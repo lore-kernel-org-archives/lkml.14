@@ -1,157 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96E26121
-	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 01:15:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD951FB3
+	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 01:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707527731; cv=none; b=hMCbr8F9pk/WA+Murl11EvLOcY0DmsoS0MnY/UW95d95aGftMyT6EudQYOPDAKWJY6u9XsET/RstUUKksZe14eSnDiJsz60Bd1Kii7MTPF8raULy20LhRrttb3mpjVvvJT6q5rFa6oenrEwVb/TJEEnm8CTxTMkgKJ5zknNb4K0=
+	t=1707527807; cv=none; b=By1H3fjd2ImU8EVRzskB2gt5faFhwwP9FvQFgUlxX5d1ahHxCEZLOxxvaKcgLHQR0E8eoSaNBMkK7/Lz8R9h17FTJiHHiMP6+ctqctioteM1gi6N78FlVNFx6gP0ME3di2jRhNJqaDY4oOALJg3bvtAGJYLpnhb/TvZEnFb8XT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707527731; c=relaxed/simple;
-	bh=JNXGB2zQQhnn/PrzqM1v1dfxZQ7EbUK4ulGfUSW4zno=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FEfqC6nfAbPdguZVfg3F2zO8p7SrcLhJgwfP/B/5LBNjysY/aWndHW605ZYGMRHX35sOKMUplEpiO5PPzQzSWqFou1MtezTf2xIIlDcNgtnBl6YBCG8REJrt4bYv2OVTtq7FcaoJgJoANGg2cdaMb1SxO+K+f/zNOXn23VdAlYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CloOSgX/; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707527807; c=relaxed/simple;
+	bh=LjE7ZHH8ae5qMsodwhs2U36vGYqe75wMOHw6PFWF9AE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IGKXXfI8ooV6COia5tMXK9WSihjvY1Nnx0Eo2fsLcpyzNjPilaPa8liUGPy6FHmPfBo1WGiibQfdYIKy/yiUNN6TjQVPY4hG0j7pQBZyH9QQy/0TZlFKBh4cT9y6FPklWXfw4jEiUyaWwT6Ndcm9e2LzGs3nP299bc8enXOuqB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NZ7z1jDm; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CloOSgX/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707527729; x=1739063729;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=JNXGB2zQQhnn/PrzqM1v1dfxZQ7EbUK4ulGfUSW4zno=;
-  b=CloOSgX/RvtyskDosha8bRU1GrwZyyGriumeHzQc7voB1cIBe3v1Cle5
-   cVjxRKQOscSOWzHxdSRhN//MvZ8ndBUz5ASQERvl1jmkUnTfDHi9doU26
-   Ndt/acdLzTUakrqPlvQMTW5qMj+RN2oxrdbQpyDsLJha44o0jjjm1AHIu
-   h8XGXMRysgfT0DwzQ9MP5CbyP9evixE0HIASKe8+e50hIqskEIXawBOw7
-   imCPRw7XaHlR6Te5p+l7en7bvn45ARlpj/PDLEAxdzQ1q5kJynKK1hJl4
-   U/WhXypPBSPGDtQ1Ml4N//s5k7MuU1kmRIQKeL1pVW4DMhXCK1ZzLcjKY
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10979"; a="19036626"
-X-IronPort-AV: E=Sophos;i="6.05,258,1701158400"; 
-   d="scan'208";a="19036626"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 17:15:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,258,1701158400"; 
-   d="scan'208";a="6834222"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 17:15:27 -0800
-Date: Fri, 9 Feb 2024 17:16:43 -0800
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: kuiliang Shi <seakeel@gmail.com>
-Cc: alexs@kernel.org, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	linux-kernel@vger.kernel.org, yangyicong@hisilicon.com
-Subject: Re: [PATCH v4 3/4] sched/fair: Rework sched_use_asym_prio() and
- sched_asym_prefer()
-Message-ID: <20240210011643.GB28896@ranerica-svr.sc.intel.com>
-References: <20240207034704.935774-1-alexs@kernel.org>
- <20240207034704.935774-3-alexs@kernel.org>
- <20240209024737.GA10494@ranerica-svr.sc.intel.com>
- <44411da9-4cda-47ff-a73d-a66c63757930@gmail.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NZ7z1jDm"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5cddfe0cb64so1061011a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 17:16:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1707527806; x=1708132606; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lynoXk2e8t7moiB6PjCqroJY6cl9fHkm6incU3soZ3w=;
+        b=NZ7z1jDm8BAYWOvls8fjZytdpAhOtIo4n7VmIfugnwCHGnj5KrkC1sqYEhzkxpkrRO
+         s/nxAgMxEz9JHzZz4aUVvdBubDZg3MfS4yFyfRFzy+h4knIfBAnixvDZGE+I7qFUPQxN
+         PGzXYyijv5BlU17iYRUhsPp/oubxYKUJt4e9M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707527806; x=1708132606;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lynoXk2e8t7moiB6PjCqroJY6cl9fHkm6incU3soZ3w=;
+        b=ti6MrRTjSE0BIDu0LP4mx24MKNniSaXahYuNlMegi0rfgFige5NuvIBFl8k7rgzJ0h
+         bW/Rjv56wPNlLvIceLcinscgdR9hPnLiwEkRUeDRxNIAfkdoqkRHFE2CRf9yTxHCDt8H
+         W94n++8o0+zNw+bg1ok1ka2tPhWLuu5KLtbdpheCe+D5q/DRmSnNSUGtHntxsDKktNjb
+         +rWxD5YHG0CYOGKvT2RqhRARGJv7Zi68k4dJK7qHRiJ1A+FJc7PaCiOSIE1sq5tUhOED
+         IM9jKBszE2u5u85d2roP/eKmgOVDMcK2bByS9DB5H+cBo4qI6FJew7hTkYko+gYC1PRD
+         3wNA==
+X-Forwarded-Encrypted: i=1; AJvYcCW7nopZbGIgbtoZe46k1XPdFnnSQOSgatc8xLW6IjGscGUyOY1uD/PpYH5DIuIroiMY47sQvokqxSBp4qCE0x99/9To4TamMWCgU/tm
+X-Gm-Message-State: AOJu0YwXak/K1IX1/Mc69yTGmXBSdeu8C4hJom+0DU3cJiGU1P+IZrII
+	QkvlqCuluk9h7d55EGScjuezCZj+76+gwvE/NEjgPnZDtfcoIzwQuHd2jsLERA==
+X-Google-Smtp-Source: AGHT+IEa4UolbVKatHcbt+cOYgbS9oWPYEU32EkcR9iaUPsGADdWcfzc/f0146FOB7f21z75zxUz6w==
+X-Received: by 2002:a05:6a20:9c8b:b0:19e:a1ae:944e with SMTP id mj11-20020a056a209c8b00b0019ea1ae944emr1032895pzb.37.1707527805847;
+        Fri, 09 Feb 2024 17:16:45 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXbpj9X4EW+IsuXY65W8NCQ77Ve63MRwZ9v0hVMOEFlWHp6XsrVDzXNHjRD3/EjbLMLlTi8GajZ3krAQxM+apEYMuvZh3C/BXJW2Ul2A87DIpaLw9uKIKT15qBRGr0uCY9gT6RItdAsLYQnMU/qdyLyDoAJG++neSQ6wOpiiNJPZhTO2AY2B6RLH4VRmT+wjSUEKjkYa8wcStKko7UnVXVHGIE7PmIeoZz4b5ZBc9dNzMx2m7oJ4TKYQuWRdtfwzzEzyjAaa0Guls96G1hIYS6KFkX+CcRhvzZ7DYiZ4+ThGlncJkWEe8PGm0FNU4lBZkJD+a5dUyaWmqh3HHNZOfETVHb8KZChW9g6e55dWlzpU8nsMXQeEBP8+QQoruYWYTfA2YxT55zm1ZSylDD7xIGi4zN72pJ3qH36y3V8XsWiQRl5gN0wQyLW+WyY2WQQax1nFFiuVTauS9nx8GicpHP+jKwT2AGGEeu02RG3odDx9GJimK5C/qjpthEk8btL
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id m19-20020a170902c45300b001d960a29da2sm2097473plm.62.2024.02.09.17.16.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Feb 2024 17:16:44 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Keith Packard <keithp@keithp.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Alexey Dobriyan <adobriyan@gmail.com>,
+	Dmitry Antipov <dmantipov@yandex.ru>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	kernel test robot <lkp@intel.com>,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 0/2] stddef: Allow attributes to be used when creating flex arrays
+Date: Fri,  9 Feb 2024 17:16:40 -0800
+Message-Id: <20240210011452.work.985-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <44411da9-4cda-47ff-a73d-a66c63757930@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Developer-Signature: v=1; a=openpgp-sha256; l=631; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=LjE7ZHH8ae5qMsodwhs2U36vGYqe75wMOHw6PFWF9AE=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlxs56CjBFfgU8SL4TcnflI84OzxGZaGCzXUwyD
+ deewc09Y96JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZcbOegAKCRCJcvTf3G3A
+ JtV0D/9vYG6bnLydYrwF5KJxu7AlrI6LOPHKy3XOwsVbevcBwCkIhJ+ys+omM7o7Z6MLLp8fAwR
+ vrQT5uqePajGvgcXsKtQBvzBxPMpS8CM5iJRn7Y1X5UTC+aFJtKiHoYYQXinHFioO9mobDrT/Nj
+ eYV22Sl/LG7i92iLbjTuPOmuhsxRakLiVu9zNICvd+3LPlXrNDg58yloa4t5MQ2bUQInd/UCjwZ
+ h+PZc6qzGAemw8zdnMr7KsMpFKI/PFzHphK3mkEtmRz7MZpPx1eKkxIuaV/TVbNxoFjZ/UdoTYE
+ QPr14m1zemajq/+78yh3YyfvOnsJm8/uLfa28KDoV3hfGWJxQUPN4nIDDQCrtt7l2JExaq1kzy7
+ OzCBrGa9KoYHZ6ZjA+8+DAeII5jBpVbm1OBy7VPdiFEPp1qR/9aEz/Ak0en9fW2YvUl1UigiTXh
+ ABbGlaUnDxmG9CwElcqMGpHmQZ2buq1uxN4A51fUgi1fRF94qbbfmZdwGrRt3+El2W3Fkmzwwaq
+ Rm14E2+cnrcRzSfABt7WsCiuiXdemzzBe9VSsfeCrS6wKRc5XnOSGnAo89gnfA/RMKE/z4mDHid
+ +BAlSCzPV4GSHaYFzqlLYsBK7gyhUzq2nz5I310hm4n4pgjTewei6rSsCVCIpkrZg4W8EXzbUJi
+ GF4RjB3P VW3rBkA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 09, 2024 at 07:08:52PM +0800, kuiliang Shi wrote:
-> 
-> 
-> On 2/9/24 10:47 AM, Ricardo Neri wrote:
-> > On Wed, Feb 07, 2024 at 11:47:03AM +0800, alexs@kernel.org wrote:
-> >> From: Alex Shi <alexs@kernel.org>
-> >>
-> >> sched_use_asym_prio() sched_asym_prefer() are used together in various
-> > 
-> > s/prio() sched/prio() and sched/
-> 
-> Will take it, Thanks!
-> 
-> > 
-> >> places. Consolidate them into a single function sched_asym().
-> >>
-> >> The existing sched_group_asym() is only used when collecting statistics
-> >> of a scheduling group. Rename it as sched_group_asym().
-> >> This makes the code easier to read. No functional changes.
-> >>
-> >> Signed-off-by: Alex Shi <alexs@kernel.org>
-> >> To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> >> To: Valentin Schneider <vschneid@redhat.com>
-> >> To: Vincent Guittot <vincent.guittot@linaro.org>
-> >> To: Peter Zijlstra <peterz@infradead.org>
-> >> To: Ingo Molnar <mingo@redhat.com>
-> >> ---
-> >>  kernel/sched/fair.c | 37 ++++++++++++++++++++-----------------
-> >>  1 file changed, 20 insertions(+), 17 deletions(-)
-> >>
-> >> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> >> index 607dc310b355..942b6358f683 100644
-> >> --- a/kernel/sched/fair.c
-> >> +++ b/kernel/sched/fair.c
-> >> @@ -9746,8 +9746,18 @@ static bool sched_use_asym_prio(struct sched_domain *sd, int cpu)
-> >>  	return sd->flags & SD_SHARE_CPUCAPACITY || is_core_idle(cpu);
-> >>  }
-> >>  
-> >> +static inline bool sched_asym(struct sched_domain *sd, int dst_cpu, int src_cpu)
-> >> +{
-> >> +	/*
-> >> +	 * First check if @dst_cpu can do asym_packing load balance. Only do it
-> >> +	 * if it has higher priority than @src_cpu.
-> >> +	 */
-> >> +	return sched_use_asym_prio(sd, dst_cpu) &&
-> >> +		sched_asym_prefer(dst_cpu, src_cpu);
-> >> +}
-> >> +
-> >>  /**
-> >> - * sched_asym - Check if the destination CPU can do asym_packing load balance
-> >> + * sched_group_asym - Check if the destination CPU can do asym_packing balance
-> >>   * @env:	The load balancing environment
-> >>   * @sgs:	Load-balancing statistics of the candidate busiest group
-> >>   * @group:	The candidate busiest group
-> > 
-> > After renaming and changing this function now its documentation has become
-> > obsolete. Can you update it?
-> 
-> Since the function sched_use_asym_prio() and sched_asym_prefer() both give detailed comments for their actions, as long as this function does, could we just remove the bit obsolete comments here?
-> 
-> 
-> @@ -9765,14 +9765,6 @@ static inline bool sched_asym(struct sched_domain *sd, int dst_cpu, int src_cpu)
->   * @env::dst_cpu can do asym_packing if it has higher priority than the
->   * preferred CPU of @group.
->   *
-> - * SMT is a special case. If we are balancing load between cores, @env::dst_cpu
-> - * can do asym_packing balance only if all its SMT siblings are idle. Also, it
-> - * can only do it if @group is an SMT group and has exactly on busy CPU. Larger
-> - * imbalances in the number of CPUS are dealt with in find_busiest_group().
-> - *
-> - * If we are balancing load within an SMT core, or at PKG domain level, always
-> - * proceed.
-> - *
->   * Return: true if @env::dst_cpu can do with asym_packing load balance. False
->   * otherwise.
+Hi,
 
-Fine with me.
+We're going to have more cases where we need to apply attributes
+(e.g. __counted_by) to struct members that have been declared with
+DECLARE_FLEX_ARRAY. Add a new ..._ATTR helper to allow for this and
+annotate one such user in linux/in.h.
 
-With this change,
-Reviewed-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+-Kees
 
-Tested on Alder Lake and Meteor Lake, which use asym_packing.
+Kees Cook (2):
+  stddef: Allow attributes to be used when creating flex arrays
+  net/ipv4: Annotate imsf_slist_flex with __counted_by(imsf_numsrc)
 
-Tested-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> >  
+ include/linux/stddef.h      | 16 ++++++++++++++--
+ include/uapi/linux/in.h     |  3 ++-
+ include/uapi/linux/stddef.h | 25 +++++++++++++++++++------
+ 3 files changed, 35 insertions(+), 9 deletions(-)
+
+-- 
+2.34.1
+
