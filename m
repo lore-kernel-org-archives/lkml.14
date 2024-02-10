@@ -1,121 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646E55FDDA
-	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 22:56:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46AF5FDD7
+	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 23:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707605806; cv=none; b=NJILBkoUo/l39yk6e7L90TGeFFTBLVAPyRgS4rYez5mbWtmktEo7AEjqPGchar19iZp4ipjvZFiLeIdwRcvEdiaaM8KkXGhZb1KVi9AHu2b9ilHGKPXFNtVm3QJoMDAHgOklhDRlWPvz/ftd33yd7EN+xf3OLOasxU6aCQk1C2M=
+	t=1707606921; cv=none; b=mQA/LdvAnr+x4I1ECPCUlVIupoGyEBXifzqgKkL8b+blQKs5Jdx501WtrAaWH7VVxETm1onwtmpMPudXJF+DVc/w3gOV2RjQj2NCPp/LhWtNU3Mi88qRBx5dZ7ud98X4g12EDBkTfemx2Psz7VcJLROmSZu7t/zlHKcoJ/xL6pA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707605806; c=relaxed/simple;
-	bh=kznykOs2boAsIDcRBVKJBzW2mUxpRYIaGPtEKyKzJRQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r7WovdPgRy86eYfLXh5QgEsb897LAqenIOhfJjj0Pd4VSxQXzb6Ms9iMhIQ/hQFjhBLqdqnpYjEIrBCLPnPy2opyZqMoHnveNOWg4bF1poDNYKmIbDkdXnONbOhRQTRnTB1+gjaPkJ1qfEQ8YpfkpPJpMi6/3Q/23Z9mfWT8zY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jH4Az/Oq; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1707606921; c=relaxed/simple;
+	bh=/3YzkBLodMNUrjnwjELpDTo92n8iOXA1+uqd9b5AE1c=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Cc:Content-Type; b=dw9iGBeblLBqeURhYeF+FjygXAEch3CZyWf7uzZnLjsmL4llRkOK3gxEcxB/lr08LZ5d1NjuTy4TZYP7Nbft38zwnZff8K6s4zk7J8uY6VQYhNxbhYd9Rtaq3ksJenSBbp3ZevoRIxL6gr6B3dLCKw8+JEbArJ7KlzBGMTzheRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--saravanak.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SxDJ+Uav; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--saravanak.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jH4Az/Oq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707605804; x=1739141804;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kznykOs2boAsIDcRBVKJBzW2mUxpRYIaGPtEKyKzJRQ=;
-  b=jH4Az/OqQKUtvi23vWkBn1rqXRb5zCcaq4JVwZrFo/LjTogrmXLhfdj8
-   G0dzTeHuojrIHfpI8k1pRwlQ5V/BqoO1QjlwgJP9OubBHU/sGEC4jHSp0
-   eUgOd0k50udU2l9nDaKrwdFVWLdi1a00CWgvi0ypQCyvbcXG5hHjoNTH1
-   X90T9MCsbrrhgj/54IkqBdX6V2CYbF5LBg5zWlxg6iweCeOIeLDtO1d9r
-   y8l5tLiBmpx4Cb0uF9JcZZcHshmJ3NHAerKyz1ombmJB6Rc3fzhfY0sG1
-   SrGqjK10tVse6zGmM5Ln0nwRu3IVBlPGA6q6VfvkaxRbak0QXVQZzTSe/
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10980"; a="12322143"
-X-IronPort-AV: E=Sophos;i="6.05,259,1701158400"; 
-   d="scan'208";a="12322143"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2024 14:56:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,259,1701158400"; 
-   d="scan'208";a="2548626"
-Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 10 Feb 2024 14:56:40 -0800
-Received: from kbuild by 01f0647817ea with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rYwH0-00069a-13;
-	Sat, 10 Feb 2024 22:56:38 +0000
-Date: Sun, 11 Feb 2024 06:56:04 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Ricardo B. Marliere" <ricardo@marliere.net>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Ricardo B. Marliere" <ricardo@marliere.net>
-Subject: Re: [PATCH 4/4] powerpc: ibmebus: make ibmebus_bus_type const
-Message-ID: <202402110615.H1X3DSiC-lkp@intel.com>
-References: <20240209-bus_cleanup-powerpc2-v1-4-79a56dcaebb1@marliere.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SxDJ+Uav"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b267bf11so2580777276.2
+        for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 15:15:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707606919; x=1708211719; darn=vger.kernel.org;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=X74cf6T8C4bXDHMgSvTgHCjENEzriqu7nAo5Mgz+MM4=;
+        b=SxDJ+Uav1JT1xkr11P8EWEEH4aiXtqA/CIPkKFuknE8oeTqX2JHCgSUINDuODtOmpq
+         pObCE5xGnFRkDYuBH9S0dR8GJtn58SBdpwz711//joxiINoHdiESNXrSXHHNQPmmPSGr
+         noebh6eRIBWeXMnrPEIJCsjCYa/MewornumtwWDCwKZvuTacIdfkiYrs+GFLv/uxpTjM
+         /sRHtp6Pv0BKDFoXrWNVgASVNLj5AA53fwHqWqSSjb2J5v7vwjO6Cn2swRXggb5tuaFt
+         J7yxGEWnqt0IBWXbzpnP4uG0J9DZ0Yi1mzweIxc6PXf2Y1RUcfwXFymIyTyG4oqiRxuA
+         MDjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707606919; x=1708211719;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=X74cf6T8C4bXDHMgSvTgHCjENEzriqu7nAo5Mgz+MM4=;
+        b=b5NTK1lXE/Q4KAPi/KHS7wBGiUuqhuwZx/nDwniXnO0wLvbvpBg9d3jW31r8R3JtIn
+         ttYLme2xERZ5coGhJAxKWWZmH8vT/OjwgSI5LCXaR547zeI41mLLPRNQphmbrfq2NGhS
+         ZSrjf8nVyC8VxR/Dsi65GGuF0bacIpWx/h5iLyo/syVmbb87DmmzThxt4RWeBuTULRNs
+         UqSX1VZ3s5eHOPlFgnCXF6wVHWc4VfSLBR3AsRKiqi1AFCtxyfkDd+gZEna9qEFqB8tJ
+         136RJO8v9DIymIlRPWAwJCx+0kfeIcD3FLqvMHcS3IenwLkHpepfAUe5UXxPS7LxH8XV
+         0jRQ==
+X-Gm-Message-State: AOJu0YwDDjL+vT6JOhNMh5G4OH8qGBmEdY0YUJElCBv5HC4p/m9/Rg47
+	766jalRyZjEHkYW3NTH59aPlKvg3j6pcB1FNPrDCqckGjYfhGbbrJRkQVTD5cORUNDWXerRYUSf
+	e0f8HKNsk2jhNaA==
+X-Google-Smtp-Source: AGHT+IH2Adref4+yil6FrbE6d/7iC18rjqbq852WHMSpdwSZBvXZFSyEt1R4atXsHCbl3PmMo9FKTKBDAQtPReQ=
+X-Received: from saravanak.san.corp.google.com ([2620:15c:2d:3:80ad:1a11:8cc3:735])
+ (user=saravanak job=sendgmr) by 2002:a05:6902:2213:b0:dc6:ebd4:cca2 with SMTP
+ id dm19-20020a056902221300b00dc6ebd4cca2mr118406ybb.11.1707606918832; Sat, 10
+ Feb 2024 15:15:18 -0800 (PST)
+Date: Sat, 10 Feb 2024 15:15:12 -0800
+Message-Id: <20240210231513.111117-1-saravanak@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240209-bus_cleanup-powerpc2-v1-4-79a56dcaebb1@marliere.net>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
+Subject: [PATCH] MAINTAINERS: of: Add Saravana Kannan
+From: Saravana Kannan <saravanak@google.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org, 
+	kernel-team@android.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Ricardo,
+Adding myself as a second maintainer for Open Firmware and Device Tree
+to help Rob out with reviews and other maintainer work.
 
-kernel test robot noticed the following build errors:
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+Discussed this with Rob.
 
-[auto build test ERROR on 41bccc98fb7931d63d03f326a746ac4d429c1dd3]
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ricardo-B-Marliere/powerpc-vio-move-device-attributes-into-a-new-ifdef/20240210-080925
-base:   41bccc98fb7931d63d03f326a746ac4d429c1dd3
-patch link:    https://lore.kernel.org/r/20240209-bus_cleanup-powerpc2-v1-4-79a56dcaebb1%40marliere.net
-patch subject: [PATCH 4/4] powerpc: ibmebus: make ibmebus_bus_type const
-config: powerpc-allyesconfig (https://download.01.org/0day-ci/archive/20240211/202402110615.H1X3DSiC-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project ac0577177f053ba7e7016e1b7e44cf5932d00b03)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240211/202402110615.H1X3DSiC-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402110615.H1X3DSiC-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> arch/powerpc/platforms/pseries/ibmebus.c:58:17: error: redefinition of 'ibmebus_bus_type' with a different type: 'struct bus_type' vs 'const struct bus_type'
-      58 | struct bus_type ibmebus_bus_type;
-         |                 ^
-   arch/powerpc/include/asm/ibmebus.h:51:30: note: previous declaration is here
-      51 | extern const struct bus_type ibmebus_bus_type;
-         |                              ^
-   arch/powerpc/platforms/pseries/ibmebus.c:134:17: warning: shift count >= width of type [-Wshift-count-overflow]
-     134 |         return mask == DMA_BIT_MASK(64);
-         |                        ^~~~~~~~~~~~~~~~
-   include/linux/dma-mapping.h:77:54: note: expanded from macro 'DMA_BIT_MASK'
-      77 | #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
-         |                                                      ^ ~~~
-   arch/powerpc/platforms/pseries/ibmebus.c:139:9: warning: shift count >= width of type [-Wshift-count-overflow]
-     139 |         return DMA_BIT_MASK(64);
-         |                ^~~~~~~~~~~~~~~~
-   include/linux/dma-mapping.h:77:54: note: expanded from macro 'DMA_BIT_MASK'
-      77 | #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
-         |                                                      ^ ~~~
-   2 warnings and 1 error generated.
-
-
-vim +58 arch/powerpc/platforms/pseries/ibmebus.c
-
-d7a301033f1990 arch/powerpc/kernel/ibmebus.c Heiko J Schick 2005-11-16  57  
-6bccf755ff5324 arch/powerpc/kernel/ibmebus.c Joachim Fenkes 2007-03-09 @58  struct bus_type ibmebus_bus_type;
-6bccf755ff5324 arch/powerpc/kernel/ibmebus.c Joachim Fenkes 2007-03-09  59  
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b01f890ec789..45c6c13b4edf 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16359,6 +16359,7 @@ F:	drivers/infiniband/ulp/opa_vnic
+ 
+ OPEN FIRMWARE AND FLATTENED DEVICE TREE
+ M:	Rob Herring <robh@kernel.org>
++M:	Saravana Kannan <saravanak@google.com>
+ L:	devicetree@vger.kernel.org
+ S:	Maintained
+ W:	http://www.devicetree.org/
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0.687.g38aa6559b0-goog
+
