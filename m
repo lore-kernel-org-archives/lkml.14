@@ -1,58 +1,70 @@
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC8436B01;
-	Sat, 10 Feb 2024 21:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E1975F84E;
+	Sat, 10 Feb 2024 22:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707602142; cv=none; b=gcID0NnYBYxcrJ30+Y+J5NZoDeXLCohMdbjhmtacaKaFXtlRckhiJ7bcIn3N+wFngLddj/IhguyMuv+fmideKkdMyr5vP0BuV4wn19nuLcAaiau3eF0RcSQlRPN2vhhbYrsLN58F1eREGSPNeNAf3AoD7sz/ZaISf6GjUjtQrt4=
+	t=1707603329; cv=none; b=AKZwEXhBz1cMaHNK+L7ks8Vx62iXzGlyWTiZjQpnR+1ijHRrsu1yY1r8wkMNKQu3eGCxB7mhdJ0MDI9vYgX7z+wKuF0Lg1lPFrKTZx2PK2ufDvUIvkKf3sggYydV1vlqiHPdZp40PdixE/DBZ6inuvh54XWw12sKYi3ghciuoSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707602142; c=relaxed/simple;
-	bh=z7rtINVttpPeGX3Q2hKXdZ2D1BRaxoQHZOCRV0NBzFM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gRaMSwN80JYgLmCGNnOu+J92j7+FbYOjY0BIpnV7q6o76f9SEa/45gvr9LtoKp2I4ANUz9nibz7YoaOYzsuBhcr9cOyyvAjamKukgM1mZfemZA/NdRrBKNty1/IwxYj5aAM+pfcvP571lHfWgywP2j80D93Qii+e2N/KCek1f40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=ID/GQKVs; arc=none smtp.client-ip=37.18.73.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+	s=arc-20240116; t=1707603329; c=relaxed/simple;
+	bh=BRBXjjTaaIg/lDsxVQno90HBFLswvVpFxmbOQLTe0Dk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mVTCAZUB2gKiDPbCzCjtwwwStxC2pb6aioGeH/iN4fEDFc7SthzHQ2FjpKJrZkPV+RicHDo3mY9SyN1S+NwMJzorsFdKYu+RKD8jCXTQtPBuwUVI9D0jtafTUrKDG5VR47rpIHaXGs7x0XiCYikmw50Pi7/UbmXWpiRpwKufdLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YvM9JKh6; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="ID/GQKVs"
-Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id BF461100003;
-	Sun, 11 Feb 2024 00:55:28 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru BF461100003
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1707602128;
-	bh=xi31YeeyyS/qFrw1DkmjVjOshSdKKbDhOyJw6MvaMJY=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=ID/GQKVsNci/VPuG6OlDS1TawQiIkMl2MhlcFJi3FsFUkAHzQjapxSzWvBdqeKYNk
-	 x9/nxqvI+m3gqaIluUH6YneQ4B07/QPZoDnziWMCoZ5N2X4cOFvoalvgxFmEB3QymO
-	 znjpXcQprfDMJHpOTQhpzosa6FEE1NqT7F4b/BlqyKI/WxnF0VDkqDhkGcXc5yc/uC
-	 66aNtPE4FvEr+IgCUUOaK+VIOFd7DhDM4+BsSV/Okrr+gWsMG85xiRNDK7AW9LDMrz
-	 XtgrsqEY+Dn/I3bPQvbCtIf3TesjzvWrTV5iBZZBT7vhnfvY0Uhk1psFgVJJLLOPro
-	 jEXeP9hdf1EHA==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Sun, 11 Feb 2024 00:55:28 +0300 (MSK)
-Received: from localhost.localdomain (100.64.160.123) by
- p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Sun, 11 Feb 2024 00:55:28 +0300
-From: Arseniy Krasnov <avkrasnov@salutedevices.com>
-To: Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger
-	<richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Neil Armstrong
-	<neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Jerome
- Brunet <jbrunet@baylibre.com>, Martin Blumenstingl
-	<martin.blumenstingl@googlemail.com>, Yixun Lan <yixun.lan@amlogic.com>,
-	Jianxin Pan <jianxin.pan@amlogic.com>
-CC: <oxffffaa@gmail.com>, <linux-mtd@lists.infradead.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-amlogic@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <kernel@sberdevices.ru>, Arseniy Krasnov
-	<avkrasnov@salutedevices.com>, <Stable@vger.kernel.org>
-Subject: [PATCH v1] mtd: rawnand: meson: fix scrambling mode value in command macro
-Date: Sun, 11 Feb 2024 00:45:51 +0300
-Message-ID: <20240210214551.441610-1-avkrasnov@salutedevices.com>
-X-Mailer: git-send-email 2.35.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YvM9JKh6"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-33b2960ff60so1727481f8f.1;
+        Sat, 10 Feb 2024 14:15:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707603325; x=1708208125; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=X3rm1Ms90qHIEjQmaGDGejHMu8DwmDql6WBGu2dQWVI=;
+        b=YvM9JKh6PEBdwuaiG8LAjqF7LLEHpFZxrLiPZEWK31IohrpTpJSWxkej+zgOInZkU8
+         nUxStFcXDQgrSgaA+866XQxwclXuPTJ0dQvxxT1cEXiR0zDUgQKWK7QjMHGJv68OpUQ9
+         mQmJ/hthhCA69+1CUPoA49kIEv9ZzWKxH7Jv0hJal/9Zfy1+FD8dRG3Xz4y7TmqjLRDZ
+         ct/YQuYHfmmtxiiCrO/BRHP1vj2EaKOkeBAOkAj/XQFas9sHdYtdw7LqhZiwp4XYeHrY
+         qdU4sWY8D3Czu3Y22kRUyMyN2S4alJNrevmKV1Sd0cMBCA0BbwuDBoZX+orafuK/aXKe
+         FauA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707603325; x=1708208125;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=X3rm1Ms90qHIEjQmaGDGejHMu8DwmDql6WBGu2dQWVI=;
+        b=k2eCXEGyxaZbHv72RvaJUC/aEny7HFQWgOktxpMSZJ6nTiosmdl2ub9TxpD65ncqLQ
+         fEZP0KwIQP0RqdL/lSQqPsRNHnfKSbD746EL0DSOIjvfisVsh5JR7PKf7HMPwtZAtckI
+         GpETw73F6H4wIAEOk9NpIOYg7QWVNG3GFl6/9FV2eRoGArFdcQ4vP628V/7fsU8Af5eM
+         kdnJ2oW8tcUCwkkwxZBxi8Zbv2+5WUufQ5oLy+QSVfPte7Y6BPDSqrtoynvUv2q/aksl
+         3h4NoslbY9El9V0uU415fsxYBftjZOqhHFIzTlza6hACQmxdXpdPLjM5V6Yh80F+oobF
+         6+TA==
+X-Gm-Message-State: AOJu0YyJv5GNN8wZZcxKk9Z9UvmHLNHKblobqE5r9xo4CyIobki94LtW
+	N/fsuftvV/Shz9fHOLNq+obE7uCCTqUGct9yRIvXJpmd0XEdPoIv
+X-Google-Smtp-Source: AGHT+IE0y+UCG4EdFJdQie7+RKChfwLRw3RuexFy6HM/rsWFm9N6XtTqLivyWTYUC7gXTGSRVK+0Sg==
+X-Received: by 2002:a5d:54c5:0:b0:33b:6cf0:e33f with SMTP id x5-20020a5d54c5000000b0033b6cf0e33fmr2406246wrv.7.1707603325409;
+        Sat, 10 Feb 2024 14:15:25 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWAwifN8+ycN566trEq3a6K9iz8dhjkjXHR4SH46LU6vsERvjPqq/72+WrhyoNBvYThpNo46kNZ8WfAizqqVrOF58Li3XYA/gnbu5jWtVI0Nzr9DRlJScSsvAGydFqJ6FohMSc5MsQvKIOVLJx27jUBAozY9NpK/ojPJClZLYXm9ymSryVRlMfM8iLQ1xmxEHX8HSBMklNyzg7o3VOQ8N+zTKv7dodE1GL19O+sSNDvFDCekbqLGCgl6lhbCKJ4HHrZ3LbGZD5JOXZuQpC9/cBzKoOTo3CjBlOErvYgnCCNaPiSSzKqjxtrXGRrRCo4UOmFMvM9sj550xjH5vx6NjcibQ==
+Received: from localhost.localdomain (cpc142640-benw12-2-0-cust620.16-2.cable.virginm.net. [82.0.14.109])
+        by smtp.gmail.com with ESMTPSA id n38-20020a05600c3ba600b0040fdb17e66csm4448843wms.4.2024.02.10.14.15.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 Feb 2024 14:15:25 -0800 (PST)
+From: Youssef Quaisse <yquaisse@gmail.com>
+To: sakari.ailus@linux.intel.com,
+	bingbu.cao@intel.com,
+	tian.shu.qiu@intel.com,
+	mchehab@kernel.org,
+	gregkh@linuxfoundation.org,
+	skhan@linuxfoundation.org
+Cc: Youssef Quaisse <yquaisse@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	linux-media@vger.kernel.org
+Subject: [PATCH] Fix three warnings when running `make htmldocs`
+Date: Sat, 10 Feb 2024 22:14:38 +0000
+Message-ID: <20240210221451.27769-1-yquaisse@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,50 +72,49 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m01.sberdevices.ru (172.16.192.107)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 183344 [Feb 10 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.3
-X-KSMG-AntiSpam-Envelope-From: avkrasnov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;smtp.sberdevices.ru:5.0.1,7.1.1;salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;100.64.160.123:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/02/10 18:28:00 #23491490
-X-KSMG-AntiVirus-Status: Clean, skipped
 
-Scrambling mode is enabled by value (1 << 19). NFC_CMD_SCRAMBLER_ENABLE
-is already (1 << 19), so there is no need to shift it again in CMDRWGEN
-macro.
+Running `make htmldocs` generates warnings for file
+drivers/staging/media/ipu3/include/uapi/intel-ipu3.h.
 
-Signed-off-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
-Cc: <Stable@vger.kernel.org>
-Fixes: 8fae856c5350 ("mtd: rawnand: meson: add support for Amlogic NAND flash controller")
+Fix was to remove the "excess" definitions.
+
+Warnings in question:
+
+```
+./drivers/staging/media/ipu3/include/uapi/intel-ipu3.h:2522: warning: Excess struct member 'reserved1' description in 'ipu3_uapi_acc_param'
+./drivers/staging/media/ipu3/include/uapi/intel-ipu3.h:2522: warning: Excess struct member 'reserved2' description in 'ipu3_uapi_acc_param'
+./drivers/staging/media/ipu3/include/uapi/intel-ipu3.h:2778: warning: Excess struct member '__acc_osys' description in 'ipu3_uapi_flags'
+```
+
+Signed-off-by: Youssef Quaisse <yquaisse@gmail.com>
 ---
- drivers/mtd/nand/raw/meson_nand.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/media/ipu3/include/uapi/intel-ipu3.h | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/mtd/nand/raw/meson_nand.c b/drivers/mtd/nand/raw/meson_nand.c
-index cdb58aca59c0..2a96a87cf79c 100644
---- a/drivers/mtd/nand/raw/meson_nand.c
-+++ b/drivers/mtd/nand/raw/meson_nand.c
-@@ -63,7 +63,7 @@
- #define CMDRWGEN(cmd_dir, ran, bch, short_mode, page_size, pages)	\
- 	(								\
- 		(cmd_dir)			|			\
--		((ran) << 19)			|			\
-+		(ran)				|			\
- 		((bch) << 14)			|			\
- 		((short_mode) << 13)		|			\
- 		(((page_size) & 0x7f) << 6)	|			\
+diff --git a/drivers/staging/media/ipu3/include/uapi/intel-ipu3.h b/drivers/staging/media/ipu3/include/uapi/intel-ipu3.h
+index caa358e0bae4..4aa2797f5e3c 100644
+--- a/drivers/staging/media/ipu3/include/uapi/intel-ipu3.h
++++ b/drivers/staging/media/ipu3/include/uapi/intel-ipu3.h
+@@ -2485,11 +2485,9 @@ struct ipu3_uapi_anr_config {
+  *		&ipu3_uapi_yuvp1_y_ee_nr_config
+  * @yds:	y down scaler config. See &ipu3_uapi_yuvp1_yds_config
+  * @chnr:	chroma noise reduction config. See &ipu3_uapi_yuvp1_chnr_config
+- * @reserved1: reserved
+  * @yds2:	y channel down scaler config. See &ipu3_uapi_yuvp1_yds_config
+  * @tcc:	total color correction config as defined in struct
+  *		&ipu3_uapi_yuvp2_tcc_static_config
+- * @reserved2: reserved
+  * @anr:	advanced noise reduction config.See &ipu3_uapi_anr_config
+  * @awb_fr:	AWB filter response config. See ipu3_uapi_awb_fr_config
+  * @ae:	auto exposure config  As specified by &ipu3_uapi_ae_config
+@@ -2724,7 +2722,6 @@ struct ipu3_uapi_obgrid_param {
+  * @acc_ae: 0 = no update, 1 = update.
+  * @acc_af: 0 = no update, 1 = update.
+  * @acc_awb: 0 = no update, 1 = update.
+- * @__acc_osys: 0 = no update, 1 = update.
+  * @reserved3: Not used.
+  * @lin_vmem_params: 0 = no update, 1 = update.
+  * @tnr3_vmem_params: 0 = no update, 1 = update.
 -- 
-2.35.0
+2.43.0
 
