@@ -1,92 +1,180 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8184C81
-	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 02:46:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00BD4C81
+	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 02:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707533177; cv=none; b=hDOD0eFZoDDCPg6XJUOV9oXF6SCca4mA4Ab4cr6B+6eubk+4TCKBo5ORVTr2lLK44TmxkMnudnO8dT7taoxpZjB20JC9jy3g4d0jAMHBjALb6ijBZllu9JWpn8JNpuFTxqFOy+SZQ5wgWbxJZB3mk7QUs/ToqoUjKn+WimAvppY=
+	t=1707533206; cv=none; b=ui35AHWzYh+DWmPSO1KLqQkQvFWWt8smY1KZ5zkYoZ6PkbUVFHlgqnopFRvgLa16Tg3WyJape+YyI45xrkmCvVrgjHn7/5+RRVCndf59flEImPjrXwMXO6ZOR1F1FbuhRLj0jnwHhbMpCIr+ngDz756Lf637Whw30nuvVJLG0KM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707533177; c=relaxed/simple;
-	bh=t8R6ekevAs5LUra8NX8imgqzdPvZELgy7Sn2syntlWU=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Cc:Date:
-	 Message-Id:References:To; b=Ly69aC8tyOxxO2O+x0puwt50xz7aKRvD2hHUulZc9asAlsgy0PpLJJXrDYCO0nrwV+4D+/+boqJsU2KGcsxHA5leMvRpdASNrOkwnda1ukXYNSzPWGnSoNwNXr9cV5VLOS523R8gqDwzUkpslGCGCx/G0QOzXjmdXnMpxOxTb8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=oFqhRojE; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1707533206; c=relaxed/simple;
+	bh=uLiR7Kz1MbofB8E4x+ZPySEkA1M0AMIiXoKEeJbpDXM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YLEsNYx7UKPsb12MktINtPVtcjDfdc2/mb4KWbeug4SkdlXPIC6njcKYp8EwIMJyyNKzXXs8rFnPr4zlb+7FFA0nqWbp4p8m0qvlNWdC/Y3XG1OTpeqccJeLOYrDqVM74u43nuhHAbHkxM1QuujwLBNycsdR/7jdLC7/gH7/43E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bBDt3Or0; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="oFqhRojE"
-Content-Type: text/plain; charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1707533172;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t8R6ekevAs5LUra8NX8imgqzdPvZELgy7Sn2syntlWU=;
-	b=oFqhRojEcCa+hyDQGgTk14lRssBFMFySGzTqvdSqSpeAhRiF5RHgRkzl84vpveesZuQ0ER
-	uZzGGl5F5sbX6kGqfTizJMOSWmmYPcF97yHVZdHd2xc42IPl4RrPhCl9Zdu1UOHBq//N3U
-	zrdsj8xHdrJS3blja0q0liYhiSuLp5A=
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bBDt3Or0"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d89f0ab02bso50995ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 18:46:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707533203; x=1708138003; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gvPi1gupQqIT9F22A3YjxH75GO/tG9qnD/uz9dNXdsA=;
+        b=bBDt3Or0HXwHv8cIE4k9ENtqtkvQICUKscvsTOiZXGGSfucELfFJLHJDCUVgyrtbbS
+         Xn1seiv+0YdtiNrD8v6EQ4on3+maY9OgenyG+DZX/xNgUxEb4yftqHaN7JnD9Rf7O41Y
+         PXMJCF00fmv0s1kpcsVzeESt+eaDXZBsXyCjD1wvpZjcmvPrOPaiLcNjT5WwPxUUOv0v
+         Ztc6MfMOiYe8IvDxVxWoohv10pbHx5I1q80ehi4jPYHlKnPhC2AsKMBfFXj+AVmhOIXn
+         wZLyIg56rcy0Tx21R7zmMHsU4yeJgdolAJ0ZmgfWcYN/efk9ewHYWPb3GSzbNj1NTIdf
+         lrzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707533203; x=1708138003;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gvPi1gupQqIT9F22A3YjxH75GO/tG9qnD/uz9dNXdsA=;
+        b=HT6KYiIGk1DDpGN5TOOwvbHJ8eUVBkV5zcQfW5FKeVmXOR/XIzs0ot4iVLQIiLYaxy
+         X5G02kdhZRP0Yp156/orNqxWJ9sn7otBmRk7KwA5mqufgpEQbgmvd1SKq9o1R5eVLaSW
+         lvjYOTqtZOdhDhmOnGxTB4t7lNjpjykBooCBR6k5YXnbagbVYm2gbXGSp2kmuzYPinbT
+         r6TQS5dvzkDgVaiHcoGQmMxZu36OyL9eknDg4O0Vk1t8R/czXGb1cXX2QN/OaOv5Ihuv
+         ME/fEC2FwlqAEA3AfsbjNQOzrdwQapPL49mALtqQ/wX3EE1THXrsj5dTJ7Q+QnV9Y0X5
+         4yHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU45iSqd4EPx/fs5BbxIg0l+PnnJC3WkDLWykOyNnoAhqbEUq5yndTs1FjXP8aPo55XiLvbhPKH368fxO7DwiZv44BZT4Tj9ncKEHF6
+X-Gm-Message-State: AOJu0Yyol+GWp7LVOfDaVCsxzI/P2Q7WS3hLX50VHjnMn4uB6G2NpYrg
+	/8+tUETTD/qWAi8bZhrfUkOM9PxpI/YWjeJeVUvHRwo9irFfxOi4umteZHE31XMZCPp2R/p1nsi
+	DLHg0FvXlDyJD9UFKtq3q6vHsKfqtUyFt5YRgUcEkn+VCuhWqz5bnowc=
+X-Google-Smtp-Source: AGHT+IGTCvpDi/N93KDltxbd+jCsgx+d2H4/3YL9Lk68bhh5nVQRaWaPF8hEL4Kp36NHmdjWMtDnU0IrZiIHcdBg/KA=
+X-Received: by 2002:a17:903:44b:b0:1d9:a393:4a38 with SMTP id
+ iw11-20020a170903044b00b001d9a3934a38mr38401plb.26.1707533202817; Fri, 09 Feb
+ 2024 18:46:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: Re: [PATCH 1/1] hugetlb: fix CONFIG_PADATA dependency for non-SMP system
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <86B96EE5-A51C-4F06-BB18-0B3B12DBCCEC@linux.dev>
-Cc: Gang Li <ligang.bdlg@bytedance.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, Randy Dunlap <rdunlap@infradead.org>,
- kernel test robot <lkp@intel.com>
-Date: Sat, 10 Feb 2024 10:45:35 +0800
-Message-Id: <2B59E906-4CC9-4926-A893-4954587D3BCD@linux.dev>
-References: <86B96EE5-A51C-4F06-BB18-0B3B12DBCCEC@linux.dev>
-To: Gang Li <gang.li@linux.dev>, jane.chu@oracle.com,
- Daniel Jordan <daniel.m.jordan@oracle.com>, steffen.klassert@secunet.com
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+References: <20240207223639.3139601-1-irogers@google.com> <CAM9d7chBixXozCQztM2WKGbfs_8C70vy6ROzKpwLSqq-upz5iQ@mail.gmail.com>
+In-Reply-To: <CAM9d7chBixXozCQztM2WKGbfs_8C70vy6ROzKpwLSqq-upz5iQ@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 9 Feb 2024 18:46:31 -0800
+Message-ID: <CAP-5=fUVkaq3dDoeMYYEN1N-ghnL-GiP8PV3N3pWpjQKpDTCHw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] maps memory improvements and fixes
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Song Liu <song@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Liam Howlett <liam.howlett@oracle.com>, 
+	Colin Ian King <colin.i.king@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Artem Savkov <asavkov@redhat.com>, Changbin Du <changbin.du@huawei.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	James Clark <james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Feb 8, 2024 at 9:44=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> Hi Ian,
+>
+> On Wed, Feb 7, 2024 at 2:37=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+> >
+> > First 6 patches from:
+> > https://lore.kernel.org/lkml/20240202061532.1939474-1-irogers@google.co=
+m/
+> >
+> > v2. Fix NO_LIBUNWIND=3D1 build issue.
+> >
+> > Ian Rogers (6):
+> >   perf maps: Switch from rbtree to lazily sorted array for addresses
+> >   perf maps: Get map before returning in maps__find
+> >   perf maps: Get map before returning in maps__find_by_name
+> >   perf maps: Get map before returning in maps__find_next_entry
+> >   perf maps: Hide maps internals
+> >   perf maps: Locking tidy up of nr_maps
+>
+> Now I see a perf test failure on the vmlinux test:
+>
+> $ sudo ./perf test -v vmlinux
+>   1: vmlinux symtab matches kallsyms                                 :
+> --- start ---
+> test child forked, pid 4164115
+> /proc/{kallsyms,modules} inconsistency while looking for
+> "[__builtin__kprobes]" module!
+> /proc/{kallsyms,modules} inconsistency while looking for
+> "[__builtin__kprobes]" module!
+> /proc/{kallsyms,modules} inconsistency while looking for
+> "[__builtin__ftrace]" module!
+> Looking at the vmlinux_path (8 entries long)
+> Using /usr/lib/debug/boot/vmlinux-6.5.13-1rodete2-amd64 for symbols
+> perf: Segmentation fault
+> Obtained 16 stack frames.
+> ./perf(+0x1b7dcd) [0x55c40be97dcd]
+> ./perf(+0x1b7eb7) [0x55c40be97eb7]
+> /lib/x86_64-linux-gnu/libc.so.6(+0x3c510) [0x7f33d7a5a510]
+> ./perf(+0x1c2e9c) [0x55c40bea2e9c]
+> ./perf(+0x1c43f6) [0x55c40bea43f6]
+> ./perf(+0x1c4649) [0x55c40bea4649]
+> ./perf(+0x1c46d3) [0x55c40bea46d3]
+> ./perf(+0x1c7303) [0x55c40bea7303]
+> ./perf(+0x1c70b5) [0x55c40bea70b5]
+> ./perf(+0x1c73e6) [0x55c40bea73e6]
+> ./perf(+0x11833e) [0x55c40bdf833e]
+> ./perf(+0x118f78) [0x55c40bdf8f78]
+> ./perf(+0x103d49) [0x55c40bde3d49]
+> ./perf(+0x103e75) [0x55c40bde3e75]
+> ./perf(+0x1044c0) [0x55c40bde44c0]
+> ./perf(+0x104de0) [0x55c40bde4de0]
+> test child interrupted
+> ---- end ----
+> vmlinux symtab matches kallsyms: FAILED!
 
-CC Jane, Daniel Jordan, Steffen as well in this thread.
+Ah, tripped over a latent bug summarized in this part of an asan stack trac=
+e:
+```
+freed by thread T0 here:
+   #0 0x7fa13bcd74b5 in __interceptor_realloc
+../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:85
+   #1 0x561d66377713 in __maps__insert util/maps.c:353
+   #2 0x561d66377b89 in maps__insert util/maps.c:413
+   #3 0x561d6652911d in dso__process_kernel_symbol util/symbol-elf.c:1460
+   #4 0x561d6652aaae in dso__load_sym_internal util/symbol-elf.c:1675
+   #5 0x561d6652b6dc in dso__load_sym util/symbol-elf.c:1771
+   #6 0x561d66321a4e in dso__load util/symbol.c:1914
+   #7 0x561d66372cd9 in map__load util/map.c:353
+   #8 0x561d663730e7 in map__find_symbol_by_name_idx util/map.c:397
+   #9 0x561d663731e7 in map__find_symbol_by_name util/map.c:410
+   #10 0x561d66378208 in maps__find_symbol_by_name_cb util/maps.c:524
+   #11 0x561d66377f49 in maps__for_each_map util/maps.c:471
+   #12 0x561d663784a0 in maps__find_symbol_by_name util/maps.c:546
+   #13 0x561d662093e8 in machine__find_kernel_symbol_by_name util/machine.h=
+:243
+   #14 0x561d6620abbd in test__vmlinux_matches_kallsyms
+tests/vmlinux-kallsyms.c:330
+...
+```
+dso__process_kernel_symbol rewrites the kernel maps here:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/symbol-elf.c#n1378
+which resizes the maps_by_address array causing the maps__for_each_map
+iteration in frame 11 to be iterating over a stale/freed value.
 
-> On Feb 8, 2024, at 10:39, Muchun Song <muchun.song@linux.dev> wrote:
-> =EF=BB=BF
->=20
->> On Feb 5, 2024, at 16:08, Gang Li <gang.li@linux.dev> wrote:
->>=20
->> =EF=BB=BFOn 2024/2/5 15:37, Muchun Song wrote:
->>> Actually, I did not get it. Why the above code cannot work? The above
->>> code already make it serialized in one call, right? What do I miss here?=
+The most correct solutions would be to clone the maps_by_address array
+prior to iteration, or reference count maps_by_address and its size.
+Neither of these solutions particularly appeal, so just reloading the
+maps_by_address and size on each iteration also fixes the problem, but
+possibly causes some maps to be skipped/repeated. I think this is
+acceptable correctness for the performance.
 
->>> Thanks.
->>=20
->> PADATA consists of two distinct functionality:
->>=20
->> One part is `padata_do_multithreaded`, which disregards
->> order and simply divides tasks into several groups for parallel
->> execution. My patch use `padata_do_multithreaded`.
->=20
-> OK. Since all users of PADATA of non-SMP case currently only use padata_do=
-_multithreaded, it=E2=80=99s possible and easy to implement a variant of tha=
-t in non-SMP case. It is not necessary to implement another functionality un=
-less the only user of crypto/pcrypt.c does not depend on SMP in the future, a=
-t least now it=E2=80=99s dependent on SMP.
->=20
-> Thanks.
->=20
->>=20
->> The other part is composed of a set of APIs that, while handling data in
->> an out-of-order parallel manner, can eventually return the data with
->> ordered sequence. Only `crypto/pcrypt.c` use them. I guess these APIs
->> are designed specifically for `crypto/pcrypt.c`.
->> ```
->> padata_alloc
->> padata_alloc_shell
->> padata_do_parallel
->> padata_do_serial
->> padata_free_shell
->> padata_free
->> ```
+Thanks,
+Ian
+
+> Thanks,
+> Namhyung
