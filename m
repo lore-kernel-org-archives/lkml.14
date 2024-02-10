@@ -1,59 +1,60 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D865651016
-	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 17:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E101B5CDFA
+	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 17:10:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707585015; cv=none; b=gc9C5q0eOZeJo0oeOlLZVtZ0QpjViR5SpDoAn2qHEL2In+bfIgyWf2VCIXyt8lzVPP94fIld9deBePgCu/0PfQ8fUgUK1QvMmdq91Rt1z9H6kgjKEkYfgAfGIaSNaKwQ8G/ggrronxR1FyDCNgUZNLgbWkChLxyQvt9Iyq1FtqU=
+	t=1707585018; cv=none; b=m5Si7Ml9Zc9dP74V0HVnEnRM6/dBQ60Cwm2GtPyvtymPj++/vtsLSWZtrojp/gjQt84we8MibiEUb8An+KA3OUkhxCQWwHcP5Ac1OHmM8wzNfEWumqOh5oXiDfEg+GeuGtHtjwnm50gik+dGxIEAfQuzRSHz3gQa/brQ/7DpW/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707585015; c=relaxed/simple;
-	bh=BaU/bP7v133m08+SRbtNQA0dEb7SZt1w/Yj0I4z/vi8=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=sLrtoYwQ9NLoywM8Qb7y7ycZy8tnowrhaem8zV9tpwMB3rk74FJr8SS/5jUBDm7dODG2aFAss00F478lF5o9ERBAa45dJ1t1yqxLFUGB9btip11UcIXGyslv9QxaOAoDD5KEX4yNW7VajHwX7r5M+MmW6OYQyQUELLaGtw5YxLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DWyThwhk; arc=none smtp.client-ip=209.85.208.49
+	s=arc-20240116; t=1707585018; c=relaxed/simple;
+	bh=4Or5VI5ZnZ1ID78niRW0J52lNzSsB1zjEV1fVdr25BM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=WJA75qN0ivwwq8wk3Am6S7YXZRA22cEFnLxX8oDRoQRm0IO9CNfQc//cyIWQI1wS1WJwfDDvB4djvj2kRVoR5PtPIwvdzhEcihzuLodnY89bPbviU2Xtg3bwFDbFjEL5Xi54KqE1tuT9pYkNoqnmro5eLyO/AyBqKezGgyeR+SE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HK+XV/IL; arc=none smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DWyThwhk"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5610c233b95so2150470a12.0
-        for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 09:10:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HK+XV/IL"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a26f73732c5so260069566b.3
+        for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 09:10:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707585012; x=1708189812; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ub3t1C16XKKLVPOgvYEAt5qRjsjAUqaoq3TtQjsnA8Y=;
-        b=DWyThwhk9S/AeiJp2XcUqp3ugX3TBOoCLUA1Fwkc6vHGSwyZspWiSRAoa1RYiMkxo1
-         nGQxO+TRX+KMKfOlHv3ISePZkGV+1fPs4MTRAuSqiueM0ZLJlVPgEGOGp3SSZ2RM2p+g
-         DxSQzh937uwWi51qctypRgX0CGgZDUw0vUlcSBlU23NwG5KyfEyBmNi5mJL5zEOfvVqN
-         FudlJIJEUglFzXOOt0VuQjm6PG7dUtZ55kxhiDoL9s+s6N/QWSVoAW6bNMrdGP5EQOae
-         YSvUS9evpFU88sMRX2P9hpxbyJJbaUAfB/y2PSbuj9LlEcdOpOYW8VcGASuVhwHbb9EO
-         P7mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707585012; x=1708189812;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1707585015; x=1708189815; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Ub3t1C16XKKLVPOgvYEAt5qRjsjAUqaoq3TtQjsnA8Y=;
-        b=GRkNyomPOPtS++hfYzhWE1zyuMWEWN7SElS+0uxKeRZ8WibCNzLS3uhtoAdodDVBv3
-         8QK8iFJi3xW0U/LQnIQXwAp+hHAPRCWlctJJHDIs7Oh4z2DAdJ6Cz3ocbKjDhtx+m1Vc
-         2nrMkKgCFJkmE9zCZhuHCDUr9xjaw2W+NY0h/qGCi+EjbdICqSPOb/AsthEZsTdSE21/
-         tSmLopvzGRXgAAV2xFQwoNiYQtFlKT1PD/ZrMixnZzGhz8Vp38FdvfgOMHCuAij6UUAf
-         uBKvrj5Qoc/lwPg1Xd6M2asrflD73JEfxQjoE1UEq7Cnx26jsI0AFID3WNrXMUgl5ehs
-         RKAQ==
-X-Gm-Message-State: AOJu0YxbrgZSP0mPnuiaOd1DeIs5wNWfzWs7irQ7TqPUcK8HKuPW9zN1
-	g8d692AhdPFDOv35V6mnRD3n82X4Ua1hRD/x30IbDA1Lc7I0WFcK8L5RMlw+8Eg=
-X-Google-Smtp-Source: AGHT+IExF/deVU4o4/K2ms8bjUDjITAx9RfeeX+sCanQBh2dY/Sb0Uw4sJCB71tV0mSzUGyVn7kvqw==
-X-Received: by 2002:a17:906:bc47:b0:a3c:2bfd:1495 with SMTP id s7-20020a170906bc4700b00a3c2bfd1495mr1389894ejv.59.1707585011898;
-        Sat, 10 Feb 2024 09:10:11 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUo3eDpPjMri7X98qBTjTw/GCgFdL055iuYdVbwRL7jqJSxjR0Wa9x1oicDkObOMIDb0OzOApIl+GYIPeIemivemNHEmoD1y52VRa+TxmXk7aFI7/4eAHeEhSyceTAVpsVgN5tlCKLKLmOq8UNSh9PlExAFmW4qH19kfeUtlAwspMikyvwXWXUpFDSWOKt+bfJI7EbgJb1XINT2E0WwQF5MQPfN6BBY5jY70k3+v8xdNUP3N/63/YjP7gZW6O4nUMHAKi0fFmcI99w+YjtTU1Va6sZu8LTQAeWgmCUeNgCAF8csv+EgNbHeVa7MUXc4keHF/aJ3gjwV5KVpn+4xcG8RI7FpgXMLD5FhiRvvLmRriey1oM3EZNmF07hDgunsUpwKLUwNDtFDcvM/gJR3tcNG++O2mCSFRFv8rw==
+        bh=e5eEDZ2SBOr178JyoKUFrLLup1vdc34CTGoZZtEa27Q=;
+        b=HK+XV/IL4rUBseoi2+eMZaQJEAO2rroKPxgKoCqhtIF10BVggwLPT6iTcYvfyYW6K5
+         Jy0gTjmJHhaLfEcC1GgLaD/ni4iNlGlBpHZ9wmTI2dGq3E4rA0WqXypo+AkQ30UXRegR
+         auJ8T7U/BrO+SYEXOFUEXeGGbEX/RgZd3tvbAz21gkx9hiNR7g7jbPSQIf/hRdeZZl8a
+         G1tj8qqPF4oa0DzS5NgJLj3yxDEL2F/+8odft+5FezoKGMyzzFSl4peRJfbG5cWt/rmQ
+         +qXTcEtDOQ2Gl3swek04sfYe47e4O7VHkIC3kn/8KmcxHU48JauDMb2CluoYfHUZjpgZ
+         Hzmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707585015; x=1708189815;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e5eEDZ2SBOr178JyoKUFrLLup1vdc34CTGoZZtEa27Q=;
+        b=LfVMsMEwjmQbgU6IOS6PMNUblgT7Kvt6Kw8pAXSH14JzPn2tMp4aPdi5uPEwg688Ih
+         kV73VMJ2jZcSmvVBcwjoibjLgthGXbh+uijvhRtO+1XPrZkvQs6Q/vL7E7oxfJHwVbHc
+         s4mhOYGdPOnpCHJbpvc12vruUxISXAc4CIfSHWSVXhMlZwdC7oTsPrl8fYxbKvfc4wua
+         7pgcq5NKzQC1cL87snQ8fYFl6zJnm9iBA8C2iwvYzjLmEZBVQY/HbJnymz/KpFaQyXzT
+         TW0qtcWN4okIvClvfAh9DrRBaJVsY9/sgwiKEmW5smStDh7LQ2edd51xZFdJDhc4T7Ku
+         bRqg==
+X-Gm-Message-State: AOJu0YxLyjDeXR+riByWrCmHNYlPkgYAKh1ORgLNp9Cp6C58LGfio42m
+	XnU8WVdePD+1Ce2/5X97WDX8VR83ldjrBfjT2IwPKp+6Jb3Vh/Y79cJWwBNgiDc=
+X-Google-Smtp-Source: AGHT+IGmyojuJZDgZJxKnYU0KbK8pKpOpVR06QrZo9a8qqVps7HLs7Dxic3PZJESurg3B6iHW103MQ==
+X-Received: by 2002:a17:906:af42:b0:a3b:d9bd:be7e with SMTP id ly2-20020a170906af4200b00a3bd9bdbe7emr1514696ejb.76.1707585015036;
+        Sat, 10 Feb 2024 09:10:15 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVnMvj5sl6aewT1D7//JM+3l1Jkpvwv0WkYZKzK5xSsmO3amS7nMfzjqGRrebRoT7aiUuPuijxYQre3qmY1JhLOWU1O9Gp6H9YMkVoczEMZUZnG+8MBVU+FTiQUtK3t8djI0vb6FKPEeXkplXXRikKAZFutdREmxGrBjqjIscBkzaFoWs9f0MqyCHaNyI1zYXDn41JzQqW0i9V3M3nZaMTgdkVVKDwZl4gsZJulSM87Sc/cXrjFrG1SuhXuWmfw4pOE5Um0ZO+1Q9W8RTZmdenBxDP2oGX1YAggDVDtVtZKC0cwpK2Sxw2YTBhoOA5iEnC1MNy/bHLfpFdUkuk9qirJ7GxUm9VzGb1lzWALQYN5na6TUw6N+kuuiOd3TVyeCA==
 Received: from [127.0.1.1] (abyl12.neoplus.adsl.tpnet.pl. [83.9.31.12])
-        by smtp.gmail.com with ESMTPSA id lg25-20020a170907181900b00a3c1e1ca800sm973242ejc.11.2024.02.10.09.10.10
+        by smtp.gmail.com with ESMTPSA id lg25-20020a170907181900b00a3c1e1ca800sm973242ejc.11.2024.02.10.09.10.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 Feb 2024 09:10:11 -0800 (PST)
+        Sat, 10 Feb 2024 09:10:14 -0800 (PST)
 From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Subject: [PATCH v2 0/3] Qualcomm PCIe RC shutdown & reinit
-Date: Sat, 10 Feb 2024 18:10:04 +0100
-Message-Id: <20240210-topic-8280_pcie-v2-0-1cef4b606883@linaro.org>
+Date: Sat, 10 Feb 2024 18:10:06 +0100
+Subject: [PATCH v2 2/3] PCI: qcom: Read back PARF_LTSSM register
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,9 +63,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAOytx2UC/x3MQQqAIBBA0avErBOmQUG7SkSEjTUbE40IpLsnL
- d/i/wqFs3CBsauQ+ZYiZ2ygvgN/rHFnJVszEJJGGlBdZxKvLFlckhdW3ulg7GAskoNWpcxBnv8
- 4ze/7ATcsVpVhAAAA
+Message-Id: <20240210-topic-8280_pcie-v2-2-1cef4b606883@linaro.org>
+References: <20240210-topic-8280_pcie-v2-0-1cef4b606883@linaro.org>
+In-Reply-To: <20240210-topic-8280_pcie-v2-0-1cef4b606883@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
  Lorenzo Pieralisi <lpieralisi@kernel.org>, 
@@ -73,38 +74,31 @@ To: Bjorn Andersson <andersson@kernel.org>,
  Philipp Zabel <p.zabel@pengutronix.de>
 Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Bjorn Andersson <quic_bjorande@quicinc.com>
+ Konrad Dybcio <konrad.dybcio@linaro.org>
 X-Mailer: b4 0.13-dev-0438c
 
-This series implements shutdown & reinitialization of the PCIe RC on
-system suspend. Tested on 8280-crd.
+To ensure write completion, read the PARF_LTSSM register after setting
+the LTSSM enable bit before polling for "link up".
 
-Changes in v2:
-* Rebase
-* Get rid of "Cache last icc bandwidth", use icc_enable instead
-* Don't permanently assert reset on clk enable fail in "Reshuffle reset.."
-* Drop fixes tag in "Reshuffle reset.."
-* Improve commit messages of "Reshuffle reset.." and "Implement RC shutdown.."
-* Only set icc tag on RPMh SoCs
-* Pick up rb
-Link to v1: https://lore.kernel.org/linux-arm-msm/20231227-topic-8280_pcie-v1-0-095491baf9e4@linaro.org/
-
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 ---
-Konrad Dybcio (3):
-      PCI: qcom: reshuffle reset logic in 2_7_0 .init
-      PCI: qcom: Read back PARF_LTSSM register
-      PCI: qcom: properly implement RC shutdown/power up
+ drivers/pci/controller/dwc/pcie-qcom.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- drivers/pci/controller/dwc/Kconfig     |   1 +
- drivers/pci/controller/dwc/pcie-qcom.c | 178 +++++++++++++++++++++++++--------
- 2 files changed, 135 insertions(+), 44 deletions(-)
----
-base-commit: 445a555e0623387fa9b94e68e61681717e70200a
-change-id: 20240210-topic-8280_pcie-c94f58158029
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index cbde9effa352..6a469ed213ce 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -539,6 +539,7 @@ static void qcom_pcie_2_3_2_ltssm_enable(struct qcom_pcie *pcie)
+ 	val = readl(pcie->parf + PARF_LTSSM);
+ 	val |= LTSSM_EN;
+ 	writel(val, pcie->parf + PARF_LTSSM);
++	readl(pcie->parf + PARF_LTSSM);
+ }
+ 
+ static int qcom_pcie_get_resources_2_3_2(struct qcom_pcie *pcie)
 
-Best regards,
 -- 
-Konrad Dybcio <konrad.dybcio@linaro.org>
+2.40.1
 
