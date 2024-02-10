@@ -1,55 +1,54 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-lf1-f65.google.com (mail-lf1-f65.google.com [209.85.167.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD0060BB8
-	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 23:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E70760ED8
+	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 23:50:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707609053; cv=none; b=abckQW7o9xHfBjbo4iaQY3qgfUdzKCDGA20k5Gs6/os5c84i45L5DFv9MlKlgyYgUxcd7hD2oL6L3NEiVYxsceozyQbDPv9ROX9YyC1UzwAkSrsJSzDgXpR2mNAAVsZOV/v3N9wCgW88MDydzSfYrCwiXXKfewW1iaxEMBQf1vc=
+	t=1707609057; cv=none; b=TX2LhWQ3lZbVgCBPhX88m8ILwAAjVac9oz5x64CHnfAfJ9qGl1cZHxkSAsHLuGPLkVa/Cdyk3qo2VT/8YROZbdUe9jvU+z1PRHlgiP8rcOxQFal5yeZ9/w9TGkYo32Lh2uesW7CcJkJ5/eQLuCdgMeTRk/dB6t9UTcGSu+fz5q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707609053; c=relaxed/simple;
-	bh=YbEEGz+x4DGalh89sTCHjKKTuGvWKdWzObsdPhFL1wQ=;
+	s=arc-20240116; t=1707609057; c=relaxed/simple;
+	bh=ohE6vU5kodAgmE00a94Fey2CKuwVGGZlFNzAOgDt1Ro=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GtQiTygtl2sUtW1hf2Ua1D0ErCMZYjYgp4I2sC0Xq4OT/CHawbEAkhBeXa4ICxTp+wcw2yQRKmhJ77Ar43JpJKvEPqoFyMMT3piWa8bFbaeNZPY7w45uYCa1El4nJiLjksTtad3BrCyfujyP/TLCfb4J2mPeSotZKgXfU4dYHdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NEc68OHh; arc=none smtp.client-ip=209.85.167.53
+	 MIME-Version:Content-Type; b=J2OWdD0ymtW0Oecbh65ZvhkuagMFeT/nb1zpVH0ee1+zIUdOVCn2+EAH3u8HEP+zQHWaqVgrYZPqmI9tA18V3IUZYNX0UPFMk89Uy2JISiu4XrUAyy2JRIYqaNF2fW/pYDZaL/4rlU4bYBCCGRxinj0k89il5l93Edckg92BntQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FEuo4wYp; arc=none smtp.client-ip=209.85.167.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NEc68OHh"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-511531f03f6so2471383e87.0
-        for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 15:50:51 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FEuo4wYp"
+Received: by mail-lf1-f65.google.com with SMTP id 2adb3069b0e04-51167e470f7so2650927e87.2
+        for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 15:50:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707609049; x=1708213849; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1707609054; x=1708213854; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VfKj9NP/58mMOcfaMc+gvbzTB/hMk+FrCsCCziFkNU8=;
-        b=NEc68OHhXtTFO9xYinVIt81NO9lLr6U0JS87MQ1dGhZUiVuJmoX3p81Jy7Q2nZApXS
-         NR0FnMH29PvJN0IE9PyPYu+1k7VVfcIOCoYXyS1v88XafT98mFaupl5spRmLtK/TCvJP
-         eEbt/R4YdKUUueytTUHchHue6CMDOtAZ5hY78=
+        bh=lhSJOrwG0vPx3/FWw5xBrBZ2OkHe0Kqn1x7V968tGh8=;
+        b=FEuo4wYpS8rla2cWJKPp6UE+l+B9u8gvZxjSDlRiDTuWeW6OgPIn0R4nY3Cb8uHKXz
+         UJGlrg8CVeHH3PapjJcDzL0qTss4+4D4I6bxPPLByBAbxRIqgFi38ptVWH2LnFETxvEB
+         3xb/g8fZShy9CBDcTSlc5lhB7dWlP6yNF0Gw8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707609049; x=1708213849;
+        d=1e100.net; s=20230601; t=1707609054; x=1708213854;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VfKj9NP/58mMOcfaMc+gvbzTB/hMk+FrCsCCziFkNU8=;
-        b=AO5obeQEHMZuBqIswlHoZ8DufvI5nO0CYLOWGLPoCV5CDFluqXCLjmUwuFBzSp6Ep2
-         d4jJDE8U6DFHliFdpatqBmZwoWcZCowULxVxV70KxKOt5qzc9vGe0gTXAQ3tl4oCvsya
-         2sSeQUcORo2J8poYHmw07fenYX6wmGNVddR9Zq22y8f8LDp6pQUK6rFciETxJr2Cg2Y8
-         dzg2MmytJtV6+2/9RFGKRGUsPAu+uSresnusTIHa1E8w1aYSSEzeokkZlw7vfm6dx7Yz
-         LKxVxB12aQqLp9imcPokCmI33UxUrNDZjIDMCNfp8NZlIThtSdi3jfxzEU3ZY0gdAX26
-         ELdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVv5VOnK1IitUVv0Ky+pTzOWnPA048Y0eUb3BvXeQlgHirEf4MFLxBsBn9w3qYwSj3MNqa4YiDvxg9Md07EDDRi2wWstPlo0++Ynlrt
-X-Gm-Message-State: AOJu0YyR/GNSZvyUfSgqy5qrvZPA2WtCAQeadg9xKda+yuy4Fs4IVqtQ
-	bQ8+o2nt2u6EgXm4qqLKFlDonEx9M3kJUmezmo729gWeYPM4t2WuaK9/pvse
-X-Google-Smtp-Source: AGHT+IEMeYfZnOf0yaY+29yzBa+kP9IAL7RSPWIsbe26MGx1+KFL1LNJu7LVSCR4N5UhimZdw7e8gg==
-X-Received: by 2002:a05:6512:3494:b0:511:29ee:83b8 with SMTP id v20-20020a056512349400b0051129ee83b8mr1734783lfr.62.1707609049402;
-        Sat, 10 Feb 2024 15:50:49 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUnsHsChtMY0XIdk/Tmra55cNHHohds/OiiSOJLv0iBqWdC10K+YsgbEEMMOPsB3XJbsSI9NoifHRtdkIOnt8nhTBwoEUIWQFELx7VPy3kr5rvDa+HIrOhzWFGXASHJahCFj0felYnPLIDmbBHjsuw4R+X8Nu4c46DhDTT2LUs3rfA/DSm8yihWmkKno1ZXluMLqdlRVrDe6bZpV1oSI7QTYxoc0MazdDiSEldCMtbJV/DvNht6h8Xp1dF6wX9yMWqM62Pu6mk4LpSR1gsGOilSy5C+01lrHoW3a91i/dKJKjiUp+dZaPrF9tBlkm2D8fUGqo2EwsvunTwLZy5Hsmt8M1HhHmmuZr1mjoMoWl/vatS3+R2Cfysoq2629ZIKOEim1xDUh5UXf595ug8JUu/FafXFRmCUHKu06nCNct70PsSKiG9t9KeFGnpsLqhIG8Qrye0gEat0A853slueNJ2Tkv/xYPB/a99MpnFX+lIumz1pJNF3KcwDCJsOSns0/yTgleI8cowwpjn5w079sIIdynDazFUZ8Pnz5uGxq+L1uA/SGRiXhNIATE1qNVl6yvmkqEiOWROuoi9ScBWc1VxBYjPt8vnCtUPojnMyIK8p+RKKig==
+        bh=lhSJOrwG0vPx3/FWw5xBrBZ2OkHe0Kqn1x7V968tGh8=;
+        b=VxK6WyqiGMjIyrT0laExWD/0KJ/plncE43mIyE1A5663flwVbpTV4T4ul2bpgDw7z4
+         dyQLP1ngvae6diZMoDhR8npSRKIC/eC8iE938fEL/zoO3VCOxd/BcW0RVuH1bylZAV/s
+         wWqczo9vLngQaWarnWnn704aODYyvAkdgAKOxhajT/5ySoaF8ZiaTOfrvEWDHI5ANehU
+         4HmCo5Amgjcsc3xOX1/SY8Axo5hBC3/hxpEZMjUHSMbPEs28PpA6y9rk04S7LTDV0o5B
+         KJXDUr+GALU9jcP77HrNUF/KTg6gda2uoIG0gnUC5GWGPDt274TKM1jSfw0oAWVa7ATe
+         8bQw==
+X-Gm-Message-State: AOJu0Yx9Xd7/+jFSzTzhdjRrHJGQhs/3JjTgiofFlyX+4rNzMqm8okEj
+	WN5VLr/Nk9jrIwNkCOdySR/8MKZbk99dMY2QHFQD0bEgymkg2S88YNtaMmkm
+X-Google-Smtp-Source: AGHT+IGu6Qu/0GalhQgiRzfCPrYXdbSwq+Pd+Xbv4UZUgM2z0+0cmIas7OsRtYtMidkr5bXpoZi+yw==
+X-Received: by 2002:a05:6512:3f7:b0:511:8697:c66a with SMTP id n23-20020a05651203f700b005118697c66amr741665lfq.31.1707609054364;
+        Sat, 10 Feb 2024 15:50:54 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWjjmGHSLBbQRDcbxOiGOhju/B6TdFQLxsbySRXM0XJrf6IuBtPEYUoAyCJRsZuLnU7z5N0XkTmoXGNIU8rd1qCHUIICWd36lpwMMMTdFUURd9HXm7PE5jZUE9Wx7I55RAYsBoURRS/W//1kRudDG7P4HM87sWZcAVUd50kYCXRVxZHh2TmhYQR1s9SRAt+/VEAg8bGBj6wwl6GmMKkZTBUTfgjj8L+le0lQ3v819uY5fIUcQnHBK0lT/60BddaYVyZnhtlghfx+Bs4rLDgfi1N88gtJO9Tkx6YIhBVs7sfX3MaEXehzTHyCdOxZ4xXi38lrYwAqKNq8fCGaRbrS6DmSZ7pLr9bKU6PxttxHRJ6j9dcExuPuvxeUKmiQfKly8mzwtUEMOWe2R8dcWuSChVA3jZmP9OmOagWGyab7CzMOD7WfxEoRUa7Lv21gmgM/uqwN12epL/6kvVJ8Avz+0OvQZVqhJKCRUV86Njn3M5eFsj8g08iQaSNcVcOx4A2lyMOWAdeSqI17oJ26LUzWUfXzonfR+V7QR1nrT4ubGCX6jrElNaX9t+SFwcxaHnvgCZ2RzTn6qMigZsvUxZq9lNjqZfMUFrzc8zxZ5ki+G3PjACF2Q==
 Received: from ukaszb-l.roam.corp.google.com (alfa56.extreme-net.one.pl. [213.77.89.56])
-        by smtp.gmail.com with ESMTPSA id o27-20020a056512051b00b0051179ae1846sm365561lfb.280.2024.02.10.15.50.47
+        by smtp.gmail.com with ESMTPSA id o27-20020a056512051b00b0051179ae1846sm365561lfb.280.2024.02.10.15.50.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 Feb 2024 15:50:49 -0800 (PST)
+        Sat, 10 Feb 2024 15:50:54 -0800 (PST)
 From: =?UTF-8?q?=C5=81ukasz=20Bartosik?= <ukaszb@chromium.org>
 To: Jason Baron <jbaron@akamai.com>,
 	Jim Cromie <jim.cromie@gmail.com>,
@@ -71,9 +70,9 @@ Cc: Guenter Roeck <groeck@google.com>,
 	Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
 	linux-kernel@vger.kernel.org,
 	upstream@semihalf.com
-Subject: [PATCH v4 12/39] dyndbg: handle [+T]:buf_name.flags grammar
-Date: Sun, 11 Feb 2024 00:49:42 +0100
-Message-ID: <20240210235009.2405808-13-ukaszb@chromium.org>
+Subject: [PATCH v4 15/39] dyndbg: update selection of trace destination
+Date: Sun, 11 Feb 2024 00:49:45 +0100
+Message-ID: <20240210235009.2405808-16-ukaszb@chromium.org>
 X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
 In-Reply-To: <20240210235009.2405808-1-ukaszb@chromium.org>
 References: <20240210235009.2405808-1-ukaszb@chromium.org>
@@ -86,406 +85,74 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add processing to handle the new [+T]:trace_name.flags grammar.
+If callsite's current trace destination is '0' and user provided T flag
+without trace destination name then set callsite's trace destination to
+default trace destination. If a user provided trace destination name
+:trace_dest_name with or without T flag then set callsite's trace
+destination to the provided name. Otherwise keep callsite's current
+trace destination.
 
-The name provided sets selected callsites' trace-destinations:
-
-"0"  - pr_debug()s are written to prdbg and devdbg trace events.
-name - pr_debug()s are written to named trace instance,
-       if its already been open'd, else err.
-
-A user can provide trace destination name by following T flag with
-":" and trace destination name, for example:
-
-echo "module thunderbolt =pT:tbt" > <debugfs>/dynamic_debug/control
-echo "module thunderbolt =lT:tbt.p" > <debugfs>/dynamic_debug/control
-
-Or user can provide only ":" and trace destination name, for example:
-
-echo "module thunderbolt =p:tbt" > <debugfs>/dynamic_debug/control
-echo "module thunderbolt =l:tbt.p" > <debugfs>/dynamic_debug/control
-
-In the former examples trace destination is set (":tbt") and write of
-pr_debug()s is enabled ("T"). In the latter examples only trace
-destination is set (":tbt") for later use.
-
-When T flag with argument is followed by other flag then the next
-flag has to be preceded with ".".
-
-When both T flag and ":" are provided together then ":" has
-to follow T flag in the form of "T:".
-
-Use of "." as a separator between flags allows a later patch to treat
-',' as a space, which mostly eliminates the need to quote query/rules.
-And this in turn avoids quoting hassles:
-
-  modprobe test_dynamic_debug dyndbg=class,D2_CORE,+p
-
-It is particularly good for passing boot-args into test-scripts.
-
-  vng -p 4 -v \
-  -a test_dynamic_debug.dyndbg=class,D2_CORE,+p
+The change main purpose is to preserve trace destination names (different
+from '0') set previously by a user which can be later enabled with
+'label' keyword.
 
 Signed-off-by: Łukasz Bartosik <ukaszb@chromium.org>
-Co-developed-by: Jim Cromie <jim.cromie@gmail.com>
-Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 ---
- lib/dynamic_debug.c | 201 +++++++++++++++++++++++++++++++++++---------
- 1 file changed, 162 insertions(+), 39 deletions(-)
+ lib/dynamic_debug.c | 28 ++++++++++++++++++++++------
+ 1 file changed, 22 insertions(+), 6 deletions(-)
 
 diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 6668f265f2c3..8a81356c52b3 100644
+index f91c51234456..172497954e00 100644
 --- a/lib/dynamic_debug.c
 +++ b/lib/dynamic_debug.c
-@@ -72,6 +72,7 @@ struct ddebug_iter {
- struct flag_settings {
- 	unsigned int flags;
- 	unsigned int mask;
-+	unsigned int trace_dst;
- };
- 
- #define DD_OPEN_CMD	"open"
-@@ -84,11 +85,17 @@ struct dd_private_tracebuf {
- 	int use_cnt;
- };
- 
-+#define DST_NOT_SET    (-1)
-+
- /*
-- * Trace destination value 0 is reserved for writing
-- * debug logs to trace events (prdbg, devdbg), that
-- * is why buf[0] is not used and we traverse bitmap
-- * starting from bit 1 (bit 0 is also not used).
-+ * When trace is enabled (T flag is set) and trace destination field
-+ * value is in range [1..63] then debug logs will be written to trace
-+ * instance whose name is stored in buf[trace destination].name, e.g.
-+ * when trace destination value is 2 and buf[2].name is set to tbt then
-+ * debug logs will be written to <debugfs>/tracing/instances/tbt.
-+ * On the other hand trace destination value 0 is reserved for writing
-+ * debug logs to trace events (prdbg, devdbg), that is why buf[0] is not
-+ * used and we traverse bitmap starting from bit 1 (bit 0 is also not used).
-  */
- struct dd_tracebuf_tbl_info {
- 	struct dd_private_tracebuf buf[TRACE_DST_LAST];
-@@ -126,6 +133,81 @@ static inline unsigned int get_trace_dst(const struct _ddebug *desc)
- 	return desc->ctrl.trace_dst;
+@@ -480,6 +480,27 @@ void update_tr_dst(const struct _ddebug *desc, const struct dd_ctrl *nctrl)
+ 		trc_tbl.buf[ndst].use_cnt++;
  }
  
-+static int find_tr_instance(const char *name)
-+{
-+	int idx = 1;
-+
-+	for_each_set_bit_from(idx, trc_tbl.bmap, trc_tbl.bmap_size)
-+		if (!strcmp(trc_tbl.buf[idx].name, name))
-+			return idx;
-+
-+	return -ENOENT;
-+}
-+
-+static const
-+char *read_colon_args(const char *str, struct flag_settings *modifiers)
-+{
-+	int len, idx = 0;
-+	char *end;
-+
-+	/* Check if trace destination was already set */
-+	if (modifiers->trace_dst != DST_NOT_SET)
-+		return NULL;
-+	/*
-+	 * When both T flag and ':' are provided then the T flag
-+	 * has to be followed by ':' in the form of 'T:'.
-+	 */
-+	if (modifiers->flags & _DPRINTK_FLAGS_TRACE &&
-+	    *(str-1) != 'T')
-+		return NULL;
-+
-+	if (strchr(str, 'T'))
-+		return NULL;
-+
-+	str++;
-+	end = strchr(str, '.');
-+	if (end) {
-+		len = end - str;
-+		*end = '\0';
-+	} else
-+		len = strlen(str);
-+	len -= 1;
-+
-+	/* destination trace events */
-+	if (!strcmp(str, DD_TR_EVENT))
-+		goto end;
-+
-+	idx = find_tr_instance(str);
-+	if (idx < 0)
-+		return NULL;
-+end:
-+	modifiers->trace_dst = idx;
-+	return end ? end : str + len;
-+}
 +
 +/*
-+ * Maximum number of characters which are being displayed when
-+ * printing trace instance name, longer names are truncated
++ * Selects trace destination. If callsite's current trace destination is '0'
++ * and user provided T flag without trace destination name then set callsite's
++ * trace destination to default trace destination. If a user provided trace
++ * destination name :trace_dest_name with or without T flag then set callsite's
++ * trace destination to the provided name. Otherwise keep callsite's current
++ * trace destination.
 + */
-+#define FLAG_COLON_ARG_LEN 24
-+
-+static char *show_colon_args(struct dd_ctrl *ctrl, char *p)
++static int select_tr_dst(struct flag_settings *modifiers, int cur_dst)
 +{
-+	int n, len = FLAG_COLON_ARG_LEN;
-+	const char *str;
++	if (!cur_dst && modifiers->flags & _DPRINTK_FLAGS_TRACE &&
++	    modifiers->trace_dst == DST_NOT_SET)
++		return trc_tbl.default_dst;
 +
-+	str = !ctrl->trace_dst ? DD_TR_EVENT :
-+	      trc_tbl.buf[ctrl->trace_dst].name;
++	if (modifiers->trace_dst >= 0)
++		return modifiers->trace_dst;
 +
-+	n = snprintf(p, len, "%s", str);
-+	if (n >= len) {
-+		strscpy(&p[len-4], "...", 4);
-+		n = len - 1;
-+	}
-+
-+	return n < 0 ? p : p + n;
++	return cur_dst;
 +}
 +
- /* Return the path relative to source root */
- static inline const char *trim_prefix(const char *path)
+ static int ddebug_parse_cmd(char *words[], int nwords)
  {
-@@ -137,9 +219,28 @@ static inline const char *trim_prefix(const char *path)
- 	return path + skip;
- }
- 
--static const struct { unsigned flag:8; char opt_char; } opt_array[] = {
-+typedef const char* (*read_flag_args_f)(const char *, struct flag_settings *);
-+typedef char* (*show_flag_args_f)(struct dd_ctrl *, char *);
-+
-+static const struct
-+{
-+	unsigned flag:8;
-+	char opt_char;
-+	bool always_show;
-+	read_flag_args_f read_args;
-+	show_flag_args_f show_args;
-+} opt_array[] = {
- 	{ _DPRINTK_FLAGS_PRINTK, 'p' },
- 	{ _DPRINTK_FLAGS_TRACE, 'T' },
-+	/*
-+	 * We don't reserve a flag for ':'. The ':' is used to provide
-+	 * trace destination name and when provided together with T flag
-+	 * it enables output to the trace destination. When ':' is provided
-+	 * without T flag then it sets trace destination for a callsite for
-+	 * future use. When both T flag and ':'are provided together then
-+	 * ':' has to follow T flag in the form of 'T:'.
-+	 */
-+	{ _DPRINTK_FLAGS_NONE, ':', true, read_colon_args, show_colon_args },
- 	{ _DPRINTK_FLAGS_INCL_MODNAME, 'm' },
- 	{ _DPRINTK_FLAGS_INCL_FUNCNAME, 'f' },
- 	{ _DPRINTK_FLAGS_INCL_SOURCENAME, 's' },
-@@ -148,22 +249,31 @@ static const struct { unsigned flag:8; char opt_char; } opt_array[] = {
- 	{ _DPRINTK_FLAGS_NONE, '_' },
- };
- 
--struct flagsbuf { char buf[ARRAY_SIZE(opt_array)+1]; };
-+struct ctrlbuf { char buf[ARRAY_SIZE(opt_array)+FLAG_COLON_ARG_LEN+1]; };
- 
- /* format a string into buf[] which describes the _ddebug's flags */
--static char *ddebug_describe_flags(unsigned int flags, struct flagsbuf *fb)
-+static char *ddebug_describe_ctrl(struct dd_ctrl *ctrl, struct ctrlbuf *cb)
- {
--	char *p = fb->buf;
-+	show_flag_args_f show_args = NULL;
-+	char *p = cb->buf;
- 	int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(opt_array); ++i)
--		if (flags & opt_array[i].flag)
-+		if (ctrl->flags & opt_array[i].flag ||
-+		    opt_array[i].always_show) {
-+			if (show_args)
-+				*p++ = '.';
- 			*p++ = opt_array[i].opt_char;
--	if (p == fb->buf)
-+			show_args = opt_array[i].show_args;
-+			if (show_args)
-+				p = show_args(ctrl, p);
-+		}
-+
-+	if (p == cb->buf)
- 		*p++ = '_';
- 	*p = '\0';
- 
--	return fb->buf;
-+	return cb->buf;
- }
- 
- #define vnpr_info(lvl, fmt, ...)				\
-@@ -221,17 +331,6 @@ static bool dd_good_trace_name(const char *str)
- 	return true;
- }
- 
--static int find_tr_instance(const char *name)
--{
--	int idx = 1;
--
--	for_each_set_bit_from(idx, trc_tbl.bmap, trc_tbl.bmap_size)
--		if (!strcmp(trc_tbl.buf[idx].name, name))
--			return idx;
--
--	return -ENOENT;
--}
--
- static int handle_trace_open_cmd(const char *arg)
- {
- 	struct dd_private_tracebuf *buf;
-@@ -383,7 +482,7 @@ static struct ddebug_class_map *ddebug_find_valid_class(struct ddebug_table cons
-  * Search the tables for _ddebug's which match the given `query' and
-  * apply the `flags' and `mask' to them.  Returns number of matching
-  * callsites, normally the same as number of changes.  If verbose,
-- * logs the changes.  Takes ddebug_lock.
-+ * logs the changes.
-  */
- static int ddebug_change(const struct ddebug_query *query,
- 			 struct flag_settings *modifiers)
-@@ -391,13 +490,12 @@ static int ddebug_change(const struct ddebug_query *query,
- 	int i;
- 	struct ddebug_table *dt;
- 	unsigned int nfound = 0;
-+	struct ctrlbuf cbuf, nbuf;
- 	struct dd_ctrl nctrl = {0};
--	struct flagsbuf fbuf, nbuf;
- 	struct ddebug_class_map *map = NULL;
- 	int __outvar valid_class;
- 
- 	/* search for matching ddebugs */
--	mutex_lock(&ddebug_lock);
- 	list_for_each_entry(dt, &ddebug_tables, link) {
- 
- 		/* match against the module name */
-@@ -458,7 +556,8 @@ static int ddebug_change(const struct ddebug_query *query,
+ 	if (nwords != 1)
+@@ -590,8 +611,7 @@ static int ddebug_change(const struct ddebug_query *query,
  			nfound++;
  
  			nctrl.flags = (get_flags(dp) & modifiers->mask) | modifiers->flags;
--			if (!memcmp(&nctrl, get_ctrl(dp), sizeof(struct dd_ctrl)))
-+			nctrl.trace_dst = modifiers->trace_dst;
-+			if (!memcmp(&nctrl, get_ctrl(dp), sizeof(nctrl)))
+-			nctrl.trace_dst = modifiers->trace_dst == DST_NOT_SET ?
+-				get_trace_dst(dp) : modifiers->trace_dst;
++			nctrl.trace_dst = select_tr_dst(modifiers, get_trace_dst(dp));
+ 			if (!memcmp(&nctrl, get_ctrl(dp), sizeof(nctrl)))
  				continue;
  #ifdef CONFIG_JUMP_LABEL
- 			if (get_flags(dp) & _DPRINTK_FLAGS_ENABLED) {
-@@ -471,13 +570,12 @@ static int ddebug_change(const struct ddebug_query *query,
- 			v4pr_info("changed %s:%d [%s]%s %s => %s\n",
- 				  trim_prefix(dp->filename), dp->lineno,
- 				  dt->mod_name, dp->function,
--				  ddebug_describe_flags(get_flags(dp), &fbuf),
--				  ddebug_describe_flags(nctrl.flags, &nbuf));
-+				  ddebug_describe_ctrl(&dp->ctrl, &cbuf),
-+				  ddebug_describe_ctrl(&nctrl, &nbuf));
- 			update_tr_dst(dp, &nctrl);
- 			set_ctrl(dp, &nctrl);
- 		}
+@@ -881,10 +901,6 @@ static int ddebug_parse_flags(const char *str, struct flag_settings *modifiers)
+ 		break;
  	}
--	mutex_unlock(&ddebug_lock);
  
- 	if (!nfound && verbose)
- 		pr_info("no matches for query\n");
-@@ -698,6 +796,7 @@ static int ddebug_parse_query(char *words[], int nwords,
-  */
- static int ddebug_parse_flags(const char *str, struct flag_settings *modifiers)
- {
-+	read_flag_args_f read_args;
- 	int op, i;
- 
- 	switch (*str) {
-@@ -716,6 +815,12 @@ static int ddebug_parse_flags(const char *str, struct flag_settings *modifiers)
- 		for (i = ARRAY_SIZE(opt_array) - 1; i >= 0; i--) {
- 			if (*str == opt_array[i].opt_char) {
- 				modifiers->flags |= opt_array[i].flag;
-+				read_args = opt_array[i].read_args;
-+				if (read_args) {
-+					str = read_args(str, modifiers);
-+					if (!str)
-+						return -EINVAL;
-+				}
- 				break;
- 			}
- 		}
-@@ -724,7 +829,7 @@ static int ddebug_parse_flags(const char *str, struct flag_settings *modifiers)
- 			return -EINVAL;
- 		}
- 	}
--	v3pr_info("flags=0x%x\n", modifiers->flags);
-+	v3pr_info("flags=0x%x, trace_dest=0x%x\n", modifiers->flags, modifiers->trace_dst);
- 
- 	/* calculate final flags, mask based upon op */
- 	switch (op) {
-@@ -747,7 +852,7 @@ static int ddebug_parse_flags(const char *str, struct flag_settings *modifiers)
- 
- static int ddebug_exec_query(char *query_string, const char *modname)
- {
--	struct flag_settings modifiers = {};
-+	struct flag_settings modifiers = { .trace_dst = DST_NOT_SET };
- 	struct ddebug_query query = {};
- #define MAXWORDS 9
- 	int nwords, nfound;
-@@ -763,20 +868,38 @@ static int ddebug_exec_query(char *query_string, const char *modname)
- 	if (is_dd_trace_cmd(words[0]))
- 		return ddebug_parse_cmd(words, nwords-1);
- 
--	/* check flags 1st (last arg) so query is pairs of spec,val */
--	if (ddebug_parse_flags(words[nwords-1], &modifiers)) {
--		pr_err("flags parse failed\n");
--		return -EINVAL;
--	}
- 	if (ddebug_parse_query(words, nwords-1, &query, modname)) {
- 		pr_err("query parse failed\n");
- 		return -EINVAL;
- 	}
-+
-+	/*
-+	 * Both ddebug_parse_flags and ddebug_change have to be run
-+	 * with locking because ddebug_parse_flags->read_T_args verifies
-+	 * if a requested trace instance is opened. Next ddebug_change
-+	 * sets the requested trace instance as output for debug logs of
-+	 * callsite(s) which matched a query. Because ddebug_proc_write
-+	 * function can be called concurrently then without locking we
-+	 * could for example run into a scenario where ddebug_change uses
-+	 * a trace instance which is already closed.
-+	 */
-+	mutex_lock(&ddebug_lock);
-+
-+	/* check flags 1st (last arg) so query is pairs of spec,val */
-+	if (ddebug_parse_flags(words[nwords-1], &modifiers)) {
-+		pr_err("flags parse failed\n");
-+		goto err;
-+	}
-+
- 	/* actually go and implement the change */
- 	nfound = ddebug_change(&query, &modifiers);
--	vpr_info_dq(&query, nfound ? "applied" : "no-match");
- 
-+	mutex_unlock(&ddebug_lock);
-+	vpr_info_dq(&query, nfound ? "applied" : "no-match");
- 	return nfound;
-+err:
-+	mutex_unlock(&ddebug_lock);
-+	return -EINVAL;
- }
- 
- /* handle multiple queries in query string, continue on error, return
-@@ -1466,7 +1589,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
- {
- 	struct ddebug_iter *iter = m->private;
- 	struct _ddebug *dp = p;
--	struct flagsbuf flags;
-+	struct ctrlbuf cbuf;
- 	char const *class;
- 
- 	if (p == SEQ_START_TOKEN) {
-@@ -1478,7 +1601,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
- 	seq_printf(m, "%s:%u [%s]%s =%s \"",
- 		   trim_prefix(dp->filename), dp->lineno,
- 		   iter->table->mod_name, dp->function,
--		   ddebug_describe_flags(get_flags(dp), &flags));
-+		   ddebug_describe_ctrl(&dp->ctrl, &cbuf));
- 	seq_escape_str(m, dp->format, ESCAPE_SPACE, "\t\r\n\"");
- 	seq_puts(m, "\"");
+-	if (modifiers->flags & _DPRINTK_FLAGS_TRACE &&
+-	    modifiers->trace_dst == DST_NOT_SET)
+-		modifiers->trace_dst = trc_tbl.default_dst;
+-
+ 	v3pr_info("flags=0x%x mask=0x%x, trace_dest=0x%x\n",
+ 		  modifiers->flags, modifiers->mask, modifiers->trace_dst);
  
 -- 
 2.43.0.687.g38aa6559b0-goog
