@@ -1,75 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932B041A82;
-	Sat, 10 Feb 2024 17:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E19D29CEF;
+	Sat, 10 Feb 2024 17:55:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707587262; cv=none; b=KfnFaFZnCIL7AYZniKVKaYb8wx7kVQhXSuOz7XZNNJ/yvYVgCbyGo9YSNi6WezjNFnixJsbXzrafsW8XjuL9b6NagBg3LP66usQ3ZtmNnMJZUhd29oEZpioHa7DCSrmqIEZYstks2eulLqS1n/Mca+QWOxImIvNbb/G21XUyL4o=
+	t=1707587731; cv=none; b=SdqCpwEBLHGlBPiFzPjl7YkRgU+5vquVYOLn/YDQKrDx7bW1GrXJ9xIkhOTaSn119rkmpJtlwKs2FNFLZN+LiWQocQe4iyVXKgfvPlWq1cFn22bkWGbUhSIulYNxGVjMegttd/wChLfsBNudYywVoKRhE+SZWY+FcFW1waUkG5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707587262; c=relaxed/simple;
-	bh=NhWbsww1cnt25l2QD4Fw46or4HLprZvRZL9zG3Ayv1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u22WFWHpMU4anQE/k9MgAM7JzNs8vQbI+ob3EFwy2OQj8a7JJ0M6rrYDaBV+y+5FmUXAjqYoLVe6aOHce3/u2N1nY2EQmwFrwOfpdYxxjFVUxA0lj9Mv+f2jsgobUpOi5DqZtflCYALHYGi3XnzlH5SP5E7kcSLKWupt6dZ8RDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rHjcjgRY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707587731; c=relaxed/simple;
+	bh=Bdz5cBVJUC+BoiWAi2wyV+PheJklqxfClV/aLVhKcIU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TjpqJUnUcw0QAxLkfabfi/NFNYj5P9wCDL9ZpF37/P4PBCmlVvEadd2CJe6zgQyQ4iZWHBoDW8X6bXGPtM5xjn+paWVJZf5s29mSvKR5WKZKWxoBiUhMOD4zSFoqRayrZW1/jdy4nxEjAIRWXtgBV8UtCbNyuV4OSEvulqwPr8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FAIQiMT/; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rHjcjgRY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 720DFC433C7;
-	Sat, 10 Feb 2024 17:47:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707587262;
-	bh=NhWbsww1cnt25l2QD4Fw46or4HLprZvRZL9zG3Ayv1k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rHjcjgRYohFKHs2fONtzdonLejGMObC99TKvNsdee5ZTfDhVotMsctS5MIK+uKJZI
-	 jDTpt82aO3YW3mnxiDtyx4kYzQcDwy1fGY8+jRRLSuezAEpgSTyiBxw0kHDryKMKuI
-	 Phw1N++pguin7ZcdmiY+TmwzFtjrHxr7ZReLWd6V9GvCX+C+iMweiTaBQLBvF0FPVR
-	 nZ+gtotrGxQF18QDoJa8GFo7douE2Lu+EhYgvFR7yUjCKOYl5UWjl02HTZ9kt2Km4b
-	 noblxvIm9q6MPtWYKm3nravCCrWADwtVGr+1YsILXVeMzvFS6hCqOe3PjYXW2q/5Ry
-	 5YoR95aIdw2PQ==
-Date: Sat, 10 Feb 2024 17:47:29 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: linux-iio@vger.kernel.org, Michael Hennerich
- <Michael.Hennerich@analog.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Liam
- Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] iio: adc: ad7944: add driver for
- AD7944/AD7985/AD7986
-Message-ID: <20240210174729.7c6cb953@jic23-huawei>
-In-Reply-To: <20240206-ad7944-mainline-v1-2-bf115fa9474f@baylibre.com>
-References: <20240206-ad7944-mainline-v1-0-bf115fa9474f@baylibre.com>
-	<20240206-ad7944-mainline-v1-2-bf115fa9474f@baylibre.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FAIQiMT/"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5d8ddbac4fbso1773364a12.0;
+        Sat, 10 Feb 2024 09:55:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707587729; x=1708192529; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=svbCPZo7tOHG4+PT9kYnFXadgA834LlYEiJR96UmKIA=;
+        b=FAIQiMT/OSo1V8mRy5ENruRwTRgx2tY130zDrYyZwy0rKiTDoiQWmxpEzJLm0fUmyV
+         pz6Nqf21vIOzr2bYenvgBvxKv0bBKzdsFKE8E240QPNMfmvFHHg0kBCVvjEDsj84FPSL
+         vS9Rgt76fakTgEl8i1pQILSwuMuhn9zf+HDNygmX397SGgG69eDjw7KB0ApF4kBXIvxw
+         U9wb+dtw47xZUu93bGZsUnaSqrkXSDtkw0ENd3TnmUHYzzKi6P+XCDSOACpZF5SPRC1e
+         AQMpUVeijiu5Y3Mb019LBLcZDAobWKr4vKNySj7yFFlKjavRLAhzCd73EuSm+kcWWl3M
+         T7cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707587729; x=1708192529;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=svbCPZo7tOHG4+PT9kYnFXadgA834LlYEiJR96UmKIA=;
+        b=MtBn7jnX8hp8sc+EEwa8s+0bs13pujlvnjJSNGFZkkGYk5jTAwvcpPoRkmGeqs6y0z
+         JzRhB/uBpOmnqGbAybh/xVVEIqjNOQi5cQemGy+Dsyi15scXDM4YSy6/ENzvcccyndaJ
+         3QWqrou+aImpedfXFJj06MfscE4twbSdwBXkhQhp1PhDZt9AjLCV9IpRjoBPoQABWOyg
+         ALZ6SSZL7lFEBZO+WgrvQ1Bl4K1XMFWqXkkNlDwzE6wnAaDIFyaj0IJoBmGoj9yfS5rB
+         4HrhxEWojMKtSngVzDhtMriWj/gzYgMgHp1h+IUaGDpRS1mXyetyen083Twzv6TIWSez
+         Txpg==
+X-Gm-Message-State: AOJu0Yw1yGYHxDcVYQ6BxQDpZ0nxKwsXUuugbaO2yL+kBS9wTtfpCpTS
+	schn0w4//TbTTL4TBZ7JBN3GqfSU1CHmZfoogWlrvvVYV3IWupAU
+X-Google-Smtp-Source: AGHT+IGOgKogGS+72H/tO4L0bUKEGeSdeZ8x5ZX/vqW88S6JcGL8VoxCmbh5kzI9d+eRZHQt2vKosA==
+X-Received: by 2002:a17:902:ea08:b0:1da:192f:3ecc with SMTP id s8-20020a170902ea0800b001da192f3eccmr3936618plg.53.1707587729287;
+        Sat, 10 Feb 2024 09:55:29 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUplzNKbOA5YE/tibcz+NMRb/+pffFJWjBYivN/jMuYDtRtkrtOoRJQwzZ46xNC7EcC7A1Jpx5wGoiXk6w60Tc7U2/9P7XHvXNk1dcJLffN2cQTvTxwBWqGkbnxl2oF3JGCdto7M+H2H+YZXRyXz8OEsJBg5F6mVQ3MYPX9QMCcaQXpSAVYX6Dfn0nWe9pocFFslRMf2FhaJplLJp4mJ+VexSOPLaZ26uVw
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id c5-20020a170902c1c500b001d964f86846sm1888044plc.161.2024.02.10.09.55.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 Feb 2024 09:55:28 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+To: Helge Deller <deller@gmx.de>
+Cc: "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+	linux-parisc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Guenter Roeck <linux@roeck-us.net>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Palmer Dabbelt <palmer@rivosinc.com>
+Subject: [PATCH] parisc: Fix ip_fast_csum
+Date: Sat, 10 Feb 2024 09:55:26 -0800
+Message-Id: <20240210175526.3710522-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue,  6 Feb 2024 11:26:00 -0600
-David Lechner <dlechner@baylibre.com> wrote:
+IP checksum unit tests report the following error when run on hppa/hppa64.
 
-> This adds a driver for the Analog Devices Inc. AD7944, AD7985, and
-> AD7986 ADCs. These are a family of pin-compatible ADCs that can sample
-> at rates up to 2.5 MSPS.
-> 
-> The initial driver adds support for sampling at lower rates using the
-> usual IIO triggered buffer and can handle all 3 possible reference
-> voltage configurations.
-> 
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
+    # test_ip_fast_csum: ASSERTION FAILED at lib/checksum_kunit.c:463
+    Expected ( u64)csum_result == ( u64)expected, but
+        ( u64)csum_result == 33754 (0x83da)
+        ( u64)expected == 10946 (0x2ac2)
+    not ok 4 test_ip_fast_csum
 
+0x83da is the expected result if the IP header length is 20 bytes. 0x2ac2
+is the expected result if the IP header length is 24 bytes. The test fails
+with an IP header length of 24 bytes. It appears that ip_fast_csum()
+always returns the checksum for a 20-byte header, no matter how long
+the header actually is.
 
-The one thing in here that will probably bite if this gets much use of
-different boards is the use of non multiple of 8 word sizes.
+Code analysis shows a suspicious assembler sequence in ip_fast_csum().
 
-Often we can get away with padding those with trailing clocks.
-Any idea if that is safe here?
+ "      addc            %0, %3, %0\n"
+ "1:    ldws,ma         4(%1), %3\n"
+ "      addib,<         0, %2, 1b\n"	<---
 
-Jonathan
+While my understanding of HPPA assembler is limited, it does not seem
+to make much sense to subtract 0 from a register and to expect the result
+to ever be negative. Subtracting 1 from the length parameter makes more
+sense. On top of that, the operation should be repeated if and only if
+the result is still > 0, so change the suspicious instruction to
+ "      addib,>         -1, %2, 1b\n"
+
+The IP checksum unit test passes after this change.
+
+Cc: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Palmer Dabbelt <palmer@rivosinc.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+Prerequisite for this patch is
+https://lore.kernel.org/lkml/20240207-fix_sparse_errors_checksum_tests-v6-0-4caa9629705b@rivosinc.com/
+
+No idea how that was not detected before. Maybe I am missing something.
+
+Note that test_csum_ipv6_magic still fails on 32-bit parisc systems
+after this patch has been applied. That is a different problem.
+
+ arch/parisc/include/asm/checksum.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/parisc/include/asm/checksum.h b/arch/parisc/include/asm/checksum.h
+index 3c43baca7b39..f705e5dd1074 100644
+--- a/arch/parisc/include/asm/checksum.h
++++ b/arch/parisc/include/asm/checksum.h
+@@ -40,7 +40,7 @@ static inline __sum16 ip_fast_csum(const void *iph, unsigned int ihl)
+ "	addc		%0, %5, %0\n"
+ "	addc		%0, %3, %0\n"
+ "1:	ldws,ma		4(%1), %3\n"
+-"	addib,<		0, %2, 1b\n"
++"	addib,>		-1, %2, 1b\n"
+ "	addc		%0, %3, %0\n"
+ "\n"
+ "	extru		%0, 31, 16, %4\n"
+-- 
+2.39.2
 
