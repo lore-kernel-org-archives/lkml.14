@@ -1,63 +1,66 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA98C33C0
-	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 03:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D151079B
+	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 03:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707535078; cv=none; b=JT6TKnrr5dyByGp/kXekkLRaEN5E5KGzNW0YGiePnBmx8/uSch/Q9NIufmwiL/LcOjVNuCqYeq6wMWv/Ovj4puujSrl8RPNuPIuhETS2Ljuqeh7V5dhlm9KNHIcJyzcEORXVVArn+Aqpvz/dLsFqd4Qgj5fThKVOWLNSxFYUKRU=
+	t=1707535084; cv=none; b=p/JLPhCdRbKdXSjOvWF12byk33GtSVfF8SqbwmnfN4QMfmV98N9xkRReTvkcx7JbJZdW+pfTjAkRvzdggCP5qrrIkQs9CZljiMWlFPVAmzjVZV5ps1B07OwArKc7lFsW9AJjB6y5FTXYoyU2sE3PBDxvSTF0SPCKKXaNSowJFhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707535078; c=relaxed/simple;
-	bh=YAb4FlNOlAfLeMVXc4h45YX0N5LZt0PmJHt3lr+GdM8=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=nfd975ceoTXAqHN9lv0BOv906IhzVEgCPGHJ0KzlWGkDtgAtp6J/LoPZz2BhlB18MxJ5xOaDvdrNiU31za/ZReHtFa11hVRAIF4Fl3Jv2gErSavGrKBlhnjWrzl0GDqxNYVpCnn1goA1EID6saL7fJLB4rx9/VjjpSPsSKVUopU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rkkOBcXa; arc=none smtp.client-ip=209.85.219.201
+	s=arc-20240116; t=1707535084; c=relaxed/simple;
+	bh=s32A8QE6IGVouXq1TZ+wzA73aJYsLB5Js6bJkKIPo+k=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=FRkvdSdHKkZoNcBOUpAZLmgp5pvFrBq8Lq/d11+blrI+Me7EvKuk/tFLONeVYtmV2UmmAGjdgmfNl5gGyW0A3CPiGJ6Ou2XRX3M+iYyvqvvdSsignh03LqLNjkgugK7cXu0C4pQ1ow960wSROtzsVhrtdjfUXffKARwUdCIEtpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ES08WGD3; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rkkOBcXa"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc748365ba9so2565348276.2
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 19:17:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ES08WGD3"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-603cbb4f06dso32588457b3.3
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 19:18:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707535076; x=1708139876; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=cyyhzZNS8ki5ynML3KytcROjeKIHNvTXQuDKrxr/+s8=;
-        b=rkkOBcXaCHIJwlM/NBMSaArU/iKtllJxFbcFW8N4r95XaP38e2jJsJCHl7sAsOyIXH
-         zuyfXB3feNtzpwyBY1ulfjoA/O/LCXJPJwhElD6vqnf72UimHIric2MzuhE88zquvSrT
-         s1kCJ3GL5+hp+Nw5pi9TtPOVyluCaC990S26E47D27gzhl2svLH6rc3dtpFPhPKRepRK
-         GtJFsJvkn+x6565a9pNfcbzYCExEa1WlWyXDZoVesY0BOcdDRT+jSgaKvX2jgpM3WjyH
-         GBoL2jPRjAp5uD5hjs7ov0CSe3gDJ5XGFM8Jzs9YsjOaPq1NexUCTGWDOHx6iRayDfes
-         Dj7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707535076; x=1708139876;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20230601; t=1707535081; x=1708139881; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=cyyhzZNS8ki5ynML3KytcROjeKIHNvTXQuDKrxr/+s8=;
-        b=nnuETVBfl9NzHMO78E5gUhscqx1JmtzEpG+Gon12Gr/xfhJdn3nq2CfWyMmLYbs8Bn
-         5haVAOYNDESV6RbAvb+bbSGFfECnEoJaUCMt39yNSsH2Hew8v20wLDHqntHfitWpT/Fr
-         L7AxX5c9QQpFhzvLyMz6g6ghIsgTfOxV3G9YrDBv8K9oCf6N9EOpJr9e5YksRlPulROd
-         klXoSaijRr+CFqn+uyLd9hetoCZkYWGp6fe4lWPP4krY3moLkzhy6c6tnXElrstV6TV6
-         HpmxNEasdsL4gZAAbkhPsSJI8losVBIeLQClFUO1GYbQlWdeq5mOwrmFSBueRVbmUzef
-         TwQw==
-X-Forwarded-Encrypted: i=1; AJvYcCV5+hiP3/PHra1vr7LsUmSrhwjSkbO7lEoMEfyCZklQoFchTeDe4gUIykeim8afyKw169i2E/oUF645CvsUrawwthZECGPsEe3rc17Z
-X-Gm-Message-State: AOJu0YxPg7Z+hg7jdE0wi39kev8RSi+hC2PaRH2KKi21rdgv1Sfo/VFN
-	SMvhNfE84T3qhl9GzmfIjElUQvJNPE7fBW9D+NZMPVhbUt4UISwo9p1rqPUoofPhHWFCLTicX/y
-	GJ4ut1w==
-X-Google-Smtp-Source: AGHT+IF1SwDaOZUfH6p6f3vnVppObrWGYDyiolwE6lbi/prKPGdxMlVbinVXuYjFA0KQF2Caw7xd7oz5mCZc
+        bh=q/wQm8CyHL9slxnjQU9iEAGyjm9UvO1+66UkYjPYQYE=;
+        b=ES08WGD3ijv/623Epyu1cuaR7JL2ZPN/51631llSzWktXhWYkeO6pxpS3T5SzZdv6/
+         tnaoFvTovUkBdBb6R44e8KXlrq6qVh0eroypdahLdAADDpfF2iSA6JkVlgN3D8Q4x847
+         uA115Fyw4+i9aVr9jlrW5N79rHwScFa5ok27tRmJecJGSY4snlEIP4TQM/GoCjKv0Kpi
+         xoY0jh4lE5eLKZuzQ9Nl2EBRk0k7SQs/yprdqQusPE85sFI3CN/1bBRAP8iaSVFeH/wk
+         s3tOhUDdTByWdMTd25XQe8wdn1RnguDOPkVzIRaelzsb76ld+w6Bsi0UziVoyk9TSXPi
+         MGTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707535081; x=1708139881;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=q/wQm8CyHL9slxnjQU9iEAGyjm9UvO1+66UkYjPYQYE=;
+        b=o0I8p3y7CVc65WaiN3W9Lfy8kWUpDU40Pta2nT69lsceLSPaDLPcybjiXTctPvYvZv
+         PuyIxmFtWeHFDuIQ0OLbF+JRw3G3JNYnp9459Z1dymgfaqho2m0jKwwWm8hNA8CZKPdz
+         gONP0WLMl3Y9vE2m9t0t0bTG4mv7HBA55LKVkafOqWLWIEsPCrF6E3Zlg/Ae/01ujUms
+         oljhv3Whm7o4ZgVgBK/4h3BIPXshP/UM1+r+mQBuh++vgy8I0nuL/tyLmYh47wIfFTau
+         lRLF7tyDTU5QtorrBpPVDtyafBCWsN+RsCxsiMQ0dJU3uxzUosSsfFG+ozNRTCDhMZiU
+         DZSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWiRqpwQ0HGKUPSKet9yR03XkfmkNVkSmF3EJ0VqHuOZDiiIP1hiXXeo+yaj1PSgUHhMbqbHAMMy9QNUkydiTxs3uNe5bL3gxYkFbRO
+X-Gm-Message-State: AOJu0YzvLZv1yROI9qcsJiY7249wiiqS9VF9HqU7v8ZygOLYxd24C7GD
+	RvDIq/1igoNcT6BDY51/L/l55Jx1wqljH+j9POCXqU8EMPw+/PLPPYZBLhdZiFIuhg4jI4NVAJ8
+	pnuU4Dw==
+X-Google-Smtp-Source: AGHT+IEfXrH7v52mYyM9vZ0WIHVc3OR2Cqb4sipPXcKdOGcECyIy8OezH070p/hyQbMisrLFOj1nQTs6NvsV
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:877:241d:8c35:1c5b])
- (user=irogers job=sendgmr) by 2002:a05:6902:1207:b0:dc6:dd76:34cc with SMTP
- id s7-20020a056902120700b00dc6dd7634ccmr31801ybu.1.1707535075759; Fri, 09 Feb
- 2024 19:17:55 -0800 (PST)
-Date: Fri,  9 Feb 2024 19:17:40 -0800
-Message-Id: <20240210031746.4057262-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a81:9155:0:b0:5d3:40f3:56bf with SMTP id
+ i82-20020a819155000000b005d340f356bfmr283705ywg.1.1707535080948; Fri, 09 Feb
+ 2024 19:18:00 -0800 (PST)
+Date: Fri,  9 Feb 2024 19:17:42 -0800
+In-Reply-To: <20240210031746.4057262-1-irogers@google.com>
+Message-Id: <20240210031746.4057262-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240210031746.4057262-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
-Subject: [PATCH v3 0/6] maps memory improvements and fixes
+Subject: [PATCH v3 2/6] perf maps: Get map before returning in maps__find
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,40 +76,248 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-First 6 patches from:
-https://lore.kernel.org/lkml/20240202061532.1939474-1-irogers@google.com/
+Finding a map is done under a lock, returning the map without a
+reference count means it can be removed without notice and causing
+uses after free. Grab a reference count to the map within the lock
+region and return this. Fix up locations that need a map__put
+following this.
 
-v3. Fix latent concurrent modification bug in maps__for_each_map.
-v2. Fix NO_LIBUNWIND=1 build issue.
+Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/arch/x86/tests/dwarf-unwind.c |  1 +
+ tools/perf/tests/vmlinux-kallsyms.c      |  5 ++---
+ tools/perf/util/bpf-event.c              |  1 +
+ tools/perf/util/event.c                  |  4 ++--
+ tools/perf/util/machine.c                | 22 ++++++++--------------
+ tools/perf/util/maps.c                   | 17 ++++++++++-------
+ tools/perf/util/symbol.c                 |  3 ++-
+ 7 files changed, 26 insertions(+), 27 deletions(-)
 
-Ian Rogers (6):
-  perf maps: Switch from rbtree to lazily sorted array for addresses
-  perf maps: Get map before returning in maps__find
-  perf maps: Get map before returning in maps__find_by_name
-  perf maps: Get map before returning in maps__find_next_entry
-  perf maps: Hide maps internals
-  perf maps: Locking tidy up of nr_maps
-
- tools/perf/arch/x86/tests/dwarf-unwind.c |    1 +
- tools/perf/tests/maps.c                  |    3 +
- tools/perf/tests/thread-maps-share.c     |    8 +-
- tools/perf/tests/vmlinux-kallsyms.c      |   10 +-
- tools/perf/util/bpf-event.c              |    1 +
- tools/perf/util/callchain.c              |    2 +-
- tools/perf/util/event.c                  |    4 +-
- tools/perf/util/machine.c                |   34 +-
- tools/perf/util/map.c                    |    1 +
- tools/perf/util/maps.c                   | 1302 ++++++++++++++--------
- tools/perf/util/maps.h                   |   65 +-
- tools/perf/util/probe-event.c            |    1 +
- tools/perf/util/symbol-elf.c             |    4 +-
- tools/perf/util/symbol.c                 |   31 +-
- tools/perf/util/thread.c                 |    2 +-
- tools/perf/util/unwind-libdw.c           |    2 +-
- tools/perf/util/unwind-libunwind-local.c |    2 +-
- tools/perf/util/unwind-libunwind.c       |    7 +-
- 18 files changed, 906 insertions(+), 574 deletions(-)
-
+diff --git a/tools/perf/arch/x86/tests/dwarf-unwind.c b/tools/perf/arch/x86/tests/dwarf-unwind.c
+index 5bfec3345d59..c05c0a85dad4 100644
+--- a/tools/perf/arch/x86/tests/dwarf-unwind.c
++++ b/tools/perf/arch/x86/tests/dwarf-unwind.c
+@@ -34,6 +34,7 @@ static int sample_ustack(struct perf_sample *sample,
+ 	}
+ 
+ 	stack_size = map__end(map) - sp;
++	map__put(map);
+ 	stack_size = stack_size > STACK_SIZE ? STACK_SIZE : stack_size;
+ 
+ 	memcpy(buf, (void *) sp, stack_size);
+diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vmlinux-kallsyms.c
+index 822f893e67d5..e808e6fc8f76 100644
+--- a/tools/perf/tests/vmlinux-kallsyms.c
++++ b/tools/perf/tests/vmlinux-kallsyms.c
+@@ -151,10 +151,8 @@ static int test__vmlinux_matches_kallsyms_cb2(struct map *map, void *data)
+ 	u64 mem_end = map__unmap_ip(args->vmlinux_map, map__end(map));
+ 
+ 	pair = maps__find(args->kallsyms.kmaps, mem_start);
+-	if (pair == NULL || map__priv(pair))
+-		return 0;
+ 
+-	if (map__start(pair) == mem_start) {
++	if (pair != NULL && !map__priv(pair) && map__start(pair) == mem_start) {
+ 		struct dso *dso = map__dso(map);
+ 
+ 		if (!args->header_printed) {
+@@ -170,6 +168,7 @@ static int test__vmlinux_matches_kallsyms_cb2(struct map *map, void *data)
+ 		pr_info(" %s\n", dso->name);
+ 		map__set_priv(pair, 1);
+ 	}
++	map__put(pair);
+ 	return 0;
+ }
+ 
+diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+index 3573e0b7ef3e..83709146a48a 100644
+--- a/tools/perf/util/bpf-event.c
++++ b/tools/perf/util/bpf-event.c
+@@ -63,6 +63,7 @@ static int machine__process_bpf_event_load(struct machine *machine,
+ 			dso->bpf_prog.id = id;
+ 			dso->bpf_prog.sub_id = i;
+ 			dso->bpf_prog.env = env;
++			map__put(map);
+ 		}
+ 	}
+ 	return 0;
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index 68f45e9e63b6..198903157f9e 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -511,7 +511,7 @@ size_t perf_event__fprintf_text_poke(union perf_event *event, struct machine *ma
+ 		struct addr_location al;
+ 
+ 		addr_location__init(&al);
+-		al.map = map__get(maps__find(machine__kernel_maps(machine), tp->addr));
++		al.map = maps__find(machine__kernel_maps(machine), tp->addr);
+ 		if (al.map && map__load(al.map) >= 0) {
+ 			al.addr = map__map_ip(al.map, tp->addr);
+ 			al.sym = map__find_symbol(al.map, al.addr);
+@@ -641,7 +641,7 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
+ 		return NULL;
+ 	}
+ 	al->maps = maps__get(maps);
+-	al->map = map__get(maps__find(maps, al->addr));
++	al->map = maps__find(maps, al->addr);
+ 	if (al->map != NULL) {
+ 		/*
+ 		 * Kernel maps might be changed when loading symbols so loading
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index b397a769006f..e8eb9f0b073f 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -896,7 +896,6 @@ static int machine__process_ksymbol_register(struct machine *machine,
+ 	struct symbol *sym;
+ 	struct dso *dso;
+ 	struct map *map = maps__find(machine__kernel_maps(machine), event->ksymbol.addr);
+-	bool put_map = false;
+ 	int err = 0;
+ 
+ 	if (!map) {
+@@ -913,12 +912,6 @@ static int machine__process_ksymbol_register(struct machine *machine,
+ 			err = -ENOMEM;
+ 			goto out;
+ 		}
+-		/*
+-		 * The inserted map has a get on it, we need to put to release
+-		 * the reference count here, but do it after all accesses are
+-		 * done.
+-		 */
+-		put_map = true;
+ 		if (event->ksymbol.ksym_type == PERF_RECORD_KSYMBOL_TYPE_OOL) {
+ 			dso->binary_type = DSO_BINARY_TYPE__OOL;
+ 			dso->data.file_size = event->ksymbol.len;
+@@ -952,8 +945,7 @@ static int machine__process_ksymbol_register(struct machine *machine,
+ 	}
+ 	dso__insert_symbol(dso, sym);
+ out:
+-	if (put_map)
+-		map__put(map);
++	map__put(map);
+ 	return err;
+ }
+ 
+@@ -977,7 +969,7 @@ static int machine__process_ksymbol_unregister(struct machine *machine,
+ 		if (sym)
+ 			dso__delete_symbol(dso, sym);
+ 	}
+-
++	map__put(map);
+ 	return 0;
+ }
+ 
+@@ -1005,11 +997,11 @@ int machine__process_text_poke(struct machine *machine, union perf_event *event,
+ 		perf_event__fprintf_text_poke(event, machine, stdout);
+ 
+ 	if (!event->text_poke.new_len)
+-		return 0;
++		goto out;
+ 
+ 	if (cpumode != PERF_RECORD_MISC_KERNEL) {
+ 		pr_debug("%s: unsupported cpumode - ignoring\n", __func__);
+-		return 0;
++		goto out;
+ 	}
+ 
+ 	if (dso) {
+@@ -1032,7 +1024,8 @@ int machine__process_text_poke(struct machine *machine, union perf_event *event,
+ 		pr_debug("Failed to find kernel text poke address map for %#" PRI_lx64 "\n",
+ 			 event->text_poke.addr);
+ 	}
+-
++out:
++	map__put(map);
+ 	return 0;
+ }
+ 
+@@ -1300,9 +1293,10 @@ static int machine__map_x86_64_entry_trampolines_cb(struct map *map, void *data)
+ 		return 0;
+ 
+ 	dest_map = maps__find(args->kmaps, map__pgoff(map));
+-	if (dest_map != map)
++	if (RC_CHK_ACCESS(dest_map) != RC_CHK_ACCESS(map))
+ 		map__set_pgoff(map, map__map_ip(dest_map, map__pgoff(map)));
+ 
++	map__put(dest_map);
+ 	args->found = true;
+ 	return 0;
+ }
+diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
+index 13dec408b931..2547c9074b3a 100644
+--- a/tools/perf/util/maps.c
++++ b/tools/perf/util/maps.c
+@@ -506,15 +506,18 @@ void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map, void *data
+ struct symbol *maps__find_symbol(struct maps *maps, u64 addr, struct map **mapp)
+ {
+ 	struct map *map = maps__find(maps, addr);
++	struct symbol *result = NULL;
+ 
+ 	/* Ensure map is loaded before using map->map_ip */
+ 	if (map != NULL && map__load(map) >= 0) {
+-		if (mapp != NULL)
+-			*mapp = map; // TODO: map_put on else path when find returns a get.
+-		return map__find_symbol(map, map__map_ip(map, addr));
+-	}
++		if (mapp)
++			*mapp = map;
+ 
+-	return NULL;
++		result = map__find_symbol(map, map__map_ip(map, addr));
++		if (!mapp)
++			map__put(map);
++	}
++	return result;
+ }
+ 
+ struct maps__find_symbol_by_name_args {
+@@ -558,7 +561,7 @@ int maps__find_ams(struct maps *maps, struct addr_map_symbol *ams)
+ 	if (ams->addr < map__start(ams->ms.map) || ams->addr >= map__end(ams->ms.map)) {
+ 		if (maps == NULL)
+ 			return -1;
+-		ams->ms.map = maps__find(maps, ams->addr);  // TODO: map_get
++		ams->ms.map = maps__find(maps, ams->addr);
+ 		if (ams->ms.map == NULL)
+ 			return -1;
+ 	}
+@@ -868,7 +871,7 @@ struct map *maps__find(struct maps *maps, u64 ip)
+ 					sizeof(*mapp), map__addr_cmp);
+ 
+ 			if (mapp)
+-				result = *mapp; // map__get(*mapp);
++				result = map__get(*mapp);
+ 			done = true;
+ 		}
+ 		up_read(maps__lock(maps));
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index be212ba157dc..1710b89e207c 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -757,7 +757,6 @@ static int dso__load_all_kallsyms(struct dso *dso, const char *filename)
+ 
+ static int maps__split_kallsyms_for_kcore(struct maps *kmaps, struct dso *dso)
+ {
+-	struct map *curr_map;
+ 	struct symbol *pos;
+ 	int count = 0;
+ 	struct rb_root_cached old_root = dso->symbols;
+@@ -770,6 +769,7 @@ static int maps__split_kallsyms_for_kcore(struct maps *kmaps, struct dso *dso)
+ 	*root = RB_ROOT_CACHED;
+ 
+ 	while (next) {
++		struct map *curr_map;
+ 		struct dso *curr_map_dso;
+ 		char *module;
+ 
+@@ -796,6 +796,7 @@ static int maps__split_kallsyms_for_kcore(struct maps *kmaps, struct dso *dso)
+ 			pos->end -= map__start(curr_map) - map__pgoff(curr_map);
+ 		symbols__insert(&curr_map_dso->symbols, pos);
+ 		++count;
++		map__put(curr_map);
+ 	}
+ 
+ 	/* Symbols have been adjusted */
 -- 
 2.43.0.687.g38aa6559b0-goog
 
