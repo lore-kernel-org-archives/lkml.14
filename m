@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D62F16435;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88E6171B1;
 	Sat, 10 Feb 2024 01:21:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707528081; cv=none; b=p7q7XkSWoH+YcP4xlyva9e85EFxzupy83SW0I3KswfJDNEbtCThYXs2BKvXiWhOXtGds70Ud3w9fhLrfkQxhdtdLxNDSqw5MCjxiqW+kVFsfYLUJAA4l2oorhSgRTpEfqt4vd9ntjVfUxzDIv/+YSfpQBmydp/H9J1tcxZpKb28=
+	t=1707528081; cv=none; b=in9NdPxiileYh+y0cK1CgO0Gu1J8cDUYeyr/D6Ts3Wwv0+1UczS0uf3K/G37hHdsrDc3HgP7/NH/TWbAYE1Z1wTw3H5CChj/tzNbNbf+d2ZEojUbkE6QRd2XzAW5oLgS5/SyXdBSw6+KrpJgY3J3tJ3k4Qdkv2qpbzbfREVas6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707528081; c=relaxed/simple;
-	bh=u/ecgRYQOkLBlRn/VtTePYv4M68IaY7mn8if9/vLcSk=;
+	bh=pSvctDHxVCaAu+4cZjOT/I3a/3LHsGScFSRvh9RHyIQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t+TzsCbW11miyiVuzGDo1DchLCx8UXK3R61rH6LMXPkfl3HCIe9IhIO9Q1rxHWWTiKaFcGhbvdAKYi5BW5bQzQ/gVYUFZjwsQ22GTKrjfRMUWZqtt/uycrvT42JoM0SX23Bbkx/bgmMXznmeZfX3NHQjRLpEHQKTJcMhU+weUVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qMgxRLFx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nxDS4zAfBKyotkjPg5R0O/QdsmENRWv95BHrmVOjKYxyg+cM2qUXtNhFKDiYCFmVNNwKdo+IFfR/MRCYuJ9blDwZNhhtf1zMpJHIyahU4Z5+Bow9zvlvwQjPGBx7QHkuJ3MYOdG9xFPhBxpQuPqOWLASbhXL04dawAk+6r4zc5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oKYz1ocl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qMgxRLFx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 449B5C41612;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oKYz1ocl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E32AC433B1;
 	Sat, 10 Feb 2024 01:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1707528081;
-	bh=u/ecgRYQOkLBlRn/VtTePYv4M68IaY7mn8if9/vLcSk=;
+	bh=pSvctDHxVCaAu+4cZjOT/I3a/3LHsGScFSRvh9RHyIQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qMgxRLFxy5zos/lUwR/xfKurLYOThw4OYp6s30K6hvrXdvFBnaciLFLlLgTimPCZV
-	 65L+5ZuIagx44mEMi+hknKH9W6SZlUo5m536Ik+Nwvck0kzDxjlzXa2dK4EQiF0+9L
-	 ePoai+L09Sijd9nWoQFffLGaaSLtc0VgJCi8id1iMNzETy3yIgVnERHbQR1qwgVnid
-	 TG7/7eiYC19DFwcXyhTWxPP1SkIWI2Xp0AwGoqBo/Q4j201IXshRoq2or+APMeM5nv
-	 l8r/zQPdaprEUo1SksEOhgGhAvqDKU15UEnplN7JKjsY8Sug+99GOHLhhrfE87aA+e
-	 dTHc83OZtXGBw==
+	b=oKYz1oclt/g6a7DRDfuHt+Tu88+httySNUlWh7ZyUzyWE3YDK4rU9JP3dih6qDLfm
+	 Vi3Xrg/Wqp3CAEQmGwR+tTUaYYxiDqUDL3y5qsw75coq8pDRhDugnkmax77EdCkIf2
+	 JYUrYLJocAdML3oj7KAc9z20dJDiTNMbzDnRBzupAQcMMEkdCQD1pC4cOLKsFfZl28
+	 bjgc+LyGaFg0A7dRk9n1DsSi7uOU1m8fKpoe61mRXglQLKHBXU6gsu4+5cksAAeRDa
+	 yzKbe9KiCDAlcPfEadSvsxbg9sqvnfoNd1aLQGGf8kLfwoGU0q+Fu+NXANJMANoJQY
+	 LX9crgJ+02xZA==
 Received: by mercury (Postfix, from userid 1000)
-	id E61751068F4B; Sat, 10 Feb 2024 02:21:15 +0100 (CET)
+	id EF2E210694AE; Sat, 10 Feb 2024 02:21:15 +0100 (CET)
 From: Sebastian Reichel <sre@kernel.org>
 To: Sebastian Reichel <sre@kernel.org>,
 	Rob Herring <robh+dt@kernel.org>,
@@ -45,9 +45,9 @@ Cc: Dong Aisheng <aisheng.dong@nxp.com>,
 	linux-arm-kernel@lists.infradead.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 07/14] dt-bindings: lcdif: Do not require power-domains for i.MX6ULL
-Date: Sat, 10 Feb 2024 02:18:11 +0100
-Message-ID: <20240210012114.489102-8-sre@kernel.org>
+Subject: [PATCH v1 10/14] ARM: dts: imx6ul: Remove fsl,anatop from usbotg1
+Date: Sat, 10 Feb 2024 02:18:14 +0100
+Message-ID: <20240210012114.489102-11-sre@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240210012114.489102-1-sre@kernel.org>
 References: <20240210012114.489102-1-sre@kernel.org>
@@ -59,44 +59,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-i.MX6UL(L) uses "fsl,imx6sx-lcdif" as fallback compatible string,
-but has only very lightweight DISPLAY power domain. Its DISPLAY
-power domain is not supported by the binding / Linux kernel at
-the moment. Since the current setup is working, let's remove the
-power-domain from being required for that platform to fix the warning
-printed by CHECK_DTBS=y.
+fsl,anatop should only be added to the usbphy nodes.
 
-Fixes: f62678a77d58 ("dt-bindings: mxsfb: Document i.MX8M/i.MX6SX/i.MX6SL power-domains property")
 Signed-off-by: Sebastian Reichel <sre@kernel.org>
 ---
- Documentation/devicetree/bindings/display/fsl,lcdif.yaml | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/nxp/imx/imx6ul.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/display/fsl,lcdif.yaml b/Documentation/devicetree/bindings/display/fsl,lcdif.yaml
-index 1c2be8d6f633..0681fc49aa1b 100644
---- a/Documentation/devicetree/bindings/display/fsl,lcdif.yaml
-+++ b/Documentation/devicetree/bindings/display/fsl,lcdif.yaml
-@@ -120,13 +120,19 @@ allOf:
-           maxItems: 1
-         clock-names:
-           maxItems: 1
-+  - if:
-+      properties:
-+        compatible:
-+          const: fsl,imx6sx-lcdif
-+    then:
-+      required:
-+        - power-domains
-   - if:
-       properties:
-         compatible:
-           contains:
-             enum:
-               - fsl,imx6sl-lcdif
--              - fsl,imx6sx-lcdif
-               - fsl,imx8mm-lcdif
-               - fsl,imx8mn-lcdif
-               - fsl,imx8mp-lcdif
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
+index a27a7554c2e7..9eb4eee0c272 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
+@@ -855,7 +855,6 @@ usbotg1: usb@2184000 {
+ 				clocks = <&clks IMX6UL_CLK_USBOH3>;
+ 				fsl,usbphy = <&usbphy1>;
+ 				fsl,usbmisc = <&usbmisc 0>;
+-				fsl,anatop = <&anatop>;
+ 				ahb-burst-config = <0x0>;
+ 				tx-burst-size-dword = <0x10>;
+ 				rx-burst-size-dword = <0x10>;
 -- 
 2.43.0
 
