@@ -1,197 +1,96 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E1C731A8F
-	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 11:30:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7543AC01
+	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 11:36:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707564617; cv=none; b=RTxo+U9KlCHp9lePOuWooyN+C/5EyPoyefhOYyLJ4K53lmXM1YWJefeze5bM4/uTduHwzHQ/ZAx/neXBQ5PF94qxjX6LWNkN7LeRer2kIbneSzalzCshnyTCEjPXGWCW7wjottemnZ2hlBgJMmujbXllzDFa+O4Vn4/O3gyqGnE=
+	t=1707564982; cv=none; b=NO4HmhsB8Yajiu74n+TGDjD25v3eqeoCQbILyJjD8Y/UQA4Xtg8Fh1NV8hhYBL7D7pUe09fVqrHhZeeYihZj8vETJ0AxfMj6KiY9ZNHAs53JpqHUl6Z3KypYwnkZhlAXM9KtEvBNPnPGgDeBvK1fhf5k3L6Wp9mzAqyitpERzBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707564617; c=relaxed/simple;
-	bh=r6mXK5irgXYNwUXBuVJYyBaJOtQdkAx2B8SbD35wMVo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n90bsGLpLV4hZrttpND2nW3v5dfDKLoHimX1aYvbcE+2tfmPDlH1eP/19GEzJXGfjJN/J5rznyDmmVsWxO9PW6fUu9yehEHUdX0Mm2x3nRxjSTXKrhDhrSy/lSk3x/CvMDqLX9dodBGkQ/wSKGnDvnPeNN8VG3rQNpws7YN7QaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eEiymRx3; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707564982; c=relaxed/simple;
+	bh=mofvx/4Gu5lY6rezEW+q6OTCAd/T7sEH3BGxSJ30Meg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aG9q3HvZxpDMf6GAwi7aw3Ntf5HZtzxyplIcALYFfBsD0dMXMZ89Em7hSJsdQK7J7j5APwNe+a5KYcTaTE/eiNqIP/gnsX1RuGsDEkedQf+awtjiC1zkFE0UQg5hVpCWrVdghnGONJzEH9qjBjc59wkgYY9BFuiuijvxjiknYU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eLaly24H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eEiymRx3"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dc742fc3b68so2039333276.2
-        for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 03:30:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707564614; x=1708169414; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=yfrY9Su7sNaNkmujlfv39yppTC8UzE/IjGvqkySYy7M=;
-        b=eEiymRx3LFgJU9ddDSIWhSKFdLLpenAEx7hnova7BFXM+UTm4lGDxCbpTxUR1xIRUr
-         HWEvk/QWw81c7n2tXQlihY7om5KWFGUqUlT+XfAyqVcx8ZouuUVzTqP0paA5XMAecWHp
-         ZV33xFHMXXdOwooTEMaRYT+FLAsQHVIw5RyiDfMptJZff0BG5S1vdNkK7exPR7BqNp1S
-         bVQ6yWHe5BQo3tFY/i6PKd76WlTKSew1lJpXjGmF+uXn3dT7RAf83FoadTIkixnfhQNq
-         nLGtet1A/Ip2U5/FvukxQidbmDe5z+SyzcSrQuz+BcuZzWJ1tgicATsyeE38lUFlycab
-         Wj4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707564614; x=1708169414;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yfrY9Su7sNaNkmujlfv39yppTC8UzE/IjGvqkySYy7M=;
-        b=hmkiQWiz2Gzd/CuvJgV70IxsT+hdULCqHLTZ9VMzLlpqWstnbw/YVqLnKoJ7ruusVl
-         JRroP3us5AonJqEOzYKI97Lv0zktoxI2u987UF19uuxnGVJT/LTd31jZar3eGR/oUCaO
-         fm1aPVZAI7xfC3ABPuMZC18UajTJ5EZHl2XPLj4ZsuF5dxuNkX+khmKJOLkN+JY1f2/L
-         +yu/9DVv1CH/AOgawIDwpbqw/6X0SbnpnpjY8WPGK75MQTxIJD1hmCJaE9SGUIRD4lhb
-         ej3M9BwllA92meFxi+L5GAx3yxSjP+aMshGQkRxGiniE/Y2dM1h6zXtCHfk3Oa2gQU17
-         8/7w==
-X-Forwarded-Encrypted: i=1; AJvYcCVGahqrxTslA88RMmsdQLMtG7fcedWbahwhlZxwvyTdE4KbyRHugHPfdlWo2YAtXlQoCBPaP1vtUlraeynaSad2rhRXI9SQfIXWTdNM
-X-Gm-Message-State: AOJu0Yy78/BGYA/mtrC3B2KILooMJ9dr30Ueaa9Zq92LnMR4OZdaU9ut
-	shijuGFkGkov6Qy1tah90BQaZZ8AOK7qxuD3cr5yB2kLM8i/HcBYeRCa4uWtS++I9YFuwJ5hQHW
-	eQlD68MeH+bfaPdmwD7kQVsFKO9WCVX10xP957w==
-X-Google-Smtp-Source: AGHT+IEt7Kj+/hZ+wzmZoPbmULWhhsnEm62dhB8EKpEyKJk/XCww+qHhpHGoDPo0BmN3s0+4ysCzQ+Am+6SRT3YGSYI=
-X-Received: by 2002:a25:850e:0:b0:dc6:9c4f:9e79 with SMTP id
- w14-20020a25850e000000b00dc69c4f9e79mr1345468ybk.38.1707564614467; Sat, 10
- Feb 2024 03:30:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eLaly24H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 641BDC433C7;
+	Sat, 10 Feb 2024 11:36:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707564982;
+	bh=mofvx/4Gu5lY6rezEW+q6OTCAd/T7sEH3BGxSJ30Meg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=eLaly24HIsgzoTZ/SX6JRFlF4EusLbDp9ivgIHzCcbK8b02h03T/I7yvYhGw+UZg9
+	 vjM3VGwFKd/yGWA9vBmdDdaH7lFBWHrBRicIi4DgZoPuGtvTRhJOFmhVS9LRfJcTNI
+	 KWqmn0844+4aenw8yz3xh3Ir0/57DQLURgX4CfE9Bdc+06jKcnJL2QVujb2WfuRV9N
+	 l5QByd3tMoFnOcYwOQgtwhWOtffyxg/IMKFdunAo1GbrADy2rqdlBkQxncAlt2rvpT
+	 nm9ZHBTjROq9sFO0NudnSJkOUZQ1jnrIxRgfNeXe5MsrY7kyMUy4L8tjaVoLBHq5xO
+	 lq5DHK65LxNXQ==
+From: alexs@kernel.org
+To: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org (open list:SCHEDULER)
+Cc: Alex Shi <alexs@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Subject: [PATCH v5 1/5] sched/topology: Remove duplicate descriptions from TOPOLOGY_SD_FLAGS
+Date: Sat, 10 Feb 2024 19:39:19 +0800
+Message-ID: <20240210113924.1130448-1-alexs@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240206114745.1388491-1-quic_kriskura@quicinc.com>
- <20240206114745.1388491-4-quic_kriskura@quicinc.com> <23824242-1b37-4544-ae9a-0a5a0582580e@linaro.org>
- <CAA8EJpqbXvKMQktGsxMFJnR+fXoOz8hFmm+E3ROPTjjiD0QLvg@mail.gmail.com>
- <6q2ocvrujbli42rjddflyol74xianr7j47jwcgdnnmwjanv25d@uw2da7zulqqd>
- <CAA8EJpr6k8c5C54S9xxQgZvd9NYFoxi5qQrOTz2AMrp0xeZZpw@mail.gmail.com>
- <baw3wxbdvzpkqqb6a7iut2wpt6jgzyqii5uyfkzptzt4ryjvao@4tpee6nqup5w> <b5c25274-9af0-4b3e-ade7-9a55d3cecd29@quicinc.com>
-In-Reply-To: <b5c25274-9af0-4b3e-ade7-9a55d3cecd29@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Sat, 10 Feb 2024 13:30:03 +0200
-Message-ID: <CAA8EJpqYBQnQRhRLqpOv5Ebdg_8gx0iTG=jWxkU7jy2pz5y8PA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] arm64: dts: qcom: sa8540-ride: Enable first port of
- tertiary usb controller
-To: Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>
-Cc: Andrew Halaney <ahalaney@redhat.com>, neil.armstrong@linaro.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	quic_ppratap@quicinc.com, quic_jackp@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Sat, 10 Feb 2024 at 12:44, Krishna Kurapati PSSNV
-<quic_kriskura@quicinc.com> wrote:
->
-> > Krishna, when you make v2 can you update the wording about the USB 2.0
-> > mux? Maybe something like "which by default on boot is selected to mux
-> > to the external port on the board (with the other option being a test
-> > point)." instead of the wording I originally had? That way the
-> > information Dmitry requested here is easily accessible in the future.
-> >
-> >>
-> >>>
->
-> [...]
->
-> >>>>>>    };
-> >>>>>
-> >>>>> Isn't gpio-hog the preferred way to describe that ?
-> >>>>
-> >>>> That depends. As this pinctrl describes board configuration, I'd agree
-> >>>> with Neil.
-> >>>
-> >>> I unfortunately don't have the experience with gpio-hog to weigh in
-> >>> here, but wouldn't be opposed to Krishna switching it if that's what's
-> >>> recommended for this type of thing.
-> >>
-> >> Quoting gpio.txt:
-> >>
-> >> The GPIO chip may contain GPIO hog definitions. GPIO hogging is a mechanism
-> >> providing automatic GPIO request and configuration as part of the
-> >> gpio-controller's driver probe function.
-> >>
-> >> See sdm845-pinctrl.yaml for an example of the gpio-hog node.
-> >
-> > Thanks, that seems like the way to go. Krishna please take note of this
-> > for v2!
-> >
->
-> Hi Andrew,
->
->   Can you help test the following patch. It is just an add-on to your
-> original one. I don't have a SA8540P Ride at the moment and getting one
-> might take time. Incase you can confirm this patch is working. I can
-> push v2 of this series.
->
->
-> diff --git
-> a/Documentation/devicetree/bindings/pinctrl/qcom,sc8280xp-tlmm.yaml
-> b/Documentation/devicetree/bindings/pinctrl/qcom,sc8280xp-tlmm.yaml
-> index ed344deaf8b9..aa42ac5a3197 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sc8280xp-tlmm.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sc8280xp-tlmm.yaml
-> @@ -36,6 +36,10 @@ patternProperties:
->               $ref: "#/$defs/qcom-sc8280xp-tlmm-state"
->           additionalProperties: false
->
-> +  "-hog(-[0-9]+)?$":
-> +    required:
-> +      - gpio-hog
-> +
->   $defs:
->     qcom-sc8280xp-tlmm-state:
->       type: object
-> diff --git a/arch/arm64/boot/dts/qcom/sa8540p-ride.dts
-> b/arch/arm64/boot/dts/qcom/sa8540p-ride.dts
-> index b04f72ec097c..aa0cec0b4cc2 100644
-> --- a/arch/arm64/boot/dts/qcom/sa8540p-ride.dts
-> +++ b/arch/arm64/boot/dts/qcom/sa8540p-ride.dts
-> @@ -503,6 +503,18 @@ &usb_2_qmpphy0 {
->          status = "okay";
->   };
->
-> +&usb_2 {
-> +       pinctrl-0 = <&usb2_en_state>;
-> +       pinctrl-names = "default";
-> +
-> +       status = "okay";
-> +};
-> +
-> +&usb_2_dwc3 {
-> +       phy-names = "usb2-port0", "usb3-port0";
-> +       phys = <&usb_2_hsphy0>, <&usb_2_qmpphy0>;
-> +};
-> +
->   &xo_board_clk {
->          clock-frequency = <38400000>;
->   };
-> @@ -655,4 +667,19 @@ wake-pins {
->                          bias-pull-up;
->                  };
->          };
-> +
-> +       usb2-en-hog {
-> +               gpio-hog;
-> +               gpios = <24 GPIO_ACTIVE_LOW>;
-> +               output-low;
-> +       };
-> +
-> +       usb2_en_state: usb2-en-state {
+From: Alex Shi <alexs@kernel.org>
 
-If you are using gpio-hog, you don't need this state. The pinctrl /
-gpio core will use the hog instead.
+These flags are already documented in include/linux/sched/sd_flags.h.
+Also, add missing SD_CLUSTER and keep the comment on SD_ASYM_PACKING
+as it is a special case.
 
-> +               /* TS3USB221A USB2.0 mux select */
-> +               pins = "gpio24";
-> +               function = "gpio";
-> +               drive-strength = <2>;
-> +               bias-disable;
-> +               output-low;
-> +       };
->
->
-> Regards,
-> Krishna,
+Suggested-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Signed-off-by: Alex Shi <alexs@kernel.org>
+Cc: Valentin Schneider <vschneid@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Reviewed-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Reviewed-by: Valentin Schneider <vschneid@redhat.com>
+---
+ kernel/sched/topology.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-
-
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 10d1391e7416..0b33f7b05d21 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1551,11 +1551,12 @@ static struct cpumask		***sched_domains_numa_masks;
+  *
+  * These flags are purely descriptive of the topology and do not prescribe
+  * behaviour. Behaviour is artificial and mapped in the below sd_init()
+- * function:
++ * function. For details, see include/linux/sched/sd_flags.h.
+  *
+- *   SD_SHARE_CPUCAPACITY   - describes SMT topologies
+- *   SD_SHARE_PKG_RESOURCES - describes shared caches
+- *   SD_NUMA                - describes NUMA topologies
++ *   SD_SHARE_CPUCAPACITY
++ *   SD_SHARE_PKG_RESOURCES
++ *   SD_CLUSTER
++ *   SD_NUMA
+  *
+  * Odd one out, which beside describing the topology has a quirk also
+  * prescribes the desired behaviour that goes along with it:
 -- 
-With best wishes
-Dmitry
+2.43.0
+
