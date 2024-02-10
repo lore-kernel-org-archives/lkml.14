@@ -1,78 +1,71 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84DA383AF
-	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 07:09:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C85139846
+	for <linux-kernel@vger.kernel.org>; Sat, 10 Feb 2024 07:09:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707548993; cv=none; b=Ccp2fRe3z9gB1/WEaxK2KjpVDILAPYO6VaVvqhH6NJZyKmoYIfWfOLc/xxio/MBeT1K8rvFcgk7/b/MUsNOeW8IBFnZQmA1tYSyvHXnjUpkABjflZQGd6F5cn8zjoyipYtGmor9uyS1ChjuvaPuWKcT4LE/R+FoULI/hQXCF9TE=
+	t=1707548996; cv=none; b=ok8+5jQwYWx1xJV9Feueaok3cQGFGf092IrTr2GDTRX1lW7Wjjqhy14lRo5FWDdwPjKjMO5jrHq3rGklrbM2fxtqqTijCEP2FgydZYUx6p/WaQ0EbOPX8A+YnFeDDcUqFR0z39e4PEGQDfNxzelJBMD4+I9sKLvCbAMYGoZwTgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707548993; c=relaxed/simple;
-	bh=CsEWTa39QEyyhyQJgHJzIAqwTPpRwHJNuxlR8WNSCvE=;
+	s=arc-20240116; t=1707548996; c=relaxed/simple;
+	bh=ZrfWbNRvVHxNeML0mxoQMrfj5rYIPsgYNkk8cvKEzno=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=De4rL2r2ojXbDDWgI7bqFzfW6w26bDtLmls/mSw5rKzcrZyf5P9ZrrKapROPTiGW5GQpBjiQ+1uMIfx0RJY+NFWqflp/VOzuIgnuCUi6BmkSmqDSCBEE7zh+NLnjeULlOw2Zi8Snx64o4d2ofcn/w/WPqVckGUmAneSjFvmdYv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=h1qp2nNV; arc=none smtp.client-ip=209.85.210.171
+	 MIME-Version; b=DjUB4pThI/yzfKSg/MdW/Da4GZZs9QVYwWf2wEEDooBT7PwleJjVDlhNICnj+R7O1KICyBZvuWtsvsqYis5KxdX+6WvZrja9sOpCqbWFVPVmGeimrEnPfV1JDX3TiQHQP9InXUYLdJMJT380R2X5+K750GPTiilJui8rDi5bXqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lGoXDUwj; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h1qp2nNV"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e096229192so1082431b3a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 23:09:50 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lGoXDUwj"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d99c5f6bfeso17923215ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Feb 2024 23:09:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707548990; x=1708153790; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1707548994; x=1708153794; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lH45L1cL1xUVSD3papAAYvPuLoLqwTUuYKVsS6HzrjY=;
-        b=h1qp2nNVYpKBvfjEKNwdNYViMp173CbOGeylz7FJebYTHr05VBFwNOwoVuhhdWa6kH
-         TibnYnSOgFlm55yTnKwYhAI2MkqCc7LSWROmQhOJNl2gR4jR2qv9TQgHVfEpEeRJ130A
-         Vd5DAnC9p4IJt6xsegWKL2oIeTADzcJy6Wa6k=
+        bh=0hZ7H2Ratg3rpkz8VVpxhu5TODDBGSfCSSbP4Wfsjkw=;
+        b=lGoXDUwj8GWKwtpOWYDgfsHqHSHSG+rG8wc5DWl/zvir8K5/qwHucx9ksNwEwKe13D
+         /HNTISSx0r+pUk/LCaDbr/AlPGyDaz/aUSGO9XqTV1FKe2NkvC4KY1t4bYtgmtIkfQEs
+         /g2SroUcjkl5QaHZNTSjVQ66tWA2aVefzJdU4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707548990; x=1708153790;
+        d=1e100.net; s=20230601; t=1707548994; x=1708153794;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lH45L1cL1xUVSD3papAAYvPuLoLqwTUuYKVsS6HzrjY=;
-        b=YLTa8iR5NwGpVTd1lhRmahtEhi1gwkiKvHXP//3T6LLhBBOKhajlNSzeX9hBH7K+iO
-         cvNiykmttuhz3jriTyb+/lqhWl6uMpfRrvsfgLorP8Ri4pFsA0TNbNFjLbZKUHmYQDsB
-         uB7vwg4zEuCSBg4aO9zjOHsQ5BBKjHPZta4qkyzn0fTI+6HDTkVSM8TknRnkXQ8pUXCZ
-         OBSVeudRed9PPKASdh/NuhSXjaERFp5WcfCoa35OaKqMBYyd/Nn05/ni/Rv4pT5N2RvU
-         tSr8JE57W5yB4PcYxKoepZFxMRwhLK9lTRanIjIR6jmdkjv2Ozu/onhumCIeEZRDV86L
-         6XQw==
-X-Gm-Message-State: AOJu0YyozEkha+15IQfuvxLdglWek9Cj8cNWTUV/yp6J2PjVV5FXkZ6C
-	dxfD9/0sfMe/EoARebMdVxQSk96ye/n3J3fVbLnWitfxcCYQ4V3za9RDvs5iYA==
-X-Google-Smtp-Source: AGHT+IF0OfRh9qwjMJ8nkTI/1ytBpIHZQTbHm7hF9TOgR4QlJF/faR+Z7kP8TgEPZBH4Qz9yiy4X3Q==
-X-Received: by 2002:a05:6a20:ce4e:b0:19c:9c1d:6090 with SMTP id id14-20020a056a20ce4e00b0019c9c1d6090mr1772103pzb.6.1707548990096;
-        Fri, 09 Feb 2024 23:09:50 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUaHaP7nLmXfSvHc7FAhO6xSnWm2pSdndktsvLRg9SOw9ntG09kMLqAGaWWETpHm/KUgqubzPqjL/Ug1m0wuCZQFQAfipUOOv/4ObeMpoa78rcvpWY7qWqMiI3J1J6K1xJDQqGMqUsjqGR5VKNNvb3UrIvQBvWZqScgSEjo2EFLs3jxE1+yNe5/Y0KFvJBDYOEyaxeLPqm7s8HXa9VuXNj1qJTnM6eKE0RP2o9DDWTZd1MylApc/eKY4r6gqdiBX+NyrBUBvfhwFmrDdVPkY/3RYmmM2COXuk+/+uYKVghN/SKHdYPzOhxv/ClNxcF2rNhndqchWKLLIooMMmxKC7HWTUASBqF2lCMlyc2A2J9PyQy1ZqXFPMzSfTshHaSJOQlr1QLH/Pxuoi0lfeegRyzss9b11hyOGQ3KsNNKAyhnzm4mC0tG8dMYkbedAhCPyV1eLkbqY3poeMOCQxPZsgbYCSYKiIHLUKI9FGYcD8WO4bj7Ap7cACyM7ndWBIzqVFbmJFIsj8ezXhgP2hTaQkO/AtmkTQixy4QQrYUM17+2lS+zVJVCTqJZMqz1jgM2zSNv7FSXGcFMC8kL0ov5mHp+fvCqwCZaZDhD7Pbe5OdfbB5NQIeIHZ5M1bpOEHVYYn4Uo1fRX9PgIvBF+V34KXDJtkmpWbFmFNJVWAz9
+        bh=0hZ7H2Ratg3rpkz8VVpxhu5TODDBGSfCSSbP4Wfsjkw=;
+        b=GhOw7OXkfEYoLe6zo0RETt1BRN8SsjQiTl0Tap5Ue645pL4/jjk8nAGBvHTYX9ghgC
+         LbZ89KSdAgnFYp0d2JF/wYARoxt05ZBRv4tAv+N0a4IDi9o7UP2JmqS1hgpPeb0NBZH2
+         1DAxrCNvYTqlmRsGrhSs0SqRIx0JOPdW/5c8RgiE9HZLcCPPrO5NXARAQJZC2KQdbgmM
+         yFqx6kUCx76vCu5GtC7q+iARYw+Hnq2nyddH17agqNp11PxtqAExpQdXTIrE/VvpqnC1
+         fsmPenWwHuisCo3+fhbz5V1ufhzR9YfXGmtD9kkjPb8ubcX12CUwylfTAVMK0jOsvK1H
+         5LxA==
+X-Forwarded-Encrypted: i=1; AJvYcCUaHWHfKYLd8C479jgtPpEIdY0VrzGsgiTNOw7zXSNQMLfkSU0xsF8ccxYc3eqWFTM1/SneCaeVNgTLEmACkKZLmi7niUqIAjrW253Z
+X-Gm-Message-State: AOJu0Yx3M8rmeO3DR/mITbk1IqcIe9Q9kcw62MUy0MRIbZQ1spplg65B
+	izkwbsyD3T194M6stApd5dcbDdshxQWJ0nKPKn6VXVIRtfZcgBuBO7k8fr50Gg==
+X-Google-Smtp-Source: AGHT+IE74shzX34A4XJ2sswnIPnBB2cAtBVGC7VAOSCbWKlPiKiVqbqmig4A0vzOlWVgJfSyoFJIVQ==
+X-Received: by 2002:a17:90a:b881:b0:296:1dcf:c297 with SMTP id o1-20020a17090ab88100b002961dcfc297mr2038853pjr.7.1707548993706;
+        Fri, 09 Feb 2024 23:09:53 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUdlXLg5og70qheFVtE2wxLh4Aatgr2JuX6qBZq1Hzv0Ubz4IIv0qIg/xzMHN8EPeDldrbsRJa3EkSGd6FVIRCmDYEQU7VCTD8/9qn7/J/564Dc7YbBVXVx8GJprDInmAOehoOK4VzXaKKoWRxaJ9KfPxwEMKT1MC/9v0Ff2/2IkDw/oc//N8Zhp/aQ9VKlfE9UkS6Fnijj/S/phDX7qkp3imWWVKdocEDgtZlC6S+PFY5tMBwxIIWO0DQuvwakgIw9Pkiw/m0OR/Tf5UowBvq5FMaYjhtiX49jof2ZrCDRMUIVmH2SxGcFfvixC1irDXKWqyJ53IAG89qM3wqEcRJLc02ftkUhCV6aUZ61aFJk5a0i04AG+zB5QHE/mrdyixBvB6qRjd12JpR5l31MK1K3O7ZL3/hK0ZUFt2faCzREy/6eMaNZdEBQGEQTB2U+LRYjZEQ=
 Received: from localhost (175.199.125.34.bc.googleusercontent.com. [34.125.199.175])
-        by smtp.gmail.com with UTF8SMTPSA id se14-20020a17090b518e00b00296d3598f9asm2910769pjb.35.2024.02.09.23.09.48
+        by smtp.gmail.com with UTF8SMTPSA id bj13-20020a17090b088d00b0029552a03219sm2883297pjb.29.2024.02.09.23.09.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Feb 2024 23:09:49 -0800 (PST)
+        Fri, 09 Feb 2024 23:09:53 -0800 (PST)
 From: Stephen Boyd <swboyd@chromium.org>
 To: chrome-platform@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org,
+Cc: Prashant Malani <pmalani@chromium.org>,
+	linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org,
 	devicetree@vger.kernel.org,
 	linux-arm-msm@vger.kernel.org,
 	Douglas Anderson <dianders@chromium.org>,
 	Pin-yen Lin <treapking@chromium.org>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH 06/22] drm/bridge: Verify lane assignment is going to work during atomic_check
-Date: Fri,  9 Feb 2024 23:09:17 -0800
-Message-ID: <20240210070934.2549994-7-swboyd@chromium.org>
+	Chen-Yu Tsai <wenst@chromium.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: [PATCH 08/22] platform/chrome: cros_ec_typec: Purge blocking switch devlinks
+Date: Fri,  9 Feb 2024 23:09:19 -0800
+Message-ID: <20240210070934.2549994-9-swboyd@chromium.org>
 X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
 In-Reply-To: <20240210070934.2549994-1-swboyd@chromium.org>
 References: <20240210070934.2549994-1-swboyd@chromium.org>
@@ -84,71 +77,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Verify during drm_atomic_bridge_check() that the lane assignment set in
-a bridge's atomic_check() callback is going to be satisfied by the
-previous bridge. If the next bridge is requiring something besides the
-default 1:1 lane assignment on its input then there must be an output
-lane assignment on the previous bridge's output. Otherwise the next
-bridge won't get the lanes assigned that it needs.
+From: Prashant Malani <pmalani@chromium.org>
 
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Robert Foss <rfoss@kernel.org>
-Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc: Jonas Karlman <jonas@kwiboo.se>
-Cc: Jernej Skrabec <jernej.skrabec@gmail.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: David Airlie <airlied@gmail.com>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: <dri-devel@lists.freedesktop.org>
-Cc: Pin-yen Lin <treapking@chromium.org>
+When using OF graph, the fw_devlink code will create links between the
+individual port driver (cros-ec-typec here) and the parent device for
+a Type-C switch (like mode-switch). Since the mode-switch will in turn
+have the usb-c-connector (i.e the child of the port driver) as a
+supplier, fw_devlink will not be able to resolve the cyclic dependency
+correctly.
+
+As a result, the mode-switch driver probe() never runs, so mode-switches
+are never registered. Because of that, the port driver probe constantly
+fails with -EPROBE_DEFER, because the Type-C connector class requires all
+switch devices to be registered prior to port registration.
+
+To break this deadlock and allow the mode-switch registration to occur,
+purge all the usb-c-connector nodes' absent suppliers. This eliminates
+the connector as a supplier for a switch and allows it to be probed.
+
+Signed-off-by: Prashant Malani <pmalani@chromium.org>
+Signed-off-by: Pin-yen Lin <treapking@chromium.org>
+Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Tested-by: Chen-Yu Tsai <wenst@chromium.org>
+Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Link: https://lore.kernel.org/r/20230331091145.737305-3-treapking@chromium.org
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- drivers/gpu/drm/drm_bridge.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/platform/chrome/cros_ec_typec.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-index 3fce0d8d7dcb..5097e7c65ddf 100644
---- a/drivers/gpu/drm/drm_bridge.c
-+++ b/drivers/gpu/drm/drm_bridge.c
-@@ -881,6 +881,10 @@ static int drm_atomic_bridge_check(struct drm_bridge *bridge,
- 				   struct drm_crtc_state *crtc_state,
- 				   struct drm_connector_state *conn_state)
- {
-+	u8 num_input_lanes, num_output_lanes = 0;
-+	const struct drm_lane_cfg *input_lanes;
-+	int i;
-+
- 	if (bridge->funcs->atomic_check) {
- 		struct drm_bridge_state *bridge_state;
- 		int ret;
-@@ -894,12 +898,24 @@ static int drm_atomic_bridge_check(struct drm_bridge *bridge,
- 						  crtc_state, conn_state);
- 		if (ret)
- 			return ret;
-+		num_output_lanes = bridge_state->output_bus_cfg.num_lanes;
- 	} else if (bridge->funcs->mode_fixup) {
- 		if (!bridge->funcs->mode_fixup(bridge, &crtc_state->mode,
- 					       &crtc_state->adjusted_mode))
- 			return -EINVAL;
+diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+index 2b2f14a1b711..cc5269a4b2f1 100644
+--- a/drivers/platform/chrome/cros_ec_typec.c
++++ b/drivers/platform/chrome/cros_ec_typec.c
+@@ -325,6 +325,16 @@ static int cros_typec_init_ports(struct cros_typec_data *typec)
+ 		return -EINVAL;
  	}
  
-+	input_lanes = drm_bridge_next_bridge_lane_cfg(bridge,
-+						      crtc_state->state,
-+						      &num_input_lanes);
 +	/*
-+	 * Ensure this bridge is aware that the next bridge wants to
-+	 * reassign lanes.
++	 * OF graph may have set up some device links with switches,
++	 * since connectors have their own compatible. Purge these
++	 * to avoid a deadlock in switch probe (the switch mistakenly
++	 * assumes the connector is a supplier).
 +	 */
-+	for (i = 0; i < num_input_lanes; i++)
-+		if (i != input_lanes[i].logical && !num_output_lanes)
-+			return -ENOTSUPP;
++	if (dev_of_node(dev))
++		device_for_each_child_node(dev, fwnode)
++			fw_devlink_purge_absent_suppliers(fwnode);
 +
- 	return 0;
- }
- 
+ 	/* DT uses "reg" to specify port number. */
+ 	port_prop = dev->of_node ? "reg" : "port-number";
+ 	device_for_each_child_node(dev, fwnode) {
 -- 
 https://chromeos.dev
 
