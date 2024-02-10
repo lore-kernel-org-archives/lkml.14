@@ -1,31 +1,30 @@
 Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8465BADF;
-	Sat, 10 Feb 2024 16:29:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5CC5C5E8;
+	Sat, 10 Feb 2024 16:29:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707582598; cv=none; b=Ewf4fU6J4kfStLzNROTSTxYozJf9bWTwun6ZyfTZDqJYkpA38+mcstmJpprhnoxcVnd9A67Syqr9xl+uEyGAlomH01GjEOebFXgkqkNexkkvYnzqfugzkk9wDyo15M6gx8/QRISA6tevb7NGjM7iz2Q8t7il2qM+JtugHoZM+IA=
+	t=1707582598; cv=none; b=QydCBbw6OY9l1DgCrrjMFUtbozQ+47zCdxQ2hIn7+QpEDIEiu/D9NFtkJQbckC5ikI5EHqs0/M+JUNFLjmJgge45dDaITnN+wKpiAhKojOyQFNNimdwD7V/4n5d6hyThF8/vmM26BrAmH16ewgL28CgLWcI27waqb+ADOK8c+nI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707582598; c=relaxed/simple;
-	bh=CWuSxu3BNt4rhvvLuYo5Pl5HYkk8Bc941D4GLJ2ONTI=;
+	bh=5m1gQLd7uABOATw03ZDp49YqHmKbWEYL7MaNLQOW2LA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WVScCGzQ5AKws767bY2KQVunKdnaqwJmVuar12Jfun2zh3h2tF2pBLJZKStiEaYHH1NtppKCZvQ/C6l2nqHZfC7uBnQZpOnvL9zK457xmdjIb7cNUEqA9fXXv7Z6zkEo1soQ/dmtfBS/JizmpG6iP7zRU4QQrXwqBLz/FMXJVKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=XO7mgdhG; arc=none smtp.client-ip=128.199.32.197
+	 In-Reply-To:To:Cc; b=qlVgu6frVXankVLO2nRsxbpLJMHF+p8WiWVnaTBPn17EVS9L0kCHSDpzcs9S1MUzo9G9ekNEiRvUA03IQxbYjhsXr9Ge6zIExiNymbYRNH+paPRpLvTQmBh6g0pHQoTLmnmFdKYLk21Wzv2uLSam6r+3PRYZj6UA86+FWBoNcL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=gKs3L7Qm; arc=none smtp.client-ip=128.199.32.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=z3ntu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="XO7mgdhG"
+	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="gKs3L7Qm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=s1;
-	t=1707582593; bh=CWuSxu3BNt4rhvvLuYo5Pl5HYkk8Bc941D4GLJ2ONTI=;
+	t=1707582594; bh=5m1gQLd7uABOATw03ZDp49YqHmKbWEYL7MaNLQOW2LA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=XO7mgdhG0Z22rmOzW0rZ9F3Ag7WgvbieaJAd/8VODO8yeD8zjOInEvfhDD3yQzNwa
-	 gUgHdqXato7QlpReQlqOeaTxyJTTrCQB4t8LjVx3hT8I9knIuAI/h6eyv2P4HWtYXO
-	 0ny2ECGH7G3tnHeXEcKvdyFAHpjXT8V5MCDcKVVQ=
+	b=gKs3L7Qmb+7nfC+0juPS3NxX8OPbkMP1D5WUHg/M1hikKvFv99yUDMZAvCSQNiKXU
+	 IEjTE9gqrNN1XI8ghGS7QsxyP2qdx9WeLhtgpm7Z+p2+ZAO2ChrheTRwl9MbDkbfWj
+	 dDqvSNXus4a6a8y824gyFdSq5qEb/MQxTwR3iUNY=
 From: Luca Weiss <luca@z3ntu.xyz>
-Date: Sat, 10 Feb 2024 17:28:52 +0100
-Subject: [PATCH v2 1/3] dt-bindings: soc: qcom: qcom,saw2: add msm8226 l2
- compatible
+Date: Sat, 10 Feb 2024 17:28:54 +0100
+Subject: [PATCH v2 3/3] ARM: dts: qcom: msm8226: Add CPU and SAW/ACC nodes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,7 +33,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240210-msm8226-cpu-v2-1-5d9cb4c35204@z3ntu.xyz>
+Message-Id: <20240210-msm8226-cpu-v2-3-5d9cb4c35204@z3ntu.xyz>
 References: <20240210-msm8226-cpu-v2-0-5d9cb4c35204@z3ntu.xyz>
 In-Reply-To: <20240210-msm8226-cpu-v2-0-5d9cb4c35204@z3ntu.xyz>
 To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
@@ -43,44 +42,158 @@ To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
  Conor Dooley <conor+dt@kernel.org>
 Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Luca Weiss <luca@z3ntu.xyz>
+ linux-kernel@vger.kernel.org, Luca Weiss <luca@z3ntu.xyz>, 
+ Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=845; i=luca@z3ntu.xyz;
- h=from:subject:message-id; bh=CWuSxu3BNt4rhvvLuYo5Pl5HYkk8Bc941D4GLJ2ONTI=;
- b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBlx6R+NNryrCojanAnRaA2VvCJ9Qn4W5qNNnpaN
- Y04yRvxVhWJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZcekfgAKCRBy2EO4nU3X
- Vp39D/0VgywKB5gelCM+T9Lfro8pM2rWFaqNAoB5jEGQoSfe1D4oqMAQduEzN64BPUjIeF8pYSe
- ysIjDVFpExdYZw8HLtXtauqWZHdyltV4IHuqNooXurXM9eQiIJqPvPtbicNEVmQZYrWEWaDUjWM
- R73o7fGvxNuNDe7H6SXOVEVO6hFA5KZRyw/cjHzngZtGdFvgcMjYSelsMxqTBH7l6Pbzzx3hVbv
- 9Y/gNifw+a8nszLsK+1zsTDbIu01pdQJUqZA9LIPpLUO9Mt89CyOupk4tQWnLe38p40oz3+0hwd
- /fNMub+e7g+UJaNs52GN/mnRAM4mOgZomXTsUrbqbmWVtAOOjRg5EWfyJ9H4ePzQj23bOW0Ro+B
- xT8SExqftJzQijf/k6daoSOriHcgMXFL8AHPIxzMEzCxJ3Q9lH4xjNnZ+nrFxoHkdnKItd/GR5E
- RAkPpAULobtGlPFfq2TKPLJP9LwruYZYU0alOA1JfnWGKZnKfan5AUG7sOhZEcaBlA3XNxNAWHx
- 2YcOifey8Aurf7QbQSYN/Q+ghkThK1ppn4xRANldWZ1mgJExPx5I14u7Gp41hwtSqa60OAxOIQv
- N+qScAVOX8E3X8+bTwyQo9ohQmvdTj+DuQUf2ghwbrNoCo+Wwhf5nUH1LDbauaa0oy1ndDxaimD
- lezoPITw7p5mCQg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3425; i=luca@z3ntu.xyz;
+ h=from:subject:message-id; bh=x8JuvX/IKrTAF+OKwnd8Abogn/7OVQEBDL8aa2HYyRY=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBlx6R/fpwkBk7PqSEx/egA+dhAVruxFjMAYds4P
+ f0Ct/QoFoGJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZcekfwAKCRBy2EO4nU3X
+ ViIFD/46Yc5EU1w9TpnVZPClDY4W2UGU7l69ASa7I5rIJu+/5OwLnqhlcQ5eQtoyxgcC8eycFqg
+ jmXHq8BvcG8QaTjeGO5UH9+2k6yfUN8uIXUmNjQpL7twM1AKgLc968hJx/2IRzTyftiVpUyC2H6
+ wVmDeSDCbgfRU7Pk7i9bVeNW8swPpqOdzURQ5vxzFrDQosWxleaJ3d1c47b+oImIggEeyDot9+e
+ 39yVheq9YRPQ9C05WCaJch+U/A12GN4LqkIf6gA/ktY5o7o3sJaL/fY1Ez4SPWVSugzdZ0B3pam
+ Vt7dzS+RML/XJ9Sq16dqt2m4Q7T1tJXs3a/C/NPkbr+vlyIcNV1mDEkksmQrs+0u5KuFQVd7QWS
+ 5r6Xb9OinywMwyKVIL64R5puUZfCmjrL4cvSE6Z/E0orIPBHFq9mHi/eEqXYApu+idwSOzUlX43
+ buAh3db6rJzXC8FvU3kK6QxIAsIpdJ8pW8aetCdBLombDLIO7WKRHmWTzsHtpTbb+6i6GDMpNmw
+ oMJ1G+Z/DopJlMWHphKxRJgopeI9ydJPo7JcUttJfT7j7gAmFAX9/yTn56NR0M2SATRV5iG0/LH
+ S6C+mFAv6TIevm3xvIg5XvA3l8qQ1ET9J9oH7J39eKwEnHsNhdp5eLqaW796X+hKIBZe+DZGsL0
+ qFQxYitjx1yoyJQ==
 X-Developer-Key: i=luca@z3ntu.xyz; a=openpgp;
  fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
-Add the compatible for the SAW2 for L2 cache found on MSM8226.
+From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
 
+Add CPU and SAW/ACC nodes to enable SMP on MSM8226.
+
+Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+[luca: update some nodes to fix dtbs_check errors, reorder, cleanup]
 Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
 ---
- Documentation/devicetree/bindings/soc/qcom/qcom,saw2.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/qcom/qcom-msm8226.dtsi | 96 ++++++++++++++++++++++++++++++++
+ 1 file changed, 96 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,saw2.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,saw2.yaml
-index f9306f2a6e99..ca4bce817273 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,saw2.yaml
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,saw2.yaml
-@@ -36,6 +36,7 @@ properties:
-           - qcom,msm8916-saw2-v3.0-cpu
-           - qcom,msm8939-saw2-v3.0-cpu
-           - qcom,msm8226-saw2-v2.1-cpu
-+          - qcom,msm8226-saw2-v2.1-l2
-           - qcom,msm8960-saw2-cpu
-           - qcom,msm8974-saw2-v2.1-cpu
-           - qcom,msm8974-saw2-v2.1-l2
+diff --git a/arch/arm/boot/dts/qcom/qcom-msm8226.dtsi b/arch/arm/boot/dts/qcom/qcom-msm8226.dtsi
+index 6896318e6612..8fae6058bf58 100644
+--- a/arch/arm/boot/dts/qcom/qcom-msm8226.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-msm8226.dtsi
+@@ -34,6 +34,57 @@ sleep_clk: sleep_clk {
+ 		};
+ 	};
+ 
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		CPU0: cpu@0 {
++			compatible = "arm,cortex-a7";
++			enable-method = "qcom,msm8226-smp";
++			device_type = "cpu";
++			reg = <0>;
++			next-level-cache = <&L2>;
++			qcom,acc = <&acc0>;
++			qcom,saw = <&saw0>;
++		};
++
++		CPU1: cpu@1 {
++			compatible = "arm,cortex-a7";
++			enable-method = "qcom,msm8226-smp";
++			device_type = "cpu";
++			reg = <1>;
++			next-level-cache = <&L2>;
++			qcom,acc = <&acc1>;
++			qcom,saw = <&saw1>;
++		};
++
++		CPU2: cpu@2 {
++			compatible = "arm,cortex-a7";
++			enable-method = "qcom,msm8226-smp";
++			device_type = "cpu";
++			reg = <2>;
++			next-level-cache = <&L2>;
++			qcom,acc = <&acc2>;
++			qcom,saw = <&saw2>;
++		};
++
++		CPU3: cpu@3 {
++			compatible = "arm,cortex-a7";
++			enable-method = "qcom,msm8226-smp";
++			device_type = "cpu";
++			reg = <3>;
++			next-level-cache = <&L2>;
++			qcom,acc = <&acc3>;
++			qcom,saw = <&saw3>;
++		};
++
++		L2: l2-cache {
++			compatible = "cache";
++			cache-level = <2>;
++			cache-unified;
++		};
++	};
++
+ 	firmware {
+ 		scm {
+ 			compatible = "qcom,scm-msm8226", "qcom,scm";
+@@ -185,6 +236,11 @@ apcs: syscon@f9011000 {
+ 			reg = <0xf9011000 0x1000>;
+ 		};
+ 
++		saw_l2: power-manager@f9012000 {
++			compatible = "qcom,msm8226-saw2-v2.1-l2", "qcom,saw2";
++			reg = <0xf9012000 0x1000>;
++		};
++
+ 		timer@f9020000 {
+ 			compatible = "arm,armv7-timer-mem";
+ 			reg = <0xf9020000 0x1000>;
+@@ -243,6 +299,46 @@ frame@f9028000 {
+ 			};
+ 		};
+ 
++		acc0: power-manager@f9088000 {
++			compatible = "qcom,kpss-acc-v2";
++			reg = <0xf9088000 0x1000>, <0xf9008000 0x1000>;
++		};
++
++		saw0: power-manager@f9089000 {
++			compatible = "qcom,msm8226-saw2-v2.1-cpu", "qcom,saw2";
++			reg = <0xf9089000 0x1000>;
++		};
++
++		acc1: power-manager@f9098000 {
++			compatible = "qcom,kpss-acc-v2";
++			reg = <0xf9098000 0x1000>, <0xf9008000 0x1000>;
++		};
++
++		saw1: power-manager@f9099000 {
++			compatible = "qcom,msm8226-saw2-v2.1-cpu", "qcom,saw2";
++			reg = <0xf9099000 0x1000>;
++		};
++
++		acc2: power-manager@f90a8000 {
++			compatible = "qcom,kpss-acc-v2";
++			reg = <0xf90a8000 0x1000>, <0xf9008000 0x1000>;
++		};
++
++		saw2: power-manager@f90a9000 {
++			compatible = "qcom,msm8226-saw2-v2.1-cpu", "qcom,saw2";
++			reg = <0xf90a9000 0x1000>;
++		};
++
++		acc3: power-manager@f90b8000 {
++			compatible = "qcom,kpss-acc-v2";
++			reg = <0xf90b8000 0x1000>, <0xf9008000 0x1000>;
++		};
++
++		saw3: power-manager@f90b9000 {
++			compatible = "qcom,msm8226-saw2-v2.1-cpu", "qcom,saw2";
++			reg = <0xf90b9000 0x1000>;
++		};
++
+ 		sdhc_1: mmc@f9824900 {
+ 			compatible = "qcom,msm8226-sdhci", "qcom,sdhci-msm-v4";
+ 			reg = <0xf9824900 0x11c>, <0xf9824000 0x800>;
 
 -- 
 2.43.0
