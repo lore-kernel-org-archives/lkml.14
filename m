@@ -1,100 +1,119 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.75])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458F415B1;
-	Sun, 11 Feb 2024 00:40:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA9317F3
+	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 01:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707612027; cv=none; b=ZN29qOYL4uA7yiOBBfaKN2HTClpuiiiIO9PYmTv0Dvx05guur3UOXZ0ps6wzc+tzPgOoERSbmmzeqYq13O+qgCSGAvQEb47+aECKpBFKzz077zUBYZpp7/6xDSW0Cb4huewRbuWNeF1WFD/RohgOTUpg/KK6ebUNrd71GOHgqZM=
+	t=1707616011; cv=none; b=tUKSJm3P81MFi7Fl3LaUnuNDv89VwQhm8eZWopFfKHcD3RXjPcnJriGyIPGoGcoMO5kx1Dg5Qs/vlmvlG1S8GEGBcCMSV6Rjuw+PLuEzv97IBRwmmWNNBLuv6omVn8TxzuXVZFt2al5YG3eOE8E1Y7pgL54w+rogqm9pyL7WH+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707612027; c=relaxed/simple;
-	bh=wmHERYYN058/RFLczrPeOcXAoo/yUFyAt/tHzV8DLHc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XSQ0IaZUG0O+rh5h0jppz+c1y9xbrXH30xKJxgb59G2/X5auds8wTR3jtU6f+xyvlRyLdsrlvNLWvAnWV1ETHvH2guuqO9rtfnTCdLDm+CSZpKa2/RVoobr2Qul8FX+aHE2EBaram3i513A72oNrrsEzuQfSfan1WTDqIlQQdP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=rYQG8Zxx; arc=none smtp.client-ip=217.72.192.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1707616011; c=relaxed/simple;
+	bh=BQmjpW0I5tJ8/1nqzqWJxFSuGQt107l1mhgaSnsMkJI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=omIGNmfg7N1BhgleounH5GztULKmytQVa+9qvczEFyqBdc85CCfMzh2kKYCv+PZhCIDvNimHLgtbgq6mOVXaBElngSqks9VzEUVOjO9b0mISnT+YNN9VsPkN9/1GEaEw7pjJ00voCAgpen1OZQA85Z7ECQ1GUanKuAaN2XZo67Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ciFknbf2; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="rYQG8Zxx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=heusel.eu;
-	s=s1-ionos; t=1707611992; x=1708216792; i=christian@heusel.eu;
-	bh=wmHERYYN058/RFLczrPeOcXAoo/yUFyAt/tHzV8DLHc=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=rYQG8Zxxn37LNmPQ2IrloJg4YF0tYXfeMdJeWAw2NuoTtT2imBfGnmnEhmzNbE9Y
-	 mkRJXIqpeEmFTpvCJrpaSZ8chuKyjZZZ6d6S93U/f7NBlWEe/2/aMyJkj2tcRfBag
-	 BkyJRCe/3YjPRUXsgFN+un6LnYVO5AMeQFobAxNsIjFMXqfVcmV/TxsbPqDUDqk/1
-	 34IJ5X4PDBHhMvS5ZRlCn4Iz2pOrjYl02s7+dpjCcvvRZHKCJSVGtQiYL/9uwBvHU
-	 X6eaje5bta3ocxoMOHu2w2/UujYtcbmOEYJcQThH4XK6dyfFd78d/+GXwFA5pEjU5
-	 J0FIojCnhYRGHIB3tA==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from meterpeter.INF524.stwhd ([141.70.80.5]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1Msqpq-1qgBRA1HIm-00tGhj; Sun, 11 Feb 2024 01:39:52 +0100
-From: Christian Heusel <christian@heusel.eu>
-To: David Woodhouse <dwmw2@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Christian Heusel <christian@heusel.eu>,
-	linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org
-Subject: [PATCH] jffs2: print symbolic error name instead of error code
-Date: Sun, 11 Feb 2024 01:39:04 +0100
-Message-ID: <20240211003907.167891-1-christian@heusel.eu>
-X-Mailer: git-send-email 2.43.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ciFknbf2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707616008;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fGLK4dJX5e1tF4UUiUtCFTTT+Sp7JjuwMt77i6yrPM0=;
+	b=ciFknbf2BfnlbQwUj2lLBUE2XdKWf5byzI6IoV1/NyG9QAAswjN07FrvDaJT6lxO83XJKr
+	GmlXviues/3AGc8C6EK3eAchE8YnOoND0J44vupKy4fTpdR+2IxROXLnl2kWengN2r8KN9
+	07pskrdgQgmBcbn7mOAQbFQPHKE9SJc=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-571-yiTLxjd_N9GMU2JQXIMtGQ-1; Sat,
+ 10 Feb 2024 20:46:41 -0500
+X-MC-Unique: yiTLxjd_N9GMU2JQXIMtGQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B7C7E38212CD;
+	Sun, 11 Feb 2024 01:46:40 +0000 (UTC)
+Received: from [10.22.16.18] (unknown [10.22.16.18])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 99E84111CD4C;
+	Sun, 11 Feb 2024 01:46:34 +0000 (UTC)
+Message-ID: <099a0310-6805-4ad5-aa99-2589e768acd6@redhat.com>
+Date: Sat, 10 Feb 2024 20:46:34 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:mdD+cC108pnAZXbGv+PQh7kUVRHEsQ7+KfabFD+Q5ylCBajXVwQ
- +3RET9o94ZZ71QCJpskyjPJvAMRbY4jidCoz5a7lci+4ts8IwctXPBczn4wJZkX+HmNb7zt
- 3JHIDZQ9nyKxYuZXIJ7kW1x0Vr8w/6+Bg70MFNvB+DRKWEUoy7avmZh4BcX8tmLEDUn/T6n
- mZ/tfamT+oPSSc1NIMIEQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:pinJemaaIv0=;vsBcASSi2Z1p+Lp65An5yLWwkcy
- LRfNErQyBdSATIHLfrW3qEeDiDDHmHXrWLlmImFBeQkI3sL4ELNSAnEk8CYvFI2Lk33eZRiYG
- kctBAHBn+Lya0INz4uM/PslB7hJvO0t07zpP/71hEFBDoltvW8OV8Zo11mPqtBc9HQyel358c
- TlVPrsRPqYL+HF5QztoF4+41vDnoZAre54DALKhm47TUOq2ALeMUEPFxCl7mUogno+OSleMx+
- fb6m5DNAu17khHcfffpd8qDN2qaXolV8EEIrAz6Y473MvPE7EE3xV9RZhThxqWUpIdnGYsskR
- TlaiVINg5612ED4saHJGXSvaMiSLDdLe4W/aQRvkwZujHLJWIx/TwrTsUixTLAavF7D+wSf56
- vskI54DQxEbsdI7tmpjaX1mDzs9D3T2i7fi2h47pYKSCemRzhWFAQfLJcGwjDBfni7wMHCsf6
- knzfEffgVGX8EhwvxcT+Yq4SQgVF+2EYbw9BuWBWop66ZS8Q43QabA2OlY8I+YokEV6yvZlnS
- bCvPwdc4IiYBE5+BwoQ94TNf7Jje9vprKuJko/C4qyUozIMYrPcVCMOPCRa51rn9swkVCiQLb
- LQdKpaavG7qM5tPuXJgDHqxuy58OpuyccOxEgjMqt7Jg/4+aLMA7g9sQdMt0h/obSY7jnsXXl
- JiYdMtNCtM21tQ2IGya08B8PAyrYCYyhL8guevNpgXRSL+I44McjTH9qUjtk5tFAooZIzEsN3
- DFX9Eju0oOsUZFtIPNX+rlaSAoRbYs6QSW4V22JRvXc5xhBUiN6Lr8=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/8] cgroup/cpuset: Support RCU_NOCB on isolated
+ partitions
+Content-Language: en-US
+To: paulmck@kernel.org
+Cc: Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
+ Johannes Weiner <hannes@cmpxchg.org>,
+ Frederic Weisbecker <frederic@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Neeraj Upadhyay <quic_neeraju@quicinc.com>,
+ Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Shuah Khan <shuah@kernel.org>,
+ cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Mrunal Patel <mpatel@redhat.com>,
+ Ryan Phillips <rphillips@redhat.com>, Brent Rowsell <browsell@redhat.com>,
+ Peter Hunt <pehunt@redhat.com>, Cestmir Kalina <ckalina@redhat.com>,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Alex Gladkov <agladkov@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>,
+ Phil Auld <pauld@redhat.com>, Paul Gortmaker <paul.gortmaker@windriver.com>,
+ Daniel Bristot de Oliveira <bristot@kernel.org>,
+ Juri Lelli <juri.lelli@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Costa Shulyupin <cshulyup@redhat.com>
+References: <20240117163511.88173-1-longman@redhat.com>
+ <ad806d7c-91ec-4659-9348-1b0bb42dd417@paulmck-laptop>
+From: Waiman Long <longman@redhat.com>
+In-Reply-To: <ad806d7c-91ec-4659-9348-1b0bb42dd417@paulmck-laptop>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-Utilize the %pe print specifier to get the symbolic error name as a
-string (i.e "-ENOMEM") in the log message instead of the error code to
-increase its readablility.
+On 1/19/24 05:24, Paul E. McKenney wrote:
+> On Wed, Jan 17, 2024 at 11:35:03AM -0500, Waiman Long wrote:
+>> This patch series is based on the RFC patch from Frederic [1]. Instead
+>> of offering RCU_NOCB as a separate option, it is now lumped into a
+>> root-only cpuset.cpus.isolation_full flag that will enable all the
+>> additional CPU isolation capabilities available for isolated partitions
+>> if set. RCU_NOCB is just the first one to this party. Additional dynamic
+>> CPU isolation capabilities will be added in the future.
+>>
+>> The first 2 patches are adopted from Federic with minor twists to fix
+>> merge conflicts and compilation issue. The rests are for implementing
+>> the new cpuset.cpus.isolation_full interface which is essentially a flag
+>> to globally enable or disable full CPU isolation on isolated partitions.
+>> On read, it also shows the CPU isolation capabilities that are currently
+>> enabled. RCU_NOCB requires that the rcu_nocbs option be present in
+>> the kernel boot command line. Without that, the rcu_nocb functionality
+>> cannot be enabled even if the isolation_full flag is set. So we allow
+>> users to check the isolation_full file to verify that if the desired
+>> CPU isolation capability is enabled or not.
+>>
+>> Only sanity checking has been done so far. More testing, especially on
+>> the RCU side, will be needed.
+> There has been some discussion of simplifying the (de-)offloading code
+> to handle only offline CPUs.  Along with some discussion of eliminating
+> the (de-)offloading capability altogehter.
+>
+> We clearly should converge on the capability to be provided before
+> exposing this to userspace.  ;-)
 
-This change was suggested in
-https://lore.kernel.org/all/92972476-0b1f-4d0a-9951-af3fc8bc6e65@suswa.mou=
-ntain/
+Would you mind giving me a pointer to the discussion of simplifying the 
+de-offloading code to  handle only offline CPUs?
 
-Signed-off-by: Christian Heusel <christian@heusel.eu>
-=2D--
- fs/jffs2/background.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/fs/jffs2/background.c b/fs/jffs2/background.c
-index 6da92ecaf66d..bb0ee1a59e71 100644
-=2D-- a/fs/jffs2/background.c
-+++ b/fs/jffs2/background.c
-@@ -44,8 +44,8 @@ int jffs2_start_garbage_collect_thread(struct jffs2_sb_i=
-nfo *c)
-
- 	tsk =3D kthread_run(jffs2_garbage_collect_thread, c, "jffs2_gcd_mtd%d", =
-c->mtd->index);
- 	if (IS_ERR(tsk)) {
--		pr_warn("fork failed for JFFS2 garbage collect thread: %ld\n",
--			-PTR_ERR(tsk));
-+		pr_warn("fork failed for JFFS2 garbage collect thread: %pe\n",
-+			tsk);
- 		complete(&c->gc_thread_exit);
- 		ret =3D PTR_ERR(tsk);
- 	} else {
-=2D-
-2.43.1
+Thanks,
+Longman
 
