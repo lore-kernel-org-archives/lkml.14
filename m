@@ -1,91 +1,78 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9126F5C5E8
-	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 18:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DB443AA0;
+	Sun, 11 Feb 2024 18:55:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707677711; cv=none; b=NetJszaLXuVhiatWxprDDS8t4ndW2srUOEskB8coqiFRlLewVbu+6MOboCYrNkL6J+BDQFKqHXpmLxdOtPeoWl0h3wV+JVvCwAeSVYD0muPNltN0c9TRUftH1kLtLTu8Ka1z/XbATbnftXFBjaoVtkhsZmwuC8oneehc0q9Fx/M=
+	t=1707677732; cv=none; b=dA5dxwt2kxSiVU6CXeIdzojImBX9i8m/CEkc1pQNU1QIpsWAQCzvNt6MTjb+cBlD/AnBBujB7AIDJGA2O4g+i6JVDSiDUYMZSqVEeN6ds+iAGwq8CC/3Hr+5hWKO6KIYXJdHXslPZ9Jv5bSrmSES7GWpo3AQUkp1Xx1ebsgUY4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707677711; c=relaxed/simple;
-	bh=zOMiltPoLSaPVXQpX+AyhP1tWAB8q+YFG5onf3ColLs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d/hgoxH0ZSzahOYmWTc4yvjSle9bvjywMLrQxccNQyQ7iZvqZYf3YjU+KMm53Y5nQTNiM0ESnz1R90o+y2rZx+L1kz/ewxMDRuB406zpWGzJYgajrug1KLSTKTQiNf0CayNAOV4rqh9WLa+ZzeMNt/FkDKvlP5qOQpOYELJLLqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=redhat.com; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-78552105081so178067185a.3
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 10:55:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707677708; x=1708282508;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZYaFnPH4T57xbODxsrD1uA/JRSAy3nBPFfHDTo1ipmE=;
-        b=dRJWiOSLXrK5+kGrFFgTid8u383bBfuwNfZMmc5+2ej45yVv1rkJFK+6zkElEDZVZx
-         bCNha4u9q49ODxbdieWevOGY6w6myDB2AMY0g7t8gXf9PgoBVvpuPRKrIZFNOWcT+lbh
-         SN8cHmVwS11XmrTG6byisMu3MTNt2hGYqFbOGDFdtOS2I64kgOP0RLCRweCTSoJFs7xG
-         8yf6QLP/m7u4VeIuaIFAbVTIbJLCExTeb5x0o0xxoZ9e+hW6rV7LI6s/KA2rf/g5wRKl
-         pliGhKgL0V9LewbLoRmtoubxrkHEWgVmmdPIMzX/8FURXpAIkvCJ3/fiLaAyfScFu0sa
-         oZGA==
-X-Gm-Message-State: AOJu0Yyo9OAPuQ6UNRALdofuVcV2PPuPE7bZeRH6eUDZ/90vHCVxCQrV
-	Ctx76+C35ZloX8/q2tUeD1+otZgUUn64sb5Tv0y9GP5Ee0I3HQqaW3OuHsxbRQ==
-X-Google-Smtp-Source: AGHT+IEpVYQgDizFElfNgxxrxcQYJwrK2TguA2ymoGhXLUMM6BM6g4VnY8a5QEGnidAYziFgxvHqig==
-X-Received: by 2002:a0c:dd08:0:b0:68c:48fd:4441 with SMTP id u8-20020a0cdd08000000b0068c48fd4441mr5088279qvk.64.1707677708614;
-        Sun, 11 Feb 2024 10:55:08 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUN17KHbxG10s+yxCtcs3OdW+Xkyi+j12gZmyMIv8GAHSnYGoSY4HE9hwNcdGiorsU8NTu+jVS/XyFjRSfwsSAoH1fHgR3wyBbxKRyqKN35MPBaBUG6gQVbISVPBRikukhUy1XefK4QGMevRepkn0rmKH+phaIL7Sg9NxV67STQkMKJyC0Cckw=
-Received: from localhost (pool-68-160-141-91.bstnma.fios.verizon.net. [68.160.141.91])
-        by smtp.gmail.com with ESMTPSA id nh6-20020a056214390600b0068c6dd9af10sm2685704qvb.64.2024.02.11.10.55.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Feb 2024 10:55:08 -0800 (PST)
-Date: Sun, 11 Feb 2024 13:55:07 -0500
-From: Mike Snitzer <snitzer@kernel.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Matthew Sakai <msakai@redhat.com>, dm-devel@lists.linux.dev,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: dm vdo slab-depot: delete unnecessary check
-Message-ID: <ZckYC4wyzbX2870P@redhat.com>
-References: <16ffd614-48a9-42b8-961d-2dc8a69c48d6@moroto.mountain>
+	s=arc-20240116; t=1707677732; c=relaxed/simple;
+	bh=lqk4STgRpueQJ7qWa///ySfTaWOZBBJd17euwFJH9iE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g897J1ze0SlNdn7DWb4pE24ZtYHA8mxVK21HY5m1IXWgyeytr8wjzXDYR8obvYEV5MhGYEUqdDwdgQWgw10ionBVtAmBhl9PAVfihO8Rl1l3rD6NjJwdYdaDp7Vit/n5ev6+yWzBSkMT72DBMJytks79iR7uTyqVBbL+c0ryYJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=Cxxgr7NE; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="Cxxgr7NE"
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 8406587C4D;
+	Sun, 11 Feb 2024 19:55:26 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1707677728;
+	bh=58z4CTvLg4x4eiEhzPFwwwmKQDV91lyZxL55+eo8WVA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Cxxgr7NE5mYdOvBdyFh75MncEiEqoLzzhlINwgbL5LhtJEubLqkHTGQPB8D5gG5Zc
+	 9HmptjBpTccJ06HFRwy9UXpebGperRrK34s5yb4qdFeA8CvUS+ivrQpOOVn/ZZs6Hr
+	 IGMS9Yop9MOuFR7WDDDVfOv55XWSwytTUellHnWi+6M+qN9kv5XCYxEQZb4qFDYSHL
+	 UK26pmkhyzEy2zhM3Cw2GEpXrDWj7CzU+87jA1isx5Y1rpH/bRmcTEXY3ULKjdCi53
+	 2Z2BEfc09wjIeNNcP07B16oiV2jiq6PwGTiXckmznatOoF1y4/pVf0Gno0iOsQikkA
+	 7/NE6rl2M5jhg==
+Message-ID: <6ecffc5a-d464-412a-9bd7-c98a5536092d@denx.de>
+Date: Sun, 11 Feb 2024 19:52:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <16ffd614-48a9-42b8-961d-2dc8a69c48d6@moroto.mountain>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 5/6] arm64: dts: imx8mp: add HDMI display pipeline
+Content-Language: en-US
+To: Adam Ford <aford173@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: aford@beaconembedded.com, Lucas Stach <l.stach@pengutronix.de>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240210204606.11944-1-aford173@gmail.com>
+ <20240210204606.11944-6-aford173@gmail.com>
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <20240210204606.11944-6-aford173@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-On Fri, Feb 09 2024 at  8:06P -0500,
-Dan Carpenter <dan.carpenter@linaro.org> wrote:
+On 2/10/24 21:46, Adam Ford wrote:
+> From: Lucas Stach <l.stach@pengutronix.de>
+> 
+> This adds the DT nodes for all the peripherals that make up the
+> HDMI display pipeline.
+> 
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> Signed-off-by: Adam Ford <aford173@gmail.com>
 
-> This is a duplicate check so it can't be true.  Delete it.
-> 
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
->  drivers/md/dm-vdo/slab-depot.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/drivers/md/dm-vdo/slab-depot.c b/drivers/md/dm-vdo/slab-depot.c
-> index 42126bd60242..2f4a2ae5e082 100644
-> --- a/drivers/md/dm-vdo/slab-depot.c
-> +++ b/drivers/md/dm-vdo/slab-depot.c
-> @@ -4100,9 +4100,6 @@ static int allocate_components(struct slab_depot *depot,
->  		};
->  	}
->  
-> -	if (result != VDO_SUCCESS)
-> -		return result;
-> -
->  	slab_count = vdo_compute_slab_count(depot->first_block, depot->last_block,
->  					    depot->slab_size_shift);
->  	if (thread_config->physical_zone_count > slab_count) {
-> -- 
-> 2.43.0
-> 
-> 
+Tested-by: Marek Vasut <marex@denx.de>
 
-Looks good, I've picked this up.
-
-Thanks,
-Mike
+Thanks !
