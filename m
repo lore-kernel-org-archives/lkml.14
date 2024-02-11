@@ -1,103 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D0CFBF0;
-	Sun, 11 Feb 2024 22:32:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83ED71426A;
+	Sun, 11 Feb 2024 22:37:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707690761; cv=none; b=TjxBU/eqUCKfQAH3B78il4lyJxaM1zuk0fhZehLOhE6teBSkUj2jApSeSCeDuDl9E4CDuve7ERf9QAvx/7JKiKB0JIIWjrjJJizj5JtPNGBT3r4i1NruQCbJ/slS/2zvRHxndp1caq4dF6dy70f67v4K70DJvA6wbBTOfC3sdMs=
+	t=1707691025; cv=none; b=iyq9b5JgEHQ8evO4YjzIbWG4+U51h7Nnz+/np+Cqwz5zvJ0CaP+ICMwOAeymjFYSGlIRnykscyBnwrybRPilY+ohT3ae+qPIUShwoQxI0bI30wkWy3jxSNKpd3fhcYRu4ysN2G4c6WUjpEheDqCkRKoTchcRjlrTkIyUQR7NLP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707690761; c=relaxed/simple;
-	bh=zoK4wRIH61AhhcB8eZbYlC0YkWtpVzhdV4ljtB0iK8M=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=j5GCD53aHStiVcPKpPJt9JLzVru0Lt5Fzyefgj4li1I67MPaohNMWXfePeuLfgxPBOX4a8Dj7YfChMfQyWcDbr4DEyPS6WGRxnXJQThKLp12hPBrXE/IjKd4txxIL2Y3FFwU4Jo+Qc+ewuTbX03E2ypk137MDtx0GiW8SZKU5CA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ns/TWa43; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707691025; c=relaxed/simple;
+	bh=v4G6ehhPG/T4ElMEaTqhlNoQjbCZltvlaQ9iSgQ/jqs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CjWu3huFL3kI3GqJrKWyf7q2ID5d19xJ0lrgUmdcnjFrZ9xxOP7IHsWuXd29YAXjZ6Woga4rtbWdrCHyunEWY7gEr4w2f7sG65OM8JPdG5i4Egp3AENc7l+zzc26wjqT+Jkmn8xwzQ+wCR1y8dqlj6WwBC7Akc2r1LtnpRVigQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TIFMKM/c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ns/TWa43"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 588D0C433C7;
-	Sun, 11 Feb 2024 22:32:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TIFMKM/c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D3D6C43390;
+	Sun, 11 Feb 2024 22:37:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707690760;
-	bh=zoK4wRIH61AhhcB8eZbYlC0YkWtpVzhdV4ljtB0iK8M=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=ns/TWa43D572D5Gz+6TXJU0hnE4dvh2+d2PNNtTp7tg3iW3MeDIR+FjOr1toHiP0j
-	 nUUx4Xd/4yxdZC7d2lhyy0FF86MDCXYbns9kroHbN62rSpNvwxhNeXlmJXZ5QDrCR+
-	 e9OkXP9VzuzkQFvmEolUESwbUqi5H57fWS1aO86Kga6Cd0r8ctOJbzzt/jZ+UAhWpF
-	 XlOiCyAHU1XDst0yhI/W0+6opwpykLYRIdUNwZHF3IaS/TZRSD9/ney6A7p59xOzE5
-	 L96PaVHA2wzkH5cMh16zYNzSvYF+bM+WxEaLkGsTgR+jXK/8v39lxkHKVL/nRUGk5z
-	 YGauiH3bIS0dQ==
-Date: Sun, 11 Feb 2024 16:32:39 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1707691025;
+	bh=v4G6ehhPG/T4ElMEaTqhlNoQjbCZltvlaQ9iSgQ/jqs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TIFMKM/caEh5dJ+bulkCR0q0gdp8pENZGkgU9CkmDCd5Oq1bSaUzntyguvgsJOvv4
+	 gjTjnGKCNzWlTToma07fms9Vcw2c+AZ0gxd1qaIR1L+7WNH8f+CnvuF/kDaPJJMAgG
+	 OeXcjmQI/c3V4bHwvSaaqgOu2o7bzLd42KFmhOPW3zZSd25LDzQ1deBLdDJyQTCzkK
+	 ikJMXpN0zJjpVanMBA070l+UVbhVC9+PLB5jUZdeLdtYULy1GMvyS17nC0QHaYBTIc
+	 wJ2pxMbg199kFs/b3OTVOd+tYLkfoSzSiUWVWn3jKHzcu/N7DK8DUYZWSXVavA0Mo/
+	 /2qdpBvaOXosg==
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d0dc3fdd1bso26130321fa.0;
+        Sun, 11 Feb 2024 14:37:04 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVQ/g7EfLcg1gzoWUj9jQYcaXoZ2VERuquZ5TNFhkfE1K6LS1xULNTKgO/R3EPf8zM4mOFDPGye7x//F+qyXxobDwsVfXxPJL+/suJ44zlRDHftPQiflJ1gFvTZIyQnZPrfg7jWpgOJTA==
+X-Gm-Message-State: AOJu0YwZEsIYefjsmgn+EReJXTSbAd8m3aC83NO/nsK/dYlUH4KnLoa/
+	p+/5oHjTcRbuzvCLnXfgu6/ASh5jGzOf9rRi8l0vl9q/R8874FXQ58hG2br0nyI+NLBaRKjoQJv
+	4C+zFU4FfdT2rci3v4sWpYl/WWBg=
+X-Google-Smtp-Source: AGHT+IFl4zc+Ad1i+CBjqwi2XTTno9sUz3Cm/iJnlLj5Ldx7zEG3AwZJXSsOHOLHudvXqss07zu7p/FqLBwWJmYbkNc=
+X-Received: by 2002:ac2:4579:0:b0:511:87b7:6d88 with SMTP id
+ k25-20020ac24579000000b0051187b76d88mr1609035lfm.32.1707691023239; Sun, 11
+ Feb 2024 14:37:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: =?utf-8?q?Ond=C5=99ej_Jirman?= <megi@xff.cz>
-Cc: linux-iio@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>, 
- devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>, Conor Dooley <conor+dt@kernel.org>, 
- linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, 
- Andrey Skvortsov <andrej.skvortzov@gmail.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-In-Reply-To: <20240211205211.2890931-3-megi@xff.cz>
-References: <20240211205211.2890931-1-megi@xff.cz>
- <20240211205211.2890931-3-megi@xff.cz>
-Message-Id: <170769075818.2433614.5244889858722764083.robh@kernel.org>
-Subject: Re: [PATCH 2/4] dt-bindings: iio: magnetometer: Add DT binding for
- Voltafield AF8133J
+References: <20240129180502.4069817-21-ardb+git@google.com>
+ <20240129180502.4069817-27-ardb+git@google.com> <20240207132922.GSZcOFspSGaVluJo92@fat_crate.local>
+ <CAMj1kXF+mHCYs08q58QFGuzZ4nzGd2sDr1gp2ydkOHHQ2LK5tQ@mail.gmail.com> <20240210104039.GAZcdSp7dRbgqBy3fg@fat_crate.local>
+In-Reply-To: <20240210104039.GAZcdSp7dRbgqBy3fg@fat_crate.local>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Sun, 11 Feb 2024 23:36:51 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXG5+KEAE5F0EFkZCkt1244M3UBJXH_O3ULg0oRHV2YnmQ@mail.gmail.com>
+Message-ID: <CAMj1kXG5+KEAE5F0EFkZCkt1244M3UBJXH_O3ULg0oRHV2YnmQ@mail.gmail.com>
+Subject: Re: [PATCH v3 06/19] x86/startup_64: Drop global variables keeping
+ track of LA57 state
+To: Borislav Petkov <bp@alien8.de>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
+	Kevin Loughlin <kevinloughlin@google.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
+	Dionna Glaze <dionnaglaze@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Kees Cook <keescook@chromium.org>, Brian Gerst <brgerst@gmail.com>, linux-arch@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
+On Sat, 10 Feb 2024 at 11:41, Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Fri, Feb 09, 2024 at 01:55:02PM +0000, Ard Biesheuvel wrote:
+> > I was trying to get rid of global variable assignments and accesses
+> > from the 1:1 mapping, but since we cannot get rid of those entirely,
+> > we might just keep __pgtable_l5_enabled but use RIP_REL_REF() in the
+> > accessors, and move the assignment to the asm startup code.
+>
+> Yeah.
+>
+> >    asm(ALTERNATIVE_TERNARY(
+> >        "movq %%cr4, %[reg] \n\t btl %[la57], %k[reg]" CC_SET(c),
+> >        %P[feat], "stc", "clc")
+> >        : [reg] "=r" (r), CC_OUT(c) (ret)
+> >        : [feat] "i" (X86_FEATURE_LA57),
+> >          [la57] "i" (X86_CR4_LA57_BIT)
+> >        : "cc");
+>
+> Creative :)
+>
+> > but we'd still have two versions in that case.
+>
+> Yap. RIP_REL_REF() ain't too bad ...
+>
 
-On Sun, 11 Feb 2024 21:51:58 +0100, Ondřej Jirman wrote:
-> From: Icenowy Zheng <icenowy@aosc.io>
-> 
-> Voltafield AF8133J is a simple magnetometer sensor produced by Voltafield
-> Technology Corp, with dual power supplies (one for core and one for I/O)
-> and active-low reset pin.
-> 
-> The sensor has configurable range 1.2 - 2.2 mT and a software controlled
-> standby mode.
-> 
-> Add a device tree binding for it.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Ondřej Jirman <megi@xff.cz>
-> ---
->  .../iio/magnetometer/voltafield,af8133j.yaml  | 58 +++++++++++++++++++
->  1 file changed, 58 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/voltafield,af8133j.yaml
-> 
-
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iio/magnetometer/voltafield,af8133j.yaml: properties:compatible: ['voltafield,af8133j'] is not of type 'object', 'boolean'
-	from schema $id: http://json-schema.org/draft-07/schema#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iio/magnetometer/voltafield,af8133j.yaml: properties:compatible: ['voltafield,af8133j'] is not of type 'object', 'boolean'
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iio/magnetometer/voltafield,af8133j.yaml: ignoring, error in schema: properties: compatible
-Documentation/devicetree/bindings/iio/magnetometer/voltafield,af8133j.example.dtb: /example-0/i2c/magnetometer@1c: failed to match any schema with compatible: ['voltafield,af8133j']
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240211205211.2890931-3-megi@xff.cz
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+We can actually rip all of that stuff out, and have only a single
+implementation of pgtable_l5_enabled() that is not based on a variable
+at all. It results in a nice cleanup, but I'll keep it as a separate
+patch in the next revision so we can easily drop it if preferred.
