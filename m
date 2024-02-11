@@ -1,63 +1,63 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2635DF14
-	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 12:30:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92DEA60273
+	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 12:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707654644; cv=none; b=lnVazmA/6sfeAi15SxNehCFhdusWhqg+Vo3m08oKwqPsoZ0y6zVYXONNPZyDeEWom4Sxh1Au5NDtt4wcPj6GaAbwf7Gpi/ZQT9kG3reK+0e+Kfp1XauuBDDTGgT3/+H2FJ9hZXcdvDnURQGFrMuV1uocQRrMEuYZGBm3UftFDDY=
+	t=1707654651; cv=none; b=UXK+RHTBhgtusANmIjL22NUW1P2bPhAIONkvqDffWwEXVXVUZNWG+veVeaLpQeA7rBZUhiKeIJn+RSyiw6wRohm4hPkIXw+BpXRBNmfr8LoMCU1IdJKM72XyhFPwjNWBvKJvgCGcfWSmtbgxROAHOMeImv+tBY4jJ6EW5+hDJAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707654644; c=relaxed/simple;
-	bh=WTlPj/PuFjUBdLisL73W1wtMR25ovc81WyfJPsXtRs4=;
+	s=arc-20240116; t=1707654651; c=relaxed/simple;
+	bh=5WoLQ+20FuNzDTgx6dlWdeAOXVkYHDqU6RsL5tdTmfc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Kbs9QRUJDPqJiG3fq+obgvp2gpPwlb2TUYPnVmAX2LzLMfM0ajwndZywOKu1Hl0+7MjZJcfV5qIfQyUwsFEEv3HizsiekUie83M5TLt21gnOc+jcjBRE0fx7dXhXpV1KgTC6lpNnv1zmXBqPc+TeBLuSIm+42lIkb+5Pvxdsa9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=cfyipmJD; arc=none smtp.client-ip=209.85.208.44
+	 MIME-Version; b=Zl5Gk0u8edhNJyAkvBd7ZGYzog7CXFHBlheEesy3VwmyblofQ0uJYc3NMck8iDQAHf/aSXNnQ2qkkDq3Q/Dt4MK/9bTtx2lJcAmtuieZP502q3pIS/wDeggMVSNbx1AQsvUy5RzP3ewDmvw3IBH6zPaDWPqVUilH8jK3lbWdF2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=iUo95rqh; arc=none smtp.client-ip=209.85.208.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="cfyipmJD"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5610cc8cc1aso2398731a12.1
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 04:30:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="iUo95rqh"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-556c3f0d6c5so3114520a12.2
+        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 04:30:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1707654636; x=1708259436; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1707654646; x=1708259446; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NHPEfHVPA/97z4dPQ2uSzzUc4GF8XJeYUG5RpzjoI18=;
-        b=cfyipmJD4Dq+yzhPoq6QC/bWWAVKX4j+tm2ioXG0xSe80aIoiSHXD/fl8+2iwtxNij
-         Zy/ChfANcSNo0J4Ic9c4cKoBfpuhN93hjAJzNbOXlLkttc8n61VPo3Khh7Ewoyfx8hRy
-         JBUF+8Ps/R3LUV96DsN5I4A5Ip8/kyKgy8mJWp7BZN8sdtlQw8toQImOJoENrPRls03i
-         aCgZxMDo+3mQMcq5qSErD4GKLzJNFJPtRyBjn1ClfV4zEwPo3tDm1SZc4toQCjUDlML1
-         VCamR6hSILuMKQCV7VC0Qp9yDTjENXAzZciv0qcsK7fUvIhftygMnhG9LtB44/gxwL+G
-         EjmA==
+        bh=fKk+aGvc2YUoK3OFau8iqg4ZDHFtN8sLbkkpKq6ClNw=;
+        b=iUo95rqhmDIs3bDNuL+jP2SWYPBOky/7fbQ9BS37psz11e9Q5aLbpEscjpYqvcukPl
+         VVfN8ljTyzkh39OfRixwfF58c8x4D7ju1WGDzX3J/8mOOFX8ZgYY6ZTeAoLYr0GvCgzU
+         irGVfrHGLWWB0vjD2VGFyQPSI2bNtIwQ1Apw3/QVBXuUwUAlZoHvkc5zZnAuMSKBjsc2
+         bjWbZxEiT3RNDmG9m9SBD+UIeZ7ebvYO7lSlV/OPKdHtMz9bi9+lx+eF77CkvmDOs87+
+         mtef6cOCPrDE0H8i6WYHOhRqpUrITW74xGg3uDnK4G9fwXEA85+DTW9+8b+IF3bAOB9A
+         0FBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707654636; x=1708259436;
+        d=1e100.net; s=20230601; t=1707654646; x=1708259446;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NHPEfHVPA/97z4dPQ2uSzzUc4GF8XJeYUG5RpzjoI18=;
-        b=Uv/sXeSuIcvgiwHZXPNiE+OuEXx2gwy23dV0hxnfsihw9Vtl8RWllAeUqOchfpnlfH
-         TtZIcYvE3x4BBfDrkp5+E1ikKcl4jAlWxlqyjmY+Xolq/GXOmUUu8+aqS+9XIPMumc5w
-         9qtC/qMmVTFmsPE+2K9+mij3KnxLPhZY3t1xq1GdJEz4XQPQeRpGt6e/UAQ9dQCJZjiH
-         KdZ8rl3rBzs21/Z2Q0FgQexuIFaV/qbNjXnIUCnwMsRRewukgVIMwLChDIij1K57WSG2
-         KcQ8+rHV2YDTT0kz0bxUFpIsFV3y4HvcL34DzwXY5pEUvyoqCibORnQ3wHBlgROHLNw9
-         Xp5g==
-X-Gm-Message-State: AOJu0YwiuG30e5gzGw/c09TkuSus30530bJZOLF/AlsDTOPf6N9OEJ1O
-	rf+JyuQjsWeIeCPELofiKQtXwa50T0ASOn7aENhGkqOAl2GyX5G6nHlE/nP8L/6efhZd6XVZ7Zh
-	n
-X-Google-Smtp-Source: AGHT+IHhrmrnU822zyf6nI+PZkj9pewRCbuE9lbE6vElCdwTgA/AfaPGYgzuZ8tZB9uv7KgZpOzQ4g==
-X-Received: by 2002:aa7:c68e:0:b0:560:ca7d:caaa with SMTP id n14-20020aa7c68e000000b00560ca7dcaaamr3093254edq.10.1707654636266;
-        Sun, 11 Feb 2024 04:30:36 -0800 (PST)
+        bh=fKk+aGvc2YUoK3OFau8iqg4ZDHFtN8sLbkkpKq6ClNw=;
+        b=wtzNJvsZttBjQtjJC3vVBFT/WjGQj/3JbP7/tPlJiYdJQUMiF29gtVatyty6epl0b6
+         9+nVWVAtqYrXqGrQbzFZAKIbyB3ZUJKRZUw0KtdWtbhWHcHHynsBoTIKXAwTGwI1SWOg
+         pH9xfaJI4R9vR72xwqieW4SCeCcwUZv6CcO7HFWBQ5vXCB9mRkNPWr/1KNOfxWwBnoah
+         RtwqrcGSNJuW6Om1qUdeoJG9AUbSGd7FQJP7eSW5JZDJ7VopjgaN9FB/++HT2chNzA+V
+         64jcf0/6348OjnWPo0kcXzo9vOsdxlx5VJtlnPEv7o5UiXXNHyuIsp6xFup7H96ajLSU
+         bAzQ==
+X-Gm-Message-State: AOJu0YzH3baLX428kqQZC7pxqnKF0m12181Ahrt8cpcHl3g4gTTs7fH+
+	3Qy6ecvAIPJx4SMkOeo/9TVtD5PtVDXI0zluBYWvhOf5649EB/E8m0hDJnLOm84XkDad9aZRBin
+	D
+X-Google-Smtp-Source: AGHT+IGZ+5R/3d4QKJq+dDeWTvA6qltpY0UNOBTVJwuOiYzYcuzMt1HQVUUzjFavdEZemkrS8p4S9g==
+X-Received: by 2002:a05:6402:1295:b0:55f:f2ae:20ed with SMTP id w21-20020a056402129500b0055ff2ae20edmr2455830edv.16.1707654646588;
+        Sun, 11 Feb 2024 04:30:46 -0800 (PST)
 Received: from raven.intern.cm-ag (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id fj18-20020a0564022b9200b0056187ca4120sm1024611edb.10.2024.02.11.04.30.35
+        by smtp.gmail.com with ESMTPSA id fj18-20020a0564022b9200b0056187ca4120sm1024611edb.10.2024.02.11.04.30.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Feb 2024 04:30:35 -0800 (PST)
+        Sun, 11 Feb 2024 04:30:45 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: linux-kernel@vger.kernel.org
 Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v3 22/35] blkdev.h: move declarations to blkdev_types.h
-Date: Sun, 11 Feb 2024 13:29:47 +0100
-Message-Id: <20240211123000.3359365-23-max.kellermann@ionos.com>
+Subject: [PATCH v3 32/35] linux/kernel.h: move VERIFY_OCTAL_PERMISSIONS() to octal_permissions.h
+Date: Sun, 11 Feb 2024 13:29:57 +0100
+Message-Id: <20240211123000.3359365-33-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240211123000.3359365-1-max.kellermann@ionos.com>
 References: <20240211123000.3359365-1-max.kellermann@ionos.com>
@@ -69,1025 +69,179 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-By providing declarations in a lean header, we can reduce header
-dependencies.
+Reducing dependencies on the header linux/kernel.h.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- include/linux/blkdev.h         | 444 +------------------------------
- include/linux/blkdev_types.h   | 463 +++++++++++++++++++++++++++++++++
- include/linux/cdrom.h          |   2 +-
- include/linux/io_uring_types.h |   2 +-
- io_uring/io_uring.c            |   1 +
- 5 files changed, 467 insertions(+), 445 deletions(-)
- create mode 100644 include/linux/blkdev_types.h
+ arch/arc/kernel/perf_event.c             |  1 +
+ drivers/edac/thunderx_edac.c             |  1 +
+ drivers/hwmon/occ/common.c               |  1 +
+ drivers/media/platform/amphion/vpu_dbg.c |  1 +
+ drivers/soc/aspeed/aspeed-uart-routing.c |  1 +
+ fs/xfs/xfs_error.c                       |  1 +
+ include/linux/kernel.h                   | 13 -------------
+ include/linux/moduleparam.h              |  2 +-
+ include/linux/octal_permissions.h        | 20 ++++++++++++++++++++
+ include/linux/sysfs.h                    |  2 +-
+ 10 files changed, 28 insertions(+), 15 deletions(-)
+ create mode 100644 include/linux/octal_permissions.h
 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 5cd0edada09d..6a07ced6099f 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -5,11 +5,9 @@
- #ifndef _LINUX_BLKDEV_H
- #define _LINUX_BLKDEV_H
+diff --git a/arch/arc/kernel/perf_event.c b/arch/arc/kernel/perf_event.c
+index 9d43a9988812..dbc24c9351d1 100644
+--- a/arch/arc/kernel/perf_event.c
++++ b/arch/arc/kernel/perf_event.c
+@@ -9,6 +9,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h> // for upper_32_bits(), lower_32_bits()
+ #include <linux/module.h>
++#include <linux/octal_permissions.h>
+ #include <linux/of.h>
+ #include <linux/perf_event.h>
+ #include <linux/platform_device.h>
+diff --git a/drivers/edac/thunderx_edac.c b/drivers/edac/thunderx_edac.c
+index e99ce19e6574..c610d99dceda 100644
+--- a/drivers/edac/thunderx_edac.c
++++ b/drivers/edac/thunderx_edac.c
+@@ -21,6 +21,7 @@
+ #include <linux/atomic.h>
+ #include <linux/bitfield.h>
+ #include <linux/circ_buf.h>
++#include <linux/octal_permissions.h>
  
--#include <linux/types.h>
-+#include <linux/blkdev_types.h>
- #include <linux/fs.h> // for inode_unhashed()
- #include <linux/blk_types.h>
--#include <linux/device_types.h>
--#include <linux/list.h>
- #include <linux/minmax.h>
- #include <linux/timer_types.h>
- #include <linux/workqueue_types.h>
-@@ -45,173 +43,6 @@ extern const struct device_type disk_type;
- extern const struct device_type part_type;
- extern struct class block_class;
+ #include <asm/page.h>
  
--/*
-- * Maximum number of blkcg policies allowed to be registered concurrently.
-- * Defined here to simplify include dependency.
-- */
--#define BLKCG_MAX_POLS		6
--
--#define DISK_MAX_PARTS			256
--#define DISK_NAME_LEN			32
--
--#define PARTITION_META_INFO_VOLNAMELTH	64
--/*
-- * Enough for the string representation of any kind of UUID plus NULL.
-- * EFI UUID is 36 characters. MSDOS UUID is 11 characters.
-- */
--#define PARTITION_META_INFO_UUIDLTH	(UUID_STRING_LEN + 1)
--
--struct partition_meta_info {
--	char uuid[PARTITION_META_INFO_UUIDLTH];
--	u8 volname[PARTITION_META_INFO_VOLNAMELTH];
--};
--
--/**
-- * DOC: genhd capability flags
-- *
-- * ``GENHD_FL_REMOVABLE``: indicates that the block device gives access to
-- * removable media.  When set, the device remains present even when media is not
-- * inserted.  Shall not be set for devices which are removed entirely when the
-- * media is removed.
-- *
-- * ``GENHD_FL_HIDDEN``: the block device is hidden; it doesn't produce events,
-- * doesn't appear in sysfs, and can't be opened from userspace or using
-- * blkdev_get*. Used for the underlying components of multipath devices.
-- *
-- * ``GENHD_FL_NO_PART``: partition support is disabled.  The kernel will not
-- * scan for partitions from add_disk, and users can't add partitions manually.
-- *
-- */
--enum {
--	GENHD_FL_REMOVABLE			= 1 << 0,
--	GENHD_FL_HIDDEN				= 1 << 1,
--	GENHD_FL_NO_PART			= 1 << 2,
--};
--
--enum {
--	DISK_EVENT_MEDIA_CHANGE			= 1 << 0, /* media changed */
--	DISK_EVENT_EJECT_REQUEST		= 1 << 1, /* eject requested */
--};
--
--enum {
--	/* Poll even if events_poll_msecs is unset */
--	DISK_EVENT_FLAG_POLL			= 1 << 0,
--	/* Forward events to udev */
--	DISK_EVENT_FLAG_UEVENT			= 1 << 1,
--	/* Block event polling when open for exclusive write */
--	DISK_EVENT_FLAG_BLOCK_ON_EXCL_WRITE	= 1 << 2,
--};
--
--struct disk_events;
--struct badblocks;
--
--struct blk_integrity {
--	const struct blk_integrity_profile	*profile;
--	unsigned char				flags;
--	unsigned char				tuple_size;
--	unsigned char				interval_exp;
--	unsigned char				tag_size;
--};
--
--typedef unsigned int __bitwise blk_mode_t;
--
--/* open for reading */
--#define BLK_OPEN_READ		((__force blk_mode_t)(1 << 0))
--/* open for writing */
--#define BLK_OPEN_WRITE		((__force blk_mode_t)(1 << 1))
--/* open exclusively (vs other exclusive openers */
--#define BLK_OPEN_EXCL		((__force blk_mode_t)(1 << 2))
--/* opened with O_NDELAY */
--#define BLK_OPEN_NDELAY		((__force blk_mode_t)(1 << 3))
--/* open for "writes" only for ioctls (specialy hack for floppy.c) */
--#define BLK_OPEN_WRITE_IOCTL	((__force blk_mode_t)(1 << 4))
--/* open is exclusive wrt all other BLK_OPEN_WRITE opens to the device */
--#define BLK_OPEN_RESTRICT_WRITES	((__force blk_mode_t)(1 << 5))
--
--struct gendisk {
--	/*
--	 * major/first_minor/minors should not be set by any new driver, the
--	 * block core will take care of allocating them automatically.
--	 */
--	int major;
--	int first_minor;
--	int minors;
--
--	char disk_name[DISK_NAME_LEN];	/* name of major driver */
--
--	unsigned short events;		/* supported events */
--	unsigned short event_flags;	/* flags related to event processing */
--
--	struct xarray part_tbl;
--	struct block_device *part0;
--
--	const struct block_device_operations *fops;
--	struct request_queue *queue;
--	void *private_data;
--
--	struct bio_set bio_split;
--
--	int flags;
--	unsigned long state;
--#define GD_NEED_PART_SCAN		0
--#define GD_READ_ONLY			1
--#define GD_DEAD				2
--#define GD_NATIVE_CAPACITY		3
--#define GD_ADDED			4
--#define GD_SUPPRESS_PART_SCAN		5
--#define GD_OWNS_QUEUE			6
--
--	struct mutex open_mutex;	/* open/close mutex */
--	unsigned open_partitions;	/* number of open partitions */
--
--	struct backing_dev_info	*bdi;
--	struct kobject queue_kobj;	/* the queue/ directory */
--	struct kobject *slave_dir;
--#ifdef CONFIG_BLOCK_HOLDER_DEPRECATED
--	struct list_head slave_bdevs;
--#endif
--	struct timer_rand_state *random;
--	atomic_t sync_io;		/* RAID */
--	struct disk_events *ev;
--
--#ifdef CONFIG_BLK_DEV_ZONED
--	/*
--	 * Zoned block device information for request dispatch control.
--	 * nr_zones is the total number of zones of the device. This is always
--	 * 0 for regular block devices. conv_zones_bitmap is a bitmap of nr_zones
--	 * bits which indicates if a zone is conventional (bit set) or
--	 * sequential (bit clear). seq_zones_wlock is a bitmap of nr_zones
--	 * bits which indicates if a zone is write locked, that is, if a write
--	 * request targeting the zone was dispatched.
--	 *
--	 * Reads of this information must be protected with blk_queue_enter() /
--	 * blk_queue_exit(). Modifying this information is only allowed while
--	 * no requests are being processed. See also blk_mq_freeze_queue() and
--	 * blk_mq_unfreeze_queue().
--	 */
--	unsigned int		nr_zones;
--	unsigned int		max_open_zones;
--	unsigned int		max_active_zones;
--	unsigned long		*conv_zones_bitmap;
--	unsigned long		*seq_zones_wlock;
--#endif /* CONFIG_BLK_DEV_ZONED */
--
--#if IS_ENABLED(CONFIG_CDROM)
--	struct cdrom_device_info *cdi;
--#endif
--	int node_id;
--	struct badblocks *bb;
--	struct lockdep_map lockdep_map;
--	u64 diskseq;
--	blk_mode_t open_mode;
--
--	/*
--	 * Independent sector access ranges. This is always NULL for
--	 * devices that do not have multiple independent access ranges.
--	 */
--	struct blk_independent_access_ranges *ia_ranges;
--};
--
- static inline bool disk_live(struct gendisk *disk)
- {
- 	return !inode_unhashed(disk->part0->bd_inode);
-@@ -260,57 +91,6 @@ static inline int blk_validate_block_size(unsigned long bsize)
- 	return 0;
- }
- 
--/*
-- * BLK_BOUNCE_NONE:	never bounce (default)
-- * BLK_BOUNCE_HIGH:	bounce all highmem pages
-- */
--enum blk_bounce {
--	BLK_BOUNCE_NONE,
--	BLK_BOUNCE_HIGH,
--};
--
--struct queue_limits {
--	enum blk_bounce		bounce;
--	unsigned long		seg_boundary_mask;
--	unsigned long		virt_boundary_mask;
--
--	unsigned int		max_hw_sectors;
--	unsigned int		max_dev_sectors;
--	unsigned int		chunk_sectors;
--	unsigned int		max_sectors;
--	unsigned int		max_user_sectors;
--	unsigned int		max_segment_size;
--	unsigned int		physical_block_size;
--	unsigned int		logical_block_size;
--	unsigned int		alignment_offset;
--	unsigned int		io_min;
--	unsigned int		io_opt;
--	unsigned int		max_discard_sectors;
--	unsigned int		max_hw_discard_sectors;
--	unsigned int		max_secure_erase_sectors;
--	unsigned int		max_write_zeroes_sectors;
--	unsigned int		max_zone_append_sectors;
--	unsigned int		discard_granularity;
--	unsigned int		discard_alignment;
--	unsigned int		zone_write_granularity;
--
--	unsigned short		max_segments;
--	unsigned short		max_integrity_segments;
--	unsigned short		max_discard_segments;
--
--	unsigned char		misaligned;
--	unsigned char		discard_misaligned;
--	unsigned char		raid_partial_stripes_expensive;
--	bool			zoned;
--
--	/*
--	 * Drivers that set dma_alignment to less than 511 must be prepared to
--	 * handle individual bvec's that are not a multiple of a SECTOR_SIZE
--	 * due to possible offsets.
--	 */
--	unsigned int		dma_alignment;
--};
--
- typedef int (*report_zones_cb)(struct blk_zone *zone, unsigned int idx,
- 			       void *data);
- 
-@@ -351,194 +131,6 @@ struct blk_independent_access_ranges {
- 	struct blk_independent_access_range	ia_range[];
- };
- 
--struct request_queue {
--	/*
--	 * The queue owner gets to use this for whatever they like.
--	 * ll_rw_blk doesn't touch it.
--	 */
--	void			*queuedata;
--
--	struct elevator_queue	*elevator;
--
--	const struct blk_mq_ops	*mq_ops;
--
--	/* sw queues */
--	struct blk_mq_ctx __percpu	*queue_ctx;
--
--	/*
--	 * various queue flags, see QUEUE_* below
--	 */
--	unsigned long		queue_flags;
--
--	unsigned int		rq_timeout;
--
--	unsigned int		queue_depth;
--
--	refcount_t		refs;
--
--	/* hw dispatch queues */
--	unsigned int		nr_hw_queues;
--	struct xarray		hctx_table;
--
--	struct percpu_ref	q_usage_counter;
--
--	struct request		*last_merge;
--
--	spinlock_t		queue_lock;
--
--	int			quiesce_depth;
--
--	struct gendisk		*disk;
--
--	/*
--	 * mq queue kobject
--	 */
--	struct kobject *mq_kobj;
--
--	struct queue_limits	limits;
--
--#ifdef  CONFIG_BLK_DEV_INTEGRITY
--	struct blk_integrity integrity;
--#endif	/* CONFIG_BLK_DEV_INTEGRITY */
--
--#ifdef CONFIG_PM
--	struct device		*dev;
--	enum rpm_status		rpm_status;
--#endif
--
--	/*
--	 * Number of contexts that have called blk_set_pm_only(). If this
--	 * counter is above zero then only RQF_PM requests are processed.
--	 */
--	atomic_t		pm_only;
--
--	struct blk_queue_stats	*stats;
--	struct rq_qos		*rq_qos;
--	struct mutex		rq_qos_mutex;
--
--	/*
--	 * ida allocated id for this queue.  Used to index queues from
--	 * ioctx.
--	 */
--	int			id;
--
--	unsigned int		dma_pad_mask;
--
--	/*
--	 * queue settings
--	 */
--	unsigned long		nr_requests;	/* Max # of requests */
--
--#ifdef CONFIG_BLK_INLINE_ENCRYPTION
--	struct blk_crypto_profile *crypto_profile;
--	struct kobject *crypto_kobject;
--#endif
--
--	struct timer_list	timeout;
--	struct work_struct	timeout_work;
--
--	atomic_t		nr_active_requests_shared_tags;
--
--	unsigned int		required_elevator_features;
--
--	struct blk_mq_tags	*sched_shared_tags;
--
--	struct list_head	icq_list;
--#ifdef CONFIG_BLK_CGROUP
--	DECLARE_BITMAP		(blkcg_pols, BLKCG_MAX_POLS);
--	struct blkcg_gq		*root_blkg;
--	struct list_head	blkg_list;
--	struct mutex		blkcg_mutex;
--#endif
--
--	int			node;
--
--	spinlock_t		requeue_lock;
--	struct list_head	requeue_list;
--	struct delayed_work	requeue_work;
--
--#ifdef CONFIG_BLK_DEV_IO_TRACE
--	struct blk_trace __rcu	*blk_trace;
--#endif
--	/*
--	 * for flush operations
--	 */
--	struct blk_flush_queue	*fq;
--	struct list_head	flush_list;
--
--	struct mutex		sysfs_lock;
--	struct mutex		sysfs_dir_lock;
--
--	/*
--	 * for reusing dead hctx instance in case of updating
--	 * nr_hw_queues
--	 */
--	struct list_head	unused_hctx_list;
--	spinlock_t		unused_hctx_lock;
--
--	int			mq_freeze_depth;
--
--#ifdef CONFIG_BLK_DEV_THROTTLING
--	/* Throttle data */
--	struct throtl_data *td;
--#endif
--	struct rcu_head		rcu_head;
--	wait_queue_head_t	mq_freeze_wq;
--	/*
--	 * Protect concurrent access to q_usage_counter by
--	 * percpu_ref_kill() and percpu_ref_reinit().
--	 */
--	struct mutex		mq_freeze_lock;
--
--	struct blk_mq_tag_set	*tag_set;
--	struct list_head	tag_set_list;
--
--	struct dentry		*debugfs_dir;
--	struct dentry		*sched_debugfs_dir;
--	struct dentry		*rqos_debugfs_dir;
--	/*
--	 * Serializes all debugfs metadata operations using the above dentries.
--	 */
--	struct mutex		debugfs_mutex;
--
--	bool			mq_sysfs_init_done;
--};
--
--/* Keep blk_queue_flag_name[] in sync with the definitions below */
--#define QUEUE_FLAG_STOPPED	0	/* queue is stopped */
--#define QUEUE_FLAG_DYING	1	/* queue being torn down */
--#define QUEUE_FLAG_NOMERGES     3	/* disable merge attempts */
--#define QUEUE_FLAG_SAME_COMP	4	/* complete on same CPU-group */
--#define QUEUE_FLAG_FAIL_IO	5	/* fake timeout */
--#define QUEUE_FLAG_NONROT	6	/* non-rotational device (SSD) */
--#define QUEUE_FLAG_VIRT		QUEUE_FLAG_NONROT /* paravirt device */
--#define QUEUE_FLAG_IO_STAT	7	/* do disk/partitions IO accounting */
--#define QUEUE_FLAG_NOXMERGES	9	/* No extended merges */
--#define QUEUE_FLAG_ADD_RANDOM	10	/* Contributes to random pool */
--#define QUEUE_FLAG_SYNCHRONOUS	11	/* always completes in submit context */
--#define QUEUE_FLAG_SAME_FORCE	12	/* force complete on same CPU */
--#define QUEUE_FLAG_HW_WC	13	/* Write back caching supported */
--#define QUEUE_FLAG_INIT_DONE	14	/* queue is initialized */
--#define QUEUE_FLAG_STABLE_WRITES 15	/* don't modify blks until WB is done */
--#define QUEUE_FLAG_POLL		16	/* IO polling enabled if set */
--#define QUEUE_FLAG_WC		17	/* Write back caching */
--#define QUEUE_FLAG_FUA		18	/* device supports FUA writes */
--#define QUEUE_FLAG_DAX		19	/* device supports DAX */
--#define QUEUE_FLAG_STATS	20	/* track IO start and completion times */
--#define QUEUE_FLAG_REGISTERED	22	/* queue has been registered to a disk */
--#define QUEUE_FLAG_QUIESCED	24	/* queue has been quiesced */
--#define QUEUE_FLAG_PCI_P2PDMA	25	/* device supports PCI p2p requests */
--#define QUEUE_FLAG_ZONE_RESETALL 26	/* supports Zone Reset All */
--#define QUEUE_FLAG_RQ_ALLOC_TIME 27	/* record rq->alloc_time_ns */
--#define QUEUE_FLAG_HCTX_ACTIVE	28	/* at least one blk-mq hctx is active */
--#define QUEUE_FLAG_NOWAIT       29	/* device supports NOWAIT */
--#define QUEUE_FLAG_SQ_SCHED     30	/* single queue style io dispatch */
--#define QUEUE_FLAG_SKIP_TAGSET_QUIESCE	31 /* quiesce_tagset skip the queue*/
--
--#define QUEUE_FLAG_MQ_DEFAULT	((1UL << QUEUE_FLAG_IO_STAT) |		\
--				 (1UL << QUEUE_FLAG_SAME_COMP) |	\
--				 (1UL << QUEUE_FLAG_NOWAIT))
--
- void blk_queue_flag_set(unsigned int flag, struct request_queue *q);
- void blk_queue_flag_clear(unsigned int flag, struct request_queue *q);
- bool blk_queue_flag_test_and_set(unsigned int flag, struct request_queue *q);
-@@ -921,32 +513,6 @@ extern void blk_put_queue(struct request_queue *);
- void blk_mark_disk_dead(struct gendisk *disk);
- 
- #ifdef CONFIG_BLOCK
--/*
-- * blk_plug permits building a queue of related requests by holding the I/O
-- * fragments for a short period. This allows merging of sequential requests
-- * into single larger request. As the requests are moved from a per-task list to
-- * the device's request_queue in a batch, this results in improved scalability
-- * as the lock contention for request_queue lock is reduced.
-- *
-- * It is ok not to disable preemption when adding the request to the plug list
-- * or when attempting a merge. For details, please see schedule() where
-- * blk_flush_plug() is called.
-- */
--struct blk_plug {
--	struct request *mq_list; /* blk-mq requests */
--
--	/* if ios_left is > 1, we can batch tag/rq allocations */
--	struct request *cached_rq;
--	u64 cur_ktime;
--	unsigned short nr_ios;
--
--	unsigned short rq_count;
--
--	bool multiple_queues;
--	bool has_elevator;
--
--	struct list_head cb_list; /* md requires an unplug callback */
--};
- 
- struct blk_plug_cb;
- typedef void (*blk_plug_cb_fn)(struct blk_plug_cb *, bool);
-@@ -983,8 +549,6 @@ static inline void blk_plug_invalidate_ts(struct task_struct *tsk)
- int blkdev_issue_flush(struct block_device *bdev);
- long nr_blockdev_pages(void);
- #else /* CONFIG_BLOCK */
--struct blk_plug {
--};
- 
- static inline void blk_start_plug_nr_ios(struct blk_plug *plug,
- 					 unsigned short nr_ios)
-@@ -1540,12 +1104,6 @@ static inline int early_lookup_bdev(const char *pathname, dev_t *dev)
- int bdev_freeze(struct block_device *bdev);
- int bdev_thaw(struct block_device *bdev);
- 
--struct io_comp_batch {
--	struct request *req_list;
--	bool need_ts;
--	void (*complete)(struct io_comp_batch *);
--};
--
- #define DEFINE_IO_COMP_BATCH(name)	struct io_comp_batch name = { }
- 
- #endif /* _LINUX_BLKDEV_H */
-diff --git a/include/linux/blkdev_types.h b/include/linux/blkdev_types.h
-new file mode 100644
-index 000000000000..e53ff5d57e29
---- /dev/null
-+++ b/include/linux/blkdev_types.h
-@@ -0,0 +1,463 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_BLKDEV_TYPES_H
-+#define _LINUX_BLKDEV_TYPES_H
-+
-+#include <linux/bio_types.h>
-+#include <linux/bitops.h> // for BITS_TO_LONGS(), needed by DECLARE_BITMAP()
-+#include <linux/list.h>
-+#include <linux/kobject_types.h>
-+#include <linux/mutex_types.h>
-+#include <linux/percpu-refcount_types.h>
-+#include <linux/pm.h>
-+#include <linux/uuid.h>
-+#include <linux/xarray_types.h>
-+
-+/*
-+ * Maximum number of blkcg policies allowed to be registered concurrently.
-+ * Defined here to simplify include dependency.
-+ */
-+#define BLKCG_MAX_POLS		6
-+
-+#define DISK_MAX_PARTS			256
-+#define DISK_NAME_LEN			32
-+
-+#define PARTITION_META_INFO_VOLNAMELTH	64
-+/*
-+ * Enough for the string representation of any kind of UUID plus NULL.
-+ * EFI UUID is 36 characters. MSDOS UUID is 11 characters.
-+ */
-+#define PARTITION_META_INFO_UUIDLTH	(UUID_STRING_LEN + 1)
-+
-+struct partition_meta_info {
-+	char uuid[PARTITION_META_INFO_UUIDLTH];
-+	u8 volname[PARTITION_META_INFO_VOLNAMELTH];
-+};
-+
-+/**
-+ * DOC: genhd capability flags
-+ *
-+ * ``GENHD_FL_REMOVABLE``: indicates that the block device gives access to
-+ * removable media.  When set, the device remains present even when media is not
-+ * inserted.  Shall not be set for devices which are removed entirely when the
-+ * media is removed.
-+ *
-+ * ``GENHD_FL_HIDDEN``: the block device is hidden; it doesn't produce events,
-+ * doesn't appear in sysfs, and can't be opened from userspace or using
-+ * blkdev_get*. Used for the underlying components of multipath devices.
-+ *
-+ * ``GENHD_FL_NO_PART``: partition support is disabled.  The kernel will not
-+ * scan for partitions from add_disk, and users can't add partitions manually.
-+ *
-+ */
-+enum {
-+	GENHD_FL_REMOVABLE			= 1 << 0,
-+	GENHD_FL_HIDDEN				= 1 << 1,
-+	GENHD_FL_NO_PART			= 1 << 2,
-+};
-+
-+enum {
-+	DISK_EVENT_MEDIA_CHANGE			= 1 << 0, /* media changed */
-+	DISK_EVENT_EJECT_REQUEST		= 1 << 1, /* eject requested */
-+};
-+
-+enum {
-+	/* Poll even if events_poll_msecs is unset */
-+	DISK_EVENT_FLAG_POLL			= 1 << 0,
-+	/* Forward events to udev */
-+	DISK_EVENT_FLAG_UEVENT			= 1 << 1,
-+	/* Block event polling when open for exclusive write */
-+	DISK_EVENT_FLAG_BLOCK_ON_EXCL_WRITE	= 1 << 2,
-+};
-+
-+struct disk_events;
-+struct badblocks;
-+
-+struct blk_integrity {
-+	const struct blk_integrity_profile	*profile;
-+	unsigned char				flags;
-+	unsigned char				tuple_size;
-+	unsigned char				interval_exp;
-+	unsigned char				tag_size;
-+};
-+
-+typedef unsigned int __bitwise blk_mode_t;
-+
-+/* open for reading */
-+#define BLK_OPEN_READ		((__force blk_mode_t)(1 << 0))
-+/* open for writing */
-+#define BLK_OPEN_WRITE		((__force blk_mode_t)(1 << 1))
-+/* open exclusively (vs other exclusive openers */
-+#define BLK_OPEN_EXCL		((__force blk_mode_t)(1 << 2))
-+/* opened with O_NDELAY */
-+#define BLK_OPEN_NDELAY		((__force blk_mode_t)(1 << 3))
-+/* open for "writes" only for ioctls (specialy hack for floppy.c) */
-+#define BLK_OPEN_WRITE_IOCTL	((__force blk_mode_t)(1 << 4))
-+/* open is exclusive wrt all other BLK_OPEN_WRITE opens to the device */
-+#define BLK_OPEN_RESTRICT_WRITES	((__force blk_mode_t)(1 << 5))
-+
-+struct gendisk {
-+	/*
-+	 * major/first_minor/minors should not be set by any new driver, the
-+	 * block core will take care of allocating them automatically.
-+	 */
-+	int major;
-+	int first_minor;
-+	int minors;
-+
-+	char disk_name[DISK_NAME_LEN];	/* name of major driver */
-+
-+	unsigned short events;		/* supported events */
-+	unsigned short event_flags;	/* flags related to event processing */
-+
-+	struct xarray part_tbl;
-+	struct block_device *part0;
-+
-+	const struct block_device_operations *fops;
-+	struct request_queue *queue;
-+	void *private_data;
-+
-+	struct bio_set bio_split;
-+
-+	int flags;
-+	unsigned long state;
-+#define GD_NEED_PART_SCAN		0
-+#define GD_READ_ONLY			1
-+#define GD_DEAD				2
-+#define GD_NATIVE_CAPACITY		3
-+#define GD_ADDED			4
-+#define GD_SUPPRESS_PART_SCAN		5
-+#define GD_OWNS_QUEUE			6
-+
-+	struct mutex open_mutex;	/* open/close mutex */
-+	unsigned open_partitions;	/* number of open partitions */
-+
-+	struct backing_dev_info	*bdi;
-+	struct kobject queue_kobj;	/* the queue/ directory */
-+	struct kobject *slave_dir;
-+#ifdef CONFIG_BLOCK_HOLDER_DEPRECATED
-+	struct list_head slave_bdevs;
-+#endif
-+	struct timer_rand_state *random;
-+	atomic_t sync_io;		/* RAID */
-+	struct disk_events *ev;
-+
-+#ifdef CONFIG_BLK_DEV_ZONED
-+	/*
-+	 * Zoned block device information for request dispatch control.
-+	 * nr_zones is the total number of zones of the device. This is always
-+	 * 0 for regular block devices. conv_zones_bitmap is a bitmap of nr_zones
-+	 * bits which indicates if a zone is conventional (bit set) or
-+	 * sequential (bit clear). seq_zones_wlock is a bitmap of nr_zones
-+	 * bits which indicates if a zone is write locked, that is, if a write
-+	 * request targeting the zone was dispatched.
-+	 *
-+	 * Reads of this information must be protected with blk_queue_enter() /
-+	 * blk_queue_exit(). Modifying this information is only allowed while
-+	 * no requests are being processed. See also blk_mq_freeze_queue() and
-+	 * blk_mq_unfreeze_queue().
-+	 */
-+	unsigned int		nr_zones;
-+	unsigned int		max_open_zones;
-+	unsigned int		max_active_zones;
-+	unsigned long		*conv_zones_bitmap;
-+	unsigned long		*seq_zones_wlock;
-+#endif /* CONFIG_BLK_DEV_ZONED */
-+
-+#if IS_ENABLED(CONFIG_CDROM)
-+	struct cdrom_device_info *cdi;
-+#endif
-+	int node_id;
-+	struct badblocks *bb;
-+	struct lockdep_map lockdep_map;
-+	u64 diskseq;
-+	blk_mode_t open_mode;
-+
-+	/*
-+	 * Independent sector access ranges. This is always NULL for
-+	 * devices that do not have multiple independent access ranges.
-+	 */
-+	struct blk_independent_access_ranges *ia_ranges;
-+};
-+
-+/*
-+ * BLK_BOUNCE_NONE:	never bounce (default)
-+ * BLK_BOUNCE_HIGH:	bounce all highmem pages
-+ */
-+enum blk_bounce {
-+	BLK_BOUNCE_NONE,
-+	BLK_BOUNCE_HIGH,
-+};
-+
-+struct queue_limits {
-+	enum blk_bounce		bounce;
-+	unsigned long		seg_boundary_mask;
-+	unsigned long		virt_boundary_mask;
-+
-+	unsigned int		max_hw_sectors;
-+	unsigned int		max_dev_sectors;
-+	unsigned int		chunk_sectors;
-+	unsigned int		max_sectors;
-+	unsigned int		max_user_sectors;
-+	unsigned int		max_segment_size;
-+	unsigned int		physical_block_size;
-+	unsigned int		logical_block_size;
-+	unsigned int		alignment_offset;
-+	unsigned int		io_min;
-+	unsigned int		io_opt;
-+	unsigned int		max_discard_sectors;
-+	unsigned int		max_hw_discard_sectors;
-+	unsigned int		max_secure_erase_sectors;
-+	unsigned int		max_write_zeroes_sectors;
-+	unsigned int		max_zone_append_sectors;
-+	unsigned int		discard_granularity;
-+	unsigned int		discard_alignment;
-+	unsigned int		zone_write_granularity;
-+
-+	unsigned short		max_segments;
-+	unsigned short		max_integrity_segments;
-+	unsigned short		max_discard_segments;
-+
-+	unsigned char		misaligned;
-+	unsigned char		discard_misaligned;
-+	unsigned char		raid_partial_stripes_expensive;
-+	bool			zoned;
-+
-+	/*
-+	 * Drivers that set dma_alignment to less than 511 must be prepared to
-+	 * handle individual bvec's that are not a multiple of a SECTOR_SIZE
-+	 * due to possible offsets.
-+	 */
-+	unsigned int		dma_alignment;
-+};
-+
-+struct request_queue {
-+	/*
-+	 * The queue owner gets to use this for whatever they like.
-+	 * ll_rw_blk doesn't touch it.
-+	 */
-+	void			*queuedata;
-+
-+	struct elevator_queue	*elevator;
-+
-+	const struct blk_mq_ops	*mq_ops;
-+
-+	/* sw queues */
-+	struct blk_mq_ctx __percpu	*queue_ctx;
-+
-+	/*
-+	 * various queue flags, see QUEUE_* below
-+	 */
-+	unsigned long		queue_flags;
-+
-+	unsigned int		rq_timeout;
-+
-+	unsigned int		queue_depth;
-+
-+	refcount_t		refs;
-+
-+	/* hw dispatch queues */
-+	unsigned int		nr_hw_queues;
-+	struct xarray		hctx_table;
-+
-+	struct percpu_ref	q_usage_counter;
-+
-+	struct request		*last_merge;
-+
-+	spinlock_t		queue_lock;
-+
-+	int			quiesce_depth;
-+
-+	struct gendisk		*disk;
-+
-+	/*
-+	 * mq queue kobject
-+	 */
-+	struct kobject *mq_kobj;
-+
-+	struct queue_limits	limits;
-+
-+#ifdef  CONFIG_BLK_DEV_INTEGRITY
-+	struct blk_integrity integrity;
-+#endif	/* CONFIG_BLK_DEV_INTEGRITY */
-+
-+#ifdef CONFIG_PM
-+	struct device		*dev;
-+	enum rpm_status		rpm_status;
-+#endif
-+
-+	/*
-+	 * Number of contexts that have called blk_set_pm_only(). If this
-+	 * counter is above zero then only RQF_PM requests are processed.
-+	 */
-+	atomic_t		pm_only;
-+
-+	struct blk_queue_stats	*stats;
-+	struct rq_qos		*rq_qos;
-+	struct mutex		rq_qos_mutex;
-+
-+	/*
-+	 * ida allocated id for this queue.  Used to index queues from
-+	 * ioctx.
-+	 */
-+	int			id;
-+
-+	unsigned int		dma_pad_mask;
-+
-+	/*
-+	 * queue settings
-+	 */
-+	unsigned long		nr_requests;	/* Max # of requests */
-+
-+#ifdef CONFIG_BLK_INLINE_ENCRYPTION
-+	struct blk_crypto_profile *crypto_profile;
-+	struct kobject *crypto_kobject;
-+#endif
-+
-+	struct timer_list	timeout;
-+	struct work_struct	timeout_work;
-+
-+	atomic_t		nr_active_requests_shared_tags;
-+
-+	unsigned int		required_elevator_features;
-+
-+	struct blk_mq_tags	*sched_shared_tags;
-+
-+	struct list_head	icq_list;
-+#ifdef CONFIG_BLK_CGROUP
-+	DECLARE_BITMAP		(blkcg_pols, BLKCG_MAX_POLS);
-+	struct blkcg_gq		*root_blkg;
-+	struct list_head	blkg_list;
-+	struct mutex		blkcg_mutex;
-+#endif
-+
-+	int			node;
-+
-+	spinlock_t		requeue_lock;
-+	struct list_head	requeue_list;
-+	struct delayed_work	requeue_work;
-+
-+#ifdef CONFIG_BLK_DEV_IO_TRACE
-+	struct blk_trace __rcu	*blk_trace;
-+#endif
-+	/*
-+	 * for flush operations
-+	 */
-+	struct blk_flush_queue	*fq;
-+	struct list_head	flush_list;
-+
-+	struct mutex		sysfs_lock;
-+	struct mutex		sysfs_dir_lock;
-+
-+	/*
-+	 * for reusing dead hctx instance in case of updating
-+	 * nr_hw_queues
-+	 */
-+	struct list_head	unused_hctx_list;
-+	spinlock_t		unused_hctx_lock;
-+
-+	int			mq_freeze_depth;
-+
-+#ifdef CONFIG_BLK_DEV_THROTTLING
-+	/* Throttle data */
-+	struct throtl_data *td;
-+#endif
-+	struct rcu_head		rcu_head;
-+	wait_queue_head_t	mq_freeze_wq;
-+	/*
-+	 * Protect concurrent access to q_usage_counter by
-+	 * percpu_ref_kill() and percpu_ref_reinit().
-+	 */
-+	struct mutex		mq_freeze_lock;
-+
-+	struct blk_mq_tag_set	*tag_set;
-+	struct list_head	tag_set_list;
-+
-+	struct dentry		*debugfs_dir;
-+	struct dentry		*sched_debugfs_dir;
-+	struct dentry		*rqos_debugfs_dir;
-+	/*
-+	 * Serializes all debugfs metadata operations using the above dentries.
-+	 */
-+	struct mutex		debugfs_mutex;
-+
-+	bool			mq_sysfs_init_done;
-+};
-+
-+/* Keep blk_queue_flag_name[] in sync with the definitions below */
-+#define QUEUE_FLAG_STOPPED	0	/* queue is stopped */
-+#define QUEUE_FLAG_DYING	1	/* queue being torn down */
-+#define QUEUE_FLAG_NOMERGES     3	/* disable merge attempts */
-+#define QUEUE_FLAG_SAME_COMP	4	/* complete on same CPU-group */
-+#define QUEUE_FLAG_FAIL_IO	5	/* fake timeout */
-+#define QUEUE_FLAG_NONROT	6	/* non-rotational device (SSD) */
-+#define QUEUE_FLAG_VIRT		QUEUE_FLAG_NONROT /* paravirt device */
-+#define QUEUE_FLAG_IO_STAT	7	/* do disk/partitions IO accounting */
-+#define QUEUE_FLAG_NOXMERGES	9	/* No extended merges */
-+#define QUEUE_FLAG_ADD_RANDOM	10	/* Contributes to random pool */
-+#define QUEUE_FLAG_SYNCHRONOUS	11	/* always completes in submit context */
-+#define QUEUE_FLAG_SAME_FORCE	12	/* force complete on same CPU */
-+#define QUEUE_FLAG_HW_WC	13	/* Write back caching supported */
-+#define QUEUE_FLAG_INIT_DONE	14	/* queue is initialized */
-+#define QUEUE_FLAG_STABLE_WRITES 15	/* don't modify blks until WB is done */
-+#define QUEUE_FLAG_POLL		16	/* IO polling enabled if set */
-+#define QUEUE_FLAG_WC		17	/* Write back caching */
-+#define QUEUE_FLAG_FUA		18	/* device supports FUA writes */
-+#define QUEUE_FLAG_DAX		19	/* device supports DAX */
-+#define QUEUE_FLAG_STATS	20	/* track IO start and completion times */
-+#define QUEUE_FLAG_REGISTERED	22	/* queue has been registered to a disk */
-+#define QUEUE_FLAG_QUIESCED	24	/* queue has been quiesced */
-+#define QUEUE_FLAG_PCI_P2PDMA	25	/* device supports PCI p2p requests */
-+#define QUEUE_FLAG_ZONE_RESETALL 26	/* supports Zone Reset All */
-+#define QUEUE_FLAG_RQ_ALLOC_TIME 27	/* record rq->alloc_time_ns */
-+#define QUEUE_FLAG_HCTX_ACTIVE	28	/* at least one blk-mq hctx is active */
-+#define QUEUE_FLAG_NOWAIT       29	/* device supports NOWAIT */
-+#define QUEUE_FLAG_SQ_SCHED     30	/* single queue style io dispatch */
-+#define QUEUE_FLAG_SKIP_TAGSET_QUIESCE	31 /* quiesce_tagset skip the queue*/
-+
-+#define QUEUE_FLAG_MQ_DEFAULT	((1UL << QUEUE_FLAG_IO_STAT) |		\
-+				 (1UL << QUEUE_FLAG_SAME_COMP) |	\
-+				 (1UL << QUEUE_FLAG_NOWAIT))
-+
-+#ifdef CONFIG_BLOCK
-+
-+/*
-+ * blk_plug permits building a queue of related requests by holding the I/O
-+ * fragments for a short period. This allows merging of sequential requests
-+ * into single larger request. As the requests are moved from a per-task list to
-+ * the device's request_queue in a batch, this results in improved scalability
-+ * as the lock contention for request_queue lock is reduced.
-+ *
-+ * It is ok not to disable preemption when adding the request to the plug list
-+ * or when attempting a merge. For details, please see schedule() where
-+ * blk_flush_plug() is called.
-+ */
-+struct blk_plug {
-+	struct request *mq_list; /* blk-mq requests */
-+
-+	/* if ios_left is > 1, we can batch tag/rq allocations */
-+	struct request *cached_rq;
-+	u64 cur_ktime;
-+	unsigned short nr_ios;
-+
-+	unsigned short rq_count;
-+
-+	bool multiple_queues;
-+	bool has_elevator;
-+
-+	struct list_head cb_list; /* md requires an unplug callback */
-+};
-+
-+#else /* CONFIG_BLOCK */
-+
-+struct blk_plug {
-+};
-+
-+#endif /* CONFIG_BLOCK */
-+
-+struct io_comp_batch {
-+	struct request *req_list;
-+	bool need_ts;
-+	void (*complete)(struct io_comp_batch *);
-+};
-+
-+#endif /* _LINUX_BLKDEV_TYPES_H */
-diff --git a/include/linux/cdrom.h b/include/linux/cdrom.h
-index 98c6fd0b39b6..d99709e14ecb 100644
---- a/include/linux/cdrom.h
-+++ b/include/linux/cdrom.h
-@@ -13,7 +13,7 @@
- 
- #include <linux/fs.h>		/* not really needed, later.. */
+diff --git a/drivers/hwmon/occ/common.c b/drivers/hwmon/occ/common.c
+index f7b89b880339..1a4f1a90c2c5 100644
+--- a/drivers/hwmon/occ/common.c
++++ b/drivers/hwmon/occ/common.c
+@@ -11,6 +11,7 @@
+ #include <linux/math64.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
++#include <linux/octal_permissions.h>
+ #include <linux/property.h>
+ #include <linux/sprintf.h>
+ #include <linux/sysfs.h>
+diff --git a/drivers/media/platform/amphion/vpu_dbg.c b/drivers/media/platform/amphion/vpu_dbg.c
+index bed0ed4fb8a0..ef5658b492cf 100644
+--- a/drivers/media/platform/amphion/vpu_dbg.c
++++ b/drivers/media/platform/amphion/vpu_dbg.c
+@@ -9,6 +9,7 @@
  #include <linux/list.h>
--#include <linux/blkdev.h>
-+#include <linux/blkdev_types.h>
- #include <scsi/scsi_common.h>
- #include <uapi/linux/cdrom.h>
+ #include <linux/module.h>
+ #include <linux/kernel.h>
++#include <linux/octal_permissions.h>
+ #include <linux/sprintf.h>
+ #include <linux/types.h>
+ #include <linux/pm_runtime.h>
+diff --git a/drivers/soc/aspeed/aspeed-uart-routing.c b/drivers/soc/aspeed/aspeed-uart-routing.c
+index a2195f062e01..6b091df7775a 100644
+--- a/drivers/soc/aspeed/aspeed-uart-routing.c
++++ b/drivers/soc/aspeed/aspeed-uart-routing.c
+@@ -5,6 +5,7 @@
+  */
+ #include <linux/device.h>
+ #include <linux/module.h>
++#include <linux/octal_permissions.h>
+ #include <linux/of.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/regmap.h>
+diff --git a/fs/xfs/xfs_error.c b/fs/xfs/xfs_error.c
+index 8d558f0f1b3b..a225860d272a 100644
+--- a/fs/xfs/xfs_error.c
++++ b/fs/xfs/xfs_error.c
+@@ -14,6 +14,7 @@
+ #include "xfs_error.h"
+ #include "xfs_sysfs.h"
+ #include "xfs_inode.h"
++#include <linux/octal_permissions.h>
+ #include <linux/kstrtox.h>
+ #include <linux/sprintf.h>
+ #include <linux/sysfs.h>
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 5d088ce30045..ac332f4deed9 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -29,7 +29,6 @@
+ #include <linux/typecheck.h>
+ #include <linux/panic.h>
+ #include <linux/printk.h>
+-#include <linux/build_bug.h>
+ #include <linux/sprintf.h>
+ #include <linux/static_call_types.h>
+ #include <linux/instruction_pointer.h>
+@@ -308,16 +307,4 @@ static inline void ftrace_dump(enum ftrace_dump_mode oops_dump_mode) { }
+ # define REBUILD_DUE_TO_FTRACE_MCOUNT_RECORD
+ #endif
  
-diff --git a/include/linux/io_uring_types.h b/include/linux/io_uring_types.h
-index 4fe7af8a4907..8dcf55fe0e09 100644
---- a/include/linux/io_uring_types.h
-+++ b/include/linux/io_uring_types.h
-@@ -1,7 +1,7 @@
- #ifndef IO_URING_TYPES_H
- #define IO_URING_TYPES_H
+-/* Permissions on a sysfs file: you didn't miss the 0 prefix did you? */
+-#define VERIFY_OCTAL_PERMISSIONS(perms)						\
+-	(BUILD_BUG_ON_ZERO((perms) < 0) +					\
+-	 BUILD_BUG_ON_ZERO((perms) > 0777) +					\
+-	 /* USER_READABLE >= GROUP_READABLE >= OTHER_READABLE */		\
+-	 BUILD_BUG_ON_ZERO((((perms) >> 6) & 4) < (((perms) >> 3) & 4)) +	\
+-	 BUILD_BUG_ON_ZERO((((perms) >> 3) & 4) < ((perms) & 4)) +		\
+-	 /* USER_WRITABLE >= GROUP_WRITABLE */					\
+-	 BUILD_BUG_ON_ZERO((((perms) >> 6) & 2) < (((perms) >> 3) & 2)) +	\
+-	 /* OTHER_WRITABLE?  Generally considered a bad idea. */		\
+-	 BUILD_BUG_ON_ZERO((perms) & 2) +					\
+-	 (perms))
+ #endif
+diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
+index a285e74ec028..860b0ea1f3b3 100644
+--- a/include/linux/moduleparam.h
++++ b/include/linux/moduleparam.h
+@@ -4,7 +4,7 @@
+ /* (C) Copyright 2001, 2002 Rusty Russell IBM Corporation */
+ #include <linux/init.h>
+ #include <linux/stringify.h>
+-#include <linux/kernel.h> // for VERIFY_OCTAL_PERMISSIONS()
++#include <linux/octal_permissions.h>
  
--#include <linux/blkdev.h>
-+#include <linux/blkdev_types.h>
- #include <linux/hashtable.h>
- #include <linux/task_work.h>
- #include <linux/bitmap.h>
-diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-index 4cc333203665..d111784bb406 100644
---- a/io_uring/io_uring.c
-+++ b/io_uring/io_uring.c
-@@ -47,6 +47,7 @@
- #include <linux/refcount.h>
- #include <linux/uio.h>
- #include <linux/bits.h>
-+#include <linux/blkdev.h>
- #include <linux/completion.h>
+ /* You can override this manually, but generally this should match the
+    module name. */
+diff --git a/include/linux/octal_permissions.h b/include/linux/octal_permissions.h
+new file mode 100644
+index 000000000000..57d4d6a5b66d
+--- /dev/null
++++ b/include/linux/octal_permissions.h
+@@ -0,0 +1,20 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_OCTAL_PERMISSIONS_H
++#define _LINUX_OCTAL_PERMISSIONS_H
++
++#include <linux/build_bug.h>
++
++/* Permissions on a sysfs file: you didn't miss the 0 prefix did you? */
++#define VERIFY_OCTAL_PERMISSIONS(perms)						\
++	(BUILD_BUG_ON_ZERO((perms) < 0) +					\
++	 BUILD_BUG_ON_ZERO((perms) > 0777) +					\
++	 /* USER_READABLE >= GROUP_READABLE >= OTHER_READABLE */		\
++	 BUILD_BUG_ON_ZERO((((perms) >> 6) & 4) < (((perms) >> 3) & 4)) +	\
++	 BUILD_BUG_ON_ZERO((((perms) >> 3) & 4) < ((perms) & 4)) +		\
++	 /* USER_WRITABLE >= GROUP_WRITABLE */					\
++	 BUILD_BUG_ON_ZERO((((perms) >> 6) & 2) < (((perms) >> 3) & 2)) +	\
++	 /* OTHER_WRITABLE?  Generally considered a bad idea. */		\
++	 BUILD_BUG_ON_ZERO((perms) & 2) +					\
++	 (perms))
++
++#endif
+diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+index 0500b023b5cc..a4b752b24329 100644
+--- a/include/linux/sysfs.h
++++ b/include/linux/sysfs.h
+@@ -15,10 +15,10 @@
  
- #include <linux/sched/signal.h>
+ #include <linux/sysfs_types.h>
+ #include <linux/kernfs.h>
+-#include <linux/kernel.h> // for VERIFY_OCTAL_PERMISSIONS()
+ #include <linux/compiler.h>
+ #include <linux/list.h>
+ #include <linux/lockdep_types.h>
++#include <linux/octal_permissions.h>
+ 
+ struct kobject;
+ struct module;
 -- 
 2.39.2
 
