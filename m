@@ -1,350 +1,166 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2048.outbound.protection.outlook.com [40.107.223.48])
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2115.outbound.protection.outlook.com [40.107.105.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC48F5B668;
-	Sun, 11 Feb 2024 14:55:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB205A11F;
+	Sun, 11 Feb 2024 14:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.115
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707663305; cv=fail; b=Q5GdLgsANt6GClMs27L2GBV1uWOENFY7xyS/aBMP4YAm5O1m6OJHr/nTX+RiAfk5frFzJWTjfcKdKMB2VgUmtta3eR/CZplxLmQPZPDQ4QzCGDGuqEAKo0smhdIRpVg2MsYrSz2Wuj8IjdbZ6EP80PFeU8saUtoHxXItb2BtmB0=
+	t=1707663485; cv=fail; b=emlgNUEhUpKzKXbp5ph44vU7wtkivqG4Lxr1sSW7hBuAs4jS8dzXIdPYk0B7A3ODcn08XZZE8mUOR4bT6/sOi51qzK954C2depxGggKkLXF+k1a6kvYKirEgweC1Sm1oQAKTMAFRW/Hlub27HXpQ5BQz1/15Vjy5/6bnQ9wPFsQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707663305; c=relaxed/simple;
-	bh=m6A03YCtZUgTv1Dr9k8y11+Py1yAJzHFE/wMU/nqYrI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LRHROunDAW872+P0EsGr4FVcdq2dwq0azSOqHl+2NbtJQyHiBx5SFZWfHLMC4t6Lhsubu59EkLf0zy1tPOl9VENm0nKt6f+rgL5wv2V6uZRQ6IkYxiGV6TS1k3zBOKZEiSFhg+OtfKNR9govgbuofZyT6bryw48JVp19U1FEzjM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kbvZyFkf; arc=fail smtp.client-ip=40.107.223.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1707663485; c=relaxed/simple;
+	bh=1Ze9AamJ8JfMfTzH5deJZ4wNGf4mdO60pEIYLXFMKtk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=BVNlqzO3z2775VgqoNlpYzzAehB2OR0l7PboSCFQUkxPvLaO4MmMObCBsFj9tWpLClKiLjX9n21FYc/Qb71+2Rt/vTy2AKtxz7mL2DA9sOJZeZg9fPHPCX/7ZBTyqQavmou/LMPCgcIif6c4VTgJ0ig+xBf4vUutwqB/MTN2Hyk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=solid-run.com; spf=pass smtp.mailfrom=solid-run.com; dkim=pass (1024-bit key) header.d=solidrn.onmicrosoft.com header.i=@solidrn.onmicrosoft.com header.b=MX7EkDbU; arc=fail smtp.client-ip=40.107.105.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=solid-run.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=solid-run.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kbvZyFkf"
+	dkim=pass (1024-bit key) header.d=solidrn.onmicrosoft.com header.i=@solidrn.onmicrosoft.com header.b="MX7EkDbU"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AJlm84cG+Qiz7fTfjx+s6L/rop1lOkUae38FxQTx4S0wCdt7oHpXXATha01ptfNmkUgqwl3tZqwLWzFWTCMQ2yBnz1lHi6HabDDFUuyBavNQumn9gn8HrHoUUqNt8oyw+SGrBU4nykU3DnSSkGVL/jILC3TbUllNB7v38QFwOS9qc3CryE5fllfGiRykeXtaVYsV+eoXdUIJXWJUXtae7MOWizmCiBN2Jqgy4YaLoTOIqz3Aif9CWGiAwmLJE5WZ6hDaRpFizkdEUcjUkxUd1AcdUFc5MhC7VdiWThM75StJfZ/ewBRRhuzNyXh9CjkYNC9upcWqXjP7fvI7xzacuQ==
+ b=Ft7EVVpELODGXs4YTejtsEZbY095IdW5GAoahAAxxH8/CKjmACXUoKesJ6JEFtdg3my2iRSDYPwwMZIK9zztIFG1K9lZcJ6ntJGsSYh+C9jwuq/ZuliMYwAnFyMie4ohddNg34COJNw1dVDbmn9nokOHhJvLiZ54uocSiQDMgFRc+wTL2FnmxerEKBWALP1ItrorPlaeq1hbJHu6100TIuf6oNmdc6V9dGSJPnyiWP+c56HyiVE1+SO1x0iGIIWhErxOHwfDb6Evuv7kfdGEsB3ktmjuXI9rxyNObThZuX1M7q4hFZ2I0mOnaOkbdsJk1cvG2pBlnCXxBW3eBdZB7A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qt4IJtDz9lJXEWpJox7SKHGWQTRgQ/1HuPjj515rsMA=;
- b=V1OEeigsyM9q/3ZP9MlPMDqfq025zSYFQgO45O904KKKHitrh8U859M8e3qFEYbv3xs/UFXteSGIL13P9zWNvGLevAPCuB9AHNRY72ODuY2vDMWWMAAQOBhvsneIYwhLzRC9G6f1ZMYRTLcxCaYzrefiMfAO7+CwhGJtYo4yTZLdWmz5H+w/UOYdv5efl98gGXgL/NwFaZseeDrGZzBbvB/kr3UMLVHNbiVD5R24qiQl2DGwNLnv72xWuv7o0KcnxRpXfUmJ/cP1bFGekNwSgbyYNbJbT8Pjy+H5V8lROXPX/8ocHXpaalDpsARb7ZpZ9WY6iUal/JfQ4r68g4LGpQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lists.freedesktop.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=1Ze9AamJ8JfMfTzH5deJZ4wNGf4mdO60pEIYLXFMKtk=;
+ b=Y+qNCXyx7gdwztmKYna18d8MSWTdhSrrlVVfFQYi62SnrCo162WKjnEh/szknPXComPMkmgEJNZehSk2p0ITxLwCXEnWvdnvEaDRPcgqET+tpwkaFN8977gggZk3+Uc4HP27dx5Bg1Mc4biGl3OYY7cMVXj4XUZcIBg2LOhfehlCazk8+QRUfYr5KFzNlqdKYWaEdn/yiw3j9wzf++7TV6MFNHWcDHr4U7KiJOXZBsyovCydTy1Do2w2JXarJ0DDkRY7HT5SLikge9x5GUHk8pOEwEfpRFLgc9s8j2RVPL6AdFMDiE3oD1wuxXV2gBUK7fHbpm5aTgzK5uyR6AdKBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=solid-run.com; dmarc=pass action=none
+ header.from=solid-run.com; dkim=pass header.d=solid-run.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=solidrn.onmicrosoft.com; s=selector1-solidrn-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qt4IJtDz9lJXEWpJox7SKHGWQTRgQ/1HuPjj515rsMA=;
- b=kbvZyFkfeh5q40dW5W4IdXBnzAmtkWoVbVQUFHw2jveI1CeE+WQCytF3t8EgFywYMSw8FnMfrrazLcnrn6TE0AwCKCRBZVgQGWzy+m34I5gwBlM3EY2lChicy1mXQREIVaAWdMzeJqA/KXP6sCyotePYBVQAVwSWeTWbtLVQHYs=
-Received: from BL1PR13CA0270.namprd13.prod.outlook.com (2603:10b6:208:2ba::35)
- by PH7PR12MB9127.namprd12.prod.outlook.com (2603:10b6:510:2f6::17) with
+ bh=1Ze9AamJ8JfMfTzH5deJZ4wNGf4mdO60pEIYLXFMKtk=;
+ b=MX7EkDbUsX5MOxnu8eV4EqKZytXlJEgUIsGODF7XBN+KHbEY+XeQFQOVYPSVYDH7dWiEC76VS2TS8dRljbzjkuBFiLaMXQYbuRPjv94bWRXPwRjBS1J6+WwJJGxCjvEeLDGXKgsaD6bFl6eds995IzFVbneoA9NjvQUSwe275GE=
+Received: from AM9PR04MB7586.eurprd04.prod.outlook.com (2603:10a6:20b:2d5::17)
+ by DU2PR04MB8966.eurprd04.prod.outlook.com (2603:10a6:10:2e1::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.12; Sun, 11 Feb
- 2024 14:54:58 +0000
-Received: from BL02EPF0001A0FB.namprd03.prod.outlook.com
- (2603:10b6:208:2ba:cafe::d6) by BL1PR13CA0270.outlook.office365.com
- (2603:10b6:208:2ba::35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.10 via Frontend
- Transport; Sun, 11 Feb 2024 14:54:58 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL02EPF0001A0FB.mail.protection.outlook.com (10.167.242.102) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7249.19 via Frontend Transport; Sun, 11 Feb 2024 14:54:57 +0000
-Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Sun, 11 Feb
- 2024 08:54:57 -0600
-From: Mario Limonciello <mario.limonciello@amd.com>
-To: <amd-gfx@lists.freedesktop.org>, "open list:DRM DRIVERS"
-	<dri-devel@lists.freedesktop.org>
-CC: "open list:ACPI" <linux-acpi@vger.kernel.org>, open list
-	<linux-kernel@vger.kernel.org>, Melissa Wen <mwen@igalia.com>, Mark Pearson
-	<mpearson-lenovo@squebb.ca>, Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v5 1/3] drm: Add support to get EDID from ACPI
-Date: Sat, 10 Feb 2024 23:50:09 -0600
-Message-ID: <20240211055011.3583-2-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240211055011.3583-1-mario.limonciello@amd.com>
-References: <20240211055011.3583-1-mario.limonciello@amd.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.39; Sun, 11 Feb
+ 2024 14:57:59 +0000
+Received: from AM9PR04MB7586.eurprd04.prod.outlook.com
+ ([fe80::3b94:f607:ebe1:7d6c]) by AM9PR04MB7586.eurprd04.prod.outlook.com
+ ([fe80::3b94:f607:ebe1:7d6c%7]) with mapi id 15.20.7249.039; Sun, 11 Feb 2024
+ 14:57:59 +0000
+From: Josua Mayer <josua@solid-run.com>
+To: Conor Dooley <conor@kernel.org>
+CC: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>, Tero
+ Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+	<conor+dt@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre
+ Belloni <alexandre.belloni@bootlin.com>, Yazan Shhady
+	<yazan.shhady@solid-run.com>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-rtc@vger.kernel.org"
+	<linux-rtc@vger.kernel.org>
+Subject: Re: [PATCH v4 2/5] dt-bindings: rtc: abx80x: convert to yaml
+Thread-Topic: [PATCH v4 2/5] dt-bindings: rtc: abx80x: convert to yaml
+Thread-Index: AQHaVfJlZfbrK8KniEiJ3e3MRZt0PbD4ue+AgAyPk4A=
+Date: Sun, 11 Feb 2024 14:57:59 +0000
+Message-ID: <eae2e8ab-7561-4990-9e5c-de1b158fbdd7@solid-run.com>
+References: <20240202-add-am64-som-v4-0-5f8b12af5e71@solid-run.com>
+ <20240202-add-am64-som-v4-2-5f8b12af5e71@solid-run.com>
+ <20240203-prolonged-backfield-c659e0016d70@spud>
+In-Reply-To: <20240203-prolonged-backfield-c659e0016d70@spud>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=solid-run.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AM9PR04MB7586:EE_|DU2PR04MB8966:EE_
+x-ms-office365-filtering-correlation-id: efa06d59-7599-4976-4e0e-08dc2b11d6b4
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ zdWGw+pkYyLoDr3SCAQGj87C9YY5Jb07Eqv3cgi0ubVcKDWQsjsA7cv4VLp7DwValyVAsraIHbyXUB3FwG6PGBQrM+pB3Fox6wbdHomeQjSjyx4VlVjdasqlLKVXTIyf8YCVCCS2q57R6G3qzceJwz1MHwEV+DDg3z2z1u22jDuQqCwQAyF/WfXHWSIWcFUzhwkx4hYuESleuo1nBGli4C2QB/d1ePRdkmha9iUCPlKsKHS6MdcLiASsyBCIKmkyQINDxTeDnbl/JBs5WLGYxfZFLqTuOtN0jXZKb3tl2ugMbK4qFATnAgQgASQ2DkpkPVESNEv66JUYJciMlz5o2HNKng+zNpg0SITivGvt7RDi/3d+Zq8+UYfPELbyxiIkXP9PjtIjaSonUcM8WiOdMSfryJtfVCmL8ov69yJWhbdsAwGKiUV5pTtcKR7t1kRjwCRVZeNXyBOHfFTmVBgAcW+6Ruh6zKIYIpKqM7A97/eKsyc6Pp1R9kj/rSvJ3lbg3LZbXp/J7DU/bSzyaTOHivDXqm1PZCKmCrf242eBhk0o+RpfZj2va62Z/thzDgElDN892r63PuWXy/u/Eve7PqNgjBLwJYJUjOArD+jYsK0=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB7586.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(346002)(136003)(376002)(39830400003)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(2906002)(4326008)(8676002)(8936002)(66899024)(5660300002)(2616005)(41300700001)(122000001)(38100700002)(76116006)(86362001)(36756003)(38070700009)(966005)(31696002)(66446008)(478600001)(91956017)(6486002)(26005)(66946007)(6916009)(54906003)(66476007)(66556008)(316002)(64756008)(6512007)(31686004)(6506007)(71200400001)(7416002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?WU5mMm56M2ZLcFBaTGRzWmJ0anZ1ZGhkWlhnMHVHQnJPSWRwcWExajNDV29l?=
+ =?utf-8?B?UHIwZGk4WGFKU2JibnZ6WmxnaHBqRWFKczB3WkRiS0NnbEt5SkhDeklHZzZn?=
+ =?utf-8?B?MFhoOS84TEs1YWgyT2crSnN6SDgxczZTRW92YzNJa092M09ueWRqOUpKeXZY?=
+ =?utf-8?B?QnEvR1AxNC9CeGVyV2h3SjlITEF4Y3p6bmNxRXN3S2ZRT0l0R29xeDlKMUhK?=
+ =?utf-8?B?TU14Y0NFM0FmaTVoVzBrRThOZFRtTUZSVk5xY1lSSUxyUGlUeUpIb0NXeGhz?=
+ =?utf-8?B?czJuQ2JiMW1IYjFVTWY3NTZ3WXpjSjQyN3JhaGJlWlZPR0ZDL2VVSkk0R1J0?=
+ =?utf-8?B?eG1uRTBCZWU2TktJZEkxTXgyc0ZubVhEcmJGdm1NSnc5VFZFcEFwMUR4WjZi?=
+ =?utf-8?B?K1hUVDlDTVUycmNmUCtrTWMzUTRLdFc5YTdSY1Q0U0NjWTJ4eGx3dGZHcHcv?=
+ =?utf-8?B?SkJtMXErTVdzSVIvQnVlY1dmMTlnSldVUjBoa3p0SEVLNHFTU1hsR1Z4Wmti?=
+ =?utf-8?B?V0dOdEp6OG1qVk85RHB3RUMxTUdLRkt1MVROWitmQTk1YktUM2tFeHY0Mit5?=
+ =?utf-8?B?dkIvY3FYNDU4R3JPRy83VC9GZ1ZmdVNacW1Zbm5DaGpmS0w4L3J5bkQyMXkr?=
+ =?utf-8?B?SnhMNHExbjhXaGpQMGdJWjFvdTJLNHF3YTJudW42dUVUbHNrRURJTGFwczdh?=
+ =?utf-8?B?R0lCT2g3eTZPdVpvVFpLWGFNcUdVNjZCS283SW1hd3g4cWJBTWlCUVl2eUZu?=
+ =?utf-8?B?U2I0aGR4Z0ZjSDgzeGNEVEhJMWQvdVBmdEMxajE3TENWUzdsRkdzV0UxNlVK?=
+ =?utf-8?B?bGlHanRLSVFSeDJXRi9RRk1wa0pHd2l3Wmk4b1F1WTFkOXdwZitkeXdlbnRZ?=
+ =?utf-8?B?K1BnSVo1MStnNW9rcjdCWlREQzcvczQ1blhMM2tsSkptWmFrN3pNNC9Dd0dB?=
+ =?utf-8?B?S3QySW5Jb2dUSUZhZ3pLTVJCekxJNnZVSm93aDU2TFp3ZGtWTUd4Qzc0c2p0?=
+ =?utf-8?B?bkdNRXhSMFBOUE9qRXZjVUVZS0FrVFhoMGYyc3VNdWw3ZjFuZ2ZkRmkybHpE?=
+ =?utf-8?B?L0tRRjVuUHZ6S09ZQWYzMS9QRVNmY0VzZDB5dzRmSkZtZkdaVng0Mm95c0dV?=
+ =?utf-8?B?aHZ2RitBc3huNkhvd0tMd25ZamVVZHFCeVlmMW9BQWRXSlNwUnI2bWJFaW91?=
+ =?utf-8?B?YkZybVd5T2RGTUNWQVRJWU0xZ0k2eElZcTlvcjVOamdsWnB1TnE2OW50L2tq?=
+ =?utf-8?B?OSt2V0hwbzFGQUJqaGYrK2NraVR2SXlVODFiNnEwOU4xRFlPNUxSQkRUcUpi?=
+ =?utf-8?B?NXAxcDRQQmZ5MVZ6UVhxMFJaZFZKdW9Nek1aTG1Kc1paNHVNVHV1MnAvR25y?=
+ =?utf-8?B?cFgvazVGQllKNWtUNmZOR1k4S01DS0NDbVdWWElYS3Myd3FJWEFmUFVHYWVT?=
+ =?utf-8?B?ZVVTU0cydmxNWndWZHBZQTQ0a0VmOWw1T1lrK0pMKzRIS0ErSG8vWmEzM0VL?=
+ =?utf-8?B?QWZOMkk3NVFMYzNpQ3M5bEFnVkpqdG9IRVlTU0ltakxZTCtBV09URDFsMUtp?=
+ =?utf-8?B?TFNUZnk4NjJVSlcxRXVVQlZFTi9wTXU3b2tabWVxalZpRzVZZ0Z2ajZjM3dL?=
+ =?utf-8?B?WXNNS2FzbzRVZCsrdFpyeVhraklzVUlGZ2EyRGVHYWw3WTJuU2RMSU9kcEVp?=
+ =?utf-8?B?MHFlZHZMMEZxRUE1M1JnTHlUV0VtaEZ1WGFSZ2gyelBmdjJVT0ZZRndQQ0Uy?=
+ =?utf-8?B?dElTRW1yekNiVTU4QXRrblpkYmxXOHowZ3FqSjFWMWJReEs2LzRBc2pQWWQy?=
+ =?utf-8?B?cXBvZmh6cDZIT1dIQ1F3cDgrSzdBRnQvT25BazBrYnJLWE81bUJCWUFTQm1I?=
+ =?utf-8?B?MDBQeVFneHplUjJxSkx0UXl1T1ZJQVRnamNpcUVWeWlTZ3JxWXZqQjNsdExm?=
+ =?utf-8?B?cTdRaGtQa3M1Y2hQTVN6b3cxRUZmM0JNVGI3LzhhZ0xBUkVCR0F6NDNFQUVr?=
+ =?utf-8?B?cGk1cGxnVDBtS1Bnd0hnTmlRK0t0RnJXYXloODdWRUp1Z1N5RGxINUJwc0xW?=
+ =?utf-8?B?Tm1jMDNBSEpSa2xKdVF5U1pqc2NhNW9sQXNYckdMVWg2WFlyVXRVUDYwa2x6?=
+ =?utf-8?Q?+CPAQmDGrtaTg6cCC7voCl97V?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <61F30DCC47F2314EBDB455EAAE4712F8@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0001A0FB:EE_|PH7PR12MB9127:EE_
-X-MS-Office365-Filtering-Correlation-Id: c792d1f3-ffab-49a5-e5a6-08dc2b116a74
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	EdiyyLUlXHoFNFGxglZXwHxayjgusrnM15c78NmCAHBr3/Ggca5u1mVrpd6CXIJWq8nx2lvLLQMdJQPCqk5ja5PoetUAdCB36k8JEP+f410hZDBWH1jh2SVzKofrffjRg9d2uMSq7Q+SB0189Y3nqtsQrP+383fWzeUog9SjBFrb0K1kXN8xRyKsi3ELiJtEvZ7NSPAldSO5fx30NDylUTxQow5Y7NfckYeDaBT+fjGVycfbTWLU5VtTMmSqvdSIsO43vlHSk0lVeiECh+mbuMhpbmy8M/54xTDnL+okvb0uU3uZvFtToicdxIWlMfdE7Tt3uvFuHjGzob32l+0hv1HrHsR1tZPWWUlPfmLILSUdP9pA26VrYxf3J9lvqALtnnSX95nj5jMpYmFzmRrrdhrGN3IYyV24RbHLD7uhY8j/CcAGT/YfeokNIIkKZa/NB6EzC+STDD+PdrYlFFu1FuMaOQMspvoCXrf6HRoeupmladWfa17ty/LR2+tGOY9tGo1qnk8enwHLeVX0Ffl82uoIAu5F3Se3/p/RjGVsAxPegGShv2tU5OJtKTgwnN5X5gpnXFaSvm2js95aJN4goam+m3qOqJZUnTJZx9gvri0=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(396003)(39860400002)(346002)(376002)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(82310400011)(40470700004)(36840700001)(46966006)(7696005)(478600001)(2616005)(41300700001)(66899024)(5660300002)(8936002)(70206006)(4326008)(70586007)(44832011)(2906002)(8676002)(110136005)(6666004)(316002)(54906003)(26005)(83380400001)(16526019)(1076003)(82740400003)(36756003)(86362001)(336012)(356005)(81166007)(426003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2024 14:54:57.9783
+X-OriginatorOrg: solid-run.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB7586.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: efa06d59-7599-4976-4e0e-08dc2b11d6b4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2024 14:57:59.5903
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c792d1f3-ffab-49a5-e5a6-08dc2b116a74
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF0001A0FB.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9127
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a4a8aaf3-fd27-4e27-add2-604707ce5b82
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ieEU8xIMVnsRUgIFKfZsvYXnxJfRpf2wl1S7MEDpU4m2DNgaTW4swiH0IQcnaniToB/dn/4D9hE4WAoJQ7ht9A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8966
 
-Some manufacturers have intentionally put an EDID that differs from
-the EDID on the internal panel on laptops.  Drivers that prefer to
-fetch this EDID can set a bit on the drm_connector to indicate that
-the DRM EDID helpers should try to fetch it and it is preferred if
-it's present.
-
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v1->v2:
- * Split code from previous amdgpu specific helper to generic drm helper.
-v2->v3:
- * Add an extra select to fix a variety of randconfig errors found from
-   LKP robot.
-v3->v4:
- * Return struct drm_edid
-v4->v5:
- * Rename to drm_edid_read_acpi
- * Drop selects
----
- drivers/gpu/drm/Kconfig     |   7 +++
- drivers/gpu/drm/drm_edid.c  | 113 +++++++++++++++++++++++++++++++++---
- include/drm/drm_connector.h |   6 ++
- include/drm/drm_edid.h      |   1 +
- 4 files changed, 119 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-index 2520db0b776e..a49740c528b9 100644
---- a/drivers/gpu/drm/Kconfig
-+++ b/drivers/gpu/drm/Kconfig
-@@ -103,6 +103,13 @@ config DRM_KMS_HELPER
- 	help
- 	  CRTC helpers for KMS drivers.
- 
-+config DRM_ACPI_HELPER
-+	tristate "ACPI support in DRM"
-+	depends on DRM
-+	depends on (ACPI_VIDEO || ACPI_VIDEO=n)
-+	help
-+	  ACPI helpers for DRM drivers.
-+
- config DRM_DEBUG_DP_MST_TOPOLOGY_REFS
-         bool "Enable refcount backtrace history in the DP MST helpers"
- 	depends on STACKTRACE_SUPPORT
-diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-index 69c68804023f..096c278b6f66 100644
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -28,6 +28,7 @@
-  * DEALINGS IN THE SOFTWARE.
-  */
- 
-+#include <acpi/video.h>
- #include <linux/bitfield.h>
- #include <linux/cec.h>
- #include <linux/hdmi.h>
-@@ -2188,6 +2189,62 @@ drm_do_probe_ddc_edid(void *data, u8 *buf, unsigned int block, size_t len)
- 	return ret == xfers ? 0 : -1;
- }
- 
-+/**
-+ * drm_do_probe_acpi_edid() - get EDID information via ACPI _DDC
-+ * @data: struct drm_connector
-+ * @buf: EDID data buffer to be filled
-+ * @block: 128 byte EDID block to start fetching from
-+ * @len: EDID data buffer length to fetch
-+ *
-+ * Try to fetch EDID information by calling acpi_video_get_edid() function.
-+ *
-+ * Return: 0 on success or error code on failure.
-+ */
-+static int
-+drm_do_probe_acpi_edid(void *data, u8 *buf, unsigned int block, size_t len)
-+{
-+	struct drm_connector *connector = data;
-+	struct drm_device *ddev = connector->dev;
-+	struct acpi_device *acpidev = ACPI_COMPANION(ddev->dev);
-+	unsigned char start = block * EDID_LENGTH;
-+	void *edid;
-+	int r;
-+
-+	if (!acpidev)
-+		return -ENODEV;
-+
-+	switch (connector->connector_type) {
-+	case DRM_MODE_CONNECTOR_LVDS:
-+	case DRM_MODE_CONNECTOR_eDP:
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	/* fetch the entire edid from BIOS */
-+	if (IS_REACHABLE(CONFIG_DRM_ACPI_HELPER)) {
-+		r = acpi_video_get_edid(acpidev, ACPI_VIDEO_DISPLAY_LCD, -1, &edid);
-+		if (r < 0) {
-+			DRM_DEBUG_KMS("Failed to get EDID from ACPI: %d\n", r);
-+			return -EINVAL;
-+		}
-+	} else {
-+		r = -EOPNOTSUPP;
-+	}
-+	if (len > r || start > r || start + len > r) {
-+		r = -EINVAL;
-+		goto cleanup;
-+	}
-+
-+	memcpy(buf, edid + start, len);
-+	r = 0;
-+
-+cleanup:
-+	kfree(edid);
-+
-+	return r;
-+}
-+
- static void connector_bad_edid(struct drm_connector *connector,
- 			       const struct edid *edid, int num_blocks)
- {
-@@ -2621,7 +2678,8 @@ EXPORT_SYMBOL(drm_probe_ddc);
-  * @connector: connector we're probing
-  * @adapter: I2C adapter to use for DDC
-  *
-- * Poke the given I2C channel to grab EDID data if possible.  If found,
-+ * If the connector allows it, try to fetch EDID data using ACPI. If not found
-+ * poke the given I2C channel to grab EDID data if possible.  If found,
-  * attach it to the connector.
-  *
-  * Return: Pointer to valid EDID or NULL if we couldn't find any.
-@@ -2629,20 +2687,50 @@ EXPORT_SYMBOL(drm_probe_ddc);
- struct edid *drm_get_edid(struct drm_connector *connector,
- 			  struct i2c_adapter *adapter)
- {
--	struct edid *edid;
-+	struct edid *edid = NULL;
- 
- 	if (connector->force == DRM_FORCE_OFF)
- 		return NULL;
- 
--	if (connector->force == DRM_FORCE_UNSPECIFIED && !drm_probe_ddc(adapter))
--		return NULL;
-+	if (connector->acpi_edid_allowed)
-+		edid = _drm_do_get_edid(connector, drm_do_probe_acpi_edid, connector, NULL);
-+
-+	if (!edid) {
-+		if (connector->force == DRM_FORCE_UNSPECIFIED && !drm_probe_ddc(adapter))
-+			return NULL;
-+		edid = _drm_do_get_edid(connector, drm_do_probe_ddc_edid, adapter, NULL);
-+	}
- 
--	edid = _drm_do_get_edid(connector, drm_do_probe_ddc_edid, adapter, NULL);
- 	drm_connector_update_edid_property(connector, edid);
- 	return edid;
- }
- EXPORT_SYMBOL(drm_get_edid);
- 
-+/**
-+ * drm_edid_read_acpi - get EDID data, if available
-+ * @connector: connector we're probing
-+ *
-+ * Use the BIOS to attempt to grab EDID data if possible.
-+ *
-+ * The returned pointer must be freed using drm_edid_free().
-+ *
-+ * Return: Pointer to valid EDID or NULL if we couldn't find any.
-+ */
-+const struct drm_edid *drm_edid_read_acpi(struct drm_connector *connector)
-+{
-+	const struct drm_edid *drm_edid;
-+
-+	if (connector->force == DRM_FORCE_OFF)
-+		return NULL;
-+
-+	drm_edid = drm_edid_read_custom(connector, drm_do_probe_acpi_edid, connector);
-+
-+	/* Note: Do *not* call connector updates here. */
-+
-+	return drm_edid;
-+}
-+EXPORT_SYMBOL(drm_edid_read_acpi);
-+
- /**
-  * drm_edid_read_custom - Read EDID data using given EDID block read function
-  * @connector: Connector to use
-@@ -2727,10 +2815,11 @@ const struct drm_edid *drm_edid_read_ddc(struct drm_connector *connector,
- EXPORT_SYMBOL(drm_edid_read_ddc);
- 
- /**
-- * drm_edid_read - Read EDID data using connector's I2C adapter
-+ * drm_edid_read - Read EDID data using BIOS or connector's I2C adapter
-  * @connector: Connector to use
-  *
-- * Read EDID using the connector's I2C adapter.
-+ * Read EDID from BIOS if allowed by connector or by using the connector's
-+ * I2C adapter.
-  *
-  * The EDID may be overridden using debugfs override_edid or firmware EDID
-  * (drm_edid_load_firmware() and drm.edid_firmware parameter), in this priority
-@@ -2742,10 +2831,18 @@ EXPORT_SYMBOL(drm_edid_read_ddc);
-  */
- const struct drm_edid *drm_edid_read(struct drm_connector *connector)
- {
-+	const struct drm_edid *drm_edid = NULL;
-+
- 	if (drm_WARN_ON(connector->dev, !connector->ddc))
- 		return NULL;
- 
--	return drm_edid_read_ddc(connector, connector->ddc);
-+	if (connector->acpi_edid_allowed)
-+		drm_edid = drm_edid_read_acpi(connector);
-+
-+	if (!drm_edid)
-+		drm_edid = drm_edid_read_ddc(connector, connector->ddc);
-+
-+	return drm_edid;
- }
- EXPORT_SYMBOL(drm_edid_read);
- 
-diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-index fe88d7fc6b8f..74ed47f37a69 100644
---- a/include/drm/drm_connector.h
-+++ b/include/drm/drm_connector.h
-@@ -1886,6 +1886,12 @@ struct drm_connector {
- 
- 	/** @hdr_sink_metadata: HDR Metadata Information read from sink */
- 	struct hdr_sink_metadata hdr_sink_metadata;
-+
-+	/**
-+	 * @acpi_edid_allowed: Get the EDID from the BIOS, if available.
-+	 * This is only applicable to eDP and LVDS displays.
-+	 */
-+	bool acpi_edid_allowed;
- };
- 
- #define obj_to_connector(x) container_of(x, struct drm_connector, base)
-diff --git a/include/drm/drm_edid.h b/include/drm/drm_edid.h
-index 518d1b8106c7..38b5e1b5c773 100644
---- a/include/drm/drm_edid.h
-+++ b/include/drm/drm_edid.h
-@@ -463,5 +463,6 @@ bool drm_edid_is_digital(const struct drm_edid *drm_edid);
- 
- const u8 *drm_find_edid_extension(const struct drm_edid *drm_edid,
- 				  int ext_id, int *ext_index);
-+const struct drm_edid *drm_edid_read_acpi(struct drm_connector *connector);
- 
- #endif /* __DRM_EDID_H__ */
--- 
-2.34.1
-
+QW0gMDMuMDIuMjQgdW0gMTY6MDggc2NocmllYiBDb25vciBEb29sZXk6DQo+IEhleSwNCj4NCj4g
+T24gRnJpLCBGZWIgMDIsIDIwMjQgYXQgMDU6MTA6NDlQTSArMDEwMCwgSm9zdWEgTWF5ZXIgd3Jv
+dGU6DQo+PiBDb252ZXJ0IHRoZSBhYnJhY29uIGFieDgweCBydGMgdGV4dCBiaW5kaW5ncyB0byBk
+dC1zY2hlbWEgZm9ybWF0Lg0KPj4NCj4+IEluIGFkZGl0aW9uIHRvIHRoZSB0ZXh0IGRlc2NyaXB0
+aW9uIHJlZmVyZW5jZSBnZW5lcmljIGludGVycnVwdHMNCj4+IHByb3BlcnRpZXMgYW5kIGFkZCBh
+biBleGFtcGxlLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IEpvc3VhIE1heWVyIDxqb3N1YUBzb2xp
+ZC1ydW4uY29tPg0KPj4gLS0tDQouLi4NCj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvcnRjL2FicmFjb24sYWJ4ODB4LnlhbWwgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvcnRjL2FicmFjb24sYWJ4ODB4LnlhbWwNCj4+IG5ldyBmaWxl
+IG1vZGUgMTAwNjQ0DQo+PiBpbmRleCAwMDAwMDAwMDAwMDAuLjQwNWIzODZhNTRiMA0KPj4gLS0t
+IC9kZXYvbnVsbA0KPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3J0
+Yy9hYnJhY29uLGFieDgweC55YW1sDQo+PiBAQCAtMCwwICsxLDc0IEBADQo+PiArIyBTUERYLUxp
+Y2Vuc2UtSWRlbnRpZmllcjogKEdQTC0yLjAtb25seSBPUiBCU0QtMi1DbGF1c2UpDQo+PiArJVlB
+TUwgMS4yDQo+PiArLS0tDQo+PiArJGlkOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvc2NoZW1hcy9y
+dGMvYWJyYWNvbixhYng4MHgueWFtbCMNCj4+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5v
+cmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMNCj4+ICsNCj4+ICt0aXRsZTogQWJyYWNvbiBBQlg4
+MFggSTJDIHVsdHJhIGxvdyBwb3dlciBSVEMvQWxhcm0gY2hpcA0KPj4gKw0KPj4gK21haW50YWlu
+ZXJzOg0KPj4gKyAgLSBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiBJZGVhbGx5IHlvdSBw
+dXQgc29tZW9uZSBoZXJlLCBub3QgdGhlIERUIGxpc3QuIFVzdWFsbHkgdGhlIG9yaWdpbmFsDQo+
+IGF1dGhvciBpcyBhIGdvb2QgY2hvaWNlLCB3aGljaCBJIHRoaW5rIGhhcHBlbnMgdG8gYmUgdGhl
+IHN1YnN5c3RlbQ0KPiBtYWludGFpbmVyLi4uIEZhaWxpbmcgdGhhdCwgdGhlIHJ0YyBzdWJzeXN0
+ZW0gbGlzdCBpcyBsaWtlbHkgYSBiZXR0ZXINCj4gY2hvaWNlIHRoYW4gdGhlIERUIG9uZS4NCnJ0
+Yy1hYng4MHguYyBtZW50aW9uczoNCk1PRFVMRV9BVVRIT1IoIlBoaWxpcHBlIERlIE11eXRlciA8
+cGhkbUBtYWNxZWwuYmU+Iik7DQpNT0RVTEVfQVVUSE9SKCJBbGV4YW5kcmUgQmVsbG9uaSA8YWxl
+eGFuZHJlLmJlbGxvbmlAYm9vdGxpbi5jb20+Iik7DQoNCkkgcGVyc29uYWxseSBwcmVmZXIgdG8g
+cHV0IGEgbGlzdCwgc2luY2UgSSBkb24ndCBrbm93IHN0YXR1cyBvZiBmaXJzdCBhdXRob3IsDQph
+bmQgc2Vjb25kIGF1dGhvciAvIHJ0YyBzdWJzeXN0ZW0gbWFpbnRhaW5lciBpcyBhdXRvbWF0aWMu
+DQoNClNvIHY1IHdpbGwgZmVhdHVyZSBsaW51eC1ydGNAdmdlci5rZXJuZWwub3JnLg0KDQo=
