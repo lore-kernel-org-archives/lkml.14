@@ -1,132 +1,196 @@
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B9B59B77;
-	Sun, 11 Feb 2024 12:30:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A0E44C73
+	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 12:30:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707654610; cv=none; b=lrvFcZEQB1U1w6TdqH76v7L22Xghcp0zBeaAV/qfEBl1LzDf7kRJfyvQqbqa4RlE45JmAfq0p8mBw4jQEzySkKn/ek0ipUHfrBnaN2wVY2RNz+ABKFlYYCXBNKZR+/1Hx4xYAndDrz3Zd1bKoq2wmGbpRAxrxy5l77Sr47wjI9U=
+	t=1707654619; cv=none; b=FujtyEa6Pl+zaaTOEfy36qVTfCLv+sxVEMUCkWQOmFpJr9yAL+iAySeC33c0luaMky68IkpbOdllaL1fCV+odPBxJYResstibmTk++vhffAbzvQvsqNispATdv7Kt5JmwY3uOMkL05eYDPRyzup8I9sexWyGZBchwalKBNEbBrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707654610; c=relaxed/simple;
-	bh=ky+RAWf8J8vXkQ6HF5HH603Fg0/+EkBj84w84UXqyY4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lEXyUFUQOlVn/SzD96AGMLbWDLs8aP9Zab0qFMVPAbqlR5hwJSSEyxZIGdQ2JK9lO7PMNM+HxRlWBhGzeArBjP/knUvEtqmmHVAP8ZI7uLR186x78RvY6+qcHx27woS80rw1PVl3kkWwl/DCnwxw/e9hAC9EbSa7xzTHq0o6gsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P/wnW/73; arc=none smtp.client-ip=209.85.167.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707654619; c=relaxed/simple;
+	bh=SghTqgxhqgon/LpOV1LOZnYIRKxGEdDsUDI6nOEWbfQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=aCOzHuhLGKF1XQgLT2apANq1y0O+Hol775xPklMvGaGvJUVYejZCnfVyz5Pv3cT2bU+nc6RDr9tsErNMAlh14+49Z7nfNd0ZI8/efx46laKMxhcR7fBXHTrn/jN00QDUiCWHvIyMr0nghBHVu53VzUhQebazkCPAGcM0wW82vdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=QrOoYnZq; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P/wnW/73"
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3bfdb84c0ebso1109101b6e.1;
-        Sun, 11 Feb 2024 04:30:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="QrOoYnZq"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-55a035669d5so3436305a12.2
+        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 04:30:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707654607; x=1708259407; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yY1B5EOzgtD2gnfK4gYntuGm53FWM/Oxlr8jej3jl3g=;
-        b=P/wnW/73+i6FUruOE679x/7LB3UejkU92aLoXbcYLr2mjWEiBXyiSojDzM1YdsE2XV
-         +V9m3qdA4TvZIiaQ8lLIPs/otd4e0PZbM1CXTL0p1e0iCjpMpcR8znRv/oV+PhS7z5lp
-         3Fgbq3hgsvxvDa+SPoK6FHRyhVyiKXjAqyXd137GRhn9scMl2q/hwf/EJf2z9lyU0bDJ
-         IrJgyi+oEp06EDiCHtFdWtvaa6JrPLsaRnH1aSt5Vq5cAC2Hq5fndGpSVJwTbNCgXlFv
-         GjBzguLaROD35KMhq2cPR6aDMaJUxM2kOnnwnoAcsIUHnmvm0+11jib256fth2/R13ib
-         6igg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707654607; x=1708259407;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=ionos.com; s=google; t=1707654614; x=1708259414; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yY1B5EOzgtD2gnfK4gYntuGm53FWM/Oxlr8jej3jl3g=;
-        b=lgixtSQpdTitFJ4KnzKWo5lW8xxS5V45FTJyJJkmq+4dvE+gKqviAHXOsefVInp/eu
-         TbPQ6FdGCTn0mMbk27gItbiC2NYm/QYWGGkg6GVRd1f6OjLC/NuOHWIlf1hTxgszdQkU
-         rRYAYd4Q3Sh94F1FSt5SgfHDCgn7kBsPnGcU11PHSSvG7dHJ5gisY6Rl8786u5x2D0zW
-         nBJMNSfSEuZDUeOEltUq2CsW8p76zuTtyi7PMmhwzOGhD9gnsb2Dg7YMFpzOk2Xre6iv
-         Nffq1e10wju0f1Jlo8j7BNrEfa7tHGbbGAouddLvgzxHFCV9W3ukGHcCKvCSKyqC38fg
-         hGOg==
-X-Forwarded-Encrypted: i=1; AJvYcCXm1UhGA9NBdpqmEOjo3QMlyppwm4ppjqfEwqDX3fL0ksX4B1qYtBEGyxTLlqVLXnt7kBBOIOgirE+Nj+LzmwdYQRP1KNbTi6spalRtPOr4Ce1PXInj+ZgbiUp+B0Tu/LzcBoaT8l4CLhXSSCItCEDgXcYOo3Lb8o13ksKVe1JAiPeHnwo=
-X-Gm-Message-State: AOJu0YwjRCWlv8lbBVTl8mb5g5MqrhybSKOhJ7TCn6jrorkGK+l2EAtN
-	BIeBnR1McEcvTgesv7Kt9PhRu8TIQbN4UnFjQdXGNNCivf0G/OSZ
-X-Google-Smtp-Source: AGHT+IF35wU7oQHIL1WAqzc2rw7d/zu+t9GZ4FvO8SQu/9DFopyNSSZKv+8ggBOG/7GT5mlted3Y9A==
-X-Received: by 2002:a05:6808:140d:b0:3bf:f233:faed with SMTP id w13-20020a056808140d00b003bff233faedmr4915160oiv.39.1707654607542;
-        Sun, 11 Feb 2024 04:30:07 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVGidnzGiLsb6tQWbD8jVvfID7bmIWxsQ7LOgUorrYLJEaiUrJv0xahtK6LablJrNmqpUrSXEnBalbh+qvMv3LF8MyasuPWlrR+/sxfTT3q1+tI0GyXxJ+F7VRvMRBR0QVpkcu4f4XjIh3xXzYbHaGJOF3iIJpt6QC10BAh/wq0+w0Q6LUKK/5SrRvUUfZRr5jXkW2j2ZfUiGmzdLeulJE6myhcW1jIY1cxrp2MtF3MN61TEXExikyVwXxKG58nXb2vdo9e6cDRsHfp9wudgSWy3yBGcRsId7OHh80dUEkYv/0esOS+VUwz27bjyrajRMZKMzn1gqwMvdATdxYIreljqMOSWYC2Ln4AVY9fykPdXY0dortluwrhM3bxQZG5pWFDJqqIy1l1uRxSGFYaoWH0JQWgVo+AbX+K7jpk7x5vJ0Vq0qOsMRmLcwfQEMo8unz+kTx8CwLEyd3AnyDMlMSZzfMMWjXo67+1DWDz6JKKVuHaB8VY
-Received: from primary ([174.95.13.129])
-        by smtp.gmail.com with ESMTPSA id ch7-20020a0561300c8700b007d2eba3ad17sm653128uab.24.2024.02.11.04.30.05
+        bh=gvmxHxgb+P9LM9n9dvePcQ7EPhhjGM1zr1ro0i5QEmI=;
+        b=QrOoYnZqwst05KLclhuF0wdkOQxppZQO7V2CP7AZt4O7MP4KvQxG6nDPfPqhKF4097
+         DJvaztw22Chjkxpcqxa2eeeDwuA/GLbBQCWndd8KtHx7v/f62/uLgt38ebAKjbdVeCOd
+         UPdklEZT0uG7Su0qvQjiObKiYBA1ZGOy2Bp7tHz91BtzBC1xRfdZf/w/Dx5WHuSIbugY
+         S3Eba3F2Zs0pfQSOEmGxIb/j6nCmglmqpI6ysv4mPDfKyX7u8CRYZlh9SuU0y3+r5uCq
+         sBh6aeodABMFWr/uAA5TOyiKTCeSkI8AiRnea9v6t8lql5mKHXO0EN6yzyGWYRbQbFMX
+         0CrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707654614; x=1708259414;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gvmxHxgb+P9LM9n9dvePcQ7EPhhjGM1zr1ro0i5QEmI=;
+        b=olkigWFNnJyIbPG/iHEk8m65fiRWJPoQwaMtU+gBHh0qLOQdJDSlTFXT5tfnyO6oL4
+         UrOi1AuGW8VjqCyo2Rq2t7ueS19HXltObWQ6wT3oND2pvV1hdT2Ql3EAKQ4rkZ9gc98c
+         F5aPSDAFgk+M4QlSzp0dPMCvovzeiaUa/ySy2LCuDv3yAj3a8x6xMPDLu9oaraQMuDEM
+         8Ye1hPB1mAMSma75pivTFc9RNQnBkhTOjQ1uWsrn/a5QRokBNizrns2cX7aKhdMPyF0n
+         xE1wz5VrLjdj2MrUHJUr/2fBywOPJ/Xugr8MWqbnhpqt6fVF3ey8W67f20SNQy5TmWeu
+         3pJw==
+X-Gm-Message-State: AOJu0YzQqF8FnjVvrQ090otKwaLtoaEEPs/DUY4uW3VMy7elXmXT6qfP
+	7l2bYGDU244ON//XMUUMdOPZR+Q+9hNNxV2WAz3JtdgC87+Way8sXD2z41bLegewS00zm1o4HU5
+	G
+X-Google-Smtp-Source: AGHT+IF3gdKqSVIlBIKi0y8mcxDaWbA/Ui52CHdsv0CAJ7EIg3iC+ldLOvSz09q7NuhhgqpHOR35dQ==
+X-Received: by 2002:a05:6402:292:b0:561:2711:68cd with SMTP id l18-20020a056402029200b00561271168cdmr2447456edv.3.1707654614102;
+        Sun, 11 Feb 2024 04:30:14 -0800 (PST)
+Received: from raven.intern.cm-ag (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
+        by smtp.gmail.com with ESMTPSA id fj18-20020a0564022b9200b0056187ca4120sm1024611edb.10.2024.02.11.04.30.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Feb 2024 04:30:06 -0800 (PST)
-Date: Sun, 11 Feb 2024 07:29:56 -0500
-From: Abdel Alkuor <alkuor@gmail.com>
-To: Lee Jones <lee@kernel.org>
-Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	Jean-Jacques Hiblot <jjhiblot@traphandler.com>,
-	ChiYuan Huang <cy_huang@richtek.com>,
-	=?utf-8?B?QW5kcsOp?= Apitzsch <git@apitzsch.eu>,
-	Alice Chen <alice_chen@richtek.com>,
-	Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-	ChiaEn Wu <chiaen_wu@richtek.com>, linux-kernel@vger.kernel.org,
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] leds: Add NCP5623 multi-led driver
-Message-ID: <Zci9xE5uHRJGMg5q@primary>
-References: <20240203175910.301099-1-alkuor@gmail.com>
- <20240203175910.301099-2-alkuor@gmail.com>
- <20240208130115.GM689448@google.com>
+        Sun, 11 Feb 2024 04:30:13 -0800 (PST)
+From: Max Kellermann <max.kellermann@ionos.com>
+To: linux-kernel@vger.kernel.org
+Cc: Max Kellermann <max.kellermann@ionos.com>
+Subject: [PATCH v3 04/35] workqueue.h: move struct delayed_work to workqueue_types.h
+Date: Sun, 11 Feb 2024 13:29:29 +0100
+Message-Id: <20240211123000.3359365-5-max.kellermann@ionos.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240211123000.3359365-1-max.kellermann@ionos.com>
+References: <20240211123000.3359365-1-max.kellermann@ionos.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240208130115.GM689448@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 08, 2024 at 01:01:15PM +0000, Lee Jones wrote:
-> On Sat, 03 Feb 2024, Abdel Alkuor wrote:
->
-Hi Lee,
+This allows including workqueue_types.h instead of workqueue.h in some
+headers.
 
-Please check the inline comment. All other comments will be addressed
-in v2.
+Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+---
+ include/linux/can/dev.h              | 2 +-
+ include/linux/jump_label_ratelimit.h | 2 +-
+ include/linux/kobject.h              | 5 ++++-
+ include/linux/workqueue.h            | 9 ---------
+ include/linux/workqueue_types.h      | 9 +++++++++
+ include/net/netns/ipv6.h             | 2 +-
+ include/sound/soc.h                  | 2 +-
+ 7 files changed, 17 insertions(+), 14 deletions(-)
 
-> > +What:		/sys/class/leds/<led>/dim_step
-> 
-> The step principle seems a bit arbitrary.
-> 
-> Why not provide the time directly?
-> 
-> dim_step_delay?
-> 
-> I already see documentation for risetime and falltime.
-> 
-> Perhaps that will omit the need for both direction and step?
->
-I'm going to drop off both and use risetime and falltime. That being
-said, the documented risetime and falltime for lm3533 use steps instead of
-entering the time directly. This is my first time doing this, should I document
-risetime/falltime in sysfs-class-led-multicolor-driver-ncp5623? or should
-I update risetime/falltime in sysfs-class-led-driver-lm3533 to reflect
-risetime/falltime for ncp5623?
-> > +Date:		Feb 2024
-> > +KernelVersion:	6.8
-> > +Contact:	Abdel Alkuor <alkuor@gmail.com>
-> > +Description:
-> > +		Set gradual dimming time.
-> > +
-> > +		==== ======== ==== ======== ==== ========
-> > +		Step Time(ms) Step Time(ms) Step Time(ms)
-> > +		0     0       11   88       22   176
-> > +		1     8       12   96       23   184
-> > +		2     16      13   104      24   192
-> > +		3     24      14   112      25   200
-> > +		4     32      15   120      26   208
-> > +		5     40      16   128      27   216
-> > +		6     48      17   136      28   224
-> > +		7     56      18   144      29   232
-> > +		8     64      19   152      30   240
-> > +		9     72      20   160      31   248
-> > +		10    80      21   168
-> > +		==== ======== ==== ======== ==== ========
+diff --git a/include/linux/can/dev.h b/include/linux/can/dev.h
+index 332ece824fde..91cf56179c13 100644
+--- a/include/linux/can/dev.h
++++ b/include/linux/can/dev.h
+@@ -22,7 +22,7 @@
+ #include <linux/can/skb.h>
+ #include <linux/ethtool.h>
+ #include <linux/netdevice.h>
+-#include <linux/workqueue.h> // for struct delayed_work
++#include <linux/workqueue_types.h> // for struct delayed_work
+ 
+ /*
+  * CAN mode
+diff --git a/include/linux/jump_label_ratelimit.h b/include/linux/jump_label_ratelimit.h
+index 8c3ee291b2d8..2b5095d3dea2 100644
+--- a/include/linux/jump_label_ratelimit.h
++++ b/include/linux/jump_label_ratelimit.h
+@@ -3,7 +3,7 @@
+ #define _LINUX_JUMP_LABEL_RATELIMIT_H
+ 
+ #include <linux/jump_label.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ 
+ #if defined(CONFIG_JUMP_LABEL)
+ struct static_key_deferred {
+diff --git a/include/linux/kobject.h b/include/linux/kobject.h
+index da714992ab38..8890ab7bdbdc 100644
+--- a/include/linux/kobject.h
++++ b/include/linux/kobject.h
+@@ -24,9 +24,12 @@
+ #include <linux/stdarg.h> // for va_list
+ #include <linux/kref.h>
+ #include <linux/kobject_ns.h>
+-#include <linux/workqueue.h>
+ #include <linux/uidgid_types.h>
+ 
++#ifdef CONFIG_DEBUG_KOBJECT_RELEASE
++#include <linux/workqueue_types.h>
++#endif
++
+ #define UEVENT_HELPER_PATH_LEN		256
+ #define UEVENT_NUM_ENVP			64	/* number of env pointers */
+ #define UEVENT_BUFFER_SIZE		2048	/* buffer for the variables */
+diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
+index 4ba33cf07f11..0fbc11030ba2 100644
+--- a/include/linux/workqueue.h
++++ b/include/linux/workqueue.h
+@@ -99,15 +99,6 @@ enum wq_misc_consts {
+ #define WORK_DATA_STATIC_INIT()	\
+ 	ATOMIC_LONG_INIT((unsigned long)(WORK_STRUCT_NO_POOL | WORK_STRUCT_STATIC))
+ 
+-struct delayed_work {
+-	struct work_struct work;
+-	struct timer_list timer;
+-
+-	/* target workqueue and CPU ->timer uses to queue ->work */
+-	struct workqueue_struct *wq;
+-	int cpu;
+-};
+-
+ struct rcu_work {
+ 	struct work_struct work;
+ 	struct rcu_head rcu;
+diff --git a/include/linux/workqueue_types.h b/include/linux/workqueue_types.h
+index 4c38824f3ab4..e16aaa7a6661 100644
+--- a/include/linux/workqueue_types.h
++++ b/include/linux/workqueue_types.h
+@@ -22,4 +22,13 @@ struct work_struct {
+ #endif
+ };
+ 
++struct delayed_work {
++	struct work_struct work;
++	struct timer_list timer;
++
++	/* target workqueue and CPU ->timer uses to queue ->work */
++	struct workqueue_struct *wq;
++	int cpu;
++};
++
+ #endif /* _LINUX_WORKQUEUE_TYPES_H */
+diff --git a/include/net/netns/ipv6.h b/include/net/netns/ipv6.h
+index 858ee28e73f9..30a55f462264 100644
+--- a/include/net/netns/ipv6.h
++++ b/include/net/netns/ipv6.h
+@@ -6,7 +6,7 @@
+ #include <linux/list.h>
+ #include <linux/spinlock_types.h>
+ #include <linux/rwlock_types.h>
+-#include <linux/workqueue.h> // for struct delayed_work
++#include <linux/workqueue_types.h> // for struct delayed_work
+ #include <net/inet_frag.h>
+ 
+ #ifndef __NETNS_IPV6_H__
+diff --git a/include/sound/soc.h b/include/sound/soc.h
+index 6defc5547ff9..0021d54625da 100644
+--- a/include/sound/soc.h
++++ b/include/sound/soc.h
+@@ -15,7 +15,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/types.h>
+ #include <linux/notifier.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+ #include <linux/regmap.h>
+-- 
+2.39.2
 
-Thanks,
-Abdel
