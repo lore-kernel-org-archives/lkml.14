@@ -1,81 +1,119 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91301E506;
-	Sun, 11 Feb 2024 12:54:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 766BD1E480;
+	Sun, 11 Feb 2024 13:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707656073; cv=none; b=VYSFKHg9tReL+v8tl1/gL3uXLFmL9BJHWvYOSvZaBHU9MofkIjjuu3LewOhpih5vrHgvd4Mv6xdAn8tM29AfzGQWsP8exDihTipKCs+nJemvXBJ13mPhc3nZEPuXpB20cM8T0G5fKN9ybfdOH/cxc4EpmmueEBIi2/McZXAfTKE=
+	t=1707656668; cv=none; b=C2bRafU5z4KXjqj1KbLLSb11bZmfZNgweSe74NaUfHxt5o2CBf5xNBYvGE+EDNuevh2HInewNDft6RLrlslw3tBohf4XnRgqvQbJ/MF0ArEiDOS2CyyNqRSEMKACDZfNXJ7Mc/MgCzOVP9CvB730cVf28l7MTZgBl+keuRTqG2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707656073; c=relaxed/simple;
-	bh=C+XQXwDD9N8THlo39OomPFlzmvWu4gIgQwLvf2U+jCc=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:Subject:MIME-Version:
-	 Content-Type; b=W3k7iCJdcqY509MuG08oD1m9m95pN3fr0BXFe+BH7Va4pr91C9D3PHFgAc3FPd0JurHOqPNOf9xdjSbgb951TnzxTo2++5ZREDYBJpQ1yduv5ToMBvrL2+rvTTw4Xpw/g9lMXLnNiiuja/Xp7Jr+4Ib2+rHTI75KYHVsbFXE+Ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j63qDuSn; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707656668; c=relaxed/simple;
+	bh=ZBgZA9ODcwNHYL2nZ5Frn5vjDI+vzGIrSTkZZkxY+l4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TFvrSt7Zr5L32hG5kap8VRY/oqPYgZsr2WmHqlYJONZjCD1MPtnQwxQS36sg86/Oc/Zdgl2EYqytMeXEUWUl/tjMH2R16riVLm6yRwG3TzkBNYd2HU4OTnG/j+dc9+Kzriohr5ocseIyaef3h/ZlpO3O+jl8vHSIPX045PrQEVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GhF+6sLO; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j63qDuSn"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5cddc5455aeso1672066a12.1;
-        Sun, 11 Feb 2024 04:54:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707656071; x=1708260871; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:in-reply-to
-         :message-id:cc:to:from:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=C+XQXwDD9N8THlo39OomPFlzmvWu4gIgQwLvf2U+jCc=;
-        b=j63qDuSnVUCw6eQMZLFHni/B0vwSKfJLfXTFb3Q46iffr1O1wrKX1ayueeHMQBvRJt
-         Kn+4qjgft1k2MITt2+ncRn07w4fKhmw/q9GbNN2b8cwXBiirWTLld7vCQscamRpAhewM
-         rv8Yk+vjbjVSMyAZOmgsCmwyG82XwRkTyPAJ6qoViRIIC89xgb5udPNIp9+544c8A2tW
-         25O8UZD1TdkYsnafHANRySyM3OrPLs+DXgScXUesTAL1lVv3zoeNJJjg7zbYCY14r5t+
-         k27JM65R0ToflLcxKpQAHA8S1+7/t6TiYMeuLAMwHhCREXuUawRtEtSi4YWTdMDCMtd3
-         H+qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707656071; x=1708260871;
-        h=content-transfer-encoding:mime-version:subject:in-reply-to
-         :message-id:cc:to:from:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=C+XQXwDD9N8THlo39OomPFlzmvWu4gIgQwLvf2U+jCc=;
-        b=VFs5Ap/WpiBFGo0tUFtpkpFX1taXu5dOXJrwMmVcVRTNO9FMAGE/jiFjJvaU0gfMiL
-         Lll1DuxljCi3PHACw0237mmaPVg9woeCBuCE4AUnyE12idQfwyrSqvuYIDZnMWDJeMqg
-         KkYZMQ1iAbMqOpBoEe+Li0l3ICKKmAxZHcCy8wxht0IP8LZHZniKlG701QED7rTge9Zm
-         rlclBc0IAxKp7Et/c2n6OSCRHqKXmomRm272tlPKe1P63OfMst+xjEFv1XuKc0SwMiOV
-         2UKYarWRaKZ3irfNhtFuycz4NwIKBC2OY4Gccq4XESaJGJWQwQT2ftYTbuZQsAQ4IP7H
-         4v3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXDGvlCRfVofStDUasRip1vI7Bsi97lnMd1WdIAvrldPNPkxWS3850FyTky+kPU3Lf3tfWeyR9ZLaxLmRoRlh8oAe6O4WuKFlQiSZ0pVmJidjzngoOZtyD3e0D/zClACTWQyouLAPcOjIvUJ9xTEwLwYRnKpTqVov8qWPKXERA2wTW2
-X-Gm-Message-State: AOJu0YxPi2d/ENrAQrr3LwSXF/TGyJR35ORovpIA6LZqKLvO6cI3StPy
-	7DWCtPa51Q2o1nvyX3aXt5/9156T7lXAXe4wYcMO2qetYcPF2s3O
-X-Google-Smtp-Source: AGHT+IEx1P+gJ/HEVuA6gr921gTOXVlkSkMwk8B77f7YKCvdF4xrlA6DRHKgxZEuCTaD0dpvKYOlsg==
-X-Received: by 2002:a05:6a20:d707:b0:19e:3c4e:d0f8 with SMTP id iz7-20020a056a20d70700b0019e3c4ed0f8mr3281418pzb.32.1707656071274;
-        Sun, 11 Feb 2024 04:54:31 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWY5o7/De9dzWdddJ0uWaxsYvSfYmI93GrIZshPkMOg98hR2Ewgh+N8tlMIWon2t5WKBja2k6RzOgapRhA67+YmgWLNIYMgdSz3l7Aq43EMQnQvgQN9LWrcsMXZehIMOZLpxSc+75AFa/3IyfQGVrsNLSDLS3mBZzDO/yz/rNj/DnyrxEFSBI/cuA4S+gV61zQ9HVVbyZN1mPK1uxw02WUyfab1OzprjNy39YS5oH4alMyq9+Hms1eLApdyraw68L1Ex3dgr5ACAreM3mNLo5KRlp/08l0sWATZV+UT3zkW4t/3HTFu4fo=
-Received: from [127.0.0.1] ([106.221.237.147])
-        by smtp.gmail.com with ESMTPSA id ja15-20020a170902efcf00b001d9fc6cb5f2sm4280038plb.203.2024.02.11.04.54.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 11 Feb 2024 04:54:30 -0800 (PST)
-Date: Sun, 11 Feb 2024 18:24:24 +0530 (GMT+05:30)
-From: Shresth Prasad <shresthprasad7@gmail.com>
-To: gregkh@linuxfoundation.org
-Cc: corbet@lwn.net, linux-doc@vger.kernel.org,
-	linux-kernel-mentees@lists.linuxfoundation.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	shresthprasad7@gmail.com, skhan@linuxfoundation.org
-Message-ID: <74d67b62-6fa4-4218-b51f-f0d33f19c422@gmail.com>
-In-Reply-To: <2024021159-banner-dramatic-af88@gregkh>
-Subject: Re: [PATCH] Fix malformed table error in gadget-testing.rst
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GhF+6sLO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707656666; x=1739192666;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ZBgZA9ODcwNHYL2nZ5Frn5vjDI+vzGIrSTkZZkxY+l4=;
+  b=GhF+6sLONpRNaFKAYF9xL0ID+nJqJgFFQyKp+7nkRidixwZUsm7KSV6v
+   olxyt8+DlTMRTNuyIK6UtZGxRvKXvfc6vQmAIOOZLlP58t2jd5OQFuxAM
+   3EQzxNHOSuPkpkPvXdhtQeVca9pRrEspT2Iv1YDdGjHE5n0UMVPnisRq4
+   np2au9cjBZj6np3lvUa43egBnTEGl8Y1JMcnLr2mTOKV57eOn8+YzKeLJ
+   FbkvxGxdhLB8L1qvWoISjx2aJE6NH0MTnHmSPWfrKO7toetegNBShjAA0
+   ZqZsOfnMJaptLC2Y/UgYCL0of35ROMJZZc3Jk4EtFAY0CwDxYyo8ij3/6
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10980"; a="1756092"
+X-IronPort-AV: E=Sophos;i="6.05,261,1701158400"; 
+   d="scan'208";a="1756092"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2024 05:04:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,261,1701158400"; 
+   d="scan'208";a="2407111"
+Received: from twinkler-lnx.jer.intel.com ([10.12.231.216])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2024 05:04:21 -0800
+From: Tomas Winkler <tomas.winkler@intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Alexander Usyskin <alexander.usyskin@intel.com>,
+	Vitaly Lubart <vitaly.lubart@intel.com>,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Tomas Winkler <tomas.winkler@intel.com>
+Subject: [char-misc-next] mei: gsc_proxy: match component when GSC is on different bus
+Date: Sun, 11 Feb 2024 15:04:08 +0200
+Message-ID: <20240211130408.3478-1-tomas.winkler@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Correlation-ID: <74d67b62-6fa4-4218-b51f-f0d33f19c422@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-I see, sorry about that. I will try some other way to fix the error.
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-Also, as mentioned in this thread: https://lore.kernel.org/all/877cjqa5le.fsf@meer.lwn.net/ has the patch already been applied, fixing the issue?
+On Arrow Lake S systems, MEI is no longer strictly connected to bus 0,
+while graphics remain exclusively on bus 0. Adapt the component
+matching logic to accommodate this change:
 
-Regards,
-Shresth
+Original behavior: Required both MEI and graphics to be on the same
+bus 0.
+
+New behavior: Only enforces graphics to be on bus 0 (integrated),
+allowing MEI to reside on any bus.
+This ensures compatibility with Arrow Lake S and maintains functionality
+for the legacy systems.
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+---
+Requires 'mei: me: add arrow lake point S DID'
+https://lore.kernel.org/lkml/20240211103912.117105-1-tomas.winkler@intel.com/
+
+ drivers/misc/mei/gsc_proxy/mei_gsc_proxy.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/misc/mei/gsc_proxy/mei_gsc_proxy.c b/drivers/misc/mei/gsc_proxy/mei_gsc_proxy.c
+index be52b113aea937c7c658e06c..89364bdbb1290f5726a34945 100644
+--- a/drivers/misc/mei/gsc_proxy/mei_gsc_proxy.c
++++ b/drivers/misc/mei/gsc_proxy/mei_gsc_proxy.c
+@@ -96,7 +96,8 @@ static const struct component_master_ops mei_component_master_ops = {
+  *
+  *    The function checks if the device is pci device and
+  *    Intel VGA adapter, the subcomponent is SW Proxy
+- *    and the parent of MEI PCI and the parent of VGA are the same PCH device.
++ *    and the VGA is on the bus 0 reserved for built-in devices
++ *    to reject discrete GFX.
+  *
+  * @dev: master device
+  * @subcomponent: subcomponent to match (I915_COMPONENT_SWPROXY)
+@@ -123,7 +124,8 @@ static int mei_gsc_proxy_component_match(struct device *dev, int subcomponent,
+ 	if (subcomponent != I915_COMPONENT_GSC_PROXY)
+ 		return 0;
+ 
+-	return component_compare_dev(dev->parent, ((struct device *)data)->parent);
++	/* Only built-in GFX */
++	return (pdev->bus->number == 0);
+ }
+ 
+ static int mei_gsc_proxy_probe(struct mei_cl_device *cldev,
+@@ -146,7 +148,7 @@ static int mei_gsc_proxy_probe(struct mei_cl_device *cldev,
+ 	}
+ 
+ 	component_match_add_typed(&cldev->dev, &master_match,
+-				  mei_gsc_proxy_component_match, cldev->dev.parent);
++				  mei_gsc_proxy_component_match, NULL);
+ 	if (IS_ERR_OR_NULL(master_match)) {
+ 		ret = -ENOMEM;
+ 		goto err_exit;
+-- 
+2.43.0
+
