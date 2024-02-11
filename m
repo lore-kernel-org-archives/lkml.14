@@ -1,63 +1,63 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAEED17996
-	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 23:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5542D1774A
+	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 23:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707693348; cv=none; b=JpWSbqy8EywMuhn15vGGCCOkyH89BHhRSzKN9JYLsfaOpnBWLCJBsBQ3WXadwKX/yasiQb4AkEcwfFtMx76DoHgCy+TskCpvUwJKxOz7WwksNrRojqMqIxn4BvYbaHpKOpXh32tJYL4+MImL6mFyB3uigVzd/GydqGvfeeYgqkQ=
+	t=1707693346; cv=none; b=qYZQcEZK8OkaD4UErVnJCXXczOvhPkufQaBdn7JDMVvFNToAkt36tqiMg4dVUnvRiaTu1yeDUD9mJHRnMvj6tna8zvagL7FHLuvN1W/+6hyRK67olDRgRgC/b141eeGJmYHwQ2y7aogzlv0vOeAlmkGUmKUqrudnauskT7kISr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707693348; c=relaxed/simple;
-	bh=sm5m4u4t8eFbR2gjJprfwSpii3UwlxNYAW+qpTdBofY=;
+	s=arc-20240116; t=1707693346; c=relaxed/simple;
+	bh=NuvTgovw/JWaOMSHbB+w3CvxRolTgHSjratxs4id3F8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GHwRC9qSZIpoxZ2VaQxSTRYQv4j2lxwIx8MogxZOXkkdyTOxBqL1Di6fdFHQw9OkPdJpkGdkTo3HmVKsy7IpP+EDwXIK4bPtoET3X17kcjEl+MFKuQ3aJSVIojjudl+oBkVHlkJ0Ah1QxYkdrHSRA0cMB/jOhQeRHbmQ7zjFei4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=FlvLRcp9; arc=none smtp.client-ip=209.85.208.54
+	 MIME-Version; b=i0a9kSJQWD6BmjZlY/NKg7d6nlxtSsuvNct9hJEXNGlCEdd/bf8MhicwWxOki6Oddl/LH+DSHvesRzLBgvw75bz2EUzbxvElCoCeHU04MAfsmQmZjKZvb9y1mWAAIlTXYmGHi2jZNTirv+kd2xEPpGoN1QquK5gFuOlCfWrB5GY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=Wcs0cfzu; arc=none smtp.client-ip=209.85.208.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="FlvLRcp9"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5600d950442so2895293a12.1
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 15:15:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="Wcs0cfzu"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d0f1ec376bso8475231fa.1
+        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 15:15:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1707693343; x=1708298143; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1707693340; x=1708298140; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6Sd3F7Cnejo0YUOQY1FFsProakPDnxze1sPdzTvGqZE=;
-        b=FlvLRcp9ESItTAwkhDDg/wfQE4p3YA1jx5f+cV4qygWjk2Sf6l59Qhukcg+5InS5WI
-         mPfyy2GMVLT0gYlaYIFjESuuyYLXKS2amb0NekNNWJQIGlnFIp8aYZnD7/UfGlV5MP8j
-         uASg+16bqnCJo4C+mMocL9LYKWxvvffXhDPDQZKClMJBfSWAv//HsmvbrJDC1zvD5xLj
-         8kR0fbszZxDjZNJQdwXL6C6ltk1+MYU4HX+J2nQ3GrABhpxpRU6p8zosq6o59lw1hBU/
-         VK4E4avNonbWJfx7H+J/wMgDfprbWlN3lhYd1kk1tQXSHhvOMTYRzwqfl0hkJDbhAtRI
-         z74w==
+        bh=BaklDAN1W3lUYoF0lQYhzt4Y/cAwOrNfc1YQYVWzhR8=;
+        b=Wcs0cfzuve0p0rD0S/4skwKenLXTUtb7WDP3B+Pzhmnmd4Krmr9bTIZ8iHR0EJyGw+
+         rsfV5i48uhOYm9WqPH1RM9peclta/8X30GP1OhQnaYP1hMPIUqNJT3g4xdxML4+jz63e
+         D2QJ9JzG19lKXQlEliEp3k/1FuaPc13u9GYE1p/SoxsTeWVcZUc5NCWqcux2LZk4/3EB
+         m0Bromy+8uSK9FyGGewBJdI6ElRXyJx6adFDY7+PIWl2JqhSszjuFT1HqGBpAR+o07Jn
+         IojgbAdL9TONOq1wSiBNT/+ULXt8h0oCwQ2TL06B/QCvCe8rkwuJyMFjUdqFlg3ieH7v
+         Ayow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707693343; x=1708298143;
+        d=1e100.net; s=20230601; t=1707693340; x=1708298140;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6Sd3F7Cnejo0YUOQY1FFsProakPDnxze1sPdzTvGqZE=;
-        b=QqjAXkz+DEOr532he38y4n0EBr6UwriiHPBSM4+cOPShYs0bLeJaCu6wbgrAzPe4WY
-         atg8d/HdYVGw6TylaioTrMcUCmFx54dSgXf0EPtfye8qgGO/HFpS/DTaFHZ185Zegm6l
-         Pgnb46cmZKviMEUz4LNls6w4E1SrDtF26i2xW3LA184UoaPJfuVJ/M0L7/nTe0jwvT5A
-         PDqHPrwaOlbSqcfYBvpoW7epfcZ9K8YqB5GEJvWGGHpG4yA9yiybq1AkbLL/3vTDsV1r
-         ud9y4Ucuy6LM3S/JMmDcym+s44GY8zLHTAjRmTllvsQjTHurlYd5VttbSQYO4hNL6gqT
-         C/dg==
-X-Gm-Message-State: AOJu0YxUYeoOebyxtkiJ3eY8jyfP+XGM/OmtAfcKWiNUdpwwA7SFOzge
-	S2IkqwteWkEo8hMLDh0jHAVwvyxVxnYwCfGtPKphPbvkE9lDwNhUbbX0I1meWSF+FZnTGV1dwHF
-	8
-X-Google-Smtp-Source: AGHT+IFVD6dhA7AvgyQGGcNLirz+n3DBmYgKZL2CMl94ii/SInxDufLyQnxAyl+ZNhth4edUEo8kaA==
-X-Received: by 2002:aa7:c383:0:b0:55f:e432:4cac with SMTP id k3-20020aa7c383000000b0055fe4324cacmr4137515edq.37.1707693343779;
-        Sun, 11 Feb 2024 15:15:43 -0800 (PST)
+        bh=BaklDAN1W3lUYoF0lQYhzt4Y/cAwOrNfc1YQYVWzhR8=;
+        b=COCbP1O9DrOsBF4sK5rj/9eEkvkr3TaxRbfWkSvMIhfrTnPTIJia0FPLr1078J5Tl5
+         eDkeGdTowWwnCEnxEE7/Dh2kEMoKZm6+tb7KBtavHIbUZLX2HUP2/hitBBNE0pTbW/Mf
+         1Xhe6s/0yRydqd0ffY5yLMFLC2RCpkl+y6EdjspcXzxNd7BxbKvLll86neLptW1lNWnm
+         zmMQOtcsO5eqFdG4l7X+Vtn/+sNocVQ6h42YXqIFoqpJX/Uzwn0NdM64L6xM8aSewQWX
+         d+fNPE5CrekN7Gc9+d+xAsd9zZXjNL22MB4pR1tX8Yco14dNj3/OsX6ef6oXT+mpoBsO
+         X/xQ==
+X-Gm-Message-State: AOJu0YwOKHWd4e1MexoGwVvC/dSsHe+AGJ+yCsS5Lp5oI3gZHKAQkFTU
+	Vjs9jwUs5GML8Z7gvWaIfjP5KHtxyjQ7+/eUM9XbPbM9AzpnHGZ/n6Rls0zSyS0Pjql5B2Hoa7L
+	D
+X-Google-Smtp-Source: AGHT+IH0U0sXwggMZeokRDVM8S0hkuAruClhDc2lX+jxJN+wkZhKxcob1Ei8l4QVN46wpFh7x7w8Zw==
+X-Received: by 2002:a2e:9bd3:0:b0:2d0:c273:669a with SMTP id w19-20020a2e9bd3000000b002d0c273669amr3105272ljj.46.1707693340607;
+        Sun, 11 Feb 2024 15:15:40 -0800 (PST)
 Received: from raven.blarg.de (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id et13-20020a056402378d00b0055d19c9daf2sm2170180edb.15.2024.02.11.15.15.43
+        by smtp.gmail.com with ESMTPSA id et13-20020a056402378d00b0055d19c9daf2sm2170180edb.15.2024.02.11.15.15.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Feb 2024 15:15:43 -0800 (PST)
+        Sun, 11 Feb 2024 15:15:40 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: linux-kernel@vger.kernel.org
 Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v4 11/35] percpu_counter.h: move declarations to percpu_counter_types.h
-Date: Mon, 12 Feb 2024 00:14:54 +0100
-Message-Id: <20240211231518.349442-12-max.kellermann@ionos.com>
+Subject: [PATCH v4 09/35] rwsem.h: move declarations to rwsem_types.h
+Date: Mon, 12 Feb 2024 00:14:52 +0100
+Message-Id: <20240211231518.349442-10-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240211231518.349442-1-max.kellermann@ionos.com>
 References: <20240211231518.349442-1-max.kellermann@ionos.com>
@@ -74,208 +74,395 @@ dependencies.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- include/linux/backing-dev-defs.h     |  2 +-
- include/linux/flex_proportions.h     |  2 +-
- include/linux/ipc_namespace.h        |  2 +-
- include/linux/mm_types.h             |  3 ++-
- include/linux/percpu_counter.h       | 17 +------------
- include/linux/percpu_counter_types.h | 37 ++++++++++++++++++++++++++++
- include/linux/sched/user.h           |  2 +-
- include/linux/shmem_fs.h             |  2 +-
- kernel/user.c                        |  1 +
- lib/flex_proportions.c               |  1 +
- 10 files changed, 47 insertions(+), 22 deletions(-)
- create mode 100644 include/linux/percpu_counter_types.h
+ include/linux/backing-dev-defs.h  |  2 +-
+ include/linux/comedi/comedidev.h  |  2 +-
+ include/linux/gnss.h              |  2 +-
+ include/linux/i3c/master.h        |  2 +-
+ include/linux/ipc_namespace.h     |  2 +-
+ include/linux/leds.h              |  2 +-
+ include/linux/mfd/intel-m10-bmc.h |  2 +-
+ include/linux/mm_types.h          |  2 +-
+ include/linux/nfs_fs.h            |  2 +-
+ include/linux/posix-clock.h       |  2 +-
+ include/linux/quota.h             |  2 +-
+ include/linux/rwsem.h             | 48 +------------------
+ include/linux/rwsem_types.h       | 78 +++++++++++++++++++++++++++++++
+ include/linux/tty.h               |  2 +-
+ include/linux/user_namespace.h    |  2 +-
+ include/net/sch_generic.h         |  2 +-
+ include/rdma/ib_verbs.h           |  2 +-
+ include/sound/core.h              |  2 +-
+ 18 files changed, 95 insertions(+), 63 deletions(-)
+ create mode 100644 include/linux/rwsem_types.h
 
 diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
-index 68fdec049456..720a88bb3513 100644
+index b379687434fa..68fdec049456 100644
 --- a/include/linux/backing-dev-defs.h
 +++ b/include/linux/backing-dev-defs.h
-@@ -6,7 +6,7 @@
- #include <linux/radix-tree.h>
- #include <linux/rbtree_types.h>
- #include <linux/spinlock_types.h>
--#include <linux/percpu_counter.h>
-+#include <linux/percpu_counter_types.h>
- #include <linux/percpu-refcount.h>
- #include <linux/flex_proportions.h>
- #include <linux/timer_types.h>
-diff --git a/include/linux/flex_proportions.h b/include/linux/flex_proportions.h
-index 35204b64addf..df9017a61046 100644
---- a/include/linux/flex_proportions.h
-+++ b/include/linux/flex_proportions.h
-@@ -8,7 +8,7 @@
- #ifndef _LINUX_FLEX_PROPORTIONS_H
- #define _LINUX_FLEX_PROPORTIONS_H
+@@ -15,7 +15,7 @@
+ #include <linux/kref_types.h>
  
--#include <linux/percpu_counter.h>
-+#include <linux/percpu_counter_types.h>
+ #ifdef CONFIG_CGROUP_WRITEBACK
+-#include <linux/rwsem.h>
++#include <linux/rwsem_types.h>
+ #endif
+ 
+ struct page;
+diff --git a/include/linux/comedi/comedidev.h b/include/linux/comedi/comedidev.h
+index d7a75b15c6f7..a3c2268f7ae5 100644
+--- a/include/linux/comedi/comedidev.h
++++ b/include/linux/comedi/comedidev.h
+@@ -13,7 +13,7 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/mutex_types.h>
  #include <linux/spinlock_types.h>
- #include <linux/seqlock_types.h>
- #include <linux/gfp_types.h>
+-#include <linux/rwsem.h>
++#include <linux/rwsem_types.h>
+ #include <linux/kref_types.h>
+ #include <linux/comedi.h>
+ 
+diff --git a/include/linux/gnss.h b/include/linux/gnss.h
+index 8fc4bdd38dc6..9f38ff948d78 100644
+--- a/include/linux/gnss.h
++++ b/include/linux/gnss.h
+@@ -12,7 +12,7 @@
+ #include <linux/device.h>
+ #include <linux/kfifo.h>
+ #include <linux/mutex_types.h>
+-#include <linux/rwsem.h>
++#include <linux/rwsem_types.h>
+ #include <linux/types.h>
+ #include <linux/wait.h>
+ 
+diff --git a/include/linux/i3c/master.h b/include/linux/i3c/master.h
+index 16cc81e55b12..0e456edeebbf 100644
+--- a/include/linux/i3c/master.h
++++ b/include/linux/i3c/master.h
+@@ -14,7 +14,7 @@
+ #include <linux/i2c.h>
+ #include <linux/i3c/ccc.h>
+ #include <linux/i3c/device.h>
+-#include <linux/rwsem.h>
++#include <linux/rwsem_types.h>
+ #include <linux/workqueue_types.h>
+ 
+ #define I3C_HOT_JOIN_ADDR		0x2
 diff --git a/include/linux/ipc_namespace.h b/include/linux/ipc_namespace.h
-index a0011b6cd5d1..7c758ab565fe 100644
+index e8240cf2611a..a0011b6cd5d1 100644
 --- a/include/linux/ipc_namespace.h
 +++ b/include/linux/ipc_namespace.h
-@@ -11,7 +11,7 @@
- #include <linux/refcount.h>
- #include <linux/rhashtable-types.h>
- #include <linux/sysctl.h>
--#include <linux/percpu_counter.h>
-+#include <linux/percpu_counter_types.h>
- 
- struct user_namespace;
- 
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 54caee378e77..a88219770c82 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -19,7 +19,8 @@
- #include <linux/page-flags-layout.h>
- #include <linux/workqueue_types.h>
- #include <linux/seqlock_types.h>
--#include <linux/percpu_counter.h>
-+#include <linux/percpu_counter_types.h>
-+#include <linux/percpu.h>
- 
- #include <asm/mmu.h>
- 
-diff --git a/include/linux/percpu_counter.h b/include/linux/percpu_counter.h
-index 8d45785b3448..bec5e7cdd476 100644
---- a/include/linux/percpu_counter.h
-+++ b/include/linux/percpu_counter.h
-@@ -7,26 +7,15 @@
-  * WARNING: these things are HUGE.  4 kbytes per counter on 32-way P4.
-  */
- 
--#include <linux/spinlock_types.h>
--#include <linux/list.h>
-+#include <linux/percpu_counter_types.h>
- #include <linux/threads.h>
- #include <linux/percpu.h>
--#include <linux/types.h>
- 
- /* percpu_counter batch for local add or sub */
- #define PERCPU_COUNTER_LOCAL_BATCH	INT_MAX
- 
- #ifdef CONFIG_SMP
- 
--struct percpu_counter {
--	raw_spinlock_t lock;
--	s64 count;
--#ifdef CONFIG_HOTPLUG_CPU
--	struct list_head list;	/* All percpu_counters are on a list */
--#endif
--	s32 __percpu *counters;
--};
--
- extern int percpu_counter_batch;
- 
- int __percpu_counter_init_many(struct percpu_counter *fbc, s64 amount,
-@@ -131,10 +120,6 @@ static inline bool percpu_counter_initialized(struct percpu_counter *fbc)
- 
- #else /* !CONFIG_SMP */
- 
--struct percpu_counter {
--	s64 count;
--};
--
- static inline int percpu_counter_init_many(struct percpu_counter *fbc,
- 					   s64 amount, gfp_t gfp,
- 					   u32 nr_counters)
-diff --git a/include/linux/percpu_counter_types.h b/include/linux/percpu_counter_types.h
-new file mode 100644
-index 000000000000..faccd9869a5a
---- /dev/null
-+++ b/include/linux/percpu_counter_types.h
-@@ -0,0 +1,37 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_PERCPU_COUNTER_TYPES_H
-+#define _LINUX_PERCPU_COUNTER_TYPES_H
-+/*
-+ * A simple "approximate counter" for use in ext2 and ext3 superblocks.
-+ *
-+ * WARNING: these things are HUGE.  4 kbytes per counter on 32-way P4.
-+ */
-+
-+#include <linux/types.h>
-+
-+#ifdef CONFIG_SMP
-+
-+#include <linux/spinlock_types.h>
-+
-+#ifdef CONFIG_HOTPLUG_CPU
-+#include <linux/list.h>
-+#endif
-+
-+struct percpu_counter {
-+	raw_spinlock_t lock;
-+	s64 count;
-+#ifdef CONFIG_HOTPLUG_CPU
-+	struct list_head list;	/* All percpu_counters are on a list */
-+#endif
-+	s32 __percpu *counters;
-+};
-+
-+#else /* !CONFIG_SMP */
-+
-+struct percpu_counter {
-+	s64 count;
-+};
-+
-+#endif	/* CONFIG_SMP */
-+
-+#endif /* _LINUX_PERCPU_COUNTER_TYPES_H */
-diff --git a/include/linux/sched/user.h b/include/linux/sched/user.h
-index 671ecee08d23..913da0aba05c 100644
---- a/include/linux/sched/user.h
-+++ b/include/linux/sched/user.h
 @@ -4,7 +4,7 @@
  
- #include <linux/uidgid_types.h>
- #include <linux/atomic.h>
--#include <linux/percpu_counter.h>
-+#include <linux/percpu_counter_types.h>
- #include <linux/refcount.h>
- #include <linux/ratelimit_types.h>
+ #include <linux/err.h>
+ #include <linux/idr.h>
+-#include <linux/rwsem.h>
++#include <linux/rwsem_types.h>
+ #include <linux/notifier.h>
+ #include <linux/nsproxy.h>
+ #include <linux/ns_common.h>
+diff --git a/include/linux/leds.h b/include/linux/leds.h
+index bec1c2fa5b26..6a50c2ea10e2 100644
+--- a/include/linux/leds.h
++++ b/include/linux/leds.h
+@@ -11,7 +11,7 @@
+ #include <dt-bindings/leds/common.h>
+ #include <linux/device.h>
+ #include <linux/mutex_types.h>
+-#include <linux/rwsem.h>
++#include <linux/rwsem_types.h>
+ #include <linux/spinlock_types.h>
+ #include <linux/timer_types.h>
+ #include <linux/types.h>
+diff --git a/include/linux/mfd/intel-m10-bmc.h b/include/linux/mfd/intel-m10-bmc.h
+index ee66c9751003..3500f5fa8057 100644
+--- a/include/linux/mfd/intel-m10-bmc.h
++++ b/include/linux/mfd/intel-m10-bmc.h
+@@ -11,7 +11,7 @@
+ #include <linux/bits.h>
+ #include <linux/dev_printk.h>
+ #include <linux/regmap.h>
+-#include <linux/rwsem.h>
++#include <linux/rwsem_types.h>
  
-diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
-index 2caa6b86106a..1d7e56eab60f 100644
---- a/include/linux/shmem_fs.h
-+++ b/include/linux/shmem_fs.h
-@@ -6,7 +6,7 @@
- #include <linux/swap.h>
- #include <linux/mempolicy.h>
+ #define M10BMC_N3000_LEGACY_BUILD_VER	0x300468
+ #define M10BMC_N3000_SYS_BASE		0x300800
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index ff5d33ace0f9..ed764511bc23 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -12,7 +12,7 @@
+ #include <linux/spinlock_types.h>
+ #include <linux/rbtree_types.h>
+ #include <linux/maple_tree_types.h>
+-#include <linux/rwsem.h>
++#include <linux/rwsem_types.h>
+ #include <linux/cpumask.h>
+ #include <linux/uprobes.h>
+ #include <linux/rcupdate.h>
+diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+index 4511d8a50e15..8f14fce5d7e2 100644
+--- a/include/linux/nfs_fs.h
++++ b/include/linux/nfs_fs.h
+@@ -24,7 +24,7 @@
  #include <linux/pagemap.h>
--#include <linux/percpu_counter.h>
-+#include <linux/percpu_counter_types.h>
- #include <linux/xattr.h>
- #include <linux/fs_parser.h>
- #include <linux/userfaultfd_k.h>
-diff --git a/kernel/user.c b/kernel/user.c
-index 28da71ea1e74..6c8b818419f8 100644
---- a/kernel/user.c
-+++ b/kernel/user.c
-@@ -22,6 +22,7 @@
- #include <linux/proc_ns.h>
- #include <linux/ratelimit.h>
- #include <linux/uidgid.h>
-+#include <linux/percpu_counter.h>
+ #include <linux/rbtree_types.h>
+ #include <linux/refcount_types.h>
+-#include <linux/rwsem.h>
++#include <linux/rwsem_types.h>
  
- #if IS_ENABLED(CONFIG_BINFMT_MISC)
- struct binfmt_misc init_binfmt_misc = {
-diff --git a/lib/flex_proportions.c b/lib/flex_proportions.c
-index 7749a48428e5..1d5e1e0bdbbe 100644
---- a/lib/flex_proportions.c
-+++ b/lib/flex_proportions.c
-@@ -36,6 +36,7 @@
- #include <linux/flex_proportions.h>
- #include <linux/log2.h>
- #include <linux/math64.h>
-+#include <linux/percpu_counter.h>
- #include <linux/seqlock.h>
+ #include <linux/sunrpc/debug.h>
+ #include <linux/sunrpc/auth.h>
+diff --git a/include/linux/posix-clock.h b/include/linux/posix-clock.h
+index ef8619f48920..f8e0c65d262d 100644
+--- a/include/linux/posix-clock.h
++++ b/include/linux/posix-clock.h
+@@ -11,7 +11,7 @@
+ #include <linux/fs.h>
+ #include <linux/poll.h>
+ #include <linux/posix-timers.h>
+-#include <linux/rwsem.h>
++#include <linux/rwsem_types.h>
  
- int fprop_global_init(struct fprop_global *p, gfp_t gfp)
+ struct posix_clock;
+ struct posix_clock_context;
+diff --git a/include/linux/quota.h b/include/linux/quota.h
+index bf16d9d2866c..956281c84850 100644
+--- a/include/linux/quota.h
++++ b/include/linux/quota.h
+@@ -34,7 +34,7 @@
+ 
+ #include <linux/list.h>
+ #include <linux/mutex_types.h>
+-#include <linux/rwsem.h>
++#include <linux/rwsem_types.h>
+ #include <linux/spinlock_types.h>
+ #include <linux/percpu_counter.h>
+ 
+diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
+index 9c29689ff505..ba9532734bf6 100644
+--- a/include/linux/rwsem.h
++++ b/include/linux/rwsem.h
+@@ -8,10 +8,10 @@
+ #ifndef _LINUX_RWSEM_H
+ #define _LINUX_RWSEM_H
+ 
++#include <linux/rwsem_types.h>
+ #include <linux/linkage.h>
+ 
+ #include <linux/types.h>
+-#include <linux/list.h>
+ #include <linux/spinlock.h>
+ #include <linux/atomic.h>
+ #include <linux/err.h>
+@@ -29,43 +29,6 @@
+ 
+ #ifndef CONFIG_PREEMPT_RT
+ 
+-#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
+-#include <linux/osq_lock.h>
+-#endif
+-
+-/*
+- * For an uncontended rwsem, count and owner are the only fields a task
+- * needs to touch when acquiring the rwsem. So they are put next to each
+- * other to increase the chance that they will share the same cacheline.
+- *
+- * In a contended rwsem, the owner is likely the most frequently accessed
+- * field in the structure as the optimistic waiter that holds the osq lock
+- * will spin on owner. For an embedded rwsem, other hot fields in the
+- * containing structure should be moved further away from the rwsem to
+- * reduce the chance that they will share the same cacheline causing
+- * cacheline bouncing problem.
+- */
+-struct rw_semaphore {
+-	atomic_long_t count;
+-	/*
+-	 * Write owner or one of the read owners as well flags regarding
+-	 * the current state of the rwsem. Can be used as a speculative
+-	 * check to see if the write owner is running on the cpu.
+-	 */
+-	atomic_long_t owner;
+-#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
+-	struct optimistic_spin_queue osq; /* spinner MCS lock */
+-#endif
+-	raw_spinlock_t wait_lock;
+-	struct list_head wait_list;
+-#ifdef CONFIG_DEBUG_RWSEMS
+-	void *magic;
+-#endif
+-#ifdef CONFIG_DEBUG_LOCK_ALLOC
+-	struct lockdep_map	dep_map;
+-#endif
+-};
+-
+ /* In all implementations count != 0 means locked */
+ static inline int rwsem_is_locked(struct rw_semaphore *sem)
+ {
+@@ -124,15 +87,6 @@ static inline int rwsem_is_contended(struct rw_semaphore *sem)
+ 
+ #else /* !CONFIG_PREEMPT_RT */
+ 
+-#include <linux/rwbase_rt.h>
+-
+-struct rw_semaphore {
+-	struct rwbase_rt	rwbase;
+-#ifdef CONFIG_DEBUG_LOCK_ALLOC
+-	struct lockdep_map	dep_map;
+-#endif
+-};
+-
+ #define __RWSEM_INITIALIZER(name)				\
+ 	{							\
+ 		.rwbase = __RWBASE_INITIALIZER(name),		\
+diff --git a/include/linux/rwsem_types.h b/include/linux/rwsem_types.h
+new file mode 100644
+index 000000000000..105142147b9b
+--- /dev/null
++++ b/include/linux/rwsem_types.h
+@@ -0,0 +1,78 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* rwsem.h: R/W semaphores, public interface
++ *
++ * Written by David Howells (dhowells@redhat.com).
++ * Derived from asm-i386/semaphore.h
++ */
++
++#ifndef _LINUX_RWSEM_TYPES_H
++#define _LINUX_RWSEM_TYPES_H
++
++#include <linux/list.h>
++#include <linux/spinlock_types.h>
++#include <linux/atomic.h>
++
++#ifdef CONFIG_DEBUG_LOCK_ALLOC
++#include <linux/lockdep_types.h>
++# define __RWSEM_DEP_MAP_INIT(lockname)			\
++	.dep_map = {					\
++		.name = #lockname,			\
++		.wait_type_inner = LD_WAIT_SLEEP,	\
++	},
++#else
++# define __RWSEM_DEP_MAP_INIT(lockname)
++#endif
++
++#ifndef CONFIG_PREEMPT_RT
++
++#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
++#include <linux/osq_lock.h>
++#endif
++
++/*
++ * For an uncontended rwsem, count and owner are the only fields a task
++ * needs to touch when acquiring the rwsem. So they are put next to each
++ * other to increase the chance that they will share the same cacheline.
++ *
++ * In a contended rwsem, the owner is likely the most frequently accessed
++ * field in the structure as the optimistic waiter that holds the osq lock
++ * will spin on owner. For an embedded rwsem, other hot fields in the
++ * containing structure should be moved further away from the rwsem to
++ * reduce the chance that they will share the same cacheline causing
++ * cacheline bouncing problem.
++ */
++struct rw_semaphore {
++	atomic_long_t count;
++	/*
++	 * Write owner or one of the read owners as well flags regarding
++	 * the current state of the rwsem. Can be used as a speculative
++	 * check to see if the write owner is running on the cpu.
++	 */
++	atomic_long_t owner;
++#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
++	struct optimistic_spin_queue osq; /* spinner MCS lock */
++#endif
++	raw_spinlock_t wait_lock;
++	struct list_head wait_list;
++#ifdef CONFIG_DEBUG_RWSEMS
++	void *magic;
++#endif
++#ifdef CONFIG_DEBUG_LOCK_ALLOC
++	struct lockdep_map	dep_map;
++#endif
++};
++
++#else /* !CONFIG_PREEMPT_RT */
++
++#include <linux/rwbase_rt.h>
++
++struct rw_semaphore {
++	struct rwbase_rt	rwbase;
++#ifdef CONFIG_DEBUG_LOCK_ALLOC
++	struct lockdep_map	dep_map;
++#endif
++};
++
++#endif /* CONFIG_PREEMPT_RT */
++
++#endif /* _LINUX_RWSEM_TYPES_H */
+diff --git a/include/linux/tty.h b/include/linux/tty.h
+index 5a3815e7d73d..da820609bc77 100644
+--- a/include/linux/tty.h
++++ b/include/linux/tty.h
+@@ -13,7 +13,7 @@
+ #include <linux/mutex_types.h>
+ #include <linux/tty_flags.h>
+ #include <uapi/linux/tty.h>
+-#include <linux/rwsem.h>
++#include <linux/rwsem_types.h>
+ #include <linux/llist.h>
+ 
+ 
+diff --git a/include/linux/user_namespace.h b/include/linux/user_namespace.h
+index 7d0e3418d497..c82e1b50dfcb 100644
+--- a/include/linux/user_namespace.h
++++ b/include/linux/user_namespace.h
+@@ -6,7 +6,7 @@
+ #include <linux/ns_common.h>
+ #include <linux/sched.h>
+ #include <linux/workqueue_types.h>
+-#include <linux/rwsem.h>
++#include <linux/rwsem_types.h>
+ #include <linux/sysctl.h>
+ #include <linux/err.h>
+ 
+diff --git a/include/net/sch_generic.h b/include/net/sch_generic.h
+index bab44a435a62..6ec5064156d9 100644
+--- a/include/net/sch_generic.h
++++ b/include/net/sch_generic.h
+@@ -12,7 +12,7 @@
+ #include <linux/list.h>
+ #include <linux/refcount.h>
+ #include <linux/mutex_types.h>
+-#include <linux/rwsem.h>
++#include <linux/rwsem_types.h>
+ #include <linux/atomic.h>
+ #include <linux/hashtable.h>
+ #include <net/gen_stats.h>
+diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
+index 64b62d1388a4..7d6216e85b0e 100644
+--- a/include/rdma/ib_verbs.h
++++ b/include/rdma/ib_verbs.h
+@@ -18,7 +18,7 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/kref_types.h>
+ #include <linux/list.h>
+-#include <linux/rwsem.h>
++#include <linux/rwsem_types.h>
+ #include <linux/workqueue_types.h>
+ #include <linux/irq_poll.h>
+ #include <uapi/linux/if_ether.h>
+diff --git a/include/sound/core.h b/include/sound/core.h
+index 0c512acac050..f95f6863986f 100644
+--- a/include/sound/core.h
++++ b/include/sound/core.h
+@@ -10,7 +10,7 @@
+ #include <linux/device.h>
+ #include <linux/sched.h>		/* wake_up() */
+ #include <linux/mutex_types.h>		/* struct mutex */
+-#include <linux/rwsem.h>		/* struct rw_semaphore */
++#include <linux/rwsem_types.h>		/* struct rw_semaphore */
+ #include <linux/stringify.h>
+ #include <linux/printk.h>
+ #include <linux/wait.h>
 -- 
 2.39.2
 
