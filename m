@@ -1,23 +1,22 @@
-Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C74A5B668
-	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 20:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797825EE6D
+	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 20:15:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707682536; cv=none; b=n6H7FUbHVZW31ayLqkkEf0hTVCKTBQ01puzxtMbvY2gHaD6FbqE0zVxO2ysJrX/wIcyLZG3834sYK2ivIardcJk2XWUK9fU9AYwexP+IwGdF/dFNrIBK7y3SlGDUoj2/nGtnWYN+nwAKEGuoKeeRqvc7JxdtsxsHM+RYHMw9KLs=
+	t=1707682539; cv=none; b=V5D6n3qL6XidOWrGEwvMm9kI9JObhbwNI8m+vOr3quriVBK7EXULI7pQZT9KzhN8k2qvlLtzCbU6vA11qnxroTAnpWLX5FGwwHAF2U9Yxq7gL2sM0V3Pueb+lel4getL/wsc+yL4UfvAf1OwjJSqs5U/QR6z3PQUwRmaTiYt6Zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707682536; c=relaxed/simple;
-	bh=5XIv07/wKtmBMOxCIJedyIk4CrP17JzQEnwYP4BIfKU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Bgrgp5DPlCzqb3+x22Gg92GT39SAvlwLSWFemUS+x/WDjc4R9qwAYOfXyo5CtoTxfaYJRhHNL7fHI2UouFKP1jhHKIOvvqGtiSLbm+1vSUQW2sL9eR1+gDsscqf+YGD2LiIR0AvnjOo89Bntm3FcPMJWJEI7UvMVGNYaqnoCaro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
+	s=arc-20240116; t=1707682539; c=relaxed/simple;
+	bh=irykZsem+8NgONVmxffWWO1MotG6wqG1fRYrdV08RAQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hp/W9dcwDEOhhC8GeV701hBzVZ1H9TEDgjuDxbbkxF/LepOaI/F25xdAbdz8XNA3070j/2Ut0ae31uMcgZR5Aa/2MDC8geYatLPWcpgjCF0M6MghvZhlHrPzAJkbcEpUMuRbU5tCCR9NE9yFGNPt7eYGDGRuMPUr8AFAhnj1xwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
 Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
-	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
-	id 4e677400-c91a-11ee-b972-005056bdfda7;
-	Sun, 11 Feb 2024 22:15:32 +0200 (EET)
+	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+	id 4cee4963-c91a-11ee-b3cf-005056bd6ce9;
+	Sun, 11 Feb 2024 22:15:29 +0200 (EET)
 From: andy.shevchenko@gmail.com
 To: Andy Shevchenko <andy.shevchenko@gmail.com>,
 	Marius Hoch <mail@mariushoch.de>,
@@ -25,12 +24,10 @@ To: Andy Shevchenko <andy.shevchenko@gmail.com>,
 	linux-kernel@vger.kernel.org
 Cc: Jonathan Cameron <jic23@kernel.org>,
 	Lars-Peter Clausen <lars@metafoo.de>
-Subject: [PATCH v1 3/3] iio: st_sensors: lsm9ds0: Use common style for terminator in ID tables
-Date: Sun, 11 Feb 2024 22:14:34 +0200
-Message-ID: <20240211201526.1518165-4-andy.shevchenko@gmail.com>
+Subject: [PATCH v1 0/3] iio: st_sensors: lsm9ds0: Miscellaneous cleanups
+Date: Sun, 11 Feb 2024 22:14:31 +0200
+Message-ID: <20240211201526.1518165-1-andy.shevchenko@gmail.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240211201526.1518165-1-andy.shevchenko@gmail.com>
-References: <20240211201526.1518165-1-andy.shevchenko@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,26 +36,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use common style for a terminator entry in the ID tables.
+Just a few ad-hoc cleanups. No functional changes intended.
 
-Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
- drivers/iio/imu/st_lsm9ds0/st_lsm9ds0_i2c.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Andy Shevchenko (3):
+  iio: st_sensors: lsm9ds0: Use dev_err_probe() everywhere
+  iio: st_sensors: lsm9ds0: Don't use "proxy" headers
+  iio: st_sensors: lsm9ds0: Use common style for terminator in ID tables
 
-diff --git a/drivers/iio/imu/st_lsm9ds0/st_lsm9ds0_i2c.c b/drivers/iio/imu/st_lsm9ds0/st_lsm9ds0_i2c.c
-index ab8504286ba4..d03cec3b24fe 100644
---- a/drivers/iio/imu/st_lsm9ds0/st_lsm9ds0_i2c.c
-+++ b/drivers/iio/imu/st_lsm9ds0/st_lsm9ds0_i2c.c
-@@ -41,7 +41,7 @@ MODULE_DEVICE_TABLE(i2c, st_lsm9ds0_id_table);
- 
- static const struct acpi_device_id st_lsm9ds0_acpi_match[] = {
- 	{"ACCL0001", (kernel_ulong_t)LSM303D_IMU_DEV_NAME},
--	{ },
-+	{}
- };
- MODULE_DEVICE_TABLE(acpi, st_lsm9ds0_acpi_match);
- 
+ drivers/iio/imu/st_lsm9ds0/st_lsm9ds0.h      |  5 ++++-
+ drivers/iio/imu/st_lsm9ds0/st_lsm9ds0_core.c | 21 +++++++++-----------
+ drivers/iio/imu/st_lsm9ds0/st_lsm9ds0_i2c.c  |  6 ++++--
+ drivers/iio/imu/st_lsm9ds0/st_lsm9ds0_spi.c  |  4 +++-
+ 4 files changed, 20 insertions(+), 16 deletions(-)
+
 -- 
 2.43.0
 
