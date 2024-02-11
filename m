@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DDEB1102;
-	Sun, 11 Feb 2024 04:37:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598B817D5;
+	Sun, 11 Feb 2024 04:37:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707626253; cv=none; b=j0pXIjHqRNRGyVe6JeRAz7N1ljedYCQzg78pdKWi/ZDaa1FsbzQUdhtWscNpwWiyKUDz8AgEGGHHKQ8MehSXkr7u0qXRA5bJ6g+Py1veab/NdcACRjaC+X2Yn+gl+Ua3mGWVnJFppQc6AbyaVTIkhaxOu7QCDgLhbqu/HPYfWnc=
+	t=1707626253; cv=none; b=csqDVk8ULuYZfSEZGAPng229arhgPOlOKrGj62b+vuGjiAoBC86mVhYCMmuTl/PyVcFtbrceqVfk7Bq299uQie3MSsKAelbZZF+VHGYKGz9wLdv0q7bezUTIux/7JlK2G/i5Gjgf9n9W8xzmTQcF2bxjA1RdqbKHk3ZINdFeQYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707626253; c=relaxed/simple;
-	bh=p8UKy0GQ+pILMVAt3l0Cq9hdX0ZMkXzGj+SrMELt91k=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=VbfmFHuRPT0aWBW7PGJlg0o5lzFooVsapSFSr9WS2d41cSNGx+F29JZp7yJXNouuNs11xmVVcHTL3EfeIk3jmAalqm7NeedM2gnktmvo6d3aDg3c61f1FUNe87ZV05BTMgEWa/xr8zVz/9IeGXFSp8TTcb6jKI4Es2ymGqSnQqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QH16CUPG; arc=none smtp.client-ip=10.30.226.201
+	bh=7Tgpfgy2gZK7gG0Vu57dji3vdBwL3zjCkXajRYIQiEc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Mx/Y8fPnULeXjYGulR4DtkxZCfV8VLrFG3wBrlNOYrh2Bh5Ds57opyn974Smvzz+w51tIb++b2wKFIK15FCD51hWjuqyKCe7vdmzlB3uejaQaePX+NFwavYV4M8JyV0kqZArxnNW/afUR1vUW4h/H330kGaflPkkolIc3AAO7MQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pOnI5HGU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QH16CUPG"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B65CEC433F1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pOnI5HGU"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CE828C43394;
 	Sun, 11 Feb 2024 04:37:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1707626252;
-	bh=p8UKy0GQ+pILMVAt3l0Cq9hdX0ZMkXzGj+SrMELt91k=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=QH16CUPGspvI9UIkkFWC8+zI6EraA7XbZX0JqE8wZ/Bkl3m1ktRJ9+j4Pl8FwaX8K
-	 VXIVLKkjP105gcC4ggeZEqwi1t96h2psaTMqSXhhOtNcEBSYxdm6BSFfBHO6Zymya9
-	 uqQ7zO6pphV4oizpmG433G2KRcRQvtJEF+LXn3e6e8c634ikH/zxTdxqelb9LgN/zj
-	 xS0rh0JK9eNX4ekDGgmxdQ8Zub5wio2JU8YbBsmhfEohlk9oZ6JB7j/TdfakocoIwH
-	 8CptZ5Bncct+tk6KHKDT/0KTfAPS30pgO6LFCKsB6oH3BFzhuNwe386WrBcB10mode
-	 4wde5wEBTddZA==
+	bh=7Tgpfgy2gZK7gG0Vu57dji3vdBwL3zjCkXajRYIQiEc=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=pOnI5HGUNJoLJtuXDQKaPUAiwdcrwlWOMsba7NMOE560N96lOOB4oVSXhgoNiN+l5
+	 WKi23x933LfRp/IRX+8urCfqBjcv7D6lmUpHAlDIfoUkKMrBDRrfkzLo3gEQ6d5TvY
+	 RW/wSRMb1h0RtvTKqMxZ3Ym48oOk15fFe5y7hJ20Vr3dduZmWJzehZHnrWyitrbJbU
+	 cvMsxrVUFNmfxGV/oTxYM/XsCxetaKihxufvNIePOugBRxMAS69dz8WhjNIlxlrODe
+	 OjiR8qmWNq8NfkYacnMuCygwWhWRlW6QngkeLMWTEejzistOmBkxwm1nl/irPKWEkZ
+	 hI4OOXnyODthQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 954EBC4829B;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3CBC4829F;
 	Sun, 11 Feb 2024 04:37:32 +0000 (UTC)
 From:
  Bjorn Andersson via B4 Relay <devnull+quic_bjorande.quicinc.com@kernel.org>
-Subject: [PATCH 0/2] arm64: dts: qcom: sc8280xp: Make pmic thermal-zones
- report temperature
-Date: Sat, 10 Feb 2024 20:41:58 -0800
-Message-Id: <20240210-sc8280xp-pmic-thermal-v1-0-a1c215a17d10@quicinc.com>
+Date: Sat, 10 Feb 2024 20:42:00 -0800
+Subject: [PATCH 2/2] arm64: dts: qcom: sc8280xp-pmics: Define adc for
+ temp-alarms
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,9 +42,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABZQyGUC/x3MTQqAIBBA4avErBsYpSy6SrQwG2ugH9GIILp70
- vJbvPdA4iicoCseiHxJkmPPUGUBbrH7zChTNmjSFWlFmFyrW7oDhk0cngvHza7ox9qwMqamhiG
- 3IbKX+//2w/t+FUXF02cAAAA=
+Message-Id: <20240210-sc8280xp-pmic-thermal-v1-2-a1c215a17d10@quicinc.com>
+References: <20240210-sc8280xp-pmic-thermal-v1-0-a1c215a17d10@quicinc.com>
+In-Reply-To: <20240210-sc8280xp-pmic-thermal-v1-0-a1c215a17d10@quicinc.com>
 To: Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
@@ -52,21 +52,21 @@ To: Bjorn Andersson <andersson@kernel.org>,
 Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Bjorn Andersson <quic_bjorande@quicinc.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=696;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2888;
  i=quic_bjorande@quicinc.com; h=from:subject:message-id;
- bh=p8UKy0GQ+pILMVAt3l0Cq9hdX0ZMkXzGj+SrMELt91k=;
- b=owEBgwJ8/ZANAwAIAQsfOT8Nma3FAcsmYgBlyFAXCdaUKkvSlYAd8UArJS3UMUBxKul4YaUtl
- v/e5SGNKu6JAkkEAAEIADMWIQQF3gPMXzXqTwlm1SULHzk/DZmtxQUCZchQFxUcYW5kZXJzc29u
- QGtlcm5lbC5vcmcACgkQCx85Pw2ZrcVzhxAAuFeGH9kv7BHw+9K4B68KMl+qBPdajShULMrA8DL
- ZiRtjUGa5CPBdEXQMBSuDvamE8MwgaR6ErYYPISnHyQw50NXKaJxxjcQIs4s5N92dS+sljPh9ay
- 7GetTcoYcHvm7JxhPNrNrXrT+bgjFej5d636q5WXgfpTQg6vb1shdbSF2X1cwKgQECNowbVJmUW
- WPqpkWQrpqWA2kAVygcN/UynSJc60s35v3CZ7HwRVL8GGvEgOruHy3atAc6uH4W5TcHVkQE/szv
- QP7WPHDpIyccZ5QUwB6yIb0wFpXbszWdanlHx6ireEa74cu+797l2WTNbZtJkZ66VFjMSRejAMa
- nJx1HTDw1ppvIxDQwt65K371eYHBlV2r7dnSuMoemH/y1+qcmgm7OklK6fga829F+vOW8uWh+sQ
- dKZ4uzvvBg8ySNLoEOSCWlvew92OZOUo7qE2FnYGwCSc2GlgSz/TlgIkB/YpGpeSzR8tywcQPkK
- EOKJ5eVqrqnq5AiZgtO+QxKIJYwrdBbl4DUxVoBorOSxnCXQtmg7in0fL9wWGPkoBfPwyDhTDMl
- 6YGWLcbIvrRO7C2x63qXneL1gEgeah4FGAbwo9RQoFyAXqSwuly5fvp/KrtMNHzBGtWATmW2kZE
- W0gmWSaHp5pXIBBELJwz6Wl7c5ByYRJqlYlQguUi4sY8=
+ bh=K7rQywm19ZMJOEqTCjhdaKmYaGUNjH5+Bg7BEu/x3tU=;
+ b=owEBgwJ8/ZANAwAIAQsfOT8Nma3FAcsmYgBlyFAXylL8zK5qj0ajAD7+jN8JFAwl72hjdDBAR
+ evaltzZSm6JAkkEAAEIADMWIQQF3gPMXzXqTwlm1SULHzk/DZmtxQUCZchQFxUcYW5kZXJzc29u
+ QGtlcm5lbC5vcmcACgkQCx85Pw2ZrcUwFhAAp6X19C1/915JgP6bSfzLi13eAGiI3IFxPXxGKP1
+ Cg91LS/4pyv0OygvGP8BrhXm9R5fNyMIxjbhRAjazIfkWdPriIGdMEUUTBco+2BFrB4vEGkiXH+
+ 98DDKC4UErvnb3c0rodDZkvycqsbMKhKeo/8y/GeisD58oMWSqMV8nCv0lifkO2tD2IYak7MOcZ
+ SZH9xN1q6p2YSYi5kerWUWrgjf1Q7OjRtYavFmBWn9+nPnvItCRNd2GW8/H72WOvtEHKHgjYT60
+ 1gTRNGZnk3L4sciH+5DRceJpD0GmA8uCJmWf2HPbc5KYai+ThNu2ieRcwGVMZ9rASSH7BOVkd9c
+ VVkQCfHmq2aj7WtRcG4m9bRutSI9A7TyFIAEcJojJXP+E2esmq7xGRhnN7MjMnFEVVYc4C1G+5g
+ +0naX0Myh24lJLzA7EcJK9D1BiW3Xwm1Hr7/UhFMccptwfZ2HJdZ9aFjcIeCM+HXlkSVsp8QCIh
+ ZEQVCKJRrKdr3GKyhCmO3+3LlqJ1KkwWvTBZKIimsRrmI2hxIt9Qlk8aF9X+Kf4zc/YXQEsDJId
+ 7ZjtCI9mWgcIlOxY0NsWr8bhv8/rZyJRnnKBtf3I03q68HWiMqgQD1DFPDt85Uzl26X762jHzik
+ jmEe1WS8LdIxgSvxVL5YpBKbgdEtK8gcnsbTalMyWtMs=
 X-Developer-Key: i=quic_bjorande@quicinc.com; a=openpgp;
  fpr=05DE03CC5F35EA4F0966D5250B1F393F0D99ADC5
 X-Endpoint-Received:
@@ -74,22 +74,86 @@ X-Endpoint-Received:
 X-Original-From: Bjorn Andersson <quic_bjorande@quicinc.com>
 Reply-To: <quic_bjorande@quicinc.com>
 
-The "pm8280-[12]-thermal" thermal zones always report 37C, fix this.
+From: Bjorn Andersson <quic_bjorande@quicinc.com>
+
+sc8280xp-pmics define the two thermal zones "pm8280-1-thermal" and
+"pm8280-2-thermal", but the related temp-alarm instances are not tied to
+any adc channels, and as such continuously report the bogus temperature
+of 37C.
+
+After previously defining these adc channels across all boards using
+sc8280xp-pmics.dtsi, we can now add these references.
+
+This does however mean that we have a non-disabled node referencing
+default-disabled nodes, requiring each board to enable the pmk8280_vadc.
+Avoid this by marking pmk8280_vadc okay.
 
 Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
 ---
-Bjorn Andersson (2):
-      arm64: dts: qcom: sc8280xp-crd: Add PMIC die-temp vadc channels
-      arm64: dts: qcom: sc8280xp-pmics: Define adc for temp-alarms
+ arch/arm64/boot/dts/qcom/sc8280xp-crd.dts                  | 4 ----
+ arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts | 2 --
+ arch/arm64/boot/dts/qcom/sc8280xp-pmics.dtsi               | 5 ++++-
+ 3 files changed, 4 insertions(+), 7 deletions(-)
 
- .../dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts     | 37 +-------------------
- arch/arm64/boot/dts/qcom/sc8280xp-pmics.dtsi       | 39 +++++++++++++++++++++-
- 2 files changed, 39 insertions(+), 37 deletions(-)
----
-base-commit: 445a555e0623387fa9b94e68e61681717e70200a
-change-id: 20240210-sc8280xp-pmic-thermal-fb56e166507e
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-crd.dts b/arch/arm64/boot/dts/qcom/sc8280xp-crd.dts
+index 22f10813aa3c..ffc4406422ae 100644
+--- a/arch/arm64/boot/dts/qcom/sc8280xp-crd.dts
++++ b/arch/arm64/boot/dts/qcom/sc8280xp-crd.dts
+@@ -604,10 +604,6 @@ rtc_offset: rtc-offset@bc {
+ 	};
+ };
+ 
+-&pmk8280_vadc {
+-	status = "okay";
+-};
+-
+ &qup0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
+index ce2564a6c26e..ad42966c94e5 100644
+--- a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
++++ b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
+@@ -851,8 +851,6 @@ rtc_offset: rtc-offset@bc {
+ };
+ 
+ &pmk8280_vadc {
+-	status = "okay";
+-
+ 	channel@144 {
+ 		reg = <PM8350_ADC7_AMUX_THM1_100K_PU(1)>;
+ 		qcom,hw-settle-time = <200>;
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-pmics.dtsi b/arch/arm64/boot/dts/qcom/sc8280xp-pmics.dtsi
+index 58fea376f0e2..945de77911de 100644
+--- a/arch/arm64/boot/dts/qcom/sc8280xp-pmics.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc8280xp-pmics.dtsi
+@@ -87,7 +87,6 @@ pmk8280_vadc: adc@3100 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			#io-channel-cells = <1>;
+-			status = "disabled";
+ 
+ 			channel@3 {
+ 				reg = <PMK8350_ADC7_DIE_TEMP>;
+@@ -160,6 +159,8 @@ pm8280_1_temp_alarm: temp-alarm@a00 {
+ 			compatible = "qcom,spmi-temp-alarm";
+ 			reg = <0xa00>;
+ 			interrupts-extended = <&spmi_bus 0x1 0xa 0x0 IRQ_TYPE_EDGE_BOTH>;
++			io-channels = <&pmk8280_vadc PM8350_ADC7_DIE_TEMP(1)>;
++			io-channel-names = "thermal";
+ 			#thermal-sensor-cells = <0>;
+ 		};
+ 
+@@ -212,6 +213,8 @@ pm8280_2_temp_alarm: temp-alarm@a00 {
+ 			compatible = "qcom,spmi-temp-alarm";
+ 			reg = <0xa00>;
+ 			interrupts-extended = <&spmi_bus 0x2 0xa 0x0 IRQ_TYPE_EDGE_BOTH>;
++			io-channels = <&pmk8280_vadc PM8350_ADC7_DIE_TEMP(3)>;
++			io-channel-names = "thermal";
+ 			#thermal-sensor-cells = <0>;
+ 		};
+ 
 
-Best regards,
 -- 
-Bjorn Andersson <quic_bjorande@quicinc.com>
+2.43.0
 
