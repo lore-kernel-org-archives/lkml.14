@@ -1,63 +1,63 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B2318032
-	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 23:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B7817BDF
+	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 23:15:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707693354; cv=none; b=gvoIEodvqYVQak33rzNNdwiUbg96/kRHrHF3KX72oJqVYT/0ePrqqZfOxUShTpM4x7P6AFIIJlSpHij+YsMMFOXh4gpAD4aO8tijJvz/JHals0lBkuWwR3IMfanO0yokG6aUDMo5ubjvmOOS0Ce+daXihFTCGDgqhYtF5A4sJXA=
+	t=1707693353; cv=none; b=I5wnkzt6qxGprMv0/6KwkoxR9zdlvsAIzD4QrOhbZZWsTP3BK/1EZ9z1GrY1Rxmw8trXwZP3vV4gG2BDrRjEAagKcPfX4EXa8D7hj037kiSmBvk4Qjshu8nkML3O8sqWaP9NnZwABFLmyNfmDTVKt+INoN7ZuMo9zSu/Vww9kbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707693354; c=relaxed/simple;
-	bh=3EMwRWQVmXFpMULqT0KRcNauX3dUmEoNi+TxEAuDB/E=;
+	s=arc-20240116; t=1707693353; c=relaxed/simple;
+	bh=TbG+/HcM8WovU8Lw/yGM7zI7b8AZCr+y1GKAEztebFU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NrHfcXkuQDV9z/ieHcsDt6fe/mwumxV3fdS2V56exDgMG6EFEXm8vTuBFVsvRGaOrnKNoAxNpmDoMrUVCHVB/rXhxqIObL43Kfwgc2OcpqDEYNLbgwKeHRxSJShOG41A+amik8z6ZcLhHewhJFaEqqjmzDHqVQ4c8wxpbnH11k0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=G1/AvoMi; arc=none smtp.client-ip=209.85.208.45
+	 MIME-Version; b=TF9LxCxgo5XyBESLUCx3htOynRhUNGjSmp247tbWjYhNj78Qqq95U6tqGC92SC55vM7RFMY9W+njFRRsv7k7LnZ0XnkpnSHYYdlefY44DO1zm51dEjjqEeCxjq8AAQDFeJLCR3zx1EFW1nhstyfKDf9//cKIvrcGdeDgFpbpf/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=NWQItVnS; arc=none smtp.client-ip=209.85.167.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="G1/AvoMi"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-558f523c072so4017781a12.2
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 15:15:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="NWQItVnS"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5116ec49365so2887095e87.3
+        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 15:15:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1707693350; x=1708298150; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1707693348; x=1708298148; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jYWONKEfyypsQx26Swj5H3vXFHTxMGTOOr2K1QsNu0M=;
-        b=G1/AvoMiYFxT5kzuRBYAAg8YtecErA2NtNeY91K7BP9rFfnKvGNfFUWgPj4SQpLX01
-         w09KGgZpCfVCqC3xqNfD1GZmNw0jtqSqof6IxqPLZ04ggDNtZ8k3S+KVRegt8y0rXTfc
-         52D/LrPfYRnufK2SGZOoMLuMI/Bl3G2LXNYE35A1Gr5jK+ULtG27JpG0HyiCKck40XU6
-         b3RP2cDkzIJpE4/R8KgB3f3HPyYj4VwftTvQPNvKQpdILRFlA02cixPTkBd+YvxpCGLO
-         iFBej1wpLl0nGG3KFpSv2hl4+rs0VKJVc0hnPpv6A4Gmbd2pt6Tj3YgH3S9qSZPIuQaZ
-         ETuA==
+        bh=5G421tyom6sWcG+XY6TfN5lZaMdP8BvN/8TI1sJrx5Q=;
+        b=NWQItVnSvzhJijZf5fTGqe0hnUTPU0Di+k1hFgLDvtsnQ6rjwjF1nn/7nBjGzsjLmm
+         eBYmRVAdR71fqSnmu776AkG/8615qObWq1ENXdVgYhurH1JugCnp2Ng3zCYd4ppxVNoa
+         x9rOS/j69YkcfSAQMZyIdyOigrQb5IloNtVl7iC/8LmqnostFlmqzhWZl+iznnzMv4Rg
+         nMyPwTz1nzTsqGiSZqCSAgxdfQIRzhB/ScMHH0/ARgMzJOOmw28386i/h/diCnhy6/Ji
+         7o1IKRiYdaML2i40Agt1cc2kKodlvfBc9+1t97fFpabK+324iSnNCzpCV2Ofgu7Fuexi
+         GNXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707693350; x=1708298150;
+        d=1e100.net; s=20230601; t=1707693348; x=1708298148;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jYWONKEfyypsQx26Swj5H3vXFHTxMGTOOr2K1QsNu0M=;
-        b=eSwoLVumD+XhhAeEazGMG9isK9IHlRdlE/0f6VuDsIgCBQhiPbyi0o+CkMG2hl0ipc
-         Z+o89DZYPuP9C1dQE5XJxbRGs9pYUZL6WldY0DvXk88aOM2+3VbVQ/ZA6u30CDJ7HsJu
-         U6pEAarV/+iU+ERFx1dkd6zc1TlFElQClBO6HQRo7l0Xw+hDLMwbquXKQ2DFMu7r6Ptg
-         43+EWOzTKMFXBIXPY/whL2u2g745WFqdCMLU2YOcvha2m42lj37GtQjCYP+xyQOTYo0s
-         QyRLsnxMFa+B314c0kt7UGM77btz3tUUS0lhOqaq45SfXo4xzsRE+t1wAqI/BB6G4qZf
-         aNIw==
-X-Gm-Message-State: AOJu0YziUhTaFQpdOUvItOXaOYW3r1D4sIv/ZLYibm8VmSjFIZzq247s
-	f9wx1Sto7tCgFtg7yPqD3rN3I2Ed1hth1r22eRG0f/HQxkjH4hnO01DVjrcCJBIhyDa+JHrN5x8
-	C
-X-Google-Smtp-Source: AGHT+IHAmifdVSLf1cSWsW/F59VovW+T1W8jcE3GUhfcZw67OZHrhyMpPaRUnPUSeMWKv8j6VCxEFg==
-X-Received: by 2002:aa7:d6d7:0:b0:55f:4464:d044 with SMTP id x23-20020aa7d6d7000000b0055f4464d044mr4094729edr.6.1707693350163;
-        Sun, 11 Feb 2024 15:15:50 -0800 (PST)
+        bh=5G421tyom6sWcG+XY6TfN5lZaMdP8BvN/8TI1sJrx5Q=;
+        b=TAFDEzpaRVbRN6aOqpWDtycGsLTFCK9+pQEWvlo/tAIQvyxIHq5HuhX6Yna9LwNUE8
+         MiAU9aeWzTW2b5lcN5kpoL1AdLDXnjrcJ/cOP87l4pHsUOo6ErClG4GNIvDO0hAjpVhU
+         44qrHHk88BCHPVdPPozZ99fw+ra913Wwx9SNt1ToZQhRou8hmmVGaiv7tw4uTTM2zrpS
+         FngM72C/U7KljvQH6kKIDU/arvvjYPg+aTMX8A/zZnkBxLQY1TamYrFIAsrcqmt7ik9T
+         Hby8rY5jKTrjUgT/2CYxkSWPRm+A5EOqFDiV6Ou8DamOagf734PU+E+ryAGDStmCB66l
+         8FtQ==
+X-Gm-Message-State: AOJu0Yyh6xKA2Jn6lzZv1L2jUkhmbNFTafAYHIHA2LZ8ylgVnAXTvfW5
+	eNb4ZdDhBb63/he/w85iuYfbE60VLc3dwUmXDkhAhRj2ghsoLUOzfzxYQxz+ieWPHhj1xdvNDAX
+	f
+X-Google-Smtp-Source: AGHT+IEBGwAqcxYaRRzPkRWV+YK4IFKdR5QatmrYOTgXLB3jAC7XGQ+Yl0V1Ng1xNTxBIBUMAqPI3g==
+X-Received: by 2002:ac2:485b:0:b0:511:5ef9:ebb0 with SMTP id 27-20020ac2485b000000b005115ef9ebb0mr2920185lfy.25.1707693343328;
+        Sun, 11 Feb 2024 15:15:43 -0800 (PST)
 Received: from raven.blarg.de (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id et13-20020a056402378d00b0055d19c9daf2sm2170180edb.15.2024.02.11.15.15.48
+        by smtp.gmail.com with ESMTPSA id et13-20020a056402378d00b0055d19c9daf2sm2170180edb.15.2024.02.11.15.15.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Feb 2024 15:15:48 -0800 (PST)
+        Sun, 11 Feb 2024 15:15:40 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: linux-kernel@vger.kernel.org
 Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v4 18/35] blkdev.h: move blk_op_is_passthrough() to blk_types.h
-Date: Mon, 12 Feb 2024 00:15:01 +0100
-Message-Id: <20240211231518.349442-19-max.kellermann@ionos.com>
+Subject: [PATCH v4 10/35] uprobes.h: move declarations to uprobes_types.h
+Date: Mon, 12 Feb 2024 00:14:53 +0100
+Message-Id: <20240211231518.349442-11-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240211231518.349442-1-max.kellermann@ionos.com>
 References: <20240211231518.349442-1-max.kellermann@ionos.com>
@@ -69,50 +69,148 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This is a very low-level function without any additional dependencies,
-and moving it will allow certain sources to omit the "blkdev.h"
-dependency.
+By providing declarations in a lean header, we can reduce header
+dependencies.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- include/linux/blk_types.h | 6 ++++++
- include/linux/blkdev.h    | 6 ------
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ arch/arm64/kernel/signal.c    |  1 +
+ include/linux/mm_types.h      |  2 +-
+ include/linux/uprobes.h       | 10 +---------
+ include/linux/uprobes_types.h | 25 +++++++++++++++++++++++++
+ kernel/entry/common.c         |  1 +
+ kernel/trace/bpf_trace.c      |  1 +
+ mm/memory.c                   |  1 +
+ 7 files changed, 31 insertions(+), 10 deletions(-)
+ create mode 100644 include/linux/uprobes_types.h
 
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index 96a37f399928..ad48c3f5ddd6 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -434,6 +434,12 @@ static inline enum req_op bio_op(const struct bio *bio)
- 	return bio->bi_opf & REQ_OP_MASK;
- }
+diff --git a/arch/arm64/kernel/signal.c b/arch/arm64/kernel/signal.c
+index 0e8beb3349ea..8990975d0c37 100644
+--- a/arch/arm64/kernel/signal.c
++++ b/arch/arm64/kernel/signal.c
+@@ -14,6 +14,7 @@
+ #include <linux/freezer.h>
+ #include <linux/stddef.h>
+ #include <linux/uaccess.h>
++#include <linux/uprobes.h>
+ #include <linux/sizes.h>
+ #include <linux/string.h>
+ #include <linux/resume_user_mode.h>
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index ed764511bc23..54caee378e77 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -14,7 +14,7 @@
+ #include <linux/maple_tree_types.h>
+ #include <linux/rwsem_types.h>
+ #include <linux/cpumask.h>
+-#include <linux/uprobes.h>
++#include <linux/uprobes_types.h>
+ #include <linux/rcupdate.h>
+ #include <linux/page-flags-layout.h>
+ #include <linux/workqueue_types.h>
+diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+index a76155cf8ceb..6ab950cce8a9 100644
+--- a/include/linux/uprobes.h
++++ b/include/linux/uprobes.h
+@@ -11,6 +11,7 @@
+  * Copyright (C) 2011-2012 Red Hat, Inc., Peter Zijlstra
+  */
  
-+static inline bool blk_op_is_passthrough(blk_opf_t op)
-+{
-+	op &= REQ_OP_MASK;
-+	return op == REQ_OP_DRV_IN || op == REQ_OP_DRV_OUT;
-+}
-+
- static inline bool op_is_write(blk_opf_t op)
- {
- 	return !!(op & (__force blk_opf_t)1);
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index e67298984913..6bfa4b92bb32 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -260,12 +260,6 @@ static inline int blk_validate_block_size(unsigned long bsize)
- 	return 0;
- }
++#include <linux/uprobes_types.h>
+ #include <linux/errno.h>
+ #include <linux/types.h>
  
--static inline bool blk_op_is_passthrough(blk_opf_t op)
--{
--	op &= REQ_OP_MASK;
--	return op == REQ_OP_DRV_IN || op == REQ_OP_DRV_OUT;
--}
+@@ -94,12 +95,6 @@ enum rp_check {
+ 	RP_CHECK_RET,
+ };
+ 
+-struct xol_area;
 -
- /*
-  * BLK_BOUNCE_NONE:	never bounce (default)
-  * BLK_BOUNCE_HIGH:	bounce all highmem pages
+-struct uprobes_state {
+-	struct xol_area		*xol_area;
+-};
+-
+ extern void __init uprobes_init(void);
+ extern int set_swbp(struct arch_uprobe *aup, struct mm_struct *mm, unsigned long vaddr);
+ extern int set_orig_insn(struct arch_uprobe *aup, struct mm_struct *mm, unsigned long vaddr);
+@@ -137,9 +132,6 @@ extern bool arch_uprobe_ignore(struct arch_uprobe *aup, struct pt_regs *regs);
+ extern void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
+ 					 void *src, unsigned long len);
+ #else /* !CONFIG_UPROBES */
+-struct uprobes_state {
+-};
+-
+ static inline void uprobes_init(void)
+ {
+ }
+diff --git a/include/linux/uprobes_types.h b/include/linux/uprobes_types.h
+new file mode 100644
+index 000000000000..0ce0fe3801ea
+--- /dev/null
++++ b/include/linux/uprobes_types.h
+@@ -0,0 +1,25 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++#ifndef _LINUX_UPROBES_TYPES_H
++#define _LINUX_UPROBES_TYPES_H
++/*
++ * User-space Probes (UProbes)
++ *
++ * Copyright (C) IBM Corporation, 2008-2012
++ * Authors:
++ *	Srikar Dronamraju
++ *	Jim Keniston
++ * Copyright (C) 2011-2012 Red Hat, Inc., Peter Zijlstra
++ */
++
++#ifdef CONFIG_UPROBES
++
++struct xol_area;
++
++struct uprobes_state {
++	struct xol_area		*xol_area;
++};
++#else /* !CONFIG_UPROBES */
++struct uprobes_state {
++};
++#endif /* !CONFIG_UPROBES */
++#endif	/* _LINUX_UPROBES_TYPES_H */
+diff --git a/kernel/entry/common.c b/kernel/entry/common.c
+index 88cb3c88aaa5..364ea38c868e 100644
+--- a/kernel/entry/common.c
++++ b/kernel/entry/common.c
+@@ -9,6 +9,7 @@
+ #include <linux/livepatch.h>
+ #include <linux/audit.h>
+ #include <linux/tick.h>
++#include <linux/uprobes.h>
+ 
+ #include "common.h"
+ 
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 241ddf5e3895..e74430389877 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -11,6 +11,7 @@
+ #include <linux/btf.h>
+ #include <linux/filter.h>
+ #include <linux/uaccess.h>
++#include <linux/uprobes.h>
+ #include <linux/ctype.h>
+ #include <linux/kprobes.h>
+ #include <linux/spinlock.h>
+diff --git a/mm/memory.c b/mm/memory.c
+index 7c3ca41a7610..68abe5dccb5b 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -70,6 +70,7 @@
+ #include <linux/string.h>
+ #include <linux/memory-tiers.h>
+ #include <linux/debugfs.h>
++#include <linux/uprobes.h>
+ #include <linux/userfaultfd_k.h>
+ #include <linux/dax.h>
+ #include <linux/oom.h>
 -- 
 2.39.2
 
