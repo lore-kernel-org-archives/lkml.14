@@ -1,63 +1,63 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB6C23761
-	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 12:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D995B69C
+	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 12:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707654630; cv=none; b=H6Ae1sujboqNYN6/z3951smwpV5Vwcuj/MNoj1dTFA0FphpkSXq7r16Tmzn7KnpnU3xPdEus1tOO1HIg3mOslnsxKHhFlelXKTDkOEAJwWYQJGxMIAdchND96YPV0CJIgOfiVJ2lGXn6NJuJddnsZ4tEljPbHBzJ0QUixO5FAMQ=
+	t=1707654632; cv=none; b=oJDUYKNjuwWTLxNtacsWqSa4ctGbvVYHU9srveueCZ9jJJowfEH1MDbUQwoTccETCRmyXpO4fNMv8dYnBWxYbWqe7tBuofq19l7Hc6MeAYqioa7DTMpQWRlUBQ1fkMcP8j3swgxqzs20mblGvn3WhOsmYnzDryd/Yckb87hqH1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707654630; c=relaxed/simple;
-	bh=sm5m4u4t8eFbR2gjJprfwSpii3UwlxNYAW+qpTdBofY=;
+	s=arc-20240116; t=1707654632; c=relaxed/simple;
+	bh=8E0JnpIDpqJTAIa7eziWdB8a1njbnn7OwwrjBeNl/Hc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZXTrDUYo/h5OYixZj+WA5mjRCwPGzDa6WcrV2Qoh5M0SMCCf5fj6Z8sRTbk6Z0dyQNhJJWY/QSSko1tn3+oALlJpOT77rrhFkZLed8nBi/te0awMQtuq8Fvd3QWfcp7AmYFh0Tc5wZrVE8BCI7G7bmJDWqroMTxFCRxAkkLKWrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=ccs2UrMP; arc=none smtp.client-ip=209.85.208.173
+	 MIME-Version; b=rB18RDLDTe1kn61turNiY9z29/dlmzUJcuqahPSh2Wk2f5GF6yhIfhYxqJjvtWKI+rvE9CEB0JV4iNjwmE0N/o9NB51PLhcjvyj3+E8UNo+buScauWhrDKOOLmHtQ/RYl/QDXXBucwkT57BG+CEvylLNQsmP3yRPIJj5eGZn+ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=BMhfRUqp; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="ccs2UrMP"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d09faadba5so30560191fa.1
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 04:30:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="BMhfRUqp"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-561587ce966so2460041a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 04:30:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1707654625; x=1708259425; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1707654627; x=1708259427; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6Sd3F7Cnejo0YUOQY1FFsProakPDnxze1sPdzTvGqZE=;
-        b=ccs2UrMPg2hZMWxxZoYWR1hW8I0L86+3pa1yp7tnWuAVc9eH/C7ww5mQoBQpgFfiAD
-         IRvTfMsXril+j58HVkHHoSirqAz/aQQXZ5Jrc6OK1sx+bnHqJF0k0REQ7TGXFOhgrlyf
-         lJbinfSpvcxSPV00isFEI+lB1GSrp8Cajj445E0+4oCThUqMY4vbBPAOSSGkti/xLiSK
-         yGuJQ2XmJvcWwgEvYvVnJzI5oqHeLhNFF+rRu0fVLmFNHPSnRDA+E60AeG3VbsbEjuVg
-         n8jrl/AzPQEXif2bhEOSbgvhrg5hsXl/UJ/iEH3qYjk5iEKvxvaRMGGKgCPeWhoEUNQ/
-         QrtQ==
+        bh=SjsOhN8aSrNAMTgfG/Xy/2KiT6HC8gp9GBm4gpWbj44=;
+        b=BMhfRUqpNRfpp1FxHj1Af2akLDZJbMSb23pQQEm940KchsPXBbSfmCH+I65DF4x3OR
+         PjzReCVVH/3vv+xaUE6EaMuDMNGnGhE+d+E2IXiH8ze5/XLHYj5GQGO5imahCnTjeceR
+         Fph+LQcr2OZpDGbN0tw257XawsIKyEad0YbnXrQ7ezvie0ggmYb5fnABsZBW2pBXd5gc
+         b4lYSWJnnmFY5LUVzzvJq3oK/OZzORojKWGt7SQi/gmnJ8P9xN3fH+OweTtMneo1pJor
+         9+vdnSx+8x0QR/6O2y7JuZqcSPCJ7aGMhAuAIbNcQCTYhNlbBhTjBqeTKwBm8NRDIr8p
+         S3aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707654625; x=1708259425;
+        d=1e100.net; s=20230601; t=1707654627; x=1708259427;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6Sd3F7Cnejo0YUOQY1FFsProakPDnxze1sPdzTvGqZE=;
-        b=c8IWL1JMUdkxNwRmJWtVmHnBYZScwO52rNd5CcrAvgTWWVHhQ5rv3wARQMU14IYETV
-         P5Nt58fnS3x0/25Jh1iU+WTJ+eW2PieBqITjTitZQWfaH4H5vyu9CthiHi/2HW++0UXq
-         WIoPZstpmIc1WS+AmKp1cEiUnfXhfX4bP7/rViCZYhQENrl9G/husPMUJ6Rs0yf7oiqM
-         +iPKmXZjfkBuqB82MEwcf43waoFnX1cYLGLBJW2FHKUb2NtNszovSXQJphTQ0LGa8mU7
-         uo1PPQfocV9QhEVyzwTu+H6Y5SnJD7NNpQrGi8PrgBrTr8+XWjzq9yE6egOKQjsuT5Ts
-         Nxqw==
-X-Gm-Message-State: AOJu0YxjTbp7YBgjc4FWbcOLgLcuTLgHgetCqjnMlvbtiCgdu9pctwhK
-	vKv0hgZZkdQD+kx2nuNxw0AStntpKTcogPzWiBJ5HN21wzId1hxFYd0PBNB82dicLQlsb22OPAc
-	7
-X-Google-Smtp-Source: AGHT+IFZbRX3qVoU0jivHjl/qZiaQjmYyKH2fSFwaSLRh0ajj1UIVEo5OWEzqt4s4QXwIX82tNc6KQ==
-X-Received: by 2002:a05:651c:1054:b0:2d0:e45c:5650 with SMTP id x20-20020a05651c105400b002d0e45c5650mr2452747ljm.11.1707654624989;
-        Sun, 11 Feb 2024 04:30:24 -0800 (PST)
+        bh=SjsOhN8aSrNAMTgfG/Xy/2KiT6HC8gp9GBm4gpWbj44=;
+        b=PAUAMh72mjpotI/5I0dQwPevjGle2/pcFV3ILWIltSYJ1iBhWrqkUf4nj0CJalKCJM
+         rHTnJIaqtvsdGrRoMds+mJZLcDkcyYPZs+cnFKYVgYUCeJkU13g8mpeDf+J/ZUB3l/Iv
+         N3CBWPGRbekG5Rha+BuNK2XGRDECHKD+5ygcLNfyTaMP4GrFa0rLIBIhfpuXF/bKPW7C
+         JrAmVkGM1bVtxtQjxwDiIyIOFkMCNuqkfAY4zzFSZJLSiy6W3Ao+g1B4IdA8E7An936H
+         vhsemKa/0ZTB8dzq59TvFidPTALOjhD/3z3ZETecK2L21S4jOBHxFPXiajwQNNJhDh6x
+         siHw==
+X-Gm-Message-State: AOJu0YzuQ3uxamiIIruvi4dQef5np9C2l1rGJFGNLpSoLw8N4F+c04aw
+	yc/g3X9p+sscjUfugOwUY8nKkbCFqU9qbDo6CjDf+k/k/k+sB8iInyAWcvNhPri+Xj1XpGTt2Ur
+	4
+X-Google-Smtp-Source: AGHT+IG+fxHKw+poR5xpBO+cVQy0VoXYfzFmDjkJbSPW0EamRmL/W2qmk1Ma9Rk06NF3QRH7K/jkbA==
+X-Received: by 2002:a05:6402:5518:b0:561:66a3:46e3 with SMTP id fi24-20020a056402551800b0056166a346e3mr2923559edb.10.1707654627556;
+        Sun, 11 Feb 2024 04:30:27 -0800 (PST)
 Received: from raven.intern.cm-ag (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id fj18-20020a0564022b9200b0056187ca4120sm1024611edb.10.2024.02.11.04.30.23
+        by smtp.gmail.com with ESMTPSA id fj18-20020a0564022b9200b0056187ca4120sm1024611edb.10.2024.02.11.04.30.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Feb 2024 04:30:23 -0800 (PST)
+        Sun, 11 Feb 2024 04:30:27 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: linux-kernel@vger.kernel.org
 Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v3 11/35] percpu_counter.h: move declarations to percpu_counter_types.h
-Date: Sun, 11 Feb 2024 13:29:36 +0100
-Message-Id: <20240211123000.3359365-12-max.kellermann@ionos.com>
+Subject: [PATCH v3 14/35] swait.h: move declarations to swait_types.h
+Date: Sun, 11 Feb 2024 13:29:39 +0100
+Message-Id: <20240211123000.3359365-15-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240211123000.3359365-1-max.kellermann@ionos.com>
 References: <20240211123000.3359365-1-max.kellermann@ionos.com>
@@ -74,208 +74,68 @@ dependencies.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- include/linux/backing-dev-defs.h     |  2 +-
- include/linux/flex_proportions.h     |  2 +-
- include/linux/ipc_namespace.h        |  2 +-
- include/linux/mm_types.h             |  3 ++-
- include/linux/percpu_counter.h       | 17 +------------
- include/linux/percpu_counter_types.h | 37 ++++++++++++++++++++++++++++
- include/linux/sched/user.h           |  2 +-
- include/linux/shmem_fs.h             |  2 +-
- kernel/user.c                        |  1 +
- lib/flex_proportions.c               |  1 +
- 10 files changed, 47 insertions(+), 22 deletions(-)
- create mode 100644 include/linux/percpu_counter_types.h
+ include/linux/swait.h       | 13 +------------
+ include/linux/swait_types.h | 20 ++++++++++++++++++++
+ 2 files changed, 21 insertions(+), 12 deletions(-)
+ create mode 100644 include/linux/swait_types.h
 
-diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
-index 68fdec049456..720a88bb3513 100644
---- a/include/linux/backing-dev-defs.h
-+++ b/include/linux/backing-dev-defs.h
-@@ -6,7 +6,7 @@
- #include <linux/radix-tree.h>
- #include <linux/rbtree_types.h>
+diff --git a/include/linux/swait.h b/include/linux/swait.h
+index 68c2e30edb1c..4a4a240b337e 100644
+--- a/include/linux/swait.h
++++ b/include/linux/swait.h
+@@ -2,6 +2,7 @@
+ #ifndef _LINUX_SWAIT_H
+ #define _LINUX_SWAIT_H
+ 
++#include <linux/swait_types.h>
+ #include <linux/list.h>
+ #include <linux/stddef.h>
  #include <linux/spinlock_types.h>
--#include <linux/percpu_counter.h>
-+#include <linux/percpu_counter_types.h>
- #include <linux/percpu-refcount.h>
- #include <linux/flex_proportions.h>
- #include <linux/timer_types.h>
-diff --git a/include/linux/flex_proportions.h b/include/linux/flex_proportions.h
-index 35204b64addf..df9017a61046 100644
---- a/include/linux/flex_proportions.h
-+++ b/include/linux/flex_proportions.h
-@@ -8,7 +8,7 @@
- #ifndef _LINUX_FLEX_PROPORTIONS_H
- #define _LINUX_FLEX_PROPORTIONS_H
- 
--#include <linux/percpu_counter.h>
-+#include <linux/percpu_counter_types.h>
- #include <linux/spinlock_types.h>
- #include <linux/seqlock_types.h>
- #include <linux/gfp_types.h>
-diff --git a/include/linux/ipc_namespace.h b/include/linux/ipc_namespace.h
-index a0011b6cd5d1..7c758ab565fe 100644
---- a/include/linux/ipc_namespace.h
-+++ b/include/linux/ipc_namespace.h
-@@ -11,7 +11,7 @@
- #include <linux/refcount.h>
- #include <linux/rhashtable-types.h>
- #include <linux/sysctl.h>
--#include <linux/percpu_counter.h>
-+#include <linux/percpu_counter_types.h>
- 
- struct user_namespace;
- 
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 54caee378e77..a88219770c82 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -19,7 +19,8 @@
- #include <linux/page-flags-layout.h>
- #include <linux/workqueue_types.h>
- #include <linux/seqlock_types.h>
--#include <linux/percpu_counter.h>
-+#include <linux/percpu_counter_types.h>
-+#include <linux/percpu.h>
- 
- #include <asm/mmu.h>
- 
-diff --git a/include/linux/percpu_counter.h b/include/linux/percpu_counter.h
-index 8d45785b3448..bec5e7cdd476 100644
---- a/include/linux/percpu_counter.h
-+++ b/include/linux/percpu_counter.h
-@@ -7,26 +7,15 @@
-  * WARNING: these things are HUGE.  4 kbytes per counter on 32-way P4.
+@@ -38,18 +39,6 @@
+  * wait queues in most cases.
   */
  
--#include <linux/spinlock_types.h>
--#include <linux/list.h>
-+#include <linux/percpu_counter_types.h>
- #include <linux/threads.h>
- #include <linux/percpu.h>
--#include <linux/types.h>
- 
- /* percpu_counter batch for local add or sub */
- #define PERCPU_COUNTER_LOCAL_BATCH	INT_MAX
- 
- #ifdef CONFIG_SMP
- 
--struct percpu_counter {
--	raw_spinlock_t lock;
--	s64 count;
--#ifdef CONFIG_HOTPLUG_CPU
--	struct list_head list;	/* All percpu_counters are on a list */
--#endif
--	s32 __percpu *counters;
+-struct task_struct;
+-
+-struct swait_queue_head {
+-	raw_spinlock_t		lock;
+-	struct list_head	task_list;
 -};
 -
- extern int percpu_counter_batch;
- 
- int __percpu_counter_init_many(struct percpu_counter *fbc, s64 amount,
-@@ -131,10 +120,6 @@ static inline bool percpu_counter_initialized(struct percpu_counter *fbc)
- 
- #else /* !CONFIG_SMP */
- 
--struct percpu_counter {
--	s64 count;
+-struct swait_queue {
+-	struct task_struct	*task;
+-	struct list_head	task_list;
 -};
 -
- static inline int percpu_counter_init_many(struct percpu_counter *fbc,
- 					   s64 amount, gfp_t gfp,
- 					   u32 nr_counters)
-diff --git a/include/linux/percpu_counter_types.h b/include/linux/percpu_counter_types.h
+ #define __SWAITQUEUE_INITIALIZER(name) {				\
+ 	.task		= current,					\
+ 	.task_list	= LIST_HEAD_INIT((name).task_list),		\
+diff --git a/include/linux/swait_types.h b/include/linux/swait_types.h
 new file mode 100644
-index 000000000000..faccd9869a5a
+index 000000000000..316038879a37
 --- /dev/null
-+++ b/include/linux/percpu_counter_types.h
-@@ -0,0 +1,37 @@
++++ b/include/linux/swait_types.h
+@@ -0,0 +1,20 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_PERCPU_COUNTER_TYPES_H
-+#define _LINUX_PERCPU_COUNTER_TYPES_H
-+/*
-+ * A simple "approximate counter" for use in ext2 and ext3 superblocks.
-+ *
-+ * WARNING: these things are HUGE.  4 kbytes per counter on 32-way P4.
-+ */
++#ifndef _LINUX_SWAIT_TYPES_H
++#define _LINUX_SWAIT_TYPES_H
 +
-+#include <linux/types.h>
-+
-+#ifdef CONFIG_SMP
-+
++#include <linux/list.h>
 +#include <linux/spinlock_types.h>
 +
-+#ifdef CONFIG_HOTPLUG_CPU
-+#include <linux/list.h>
-+#endif
++struct task_struct;
 +
-+struct percpu_counter {
-+	raw_spinlock_t lock;
-+	s64 count;
-+#ifdef CONFIG_HOTPLUG_CPU
-+	struct list_head list;	/* All percpu_counters are on a list */
-+#endif
-+	s32 __percpu *counters;
++struct swait_queue_head {
++	raw_spinlock_t		lock;
++	struct list_head	task_list;
 +};
 +
-+#else /* !CONFIG_SMP */
-+
-+struct percpu_counter {
-+	s64 count;
++struct swait_queue {
++	struct task_struct	*task;
++	struct list_head	task_list;
 +};
 +
-+#endif	/* CONFIG_SMP */
-+
-+#endif /* _LINUX_PERCPU_COUNTER_TYPES_H */
-diff --git a/include/linux/sched/user.h b/include/linux/sched/user.h
-index 671ecee08d23..913da0aba05c 100644
---- a/include/linux/sched/user.h
-+++ b/include/linux/sched/user.h
-@@ -4,7 +4,7 @@
- 
- #include <linux/uidgid_types.h>
- #include <linux/atomic.h>
--#include <linux/percpu_counter.h>
-+#include <linux/percpu_counter_types.h>
- #include <linux/refcount.h>
- #include <linux/ratelimit_types.h>
- 
-diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
-index 2caa6b86106a..1d7e56eab60f 100644
---- a/include/linux/shmem_fs.h
-+++ b/include/linux/shmem_fs.h
-@@ -6,7 +6,7 @@
- #include <linux/swap.h>
- #include <linux/mempolicy.h>
- #include <linux/pagemap.h>
--#include <linux/percpu_counter.h>
-+#include <linux/percpu_counter_types.h>
- #include <linux/xattr.h>
- #include <linux/fs_parser.h>
- #include <linux/userfaultfd_k.h>
-diff --git a/kernel/user.c b/kernel/user.c
-index 28da71ea1e74..6c8b818419f8 100644
---- a/kernel/user.c
-+++ b/kernel/user.c
-@@ -22,6 +22,7 @@
- #include <linux/proc_ns.h>
- #include <linux/ratelimit.h>
- #include <linux/uidgid.h>
-+#include <linux/percpu_counter.h>
- 
- #if IS_ENABLED(CONFIG_BINFMT_MISC)
- struct binfmt_misc init_binfmt_misc = {
-diff --git a/lib/flex_proportions.c b/lib/flex_proportions.c
-index 7749a48428e5..1d5e1e0bdbbe 100644
---- a/lib/flex_proportions.c
-+++ b/lib/flex_proportions.c
-@@ -36,6 +36,7 @@
- #include <linux/flex_proportions.h>
- #include <linux/log2.h>
- #include <linux/math64.h>
-+#include <linux/percpu_counter.h>
- #include <linux/seqlock.h>
- 
- int fprop_global_init(struct fprop_global *p, gfp_t gfp)
++#endif /* _LINUX_SWAIT_TYPES_H */
 -- 
 2.39.2
 
