@@ -1,63 +1,63 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEFE65F46B
-	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 12:30:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0622A5F49E
+	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 12:30:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707654643; cv=none; b=nfjCRzlly6na55vw+FAddoUdPgfsKKOjqNWVfxLiXUhQpEHkVSP48FjqAQuEzh4jPnHrDdDDxgArfyxtGRt+5DEsFl+WIO/GvfEliYdG5K3S06ZnlT6TxfDQZjx14qK+flivoK3P0OC9I5bLC3OecMs0Nb55eP7OV6mU36lq03w=
+	t=1707654646; cv=none; b=kz5vHA3w3kbBt7CpqSwVLto+Dpj/KDtFGK27TGbKKzcuq3g7LacgXGvGcE4+Pq8VU7VWWq4Kiy8o4VT8Kefh3wGUTPNR5ANiJQckkQOFLiJKocWPyzdGSVwAfhAr30RdGavVK157LWEq4xFMS3wZ3SWFjJKbFDNA4s4yN3pXazE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707654643; c=relaxed/simple;
-	bh=M+TCf4sn0Vj4ZvvDThMshhJMhSj/72BJZc8cZVfWfZY=;
+	s=arc-20240116; t=1707654646; c=relaxed/simple;
+	bh=k0CWYvaaB/gYg4+a4TXJ9LeyRASwAqQNiIxSmINjJE8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PeczU1LP+WanoZSEcJ+v/x4KNcqr/d2OqqqhJ05Koau15/ykOEd7nBTSOVzHIYWIgBvegsMzg49Sg88r3yelgRHE8Mj+j9go6+Tn/gTPj7o6gOzy5UDEeYPUmpI3bH+2YhUp1jWarOyKlIZMkuhCMGUGFUMJr17ZO0YIP4L4xP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=UUrRu1eJ; arc=none smtp.client-ip=209.85.208.46
+	 MIME-Version; b=kSM6d0JV/n2Iyz97Ou2NlyWDuQ1KCwzZM8LevKNkptrZxc083mtE1XTZoiwi1pkaK8YlzE/dKg3weUMRYh731Y/FKQwttdvjK0G7hru8F/GOJ2BKboDrpF8LeI7PEOW8UO9aVGuchrJpJAoNu+2u6stbToc28ePTd6aLoK/K/Ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=f6ZYB5xE; arc=none smtp.client-ip=209.85.208.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="UUrRu1eJ"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-56001b47285so3090104a12.1
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 04:30:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="f6ZYB5xE"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5610cc8cc1aso2398749a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 04:30:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1707654638; x=1708259438; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1707654640; x=1708259440; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=33wlCo9DUXvbQxRFpboMlES43uYj+ZzSbFUQMwIDJfY=;
-        b=UUrRu1eJcrf6c60uR2/5LPXvE7QQTN0E7utX5olfoM9ZvNOIxusRa6yCufNX2XTvOT
-         cJ7VJD9080wo8fIuec/x5qxQuYmVX/De9KFstCg09+XEA3GNDOftd3FNUNljRaeI/GVf
-         Yez3g6L28a3oGcwhrfhFSdX2bd1nfZf96hc8TVQ9HUlOZZ81CBXb/FcP5RjnHorVW0FD
-         mdFnJoUWGPLoXbUxI2fKHMhkoA8u8++hXbGrPz93IKq/orfa625hHZc92OZQS80XmA32
-         /eorzccEJEslXA1sdEHIJgfkU/bKStkG47Mezqd+mElwlR5qIkwalWv1vSZjnLDTzTLT
-         v0ww==
+        bh=ocDV0xt8N038gP+DLg6dR5T/0PL4+pEI/kg00OQd02E=;
+        b=f6ZYB5xE0VNf0k0hJMmX/jaIUNR7+6Lvo6P8SZ9aveFmBRpsOubfcyO216wwh+zvk0
+         DjPcM6Ev0r7pkyoxR40Rfm3dG5u+ZCuxByNP+LhLKrxhFiVz8IvZQsKIAkn/VBvoWgzM
+         blVGAjGXaOlPQOU7T9btTKRQmxfY6QR3GeXDR7LcZFsP87/ibinjzMW6N8+kBO6CkHDR
+         9HXQvW6IlST5edxuodGSb76gGhKFxZuA1jwUlZhL20GvzD18tWfiT0VwkIbE/OKyHUru
+         5QMF/hWu8xRRvnJ5dXobr6/ggoFgTKG+Tx1QHAEQr0bN+Di3JwSp3MFkIacsIs/1U191
+         WeUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707654638; x=1708259438;
+        d=1e100.net; s=20230601; t=1707654640; x=1708259440;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=33wlCo9DUXvbQxRFpboMlES43uYj+ZzSbFUQMwIDJfY=;
-        b=AxN/FvrUltN7yKeP9SkE7PhIfihh1lguh/2bZIro4XMLE5zUOzHJ0YUUmVZCcol86n
-         C7cuqo9lSRezP0iZtdqxvkNW0+PZtQUHBt+cDrC1uZaQo7iQZjYjABGFYpg1eXlO+4iW
-         g4TVyaAC7Ibwzalqq/M/UPRJXPvc3zNn1IL6OdY9e6dtVEHYhqrJbv3EvKMX4HyVcvS6
-         kPoXIyIHgi2vUBoK/D+qkhSJ4W5zwO2dk0nUIseSYecmuAVwRGEh5Y+stgGwSPP/mj1H
-         8hPbRBi5U1BBapp9z+rND26GEwtdBUxSlYw6f5xUliUpAgH70VK5RIgxWbQUjHpOo9jd
-         Y8OQ==
-X-Gm-Message-State: AOJu0YzJmQAMJAlOX6gECDtzr+4I95H93DF2IvskakNR4OHEFx5vBYhl
-	LtTe3+2t+Lp8IQk2SGSCbddrZCcXXVNvnPNhR+2cRnOCAgXqTzWE7AZeZXg6lTiZq06cxLgCZYZ
-	g
-X-Google-Smtp-Source: AGHT+IHFiXS59oWoO2QrM4VVY0M3eBYN7I22GPtIiCYHHzGdmhpShROaCr2XBpheKtm0a3KYKIYxxA==
-X-Received: by 2002:a05:6402:30b1:b0:561:9968:a1ec with SMTP id df17-20020a05640230b100b005619968a1ecmr841785edb.9.1707654638397;
-        Sun, 11 Feb 2024 04:30:38 -0800 (PST)
+        bh=ocDV0xt8N038gP+DLg6dR5T/0PL4+pEI/kg00OQd02E=;
+        b=LZdyFFIVu6OQcAeC+nbdfUZw7YW1LGVHmmRFgJHq2USnO/qzprY8opF59McN0zNDcs
+         GjS0G1Cr+6S9CMb2BSQA+TaJXPE63AKbkQO3H6AS+QEJCJv4rwbwldXTVSf9jNaQzeo/
+         Z3kq6SJmx8IFaVBvi2TuOw9+cDczkWRwWeBd5qOUw+WS0c3JmqsTmLpmMIS4+4XAVjKK
+         tKtfWj62sfuFPvXKQ/AxufVFLihfG5Y+1ZPQ2JAs3ByzJlOvOTH/aiLYMorNea+VCUZh
+         lHadddzcDpiHZl0kaoFoCen0vzQM6Qmc3PLhY6Ez17xMfYGWAAoRORRAtgpRByBXOKEP
+         kyKg==
+X-Gm-Message-State: AOJu0YyArOLhkMflyoOwUNlTRKZLHX3GnaixNfoAk+KFHTlW9MO8ZMhb
+	lhyJ0WbafTOa81Ml8h/cVsBRi0jeJaeTDWBF/ov6qi5rMxrBmM5ruudXFXC9kDypcChy2bz4qD0
+	b
+X-Google-Smtp-Source: AGHT+IF+2qODIq7AEyrYjDLlJFbCilNnKwTvHFdf3Bt01pRWV+uspWBkvefqlTflTWZmaIMLqkQ91w==
+X-Received: by 2002:a05:6402:128e:b0:561:2f3b:7221 with SMTP id w14-20020a056402128e00b005612f3b7221mr2438701edv.18.1707654640647;
+        Sun, 11 Feb 2024 04:30:40 -0800 (PST)
 Received: from raven.intern.cm-ag (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id fj18-20020a0564022b9200b0056187ca4120sm1024611edb.10.2024.02.11.04.30.36
+        by smtp.gmail.com with ESMTPSA id fj18-20020a0564022b9200b0056187ca4120sm1024611edb.10.2024.02.11.04.30.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Feb 2024 04:30:37 -0800 (PST)
+        Sun, 11 Feb 2024 04:30:40 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: linux-kernel@vger.kernel.org
 Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v3 24/35] list_lru.h: move declarations to list_lru_types.h
-Date: Sun, 11 Feb 2024 13:29:49 +0100
-Message-Id: <20240211123000.3359365-25-max.kellermann@ionos.com>
+Subject: [PATCH v3 26/35] percpu-rwsem.h: move declarations to percpu-rwsem_types.h
+Date: Sun, 11 Feb 2024 13:29:51 +0100
+Message-Id: <20240211123000.3359365-27-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240211123000.3359365-1-max.kellermann@ionos.com>
 References: <20240211123000.3359365-1-max.kellermann@ionos.com>
@@ -74,143 +74,85 @@ dependencies.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- fs/super.c                     |  1 +
- include/linux/fs.h             |  2 +-
- include/linux/list_lru.h       | 36 +----------------------------
- include/linux/list_lru_types.h | 42 ++++++++++++++++++++++++++++++++++
- 4 files changed, 45 insertions(+), 36 deletions(-)
- create mode 100644 include/linux/list_lru_types.h
+ include/linux/cgroup-defs.h        |  2 +-
+ include/linux/percpu-rwsem.h       | 15 +--------------
+ include/linux/percpu-rwsem_types.h | 24 ++++++++++++++++++++++++
+ 3 files changed, 26 insertions(+), 15 deletions(-)
+ create mode 100644 include/linux/percpu-rwsem_types.h
 
-diff --git a/fs/super.c b/fs/super.c
-index 2ab97cc49374..6a8cc1c49940 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -34,6 +34,7 @@
- #include <linux/rculist_bl.h>
- #include <linux/fscrypt.h>
- #include <linux/fsnotify.h>
-+#include <linux/list_lru.h>
+diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
+index 878deefba0e1..691c50aeafae 100644
+--- a/include/linux/cgroup-defs.h
++++ b/include/linux/cgroup-defs.h
+@@ -16,7 +16,7 @@
+ #include <linux/rcupdate.h>
+ #include <linux/refcount_types.h>
+ #include <linux/percpu-refcount_types.h>
+-#include <linux/percpu-rwsem.h>
++#include <linux/percpu-rwsem_types.h>
+ #include <linux/u64_stats_sync.h>
+ #include <linux/workqueue.h>
+ #include <linux/bpf-cgroup-defs.h>
+diff --git a/include/linux/percpu-rwsem.h b/include/linux/percpu-rwsem.h
+index 36b942b67b7d..0f427bd5217a 100644
+--- a/include/linux/percpu-rwsem.h
++++ b/include/linux/percpu-rwsem.h
+@@ -2,24 +2,11 @@
+ #ifndef _LINUX_PERCPU_RWSEM_H
+ #define _LINUX_PERCPU_RWSEM_H
+ 
++#include <linux/percpu-rwsem_types.h>
+ #include <linux/atomic.h>
+ #include <linux/percpu.h>
+-#include <linux/rcuwait.h>
+-#include <linux/wait.h>
+-#include <linux/rcu_sync.h>
  #include <linux/lockdep.h>
- #include <linux/user_namespace.h>
- #include <linux/fs_context.h>
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 5862fe2c82d5..1cfe76f7544e 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -10,7 +10,7 @@
- #include <linux/stat.h>
- #include <linux/cache.h>
- #include <linux/list.h>
--#include <linux/list_lru.h>
-+#include <linux/list_lru_types.h>
- #include <linux/llist.h>
- #include <linux/xarray.h>
- #include <linux/rbtree.h>
-diff --git a/include/linux/list_lru.h b/include/linux/list_lru.h
-index 5e8cd106dae4..bb348492037f 100644
---- a/include/linux/list_lru.h
-+++ b/include/linux/list_lru.h
-@@ -8,14 +8,10 @@
- #ifndef _LRU_LIST_H
- #define _LRU_LIST_H
  
--#include <linux/list.h>
-+#include <linux/list_lru_types.h>
- #include <linux/nodemask.h>
- #include <linux/shrinker.h>
- 
--#ifdef CONFIG_MEMCG_KMEM
--#include <linux/xarray_types.h>
--#endif
--
- struct mem_cgroup;
- 
- /* list_lru_walk_cb has to always return one of those */
-@@ -31,36 +27,6 @@ enum lru_status {
- 				   internally, but has to return locked. */
- };
- 
--struct list_lru_one {
--	struct list_head	list;
--	/* may become negative during memcg reparenting */
--	long			nr_items;
--};
--
--struct list_lru_memcg {
--	struct rcu_head		rcu;
--	/* array of per cgroup per node lists, indexed by node id */
--	struct list_lru_one	node[];
--};
--
--struct list_lru_node {
--	/* protects all lists on the node, including per cgroup */
--	spinlock_t		lock;
--	/* global list, used for the root cgroup in cgroup aware lrus */
--	struct list_lru_one	lru;
--	long			nr_items;
--} ____cacheline_aligned_in_smp;
--
--struct list_lru {
--	struct list_lru_node	*node;
--#ifdef CONFIG_MEMCG_KMEM
--	struct list_head	list;
--	int			shrinker_id;
--	bool			memcg_aware;
--	struct xarray		xa;
+-struct percpu_rw_semaphore {
+-	struct rcu_sync		rss;
+-	unsigned int __percpu	*read_count;
+-	struct rcuwait		writer;
+-	wait_queue_head_t	waiters;
+-	atomic_t		block;
+-#ifdef CONFIG_DEBUG_LOCK_ALLOC
+-	struct lockdep_map	dep_map;
 -#endif
 -};
 -
- void list_lru_destroy(struct list_lru *lru);
- int __list_lru_init(struct list_lru *lru, bool memcg_aware,
- 		    struct lock_class_key *key, struct shrinker *shrinker);
-diff --git a/include/linux/list_lru_types.h b/include/linux/list_lru_types.h
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+ #define __PERCPU_RWSEM_DEP_MAP_INIT(lockname)	.dep_map = { .name = #lockname },
+ #else
+diff --git a/include/linux/percpu-rwsem_types.h b/include/linux/percpu-rwsem_types.h
 new file mode 100644
-index 000000000000..51ccef0d6994
+index 000000000000..0716d08b758b
 --- /dev/null
-+++ b/include/linux/list_lru_types.h
-@@ -0,0 +1,42 @@
++++ b/include/linux/percpu-rwsem_types.h
+@@ -0,0 +1,24 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LRU_LIST_TYPES_H
-+#define _LRU_LIST_TYPES_H
++#ifndef _LINUX_PERCPU_RWSEM_TYPES_H
++#define _LINUX_PERCPU_RWSEM_TYPES_H
 +
-+#include <linux/list.h>
-+
-+#ifdef CONFIG_MEMCG_KMEM
-+#include <linux/types.h> // for bool
-+#include <linux/xarray_types.h>
++#include <linux/rcu_sync.h>
++#include <linux/rcuwait.h>
++#include <linux/types.h>
++#include <linux/wait_types.h>
++#ifdef CONFIG_DEBUG_LOCK_ALLOC
++#include <linux/lockdep_types.h>
 +#endif
 +
-+struct list_lru_one {
-+	struct list_head	list;
-+	/* may become negative during memcg reparenting */
-+	long			nr_items;
-+};
-+
-+struct list_lru_memcg {
-+	struct rcu_head		rcu;
-+	/* array of per cgroup per node lists, indexed by node id */
-+	struct list_lru_one	node[];
-+};
-+
-+struct list_lru_node {
-+	/* protects all lists on the node, including per cgroup */
-+	spinlock_t		lock;
-+	/* global list, used for the root cgroup in cgroup aware lrus */
-+	struct list_lru_one	lru;
-+	long			nr_items;
-+} ____cacheline_aligned_in_smp;
-+
-+struct list_lru {
-+	struct list_lru_node	*node;
-+#ifdef CONFIG_MEMCG_KMEM
-+	struct list_head	list;
-+	int			shrinker_id;
-+	bool			memcg_aware;
-+	struct xarray		xa;
++struct percpu_rw_semaphore {
++	struct rcu_sync		rss;
++	unsigned int __percpu	*read_count;
++	struct rcuwait		writer;
++	wait_queue_head_t	waiters;
++	atomic_t		block;
++#ifdef CONFIG_DEBUG_LOCK_ALLOC
++	struct lockdep_map	dep_map;
 +#endif
 +};
 +
-+#endif /* _LRU_LIST_TYPES_H */
++#endif
 -- 
 2.39.2
 
