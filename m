@@ -1,63 +1,63 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F44117566
-	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 23:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAEED17996
+	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 23:15:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707693342; cv=none; b=jZnYmh/FtPORkxMa09kcKweYvkctgBMbw8J/tEJ8ndi0+wb07fWCcV2AnRM8eXXNiE4OLZ8/Dy6MXACzIGHAzRKNPYlgLmE45JFqrlKmgoNYUkyujq9VzJnjtoATXSwYzZfUa8R0dZBXLAmYUqWGo4hvwOs/pd1cfb3OAneNkag=
+	t=1707693348; cv=none; b=JpWSbqy8EywMuhn15vGGCCOkyH89BHhRSzKN9JYLsfaOpnBWLCJBsBQ3WXadwKX/yasiQb4AkEcwfFtMx76DoHgCy+TskCpvUwJKxOz7WwksNrRojqMqIxn4BvYbaHpKOpXh32tJYL4+MImL6mFyB3uigVzd/GydqGvfeeYgqkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707693342; c=relaxed/simple;
-	bh=FlfryTRGDdyF0z2mZ9UhX2PTECwgKYOqoLIQpD1+7dk=;
+	s=arc-20240116; t=1707693348; c=relaxed/simple;
+	bh=sm5m4u4t8eFbR2gjJprfwSpii3UwlxNYAW+qpTdBofY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rpKJwf81mClps6krV/TX6R47nsmxgVBbeAxPqhyniWmSqp1Z0onN5ZohsUnwqw2TsysXFlSI3oHcA4h5L6x+MAum0Pe+botk5AqIEPWV9LPG+t7C8m1ct+1+cyr49xwn+Aweyn4Plusd5kbHB3248E0OKjUrLpDudF/QKxzxueI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=JpIABkxY; arc=none smtp.client-ip=209.85.208.43
+	 MIME-Version; b=GHwRC9qSZIpoxZ2VaQxSTRYQv4j2lxwIx8MogxZOXkkdyTOxBqL1Di6fdFHQw9OkPdJpkGdkTo3HmVKsy7IpP+EDwXIK4bPtoET3X17kcjEl+MFKuQ3aJSVIojjudl+oBkVHlkJ0Ah1QxYkdrHSRA0cMB/jOhQeRHbmQ7zjFei4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=FlvLRcp9; arc=none smtp.client-ip=209.85.208.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="JpIABkxY"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5601eb97b29so4810426a12.0
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 15:15:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="FlvLRcp9"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5600d950442so2895293a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 15:15:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1707693337; x=1708298137; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1707693343; x=1708298143; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zxG16Tl9aF75BCbOOBZ8CaUnNnP0NXfy2/Hg/yLLjHQ=;
-        b=JpIABkxYDI50uitvKWR9QD+CRoVKYZTNCXVNI8WpD4+g+KJOq40irgQl+GuYojgl/8
-         iDO+dJLku6kuCQx61C9HN7swd+gfN/qseIBZDSg8P4G1vteTR1zTiDDqNggZAmMlbSvp
-         BoJ9++/ZNeSx91EupDOAhCphXeXiF9F/X7jfKQ8KrUHNlGk8mWTPwNyZ3CWitlj9FDBk
-         PsdVMOo4WCxMVdRyObT+a84eJvBhD3QBtA6CL1ETrs9sUNSd8XRpwNAwkQfHcVIZTypl
-         7syovCYgobvRmJt0dZ3zuxT6uQ+HnBajcaqMPI0U0tzKe6l5X3bJ4fk/2E6t4K4KQWC6
-         S9qg==
+        bh=6Sd3F7Cnejo0YUOQY1FFsProakPDnxze1sPdzTvGqZE=;
+        b=FlvLRcp9ESItTAwkhDDg/wfQE4p3YA1jx5f+cV4qygWjk2Sf6l59Qhukcg+5InS5WI
+         mPfyy2GMVLT0gYlaYIFjESuuyYLXKS2amb0NekNNWJQIGlnFIp8aYZnD7/UfGlV5MP8j
+         uASg+16bqnCJo4C+mMocL9LYKWxvvffXhDPDQZKClMJBfSWAv//HsmvbrJDC1zvD5xLj
+         8kR0fbszZxDjZNJQdwXL6C6ltk1+MYU4HX+J2nQ3GrABhpxpRU6p8zosq6o59lw1hBU/
+         VK4E4avNonbWJfx7H+J/wMgDfprbWlN3lhYd1kk1tQXSHhvOMTYRzwqfl0hkJDbhAtRI
+         z74w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707693337; x=1708298137;
+        d=1e100.net; s=20230601; t=1707693343; x=1708298143;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zxG16Tl9aF75BCbOOBZ8CaUnNnP0NXfy2/Hg/yLLjHQ=;
-        b=PvnVSgXIOVVOl3SCYNdBV1/bcSW59YeNTaFf4ZFWUt1ummanwmglFPP9HAa8nhX7vz
-         eCLBzL2PPO2EE3kpo5+YEDapRcaVWAelOa//dzipHldCsp3lKKxURCXxnV0JK/eh3SOv
-         0C1wWhCWdebjjc1nfxfMpwlFbAXZJcbRwKy5C7S/sxYOr0nASBZi1gp08W90DO+gcXe7
-         dMSr/IRFq/8sY0gxEoBlru0Y17sJaY4igyFWMTzF9jtZuQYVX7CbyG2YaBGvTvxPvjua
-         bEXFW4yCwAlGsNMBRwJER/pNqKL4KpZJ1Jp0V7uRFY9FnwtkR0KARlR6Y5cP95bg66c+
-         y5/Q==
-X-Gm-Message-State: AOJu0Yw2sjBvYh6FKisKMiA0Yk0KhmLnvH/DvsxplKG+WJyjipcz2r7O
-	WczWaI3NEPt64e8povrnJ4Gpas6ooU1l3jVzRiAa4lcE/Z3sxMM9U/qmH6URnwC540MlEi2YihW
-	+
-X-Google-Smtp-Source: AGHT+IGe+ZRGn5wadw4ZGok1jNrrk3mjIFQL/aRpFESoTxsEQqHuU4jCZZDGh6m603/hv8IyKqbNAg==
-X-Received: by 2002:a05:6402:528d:b0:561:64e6:b5c with SMTP id en13-20020a056402528d00b0056164e60b5cmr4726904edb.7.1707693337546;
-        Sun, 11 Feb 2024 15:15:37 -0800 (PST)
+        bh=6Sd3F7Cnejo0YUOQY1FFsProakPDnxze1sPdzTvGqZE=;
+        b=QqjAXkz+DEOr532he38y4n0EBr6UwriiHPBSM4+cOPShYs0bLeJaCu6wbgrAzPe4WY
+         atg8d/HdYVGw6TylaioTrMcUCmFx54dSgXf0EPtfye8qgGO/HFpS/DTaFHZ185Zegm6l
+         Pgnb46cmZKviMEUz4LNls6w4E1SrDtF26i2xW3LA184UoaPJfuVJ/M0L7/nTe0jwvT5A
+         PDqHPrwaOlbSqcfYBvpoW7epfcZ9K8YqB5GEJvWGGHpG4yA9yiybq1AkbLL/3vTDsV1r
+         ud9y4Ucuy6LM3S/JMmDcym+s44GY8zLHTAjRmTllvsQjTHurlYd5VttbSQYO4hNL6gqT
+         C/dg==
+X-Gm-Message-State: AOJu0YxUYeoOebyxtkiJ3eY8jyfP+XGM/OmtAfcKWiNUdpwwA7SFOzge
+	S2IkqwteWkEo8hMLDh0jHAVwvyxVxnYwCfGtPKphPbvkE9lDwNhUbbX0I1meWSF+FZnTGV1dwHF
+	8
+X-Google-Smtp-Source: AGHT+IFVD6dhA7AvgyQGGcNLirz+n3DBmYgKZL2CMl94ii/SInxDufLyQnxAyl+ZNhth4edUEo8kaA==
+X-Received: by 2002:aa7:c383:0:b0:55f:e432:4cac with SMTP id k3-20020aa7c383000000b0055fe4324cacmr4137515edq.37.1707693343779;
+        Sun, 11 Feb 2024 15:15:43 -0800 (PST)
 Received: from raven.blarg.de (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id et13-20020a056402378d00b0055d19c9daf2sm2170180edb.15.2024.02.11.15.15.35
+        by smtp.gmail.com with ESMTPSA id et13-20020a056402378d00b0055d19c9daf2sm2170180edb.15.2024.02.11.15.15.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Feb 2024 15:15:36 -0800 (PST)
+        Sun, 11 Feb 2024 15:15:43 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: linux-kernel@vger.kernel.org
 Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v4 07/35] sysfs.h: move declarations to sysfs_types.h
-Date: Mon, 12 Feb 2024 00:14:50 +0100
-Message-Id: <20240211231518.349442-8-max.kellermann@ionos.com>
+Subject: [PATCH v4 11/35] percpu_counter.h: move declarations to percpu_counter_types.h
+Date: Mon, 12 Feb 2024 00:14:54 +0100
+Message-Id: <20240211231518.349442-12-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240211231518.349442-1-max.kellermann@ionos.com>
 References: <20240211231518.349442-1-max.kellermann@ionos.com>
@@ -74,392 +74,208 @@ dependencies.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- drivers/firmware/dmi-sysfs.c    |  1 +
- drivers/firmware/memmap.c       |  1 +
- drivers/input/vivaldi-fmap.c    |  1 +
- include/linux/device/bus.h      |  2 +-
- include/linux/iio/buffer_impl.h |  3 +-
- include/linux/kobject.h         |  2 +-
- include/linux/module.h          |  2 +-
- include/linux/perf_event.h      |  2 +-
- include/linux/sysfs.h           | 63 +----------------------
- include/linux/sysfs_types.h     | 89 +++++++++++++++++++++++++++++++++
- include/linux/thermal.h         |  2 +-
- include/net/netdev_rx_queue.h   |  2 +-
- include/rdma/ib_sysfs.h         |  2 +-
- kernel/kheaders.c               |  1 +
- lib/kobject.c                   |  1 +
- mm/cma_sysfs.c                  |  1 +
- 16 files changed, 105 insertions(+), 70 deletions(-)
- create mode 100644 include/linux/sysfs_types.h
+ include/linux/backing-dev-defs.h     |  2 +-
+ include/linux/flex_proportions.h     |  2 +-
+ include/linux/ipc_namespace.h        |  2 +-
+ include/linux/mm_types.h             |  3 ++-
+ include/linux/percpu_counter.h       | 17 +------------
+ include/linux/percpu_counter_types.h | 37 ++++++++++++++++++++++++++++
+ include/linux/sched/user.h           |  2 +-
+ include/linux/shmem_fs.h             |  2 +-
+ kernel/user.c                        |  1 +
+ lib/flex_proportions.c               |  1 +
+ 10 files changed, 47 insertions(+), 22 deletions(-)
+ create mode 100644 include/linux/percpu_counter_types.h
 
-diff --git a/drivers/firmware/dmi-sysfs.c b/drivers/firmware/dmi-sysfs.c
-index b6a72128e818..158cc26a0331 100644
---- a/drivers/firmware/dmi-sysfs.c
-+++ b/drivers/firmware/dmi-sysfs.c
-@@ -25,6 +25,7 @@
- #include <linux/dmi.h>
- #include <linux/capability.h>
- #include <linux/slab.h>
-+#include <linux/sysfs.h>
- #include <linux/list.h>
- #include <linux/io.h>
- #include <asm/dmi.h>
-diff --git a/drivers/firmware/memmap.c b/drivers/firmware/memmap.c
-index 4cf473815372..a188b204a012 100644
---- a/drivers/firmware/memmap.c
-+++ b/drivers/firmware/memmap.c
-@@ -14,6 +14,7 @@
- #include <linux/types.h>
- #include <linux/memblock.h>
- #include <linux/slab.h>
-+#include <linux/sysfs.h>
- #include <linux/mm.h>
- 
- /*
-diff --git a/drivers/input/vivaldi-fmap.c b/drivers/input/vivaldi-fmap.c
-index 0d29ec014e2f..72845c0720f2 100644
---- a/drivers/input/vivaldi-fmap.c
-+++ b/drivers/input/vivaldi-fmap.c
-@@ -9,6 +9,7 @@
- #include <linux/input/vivaldi-fmap.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/sysfs.h>
- #include <linux/types.h>
- 
- /**
-diff --git a/include/linux/device/bus.h b/include/linux/device/bus.h
-index bdd8ac64f629..a6fc75a825a3 100644
---- a/include/linux/device/bus.h
-+++ b/include/linux/device/bus.h
-@@ -16,7 +16,7 @@
- 
- #include <linux/klist.h>
- #include <linux/pm.h>
--#include <linux/sysfs.h> // for struct attribute
-+#include <linux/sysfs_types.h> // for struct attribute
- 
- struct device_driver;
- struct device_node;
-diff --git a/include/linux/iio/buffer_impl.h b/include/linux/iio/buffer_impl.h
-index 184f8c399854..df4cad6a8c8e 100644
---- a/include/linux/iio/buffer_impl.h
-+++ b/include/linux/iio/buffer_impl.h
-@@ -1,7 +1,8 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #ifndef _IIO_BUFFER_GENERIC_IMPL_H_
- #define _IIO_BUFFER_GENERIC_IMPL_H_
--#include <linux/sysfs.h>
-+
-+#include <linux/sysfs_types.h> // for struct attribute_group
- #include <linux/kref_types.h>
- 
- #ifdef CONFIG_IIO_BUFFER
-diff --git a/include/linux/kobject.h b/include/linux/kobject.h
-index cd29809a05e4..462a2d604b03 100644
---- a/include/linux/kobject.h
-+++ b/include/linux/kobject.h
-@@ -18,7 +18,7 @@
- #include <linux/kobject_types.h>
- #include <linux/types.h>
- #include <linux/list.h>
--#include <linux/sysfs.h>
-+#include <linux/sysfs_types.h> // for struct attribute
- #include <linux/compiler.h>
- #include <linux/container_of.h>
+diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
+index 68fdec049456..720a88bb3513 100644
+--- a/include/linux/backing-dev-defs.h
++++ b/include/linux/backing-dev-defs.h
+@@ -6,7 +6,7 @@
+ #include <linux/radix-tree.h>
+ #include <linux/rbtree_types.h>
  #include <linux/spinlock_types.h>
-diff --git a/include/linux/module.h b/include/linux/module.h
-index 426d3bdf83bb..ba3c0d129cb5 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -27,7 +27,7 @@
- #include <linux/tracepoint-defs.h>
- #include <linux/srcu.h>
- #include <linux/static_call_types.h>
--#include <linux/sysfs.h> // for struct attribute
-+#include <linux/sysfs_types.h> // for struct attribute
- #include <linux/dynamic_debug.h>
+-#include <linux/percpu_counter.h>
++#include <linux/percpu_counter_types.h>
+ #include <linux/percpu-refcount.h>
+ #include <linux/flex_proportions.h>
+ #include <linux/timer_types.h>
+diff --git a/include/linux/flex_proportions.h b/include/linux/flex_proportions.h
+index 35204b64addf..df9017a61046 100644
+--- a/include/linux/flex_proportions.h
++++ b/include/linux/flex_proportions.h
+@@ -8,7 +8,7 @@
+ #ifndef _LINUX_FLEX_PROPORTIONS_H
+ #define _LINUX_FLEX_PROPORTIONS_H
  
+-#include <linux/percpu_counter.h>
++#include <linux/percpu_counter_types.h>
+ #include <linux/spinlock_types.h>
+ #include <linux/seqlock_types.h>
+ #include <linux/gfp_types.h>
+diff --git a/include/linux/ipc_namespace.h b/include/linux/ipc_namespace.h
+index a0011b6cd5d1..7c758ab565fe 100644
+--- a/include/linux/ipc_namespace.h
++++ b/include/linux/ipc_namespace.h
+@@ -11,7 +11,7 @@
+ #include <linux/refcount.h>
+ #include <linux/rhashtable-types.h>
+ #include <linux/sysctl.h>
+-#include <linux/percpu_counter.h>
++#include <linux/percpu_counter_types.h>
+ 
+ struct user_namespace;
+ 
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 54caee378e77..a88219770c82 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -19,7 +19,8 @@
+ #include <linux/page-flags-layout.h>
+ #include <linux/workqueue_types.h>
+ #include <linux/seqlock_types.h>
+-#include <linux/percpu_counter.h>
++#include <linux/percpu_counter_types.h>
++#include <linux/percpu.h>
+ 
+ #include <asm/mmu.h>
+ 
+diff --git a/include/linux/percpu_counter.h b/include/linux/percpu_counter.h
+index 8d45785b3448..bec5e7cdd476 100644
+--- a/include/linux/percpu_counter.h
++++ b/include/linux/percpu_counter.h
+@@ -7,26 +7,15 @@
+  * WARNING: these things are HUGE.  4 kbytes per counter on 32-way P4.
+  */
+ 
+-#include <linux/spinlock_types.h>
+-#include <linux/list.h>
++#include <linux/percpu_counter_types.h>
+ #include <linux/threads.h>
  #include <linux/percpu.h>
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index eaf5d5f76e0e..b3aec977b0e4 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -55,7 +55,7 @@ struct perf_guest_info_callbacks {
- #include <linux/static_key.h>
- #include <linux/jump_label_ratelimit.h>
- #include <linux/atomic.h>
--#include <linux/sysfs.h>
-+#include <linux/sysfs_types.h>
- #include <linux/perf_regs.h>
- #include <linux/cgroup.h>
- #include <linux/refcount_types.h>
-diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
-index 6fed6884d2e6..0500b023b5cc 100644
---- a/include/linux/sysfs.h
-+++ b/include/linux/sysfs.h
-@@ -13,6 +13,7 @@
- #ifndef _SYSFS_H_
- #define _SYSFS_H_
+-#include <linux/types.h>
  
-+#include <linux/sysfs_types.h>
- #include <linux/kernfs.h>
- #include <linux/kernel.h> // for VERIFY_OCTAL_PERMISSIONS()
- #include <linux/compiler.h>
-@@ -23,16 +24,6 @@ struct kobject;
- struct module;
- struct bin_attribute;
+ /* percpu_counter batch for local add or sub */
+ #define PERCPU_COUNTER_LOCAL_BATCH	INT_MAX
  
--struct attribute {
--	const char		*name;
--	umode_t			mode;
--#ifdef CONFIG_DEBUG_LOCK_ALLOC
--	bool			ignore_lockdep:1;
--	struct lock_class_key	*key;
--	struct lock_class_key	skey;
+ #ifdef CONFIG_SMP
+ 
+-struct percpu_counter {
+-	raw_spinlock_t lock;
+-	s64 count;
+-#ifdef CONFIG_HOTPLUG_CPU
+-	struct list_head list;	/* All percpu_counters are on a list */
 -#endif
+-	s32 __percpu *counters;
 -};
 -
- /**
-  *	sysfs_attr_init - initialize a dynamically allocated sysfs attribute
-  *	@attr: struct attribute to initialize
-@@ -54,39 +45,6 @@ do {							\
- #define sysfs_attr_init(attr) do {} while (0)
- #endif
+ extern int percpu_counter_batch;
  
--/**
-- * struct attribute_group - data structure used to declare an attribute group.
-- * @name:	Optional: Attribute group name
-- *		If specified, the attribute group will be created in
-- *		a new subdirectory with this name.
-- * @is_visible:	Optional: Function to return permissions associated with an
-- *		attribute of the group. Will be called repeatedly for each
-- *		non-binary attribute in the group. Only read/write
-- *		permissions as well as SYSFS_PREALLOC are accepted. Must
-- *		return 0 if an attribute is not visible. The returned value
-- *		will replace static permissions defined in struct attribute.
-- * @is_bin_visible:
-- *		Optional: Function to return permissions associated with a
-- *		binary attribute of the group. Will be called repeatedly
-- *		for each binary attribute in the group. Only read/write
-- *		permissions as well as SYSFS_PREALLOC are accepted. Must
-- *		return 0 if a binary attribute is not visible. The returned
-- *		value will replace static permissions defined in
-- *		struct bin_attribute.
-- * @attrs:	Pointer to NULL terminated list of attributes.
-- * @bin_attrs:	Pointer to NULL terminated list of binary attributes.
-- *		Either attrs or bin_attrs or both must be provided.
-- */
--struct attribute_group {
--	const char		*name;
--	umode_t			(*is_visible)(struct kobject *,
--					      struct attribute *, int);
--	umode_t			(*is_bin_visible)(struct kobject *,
--						  struct bin_attribute *, int);
--	struct attribute	**attrs;
--	struct bin_attribute	**bin_attrs;
--};
--
- /*
-  * Use these macros to make defining attributes easier.
-  * See include/linux/device.h for examples..
-@@ -164,25 +122,6 @@ static const struct attribute_group _name##_group = {		\
- };								\
- __ATTRIBUTE_GROUPS(_name)
+ int __percpu_counter_init_many(struct percpu_counter *fbc, s64 amount,
+@@ -131,10 +120,6 @@ static inline bool percpu_counter_initialized(struct percpu_counter *fbc)
  
--struct file;
--struct vm_area_struct;
--struct address_space;
--
--struct bin_attribute {
--	struct attribute	attr;
--	size_t			size;
--	void			*private;
--	struct address_space *(*f_mapping)(void);
--	ssize_t (*read)(struct file *, struct kobject *, struct bin_attribute *,
--			char *, loff_t, size_t);
--	ssize_t (*write)(struct file *, struct kobject *, struct bin_attribute *,
--			 char *, loff_t, size_t);
--	loff_t (*llseek)(struct file *, struct kobject *, struct bin_attribute *,
--			 loff_t, int);
--	int (*mmap)(struct file *, struct kobject *, struct bin_attribute *attr,
--		    struct vm_area_struct *vma);
+ #else /* !CONFIG_SMP */
+ 
+-struct percpu_counter {
+-	s64 count;
 -};
 -
- /**
-  *	sysfs_bin_attr_init - initialize a dynamically allocated bin_attribute
-  *	@attr: struct bin_attribute to initialize
-diff --git a/include/linux/sysfs_types.h b/include/linux/sysfs_types.h
+ static inline int percpu_counter_init_many(struct percpu_counter *fbc,
+ 					   s64 amount, gfp_t gfp,
+ 					   u32 nr_counters)
+diff --git a/include/linux/percpu_counter_types.h b/include/linux/percpu_counter_types.h
 new file mode 100644
-index 000000000000..2840a1935ea1
+index 000000000000..faccd9869a5a
 --- /dev/null
-+++ b/include/linux/sysfs_types.h
-@@ -0,0 +1,89 @@
++++ b/include/linux/percpu_counter_types.h
+@@ -0,0 +1,37 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_PERCPU_COUNTER_TYPES_H
++#define _LINUX_PERCPU_COUNTER_TYPES_H
 +/*
-+ * sysfs.h - definitions for the device driver filesystem
++ * A simple "approximate counter" for use in ext2 and ext3 superblocks.
 + *
-+ * Copyright (c) 2001,2002 Patrick Mochel
-+ * Copyright (c) 2004 Silicon Graphics, Inc.
-+ * Copyright (c) 2007 SUSE Linux Products GmbH
-+ * Copyright (c) 2007 Tejun Heo <teheo@suse.de>
-+ *
-+ * Please see Documentation/filesystems/sysfs.rst for more information.
++ * WARNING: these things are HUGE.  4 kbytes per counter on 32-way P4.
 + */
-+
-+#ifndef _SYSFS_TYPES_H_
-+#define _SYSFS_TYPES_H_
 +
 +#include <linux/types.h>
-+#include <linux/lockdep_types.h>
 +
-+struct kobject;
-+struct module;
-+struct bin_attribute;
++#ifdef CONFIG_SMP
 +
-+struct attribute {
-+	const char		*name;
-+	umode_t			mode;
-+#ifdef CONFIG_DEBUG_LOCK_ALLOC
-+	bool			ignore_lockdep:1;
-+	struct lock_class_key	*key;
-+	struct lock_class_key	skey;
++#include <linux/spinlock_types.h>
++
++#ifdef CONFIG_HOTPLUG_CPU
++#include <linux/list.h>
 +#endif
-+};
 +
-+/**
-+ * struct attribute_group - data structure used to declare an attribute group.
-+ * @name:	Optional: Attribute group name
-+ *		If specified, the attribute group will be created in
-+ *		a new subdirectory with this name.
-+ * @is_visible:	Optional: Function to return permissions associated with an
-+ *		attribute of the group. Will be called repeatedly for each
-+ *		non-binary attribute in the group. Only read/write
-+ *		permissions as well as SYSFS_PREALLOC are accepted. Must
-+ *		return 0 if an attribute is not visible. The returned value
-+ *		will replace static permissions defined in struct attribute.
-+ * @is_bin_visible:
-+ *		Optional: Function to return permissions associated with a
-+ *		binary attribute of the group. Will be called repeatedly
-+ *		for each binary attribute in the group. Only read/write
-+ *		permissions as well as SYSFS_PREALLOC are accepted. Must
-+ *		return 0 if a binary attribute is not visible. The returned
-+ *		value will replace static permissions defined in
-+ *		struct bin_attribute.
-+ * @attrs:	Pointer to NULL terminated list of attributes.
-+ * @bin_attrs:	Pointer to NULL terminated list of binary attributes.
-+ *		Either attrs or bin_attrs or both must be provided.
-+ */
-+struct attribute_group {
-+	const char		*name;
-+	umode_t			(*is_visible)(struct kobject *,
-+					      struct attribute *, int);
-+	umode_t			(*is_bin_visible)(struct kobject *,
-+						  struct bin_attribute *, int);
-+	struct attribute	**attrs;
-+	struct bin_attribute	**bin_attrs;
-+};
-+
-+struct file;
-+struct vm_area_struct;
-+struct address_space;
-+
-+struct bin_attribute {
-+	struct attribute	attr;
-+	size_t			size;
-+#ifdef __cplusplus
-+	void			*private_;
-+#else
-+	void			*private;
++struct percpu_counter {
++	raw_spinlock_t lock;
++	s64 count;
++#ifdef CONFIG_HOTPLUG_CPU
++	struct list_head list;	/* All percpu_counters are on a list */
 +#endif
-+	struct address_space *(*f_mapping)(void);
-+	ssize_t (*read)(struct file *, struct kobject *, struct bin_attribute *,
-+			char *, loff_t, size_t);
-+	ssize_t (*write)(struct file *, struct kobject *, struct bin_attribute *,
-+			 char *, loff_t, size_t);
-+	loff_t (*llseek)(struct file *, struct kobject *, struct bin_attribute *,
-+			 loff_t, int);
-+	int (*mmap)(struct file *, struct kobject *, struct bin_attribute *attr,
-+		    struct vm_area_struct *vma);
++	s32 __percpu *counters;
 +};
 +
-+#endif /* _SYSFS_TYPES_H_ */
-diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-index e0bdda259a29..14450673bd8b 100644
---- a/include/linux/thermal.h
-+++ b/include/linux/thermal.h
-@@ -12,7 +12,7 @@
- 
- #include <linux/idr.h>
- #include <linux/device.h>
--#include <linux/sysfs.h>
-+#include <linux/sysfs_types.h>
- #include <linux/workqueue_types.h>
- #include <uapi/linux/thermal.h>
- 
-diff --git a/include/net/netdev_rx_queue.h b/include/net/netdev_rx_queue.h
-index 4841ec031857..7122cb4b7e44 100644
---- a/include/net/netdev_rx_queue.h
-+++ b/include/net/netdev_rx_queue.h
++#else /* !CONFIG_SMP */
++
++struct percpu_counter {
++	s64 count;
++};
++
++#endif	/* CONFIG_SMP */
++
++#endif /* _LINUX_PERCPU_COUNTER_TYPES_H */
+diff --git a/include/linux/sched/user.h b/include/linux/sched/user.h
+index 671ecee08d23..913da0aba05c 100644
+--- a/include/linux/sched/user.h
++++ b/include/linux/sched/user.h
 @@ -4,7 +4,7 @@
  
- #include <linux/kobject_types.h>
- #include <linux/netdevice.h>
--#include <linux/sysfs.h>
-+#include <linux/sysfs_types.h>
- #include <net/xdp.h>
+ #include <linux/uidgid_types.h>
+ #include <linux/atomic.h>
+-#include <linux/percpu_counter.h>
++#include <linux/percpu_counter_types.h>
+ #include <linux/refcount.h>
+ #include <linux/ratelimit_types.h>
  
- /* This structure contains an instance of an RX queue. */
-diff --git a/include/rdma/ib_sysfs.h b/include/rdma/ib_sysfs.h
-index 3b77cfd74d9a..ece1b920c690 100644
---- a/include/rdma/ib_sysfs.h
-+++ b/include/rdma/ib_sysfs.h
-@@ -5,7 +5,7 @@
- #ifndef DEF_RDMA_IB_SYSFS_H
- #define DEF_RDMA_IB_SYSFS_H
- 
--#include <linux/sysfs.h>
-+#include <linux/sysfs_types.h>
- 
- struct ib_device;
- 
-diff --git a/kernel/kheaders.c b/kernel/kheaders.c
-index 42163c9e94e5..b48bd8a23cda 100644
---- a/kernel/kheaders.c
-+++ b/kernel/kheaders.c
-@@ -10,6 +10,7 @@
- #include <linux/module.h>
- #include <linux/kobject.h>
- #include <linux/init.h>
-+#include <linux/sysfs.h>
- 
- /*
-  * Define kernel_headers_data and kernel_headers_data_end, within which the
-diff --git a/lib/kobject.c b/lib/kobject.c
-index 48ba445604f8..f53564596438 100644
---- a/lib/kobject.c
-+++ b/lib/kobject.c
+diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
+index 2caa6b86106a..1d7e56eab60f 100644
+--- a/include/linux/shmem_fs.h
++++ b/include/linux/shmem_fs.h
+@@ -6,7 +6,7 @@
+ #include <linux/swap.h>
+ #include <linux/mempolicy.h>
+ #include <linux/pagemap.h>
+-#include <linux/percpu_counter.h>
++#include <linux/percpu_counter_types.h>
+ #include <linux/xattr.h>
+ #include <linux/fs_parser.h>
+ #include <linux/userfaultfd_k.h>
+diff --git a/kernel/user.c b/kernel/user.c
+index 28da71ea1e74..6c8b818419f8 100644
+--- a/kernel/user.c
++++ b/kernel/user.c
 @@ -22,6 +22,7 @@
+ #include <linux/proc_ns.h>
+ #include <linux/ratelimit.h>
  #include <linux/uidgid.h>
- #include <linux/workqueue.h>
- #include <linux/kref.h>
-+#include <linux/sysfs.h>
++#include <linux/percpu_counter.h>
  
- /**
-  * kobject_namespace() - Return @kobj's namespace tag.
-diff --git a/mm/cma_sysfs.c b/mm/cma_sysfs.c
-index f50db3973171..2c75ea0827c4 100644
---- a/mm/cma_sysfs.c
-+++ b/mm/cma_sysfs.c
-@@ -8,6 +8,7 @@
- #include <linux/cma.h>
- #include <linux/kernel.h>
- #include <linux/slab.h>
-+#include <linux/sysfs.h>
+ #if IS_ENABLED(CONFIG_BINFMT_MISC)
+ struct binfmt_misc init_binfmt_misc = {
+diff --git a/lib/flex_proportions.c b/lib/flex_proportions.c
+index 7749a48428e5..1d5e1e0bdbbe 100644
+--- a/lib/flex_proportions.c
++++ b/lib/flex_proportions.c
+@@ -36,6 +36,7 @@
+ #include <linux/flex_proportions.h>
+ #include <linux/log2.h>
+ #include <linux/math64.h>
++#include <linux/percpu_counter.h>
+ #include <linux/seqlock.h>
  
- #include "cma.h"
- 
+ int fprop_global_init(struct fprop_global *p, gfp_t gfp)
 -- 
 2.39.2
 
