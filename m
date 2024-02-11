@@ -1,112 +1,97 @@
-Received: from nikam.ms.mff.cuni.cz (nikam.ms.mff.cuni.cz [195.113.20.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A1C5917B;
-	Sun, 11 Feb 2024 09:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.113.20.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1196C59141;
+	Sun, 11 Feb 2024 09:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707644840; cv=none; b=LRxc+YGdTgl06/91BTkqUXqTUfdssMvZT5FPsKX3ycwYLldO9AQke/juoP62+r2bdv0WCKFWwqVO1v97wUSbj9G4AaZ9vT8ew02ulP21LB8LLo0MX7aBkQsCMbLH11eXrzUmf5NYeQ0zVJfpU8LDaiAzs8MKAF780jWh/nr4foo=
+	t=1707645236; cv=none; b=P5cq4U1l17xFVATWHRf9MM+5kvLq9FWeF0p3mbxkAQkWyRI/M6dp4YLi1ajZh3oEvWk1rt6rius5By8W6JtKRVuPORp6y+sZhG1JphMbSlAM099eecDV2nSRIfA2L8svuFZ8OsdWLl6dAl6WYCpB7lJVWMcmALRgvgqcll5MmNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707644840; c=relaxed/simple;
-	bh=Rz3Cekc8usFcSJQcfJZUmbTcQMIdJQWkXz/P4jnh4Q0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LrChYgU2AwxxlG0lmTCKU2X4P3LSb8xpjsGe6TCnBtZFl1jgmlI34eYvWzAbWhOnNwRnYenVgKO6brCDazj8JADe2JhkDaeXg/nHWV1MFX7jD/LfhWFJAorAm2dZHhYhIhsR3Pi9mTu7/x2t0lSQ5KjuTPeZ75EXeC5X0O6GoxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gimli.ms.mff.cuni.cz; spf=pass smtp.mailfrom=gimli.ms.mff.cuni.cz; dkim=pass (1024-bit key) header.d=gimli.ms.mff.cuni.cz header.i=@gimli.ms.mff.cuni.cz header.b=nHxuFXWL; arc=none smtp.client-ip=195.113.20.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gimli.ms.mff.cuni.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gimli.ms.mff.cuni.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gimli.ms.mff.cuni.cz header.i=@gimli.ms.mff.cuni.cz header.b="nHxuFXWL"
-Received: from gimli.ms.mff.cuni.cz (gimli.ms.mff.cuni.cz [195.113.20.176])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by nikam.ms.mff.cuni.cz (Postfix) with ESMTPS id BBD692811B8;
-	Sun, 11 Feb 2024 10:47:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gimli.ms.mff.cuni.cz;
-	s=gen1; t=1707644836;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wPl76FU0AHEFD99SA7WWEeqLbLOJwpClmk6J8pBft1M=;
-	b=nHxuFXWLAj4dJVRr7cv3jjBbs3XxnhuHB0/cG6Ov1lkSy5uFLYHv6i6Yz3ly11NnFd8Dri
-	K665JqvNU5UFUW4FFVcwW9pU4gd2/k9lRXG18UllfegYkDk5qDHGwrD3diws4gL6w097JL
-	eqQv3BHFT67yRUf+pLW3Q7hTiyMdmTY=
-Received: from localhost (internet5.mraknet.com [185.200.108.250])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: karelb)
-	by gimli.ms.mff.cuni.cz (Postfix) with ESMTPSA id 97E76457E76;
-	Sun, 11 Feb 2024 10:47:16 +0100 (CET)
-From: Karel Balej <karelb@gimli.ms.mff.cuni.cz>
-To: Karel Balej <balejk@matfyz.cz>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lee Jones <lee@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Duje=20Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
-	~postmarketos/upstreaming@lists.sr.ht,
-	phone-devel@vger.kernel.org
-Subject: [RFC PATCH v2 6/6] MAINTAINERS: add myself for Marvell 88PM886 PMIC
-Date: Sun, 11 Feb 2024 10:35:56 +0100
-Message-ID: <20240211094609.2223-7-karelb@gimli.ms.mff.cuni.cz>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240211094609.2223-1-karelb@gimli.ms.mff.cuni.cz>
-References: <20240211094609.2223-1-karelb@gimli.ms.mff.cuni.cz>
+	s=arc-20240116; t=1707645236; c=relaxed/simple;
+	bh=I7YZwRT/usHmRZRp/Ua6UZNQvDq03jokdgJSQkJx8ZM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NryFFYUpvQlNP3FL8216/xOnfE6J4jQ/+5Ci47/wL9PfYsDYXj/VKxPtzjbXdsRsuMS5MCKN9Y86GVsBvCLLr+qtFzO/nIvRJEEJ44PpGjmD/eSexs5WX6ud1th1Ru5EQeE/7cVOI1aSK7UuCmDTn3I48oAufybzlGfgi0+5L28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7857964f57aso95575185a.1;
+        Sun, 11 Feb 2024 01:53:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707645233; x=1708250033;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0RvRmHt+r/0Yyk/VeH3rIf5h0w1G4j3Mo4jl/7Uv/FU=;
+        b=vP6xso8WxFI1fhh3mhv5Ucr2PGx5O1ikiqLM4kTc0OYH/tmW2feRAXwRqPyRhYDnow
+         jzy8Rm4+aJk41thc3z1F1VS1IA78INerx8wVHj2NktGTcSYHWaUyTQ9Xcsn+Genw57uu
+         Kv1TGmJHBqWCO1xteyr0UW+W/vjUA9FG3LGT9DabzBDnX6f7zoAwtc8dFyte1pclIVQP
+         ai4ra08uDz/jGDCW5AMBcMjCq1975JKgBv3CSEVH39v44Hlynrdd7FIoqtdckRuNPBGh
+         y3AohsSv+XabUz4JKpspOm5rY1YLG/ZcTnEroJEg3bWQxQNl3M0SbDLxTN89b7VQUcJK
+         VeJQ==
+X-Gm-Message-State: AOJu0YzvRG5ojb3m+28Yzg/pb2Wp8BqYCzpaIsnanDF25wKAOxvMhZFl
+	nUiIsoOTlslpjnDvGhD+laABIWPu8P3Nh3usJ/BlQ5gSWIq0h1dE9O8s14bjTmQ=
+X-Google-Smtp-Source: AGHT+IFvOwg1zd0A4PC3nUVjxgaRSJa+7ErW7hQCfQXkbFz1cvwGS51Lf9w3PSjYhGsX6A4a5Cr3NA==
+X-Received: by 2002:a05:620a:4153:b0:783:e9ba:7d4b with SMTP id k19-20020a05620a415300b00783e9ba7d4bmr5115622qko.49.1707645232544;
+        Sun, 11 Feb 2024 01:53:52 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWzBikxsSKV31rzOvWhNSuFsi7eqUndeY/GLXxXsXsnrGD4DaWMJrP5PiP8YmVAnc7zZqUH3ni4dzdMCnvVrtCXlsj1ebiD0cWMXO103Ggrnf5iYtfQ4Sba3yZNWnJAUZYPwi5c+iM=
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com. [209.85.219.171])
+        by smtp.gmail.com with ESMTPSA id v19-20020a81a553000000b005fff0d150adsm670175ywg.122.2024.02.11.01.53.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 11 Feb 2024 01:53:51 -0800 (PST)
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dc74435c428so2194685276.2;
+        Sun, 11 Feb 2024 01:53:51 -0800 (PST)
+X-Received: by 2002:a25:9347:0:b0:dc7:32b1:b7ea with SMTP id
+ g7-20020a259347000000b00dc732b1b7eamr2843172ybo.46.1707645231510; Sun, 11 Feb
+ 2024 01:53:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <65ed7c95-712c-410b-84f3-58496b0c9649@roeck-us.net>
+ <aedf7b7f39f820de555f1c41b6a8d663738eb3a2.camel@physik.fu-berlin.de> <0a0fbbd8-17dd-4f4c-9513-f3ac9749890b@roeck-us.net>
+In-Reply-To: <0a0fbbd8-17dd-4f4c-9513-f3ac9749890b@roeck-us.net>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Sun, 11 Feb 2024 10:53:39 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVt1Ebjf0X6X=rvFsr4aOcGc2c=RBViWP3cbAodNQJ4tg@mail.gmail.com>
+Message-ID: <CAMuHMdVt1Ebjf0X6X=rvFsr4aOcGc2c=RBViWP3cbAodNQJ4tg@mail.gmail.com>
+Subject: Re: Problems with csum_partial with misaligned buffers on sh4 platform
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+	Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Karel Balej <balejk@matfyz.cz>
+Hi G=C3=BCnter,
 
-Add an entry to MAINTAINERS for the Marvell 88PM886 PMIC MFD, onkey and
-regulator drivers.
+On Sat, Feb 10, 2024 at 10:59=E2=80=AFPM Guenter Roeck <linux@roeck-us.net>=
+ wrote:
+> On 2/10/24 12:12, John Paul Adrian Glaubitz wrote:
+> > I have not run these tests before. Can you tell me how these are run,
+> > so I can verify these reproduce on real hardware?
+>
+> Enabling CONFIG_KUNIT and CONFIG_CHECKSUM_KUNIT on top of a working
+> configuration should do the trick. Both can be built as module,
+> so presumably one can build and load them separately. I have not tried
+> that, though - I always build them into the kernel and boot the resulting
+> image.
 
-Signed-off-by: Karel Balej <balejk@matfyz.cz>
----
+Yes, you can build and load them as modules separately; that's what
+I do on m68k (and yes, the checksum test fails on m68k, as it is
+big endian).
 
-Notes:
-    RFC v2:
-    - Only mention 88PM886 in the commit message.
-    - Add regulator driver.
-    - Rename the entry.
+Gr{oetje,eeting}s,
 
- MAINTAINERS | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+                        Geert
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 960512bec428..c8628b9c633d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12949,6 +12949,17 @@ F:	drivers/net/dsa/mv88e6xxx/
- F:	include/linux/dsa/mv88e6xxx.h
- F:	include/linux/platform_data/mv88e6xxx.h
- 
-+MARVELL 88PM886 PMIC DRIVER
-+M:	Karel Balej <balejk@matfyz.cz>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/input/marvell,88pm88x-onkey.yaml
-+F:	Documentation/devicetree/bindings/mfd/marvell,88pm88x.yaml
-+F:	Documentation/devicetree/bindings/regulator/marvell,88pm88x-regulator.yaml
-+F:	drivers/input/misc/88pm88x-onkey.c
-+F:	drivers/mfd/88pm88x.c
-+F:	drivers/regulators/88pm88x-regulator.c
-+F:	include/linux/mfd/88pm88x.h
-+
- MARVELL ARMADA 3700 PHY DRIVERS
- M:	Miquel Raynal <miquel.raynal@bootlin.com>
- S:	Maintained
--- 
-2.43.0
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
