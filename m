@@ -1,175 +1,132 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8258E5A7A3;
-	Sun, 11 Feb 2024 12:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B9B59B77;
+	Sun, 11 Feb 2024 12:30:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707654562; cv=none; b=lH85nyCXaTxLle26u0QET1qQU+FgcGnjUeoiTkt7eDGkr1Gu+RoY0POj0+oWIdo7aX9OZXJz6sglcOvPKPLRYUiz4dE0vLxCa08DCpA4lsUiWroRSr7iLuso8pc2K3qnLQawfS+EQo+S+fT+t1i/ZBUtyYDOR4YVbOFT+Dn6OPY=
+	t=1707654610; cv=none; b=lrvFcZEQB1U1w6TdqH76v7L22Xghcp0zBeaAV/qfEBl1LzDf7kRJfyvQqbqa4RlE45JmAfq0p8mBw4jQEzySkKn/ek0ipUHfrBnaN2wVY2RNz+ABKFlYYCXBNKZR+/1Hx4xYAndDrz3Zd1bKoq2wmGbpRAxrxy5l77Sr47wjI9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707654562; c=relaxed/simple;
-	bh=VwX8jTkGRHN45CR6kBtjZLzI/2h6wx1SMmLlG2uBUJs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tVXziJxhLMd2N6fGpkPxSgwGVUhPogolVaHiJ9bT474QpVObXK6vAhBGCCr402yLk5DVSXcqpC27PWv8cmsPqAZGGoLPFSiMFhN4yArl7nN2L6XNkugtovXgBz3gHzZyI6UaevJKFeBD52oRkMtQH6htlm1dukZ7rbkxp6zh9K8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=McCtZJxC; arc=none smtp.client-ip=209.85.208.54
+	s=arc-20240116; t=1707654610; c=relaxed/simple;
+	bh=ky+RAWf8J8vXkQ6HF5HH603Fg0/+EkBj84w84UXqyY4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lEXyUFUQOlVn/SzD96AGMLbWDLs8aP9Zab0qFMVPAbqlR5hwJSSEyxZIGdQ2JK9lO7PMNM+HxRlWBhGzeArBjP/knUvEtqmmHVAP8ZI7uLR186x78RvY6+qcHx27woS80rw1PVl3kkWwl/DCnwxw/e9hAC9EbSa7xzTHq0o6gsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P/wnW/73; arc=none smtp.client-ip=209.85.167.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="McCtZJxC"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-55fe4534e9bso3018737a12.0;
-        Sun, 11 Feb 2024 04:29:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P/wnW/73"
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3bfdb84c0ebso1109101b6e.1;
+        Sun, 11 Feb 2024 04:30:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707654558; x=1708259358; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X35ILRBkG0W3UFNYMJqcSJcOeU1woxE6II9pSxpa6zo=;
-        b=McCtZJxCH9TD7hrU3vP+hkdq/lj4lILvxcj1DsLalshv++Yor3YTJFdAoK4+1PK4r+
-         UCCKZL60xD3XcPQLN8QuClTvSTgMsMOP/KmbSco8OSCv7JxtijxizULGTIM8Ck9yagQ+
-         57lAW0GzNqs4OlRL8o7VE+DUnqrRsJbe4p1iHDF8Rw0Lf9pVgZ2P02Kw+jY24bqjhUku
-         CmoThea1yoRvU1AQ8i6cjXecA6ewbeZdtymgld3cFnWRoh7t+Sr9bWF85sJHcLeYZsy2
-         7qm2AsnViMxRKeCMnpWEJOnVXL2rBeofu6DMb7H8wr0Gnk2wTMQeuAZbj9OWjJWr5wOc
-         fvXA==
+        d=gmail.com; s=20230601; t=1707654607; x=1708259407; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yY1B5EOzgtD2gnfK4gYntuGm53FWM/Oxlr8jej3jl3g=;
+        b=P/wnW/73+i6FUruOE679x/7LB3UejkU92aLoXbcYLr2mjWEiBXyiSojDzM1YdsE2XV
+         +V9m3qdA4TvZIiaQ8lLIPs/otd4e0PZbM1CXTL0p1e0iCjpMpcR8znRv/oV+PhS7z5lp
+         3Fgbq3hgsvxvDa+SPoK6FHRyhVyiKXjAqyXd137GRhn9scMl2q/hwf/EJf2z9lyU0bDJ
+         IrJgyi+oEp06EDiCHtFdWtvaa6JrPLsaRnH1aSt5Vq5cAC2Hq5fndGpSVJwTbNCgXlFv
+         GjBzguLaROD35KMhq2cPR6aDMaJUxM2kOnnwnoAcsIUHnmvm0+11jib256fth2/R13ib
+         6igg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707654558; x=1708259358;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=X35ILRBkG0W3UFNYMJqcSJcOeU1woxE6II9pSxpa6zo=;
-        b=bbIn1/AQ3l2t44z+ECwnvArowBAhuJFN2wDo5n8NZ7fznB1QTLyxD3qzboKX7hpndu
-         fnD6yFz8bpp3tlrruqRGlQrtZrQHDi8v2BI/mhWdo1dh0c/UP5TvTyL/+2HxzuXeTKJb
-         qbIVdBHwJRAdkKJwNYoPf8LyvZCgekGowsi4j93cijk3Jxz6WiaibLbMuddERBbEGVYq
-         RLbGk0Y/yO5eUtNXVLziRirQUANsytDNR2Shpwmt7iaNCwsvCvWUBAnjVWDn7kqNnO9p
-         to0UL0kVhZr0I/GSF0eGnvqxmE+N18bDuzYJlvfh/CTiVjVZF1FRhcnEucxZbOAWdsCl
-         CmTg==
-X-Forwarded-Encrypted: i=1; AJvYcCUQCDCbPLagw34ETEn0fukNWQAdMD3uRgM5sUg93KSIZ6kvj0RsQxe+SFlv9VZJFzCz8yl4sn+WNPZady+drm3ll0n+L0tbAT9gy/rTztptoDH33VNVCFVi6HiGAV6rA8xkI+x9p20DIXrI3H02ZC0gEf+9OjMofAp/P8UYPKfm2kUyLw2jD+0=
-X-Gm-Message-State: AOJu0Yyfm/FFyfU8v9jBUDXMED6oycWQDqyMHeXu/o+1eLl2iyayI+WU
-	CGdRA8hGnZqFl30HT4d2Ep2BA93L7a0UjSqwlaXOSKyGAFxGQNZnIBTMYRY2o6nWqC0AQH+o7kI
-	eXCqgFp8hk2taw3yFePnxibzQ98ZFI+T2YQiuLQ==
-X-Google-Smtp-Source: AGHT+IHijx2emtorcDgngiDo0i/V17ZPuizjCZcYAzuuxRkHCFvkuCCJlYtGIve/UVxtNwgrIItMRsx6ltLZT81U1PM=
-X-Received: by 2002:a05:6402:1293:b0:55f:f94d:cf76 with SMTP id
- w19-20020a056402129300b0055ff94dcf76mr2604857edv.27.1707654558468; Sun, 11
- Feb 2024 04:29:18 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707654607; x=1708259407;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yY1B5EOzgtD2gnfK4gYntuGm53FWM/Oxlr8jej3jl3g=;
+        b=lgixtSQpdTitFJ4KnzKWo5lW8xxS5V45FTJyJJkmq+4dvE+gKqviAHXOsefVInp/eu
+         TbPQ6FdGCTn0mMbk27gItbiC2NYm/QYWGGkg6GVRd1f6OjLC/NuOHWIlf1hTxgszdQkU
+         rRYAYd4Q3Sh94F1FSt5SgfHDCgn7kBsPnGcU11PHSSvG7dHJ5gisY6Rl8786u5x2D0zW
+         nBJMNSfSEuZDUeOEltUq2CsW8p76zuTtyi7PMmhwzOGhD9gnsb2Dg7YMFpzOk2Xre6iv
+         Nffq1e10wju0f1Jlo8j7BNrEfa7tHGbbGAouddLvgzxHFCV9W3ukGHcCKvCSKyqC38fg
+         hGOg==
+X-Forwarded-Encrypted: i=1; AJvYcCXm1UhGA9NBdpqmEOjo3QMlyppwm4ppjqfEwqDX3fL0ksX4B1qYtBEGyxTLlqVLXnt7kBBOIOgirE+Nj+LzmwdYQRP1KNbTi6spalRtPOr4Ce1PXInj+ZgbiUp+B0Tu/LzcBoaT8l4CLhXSSCItCEDgXcYOo3Lb8o13ksKVe1JAiPeHnwo=
+X-Gm-Message-State: AOJu0YwjRCWlv8lbBVTl8mb5g5MqrhybSKOhJ7TCn6jrorkGK+l2EAtN
+	BIeBnR1McEcvTgesv7Kt9PhRu8TIQbN4UnFjQdXGNNCivf0G/OSZ
+X-Google-Smtp-Source: AGHT+IF35wU7oQHIL1WAqzc2rw7d/zu+t9GZ4FvO8SQu/9DFopyNSSZKv+8ggBOG/7GT5mlted3Y9A==
+X-Received: by 2002:a05:6808:140d:b0:3bf:f233:faed with SMTP id w13-20020a056808140d00b003bff233faedmr4915160oiv.39.1707654607542;
+        Sun, 11 Feb 2024 04:30:07 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVGidnzGiLsb6tQWbD8jVvfID7bmIWxsQ7LOgUorrYLJEaiUrJv0xahtK6LablJrNmqpUrSXEnBalbh+qvMv3LF8MyasuPWlrR+/sxfTT3q1+tI0GyXxJ+F7VRvMRBR0QVpkcu4f4XjIh3xXzYbHaGJOF3iIJpt6QC10BAh/wq0+w0Q6LUKK/5SrRvUUfZRr5jXkW2j2ZfUiGmzdLeulJE6myhcW1jIY1cxrp2MtF3MN61TEXExikyVwXxKG58nXb2vdo9e6cDRsHfp9wudgSWy3yBGcRsId7OHh80dUEkYv/0esOS+VUwz27bjyrajRMZKMzn1gqwMvdATdxYIreljqMOSWYC2Ln4AVY9fykPdXY0dortluwrhM3bxQZG5pWFDJqqIy1l1uRxSGFYaoWH0JQWgVo+AbX+K7jpk7x5vJ0Vq0qOsMRmLcwfQEMo8unz+kTx8CwLEyd3AnyDMlMSZzfMMWjXo67+1DWDz6JKKVuHaB8VY
+Received: from primary ([174.95.13.129])
+        by smtp.gmail.com with ESMTPSA id ch7-20020a0561300c8700b007d2eba3ad17sm653128uab.24.2024.02.11.04.30.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 Feb 2024 04:30:06 -0800 (PST)
+Date: Sun, 11 Feb 2024 07:29:56 -0500
+From: Abdel Alkuor <alkuor@gmail.com>
+To: Lee Jones <lee@kernel.org>
+Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Jean-Jacques Hiblot <jjhiblot@traphandler.com>,
+	ChiYuan Huang <cy_huang@richtek.com>,
+	=?utf-8?B?QW5kcsOp?= Apitzsch <git@apitzsch.eu>,
+	Alice Chen <alice_chen@richtek.com>,
+	Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+	ChiaEn Wu <chiaen_wu@richtek.com>, linux-kernel@vger.kernel.org,
+	linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/2] leds: Add NCP5623 multi-led driver
+Message-ID: <Zci9xE5uHRJGMg5q@primary>
+References: <20240203175910.301099-1-alkuor@gmail.com>
+ <20240203175910.301099-2-alkuor@gmail.com>
+ <20240208130115.GM689448@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CADT+UeAfCTd8c+dHn3mgT=g6Boip=oRPdkODMN_j2KaROcT0AQ@mail.gmail.com>
- <5600b643-0d07-5583-4858-a521676476a5@gmail.com> <CADT+UeBXkHTGdqpMqXPbXj3Dguci1tEJTUYr5xRkT0+G-6hzgg@mail.gmail.com>
-In-Reply-To: <CADT+UeBXkHTGdqpMqXPbXj3Dguci1tEJTUYr5xRkT0+G-6hzgg@mail.gmail.com>
-From: Biju Das <biju.das.au@gmail.com>
-Date: Sun, 11 Feb 2024 12:29:07 +0000
-Message-ID: <CADT+UeBAprPpYaxwZB=HFXTOQgmskFX7Y7QMwkftQnKVBFcChQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 4/5] net: ravb: Do not apply RX checksum
- settings to hardware if the interface is down
-To: Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Cc: Sergey Shtylyov <s.shtylyov@omp.ru>, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, claudiu.beznea@tuxon.dev, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, netdev@vger.kernel.org, 
-	Paolo Abeni <pabeni@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240208130115.GM689448@google.com>
 
-Hi Claudiu,
-
-On Sun, Feb 11, 2024 at 12:13=E2=80=AFPM Biju Das <biju.das.au@gmail.com> w=
-rote:
+On Thu, Feb 08, 2024 at 01:01:15PM +0000, Lee Jones wrote:
+> On Sat, 03 Feb 2024, Abdel Alkuor wrote:
 >
-> Hi Sergey,
->
-> On Sun, Feb 11, 2024 at 9:40=E2=80=AFAM Sergei Shtylyov
-> <sergei.shtylyov@gmail.com> wrote:
-> >
-> > On 2/11/24 11:56 AM, Biju Das wrote:
-> >
-> > >>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> > >>>>
-> > >>>> Do not apply the RX checksum settings to hardware if the interface=
- is
-> > >>>> down.
+Hi Lee,
 
-Gb eth supports both Rx/Tx Checksum
+Please check the inline comment. All other comments will be addressed
+in v2.
 
-The intention is not to apply any hardware feature while the interface is d=
-one.
-So please add a generic commit header and description.
+> > +What:		/sys/class/leds/<led>/dim_step
+> 
+> The step principle seems a bit arbitrary.
+> 
+> Why not provide the time directly?
+> 
+> dim_step_delay?
+> 
+> I already see documentation for risetime and falltime.
+> 
+> Perhaps that will omit the need for both direction and step?
+>
+I'm going to drop off both and use risetime and falltime. That being
+said, the documented risetime and falltime for lm3533 use steps instead of
+entering the time directly. This is my first time doing this, should I document
+risetime/falltime in sysfs-class-led-multicolor-driver-ncp5623? or should
+I update risetime/falltime in sysfs-class-led-driver-lm3533 to reflect
+risetime/falltime for ncp5623?
+> > +Date:		Feb 2024
+> > +KernelVersion:	6.8
+> > +Contact:	Abdel Alkuor <alkuor@gmail.com>
+> > +Description:
+> > +		Set gradual dimming time.
+> > +
+> > +		==== ======== ==== ======== ==== ========
+> > +		Step Time(ms) Step Time(ms) Step Time(ms)
+> > +		0     0       11   88       22   176
+> > +		1     8       12   96       23   184
+> > +		2     16      13   104      24   192
+> > +		3     24      14   112      25   200
+> > +		4     32      15   120      26   208
+> > +		5     40      16   128      27   216
+> > +		6     48      17   136      28   224
+> > +		7     56      18   144      29   232
+> > +		8     64      19   152      30   240
+> > +		9     72      20   160      31   248
+> > +		10    80      21   168
+> > +		==== ======== ==== ======== ==== ========
 
-Cheers,
-Biju
-
-> > >>>> In case runtime PM is enabled, and while the interface is down, th=
-e IP
-> > >>>> will be in reset mode (as for some platforms disabling the clocks =
-will
-> > >>>> switch the IP to reset mode, which will lead to losing register
-> > >>>> contents) and applying settings in reset mode is not an option.
-> > >>>> Instead, cache the RX checksum settings and apply them in ravb_ope=
-n()
-> > >>>> through ravb_emac_init().
-> > >>>> This has been solved by introducing pm_runtime_active() check. The
-> > >>>> device runtime PM usage counter has been incremented to avoid
-> > >>>> disabling the device clocks while the check is in progress (if any=
-).
-> > >>>>
-> > >>>> Commit prepares for the addition of runtime PM.
-> > >>>>
-> > >>>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> > >>>
-> > >>> Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
-> > >>
-> > >> This will do the same job, without code duplication right?
-> > >>
-> > >>> static int ravb_set_features(struct net_device *ndev,
-> > >>>     netdev_features_t features)
-> > >>> {
-> > >>> struct ravb_private *priv =3D netdev_priv(ndev);
-> > >>> struct device *dev =3D &priv->pdev->dev;
-> > >>> const struct ravb_hw_info *info =3D priv->info;
-> > >>>
-> > >>> pm_runtime_get_noresume(dev);
-> > >>> if (!pm_runtime_active(dev)) {
-> > >>> pm_runtime_put_noidle(dev);
-> > >>> ndev->features =3D features;
-> > >>> return 0;
-> > >>> }
-> > >>>
-> > >>> return info->set_feature(ndev, features);
-> > >
-> > >> We now leak the device reference by not calling pm_runtime_put_noidl=
-e()
-> > >> after this statement...
-> > >
-> > > Oops. So this leak  can be fixed like [1]
-> > >
-> > >>  The approach seems sane though -- Claudiu, please consider followin=
-g it.
-> > >
-> > > [1]
-> > > static int ravb_set_features(struct net_device *ndev,
-> > >     netdev_features_t features)
-> > > {
-> > > struct ravb_private *priv =3D netdev_priv(ndev);
-> > > const struct ravb_hw_info *info =3D priv->info;
-> > > struct device *dev =3D &priv->pdev->dev;
-> > > bool pm_active;
-> > >
-> > > pm_runtime_get_noresume(dev);
-> > > pm_active =3D pm_runtime_active(dev);
-> > > pm_runtime_put_noidle(dev);
-> >
-> >    There is no point dropping the RPM reference before we access
-> > the regs...
->
-> I don't think there is an issue in accessing register by the usage of
-> below API's
->
-> pm_runtime_get_noresume:--- Bump up runtime PM usage counter of a device.
-> pm_runtime_active:--- Check whether or not a device is runtime-active.
-> pm_runtime_put_noidle:--Drop runtime PM usage counter of a device.
->
-> Cheers,
-> Biju
+Thanks,
+Abdel
