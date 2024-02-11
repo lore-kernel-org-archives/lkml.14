@@ -1,129 +1,119 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812945B668;
-	Sun, 11 Feb 2024 15:42:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9339338F97
+	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 15:44:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707666176; cv=none; b=e4e3eIpLIENHWH1hsRoCn8WHWV1RD6+ydshnGNKS72i4Uo46bAnMMlpVkpIKsujf9dCJnEDe2Q173sSI4lwOI/4+hUXfdEPKSISSVUUtQz9n0Yw/qvRj5UEa4EVXCNqClTQECOA+MTvFh6ORQSAY26bjID2VgSc28Ymebbo1KZg=
+	t=1707666274; cv=none; b=eGOFs6JvVanhanimVvJEqbNPBjJe0kOXmYt4NV1HllEv+jwtUl0VPXRcQKHz+MkF7PEnhQU3abhlllXkhKs8IqRwcrhW9t3kHa+GzjEg/oWfLw47jvwaDlJgcqH1p5ItpJ7BPebPCk4Jr/BtruY2Y4WY4Gxi7FC5tBGb4J58Rys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707666176; c=relaxed/simple;
-	bh=lhbXjww9UyAKMdiEKIwf186NCMys5erRb0M4pfLaPfM=;
-	h=References:From:To:Cc:Subject:In-reply-to:Date:Message-ID:
-	 MIME-Version:Content-Type; b=fZGH1rP0r/IlK71rhCgqycn+G/Fpxf4gtpJEDA2iJbitT4wUD3vl0XFNZl8S/5MKedoK+RZotq9jW9mcLdSxCjKcKePl2x/iO5YY6zu3zKETRGIOuMJe1UuysDkIvobvRuxYvxWMkkzMtKcr8KP9Cw7Gjwpoq5v8KNz6knETQ1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev; spf=pass smtp.mailfrom=oltmanns.dev; dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b=dtbevJw2; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oltmanns.dev
+	s=arc-20240116; t=1707666274; c=relaxed/simple;
+	bh=gEOm0A9HxhtT0ToHBtW5wPYxu1/NZcFG8ycY66XAqQA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=igmUD7aMnX6JvHb3msprG1OtOCG1o8p7OlldWORex1dJOO3c/Lw17rbCm6l3PZEIHu/4/puxhUoLrmn2+/tJ+em4o+moaJ+VOzzquE7svERzveakZMG86LynDMk3ml1BEZERjd57pIW/hehQwFsDc5IjzIzZteX9ARPO2tUXDdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=XaXKuMmt; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b="dtbevJw2"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4TXsL23Rdhz9scZ;
-	Sun, 11 Feb 2024 16:42:50 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oltmanns.dev;
-	s=MBO0001; t=1707666170;
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="XaXKuMmt"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d74045c463so19425155ad.3
+        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 07:44:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707666272; x=1708271072;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:dkim-signature:from:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=5tNlqyKVcD2JCRQKsna6Vl1wVCfVwrAQA3PsQcUJP04=;
+        b=RzZoaytvgoZlrp5Pg8jCCPzSokXEctZoXvD7sp9l8dWj3IF5AGOtPZHK5JmATRFdeh
+         RHcBjYa7pCrmXY1pS4SdhSUdXBsShwQmhIpyyrgD/HsyHDzzb3AZKHuzCWPq/f1TAda7
+         swft0lfMGCjiEfN35SzA4nznxbOFWk7SzUhhjIsc+zGOAB+6ZleD+hP9hLHXUlV70jMT
+         UNEI7ym+wuFOQS3GWNRkP5A2B4fDWyGU0kcuTBf9WodkZ6tROo4azS6YM2b7BWHzrqOU
+         rjxmKJyTB0vsLJ1kF+pzb0EBb2mMW6nOrZRR/bh50qyTsVuzZVtsB2lXKksHcnBkloiw
+         TjjA==
+X-Forwarded-Encrypted: i=1; AJvYcCVF9AMRVy23JiZbxgxYhuaPRE3fGc1uQT8CcOJyFnBrFTgWKirZc9OaU222RUJJkmY3pgcU4L95wftiekPw/byjkWAvvHnq/GU7CuDN
+X-Gm-Message-State: AOJu0Yxzgm4XTx066a/2GQpmCSshtKpiVJ7GD32O7rM6RYM+8Nr4yZR1
+	+NcyfN/OKd8d6SCGdi5L82LYr6BB4kIdY8mGSv59aCRsy/eVS0XI
+X-Google-Smtp-Source: AGHT+IEL9ClmJ2nRX1SclKFcrqCXlbb7x1e2l9TyBORDkkAGAFtf5V6iUv4wGJ6iz8p6sSfwm36vdg==
+X-Received: by 2002:a17:903:5c6:b0:1d9:5b8b:f70 with SMTP id kf6-20020a17090305c600b001d95b8b0f70mr3637223plb.29.1707666271856;
+        Sun, 11 Feb 2024 07:44:31 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV8uY+mhJLy/dvFbmj/TX2JuLJqu613NusbhxlLuIpZukluRkB/2ZEgoTeBU0WlI1Dvl7P7pK8iDbMvYyVPchibFdQ5PBI2B+e8lvwWGGVQnIhAblma4EH4IJguvnDeTWwOtW8JC4JkSQ==
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id mp6-20020a170902fd0600b001d5f1005096sm4447053plb.55.2024.02.11.07.44.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 Feb 2024 07:44:31 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2024; t=1707666270;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=98aDbHgBbGqJamJlcPsF9M6fGfi3Twm9F/GrRpw8fzI=;
-	b=dtbevJw2RvdVTy1+oh5ExI/QO4OF403FR6JiNYzrqWdLydcjnRivDO15lGVH9EtidDlKzl
-	oyXvxHTUS2c4XApjWIuMjMOgBxMKmmmDtrkPpSXmfDot5xPTE1TtEO9iGJfByr0YJa8sT0
-	FTifdEFNutdUrivRSWb3OFHI/17FqDhzk8iAgTgM/Kq6cQZWiECx2tOPlxJq0xauL8o6/f
-	in9z6b7cL4yVjxXoSxoumh0x9U8qViyV1w2GC0AukoHC0EtFBYyXrGKje/BEMpqVxg6wo2
-	FoCa5h/xYhFO2TyLCITT9NvnUlOQIuuEBgy3nnNQvBoFXkqUm0Wmo8t4NOo4XQ==
-References: <20240205-pinephone-pll-fixes-v2-0-96a46a2d8c9b@oltmanns.dev>
- <20240205-pinephone-pll-fixes-v2-5-96a46a2d8c9b@oltmanns.dev>
- <poua4bzyciiwt65sqjf2whqfdumvoe4h3bkjpf64px2vwgumrf@sai73byg2iju>
-From: Frank Oltmanns <frank@oltmanns.dev>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
- <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, Guido
- =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>, Purism Kernel Team
- <kernel@puri.sm>, Ondrej
- Jirman <megi@xff.cz>, Neil Armstrong <neil.armstrong@linaro.org>, Jessica
- Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter
- <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] drm/panel: st7703: Drive XBD599 panel at higher
- clock rate
-In-reply-to: <poua4bzyciiwt65sqjf2whqfdumvoe4h3bkjpf64px2vwgumrf@sai73byg2iju>
-Date: Sun, 11 Feb 2024 16:42:43 +0100
-Message-ID: <87sf1zxb0s.fsf@oltmanns.dev>
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=5tNlqyKVcD2JCRQKsna6Vl1wVCfVwrAQA3PsQcUJP04=;
+	b=XaXKuMmteTv78/6BoE7RVYQEmpZ4EJI7nPkrONG+lQ8Owtxr4ccW4u/dafdyfD/nlhdc2n
+	di7zJdRH/+X19Ke6FcjSWb8QL9Is+oVqs4ryZMqEqgOIHb892/AJsFkN9d+GFuPtUZgOUl
+	+nsyKhUuP3YcuBGDhQGaoFMeIHwgBsWthR9B1xIXmAaaEMMvK7IGRj/HadusbPViGjELZ3
+	tAT9MQ79mkJNf+2l2K7KwLQiOldTCbyaaejEsFYzoFtMlxJx68U2wnNEDD90L7KHmid4Mp
+	QkgzDHe/fkbjEsxWU5+5wb1I9caA9pYfWmpedAzyhplFHwN/13CssyXLK2w6Bg==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Subject: [PATCH 0/2] ARM: struct bus_type cleanup
+Date: Sun, 11 Feb 2024 12:45:06 -0300
+Message-Id: <20240211-bus_cleanup-rmk-v1-0-65668e578d55@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Rspamd-Queue-Id: 4TXsL23Rdhz9scZ
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAILryGUC/x3MQQqAIBBA0avErBNSpKKrRITaVENl4WAE4d2Tl
+ m/x/wuMgZChK14IeBPT6TNkWYBbjV9Q0JQNqlK6UlIKG3l0OxofLxGOTTSzs9piq52qIVdXwJm
+ e/9gPKX0Y+DssYQAAAA==
+To: Russell King <linux@armlinux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=933; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=gEOm0A9HxhtT0ToHBtW5wPYxu1/NZcFG8ycY66XAqQA=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlyOuDFI0/PkQL9gktx02ndKh8QoAMAX6GtDPG1
+ zbBQU7ST82JAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZcjrgwAKCRDJC4p8Y4ZY
+ ptEoD/4krvVw1nJlgzCNDYjJ8bvrX+m4GkoB5HoFkdBRwc9k8QK0IoYvJAnk/9EORt+WvvhnwXc
+ HIuVI7MZ++bCtIS+g8s0IlxAdV0y5OmEy2c6IJDbE7ykdYEVkeYYyHBKiJGcWUzfgS9erN8xyzh
+ QsbI810VduufeV1jPNwd6thPaPibazoUm8lD+/oru9HtOxXDiiz6gKPBUMGSlZOU/K/YVHitmH9
+ GlT7THXuubFH5jPuuDhri/ExzDyE3ut5fwYlh/YigiqxT0NmkxUsjQVYRfc7St4lzLe/6jCZgVR
+ wyLWT50/XSnpw3JwaJkFmHbyGolbM8M/js/DIyevQ8RUCLfI63UR+jltqDgd8TRr19bhfzNOhmH
+ BZz4sgbOkOV3d80tx0/4TgjWGXdPeMoHqbqxmwfuROr2HLQMu26ylye47OxjxaTSkegewHP4BE8
+ TBZ19vnzzzUGUEez2sqyQFgdjZXAUm/cZ1MU4bEHNowxgmMceUdGHPV1zfL2IcoZ3UWdbCCEW6J
+ PK9qZZ2qEXOLR7erG3/5NzJXyL/2RaETHRgjAVSOjn/aTyY04MlarIi4TklRUKMocoJyAyAq2ct
+ iKXTThUlH+JGETv/lU37N5JLJzPGjzKkzNHh96W64QNgaGBBR4qKNLxc3GNfoQ22zZfsdW1pjBZ
+ zcYY5mR3IMQadSg==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
+This series is part of an effort to cleanup the users of the driver
+core, as can be seen in many recent patches authored by Greg across the
+tree (e.g. [1]).
 
-On 2024-02-08 at 20:05:08 +0100, Maxime Ripard <mripard@kernel.org> wrote:
-> [[PGP Signed Part:Undecided]]
-> Hi Frank,
->
-> On Mon, Feb 05, 2024 at 04:22:28PM +0100, Frank Oltmanns wrote:
->> This panel is used in the pinephone that runs on a Allwinner A64 SOC.
->> The SOC requires pll-mipi to run at more than 500 MHz.
->>
->> This is the relevant clock tree:
->>  pll-mipi
->>     tcon0
->>        tcon-data-clock
->>
->> tcon-data-clock has to run at 1/4 the DSI per-lane bit rate. The XBD599
->> has 24 bpp and 4 lanes. Therefore, the resulting requested
->> tcon-data-clock rate is:
->>     crtc_clock * 1000 * (24 / 4) / 4
->>
->> tcon-data-clock runs at tcon0 / 4 (fixed divisor), so it requests a
->> parent rate of
->>     4 * (crtc_clock * 1000 * (24 / 4) / 4)
->>
->> Since tcon0 is a ccu_mux, the rate of tcon0 equals the rate of pll-mipi.
->>
->> pll-mipi's constraint to run at 500MHz or higher forces us to have a
->> crtc_clock >= 83333 kHz if we want a 60 Hz vertical refresh rate.
->>
->> Change [hv]sync_(start|end) so that we reach a clock rate of 83502 kHz
->> so that it is high enough to align with pll-pipi limits.
->>
->> Signed-off-by: Frank Oltmanns <frank@oltmanns.dev>
->
-> That commit log is great, but it's kind of off-topic. It's a panel
-> driver, it can be used on any MIPI-DSI controller, the only relevant
-> information there should be the panel timings required in the datasheet.
->
-> The PLL setup is something for the MIPI-DSI driver to adjust, not for
-> the panel to care for.
->
+---
+[1]: https://lore.kernel.org/lkml/?q=f%3Agregkh%40linuxfoundation.org+s%3A%22make%22+and+s%3A%22const%22
 
-I absolutely agree. It even was the reason for my submission of a
-sunxi-ng patch series last year that was accepted, to make pll-mipi more
-flexible. :)
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
 
-The only remaining option I currently see for adjusting the sunxi-ng
-driver to further accomodate the panel, is trying to use a higher
-divisor than 4 for calculating tcon-data-clock from tcon0. I remember
-reading a discussion about this, but as far as I remember that proposal
-was rejected (by you, IIRC).
+---
+Ricardo B. Marliere (2):
+      ARM: sa1111: make sa1111_bus_type const
+      ARM: ecard: make ecard_bus_type const
 
-While I appreciate other suggestion as well, I'll look into options for
-using a different divisor than 4.
+ arch/arm/common/sa1111.c               | 2 +-
+ arch/arm/include/asm/ecard.h           | 2 +-
+ arch/arm/include/asm/hardware/sa1111.h | 2 +-
+ arch/arm/mach-rpc/ecard.c              | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+---
+base-commit: 8790fade1a19caf714ba1d91ce1fdceb9f2067f2
+change-id: 20240211-bus_cleanup-rmk-7fcb4be84c26
 
 Best regards,
-  Frank
+-- 
+Ricardo B. Marliere <ricardo@marliere.net>
 
->
-> Maxime
->
-> [[End of PGP Signed Part]]
