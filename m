@@ -1,80 +1,131 @@
-Received: from mail.cock.li (mail.cock.li [37.120.193.123])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20F758ABE
-	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 09:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.120.193.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0661E168B7;
+	Sun, 11 Feb 2024 09:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707642190; cv=none; b=OsP6DffcISeJzYPqBmmNW2ZNsJySWcYoV5jIBy+94M7nXgotoUa0FNqTsm61e5XCu1G2T62TLx3YhqrZWA7JuywNG+OI4Dk+LuTT0U+V+6xctz3WgAK6nDC2XoOZKVQNbRbXpKx+OwcE1o2xMSqasPPG+P/wYv77TK9wwH8xiMU=
+	t=1707643052; cv=none; b=ARKX5efoPIfDk/hE5GpkNy6k4NihrhzPZQFpYHWHKLQ0nZMYAGEO7zL+5lkvOUTy/JzoLnt8d57tE6MHygGa7tM7enMzCFueGpaGA9EGwSVBt+iLe84TgUIlYEySsgDf3WeBuW2Y66B3k8i/GxB9Otei0B7XovVrStx3OiwYKnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707642190; c=relaxed/simple;
-	bh=4JP92RE3t9VQw+D1FzK47Dplx1G0LHGUu6RQVFkBwfw=;
-	h=MIME-Version:Content-Type:Date:From:To:Cc:Subject:Message-ID; b=fvXgpa7Eu3qC1TC3XA601JqoeUFWF6Fcz7OZhnwn1AuFSZjDh1c0ywlz2EFjgJBZcURtPiWVvEPYB94zhrASCDp63yZsuOEhAavOSBK5DtcXZZTCRXutrq+BcAPMWFau/4TEE9YzDfQTB37B5YeDPDHI7lkEF2zM2tj3JKxbq/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=420blaze.it; spf=pass smtp.mailfrom=420blaze.it; dkim=pass (2048-bit key) header.d=420blaze.it header.i=@420blaze.it header.b=hMsJV+cd; arc=none smtp.client-ip=37.120.193.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=420blaze.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=420blaze.it
+	s=arc-20240116; t=1707643052; c=relaxed/simple;
+	bh=rSHYS9qHk/jwImtw4+JVwsbnbAy0pXklABl265nds1E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=XSLjJTk/6uI70VfEMrrswDqxQ3rw5bZ/yUVqgv2l3/wUVVOpb7ktWN61SMbiHCsFBDyETW4G2jDq7D1c/HuO1FFdMQ5DUmaA2BxaZvyVybI+0ZGroASMBDuKbEPBYIYxJNn8tAbe5VrHhw2xppm3P7bH5vQPFqdt1mMJVlzMP8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=P8Np99p/; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=420blaze.it header.i=@420blaze.it header.b="hMsJV+cd"
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="P8Np99p/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
+	s=s31663417; t=1707643010; x=1708247810; i=erick.archer@gmx.com;
+	bh=rSHYS9qHk/jwImtw4+JVwsbnbAy0pXklABl265nds1E=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=P8Np99p/+p9ERHHFhS7PD/pOfT2dBBXJIHtsDOJ8QeWuiL8RS4wg58MC1tDUtF3I
+	 GIJgL1Qv1ogbXlkXsE3dLCbmWzBs5EYt8Dkotr82zFA2LN59zWfIoZ+t3loKmIc2U
+	 VM47LRH4J8VPJ4aBZaxmaFbDghDcda92em6l6ER4JIcQVsWgfIFUsA+Vg2oh/MRvA
+	 hDeJ0yHCkdzrL2Nml9oj9ophK1f/0V2WnyODJze/8qIdeHvm9ubBEGsZTEdOJrAjG
+	 ewiseXCZxU2EY5Lhqc/U8Akb5/fG1+xNt+UnWY/xBAAhkMkR2pZcFxX+1hFJTSzIL
+	 E4dl311syDfFl6Mc9g==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
+ (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MDQeK-1rjaLv3tI6-00ATNc; Sun, 11 Feb 2024 10:16:50 +0100
+From: Erick Archer <erick.archer@gmx.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Li Zetao <lizetao1@huawei.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Kees Cook <keescook@chromium.org>
+Cc: Erick Archer <erick.archer@gmx.com>,
+	linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] mtd: rawnand: Prefer struct_size over open coded arithmetic
+Date: Sun, 11 Feb 2024 10:16:33 +0100
+Message-Id: <20240211091633.4545-1-erick.archer@gmx.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=420blaze.it; s=mail;
-	t=1707641567; bh=4JP92RE3t9VQw+D1FzK47Dplx1G0LHGUu6RQVFkBwfw=;
-	h=Date:From:To:Cc:Subject:From;
-	b=hMsJV+cdlLbcDaSujjO4cqMmMsvrJUoNqsQfRjSojzLMZ46qZ3ObQjTy+e0r3IBXJ
-	 DSguVHCkZN5YzxuSs3x3J459wXTVaDMH/xOaN1X60XLT0pB2i6zMCrGDtNrrv27Kc0
-	 qyoFNtKvZtIPkEfPog7ks9YgSRRJJtIkF7nZry1yHCOQN7whBk3UCK9uC69QvBVHkU
-	 nOPJ7+df7ewpWczoT7/JuOlEI0Qc8SQuKSKuTVq5nuh5ZrObF7ISIURt8rv1g0m6k7
-	 UKtO96BWU4Sz4IQVvtPieRJHHt95ulyJuTsHpk8+Xd1ipaB1zZdBeu2dzQvd5V4jXI
-	 O71BllM9aJfkQ==
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date: Sun, 11 Feb 2024 08:52:45 +0000
-From: hapter@420blaze.it
-To: mingo@redhat.com
-Cc: tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
- x86@kernel.org, hpa@zytor.com, linux-kernel@vger.kernel.org
-Subject: arch/x86/kernel/sys_x86_64.c: rationale for 0x40000000 for
- MAP_32BIT's start address?
-User-Agent: Roundcube Webmail/1.4.15
-Message-ID: <a5c2f06ba401cdf13bc87749341b1605@420blaze.it>
-X-Sender: hapter@420blaze.it
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:T+hTP+nIP/OHyAruT5vbyzud6ys/lN69HGWrX4oTcE/i2FVhsLb
+ KB1+1LMkHVn67DYnshciNkLlvXJBH7PrHaD6kPazuidAQ3uf7+ILEuHn5Zug3nf5IWR0uLP
+ dQ8jOMugei9vxKq8tNZK0YEo3hnZmFtY2P9kqlssEl7RsuygsGmnYzSjBGSbzhdIDw837pK
+ wZXnBXQy57CiHMIASp4JA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:NSjmnwszXxk=;Cbh7RAxypTb5l0v+Ku1wyOW3xX4
+ 2FZLp9I9qGqFp+d8FikX8Mb/wxlht9YG9qt1CThsj//a/h5HF++hqJyWvp8s8bpQ1DCp7h2J4
+ bvHP/orYTs1qm1TyPc2oSzxWu2lwQTwO0mIpQ17idfrdOcnVdOqp2Sj3uqtGa3p+aUEhdg7HR
+ qyazQNUAnNw+Rm3a1izZTMDwjK//gpp9KwThVr/fd00ZMlO4KNWTEGzS2uYtqdwc+7k+0eskv
+ TazVSmv5nzuEmGxT5/enrL9wluwpJzdudwgZEsnRs2vW5zxs4pR8JpaGQe2SwfPzxDehLsOWU
+ Rz+m4X7qrsoUXkwjEqRDjwJc5/zyG28dABjemoW9LPKWaHnbfCqc20rAcT70EDjM9JSBOxdP7
+ 8Suh84GDpLmXFSY2va1VIUEDWcAETfS5YhfsbmB+wMi5VMKlEYSLk1uJ58rVPfN1q+Zozz8Z5
+ lpDMnHVIga52kjN1m+nj30z4AVhsXwE9R8ck/N3UuiLD+UOs8fIhAEcOjobLbu9KsJkPToVgR
+ OQPs9w1hJn2lU+kVkpea+Q0aVOSDMQafkDwQu4RYWBH6D3IWTrFq724+a8uEb9cKRwLhTb/h8
+ DTRKlGw0Z49mn5o3qdVIqL8zB0+hsAlN0MkjVoj8KuWQnZQUdODeeraM/8Gjjaq6b9+H8cUdO
+ WVT8/ytmHjbeDcCSVNEp0qJyNCu9M/iaNm3bzGR37WcuSTqKA+15SX7YfHWv/nCjnLb1i5gr1
+ MA0ctpGc1u24wlGJ4YCxupldxRrbxhpJJRKhweMz3StESKeJtnOiu5Q8YCuPL9mKzAMFa0nCg
+ cINxvhCxkLxbckyyyVzNI/VQJHstAhTQpdn02cGmDVikI=
 
-I've found that passing in MAP_32BIT for mmap() will always return an 
-address above 0x40000000. The problem seems to lie in 
-arch/x86/kernek/sys_x86_64.c, where the following comment is the only 
-thing close to a hint(Line 100):
+This is an effort to get rid of all multiplications from allocation
+functions in order to prevent integer overflows [1].
 
-/* This is usually used needed to map code in small
-    model, so it needs to be in the first 31bit. Limit
-    it to that.  This means we need to move the
-    unmapped base down for this case. This can give
-    conflicts with the heap, but we assume that glibc
-    malloc knows how to fall back to mmap. Give it 1GB
-    of playground for now. -AK */
+As the "chip" variable is a pointer to "struct mtk_nfc_nand_chip" and
+this structure ends in a flexible array:
 
-Unfortunately this does not supply a rationale for starting from 
-0x40000000, which seems very arbitrary, and the git commit has been 
-there since the beginning of time (i.e. as far the the git history 
-goes), so the git blame has not helped much to clarify it. I was also 
-not able to find who "AK" was.
+struct mtk_nfc_nand_chip {
+	[...]
+	u8 sels[] __counted_by(nsels);
+};
 
-I have found another operating system that provides MAP_32BIT, FreeBSD, 
-to not exhibit the same behavior and not cause any execution problems 
-for RWX pages allocated below 0x40000000, so it does not seem a 
-technical rationale exists either.
+the preferred way in the kernel is to use the struct_size() helper to
+do the arithmetic instead of the argument "size + count * size" in the
+devm_kzalloc() function.
 
-mmap will happily return 0x10000 (which seems like the lowest address 
-the kernel will map when you supply it as a hint, so I do not see any 
-reason not to start the find from 0x10000, or something that isn't as 
-big as 0x40000000, which is big enough to impose a significant handicap 
-for applications using MAP_32BIT (e.g. JITs that want to use CALL rel32 
-at all times).
+This way, the code is more readable and safer.
 
-I will happily await for any clarifications on this matter.
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-=
+coded-arithmetic-in-allocator-arguments [1]
+Link: https://github.com/KSPP/linux/issues/160 [2]
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Erick Archer <erick.archer@gmx.com>
+=2D--
+Changes in v2:
+- Add the "Reviewed-by:" tag.
+- Fix a spelling error in the commit message. Change "more safer" for
+  "safer" (Uwe Kleine-K=C3=B6nig)
+=2D--
+ drivers/mtd/nand/raw/mtk_nand.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-- hapter
+diff --git a/drivers/mtd/nand/raw/mtk_nand.c b/drivers/mtd/nand/raw/mtk_na=
+nd.c
+index 60198e33d2d5..17477bb2d48f 100644
+=2D-- a/drivers/mtd/nand/raw/mtk_nand.c
++++ b/drivers/mtd/nand/raw/mtk_nand.c
+@@ -1356,7 +1356,7 @@ static int mtk_nfc_nand_chip_init(struct device *dev=
+, struct mtk_nfc *nfc,
+ 		return -EINVAL;
+ 	}
+
+-	chip =3D devm_kzalloc(dev, sizeof(*chip) + nsels * sizeof(u8),
++	chip =3D devm_kzalloc(dev, struct_size(chip, sels, nsels),
+ 			    GFP_KERNEL);
+ 	if (!chip)
+ 		return -ENOMEM;
+=2D-
+2.25.1
+
