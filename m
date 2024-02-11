@@ -1,63 +1,63 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858005CDF8
-	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 12:30:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 134C6605D0
+	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 12:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707654640; cv=none; b=hURTL6z2hmC40cgTXlBDr7/U3XzwfcPNvE4hKI51HXH5itth5XEZu5oU8H5IaRRrkvDXD7K1iEMAwTI7yQIcZ6p9SGjjDoHajtrrZaeSIgc4Muzn3AN7g4YSQ0/0rNJE0zVechTC4AfzYE7CQJz6UClDrC0GuAJQ4w0hqO8GQ6c=
+	t=1707654657; cv=none; b=Gtcw4HjLYqXqK/S27BcOcnYKa+KHQF30QaIsETg4TD/JUFz8aEtSu7OUMWT1hXQB0O/fdCNmeZltmk77NJelp8HNMMKtG8vJ0lomEJPeum41IDl8v7EMqYhkA8Z2qZz9cGloR5Axz7dOC4KZq5y4rmfeKhUmtTn+slNQ7fSBbJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707654640; c=relaxed/simple;
-	bh=tDggXG/cf55a0q6LxotFBFlEle9lDrYwqcOX09ziYD4=;
+	s=arc-20240116; t=1707654657; c=relaxed/simple;
+	bh=DOs/1CT7Q9lpsib1nJw3jvympuQfSrmsd//C5vY6qKY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NQJ60yDMp2MgFycbkU9y99C262sw9jtpqoWwSMSnAiMYvhoeQV8pZpOYxNy3yKXj9RcqhD8kZR64VNomW6ePkqnvJP5vWexfLxjw6rgBlQfm1wBVu3g6l6dmw6ldUYNJKnCN3aajdZ+wgsESzLWyw6ExAjRy7qQtLaSQShmxBAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=LE+vNZmA; arc=none smtp.client-ip=209.85.208.46
+	 MIME-Version; b=IZnf8P5cpD+NUAVe0UxB+xqcbfCK0EXBEt699pxBxfuj6mhSnL0nxSgN4w+fB7y/+hW8jGqwKn1RrSiDIAuw90rDRxnbdLIjPUyb25Fw4g14edppA6FCXtBLP7u20VAmMvH7OWxNKkOrBAJbBHpWETRVhcnP1dKctil5PABkNu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=WGl0xfdP; arc=none smtp.client-ip=209.85.208.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="LE+vNZmA"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-558f523c072so3593928a12.2
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 04:30:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="WGl0xfdP"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2d0e2adfeefso18220481fa.2
+        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 04:30:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1707654630; x=1708259430; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1707654650; x=1708259450; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lkBKq3xTlr2ouWRmtnOSWyY8EdO4jze66ij3tm/tNn8=;
-        b=LE+vNZmA0zarcglQiMPVOqLhLAo+WNx74PAiABEyp9U2zrS1++F4JpB7dp+FkFfogt
-         dtIjnwhxXQKuKWmO1tmBOdnPq3syiQ5dRp+SZUDst0LaRvKSAGM8h+hVf5oV75nVNhh6
-         LvNLuJ5fab6WJrudakTOIbWBBYCRjKHtluCwUCXK5gfECDwPRbH4bX+7JWpAY3JOspY8
-         kesrShxWOkmr9a0jO0oZ5O8pQ/fs+Yw5XPm4ogiuqEynMnb5XyrfErsacUuFD6uxG/2J
-         MutROxO9Nq5mhxxyD0pYMeobSi9oHcFN0w1gCnhwDv2vjTmKDVG3uMScUy/MFkEiegOY
-         1pcQ==
+        bh=ny55Id8/NqdjgmE7ajAns4TZAdiMo58DOz6DyfWMXq0=;
+        b=WGl0xfdPWtHmPpPVr88f+FxF99Ko6IKDBWTWyjzK0VFwtSRrGF7Juk3cgueN2x+lsG
+         pl7heB4D9fg3HXyfBKnR5HfKwNI4aVQD2jJXfK0/PHnQcapPKevrxoMpW+jc3X1mCDsc
+         AzznAlzPtZOb1sGQp59QVt93pQ4RKnYZ/3LEYrFtqNWWVVF4esgXnADTvSlDzTothdE/
+         oXQi7bPvYi6Megn/S0CkgrmjSqM4hJdk8KCRyHRA5Pyau0lEtTsSURS3NVfpwzP9kR/O
+         bO8RCltiwsWbv4sqdv45D3lCXDtp7vYBoIbb+foEfiLmUY5zno6ST72Ev5aM+tsFI22z
+         UIiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707654630; x=1708259430;
+        d=1e100.net; s=20230601; t=1707654650; x=1708259450;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lkBKq3xTlr2ouWRmtnOSWyY8EdO4jze66ij3tm/tNn8=;
-        b=KS9HtB8lhjBpiUlwlwStgiYFde+JfL49jQzY7kyLzliYyvHM4P7SYASzTO2ln4k09C
-         uiGa4LzSRS71ywviekDq4l/r862ccO/cJ3NYhy8yuNX7aCfIw4WiH8XQqO2p1VIvt4Dt
-         2aeweak9PfStMTP09AiSuCVm2KS7FkNM6SzbEd59UQhveEQb1LGWHe6ZvIDMabUPnrvB
-         bWpOM/NLAUmbmH88Vk9ya5N9mD1a2l33drljzEsH36WG/9SiRVZROxDs0izuhwULwWNZ
-         Zq9OaIBwWovNqzyNryzK/fyczki013ftcD7Ah44JqJ5Mq9h2+dfIcWw6Cy2xIEqQyFpJ
-         NsjA==
-X-Gm-Message-State: AOJu0YwcwyHN03OIV0IP4eCDda4nVnCoRVbTUBPvxO48i0GF5GyicoDB
-	0gSUO4jdxB36DjyekuQkbHcarHfrpLC3o5kYFcuIrbuM0CrKGbIsY1pMe9sgqeppgEFBmh3IbgB
-	s
-X-Google-Smtp-Source: AGHT+IFciadZvSJ5F8gtviRi3Z6qWnDBUHqOulQocD/ZIZ/yOTwSIqJJicEU61hhjoisN8q0N53GZw==
-X-Received: by 2002:aa7:d1c8:0:b0:560:3a3:0 with SMTP id g8-20020aa7d1c8000000b0056003a30000mr3198411edp.30.1707654629625;
-        Sun, 11 Feb 2024 04:30:29 -0800 (PST)
+        bh=ny55Id8/NqdjgmE7ajAns4TZAdiMo58DOz6DyfWMXq0=;
+        b=TbtVuozHOzcGXj3VK+Qy8MhbhBZDNhfaBOACYQy+Ki/4pYrVIeRzRKdpJmrME41lZk
+         nSN6/AkAcL/JgfYSBW7890XJjbKw54ZpnLag2XPTMZfKN3vPBvm3K1AK9CA/wEMwSeGQ
+         CwVCwq8b8YWBbSgtYOD6QQp5cZGliKWPKmIM6IG/z+Aeo4tAvYq0uDhTeiC0/6M/AzdT
+         XxZidY37697WW2Ns4Y+JltQwVNWuTgNInND0zXBw8YVyKd9WIdwoD745I3holzOzbi/6
+         k72UyQtQReMd43LjsAbL7x284/SDVs4v4ewCYmF6QcV1Jng37PEKeCslQnD3yaGyVV9t
+         7O5A==
+X-Gm-Message-State: AOJu0YxYIBrN/aG2LE/lfVQE+/LHG1Ia35JBhzoocOlL3OEFG31cJm+/
+	vvfoHuBiGJ+thUlODO8PdYCiYuJK3cUnztL032Y+NhrXkFFy/fyPhbw6KPwwRfyzCLeJ4LFvMgN
+	C
+X-Google-Smtp-Source: AGHT+IGC74jjgrJ5Q6aps7KRKJQKWu3jX9+OLkKGbjwkrNs25d/T3blL5bx9Wo48nwbCZqL/BLd9Jg==
+X-Received: by 2002:a2e:720f:0:b0:2d0:cb13:652 with SMTP id n15-20020a2e720f000000b002d0cb130652mr2551504ljc.12.1707654649661;
+        Sun, 11 Feb 2024 04:30:49 -0800 (PST)
 Received: from raven.intern.cm-ag (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id fj18-20020a0564022b9200b0056187ca4120sm1024611edb.10.2024.02.11.04.30.29
+        by smtp.gmail.com with ESMTPSA id fj18-20020a0564022b9200b0056187ca4120sm1024611edb.10.2024.02.11.04.30.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Feb 2024 04:30:29 -0800 (PST)
+        Sun, 11 Feb 2024 04:30:49 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: linux-kernel@vger.kernel.org
 Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v3 16/35] device.h: move declarations to device_types.h
-Date: Sun, 11 Feb 2024 13:29:41 +0100
-Message-Id: <20240211123000.3359365-17-max.kellermann@ionos.com>
+Subject: [PATCH v3 35/35] include: remove lots of unnecessary <linux/kernel.h> includes
+Date: Sun, 11 Feb 2024 13:30:00 +0100
+Message-Id: <20240211123000.3359365-36-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240211123000.3359365-1-max.kellermann@ionos.com>
 References: <20240211123000.3359365-1-max.kellermann@ionos.com>
@@ -69,1722 +69,1068 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-By providing declarations in a lean header, we can reduce header
-dependencies.
-
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- block/disk-events.c                           |   1 +
- block/early-lookup.c                          |   1 +
- block/partitions/core.c                       |   1 +
- drivers/counter/counter-chrdev.c              |   1 +
- drivers/cxl/cxl.h                             |   1 +
- drivers/devfreq/devfreq-event.c               |   1 +
- drivers/extcon/extcon.h                       |   2 +-
- drivers/gpu/drm/mcde/mcde_clk_div.c           |   1 +
- .../gpu/drm/renesas/rcar-du/rcar_du_encoder.c |   1 +
- .../drm/renesas/rcar-du/rcar_du_writeback.c   |   2 +
- drivers/gpu/drm/sun4i/sun4i_tcon_dclk.c       |   1 +
- drivers/gpu/drm/tidss/tidss_encoder.c         |   1 +
- drivers/gpu/drm/tidss/tidss_plane.c           |   1 +
- include/linux/acpi.h                          |   2 +-
- include/linux/backlight.h                     |   2 +-
- include/linux/blk_types.h                     |   2 +-
- include/linux/blkdev.h                        |   2 +-
- include/linux/container.h                     |   2 +-
- include/linux/coresight.h                     |   2 +-
- include/linux/counter.h                       |   2 +-
- include/linux/devfreq-event.h                 |   2 +-
- include/linux/devfreq.h                       |   2 +-
- include/linux/device.h                        | 466 +---------------
- include/linux/device_types.h                  | 501 ++++++++++++++++++
- include/linux/dmaengine.h                     |   2 +-
- include/linux/edac.h                          |   2 +-
- include/linux/enclosure.h                     |   2 +-
- include/linux/fpga/fpga-bridge.h              |   2 +-
- include/linux/fpga/fpga-region.h              |   2 +-
- include/linux/framer/framer.h                 |   2 +-
- include/linux/hdmi.h                          |   2 +-
- include/linux/hwmon-sysfs.h                   |   2 +-
- include/linux/iio/iio.h                       |   2 +-
- include/linux/lcd.h                           |   2 +-
- include/linux/node.h                          |   2 +-
- include/linux/peci.h                          |   2 +-
- include/linux/pm_clock.h                      |   2 +-
- include/linux/pm_domain.h                     |   2 +-
- include/linux/pm_qos.h                        |   2 +-
- include/linux/power_supply.h                  |   2 +-
- include/linux/powercap.h                      |   2 +-
- include/linux/rtc.h                           |   2 +-
- include/linux/swiotlb.h                       |   3 +-
- include/linux/thermal.h                       |   2 +-
- include/linux/w1.h                            |   2 +-
- include/media/cec.h                           |   2 +-
- include/media/media-devnode.h                 |   2 +-
- include/net/nfc/nfc.h                         |   2 +-
- include/pcmcia/ss.h                           |   2 +-
- include/scsi/scsi_device.h                    |   1 +
- kernel/trace/blktrace.c                       |   1 +
- 51 files changed, 552 insertions(+), 501 deletions(-)
- create mode 100644 include/linux/device_types.h
+ arch/arm64/include/asm/cpufeature.h      | 1 -
+ arch/arm64/include/asm/fixmap.h          | 1 -
+ include/acpi/platform/aclinux.h          | 1 -
+ include/linux/backing-dev.h              | 1 -
+ include/linux/badblocks.h                | 1 -
+ include/linux/bcm47xx_nvram.h            | 1 -
+ include/linux/bcm47xx_sprom.h            | 1 -
+ include/linux/bit_spinlock.h             | 1 -
+ include/linux/bootconfig.h               | 1 -
+ include/linux/btree.h                    | 1 -
+ include/linux/clk.h                      | 1 -
+ include/linux/counter.h                  | 1 -
+ include/linux/cpu_pm.h                   | 1 -
+ include/linux/cpumask.h                  | 1 -
+ include/linux/decompress/mm.h            | 1 -
+ include/linux/dim.h                      | 1 -
+ include/linux/firewire.h                 | 1 -
+ include/linux/fs_context.h               | 1 -
+ include/linux/gpio.h                     | 2 --
+ include/linux/gpio/consumer.h            | 1 -
+ include/linux/greybus.h                  | 1 -
+ include/linux/hashtable.h                | 1 -
+ include/linux/highmem.h                  | 1 -
+ include/linux/interrupt.h                | 1 -
+ include/linux/iova.h                     | 1 -
+ include/linux/isa.h                      | 1 -
+ include/linux/isdn/capilli.h             | 1 -
+ include/linux/kallsyms.h                 | 1 -
+ include/linux/kasan.h                    | 1 -
+ include/linux/kfifo.h                    | 1 -
+ include/linux/libnvdimm.h                | 2 +-
+ include/linux/lsm_audit.h                | 1 -
+ include/linux/maple_tree.h               | 1 -
+ include/linux/memcontrol.h               | 1 -
+ include/linux/mfd/davinci_voicecodec.h   | 1 -
+ include/linux/mfd/madera/pdata.h         | 1 -
+ include/linux/mfd/wm8350/core.h          | 1 -
+ include/linux/mlx5/driver.h              | 1 -
+ include/linux/mtd/map.h                  | 1 -
+ include/linux/namei.h                    | 1 -
+ include/linux/net/intel/iidc.h           | 1 -
+ include/linux/pci-ecam.h                 | 1 -
+ include/linux/peci.h                     | 1 -
+ include/linux/profile.h                  | 1 -
+ include/linux/qed/qed_chain.h            | 1 -
+ include/linux/qed/qed_if.h               | 1 -
+ include/linux/qed/qed_ll2_if.h           | 1 -
+ include/linux/randomize_kstack.h         | 1 -
+ include/linux/regulator/coupler.h        | 1 -
+ include/linux/resctrl.h                  | 1 -
+ include/linux/rfkill.h                   | 1 -
+ include/linux/rmi.h                      | 1 -
+ include/linux/sed-opal-key.h             | 2 +-
+ include/linux/siphash.h                  | 1 -
+ include/linux/skbuff.h                   | 1 -
+ include/linux/soc/amlogic/meson-canvas.h | 2 +-
+ include/linux/soc/ixp4xx/npe.h           | 1 -
+ include/linux/soc/ixp4xx/qmgr.h          | 1 -
+ include/linux/soc/mediatek/mtk_wed.h     | 1 -
+ include/linux/sysfb.h                    | 1 -
+ include/linux/textsearch.h               | 1 -
+ include/linux/usb/pd.h                   | 1 -
+ include/linux/vdpa.h                     | 1 -
+ include/linux/videodev2.h                | 1 -
+ include/linux/watchdog.h                 | 1 -
+ include/linux/xarray.h                   | 1 -
+ include/linux/zutil.h                    | 1 -
+ include/net/af_vsock.h                   | 1 -
+ include/net/caif/caif_device.h           | 1 -
+ include/net/flow_offload.h               | 1 -
+ include/net/ieee80211_radiotap.h         | 1 -
+ include/net/inet_connection_sock.h       | 1 -
+ include/net/ipv6_frag.h                  | 1 -
+ include/net/mac80211.h                   | 1 -
+ include/net/sock.h                       | 1 -
+ include/rdma/iba.h                       | 1 -
+ include/rdma/uverbs_types.h              | 1 -
+ include/scsi/scsi.h                      | 1 -
+ include/sound/soc.h                      | 1 -
+ include/xen/grant_table.h                | 1 -
+ include/xen/xen-front-pgdir-shbuf.h      | 2 --
+ 81 files changed, 3 insertions(+), 83 deletions(-)
 
-diff --git a/block/disk-events.c b/block/disk-events.c
-index f9ec09799906..86b3a7b6ccdf 100644
---- a/block/disk-events.c
-+++ b/block/disk-events.c
-@@ -5,6 +5,7 @@
- #include <linux/export.h>
- #include <linux/moduleparam.h>
- #include <linux/blkdev.h>
-+#include <linux/device.h>
- #include <linux/kobject.h>
- #include "blk.h"
- #include <linux/sprintf.h>
-diff --git a/block/early-lookup.c b/block/early-lookup.c
-index 0862a56c25ac..0bfb6b3fecf5 100644
---- a/block/early-lookup.c
-+++ b/block/early-lookup.c
-@@ -5,6 +5,7 @@
-  */
- #include <linux/blkdev.h>
- #include <linux/ctype.h>
-+#include <linux/device.h>
- #include <linux/kstrtox.h>
- #include <linux/sprintf.h>
+diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
+index a98d95f3492b..b4cf83ec8c93 100644
+--- a/arch/arm64/include/asm/cpufeature.h
++++ b/arch/arm64/include/asm/cpufeature.h
+@@ -22,7 +22,6 @@
  
-diff --git a/block/partitions/core.c b/block/partitions/core.c
-index b56add574054..576118154d57 100644
---- a/block/partitions/core.c
-+++ b/block/partitions/core.c
-@@ -9,6 +9,7 @@
- #include <linux/major.h>
- #include <linux/slab.h>
+ #include <linux/bug.h>
+ #include <linux/jump_label.h>
+-#include <linux/kernel.h>
+ #include <linux/cpumask.h>
+ 
+ /*
+diff --git a/arch/arm64/include/asm/fixmap.h b/arch/arm64/include/asm/fixmap.h
+index 58c294a96676..5d127e0fe919 100644
+--- a/arch/arm64/include/asm/fixmap.h
++++ b/arch/arm64/include/asm/fixmap.h
+@@ -16,7 +16,6 @@
+ #define _ASM_ARM64_FIXMAP_H
+ 
+ #ifndef __ASSEMBLY__
+-#include <linux/kernel.h>
+ #include <linux/math.h>
+ #include <linux/sizes.h>
+ #include <asm/boot.h>
+diff --git a/include/acpi/platform/aclinux.h b/include/acpi/platform/aclinux.h
+index 9d88b028f6b0..a26dbc7f66b2 100644
+--- a/include/acpi/platform/aclinux.h
++++ b/include/acpi/platform/aclinux.h
+@@ -50,7 +50,6 @@
+ #endif
+ 
+ #include <linux/string.h>
+-#include <linux/kernel.h>
  #include <linux/ctype.h>
-+#include <linux/device.h>
- #include <linux/sprintf.h>
- #include <linux/vmalloc.h>
- #include <linux/raid/detect.h>
-diff --git a/drivers/counter/counter-chrdev.c b/drivers/counter/counter-chrdev.c
-index afc94d0062b1..7d3e44315c8c 100644
---- a/drivers/counter/counter-chrdev.c
-+++ b/drivers/counter/counter-chrdev.c
-@@ -5,6 +5,7 @@
-  */
- #include <linux/cdev.h>
- #include <linux/counter.h>
-+#include <linux/device.h>
- #include <linux/err.h>
+ #include <linux/sched.h>
+ #include <linux/atomic.h>
+diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
+index 3c39a171c073..38ac4bf4c26f 100644
+--- a/include/linux/backing-dev.h
++++ b/include/linux/backing-dev.h
+@@ -9,7 +9,6 @@
+ #ifndef _LINUX_BACKING_DEV_H
+ #define _LINUX_BACKING_DEV_H
+ 
+-#include <linux/kernel.h>
+ #include <linux/fs.h>
+ #include <linux/sched.h>
+ #include <linux/device.h>
+diff --git a/include/linux/badblocks.h b/include/linux/badblocks.h
+index bd14c9de160a..345b04610a60 100644
+--- a/include/linux/badblocks.h
++++ b/include/linux/badblocks.h
+@@ -4,7 +4,6 @@
+ 
+ #include <linux/seqlock_types.h>
+ #include <linux/device.h>
+-#include <linux/kernel.h>
+ #include <linux/stddef.h>
+ #include <linux/types.h>
+ 
+diff --git a/include/linux/bcm47xx_nvram.h b/include/linux/bcm47xx_nvram.h
+index 7615f8d7b1ed..e4b6ce953ddb 100644
+--- a/include/linux/bcm47xx_nvram.h
++++ b/include/linux/bcm47xx_nvram.h
+@@ -7,7 +7,6 @@
+ 
  #include <linux/errno.h>
- #include <linux/export.h>
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 784bcd943215..0c4b2b3f6217 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -7,6 +7,7 @@
- #include <linux/libnvdimm.h>
- #include <linux/bitfield.h>
- #include <linux/bitops.h>
-+#include <linux/device_types.h>
- #include <linux/device/driver.h>
- #include <linux/log2.h>
- #include <linux/node.h>
-diff --git a/drivers/devfreq/devfreq-event.c b/drivers/devfreq/devfreq-event.c
-index 649971baca70..48237648615a 100644
---- a/drivers/devfreq/devfreq-event.c
-+++ b/drivers/devfreq/devfreq-event.c
-@@ -9,6 +9,7 @@
+ #include <linux/types.h>
+-#include <linux/kernel.h>
+ #include <linux/vmalloc.h>
+ 
+ #ifdef CONFIG_BCM47XX_NVRAM
+diff --git a/include/linux/bcm47xx_sprom.h b/include/linux/bcm47xx_sprom.h
+index f8254fd53e15..bb2b58dffa98 100644
+--- a/include/linux/bcm47xx_sprom.h
++++ b/include/linux/bcm47xx_sprom.h
+@@ -6,7 +6,6 @@
+ #define __BCM47XX_SPROM_H
+ 
+ #include <linux/types.h>
+-#include <linux/kernel.h>
+ #include <linux/vmalloc.h>
+ 
+ struct ssb_sprom;
+diff --git a/include/linux/bit_spinlock.h b/include/linux/bit_spinlock.h
+index bbc4730a6505..9bb56222346c 100644
+--- a/include/linux/bit_spinlock.h
++++ b/include/linux/bit_spinlock.h
+@@ -2,7 +2,6 @@
+ #ifndef __LINUX_BIT_SPINLOCK_H
+ #define __LINUX_BIT_SPINLOCK_H
+ 
+-#include <linux/kernel.h>
+ #include <linux/preempt.h>
+ #include <linux/atomic.h>
+ #include <linux/bug.h>
+diff --git a/include/linux/bootconfig.h b/include/linux/bootconfig.h
+index 81f3738d453c..7187ce3d1a2f 100644
+--- a/include/linux/bootconfig.h
++++ b/include/linux/bootconfig.h
+@@ -8,7 +8,6 @@
   */
  
- #include <linux/devfreq-event.h>
-+#include <linux/device.h>
- #include <linux/kernel.h>
- #include <linux/err.h>
- #include <linux/init.h>
-diff --git a/drivers/extcon/extcon.h b/drivers/extcon/extcon.h
-index b2e0f715d81c..1b850b2a06ac 100644
---- a/drivers/extcon/extcon.h
-+++ b/drivers/extcon/extcon.h
-@@ -2,7 +2,7 @@
- #ifndef __LINUX_EXTCON_INTERNAL_H__
- #define __LINUX_EXTCON_INTERNAL_H__
+ #ifdef __KERNEL__
+-#include <linux/kernel.h>
+ #include <linux/init.h> // for __init
+ #include <linux/types.h>
+ #else /* !__KERNEL__ */
+diff --git a/include/linux/btree.h b/include/linux/btree.h
+index 243ee544397a..f88a19413419 100644
+--- a/include/linux/btree.h
++++ b/include/linux/btree.h
+@@ -2,7 +2,6 @@
+ #ifndef BTREE_H
+ #define BTREE_H
  
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/extcon-provider.h>
+-#include <linux/kernel.h>
+ #include <linux/mempool.h>
  
  /**
-diff --git a/drivers/gpu/drm/mcde/mcde_clk_div.c b/drivers/gpu/drm/mcde/mcde_clk_div.c
-index 3056ac566473..ac90497d366a 100644
---- a/drivers/gpu/drm/mcde/mcde_clk_div.c
-+++ b/drivers/gpu/drm/mcde/mcde_clk_div.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/clk-provider.h>
-+#include <linux/device.h> // for devm_kzalloc()
- #include <linux/io.h>
- #include <linux/regulator/consumer.h>
+diff --git a/include/linux/clk.h b/include/linux/clk.h
+index 2fcae620703b..f285683f40d8 100644
+--- a/include/linux/clk.h
++++ b/include/linux/clk.h
+@@ -10,7 +10,6 @@
+ #define __LINUX_CLK_H
  
-diff --git a/drivers/gpu/drm/renesas/rcar-du/rcar_du_encoder.c b/drivers/gpu/drm/renesas/rcar-du/rcar_du_encoder.c
-index 7ecec7b04a8d..18842d466b74 100644
---- a/drivers/gpu/drm/renesas/rcar-du/rcar_du_encoder.c
-+++ b/drivers/gpu/drm/renesas/rcar-du/rcar_du_encoder.c
-@@ -7,6 +7,7 @@
-  * Contact: Laurent Pinchart (laurent.pinchart@ideasonboard.com)
-  */
- 
-+#include <linux/device.h> // for dev_dbg()
- #include <linux/export.h>
- #include <linux/of.h>
- 
-diff --git a/drivers/gpu/drm/renesas/rcar-du/rcar_du_writeback.c b/drivers/gpu/drm/renesas/rcar-du/rcar_du_writeback.c
-index 8cd37d7b8ae2..0fb49db3a5b6 100644
---- a/drivers/gpu/drm/renesas/rcar-du/rcar_du_writeback.c
-+++ b/drivers/gpu/drm/renesas/rcar-du/rcar_du_writeback.c
-@@ -13,6 +13,8 @@
- #include <drm/drm_probe_helper.h>
- #include <drm/drm_writeback.h>
- 
-+#include <linux/device.h> // for dev_dbg()
-+
- #include "rcar_du_crtc.h"
- #include "rcar_du_drv.h"
- #include "rcar_du_kms.h"
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon_dclk.c b/drivers/gpu/drm/sun4i/sun4i_tcon_dclk.c
-index 03d7de1911cd..e27219f38e80 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon_dclk.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon_dclk.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <linux/clk-provider.h>
-+#include <linux/device.h> // for devm_kzalloc()
- #include <linux/regmap.h>
- 
- #include "sun4i_tcon.h"
-diff --git a/drivers/gpu/drm/tidss/tidss_encoder.c b/drivers/gpu/drm/tidss/tidss_encoder.c
-index 17a86bed8054..c002c07f262e 100644
---- a/drivers/gpu/drm/tidss/tidss_encoder.c
-+++ b/drivers/gpu/drm/tidss/tidss_encoder.c
-@@ -4,6 +4,7 @@
-  * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-  */
- 
-+#include <linux/device.h> // for dev_dbg()
- #include <linux/export.h>
- 
- #include <drm/drm_atomic_helper.h>
-diff --git a/drivers/gpu/drm/tidss/tidss_plane.c b/drivers/gpu/drm/tidss/tidss_plane.c
-index 2d9cc2b12cc6..13aac5a6ec21 100644
---- a/drivers/gpu/drm/tidss/tidss_plane.c
-+++ b/drivers/gpu/drm/tidss/tidss_plane.c
-@@ -11,6 +11,7 @@
- #include <drm/drm_fourcc.h>
- #include <drm/drm_framebuffer.h>
- #include <drm/drm_gem_atomic_helper.h>
-+#include <linux/device.h> // for dev_dbg()
- 
- #include <linux/device.h> // for dev_dbg()
- #include <linux/slab.h>
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 3beab76d31d4..9f0a021dfef3 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -11,7 +11,7 @@
- #include <linux/errno.h>
- #include <linux/ioport.h>	/* for struct resource */
- #include <linux/resource_ext.h>
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/mod_devicetable.h>
- #include <linux/property.h>
- #include <linux/uuid.h>
-diff --git a/include/linux/backlight.h b/include/linux/backlight.h
-index 614653e07e3a..9164ee5f1c8b 100644
---- a/include/linux/backlight.h
-+++ b/include/linux/backlight.h
-@@ -9,7 +9,7 @@
- #ifndef _LINUX_BACKLIGHT_H
- #define _LINUX_BACKLIGHT_H
- 
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/fb.h>
- #include <linux/mutex.h>
+ #include <linux/err.h>
+-#include <linux/kernel.h>
  #include <linux/notifier.h>
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index 9d2d8a8328a6..96a37f399928 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -8,7 +8,7 @@
+ #include <linux/sched/debug_atomic_sleep.h> // for might_sleep()
  
- #include <linux/types.h>
- #include <linux/bvec_types.h>
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/ktime.h>
- 
- struct bio_set;
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 2a8df9c0e87b..7e1fc101a5c3 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -8,7 +8,7 @@
- #include <linux/types.h>
- #include <linux/fs.h> // for inode_unhashed()
- #include <linux/blk_types.h>
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/list.h>
- #include <linux/minmax.h>
- #include <linux/timer_types.h>
-diff --git a/include/linux/container.h b/include/linux/container.h
-index dd00cc918a92..a90e59f0c65d 100644
---- a/include/linux/container.h
-+++ b/include/linux/container.h
-@@ -9,7 +9,7 @@
- #ifndef _LINUX_CONTAINER_H
- #define _LINUX_CONTAINER_H
- 
--#include <linux/device.h>
-+#include <linux/device_types.h>
- 
- /* drivers/base/power/container.c */
- extern const struct bus_type container_subsys;
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index a4cb7dd6ca23..fce16528de85 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -8,7 +8,7 @@
- 
- #include <linux/amba/bus.h>
- #include <linux/clk.h>
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/io.h>
- #include <linux/perf_event.h>
- #include <linux/sched.h>
 diff --git a/include/linux/counter.h b/include/linux/counter.h
-index 638ebb5b4d27..95e8067f4b78 100644
+index 95e8067f4b78..bc66c23e1bc6 100644
 --- a/include/linux/counter.h
 +++ b/include/linux/counter.h
-@@ -7,7 +7,7 @@
- #define _COUNTER_H_
+@@ -8,7 +8,6 @@
  
  #include <linux/cdev.h>
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/kernel.h>
+ #include <linux/device_types.h>
+-#include <linux/kernel.h>
  #include <linux/kfifo.h>
  #include <linux/mutex_types.h>
-diff --git a/include/linux/devfreq-event.h b/include/linux/devfreq-event.h
-index 4a50a5c71a5f..36f0e6cf7cc5 100644
---- a/include/linux/devfreq-event.h
-+++ b/include/linux/devfreq-event.h
-@@ -9,7 +9,7 @@
- #ifndef __LINUX_DEVFREQ_EVENT_H__
- #define __LINUX_DEVFREQ_EVENT_H__
+ #include <linux/spinlock_types.h>
+diff --git a/include/linux/cpu_pm.h b/include/linux/cpu_pm.h
+index 552b8f9ea05e..947e0f0faebe 100644
+--- a/include/linux/cpu_pm.h
++++ b/include/linux/cpu_pm.h
+@@ -9,7 +9,6 @@
+ #ifndef _LINUX_CPU_PM_H
+ #define _LINUX_CPU_PM_H
  
--#include <linux/device.h>
-+#include <linux/device_types.h>
- 
- /**
-  * struct devfreq_event_dev - the devfreq-event device
-diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
-index d312ffbac4dd..bf8d30af9fa2 100644
---- a/include/linux/devfreq.h
-+++ b/include/linux/devfreq.h
-@@ -10,7 +10,7 @@
- #ifndef __LINUX_DEVFREQ_H__
- #define __LINUX_DEVFREQ_H__
- 
--#include <linux/device.h>
-+#include <linux/device_types.h>
+-#include <linux/kernel.h>
  #include <linux/notifier.h>
- #include <linux/pm_opp.h>
- #include <linux/pm_qos.h>
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 3e221c132d89..56735ece2ada 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -12,6 +12,7 @@
- #ifndef _DEVICE_H_
- #define _DEVICE_H_
  
-+#include <linux/device_types.h>
- #include <linux/dev_printk.h>
- #include <linux/energy_model.h>
- #include <linux/ioport.h>
-@@ -30,7 +31,6 @@
- #include <linux/device/driver.h>
- #include <linux/cleanup.h>
- #include <linux/sysfs.h> // for __ATTR_*
--#include <asm/device.h>
- 
- struct device;
- struct device_private;
-@@ -46,27 +46,6 @@ struct dev_pin_info;
- struct dev_iommu;
- struct msi_device_data;
- 
--/**
-- * struct subsys_interface - interfaces to device functions
-- * @name:       name of the device function
-- * @subsys:     subsystem of the devices to attach to
-- * @node:       the list of functions registered at the subsystem
-- * @add_dev:    device hookup to device function handler
-- * @remove_dev: device hookup to device function handler
-- *
-- * Simple interfaces attached to a subsystem. Multiple interfaces can
-- * attach to a subsystem and its devices. Unlike drivers, they do not
-- * exclusively claim or control devices. Interfaces usually represent
-- * a specific functionality of a subsystem/class of devices.
-- */
--struct subsys_interface {
--	const char *name;
--	const struct bus_type *subsys;
--	struct list_head node;
--	int (*add_dev)(struct device *dev, struct subsys_interface *sif);
--	void (*remove_dev)(struct device *dev, struct subsys_interface *sif);
--};
--
- int subsys_interface_register(struct subsys_interface *sif);
- void subsys_interface_unregister(struct subsys_interface *sif);
- 
-@@ -75,50 +54,6 @@ int subsys_system_register(const struct bus_type *subsys,
- int subsys_virtual_register(const struct bus_type *subsys,
- 			    const struct attribute_group **groups);
- 
--/*
-- * The type of device, "struct device" is embedded in. A class
-- * or bus can contain devices of different types
-- * like "partitions" and "disks", "mouse" and "event".
-- * This identifies the device type and carries type-specific
-- * information, equivalent to the kobj_type of a kobject.
-- * If "name" is specified, the uevent will contain it in
-- * the DEVTYPE variable.
-- */
--struct device_type {
--	const char *name;
--	const struct attribute_group **groups;
--	int (*uevent)(const struct device *dev, struct kobj_uevent_env *env);
--	char *(*devnode)(const struct device *dev, umode_t *mode,
--			 kuid_t *uid, kgid_t *gid);
--	void (*release)(struct device *dev);
--
--	const struct dev_pm_ops *pm;
--};
--
--/**
-- * struct device_attribute - Interface for exporting device attributes.
-- * @attr: sysfs attribute definition.
-- * @show: Show handler.
-- * @store: Store handler.
-- */
--struct device_attribute {
--	struct attribute	attr;
--	ssize_t (*show)(struct device *dev, struct device_attribute *attr,
--			char *buf);
--	ssize_t (*store)(struct device *dev, struct device_attribute *attr,
--			 const char *buf, size_t count);
--};
--
--/**
-- * struct dev_ext_attribute - Exported device attribute with extra context.
-- * @attr: Exported device attribute.
-- * @var: Pointer to context.
-- */
--struct dev_ext_attribute {
--	struct device_attribute attr;
--	void *var;
--};
--
- ssize_t device_show_ulong(struct device *dev, struct device_attribute *attr,
- 			  char *buf);
- ssize_t device_store_ulong(struct device *dev, struct device_attribute *attr,
-@@ -423,34 +358,6 @@ void __percpu *__devm_alloc_percpu(struct device *dev, size_t size,
- 				   size_t align);
- void devm_free_percpu(struct device *dev, void __percpu *pdata);
- 
--struct device_dma_parameters {
--	/*
--	 * a low level driver may set these to teach IOMMU code about
--	 * sg limitations.
--	 */
--	unsigned int max_segment_size;
--	unsigned int min_align_mask;
--	unsigned long segment_boundary_mask;
--};
--
--/**
-- * enum device_link_state - Device link states.
-- * @DL_STATE_NONE: The presence of the drivers is not being tracked.
-- * @DL_STATE_DORMANT: None of the supplier/consumer drivers is present.
-- * @DL_STATE_AVAILABLE: The supplier driver is present, but the consumer is not.
-- * @DL_STATE_CONSUMER_PROBE: The consumer is probing (supplier driver present).
-- * @DL_STATE_ACTIVE: Both the supplier and consumer drivers are present.
-- * @DL_STATE_SUPPLIER_UNBIND: The supplier driver is unbinding.
-- */
--enum device_link_state {
--	DL_STATE_NONE = -1,
--	DL_STATE_DORMANT = 0,
--	DL_STATE_AVAILABLE,
--	DL_STATE_CONSUMER_PROBE,
--	DL_STATE_ACTIVE,
--	DL_STATE_SUPPLIER_UNBIND,
--};
--
  /*
-  * Device link flags.
-  *
-@@ -475,363 +382,6 @@ enum device_link_state {
- #define DL_FLAG_INFERRED		BIT(8)
- #define DL_FLAG_CYCLE			BIT(9)
- 
--/**
-- * enum dl_dev_state - Device driver presence tracking information.
-- * @DL_DEV_NO_DRIVER: There is no driver attached to the device.
-- * @DL_DEV_PROBING: A driver is probing.
-- * @DL_DEV_DRIVER_BOUND: The driver has been bound to the device.
-- * @DL_DEV_UNBINDING: The driver is unbinding from the device.
-- */
--enum dl_dev_state {
--	DL_DEV_NO_DRIVER = 0,
--	DL_DEV_PROBING,
--	DL_DEV_DRIVER_BOUND,
--	DL_DEV_UNBINDING,
--};
--
--/**
-- * enum device_removable - Whether the device is removable. The criteria for a
-- * device to be classified as removable is determined by its subsystem or bus.
-- * @DEVICE_REMOVABLE_NOT_SUPPORTED: This attribute is not supported for this
-- *				    device (default).
-- * @DEVICE_REMOVABLE_UNKNOWN:  Device location is Unknown.
-- * @DEVICE_FIXED: Device is not removable by the user.
-- * @DEVICE_REMOVABLE: Device is removable by the user.
-- */
--enum device_removable {
--	DEVICE_REMOVABLE_NOT_SUPPORTED = 0, /* must be 0 */
--	DEVICE_REMOVABLE_UNKNOWN,
--	DEVICE_FIXED,
--	DEVICE_REMOVABLE,
--};
--
--/**
-- * struct dev_links_info - Device data related to device links.
-- * @suppliers: List of links to supplier devices.
-- * @consumers: List of links to consumer devices.
-- * @defer_sync: Hook to global list of devices that have deferred sync_state.
-- * @status: Driver status information.
-- */
--struct dev_links_info {
--	struct list_head suppliers;
--	struct list_head consumers;
--	struct list_head defer_sync;
--	enum dl_dev_state status;
--};
--
--/**
-- * struct dev_msi_info - Device data related to MSI
-- * @domain:	The MSI interrupt domain associated to the device
-- * @data:	Pointer to MSI device data
-- */
--struct dev_msi_info {
--#ifdef CONFIG_GENERIC_MSI_IRQ
--	struct irq_domain	*domain;
--	struct msi_device_data	*data;
--#endif
--};
--
--/**
-- * enum device_physical_location_panel - Describes which panel surface of the
-- * system's housing the device connection point resides on.
-- * @DEVICE_PANEL_TOP: Device connection point is on the top panel.
-- * @DEVICE_PANEL_BOTTOM: Device connection point is on the bottom panel.
-- * @DEVICE_PANEL_LEFT: Device connection point is on the left panel.
-- * @DEVICE_PANEL_RIGHT: Device connection point is on the right panel.
-- * @DEVICE_PANEL_FRONT: Device connection point is on the front panel.
-- * @DEVICE_PANEL_BACK: Device connection point is on the back panel.
-- * @DEVICE_PANEL_UNKNOWN: The panel with device connection point is unknown.
-- */
--enum device_physical_location_panel {
--	DEVICE_PANEL_TOP,
--	DEVICE_PANEL_BOTTOM,
--	DEVICE_PANEL_LEFT,
--	DEVICE_PANEL_RIGHT,
--	DEVICE_PANEL_FRONT,
--	DEVICE_PANEL_BACK,
--	DEVICE_PANEL_UNKNOWN,
--};
--
--/**
-- * enum device_physical_location_vertical_position - Describes vertical
-- * position of the device connection point on the panel surface.
-- * @DEVICE_VERT_POS_UPPER: Device connection point is at upper part of panel.
-- * @DEVICE_VERT_POS_CENTER: Device connection point is at center part of panel.
-- * @DEVICE_VERT_POS_LOWER: Device connection point is at lower part of panel.
-- */
--enum device_physical_location_vertical_position {
--	DEVICE_VERT_POS_UPPER,
--	DEVICE_VERT_POS_CENTER,
--	DEVICE_VERT_POS_LOWER,
--};
--
--/**
-- * enum device_physical_location_horizontal_position - Describes horizontal
-- * position of the device connection point on the panel surface.
-- * @DEVICE_HORI_POS_LEFT: Device connection point is at left part of panel.
-- * @DEVICE_HORI_POS_CENTER: Device connection point is at center part of panel.
-- * @DEVICE_HORI_POS_RIGHT: Device connection point is at right part of panel.
-- */
--enum device_physical_location_horizontal_position {
--	DEVICE_HORI_POS_LEFT,
--	DEVICE_HORI_POS_CENTER,
--	DEVICE_HORI_POS_RIGHT,
--};
--
--/**
-- * struct device_physical_location - Device data related to physical location
-- * of the device connection point.
-- * @panel: Panel surface of the system's housing that the device connection
-- *         point resides on.
-- * @vertical_position: Vertical position of the device connection point within
-- *                     the panel.
-- * @horizontal_position: Horizontal position of the device connection point
-- *                       within the panel.
-- * @dock: Set if the device connection point resides in a docking station or
-- *        port replicator.
-- * @lid: Set if this device connection point resides on the lid of laptop
-- *       system.
-- */
--struct device_physical_location {
--	enum device_physical_location_panel panel;
--	enum device_physical_location_vertical_position vertical_position;
--	enum device_physical_location_horizontal_position horizontal_position;
--	bool dock;
--	bool lid;
--};
--
--/**
-- * struct device - The basic device structure
-- * @parent:	The device's "parent" device, the device to which it is attached.
-- * 		In most cases, a parent device is some sort of bus or host
-- * 		controller. If parent is NULL, the device, is a top-level device,
-- * 		which is not usually what you want.
-- * @p:		Holds the private data of the driver core portions of the device.
-- * 		See the comment of the struct device_private for detail.
-- * @kobj:	A top-level, abstract class from which other classes are derived.
-- * @init_name:	Initial name of the device.
-- * @type:	The type of device.
-- * 		This identifies the device type and carries type-specific
-- * 		information.
-- * @mutex:	Mutex to synchronize calls to its driver.
-- * @bus:	Type of bus device is on.
-- * @driver:	Which driver has allocated this
-- * @platform_data: Platform data specific to the device.
-- * 		Example: For devices on custom boards, as typical of embedded
-- * 		and SOC based hardware, Linux often uses platform_data to point
-- * 		to board-specific structures describing devices and how they
-- * 		are wired.  That can include what ports are available, chip
-- * 		variants, which GPIO pins act in what additional roles, and so
-- * 		on.  This shrinks the "Board Support Packages" (BSPs) and
-- * 		minimizes board-specific #ifdefs in drivers.
-- * @driver_data: Private pointer for driver specific info.
-- * @links:	Links to suppliers and consumers of this device.
-- * @power:	For device power management.
-- *		See Documentation/driver-api/pm/devices.rst for details.
-- * @pm_domain:	Provide callbacks that are executed during system suspend,
-- * 		hibernation, system resume and during runtime PM transitions
-- * 		along with subsystem-level and driver-level callbacks.
-- * @em_pd:	device's energy model performance domain
-- * @pins:	For device pin management.
-- *		See Documentation/driver-api/pin-control.rst for details.
-- * @msi:	MSI related data
-- * @numa_node:	NUMA node this device is close to.
-- * @dma_ops:    DMA mapping operations for this device.
-- * @dma_mask:	Dma mask (if dma'ble device).
-- * @coherent_dma_mask: Like dma_mask, but for alloc_coherent mapping as not all
-- * 		hardware supports 64-bit addresses for consistent allocations
-- * 		such descriptors.
-- * @bus_dma_limit: Limit of an upstream bridge or bus which imposes a smaller
-- *		DMA limit than the device itself supports.
-- * @dma_range_map: map for DMA memory ranges relative to that of RAM
-- * @dma_parms:	A low level driver may set these to teach IOMMU code about
-- * 		segment limitations.
-- * @dma_pools:	Dma pools (if dma'ble device).
-- * @dma_mem:	Internal for coherent mem override.
-- * @cma_area:	Contiguous memory area for dma allocations
-- * @dma_io_tlb_mem: Software IO TLB allocator.  Not for driver use.
-- * @dma_io_tlb_pools:	List of transient swiotlb memory pools.
-- * @dma_io_tlb_lock:	Protects changes to the list of active pools.
-- * @dma_uses_io_tlb: %true if device has used the software IO TLB.
-- * @archdata:	For arch-specific additions.
-- * @of_node:	Associated device tree node.
-- * @fwnode:	Associated device node supplied by platform firmware.
-- * @devt:	For creating the sysfs "dev".
-- * @id:		device instance
-- * @devres_lock: Spinlock to protect the resource of the device.
-- * @devres_head: The resources list of the device.
-- * @class:	The class of the device.
-- * @groups:	Optional attribute groups.
-- * @release:	Callback to free the device after all references have
-- * 		gone away. This should be set by the allocator of the
-- * 		device (i.e. the bus driver that discovered the device).
-- * @iommu_group: IOMMU group the device belongs to.
-- * @iommu:	Per device generic IOMMU runtime data
-- * @physical_location: Describes physical location of the device connection
-- *		point in the system housing.
-- * @removable:  Whether the device can be removed from the system. This
-- *              should be set by the subsystem / bus driver that discovered
-- *              the device.
-- *
-- * @offline_disabled: If set, the device is permanently online.
-- * @offline:	Set after successful invocation of bus type's .offline().
-- * @of_node_reused: Set if the device-tree node is shared with an ancestor
-- *              device.
-- * @state_synced: The hardware state of this device has been synced to match
-- *		  the software state of this device by calling the driver/bus
-- *		  sync_state() callback.
-- * @can_match:	The device has matched with a driver at least once or it is in
-- *		a bus (like AMBA) which can't check for matching drivers until
-- *		other devices probe successfully.
-- * @dma_coherent: this particular device is dma coherent, even if the
-- *		architecture supports non-coherent devices.
-- * @dma_ops_bypass: If set to %true then the dma_ops are bypassed for the
-- *		streaming DMA operations (->map_* / ->unmap_* / ->sync_*),
-- *		and optionall (if the coherent mask is large enough) also
-- *		for dma allocations.  This flag is managed by the dma ops
-- *		instance from ->dma_supported.
-- *
-- * At the lowest level, every device in a Linux system is represented by an
-- * instance of struct device. The device structure contains the information
-- * that the device model core needs to model the system. Most subsystems,
-- * however, track additional information about the devices they host. As a
-- * result, it is rare for devices to be represented by bare device structures;
-- * instead, that structure, like kobject structures, is usually embedded within
-- * a higher-level representation of the device.
-- */
--struct device {
--	struct kobject kobj;
--	struct device		*parent;
--
--	struct device_private	*p;
--
--	const char		*init_name; /* initial name of the device */
--	const struct device_type *type;
--
--	const struct bus_type	*bus;	/* type of bus device is on */
--	struct device_driver *driver;	/* which driver has allocated this
--					   device */
--	void		*platform_data;	/* Platform specific data, device
--					   core doesn't touch it */
--	void		*driver_data;	/* Driver data, set and get with
--					   dev_set_drvdata/dev_get_drvdata */
--	struct mutex		mutex;	/* mutex to synchronize calls to
--					 * its driver.
--					 */
--
--	struct dev_links_info	links;
--	struct dev_pm_info	power;
--	struct dev_pm_domain	*pm_domain;
--
--#ifdef CONFIG_ENERGY_MODEL
--	struct em_perf_domain	*em_pd;
--#endif
--
--#ifdef CONFIG_PINCTRL
--	struct dev_pin_info	*pins;
--#endif
--	struct dev_msi_info	msi;
--#ifdef CONFIG_DMA_OPS
--	const struct dma_map_ops *dma_ops;
--#endif
--	u64		*dma_mask;	/* dma mask (if dma'able device) */
--	u64		coherent_dma_mask;/* Like dma_mask, but for
--					     alloc_coherent mappings as
--					     not all hardware supports
--					     64 bit addresses for consistent
--					     allocations such descriptors. */
--	u64		bus_dma_limit;	/* upstream dma constraint */
--	const struct bus_dma_region *dma_range_map;
--
--	struct device_dma_parameters *dma_parms;
--
--	struct list_head	dma_pools;	/* dma pools (if dma'ble) */
--
--#ifdef CONFIG_DMA_DECLARE_COHERENT
--	struct dma_coherent_mem	*dma_mem; /* internal for coherent mem
--					     override */
--#endif
--#ifdef CONFIG_DMA_CMA
--	struct cma *cma_area;		/* contiguous memory area for dma
--					   allocations */
--#endif
--#ifdef CONFIG_SWIOTLB
--	struct io_tlb_mem *dma_io_tlb_mem;
--#endif
--#ifdef CONFIG_SWIOTLB_DYNAMIC
--	struct list_head dma_io_tlb_pools;
--	spinlock_t dma_io_tlb_lock;
--	bool dma_uses_io_tlb;
--#endif
--	/* arch specific additions */
--	struct dev_archdata	archdata;
--
--	struct device_node	*of_node; /* associated device tree node */
--	struct fwnode_handle	*fwnode; /* firmware device node */
--
--#ifdef CONFIG_NUMA
--	int		numa_node;	/* NUMA node this device is close to */
--#endif
--	dev_t			devt;	/* dev_t, creates the sysfs "dev" */
--	u32			id;	/* device instance */
--
--	spinlock_t		devres_lock;
--	struct list_head	devres_head;
--
--	const struct class	*class;
--	const struct attribute_group **groups;	/* optional groups */
--
--	void	(*release)(struct device *dev);
--	struct iommu_group	*iommu_group;
--	struct dev_iommu	*iommu;
--
--	struct device_physical_location *physical_location;
--
--	enum device_removable	removable;
--
--	bool			offline_disabled:1;
--	bool			offline:1;
--	bool			of_node_reused:1;
--	bool			state_synced:1;
--	bool			can_match:1;
--#if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
--    defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
--    defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
--	bool			dma_coherent:1;
--#endif
--#ifdef CONFIG_DMA_OPS_BYPASS
--	bool			dma_ops_bypass : 1;
--#endif
--};
--
--/**
-- * struct device_link - Device link representation.
-- * @supplier: The device on the supplier end of the link.
-- * @s_node: Hook to the supplier device's list of links to consumers.
-- * @consumer: The device on the consumer end of the link.
-- * @c_node: Hook to the consumer device's list of links to suppliers.
-- * @link_dev: device used to expose link details in sysfs
-- * @status: The state of the link (with respect to the presence of drivers).
-- * @flags: Link flags.
-- * @rpm_active: Whether or not the consumer device is runtime-PM-active.
-- * @kref: Count repeated addition of the same link.
-- * @rm_work: Work structure used for removing the link.
-- * @supplier_preactivated: Supplier has been made active before consumer probe.
-- */
--struct device_link {
--	struct device *supplier;
--	struct list_head s_node;
--	struct device *consumer;
--	struct list_head c_node;
--	struct device link_dev;
--	enum device_link_state status;
--	u32 flags;
--	refcount_t rpm_active;
--	struct kref kref;
--	struct work_struct rm_work;
--	bool supplier_preactivated; /* Owned by consumer probe. */
--};
--
- #define kobj_to_dev(__kobj)	container_of_const(__kobj, struct device, kobj)
- 
- /**
-@@ -847,20 +397,6 @@ static inline bool device_iommu_mapped(struct device *dev)
- /* Get the wakeup routines, which depend on struct device */
- #include <linux/pm_wakeup.h>
- 
--/**
-- * dev_name - Return a device's name.
-- * @dev: Device with name to get.
-- * Return: The kobject name of the device, or its initial name if unavailable.
-- */
--static inline const char *dev_name(const struct device *dev)
--{
--	/* Use the init name until the kobject becomes available */
--	if (dev->init_name)
--		return dev->init_name;
--
--	return kobject_name(&dev->kobj);
--}
--
- /**
-  * dev_bus_name - Return a device's bus/class name, if at all possible
-  * @dev: struct device to get the bus/class name of
-diff --git a/include/linux/device_types.h b/include/linux/device_types.h
-new file mode 100644
-index 000000000000..ead555b00c11
---- /dev/null
-+++ b/include/linux/device_types.h
-@@ -0,0 +1,501 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * device.h - generic, centralized driver model
-+ *
-+ * Copyright (c) 2001-2003 Patrick Mochel <mochel@osdl.org>
-+ * Copyright (c) 2004-2009 Greg Kroah-Hartman <gregkh@suse.de>
-+ * Copyright (c) 2008-2009 Novell Inc.
-+ *
-+ * See Documentation/driver-api/driver-model/ for more information.
-+ */
-+
-+#ifndef _DEVICE_TYPES_H_
-+#define _DEVICE_TYPES_H_
-+
-+#include <linux/kobject_types.h>
-+#include <linux/mutex_types.h>
-+#include <linux/pm.h>
-+#include <linux/sysfs_types.h>
-+#include <linux/uidgid_types.h>
-+#include <asm/device.h>
-+
-+struct device;
-+struct device_private;
-+struct device_driver;
-+struct driver_private;
-+struct module;
-+struct class;
-+struct subsys_private;
-+struct device_node;
-+struct fwnode_handle;
-+struct iommu_group;
-+struct dev_pin_info;
-+struct dev_iommu;
-+struct msi_device_data;
-+struct kobj_uevent_env;
-+
-+/**
-+ * struct subsys_interface - interfaces to device functions
-+ * @name:       name of the device function
-+ * @subsys:     subsystem of the devices to attach to
-+ * @node:       the list of functions registered at the subsystem
-+ * @add_dev:    device hookup to device function handler
-+ * @remove_dev: device hookup to device function handler
-+ *
-+ * Simple interfaces attached to a subsystem. Multiple interfaces can
-+ * attach to a subsystem and its devices. Unlike drivers, they do not
-+ * exclusively claim or control devices. Interfaces usually represent
-+ * a specific functionality of a subsystem/class of devices.
-+ */
-+struct subsys_interface {
-+	const char *name;
-+	const struct bus_type *subsys;
-+	struct list_head node;
-+	int (*add_dev)(struct device *dev, struct subsys_interface *sif);
-+	void (*remove_dev)(struct device *dev, struct subsys_interface *sif);
-+};
-+
-+/*
-+ * The type of device, "struct device" is embedded in. A class
-+ * or bus can contain devices of different types
-+ * like "partitions" and "disks", "mouse" and "event".
-+ * This identifies the device type and carries type-specific
-+ * information, equivalent to the kobj_type of a kobject.
-+ * If "name" is specified, the uevent will contain it in
-+ * the DEVTYPE variable.
-+ */
-+struct device_type {
-+	const char *name;
-+	const struct attribute_group **groups;
-+	int (*uevent)(const struct device *dev, struct kobj_uevent_env *env);
-+	char *(*devnode)(const struct device *dev, umode_t *mode,
-+			 kuid_t *uid, kgid_t *gid);
-+	void (*release)(struct device *dev);
-+
-+	const struct dev_pm_ops *pm;
-+};
-+
-+/**
-+ * struct device_attribute - Interface for exporting device attributes.
-+ * @attr: sysfs attribute definition.
-+ * @show: Show handler.
-+ * @store: Store handler.
-+ */
-+struct device_attribute {
-+	struct attribute	attr;
-+	ssize_t (*show)(struct device *dev, struct device_attribute *attr,
-+			char *buf);
-+	ssize_t (*store)(struct device *dev, struct device_attribute *attr,
-+			 const char *buf, size_t count);
-+};
-+
-+/**
-+ * struct dev_ext_attribute - Exported device attribute with extra context.
-+ * @attr: Exported device attribute.
-+ * @var: Pointer to context.
-+ */
-+struct dev_ext_attribute {
-+	struct device_attribute attr;
-+	void *var;
-+};
-+
-+struct device_dma_parameters {
-+	/*
-+	 * a low level driver may set these to teach IOMMU code about
-+	 * sg limitations.
-+	 */
-+	unsigned int max_segment_size;
-+	unsigned int min_align_mask;
-+	unsigned long segment_boundary_mask;
-+};
-+
-+/**
-+ * enum device_link_state - Device link states.
-+ * @DL_STATE_NONE: The presence of the drivers is not being tracked.
-+ * @DL_STATE_DORMANT: None of the supplier/consumer drivers is present.
-+ * @DL_STATE_AVAILABLE: The supplier driver is present, but the consumer is not.
-+ * @DL_STATE_CONSUMER_PROBE: The consumer is probing (supplier driver present).
-+ * @DL_STATE_ACTIVE: Both the supplier and consumer drivers are present.
-+ * @DL_STATE_SUPPLIER_UNBIND: The supplier driver is unbinding.
-+ */
-+enum device_link_state {
-+	DL_STATE_NONE = -1,
-+	DL_STATE_DORMANT = 0,
-+	DL_STATE_AVAILABLE,
-+	DL_STATE_CONSUMER_PROBE,
-+	DL_STATE_ACTIVE,
-+	DL_STATE_SUPPLIER_UNBIND,
-+};
-+
-+/**
-+ * enum dl_dev_state - Device driver presence tracking information.
-+ * @DL_DEV_NO_DRIVER: There is no driver attached to the device.
-+ * @DL_DEV_PROBING: A driver is probing.
-+ * @DL_DEV_DRIVER_BOUND: The driver has been bound to the device.
-+ * @DL_DEV_UNBINDING: The driver is unbinding from the device.
-+ */
-+enum dl_dev_state {
-+	DL_DEV_NO_DRIVER = 0,
-+	DL_DEV_PROBING,
-+	DL_DEV_DRIVER_BOUND,
-+	DL_DEV_UNBINDING,
-+};
-+
-+/**
-+ * enum device_removable - Whether the device is removable. The criteria for a
-+ * device to be classified as removable is determined by its subsystem or bus.
-+ * @DEVICE_REMOVABLE_NOT_SUPPORTED: This attribute is not supported for this
-+ *				    device (default).
-+ * @DEVICE_REMOVABLE_UNKNOWN:  Device location is Unknown.
-+ * @DEVICE_FIXED: Device is not removable by the user.
-+ * @DEVICE_REMOVABLE: Device is removable by the user.
-+ */
-+enum device_removable {
-+	DEVICE_REMOVABLE_NOT_SUPPORTED = 0, /* must be 0 */
-+	DEVICE_REMOVABLE_UNKNOWN,
-+	DEVICE_FIXED,
-+	DEVICE_REMOVABLE,
-+};
-+
-+/**
-+ * struct dev_links_info - Device data related to device links.
-+ * @suppliers: List of links to supplier devices.
-+ * @consumers: List of links to consumer devices.
-+ * @defer_sync: Hook to global list of devices that have deferred sync_state.
-+ * @status: Driver status information.
-+ */
-+struct dev_links_info {
-+	struct list_head suppliers;
-+	struct list_head consumers;
-+	struct list_head defer_sync;
-+	enum dl_dev_state status;
-+};
-+
-+/**
-+ * struct dev_msi_info - Device data related to MSI
-+ * @domain:	The MSI interrupt domain associated to the device
-+ * @data:	Pointer to MSI device data
-+ */
-+struct dev_msi_info {
-+#ifdef CONFIG_GENERIC_MSI_IRQ
-+	struct irq_domain	*domain;
-+	struct msi_device_data	*data;
-+#endif
-+};
-+
-+/**
-+ * enum device_physical_location_panel - Describes which panel surface of the
-+ * system's housing the device connection point resides on.
-+ * @DEVICE_PANEL_TOP: Device connection point is on the top panel.
-+ * @DEVICE_PANEL_BOTTOM: Device connection point is on the bottom panel.
-+ * @DEVICE_PANEL_LEFT: Device connection point is on the left panel.
-+ * @DEVICE_PANEL_RIGHT: Device connection point is on the right panel.
-+ * @DEVICE_PANEL_FRONT: Device connection point is on the front panel.
-+ * @DEVICE_PANEL_BACK: Device connection point is on the back panel.
-+ * @DEVICE_PANEL_UNKNOWN: The panel with device connection point is unknown.
-+ */
-+enum device_physical_location_panel {
-+	DEVICE_PANEL_TOP,
-+	DEVICE_PANEL_BOTTOM,
-+	DEVICE_PANEL_LEFT,
-+	DEVICE_PANEL_RIGHT,
-+	DEVICE_PANEL_FRONT,
-+	DEVICE_PANEL_BACK,
-+	DEVICE_PANEL_UNKNOWN,
-+};
-+
-+/**
-+ * enum device_physical_location_vertical_position - Describes vertical
-+ * position of the device connection point on the panel surface.
-+ * @DEVICE_VERT_POS_UPPER: Device connection point is at upper part of panel.
-+ * @DEVICE_VERT_POS_CENTER: Device connection point is at center part of panel.
-+ * @DEVICE_VERT_POS_LOWER: Device connection point is at lower part of panel.
-+ */
-+enum device_physical_location_vertical_position {
-+	DEVICE_VERT_POS_UPPER,
-+	DEVICE_VERT_POS_CENTER,
-+	DEVICE_VERT_POS_LOWER,
-+};
-+
-+/**
-+ * enum device_physical_location_horizontal_position - Describes horizontal
-+ * position of the device connection point on the panel surface.
-+ * @DEVICE_HORI_POS_LEFT: Device connection point is at left part of panel.
-+ * @DEVICE_HORI_POS_CENTER: Device connection point is at center part of panel.
-+ * @DEVICE_HORI_POS_RIGHT: Device connection point is at right part of panel.
-+ */
-+enum device_physical_location_horizontal_position {
-+	DEVICE_HORI_POS_LEFT,
-+	DEVICE_HORI_POS_CENTER,
-+	DEVICE_HORI_POS_RIGHT,
-+};
-+
-+/**
-+ * struct device_physical_location - Device data related to physical location
-+ * of the device connection point.
-+ * @panel: Panel surface of the system's housing that the device connection
-+ *         point resides on.
-+ * @vertical_position: Vertical position of the device connection point within
-+ *                     the panel.
-+ * @horizontal_position: Horizontal position of the device connection point
-+ *                       within the panel.
-+ * @dock: Set if the device connection point resides in a docking station or
-+ *        port replicator.
-+ * @lid: Set if this device connection point resides on the lid of laptop
-+ *       system.
-+ */
-+struct device_physical_location {
-+	enum device_physical_location_panel panel;
-+	enum device_physical_location_vertical_position vertical_position;
-+	enum device_physical_location_horizontal_position horizontal_position;
-+	bool dock;
-+	bool lid;
-+};
-+
-+/**
-+ * struct device - The basic device structure
-+ * @parent:	The device's "parent" device, the device to which it is attached.
-+ * 		In most cases, a parent device is some sort of bus or host
-+ * 		controller. If parent is NULL, the device, is a top-level device,
-+ * 		which is not usually what you want.
-+ * @p:		Holds the private data of the driver core portions of the device.
-+ * 		See the comment of the struct device_private for detail.
-+ * @kobj:	A top-level, abstract class from which other classes are derived.
-+ * @init_name:	Initial name of the device.
-+ * @type:	The type of device.
-+ * 		This identifies the device type and carries type-specific
-+ * 		information.
-+ * @mutex:	Mutex to synchronize calls to its driver.
-+ * @bus:	Type of bus device is on.
-+ * @driver:	Which driver has allocated this
-+ * @platform_data: Platform data specific to the device.
-+ * 		Example: For devices on custom boards, as typical of embedded
-+ * 		and SOC based hardware, Linux often uses platform_data to point
-+ * 		to board-specific structures describing devices and how they
-+ * 		are wired.  That can include what ports are available, chip
-+ * 		variants, which GPIO pins act in what additional roles, and so
-+ * 		on.  This shrinks the "Board Support Packages" (BSPs) and
-+ * 		minimizes board-specific #ifdefs in drivers.
-+ * @driver_data: Private pointer for driver specific info.
-+ * @links:	Links to suppliers and consumers of this device.
-+ * @power:	For device power management.
-+ *		See Documentation/driver-api/pm/devices.rst for details.
-+ * @pm_domain:	Provide callbacks that are executed during system suspend,
-+ * 		hibernation, system resume and during runtime PM transitions
-+ * 		along with subsystem-level and driver-level callbacks.
-+ * @em_pd:	device's energy model performance domain
-+ * @pins:	For device pin management.
-+ *		See Documentation/driver-api/pin-control.rst for details.
-+ * @msi:	MSI related data
-+ * @numa_node:	NUMA node this device is close to.
-+ * @dma_ops:    DMA mapping operations for this device.
-+ * @dma_mask:	Dma mask (if dma'ble device).
-+ * @coherent_dma_mask: Like dma_mask, but for alloc_coherent mapping as not all
-+ * 		hardware supports 64-bit addresses for consistent allocations
-+ * 		such descriptors.
-+ * @bus_dma_limit: Limit of an upstream bridge or bus which imposes a smaller
-+ *		DMA limit than the device itself supports.
-+ * @dma_range_map: map for DMA memory ranges relative to that of RAM
-+ * @dma_parms:	A low level driver may set these to teach IOMMU code about
-+ * 		segment limitations.
-+ * @dma_pools:	Dma pools (if dma'ble device).
-+ * @dma_mem:	Internal for coherent mem override.
-+ * @cma_area:	Contiguous memory area for dma allocations
-+ * @dma_io_tlb_mem: Software IO TLB allocator.  Not for driver use.
-+ * @dma_io_tlb_pools:	List of transient swiotlb memory pools.
-+ * @dma_io_tlb_lock:	Protects changes to the list of active pools.
-+ * @dma_uses_io_tlb: %true if device has used the software IO TLB.
-+ * @archdata:	For arch-specific additions.
-+ * @of_node:	Associated device tree node.
-+ * @fwnode:	Associated device node supplied by platform firmware.
-+ * @devt:	For creating the sysfs "dev".
-+ * @id:		device instance
-+ * @devres_lock: Spinlock to protect the resource of the device.
-+ * @devres_head: The resources list of the device.
-+ * @class:	The class of the device.
-+ * @groups:	Optional attribute groups.
-+ * @release:	Callback to free the device after all references have
-+ * 		gone away. This should be set by the allocator of the
-+ * 		device (i.e. the bus driver that discovered the device).
-+ * @iommu_group: IOMMU group the device belongs to.
-+ * @iommu:	Per device generic IOMMU runtime data
-+ * @physical_location: Describes physical location of the device connection
-+ *		point in the system housing.
-+ * @removable:  Whether the device can be removed from the system. This
-+ *              should be set by the subsystem / bus driver that discovered
-+ *              the device.
-+ *
-+ * @offline_disabled: If set, the device is permanently online.
-+ * @offline:	Set after successful invocation of bus type's .offline().
-+ * @of_node_reused: Set if the device-tree node is shared with an ancestor
-+ *              device.
-+ * @state_synced: The hardware state of this device has been synced to match
-+ *		  the software state of this device by calling the driver/bus
-+ *		  sync_state() callback.
-+ * @can_match:	The device has matched with a driver at least once or it is in
-+ *		a bus (like AMBA) which can't check for matching drivers until
-+ *		other devices probe successfully.
-+ * @dma_coherent: this particular device is dma coherent, even if the
-+ *		architecture supports non-coherent devices.
-+ * @dma_ops_bypass: If set to %true then the dma_ops are bypassed for the
-+ *		streaming DMA operations (->map_* / ->unmap_* / ->sync_*),
-+ *		and optionall (if the coherent mask is large enough) also
-+ *		for dma allocations.  This flag is managed by the dma ops
-+ *		instance from ->dma_supported.
-+ *
-+ * At the lowest level, every device in a Linux system is represented by an
-+ * instance of struct device. The device structure contains the information
-+ * that the device model core needs to model the system. Most subsystems,
-+ * however, track additional information about the devices they host. As a
-+ * result, it is rare for devices to be represented by bare device structures;
-+ * instead, that structure, like kobject structures, is usually embedded within
-+ * a higher-level representation of the device.
-+ */
-+struct device {
-+	struct kobject kobj;
-+	struct device		*parent;
-+
-+	struct device_private	*p;
-+
-+	const char		*init_name; /* initial name of the device */
-+	const struct device_type *type;
-+
-+	const struct bus_type	*bus;	/* type of bus device is on */
-+	struct device_driver *driver;	/* which driver has allocated this
-+					   device */
-+	void		*platform_data;	/* Platform specific data, device
-+					   core doesn't touch it */
-+	void		*driver_data;	/* Driver data, set and get with
-+					   dev_set_drvdata/dev_get_drvdata */
-+	struct mutex		mutex;	/* mutex to synchronize calls to
-+					 * its driver.
-+					 */
-+
-+	struct dev_links_info	links;
-+	struct dev_pm_info	power;
-+	struct dev_pm_domain	*pm_domain;
-+
-+#ifdef CONFIG_ENERGY_MODEL
-+	struct em_perf_domain	*em_pd;
-+#endif
-+
-+#ifdef CONFIG_PINCTRL
-+	struct dev_pin_info	*pins;
-+#endif
-+	struct dev_msi_info	msi;
-+#ifdef CONFIG_DMA_OPS
-+	const struct dma_map_ops *dma_ops;
-+#endif
-+	u64		*dma_mask;	/* dma mask (if dma'able device) */
-+	u64		coherent_dma_mask;/* Like dma_mask, but for
-+					     alloc_coherent mappings as
-+					     not all hardware supports
-+					     64 bit addresses for consistent
-+					     allocations such descriptors. */
-+	u64		bus_dma_limit;	/* upstream dma constraint */
-+	const struct bus_dma_region *dma_range_map;
-+
-+	struct device_dma_parameters *dma_parms;
-+
-+	struct list_head	dma_pools;	/* dma pools (if dma'ble) */
-+
-+#ifdef CONFIG_DMA_DECLARE_COHERENT
-+	struct dma_coherent_mem	*dma_mem; /* internal for coherent mem
-+					     override */
-+#endif
-+#ifdef CONFIG_DMA_CMA
-+	struct cma *cma_area;		/* contiguous memory area for dma
-+					   allocations */
-+#endif
-+#ifdef CONFIG_SWIOTLB
-+	struct io_tlb_mem *dma_io_tlb_mem;
-+#endif
-+#ifdef CONFIG_SWIOTLB_DYNAMIC
-+	struct list_head dma_io_tlb_pools;
-+	spinlock_t dma_io_tlb_lock;
-+	bool dma_uses_io_tlb;
-+#endif
-+	/* arch specific additions */
-+	struct dev_archdata	archdata;
-+
-+	struct device_node	*of_node; /* associated device tree node */
-+	struct fwnode_handle	*fwnode; /* firmware device node */
-+
-+#ifdef CONFIG_NUMA
-+	int		numa_node;	/* NUMA node this device is close to */
-+#endif
-+	dev_t			devt;	/* dev_t, creates the sysfs "dev" */
-+	u32			id;	/* device instance */
-+
-+	spinlock_t		devres_lock;
-+	struct list_head	devres_head;
-+
-+	const struct class	*class;
-+	const struct attribute_group **groups;	/* optional groups */
-+
-+	void	(*release)(struct device *dev);
-+	struct iommu_group	*iommu_group;
-+	struct dev_iommu	*iommu;
-+
-+	struct device_physical_location *physical_location;
-+
-+	enum device_removable	removable;
-+
-+	bool			offline_disabled:1;
-+	bool			offline:1;
-+	bool			of_node_reused:1;
-+	bool			state_synced:1;
-+	bool			can_match:1;
-+#if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
-+    defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
-+    defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
-+	bool			dma_coherent:1;
-+#endif
-+#ifdef CONFIG_DMA_OPS_BYPASS
-+	bool			dma_ops_bypass : 1;
-+#endif
-+};
-+
-+/**
-+ * struct device_link - Device link representation.
-+ * @supplier: The device on the supplier end of the link.
-+ * @s_node: Hook to the supplier device's list of links to consumers.
-+ * @consumer: The device on the consumer end of the link.
-+ * @c_node: Hook to the consumer device's list of links to suppliers.
-+ * @link_dev: device used to expose link details in sysfs
-+ * @status: The state of the link (with respect to the presence of drivers).
-+ * @flags: Link flags.
-+ * @rpm_active: Whether or not the consumer device is runtime-PM-active.
-+ * @kref: Count repeated addition of the same link.
-+ * @rm_work: Work structure used for removing the link.
-+ * @supplier_preactivated: Supplier has been made active before consumer probe.
-+ */
-+struct device_link {
-+	struct device *supplier;
-+	struct list_head s_node;
-+	struct device *consumer;
-+	struct list_head c_node;
-+	struct device link_dev;
-+	enum device_link_state status;
-+	u32 flags;
-+	refcount_t rpm_active;
-+	struct kref kref;
-+	struct work_struct rm_work;
-+	bool supplier_preactivated; /* Owned by consumer probe. */
-+};
-+
-+/**
-+ * dev_name - Return a device's name.
-+ * @dev: Device with name to get.
-+ * Return: The kobject name of the device, or its initial name if unavailable.
-+ */
-+static inline const char *dev_name(const struct device *dev)
-+{
-+	/* Use the init name until the kobject becomes available */
-+	if (dev->init_name)
-+		return dev->init_name;
-+
-+	return kobject_name(&dev->kobj);
-+}
-+
-+#endif /* _DEVICE_TYPES_H_ */
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 32c2f49177b1..765f799d49bd 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -5,7 +5,7 @@
- #ifndef LINUX_DMAENGINE_H
- #define LINUX_DMAENGINE_H
- 
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/err.h>
- #include <linux/idr.h> // for struct ida
- #include <linux/uio.h>
-diff --git a/include/linux/edac.h b/include/linux/edac.h
-index 7b78403cac40..08ba34f2a43e 100644
---- a/include/linux/edac.h
-+++ b/include/linux/edac.h
-@@ -13,7 +13,7 @@
- #define _LINUX_EDAC_H_
- 
+diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
+index 2b601a7eb148..fbb5e29aac3b 100644
+--- a/include/linux/cpumask.h
++++ b/include/linux/cpumask.h
+@@ -8,7 +8,6 @@
+  * only nr_cpu_ids (<= NR_CPUS) bits are valid.
+  */
+ #include <linux/cleanup.h>
+-#include <linux/kernel.h>
+ #include <linux/threads.h>
+ #include <linux/bitmap.h>
  #include <linux/atomic.h>
--#include <linux/device.h>
-+#include <linux/device_types.h>
+diff --git a/include/linux/decompress/mm.h b/include/linux/decompress/mm.h
+index ac862422df15..3fa9bbe24272 100644
+--- a/include/linux/decompress/mm.h
++++ b/include/linux/decompress/mm.h
+@@ -76,7 +76,6 @@ MALLOC_VISIBLE void free(void *where)
+ 
+ /* Code active when compiled standalone for use when loading ramdisk: */
+ 
+-#include <linux/kernel.h>
+ #include <linux/fs.h>
+ #include <linux/string.h>
+ #include <linux/slab.h>
+diff --git a/include/linux/dim.h b/include/linux/dim.h
+index e4ff5829963f..56b0aca7abf0 100644
+--- a/include/linux/dim.h
++++ b/include/linux/dim.h
+@@ -5,7 +5,6 @@
+ #define DIM_H
+ 
+ #include <linux/bits.h>
+-#include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
+ #include <linux/workqueue_types.h>
+diff --git a/include/linux/firewire.h b/include/linux/firewire.h
+index a81e31472530..a4ded9ad3a71 100644
+--- a/include/linux/firewire.h
++++ b/include/linux/firewire.h
+@@ -5,7 +5,6 @@
  #include <linux/completion_types.h>
- #include <linux/workqueue_types.h>
- #include <linux/debugfs.h>
-diff --git a/include/linux/enclosure.h b/include/linux/enclosure.h
-index 1c630e2c2756..8fb9f561263f 100644
---- a/include/linux/enclosure.h
-+++ b/include/linux/enclosure.h
-@@ -12,7 +12,7 @@
- #ifndef _LINUX_ENCLOSURE_H_
- #define _LINUX_ENCLOSURE_H_
- 
--#include <linux/device.h>
-+#include <linux/device_types.h>
+ #include <linux/device.h>
+ #include <linux/dma-mapping.h>
+-#include <linux/kernel.h>
+ #include <linux/kref.h>
  #include <linux/list.h>
- 
- /* A few generic types ... taken from ses-2 */
-diff --git a/include/linux/fpga/fpga-bridge.h b/include/linux/fpga/fpga-bridge.h
-index 223da48a6d18..3a1eeb26bd65 100644
---- a/include/linux/fpga/fpga-bridge.h
-+++ b/include/linux/fpga/fpga-bridge.h
-@@ -3,7 +3,7 @@
- #ifndef _LINUX_FPGA_BRIDGE_H
- #define _LINUX_FPGA_BRIDGE_H
- 
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/fpga/fpga-mgr.h>
- 
- struct fpga_bridge;
-diff --git a/include/linux/fpga/fpga-region.h b/include/linux/fpga/fpga-region.h
-index 9d4d32909340..be1e5033f0d3 100644
---- a/include/linux/fpga/fpga-region.h
-+++ b/include/linux/fpga/fpga-region.h
-@@ -3,7 +3,7 @@
- #ifndef _FPGA_REGION_H
- #define _FPGA_REGION_H
- 
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/fpga/fpga-mgr.h>
- #include <linux/fpga/fpga-bridge.h>
- 
-diff --git a/include/linux/framer/framer.h b/include/linux/framer/framer.h
-index 2352a52d7d0f..ebaacd782702 100644
---- a/include/linux/framer/framer.h
-+++ b/include/linux/framer/framer.h
-@@ -14,7 +14,7 @@
  #include <linux/mutex_types.h>
- #include <linux/notifier.h>
- #include <linux/of.h>
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/workqueue_types.h>
+diff --git a/include/linux/fs_context.h b/include/linux/fs_context.h
+index 34ad2597640e..2ffc7c992d59 100644
+--- a/include/linux/fs_context.h
++++ b/include/linux/fs_context.h
+@@ -8,7 +8,6 @@
+ #ifndef _LINUX_FS_CONTEXT_H
+ #define _LINUX_FS_CONTEXT_H
  
- /**
-diff --git a/include/linux/hdmi.h b/include/linux/hdmi.h
-index 3bb87bf6bc65..5803588f86db 100644
---- a/include/linux/hdmi.h
-+++ b/include/linux/hdmi.h
-@@ -25,7 +25,7 @@
- #define __LINUX_HDMI_H_
+-#include <linux/kernel.h>
+ #include <linux/refcount_types.h>
+ #include <linux/errno.h>
+ #include <linux/security.h>
+diff --git a/include/linux/gpio.h b/include/linux/gpio.h
+index 7ecc25c543ce..f735f9cb1a95 100644
+--- a/include/linux/gpio.h
++++ b/include/linux/gpio.h
+@@ -125,8 +125,6 @@ int devm_gpio_request_one(struct device *dev, unsigned gpio,
+ 
+ #else /* ! CONFIG_GPIOLIB */
+ 
+-#include <linux/kernel.h>
+-
+ #include <asm/bug.h>
+ #include <asm/errno.h>
+ 
+diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+index db2dfbae8edb..601b3558c3c0 100644
+--- a/include/linux/gpio/consumer.h
++++ b/include/linux/gpio/consumer.h
+@@ -184,7 +184,6 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
+ #else /* CONFIG_GPIOLIB */
+ 
+ #include <linux/err.h>
+-#include <linux/kernel.h>
+ 
+ #include <asm/bug.h>
+ 
+diff --git a/include/linux/greybus.h b/include/linux/greybus.h
+index 18c0fb958b74..f73a7996c137 100644
+--- a/include/linux/greybus.h
++++ b/include/linux/greybus.h
+@@ -11,7 +11,6 @@
+ 
+ #ifdef __KERNEL__
+ 
+-#include <linux/kernel.h>
+ #include <linux/types.h>
+ #include <linux/list.h>
+ #include <linux/slab.h>
+diff --git a/include/linux/hashtable.h b/include/linux/hashtable.h
+index f6c666730b8c..47fc50c72463 100644
+--- a/include/linux/hashtable.h
++++ b/include/linux/hashtable.h
+@@ -9,7 +9,6 @@
+ 
+ #include <linux/list.h>
+ #include <linux/types.h>
+-#include <linux/kernel.h>
+ #include <linux/hash.h>
+ #include <linux/rculist.h>
+ 
+diff --git a/include/linux/highmem.h b/include/linux/highmem.h
+index 00341b56d291..a63be916fe3b 100644
+--- a/include/linux/highmem.h
++++ b/include/linux/highmem.h
+@@ -3,7 +3,6 @@
+ #define _LINUX_HIGHMEM_H
+ 
+ #include <linux/fs.h>
+-#include <linux/kernel.h>
+ #include <linux/bug.h>
+ #include <linux/cacheflush.h>
+ #include <linux/kmsan.h>
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index e3a0f2c22a75..9883e30a6130 100644
+--- a/include/linux/interrupt.h
++++ b/include/linux/interrupt.h
+@@ -3,7 +3,6 @@
+ #ifndef _LINUX_INTERRUPT_H
+ #define _LINUX_INTERRUPT_H
+ 
+-#include <linux/kernel.h>
+ #include <linux/bitops.h>
+ #include <linux/cpumask.h>
+ #include <linux/irqreturn.h>
+diff --git a/include/linux/iova.h b/include/linux/iova.h
+index ee656a0490ed..efd0c192e8cc 100644
+--- a/include/linux/iova.h
++++ b/include/linux/iova.h
+@@ -10,7 +10,6 @@
+ #define _IOVA_H_
  
  #include <linux/types.h>
--#include <linux/device.h>
-+#include <linux/device_types.h>
+-#include <linux/kernel.h>
+ #include <linux/rbtree_types.h>
+ #include <linux/dma-mapping.h>
  
- enum hdmi_packet_type {
- 	HDMI_PACKET_TYPE_NULL = 0x00,
-diff --git a/include/linux/hwmon-sysfs.h b/include/linux/hwmon-sysfs.h
-index d896713359cd..6b13b3e5a9b5 100644
---- a/include/linux/hwmon-sysfs.h
-+++ b/include/linux/hwmon-sysfs.h
-@@ -7,7 +7,7 @@
- #ifndef _LINUX_HWMON_SYSFS_H
- #define _LINUX_HWMON_SYSFS_H
+diff --git a/include/linux/isa.h b/include/linux/isa.h
+index 4fbbf5e36e08..7c61e9396e5b 100644
+--- a/include/linux/isa.h
++++ b/include/linux/isa.h
+@@ -8,7 +8,6 @@
  
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/kstrtox.h>
- 
- struct sensor_device_attribute{
-diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-index 6dafef342e91..91d67fdda784 100644
---- a/include/linux/iio/iio.h
-+++ b/include/linux/iio/iio.h
-@@ -7,7 +7,7 @@
- #ifndef _INDUSTRIAL_IO_H_
- #define _INDUSTRIAL_IO_H_
- 
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/cdev.h>
  #include <linux/device.h>
- #include <linux/slab.h>
-diff --git a/include/linux/lcd.h b/include/linux/lcd.h
-index 238fb1dfed98..a0deeeb3db49 100644
---- a/include/linux/lcd.h
-+++ b/include/linux/lcd.h
-@@ -9,7 +9,7 @@
- #ifndef _LINUX_LCD_H
- #define _LINUX_LCD_H
+ #include <linux/errno.h>
+-#include <linux/kernel.h>
  
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/mutex.h>
- #include <linux/notifier.h>
- #include <linux/fb.h>
-diff --git a/include/linux/node.h b/include/linux/node.h
-index c4c17037c954..791954e0f01b 100644
---- a/include/linux/node.h
-+++ b/include/linux/node.h
-@@ -15,7 +15,7 @@
- #ifndef _LINUX_NODE_H_
- #define _LINUX_NODE_H_
+ struct isa_driver {
+ 	int (*match)(struct device *, unsigned int);
+diff --git a/include/linux/isdn/capilli.h b/include/linux/isdn/capilli.h
+index 12be09b6883b..758e01e6cfbf 100644
+--- a/include/linux/isdn/capilli.h
++++ b/include/linux/isdn/capilli.h
+@@ -12,7 +12,6 @@
+ #ifndef __CAPILLI_H__
+ #define __CAPILLI_H__
  
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/cpumask.h>
+-#include <linux/kernel.h>
  #include <linux/list.h>
- #include <linux/mmzone.h> // for enum meminit_context
+ #include <linux/capi.h>
+ #include <linux/kernelcapi.h>
+diff --git a/include/linux/kallsyms.h b/include/linux/kallsyms.h
+index c3f075e8f60c..0eafffc64a53 100644
+--- a/include/linux/kallsyms.h
++++ b/include/linux/kallsyms.h
+@@ -8,7 +8,6 @@
+ 
+ #include <linux/errno.h>
+ #include <linux/buildid.h>
+-#include <linux/kernel.h>
+ #include <linux/stddef.h>
+ #include <linux/mm.h>
+ #include <linux/module.h>
+diff --git a/include/linux/kasan.h b/include/linux/kasan.h
+index dbb06d789e74..7d60e6c1d29c 100644
+--- a/include/linux/kasan.h
++++ b/include/linux/kasan.h
+@@ -5,7 +5,6 @@
+ #include <linux/bug.h>
+ #include <linux/kasan-enabled.h>
+ #include <linux/kasan-tags.h>
+-#include <linux/kernel.h>
+ #include <linux/static_key.h>
+ #include <linux/types.h>
+ 
+diff --git a/include/linux/kfifo.h b/include/linux/kfifo.h
+index 0b35a41440ff..17fea09984fe 100644
+--- a/include/linux/kfifo.h
++++ b/include/linux/kfifo.h
+@@ -36,7 +36,6 @@
+  * to lock the reader.
+  */
+ 
+-#include <linux/kernel.h>
+ #include <linux/spinlock.h>
+ #include <linux/stddef.h>
+ #include <linux/scatterlist.h>
+diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
+index 04be45d6a9ab..ff4ddab84495 100644
+--- a/include/linux/libnvdimm.h
++++ b/include/linux/libnvdimm.h
+@@ -6,7 +6,7 @@
+  */
+ #ifndef __LIBNVDIMM_H__
+ #define __LIBNVDIMM_H__
+-#include <linux/kernel.h>
++
+ #include <linux/sizes.h>
+ #include <linux/types.h>
+ #include <linux/uuid.h>
+diff --git a/include/linux/lsm_audit.h b/include/linux/lsm_audit.h
+index bd1ae08af2aa..5b1e1ffaad77 100644
+--- a/include/linux/lsm_audit.h
++++ b/include/linux/lsm_audit.h
+@@ -13,7 +13,6 @@
+ 
+ #include <linux/stddef.h>
+ #include <linux/errno.h>
+-#include <linux/kernel.h>
+ #include <linux/kdev_t.h>
+ #include <linux/init.h>
+ #include <linux/audit.h>
+diff --git a/include/linux/maple_tree.h b/include/linux/maple_tree.h
+index 7f5dd33f4b94..7e52ed3fd219 100644
+--- a/include/linux/maple_tree.h
++++ b/include/linux/maple_tree.h
+@@ -10,7 +10,6 @@
+ 
+ #include <linux/maple_tree_types.h>
+ 
+-#include <linux/kernel.h>
+ #include <linux/rcupdate.h>
+ #include <linux/spinlock.h>
+ /* #define CONFIG_MAPLE_RCU_DISABLED */
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 566566b0ae64..c2d33150b093 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -14,7 +14,6 @@
+ #include <linux/vm_event_item.h>
+ #include <linux/hardirq.h>
+ #include <linux/jump_label.h>
+-#include <linux/kernel.h>
+ #include <linux/page_counter.h>
+ #include <linux/vmpressure.h>
+ #include <linux/eventfd.h>
+diff --git a/include/linux/mfd/davinci_voicecodec.h b/include/linux/mfd/davinci_voicecodec.h
+index 556375b91316..725c8730f34a 100644
+--- a/include/linux/mfd/davinci_voicecodec.h
++++ b/include/linux/mfd/davinci_voicecodec.h
+@@ -10,7 +10,6 @@
+ #ifndef __LINUX_MFD_DAVINCI_VOICECODEC_H_
+ #define __LINUX_MFD_DAVINCI_VOICECODEC_H_
+ 
+-#include <linux/kernel.h>
+ #include <linux/platform_device.h>
+ #include <linux/mfd/core.h>
+ #include <linux/platform_data/edma.h>
+diff --git a/include/linux/mfd/madera/pdata.h b/include/linux/mfd/madera/pdata.h
+index 32e3470708ed..7d7b216b2490 100644
+--- a/include/linux/mfd/madera/pdata.h
++++ b/include/linux/mfd/madera/pdata.h
+@@ -8,7 +8,6 @@
+ #ifndef MADERA_PDATA_H
+ #define MADERA_PDATA_H
+ 
+-#include <linux/kernel.h>
+ #include <linux/regulator/arizona-ldo1.h>
+ #include <linux/regulator/arizona-micsupp.h>
+ #include <linux/regulator/machine.h>
+diff --git a/include/linux/mfd/wm8350/core.h b/include/linux/mfd/wm8350/core.h
+index 25379c7f94c4..90002375b2cd 100644
+--- a/include/linux/mfd/wm8350/core.h
++++ b/include/linux/mfd/wm8350/core.h
+@@ -8,7 +8,6 @@
+ #ifndef __LINUX_MFD_WM8350_CORE_H_
+ #define __LINUX_MFD_WM8350_CORE_H_
+ 
+-#include <linux/kernel.h>
+ #include <linux/mutex_types.h>
+ #include <linux/interrupt.h>
+ #include <linux/completion_types.h>
+diff --git a/include/linux/mlx5/driver.h b/include/linux/mlx5/driver.h
+index 07956bd2e55b..80f4fa5568d2 100644
+--- a/include/linux/mlx5/driver.h
++++ b/include/linux/mlx5/driver.h
+@@ -33,7 +33,6 @@
+ #ifndef MLX5_DRIVER_H
+ #define MLX5_DRIVER_H
+ 
+-#include <linux/kernel.h>
+ #include <linux/completion_types.h>
+ #include <linux/pci.h>
+ #include <linux/irq.h>
+diff --git a/include/linux/mtd/map.h b/include/linux/mtd/map.h
+index b4fa92a6e44b..97bd6007a6f8 100644
+--- a/include/linux/mtd/map.h
++++ b/include/linux/mtd/map.h
+@@ -12,7 +12,6 @@
+ #include <linux/list.h>
+ #include <linux/string.h>
+ #include <linux/bug.h>
+-#include <linux/kernel.h>
+ #include <linux/io.h>
+ 
+ #include <asm/unaligned.h>
+diff --git a/include/linux/namei.h b/include/linux/namei.h
+index 74e0cc14ebf8..c4b71e99f414 100644
+--- a/include/linux/namei.h
++++ b/include/linux/namei.h
+@@ -3,7 +3,6 @@
+ #define _LINUX_NAMEI_H
+ 
+ #include <linux/fs.h>
+-#include <linux/kernel.h>
+ #include <linux/path.h>
+ #include <linux/fcntl.h>
+ #include <linux/errno.h>
+diff --git a/include/linux/net/intel/iidc.h b/include/linux/net/intel/iidc.h
+index 1c1332e4df26..5424c9069ed7 100644
+--- a/include/linux/net/intel/iidc.h
++++ b/include/linux/net/intel/iidc.h
+@@ -8,7 +8,6 @@
+ #include <linux/dcbnl.h>
+ #include <linux/device.h>
+ #include <linux/if_ether.h>
+-#include <linux/kernel.h>
+ #include <linux/netdevice.h>
+ 
+ enum iidc_event_type {
+diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
+index 3a4860bd2758..b987d0ba1262 100644
+--- a/include/linux/pci-ecam.h
++++ b/include/linux/pci-ecam.h
+@@ -6,7 +6,6 @@
+ #define DRIVERS_PCI_ECAM_H
+ 
+ #include <linux/pci.h>
+-#include <linux/kernel.h>
+ #include <linux/platform_device.h>
+ 
+ /*
 diff --git a/include/linux/peci.h b/include/linux/peci.h
-index ad3ea1371680..39d455231e21 100644
+index 39d455231e21..a750b9d65dba 100644
 --- a/include/linux/peci.h
 +++ b/include/linux/peci.h
-@@ -4,7 +4,7 @@
- #ifndef __LINUX_PECI_H
+@@ -5,7 +5,6 @@
  #define __LINUX_PECI_H
  
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/kernel.h>
+ #include <linux/device_types.h>
+-#include <linux/kernel.h>
  #include <linux/mutex_types.h>
  #include <linux/types.h>
-diff --git a/include/linux/pm_clock.h b/include/linux/pm_clock.h
-index 68669ce18720..8b89565c6e6e 100644
---- a/include/linux/pm_clock.h
-+++ b/include/linux/pm_clock.h
-@@ -8,7 +8,7 @@
- #ifndef _LINUX_PM_CLOCK_H
- #define _LINUX_PM_CLOCK_H
  
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/notifier.h>
+diff --git a/include/linux/profile.h b/include/linux/profile.h
+index 11db1ec516e2..8b417675054e 100644
+--- a/include/linux/profile.h
++++ b/include/linux/profile.h
+@@ -2,7 +2,6 @@
+ #ifndef _LINUX_PROFILE_H
+ #define _LINUX_PROFILE_H
  
- struct pm_clk_notifier_block {
-diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
-index 5c90e059cdb7..215867204aa9 100644
---- a/include/linux/pm_domain.h
-+++ b/include/linux/pm_domain.h
-@@ -8,7 +8,7 @@
- #ifndef _LINUX_PM_DOMAIN_H
- #define _LINUX_PM_DOMAIN_H
- 
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/ktime.h>
- #include <linux/mutex_types.h>
- #include <linux/pm.h>
-diff --git a/include/linux/pm_qos.h b/include/linux/pm_qos.h
-index 4a69d4af3ff8..97234cba44e0 100644
---- a/include/linux/pm_qos.h
-+++ b/include/linux/pm_qos.h
-@@ -14,7 +14,7 @@
- 
- #include <linux/plist.h>
- #include <linux/notifier.h>
--#include <linux/device.h>
-+#include <linux/device_types.h>
- 
- enum pm_qos_flags_status {
- 	PM_QOS_FLAGS_UNDEFINED = -1,
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index 2bcf998da2a7..762ffc2c5dc2 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -12,7 +12,7 @@
- #ifndef __LINUX_POWER_SUPPLY_H__
- #define __LINUX_POWER_SUPPLY_H__
- 
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/workqueue_types.h>
- #include <linux/leds.h>
- #include <linux/spinlock_types.h>
-diff --git a/include/linux/powercap.h b/include/linux/powercap.h
-index 3d557bbcd2c7..da48bd9bcdd7 100644
---- a/include/linux/powercap.h
-+++ b/include/linux/powercap.h
-@@ -7,7 +7,7 @@
- #ifndef __POWERCAP_H__
- #define __POWERCAP_H__
- 
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/idr.h>
- 
- /*
-diff --git a/include/linux/rtc.h b/include/linux/rtc.h
-index 98401e771e75..82cb7f0fd843 100644
---- a/include/linux/rtc.h
-+++ b/include/linux/rtc.h
-@@ -34,7 +34,7 @@ static inline time64_t rtc_tm_sub(struct rtc_time *lhs, struct rtc_time *rhs)
- 	return rtc_tm_to_time64(lhs) - rtc_tm_to_time64(rhs);
- }
- 
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/seq_file.h>
- #include <linux/cdev.h>
- #include <linux/poll.h>
-diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
-index c37473373649..94aa8de02ea7 100644
---- a/include/linux/swiotlb.h
-+++ b/include/linux/swiotlb.h
-@@ -2,7 +2,7 @@
- #ifndef __LINUX_SWIOTLB_H
- #define __LINUX_SWIOTLB_H
- 
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/dma-direction.h>
+-#include <linux/kernel.h>
  #include <linux/init.h>
+ #include <linux/cpumask.h>
+ #include <linux/cache.h>
+diff --git a/include/linux/qed/qed_chain.h b/include/linux/qed/qed_chain.h
+index a84063492c71..40c168c83816 100644
+--- a/include/linux/qed/qed_chain.h
++++ b/include/linux/qed/qed_chain.h
+@@ -9,7 +9,6 @@
+ 
  #include <linux/types.h>
+ #include <asm/byteorder.h>
+-#include <linux/kernel.h>
+ #include <linux/list.h>
+ #include <linux/sizes.h>
+ #include <linux/slab.h>
+diff --git a/include/linux/qed/qed_if.h b/include/linux/qed/qed_if.h
+index 6dc4943d8aec..be88819ec6ac 100644
+--- a/include/linux/qed/qed_if.h
++++ b/include/linux/qed/qed_if.h
+@@ -16,7 +16,6 @@
+ #include <asm/byteorder.h>
+ #include <linux/io.h>
+ #include <linux/compiler.h>
+-#include <linux/kernel.h>
+ #include <linux/list.h>
+ #include <linux/slab.h>
+ #include <linux/qed/common_hsi.h>
+diff --git a/include/linux/qed/qed_ll2_if.h b/include/linux/qed/qed_ll2_if.h
+index 5b67cd03276e..fa53d7831240 100644
+--- a/include/linux/qed/qed_ll2_if.h
++++ b/include/linux/qed/qed_ll2_if.h
+@@ -12,7 +12,6 @@
+ #include <linux/netdevice.h>
+ #include <linux/pci.h>
+ #include <linux/skbuff.h>
+-#include <linux/kernel.h>
+ #include <linux/slab.h>
+ #include <linux/qed/qed_if.h>
+ 
+diff --git a/include/linux/randomize_kstack.h b/include/linux/randomize_kstack.h
+index 5d868505a94e..154d30fdd392 100644
+--- a/include/linux/randomize_kstack.h
++++ b/include/linux/randomize_kstack.h
+@@ -3,7 +3,6 @@
+ #define _LINUX_RANDOMIZE_KSTACK_H
+ 
+ #ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
+-#include <linux/kernel.h>
+ #include <linux/jump_label.h>
+ #include <linux/percpu-defs.h>
+ 
+diff --git a/include/linux/regulator/coupler.h b/include/linux/regulator/coupler.h
+index 7f37ce155330..cdc0833ed31d 100644
+--- a/include/linux/regulator/coupler.h
++++ b/include/linux/regulator/coupler.h
+@@ -9,7 +9,6 @@
+ #define __LINUX_REGULATOR_COUPLER_H_
+ 
+ #include <linux/errno.h>
+-#include <linux/kernel.h>
+ #include <linux/suspend.h>
+ 
+ struct regulator_coupler;
+diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+index c62f0be16fa2..32cd56aa1284 100644
+--- a/include/linux/resctrl.h
++++ b/include/linux/resctrl.h
+@@ -2,7 +2,6 @@
+ #ifndef _RESCTRL_H
+ #define _RESCTRL_H
+ 
+-#include <linux/kernel.h>
+ #include <linux/list.h>
+ 
+ #ifdef CONFIG_PROC_CPU_RESCTRL
+diff --git a/include/linux/rfkill.h b/include/linux/rfkill.h
+index 0e8d11410f9f..61497bd04956 100644
+--- a/include/linux/rfkill.h
++++ b/include/linux/rfkill.h
+@@ -30,7 +30,6 @@ enum rfkill_user_states {
+ #undef RFKILL_STATE_UNBLOCKED
+ #undef RFKILL_STATE_HARD_BLOCKED
+ 
+-#include <linux/kernel.h>
+ #include <linux/leds.h>
+ #include <linux/err.h>
+ 
+diff --git a/include/linux/rmi.h b/include/linux/rmi.h
+index ab7eea01ab42..9bd3aadad055 100644
+--- a/include/linux/rmi.h
++++ b/include/linux/rmi.h
+@@ -6,7 +6,6 @@
+ 
+ #ifndef _RMI_H
+ #define _RMI_H
+-#include <linux/kernel.h>
+ #include <linux/device.h>
+ #include <linux/interrupt.h>
+ #include <linux/input.h>
+diff --git a/include/linux/sed-opal-key.h b/include/linux/sed-opal-key.h
+index 0ca03054e8f6..00f6e5fbd659 100644
+--- a/include/linux/sed-opal-key.h
++++ b/include/linux/sed-opal-key.h
+@@ -9,7 +9,7 @@
+  *
+  */
+ 
+-#include <linux/kernel.h>
++#include <linux/types.h>
+ 
+ #ifdef CONFIG_PSERIES_PLPKS_SED
+ int sed_read_key(char *keyname, char *key, u_int *keylen);
+diff --git a/include/linux/siphash.h b/include/linux/siphash.h
+index e516ddfc3daf..6b5e06a6fac4 100644
+--- a/include/linux/siphash.h
++++ b/include/linux/siphash.h
+@@ -14,7 +14,6 @@
+ 
+ #include <linux/align.h>
+ #include <linux/types.h>
+-#include <linux/kernel.h>
+ #include <uapi/asm/byteorder.h> // for le32_to_cpup(), le64_to_cpu()
+ 
+ #define SIPHASH_ALIGNMENT __alignof__(u64)
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index 8ee67e49699b..fc59f80eb169 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
 @@ -10,7 +10,6 @@
- #include <linux/spinlock_types.h>
+ #ifndef _LINUX_SKBUFF_H
+ #define _LINUX_SKBUFF_H
+ 
+-#include <linux/kernel.h>
+ #include <linux/compiler.h>
+ #include <linux/time.h>
+ #include <linux/bug.h>
+diff --git a/include/linux/soc/amlogic/meson-canvas.h b/include/linux/soc/amlogic/meson-canvas.h
+index 0cb2a6050d1f..eaa0f777ce3a 100644
+--- a/include/linux/soc/amlogic/meson-canvas.h
++++ b/include/linux/soc/amlogic/meson-canvas.h
+@@ -5,7 +5,7 @@
+ #ifndef __SOC_MESON_CANVAS_H
+ #define __SOC_MESON_CANVAS_H
+ 
+-#include <linux/kernel.h>
++#include <linux/types.h>
+ 
+ #define MESON_CANVAS_WRAP_NONE	0x00
+ #define MESON_CANVAS_WRAP_X	0x01
+diff --git a/include/linux/soc/ixp4xx/npe.h b/include/linux/soc/ixp4xx/npe.h
+index 9efeac777da1..d734f06fe5ff 100644
+--- a/include/linux/soc/ixp4xx/npe.h
++++ b/include/linux/soc/ixp4xx/npe.h
+@@ -2,7 +2,6 @@
+ #ifndef __IXP4XX_NPE_H
+ #define __IXP4XX_NPE_H
+ 
+-#include <linux/kernel.h>
+ #include <linux/regmap.h>
+ 
+ extern const char *npe_names[];
+diff --git a/include/linux/soc/ixp4xx/qmgr.h b/include/linux/soc/ixp4xx/qmgr.h
+index 2c0f433a3841..a51948a82eff 100644
+--- a/include/linux/soc/ixp4xx/qmgr.h
++++ b/include/linux/soc/ixp4xx/qmgr.h
+@@ -7,7 +7,6 @@
+ #define IXP4XX_QMGR_H
+ 
+ #include <linux/io.h>
+-#include <linux/kernel.h>
+ 
+ #define DEBUG_QMGR	0
+ 
+diff --git a/include/linux/soc/mediatek/mtk_wed.h b/include/linux/soc/mediatek/mtk_wed.h
+index a476648858a6..c8474a65e474 100644
+--- a/include/linux/soc/mediatek/mtk_wed.h
++++ b/include/linux/soc/mediatek/mtk_wed.h
+@@ -1,7 +1,6 @@
+ #ifndef __MTK_WED_H
+ #define __MTK_WED_H
+ 
+-#include <linux/kernel.h>
+ #include <linux/rcupdate.h>
+ #include <linux/regmap.h>
+ #include <linux/pci.h>
+diff --git a/include/linux/sysfb.h b/include/linux/sysfb.h
+index 19cb803dd5ec..c21885316349 100644
+--- a/include/linux/sysfb.h
++++ b/include/linux/sysfb.h
+@@ -7,7 +7,6 @@
+  * Copyright (c) 2012-2013 David Herrmann <dh.herrmann@gmail.com>
+  */
+ 
+-#include <linux/kernel.h>
+ #include <linux/platform_data/simplefb.h>
+ 
+ struct screen_info;
+diff --git a/include/linux/textsearch.h b/include/linux/textsearch.h
+index 6673e4d4ac2e..b5f8fe9c9ac5 100644
+--- a/include/linux/textsearch.h
++++ b/include/linux/textsearch.h
+@@ -4,7 +4,6 @@
+ 
+ #include <linux/types.h>
+ #include <linux/list.h>
+-#include <linux/kernel.h>
+ #include <linux/err.h>
+ #include <linux/slab.h>
+ 
+diff --git a/include/linux/usb/pd.h b/include/linux/usb/pd.h
+index 5fe5f786ad96..2f5ba98c2640 100644
+--- a/include/linux/usb/pd.h
++++ b/include/linux/usb/pd.h
+@@ -7,7 +7,6 @@
+ #define __LINUX_USB_PD_H
+ 
+ #include <uapi/asm/byteorder.h> // for __le16
+-#include <linux/kernel.h>
+ #include <linux/types.h>
+ #include <linux/usb/typec.h>
+ 
+diff --git a/include/linux/vdpa.h b/include/linux/vdpa.h
+index db15ac07f8a6..ba3e6aae8bb7 100644
+--- a/include/linux/vdpa.h
++++ b/include/linux/vdpa.h
+@@ -2,7 +2,6 @@
+ #ifndef _LINUX_VDPA_H
+ #define _LINUX_VDPA_H
+ 
+-#include <linux/kernel.h>
+ #include <linux/device.h>
+ #include <linux/interrupt.h>
+ #include <linux/vhost_iotlb.h>
+diff --git a/include/linux/videodev2.h b/include/linux/videodev2.h
+index 219037f4c08d..16c0ed6c50a7 100644
+--- a/include/linux/videodev2.h
++++ b/include/linux/videodev2.h
+@@ -57,7 +57,6 @@
+ #define __LINUX_VIDEODEV2_H
+ 
+ #include <linux/time.h>     /* need struct timeval */
+-#include <linux/kernel.h>
+ #include <uapi/linux/videodev2.h>
+ 
+ #endif /* __LINUX_VIDEODEV2_H */
+diff --git a/include/linux/watchdog.h b/include/linux/watchdog.h
+index 99660197a36c..4aeb3704c348 100644
+--- a/include/linux/watchdog.h
++++ b/include/linux/watchdog.h
+@@ -13,7 +13,6 @@
+ #include <linux/bitops.h>
+ #include <linux/cdev.h>
+ #include <linux/device.h>
+-#include <linux/kernel.h>
+ #include <linux/notifier.h>
+ #include <uapi/linux/watchdog.h>
+ 
+diff --git a/include/linux/xarray.h b/include/linux/xarray.h
+index ff1e63ec4865..2ecb2ee42cd4 100644
+--- a/include/linux/xarray.h
++++ b/include/linux/xarray.h
+@@ -14,7 +14,6 @@
+ #include <linux/bug.h>
+ #include <linux/compiler.h>
+ #include <linux/kconfig.h>
+-#include <linux/kernel.h>
+ #include <linux/math.h> // for DIV_ROUND_UP()
+ #include <linux/rcupdate.h>
+ #include <linux/sched/mm.h>
+diff --git a/include/linux/zutil.h b/include/linux/zutil.h
+index 663689521759..a63c8eb8294d 100644
+--- a/include/linux/zutil.h
++++ b/include/linux/zutil.h
+@@ -15,7 +15,6 @@
+ 
+ #include <linux/zlib.h>
+ #include <linux/string.h>
+-#include <linux/kernel.h>
+ 
+ typedef unsigned char  uch;
+ typedef unsigned short ush;
+diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
+index 7eca98931e25..2737d8fb7133 100644
+--- a/include/net/af_vsock.h
++++ b/include/net/af_vsock.h
+@@ -8,7 +8,6 @@
+ #ifndef __AF_VSOCK_H__
+ #define __AF_VSOCK_H__
+ 
+-#include <linux/kernel.h>
  #include <linux/workqueue_types.h>
+ #include <net/sock.h>
+ #include <uapi/linux/vm_sockets.h>
+diff --git a/include/net/caif/caif_device.h b/include/net/caif/caif_device.h
+index 91d1fd5b44a4..f40be65cebae 100644
+--- a/include/net/caif/caif_device.h
++++ b/include/net/caif/caif_device.h
+@@ -6,7 +6,6 @@
  
--struct device;
- struct page;
- struct scatterlist;
+ #ifndef CAIF_DEVICE_H_
+ #define CAIF_DEVICE_H_
+-#include <linux/kernel.h>
+ #include <linux/net.h>
+ #include <linux/netdevice.h>
+ #include <linux/caif/caif_socket.h>
+diff --git a/include/net/flow_offload.h b/include/net/flow_offload.h
+index 314087a5e181..1e56da4fb2b4 100644
+--- a/include/net/flow_offload.h
++++ b/include/net/flow_offload.h
+@@ -1,7 +1,6 @@
+ #ifndef _NET_FLOW_OFFLOAD_H
+ #define _NET_FLOW_OFFLOAD_H
  
-diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-index 14450673bd8b..ba5d2bd8e007 100644
---- a/include/linux/thermal.h
-+++ b/include/linux/thermal.h
-@@ -11,7 +11,7 @@
- #define __THERMAL_H__
+-#include <linux/kernel.h>
+ #include <linux/list.h>
+ #include <linux/netlink.h>
+ #include <net/flow_dissector.h>
+diff --git a/include/net/ieee80211_radiotap.h b/include/net/ieee80211_radiotap.h
+index 925bac726a92..8b0a19ef2652 100644
+--- a/include/net/ieee80211_radiotap.h
++++ b/include/net/ieee80211_radiotap.h
+@@ -17,7 +17,6 @@
+ #ifndef __RADIOTAP_H
+ #define __RADIOTAP_H
  
- #include <linux/idr.h>
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/sysfs_types.h>
- #include <linux/workqueue_types.h>
- #include <uapi/linux/thermal.h>
-diff --git a/include/linux/w1.h b/include/linux/w1.h
-index 9a2a0ef39018..3cbc5e0bab9d 100644
---- a/include/linux/w1.h
-+++ b/include/linux/w1.h
-@@ -6,7 +6,7 @@
- #ifndef __LINUX_W1_H
- #define __LINUX_W1_H
- 
--#include <linux/device.h>
-+#include <linux/device_types.h>
+-#include <linux/kernel.h>
+ #include <asm/unaligned.h>
  
  /**
-  * struct w1_reg_num - broken out slave device id
-diff --git a/include/media/cec.h b/include/media/cec.h
-index 4c9daa53ae34..562aad160e2b 100644
---- a/include/media/cec.h
-+++ b/include/media/cec.h
-@@ -11,7 +11,7 @@
+diff --git a/include/net/inet_connection_sock.h b/include/net/inet_connection_sock.h
+index 4e62121e1cb6..9568878dd6bc 100644
+--- a/include/net/inet_connection_sock.h
++++ b/include/net/inet_connection_sock.h
+@@ -15,7 +15,6 @@
+ #include <linux/string.h>
+ #include <linux/timer_types.h>
  #include <linux/poll.h>
- #include <linux/fs.h>
- #include <linux/debugfs.h>
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/cdev.h>
- #include <linux/kthread.h>
- #include <linux/cec-funcs.h>
-diff --git a/include/media/media-devnode.h b/include/media/media-devnode.h
-index d27c1c646c28..e690f171c67e 100644
---- a/include/media/media-devnode.h
-+++ b/include/media/media-devnode.h
-@@ -18,7 +18,7 @@
+-#include <linux/kernel.h>
+ #include <linux/sockptr.h>
  
- #include <linux/poll.h>
- #include <linux/fs.h>
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/cdev.h>
+ #include <net/inet_sock.h>
+diff --git a/include/net/ipv6_frag.h b/include/net/ipv6_frag.h
+index 7321ffe3a108..a593919e9d83 100644
+--- a/include/net/ipv6_frag.h
++++ b/include/net/ipv6_frag.h
+@@ -2,7 +2,6 @@
+ #ifndef _IPV6_FRAG_H
+ #define _IPV6_FRAG_H
+ #include <linux/icmpv6.h>
+-#include <linux/kernel.h>
+ #include <net/addrconf.h>
+ #include <net/ipv6.h>
+ #include <net/inet_frag.h>
+diff --git a/include/net/mac80211.h b/include/net/mac80211.h
+index 45d905b17a65..8213a2a0afab 100644
+--- a/include/net/mac80211.h
++++ b/include/net/mac80211.h
+@@ -14,7 +14,6 @@
+ #define MAC80211_H
  
- struct media_device;
-diff --git a/include/net/nfc/nfc.h b/include/net/nfc/nfc.h
-index 5dee575fbe86..9b8991560a3e 100644
---- a/include/net/nfc/nfc.h
-+++ b/include/net/nfc/nfc.h
-@@ -12,7 +12,7 @@
- #define __NET_NFC_H
- 
- #include <linux/nfc.h>
--#include <linux/device.h>
-+#include <linux/device_types.h>
+ #include <linux/bug.h>
+-#include <linux/kernel.h>
+ #include <linux/if_ether.h>
  #include <linux/skbuff.h>
+ #include <linux/ieee80211.h>
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 008a6c5a3bfc..4377a8ebc251 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -36,7 +36,6 @@
+ #define _SOCK_H
  
- #define nfc_dbg(dev, fmt, ...) dev_dbg((dev), "NFC: " fmt, ##__VA_ARGS__)
-diff --git a/include/pcmcia/ss.h b/include/pcmcia/ss.h
-index 694e5ae0f245..4bf85a0cfa5e 100644
---- a/include/pcmcia/ss.h
-+++ b/include/pcmcia/ss.h
-@@ -12,7 +12,7 @@
- #ifndef _LINUX_SS_H
- #define _LINUX_SS_H
- 
--#include <linux/device.h>
-+#include <linux/device_types.h>
- #include <linux/sched.h>	/* task_struct, completion */
- #include <linux/mutex_types.h>
- 
-diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
-index c70aafd415b5..74c9a6d165ac 100644
---- a/include/scsi/scsi_device.h
-+++ b/include/scsi/scsi_device.h
-@@ -2,6 +2,7 @@
- #ifndef _SCSI_SCSI_DEVICE_H
- #define _SCSI_SCSI_DEVICE_H
- 
-+#include <linux/device.h> // for device_reprobe()
+ #include <linux/hardirq.h>
+-#include <linux/kernel.h>
  #include <linux/list.h>
- #include <linux/spinlock_types.h>
+ #include <linux/list_nulls.h>
+ #include <linux/timer_types.h>
+diff --git a/include/rdma/iba.h b/include/rdma/iba.h
+index 6a1115b02a0d..bcea705a36ea 100644
+--- a/include/rdma/iba.h
++++ b/include/rdma/iba.h
+@@ -5,7 +5,6 @@
+ #ifndef _IBA_DEFS_H_
+ #define _IBA_DEFS_H_
+ 
+-#include <linux/kernel.h>
+ #include <linux/bitfield.h>
+ #include <asm/unaligned.h>
+ 
+diff --git a/include/rdma/uverbs_types.h b/include/rdma/uverbs_types.h
+index 8744e75220a3..87566478032d 100644
+--- a/include/rdma/uverbs_types.h
++++ b/include/rdma/uverbs_types.h
+@@ -6,7 +6,6 @@
+ #ifndef _UVERBS_TYPES_
+ #define _UVERBS_TYPES_
+ 
+-#include <linux/kernel.h>
+ #include <linux/kref.h>
+ #include <rdma/ib_verbs.h>
+ 
+diff --git a/include/scsi/scsi.h b/include/scsi/scsi.h
+index 4498f845b112..3eadcf14b7f7 100644
+--- a/include/scsi/scsi.h
++++ b/include/scsi/scsi.h
+@@ -8,7 +8,6 @@
+ 
+ #include <linux/types.h>
+ #include <linux/scatterlist.h>
+-#include <linux/kernel.h>
+ #include <scsi/scsi_common.h>
+ #include <scsi/scsi_proto.h>
+ #include <scsi/scsi_status.h>
+diff --git a/include/sound/soc.h b/include/sound/soc.h
+index 0021d54625da..72f7b3372014 100644
+--- a/include/sound/soc.h
++++ b/include/sound/soc.h
+@@ -17,7 +17,6 @@
+ #include <linux/notifier.h>
  #include <linux/workqueue_types.h>
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 620ffbd44dbe..76b77496d734 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -15,6 +15,7 @@
- #include <linux/mutex.h>
- #include <linux/slab.h>
- #include <linux/debugfs.h>
-+#include <linux/device.h>
- #include <linux/export.h>
- #include <linux/sprintf.h>
- #include <linux/time.h>
+ #include <linux/interrupt.h>
+-#include <linux/kernel.h>
+ #include <linux/regmap.h>
+ #include <linux/log2.h>
+ #include <sound/core.h>
+diff --git a/include/xen/grant_table.h b/include/xen/grant_table.h
+index e279be353e3f..b4e0506262e6 100644
+--- a/include/xen/grant_table.h
++++ b/include/xen/grant_table.h
+@@ -48,7 +48,6 @@
+ #include <xen/page.h>
+ #include <linux/mm_types.h>
+ #include <linux/page-flags.h>
+-#include <linux/kernel.h>
+ 
+ /*
+  * Technically there's no reliably invalid grant reference or grant handle,
+diff --git a/include/xen/xen-front-pgdir-shbuf.h b/include/xen/xen-front-pgdir-shbuf.h
+index 150ef7ec51ec..27ceb1c1920f 100644
+--- a/include/xen/xen-front-pgdir-shbuf.h
++++ b/include/xen/xen-front-pgdir-shbuf.h
+@@ -12,8 +12,6 @@
+ #ifndef __XEN_FRONT_PGDIR_SHBUF_H_
+ #define __XEN_FRONT_PGDIR_SHBUF_H_
+ 
+-#include <linux/kernel.h>
+-
+ #include <xen/grant_table.h>
+ 
+ struct xen_front_pgdir_shbuf_ops;
 -- 
 2.39.2
 
