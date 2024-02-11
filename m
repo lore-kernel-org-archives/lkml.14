@@ -1,64 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721E0266A7;
-	Sun, 11 Feb 2024 08:41:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A3E5914F;
+	Sun, 11 Feb 2024 08:41:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707640893; cv=none; b=pMSZzSI5BJVGoDfoMRgwBwqJqUWeffpLRpJ48ivqEw9g28t7SwYAXUXbpywoNjnOuvgks28Eb+zDccNETIzcKLCbyxedG7WK7tOu91Gwd2h5ZvZBjMocnK1UFTuAaoB9Yqtf4pXiCr/kyvsjEf/8afgGcYZQ5e1NNgBwuwsajlc=
+	t=1707640894; cv=none; b=hh2bbZ+PBfRXjUy8uR55/1H0ObJg2XyWIzOYfBweD5DrmIpd+QWh6BOWGz6Hm765TuHPfkVJk4KdN/0t4Cwpi5JH8DYzddx3gBWFgt89W/v/X/gh1O5v3U4GRuanU7sVqrQMHNzf4YY04wjdpr7t/ES1vefMDACtZXfg5+ELAJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707640893; c=relaxed/simple;
-	bh=7cuTK77OjwMcPgGPe4LXB+0xeYPPy2gnPG0Oq4cUHjU=;
+	s=arc-20240116; t=1707640894; c=relaxed/simple;
+	bh=eMI1H9E2hbAvc+crFYzOiXeUD06o3YTPirTX3f4yv0w=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=N1TRQBQK4HaT8vN5g9DP90KJ7ZaXNkHPp8JlOiKtDGBfLQxu+Zr204712GH6w2W3BCEcy+06HX+Rly8mpxEojT1kIwvXQKbqgrM+/WZPZKeMB3FFrHpc2s8nyhkmj+bqlO/JOt6tOUm++S+3X4sqLOcP8MALrOqc2OUxIHzEV4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FrUZL7mW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6bJffnHP; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=qEWqyRJJAG0ExrS46fN0TkAVlDCzQ9TmwGO5992LCyiZftqmAGSGfep7GFzHrmoAl6o6OZg9o3ZLrkZDeahp7Oo0/7IygHJNGGtuiF9WZlPKTzLABDm+zAjwjVJ6Z6iUKdbFxFImxfEiH/azI6l24FcYLbtsYkkkpMUSq77auS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=B/svAXlK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kp2SRcC9; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FrUZL7mW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6bJffnHP"
-Date: Sun, 11 Feb 2024 08:41:28 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="B/svAXlK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kp2SRcC9"
+Date: Sun, 11 Feb 2024 08:41:30 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1707640889;
+	s=2020; t=1707640891;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DK9j+uZmUCooyPlMPC3ga8wjE+/B9aU1nf0GHjtruOg=;
-	b=FrUZL7mWfxRy+sE4i+HQ1gpW4BadI2pDe9xYjb8Z63WI7EM0bl/8aQ+ShH19MNDbMY9RFz
-	UwvvCNJyfRTNSvMdShSE3Khwq18RB3GQm/bvQPO3Y/FZ1wJWnPPciQO9MJnJn7vf0G5uJB
-	RNVQs05UPZ858YWrKwXzgLSbSdFGdPjCEHicicSP1waMK7/lKZDJDhxYAEx7gZ2Cjy2+DT
-	4dw8AHcLJbGgSljBi8LJJMwj00++9SKedf9tf5tDIVkY3WYWrYOZtNXVWBokkxpu0iIqkv
-	hU5r90z6rkeByn1iSJKOXvCKaFbjW+mFBAGzB+hIwOjJR+MI7gAz8ZR6wpLRQw==
+	bh=YVpjmDPxQYdVOTD09wDoa7NCF6DwXAMTzVJVqTgUlT8=;
+	b=B/svAXlKRr6gBBUK5DHbCCQ32fE8Iij7pa3lLHeaC51pUgWpsWbKcrZ+KK6t9juGO17egF
+	vxNWKPE4JRDHf29uTX6uZwWT6SyiJlNM5axWUn2hBHetSUminOGnfOZJ/8d8b0VNR5jjNM
+	WntyzGq8vldyoGro+gxYrFTgH5ffsBIQ2PuxFPozOCo708wkLr/O2F9TWHOlY32ybphRIE
+	RbRDuQ7Jzhz4HZThNFFdo4y3//6GnFOlEY5MXT0HiDjSllMs8Vn2nEV8r7vwOokOs60xcH
+	fWf6yc/zgCvnMV+YHaF3tT4FthNqTH58f0046OEdEw9KBmEMAqSCNKBrdu/Ejw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1707640889;
+	s=2020e; t=1707640891;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DK9j+uZmUCooyPlMPC3ga8wjE+/B9aU1nf0GHjtruOg=;
-	b=6bJffnHPc3la52bYJe32FlZP8zKwsuye67wU6Rr+cccqOqA2civrnKVw7/N7v7jLfgi1ji
-	Dowd3xLrOm6B0aAg==
+	bh=YVpjmDPxQYdVOTD09wDoa7NCF6DwXAMTzVJVqTgUlT8=;
+	b=kp2SRcC9a1/Vh5cJlggmrCKL2PSIP982re/6O5DezK3YTeKvd1INDQO7uobNyNxQNp79qb
+	nKnL+o82h9ltLgBg==
 From: "tip-bot2 for Peter Hilber" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/ptp] treewide: Remove system_counterval_t.cs, which is
- never read
+Subject: [tip: timers/ptp] x86/kvm, ptp/kvm: Add clocksource ID, set
+ system_counterval_t.cs_id
 Cc: Peter Hilber <peter.hilber@opensynergy.com>,
  Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20240201010453.2212371-8-peter.hilber@opensynergy.com>
-References: <20240201010453.2212371-8-peter.hilber@opensynergy.com>
+In-Reply-To: <20240201010453.2212371-5-peter.hilber@opensynergy.com>
+References: <20240201010453.2212371-5-peter.hilber@opensynergy.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170764088833.398.11611177380615244140.tip-bot2@tip-bot2>
+Message-ID: <170764089059.398.1435801360306795593.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,211 +68,76 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/ptp branch of tip:
 
-Commit-ID:     b152688c91313ab4073cff4a5e63ff4cc491c358
-Gitweb:        https://git.kernel.org/tip/b152688c91313ab4073cff4a5e63ff4cc491c358
+Commit-ID:     576bd4962f19bb8f437f8cecbb25e4202438c41e
+Gitweb:        https://git.kernel.org/tip/576bd4962f19bb8f437f8cecbb25e4202438c41e
 Author:        Peter Hilber <peter.hilber@opensynergy.com>
-AuthorDate:    Thu, 01 Feb 2024 02:04:52 +01:00
+AuthorDate:    Thu, 01 Feb 2024 02:04:49 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Wed, 07 Feb 2024 17:05:21 +01:00
 
-treewide: Remove system_counterval_t.cs, which is never read
+x86/kvm, ptp/kvm: Add clocksource ID, set system_counterval_t.cs_id
 
-The clocksource pointer in struct system_counterval_t is not evaluated any
-more. Remove the code setting the member, and the member itself.
+Add a clocksource ID for the x86 kvmclock.
+
+Also, for ptp_kvm, set the recently added struct system_counterval_t member
+cs_id to the clocksource ID (x86 kvmclock or ARM Generic Timer). In the
+future, get_device_system_crosststamp() will compare the clocksource ID in
+struct system_counterval_t, rather than the clocksource.
+
+For now, to avoid touching too many subsystems at once, extract the
+clocksource ID from the clocksource. The clocksource dereference will be
+removed once everything is converted over..
 
 Signed-off-by: Peter Hilber <peter.hilber@opensynergy.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20240201010453.2212371-8-peter.hilber@opensynergy.com
-
+Link: https://lore.kernel.org/r/20240201010453.2212371-5-peter.hilber@opensynergy.com
 ---
- arch/x86/kernel/tsc.c                | 14 ++------------
- drivers/clocksource/arm_arch_timer.c |  3 ---
- drivers/ptp/ptp_kvm_arm.c            |  2 +-
- drivers/ptp/ptp_kvm_common.c         |  4 +---
- drivers/ptp/ptp_kvm_x86.c            |  2 --
- include/linux/ptp_kvm.h              |  4 +---
- include/linux/timekeeping.h          |  3 ---
- 7 files changed, 5 insertions(+), 27 deletions(-)
+ arch/x86/kernel/kvmclock.c      | 1 +
+ drivers/ptp/ptp_kvm_common.c    | 2 ++
+ include/linux/clocksource_ids.h | 1 +
+ 3 files changed, 4 insertions(+)
 
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index fd567a0..5a69a49 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -53,7 +53,6 @@ static int __read_mostly tsc_force_recalibrate;
- static u32 art_to_tsc_numerator;
- static u32 art_to_tsc_denominator;
- static u64 art_to_tsc_offset;
--static struct clocksource *art_related_clocksource;
- static bool have_art;
- 
- struct cyc2ns {
-@@ -1313,7 +1312,6 @@ struct system_counterval_t convert_art_to_tsc(u64 art)
- 	res += tmp + art_to_tsc_offset;
- 
- 	return (struct system_counterval_t) {
--		.cs	= art_related_clocksource,
- 		.cs_id	= have_art ? CSID_X86_TSC : CSID_GENERIC,
- 		.cycles	= res,
- 	};
-@@ -1337,9 +1335,6 @@ EXPORT_SYMBOL(convert_art_to_tsc);
-  *	corresponding clocksource:
-  *	cycles:		System counter value
-  *	cs_id:		The clocksource ID for validating comparability
-- *	cs:		Clocksource corresponding to system counter value. Used
-- *			by timekeeping code to verify comparability of two cycle
-- *			values.
-  */
- 
- struct system_counterval_t convert_art_ns_to_tsc(u64 art_ns)
-@@ -1355,7 +1350,6 @@ struct system_counterval_t convert_art_ns_to_tsc(u64 art_ns)
- 	res += tmp;
- 
- 	return (struct system_counterval_t) {
--		.cs	= art_related_clocksource,
- 		.cs_id	= have_art ? CSID_X86_TSC : CSID_GENERIC,
- 		.cycles	= res,
- 	};
-@@ -1464,10 +1458,8 @@ out:
- 	if (tsc_unstable)
- 		goto unreg;
- 
--	if (boot_cpu_has(X86_FEATURE_ART)) {
--		art_related_clocksource = &clocksource_tsc;
-+	if (boot_cpu_has(X86_FEATURE_ART))
- 		have_art = true;
--	}
- 	clocksource_register_khz(&clocksource_tsc, tsc_khz);
- unreg:
- 	clocksource_unregister(&clocksource_tsc_early);
-@@ -1492,10 +1484,8 @@ static int __init init_tsc_clocksource(void)
- 	 * the refined calibration and directly register it as a clocksource.
- 	 */
- 	if (boot_cpu_has(X86_FEATURE_TSC_KNOWN_FREQ)) {
--		if (boot_cpu_has(X86_FEATURE_ART)) {
--			art_related_clocksource = &clocksource_tsc;
-+		if (boot_cpu_has(X86_FEATURE_ART))
- 			have_art = true;
--		}
- 		clocksource_register_khz(&clocksource_tsc, tsc_khz);
- 		clocksource_unregister(&clocksource_tsc_early);
- 
-diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-index 45a0287..8d4a520 100644
---- a/drivers/clocksource/arm_arch_timer.c
-+++ b/drivers/clocksource/arm_arch_timer.c
-@@ -1807,7 +1807,6 @@ TIMER_ACPI_DECLARE(arch_timer, ACPI_SIG_GTDT, arch_timer_acpi_init);
- #endif
- 
- int kvm_arch_ptp_get_crosststamp(u64 *cycle, struct timespec64 *ts,
--				 struct clocksource **cs,
- 				 enum clocksource_ids *cs_id)
- {
- 	struct arm_smccc_res hvc_res;
-@@ -1832,8 +1831,6 @@ int kvm_arch_ptp_get_crosststamp(u64 *cycle, struct timespec64 *ts,
- 	*ts = ktime_to_timespec64(ktime);
- 	if (cycle)
- 		*cycle = (u64)hvc_res.a2 << 32 | hvc_res.a3;
--	if (cs)
--		*cs = &clocksource_counter;
- 	if (cs_id)
- 		*cs_id = CSID_ARM_ARCH_COUNTER;
- 
-diff --git a/drivers/ptp/ptp_kvm_arm.c b/drivers/ptp/ptp_kvm_arm.c
-index 017bb5f..e68e694 100644
---- a/drivers/ptp/ptp_kvm_arm.c
-+++ b/drivers/ptp/ptp_kvm_arm.c
-@@ -28,5 +28,5 @@ void kvm_arch_ptp_exit(void)
- 
- int kvm_arch_ptp_get_clock(struct timespec64 *ts)
- {
--	return kvm_arch_ptp_get_crosststamp(NULL, ts, NULL, NULL);
-+	return kvm_arch_ptp_get_crosststamp(NULL, ts, NULL);
- }
+diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
+index 5bb3955..2f1bbf7 100644
+--- a/arch/x86/kernel/kvmclock.c
++++ b/arch/x86/kernel/kvmclock.c
+@@ -160,6 +160,7 @@ struct clocksource kvm_clock = {
+ 	.rating	= 400,
+ 	.mask	= CLOCKSOURCE_MASK(64),
+ 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
++	.id     = CSID_X86_KVM_CLK,
+ 	.enable	= kvm_cs_enable,
+ };
+ EXPORT_SYMBOL_GPL(kvm_clock);
 diff --git a/drivers/ptp/ptp_kvm_common.c b/drivers/ptp/ptp_kvm_common.c
-index f6683ba..15ccb7d 100644
+index 2418977..b0b36f1 100644
 --- a/drivers/ptp/ptp_kvm_common.c
 +++ b/drivers/ptp/ptp_kvm_common.c
-@@ -30,14 +30,13 @@ static int ptp_kvm_get_time_fn(ktime_t *device_time,
- {
- 	enum clocksource_ids cs_id;
- 	struct timespec64 tspec;
--	struct clocksource *cs;
- 	u64 cycle;
- 	int ret;
- 
- 	spin_lock(&kvm_ptp_lock);
- 
- 	preempt_disable_notrace();
--	ret = kvm_arch_ptp_get_crosststamp(&cycle, &tspec, &cs, &cs_id);
-+	ret = kvm_arch_ptp_get_crosststamp(&cycle, &tspec, &cs_id);
- 	if (ret) {
- 		spin_unlock(&kvm_ptp_lock);
- 		preempt_enable_notrace();
-@@ -47,7 +46,6 @@ static int ptp_kvm_get_time_fn(ktime_t *device_time,
- 	preempt_enable_notrace();
+@@ -4,6 +4,7 @@
+  *
+  * Copyright (C) 2017 Red Hat Inc.
+  */
++#include <linux/clocksource.h>
+ #include <linux/device.h>
+ #include <linux/err.h>
+ #include <linux/init.h>
+@@ -47,6 +48,7 @@ static int ptp_kvm_get_time_fn(ktime_t *device_time,
  
  	system_counter->cycles = cycle;
--	system_counter->cs = cs;
- 	system_counter->cs_id = cs_id;
+ 	system_counter->cs = cs;
++	system_counter->cs_id = cs->id;
  
  	*device_time = timespec64_to_ktime(tspec);
-diff --git a/drivers/ptp/ptp_kvm_x86.c b/drivers/ptp/ptp_kvm_x86.c
-index 2782442..617c8d6 100644
---- a/drivers/ptp/ptp_kvm_x86.c
-+++ b/drivers/ptp/ptp_kvm_x86.c
-@@ -93,7 +93,6 @@ int kvm_arch_ptp_get_clock(struct timespec64 *ts)
- }
  
- int kvm_arch_ptp_get_crosststamp(u64 *cycle, struct timespec64 *tspec,
--			      struct clocksource **cs,
- 			      enum clocksource_ids *cs_id)
- {
- 	struct pvclock_vcpu_time_info *src;
-@@ -124,7 +123,6 @@ int kvm_arch_ptp_get_crosststamp(u64 *cycle, struct timespec64 *tspec,
- 		*cycle = __pvclock_read_cycles(src, clock_pair->tsc);
- 	} while (pvclock_read_retry(src, version));
- 
--	*cs = &kvm_clock;
- 	*cs_id = CSID_X86_KVM_CLK;
- 
- 	return 0;
-diff --git a/include/linux/ptp_kvm.h b/include/linux/ptp_kvm.h
-index 95b3d4d..e8c74fa 100644
---- a/include/linux/ptp_kvm.h
-+++ b/include/linux/ptp_kvm.h
-@@ -12,13 +12,11 @@
- #include <linux/types.h>
- 
- struct timespec64;
--struct clocksource;
- 
- int kvm_arch_ptp_init(void);
- void kvm_arch_ptp_exit(void);
- int kvm_arch_ptp_get_clock(struct timespec64 *ts);
- int kvm_arch_ptp_get_crosststamp(u64 *cycle,
--		struct timespec64 *tspec, struct clocksource **cs,
--		enum clocksource_ids *cs_id);
-+		struct timespec64 *tspec, enum clocksource_ids *cs_id);
- 
- #endif /* _PTP_KVM_H_ */
-diff --git a/include/linux/timekeeping.h b/include/linux/timekeeping.h
-index 3538c5b..7e50cbd 100644
---- a/include/linux/timekeeping.h
-+++ b/include/linux/timekeeping.h
-@@ -271,8 +271,6 @@ struct system_device_crosststamp {
-  * struct system_counterval_t - system counter value with the ID of the
-  *				corresponding clocksource
-  * @cycles:	System counter value
-- * @cs:		Clocksource corresponding to system counter value. Timekeeping
-- *		code now evaluates cs_id instead.
-  * @cs_id:	Clocksource ID corresponding to system counter value. Used by
-  *		timekeeping code to verify comparability of two cycle values.
-  *		The default ID, CSID_GENERIC, does not identify a specific
-@@ -280,7 +278,6 @@ struct system_device_crosststamp {
-  */
- struct system_counterval_t {
- 	u64			cycles;
--	struct clocksource	*cs;
- 	enum clocksource_ids	cs_id;
+diff --git a/include/linux/clocksource_ids.h b/include/linux/clocksource_ids.h
+index f846794..a4fa343 100644
+--- a/include/linux/clocksource_ids.h
++++ b/include/linux/clocksource_ids.h
+@@ -8,6 +8,7 @@ enum clocksource_ids {
+ 	CSID_ARM_ARCH_COUNTER,
+ 	CSID_X86_TSC_EARLY,
+ 	CSID_X86_TSC,
++	CSID_X86_KVM_CLK,
+ 	CSID_MAX,
  };
  
