@@ -1,63 +1,63 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0622A5F49E
-	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 12:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 633695FF06
+	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 12:30:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707654646; cv=none; b=kz5vHA3w3kbBt7CpqSwVLto+Dpj/KDtFGK27TGbKKzcuq3g7LacgXGvGcE4+Pq8VU7VWWq4Kiy8o4VT8Kefh3wGUTPNR5ANiJQckkQOFLiJKocWPyzdGSVwAfhAr30RdGavVK157LWEq4xFMS3wZ3SWFjJKbFDNA4s4yN3pXazE=
+	t=1707654649; cv=none; b=qv/iaY53b7TW+QRoeH8LEkv+kcjRB+vfueJ9ZrCZvPjxzy+pqO94d7N4Kx+rnrJCgmJkz9SUovMPi6CpDfo6VgGsJZycfid9zVAterc7hZjWLfKmhOUQKyHt2RIZxTPYZxjZIyivZoyF17Q59bfxN4IGRQxnAgQT/4Cpkq0KVik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707654646; c=relaxed/simple;
-	bh=k0CWYvaaB/gYg4+a4TXJ9LeyRASwAqQNiIxSmINjJE8=;
+	s=arc-20240116; t=1707654649; c=relaxed/simple;
+	bh=FaWrvDRhCn6qo66e2LFY1/am/fRiqeQ00xmmtBjY9fQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kSM6d0JV/n2Iyz97Ou2NlyWDuQ1KCwzZM8LevKNkptrZxc083mtE1XTZoiwi1pkaK8YlzE/dKg3weUMRYh731Y/FKQwttdvjK0G7hru8F/GOJ2BKboDrpF8LeI7PEOW8UO9aVGuchrJpJAoNu+2u6stbToc28ePTd6aLoK/K/Ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=f6ZYB5xE; arc=none smtp.client-ip=209.85.208.53
+	 MIME-Version; b=oxSWNAUuU64xdltxN18pV/EbERjF2gOc8IgFg7ZwucVVUXpWYWwlpvFZJHPvE+h5XJGoTrKXbGp/OWietGq0VYarH8wrXLmMBSSjgQdtFF96R/t/vUXXQP6NHC1PPnhgdLAqYGxIKV2jesMFz51up3N74GB5u2BaD5NqE56IG2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=ZhnjJBq9; arc=none smtp.client-ip=209.85.208.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="f6ZYB5xE"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5610cc8cc1aso2398749a12.1
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 04:30:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="ZhnjJBq9"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d0e2adfeefso18219681fa.2
+        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 04:30:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1707654640; x=1708259440; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1707654644; x=1708259444; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ocDV0xt8N038gP+DLg6dR5T/0PL4+pEI/kg00OQd02E=;
-        b=f6ZYB5xE0VNf0k0hJMmX/jaIUNR7+6Lvo6P8SZ9aveFmBRpsOubfcyO216wwh+zvk0
-         DjPcM6Ev0r7pkyoxR40Rfm3dG5u+ZCuxByNP+LhLKrxhFiVz8IvZQsKIAkn/VBvoWgzM
-         blVGAjGXaOlPQOU7T9btTKRQmxfY6QR3GeXDR7LcZFsP87/ibinjzMW6N8+kBO6CkHDR
-         9HXQvW6IlST5edxuodGSb76gGhKFxZuA1jwUlZhL20GvzD18tWfiT0VwkIbE/OKyHUru
-         5QMF/hWu8xRRvnJ5dXobr6/ggoFgTKG+Tx1QHAEQr0bN+Di3JwSp3MFkIacsIs/1U191
-         WeUw==
+        bh=dhd0Wyk/ZgeZM/EU3KZ6LbkcM94I0OFOZkDaLa9LsZQ=;
+        b=ZhnjJBq9UlbZIahyq8LYfJIU3IheyD12vYU0g98Givle61VZQr3I0hefCz5Y16Nm9V
+         3q78+kZPHIPxA873Qmfe9JNhZH/hv/3zmcnfPvy0V5Ac61oXNAH/tH5oQoJsfvJ5p3hz
+         ydHcDuitgUhtzxTrTrq8OJUBSo8EmU27uE7hxDcN8iXtDk4IOe/mdc5EdCZkmjmLn6qW
+         tSYJziQR9ybARHH9XdOWJVqR6hNmgWzWXcK/1znP2ehlBUIW5bC30aWGfLDxO2cdvXgG
+         57bp1fFaJxoq7LXx6UTZVHXrjmRzAKZIqZYKSBvsmzSoF0QSBNYqhTfHIUeEcr3bQHdH
+         Bvsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707654640; x=1708259440;
+        d=1e100.net; s=20230601; t=1707654644; x=1708259444;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ocDV0xt8N038gP+DLg6dR5T/0PL4+pEI/kg00OQd02E=;
-        b=LZdyFFIVu6OQcAeC+nbdfUZw7YW1LGVHmmRFgJHq2USnO/qzprY8opF59McN0zNDcs
-         GjS0G1Cr+6S9CMb2BSQA+TaJXPE63AKbkQO3H6AS+QEJCJv4rwbwldXTVSf9jNaQzeo/
-         Z3kq6SJmx8IFaVBvi2TuOw9+cDczkWRwWeBd5qOUw+WS0c3JmqsTmLpmMIS4+4XAVjKK
-         tKtfWj62sfuFPvXKQ/AxufVFLihfG5Y+1ZPQ2JAs3ByzJlOvOTH/aiLYMorNea+VCUZh
-         lHadddzcDpiHZl0kaoFoCen0vzQM6Qmc3PLhY6Ez17xMfYGWAAoRORRAtgpRByBXOKEP
-         kyKg==
-X-Gm-Message-State: AOJu0YyArOLhkMflyoOwUNlTRKZLHX3GnaixNfoAk+KFHTlW9MO8ZMhb
-	lhyJ0WbafTOa81Ml8h/cVsBRi0jeJaeTDWBF/ov6qi5rMxrBmM5ruudXFXC9kDypcChy2bz4qD0
-	b
-X-Google-Smtp-Source: AGHT+IF+2qODIq7AEyrYjDLlJFbCilNnKwTvHFdf3Bt01pRWV+uspWBkvefqlTflTWZmaIMLqkQ91w==
-X-Received: by 2002:a05:6402:128e:b0:561:2f3b:7221 with SMTP id w14-20020a056402128e00b005612f3b7221mr2438701edv.18.1707654640647;
-        Sun, 11 Feb 2024 04:30:40 -0800 (PST)
+        bh=dhd0Wyk/ZgeZM/EU3KZ6LbkcM94I0OFOZkDaLa9LsZQ=;
+        b=AEbZwQ6cdh1mQC1ElTyJ1+HrUxK7PI+kK787hsw90v446C8TZ32/HJS+lbGyTtzIvT
+         BjfPT7talud71KgqHuPgiXDYktjJ42dN3u/rWSb+5rZh0tmf9z7SuuKqzz4inx8Lw4nL
+         BdsPH+Kp8HYyV3TBZm+VNkxexyqhLWzn8bpy5q/yXkiqXOZ8oKhKS+t5ORQet5vuTrYl
+         8F2kOOuj/r80hHqLc/KL/wvYjURiuBip7JpXc6D+YVTitBBB5x9dsluIFaK/ev0ToT9z
+         7yjUV5SptEFXsbQKDlcpOEvDZ4RInFYAIaEzIJExeRuQV+3FtYL8y3DSO116vQ0e7vZS
+         TFLQ==
+X-Gm-Message-State: AOJu0YyD2SuJWKCME7mH+q0pUnrHZkgHORiQgjhKybUgMPEgZk6A2JjM
+	jHDpQUw+jJMOhsRkayNBh7HvjJIWt9+3O3uyWpQYKqY+VhWa75+M1t0znOFgJSLM941wyrgVk20
+	y
+X-Google-Smtp-Source: AGHT+IGe2JCDcv2zmH51jFGl38SlUOBmvxv1RcSyvmLnDS+lCsrshqS+1OGZ+4Y8ODu01VNPs4AB1A==
+X-Received: by 2002:a2e:a498:0:b0:2d0:c322:7638 with SMTP id h24-20020a2ea498000000b002d0c3227638mr2437312lji.39.1707654643909;
+        Sun, 11 Feb 2024 04:30:43 -0800 (PST)
 Received: from raven.intern.cm-ag (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id fj18-20020a0564022b9200b0056187ca4120sm1024611edb.10.2024.02.11.04.30.39
+        by smtp.gmail.com with ESMTPSA id fj18-20020a0564022b9200b0056187ca4120sm1024611edb.10.2024.02.11.04.30.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Feb 2024 04:30:40 -0800 (PST)
+        Sun, 11 Feb 2024 04:30:42 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: linux-kernel@vger.kernel.org
 Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v3 26/35] percpu-rwsem.h: move declarations to percpu-rwsem_types.h
-Date: Sun, 11 Feb 2024 13:29:51 +0100
-Message-Id: <20240211123000.3359365-27-max.kellermann@ionos.com>
+Subject: [PATCH v3 29/35] linux/random.h: reduce dependencies on linux/kernel.h
+Date: Sun, 11 Feb 2024 13:29:54 +0100
+Message-Id: <20240211123000.3359365-30-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240211123000.3359365-1-max.kellermann@ionos.com>
 References: <20240211123000.3359365-1-max.kellermann@ionos.com>
@@ -69,90 +69,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-By providing declarations in a lean header, we can reduce header
-dependencies.
-
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- include/linux/cgroup-defs.h        |  2 +-
- include/linux/percpu-rwsem.h       | 15 +--------------
- include/linux/percpu-rwsem_types.h | 24 ++++++++++++++++++++++++
- 3 files changed, 26 insertions(+), 15 deletions(-)
- create mode 100644 include/linux/percpu-rwsem_types.h
+ include/linux/random.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
-index 878deefba0e1..691c50aeafae 100644
---- a/include/linux/cgroup-defs.h
-+++ b/include/linux/cgroup-defs.h
-@@ -16,7 +16,7 @@
- #include <linux/rcupdate.h>
- #include <linux/refcount_types.h>
- #include <linux/percpu-refcount_types.h>
--#include <linux/percpu-rwsem.h>
-+#include <linux/percpu-rwsem_types.h>
- #include <linux/u64_stats_sync.h>
- #include <linux/workqueue.h>
- #include <linux/bpf-cgroup-defs.h>
-diff --git a/include/linux/percpu-rwsem.h b/include/linux/percpu-rwsem.h
-index 36b942b67b7d..0f427bd5217a 100644
---- a/include/linux/percpu-rwsem.h
-+++ b/include/linux/percpu-rwsem.h
-@@ -2,24 +2,11 @@
- #ifndef _LINUX_PERCPU_RWSEM_H
- #define _LINUX_PERCPU_RWSEM_H
+diff --git a/include/linux/random.h b/include/linux/random.h
+index 70e5250f3bc4..3183025ddda9 100644
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -4,7 +4,8 @@
+ #define _LINUX_RANDOM_H
  
-+#include <linux/percpu-rwsem_types.h>
- #include <linux/atomic.h>
- #include <linux/percpu.h>
--#include <linux/rcuwait.h>
--#include <linux/wait.h>
--#include <linux/rcu_sync.h>
- #include <linux/lockdep.h>
+ #include <linux/bug.h>
+-#include <linux/kernel.h>
++#include <linux/limits.h> // for U32_MAX
++#include <linux/log2.h> // for is_power_of_2()
  
--struct percpu_rw_semaphore {
--	struct rcu_sync		rss;
--	unsigned int __percpu	*read_count;
--	struct rcuwait		writer;
--	wait_queue_head_t	waiters;
--	atomic_t		block;
--#ifdef CONFIG_DEBUG_LOCK_ALLOC
--	struct lockdep_map	dep_map;
--#endif
--};
--
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
- #define __PERCPU_RWSEM_DEP_MAP_INIT(lockname)	.dep_map = { .name = #lockname },
- #else
-diff --git a/include/linux/percpu-rwsem_types.h b/include/linux/percpu-rwsem_types.h
-new file mode 100644
-index 000000000000..0716d08b758b
---- /dev/null
-+++ b/include/linux/percpu-rwsem_types.h
-@@ -0,0 +1,24 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_PERCPU_RWSEM_TYPES_H
-+#define _LINUX_PERCPU_RWSEM_TYPES_H
-+
-+#include <linux/rcu_sync.h>
-+#include <linux/rcuwait.h>
-+#include <linux/types.h>
-+#include <linux/wait_types.h>
-+#ifdef CONFIG_DEBUG_LOCK_ALLOC
-+#include <linux/lockdep_types.h>
-+#endif
-+
-+struct percpu_rw_semaphore {
-+	struct rcu_sync		rss;
-+	unsigned int __percpu	*read_count;
-+	struct rcuwait		writer;
-+	wait_queue_head_t	waiters;
-+	atomic_t		block;
-+#ifdef CONFIG_DEBUG_LOCK_ALLOC
-+	struct lockdep_map	dep_map;
-+#endif
-+};
-+
-+#endif
+ #include <uapi/linux/random.h>
+ 
 -- 
 2.39.2
 
