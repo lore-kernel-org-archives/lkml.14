@@ -1,134 +1,77 @@
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4260C5C610
-	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 15:44:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822815D460;
+	Sun, 11 Feb 2024 15:44:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707666280; cv=none; b=Oko+/wmAU0cESMxRaJzsitWT6CQiwLcAEXJI3UtUGrehr5tMPEHfgmCl8+f813x6kJQFrfSrE+cz4v7m1Z/ODwcfM5TOkCb7clvf/+VljHjRpCBIbL2qo/e1XkXOTAfnHK0WoHCk/a2AUVINmUIbO7JumQOoup1g/1G0+y12nQ8=
+	t=1707666297; cv=none; b=uKHX5S1xTHtlcQ7zt44bGL62KNiAqmZAcsN/NZOcPg6dUFCq3/+D96/Tmmw2xM+BzbdZ3U6rMCN59s6Cqd82dkGLT21z7qNVISvt8xzXi7wyjLFA+5gIt9oKN8p1CGvUv9lpj9l23qbB9w5eo77+l/EFSkJQ4+YSw2xzU63dWq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707666280; c=relaxed/simple;
-	bh=Zp1Q7HHvgyv0KT1mM4ftOo2mRyUQ2sFgTV9nu850Kig=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Mdk8ueu6nZs610AwQB3UF1ALRtaSnwehBfEC+5zubWmwKZkW4tcrqYeYW+IqlFh91bihuuVsDX7e1Jwlhq2yMoLmYI1/WSniWJu6C8QORcwPYaLImzDw2N7z547bktnpnYrgnK3diBKlPYBeeu0kZFr95U/kFEbRFxtw5uMvxO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=KcploYk9; arc=none smtp.client-ip=209.85.210.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707666297; c=relaxed/simple;
+	bh=02hlsE3fIeUkpdG/W45CI6vNfgQ7OGsQBobYHKiWcTI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OFjcXm/67CB8p6zH9kYJLxa56LX6N2qyvr9XEG3MiM9Vui20ga0r31Ei1AX1HbnOkJgqatB0Fu94WVvhWPKfayhAvB/TNPHJ5uqPU6y/VPCVqQctyFNgDiZMt3eXSsWZzs5anIZLkWngwe1NwSNJi+uOKYx/3/53upO5hAX+owo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=bwD08rAe; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="KcploYk9"
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-6e2e6bcc115so63566a34.3
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 07:44:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707666278; x=1708271078;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:dkim-signature:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=iSmA1cSynCqQIlNVQ5FPbNWJVzvoZ+aRPHqPGGv5d7I=;
-        b=fu8FkO6R+KaWD2Wse7sxAHsUcqzwYCs4h8gy6kGH55tXULKg1hiV3+WEB57MJG8gVt
-         C520wJTLJ/b4T/Kduu63PYQk/aYNW2sexRxkQCHL59PQXPPrE/Cj8hBTC8nITfFUkRao
-         CNBJKLRNYS9q9VtKV978NWGEVB9omXHmqPQqjfT180joCMGORvdqO+RSpWcefIvt6Z3j
-         XjX7PZzdEq4uABe5TLE9yxsTPTnL2cpPAAZOgi/Oq331lVNcBlnOlIOunvMH5dpd26ve
-         F5R7WfyZdemhskunelsMlK9E5JXQaOoV5CJnTelt3UV25LPfzgfxxY+xW5Q4aU2+8ige
-         u9dg==
-X-Forwarded-Encrypted: i=1; AJvYcCVQE+i7/+pzp8wed9jmaqgKeB1Ymg+c+LVbzuRXjBh8GO30G/5I+Mdqf8L9wPRui8dg8lkk2diiCmGaH/wCMVhrfa2x/GNMNcmB0FNQ
-X-Gm-Message-State: AOJu0YxJZNe8QcHOVHCLhnOIPx1NW7cUB3rWOFXylN51DfX2eXmnf7Tm
-	U2ukmoMdWnGw+H4SzlWTOQlp3JBmDM5V6a5MPfVt2CoXv+x4vFDatKzsx2dS/dNJ3A==
-X-Google-Smtp-Source: AGHT+IFNs2spGEyVcBjQ8A170hFY1vqr5VCSGucgDBWE+QDFujCRcS5xMIKSTbAZn2S/iP1XJmq4LQ==
-X-Received: by 2002:a9d:5f1a:0:b0:6e2:bdcf:e31a with SMTP id f26-20020a9d5f1a000000b006e2bdcfe31amr4720136oti.17.1707666278219;
-        Sun, 11 Feb 2024 07:44:38 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWoiMSbGJe8S1q2ovuzusX/bwgA76D8ullFd58iyry0AWkEGojBJQ0EJoWZFHJDcMiDN7rPTy9GkX105L8QzRE21VZRx5jH79bkNSvRNO4viHrNf3u1Q0i0dUHorNKkGz8URPu7q1Vghg==
-Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id n25-20020aa78a59000000b006dd8a07696csm3907611pfa.106.2024.02.11.07.44.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Feb 2024 07:44:37 -0800 (PST)
-From: "Ricardo B. Marliere" <ricardo@marliere.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2024; t=1707666276;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iSmA1cSynCqQIlNVQ5FPbNWJVzvoZ+aRPHqPGGv5d7I=;
-	b=KcploYk9c9GJF1gy2PasRbT+RUU6tACZjm4S3eIKku6LuupjPmSFQHrXQI3KQeQMTqJHTI
-	1XRZFqxNOdPHkAaFeWVW9ODPwug13zNMSev/0jYrmJKvu8i/at5hKtttR4xjqUYE6sKZwc
-	V21H7BsReWjBY5pYlm0xFG/C0OrbupSo7olH63WBL3GVepMfBX/x++K3656cpCRLqHmoyX
-	wRLvLCK+cb03czKClyaXtO+eFE7SB+ubv3ws0tvNNLc06+oHvn6X8umuLjSikTWt/1WC7g
-	cDjrSLEy2pivGXHIDMaAfK87jG8U13b9IWMD/giWO4i1ymJLHfhEINHulhnsOA==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-Date: Sun, 11 Feb 2024 12:45:08 -0300
-Subject: [PATCH 2/2] ARM: ecard: make ecard_bus_type const
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="bwD08rAe"
+Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 5426E20751;
+	Sun, 11 Feb 2024 16:44:43 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1707666283;
+	bh=tAZNyiysoPkFJigXlxkqXvpyemn+vj6wg0E7daVSflM=; h=From:To:Subject;
+	b=bwD08rAeNi+64JMXiP3XA2VtDpTi7cmj50ioN6lj1Rfj2rLJzf61w/veV2+pAwoBr
+	 TCAK3OFqIfeiCT4k7nP2UcdPvyPV/jaRn7ZDVtsnKU2R6uOGce28y9lX+Oa0o58E0q
+	 a2ubtFvKk8VJu5N02m2N3SonJxEp8+mP+WeK/A9Yn0A6LjmjhsTaOMVl88sKlNfFKP
+	 gzHiCU0AIvWZZF5w5ha7+qeHXFJGs9y8aCQcd3p88QhJ4OQo9BzVi3813VzloR6a58
+	 TJCoFyOYa2txRZgQXdnPPgTi5V284r+2rG1eFUwhO3KvKjNEIaTpoGRfzSSJjnzsu+
+	 jqh+YM2QxzuEQ==
+Date: Sun, 11 Feb 2024 16:44:11 +0100
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Judith Mendez <jm@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/9] Fix MMC properties on Sitara devices
+Message-ID: <20240211154411.GA3360@francesco-nb>
+References: <20240207225526.3953230-1-jm@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240211-bus_cleanup-rmk-v1-2-65668e578d55@marliere.net>
-References: <20240211-bus_cleanup-rmk-v1-0-65668e578d55@marliere.net>
-In-Reply-To: <20240211-bus_cleanup-rmk-v1-0-65668e578d55@marliere.net>
-To: Russell King <linux@armlinux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Ricardo B. Marliere" <ricardo@marliere.net>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1570; i=ricardo@marliere.net;
- h=from:subject:message-id; bh=Zp1Q7HHvgyv0KT1mM4ftOo2mRyUQ2sFgTV9nu850Kig=;
- b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlyOuD8ODd/0ZKmuvbvR2pW6rdXJpZB6FjW2D2r
- ocNh2NL10uJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZcjrgwAKCRDJC4p8Y4ZY
- pr2MD/9NAY96OeQSHI6t2nQzztaYYKMIBrBwXSn08TW8UZsVlJnKQ5zegjL4D1I/RViTQ11NQ8y
- LnkxFtyae4w2KqgtvGrfCt1wJgMmagqY11wKtLQ6svch8FDgo7KpQJA0BMv8KToG2aRy/YOaX5V
- PsR2vpnKeXOxC24C48bgbXf4p+DthYx4fvzApG8Mv76dVgqZlBCjsQ4nnrgbWaEVE7cYE/SkCbF
- mQlhvJaf0hvWb89tggvEbxHScJlrGHzPEo6ykRjLou1QQONG0RHiTeLT9BJmAAHpVEr4rVLUClw
- +yr+hZZdz0ppoJqsW/S1rFT2f7tvAAfCY6F/jcakfYA8/Of2Z+UfIsfEy+PohxeVVt1owFSwHtp
- E+LEGAYjrDTaUbQeE0VQs165EcdlsbpvEsZpelo67ilK4B2S/nt75+7oN2u1GPYWRNqYYHIg2dr
- IDG5L3/RIybyqmNIAhmQ3isC2aDobQTaYqpsiGd9oeP9P6vgjNeMlsSD4eoDX3nX6u849NOWvOR
- tj74tTG4qKk913CebFAfR3WQccLSQVKFXeBw0x2EEi+uhgGmHxLxDbwDvg7YaGqlyEMrW3d+FT6
- GJeATLwfV/ETdnFd8abiOQpuoL4rQ2ZRISyTwCbRNO3+MBXEJW4PeWXUNz1Jj2KW11QxAswH/K9
- wPX+2G/5eZmlcSQ==
-X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
- fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240207225526.3953230-1-jm@ti.com>
 
-Now that the driver core can properly handle constant struct bus_type,
-move the ecard_bus_type variable to be a constant structure as well,
-placing it into read-only memory which can not be modified at runtime.
+Hello Judith and TI folks,
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
----
- arch/arm/include/asm/ecard.h | 2 +-
- arch/arm/mach-rpc/ecard.c    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+On Wed, Feb 07, 2024 at 04:55:17PM -0600, Judith Mendez wrote:
+> This patch series aims to add or fix MMC properties:
+> OTAPDLY/ITAPDLY.
+> 
+> The DLL properties ti,trm-icp and ti,driver-strength-ohm
+> should also be updated since only AM64x and AM62p devices
+> have a DLL to enable, so remove these properties when not
+> applicable.
 
-diff --git a/arch/arm/include/asm/ecard.h b/arch/arm/include/asm/ecard.h
-index 4befe8d2ae19..7cbe001bf9cc 100644
---- a/arch/arm/include/asm/ecard.h
-+++ b/arch/arm/include/asm/ecard.h
-@@ -195,7 +195,7 @@ void __iomem *ecardm_iomap(struct expansion_card *ec, unsigned int res,
- 			   unsigned long offset, unsigned long maxsize);
- #define ecardm_iounmap(__ec, __addr)	devm_iounmap(&(__ec)->dev, __addr)
- 
--extern struct bus_type ecard_bus_type;
-+extern const struct bus_type ecard_bus_type;
- 
- #define ECARD_DEV(_d)	container_of((_d), struct expansion_card, dev)
- 
-diff --git a/arch/arm/mach-rpc/ecard.c b/arch/arm/mach-rpc/ecard.c
-index c30df1097c52..4b843cffcac2 100644
---- a/arch/arm/mach-rpc/ecard.c
-+++ b/arch/arm/mach-rpc/ecard.c
-@@ -1124,7 +1124,7 @@ static int ecard_match(struct device *_dev, struct device_driver *_drv)
- 	return ret;
- }
- 
--struct bus_type ecard_bus_type = {
-+const struct bus_type ecard_bus_type = {
- 	.name		= "ecard",
- 	.dev_groups	= ecard_dev_groups,
- 	.match		= ecard_match,
+Do you have any reference regarding this change? TI reference manual or
+anything like that?
 
--- 
-2.43.0
+No change needed in sdhci_am654.c? It seems that `drv_strength` is written
+to some register unconditionally, is it ok to do so?
+
+Do this change implies that there is no way to configure the drive
+strength on such SoCs and MMC/SD trace impedance must be the nominal
+50ohm?
+
+Thanks,
+Francesco
 
