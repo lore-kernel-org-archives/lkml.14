@@ -1,63 +1,63 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A0E44C73
-	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 12:30:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE235B5A6
+	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 12:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707654619; cv=none; b=FujtyEa6Pl+zaaTOEfy36qVTfCLv+sxVEMUCkWQOmFpJr9yAL+iAySeC33c0luaMky68IkpbOdllaL1fCV+odPBxJYResstibmTk++vhffAbzvQvsqNispATdv7Kt5JmwY3uOMkL05eYDPRyzup8I9sexWyGZBchwalKBNEbBrk=
+	t=1707654623; cv=none; b=gg6UZ/T2c9yLLe9eFCqKcAaqDGTqz7/r9lUbtjYbraYtWHgGZHGeoVH4QmHbBKIetMayP/oyP2SIMutNbussWvi+PgrbHoJVjZSEDO/tyoZnOcdrs5gEYRYAFnPOED5SN0K9t6T3bBy5Pg08CNaBTv6NRkJT8PYAaxUnrtVezGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707654619; c=relaxed/simple;
-	bh=SghTqgxhqgon/LpOV1LOZnYIRKxGEdDsUDI6nOEWbfQ=;
+	s=arc-20240116; t=1707654623; c=relaxed/simple;
+	bh=FlfryTRGDdyF0z2mZ9UhX2PTECwgKYOqoLIQpD1+7dk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aCOzHuhLGKF1XQgLT2apANq1y0O+Hol775xPklMvGaGvJUVYejZCnfVyz5Pv3cT2bU+nc6RDr9tsErNMAlh14+49Z7nfNd0ZI8/efx46laKMxhcR7fBXHTrn/jN00QDUiCWHvIyMr0nghBHVu53VzUhQebazkCPAGcM0wW82vdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=QrOoYnZq; arc=none smtp.client-ip=209.85.208.48
+	 MIME-Version; b=l8pPas75qK8Sh8NxudyDYUFQB+BLHbTpoHukPmW7U20Xwr6izLp5Yuiu/LJW1MaGi1gG+mZzmpXol2PcbRLCpxdRj7HdXFSZ2Ivaqt3tV6Q7JqtU5R8fTwiSRe5RboYPtw0U3tud55RMfZDddYRZEey1mXCDHa7Hcolhs2WlGfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=Ii4Ij42t; arc=none smtp.client-ip=209.85.208.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="QrOoYnZq"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-55a035669d5so3436305a12.2
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 04:30:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="Ii4Ij42t"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-560c696ccffso5915776a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 04:30:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1707654614; x=1708259414; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1707654619; x=1708259419; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gvmxHxgb+P9LM9n9dvePcQ7EPhhjGM1zr1ro0i5QEmI=;
-        b=QrOoYnZqwst05KLclhuF0wdkOQxppZQO7V2CP7AZt4O7MP4KvQxG6nDPfPqhKF4097
-         DJvaztw22Chjkxpcqxa2eeeDwuA/GLbBQCWndd8KtHx7v/f62/uLgt38ebAKjbdVeCOd
-         UPdklEZT0uG7Su0qvQjiObKiYBA1ZGOy2Bp7tHz91BtzBC1xRfdZf/w/Dx5WHuSIbugY
-         S3Eba3F2Zs0pfQSOEmGxIb/j6nCmglmqpI6ysv4mPDfKyX7u8CRYZlh9SuU0y3+r5uCq
-         sBh6aeodABMFWr/uAA5TOyiKTCeSkI8AiRnea9v6t8lql5mKHXO0EN6yzyGWYRbQbFMX
-         0CrA==
+        bh=zxG16Tl9aF75BCbOOBZ8CaUnNnP0NXfy2/Hg/yLLjHQ=;
+        b=Ii4Ij42tI804zzl/pRWXs7adXgFKvxvXaP/7Hr+uzVBQvJweRFOatSsR66f9I0pnql
+         F2cRMsFvehZBR+DLODZvz74O0bobHahYN1wkJHnvu/bW7dc4bKG7jKCJQl+TY04dh0kW
+         DkM/XJkEt2FeKhrLREG1QzlR0qn5PRSFelQ08CCLaY/uKDfWuchUwGDVYr879rpRo+/6
+         ywpF8zfgar30Y4fQ8r7DwxznZSsjhL1xTiXhgZry2Pm00Kv3EhIS04/h6fATQgW7ldGN
+         KluOZRT2CWPym053Zvczhshz8ug0WfcUCVz+Milp6kWJYcTDQjoAJNnU7MztprcqVtgL
+         p0fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707654614; x=1708259414;
+        d=1e100.net; s=20230601; t=1707654619; x=1708259419;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gvmxHxgb+P9LM9n9dvePcQ7EPhhjGM1zr1ro0i5QEmI=;
-        b=olkigWFNnJyIbPG/iHEk8m65fiRWJPoQwaMtU+gBHh0qLOQdJDSlTFXT5tfnyO6oL4
-         UrOi1AuGW8VjqCyo2Rq2t7ueS19HXltObWQ6wT3oND2pvV1hdT2Ql3EAKQ4rkZ9gc98c
-         F5aPSDAFgk+M4QlSzp0dPMCvovzeiaUa/ySy2LCuDv3yAj3a8x6xMPDLu9oaraQMuDEM
-         8Ye1hPB1mAMSma75pivTFc9RNQnBkhTOjQ1uWsrn/a5QRokBNizrns2cX7aKhdMPyF0n
-         xE1wz5VrLjdj2MrUHJUr/2fBywOPJ/Xugr8MWqbnhpqt6fVF3ey8W67f20SNQy5TmWeu
-         3pJw==
-X-Gm-Message-State: AOJu0YzQqF8FnjVvrQ090otKwaLtoaEEPs/DUY4uW3VMy7elXmXT6qfP
-	7l2bYGDU244ON//XMUUMdOPZR+Q+9hNNxV2WAz3JtdgC87+Way8sXD2z41bLegewS00zm1o4HU5
-	G
-X-Google-Smtp-Source: AGHT+IF3gdKqSVIlBIKi0y8mcxDaWbA/Ui52CHdsv0CAJ7EIg3iC+ldLOvSz09q7NuhhgqpHOR35dQ==
-X-Received: by 2002:a05:6402:292:b0:561:2711:68cd with SMTP id l18-20020a056402029200b00561271168cdmr2447456edv.3.1707654614102;
-        Sun, 11 Feb 2024 04:30:14 -0800 (PST)
+        bh=zxG16Tl9aF75BCbOOBZ8CaUnNnP0NXfy2/Hg/yLLjHQ=;
+        b=riVtv+xsVhjIIco99uVYAUUNw1X6goSekaSaxXu8XSiolVpzplWDqRxMlPbbkUh5rR
+         zCs0M5BXD6ku770yRfdy1NqGLCx+0N4aYOAKUMgGYr+/7F420+2dibwQFVmKKHzvrs0I
+         FEepGt7zpwOooBXiSEfmeimXcPtLcIrAD44suUJB2hUb3OQOg1nEehV49Wizs4QDIs2Y
+         3OMKQA8i90Ud/yyw/d6BilCECIqaj59PPB2clCLHKDclY7w0rTQRtj8C0mgTG+2ml0YL
+         A+k3DlkUV+ezy6ljtTLzVGb13xxQrjfNoDgd3WzFnmFt6arQUYa9c5KIEYd18v8k+Kl6
+         XQ5w==
+X-Gm-Message-State: AOJu0YwpSxQrYqnKsRjowimxjcAIcArgLby8T+CAtps3bs+MhARJT1h2
+	F9Yy0x+QA2d4fqEJdR2v4cu0Qu2fdv9Zau/KkrDHB4D6I9SAg6MqzgAjZu62GeffTxpZG8JSS1V
+	d
+X-Google-Smtp-Source: AGHT+IHHsfCo0OO+7W8vq3TldcbCeh3BOi8GqXTXU8p9rFS0jXcPZJwT1H4bPejWEMSwv5FcfhupbA==
+X-Received: by 2002:a05:6402:559:b0:561:33dd:621c with SMTP id i25-20020a056402055900b0056133dd621cmr4133010edx.7.1707654618743;
+        Sun, 11 Feb 2024 04:30:18 -0800 (PST)
 Received: from raven.intern.cm-ag (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id fj18-20020a0564022b9200b0056187ca4120sm1024611edb.10.2024.02.11.04.30.13
+        by smtp.gmail.com with ESMTPSA id fj18-20020a0564022b9200b0056187ca4120sm1024611edb.10.2024.02.11.04.30.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Feb 2024 04:30:13 -0800 (PST)
+        Sun, 11 Feb 2024 04:30:18 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: linux-kernel@vger.kernel.org
 Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v3 04/35] workqueue.h: move struct delayed_work to workqueue_types.h
-Date: Sun, 11 Feb 2024 13:29:29 +0100
-Message-Id: <20240211123000.3359365-5-max.kellermann@ionos.com>
+Subject: [PATCH v3 07/35] sysfs.h: move declarations to sysfs_types.h
+Date: Sun, 11 Feb 2024 13:29:32 +0100
+Message-Id: <20240211123000.3359365-8-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240211123000.3359365-1-max.kellermann@ionos.com>
 References: <20240211123000.3359365-1-max.kellermann@ionos.com>
@@ -69,128 +69,397 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This allows including workqueue_types.h instead of workqueue.h in some
-headers.
+By providing declarations in a lean header, we can reduce header
+dependencies.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- include/linux/can/dev.h              | 2 +-
- include/linux/jump_label_ratelimit.h | 2 +-
- include/linux/kobject.h              | 5 ++++-
- include/linux/workqueue.h            | 9 ---------
- include/linux/workqueue_types.h      | 9 +++++++++
- include/net/netns/ipv6.h             | 2 +-
- include/sound/soc.h                  | 2 +-
- 7 files changed, 17 insertions(+), 14 deletions(-)
+ drivers/firmware/dmi-sysfs.c    |  1 +
+ drivers/firmware/memmap.c       |  1 +
+ drivers/input/vivaldi-fmap.c    |  1 +
+ include/linux/device/bus.h      |  2 +-
+ include/linux/iio/buffer_impl.h |  3 +-
+ include/linux/kobject.h         |  2 +-
+ include/linux/module.h          |  2 +-
+ include/linux/perf_event.h      |  2 +-
+ include/linux/sysfs.h           | 63 +----------------------
+ include/linux/sysfs_types.h     | 89 +++++++++++++++++++++++++++++++++
+ include/linux/thermal.h         |  2 +-
+ include/net/netdev_rx_queue.h   |  2 +-
+ include/rdma/ib_sysfs.h         |  2 +-
+ kernel/kheaders.c               |  1 +
+ lib/kobject.c                   |  1 +
+ mm/cma_sysfs.c                  |  1 +
+ 16 files changed, 105 insertions(+), 70 deletions(-)
+ create mode 100644 include/linux/sysfs_types.h
 
-diff --git a/include/linux/can/dev.h b/include/linux/can/dev.h
-index 332ece824fde..91cf56179c13 100644
---- a/include/linux/can/dev.h
-+++ b/include/linux/can/dev.h
-@@ -22,7 +22,7 @@
- #include <linux/can/skb.h>
- #include <linux/ethtool.h>
- #include <linux/netdevice.h>
--#include <linux/workqueue.h> // for struct delayed_work
-+#include <linux/workqueue_types.h> // for struct delayed_work
+diff --git a/drivers/firmware/dmi-sysfs.c b/drivers/firmware/dmi-sysfs.c
+index b6a72128e818..158cc26a0331 100644
+--- a/drivers/firmware/dmi-sysfs.c
++++ b/drivers/firmware/dmi-sysfs.c
+@@ -25,6 +25,7 @@
+ #include <linux/dmi.h>
+ #include <linux/capability.h>
+ #include <linux/slab.h>
++#include <linux/sysfs.h>
+ #include <linux/list.h>
+ #include <linux/io.h>
+ #include <asm/dmi.h>
+diff --git a/drivers/firmware/memmap.c b/drivers/firmware/memmap.c
+index 4cf473815372..a188b204a012 100644
+--- a/drivers/firmware/memmap.c
++++ b/drivers/firmware/memmap.c
+@@ -14,6 +14,7 @@
+ #include <linux/types.h>
+ #include <linux/memblock.h>
+ #include <linux/slab.h>
++#include <linux/sysfs.h>
+ #include <linux/mm.h>
  
  /*
-  * CAN mode
-diff --git a/include/linux/jump_label_ratelimit.h b/include/linux/jump_label_ratelimit.h
-index 8c3ee291b2d8..2b5095d3dea2 100644
---- a/include/linux/jump_label_ratelimit.h
-+++ b/include/linux/jump_label_ratelimit.h
-@@ -3,7 +3,7 @@
- #define _LINUX_JUMP_LABEL_RATELIMIT_H
+diff --git a/drivers/input/vivaldi-fmap.c b/drivers/input/vivaldi-fmap.c
+index 0d29ec014e2f..72845c0720f2 100644
+--- a/drivers/input/vivaldi-fmap.c
++++ b/drivers/input/vivaldi-fmap.c
+@@ -9,6 +9,7 @@
+ #include <linux/input/vivaldi-fmap.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/sysfs.h>
+ #include <linux/types.h>
  
- #include <linux/jump_label.h>
--#include <linux/workqueue.h>
-+#include <linux/workqueue_types.h>
+ /**
+diff --git a/include/linux/device/bus.h b/include/linux/device/bus.h
+index bdd8ac64f629..a6fc75a825a3 100644
+--- a/include/linux/device/bus.h
++++ b/include/linux/device/bus.h
+@@ -16,7 +16,7 @@
  
- #if defined(CONFIG_JUMP_LABEL)
- struct static_key_deferred {
+ #include <linux/klist.h>
+ #include <linux/pm.h>
+-#include <linux/sysfs.h> // for struct attribute
++#include <linux/sysfs_types.h> // for struct attribute
+ 
+ struct device_driver;
+ struct device_node;
+diff --git a/include/linux/iio/buffer_impl.h b/include/linux/iio/buffer_impl.h
+index 184f8c399854..df4cad6a8c8e 100644
+--- a/include/linux/iio/buffer_impl.h
++++ b/include/linux/iio/buffer_impl.h
+@@ -1,7 +1,8 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ #ifndef _IIO_BUFFER_GENERIC_IMPL_H_
+ #define _IIO_BUFFER_GENERIC_IMPL_H_
+-#include <linux/sysfs.h>
++
++#include <linux/sysfs_types.h> // for struct attribute_group
+ #include <linux/kref_types.h>
+ 
+ #ifdef CONFIG_IIO_BUFFER
 diff --git a/include/linux/kobject.h b/include/linux/kobject.h
-index da714992ab38..8890ab7bdbdc 100644
+index cd29809a05e4..462a2d604b03 100644
 --- a/include/linux/kobject.h
 +++ b/include/linux/kobject.h
-@@ -24,9 +24,12 @@
- #include <linux/stdarg.h> // for va_list
- #include <linux/kref.h>
- #include <linux/kobject_ns.h>
--#include <linux/workqueue.h>
- #include <linux/uidgid_types.h>
+@@ -18,7 +18,7 @@
+ #include <linux/kobject_types.h>
+ #include <linux/types.h>
+ #include <linux/list.h>
+-#include <linux/sysfs.h>
++#include <linux/sysfs_types.h> // for struct attribute
+ #include <linux/compiler.h>
+ #include <linux/container_of.h>
+ #include <linux/spinlock_types.h>
+diff --git a/include/linux/module.h b/include/linux/module.h
+index 426d3bdf83bb..ba3c0d129cb5 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -27,7 +27,7 @@
+ #include <linux/tracepoint-defs.h>
+ #include <linux/srcu.h>
+ #include <linux/static_call_types.h>
+-#include <linux/sysfs.h> // for struct attribute
++#include <linux/sysfs_types.h> // for struct attribute
+ #include <linux/dynamic_debug.h>
  
-+#ifdef CONFIG_DEBUG_KOBJECT_RELEASE
-+#include <linux/workqueue_types.h>
-+#endif
-+
- #define UEVENT_HELPER_PATH_LEN		256
- #define UEVENT_NUM_ENVP			64	/* number of env pointers */
- #define UEVENT_BUFFER_SIZE		2048	/* buffer for the variables */
-diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
-index 4ba33cf07f11..0fbc11030ba2 100644
---- a/include/linux/workqueue.h
-+++ b/include/linux/workqueue.h
-@@ -99,15 +99,6 @@ enum wq_misc_consts {
- #define WORK_DATA_STATIC_INIT()	\
- 	ATOMIC_LONG_INIT((unsigned long)(WORK_STRUCT_NO_POOL | WORK_STRUCT_STATIC))
+ #include <linux/percpu.h>
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index eaf5d5f76e0e..b3aec977b0e4 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -55,7 +55,7 @@ struct perf_guest_info_callbacks {
+ #include <linux/static_key.h>
+ #include <linux/jump_label_ratelimit.h>
+ #include <linux/atomic.h>
+-#include <linux/sysfs.h>
++#include <linux/sysfs_types.h>
+ #include <linux/perf_regs.h>
+ #include <linux/cgroup.h>
+ #include <linux/refcount_types.h>
+diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+index 6fed6884d2e6..0500b023b5cc 100644
+--- a/include/linux/sysfs.h
++++ b/include/linux/sysfs.h
+@@ -13,6 +13,7 @@
+ #ifndef _SYSFS_H_
+ #define _SYSFS_H_
  
--struct delayed_work {
--	struct work_struct work;
--	struct timer_list timer;
--
--	/* target workqueue and CPU ->timer uses to queue ->work */
--	struct workqueue_struct *wq;
--	int cpu;
++#include <linux/sysfs_types.h>
+ #include <linux/kernfs.h>
+ #include <linux/kernel.h> // for VERIFY_OCTAL_PERMISSIONS()
+ #include <linux/compiler.h>
+@@ -23,16 +24,6 @@ struct kobject;
+ struct module;
+ struct bin_attribute;
+ 
+-struct attribute {
+-	const char		*name;
+-	umode_t			mode;
+-#ifdef CONFIG_DEBUG_LOCK_ALLOC
+-	bool			ignore_lockdep:1;
+-	struct lock_class_key	*key;
+-	struct lock_class_key	skey;
+-#endif
 -};
 -
- struct rcu_work {
- 	struct work_struct work;
- 	struct rcu_head rcu;
-diff --git a/include/linux/workqueue_types.h b/include/linux/workqueue_types.h
-index 4c38824f3ab4..e16aaa7a6661 100644
---- a/include/linux/workqueue_types.h
-+++ b/include/linux/workqueue_types.h
-@@ -22,4 +22,13 @@ struct work_struct {
+ /**
+  *	sysfs_attr_init - initialize a dynamically allocated sysfs attribute
+  *	@attr: struct attribute to initialize
+@@ -54,39 +45,6 @@ do {							\
+ #define sysfs_attr_init(attr) do {} while (0)
  #endif
- };
  
-+struct delayed_work {
-+	struct work_struct work;
-+	struct timer_list timer;
+-/**
+- * struct attribute_group - data structure used to declare an attribute group.
+- * @name:	Optional: Attribute group name
+- *		If specified, the attribute group will be created in
+- *		a new subdirectory with this name.
+- * @is_visible:	Optional: Function to return permissions associated with an
+- *		attribute of the group. Will be called repeatedly for each
+- *		non-binary attribute in the group. Only read/write
+- *		permissions as well as SYSFS_PREALLOC are accepted. Must
+- *		return 0 if an attribute is not visible. The returned value
+- *		will replace static permissions defined in struct attribute.
+- * @is_bin_visible:
+- *		Optional: Function to return permissions associated with a
+- *		binary attribute of the group. Will be called repeatedly
+- *		for each binary attribute in the group. Only read/write
+- *		permissions as well as SYSFS_PREALLOC are accepted. Must
+- *		return 0 if a binary attribute is not visible. The returned
+- *		value will replace static permissions defined in
+- *		struct bin_attribute.
+- * @attrs:	Pointer to NULL terminated list of attributes.
+- * @bin_attrs:	Pointer to NULL terminated list of binary attributes.
+- *		Either attrs or bin_attrs or both must be provided.
+- */
+-struct attribute_group {
+-	const char		*name;
+-	umode_t			(*is_visible)(struct kobject *,
+-					      struct attribute *, int);
+-	umode_t			(*is_bin_visible)(struct kobject *,
+-						  struct bin_attribute *, int);
+-	struct attribute	**attrs;
+-	struct bin_attribute	**bin_attrs;
+-};
+-
+ /*
+  * Use these macros to make defining attributes easier.
+  * See include/linux/device.h for examples..
+@@ -164,25 +122,6 @@ static const struct attribute_group _name##_group = {		\
+ };								\
+ __ATTRIBUTE_GROUPS(_name)
+ 
+-struct file;
+-struct vm_area_struct;
+-struct address_space;
+-
+-struct bin_attribute {
+-	struct attribute	attr;
+-	size_t			size;
+-	void			*private;
+-	struct address_space *(*f_mapping)(void);
+-	ssize_t (*read)(struct file *, struct kobject *, struct bin_attribute *,
+-			char *, loff_t, size_t);
+-	ssize_t (*write)(struct file *, struct kobject *, struct bin_attribute *,
+-			 char *, loff_t, size_t);
+-	loff_t (*llseek)(struct file *, struct kobject *, struct bin_attribute *,
+-			 loff_t, int);
+-	int (*mmap)(struct file *, struct kobject *, struct bin_attribute *attr,
+-		    struct vm_area_struct *vma);
+-};
+-
+ /**
+  *	sysfs_bin_attr_init - initialize a dynamically allocated bin_attribute
+  *	@attr: struct bin_attribute to initialize
+diff --git a/include/linux/sysfs_types.h b/include/linux/sysfs_types.h
+new file mode 100644
+index 000000000000..2840a1935ea1
+--- /dev/null
++++ b/include/linux/sysfs_types.h
+@@ -0,0 +1,89 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * sysfs.h - definitions for the device driver filesystem
++ *
++ * Copyright (c) 2001,2002 Patrick Mochel
++ * Copyright (c) 2004 Silicon Graphics, Inc.
++ * Copyright (c) 2007 SUSE Linux Products GmbH
++ * Copyright (c) 2007 Tejun Heo <teheo@suse.de>
++ *
++ * Please see Documentation/filesystems/sysfs.rst for more information.
++ */
 +
-+	/* target workqueue and CPU ->timer uses to queue ->work */
-+	struct workqueue_struct *wq;
-+	int cpu;
++#ifndef _SYSFS_TYPES_H_
++#define _SYSFS_TYPES_H_
++
++#include <linux/types.h>
++#include <linux/lockdep_types.h>
++
++struct kobject;
++struct module;
++struct bin_attribute;
++
++struct attribute {
++	const char		*name;
++	umode_t			mode;
++#ifdef CONFIG_DEBUG_LOCK_ALLOC
++	bool			ignore_lockdep:1;
++	struct lock_class_key	*key;
++	struct lock_class_key	skey;
++#endif
 +};
 +
- #endif /* _LINUX_WORKQUEUE_TYPES_H */
-diff --git a/include/net/netns/ipv6.h b/include/net/netns/ipv6.h
-index 858ee28e73f9..30a55f462264 100644
---- a/include/net/netns/ipv6.h
-+++ b/include/net/netns/ipv6.h
-@@ -6,7 +6,7 @@
- #include <linux/list.h>
- #include <linux/spinlock_types.h>
- #include <linux/rwlock_types.h>
--#include <linux/workqueue.h> // for struct delayed_work
-+#include <linux/workqueue_types.h> // for struct delayed_work
- #include <net/inet_frag.h>
++/**
++ * struct attribute_group - data structure used to declare an attribute group.
++ * @name:	Optional: Attribute group name
++ *		If specified, the attribute group will be created in
++ *		a new subdirectory with this name.
++ * @is_visible:	Optional: Function to return permissions associated with an
++ *		attribute of the group. Will be called repeatedly for each
++ *		non-binary attribute in the group. Only read/write
++ *		permissions as well as SYSFS_PREALLOC are accepted. Must
++ *		return 0 if an attribute is not visible. The returned value
++ *		will replace static permissions defined in struct attribute.
++ * @is_bin_visible:
++ *		Optional: Function to return permissions associated with a
++ *		binary attribute of the group. Will be called repeatedly
++ *		for each binary attribute in the group. Only read/write
++ *		permissions as well as SYSFS_PREALLOC are accepted. Must
++ *		return 0 if a binary attribute is not visible. The returned
++ *		value will replace static permissions defined in
++ *		struct bin_attribute.
++ * @attrs:	Pointer to NULL terminated list of attributes.
++ * @bin_attrs:	Pointer to NULL terminated list of binary attributes.
++ *		Either attrs or bin_attrs or both must be provided.
++ */
++struct attribute_group {
++	const char		*name;
++	umode_t			(*is_visible)(struct kobject *,
++					      struct attribute *, int);
++	umode_t			(*is_bin_visible)(struct kobject *,
++						  struct bin_attribute *, int);
++	struct attribute	**attrs;
++	struct bin_attribute	**bin_attrs;
++};
++
++struct file;
++struct vm_area_struct;
++struct address_space;
++
++struct bin_attribute {
++	struct attribute	attr;
++	size_t			size;
++#ifdef __cplusplus
++	void			*private_;
++#else
++	void			*private;
++#endif
++	struct address_space *(*f_mapping)(void);
++	ssize_t (*read)(struct file *, struct kobject *, struct bin_attribute *,
++			char *, loff_t, size_t);
++	ssize_t (*write)(struct file *, struct kobject *, struct bin_attribute *,
++			 char *, loff_t, size_t);
++	loff_t (*llseek)(struct file *, struct kobject *, struct bin_attribute *,
++			 loff_t, int);
++	int (*mmap)(struct file *, struct kobject *, struct bin_attribute *attr,
++		    struct vm_area_struct *vma);
++};
++
++#endif /* _SYSFS_TYPES_H_ */
+diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+index e0bdda259a29..14450673bd8b 100644
+--- a/include/linux/thermal.h
++++ b/include/linux/thermal.h
+@@ -12,7 +12,7 @@
  
- #ifndef __NETNS_IPV6_H__
-diff --git a/include/sound/soc.h b/include/sound/soc.h
-index 6defc5547ff9..0021d54625da 100644
---- a/include/sound/soc.h
-+++ b/include/sound/soc.h
-@@ -15,7 +15,7 @@
- #include <linux/platform_device.h>
- #include <linux/types.h>
- #include <linux/notifier.h>
--#include <linux/workqueue.h>
-+#include <linux/workqueue_types.h>
- #include <linux/interrupt.h>
+ #include <linux/idr.h>
+ #include <linux/device.h>
+-#include <linux/sysfs.h>
++#include <linux/sysfs_types.h>
+ #include <linux/workqueue_types.h>
+ #include <uapi/linux/thermal.h>
+ 
+diff --git a/include/net/netdev_rx_queue.h b/include/net/netdev_rx_queue.h
+index 4841ec031857..7122cb4b7e44 100644
+--- a/include/net/netdev_rx_queue.h
++++ b/include/net/netdev_rx_queue.h
+@@ -4,7 +4,7 @@
+ 
+ #include <linux/kobject_types.h>
+ #include <linux/netdevice.h>
+-#include <linux/sysfs.h>
++#include <linux/sysfs_types.h>
+ #include <net/xdp.h>
+ 
+ /* This structure contains an instance of an RX queue. */
+diff --git a/include/rdma/ib_sysfs.h b/include/rdma/ib_sysfs.h
+index 3b77cfd74d9a..ece1b920c690 100644
+--- a/include/rdma/ib_sysfs.h
++++ b/include/rdma/ib_sysfs.h
+@@ -5,7 +5,7 @@
+ #ifndef DEF_RDMA_IB_SYSFS_H
+ #define DEF_RDMA_IB_SYSFS_H
+ 
+-#include <linux/sysfs.h>
++#include <linux/sysfs_types.h>
+ 
+ struct ib_device;
+ 
+diff --git a/kernel/kheaders.c b/kernel/kheaders.c
+index 42163c9e94e5..b48bd8a23cda 100644
+--- a/kernel/kheaders.c
++++ b/kernel/kheaders.c
+@@ -10,6 +10,7 @@
+ #include <linux/module.h>
+ #include <linux/kobject.h>
+ #include <linux/init.h>
++#include <linux/sysfs.h>
+ 
+ /*
+  * Define kernel_headers_data and kernel_headers_data_end, within which the
+diff --git a/lib/kobject.c b/lib/kobject.c
+index 48ba445604f8..f53564596438 100644
+--- a/lib/kobject.c
++++ b/lib/kobject.c
+@@ -22,6 +22,7 @@
+ #include <linux/uidgid.h>
+ #include <linux/workqueue.h>
+ #include <linux/kref.h>
++#include <linux/sysfs.h>
+ 
+ /**
+  * kobject_namespace() - Return @kobj's namespace tag.
+diff --git a/mm/cma_sysfs.c b/mm/cma_sysfs.c
+index f50db3973171..2c75ea0827c4 100644
+--- a/mm/cma_sysfs.c
++++ b/mm/cma_sysfs.c
+@@ -8,6 +8,7 @@
+ #include <linux/cma.h>
  #include <linux/kernel.h>
- #include <linux/regmap.h>
+ #include <linux/slab.h>
++#include <linux/sysfs.h>
+ 
+ #include "cma.h"
+ 
 -- 
 2.39.2
 
