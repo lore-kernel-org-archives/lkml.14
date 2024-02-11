@@ -1,126 +1,98 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484611E506;
-	Sun, 11 Feb 2024 15:57:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C090B2AE74;
+	Sun, 11 Feb 2024 16:01:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707667071; cv=none; b=UDSHj8fVdX2/AoYwvv9d7efOwbJxhJ9YwEaoVNrxKmh6xYqo3s2STWtq5EGTS4VMtG/3lecH69sN67vtV+bwpn+7AYifQqWqJIa9qCcEvg52BssM5rUCh5kZJwQezT0or6tZYWGWEi8vGVxfpPvZrs0TfNJ4cm0ecp1F2FFI8uE=
+	t=1707667321; cv=none; b=nYsiogJvSdZ46USkK6ZVMdc3BNWx/5ExRxIpIKOUV9TMW1pw9M1n65NgP97tBP8o+eUvT5MtpEL1hs1Mu6DVeHVSoIiypsuyAzmVkvDcRYKSYMFiBIB4UWtHV+eyyCkI8fYBysbhASp0rUci+j/XO7Yn84NuHx3rZLzrMlawT6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707667071; c=relaxed/simple;
-	bh=stmkEqJ1qXcSaTqWdTlvLqtEOfj+D0MgCx9mbqK/hAE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CARe4KZ1I3670Z8RAw0z5zALb3gMkzZicz7Ylgec42dd0Emk6yRMFDrSAvtBbaNqPVweJVPxwfj80iSw/+DRO+9OGrhSFC1fasle7rLmdwrpGBj3I75NTx2JQIjv21kyZpAosonXYtBCh6bH0QwaGNzAvqgDPOFCH2IVAqBXO0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BpVcS5gG; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1707667321; c=relaxed/simple;
+	bh=iC+JbRILc1eLrWSfxvm521SmQ6znWeU6jUzyc+yCpCw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MmjNJlrn4TBY8LRWXe8kvQSrJJpWn79T5N8Vl6eg7AjbpmTZ5G7PJ5wjyzMZecIFI6k3vyayNV34gop1ryLIHSOBMOmTQUWNanpYOtgo7G61ijqFuOWp5o6PI03nh2cf5F6w3SJQeJZw7wo9qzZy6r/7o3dZo5Lb1uftnrKCWxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=kd86+i6P; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BpVcS5gG"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d0aabed735so32488101fa.0;
-        Sun, 11 Feb 2024 07:57:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707667067; x=1708271867; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1hHa5kUPlIxFb3OXyDNX1LwLohhu/1WXPO430OUtUMM=;
-        b=BpVcS5gGzy29AbdSXIEGkJlPB2hKZnX7ErM5olltH8KsH7lbNXupQyvArg1Sudbf2G
-         9U2rAAER0jfdYLDBerTLlKnt16zA1p7o1hM30hmMGJhbpP7Oe7LT2tBGKJKSYmu/1znA
-         INXAMt5x354fAxLmdJqZsDk5OFxqWROJCLO+QOp8tdWs0Ynh+46ntxZivxCkOYiIRcxz
-         Gta+g2m/jSrnNMJzkglUMfeZYpi0DfDEjHCZGPhe4r4sQdOQSFKHvgg8ETtBCvR+be8G
-         cCyENBU3ZW2nPAg8rYXz28Q/D1IsolQf9Su6RXphPC6CTP69Jf6armEC1mEQuEYJ1qsf
-         jQrw==
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="kd86+i6P"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d91397bd22so18614095ad.0;
+        Sun, 11 Feb 2024 08:01:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707667067; x=1708271867;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1hHa5kUPlIxFb3OXyDNX1LwLohhu/1WXPO430OUtUMM=;
-        b=oIQdN/MQP6hgjCz7+H2b4+ZMkDNV4GoVCOFnNxwPW5J1J3tnPJ9xECIUBNoHiihvhc
-         43GLRjcqZXWb1wPB8cKumWiwOppxIUtqjLejUjI+YHB+c/zxFoWfk7SzW2Q8L8akmt0C
-         2liKnKe5z+uKe+wYo1VlZfFbe76VwWA7/VYN5DIrDxIrBaHfH0CzwF5GNRYMxOvdxA+M
-         5d6oGpiDLyMogdLwzGZMqhdnImS0QTBP6YmhZeVwDXio1ri9jff3oVdW8Bk/cANWEZDo
-         f6tqpbbgOvYPLujPl40e1oNWzf7Y2oed2LCCOg7Z18B5MspSdp/tOV7PFEtXu7ji6d+o
-         fVGg==
-X-Gm-Message-State: AOJu0YwnLxzc66+Gw550v5n1yFN+X/gkZdsE4PUrh9T6SGO8eZml9kh+
-	I89tk7vv3IDV7dYFtdgYDsgiopcvZkOLuLzT3a2IbmuqAvAWKSPJinSfnJ+K1HkqQDwj3l8W6nM
-	LRj8cgERCZSqNPMi7Y6/eVBMuu93bjzDk
-X-Google-Smtp-Source: AGHT+IFhqINxZv3yWOWEeiA1OlbuMFnXjwFNxOQeInzW5VoWqiv0Bxq19H5xDF6jLhd9+hi91q0aWl3V+wZyMjqARdI=
-X-Received: by 2002:a2e:8519:0:b0:2cd:5cfd:b19 with SMTP id
- j25-20020a2e8519000000b002cd5cfd0b19mr3062812lji.19.1707667066875; Sun, 11
- Feb 2024 07:57:46 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707667319; x=1708272119;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:dkim-signature:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=enTZ7yPBGcyh9V3V7UZj+oDbi/s8GRugq5pckUIXny8=;
+        b=Lsi2n8fUYSycq35aGCiYgG3oetK2eBoKZQsWl5GCsggl+GvhTG5F95p6/uNnP0joLt
+         +ch3u2qZKLjiF8eRImimey6q1GkJXcX9IjvFUD/8UKXkz+nJkT/max8Ef+s5BY/4EQgm
+         JJK/QoPGs21vNpa9gGihJhpuL/PMh9CXMm1y0cJ4lGNjifdn+EdDJKFSmcbZgJlr1IOu
+         tfNZ2e6n2sEBhuTfpISpSnwkB+aDq7H+f74rYn7TGubFNdgpOtJFyG8JsNrwTXr1B2cN
+         Vm7hETHx+TQ7e1yuibQf/Fs/rIdyGcz5GNUuu+IFj2pQoJUf8KM9UaerooMj9XHHhY/R
+         rPng==
+X-Gm-Message-State: AOJu0YzQJM/biJEBb6Kwvq4/hACAKS/seZEQ2GP/tC1A5FzxB8+kbOh1
+	8BEia+oFJNowbdx82k7qEsS3FCZwpb1EB2zTlUCj90nuDfYby5Rd5jhi2vlMUMIPVg==
+X-Google-Smtp-Source: AGHT+IGV6aw/103BpNKJyhhVIc2nslgu+kV7vfCuKhF1hSUzTLM7MV8eSROCrqi5pl6aV7pDmBVKIw==
+X-Received: by 2002:a17:902:b906:b0:1da:1e83:b961 with SMTP id bf6-20020a170902b90600b001da1e83b961mr3286505plb.63.1707667319031;
+        Sun, 11 Feb 2024 08:01:59 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX5AlRHgfc4qix+2oX3sHxdq09tV/fuUxgBjPdxnMGHBzofdopUGDqP7OtWc1y072phEhcCpPSF3p/b0/sJ1eAJ0vbSxpJSdTDAqj0P9Yk7zE26V6Q+TOySsExAu8Z7k4XGmcTBUS5ye8SnXURL0mCVpE3HoZ2FBMGKf7bPRzXkN3dqBmWNNPwRFTwAjqr9aeNxODTVEBbF4f+SGqyLKx1zQd3XjkNxhViIfzAGgVqf3WdAvmt5w49FHstkkBz0hwILQ0/dDbrCseLKCxyc7re/iZ5WsuyC52UbUrS2xw==
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id o3-20020a170902d4c300b001d987771271sm4418503plg.123.2024.02.11.08.01.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 Feb 2024 08:01:58 -0800 (PST)
+Date: Sun, 11 Feb 2024 13:02:34 -0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2024; t=1707667316;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=enTZ7yPBGcyh9V3V7UZj+oDbi/s8GRugq5pckUIXny8=;
+	b=kd86+i6P8fyNFqDFvEkSzF819/p9sP+e3B2DuIHzeK1gERxnVQkkmEfwsMKwQENXP9bsmq
+	j5YJsZbTlxFZrVBqmkAzYee1wBM/1e6lQsaBT4RKIlnkgmjM8EmOzSd5WAIvumiHtgwJ7M
+	ymILgOfYS7S58PCOiKlK31QvzFyTN0tv4CZ1lzX9J4AtaZ2ftR5DJMWFLsxeLOzxCLGJnC
+	qVdVlOdynVLIr/eScILSwrajjmG9RzgLaUuUfALJRLZ0SJXXGtdSSkyDzi1JqzqtEcc2W9
+	16JbLGaKcXwzf++nOepIEskVeCnKS2WjbQ5eRWhCAIgf17ImTLQJAReLlpiF4A==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+To: Shresth Prasad <shresthprasad7@gmail.com>
+Cc: gregkh@linuxfoundation.org, corbet@lwn.net, linux-doc@vger.kernel.org, 
+	linux-kernel-mentees@lists.linuxfoundation.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	skhan@linuxfoundation.org
+Subject: Re: [PATCH] Fix malformed table error in gadget-testing.rst
+Message-ID: <qhnapkrcmqvpagzii46be362iyaelcbodo6vh7v3sem3ww5kpl@nw65w7gbyjij>
+References: <2024021159-banner-dramatic-af88@gregkh>
+ <74d67b62-6fa4-4218-b51f-f0d33f19c422@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240210222226.890031-1-vibhavp@gmail.com>
-In-Reply-To: <20240210222226.890031-1-vibhavp@gmail.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Sun, 11 Feb 2024 10:57:34 -0500
-Message-ID: <CABBYNZJx68KUkiHXeZmSnzwpkK2CAB_ASrD5dK+WMocDuwuomQ@mail.gmail.com>
-Subject: Re: [PATCH 0/1] Bluetooth: mgmt: Add command for getting device IO capabilities.
-To: Vibhav Pant <vibhavp@gmail.com>
-Cc: linux-bluetooth@vger.kernel.org, marcel@holtmann.org, 
-	johan.hedberg@gmail.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <74d67b62-6fa4-4218-b51f-f0d33f19c422@gmail.com>
 
-Hi Vibhav,
+Hi Shresth,
 
-On Sat, Feb 10, 2024 at 5:22=E2=80=AFPM Vibhav Pant <vibhavp@gmail.com> wro=
-te:
->
-> The following patch adds a new command to the bluetooth management interf=
-ace,
-> GET_DEVICE_IO_CAPABILITY. The command allows userspace to get the IO capa=
-bility,
-> and the authentication methods supported by a connected device. The comma=
-nd is
-> necessary in order to implement parts of the Win32 Bluetooth API in the W=
-ine,
-> specifically the following two structs:
->
-> * BLUETOOTH_AUTHENTICATION_CALLBACK_PARAMS, which provides IO and auth ca=
-pabilities
-> info for an incoming authentication request from a device.
->
-> * BTH_DEVICE_INFO, which contains flags indicating whether the device sup=
-ports
-> Simple Secure Pairing and MITM protection. The former is supported throug=
-h BlueZ's
-> "LegacyPairing" property.
->
-> Because the Wine API are implemented on top of BlueZ, I'll also be provid=
-ing a
-> corresponding patch that uses the newly added management command to expos=
-e the
-> capabilities through new properties in the org.bluez.Device1 interface.
+On 11 Feb 18:24, Shresth Prasad wrote:
+> I see, sorry about that. I will try some other way to fix the error.
+> 
+> Also, as mentioned in this thread: https://lore.kernel.org/all/877cjqa5le.fsf@meer.lwn.net/ has the patch already been applied, fixing the issue?
 
-Interesting, but the IO capability matching logic lives under the
-kernel so I wonder how useful this information is if you can't really
-do much about the authentication method used? And in case you are
-thinking of changing the pairing procedure to just leave it up to the
-upper layer to figure it out, I don't think that is a good idea
-because that is subject to qualification that would effectively be a
-new implementation.
+Yes, that seems to be the case. In the future, make sure to split your
+patches into individual "logical" changes. In this case you would have
+one patch to fix the warnings and another to change tabs to space (even
+though this should not be done, as you know now).
 
-> Thanks,
-> Vibhav
->
-> Vibhav Pant (1):
->   Bluetooth: mgmt: Add command for getting device IO capabilities.
->
->  include/net/bluetooth/mgmt.h | 19 ++++++++
->  net/bluetooth/mgmt.c         | 89 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 108 insertions(+)
->
-> --
-> 2.43.0
->
->
+Refer to https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+
+Best regards,
+-	Ricardo.
 
 
---=20
-Luiz Augusto von Dentz
+
+> 
+> Regards,
+> Shresth
+> 
