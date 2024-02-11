@@ -1,63 +1,63 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA77383AE
-	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 23:16:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992B336AFD
+	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 23:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707693369; cv=none; b=D2yriGpubup7BeHEczimqH0Vy+DCY2mr5R+8QEr7kC4D0w8c3KXRpoa28CGcx2l23cTlPtg6ri4Be9wBo3IFn65pZpkRorex+NI490dMOCgwqVpxswP8W5PCV09Xb5A8uwH+aQR+VQWGui5UxpV0TFD+jDNwAayWCVi6ffVd570=
+	t=1707693367; cv=none; b=a8qtfR970IdpaDw3+pyET4V21gQtQEn2xdtvYZQW3lVDFP2dQha0LROeuXgLAxTBJbvhw6+GKwxkeZdFwY9ndNC5fd7lQLYg4PjnHQTL6BF6WvSvjqOxJA+/AhWpPS+SotoWBo5GbufxYxnxzzyKjTgwWWz2u7OgXQqHybizS28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707693369; c=relaxed/simple;
-	bh=iW4ba7UHKk0KDThAeTMx8C2vBPEV860cssjhylXWogA=;
+	s=arc-20240116; t=1707693367; c=relaxed/simple;
+	bh=syQAlmBByqaoLkzoL1THQRHvq9XL0JSQf34V/193qmc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NaYc9RTdI5inB6P62m9l4IO2JDlDco32ub5alFaa5QCwqaLB62Af3YC+4LmzwXhocYnVQg8NiyEF2TsVE+2p5LDRz9EjDtCUIIYDYieV4YiNoXInUL8ZEkc/iTr4FKIHNKvS73eCg23YAOeBYXq7pgj8sXKkXWj8nmzRvbgKvq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=Q154jwhq; arc=none smtp.client-ip=209.85.208.53
+	 MIME-Version; b=sbcqXXpMVwntDsUKypH5u7v7zeC8KTcjpodfYUn6jEakccF4bn5dGUWHYA4DefR5wf/kzLI5Lg2DGYfB727hwMQT3qB+s2IqIhwshTyczGMV+Ly9xvsHerlyE64fk1i7LLEo5axff1u272t+podGZNkgLtYhLIK0hP8Nu3dTVH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=LstFnoGL; arc=none smtp.client-ip=209.85.208.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="Q154jwhq"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-55a5e7fa471so3363551a12.1
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 15:16:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="LstFnoGL"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-560c696ccffso6380188a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 15:16:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1707693364; x=1708298164; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1707693361; x=1708298161; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Z2wHzIJ+1gKKynMpcxVEtR1yMxxOWj0+XBOjO/6pnQI=;
-        b=Q154jwhq42+KuhWwV3GIrcOX3btcp3kWzCIQ7T7NVLS9yNNbso2pUlHE+SgqXO1nUA
-         mIv2rInZDldG9JOIsr976zUAN3HOQO1i20WmYvBQgfdHyHxRllYlsQN2v35EMUqtFmNR
-         HYQPlL3aQiQxhQfC/4UUVfD8H+aGPxHXA6aZBET+L3TpAVJdakcZNB1BrjpnMGzrpBCC
-         Eao5FFqRAo6ggf8dpWRHJjpCFILPNncJg1EQAzb5E2VZ/MjVSHnx6yxTy9mc0FhoJN8H
-         4V85TPOMk/zxIu3gm0JVuSun/eg3SMDBkIIXZmVt6Cun2K/Ssc/3xjlU37iT63vjjGU0
-         0rMg==
+        bh=cjsenR1I+hBMNdlhl6pWpCICsCc70DR6NnhT7oUmxSY=;
+        b=LstFnoGL3xwA0UgRznWzqcS6aMifmZ7Q0Y0Fwy9SemGaf8aB0s6W4LBRyTAc7+IsJD
+         BCI+Tms66OVUlLs7VCEzhSw69C3kll/JNQaRjDcb7qIUe3PbTdpq15K0PuJEu8stiBZC
+         Gu5OtuPv7GTe9HO6cuoaPZDuJyh9biy2TofflcmWPAhyus7dIF6jC8vOCfVB/JHbNL+O
+         +DQSnShRTVofWc2f/zxaHM8aE51vwwPvohm2YtnAFnx9q//ZbUvWAaN5LBHJ+K5fagnc
+         k0DGVCsRG1sftY5xf4JxfsrTvh2lxq0VcEn1TmfPN4PIQd+flbJTyo3fJu73JuEYzqPi
+         7HDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707693364; x=1708298164;
+        d=1e100.net; s=20230601; t=1707693361; x=1708298161;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Z2wHzIJ+1gKKynMpcxVEtR1yMxxOWj0+XBOjO/6pnQI=;
-        b=T3eVNOmlG92iksCIecpmqAAE8GEkIE+l6bHGzD3siEyCP1HSb4NwE51m2IAu17yw3I
-         wkwlHfm5W3qd3z74sqxprNGp2TS5xuzGqpa5iCN7CCo9j7DuDSiKeTOWPnCu05CqhQwr
-         m82bgcebTNZjJjTUMreibZ7blYx1CZCZOctNum1zn5wdWQuMXzczrPSF/b3FEri97mbj
-         bnBHh9RL8enAYRokwyJLdhlig524Qt681YTV/0g+6I+kQVn4Nebu9wnrZDbFAnmuI7qP
-         594Lgu64ld7+xj1RNytVX3zi4aTfddN4qLLcyW7YyOHuRbIMN5iR3J1Tz0g4LGgjWbRO
-         6gPw==
-X-Gm-Message-State: AOJu0Ywk0aXKw4wzB0L2Uwwfmgp1TDR0tXUvPzMlzuYUosP5+Kjq5BpZ
-	dhCALUpmBHnehT2v7KNxvtJNgkkYgwWY9jFC+Is+d2PlK5C6oht+cgmadolSXNFfpcIc5WPpAic
+        bh=cjsenR1I+hBMNdlhl6pWpCICsCc70DR6NnhT7oUmxSY=;
+        b=GGDVmHS6Q6COtFtg/YwzWGXdIEoZm/MSDEsuMBsk142i04pWYvp7amWVPe+Sp17oyl
+         Gf5eQwwb3dCHgHppfCjQ5jjv7fodP8IO3/wBPXE8si/56+TrFqmm0n0e9ZdIqQ1eR8R+
+         aUjaD8SdG7U4+rOCX7qWRQPCmah36tzA0nuqRKdEpuu7TYmUq5P8T4qRC2rS8NzA5xLw
+         fB0Rf9BQ19sgeh5DCesscwx9dqJ5mlP9+mOO1Po906RrlBnbQMrad8LXFP2s9yHG9Kk6
+         pnrvxyXoaN9Eej85/xgEJH9bSgdyLentYDtufcIvHBX9Ysb8mqqPegnRT3wi+vkV3ZpE
+         BIjg==
+X-Gm-Message-State: AOJu0YwOmS+xgsLk3iW9lED/+aNN6aGKb6fZmOBn41afrcMrc3vai9d5
+	g2Hg0u6eVSji3kSx0rkKjWhfrirmgp0ogYUThujVU8SCns7t9TFKxT+a9e2aL2qfMFSJvI96I+j
 	m
-X-Google-Smtp-Source: AGHT+IEdAsT8B7MqH0+bfjaLuq8WfheGTPFq9pVKgfkyUaPWRH/oKJQh3ITEJKt85/SGYGeCxmZXlA==
-X-Received: by 2002:a05:6402:33c8:b0:55e:fe6b:f4dc with SMTP id a8-20020a05640233c800b0055efe6bf4dcmr2754011edc.40.1707693363892;
-        Sun, 11 Feb 2024 15:16:03 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGwiF/0lLjqGttRCIu+tHOXGdXrpJDy8rBcrSNRF+ZJA/54YqeP25JzvXHNhdndU+w+STkrUw==
+X-Received: by 2002:aa7:d4d3:0:b0:561:8950:b9eb with SMTP id t19-20020aa7d4d3000000b005618950b9ebmr2781450edr.16.1707693361427;
+        Sun, 11 Feb 2024 15:16:01 -0800 (PST)
 Received: from raven.blarg.de (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id et13-20020a056402378d00b0055d19c9daf2sm2170180edb.15.2024.02.11.15.16.03
+        by smtp.gmail.com with ESMTPSA id et13-20020a056402378d00b0055d19c9daf2sm2170180edb.15.2024.02.11.15.16.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Feb 2024 15:16:03 -0800 (PST)
+        Sun, 11 Feb 2024 15:16:00 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: linux-kernel@vger.kernel.org
 Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v4 33/35] linux/kernel.h: move upper/lower_*_bits macros to wordpart.h
-Date: Mon, 12 Feb 2024 00:15:16 +0100
-Message-Id: <20240211231518.349442-34-max.kellermann@ionos.com>
+Subject: [PATCH v4 30/35] linux/kernel.h: move might_sleep(), ... to sched/debug_atomic_sleep.h
+Date: Mon, 12 Feb 2024 00:15:13 +0100
+Message-Id: <20240211231518.349442-31-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240211231518.349442-1-max.kellermann@ionos.com>
 References: <20240211231518.349442-1-max.kellermann@ionos.com>
@@ -73,286 +73,399 @@ Reducing dependencies on the header linux/kernel.h.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- arch/arm64/include/asm/syscall.h  |  2 +-
- arch/arm64/kvm/handle_exit.c      |  2 +-
- drivers/bus/uniphier-system-bus.c |  2 +-
- drivers/irqchip/irq-gic-v3-its.c  |  1 +
- drivers/spi/spi-pci1xxxx.c        |  1 +
- fs/hfs/hfs_fs.h                   |  2 +-
- fs/hfsplus/hfsplus_fs.h           |  2 +-
- include/drm/drm_fixed.h           |  2 +-
- include/linux/dma-fence.h         |  2 +-
- include/linux/goldfish.h          |  2 +-
- include/linux/kernel.h            | 29 +----------------------------
- include/linux/qed/common_hsi.h    |  1 +
- include/linux/wordpart.h          | 28 ++++++++++++++++++++++++++++
- include/rdma/uverbs_ioctl.h       |  2 +-
- include/soc/fsl/bman.h            |  2 ++
- include/soc/fsl/qman.h            |  1 +
- 16 files changed, 44 insertions(+), 37 deletions(-)
+ include/linux/clk.h                      |   1 +
+ include/linux/kernel.h                   | 109 ----------------------
+ include/linux/mmu_notifier.h             |   1 +
+ include/linux/pwm.h                      |   2 +
+ include/linux/rcutiny.h                  |   1 +
+ include/linux/sched.h                    |   1 +
+ include/linux/sched/debug_atomic_sleep.h | 114 +++++++++++++++++++++++
+ include/linux/sched/mm.h                 |   2 +-
+ include/linux/uaccess.h                  |   1 +
+ include/linux/wait.h                     |   1 +
+ include/linux/wait_bit.h                 |   2 +-
+ security/landlock/object.c               |   1 +
+ security/landlock/ruleset.c              |   1 +
+ 13 files changed, 126 insertions(+), 111 deletions(-)
+ create mode 100644 include/linux/sched/debug_atomic_sleep.h
 
-diff --git a/arch/arm64/include/asm/syscall.h b/arch/arm64/include/asm/syscall.h
-index 107ada608694..e5f462cc1a54 100644
---- a/arch/arm64/include/asm/syscall.h
-+++ b/arch/arm64/include/asm/syscall.h
-@@ -8,7 +8,7 @@
- #include <uapi/linux/audit.h>
- #include <linux/compat.h>
+diff --git a/include/linux/clk.h b/include/linux/clk.h
+index 06f1b292f8a0..2fcae620703b 100644
+--- a/include/linux/clk.h
++++ b/include/linux/clk.h
+@@ -12,6 +12,7 @@
  #include <linux/err.h>
--#include <linux/kernel.h> // for lower_32_bits()
-+#include <linux/wordpart.h> // for lower_32_bits()
+ #include <linux/kernel.h>
+ #include <linux/notifier.h>
++#include <linux/sched/debug_atomic_sleep.h> // for might_sleep()
  
- typedef long (*syscall_fn_t)(const struct pt_regs *regs);
- 
-diff --git a/arch/arm64/kvm/handle_exit.c b/arch/arm64/kvm/handle_exit.c
-index a82b4b31bb36..91bd5b701acf 100644
---- a/arch/arm64/kvm/handle_exit.c
-+++ b/arch/arm64/kvm/handle_exit.c
-@@ -10,7 +10,7 @@
- 
- #include <linux/kvm.h>
- #include <linux/kvm_host.h>
--#include <linux/kernel.h> // for upper_32_bits(), lower_32_bits()
-+#include <linux/wordpart.h> // for lower_32_bits(), upper_32_bits()
- 
- #include <asm/esr.h>
- #include <asm/exception.h>
-diff --git a/drivers/bus/uniphier-system-bus.c b/drivers/bus/uniphier-system-bus.c
-index 8cffdb089a6b..8949a7a5c170 100644
---- a/drivers/bus/uniphier-system-bus.c
-+++ b/drivers/bus/uniphier-system-bus.c
-@@ -6,7 +6,7 @@
- #include <linux/io.h>
- #include <linux/kernel.h> // for upper_32_bits(), lower_32_bits()
- #include <linux/log2.h>
--#include <linux/kernel.h> // for upper_32_bits()
-+#include <linux/wordpart.h> // for upper_32_bits()
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 1be09abac7cc..2b33edb78c26 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -30,6 +30,7 @@
- #include <linux/percpu.h>
- #include <linux/slab.h>
- #include <linux/syscore_ops.h>
-+#include <linux/wordpart.h> // for lower_32_bits(), upper_32_bits()
- 
- #include <linux/irqchip.h>
- #include <linux/irqchip/arm-gic-v3.h>
-diff --git a/drivers/spi/spi-pci1xxxx.c b/drivers/spi/spi-pci1xxxx.c
-index ab99aac85eb9..1ff89d726927 100644
---- a/drivers/spi/spi-pci1xxxx.c
-+++ b/drivers/spi/spi-pci1xxxx.c
-@@ -9,6 +9,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/iopoll.h>
- #include <linux/irq.h>
-+#include <linux/kernel.h> // for upper_32_bits(), lower_32_bits()
- #include <linux/module.h>
- #include <linux/msi.h>
- #include <linux/pci_regs.h>
-diff --git a/fs/hfs/hfs_fs.h b/fs/hfs/hfs_fs.h
-index 71ebbed52f5f..99e54ff4df83 100644
---- a/fs/hfs/hfs_fs.h
-+++ b/fs/hfs/hfs_fs.h
-@@ -17,7 +17,7 @@
- 
- #include <linux/slab.h>
- #include <linux/types.h>
--#include <linux/kernel.h> // for lower_32_bits()
-+#include <linux/wordpart.h> // for lower_32_bits()
- #include <linux/mutex.h>
- #include <linux/buffer_head.h>
- #include <linux/fs.h>
-diff --git a/fs/hfsplus/hfsplus_fs.h b/fs/hfsplus/hfsplus_fs.h
-index 157dad01495f..79cac82d050e 100644
---- a/fs/hfsplus/hfsplus_fs.h
-+++ b/fs/hfsplus/hfsplus_fs.h
-@@ -21,7 +21,7 @@
- #include <linux/mutex.h>
- #include <linux/buffer_head.h>
- #include <linux/blkdev.h>
--#include <linux/kernel.h> // for lower_32_bits()
-+#include <linux/wordpart.h> // for lower_32_bits()
- #include "hfsplus_raw.h"
- 
- #define DBG_BNODE_REFS	0x00000001
-diff --git a/include/drm/drm_fixed.h b/include/drm/drm_fixed.h
-index 0c9f917a4d4b..ff9a91fa40b6 100644
---- a/include/drm/drm_fixed.h
-+++ b/include/drm/drm_fixed.h
-@@ -25,7 +25,7 @@
- #ifndef DRM_FIXED_H
- #define DRM_FIXED_H
- 
--#include <linux/kernel.h>
-+#include <linux/wordpart.h> // for lower_32_bits()
- #include <linux/math64.h>
- 
- typedef union dfixed {
-diff --git a/include/linux/dma-fence.h b/include/linux/dma-fence.h
-index 3081ff146d41..308d77098e21 100644
---- a/include/linux/dma-fence.h
-+++ b/include/linux/dma-fence.h
-@@ -16,7 +16,7 @@
- #include <linux/err.h>
- #include <linux/list.h>
- #include <linux/bitops.h>
--#include <linux/kernel.h> // for lower_32_bits()
-+#include <linux/wordpart.h> // for lower_32_bits()
- #include <linux/kref.h>
- #include <linux/sched.h>
- #include <linux/printk.h>
-diff --git a/include/linux/goldfish.h b/include/linux/goldfish.h
-index bcc17f95b906..8b2b3046f779 100644
---- a/include/linux/goldfish.h
-+++ b/include/linux/goldfish.h
-@@ -2,7 +2,7 @@
- #ifndef __LINUX_GOLDFISH_H
- #define __LINUX_GOLDFISH_H
- 
--#include <linux/kernel.h>
-+#include <linux/wordpart.h> // for lower_32_bits(), upper_32_bits()
- #include <linux/types.h>
- #include <linux/io.h>
- 
+ struct device;
+ struct clk;
 diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index ac332f4deed9..6f436367dd16 100644
+index f4a1d582b79d..67662bdb17d0 100644
 --- a/include/linux/kernel.h
 +++ b/include/linux/kernel.h
-@@ -32,6 +32,7 @@
- #include <linux/sprintf.h>
- #include <linux/static_call_types.h>
- #include <linux/instruction_pointer.h>
-+#include <linux/wordpart.h>
- #include <asm/byteorder.h>
+@@ -80,115 +80,6 @@
+  */
+ #define lower_16_bits(n) ((u16)((n) & 0xffff))
  
- #include <uapi/linux/kernel.h>
-@@ -47,34 +48,6 @@
- }					\
- )
- 
+-struct completion;
+-struct user;
+-
+-#ifdef CONFIG_PREEMPT_VOLUNTARY_BUILD
+-
+-extern int __cond_resched(void);
+-# define might_resched() __cond_resched()
+-
+-#elif defined(CONFIG_PREEMPT_DYNAMIC) && defined(CONFIG_HAVE_PREEMPT_DYNAMIC_CALL)
+-
+-extern int __cond_resched(void);
+-
+-DECLARE_STATIC_CALL(might_resched, __cond_resched);
+-
+-static __always_inline void might_resched(void)
+-{
+-	static_call_mod(might_resched)();
+-}
+-
+-#elif defined(CONFIG_PREEMPT_DYNAMIC) && defined(CONFIG_HAVE_PREEMPT_DYNAMIC_KEY)
+-
+-extern int dynamic_might_resched(void);
+-# define might_resched() dynamic_might_resched()
+-
+-#else
+-
+-# define might_resched() do { } while (0)
+-
+-#endif /* CONFIG_PREEMPT_* */
+-
+-#ifdef CONFIG_DEBUG_ATOMIC_SLEEP
+-extern void __might_resched(const char *file, int line, unsigned int offsets);
+-extern void __might_sleep(const char *file, int line);
+-extern void __cant_sleep(const char *file, int line, int preempt_offset);
+-extern void __cant_migrate(const char *file, int line);
+-
 -/**
-- * upper_32_bits - return bits 32-63 of a number
-- * @n: the number we're accessing
+- * might_sleep - annotation for functions that can sleep
 - *
-- * A basic shift-right of a 64- or 32-bit quantity.  Use this to suppress
-- * the "right shift count >= width of type" warning when that quantity is
-- * 32-bits.
+- * this macro will print a stack trace if it is executed in an atomic
+- * context (spinlock, irq-handler, ...). Additional sections where blocking is
+- * not allowed can be annotated with non_block_start() and non_block_end()
+- * pairs.
+- *
+- * This is a useful debugging help to be able to catch problems early and not
+- * be bitten later when the calling function happens to sleep when it is not
+- * supposed to.
 - */
--#define upper_32_bits(n) ((u32)(((n) >> 16) >> 16))
+-# define might_sleep() \
+-	do { __might_sleep(__FILE__, __LINE__); might_resched(); } while (0)
+-/**
+- * cant_sleep - annotation for functions that cannot sleep
+- *
+- * this macro will print a stack trace if it is executed with preemption enabled
+- */
+-# define cant_sleep() \
+-	do { __cant_sleep(__FILE__, __LINE__, 0); } while (0)
+-# define sched_annotate_sleep()	(current->task_state_change = 0)
 -
 -/**
-- * lower_32_bits - return bits 0-31 of a number
-- * @n: the number we're accessing
+- * cant_migrate - annotation for functions that cannot migrate
+- *
+- * Will print a stack trace if executed in code which is migratable
 - */
--#define lower_32_bits(n) ((u32)((n) & 0xffffffff))
+-# define cant_migrate()							\
+-	do {								\
+-		if (IS_ENABLED(CONFIG_SMP))				\
+-			__cant_migrate(__FILE__, __LINE__);		\
+-	} while (0)
 -
 -/**
-- * upper_16_bits - return bits 16-31 of a number
-- * @n: the number we're accessing
+- * non_block_start - annotate the start of section where sleeping is prohibited
+- *
+- * This is on behalf of the oom reaper, specifically when it is calling the mmu
+- * notifiers. The problem is that if the notifier were to block on, for example,
+- * mutex_lock() and if the process which holds that mutex were to perform a
+- * sleeping memory allocation, the oom reaper is now blocked on completion of
+- * that memory allocation. Other blocking calls like wait_event() pose similar
+- * issues.
 - */
--#define upper_16_bits(n) ((u16)((n) >> 16))
--
+-# define non_block_start() (current->non_block_count++)
 -/**
-- * lower_16_bits - return bits 0-15 of a number
-- * @n: the number we're accessing
+- * non_block_end - annotate the end of section where sleeping is prohibited
+- *
+- * Closes a section opened by non_block_start().
 - */
--#define lower_16_bits(n) ((u16)((n) & 0xffff))
+-# define non_block_end() WARN_ON(current->non_block_count-- == 0)
+-#else
+-  static inline void __might_resched(const char *file, int line,
+-				     unsigned int offsets) { }
+-static inline void __might_sleep(const char *file, int line) { }
+-# define might_sleep() do { might_resched(); } while (0)
+-# define cant_sleep() do { } while (0)
+-# define cant_migrate()		do { } while (0)
+-# define sched_annotate_sleep() do { } while (0)
+-# define non_block_start() do { } while (0)
+-# define non_block_end() do { } while (0)
+-#endif
+-
+-#define might_sleep_if(cond) do { if (cond) might_sleep(); } while (0)
+-
+-#if defined(CONFIG_MMU) && \
+-	(defined(CONFIG_PROVE_LOCKING) || defined(CONFIG_DEBUG_ATOMIC_SLEEP))
+-#define might_fault() __might_fault(__FILE__, __LINE__)
+-void __might_fault(const char *file, int line);
+-#else
+-static inline void might_fault(void) { }
+-#endif
 -
  void do_exit(long error_code) __noreturn;
  
  extern int get_option(char **str, int *pint);
-diff --git a/include/linux/qed/common_hsi.h b/include/linux/qed/common_hsi.h
-index 827624840ee2..11482394d7f3 100644
---- a/include/linux/qed/common_hsi.h
-+++ b/include/linux/qed/common_hsi.h
-@@ -11,6 +11,7 @@
- #include <asm/byteorder.h>
- #include <linux/bitops.h>
- #include <linux/slab.h>
-+#include <linux/wordpart.h> // for upper_32_bits()
+diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
+index 6aa17677254b..d13d1210e7a0 100644
+--- a/include/linux/mmu_notifier.h
++++ b/include/linux/mmu_notifier.h
+@@ -5,6 +5,7 @@
+ #include <linux/list.h>
+ #include <linux/mm_types.h>
+ #include <linux/mmap_lock.h>
++#include <linux/sched/debug_atomic_sleep.h> // for might_sleep()
+ #include <linux/srcu.h>
+ #include <linux/interval_tree.h>
  
- /* dma_addr_t manip */
- #define PTR_LO(x)		((u32)(((uintptr_t)(x)) & 0xffffffff))
-diff --git a/include/linux/wordpart.h b/include/linux/wordpart.h
-index c9e6bd773ebd..a73f0c84a03a 100644
---- a/include/linux/wordpart.h
-+++ b/include/linux/wordpart.h
-@@ -10,4 +10,32 @@
-  */
- #define REPEAT_BYTE(x)	((~0ul / 0xff) * (x))
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index 4eef97d74366..8c3165ebec5e 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -403,6 +403,8 @@ struct pwm_device *devm_fwnode_pwm_get(struct device *dev,
+ 				       struct fwnode_handle *fwnode,
+ 				       const char *con_id);
+ #else
++#include <linux/sched/debug_atomic_sleep.h> // for might_sleep()
++
+ static inline bool pwm_might_sleep(struct pwm_device *pwm)
+ {
+ 	return true;
+diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
+index d9ac7b136aea..e7b6acfbf054 100644
+--- a/include/linux/rcutiny.h
++++ b/include/linux/rcutiny.h
+@@ -12,6 +12,7 @@
+ #ifndef __LINUX_TINY_H
+ #define __LINUX_TINY_H
  
++#include <linux/sched/debug_atomic_sleep.h> // for might_sleep()
+ #include <asm/param.h> /* for HZ */
+ 
+ struct rcu_gp_oldstate {
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 42555e8e5aa7..796c32c124c5 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -32,6 +32,7 @@
+ #include <linux/resource.h>
+ #include <linux/latencytop.h>
+ #include <linux/log2.h>
++#include <linux/sched/debug_atomic_sleep.h> // for __might_resched()
+ #include <linux/sched/prio.h>
+ #include <linux/sched/types.h>
+ #include <linux/signal_types.h>
+diff --git a/include/linux/sched/debug_atomic_sleep.h b/include/linux/sched/debug_atomic_sleep.h
+new file mode 100644
+index 000000000000..018d4a421a80
+--- /dev/null
++++ b/include/linux/sched/debug_atomic_sleep.h
+@@ -0,0 +1,114 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_SCHED_DEBUG_ATOMIC_SLEEP_H
++#define _LINUX_SCHED_DEBUG_ATOMIC_SLEEP_H
++
++#ifdef CONFIG_PREEMPT_VOLUNTARY_BUILD
++
++extern int __cond_resched(void);
++# define might_resched() __cond_resched()
++
++#elif defined(CONFIG_PREEMPT_DYNAMIC) && defined(CONFIG_HAVE_PREEMPT_DYNAMIC_CALL)
++
++#include <linux/static_call_types.h>
++
++extern int __cond_resched(void);
++
++DECLARE_STATIC_CALL(might_resched, __cond_resched);
++
++static __always_inline void might_resched(void)
++{
++	static_call_mod(might_resched)();
++}
++
++#elif defined(CONFIG_PREEMPT_DYNAMIC) && defined(CONFIG_HAVE_PREEMPT_DYNAMIC_KEY)
++
++extern int dynamic_might_resched(void);
++# define might_resched() dynamic_might_resched()
++
++#else
++
++# define might_resched() do { } while (0)
++
++#endif /* CONFIG_PREEMPT_* */
++
++#ifdef CONFIG_DEBUG_ATOMIC_SLEEP
++extern void __might_resched(const char *file, int line, unsigned int offsets);
++extern void __might_sleep(const char *file, int line);
++extern void __cant_sleep(const char *file, int line, int preempt_offset);
++extern void __cant_migrate(const char *file, int line);
++
 +/**
-+ * upper_32_bits - return bits 32-63 of a number
-+ * @n: the number we're accessing
++ * might_sleep - annotation for functions that can sleep
 + *
-+ * A basic shift-right of a 64- or 32-bit quantity.  Use this to suppress
-+ * the "right shift count >= width of type" warning when that quantity is
-+ * 32-bits.
++ * this macro will print a stack trace if it is executed in an atomic
++ * context (spinlock, irq-handler, ...). Additional sections where blocking is
++ * not allowed can be annotated with non_block_start() and non_block_end()
++ * pairs.
++ *
++ * This is a useful debugging help to be able to catch problems early and not
++ * be bitten later when the calling function happens to sleep when it is not
++ * supposed to.
 + */
-+#define upper_32_bits(n) ((u32)(((n) >> 16) >> 16))
++# define might_sleep() \
++	do { __might_sleep(__FILE__, __LINE__); might_resched(); } while (0)
++/**
++ * cant_sleep - annotation for functions that cannot sleep
++ *
++ * this macro will print a stack trace if it is executed with preemption enabled
++ */
++# define cant_sleep() \
++	do { __cant_sleep(__FILE__, __LINE__, 0); } while (0)
++# define sched_annotate_sleep()	(current->task_state_change = 0)
 +
 +/**
-+ * lower_32_bits - return bits 0-31 of a number
-+ * @n: the number we're accessing
++ * cant_migrate - annotation for functions that cannot migrate
++ *
++ * Will print a stack trace if executed in code which is migratable
 + */
-+#define lower_32_bits(n) ((u32)((n) & 0xffffffff))
++# define cant_migrate()							\
++	do {								\
++		if (IS_ENABLED(CONFIG_SMP))				\
++			__cant_migrate(__FILE__, __LINE__);		\
++	} while (0)
 +
 +/**
-+ * upper_16_bits - return bits 16-31 of a number
-+ * @n: the number we're accessing
++ * non_block_start - annotate the start of section where sleeping is prohibited
++ *
++ * This is on behalf of the oom reaper, specifically when it is calling the mmu
++ * notifiers. The problem is that if the notifier were to block on, for example,
++ * mutex_lock() and if the process which holds that mutex were to perform a
++ * sleeping memory allocation, the oom reaper is now blocked on completion of
++ * that memory allocation. Other blocking calls like wait_event() pose similar
++ * issues.
 + */
-+#define upper_16_bits(n) ((u16)((n) >> 16))
-+
++# define non_block_start() (current->non_block_count++)
 +/**
-+ * lower_16_bits - return bits 0-15 of a number
-+ * @n: the number we're accessing
++ * non_block_end - annotate the end of section where sleeping is prohibited
++ *
++ * Closes a section opened by non_block_start().
 + */
-+#define lower_16_bits(n) ((u16)((n) & 0xffff))
++# define non_block_end() WARN_ON(current->non_block_count-- == 0)
++#else
++  static inline void __might_resched(const char *file, int line,
++				     unsigned int offsets) { }
++static inline void __might_sleep(const char *file, int line) { }
++# define might_sleep() do { might_resched(); } while (0)
++# define cant_sleep() do { } while (0)
++# define cant_migrate()		do { } while (0)
++# define sched_annotate_sleep() do { } while (0)
++# define non_block_start() do { } while (0)
++# define non_block_end() do { } while (0)
++#endif
 +
- #endif // _LINUX_WORDPART_H
-diff --git a/include/rdma/uverbs_ioctl.h b/include/rdma/uverbs_ioctl.h
-index 47a6be467004..05002792b078 100644
---- a/include/rdma/uverbs_ioctl.h
-+++ b/include/rdma/uverbs_ioctl.h
++#define might_sleep_if(cond) do { if (cond) might_sleep(); } while (0)
++
++#if defined(CONFIG_MMU) && \
++	(defined(CONFIG_PROVE_LOCKING) || defined(CONFIG_DEBUG_ATOMIC_SLEEP))
++#define might_fault() __might_fault(__FILE__, __LINE__)
++void __might_fault(const char *file, int line);
++#else
++static inline void might_fault(void) { }
++#endif
++
++
++#endif
+diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+index c29059a76052..1a6286496495 100644
+--- a/include/linux/sched/mm.h
++++ b/include/linux/sched/mm.h
+@@ -2,9 +2,9 @@
+ #ifndef _LINUX_SCHED_MM_H
+ #define _LINUX_SCHED_MM_H
+ 
+-#include <linux/kernel.h>
+ #include <linux/atomic.h>
+ #include <linux/sched.h>
++#include <linux/sched/debug_atomic_sleep.h> // for might_sleep_if()
+ #include <linux/mm_types.h>
+ #include <linux/gfp.h>
+ #include <linux/sync_core.h>
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index 3064314f4832..8ea27d05f17e 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -6,6 +6,7 @@
+ #include <linux/instrumented.h>
+ #include <linux/minmax.h>
+ #include <linux/sched.h>
++#include <linux/sched/debug_atomic_sleep.h> // for might_faul()
+ #include <linux/thread_info.h>
+ 
+ #include <asm/uaccess.h>
+diff --git a/include/linux/wait.h b/include/linux/wait.h
+index b36000bb012c..deb1204ed222 100644
+--- a/include/linux/wait.h
++++ b/include/linux/wait.h
+@@ -5,6 +5,7 @@
+  * Linux wait queue related types and methods
+  */
+ #include <linux/wait_types.h>
++#include <linux/sched/debug_atomic_sleep.h> // for might_sleep()
+ #include <linux/stddef.h>
+ #include <linux/spinlock.h>
+ 
+diff --git a/include/linux/wait_bit.h b/include/linux/wait_bit.h
+index 514f68eff79d..9cc8fcba24c5 100644
+--- a/include/linux/wait_bit.h
++++ b/include/linux/wait_bit.h
 @@ -7,7 +7,7 @@
- #define _UVERBS_IOCTL_
- 
- #include <rdma/uverbs_types.h>
--#include <linux/kernel.h> // for upper_32_bits(), lower_32_bits()
-+#include <linux/wordpart.h>
- #include <linux/uaccess.h>
- #include <rdma/rdma_user_ioctl.h>
- #include <rdma/ib_user_ioctl_verbs.h>
-diff --git a/include/soc/fsl/bman.h b/include/soc/fsl/bman.h
-index 173e4049d963..b01d8c0ac204 100644
---- a/include/soc/fsl/bman.h
-+++ b/include/soc/fsl/bman.h
-@@ -31,6 +31,8 @@
- #ifndef __FSL_BMAN_H
- #define __FSL_BMAN_H
- 
-+#include <linux/wordpart.h> // for upper_32_bits()
-+
- /* wrapper for 48-bit buffers */
- struct bm_buffer {
- 	union {
-diff --git a/include/soc/fsl/qman.h b/include/soc/fsl/qman.h
-index 0d3d6beb7fdb..c5230a844114 100644
---- a/include/soc/fsl/qman.h
-+++ b/include/soc/fsl/qman.h
-@@ -33,6 +33,7 @@
- 
+  */
  #include <linux/bitops.h>
- #include <linux/device.h>
-+#include <linux/wordpart.h> // for upper_32_bits()
+ #include <linux/init.h> // for __init
+-#include <linux/kernel.h> // for might_sleep()
++#include <linux/sched/debug_atomic_sleep.h> // for might_sleep()
+ #include <linux/wait_types.h>
  
- /* Hardware constants */
- #define QM_CHANNEL_SWPORTAL0 0
+ struct wait_bit_key {
+diff --git a/security/landlock/object.c b/security/landlock/object.c
+index 1f50612f0185..feb2dec3d89a 100644
+--- a/security/landlock/object.c
++++ b/security/landlock/object.c
+@@ -12,6 +12,7 @@
+ #include <linux/kernel.h>
+ #include <linux/rcupdate.h>
+ #include <linux/refcount.h>
++#include <linux/sched/debug_atomic_sleep.h> // for might_sleep()
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+ 
+diff --git a/security/landlock/ruleset.c b/security/landlock/ruleset.c
+index e0a5fbf9201a..36396959a0e9 100644
+--- a/security/landlock/ruleset.c
++++ b/security/landlock/ruleset.c
+@@ -16,6 +16,7 @@
+ #include <linux/overflow.h>
+ #include <linux/rbtree.h>
+ #include <linux/refcount.h>
++#include <linux/sched/debug_atomic_sleep.h> // for might_sleep_if()
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+ #include <linux/workqueue.h>
 -- 
 2.39.2
 
