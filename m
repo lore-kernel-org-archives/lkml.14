@@ -1,205 +1,116 @@
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.82])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFCF65A4E3;
-	Sun, 11 Feb 2024 11:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707650962; cv=pass; b=S5iaXq+waMUoNeI6tC+bFdOzuQmrotdIYysHVygVz4X40GQIeq1N7BLDAEJsMJejFBSYdFSkpo9FySEJezn+GwEvXNFnmj2uvwiNRh81pqAFotchm5vYdsRl+bPaeL3yDJMfrzlpMB8M1IcYDtb1p9IEuyXlryBgaBnIvRccpK8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707650962; c=relaxed/simple;
-	bh=tYMdb2LLTRJ2YPUNIoiWFiSTohAhAU9eoI1ncEhCMyk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PefYX6sQeIoAthVOOlPw9uz8OIsLGJ2wevsjTzxUItX0PG+wFqoI0A4gqy1QKy8wfyVxCPl6DFMlf21Hm4pHh/tF45vUuh/d3od+jPZl3jtB9e8sq1CeDrtCW2NjGGyoyGwyZDNivpWUQ/wLHCkMwzLNQFN+iK5hfY5zE1Ub354=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gerhold.net; spf=none smtp.mailfrom=gerhold.net; dkim=pass (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b=ZlutzGl0; dkim=permerror (0-bit key) header.d=gerhold.net header.i=@gerhold.net header.b=0PFuMinM; arc=pass smtp.client-ip=85.215.255.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gerhold.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=gerhold.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="ZlutzGl0";
-	dkim=permerror (0-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="0PFuMinM"
-ARC-Seal: i=1; a=rsa-sha256; t=1707650776; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=kOiiCJEmE0TSIOagG9z/d0f5JYdQN04K3eg1VS9ynNnL7bY2vdUOAXQJcLOu1qJhV2
-    9CFJS/6LzSBQD/x9rDxLNnve/QUO2RntTVRwNlPLlVFJb8mZmSIanzmOZVI9EkVIdWc2
-    3gZLSZ0tdnOVJCAaAmY4Y8gp3bv3p8FgFq/kRbSXe5CDIqHatMjKv8Z1ZeiBp5L5eaLY
-    QPafPU4GuzM0r3ozSM0DD8Sngxp0R0KaiseMXCkThZpaM5I4ZVsmeWxUVmooUKi39z3V
-    f/DMI1LFeH443J4AmQi9ge+11kChtdRIM02dfYKxiIzZHf//4EG/0wFHmVuGy1yDTnVj
-    VD2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1707650776;
-    s=strato-dkim-0002; d=strato.com;
-    h=Cc:To:In-Reply-To:References:Message-Id:Subject:Date:From:Cc:Date:
-    From:Subject:Sender;
-    bh=dFelX5EHlu+pZ8B6gF/nAN2jUERUrCFzhnmIS9NBoP0=;
-    b=HHcyf3yuic6Bp62uBV/XIndriKVnXJoLynHDy+rVw4H9nOHgRL/LUY1qQnfR44uxSx
-    1KHieXBohSXCNNnPH3WR3bXA0hwjFxC7Og+ywD5WTUU7M/ophkeMqpqGt7wcfTgdgbpE
-    Glh7T1ct7hTrdC2skMu6GpprCs4hoFKXNa5BgMZASEYelhBFNlfTuKkrlAk8IdWhTN/X
-    G1sAucY7TuhBW0UK67toqnT0hlwBP9gwHjBY9zCRoA8V45nHt8t9gZTzAmaQl9y8JOTL
-    miXZ+LfPnn49HLX3Dn81gMVak0JXDX7iasxIni2TyAAkth81nl+2wmoh2IcvQBG876n5
-    QpfQ==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1707650776;
-    s=strato-dkim-0002; d=gerhold.net;
-    h=Cc:To:In-Reply-To:References:Message-Id:Subject:Date:From:Cc:Date:
-    From:Subject:Sender;
-    bh=dFelX5EHlu+pZ8B6gF/nAN2jUERUrCFzhnmIS9NBoP0=;
-    b=ZlutzGl0zwneklmSSeL28p0KFjVLApBaTFcfzEK4U4AqYy7bcxui3q7RFSiO6zDn1B
-    ixzBG2Ho77wXuYQ9yYujDzZI4wx11sjjX4x7tzjc4Qe9Gb03LxkFxBKReWPEqbM7TYai
-    95qZv4DLAGjKNSgfnNRL3dZt3Ck+xzHJdLXikuQrItrjIPfHFb7DrTVait9XgRTflsk1
-    P+GJ/Pi3RN+AFDeogoHarAICX8gYRzaXIu/WOiffb/+pD1Hnwcymar0/Q8A1uz9Xaa3/
-    nDwS2RYr1YR6iNOFqrl+hxdvHbwOqU2cQZjvyQ8YuuohL2JSt1bUL+DPw8GtwvH2MPOn
-    U7Kw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1707650776;
-    s=strato-dkim-0003; d=gerhold.net;
-    h=Cc:To:In-Reply-To:References:Message-Id:Subject:Date:From:Cc:Date:
-    From:Subject:Sender;
-    bh=dFelX5EHlu+pZ8B6gF/nAN2jUERUrCFzhnmIS9NBoP0=;
-    b=0PFuMinM4KxoD7PNY7+WdUDXFmdccYlMQlnJlsoyyj5sPO946cByF0AkSReXLqTjcV
-    RFn3ACkKh81lOt5OPaAQ==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQjVd4CteZ/7jYgS+mLFY+H0JAn8u4p3mw=="
-Received: from [192.168.244.3]
-    by smtp.strato.de (RZmta 49.11.2 DYNA|AUTH)
-    with ESMTPSA id ze34f101BBQGwzt
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Sun, 11 Feb 2024 12:26:16 +0100 (CET)
-From: Stephan Gerhold <stephan@gerhold.net>
-Date: Sun, 11 Feb 2024 12:25:50 +0100
-Subject: [PATCH RESEND v3 1/2] dt-bindings: input: touchscreen: document
- Himax HX852x(ES)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5C042A94
+	for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 11:51:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707652315; cv=none; b=sGt70fCmTDtcWkilgi486EOHdsnMN3UooIGO03uW7oVAReCqUxXhBBZ+mj1naa/qN03aXpkGyo7fU53TJG3RVvobkuruet2i/c6hy7Ht3SltwQGi6zq1Kc5cZ6o4sqJweRzpTMi5454hCXM5mORKjb3LJEh49x0d01WxWqfc5qI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707652315; c=relaxed/simple;
+	bh=XOk8Kr8T8eOC+VVzgQLqdZmZkP4QeC0s2lWogs+CjA4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z6zocXV9JlPpX/MNdwdVswQPvhlSRp3Y86T49YPg51YronzMpqmYPtZtIBvhrQc+87kbRG/Nk/e9aI0W5FaMWfXThK3142nFTHJxctCd9Z6B8pX0pX2+f3BazlprPO0FydMYrO2TqqAYXSstOJ3pvqOM5goXNzoq1BpnVMxNWsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rZ8Mp-0000La-H1; Sun, 11 Feb 2024 12:51:27 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rZ8Mj-0005Ea-EX; Sun, 11 Feb 2024 12:51:21 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rZ8Mj-002Utq-17;
+	Sun, 11 Feb 2024 12:51:21 +0100
+Date: Sun, 11 Feb 2024 12:51:21 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Erick Archer <erick.archer@gmx.com>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+	Heiko Stuebner <heiko@sntech.de>, Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Li Zetao <lizetao1@huawei.com>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Kees Cook <keescook@chromium.org>, linux-mtd@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] mtd: rawnand: Prefer struct_size over open coded
+ arithmetic
+Message-ID: <rep3323evfhxh5ctmyd2biqrpg2ifej2jei5rsqpei7vuvnmsc@krh3gihuyoox>
+References: <20240211091633.4545-1-erick.archer@gmx.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240211-hx852x-v3-1-f682e2fcf11d@gerhold.net>
-References: <20240211-hx852x-v3-0-f682e2fcf11d@gerhold.net>
-In-Reply-To: <20240211-hx852x-v3-0-f682e2fcf11d@gerhold.net>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Henrik Rydberg <rydberg@bitmath.org>, 
- linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Jeff LaBundy <jeff@labundy.com>, 
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
- Jonathan Albrieux <jonathan.albrieux@gmail.com>, 
- Stephan Gerhold <stephan@gerhold.net>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.12.4
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="sfcqdcis3bm2zuuf"
+Content-Disposition: inline
+In-Reply-To: <20240211091633.4545-1-erick.archer@gmx.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Himax HX852x(ES) is a touch panel controller with optional support
-for capacitive touch keys.
 
-Unfortunately, the model naming is quite unclear and confusing. There
-seems to be a distinction between models (e.g. HX8526) and the "series"
-suffix (e.g. -A, -B, -C, -D, -E, -ES). But this doesn't seem to be
-applied very consistently because e.g. HX8527-E(44) actually seems to
-belong to the -ES series.
+--sfcqdcis3bm2zuuf
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The compatible consists of the actual part number followed by the
-"series" as fallback compatible. Typically only the latter will be
-interesting for drivers as there is no relevant difference on the
-driver side.
+On Sun, Feb 11, 2024 at 10:16:33AM +0100, Erick Archer wrote:
+> This is an effort to get rid of all multiplications from allocation
+> functions in order to prevent integer overflows [1].
+>=20
+> As the "chip" variable is a pointer to "struct mtk_nfc_nand_chip" and
+> this structure ends in a flexible array:
+>=20
+> struct mtk_nfc_nand_chip {
+> 	[...]
+> 	u8 sels[] __counted_by(nsels);
+> };
+>=20
+> the preferred way in the kernel is to use the struct_size() helper to
+> do the arithmetic instead of the argument "size + count * size" in the
+> devm_kzalloc() function.
+>=20
+> This way, the code is more readable and safer.
+>=20
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open=
+-coded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/160 [2]
+> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
----
- .../bindings/input/touchscreen/himax,hx852es.yaml  | 81 ++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/himax,hx852es.yaml b/Documentation/devicetree/bindings/input/touchscreen/himax,hx852es.yaml
-new file mode 100644
-index 000000000000..40a60880111d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/himax,hx852es.yaml
-@@ -0,0 +1,81 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/touchscreen/himax,hx852es.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Himax HX852x(ES) touch panel controller
-+
-+maintainers:
-+  - Stephan Gerhold <stephan@gerhold.net>
-+
-+allOf:
-+  - $ref: touchscreen.yaml#
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - himax,hx8525e
-+          - himax,hx8526e
-+          - himax,hx8527e
-+      - const: himax,hx852es
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+    description: Touch Screen Interrupt (TSIX), active low
-+
-+  reset-gpios:
-+    maxItems: 1
-+    description: External Reset (XRES), active low
-+
-+  vcca-supply:
-+    description: Analog power supply (VCCA)
-+
-+  vccd-supply:
-+    description: Digital power supply (VCCD)
-+
-+  touchscreen-inverted-x: true
-+  touchscreen-inverted-y: true
-+  touchscreen-size-x: true
-+  touchscreen-size-y: true
-+  touchscreen-swapped-x-y: true
-+
-+  linux,keycodes:
-+    minItems: 1
-+    maxItems: 4
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - reset-gpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/input/input.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      touchscreen@48 {
-+        compatible = "himax,hx8527e", "himax,hx852es";
-+        reg = <0x48>;
-+        interrupt-parent = <&tlmm>;
-+        interrupts = <13 IRQ_TYPE_LEVEL_LOW>;
-+        reset-gpios = <&tlmm 12 GPIO_ACTIVE_LOW>;
-+        vcca-supply = <&reg_ts_vcca>;
-+        vccd-supply = <&pm8916_l6>;
-+        linux,keycodes = <KEY_BACK KEY_HOMEPAGE KEY_APPSELECT>;
-+      };
-+    };
-+
-+...
+Best regards
+Uwe
 
--- 
-2.43.1
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
+--sfcqdcis3bm2zuuf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXItLgACgkQj4D7WH0S
+/k5ikgf9F4/qTgtnox96aTKRccDzsaTgOw9Qi3pN71OjgluyHYlBZZuLkP5oxvMH
+1xtEtrRoArhwg8s5AISfkCSKbJG6D3uSXUf9HsjiHx2K2tK+RkQy1vFalheaw7V5
+E4xeT2nxo6jpRzzqeqs75p8KbDE1FdrEZZuarr3wqtfb+oapvNF8Fy9a82Yg1BZC
+DMVilJ/dMLxb6nLJ6V0fGGOzzio9S8AIFx0alMWvEzVu8i+yDDLBWbQDlQZTqzIn
+lfNs4OCNwrzqhNhlWD6V8lzYV8SaUtFW+1A6ZKJb19MwobAnXElAgIQJOWX0PSY1
+vASWpbUmeY9zm+JPlBvqvX/3KIcWew==
+=DQCU
+-----END PGP SIGNATURE-----
+
+--sfcqdcis3bm2zuuf--
