@@ -1,110 +1,118 @@
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B404CE1B
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 22:07:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FFB84CE0F;
+	Mon, 12 Feb 2024 22:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707775655; cv=none; b=Y0OPYV5z5A3CB3rMBghs6QjTJMIfUjgqIdWn+pJvvFJ+qEsTCKBiusgB93CTEm8Pn50wSEMB9aMXXa/5fgo8FtLlOzughaLsfhOI4eKrkIqYBOwkr6kp4IYuHgGsdrDknXTUuDFFGyuZDA6cj1l7kh1OJjI3cMOV05/j9MzBKBI=
+	t=1707775712; cv=none; b=FW1j8MU9dmp3hQqo1gqMXhkOG0EOzsmTysBpX5mzZEFins87aHTRoMD+3f1AYgmTTagt69PQZG+HZ8FVSynl++uahgJDmH9T8S89ZrogoICRoTyh2ZTF1YwJ4gYLoH1wp2yn0CFJ8/ObqwiGAwrEhmzy1Lu4L037HqAM5UM9TcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707775655; c=relaxed/simple;
-	bh=o3J+H6QK+ft/jI/HQ/DmCribE5VO5VgEVrwjTsOd3+s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e0xsyQkHghuurRu8fFU2mEdJvjkqbgqZ4GPnJEYWfK5DqK9DFavLXRhorPtjwfRRPRLDPwG5IoyTtCbLX1eQWB/pI3VbfkJLMBKF7C2a1/dNFgMOLb3z8cHF1a26Lmo6R1mUyEe/fO4VBUo6jshqAw203f7AnU3Ube/lfhvJC0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XdtMu9WI; arc=none smtp.client-ip=209.85.161.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1707775712; c=relaxed/simple;
+	bh=y2m2uO1no1fiw88GoXKkQD+X/l3kVWbx0bdXFCnja60=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=forLWlbQeY2p4Yquc32MdkcTD7BOrsfIK1YHQT2NI5xSk+OHCb1hXm/tvHztDJlcFuOVdiV3B4hF93UetLpvEslleNsUw5GdbK1Kjf0rMGfX6onQ5bVUZ2VUvGfZs4RbShhspWjiifkn3CRnd/TjUuIN7T+/dfqbc9k2bEE0/Ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TCVy1d+q; arc=none smtp.client-ip=134.134.136.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XdtMu9WI"
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-59a31c14100so1505546eaf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 14:07:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707775652; x=1708380452; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8TgitNbd1mPIu/vo61kw5GTuium5jPqAU8tOs86SzdA=;
-        b=XdtMu9WIFB9uc4U8zSKaU7+In/8Xo4bXeWei2q9/eXsCtsC9kPrJ140XpB915ij5CC
-         WDYU5SG//GaarAXX6bV/HN1JAUy2rPoEDCzCeVwGRL8evFCYUezqzcft/JPRGyvYjtSj
-         Mvkn98lqNGW+hsbHMDsXH9mejpzKBqIQH+/ZQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707775652; x=1708380452;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8TgitNbd1mPIu/vo61kw5GTuium5jPqAU8tOs86SzdA=;
-        b=bmly59ja0zIGgyuNbULqLnnBYYOvjvcErP02yEgPROeunMWzkOKjYijysKNR3jLKBk
-         GAZS9fHqeqzX/lPLYqpq6buQeYVeM0PUoLLZ2eNmi4cUr49NAfyrRCcKjWntFk76Ql3S
-         Y5DKcG4FEEuzkH8LwP0NpKIwm5+X62nAIkGkdvM+6a9ctH2y1koefWKSIcs+JU5xW0y+
-         aRy2ez2G3efZZB9yWLy8X7pD3oeRLOH7VX/DuamuP1Zv5le8IP0qqfCMxma5/UYTKw3U
-         /oIypzorRUxANd91hBEdd9D/iSocklrlai0uBQUo0r8IlJHOzMaZoWgFsSV2p5/Hus/q
-         U0fQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXCum7HwYzlhTn/BXF42nwk2fO6rFQdZD3zlzJhkSYm+ZQU5vaTKs95HJwIqLAh4mNj5TUI6rBykKk34BwIbmvfHc184OIOX9Xp3/bm
-X-Gm-Message-State: AOJu0YwYm2hsW1lvHC9RYw+TSiDAfC0AUePPqepqCDnhlTKyg+SVrmzc
-	Jsr8zMEUGBhEGAaQvLiAo7PZ73+dAfVJRywTV85w/WBRJZBHYOgyChLvCAfUlg==
-X-Google-Smtp-Source: AGHT+IEBoMpvF9BOMExh1vMJk+XNeXjoVJg2+jCy4pHswhoUPY0dich6Z61quUlAHQwa6lLLXH8fXg==
-X-Received: by 2002:a05:6358:5620:b0:176:b16a:f392 with SMTP id b32-20020a056358562000b00176b16af392mr12132731rwf.10.1707775652109;
-        Mon, 12 Feb 2024 14:07:32 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV8Gn2OxEuKk3FWjwu68UFaXsDD8RjGlM9njWSjabpecNhnMIF1qXxYsfC+/txWlVHC0uNpzndoDwf4ESht85jrpR/r/ZEAKPrZUfbCo36fTMhd5H7f89i82wLKok+ONkyckgWyvxvKZtguOZF19Lc8xEaaVmAhtDm4F98Jh5EiEU3bzhs2RJR7RX0b9EomlrTIMl2Vxf2JdkvMNlJ0310atgxvP0jRcjEz3LHTvUEeurXD9TVukzAeS1b+rDlDTNf71RARiXOdJMocjBhVxo0y425GBYWZy8HcJ3+Ewgj4Xbb5EiVCQj1rNNHF2o6HLhHP4A5G2EKni1Zp8kjTIQjZ7s2fZJ1D72MCwgSyHivTpm6mOTQtfxtt+idhBUM0KbKxWyCg7Fv1qyqxIRjf1NF3si4y72XuPquRerzGB+jFwtjZvokCokPWHXZe7fe9UFmeZqPwFzwdNYmKgzWkpfwmCqyBJbExowRztIrXkyAP1VdjX4X5Qc7dYEOmYc2WTGh3xtGJQr2Xo9EofKKCkp3mJ75b52BYwQbiQKEcmvC9ksvZybPWUZsRvCHQn+/hCuu/sVnHaFqQ2wTv1z7S/eBVKDqADDYHWqcS27arhMV3Qjz5uTY6EdWZHoxUwWBMH6jThkfIXMpBBFqDYg4U/KSoQpNzl38XKZW5h7gL6/YWlncNExg8DDgYF1aMOe7inz7E4L4FD63Iu9G9AHU8reaLM/OMt3uQXOlbrIrQE+z6JttijOLciccsYCwdIBgLeFq6N7Cw2y5pw8g/+8JUMVk=
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id p2-20020aa78602000000b006e0eece1ca4sm974755pfn.4.2024.02.12.14.07.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 14:07:31 -0800 (PST)
-Date: Mon, 12 Feb 2024 14:07:31 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, mhocko@suse.com,
-	vbabka@suse.cz, hannes@cmpxchg.org, roman.gushchin@linux.dev,
-	mgorman@suse.de, dave@stgolabs.net, willy@infradead.org,
-	liam.howlett@oracle.com, corbet@lwn.net, void@manifault.com,
-	peterz@infradead.org, juri.lelli@redhat.com,
-	catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, peterx@redhat.com, david@redhat.com,
-	axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org,
-	nathan@kernel.org, dennis@kernel.org, tj@kernel.org,
-	muchun.song@linux.dev, rppt@kernel.org, paulmck@kernel.org,
-	pasha.tatashin@soleen.com, yosryahmed@google.com, yuzhao@google.com,
-	dhowells@redhat.com, hughd@google.com, andreyknvl@gmail.com,
-	ndesaulniers@google.com, vvvvvv@google.com,
-	gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, bristot@redhat.com,
-	vschneid@redhat.com, cl@linux.com, penberg@kernel.org,
-	iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com,
-	elver@google.com, dvyukov@google.com, shakeelb@google.com,
-	songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com,
-	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev, linux-arch@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com,
-	cgroups@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v3 03/35] fs: Convert alloc_inode_sb() to a macro
-Message-ID: <202402121407.A6C61F37AE@keescook>
-References: <20240212213922.783301-1-surenb@google.com>
- <20240212213922.783301-4-surenb@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TCVy1d+q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707775711; x=1739311711;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=y2m2uO1no1fiw88GoXKkQD+X/l3kVWbx0bdXFCnja60=;
+  b=TCVy1d+q0K++dIObUC2agJNdkLt5u6Rf31kXJlmnKKJ+6VUe2qSySy4f
+   3Vx+SbJ6J2O2UKfORMaR6wQdX4w9GZp5LRrWlV3SpG6x0jgvrrMzkIl1v
+   LbiEfk85Swzfzs8/r4toDBL8B4mi4v2Pbgs7oXcdboPa1wDeSun1xor7m
+   FYgwm4nk3NeIrfz4LGHleUsSCHS2++uNdGA8EMwucQ2MljrNJjyYxg7aX
+   cxyXUOp1TcoK2pZTfiF7aGTQisCh3/9YxX+EHamrEDP3WNNAuy1MloYU4
+   wyG3uzd46XxVSjkcwC/BxTZcndjsc56JZ0ZEyhMxVzUeX4pvmdgCnp3In
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="396205074"
+X-IronPort-AV: E=Sophos;i="6.06,155,1705392000"; 
+   d="scan'208";a="396205074"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 14:08:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,155,1705392000"; 
+   d="scan'208";a="7337485"
+Received: from sparrish-mobl1.amr.corp.intel.com (HELO [10.209.29.247]) ([10.209.29.247])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 14:08:30 -0800
+Message-ID: <dfa253e01ba9164abdd47da489c2a3da5da5cc93.camel@linux.intel.com>
+Subject: Re: [PATCH] tracing: Fix wasted memory in saved_cmdlines logic
+From: Tim Chen <tim.c.chen@linux.intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>, LKML
+ <linux-kernel@vger.kernel.org>,  Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Vincent Donnefort
+ <vdonnefort@google.com>,  Sven Schnelle <svens@linux.ibm.com>, Mete Durlu
+ <meted@linux.ibm.com>, stable <stable@vger.kernel.org>
+Date: Mon, 12 Feb 2024 14:08:29 -0800
+In-Reply-To: <20240208105328.7e73f71d@rorschach.local.home>
+References: <20240208105328.7e73f71d@rorschach.local.home>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240212213922.783301-4-surenb@google.com>
 
-On Mon, Feb 12, 2024 at 01:38:49PM -0800, Suren Baghdasaryan wrote:
-> From: Kent Overstreet <kent.overstreet@linux.dev>
-> 
-> We're introducing alloc tagging, which tracks memory allocations by
-> callsite. Converting alloc_inode_sb() to a macro means allocations will
-> be tracked by its caller, which is a bit more useful.
-> 
-> Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+On Thu, 2024-02-08 at 10:53 -0500, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+>=20
+> While looking at improving the saved_cmdlines cache I found a huge amount
+> of wasted memory that should be used for the cmdlines.
+>=20
+> The tracing data saves pids during the trace. At sched switch, if a trace
+> occurred, it will save the comm of the task that did the trace. This is
+> saved in a "cache" that maps pids to comms and exposed to user space via
+> the /sys/kernel/tracing/saved_cmdlines file. Currently it only caches by
+> default 128 comms.
+>=20
+> The structure that uses this creates an array to store the pids using
+> PID_MAX_DEFAULT (which is usually set to 32768). This causes the structur=
+e
+> to be of the size of 131104 bytes on 64 bit machines.
+>=20
+> In hex: 131104 =3D 0x20020, and since the kernel allocates generic memory=
+ in
+> powers of two, the kernel would allocate 0x40000 or 262144 bytes to store
+> this structure. That leaves 131040 bytes of wasted space.
+>=20
+> Worse, the structure points to an allocated array to store the comm names=
+,
+> which is 16 bytes times the amount of names to save (currently 128), whic=
+h
+> is 2048 bytes. Instead of allocating a separate array, make the structure
+> end with a variable length string and use the extra space for that.
+>=20
+> This is similar to a recommendation that Linus had made about eventfs_ino=
+de names:
+>=20
+>   https://lore.kernel.org/all/20240130190355.11486-5-torvalds@linux-found=
+ation.org/
+>=20
+> Instead of allocating a separate string array to hold the saved comms,
+> have the structure end with: char saved_cmdlines[]; and round up to the
+> next power of two over sizeof(struct saved_cmdline_buffers) + num_cmdline=
+s * TASK_COMM_LEN
+> It will use this extra space for the saved_cmdline portion.
+>=20
+> Now, instead of saving only 128 comms by default, by using this wasted
+> space at the end of the structure it can save over 8000 comms and even
+> saves space by removing the need for allocating the other array.
 
-Yup, getting these all doing direct calls will be nice.
+The change looks good to me code wise.  But it seems like we are still
+overallocating as we can now accommodate 8000 comms when 128
+was asked for.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Wonder if we can reduce the default ask to 127 comm so we don't have to
+go to the next page order?
 
--- 
-Kees Cook
+Tim
+
