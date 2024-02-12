@@ -1,209 +1,161 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5B83F9D6;
-	Mon, 12 Feb 2024 17:34:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D0845BE3
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 17:34:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707759261; cv=none; b=UdyGR7MtAaq6BcZUZviHPrJymEvGuTT51IBzX7zRgSEKH7dnyp+SSkGu0qGyB6ucGTHkzKm/DkGkNa7vfRFp9VaDCy/l9ZIyx3ElCu8Q6f6Wx0rZQHElZVTBswWQwTq49rcLXe3ZfyJviFIDZ80machDpkJXJP3FX9Gl9FEQRKA=
+	t=1707759267; cv=none; b=q/HY124As23YaKb1U9fsZojD5Gg5yjgOaM31WjMaomW4y+e8lQfizIgup42VZmGf/yeeQHmpB0/ePy2QMdfdZ/+IbJuBXfxvUfKmjzTkJdo67wiYUk8eLNDfVJjZ4UcYmxM7CE1Ha2p0lyiO3Le78dbMakUHTkxjnTHHgRlhyBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707759261; c=relaxed/simple;
-	bh=MR2vvDdKuPLHZeKtHXdt3kZU+KSz+BqV4ccn+OWY6tM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y1iEV5RKH8pUo0shr3ZHQ9Bwu2zvK3o2SiqTD9Lhaigkfa5Z37z/jfXXlcTipMO0Dd3ACX5C2T5vdSEzFb8bPd4ZlBlrvgrfVQc0p+FIqUo/vpEkFnozETYJc+U4FD3c2w0oq+NijSv4JNKJm47pm4g1YJomXaQkxHpuIQPanZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ffndsBHv; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1707759267; c=relaxed/simple;
+	bh=UErLGNLN+bkHULQl7INxGvmus6rXF07RAy36HFmAm9U=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YU7dABCS9/ObxxSxmoNz9vFrH55CHjdCguUzjIqXfp59WxZA4zh2DS+ewgGfuAn0MfZI/teWi7Be3UqpY6Ft6m5osfDSrXcil5B5aN9c2ct06V7wKh1Oju9a4xTjkKsBxYCPMDNEB5QEIjbz8eyF8hAY64CErIeIbV4cVJxx1uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oV93OjvV; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ffndsBHv"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41CHVwr4023553;
-	Mon, 12 Feb 2024 17:33:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=DLXtadvmS+MQDFNX0Ou+z9MDPCtBkk/v8TTumqraoFU=;
- b=ffndsBHvEBggVrzfPWOmT47iJQ8MPRJxfnrm/M5NRpJHng9gZh9QDpbP14FtdRCYxNyg
- 0bhXFQ75LzsWBjnBup66mdELK6VAbUMVRcRyxSNFo72BwwIBjz3cM2r2HyE2U/PUfO9w
- FonH0nTk17YIyYJO76ZuMEucWGu10tor7/mF9E8YMRNrNFPGu1/n+Ge4XsDu5DT2Lr/J
- Bj01d609SVPtxHHe5J0hrqk7TOEB1LNCVS8jAAGOlcYPJo/ZIHsElALHBuSqUfSYslb0
- peweyxL0oCAAYZxc0uabtIQeeUPhn9r+NpmKowaPCHVeKAVmRTMyYt30qKtlu6lCfFB/ zQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w7qtjr0fk-80
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oV93OjvV"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41CExrak009925;
+	Mon, 12 Feb 2024 17:34:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=M48vkdZ
+	0s2Pyp9OxRZ4mN+0EZPXt65Mq0CLdaBP2Bag=; b=oV93OjvVOEBir3PASs91FQ8
+	vr1jwuS5B5FziIhrj11H+JET01w8AIIe4PMEii8EC+Zel3WhV6vvnPQYxn/P6KeG
+	OBGCY8dx/4dCku6ICS73732PK3M6oRg/RcMaBmzW3X7zRl0lXFTTZfymxoMrbLTW
+	d8NJD2p6TFFpqHOZkouGldrVWDslpJYyirsjpBckMV8EKEyE6cs9HRFrYnu2H/i8
+	OVnUz4CZmQ/DhJ856/nfWHu6fj7GwQ3YS0cH1xGKDEmoBgoUiCQcs62veVjPaakP
+	u5KfmZqEoTiDh7U1NpKteXEusdZe+f/8yoGxfMHm4+2YakU+1oOhz6EGHiUQZ9w=
+	=
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w7nk90bp1-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Feb 2024 17:33:47 +0000
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41CHGWGQ001555;
-	Mon, 12 Feb 2024 17:24:16 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w7qcggv06-1
+	Mon, 12 Feb 2024 17:34:06 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41CHY5Zo021330
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Feb 2024 17:24:15 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41CGjLG7024908;
-	Mon, 12 Feb 2024 17:24:00 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w6mfp1wpr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Feb 2024 17:24:00 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41CHNwef38470244
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 12 Feb 2024 17:24:00 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 239B258055;
-	Mon, 12 Feb 2024 17:23:58 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 80A635805F;
-	Mon, 12 Feb 2024 17:23:55 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 12 Feb 2024 17:23:55 +0000 (GMT)
-Message-ID: <0c707e4f-88d8-4cad-a2ed-8db0e9d0b4ac@linux.ibm.com>
-Date: Mon, 12 Feb 2024 12:23:54 -0500
+	Mon, 12 Feb 2024 17:34:05 GMT
+Received: from abhinavk-linux1.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 12 Feb 2024 09:34:04 -0800
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+To: <dri-devel@lists.freedesktop.org>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+CC: Paloma Arellano <quic_parellan@quicinc.com>, <robdclark@gmail.com>,
+        <freedreno@lists.freedesktop.org>, <dmitry.baryshkov@linaro.org>,
+        <intel-gfx@lists.freedesktop.org>, <jani.nikula@linux.intel.com>,
+        <ville.syrjala@linux.intel.com>, <quic_jesszhan@quicinc.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4] drm/dp: add an API to indicate if sink supports VSC SDP
+Date: Mon, 12 Feb 2024 09:33:55 -0800
+Message-ID: <20240212173355.1857757-1-quic_abhinavk@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 14/25] security: Introduce path_post_mknod hook
-Content-Language: en-US
-To: Roberto Sassu <roberto.sassu@huaweicloud.com>, viro@zeniv.linux.org.uk,
-        brauner@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org,
-        neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
-        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
-        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com,
-        eric.snowberg@oracle.com, dhowells@redhat.com, jarkko@kernel.org,
-        stephen.smalley.work@gmail.com, eparis@parisplace.org,
-        casey@schaufler-ca.com, shuah@kernel.org, mic@digikod.net
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        selinux@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Roberto Sassu <roberto.sassu@huawei.com>
-References: <20240115181809.885385-1-roberto.sassu@huaweicloud.com>
- <20240115181809.885385-15-roberto.sassu@huaweicloud.com>
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <20240115181809.885385-15-roberto.sassu@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 2rgWjWbv1u0IGwjd5MfBUTeXVggIG93w
-X-Proofpoint-ORIG-GUID: YjZ9j3wE5gn5UpYDttxI-qnVyWYUFImn
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: P8GmQe4ttF1H-u5Kesrhqz8l7SQF7vzY
+X-Proofpoint-ORIG-GUID: P8GmQe4ttF1H-u5Kesrhqz8l7SQF7vzY
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-12_14,2024-02-12_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 spamscore=0 mlxlogscore=999 priorityscore=1501
- impostorscore=0 bulkscore=0 suspectscore=0 mlxscore=0 malwarescore=0
- phishscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402120133
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 adultscore=0 spamscore=0 malwarescore=0 mlxscore=0
+ bulkscore=0 priorityscore=1501 mlxlogscore=999 impostorscore=0
+ clxscore=1015 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2401310000 definitions=main-2402120133
 
+From: Paloma Arellano <quic_parellan@quicinc.com>
 
+YUV420 format is supported only in the VSC SDP packet and not through
+MSA. Hence add an API which indicates the sink support which can be used
+by the rest of the DP programming.
 
-On 1/15/24 13:17, Roberto Sassu wrote:
-> From: Roberto Sassu <roberto.sassu@huawei.com>
-> 
-> In preparation for moving IMA and EVM to the LSM infrastructure, introduce
-> the path_post_mknod hook.
-> 
-> IMA-appraisal requires all existing files in policy to have a file
-> hash/signature stored in security.ima. An exception is made for empty files
-> created by mknod, by tagging them as new files.
-> 
-> LSMs could also take some action after files are created.
-> 
-> The new hook cannot return an error and cannot cause the operation to be
-> reverted.
-> 
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> Acked-by: Casey Schaufler <casey@schaufler-ca.com>
-> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+changes in v4:
+	- bail out early if dpcd rev check fails
 
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-> ---
->   fs/namei.c                    |  5 +++++
->   include/linux/lsm_hook_defs.h |  2 ++
->   include/linux/security.h      |  5 +++++
->   security/security.c           | 14 ++++++++++++++
->   4 files changed, 26 insertions(+)
-> 
-> diff --git a/fs/namei.c b/fs/namei.c
-> index fb93d3e13df6..b7f433720b1e 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -4047,6 +4047,11 @@ static int do_mknodat(int dfd, struct filename *name, umode_t mode,
->   					  dentry, mode, 0);
->   			break;
->   	}
-> +
-> +	if (error)
-> +		goto out2;
-> +
-> +	security_path_post_mknod(idmap, dentry);
->   out2:
->   	done_path_create(&path, dentry);
->   	if (retry_estale(error, lookup_flags)) {
-> diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-> index 229f84ce12ae..e08b9091350d 100644
-> --- a/include/linux/lsm_hook_defs.h
-> +++ b/include/linux/lsm_hook_defs.h
-> @@ -94,6 +94,8 @@ LSM_HOOK(int, 0, path_mkdir, const struct path *dir, struct dentry *dentry,
->   LSM_HOOK(int, 0, path_rmdir, const struct path *dir, struct dentry *dentry)
->   LSM_HOOK(int, 0, path_mknod, const struct path *dir, struct dentry *dentry,
->   	 umode_t mode, unsigned int dev)
-> +LSM_HOOK(void, LSM_RET_VOID, path_post_mknod, struct mnt_idmap *idmap,
-> +	 struct dentry *dentry)
->   LSM_HOOK(int, 0, path_truncate, const struct path *path)
->   LSM_HOOK(int, 0, path_symlink, const struct path *dir, struct dentry *dentry,
->   	 const char *old_name)
-> diff --git a/include/linux/security.h b/include/linux/security.h
-> index 2997348afcb7..977dd9f7f51a 100644
-> --- a/include/linux/security.h
-> +++ b/include/linux/security.h
-> @@ -1893,6 +1893,7 @@ int security_path_mkdir(const struct path *dir, struct dentry *dentry, umode_t m
->   int security_path_rmdir(const struct path *dir, struct dentry *dentry);
->   int security_path_mknod(const struct path *dir, struct dentry *dentry, umode_t mode,
->   			unsigned int dev);
-> +void security_path_post_mknod(struct mnt_idmap *idmap, struct dentry *dentry);
->   int security_path_truncate(const struct path *path);
->   int security_path_symlink(const struct path *dir, struct dentry *dentry,
->   			  const char *old_name);
-> @@ -1927,6 +1928,10 @@ static inline int security_path_mknod(const struct path *dir, struct dentry *den
->   	return 0;
->   }
->   
-> +static inline void security_path_post_mknod(struct mnt_idmap *idmap,
-> +					    struct dentry *dentry)
-> +{ }
-> +
->   static inline int security_path_truncate(const struct path *path)
->   {
->   	return 0;
-> diff --git a/security/security.c b/security/security.c
-> index 7d10724872f8..750bfe2768d5 100644
-> --- a/security/security.c
-> +++ b/security/security.c
-> @@ -1800,6 +1800,20 @@ int security_path_mknod(const struct path *dir, struct dentry *dentry,
->   }
->   EXPORT_SYMBOL(security_path_mknod);
->   
-> +/**
-> + * security_path_post_mknod() - Update inode security field after file creation
-> + * @idmap: idmap of the mount
-> + * @dentry: new file
-> + *
-> + * Update inode security field after a file has been created.
-> + */
-> +void security_path_post_mknod(struct mnt_idmap *idmap, struct dentry *dentry)
-> +{
-> +	if (unlikely(IS_PRIVATE(d_backing_inode(dentry))))
-> +		return;
-> +	call_void_hook(path_post_mknod, idmap, dentry);
-> +}
-> +
->   /**
->    * security_path_mkdir() - Check if creating a new directory is allowed
->    * @dir: parent directory
+changes in v3:
+	- fix the commit title prefix to drm/dp
+	- get rid of redundant !!
+	- break out this change from series [1] to get acks from drm core
+	  maintainers
+
+Changes in v2:
+	- Move VSC SDP support check API from dp_panel.c to
+	  drm_dp_helper.c
+
+[1]: https://patchwork.freedesktop.org/series/129180/
+
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Paloma Arellano <quic_parellan@quicinc.com>
+Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+---
+ drivers/gpu/drm/display/drm_dp_helper.c | 23 +++++++++++++++++++++++
+ include/drm/display/drm_dp_helper.h     |  1 +
+ 2 files changed, 24 insertions(+)
+
+diff --git a/drivers/gpu/drm/display/drm_dp_helper.c b/drivers/gpu/drm/display/drm_dp_helper.c
+index b1ca3a1100da..b10fb2be837e 100644
+--- a/drivers/gpu/drm/display/drm_dp_helper.c
++++ b/drivers/gpu/drm/display/drm_dp_helper.c
+@@ -2916,6 +2916,29 @@ void drm_dp_vsc_sdp_log(const char *level, struct device *dev,
+ }
+ EXPORT_SYMBOL(drm_dp_vsc_sdp_log);
+ 
++/**
++ * drm_dp_vsc_sdp_supported() - check if vsc sdp is supported
++ * @aux: DisplayPort AUX channel
++ * @dpcd: DisplayPort configuration data
++ *
++ * Returns true if vsc sdp is supported, else returns false
++ */
++bool drm_dp_vsc_sdp_supported(struct drm_dp_aux *aux, const u8 dpcd[DP_RECEIVER_CAP_SIZE])
++{
++	u8 rx_feature;
++
++	if (dpcd[DP_DPCD_REV] < DP_DPCD_REV_13)
++		return false;
++
++	if (drm_dp_dpcd_readb(aux, DP_DPRX_FEATURE_ENUMERATION_LIST, &rx_feature) != 1) {
++		drm_dbg_dp(aux->drm_dev, "failed to read DP_DPRX_FEATURE_ENUMERATION_LIST\n");
++		return false;
++	}
++
++	return (rx_feature & DP_VSC_SDP_EXT_FOR_COLORIMETRY_SUPPORTED);
++}
++EXPORT_SYMBOL(drm_dp_vsc_sdp_supported);
++
+ /**
+  * drm_dp_get_pcon_max_frl_bw() - maximum frl supported by PCON
+  * @dpcd: DisplayPort configuration data
+diff --git a/include/drm/display/drm_dp_helper.h b/include/drm/display/drm_dp_helper.h
+index 863b2e7add29..948381b2b0b1 100644
+--- a/include/drm/display/drm_dp_helper.h
++++ b/include/drm/display/drm_dp_helper.h
+@@ -100,6 +100,7 @@ struct drm_dp_vsc_sdp {
+ 
+ void drm_dp_vsc_sdp_log(const char *level, struct device *dev,
+ 			const struct drm_dp_vsc_sdp *vsc);
++bool drm_dp_vsc_sdp_supported(struct drm_dp_aux *aux, const u8 dpcd[DP_RECEIVER_CAP_SIZE]);
+ 
+ int drm_dp_psr_setup_time(const u8 psr_cap[EDP_PSR_RECEIVER_CAP_SIZE]);
+ 
+-- 
+2.34.1
+
