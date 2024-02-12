@@ -1,145 +1,156 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A45405C6;
-	Mon, 12 Feb 2024 18:26:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606413C6A6
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 18:28:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707762413; cv=none; b=Zg0a4MWqaJhQ62NAPRLXa4Rw3AnA4UNZm1g+nIPx/x0fG9L1micB/UlC3Dp5jKGCUGyWj48wJH69ZnYg5ofvRzzXY550mPoYZk0gZQOvy0nNRMldt/vtT4XbEHXk9Et58Y8quOS82thxEPv2o7436Jqbj1zNwFwq5NEh5LsqNhk=
+	t=1707762500; cv=none; b=QWcYwbY+s7ZlY64ZvFY+bWV8Yqo7tieYxpY0gR5HSmSsp4M5InAswYxVyK0tVERuNmdQqF6VfyHhl0YzOtMQI1oaFLNrCpotGoo1JDtQ6gkZ0rohXWkglaDD7JYtIAhCqNRgeG7DI1n9pFrPU8jNJ+A9eAq33MOLylCwQ8v6cI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707762413; c=relaxed/simple;
-	bh=zPCAl5W84MBNOsC7L5RhtuIjML3Qo3/ZiF/pSR55Tw4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DZzvsjyAZdnPVs/eTLajqh8zEjneN/Ilu9rZzcMfZn6TYTQoz//iXTrEV+bqGSWYVOoFzN/6WkRLTLp5CnDh4V/SNmS0B1F9/rt/QkgPaGg2l54qQGgE5XwMgWU7W3eEYPeCcQylqAcUIaBs3cmC1Mc/RtOvNB1xxbnvpNU47kQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=K8JRXJ4P; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1707762500; c=relaxed/simple;
+	bh=WiUYf9N/yCCt/KvvF5EwlwZUQRLHndE2JKq3S/cTn0M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TsFuuRvU7o7i+X9UblpukJvH/eKkCfMSqbQJ5t0L7go6C1XIjW5KBYE4gKwLFNvgHT6V8Y+LoCM/K2q6veAaOVVIwkIDvo4JPSs8j77EI/vdLdrYBIvbgdgwl7b4afJR2ik4gk1BFl6kkN4ANBP8BxxrJ5BVHCmq2hq5G0xfNZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M9SXeEve; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="K8JRXJ4P"
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41CI7Cpo010517;
-	Mon, 12 Feb 2024 18:26:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=Orzq42MMO1ZEvKZjaWq3C1tqDEzzTaEwvYhlVNC563w=;
- b=K8JRXJ4PqLVKZ0WMD9nrgP1IEz3u4RKWc619cNgQ9yK16WPJyqQChwh0pZWP+YrBu/Ng
- Hd+Tiibuch3pwMxs62A2ybloGjiMw+Tv0fkKflFiNohOcesTjpewb5+8WYKeaJXhc1YK
- SHei8YaI/TClrRSYWEJMBg9aiP6rdy5Ekw7qZd8oWpkA7jQ6GcgiS3IBecNeqQPmk69W
- MALZnxHex4n8dnMOkyMzZTpV4RosSize1Rp6RUWtlCNIHam/bW8EP5FQvMpDTxWQsREb
- DIlGj7Z0bttGNMGgx7CKU2Sk0XfvcTBE5AXgWgQGEfFr6mVeICDExbT1zrCDEyEhPFTd /Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w7raq0f34-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Feb 2024 18:26:21 +0000
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41CI7mtC012593;
-	Mon, 12 Feb 2024 18:26:21 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w7raq0f22-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Feb 2024 18:26:21 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41CGx4f0024877;
-	Mon, 12 Feb 2024 18:26:20 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w6mfp27hd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Feb 2024 18:26:19 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41CIQH4n17629696
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 12 Feb 2024 18:26:19 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2AAB858059;
-	Mon, 12 Feb 2024 18:26:17 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8480B58067;
-	Mon, 12 Feb 2024 18:26:10 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 12 Feb 2024 18:26:10 +0000 (GMT)
-Message-ID: <5d10e7d8-9d3e-43f9-95d8-67247ffa091c@linux.ibm.com>
-Date: Mon, 12 Feb 2024 13:26:09 -0500
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M9SXeEve"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-410acf9e776so3565e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 10:28:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707762496; x=1708367296; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ypHcUZ+aGWwSqOIX8vKscvJOnKGBfRqwg/T41r3ZbLM=;
+        b=M9SXeEveF6Kv2HTN61BwJbr6BphjrVKsmlbLg822jfd2HDbNSY1Hwkc3hmKw1++gxP
+         CLYk4kmWCMmU8yph/vMJcQtM0pdVkuhYQ6PCX/sQBo9Yo7nCuP1YDW2NQqJrXEHKAisD
+         EKsZmHmeqmIO/YddsczsqN7famO7FuFQ8TTwhHUGOz/6RqbAgDUJDxtF3gsGomJqajJu
+         O0rBUtmAh8dN70eJydYcCLwViOGScId8BvHBgE6t63KqHkp0KLDV6GWyfuJEQGHLn6Hq
+         HhHLBceJZ8R8cfbS25NokE3upOZgYoO/c/mvy8/npkVq4k/sl81FnqQL7xAYMx/ja1EP
+         ULxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707762496; x=1708367296;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ypHcUZ+aGWwSqOIX8vKscvJOnKGBfRqwg/T41r3ZbLM=;
+        b=QJtgFzFbv06wjOnNEVSmeICFoZsocr4RzoPc1yD1EoP/z9huolSP+wLpoD5WlzjrZz
+         ELzLW+ykBdB0QCsQnzBqTKlxKf+5sZnI3hlJeOcVWVSOlEAKFAgU0TdC/dmGdEWzf9KC
+         XJXYkxChcodVPt/0+8jiumaqwUh2+z7sGaEaTkfy2Au26KSKQc0WDE3b5ZK5m0OJyF2e
+         Y3IhUvlBeAqIViRM36LLKWzTsJZ5rA0TIJmYxYOzq5PuV9LTOvJK/11XDVj+Ndeaibkk
+         LqhNl0UKG7CIV+egPaKrNMhm5QY9Yj8TcviimsSTLhyy8KNAiBfLI0F0tf+VoC++4SnW
+         Y4HA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBIhhVAzr64n+wCCwlBncrelaAmWJiU+vtv5V0yIIPkIplmdh8bCAQHxOwz6U68m9SdKfSQTNIiM7irVDlmsHZk+p1//RnTZwe/LJe
+X-Gm-Message-State: AOJu0YwJw8cMJPH0WwGYv8LmF9KrmsM+e2HTtK7xUm/lT7LCdByELNXi
+	IPNeGXOVkpprS253aXrG21M2OK8kifDBeTpPYRz8kqMJSQbFbBnEq3EkZ6LYO+Kiuat+vHonPrl
+	ufpVL7PxPYOLgjd6vnxntqPpUbltrJlLKlll1
+X-Google-Smtp-Source: AGHT+IENUbcQetxdbVJUWkDcZV9wBOKwUA5KBVKb3q8kwwNwrJ81UhZO9mANnq3JBZ4CWFIexcNdopfgQFazsqAn7Lc=
+X-Received: by 2002:a05:600c:1f1b:b0:410:d18a:290b with SMTP id
+ bd27-20020a05600c1f1b00b00410d18a290bmr200842wmb.7.1707762496373; Mon, 12 Feb
+ 2024 10:28:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 22/25] evm: Move to LSM infrastructure
-Content-Language: en-US
-To: Roberto Sassu <roberto.sassu@huaweicloud.com>, viro@zeniv.linux.org.uk,
-        brauner@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org,
-        neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
-        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
-        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com,
-        eric.snowberg@oracle.com, dhowells@redhat.com, jarkko@kernel.org,
-        stephen.smalley.work@gmail.com, eparis@parisplace.org,
-        casey@schaufler-ca.com, shuah@kernel.org, mic@digikod.net
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        selinux@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Roberto Sassu <roberto.sassu@huawei.com>
-References: <20240115181809.885385-1-roberto.sassu@huaweicloud.com>
- <20240115181809.885385-23-roberto.sassu@huaweicloud.com>
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <20240115181809.885385-23-roberto.sassu@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: sHIteHYy_ZuTq_ohDZCWtRB_3ocR2sgr
-X-Proofpoint-ORIG-GUID: 90lN_cbqjmQZCAMAtg7OuVMDbdTvBlWj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-12_15,2024-02-12_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=999 impostorscore=0 phishscore=0 adultscore=0 spamscore=0
- priorityscore=1501 clxscore=1015 mlxscore=0 bulkscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402120139
+References: <20240212163510.859822-1-zi.yan@sent.com> <20240212163510.859822-4-zi.yan@sent.com>
+In-Reply-To: <20240212163510.859822-4-zi.yan@sent.com>
+From: Yu Zhao <yuzhao@google.com>
+Date: Mon, 12 Feb 2024 11:27:38 -0700
+Message-ID: <CAOUHufYz2P8w_kqxSjmOghbEG8CZmO2cfb4UzP7dkduBQbHhQw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] mm/compaction: optimize >0 order folio compaction
+ with free page split.
+To: Zi Yan <ziy@nvidia.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	"Huang, Ying" <ying.huang@intel.com>, Ryan Roberts <ryan.roberts@arm.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	David Hildenbrand <david@redhat.com>, "Yin, Fengwei" <fengwei.yin@intel.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Kemeng Shi <shikemeng@huaweicloud.com>, Mel Gorman <mgorman@techsingularity.net>, 
+	Rohan Puri <rohan.puri15@gmail.com>, Mcgrof Chamberlain <mcgrof@kernel.org>, 
+	Adam Manzanares <a.manzanares@samsung.com>, "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Feb 12, 2024 at 9:35=E2=80=AFAM Zi Yan <zi.yan@sent.com> wrote:
+>
+> From: Zi Yan <ziy@nvidia.com>
+>
+> During migration in a memory compaction, free pages are placed in an arra=
+y
+> of page lists based on their order.  But the desired free page order
+> (i.e., the order of a source page) might not be always present, thus
+> leading to migration failures and premature compaction termination.  Spli=
+t
+> a high order free pages when source migration page has a lower order to
+> increase migration successful rate.
+>
+> Note: merging free pages when a migration fails and a lower order free
+> page is returned via compaction_free() is possible, but there is too much
+> work.  Since the free pages are not buddy pages, it is hard to identify
+> these free pages using existing PFN-based page merging algorithm.
+>
+> Signed-off-by: Zi Yan <ziy@nvidia.com>
+> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> Tested-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> Cc: Adam Manzanares <a.manzanares@samsung.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Huang Ying <ying.huang@intel.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Kemeng Shi <shikemeng@huaweicloud.com>
+> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Cc: Luis Chamberlain <mcgrof@kernel.org>
+> Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: Ryan Roberts <ryan.roberts@arm.com>
+> Cc: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Yin Fengwei <fengwei.yin@intel.com>
+> Cc: Yu Zhao <yuzhao@google.com>
+> ---
+>  mm/compaction.c | 36 +++++++++++++++++++++++++++++++-----
+>  1 file changed, 31 insertions(+), 5 deletions(-)
+>
+> diff --git a/mm/compaction.c b/mm/compaction.c
+> index d0a05a621b67..25908e36b97c 100644
+> --- a/mm/compaction.c
+> +++ b/mm/compaction.c
+> @@ -1832,15 +1832,41 @@ static struct folio *compaction_alloc(struct foli=
+o *src, unsigned long data)
+>         struct compact_control *cc =3D (struct compact_control *)data;
+>         struct folio *dst;
+>         int order =3D folio_order(src);
+> +       bool has_isolated_pages =3D false;
+> +       int start_order;
+> +       struct page *freepage;
+> +       unsigned long size;
+> +
+> +again:
+> +       for (start_order =3D order; start_order < NR_PAGE_ORDERS; start_o=
+rder++)
+> +               if (!list_empty(&cc->freepages[start_order]))
+> +                       break;
+>
+> -       if (list_empty(&cc->freepages[order])) {
+> -               isolate_freepages(cc);
+> -               if (list_empty(&cc->freepages[order]))
+> +       /* no free pages in the list */
+> +       if (start_order =3D=3D NR_PAGE_ORDERS) {
+> +               if (!has_isolated_pages) {
+> +                       isolate_freepages(cc);
+> +                       has_isolated_pages =3D true;
+> +                       goto again;
+> +               } else
+>                         return NULL;
 
+Nit: remove the "else" above, or just:
 
-On 1/15/24 13:18, Roberto Sassu wrote:
-> From: Roberto Sassu <roberto.sassu@huawei.com>
-> 
-> As for IMA, move hardcoded EVM function calls from various places in the
-> kernel to the LSM infrastructure, by introducing a new LSM named 'evm'
-> (last and always enabled like 'ima'). The order in the Makefile ensures
-> that 'evm' hooks are executed after 'ima' ones.
-> 
-> Make EVM functions as static (except for evm_inode_init_security(), which
-> is exported), and register them as hook implementations in init_evm_lsm().
-> Also move the inline functions evm_inode_remove_acl(),
-> evm_inode_post_remove_acl(), and evm_inode_post_set_acl() from the public
-> evm.h header to evm_main.c.
-> 
-> Unlike before (see commit to move IMA to the LSM infrastructure),
-> evm_inode_post_setattr(), evm_inode_post_set_acl(),
-> evm_inode_post_remove_acl(), and evm_inode_post_removexattr() are not
-> executed for private inodes.
-> 
-> Finally, add the LSM_ID_EVM case in lsm_list_modules_test.c
-> 
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> Reviewed-by: Casey Schaufler <casey@schaufler-ca.com>
-
->   }
->   
-> +static struct security_hook_list evm_hooks[] __ro_after_init = {
-> +	LSM_HOOK_INIT(inode_setattr, evm_inode_setattr),
-> +	LSM_HOOK_INIT(inode_post_setattr, evm_inode_post_setattr),
-> +	LSM_HOOK_INIT(inode_copy_up_xattr, evm_inode_copy_up_xattr),
-> +	LSM_HOOK_INIT(inode_setxattr, evm_inode_setxattr),
-> +	LSM_HOOK_INIT(inode_set_acl, evm_inode_set_acl),
-> +	LSM_HOOK_INIT(inode_post_set_acl, evm_inode_post_set_acl),
-> +	LSM_HOOK_INIT(inode_remove_acl, evm_inode_remove_acl),
-> +	LSM_HOOK_INIT(inode_post_remove_acl, evm_inode_post_remove_acl),
-> +	LSM_HOOK_INIT(inode_post_setxattr, evm_inode_post_setxattr),
-
-nit: move this one up after inode_setxattr.
-
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+        if (has_isolated_pages)
+                return NULL;
+        isolate_freepages(cc);
+        has_isolated_pages =3D true;
+        goto again;
