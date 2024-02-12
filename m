@@ -1,98 +1,105 @@
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069F017BCA
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 10:04:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91AB2182A1
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 10:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707732300; cv=none; b=ZVsCdiWP8dtMyQBkgHDV5ELQVu5cdMp8WEsODT1PA3lFPjoyQZVjN4MrmwWZhqj9Z4mriHR/4l8qYhSpL2QrVts7ejqED/omNDW1Bgd9OLzo+6FTIzQkpqVSrLfVkNbVqqSjiD3njHrGkoidMM7JQGuZ5ypUS8OzfT8vG2jtM0M=
+	t=1707732356; cv=none; b=ENJcbkdjekFwlqxPGWMcmW/cVvqPrggY5Yn8jzbIE2pljr7a6vHHZv/FiMY+3H8uqp59TjHyb77rq3rK1qpSYYWWBYB3XBIKeocBRJNFzkjfWXcsDp0WN2i4bgj51ElP6gveEZqNGmFbEguun2l/wGM/U8grQFCWbHFOOKA9Akc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707732300; c=relaxed/simple;
-	bh=ggduzU9L1RUTLLiPLM4EOtwsbNI4tWctUrmL552s1jo=;
+	s=arc-20240116; t=1707732356; c=relaxed/simple;
+	bh=Wz3Igt76gUzwJJe3QfNiRBzS4XiV7PCRiBzUXh+mcIE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q4IFhUAgYO0ORUkWzQYRJsHTvXbjCinoFgMGFd3WiqRVLIBLak9hIXk17Ggx1R7jaRz3+8M+JY9ea/utN9nVdkByafMzYrUZqvqMHQ12d12h+onnYim8WPoKY1jmgdnyNoGpSSHqiKyP+kqh481WJATdkC2nmtbW93cbtc1wPVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iC1o0ssq; arc=none smtp.client-ip=209.85.222.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=YZZ33RMzOS//1DiqAPUqnqjEBi01d9LZy/b2oH/1pjvqiDCqvMUOkj5YS6Wr+W0YJoxHm4n9pxHmeV1dOLs8WUjhNskeotOm6i2Dfm+uQF0gnzqRJuX43Rs3zr+s5FVYQQc2ykKngxXlYhp/Uj8EBTe24L0b/kSL1NnySjmzFuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QhvY2WCp; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iC1o0ssq"
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-7d2940ad0e1so1735962241.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 02:04:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707732298; x=1708337098; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ggduzU9L1RUTLLiPLM4EOtwsbNI4tWctUrmL552s1jo=;
-        b=iC1o0ssqIXRXXD8GfJHqXimLiw/iVWyakgdgApwtkSjSLJSZuDxmYqDVFaROpR6znS
-         c9I+mwoUjARm+lO5dGG9ROKrZveRQXbxhPByIlnitJSC+nhrWs2lrhpwkpY7lqi2fqfb
-         XDsODwFuZH+2GbaSbSmHiad95ciCHNekTm7rWhduAhcTxhPlK+zHLcDqGeCYgDFYgQjZ
-         b321VahMNBNj65aiJxr5Hr6K/pi2SIV9bnFgqDjI9DoDe6faOrXczdkgeTo/3LxgwRNq
-         NaFH5ASoeVqVYicvLcpB6zKfzJutUwT1Zd0UWXaWYGY3kky9ap6WNwUhWo705sBrzJQ1
-         QmeQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QhvY2WCp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707732353;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x9NB+yvDFxltKDSPmB8kuUqoCt7FggvFJ2MXEIt1gVg=;
+	b=QhvY2WCpjGCoVMlWaOGGkriYI0VPSkTmbOhXnNkwoxuspiQFIEqxhLNVShPBx/fjfb5Vz1
+	dxnYU8dHsMBlg7CFoPsGhgwvejqDSJKx95oxJrDilEU6nUUgmXsqUqhoAnPDK+GJ1PIOtr
+	CGG+TQf8D6n+8beEFFk8/nnEYTdVGGQ=
+Received: from mail-vs1-f71.google.com (mail-vs1-f71.google.com
+ [209.85.217.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-656-ELuluS6cNUKJnip4Jv6X-w-1; Mon, 12 Feb 2024 05:05:51 -0500
+X-MC-Unique: ELuluS6cNUKJnip4Jv6X-w-1
+Received: by mail-vs1-f71.google.com with SMTP id ada2fe7eead31-4677690896cso1210714137.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 02:05:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707732298; x=1708337098;
+        d=1e100.net; s=20230601; t=1707732351; x=1708337151;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ggduzU9L1RUTLLiPLM4EOtwsbNI4tWctUrmL552s1jo=;
-        b=ltsT2URWLHmjxIPkUsT23gsWoijsVdobBJBB3D9tSQNNHD65/7PqppuzMt63H93kKo
-         6xTdK/xaU7PErc5m/UjFwXw0bI1v3F5TGXElto4C4A+1Tm5KFj54JOH6OUvMLx5EMKIe
-         eOHazgfULpNBQEqAVtBFYnBxJcCXgsy7x4pYn8lJH2LN+7MHEpVTy/ogbt4MxqQpVqAS
-         fEwKkAYhKt51iZXWVkQG0AU+4/RYV14KZ8StqHL3tY3OdkfzVRiGsaAfbKjdc7ND1oeK
-         /gL1xIkDLE5u7CuZJy+uCpWP5mEnw6/iLi08LG8bIauOp/A1rFUJfddK23u/tbED2gv7
-         ckKA==
-X-Forwarded-Encrypted: i=1; AJvYcCVX8i/dsQ/hRowTnmLapZm26PQyn6S9AbR3NSeBu4QZd46RdWg3HARqBrlvi8RNosXDZhQsftPsXzXmRoMZL4nv3lAgLBl2eIkhmi+r
-X-Gm-Message-State: AOJu0YwSTJ2APuIC+meDgxnQlZXRpqjWf6f/G9tSUnLT9LW/y2LbRDvy
-	bqdvTgMZmYmw+YUT1HL/PJOE7rOFsu0zTiqnfcUDbBvvLiwwOGMR86Qh6Z6EoOvQIMjpijysQoQ
-	RHWRaTTFFnpmLxK8exzFKT9UFCpCt1UjefT6L
-X-Google-Smtp-Source: AGHT+IEd49py4OLNX4mf5CeRvn2sftXgoKqJgVKe0kGtx19XgPRbHY6OUXT+lpg/lNJ+Ows2+YxSA63IQJz7omMeAsc=
-X-Received: by 2002:a05:6102:2a59:b0:46d:61e8:46a with SMTP id
- gt25-20020a0561022a5900b0046d61e8046amr3708124vsb.28.1707732297773; Mon, 12
- Feb 2024 02:04:57 -0800 (PST)
+        bh=x9NB+yvDFxltKDSPmB8kuUqoCt7FggvFJ2MXEIt1gVg=;
+        b=mhs3dbXmt4nB6T7R9EzLBTGANynRE3ne16hE6fiE/jHSutUFJNNy6OsGRo+sJDkehk
+         jHXT9m2ulcFND5Ve5YvWEoY1TwL25TXh3pXRN/zL9JNJGsw+eCrZuN4AQfWKOGERC+jp
+         xlyX9SPM5gDGa6c1vc0aLmg1V5Lvvsn6u2VILIR0ICdv3EQS6D1cNZAmi/sBVjkmw++v
+         sKfKDkto6PsjDvAl1e0hsJB9imaEPj4ZitaJ6q7P3XCOUBjTwdbTUngiN4dzqL+4kWnl
+         l0zawpOrhfNjffauypBK8SnpSouXVawDUFkhyCan9Ksp8hSvF8YrQdm1vnGf75gvtu89
+         qsng==
+X-Gm-Message-State: AOJu0YwyG6XkmJA9mMiafy1vZxwRG+Z8OglBIL1B2gtGpzZBIw+/KoKw
+	/XkFF/5vWdADncop40KiZ+d6DhlTHRFcAgHdHOsoZDxN//+V0bm5l/Em59fAHkqkPF+2sL8eaRY
+	z/XWgTOJ/yEeeA1sSh0hVTRaXMbKnde4UoLjaXhrW2c5m8aa74ePgNedGgqRisxQBGhrXUZ01V0
+	m3PF+VBHFwV5Pnah/bzKqHJ35Vj7wop+SGe2fj
+X-Received: by 2002:a05:6102:2257:b0:46d:3a98:2846 with SMTP id e23-20020a056102225700b0046d3a982846mr2605339vsb.15.1707732351348;
+        Mon, 12 Feb 2024 02:05:51 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHi0TD7WQgwvMqZlbCAYD+0WsvU/zcQXCDClTSsPA8snYp3w4Kzc6xouTVN8AwdtHUnBD76nnZDXf/199GkL/o=
+X-Received: by 2002:a05:6102:2257:b0:46d:3a98:2846 with SMTP id
+ e23-20020a056102225700b0046d3a982846mr2605328vsb.15.1707732351120; Mon, 12
+ Feb 2024 02:05:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240209-alice-file-v5-0-a37886783025@google.com>
- <20240209-alice-file-v5-7-a37886783025@google.com> <CALNs47tTTbWL3T9rk_ismPT0Bwi8Kcm5aT9k8jfPsh=1wKvrPA@mail.gmail.com>
-In-Reply-To: <CALNs47tTTbWL3T9rk_ismPT0Bwi8Kcm5aT9k8jfPsh=1wKvrPA@mail.gmail.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Mon, 12 Feb 2024 11:04:47 +0100
-Message-ID: <CAH5fLgj8u925_5qW3n7OBd3tPxxdy4=BR=yWvzhyLN6TT6M+dQ@mail.gmail.com>
-Subject: Re: [PATCH v5 7/9] rust: file: add `Kuid` wrapper
-To: Trevor Gross <tmgross@umich.edu>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	=?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Kees Cook <keescook@chromium.org>, Matthew Wilcox <willy@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Daniel Xu <dxu@dxuuu.xyz>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Martin Rodriguez Reboredo <yakoyoku@gmail.com>
+References: <cover.1705965634.git.isaku.yamahata@intel.com> <a4d44b01523c935595c8ee00622ab8766e269ef4.1705965634.git.isaku.yamahata@intel.com>
+In-Reply-To: <a4d44b01523c935595c8ee00622ab8766e269ef4.1705965634.git.isaku.yamahata@intel.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Mon, 12 Feb 2024 11:05:39 +0100
+Message-ID: <CABgObfbjKb0x+uO=LRLqU8CZ35L7Tgg9B1i0NUwNRG5aQK9ixA@mail.gmail.com>
+Subject: Re: [PATCH v18 015/121] KVM: TDX: Retry SEAMCALL on the lack of
+ entropy error
+To: isaku.yamahata@intel.com
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	isaku.yamahata@gmail.com, erdemaktas@google.com, 
+	Sean Christopherson <seanjc@google.com>, Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>, 
+	chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 10, 2024 at 8:43=E2=80=AFAM Trevor Gross <tmgross@umich.edu> wr=
-ote:
+On Tue, Jan 23, 2024 at 12:55=E2=80=AFAM <isaku.yamahata@intel.com> wrote:
 >
-> On Fri, Feb 9, 2024 at 5:22=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> =
-wrote:
-> >
-> > Of course, once a wrapper for rcu_read_lock is available, it is
-> > preferable to use that over either of the two above approaches.
+> From: Isaku Yamahata <isaku.yamahata@intel.com>
 >
-> Is this worth a FIXME?
+> Some SEAMCALL may return TDX_RND_NO_ENTROPY error when the entropy is
+> lacking.  Retry SEAMCALL on the error following rdrand_long() to retry
+> RDRAND_RETRY_LOOPS times.
+>
+> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 
-Shrug. I think a patch to introduce rcu_read_lock would go through the
-helpers as a matter of course either way. But it also doesn't hurt.
+This patch should not be needed anymore, just...
 
-Alice
+> +       /* Mimic the existing rdrand_long() to retry RDRAND_RETRY_LOOPS t=
+imes. */
+> +       retry =3D RDRAND_RETRY_LOOPS;
+> +       do {
+> +               /* As __seamcall_ret() overwrites out, init out on each l=
+oop. */
+>                 *out =3D *in;
+>                 ret =3D __seamcall_ret(op, out);
+> -       } else
+> -               ret =3D __seamcall(op, in);
+
+... use seamcall() and seamcall_ret() here instead of the "__" versions.
+
+Paolo
+
