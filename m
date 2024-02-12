@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53CE82BAE7;
-	Mon, 12 Feb 2024 11:23:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0FE38DE4;
+	Mon, 12 Feb 2024 11:24:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707737029; cv=none; b=ccHYdL/8+LPg5wtUb1wQ28sPDPNlJ425F+c6+7wNfsKacqWskp4hS0toMdxDXleheVEcXn+RRtk+hQV6FTH52fprEk+D8387LbWZIkEEBrUWsc8HC20dvJD/W2IpTkxQH45GF7z5iNrfX0KPZ6IErSHUKO+JEzQ8aY/ZJF2xC7Q=
+	t=1707737065; cv=none; b=HNpLU9qyo2YAiDRbejg8oOwsXRXTXSeF+ktrzXRFVmly1JW66V8D5tsnW6OeyldPPnP24w/MYWG2tnWhvnPl1EseWHeFqsCP3T2Qk3v1LWccbRBQoVfY64QMNNcTJ62MaQsVqUt2tVv5ph54y7hlsy6DTCpZwYez1zzMiMF58EE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707737029; c=relaxed/simple;
-	bh=QWBljQ37tVO9zYHpDIfIS7N57SgyU4Ob3klCDZ6vAGI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LSOxOVrfwSRyE574JLjJT/0KVyKorFJTNouhjBwjwIixztKRXUzRg1o7WF4i8b1d6uOYZDgHg23GVlCUQzeNLAPxcukxkY7+LnXaO/LZvoVEWTzGrL2UocJofBmjzZBMti4mJ8p8WB3SdDlbCBDlFtubh15XKxKeNVcYPG9+7zU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=taRsQhk7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707737065; c=relaxed/simple;
+	bh=ctB3UNnuko1So6jdWUHT6OoiQS0dR1uMODQ5VcPcPKc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ecGaLcdzWBadbq20algPSnvsPyRD3IzY744myK7tSxh4rjdZ5sbeIXhwqpfrfoUIdeaupybRe4UCkLOpWamxNSvQy6V6Mn1V87srACqtvSVHT5FNxv7U8m1ytAa9xzwnGNUxJj/lsyrfqmuIKX/WZ3I+jyOlr6194mVzZRUI9Bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B5noxPAz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="taRsQhk7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80F35C433C7;
-	Mon, 12 Feb 2024 11:23:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B5noxPAz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BB6CC433F1;
+	Mon, 12 Feb 2024 11:24:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707737028;
-	bh=QWBljQ37tVO9zYHpDIfIS7N57SgyU4Ob3klCDZ6vAGI=;
+	s=k20201202; t=1707737064;
+	bh=ctB3UNnuko1So6jdWUHT6OoiQS0dR1uMODQ5VcPcPKc=;
 	h=From:To:Cc:Subject:Date:From;
-	b=taRsQhk7qi6FZ2wfVKxUhQnWohy/ynKu5x/Bs7k7woKlhf2XofhnCymJgSM3AFa2a
-	 3+pDcgzfZnp7rg9XH7aeyMaDPh6O4fL8m6Tx/B4w/rnZkJly3eDzwP9A75DBEpWAy4
-	 ho1uRuyQMnmPA4aplPMfWBDC52Oh3PPWbL41lLVuCwbTZcWGNWE9HJltrRTgHsk9mp
-	 iYxxAfIRuKbz+WsNPiRiBJJJ0jppet9Ab4IHzOTOxhgIuLn+y3SuXchunBJu4Ve0IY
-	 Zazigy2p8nfPCsEcDB3KyASgbLjO/8SgY0ffCSYiRCxqbMbzrTJCn7dyxQiCf3KSOs
-	 bNZFq2J7w98pA==
+	b=B5noxPAzXIEuAGofnSaGSwq1xWlEazm6k239d4/xurIUbuH5MgkBZfs/R7TmGqlW5
+	 T9lEmQcQLc010Rnb2Q8h/yB0kiY4BWU5AkdAXvVzwz0iaoBHRL8jy+nr3q62v4aRdc
+	 NIFNQ/KJZpWOQV2SBjEIHLMlvrgFh49TQOEnuMDuDpy5iOc7Cg6LZ9WKBdb2K0JZMM
+	 rsnWzKlx/pOIl/03GuxYcjmTILp7teizsQGVIfmV3yRrJiKqFE3ZDKZwZYF67tJbK0
+	 KDHzzvHo/bwKCULiTcyXI+b5s3dD7nkaEAa/k533pVgeWBBGDG84tkj2nmuCmH8Wya
+	 wnHZDzTRf02eQ==
 From: Arnd Bergmann <arnd@kernel.org>
-To: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Kalle Valo <kvalo@kernel.org>,
-	Johannes Berg <johannes.berg@intel.com>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Marc Zyngier <maz@kernel.org>,
+	David Matlack <dmatlack@google.com>
 Cc: Arnd Bergmann <arnd@arndb.de>,
-	Gregory Greenman <gregory.greenman@intel.com>,
-	Alon Giladi <alon.giladi@intel.com>,
-	Mukesh Sisodiya <mukesh.sisodiya@intel.com>,
-	Anjaneyulu <pagadala.yesu.anjaneyulu@intel.com>,
-	linux-wireless@vger.kernel.org,
+	Sean Christopherson <seanjc@google.com>,
+	Fuad Tabba <tabba@google.com>,
+	Shaoqin Huang <shahuang@redhat.com>,
+	Chao Peng <chao.p.peng@linux.intel.com>,
+	kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] wifi: iwlwifi: fix #ifdef CONFIG_ACPI check
-Date: Mon, 12 Feb 2024 12:23:36 +0100
-Message-Id: <20240212112343.1148931-1-arnd@kernel.org>
+Subject: [PATCH] KVM: fix kvm_mmu_memory_cache allocation warning
+Date: Mon, 12 Feb 2024 12:24:10 +0100
+Message-Id: <20240212112419.1186065-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -50,66 +50,36 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-The #ifdef check around the function definitionm for two functions was
-changed without also changing the one on the declaration:
+gcc-14 notices that the arguments to kvmalloc_array() are mixed up:
 
-drivers/net/wireless/intel/iwlwifi/fw/uefi.c:359:6: error: redefinition of 'iwl_uefi_get_sgom_table'
-  359 | void iwl_uefi_get_sgom_table(struct iwl_trans *trans,
-      |      ^~~~~~~~~~~~~~~~~~~~~~~
-In file included from drivers/net/wireless/intel/iwlwifi/fw/uefi.c:11:
-drivers/net/wireless/intel/iwlwifi/fw/uefi.h:294:6: note: previous definition of 'iwl_uefi_get_sgom_table' with type 'void(struct iwl_trans *, struct iwl_fw_runtime *)'
-  294 | void iwl_uefi_get_sgom_table(struct iwl_trans *trans, struct iwl_fw_runtime *fwrt)
-      |      ^~~~~~~~~~~~~~~~~~~~~~~
-drivers/net/wireless/intel/iwlwifi/fw/uefi.c:392:5: error: redefinition of 'iwl_uefi_get_uats_table'
-  392 | int iwl_uefi_get_uats_table(struct iwl_trans *trans,
-      |     ^~~~~~~~~~~~~~~~~~~~~~~
-drivers/net/wireless/intel/iwlwifi/fw/uefi.h:299:5: note: previous definition of 'iwl_uefi_get_uats_table' with type 'int(struct iwl_trans *, struct iwl_fw_runtime *)'
-  299 | int iwl_uefi_get_uats_table(struct iwl_trans *trans,
-      |     ^~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/kvm/../../../virt/kvm/kvm_main.c: In function '__kvm_mmu_topup_memory_cache':
+arch/x86/kvm/../../../virt/kvm/kvm_main.c:424:53: error: 'kvmalloc_array' sizes specified with 'sizeof' in the earlier argument and not in the later argument [-Werror=calloc-transposed-args]
+  424 |                 mc->objects = kvmalloc_array(sizeof(void *), capacity, gfp);
+      |                                                     ^~~~
+arch/x86/kvm/../../../virt/kvm/kvm_main.c:424:53: note: earlier argument should specify number of elements, later size of each element
 
-Adapt it by merging the declarations into the existing #ifdef block.
+The code still works correctly, but the incorrect order prevents the compiler
+from properly tracking the object sizes.
 
-Fixes: 74f4cd710705 ("wifi: iwlwifi: take SGOM and UATS code out of ACPI ifdef")
+Fixes: 837f66c71207 ("KVM: Allow for different capacities in kvm_mmu_memory_cache structs")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/net/wireless/intel/iwlwifi/fw/uefi.h | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ virt/kvm/kvm_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/uefi.h b/drivers/net/wireless/intel/iwlwifi/fw/uefi.h
-index 39053290bd59..303cc299d1bc 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/uefi.h
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/uefi.h
-@@ -204,6 +204,9 @@ int iwl_uefi_get_mcc(struct iwl_fw_runtime *fwrt, char *mcc);
- int iwl_uefi_get_eckv(struct iwl_fw_runtime *fwrt, u32 *extl_clk);
- int iwl_uefi_get_dsm(struct iwl_fw_runtime *fwrt, enum iwl_dsm_funcs func,
- 		     u32 *value);
-+void iwl_uefi_get_sgom_table(struct iwl_trans *trans, struct iwl_fw_runtime *fwrt);
-+int iwl_uefi_get_uats_table(struct iwl_trans *trans,
-+			    struct iwl_fw_runtime *fwrt);
- #else /* CONFIG_EFI */
- static inline void *iwl_uefi_get_pnvm(struct iwl_trans *trans, size_t *len)
- {
-@@ -283,13 +286,7 @@ static inline int iwl_uefi_get_dsm(struct iwl_fw_runtime *fwrt,
- {
- 	return -ENOENT;
- }
--#endif /* CONFIG_EFI */
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 8f03b56dafbd..4c48f61cae35 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -421,7 +421,7 @@ int __kvm_mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int capacity,
+ 		if (WARN_ON_ONCE(!capacity))
+ 			return -EIO;
  
--#if defined(CONFIG_EFI) && defined(CONFIG_ACPI)
--void iwl_uefi_get_sgom_table(struct iwl_trans *trans, struct iwl_fw_runtime *fwrt);
--int iwl_uefi_get_uats_table(struct iwl_trans *trans,
--			    struct iwl_fw_runtime *fwrt);
--#else
- static inline
- void iwl_uefi_get_sgom_table(struct iwl_trans *trans, struct iwl_fw_runtime *fwrt)
- {
-@@ -301,5 +298,5 @@ int iwl_uefi_get_uats_table(struct iwl_trans *trans,
- {
- 	return 0;
- }
--#endif
-+#endif /* CONFIG_EFI */
- #endif /* __iwl_fw_uefi__ */
+-		mc->objects = kvmalloc_array(sizeof(void *), capacity, gfp);
++		mc->objects = kvmalloc_array(capacity, sizeof(void *), gfp);
+ 		if (!mc->objects)
+ 			return -ENOMEM;
+ 
 -- 
 2.39.2
 
