@@ -1,91 +1,62 @@
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D404EB23
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 22:42:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0112C4F889;
+	Mon, 12 Feb 2024 22:43:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707777768; cv=none; b=O6pL0WdmcA/eZIzw7rD3y7ZYKGGuuvnYBeAHnS+7qaQhh8tUY/oy9AkankVuy0TJ/ExoB+4rtqAl9QWK4NZ4wX26GzMi4M9Bkrs3Rfrv9tQrMShy73B3k+RO+V9GwSqTiMvlK1ngeU7e+PX0evItZp6Z6ycJ3TMnBfzK4WmWMj4=
+	t=1707777800; cv=none; b=nQr2GQTo18PmGqKTQc5vac9PTZwfGDW3VwoScXem2h+gZMhRmxaxeh+Rvu4vWw99BmEFCo/s8tGbFcL4ca2SDf1hjigLk08+ZsiTNlSahKMABgmFtftuQXsetgy095ppNOTOIOmwBu5FBKzqutDoM98Nkvw4w8MkZ81d5kcALhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707777768; c=relaxed/simple;
-	bh=e0gPUIkWXu2GXoStCrj5iVTRXASa+QcWboJpNbQHy2g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n/Db/1xRvG8xIm+pbZKpSwSojflxqM2XFY34jpIxtcfse+rQuFHjvGM9vbHZ3y3C+BZnmPH1g86Ib7PAJeCf+/oJPpLV+pfA5iFcznniQKGDkXFjVN4pr7V5VMOjaqWO8e/eT4dGez0CeGGz8mcNLnW4XPxuIu7wK8wQldC94+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tNizHiIT; arc=none smtp.client-ip=209.85.217.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707777800; c=relaxed/simple;
+	bh=x2mMi/fx9SnRvghtCGTJEcD7mZ+U4vCfO/kAy4ITm8g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZVoBNn/WlMMSeUNOyYX9NsRjI+1xQoWmSvPKMikZwJUFb+zf2Ddu0830R9A0dl/tV0ymW+HGBYTW0FIS91systzbr+8uoZ0nwdDH2unFFLgIQwkpx3/uSk44iaZwK/VJqnjWmPE8R7F7wPS4aW1/Bwy9i/+O3HN76X3XRzpruBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tyQWWHQa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tNizHiIT"
-Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-46d34c22594so448229137.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 14:42:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707777766; x=1708382566; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7qwxet0SdK/KijzcEcZqFiBIv3Lx4sNueH8dt0TXMEA=;
-        b=tNizHiITVRbSSUUNU/apd8Fiqnb6uSQvzTVtZfFwPiNOfQauwx2h5hEHj1OF0IHOnM
-         xdxtVia8pphAW+g+QoBkLMP33SgIZHJ1KnI7enmDwhhiLSU+GiIlIeyC/uNvIl3ySI58
-         SDTHdmbyfvSQsgi5BlX8oS+2J6bHooW/vUxXjwn5VK28IgP4+xGVhHFpTUYzpdHSidsw
-         UW8ezw9Vm1MoqXnxfxPas3S5iYfAa2IGQbBIG3olPOgtIfU3RN9q5GXKOS9FY3ZR7TdO
-         L0vJtC+XSkVxCLX093GF6BiLxgu15w7gl1xs/uE0+w1DXUuRb126I0btevJwx9dURvCK
-         Lg7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707777766; x=1708382566;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7qwxet0SdK/KijzcEcZqFiBIv3Lx4sNueH8dt0TXMEA=;
-        b=w3qKiCdYHLPUyqdmvN/oyPxpvQ75MAhUrJvYC5UGMlakZ4/KAFwZTG/XJORXU4mRoX
-         drUAX/5R2l9MuEI4CpPpGXla0lCiC8pyg3lgNjfQFGF8/epOw0xuiiK/Wyx6PAsNZ8bb
-         bMGiKLnvLsxFpzXW6l5kW6b1WQZgppbEvxXRdgqxZdi6U1jkha5ot3NcGW1y0+ynJCZ3
-         w4nqRek7rvLdZZTjKjamODMN3meyw6RQO11DhvVHfXHMGadtmzKXwS6g9MYOYtdnhzuc
-         DZOkVRJr/oystGNn8kGZZJGC1Xu4Vdn8r4wA9McjZUBtyp+MjVYW4MWSCRyB1d5pGHGd
-         wkfg==
-X-Gm-Message-State: AOJu0YwKYCAb2WzvaqvodNG7RGHpld62YN6s5FyVqT7rqbuvMf4d8VYW
-	ei9UVFhfokDF+QLRaSTQeHct9BoynfIJ4NOMHY+g6HG5+eHVjS9Bps787xiGVPyhooQ/BA85DrE
-	7PGFyw07VNHCV6qWuaT6UTtiPvPoILVaZEGa0
-X-Google-Smtp-Source: AGHT+IH2PFWckqE2GJ70cLraXtxiXeFdzwkuapkjt2RE/iVug7s4bx+SA7ex/sf/XeUJ6mzlBaAZrxr8mL3iAaLX638=
-X-Received: by 2002:a67:f8d7:0:b0:46c:ae93:9c7 with SMTP id
- c23-20020a67f8d7000000b0046cae9309c7mr4378021vsp.18.1707777765979; Mon, 12
- Feb 2024 14:42:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tyQWWHQa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FAF9C433F1;
+	Mon, 12 Feb 2024 22:43:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707777799;
+	bh=x2mMi/fx9SnRvghtCGTJEcD7mZ+U4vCfO/kAy4ITm8g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tyQWWHQafzrMSy+PFMbNIlAtOPCP+JbIKLPlilmaTOZs7SegUA5XNyZQsexCR1xwp
+	 wY9bB8fW5NB9Pk2QzYQ2LU82o7wcsEyTMu3rnqqWL33fi5rqkc7mqTXuavT8sVm/VR
+	 QM++PBoO1qT//fuLwZLwc9XxCYZ9RMpkGur1fnq3pNDMZoDEeY56oXLFgfU1pS/QJf
+	 +rMYG68S8q7Hp9BeFowp1jOfugLgrAfWI1TDbbcqC6t9Dn+9FPnoI42cGJUN9n1lKQ
+	 FrDvpuihjceONJS4QVPKR5GLACt+RE47S2IyEU9PDQdm8Grn4V/vHQCCT3sDP3Sqws
+	 Pi2dE41qavslQ==
+Date: Mon, 12 Feb 2024 16:43:17 -0600
+From: Rob Herring <robh@kernel.org>
+To: Saravana Kannan <saravanak@google.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	kernel-team@android.com
+Subject: Re: [PATCH] MAINTAINERS: of: Add Saravana Kannan
+Message-ID: <170777778090.2688977.14804637560473102697.robh@kernel.org>
+References: <20240210231513.111117-1-saravanak@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240210-zswap-global-lru-v1-0-853473d7b0da@bytedance.com> <20240210-zswap-global-lru-v1-2-853473d7b0da@bytedance.com>
-In-Reply-To: <20240210-zswap-global-lru-v1-2-853473d7b0da@bytedance.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Mon, 12 Feb 2024 14:42:09 -0800
-Message-ID: <CAJD7tkYdEWrrQj+MFNpDR6FHc60czXcuawh3dd1rSF=QQm6+yg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mm/zswap: change zswap_pool kref to percpu_ref
-To: Chengming Zhou <zhouchengming@bytedance.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240210231513.111117-1-saravanak@google.com>
 
-On Sun, Feb 11, 2024 at 5:58=E2=80=AFAM Chengming Zhou
-<zhouchengming@bytedance.com> wrote:
->
-> All zswap entries will take a reference of zswap_pool when
-> zswap_store(), and drop it when free. Change it to use the
-> percpu_ref is better for scalability performance.
->
-> Testing kernel build in tmpfs with memory.max=3D2GB
-> (zswap shrinker and writeback enabled with one 50GB swapfile).
->
->         mm-unstable  zswap-global-lru
-> real    63.20        63.12
-> user    1061.75      1062.95
-> sys     268.74       264.44
 
-Are these numbers from a single run or the average of multiple runs?
-It just seems that the improvement is small, and percpu refcnt is
-slightly less intuitive (and uses a bit more memory), so let's make
-sure there is a real performance gain first.
+On Sat, 10 Feb 2024 15:15:12 -0800, Saravana Kannan wrote:
+> Adding myself as a second maintainer for Open Firmware and Device Tree
+> to help Rob out with reviews and other maintainer work.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+> Discussed this with Rob.
+> 
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-It would also be useful to mention how many threads/CPUs are being used her=
-e.
+Applied, thanks!
+
