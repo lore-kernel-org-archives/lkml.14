@@ -1,97 +1,134 @@
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD723B782;
-	Mon, 12 Feb 2024 14:57:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0346F39FD5;
+	Mon, 12 Feb 2024 15:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707749855; cv=none; b=SKjYt1M0E8CZEc7iBCNJao1Dr5bdhhFPJme6nDTPEGw8wim9wh69kzW+S6RNM9Os1QoUiybiLe57N1/bu8tXFFRzEJNxai8xiDZCc9uCepcdYDh3rkunhqhUyjNYd+Tgyvd79/BB0hzVqKuEUDPOXltdxqzox6PWKTeVnj3ixFY=
+	t=1707750040; cv=none; b=qwEsrw+UjD02wM4oEc2TvkSBTtClabuk9y1nCgfNtoirZ/FW5HUrxBfsgY1RT1lyWqLu+JfURvtlfV5p96dBhBd6YDpBRnVIKy/MKpumIGf7Pf1kv2ZRx3vysyDbMrU40aE/qQhGf+dlTMJGO7/WPybke40r9wJD3Z9+A3ar3Jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707749855; c=relaxed/simple;
-	bh=dB6h7vjL83xsxisp6w5d1sjXMpb1xlAf6QjbQZNLPNQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NJ2PxUUId5dpTHjt09jRZRW+ZYdIudIkMt3bvzcKooF2BIfeOd/PtDjhKeU9NimDu+JDtbcANnmSqgW7mkeH+Nvitb4vVF0RqYBeHVHML1uKGsCt/iwpjY2rrmwykyde6q7VJ6ypOZynxefiH85xFfNa8NmFI++RBSrQ8Owt8WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6e2e74e34a7so15735a34.1;
-        Mon, 12 Feb 2024 06:57:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707749853; x=1708354653;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZoJgXTdG93XMCXcdtwqy8JUV2GOmXd3e2IuGvT55Kog=;
-        b=TUf415e5hhybLfRZiTSy7xs1gaG9tlW5aU0nSFalMeM+Q/U8Bd+L6c5lyGK2lN7AyF
-         mHBifHOBSlySRGIln5NwcHFQdA1AA8SMao90rbRz+Lw3KrHJTS89W3kFzkXlQijJ2Rm5
-         bVfHskhIzr8vWvR+pds5PucebyEw8u8IrgkpjhslXyq4a1WrbOYDwGMMyHNppwYUlKLG
-         sAmVkK8kf7KalS15VkMc+pnCa9WTcGgZlM/uKu1wFK9LoQ91XW7WIbLmDiFrC1NJgeJg
-         1baz0M1O2KRU5HkMwmBG51mSSeur7tl71To4tS8A45Ycv97sivj8Feq09wxJGw4NTUJc
-         S1Cg==
-X-Forwarded-Encrypted: i=1; AJvYcCXiQhbJ75QlPV9d0xFPGJbqqqzf/i4ffDHPYfTmkBCbl0Dj8kzT9L1RoRcLOm0SN9JDCotfTDqgBQqwoGeAcmgREY+n79nhi88CSPj5Lbg3JEefp0QmOH3fZgRRPNvIlUDUfIiGIMs=
-X-Gm-Message-State: AOJu0YyfhR37YB4pZqFoquLxyzmwlxVT99yzGVACYMpFYYyuElYj4e/r
-	zemlmKbEpJQSBaLH1aqbKA0nobOEe2rt/Y10YkDJMdTrMfbQRGYEKSw3ZrHzJk4HsJFReVzJ80h
-	HQoIwsmZweLL2ZtzT7HWXuftcagQ=
-X-Google-Smtp-Source: AGHT+IGZyCv9xBolB0ZZzsJS3NKRaugRZdOdRxfO04espInS7VgyDrePxjvrQB0cqpt140aNEefh6SV/6bmblcWD+Pc=
-X-Received: by 2002:a4a:ca0d:0:b0:599:e8ff:66d9 with SMTP id
- w13-20020a4aca0d000000b00599e8ff66d9mr5112472ooq.1.1707749852925; Mon, 12 Feb
- 2024 06:57:32 -0800 (PST)
+	s=arc-20240116; t=1707750040; c=relaxed/simple;
+	bh=zCA6YMIgfL2kSQYWwcG3dnu2KR4ZdNffoBP3LtJDiiQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MSJ3eMR5aG6pdae+54Yz6ikEw6UkH5ZCDhVsVG2D2WAwK3I0p5zUEzCnDPnBCdRPrRcvFjC2qp7pXAEFFzQtiy0dqDTJEBedvcrjg46ojqJe1RL+jk95MRqVh25RAXVdvTOM1XoxuPVIGe72elT5UOUth5IiI7fGDk5oOSfYqr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=MvvqIR95; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=MvvqIR95; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="MvvqIR95";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="MvvqIR95"
+Received: from blackpad (unknown [10.100.12.75])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2643721BDD;
+	Mon, 12 Feb 2024 15:00:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1707750037; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zCA6YMIgfL2kSQYWwcG3dnu2KR4ZdNffoBP3LtJDiiQ=;
+	b=MvvqIR95yBP75tWFFy1E1AQN+7JSPPgRSEt6Mv39rfeUc6lnAA1+ajIgsxDBV2O3pfCrMf
+	hunvnm68UfdHJTa/XZ5WtpnzS3ACHsonwVULiwzLCTQxVvSOJL1ERy4mupMUaSdc+QnZHG
+	nKfmBE0Wg2ucd43Je97aRJ2o/WOC9pA=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1707750037; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zCA6YMIgfL2kSQYWwcG3dnu2KR4ZdNffoBP3LtJDiiQ=;
+	b=MvvqIR95yBP75tWFFy1E1AQN+7JSPPgRSEt6Mv39rfeUc6lnAA1+ajIgsxDBV2O3pfCrMf
+	hunvnm68UfdHJTa/XZ5WtpnzS3ACHsonwVULiwzLCTQxVvSOJL1ERy4mupMUaSdc+QnZHG
+	nKfmBE0Wg2ucd43Je97aRJ2o/WOC9pA=
+Date: Mon, 12 Feb 2024 16:00:36 +0100
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: "Jan Kratochvil (Azul)" <jkratochvil@azul.com>
+Cc: cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, containers@lists.osdl.org, Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v2] Port hierarchical_{memory,swap}_limit cgroup1->cgroup2
+Message-ID: <ked455hccs23ghrqug3ieqck6qmmlip5htgszjvz7n3cvhvaeo@7kkg6faezy2a>
+References: <ZcmaPqZ9HzoN0GFM@host1.jankratochvil.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <4a043533-009f-4db9-b107-c8374be28d2b@samsung.com>
- <CAJZ5v0hDmwaFEtLc8yDc4cXn2wODXAqATe0+_Hpm9QPODUPMQw@mail.gmail.com>
- <ZcOyW_Q1FC35oxob@slm.duckdns.org> <2f125955-8c7c-465c-938c-8768f7ca360b@samsung.com>
- <ZcPSuUBoL_EDvcTF@slm.duckdns.org> <ZcPelerpp3Rr5YFW@slm.duckdns.org>
- <b4ceab79-3208-419b-9a79-f34540db3f70@samsung.com> <CGME20240207213600eucas1p1615e189e07dd1e96b001c7a187854fce@eucas1p1.samsung.com>
- <ZcP3uiapKGZqw0q5@slm.duckdns.org> <8c468452-1b00-438a-b634-eeccc35d9a41@samsung.com>
- <ZcVvxbKOlrWmmyhS@slm.duckdns.org>
-In-Reply-To: <ZcVvxbKOlrWmmyhS@slm.duckdns.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 12 Feb 2024 15:57:21 +0100
-Message-ID: <CAJZ5v0iLZ_U92q_Jt-91StZhUPdeZRD05MpDLxmaGaAa2-v1KQ@mail.gmail.com>
-Subject: Re: [PATCH v1] PM: sleep: Restore asynchronous device resume optimization
-To: Tejun Heo <tj@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Nathan Chancellor <nathan@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	Naohiro.Aota@wdc.com, kernel-team@meta.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="udftjw4lcp7jj2yb"
+Content-Disposition: inline
+In-Reply-To: <ZcmaPqZ9HzoN0GFM@host1.jankratochvil.net>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -2.95
+X-Spamd-Result: default: False [-2.95 / 50.00];
+	 ARC_NA(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	 RCPT_COUNT_FIVE(0.00)[6];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 NEURAL_HAM_SHORT(-0.20)[-0.975];
+	 SIGNED_PGP(-2.00)[];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 RCVD_COUNT_ZERO(0.00)[0];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+,1:+,2:~];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 BAYES_HAM(-0.05)[60.57%]
+X-Spam-Flag: NO
+
+
+--udftjw4lcp7jj2yb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hello.
 
-On Fri, Feb 9, 2024 at 1:20=E2=80=AFAM Tejun Heo <tj@kernel.org> wrote:
->
-> Hello,
->
-> On Thu, Feb 08, 2024 at 08:47:12AM +0100, Marek Szyprowski wrote:
-> > I've tried to get drgn running on the test target, but then I've notice=
-d
-> > that it is not possible to run it on ARM 32bit target, as it requires
-> > PROC_KCORE support, which is 'Visible if: PROC_FS [=3Dy] && MMU [=3Dy] =
-&&
-> > !ARM [=3Dy]' for some reasons.
->
-> Bummer. I instrumented code on my test setup (x86) and couldn't repro usa=
-ge
-> of the dfl_pwq, unfortuantely.
+Something like this would come quite handy.
 
-On x86 there are fewer device links representing dependencies between
-devices, because it doesn't use fw_devlink which is used on ARM
-platforms (and other DT-based), so on x86 it is less likely to
-reproduce this.
+On Mon, Feb 12, 2024 at 12:10:38PM +0800, "Jan Kratochvil (Azul)" <jkratoch=
+vil@azul.com> wrote:
+> which are useful for userland to easily and performance-wise find out the
+> effective cgroup limits being applied.
 
-> Independent of understanding what's going on with the system_unbound_wq, =
+And the only way to figure out inside cgroupns.
+
+> But for cgroup2 it has been missing so far, this is just a copy-paste of =
 the
-> correct solution seems like using a dedicated workqueue with raised
-> min_active. Just posted the patchset to do that:
->
->   http://lkml.kernel.org/r/ZcVtzJvJCRV5OLM-@slm.duckdns.org
+> cgroup1 code while changing s/memsw/swap/ as that is what cgroup1 vs. cgr=
+oup2
+> tracks. I have added it to the end of "memory.stat" to prevent possible
+> compatibility problems with existing code parsing that file.
 
-LGTM, thanks!
+I was thinking of memory.max.effective (and others).
+
+- no need to (possibly flush) stats when reading memory.stat
+- can be generalized also for pids controller (and other "limiting" control=
+lers)=20
+- analogous to precedent of cpuset.cpus.effective
+
+Whereas, using v1 approach in v2:
+- memory.stat mixes true stats and limits,
+- memmory.stat is hierarchical by default, no need for the prefix.
+
+What do you think of the separate .effective file(s)?
+
+Thanks
+Michal
+
+--udftjw4lcp7jj2yb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQQpEWyjXuwGT2dDBqAGvrMr/1gcjgUCZcoykQAKCRAGvrMr/1gc
+jrcRAQCmHQ3zahZOyBX4mYSsgAGeyZnpqwR6DtFU4iC+td8H0gD8CMLymLYdXAGC
+I89BNel0pL7qDQzxSuSAVFvoyZhlRws=
+=v9Sh
+-----END PGP SIGNATURE-----
+
+--udftjw4lcp7jj2yb--
