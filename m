@@ -1,116 +1,98 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B446D17BBE;
-	Mon, 12 Feb 2024 10:03:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069F017BCA
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 10:04:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707732211; cv=none; b=oyhC3faMFGsPqY/skv5NjH5cJMhPWaNw53BO0C3DOqNr6SWrnu0YfNZ9ecKspZzIFILiSVQ+i6i1W0tZzjFGiuaahaUYW8b/B2TdZXgldlDYPQLbHw8TAKocE5MPCX9bUb4aJkR+/fHZ+9e9ekX/E5yxcl2IiUFmTuOMdv+dXZU=
+	t=1707732300; cv=none; b=ZVsCdiWP8dtMyQBkgHDV5ELQVu5cdMp8WEsODT1PA3lFPjoyQZVjN4MrmwWZhqj9Z4mriHR/4l8qYhSpL2QrVts7ejqED/omNDW1Bgd9OLzo+6FTIzQkpqVSrLfVkNbVqqSjiD3njHrGkoidMM7JQGuZ5ypUS8OzfT8vG2jtM0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707732211; c=relaxed/simple;
-	bh=EUaMkEUqz4qgROvxBCIDolmNlZRkFxJ7hUO/k+Lveu0=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ut4W3DEFOcsvv8fjCktwAQ3YrjXi5ruUdp3GBIY2+k5G3XEjATiSvnSOnCKCVnGOH2KjchQv7CRtFtMcNULBsQvHQXee3qAA6LCGeorQSGRFuUGiUw1b20blwzkZWNj8596oK6lGyS6wmucyLpAN2y5SCgeBBn1FeXuxOGG3t/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=LWzQNVJn; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1707732300; c=relaxed/simple;
+	bh=ggduzU9L1RUTLLiPLM4EOtwsbNI4tWctUrmL552s1jo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=q4IFhUAgYO0ORUkWzQYRJsHTvXbjCinoFgMGFd3WiqRVLIBLak9hIXk17Ggx1R7jaRz3+8M+JY9ea/utN9nVdkByafMzYrUZqvqMHQ12d12h+onnYim8WPoKY1jmgdnyNoGpSSHqiKyP+kqh481WJATdkC2nmtbW93cbtc1wPVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iC1o0ssq; arc=none smtp.client-ip=209.85.222.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="LWzQNVJn"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41C7sVo4016307;
-	Mon, 12 Feb 2024 04:02:21 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=PODMain02222019; bh=WLF2X+j3Bn92Q1D
-	DaV05/unswsO5ahBS+1WWPqaApW4=; b=LWzQNVJn8q7dcq0Bd+TtMxT1lIBoGiw
-	yD0TsejCsoABuy8AggRDJW06Q1z2xJlky/ztkU9ADIkffObtOL0UuCQv3Beh4nhA
-	Put6Ypu2vVivviEJ6Oil+cEfW1Q27QM+O9ltZ623dvQO4anhr/dZNovMzxP3lw+a
-	LhOj5jub+y3fjAvlvXTHjliMbTrYlMFuhJHFxHorIs5Vl5GjaGvKHU61HqyF2Ni8
-	oMyxoPUphkMgU1KFNxi+kfuEZzYoo4jyVm3Qy64lf8Glce+CGjlLDllqFwliGFC9
-	RTpYBk2a8X7avMhCql6FZ7NmoU/tVg544Z1TluPmt36M8g8y3w06Uow==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3w67e21nee-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Feb 2024 04:02:21 -0600 (CST)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 12 Feb
- 2024 10:02:18 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1118.40 via Frontend Transport; Mon, 12 Feb 2024 10:02:18 +0000
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 70E1F820242;
-	Mon, 12 Feb 2024 10:02:18 +0000 (UTC)
-Date: Mon, 12 Feb 2024 10:02:17 +0000
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-CC: Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
-	<sboyd@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>,
-        Peng Fan
-	<peng.fan@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Nishanth Menon
-	<nm@ti.com>, Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter
-	<jonathanh@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Laurent
- Pinchart" <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, Russell King
-	<linux@armlinux.org.uk>,
-        Srinivas Kandagatla
-	<srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>, "Jaroslav
- Kysela" <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, <linux-clk@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <patches@opensource.cirrus.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        NXP Linux Team
-	<linux-imx@nxp.com>,
-        <linux-amlogic@lists.infradead.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <alsa-devel@alsa-project.org>,
-        <linux-sound@vger.kernel.org>
-Subject: Re: [PATCH] clk: constify the of_phandle_args argument of
- of_clk_provider
-Message-ID: <ZcnsqaIftZXcNaUA@ediswmail9.ad.cirrus.com>
-References: <20240208163710.512733-1-krzysztof.kozlowski@linaro.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iC1o0ssq"
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-7d2940ad0e1so1735962241.1
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 02:04:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707732298; x=1708337098; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ggduzU9L1RUTLLiPLM4EOtwsbNI4tWctUrmL552s1jo=;
+        b=iC1o0ssqIXRXXD8GfJHqXimLiw/iVWyakgdgApwtkSjSLJSZuDxmYqDVFaROpR6znS
+         c9I+mwoUjARm+lO5dGG9ROKrZveRQXbxhPByIlnitJSC+nhrWs2lrhpwkpY7lqi2fqfb
+         XDsODwFuZH+2GbaSbSmHiad95ciCHNekTm7rWhduAhcTxhPlK+zHLcDqGeCYgDFYgQjZ
+         b321VahMNBNj65aiJxr5Hr6K/pi2SIV9bnFgqDjI9DoDe6faOrXczdkgeTo/3LxgwRNq
+         NaFH5ASoeVqVYicvLcpB6zKfzJutUwT1Zd0UWXaWYGY3kky9ap6WNwUhWo705sBrzJQ1
+         QmeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707732298; x=1708337098;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ggduzU9L1RUTLLiPLM4EOtwsbNI4tWctUrmL552s1jo=;
+        b=ltsT2URWLHmjxIPkUsT23gsWoijsVdobBJBB3D9tSQNNHD65/7PqppuzMt63H93kKo
+         6xTdK/xaU7PErc5m/UjFwXw0bI1v3F5TGXElto4C4A+1Tm5KFj54JOH6OUvMLx5EMKIe
+         eOHazgfULpNBQEqAVtBFYnBxJcCXgsy7x4pYn8lJH2LN+7MHEpVTy/ogbt4MxqQpVqAS
+         fEwKkAYhKt51iZXWVkQG0AU+4/RYV14KZ8StqHL3tY3OdkfzVRiGsaAfbKjdc7ND1oeK
+         /gL1xIkDLE5u7CuZJy+uCpWP5mEnw6/iLi08LG8bIauOp/A1rFUJfddK23u/tbED2gv7
+         ckKA==
+X-Forwarded-Encrypted: i=1; AJvYcCVX8i/dsQ/hRowTnmLapZm26PQyn6S9AbR3NSeBu4QZd46RdWg3HARqBrlvi8RNosXDZhQsftPsXzXmRoMZL4nv3lAgLBl2eIkhmi+r
+X-Gm-Message-State: AOJu0YwSTJ2APuIC+meDgxnQlZXRpqjWf6f/G9tSUnLT9LW/y2LbRDvy
+	bqdvTgMZmYmw+YUT1HL/PJOE7rOFsu0zTiqnfcUDbBvvLiwwOGMR86Qh6Z6EoOvQIMjpijysQoQ
+	RHWRaTTFFnpmLxK8exzFKT9UFCpCt1UjefT6L
+X-Google-Smtp-Source: AGHT+IEd49py4OLNX4mf5CeRvn2sftXgoKqJgVKe0kGtx19XgPRbHY6OUXT+lpg/lNJ+Ows2+YxSA63IQJz7omMeAsc=
+X-Received: by 2002:a05:6102:2a59:b0:46d:61e8:46a with SMTP id
+ gt25-20020a0561022a5900b0046d61e8046amr3708124vsb.28.1707732297773; Mon, 12
+ Feb 2024 02:04:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240208163710.512733-1-krzysztof.kozlowski@linaro.org>
-X-Proofpoint-ORIG-GUID: NzDJLMtFiatrdGDskmwX3IMPmG4MYizJ
-X-Proofpoint-GUID: NzDJLMtFiatrdGDskmwX3IMPmG4MYizJ
-X-Proofpoint-Spam-Reason: safe
+References: <20240209-alice-file-v5-0-a37886783025@google.com>
+ <20240209-alice-file-v5-7-a37886783025@google.com> <CALNs47tTTbWL3T9rk_ismPT0Bwi8Kcm5aT9k8jfPsh=1wKvrPA@mail.gmail.com>
+In-Reply-To: <CALNs47tTTbWL3T9rk_ismPT0Bwi8Kcm5aT9k8jfPsh=1wKvrPA@mail.gmail.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 12 Feb 2024 11:04:47 +0100
+Message-ID: <CAH5fLgj8u925_5qW3n7OBd3tPxxdy4=BR=yWvzhyLN6TT6M+dQ@mail.gmail.com>
+Subject: Re: [PATCH v5 7/9] rust: file: add `Kuid` wrapper
+To: Trevor Gross <tmgross@umich.edu>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	=?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
+	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Kees Cook <keescook@chromium.org>, Matthew Wilcox <willy@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Daniel Xu <dxu@dxuuu.xyz>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	Martin Rodriguez Reboredo <yakoyoku@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 08, 2024 at 05:37:10PM +0100, Krzysztof Kozlowski wrote:
-> None of the implementations of the get() and get_hw() callbacks of
-> "struct of_clk_provider" modify the contents of received of_phandle_args
-> pointer.  They treat it as read-only variable used to find the clock to
-> return.  Make obvious that implementations are not supposed to modify
-> the of_phandle_args, by making it a pointer to const.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  drivers/clk/clk-lochnagar.c                   |  2 +-
+On Sat, Feb 10, 2024 at 8:43=E2=80=AFAM Trevor Gross <tmgross@umich.edu> wr=
+ote:
+>
+> On Fri, Feb 9, 2024 at 5:22=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> =
+wrote:
+> >
+> > Of course, once a wrapper for rcu_read_lock is available, it is
+> > preferable to use that over either of the two above approaches.
+>
+> Is this worth a FIXME?
 
-For the Lochnagar bits:
+Shrug. I think a patch to introduce rcu_read_lock would go through the
+helpers as a matter of course either way. But it also doesn't hurt.
 
-Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-
-Thanks,
-Charles
+Alice
