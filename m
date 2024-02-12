@@ -1,46 +1,78 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B3F3D65
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 07:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B1B3D65
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 07:13:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707721764; cv=none; b=rzAn+KEHhbupBVh3pmzCNkWhlS47NpNN9uG7cfwkH+si0CSg15Tt03AtQS96tK7PtZo0fokeWFzWsmnk3WUsaHM++8gADHqZkqqV63dPCu94V1Nf6Cm/YpOvkZ21OQ2Asdjrb3U/8ORDb0JQLmK/w/bLNgYQuvaPr7lr3aO3SLI=
+	t=1707722024; cv=none; b=RJGSX0+e0oue6UlmOE5OCMSW2YXeN1XO4ItQEegHvONPDen/Scv41/xv4ounR4pqvT3oqMi18N/5H1rTFv184xQOC3zKdvoIKH/NWxAz6sro6QuS7fnFyoNPqpwGJgjkvQ3g7dMqhyhGUApi64bVisKkbfxgZfMFPrktT4PoUZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707721764; c=relaxed/simple;
-	bh=lj8or7ggdJKR9iXDKz21o2V4MlB+Zx4S208R6fznus0=;
+	s=arc-20240116; t=1707722024; c=relaxed/simple;
+	bh=p2ZQAoNOIYqxMWKVK1KPOXSBJsvB6Ou418OFph63PiY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NN1nwv4HOdrsFaPdaCFkchEmAJj9jQAYGpeegPR9Ser3ZlmDU9QMztU0Inw4BEohvXAjQLLekvZuuyHHvtoPuL39qxpe4vNLRky7pe6jj/NFczy2B+Qz3gACyclyX2id1Xkv0WuZ9iB49NLfQSNrGcwFdeVAY1LWo4hrma2QWNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a3916c1f9b0so377221466b.1
-        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 23:09:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707721760; x=1708326560;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2oQwdcuaPgD/6a3Qyiq6Up5TUTtBy+clzjlSb/4KKug=;
-        b=ksdMisclwW0hDjqfolpFePequJ2StV828cP0DbABkuc/OkeJo/HpZL8Bx4wlCA1heY
-         YemGJr9il5X9+UF8/abCs1HBx17xFKkHofM5dFrkP39XcKBn7FW79gCJGjta4Pkz62jv
-         u4BVa71/uyObfhz7joKWSRBwETV3wxt4PvH1xnsStfgDLMKgDzRfiYqNndI5O7ou5FdQ
-         JqssxUa8KDFIqW21PREsdeZch6DU36nPtSs+Wl88ai0gA7Nq2fJ+8+BS0FcobczTgXmy
-         65RNWkYkw8vSDCk0A11znnSLeEAhRW2pLDWsjRI/0FiQg6RzQ490VZW30aHwY+NhQiTT
-         0rWg==
-X-Forwarded-Encrypted: i=1; AJvYcCVbWvF0KFdnOSCAaTRalDWE26hYQhGbfvLLGCCxDOunNl8irZ1tv/xQr9T3byQp3mQFAMqRACwhp2/ZWxahDO3VbpG+iA12RCeTwtYu
-X-Gm-Message-State: AOJu0YzW0So0RWkqmfYAp91ocIcVOe9cTF+tps6BOJ/bicGtuTruQ0L/
-	LoY1ONYRHiSQhfHFaALo0psO1zMLAuGvT0AYIr7P/kWZI0tzfjzc
-X-Google-Smtp-Source: AGHT+IHedEWJoOAdlpNfWpSkXIqYj9kZfAdQq1FG4PUyadjjt2AVqxpfV+Ma2fNddcbA5kN9F+nRHg==
-X-Received: by 2002:a17:906:abcc:b0:a3c:c311:9 with SMTP id kq12-20020a170906abcc00b00a3cc3110009mr436285ejb.72.1707721760612;
-        Sun, 11 Feb 2024 23:09:20 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUleGVnhcJS2ioXX5L8pT8BcU6eMlSRt5YvVqlu8u/8Qguy2B+HlaSU3sqVZ1fMak5/bga4fQnYI+0oCPpR9kMkEFq98Euyt5JIge04GAgr9cfwSMPW9uXoPtON46Zf2BEOtDUIOIcTp7i+IpSH+okSAH81lESaaXgdgbpT+LOcBXBSr4p1ZKvIDckhaEa34oeBwgQ2JttbTbC9l6Chs6gWp6IMg1OtetrKaQViWVjOtJc0afzmZbOLoOzaQPPZsNHMmt+b2Byy4GEfsHgILG/YsK8ZCi/MPfdjqkSKxG+ezq4k7nocejSw/s+zYJSrXLZ/dbVxE3P1/0yB3Klu9hg8IXdsvXPxRkqfPu8mLrM3HCnkKKP6gmctyVgJ8m6O/aEcWfnGMlGa2LSWeBHZdkHlmoo0
-Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:59? ([2a0b:e7c0:0:107::aaaa:59])
-        by smtp.gmail.com with ESMTPSA id rg8-20020a1709076b8800b00a38a2fa2d4bsm3560483ejc.45.2024.02.11.23.09.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 11 Feb 2024 23:09:19 -0800 (PST)
-Message-ID: <b912a534-f56b-4bc9-a704-4430e0743f60@kernel.org>
-Date: Mon, 12 Feb 2024 08:09:18 +0100
+	 In-Reply-To:Content-Type; b=A9sSHKxua73kasOCr+BblVayhpSWyV4zRSbCKHL0bIjKXeHCvuYfv/viLiKG/gxD5O8AH0IqClDmT9JbO+bhhTz6XCLUl0Fjp1xT6k6o0sFqCrPuQmXrpzYVR142WVsODgTnlJThIv/RSZe8pkFJcPBpw8uUqGEy6urjzOnm1IY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vBdU6k13; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=N+6N/5Ua; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vBdU6k13; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=N+6N/5Ua; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vBdU6k13";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="N+6N/5Ua";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vBdU6k13";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="N+6N/5Ua"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B489B21FCE;
+	Mon, 12 Feb 2024 07:13:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707722020; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=1WOjUnpnGkXzNsMkm2Jun5Zhamu1kXqO02gV7jrxbkw=;
+	b=vBdU6k13teUUW7vZs32TX5nIBR5LRtxqQvbb8sZJkRqTdfl9RYG2b+dN/IBsPw3r/CjPkJ
+	dmWod4S1vAZWyaq1VxW4q6yhQjOLYq1iIuTAD/fN2rb9KuiOEhw7KqzPWbeHFkcdzNOkfQ
+	UyhV8uKu22M14UOLyvoYHSTQVQRw8Xg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707722020;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=1WOjUnpnGkXzNsMkm2Jun5Zhamu1kXqO02gV7jrxbkw=;
+	b=N+6N/5UaAPszhxbbiIOEG+LyGvHqlTqBwhNgXQIY9cXFW3Mx8+vplQqY6nqB/fHDDcXd+t
+	CyR51MZppnsav+AA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707722020; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=1WOjUnpnGkXzNsMkm2Jun5Zhamu1kXqO02gV7jrxbkw=;
+	b=vBdU6k13teUUW7vZs32TX5nIBR5LRtxqQvbb8sZJkRqTdfl9RYG2b+dN/IBsPw3r/CjPkJ
+	dmWod4S1vAZWyaq1VxW4q6yhQjOLYq1iIuTAD/fN2rb9KuiOEhw7KqzPWbeHFkcdzNOkfQ
+	UyhV8uKu22M14UOLyvoYHSTQVQRw8Xg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707722020;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=1WOjUnpnGkXzNsMkm2Jun5Zhamu1kXqO02gV7jrxbkw=;
+	b=N+6N/5UaAPszhxbbiIOEG+LyGvHqlTqBwhNgXQIY9cXFW3Mx8+vplQqY6nqB/fHDDcXd+t
+	CyR51MZppnsav+AA==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 8380313212;
+	Mon, 12 Feb 2024 07:13:40 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id Ua78HSTFyWUPWQAAn2gu4w
+	(envelope-from <tzimmermann@suse.de>); Mon, 12 Feb 2024 07:13:40 +0000
+Message-ID: <bf0d02d4-2c90-40a4-8018-bd96a01f2751@suse.de>
+Date: Mon, 12 Feb 2024 08:13:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,75 +80,111 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sound: drivers: fix typo 'reguest' to 'request'
+Subject: Re: [PATCH RESEND] iosys-map: fix typos
+To: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+References: <20240212042837.21071-1-rdunlap@infradead.org>
 Content-Language: en-US
-To: Yinchuan Guo <guoych37@mail2.sysu.edu.cn>, linux-kernel@vger.kernel.org
-Cc: lee.jones@linaro.org, james.smart@broadcom.com,
- dick.kennedy@broadcom.com, jejb@linux.ibm.com, martin.petersen@oracle.com,
- gregkh@linuxfoundation.org, lgirdwood@gmail.com, broonie@kernel.org,
- perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org
-References: <20240212065014.3696356-1-guoych37@mail2.sysu.edu.cn>
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20240212065014.3696356-1-guoych37@mail2.sysu.edu.cn>
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20240212042837.21071-1-rdunlap@infradead.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -4.29
+X-Spamd-Result: default: False [-4.29 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 RCPT_COUNT_THREE(0.00)[3];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 BAYES_HAM(-3.00)[100.00%];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,infradead.org:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[]
+X-Spam-Flag: NO
 
-On 12. 02. 24, 7:50, Yinchuan Guo wrote:
-> This patch fixes a widespread spelling mistake of the word "request"
-> (incorrectly spelled as "reguest") across multiple files.
-> 
-> Signed-off-by: Yinchuan Guo <guoych37@mail2.sysu.edu.cn>
+Hi
+
+Am 12.02.24 um 05:28 schrieb Randy Dunlap:
+> Correct spellos/typos in comments.
+>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: dri-devel@lists.freedesktop.org
 > ---
->   drivers/mfd/da9063-irq.c      | 2 +-
->   drivers/scsi/lpfc/lpfc_sli.c  | 2 +-
->   drivers/tty/serial/max310x.c  | 2 +-
->   drivers/tty/serial/sccnxp.c   | 2 +-
+>   include/linux/iosys-map.h |    4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff -- a/include/linux/iosys-map.h b/include/linux/iosys-map.h
+> --- a/include/linux/iosys-map.h
+> +++ b/include/linux/iosys-map.h
+> @@ -34,7 +34,7 @@
+>    * the same driver for allocation, read and write operations.
+>    *
+>    * Open-coding access to :c:type:`struct iosys_map <iosys_map>` is considered
+> - * bad style. Rather then accessing its fields directly, use one of the provided
+> + * bad style. Rather than accessing its fields directly, use one of the provided
+Ok.
+>    * helper functions, or implement your own. For example, instances of
+>    * :c:type:`struct iosys_map <iosys_map>` can be initialized statically with
+>    * IOSYS_MAP_INIT_VADDR(), or at runtime with iosys_map_set_vaddr(). These
+> @@ -85,7 +85,7 @@
+>    *	if (iosys_map_is_equal(&sys_map, &io_map))
+>    *		// always false
+>    *
+> - * A set up instance of struct iosys_map can be used to access or manipulate the
+> + * A setup instance of struct iosys_map can be used to access or manipulate the
+That's not a typo. This refers to "an instance that has been set up".
 
-Again, these have nothing to do with sound.
+Best regards
+Thomas
+
+>    * buffer memory. Depending on the location of the memory, the provided helpers
+>    * will pick the correct operations. Data can be copied into the memory with
+>    * iosys_map_memcpy_to(). The address can be manipulated with iosys_map_incr().
 
 -- 
-js
-suse labs
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
