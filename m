@@ -1,54 +1,57 @@
 Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D0518C1A;
-	Mon, 12 Feb 2024 09:59:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0867520DDB;
+	Mon, 12 Feb 2024 09:59:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707731966; cv=none; b=EnSYLZsDPqRN54dzkOcaJlQra5C3V7CIPoysF1MXBbUKcxf8+XbfSo0PzxU9wLk0spdE1exaPjrUzwlQUgbZd7bhG3ULRzOJ9kvUSnvv1S8OGd96ctdk5WxlClGqpPKCh4Hqp3bU5uIp+Q5Us9zDvcsAiZ8jhcQWhQbYXc8GyQg=
+	t=1707731970; cv=none; b=YtZKtpThBsSypgYwl+pQ9pI3VGAPSu0yQQfdWHRVwYbaGUF8ufUoAcCEJjjdQSBwzMj3kulBiXUdYn63Gf3KtuawWEC6UftvsKizokg7nzxYSRCWa5OWcKkYqW3JW9yGSuVz+PcSWSxdQX2LrH5N2bAySsAHrrkHdR0C8XNw7lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707731966; c=relaxed/simple;
-	bh=ftGHsqO0Vk/c2onr5I5HWonlwK+PTS5LvdCnyhPdl/I=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EqbUF9K7tXNWa6F4YpxnWlEs6yk1Qm4cnZA5JW/LBV4u7Hc9nSPpji7x+EvA+7aARI69Y/alm5CWZinc3jlBxvtWpFse0tTDzXt5U+K2UDLpySUZ5T9b7Kqaf/whfclNCPiyj1sYW7/l5gFL8NRV4HJv4QXnbvdMZ3EAF+zMCFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=R0yVKx8j; arc=none smtp.client-ip=198.47.19.141
+	s=arc-20240116; t=1707731970; c=relaxed/simple;
+	bh=M9vUn1aa5DP+LVMajo+gAizOtluS966drUCXVdFCT0c=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VOOg6rJ8M7G52+dzcRVzfWlG9uTKXP5g/a6BzNNnHU544Icg3W9PEu+xst3+a46cZo2ulaHVhbaIYWwDV5Jg8h9T/m5xaEsTzxRxpCMGlONScv0mdmHiK9CnlpRZp+Xj6paOnYts6z8ayijC++55R/FrZ44P/AcsoSyUfrpgkIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BH62PE8p; arc=none smtp.client-ip=198.47.19.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="R0yVKx8j"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41C9x7dg104125;
-	Mon, 12 Feb 2024 03:59:07 -0600
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BH62PE8p"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41C9xBFj104133;
+	Mon, 12 Feb 2024 03:59:11 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707731947;
-	bh=H03vJZR7X7TTsYl6qr8Q1kdmFHGN5fIcR2OQ+SgxN78=;
-	h=From:To:CC:Subject:Date;
-	b=R0yVKx8jFcR+epauEenmmCuHrozmtv8c2YQY0MtzklerqbwGRBC7rPMe3ByP7VD3R
-	 zMcOAHUlflSkz512kcGwAzrOfXEiAMdfV09rukbLIrXW1jPzDdO2aKBeLaabBa2IPT
-	 DR9HjWEMgplxK995nPF2vxyuiAaH9gJmvrHyY6Oc=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41C9x75i004479
+	s=ti-com-17Q1; t=1707731951;
+	bh=Lu7GL6S01MxpK81dYodty5LRUmjoXKMg1Hhdy/4mUIk=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=BH62PE8pPmFMMNoGHqtZZja1RRUGiAXsJ7dwV72DXK3UyshMfwHy9dd00VtieI8j8
+	 9u3k1tfPZSYbY1THtvxyQmZQa1b3j1lJ2zLWDsTbnXiX0dUGivBLm0Xyt4CjNY1onf
+	 h11TY6AT4BseJNZLknmhIUychv3ha8uMiYR+FpEE=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41C9xBSZ026780
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 12 Feb 2024 03:59:07 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+	Mon, 12 Feb 2024 03:59:11 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 12
- Feb 2024 03:59:06 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2024 03:59:11 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 12 Feb 2024 03:59:06 -0600
+ Frontend Transport; Mon, 12 Feb 2024 03:59:10 -0600
 Received: from localhost (a0498981-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.68.216])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41C9x607056478;
-	Mon, 12 Feb 2024 03:59:06 -0600
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41C9xA6u056550;
+	Mon, 12 Feb 2024 03:59:10 -0600
 From: Bhavya Kapoor <b-kapoor@ti.com>
 To: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh+dt@kernel.org>,
         <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <b-kapoor@ti.com>
-Subject: [PATCH 0/4] arm64: dts: ti: Modify pinmux for wkup_uart0 and mcu_uart0
-Date: Mon, 12 Feb 2024 15:29:01 +0530
-Message-ID: <20240212095905.1057298-1-b-kapoor@ti.com>
+Subject: [PATCH 3/4] arm64: dts: ti: k3-j721s2-common-proc-board: Remove Pinmux for CTS and RTS in wkup_uart0
+Date: Mon, 12 Feb 2024 15:29:04 +0530
+Message-ID: <20240212095905.1057298-4-b-kapoor@ti.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240212095905.1057298-1-b-kapoor@ti.com>
+References: <20240212095905.1057298-1-b-kapoor@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,30 +62,29 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-WKUP_PADCONFIG registers for wkup_uart0 and mcu_uart0 lies under
-wkup_pmx2 for J7200. Thus, modify pinmux for both of them. Also,
-remove the redundant clock-frequency property from mcu_uart0 node.
-
 Only Tx and Rx Signal lines for wkup_uart0 are brought out on
-J721S2 Common Proc Board and J784S4 EVM, but CTS and RTS signal lines
-are not brought out. Thus, remove pinmux for CTS and RTS signal lines
-for wkup_uart0 in J721S2 and J784S4.
+the Common Proc Board through SoM, but CTS and RTS signal lines
+are not brought on the board. Thus, remove pinmux for CTS and RTS
+signal lines for wkup_uart0 in J721S2.
 
-Bhavya Kapoor (4):
-  arm64: dts: ti: k3-j7200-common-proc-board: Modify Pinmux for
-    wkup_uart0 and mcu_uart0
-  arm64: dts: ti: k3-j7200-common-proc-board: Remove clock-frequency
-    from mcu_uart0
-  arm64: dts: ti: k3-j721s2-common-proc-board: Remove Pinmux for CTS and
-    RTS in wkup_uart0
-  arm64: dts: ti: k3-j784s4-evm: Remove Pinmux for CTS and RTS in
-    wkup_uart0
+Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts | 2 --
+ 1 file changed, 2 deletions(-)
 
- .../boot/dts/ti/k3-j7200-common-proc-board.dts | 18 +++++++++---------
- .../dts/ti/k3-j721s2-common-proc-board.dts     |  2 --
- arch/arm64/boot/dts/ti/k3-j784s4-evm.dts       |  2 --
- 3 files changed, 9 insertions(+), 13 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
+index 361365bb5523..6371cb1c1fe7 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
+@@ -190,8 +190,6 @@ J721S2_IOPAD(0x038, PIN_OUTPUT, 0) /* (AB28) MCASP0_ACLKX.MCAN5_TX */
+ &wkup_pmx2 {
+ 	wkup_uart0_pins_default: wkup-uart0-default-pins {
+ 		pinctrl-single,pins = <
+-			J721S2_WKUP_IOPAD(0x070, PIN_INPUT, 0) /* (E25) WKUP_GPIO0_6.WKUP_UART0_CTSn */
+-			J721S2_WKUP_IOPAD(0x074, PIN_OUTPUT, 0) /* (F28) WKUP_GPIO0_7.WKUP_UART0_RTSn */
+ 			J721S2_WKUP_IOPAD(0x048, PIN_INPUT, 0) /* (D28) WKUP_UART0_RXD */
+ 			J721S2_WKUP_IOPAD(0x04c, PIN_OUTPUT, 0) /* (D27) WKUP_UART0_TXD */
+ 		>;
 -- 
 2.34.1
 
