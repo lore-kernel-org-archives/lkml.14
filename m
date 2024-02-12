@@ -1,35 +1,35 @@
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CD408C11;
-	Mon, 12 Feb 2024 07:57:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF14FC16;
+	Mon, 12 Feb 2024 07:57:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707724635; cv=none; b=l/+hlOGMwceT3tB+YUL9wMWVOWzrDZZt6MesO7LE1C3AUgOXVn8eSt2PatlReAXXbBnR9unFhlHFW0yXW1dCHKWYXvMd04lkFpP32thIqkOosQ7odbreLX42qZFxpH4enhZteralwC1siG0LBJG91sIIFFOWOlX6RfzvOBVBfxc=
+	t=1707724636; cv=none; b=C2YoAALDKFOeza073flVq09NfNaxXZ+fQIveStQE2bjLypjmVIfna+3vrGQTqfaAYXYmuhmEGoFAyWRhIvFblk7pekG7P6uOgK5wQvH48rn+FtMMiDlH7jfoOU8BoNWj99kPeJ6T2ZwT3oPZ1UrvpUh/aj5NbcMATLZNl1nW5+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707724635; c=relaxed/simple;
+	s=arc-20240116; t=1707724636; c=relaxed/simple;
 	bh=o3GCbQ0HDcwCxhsdiMaIWoSqnIsvjGA8R22JTLCknSY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YD6tRNyU/fleZuj4d8QRJDnbQMI3xKsYbwpXhzq4332ukeykdwqNK4pPKl3CReEvJk37ognVVzFqPP74UpFGMWkMDfxAZidoq87mP6/+zUGzFRt9HC3ppV7olD7LipI1Tx5kK29s+X2f/vSZ7UazFSc6KZKYwZa6T0j2rOQeXUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CpLaACsQ; arc=none smtp.client-ip=217.70.183.194
+	 MIME-Version; b=Zg4tTCacd8lAQxX15M+Lh/219jPN9amJGJRgUDhXKrPsFENivOz/j8u6qxrbGSPgXlFYZSA5DLk8fueAZuJDcb2CB5+l3/6ZpcpUCGViUDsv2tJzTKLmnidr1N7wtPd7feBMNhgus+su4UCxM+/fveOlP+AP110931fcJbghfkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dTj0L8CU; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CpLaACsQ"
-Received: by mail.gandi.net (Postfix) with ESMTPA id C9FF840004;
-	Mon, 12 Feb 2024 07:57:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dTj0L8CU"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 89FA640013;
+	Mon, 12 Feb 2024 07:57:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1707724625;
+	t=1707724631;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
 	bh=dO1lu7mTt2Z5I540dnIACd6uZE/pOpssk6saKJ+PaEA=;
-	b=CpLaACsQqjVCxN1nDvdqzfPxoK1c54PfXjzOH48eWawocztOZXx2gYfUdXnPtLJfD/zwbW
-	HyNy8ENJ/CsO/jjE3/roWYzZWWBqapfQ4ba+cUGTsffzeTPu1l2+H1emZR94NdNXOHqAdF
-	FwqB2GWmv4+usRkdeDTaCDuVVHo48aC3MAS9Ybi5ZljBc3hWkKzsfQRhQdOqq+F1Q38H3k
-	uIKQJ9rAMvXwGYyUDVmR9LgSAbEsR6cts4SuZ7nno8mfI88IyCOc4sgts7peljBefZ0NGC
-	PlgY7J8bO7GSPUtos5sLZGQ8tW6OALCQPUlJVdmAt9LD0zo2hpVLc3C/xQVn6Q==
+	b=dTj0L8CUPn2xJHC/hWxnBaRNxEwVgoRfzQnMxFRgwd/yOia4U4+FtVuXb3r4d21WVoWnwJ
+	s4oHRXy4yAcxKfXMeD+GT7Vt7wdJIxB2kBQQbYDaMBijGqh6gNPOBq0zsFLYMVkQwUB20u
+	seFbF09SmNRgT3KZtBvZcj3u081a4q7Q87NINExrU+4R5iftejtlX6nGn2Hczdij/MQGN8
+	1BYkC8dY6UpyNf/q6q+c1Z36Q69Fg7FuP29o0nkmqlg/ibfIuqCm0Hhh8yofq8A7oaKvgz
+	T2i/gNrfa7sLBmuA0sC5vysK6GKgtYC8kVP7W57/I8XYXyoRt8JVnA36/pBazQ==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
 	"David S. Miller" <davem@davemloft.net>,
@@ -47,9 +47,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Mark Brown <broonie@kernel.org>,
 	Christophe Leroy <christophe.leroy@csgroup.eu>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v3 RESEND 4/6] bitmap: Introduce bitmap_off()
-Date: Mon, 12 Feb 2024 08:56:32 +0100
-Message-ID: <20240212075646.19114-5-herve.codina@bootlin.com>
+Subject: [RESEND PATCH v3 4/6] bitmap: Introduce bitmap_off()
+Date: Mon, 12 Feb 2024 08:56:39 +0100
+Message-ID: <20240212075646.19114-12-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240212075646.19114-1-herve.codina@bootlin.com>
 References: <20240212075646.19114-1-herve.codina@bootlin.com>
