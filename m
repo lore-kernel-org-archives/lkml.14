@@ -1,35 +1,35 @@
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B263E20DD2;
-	Mon, 12 Feb 2024 07:14:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8792282F9;
+	Mon, 12 Feb 2024 07:14:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707722076; cv=none; b=Y0uQWi+DF2SCFfetYIQbO/1Jvpfzi7cMnHRs1aocqoEIDu743XNeSgMwsFdb2AL4rQnVptxlNl/9e1UFvmizAir/EqMtRfgzU31UyokGFgKH39p5YL3yw5eSJjSMvJ+RitjKg/ZcRPeL9tXhXsMR9ccfYzoxwb611wr3OIY0HIE=
+	t=1707722080; cv=none; b=pY5dXmAfhKc/Tmyqz7pZcPnNzFGFP4xitXIsI0KLE+Ja2Q15Fh4EluEMByQ2JD/IWHFxPYgpUrkLV8NpBqhuGfJuD1fwDQ7vPgG5wilKXsdcoIRXIdPnkdt6McZ4Lv3j22SvyuDSZewuBSepPnayIBlsF0p5I+frVdka367d2WA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707722076; c=relaxed/simple;
-	bh=R03670f0uJzq6tZ590Qnsjch+falD9+U0M7iGN8msuQ=;
+	s=arc-20240116; t=1707722080; c=relaxed/simple;
+	bh=MKMZqD2/w+QWED2+pauhKDqx2bzrHQVvjTQI06WBrSw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=naYJ6VG8Y/+K2t4GxmDTP+mp2+Cv5jv0mfwfSCudsPZXkK93MzH/QiffY0c/7ixGaHu3D+n7pXiPYPxAwg5NjeZVpyrZSoijLbvw4w/gDG+j/4efEXG/60Hq1DAYVr6OiroPV0cWKjhpIFa+LzQmm1+vnUg2/V9mGyBvVJdAxM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XbHX1mZC; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=E9f/ihYx8mQgbqpUG2zxIvNtBeYLYvwshJabEK0RZWsFCCL0ryR0+7nxtrv+T+H7moA8CCAF5i64oPTB0egZ06Lamfh7t6XVbGhAkyY/nfT2ATFXEJp9L8d4Ga/jOIaL6jrPmNzToQyJRj9xrrGKjJEvkIBnlCfvqNspm/whsnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qGm4DgDh; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XbHX1mZC"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qGm4DgDh"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=hDwf/sJTGlPIwBTRyPln6Zb1s+XpptYYA785c3w7vC4=; b=XbHX1mZCM5Mo7rShucMVsPQybi
-	QYfeqa4nFaBzcM/DsAKy72s4D9gnZOQ+eZo15yg3xEHI7qigOLDFMavU0ZQlm8qdIdV8CBLgIYtNM
-	gHhvHVUsTtsNGL+zE1jQLwkYVCj1Ruag3QbLwJ6Ta838iRkgnS1Lg6mE0P8nW/ZpIDmOytDpBIi4n
-	yCMmI5JnIJvd0PcT1ZiaClUiaUlPN6MlYprQswFXIjkP/LX0Uli5B5o6UES3k6xUM87eJrAHtae9O
-	FQP2lx8hKziZv9DQcZadgvj3xcrZEzcT3dQju6kWLLYmqNYz0W+KfaI8gVzCyx93dbRKa1wcqdpG3
-	r9C4E0cQ==;
+	bh=KFNTqb7k3Ymo30IuEwDaihs1yCQpUBV3RN+kFxOoV/I=; b=qGm4DgDhGagw28iocodC5iIhS6
+	xsiMjPN63KLn6sFjMYCPL7iseVbubE2wS8w6bXJ+dcbmYvOHEWzOAZUcrSN0z9s6qgqeA4zE+v25Z
+	Ieo4AhffrF+snI/gQkbKzpqjnhFvronw/KWUEfMYR/mvFkRA7Rkarbpg0iWyZZlXzrZJHp4jqfsi9
+	q9boZv/wYg0kxsnUDqX9688gwSdlI9bqz14Z3r5AjizGcXXBELXp/TxTAsBR1zhWDROEl8xd9MQ6z
+	QcXvVjnwYut7/ExXvXXIN3edVcs960N7aYgwjVh71uI9ph52Edo7WhetgJdrGm5ARyCfAEeyxZjds
+	ynVt7v1g==;
 Received: from [2001:4bb8:190:6eab:75e9:7295:a6e3:c35d] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rZQWN-00000004T3G-2raf;
-	Mon, 12 Feb 2024 07:14:32 +0000
+	id 1rZQWT-00000004T5c-0Fro;
+	Mon, 12 Feb 2024 07:14:37 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: linux-mm@kvack.org
 Cc: Matthew Wilcox <willy@infradead.org>,
@@ -39,11 +39,10 @@ Cc: Matthew Wilcox <willy@infradead.org>,
 	Christian Brauner <brauner@kernel.org>,
 	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Jan Kara <jack@suse.cz>,
-	Dave Chinner <dchinner@redhat.com>
-Subject: [PATCH 12/14] writeback: Move the folio_prepare_writeback loop out of write_cache_pages()
-Date: Mon, 12 Feb 2024 08:13:46 +0100
-Message-Id: <20240212071348.1369918-13-hch@lst.de>
+	Jan Kara <jack@suse.cz>
+Subject: [PATCH 14/14] writeback: Remove a use of write_cache_pages() from do_writepages()
+Date: Mon, 12 Feb 2024 08:13:48 +0100
+Message-Id: <20240212071348.1369918-15-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240212071348.1369918-1-hch@lst.de>
 References: <20240212071348.1369918-1-hch@lst.de>
@@ -58,64 +57,65 @@ X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Move the loop for should-we-write-this-folio to writeback_get_folio.
+Use the new writeback_iter() directly instead of indirecting
+through a callback.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-[hch: folded the loop into the existing helper instead of a separate one
-      as suggested by Jan Kara]
+[hch: ported to the while based iter style]
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Brian Foster <bfoster@redhat.com>
 Reviewed-by: Jan Kara <jack@suse.cz>
-Acked-by: Dave Chinner <dchinner@redhat.com>
 ---
- mm/page-writeback.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ mm/page-writeback.c | 27 +++++++++++++++++----------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
 
 diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index 62b663debe713b..01f076db4f2118 100644
+index 1996200849e577..2fd83d438f92bd 100644
 --- a/mm/page-writeback.c
 +++ b/mm/page-writeback.c
-@@ -2411,6 +2411,7 @@ static struct folio *writeback_get_folio(struct address_space *mapping,
+@@ -2577,12 +2577,24 @@ int write_cache_pages(struct address_space *mapping,
+ }
+ EXPORT_SYMBOL(write_cache_pages);
+ 
+-static int writepage_cb(struct folio *folio, struct writeback_control *wbc,
+-		void *data)
++static int writeback_use_writepage(struct address_space *mapping,
++		struct writeback_control *wbc)
  {
- 	struct folio *folio;
+-	struct address_space *mapping = data;
++	struct folio *folio = NULL;
++	struct blk_plug plug;
++	int err;
  
-+retry:
- 	folio = folio_batch_next(&wbc->fbatch);
- 	if (!folio) {
- 		folio_batch_release(&wbc->fbatch);
-@@ -2418,8 +2419,17 @@ static struct folio *writeback_get_folio(struct address_space *mapping,
- 		filemap_get_folios_tag(mapping, &wbc->index, wbc_end(wbc),
- 				wbc_to_tag(wbc), &wbc->fbatch);
- 		folio = folio_batch_next(&wbc->fbatch);
-+		if (!folio)
-+			return NULL;
+-	return mapping->a_ops->writepage(&folio->page, wbc);
++	blk_start_plug(&plug);
++	while ((folio = writeback_iter(mapping, wbc, folio, &err))) {
++		err = mapping->a_ops->writepage(&folio->page, wbc);
++		if (err == AOP_WRITEPAGE_ACTIVATE) {
++			folio_unlock(folio);
++			err = 0;
++		}
 +	}
++	blk_finish_plug(&plug);
 +
-+	folio_lock(folio);
-+	if (unlikely(!folio_prepare_writeback(mapping, wbc, folio))) {
-+		folio_unlock(folio);
-+		goto retry;
- 	}
- 
-+	trace_wbc_writepage(wbc, inode_to_bdi(mapping->host));
- 	return folio;
++	return err;
  }
  
-@@ -2480,14 +2490,6 @@ int write_cache_pages(struct address_space *mapping,
- 		if (!folio)
- 			break;
- 
--		folio_lock(folio);
--		if (!folio_prepare_writeback(mapping, wbc, folio)) {
--			folio_unlock(folio);
--			continue;
--		}
+ int do_writepages(struct address_space *mapping, struct writeback_control *wbc)
+@@ -2598,12 +2610,7 @@ int do_writepages(struct address_space *mapping, struct writeback_control *wbc)
+ 		if (mapping->a_ops->writepages) {
+ 			ret = mapping->a_ops->writepages(mapping, wbc);
+ 		} else if (mapping->a_ops->writepage) {
+-			struct blk_plug plug;
 -
--		trace_wbc_writepage(wbc, inode_to_bdi(mapping->host));
--
- 		error = writepage(folio, wbc, data);
- 		wbc->nr_to_write -= folio_nr_pages(folio);
- 
+-			blk_start_plug(&plug);
+-			ret = write_cache_pages(mapping, wbc, writepage_cb,
+-						mapping);
+-			blk_finish_plug(&plug);
++			ret = writeback_use_writepage(mapping, wbc);
+ 		} else {
+ 			/* deal with chardevs and other special files */
+ 			ret = 0;
 -- 
 2.39.2
 
