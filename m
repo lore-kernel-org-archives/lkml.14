@@ -1,149 +1,176 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17BD12574F
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 10:35:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933AE2575F
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 10:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707734127; cv=none; b=kmsoeykBCLcIEy9hqF4Bvbm1bjbbR5uLaAOHirtlZf+1j1lq843fvgWWuZEsalvCmLOAC67SEs9WpbPbIyhY0VdVds9R8uQ9uDXQuQr02AEJIDo6YydGM0hG3khJK/l08qj5yTf8b3bTkxWq1zv7ksWcBGPEDlZvZep+4raAUcc=
+	t=1707734186; cv=none; b=rWdUGiu4rIXxptseIMZFIJYHGu3NHDKs3Gr9gL4aKlItR/zfywpPJn2Bhsxi78u/Mrlc+WvlI22AU6zpj25baGg/0ABrdZBI9uyJJ7TcnCZZ5iarfsDxtI/o7U0q+7emH/tNeCgXsXdYmC1HH8XXZgkxnPov+4o+k+FUdwzz1uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707734127; c=relaxed/simple;
-	bh=oEN+dwSDlX4Wf7XHSwlhkxtlCib+wj4mwpgMAlW6/PU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=YldJGgDCXPwmyxyu1gUyeQ6JsLvFh9BufVBkJ5PSPl/cgk5T0XrPOTa+IbLt7xOJ6R2cZF4ygIg4REfXt3Y+9ScrJfESgZLzR2fD8CtX8A8k+QUMAyvvwUtFxP/BYq1XNf/zVJdVGwfhEgId34a5XM4S6qH5urTLgOwllkMUey0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=haSv7bqJ; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="haSv7bqJ"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240212103524epoutp045f1c1a0368b141fca86d1afa66c7f15b~zFyNRCK_-1307313073epoutp04N
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 10:35:24 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240212103524epoutp045f1c1a0368b141fca86d1afa66c7f15b~zFyNRCK_-1307313073epoutp04N
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1707734124;
-	bh=hE+eDG2GxhJPpLaElEHIROodVE8STJFl+Q2ht+hx3xE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=haSv7bqJZE4ZeskYWr0X7iOFvchScxYZGegfCG956YjPFhLb6iHZ8GJWKbh8XKcHu
-	 hDp5eBt6RKU1cohYqdWR5bbv5p6RhRdUWkb067LDGbUXqorYxOf1TKHfsxQXL+5YS9
-	 YWZZkXRllnp7zbGpqbMmjFKcwS2AlFRbcItpke/c=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-	20240212103523epcas5p34acfeaf02bab59f0263b944dfb9d320c~zFyMS6TqR1499914999epcas5p3d;
-	Mon, 12 Feb 2024 10:35:23 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	79.07.09672.A64F9C56; Mon, 12 Feb 2024 19:35:22 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240212102425epcas5p176017ab3c94d39af29bbeaa72a43a996~zFooENVFL3127531275epcas5p1a;
-	Mon, 12 Feb 2024 10:24:25 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240212102425epsmtrp188e8822434c2a4d1347dabb50dbbc173~zFooDNwj10772407724epsmtrp1j;
-	Mon, 12 Feb 2024 10:24:25 +0000 (GMT)
-X-AuditID: b6c32a4b-39fff700000025c8-f4-65c9f46a0f1b
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	1C.88.07368.9D1F9C56; Mon, 12 Feb 2024 19:24:25 +0900 (KST)
-Received: from localhost.localdomain (unknown [107.109.224.44]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240212102421epsmtip22276b86b88307151f59ab9ad28d86385~zFokQfgB_1200912009epsmtip2I;
-	Mon, 12 Feb 2024 10:24:21 +0000 (GMT)
-From: Onkarnarth <onkarnath.1@samsung.com>
-To: rafael@kernel.org, lenb@kernel.org, bhelgaas@google.com,
-	viresh.kumar@linaro.org, mingo@redhat.com, peterz@infradead.org,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	bristot@redhat.com, vschneid@redhat.com
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-	r.thapliyal@samsung.com, maninder1.s@samsung.com, helgaas@kernel.org,
-	Onkarnath <onkarnath.1@samsung.com>, Stanislaw Gruszka
-	<stanislaw.gruszka@linux.intel.com>
-Subject: [PATCH v2 2/2] cpufreq/schedutil: print errors with %pe for better
- readability of logs
-Date: Mon, 12 Feb 2024 15:54:04 +0530
-Message-Id: <20240212102404.1900708-2-onkarnath.1@samsung.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240212102404.1900708-1-onkarnath.1@samsung.com>
+	s=arc-20240116; t=1707734186; c=relaxed/simple;
+	bh=XgBeXlxzyxENPKM0phJQ2DOLEQhtvy3i7sWOZwQU7Hs=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=DL0gQhsCPdOcyj+w3C4+iaiCOwqfCw8+N6ucvrQ5M0xwMLyUFl9BJyRV3kK73KS91HNyWK3Ot3BgEWtkQZ/nvYUNr7j+U4A2Rkhch7PxOWAdwtqkhxGQOkLr+t7Oo8mMwKGdyyY6oPpwWNUMl4ddOGOZcnMBTh3Jb6ktX9NvBKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-363c88eff5aso26558845ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 02:36:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707734183; x=1708338983;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HcAZJy4DlbXdryo7e17UK1Z9B9l9LAm7zSOtqPj6VWI=;
+        b=RTdmwp82e2EkmtHlYqBQXUB0RuBwvJom+2odjJMze66UJTfaRtlTSA5PQ7i8IQaXuO
+         6QeJd/EzZuoPYs1NEl8UQesOlqt0pPRXHkWssdgQiiSrZOZPMJsnM7W/uMwo9IeK8Jtg
+         A51EpYAYoqwXMi8XLZ8iZ4Dnjd/ekNDztnjs65fGZIXeBdLJPdn4UGaJb6ceE9aEWtDz
+         sU5jymIMK2gpPbSsH9i3zrgQpl6EmmQDTviTipgGsLvYh3RN70z22PluO8LUebQ1NAwi
+         k2kJc53jpZ2E2eR0EMTOVo44+wzymlOrvgkdRM+/PgWjctSTflS1yCZRvXqUviKuhaCh
+         UHAg==
+X-Gm-Message-State: AOJu0YyXmUj2HDeofLJt/Kx0gnMNX1O+WXnwyJCTbJKvi9FdzQvNjMcH
+	f/QOzkRlT4FdpWvoF1uDar866YLyWAN14MDaaiCijhcayec9cM56e8AOxUnWgfesGaGGMxVf5f8
+	JXaa8DLiKQBP81gJjT9xq/FBQJJ7yC6K0bwpmNtlGe0JHBarYpmhVTwE=
+X-Google-Smtp-Source: AGHT+IFgUu1kKNz+kizPomTdh//ehK7fDS3zmiYjhrrX2+PxpWm/qB6rlGdmysbiOYRLhvVXOYUWzAxFCxVZSuqc5a+dg0/9gX3y
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDKsWRmVeSWpSXmKPExsWy7bCmum7Wl5OpBtsPWFssacqwuPT4KpvF
-	9JeNLBZPJ2xltnh1Zi2bxd3+qSwWOx++ZbNYvq+f0eLyrjlsFmfnHWez+Nx7hNHi8Pw2FovJ
-	754xWlw6sIDJYkXPB1aL470HmCw23su2mPtlKrPFvo4HTBYf92xgtOg48o3ZYuNXD4utR7+z
-	O4h7rJm3htGjZd8tdo8Fm0o9Nq/Q8ti0qpPN4861PWwe804Gerzfd5XNo2/LKkaPzaerPT5v
-	kgvgjuKySUnNySxLLdK3S+DKmLtjLltBH0fFpCeHmBsYP7J1MXJySAiYSJy72skEYgsJ7GaU
-	mD1BqIuRC8j+xCgxb9IzFojEN0aJnRfFYBrm9FxnhSjayyhxrWMuE4TzhVFi5vfpYB1sAloS
-	M+4cAEuICGxhklhy6SA7iMMsMJtJYt2372BVwgKJEn/XvgOzWQRUJV4uec4OYvMK2Elc+v2L
-	EWKfvMTMS9/B4pwC9hKP1i1jhqgRlDg58wlYLzNQTfPW2cwgCyQE2jkl9i3cAPWdi8ScvdvY
-	IWxhiVfHt0DZUhIv+9ug7HyJltmzgJo5gOwaiatPVSHC9hJPLi5kBQkzC2hKrN+lDxGWlZh6
-	ah0TxFo+id7fT5gg4rwSO+bB2KoSv6ZMZYGwpSXu/54LdY2HRP+in9Cgm8QosfD+TfYJjAqz
-	kLwzC8k7sxBWL2BkXsUomVpQnJueWmxaYJyXWq5XnJhbXJqXrpecn7uJEZxAtbx3MD568EHv
-	ECMTB+MhRgkOZiUR3kszTqQK8aYkVlalFuXHF5XmpBYfYpTmYFES533dOjdFSCA9sSQ1OzW1
-	ILUIJsvEwSnVwOTmc0G6KGd/MhOTx+rilx8m9FWblUS5t7sLzPHzVp5/6Lf4x6Vb/S7Zbny0
-	tajD9FSK8RQLNl+DVb/vc/Tusy5df0hzg5umovK8zil7LnvWhnvsOmlfv/f5PMZEdqPaxAts
-	QiETv/FE/g7ayhSzSafL6N7bXnafvbt+SSpsWNggE39kc5D1gYtnbjnLrlD+rOKtwmJUy27v
-	elAyNL2Sd8n3nqXuh3+2823IV7LfHPbsiNaRYpPnMvyW829svc8/If2+cHQGh66ozVeVR+xT
-	GDf6zqy5zv83s6xAoG1iymE1l06h2bGrHjm/mxm3SpHhxun2vvxpt/M/6kv80OxR3tl6b9+7
-	zr1+FooVFx62KbEUZyQaajEXFScCAE7tRGsPBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAIsWRmVeSWpSXmKPExsWy7bCSvO7NjydTDbrOqlksacqwuPT4KpvF
-	9JeNLBZPJ2xltnh1Zi2bxd3+qSwWOx++ZbNYvq+f0eLyrjlsFmfnHWez+Nx7hNHi8Pw2FovJ
-	754xWlw6sIDJYkXPB1aL470HmCw23su2mPtlKrPFvo4HTBYf92xgtOg48o3ZYuNXD4utR7+z
-	O4h7rJm3htGjZd8tdo8Fm0o9Nq/Q8ti0qpPN4861PWwe804Gerzfd5XNo2/LKkaPzaerPT5v
-	kgvgjuKySUnNySxLLdK3S+DKmLtjLltBH0fFpCeHmBsYP7J1MXJySAiYSMzpuc7axcjFISSw
-	m1HiyqVbUAlpiU+X57BD2MISK/89Z4co+sQocXv6E1aQBJuAlsSMOweYQBIiAseYJKb1b2QB
-	cZgFFjNJbOxewAhSJSwQL7Fx4UIwm0VAVeLlkudgY3kF7CQu/f7FCLFCXmLmpe9gcU4Be4lH
-	65Yxg9hCQDV3d91hgqgXlDg58wkLiM0MVN+8dTbzBEaBWUhSs5CkFjAyrWKUTC0ozk3PTTYs
-	MMxLLdcrTswtLs1L10vOz93ECI5ULY0djPfm/9M7xMjEwXiIUYKDWUmE99KME6lCvCmJlVWp
-	RfnxRaU5qcWHGKU5WJTEeQ1nzE4REkhPLEnNTk0tSC2CyTJxcEo1MOkIHX6y69juhXJKF3Y/
-	N1kSLbCLc9+cm0wlj0KtLszbbqcWudBztWGXs/WRmHtWqm49cY8Xq7YE3VXOme20rPv3J3Yf
-	fpfF4heboyezTPgvsvpI1SMlg7aktZfdfD3/WZ8K3SZlumdLjv7ps1aO4SdOFlophz8J+tZ+
-	/qbi4buVvXei//7XDefabWXjUyG6M31d6c79ttx/Ig8IrdXey3DgsP5Em79fU4+eO/NP8v93
-	o+mXfu+a3zjl8xuXx/v2+cZe8zZ2myFv8ujp7n4GTg/Btj1+FU82H9vlqfrub0PXXLZzSxnd
-	5r2MTEpuSb6lleEb5+eRn13ys+iGm7vQjrzjcoLxmesMz191i/vj2a3EUpyRaKjFXFScCACn
-	w033QwMAAA==
-X-CMS-MailID: 20240212102425epcas5p176017ab3c94d39af29bbeaa72a43a996
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20240212102425epcas5p176017ab3c94d39af29bbeaa72a43a996
-References: <20240212102404.1900708-1-onkarnath.1@samsung.com>
-	<CGME20240212102425epcas5p176017ab3c94d39af29bbeaa72a43a996@epcas5p1.samsung.com>
+X-Received: by 2002:a05:6638:4707:b0:471:6214:bc1e with SMTP id
+ cs7-20020a056638470700b004716214bc1emr53988jab.1.1707734182950; Mon, 12 Feb
+ 2024 02:36:22 -0800 (PST)
+Date: Mon, 12 Feb 2024 02:36:22 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000587e0f06112cd973@google.com>
+Subject: [syzbot] [dri?] divide error in drm_mode_convert_to_umode
+From: syzbot <syzbot+0d7a3627fb6a42cf0863@syzkaller.appspotmail.com>
+To: airlied@gmail.com, daniel@ffwll.ch, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com, 
+	mripard@kernel.org, syzkaller-bugs@googlegroups.com, tzimmermann@suse.de
+Content-Type: text/plain; charset="UTF-8"
 
-From: Onkarnath <onkarnath.1@samsung.com>
+Hello,
 
-Instead of printing errros as a number(%ld), it's better to print in string
-format for better readability of logs.
+syzbot found the following issue on:
 
-Signed-off-by: Onkarnath <onkarnath.1@samsung.com>
-Reviewed-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
-Reviewed-by: Valentin Schneider <vschneid@redhat.com>
+HEAD commit:    445a555e0623 Add linux-next specific files for 20240209
+git tree:       linux-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=175fa6ec180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=85aa3388229f9ea9
+dashboard link: https://syzkaller.appspot.com/bug?extid=0d7a3627fb6a42cf0863
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17d4bd48180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=106ae642180000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/9188bb84c998/disk-445a555e.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/3ce0c98eabb2/vmlinux-445a555e.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/ab801b1c1d6d/bzImage-445a555e.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+0d7a3627fb6a42cf0863@syzkaller.appspotmail.com
+
+divide error: 0000 [#1] PREEMPT SMP KASAN PTI
+CPU: 0 PID: 5068 Comm: syz-executor201 Not tainted 6.8.0-rc3-next-20240209-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
+RIP: 0010:drm_mode_vrefresh drivers/gpu/drm/drm_modes.c:1303 [inline]
+RIP: 0010:drm_mode_convert_to_umode+0x36a/0xc30 drivers/gpu/drm/drm_modes.c:2594
+Code: 0f b7 03 66 83 f8 02 b9 01 00 00 00 0f 43 c8 0f b7 c1 44 0f af f8 44 89 f0 48 69 c8 e8 03 00 00 44 89 f8 d1 e8 48 01 c8 31 d2 <49> f7 f7 48 89 c3 eb 1a e8 19 a2 47 fc eb 05 e8 12 a2 47 fc 48 8b
+RSP: 0018:ffffc900034ff660 EFLAGS: 00010246
+RAX: 0000000000001f40 RBX: ffff8880176d9016 RCX: 0000000000001f40
+RDX: 0000000000000000 RSI: ffffc900034ff720 RDI: dffffc0000000000
+RBP: 0000000000000200 R08: ffffffff854c389a R09: ffff8880176d900a
+R10: dffffc0000000000 R11: ffffed100366d143 R12: 1ffff11002edb202
+R13: ffff8880176d9000 R14: 0000000000000008 R15: 0000000000000000
+FS:  0000555555c18380(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000005fdeb8 CR3: 0000000011012000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ drm_atomic_set_mode_for_crtc+0x14a/0x4a0 drivers/gpu/drm/drm_atomic_uapi.c:82
+ __drm_atomic_helper_set_config+0x255/0xf80 drivers/gpu/drm/drm_atomic.c:1679
+ drm_atomic_helper_set_config+0x8b/0x150 drivers/gpu/drm/drm_atomic_helper.c:3263
+ drm_mode_setcrtc+0xbae/0x17c0 drivers/gpu/drm/drm_crtc.c:886
+ drm_ioctl_kernel+0x33a/0x440 drivers/gpu/drm/drm_ioctl.c:744
+ drm_ioctl+0x63a/0xb10 drivers/gpu/drm/drm_ioctl.c:841
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:871 [inline]
+ __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:857
+ do_syscall_64+0xfb/0x240
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+RIP: 0033:0x7fd888e1b7e9
+Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffd99378a68 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007ffd99378c38 RCX: 00007fd888e1b7e9
+RDX: 0000000020000400 RSI: 00000000c06864a2 RDI: 0000000000000003
+RBP: 00007fd888e8e610 R08: 0000000000000005 R09: 00007ffd99378c38
+R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007ffd99378c28 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:drm_mode_vrefresh drivers/gpu/drm/drm_modes.c:1303 [inline]
+RIP: 0010:drm_mode_convert_to_umode+0x36a/0xc30 drivers/gpu/drm/drm_modes.c:2594
+Code: 0f b7 03 66 83 f8 02 b9 01 00 00 00 0f 43 c8 0f b7 c1 44 0f af f8 44 89 f0 48 69 c8 e8 03 00 00 44 89 f8 d1 e8 48 01 c8 31 d2 <49> f7 f7 48 89 c3 eb 1a e8 19 a2 47 fc eb 05 e8 12 a2 47 fc 48 8b
+RSP: 0018:ffffc900034ff660 EFLAGS: 00010246
+RAX: 0000000000001f40 RBX: ffff8880176d9016 RCX: 0000000000001f40
+RDX: 0000000000000000 RSI: ffffc900034ff720 RDI: dffffc0000000000
+RBP: 0000000000000200 R08: ffffffff854c389a R09: ffff8880176d900a
+R10: dffffc0000000000 R11: ffffed100366d143 R12: 1ffff11002edb202
+R13: ffff8880176d9000 R14: 0000000000000008 R15: 0000000000000000
+FS:  0000555555c18380(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fd888e95270 CR3: 0000000011012000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	0f b7 03             	movzwl (%rbx),%eax
+   3:	66 83 f8 02          	cmp    $0x2,%ax
+   7:	b9 01 00 00 00       	mov    $0x1,%ecx
+   c:	0f 43 c8             	cmovae %eax,%ecx
+   f:	0f b7 c1             	movzwl %cx,%eax
+  12:	44 0f af f8          	imul   %eax,%r15d
+  16:	44 89 f0             	mov    %r14d,%eax
+  19:	48 69 c8 e8 03 00 00 	imul   $0x3e8,%rax,%rcx
+  20:	44 89 f8             	mov    %r15d,%eax
+  23:	d1 e8                	shr    %eax
+  25:	48 01 c8             	add    %rcx,%rax
+  28:	31 d2                	xor    %edx,%edx
+* 2a:	49 f7 f7             	div    %r15 <-- trapping instruction
+  2d:	48 89 c3             	mov    %rax,%rbx
+  30:	eb 1a                	jmp    0x4c
+  32:	e8 19 a2 47 fc       	call   0xfc47a250
+  37:	eb 05                	jmp    0x3e
+  39:	e8 12 a2 47 fc       	call   0xfc47a250
+  3e:	48                   	rex.W
+  3f:	8b                   	.byte 0x8b
+
+
 ---
-v1->v2: Updated subject as per file history
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
- kernel/sched/cpufreq_schedutil.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index eece6244f9d2..2c42eaa56fa3 100644
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -671,7 +671,7 @@ static int sugov_kthread_create(struct sugov_policy *sg_policy)
- 				"sugov:%d",
- 				cpumask_first(policy->related_cpus));
- 	if (IS_ERR(thread)) {
--		pr_err("failed to create sugov thread: %ld\n", PTR_ERR(thread));
-+		pr_err("failed to create sugov thread: %pe\n", thread);
- 		return PTR_ERR(thread);
- 	}
- 
--- 
-2.25.1
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
