@@ -1,59 +1,59 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D863D99E
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 13:36:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 500113E483
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 13:36:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707744979; cv=none; b=T6wZ8uAbj75+39haiVkRKEN7+aAsuNERnynR/xy0lOuHYlQ6DeqKJX93zQfc/7P0wVhANtG5NDD2F7+UE+D2lUyr8N96uYRR3Nd5ogzE2ZpsPCyDLgT1WU8ubn9pV8S6A/70yF0o67k1XoFXrQlMVj2VebxN44pqg5/nOIoA8uM=
+	t=1707745021; cv=none; b=UwOAIBGGxzzVXHr3BK2AeOcmy3SWKmH53o6QdZ742GXrRWg8GW+HX7AaN14TO1pwZNgP5x1ZHqkqlQeeGU1gY4VasKvX70ZokQbPGvyVOTBzkPPZswWrEb08rhzepJg+XwTVXukeQB3+UKduFWNo+KnwEoySJ3iynOtigIugYC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707744979; c=relaxed/simple;
-	bh=TW2CSdVYIub/goe1WKuXyYiZXm1j9zzBXYlgffNdpWE=;
+	s=arc-20240116; t=1707745021; c=relaxed/simple;
+	bh=/1gQpCmbof5JoYEDBIJ7R4EezJlCr0yE/wJqWblGEoc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VnJNVPCy3Zh3T5ECUMBsLlKpMQE/dcirccWI57icEpfoVSnzi4c740BahfCgDIMv+b7g94pSgdG+BF0jv30Uplf6yTF7qp5Wqrkz5NvorsRMKGaYDyIFYfEWKd4SpNPn2K00Z2jqOUthxoEuk0k++R+25HlJJk9taZrcmpYv2po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mcYptDb3; arc=none smtp.client-ip=192.198.163.8
+	 Content-Type:Content-Disposition:In-Reply-To; b=tla4fJnCQJYoJuWg6BVmyhLGy/XwQRopDlyvFIbet7iO5gOE2pLhhaAGyRx51XiUIdWrZtXXbIMo4gcKOPg/Njm8rTQ/O8XHA3vlWFe5eurFgRcaiQXJ32WuLNTKUbNPiFavZP3W9ZrmI4SM7kyW/4NTil36kFyD8hRN0U3FjEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AT/bQ28F; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mcYptDb3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AT/bQ28F"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707744977; x=1739280977;
+  t=1707745020; x=1739281020;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=TW2CSdVYIub/goe1WKuXyYiZXm1j9zzBXYlgffNdpWE=;
-  b=mcYptDb3xFhFhYrqyRzkhk+SCzHJEV2mQDScXQMWTiqdQ5VMS0eEfXbr
-   w0j9nJbKxe5SmOiA6F5ZBtWQq0MlJvgaghf2NECj7kEp+xUvSeZ8+Ryjc
-   QY6QfB2UGIsjCIWxzU/BZ0ZdR+fnkSj3tA/amvOVSMPAyMq/FGII8kdgr
-   SSCbdmG2/ISd5FowdgI9FXgvA/i4Ta+ZRS4Ef4N0HZjaSFzOpzTJv93gt
-   j44sTWgegQV/FrXS9JKcKjhrdJKii1e/yttxneLgDmH1GQnvITvLh/95K
-   +hNaByYN8ymdjTX+xkFJV7iAejqaaOFNPk2LG6PMUcn4256mIJ1y6hj4E
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="19226749"
+  bh=/1gQpCmbof5JoYEDBIJ7R4EezJlCr0yE/wJqWblGEoc=;
+  b=AT/bQ28FZMgiSS0JJde11ma488VtRJGE/zgGHc+buGXmCETOFWWFSqzk
+   5ekfRLl0zqgHhSDhsw0rYIdT/54NZOb5tZOdFBJpYOj9lveXaqlmdo06h
+   HSXmvcFQ4QwSep2A8cvH/YAG//oomWJcrMaZiHWUjVjX6vgIME71opk2T
+   K5vJJtO6Q3ocMcYLBmx5cdhjOMzq0OYM6ba5Ly+T4HQgnrA6uIW/GcGxq
+   c50ceNAWQrkoqhtoaecZ2JZ8s09jCJYnMFPV42F2rB88rM0PJbF2P2Xyi
+   ykpNr6xPTsvZpoFpqlIZrv+9XmsIlUJt5ITJ7kpg3Lw1TUl9ittTsYdNO
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="19226806"
 X-IronPort-AV: E=Sophos;i="6.06,264,1705392000"; 
-   d="scan'208";a="19226749"
+   d="scan'208";a="19226806"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 05:36:16 -0800
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 05:36:57 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="911483686"
+X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="911483801"
 X-IronPort-AV: E=Sophos;i="6.06,264,1705392000"; 
-   d="scan'208";a="911483686"
+   d="scan'208";a="911483801"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 05:36:15 -0800
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 05:36:55 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rZWTk-00000003uKl-1hOH;
-	Mon, 12 Feb 2024 15:36:12 +0200
-Date: Mon, 12 Feb 2024 15:36:12 +0200
+	id 1rZWUP-00000003uL4-1uJR;
+	Mon, 12 Feb 2024 15:36:53 +0200
+Date: Mon, 12 Feb 2024 15:36:53 +0200
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Thomas Zimmermann <tzimmermann@suse.de>, linux-kernel@vger.kernel.org
 Cc: Miguel Ojeda <ojeda@kernel.org>,
 	Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 1/3] auxdisplay: Take over maintainership, but in Odd
- Fixes mode
-Message-ID: <ZcoezKt4zKvO8jOf@smile.fi.intel.com>
+Subject: Re: [PATCH v2 2/3] auxdisplay: Move cfag12864b.h to the subsystem
+ folder
+Message-ID: <Zcoe9axtLXxB7Jeo@smile.fi.intel.com>
 References: <20240212132515.2660837-2-andriy.shevchenko@linux.intel.com>
- <20240212132515.2660837-3-andriy.shevchenko@linux.intel.com>
+ <20240212132515.2660837-4-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,17 +62,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240212132515.2660837-3-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20240212132515.2660837-4-andriy.shevchenko@linux.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Feb 12, 2024 at 03:23:53PM +0200, Andy Shevchenko wrote:
-> I have no time for this, but since it looks like I'm the main
-> contributor for the last few years to the subsystem, I'll take
-> it for now. Geert agreed to help me with as a designated reviwer.
+On Mon, Feb 12, 2024 at 03:23:54PM +0200, Andy Shevchenko wrote:
+> There is no users outside of auxdisplay subsystem for the cfag12864b.h.
+> Move include/linux/cfag12864b.h to drivers/auxdisplay.
 
-The typo ("reviewer") has been fixed locally.
+...
 
-> Let's see how it will go...
+>  F:	drivers/auxdisplay/cfag12864b.c
+> -F:	include/linux/cfag12864b.h
+>  
+>  CFAG12864BFB LCD FRAMEBUFFER DRIVER
+>  M:	Miguel Ojeda <ojeda@kernel.org>
+>  S:	Maintained
+>  F:	drivers/auxdisplay/cfag12864bfb.c
+> -F:	include/linux/cfag12864b.h
+
+Should be replaced. Done locally.
 
 -- 
 With Best Regards,
