@@ -1,325 +1,154 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ABCD4CB55;
-	Mon, 12 Feb 2024 17:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 030B14F5F9
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 17:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707757499; cv=none; b=HjNE7/BbVJWdEYwiDb2hiV6l/VNgn3BLvCNPyiaDE4tTzN2kDjgQm/vVsbzIoz6hwDdfIk1qtAAW/NAtb8x6c/Zh7yEfderwT/lH95iMI6/Lnb7KZx4Pr2HNgW+12F5iymmzOs7fa7W9M9num+ksVsv5rHBn/vqFA7sTgmleGBQ=
+	t=1707757511; cv=none; b=fkw65MF6gyPzqF1e1uUPPj11URPHpDcOQ3uhzGtpQNQKNZ7kq3HvVE3v7HqlrEaiaCu12v4NPhY0sx8Mhak8rJB5zWok4i1mx4UYrm9XHYpCtocXqVWwCBwnxiHCJrEEqmLfBuN2NJAVBJJEhVgVrwA6h6x3ibS0uhhLt51gGZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707757499; c=relaxed/simple;
-	bh=v6wTWOcgnBbdVRVq0vTx2zi8kxA67Ld9K3m1TKyiM1Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e0heQ/feYW9kg8ye6UedVXsu73+092ISBwrA8IocMr2Qj275NbJI47n7QtTQO0bo0cZuEZC9Y/5VPVOvM28s+1aA8cJJjI05zDezuy45PSvfunJUFEUf0CC7BNSkXArQt0KVGAkbWVp20W0d+vIEiqQhVb9l0Hmjg9MtgUyHMEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mP440zFv; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707757511; c=relaxed/simple;
+	bh=/ppasOObi1vl2zoLkHHxsigE/xVlK8tLer+NXGAx/2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jKSjZIPU1Lwvm3EWkIB0+/4IPqpf7pJLYm8cbVCxKpxW7+zu3f9WdUraqqMebM/fPIasdCo8qw+2ekYOB41Xml480wl8DIZE/Npdl1MzEfvAAsIr9sTvrOWfPVf5EWg/VUwL0jSt8cRHv5vZ9kI/G31LiB6zOFutPm20+00q21s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BJwkiqz+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mP440zFv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707757498; x=1739293498;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=v6wTWOcgnBbdVRVq0vTx2zi8kxA67Ld9K3m1TKyiM1Q=;
-  b=mP440zFvoBdSr7zyr+42Ec/IzOKZd6ODy1GFnvG+CYdtyOiPC4XhGE8G
-   zM7WulTm8Olilx4PKWzfwG8+QYB1HlEkpYNMOGiqb/6YT/vako1ju1B1s
-   qJl28oofdVrSEY8ftOMSmEqqQgxpaQDfgX7g+Sd3Bml5TJIjI8BVKTp+C
-   SEEbLG1klni1GYnabCViX/Ya6JFjVU4dKQD2gsTBvJQ9eTPNO0x6/kqz0
-   dDMX+oCM7/0SFsOTMsd1eXus5UtGBILfFC1w9kq7n/1Ag1OYb0xRv4rlq
-   UjNUUnE21mP6WlP0RLjrMUpB3cKqcBq3ufeKkwwOXcuZlzVS5Lw7pZeUM
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="19153247"
-X-IronPort-AV: E=Sophos;i="6.06,264,1705392000"; 
-   d="scan'208";a="19153247"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 09:04:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="935116836"
-X-IronPort-AV: E=Sophos;i="6.06,264,1705392000"; 
-   d="scan'208";a="935116836"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 12 Feb 2024 09:04:50 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 4740C4E9; Mon, 12 Feb 2024 19:04:43 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andy@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Robin van der Gracht <robin@protonic.nl>,
-	Paul Burton <paulburton@kernel.org>
-Subject: [PATCH v2 15/15] auxdisplay: Add driver for MAX695x 7-segment LED controllers
-Date: Mon, 12 Feb 2024 19:01:48 +0200
-Message-ID: <20240212170423.2860895-16-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240212170423.2860895-1-andriy.shevchenko@linux.intel.com>
-References: <20240212170423.2860895-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BJwkiqz+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707757508;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AOauPAOUW8xmwdezNoz+IWSD863XpUK91dsGE3R14Gg=;
+	b=BJwkiqz+FdLvAn0xYXWPsEFTnhsviBjAS3z7y4R4w3R7cdO6/PNuYYHkMh/lktjzm5Xac8
+	/SQa7DzRweIK50F50R7LYqHlIpB5tCYrEegr86EUR0GNl6vY+c4coMKUW+Zax1uv96hSQZ
+	uVva3i+5auzqM9sTSHzQTa9neqUK8jo=
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
+ [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-572-O-3ZtJoWNTKcuMHarU0CkA-1; Mon, 12 Feb 2024 12:05:06 -0500
+X-MC-Unique: O-3ZtJoWNTKcuMHarU0CkA-1
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-363ec32bca3so27778445ab.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 09:05:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707757506; x=1708362306;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AOauPAOUW8xmwdezNoz+IWSD863XpUK91dsGE3R14Gg=;
+        b=RRUvDDFJpvGz75nBzQfEk8UrvpKzy1dw3Fs9KhjTOq3ct5xQ12O3rVmMG9MGJlRevh
+         DQlGbGxiKrjGCS0WfQorw0B2UtA1YKzAPy2YLfDCGrM8JWOaK8kPU8YQtErFzJbLyExW
+         m5I8Co3THeIq+DNKf7MO+6wTtMj/85ZhAKYSmUZt0RdCAqXp/xSJPHpj3Jnf1Fb/6pAc
+         lhIxDvEjRDRCyeXQxMlnz9ptPt9grM86QiigIRoIymPoKh8pS0Uyl2CeiEJkOE5DbIWb
+         V2SspiqZHvroK3KcwWm0gGkFwk/V63fwb/rKPm3IBVGXZQ6vGOFbJ9fCTNWYdhT3kQEP
+         Ot7A==
+X-Forwarded-Encrypted: i=1; AJvYcCVIJ4ZrnMp78kzkpnLkhxNjrp/a7MnDQ8f2FslMseWHV83FQ66Uh/MSh4036gfRNbJgwuB0V77fyn7UW1O21Wi5Lil26of9F7U5Vyp7
+X-Gm-Message-State: AOJu0YwAyKUabTOYy7r8jKR2KR6VJLnl6aaAuXLaR87GPOZZiKnrhY7Z
+	Hluy7DzdbuBGgyaHGT+B48PptC9bvUgbA5ZLJw+rfq+ZpyTlUCf4KALUETrIi1Otlt3UpcM7HCb
+	kTbTmUwkhGEQDEog+m0vxlPNwm0j4pdg5hRgK3Sl0bq6UHtyqZ49r+HJITWo+uQ==
+X-Received: by 2002:a05:6e02:1c0f:b0:363:bf4f:9242 with SMTP id l15-20020a056e021c0f00b00363bf4f9242mr12359138ilh.0.1707757505977;
+        Mon, 12 Feb 2024 09:05:05 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFTr7BKAunXGu61vRYhJINkTJcmaRk0uei4AcQbQ44MkhVmZ5mwHzO7IldqcHZ1n+fHrehwBg==
+X-Received: by 2002:a05:6e02:1c0f:b0:363:bf4f:9242 with SMTP id l15-20020a056e021c0f00b00363bf4f9242mr12359090ilh.0.1707757505683;
+        Mon, 12 Feb 2024 09:05:05 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWTKjfqO4rkuhd2GHVkqqBNv4+4iVoZcGlDpy3HDG1uMMhT2d1jmDXMdgoX5DAWSe6wNqaoupDoOAQYGfaqx0u2YxoUAD4jOURcBV59dRJ0I84dPyAqjUa503odT/ihzOsHVyPnNOPJoHdYRT0Rkp1ITk30Z0jK0uQhOT8ZxCTTsDwHyplbhVXKzzWJ+5KLI0CW6tCa0uQX8eZY5XNRWRGf+QNcHvIm3yhzArCWF1+twWZ8ZnjPN50CfZ2MfWdE75xZdbBSioYKg/nzKmtiQE3HF/9lKHwRBYl6QkNkUBjfurx86zdYaK+ehhpNI3KCup/fqQW91N+qdWpE6M/4gD15NJDcY+cT9NbrcP/cidh0BMgG50wNuXrmnkXpm4oifG69lW1OlbPuCF3FwTEvBEMdMJNhwGJUq73Fb0yEEC3moByn74AQRxFN2+lKgvS7f3ETe1xbUchqRjQJYKyPvAv5d54L1Slq5ySDW0gE8KXZDMWQOLPNjP8lfWTWVQz2cegkBDFZnvSicLwrm7kx6Uyn4iQRg2Q2+2S092z+9EVssL4dTBcBiSfvzP4WR8BM9x2Cnj61ySifZP2b3sit2kXjDiHOKSpVT3XvUxV2NbiqyqaykRhfqoQWedicpEy2bUk4+6LGqp11TmwKitHZJVqrpjqEY5C20DTsYEiFK61AzM8/cBavnY1uHrFpyCAogoztCVgiLv6dR1pGSea50FebaaEoxsF0FdNhpT2In60GDbjrIIPJw9Yq3LE+A7pRuI8M2Pv2xba1cBmYG5BrQ/9vAC0AeyPnL/EjsEcqAD861Ut39qWpRqvM0jpvnlygSo13H7bWAWmrMWzOqUYutqVrxS1vCjbuNPAk4KPe0BHXnX+ou2Ou1LDGvKclXyNuba+zNe/6NIkiQ9tFgwZQWrO6cdbtM29KCOYYYy6I1yQguArOSxd54yZMFBXbHqlvq68ZD7
+ s5Ogdlm3vmILJeBjg6GR7Gfseo5SInXkPEJuISfamgJq1cKmYEkWiLHdpEXsU2z2bxLv6UizINdscavVhxNtO+f3YWyq67/6mkIHGegdJtwSQkFTQE38Qc6rY4wjyj3IoWWIw3JoTW1arS4PnomVhrCPLrZRuUcqKd4YW697swDORpqc5pjtaQmDUFd3HjddzZ2ykwrVpXhQU0MTWWohfdS3VaXxvAHWG/+cPs5+gvAChdu1Syik831EdMmJCOOtGu+BcmXFq/EhhR6d91D/vA9vXazLvjYergDYBNbDpREevkFO/zUNlr5Hb5RaVHWWDvXX9c
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id bf12-20020a056e02308c00b0036275404ab3sm2025858ilb.85.2024.02.12.09.05.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Feb 2024 09:05:04 -0800 (PST)
+Date: Mon, 12 Feb 2024 10:05:02 -0700
+From: Alex Williamson <alex.williamson@redhat.com>
+To: <ankita@nvidia.com>
+Cc: <jgg@nvidia.com>, <maz@kernel.org>, <oliver.upton@linux.dev>,
+ <james.morse@arm.com>, <suzuki.poulose@arm.com>, <yuzenghui@huawei.com>,
+ <reinette.chatre@intel.com>, <surenb@google.com>, <stefanha@redhat.com>,
+ <brauner@kernel.org>, <catalin.marinas@arm.com>, <will@kernel.org>,
+ <mark.rutland@arm.com>, <kevin.tian@intel.com>, <yi.l.liu@intel.com>,
+ <ardb@kernel.org>, <akpm@linux-foundation.org>, <andreyknvl@gmail.com>,
+ <wangjinchao@xfusion.com>, <gshan@redhat.com>, <shahuang@redhat.com>,
+ <ricarkol@google.com>, <linux-mm@kvack.org>, <lpieralisi@kernel.org>,
+ <rananta@google.com>, <ryan.roberts@arm.com>, <david@redhat.com>,
+ <linus.walleij@linaro.org>, <bhe@redhat.com>, <aniketa@nvidia.com>,
+ <cjia@nvidia.com>, <kwankhede@nvidia.com>, <targupta@nvidia.com>,
+ <vsethi@nvidia.com>, <acurrid@nvidia.com>, <apopple@nvidia.com>,
+ <jhubbard@nvidia.com>, <danw@nvidia.com>, <kvmarm@lists.linux.dev>,
+ <mochs@nvidia.com>, <zhiw@nvidia.com>, <kvm@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v7 4/4] vfio: convey kvm that the vfio-pci device is wc
+ safe
+Message-ID: <20240212100502.2b5009e4.alex.williamson@redhat.com>
+In-Reply-To: <20240211174705.31992-5-ankita@nvidia.com>
+References: <20240211174705.31992-1-ankita@nvidia.com>
+	<20240211174705.31992-5-ankita@nvidia.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Add initial driver for the MAX6958 and MAX6959 7-segment LED
-controllers.
+On Sun, 11 Feb 2024 23:17:05 +0530
+<ankita@nvidia.com> wrote:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/auxdisplay/Kconfig   |  14 +++
- drivers/auxdisplay/Makefile  |   1 +
- drivers/auxdisplay/max6959.c | 200 +++++++++++++++++++++++++++++++++++
- 3 files changed, 215 insertions(+)
- create mode 100644 drivers/auxdisplay/max6959.c
+> From: Ankit Agrawal <ankita@nvidia.com>
+> 
+> The code to map the MMIO in S2 as NormalNC is enabled when conveyed
+> that the device is WC safe using a new flag VM_ALLOW_ANY_UNCACHED.
+> 
+> Make vfio-pci set the VM_ALLOW_ANY_UNCACHED flag.
+> 
+> This could be extended to other devices in the future once that
+> is deemed safe.
+> 
+> Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
+> Acked-by: Jason Gunthorpe <jgg@nvidia.com>
+> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Ankit Agrawal <ankita@nvidia.com>
+> ---
+>  drivers/vfio/pci/vfio_pci_core.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> index 1cbc990d42e0..eba2146202f9 100644
+> --- a/drivers/vfio/pci/vfio_pci_core.c
+> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> @@ -1862,8 +1862,12 @@ int vfio_pci_core_mmap(struct vfio_device *core_vdev, struct vm_area_struct *vma
+>  	/*
+>  	 * See remap_pfn_range(), called from vfio_pci_fault() but we can't
+>  	 * change vm_flags within the fault handler.  Set them now.
+> +	 *
+> +	 * Set an additional flag VM_ALLOW_ANY_UNCACHED to convey kvm that
+> +	 * the device is wc safe.
+>  	 */
 
-diff --git a/drivers/auxdisplay/Kconfig b/drivers/auxdisplay/Kconfig
-index a34a9a52158f..079d58bb0293 100644
---- a/drivers/auxdisplay/Kconfig
-+++ b/drivers/auxdisplay/Kconfig
-@@ -187,6 +187,20 @@ config HT16K33
- 	  Say yes here to add support for Holtek HT16K33, RAM mapping 16*8
- 	  LED controller driver with keyscan.
- 
-+config MAX6959
-+	tristate "Maxim MAX6958/6959 7-segment LED controller with keyscan"
-+	depends on I2C
-+	select REGMAP_I2C
-+	select LINEDISP
-+	help
-+	  If you say yes here you get support for the following Maxim chips
-+	  (I2C 7-segment LED display controller with keyscan):
-+	  - MAX6958
-+	  - MAX6959 (debounce support)
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called max6959.
-+
- config ARM_CHARLCD
- 	bool "ARM Ltd. Character LCD Driver"
- 	depends on PLAT_VERSATILE
-diff --git a/drivers/auxdisplay/Makefile b/drivers/auxdisplay/Makefile
-index 43bad850481c..f62a258809ef 100644
---- a/drivers/auxdisplay/Makefile
-+++ b/drivers/auxdisplay/Makefile
-@@ -12,5 +12,6 @@ obj-$(CONFIG_CFAG12864B)	+= cfag12864b.o cfag12864bfb.o
- obj-$(CONFIG_LINEDISP)		+= line-display.o
- obj-$(CONFIG_IMG_ASCII_LCD)	+= img-ascii-lcd.o
- obj-$(CONFIG_HT16K33)		+= ht16k33.o
-+obj-$(CONFIG_MAX6959)		+= max6959.o
- obj-$(CONFIG_ARM_CHARLCD)	+= arm-charlcd.o
- obj-$(CONFIG_PARPORT_PANEL)	+= panel.o
-diff --git a/drivers/auxdisplay/max6959.c b/drivers/auxdisplay/max6959.c
-new file mode 100644
-index 000000000000..0c5cbd16c3fe
---- /dev/null
-+++ b/drivers/auxdisplay/max6959.c
-@@ -0,0 +1,200 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * MAX6958/6959 7-segment LED display controller with keyscan
-+ * Datasheet:
-+ * https://www.analog.com/media/en/technical-documentation/data-sheets/MAX6958-MAX6959.pdf
-+ *
-+ * Copyright (c) 2024, Intel Corporation.
-+ * Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-+ */
-+#include <linux/array_size.h>
-+#include <linux/bitrev.h>
-+#include <linux/bits.h>
-+#include <linux/container_of.h>
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/pm.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+#include <linux/workqueue.h>
-+
-+#include <linux/map_to_7segment.h>
-+
-+#include "line-display.h"
-+
-+/* Registers */
-+#define REG_DECODE_MODE			0x01
-+#define REG_INTENSITY			0x02
-+#define REG_SCAN_LIMIT			0x03
-+#define REG_CONFIGURATION		0x04
-+#define REG_CONFIGURATION_S_BIT		BIT(0)
-+
-+#define REG_DIGIT(x)			(0x20 + (x))
-+#define REG_DIGIT0			0x20
-+#define REG_DIGIT1			0x21
-+#define REG_DIGIT2			0x22
-+#define REG_DIGIT3			0x23
-+
-+#define REG_SEGMENTS			0x24
-+#define REG_MAX				REG_SEGMENTS
-+
-+/* Defines */
-+#define MIN_BRIGHTNESS			0x01
-+#define MAX_BRIGHTNESS			0x40
-+
-+struct max6959_priv {
-+	struct linedisp linedisp;
-+
-+	struct delayed_work work;
-+
-+	struct regmap *regmap;
-+};
-+
-+static void max6959_disp_update(struct work_struct *work)
-+{
-+	struct max6959_priv *priv = container_of(work, struct max6959_priv, work.work);
-+	struct linedisp *linedisp = &priv->linedisp;
-+	struct linedisp_map *map = linedisp->map;
-+	char *s = linedisp->curr;
-+	u8 buf[4];
-+
-+	/* Map segments according to datasheet */
-+	buf[0] = bitrev8(map_to_seg7(&map->map.seg7, *s++)) >> 1;
-+	buf[1] = bitrev8(map_to_seg7(&map->map.seg7, *s++)) >> 1;
-+	buf[2] = bitrev8(map_to_seg7(&map->map.seg7, *s++)) >> 1;
-+	buf[3] = bitrev8(map_to_seg7(&map->map.seg7, *s++)) >> 1;
-+
-+	regmap_bulk_write(priv->regmap, REG_DIGIT(0), buf, ARRAY_SIZE(buf));
-+}
-+
-+static int max6959_linedisp_get_map_type(struct linedisp *linedisp)
-+{
-+	struct max6959_priv *priv = container_of(linedisp, struct max6959_priv, linedisp);
-+
-+	INIT_DELAYED_WORK(&priv->work, max6959_disp_update);
-+	return LINEDISP_MAP_SEG7;
-+}
-+
-+static void max6959_linedisp_update(struct linedisp *linedisp)
-+{
-+	struct max6959_priv *priv = container_of(linedisp, struct max6959_priv, linedisp);
-+
-+	schedule_delayed_work(&priv->work, 0);
-+}
-+
-+static const struct linedisp_ops max6959_linedisp_ops = {
-+	.get_map_type = max6959_linedisp_get_map_type,
-+	.update = max6959_linedisp_update,
-+};
-+
-+static int max6959_enable(struct max6959_priv *priv, bool enable)
-+{
-+	u8 mask = REG_CONFIGURATION_S_BIT;
-+	u8 value = enable ? mask : 0;
-+
-+	return regmap_update_bits(priv->regmap, REG_CONFIGURATION, mask, value);
-+}
-+
-+static void max6959_power_off(void *priv)
-+{
-+	max6959_enable(priv, false);
-+}
-+
-+static int max6959_power_on(struct max6959_priv *priv)
-+{
-+	struct device *dev = regmap_get_device(priv->regmap);
-+	int ret;
-+
-+	ret = max6959_enable(priv, true);
-+	if (ret)
-+		return ret;
-+
-+	return devm_add_action_or_reset(dev, max6959_power_off, priv);
-+}
-+
-+static const struct regmap_config max6959_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+
-+	.max_register = REG_MAX,
-+	.cache_type = REGCACHE_MAPLE,
-+};
-+
-+static int max6959_i2c_probe(struct i2c_client *client)
-+{
-+	struct device *dev = &client->dev;
-+	struct max6959_priv *priv;
-+	int ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->regmap = devm_regmap_init_i2c(client, &max6959_regmap_config);
-+	if (IS_ERR(priv->regmap))
-+		return PTR_ERR(priv->regmap);
-+
-+	ret = max6959_power_on(priv);
-+	if (ret)
-+		return ret;
-+
-+	ret = linedisp_register(&priv->linedisp, dev, 4, NULL, &max6959_linedisp_ops);
-+	if (ret)
-+		return ret;
-+
-+	i2c_set_clientdata(client, priv);
-+
-+	return 0;
-+}
-+
-+static void max6959_i2c_remove(struct i2c_client *client)
-+{
-+	struct max6959_priv *priv = i2c_get_clientdata(client);
-+
-+	cancel_delayed_work_sync(&priv->work);
-+	linedisp_unregister(&priv->linedisp);
-+}
-+
-+static int max6959_suspend(struct device *dev)
-+{
-+	return max6959_enable(dev_get_drvdata(dev), false);
-+}
-+
-+static int max6959_resume(struct device *dev)
-+{
-+	return max6959_enable(dev_get_drvdata(dev), true);
-+}
-+
-+static DEFINE_SIMPLE_DEV_PM_OPS(max6959_pm_ops, max6959_suspend, max6959_resume);
-+
-+static const struct i2c_device_id max6959_i2c_id[] = {
-+	{ "max6959" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, max6959_i2c_id);
-+
-+static const struct of_device_id max6959_of_table[] = {
-+	{ .compatible = "maxim,max6959" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, max6959_of_table);
-+
-+static struct i2c_driver max6959_i2c_driver = {
-+	.driver = {
-+		.name = "max6959",
-+		.pm = pm_sleep_ptr(&max6959_pm_ops),
-+		.of_match_table = max6959_of_table,
-+	},
-+	.probe = max6959_i2c_probe,
-+	.remove = max6959_i2c_remove,
-+	.id_table = max6959_i2c_id,
-+};
-+module_i2c_driver(max6959_i2c_driver);
-+
-+MODULE_DESCRIPTION("MAX6958/6959 7-segment LED controller with keyscan");
-+MODULE_AUTHOR("Andy Shevchenko <andriy.shevchenko@linux.intel.com>");
-+MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS(LINEDISP);
--- 
-2.43.0.rc1.1.gbec44491f096
+That's a pretty superficial comment.  Check that this is accurate, but
+maybe something like:
+
+	The VM_ALLOW_ANY_UNCACHED flag is implemented for ARM64,
+	allowing stage 2 device mapping attributes to use Normal-NC
+	rather than DEVICE_nGnRE, which allows guest mappings
+	supporting combining attributes (WC).  This attribute has
+	potential risks with the GICv2 VCPU interface, but is expected
+	to be safe for vfio-pci use cases.
+
+And specifically, I think these other devices that may be problematic
+as described in the cover letter is a warning against use for
+vfio-platform, is that correct?
+
+Thanks,
+Alex
+
+> -	vm_flags_set(vma, VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP);
+> +	vm_flags_set(vma, VM_ALLOW_ANY_UNCACHED | VM_IO | VM_PFNMAP |
+> +			VM_DONTEXPAND | VM_DONTDUMP);
+>  	vma->vm_ops = &vfio_pci_mmap_ops;
+>  
+>  	return 0;
 
