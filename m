@@ -1,26 +1,62 @@
-Received: from mx.skole.hr (mx2.hosting.skole.hr [161.53.165.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA4B4CB55;
-	Mon, 12 Feb 2024 20:04:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.165.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A784D12D
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 20:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707768284; cv=none; b=tjyzDQJ6HfQHpqQUQz2l9G6ZAIZUKcbfgY0fG4JOL42BhcNMFif2DQ03vWe3HH4fvikx9+nUbN9iwUmyIc7PwtInypsAdlSBWEB5eRX6sPoJ4hSiG0iBybwp8uCpdFBIP73rOUL3HyeEhMBoAzYgQtm28bYH535cFzsajxpALIY=
+	t=1707768284; cv=none; b=HfugDngDLAiV2aV+cPm3BWiWr9ZY/O30Fttd8PL4Q4vnDHdNhMWAWt96vIBhBQK0ZGQz+DN0+EqgIndlepzbRPgXMGF5Vmu4HZtWoS1lirHC7TMsTgqoIajoaOUz51fitsmqUE+J4dGSce5FEDLQguO+JBzGZ6JpVVoJpXK/BPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707768284; c=relaxed/simple;
-	bh=PSXGPCrqbnaDBfgcrLl0RTka3gT8h50OxpcbtqLKeVY=;
+	bh=nVdAcq5qBuV+u2+BDT0vbbPtDSUMY5Jwqu+E2afCaAQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Kf7Jn0kUSdo/U+t0k0KBWN0LxCWSSpnn79jn33ZF+X84C3egsg8zzTD09roC4cNdc6t+X3HYcMevlETushA2IkXVusaKeenL6fW5DBsTBrzPcBqhZhM861oRA4utlvmoWU1TdcgyW4iMNDcVYrm3mg1ns6bHwv4UHXlj2iY60Eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr; spf=pass smtp.mailfrom=skole.hr; arc=none smtp.client-ip=161.53.165.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skole.hr
-Received: from mx2.hosting.skole.hr (localhost.localdomain [127.0.0.1])
-	by mx.skole.hr (mx.skole.hr) with ESMTP id DE5BB8507B;
-	Mon, 12 Feb 2024 21:04:37 +0100 (CET)
-From: =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Date: Mon, 12 Feb 2024 21:03:25 +0100
-Subject: [PATCH 1/2] Revert "leds: Only descend into leds directory when
- CONFIG_NEW_LEDS is set"
+	 In-Reply-To:To:Cc; b=ZW1jB8iOb2+9soxHxOBorkDC7uSmVkQL6vLAOH9eubLK6mxCrdZD25+EzJ4v4Y4B2eH3wPiiSJ1yI71InqD0OkXwC8d/fdlnITIMSf9iwLrvo0luC0CMbfi6FesXgZdKOMiCIbiCj98QrDJMq2akz6i5qDKaKy/bu8RF8HH8NAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=cj+Gm/K7; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="cj+Gm/K7"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d746856d85so26794145ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 12:04:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707768282; x=1708373082;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:dkim-signature:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=db2Uhnapp+w5dyUlo+M8v03nvRL1AyZA94jDVlSeXjQ=;
+        b=omPk3PQNS7mTh2N9qiZZkxb6tYvt+dRDeXFEEmJlTT2q4Io8N/IBEdzk7aGc3ZH94z
+         0c2s8qdnCYMtWt+a+MvmoYPugdqvfY8gLjMl1Za4ACVQEd1iC6FaAFn3Cb4U4Pw9w+5Z
+         0Im5u4ZKeiTPGQgLD57EHZ7xgynnwMAnOxZm6ZPb4BE9JZ+1C5NQbkP/TKgpmynNpma2
+         shpweoTwBLqAexxyYcwFbTvIwPdu6DnmevaD/5laeAnR5KG6Hr7+dywdE6j1q3jcFE6/
+         rOryWWPFHx3y7OzQC/gfLUh1je0TYM5P32nPb2Ft9U97uF2ieywSbLe5YoNZjo5SS9A2
+         EvMg==
+X-Gm-Message-State: AOJu0Yz6Y9GuX2+1YJe1pxCBPAgocX6DLuc7zW5gBHvUQI1m0nMRvFP5
+	4WKwwLt26SprcfC1Qsn9uo5yx70ohKP9WLK6OYDmiuxY0hbAWnjK
+X-Google-Smtp-Source: AGHT+IE8SVcMxOkLwBDIRmqSz/zr2jQon8D4r5B9AFrKXhLXIulNq2CR9/4ML5XN80KSjvnDri+oBw==
+X-Received: by 2002:a17:902:f809:b0:1d9:427a:99b with SMTP id ix9-20020a170902f80900b001d9427a099bmr6869869plb.32.1707768282176;
+        Mon, 12 Feb 2024 12:04:42 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWh06n6YhsaJA8HcOSOeEyE9tkWsBCUMlmMXjeAnxBL4mwLpDYhrSU2gThu1OCwH7Tau36MBJYZphBqkJchgGjcyncBBsXHIJruIwI8Ole3n3F9/VRVKVB2qTX2N58J23sA47waUHOedZm391zeUNE+j14/lsHLrrhmeE9snpx+RZDvn6UQTIuX9YkVt8JooBJawbmG+IUTM/zc6+4pJNgcrM+SSCcdyLXEva9I5s2NuwFIeFRTfdz/ML1VMMmAhCF2D7ZeKLIjeIFTmOQB
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id s2-20020a170902c64200b001d958de13c7sm759098pls.0.2024.02.12.12.04.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Feb 2024 12:04:41 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2024; t=1707768280;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=db2Uhnapp+w5dyUlo+M8v03nvRL1AyZA94jDVlSeXjQ=;
+	b=cj+Gm/K7r/ULgwd1zluQ8A+gbU2ta02TRefNIMEOMo0pSU1uNofUxpm4ooY+ye2Iy6fHzd
+	XlX/D+Kz7L1VgVRzoTUFqmBOT9oZGmouYaiKKAAmhvU/bgC/+v9k1GhSrAfhWID44UVfxS
+	EN55cY/ZxwvygA3SM9wJ7CbIju4vcYE3Qht4GWa/PssSB64Yx0ppDk4GHnl+5ZyLtKwQkh
+	/zpDf674RgUBRT2n3i181r1hIzyKtkiaZBJwiYeemDB8RcsiRwTlgwkellA93FfVNmxYxg
+	9Ap6d8BNw/d9/OeWUgoM6AEQH7xlb82Q+yOWADkwBn5SZqO0R1qT/+g3M6ciAg==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Date: Mon, 12 Feb 2024 17:05:03 -0300
+Subject: [PATCH v2 5/5] powerpc: ibmebus: make ibmebus_bus_type const
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -28,69 +64,85 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240212-expresswire-deps-v1-1-685ad10cd693@skole.hr>
-References: <20240212-expresswire-deps-v1-0-685ad10cd693@skole.hr>
-In-Reply-To: <20240212-expresswire-deps-v1-0-685ad10cd693@skole.hr>
-To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
- Daniel Thompson <daniel.thompson@linaro.org>, 
- Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Flavio Suligoi <f.suligoi@asem.it>, Hans de Goede <hdegoede@redhat.com>, 
- Jianhua Lu <lujianhua000@gmail.com>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
- Helge Deller <deller@gmx.de>, Jingoo Han <jingoohan1@gmail.com>, 
- Karel Balej <balejk@matfyz.cz>, dri-devel@lists.freedesktop.org, 
- linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-leds@vger.kernel.org, 
- =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1040;
- i=duje.mihanovic@skole.hr; h=from:subject:message-id;
- bh=PSXGPCrqbnaDBfgcrLl0RTka3gT8h50OxpcbtqLKeVY=;
- b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBlynmg1AO2BNWzA/ObjvKoEbirvyIXAvvYxitfx
- MmcK/0fNv2JAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZcp5oAAKCRCaEZ6wQi2W
- 4ctmD/4tcF0fuxA0coVon4C8C7312+ldyuaC8IMNaeizEWBKHkJm0mENe1UP33oiF5dAyGssI44
- 95H+dwlBtvzANNwvK6g/oKe/1Qt/OJrcPpxaFinTRGdGF2a7/YVIPbWdRGdxUI0D+kOGpHkjKJ8
- Nl7wrt9TWpqs2ABy5Aiwr0y1a3tNTx57hHkCTIWrdB/MZW3c6yxOcYeyBo+lT6zEcUuGsuEaiql
- 0k/BMoMtI9IPG3K84mn8KlbY1tqAjaEiL+HiusXzi88t+IgfiIi2NxP6sxpeSQrCqvlkFRo8mLY
- f99AfHzmk54jks9GuUMTmArCD0TdROur7XqcHoM/kt8M/B3xh0Kevs4qGQXi9COv5+bTc2LWdXU
- xB7NOqva9vj785yNN98a60IEct2wT0Au/zuSA94KqQmrRRLD9MqlKZqHzfYjcmg2yW1kJbWG2V4
- tKsHMGRNxl1/mNti1iZy5SfKnPoQY7TyoBLBz7eHLfDTrPCVWudNcyzomdhqVG1r7hNVpNQdeDN
- FJImywxVWRgLegz1/5kVkdUhyNrP6nJz1Nbw0EanENzJH+3FjGJci3RybAAm6S6C3rYNee8QJtF
- eFM3JQS1+C0AOhRpnyHQaKKI/SkvEphXmU5iVyON3BO8crU8TJPJqGETm4X2Z+upytZmQTZbMNh
- vdemFIgFU3AMFtQ==
-X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
- fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240212-bus_cleanup-powerpc2-v2-5-8441b3f77827@marliere.net>
+References: <20240212-bus_cleanup-powerpc2-v2-0-8441b3f77827@marliere.net>
+In-Reply-To: <20240212-bus_cleanup-powerpc2-v2-0-8441b3f77827@marliere.net>
+To: Michael Ellerman <mpe@ellerman.id.au>, 
+ Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2050; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=nVdAcq5qBuV+u2+BDT0vbbPtDSUMY5Jwqu+E2afCaAQ=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlynnv/phT/tgLAi3w01xX1x1lm+XkR/vq3YP08
+ H7MNNK8uo6JAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZcp57wAKCRDJC4p8Y4ZY
+ pqLmD/wIPQTXfZHkPBsZz+WbeisckhU1iPI9/FW4ze2PGk/olNSI56xfFPbRxqvEQpuVUjym3t3
+ Rx7QRjXneci1tfF+gw7xi2JJIAeXHtECUF+sox6V2X4B9SW9i35gGWfQHAZMUgyuJew/UuFWkW9
+ II8liY2MgGjEhVDudIf8uaiazWWzQiS5INaA6NtQdDgjKWRLO8bZ9jgOh41GSRbmJ6ce1RhCan4
+ q+QChn0KQKd2xTCxGAC/5cffnhOTyqhDW98TLHou90NiFJR4lAGuI1vu87fOsJ7466CT95W82iv
+ th6FiAUmNSErQkN4uHdr95oDgXsx/xQP73ccL+TRNiAZmy+opUIvaxZXyG29euJNIxdQnfmGZV/
+ j3UnxUIzcx7pVierP7VmNtIb7I1ISXYyVRdtmBYepA6p57OdiSkpizqoM/6+Rts55swvYVIQ9bl
+ VkwMmBHWio39eH0MKHv8HyDOY4uBsJbvPD5qrPZiv6ukIsbyaJpv8d+I6JgUSqhOzYJeMezFlah
+ kLxLtsQhvIf/UgmB0FAfmkBLSse5FhFGk6/18o+fx0Ix+VNLD+JT48G99Fyv/MUdfSK82izeSiC
+ cF/9SaUKQTYG93oeKu6+dHB0zGDihLVkUyZ5guQDxwJZez53nwi8VhxF7keoTqTuE3oA61bl35x
+ YIjcK1OIQ3FScuA==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
-This reverts commit b1ae40a5db6191c42e2e45d726407096f030ee08.
+Since commit d492cc2573a0 ("driver core: device.h: make struct
+bus_type a const *"), the driver core can properly handle constant
+struct bus_type, move the ibmebus_bus_type variable to be a constant
+structure as well, placing it into read-only memory which can not be
+modified at runtime.
 
-The ExpressWire library introduced in 25ae5f5f4168 ("leds: Introduce
-ExpressWire library") does not depend on NEW_LEDS, but without this
-revert it would never get compiled if NEW_LEDS is not enabled. Revert
-this commit to allow the library to be compiled.
-
-Link: https://lore.kernel.org/2cacd8dc-6150-4aa2-af9e-830a202fb0a8@app.fastmail.com
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
 ---
- drivers/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/include/asm/ibmebus.h       | 2 +-
+ arch/powerpc/platforms/pseries/ibmebus.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/Makefile b/drivers/Makefile
-index 37fd6ce3bd7f..3bf5cab4b451 100644
---- a/drivers/Makefile
-+++ b/drivers/Makefile
-@@ -135,7 +135,7 @@ obj-$(CONFIG_CPU_IDLE)		+= cpuidle/
- obj-y				+= mmc/
- obj-y				+= ufs/
- obj-$(CONFIG_MEMSTICK)		+= memstick/
--obj-$(CONFIG_NEW_LEDS)		+= leds/
-+obj-y				+= leds/
- obj-$(CONFIG_INFINIBAND)	+= infiniband/
- obj-y				+= firmware/
- obj-$(CONFIG_CRYPTO)		+= crypto/
+diff --git a/arch/powerpc/include/asm/ibmebus.h b/arch/powerpc/include/asm/ibmebus.h
+index 6f33253a364a..46fe406f461c 100644
+--- a/arch/powerpc/include/asm/ibmebus.h
++++ b/arch/powerpc/include/asm/ibmebus.h
+@@ -48,7 +48,7 @@
+ 
+ struct platform_driver;
+ 
+-extern struct bus_type ibmebus_bus_type;
++extern const struct bus_type ibmebus_bus_type;
+ 
+ int ibmebus_register_driver(struct platform_driver *drv);
+ void ibmebus_unregister_driver(struct platform_driver *drv);
+diff --git a/arch/powerpc/platforms/pseries/ibmebus.c b/arch/powerpc/platforms/pseries/ibmebus.c
+index 998e3aff2457..b401282727a4 100644
+--- a/arch/powerpc/platforms/pseries/ibmebus.c
++++ b/arch/powerpc/platforms/pseries/ibmebus.c
+@@ -55,7 +55,7 @@ static struct device ibmebus_bus_device = { /* fake "parent" device */
+ 	.init_name = "ibmebus",
+ };
+ 
+-struct bus_type ibmebus_bus_type;
++const struct bus_type ibmebus_bus_type;
+ 
+ /* These devices will automatically be added to the bus during init */
+ static const struct of_device_id ibmebus_matches[] __initconst = {
+@@ -432,7 +432,7 @@ static int ibmebus_bus_modalias(const struct device *dev, struct kobj_uevent_env
+ 	return of_device_uevent_modalias(dev, env);
+ }
+ 
+-struct bus_type ibmebus_bus_type = {
++const struct bus_type ibmebus_bus_type = {
+ 	.name      = "ibmebus",
+ 	.uevent    = ibmebus_bus_modalias,
+ 	.bus_groups = ibmbus_bus_groups,
 
 -- 
-2.43.1
-
+2.43.0
 
