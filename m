@@ -1,66 +1,60 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5780A3BB28
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 14:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE703A8C9
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 14:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707747562; cv=none; b=KRsMqZ5y7w31kA7b0o22LR/XyczuUiQEYw8HJSdLG/33vdIJ/bdGUFytc+MfITumLxexqA4eqZSqRuC34Vfir7M+usLcyRIa0QEBGrcDHuOiyD4X2d/87HWvZqtue26UaJp069VicDY2+ffrBQcFJm8NXcBuMqJZODxTpQFFXHQ=
+	t=1707747631; cv=none; b=DxvKfK0QwHz8wPUYROlstIKMEGog6f1rnu8U50Vs+IUWI3q+j+YUkUMs5VeWgndVJGr9sGNyp8HvHesf5vigU3M6+MonSidYIwJtybw99LaW6QJUjABdpEZoXosbINXJU+gsT4sAWlP2QllBmSmga8NTZHcFth/9bomhFv/v7JA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707747562; c=relaxed/simple;
-	bh=gs8tkUTje+RaprAq3IBjDstuMAAUUbDa5/b0JQtY9jA=;
+	s=arc-20240116; t=1707747631; c=relaxed/simple;
+	bh=IhQAKpuPrgzYPj8eGChOmKdNzeEYV7muCE4GmdmJGQQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c1Xv418sc8BA5jt242XsYiGf28i3jsWSKKWADXJkG3f9C9y/naDtIq/jLQ50Sla/F64ZmsMo0Cnm1NWTkVb2Mm0Nt3rukJxRCrdkKhEPTVDNT6ov0mmDiLH1OB6mPPMnj2PYVefNki6qBxRKR+FL4gzkJkJVHRkM9CVpAI9WBf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NtgigO3U; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=XzcFlzf/UBRO+e0B0PENt/Yv6LLOfN9zLxS5WaRoq3YtYKfjHjBjYYtZ+ACDyZOOAOcFW1fCnsvI539kZDaAkk9DifhEQQJtb6vUwaVHiI42519tUrDUVElbZScBeyOoCamJy4LCv2Qt6PUsQ91nMgTvv3nn/5CjKPHuYsZIL+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VtNtKiyD; arc=none smtp.client-ip=209.85.167.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NtgigO3U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707747559;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=KdQyq15dmu/vW742NSYA7eol+qHrc++m5aFpTBakKcc=;
-	b=NtgigO3URYfpYO+aT8yboDoyKVDqhk+rGQKp1UUmkv6h0BueUkAYl5fJMSPJbC3RiS7Ftr
-	5g0vd2/NMGQ6lbyJRwQp5O7ZbDw0ODYCKHThZsK0riSnPVumxFn/tl15g2c4pwO2w12Zux
-	XhiJ+RIBRVq+rJcfPft4NFRZpu9xSl4=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-633-lOB2XY_QONyDeehyhz19rA-1; Mon, 12 Feb 2024 09:19:17 -0500
-X-MC-Unique: lOB2XY_QONyDeehyhz19rA-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-33b5192599bso1261929f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 06:19:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VtNtKiyD"
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3c031a077d5so1278002b6e.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 06:20:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707747629; x=1708352429; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gyBJeVAbVLOUugM8uBMgD4ijJoIOfpy1k/OkoITELdI=;
+        b=VtNtKiyDunRbaiZFiHfe3G+NrKpBZRLUVMeuHCILbMCskPc8yOP7DKvLEGF85Kq6Do
+         Dr+O8Ifwd83NXWYM7Lw7LItb+jpUjSY6VdqliROZKseVYul3P9jO0x6dn6kq0tz2uifg
+         pzVZxADsx/rGTcdaPmD6iXKqFs+UnGgqre1l+hLWyMwe2aN9ZzoIiGDv92+RJflOzGve
+         6gv3I/tMgNeV4VyE+ttJJE2f9qsnEzNqjyTlXnvBst+fa18OUSEG759JqA1u8Ym2r7+A
+         xuaXbeQQ2/UekdW35avkS5QmHHq+lnhOiyFOvktrQQoOcjX2C7u9E/CwBvuUXBIEBFoT
+         FXrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707747556; x=1708352356;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :references:cc:to:content-language:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KdQyq15dmu/vW742NSYA7eol+qHrc++m5aFpTBakKcc=;
-        b=BQ7zUwjnp9reUokzu58Ox1pJeMKhmCFNfuRrJqAMM5NhLv2C4pAo+vJE7p3sfj30kb
-         1MrwzVazgIxCPHdAJKnV2ae1NwqHGbNWEKT9Crz+uyzPZ3wbGQJaJZWFIZECGUdjzgAN
-         WuQe9Y4nXd/Qr7MWasHuvlfkBkv2h5lueYt5cx+13A+jaoskdrC7yRWJDXtymeB3a74I
-         62mtuOo10q+ISJxPrw+xllKyD/PDazaSM3lNqjfySLVgbITcgxgz4LLOMdJ/mx+sGFrB
-         fyYs2cBg8uoUqUDx1Clzmr8VQ7i1Vhag2oTtDhOWWZ/HuvOXLk7wUyJR1Lccj8ly/nVK
-         +dWA==
-X-Gm-Message-State: AOJu0YzlKVvOxF5xs8fzSZlEjpzEWlVRD/YnNSH17VAXuG15Fe16labR
-	zOFpy3+xG2v7AM4gdGkMtfRv+vytaItvwuSy2EsE+bwwTmBRwszPk8hG4zxLsh7JfMU7O4i4WDY
-	Jq8UcoNKgWUr8YJMa6Op8iTtsPWy3twFnWI3hZRvo4Vm5DZ6gobbl3iDpupfuDg==
-X-Received: by 2002:a5d:69cd:0:b0:33b:4ac7:224c with SMTP id s13-20020a5d69cd000000b0033b4ac7224cmr4637495wrw.13.1707747556148;
-        Mon, 12 Feb 2024 06:19:16 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFDVRzBzkFQ83bEbY+lChHQ7exeRhG46Lx2P594IWjJkzAXyhqGvCydJzGmcxdEyNo3ehdTmQ==
-X-Received: by 2002:a5d:69cd:0:b0:33b:4ac7:224c with SMTP id s13-20020a5d69cd000000b0033b4ac7224cmr4637479wrw.13.1707747555785;
-        Mon, 12 Feb 2024 06:19:15 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU9Trjf3o0USZ05XJLpdaUPsAbut+JeqrWqUdZRtiQDFi17Otuah6pvaV0j01E+tXRzFzghY2xWPwBF1ynjFzshvStCGJzEqOhjMKoUXQXPA3sxOLGXPE6mfQg/QiWEuhw3qNb2qstFvAsdMqsdKO5+5ba60JhcZGEFHEWpk3rPXxxMLlS3clcME2jVLqlmX7mQHfOHQjVg8GCra9eqgp64Nzt3UBwGiKGWkh+nsWqhgJ7PUcOCvg1gdeOWS0/4eI8DoRCdh/XxIgbHzN6jAJX1TKF31TTdYtZRVE7x7w==
-Received: from ?IPV6:2003:cb:c730:2200:7229:83b1:524e:283a? (p200300cbc7302200722983b1524e283a.dip0.t-ipconnect.de. [2003:cb:c730:2200:7229:83b1:524e:283a])
-        by smtp.gmail.com with ESMTPSA id n14-20020a056000170e00b0033b5b5033b9sm7047109wrc.18.2024.02.12.06.19.14
+        d=1e100.net; s=20230601; t=1707747629; x=1708352429;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gyBJeVAbVLOUugM8uBMgD4ijJoIOfpy1k/OkoITELdI=;
+        b=NA0nlrTGXiRRqfqE+seL/jX6uyp/JnPRkf0Nt25PniSklK1RtADygxuNo4TtF9KDQt
+         W8aXaydOTJmUKnE7bxuH7t3NhTvSlL7u1iAT8pIQ0dnCVgK6/6Z7PzVtBWV2IY+48jY6
+         pjMXAC5FnXiYpwGka2DpR+ZrKRSexPaIEyfKenm92gLlE/mBQM8SEl5d1TkRrfQWzMqD
+         y2eejShbExP9oP4XyvguphTkwyh3qUO//nYARyhiM0T6UZWAGzibOIiax5ElcFiEUoNA
+         WGOdbWhpTXqAXGxwa8g3D0Rtenr8+rDl3UXw0fQjAga6tHUrZNMFkE6QRkGz9kJhRtwY
+         busw==
+X-Forwarded-Encrypted: i=1; AJvYcCXb831g8IaygMgAhaAKkUkYQkh0O5ad784C0POg1oNN/ISy8taoay/WTpRLoUZuipyvRp1/dhzjU4Xr4oxcna5xRo3NOfv+Puh2GP0o
+X-Gm-Message-State: AOJu0YxixiABjygU3NQI+VuVCpKl8A8c8ThNu8dYwKhs3n1YBbOeUjPa
+	Ld8tnCjdFxuJsvnjVadSHCmf1edFuaIpPKG3KxmVyZB68DYEi7sPhALZUuf8kB0=
+X-Google-Smtp-Source: AGHT+IEGwcabb0YbhKwmetbqxIxk8MR6hwoLl7QmVWgc4fBr5tMkd3EHAZxNjeVus+2aEpCRzz2hUA==
+X-Received: by 2002:a05:6808:4384:b0:3bf:e02e:6429 with SMTP id dz4-20020a056808438400b003bfe02e6429mr6045776oib.24.1707747629328;
+        Mon, 12 Feb 2024 06:20:29 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXnJp0TmICHcK9u990k/r8Wr9NMlUp/F3Ktj/d4g2A/wGijqSF1rMoOayxG2H2BfX+C5y2JDzQSNOpLI3Cgjr0+F2CbVR8MU69JP8+uyTP3Z/h/XdnIaIkNED7ihwuEYahQlncrMl/gpAmiT7u2DA6pPWHd+sBdmxx1uMSYuqf3F1PkbAEiNR9S/T198MlN+V+Nll16+VJNpr3ES4UMxzKhI5HxxMXNyFIENiM80W/VHOHk1bx2UpwGje7A5GYQlJUa41QhF2ePbN+KcWLcAMXTaU96Kf68E2i1AIVhxVDKF1MQIDqK3QE/GQD/snBCjArbRdeMRcGORv4/p9C6IHBTGpWS/U3v/QwFHcxg6Rep+s4UiAVqIuNG32US3Vb0xf4Zqx4P+c+qjXguGZo=
+Received: from [192.168.1.20] ([178.197.223.6])
+        by smtp.gmail.com with ESMTPSA id pe5-20020a05620a850500b00783f77b968fsm2053452qkn.109.2024.02.12.06.20.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Feb 2024 06:19:15 -0800 (PST)
-Message-ID: <b73948f3-560c-4b5e-b638-6f3055dee758@redhat.com>
-Date: Mon, 12 Feb 2024 15:19:14 +0100
+        Mon, 12 Feb 2024 06:20:28 -0800 (PST)
+Message-ID: <b836cf9d-dc71-4835-b45f-1092aafa1dfd@linaro.org>
+Date: Mon, 12 Feb 2024 15:20:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,142 +62,106 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/hugetlb: Move page order check inside
- hugetlb_cma_reserve()
+Subject: Re: [PATCH 1/3] dt-bindings: auxdisplay: hit,hd44780: drop redundant
+ GPIO node
 Content-Language: en-US
-To: Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Miguel Ojeda
+ <ojeda@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Robin van der Gracht
+ <robin@protonic.nl>, Paul Burton <paulburton@kernel.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org
-References: <20240209054221.1403364-1-anshuman.khandual@arm.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240209054221.1403364-1-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <20240212083426.26757-1-krzysztof.kozlowski@linaro.org>
+ <ZcofhWb8stiddmru@smile.fi.intel.com>
+ <906db6a6-48ba-41e5-be23-1dea0ecf96ee@linaro.org>
+ <Zcomjp9oH9VfO3NA@smile.fi.intel.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <Zcomjp9oH9VfO3NA@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 09.02.24 06:42, Anshuman Khandual wrote:
-> All platforms could benefit from page order check against MAX_PAGE_ORDER
-> before allocating a CMA area for gigantic hugetlb pages. Let's move this
-> check from individual platforms to generic hugetlb.
+On 12/02/2024 15:09, Andy Shevchenko wrote:
+> On Mon, Feb 12, 2024 at 02:56:43PM +0100, Krzysztof Kozlowski wrote:
+>> On 12/02/2024 14:39, Andy Shevchenko wrote:
+>>> On Mon, Feb 12, 2024 at 09:34:24AM +0100, Krzysztof Kozlowski wrote:
 > 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
-> This applies on v6.8-rc3
->   
->   arch/arm64/mm/hugetlbpage.c   | 7 -------
->   arch/powerpc/mm/hugetlbpage.c | 4 +---
->   mm/hugetlb.c                  | 7 +++++++
->   3 files changed, 8 insertions(+), 10 deletions(-)
+> ...
 > 
-> diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-> index 8116ac599f80..6720ec8d50e7 100644
-> --- a/arch/arm64/mm/hugetlbpage.c
-> +++ b/arch/arm64/mm/hugetlbpage.c
-> @@ -45,13 +45,6 @@ void __init arm64_hugetlb_cma_reserve(void)
->   	else
->   		order = CONT_PMD_SHIFT - PAGE_SHIFT;
->   
-> -	/*
-> -	 * HugeTLB CMA reservation is required for gigantic
-> -	 * huge pages which could not be allocated via the
-> -	 * page allocator. Just warn if there is any change
-> -	 * breaking this assumption.
-> -	 */
-> -	WARN_ON(order <= MAX_PAGE_ORDER);
->   	hugetlb_cma_reserve(order);
->   }
->   #endif /* CONFIG_CMA */
-> diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
-> index 0a540b37aab6..16557d008eef 100644
-> --- a/arch/powerpc/mm/hugetlbpage.c
-> +++ b/arch/powerpc/mm/hugetlbpage.c
-> @@ -614,8 +614,6 @@ void __init gigantic_hugetlb_cma_reserve(void)
->   		 */
->   		order = mmu_psize_to_shift(MMU_PAGE_16G) - PAGE_SHIFT;
->   
-> -	if (order) {
-> -		VM_WARN_ON(order <= MAX_PAGE_ORDER);
-> +	if (order)
->   		hugetlb_cma_reserve(order);
-> -	}
->   }
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index cf9c9b2906ea..345b3524df35 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -7699,6 +7699,13 @@ void __init hugetlb_cma_reserve(int order)
->   	bool node_specific_cma_alloc = false;
->   	int nid;
->   
-> +	/*
-> +	 * HugeTLB CMA reservation is required for gigantic
-> +	 * huge pages which could not be allocated via the
-> +	 * page allocator. Just warn if there is any change
-> +	 * breaking this assumption.
-> +	 */
-> +	VM_WARN_ON(order <= MAX_PAGE_ORDER);
->   	cma_reserve_called = true;
->   
->   	if (!hugetlb_cma_size)
+>>>> -    i2c {
+>>>> -            #address-cells = <1>;
+>>>> -            #size-cells = <0>;
+>>>>  
+>>>> -            pcf8574: pcf8574@27 {
+>>>> -                    compatible = "nxp,pcf8574";
+>>>> -                    reg = <0x27>;
+>>>> -                    gpio-controller;
+>>>> -                    #gpio-cells = <2>;
+>>>> -            };
+>>>> -    };
+>>>
+>>> In patch 3 you updated the lines that have lost their sense due to this one.
+>>
+>> How did they lose it?
+> 
+> Now they are referring to the non-existed node in the example. OTOH, there is
+> already hc595 case...
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+All of the bindings examples do it. It's expected.
 
--- 
-Cheers,
+> 
+> The Q here (as you pointed out that it's better to name nodes in generic way),
+> how these names are okay with the schema (hc595, pcf8574) as being referred to?
 
-David / dhildenb
+They are not OK, although I don't see the name "hc595". There is phandle
+to the hc595 label, but that's fine. Not a node name.
+
+Best regards,
+Krzysztof
 
