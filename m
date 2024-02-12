@@ -1,47 +1,47 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4E34596E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7C144C8B;
 	Mon, 12 Feb 2024 17:04:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707757494; cv=none; b=Kf2b5amUD3Wj6dby25Io0gbGmy9fzR1D5O7ZVG1TmerwFTIiR9S2v2jU4owar/uQ/MtwzCWQVgadlxM55k5xwNc9KBmYwnOoGJ4MKMaKAGSOSzhpbVQWkRJZhOI2ujcRsb+OgNEPaRKcinis0pjM7CPZsAGZ1ZpwnvE2VJwhIxU=
+	t=1707757494; cv=none; b=oXblec86J2s7RDs3gAN9MTbfVoz/7qDQ0J9SqZ7y/BpCdqlzN3cdOC3IKg1CZA0MxjIWX2e5CenUwFzt82h6TGMgEPIU1LU6Mc3+kka653NNrSDuAQ5G4ZjTliGmnnPUyt3bqtsUjsqFKqfMfC2ZPunyWG3jZDXSTcHEp8ZFQO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707757494; c=relaxed/simple;
-	bh=Fg8HFd6qXwgrRuKizTmdQy4zN2vPEsdI81OkVtdnatg=;
+	bh=Fh1FBaKJwc92BMrBFROUJ6kx0dRqre1zQ6DU0DmV0sM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cPJPzsgZxMfoq78W8TUUy+ykAqnI01KpHuxCj+0H3E0BPaHWO8ZFEWWIf0uDgeY40wkiF/uss/XbeMkMiB7QKrlv6gQ7WPfHXwzGcVHHPRwdOgSOM8GrR74AAmuRefHSZaNwp5qBvfwzy+LDwTcPpTM411ljiOf43CA4hhV76S8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k8LV/yz1; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version; b=PTnPdJo4r79Sl6czR0xWcWkCbtXDKOD+ULPCJp1+8FF4qlocTx/t02alf4QvxZDFGv8N9592oLZhr7M0OHBYDdzibK26AkOEukHZPWW2cPIeBTz8cSwiu33xOk4id2ERRof+ua7R0YozGoSWHzV6YDOqmQAisyk4VejJj3c5Ezs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ulhx/DSC; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k8LV/yz1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ulhx/DSC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1707757493; x=1739293493;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Fg8HFd6qXwgrRuKizTmdQy4zN2vPEsdI81OkVtdnatg=;
-  b=k8LV/yz1igpk/NVNBVSN4fCFBVSqRaVN/juIR0QuYKCVW4xKWBJ3CEXD
-   20DJ8tplemiltLzATsTcCrVfMh9lDwfp75cDsZ+pQpfLG6HqdNSy7AZt5
-   5vmhKZmqk0dJ0ZV7zCy8xFpRJBLCFqOM6KjKl9PkY338cpB5xhgflRx6X
-   p0bRRu/ex+PjWsc7mD4e9RUeOM6RgfgwVcS7PitOnntIgkhLI5XsS5gpD
-   NRacAxSe5XC4AxJaqBbcmVWPiP6l8ZePq5Tv2ehr4iRpsdwA4v9pETUwh
-   /3O5n6C51QpfD7fsHO6hUxXxWBqfe8A66cKpLMViBnYtYPAKLUOAYeurO
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="19153215"
+  bh=Fh1FBaKJwc92BMrBFROUJ6kx0dRqre1zQ6DU0DmV0sM=;
+  b=Ulhx/DSC7IviiklRrxduLsSeWQHWUfERlT99nvkfHZjZaktoPK7nbrL+
+   1wKLEnTQ6P3PGUEIyVmDPyrcT2k8w15imKdBCPiLUmFhNknoiP2nmqVzl
+   ssORgqN1clpfaKaGxJcyrx5MlhH+861RgYQLFDLlCT8DaktseY6M5soM/
+   1fmTxceJ8tk8YLVvaC3hH969vhuieKg7GT/Wy+Oe0GGcf6loKMizeaMCo
+   mvbUDexPCMuidKatHBvnVkIiUahogFLZ/Ak4oF73DmazvBHzt6q+8mgOm
+   NwVfcdBTcPkw/C4BByTVGlRAIWU5e6uPvZeAu6aKoBWZYeo5P43GjKENA
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="19153204"
 X-IronPort-AV: E=Sophos;i="6.06,264,1705392000"; 
-   d="scan'208";a="19153215"
+   d="scan'208";a="19153204"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 09:04:50 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="935116825"
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="935116824"
 X-IronPort-AV: E=Sophos;i="6.06,264,1705392000"; 
-   d="scan'208";a="935116825"
+   d="scan'208";a="935116824"
 Received: from black.fi.intel.com ([10.237.72.28])
   by fmsmga001.fm.intel.com with ESMTP; 12 Feb 2024 09:04:47 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id D5900161; Mon, 12 Feb 2024 19:04:42 +0200 (EET)
+	id F3653323; Mon, 12 Feb 2024 19:04:42 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	devicetree@vger.kernel.org,
@@ -53,9 +53,9 @@ Cc: Andy Shevchenko <andy@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Robin van der Gracht <robin@protonic.nl>,
 	Paul Burton <paulburton@kernel.org>
-Subject: [PATCH v2 07/15] auxdisplay: linedisp: Group line display drivers together
-Date: Mon, 12 Feb 2024 19:01:40 +0200
-Message-ID: <20240212170423.2860895-8-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 09/15] auxdisplay: linedisp: Add support for overriding character mapping
+Date: Mon, 12 Feb 2024 19:01:42 +0200
+Message-ID: <20240212170423.2860895-10-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 In-Reply-To: <20240212170423.2860895-1-andriy.shevchenko@linux.intel.com>
 References: <20240212170423.2860895-1-andriy.shevchenko@linux.intel.com>
@@ -67,102 +67,234 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-For better usability group the line display drivers together in Kconfig
-and Makefile.
+There is already the driver using character mapping table for
+7 or 14 segment display. It is possible to override it. Make
+the similar in the line display library to allow other drivers
+to utilise the same functionality.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/auxdisplay/Kconfig  | 32 ++++++++++++++++----------------
- drivers/auxdisplay/Makefile | 12 ++++++------
- 2 files changed, 22 insertions(+), 22 deletions(-)
+ drivers/auxdisplay/line-display.c | 111 +++++++++++++++++++++++++++++-
+ drivers/auxdisplay/line-display.h |  31 +++++++++
+ 2 files changed, 140 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/auxdisplay/Kconfig b/drivers/auxdisplay/Kconfig
-index d944d5298eca..a34a9a52158f 100644
---- a/drivers/auxdisplay/Kconfig
-+++ b/drivers/auxdisplay/Kconfig
-@@ -25,12 +25,6 @@ config CHARLCD
- 	  This is some character LCD core interface that multiple drivers can
- 	  use.
+diff --git a/drivers/auxdisplay/line-display.c b/drivers/auxdisplay/line-display.c
+index 6453a62f653f..75852ce6cc8d 100644
+--- a/drivers/auxdisplay/line-display.c
++++ b/drivers/auxdisplay/line-display.c
+@@ -22,6 +22,9 @@
+ #include <linux/sysfs.h>
+ #include <linux/timer.h>
  
--config LINEDISP
--	tristate "Character line display core support" if COMPILE_TEST
--	help
--	  This is the core support for single-line character displays, to be
--	  selected by drivers that use it.
--
- config HD44780_COMMON
- 	tristate "Common functions for HD44780 (and compatibles) LCD displays" if COMPILE_TEST
- 	select CHARLCD
-@@ -52,6 +46,16 @@ config HD44780
- 	  kernel and started at boot.
- 	  If you don't understand what all this is about, say N.
- 
-+config LCD2S
-+	tristate "lcd2s 20x4 character display over I2C console"
-+	depends on I2C
-+	select CHARLCD
-+	help
-+	  This is a driver that lets you use the lcd2s 20x4 character display
-+	  from Modtronix engineering as a console output device. The display
-+	  is a simple single color character display. You have to connect it
-+	  to an I2C bus.
++#include <linux/map_to_7segment.h>
++#include <linux/map_to_14segment.h>
 +
- config KS0108
- 	tristate "KS0108 LCD Controller"
- 	depends on PARPORT_PC
-@@ -153,6 +157,12 @@ config CFAG12864B_RATE
- 	  If you compile this as a module, you can still override this
- 	  value using the module parameters.
+ #include "line-display.h"
  
-+config LINEDISP
-+	tristate "Character line display core support" if COMPILE_TEST
-+	help
-+	  This is the core support for single-line character displays, to be
-+	  selected by drivers that use it.
+ #define DEFAULT_SCROLL_RATE	(HZ / 2)
+@@ -188,12 +191,71 @@ static ssize_t scroll_step_ms_store(struct device *dev,
+ 
+ static DEVICE_ATTR_RW(scroll_step_ms);
+ 
++static ssize_t map_seg_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	struct linedisp *linedisp = container_of(dev, struct linedisp, dev);
++	struct linedisp_map *map = linedisp->map;
 +
- config IMG_ASCII_LCD
- 	tristate "Imagination Technologies ASCII LCD Display"
- 	depends on HAS_IOMEM
-@@ -177,16 +187,6 @@ config HT16K33
- 	  Say yes here to add support for Holtek HT16K33, RAM mapping 16*8
- 	  LED controller driver with keyscan.
++	memcpy(buf, &map->map, map->size);
++	return map->size;
++}
++
++static ssize_t map_seg_store(struct device *dev, struct device_attribute *attr,
++			     const char *buf, size_t count)
++{
++	struct linedisp *linedisp = container_of(dev, struct linedisp, dev);
++	struct linedisp_map *map = linedisp->map;
++
++	if (count != map->size)
++		return -EINVAL;
++
++	memcpy(&map->map, buf, count);
++	return count;
++}
++
++static const SEG7_DEFAULT_MAP(initial_map_seg7);
++static DEVICE_ATTR(map_seg7, 0644, map_seg_show, map_seg_store);
++
++static const SEG14_DEFAULT_MAP(initial_map_seg14);
++static DEVICE_ATTR(map_seg14, 0644, map_seg_show, map_seg_store);
++
+ static struct attribute *linedisp_attrs[] = {
+ 	&dev_attr_message.attr,
+ 	&dev_attr_scroll_step_ms.attr,
+-	NULL,
++	&dev_attr_map_seg7.attr,
++	&dev_attr_map_seg14.attr,
++	NULL
+ };
+-ATTRIBUTE_GROUPS(linedisp);
++
++static umode_t linedisp_attr_is_visible(struct kobject *kobj, struct attribute *attr, int n)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct linedisp *linedisp = container_of(dev, struct linedisp, dev);
++	struct linedisp_map *map = linedisp->map;
++	umode_t mode = attr->mode;
++
++	if (attr == &dev_attr_map_seg7.attr) {
++		if (!map)
++			return 0;
++		if (map->type != LINEDISP_MAP_SEG7)
++			return 0;
++	}
++
++	if (attr == &dev_attr_map_seg14.attr) {
++		if (!map)
++			return 0;
++		if (map->type != LINEDISP_MAP_SEG14)
++			return 0;
++	}
++
++	return mode;
++};
++
++static const struct attribute_group linedisp_group = {
++	.is_visible	= linedisp_attr_is_visible,
++	.attrs		= linedisp_attrs,
++};
++__ATTRIBUTE_GROUPS(linedisp);
  
--config LCD2S
--	tristate "lcd2s 20x4 character display over I2C console"
--	depends on I2C
--	select CHARLCD
--	help
--	  This is a driver that lets you use the lcd2s 20x4 character display
--	  from Modtronix engineering as a console output device. The display
--	  is a simple single color character display. You have to connect it
--	  to an I2C bus.
--
- config ARM_CHARLCD
- 	bool "ARM Ltd. Character LCD Driver"
- 	depends on PLAT_VERSATILE
-diff --git a/drivers/auxdisplay/Makefile b/drivers/auxdisplay/Makefile
-index 6968ed4d3f0a..43bad850481c 100644
---- a/drivers/auxdisplay/Makefile
-+++ b/drivers/auxdisplay/Makefile
-@@ -5,12 +5,12 @@
+ static DEFINE_IDA(linedisp_id);
  
- obj-$(CONFIG_CHARLCD)		+= charlcd.o
- obj-$(CONFIG_HD44780_COMMON)	+= hd44780_common.o
--obj-$(CONFIG_ARM_CHARLCD)	+= arm-charlcd.o
-+obj-$(CONFIG_HD44780)		+= hd44780.o
-+obj-$(CONFIG_LCD2S)		+= lcd2s.o
- obj-$(CONFIG_KS0108)		+= ks0108.o
- obj-$(CONFIG_CFAG12864B)	+= cfag12864b.o cfag12864bfb.o
--obj-$(CONFIG_IMG_ASCII_LCD)	+= img-ascii-lcd.o
--obj-$(CONFIG_HD44780)		+= hd44780.o
--obj-$(CONFIG_HT16K33)		+= ht16k33.o
--obj-$(CONFIG_PARPORT_PANEL)	+= panel.o
--obj-$(CONFIG_LCD2S)		+= lcd2s.o
- obj-$(CONFIG_LINEDISP)		+= line-display.o
-+obj-$(CONFIG_IMG_ASCII_LCD)	+= img-ascii-lcd.o
-+obj-$(CONFIG_HT16K33)		+= ht16k33.o
-+obj-$(CONFIG_ARM_CHARLCD)	+= arm-charlcd.o
-+obj-$(CONFIG_PARPORT_PANEL)	+= panel.o
+@@ -201,6 +263,7 @@ static void linedisp_release(struct device *dev)
+ {
+ 	struct linedisp *linedisp = container_of(dev, struct linedisp, dev);
+ 
++	kfree(linedisp->map);
+ 	kfree(linedisp->message);
+ 	ida_free(&linedisp_id, linedisp->id);
+ }
+@@ -210,6 +273,44 @@ static const struct device_type linedisp_type = {
+ 	.release = linedisp_release,
+ };
+ 
++static int linedisp_init_map(struct linedisp *linedisp)
++{
++	struct linedisp_map *map;
++	int err;
++
++	if (!linedisp->ops->get_map_type)
++		return 0;
++
++	err = linedisp->ops->get_map_type(linedisp);
++	if (err < 0)
++		return err;
++
++	map = kmalloc(sizeof(*map), GFP_KERNEL);
++	if (!map)
++		return -ENOMEM;
++
++	map->type = err;
++
++	/* assign initial mapping */
++	switch (map->type) {
++	case LINEDISP_MAP_SEG7:
++		map->map.seg7 = initial_map_seg7;
++		map->size = sizeof(map->map.seg7);
++		break;
++	case LINEDISP_MAP_SEG14:
++		map->map.seg14 = initial_map_seg14;
++		map->size = sizeof(map->map.seg14);
++		break;
++	default:
++		kfree(map);
++		return -EINVAL;
++	}
++
++	linedisp->map = map;
++
++	return 0;
++}
++
+ /**
+  * linedisp_register - register a character line display
+  * @linedisp: pointer to character line display structure
+@@ -241,6 +342,11 @@ int linedisp_register(struct linedisp *linedisp, struct device *parent,
+ 	device_initialize(&linedisp->dev);
+ 	dev_set_name(&linedisp->dev, "linedisp.%u", linedisp->id);
+ 
++	/* initialise a character mapping, if required */
++	err = linedisp_init_map(linedisp);
++	if (err)
++		goto out_put_device;
++
+ 	/* initialise a timer for scrolling the message */
+ 	timer_setup(&linedisp->timer, linedisp_scroll, 0);
+ 
+@@ -259,6 +365,7 @@ int linedisp_register(struct linedisp *linedisp, struct device *parent,
+ 	device_del(&linedisp->dev);
+ out_del_timer:
+ 	del_timer_sync(&linedisp->timer);
++out_put_device:
+ 	put_device(&linedisp->dev);
+ 	return err;
+ }
+diff --git a/drivers/auxdisplay/line-display.h b/drivers/auxdisplay/line-display.h
+index a4f0d1bf5848..65d782111f53 100644
+--- a/drivers/auxdisplay/line-display.h
++++ b/drivers/auxdisplay/line-display.h
+@@ -14,13 +14,43 @@
+ #include <linux/device.h>
+ #include <linux/timer_types.h>
+ 
++#include <linux/map_to_7segment.h>
++#include <linux/map_to_14segment.h>
++
+ struct linedisp;
+ 
++/**
++ * enum linedisp_map_type - type of the character mapping
++ * @LINEDISP_MAP_SEG7: Map characters to 7 segment display
++ * @LINEDISP_MAP_SEG14: Map characters to 14 segment display
++ */
++enum linedisp_map_type {
++	LINEDISP_MAP_SEG7,
++	LINEDISP_MAP_SEG14,
++};
++
++/**
++ * struct linedisp_map - character mapping
++ * @type: type of the character mapping
++ * @map: conversion character mapping
++ * @size: size of the @map
++ */
++struct linedisp_map {
++	enum linedisp_map_type type;
++	union {
++		struct seg7_conversion_map seg7;
++		struct seg14_conversion_map seg14;
++	} map;
++	unsigned int size;
++};
++
+ /**
+  * struct linedisp_ops - character line display operations
++ * @get_map_type: Function called to get the character mapping, if required
+  * @update: Function called to update the display. This must not sleep!
+  */
+ struct linedisp_ops {
++	int (*get_map_type)(struct linedisp *linedisp);
+ 	void (*update)(struct linedisp *linedisp);
+ };
+ 
+@@ -42,6 +72,7 @@ struct linedisp {
+ 	unsigned int id;
+ 	struct timer_list timer;
+ 	const struct linedisp_ops *ops;
++	struct linedisp_map *map;
+ 	char *buf;
+ 	char *message;
+ 	unsigned int num_chars;
 -- 
 2.43.0.rc1.1.gbec44491f096
 
