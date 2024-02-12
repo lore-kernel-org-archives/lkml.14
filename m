@@ -1,116 +1,95 @@
-Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43604D9E9;
-	Mon, 12 Feb 2024 20:04:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.165.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42BAA4E1CC;
+	Mon, 12 Feb 2024 20:05:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707768289; cv=none; b=KYdF9Zw8QpHzr+0dHTtVKY2GmvC3euMkGxCcZIq/AGnWB3C5KOdJ14HdBKRbVEhr8Ruoj8dJZWCa78uKRcrqrqXOQ14h6tjxn1TuflGiFF6GgUmQDGrMA2kOSCHxiOP7uSVM+y9VKiRN0aWxkMYH3Qi/DwctGpF/PVm4f0tXskc=
+	t=1707768317; cv=none; b=cQW/DQM+c5aJSDPQTmriKgIrMI18VEBg8WwfBQCgWIUuidScvD9d0NLnlN0cGlCBkUHLNDZu6Xn38qHRZ5kjbT48r4Ru5f05lYhFXqdRprbgnPQRgkeF3SalULuf6iNRnSVPPcmxRk9OcFfLIHeezAuQhMhK4IHfQIIzDtXizSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707768289; c=relaxed/simple;
-	bh=8oXLHu5mf6GCO+ZMr+tU6h6oKIscP7uIjmv7rxzg+zo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bkNO3HDTPNqfiW3IY/oyxMacCEOxXP3N7LhqVI9xhA34IUuSswr4xAUvyDq8TWpLr1gKDkPdbFAOD3dV4gFHqlvE7tCf6+63z/N3J+QH8Wzj/9fai4TrhyLCfPRa8EyXrW+FgOcrwm0AgOq+wuDBfeRa0uupoTSMY66wVmCQP4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr; spf=pass smtp.mailfrom=skole.hr; arc=none smtp.client-ip=161.53.165.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skole.hr
-Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
-	by mx.skole.hr (mx.skole.hr) with ESMTP id 982CF83C56;
-	Mon, 12 Feb 2024 21:04:38 +0100 (CET)
-From: =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Date: Mon, 12 Feb 2024 21:03:26 +0100
-Subject: [PATCH 2/2] leds: expresswire: don't depend on NEW_LEDS
+	s=arc-20240116; t=1707768317; c=relaxed/simple;
+	bh=C1Uur93VzozDJB1KDcwGTxWQyeDZHRrmkGuViNEdyC0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=XlFzEC1GAyAQ6TPTPN6/OyxW5jvkUI57xF4t8GPbPTvB8YvG8ZQ2imFKqHoXwzZeFg2hI7yI0PB0L1J8hEsIzlyJF48RmM8JtlxmtxFIwq+2bknsKg/5s2DRJnWPNeno0Z1OqBqkRDuox8HlT6HPn6laNgLtTxUMym6+qtikOR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DZpTXpOz; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DZpTXpOz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD81BC433C7;
+	Mon, 12 Feb 2024 20:05:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707768316;
+	bh=C1Uur93VzozDJB1KDcwGTxWQyeDZHRrmkGuViNEdyC0=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
+	b=DZpTXpOz1RyoE8E/G7bw6IT9gly+udU4s1xI7qjMCtGzBHP62ttJOFB3VKlf7AD8o
+	 Rvnj6sSVQCyuPyOf65o85ntiHPbJB9KsrEfMBEJULZCua637zPW8bQK3IA78+MOZev
+	 WUXHCI83iYvPJ0SQQOVFII/VZa/bmLpDcirv9rH85vYG/Lecg1GI/b5z/trmqAZDpD
+	 vlUt6HRtgELgdIZ9NG8/6NaORNYyFMnmUU1AndX+FUUmJwKvqrhKchIIWEV5FvSeXL
+	 agBrXS+kW/KmI71d2zfz7z77WJ3UFiURTP9+sNwPRgzi1/OLCy+XkTlBnKI2olXj4e
+	 kLB+O9PbnETRw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240212-expresswire-deps-v1-2-685ad10cd693@skole.hr>
-References: <20240212-expresswire-deps-v1-0-685ad10cd693@skole.hr>
-In-Reply-To: <20240212-expresswire-deps-v1-0-685ad10cd693@skole.hr>
-To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
- Daniel Thompson <daniel.thompson@linaro.org>, 
- Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Flavio Suligoi <f.suligoi@asem.it>, Hans de Goede <hdegoede@redhat.com>, 
- Jianhua Lu <lujianhua000@gmail.com>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
- Helge Deller <deller@gmx.de>, Jingoo Han <jingoohan1@gmail.com>, 
- Karel Balej <balejk@matfyz.cz>, dri-devel@lists.freedesktop.org, 
- linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-leds@vger.kernel.org, 
- =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1760;
- i=duje.mihanovic@skole.hr; h=from:subject:message-id;
- bh=8oXLHu5mf6GCO+ZMr+tU6h6oKIscP7uIjmv7rxzg+zo=;
- b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBlynmgL8L0kP8ZVEOL1g3BmNLjNbTU+Q9Ykoclo
- JRlY2qTALGJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZcp5oAAKCRCaEZ6wQi2W
- 4ZkvD/9Tm0AdqRYDjoU8A+UDGagpNQJX5o2MxYzKRI15Kjuili8GVVflTvViVBi8H34/ML2TaNa
- jEeaHxyeQssz/2zcEpflayLn02Sq1FOwKnbvzp7VjdvltWyeAkIPn6Nx3gLszasLNrh3FisGZ+8
- pg4FlXvlkDpxnflQ7tu8hTKLCnPWnbzIX8dZqP2JDTTljWc0fqL8CvLXfOqz3W4kdj3JYmGpAB+
- NPcKfhUn+aP+MUzP3j0hxCUiaywhKiR5e0hvgIgyiXYY7KHcD/tfh6P5nefeV3x6nD/NsStw5eO
- sOkyzOe3hc0KlLT2sgdzGw7t1Zm5ytPX6LYjwfBwiBG9vvCC0Cxa6xbqpdr5cUPjmJL0wRFO3/Z
- E0baLz6BFlGEs64xGzWz1dTG+VMlG2V3Or2CKO4p4AIsx7QEio/Rjm6tGChAcqupljAZCeetnSA
- 4GcUqixr4W8gbqcFkylk86tIXZmqaI4YsTEyObgqQwmSFIHwUhnU8aV2pLH7JBtJQHABysUjUXz
- P97uJRkCfNs1CVOYbBgH3tYIKH3aSkzIuv4i+gf/8LPtge3BGEOEUHYXc8E4TvJJTnZ1tFP2Zh4
- qzDs5rdjQ6ZsABIz4sdsizTeQjIJytLO0ZIWgZGxjtXnH1U9iT5vCcdUe6qTMkpr20jL9/XqD28
- eOvZ3avwrFwS2jg==
-X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
- fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 12 Feb 2024 22:05:12 +0200
+Message-Id: <CZ3DCC8JHNLK.3MGE70MQJT5XM@kernel.org>
+To: "Lino Sanfilippo" <l.sanfilippo@kunbus.com>, "Daniel P. Smith"
+ <dpsmith@apertussolutions.com>, "Jason Gunthorpe" <jgg@ziepe.ca>, "Sasha
+ Levin" <sashal@kernel.org>, <linux-integrity@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Cc: "Ross Philipson" <ross.philipson@oracle.com>, "Kanth Ghatraju"
+ <kanth.ghatraju@oracle.com>, "Peter Huewe" <peterhuewe@gmx.de>
+Subject: Re: [PATCH 1/3] tpm: protect against locality counter underflow
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+X-Mailer: aerc 0.16.0
+References: <20240131170824.6183-1-dpsmith@apertussolutions.com>
+ <20240131170824.6183-2-dpsmith@apertussolutions.com>
+ <CYU3CFW08DAA.29DJY7SJYPJJZ@suppilovahvero>
+ <2ba9a96e-f93b-48e2-9ca0-48318af7f9b1@kunbus.com>
+In-Reply-To: <2ba9a96e-f93b-48e2-9ca0-48318af7f9b1@kunbus.com>
 
-The ExpressWire library does not depend on NEW_LEDS and selecting it
-from a subsystem other than LEDs may cause Kconfig warnings:
+On Fri Feb 2, 2024 at 5:08 AM EET, Lino Sanfilippo wrote:
+>
+>
+> On 01.02.24 23:21, Jarkko Sakkinen wrote:
+>
+> >=20
+> > On Wed Jan 31, 2024 at 7:08 PM EET, Daniel P. Smith wrote:
+> >> Commit 933bfc5ad213 introduced the use of a locality counter to contro=
+l when a
+> >> locality request is allowed to be sent to the TPM. In the commit, the =
+counter
+> >> is indiscriminately decremented. Thus creating a situation for an inte=
+ger
+> >> underflow of the counter.
+> >=20
+> > What is the sequence of events that leads to this triggering the
+> > underflow? This information should be represent in the commit message.
+> >=20
+>
+> AFAIU this is:
+>
+> 1. We start with a locality_counter of 0 and then we call tpm_tis_request=
+_locality()
+> for the first time, but since a locality is (unexpectedly) already active=
+ check_locality() and consequently
+> __tpm_tis_request_locality() return "true". This prevents the locality_co=
+unter from being increased
+> to 1, see=20
+>
+> 	ret =3D __tpm_tis_request_locality(chip, l);
+> 	if (!ret) /* Counter not increased since ret =3D=3D 1 */
+> 		priv->locality_count++;
+>
+> in tpm_tis_request_locality().
+>
+> If now the locality is released the counter is decreased to below zero (r=
+esulting
+> in an underflow since "locality_counter" is an unsigned int.=20
 
-WARNING: unmet direct dependencies detected for LEDS_EXPRESSWIRE
-  Depends on [n]: NEW_LEDS [=n] && GPIOLIB [=y]
-  Selected by [y]:
-  - BACKLIGHT_KTD2801 [=y] && HAS_IOMEM [=y] && BACKLIGHT_CLASS_DEVICE [=y]
+Thanks, Daniel, can you transcript this to the commit message?
 
-Move it out of the "if NEW_LEDS" block to allow selection from other
-subsystems (in particular backlight) without raising this warning.
-
-Link: https://lore.kernel.org/20240212111819.936815-1-arnd@kernel.org
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Suggested-by: Daniel Thompson <daniel.thompson@linaro.org>
-Fixes: 25ae5f5f4168 ("leds: Introduce ExpressWire library")
-Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
----
- drivers/leds/Kconfig | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index 52328d295b4e..66998b938ed3 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -6,6 +6,12 @@ config LEDS_GPIO_REGISTER
- 	  As this function is used by arch code it must not be compiled as a
- 	  module.
- 
-+# This library does not depend on NEW_LEDS and must be independent so it can be
-+# selected from other subsystems (specifically backlight).
-+config LEDS_EXPRESSWIRE
-+	bool
-+	depends on GPIOLIB
-+
- menuconfig NEW_LEDS
- 	bool "LED Support"
- 	help
-@@ -186,10 +192,6 @@ config LEDS_EL15203000
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called leds-el15203000.
- 
--config LEDS_EXPRESSWIRE
--	bool
--	depends on GPIOLIB
--
- config LEDS_TURRIS_OMNIA
- 	tristate "LED support for CZ.NIC's Turris Omnia"
- 	depends on LEDS_CLASS_MULTICOLOR
-
--- 
-2.43.1
-
-
+BR, Jarkko
