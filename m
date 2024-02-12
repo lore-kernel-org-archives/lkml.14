@@ -1,176 +1,187 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A94F2481AD;
-	Mon, 12 Feb 2024 21:24:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024854C63F
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 21:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707773065; cv=none; b=d2LPdsQRkf7/M3OhaSySblsWUzFmshTV2GkK+KRAH/EkoYu/TE3XL/eH0Fdmc6X+fQVB28jiKo1D3JZrnIKxhjcJTXXvmqBSnhJ8IJp6led80tQfq0SZ4JHmxFCcs9POul0qMI0OZ7TrG98bDSlbVM3Ld/7Tl1hLeUkPz0ZDe24=
+	t=1707773178; cv=none; b=HwU77Khf9N3JtMah85/6Nt5V5GcxYmJ8nb5DrLejnUB6xqMX5AFm/wfyjV+kgFQyZKqJSRHuwQJNPffrjkKcEdtZt0v0pYOIBIzMCGimDEeVX41QI5JKIeabiDHpck9eoJbjhrxst4V0FM9e91rbJQ3j/pSDeeF54ad2eSID39Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707773065; c=relaxed/simple;
-	bh=bxE29yGll33bT1hVGkhkpU2SSMDQ/72L2rqcmd5FkqI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=atLfTrauXL/V/yUprSgpr0obyKo8JRPLNOudTG1Va2f9xStq4rQ4q2iz0AFbamJ1C95IXopR5EIEu06j6WdcMNHMAg6xQqvCkWA/Dn49ToLd6JA7ZZN+jnsSRyuojx5RXyz59NV5TOhaz5LfdK8NHhBjMFsWvxoWlLYSJXtr6eA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NGcHWXeS; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NGcHWXeS"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-33b66883de9so2594926f8f.0;
-        Mon, 12 Feb 2024 13:24:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707773062; x=1708377862; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bxE29yGll33bT1hVGkhkpU2SSMDQ/72L2rqcmd5FkqI=;
-        b=NGcHWXeS4iFkAbyCmXmhwCNxDHcnvpI7Ty7W2/qXLcd2G7JUvaruPJ4siVDDBR+wAA
-         TTiGB6ki1xKHlvqaa0VvVIwYU/QhTSABRBpxgmdQpRdPJkqauBUnyh4MaIjPucsmXcae
-         Ki56aX6n92Al5ogmEVuNQAmm2G6Om8N7WkR4Tw7DPkLxzqiowrK1Zg8gFI60DnPu3+dA
-         rjjVXgBcICKguHPRSZ1JV68OVFd3L5t/LspBUQ6EzpQ/HW+c7pMw3zNNM4VuWvI9L8Er
-         ISFcGjoeZR9MAfraU6350kKKSS7mHmbqBtIZrsXsBUrx+jLFBfngBc8SRA0lwql4erri
-         HTwg==
+	s=arc-20240116; t=1707773178; c=relaxed/simple;
+	bh=gdBrqYwMAIQdRKLaqdduNKTUrHZMgfta/ChCSoiv/JI=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=OLm2P3MmObrY58PZKTDrPjFVD7ly81WqE+sH3bKD9QPkMKGrLCej0utCF2W6/u+DU+gVmMbwkirMmtu0lIh6qTod+SYHoNMME2+6Rjn5JftTC5M9NQuembJbqkx90zbT5O0gUlopJ7il9mWol8mIfaEYZbwOdSgPoi1tKBvMpyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-363dfc1a546so37156805ab.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 13:26:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707773062; x=1708377862;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bxE29yGll33bT1hVGkhkpU2SSMDQ/72L2rqcmd5FkqI=;
-        b=itSjiM0Xd0YhbWTD/WdZT8/Z2JygdYjwb9YVPU3dlRd+lAUowgFZND3l1sGOVr1dpp
-         NfOalQnuW7smERzdnQzZZ3yx/wVlH2FaGqN5/zOvJIU80+5BagBLNd1SKCgQeqtDv9Sz
-         UcVkiYceKHK69D3ZDwtSJvdwfcv3i3g0blIf9EjTuIO1KS1Dw4/PmrWbamCYC31GoI8/
-         IUFdb66v5Io7cOqGJ8lqB8lCxT78wrsLbOmLhr0RDB5+Yaq+OtPfb/l229Q4t2MCM/YS
-         fm+CTwSz/7Gkq8ScAZNvhG2U41yu3+BtizaQuXvg/yaKK71SSpKOfBqU5/ynlsBH6kn6
-         tQew==
-X-Forwarded-Encrypted: i=1; AJvYcCUOef7VnbKhReZZXtw3GMjld0QsvXvQjkuyuuT2XombRWRfVp5N9OpPSIY1WzIhpsJ5E1cSSGt55Q92NMssXA/gvd5HywVQed6SaaqsE9NaTV6cPaGcTYMELvQR00PwaKQEHYxEjKFxPW3MVDMgkIV+6eM7uDKe+ztFl/7XpzJkY9RaQlUvWCGJ5+IWyRk9x235jp5ogfaNvWp9e7BUkuZJvYcAEeJ/F/Axifo/SzhMsWYyjqcY1MWiHFA=
-X-Gm-Message-State: AOJu0YyWL2COuTSVzzMBhEv/ke4ztxMpgPV0OlFskYMVGBJqsYcpE0HA
-	ZYClnIZkBk7oZ4fz4DoeMJESPQDLi/jA9QKzjLXc6dIE0Ug95r93LqZTBwjXa8LKgHc7mVA75op
-	rgCRtE1ZZ6WQcEljxGO5TYlA0pmU=
-X-Google-Smtp-Source: AGHT+IGQJsk4wTT+E8TFIHtU+/AM8HkdWJmfCDLAlARodYmBzIu5z3aknMyj7upwGILqyPN3v8jpKhnatN3rHCwCR5Q=
-X-Received: by 2002:a05:6000:148:b0:33b:8782:985a with SMTP id
- r8-20020a056000014800b0033b8782985amr1875411wrx.21.1707773061559; Mon, 12 Feb
- 2024 13:24:21 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707773176; x=1708377976;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Wagcq9COHb24z/xuskXRn8d6kbGmFHER+wSRaPPVz+w=;
+        b=oXa1vhyzC1Fdb7rfGoVHV90OtjL4zcbbENvQAAlMGcAyyipjWY2xkD7wSozGfyrMnh
+         Uq8xR9ifXGepbZfnLofJlolpsgX5sTIJZUzLQnO8UQxlF1KXxU/5ErDlWDT8IqsER/bx
+         zVjhPI4/WUablc4afXD0Mh92+hDDvIgLxZpMi6McRkGUOciH6WaOMi15hBrNEMp77bXK
+         epunI6w67o18fA6W9T6PIDHjPm+N4h8EVYKTGp6Hff6yOaQeKx6o3LZVFXVCQNndAayX
+         itui6SGC7c9o0INrwOCaG2WDqjkLar4kuhC5a9Rt22r1jVhfGA/mlghArWEub+22bcTF
+         xu9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV8dge+MmghNstciDfLjrulzY7uTTON6DEG+0OeF89pwfYbYeVBWNdLZRtH0fmd7cBC2qaESQv7unJby4/kqmVYZqq7gAb0acFwYDm+
+X-Gm-Message-State: AOJu0YwGIeIPiaJczi+dsh9kptPoSqFTOBq8bk2uLhLgzb2zisS3fm/p
+	kj7j4nTwhjcavBkygqhAEO6pd2/T7iNgNO6YEYSknQMlIzcfJCpv+bGkvz4uS5QYSb9gTKANRTY
+	oZ3B3sNHOMs7+oZ4jBCjmMyNNTZ/W9N35GVvn0976e06u+FFMk4FtWo8=
+X-Google-Smtp-Source: AGHT+IEQ6Yr7NUwr1aO5sIMrfITNumwjXzV8MO5Y/AwbsS6q1SAgcgqkhs5f5Cb/5wsoXRVEZPgBYlQuasVbw4LiOOqFFgIk1CeV
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240209-hid-bpf-sleepable-v1-0-4cc895b5adbd@kernel.org>
- <87bk8pve2z.fsf@toke.dk> <CAO-hwJ+UeaBydN9deA8KBbgBiC_UCt6oXX-wGnNuSr8fhUrkXw@mail.gmail.com>
- <875xyxva9u.fsf@toke.dk> <CAO-hwJLvEGNRXc8G2PR+AQ6kJg+k5YqSt3F7LCSc0zWnmFfe5g@mail.gmail.com>
- <87r0hhfudh.fsf@toke.dk> <CAO-hwJLxkt=THKBjxDA6KZsC5h52rCXZ-2RNKPCiYMHNjhQJNg@mail.gmail.com>
-In-Reply-To: <CAO-hwJLxkt=THKBjxDA6KZsC5h52rCXZ-2RNKPCiYMHNjhQJNg@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Mon, 12 Feb 2024 13:24:09 -0800
-Message-ID: <CAADnVQKt7zu2OY0xHCkTb=KSXO33Xj8H4vVYMqP51ZJ_Kj1sZA@mail.gmail.com>
-Subject: Re: [PATCH RFC bpf-next 0/9] allow HID-BPF to do device IOs
-To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>, 
-	Benjamin Tissoires <bentiss@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Jiri Kosina <jikos@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
+X-Received: by 2002:a05:6638:4904:b0:471:fe5:c48b with SMTP id
+ cx4-20020a056638490400b004710fe5c48bmr88097jab.3.1707773176154; Mon, 12 Feb
+ 2024 13:26:16 -0800 (PST)
+Date: Mon, 12 Feb 2024 13:26:16 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000085930e061135ed45@google.com>
+Subject: [syzbot] [wireguard?] KCSAN: data-race in wg_packet_receive /
+ wg_packet_receive (7)
+From: syzbot <syzbot+fd07f3da9110f5f18b4f@syzkaller.appspotmail.com>
+To: Jason@zx2c4.com, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com, wireguard@lists.zx2c4.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 12, 2024 at 10:21=E2=80=AFAM Benjamin Tissoires
-<benjamin.tissoires@redhat.com> wrote:
->
-> On Mon, Feb 12, 2024 at 6:46=E2=80=AFPM Toke H=C3=B8iland-J=C3=B8rgensen =
-<toke@redhat.com> wrote:
-> >
-> > Benjamin Tissoires <benjamin.tissoires@redhat.com> writes:
-> >
-> > [...]
-> > >> IIUC, the bpf_timer callback is just a function (subprog) from the
-> > >> verifier PoV, so it is verified as whatever program type is creating=
- the
-> > >> timer. So in other words, as long as you setup the timer from inside=
- a
-> > >> tracing prog type, you should have access to all the same kfuncs, I
-> > >> think?
-> > >
-> > > Yep, you are correct. But as mentioned above, I am now in trouble wit=
-h
-> > > the sleepable state:
-> > > - I need to call timer_start() from a non sleepable tracing function
-> > > (I'm in hard IRQ when dealing with a physical device)
-> > > - but then, ideally, the callback function needs to be tagged as a
-> > > sleepable one, so I can export my kfuncs which are doing kzalloc and
-> > > device IO as such.
-> > >
-> > > However, I can not really teach the BPF verifier to do so:
-> > > - it seems to check for the callback first when it is loaded, and
-> > > there is no SEC() equivalent for static functions
-> > > - libbpf doesn't have access to the callback as a prog as it has to b=
-e
-> > > a static function, and thus isn't exported as a full-blown prog.
-> > > - the verifier only checks for the callback when dealing with
-> > > BPF_FUNC_timer_set_callback, which doesn't have a "flag" argument
-> > > (though the validation of the callback has already been done while
-> > > checking it first, so we are already too late to change the sleppable
-> > > state of the callback)
-> > >
-> > > Right now, the only OK-ish version I have is declaring the kfunc as
-> > > non-sleepable, but checking that we are in a different context than
-> > > the IRQ of the initial event. This way, I am not crashing if this
-> > > function is called from the initial IRQ, but will still crash if used
-> > > outside of the hid context.
-> > >
-> > > This is not satisfactory, but I feel like it's going to be hard to
-> > > teach the verifier that the callback function is sleepable in that
-> > > case (maybe we could suffix the callback name, like we do for
-> > > arguments, but this is not very clean either).
-> >
-> > The callback is only set once when the timer is first setup; I *think*
-> > it works to do the setup (bpf_timer_init() and bpf_timer_set_callback()=
-)
-> > in the context you need (from a sleepable prog), but do the arming
-> > (bpf_timer_start()) from a different program that is not itself sleepab=
-le?
-> >
->
-> Genius! It works, and I can just keep having them declared as a
-> syscall kfunc, not as a tracing kfunc.
->
-> But isn't this an issue outside of my use case? I mean, if the
-> callback is assuming the environment for when it is set up but can be
-> called from any context there seems to be a problem when 2 contexts
-> are not equivalent, no?
+Hello,
 
-I agree that workqueue delegation fits into the bpf_timer concept and
-a lot of code can and should be shared.
-All the lessons(bugs) learned with bpf_timer don't need to be re-discovered=
- :)
-Too bad, bpf_timer_set_callback() doesn't have a flag argument,
-so we need a new kfunc to set a sleepable callback.
-Maybe
-bpf_timer_set_sleepable_cb() ?
-The verifier will set is_async_cb =3D true for it (like it does for regular=
- cb-s).
-And since prog->aux->sleepable is kinda "global" we need another
-per subprog flag:
-bool is_sleepable: 1;
+syzbot found the following issue on:
 
-We can factor out a check "if (prog->aux->sleepable)" into a helper
-that will check that "global" flag and another env->cur_state->in_sleepable
-flag that will work similar to active_rcu_lock.
-Once the verifier starts processing subprog->is_sleepable
-it will set cur_state->in_sleepable =3D true;
-to make all subprogs called from that cb to be recognized as sleepable too.
+HEAD commit:    a5b6244cf87c Merge tag 'block-6.8-2024-02-10' of git://git..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=126f51e0180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3cd0dc1b46a5bc5c
+dashboard link: https://syzkaller.appspot.com/bug?extid=fd07f3da9110f5f18b4f
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-A bit of a challenge is what to do with global subprogs,
-since they're verified lazily. They can be called from
-sleepable and non-sleepable contex. Should be solvable.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Overall I think this feature is needed urgently,
-so if you don't have cycles to work on this soon,
-I can prioritize it right after bpf_arena work.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/c1a21353ecf6/disk-a5b6244c.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/675fe8a43c32/vmlinux-a5b6244c.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/1848dc711f3f/bzImage-a5b6244c.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+fd07f3da9110f5f18b4f@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KCSAN: data-race in wg_packet_receive / wg_packet_receive
+
+read to 0xffff88812bad5c08 of 4 bytes by interrupt on cpu 0:
+ wg_cpumask_next_online drivers/net/wireguard/queueing.h:127 [inline]
+ wg_queue_enqueue_per_device_and_peer drivers/net/wireguard/queueing.h:173 [inline]
+ wg_packet_consume_data drivers/net/wireguard/receive.c:526 [inline]
+ wg_packet_receive+0xc51/0x12c0 drivers/net/wireguard/receive.c:576
+ wg_receive+0x4e/0x70 drivers/net/wireguard/socket.c:326
+ udp_queue_rcv_one_skb+0xad0/0xb60 net/ipv4/udp.c:2113
+ udp_queue_rcv_skb+0x20a/0x220 net/ipv4/udp.c:2191
+ udp_unicast_rcv_skb+0x1c2/0x1f0 net/ipv4/udp.c:2351
+ __udp4_lib_rcv+0xb93/0x1110 net/ipv4/udp.c:2427
+ udp_rcv+0x4f/0x60 net/ipv4/udp.c:2609
+ ip_protocol_deliver_rcu+0x356/0x6d0 net/ipv4/ip_input.c:205
+ ip_local_deliver_finish+0x13c/0x1b0 net/ipv4/ip_input.c:233
+ NF_HOOK include/linux/netfilter.h:314 [inline]
+ ip_local_deliver+0xec/0x1c0 net/ipv4/ip_input.c:254
+ dst_input include/net/dst.h:461 [inline]
+ ip_rcv_finish net/ipv4/ip_input.c:449 [inline]
+ NF_HOOK include/linux/netfilter.h:314 [inline]
+ ip_rcv+0x18a/0x260 net/ipv4/ip_input.c:569
+ __netif_receive_skb_one_core net/core/dev.c:5534 [inline]
+ __netif_receive_skb+0x90/0x1b0 net/core/dev.c:5648
+ process_backlog+0x21f/0x380 net/core/dev.c:5976
+ __napi_poll+0x60/0x3c0 net/core/dev.c:6576
+ napi_poll net/core/dev.c:6645 [inline]
+ net_rx_action+0x32b/0x750 net/core/dev.c:6778
+ __do_softirq+0xc4/0x27b kernel/softirq.c:553
+ do_softirq+0x5e/0x90 kernel/softirq.c:454
+ __local_bh_enable_ip+0x66/0x70 kernel/softirq.c:381
+ __raw_read_unlock_bh include/linux/rwlock_api_smp.h:257 [inline]
+ _raw_read_unlock_bh+0x1b/0x20 kernel/locking/spinlock.c:284
+ wg_socket_send_skb_to_peer+0x109/0x130 drivers/net/wireguard/socket.c:184
+ wg_packet_create_data_done drivers/net/wireguard/send.c:251 [inline]
+ wg_packet_tx_worker+0x127/0x360 drivers/net/wireguard/send.c:276
+ process_one_work kernel/workqueue.c:2633 [inline]
+ process_scheduled_works+0x5b8/0xa40 kernel/workqueue.c:2706
+ worker_thread+0x525/0x730 kernel/workqueue.c:2787
+ kthread+0x1d7/0x210 kernel/kthread.c:388
+ ret_from_fork+0x48/0x60 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
+
+write to 0xffff88812bad5c08 of 4 bytes by interrupt on cpu 1:
+ wg_cpumask_next_online drivers/net/wireguard/queueing.h:130 [inline]
+ wg_queue_enqueue_per_device_and_peer drivers/net/wireguard/queueing.h:173 [inline]
+ wg_packet_consume_data drivers/net/wireguard/receive.c:526 [inline]
+ wg_packet_receive+0xd3a/0x12c0 drivers/net/wireguard/receive.c:576
+ wg_receive+0x4e/0x70 drivers/net/wireguard/socket.c:326
+ udpv6_queue_rcv_one_skb+0xb37/0xbc0 net/ipv6/udp.c:716
+ udpv6_queue_rcv_skb+0x20f/0x230 net/ipv6/udp.c:778
+ udp6_unicast_rcv_skb+0x195/0x1b0 net/ipv6/udp.c:921
+ __udp6_lib_rcv+0xa24/0xc80 net/ipv6/udp.c:1010
+ udpv6_rcv+0x4f/0x60 net/ipv6/udp.c:1124
+ ip6_protocol_deliver_rcu+0x92f/0xf30 net/ipv6/ip6_input.c:438
+ ip6_input_finish net/ipv6/ip6_input.c:483 [inline]
+ NF_HOOK include/linux/netfilter.h:314 [inline]
+ ip6_input+0xbd/0x1b0 net/ipv6/ip6_input.c:492
+ dst_input include/net/dst.h:461 [inline]
+ ip6_rcv_finish+0x1d9/0x2d0 net/ipv6/ip6_input.c:79
+ NF_HOOK include/linux/netfilter.h:314 [inline]
+ ipv6_rcv+0x74/0x150 net/ipv6/ip6_input.c:310
+ __netif_receive_skb_one_core net/core/dev.c:5534 [inline]
+ __netif_receive_skb+0x90/0x1b0 net/core/dev.c:5648
+ process_backlog+0x21f/0x380 net/core/dev.c:5976
+ __napi_poll+0x60/0x3c0 net/core/dev.c:6576
+ napi_poll net/core/dev.c:6645 [inline]
+ net_rx_action+0x32b/0x750 net/core/dev.c:6778
+ __do_softirq+0xc4/0x27b kernel/softirq.c:553
+ do_softirq+0x5e/0x90 kernel/softirq.c:454
+ __local_bh_enable_ip+0x66/0x70 kernel/softirq.c:381
+ __raw_read_unlock_bh include/linux/rwlock_api_smp.h:257 [inline]
+ _raw_read_unlock_bh+0x1b/0x20 kernel/locking/spinlock.c:284
+ wg_socket_send_skb_to_peer+0x109/0x130 drivers/net/wireguard/socket.c:184
+ wg_packet_create_data_done drivers/net/wireguard/send.c:251 [inline]
+ wg_packet_tx_worker+0x127/0x360 drivers/net/wireguard/send.c:276
+ process_one_work kernel/workqueue.c:2633 [inline]
+ process_scheduled_works+0x5b8/0xa40 kernel/workqueue.c:2706
+ worker_thread+0x525/0x730 kernel/workqueue.c:2787
+ kthread+0x1d7/0x210 kernel/kthread.c:388
+ ret_from_fork+0x48/0x60 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
+
+value changed: 0x00000000 -> 0x00000001
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 PID: 5475 Comm: kworker/1:6 Not tainted 6.8.0-rc3-syzkaller-00293-ga5b6244cf87c #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
+Workqueue: wg-crypt-wg0 wg_packet_tx_worker
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
