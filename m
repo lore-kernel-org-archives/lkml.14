@@ -1,281 +1,200 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2052.outbound.protection.outlook.com [40.107.114.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F2AD47A73;
-	Mon, 12 Feb 2024 20:08:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707768503; cv=none; b=t780HZL7eG41UfVKSb2A6qO1wjIN57UBeOlEyurve/tnta8C6kXW5PQ1JhqntaI6nAat3PS0j7i8X3YhrlLr56QpJC1ShAKRQsVRa58adsPFg9CGDXAaVRBexrxSCsKwdMo9gObMgad5cuDC2+LhvNk4oa9gv99GN9CYSUqLDjA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707768503; c=relaxed/simple;
-	bh=2K9Jkx7Dbx+wU3PTYaguUrfmvf8b4+S7YQdNN1Rasms=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KBJzlbc8iAwFtTsMfzjA5re0H80XvVOy8hpTQnFoiEVJ3PnYoS5xeLrLhRD7tBHYsUBNreYOHiPoPlRTBdEENKGbJbC30qi76KvIgnBLW1L9I1AEcBsTJxsL3HKi9YrG5IfelammhbfShvsbIe9Djxz69gDAoIXAqu1uquVwzVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N3T+hmLS; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F7648781;
+	Mon, 12 Feb 2024 20:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.114.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707768549; cv=fail; b=XQV2IGrOj1KpZLUjPrsyk08FdIDHSiwGBbQyriWESEQgWxyRqakJcOzi8x41PqQI3in4l2Bd2po/btQlpjxJ1iV+A+Vmk1/nytbAlWyemBhD1o1Jxd8XKiCcR2un+IN6Az3eWl8Eb2/Ts5zeFUunYmR7Qv9zF6aFooqlvV/ImD8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707768549; c=relaxed/simple;
+	bh=+kBsPFZGPIzBzk6351SgiFIwIbzcbQpMKnZDwBSnp/8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=VB14Q//Ozkb/7J9Czf5GEMipQvbJSqqEFLnOcDomlTwPXFOh+1Jj/Bw/RPwAUVvG6oXegDAdEK1yWXCsujnhOx+ZjRSinYRfdHsXhit1UlJTVrj6qUc/mWAvJ/w29L+VAeuNATN/x+tFkg/rXFzjUxg6VxLNHMc/jtFTKM+oyd4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=Yf6lvyVy; arc=fail smtp.client-ip=40.107.114.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N3T+hmLS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707768502; x=1739304502;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2K9Jkx7Dbx+wU3PTYaguUrfmvf8b4+S7YQdNN1Rasms=;
-  b=N3T+hmLSoWp93KuiX7S6l018QIDfjp6G+kogirbqBIQUaay677JWlQ7T
-   Y/TJEuTBjM3xxfxdeZWfJUsxJVpVvbj3jWAjBR2wNrNbdErrtJI80zThu
-   jBPejs7hnbVdQgcEehQew9doGuUbjqLQjghJ5jJOHUk9cVDSRqPSGszt3
-   iCv2fHB9RdWl3gscqYVS+q2Ow+5WTt88MB7i34/JTH1bomQrNvmdC5tcg
-   e42vDvRHJaBZzVtP3j0s3s6LomdwJNv3GGpO40l86hDtBg+AwHu31KMLc
-   ydtZf9XKXGy+j8ilqRJuPc/7Vetz/+aiWK710QefrF3sHGgXK+V6Elyhs
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="1909065"
-X-IronPort-AV: E=Sophos;i="6.06,155,1705392000"; 
-   d="scan'208";a="1909065"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 12:08:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,155,1705392000"; 
-   d="scan'208";a="7314343"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 12:08:19 -0800
-Date: Mon, 12 Feb 2024 12:13:46 -0800
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: LKML <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>, Peter
- Zijlstra <peterz@infradead.org>, iommu@lists.linux.dev, Thomas Gleixner
- <tglx@linutronix.de>, Lu Baolu <baolu.lu@linux.intel.com>,
- kvm@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, Joerg Roedel
- <joro@8bytes.org>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov
- <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, Paul Luse
- <paul.e.luse@intel.com>, Dan Williams <dan.j.williams@intel.com>, Raj Ashok
- <ashok.raj@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
- maz@kernel.org, seanjc@google.com, Robin Murphy <robin.murphy@arm.com>,
- jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH 00/15] Coalesced Interrupt Delivery with posted MSI
-Message-ID: <20240212121346.0f8870a7@jacob-builder>
-In-Reply-To: <2aa290eb-ec4b-43b1-87db-4df8ccbeaa37@kernel.dk>
-References: <20240126234237.547278-1-jacob.jun.pan@linux.intel.com>
-	<051cf099-9ecf-4f5a-a3ac-ee2d63a62fa6@kernel.dk>
-	<20240209094307.4e7eacd0@jacob-builder>
-	<9285b29c-6556-46db-b0bb-7a85ad40d725@kernel.dk>
-	<20240212102742.34e1e2c2@jacob-builder>
-	<2aa290eb-ec4b-43b1-87db-4df8ccbeaa37@kernel.dk>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="Yf6lvyVy"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=M1yLWAI+IwF45Dtp/zub8iBwEBkZwRAv64UnQNZV2AWhE0gjTrJ9Wd0wX/oXH9WISWZOKd+Cdeb0I/nYDjBMaZAotX9AjOxIHPCk4B5dWTtd5FK0Kw4KTECKUMZEMADzGDLKwQZa62ajicZAQrX1wCyNf8HnUOpjuLdxp4337ZA6F6MsSMyWyJJNS44AEnSKDo7bDVp/rM1ReY4NQqx/+8vpNjZypHBTbRUjwk0PjbZGr/GMJdUyigt73ZnlF2FjS3gPzcuuFJ7BLYPMG+Gn9F+FVLyH/PSzlabLQ80XXlH3yKpg66dDwF/CPTX5e2vD5qSpgJeCR4JucL9UcnSD4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=w5n9Jldo+t6z7HIeJbRpnreWGyxxGDEhffmNMfR9w6s=;
+ b=c+7F1+gA2FRZx4G83RCwPfyv06HZaz9Dn9TR9gduzMLpVKsI/A5uiTVoU2+eMFGu3JKZlL0IRSvEsItsUXrzq5vvzgLtv+Zdr7lcUa599v5fmIUB+SnZNGJLRp7Flubu0TWhznGn5FAPn9Qy1/K08aPnPqjukNTvTfS0MomGO1+OfjsEnIwH+bWhAeJq2d2KHQ5w7/ZwBU4D86o08RkEEz4rzP8+F23CuKaaRsiTztqchx2Mqu3TYDZiBSKkBBy6NoViYFG3vWZusypwhGcLAaJqRzP6g3xh0UGFWrCzJFgHOFR0XA0otyJJgO/0g3FtFaCRLPETkZkQQJwLD8sbmg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w5n9Jldo+t6z7HIeJbRpnreWGyxxGDEhffmNMfR9w6s=;
+ b=Yf6lvyVyaD942Va2AZdhq9IiOIQEoTOydSorDBGmSk+oAQTqpDFrpGcL5z9Lw9mKIQNMcbuPKgqDHYH5gif46g0HHoQ35gZYUvdPGyLgtu5Ujq/3g/dENsA8pG2y85P2syQRKZGI7jbcfwgKShNRqS7QrBdnAUSSusZ5lVAkqcM=
+Received: from TYCPR01MB12093.jpnprd01.prod.outlook.com (2603:1096:400:448::7)
+ by OS7PR01MB11452.jpnprd01.prod.outlook.com (2603:1096:604:243::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.39; Mon, 12 Feb
+ 2024 20:09:02 +0000
+Received: from TYCPR01MB12093.jpnprd01.prod.outlook.com
+ ([fe80::fb0a:e289:43e:1c17]) by TYCPR01MB12093.jpnprd01.prod.outlook.com
+ ([fe80::fb0a:e289:43e:1c17%6]) with mapi id 15.20.7270.036; Mon, 12 Feb 2024
+ 20:09:02 +0000
+From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+To: =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+CC: Philipp Zabel <p.zabel@pengutronix.de>, Geert Uytterhoeven
+	<geert+renesas@glider.be>, Biju Das <biju.das.jz@bp.renesas.com>, Magnus Damm
+	<magnus.damm@gmail.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org"
+	<linux-pwm@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org"
+	<linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH v6 2/4] pwm: Add support for RZ/V2M PWM driver
+Thread-Topic: [PATCH v6 2/4] pwm: Add support for RZ/V2M PWM driver
+Thread-Index: AQHaWuYI/v4KlwHV40Gk2x8URHJzn7ED1uOAgAMC8wA=
+Date: Mon, 12 Feb 2024 20:09:02 +0000
+Message-ID:
+ <TYCPR01MB120934E8A094DD3185573B9C9C2482@TYCPR01MB12093.jpnprd01.prod.outlook.com>
+References: <20240208232411.316936-1-fabrizio.castro.jz@renesas.com>
+ <20240208232411.316936-3-fabrizio.castro.jz@renesas.com>
+ <vovrjoymovpjzz2myx73ns4zvbqyfw6twzvjhuyruogmcqvj4y@g2at4kznmqxh>
+In-Reply-To: <vovrjoymovpjzz2myx73ns4zvbqyfw6twzvjhuyruogmcqvj4y@g2at4kznmqxh>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYCPR01MB12093:EE_|OS7PR01MB11452:EE_
+x-ms-office365-filtering-correlation-id: 60a040a3-bcc8-408d-8871-08dc2c0674f3
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ kEtlk8bOpVzXpmn05NpcIunc+FO0xJxedI8BXitVhMpK6WaJWuIxYCrW67y0M2R3dl6/IJAVwzDt2dehpywfwMmUNiCsVledC/LxHcaAF5UdpE2EJZgxe+/3VbXt4yrV6nrfNEx5c8wtPkh6PJq/tdVH4Rha7Lsjm+hBwmlyC7sTOWPZc8EEhWjSCbXsKq8AYRSfCUVXrjazxsRFTk0iCSFRE8VmudGHEWZXVTrb+A0rP8bK5bVGkwrAzCFEIGNa9FVjV5oLI9S10ys1A6pYdMx8JYx4ZbwWQdaIuTiq+Vj25QIn4sQ3C1NMpCYQ3fYMfJbOG6xajzck3SdjTvyfhM9Im6MGDT2JQ1f+JGY2l9VX93t04nqQVKurZHfk2NsrJLRDOdE/8LSSReckz8KfEXzWeUvwAOlSaVc3MDSJorrgE8M/NG0aKz1eyY7jGmF/iwnhf1kPtDNbTOWI7Klx4wk1rTbBp2wAxfPCTO4sSmS2QmpPYxdvHjU4BVh+p//JnDTC8S1qwDNB8KhV08O8fxKrdo16+gQVjCs2UR0CZK/pUlfGNUyYl3ZA927uAm/XwDlVRx4duzO+xv4YkI//k8IeQk/9zoQt9Kd3lZdU8bM=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB12093.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(396003)(366004)(39860400002)(376002)(346002)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(86362001)(33656002)(122000001)(38100700002)(6506007)(966005)(9686003)(7696005)(53546011)(316002)(478600001)(54906003)(71200400001)(66574015)(26005)(83380400001)(41300700001)(38070700009)(4326008)(55016003)(2906002)(8936002)(6916009)(8676002)(66946007)(52536014)(64756008)(66446008)(66476007)(66556008)(5660300002)(76116006);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?Q6MQfjyEDPrAnkquwU7GJJCBvz+MEWvlnRacNu5KKcQhNIOrMfAu3VQ2Qf?=
+ =?iso-8859-1?Q?AjVxoPO0zdmIrejl5y4Ww3zTUBK00s4P9ACDXN97X0Mtv8406Aa1czJnlC?=
+ =?iso-8859-1?Q?ajzBfS3hFmr7sfMyhB89+lpm3rXiL7te9TU/JNEqrH4XIc6eJkTJMOfck8?=
+ =?iso-8859-1?Q?iEikDkZR1vV+NibIQMtwFeH/fmuvAj/7bNDXSQ3IzIIKN8Dg+UccNcYFqC?=
+ =?iso-8859-1?Q?x2phKAYLKYKu5ww8C0PyoXQx+PNvFVG30ehWKZ8bDgcMBciX/Vpg5ImnKo?=
+ =?iso-8859-1?Q?fV6HJysYI8WXLZRWv9qaIaZ1Ijrutv6y823/IjpiwAPxclY8yHdpis6+47?=
+ =?iso-8859-1?Q?YJ11AW3Vn5w4/762P81/VgghIP1FRnE5f0xIwFLM3MCiZX77Oiguf1wL8E?=
+ =?iso-8859-1?Q?EcRpGvAOxn7Qco4q0ioXGAnCFx9lh2TfhMANMUPGxXg58SIXPdHAy75e0i?=
+ =?iso-8859-1?Q?FKLRn9C7Qf18XTsnU4yOwyXoFBZMl7GcxrZyZQg0tWtEthjwX6I5bFCUia?=
+ =?iso-8859-1?Q?dmdyWKV4sZdH7L4pcLqG8NinDI10uBTEVX7LTezo0DWavT1wgcp3nuMzl0?=
+ =?iso-8859-1?Q?vAjaZtR4ieVunu2R5+pwTE11xmMiTlFIOLx0T37riHfwWVtR3DiCRqOBIp?=
+ =?iso-8859-1?Q?D5VLgbBZpTFyCe2x4ov6tiiGdSl2o7NsgSkJO/jREYktXey3j9m0h54EDU?=
+ =?iso-8859-1?Q?W9gLdm25tu7y+2/xRvL4kenTOcLjoFuEuMMYnfZ4itQ4S0FjIWlLf4qm1R?=
+ =?iso-8859-1?Q?IQ+0qXkztel26qKTMqPYumFi5YzG389H0WKtq4U/yR9Vd47ICE9Tm2+TrM?=
+ =?iso-8859-1?Q?wjEVHtY/R+C4Ioc+CqZfFKWWHhHlcBdzcMYT6CpiGHRnSbNNw4MUPW9P7t?=
+ =?iso-8859-1?Q?zEKeR6d3FFaJ/4ndZ5m1VTCfHQn42a0ds5pLKbbEISLoGucpDkPgEbBo7w?=
+ =?iso-8859-1?Q?ok6u6XFT6hP0a3Cz3BO2p+LKZIzPr6Antc0trxi4u1AVQsF8jo0PnIlkj/?=
+ =?iso-8859-1?Q?4hlgzCYJUrIp9Ygtm8NCUZkMTh2UbdeaqH1MIK3g/Nkg1XgvZMy8n/pPAn?=
+ =?iso-8859-1?Q?qC3VJ/jGcnXXw8uVqT4URlSMWuA1IATFSKh3U62uvDuOa70ZABE75CBbeH?=
+ =?iso-8859-1?Q?KOyNMG787JrGeSTQmXK0QwOo56oeBsxrSqvO7JCmEVAS2ApHZZ0vqKNDP0?=
+ =?iso-8859-1?Q?7plH2xhhSA3w/dVOOfK2prX9ReNZmcw/Ivvi7Y/5VvbpovWo54F/U3hvcJ?=
+ =?iso-8859-1?Q?wLw+LbSnV/b/lH7+mXdSf5X1mNLrwCnpZ1xiTYd+oSc4dI41xA3ndSpPqT?=
+ =?iso-8859-1?Q?RT/pDPGve/LoNbYqq1Y8U0W51ck3HDEkSYOknq1i2hZcL2I7lWvw3Xs6KO?=
+ =?iso-8859-1?Q?buB5pygU+a3dnJXmVi3/Ri+RNvS6Qx++beaU2nfEUwUGe6lx//5AEpvosQ?=
+ =?iso-8859-1?Q?wSymn5ksCjd6QU94dZMoW0VuORja84r1k2hxo/UoDexYvd+9fgF/1XFYSJ?=
+ =?iso-8859-1?Q?h9alwrGx7I1uLBOGceWKhQwBoajawZBnq4BrLC8y9UhqqJ5DNHV5QMmBaa?=
+ =?iso-8859-1?Q?L2fhjLZqHTTrP399pujZa6E0ZmExxj2dSqTSpwRfaCa7e3wmndO8DqqCSf?=
+ =?iso-8859-1?Q?NRyJScNPt7vguElGeIfiuidJe0rK0bPKmgJSDcqqiBa8VZL7vpUAYSRA?=
+ =?iso-8859-1?Q?=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB12093.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60a040a3-bcc8-408d-8871-08dc2c0674f3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Feb 2024 20:09:02.3296
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gK+w4dXBTejgI66J1AhZZbEJE/QxYSl0Xca7kk2/GumWJrdnfy/8D3QqOy8lBdj3FgXIdaC9woIr3beIaNCu00o3xHrqOIKXhPVvVeo9s74=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS7PR01MB11452
 
-Hi Jens,
+Hello Uwe,
 
-On Mon, 12 Feb 2024 11:36:42 -0700, Jens Axboe <axboe@kernel.dk> wrote:
+Thanks for your reply!
 
-> On 2/12/24 11:27 AM, Jacob Pan wrote:
-> > Hi Jens,
-> > 
-> > On Fri, 9 Feb 2024 13:31:17 -0700, Jens Axboe <axboe@kernel.dk> wrote:
-> >   
-> >> On 2/9/24 10:43 AM, Jacob Pan wrote:  
-> >>> Hi Jens,
-> >>>
-> >>> On Thu, 8 Feb 2024 08:34:55 -0700, Jens Axboe <axboe@kernel.dk> wrote:
-> >>>     
-> >>>> Hi Jacob,
-> >>>>
-> >>>> I gave this a quick spin, using 4 gen2 optane drives. Basic test,
-> >>>> just IOPS bound on the drive, and using 1 thread per drive for IO.
-> >>>> Random reads, using io_uring.
-> >>>>
-> >>>> For reference, using polled IO:
-> >>>>
-> >>>> IOPS=20.36M, BW=9.94GiB/s, IOS/call=31/31
-> >>>> IOPS=20.36M, BW=9.94GiB/s, IOS/call=31/31
-> >>>> IOPS=20.37M, BW=9.95GiB/s, IOS/call=31/31
-> >>>>
-> >>>> which is abount 5.1M/drive, which is what they can deliver.
-> >>>>
-> >>>> Before your patches, I see:
-> >>>>
-> >>>> IOPS=14.37M, BW=7.02GiB/s, IOS/call=32/32
-> >>>> IOPS=14.38M, BW=7.02GiB/s, IOS/call=32/31
-> >>>> IOPS=14.38M, BW=7.02GiB/s, IOS/call=32/31
-> >>>> IOPS=14.37M, BW=7.02GiB/s, IOS/call=32/32
-> >>>>
-> >>>> at 2.82M ints/sec. With the patches, I see:
-> >>>>
-> >>>> IOPS=14.73M, BW=7.19GiB/s, IOS/call=32/31
-> >>>> IOPS=14.90M, BW=7.27GiB/s, IOS/call=32/31
-> >>>> IOPS=14.90M, BW=7.27GiB/s, IOS/call=31/32
-> >>>>
-> >>>> at 2.34M ints/sec. So a nice reduction in interrupt rate, though not
-> >>>> quite at the extent I expected. Booted with 'posted_msi' and I do see
-> >>>> posted interrupts increasing in the PMN in /proc/interrupts, 
-> >>>>    
-> >>> The ints/sec reduction is not as high as I expected either, especially
-> >>> at this high rate. Which means not enough coalescing going on to get
-> >>> the performance benefits.    
-> >>
-> >> Right, it means that we're getting pretty decent commands-per-int
-> >> coalescing already. I added another drive and repeated, here's that
-> >> one:
-> >>
-> >> IOPS w/polled: 25.7M IOPS
-> >>
-> >> Stock kernel:
-> >>
-> >> IOPS=21.41M, BW=10.45GiB/s, IOS/call=32/32
-> >> IOPS=21.44M, BW=10.47GiB/s, IOS/call=32/32
-> >> IOPS=21.41M, BW=10.45GiB/s, IOS/call=32/32
-> >>
-> >> at ~3.7M ints/sec, or about 5.8 IOPS / int on average.
-> >>
-> >> Patched kernel:
-> >>
-> >> IOPS=21.90M, BW=10.69GiB/s, IOS/call=31/32
-> >> IOPS=21.89M, BW=10.69GiB/s, IOS/call=32/31
-> >> IOPS=21.89M, BW=10.69GiB/s, IOS/call=32/32
-> >>
-> >> at the same interrupt rate. So not a reduction, but slighter higher
-> >> perf. Maybe we're reaping more commands on average per interrupt.
-> >>
-> >> Anyway, not a lot of interesting data there, just figured I'd re-run it
-> >> with the added drive.
-> >>  
-> >>> The opportunity of IRQ coalescing is also dependent on how long the
-> >>> driver's hardirq handler executes. In the posted MSI demux loop, it
-> >>> does not wait for more MSIs to come before existing the pending IRQ
-> >>> polling loop. So if the hardirq handler finishes very quickly, it may
-> >>> not coalesce as much. Perhaps, we need to find more "useful" work to
-> >>> do to maximize the window for coalescing.
-> >>>
-> >>> I am not familiar with optane driver, need to look into how its
-> >>> hardirq handler work. I have only tested NVMe gen5 in terms of
-> >>> storage IO, i saw 30-50% ints/sec reduction at even lower IRQ rate
-> >>> (200k/sec).    
-> >>
-> >> It's just an nvme device, so it's the nvme driver. The IRQ side is very
-> >> cheap - for as long as there are CQEs in the completion ring, it'll
-> >> reap them and complete them. That does mean that if we get an IRQ and
-> >> there's more than one entry to complete, we will do all of them. No IRQ
-> >> coalescing is configured (nvme kind of sucks for that...), but optane
-> >> media is much faster than flash, so that may be a difference.
-> >>  
-> > Yeah, I also check the the driver code it seems just wake up the
-> > threaded handler.  
-> 
-> That only happens if you're using threaded interrupts, which is not the
-> default as it's much slower. What happens for the normal case is that we
-> init a batch, and then poll the CQ ring for completions, and then add
-> them to the completion batch. Once no more are found, we complete the
-> batch.
-> 
-thanks for the explanation.
+> From: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> Sent: Saturday, February 10, 2024 5:27 PM
+> To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> Subject: Re: [PATCH v6 2/4] pwm: Add support for RZ/V2M PWM driver
+>=20
+> Hello Fabrizio,
+>=20
+> On Thu, Feb 08, 2024 at 11:24:09PM +0000, Fabrizio Castro wrote:
+> > +static inline u64 rzv2m_pwm_mul_u64_u64_div_u64_roundup(u64 a, u64 b,
+> u64 c)
+> > +{
+> > +	u64 ab =3D a * b;
+>=20
+> This might overflow.
 
-> You're not using threaded interrupts, are you?
-No. I didn't add module parameter "use_threaded_interrupts"
+In the context of this driver, this cannot overflow.
+The 2 formulas the above is needed for are:
+1) period =3D (cyc + 1)*(NSEC_PER_SEC * frequency_divisor)/rate
+2) duty_cycle =3D (cyc + 1 - low)*(NSEC_PER_SEC * frequency_divisor)/rate
 
-> 
-> > For the record, here is my set up and performance data for 4 Samsung
-> > disks. IOPS increased from 1.6M per disk to 2.1M. One difference I
-> > noticed is that IRQ throughput is improved instead of reduction with
-> > this patch on my setup. e.g. BEFORE: 185545/sec/vector 
-> >      AFTER:  220128  
-> 
-> I'm surprised at the rates being that low, and if so, why the posted MSI
-> makes a difference? Usually what I've seen for IRQ being slower than
-> poll is if interrupt delivery is unreasonably slow on that architecture
-> of machine. But ~200k/sec isn't that high at all.
-> 
+With respect to 1), the dividend overflows when period * rate also
+overflows (its product is calculated in rzv2m_pwm_config).
+However, limiting the period to a maximum value of U64_MAX / rate
+prevents the calculations from overflowing (in both directions, from period=
+ to cyc, and from cyc to period). v6 uses max_period for this.
+The situation for 2) is very similar to 1), with duty_cycle<=3Dperiod,
+therefore limiting period to a max value (and clamping the duty cycle
+accordingly) will ensure that the calculation for duty_cycle won't
+overflow, either.
 
+>=20
+> > +	return ab / c + (ab % c ? 1 : 0);
+>=20
+> This division triggered the kernel build bot error. If you want to
+> divide a u64, you must not use /.
 
-> > [global]                      
-> > bs=4k                         
-> > direct=1                      
-> > norandommap                   
-> > ioengine=libaio               
-> > randrepeat=0                  
-> > readwrite=randread            
-> > group_reporting               
-> > time_based                    
-> > iodepth=64                    
-> > exitall                       
-> > random_generator=tausworthe64 
-> > runtime=30                    
-> > ramp_time=3                   
-> > numjobs=8                     
-> > group_reporting=1             
-> >                               
-> > #cpus_allowed_policy=shared   
-> > cpus_allowed_policy=split     
-> > [disk_nvme6n1_thread_1]       
-> > filename=/dev/nvme6n1         
-> > cpus_allowed=0-7       
-> > [disk_nvme6n1_thread_1]
-> > filename=/dev/nvme5n1  
-> > cpus_allowed=8-15      
-> > [disk_nvme5n1_thread_2]
-> > filename=/dev/nvme4n1  
-> > cpus_allowed=16-23     
-> > [disk_nvme5n1_thread_3]
-> > filename=/dev/nvme3n1  
-> > cpus_allowed=24-31       
-> 
-> For better performance, I'd change that engine=libaio to:
-> 
-> ioengine=io_uring
-> fixedbufs=1
-> registerfiles=1
-> 
-> Particularly fixedbufs makes a big difference, as a big cycle consumer
-> is mapping/unmapping pages from the application space into the kernel
-> for O_DIRECT. With fixedbufs=1, this is done once and we just reuse the
-> buffers. At least for my runs, this is ~15% of the systime for doing IO.
-> It also removes the page referencing, which isn't as big a consumer, but
-> still noticeable.
-> 
-Indeed, the CPU utilization system time goes down significantly. I got the
-following with posted MSI patch applied:
-Before (aio):
-  read: IOPS=8925k, BW=34.0GiB/s (36.6GB/s)(1021GiB/30001msec)
-	user    3m25.156s                                                                                                           	
-	sys     11m16.785s                                                                                                          	
-						
-After (fixedbufs, iouring engine):
-  read: IOPS=8811k, BW=33.6GiB/s (36.1GB/s)(1008GiB/30002msec)
-  	user    2m56.255s                                                                                                  	
-	sys     8m56.378s                                                                                                  	
-				
-It seems to have no gain in IOPS, just CPU utilization reduction.
+Right!
+I have replicated the problem locally, and confirmed that also other divisi=
+ons from the same patch are problematic.
+Clearly, % can't work either.
 
-Both have improvement over libaio w/o posted MSI patch. 
+I am going to replace / with div64_u64.
+For rounding up, I think I'll go with something like:
 
-> Anyway, side quest, but I think you'll find this considerably reduces
-> overhead / improves performance. Also makes it so that you can compare
-> with polled IO on nvme, which aio can't do. You'd just add hipri=1 as an
-> option for that (with a side note that you need to configure nvme poll
-> queues, see the poll_queues parameter).
-> 
-> On my box, all the NVMe devices seem to be on node1, not node0 which
-> looks like it's the CPUs you are using. Might be worth checking and
-> adjusting your CPU domains for each drive? I also tend to get better
-> performance by removing the CPU scheduler, eg just pin each job to a
-> single CPU rather than many. It's just one process/thread anyway, so
-> really no point in giving it options here. It'll help reduce variability
-> too, which can be a pain in the butt to deal with.
-> 
-Much faster with poll_queues=32 (32jobs)
-  read: IOPS=13.0M, BW=49.6GiB/s (53.3GB/s)(1489GiB/30001msec)
-     	user    2m29.177s
-	sys     15m7.022s
-				
-Observed no IRQ counts from NVME.
+u64 ab =3D a * b;
+u64 d =3D div64_u64(ab, c);
+u64 e =3D d * c;
+return d + ((ab - e) ? 1 : 0);
 
-Thanks,
+I am aware that I could use DIV64_U64_ROUND_UP instead of the above,
+however, the above allows for larger dividends than when using DIV64_U64_RO=
+UND_UP.
+If I were to use DIV64_U64_ROUND_UP instead, I would have to limit
+max_period further to (U64_MAX + 1 - rate)/rate, which I rather avoid.
 
-Jacob
+I'll send v7 to address this build issue for 32 bit platforms.
+
+Cheers,
+Fab
+
+>=20
+> Best regards
+> Uwe
+>=20
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=F6nig          =
+  |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
+|
