@@ -1,61 +1,66 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974AE3FB2E
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 18:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A45405C6;
+	Mon, 12 Feb 2024 18:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707762409; cv=none; b=rZPhMNcVzD4UHFZDQ5x1icqFL5lKunChs5hVq39l++Tn+oUWkBCDWFCnvtx8LMlrn0NQj0P6X1KCaFTKC6kDagH1l/NInfApJABB7XVm1c+hmqhbS+C/6lcweq+4dM7nNL3SztertsiPd9GW305bO5CAvbYXLjD6r2kHxB8KoUo=
+	t=1707762413; cv=none; b=Zg0a4MWqaJhQ62NAPRLXa4Rw3AnA4UNZm1g+nIPx/x0fG9L1micB/UlC3Dp5jKGCUGyWj48wJH69ZnYg5ofvRzzXY550mPoYZk0gZQOvy0nNRMldt/vtT4XbEHXk9Et58Y8quOS82thxEPv2o7436Jqbj1zNwFwq5NEh5LsqNhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707762409; c=relaxed/simple;
-	bh=Pry+G7WSAZZaRL4coVL0+gsr6B0HPSoXJPy1RuH9m9U=;
+	s=arc-20240116; t=1707762413; c=relaxed/simple;
+	bh=zPCAl5W84MBNOsC7L5RhtuIjML3Qo3/ZiF/pSR55Tw4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S3XjfcjTlaps3U2mbshGt0Iq5ZwKajUIBA7d9pMll575/KNXTEOW/ML5bp8XYRDJLjKrO2iT+EU7ZLuxl3R5uBoTMbiOpVabRXMYCbV5iH6zQ2UMSL2qm7t2x2bIYME1x6IKyw78X1wAkF0x/Ckb/hvkV6hLueQaI2e0xEAa/dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i/9hmkyI; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=DZzvsjyAZdnPVs/eTLajqh8zEjneN/Ilu9rZzcMfZn6TYTQoz//iXTrEV+bqGSWYVOoFzN/6WkRLTLp5CnDh4V/SNmS0B1F9/rt/QkgPaGg2l54qQGgE5XwMgWU7W3eEYPeCcQylqAcUIaBs3cmC1Mc/RtOvNB1xxbnvpNU47kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=K8JRXJ4P; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/9hmkyI"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d8aadc624dso25608435ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 10:26:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707762407; x=1708367207; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=fWakcISGbUojOGcrNAN739uoQIinJaHwicVnHyikNI8=;
-        b=i/9hmkyI6d2ElL92vnYpLyXKwA3m2/QNx1O4waaG/c7IGvkeP9sGeuCSjrEOWatccQ
-         DvvDQeoXQmZKg6bcET9Fko6gb1/4M/3MPkLrUCXr49GCDJ64Ux/EY8UPu699HUFdXDzs
-         v3rwE3Km2K7UOW7N+W6ZfzGW7cKiJhecu2oPHrul87nLaDsL5RI6xROwNz5wFvOijTJ9
-         qEt2WbTOtPMDijfRFf9aWl+EUkNPHcu2MwnMfdBoU61ABKLQnNidv5+a5gjGdZ75/jfx
-         mqi2XmutSxYAh9TLJ1iv6qOx2GbMF7DDVjDzxjYjg3tSHYUgvhvJwaiuK0/rsMYIuasY
-         1Jaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707762407; x=1708367207;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fWakcISGbUojOGcrNAN739uoQIinJaHwicVnHyikNI8=;
-        b=Y6BAY+ugbQ9HXCL/oSD7Q8ia1gN3HdVIJhT8/qd81fcDwaKmiW9rG9qUtWr0OGWYfV
-         BncyK9hllXWVhvBUrPgjKfFPTF0WfAK+bbc7VKY1mR23kCsccJW20XcZ7CY3Zd9tmH7v
-         vKCigJOcUHkPQ61qJWcZtkR3jpRdRmHiL48MyN6D4kYZ23LNOvHS9cCWY4PjbKpSPeZh
-         AUUTY/Chn8preTxd3bdJY6EqLmsy1EGpvA6jgXsF3EYA9/84yWxizFs8J/tNim/joSB5
-         7UbP2H4/uvAhRl7CsBWMszQVuxNwTFjkWo9b5v+alORfl49Oc3h4MudfwikGieI9JHUf
-         6Rew==
-X-Gm-Message-State: AOJu0YzzACqeci7cniLpr5PkPEXq3p6qUkGLbSO/et9jOJr0pGDKyz9r
-	N2r/LSrtwx6wIsE66/gC1EWOQBlV+7N7v7xKlSj+6/vI26/IAMfF
-X-Google-Smtp-Source: AGHT+IGitFw1qH4Sr5khK0PRo7R34TS2nIfGdDW8+jVwJCdjEtr2bqbfja2NLLBTk0mD2V4ct5sLQg==
-X-Received: by 2002:a17:902:f552:b0:1db:28b6:cb3b with SMTP id h18-20020a170902f55200b001db28b6cb3bmr1272639plf.6.1707762406780;
-        Mon, 12 Feb 2024 10:26:46 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXGZ14RTMtbXhUBCfnPCij1oE21n6EERFwYOfwurw9C15OUMzb5p8zj5tMRgP6ewNxdkAdCYMlDFXRl4inFHsT7peKhX67pgscujmUT8vzSX+hhPTguBtsHFZFcR07U1PkjM/D/NbJAXzVkGhxA3qeNAwbsDmiERvXYuSunoZ+msaKP/XvY/bNNuENdJq+VXR7I8Zlp
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id ix10-20020a170902f80a00b001d94a461d2dsm656079plb.73.2024.02.12.10.26.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Feb 2024 10:26:45 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <1302af8c-f1b7-4015-8655-c7fdaff63d69@roeck-us.net>
-Date: Mon, 12 Feb 2024 10:26:44 -0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="K8JRXJ4P"
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41CI7Cpo010517;
+	Mon, 12 Feb 2024 18:26:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=Orzq42MMO1ZEvKZjaWq3C1tqDEzzTaEwvYhlVNC563w=;
+ b=K8JRXJ4PqLVKZ0WMD9nrgP1IEz3u4RKWc619cNgQ9yK16WPJyqQChwh0pZWP+YrBu/Ng
+ Hd+Tiibuch3pwMxs62A2ybloGjiMw+Tv0fkKflFiNohOcesTjpewb5+8WYKeaJXhc1YK
+ SHei8YaI/TClrRSYWEJMBg9aiP6rdy5Ekw7qZd8oWpkA7jQ6GcgiS3IBecNeqQPmk69W
+ MALZnxHex4n8dnMOkyMzZTpV4RosSize1Rp6RUWtlCNIHam/bW8EP5FQvMpDTxWQsREb
+ DIlGj7Z0bttGNMGgx7CKU2Sk0XfvcTBE5AXgWgQGEfFr6mVeICDExbT1zrCDEyEhPFTd /Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w7raq0f34-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 Feb 2024 18:26:21 +0000
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41CI7mtC012593;
+	Mon, 12 Feb 2024 18:26:21 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w7raq0f22-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 Feb 2024 18:26:21 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41CGx4f0024877;
+	Mon, 12 Feb 2024 18:26:20 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w6mfp27hd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 Feb 2024 18:26:19 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41CIQH4n17629696
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 12 Feb 2024 18:26:19 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2AAB858059;
+	Mon, 12 Feb 2024 18:26:17 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8480B58067;
+	Mon, 12 Feb 2024 18:26:10 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 12 Feb 2024 18:26:10 +0000 (GMT)
+Message-ID: <5d10e7d8-9d3e-43f9-95d8-67247ffa091c@linux.ibm.com>
+Date: Mon, 12 Feb 2024 13:26:09 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,96 +68,78 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/2] lib: checksum: Use aligned accesses for
- ip_fast_csum and csum_ipv6_magic tests
+Subject: Re: [PATCH v9 22/25] evm: Move to LSM infrastructure
 Content-Language: en-US
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, David Laight
- <David.Laight@aculab.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org
-References: <20240207-fix_sparse_errors_checksum_tests-v6-0-4caa9629705b@rivosinc.com>
- <20240207-fix_sparse_errors_checksum_tests-v6-2-4caa9629705b@rivosinc.com>
- <20240212062614.GI608142@ZenIV>
- <52393411-8313-4e94-9618-916b57f7d52e@roeck-us.net> <Zcpe2ZthpFf1BVGg@ghost>
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <Zcpe2ZthpFf1BVGg@ghost>
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>, viro@zeniv.linux.org.uk,
+        brauner@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org,
+        neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
+        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com,
+        eric.snowberg@oracle.com, dhowells@redhat.com, jarkko@kernel.org,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        casey@schaufler-ca.com, shuah@kernel.org, mic@digikod.net
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        selinux@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Roberto Sassu <roberto.sassu@huawei.com>
+References: <20240115181809.885385-1-roberto.sassu@huaweicloud.com>
+ <20240115181809.885385-23-roberto.sassu@huaweicloud.com>
+From: Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <20240115181809.885385-23-roberto.sassu@huaweicloud.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: sHIteHYy_ZuTq_ohDZCWtRB_3ocR2sgr
+X-Proofpoint-ORIG-GUID: 90lN_cbqjmQZCAMAtg7OuVMDbdTvBlWj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-12_15,2024-02-12_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=999 impostorscore=0 phishscore=0 adultscore=0 spamscore=0
+ priorityscore=1501 clxscore=1015 mlxscore=0 bulkscore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402120139
 
-On 2/12/24 10:09, Charlie Jenkins wrote:
-[ ... ]
 
->> Almost. Turns out the csum parameter of csum_ipv6_magic() needs to be in
->> network byte order, and the length parameter needs to be in host byte order.
->> So instead of
->> 	data.len = data_ptr->len;
->> 	data.csum = (__force __wsum)htonl((__force u32)data_ptr->csum);
->> it needs to be something like
->> 	data.len = ntohl(data_ptr->len);
->> 	data.csum = data_ptr->csum;
->>
->> Also, as you mentioned, either the returned checksum or the expected
->> checksum needs to be converted for the comparison because one is in
->> network byte order and the other in host byte order.
->>
->> Address conversions are indeed not needed.
->>
->> Thanks,
->> Guenter
+
+On 1/15/24 13:18, Roberto Sassu wrote:
+> From: Roberto Sassu <roberto.sassu@huawei.com>
 > 
-> Aww that makes sense thank you. I was reversing everything except len
-> and the solution was to only reverse len... Thank you for figuring that
-> out for me.
+> As for IMA, move hardcoded EVM function calls from various places in the
+> kernel to the LSM infrastructure, by introducing a new LSM named 'evm'
+> (last and always enabled like 'ima'). The order in the Makefile ensures
+> that 'evm' hooks are executed after 'ima' ones.
 > 
-> I will send out another version with your change. Should I add a
-> signed-off-by with your tag for this patch?
+> Make EVM functions as static (except for evm_inode_init_security(), which
+> is exported), and register them as hook implementations in init_evm_lsm().
+> Also move the inline functions evm_inode_remove_acl(),
+> evm_inode_post_remove_acl(), and evm_inode_post_set_acl() from the public
+> evm.h header to evm_main.c.
 > 
+> Unlike before (see commit to move IMA to the LSM infrastructure),
+> evm_inode_post_setattr(), evm_inode_post_set_acl(),
+> evm_inode_post_remove_acl(), and evm_inode_post_removexattr() are not
+> executed for private inodes.
+> 
+> Finally, add the LSM_ID_EVM case in lsm_list_modules_test.c
+> 
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> Reviewed-by: Casey Schaufler <casey@schaufler-ca.com>
 
-No need. I'll send you a Tested-by: tag on the final version (if it works ;-).
+>   }
+>   
+> +static struct security_hook_list evm_hooks[] __ro_after_init = {
+> +	LSM_HOOK_INIT(inode_setattr, evm_inode_setattr),
+> +	LSM_HOOK_INIT(inode_post_setattr, evm_inode_post_setattr),
+> +	LSM_HOOK_INIT(inode_copy_up_xattr, evm_inode_copy_up_xattr),
+> +	LSM_HOOK_INIT(inode_setxattr, evm_inode_setxattr),
+> +	LSM_HOOK_INIT(inode_set_acl, evm_inode_set_acl),
+> +	LSM_HOOK_INIT(inode_post_set_acl, evm_inode_post_set_acl),
+> +	LSM_HOOK_INIT(inode_remove_acl, evm_inode_remove_acl),
+> +	LSM_HOOK_INIT(inode_post_remove_acl, evm_inode_post_remove_acl),
+> +	LSM_HOOK_INIT(inode_post_setxattr, evm_inode_post_setxattr),
 
-Thanks,
-Guenter
+nit: move this one up after inode_setxattr.
 
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
