@@ -1,147 +1,84 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC6ED3B194
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 13:27:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EBDD3B1AB
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 13:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707744429; cv=none; b=R7EBLqPFwoWw4v6bsxYNgsI9uX/psqgFse/JoVJEotVNxyGncMosuTvrM7Ri9XDHH39ZguD2jr5L4KNdNdpM8os2moM+lA9ladkhFhdhgjzp4XSLNn9nE3xzmk/7pZFz0+HG3H0vmMkPK3XKyUmJPlblq8e2mQyCJ60aWH4QqV0=
+	t=1707744429; cv=none; b=YdPrTFeDZEW6kpWlzq4NNv/aXCED58NrpbRsk7vDddrluM93HZy+tPyt0BowXrzjWOcvxHSzCIAKid89lh4hL5dQTIo3QJLN4OUJiSmuAXYQ8KizodgPK/Q7I23u/tv9hrhYmi8rOgBo0cS/SPesW8iDEoFmBlvWgyuX/O9H2DY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707744429; c=relaxed/simple;
-	bh=b9bJMcwC+cn00rgdnKEXAAs3PpIJ9WUsM3I1xGcJypA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nfat0lpb/rQpsFNIrfIhtz+npcX/ADm6f9tBpld9CqKc4mkpSKms4GlNqqUB4Oi0MNoUNB0iw4Qmqzxs6gb+sl+NuEfi7Lq02ff+FMQnoOn+GqA2EouFQpZV2wdQ1ozZ8Yui8Cb5KJe8V02Ur+W0eB3vG4lGCAj1oHgvtT7E3pA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3AF9DA7;
-	Mon, 12 Feb 2024 05:27:47 -0800 (PST)
-Received: from [10.57.78.115] (unknown [10.57.78.115])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 009623F7BD;
-	Mon, 12 Feb 2024 05:27:01 -0800 (PST)
-Message-ID: <e19ba38c-8935-47be-be2a-1920b09034c8@arm.com>
-Date: Mon, 12 Feb 2024 13:27:00 +0000
+	bh=lTPAzQsGc/1ML8Nowvg3JHvpwoPMMDUTqMEFsPGXKMs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EMoZIyK2a5Ln0fq6yoWMVZ2tmdzRLRX2OprUv51w7cLhFaxpGb8wtpib1mPlxT/oHsT0uMqPGoOrg+OTzdKXuTNV96qmxU3LH1T2QHDj7WPX000cqeS+0EJTLoj1iyZi7gV/slaH3yUOSil1O185+9gR/OqWwLoA9Xhkc1unauk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GbTI6Gjh; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GbTI6Gjh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707744427; x=1739280427;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=lTPAzQsGc/1ML8Nowvg3JHvpwoPMMDUTqMEFsPGXKMs=;
+  b=GbTI6GjhNeSd31Z56ACAHn7EfBIFnopQyu6RuBhyMpM9jsPJfUgQrTMK
+   MUjquJGZrX+qX/Vxtx3JrR3/051WDu55J5AKRnUN92L4G1KcW6gDUserW
+   RIsPj37CqKBl3DkWtfI2cXBE587A0zd9TxRipGDieVHkQ8oQFcx9jgvcB
+   0vPeOf70WMNcmcQuWMdZSbEfNKYKL8SqfyfjZP2RFZYshZSlUzqlvpNyh
+   VQ6/1fHmfzGnA12kaai50iG3uTA/BbXd7B3nrRglLzR0vzCSuOQ99oz0N
+   rBfP6HyCSyWJ/1aGjkN5QMTPN7zS7uFcR9oeESjLw1TmqwKOsWAeoJbjl
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="5496472"
+X-IronPort-AV: E=Sophos;i="6.06,264,1705392000"; 
+   d="scan'208";a="5496472"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 05:26:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="935067319"
+X-IronPort-AV: E=Sophos;i="6.06,264,1705392000"; 
+   d="scan'208";a="935067319"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 12 Feb 2024 05:26:17 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 56F2FF7; Mon, 12 Feb 2024 15:26:16 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	linux-kernel@vger.kernel.org
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH v2 0/3] auxdisplay: Refresh MAINTAINERS for the subsystem
+Date: Mon, 12 Feb 2024 15:23:52 +0200
+Message-ID: <20240212132515.2660837-2-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 18/25] arm64/mm: Split __flush_tlb_range() to elide
- trailing DSB
-Content-Language: en-GB
-To: David Hildenbrand <david@redhat.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Ard Biesheuvel <ardb@kernel.org>, Marc Zyngier <maz@kernel.org>,
- James Morse <james.morse@arm.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>, Mark Rutland <mark.rutland@arm.com>,
- Kefeng Wang <wangkefeng.wang@huawei.com>, John Hubbard
- <jhubbard@nvidia.com>, Zi Yan <ziy@nvidia.com>,
- Barry Song <21cnbao@gmail.com>, Alistair Popple <apopple@nvidia.com>,
- Yang Shi <shy828301@gmail.com>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-arm-kernel@lists.infradead.org, x86@kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20240202080756.1453939-1-ryan.roberts@arm.com>
- <20240202080756.1453939-19-ryan.roberts@arm.com>
- <9e1d793a-02c9-4dbb-a6d4-1e1c0c42638c@redhat.com>
- <1ef4c737-0926-424c-9698-794c23370b74@arm.com>
- <608feac1-8cd6-48c2-87ab-688fb9c0bda4@redhat.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <608feac1-8cd6-48c2-87ab-688fb9c0bda4@redhat.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 12/02/2024 13:15, David Hildenbrand wrote:
-> On 12.02.24 14:05, Ryan Roberts wrote:
->> On 12/02/2024 12:44, David Hildenbrand wrote:
->>> On 02.02.24 09:07, Ryan Roberts wrote:
->>>> Split __flush_tlb_range() into __flush_tlb_range_nosync() +
->>>> __flush_tlb_range(), in the same way as the existing flush_tlb_page()
->>>> arrangement. This allows calling __flush_tlb_range_nosync() to elide the
->>>> trailing DSB. Forthcoming "contpte" code will take advantage of this
->>>> when clearing the young bit from a contiguous range of ptes.
->>>>
->>>> Tested-by: John Hubbard <jhubbard@nvidia.com>
->>>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
->>>> ---
->>>>    arch/arm64/include/asm/tlbflush.h | 13 +++++++++++--
->>>>    1 file changed, 11 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/arch/arm64/include/asm/tlbflush.h
->>>> b/arch/arm64/include/asm/tlbflush.h
->>>> index 79e932a1bdf8..50a765917327 100644
->>>> --- a/arch/arm64/include/asm/tlbflush.h
->>>> +++ b/arch/arm64/include/asm/tlbflush.h
->>>> @@ -422,7 +422,7 @@ do {                                    \
->>>>    #define __flush_s2_tlb_range_op(op, start, pages, stride, tlb_level) \
->>>>        __flush_tlb_range_op(op, start, pages, stride, 0, tlb_level, false,
->>>> kvm_lpa2_is_enabled());
->>>>    -static inline void __flush_tlb_range(struct vm_area_struct *vma,
->>>> +static inline void __flush_tlb_range_nosync(struct vm_area_struct *vma,
->>>>                         unsigned long start, unsigned long end,
->>>>                         unsigned long stride, bool last_level,
->>>>                         int tlb_level)
->>>> @@ -456,10 +456,19 @@ static inline void __flush_tlb_range(struct
->>>> vm_area_struct *vma,
->>>>            __flush_tlb_range_op(vae1is, start, pages, stride, asid,
->>>>                         tlb_level, true, lpa2_is_enabled());
->>>>    -    dsb(ish);
->>>>        mmu_notifier_arch_invalidate_secondary_tlbs(vma->vm_mm, start, end);
->>>>    }
->>>>    +static inline void __flush_tlb_range(struct vm_area_struct *vma,
->>>> +                     unsigned long start, unsigned long end,
->>>> +                     unsigned long stride, bool last_level,
->>>> +                     int tlb_level)
->>>> +{
->>>> +    __flush_tlb_range_nosync(vma, start, end, stride,
->>>> +                 last_level, tlb_level);
->>>> +    dsb(ish);
->>>> +}
->>>> +
->>>>    static inline void flush_tlb_range(struct vm_area_struct *vma,
->>>>                       unsigned long start, unsigned long end)
->>>>    {
->>>
->>> You're now calling dsb() after mmu_notifier_arch_invalidate_secondary_tlbs().
->>>
->>>
->>> In flush_tlb_mm(), we have the order
->>>
->>>      dsb(ish);
->>>      mmu_notifier_arch_invalidate_secondary_tlbs()
->>>
->>> In flush_tlb_page(), we have the effective order:
->>>
->>>      mmu_notifier_arch_invalidate_secondary_tlbs()
->>>      dsb(ish);
->>>
->>> In flush_tlb_range(), we used to have the order:
->>>
->>>      dsb(ish);
->>>      mmu_notifier_arch_invalidate_secondary_tlbs();
->>>
->>>
->>> So I *suspect* having that DSB before
->>> mmu_notifier_arch_invalidate_secondary_tlbs() is fine. Hopefully, nothing in
->>> there relies on that placement.
->>
->> Will spotted this against v3. My argument was that I was following the existing
->> pattern in flush_tlb_page(). Apparently that is not correct and needs changing,
->> but the conclusion was to leave my change as is for now, since it is consistent
->> and change them at a later date together.
-> 
-> Good, I think you should add a few words to the patch description ("ordering
-> might be incorrect, but is in-line with __flush_tlb_page()"; will be resolved
-> separately).
-> 
+Update MAINTAINERS for AUXDISPLAY subsystem in accordance to the last
+(administrative) changes.
 
-ACK, will do. Thanks!
+In v2:
+- included Geert as Reviewer and added Git tree 
+- added two more patches that are related to MAINTAINERS
+
+Andy Shevchenko (3):
+  auxdisplay: Take over maintainership, but in Odd Fixes mode
+  auxdisplay: Move cfag12864b.h to the subsystem folder
+  auxdisplay: Add 7 and 14 segment mappings to MAINTAINERS
+
+ MAINTAINERS                                        | 11 ++++++-----
+ drivers/auxdisplay/cfag12864b.c                    |  2 +-
+ {include/linux => drivers/auxdisplay}/cfag12864b.h |  0
+ drivers/auxdisplay/cfag12864bfb.c                  |  3 ++-
+ 4 files changed, 9 insertions(+), 7 deletions(-)
+ rename {include/linux => drivers/auxdisplay}/cfag12864b.h (100%)
+
+-- 
+2.43.0.rc1.1.gbec44491f096
 
