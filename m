@@ -1,105 +1,197 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A6A13FE31
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 18:26:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F51405FD;
+	Mon, 12 Feb 2024 18:26:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707762367; cv=none; b=iB3y/cxeft0NzwDHvsTZ7VoA52iSZARyWGpIXfOuqiboodjpDhbHAKyysxv0ciTZJM0RJy4b7kGKftiVekuvhw6TbWL/uPEeLh2sA44TptMxdAEy+6I4l1LjKrxO54/gsIcZ1qdPFYhcKWxVOCOqQzUSRZNS9ElgPr1MBxWNoWU=
+	t=1707762369; cv=none; b=RZoS5n0QWMo+qX93mKge6qoKuxfVBYl28WDUPQS7b9Mlg+40msbWVwfN0NUBgLVyg5R6IRwzfExXEDgXVbXG6Y0hkYDSx/43RV3xV55Xm9ARFqg7n2N1cj05Caif3fVH+qyP7PBUF8EHJQ6TnmiP2o/bqHFvfRBQN96q4Ehi+w4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707762367; c=relaxed/simple;
-	bh=yAUHypRlpeoME/JqFNQ6+yrqIWhow/SYsyub6kJOuL8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ig1ccow7FI+pPUj6wdJLuqN0HrIUFUfajQxM8hYlBtaUrTlrnJh1m04MlWNDi7yKpxMCP1ZtPVLYpTqwXJzvr8AcOq+quVrPiQo8el43WRRMGZkpjC8q8dcv2WlPqOge9jCM0J05Z3Cu/BYvuJGCn4esw+aNczLy3a5Gn53XjaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=EddX1/Gg; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EddX1/Gg"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e08dd0fa0bso2361143b3a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 10:26:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707762365; x=1708367165; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kelddDkBCW+g7SFvND6ka4Ang08zpm8PxHIejMLmNTs=;
-        b=EddX1/GgAbEeDtEik8j732OAX1GG6mqLZtclhFqcdrWHYPFo8uRuaTgLmC6EN8s1Xm
-         yjaS0Qr0GnJvXBOvtBsaWomiMvHmKolRP6NZJQdMi12UfCRcUYQ8yQvpJd7zAYf6nKC0
-         8ZlTTuEq3m8rJaWpUwYs6m352PJQjeMUZKanM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707762365; x=1708367165;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kelddDkBCW+g7SFvND6ka4Ang08zpm8PxHIejMLmNTs=;
-        b=Wt/2DTdf4CDLIUtLghY/szahv+tYamiVrib1u9Sq0Fx6ZduPHcwLM28k1ghSl7hnKB
-         PbNWsQwYD4qULIlUnqYzmFJBDCVWQMPrCWE9EYZatjNg2LtzZ1DuNW0VwsfOkaKO5OhW
-         XGVbKz9GlwFdX1i3T1tYAc26PH8q3l74/F0CDRtTA2rSJ0dMIyKmbFKTbNi53bCU7Q2y
-         ckYw1evN+gcPxSho4ETsR5hShV9dRy9pcwxUqLw/iHVW5hS5O9AOMX+0cyQXKCCjDk90
-         S9eiMZ6mehRiA4tBJuRXAdO+0tqabhH4FCHRiYDw5aAdXRMmg0I5NYGIvWCUEyJP824X
-         pZIA==
-X-Forwarded-Encrypted: i=1; AJvYcCXqOrjvsj2Zd/Z35S6hJ0DegRzdlAt8AiyBM2yX8AZppY8QE9HKVwFs68Zn+dZhRYVDyio73/FSnNiuPQvuau/EJM+ExOFyu81fHYvd
-X-Gm-Message-State: AOJu0YxVPJdQuCKKR5aq9NlWQrK+GdEj0OK9FlQiUx8qqyFusHg2Qn3Y
-	aYnSz5vrSi6QzFuxmDj+HcHFLR283X068NsYEU5cmdcM/1bl1ZMejI+h4ZC+3w==
-X-Google-Smtp-Source: AGHT+IHm5PSmStcCD2PbOKmO9HvYx5jctVUpwg+mA5CidbOqS112sDrGysxA8yytheZf5F/8il7XBA==
-X-Received: by 2002:a05:6a21:1788:b0:19d:e644:7c9 with SMTP id nx8-20020a056a21178800b0019de64407c9mr294312pzb.22.1707762364941;
-        Mon, 12 Feb 2024 10:26:04 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWtL7E/Ga3300LiXSPhQpKnlGv08BNISJBi/jBmB7YmHJiNT6YrIQwiAH9I8vBkaTBnDjziwBfcfr/PRvJMQEI8SyNDGq1QbgjzYxA4X2r9uBkF/UY/uZQ3V5lh4HO3EpicV3EyoRKeTXLxIIbov/L8ZEWORYZO7ID1Et7cPita3g01WnaoCTcRtV6KzD1U8GLFhX2Ha8muf8PRlXkVwUWaCzIxmISUdN05pQZSnlU2BQJq7yf2C0SNBCfe+oknwnOhWh64uJgcdqSJ36FShA==
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id u189-20020a6385c6000000b005d8c1ce4443sm743664pgd.88.2024.02.12.10.26.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 10:26:04 -0800 (PST)
-Date: Mon, 12 Feb 2024 10:26:03 -0800
-From: Kees Cook <keescook@chromium.org>
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
-	kernel test robot <lkp@intel.com>, Rich Felker <dalias@libc.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nicolas Schier <n.schier@avm.de>, linux-sh@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] sh: Fix build with CONFIG_UBSAN=y
-Message-ID: <202402121025.B0B6E47@keescook>
-References: <20240130232717.work.088-kees@kernel.org>
- <494586ed5a0871cf7cfd005f513577952306a0bc.camel@physik.fu-berlin.de>
- <fe057f57aba0f8a9040d4700d27f5bd478032925.camel@physik.fu-berlin.de>
- <202402020228.BBEF7DAC@keescook>
- <9fda57fc1b1ba6ad9bd6f7df3fb12674d0f4f940.camel@physik.fu-berlin.de>
- <cd1a36a234c8fc61c5febe646ae0f05ed20ae32a.camel@physik.fu-berlin.de>
+	s=arc-20240116; t=1707762369; c=relaxed/simple;
+	bh=RVBiiKt71wjFsnRdAFPjF0d4lGi7IogOJgAvmxhOfIw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=movyyexd2AphoO4XQ6o34tBxiFu9z9t5/M8ualL5x/ukshP4uzVIrj4gVzCczu/pnSGJQIuaUyWRfRprBizWaEdFRxbrl9HJ2EBFK6I/FNE1ZGzRisR1OeLXYu6iLd8r1993uftu/byayeDgjjwO0WebhtHV/ZrFMYVrwnxpf7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BA73C43399;
+	Mon, 12 Feb 2024 18:26:07 +0000 (UTC)
+Date: Mon, 12 Feb 2024 13:26:49 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, "Manivannan Sadhasivam"
+ <manivannan.sadhasivam@linaro.org>, <linux-kernel@vger.kernel.org>,
+ <mhi@lists.linux.dev>, <linux-arm-msm@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>, <quic_vbadigan@quicinc.com>,
+ <quic_ramkri@quicinc.com>, <quic_nitegupt@quicinc.com>,
+ <quic_skananth@quicinc.com>, <quic_parass@quicinc.com>
+Subject: Re: [PATCH v11] bus: mhi: host: Add tracing support
+Message-ID: <20240212132649.767e9b87@gandalf.local.home>
+In-Reply-To: <20240206-ftrace_support-v11-1-3f71dc187544@quicinc.com>
+References: <20240206-ftrace_support-v11-1-3f71dc187544@quicinc.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cd1a36a234c8fc61c5febe646ae0f05ed20ae32a.camel@physik.fu-berlin.de>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, Feb 11, 2024 at 11:39:49AM +0100, John Paul Adrian Glaubitz wrote:
-> Hi Kees,
-> 
-> On Fri, 2024-02-02 at 12:06 +0100, John Paul Adrian Glaubitz wrote:
-> > > When I use GCC 13.2 (I'm specifically on Ubuntu 23.10) and the randconfig
-> > > linked from the report:
-> > > https://download.01.org/0day-ci/archive/20240131/202401310416.s8HLiLnC-lkp@intel.com/config
-> > > (which is notably enabling CONFIG_UBSAN=y and CONFIG_UBSAN_SHIFT=y) then I
-> > > see at the final link stage:
-> > > 
-> > > /usr/bin/sh4-linux-gnu-ld: arch/sh/boot/compressed/misc.o: in function `zlib_inflate_table':
-> > > misc.c:(.text+0x650): undefined reference to `__ubsan_handle_shift_out_of_bounds'
-> > > ...
-> > > 
-> > > After the patch, it's solved.
-> > 
-> > OK, let me test with gcc 13.x. My build host is currently running openSUSE Leap 15.5.
-> 
-> I just wanted to try reproduce the problem again with the reproducer in [1] as well
-> as with gcc-13.2.0, but your branch devel/overflow/ubsan-only no longer exists.
-> 
-> Can you tell me where to find the patches now?
+On Tue, 6 Feb 2024 10:02:05 +0530
+Krishna chaitanya chundru <quic_krichai@quicinc.com> wrote:
 
-Sure, they're in -next, but for an -rc2 based tree, see:
-https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=for-next/kspp
 
--- 
-Kees Cook
+
+> diff --git a/drivers/bus/mhi/host/main.c b/drivers/bus/mhi/host/main.c
+> index abb561db9ae1..2d38f6005da6 100644
+> --- a/drivers/bus/mhi/host/main.c
+> +++ b/drivers/bus/mhi/host/main.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/skbuff.h>
+>  #include <linux/slab.h>
+>  #include "internal.h"
+> +#include "trace.h"
+>  
+>  int __must_check mhi_read_reg(struct mhi_controller *mhi_cntrl,
+>  			      void __iomem *base, u32 offset, u32 *out)
+> @@ -493,11 +494,8 @@ irqreturn_t mhi_intvec_threaded_handler(int irq_number, void *priv)
+>  
+>  	state = mhi_get_mhi_state(mhi_cntrl);
+>  	ee = mhi_get_exec_env(mhi_cntrl);
+> -	dev_dbg(dev, "local ee: %s state: %s device ee: %s state: %s\n",
+> -		TO_MHI_EXEC_STR(mhi_cntrl->ee),
+> -		mhi_state_str(mhi_cntrl->dev_state),
+> -		TO_MHI_EXEC_STR(ee), mhi_state_str(state));
+>  
+> +	trace_mhi_intvec_states(mhi_cntrl, ee, state);
+>  	if (state == MHI_STATE_SYS_ERR) {
+>  		dev_dbg(dev, "System error detected\n");
+>  		pm_state = mhi_tryset_pm_state(mhi_cntrl,
+> @@ -838,6 +836,8 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
+>  	while (dev_rp != local_rp) {
+>  		enum mhi_pkt_type type = MHI_TRE_GET_EV_TYPE(local_rp);
+>  
+> +		trace_mhi_ctrl_event(mhi_cntrl, local_rp);
+> +
+>  		switch (type) {
+>  		case MHI_PKT_TYPE_BW_REQ_EVENT:
+>  		{
+> @@ -1003,6 +1003,8 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
+>  	while (dev_rp != local_rp && event_quota > 0) {
+>  		enum mhi_pkt_type type = MHI_TRE_GET_EV_TYPE(local_rp);
+>  
+> +		trace_mhi_data_event(mhi_cntrl, local_rp);
+> +
+>  		chan = MHI_TRE_GET_EV_CHID(local_rp);
+>  
+>  		WARN_ON(chan >= mhi_cntrl->max_chan);
+> @@ -1243,6 +1245,7 @@ int mhi_gen_tre(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
+>  	mhi_tre->dword[0] = MHI_TRE_DATA_DWORD0(info->len);
+>  	mhi_tre->dword[1] = MHI_TRE_DATA_DWORD1(bei, eot, eob, chain);
+>  
+> +	trace_mhi_gen_tre(mhi_cntrl, mhi_chan, mhi_tre);
+>  	/* increment WP */
+>  	mhi_add_ring_element(mhi_cntrl, tre_ring);
+>  	mhi_add_ring_element(mhi_cntrl, buf_ring);
+> @@ -1337,9 +1340,7 @@ static int mhi_update_channel_state(struct mhi_controller *mhi_cntrl,
+>  	enum mhi_cmd_type cmd = MHI_CMD_NOP;
+>  	int ret;
+>  
+> -	dev_dbg(dev, "%d: Updating channel state to: %s\n", mhi_chan->chan,
+> -		TO_CH_STATE_TYPE_STR(to_state));
+> -
+> +	trace_mhi_channel_command_start(mhi_cntrl, mhi_chan, to_state, "Updating");
+
+The string above "Updating"
+
+>  	switch (to_state) {
+>  	case MHI_CH_STATE_TYPE_RESET:
+>  		write_lock_irq(&mhi_chan->lock);
+> @@ -1406,9 +1407,7 @@ static int mhi_update_channel_state(struct mhi_controller *mhi_cntrl,
+>  		write_unlock_irq(&mhi_chan->lock);
+>  	}
+>  
+> -	dev_dbg(dev, "%d: Channel state change to %s successful\n",
+> -		mhi_chan->chan, TO_CH_STATE_TYPE_STR(to_state));
+> -
+> +	trace_mhi_channel_command_end(mhi_cntrl, mhi_chan, to_state, "Updated");
+
+And here "Updated"
+
+>  exit_channel_update:
+>  	mhi_cntrl->runtime_put(mhi_cntrl);
+>  	mhi_device_put(mhi_cntrl->mhi_dev);
+
+Please add them to the printk_formats (like RCU trace events do).
+
+#define TPS(x)	tracepoint_string(x)
+
+Then the above should have:
+
+	trace_mhi_channel_command_start(mhi_cntrl, mhi_chan, to_state, TPS("Updating"));
+
+and
+
+	trace_mhi_channel_command_end(mhi_cntrl, mhi_chan, to_state, TPS("Updated"));
+
+> +DECLARE_EVENT_CLASS(mhi_update_channel_state,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan, int state,
+> +		 const char *reason),
+> +
+> +	TP_ARGS(mhi_cntrl, mhi_chan, state, reason),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, mhi_cntrl->mhi_dev->name)
+> +		__field(int, ch_num)
+> +		__field(int, state)
+> +		__field(const char *, reason)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, mhi_cntrl->mhi_dev->name);
+> +		__entry->ch_num = mhi_chan->chan;
+> +		__entry->state = state;
+> +		__entry->reason = reason;
+> +	),
+> +
+> +	TP_printk("%s: chan%d: %s state to: %s\n",
+> +		  __get_str(name),  __entry->ch_num, __entry->reason,
+> +		  __print_symbolic(__entry->state, MHI_CH_STATE_TYPE_LIST))
+> +);
+
+The above print fmt has "%s" on __entry->reason which is just an internal
+kernel pointer to the string that is saved in the ring buffer. User space
+tools like perf and trace-cmd will not report them. It will just show some
+internal kernel address. By adding the TPS() logic above, those addresses
+will be mapped to strings:
+
+ ~# grep RCU /sys/kernel/tracing/printk_formats 
+ 0xffffffffb069a4e0 : "End RCU core"
+ 0xffffffffb069a520 : "Start RCU core"
+
+As RCU uses direct string pointers in its name space, it has the TPS()
+logic that allows perf and ftrace to map the addresses that are saved in
+the ring buffer to the strings they represent.
+
+-- Steve
+
+
+> +
+> +DEFINE_EVENT(mhi_update_channel_state, mhi_channel_command_start,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan, int state,
+> +		 const char *reason),
+> +
+> +	TP_ARGS(mhi_cntrl, mhi_chan, state, reason)
+> +);
+> +
+> +DEFINE_EVENT(mhi_update_channel_state, mhi_channel_command_end,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan, int state,
+> +		 const char *reason),
+> +
+> +	TP_ARGS(mhi_cntrl, mhi_chan, state, reason)
+> +);
+> +
