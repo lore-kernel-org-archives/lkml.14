@@ -1,166 +1,142 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C6123B2A4;
-	Mon, 12 Feb 2024 16:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 102F318E11
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 16:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707756624; cv=none; b=S0g1T4P63WJAd6ANO5FZX1pn+dCkvC66gN2SWsSCiypAna1aI/0hLNVDblwshiDLeFqWKBFF1K+dpuU5nfOy3yMdx344GPdvK46COru4WdtsgbeIZk3pGWcLUJLiaN+DMQ8yWnTR2BELSCS0rEoJfNoe+cRbCUdBwV800TSJIlg=
+	t=1707756667; cv=none; b=H3eRYs2xWPWce88Vzr7IYWQVq2oo2NKtcPczeOmskX38QJhXMaFDHyBJx+wNmCS27oakoPRxYkcpaVPGH7vGAfW7qtw/xFVYKWz7G/kMUlF8qlZoOhjX4rm22e/KtO4wiSuR/Ph79Xc9qZysdlhblXgBDs04NSf7OGI/phWT3B0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707756624; c=relaxed/simple;
-	bh=psAYolLubLnXKh+kFdLshH1IwolSJgEuJAOQ4J6CcLU=;
-	h=Content-Type:Mime-Version:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=Dflv+8i5hjEA9M+2CFJts669y+y2ibGCZ7UQ1FBm9c2zy7UGTe+KHIk3lCi3duFpUIapNp/hOjPflm61MYCaisbyA8ugMHKnbtYL5tH7Yruf6jS8GmX/zOFSOygxj/SOHMcMnaHGz0kvSjIxPhdEejzRgc+PWsDcql2UD0FZTGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dNT2mCxz; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dNT2mCxz"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-55ff5f6a610so4064821a12.3;
-        Mon, 12 Feb 2024 08:50:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707756620; x=1708361420; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DbtCOz3u26hElchW0PWcPewu+ZG78Aj7zeMZmqh8H1Y=;
-        b=dNT2mCxzWEr53u2iUy94Ob2lLxy1+oONvYndOERnxF1t8JTnl+zutiVmPUomkG1oun
-         RrgOBxRneraUvByoknqwhckgHUiqtclhA1gO4NyIoLqi4AUzrw7eYq28GWYjRcWJjDqj
-         q4HBvL+2rFh2ydvwKQtONNE3BHMHLE1Twa7dmLGzqg1O5sJeP2QBL9+DX0v8uUxkJqom
-         hy3nrMzScBBGJpK7rvRnfndoqTpJhaIsW5Z1G8ivQtqQEoLeLJt3ksXTJ3ENjEjVavK0
-         ULUSV6FBgDBA/Xo44chKfbSN2pFPTuW/5JeQ45I191kz/mTaZQjIJKmbugoCVX4HNHHm
-         uWrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707756620; x=1708361420;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DbtCOz3u26hElchW0PWcPewu+ZG78Aj7zeMZmqh8H1Y=;
-        b=nbHFMLY/PJXa/WN5sRqQNnuRVW8a6RolkarSBw3wkNwqM5Y3/IEElbdv4uageau+Ml
-         GVpqp8GFAEw427erg4PQ7gaxgx0QpIC/l1mZG6eKcMqXLDOUzTAWFOeAnOEp+nQuhlWv
-         zn6nGBJeLM4pfrxwk6bRxWYct1fuRACLRXpJlVbkCfHLEAytGUUqM916AgdpfQaTT1S/
-         adKASSY4IMzl7WaKwUCaYahrIxfw9S2Nj1jCFbbfpQht0qpM0U2AatySXiANA+v8AZnM
-         qVu0Dd3uOUFkWa9cr525Vtc3XaXh4ERokWB91I8ddPdxOir5YfFeX92Zrauf7GjAzzq4
-         EmiA==
-X-Forwarded-Encrypted: i=1; AJvYcCWwWuViV01a/4f4KsL2NPutsmvLkxNCYKeoW3+cwFCJB2p+uNKEKhziBs5VvoWln+Ol7F0YLF2U4w5S/ponwlL08TQJEKL9DkTjbPBla7Ly7/LCuRS3FphHo9unfMhRbyRolgLhnDKniZU=
-X-Gm-Message-State: AOJu0Yw8BJJf3RsVT+1CtcJC634nYnEgZMXPTC8zyuQ9ABjW80JRsocc
-	6aOSyn3DqhZ2Pa9tg0J2kM9nsszi4aoq/Ln2Q4lDzlASum+psQJP
-X-Google-Smtp-Source: AGHT+IFftF7HlCObOuwBQ/Rn6Zi2lSFub53JoK52ItcnhXkLZH4AbtnP3IeLI2bAJ9AZkCoRml7RVw==
-X-Received: by 2002:a05:6402:5d90:b0:561:9f62:8db3 with SMTP id if16-20020a0564025d9000b005619f628db3mr3335969edb.29.1707756620298;
-        Mon, 12 Feb 2024 08:50:20 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUjZZUQ9opbitxcj18TgINb330mLd5bs/QgDlAbVc+/b+TQo4HTAg3GgfMZ8auVW03Z1K+zY+oia7eAq3u5uS7adDcegYT2WYL8wWZxXkIaVCZW1t3ew+5ZopdP7hUwUNJ3VN9LK7iW3Lsrkct/FM5lg+yVeash9cqoJ6lSzXFHnR+6kCG+2usplPZH2qJlwCr+FAADAKNkiKU9NR0+4jbN8yQUJ5HGHmZ6sPtcLn9ygubDuPIzQ01ytxWScUDKCXou2wIcSabOInIYxvJHqUyIBae0aJx9kTe5ZlEH
-Received: from localhost (p200300e41f147f00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f14:7f00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id fd9-20020a056402388900b005607f899175sm2927160edb.70.2024.02.12.08.50.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Feb 2024 08:50:19 -0800 (PST)
-Content-Type: multipart/signed;
- boundary=7c640255eac135c68b597b52d418781ce4ba02d5840e4f5c2d60ce4c9520;
- micalg=pgp-sha256; protocol="application/pgp-signature"
+	s=arc-20240116; t=1707756667; c=relaxed/simple;
+	bh=eB9xMFTkL9TOu4VQG3m74Dcn6+Ley2QNkFj53q4psxM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qj2L/lELtQzuU+KxQcenAKaH06UghAlN9EyKIcN2tie7D7yREg47CEqUF7DEGEnLjasmG8d6e488y+TCOOABhcQvvMdZfx0b3TRtGw+wAVYCu52/NhLGNv7Xqb8fi/PoLZV6tD9fzgDgFEWDJJwpGc2U9UQ6WAFEzrg4eY/en8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A006DA7;
+	Mon, 12 Feb 2024 08:51:42 -0800 (PST)
+Received: from e133344.arm.com (e133344.arm.com [10.1.25.137])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3BD983F762;
+	Mon, 12 Feb 2024 08:51:00 -0800 (PST)
+Date: Mon, 12 Feb 2024 16:50:49 +0000
+From: Dave Martin <Dave.Martin@arm.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Oleg Nesterov <oleg@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] arm64/sve: Lower the maximum allocation for the SVE
+ ptrace regset
+Message-ID: <ZcpMabqH+VZv6RCZ@e133344.arm.com>
+References: <20240203-arm64-sve-ptrace-regset-size-v1-1-2c3ba1386b9e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Mon, 12 Feb 2024 17:50:19 +0100
-Message-Id: <CZ3974AW5FT3.39WK876PU00AZ@gmail.com>
-Cc: <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 1/2] ARM: tegra: set correct naming for Tegra Note 7
-From: "Thierry Reding" <thierry.reding@gmail.com>
-To: "Jon Hunter" <jonathanh@nvidia.com>, "Svyatoslav Ryhel"
- <clamor95@gmail.com>, "Rob Herring" <robh+dt@kernel.org>, "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Shubhi Garg" <shgarg@nvidia.com>
-X-Mailer: aerc 0.16.0-1-0-g560d6168f0ed-dirty
-References: <20240212071843.6679-1-clamor95@gmail.com>
- <20240212071843.6679-2-clamor95@gmail.com>
- <8ffbe7ae-67e9-4a3f-9866-3cd744729971@nvidia.com>
-In-Reply-To: <8ffbe7ae-67e9-4a3f-9866-3cd744729971@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240203-arm64-sve-ptrace-regset-size-v1-1-2c3ba1386b9e@kernel.org>
 
---7c640255eac135c68b597b52d418781ce4ba02d5840e4f5c2d60ce4c9520
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+On Sat, Feb 03, 2024 at 12:16:49PM +0000, Mark Brown wrote:
+> Doug Anderson observed that ChromeOS crashes are being reported which
+> include failing allocations of order 7 during core dumps due to ptrace
+> allocating storage for regsets:
+> 
+>   chrome: page allocation failure: order:7,
+>           mode:0x40dc0(GFP_KERNEL|__GFP_COMP|__GFP_ZERO),
+>           nodemask=(null),cpuset=urgent,mems_allowed=0
+>    ...
+>   regset_get_alloc+0x1c/0x28
+>   elf_core_dump+0x3d8/0xd8c
+>   do_coredump+0xeb8/0x1378
+> 
+> with further investigation showing that this is:
+> 
+>    [   66.957385] DOUG: Allocating 279584 bytes
+> 
+> which is the maximum size of the SVE regset. As Doug observes it is not
+> entirely surprising that such a large allocation of contiguous memory might
+> fail on a long running system.
+> 
+> The SVE regset is currently sized to hold SVE registers with a VQ of
+> SVE_VQ_MAX which is 512, substantially more than the architectural maximum
+> of 16 which we might see even in a system emulating the limits of the
+> architecture. Since we don't expose the size we tell the regset core
+> externally let's define ARCH_SVE_VQ_MAX with the actual architectural
+> maximum and use that for the regset, we'll still overallocate most of the
+> time but much less so which will be helpful even if the core is fixed to
+> not require contiguous allocations.
+> 
+> We could also teach the ptrace core about runtime discoverable regset sizes
+> but that would be a more invasive change and this is being observed in
+> practical systems.
+> 
+> Reported-by: Doug Anderson <dianders@chromium.org>
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
+> We should probably also use the actual architectural limit for the
+> bitmasks we use in the VL enumeration code, though that's both a little
+> bit more involved and less immediately a problem.
+> ---
+>  arch/arm64/include/asm/fpsimd.h | 10 +++++-----
+>  arch/arm64/kernel/ptrace.c      |  3 ++-
+>  2 files changed, 7 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/fpsimd.h b/arch/arm64/include/asm/fpsimd.h
+> index 50e5f25d3024..cf5f31181bc8 100644
+> --- a/arch/arm64/include/asm/fpsimd.h
+> +++ b/arch/arm64/include/asm/fpsimd.h
+> @@ -62,12 +62,12 @@ static inline void cpacr_restore(unsigned long cpacr)
+>   * When we defined the maximum SVE vector length we defined the ABI so
+>   * that the maximum vector length included all the reserved for future
+>   * expansion bits in ZCR rather than those just currently defined by
+> - * the architecture. While SME follows a similar pattern the fact that
+> - * it includes a square matrix means that any allocations that attempt
+> - * to cover the maximum potential vector length (such as happen with
+> - * the regset used for ptrace) end up being extremely large. Define
+> - * the much lower actual limit for use in such situations.
+> + * the architecture.  Using this length to allocate worst size buffers
+> + * results in excessively large allocations, and this effect is even
+> + * more pronounced for SME due to ZA.  Define more suitable VLs for
+> + * these situations.
+>   */
+> +#define ARCH_SVE_VQ_MAX 16
+>  #define SME_VQ_MAX	16
+>  
+>  struct task_struct;
+> diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+> index dc6cf0e37194..e3bef38fc2e2 100644
+> --- a/arch/arm64/kernel/ptrace.c
+> +++ b/arch/arm64/kernel/ptrace.c
+> @@ -1500,7 +1500,8 @@ static const struct user_regset aarch64_regsets[] = {
+>  #ifdef CONFIG_ARM64_SVE
+>  	[REGSET_SVE] = { /* Scalable Vector Extension */
+>  		.core_note_type = NT_ARM_SVE,
+> -		.n = DIV_ROUND_UP(SVE_PT_SIZE(SVE_VQ_MAX, SVE_PT_REGS_SVE),
+> +		.n = DIV_ROUND_UP(SVE_PT_SIZE(ARCH_SVE_VQ_MAX,
+> +					      SVE_PT_REGS_SVE),
+>  				  SVE_VQ_BYTES),
 
-On Mon Feb 12, 2024 at 5:14 PM CET, Jon Hunter wrote:
->
-> On 12/02/2024 07:18, Svyatoslav Ryhel wrote:
-> > Correct codename of Tegra Note 7 is "tegratab", while model
-> > name should be "NVIDIA Tegra Note 7". Fix this inconsistency.
-> >=20
-> > Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-> > ---
-> >   arch/arm/boot/dts/nvidia/Makefile                            | 4 ++--
-> >   .../{tegra114-tn7.dts =3D> tegra114-nvidia-tegratab.dts}       | 5 ++=
-+--
-> >   2 files changed, 5 insertions(+), 4 deletions(-)
-> >   rename arch/arm/boot/dts/nvidia/{tegra114-tn7.dts =3D> tegra114-nvidi=
-a-tegratab.dts} (98%)
-> >=20
-> > diff --git a/arch/arm/boot/dts/nvidia/Makefile b/arch/arm/boot/dts/nvid=
-ia/Makefile
-> > index 7a422f150488..474f3fbbd99d 100644
-> > --- a/arch/arm/boot/dts/nvidia/Makefile
-> > +++ b/arch/arm/boot/dts/nvidia/Makefile
-> > @@ -2,8 +2,8 @@
-> >   dtb-$(CONFIG_ARCH_TEGRA_114_SOC) +=3D \
-> >   	tegra114-asus-tf701t.dtb \
-> >   	tegra114-dalmore.dtb \
-> > -	tegra114-roth.dtb \
-> > -	tegra114-tn7.dtb
-> > +	tegra114-nvidia-tegratab.dtb \
-> > +	tegra114-roth.dtb
-> >   dtb-$(CONFIG_ARCH_TEGRA_124_SOC) +=3D \
-> >   	tegra124-apalis-eval.dtb \
-> >   	tegra124-apalis-v1.2-eval.dtb \
-> > diff --git a/arch/arm/boot/dts/nvidia/tegra114-tn7.dts b/arch/arm/boot/=
-dts/nvidia/tegra114-nvidia-tegratab.dts
-> > similarity index 98%
-> > rename from arch/arm/boot/dts/nvidia/tegra114-tn7.dts
-> > rename to arch/arm/boot/dts/nvidia/tegra114-nvidia-tegratab.dts
-> > index bfbdb345575a..30b2ed91be23 100644
-> > --- a/arch/arm/boot/dts/nvidia/tegra114-tn7.dts
-> > +++ b/arch/arm/boot/dts/nvidia/tegra114-nvidia-tegratab.dts
-> > @@ -5,8 +5,9 @@
-> >   #include "tegra114.dtsi"
-> >  =20
-> >   / {
-> > -	model =3D "Tegra Note 7";
-> > -	compatible =3D "nvidia,tn7", "nvidia,tegra114";
-> > +	model =3D "NVIDIA Tegra Note 7";
-> > +	compatible =3D "nvidia,tegratab", "nvidia,tegra114";
-> > +	chassis-type =3D "tablet";
->
-> No mention of adding the chassis-type in the commit message. Seems like=
-=20
-> that should be a separate change.
+Do we need an actual check somewhere that we don't bust this limit?
 
-Agreed. Along with Krzysztof's comments maybe this should just be a
-single patch that updates the model property and adds the chassis-type.
-We haven't used chassis-type before, but I see that the devicetree
-specification has it marked as "optional-but-recommended", so maybe we
-should make a pass over all files and add these as appropriate.
+Since ZCR_ELx_LEN_MASK was changed from 0x1ff to 0xf, it looks like the
+kernel itself will not generate an overlarge VL, although it feels a bit
+like this guarantee arrives by accident.
+Could ARCH_SVE_VQ_MAX be based on ZCR_ELx_LEN_MASK instead?
 
-Thierry
+Userspace could specify vl > sve_vl_from_vq(ARCH_SVE_VQ_MAX) in
+PTRACE_SETREGSET; I'm not sure exactly what happens there.
 
---7c640255eac135c68b597b52d418781ce4ba02d5840e4f5c2d60ce4c9520
-Content-Type: application/pgp-signature; name="signature.asc"
+(The original 0x1ff value of ZCR_ELx_LEN_MASK was based on more than
+just hope, but it does seem appropriate to restrict it now so that it
+matches the formal architecture, as per commit f171f9e4097d
+("arm64/fp: Make SVE and SME length register definition match
+architecture") )
 
------BEGIN PGP SIGNATURE-----
+[...]
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmXKTEsACgkQ3SOs138+
-s6FMYxAAtw170jJGnf2jjS+4ueekSK3Ym6O38q1r0QQu8S71dwn7SHUFfxLmnvzT
-b4eTV+3mSt9S1z2YGxseXo9YCV21ZmhOBqCtjpgnE3hf/yoBCMt6oOGw5O5TYtl7
-5Aa7fTdSBEWvG3zKT39kR73o0TtVn4FV5XecsZIu7922LA7IEqAEkb53T4p7mmTo
-lHmI6qUTzISgYO2T7JhAPTUsh+R3F66HM0mnDTU6s59Leaazi1WfoWX2gufWfDWP
-aUGXb0O+lTJKVIzE83vbGgPeC5MSYMHXlGe9bPIkaThJjbUnO066bUwEZ7e6F/WJ
-V+169e6ueZdPNxr7A/gDVbFN28e3KHbYon7khgdJZOPpfp2TWN0EGfkPPj5Jhdya
-dMnqvOLEt7OTWbDIcjfIzPNPsiKETsOMN9YrTYkCvJN3yOelvFF+oogrvDCkWFpn
-48WFVAxUq83nmPz1Rv71mpwWH2sySWhf6Oe5QesaDxmfaL8gIpmL1MPbtB3o8kz1
-U8LZ0G1+5HPUUsyvQDU6BPaU5TQqS9zqu0/YSwQydlAp/ZZ36H5xwkeMN2PBMNr+
-LKMJl2Sz5FmM0FkIWTkYEfPmCqQSE0i6vNeZqH8Y++qPXfnTCzoGNiBUouME4Cp+
-t5Yh3PnHtu3sCM6rmfWApTqRsJ10UBuDd7fF8BKFlf+tVeBG9Kk=
-=U8Ue
------END PGP SIGNATURE-----
-
---7c640255eac135c68b597b52d418781ce4ba02d5840e4f5c2d60ce4c9520--
+Cheers
+---Dave
