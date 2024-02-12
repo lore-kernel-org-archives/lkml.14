@@ -1,257 +1,134 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9B62BAEA
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 10:41:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75A220DCF
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 10:42:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707734517; cv=none; b=dKDVhNO1wYaDT6FvCMqzJFXNxhUfu8+hytwZC40WvoVyuNkIIiKbJ8uYuKrzxJhSaaeCy5dJv4ElwZtny67+eDTV+2Ovx6qwgb6rizcBbte8SO0/8xScvrbr4ca8HtOjHRMfzswVLPFKB2DAUPbB4BucoenzsxgmrGWbO3ZLz/M=
+	t=1707734574; cv=none; b=nJZLkHnnsLWSDXIsaB6Q544f8vaz1uCtBN77tp1Czxk9DM877JlA7HxbalJES0y+fV3Ce6zbk8hgV7r30GfZYc8O4LEexfH6/guH+14TmadEFHLCuLS1r+41OzKcOQjKhXscYwzihEDx50aK28771f8hMUFGyu+pVEYPf3dDuYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707734517; c=relaxed/simple;
-	bh=sb+BUbpAKNdAjV5BfvBUmozIG93UDVkuI+FFaQoAjp4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yz0cUezlsL4QLd9D+UwPwqd1NNIKGznHWUE4D6riTwkxJ5VA+hU0LpJX3jcbqfQDHThtRRImmJvWy7i8OPxxsN/E40v9GIYxACFH/lKtrNq39NGs5ZyueR1o+8vDPMrosOX/e9T8zfWBZb2bTYSLq7bLaun/M4jRVZPP9rUy/6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sDhq388a; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707734574; c=relaxed/simple;
+	bh=Jygs9Q6J8uxw8Ho/Er8Ipal7NjHuxFkoUvaGLn9kKs0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qmQr71zBXkDQzRH3F6U1eNr2ZjHCWkboYt7xwk3QjAsV1OcghDD4WiRg5WPGVUb8Bfz1HwmMgAIOJvd0aCo1HsUIc3MIC0OHK6Zr15WhPM5WE0BGQnyOz3P9r6LLv+cqlAQS1b8QqnvbzsV5wGMmnhhiGi0AK0Wh/h7FrDMwReA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yO+Sw2nG; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sDhq388a"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-56154f4c9c8so17861a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 02:41:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yO+Sw2nG"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2d0d799b55cso37530981fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 02:42:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707734513; x=1708339313; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F+78diOCZPHLp3izRsQEIMDqxF/GnwBM3MnY4r3LURs=;
-        b=sDhq388atdZxf+oHowYc5CIfyYTejfg8Vw3CfjvvvwIMgqPZcDYKBdcVFkSM/wvvRC
-         vxyOYA1UJTEthQdjnl3WDkcGdrkXv4pb3+MTsWjEaqkUhefE05p/KGasysKZRumLR91P
-         B0v15tbKkOxftmqLejyrIdf3k+60RdKiLjAse907RhJ6XGXCDipOAGHj43n2181EMRGH
-         9WKHuug673a9dLKP2v1WTmx3QfGrbeMA/s3zO8CmaKbmG3LxSEcg1PrP/p3j3cBqrM9u
-         MboFuozwMgJ0yPWzngYoCxovPe2QJrfTZT+Xpv1Q86Buk4WdXOfS8w+5zjIv/hOip+hA
-         lG6w==
+        d=linaro.org; s=google; t=1707734571; x=1708339371; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=a1oPdZBnKqKSBzao8ZSP9DjSYpKnjrU7QOhn8hTFi48=;
+        b=yO+Sw2nGDyhEFBVW9u7bMxzJpXXLv5mOh5XrJHC60hAOQ0doz6P0t0SmzpASL7VNvN
+         BlbS/PJCbufkRwY0xJKOhH3Ej4wRBkOrEVPWmDCf0aJwa1ny3/k0ixRfwzbg64urOuv2
+         b2wA5f29qkps9FK0xpfSv//CJfSmlsBIg7up284LEZTIb/Ucniv+9XjhzjQ7YVKNDZfO
+         QtSunhRuKKcZkLgPheKvsh1YTGEB3kIu81e/Q10BqQQ1Egr2m7xX43f5Q005qJ6kFPP3
+         x06mpuhbBVkPLdM9cMNvHJ6aFQNABzlEYtSROc3fHhHV83D+yuN4Ha1sWhqNvCVP4jTR
+         aLhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707734513; x=1708339313;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F+78diOCZPHLp3izRsQEIMDqxF/GnwBM3MnY4r3LURs=;
-        b=fQ3UqYbxi4rEHDM15NYZN5otH1TKEGLaaYt/H5Of8R1f+G1ivqY9ce8FfQuqTBuDTk
-         SdCquJRomWUWFSW1NQdGJ8NwXr/RPbw/IQvaBJakZzjMl9SxuX7zlXrlJW0Kjuqrti3O
-         EiKh+92CCgD9+mQzbsWkucFyHZqy8zVY8tMdkO/GjeCQxTB4eb3yFLtVQYrS8EkkrUkz
-         JccG6QkQ14VkATPm/dA2TkIZHjIemJzcEm3uzfnR938Tf9Xb0qQgOBWeslkJa+L2+xkt
-         Y6k+8xT8TOm9qS308U0jNC299wwKCajLcpQHTy2N9OvqAKC4gIi6ZvKb87RjB3ZlAnjs
-         JYlw==
-X-Gm-Message-State: AOJu0Yw3HySsqMnSCYBKWP60lFq89lYVdVNmYqly4YwEUESg2sIC141S
-	Du+zdyl3/VhTjGK+bFuWX+Qi11hsFnHT5Kd3L1eXp3z+vFyyOwBR6W7fMiPewKdGz1m4u0Z0EaF
-	7cgrF3w3VmYcfE5GDpUt5sZ8UAKaP3ojoU2Js
-X-Google-Smtp-Source: AGHT+IFJ2TR8vLIjcwFGIqV1t5PL/WV6+3mRWSzVhvtQmnWz17FztMyRhFL7k6YnS0/tmXT1yBl4qprTazklTi+mZmY=
-X-Received: by 2002:a50:8a93:0:b0:55f:8851:d03b with SMTP id
- j19-20020a508a93000000b0055f8851d03bmr195865edj.5.1707734513245; Mon, 12 Feb
- 2024 02:41:53 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707734571; x=1708339371;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a1oPdZBnKqKSBzao8ZSP9DjSYpKnjrU7QOhn8hTFi48=;
+        b=fttd7kynS6sO+bo/GFn/SwRQVe5j3b9SMrIp175Q6KLIibwjIyDbk4SKOsz3kJhMfg
+         aUBfLgGpvRafwfwtRorxF0KiwbKBPtxKSQJBcnF46bVJfml924xy96N9LGXLUBAkgjDh
+         lDzUvICchs37hF9KXzQeII76TCTUqW/kcGB2y5KDqMeLMBRqsjQVneMpfkZRfajXyzrJ
+         0lAa88eCIplZlPhUsXy63MOMOo63v+XvJ8raSZU+dKYqhHkb0+JZ0Zjph2Kf3edK4uQy
+         FNikyLLM0JukngXL0/DggrLqKtsbiv7/oc5hENwjvyEc8QZkWcDCmLGnFgKWpltMdTR3
+         YiGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+q1jL/VjT4dZTmuOQOUPsCJjZcp5y4zjEL89Uvd4v3RHLsb6qcq5mKpCHQWySnHGHmuggLkZbOReYhedBltcLrgWOgA+gnhOqRONp
+X-Gm-Message-State: AOJu0Yzt9XJY3CKAQStyXItPMZBCdrvtg5Qe+0EosiOAjhbGd7K19wjr
+	XlbG0O5oy9YOqu5Pl5w9i+OKipjdz4GWkllEcefXFbPKJ7Oa9iEmXyDoQWuvDWY=
+X-Google-Smtp-Source: AGHT+IHYHCImbdKOmN4+PmM5r2d3rzw3UZ7jC5CqA3YWWONjsgNMoSk+hmdjz6ntq1RBbyQC/rD/kA==
+X-Received: by 2002:a2e:3c19:0:b0:2cf:1977:d098 with SMTP id j25-20020a2e3c19000000b002cf1977d098mr4537778lja.40.1707734570881;
+        Mon, 12 Feb 2024 02:42:50 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUBTv0gERFkitI3tSXtHCI3bqTrIcksSSsOz+rZ1yN2EcT/pwdBkHbrjeYcKgsmPMUMRFANtARb8/Jxs9pyyEt6QNVGNIPbeWf+yCtoH8z9UgBjit9MyaiYhzflbVNSqyk86qMbbiDB36D3R5r67wdCM+QNFUbZ2FujOR7+KS8oWt65idTmzxuOGT0AZsk3o89/OegmKXg+dX8o6cG0TY4l9kI90i2zJ3r69mx/w/vTkHhX7qVR4y7Sg+B5Vjxu+TZHLiHQJJ3r1zSN3kWnhRwZEpLhQ+VDpmsCuAIGH8j+s/IF2OAVz+YSYlr1bc0f5Cun1cy1z0Nl4iQeCByTP7+SnliaPyf3ctctnNSr1VYAr8f0389XCUcL9uQSWfQpUpZ5NAcQvD5RHWC/SQnYwDTTlO0H/at1fBjdw4Oo/WWDuIt0h2QZUddJLDEgx9sbOg35WAP08HKt1heOA88Jip8oRTMNI+npASiH5f6QBkjAT1PsEzbaShSVvMIIL+Q1GhYdMTebdEaKSlWnU5ycAtI0NdNU4TPP8h4JNpIChi4p6dUMBTLhS18xYSow7jCSsHec+vcfE+5+9RWV4SA2b0zbWqfBfsofTT9EHFZkMSlNCN7wX7ufaTzomdk/2rF5hOrHmaRmcNj2rcUz2dUDNBnWYS8ktGAaG2x/NIRuulWajhYwShWHsPvJOYm0gbCB50yGrVcwY2fVcPIXF3Hx5hJy8EX+QCWL0FZfP7zUzLkpEepDhZjF4sR9ecFJ+/kY6zF8LIUhzVKm1HIBwmoxlZujxgQ22csDqF/JZVLZQaOq0WmOdolfd1LKEBge
+Received: from [192.168.192.135] (037008245233.garwolin.vectranet.pl. [37.8.245.233])
+        by smtp.gmail.com with ESMTPSA id i25-20020a170906a29900b00a3600d7c2fbsm70567ejz.176.2024.02.12.02.42.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 Feb 2024 02:42:50 -0800 (PST)
+Message-ID: <1a7d7283-1437-46f5-8983-bd551f5a9801@linaro.org>
+Date: Mon, 12 Feb 2024 11:42:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <000000000000ae28ce06112cb52e@google.com>
-In-Reply-To: <000000000000ae28ce06112cb52e@google.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Mon, 12 Feb 2024 11:41:38 +0100
-Message-ID: <CANn89iKPYAY226+kV9D0jUn6Kfjq1gQJBAjSRxxFgQJK-QbLwA@mail.gmail.com>
-Subject: Re: [syzbot] [batman?] BUG: soft lockup in sys_sendmsg
-To: syzbot <syzbot+a6a4b5bb3da165594cff@syzkaller.appspotmail.com>
-Cc: a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org, davem@davemloft.net, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, mareklindner@neomailbox.ch, 
-	netdev@vger.kernel.org, pabeni@redhat.com, sven@narfation.org, 
-	sw@simonwunderlich.de, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] dt-bindings: display/msm/gmu: Document Adreno 750 GMU
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+ Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Will Deacon <will@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+ Bjorn Andersson <andersson@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ iommu@lists.linux.dev
+References: <20240212-topic-sm8650-gpu-v1-0-708a40b747b5@linaro.org>
+ <20240212-topic-sm8650-gpu-v1-1-708a40b747b5@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240212-topic-sm8650-gpu-v1-1-708a40b747b5@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 12, 2024 at 11:26=E2=80=AFAM syzbot
-<syzbot+a6a4b5bb3da165594cff@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following issue on:
->
-> HEAD commit:    41bccc98fb79 Linux 6.8-rc2
-> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux=
-.git for-kernelci
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D1420011818000=
-0
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D451a1e62b11ea=
-4a6
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3Da6a4b5bb3da1655=
-94cff
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Deb=
-ian) 2.40
-> userspace arch: arm64
->
-> Unfortunately, I don't have any reproducer for this issue yet.
->
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/0772069e29cf/dis=
-k-41bccc98.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/659d3f0755b7/vmlinu=
-x-41bccc98.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/7780a45c3e51/I=
-mage-41bccc98.gz.xz
->
-> IMPORTANT: if you fix the issue, please add the following tag to the comm=
-it:
-> Reported-by: syzbot+a6a4b5bb3da165594cff@syzkaller.appspotmail.com
->
-> watchdog: BUG: soft lockup - CPU#1 stuck for 22s! [syz-executor.0:28718]
-> Modules linked in:
-> irq event stamp: 45929391
-> hardirqs last  enabled at (45929390): [<ffff8000801d9dc8>] __local_bh_ena=
-ble_ip+0x224/0x44c kernel/softirq.c:386
-> hardirqs last disabled at (45929391): [<ffff80008ad57108>] __el1_irq arch=
-/arm64/kernel/entry-common.c:499 [inline]
-> hardirqs last disabled at (45929391): [<ffff80008ad57108>] el1_interrupt+=
-0x24/0x68 arch/arm64/kernel/entry-common.c:517
-> softirqs last  enabled at (2040): [<ffff80008002189c>] softirq_handle_end=
- kernel/softirq.c:399 [inline]
-> softirqs last  enabled at (2040): [<ffff80008002189c>] __do_softirq+0xac8=
-/0xce4 kernel/softirq.c:582
-> softirqs last disabled at (2052): [<ffff80008aacbc40>] spin_lock_bh inclu=
-de/linux/spinlock.h:356 [inline]
-> softirqs last disabled at (2052): [<ffff80008aacbc40>] batadv_tt_local_re=
-size_to_mtu+0x60/0x154 net/batman-adv/translation-table.c:3949
-> CPU: 1 PID: 28718 Comm: syz-executor.0 Not tainted 6.8.0-rc2-syzkaller-g4=
-1bccc98fb79 #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS G=
-oogle 11/17/2023
-> pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
-> pc : should_resched arch/arm64/include/asm/preempt.h:79 [inline]
-> pc : __local_bh_enable_ip+0x228/0x44c kernel/softirq.c:388
-> lr : __local_bh_enable_ip+0x224/0x44c kernel/softirq.c:386
-> sp : ffff80009a0670b0
-> x29: ffff80009a0670c0 x28: ffff70001340ce60 x27: ffff80009a0673d0
-> x26: ffff00011e860290 x25: ffff0000d08a9f08 x24: 0000000000000001
-> x23: 1fffe00023d4d3c1 x22: dfff800000000000 x21: ffff80008aacbf98
-> x20: 0000000000000202 x19: ffff00011ea69e08 x18: ffff80009a066800
-> x17: 77656e2074696620 x16: ffff80008031ffc8 x15: 0000000000000001
-> x14: 1fffe0001ba5a290 x13: 0000000000000000 x12: 0000000000000003
-> x11: 0000000000040000 x10: 0000000000000003 x9 : 0000000000000000
-> x8 : 0000000002bcd3ae x7 : ffff80008aacbe30 x6 : 0000000000000000
-> x5 : 0000000000000000 x4 : 0000000000000001 x3 : 0000000000000000
-> x2 : 0000000000000002 x1 : ffff80008aecd7e0 x0 : ffff80012545c000
-> Call trace:
->  __daif_local_irq_enable arch/arm64/include/asm/irqflags.h:27 [inline]
->  arch_local_irq_enable arch/arm64/include/asm/irqflags.h:49 [inline]
->  __local_bh_enable_ip+0x228/0x44c kernel/softirq.c:386
->  __raw_spin_unlock_bh include/linux/spinlock_api_smp.h:167 [inline]
->  _raw_spin_unlock_bh+0x3c/0x4c kernel/locking/spinlock.c:210
->  spin_unlock_bh include/linux/spinlock.h:396 [inline]
->  batadv_tt_local_purge+0x264/0x2e8 net/batman-adv/translation-table.c:135=
-6
->  batadv_tt_local_resize_to_mtu+0xa0/0x154 net/batman-adv/translation-tabl=
-e.c:3956
->  batadv_update_min_mtu+0x74/0xa4 net/batman-adv/hard-interface.c:651
->  batadv_netlink_set_mesh+0x50c/0x1078 net/batman-adv/netlink.c:500
->  genl_family_rcv_msg_doit net/netlink/genetlink.c:1113 [inline]
->  genl_family_rcv_msg net/netlink/genetlink.c:1193 [inline]
->  genl_rcv_msg+0x874/0xb6c net/netlink/genetlink.c:1208
->  netlink_rcv_skb+0x214/0x3c4 net/netlink/af_netlink.c:2543
->  genl_rcv+0x38/0x50 net/netlink/genetlink.c:1217
->  netlink_unicast_kernel net/netlink/af_netlink.c:1341 [inline]
->  netlink_unicast+0x65c/0x898 net/netlink/af_netlink.c:1367
->  netlink_sendmsg+0x83c/0xb20 net/netlink/af_netlink.c:1908
->  sock_sendmsg_nosec net/socket.c:730 [inline]
->  __sock_sendmsg net/socket.c:745 [inline]
->  ____sys_sendmsg+0x56c/0x840 net/socket.c:2584
->  ___sys_sendmsg net/socket.c:2638 [inline]
->  __sys_sendmsg+0x26c/0x33c net/socket.c:2667
->  __do_sys_sendmsg net/socket.c:2676 [inline]
->  __se_sys_sendmsg net/socket.c:2674 [inline]
->  __arm64_sys_sendmsg+0x80/0x94 net/socket.c:2674
->  __invoke_syscall arch/arm64/kernel/syscall.c:37 [inline]
->  invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:51
->  el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:136
->  do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:155
->  el0_svc+0x54/0x158 arch/arm64/kernel/entry-common.c:678
->  el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:696
->  el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
-> Sending NMI from CPU 1 to CPUs 0:
-> NMI backtrace for cpu 0
-> CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.8.0-rc2-syzkaller-g41bccc98fb=
-79 #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS G=
-oogle 11/17/2023
-> pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
-> pc : arch_local_irq_enable+0x8/0xc arch/arm64/include/asm/irqflags.h:51
-> lr : default_idle_call+0xf8/0x128 kernel/sched/idle.c:103
-> sp : ffff80008ebe7cd0
-> x29: ffff80008ebe7cd0 x28: dfff800000000000 x27: 1ffff00011d7cfa8
-> x26: ffff80008ec6d000 x25: 0000000000000000 x24: 0000000000000001
-> x23: 1ffff00011d8da74 x22: ffff80008ec6d3a0 x21: 0000000000000000
-> x20: ffff80008ec94e00 x19: ffff8000802cff08 x18: 1fffe000367ff796
-> x17: ffff80008ec6d000 x16: ffff8000802cf7cc x15: 0000000000000001
-> x14: 1fffe00036801310 x13: 0000000000000000 x12: 0000000000000003
-> x11: 0000000000000001 x10: 0000000000000003 x9 : 0000000000000000
-> x8 : 0000000000bf0413 x7 : ffff800080461668 x6 : 0000000000000000
-> x5 : 0000000000000001 x4 : 0000000000000001 x3 : ffff80008ad5af48
-> x2 : 0000000000000000 x1 : ffff80008aecd7e0 x0 : ffff80012543a000
-> Call trace:
->  __daif_local_irq_enable arch/arm64/include/asm/irqflags.h:27 [inline]
->  arch_local_irq_enable+0x8/0xc arch/arm64/include/asm/irqflags.h:49
->  cpuidle_idle_call kernel/sched/idle.c:170 [inline]
->  do_idle+0x1f0/0x4e8 kernel/sched/idle.c:312
->  cpu_startup_entry+0x5c/0x74 kernel/sched/idle.c:410
->  rest_init+0x2dc/0x2f4 init/main.c:730
->  start_kernel+0x0/0x4e8 init/main.c:827
->  start_kernel+0x3e8/0x4e8 init/main.c:1072
->  __primary_switched+0xb4/0xbc arch/arm64/kernel/head.S:523
->
->
+On 12.02.2024 11:37, Neil Armstrong wrote:
+> Document the Adreno 750 GMU found on the SM8650 platform.
+> 
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 > ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
->
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
->
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
->
-> If you want to undo deduplication, reply with:
-> #syz undup
 
-This patch [1] looks suspicious
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-I think batman-adv should reject too small MTU values.
-
-[1]
-
-commit d8e42a2b0addf238be8b3b37dcd9795a5c1be459
-Author: Sven Eckelmann <sven@narfation.org>
-Date:   Wed Jul 19 10:01:15 2023 +0200
-
-    batman-adv: Don't increase MTU when set by user
-
-    If the user set an MTU value, it usually means that there are special
-    requirements for the MTU. But if an interface gots activated, the MTU w=
-as
-    always recalculated and then the user set value was overwritten.
-
-    The only reason why this user set value has to be overwritten, is when =
-the
-    MTU has to be decreased because batman-adv is not able to transfer pack=
-ets
-    with the user specified size.
-
-    Fixes: c6c8fea29769 ("net: Add batman-adv meshing protocol")
-    Cc: stable@vger.kernel.org
-    Signed-off-by: Sven Eckelmann <sven@narfation.org>
-    Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Konrad
