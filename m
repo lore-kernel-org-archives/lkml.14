@@ -1,35 +1,35 @@
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E1B79E1;
-	Mon, 12 Feb 2024 07:57:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4CD79E2;
+	Mon, 12 Feb 2024 07:57:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707724634; cv=none; b=cYi/k1nN7O0bu9xfvk3pUOD8bkDFyo1z2sBvYKkBLFbZJ66V3MIgLzvEoSe85BnpYw9TGvTfOKmTDgB6nsFW9o51RsRIbzJ2Lr8s0m8WU1vxGaqBpByMbdxOqFxbX7DC1uz9Zz/3iOhX8j5t31aFNfbByMvJFPPswDqt7xhVfn8=
+	t=1707724634; cv=none; b=EhGVVNSwlvaQqLnlsUZQwuOmWeCiiS9RhJDy56V8yy0xk5rWVDdZaECL99r+RupYPdesDUpH+mbnN4mDot7XiwQ4IVKDzNo3Bzqh9AO+Y7fDUBtp0liTd5sXQoJvMR+9AmNrUrCgpNFP3w5q6j1jffK+Q1vt47t+l1Q6xk8Y+qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707724634; c=relaxed/simple;
 	bh=Qvy5YIlLldiX0R7wIDqtJBVKHeubDCELaurFbpCFnp8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B0AfiZvoPoSH5L1tV9hpoGz1CmKmLzX3RCdFPaOkRBKLYIzCwoQz7mFkaQH68+l66tlYmVxiHr0j/7Y/jtyrxZ8O9bMq8C9CZySrLzsSosX/28SAvqAGcoS/DwoUMvq2PXb5rd/B6geELwHUfs//rmxy0zYthChYOQaE7NQC0wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=MzYU1wXM; arc=none smtp.client-ip=217.70.183.194
+	 MIME-Version; b=h7NOebdtERyoac7DSVnos9x54ppUF498pMUrgE8sp0VXZWZLsoGDoGnulJ0G4ZkKnZCJpuaLfXg/Tdg7/lFYCpfCriYZ12a0Q9QYARzRBiynig5yHmRV4QoEjgfJTJNys64DD6MXJsVLdyrpKDoSGLLs/3EXWs4s4dlA/4XFqz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=NTMRwddA; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="MzYU1wXM"
-Received: by mail.gandi.net (Postfix) with ESMTPA id C8CD140014;
-	Mon, 12 Feb 2024 07:57:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="NTMRwddA"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 173614000E;
+	Mon, 12 Feb 2024 07:57:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1707724629;
+	t=1707724623;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
 	bh=opmB03pxVbtCj6pvCgp5nhczC3sDrqxdKFiEeY7PEsQ=;
-	b=MzYU1wXM1GGxq6AOxEnTOcYsLAvdRMfolwWcOEA51YpjcTseBGJm6ExlyHlUxko3+0S4Rv
-	x5vCTulTS8uRZ/8cXIaX7Vox1tb+8rwQ82mdTDybFvYSXQIxEiukf6rIRe7Xxzmg8LBfAK
-	1OW8d8aHvnhv+glWM26DE51UZFa0r4UL41wOneWRQfY8frUQmvWAF3H6TW/WJJSaaMOGUD
-	gyZyt4/nwowMQNkmp90iQ0I7rV26/4r1jijAfe+bfm9RIfsjczlcunHGXocAd5wnxOUEq+
-	UAL4sY1ot/paNpNoIQIKbwvUlhtzGci+zDQjyuUWp34XGfA8V0wnMnbv4JHdxA==
+	b=NTMRwddAiPJ8W2BJgEhIhCXCBvfAaF3fv6JI0nCnNKGTvsU5AFRZJTpK9fpXZ2Jkq6hp+l
+	rKRas7y3O9f40GB/uX4g6Q/6rEFaWV7H7bAyqyg9G6UfO73X9q5eTd3Jnxng5wGD24MvO4
+	B5WDvXoaDdMRTr/CsbTHNYLUSpOA3xOJDPtxcWBV/4pO+ID/CU0wCj3rQqIYZIIDCAvmMn
+	oe2QaVxiCCAL+TMDjw0/fjwXAQy5O4Xrdl2gOog1fEyzJbUo9+vAmsy6+5qlLbBl/lZLzR
+	9Yq5SNLyEuFPSvCUJP6Tc/fggVD7b6q5PsszSv1pCI0gDJ27lFODceoFHUOt0g==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
 	"David S. Miller" <davem@davemloft.net>,
@@ -47,9 +47,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Mark Brown <broonie@kernel.org>,
 	Christophe Leroy <christophe.leroy@csgroup.eu>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [RESEND PATCH v3 2/6] MAINTAINERS: Add the Freescale QMC HDLC driver entry
-Date: Mon, 12 Feb 2024 08:56:37 +0100
-Message-ID: <20240212075646.19114-10-herve.codina@bootlin.com>
+Subject: [PATCH v3 RESEND 2/6] MAINTAINERS: Add the Freescale QMC HDLC driver entry
+Date: Mon, 12 Feb 2024 08:56:30 +0100
+Message-ID: <20240212075646.19114-3-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240212075646.19114-1-herve.codina@bootlin.com>
 References: <20240212075646.19114-1-herve.codina@bootlin.com>
