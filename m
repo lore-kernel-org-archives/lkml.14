@@ -1,55 +1,55 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC0958121
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 21:40:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF2758AAC
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 21:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707774026; cv=none; b=ZfK+7w5iax5p3jXqcJpPCWHH7c3Rr/8yBNaEiN9Y7IAVyueeDkgaOzclfELrxP2QaDtSAklvuDtE9wLBhaltpjmvwS27yGAmB6jw8iDKyoJ6YX+qGn5Qn/4FEIazkbGANKIIsGGEuO+D8WJBrDvFcK9DoBj6vetfM+p4q0vGrTE=
+	t=1707774029; cv=none; b=YkddTI9yF+Tz+ol1WpzRLJmumaqAMGVyfzQy9MMzYF2D9RIefAK93rJ1cG7PBxYaA8c1v0HB57mjkgGwANyi+id1FHaFQLyVRbRd2+fjzxVR8eKo19QIrXOlJziPuKSd5pW2EWbfoAyjpeP2jQySMtlTZ4lakOlq+QDJip6TCG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707774026; c=relaxed/simple;
-	bh=mETHOHGta/ApXOLd4cZ9kSxCTLotDnWcLiMxmS8gzhM=;
+	s=arc-20240116; t=1707774029; c=relaxed/simple;
+	bh=SPQ6Ysfd7WnLLii6ApAHVobNpCAxJwmzP4EGGARuO/M=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=JUGGg3oIfinxq+EwVIdYTHw8zSZ3/3x+gvx/SndbKcRv+HDM1sj/O6DtQoPEczxvG6ejznwdY2ufOf43MxifoJgtvhWXQ9A5qnInO9nBg0sgbtTbSipYwv53FgmroQhZ69fdoHR9uF6+TBgv9XW4KsH7IZ09mlZw/tY/E2huIZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RjTPiwri; arc=none smtp.client-ip=209.85.219.202
+	 To:Cc:Content-Type; b=QRD7SFiMY4YmmOMD9HtaNrtiUxZwqWZwiVLwNk3VmCucnEKH36DDZFe2DZGt8nWLDbVSQulct9q4F79IjopY1tg3m+35Z1Hnm889mWFVEfv/vArxjEn0DzOAHj0+DKtnz1p1OyGZL+fnw6XUnpNAdZ1+07pP7gUQAmi25npCZuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FNho1vl3; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RjTPiwri"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcbee93a3e1so863507276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 13:40:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FNho1vl3"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6047a047f58so66780127b3.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 13:40:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707774023; x=1708378823; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1707774027; x=1708378827; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QVjGOqS2/C9DQQqaQQFc7iw3YwNnxSDsGz2z4KoUl2k=;
-        b=RjTPiwriVDcuzwCfbRq9xz7eA2HwUPhlq7u9tBFItarGbooXsTHQrlQpNlJwmuRl+I
-         AY+0rRZ7z9gxpONCWjOF9sIJw+wBlb6KwBkhfrw2WREPdVk36sYpA/6IRvxV29aphyMf
-         zvX8ZyzRJ/sESFwB3DhyxyBZpiOro5RsFO6WghWMyIxZUzanm975zVvqx4BFStHGpXlQ
-         Rq+rqSLyfcBNkfPlYT3L4aH/gGNoeC2s4VBGK63HGGzZJiF+SkHTIPHFhHzY83VhzS3Y
-         YRGAEQMgXHRAnUPX7olhQlsnfjoLlYnyGISEgePfojGjl7aPnctGrv0jrL0ISua5jFcw
-         7cZg==
+        bh=Uyzb7E9FIhn/mbh3tSg2FbzBy8bNHcnwrWfMf2QZXg0=;
+        b=FNho1vl3tt9J+6Doa5B0s+MpcIxnRkqDjVGbtulbmBq+KlAel0ZRPSDKK5WK6m2YUI
+         v5mbXUCJL7cHOZPaO/Z/isl9yYFvC0fQ6Ba54wk2zZNnB20JGQEvjPJbCNPNEumi2G2v
+         TCVSgWGroVKF+trDAcs9bCaBGiARj+xv8V2Ew9bCpZxMRNl+fd1OjFzNml5UAoxcQlYx
+         YwMcLllMnvgJbNXfJkJ50caD3DDtPwuWkYTKXTDfLUadKu4W5dxBcw1V0hsKxVqpBnIo
+         FLqwwV8Z4Ut/Q1n96ll3obaZBsRTc22a4yBF9F1JHTQ32EnjRNdsWrXMymkJZ60bzQo/
+         2Zlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707774023; x=1708378823;
+        d=1e100.net; s=20230601; t=1707774027; x=1708378827;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QVjGOqS2/C9DQQqaQQFc7iw3YwNnxSDsGz2z4KoUl2k=;
-        b=CFNdIfp5OhZbNDHzCZgYpPhLUQhtm4WP01+zEZEdarUOek1FXIi1Og6p22EimtW3/+
-         +zK7bSa+bVIPlaGyTjqdiD2LDdSeKWHMiDUQiTMU1wV84IW0IUgM5REv6fNx9aJ0Y5Kt
-         9PWpNZ8dvGh5dEQqChs446nv5Ga7nC1q7+cm9MhuN3AUzw3byO2nxDYiQlQ4gSWaAvvk
-         KKP0wr3h/X6C3QdS5H3esvMEMVqRqruhMQwx9hxMIF1fIjW4lpLMqKXFmspf7hBkfeeO
-         wVxhH00QZHwDbmAk6TLIn5w7r/erjFQHGBvxXHlFWiinADchTy6TancBl353lPAMTuIc
-         3FPA==
-X-Forwarded-Encrypted: i=1; AJvYcCW0tEH282EBwrc/Vh3pJaHCJHywK0K8q3h4VlqbJgvGDCijPCVZswaYCABrMXla0qaH8s6IfcAzMEISOBXRe2fz72RwrkgEChI+NhtX
-X-Gm-Message-State: AOJu0YwDNNJ0ec94fNeJhd7fR2tUv/CZ0Acc2p+IeV27ZS/ciwt+uohf
-	S7nVjb5Vpq28yVnxfBdcApK8u5Sn3cHg1wkHcbV4JLFp9QAmlxagOrogZMqY2wwxpUW63obPeDe
-	yKw==
-X-Google-Smtp-Source: AGHT+IHcBrIgMIQ03gLdwIObn4fTPAITy7Rn+dgjwGrjWr5hIgaJ7mUN+6YCHWnvHC5rR1WgctLJs84VL90=
+        bh=Uyzb7E9FIhn/mbh3tSg2FbzBy8bNHcnwrWfMf2QZXg0=;
+        b=ZNw8atSAHHGRuyoEw69nRY4zSvhM5hWBUirlHljWPmTwNh8NoSBvbkTFscWp6B3V7+
+         PnevBAgEV/37+gZpKgB+AidcCuc/9UzB7g/1P+kaES2orFxc98fEaWvc3UxT6mBh5dBD
+         V0a8BtZYOde11LZI1rK/eE78afQ1A1dQYP3RWs/9w1QYQ47ITSOdSPflvVfMw/g3TeSX
+         rcbwzyFsZYyyb8DvcRzaAn47hHDyNKiSso2NPgadrBZtu5zAjLQeoZDZwpo2tT5pd9AB
+         WgxTFKOaLCRjnHZtPLbJ7XfNR4LnMH4gChsl5W3p1elW6YWJ/jTAGzxG5Tk3AFUxhgfH
+         TLGg==
+X-Forwarded-Encrypted: i=1; AJvYcCXobTsRUN9NBXvVq5YSXs66Qy9PJA5ush5l3o/JKRsaAKd0lS9jIf0HAheBb/LNTkTEgX8pyyFUJRNvFUQ5ySDuBLKxPOfyrICFPG9o
+X-Gm-Message-State: AOJu0YxoeaBn5FVqWIk/yBHOyNRjTRqfq52cT1Zj62XTPaDr3042kO/2
+	5vYMogpaAVh3m/ZXz+PjWFLTqgA0r3iaxcAXYgSrN/PFqxDyMJk6LQXj0FQ8dBEvrhtgFXuoszo
+	Hkw==
+X-Google-Smtp-Source: AGHT+IE5NPp+ufCGF1WHGTLjC5ri/m4V06t1gtAUtmtnTKuKy22ZlehWWdmQuoopo1S/2T4p6wMzddrrcNE=
 X-Received: from surenb-desktop.mtv.corp.google.com ([2620:15c:211:201:b848:2b3f:be49:9cbc])
- (user=surenb job=sendgmr) by 2002:a05:6902:709:b0:dbd:73bd:e55a with SMTP id
- k9-20020a056902070900b00dbd73bde55amr364194ybt.4.1707774022635; Mon, 12 Feb
- 2024 13:40:22 -0800 (PST)
-Date: Mon, 12 Feb 2024 13:39:09 -0800
+ (user=surenb job=sendgmr) by 2002:a05:6902:1505:b0:dc7:48ce:d17f with SMTP id
+ q5-20020a056902150500b00dc748ced17fmr2107200ybu.10.1707774026593; Mon, 12 Feb
+ 2024 13:40:26 -0800 (PST)
+Date: Mon, 12 Feb 2024 13:39:11 -0800
 In-Reply-To: <20240212213922.783301-1-surenb@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240212213922.783301-1-surenb@google.com>
 X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
-Message-ID: <20240212213922.783301-24-surenb@google.com>
-Subject: [PATCH v3 23/35] mm/slub: Mark slab_free_freelist_hook() __always_inline
+Message-ID: <20240212213922.783301-26-surenb@google.com>
+Subject: [PATCH v3 25/35] xfs: Memory allocation profiling fixups
 From: Suren Baghdasaryan <surenb@google.com>
 To: akpm@linux-foundation.org
 Cc: kent.overstreet@linux.dev, mhocko@suse.com, vbabka@suse.cz, 
@@ -92,27 +92,72 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Kent Overstreet <kent.overstreet@linux.dev>
 
-It seems we need to be more forceful with the compiler on this one.
+This adds an alloc_hooks() wrapper around kmem_alloc(), so that we can
+have allocations accounted to the proper callsite.
 
 Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
 Signed-off-by: Suren Baghdasaryan <surenb@google.com>
 ---
- mm/slub.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/xfs/kmem.c |  4 ++--
+ fs/xfs/kmem.h | 10 ++++------
+ 2 files changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/mm/slub.c b/mm/slub.c
-index 9ea03d6e9c9d..4d480784942e 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -2124,7 +2124,7 @@ bool slab_free_hook(struct kmem_cache *s, void *x, bool init)
- 	return !kasan_slab_free(s, x, init);
+diff --git a/fs/xfs/kmem.c b/fs/xfs/kmem.c
+index c557a030acfe..9aa57a4e2478 100644
+--- a/fs/xfs/kmem.c
++++ b/fs/xfs/kmem.c
+@@ -8,7 +8,7 @@
+ #include "xfs_trace.h"
+ 
+ void *
+-kmem_alloc(size_t size, xfs_km_flags_t flags)
++kmem_alloc_noprof(size_t size, xfs_km_flags_t flags)
+ {
+ 	int	retries = 0;
+ 	gfp_t	lflags = kmem_flags_convert(flags);
+@@ -17,7 +17,7 @@ kmem_alloc(size_t size, xfs_km_flags_t flags)
+ 	trace_kmem_alloc(size, flags, _RET_IP_);
+ 
+ 	do {
+-		ptr = kmalloc(size, lflags);
++		ptr = kmalloc_noprof(size, lflags);
+ 		if (ptr || (flags & KM_MAYFAIL))
+ 			return ptr;
+ 		if (!(++retries % 100))
+diff --git a/fs/xfs/kmem.h b/fs/xfs/kmem.h
+index b987dc2c6851..c4cf1dc2a7af 100644
+--- a/fs/xfs/kmem.h
++++ b/fs/xfs/kmem.h
+@@ -6,6 +6,7 @@
+ #ifndef __XFS_SUPPORT_KMEM_H__
+ #define __XFS_SUPPORT_KMEM_H__
+ 
++#include <linux/alloc_tag.h>
+ #include <linux/slab.h>
+ #include <linux/sched.h>
+ #include <linux/mm.h>
+@@ -56,18 +57,15 @@ kmem_flags_convert(xfs_km_flags_t flags)
+ 	return lflags;
  }
  
--static inline bool slab_free_freelist_hook(struct kmem_cache *s,
-+static __always_inline bool slab_free_freelist_hook(struct kmem_cache *s,
- 					   void **head, void **tail,
- 					   int *cnt)
+-extern void *kmem_alloc(size_t, xfs_km_flags_t);
+ static inline void  kmem_free(const void *ptr)
  {
+ 	kvfree(ptr);
+ }
+ 
++extern void *kmem_alloc_noprof(size_t, xfs_km_flags_t);
++#define kmem_alloc(...)			alloc_hooks(kmem_alloc_noprof(__VA_ARGS__))
+ 
+-static inline void *
+-kmem_zalloc(size_t size, xfs_km_flags_t flags)
+-{
+-	return kmem_alloc(size, flags | KM_ZERO);
+-}
++#define kmem_zalloc(_size, _flags)	kmem_alloc((_size), (_flags) | KM_ZERO)
+ 
+ /*
+  * Zone interfaces
 -- 
 2.43.0.687.g38aa6559b0-goog
 
