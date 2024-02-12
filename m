@@ -1,58 +1,57 @@
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99BA14F618
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 23:27:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4BF4F888
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 23:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707780480; cv=none; b=u7ed47bABOUfJTupOsgmngXySBS0Ni5mrIN/5qpTTm4zY4+Ci4NcI63/KjrhbFZ/eW3ZGoI9xL1o1UOCQVKc46+acnzIES26ln6jNmfNR0DUMBaiiNXEkjTmPw1g/fdcJQhcBXBDQapwyuieUQ+1Hn5vA6z6/SaKdrqIs42/pvg=
+	t=1707780480; cv=none; b=lf4l4W1swE4nKdVFChWZiCf+mSnnAdEwjE1zqXxGX+7Cv6aBzhO9AQmteA26sqQlgOxW6bPiJtPkwZbwHHSRQQgtb9n0bduimncSMvP5kQRxHwlfBWrncO90lTD/s+nn/rXaTkK0B3rlsEuWsbpbBRFg2in9AJ8WDy+2NTfNt70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707780480; c=relaxed/simple;
-	bh=pBodro6qaNPwfsk7dgSwBHvtNf3EfyqOH3QDD8d7KSA=;
+	bh=SOwuvsAaLR0dNkyt8XZ60TPrC9qAZLshwqZz0Hj2Yuc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RKrI1AkDZ6AFtumRCwr10VdR9E/6gg/LvpZAA35f5HOBARSPY8vJfQvDfA/2km9V/25ZV5u1zLK4z3e6zgWP5YagkZVDNBXCpG8wHKiFakCugPpPr3hoiJqNrH10jQWtQ/r72oHvx54WPTVW0o+BA8xZrogL/r0P0YUAdVkL07U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=zHC3UF1u; arc=none smtp.client-ip=209.85.160.43
+	 MIME-Version:Content-Type; b=sLpbdaR6pTKqR3OVE/1AHeZ7YQwOV5SxjQsVuORhcTobRdR9/GC/yVARFHUjHEzKCrEghvfQBdWb67ksI4rbT3q0K0BfR4sjFqLTyK4zzOn1yYbFSuURsUnu7WlpCqr6fg94FvVmdrR7kcIYzS2nU5ZNjiltwr6af8TUvE8JqL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=NQJR/Lu5; arc=none smtp.client-ip=209.85.210.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="zHC3UF1u"
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2046b2cd2d3so3049208fac.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 15:27:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="NQJR/Lu5"
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6e2c45b81d8so1289683a34.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 15:27:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1707780477; x=1708385277; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1707780476; x=1708385276; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/CDnTfe6nvQ55r7IK52xXS4oQavI5ZjAWN4vgbC1X28=;
-        b=zHC3UF1utFRvV2eeuI5NDvbRyHfqNRzSFM2J5NeqV1z2TtEnv3xSfnoC7fAHWNmgTk
-         j3viZjPMUYq85mIRDvQtSTXgbP7ov0P8BnO8rkJ6fZpAjbEq4a1jyCxrsXdwcRbwR9Pr
-         4D942dCs3wiTR5eqZCRqaftgXkZPylUYG2qqjOSD3cdmosQZoOPuO1eg5UX03pIqCce4
-         lD51Cq5aPHOk2efC+1DjBk8qwpug2P6x+uWw3tw9ZzH3ThhGwEmqlxaOD+5zMrKLzfQj
-         Cv4UUXxv5UaKWycyDls4HheEHGOS9+92o9Ssd+ZybX0sNkMxurOUoUPRMPqVZHk7e0Uo
-         Q08A==
+        bh=eLX74Fa9d90V9VkLwpCR7m/vmZr63zncboWNam9EPB0=;
+        b=NQJR/Lu5t5bctPZ1Ck/9aqUV/gJHEuGv3KO/pmtJXImeWVYd5TATYphharej1Mhr3f
+         fRfoD1OI/kIZcCNuFbtR6Hi3uGFJnrc9+lw/nA1ZOjc2gZDIeyHlXWpxb8IHwazFhLGz
+         i6y80X8gz2m3SmrU79T6bAZqrxdGRrY1m7fhW9kejTh2xZegB3/kp3LoAQYlp9wJxNaQ
+         NWwhh+6dnFnkJFvdNy2jcD5j1A11iIUW35IaRmbr4GBHTg+AyRs+jhVXzxdxikciWkq0
+         Dinwis8RnLgWbuQO8nUvoqkaHVUONcF89Mcqs/QarHRhpGnbG0nIPuYF8wdETXi1WqGZ
+         /PSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707780477; x=1708385277;
+        d=1e100.net; s=20230601; t=1707780476; x=1708385276;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/CDnTfe6nvQ55r7IK52xXS4oQavI5ZjAWN4vgbC1X28=;
-        b=Vbuw9SVPey6ktjJDXIx1rrb901wUgp1aTeIlg4J4acxOM7yHLIg0D7wBz5ydhzwsw1
-         1Ankn2hHFKxAQmP6Rs1v0ZmHcfVaHgNdbWLispG0VDA+rk/dRjzudeS2dGDoXbPm0hmv
-         b3Kwm4Pimofu//STY8b3E5tQvZuGDxg+aPr2eH70HwhJiwVcjh/psa2Y/fBfiX1T9H83
-         T5iz6pqPBi7Us4c908b1HplIigUKwwtTf34MpR00zpj6VDz1uLea/1BtnKdM5HHQELAq
-         emjRUCFaTexlVWP6ijt2R8bHGJi+eOh/9wrhYCd1q7qW6VYqcWOJKBPaYrxiUnEqyFy+
-         G0jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXVA52r0qO6jgBmH4xzbIw7mWxg48aHSnXD+hpCc4gm6SdspHasGdszUalbO+vhzNWela9knuGEkkOl59/lZ9qjQCm/iSZnBKOzH5Fk
-X-Gm-Message-State: AOJu0YyxyXuywjZjJqRRk7Yc4ExW5ppPbgDz+gZRQwxb35ioVJs8TYid
-	yDyDuE7H3WzlNI1pwZ3euDu4uM63iYL/dxJPbTZSeI8SvwZbA1ImvYptTQ0qjf0=
-X-Google-Smtp-Source: AGHT+IFB5BMY94ESp7KJjpv5JdpAU/tpvbuYuXHw2+mNPbkI1Ukm6LHnu4zxTlzwR9ndeIJuVaW/DQ==
-X-Received: by 2002:a05:6870:c98e:b0:21a:47fc:4bcf with SMTP id hi14-20020a056870c98e00b0021a47fc4bcfmr8244258oab.29.1707780477681;
-        Mon, 12 Feb 2024 15:27:57 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXmAThv/8juXzf9mfLJyIKEgmDljh/Todw+KLIUx9gxl6haVS4PiqGhAXBBBtWjETVMr9PyQP32dLRyjAN/ELx2NsQX+J2CVBwF7rElKMmqRAGrSWTy0bpITdFHUKav9sX2g1m8B0PokQONqbek1aATCqIPG/6OFwYqjxh54DYpJRslItxMr0xXT4k+OBtPQbk2PgR2SVYRDiI51YKp6Jpnm5q2He9K2KJq+ige12IGcyYJeq+AwC2gZ+pPlZijbO9dCkgHWU2QaDWASE5mDCJgc7/+NAkeTE2Sg+nxaXR8yMtF3KBGjGwDYOPJNPzy3s6rFm79s5zxIUH/Hv/qqxwC4pPjC8ta645ynQAqa3XhikPFza9zF6ALx05/XuhBaHG34Nwq3bz2U88bl5uAqU5N00yJRy4KNq3i07oDEtSGUHhtHsSZngncZ99/PaGJxD/5JnvbkC19EZftclOQobnbO8MfFWmK1ghtKjQ7vnSJQ3jQvFbx/KMC+PNXlrmxOucutnfCsfbOmFY7bhwXgoZckU2oVao=
+        bh=eLX74Fa9d90V9VkLwpCR7m/vmZr63zncboWNam9EPB0=;
+        b=D0O7GV/2gVvD1hSeDBwchnBpjFIz1FO0XuSFCB3sZbmMrvMYLRhmBmOBymxpvxvhA0
+         kupHmvMX4JM6PKlqI1bYGRKn89/jZA9rVv3yNiW78oRQJ5Qg8K24r/qYab85sC3Dtu+b
+         1tTTfBQ8OwqF5pG6OqAGp/JkOKn9cXEOkAn6eqHQu4RtvGtAtFGIz5avwCxuIBIynL5F
+         HESiD5f02w1//LmpIMoaFREM8jSJv2EXuGwzjHP669UsX5Jh4NHy4/TM/WqFPz4/pnI7
+         57Lla0hZGbES35b12H8vNb0niYAFnVa33hJXLFyzXRckN9HlXhysDN55r9JAZpZ4vTA+
+         Ot3Q==
+X-Gm-Message-State: AOJu0Yy1+gwyJEQAvZXTpl6XBnB6r1i57DlWHfXudYjKH9cWRo4OzTW4
+	bqcjSAEfJrR5EJLbnNFegISi9h+SbB0ppOtznxFcaLnqxOdENfVvGMjLB5zKeuQ=
+X-Google-Smtp-Source: AGHT+IENcG0sbm+FxGSeKQ32xuud3iecYncceHk8taz1sm4Yg2pNVJ8oAzK4Wiliu88pFCNfDotmDQ==
+X-Received: by 2002:a05:6808:4396:b0:3c0:370c:69ea with SMTP id dz22-20020a056808439600b003c0370c69eamr307850oib.21.1707780475807;
+        Mon, 12 Feb 2024 15:27:55 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWi+s6AcBtZ0faJKmtDS0VKFmvby7nAC38w75GOULRX0y9EwEx7+1J4H9ouW6lZvgCfSXJzdPrc7yhgO3q+HjZI/gPHESEeDPCRuQ/REyCrDkMkJv6LRwKg8Uo1Z/VP7UB+maV2po+cRkt1zHUDomud4hHTEjSVKo1VkbhcHLieCmVmF2Kqam/A9G7dQDDYuHW3eZu0brg+uTKK5AOlNYmeZqIkCCWu/Ru3v84yl6XJsbYnZIzbE/3z1ezjezL0f3AVzKT0610T2R7bCmORiIn8vdONSIM4qGQPMyXP2+xGeKXDtJmU3qIhddqUByKFCCmhPITsVmEHZTV0ZSu8DVluKLVxz1yE5CfaNKZvbiXWUs23Kk2xX6o8l7x0L0Qd833OSHTRbjkeyEpqTy4qxYTtzlOeYpDvj2A4mdKBAdNI1R54Zt5oK87Z4zOTALUFtihDq2C6VC2RX68xgia+zTecW9/zY1uVG4ALoFCXhgqXknkJMDkVxR86w/jjgiv2Vy35XT8Hk8V4JXrFtvGU82GTiScVHa4=
 Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id pk17-20020a0568704c1100b0021a7a45e0b1sm330141oab.35.2024.02.12.15.27.56
+        by smtp.gmail.com with ESMTPSA id pk17-20020a0568704c1100b0021a7a45e0b1sm330141oab.35.2024.02.12.15.27.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 15:27:57 -0800 (PST)
+        Mon, 12 Feb 2024 15:27:55 -0800 (PST)
 From: David Lechner <dlechner@baylibre.com>
 To: Mark Brown <broonie@kernel.org>
 Cc: David Lechner <dlechner@baylibre.com>,
@@ -69,9 +68,9 @@ Cc: David Lechner <dlechner@baylibre.com>,
 	linux-stm32@st-md-mailman.stormreply.com,
 	linux-arm-kernel@lists.infradead.org,
 	linux-iio@vger.kernel.org
-Subject: [PATCH 4/5] spi: axi-spi-engine: move message compile to optimize_message
-Date: Mon, 12 Feb 2024 17:26:44 -0600
-Message-ID: <20240212-mainline-spi-precook-message-v1-4-a2373cd72d36@baylibre.com>
+Subject: [PATCH 2/5] spi: move splitting transfers to spi_optimize_message()
+Date: Mon, 12 Feb 2024 17:26:42 -0600
+Message-ID: <20240212-mainline-spi-precook-message-v1-2-a2373cd72d36@baylibre.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240212-mainline-spi-precook-message-v1-0-a2373cd72d36@baylibre.com>
 References: <20240212-mainline-spi-precook-message-v1-0-a2373cd72d36@baylibre.com>
@@ -85,128 +84,189 @@ Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.12.4
 Content-Transfer-Encoding: 8bit
 
-In the AXI SPI Engine driver, compiling the message is an expensive
-operation. Previously, it was done per message transfer in the
-prepare_message hook. This patch moves the message compile to the
-optimize_message hook so that it is only done once per message in
-cases where the peripheral driver calls spi_optimize_message().
+Splitting transfers is an expensive operation so we can potentially
+optimize it by doing it only once per optimization of the message
+instead of repeating each time the message is transferred.
 
-This can be a significant performance improvement for some peripherals.
-For example, the ad7380 driver saw a 13% improvement in throughput
-when using the AXI SPI Engine driver with this patch.
+The transfer splitting functions are currently the only user of
+spi_res_alloc() so spi_res_release() can be safely moved at this time
+from spi_finalize_current_message() to spi_unoptimize_message().
 
-Since we now need two message states, one for the optimization stage
-that doesn't change for the lifetime of the message and one that is
-reset on each transfer for managing the current transfer state, the old
-msg->state is split into msg->opt_state and spi_engine->msg_state. The
-latter is included in the driver struct now since there is only one
-current message at a time that can ever use it and it is in a hot path
-so avoiding allocating a new one on each message transfer saves a few
-cpu cycles and lets us get rid of the prepare_message callback.
+The doc comments of the public functions for splitting transfers are
+also updated so that callers will know when it is safe to call them
+to ensure proper resource management.
 
 Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
- drivers/spi/spi-axi-spi-engine.c | 40 +++++++++++++++++-----------------------
- 1 file changed, 17 insertions(+), 23 deletions(-)
+ drivers/spi/spi.c | 110 +++++++++++++++++++++++++++++++++---------------------
+ 1 file changed, 68 insertions(+), 42 deletions(-)
 
-diff --git a/drivers/spi/spi-axi-spi-engine.c b/drivers/spi/spi-axi-spi-engine.c
-index ca66d202f0e2..6177c1a8d56e 100644
---- a/drivers/spi/spi-axi-spi-engine.c
-+++ b/drivers/spi/spi-axi-spi-engine.c
-@@ -109,6 +109,7 @@ struct spi_engine {
- 	spinlock_t lock;
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 5bac215d7009..8a21fa5bd4b9 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -1747,38 +1747,6 @@ static int __spi_pump_transfer_message(struct spi_controller *ctlr,
  
- 	void __iomem *base;
-+	struct spi_engine_message_state msg_state;
- 	struct completion msg_complete;
- 	unsigned int int_enable;
- };
-@@ -499,17 +500,11 @@ static irqreturn_t spi_engine_irq(int irq, void *devid)
- 	return IRQ_HANDLED;
- }
+ 	trace_spi_message_start(msg);
  
--static int spi_engine_prepare_message(struct spi_controller *host,
--				      struct spi_message *msg)
-+static int spi_engine_optimize_message(struct spi_message *msg)
- {
- 	struct spi_engine_program p_dry, *p;
--	struct spi_engine_message_state *st;
- 	size_t size;
- 
--	st = kzalloc(sizeof(*st), GFP_KERNEL);
--	if (!st)
--		return -ENOMEM;
+-	/*
+-	 * If an SPI controller does not support toggling the CS line on each
+-	 * transfer (indicated by the SPI_CS_WORD flag) or we are using a GPIO
+-	 * for the CS line, we can emulate the CS-per-word hardware function by
+-	 * splitting transfers into one-word transfers and ensuring that
+-	 * cs_change is set for each transfer.
+-	 */
+-	if ((msg->spi->mode & SPI_CS_WORD) && (!(ctlr->mode_bits & SPI_CS_WORD) ||
+-					       spi_is_csgpiod(msg->spi))) {
+-		ret = spi_split_transfers_maxwords(ctlr, msg, 1);
+-		if (ret) {
+-			msg->status = ret;
+-			spi_finalize_current_message(ctlr);
+-			return ret;
+-		}
 -
- 	spi_engine_precompile_message(msg);
- 
- 	p_dry.length = 0;
-@@ -517,31 +512,22 @@ static int spi_engine_prepare_message(struct spi_controller *host,
- 
- 	size = sizeof(*p->instructions) * (p_dry.length + 1);
- 	p = kzalloc(sizeof(*p) + size, GFP_KERNEL);
--	if (!p) {
--		kfree(st);
-+	if (!p)
- 		return -ENOMEM;
+-		list_for_each_entry(xfer, &msg->transfers, transfer_list) {
+-			/* Don't change cs_change on the last entry in the list */
+-			if (list_is_last(&xfer->transfer_list, &msg->transfers))
+-				break;
+-			xfer->cs_change = 1;
+-		}
+-	} else {
+-		ret = spi_split_transfers_maxsize(ctlr, msg,
+-						  spi_max_transfer_size(msg->spi));
+-		if (ret) {
+-			msg->status = ret;
+-			spi_finalize_current_message(ctlr);
+-			return ret;
+-		}
 -	}
- 
- 	spi_engine_compile_message(msg, false, p);
- 
- 	spi_engine_program_add_cmd(p, false, SPI_ENGINE_CMD_SYNC(
- 						AXI_SPI_ENGINE_CUR_MSG_SYNC_ID));
- 
--	st->p = p;
--	st->cmd_buf = p->instructions;
--	st->cmd_length = p->length;
--	msg->state = st;
-+	msg->opt_state = p;
- 
- 	return 0;
- }
- 
--static int spi_engine_unprepare_message(struct spi_controller *host,
--					struct spi_message *msg)
-+static int spi_engine_unoptimize_message(struct spi_message *msg)
- {
--	struct spi_engine_message_state *st = msg->state;
 -
--	kfree(st->p);
--	kfree(st);
-+	kfree(msg->opt_state);
+ 	if (ctlr->prepare_message) {
+ 		ret = ctlr->prepare_message(ctlr, msg);
+ 		if (ret) {
+@@ -2124,6 +2092,8 @@ static void __spi_unoptimize_message(struct spi_message *msg)
+ 	if (ctlr->unoptimize_message)
+ 		ctlr->unoptimize_message(msg);
  
++	spi_res_release(ctlr, msg);
++
+ 	msg->optimized = false;
+ 	msg->opt_state = NULL;
+ }
+@@ -2169,15 +2139,6 @@ void spi_finalize_current_message(struct spi_controller *ctlr)
+ 
+ 	spi_unmap_msg(ctlr, mesg);
+ 
+-	/*
+-	 * In the prepare_messages callback the SPI bus has the opportunity
+-	 * to split a transfer to smaller chunks.
+-	 *
+-	 * Release the split transfers here since spi_map_msg() is done on
+-	 * the split transfers.
+-	 */
+-	spi_res_release(ctlr, mesg);
+-
+ 	if (mesg->prepared && ctlr->unprepare_message) {
+ 		ret = ctlr->unprepare_message(ctlr, mesg);
+ 		if (ret) {
+@@ -3819,6 +3780,10 @@ static int __spi_split_transfer_maxsize(struct spi_controller *ctlr,
+  * @msg:   the @spi_message to transform
+  * @maxsize:  the maximum when to apply this
+  *
++ * This function allocates resources that are automatically freed during the
++ * spi message unoptimize phase so this function should only be called from
++ * optimize_message callbacks.
++ *
+  * Return: status of transformation
+  */
+ int spi_split_transfers_maxsize(struct spi_controller *ctlr,
+@@ -3857,6 +3822,10 @@ EXPORT_SYMBOL_GPL(spi_split_transfers_maxsize);
+  * @msg:      the @spi_message to transform
+  * @maxwords: the number of words to limit each transfer to
+  *
++ * This function allocates resources that are automatically freed during the
++ * spi message unoptimize phase so this function should only be called from
++ * optimize_message callbacks.
++ *
+  * Return: status of transformation
+  */
+ int spi_split_transfers_maxwords(struct spi_controller *ctlr,
+@@ -4231,6 +4200,57 @@ static int __spi_validate(struct spi_device *spi, struct spi_message *message)
  	return 0;
  }
-@@ -550,10 +536,18 @@ static int spi_engine_transfer_one_message(struct spi_controller *host,
- 	struct spi_message *msg)
- {
- 	struct spi_engine *spi_engine = spi_controller_get_devdata(host);
--	struct spi_engine_message_state *st = msg->state;
-+	struct spi_engine_message_state *st = &spi_engine->msg_state;
-+	struct spi_engine_program *p = msg->opt_state;
- 	unsigned int int_enable = 0;
- 	unsigned long flags;
  
-+	/* reinitialize message state for this transfer */
-+	memset(st, 0, sizeof(*st));
-+	st->p = p;
-+	st->cmd_buf = p->instructions;
-+	st->cmd_length = p->length;
-+	msg->state = st;
++/**
++ * spi_split_transfers - generic handling of transfer splitting
++ * @msg: the message to split
++ *
++ * Under certain conditions, a SPI controller may not support arbitrary
++ * transfer sizes or other features required by a peripheral. This function
++ * will split the transfers in the message into smaller transfers that are
++ * supported by the controller.
++ *
++ * Controllers with special requirements not covered here can also split
++ * transfers in the optimize_message() callback.
++ *
++ * Context: can sleep
++ * Return: zero on success, else a negative error code
++ */
++static int spi_split_transfers(struct spi_message *msg)
++{
++	struct spi_controller *ctlr = msg->spi->controller;
++	struct spi_transfer *xfer;
++	int ret;
 +
- 	reinit_completion(&spi_engine->msg_complete);
++	/*
++	 * If an SPI controller does not support toggling the CS line on each
++	 * transfer (indicated by the SPI_CS_WORD flag) or we are using a GPIO
++	 * for the CS line, we can emulate the CS-per-word hardware function by
++	 * splitting transfers into one-word transfers and ensuring that
++	 * cs_change is set for each transfer.
++	 */
++	if ((msg->spi->mode & SPI_CS_WORD) && (!(ctlr->mode_bits & SPI_CS_WORD) ||
++					       spi_is_csgpiod(msg->spi))) {
++		ret = spi_split_transfers_maxwords(ctlr, msg, 1);
++		if (ret)
++			return ret;
++
++		list_for_each_entry(xfer, &msg->transfers, transfer_list) {
++			/* Don't change cs_change on the last entry in the list */
++			if (list_is_last(&xfer->transfer_list, &msg->transfers))
++				break;
++
++			xfer->cs_change = 1;
++		}
++	} else {
++		ret = spi_split_transfers_maxsize(ctlr, msg,
++						  spi_max_transfer_size(msg->spi));
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
+ /**
+  * __spi_optimize_message - shared implementation for spi_optimize_message()
+  *                          and spi_maybe_optimize_message()
+@@ -4256,10 +4276,16 @@ static int __spi_optimize_message(struct spi_device *spi,
+ 	if (ret)
+ 		return ret;
  
- 	spin_lock_irqsave(&spi_engine->lock, flags);
-@@ -658,8 +652,8 @@ static int spi_engine_probe(struct platform_device *pdev)
- 	host->bits_per_word_mask = SPI_BPW_RANGE_MASK(1, 32);
- 	host->max_speed_hz = clk_get_rate(spi_engine->ref_clk) / 2;
- 	host->transfer_one_message = spi_engine_transfer_one_message;
--	host->prepare_message = spi_engine_prepare_message;
--	host->unprepare_message = spi_engine_unprepare_message;
-+	host->optimize_message = spi_engine_optimize_message;
-+	host->unoptimize_message = spi_engine_unoptimize_message;
- 	host->num_chipselect = 8;
++	ret = spi_split_transfers(msg);
++	if (ret)
++		return ret;
++
+ 	if (ctlr->optimize_message) {
+ 		ret = ctlr->optimize_message(msg);
+-		if (ret)
++		if (ret) {
++			spi_res_release(ctlr, msg);
+ 			return ret;
++		}
+ 	}
  
- 	if (host->max_speed_hz == 0)
+ 	msg->pre_optimized = pre_optimized;
 
 -- 
 2.43.0
