@@ -1,56 +1,58 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466DE3E474
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 17:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153C13F8DE
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 17:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707758624; cv=none; b=is2ShUv4CtOuyuLuR5tV8eleC/NFs+mE1jxflgS+9ktmxKajDiITqRTiE6VAfRyw/o9CBPeVIy7elr5PqTukEILWEIlmW38zUwrn66wpnGUz+bNR47zUR++xpN+PB5SZ6kYhTbqDFWb6jJPN/j9Y4S04dBBr/V2uooR234NpR5Y=
+	t=1707758627; cv=none; b=i0bs9vrXCC8MTxbC6mZ1mRf8JcxAJsaeaRt+OHJsO4U5fKMT5e22pJIxSq3yW+XTG4/kLxVFp22b+zJhvp6L+uu7QTyg2zRE/ABFLhTmK2Lynvdpdkbw2C6dmtFsueegdviRApeRpKHdt5m00j9upfVXom6hRpe2aD2A9/6Zecw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707758624; c=relaxed/simple;
-	bh=sofmcUHFrSsRqgPeeSwX11oZTqFd4uStpGltcl3i2K8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Z6JA7aA8Mr1h1Q/P1UIo8QiCuRywgGda9rDh7tCOd4Bk0Z1RLVdiRKcCcWw00yo6KwQxHnYjynvhipWQU1ItREgI1EoHQsTrpKxBMMFrcPWh6lk4yLq2/QeytP0B5tALjajaS+ZpkrMq2UtcgLSPU3zvTbSRRbrKgrxo3fQOAvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kw7XseNO; arc=none smtp.client-ip=209.85.128.48
+	s=arc-20240116; t=1707758627; c=relaxed/simple;
+	bh=5XVzlYC+qpm9vGdb8/TYWQyQTGjbhbrC0Amkh6z50VU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=d4sXyE7bB+0pc/jprZbQzjKwWXjLIJxHgUMdOmN652gSFoRMsOb0wY7QibQWM6xI2EML2XBlKLl6fV0fHbUtXGW6uSj+4m3FgrfjnJd+yY1jspT1NLhRnvGV5UBxj1j9jQkeOX6DBEYmeT3/oYWXd/Av21CtJnSwM9aoEEWv1X4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kac9hDJ/; arc=none smtp.client-ip=209.85.167.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kw7XseNO"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-41102f140b4so5723655e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 09:23:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kac9hDJ/"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-51181d8f52fso2565406e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 09:23:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707758618; x=1708363418; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/eslJc6t8FgQCK9mas7bDa4yNb2WxlkjcF3wqq624pU=;
-        b=kw7XseNOMt3b6KhLGvox+JJWt5N8u+wumV5QwXi4kiKGtp9sjJTIRx162wmM0WntoY
-         JLEWF9t9+GCYmteYjt88C1mdn2Gz7a/piBdZRjYEhUF7xUZ2PEzzCAN+tkQekCE/s3x4
-         NhKnZI0wrqJMZtOyb58h8wYHR4okyI4mBLythZtMwIOq7cRhrzwEyr/YzmBNsnqcWrnR
-         i9VjhR2FKBF4iOg0hHwHKcKRJrBy6Bi+FlHwpjDFopJsgqU8+yiAW+okevYcxUjeXsNk
-         P60yo+xxDfpxxPaqJOi6Vcq5/QCKXcBN1db+VqErHJU+ZbKVnkUs/K06k3+WorXNcvYj
-         b1aA==
+        d=linaro.org; s=google; t=1707758622; x=1708363422; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0fSHFdK/uGFKm3kPfOsQzHS9AyIstJMyMVPPpye8zlY=;
+        b=kac9hDJ/Et0NDaLcfxg7Uum/BQU/N7RwHpsfE+/VOXZRDsu/IcGj7Svh+CL/gNYRaT
+         iTOswebjCmpxOl2g2D31jqmqp0lazCB8gTOX3zsgoxA+J7EtZEIkZQGCNPHOCRaKNx2H
+         S96V0Fvz5D0RGP9GWT48HDrJ143aBAKivUWJAmEkx0T/wi/0JMr+GhMR/eVayFCdnH0G
+         XjFegKEkw2N5Aye/2rBTtvkExrOV/oYVl3tjP+X4CEl3W+NOJSktWUdXBWwuZpkB48qP
+         g2UCEb8FO+Y+PY1wBsUZq18S52S0hws+eS/wZ6lQ8KxoiaYCJ+OnPj/w6QNxhokZFMzF
+         ycGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707758618; x=1708363418;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/eslJc6t8FgQCK9mas7bDa4yNb2WxlkjcF3wqq624pU=;
-        b=Kbh7a+AlWpEzm8zMxy3B4S9MblPuG7UCXe8yJNQHKBoJmKMnzFuJIxF3mYSytwidnt
-         g4DB/cPEbg9xqSxNYm8KsNNsebut1FYhn6SQJdZR1h96203N/O6eOFe5xaE797EirE2l
-         yqkYWbKIgj9BD054k0h/THWJgeBnNDeijej+teTjrasfEZ2BOKTZepED4SYR6NQRnIxo
-         nYLRRQgvt40+1R0sUCfY2/KTO5+wL/kLVWd0vKSEYveqOqRhCvds/o+AXNeB2h2/tThr
-         E5D6V/dj81JzASwhDuC3KzddvEB3zdF9Hyet0zQgE6Dp2QjLEeJNzQdtfK5h5lArA7eE
-         lFfg==
-X-Forwarded-Encrypted: i=1; AJvYcCWknC2A8UaHDHH5isypdXIvDHvPaHQokHDhXsTiCsaGYCXLuI2MK4qX0qwUV2AlDoc+7rYqQtzk25NeDQ7mf+WKKn3rBJ4FPdlsrRtg
-X-Gm-Message-State: AOJu0YyAffUVv6v4J0kb9J3IlcWGPrrPNJzb3R9prKmVu9DXMdwNXmVK
-	ldta8w5ZqOFW5zdTnnrqZwUqqA6IpOHYHJ73LXdTj4qBC4sIW42lKLfzlrEV0Wg=
-X-Google-Smtp-Source: AGHT+IFVxtbsb2WQ+jwZa008fgojeqgjRlYlMaM2ykmzx1woC1CO/XtBUKH3eNCXodCmTZTCDEnyxA==
-X-Received: by 2002:a05:600c:600e:b0:410:be25:12bf with SMTP id az14-20020a05600c600e00b00410be2512bfmr3387465wmb.38.1707758618482;
-        Mon, 12 Feb 2024 09:23:38 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX/glzWdQmMgcXw+DGQBL6Oi3Zv6d4XaYB9wXHL5YREvDIvCp2n0m1uLq5wKpIVvDMKD6QUp0lw2J2XJGQs3s2EwQf5cDtTMtIH09WBOHJpKmKxB6UlQO77/ujjSGKmYb4rYKCb5NLMQiVlcrnDXzJUlg3bkhkdqh4rrlicTEnV6TBSTnlZJ3p263yC12hBqvVATFx+/mFkQuKit0HebMD0LyJfzi1o5E4zwIX3p3MOlgOPrWEjNcT6d8DbjTAtPoiZBs2o/lc14t7P
+        d=1e100.net; s=20230601; t=1707758622; x=1708363422;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0fSHFdK/uGFKm3kPfOsQzHS9AyIstJMyMVPPpye8zlY=;
+        b=gHCXzpxeQ/MnGy/fnCopEcNyPtghd6Or8/wgg8TZv9HGLgLa/BYNZJRD8bKUEVQ3cR
+         iv93x5wM19c3Y2eQI9cxLFO/O7BrP5oP1TTKYy6y0Toj/pv6FRKvT08aa8v4JPhD8W+V
+         mSsOFATXzFXFFP8icc8RsjRrszHLk+wLhHAgKKSQ8YY5lGV4lSdtH1zP0EziBiwusk2D
+         HfoCda0t+y8/FvbW5tu+qImClFSNAmqH/NMQXRjx1NNi9OTmJ5C9bNVcJak12mtkDeAt
+         ozeaRXbuKeI0wTqFsbRQDZCMok8HK3cyqaQ/ZueMLtzQoWOROzhrEF8xxw8XnrVh7r6y
+         4jFw==
+X-Forwarded-Encrypted: i=1; AJvYcCV3PgE4JW4OT0lgknKcsKgKkVfM6V97ItDmJqCEOLHPzzVrHtUybOnF6ztaGmqAcnaiq0aCZbRo0lE6yEqbedKET1BN6Z+0oa0BpcI7
+X-Gm-Message-State: AOJu0Yw5qVfmLP4VuRu8fekTBgmEcxwxZGyqMwhuz5WBkKugtYuVS01n
+	chj0dP9lW44SbmkOGfHlZQz3xnNGsvmMNaiffL9XgrHPbvBdZ20CVxL5EEEDlpQ=
+X-Google-Smtp-Source: AGHT+IE0sUmHQyQQkK1/rQlRNzHbB3VBeB867B7Ks71f9eyXB54QFH9TTVqRoOE2KMZ+8lFmxdKxhQ==
+X-Received: by 2002:a05:6512:3d11:b0:511:5237:a357 with SMTP id d17-20020a0565123d1100b005115237a357mr5822624lfv.48.1707758622125;
+        Mon, 12 Feb 2024 09:23:42 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWRszEkpoIzxDfw7vX3ftS/LysnMc+CzI1HkJ4tszLdWxQJU8/TWTuAmNwlB3xDfl+pdHzH2ljFAzRazfPqs1Rwl/onxhVKnOYTiHX8eDjLAtpCf13wDYZxpih+EVmngGphl5/Jf6oaQY+EUM7VwIDJlUQgOXHQUZPSyjri+u1qi7PRWGteeP59je7TKUuwcvStc9xEQD8SSS8eYmZBsfbbD4S2BSfgB4TMUBRDetiiCqaXQ1pEpsrEXKbgBmeDK2xNiDNI3jF2s2Fx
 Received: from krzk-bin.. ([178.197.223.6])
-        by smtp.gmail.com with ESMTPSA id p31-20020a05600c1d9f00b00411a595d56bsm954051wms.14.2024.02.12.09.23.37
+        by smtp.gmail.com with ESMTPSA id p31-20020a05600c1d9f00b00411a595d56bsm954051wms.14.2024.02.12.09.23.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 09:23:38 -0800 (PST)
+        Mon, 12 Feb 2024 09:23:41 -0800 (PST)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konrad.dybcio@linaro.org>,
@@ -61,10 +63,12 @@ To: Bjorn Andersson <andersson@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 1/5] arm64: dts: sc8280xp: correct DMIC2 and DMIC3 pin config node names
-Date: Mon, 12 Feb 2024 18:23:31 +0100
-Message-Id: <20240212172335.124845-1-krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 4/5] arm64: dts: sm8650: correct DMIC2 and DMIC3 pin config node names
+Date: Mon, 12 Feb 2024 18:23:34 +0100
+Message-Id: <20240212172335.124845-4-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240212172335.124845-1-krzysztof.kozlowski@linaro.org>
+References: <20240212172335.124845-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,42 +83,19 @@ improves code readability and avoids any confusion when reading the DTS.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts | 2 +-
- arch/arm64/boot/dts/qcom/sc8280xp.dtsi                     | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/qcom/sm8650.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
-index def3976bd5bb..8f2e9bed0679 100644
---- a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
-+++ b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
-@@ -1202,7 +1202,7 @@ &usb_1_role_switch {
- };
- 
- &vamacro {
--	pinctrl-0 = <&dmic01_default>, <&dmic02_default>;
-+	pinctrl-0 = <&dmic01_default>, <&dmic23_default>;
- 	pinctrl-names = "default";
- 
- 	vdd-micb-supply = <&vreg_s10b>;
-diff --git a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-index febf28356ff8..38351e8ea8b3 100644
---- a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-@@ -2978,7 +2978,7 @@ data-pins {
+diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+index 2df77123a8c7..27b3917c1327 100644
+--- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+@@ -2919,7 +2919,7 @@ data-pins {
  				};
  			};
  
 -			dmic02_default: dmic02-default-state {
 +			dmic23_default: dmic23-default-state {
- 				clk-pins {
- 					pins = "gpio8";
- 					function = "dmic2_clk";
-@@ -2994,7 +2994,7 @@ data-pins {
- 				};
- 			};
- 
--			dmic02_sleep: dmic02-sleep-state {
-+			dmic23_sleep: dmic23-sleep-state {
  				clk-pins {
  					pins = "gpio8";
  					function = "dmic2_clk";
