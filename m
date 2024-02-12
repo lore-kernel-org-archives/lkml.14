@@ -1,142 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A697546453;
-	Mon, 12 Feb 2024 21:37:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2664CDE1
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 21:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707773833; cv=none; b=FH0JNM82O9PTiKLE0I1mU0aKhABXegKrv6irHpfFx5Mnno9h8yAanv5B8fE2+0/OIK/fmzpHOy5Y/8omtqfYpPwBfNqIYlJg/ugfIOuKJxTkKmNeC+lCT/hr9nzkyAYOV2nH0vR7+FXizgKG91yKlTDx1R0anvTTGHafDQlt9+A=
+	t=1707773968; cv=none; b=ps01eyNNln9IcRW1bfB1lGfVKf6TcW7MGShEEQDIo2QueLhGmeUKu9noQWWZjR1kGpAk/oR+B+3t9SzvB0WYYdeso6u9IsgwxHocLaFVnnhyQuyVkHTALqTFC/BShIjCYJJz94STCHLvjWrKWeyG/wVW/eqghodCDmuueMIoAMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707773833; c=relaxed/simple;
-	bh=nbPBW+LVdPgWVpFKe00QQCTZhOf+yrh6eERXbHsxeCQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d3464Y2NiMMjrlIMDSF/raklcOkNPEPjXOVf1ynxY0n/bxavqcGbOn8Cp7v2nrWdyNEmuFW2ley5dnwQ8bzIB3XN0MW/a7yvEzB9c0N80z6xz+6XOZ4l/lNr+80RUX9767h3ViUWwNPwzBphD8LqPIaQVlbuSaeIiQ6j6fop3ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fdU4dDrF; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1707773968; c=relaxed/simple;
+	bh=N3/kikCT/ViKRnsMui+U9/gXaw82x3G8rndyMWY3axE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PeaaYPnNU6CnN3gipEwCQt8XL6SgU0eUD6P7BN928SYA8Oy9IpLsJ9RWdXbkQwV80how7nSRffwtoY1wQ4wiUa57Tzuv+CmmPx1SCCW+6sYf2/pvQHpsG2sCYMrVInzJRg44sIBPqKCuuNwZFRru73DrBJ4AG9A1M5PC984zFTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=DmUYmnow; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fdU4dDrF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707773832; x=1739309832;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nbPBW+LVdPgWVpFKe00QQCTZhOf+yrh6eERXbHsxeCQ=;
-  b=fdU4dDrF9CWnKt0wsyhsO1bDZAg2NyntRL2Yu0kcIAU0a5MCz6jIbovZ
-   Q/9qq9hNerarnQ2FYe3ZII6ryf6/tDdSYmx7Na+St9aJKeUDrZdAxAnUf
-   eYN4SmzMXckQyAmQKdCbJnm+YXnJEpyY37Eh41lt/YOG+OERXMomXvJtw
-   pThQghwDK81Xv5vRpPMza9gIpayQGHCb5NEy58upfvsDG69qH/4eEMIXn
-   aul89eHAIQgJHk7WU4Bc0l/I7v/AsAP620KM//YbzpKhbyRCHGToI3Heb
-   dhvBctsvlUTmVidNE8AzYYvFdinCDlFQnn2+mdIaHcNPTHmxdlyV95kf4
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="1895537"
-X-IronPort-AV: E=Sophos;i="6.06,155,1705392000"; 
-   d="scan'208";a="1895537"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 13:37:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,155,1705392000"; 
-   d="scan'208";a="7329489"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.74])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 13:37:10 -0800
-Date: Mon, 12 Feb 2024 13:37:09 -0800
-From: Tony Luck <tony.luck@intel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: "Naik, Avadhut" <avadnaik@amd.com>,
-	"Mehta, Sohil" <sohil.mehta@intel.com>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
-	Avadhut Naik <avadhut.naik@amd.com>
-Subject: Re: [PATCH 2/2] x86/MCE: Add command line option to extend MCE
- Records pool
-Message-ID: <ZcqPhVO_DtD2x5N7@agluck-desk3>
-References: <75ddf61d-8dda-47fa-9da0-24221feb22a2@amd.com>
- <20240211111455.GAZcisL09LeFPWa2EI@fat_crate.local>
- <774e7ca5-154d-4ca4-bc4c-2f945c20b938@amd.com>
- <20240212085801.GAZcndma4UTPtKm33e@fat_crate.local>
- <20240212093246.GBZcnlvkPKDC8C7rv5@fat_crate.local>
- <SJ1PR11MB6083B3511D18787BE823AB2CFC482@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <20240212175408.GIZcpbQHVjEtwRKLS-@fat_crate.local>
- <SJ1PR11MB60830AF35FA89C7869B8C11EFC482@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <20240212191401.GLZcpt-XHFqPg3cDw-@fat_crate.local>
- <SJ1PR11MB6083C60D7584B02E9CAF19D5FC482@SJ1PR11MB6083.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="DmUYmnow"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-33b728b6981so1290647f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 13:39:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707773964; x=1708378764; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ex+oKN9tSPmg7cHAF6KW1k5mHWCdEfz2WwiKUWwTXNo=;
+        b=DmUYmnowvlmWQTK16hezBbQJYk90+mR8g4nVecNqMak2BbTmKKktbBmqTV/U1wAuaR
+         nVPK+Kt1dRuK5AcKD1uMe97cPeLgFnX9DC21k1XmMf7xOUH9uSr4exqePjN1y7UfEgaN
+         9ldJie6dIsepUlApNHf2VcSLWHeM/MVfLGUE4qsDzn1UwubBWXd5I5w2vtlJw9RBHqe8
+         ipd6NpiHKlmdvgAf1oCfH5/UjZIKzUAsTdZJWQYU/fCPZsmPhtrdzkeYAG3sTPLVgrEy
+         6rSakmyPWkaWc94TuEysGCPfZ9ZfGdKxWyxkcB93R5ROJjsmgXzCySIp4pnlo9zxfVsP
+         ij1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707773964; x=1708378764;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ex+oKN9tSPmg7cHAF6KW1k5mHWCdEfz2WwiKUWwTXNo=;
+        b=UxvlhsDQy1NGtruUmoIMneJ1Dh7OecL2+nExNWM7MQezGkkzf7ZXGoWlnv1jBe9V68
+         Cr7JzT+/twoZ/VBdEI6DaXE6U4Uubju1Q4DxlqNy9htEU4BoADUsEjsQNITrKPpAm8Ql
+         2R+PT4vlvabqAZ4UNYP4TrP2mlVFqPAR9TjRq26uPaAqw/ixHCXRkgHjS7eKDnpG5Mvz
+         08mxAsB6jTYIOMZRPd4uHM+sxnYrnes0EEx7BlkLTfMjjOmTHte3MrWYOGsiTLH3hu9e
+         qKGlHduOJ6VnvwBKAgG2O3XG1aXJoKleZ9LcVCFQ82VlgDHfifzbKn+QvRuxXnwUSTyH
+         ZR1w==
+X-Forwarded-Encrypted: i=1; AJvYcCVd5alCEbkindM4VxaBSdbtMJnLWc8ZTT9jtkX7bBnc0HEotQBSiBfuCNsQRiQmsScIQqViPum3oS4QacFZPFXeYRAE1WlJoyNq2r6Y
+X-Gm-Message-State: AOJu0YydLvv5SgruDnIkGXE4qmTvhjh6A2NqF++1SLHmaKyxebN1ecUR
+	tykrzCSCVfxNTOb3/bqXTW9K/JOcJMDorYwvKpR8mAYYU/HiJwJ0uQRf0Od+OPw=
+X-Google-Smtp-Source: AGHT+IGfhwxLT8Vk9nOPKN82YJ7lRjNzIYy/6NFrGqYkUXIjQMu7mfZ3RmqADRi467Voah4oS3AEMg==
+X-Received: by 2002:adf:fa89:0:b0:33b:1aa1:4859 with SMTP id h9-20020adffa89000000b0033b1aa14859mr5532501wrr.25.1707773963604;
+        Mon, 12 Feb 2024 13:39:23 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWVObmwKxPpP3wOlRvgKDIfG7AsKKOS08XKPkQTHLXQz5zYMCfLuHYPfRqnFrOZyPEvq4l+ohKUHWdqxvracpdMWzset61MSOnZAokRmpZDGYODUDhkr87emdvI3IT7mtdptcWRNhp8cJYuDGn0rXvTD3gaG9Lk/zl11arf7IRLDMqI/BIMRnOqDIsRt57QKK/BePfY3HvkcKzmvxG8VB5gIWA3S/LkwuXWfgUqs5f4R5I2ChcfQH9Kt9VogbyrULBtehgBy5o2Pz1687xaqIMDxa6olO2ZcZUqBLJkrw+EeKxuG3AxjTIuw0dmY7crNtRKSTE/gF4UZ2GJYDbNSODt5uR0akb4
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:3ff8:aa1d:f441:5fbd])
+        by smtp.gmail.com with ESMTPSA id f14-20020a056000128e00b0033b50e0d493sm7776702wrx.59.2024.02.12.13.39.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Feb 2024 13:39:23 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>,
+	Alex Elder <elder@linaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] gpio: initialize descriptor SRCU structure before adding OF-based chips
+Date: Mon, 12 Feb 2024 22:39:20 +0100
+Message-Id: <20240212213920.49796-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SJ1PR11MB6083C60D7584B02E9CAF19D5FC482@SJ1PR11MB6083.namprd11.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 12, 2024 at 07:41:03PM +0000, Luck, Tony wrote:
-> > It needs a proper explanation why that's ok rather than an empirical
-> > test only.
-> 
-> start_kernel()
->    ... setup_arch()
->        .... acpi stuff parses MADT and sets bits in possible map
-> 
->    ... arch_cpu_finalize_init()
->        ... calls mce_gen_pool_init()
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-This made me question the "we don't have an allocator in
-mce_gen_pool_init()". Because if we got through all the
-ACPI stuff, we surely have an allocator.
+In certain situations we may end up taking the GPIO descriptor SRCU read
+lock in of_gpiochip_add() before the SRCU struct is initialized. Move
+the initialization before the call to of_gpiochip_add().
 
-Below patch doesn't explode at runtime.
+Fixes: be711caa87c5 ("gpio: add SRCU infrastructure to struct gpio_desc")
+Fixes: 1f2bcb8c8ccd ("gpio: protect the descriptor label with SRCU")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202402122228.e607a080-lkp@intel.com
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpiolib.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
--Tony
-
-diff --git a/arch/x86/kernel/cpu/mce/genpool.c b/arch/x86/kernel/cpu/mce/genpool.c
-index fbe8b61c3413..81de877f2a51 100644
---- a/arch/x86/kernel/cpu/mce/genpool.c
-+++ b/arch/x86/kernel/cpu/mce/genpool.c
-@@ -16,14 +16,12 @@
-  * used to save error information organized in a lock-less list.
-  *
-  * This memory pool is only to be used to save MCE records in MCE context.
-- * MCE events are rare, so a fixed size memory pool should be enough. Use
-- * 2 pages to save MCE events for now (~80 MCE records at most).
-+ * MCE events are rare, so a fixed size memory pool should be enough.
-+ * Allocate on a sliding scale based on number of CPUs.
-  */
--#define MCE_POOLSZ	(2 * PAGE_SIZE)
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 82811d9a4477..f5434e559382 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -991,10 +991,6 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 	if (ret)
+ 		goto err_cleanup_gdev_srcu;
  
- static struct gen_pool *mce_evt_pool;
- static LLIST_HEAD(mce_event_llist);
--static char gen_pool_buf[MCE_POOLSZ];
+-	ret = of_gpiochip_add(gc);
+-	if (ret)
+-		goto err_free_gpiochip_mask;
+-
+ 	for (i = 0; i < gc->ngpio; i++) {
+ 		struct gpio_desc *desc = &gdev->descs[i];
  
- /*
-  * Compare the record "t" with each of the records on list "l" to see if
-@@ -118,14 +116,23 @@ int mce_gen_pool_add(struct mce *mce)
+@@ -1002,7 +998,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 		if (ret) {
+ 			for (j = 0; j < i; j++)
+ 				cleanup_srcu_struct(&gdev->descs[j].srcu);
+-			goto err_remove_of_chip;
++			goto err_free_gpiochip_mask;
+ 		}
  
- static int mce_gen_pool_create(void)
- {
-+	int mce_numrecords, mce_poolsz;
- 	struct gen_pool *tmpp;
- 	int ret = -ENOMEM;
-+	void *mce_pool;
+ 		if (gc->get_direction && gpiochip_line_is_valid(gc, i)) {
+@@ -1014,10 +1010,14 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 		}
+ 	}
  
- 	tmpp = gen_pool_create(ilog2(sizeof(struct mce_evt_llist)), -1);
- 	if (!tmpp)
- 		goto out;
+-	ret = gpiochip_add_pin_ranges(gc);
++	ret = of_gpiochip_add(gc);
+ 	if (ret)
+ 		goto err_cleanup_desc_srcu;
  
--	ret = gen_pool_add(tmpp, (unsigned long)gen_pool_buf, MCE_POOLSZ, -1);
-+	mce_numrecords = max(80, num_possible_cpus() * 8);
-+	mce_poolsz = mce_numrecords * ilog2(sizeof(struct mce_evt_llist));
-+	mce_pool = kmalloc(mce_poolsz, GFP_KERNEL);
-+	if (!mce_pool) {
-+		gen_pool_destroy(tmpp);
-+		goto out;
-+	}
-+	ret = gen_pool_add(tmpp, (unsigned long)mce_pool, mce_poolsz, -1);
- 	if (ret) {
- 		gen_pool_destroy(tmpp);
- 		goto out;
++	ret = gpiochip_add_pin_ranges(gc);
++	if (ret)
++		goto err_remove_of_chip;
++
+ 	acpi_gpiochip_add(gc);
+ 
+ 	machine_gpiochip_add(gc);
+@@ -1055,12 +1055,12 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 	gpiochip_irqchip_free_valid_mask(gc);
+ err_remove_acpi_chip:
+ 	acpi_gpiochip_remove(gc);
+-err_cleanup_desc_srcu:
+-	for (i = 0; i < gdev->ngpio; i++)
+-		cleanup_srcu_struct(&gdev->descs[i].srcu);
+ err_remove_of_chip:
+ 	gpiochip_free_hogs(gc);
+ 	of_gpiochip_remove(gc);
++err_cleanup_desc_srcu:
++	for (i = 0; i < gdev->ngpio; i++)
++		cleanup_srcu_struct(&gdev->descs[i].srcu);
+ err_free_gpiochip_mask:
+ 	gpiochip_remove_pin_ranges(gc);
+ 	gpiochip_free_valid_mask(gc);
 -- 
-2.43.0
+2.40.1
 
