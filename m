@@ -1,22 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 324E51E482
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 12:33:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33ABC39FEB
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 12:33:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707741184; cv=none; b=rf4CJCQBrrIAWVvPcPLKglQyt6KGDp4IxKSbLNza8ScG3HeeY6nrMkTC0tEfCNfmXKu1LD5iWA/zgZWs+1aN0ZD71Uby5eYLAE9QgBQCHMReu2fJi18dbKzJbvPmnIdDRpLD+byTXKz6PdkioOzp/27DprTgkhU4wHePbgFXBqg=
+	t=1707741186; cv=none; b=G1J1Z4g5o/4xwemQN9+NLzhv6yyrTD2PVqms9kOFeNzOZi8lkJj3U5fzAfNPv9phgDytjcgGSYBixqfbj6YipHYhZ6GLPY2EB4+adDmsK1ovS/AxJfT12LFPgIMfJ/Z+mTF/GzofOTAq/Lpg+OW940afF7XItK0hRS9yOaOvuB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707741184; c=relaxed/simple;
-	bh=lsZVN1LqvRvnK1gbO+NtoBOF2GURNE7UO+ht2iOyTSc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KOoK4sGmSQ2x9IE8oJ9S2UIGwpGHCfyKI3bmlJ006/tnL64Jk7ngg7yWWDMSFTVWPxwc8ouWJ10am7r6UMPWp2ZArd/g36/IQC6AnCr2/2+NlrDIHOT9R7Ls3hYsf0qWMRqYdS5mANh2lUvA7OvjsNz+Xsdz4IZoQO6jaqH/exQ=
+	s=arc-20240116; t=1707741186; c=relaxed/simple;
+	bh=L7rCObjeJJ/6znwFBtlQDxE88+afFeZnyW7f58K3Lx8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ersZqGFLtKzzsFwZpL/ebUqnkb1jdNGkIaoqNb1wwogAOcYUvi7JxqMk6OSL3TWVdaK2QSjEpMxksRBjzgdlk7m6XQOooPVRfz9GIYjn9lDiPQnomgwI935SfrTx0/v1Joqgfm1ROtVpdrHPcYxYQDU/oQv9HCxhziV2icgt3Ko=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 94BA5DA7;
-	Mon, 12 Feb 2024 04:33:42 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F25981063;
+	Mon, 12 Feb 2024 04:33:45 -0800 (PST)
 Received: from pluto.fritz.box (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9DBEC3F7BD;
-	Mon, 12 Feb 2024 04:32:59 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F0CF3F7BD;
+	Mon, 12 Feb 2024 04:33:03 -0800 (PST)
 From: Cristian Marussi <cristian.marussi@arm.com>
 To: linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org
@@ -28,10 +29,12 @@ Cc: sudeep.holla@arm.com,
 	quic_nkela@quicinc.com,
 	souvik.chakravarty@arm.com,
 	Cristian Marussi <cristian.marussi@arm.com>
-Subject: [PATCH 00/11] Add SCMI core checks for notification support.
-Date: Mon, 12 Feb 2024 12:32:22 +0000
-Message-ID: <20240212123233.1230090-1-cristian.marussi@arm.com>
+Subject: [PATCH 02/11] firmware: arm_scmi: Add a common helper to check if a message is supported
+Date: Mon, 12 Feb 2024 12:32:24 +0000
+Message-ID: <20240212123233.1230090-3-cristian.marussi@arm.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240212123233.1230090-1-cristian.marussi@arm.com>
+References: <20240212123233.1230090-1-cristian.marussi@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,86 +43,86 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+A common helper is provided to check if a specific protocol message is
+supported or not.
 
-this small series adds a new logic into the SCMI core to implicitly check
-for notification support when some SCMI driver attempts to register for
-notifications.
-
-Till now, trying to register a notifier for an unsuppported notification
-returned an error and this behaviour generated unneeded message exchanges:
-the only way to avoid this was to lookup in advance the specific protocol
-and resources available in order to avoid registering at all any notifier
-where not supported.
-
-Anyway, not all protocols currently expose the related notification info
-to lookup and, moreover, no check was performed anywhere to verify if the
-specific notification enable/disable command was supported at all (almost
-all of these notification enable commands are optional).
-
-Last but not least, this kind of support checks could and should be handled
-transparently by the SCMI core.
-
-With this series each protocol can optionally provide an event_ops
-callcback that will be invoked by the core to lookup if the specific
-command and event/resource notification is supported on the running
-platform; the SCMI core then, at initialization time, will use such
-callbacks to take care to collect such info and mark unsupported
-events/resources.
-
-Later on, when an SCMI driver attempts to register a notifier for a
-specific event/resources, it will fail and return an error to the caller
-if the requested notification was not supported.
-
-The end-result is that the SCMI driver user will fail to register a
-notifier if the related command or resource is not supported (like before),
-BUT without the need of exchanging any message NOR the need to actively
-lookup if the specified notification is supported.
-
-The last two patches in the series, instead, take care to extend the Perf
-notification report to provide the pre-calculated frequencies corresponding
-to the level or index carried by the specific notification report.
-These latter 2 patches are indeed only slighly related to this series at
-large but are provided here for ease of access.
-
-Based on sudeep/for-next/scmi/updates on top of commit
-
-7dd3d11f4dac ("clk: scmi: Add support for forbidden clock state controls")
-
-Thanks,
-Cristian
-
+Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
 ---
+ drivers/firmware/arm_scmi/driver.c    | 34 +++++++++++++++++++++++++++
+ drivers/firmware/arm_scmi/protocols.h |  4 ++++
+ 2 files changed, 38 insertions(+)
 
-Cristian Marussi (11):
-  firmware: arm_scmi: Check for notification support
-  firmware: arm_scmi: Add a common helper to check if a message is
-    supported
-  firmware: arm_scmi: Implement Perf .is_notify_supported callback
-  firmware: arm_scmi: Implement Power .is_notify_supported callback
-  firmware: arm_scmi: Implement SysPower .is_notify_supported callback
-  firmware: arm_scmi: Implement Clock .is_notify_supported callback
-  firmware: arm_scmi: Implement Sensor .is_notify_supported callback
-  firmware: arm_scmi: Implement Reset .is_notify_supported callback
-  firmware: arm_scmi: Implement Powercap .is_notify_supported callback
-  firmware: arm_scmi: Use opps_by_lvl to store opps
-  firmware: arm_scmi: Report frequencies in Perf notifications
-
- drivers/firmware/arm_scmi/clock.c     |  47 ++++++++-
- drivers/firmware/arm_scmi/driver.c    |  34 ++++++
- drivers/firmware/arm_scmi/notify.c    |  17 ++-
- drivers/firmware/arm_scmi/notify.h    |   4 +
- drivers/firmware/arm_scmi/perf.c      | 144 +++++++++++++++++++++++---
- drivers/firmware/arm_scmi/power.c     |  30 +++++-
- drivers/firmware/arm_scmi/powercap.c  |  45 +++++++-
- drivers/firmware/arm_scmi/protocols.h |   4 +
- drivers/firmware/arm_scmi/reset.c     |  37 +++++--
- drivers/firmware/arm_scmi/sensors.c   |  37 ++++++-
- drivers/firmware/arm_scmi/system.c    |  16 +++
- include/linux/scmi_protocol.h         |   3 +
- 12 files changed, 383 insertions(+), 35 deletions(-)
-
+diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+index 3ea64b22cf0d..4a64ad5c21ee 100644
+--- a/drivers/firmware/arm_scmi/driver.c
++++ b/drivers/firmware/arm_scmi/driver.c
+@@ -1754,10 +1754,44 @@ static void scmi_common_fastchannel_db_ring(struct scmi_fc_db_info *db)
+ #endif
+ }
+ 
++/**
++ * scmi_protocol_msg_check  - Check protocol message attributes
++ *
++ * @ph: A reference to the protocol handle.
++ * @message_id: The ID of the message to check.
++ * @attributes: A parameter to optionally return the retrieved message
++ *		attributes, in case of Success.
++ *
++ * An helper to check protocol message attributes for a specific protocol
++ * and message pair.
++ *
++ * Return: 0 on SUCCESS
++ */
++static int scmi_protocol_msg_check(const struct scmi_protocol_handle *ph,
++				   u32 message_id, u32 *attributes)
++{
++	int ret;
++	struct scmi_xfer *t;
++
++	ret = xfer_get_init(ph, PROTOCOL_MESSAGE_ATTRIBUTES,
++			    sizeof(__le32), 0, &t);
++	if (ret)
++		return ret;
++
++	put_unaligned_le32(message_id, t->tx.buf);
++	ret = do_xfer(ph, t);
++	if (!ret && attributes)
++		*attributes = get_unaligned_le32(t->rx.buf);
++	xfer_put(ph, t);
++
++	return ret;
++}
++
+ static const struct scmi_proto_helpers_ops helpers_ops = {
+ 	.extended_name_get = scmi_common_extended_name_get,
+ 	.iter_response_init = scmi_iterator_init,
+ 	.iter_response_run = scmi_iterator_run,
++	.protocol_msg_check = scmi_protocol_msg_check,
+ 	.fastchannel_init = scmi_common_fastchannel_init,
+ 	.fastchannel_db_ring = scmi_common_fastchannel_db_ring,
+ };
+diff --git a/drivers/firmware/arm_scmi/protocols.h b/drivers/firmware/arm_scmi/protocols.h
+index e683c26f24eb..26a3edd49fea 100644
+--- a/drivers/firmware/arm_scmi/protocols.h
++++ b/drivers/firmware/arm_scmi/protocols.h
+@@ -251,6 +251,8 @@ struct scmi_fc_info {
+  *			provided in @ops.
+  * @iter_response_run: A common helper to trigger the run of a previously
+  *		       initialized iterator.
++ * @protocol_msg_check: A common helper to check is a specific protocol message
++ *			is supported.
+  * @fastchannel_init: A common helper used to initialize FC descriptors by
+  *		      gathering FC descriptions from the SCMI platform server.
+  * @fastchannel_db_ring: A common helper to ring a FC doorbell.
+@@ -264,6 +266,8 @@ struct scmi_proto_helpers_ops {
+ 				    unsigned int max_resources, u8 msg_id,
+ 				    size_t tx_size, void *priv);
+ 	int (*iter_response_run)(void *iter);
++	int (*protocol_msg_check)(const struct scmi_protocol_handle *ph,
++				  u32 message_id, u32 *attributes);
+ 	void (*fastchannel_init)(const struct scmi_protocol_handle *ph,
+ 				 u8 describe_id, u32 message_id,
+ 				 u32 valid_size, u32 domain,
 -- 
 2.43.0
-
 
