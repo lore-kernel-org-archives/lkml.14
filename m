@@ -1,73 +1,212 @@
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2EBA3B298;
-	Mon, 12 Feb 2024 13:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C15E3D549;
+	Mon, 12 Feb 2024 13:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707745468; cv=none; b=h1rnITC7C8KJoFtwQycOI+O4VYVGFfGCMmU6wNzC97EoGAs7CS9NywyLTmdOPpbHeMTmyzzMKOcuCj4wcFwTFEtvvyV8IzkOoVkeeHRBAcXCKyqEa2P/kuY4gK6MDlcx/aXC7nbekETDpmMS03O0+iCMoQmYHD4Dg5EaAD/qTl4=
+	t=1707745479; cv=none; b=kp8G6oZl23FWmdt34dBTMEq/dJiJZzoqo+HfEgnzJcymznA6LCW6hvE8Yjn/f+olL+fNvTLF0cw5trwOZiHj41Pj0cDv0jnGCioAg9Es+rfCxCgq1zFkWGZqEW0wfJp6/AyDKtdQcNZ5lCAGIgRY5p3E+SDbbrjaVWhxgZQDgqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707745468; c=relaxed/simple;
-	bh=ppWjXqvOz7E5NKyhtw98QvPMgUwleYBISgwi5Vq2qHk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Wt/c01UIRgr7NtbdXHHjaoUEN4slpNrPgwip3Z586+zILPZW04SlRkcEVzzlRq7sXeUflr/YwJmGq/TaGKSZByQBceRgJnU8x3/UlNhtke3kdeYpz/epX46iwcMiE6wlmgQ1jmn3Jz7f4/J4q1vJlqVyT9OqB7rYn37ZvrOtZAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-59d249f8e57so172827eaf.1;
-        Mon, 12 Feb 2024 05:44:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707745465; x=1708350265;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ppWjXqvOz7E5NKyhtw98QvPMgUwleYBISgwi5Vq2qHk=;
-        b=BXRMTHD0goX/tczpRb8GGH9W+cmgCwzYYcxU/Qop1Skb+mcvgHWnpShbFtk3s8w+I9
-         ghVDVc9Ot1cUnbMWtDOVZEzgeS74YNHvpjh1qQVlpO3elR+U+0OXB8EirihZZwa8+QWg
-         GtvVk/I0DLVjszP7NrslKiNaYvYdPEozptw1bNQUCCKg659LlRkxLWtmpEWfDKks+/YZ
-         Zh5fVCXWr8rGtG1f60Io2k0k9lsFrBY0ByG+4NyGOF/mdyCEG7MZnU6eF3PY81oFJeo/
-         eCZ3+5Z+s5NG29cXXvm/QvrgJjd+LpZ5Z5VEwhO3dTGphfbyf819XVLY1eXccgpDe6XR
-         a8xw==
-X-Forwarded-Encrypted: i=1; AJvYcCWVh6H8F9PGCXksjGlnKzV+iOwsq7HKUF5BGKwDTIuQyWGKwi6Icu0jXtxrI2I8oFn7VGdTJrx7UeMgfFHTvOCNwY1pZN/VL3EmXQW5JRWXmteVIY1p+rg1rwHT/YYGpqzViu5yiMhdBA==
-X-Gm-Message-State: AOJu0YwNc5ejTJaxh40tkhOPKb1VTyz7RDWOqS1oVNeCDIURzBLoqnxt
-	48sxdTtP2XKtCVOmy6gCnKZ9+1G9TBX9b5MDxwpvkHw2+/4Z7nCaeBVaIiklrIzsu9atuggjwpS
-	znynUYBIvDgZ3zoy7pHaOxGk1ZXtXhz66
-X-Google-Smtp-Source: AGHT+IFt5zZFUHvxaPO9xM2x/WE9iUUFA8RIXi0YERKym3ViZ6pXarboaXioZcO82blmx8jq0lZVwjFNXcBjvAMgJE8=
-X-Received: by 2002:a4a:ee91:0:b0:59c:7c63:928f with SMTP id
- dk17-20020a4aee91000000b0059c7c63928fmr4934727oob.0.1707745465516; Mon, 12
- Feb 2024 05:44:25 -0800 (PST)
+	s=arc-20240116; t=1707745479; c=relaxed/simple;
+	bh=YIEKqK5MI7C6wgG1cBeAfL6H69SH6ljkSO16YrF7vPc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=bQiw0lfs62VVIzpDI5GcRrKZEQSyW97tZSj6US0XbBkP+JoniAq5SmS6UL/h3Lsxu95sZD3YLRGMB93j+WqFkoKDSShMyCd2PJy6PskEqcXgBYfkfwLDgCYXEzahR3mLxFSefZWCAjYTACPAAgOgmgNvE40cSxF34CLbQdiQFiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DawKnAGW; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DawKnAGW"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5ECEDFF802;
+	Mon, 12 Feb 2024 13:44:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1707745475;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pM6whmgyRwSqq5DhU05BK7t5rD5rPlWu1apIXMRZECI=;
+	b=DawKnAGWiKXF0FSl4Sd28dy7tSWbsS9R1KLVoe+V4yFPbSIP8wOP3BE3bT64jf6cqe1jlf
+	8xsTa/OKgwb7eq2PqqByT8w3gmCtaBgG9a6PTV3GZfGu/gIWBMmY1uiM/sITT86ZIUdTsx
+	7LF/DYVEUUdLS/qM8l8LHPpT8IbtMGqBUv5s/+XieiCt0bf7/NEwcFrloOxhMAwYHhYKcA
+	CVLe8sEHuNjkHT32aArX8gjbCsHC9HtonUl9aIxhbYQ57h47zfQPWW9NMvaZnnw5FvYn4M
+	9WT95vBiJVcgxK4CEELa4OVs6CCW7yZkrJpmMSvJugWqrigDRBCN3vmLB22aJg==
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Date: Mon, 12 Feb 2024 14:44:32 +0100
+Subject: [PATCH v6 01/13] clk: fixed-factor: add optional accuracy support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240211-bus_cleanup-acpi-v1-1-08540c6e9458@marliere.net> <2024021222-overhead-kudos-3565@gregkh>
-In-Reply-To: <2024021222-overhead-kudos-3565@gregkh>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 12 Feb 2024 14:44:14 +0100
-Message-ID: <CAJZ5v0i3Qa+i2jx_G-0B3dYuD5av2NbCpXe=pGfrSFtSch3f-g@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: bus: make acpi_bus_type const
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Robert Moore <robert.moore@intel.com>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, acpica-devel@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240212-mbly-clk-v6-1-c46fa1f93839@bootlin.com>
+References: <20240212-mbly-clk-v6-0-c46fa1f93839@bootlin.com>
+In-Reply-To: <20240212-mbly-clk-v6-0-c46fa1f93839@bootlin.com>
+To: Gregory CLEMENT <gregory.clement@bootlin.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, 
+ Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-gpio@vger.kernel.org, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+X-Mailer: b4 0.12.4
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-On Mon, Feb 12, 2024 at 11:44=E2=80=AFAM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Sun, Feb 11, 2024 at 12:37:11PM -0300, Ricardo B. Marliere wrote:
-> > Now that the driver core can properly handle constant struct bus_type,
-> > move the acpi_bus_type variable to be a constant structure as well,
-> > placing it into read-only memory which can not be modified at runtime.
-> >
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
->
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixed factor clock reports the parent clock accuracy. Add flags and acc
+fields to `struct clk_fixed_factor` to support setting a fixed
+accuracy. The default if no flag is set is not changed: use the parent
+clock accuracy.
 
-Applied as 6.9 material, thanks!
+Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+---
+ drivers/clk/clk-fixed-factor.c | 28 +++++++++++++++++++++-------
+ include/linux/clk-provider.h   | 12 +++++++++++-
+ 2 files changed, 32 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-factor.c
+index b3e66202b942..bc2644a9bd7d 100644
+--- a/drivers/clk/clk-fixed-factor.c
++++ b/drivers/clk/clk-fixed-factor.c
+@@ -57,10 +57,22 @@ static int clk_factor_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	return 0;
+ }
+ 
++static unsigned long clk_factor_recalc_accuracy(struct clk_hw *hw,
++						unsigned long parent_accuracy)
++{
++	struct clk_fixed_factor *fix = to_clk_fixed_factor(hw);
++
++	if (fix->flags & CLK_FIXED_FACTOR_FIXED_ACCURACY)
++		return fix->acc;
++
++	return parent_accuracy;
++}
++
+ const struct clk_ops clk_fixed_factor_ops = {
+ 	.round_rate = clk_factor_round_rate,
+ 	.set_rate = clk_factor_set_rate,
+ 	.recalc_rate = clk_factor_recalc_rate,
++	.recalc_accuracy = clk_factor_recalc_accuracy,
+ };
+ EXPORT_SYMBOL_GPL(clk_fixed_factor_ops);
+ 
+@@ -81,7 +93,7 @@ __clk_hw_register_fixed_factor(struct device *dev, struct device_node *np,
+ 		const char *name, const char *parent_name,
+ 		const struct clk_hw *parent_hw, int index,
+ 		unsigned long flags, unsigned int mult, unsigned int div,
+-		bool devm)
++		unsigned long acc, unsigned int fixflags, bool devm)
+ {
+ 	struct clk_fixed_factor *fix;
+ 	struct clk_init_data init = { };
+@@ -105,6 +117,8 @@ __clk_hw_register_fixed_factor(struct device *dev, struct device_node *np,
+ 	fix->mult = mult;
+ 	fix->div = div;
+ 	fix->hw.init = &init;
++	fix->acc = acc;
++	fix->flags = fixflags;
+ 
+ 	init.name = name;
+ 	init.ops = &clk_fixed_factor_ops;
+@@ -152,7 +166,7 @@ struct clk_hw *devm_clk_hw_register_fixed_factor_index(struct device *dev,
+ 		unsigned int mult, unsigned int div)
+ {
+ 	return __clk_hw_register_fixed_factor(dev, NULL, name, NULL, NULL, index,
+-					      flags, mult, div, true);
++					      flags, mult, div, 0, 0, true);
+ }
+ EXPORT_SYMBOL_GPL(devm_clk_hw_register_fixed_factor_index);
+ 
+@@ -174,7 +188,7 @@ struct clk_hw *devm_clk_hw_register_fixed_factor_parent_hw(struct device *dev,
+ 		unsigned long flags, unsigned int mult, unsigned int div)
+ {
+ 	return __clk_hw_register_fixed_factor(dev, NULL, name, NULL, parent_hw,
+-					      -1, flags, mult, div, true);
++					      -1, flags, mult, div, 0, 0, true);
+ }
+ EXPORT_SYMBOL_GPL(devm_clk_hw_register_fixed_factor_parent_hw);
+ 
+@@ -184,7 +198,7 @@ struct clk_hw *clk_hw_register_fixed_factor_parent_hw(struct device *dev,
+ {
+ 	return __clk_hw_register_fixed_factor(dev, NULL, name, NULL,
+ 					      parent_hw, -1, flags, mult, div,
+-					      false);
++					      0, 0, false);
+ }
+ EXPORT_SYMBOL_GPL(clk_hw_register_fixed_factor_parent_hw);
+ 
+@@ -193,7 +207,7 @@ struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
+ 		unsigned int mult, unsigned int div)
+ {
+ 	return __clk_hw_register_fixed_factor(dev, NULL, name, parent_name, NULL, -1,
+-					      flags, mult, div, false);
++					      flags, mult, div, 0, 0, false);
+ }
+ EXPORT_SYMBOL_GPL(clk_hw_register_fixed_factor);
+ 
+@@ -240,7 +254,7 @@ struct clk_hw *devm_clk_hw_register_fixed_factor(struct device *dev,
+ 		unsigned int mult, unsigned int div)
+ {
+ 	return __clk_hw_register_fixed_factor(dev, NULL, name, parent_name, NULL, -1,
+-			flags, mult, div, true);
++			flags, mult, div, 0, 0, true);
+ }
+ EXPORT_SYMBOL_GPL(devm_clk_hw_register_fixed_factor);
+ 
+@@ -267,7 +281,7 @@ static struct clk_hw *_of_fixed_factor_clk_setup(struct device_node *node)
+ 	of_property_read_string(node, "clock-output-names", &clk_name);
+ 
+ 	hw = __clk_hw_register_fixed_factor(NULL, node, clk_name, NULL, NULL, 0,
+-					    0, mult, div, false);
++					    0, mult, div, 0, 0, false);
+ 	if (IS_ERR(hw)) {
+ 		/*
+ 		 * Clear OF_POPULATED flag so that clock registration can be
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index 1293c38ddb7f..7ddc952c8c67 100644
+--- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -1084,18 +1084,28 @@ void of_fixed_factor_clk_setup(struct device_node *node);
+  * @hw:		handle between common and hardware-specific interfaces
+  * @mult:	multiplier
+  * @div:	divider
++ * @acc:	fixed accuracy in ppb
++ * @flags:	behavior modifying flags
+  *
+  * Clock with a fixed multiplier and divider. The output frequency is the
+  * parent clock rate divided by div and multiplied by mult.
+- * Implements .recalc_rate, .set_rate and .round_rate
++ * Implements .recalc_rate, .set_rate, .round_rate and .recalc_accuracy
++ *
++ * Flags:
++ * * CLK_FIXED_FACTOR_FIXED_ACCURACY - Use the value in @acc instead of the
++ *                                     parent clk accuracy.
+  */
+ 
+ struct clk_fixed_factor {
+ 	struct clk_hw	hw;
+ 	unsigned int	mult;
+ 	unsigned int	div;
++	unsigned long	acc;
++	unsigned int	flags;
+ };
+ 
++#define CLK_FIXED_FACTOR_FIXED_ACCURACY	BIT(0)
++
+ #define to_clk_fixed_factor(_hw) container_of(_hw, struct clk_fixed_factor, hw)
+ 
+ extern const struct clk_ops clk_fixed_factor_ops;
+
+-- 
+2.43.0
+
