@@ -1,98 +1,62 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CCFF171D8;
-	Mon, 12 Feb 2024 08:33:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-out.aladdin-rd.ru (mail-out.aladdin-rd.ru [91.199.251.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B4B101C1
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 08:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.199.251.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707726785; cv=none; b=l+gqiiFfGKFkPkUtwXYg72A1bLmunXYKWJhoJkJi9VNnT8fnKANjG2I7et7iK7Za7ljagUGk5lFKj0yspbWagO2yy8FiMDx4A3BntDfiMRSZNzgF8+GVYA6wZyfVvXmZ+s+EMmqnO5p0xEuRbu3nOaONKTfiFwZZ6OtC+x9NiNY=
+	t=1707726849; cv=none; b=t8AXb8DYIZY2BhEXXD5HckfyiVJTtOtIMwl9dYr/UyCrJ4G8o6wqr9WD5XVJNzvCt1Zs+h4gqTBfrly1g6Hd+8wAJF4eeDkUwl/q1bH/eQHa8VYvbxZTDUjTvCVYYvee62LiDEr/wue2mQwKruJg3vJ7tG+9hhIg1k5Q5ZJgFIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707726785; c=relaxed/simple;
-	bh=oAx7UdIptNGJIyOG4C2MhW+Ho6HfSOl4NTYv7z3o+MM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YwlyQZATGr7fWSCuLq6qKAy/i+5Mo4eNCuglrJ8aWn1Z67YpbZPQmeeMiK2igoxyf9bqCGpNjiUREQlcMvnsOj2u2VQTn/5huVn0CZTC1GyhlmHh3IUKWqBT63vXsR062l5ZUvgnGv/6BpumxDfjr3u4bfFJhvyrun9HkqJ7WP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7FC3EDA7;
-	Mon, 12 Feb 2024 00:33:42 -0800 (PST)
-Received: from [10.57.78.115] (unknown [10.57.78.115])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 19CCD3F762;
-	Mon, 12 Feb 2024 00:32:59 -0800 (PST)
-Message-ID: <9ff817f4-e999-4a95-b00d-6984a7ea6181@arm.com>
-Date: Mon, 12 Feb 2024 08:32:58 +0000
+	s=arc-20240116; t=1707726849; c=relaxed/simple;
+	bh=Ppw/szsqkGDaYnrWnVR/G4gm/cVWMG7SAB9kfoPViIc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ULTeK0nOi+6GsNLQKR1KCRFsf8TIalyTF82KJlBj63B7JHG1T9TM3buXKm3MIo29oi05RxFLTedbhQbTiTgdIfgaqQ1zxA3UGUdYC8+iBRzxCFvIx8/mGKe88oo7Ocd7L+ODstZSyH0IE8V3r4ANL5e9n0cHCusru9VqrglitRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru; spf=pass smtp.mailfrom=aladdin.ru; arc=none smtp.client-ip=91.199.251.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aladdin.ru
+From: Daniil Dulov <d.dulov@aladdin.ru>
+To: Jeffrey E Altman <jaltman@auristor.com>
+CC: Daniil Dulov <d.dulov@aladdin.ru>, <linux-afs@lists.infradead.org>, Marc
+ Dionne <marc.dionne@auristor.com>, David Howells <dhowells@redhat.com>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
+Subject: [PATCH v2] afs: Increase buffer size in afs_update_volume_status()
+Date: Mon, 12 Feb 2024 00:33:47 -0800
+Message-ID: <20240212083347.10742-1-d.dulov@aladdin.ru>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/mm: Don't needlessly use sudo to obtain root in
- run_vmtests.sh
-To: Mark Brown <broonie@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>,
- linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240209-kselftest-mm-check-deps-v1-1-19b09b151522@kernel.org>
- <17c0b7a1-6ec2-4504-8287-f0fa111b9748@arm.com>
- <ZcdthfAvzLQ9lzvd@finisterre.sirena.org.uk>
-Content-Language: en-GB
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <ZcdthfAvzLQ9lzvd@finisterre.sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EXCH-2016-02.aladdin.ru (192.168.1.102) To
+ EXCH-2016-01.aladdin.ru (192.168.1.101)
 
-On 10/02/2024 12:35, Mark Brown wrote:
-> On Sat, Feb 10, 2024 at 07:40:16AM +0000, Ryan Roberts wrote:
->> On 09/02/2024 20:21, Mark Brown wrote:
-> 
->>> When opening yama/ptrace_scope we unconditionally use sudo to ensure we
->>> are running as root, resulting in failures if running in a minimal root
->>> filesystem where sudo is not installed. Since automated test systems will
->>> typically just run all of kselftest as root (and many kselftests rely on
->>> this for full functionality) add a check to see if we're already root and
->>> only invoke sudo if not.
-> 
->> I don't really see the point of this. run_vmtests.sh needs to be run as root;
->> there are lots of operations that depend on it and most tests will fail if not
->> root. So I think it would be much cleaner just to remove this instance sudo.
-> 
-> Ah, I was assuming that some of the suite ran usefully as non-root given
-> that the only point of that sudo was to acquire root.  If the whole
-> thing needs to be root then we should instead have a check for root at
-> the top of run_vmtests.sh and just skip the whole thing if we aren't
-> root, but then I'm unclear why it's invoking sudo in the first place.
+The max length of volume->vid value is 20 characters.
+So increase idbuf[] size up to 20 to avoid overflow.
 
-I can't speak for how others use the suite, but there are a bunch of setup
-operations in the script itself that require root (e.g. reserving huge pages).
-Some of the tests will work without root, I'm sure, but I'm not sure its hugely
-valuable. Personally, I'd vote for just doing a test for root at the top, as you
-suggest.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-> 
->> The problem that I was referring to yesterday, about needing sudo was for this case:
-> 
->> CATEGORY="mlock" run_test sudo -u nobody ./on-fault-limit
-> 
->> Here, we are using sudo to deprivilege ourselves from root and run
->> on-fault-limit as nobody. This is required because the test is checking an
->> rlimit that is only enforced for normal users.
-> 
->> Somebody on list was talking about skipping this test if sudo wasn't present a
->> couple of weeks back. Not sure if that happened.
-> 
-> Yes, there's a check:
-> 
-> 	if command -v sudo &> /dev/null;
-> 	then
-> 	        CATEGORY="mlock" run_test sudo -u nobody ./on-fault-limit
-> 	else
-> 	        echo "# SKIP ./on-fault-limit"
-> 	fi
+Fixes: d2ddc776a458 ("afs: Overhaul volume and server record caching and fileserver rotation")
+Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
+---
+ fs/afs/volume.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Ahh that's obviously been added in the last week. The version of mm-unstable I'm
-looking at doesn't have that. Although the skip message could do with being
-TAP-compliant.
-
-
+diff --git a/fs/afs/volume.c b/fs/afs/volume.c
+index 020ecd45e476..d4a379bfd54e 100644
+--- a/fs/afs/volume.c
++++ b/fs/afs/volume.c
+@@ -353,7 +353,7 @@ static int afs_update_volume_status(struct afs_volume *volume, struct key *key)
+ {
+ 	struct afs_server_list *new, *old, *discard;
+ 	struct afs_vldb_entry *vldb;
+-	char idbuf[16];
++	char idbuf[20];
+ 	int ret, idsz;
+ 
+ 	_enter("");
+-- 
+2.25.1
 
