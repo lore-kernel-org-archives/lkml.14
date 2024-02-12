@@ -1,290 +1,170 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3762C3A8D0;
-	Mon, 12 Feb 2024 12:00:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EF53A8F3;
+	Mon, 12 Feb 2024 12:01:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707739259; cv=none; b=INSAPP9tGy5n4EgL3zUzKSxbvS7zDxln3hOUba5JlI4UOZ5vemoQQxXS94j8JUNt00gAd37mEDI3896VKZ80PJ+/VSf/ffgGPPk1mj5rsxNhddQO9DlqCrvOWY9hhDD+LibuUGyC5ymneAcXQNkkrZsZ7R5fEtBx8Frc5Z2o/D0=
+	t=1707739295; cv=none; b=gGqFaX4kMmfVSxsNqiqqKXKB/nyv6OYjFCWoNmH6ZtVd5RereMoxGH6SJTRGuWCw9Rv7Pg3DJCCl3xJkoke2vla3qwZ7neaSU41ugs7cmqfjr5aTL6htuprZ5yA8+QyG0qqBs35kXxxQN1EXJTXBI9rH8tQZHY6yR99oJfixYK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707739259; c=relaxed/simple;
-	bh=fBPh4u4tVAxhauhC0Yb1yVeuyaYm5kQBQbtRTvlFcHY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DvBvTQ8efGS1j4qEDo5Lj7djAJ25bjbTbLAQExC1t8DYBnbGmI672iengDhpGQRjXMlpmL+yFitWvJGkMFaeTap1JXGJXmMInr5gEkFRNRWN5McyO7vW534whphazldVnpoYNkeiVriyjwrvQoe1dDbfgQYVQZYeZGk6mVPSePk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=TCqu/fIn; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1707739295; c=relaxed/simple;
+	bh=6JvoMl+MHdSsuOMcAJwraxyF5vh1I7HnMGQ855T0VP8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=dEBveNKwWK+NP4kYu4GlkX1MmZLuTxNLrKg8LcVQnsS3vtwbtzJXGYwt6y5BX+mD4xNmJf1+lklwxLl7GWIEDQGzwIYLMAkj6nRtT9hCKnYAqX1j+An8dIPN/I6tPt+8QBIG3toUR58SpiThPmA6XCoeUT5/fpGmD9hs/PIdhp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VewNf8WA; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TCqu/fIn"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41CC0qJ0001008;
-	Mon, 12 Feb 2024 06:00:52 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707739252;
-	bh=LqDoE8mxdm+tXcZyOrm6S/Dp6GDW7NfOGTIPDKoBP1g=;
-	h=From:To:CC:Subject:Date;
-	b=TCqu/fInad3ktQ/jbpPrex28hra+apckaU7CThjbxeap5hNMZDMzkEj2ycUNG1PSi
-	 GF+/aHAukY4ao5i4gci4rOXqrJF7PLTOcPGPc7GQKgjS+3G4A2qMk94MuuksUsfGj/
-	 BgqKDnxY0XOupvKsJbGHcprNyaItzwE5PNkjCbNo=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41CC0qKU016119
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 12 Feb 2024 06:00:52 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 12
- Feb 2024 06:00:52 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 12 Feb 2024 06:00:52 -0600
-Received: from uda0490681.. ([10.24.69.142])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41CC0nw1082905;
-	Mon, 12 Feb 2024 06:00:50 -0600
-From: Vaishnav Achath <vaishnav.a@ti.com>
-To: <broonie@kernel.org>
-CC: <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <vigneshr@ti.com>, <u-kumar1@ti.com>, <vaishnav.a@ti.com>
-Subject: [PATCH] spi: omap2-mcspi: Revert FIFO support without DMA
-Date: Mon, 12 Feb 2024 17:30:49 +0530
-Message-ID: <20240212120049.438495-1-vaishnav.a@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VewNf8WA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707739294; x=1739275294;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=6JvoMl+MHdSsuOMcAJwraxyF5vh1I7HnMGQ855T0VP8=;
+  b=VewNf8WAu2VJhTS/NeCpBjr53C+KnQPwsj2ErGx36r8fQoEbDzDzPfaP
+   uevvIcAR5qgnqLKIQovNYoPCxPcQPaxfV8rwys3A7Mfys42UFbuStDmSv
+   WviuZUvK2ul3Klfkp7fli6CdkTIGW0IXzc/1NT7LRGlvMxSUQ5XUqD02T
+   D9TSpBBWW/Z4kMs/mTFh2GzsTpG1bK1QLB5c6sTz2h47rLh+nHonJzgC+
+   HkrwwlI1OcGweZUZhbKJ/Bd8dSZV5flzv5aYshJgMS/Hg+kV5fiDNJywC
+   60OjOfGf1utGl2uxQ+kiNj34/IzdU+/SgNwC3Es1uEbpYJbNESdX7c0Ub
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="12800646"
+X-IronPort-AV: E=Sophos;i="6.06,263,1705392000"; 
+   d="scan'208";a="12800646"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 04:01:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,263,1705392000"; 
+   d="scan'208";a="2576576"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.49.160])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 04:01:31 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 12 Feb 2024 14:01:25 +0200 (EET)
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>
+cc: Bjorn Helgaas <bhelgaas@google.com>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] PCI: Correct error reporting with PCIe failed link
+ retraining
+In-Reply-To: <alpine.DEB.2.21.2402100045590.2376@angie.orcam.me.uk>
+Message-ID: <f4eafdbc-b295-a982-fe8e-dbd11b98d56f@linux.intel.com>
+References: <alpine.DEB.2.21.2402092125070.2376@angie.orcam.me.uk> <alpine.DEB.2.21.2402100045590.2376@angie.orcam.me.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/mixed; boundary="8323328-194427090-1707739285=:1013"
 
-MCSPI controller have few limitations regarding the transaction
-size when the FIFO buffer is enabled and the WCNT feature is used
-to find the end of word, in this case if WCNT is not a multiple of
-the FIFO Almost Empty Level (AEL), then the FIFO empty event is not
-generated correctly. In addition to this limitation, few other unknown
-sequence of events that causes the FIFO empty status to not reflect the
-exact status were found when FIFO is being used without DMA enabled
-during extended testing in AM65x platform. Till the exact root cause
-is found and fixed, revert the FIFO support without DMA.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-See J721E Technical Reference Manual (SPRUI1C), section 12.1.5
-for further details: http://www.ti.com/lit/pdf/spruil1
+--8323328-194427090-1707739285=:1013
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-This reverts commit 75223bbea840e125359fc63942b5f93462b474c6.
+On Sat, 10 Feb 2024, Maciej W. Rozycki wrote:
 
-Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
----
- drivers/spi/spi-omap2-mcspi.c | 137 ++--------------------------------
- 1 file changed, 8 insertions(+), 129 deletions(-)
+> Only return successful completion status from `pcie_failed_link_retrain'=
+=20
+> if retraining has actually been done, preventing excessive delays from=20
+> being triggered at call sites in a hope that communication will finally=
+=20
+> be established with the downstream device where in fact nothing has been=
+=20
+> done about the link in question that would justify such a hope.
+>=20
+> Fixes: a89c82249c37 ("PCI: Work around PCIe link training failures")
+> Reported-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> Link: https://lore.kernel.org/r/aa2d1c4e-9961-d54a-00c7-ddf8e858a9b0@linu=
+x.intel.com/
+> Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
+> Cc: stable@vger.kernel.org # v6.5+
 
-diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
-index a0c9fea908f5..ddf1c684bcc7 100644
---- a/drivers/spi/spi-omap2-mcspi.c
-+++ b/drivers/spi/spi-omap2-mcspi.c
-@@ -53,8 +53,6 @@
- 
- /* per-register bitmasks: */
- #define OMAP2_MCSPI_IRQSTATUS_EOW	BIT(17)
--#define OMAP2_MCSPI_IRQSTATUS_TX0_EMPTY    BIT(0)
--#define OMAP2_MCSPI_IRQSTATUS_RX0_FULL    BIT(2)
- 
- #define OMAP2_MCSPI_MODULCTRL_SINGLE	BIT(0)
- #define OMAP2_MCSPI_MODULCTRL_MS	BIT(2)
-@@ -293,7 +291,7 @@ static void omap2_mcspi_set_mode(struct spi_controller *ctlr)
- }
- 
- static void omap2_mcspi_set_fifo(const struct spi_device *spi,
--				struct spi_transfer *t, int enable, int dma_enabled)
-+				struct spi_transfer *t, int enable)
- {
- 	struct spi_controller *ctlr = spi->controller;
- 	struct omap2_mcspi_cs *cs = spi->controller_state;
-@@ -314,28 +312,20 @@ static void omap2_mcspi_set_fifo(const struct spi_device *spi,
- 			max_fifo_depth = OMAP2_MCSPI_MAX_FIFODEPTH / 2;
- 		else
- 			max_fifo_depth = OMAP2_MCSPI_MAX_FIFODEPTH;
--		if (dma_enabled)
--			wcnt = t->len / bytes_per_word;
--		else
--			wcnt = 0;
-+
-+		wcnt = t->len / bytes_per_word;
- 		if (wcnt > OMAP2_MCSPI_MAX_FIFOWCNT)
- 			goto disable_fifo;
- 
- 		xferlevel = wcnt << 16;
- 		if (t->rx_buf != NULL) {
- 			chconf |= OMAP2_MCSPI_CHCONF_FFER;
--			if (dma_enabled)
--				xferlevel |= (bytes_per_word - 1) << 8;
--			else
--				xferlevel |= (max_fifo_depth - 1) << 8;
-+			xferlevel |= (bytes_per_word - 1) << 8;
- 		}
- 
- 		if (t->tx_buf != NULL) {
- 			chconf |= OMAP2_MCSPI_CHCONF_FFET;
--			if (dma_enabled)
--				xferlevel |= bytes_per_word - 1;
--			else
--				xferlevel |= (max_fifo_depth - 1);
-+			xferlevel |= bytes_per_word - 1;
- 		}
- 
- 		mcspi_write_reg(ctlr, OMAP2_MCSPI_XFERLEVEL, xferlevel);
-@@ -892,113 +882,6 @@ omap2_mcspi_txrx_pio(struct spi_device *spi, struct spi_transfer *xfer)
- 	return count - c;
- }
- 
--static unsigned
--omap2_mcspi_txrx_piofifo(struct spi_device *spi, struct spi_transfer *xfer)
--{
--	struct omap2_mcspi_cs	*cs = spi->controller_state;
--	struct omap2_mcspi    *mcspi;
--	unsigned int		count, c;
--	unsigned int		iter, cwc;
--	int last_request;
--	void __iomem		*base = cs->base;
--	void __iomem		*tx_reg;
--	void __iomem		*rx_reg;
--	void __iomem		*chstat_reg;
--	void __iomem        *irqstat_reg;
--	int			word_len, bytes_per_word;
--	u8		*rx;
--	const u8	*tx;
--
--	mcspi = spi_controller_get_devdata(spi->controller);
--	count = xfer->len;
--	c = count;
--	word_len = cs->word_len;
--	bytes_per_word = mcspi_bytes_per_word(word_len);
--
--	/*
--	 * We store the pre-calculated register addresses on stack to speed
--	 * up the transfer loop.
--	 */
--	tx_reg		= base + OMAP2_MCSPI_TX0;
--	rx_reg		= base + OMAP2_MCSPI_RX0;
--	chstat_reg	= base + OMAP2_MCSPI_CHSTAT0;
--	irqstat_reg    = base + OMAP2_MCSPI_IRQSTATUS;
--
--	if (c < (word_len >> 3))
--		return 0;
--
--	rx = xfer->rx_buf;
--	tx = xfer->tx_buf;
--
--	do {
--		/* calculate number of words in current iteration */
--		cwc = min((unsigned int)mcspi->fifo_depth / bytes_per_word,
--			  c / bytes_per_word);
--		last_request = cwc != (mcspi->fifo_depth / bytes_per_word);
--		if (tx) {
--			if (mcspi_wait_for_reg_bit(irqstat_reg,
--						   OMAP2_MCSPI_IRQSTATUS_TX0_EMPTY) < 0) {
--				dev_err(&spi->dev, "TX Empty timed out\n");
--				goto out;
--			}
--			writel_relaxed(OMAP2_MCSPI_IRQSTATUS_TX0_EMPTY, irqstat_reg);
--
--			for (iter = 0; iter < cwc; iter++, tx += bytes_per_word) {
--				if (bytes_per_word == 1)
--					writel_relaxed(*tx, tx_reg);
--				else if (bytes_per_word == 2)
--					writel_relaxed(*((u16 *)tx), tx_reg);
--				else if (bytes_per_word == 4)
--					writel_relaxed(*((u32 *)tx), tx_reg);
--			}
--		}
--
--		if (rx) {
--			if (!last_request &&
--			    mcspi_wait_for_reg_bit(irqstat_reg,
--						   OMAP2_MCSPI_IRQSTATUS_RX0_FULL) < 0) {
--				dev_err(&spi->dev, "RX_FULL timed out\n");
--				goto out;
--			}
--			writel_relaxed(OMAP2_MCSPI_IRQSTATUS_RX0_FULL, irqstat_reg);
--
--			for (iter = 0; iter < cwc; iter++, rx += bytes_per_word) {
--				if (last_request &&
--				    mcspi_wait_for_reg_bit(chstat_reg,
--							   OMAP2_MCSPI_CHSTAT_RXS) < 0) {
--					dev_err(&spi->dev, "RXS timed out\n");
--					goto out;
--				}
--				if (bytes_per_word == 1)
--					*rx = readl_relaxed(rx_reg);
--				else if (bytes_per_word == 2)
--					*((u16 *)rx) = readl_relaxed(rx_reg);
--				else if (bytes_per_word == 4)
--					*((u32 *)rx) = readl_relaxed(rx_reg);
--			}
--		}
--
--		if (last_request) {
--			if (mcspi_wait_for_reg_bit(chstat_reg,
--						   OMAP2_MCSPI_CHSTAT_EOT) < 0) {
--				dev_err(&spi->dev, "EOT timed out\n");
--				goto out;
--			}
--			if (mcspi_wait_for_reg_bit(chstat_reg,
--						   OMAP2_MCSPI_CHSTAT_TXFFE) < 0) {
--				dev_err(&spi->dev, "TXFFE timed out\n");
--				goto out;
--			}
--			omap2_mcspi_set_enable(spi, 0);
--		}
--		c -= cwc * bytes_per_word;
--	} while (c >= bytes_per_word);
--
--out:
--	omap2_mcspi_set_enable(spi, 1);
--	return count - c;
--}
--
- static u32 omap2_mcspi_calc_divisor(u32 speed_hz, u32 ref_clk_hz)
- {
- 	u32 div;
-@@ -1323,9 +1206,7 @@ static int omap2_mcspi_transfer_one(struct spi_controller *ctlr,
- 		if ((mcspi_dma->dma_rx && mcspi_dma->dma_tx) &&
- 		    ctlr->cur_msg_mapped &&
- 		    ctlr->can_dma(ctlr, spi, t))
--			omap2_mcspi_set_fifo(spi, t, 1, 1);
--		else if (t->len > OMAP2_MCSPI_MAX_FIFODEPTH)
--			omap2_mcspi_set_fifo(spi, t, 1, 0);
-+			omap2_mcspi_set_fifo(spi, t, 1);
- 
- 		omap2_mcspi_set_enable(spi, 1);
- 
-@@ -1338,8 +1219,6 @@ static int omap2_mcspi_transfer_one(struct spi_controller *ctlr,
- 		    ctlr->cur_msg_mapped &&
- 		    ctlr->can_dma(ctlr, spi, t))
- 			count = omap2_mcspi_txrx_dma(spi, t);
--		else if (mcspi->fifo_depth > 0)
--			count = omap2_mcspi_txrx_piofifo(spi, t);
- 		else
- 			count = omap2_mcspi_txrx_pio(spi, t);
- 
-@@ -1352,7 +1231,7 @@ static int omap2_mcspi_transfer_one(struct spi_controller *ctlr,
- 	omap2_mcspi_set_enable(spi, 0);
- 
- 	if (mcspi->fifo_depth > 0)
--		omap2_mcspi_set_fifo(spi, t, 0, 0);
-+		omap2_mcspi_set_fifo(spi, t, 0);
- 
- out:
- 	/* Restore defaults if they were overriden */
-@@ -1375,7 +1254,7 @@ static int omap2_mcspi_transfer_one(struct spi_controller *ctlr,
- 		omap2_mcspi_set_cs(spi, !(spi->mode & SPI_CS_HIGH));
- 
- 	if (mcspi->fifo_depth > 0 && t)
--		omap2_mcspi_set_fifo(spi, t, 0, 0);
-+		omap2_mcspi_set_fifo(spi, t, 0);
- 
- 	return status;
- }
--- 
-2.34.1
+Thanks.
 
+The original thread might be useful for context if somebody has to look at=
+=20
+this change later on from the history, so:
+
+Link: https://lore.kernel.org/linux-pci/20240129112710.2852-2-ilpo.jarvinen=
+@linux.intel.com/T/#u
+
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
+ i.
+
+> ---
+>  drivers/pci/quirks.c |   18 +++++++++++-------
+>  1 file changed, 11 insertions(+), 7 deletions(-)
+>=20
+> linux-pcie-failed-link-retrain-status-fix.diff
+> Index: linux-macro/drivers/pci/quirks.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- linux-macro.orig/drivers/pci/quirks.c
+> +++ linux-macro/drivers/pci/quirks.c
+> @@ -74,7 +74,8 @@
+>   * firmware may have already arranged and lift it with ports that alread=
+y
+>   * report their data link being up.
+>   *
+> - * Return TRUE if the link has been successfully retrained, otherwise FA=
+LSE.
+> + * Return TRUE if the link has been successfully retrained, otherwise FA=
+LSE,
+> + * also when retraining was not needed in the first place.
+>   */
+>  bool pcie_failed_link_retrain(struct pci_dev *dev)
+>  {
+> @@ -83,10 +84,11 @@ bool pcie_failed_link_retrain(struct pci
+>  =09=09{}
+>  =09};
+>  =09u16 lnksta, lnkctl2;
+> +=09bool ret =3D false;
+> =20
+>  =09if (!pci_is_pcie(dev) || !pcie_downstream_port(dev) ||
+>  =09    !pcie_cap_has_lnkctl2(dev) || !dev->link_active_reporting)
+> -=09=09return false;
+> +=09=09return ret;
+> =20
+>  =09pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &lnkctl2);
+>  =09pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
+> @@ -98,9 +100,10 @@ bool pcie_failed_link_retrain(struct pci
+>  =09=09lnkctl2 |=3D PCI_EXP_LNKCTL2_TLS_2_5GT;
+>  =09=09pcie_capability_write_word(dev, PCI_EXP_LNKCTL2, lnkctl2);
+> =20
+> -=09=09if (pcie_retrain_link(dev, false)) {
+> +=09=09ret =3D pcie_retrain_link(dev, false) =3D=3D 0;
+> +=09=09if (!ret) {
+>  =09=09=09pci_info(dev, "retraining failed\n");
+> -=09=09=09return false;
+> +=09=09=09return ret;
+>  =09=09}
+> =20
+>  =09=09pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
+> @@ -117,13 +120,14 @@ bool pcie_failed_link_retrain(struct pci
+>  =09=09lnkctl2 |=3D lnkcap & PCI_EXP_LNKCAP_SLS;
+>  =09=09pcie_capability_write_word(dev, PCI_EXP_LNKCTL2, lnkctl2);
+> =20
+> -=09=09if (pcie_retrain_link(dev, false)) {
+> +=09=09ret =3D pcie_retrain_link(dev, false) =3D=3D 0;
+> +=09=09if (!ret) {
+>  =09=09=09pci_info(dev, "retraining failed\n");
+> -=09=09=09return false;
+> +=09=09=09return ret;
+>  =09=09}
+>  =09}
+> =20
+> -=09return true;
+> +=09return ret;
+>  }
+> =20
+>  static ktime_t fixup_debug_start(struct pci_dev *dev,
+>=20
+
+--8323328-194427090-1707739285=:1013--
