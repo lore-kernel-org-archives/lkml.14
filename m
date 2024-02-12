@@ -1,90 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873FF2555B;
-	Mon, 12 Feb 2024 10:47:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4585538F86;
+	Mon, 12 Feb 2024 10:48:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707734858; cv=none; b=p2vH39TrhMkD3E1Qb89z8QJcDJR3h0cGZivzk7erjBIMsbqYUgzgtu1H1s87p78nmUvTTDQfJ0VvBnOaw2nBHDBvBs9hnUiyBOmYq7vN7RVGseNb0Nm4RTAkjnIfRODXzQW9TkEJI0OdQ2fDJ97W1QLEIsrVTMpkOR2Fz47asgk=
+	t=1707734891; cv=none; b=DW4x9e9Nf3G7w0GC69RpW+P+NwmfrTCH++a64r4LOl+9l3frbt8UWiNeaxoNC838XWEJEdy/VAq1FwqRERWQe9gVe8E3jPkv2+oM+iwWFTDnNANNklQCefqiAzgGKh30mzWkRtRQwyPQungJl9I4bTQ5OYboCBB+t1zLE67bhWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707734858; c=relaxed/simple;
-	bh=t/ZTePsKdIVKC4gWLazaU/Eiquk8TE+7jyT9VDJ6mgI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QL1bxiJiOlvQ6Px/a4HNS9w9HAkebL4VdRyZIcZ23pqcI/THHlj2JfVxyL7gVU+9hSnmFMCLULxFBltteJXn06q3WE21ybWKz8G4l5WkSmp8WaMcGj8Ucl+UTia0UjSXjUFNk8z9xcPMx+uKw4mWs61IHSl38pHi/CRERkgX800=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IrMEgCCr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707734891; c=relaxed/simple;
+	bh=33VlHW6tG6RBpKyaXFo4ViMfDvaBlB4JaKCY3aSVkss=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=VQlz0kHPTwH+eqb3krPPGxipi39ut9gJ5stW8eTOnnYA0jHn/FGM63Mi3ccOYWtW3nYpCDR2QtRUbQX5/KT+rssVmS5+apqPrkGbcddiYCKAEuO7ABDoUEtNqMPoUeieVlsRar6sHxND1C8ZHHebRQz2ioRjKCQcpz1lw48XeKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=caw9aptx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IrMEgCCr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC055C433C7;
-	Mon, 12 Feb 2024 10:47:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="caw9aptx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59D62C433F1;
+	Mon, 12 Feb 2024 10:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707734858;
-	bh=t/ZTePsKdIVKC4gWLazaU/Eiquk8TE+7jyT9VDJ6mgI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IrMEgCCrpHvdMCfGdToN4BxinirdDqARNMPWtQr6H0NW0Ziy4uCKXTzVJNZzRMj58
-	 8i3nL8Wt1M8k7yHb5AwI1vfq5kMm4QUDOe/nCQYd/0eR4+tz/6YJUJ2z1i4TK6c3xS
-	 9KBE4sTFK1ZsfJ10qNJPzY/D3qLP7PxFqZYSUvRrEfYa+aTx50rO/VNZxKAe4z8Kkl
-	 mfdASZ/EL62Ke6TFpTVpNJkv+8jpbDdpRusebAwh4RhibDdD9sGrprQi63knxoFMY1
-	 uGmrIQ7LhSV7aHwT8OOWme+PuuvJSJBdE7FeIwnrJrjcSTzsdfq232wBvqEBPVpTsb
-	 bqE9m+5ee5GAg==
-Date: Mon, 12 Feb 2024 18:34:36 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Andre Przywara <andre.przywara@arm.com>, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: arm: sunxi: Add Sipeed Longan Module
- 3H and Longan Pi 3H
-Message-ID: <Zcn0POS-4BFGlRm9@xhacker>
-References: <20240211081739.395-1-jszhang@kernel.org>
- <20240211081739.395-2-jszhang@kernel.org>
- <7ee6df91-76fa-44e8-ab81-fd4b63b58ce9@linaro.org>
+	s=k20201202; t=1707734890;
+	bh=33VlHW6tG6RBpKyaXFo4ViMfDvaBlB4JaKCY3aSVkss=;
+	h=From:Date:Subject:To:Cc:From;
+	b=caw9aptxYciK7woZ+Znptsxd+4JBaSsjf2+XrG+nV4ndr1u+Dk2b59hPjR56TLQE+
+	 XGsDayWpjFXjoXtCDMhNMpf9AO6j80zBcBKt5dYbkIYTpzH5blqPhpfTJoWJLNiYjM
+	 smMiz5yiWAbpevF0Yej20x5KC7qsWF61hIFBbkWgkGpZwJOBTXG5KUTgjIZp2gmBbO
+	 ia9KOhB9r+eS1E7qGeWyH9TOhhiRmyWvDiMn9qXvPH+IeqsiHHR8nZrrS7h5AhILj7
+	 Dg/GRSc9/osqPXnZbZbpcRiO9vh5Q0aSK19z5NUOZ9YebPzq6++wyL2yCW2roYwkl3
+	 fnp7iTw/RFb7Q==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Mon, 12 Feb 2024 11:47:14 +0100
+Subject: [PATCH] configs/debug: add NET debug config
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <7ee6df91-76fa-44e8-ab81-fd4b63b58ce9@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240212-kconfig-debug-enable-net-v1-1-fb026de8174c@kernel.org>
+X-B4-Tracking: v=1; b=H4sIADH3yWUC/x3MQQqDMBBG4avIrB1IhtpFryJdaPIbh5ZRkioF8
+ e4Gl9/ivYMKsqLQqzkoY9eii1X4tqEwD5bAGqtJnDyceOFPWGzSxBHjlhg2jF+w4cdBYnh650Q
+ 6oZqvGZP+73X/Ps8LnkNLImoAAAA=
+To: linux-kernel@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Qian Cai <quic_qiancai@quicinc.com>, 
+ Kees Cook <keescook@chromium.org>, mptcp@lists.linux.dev, 
+ netdev@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1883; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=33VlHW6tG6RBpKyaXFo4ViMfDvaBlB4JaKCY3aSVkss=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlyfdo2EU3gz8te8tWN2NgzXSfDNfXwe0Vg1Nu+
+ cfZL5tRm2iJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZcn3aAAKCRD2t4JPQmmg
+ c2HYD/0SmdRvuXq/A7Au2J0oT3t9EzkMu7KVbSKecDAxR/eUcjb4zqviltUibKCFnLmSjI2ytEa
+ AdItLkDYHRZVWCuOOkgiHNLxb01uqpSzvkQMLvvzgh85rW1ajWrjoQ3OpwZqMJNX+xvYXh5wcMr
+ 4sbyDH88vMyDqXEkP40JgzPDWJ7Iu/9BUNWy0+fXOO3kvkg5xbRnkZlrARWHDTXGlTpCRoBDaqp
+ h/Lx27W9to+iLxxGScjErd4nG7BTFnSGN1srkA8CCu5nYzAe1tSoMHI4jcRyIAOYMgqPM/R028h
+ BRdVVuVH3U1c2PLjey4iVlXxuS5Wi6AC7+9pguUb/CMCPT4CyXow1zXWW2iLmVWUVX35Z2XkJ+n
+ 0U2FnNcmx6BbqgA8kVCPDWgRMNZWhq7lZSX//9+1pH1/LTHPtSn1YH2igNlDuKkrvR9Yx2fKzgu
+ hYtc9/qiloDNkWUnc3E8Gz8lZgmB8YVmOStl2k61MM9W34wylfftOZAMRi11P/8VVh168F+xJXS
+ g+mN31xdrtqXbVW3cWbQwAxj4gl8NUx1SXgpiVkk4FWD5E0HOTGlLykdzrrcscGF7j9YrEPDaz+
+ nWoqdsKBORqV5j+3UH1lefvjxhJMKm7VaJG2Lps/APVnzkWJHxMJBWy7PJbElZ8vOVUGrOvatBa
+ UgS7P+J0YKmXiHw==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On Sun, Feb 11, 2024 at 05:29:32PM +0100, Krzysztof Kozlowski wrote:
-> On 11/02/2024 09:17, Jisheng Zhang wrote:
-> > Add name & compatible for the Sipeed Longan Module 3H and Longan PI 3H
-> > board.
-> > 
-> > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> > Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-> > ---
-> 
-> This is a friendly reminder during the review process.
+The debug.config file is really great to easily enable a bunch of
+general debugging features on a CI-like setup. But it would be great to
+also include core networking debugging config.
 
-Oops, I forgot to add Conor's ack...
-> 
-> It looks like you received a tag and forgot to add it.
-> 
-> If you do not know the process, here is a short explanation:
-> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-> versions, under or above your Signed-off-by tag. Tag is "received", when
-> provided in a message replied to you on the mailing list. Tools like b4
-> can help here. However, there's no need to repost patches *only* to add
-> the tags. The upstream maintainer will do that for tags received on the
-> version they apply.
+A few CI's validating features from the Net tree also enable a few other
+debugging options on top of debug.config. A small selection is quite
+generic for the whole net tree. They validate some assumptions in
+different parts of the core net tree. As suggested by Jakub Kicinski in
+[1], having them added to this debug.config file would help other CIs
+using network features to find bugs in this area.
 
-IIRC, the b4 can only help on the latest version. If I missed the ack
-in v3, the ack tag will be lost. So how to handle this case? repost or
-Conor gave an ack to v3 again?
+Note that the two REFCNT configs also select REF_TRACKER, which doesn't
+seem to be an issue.
 
-Thanks for your information.
-> 
-> https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
-> 
-> If a tag was not added on purpose, please state why and what changed.
-> Best regards,
-> Krzysztof
-> 
+Link: https://lore.kernel.org/netdev/20240202093148.33bd2b14@kernel.org/T/ [1]
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Notes:
+  - It looks like this debug.config doesn't have a specific maintainer.
+    If this patch is not rejected, I don't know if this modification can
+    go through the net tree, or if it should be handled by Andrew.
+    Probably the latter? I didn't add [net-next] in the subject for this
+    reason.
+---
+ kernel/configs/debug.config | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/kernel/configs/debug.config b/kernel/configs/debug.config
+index 4722b998a324..509ee703de15 100644
+--- a/kernel/configs/debug.config
++++ b/kernel/configs/debug.config
+@@ -40,6 +40,12 @@ CONFIG_UBSAN_ENUM=y
+ CONFIG_UBSAN_SHIFT=y
+ CONFIG_UBSAN_UNREACHABLE=y
+ #
++# Networking Debugging
++#
++CONFIG_NET_DEV_REFCNT_TRACKER=y
++CONFIG_NET_NS_REFCNT_TRACKER=y
++CONFIG_DEBUG_NET=y
++#
+ # Memory Debugging
+ #
+ # CONFIG_DEBUG_PAGEALLOC is not set
+
+---
+base-commit: 841c35169323cd833294798e58b9bf63fa4fa1de
+change-id: 20240212-kconfig-debug-enable-net-c2dc61002252
+
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
