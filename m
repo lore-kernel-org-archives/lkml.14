@@ -1,62 +1,25 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A784D12D
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 20:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDFC347F57;
+	Mon, 12 Feb 2024 20:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.165.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707768284; cv=none; b=HfugDngDLAiV2aV+cPm3BWiWr9ZY/O30Fttd8PL4Q4vnDHdNhMWAWt96vIBhBQK0ZGQz+DN0+EqgIndlepzbRPgXMGF5Vmu4HZtWoS1lirHC7TMsTgqoIajoaOUz51fitsmqUE+J4dGSce5FEDLQguO+JBzGZ6JpVVoJpXK/BPk=
+	t=1707768287; cv=none; b=LvdYBcFKfghwVQ9HaP27/kk47Ui6xB1qcg7iNHm/Bf1QNkFN1LMNqpQ4U8NKX/WDzlwgYLeh9pVsyDXKZQPx23iSlrLSfmfSVqd6wQtYxM7W/XQk7mjt3qf3pjEkRPEtZhN8Heeht9aqGg+nl5YB7YEIQs35emHrNOYYH19WMtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707768284; c=relaxed/simple;
-	bh=nVdAcq5qBuV+u2+BDT0vbbPtDSUMY5Jwqu+E2afCaAQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZW1jB8iOb2+9soxHxOBorkDC7uSmVkQL6vLAOH9eubLK6mxCrdZD25+EzJ4v4Y4B2eH3wPiiSJ1yI71InqD0OkXwC8d/fdlnITIMSf9iwLrvo0luC0CMbfi6FesXgZdKOMiCIbiCj98QrDJMq2akz6i5qDKaKy/bu8RF8HH8NAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=cj+Gm/K7; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="cj+Gm/K7"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d746856d85so26794145ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 12:04:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707768282; x=1708373082;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:dkim-signature:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=db2Uhnapp+w5dyUlo+M8v03nvRL1AyZA94jDVlSeXjQ=;
-        b=omPk3PQNS7mTh2N9qiZZkxb6tYvt+dRDeXFEEmJlTT2q4Io8N/IBEdzk7aGc3ZH94z
-         0c2s8qdnCYMtWt+a+MvmoYPugdqvfY8gLjMl1Za4ACVQEd1iC6FaAFn3Cb4U4Pw9w+5Z
-         0Im5u4ZKeiTPGQgLD57EHZ7xgynnwMAnOxZm6ZPb4BE9JZ+1C5NQbkP/TKgpmynNpma2
-         shpweoTwBLqAexxyYcwFbTvIwPdu6DnmevaD/5laeAnR5KG6Hr7+dywdE6j1q3jcFE6/
-         rOryWWPFHx3y7OzQC/gfLUh1je0TYM5P32nPb2Ft9U97uF2ieywSbLe5YoNZjo5SS9A2
-         EvMg==
-X-Gm-Message-State: AOJu0Yz6Y9GuX2+1YJe1pxCBPAgocX6DLuc7zW5gBHvUQI1m0nMRvFP5
-	4WKwwLt26SprcfC1Qsn9uo5yx70ohKP9WLK6OYDmiuxY0hbAWnjK
-X-Google-Smtp-Source: AGHT+IE8SVcMxOkLwBDIRmqSz/zr2jQon8D4r5B9AFrKXhLXIulNq2CR9/4ML5XN80KSjvnDri+oBw==
-X-Received: by 2002:a17:902:f809:b0:1d9:427a:99b with SMTP id ix9-20020a170902f80900b001d9427a099bmr6869869plb.32.1707768282176;
-        Mon, 12 Feb 2024 12:04:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWh06n6YhsaJA8HcOSOeEyE9tkWsBCUMlmMXjeAnxBL4mwLpDYhrSU2gThu1OCwH7Tau36MBJYZphBqkJchgGjcyncBBsXHIJruIwI8Ole3n3F9/VRVKVB2qTX2N58J23sA47waUHOedZm391zeUNE+j14/lsHLrrhmeE9snpx+RZDvn6UQTIuX9YkVt8JooBJawbmG+IUTM/zc6+4pJNgcrM+SSCcdyLXEva9I5s2NuwFIeFRTfdz/ML1VMMmAhCF2D7ZeKLIjeIFTmOQB
-Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id s2-20020a170902c64200b001d958de13c7sm759098pls.0.2024.02.12.12.04.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 12:04:41 -0800 (PST)
-From: "Ricardo B. Marliere" <ricardo@marliere.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2024; t=1707768280;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=db2Uhnapp+w5dyUlo+M8v03nvRL1AyZA94jDVlSeXjQ=;
-	b=cj+Gm/K7r/ULgwd1zluQ8A+gbU2ta02TRefNIMEOMo0pSU1uNofUxpm4ooY+ye2Iy6fHzd
-	XlX/D+Kz7L1VgVRzoTUFqmBOT9oZGmouYaiKKAAmhvU/bgC/+v9k1GhSrAfhWID44UVfxS
-	EN55cY/ZxwvygA3SM9wJ7CbIju4vcYE3Qht4GWa/PssSB64Yx0ppDk4GHnl+5ZyLtKwQkh
-	/zpDf674RgUBRT2n3i181r1hIzyKtkiaZBJwiYeemDB8RcsiRwTlgwkellA93FfVNmxYxg
-	9Ap6d8BNw/d9/OeWUgoM6AEQH7xlb82Q+yOWADkwBn5SZqO0R1qT/+g3M6ciAg==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-Date: Mon, 12 Feb 2024 17:05:03 -0300
-Subject: [PATCH v2 5/5] powerpc: ibmebus: make ibmebus_bus_type const
+	s=arc-20240116; t=1707768287; c=relaxed/simple;
+	bh=H5SASPixAqUHq3Nu5xj+/KLu5M1naq1Am/HTSAj4Qig=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=pBzFbEGdbC1e5zYEsONwjw5BJ53WFpHwNNR4BoqbmKGsKv8at5HUoVJvYKOX7YkLwJ6Upi5tLo+h87HKvOc1PAc42Ah+Ii3QidoVQifgTlUBHjb+fX6ekFR8Vt6nMpMFy0vKk6L18zh7+KkNPBXr4k+Z60G44ugg5NbX/BxaUwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr; spf=pass smtp.mailfrom=skole.hr; arc=none smtp.client-ip=161.53.165.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skole.hr
+Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
+	by mx.skole.hr (mx.skole.hr) with ESMTP id E072683BA7;
+	Mon, 12 Feb 2024 21:04:36 +0100 (CET)
+From: =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Subject: [PATCH 0/2] leds: expresswire: Fix dependencies
+Date: Mon, 12 Feb 2024 21:03:24 +0100
+Message-Id: <20240212-expresswire-deps-v1-0-685ad10cd693@skole.hr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,85 +27,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240212-bus_cleanup-powerpc2-v2-5-8441b3f77827@marliere.net>
-References: <20240212-bus_cleanup-powerpc2-v2-0-8441b3f77827@marliere.net>
-In-Reply-To: <20240212-bus_cleanup-powerpc2-v2-0-8441b3f77827@marliere.net>
-To: Michael Ellerman <mpe@ellerman.id.au>, 
- Nicholas Piggin <npiggin@gmail.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Ricardo B. Marliere" <ricardo@marliere.net>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2050; i=ricardo@marliere.net;
- h=from:subject:message-id; bh=nVdAcq5qBuV+u2+BDT0vbbPtDSUMY5Jwqu+E2afCaAQ=;
- b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlynnv/phT/tgLAi3w01xX1x1lm+XkR/vq3YP08
- H7MNNK8uo6JAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZcp57wAKCRDJC4p8Y4ZY
- pqLmD/wIPQTXfZHkPBsZz+WbeisckhU1iPI9/FW4ze2PGk/olNSI56xfFPbRxqvEQpuVUjym3t3
- Rx7QRjXneci1tfF+gw7xi2JJIAeXHtECUF+sox6V2X4B9SW9i35gGWfQHAZMUgyuJew/UuFWkW9
- II8liY2MgGjEhVDudIf8uaiazWWzQiS5INaA6NtQdDgjKWRLO8bZ9jgOh41GSRbmJ6ce1RhCan4
- q+QChn0KQKd2xTCxGAC/5cffnhOTyqhDW98TLHou90NiFJR4lAGuI1vu87fOsJ7466CT95W82iv
- th6FiAUmNSErQkN4uHdr95oDgXsx/xQP73ccL+TRNiAZmy+opUIvaxZXyG29euJNIxdQnfmGZV/
- j3UnxUIzcx7pVierP7VmNtIb7I1ISXYyVRdtmBYepA6p57OdiSkpizqoM/6+Rts55swvYVIQ9bl
- VkwMmBHWio39eH0MKHv8HyDOY4uBsJbvPD5qrPZiv6ukIsbyaJpv8d+I6JgUSqhOzYJeMezFlah
- kLxLtsQhvIf/UgmB0FAfmkBLSse5FhFGk6/18o+fx0Ix+VNLD+JT48G99Fyv/MUdfSK82izeSiC
- cF/9SaUKQTYG93oeKu6+dHB0zGDihLVkUyZ5guQDxwJZez53nwi8VhxF7keoTqTuE3oA61bl35x
- YIjcK1OIQ3FScuA==
-X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
- fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAIx5ymUC/x2MQQqAIBQFrxJ/naBWYF0lWki+6m8q/FCCePek5
+ TDMZBJEhtDUZIp4WPg6K5i2ofXw5w7FoTJZbXttjVVId4TIyxEq4BYFNw5wwTv4jmpW9cbpX85
+ LKR8kQUMcYgAAAA==
+To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
+ Daniel Thompson <daniel.thompson@linaro.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Flavio Suligoi <f.suligoi@asem.it>, Hans de Goede <hdegoede@redhat.com>, 
+ Jianhua Lu <lujianhua000@gmail.com>, 
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+ Helge Deller <deller@gmx.de>, Jingoo Han <jingoohan1@gmail.com>, 
+ Karel Balej <balejk@matfyz.cz>, dri-devel@lists.freedesktop.org, 
+ linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-leds@vger.kernel.org, 
+ =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=675;
+ i=duje.mihanovic@skole.hr; h=from:subject:message-id;
+ bh=H5SASPixAqUHq3Nu5xj+/KLu5M1naq1Am/HTSAj4Qig=;
+ b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBlynmgj96tx0yxiCk6LRKUNqTO/ibINXBCd6K5R
+ Kv13Nu7/QWJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZcp5oAAKCRCaEZ6wQi2W
+ 4UtOD/9CIR17mjfkoT3abEQNFhCVDJXwkykj/eV70cTOXmLHQYJqogh+3EJOfkyCEG8Xg5jDGx1
+ jRe5pKs4RXoKgOpZNN7dZ9PlGpJdTc+cW4IxpbBrAlVqKltFH5x1OBOiQgrObxnTOqe4q6u5rfB
+ cW2nW8fTnLL+pFOupFa+onY+wNLeRyDXXh0/dJPEdBsDIMVzxX8VZdXN4aKbTTViXvHWWiRFljP
+ cknU797dHb6Tf1K+/Dq4XgVMqCYPpQJxkgyDql9hiSuQSaYlQUc+nf0RjFOHL4NreWQX+jtipxG
+ 9pUAdh5AcoDVUp+PhT9giIZUSPKGaBlsnomNN2BcP4uCXh9OOleOgPzuk7yEGhnXb4/EgxrIMxx
+ TVUkyYUFqQpMvAN2OlsG1roXKQm1ow/yODTY7y0Cst46f41R8n/pZ2HJ6E9UjBLG/S5P21wc7k6
+ eD0ghlPYG5knL3dk9VD0npSPY9PmD13y0ixup6J1GfROEtWMdWmyUBnplvpSjdVOACrSGRSW/LO
+ lL+YEx2Ccc+KBme2eTZYjkdtggldwF9XpDGCHmaoTKO8YoxNCj2A4dMOWyFPBuEVek3gsq0l1qE
+ WxD0CWMpkokK8LnYySyUvjyLTrikpqRSUWiTTuQqrVZytxuihgUP+iiVQOee5y0AtWyexIron7X
+ kS/qxZVpmhMJHFw==
+X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
+ fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
 
-Since commit d492cc2573a0 ("driver core: device.h: make struct
-bus_type a const *"), the driver core can properly handle constant
-struct bus_type, move the ibmebus_bus_type variable to be a constant
-structure as well, placing it into read-only memory which can not be
-modified at runtime.
+LEDS_EXPRESSWIRE does not depend on NEW_LEDS in practice but still does
+in Kconfig. Fix up its Kconfig entry to reflect this and fix a Kconfig
+warning.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
 ---
- arch/powerpc/include/asm/ibmebus.h       | 2 +-
- arch/powerpc/platforms/pseries/ibmebus.c | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Duje Mihanović (2):
+      Revert "leds: Only descend into leds directory when CONFIG_NEW_LEDS is set"
+      leds: expresswire: don't depend on NEW_LEDS
 
-diff --git a/arch/powerpc/include/asm/ibmebus.h b/arch/powerpc/include/asm/ibmebus.h
-index 6f33253a364a..46fe406f461c 100644
---- a/arch/powerpc/include/asm/ibmebus.h
-+++ b/arch/powerpc/include/asm/ibmebus.h
-@@ -48,7 +48,7 @@
- 
- struct platform_driver;
- 
--extern struct bus_type ibmebus_bus_type;
-+extern const struct bus_type ibmebus_bus_type;
- 
- int ibmebus_register_driver(struct platform_driver *drv);
- void ibmebus_unregister_driver(struct platform_driver *drv);
-diff --git a/arch/powerpc/platforms/pseries/ibmebus.c b/arch/powerpc/platforms/pseries/ibmebus.c
-index 998e3aff2457..b401282727a4 100644
---- a/arch/powerpc/platforms/pseries/ibmebus.c
-+++ b/arch/powerpc/platforms/pseries/ibmebus.c
-@@ -55,7 +55,7 @@ static struct device ibmebus_bus_device = { /* fake "parent" device */
- 	.init_name = "ibmebus",
- };
- 
--struct bus_type ibmebus_bus_type;
-+const struct bus_type ibmebus_bus_type;
- 
- /* These devices will automatically be added to the bus during init */
- static const struct of_device_id ibmebus_matches[] __initconst = {
-@@ -432,7 +432,7 @@ static int ibmebus_bus_modalias(const struct device *dev, struct kobj_uevent_env
- 	return of_device_uevent_modalias(dev, env);
- }
- 
--struct bus_type ibmebus_bus_type = {
-+const struct bus_type ibmebus_bus_type = {
- 	.name      = "ibmebus",
- 	.uevent    = ibmebus_bus_modalias,
- 	.bus_groups = ibmbus_bus_groups,
+ drivers/Makefile     |  2 +-
+ drivers/leds/Kconfig | 10 ++++++----
+ 2 files changed, 7 insertions(+), 5 deletions(-)
+---
+base-commit: ae00c445390b349e070a64dc62f08aa878db7248
+change-id: 20240212-expresswire-deps-e895e8da8ea3
 
+Best regards,
 -- 
-2.43.0
+Duje Mihanović <duje.mihanovic@skole.hr>
+
 
