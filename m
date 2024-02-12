@@ -1,134 +1,138 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F653FB1C
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 17:16:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 296223CF4C
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 17:18:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707758197; cv=none; b=X6jvWpnRZ4WUMCY1BfCabVLP29oIXCLurGJFWdzT0BhXQWWREJeqSD2tngBZUkCk/pPbXDE3Res0TQBw9Bo4PUlJgNDswIH6dg/HCYSkgEMXi10BHQPJFALLE8oWIjO3o4RTjL6+lgUYH7h+u9qdLT3F7eMSCmRxA+7uMvfiWg8=
+	t=1707758298; cv=none; b=nImI4Lpo4WUf8QL/4pVcy2it3sYNt7izKKJzDY40lExDPnZaR/WGr/jm12RPZTyuCSxZsyHr8+j0QHyrKqn5QR4UpIqp63XaxTYEUJl56eFkYkUWc6XtDjWejJS4IxBVXdLBeJ2Y3jkIDPPBgapM5cp3kNi0quLS6k4E85XYkzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707758197; c=relaxed/simple;
-	bh=Q6Yq07+VdvdKRo4K3In05WZjYT3GiDeEF2bQ46jl/XU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=sY1LNApNY87P8S0oYLesOnvv7BYR1dV0THLLgP3JRx5tkjQyfFswT4ytUqQJTQSyA9WE6DG0oe3oN6P0ljK1m/a1JQNGfVMJvn9GdcOLI96cU9TGDsRzgqp5dyspoXA/iDtaWPlz8Fa0LnAmFmY3dVO8FTU1mVyVN0O83nrh9Lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=BnTgIY95; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1707758298; c=relaxed/simple;
+	bh=aJLhxZw/6VLXC4cw+RKcpvlB3LpEG0ldQx2kfyU4uVM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WpnqzW9ILIc32RTlK2Lul6LyyjiBwWUKiGerrNs+0JamfE3ct7MBp8lowXUn6F7Em/5/dBUGTqv3ZvpEQbkNvqkZw9kO4GoWUiGoLbT6yROeKgLS0lmM6Qg9M1YiqLfYnyOLc6g5jl/IGb/knuS/M8fFT+Xc6w6yQdVf3XSk/9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cXidrwGw; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BnTgIY95"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41CFxpIS004867;
-	Mon, 12 Feb 2024 17:16:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2023-11-20;
- bh=2Q4si0x3nG3VI9xSasdsfLDFx2lasKaM6lvaVLjk0wk=;
- b=BnTgIY95wjHStu21zgmfSgXIo9yUC3WUxQN1MJw0Wc0n4UP5jsS8Y6fsIO6iZhyBIP2m
- hxSVSp6lj5Lsn6OvvMlv88XBEYc0NjBSGTsCgRp7Gqbkgk514Dw0s0Xf/5P9IIRtGx9Y
- lOPyBce85Dok6vo2o7pbmxIH4SZ8W78lvBTqJ/BmvKD5SF5esStfOqWnY4ml73IFvSu/
- oTNgfPA+dk1uydQetedhaLRtKKxkdxJH13DoL34tqugF1hk0q5j7ADSzCo3lUAydyjdA
- XuCdVyy/au597x4y7DX/NgGQLuQMgc8tBUeA/h2c4dtzvTwVYM+ZCnHSwlgoxbWXjz3N 4Q== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3w7pf1r6yf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 12 Feb 2024 17:16:19 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41CGZllm031499;
-	Mon, 12 Feb 2024 17:16:18 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3w5yk620f9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 12 Feb 2024 17:16:18 +0000
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41CHGFCC019216;
-	Mon, 12 Feb 2024 17:16:18 GMT
-Received: from ca-dev63.us.oracle.com (ca-dev63.us.oracle.com [10.211.8.221])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3w5yk620cq-3;
-	Mon, 12 Feb 2024 17:16:18 +0000
-From: Steve Sistare <steven.sistare@oracle.com>
-To: virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
-        Si-Wei Liu <si-wei.liu@oracle.com>,
-        Eugenio Perez Martin <eperezma@redhat.com>,
-        Xie Yongji <xieyongji@bytedance.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Steve Sistare <steven.sistare@oracle.com>
-Subject: [PATCH V2 2/3] vduse: suspend
-Date: Mon, 12 Feb 2024 09:16:13 -0800
-Message-Id: <1707758174-142161-3-git-send-email-steven.sistare@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1707758174-142161-1-git-send-email-steven.sistare@oracle.com>
-References: <1707758174-142161-1-git-send-email-steven.sistare@oracle.com>
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-12_14,2024-02-12_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 spamscore=0
- adultscore=0 phishscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2402120131
-X-Proofpoint-ORIG-GUID: 52OpQkWopH_UijR_V1gH72otsGZlCUqw
-X-Proofpoint-GUID: 52OpQkWopH_UijR_V1gH72otsGZlCUqw
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cXidrwGw"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d93edfa76dso27515995ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 09:18:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707758296; x=1708363096; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xCIep0DRPStcfl/IGRa0Zu4ofjT1z5YXLFif2WK89OI=;
+        b=cXidrwGwFjdju3h97LeTE3ie9TrlpyMKa3PS8dtfvkCiphrlQz2wa/mABuH51V2bMT
+         m8FwYzYJeXcWpEK3awFA0OjtJRWDGQ+m1L6VRYMFs3HJB4yiWfMqzmA8mCVFyd2NCfN1
+         /zGSN9Jgt07lrokyMg6PswMbGnVHae6vLHpzzn7lEqH3eOJW3ltoHcmB2d6AYj7vjr98
+         OERnnYp79WKwiEPpVMdm6zJR8petlJyUHIOL4xUTDGX365kjhyBlFKTZoiKBYRrkrhTr
+         Hqj2ww2kUOuLkz7J4yw8d/dZUujSvQqfC2vKq+V/2EBSpUsuWv9WFOlWRlz4ET1VOyOm
+         8EXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707758296; x=1708363096;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xCIep0DRPStcfl/IGRa0Zu4ofjT1z5YXLFif2WK89OI=;
+        b=Tda5RIEffsHnDM4yl59If9B6eoaucEy7+L+XelLjCEBFNNlUmhSddgieBTLv5dddyw
+         Ujf876W9Gt460Rm5gCRPTXg+V1Po5AhZ4xa4RNHn/B75rXbE5WN/z9YfyDHX81mYoaEx
+         CK3WbXZ7aluXDX/2NOwxAybjfzR+hbVECfQjdeKIAdUgNOr7a6fkL6p6iwOXRrrjWtqc
+         A17XhgNM2sOKlw4EUrCqVwCuWN1FHUrNytwFjvQr/+CiRAl5iPw5bswCD/fPIdEX/rgN
+         Eo56LXRPWpSG3BsnVofzdXJeZfHPg6G1J85tmbCx5xBVAxRvcXpVjO2JYK8QQFCJNf7+
+         5LoQ==
+X-Gm-Message-State: AOJu0YxPJQ+uitogvXBXZ9rkHm8gfeAIDz/jAUD+CmiZti6Uq21O1Qij
+	ePm5Dod8Ww4HKTccHj0oMCdtTGqFb+OaB/kGznpOdgzqylck4AxBqmg9wclf
+X-Google-Smtp-Source: AGHT+IFoWURwgwgvKRH0QVWKaGGiNOmEse8OuCzXBqnCibQ8yGzeHDffuGcTSVv1yNbB/L1doUI7nQ==
+X-Received: by 2002:a17:903:1211:b0:1d9:aa5d:a50 with SMTP id l17-20020a170903121100b001d9aa5d0a50mr10732122plh.25.1707758296397;
+        Mon, 12 Feb 2024 09:18:16 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWYLUsksLO6TZWxtIYFLJu3MNl032gEQvyUaZQadn50tG/dI7NvMX3T6pflSFtNX3TJYJ8y33Yvt9Xy6ccgwvgmnVb68Oaev/7ILkRjoVE39OW7d/w1mRY/kqXf8FZiDa+b7WkdAkTf3C6VDsuD035rt1Khwsdc95bYUBtxn2SZHv2GcUPBw9OJKjJzluEWXKKijrLQ
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id u11-20020a170903308b00b001d6f091ca04sm603980plc.13.2024.02.12.09.18.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Feb 2024 09:18:15 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Mon, 12 Feb 2024 09:18:14 -0800
+From: Guenter Roeck <linux@roeck-us.net>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Charlie Jenkins <charlie@rivosinc.com>,
+	David Laight <David.Laight@aculab.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] lib: checksum: Use aligned accesses for
+ ip_fast_csum and csum_ipv6_magic tests
+Message-ID: <52393411-8313-4e94-9618-916b57f7d52e@roeck-us.net>
+References: <20240207-fix_sparse_errors_checksum_tests-v6-0-4caa9629705b@rivosinc.com>
+ <20240207-fix_sparse_errors_checksum_tests-v6-2-4caa9629705b@rivosinc.com>
+ <20240212062614.GI608142@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240212062614.GI608142@ZenIV>
 
-Support the suspend operation.  There is little to do, except flush to
-guarantee no workers are running when suspend returns.
+On Mon, Feb 12, 2024 at 06:26:14AM +0000, Al Viro wrote:
+> On Wed, Feb 07, 2024 at 04:22:51PM -0800, Charlie Jenkins wrote:
+> > +	struct csum_ipv6_magic_data {
+> > +		const struct in6_addr saddr;
+> > +		const struct in6_addr daddr;
+> > +		unsigned int len;
+> > +		__wsum csum;
+> > +		unsigned char proto;
+> > +	} data, *data_ptr;
+> 
+> Huh?
+> 
+> > +	int num_tests = MAX_LEN / WORD_ALIGNMENT - sizeof(struct csum_ipv6_magic_data);
+> > +
+> > +	for (int i = 0; i < num_tests; i++) {
+> > +		data_ptr = (struct csum_ipv6_magic_data *)(random_buf + (i * WORD_ALIGNMENT));
+> > +
+> > +		cpu_to_be32_array((__be32 *)&data.saddr, (const u32 *)&data_ptr->saddr,
+> > +				  sizeof_field(struct csum_ipv6_magic_data, saddr) / 4);
+> > +		cpu_to_be32_array((__be32 *)&data.daddr, (const u32 *)&data_ptr->daddr,
+> > +				  sizeof_field(struct csum_ipv6_magic_data, daddr) / 4);
+> > +		data.len = data_ptr->len;
+> > +		data.csum = (__force __wsum)htonl((__force u32)data_ptr->csum);
+> 
+> What are those cpu_to_be32() about?  Checksum calculations *DO* *NOT* involve
+> any endianness conversions.  At any point.
+> 
+> Replace those assignments with memcpy() and be done with that - that will take
+> care of unaligned accesses.
+> 
+> Result will have host-independent memory representation.  The only place where you
+> might want to play with byteswaps (only 16-bit ones) is if you initialized the
+> array of expected results with u16 constants.  That will have opposite memory
+> representations on l-e and b-e, so you'll need to byteswap to compare with
+> what you get from function.  Alternatively, make it an array of bytes and
+> do
+> 	sum16 = csum_ipv6_magic(saddr, daddr, len, proto, csum);
+> 	if (memcmp(sum16, expected_csum_ipv6_magic + i * 2, 2))
+> 		complain
+> 
+> That's it.
 
-Signed-off-by: Steve Sistare <steven.sistare@oracle.com>
----
- drivers/vdpa/vdpa_user/vduse_dev.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+Almost. Turns out the csum parameter of csum_ipv6_magic() needs to be in
+network byte order, and the length parameter needs to be in host byte order.
+So instead of
+	data.len = data_ptr->len;
+	data.csum = (__force __wsum)htonl((__force u32)data_ptr->csum);
+it needs to be something like
+	data.len = ntohl(data_ptr->len);
+	data.csum = data_ptr->csum;
 
-diff --git a/drivers/vdpa/vdpa_user/vduse_dev.c b/drivers/vdpa/vdpa_user/vduse_dev.c
-index 1d24da79c399..503030f19e52 100644
---- a/drivers/vdpa/vdpa_user/vduse_dev.c
-+++ b/drivers/vdpa/vdpa_user/vduse_dev.c
-@@ -472,6 +472,18 @@ static void vduse_dev_reset(struct vduse_dev *dev)
- 	up_write(&dev->rwsem);
- }
- 
-+static void vduse_flush_work(struct vduse_dev *dev)
-+{
-+	flush_work(&dev->inject);
-+
-+	for (int i = 0; i < dev->vq_num; i++) {
-+		struct vduse_virtqueue *vq = dev->vqs[i];
-+
-+		flush_work(&vq->inject);
-+		flush_work(&vq->kick);
-+	}
-+}
-+
- static int vduse_vdpa_set_vq_address(struct vdpa_device *vdpa, u16 idx,
- 				u64 desc_area, u64 driver_area,
- 				u64 device_area)
-@@ -713,6 +725,17 @@ static int vduse_vdpa_reset(struct vdpa_device *vdpa)
- 	return ret;
- }
- 
-+static int vduse_vdpa_suspend(struct vdpa_device *vdpa)
-+{
-+	struct vduse_dev *dev = vdpa_to_vduse(vdpa);
-+
-+	down_write(&dev->rwsem);
-+	vduse_flush_work(dev);
-+	up_write(&dev->rwsem);
-+
-+	return 0;
-+}
-+
- static u32 vduse_vdpa_get_generation(struct vdpa_device *vdpa)
- {
- 	struct vduse_dev *dev = vdpa_to_vduse(vdpa);
-@@ -794,6 +817,7 @@ static const struct vdpa_config_ops vduse_vdpa_config_ops = {
- 	.set_vq_affinity	= vduse_vdpa_set_vq_affinity,
- 	.get_vq_affinity	= vduse_vdpa_get_vq_affinity,
- 	.reset			= vduse_vdpa_reset,
-+	.suspend		= vduse_vdpa_suspend,
- 	.set_map		= vduse_vdpa_set_map,
- 	.free			= vduse_vdpa_free,
- };
--- 
-2.39.3
+Also, as you mentioned, either the returned checksum or the expected
+checksum needs to be converted for the comparison because one is in
+network byte order and the other in host byte order.
 
+Address conversions are indeed not needed.
+
+Thanks,
+Guenter
