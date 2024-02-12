@@ -1,45 +1,46 @@
 Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46BD63D0DD;
-	Mon, 12 Feb 2024 16:28:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B86793D3A1;
+	Mon, 12 Feb 2024 16:28:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707755327; cv=none; b=S7r5ljifXVPow4nsFuD7vChH+4+vCa/dDTWhVXcahB5xzZt/Y33iCJENMB/l2h+GQMNjJSzy08JPLvGsllllS2lXCluYrutVh0b/n7D64JvFmlpkFEsW38l1f2aZeehoBJ3AOb886uFP3VZWaRKJNveUvfdXK1oMnAeOKmEeX9c=
+	t=1707755329; cv=none; b=aL5sR7O+SVGjIXBTIiNDYgOa/yU0IW7q86y8+2XuZqQw/cnnhK+DpfeFLXSYs9XBVML7TUb/6XhjbZEqHGt8PVuC2GkFxaawpc0XwJJ91dx+jC7rdfdBNsqPK+iMMvmIRZuS6WctvMDIt09oQTiP5zGpWUj/U/5caaM4QaSRHZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707755327; c=relaxed/simple;
-	bh=I2MpepqswomHCVb5FtmVYpczlffOVMKkP0FDjf0skWM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HHWjW8iXJOvTt5P6wou6b3aIBIRt8iqnn/HBQu40kRL6PCFhimnTCq0Lgv10MnvYYHxaX6SjewRKN3pDU4dZU9qrgmdOLglq8LFlFzSBXBzoY5NdkXNDPu0c4foF/iA9WOPAjEipq7LKda0jjs0OJ0e+qyz+Rpfmouo6sd5K7Uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=gkharXyj; arc=none smtp.client-ip=198.47.23.248
+	s=arc-20240116; t=1707755329; c=relaxed/simple;
+	bh=F6j/rd2uqE1cUyZDghMq6eHqquIs5sdJYRKTy0Bo8is=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IHOv1Uy9Nfk9oQrUCigLMhtGDvXzfCrqcDPJVipyaLuCz8yNKWUV0pabxQaayK037PKBTs0toBnMZfA/UK/xOX/dNuG0iqOJxHPA6FyijwDlOmBr9qTLFXnt18+tjaajsWpraTQg3QbkE08pGiV81pZhL4TxceR99TPp3QRBfGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=H/SZ7sbI; arc=none smtp.client-ip=198.47.23.248
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gkharXyj"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41CGSXeS045183;
-	Mon, 12 Feb 2024 10:28:33 -0600
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H/SZ7sbI"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41CGSadb045193;
+	Mon, 12 Feb 2024 10:28:36 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707755313;
-	bh=zXYO7lK1k6ZbLMjJ3atq6vexiEb/Ht/2UM7FiDOlEBw=;
-	h=From:To:CC:Subject:Date;
-	b=gkharXyjdkRePbJdX8y5/s7In1GP+q0Lak59nwSfxcScDtvZML9ASF2/tkje/wPRv
-	 Vo0rNqc2ec9rbBW2HLX35FNsXb7b22AJcBP0edi4pIwbTTR59Eu5jw0qya/4mXHlMk
-	 nVUIZ4GNiULWS7hItIoG5lC8qAX7uPeAIfcg4SX8=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41CGSXwG008638
+	s=ti-com-17Q1; t=1707755316;
+	bh=9UwPUx+fSL3rKTkctxFppsbeFk236+6n4WL7g1DOd5Q=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=H/SZ7sbIjF3f0d2pCXRXRcE1gqiSFH3sJ7VDWYej5cVWcGSZ0j9duBlwWbClBLx9E
+	 4wdk7UquWUJ8x6R2UQE5QAZ9U9tapK/leEWi76TNb3wvuLWecH0oP+G3Idn4zBN9OS
+	 +ytSakjCSxSpGX++wxeFacgFM9WzOC2OTf2tjdpE=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41CGSaa5041911
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 12 Feb 2024 10:28:33 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+	Mon, 12 Feb 2024 10:28:36 -0600
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 12
- Feb 2024 10:28:33 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2024 10:28:35 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 12 Feb 2024 10:28:33 -0600
+ Frontend Transport; Mon, 12 Feb 2024 10:28:35 -0600
 Received: from lelvsmtp5.itg.ti.com ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41CGSWQu090688;
-	Mon, 12 Feb 2024 10:28:32 -0600
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41CGSWR0090688;
+	Mon, 12 Feb 2024 10:28:35 -0600
 From: Andrew Davis <afd@ti.com>
 To: Sebastian Reichel <sre@kernel.org>,
         Manivannan Sadhasivam
@@ -61,10 +62,12 @@ CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-actions@lists.infradead.org>, <linux-arm-msm@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>, Andrew Davis <afd@ti.com>
-Subject: [PATCH v4 00/19] Remove pm_power_off use in drivers/power/reset
-Date: Mon, 12 Feb 2024 10:28:12 -0600
-Message-ID: <20240212162831.67838-1-afd@ti.com>
+Subject: [PATCH v4 04/19] power: reset: xgene-reboot: Use devm_register_sys_off_handler(RESTART)
+Date: Mon, 12 Feb 2024 10:28:16 -0600
+Message-ID: <20240212162831.67838-5-afd@ti.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240212162831.67838-1-afd@ti.com>
+References: <20240212162831.67838-1-afd@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,80 +78,47 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hello all,
+Use device life-cycle managed register function to simplify probe.
 
-Use of pm_power_off is considered legacy and should be replaced with
-register_sys_off*(). Same for register_restart_handler(). Do this
-for the drivers/power/reset subsystem for all trivial cases.
+Signed-off-by: Andrew Davis <afd@ti.com>
+---
+ drivers/power/reset/xgene-reboot.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-Thanks,
-Andrew
-
-Changes for v4:
- - Fix sparse warning in [12/19] and [13/19]
- - Move data allocate from [19/19] to [18/19]
- - Add review tags in patches [7/19] and [11/19]
- - Rebase on v6.8-rc4
-
-Changes for v3:
- - Use dev_err_probe() in patch [11/19]
- - Add review tags in patches [18/19] and [19/19]
-
-Changes for v2:
- - Fix sparse warning in 7/19 and 10/19
- - Add new patch fixing an already existing sparse warning (3/19)
- - Rebase on v6.8-rc3
-
-Andrew Davis (19):
-  power: reset: atc260x-poweroff: Use
-    devm_register_sys_off_handler(RESTART)
-  power: reset: atc260x-poweroff: Use
-    devm_register_sys_off_handler(POWER_OFF)
-  power: reset: xgene-reboot: Use devm_platform_ioremap_resource()
-    helper
-  power: reset: xgene-reboot: Use devm_register_sys_off_handler(RESTART)
-  power: reset: tps65086-restart: Use
-    devm_register_sys_off_handler(RESTART)
-  power: reset: tps65086-restart: Remove unneeded device data struct
-  power: reset: brcm-kona-reset: Use
-    devm_register_sys_off_handler(RESTART)
-  power: reset: axxia-reset: Use devm_register_sys_off_handler(RESTART)
-  power: reset: rmobile-reset: Use devm_platform_ioremap_resource()
-    helper
-  power: reset: rmobile-reset: Use
-    devm_register_sys_off_handler(RESTART)
-  power: reset: mt6323-poweroff: Use
-    devm_register_sys_off_handler(POWER_OFF)
-  power: reset: msm-poweroff: Use
-    devm_register_sys_off_handler(POWER_OFF)
-  power: reset: msm-poweroff: Use devm_register_sys_off_handler(RESTART)
-  power: reset: regulator-poweroff: Use
-    devm_register_sys_off_handler(POWER_OFF)
-  power: reset: as3722-poweroff: Use
-    devm_register_sys_off_handler(POWER_OFF)
-  power: reset: gemini-poweroff: Use
-    devm_register_sys_off_handler(POWER_OFF)
-  power: reset: restart-poweroff: Use
-    devm_register_sys_off_handler(POWER_OFF)
-  power: reset: syscon-poweroff: Move device data into a struct
-  power: reset: syscon-poweroff: Use
-    devm_register_sys_off_handler(POWER_OFF)
-
- drivers/power/reset/as3722-poweroff.c    | 30 ++++-------
- drivers/power/reset/atc260x-poweroff.c   | 55 ++++++++------------
- drivers/power/reset/axxia-reset.c        | 16 +++---
- drivers/power/reset/brcm-kona-reset.c    | 11 ++--
- drivers/power/reset/gemini-poweroff.c    | 16 +++---
- drivers/power/reset/msm-poweroff.c       | 21 +++-----
- drivers/power/reset/mt6323-poweroff.c    | 26 +++++-----
- drivers/power/reset/regulator-poweroff.c | 36 +++++--------
- drivers/power/reset/restart-poweroff.c   | 25 +++------
- drivers/power/reset/rmobile-reset.c      | 35 ++++---------
- drivers/power/reset/syscon-poweroff.c    | 66 ++++++++++++------------
- drivers/power/reset/tps65086-restart.c   | 58 ++++-----------------
- drivers/power/reset/xgene-reboot.c       | 21 +++-----
- 13 files changed, 150 insertions(+), 266 deletions(-)
-
+diff --git a/drivers/power/reset/xgene-reboot.c b/drivers/power/reset/xgene-reboot.c
+index 6b545a83d8889..867162dfe7eae 100644
+--- a/drivers/power/reset/xgene-reboot.c
++++ b/drivers/power/reset/xgene-reboot.c
+@@ -24,15 +24,11 @@ struct xgene_reboot_context {
+ 	struct device *dev;
+ 	void __iomem *csr;
+ 	u32 mask;
+-	struct notifier_block restart_handler;
+ };
+ 
+-static int xgene_restart_handler(struct notifier_block *this,
+-				 unsigned long mode, void *cmd)
++static int xgene_restart_handler(struct sys_off_data *data)
+ {
+-	struct xgene_reboot_context *ctx =
+-		container_of(this, struct xgene_reboot_context,
+-			     restart_handler);
++	struct xgene_reboot_context *ctx = data->cb_data;
+ 
+ 	/* Issue the reboot */
+ 	writel(ctx->mask, ctx->csr);
+@@ -64,9 +60,8 @@ static int xgene_reboot_probe(struct platform_device *pdev)
+ 		ctx->mask = 0xFFFFFFFF;
+ 
+ 	ctx->dev = dev;
+-	ctx->restart_handler.notifier_call = xgene_restart_handler;
+-	ctx->restart_handler.priority = 128;
+-	err = register_restart_handler(&ctx->restart_handler);
++	err = devm_register_sys_off_handler(dev, SYS_OFF_MODE_RESTART, 128,
++					    xgene_restart_handler, ctx);
+ 	if (err)
+ 		dev_err(dev, "cannot register restart handler (err=%d)\n", err);
+ 
 -- 
 2.39.2
 
