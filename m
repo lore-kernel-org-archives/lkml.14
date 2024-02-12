@@ -1,93 +1,63 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B95F94D584;
-	Mon, 12 Feb 2024 22:12:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C944CB22;
+	Mon, 12 Feb 2024 22:13:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707775933; cv=none; b=pM/PGOOhHVV+O4vffmRpy/0mOXXcvXYLHVpFXlPp6nrVGjRNonCS9dzWcLtZWr7JGi7jEL/wCrSkUcFwfC+evPpOZPI6WVDyhrDE5TDFRjBCKC1gpS4/SxXyXR+hYxNj9wrUJ+FqFkS2Y0mbDCGJDo1dBzWDZjnFkMwPUy5gb78=
+	t=1707775993; cv=none; b=UxMDzbjGCsihfYSl7c7OP4+38WC8scJWA5odMVyflAWh0Pt2EEyea+l8DD6W/ElPXBih9MSLvz++CRuiZaB8PTXve/bzyLS19JQfc125160I7DUPZ8BIair26Xjpr7OIoTizw72OnITJ/EK+YCXIUp4DhU65tfqhwScCWGR9oVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707775933; c=relaxed/simple;
-	bh=mQ24OEKxUf3+tyNALVBAJd3zdQYEVPgzTVv3KI1xCoo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lauOqriaBg9nsA69Wqi+6oN2/fVfuAActOUGNWeRCIlGF9m24SBIS4XPyZkI+7/uTFjE3WYPG0DNwaajOpST0kkxduYmpNJlTHt/glXZ9brrSwh/MdTNDZabuVi2Nv0wQk4avgzPByYtFSH3lfnIPbB6OIc8YK/4PM9+KhgIxz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1rZeWs-0002fz-00; Mon, 12 Feb 2024 23:11:58 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id DC4A6C0267; Mon, 12 Feb 2024 23:10:50 +0100 (CET)
-Date: Mon, 12 Feb 2024 23:10:50 +0100
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Oleg Nesterov <oleg@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ben Hutchings <ben@decadent.org.uk>, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-mm@kvack.org, Xi Ruoyao <xry111@xry111.site>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 0/3] Handle delay slot for extable lookup
-Message-ID: <ZcqXaqCnKuhMDgqt@alpha.franken.de>
-References: <20240202-exception_ip-v2-0-e6894d5ce705@flygoat.com>
+	s=arc-20240116; t=1707775993; c=relaxed/simple;
+	bh=SDBjZNJSlI8khI3Yh6gcu+kDznObYoNuS98OzSe2xJU=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=k3pvMXN5+ZRd9n2upB/dvVXg5R8XE0x1mUknG7OD/7nlbRaJDsZQ4E5pwr+1vmaRjbsfca7+4ewiiKV7yA5vFJjISMsccDCiZZojTHtie4kCs8K9w03YQ7u8Z3y6s5Vxnhs5w+CRfNi+dlE9u4HvouceLZE7rBNbc+VmLr2Uzao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GIa7InYR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GIa7InYR"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9FB80C433C7;
+	Mon, 12 Feb 2024 22:13:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707775992;
+	bh=SDBjZNJSlI8khI3Yh6gcu+kDznObYoNuS98OzSe2xJU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=GIa7InYRLQzvrXGcJxZgKiIJCLzr+F4TEmg+IEb2PY24ZOUhrESnD6EzMxbIAn1g1
+	 YjMKiItzl1OnqKbYNuEu5N4My1E763yl+EZJDo4/ppjJMpEw3DqhtZWfqJr7FVfzeE
+	 QI/EiVlkZHuDhy5/ilGqP4Ulb6sr88uSlZFvO+es8UywHjg9ulk4d1oZv/9tUvKws/
+	 Jpzi8TsL2JwNDlrdC/kR/WQWtC3c3Xwv2kOxb92hMFjhpqgYkqCOfPvDFbSvHYQhIG
+	 w/gos809hPOEkHgQXfUF0RvUQjW8tAp17FJ9nWMheCz49ufEyXp9LayHa4CpKS28U5
+	 UtdRFO0QmhMnA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8A5E0D84BC3;
+	Mon, 12 Feb 2024 22:13:12 +0000 (UTC)
+Subject: Re: [GIT PULL] Documentation fix for 6.8
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <871q9h8hz9.fsf@meer.lwn.net>
+References: <871q9h8hz9.fsf@meer.lwn.net>
+X-PR-Tracked-List-Id: <linux-doc.vger.kernel.org>
+X-PR-Tracked-Message-Id: <871q9h8hz9.fsf@meer.lwn.net>
+X-PR-Tracked-Remote: git://git.lwn.net/linux.git tags/docs-6.8-fixes2
+X-PR-Tracked-Commit-Id: c23de7ceae59e4ca5894c3ecf4f785c50c0fa428
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c664e16bb1ba1c8cf1d7ecf3df5fd83bbb8ac15a
+Message-Id: <170777599255.5978.8885975399696872697.pr-tracker-bot@kernel.org>
+Date: Mon, 12 Feb 2024 22:13:12 +0000
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Linus Torvalds <torvalds@linuxfoundation.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240202-exception_ip-v2-0-e6894d5ce705@flygoat.com>
 
-On Fri, Feb 02, 2024 at 12:30:25PM +0000, Jiaxun Yang wrote:
-> Hi all,
-> 
-> This series fixed extable handling for architecture delay slot (MIPS).
-> 
-> Please see previous discussions at [1].
-> 
-> There are some other places in kernel not handling delay slots properly,
-> such as uprobe and kgdb, I'll sort them later.
-> 
-> Thanks!
-> 
-> [1]: https://lore.kernel.org/lkml/75e9fd7b08562ad9b456a5bdaacb7cc220311cc9.camel@xry111.site
-> 
-> To: Oleg Nesterov <oleg@redhat.com>
-> 
-> To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> 
-> To: Andrew Morton <akpm@linux-foundation.org>
-> To: Ben Hutchings <ben@decadent.org.uk>
-> 
-> Cc:  <linux-arch@vger.kernel.org>
-> Cc:  <linux-kernel@vger.kernel.org>
-> 
-> Cc:  <linux-mips@vger.kernel.org>
-> 
-> Cc:  <linux-mm@kvack.org>
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
-> Changes in v2:
-> - Reduce diffstat by implemente fallback macro in linux/ptrace.h (linus)
-> - Link to v1: https://lore.kernel.org/r/20240201-exception_ip-v1-0-aa26ab3ee0b5@flygoat.com
-> 
-> ---
-> Jiaxun Yang (3):
->       ptrace: Introduce exception_ip arch hook
->       MIPS: Clear Cause.BD in instruction_pointer_set
->       mm/memory: Use exception ip to search exception tables
-> 
->  arch/mips/include/asm/ptrace.h | 3 +++
->  arch/mips/kernel/ptrace.c      | 7 +++++++
->  include/linux/ptrace.h         | 4 ++++
->  mm/memory.c                    | 4 ++--
->  4 files changed, 16 insertions(+), 2 deletions(-)
+The pull request you sent on Mon, 12 Feb 2024 14:56:10 -0700:
 
-series applied to mips-fixes.
+> git://git.lwn.net/linux.git tags/docs-6.8-fixes2
 
-Thomas.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c664e16bb1ba1c8cf1d7ecf3df5fd83bbb8ac15a
+
+Thank you!
 
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
