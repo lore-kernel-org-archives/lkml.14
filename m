@@ -1,93 +1,74 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F1E3BB47
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 15:07:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843BC3C06A;
+	Mon, 12 Feb 2024 15:07:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707750425; cv=none; b=GF0qoMTiKdp5X9x/57W6sFRTHf4T3GdcpKlHj2Oyd5vy0we9ozlMzeqsMwBjV8hshbvi7p3N6Qo4TzlXfUbKZ24BOMdjru/3Vdg73RY/2VtZl4yPfDDQNptJYoJdmuWwpngzuGDd4SmUmJ8kK89bBYizHLAFFco33dX3qWATn74=
+	t=1707750432; cv=none; b=u/LOBevsmRRvAwbsTOnefqBx5ecjY9/A47XWN/yY/NwQulVsPnasFWx5drXuAJmrG2KEa6IprCIDcnOUSWJDgCWaZJlO7gkUDlU8in7diHsWZEJvIcCNISrtObuJic6zOLwO11aoLk9ZHqgHXSlQrX1jL77DeTs+WvKE8w/dqoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707750425; c=relaxed/simple;
-	bh=vCfkrs4LXkcsKAOjKr0PZzIoNZisYM7i/fhAMFPfhls=;
+	s=arc-20240116; t=1707750432; c=relaxed/simple;
+	bh=wQOq4bOK/MtslhyaEgSZoHnk92FEKvYn7lNpICXclX0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XGbc2Vkl74XmkOo3a+QGroPLEMugdz7dXuyNfa1kjQdBIaLIGSgNIOBp1fYw6aSUs4CjXu78gZTF7jPMRG2IO5um3bezWEOmvwk8D9H23J1PsRYWCJqdlOCEK8C8aopodXqBPvrZ/VFG6uZuGQjsxs0jTBFPbEYBGiAI8ZO+fOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=lBcPtdPj; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=teSwNA1nzlijXRNjNVp3ij9MacyVsdIM+YjGTafvE26GKr0SRgoXhkaszPnBMguB50OCo5L7/RNUuyfTjwmjCxMiZer/vZirj18BXGtVjd3S8VSMjre5olrChiRbjY4I6e7Sg7xx2T/qQGby3Ofm8FvruYQH5rWDM6wzXlOcBkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=lkif+SG5; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="lBcPtdPj"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5B4EB40E0196;
-	Mon, 12 Feb 2024 15:07:01 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id o-jPY8JYnAoI; Mon, 12 Feb 2024 15:06:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1707750419; bh=WDM8Uif/B5+8ANeYiSTlCLljZ2ujoEn3IiKUsIYm+R4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lBcPtdPjKv5wfyAc30rmOBb8xnT3Jj/5ufA9bkkTYygCAN9ukaAqIW7xpo2YZOLjM
-	 9woRpOMc+GhOHojQNZVv5e61VjorCwhIMcq5TCW0+6fGdAwzothY+9O2XXEnr2Q6AD
-	 QYafQKJio+k1uhEWnjgXXg5py2duIZSbSi7Osx5ZOfnWMZ5FQTmuudRs96aN1At8B0
-	 e0PD/DaEoMmbmpfkSjpsbTtSdgLMAZsbh4+3mhwNkXZs2MM+Ze+YJT6jNx3loh+5VS
-	 NgqWir9i1epBSPtydVEyYaJ/toMXnV/e/ysB59GkQsOLH7U/iKivvCOxuI73/zFzOM
-	 BR+xiFAP2t0afMPbV2R2NsaqOlcVupvcqwjADTPBgP8Nh7TyAJNWKB9ou/BeejsSJq
-	 Cd3aPWOmLcL2YGlijzSdHtHR71Awnmrq3TKiEEzS1l2daKzw0yG5nqZkRBAn373+Hi
-	 U5McIXhNDagHauJnKWDhi95zNickLs8JVQGL7vqwfFWtkaqkmCYoKxzAO7EuwQyh9x
-	 BiWzC3DGxM7iOGxmfza4IyR920PWuBW62kr04Ppp2D5uyyhllF0tGeRhKIJliH8b8e
-	 XFQUDuA3Wm1H4xCSZv2EUcLSXy+Z0kOSAvkslamJ3Y4d/qgmjiNiZUDZ0RiOv76ZGK
-	 /a9GPfYN6lSdJVYOJu3lhGUA=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 29C8F40E01A9;
-	Mon, 12 Feb 2024 15:06:41 +0000 (UTC)
-Date: Mon, 12 Feb 2024 16:06:40 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Arjan van de Ven <arjan@linux.intel.com>,
-	Huang Rui <ray.huang@amd.com>, Juergen Gross <jgross@suse.com>,
-	Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Zhang Rui <rui.zhang@intel.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Feng Tang <feng.tang@intel.com>,
-	Andy Shevchenko <andy@infradead.org>,
-	Michael Kelley <mhklinux@outlook.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: Re: [patch v5 11/19] x86/cpu: Use common topology code for AMD
-Message-ID: <20240212150640.GGZco0AIP5shsUgXMI@fat_crate.local>
-References: <20240117115752.863482697@linutronix.de>
- <20240117115909.011311608@linutronix.de>
- <20240206155830.GPZcJXJkOv8NOtIfHi@fat_crate.local>
- <87cyt1lotf.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lkif+SG5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=wnB39ES76DNPpISASYCOBAKMF2MUBv8m38PEbyYRN+0=; b=lkif+SG5mbcCnNZEqgRMOrKSxA
+	220hgrFv/zNRNFObsNsagKTn6t8p3HCdkdXxJsCEcXQx/MM+mgTUddfTaYp+JHWThBAAbF9Bqi1S0
+	HLdJMD2lBbHX6JCuuzEAlj/AIs11BZ/k/FCJPoETDGG5yGvMwCT1KWaUJ1W3BjPJKIFo=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rZXtm-007aK5-DX; Mon, 12 Feb 2024 16:07:10 +0100
+Date: Mon, 12 Feb 2024 16:07:10 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: POPESCU Catalin <catalin.popescu@leica-geosystems.com>
+Cc: "davem@davemloft.net" <davem@davemloft.net>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	"robh+dt@kernel.org" <robh+dt@kernel.org>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"afd@ti.com" <afd@ti.com>,
+	"hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+	"linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	GEO-CHHER-bsp-development <bsp-development.geo@leica-geosystems.com>,
+	"m.felsch@pengutronix.de" <m.felsch@pengutronix.de>
+Subject: Re: [PATCH v4 2/2] net: phy: dp83826: support TX data voltage tuning
+Message-ID: <1412f8bc-6555-4e80-8e44-dda2292ac458@lunn.ch>
+References: <20240212074649.806812-1-catalin.popescu@leica-geosystems.com>
+ <20240212074649.806812-2-catalin.popescu@leica-geosystems.com>
+ <186cf83c-b7a7-4d28-a8b1-85dde032287b@leica-geosystems.com>
+ <10ed19e3-01a9-4fcb-819f-686c6d0bf772@lunn.ch>
+ <ff630ce9-0da8-4ad7-ab30-11f337dfa1ff@leica-geosystems.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87cyt1lotf.ffs@tglx>
+In-Reply-To: <ff630ce9-0da8-4ad7-ab30-11f337dfa1ff@leica-geosystems.com>
 
-On Mon, Feb 12, 2024 at 03:50:04PM +0100, Thomas Gleixner wrote:
-> Hrm. That is unfortunate, but we really don't want to mix the RAS
-> tree. So this needs a fixup in next and in the pull requests.
+> I see. Then, I should not disable WOL in config_init, since this 
+> callback is also called on the resume path : 
+> mdio_bus_phy_resume->phy_init_hw->config_init.
+> However, this contrasts with the rest of the driver and my patch is not 
+> anymore about just adding support for tuning of TX voltage levels ...
 
-Sure, lemme know how you wanna do the patch tetris and I'll take care of
-it.
+So wait until your patch is merged and then follow up with another
+patch disabling WoL. Patches get merged pretty quickly, so there is
+plenty of time before the next merge window.
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+      Andrew
