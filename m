@@ -1,90 +1,129 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0867520DDB;
-	Mon, 12 Feb 2024 09:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635B728387
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 09:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707731970; cv=none; b=YtZKtpThBsSypgYwl+pQ9pI3VGAPSu0yQQfdWHRVwYbaGUF8ufUoAcCEJjjdQSBwzMj3kulBiXUdYn63Gf3KtuawWEC6UftvsKizokg7nzxYSRCWa5OWcKkYqW3JW9yGSuVz+PcSWSxdQX2LrH5N2bAySsAHrrkHdR0C8XNw7lo=
+	t=1707732001; cv=none; b=d7prx3UMhd0bML6Rv49x+YshezseflD7rwm+qINfxJmyV6+mw6NCbk7Ffs15ausFFOGWCQvugtVg4gOunPYKVRZq7KuhBZE6VI71Tgjlg/LuWXe4b00RU7PBNXbQAbggquWYyL0cN9O3rq3r9JCxCdRwsHQRQphlos9dhG9FTGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707731970; c=relaxed/simple;
-	bh=M9vUn1aa5DP+LVMajo+gAizOtluS966drUCXVdFCT0c=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VOOg6rJ8M7G52+dzcRVzfWlG9uTKXP5g/a6BzNNnHU544Icg3W9PEu+xst3+a46cZo2ulaHVhbaIYWwDV5Jg8h9T/m5xaEsTzxRxpCMGlONScv0mdmHiK9CnlpRZp+Xj6paOnYts6z8ayijC++55R/FrZ44P/AcsoSyUfrpgkIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BH62PE8p; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1707732001; c=relaxed/simple;
+	bh=vDtolkGdaMWAyiegRfRrHs/H2BrHfAsixEXypYInEIA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QAtgcyQva0c/nJRwnglQwR85SLPIVgTWWNI3vMxPA0KuihbeMjN82tepasg8Q8PYQwehvBQsE58r4xN/zam9JtLi8vNHCN4n+T1G0T8ZAp3z+A1fOC2RqtntmOAvwbj2D8bht2PCgCYE91cyL1WFk5ATJTq81ZcTozbnkno+0nY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OVlArfF9; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BH62PE8p"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41C9xBFj104133;
-	Mon, 12 Feb 2024 03:59:11 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707731951;
-	bh=Lu7GL6S01MxpK81dYodty5LRUmjoXKMg1Hhdy/4mUIk=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=BH62PE8pPmFMMNoGHqtZZja1RRUGiAXsJ7dwV72DXK3UyshMfwHy9dd00VtieI8j8
-	 9u3k1tfPZSYbY1THtvxyQmZQa1b3j1lJ2zLWDsTbnXiX0dUGivBLm0Xyt4CjNY1onf
-	 h11TY6AT4BseJNZLknmhIUychv3ha8uMiYR+FpEE=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41C9xBSZ026780
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 12 Feb 2024 03:59:11 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 12
- Feb 2024 03:59:11 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 12 Feb 2024 03:59:10 -0600
-Received: from localhost (a0498981-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.68.216])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41C9xA6u056550;
-	Mon, 12 Feb 2024 03:59:10 -0600
-From: Bhavya Kapoor <b-kapoor@ti.com>
-To: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <b-kapoor@ti.com>
-Subject: [PATCH 3/4] arm64: dts: ti: k3-j721s2-common-proc-board: Remove Pinmux for CTS and RTS in wkup_uart0
-Date: Mon, 12 Feb 2024 15:29:04 +0530
-Message-ID: <20240212095905.1057298-4-b-kapoor@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240212095905.1057298-1-b-kapoor@ti.com>
-References: <20240212095905.1057298-1-b-kapoor@ti.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OVlArfF9"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dc6e080c1f0so2579538276.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 01:59:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707731997; x=1708336797; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8EUAKADpIIShD8988Fj+XlVtzUoRcV54qiXkH80IZQA=;
+        b=OVlArfF9CHwHv5SJHsClLdyDfcg0xLHzPqRo6PpFxUg1EiBi1DWuo19SPZwC/XSdhJ
+         Ni9Cf94/iAZtTS24RvCGgBoFVITXySBO/g/rp1ttRMGkPzRzet7omX1oygYxcbQj0uUr
+         vSVQRCcnmzHf81A6vpFRd5CQDEmqX7ry0fNJx7WTzPR2iN87nXthqBHGbBlo7R2/rzO2
+         SHCBhemZ+FfAHUyiZyXmvKQqo3n1w9/hJ+AJaeDUcux5Km72DBERxFgjMNtVa2Lke1wl
+         Uq4PsASbfEBakMxprpB0HoazNv5GNsQMu4P2SvbMf0IOZicTFkRgZ2ghhIGUH3/0U1LF
+         9LXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707731997; x=1708336797;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8EUAKADpIIShD8988Fj+XlVtzUoRcV54qiXkH80IZQA=;
+        b=TmPLq/vFD88NOx2IB5hAa/3hftenJ9YFUdDWjORNDmaaSBelX/0guQ2B4lFBnj3ZQ0
+         gjtG+A427W7sxN5eU5muMLa42jEhI0tecga0qRtLe38+KjMwB+iI1gngKg4TrwUVDwkb
+         fAq5UkJgdYHm5zc1+41a2Z0GKKx3CQ4gzNunAFjm9wntmFVO2VnXAEOxWUqCtqjYOwcf
+         HKj+1zExNuEJTEtyv7cuLrkz5ebJ3/m7q0VdvnTucz+ncmejmpB6cW9pxnrDvGW/2KTL
+         JUJ0B4ZERjbcnqNSTcuQWsDUHyK9BTJiiXmF8bqikd+fpVJ4znHBBBPsqieH/avPUQVe
+         0+6A==
+X-Forwarded-Encrypted: i=1; AJvYcCVewx6rF0lmUBogRalYmUeD8bI5FxUZG/R+q64fAsqh/X+Tw0JblWAaqt7V0H8NcmDj3GMbOVHYUNXfstNe9pEAtmBoX6a84hMZwh9U
+X-Gm-Message-State: AOJu0Yzb2BMXKDN9cw5bJchVoW1FN9KittgDR0kB+Kkmdla03YC4E9S0
+	8/2/1qZ91+paOliv+5CGxDJ7K1LRZuAbLM/roqt8bn/9DQrHepuhEy+9kBKRwFDp0OhQU6CZjQr
+	A9BMqoLWl9Ea+C6Ebr0bEGu+r4CR+QziHbXhtNA==
+X-Google-Smtp-Source: AGHT+IEkE9Hg5jeZfD1Tk+QDSD6mWDX7W383XCB8OM5NDOZ5+ZDEaDz5sVK+FINKgigTa1URH3madrlxVrJc3kmUHhc=
+X-Received: by 2002:a25:2943:0:b0:dc6:d313:62dd with SMTP id
+ p64-20020a252943000000b00dc6d31362ddmr5102056ybp.61.1707731997192; Mon, 12
+ Feb 2024 01:59:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20240208095920.8035-1-brgl@bgdev.pl> <20240208095920.8035-24-brgl@bgdev.pl>
+ <20240210053730.GA187163@rigel> <CAMRc=Mcq2Obf58=iLHpm5B2_KkHCqRevFWupbBuKmNs_BV6i2g@mail.gmail.com>
+ <20240212095722.GB388487@rigel>
+In-Reply-To: <20240212095722.GB388487@rigel>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Mon, 12 Feb 2024 10:59:46 +0100
+Message-ID: <CACMJSesy79vtjcywfZU8=irZF9DR535BjTGXahE0xzyHhC5fDg@mail.gmail.com>
+Subject: Re: [PATCH v3 23/24] gpio: remove the RW semaphore from the GPIO device
+To: Kent Gibson <warthog618@gmail.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij <linus.walleij@linaro.org>, 
+	Alex Elder <elder@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	"Paul E . McKenney" <paulmck@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Wolfram Sang <wsa@the-dreams.de>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Only Tx and Rx Signal lines for wkup_uart0 are brought out on
-the Common Proc Board through SoM, but CTS and RTS signal lines
-are not brought on the board. Thus, remove pinmux for CTS and RTS
-signal lines for wkup_uart0 in J721S2.
+On Mon, 12 Feb 2024 at 10:57, Kent Gibson <warthog618@gmail.com> wrote:
+>
+> On Mon, Feb 12, 2024 at 10:53:07AM +0100, Bartosz Golaszewski wrote:
+> > On Sat, Feb 10, 2024 at 6:37=E2=80=AFAM Kent Gibson <warthog618@gmail.c=
+om> wrote:
+> > >
+> > > On Thu, Feb 08, 2024 at 10:59:19AM +0100, Bartosz Golaszewski wrote:
+> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > >
+> > > > With all accesses to gdev->chip being protected with SRCU, we can n=
+ow
+> > > > remove the RW-semaphore specific to the character device which
+> > > > fullfilled the same role up to this point.
+> > > >
+> > >
+> > > fulfilled
+> > >
+> > > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > > > ---
+> > > >  drivers/gpio/gpiolib-cdev.c | 1 -
+> > > >  drivers/gpio/gpiolib.c      | 4 ----
+> > > >  drivers/gpio/gpiolib.h      | 5 -----
+> > > >  3 files changed, 10 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cde=
+v.c
+> > > > index ccdeed013f6b..9323b357df43 100644
+> > > > --- a/drivers/gpio/gpiolib-cdev.c
+> > > > +++ b/drivers/gpio/gpiolib-cdev.c
+> > > > @@ -24,7 +24,6 @@
+> > > >  #include <linux/pinctrl/consumer.h>
+> > > >  #include <linux/poll.h>
+> > > >  #include <linux/rbtree.h>
+> > > > -#include <linux/rwsem.h>
+> > > >  #include <linux/seq_file.h>
+> > > >  #include <linux/spinlock.h>
+> > > >  #include <linux/timekeeping.h>
+> > >
+> > > Shouldn't this be part of the rwsem -> srcu switch in the previous
+> > > patch?
+> > >
+> >
+> > That other patch was already huge. I figured this should be separate.
+> >
+>
+> To be clear, I mean just this header removal, not the whole patch.
+>
+> Cheers,
+> Kent.
 
-Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
----
- arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts | 2 --
- 1 file changed, 2 deletions(-)
+Ah, then it makes sense indeed. I'll fix it in tree.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
-index 361365bb5523..6371cb1c1fe7 100644
---- a/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
-@@ -190,8 +190,6 @@ J721S2_IOPAD(0x038, PIN_OUTPUT, 0) /* (AB28) MCASP0_ACLKX.MCAN5_TX */
- &wkup_pmx2 {
- 	wkup_uart0_pins_default: wkup-uart0-default-pins {
- 		pinctrl-single,pins = <
--			J721S2_WKUP_IOPAD(0x070, PIN_INPUT, 0) /* (E25) WKUP_GPIO0_6.WKUP_UART0_CTSn */
--			J721S2_WKUP_IOPAD(0x074, PIN_OUTPUT, 0) /* (F28) WKUP_GPIO0_7.WKUP_UART0_RTSn */
- 			J721S2_WKUP_IOPAD(0x048, PIN_INPUT, 0) /* (D28) WKUP_UART0_RXD */
- 			J721S2_WKUP_IOPAD(0x04c, PIN_OUTPUT, 0) /* (D27) WKUP_UART0_TXD */
- 		>;
--- 
-2.34.1
-
+Bart
