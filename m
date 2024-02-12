@@ -1,67 +1,60 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0317420DCF
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 11:06:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA5228385
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 11:06:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707735969; cv=none; b=mRsA2oS6UIksYrRkpL/ViJoK68PiGGPwth8OzxS2Rfa0WBVI1xqht/+8vNFUUSyEQ1GF89Aze5NP2CiQWO+YG59OI0nF9BoPlQW9qRzf3JKSgRDFmWcO8Ms3cmHLmTft+tOsEIEjrISwzwXHSc7PaPKfbyjF6YIRRcLPKM35zys=
+	t=1707736009; cv=none; b=rR+a3ZPlvHeTgS6D7JcppVco8rpdQOjIyYRexreHDFIn/gfgEklMT05LubheotYYRPwiZMeDz5Dzs61PVdpsIEKWi54YKNfIp4MfnnJRtniTeITs0zzZJ4eRCyvZSNc2Wu+IcIZ1hyQmY8Ej6WJd9rSz+knG7yb+eIRApOodHIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707735969; c=relaxed/simple;
-	bh=ZjxY7ETmwm66S7SvljgpwaT1ozLIcQV9nIcf2Hib5b0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=MxDa84dJZwRKE8htiuKeADzhrr0Fnwl2B0G60CUbbX2J8mCQT6gkWZCWFu7EOeSP+s2hhQd+fyJ1NWc8mWrJ63dFE3zF8poYSPS6Ac4JNJhbmVUDL/c+c1n0PyLIMamTdqQWcLmG0hjAcGhniWUxvLkSGqjnTMWzkzTXRQFQhB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q8fBrNG6; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707736009; c=relaxed/simple;
+	bh=RrqQebk8MEWaWRfz6Ui/uTkNxZIWrCN8v4vHa4PXNc0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nxQs4kcWZXiry6mk7Ln8HefbodxU38UQ0AzZvOFVSF4Uq+ZFn5V2VrqdH4VPyRqkxfpPrScYxzxkoPsFFAc+r1sw7UTKsh0vQUNJ+kMMx64xIA/OSstogRiH1nKUcEZ8DxIJV0RUBKm6DZTKOK+2eD6HUYM0TXlXPQGeFhBsOjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QOV2p0Cn; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q8fBrNG6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707735964;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=7FqoqAesIGcQo2dISuvlgJNiDoSjW2RZdVRhvlHXipo=;
-	b=Q8fBrNG6ZZNq6NzzKdmF6bwfLBN+FnTZrIpY7/R7lI80myirZWjGC+aRlYX4e5vinNaPlN
-	yiyWeHRqv8QARz+nlYcFi9SLm9BQiTnOPj5zxdT87VhFf8DtYwYlZgdWljBzOQD/sIO4qU
-	Qq8TQ9LnhFFiY+4hpm4WprDbq5ggUss=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-369-4-dOAl2bOiekqcktNJRDZg-1; Mon, 12 Feb 2024 06:06:03 -0500
-X-MC-Unique: 4-dOAl2bOiekqcktNJRDZg-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-410c65efe5bso5639005e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 03:06:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QOV2p0Cn"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-55a179f5fa1so4016881a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 03:06:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707736006; x=1708340806; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=O3wABuey571Xqv0wrWgtmt5tg5JObQURPrUQDZjev18=;
+        b=QOV2p0CnO+8+bw5E4CCKmRtSzVSr115ZPUu0LaYszcuuvHtiEmrtSR+s/npDq3DxwN
+         jftVQLr2rdZKV5/fWHa25sNuTMbC/0t0dHWIm/D3R+7AGJ0gu7U0nzRqWUFhAk4mKM+x
+         GTsDZZ3T3j+szEAqcwF3G++exdVjZ3FKCpKXNKCjUjJEfCMaqmHC3OMUlucgZJA/xbID
+         aA4J7+4aYNN/xFIDFQY/gUmFwJL6OwBhnmYeBkuc4ToioeuzOtyH8qDk9aHim30uM5vo
+         TLcWhlcd24kSEv+UIkjObmSUGgb6Xi/Ye7xH3c23IRQ0K9y0TIP6BEPOuFM6IqLkSKvg
+         08cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707735962; x=1708340762;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:from:content-language:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=7FqoqAesIGcQo2dISuvlgJNiDoSjW2RZdVRhvlHXipo=;
-        b=cXgNryI9JXxJGjW5hJ1K7AFy269nhxbrC4DyK+pbCWNwLIqj2+ARVkvnI5xBiLg1n9
-         9AyjzHCeCD7kgVGdtIPitxc79HyVAkzg6aQ5NuMgbmMDVKC697VMIXED3CmHcDFAKR1w
-         ddNoyTzSjJadhlcVK4SJfw79TRWJQ2EsCr2rJRsg7UzM0hiw/T6W2D603E519sjjlRIk
-         2VJ0WbSu+D6XExnGrdy/h3tEn6+I98/8fSdvuNR080cRYfEyqoWNQJW1nzWgFvuOn6y5
-         t7wiThzROP2jgRQT3wp1zFuf8BhTmzaseaGNm4BBcQQgNfJjsoS/9xbe+WrRtQchOlrD
-         XogA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBqQyhrV1snOET15sEqNE9RH5PPPaIwR0NILyGjCB3yFx57rn5pzkP1UFpaurOJIKwImQ8mDbr2EetWYXzcIMTDIvuGTSC5DTqJPIB
-X-Gm-Message-State: AOJu0YzqQCJYEL2lzYzQG7oAvpsfSpMTsI5ysw2ZrW/HCEdv//tnRSOG
-	1T2Z4Kmu7C6xD5rEwBucIIH56vK+lJIYUCO8x/ScSbCLFTVJtvedHIrizMi9s0Uylnc6HTZXWhh
-	PptMRIyHHAu2wC8Zets/ss7/MHxhYLwFmOjb+0xwq+k3VcetYHRWNZwhlFC/Skw==
-X-Received: by 2002:a05:600c:4f51:b0:40f:b164:a415 with SMTP id m17-20020a05600c4f5100b0040fb164a415mr4095909wmq.25.1707735962326;
-        Mon, 12 Feb 2024 03:06:02 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEb3whbUDNAx+XiP6uqByXUY70xbuTJym3UumyKe/MA+jY3HBbtBWUPQh3CjaxoVhB4AEqTCg==
-X-Received: by 2002:a05:600c:4f51:b0:40f:b164:a415 with SMTP id m17-20020a05600c4f5100b0040fb164a415mr4095877wmq.25.1707735961864;
-        Mon, 12 Feb 2024 03:06:01 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW/3mB3OIvvP8bX+P7e7eWVj5uYZGyVMgw/IzavGZ+D1i8US4/QvC5WKS/MSTgoUaukNqqv2li04fZJd55hE3TbJvx3qpBC9gw/QggqAKcSCfrWoGp+jPQ//8YUkdI5QvwGN3qFueK3H1vqd0sWfU1EXvf2JGivZCpPGqHQ8RN+U5QMpbHLLpq0OWO/VtISOR/8S4GJVGheRarJ7jUYpcFfpUN4iHzMNKH0SJoHPGpus2zGsjSymUPgXSzXrIN0JrmO6roTnKlDGhONqEEcdAeLOXdtW3pqxeaD1wdIYRWdi7/2aWmCSPC3Xnj3dWUigFRQSss0tU1Y3zhO+nQSym8eWbCoKj8L6Fo6BTQf+dSi8WYSNUlNyOaLjd1oXEzmcavQde1w/MXJ4iWaG+WDUSd7P9w++O3ASeE85082QYrqLiY7/9G0TTP8W5FlBxwzIdlkXLnCPJXGcGtFHYCPY0qLiZ2BmHNdsV9DnvitoK7kcHzpsTGRpgtN+3lu0Fj4KH5aneB/Wj25155cZWA3kNMOQ3Y4+Z69uyXDf5ZTDmy18EYBM3BC1NaSKNSQ0uRv97g1GpiLrYp9GeDopNG8v2W8D2XtirlxAe42+YZS/D0tLgbr00+j1XibBmjx3QdGHJyOHkMvYHwv4i2HrZB8MdLiLlSIU3XWRPMQ/bgIE6KVgnt6Staya3pDnbyl+GW6mf5DkAvoEsPPED0dfIeyZEDDRwgt9aWZrfWy/19wL1//M1DnMfQ=
-Received: from ?IPV6:2003:cb:c730:2200:7229:83b1:524e:283a? (p200300cbc7302200722983b1524e283a.dip0.t-ipconnect.de. [2003:cb:c730:2200:7229:83b1:524e:283a])
-        by smtp.gmail.com with ESMTPSA id r2-20020a056000014200b0033b4acb999dsm6436120wrx.98.2024.02.12.03.06.00
+        d=1e100.net; s=20230601; t=1707736006; x=1708340806;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O3wABuey571Xqv0wrWgtmt5tg5JObQURPrUQDZjev18=;
+        b=UNQgsbvaX0+8hSyjDL83z28JoeBF3uYHMIUeUTb8vNATiuLaieUzbMEsCqNT5LypUT
+         UVauY/diOVmI+n40RGi36jc9WccGxIS1a59d/O6zywSfHdkTIgGBQ2q9/xPgmm8aTVO/
+         VBlz08S2qyzP7oZ4sNXzUxMfLEVp53uArnhFX5u5T3OinzvLjyaSmc5Eb0cSP1K0LY/G
+         7mQWufty48QiXdSL7fyijE1p2tQ7/pur92MP+FAub+AEHLziOh7801Gs8m0wCzoNW3K1
+         piC7wYpBdlnTOpROjipW9Zr7FR2CI0pbiG/ZkQQmJ0URNAP15bIGI5nVxLQ32ctnmvCG
+         ZPAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW9vsnP5ZEL7bAsq8KdtULHZ1bizl3exkbfiNZ6X9Yb5RMw+ZrSvTVDaVYNRQZcE0XtXlpJebRQONTQ00jDDEHPTyJyDX7sbMT5rQ4T
+X-Gm-Message-State: AOJu0YzLRQJRQmQFgsgcuBaoKNTPBalTCppiw04DqEoLR8Y9abSdVvfO
+	Zeo/QbNcVNw5wYkrXIKB679ySH3nANi5o7TXzyrFTqAYH2QaffHPrs3Wv9X4zBI=
+X-Google-Smtp-Source: AGHT+IFitwxlEjO3e46UA4wpoMuf6HZKFPjuyQD2vH7qXeoxc9Zr0CQrSF2s4Dz2EjtumSRas7IVYA==
+X-Received: by 2002:a17:906:6893:b0:a3c:1046:93dd with SMTP id n19-20020a170906689300b00a3c104693ddmr4778168ejr.31.1707736005589;
+        Mon, 12 Feb 2024 03:06:45 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW8WXIaVyguxwn+RNd8A1CPmAIw6No7r+3Kp5tXRghuATjIa7MQ4kMnBP70mck5WXGYrUV0wliStMR3zhcWwIW0ntMCeYAwSLcmRaSKuAAc5OjqtzJ53YyYwn81z0tfHO1xsglL4qR2kqPCcA0uyJ9nTNTcsidt9HzFNcF40OTyhWW453iUjO9fjGjOVBh6k/0hePAqCWGY3fhaqVLZbzsCEXVft5uMqrnVl7KKFAzWwEuKfh/vcxHNGeBCoZRzJgFrxsp/4U4qxubaYRc4+1k8zDqOr6ueDxWK
+Received: from [192.168.192.135] (037008245233.garwolin.vectranet.pl. [37.8.245.233])
+        by smtp.gmail.com with ESMTPSA id d18-20020a17090648d200b00a3ccbeece96sm97404ejt.33.2024.02.12.03.06.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Feb 2024 03:06:01 -0800 (PST)
-Message-ID: <66ca6c58-1983-494f-b920-140be736f1d8@redhat.com>
-Date: Mon, 12 Feb 2024 12:05:59 +0100
+        Mon, 12 Feb 2024 03:06:45 -0800 (PST)
+Message-ID: <0cb3a2a7-6ced-4f41-8632-6f4214a48956@linaro.org>
+Date: Mon, 12 Feb 2024 12:06:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,247 +62,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 09/10] mm/mmu_gather: improve cond_resched() handling
- with large folios and expensive page freeing
+Subject: Re: [PATCH 1/2] arm64: dts: qcom: sc8280xp-crd: Add PMIC die-temp
+ vadc channels
 Content-Language: en-US
-From: David Hildenbrand <david@redhat.com>
-To: Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Yin Fengwei <fengwei.yin@intel.com>, Michal Hocko <mhocko@suse.com>,
- Will Deacon <will@kernel.org>, "Aneesh Kumar K.V"
- <aneesh.kumar@linux.ibm.com>, Nick Piggin <npiggin@gmail.com>,
- Peter Zijlstra <peterz@infradead.org>, Michael Ellerman
- <mpe@ellerman.id.au>, Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
- linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org
-References: <20240209221509.585251-1-david@redhat.com>
- <20240209221509.585251-10-david@redhat.com>
- <f1578e92-4de0-4718-bf79-ec29e9a19fe0@arm.com>
- <6c66f7ca-4b14-4bbb-bf06-e81b3481b03f@redhat.com>
- <590946ad-a538-4c99-947f-93455c2d96c6@arm.com>
- <e6774e16-90c0-4fba-9b9c-98de803fc920@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <e6774e16-90c0-4fba-9b9c-98de803fc920@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+To: quic_bjorande@quicinc.com, Bjorn Andersson <andersson@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Johan Hovold <johan@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240210-sc8280xp-pmic-thermal-v1-0-a1c215a17d10@quicinc.com>
+ <20240210-sc8280xp-pmic-thermal-v1-1-a1c215a17d10@quicinc.com>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240210-sc8280xp-pmic-thermal-v1-1-a1c215a17d10@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 12.02.24 11:56, David Hildenbrand wrote:
-> On 12.02.24 11:32, Ryan Roberts wrote:
->> On 12/02/2024 10:11, David Hildenbrand wrote:
->>> Hi Ryan,
->>>
->>>>> -static void tlb_batch_pages_flush(struct mmu_gather *tlb)
->>>>> +static void __tlb_batch_free_encoded_pages(struct mmu_gather_batch *batch)
->>>>>     {
->>>>> -    struct mmu_gather_batch *batch;
->>>>> -
->>>>> -    for (batch = &tlb->local; batch && batch->nr; batch = batch->next) {
->>>>> -        struct encoded_page **pages = batch->encoded_pages;
->>>>> +    struct encoded_page **pages = batch->encoded_pages;
->>>>> +    unsigned int nr, nr_pages;
->>>>>     +    /*
->>>>> +     * We might end up freeing a lot of pages. Reschedule on a regular
->>>>> +     * basis to avoid soft lockups in configurations without full
->>>>> +     * preemption enabled. The magic number of 512 folios seems to work.
->>>>> +     */
->>>>> +    if (!page_poisoning_enabled_static() && !want_init_on_free()) {
->>>>
->>>> Is the performance win really worth 2 separate implementations keyed off this?
->>>> It seems a bit fragile, in case any other operations get added to free which are
->>>> proportional to size in future. Why not just always do the conservative version?
->>>
->>> I really don't want to iterate over all entries on the "sane" common case. We
->>> already do that two times:
->>>
->>> a) free_pages_and_swap_cache()
->>>
->>> b) release_pages()
->>>
->>> Only the latter really is required, and I'm planning on removing the one in (a)
->>> to move it into (b) as well.
->>>
->>> So I keep it separate to keep any unnecessary overhead to the setups that are
->>> already terribly slow.
->>>
->>> No need to iterate a page full of entries if it can be easily avoided.
->>> Especially, no need to degrade the common order-0 case.
->>
->> Yeah, I understand all that. But given this is all coming from an array, (so
->> easy to prefetch?) and will presumably all fit in the cache for the common case,
->> at least, so its hot for (a) and (b), does separating this out really make a
->> measurable performance difference? If yes then absolutely this optimizaiton
->> makes sense. But if not, I think its a bit questionable.
+On 11.02.2024 05:41, Bjorn Andersson via B4 Relay wrote:
+> From: Bjorn Andersson <quic_bjorande@quicinc.com>
 > 
-> I primarily added it because
+> The die-temp vadc channels are not defined for the CRD, but describing
+> them directly would directly duplicate the definition from the Lenovo
+> Thinkpad X13s DeviceTree.
 > 
-> (a) we learned that each cycle counts during mmap() just like it does
-> during fork().
-> 
-> (b) Linus was similarly concerned about optimizing out another batching
-> walk in c47454823bd4 ("mm: mmu_gather: allow more than one batch of
-> delayed rmaps"):
-> 
-> "it needs to walk that array of pages while still holding the page table
-> lock, and our mmu_gather infrastructure allows for batching quite a lot
-> of pages.  We may have thousands on pages queued up for freeing, and we
-> wanted to walk only the last batch if we then added a dirty page to the
-> queue."
-> 
-> So if it matters enough for reducing the time we hold the page table
-> lock, it surely adds "some" overhead in general.
-> 
-> 
->>
->> You're the boss though, so if your experience tells you this is neccessary, then
->> I'm ok with that.
-> 
-> I did not do any measurements myself, I just did that intuitively as
-> above. After all, it's all pretty straight forward (keeping the existing
-> logic, we need a new one either way) and not that much code.
-> 
-> So unless there are strong opinions, I'd just leave the common case as
-> it was, and the odd case be special.
+> The sc8280xp-pmics file describes the common configuration of PMK8280,
+> two PMC8280, PMC8280C, and PMR735a. As such, even though these vadc
+> channels makes references across PMICs, it's suitable to define them in
+> the shared file.
 
-I think we can just reduce the code duplication easily:
+For that reason, you can also keep the VADC enabled by default since
+it's a constant element across designs utilizing this set of PMICs
 
-diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
-index d175c0f1e2c8..99b3e9408aa0 100644
---- a/mm/mmu_gather.c
-+++ b/mm/mmu_gather.c
-@@ -91,18 +91,21 @@ void tlb_flush_rmaps(struct mmu_gather *tlb, struct vm_area_struct *vma)
-  }
-  #endif
-  
--static void tlb_batch_pages_flush(struct mmu_gather *tlb)
--{
--	struct mmu_gather_batch *batch;
-+/*
-+ * We might end up freeing a lot of pages. Reschedule on a regular
-+ * basis to avoid soft lockups in configurations without full
-+ * preemption enabled. The magic number of 512 folios seems to work.
-+ */
-+#define MAX_NR_FOLIOS_PER_FREE		512
-  
--	for (batch = &tlb->local; batch && batch->nr; batch = batch->next) {
--		struct encoded_page **pages = batch->encoded_pages;
-+static void __tlb_batch_free_encoded_pages(struct mmu_gather_batch *batch)
-+{
-+	struct encoded_page **pages = batch->encoded_pages;
-+	unsigned int nr, nr_pages;
-  
--		while (batch->nr) {
--			/*
--			 * limit free batch count when PAGE_SIZE > 4K
--			 */
--			unsigned int nr = min(512U, batch->nr);
-+	while (batch->nr) {
-+		if (!page_poisoning_enabled_static() && !want_init_on_free()) {
-+			nr = min(MAX_NR_FOLIOS_PER_FREE, batch->nr);
-  
-  			/*
-  			 * Make sure we cover page + nr_pages, and don't leave
-@@ -111,14 +114,39 @@ static void tlb_batch_pages_flush(struct mmu_gather *tlb)
-  			if (unlikely(encoded_page_flags(pages[nr - 1]) &
-  				     ENCODED_PAGE_BIT_NR_PAGES_NEXT))
-  				nr++;
-+		} else {
-+			/*
-+			 * With page poisoning and init_on_free, the time it
-+			 * takes to free memory grows proportionally with the
-+			 * actual memory size. Therefore, limit based on the
-+			 * actual memory size and not the number of involved
-+			 * folios.
-+			 */
-+			for (nr = 0, nr_pages = 0;
-+			     nr < batch->nr && nr_pages < MAX_NR_FOLIOS_PER_FREE;
-+			     nr++) {
-+				if (unlikely(encoded_page_flags(pages[nr]) &
-+					     ENCODED_PAGE_BIT_NR_PAGES_NEXT))
-+					nr_pages += encoded_nr_pages(pages[++nr]);
-+				else
-+					nr_pages++;
-+			}
-+		}
-  
--			free_pages_and_swap_cache(pages, nr);
--			pages += nr;
--			batch->nr -= nr;
-+		free_pages_and_swap_cache(pages, nr);
-+		pages += nr;
-+		batch->nr -= nr;
-  
--			cond_resched();
--		}
-+		cond_resched();
-  	}
-+}
-+
-+static void tlb_batch_pages_flush(struct mmu_gather *tlb)
-+{
-+	struct mmu_gather_batch *batch;
-+
-+	for (batch = &tlb->local; batch && batch->nr; batch = batch->next)
-+		__tlb_batch_free_encoded_pages(batch);
-  	tlb->active = &tlb->local;
-  }
-  
--- 
-2.43.0
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-
--- 
-Cheers,
-
-David / dhildenb
-
+Konrad
