@@ -1,146 +1,154 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4E279C0;
-	Mon, 12 Feb 2024 07:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE7710A3E
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 07:59:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707724740; cv=none; b=nbQvSDeFPhiMPKTyDdraoygjkcAW7HBkXCVz0gSUVChnA9+RjFhko0RTCAN/9zAcktQJkOddZm3mMyeSy1zWfaxYqWSizn+tWV6HihnmodgDzSu8jgcDrXDfN1L2q+gzg2VRK7PG6zaYoATkAY80K76ovYIFZ9AZGrZ9e+YRGw4=
+	t=1707724790; cv=none; b=S5ZLmarzvlSI3mdNNBsatpz9/YRYIbRejbapkL3dsEZ848ZeKNpExMzfyg4seHXOdXLUYFAyhK+gNmaf/Q/jRutuUShDjkvjRQgq2WoVgoctzRqtYGtTXdDRJEhNCkOXZhGp//EP9R8e09e1rTk/Mj+kPIwTKzUBoeXsx3P/Rb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707724740; c=relaxed/simple;
-	bh=+4UKT5lMeLqBN6tkRMqWTiLZXcD5qaeXmDujbrzfJ+U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Ibm/dVaX3qBOmf3BO4u7cVBw8pqxb5AdLijm9ZUD8u5QSNvNqY1JMP5nNAN5mKG3s0hAoPLHlHaUrfQsJsEZzU/H7Zm5nD/Z0LMvWuNeN+hodB67EZtpyRey95mXNQ7ed+FsgWBfxqvTUpm+fZQgJbrxJwEtmnNmj8rKB0cg5Oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Gmewb0m7; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1707724790; c=relaxed/simple;
+	bh=S2Uqhyu2AZbHS9NIPD1aKC5+EfAw/ekjc23uBrJPgiM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dpG4+UmL2qcfFQfpSoZZ3fMgZAGNYhmD/rM1LGKnqAR/NoRwV1L4bNKh5VFVBz86wjWZ/MrUuFHOfOKGyZP4zl6rOeNrxfrWAiqzblSEdkCl70KnRNcqKuwrt3HR+bRWTIQmfWEpEt2LLl0gwsZub0wA1770U/mYfSVKvVAyWAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JllIGDov; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Gmewb0m7"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41C5ixuY008599;
-	Mon, 12 Feb 2024 07:58:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=ZSOH1PNXfKcnxMduQOe97NhLQ6gWraBZNi5A2GI1zrg=; b=Gm
-	ewb0m7TnoqQg1weQKx3rmrFinaLGHVngcZ7tVF5oBruuWsoCNKtN1KhjGx/eykG1
-	9kYeAgZqkDprk/nM+xBiGAgbnwHsDszyWppicxn+M1p1jdCQ0VsnUd9975hR6jXn
-	eSH7atGT45+43Njy6Q/HxiJwg6E7Wl3J/rjGh8EKcBAoFlVEzDZJkRp9F/s7bW8p
-	4JkaW/Rwtx1iYew/JCu1W4YybxZOcEgYG6iKlScxWgul08LmEIa7REyLjHvq4kIo
-	pf0P5nYKsu1hxAOnuyefGTzWvNN1ziHAMv/4362wNJSeEc5Ub82a/SJRrMTxm6Pf
-	eUEJx14zDcROktVrZvFw==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w62n02qqx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Feb 2024 07:58:33 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41C7wWRg005655
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Feb 2024 07:58:32 GMT
-Received: from [10.110.93.252] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Sun, 11 Feb
- 2024 23:58:31 -0800
-Message-ID: <7abc0c1f-c223-c069-7152-418c42aaaecf@quicinc.com>
-Date: Sun, 11 Feb 2024 23:58:31 -0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JllIGDov"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-410e8412b54so2346225e9.3
+        for <linux-kernel@vger.kernel.org>; Sun, 11 Feb 2024 23:59:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707724787; x=1708329587; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rFvdRy8kkXcwjev+NaWwc97EXhX6CAgZBmzJo32Ct9A=;
+        b=JllIGDovvRNoispunlVlvPvkiN+hnrDGkuRl1L104oclNXQSclLpkDSdFLFaluRdL7
+         /KnjKtuUqb4Hviy+OFwH5AcoMVWZ5rzuDPk/lQ9iMBib0tIIoMONAk0qwskqiRL2BzTu
+         6vQVDiA49XVaieUhcNGld1XLMFibF5GjIzOycOVlWW0dNmqsbPEu+Hv1NLGoAYmdkjax
+         cDhmaX3tcsds3JPgGI/KPcovGsm3W6qj9hiVJVdJFzSriYMwmykN0ht/d0lyx7izdZM0
+         FLln6x5LTz/dH/n1YLcn5QuH/r62Rt4nDQUrMIOTDBdeJRS6JWsUfbkSGgrzrFk71NWj
+         gEAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707724787; x=1708329587;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rFvdRy8kkXcwjev+NaWwc97EXhX6CAgZBmzJo32Ct9A=;
+        b=nmZVZoO1aIVyKkimTSq5oqeElxqVevrHSxHaCqlMN9jSkFP4fB4EaCD4IOYHJQxNww
+         OKe799d9aPDR/E0gOdkOmX34IqFnDZASENiroJ+O9L0sK72MsHVavX18D2Och7uFhTHc
+         zAXfysZo37lkSglEDG9jwa0jqQymc/W9X+sTWUIOGXJyMsVtqn81bvXski63axNvjS+E
+         YobYgKqAw/ip1e5ZvPN6n5o7/0rLFXboS4MYrfsWCPwIfh1uhQSOTaGTRwG6jDvUu3++
+         UMjY3OKZVxUjY4CjVh4tIb49w9EJKiksSunJ0Mf20M9sDUoPnTGo5uNfvojLX5QL3I7F
+         uNaw==
+X-Gm-Message-State: AOJu0YxxqxJU4fpXOnW6Yz02mcHM2W+bm5AZM8S+pfwpS+0RiIBIyfdo
+	PXijMcF8qaLMSQLtNwhzmAj4cFs0aFxcaoHLQM7nACPkHywkiojfoIdtTFzCrBc=
+X-Google-Smtp-Source: AGHT+IHkBmADWXy0XjDn8+WWf5skCrskTR6akY4ui31c/2B8oAzXzgBlezeFaFPBQq3X9EgwrytmcQ==
+X-Received: by 2002:a05:600c:474d:b0:40f:e40:b53d with SMTP id w13-20020a05600c474d00b0040f0e40b53dmr4354424wmo.1.1707724787175;
+        Sun, 11 Feb 2024 23:59:47 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXQeLKOtb4h7CMVYe55f+p3T0oAu5nPFqhmpU+MBCr2NfxZfKC5pyAYalum/4wPJO/+KKYitfIK3zrMBeJlv7jCPfNyrT6L7cEALowOMAPAPWkLzycYmZyUKRoW5LdVMGCYBYfd7W8n4JcPKWAq6V+orwy00lBtP1VMi1xekfLz5SKSLzSkMiraefqtp3I/0dYfKGmy0U0THjU7f5fwZRQr2bq0fjV3HBWf4TE2aHCvCaTCDjucJpmT/5VRU48DnOY/VU94K1fOcMIY65lPWhnF9ifDu/jt+nDqWFEhjD/Nr+CGZ+y13znGc+ggZWrYeXaXo6U7Bv5GaSCKZo0EgcQg/AG/yWmvGoJCSN7FUxg=
+Received: from [192.168.1.20] ([178.197.223.6])
+        by smtp.gmail.com with ESMTPSA id jp25-20020a05600c559900b00410c7912c6esm2886372wmb.14.2024.02.11.23.59.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 11 Feb 2024 23:59:46 -0800 (PST)
+Message-ID: <954c5cd6-e254-4c81-bfbd-417c6e0a0c24@linaro.org>
+Date: Mon, 12 Feb 2024 08:59:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v14 20/53] ASoC: Add SOC USB APIs for adding an USB
- backend
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] MAINTAINERS: Add an entry for AF8133J driver
 Content-Language: en-US
-To: Takashi Iwai <tiwai@suse.de>
-CC: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
-        <perex@perex.cz>, <conor+dt@kernel.org>, <corbet@lwn.net>,
-        <lgirdwood@gmail.com>, <andersson@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <gregkh@linuxfoundation.org>,
-        <Thinh.Nguyen@synopsys.com>, <broonie@kernel.org>,
-        <bgoswami@quicinc.com>, <tiwai@suse.com>, <robh+dt@kernel.org>,
-        <konrad.dybcio@linaro.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-sound@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <alsa-devel@alsa-project.org>
-References: <20240208231406.27397-1-quic_wcheng@quicinc.com>
- <20240208231406.27397-21-quic_wcheng@quicinc.com>
- <87r0hl29ha.wl-tiwai@suse.de>
- <b007a78c-b8fb-83bc-3be6-963708182cee@quicinc.com>
- <875xywzqpp.wl-tiwai@suse.de>
-From: Wesley Cheng <quic_wcheng@quicinc.com>
-In-Reply-To: <875xywzqpp.wl-tiwai@suse.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: W9h0Nhn7smWBWqODCEcxtLDWOGGyIb2g
-X-Proofpoint-ORIG-GUID: W9h0Nhn7smWBWqODCEcxtLDWOGGyIb2g
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-12_05,2024-02-08_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 malwarescore=0 impostorscore=0 bulkscore=0
- mlxlogscore=929 phishscore=0 priorityscore=1501 mlxscore=0 suspectscore=0
- spamscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402120060
+To: =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megi@xff.cz>,
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Andrey Skvortsov <andrej.skvortzov@gmail.com>
+Cc: Icenowy Zheng <icenowy@aosc.io>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240211205211.2890931-1-megi@xff.cz>
+ <20240211205211.2890931-4-megi@xff.cz>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240211205211.2890931-4-megi@xff.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Takashi,
-
-On 2/10/2024 12:08 AM, Takashi Iwai wrote:
-> On Fri, 09 Feb 2024 21:34:39 +0100,
-> Wesley Cheng wrote:
->>
->> Hi Takashi,
->>
->> On 2/9/2024 2:54 AM, Takashi Iwai wrote:
->>> On Fri, 09 Feb 2024 00:13:33 +0100,
->>> Wesley Cheng wrote:
->>>>
->>>> Some platforms may have support for offloading USB audio devices to a
->>>> dedicated audio DSP.  Introduce a set of APIs that allow for management of
->>>> USB sound card and PCM devices enumerated by the USB SND class driver.
->>>> This allows for the ASoC components to be aware of what USB devices are
->>>> available for offloading.
->>>>
->>>> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
->>> (snip)
->>>> --- a/sound/soc/Makefile
->>>> +++ b/sound/soc/Makefile
->>>> @@ -1,5 +1,5 @@
->>>>    # SPDX-License-Identifier: GPL-2.0
->>>> -snd-soc-core-objs := soc-core.o soc-dapm.o soc-jack.o soc-utils.o soc-dai.o soc-component.o
->>>> +snd-soc-core-objs := soc-core.o soc-dapm.o soc-jack.o soc-usb.o soc-utils.o soc-dai.o soc-component.o
->>>>    snd-soc-core-objs += soc-pcm.o soc-devres.o soc-ops.o soc-link.o soc-card.o
->>>>    snd-soc-core-$(CONFIG_SND_SOC_COMPRESS) += soc-compress.o
->>>
->>> Do we really want to build this into ASoC core unconditionally?
->>> This is very specific to Qualcomm USB-offload stuff, so it's better to
->>> factor out.
->>>
->>
->> Ideally, the SOC USB part shouldn't be Qualcomm specific.  Since I
->> don't have access or insight into how other vendors are achieving the
->> same thing, I can only base the soc-usb layer to work with the
->> information that is required to get the audio stream up and running on
->> the QC platforms.  In its simplest form, its basically just a SW
->> entity that notifies ASoC components about changes occurring from USB
->> SND, and I think all vendors that have an ASoC based platform card
->> handling the offload will need this notification.
+On 11/02/2024 21:51, Ondřej Jirman wrote:
+> From: Ondrej Jirman <megi@xff.cz>
 > 
-> Yes, but it's not necessarily built into the snd-soc-core module at
-> all, but can be split to another module, right?  Otherwise all
-> machines must load this code even if it doesn't use at all.
-> If this were common among various chips, it'd be worth to be merged
-> into the default common module.  But I don't think that's the case.
+> As I am submitting the driver and have the device to test. I'll maintain
+> the driver.
 > 
+> Signed-off-by: Ondrej Jirman <megi@xff.cz>
+> ---
+>  MAINTAINERS | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index dc5ca7a042b5..cc691f61a77e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -579,6 +579,12 @@ F:	drivers/iio/accel/adxl372.c
+>  F:	drivers/iio/accel/adxl372_i2c.c
+>  F:	drivers/iio/accel/adxl372_spi.c
+>  
+> +AF8133J THREE-AXIS MAGNETOMETER DRIVER
+> +M:	Ondřej Jirman <megi@xff.cz>
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/iio/magnetometer/voltafield,af8133j.yaml
+> +F:	drivers/iio/magnetometer/af8133j.c
 
-That's fair.  I'll make it a separate module and upload v15 tomorrow. 
-Thanks for the explanation.
+Your patchset is not correctly ordered. There is no such file here.
 
-Thanks
-Wesley Cheng
+Best regards,
+Krzysztof
+
