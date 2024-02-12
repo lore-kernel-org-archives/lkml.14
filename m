@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03FCC1E487
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 12:33:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EBD43A1B2
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 12:33:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707741186; cv=none; b=ZvI7gIuPXNjZEdar2ryd23FEtmaW76xEMsX3MONAOdY9N7vq04lPsmC9TIqnFhvuOYOFrh/T7CSkCErCnh1p/vT/c/Oac5wvg+34MYwB/ifdvqX3ZtJoj7z4plJcZ8t67tDJnzY0nb+7yZdAxTT19aSunc/duhzazcwUny24YzM=
+	t=1707741188; cv=none; b=XVIy+3IwOFiCKcZ7wIvXs7z9bDdQftDsWqy1CObDbuwe21F4f+CRfj19PrQcSP4ANE4R89CiaYFb+YoqHLOYtQ9i9urP++A25pwQlyd5fdDDuT2vuDKJDtGnipZ2o/If9PYXNRxMga72lOc6DnTi0+TSeAE+rRD4jdlazxjIaFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707741186; c=relaxed/simple;
-	bh=JlkQiW/QuL/OX9TPCicFNqlZdcMRLppLsC1w6NTqto0=;
+	s=arc-20240116; t=1707741188; c=relaxed/simple;
+	bh=evkNOnm5oC5eo6hVIW+ZaWP1k6EADRqFYfcbNt8e4+o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X6UhkiMppLK/uGb/oCUdlBBdvW9mTmGrk0IlZMqCj54Ov3guU3bs0R/kx+gNXZxGkkOU+s9JNNUStVbveUbnf+ezSj9kpfHFAqw7Ec7/euTrGm5QUk8UINa+XcIPe+2PdmzqFgRBLICNXXd8+K1PYwWg0WHlvsIxa9MPeXNAyI0=
+	 MIME-Version; b=IqnjS9ZMFgga2C7cAi2zJaqtvZX9SdgwmNwbZQrfcwWxuHFjITpHJxf4JUpmQu6ETBdtFrisBx+olxrrb5ZTaTQUFwyA98yyL26QY34NbYKTu/hMXp21eSyabzIz/limN0b+12bYMi+qSZ8aSw+aF3WNR719c9YbIlayELvK/y8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A3BAFEC;
-	Mon, 12 Feb 2024 04:33:44 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A6B2911FB;
+	Mon, 12 Feb 2024 04:33:47 -0800 (PST)
 Received: from pluto.fritz.box (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7A3E03F7BD;
-	Mon, 12 Feb 2024 04:33:01 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D7C1B3F7BD;
+	Mon, 12 Feb 2024 04:33:04 -0800 (PST)
 From: Cristian Marussi <cristian.marussi@arm.com>
 To: linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org
@@ -29,9 +29,9 @@ Cc: sudeep.holla@arm.com,
 	quic_nkela@quicinc.com,
 	souvik.chakravarty@arm.com,
 	Cristian Marussi <cristian.marussi@arm.com>
-Subject: [PATCH 01/11] firmware: arm_scmi: Check for notification support
-Date: Mon, 12 Feb 2024 12:32:23 +0000
-Message-ID: <20240212123233.1230090-2-cristian.marussi@arm.com>
+Subject: [PATCH 03/11] firmware: arm_scmi: Implement Perf .is_notify_supported callback
+Date: Mon, 12 Feb 2024 12:32:25 +0000
+Message-ID: <20240212123233.1230090-4-cristian.marussi@arm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240212123233.1230090-1-cristian.marussi@arm.com>
 References: <20240212123233.1230090-1-cristian.marussi@arm.com>
@@ -43,99 +43,114 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When registering protocol events, use the optional .is_notify_supported
-callback provided by the protocol to check if that specific notification
-type is available for that particular resource on the running system,
-marking it as unsupported otherwise.
-
-Then, when a notification enable request is received, return an error if
-it was previously marked as unsuppported, so avoiding to send a needless
-notification enable command and check the returned value for failure.
+Add a preliminary check to verify if Perf-related notify enable commands
+are supported at all by the running platform, and then provide the callback
+needed to allow the core SCMI notification subsytem to fine-grain check if
+a specific resource domain supports notifications.
 
 Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
 ---
- drivers/firmware/arm_scmi/notify.c | 17 ++++++++++++++++-
- drivers/firmware/arm_scmi/notify.h |  4 ++++
- 2 files changed, 20 insertions(+), 1 deletion(-)
+ drivers/firmware/arm_scmi/perf.c | 45 +++++++++++++++++++++++++++++---
+ 1 file changed, 42 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/firmware/arm_scmi/notify.c b/drivers/firmware/arm_scmi/notify.c
-index 0efd20cd9d69..27c52531194d 100644
---- a/drivers/firmware/arm_scmi/notify.c
-+++ b/drivers/firmware/arm_scmi/notify.c
-@@ -99,6 +99,7 @@
- #define PROTO_ID_MASK		GENMASK(31, 24)
- #define EVT_ID_MASK		GENMASK(23, 16)
- #define SRC_ID_MASK		GENMASK(15, 0)
-+#define NOTIF_UNSUPP		-1
+diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
+index 9e7b1ee94940..2627ace5b07f 100644
+--- a/drivers/firmware/arm_scmi/perf.c
++++ b/drivers/firmware/arm_scmi/perf.c
+@@ -182,6 +182,8 @@ struct scmi_perf_info {
+ 	enum scmi_power_scale power_scale;
+ 	u64 stats_addr;
+ 	u32 stats_size;
++	bool notify_lvl_cmd;
++	bool notify_lim_cmd;
+ 	struct perf_dom_info *dom_info;
+ };
  
- /*
-  * Builds an unsigned 32bit key from the given input tuple to be used
-@@ -788,6 +789,7 @@ int scmi_register_protocol_events(const struct scmi_handle *handle, u8 proto_id,
+@@ -222,6 +224,15 @@ static int scmi_perf_attributes_get(const struct scmi_protocol_handle *ph,
+ 	}
  
- 	pd->ph = ph;
- 	for (i = 0; i < ee->num_events; i++, evt++) {
-+		int id;
- 		struct scmi_registered_event *r_evt;
- 
- 		r_evt = devm_kzalloc(ni->handle->dev, sizeof(*r_evt),
-@@ -809,6 +811,11 @@ int scmi_register_protocol_events(const struct scmi_handle *handle, u8 proto_id,
- 		if (!r_evt->report)
- 			return -ENOMEM;
- 
-+		for (id = 0; id < r_evt->num_sources; id++)
-+			if (ee->ops->is_notify_supported &&
-+			    !ee->ops->is_notify_supported(ph, r_evt->evt->id, id))
-+				refcount_set(&r_evt->sources[id], NOTIF_UNSUPP);
+ 	ph->xops->xfer_put(ph, t);
 +
- 		pd->registered_events[i] = r_evt;
- 		/* Ensure events are updated */
- 		smp_wmb();
-@@ -1166,7 +1173,13 @@ static inline int __scmi_enable_evt(struct scmi_registered_event *r_evt,
- 			int ret = 0;
++	if (!ret) {
++		if (!ph->hops->protocol_msg_check(ph, PERF_NOTIFY_LEVEL, NULL))
++			pi->notify_lvl_cmd = true;
++
++		if (!ph->hops->protocol_msg_check(ph, PERF_NOTIFY_LIMITS, NULL))
++			pi->notify_lim_cmd = true;
++	}
++
+ 	return ret;
+ }
  
- 			sid = &r_evt->sources[src_id];
--			if (refcount_read(sid) == 0) {
-+			if (refcount_read(sid) == NOTIF_UNSUPP) {
-+				dev_dbg(r_evt->proto->ph->dev,
-+					"Notification NOT supported - proto_id:%d  evt_id:%d  src_id:%d",
-+					r_evt->proto->id, r_evt->evt->id,
-+					src_id);
-+				ret = -EOPNOTSUPP;
-+			} else if (refcount_read(sid) == 0) {
- 				ret = REVT_NOTIFY_ENABLE(r_evt, r_evt->evt->id,
- 							 src_id);
- 				if (!ret)
-@@ -1179,6 +1192,8 @@ static inline int __scmi_enable_evt(struct scmi_registered_event *r_evt,
- 	} else {
- 		for (; num_sources; src_id++, num_sources--) {
- 			sid = &r_evt->sources[src_id];
-+			if (refcount_read(sid) == NOTIF_UNSUPP)
-+				continue;
- 			if (refcount_dec_and_test(sid))
- 				REVT_NOTIFY_DISABLE(r_evt,
- 						    r_evt->evt->id, src_id);
-diff --git a/drivers/firmware/arm_scmi/notify.h b/drivers/firmware/arm_scmi/notify.h
-index 4e9b627edfef..76758a736cf4 100644
---- a/drivers/firmware/arm_scmi/notify.h
-+++ b/drivers/firmware/arm_scmi/notify.h
-@@ -35,6 +35,8 @@ struct scmi_protocol_handle;
+@@ -239,6 +250,7 @@ static void scmi_perf_xa_destroy(void *data)
+ static int
+ scmi_perf_domain_attributes_get(const struct scmi_protocol_handle *ph,
+ 				struct perf_dom_info *dom_info,
++				bool notify_lim_cmd, bool notify_lvl_cmd,
+ 				u32 version)
+ {
+ 	int ret;
+@@ -260,8 +272,12 @@ scmi_perf_domain_attributes_get(const struct scmi_protocol_handle *ph,
  
- /**
-  * struct scmi_event_ops  - Protocol helpers called by the notification core.
-+ * @is_notify_supported: Return 0 if the specified notification for the
-+ *			 specified resource (src_id) is supported.
-  * @get_num_sources: Returns the number of possible events' sources for this
-  *		     protocol
-  * @set_notify_enabled: Enable/disable the required evt_id/src_id notifications
-@@ -50,6 +52,8 @@ struct scmi_protocol_handle;
-  *	    process context.
-  */
- struct scmi_event_ops {
-+	bool (*is_notify_supported)(const struct scmi_protocol_handle *ph,
-+				    u8 evt_id, u32 src_id);
- 	int (*get_num_sources)(const struct scmi_protocol_handle *ph);
- 	int (*set_notify_enabled)(const struct scmi_protocol_handle *ph,
- 				  u8 evt_id, u32 src_id, bool enabled);
+ 		dom_info->set_limits = SUPPORTS_SET_LIMITS(flags);
+ 		dom_info->info.set_perf = SUPPORTS_SET_PERF_LVL(flags);
+-		dom_info->perf_limit_notify = SUPPORTS_PERF_LIMIT_NOTIFY(flags);
+-		dom_info->perf_level_notify = SUPPORTS_PERF_LEVEL_NOTIFY(flags);
++		if (notify_lim_cmd)
++			dom_info->perf_limit_notify =
++				SUPPORTS_PERF_LIMIT_NOTIFY(flags);
++		if (notify_lvl_cmd)
++			dom_info->perf_level_notify =
++				SUPPORTS_PERF_LEVEL_NOTIFY(flags);
+ 		dom_info->perf_fastchannels = SUPPORTS_PERF_FASTCHANNELS(flags);
+ 		if (PROTOCOL_REV_MAJOR(version) >= 0x4)
+ 			dom_info->level_indexing_mode =
+@@ -993,6 +1009,27 @@ static const struct scmi_perf_proto_ops perf_proto_ops = {
+ 	.power_scale_get = scmi_power_scale_get,
+ };
+ 
++static bool scmi_perf_notify_supported(const struct scmi_protocol_handle *ph,
++				       u8 evt_id, u32 src_id)
++{
++	bool supported;
++	struct perf_dom_info *dom;
++
++	if (evt_id >= ARRAY_SIZE(evt_2_cmd))
++		return false;
++
++	dom = scmi_perf_domain_lookup(ph, src_id);
++	if (IS_ERR(dom))
++		return false;
++
++	if (evt_id == SCMI_EVENT_PERFORMANCE_LIMITS_CHANGED)
++		supported = dom->perf_limit_notify;
++	else
++		supported = dom->perf_level_notify;
++
++	return supported;
++}
++
+ static int scmi_perf_set_notify_enabled(const struct scmi_protocol_handle *ph,
+ 					u8 evt_id, u32 src_id, bool enable)
+ {
+@@ -1082,6 +1119,7 @@ static const struct scmi_event perf_events[] = {
+ };
+ 
+ static const struct scmi_event_ops perf_event_ops = {
++	.is_notify_supported = scmi_perf_notify_supported,
+ 	.get_num_sources = scmi_perf_get_num_sources,
+ 	.set_notify_enabled = scmi_perf_set_notify_enabled,
+ 	.fill_custom_report = scmi_perf_fill_custom_report,
+@@ -1126,7 +1164,8 @@ static int scmi_perf_protocol_init(const struct scmi_protocol_handle *ph)
+ 		struct perf_dom_info *dom = pinfo->dom_info + domain;
+ 
+ 		dom->id = domain;
+-		scmi_perf_domain_attributes_get(ph, dom, version);
++		scmi_perf_domain_attributes_get(ph, dom, pinfo->notify_lim_cmd,
++						pinfo->notify_lvl_cmd, version);
+ 		scmi_perf_describe_levels_get(ph, dom, version);
+ 
+ 		if (dom->perf_fastchannels)
 -- 
 2.43.0
 
