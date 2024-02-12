@@ -1,117 +1,166 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055F53A8D6;
-	Mon, 12 Feb 2024 12:06:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5478C3A8D6;
+	Mon, 12 Feb 2024 12:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707739575; cv=none; b=U9qmVyKXQulLgwgOR891CyCRixmJU84X4jYQDBZghZrk6VuwA9qqm6i8meYAYJkDpJ95tuS3O/ImAeLZPktOWyATAst10XvRjwEA7fLEPO3Vb27hK+sx0JCVnIhdaw/SW5XUk19XQ7Ufp3Cs7AQ4DdV4z3MZhPw04UHtVnKoIaI=
+	t=1707739607; cv=none; b=XxPi58bO3Vxs0Hum1cjmfyOjje7o6yMcabK+6pHHEL3i1Xo3ScCL1PkGFJHkiLIwwRimvRvCFPmIc5uj3h/Ba1Llh1aZ3WrhmPrETG0ApzS4SI51uWRQJLwr2gZ4a2UACmmWyPV7YEGigCgdJnDKX5hxDKNV4afc0D6z+exvaGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707739575; c=relaxed/simple;
-	bh=Wj1Bx+ORc780amYfcnyH0jUkdbacpOiyptGUnVCMAiE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hRieNER9S/oX7iJjfu0kLe/8cb3d8G8hzA/T7eMlHTk6b3LOffs6yMCUw96PwFwpKUv8/QK+UcNP6wiV3577MuL1oSDJW3LriD2+7fM5PLrg1vH8hrq63xXSrBWqIDUUcaimaIUureGMy94kgWRHBHlP88YReXtkXwf29vbLW14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LrqJ+Zzn; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1707739607; c=relaxed/simple;
+	bh=WS2EwGIYfjfVYeJeT+YZsja3GaMwcTRbUQylau3i3Fc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=r9OHITgxSQuNk3Paz+SCftp3M0rs2HTLNYa8/8aRYQ5KVYae4n8ifshrThpmmld0EiyN9/KWHfP/BkMmUgn7yrj4rwzUk+F153kNXx/3mExtoVUkHFniknJwwgXVlrOSPrgXbjzdX+Qm5202sulH3Dgl7hanwVLxp57Tkawc4DA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=WW14W2bJ; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LrqJ+Zzn"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41CBuMtg027065;
-	Mon, 12 Feb 2024 12:06:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=Wj1Bx+ORc780amYfcnyH0jUkdbacpOiyptGUnVCMAiE=;
- b=LrqJ+ZznGcXpk2/klyB5BIuAalcafhrItd5nJVFkd+PTaEN8KtYViMRZzlmhOTQacDgU
- oviIhp5cjwR+j4oJf+aiDLKOm6vBNNS3H61QGU8gjtqbNGYKtzCT+PnXvLZyJ7vjv67h
- ebMmMltIhIZTaQdKAiZBEOCLhgBKpGX1zh3dT0HnSjzWVcR9RoOumoXteL8GBLCgpUV/
- jiLWAYMG410QaeRqBxdq+SS99J026uOYa6JlVbOFL/GZ38eCxKz2aPGbGVgU3QVfdzIX
- KlGBFX3NAIZsb3GqqQqwnZwIoIIseSaIb2bQracek8jTx7qBOX5qdyz5vsNL7vP9nVOT OA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w7jw8rfm1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Feb 2024 12:06:04 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41CBucuv028176;
-	Mon, 12 Feb 2024 12:06:03 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w7jw8rfku-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Feb 2024 12:06:03 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41CC1ZCt009728;
-	Mon, 12 Feb 2024 12:06:02 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3w6p62fwhk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Feb 2024 12:06:02 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41CC5wQg24773246
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 12 Feb 2024 12:06:00 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9CEBD20043;
-	Mon, 12 Feb 2024 12:05:58 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 48F7820040;
-	Mon, 12 Feb 2024 12:05:56 +0000 (GMT)
-Received: from li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com (unknown [9.109.253.82])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 12 Feb 2024 12:05:56 +0000 (GMT)
-Date: Mon, 12 Feb 2024 17:35:54 +0530
-From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-To: John Garry <john.g.garry@oracle.com>
-Cc: hch@lst.de, djwong@kernel.org, viro@zeniv.linux.org.uk, brauner@kernel.org,
-        dchinner@redhat.com, jack@suse.cz, chandan.babu@oracle.com,
-        martin.petersen@oracle.com, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        tytso@mit.edu, jbongio@google.com
-Subject: Re: [PATCH 4/6] fs: xfs: Support atomic write for statx
-Message-ID: <ZcoJossEQe6QIIM+@li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com>
-References: <20240124142645.9334-1-john.g.garry@oracle.com>
- <20240124142645.9334-5-john.g.garry@oracle.com>
- <ZcXNidyoaVJMFKYW@li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com>
- <36437378-de35-48dc-8b1e-b5c1370e38b0@oracle.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WW14W2bJ"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41CC6dZT117182;
+	Mon, 12 Feb 2024 06:06:39 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1707739599;
+	bh=S5J/1ObFeoSiJ6gia+94nSw92mC+A99I/PrxqgTLWS4=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=WW14W2bJfJTJeCbB7afdwKJWmIZVkb3pzb9UZCYWr6IQaq6oD6MaC8c6e/R6GCJVO
+	 dqXrc4cGoX/3NewVDdqfmSu6RuDTUXg8HZWPSs1/rsMiFZVldTdaCs7TpKbuS3LSKj
+	 KAd2oWHLOQLfamyjV7xN+CFhm19CWiYr3tPeVumw=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41CC6dWJ022746
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 12 Feb 2024 06:06:39 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 12
+ Feb 2024 06:06:38 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 12 Feb 2024 06:06:38 -0600
+Received: from [10.24.69.142] ([10.24.69.142])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41CC3s6u085591;
+	Mon, 12 Feb 2024 06:06:35 -0600
+Message-ID: <a64d7c6b-8c22-47c3-a60f-e9dc39026fe0@ti.com>
+Date: Mon, 12 Feb 2024 17:36:34 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <36437378-de35-48dc-8b1e-b5c1370e38b0@oracle.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Yz_9j8QJ6aXP9aheSmS02njmCgE8aigr
-X-Proofpoint-ORIG-GUID: I2AGZZshADJdEP-gsA_Gj8B0Kskv6lmq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-12_09,2024-02-12_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 impostorscore=0 suspectscore=0 malwarescore=0 clxscore=1015
- mlxscore=0 mlxlogscore=693 priorityscore=1501 phishscore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402120091
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] arm64: dts: ti: k3-am62p: Add nodes for CSI-RX
+Content-Language: en-US
+To: Jai Luthra <j-luthra@ti.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh
+ Raghavendra <vigneshr@ti.com>,
+        Tero Kristo <kristo@kernel.org>, Rob Herring
+	<robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>,
+        Bryan Brattlof <bb@ti.com>, Dhruva Gole
+	<d-gole@ti.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Devarsh Thakkar <devarsht@ti.com>,
+        Aradhya
+ Bhatia <a-bhatia1@ti.com>
+References: <20240201-am62p_csi-v1-0-c83bb9eaeb49@ti.com>
+ <20240201-am62p_csi-v1-3-c83bb9eaeb49@ti.com>
+From: Vaishnav Achath <vaishnav.a@ti.com>
+In-Reply-To: <20240201-am62p_csi-v1-3-c83bb9eaeb49@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Fri, Feb 09, 2024 at 05:30:50PM +0000, John Garry wrote:
-> The same goes for atomic write boundary in NVMe. Currently we say that it
-> needs to be a power-of-2. However, it really just needs to be a multiple of
-> awu_max. So if some HW did report a !power-of-2 atomic write boundary, we
 
-Hey John, sorry for double reply but can you point out where this
-requrement is stated in the spec?
 
-For example in NVME 2.1.4.3 Command Set spec I can see that
+On 01/02/24 18:37, Jai Luthra wrote:
+> AM62P supports image capture via the MIPI CSI-2 protocol, it uses three
+> IPs to achieve this: Cadence DPHY, Cadence CSI-RX, and TI's pixelgrabber
+> wrapper on top. Enable all of these IPs in the devicetree.
+> 
 
-> The boundary size shall be greater than or equal to the corresponding
-> atomic write size
+Add nodes and keep them disabled sounds more apt here as you are keeping 
+all of these disabled.
 
-However I'm not able to find the multiple-of-unit-max reqirement in the
-spec. Maybe I'm missing something?
+> Signed-off-by: Jai Luthra <j-luthra@ti.com>
+> ---
+>   arch/arm64/boot/dts/ti/k3-am62p-main.dtsi | 61 +++++++++++++++++++++++++++++++
+>   1 file changed, 61 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
+> index 57ec4ef334e4..fdd835a04327 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
+> @@ -928,4 +928,65 @@ mcasp2: audio-controller@2b20000 {
+>   		power-domains = <&k3_pds 192 TI_SCI_PD_EXCLUSIVE>;
+>   		status = "disabled";
+>   	};
+> +
+> +	ti_csi2rx0: ticsi2rx@30102000 {
+> +		compatible = "ti,j721e-csi2rx-shim";
+> +		reg = <0x00 0x30102000 0x00 0x1000>;
+> +		ranges;
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		dmas = <&main_bcdma_csi 0 0x5000 0>;
+> +		dma-names = "rx0";
+> +		power-domains = <&k3_pds 182 TI_SCI_PD_EXCLUSIVE>;
+> +		status = "disabled";
+> +
+> +		cdns_csi2rx0: csi-bridge@30101000 {
+> +			compatible = "ti,j721e-csi2rx", "cdns,csi2rx";
+> +			reg = <0x00 0x30101000 0x00 0x1000>;
+> +			clocks = <&k3_clks 182 0>, <&k3_clks 182 3>, <&k3_clks 182 0>,
+> +				<&k3_clks 182 0>, <&k3_clks 182 4>, <&k3_clks 182 4>;
+> +			clock-names = "sys_clk", "p_clk", "pixel_if0_clk",
+> +				"pixel_if1_clk", "pixel_if2_clk", "pixel_if3_clk";
+> +			phys = <&dphy0>;
+> +			phy-names = "dphy";
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				csi0_port0: port@0 {
+> +					reg = <0>;
+> +					status = "disabled";
+> +				};
+> +
+> +				csi0_port1: port@1 {
+> +					reg = <1>;
+> +					status = "disabled";
+> +				};
+> +
+> +				csi0_port2: port@2 {
+> +					reg = <2>;
+> +					status = "disabled";
+> +				};
+> +
+> +				csi0_port3: port@3 {
+> +					reg = <3>;
+> +					status = "disabled";
+> +				};
+> +
+> +				csi0_port4: port@4 {
+> +					reg = <4>;
+> +					status = "disabled";
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	dphy0: phy@30110000 {
+> +		compatible = "cdns,dphy-rx";
+> +		reg = <0x00 0x30110000 0x00 0x1100>;
+> +		#phy-cells = <0>;
+> +		power-domains = <&k3_pds 185 TI_SCI_PD_EXCLUSIVE>;
+> +		status = "disabled";
+> +	};
 
-Regards,
-ojaswin
+Reviewed-by: Vaishnav Achath <vaishnav.a@ti.com>
 
-> could reduce awu_max reported until to fits the power-of-2 rule and also is
-> cleanly divisible into atomic write boundary. But that is just not what HW
-> will report (I expect). We live in a power-of-2 data granularity world.
+>   };
+> 
