@@ -1,66 +1,37 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E17046551;
-	Mon, 12 Feb 2024 20:29:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE22AA48;
+	Mon, 12 Feb 2024 20:33:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707769753; cv=none; b=CeIxJJcLrojDctgP7PHIAfmX95nNIrtwgsqxsjL3IBg3swecZdAtUQPXqFlLrrczWHH9TRw4Fto7QM+lG12mmSunFRR6OVW2LS5hjoBIFmBAUvHTXiJstrYunMihdYyvLgbBM5ASifSv7K9HkLSwFtTwNwld7xnklLoqqXAm2ds=
+	t=1707769992; cv=none; b=C7qa7LgHhTEOvSSmNJVFJHXOWjMYWBZFpJxdkRr4yZDRRiHMtNNY+ozxindsTD/A1d+m7rnBi4jN4+LiaaCiLdsczFM2yveAgi7ZYoG56VcKADn5XADDrQYPCi7l1nIXBfYsqLBtJSv+O06GskyCUkTTPBF+QRHz/NG9nWg8664=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707769753; c=relaxed/simple;
-	bh=eSMPcnqleewvsCZOjcxX6j+WVDKLH3kGFH0udq8XuOQ=;
+	s=arc-20240116; t=1707769992; c=relaxed/simple;
+	bh=nJUt4pHJ8BpD1u4EJKsxi9gTeO8e+eSF+KEnrBvsl7k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wttk7MdccOB4IXmfEC5SAImVoD+rarb0N+X/IWR6ADizPsaOiM8Wu//sa9BBtMuKPtDvXaZFkJRNld5jxrl/1ph1n+lqrr+YHeqVOaSUD0hrK/VwPS+5GzD2u7gSMq7emi0YsWEJ76K3loYsSjgBHvbuECM+373Mj+HfOJO3Zp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tAv1716J; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=BDbJ8ApbmC75cnIfLBkkhHat1GHKUNkUM6ZwG6UZTh9rifMsjEtwz+yTX2tjxBYRdmeUw7JWiIRXi7Z9JvZWOlnURhyXByvCcs9ycRcrKyJRFMzQXgzOjp6GyLpxmtNkcOwSbVE8MTwY8br2oeItEpCym4cjxo+BJVWNAlTBSsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tbTxPzGp; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tAv1716J"
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41CKN0SZ003408;
-	Mon, 12 Feb 2024 20:28:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=JhR4CnsbNNlV55xXkJZROwtBvgr65QVEvejYyFSklRU=;
- b=tAv1716JGfXUJ56oTLAfdJEAD2xUh5bWfDi9/epslC9qI0QdHGhMP/isop8LFXZYitAa
- X5/DINpovaNb3ALNwWh0aQicSxSlX3WzOwvXd3m9k02/VXzF/4GKcMhiTOmgiyW+dOXr
- lwoTKH3TjlQWp9nDIbr6sM9Q9zGbt2g9THl4Zxm4b32c9xkVgn0QCLEPjsCf/n9T9XhT
- tgfV7J7oxNDKtRSUSArXMorP4r5rMg0LzL0C7ErqQlUsn9GZiHTasnhq2ToHLX53pHpd
- O31Ey5sgcha96GI93Q+qCuG+6760LshZH1SRDukLhKwsbjemnWFUeLvqXosjvZNfu8iA 3w== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w7taf8470-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Feb 2024 20:28:45 +0000
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41CKQ2sa011682;
-	Mon, 12 Feb 2024 20:28:44 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w7taf845d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Feb 2024 20:28:44 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41CJ3q0B004297;
-	Mon, 12 Feb 2024 20:28:43 GMT
-Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w6kv036ey-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Feb 2024 20:28:43 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41CKSeM546268780
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 12 Feb 2024 20:28:42 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7FD7C5805D;
-	Mon, 12 Feb 2024 20:28:38 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9BE8E58055;
-	Mon, 12 Feb 2024 20:28:34 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 12 Feb 2024 20:28:34 +0000 (GMT)
-Message-ID: <7940b9d0-3133-4b08-b397-ad9ee34e3b34@linux.ibm.com>
-Date: Mon, 12 Feb 2024 15:28:33 -0500
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tbTxPzGp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=cB5uI6Uc3sHMEabW/GpnBNsAvTUG2EhVDqN17ZdYZDk=; b=tbTxPzGpCT6Xm4uWLt66esQI+h
+	mFce4aLnEh2/erOnvVwfiyz28Tt5b8YTC9hta3yy3mpw+VlZX7SeOtCnjtQGqbt21zyOYI3d6eM1g
+	TqGC7/P0Vb7wlEx92mv6xOWHIvJcvUfxdMZ9agb+gAXj5sKS1RAZF6z6kDCnjlnmapjPNIEuM2MVK
+	m1tG/nk2OhaXrY1wDOyvWt5C1yA2zmVsBG12NNF8mxA+C0P65GVL4JZVaxpPQByQ4HBL+y6E4CgMZ
+	cfR28tIH/X+8JnzCm4Pglev3Fl1GhAkjI7Mr5OYxjufZ64N3LohcZfrB1aw9stQ3lPxURYNR+Uhdi
+	9+Zaziew==;
+Received: from [50.53.50.0] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rZczF-00000006sNd-18m4;
+	Mon, 12 Feb 2024 20:33:09 +0000
+Message-ID: <ea0554f6-e0f6-44eb-b98a-d25772273f6e@infradead.org>
+Date: Mon, 12 Feb 2024 12:33:08 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,78 +39,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 19/25] integrity: Move
- integrity_kernel_module_request() to IMA
+Subject: Re: linux-next: Tree for Feb 12 (drivers/md/dm-vdo/thread-registry.c
+ on arch/loongarch/)
 Content-Language: en-US
-To: Paul Moore <paul@paul-moore.com>
-Cc: Roberto Sassu <roberto.sassu@huaweicloud.com>, viro@zeniv.linux.org.uk,
-        brauner@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org,
-        neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
-        jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com,
-        dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com,
-        dhowells@redhat.com, jarkko@kernel.org, stephen.smalley.work@gmail.com,
-        eparis@parisplace.org, casey@schaufler-ca.com, shuah@kernel.org,
-        mic@digikod.net, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org,
-        keyrings@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Roberto Sassu <roberto.sassu@huawei.com>
-References: <20240115181809.885385-1-roberto.sassu@huaweicloud.com>
- <20240115181809.885385-20-roberto.sassu@huaweicloud.com>
- <fd6ddc3d-e5d3-4b9c-b00b-ac2b1f22d653@linux.ibm.com>
- <CAHC9VhTY=X7z5SRQZzFe25FGB2E3FBBkuZ_YYA1+ETyr7pv=tA@mail.gmail.com>
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <CAHC9VhTY=X7z5SRQZzFe25FGB2E3FBBkuZ_YYA1+ETyr7pv=tA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: IG8gA7VCiIuoNiLherBpxii_bnuMc-F5
-X-Proofpoint-ORIG-GUID: n2O60wZIGE2TuBwcELMLALmk7ji0iQ_T
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-12_16,2024-02-12_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- malwarescore=0 phishscore=0 impostorscore=0 bulkscore=0 lowpriorityscore=0
- adultscore=0 clxscore=1015 spamscore=0 mlxlogscore=999 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2402120158
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "open list:LOONGARCH" <loongarch@lists.linux.dev>,
+ Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
+ dm-devel@lists.linux.dev, Matthew Sakai <msakai@redhat.com>
+References: <20240212153137.2c37f7e6@canb.auug.org.au>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240212153137.2c37f7e6@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
 
-On 2/12/24 12:56, Paul Moore wrote:
-> On Mon, Feb 12, 2024 at 12:48 PM Stefan Berger <stefanb@linux.ibm.com> wrote:
->> On 1/15/24 13:18, Roberto Sassu wrote:
+On 2/11/24 20:31, Stephen Rothwell wrote:
+> Hi all,
 > 
-> ...
+> Changes since 20240209:
 > 
->>> +/**
->>> + * ima_kernel_module_request - Prevent crypto-pkcs1pad(rsa,*) requests
->>> + * @kmod_name: kernel module name
->>> + *
->>> + * We have situation, when public_key_verify_signature() in case of RSA > + * algorithm use alg_name to store internal information in order to
->>> + * construct an algorithm on the fly, but crypto_larval_lookup() will try
->>> + * to use alg_name in order to load kernel module with same name.
->>> + * Since we don't have any real "crypto-pkcs1pad(rsa,*)" kernel modules,
->>> + * we are safe to fail such module request from crypto_larval_lookup().
->>> + *
->>> + * In this way we prevent modprobe execution during digsig verification
->>> + * and avoid possible deadlock if modprobe and/or it's dependencies
->>> + * also signed with digsig.
->>
->> This text needs to some reformulation at some point..
-> 
-> There is no time like the present.  If you have a suggestion I would
-> love to hear it and I'm sure Roberto would too.
-> 
+> The mm tree lost its boot failure.
 
-My interpretation of the issue after possibly lossy decoding of the 
-above sentences:
+on loongarch:
 
-Avoid a deadlock by rejecting a virtual kernel module with the name 
-"crypto-pkcs1pad(rsa,*)". This module may be requested by 
-crypto_larval_lookup() while trying to verify an RSA signature in 
-public_key_verify_signature(). Since the loading of the RSA module may 
-itself cause the request for an RSA signature verification it will 
-otherwise lead to a deadlock.
+../drivers/md/dm-vdo/thread-registry.c: In function 'vdo_register_thread':
+../drivers/md/dm-vdo/thread-registry.c:32:28: error: 'current' undeclared (first use in this function)
+   32 |         new_thread->task = current;
+      |                            ^~~~~~~
+../drivers/md/dm-vdo/thread-registry.c:32:28: note: each undeclared identifier is reported only once for each function it appears in
+../drivers/md/dm-vdo/thread-registry.c: In function 'vdo_unregister_thread':
+../drivers/md/dm-vdo/thread-registry.c:61:37: error: 'current' undeclared (first use in this function)
+   61 |                 if (thread->task == current) {
+      |                                     ^~~~~~~
+../drivers/md/dm-vdo/thread-registry.c: In function 'vdo_lookup_thread':
+../drivers/md/dm-vdo/thread-registry.c:84:37: error: 'current' undeclared (first use in this function)
+   84 |                 if (thread->task == current) {
+      |                                     ^~~~~~~
 
+
+-- 
+#Randy
