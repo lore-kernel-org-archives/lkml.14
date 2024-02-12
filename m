@@ -1,188 +1,303 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E084CDE5
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 21:59:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55FDE4CDE5
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 22:00:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707775171; cv=none; b=N7fWWjq2lrmx1otwYllwXbEliUubZjncrpk60pGxdetztoARZXd0ipwCyciRwSGH2CcgOCiikIQeJ4tHKo9LmoByaAdpY+67I7PsZuH+PzGe597uNkmhF+/lG2rcIhCW5WgDle24EpyJpopAfqPIAApHnQzbLIvnonZRSri/bBw=
+	t=1707775225; cv=none; b=aurLkW56GZ7Zw+vyPgpCrhwrhhigamJwXC/16uiHSk5GBDsDS6T9+EFL4PVLWMn2bp4ntrdISNFHdh7IwvaIN2+MvxLGLdjU43lRFlBoER8Gygf3bqImIa3ghmzkLMHx2X8o4M85xy7SBQMNIx0kinLdJvrt+qXgC5FtP9eX7/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707775171; c=relaxed/simple;
-	bh=b+F7pcUkc0r1mBK4PMiDYHZh9PrP/YYZbjdLAkDYuqQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NWlS2gP4h0MMZVhupMbmqtojkjrA8GMpzUAcTmOXBRMkEwaLFQ2WKoU+Bwttvf0cWAFDe+Xup22XqGu3wqKBOaYF2I3yVV+g0gwN1qrSuSjbfksBgQMt6HlEM0kFISVtZerurkyMpOnUGzNlgFUiSOCRtCTkblIaB3vQ83arpAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wD7rETtq; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wD7rETtq"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-561f0f116ecso771a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 13:59:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707775168; x=1708379968; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FAP8ciFMVXJQebx3ikecm7gfdkfYQjqo8DHa2ep2azc=;
-        b=wD7rETtqM4/AXpgyBmUXVB/RxvDASj96OA3fpDl+l5zIbLSdb2C0yABKfNBMEjYSqs
-         rfQiDnPfueMDBAMjO1KbdmkGrdOZ09tar1O03kWVwt4ZiU97GErY0Omh/MGe2Q4LnfM4
-         jJNJjI0tlhXOthnkMk0Ahe/wofJhKaSVCGCbLhKQ9VVpdZ8etBcjVJ1EMkrkaiTZHTvf
-         L78ZFoMBAFWoLO/wCpCUXtTUn4cfRpHsSFXYmAXnyDkMvteofbst609rR49o0IX2uC9i
-         4oveUekPtgh8KGmqyLwmG1DkP0eHTOZER0wkpekaD8m1Fha5z7i14z44ZpdbBknobU4C
-         s1hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707775168; x=1708379968;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FAP8ciFMVXJQebx3ikecm7gfdkfYQjqo8DHa2ep2azc=;
-        b=Wk35cXcOKXNrsx24MbXxdcse839nn8DDSBux2wYTuwSvZWynpzeHND4+YXQ7xwGpKk
-         RBwKzijq5DkYj+PGcy++iGIxtXMhywYQ93P3WsP9K47KkTTbsk6QwUBsA97HFPzWwsOW
-         FfLHhO6gWwLwN1RcmwR63yK3aIYU2Vxq5bfLBVJnoPDHlU+g90rA7vWm4TdodQ4I4QRS
-         DFZT5CLysCEQQzs1GApdDSzNJzcF1UG2kYmGRqFcBWwcTSX0KMOcHCQVmCM1c7H6WotL
-         iMbH7DgbFHIvURyQ2ePTtQIsFbKq0QEHkyc7Aw1Y/I1yrbZEegAq18N6fUM8HrntSrXu
-         9CzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVog21qXyfwVTiO2xKGTWERp7FNwCfPXYL+ytvFRAp0+Fkcso5HlVQXflTeZrqyOj6IUTsNW748ogDIgsLRLfNdE+S/kpeetH+1urfS
-X-Gm-Message-State: AOJu0YwxarIBhcAAShMx1wM5WxlwV4CVrEwghgt0UQBGOCLxbK0b1p5b
-	6pfoQgOBb2sw3aeeX7b/ombvRxV1Myoc36fpKCG+XckUWEkYyQsjaejgTzfmeX4EF/PKDgGF0no
-	rUMm7UMIfGbQZ7RPwrFK0FPeprw6/H2DkohxZ
-X-Google-Smtp-Source: AGHT+IHVMdtdCGzIfHivtEQ0BtRleckWRpXt904pHGON8MVFD17b2K8kzlWT2wyZJMxj43kyZ4tIOGfpdJ4L3KikWtM=
-X-Received: by 2002:a50:f615:0:b0:561:d84d:f6ce with SMTP id
- c21-20020a50f615000000b00561d84df6cemr22522edn.6.1707775167821; Mon, 12 Feb
- 2024 13:59:27 -0800 (PST)
+	s=arc-20240116; t=1707775225; c=relaxed/simple;
+	bh=ooTB2I6b7Z7IEefQMC00P9YKHefeksN14fi7O6leJDA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=iWr2PDtDycUVydC8X0p5E0d/Bu8HA9YRdO7VtwhdgB8NjPDNgnurTdFUYTI6viqqAgwHSVuXtKsDwKPid4EtpQmBQBxUmnAZMHY+ItaJ815oJ7yqBlR59A/kjHzTx7YsQAIoTazwvkgLsa1qkMJNpekhvYVQlH8yt0HcXhubDI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33731C433F1;
+	Mon, 12 Feb 2024 22:00:24 +0000 (UTC)
+Date: Mon, 12 Feb 2024 17:01:07 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Daniel Bristot de Oliveira <bristot@kernel.org>, John Kacur
+ <jkacur@redhat.com>, limingming3 <limingming890315@gmail.com>, LKML
+ <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] tracing/tooling: Fixes for v6.8-rc4
+Message-ID: <20240212170107.60da326a@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240208012057.2754421-2-yshuiv7@gmail.com> <CAK7LNAT0KT7sbZJZNXtq5waM-UjUm4zHyf9xHZc3uHLvZ_eAfA@mail.gmail.com>
-In-Reply-To: <CAK7LNAT0KT7sbZJZNXtq5waM-UjUm4zHyf9xHZc3uHLvZ_eAfA@mail.gmail.com>
-From: Fangrui Song <maskray@google.com>
-Date: Mon, 12 Feb 2024 13:59:13 -0800
-Message-ID: <CAFP8O3Kqx-gdTBFn_hesWzd-6NCpGEz1=fMoJXuX+n4c7sp0Bw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Fix building with LLVM on NixOS
-To: Yuxuan Shui <yshuiv7@gmail.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, llvm@lists.linux.dev, nathan@kernel.org, 
-	nicolas@fjasle.eu, linux-kbuild@vger.kernel.org, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-	hpa@zytor.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Feb 12, 2024 at 1:30=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.o=
-rg> wrote:
->
-> +Cc: Fangrui Song <maskray@google.com>
->
->
->
-> On Thu, Feb 8, 2024 at 10:22=E2=80=AFAM Yuxuan Shui <yshuiv7@gmail.com> w=
-rote:
-> >
-> > NixOS is designed to have immutable packages, and explicit dependencies=
-.
-> > It allows multiple different versions of the same shared library to
-> > co-exist in its file system.
-> >
-> > Each application built with Nix, the NixOS package manager, will have
-> > paths to its dependency shared libraries hardcoded into its executable,
-> > this includes the dynamic linker. To achieve this, Nix adds a
-> > --dynamic-linker linker flag when building any application.
-> >
-> > This isn't a problem if the kernel is built with ld.bfd, because ld.bfd
-> > ignores the --dynamic-linker flag when the resulting binary doesn't hav=
-e
-> > a DT_NEEDED entry. However, ld.lld respects --dynamic-linker
-> > unconditionally, which breaks linking in several cases.
-> >
-> > This commit adds an explicit --no-dynamic-linker flag which overrides
-> > the flag added by Nix.
->
->
->
-> I expect some Acks from LLVM folks (especially, from Frangrui)
-> if this is the right thing to do.
-
-GNU ld seems to ignore --dynamic-linker for a position-dependent
-executable (ET_EXEC) when there is no DT_NEEDED entry.
-ld.lld respects --dynamic-linker in this case. Before this kernel
-report, I do not know any user inconvenienced by this difference.
-(mold respects --dynamic-linker as well.)
-This could be helpful to test an executable with PT_INTERP but no DT_NEEDED=
-.
-
-I think this patch does not fix non-x86 builds.
-It feels to me that NixOS should provide a linker wrapper that does
-not force --dynamic-linker=3D.
-While it's extremely uncommon (and generally not recommended), certain
-programs invoke the linker directly (instead of using a compiler
-driver).
-Such programs would run into a problem when they make a
-position-dependent executable with no dependency as well.
-I don't feel that NixOS forcing --dynamic-linker=3D is enough
-justification to change linkers.
-
-> > Signed-off-by: Yuxuan Shui <yshuiv7@gmail.com>
-> > ---
-> >  Makefile                      | 3 +++
-> >  arch/x86/boot/Makefile        | 2 +-
-> >  arch/x86/realmode/rm/Makefile | 2 +-
-> >  3 files changed, 5 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Makefile b/Makefile
-> > index a171eafce2a3b..10ed19caecb1b 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -531,6 +531,9 @@ RUSTFLAGS_KERNEL =3D
-> >  AFLAGS_KERNEL  =3D
-> >  LDFLAGS_vmlinux =3D
-> >
-> > +LDFLAGS_MODULE +=3D --no-dynamic-linker
-> > +LDFLAGS_vmlinux +=3D --no-dynamic-linker
-> > +
-> >  # Use USERINCLUDE when you must reference the UAPI directories only.
-> >  USERINCLUDE    :=3D \
-> >                 -I$(srctree)/arch/$(SRCARCH)/include/uapi \
-> > diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-> > index 3cece19b74732..390a4604166eb 100644
-> > --- a/arch/x86/boot/Makefile
-> > +++ b/arch/x86/boot/Makefile
-> > @@ -102,7 +102,7 @@ $(obj)/zoffset.h: $(obj)/compressed/vmlinux FORCE
-> >  AFLAGS_header.o +=3D -I$(objtree)/$(obj)
-> >  $(obj)/header.o: $(obj)/zoffset.h
-> >
-> > -LDFLAGS_setup.elf      :=3D -m elf_i386 -z noexecstack -T
-> > +LDFLAGS_setup.elf      :=3D --no-dynamic-linker -m elf_i386 -z noexecs=
-tack -T
-> >  $(obj)/setup.elf: $(src)/setup.ld $(SETUP_OBJS) FORCE
-> >         $(call if_changed,ld)
-> >
-> > diff --git a/arch/x86/realmode/rm/Makefile b/arch/x86/realmode/rm/Makef=
-ile
-> > index f614009d3e4e2..4b42006d9ce02 100644
-> > --- a/arch/x86/realmode/rm/Makefile
-> > +++ b/arch/x86/realmode/rm/Makefile
-> > @@ -50,7 +50,7 @@ $(obj)/pasyms.h: $(REALMODE_OBJS) FORCE
-> >  targets +=3D realmode.lds
-> >  $(obj)/realmode.lds: $(obj)/pasyms.h
-> >
-> > -LDFLAGS_realmode.elf :=3D -m elf_i386 --emit-relocs -T
-> > +LDFLAGS_realmode.elf :=3D --no-dynamic-linker -m elf_i386 --emit-reloc=
-s -T
-> >  CPPFLAGS_realmode.lds +=3D -P -C -I$(objtree)/$(obj)
-> >
-> >  targets +=3D realmode.elf
-> > --
-> > 2.43.0
-> >
->
->
-> --
-> Best Regards
-> Masahiro Yamada
->
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
 
---=20
-=E5=AE=8B=E6=96=B9=E7=9D=BF
+Linus,
+
+Tracing tooling updates for 6.8-rc4:
+
+RTLA:
+        - rtla tools are exiting with a positive value when usage()
+          is called. Make them return 0 if the usage was called via
+          -h/--help.
+
+        - the -P priority sets the sched priority for rtla workload.
+          When the SCHED_OTHER scheduler is selected, it sets
+          the rt_priority instead of the nice parameter. Setting
+          the nice value is the correct thing, so fix it.
+
+        - rtla is failing to compile with clang due to unsupported
+          options from gcc. Adjusting the compiler/linker options
+          makes clang work properly.
+
+        - Remove the sched_getattr() unused function on utils.c.
+
+        - Fixes on variable initialization and size, reported by
+          clang.
+
+Verification:
+        - rv is failing to compile with clang due to unsupported
+          options from gcc. Adjusting the compiler/linker options
+          makes clang work properly.
+
+        - Fix an uninitialized variable on in_kernel.c reported by
+          clang.
+
+
+Please pull the latest trace-tools-v6.8-rc4 tree, which can be found at:
+
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+trace-tools-v6.8-rc4
+
+Tag SHA1: 43f245e8613c3a071441ab907842c1b9b7812ee1
+Head SHA1: b5f319360371087d52070d8f3fc7789e80ce69a6
+
+
+Daniel Bristot de Oliveira (6):
+      tools/rtla: Fix Makefile compiler options for clang
+      tools/rtla: Fix uninitialized bucket/data->bucket_size warning
+      tools/rtla: Fix clang warning about mount_point var size
+      tools/rtla: Remove unused sched_getattr() function
+      tools/rv: Fix Makefile compiler options for clang
+      tools/rv: Fix curr_reactor uninitialized variable
+
+John Kacur (1):
+      tools/rtla: Exit with EXIT_SUCCESS when help is invoked
+
+limingming3 (1):
+      tools/rtla: Replace setting prio with nice for SCHED_OTHER
+
+----
+ tools/tracing/rtla/Makefile            |  7 ++++++-
+ tools/tracing/rtla/src/osnoise_hist.c  |  9 ++++++---
+ tools/tracing/rtla/src/osnoise_top.c   |  6 +++++-
+ tools/tracing/rtla/src/timerlat_hist.c |  9 ++++++---
+ tools/tracing/rtla/src/timerlat_top.c  |  6 +++++-
+ tools/tracing/rtla/src/utils.c         | 14 ++++----------
+ tools/tracing/rtla/src/utils.h         |  2 ++
+ tools/verification/rv/Makefile         |  7 ++++++-
+ tools/verification/rv/src/in_kernel.c  |  2 +-
+ 9 files changed, 41 insertions(+), 21 deletions(-)
+---------------------------
+diff --git a/tools/tracing/rtla/Makefile b/tools/tracing/rtla/Makefile
+index 2456a399eb9a..afd18c678ff5 100644
+--- a/tools/tracing/rtla/Makefile
++++ b/tools/tracing/rtla/Makefile
+@@ -28,10 +28,15 @@ FOPTS	:=	-flto=auto -ffat-lto-objects -fexceptions -fstack-protector-strong \
+ 		-fasynchronous-unwind-tables -fstack-clash-protection
+ WOPTS	:= 	-Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS -Wno-maybe-uninitialized
+ 
++ifeq ($(CC),clang)
++  FOPTS := $(filter-out -ffat-lto-objects, $(FOPTS))
++  WOPTS := $(filter-out -Wno-maybe-uninitialized, $(WOPTS))
++endif
++
+ TRACEFS_HEADERS	:= $$($(PKG_CONFIG) --cflags libtracefs)
+ 
+ CFLAGS	:=	-O -g -DVERSION=\"$(VERSION)\" $(FOPTS) $(MOPTS) $(WOPTS) $(TRACEFS_HEADERS) $(EXTRA_CFLAGS)
+-LDFLAGS	:=	-ggdb $(EXTRA_LDFLAGS)
++LDFLAGS	:=	-flto=auto -ggdb $(EXTRA_LDFLAGS)
+ LIBS	:=	$$($(PKG_CONFIG) --libs libtracefs)
+ 
+ SRC	:=	$(wildcard src/*.c)
+diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
+index 8f81fa007364..01870d50942a 100644
+--- a/tools/tracing/rtla/src/osnoise_hist.c
++++ b/tools/tracing/rtla/src/osnoise_hist.c
+@@ -135,8 +135,7 @@ static void osnoise_hist_update_multiple(struct osnoise_tool *tool, int cpu,
+ 	if (params->output_divisor)
+ 		duration = duration / params->output_divisor;
+ 
+-	if (data->bucket_size)
+-		bucket = duration / data->bucket_size;
++	bucket = duration / data->bucket_size;
+ 
+ 	total_duration = duration * count;
+ 
+@@ -480,7 +479,11 @@ static void osnoise_hist_usage(char *usage)
+ 
+ 	for (i = 0; msg[i]; i++)
+ 		fprintf(stderr, "%s\n", msg[i]);
+-	exit(1);
++
++	if (usage)
++		exit(EXIT_FAILURE);
++
++	exit(EXIT_SUCCESS);
+ }
+ 
+ /*
+diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
+index f7c959be8677..457360db0767 100644
+--- a/tools/tracing/rtla/src/osnoise_top.c
++++ b/tools/tracing/rtla/src/osnoise_top.c
+@@ -331,7 +331,11 @@ static void osnoise_top_usage(struct osnoise_top_params *params, char *usage)
+ 
+ 	for (i = 0; msg[i]; i++)
+ 		fprintf(stderr, "%s\n", msg[i]);
+-	exit(1);
++
++	if (usage)
++		exit(EXIT_FAILURE);
++
++	exit(EXIT_SUCCESS);
+ }
+ 
+ /*
+diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
+index 47d3d8b53cb2..dbf154082f95 100644
+--- a/tools/tracing/rtla/src/timerlat_hist.c
++++ b/tools/tracing/rtla/src/timerlat_hist.c
+@@ -178,8 +178,7 @@ timerlat_hist_update(struct osnoise_tool *tool, int cpu,
+ 	if (params->output_divisor)
+ 		latency = latency / params->output_divisor;
+ 
+-	if (data->bucket_size)
+-		bucket = latency / data->bucket_size;
++	bucket = latency / data->bucket_size;
+ 
+ 	if (!context) {
+ 		hist = data->hist[cpu].irq;
+@@ -546,7 +545,11 @@ static void timerlat_hist_usage(char *usage)
+ 
+ 	for (i = 0; msg[i]; i++)
+ 		fprintf(stderr, "%s\n", msg[i]);
+-	exit(1);
++
++	if (usage)
++		exit(EXIT_FAILURE);
++
++	exit(EXIT_SUCCESS);
+ }
+ 
+ /*
+diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
+index 1640f121baca..3e9af2c38688 100644
+--- a/tools/tracing/rtla/src/timerlat_top.c
++++ b/tools/tracing/rtla/src/timerlat_top.c
+@@ -375,7 +375,11 @@ static void timerlat_top_usage(char *usage)
+ 
+ 	for (i = 0; msg[i]; i++)
+ 		fprintf(stderr, "%s\n", msg[i]);
+-	exit(1);
++
++	if (usage)
++		exit(EXIT_FAILURE);
++
++	exit(EXIT_SUCCESS);
+ }
+ 
+ /*
+diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
+index c769d7b3842c..9ac71a66840c 100644
+--- a/tools/tracing/rtla/src/utils.c
++++ b/tools/tracing/rtla/src/utils.c
+@@ -238,12 +238,6 @@ static inline int sched_setattr(pid_t pid, const struct sched_attr *attr,
+ 	return syscall(__NR_sched_setattr, pid, attr, flags);
+ }
+ 
+-static inline int sched_getattr(pid_t pid, struct sched_attr *attr,
+-				unsigned int size, unsigned int flags)
+-{
+-	return syscall(__NR_sched_getattr, pid, attr, size, flags);
+-}
+-
+ int __set_sched_attr(int pid, struct sched_attr *attr)
+ {
+ 	int flags = 0;
+@@ -479,13 +473,13 @@ int parse_prio(char *arg, struct sched_attr *sched_param)
+ 		if (prio == INVALID_VAL)
+ 			return -1;
+ 
+-		if (prio < sched_get_priority_min(SCHED_OTHER))
++		if (prio < MIN_NICE)
+ 			return -1;
+-		if (prio > sched_get_priority_max(SCHED_OTHER))
++		if (prio > MAX_NICE)
+ 			return -1;
+ 
+ 		sched_param->sched_policy   = SCHED_OTHER;
+-		sched_param->sched_priority = prio;
++		sched_param->sched_nice = prio;
+ 		break;
+ 	default:
+ 		return -1;
+@@ -536,7 +530,7 @@ int set_cpu_dma_latency(int32_t latency)
+  */
+ static const int find_mount(const char *fs, char *mp, int sizeof_mp)
+ {
+-	char mount_point[MAX_PATH];
++	char mount_point[MAX_PATH+1];
+ 	char type[100];
+ 	int found = 0;
+ 	FILE *fp;
+diff --git a/tools/tracing/rtla/src/utils.h b/tools/tracing/rtla/src/utils.h
+index 04ed1e650495..d44513e6c66a 100644
+--- a/tools/tracing/rtla/src/utils.h
++++ b/tools/tracing/rtla/src/utils.h
+@@ -9,6 +9,8 @@
+  */
+ #define BUFF_U64_STR_SIZE	24
+ #define MAX_PATH		1024
++#define MAX_NICE		20
++#define MIN_NICE		-19
+ 
+ #define container_of(ptr, type, member)({			\
+ 	const typeof(((type *)0)->member) *__mptr = (ptr);	\
+diff --git a/tools/verification/rv/Makefile b/tools/verification/rv/Makefile
+index 3d0f3888a58c..485f8aeddbe0 100644
+--- a/tools/verification/rv/Makefile
++++ b/tools/verification/rv/Makefile
+@@ -28,10 +28,15 @@ FOPTS	:=	-flto=auto -ffat-lto-objects -fexceptions -fstack-protector-strong \
+ 		-fasynchronous-unwind-tables -fstack-clash-protection
+ WOPTS	:= 	-Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS -Wno-maybe-uninitialized
+ 
++ifeq ($(CC),clang)
++  FOPTS := $(filter-out -ffat-lto-objects, $(FOPTS))
++  WOPTS := $(filter-out -Wno-maybe-uninitialized, $(WOPTS))
++endif
++
+ TRACEFS_HEADERS	:= $$($(PKG_CONFIG) --cflags libtracefs)
+ 
+ CFLAGS	:=	-O -g -DVERSION=\"$(VERSION)\" $(FOPTS) $(MOPTS) $(WOPTS) $(TRACEFS_HEADERS) $(EXTRA_CFLAGS) -I include
+-LDFLAGS	:=	-ggdb $(EXTRA_LDFLAGS)
++LDFLAGS	:=	-flto=auto -ggdb $(EXTRA_LDFLAGS)
+ LIBS	:=	$$($(PKG_CONFIG) --libs libtracefs)
+ 
+ SRC	:=	$(wildcard src/*.c)
+diff --git a/tools/verification/rv/src/in_kernel.c b/tools/verification/rv/src/in_kernel.c
+index ad28582bcf2b..f04479ecc96c 100644
+--- a/tools/verification/rv/src/in_kernel.c
++++ b/tools/verification/rv/src/in_kernel.c
+@@ -210,9 +210,9 @@ static char *ikm_read_reactor(char *monitor_name)
+ static char *ikm_get_current_reactor(char *monitor_name)
+ {
+ 	char *reactors = ikm_read_reactor(monitor_name);
++	char *curr_reactor = NULL;
+ 	char *start;
+ 	char *end;
+-	char *curr_reactor;
+ 
+ 	if (!reactors)
+ 		return NULL;
