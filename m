@@ -1,132 +1,150 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF1B117C60;
-	Mon, 12 Feb 2024 09:54:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12405680;
+	Mon, 12 Feb 2024 09:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707731670; cv=none; b=lssWrdddfk77LSMZR9ETtpkMCncn/n292+y5S24UypnKcL/CHuyKR6KlbW2o7veMFRE1u2GFs6fN57Bzv1ZWzvWtrPHaYJj+YoYx/GytHFoVZw6bWFcmU3A2JQ5MLkOPp2F+BXzcPISAB97e2Wj82n7p9zGRWz8VPYYmMmcZn4Y=
+	t=1707731722; cv=none; b=AbnyYQYW9sWjKp7/LNeLtEnWbMKMQcHX5ab4dmV4WjV8I1fy/mNAnAuB9crODQd/L7wPs4J0IWU8y+BT5d9XakMOfJ0xS4xwQeUR0IoAqKFSRGVS1B7lQvhOwCaqEnJeLorZDmtFGoXh+xy9gVDRu1g6Hyqi8RhT9ac20RI3J+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707731670; c=relaxed/simple;
-	bh=TMIQDKpWunM+UrneNS0NgY3ocyzjZza2ecHhJJ88y1k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nPNnlY9wynWnct8iTObIyjmCe5VwytOrnBGXAj0uzVOuBkuVM3ei2EEIwzR3qLqY0k+HKqqwQkCzqNMmGopVSeYU18Sx0YdCK7wZWe+SyZNKZoIKa9rpzltJ9IQyLEyn0Nfi7attU9i5oSRuEuQZISE3piXdTK3DLnj6Gy3bIjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MdQmsBfh; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707731722; c=relaxed/simple;
+	bh=t4WvYxU51ydBpw383RUz2vrJCztI+BCrun0XRdgVmKQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UYS4KcGpX/JFvkuKJ0RH/u8PXvioY3/4t9h2SZ6qduEsyNoErR1tBA03MCEZaPxNrtGAX6xPjjpG+e+BKrHHAIRnb2pzVFoYH/OdnxProc26+cOs656qRCZDJ+kh+JppBlDaP10Op841T22+92uCDiTDd23x0AqoGpDv4LBRY2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UtTjwY9y; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=M2CnSysU; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RI2oHVs3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=eNEsrdT2; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MdQmsBfh"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a3850ce741bso284249066b.3;
-        Mon, 12 Feb 2024 01:54:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707731667; x=1708336467; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TMIQDKpWunM+UrneNS0NgY3ocyzjZza2ecHhJJ88y1k=;
-        b=MdQmsBfhgbYHH6hymmhEszVWOymUHbrr0TrZag+RqIp7O+VFHusX7oOYBr8a9zKDaS
-         mPwbm4vc0wuQaLtp+8cpXffwtoFuropO3IWF6515r+14pszXkBcVVMvuxP3r52dmdhAF
-         z8bwWSxVVrdtvcpjncQPiATiOw4p62SHPnQev/5/71yHIcfD1g7CGlwBXuBu31oz2g9M
-         VhPsK9XqHJUfPh2cetwNml4ncwbV7DuKJ6qI0Me5472OjcutXmeGcbNYVi2+5NCME7It
-         6PJGhnYDjZKtxbd8Wrna0qWpMlMck3zu4Vy7oeJUMGavhNVboWO8lype0mAuzT2R3xbg
-         Qj+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707731667; x=1708336467;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TMIQDKpWunM+UrneNS0NgY3ocyzjZza2ecHhJJ88y1k=;
-        b=HpeplDEFUHpUxFrnkrcaRUa4ZF7pUZ3jluQ26jFPmTpTfoE74bEX4bCIJvsLPncbtD
-         bzVCyqBCJw4x0EDElBnMhUDlaQwwkGkL3M+K/n7AmdOBYQiQNhyJbNgzZGT0QNDdeOm+
-         yjUUEYU8Eng0H3Vmyk0U/Bz/YYp1TApVxeTRJFDYQkgPsNB5LDBDby/bI1M4yNaNtSuP
-         ngFRhCJ/p+aFcTcCHB4uCQBGnyJofgB7tD5qVrTV/+SO7mydhWZCrvKmgAASLB+wFmai
-         bCNITbU/5JmRV8UTmN4PB3vxqUZT0koIna99NqTUCyBwcVQYoOO69DME9Dy+FDflABTt
-         ScEg==
-X-Gm-Message-State: AOJu0Yyf0YQtkcm0tsSQaYrjwB3qr8WchtPn96Pm/lGAILOJs3t+eOH7
-	lcJ5Go/xYfjm2MSq8mpsPGgkdNZevbgmmXdsu2grEUHG7tCxXPKCnPJ2lV6gJwSjwLuwKscCs4T
-	CAgVktueaodVz1IWsTiIJCfKnbc4=
-X-Google-Smtp-Source: AGHT+IG/MlHO4rtA/ydi+JG0ItW1+P0Kw4weOn/uJNJktOE3eTDa25UDCp+VSUuqwmxkMzquRjo17adF55sUnhaFaMo=
-X-Received: by 2002:a17:906:4c57:b0:a3c:8a77:e67d with SMTP id
- d23-20020a1709064c5700b00a3c8a77e67dmr1916452ejw.59.1707731666830; Mon, 12
- Feb 2024 01:54:26 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UtTjwY9y";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="M2CnSysU";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RI2oHVs3";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="eNEsrdT2"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 5D98021C55;
+	Mon, 12 Feb 2024 09:55:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707731716; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TcOt8F/vPFobphbJxqs2m3ZJ2DqTEZsfenrec8cS0dc=;
+	b=UtTjwY9yyodJDceWP/WkqF2y+A1kALxjOIl57ksBltuIiw/wnTU4YH0sll5WHp13+K2NtU
+	K+gZeMkVhS9ade2ALrbpaqJWQA25mcPFZG2GKgKO3NEWjrAV4D+fzLqCuQ8Fvo4LK7j+d8
+	dqFh1MRucIebxZVX77SOlZRUtMragRc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707731716;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TcOt8F/vPFobphbJxqs2m3ZJ2DqTEZsfenrec8cS0dc=;
+	b=M2CnSysUHtdXn9kwBLsqBR5gUyHtkBsnJtQ+ag46LwN1eGfcOPN/P6IeBfnrfWHlp2t2fH
+	UZDbTySVVF8BV9Cw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707731714; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TcOt8F/vPFobphbJxqs2m3ZJ2DqTEZsfenrec8cS0dc=;
+	b=RI2oHVs3KSB3UJrXCyqeWJLdVfkA30EgSO/rXf+AioGez8Xz5xCuaMK8Fwf6uuKFO9JXVx
+	qZwkz/+HIn17FhAMVQAuB3CaJWzkjqedJnv+ujQrE90xil7ynPSNdZTovI0dX3EO9QVSrO
+	gWHWr8TJb43rLuMPeJY3xL02mI5iVDM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707731714;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TcOt8F/vPFobphbJxqs2m3ZJ2DqTEZsfenrec8cS0dc=;
+	b=eNEsrdT2dKXIw/yRW0fLu018iWrhcqMvCjURM6YjrMi6mRX8tEAbQ31ngiwG5aNOLeweF0
+	Ql22q2eJIUGroICw==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 44C2313A0E;
+	Mon, 12 Feb 2024 09:55:14 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id hmFQDwLryWUwAQAAn2gu4w
+	(envelope-from <dwagner@suse.de>); Mon, 12 Feb 2024 09:55:14 +0000
+Date: Mon, 12 Feb 2024 10:55:13 +0100
+From: Daniel Wagner <dwagner@suse.de>
+To: Fedor Pchelkin <pchelkin@ispras.ru>
+Cc: James Smart <james.smart@broadcom.com>, 
+	Ram Vegesna <ram.vegesna@broadcom.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, Hannes Reinecke <hare@suse.de>, linux-scsi@vger.kernel.org, 
+	target-devel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Alexey Khoroshilov <khoroshilov@ispras.ru>, lvc-project@linuxtesting.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2] scsi: elx: efct: adjust error handling inside
+ efct_hw_setup_io
+Message-ID: <fbz7l6ekiqqhi47cv6r2ots7siztdydfcspwr2jt56ldsyxjep@rwd5zx2oezl4>
+References: <2ik7x74hq6exam5ab4v2moauy4lfvqe3r626bxxettseat2nmv@q4gykxnezkff>
+ <20240210110833.27723-1-pchelkin@ispras.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231214173614.2820929-1-gnstark@salutedevices.com>
- <20231221151111.GJ10102@google.com> <ZcZcpUHygltD2ETa@smile.fi.intel.com> <d844862e-1d1c-4c9a-b7fe-e0ac44f4126e@salutedevices.com>
-In-Reply-To: <d844862e-1d1c-4c9a-b7fe-e0ac44f4126e@salutedevices.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 12 Feb 2024 11:53:49 +0200
-Message-ID: <CAHp75VfQd9e4fLAYkYrMajnJfPQqno6s_aiTarErPiqP-Z6ydg@mail.gmail.com>
-Subject: Re: [DMARC error][SPF error] Re: [PATCH v4 00/10] devm_led_classdev_register()
- usage problem
-To: George Stark <gnstark@salutedevices.com>
-Cc: pavel@ucw.cz, vadimp@nvidia.com, mpe@ellerman.id.au, npiggin@gmail.com, 
-	christophe.leroy@csgroup.eu, hdegoede@redhat.com, mazziesaccount@gmail.com, 
-	peterz@infradead.org, mingo@redhat.com, will@kernel.org, longman@redhat.com, 
-	boqun.feng@gmail.com, nikitos.tr@gmail.com, linux-leds@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	Lee Jones <lee@kernel.org>, kernel@salutedevices.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240210110833.27723-1-pchelkin@ispras.ru>
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=RI2oHVs3;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=eNEsrdT2
+X-Spamd-Result: default: False [-1.81 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_TWELVE(0.00)[12];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email,linuxtesting.org:url,ispras.ru:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.00)[38.62%];
+	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:98:from]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 5D98021C55
+X-Spam-Level: 
+X-Spam-Score: -1.81
+X-Spam-Flag: NO
 
-On Mon, Feb 12, 2024 at 1:52=E2=80=AFAM George Stark <gnstark@salutedevices=
-.com> wrote:
-> I haven't lose hope for the devm_mutex thing and keep pinging those guys
-> from time to time.
+On Sat, Feb 10, 2024 at 02:08:33PM +0300, Fedor Pchelkin wrote:
+> IO and WQE buffers are allocated once per HW and can be reused later. If
+> WQE buffers allocation fails then the whole allocation is marked as failed
+> but already created IO array internal objects are not freed. hw->io is
+> freed but not nullified in that specific case - it may become a problem
+> later as efct_hw_setup_io() is supposed to be reusable for the same HW.
+> 
+> Also rollback if HW IO objects initialization loop fails due to memory
+> allocation error.
+> 
+> While at it, use kcalloc instead of kmalloc_array/memset-zero combination
+> and get rid of some needless NULL assignments: nullifying hw->io[i]
+> elements just before freeing hw->io is not really useful.
+> 
+> Found by Linux Verification Center (linuxtesting.org).
+> 
+> Fixes: 4df84e846624 ("scsi: elx: efct: Driver initialization routines")
+> Cc: stable@vger.kernel.org
+> Suggested-by: Daniel Wagner <dwagner@suse.de>
+> Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
+> ---
+> v2: per Daniel Wagner's notice, handle the other possible memory
+>     allocation errors inside the function.
 
-I don't understand. According to v4 thread Christophe proposed on how
-the patch should look like. What you need is to incorporate an updated
-version into your series. Am I wrong?
+Looks good to me! Thanks!
 
-> Sure I can single out the fix-only patch I'll do it tomorrow.
-
-I believe it can be handled without issuing it separately. `b4` tool
-is capable of selective choices. It was rather Q to Lee if he can/want
-to apply it right away.
-
-> On 2/9/24 20:11, Andy Shevchenko wrote:
-> > On Thu, Dec 21, 2023 at 03:11:11PM +0000, Lee Jones wrote:
-> >> On Thu, 14 Dec 2023, George Stark wrote:
-> >>
-> >>> This patch series fixes the problem of devm_led_classdev_register mis=
-using.
-> >>>
-> >>> The basic problem is described in [1]. Shortly when devm_led_classdev=
-_register()
-> >>> is used then led_classdev_unregister() called after driver's remove()=
- callback.
-> >>> led_classdev_unregister() calls driver's brightness_set callback and =
-that callback
-> >>> may use resources which were destroyed already in driver's remove().
-> >>>
-> >>> After discussion with maintainers [2] [3] we decided:
-> >>> 1) don't touch led subsytem core code and don't remove led_set_bright=
-ness() from it
-> >>> but fix drivers
-> >>> 2) don't use devm_led_classdev_unregister
-> >>>
-> >>> So the solution is to use devm wrappers for all resources
-> >>> driver's brightness_set() depends on. And introduce dedicated devm wr=
-apper
-> >>> for mutex as it's often used resource.
-> >>>
-> >>> [1] https://lore.kernel.org/lkml/8704539b-ed3b-44e6-aa82-586e2f895e2b=
-@salutedevices.com/T/
-> >>> [2] https://lore.kernel.org/lkml/8704539b-ed3b-44e6-aa82-586e2f895e2b=
-@salutedevices.com/T/#mc132b9b350fa51931b4fcfe14705d9f06e91421f
-> >>> [3] https://lore.kernel.org/lkml/8704539b-ed3b-44e6-aa82-586e2f895e2b=
-@salutedevices.com/T/#mdbf572a85c33f869a553caf986b6228bb65c8383
-> >
-> > ...
-> >
-> >> FYI: I'll conduct my review once the locking side is settled.
-> >
-> > To reduce burden can you apply the first one? It's a fix.
-
---=20
-With Best Regards,
-Andy Shevchenko
+Reviewed-by: Daniel Wagner <dwagner@suse.de>
