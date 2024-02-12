@@ -1,161 +1,80 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2AD3A1A1
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 12:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7181539FE0
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 12:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707741948; cv=none; b=iWE2wNIhaajVjE3GN45Fo+qyfKBVdNpRrhJk98a0+WaYddJCInZi0zYxuhk2wcWWyjKYX5q4afiy3jWOGm/ViZTfCzNIXFPzie52rsrc5fB4XhpGY6t3mYTLuuJmn/fZuMW48qDcxdLMO/GO3v6cTUFadKwGDcsUnFXToJJMaY8=
+	t=1707741952; cv=none; b=KUeo+KpZnR5mHuyLOBNhC0UJVQFZRFnnKu5fShhxVANu/Jtc/kH1ykwsjiJgCItuaT/X7GSuP8DyyuXZRq+zgn4swqgYuVFo64HhL0jD+LqAli+0kNPLZdhllV/fTrFlJ1r/OE5cc8dVh8oZb3pbki9xfBztJsMSJHAkcyt1NdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707741948; c=relaxed/simple;
-	bh=47Vc+He3k3RnRH0Ql7hR/kVezI3csD20gT8aPlqqG/w=;
+	s=arc-20240116; t=1707741952; c=relaxed/simple;
+	bh=tayDtlPlx5o6p0Re1yK3lCp2UKqcklR8YnRrrnZiHmA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hWilx0OCthbURvobHyNaXqWekAUfCn5f7UMxPSbl9h7VFvDEWnvhHvviMyHvqdpLBkZ0Nr0gM0E/cENbKKq74rV6+FMxucH1g6kI5y1eY8IoQtc5APZObjBa/Iyc7HLmAN3YCyriZW8X1gOleSSjp9ejPsADUDbkfWTZCl0FqJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IJO4yTxU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=IPOdjfmqrdgkHinsKpdi6oAhh2h3FNGrBlG6ZYwifDcYIm2aYFA5Ki/4aSnneg6Blkh12Onbg8a78soNra1btR0fjRq3tH7WhFihVXPMkEsRU78jFc4C+DyuUXnIE8xZCgCyNtT3eCPz5x05fQG4gTCQj5x746bpawegCr5a+ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iM92ejlz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IJO4yTxU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707741945;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CDSPlvIYjBlKyfzOSysIpxi5bGhwenO4Xb+dpw1JB1E=;
-	b=IJO4yTxU9HC6nXUps5gL36XZmVLsSWPrxmz02UIGsV/7CcQuzDpZbSx/C+YyqMmc6f3soX
-	8GhG8xi/vO7uxZ3WTwIcJtfXcmxUH7ut4BHk2hMW7oosMaDcF8MUzs5YTNoWWfpepdNqcW
-	UVv2ijBgr1fuq1ol68Y5fqVDnTjwnSY=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-417-ba70zfwLNsySkNpyQxSsgg-1; Mon,
- 12 Feb 2024 07:45:42 -0500
-X-MC-Unique: ba70zfwLNsySkNpyQxSsgg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2CEB81C29EA0;
-	Mon, 12 Feb 2024 12:45:42 +0000 (UTC)
-Received: from bfoster (unknown [10.22.8.118])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9FCFBC2E1E6;
-	Mon, 12 Feb 2024 12:45:41 +0000 (UTC)
-Date: Mon, 12 Feb 2024 07:47:00 -0500
-From: Brian Foster <bfoster@redhat.com>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Dave Chinner <david@fromorbit.com>, brauner@kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Jan Kara <jack@suse.cz>, Dave Chinner <dchinner@redhat.com>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Theodore Ts'o <tytso@mit.edu>
-Subject: Re: [PATCH v2 3/7] fs: FS_IOC_GETUUID
-Message-ID: <ZcoTROgZiKOfp3iM@bfoster>
-References: <20240206201858.952303-1-kent.overstreet@linux.dev>
- <20240206201858.952303-4-kent.overstreet@linux.dev>
- <ZcKsIbRRfeXfCObl@dread.disaster.area>
- <cm4wbdmpuq6mlyfqrb3qqwyysa3qao6t5sc2eq3ykmgb4ptpab@qkyberqtvrtt>
- <ZcN+8iOBR97t451x@bfoster>
- <krc2udjtkvylugzuledk7hre7rizmiajrgkiwvwcmsxtgxobyz@miqndphw7uhi>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iM92ejlz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60D09C43394;
+	Mon, 12 Feb 2024 12:45:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707741951;
+	bh=tayDtlPlx5o6p0Re1yK3lCp2UKqcklR8YnRrrnZiHmA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iM92ejlzhszCISkJf+x8WRaW92+r0uNWiwo7qZYTcchEJXLqLby6H8yXVhCWcbHH0
+	 CtWrp2QHwG/ILgWFr5Hjm7pYnn/8D0i4IUzfFazLGn1KLteJZTi4DU32azYylR2BJo
+	 1Ye5UjxGBgFHJu4MP6mOT+iEB3S8YTtbQ3gbKbncCYjR6A1DXI2udpnQO0lmyZnZRS
+	 mCSDj3bAIOvrrK/uxKqV86D3WcrmN5gqMUXok2rC5ZWqv6+99uW+QY0+lrowixowUf
+	 9Pjh17556hsYyjlRQhBnwdhNRabEJ5R6EXg334z4KRg7YOXuAb34/aDna6jn+0IXWU
+	 prMLp5w9mr3Mw==
+Date: Mon, 12 Feb 2024 12:45:47 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Yinchuan Guo <guoych37@mail2.sysu.edu.cn>
+Cc: linux-kernel@vger.kernel.org, lee.jones@linaro.org, lgirdwood@gmail.com,
+	perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org
+Subject: Re: [PATCH] sound: codecs: fix typo 'reguest' to 'request'
+Message-ID: <279b1b4f-1487-4519-8208-dca5f2576078@sirena.org.uk>
+References: <20240212065014.3696356-1-guoych37@mail2.sysu.edu.cn>
+ <20240212101820.18437-1-guoych37@mail2.sysu.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="YZPcNs4IBbyjVRkh"
+Content-Disposition: inline
+In-Reply-To: <20240212101820.18437-1-guoych37@mail2.sysu.edu.cn>
+X-Cookie: Will stain.
+
+
+--YZPcNs4IBbyjVRkh
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <krc2udjtkvylugzuledk7hre7rizmiajrgkiwvwcmsxtgxobyz@miqndphw7uhi>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-On Thu, Feb 08, 2024 at 04:57:02PM -0500, Kent Overstreet wrote:
-> On Wed, Feb 07, 2024 at 08:05:29AM -0500, Brian Foster wrote:
-> > On Tue, Feb 06, 2024 at 05:37:22PM -0500, Kent Overstreet wrote:
-> > > On Wed, Feb 07, 2024 at 09:01:05AM +1100, Dave Chinner wrote:
-> > > > On Tue, Feb 06, 2024 at 03:18:51PM -0500, Kent Overstreet wrote:
-> > > > > +static int ioctl_getfsuuid(struct file *file, void __user *argp)
-> > > > > +{
-> > > > > +	struct super_block *sb = file_inode(file)->i_sb;
-> > > > > +
-> > > > > +	if (!sb->s_uuid_len)
-> > > > > +		return -ENOIOCTLCMD;
-> > > > > +
-> > > > > +	struct fsuuid2 u = { .len = sb->s_uuid_len, };
-> > > > > +	memcpy(&u.uuid[0], &sb->s_uuid, sb->s_uuid_len);
-> > > > > +
-> > > > > +	return copy_to_user(argp, &u, sizeof(u)) ? -EFAULT : 0;
-> > > > > +}
-> > > > 
-> > > > Can we please keep the declarations separate from the code? I always
-> > > > find this sort of implicit scoping of variables both difficult to
-> > > > read (especially in larger functions) and a landmine waiting to be
-> > > > tripped over. This could easily just be:
-> > > > 
-> > > > static int ioctl_getfsuuid(struct file *file, void __user *argp)
-> > > > {
-> > > > 	struct super_block *sb = file_inode(file)->i_sb;
-> > > > 	struct fsuuid2 u = { .len = sb->s_uuid_len, };
-> > > > 
-> > > > 	....
-> > > > 
-> > > > and then it's consistent with all the rest of the code...
-> > > 
-> > > The way I'm doing it here is actually what I'm transitioning my own code
-> > > to - the big reason being that always declaring variables at the tops of
-> > > functions leads to separating declaration and initialization, and worse
-> > > it leads people to declaring a variable once and reusing it for multiple
-> > > things (I've seen that be a source of real bugs too many times).
-> > > 
-> > 
-> > I still think this is of questionable value. I know I've mentioned
-> > similar concerns to Dave's here on the bcachefs list, but still have not
-> > really seen any discussion other than a bit of back and forth on the
-> > handful of generally accepted (in the kernel) uses of this sort of thing
-> > for limiting scope in loops/branches and such.
-> > 
-> > I was skimming through some more recent bcachefs patches the other day
-> > (the journal write pipelining stuff) where I came across one or two
-> > medium length functions where this had proliferated, and I found it kind
-> > of annoying TBH. It starts to almost look like there are casts all over
-> > the place and it's a bit more tedious to filter out logic from the
-> > additional/gratuitous syntax, IMO.
-> > 
-> > That's still just my .02, but there was also previous mention of
-> > starting/having discussion on this sort of style change. Is that still
-> > the plan? If so, before or after proliferating it throughout the
-> > bcachefs code? ;) I am curious if there are other folks in kernel land
-> > who think this makes enough sense that they'd plan to adopt it. Hm?
-> 
-> That was the discussion :)
-> 
-> bcachefs is my codebase, so yes, I intend to do it there. I really think
-> this is an instance where you and Dave are used to the way C has
-> historically forced us to do things; our brains get wired to read code a
-> certain way and changes are jarring.
-> 
+On Mon, Feb 12, 2024 at 06:18:20PM +0800, Yinchuan Guo wrote:
+> This patch corrects a common misspelling of "request" as "reguest" found
+> in the log messages across various files within sound/soc/codecs.
 
-Heh, fair enough. That's certainly your prerogative. I'm certainly not
-trying to tell you what to do or not with bcachefs. That's at least
-direct enough that it's clear it's not worth debating too much. ;)
+Please submit patches using subject lines reflecting the style for the
+subsystem, this makes it easier for people to identify relevant patches.
+Look at what existing commits in the area you're changing are doing and
+make sure your subject lines visually resemble what they're doing.
+There's no need to resubmit to fix this alone.
 
-> But take a step back; if we were used to writing code the way I'm doing
-> it, and you were arguing for putting declarations at the tops of
-> functions, what would the arguments be?
-> 
+--YZPcNs4IBbyjVRkh
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I think my thought process would be similar. I.e., is the proposed
-benefit of such a change worth the tradeoffs?
+-----BEGIN PGP SIGNATURE-----
 
-> I would say you're just breaking up the flow of ideas for no reason; a
-> chain of related statements now includes a declaration that isn't with
-> the actual logic.
-> 
-> And bugs due to variable reuse, missed initialization - there's real
-> reasons not to do it that way.
-> 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXKEvoACgkQJNaLcl1U
+h9Bl7wf+IHfyDCF21Yc366dRvZpkBp65DHKrxCRC6RKhJjS91F4fgTz+ZQUSdjvg
+mA7Nz1Gq5DR0dDAy5zNrFQVb6Qq2cZInJRwJ9Zv+M+6XhTlvVI+sTEa8eLL1Z2LH
+wvDy2+K90gSaMWYWNbAMJWT+m3mDG1UVBKMkutSmtGQMnkHAR8RGILhApTr1MFtz
+B3s8ZwiHw2LheKvEaviyO+B5zZ6BYyZJ740jFENdWfltHKNRKVCg8ly7drcBEddx
+pnMKP4hhr3261pDeQPYsTmkheyxVQt4AdPvEUbdwfqKJuuNpN+mJb2MYgaDc/u+Y
+KDDsFV/kjDwcqcIdlzqtpIdeQTv4nA==
+=4JNf
+-----END PGP SIGNATURE-----
 
-And were I in that position, I don't think I would reduce a decision
-that affects readability/reviewability of my subsystem to a nontrivial
-degree (for other people, at least) to that single aspect. This would be
-the answer to the question: "is this worth considering?"
-
-Brian
-
+--YZPcNs4IBbyjVRkh--
