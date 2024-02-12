@@ -1,91 +1,118 @@
-Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CD13A8EB
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 12:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2849D3B783;
+	Mon, 12 Feb 2024 12:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707740021; cv=none; b=g8X9MbKAr2hDVFTR1Ecso0izmglcsFairNOIVBMhruWGblFksSXIMiEg+GaPJ0W23dlWKloe2G2Viu4TPFlu/9QZLH2BDr39AtI21CWxGXH5O7AlQXG+i+O5vYV8qxdqK2hw/Y0vFXCPA9i2P2hgGmA0brXXVKpcS41mtSlncas=
+	t=1707740044; cv=none; b=shTuFlU/qyxgZj1eOBmAgiU6F4uYQcGjARw8p/7K8xzGMo2dfY0k2KRQNHvd/VCTvwWSQMcLGlD30VnFHH8NzExigCYUJ+gteYqbU5retLNe2egnIDYCSAzekTuciJAY0EFYtHP/8mP8Y3qeAd8MyrRPIq9/67VI1+2jrSIXcYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707740021; c=relaxed/simple;
-	bh=xKohLmgszB47qEXbhAej0mnn6ushwhKQLMYAMblD060=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=VojJOe8c/o5tIN9fLdhQ9L0ofaajVN1y4vGXl2S+SzKcV43AkuC/8MqWdM7qPqArpft0HPgn1e6+mHClLTnqh8S/Vtre2i22vKiJpjjrRQbK7espEFsqS8IyAKeEn34Hycb6XxAQHjTFbx40uWLEOrHOzLXbotcIYDUZR0GcAaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=r+reU0DV; arc=none smtp.client-ip=203.205.221.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1707740044; c=relaxed/simple;
+	bh=95Tz2nLS8qGhsUQIbqsSqYKNRqEfqdnfgnY+bZCrxs8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TsUdTv1mUXeqLYgeix15xRrU3d4J1DDMqn6O71iJNg14hWKWvZJ7I4n7noAq86WjeDAyvf22cak0ObEZzqTeelGFq3mKq0G7zbcZBufxAE/EQig7xM4CCten9FjNs976kL2uklky2pjQ5u4so7fFeUfJ82mR3ERfaOg/i8K/uGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m9USiGBC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="r+reU0DV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1707740010; bh=xTQJRPDMPKxwfMQecLLy0zy3Z6oeJK5jbhqCH22xWW8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=r+reU0DVh10JDI2PRzL0hO2b54uB0eMa5du08NBmr+5yK96l2mbEH8zsMxFz/G3hi
-	 WOm3146KjxugmJ7ZxM53r9Qtd3QvVHJMhi/DdQn8/UNi7JBGUuahGdDjPEjGm0Tk4B
-	 5z9tmPrv89v1LeJzryjHs6pSqFHXQ19rV6obS7qQ=
-Received: from pek-lxu-l1.wrs.com ([36.129.58.158])
-	by newxmesmtplogicsvrszc5-2.qq.com (NewEsmtp) with SMTP
-	id 1D42E6B0; Mon, 12 Feb 2024 20:07:20 +0800
-X-QQ-mid: xmsmtpt1707739640t7f1xmzly
-Message-ID: <tencent_9E786E6C4C2DF96F4097BCEA5AED66CEBC0A@qq.com>
-X-QQ-XMAILINFO: N5sfBKY/oC4k2pZio3FMLYvCCX1tGL5fDqcEh+KzrsHvTELLJEQRN05gdsY9Uy
-	 kqxqJkdOkKGeWbLLopMaf2/Ak6JDGcMRQ1bvbS1fqJKOZqsSCJsXVGxIH7L4XOYS64mpfSjqUw9Q
-	 DZ7mk/OnWi/qR+C/poOxLrn9l1iAXYijPbByxFP2cdPBrpistSzxFf2QTZwqvJ9Urhjty8qz7x0w
-	 ViWogcZdzY3Go30mu2Hn85VqF5JLbHhVDItEZEbR117GUUWz4nLuYTAueuvVfsRjDrXj4EGgC7mG
-	 9gVsC29TB93CufcLAAnMajowE9RE+2cgyugbFesStEZ6dxWC2r4Um7ZfBgBz8pifbJ7UE08FutYt
-	 85pApXai4DUywAWUN15Th/UyYPLpYAy/Ag5Gu7ezauZKotSTAY60s+zU87hv1DmBUfRTiZmAux79
-	 CDfPIx7tMHJGBkZ4htxt9hBCRqSQm8XcCa/B/IeO8PcI3uN3WsCmJSQQ4ybenRaTAubb1YiptJJ0
-	 sWOrX+Blw1tKSHo73+oy4Ue7rfw/esygIA9LRhah1mzTnfWpkSi7Jc0nZFfs7QbvQSoyul3Lswkm
-	 MxpA+PLg049cJ3MIxXZpO2s1H4+b+PgeB7rnReAd0DUnXwjoq+GpxDUCpj2MI+Rpoa0ap7mNgu24
-	 AxGvv5iAocChYBmMSm32fFWTIkhVGJAAHyyQErJLsrZfkj99pIHIzun7WrozV8ZMCAGDMqyX4HFq
-	 h2wE1WVprEDahR3bvXGhqdCfsXSgUXn/vRTtfn+wjNM4Ne5jUfOE1y9t2ltxbc1qwiZ3WV03Ir71
-	 7X6Ai1DiJG1K0vDuqwn1ABGlUZyovgJHOpOsaX2c2wQRleouc2KW7DhBDUyO8hsW8ReQCGvedi0g
-	 FuuQd9K425XaIceePkHZK179+YTyNdTyKSJu4PrDsUI/iCp+caL9U=
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+0d7a3627fb6a42cf0863@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH] Test divide err in drm
-Date: Mon, 12 Feb 2024 20:07:20 +0800
-X-OQ-MSGID: <20240212120720.120067-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000587e0f06112cd973@google.com>
-References: <000000000000587e0f06112cd973@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m9USiGBC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07FE0C433C7;
+	Mon, 12 Feb 2024 12:13:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707740043;
+	bh=95Tz2nLS8qGhsUQIbqsSqYKNRqEfqdnfgnY+bZCrxs8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=m9USiGBCVZPxf3gJRTfe3AFevQ6PQp7alHf2Q8N/alAGW/eQ1EHbr8KPsk0D8uWCA
+	 a2sPmLvwQHuixvlZZG64saCMjqtDLlgZUJUJT+62TWJn73VOZ6xz7w52AXtAe0UxYW
+	 rdtLc0uYkGpWhdC5PV/PvOyP/HeIBppS4HaWgtvq7YakzsE901QBHXHnSVL0oPFX8g
+	 //DdhB3il4cedvMYlOPSvyy1oTcDgkZt1hUWnWKru6ZMGJ4buxaxg/MX2+7OWx6PQF
+	 mnS6Qh0zQhYqblpeNOxFjLORif8Hm+OOGOVYgvELt5YRZW13SEJGh8eH1pDZs9VX5u
+	 tqI4o+CWMYgNQ==
+Message-ID: <2629cd30-23aa-4f03-8452-ae13297fd6b6@kernel.org>
+Date: Mon, 12 Feb 2024 14:13:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] arm64: dts: ti: k3-am62-main: disable usb lpm
+Content-Language: en-US
+To: Andrejs Cainikovs <andrejs.cainikovs@gmail.com>,
+ Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Tero Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Aswath Govindraju <a-govindraju@ti.com>,
+ Sjoerd Simons <sjoerd@collabora.com>
+Cc: Andrejs Cainikovs <andrejs.cainikovs@toradex.com>,
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, "Bin Liu [EP]" <b-liu@ti.com>,
+ "Gunasekaran, Ravi" <r-gunasekaran@ti.com>
+References: <20240209130213.38908-1-andrejs.cainikovs@gmail.com>
+From: Roger Quadros <rogerq@kernel.org>
+In-Reply-To: <20240209130213.38908-1-andrejs.cainikovs@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-please test divide err in drm
+Hi Andrejs,
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+On 09/02/2024 15:02, Andrejs Cainikovs wrote:
+> From: Andrejs Cainikovs <andrejs.cainikovs@toradex.com>
+> 
+> AM62 USB works with some devices, while failing to operate with others.
 
-diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
-index ac9a406250c5..60739d861da2 100644
---- a/drivers/gpu/drm/drm_modes.c
-+++ b/drivers/gpu/drm/drm_modes.c
-@@ -36,6 +36,7 @@
- #include <linux/list.h>
- #include <linux/list_sort.h>
- #include <linux/of.h>
-+#include <linux/overflow.h>
- 
- #include <video/of_display_timing.h>
- #include <video/of_videomode.h>
-@@ -1297,8 +1298,10 @@ int drm_mode_vrefresh(const struct drm_display_mode *mode)
- 		num *= 2;
- 	if (mode->flags & DRM_MODE_FLAG_DBLSCAN)
- 		den *= 2;
--	if (mode->vscan > 1)
--		den *= mode->vscan;
-+	if (mode->vscan > 1) {
-+		if (unlikely(check_mul_overflow(den, mode->vscan, &den)))
-+			return 0;
-+	}
- 
- 	return DIV_ROUND_CLOSEST_ULL(mul_u32_u32(num, 1000), den);
- }
+Could you please share which devices failed to work for you?
 
+> 
+> [  560.189822] xhci-hcd xhci-hcd.4.auto: xHCI Host Controller
+> [  560.195631] xhci-hcd xhci-hcd.4.auto: new USB bus registered, assigned bus number 2
+> [  574.388509] xhci-hcd xhci-hcd.4.auto: can't setup: -110
+> [  574.393814] xhci-hcd xhci-hcd.4.auto: USB bus 2 deregistered
+> [  574.399544] xhci-hcd: probe of xhci-hcd.4.auto failed with error -110
+> 
+> This seems to be related to LPM (Link Power Management), and disabling it
+> turns USB into reliable working state.
+> 
+> As per AM62 reference manual:
+> 
+>> 4.8.2.1 USB2SS Unsupported Features
+>>
+>> The following features are not supported on this family of devices:
+>> ...
+>> - USB 2.0 ECN: Link Power Management (LPM)
+>> ...
+> 
+> Fixes: 2240f96cf3cd ("arm64: dts: ti: k3-am62-main: Add support for USB")
+> Signed-off-by: Andrejs Cainikovs <andrejs.cainikovs@toradex.com>
+> ---
+>  arch/arm64/boot/dts/ti/k3-am62-main.dtsi | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+> index 464b7565d085..c49fbce5cb70 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+> @@ -640,6 +640,8 @@ usb0: usb@31000000 {
+>  			interrupt-names = "host", "peripheral";
+>  			maximum-speed = "high-speed";
+>  			dr_mode = "otg";
+> +			snps,usb2-gadget-lpm-disable;
+> +			snps,usb2-lpm-disable;
+>  		};
+>  	};
+>  
+> @@ -663,6 +665,8 @@ usb1: usb@31100000 {
+>  			interrupt-names = "host", "peripheral";
+>  			maximum-speed = "high-speed";
+>  			dr_mode = "otg";
+> +			snps,usb2-gadget-lpm-disable;
+> +			snps,usb2-lpm-disable;
+>  		};
+>  	};
+>  
+
+Instead of this could you please check if this series fixes the issue for you?
+https://lore.kernel.org/all/20240205141221.56076-1-rogerq@kernel.org/
+
+-- 
+cheers,
+-roger
