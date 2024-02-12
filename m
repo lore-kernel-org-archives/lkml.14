@@ -1,105 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A92F4F88E;
-	Mon, 12 Feb 2024 18:42:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB96B3E464
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 18:43:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707763361; cv=none; b=BTLrYxiIeLSM36mLRI9VjB9oho4w3LdDj1hRtMRTbY2y15N10wKieFjKbRUEeIteS+Rz6m9YDiRb6eYIqnOB3kzuqi/o7+0VsnHxrq3UiQwFZKFbAvU+xM52t7nN9aSGgUYI5xtUv3DzrdqwBQiICZwDZrTdX4FwkINsZE/D0Yo=
+	t=1707763407; cv=none; b=Ygu23TlIky0/TvKjytdVt2z0AA+DwKJ9fr/8nnO7hYtfqWepi1+upB18My0Xeqjh/dN+V85HlR0hwlMoMMweWGGi6Rjpo0zAS8YvPBfNdnw0BXggcNQgNUDU3vANq/25fL0ibcu5Z/iaghv9OvUKwg1DIT86UdWId04RMV2xXvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707763361; c=relaxed/simple;
-	bh=irer2YtQLNsknzcYh5DTwio375EH3XNe3jCuZA+5ASY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=mde/8//aL8awIYOkL23HE1xZj4gnHMzExR3wW6mnWuo8PuBs2EPEwbEAhzDfSE39UUBMIV2dGoq72ks2w3Q22oxpL6/rZY5IVmNpK0NSD7/+TaLU+py0VaXGnCz79EYoKvg3CQCftH5d9X7ZAR7zzfbaQtNADWWG9zdkBXj5srg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VifBjncT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707763407; c=relaxed/simple;
+	bh=xuJuJVojqzGkpxFOVvXqEPg45jhcADabr87a55V2+r4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HzxZCv58LegXwz5iWZ2g7skPIoXnZ3/W0zjHpgMoA4gmF/zs6CKtPiIlMWq20QE0rIRiTFms+4wUJfwOZe9bb4WwGCTtFfVbgq3lDUPnu9iFkpPhvlv496NaUcEvC55bw7mFVnYalht0LZ0+20djYQbcpstyFWFL+VdxYeL7NHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=URDbmCDg; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VifBjncT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A79C1C433F1;
-	Mon, 12 Feb 2024 18:42:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707763360;
-	bh=irer2YtQLNsknzcYh5DTwio375EH3XNe3jCuZA+5ASY=;
-	h=From:Date:Subject:To:Cc:From;
-	b=VifBjncTzm/SLmDloF6KudUAhLMU3zwB/Rc/bEv4ZXXj85D3XaKXQlcAmd2r00kYd
-	 KXUi+QdWYSAaviDRAozXc3iojVFFFp39oDduA3NFimDwlpR/7wlWrPcYJChs54IpT0
-	 wK8NqEi8K8sag4Q4lBdvc28ywS+asdkcH3h3jSHf/Ulk6PecgeSp3gmc9toWXOAYP0
-	 w6ocisprHyqF3EC/r3+Rb5CsYlWhq+iiaZrIRn6EDb4iGk9zX9yHsC1OzKbSHcqno+
-	 Wkds3mofpO1WWgj4y5ULuH1D1r5X+zqFWn9h0EQOLfT0T13ntlmUumtHHY7mb55rbl
-	 syMMRZaiJyM+g==
-From: Mark Brown <broonie@kernel.org>
-Date: Mon, 12 Feb 2024 18:42:13 +0000
-Subject: [PATCH] usb: typec: tpcm: Fix issues with power being removed
- during reset
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="URDbmCDg"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=p0DdbAuSpgsYOwZa1oPHxn50PF84K4wxSeGZY4WB+KA=; b=URDbmCDgHekyc/FtZTQSr9K6e5
+	ScyR7CUhtRVpT44a7oOHmrNBJAjsxg+mmxMOw25RzsyJGbUwVNBkGczISwbOlGQVwRvujWtEX7g1/
+	/jJmiyPv2K/4xnyaLeFZCJ4sM6LOMZr04VwhXPvxMsNYXXo15moQG8ZvLv/KhHy8qxuhHhs/Wow5K
+	+q+5wTIbHulxFUGCC1XU2nxznDgUGsRg6pn9XHIZvfgqx1zF/pso2c6561BgE+LaQiTfgOGy5wjRN
+	Ok0PGmUwIwpIUKMsjjZoHqr+lYX78D3j4Beka7kFYX3jM9UCdeMli28kke3eQJRAwPzGOvXlXLkaL
+	rgg2PmaQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rZbGw-0072Kh-1W;
+	Mon, 12 Feb 2024 18:43:18 +0000
+Date: Mon, 12 Feb 2024 18:43:18 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Charlie Jenkins <charlie@rivosinc.com>,
+	David Laight <David.Laight@aculab.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] lib: checksum: Use aligned accesses for
+ ip_fast_csum and csum_ipv6_magic tests
+Message-ID: <20240212184318.GL608142@ZenIV>
+References: <20240207-fix_sparse_errors_checksum_tests-v6-0-4caa9629705b@rivosinc.com>
+ <20240207-fix_sparse_errors_checksum_tests-v6-2-4caa9629705b@rivosinc.com>
+ <20240212062614.GI608142@ZenIV>
+ <52393411-8313-4e94-9618-916b57f7d52e@roeck-us.net>
+ <20240212181217.GK608142@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240212-usb-fix-renegade-v1-1-22c43c88d635@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAIRmymUC/x2MQQqAMAzAviI9W5idovgV8TC3qr1M6VAE2d8dH
- kNIXkiswgnG6gXlW5IcsUBTV+B3FzdGCYWBDLWGGsIrLbjKg8qRNxcYB9sH2/nVG09QslO5+H8
- 5zTl/muZROmIAAAA=
-To: Guenter Roeck <linux@roeck-us.net>, 
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Badhri Jagan Sridharan <badhri@google.com>, 
- =?utf-8?q?G=C3=A1bor_Stefanik?= <netrolller.3d@gmail.com>
-Cc: rdbabiera@google.com, amitsd@google.com, linux-usb@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.13-dev-a684c
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1677; i=broonie@kernel.org;
- h=from:subject:message-id; bh=irer2YtQLNsknzcYh5DTwio375EH3XNe3jCuZA+5ASY=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBlymadxjfOunvW5iuuvs6fLTNKMZiykKsoChOlBpq+
- W2B7YsiJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZcpmnQAKCRAk1otyXVSH0PXGB/
- sGjzS7y8rugetcpFH7Oub8vjhofM6VhXi+yLi4bybuapgOYCHidxWUP8CNGOVpiX+2iYIt7HuXYhGV
- RvwALySl2kR987R1PDdF/AkVhYq5KotLAkSny1djJZMywDhiy+AtFy0+ZVy1kH5kPBvON5sAsZO3qk
- rv+5UL/RhKjd23IVZghZ7GB/gDinEZphaO14t1mA9cwaPllVQKry6Jk1L9vFfSjdzhtX3Ebun1uWZn
- j+iuBsDkM5I2dYtL+w5P2maUsfCkZ5+lyzF5Umzy52Bx6RfMONkcCWo5TN7dPBC4sVc8xdOMHNcChT
- ZTDDlGjE4uW2YtMVQ/I2AouFN3+03k
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240212181217.GK608142@ZenIV>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-Since the merge of b717dfbf73e8 ("Revert "usb: typec: tcpm: fix
-cc role at port reset"") into mainline the LibreTech Renegade
-Elite/Firefly has died during boot, the main symptom observed in testing
-is a sudden stop in console output.  Gábor Stefanik identified in review
-that the patch would cause power to be removed from devices without
-batteries (like this board), observing that while the patch is correct
-according to the spec this appears to be an oversight in the spec.
+On Mon, Feb 12, 2024 at 06:12:17PM +0000, Al Viro wrote:
+>                          csum_ipv6_magic(data.saddr, data.daddr, ntohl(data.len),
+					   &data.saddr, &data.daddr, ntohl(data.len),
 
-Given that the change makes previously working systems unusable let's
-revert it, there was some discussion of identifying systems that have
-alternative power and implementing the standards conforming behaviour in
-only that case.
-
-Fixes: b717dfbf73e8 ("Revert "usb: typec: tcpm: fix cc role at port reset"")
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/usb/typec/tcpm/tcpm.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-index f7d7daa60c8d..a0978ed1a257 100644
---- a/drivers/usb/typec/tcpm/tcpm.c
-+++ b/drivers/usb/typec/tcpm/tcpm.c
-@@ -4876,7 +4876,8 @@ static void run_state_machine(struct tcpm_port *port)
- 		break;
- 	case PORT_RESET:
- 		tcpm_reset_port(port);
--		tcpm_set_cc(port, TYPEC_CC_OPEN);
-+		tcpm_set_cc(port, tcpm_default_state(port) == SNK_UNATTACHED ?
-+			    TYPEC_CC_RD : tcpm_rp_cc(port));
- 		tcpm_set_state(port, PORT_RESET_WAIT_OFF,
- 			       PD_T_ERROR_RECOVERY);
- 		break;
-
----
-base-commit: 841c35169323cd833294798e58b9bf63fa4fa1de
-change-id: 20240212-usb-fix-renegade-837d35cfc0c2
-
-Best regards,
--- 
-Mark Brown <broonie@kernel.org>
-
+obviously...
