@@ -1,168 +1,209 @@
-Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DE93CF7C
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 16:04:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.143.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1EF3CF7C;
+	Mon, 12 Feb 2024 16:05:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707753853; cv=none; b=Ihdt5OKwMRM0fMV4faMQDr4/Z8b91fuK5MlAjRqKx4i5BRJgLFYX4t+NOh/0PaI5DRJzqW8UXhJk1FU6rfHoziC3YxXwslNUQ1yGv0Z0tA20jsYhheuZ5oQ9hQ5BcoOTSrBbyDh0Ec+wnCQX3OsiP5lLKcgB/WWCt6L2l6kHmPk=
+	t=1707753947; cv=none; b=Ll8sEDlvBoAd+htlwcFM0wKxvoSwD7HkdUPXSh05as3qpSw4n8gP8iqdqgaO3+t3UQHphwEgbIuaTtHpbN251MdWslZuULx288WaeQRv1cXSyqucqse6dSxQe6HI8i8EVUpekIn3U5kmWJLEft5Ejsu42NGUCiGB4TaDnFC914E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707753853; c=relaxed/simple;
-	bh=rl/yyVjmBu4nkntx95NTjP9MeBqwIZs3VgXZpyBSGGg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pw+8PrBzvSR5G2ie4ZQi/Qj/I6wtrXoPZxjBpVjgTnNxrRPMdSmXYun9JiE5TnGZUVv7VI9sfAuymEncs/3XnLfX4VNSOgijRSyE741aw+xSLtFZ/bZEqMAhyvuRsaUyB9LuDebhJGjAHxlTdgwokpv8Q2BDjgxxVLIqtx+FPW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=aa6I/7nJ; arc=none smtp.client-ip=148.163.143.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	s=arc-20240116; t=1707753947; c=relaxed/simple;
+	bh=PVnetzBOH34x39uT5RM+QQRj/93uXMs1sWHwvNANQ6o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gk+sp0NWqrqJxR5Osj3lv0OCnKMo0KNtyeJDgLjM7kqLWtmNusYOoUkv4KxfOhHW4GsRqW1qzW8lscXk4/X+iOlOZ6HuUYv/rHRTRKJ4QP172x9WJw3Nm/Qfy+fH1Y/jZDTKGQ1GvjKeJl1uOkkHPv/KH5u9+I41gQ4WJ63epv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H5xdMN8S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="aa6I/7nJ"
-Received: from pps.filterd (m0150244.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41CG2VcP029891;
-	Mon, 12 Feb 2024 16:03:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pps0720; bh=sFUZ1ZPFZ/WDyHllg7SZ7uHP4YihqPe1LFWLeuVzMlk=;
- b=aa6I/7nJCtMDWox5l/XN0Mno+JoipZHShRa2/Lp+CnnaXpuvCe5S1YjmVjYK7sKk4uMm
- VmR1zkG2L6buf+Ij7D21wBfZEx6GhMr+UOa9bdu2yblvZ4/9Scqimcc87ACGHESjtjBL
- k8hlnaydbRDr9KSSQLCUkcb97tewOYbHWyuQgtJjumLZ8qfM+ulyGa6zoK7w07ylekxA
- WFs5If4wuK5Tlq6Bnk6VWHd8d05hWuG28ac6aQHgWLGPlbP7wg1W9mKoiM1YTDzxJ4nJ
- S2tPjtVXJewliOVHR6abcNd/799qqA6oCYDxpgAAvKlAi1e/AstIUfcK+cBbPrKFxtuW 7Q== 
-Received: from p1lg14878.it.hpe.com ([16.230.97.204])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3w7p7r0ads-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Feb 2024 16:03:29 +0000
-Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14878.it.hpe.com (Postfix) with ESMTPS id 14FDD132DB;
-	Mon, 12 Feb 2024 16:03:25 +0000 (UTC)
-Received: from dog.eag.rdlabs.hpecorp.net (unknown [16.231.227.36])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(Client did not present a certificate)
-	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id 60BEC80162E;
-	Mon, 12 Feb 2024 16:03:23 +0000 (UTC)
-Date: Mon, 12 Feb 2024 10:03:21 -0600
-From: Steve Wahl <steve.wahl@hpe.com>
-To: Steve Wahl <steve.wahl@hpe.com>, Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-Cc: Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>
-Subject: Re: [PATCH v3] x86/mm/ident_map: Use gbpages only where full GB page
- should be mapped.
-Message-ID: <20240212160321.GA1508687@dog.eag.rdlabs.hpecorp.net>
-References: <20240126164841.170866-1-steve.wahl@hpe.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H5xdMN8S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BBDAC433F1;
+	Mon, 12 Feb 2024 16:05:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707753947;
+	bh=PVnetzBOH34x39uT5RM+QQRj/93uXMs1sWHwvNANQ6o=;
+	h=From:To:Cc:Subject:Date:From;
+	b=H5xdMN8SecoFM2W/G3J7KfIOpJOnULuNUcgoL/oKLg+ZvqYE8eBBWyT7L0b4BgeEA
+	 r6Mg4hTrtKolVsF88U6R0kRFAYAFOIp8pZTkobZGOnTBdxWy/yVkCDJC3AoJ9g/Q+E
+	 e4hyC3eaXDryq0JjXntd5Tc4YZjfAUQSP6foWOBRcK/8vj96RXPdlaomFK7fimemr8
+	 emUcBjiaJeJgLwJs8dteLhJUMMfqO4QHR02erWvns5fg99wVhGblS77HQGgKCG6Z4+
+	 5KIeItZ6PxyG5kjQUbwpx7kJx3SDjb3tPCATr93wm7q+0j05rJSnibgGlbnsTZtyT9
+	 VvRpHhLWmYG+g==
+From: Chao Yu <chao@kernel.org>
+To: stable@vger.kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Sheng Yong <shengyong@oppo.com>,
+	Chao Yu <chao@kernel.org>,
+	Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH 6.1] f2fs: add helper to check compression level
+Date: Tue, 13 Feb 2024 00:05:30 +0800
+Message-Id: <20240212160530.1017205-1-chao@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240126164841.170866-1-steve.wahl@hpe.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Proofpoint-ORIG-GUID: ARyePb20hroSPz7YuULDTLQnDM6LJ6b0
-X-Proofpoint-GUID: ARyePb20hroSPz7YuULDTLQnDM6LJ6b0
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-12_13,2024-02-12_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- phishscore=0 adultscore=0 mlxlogscore=999 priorityscore=1501 spamscore=0
- suspectscore=0 lowpriorityscore=0 malwarescore=0 impostorscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402120121
+Content-Transfer-Encoding: 8bit
 
-Gentle Ping... Thanks
+From: Sheng Yong <shengyong@oppo.com>
 
---> Steve Wahl
+commit c571fbb5b59a3741e48014faa92c2f14bc59fe50 upstream.
 
-On Fri, Jan 26, 2024 at 10:48:41AM -0600, Steve Wahl wrote:
-> When ident_pud_init() uses only gbpages to create identity maps, large
-> ranges of addresses not actually requested can be included in the
-> resulting table; a 4K request will map a full GB.  On UV systems, this
-> ends up including regions that will cause hardware to halt the system
-> if accessed (these are marked "reserved" by BIOS).  Even though code
-> does not actually make references to these addresses, including them
-> in an active map allows processor speculation into this region, which
-> is enough to trigger the system halt.
-> 
-> Instead of using gbpages for all memory regions, which can include
-> vast areas outside what's actually been requested, use them only when
-> map creation requests include the full GB page of space; descend to
-> using smaller 2M pages when only portions of a GB page are included in
-> the request.
-> 
-> No attempt is made to coalesce mapping requests. If a request requires
-> a map entry at the 2M (pmd) level, subsequent mapping requests within
-> the same 1G region will also be at the pmd level, even if adjacent or
-> overlapping such requests could have been combined to map a full
-> gbpage.  Existing usage starts with larger regions and then adds
-> smaller regions, so this should not have any great consequence.
-> 
-> The existing kernel option "nogbpages" would disallow use of
-> gbpages entirely and avoid this problem, but uses a lot of extra
-> memory for page tables that are not really needed.
-> 
-> Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
-> ---
-> 
-> v3: per Dave Hansen review, re-arrange changelog info,
->     refactor code to use bool variable and split out conditions.
-> 
-> v2: per Dave Hansen review: Additional changelog info,
->     moved pud_large() check earlier in the code, and
->     improved the comment describing the conditions
->     that restrict gbpage usage.
->    
->  arch/x86/mm/ident_map.c | 23 ++++++++++++++++++-----
->  1 file changed, 18 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/x86/mm/ident_map.c b/arch/x86/mm/ident_map.c
-> index 968d7005f4a7..f50cc210a981 100644
-> --- a/arch/x86/mm/ident_map.c
-> +++ b/arch/x86/mm/ident_map.c
-> @@ -26,18 +26,31 @@ static int ident_pud_init(struct x86_mapping_info *info, pud_t *pud_page,
->  	for (; addr < end; addr = next) {
->  		pud_t *pud = pud_page + pud_index(addr);
->  		pmd_t *pmd;
-> +		bool use_gbpage;
->  
->  		next = (addr & PUD_MASK) + PUD_SIZE;
->  		if (next > end)
->  			next = end;
->  
-> -		if (info->direct_gbpages) {
-> -			pud_t pudval;
-> +		/* if this is already a gbpage, this portion is already mapped */
-> +		if (pud_large(*pud))
-> +			continue;
-> +
-> +		/* Is using a gbpage allowed? */
-> +		use_gbpage = info->direct_gbpages;
->  
-> -			if (pud_present(*pud))
-> -				continue;
-> +		/* Don't use gbpage if it maps more than the requested region. */
-> +		/* at the begining: */
-> +		use_gbpage &= ((addr & ~PUD_MASK) == 0);
-> +		/* ... or at the end: */
-> +		use_gbpage &= ((next & ~PUD_MASK) == 0);
-> +
-> +		/* Never overwrite existing mappings */
-> +		use_gbpage &= !pud_present(*pud);
-> +
-> +		if (use_gbpage) {
-> +			pud_t pudval;
->  
-> -			addr &= PUD_MASK;
->  			pudval = __pud((addr - info->offset) | info->page_flag);
->  			set_pud(pud, pudval);
->  			continue;
-> -- 
-> 2.26.2
-> 
+This patch adds a helper function to check if compression level is
+valid.
+
+Meanwhile, this patch fixes a reported issue [1]:
+
+The issue is easily reproducible by:
+
+1. dd if=/dev/zero of=test.img count=100 bs=1M
+2. mkfs.f2fs -f -O compression,extra_attr ./test.img
+3. mount -t f2fs -o compress_algorithm=zstd:6,compress_chksum,atgc,gc_merge,lazytime ./test.img /mnt
+
+resulting in
+
+[   60.789982] F2FS-fs (loop0): invalid zstd compress level: 6
+
+A bugzilla report has been submitted in
+https://bugzilla.kernel.org/show_bug.cgi?id=218471
+
+[1] https://lore.kernel.org/lkml/ZcWDOjKEnPDxZ0Or@google.com/T/
+
+The root cause is commit 00e120b5e4b5 ("f2fs: assign default compression
+level") tries to check low boundary of compress level w/ zstd_min_clevel(),
+however, since commit e0c1b49f5b67 ("lib: zstd: Upgrade to latest upstream
+zstd version 1.4.10"), zstd supports negative compress level, it cast type
+for negative value returned from zstd_min_clevel() to unsigned int in below
+check condition, result in repored issue.
+
+	if (level < zstd_min_clevel() || ...
+
+This patch fixes this issue by casting type for level to int before
+comparison.
+
+Fixes: 00e120b5e4b5 ("f2fs: assign default compression level")
+Signed-off-by: Sheng Yong <shengyong@oppo.com>
+Reviewed-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Chao Yu <chao@kernel.org>
+---
+ fs/f2fs/compress.c | 27 +++++++++++++++++++++++++++
+ fs/f2fs/f2fs.h     |  2 ++
+ fs/f2fs/super.c    |  4 ++--
+ 3 files changed, 31 insertions(+), 2 deletions(-)
+
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index 4cb58e8d699e..4e83cfa1b073 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -55,6 +55,7 @@ struct f2fs_compress_ops {
+ 	int (*init_decompress_ctx)(struct decompress_io_ctx *dic);
+ 	void (*destroy_decompress_ctx)(struct decompress_io_ctx *dic);
+ 	int (*decompress_pages)(struct decompress_io_ctx *dic);
++	bool (*is_level_valid)(int level);
+ };
+ 
+ static unsigned int offset_in_cluster(struct compress_ctx *cc, pgoff_t index)
+@@ -322,11 +323,21 @@ static int lz4_decompress_pages(struct decompress_io_ctx *dic)
+ 	return 0;
+ }
+ 
++static bool lz4_is_level_valid(int lvl)
++{
++#ifdef CONFIG_F2FS_FS_LZ4HC
++	return !lvl || (lvl >= LZ4HC_MIN_CLEVEL && lvl <= LZ4HC_MAX_CLEVEL);
++#else
++	return lvl == 0;
++#endif
++}
++
+ static const struct f2fs_compress_ops f2fs_lz4_ops = {
+ 	.init_compress_ctx	= lz4_init_compress_ctx,
+ 	.destroy_compress_ctx	= lz4_destroy_compress_ctx,
+ 	.compress_pages		= lz4_compress_pages,
+ 	.decompress_pages	= lz4_decompress_pages,
++	.is_level_valid		= lz4_is_level_valid,
+ };
+ #endif
+ 
+@@ -490,6 +501,11 @@ static int zstd_decompress_pages(struct decompress_io_ctx *dic)
+ 	return 0;
+ }
+ 
++static bool zstd_is_level_valid(int lvl)
++{
++	return lvl >= zstd_min_clevel() && lvl <= zstd_max_clevel();
++}
++
+ static const struct f2fs_compress_ops f2fs_zstd_ops = {
+ 	.init_compress_ctx	= zstd_init_compress_ctx,
+ 	.destroy_compress_ctx	= zstd_destroy_compress_ctx,
+@@ -497,6 +513,7 @@ static const struct f2fs_compress_ops f2fs_zstd_ops = {
+ 	.init_decompress_ctx	= zstd_init_decompress_ctx,
+ 	.destroy_decompress_ctx	= zstd_destroy_decompress_ctx,
+ 	.decompress_pages	= zstd_decompress_pages,
++	.is_level_valid		= zstd_is_level_valid,
+ };
+ #endif
+ 
+@@ -555,6 +572,16 @@ bool f2fs_is_compress_backend_ready(struct inode *inode)
+ 	return f2fs_cops[F2FS_I(inode)->i_compress_algorithm];
+ }
+ 
++bool f2fs_is_compress_level_valid(int alg, int lvl)
++{
++	const struct f2fs_compress_ops *cops = f2fs_cops[alg];
++
++	if (cops->is_level_valid)
++		return cops->is_level_valid(lvl);
++
++	return lvl == 0;
++}
++
+ static mempool_t *compress_page_pool;
+ static int num_compress_pages = 512;
+ module_param(num_compress_pages, uint, 0444);
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 5c76ba764b71..e5a9498b89c0 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -4219,6 +4219,7 @@ bool f2fs_compress_write_end(struct inode *inode, void *fsdata,
+ int f2fs_truncate_partial_cluster(struct inode *inode, u64 from, bool lock);
+ void f2fs_compress_write_end_io(struct bio *bio, struct page *page);
+ bool f2fs_is_compress_backend_ready(struct inode *inode);
++bool f2fs_is_compress_level_valid(int alg, int lvl);
+ int f2fs_init_compress_mempool(void);
+ void f2fs_destroy_compress_mempool(void);
+ void f2fs_decompress_cluster(struct decompress_io_ctx *dic, bool in_task);
+@@ -4283,6 +4284,7 @@ static inline bool f2fs_is_compress_backend_ready(struct inode *inode)
+ 	/* not support compression */
+ 	return false;
+ }
++static inline bool f2fs_is_compress_level_valid(int alg, int lvl) { return false; }
+ static inline struct page *f2fs_compress_control_page(struct page *page)
+ {
+ 	WARN_ON_ONCE(1);
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 3805162dcef2..0c0d0671febe 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -628,7 +628,7 @@ static int f2fs_set_lz4hc_level(struct f2fs_sb_info *sbi, const char *str)
+ 	if (kstrtouint(str + 1, 10, &level))
+ 		return -EINVAL;
+ 
+-	if (level < LZ4HC_MIN_CLEVEL || level > LZ4HC_MAX_CLEVEL) {
++	if (!f2fs_is_compress_level_valid(COMPRESS_LZ4, level)) {
+ 		f2fs_info(sbi, "invalid lz4hc compress level: %d", level);
+ 		return -EINVAL;
+ 	}
+@@ -666,7 +666,7 @@ static int f2fs_set_zstd_level(struct f2fs_sb_info *sbi, const char *str)
+ 	if (kstrtouint(str + 1, 10, &level))
+ 		return -EINVAL;
+ 
+-	if (level < zstd_min_clevel() || level > zstd_max_clevel()) {
++	if (!f2fs_is_compress_level_valid(COMPRESS_ZSTD, level)) {
+ 		f2fs_info(sbi, "invalid zstd compress level: %d", level);
+ 		return -EINVAL;
+ 	}
+-- 
+2.40.1
+
