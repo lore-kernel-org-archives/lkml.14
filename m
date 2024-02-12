@@ -1,153 +1,132 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00854EB32;
-	Mon, 12 Feb 2024 23:01:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 194A14EB3D
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 23:01:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707778868; cv=none; b=o6PJA588msDg6OI6Ara6sSvE468agwlocmzgr+VpcDzKcLTdBnNOdutriewrwP1LI0JU5LkVs132896hzQhg7iPgCOXxn/VcuaxKQIxgLb6Ggijs7A+IcgDIBAcTWZeLd4DXLVICw+EBA5u+1Zv/4ynr1wwdFJTpaEr9QxLUh2g=
+	t=1707778870; cv=none; b=tqNAoUxsiaIr/6e15klX8JLeo+WMKpheHAlM506EFMx2fSWVa+NerG2M8xpzXPFj+RHoI0GoJzEqp6eo0Q/INGz1OGU7fFhYstC6ZU8EBP73pymSV5GYHoQJlgtpDW9tG1mJKnKuTlBmDa13vokVMc7OyKeJ6dpt1dXpF35+NTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707778868; c=relaxed/simple;
-	bh=dz7Bo1p6nMIUN4HZJcwpOyE8WVu5se81Ug/mMhzK6uE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Pun6XKd8c4auOGiDLrse2MrM/Aet2P1MlkYKst7cnlqEnPbFpgA7fjTVrNHwDioDmINKC4cHFwJX3rRYgpC2+HI0XgeyvU5PqWrC9KMGr+47lXrDTN+KlrqruKN7RLwq4/A7s3cZdV16HRpyV5LcIgXGOL1GKM8v3IMNKebLpJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4QVWVS5P; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lDBRH2wk; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1707778870; c=relaxed/simple;
+	bh=8LHnGgzWPky93CofKSFQtD84mMH96b/653GC9OgJAE0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Oo0/T9kzZsfnND+30FCNQWgIVMfkMDQqDr7Fox5vJzEw8ukfRHF/hmZdw0zbfc5GF2uSAqyzeP1qOXqel+FXHumyyUSCEMmlFvCvWgqFTNBCEb/kI8CIhlo6wl/RL5zlUZTBUyTwmOvboOwHn/yUQuLZVUDd6K8UDXFOygZXI8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UbMoyjx5; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4QVWVS5P";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lDBRH2wk"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1707778863;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cJvi9CRczxtyvt+qDDAp8M1Cn+0bYcrQ7i1j7oLPeQ0=;
-	b=4QVWVS5P8I5fXGOVrY9yhMPnb2fr6bh5DstEwe9iyViUGasAAce0JhykHVrbma4jNBnd4Y
-	bJlwmkgZe1xx716rstpRBKVrqHN/THOe88UDz5+ffgYp4IH4rK8tfkb77ht+0E5QwPwMUW
-	WvvHYKa3dwoVgL4NvSbZkVOKuVKvDTN078CIHboWrZCFTNkYTuNe1plQ3/MK0URLcf6UL5
-	cJKUpVf6phI5gSlUkz5bez5sSyyf1pBVZGicPVXiup2weX1N5hu8bK+PngRyOPbYT0PhjM
-	zSxQ8bcSsh2pLO4nNovEs6pAdIZ8lh6aJpLK2kqSIIUTNiA46zrnwItg4/CTqw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1707778863;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cJvi9CRczxtyvt+qDDAp8M1Cn+0bYcrQ7i1j7oLPeQ0=;
-	b=lDBRH2wkcBL4ybc1JUik/fBkcxnxlfhNUH8/+IaAX1ZpWWS2Aj2u1jJ/vRqlhL2Olqe4/m
-	kSBbaC99OGfImqCQ==
-To: syzbot <syzbot+039399a9b96297ddedca@syzkaller.appspotmail.com>,
- linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Cc: netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, "David S. Miller" <davem@davemloft.net>
-Subject: Re: [syzbot] [kernel?] BUG: unable to handle kernel NULL pointer
- dereference in hrtimer_active
-In-Reply-To: <00000000000014671906112cb2ef@google.com>
-References: <00000000000014671906112cb2ef@google.com>
-Date: Tue, 13 Feb 2024 00:01:03 +0100
-Message-ID: <875xytjnio.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UbMoyjx5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707778867; x=1739314867;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8LHnGgzWPky93CofKSFQtD84mMH96b/653GC9OgJAE0=;
+  b=UbMoyjx5b8aZQ2IWiFTpOdnsRHAsmK18zq6NRGn88EWUsT528xdFWALP
+   HDfZHiPAPergUJNjHBaSCSmGtIN1vFUaYWFhft53FRyeZzgDzISbQbDlP
+   T/GqPEOLax5ELQT6bhGOrGbHydns0G60PKgSTZBeZsldX7KAZMQoAw508
+   CCF3h4R2CdDmFmjPmXKz/9PnR+WA+l9qzv1fUN99n6SXvGFNgJ1y8mPr3
+   hgnj5Zmcw7EBtKW3V5tT0MbFlslVbgG7CboYdfNJ9q2TaSlqN3DYKn98/
+   eoocP6KLCiOxP04r6nj/vMIM64PqsP35RD7zL3SbiTKo82fWckdikSKTl
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="19286825"
+X-IronPort-AV: E=Sophos;i="6.06,155,1705392000"; 
+   d="scan'208";a="19286825"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 15:01:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,155,1705392000"; 
+   d="scan'208";a="3093271"
+Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 12 Feb 2024 15:01:04 -0800
+Received: from kbuild by 01f0647817ea with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rZfIK-0007PK-2x;
+	Mon, 12 Feb 2024 23:01:00 +0000
+Date: Tue, 13 Feb 2024 07:00:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Cristian Marussi <cristian.marussi@arm.com>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: oe-kbuild-all@lists.linux.dev, sudeep.holla@arm.com,
+	vincent.guittot@linaro.org, peng.fan@oss.nxp.com,
+	michal.simek@amd.com, quic_sibis@quicinc.com,
+	quic_nkela@quicinc.com, souvik.chakravarty@arm.com,
+	Cristian Marussi <cristian.marussi@arm.com>
+Subject: Re: [PATCH 06/11] firmware: arm_scmi: Implement Clock
+ .is_notify_supported callback
+Message-ID: <202402130607.H0A5KJ1C-lkp@intel.com>
+References: <20240212123233.1230090-7-cristian.marussi@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240212123233.1230090-7-cristian.marussi@arm.com>
+
+Hi Cristian,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on soc/for-next]
+[also build test ERROR on linus/master v6.8-rc4 next-20240212]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Cristian-Marussi/firmware-arm_scmi-Check-for-notification-support/20240212-203727
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git for-next
+patch link:    https://lore.kernel.org/r/20240212123233.1230090-7-cristian.marussi%40arm.com
+patch subject: [PATCH 06/11] firmware: arm_scmi: Implement Clock .is_notify_supported callback
+config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20240213/202402130607.H0A5KJ1C-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240213/202402130607.H0A5KJ1C-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202402130607.H0A5KJ1C-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+   drivers/firmware/arm_scmi/clock.c: In function 'scmi_clk_notify_supported':
+>> drivers/firmware/arm_scmi/clock.c:853:15: error: implicit declaration of function 'scmi_clock_domain_lookup' [-Werror=implicit-function-declaration]
+     853 |         clk = scmi_clock_domain_lookup(ci, src_id);
+         |               ^~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/firmware/arm_scmi/clock.c:853:13: warning: assignment to 'struct scmi_clock_info *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+     853 |         clk = scmi_clock_domain_lookup(ci, src_id);
+         |             ^
+   cc1: some warnings being treated as errors
 
 
-Cc: +netdev
+vim +/scmi_clock_domain_lookup +853 drivers/firmware/arm_scmi/clock.c
 
-On Mon, Feb 12 2024 at 02:25, syzbot wrote:
-> HEAD commit:    4a7bbe7519b6 Merge tag 'scsi-fixes' of git://git.kernel.or..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10476de0180000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=264238120cdb2bda
-> dashboard link: https://syzkaller.appspot.com/bug?extid=039399a9b96297ddedca
-> compiler:       aarch64-linux-gnu-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-> userspace arch: arm64
->
-> Unfortunately, I don't have any reproducer for this issue yet.
->
-> Downloadable assets:
-> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/384ffdcca292/non_bootable_disk-4a7bbe75.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/ee3f97d1ed38/vmlinux-4a7bbe75.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/eb6f9f8f9f37/Image-4a7bbe75.gz.xz
->
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+039399a9b96297ddedca@syzkaller.appspotmail.com
->
-> infiniband syz0: set active
-> Unable to handle kernel NULL pointer dereference at virtual address 0000000000000010
-> CPU: 1 PID: 3665 Comm: syz-executor.0 Not tainted 6.8.0-rc3-syzkaller-00279-g4a7bbe7519b6 #0
-> pc : __seqprop_raw_spinlock_sequence include/linux/seqlock.h:226 [inline]
+   842	
+   843	static bool scmi_clk_notify_supported(const struct scmi_protocol_handle *ph,
+   844					      u8 evt_id, u32 src_id)
+   845	{
+   846		bool supported;
+   847		struct scmi_clock_info *clk;
+   848		struct clock_info *ci = ph->get_priv(ph);
+   849	
+   850		if (evt_id >= ARRAY_SIZE(evt_2_cmd))
+   851			return false;
+   852	
+ > 853		clk = scmi_clock_domain_lookup(ci, src_id);
+   854		if (IS_ERR(clk))
+   855			return false;
+   856	
+   857		if (evt_id == SCMI_EVENT_CLOCK_RATE_CHANGED)
+   858			supported = clk->rate_changed_notifications;
+   859		else
+   860			supported = clk->rate_change_requested_notifications;
+   861	
+   862		return supported;
+   863	}
+   864	
 
-That's:
-
-        seq = raw_read_seqcount_begin(&base->seq);
-
-where base == NULL. That can only happen when hrtimer_cancel() is
-invoked with a non-initialized timer.
-
-> pc : hrtimer_active+0x4/0x60 kernel/time/hrtimer.c:1614
-> lr : hrtimer_try_to_cancel+0x1c/0xf8 kernel/time/hrtimer.c:1331
-> sp : ffff800082c63300
-> x29: ffff800082c63300 x28: 0000000000000000 x27: 0000000000000000
-> x26: 0000000000000340 x25: 0000000000000000 x24: f3ff00001ab7e9e0
-> x23: 0000000000000000 x22: 000061100fc019e9 x21: 0000000000000009
-> x20: 0000000000000000 x19: fbff00001abf9920 x18: 0000000000000000
-> x17: 0000000000000000 x16: 0000000000000000 x15: ffff80008144d28c
-> x14: ffff80008144d20c x13: ffff80008144d28c x12: ffff80008144d20c
-> x11: ffff800080011558 x10: ffff800081907d14 x9 : ffff8000819078a4
-> x8 : ffff800082c63408 x7 : 0000000000000000 x6 : ffff800080026d20
-> x5 : f2ff000033f2c800 x4 : 000061100fc019e9 x3 : 0000000000000340
-> x2 : 0000000000000000 x1 : 000000000000000d x0 : fbff00001abf9920
-> Call trace:
->  hrtimer_active+0x4/0x60 kernel/time/hrtimer.c:1613
->  hrtimer_cancel+0x1c/0x38 kernel/time/hrtimer.c:1446
->  napi_disable+0x5c/0x11c net/core/dev.c:6502
->  veth_napi_del_range+0x64/0x1d8 drivers/net/veth.c:1109
->  veth_napi_del drivers/net/veth.c:1129 [inline]
->  veth_set_features+0x68/0x98 drivers/net/veth.c:1580
->  __netdev_update_features+0x200/0x6ec net/core/dev.c:9872
->  netdev_update_features+0x28/0x6c net/core/dev.c:9946
->  veth_xdp_set drivers/net/veth.c:1681 [inline]
->  veth_xdp+0x108/0x224 drivers/net/veth.c:1694
->  dev_xdp_install+0x64/0xf8 net/core/dev.c:9243
->  dev_xdp_attach+0x250/0x52c net/core/dev.c:9395
->  dev_change_xdp_fd+0x16c/0x218 net/core/dev.c:9643
->  do_setlink+0xdd0/0xf14 net/core/rtnetlink.c:3132
->  rtnl_group_changelink net/core/rtnetlink.c:3452 [inline]
->  __rtnl_newlink+0x460/0x898 net/core/rtnetlink.c:3711
->  rtnl_newlink+0x50/0x7c net/core/rtnetlink.c:3748
->  rtnetlink_rcv_msg+0x12c/0x380 net/core/rtnetlink.c:6615
->  netlink_rcv_skb+0x5c/0x128 net/netlink/af_netlink.c:2543
->  rtnetlink_rcv+0x18/0x24 net/core/rtnetlink.c:6633
->  netlink_unicast_kernel net/netlink/af_netlink.c:1341 [inline]
->  netlink_unicast+0x2f4/0x360 net/netlink/af_netlink.c:1367
->  netlink_sendmsg+0x1a4/0x3e8 net/netlink/af_netlink.c:1908
->  sock_sendmsg_nosec net/socket.c:730 [inline]
->  __sock_sendmsg+0x54/0x60 net/socket.c:745
->  ____sys_sendmsg+0x274/0x2ac net/socket.c:2584
->  ___sys_sendmsg+0xac/0x100 net/socket.c:2638
->  __sys_sendmsg+0x84/0xe0 net/socket.c:2667
->  __do_sys_sendmsg net/socket.c:2676 [inline]
->  __se_sys_sendmsg net/socket.c:2674 [inline]
->  __arm64_sys_sendmsg+0x24/0x30 net/socket.c:2674
-
-So something in that syzbot test case manages to tear down a napi
-context which has not yet been fully initialized. While the rest of
-napi_disable() does not care much as long as neither NAPIF_STATE_SCHED
-nor NAPIF_STATE_NPSVC are set in napi->state, hrtimer_cancel() pretty
-much cares as demonstrated by the NULL pointer dereference.
-
-While it would be trivial to harden the hrtimer code for the case that a
-non-initialized hrtimer is canceled, I wonder whether this invocation of
-napi_disable() is harmless (aside of the hrtimer issue) or if there are
-some hidden subtle issues with that.
-
-Thanks,
-
-        tglx
-
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
