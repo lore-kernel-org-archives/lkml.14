@@ -1,63 +1,63 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 030B739AC9
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 11:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEAA43A8DB
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 11:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707738929; cv=none; b=hJJwHrNYhKqYiL8LGOvPANUyE5cEXenQPt9G07D4HUFjNQMqBZxVO7pAxAFhNiLpKnxtXGduTkLk6UEvY/umkfp6b9EgAd2l2xQA9Rozb24N2mF9IHCNduiroNIGz06ce6pQ9e4k5GqEb/Fsyo+6ryFXmYFZWPGxWZ8Ao/xFXhk=
+	t=1707738936; cv=none; b=kI1U1DmTTjR2/xxd9pEfjZvjOXcKI7yTN78G15OsSJEe0WdTfiUGbW60xzEg2T9lo6qKgw48hlFYJa6UOg3KnArrRGO0Jz94iMq13lfMewYlxGI01Ijis27yF5ipE8yD5TRfyzHMzAa0aiR1AfhySw4srl+ilrArHTXNBRemCU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707738929; c=relaxed/simple;
-	bh=HTmS7KgIHpTSgp6cqH/ynIQyNkUm0EieqPOuHqM5KOY=;
+	s=arc-20240116; t=1707738936; c=relaxed/simple;
+	bh=3EMwRWQVmXFpMULqT0KRcNauX3dUmEoNi+TxEAuDB/E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=O1czKxAtO6dqr+TXYF2JVrt3SgOxc2Ot4Eqg2kw6iuhoMXj7nn4yqoHAM00Pbg1CuH72ZuVU7vt4gkmsp+NQsi8oCthje/y6lCU7Iv/FmUuKRmBCsCXig+qr0ywZm1WB3RSAsqL1ntsepumbbvLC/rdNybybE2/k1sPTthAocm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=FtzoP6uu; arc=none smtp.client-ip=209.85.218.48
+	 MIME-Version; b=Z5Ckzifaqg2nGKlWOXae3hC+y19qYGPE0Yc08GhXu3zwF4arfVEPou2urfstVxGiYl+6pYd3aSKZ7KWKOYKUu7XtDzooJ0RVigggysU7VT8sYhw44VdWANvvBLeVpfyzSR08+lvsSkf7EBwuV8sl+cwAlHfa6EAjT8oJk+jPk9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=WUR+egWe; arc=none smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="FtzoP6uu"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a30f7c9574eso361733466b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 03:55:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="WUR+egWe"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a3ca40db065so76974766b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 03:55:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1707738925; x=1708343725; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1707738932; x=1708343732; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mCAe8mO/KUlyg+BnRuX+JoIprh3UWXF6vcGK++EkmGw=;
-        b=FtzoP6uuzZxgJVOV82ndafgsvNCeE8feMZmNCuNkR0kenbQ0mgfzU050l38YuOllLD
-         6mOBSJoZOXOYsZ8KehoaT89Qt1U24EEEKidC2vUIncVIDRsHqtely8ZBFz47obUUGTq2
-         NlJh73nHZ9A0nAL0GzkkbR2TrLRQ0qhv/NCLv9kUYnBhfXfUpdHXvCTyss33iHg7OxzC
-         6Y3iNNDsLLLJayiXda8o87ADPiHqxkCH1xfi/hL8xvtLty8yMki4HNCr0DjNbvioPNQw
-         j/0iWbUGwfdCmkWC7eigjYDinpi2F1uvATWXcPjbyWvBIIAHr3lxbRdzAp7+414DcCwP
-         Lzow==
+        bh=jYWONKEfyypsQx26Swj5H3vXFHTxMGTOOr2K1QsNu0M=;
+        b=WUR+egWeUsyUe4XxZWMHNGZx79eFhW/o/6UA/Cz4MID0LftctkEiea7sb3CXK8toBo
+         8Y2GAlPxp1hZ0N1VgknaY84ehWDHgShaaFr1U+ku/2uouQv8KecxCCSuqRFvwqj7Nl3+
+         fNAiK5YEIEIdwWDgiNGBd54XqHVwhWS08qesc+yj1LaijyEJI/2yVsLdzmWTb1N8pzyp
+         +uTuFV/oXDaGTEBLStzRZDaOf39PxRngeURIvJ6xNrYmKFV/EmC6fzMXWeUs4jfQUekK
+         vxidH2L06kQkca3w1J22LavnST4ddlfxLo/JQf/gdQaApc0ZCyWpT6+DA/d0xANeDi1e
+         hTnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707738925; x=1708343725;
+        d=1e100.net; s=20230601; t=1707738932; x=1708343732;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mCAe8mO/KUlyg+BnRuX+JoIprh3UWXF6vcGK++EkmGw=;
-        b=OgLXo96dw8RC48quawuHvfKcAo8GM9Wu6bxD3t4zb75U573sEYLFKEv83RvQkbg797
-         bOGUNrtkL4zAAOiKxU7LOFe/PqIu7Yqkc6T0ValeRXtDl/sfV2TRPbaVhuoPueOCBfLG
-         uMmrTbRLLr+IR6VZV8/EjHPrryzHK/NMa2v4FEfjt4X/MFbsZjW3rzNxDo6TimGWEqCi
-         hyCSXl3ptNry3WjSWB6cXQK4d5+spmBpz2RbucAZNnU+rJNInUZmf3nFo6FZh0cGFC5c
-         VOfmmR8A7FR1DkngTnp2CgrJcqup1Frm46gngxKcxh55MSWspDNjCocjzESL9iEEJIJ4
-         zSbQ==
-X-Gm-Message-State: AOJu0Yy98Lv4UsjsyqBz2ze/uJEH42DwoWjOqWu2jpN6aN0G5foTcbCs
-	AJrMrokPjqHbYZ3d1sHGXTM+1rMkqDEBiXgLTBu9T6yPny2lYWKG5OMxU7G9xuX0uHyM75ueNml
-	U
-X-Google-Smtp-Source: AGHT+IHrh9pm2vOubQmRuvG9zcz4pYU/cOY7wSLLg7Yy4lsjcaxCzpebTGm/W1ZW3INiK8ZJpfRFPw==
-X-Received: by 2002:a17:906:ece8:b0:a38:1673:682a with SMTP id qt8-20020a170906ece800b00a381673682amr4804067ejb.32.1707738924971;
-        Mon, 12 Feb 2024 03:55:24 -0800 (PST)
+        bh=jYWONKEfyypsQx26Swj5H3vXFHTxMGTOOr2K1QsNu0M=;
+        b=MQosWC1p6Exai8e224orI/7QDX4wNLDvR+hsPtJcQkjRLTM61k1qmsBmfRE/Q0wIX5
+         5zTc/k6s/E5aK/RBUUkkx2GiNfjLMJviftHviK+hyQLBv/tIKgfggmMmLM+8ViCwwkya
+         lgr2piPkp/0jpteaYXg0Zs4Bqon0CgE6iRfvaAyqQvWaAMeWtBrflxbW0EFzHcaQlqP8
+         7XbPWTkQdLSzMCR2lxLDHsrnJIqHEHCJGeVYjM57JYzC0W2WlJAVLhb8ukJsPcu6wYRN
+         CyF/oZRn40mXyw83Z1dJkSoOw5tyOh3EyRctQDJu4qkk0jkG8shGhe72EL5LeHX9Q4Cl
+         2Z4A==
+X-Gm-Message-State: AOJu0YyJjD5UfSzcGhbsEfNMti5a3/fpWJwgiqSYu3sNYK2HnoYjEmJc
+	naBdjialz9wj6JYbJ8rowgoAjTr/VoF6HosrY6nmr4a3WGDHUZ7Nyy1ysHIE/7YTHCvFdshKoOI
+	Q
+X-Google-Smtp-Source: AGHT+IFUKG++8yIi9n/UKrive4UdkNDxSMPhe9li3i6Ur3gn3Wt0VfESSLbzPYHi1ufEK9pfYRm+uQ==
+X-Received: by 2002:a17:906:d96f:b0:a3c:ccf7:5fda with SMTP id rp15-20020a170906d96f00b00a3cccf75fdamr687984ejb.46.1707738932239;
+        Mon, 12 Feb 2024 03:55:32 -0800 (PST)
 Received: from raven.blarg.de (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id m1-20020a17090607c100b00a36c3e2e52dsm139203ejc.61.2024.02.12.03.55.24
+        by smtp.gmail.com with ESMTPSA id m1-20020a17090607c100b00a36c3e2e52dsm139203ejc.61.2024.02.12.03.55.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 03:55:24 -0800 (PST)
+        Mon, 12 Feb 2024 03:55:30 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: linux-kernel@vger.kernel.org
 Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v5 12/35] bvec.h: move declarations to bvec_types.h
-Date: Mon, 12 Feb 2024 12:54:37 +0100
-Message-Id: <20240212115500.2078463-13-max.kellermann@ionos.com>
+Subject: [PATCH v5 18/35] blkdev.h: move blk_op_is_passthrough() to blk_types.h
+Date: Mon, 12 Feb 2024 12:54:43 +0100
+Message-Id: <20240212115500.2078463-19-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240212115500.2078463-1-max.kellermann@ionos.com>
 References: <20240212115500.2078463-1-max.kellermann@ionos.com>
@@ -69,268 +69,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-By providing declarations in a lean header, we can reduce header
-dependencies.
+This is a very low-level function without any additional dependencies,
+and moving it will allow certain sources to omit the "blkdev.h"
+dependency.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- include/linux/blk_types.h  |  2 +-
- include/linux/bvec.h       | 84 +--------------------------------
- include/linux/bvec_types.h | 95 ++++++++++++++++++++++++++++++++++++++
- include/linux/iov_iter.h   |  2 +-
- include/linux/skbuff.h     |  2 +-
- 5 files changed, 99 insertions(+), 86 deletions(-)
- create mode 100644 include/linux/bvec_types.h
+ include/linux/blk_types.h | 6 ++++++
+ include/linux/blkdev.h    | 6 ------
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index 1c07848dea7e..9d2d8a8328a6 100644
+index 96a37f399928..ad48c3f5ddd6 100644
 --- a/include/linux/blk_types.h
 +++ b/include/linux/blk_types.h
-@@ -7,7 +7,7 @@
- #define __LINUX_BLK_TYPES_H
- 
- #include <linux/types.h>
--#include <linux/bvec.h>
-+#include <linux/bvec_types.h>
- #include <linux/device.h>
- #include <linux/ktime.h>
- 
-diff --git a/include/linux/bvec.h b/include/linux/bvec.h
-index 555aae5448ae..fbb79e6ba953 100644
---- a/include/linux/bvec.h
-+++ b/include/linux/bvec.h
-@@ -7,6 +7,7 @@
- #ifndef __LINUX_BVEC_H
- #define __LINUX_BVEC_H
- 
-+#include <linux/bvec_types.h>
- #include <linux/highmem.h>
- #include <linux/bug.h>
- #include <linux/errno.h>
-@@ -14,26 +15,6 @@
- #include <linux/minmax.h>
- #include <linux/types.h>
- 
--struct page;
--
--/**
-- * struct bio_vec - a contiguous range of physical memory addresses
-- * @bv_page:   First page associated with the address range.
-- * @bv_len:    Number of bytes in the address range.
-- * @bv_offset: Start of the address range relative to the start of @bv_page.
-- *
-- * The following holds for a bvec if n * PAGE_SIZE < bv_offset + bv_len:
-- *
-- *   nth_page(@bv_page, n) == @bv_page + n
-- *
-- * This holds because page_is_mergeable() checks the above property.
-- */
--struct bio_vec {
--	struct page	*bv_page;
--	unsigned int	bv_len;
--	unsigned int	bv_offset;
--};
--
- /**
-  * bvec_set_page - initialize a bvec based off a struct page
-  * @bv:		bvec to initialize
-@@ -74,69 +55,6 @@ static inline void bvec_set_virt(struct bio_vec *bv, void *vaddr,
- 	bvec_set_page(bv, virt_to_page(vaddr), len, offset_in_page(vaddr));
+@@ -434,6 +434,12 @@ static inline enum req_op bio_op(const struct bio *bio)
+ 	return bio->bi_opf & REQ_OP_MASK;
  }
  
--struct bvec_iter {
--	sector_t		bi_sector;	/* device address in 512 byte
--						   sectors */
--	unsigned int		bi_size;	/* residual I/O count */
--
--	unsigned int		bi_idx;		/* current index into bvl_vec */
--
--	unsigned int            bi_bvec_done;	/* number of bytes completed in
--						   current bvec */
--} __packed;
--
--struct bvec_iter_all {
--	struct bio_vec	bv;
--	int		idx;
--	unsigned	done;
--};
--
--/*
-- * various member access, note that bio_data should of course not be used
-- * on highmem page vectors
-- */
--#define __bvec_iter_bvec(bvec, iter)	(&(bvec)[(iter).bi_idx])
--
--/* multi-page (mp_bvec) helpers */
--#define mp_bvec_iter_page(bvec, iter)				\
--	(__bvec_iter_bvec((bvec), (iter))->bv_page)
--
--#define mp_bvec_iter_len(bvec, iter)				\
--	min((iter).bi_size,					\
--	    __bvec_iter_bvec((bvec), (iter))->bv_len - (iter).bi_bvec_done)
--
--#define mp_bvec_iter_offset(bvec, iter)				\
--	(__bvec_iter_bvec((bvec), (iter))->bv_offset + (iter).bi_bvec_done)
--
--#define mp_bvec_iter_page_idx(bvec, iter)			\
--	(mp_bvec_iter_offset((bvec), (iter)) / PAGE_SIZE)
--
--#define mp_bvec_iter_bvec(bvec, iter)				\
--((struct bio_vec) {						\
--	.bv_page	= mp_bvec_iter_page((bvec), (iter)),	\
--	.bv_len		= mp_bvec_iter_len((bvec), (iter)),	\
--	.bv_offset	= mp_bvec_iter_offset((bvec), (iter)),	\
--})
--
--/* For building single-page bvec in flight */
-- #define bvec_iter_offset(bvec, iter)				\
--	(mp_bvec_iter_offset((bvec), (iter)) % PAGE_SIZE)
--
--#define bvec_iter_len(bvec, iter)				\
--	min_t(unsigned, mp_bvec_iter_len((bvec), (iter)),		\
--	      PAGE_SIZE - bvec_iter_offset((bvec), (iter)))
--
--#define bvec_iter_page(bvec, iter)				\
--	(mp_bvec_iter_page((bvec), (iter)) +			\
--	 mp_bvec_iter_page_idx((bvec), (iter)))
--
--#define bvec_iter_bvec(bvec, iter)				\
--((struct bio_vec) {						\
--	.bv_page	= bvec_iter_page((bvec), (iter)),	\
--	.bv_len		= bvec_iter_len((bvec), (iter)),	\
--	.bv_offset	= bvec_iter_offset((bvec), (iter)),	\
--})
--
- static inline bool bvec_iter_advance(const struct bio_vec *bv,
- 		struct bvec_iter *iter, unsigned bytes)
++static inline bool blk_op_is_passthrough(blk_opf_t op)
++{
++	op &= REQ_OP_MASK;
++	return op == REQ_OP_DRV_IN || op == REQ_OP_DRV_OUT;
++}
++
+ static inline bool op_is_write(blk_opf_t op)
  {
-diff --git a/include/linux/bvec_types.h b/include/linux/bvec_types.h
-new file mode 100644
-index 000000000000..23453c988154
---- /dev/null
-+++ b/include/linux/bvec_types.h
-@@ -0,0 +1,95 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * bvec iterator
-+ *
-+ * Copyright (C) 2001 Ming Lei <ming.lei@canonical.com>
-+ */
-+#ifndef __LINUX_BVEC_TYPES_H
-+#define __LINUX_BVEC_TYPES_H
-+
-+#include <linux/types.h>
-+
-+struct page;
-+
-+/**
-+ * struct bio_vec - a contiguous range of physical memory addresses
-+ * @bv_page:   First page associated with the address range.
-+ * @bv_len:    Number of bytes in the address range.
-+ * @bv_offset: Start of the address range relative to the start of @bv_page.
-+ *
-+ * The following holds for a bvec if n * PAGE_SIZE < bv_offset + bv_len:
-+ *
-+ *   nth_page(@bv_page, n) == @bv_page + n
-+ *
-+ * This holds because page_is_mergeable() checks the above property.
-+ */
-+struct bio_vec {
-+	struct page	*bv_page;
-+	unsigned int	bv_len;
-+	unsigned int	bv_offset;
-+};
-+
-+struct bvec_iter {
-+	sector_t		bi_sector;	/* device address in 512 byte
-+						   sectors */
-+	unsigned int		bi_size;	/* residual I/O count */
-+
-+	unsigned int		bi_idx;		/* current index into bvl_vec */
-+
-+	unsigned int            bi_bvec_done;	/* number of bytes completed in
-+						   current bvec */
-+} __packed;
-+
-+struct bvec_iter_all {
-+	struct bio_vec	bv;
-+	int		idx;
-+	unsigned	done;
-+};
-+
-+/*
-+ * various member access, note that bio_data should of course not be used
-+ * on highmem page vectors
-+ */
-+#define __bvec_iter_bvec(bvec, iter)	(&(bvec)[(iter).bi_idx])
-+
-+/* multi-page (mp_bvec) helpers */
-+#define mp_bvec_iter_page(bvec, iter)				\
-+	(__bvec_iter_bvec((bvec), (iter))->bv_page)
-+
-+#define mp_bvec_iter_len(bvec, iter)				\
-+	min((iter).bi_size,					\
-+	    __bvec_iter_bvec((bvec), (iter))->bv_len - (iter).bi_bvec_done)
-+
-+#define mp_bvec_iter_offset(bvec, iter)				\
-+	(__bvec_iter_bvec((bvec), (iter))->bv_offset + (iter).bi_bvec_done)
-+
-+#define mp_bvec_iter_page_idx(bvec, iter)			\
-+	(mp_bvec_iter_offset((bvec), (iter)) / PAGE_SIZE)
-+
-+#define mp_bvec_iter_bvec(bvec, iter)				\
-+((struct bio_vec) {						\
-+	.bv_page	= mp_bvec_iter_page((bvec), (iter)),	\
-+	.bv_len		= mp_bvec_iter_len((bvec), (iter)),	\
-+	.bv_offset	= mp_bvec_iter_offset((bvec), (iter)),	\
-+})
-+
-+/* For building single-page bvec in flight */
-+ #define bvec_iter_offset(bvec, iter)				\
-+	(mp_bvec_iter_offset((bvec), (iter)) % PAGE_SIZE)
-+
-+#define bvec_iter_len(bvec, iter)				\
-+	min_t(unsigned, mp_bvec_iter_len((bvec), (iter)),		\
-+	      PAGE_SIZE - bvec_iter_offset((bvec), (iter)))
-+
-+#define bvec_iter_page(bvec, iter)				\
-+	(mp_bvec_iter_page((bvec), (iter)) +			\
-+	 mp_bvec_iter_page_idx((bvec), (iter)))
-+
-+#define bvec_iter_bvec(bvec, iter)				\
-+((struct bio_vec) {						\
-+	.bv_page	= bvec_iter_page((bvec), (iter)),	\
-+	.bv_len		= bvec_iter_len((bvec), (iter)),	\
-+	.bv_offset	= bvec_iter_offset((bvec), (iter)),	\
-+})
-+
-+#endif /* __LINUX_BVEC_TYPES_H */
-diff --git a/include/linux/iov_iter.h b/include/linux/iov_iter.h
-index c3adba9ff389..060626682481 100644
---- a/include/linux/iov_iter.h
-+++ b/include/linux/iov_iter.h
-@@ -9,7 +9,7 @@
- #define _LINUX_IOV_ITER_H
+ 	return !!(op & (__force blk_opf_t)1);
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index e67298984913..6bfa4b92bb32 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -260,12 +260,6 @@ static inline int blk_validate_block_size(unsigned long bsize)
+ 	return 0;
+ }
  
- #include <linux/uio.h>
--#include <linux/bvec.h>
-+#include <linux/bvec_types.h>
- #include <linux/highmem.h> // for kmap_local_page()
- 
- typedef size_t (*iov_step_f)(void *iter_base, size_t progress, size_t len,
-diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index 2dde34c29203..8ee67e49699b 100644
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -14,7 +14,7 @@
- #include <linux/compiler.h>
- #include <linux/time.h>
- #include <linux/bug.h>
--#include <linux/bvec.h>
-+#include <linux/bvec_types.h>
- #include <linux/cache.h>
- #include <linux/rbtree.h>
- #include <linux/socket.h>
+-static inline bool blk_op_is_passthrough(blk_opf_t op)
+-{
+-	op &= REQ_OP_MASK;
+-	return op == REQ_OP_DRV_IN || op == REQ_OP_DRV_OUT;
+-}
+-
+ /*
+  * BLK_BOUNCE_NONE:	never bounce (default)
+  * BLK_BOUNCE_HIGH:	bounce all highmem pages
 -- 
 2.39.2
 
