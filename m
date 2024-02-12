@@ -1,170 +1,98 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72D2487B3;
-	Mon, 12 Feb 2024 16:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF923D0A0;
+	Mon, 12 Feb 2024 16:29:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707755338; cv=none; b=oZIA3dd3Zk7hPM82MvRQYJ6Fv8GR2WgBPpMZxKnrMCwdbSIrbsvmW8huJXHntpqVIl1GkbmWy5jwPlaqe+DcZKGJWhzEXOHQRsFxc3Mbpn7YntMSdZmlSKWAdLTARKzahWxyLBEXm2s5ULXadhDE8cxxGY8tEA69j2YeVLI2/L4=
+	t=1707755374; cv=none; b=tbK5yJ0cTRPqxaT8wmV2IdeY1FGlnhvdAdRxR2BG/YnFCxUTHYp5yT32lFLUHXJym24VyHkaINARuEWnqsEoDargyV2XxNopEjL3K69Pbvzg6v7YW6t29dDLfl/G1uKdzRJVuGbrNs7PIFW1x5MwAW2v67XoDguvI9nOttj4QSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707755338; c=relaxed/simple;
-	bh=SgJH3Y/k6PSY61jd629jA/U3cLCCWfZBB34w3kIbRpQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=avXx4iwtqBIcKoT2yYbusGfTt2NETeroazSfmHC2zr/r7dk8LF0BREGJYX4rWAabdzwiMUPBIUUwHaAzmh70trFkH/dk9ViYI1ZvlD8I++w2mCYH+hZPT735xszg/1dp5irAvZcn7Os804+WRo7poYfS+oJSuIvV9zuc7qzHi1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=oHPBkh5n; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oHPBkh5n"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41CGSe7R045208;
-	Mon, 12 Feb 2024 10:28:40 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707755320;
-	bh=tQD/ZFj+g03UN+0Ct3lIkEa6cwgymbRiKX/WFX6uZkY=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=oHPBkh5nKsWmJzcR+3qt8mWT8R5f2QSw9OfqV0xq68vZx91t+F2FXjofLHUcmHsmH
-	 Z+iXD7h0cIftBWtRTuF0CMX02BQfN5EzrNQN56rFrsOtB0UaHNhF7q/LLSaqZk1rEv
-	 3zpgfqsfmRQvy1hjQGFUtrSXTKSKU/JuH7BbBeUA=
-Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41CGSe4D008748
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 12 Feb 2024 10:28:40 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 12
- Feb 2024 10:28:40 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 12 Feb 2024 10:28:39 -0600
-Received: from lelvsmtp5.itg.ti.com ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41CGSWR7090688;
-	Mon, 12 Feb 2024 10:28:39 -0600
-From: Andrew Davis <afd@ti.com>
-To: Sebastian Reichel <sre@kernel.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Cristian Ciocaltea
-	<cristian.ciocaltea@gmail.com>,
-        Florian Fainelli
-	<florian.fainelli@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>, Scott Branden
-	<sbranden@broadcom.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad
- Dybcio <konrad.dybcio@linaro.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>
-CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-actions@lists.infradead.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, Andrew Davis <afd@ti.com>
-Subject: [PATCH v4 11/19] power: reset: mt6323-poweroff: Use devm_register_sys_off_handler(POWER_OFF)
-Date: Mon, 12 Feb 2024 10:28:23 -0600
-Message-ID: <20240212162831.67838-12-afd@ti.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240212162831.67838-1-afd@ti.com>
-References: <20240212162831.67838-1-afd@ti.com>
+	s=arc-20240116; t=1707755374; c=relaxed/simple;
+	bh=kjdYXtW0dzh6kTs3nxWBA75lsnQ4hvAZA7R0V3EAhzM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dgT2A8CWdQvT2z+jSYFU+EJjsAk9tO+78yWqR6MjUtOqaBQytu+BBGCL4J4LHS/uHirDyhLTAqma74PWfZVeX5Wu+lV+oUkAqX8ep9J1EgWEixWUirzSQMsyE6i12SrKCcKcdy3Z/g2447nchHcbehNPv6IPt07j6fxTn2LVJws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6077a99bbf1so2085377b3.1;
+        Mon, 12 Feb 2024 08:29:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707755372; x=1708360172;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sMMgeYKVED6CfJxdYuAOnKZRGq8dCY2fP6QlD7Y2V8w=;
+        b=WnKNZgOWu+ZAsyh7WwBewsMRP+Z7Ww70c8pzJdPKoatHwBhVgDoCHDbvVIiUHcBAqX
+         6mHzS6niGQbQ++pqWcUYEfELQ5cCfa7ljXwZvr2kyF3aeB8z/IDejDJyeYwrAIubmUZ+
+         yzFdOGBMcy8hn60+Gpre0SaDBTYfa5dbPBYv9hAHec313RbyZVpm4xQnkBnm82c+gfYV
+         vjdnMcHZ8Y0+Xcmjc7nbnJ1yeAQhrv5+DqyvZtSHB0aMGrzgyFsmbMYJkq4jqkaWFaRn
+         OE3o37fdr8v8iPRdGHvKRp287GvMezAQfCOxAwSavyeYL+1F7ykVrTa/uDHs8aq48Z6p
+         OyvQ==
+X-Gm-Message-State: AOJu0YzZypynNYmWVpKhIkhF6gvfjqm2it3z+IQBOEnG1oLH+BnBWmsb
+	BT4AQfkleKZizCK+HIUhRe1CiZLsgApdyShWl2sA853vxopywVHVGO7BghjJqrc=
+X-Google-Smtp-Source: AGHT+IHsCTOPigxmrLnHkTh/5Ei/TmYTJR75lDJ1kLoJFjZBTe5Tl6zFSmDP60WZvNNR5CYpmsfBNQ==
+X-Received: by 2002:a81:a0c1:0:b0:604:1f23:284b with SMTP id x184-20020a81a0c1000000b006041f23284bmr6880ywg.11.1707755371963;
+        Mon, 12 Feb 2024 08:29:31 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXo/3aaRhyjsbei87Q8i2t9ZTisTVWPHgOBJlmwk5kRN+6LrH7N88UtbLxdC1dSPfmY1GXNN/fmdGp6mgdRIXeLQbZm6S3N3O2lvRuSUmlkvJL/qtTE/u+ovacD8A5stMZoCSfIAs+SfNuk9deTh52/L+nLe3LzdcTZGbs2EsT4G00ReMt/y48nPMYQ
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com. [209.85.219.173])
+        by smtp.gmail.com with ESMTPSA id ee4-20020a05690c288400b0060778320f39sm101511ywb.1.2024.02.12.08.29.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 Feb 2024 08:29:31 -0800 (PST)
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dc25e12cc63so3607432276.0;
+        Mon, 12 Feb 2024 08:29:31 -0800 (PST)
+X-Received: by 2002:a05:6902:cc3:b0:dc2:5512:b6d9 with SMTP id
+ cq3-20020a0569020cc300b00dc25512b6d9mr6182ybb.12.1707755371673; Mon, 12 Feb
+ 2024 08:29:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20240205144421.51195-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240205144421.51195-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240205144421.51195-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 12 Feb 2024 17:29:20 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWvOH7W_h9uvC1fdRjpneJapNsOFb8k96Et2iCgBGabAw@mail.gmail.com>
+Message-ID: <CAMuHMdWvOH7W_h9uvC1fdRjpneJapNsOFb8k96Et2iCgBGabAw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] arm64: dts: renesas: r9a08g045: Add missing
+ interrupts of IRQC node
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Use device life-cycle managed register function to simplify probe and
-exit paths.
+On Mon, Feb 5, 2024 at 3:44=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.co=
+m> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> The IRQC block on RZ/G3S ("R9A08G045") SoC supports ECCRAM error
+> interrupts too, add those missing interrupts in the IRQC node.
+>
+> Fixes: 837918aa3fdd ("arm64: dts: renesas: r9a08g045: Add IA55 interrupt =
+controller node")
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Signed-off-by: Andrew Davis <afd@ti.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- drivers/power/reset/mt6323-poweroff.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.9, once the DT bindings have
+been accepted.
 
-diff --git a/drivers/power/reset/mt6323-poweroff.c b/drivers/power/reset/mt6323-poweroff.c
-index 57a63c0ab7fb7..c663347547f97 100644
---- a/drivers/power/reset/mt6323-poweroff.c
-+++ b/drivers/power/reset/mt6323-poweroff.c
-@@ -14,6 +14,7 @@
- #include <linux/platform_device.h>
- #include <linux/mfd/mt6397/core.h>
- #include <linux/mfd/mt6397/rtc.h>
-+#include <linux/reboot.h>
- 
- struct mt6323_pwrc {
- 	struct device *dev;
-@@ -21,11 +22,9 @@ struct mt6323_pwrc {
- 	u32 base;
- };
- 
--static struct mt6323_pwrc *mt_pwrc;
--
--static void mt6323_do_pwroff(void)
-+static int mt6323_do_pwroff(struct sys_off_data *data)
- {
--	struct mt6323_pwrc *pwrc = mt_pwrc;
-+	struct mt6323_pwrc *pwrc = data->cb_data;
- 	unsigned int val;
- 	int ret;
- 
-@@ -44,6 +43,8 @@ static void mt6323_do_pwroff(void)
- 	mdelay(1000);
- 
- 	WARN_ONCE(1, "Unable to power off system\n");
-+
-+	return NOTIFY_DONE;
- }
- 
- static int mt6323_pwrc_probe(struct platform_device *pdev)
-@@ -51,6 +52,7 @@ static int mt6323_pwrc_probe(struct platform_device *pdev)
- 	struct mt6397_chip *mt6397_chip = dev_get_drvdata(pdev->dev.parent);
- 	struct mt6323_pwrc *pwrc;
- 	struct resource *res;
-+	int ret;
- 
- 	pwrc = devm_kzalloc(&pdev->dev, sizeof(*pwrc), GFP_KERNEL);
- 	if (!pwrc)
-@@ -63,19 +65,18 @@ static int mt6323_pwrc_probe(struct platform_device *pdev)
- 	pwrc->base = res->start;
- 	pwrc->regmap = mt6397_chip->regmap;
- 	pwrc->dev = &pdev->dev;
--	mt_pwrc = pwrc;
- 
--	pm_power_off = &mt6323_do_pwroff;
-+	ret = devm_register_sys_off_handler(pwrc->dev,
-+					    SYS_OFF_MODE_POWER_OFF,
-+					    SYS_OFF_PRIO_DEFAULT,
-+					    mt6323_do_pwroff,
-+					    pwrc);
-+	if (ret)
-+		return dev_err_probe(pwrc->dev, ret, "failed to register power-off handler\n");
- 
- 	return 0;
- }
- 
--static void mt6323_pwrc_remove(struct platform_device *pdev)
--{
--	if (pm_power_off == &mt6323_do_pwroff)
--		pm_power_off = NULL;
--}
--
- static const struct of_device_id mt6323_pwrc_dt_match[] = {
- 	{ .compatible = "mediatek,mt6323-pwrc" },
- 	{},
-@@ -84,7 +85,6 @@ MODULE_DEVICE_TABLE(of, mt6323_pwrc_dt_match);
- 
- static struct platform_driver mt6323_pwrc_driver = {
- 	.probe          = mt6323_pwrc_probe,
--	.remove_new     = mt6323_pwrc_remove,
- 	.driver         = {
- 		.name   = "mt6323-pwrc",
- 		.of_match_table = mt6323_pwrc_dt_match,
--- 
-2.39.2
+Gr{oetje,eeting}s,
 
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
