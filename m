@@ -1,117 +1,107 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E223FE24;
-	Mon, 12 Feb 2024 18:35:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51FB33FB01;
+	Mon, 12 Feb 2024 18:36:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707762933; cv=none; b=g32SiPHAJ+nXnXEBjPAoikBgjwxrnr0gF4STYvg/vczRqSet4Ebv5F2Rv66DDPUSDYlftnDumcSs5GaIfb29gA/qWxEY5nDhCWIen5WOllJEri4jLEwYQvrEQP5kU9YbZwnXGx0ktjzEhvndrwZKD9+HQa0GMWIBjI500t84mBc=
+	t=1707762968; cv=none; b=LJWwkWxtK7nD8He/yTPjtCIeYcCIUVuoXIi0O2p399SGH8w2okLcxnwHfY+WNw0kuQrsbI2D5A9EZ7a9Lu99iJELP87fdsCCjgnPnzS3Vk3TEGBFENMjfTv/HRxUOHSb32EoDSD1EyuTbdxR0zNrRK/Usq29lUlYrZ0znI/0I4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707762933; c=relaxed/simple;
-	bh=U/7Lj3FWbjI2GjLaSoK/nsKWyLH6E74rVAh9DUsfCWc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LPPsutqwtqVwBYFGox7UXyUJ5MgfTYUp+oNZmVTaLaQdFQv0mDc35De9zpvEpJVfdrAcjKBFZ7aMZ8DXSXIwdXUVlcmeYx35gJpe7c5rWCGjChonnBhVw768p/Rgt+ZJiwLq08O+41jsoRjL3mTOTP13tuQFABIA0k7wtJIMV/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OT8S7QNM; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1707762968; c=relaxed/simple;
+	bh=T6klo5znd49M931UrjN16DNw3T/R1nxaLTG4aDB8gV4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TLmRP2raQq/9OUW9YaYJEdZfxCElJ/qiiZtgcJuyYFMM0rkjWm0GxKPlBAkDSFvMyYS0Sy+CZuGM+uD1Omwp4YXXLl7bVCvZEAs13s+w57Ym+qqJsvpqb+9SQqYssKhzhxl4XzleX68YpvMy2Y3uyKZyFIn2eb4RtdbMuhgb8zM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ViEM1ASS; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OT8S7QNM"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41CCZTOL021818;
-	Mon, 12 Feb 2024 18:35:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=qcppdkim1; bh=GS9jj+f
-	pf7KW1J3SmhSNAEWkbpmxAkYxeZmABJ8VC8g=; b=OT8S7QNMjhq1nu5Xihb2fXL
-	N0U0Mi+WDYo8ukNkuO4D0GK5DeMyTPmK8fbOuE1fRk9ytyMq1pXQ6E32Tjsl92Zn
-	pBn1bTZ9DIQGZJ2Qlbukhb3pSM3pJ9N/uPqPNb2hs9oByPRuf/wDdR1Ms4WaTC1N
-	mxk06pS5GEhiuleeWOgdfCw0Hqp2PDZQEh4qQVKM/XTNkdS45/njKf9Ngo+OT8E/
-	07hg0g9+i0E5ieYSxVoNSl9A6JxvUoxWUK+zHoIShz30Ch52MExsbB6t6uGlt3ux
-	dakPt9P14C53+YQoYYYhx/ujTTAEOO32vCqcotUNJxj5u7B32KaokZsqrFG3JsA=
-	=
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w7gs1h7vk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Feb 2024 18:35:28 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41CIZRn9002336
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Feb 2024 18:35:27 GMT
-Received: from hu-uchalich-lv.qualcomm.com (10.49.16.6) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 12 Feb 2024 10:35:25 -0800
-From: Unnathi Chalicheemala <quic_uchalich@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Abel Vesa <abel.vesa@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel@quicinc.com>, Elliot Berman <quic_eberman@quicinc.com>
-Subject: [PATCH v3] soc: qcom: llcc: Check return value on Broadcast_OR reg read
-Date: Mon, 12 Feb 2024 10:35:15 -0800
-Message-ID: <20240212183515.433873-1-quic_uchalich@quicinc.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ViEM1ASS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1707762965;
+	bh=T6klo5znd49M931UrjN16DNw3T/R1nxaLTG4aDB8gV4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ViEM1ASSooz6/5l6YhYrLglA/e9pS7yzXmNL899kVcI6WvbWsO2YTMBU5RHhM6vHo
+	 sDSDiOBEF+9A1U24pV7d6Nv30985UXdCSXoUx5+H/Yla0qVzWC/OPoMd1/J1WEo8Yx
+	 jmUOfgyRlk/a6nLF26s8jpyQzl1e1G/x28X307zQFTPvDVV34WxMGM13V+fWNLfVSb
+	 0TeJqUoxnUjURSy+5zYdcIr/3bnPOBiV5ScgmQBFcZuWX41VxhhfIaNk92UNZOqwtW
+	 WDWgb3nhFoZGfvSMXy3nOcP+/xfI3vNm+zh1oG6gDiy3gbuLeXCLjdmy6iCdPmJ6nv
+	 FtcJtDTDDWgYQ==
+Received: from [100.115.223.179] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 277193781FCE;
+	Mon, 12 Feb 2024 18:36:04 +0000 (UTC)
+Message-ID: <4efca2ec-b078-4421-8956-e3add15d8f62@collabora.com>
+Date: Mon, 12 Feb 2024 20:36:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: TfFY2h6r_-O0FiK6uGWN5bkyufH-d0kP
-X-Proofpoint-ORIG-GUID: TfFY2h6r_-O0FiK6uGWN5bkyufH-d0kP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-12_16,2024-02-12_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 adultscore=0 clxscore=1015 impostorscore=0 mlxscore=0
- malwarescore=0 spamscore=0 phishscore=0 priorityscore=1501 bulkscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402120142
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] phy: rockchip: Add Samsung HDMI/eDP Combo PHY
+ driver
+Content-Language: en-US
+To: Luis de Arquer <ldearquer@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Johan Jonker <jbx6244@gmail.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Sascha Hauer <s.hauer@pengutronix.de>, Andy Yan <andy.yan@rock-chips.com>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Algea Cao <algea.cao@rock-chips.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-phy@lists.infradead.org, kernel@collabora.com
+References: <20240205-phy-hdptx-v2-0-a7150814c047@collabora.com>
+ <20240205-phy-hdptx-v2-2-a7150814c047@collabora.com>
+ <61af7b121b23fe8ed06df5348692f862b9b125bf.camel@gmail.com>
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+In-Reply-To: <61af7b121b23fe8ed06df5348692f862b9b125bf.camel@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Commit c72ca343f911 ("soc: qcom: llcc: Add v4.1 HW version support")
-introduced a new 4.1 if statement in llcc_update_act_ctrl() without
-considering that ret might be overwritten. So, add return value check
-after Broadcast_OR register read in llcc_update_act_ctrl().
+Hi Luis,
 
-Fixes: c72ca343f911 ("soc: qcom: llcc: Add v4.1 HW version support")
-Signed-off-by: Unnathi Chalicheemala <quic_uchalich@quicinc.com>
-Reviewed-by: Elliot Berman <quic_eberman@quicinc.com>
+On 2/12/24 18:44, Luis de Arquer wrote:
+> Hi Cristian,
+> 
+> On Mon, 2024-02-05 at 13:24 +0200, Cristian Ciocaltea wrote:
+>> +
+>> +static bool hdptx_phy_clk_pll_calc(unsigned int data_rate,
+>> +				   struct ropll_config *cfg)
+>> +{
+>> +	const unsigned int fout = data_rate / 2, fref = 24000;
+>> +	unsigned long k = 0, lc, k_sub, lc_sub;
+>> +	unsigned int fvco, sdc;
+>> +	u32 mdiv, sdiv, n = 8;
+>> +
+>> +	for (sdiv = 16; sdiv >= 1; sdiv--) {
+>> +		if (sdiv % 2 && sdiv != 1)
+>> +			continue;
+>> +
+>> +		fvco = fout * sdiv;
+>> +
+>> +		if (fvco < 2000000 || fvco > 4000000)
+>> +			continue;
+>> +
+> 
+> What about adding a check to data_rate, maybe like
+> 
+> if (fout > 0x0FFFFFFF)
+> 	return false;
+> 
+> or similar, before the for loop, to keep the multiplication safe?
+> 
+> Right now it would be redundant, given that data_rate was, at some
+> point, encoded in 28 bits within bus_width. But can prevent future pain,
+> especially after changing to phy_configure_opts_hdmi.
 
----
-Changes in v3:
-- Bunched Fixes tag with other tags.
-- Modified commit message.
-- Link to v2: https://lore.kernel.org/all/20240210011415.3440236-1-quic_uchalich@quicinc.com/
+Indeed, it makes sense to do the check, thanks for the heads up!
+I was almost ready to submit v3, so this arrived just in time. :-)
 
-Changes in v2:
-- Referenced right commit to be fixed in the commit message.
-- Added Elliot's R-B tag.
-- Modified commit message to better explain problem statement.
-- Link to v1: https://lore.kernel.org/all/20240202-fix_llcc_update_act_ctrl-v1-1-d36df95c8bd5@quicinc.com/
-
----
- drivers/soc/qcom/llcc-qcom.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/soc/qcom/llcc-qcom.c b/drivers/soc/qcom/llcc-qcom.c
-index 4ca88eaebf06..cbef0dea1d5d 100644
---- a/drivers/soc/qcom/llcc-qcom.c
-+++ b/drivers/soc/qcom/llcc-qcom.c
-@@ -859,6 +859,8 @@ static int llcc_update_act_ctrl(u32 sid,
- 	ret = regmap_read_poll_timeout(drv_data->bcast_regmap, status_reg,
- 				      slice_status, !(slice_status & status),
- 				      0, LLCC_STATUS_READ_DELAY);
-+	if (ret)
-+		return ret;
- 
- 	if (drv_data->version >= LLCC_VERSION_4_1_0_0)
- 		ret = regmap_write(drv_data->bcast_regmap, act_clear_reg,
--- 
-2.25.1
-
+Regards,
+Cristian
