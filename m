@@ -1,63 +1,63 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F400039FF5
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 11:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827C13A262
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 11:55:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707738930; cv=none; b=WlJKWZWuFXtD+Wogn6THEFq0oAXaWGBUpkM0zOuJpiTJ066+eK8em54B2fG5Nm+9kKZT2gb0Ptl/Sxc/QxtA63n0pbYXIciEnctZjLhNuwnnVpVqwWuj4HwSvpz5SpaSGRZNS3nCR4LJR9l9Q4e+RGXkA9GpNw0a9K2jAGWzsbc=
+	t=1707738935; cv=none; b=Crwtgd0g+wD80AmPW3DYttZvxPcFWx9boHHhm4WaV2eWiE9AdzdF+kHGcIThuueD3FHVesWnSuwRlKNXlvv7ZjKX9FcNbDev3SnSJKNB6s9zRsHg7tF0USgykpvFWkJzcFEsou18bmf8/kpm68QzPjU6WtD24ZM5prUEQs8+fro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707738930; c=relaxed/simple;
-	bh=SCadLCodTQ4TW+/zHHITSe11VlBLx8yTMl1c5EKWZlE=;
+	s=arc-20240116; t=1707738935; c=relaxed/simple;
+	bh=DFtkYlLlNabbshH9GwA9kiSm8fKyjyUMYUieRVNx8fg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GI6CRTipg1pJuePZ6Ao0XaZOSL9wpEqi3byV6PnOQ5sGFQXtrBgbFmsvzHJjBMnWIbjgAeeyESQTHx0VHmsOicu2ZPdD4ffDRZ09VUjuVrGxSVkT219ID3xikJ22vSbEKVJeSW25YGWlpLCay+8KAJ7MXUMHWNHF/dF1iWNWnV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=UO8GVZhr; arc=none smtp.client-ip=209.85.218.44
+	 MIME-Version; b=siswirw+zjHrUqboKGU6ch7k610ZbSX4pDDEOhRTrm6X4qKEj5gsSQjg6U+WCLVl6eBAHwsF8GkeWMvraPzgiNlhSLQ+VnoVSDvgUOtayYpLy6QKMLSvuYivFigRhW1BrbfM7M2tWVGFyF4NopHyz0ifmcSRop6v7f6PrHinRwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=E9FtuvfW; arc=none smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="UO8GVZhr"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a3566c0309fso362876566b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 03:55:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="E9FtuvfW"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a3c00c98d32so348228366b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 03:55:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1707738925; x=1708343725; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1707738929; x=1708343729; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UvoiihLJ5aqM7bkArA3AZLqLBb82+bEROlJyYKdd/dM=;
-        b=UO8GVZhrqmvUCoommc8dYswl14dYNbwFMTsuqpJP+yeVWWktxTE8mNlc/0d+KacLYd
-         HYkcvuD4X+sZWqWr5yVINe3Gc8AewAX9iQuvO0MaCN+VZq2yp3c51HPmVbBX9btbOkse
-         zjVRiq13HAEgkwvjHVzH+p3wWYd3AmekPDaT8BiXDtovODf1cEbvILxAXdj0czCsFqw8
-         2Rx6okxG6P37WyH9bQmYkn88tK5vgnEsIHfKrLXz4c+z4FEHCmFTDIm9Dpji3VJLchea
-         Lo05NMxK/UYadN7hIama27bsjW5R820RhnOnKuLpuNCUJ6+JS5HjjCXt4iWB54TGOTd+
-         B16A==
+        bh=/J9uDdEO2uVwAKDurDnR1+NlqV3E98caoyDJWoT9R94=;
+        b=E9FtuvfWSDp1YiEjK4o6JEVO8Qcg8uFWvKFzygFDXzVRRgAynwZM8OAQveMXmVqWXG
+         x7pR3Rp3g6n99LzB8Itus8xgz8+DtL3yOjprWN2QqbmUbkrWUi4MTCwLfbek2iTotLRq
+         Y7F/b8tOToFjjKG0cmhzXkPQKvzK/DWFhWvavcDo18m7rS0XScXw5f0GzmuRbhF1RUaB
+         AiLsTUUrQndrA+/VTJGHfyYYwWVe5m13073E3cwSlVS5LBjSVGCiNyzSlqzVphWRk02S
+         4EDsm/LL1JG425/fPI7l8ecOgLRz7sdy6MJL3g13hhL75dSbaMQ5erECjy39waAD1SjN
+         hnPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707738925; x=1708343725;
+        d=1e100.net; s=20230601; t=1707738929; x=1708343729;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UvoiihLJ5aqM7bkArA3AZLqLBb82+bEROlJyYKdd/dM=;
-        b=Dl10IC1Nna1bU442ODIah2Tiq+T44V0/peBf6lpd5shwDusczxjhqe+52ZhxIZk187
-         vAkkbwq1PmJsFVE8Nry8uVO4NNWvRvNAhoKGoPTuDttxlP3QjjZ5IpNDNn0E4BctZrU6
-         9M2UR+8NT3yX3Qp3WZ/2Xa5tJiCpdQpBxBS3dryM/vb0nrV0+Hu9NI2y8GjYOxBqSf5r
-         Gd15f2XdysFdRJBUg58o65DRG/NzFdyDAjVcQzzkDoB1IUyH6VQanYXdgMW5C4PCpzEa
-         WGmLmWVBDVvEj4pLnQZ6vDeF18h7gXeLL1Fn0/+Xtqv7//CWucCuF1OUVLQ1hKOeiCVW
-         /MoA==
-X-Gm-Message-State: AOJu0YxzsUo9GhJvVv5bykQwpntoObkAHlsFWeWy4YzPSYy/lpV2DK2Y
-	cW/f9pqBvGne8NlbWxf0Nq+hFIUB8ntzdydjxIr5tDanu6KMHN43bhaNM60Y+ZL8Y9GdPK381k/
-	A
-X-Google-Smtp-Source: AGHT+IGvgXLGWQawGRfNclEgw8zXsx5CYmu/PXSDDRRhQs4IPHT+o5hR9+ZOjIkV8JlHDVHg0w6OJg==
-X-Received: by 2002:a17:906:3454:b0:a37:5137:1263 with SMTP id d20-20020a170906345400b00a3751371263mr3826377ejb.30.1707738925417;
-        Mon, 12 Feb 2024 03:55:25 -0800 (PST)
+        bh=/J9uDdEO2uVwAKDurDnR1+NlqV3E98caoyDJWoT9R94=;
+        b=mNK4u/DjGh48ytOa1yD+gwhbw7SAKwrLLfk6irGLwiJilTMCNO5URL3z39notn4f3+
+         vS8ZAAmcJnbpF/NBoM7CD6Pk4QX5LzgAnrXFjsj7jeYFKVNOacxCRl7Q3mBhGudN5WrC
+         6jCljvFtaVE5S+yXN5k8WHAqQ6WhxT3ZIhI6xnXf3E1b2UzkQn4f6YZLCiwk1kfDG+D2
+         t/DFl4cqdrtJRU2x6xwK38uMXSMwwwaZjQ4ee5qqSk0TySLRDoN6/LRX00luNDvTFPO3
+         sH+orcY0wr0pHXo8wd+jfgUq3fMjYbP7VLHRR9YsawIvKXFXpI2PxMcTdjlOtKYemiSn
+         5llg==
+X-Gm-Message-State: AOJu0YxTNGiPliQO2501iHoOnOV+xt2W/2lc0s6SkOFRYu8UqmYf34S8
+	pKBNuZjsdiTAD8eNc2ftjtxDmvryV1IcwjgOj+vRp01Jrnf63Qc2EAh2TL1/BJkFG0owbEsJYS5
+	N
+X-Google-Smtp-Source: AGHT+IFJS6sWhP+eCFVqTCyemstSu0Wn4WbixxjyiocFtdvIz0w462lbHBxbGcoDypmU2rCArvCVZA==
+X-Received: by 2002:a17:906:2493:b0:a3c:d0f5:dbd4 with SMTP id e19-20020a170906249300b00a3cd0f5dbd4mr670812ejb.18.1707738929137;
+        Mon, 12 Feb 2024 03:55:29 -0800 (PST)
 Received: from raven.blarg.de (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id m1-20020a17090607c100b00a36c3e2e52dsm139203ejc.61.2024.02.12.03.55.25
+        by smtp.gmail.com with ESMTPSA id m1-20020a17090607c100b00a36c3e2e52dsm139203ejc.61.2024.02.12.03.55.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 03:55:25 -0800 (PST)
+        Mon, 12 Feb 2024 03:55:27 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: linux-kernel@vger.kernel.org
 Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v5 13/35] wait.h: move declarations to wait_types.h
-Date: Mon, 12 Feb 2024 12:54:38 +0100
-Message-Id: <20240212115500.2078463-14-max.kellermann@ionos.com>
+Subject: [PATCH v5 15/35] completion.h: move declarations to completion_types.h
+Date: Mon, 12 Feb 2024 12:54:40 +0100
+Message-Id: <20240212115500.2078463-16-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240212115500.2078463-1-max.kellermann@ionos.com>
 References: <20240212115500.2078463-1-max.kellermann@ionos.com>
@@ -74,640 +74,567 @@ dependencies.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_ih.h |  2 +-
- include/drm/gpu_scheduler.h            |  2 +-
- include/linux/backing-dev-defs.h       |  2 +-
- include/linux/blkdev.h                 |  2 +-
- include/linux/buffer_head.h            |  2 +-
- include/linux/ceph/libceph.h           |  2 +-
- include/linux/cgroup-defs.h            |  2 +-
- include/linux/console_struct.h         |  2 +-
- include/linux/counter.h                |  2 +-
- include/linux/dcache.h                 |  2 +-
- include/linux/dma-buf.h                |  2 +-
- include/linux/eventfd.h                |  2 +-
- include/linux/gnss.h                   |  2 +-
- include/linux/libps2.h                 |  2 +-
- include/linux/lp.h                     |  2 +-
- include/linux/mempool.h                |  2 +-
- include/linux/mhi.h                    |  2 +-
- include/linux/mmzone.h                 |  2 +-
- include/linux/mtd/flashchip.h          |  2 +-
- include/linux/net.h                    |  2 +-
- include/linux/nfs_fs_sb.h              |  2 +-
- include/linux/parport.h                |  2 +-
- include/linux/pid.h                    |  2 +-
- include/linux/pm.h                     |  2 +-
- include/linux/poll.h                   |  2 +-
- include/linux/psi_types.h              |  2 +-
- include/linux/relay.h                  |  2 +-
- include/linux/rtnetlink.h              |  2 +-
- include/linux/sbitmap.h                |  2 +-
- include/linux/sunrpc/rpc_pipe_fs.h     |  2 +-
- include/linux/syslog.h                 |  2 +-
- include/linux/tty_port.h               |  2 +-
- include/linux/wait.h                   | 23 +------------------
- include/linux/wait_bit.h               |  2 +-
- include/linux/wait_types.h             | 31 ++++++++++++++++++++++++++
- include/media/dvb_ringbuffer.h         |  2 +-
- include/net/smc.h                      |  2 +-
- include/net/sock.h                     |  2 +-
- include/scsi/libiscsi.h                |  2 +-
- include/sound/control.h                |  2 +-
- include/sound/rawmidi.h                |  2 +-
- 41 files changed, 71 insertions(+), 61 deletions(-)
- create mode 100644 include/linux/wait_types.h
+ drivers/target/target_core_xcopy.c |  1 +
+ include/drm/drm_audio_component.h  |  2 +-
+ include/drm/gpu_scheduler.h        |  2 +-
+ include/linux/ceph/osd_client.h    |  2 +-
+ include/linux/completion.h         | 18 +----------------
+ include/linux/completion_types.h   | 31 ++++++++++++++++++++++++++++++
+ include/linux/cpufreq.h            |  2 +-
+ include/linux/edac.h               |  2 +-
+ include/linux/firewire.h           |  2 +-
+ include/linux/greybus/operation.h  |  2 +-
+ include/linux/hw_random.h          |  2 +-
+ include/linux/hyperv.h             |  2 +-
+ include/linux/livepatch.h          |  2 +-
+ include/linux/mailbox_controller.h |  2 +-
+ include/linux/memremap.h           |  2 +-
+ include/linux/mfd/cs42l43.h        |  2 +-
+ include/linux/mfd/da9052/da9052.h  |  2 +-
+ include/linux/mfd/wm8350/core.h    |  2 +-
+ include/linux/mlx4/device.h        |  2 +-
+ include/linux/mlx5/cq.h            |  1 +
+ include/linux/mlx5/driver.h        |  2 +-
+ include/linux/mmc/core.h           |  2 +-
+ include/linux/mtd/onenand.h        |  2 +-
+ include/linux/mtd/sh_flctl.h       |  2 +-
+ include/linux/ntb.h                |  2 +-
+ include/linux/pm.h                 |  2 +-
+ include/linux/rcupdate_wait.h      |  2 +-
+ include/linux/sched/signal.h       |  2 +-
+ include/linux/soc/qcom/qmi.h       |  2 +-
+ include/linux/spi/spi.h            |  2 +-
+ include/linux/srcutree.h           |  2 +-
+ include/linux/usb.h                |  2 +-
+ include/net/inet_frag.h            |  2 +-
+ include/rdma/ib_sa.h               |  2 +-
+ include/rdma/restrack.h            |  2 +-
+ include/target/target_core_base.h  |  2 +-
+ include/xen/xenbus.h               |  2 +-
+ 37 files changed, 67 insertions(+), 50 deletions(-)
+ create mode 100644 include/linux/completion_types.h
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ih.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_ih.h
-index 59a5bc9b1120..6e01527b2be5 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ih.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ih.h
-@@ -25,7 +25,7 @@
- #define __AMDGPU_IH_H__
+diff --git a/drivers/target/target_core_xcopy.c b/drivers/target/target_core_xcopy.c
+index fafa738f0f7e..df06ec0f75fe 100644
+--- a/drivers/target/target_core_xcopy.c
++++ b/drivers/target/target_core_xcopy.c
+@@ -16,6 +16,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/list.h>
+ #include <linux/rculist.h>
++#include <linux/completion.h>
+ #include <linux/configfs.h>
+ #include <linux/ratelimit.h>
+ #include <linux/workqueue.h>
+diff --git a/include/drm/drm_audio_component.h b/include/drm/drm_audio_component.h
+index 5a4cd1fa8e2a..d4e95bca4d10 100644
+--- a/include/drm/drm_audio_component.h
++++ b/include/drm/drm_audio_component.h
+@@ -4,7 +4,7 @@
+ #ifndef _DRM_AUDIO_COMPONENT_H_
+ #define _DRM_AUDIO_COMPONENT_H_
  
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
  #include <linux/types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
  
- /* Maximum number of IVs processed at once */
- #define AMDGPU_IH_MAX_NUM_IVS	32
+ struct drm_audio_component;
 diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
-index 4edd7ac64b62..05591cc987c2 100644
+index 05591cc987c2..9a89f72a3bac 100644
 --- a/include/drm/gpu_scheduler.h
 +++ b/include/drm/gpu_scheduler.h
-@@ -28,7 +28,7 @@
+@@ -26,7 +26,7 @@
+ 
+ #include <drm/spsc_queue.h>
  #include <linux/dma-fence.h>
- #include <linux/completion.h>
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
  #include <linux/xarray.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
+ #include <linux/wait_types.h>
  #include <linux/workqueue_types.h>
- 
- #define MAX_WAIT_SCHED_ENTITY_Q_EMPTY msecs_to_jiffies(1000)
-diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
-index 9f2ef799cff4..068fc9f3e883 100644
---- a/include/linux/backing-dev-defs.h
-+++ b/include/linux/backing-dev-defs.h
-@@ -10,7 +10,7 @@
- #include <linux/percpu-refcount.h>
- #include <linux/flex_proportions.h>
- #include <linux/timer_types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/workqueue_types.h>
- #include <linux/kref_types.h>
- 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 26344147adec..2a8df9c0e87b 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -13,7 +13,7 @@
- #include <linux/minmax.h>
- #include <linux/timer_types.h>
- #include <linux/workqueue_types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/bio.h>
- #include <linux/gfp_types.h>
- #include <linux/kdev_t.h>
-diff --git a/include/linux/buffer_head.h b/include/linux/buffer_head.h
-index d78454a4dd1f..15dffb5374fb 100644
---- a/include/linux/buffer_head.h
-+++ b/include/linux/buffer_head.h
-@@ -13,7 +13,7 @@
- #include <linux/fs.h>
- #include <linux/linkage.h>
- #include <linux/pagemap.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/atomic.h>
- 
- enum bh_state_bits {
-diff --git a/include/linux/ceph/libceph.h b/include/linux/ceph/libceph.h
-index d01be9103e56..12eb9c9f6620 100644
---- a/include/linux/ceph/libceph.h
-+++ b/include/linux/ceph/libceph.h
-@@ -11,7 +11,7 @@
- #include <linux/fs.h>
- #include <linux/mempool.h>
- #include <linux/pagemap.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/writeback.h>
- #include <linux/slab.h>
- #include <linux/refcount_types.h>
-diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
-index 380a59b31624..99e24f3034df 100644
---- a/include/linux/cgroup-defs.h
-+++ b/include/linux/cgroup-defs.h
-@@ -11,7 +11,7 @@
- #include <linux/limits.h>
- #include <linux/list.h>
- #include <linux/idr.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/mutex_types.h>
- #include <linux/rcupdate.h>
- #include <linux/refcount_types.h>
-diff --git a/include/linux/console_struct.h b/include/linux/console_struct.h
-index a0142b93eaf9..8babdd50a4ca 100644
---- a/include/linux/console_struct.h
-+++ b/include/linux/console_struct.h
-@@ -13,7 +13,7 @@
- #ifndef _LINUX_CONSOLE_STRUCT_H
- #define _LINUX_CONSOLE_STRUCT_H
- 
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/vt.h>
- #include <linux/workqueue_types.h>
- 
-diff --git a/include/linux/counter.h b/include/linux/counter.h
-index 846b94517c5b..638ebb5b4d27 100644
---- a/include/linux/counter.h
-+++ b/include/linux/counter.h
-@@ -13,7 +13,7 @@
- #include <linux/mutex_types.h>
- #include <linux/spinlock_types.h>
- #include <linux/types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <uapi/linux/counter.h>
- 
- struct counter_device;
-diff --git a/include/linux/dcache.h b/include/linux/dcache.h
-index 04ab9e67046c..560ca5e16f1e 100644
---- a/include/linux/dcache.h
-+++ b/include/linux/dcache.h
-@@ -13,7 +13,7 @@
- #include <linux/rcupdate.h>
- #include <linux/lockref.h>
- #include <linux/stringhash.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- struct path;
- struct file;
-diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
-index 8ff4add71f88..ab67e5a4b0ec 100644
---- a/include/linux/dma-buf.h
-+++ b/include/linux/dma-buf.h
-@@ -21,7 +21,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/fs.h>
- #include <linux/dma-fence.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- struct device;
- struct dma_buf;
-diff --git a/include/linux/eventfd.h b/include/linux/eventfd.h
-index 7199c5039561..5f41551db2f1 100644
---- a/include/linux/eventfd.h
-+++ b/include/linux/eventfd.h
-@@ -9,7 +9,7 @@
- #ifndef _LINUX_EVENTFD_H
- #define _LINUX_EVENTFD_H
- 
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/err.h>
- #include <linux/sched.h>
- #include <uapi/linux/eventfd.h>
-diff --git a/include/linux/gnss.h b/include/linux/gnss.h
-index 9f38ff948d78..3c24e934b732 100644
---- a/include/linux/gnss.h
-+++ b/include/linux/gnss.h
-@@ -14,7 +14,7 @@
- #include <linux/mutex_types.h>
- #include <linux/rwsem_types.h>
- #include <linux/types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- struct gnss_device;
- 
-diff --git a/include/linux/libps2.h b/include/linux/libps2.h
-index 006c38667e75..c2f438730ae1 100644
---- a/include/linux/libps2.h
-+++ b/include/linux/libps2.h
-@@ -11,7 +11,7 @@
- #include <linux/interrupt.h>
- #include <linux/mutex_types.h>
- #include <linux/types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- struct ps2dev;
- 
-diff --git a/include/linux/lp.h b/include/linux/lp.h
-index 337573412852..d700bf3255b1 100644
---- a/include/linux/lp.h
-+++ b/include/linux/lp.h
-@@ -9,7 +9,7 @@
- #define _LINUX_LP_H
- 
- 
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/mutex_types.h>
- #include <uapi/linux/lp.h>
- 
-diff --git a/include/linux/mempool.h b/include/linux/mempool.h
-index 16c5cc807ff6..d3df002ac3b7 100644
---- a/include/linux/mempool.h
-+++ b/include/linux/mempool.h
-@@ -5,7 +5,7 @@
- #ifndef _LINUX_MEMPOOL_H
- #define _LINUX_MEMPOOL_H
- 
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/compiler.h>
- 
- struct kmem_cache;
-diff --git a/include/linux/mhi.h b/include/linux/mhi.h
-index bd99f47726dc..243bfae1a94c 100644
---- a/include/linux/mhi.h
-+++ b/include/linux/mhi.h
-@@ -12,7 +12,7 @@
- #include <linux/skbuff.h>
- #include <linux/slab.h>
- #include <linux/spinlock_types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/workqueue_types.h>
- 
- #define MHI_MAX_OEM_PK_HASH_SEGMENTS 16
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index ce11c2dab2bc..fa41c34f16da 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -8,7 +8,7 @@
- #include <linux/spinlock_types.h>
- #include <linux/list.h>
- #include <linux/list_nulls.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/bitops.h>
- #include <linux/cache.h>
- #include <linux/threads.h>
-diff --git a/include/linux/mtd/flashchip.h b/include/linux/mtd/flashchip.h
-index e856c0dcba27..58ffb6515741 100644
---- a/include/linux/mtd/flashchip.h
-+++ b/include/linux/mtd/flashchip.h
-@@ -13,7 +13,7 @@
-  */
- #include <linux/sched.h>
- #include <linux/mutex_types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- typedef enum {
- 	FL_READY,
-diff --git a/include/linux/net.h b/include/linux/net.h
-index c9b4a63791a4..139a936fb772 100644
---- a/include/linux/net.h
-+++ b/include/linux/net.h
-@@ -16,7 +16,7 @@
- 
- #include <linux/stringify.h>
- #include <linux/random.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/fcntl.h>	/* For O_CLOEXEC and O_NONBLOCK */
- #include <linux/rcupdate.h>
- #include <linux/once.h>
-diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-index 08860ceda787..1c9a1e28b13e 100644
---- a/include/linux/nfs_fs_sb.h
-+++ b/include/linux/nfs_fs_sb.h
-@@ -5,7 +5,7 @@
- #include <linux/list.h>
- #include <linux/backing-dev.h>
- #include <linux/idr.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/nfs_xdr.h>
- #include <linux/sunrpc/xprt.h>
- 
-diff --git a/include/linux/parport.h b/include/linux/parport.h
-index c8e3b71a3b49..783835d05d9b 100644
---- a/include/linux/parport.h
-+++ b/include/linux/parport.h
-@@ -10,7 +10,7 @@
- #include <linux/jiffies.h>
- #include <linux/proc_fs.h>
- #include <linux/spinlock_types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/irqreturn.h>
- #include <linux/semaphore.h>
- #include <linux/device.h>
-diff --git a/include/linux/pid.h b/include/linux/pid.h
-index 8124d57752b9..fd9d9c054585 100644
---- a/include/linux/pid.h
-+++ b/include/linux/pid.h
-@@ -7,7 +7,7 @@
- #include <linux/rcupdate.h>
- #include <linux/refcount.h>
- #include <linux/sched.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- /*
-  * What is struct pid?
-diff --git a/include/linux/pm.h b/include/linux/pm.h
-index 303a143c4e04..c1533ce86893 100644
---- a/include/linux/pm.h
-+++ b/include/linux/pm.h
-@@ -13,7 +13,7 @@
- #include <linux/list.h>
- #include <linux/workqueue_types.h>
- #include <linux/spinlock_types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/hrtimer_types.h>
- #include <linux/completion.h>
- 
-diff --git a/include/linux/poll.h b/include/linux/poll.h
-index a9e0e1c2d1f2..043aa684b09c 100644
---- a/include/linux/poll.h
-+++ b/include/linux/poll.h
-@@ -5,7 +5,7 @@
- 
- #include <linux/compiler.h>
- #include <linux/ktime.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/string.h>
- #include <linux/fs.h>
- #include <linux/uaccess.h>
-diff --git a/include/linux/psi_types.h b/include/linux/psi_types.h
-index 8af6452b36e2..de72dcc6e0bf 100644
---- a/include/linux/psi_types.h
-+++ b/include/linux/psi_types.h
-@@ -5,7 +5,7 @@
- #include <linux/kthread.h>
- #include <linux/seqlock_types.h>
- #include <linux/types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- #ifdef CONFIG_PSI
- 
-diff --git a/include/linux/relay.h b/include/linux/relay.h
-index d33735edc3cb..79ecc446ed48 100644
---- a/include/linux/relay.h
-+++ b/include/linux/relay.h
-@@ -13,7 +13,7 @@
- 
- #include <linux/types.h>
- #include <linux/sched.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/list.h>
- #include <linux/irq_work.h>
- #include <linux/bug.h>
-diff --git a/include/linux/rtnetlink.h b/include/linux/rtnetlink.h
-index d1c42219429c..4b1f01916825 100644
---- a/include/linux/rtnetlink.h
-+++ b/include/linux/rtnetlink.h
+diff --git a/include/linux/ceph/osd_client.h b/include/linux/ceph/osd_client.h
+index 289034e8854f..fa926dcdf940 100644
+--- a/include/linux/ceph/osd_client.h
++++ b/include/linux/ceph/osd_client.h
 @@ -3,7 +3,7 @@
- #define __LINUX_RTNETLINK_H
+ #define _FS_CEPH_OSD_CLIENT_H
  
- #include <linux/netdevice.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/refcount.h>
- #include <uapi/linux/rtnetlink.h>
- 
-diff --git a/include/linux/sbitmap.h b/include/linux/sbitmap.h
-index d7d3fba174f8..f7279f7632fe 100644
---- a/include/linux/sbitmap.h
-+++ b/include/linux/sbitmap.h
-@@ -18,7 +18,7 @@
- #include <linux/percpu.h>
- #include <linux/slab.h>
- #include <linux/types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- struct seq_file;
- 
-diff --git a/include/linux/sunrpc/rpc_pipe_fs.h b/include/linux/sunrpc/rpc_pipe_fs.h
-index c26733d8fde7..3f4d6fc0a8a3 100644
---- a/include/linux/sunrpc/rpc_pipe_fs.h
-+++ b/include/linux/sunrpc/rpc_pipe_fs.h
-@@ -4,7 +4,7 @@
- 
- #include <linux/list.h>
- #include <linux/spinlock_types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- struct rpc_pipe_dir_head {
- 	struct list_head pdh_entries;
-diff --git a/include/linux/syslog.h b/include/linux/syslog.h
-index 955f80e34d4f..2a4c9199d718 100644
---- a/include/linux/syslog.h
-+++ b/include/linux/syslog.h
-@@ -8,7 +8,7 @@
- #ifndef _LINUX_SYSLOG_H
- #define _LINUX_SYSLOG_H
- 
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- /* Close the log.  Currently a NOP. */
- #define SYSLOG_ACTION_CLOSE          0
-diff --git a/include/linux/tty_port.h b/include/linux/tty_port.h
-index a76a5b6a5cf2..8622638452cb 100644
---- a/include/linux/tty_port.h
-+++ b/include/linux/tty_port.h
-@@ -6,7 +6,7 @@
- #include <linux/kref.h>
- #include <linux/mutex_types.h>
- #include <linux/tty_buffer.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- struct attribute_group;
- struct tty_driver;
-diff --git a/include/linux/wait.h b/include/linux/wait.h
-index 8aa3372f21a0..b36000bb012c 100644
---- a/include/linux/wait.h
-+++ b/include/linux/wait.h
-@@ -4,17 +4,12 @@
- /*
-  * Linux wait queue related types and methods
+ #include <linux/bitrev.h>
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/kref_types.h>
+ #include <linux/mempool.h>
+ #include <linux/rbtree_types.h>
+diff --git a/include/linux/completion.h b/include/linux/completion.h
+index fb2915676574..a57ffe2836b9 100644
+--- a/include/linux/completion.h
++++ b/include/linux/completion.h
+@@ -9,25 +9,9 @@
+  * See kernel/sched/completion.c for details.
   */
--#include <linux/list.h>
-+#include <linux/wait_types.h>
- #include <linux/stddef.h>
- #include <linux/spinlock.h>
  
- #include <asm/current.h>
- 
--typedef struct wait_queue_entry wait_queue_entry_t;
--
--typedef int (*wait_queue_func_t)(struct wait_queue_entry *wq_entry, unsigned mode, int flags, void *key);
--int default_wake_function(struct wait_queue_entry *wq_entry, unsigned mode, int flags, void *key);
--
- /* wait_queue_entry::flags */
- #define WQ_FLAG_EXCLUSIVE	0x01
- #define WQ_FLAG_WOKEN		0x02
-@@ -22,22 +17,6 @@ int default_wake_function(struct wait_queue_entry *wq_entry, unsigned mode, int
- #define WQ_FLAG_DONE		0x08
- #define WQ_FLAG_PRIORITY	0x10
++#include <linux/completion_types.h>
+ #include <linux/swait.h>
  
 -/*
-- * A single wait-queue entry structure:
+- * struct completion - structure used to maintain state for a "completion"
+- *
+- * This is the opaque structure used to maintain the state for a "completion".
+- * Completions currently use a FIFO to queue threads that have to wait for
+- * the "completion" event.
+- *
+- * See also:  complete(), wait_for_completion() (and friends _timeout,
+- * _interruptible, _interruptible_timeout, and _killable), init_completion(),
+- * reinit_completion(), and macros DECLARE_COMPLETION(),
+- * DECLARE_COMPLETION_ONSTACK().
 - */
--struct wait_queue_entry {
--	unsigned int		flags;
--	void			*private;
--	wait_queue_func_t	func;
--	struct list_head	entry;
+-struct completion {
+-	unsigned int done;
+-	struct swait_queue_head wait;
 -};
 -
--struct wait_queue_head {
--	spinlock_t		lock;
--	struct list_head	head;
--};
--typedef struct wait_queue_head wait_queue_head_t;
--
- struct task_struct;
- 
- /*
-diff --git a/include/linux/wait_bit.h b/include/linux/wait_bit.h
-index 96c90fbcf652..514f68eff79d 100644
---- a/include/linux/wait_bit.h
-+++ b/include/linux/wait_bit.h
-@@ -8,7 +8,7 @@
- #include <linux/bitops.h>
- #include <linux/init.h> // for __init
- #include <linux/kernel.h> // for might_sleep()
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- struct wait_bit_key {
- 	void			*flags;
-diff --git a/include/linux/wait_types.h b/include/linux/wait_types.h
+ #define init_completion_map(x, m) init_completion(x)
+ static inline void complete_acquire(struct completion *x) {}
+ static inline void complete_release(struct completion *x) {}
+diff --git a/include/linux/completion_types.h b/include/linux/completion_types.h
 new file mode 100644
-index 000000000000..4b43e7bc6dac
+index 000000000000..032192c95462
 --- /dev/null
-+++ b/include/linux/wait_types.h
++++ b/include/linux/completion_types.h
 @@ -0,0 +1,31 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_WAIT_TYPES_H
-+#define _LINUX_WAIT_TYPES_H
-+/*
-+ * Linux wait queue related types and methods
-+ */
-+#include <linux/list.h>
-+#include <linux/spinlock_types.h>
-+
-+typedef struct wait_queue_entry wait_queue_entry_t;
-+
-+typedef int (*wait_queue_func_t)(struct wait_queue_entry *wq_entry, unsigned mode, int flags, void *key);
-+int default_wake_function(struct wait_queue_entry *wq_entry, unsigned mode, int flags, void *key);
++#ifndef __LINUX_COMPLETION_TYPES_H
++#define __LINUX_COMPLETION_TYPES_H
 +
 +/*
-+ * A single wait-queue entry structure:
++ * (C) Copyright 2001 Linus Torvalds
++ *
++ * Atomic wait-for-completion handler data structures.
++ * See kernel/sched/completion.c for details.
 + */
-+struct wait_queue_entry {
-+	unsigned int		flags;
-+	void			*private;
-+	wait_queue_func_t	func;
-+	struct list_head	entry;
++
++#include <linux/swait_types.h>
++
++/*
++ * struct completion - structure used to maintain state for a "completion"
++ *
++ * This is the opaque structure used to maintain the state for a "completion".
++ * Completions currently use a FIFO to queue threads that have to wait for
++ * the "completion" event.
++ *
++ * See also:  complete(), wait_for_completion() (and friends _timeout,
++ * _interruptible, _interruptible_timeout, and _killable), init_completion(),
++ * reinit_completion(), and macros DECLARE_COMPLETION(),
++ * DECLARE_COMPLETION_ONSTACK().
++ */
++struct completion {
++	unsigned int done;
++	struct swait_queue_head wait;
 +};
 +
-+struct wait_queue_head {
-+	spinlock_t		lock;
-+	struct list_head	head;
-+};
-+typedef struct wait_queue_head wait_queue_head_t;
-+
-+#endif /* _LINUX_WAIT_TYPES_H */
-diff --git a/include/media/dvb_ringbuffer.h b/include/media/dvb_ringbuffer.h
-index 131997d1f131..22da81bff624 100644
---- a/include/media/dvb_ringbuffer.h
-+++ b/include/media/dvb_ringbuffer.h
-@@ -24,7 +24,7 @@
- #define _DVB_RINGBUFFER_H_
++#endif
+diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
+index a56eae4b0787..1087f325d056 100644
+--- a/include/linux/cpufreq.h
++++ b/include/linux/cpufreq.h
+@@ -11,7 +11,7 @@
+ #include <linux/clk.h>
+ #include <linux/cpu.h>
+ #include <linux/cpumask.h>
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/kobject_types.h>
+ #include <linux/notifier.h>
+ #include <linux/of.h>
+diff --git a/include/linux/edac.h b/include/linux/edac.h
+index f939d5fad491..7b78403cac40 100644
+--- a/include/linux/edac.h
++++ b/include/linux/edac.h
+@@ -14,7 +14,7 @@
  
- #include <linux/spinlock_types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
+ #include <linux/atomic.h>
+ #include <linux/device.h>
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/workqueue_types.h>
+ #include <linux/debugfs.h>
+ #include <linux/numa.h>
+diff --git a/include/linux/firewire.h b/include/linux/firewire.h
+index feef7e09b60a..a81e31472530 100644
+--- a/include/linux/firewire.h
++++ b/include/linux/firewire.h
+@@ -2,7 +2,7 @@
+ #ifndef _LINUX_FIREWIRE_H
+ #define _LINUX_FIREWIRE_H
  
- /**
-  * struct dvb_ringbuffer - Describes a ring buffer used at DVB framework
-diff --git a/include/net/smc.h b/include/net/smc.h
-index 44a01bd3da10..92611a9cf0e9 100644
---- a/include/net/smc.h
-+++ b/include/net/smc.h
-@@ -13,7 +13,7 @@
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/device.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/kernel.h>
+diff --git a/include/linux/greybus/operation.h b/include/linux/greybus/operation.h
+index c49053e5707d..8d849f4ee99f 100644
+--- a/include/linux/greybus/operation.h
++++ b/include/linux/greybus/operation.h
+@@ -9,7 +9,7 @@
+ #ifndef __OPERATION_H
+ #define __OPERATION_H
  
- #include <linux/spinlock_types.h>
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/kref_types.h>
+ #include <linux/timer_types.h>
  #include <linux/types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include "linux/ism.h"
+diff --git a/include/linux/hw_random.h b/include/linux/hw_random.h
+index 96cad10d0201..69838419f2e7 100644
+--- a/include/linux/hw_random.h
++++ b/include/linux/hw_random.h
+@@ -12,7 +12,7 @@
+ #ifndef LINUX_HWRANDOM_H_
+ #define LINUX_HWRANDOM_H_
+ 
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/types.h>
+ #include <linux/list.h>
+ #include <linux/kref_types.h>
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index 249c4eb67f38..60ed23c4ca17 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -18,7 +18,7 @@
+ #include <linux/types.h>
+ #include <linux/scatterlist.h>
+ #include <linux/list.h>
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/device.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/interrupt.h>
+diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
+index 9b9b38e89563..5277d2a768eb 100644
+--- a/include/linux/livepatch.h
++++ b/include/linux/livepatch.h
+@@ -11,7 +11,7 @@
+ 
+ #include <linux/module.h>
+ #include <linux/ftrace.h>
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/list.h>
+ #include <linux/livepatch_sched.h>
+ 
+diff --git a/include/linux/mailbox_controller.h b/include/linux/mailbox_controller.h
+index 2006897fdaf9..c59f13cb5f28 100644
+--- a/include/linux/mailbox_controller.h
++++ b/include/linux/mailbox_controller.h
+@@ -5,7 +5,7 @@
+ 
+ #include <linux/types.h>
+ #include <linux/hrtimer_types.h>
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
  
  struct device;
-diff --git a/include/net/sock.h b/include/net/sock.h
-index bebdc45cf622..008a6c5a3bfc 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -53,7 +53,7 @@
- #include <linux/memcontrol.h>
- #include <linux/static_key.h>
- #include <linux/sched.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/cgroup-defs.h>
- #include <linux/rbtree_types.h>
- #include <linux/rculist_nulls.h>
-diff --git a/include/scsi/libiscsi.h b/include/scsi/libiscsi.h
-index 01f13729ad24..d30e65c5f137 100644
---- a/include/scsi/libiscsi.h
-+++ b/include/scsi/libiscsi.h
-@@ -11,7 +11,7 @@
- #define LIBISCSI_H
+ struct of_phandle_args;
+diff --git a/include/linux/memremap.h b/include/linux/memremap.h
+index eea01060a6b7..767b64ab667b 100644
+--- a/include/linux/memremap.h
++++ b/include/linux/memremap.h
+@@ -2,7 +2,7 @@
+ #ifndef _LINUX_MEMREMAP_H_
+ #define _LINUX_MEMREMAP_H_
  
- #include <linux/types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/mmzone.h>
+ #include <linux/range.h>
+ #include <linux/ioport.h>
+diff --git a/include/linux/mfd/cs42l43.h b/include/linux/mfd/cs42l43.h
+index 00e074b8c41f..e09e95ce1538 100644
+--- a/include/linux/mfd/cs42l43.h
++++ b/include/linux/mfd/cs42l43.h
+@@ -9,7 +9,7 @@
+ #ifndef CS42L43_CORE_EXT_H
+ #define CS42L43_CORE_EXT_H
+ 
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
  #include <linux/mutex_types.h>
- #include <linux/timer_types.h>
- #include <linux/workqueue_types.h>
-diff --git a/include/sound/control.h b/include/sound/control.h
-index 486017d25181..04ad6c42029d 100644
---- a/include/sound/control.h
-+++ b/include/sound/control.h
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+diff --git a/include/linux/mfd/da9052/da9052.h b/include/linux/mfd/da9052/da9052.h
+index 76feb3a7066d..ade7e7ca0729 100644
+--- a/include/linux/mfd/da9052/da9052.h
++++ b/include/linux/mfd/da9052/da9052.h
+@@ -13,7 +13,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/list.h>
+ #include <linux/mfd/core.h>
+ 
+diff --git a/include/linux/mfd/wm8350/core.h b/include/linux/mfd/wm8350/core.h
+index dc6ff85cb5b0..25379c7f94c4 100644
+--- a/include/linux/mfd/wm8350/core.h
++++ b/include/linux/mfd/wm8350/core.h
+@@ -11,7 +11,7 @@
+ #include <linux/kernel.h>
+ #include <linux/mutex_types.h>
+ #include <linux/interrupt.h>
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/regmap.h>
+ 
+ #include <linux/mfd/wm8350/audio.h>
+diff --git a/include/linux/mlx4/device.h b/include/linux/mlx4/device.h
+index 27f42f713c89..18d71b808bc2 100644
+--- a/include/linux/mlx4/device.h
++++ b/include/linux/mlx4/device.h
+@@ -36,7 +36,7 @@
+ #include <linux/auxiliary_bus.h>
+ #include <linux/if_ether.h>
+ #include <linux/pci.h>
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/radix-tree.h>
+ #include <linux/cpu_rmap.h>
+ #include <linux/crash_dump.h>
+diff --git a/include/linux/mlx5/cq.h b/include/linux/mlx5/cq.h
+index cb15308b5cb0..7acfefd41950 100644
+--- a/include/linux/mlx5/cq.h
++++ b/include/linux/mlx5/cq.h
+@@ -35,6 +35,7 @@
+ 
+ #include <linux/mlx5/driver.h>
+ #include <linux/refcount.h>
++#include <linux/completion.h>
+ 
+ struct mlx5_core_cq {
+ 	u32			cqn;
+diff --git a/include/linux/mlx5/driver.h b/include/linux/mlx5/driver.h
+index 7d47499ce75a..d9b99aca9e72 100644
+--- a/include/linux/mlx5/driver.h
++++ b/include/linux/mlx5/driver.h
+@@ -34,7 +34,7 @@
+ #define MLX5_DRIVER_H
+ 
+ #include <linux/kernel.h>
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/pci.h>
+ #include <linux/irq.h>
+ #include <linux/spinlock_types.h>
+diff --git a/include/linux/mmc/core.h b/include/linux/mmc/core.h
+index 2c7928a50907..54cee0bf305d 100644
+--- a/include/linux/mmc/core.h
++++ b/include/linux/mmc/core.h
+@@ -5,7 +5,7 @@
+ #ifndef LINUX_MMC_CORE_H
+ #define LINUX_MMC_CORE_H
+ 
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/types.h>
+ 
+ struct mmc_data;
+diff --git a/include/linux/mtd/onenand.h b/include/linux/mtd/onenand.h
+index 7ebd8180c617..43e0f8812f52 100644
+--- a/include/linux/mtd/onenand.h
++++ b/include/linux/mtd/onenand.h
+@@ -10,7 +10,7 @@
+ #define __LINUX_MTD_ONENAND_H
+ 
+ #include <linux/spinlock_types.h>
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/mtd/flashchip.h>
+ #include <linux/mtd/onenand_regs.h>
+ #include <linux/mtd/bbm.h>
+diff --git a/include/linux/mtd/sh_flctl.h b/include/linux/mtd/sh_flctl.h
+index 78fc2d4218c8..2f48438bf2a3 100644
+--- a/include/linux/mtd/sh_flctl.h
++++ b/include/linux/mtd/sh_flctl.h
+@@ -8,7 +8,7 @@
+ #ifndef __SH_FLCTL_H__
+ #define __SH_FLCTL_H__
+ 
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/mtd/mtd.h>
+ #include <linux/mtd/rawnand.h>
+ #include <linux/mtd/partitions.h>
+diff --git a/include/linux/ntb.h b/include/linux/ntb.h
+index 191b524e5c0d..b8a8be4052e1 100644
+--- a/include/linux/ntb.h
++++ b/include/linux/ntb.h
+@@ -56,7 +56,7 @@
+ #ifndef _NTB_H_
+ #define _NTB_H_
+ 
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/device.h>
+ #include <linux/interrupt.h>
+ 
+diff --git a/include/linux/pm.h b/include/linux/pm.h
+index c1533ce86893..34cf20dd1ad1 100644
+--- a/include/linux/pm.h
++++ b/include/linux/pm.h
+@@ -15,7 +15,7 @@
+ #include <linux/spinlock_types.h>
+ #include <linux/wait_types.h>
+ #include <linux/hrtimer_types.h>
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ 
+ #ifdef CONFIG_PM_CLK
+ #include <linux/mutex_types.h>
+diff --git a/include/linux/rcupdate_wait.h b/include/linux/rcupdate_wait.h
+index d07f0848802e..a28b4fce69a5 100644
+--- a/include/linux/rcupdate_wait.h
++++ b/include/linux/rcupdate_wait.h
 @@ -7,7 +7,7 @@
-  *  Copyright (c) by Jaroslav Kysela <perex@perex.cz>
   */
  
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/nospec.h>
- #include <linux/string.h> // for strscpy()
- #include <sound/asound.h>
-diff --git a/include/sound/rawmidi.h b/include/sound/rawmidi.h
-index 46678a38dbb9..6c380196bff4 100644
---- a/include/sound/rawmidi.h
-+++ b/include/sound/rawmidi.h
-@@ -10,7 +10,7 @@
- #include <sound/asound.h>
- #include <linux/interrupt.h>
- #include <linux/spinlock_types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/mutex_types.h>
- #include <linux/workqueue_types.h>
+ #include <linux/rcupdate.h>
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/sched.h>
+ 
+ /*
+diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
+index 17436f950ec2..565d3e13efd3 100644
+--- a/include/linux/sched/signal.h
++++ b/include/linux/sched/signal.h
+@@ -7,7 +7,7 @@
+ #include <linux/sched.h>
+ #include <linux/sched/jobctl.h>
+ #include <linux/sched/task.h>
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/refcount.h>
+ #include <linux/pid.h>
+ #include <linux/posix-timers_types.h>
+diff --git a/include/linux/soc/qcom/qmi.h b/include/linux/soc/qcom/qmi.h
+index 900c4b3540cc..d2e725b1864b 100644
+--- a/include/linux/soc/qcom/qmi.h
++++ b/include/linux/soc/qcom/qmi.h
+@@ -6,7 +6,7 @@
+ #ifndef __QMI_HELPERS_H__
+ #define __QMI_HELPERS_H__
+ 
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/idr.h>
+ #include <linux/list.h>
+ #include <linux/qrtr.h>
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index 586a6ac21535..8f3b79a0d5d1 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -8,7 +8,7 @@
+ 
+ #include <linux/acpi.h>
+ #include <linux/bits.h>
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
  #include <linux/device.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/kthread.h>
+diff --git a/include/linux/srcutree.h b/include/linux/srcutree.h
+index 74edc15cfcf3..8b1747a66608 100644
+--- a/include/linux/srcutree.h
++++ b/include/linux/srcutree.h
+@@ -12,7 +12,7 @@
+ #define _LINUX_SRCU_TREE_H
+ 
+ #include <linux/rcu_node_tree.h>
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/mutex_types.h>
+ #include <linux/workqueue.h>
+ 
+diff --git a/include/linux/usb.h b/include/linux/usb.h
+index d7e2fa3d888d..a994f8a5edfd 100644
+--- a/include/linux/usb.h
++++ b/include/linux/usb.h
+@@ -18,7 +18,7 @@
+ #include <linux/kref_types.h>	/* for struct kref */
+ #include <linux/device.h>	/* for struct device */
+ #include <linux/fs.h>		/* for struct file_operations */
+-#include <linux/completion.h>	/* for struct completion */
++#include <linux/completion_types.h>	/* for struct completion */
+ #include <linux/sched.h>	/* for current && schedule_timeout */
+ #include <linux/mutex_types.h>	/* for struct mutex */
+ #include <linux/sprintf.h>
+diff --git a/include/net/inet_frag.h b/include/net/inet_frag.h
+index 153960663ce4..eafb78c7cd76 100644
+--- a/include/net/inet_frag.h
++++ b/include/net/inet_frag.h
+@@ -3,7 +3,7 @@
+ #define __NET_FRAG_H__
+ 
+ #include <linux/rhashtable-types.h>
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/in6.h>
+ #include <linux/rbtree_types.h>
+ #include <linux/refcount.h>
+diff --git a/include/rdma/ib_sa.h b/include/rdma/ib_sa.h
+index b46353fc53bf..fd6f7630e91e 100644
+--- a/include/rdma/ib_sa.h
++++ b/include/rdma/ib_sa.h
+@@ -8,7 +8,7 @@
+ #ifndef IB_SA_H
+ #define IB_SA_H
+ 
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/compiler.h>
+ 
+ #include <linux/atomic.h>
+diff --git a/include/rdma/restrack.h b/include/rdma/restrack.h
+index f5a4ae56a1d9..48aba5db7544 100644
+--- a/include/rdma/restrack.h
++++ b/include/rdma/restrack.h
+@@ -9,7 +9,7 @@
+ #include <linux/typecheck.h>
+ #include <linux/sched.h>
+ #include <linux/kref_types.h>
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/sched/task.h>
+ #include <uapi/rdma/rdma_netlink.h>
+ 
+diff --git a/include/target/target_core_base.h b/include/target/target_core_base.h
+index 97099a5e3f6c..5b9156adceca 100644
+--- a/include/target/target_core_base.h
++++ b/include/target/target_core_base.h
+@@ -7,7 +7,7 @@
+ #include <linux/sbitmap.h>
+ #include <linux/percpu-refcount.h>
+ #include <linux/semaphore.h>     /* struct semaphore */
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ 
+ #define TARGET_CORE_VERSION		"v5.0"
+ 
+diff --git a/include/xen/xenbus.h b/include/xen/xenbus.h
+index d0f2e0a134be..a7326aa58680 100644
+--- a/include/xen/xenbus.h
++++ b/include/xen/xenbus.h
+@@ -38,7 +38,7 @@
+ #include <linux/notifier.h>
+ #include <linux/export.h>
+ #include <linux/fs.h>
+-#include <linux/completion.h>
++#include <linux/completion_types.h>
+ #include <linux/init.h>
+ #include <linux/slab.h>
+ #include <linux/semaphore.h>
 -- 
 2.39.2
 
