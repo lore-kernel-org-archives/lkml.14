@@ -1,27 +1,27 @@
 Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AFE645BED;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3F945BEC;
 	Mon, 12 Feb 2024 17:54:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707760458; cv=none; b=F3xMLZTBC0JJ4glsUhofYXD29DGRdVVI+ZmpDL1PLwapBnewz+iHyMAXN+aw5py0lMPYdDsMUshAbHZsw1o8z39d5W9LTIDwdWNGMKouueN0JOrGfavcT8WLVaXkGaWN7ItuYAQ+RE4XEbxR9X1pmTFWz3NMYuHheno2nrqDFz8=
+	t=1707760459; cv=none; b=LTtP8QOCRxDj+ewGJWUTvzVGVaaa4yF34RCXJJjNfR3YqjGFBMFFJQ2pbbhlzBqaa2CcyptusNQpd8IEDaq6J0O28vdLsS3zOef0bV/i/QMTebjOVn3IHrLz2OIevzWhYlxkgnoc0EK+howItnTxp12d3cuM/LGZqU9CfPkhSdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707760458; c=relaxed/simple;
-	bh=w4dFeJN6ekT4fZLMgY0MSjyE6BSqXIkBWnDC/steBeE=;
+	s=arc-20240116; t=1707760459; c=relaxed/simple;
+	bh=oF9i+Z8BdopTqVTnBumsz4Nu/Iy7VmW+wAYqm2kOVt4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EIlC4X8rmpv50Zj1eYv96EkQFk4myQclATHGXYiH40HQghgGeiPY6xpPYBjSKTLMRl+o+OjxdiKFGXhxJyheTlSBor6FI7enwn7FOYBRB/UnuEzFB0ANzncLmC1+7VQ0XJOdhL1755TcM9+/2kkUr4goI2lEpR72Xc2cmZl9ZL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=g6PZhm/P; arc=none smtp.client-ip=195.181.215.36
+	 MIME-Version:Content-Type; b=oAczeDaRutAVU3R1hRHcj11/a6l5LLLaSv2eorYjKi15D1gtL65s4u2hIF7EytkHEjZo9nILTIv6wH/82SSKJzsqGjLh8uFm6MZwA3YFX5QdlmaRW3iVfOdnD+Y7g7wgbLOIcrGeYPgvEEzmOKpwuSWauzecgoBnU/N652DZ1DA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=xnSouA+T; arc=none smtp.client-ip=195.181.215.36
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="g6PZhm/P"
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="xnSouA+T"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
-	t=1707760454; bh=w4dFeJN6ekT4fZLMgY0MSjyE6BSqXIkBWnDC/steBeE=;
+	t=1707760454; bh=oF9i+Z8BdopTqVTnBumsz4Nu/Iy7VmW+wAYqm2kOVt4=;
 	h=From:To:Cc:Subject:Date:References:From;
-	b=g6PZhm/Prk73mVVUFfWlw4G87khYBj4/3uYUDF/qZlgJkO/84G1G8JzUCaTlQ7Nrv
-	 LqO0FKEtTuLxXb2fm0k2ijhFcouznFtXWihL5gSj33pNfBHvmtyaLEpxAvzyhkTxCS
-	 r2mWGyLtDitwYKtdbkZqu2jxcGjBNQ7fbQX1K0vU=
+	b=xnSouA+T8OAdh2amQX5sJlpaKHMJ6LK8nbkiDRhmQOwVNcjGBl6Po95bAsnLkyn04
+	 tfvwds7hXsmDCuHnNEZFqgqmz3Pk4S02ZYCn0u1EUkSp/pVFjbXN7iQ8MWS6x/IQFa
+	 ixxH0fx3VrR4yuhzef3IN1J7F9gaBFoHI3lsVfJs=
 From: =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megi@xff.cz>
 To: Jonathan Cameron <jic23@kernel.org>,
 	Lars-Peter Clausen <lars@metafoo.de>,
@@ -29,16 +29,16 @@ To: Jonathan Cameron <jic23@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Andrey Skvortsov <andrej.skvortzov@gmail.com>
-Cc: Ondrej Jirman <megi@xff.cz>,
-	Icenowy Zheng <icenowy@aosc.io>,
+Cc: Icenowy Zheng <icenowy@aosc.io>,
 	Dalton Durst <dalton@ubports.com>,
 	Shoji Keita <awaittrot@shjk.jp>,
 	linux-iio@vger.kernel.org,
 	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] MAINTAINERS: Add an entry for AF8133J driver
-Date: Mon, 12 Feb 2024 18:53:56 +0100
-Message-ID: <20240212175410.3101973-5-megi@xff.cz>
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Ond=C5=99ej=20Jirman?= <megi@xff.cz>
+Subject: [PATCH v2 2/4] dt-bindings: iio: magnetometer: Add Voltafield AF8133J
+Date: Mon, 12 Feb 2024 18:53:54 +0100
+Message-ID: <20240212175410.3101973-3-megi@xff.cz>
 In-Reply-To: <20240212175410.3101973-1-megi@xff.cz>
 References: <20240212175410.3101973-1-megi@xff.cz>
 Precedence: bulk
@@ -50,33 +50,90 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Ondrej Jirman <megi@xff.cz>
+From: Icenowy Zheng <icenowy@aosc.io>
 
-As I am submitting the driver and have the device to test. I'll maintain
-the driver.
+Voltafield AF8133J is a simple magnetometer sensor produced by Voltafield
+Technology Corp, with dual power supplies (one for core and one for I/O)
+and active-low reset pin.
 
-Signed-off-by: Ondrej Jirman <megi@xff.cz>
+The sensor has configurable range 1.2 - 2.2 mT and a software controlled
+standby mode.
+
+Add a device tree binding for it.
+
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Ondřej Jirman <megi@xff.cz>
 ---
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../iio/magnetometer/voltafield,af8133j.yaml  | 60 +++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/voltafield,af8133j.yaml
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index dc5ca7a042b5..cc691f61a77e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -579,6 +579,12 @@ F:	drivers/iio/accel/adxl372.c
- F:	drivers/iio/accel/adxl372_i2c.c
- F:	drivers/iio/accel/adxl372_spi.c
- 
-+AF8133J THREE-AXIS MAGNETOMETER DRIVER
-+M:	Ondřej Jirman <megi@xff.cz>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/iio/magnetometer/voltafield,af8133j.yaml
-+F:	drivers/iio/magnetometer/af8133j.c
+diff --git a/Documentation/devicetree/bindings/iio/magnetometer/voltafield,af8133j.yaml b/Documentation/devicetree/bindings/iio/magnetometer/voltafield,af8133j.yaml
+new file mode 100644
+index 000000000000..b6ab01a6914a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/magnetometer/voltafield,af8133j.yaml
+@@ -0,0 +1,60 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/magnetometer/voltafield,af8133j.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- AF9013 MEDIA DRIVER
- L:	linux-media@vger.kernel.org
- S:	Orphan
++title: Voltafield AF8133J magnetometer sensor
++
++maintainers:
++  - Ondřej Jirman <megi@xff.cz>
++
++properties:
++  compatible:
++    const: voltafield,af8133j
++
++  reg:
++    maxItems: 1
++
++  reset-gpios:
++    description:
++      A signal for active low reset input of the sensor. (optional; if not
++      used, software reset over I2C will be used instead)
++
++  avdd-supply:
++    description:
++      A regulator that provides AVDD power (Working power, usually 3.3V) to
++      the sensor.
++
++  dvdd-supply:
++    description:
++      A regulator that provides DVDD power (Digital IO power, 1.8V - AVDD)
++      to the sensor.
++
++  mount-matrix:
++    description: An optional 3x3 mounting rotation matrix.
++
++required:
++  - compatible
++  - reg
++  - avdd-supply
++  - dvdd-supply
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/gpio/gpio.h>
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        magnetometer@1c {
++            compatible = "voltafield,af8133j";
++            reg = <0x1c>;
++            avdd-supply = <&reg_dldo1>;
++            dvdd-supply = <&reg_dldo1>;
++            reset-gpios = <&pio 1 1 GPIO_ACTIVE_LOW>;
++        };
++    };
 -- 
 2.43.0
 
