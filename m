@@ -1,102 +1,130 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F2C45BEC
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 18:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF70418658;
+	Mon, 12 Feb 2024 18:32:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707762674; cv=none; b=rRlRh9TtlR/j/9oc9QpcnCR/gbcEbLUekOW7P/W0va0JoCr18yLJcG4A920h3XVx4eXbQd0nVb5mNm+uG5Bx0zfg9I09KpuHb2l6F/Yox4r556g4Lnnp6hzrKWtzkbSAvWu73I6yfNSoL8JjiAtLQdDBQAWYZ05KcGokBwLl9Oo=
+	t=1707762750; cv=none; b=tIQeRPf2U5sxg7//GXiqCCVdLi/ffZ/d5i2RD7G0lD/Ju6bSDd+pyud/eGI3RQYZikcUJ4VP45s6TNUscTZJmGs2pmww0MvFclS+HBTzjEoFb6MQFNT+5Oq0CCDnwPRoFvD0FbqUIKfwwsoJqNGRqS34SHpFMPDckCLYqBjEcXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707762674; c=relaxed/simple;
-	bh=Vi6c5axLczsjAfZ/jdvV6TZrVwfcoDXEpjFAYHPKp3c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xa6o/woY8jESl4sFBERodWcp5wZZBrIkQMqFotHpXbqkPHS1tclcmBiHBt+zbcXRAIRthIIJn+mTG67L2vq50CJTSSfQcUes0LOCX/A2I76VVKKIvZRIpq0CWfvmfflzfAcZi2P84+QT2mP8ImXQrnXLWedA+WKfg53V2dPr8Ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=D/hV02gh; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1707762750; c=relaxed/simple;
+	bh=yPkH3hOzgZLrY6lJrlZMx8Gh7Q26Rh5ZLHjFNrPwcC0=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=C4q80m775XGmVXiY9gytWfxgMl87b0thCoxkZEyoibBteqV9cGEY4Ocq0whoxiG4dZR8R+0yYrQEbPhJqsueaP8wzF7PTKNZIYelgiryWw42hQuWt5Lak6oYOoxLV5IcbGOhcs7ABOCY9Uc1Mg0GE7d7hEXzo7ErrN7Ubio0PJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3nCWYFnE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wal9GZwL; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D/hV02gh"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d953fa3286so27313025ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 10:31:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707762672; x=1708367472; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WxYKfxVc01RvCqlquCukYbiHiXMELvJ7WajMr+fzZiM=;
-        b=D/hV02ghUOW7InC8DBjnupW8sppG3rdPN97stTmQ+RJrVoAlwtCby26PXszVlz6gMN
-         IQ/2x0kHiBbshyjEyJHdyWlay+FMLpZIFVVU5XGxS4Pzcf9dLeVWvjDKtKOpt/ix07x8
-         4eD816rufukq9CNHbq4IUZRxgRy/vyHL/Z8jA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707762672; x=1708367472;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WxYKfxVc01RvCqlquCukYbiHiXMELvJ7WajMr+fzZiM=;
-        b=n7gXiqe8A7mlm8Rz/DDDTeZIch6fHbKBf6Mlyzu4vqRtCbZlVlvBTsCa9dP7R2AJ5B
-         cYiH/uaNL290TruoOlOOW8+ZRdhByqGkvHu9iGE9VbWRMLoxJSMTJaF6L9OnnKirPhl/
-         /TT+qyZeBkbYkgSfBwalw1oiQI7qnSjORwvBljVTil607v4vAJVHUhJGJKZNw7wR1VV7
-         BtmavDarUDmXZMgpQ6kFjrrPy+DAVFxL6FrUhV0RbRsvd6znOn4gcICrL9vHQYZOQh6G
-         opW1aNyPLNSbigtD8xt0VqKXeWbXQBH6Ml098ZqKLQOXhKHdsvJ+i9176XrAJtLIdN+9
-         89og==
-X-Forwarded-Encrypted: i=1; AJvYcCX5A7o2p4L1DXDo9KUiLZopm2k3t37BgM8VECs/6HvfxOLUN553FxWlF+nf4OsV2Pim+Jh/ggHmorgDtyY857bjs59QWoK3ZuV2Liq7
-X-Gm-Message-State: AOJu0YyhofsriR9Xg9chdoaMaUL0+GVv6KWG0QY5OWovmctKWYcJvUe9
-	8l01m7OeJHoT2aq/yHrca2AoPHiMZCgciZfsCfGuzA/wdFUTciv8Es7pw4W08lJoc/Qm9XQsK/E
-	=
-X-Google-Smtp-Source: AGHT+IGgwfZ85ig5seHJCbnXSbj93G7dxG+Z8HmWUBYItrse6pgkNnMFfriCyi+RacTqAQ3g9R52ZQ==
-X-Received: by 2002:a17:902:fc46:b0:1db:28b4:4475 with SMTP id me6-20020a170902fc4600b001db28b44475mr1656842plb.9.1707762672359;
-        Mon, 12 Feb 2024 10:31:12 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUtqiIrorFvqjkApbF3idZ0NNZ5ryhVf4jv0lvSRs8BQcLjw0NMWxaEQu8LPuqrHMfyobiwwul93Aab5pCDYkBrY9W3bg2i7mqlQcoAFQQyYmGUTas1LBvaN0eXhGp9H8cMyHhB2/Q3mp7GKvlkANpIW9Wsyj84t7uczus2LAnei8WalXriCMZ7LUDrnMYTV9IHk/9NA5/PiUoWn60yClB2etHXG0QPKoMNUOUSMw4PXsAhnJztLYYRnfzHD0wF74cnM93rATXrgJcTQSYTLZO6vb+CIVa6/29VJsTH2F0UCAA90uUT8BRGcKcK504=
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id h12-20020a170902f7cc00b001d8924d8dbfsm644712plw.265.2024.02.12.10.31.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 10:31:11 -0800 (PST)
-Date: Mon, 12 Feb 2024 10:31:11 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Erick Archer <erick.archer@gmx.com>
-Cc: David Woodhouse <dwmw2@infradead.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] iommu/vt-d: Use kcalloc() instead of kzalloc()
-Message-ID: <202402121031.4649560C1@keescook>
-References: <20240211175143.9229-1-erick.archer@gmx.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3nCWYFnE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wal9GZwL"
+Date: Mon, 12 Feb 2024 18:32:26 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1707762746;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=ZYHpy+obrltc3uNCIQFHHG/TJ4ylG62vxjIjKDv0+7c=;
+	b=3nCWYFnEj4ECw9B+cweR1xfRATYQJu5RlI4PoFbApmF73SsAIuzk+2AJKfvevq2hYn2m5v
+	CGmAgPesmji33O3Su4rGAfxIVmZg03mQvDrkDtsFQkhUWnBxNNPx6aTA/VzJpBi4Cwmi9h
+	142+iezwo1vUbir9Q/7e0Q9fzKRsCUr8/NQ//Qdu5UCe++F9EdoNsCgkc95VlPb1gBPJkc
+	X6f4f88wPKeDklkKbZtSnlC0xiLLtM2pLX05YIX7ev0nVx4EanHHusWAz3EH5cHojDeAjQ
+	m8Q0R2fnMPxwWX5tvBjCm3BYs3fyD4eP6OH9Fc/WxwX/yQk027tpoatJkaWgbw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1707762746;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=ZYHpy+obrltc3uNCIQFHHG/TJ4ylG62vxjIjKDv0+7c=;
+	b=wal9GZwLTFVHptExbhkoErcgAEgrWOzruf9sc9kud9c8zIMFN5COdcszooWoLaLMtGAsiz
+	K3WDNEUH109apmAw==
+From: "tip-bot2 for Sean Christopherson" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] KVM/VMX: Use BT+JNC, i.e. EFLAGS.CF to select
+ VMRESUME vs. VMLAUNCH
+Cc: Sean Christopherson <seanjc@google.com>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Nikolay Borisov <nik.borisov@suse.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240211175143.9229-1-erick.archer@gmx.com>
+Message-ID: <170776274619.398.641202461394579378.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Sun, Feb 11, 2024 at 06:51:43PM +0100, Erick Archer wrote:
-> This is an effort to get rid of all multiplications from allocation
-> functions in order to prevent integer overflows [1].
-> 
-> Here the multiplication is obviously safe because DMAR_LATENCY_NUM
-> is the number of latency types defined in the "latency_type" enum.
-> 
-> enum latency_type {
-> 	DMAR_LATENCY_INV_IOTLB = 0,
-> 	DMAR_LATENCY_INV_DEVTLB,
-> 	DMAR_LATENCY_INV_IEC,
-> 	DMAR_LATENCY_PRQ,
-> 	DMAR_LATENCY_NUM
-> };
-> 
-> However, using kcalloc() is more appropriate [2] and improves
-> readability. This patch has no effect on runtime behavior.
-> 
-> Link: https://github.com/KSPP/linux/issues/162 [1]
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+The following commit has been merged into the x86/urgent branch of tip:
 
-Looks reasonable.
+Commit-ID:     e1920bd6fa76385fbfaf27f5460b60ad1d4c1b9b
+Gitweb:        https://git.kernel.org/tip/e1920bd6fa76385fbfaf27f5460b60ad1d4c1b9b
+Author:        Sean Christopherson <seanjc@google.com>
+AuthorDate:    Sun, 04 Feb 2024 23:20:06 -08:00
+Committer:     Dave Hansen <dave.hansen@linux.intel.com>
+CommitterDate: Mon, 12 Feb 2024 10:25:22 -08:00
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+KVM/VMX: Use BT+JNC, i.e. EFLAGS.CF to select VMRESUME vs. VMLAUNCH
 
--- 
-Kees Cook
+Use EFLAGS.CF instead of EFLAGS.ZF to track whether to use VMRESUME versus
+VMLAUNCH.  Freeing up EFLAGS.ZF will allow doing VERW, which clobbers ZF,
+for MDS mitigations as late as possible without needing to duplicate VERW
+for both paths.
+
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
+Link: https://lore.kernel.org/all/20240204-delay-verw-v7-5-59be2d704cb2%40linux.intel.com
+---
+ arch/x86/kvm/vmx/run_flags.h | 7 +++++--
+ arch/x86/kvm/vmx/vmenter.S   | 6 +++---
+ 2 files changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/kvm/vmx/run_flags.h b/arch/x86/kvm/vmx/run_flags.h
+index edc3f16..6a9bfdf 100644
+--- a/arch/x86/kvm/vmx/run_flags.h
++++ b/arch/x86/kvm/vmx/run_flags.h
+@@ -2,7 +2,10 @@
+ #ifndef __KVM_X86_VMX_RUN_FLAGS_H
+ #define __KVM_X86_VMX_RUN_FLAGS_H
+ 
+-#define VMX_RUN_VMRESUME	(1 << 0)
+-#define VMX_RUN_SAVE_SPEC_CTRL	(1 << 1)
++#define VMX_RUN_VMRESUME_SHIFT		0
++#define VMX_RUN_SAVE_SPEC_CTRL_SHIFT	1
++
++#define VMX_RUN_VMRESUME		BIT(VMX_RUN_VMRESUME_SHIFT)
++#define VMX_RUN_SAVE_SPEC_CTRL		BIT(VMX_RUN_SAVE_SPEC_CTRL_SHIFT)
+ 
+ #endif /* __KVM_X86_VMX_RUN_FLAGS_H */
+diff --git a/arch/x86/kvm/vmx/vmenter.S b/arch/x86/kvm/vmx/vmenter.S
+index 906ecd0..ef7cfba 100644
+--- a/arch/x86/kvm/vmx/vmenter.S
++++ b/arch/x86/kvm/vmx/vmenter.S
+@@ -139,7 +139,7 @@ SYM_FUNC_START(__vmx_vcpu_run)
+ 	mov (%_ASM_SP), %_ASM_AX
+ 
+ 	/* Check if vmlaunch or vmresume is needed */
+-	test $VMX_RUN_VMRESUME, %ebx
++	bt   $VMX_RUN_VMRESUME_SHIFT, %ebx
+ 
+ 	/* Load guest registers.  Don't clobber flags. */
+ 	mov VCPU_RCX(%_ASM_AX), %_ASM_CX
+@@ -161,8 +161,8 @@ SYM_FUNC_START(__vmx_vcpu_run)
+ 	/* Load guest RAX.  This kills the @regs pointer! */
+ 	mov VCPU_RAX(%_ASM_AX), %_ASM_AX
+ 
+-	/* Check EFLAGS.ZF from 'test VMX_RUN_VMRESUME' above */
+-	jz .Lvmlaunch
++	/* Check EFLAGS.CF from the VMX_RUN_VMRESUME bit test above. */
++	jnc .Lvmlaunch
+ 
+ 	/*
+ 	 * After a successful VMRESUME/VMLAUNCH, control flow "magically"
