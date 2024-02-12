@@ -1,104 +1,127 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85363D556;
-	Mon, 12 Feb 2024 16:28:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B9C3C699;
+	Mon, 12 Feb 2024 16:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707755299; cv=none; b=u2Qxj4ON2kNX8zUiCsv08OBArzcDc+Nllkv99lPy5X8N+QGAEIiyz4xao8JgIjOsMlnMqlORj97+j5GgYcQQ/0u+rbGQrJj82RX4J5+Pd54WPvyB+loI+e9eji2nPSk/AtTLKZuLF5nbol5Ie3cUTCwJ5WBWzZjHvj6byk5OIi4=
+	t=1707755327; cv=none; b=QfBOL838F4pwjS2ibBb+MkMpMkGBKqFCCdKU56V/pJE4IAm6qXps3kNNF3dsdHf+zxPK9Da7/XHuZlxrbtMM2MXhRL2UONZqz5Kto4HXmUXPiMxvPOmWiGMwOmwjV/Vw2sXJhMXSVctCW/nt6rn9E8RxD7zxZ6FDNSXFb5voaVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707755299; c=relaxed/simple;
-	bh=FwSmj40KHI9q4fP0jEOfUy7Iegfc7L/g/89ztN2HV0I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T/DtBX20avp/Q3bKYe4OcKkGyxi3f+Zb0cWTa2aIphSxr4/N1t/sfaLDjPIIuqBn6rgmrlX/K0n6r7H5rDJIlImt7tloxyHJuf6/2BPIOMdcAWcwhUHaepTSC7LGHetCmeV5xo52SoYWEeilf/imgzRsWXVDbn2eA6dmUEGeVws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-60491cb9571so31337867b3.0;
-        Mon, 12 Feb 2024 08:28:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707755295; x=1708360095;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NA6Gogw1d1PUCHDqcxvzd0ivtdZaDl7Z3Y82qi5GOdE=;
-        b=eKmvbTUwFUPYYgVBDVTtf1jsdmnMkquzSvVYjfU/F3p8FoAhDHeLx00EqWRLhViR7J
-         RHRabZ/MorObhZF2VUwCkiYOvf02Lh5Sp2vqYoKbyVWVPwsy9DM9S1bnsfx0JHuBmQkl
-         IThWsJ/OGdGpxTwcOf4gMYLWaKDVOr/T1aCHoikZmhmLj8WvYFU6SS4K77P7j3dw+Tae
-         6fURIqjsEWkViM3OHlOCfxxIZC7Mt4GcpqgFGtoFDUVnEL0SjfrSIYuUoJLYpZ2c5H0H
-         gsiwQEFx1ez4qUyhKn5HQFYW0D9fOZJk9gzH2Te7xxffhw2cUjG7FVkIVqztxRHy1Y2l
-         OfNA==
-X-Gm-Message-State: AOJu0Yx9C6siF6d0SoJNPIJrnvD8+ftVmbKTLzOyeot2AfaAnYhyr5CK
-	dxZPdv+9oQg0txdG143x5LNw/1/pETpC7P9qPflsUSPApwgI+Hez0Himy3UFyag=
-X-Google-Smtp-Source: AGHT+IGUXPfRYHHM5FcgUqy0FUNP/D2oM+JodZmXzWKB7D3GDSGU+i63EyPgufqZ/EPi4GtNvwC7XA==
-X-Received: by 2002:a81:7704:0:b0:604:3e1c:3d7d with SMTP id s4-20020a817704000000b006043e1c3d7dmr5608719ywc.31.1707755295468;
-        Mon, 12 Feb 2024 08:28:15 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWsB0Iu2NCw04S0/nQy8S6qkgX94SeXgOehlZQSV0TmVWQWq+XgUPJJ5Q5cDtdqpLS/SGoPjpHc1Os+pc1mve3fkGf2qkUqO1cY/jlGM6QZFvGhtejl2CdLJ5in0Lkr0rXQefsYWpF7ksFh3Mr2nkN+SxOmrIUvnGc40XwWwXGXOsY7BHIQ+d1tDYzD
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
-        by smtp.gmail.com with ESMTPSA id t5-20020a81c245000000b005ff9bb7fa40sm1211840ywg.34.2024.02.12.08.28.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Feb 2024 08:28:15 -0800 (PST)
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dc75c2c3574so2220969276.0;
-        Mon, 12 Feb 2024 08:28:14 -0800 (PST)
-X-Received: by 2002:a25:2943:0:b0:dc2:399b:6451 with SMTP id
- p64-20020a252943000000b00dc2399b6451mr4668660ybp.62.1707755294574; Mon, 12
- Feb 2024 08:28:14 -0800 (PST)
+	s=arc-20240116; t=1707755327; c=relaxed/simple;
+	bh=ilhrdoWUjxQAw/qNLh+VKGDKCDBwtm1fe8dEPR5edio=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qVXOEjhBNWZ9lzPeMZ/MK85EVLQX2s1PaOZdDl731QLJYzvMojWspxpV9UjrNh84sps7YyTUwlklY1vqldcyQQg8LkER+QVOgvysVZ3/qU/ssNupQ93AkhcTWt0AbKBRHkuLF3aBbhWHED4/IuK0ABmT7a8QpEfWmuEnSpcOZjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=FsMWecg9; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FsMWecg9"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41CGSZEp045189;
+	Mon, 12 Feb 2024 10:28:35 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1707755315;
+	bh=DM5F+CDTYAkATD9JuxoEYM5J5TLXMlR0cMppKdmlkcg=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=FsMWecg9kC5UB9179sxzrodGJ+BwYFphMHjuRqDJMGMmX+uJEQw1F4Y2KdJBbyU1y
+	 axJ8HnpdI5e6NTPZjsioFGoQcnJOSk5ILRMwVTDXEOZf4J5ppFFem60uCaEIiBKR/P
+	 /C02cGkFKcGlMn6abK1vZQyTFXRlng5eZPT8N9m4=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41CGSZJj041897
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 12 Feb 2024 10:28:35 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 12
+ Feb 2024 10:28:35 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 12 Feb 2024 10:28:35 -0600
+Received: from lelvsmtp5.itg.ti.com ([10.249.42.149])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41CGSWQx090688;
+	Mon, 12 Feb 2024 10:28:34 -0600
+From: Andrew Davis <afd@ti.com>
+To: Sebastian Reichel <sre@kernel.org>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Cristian Ciocaltea
+	<cristian.ciocaltea@gmail.com>,
+        Florian Fainelli
+	<florian.fainelli@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>, Scott Branden
+	<sbranden@broadcom.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad
+ Dybcio <konrad.dybcio@linaro.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-actions@lists.infradead.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, Andrew Davis <afd@ti.com>
+Subject: [PATCH v4 03/19] power: reset: xgene-reboot: Use devm_platform_ioremap_resource() helper
+Date: Mon, 12 Feb 2024 10:28:15 -0600
+Message-ID: <20240212162831.67838-4-afd@ti.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240212162831.67838-1-afd@ti.com>
+References: <20240212162831.67838-1-afd@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240205144421.51195-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240205144421.51195-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240205144421.51195-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 12 Feb 2024 17:28:03 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXhNC7oq2ywbg7zMYGdYqE66ik9NsMCoT3c1XFX=i=nSQ@mail.gmail.com>
-Message-ID: <CAMuHMdXhNC7oq2ywbg7zMYGdYqE66ik9NsMCoT3c1XFX=i=nSQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] arm64: dts: renesas: rz-g2l-family: Add missing
- interrupts from IRQC IP block
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Mon, Feb 5, 2024 at 3:44=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.co=
-m> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> The IRQC IP block supports Bus error and ECCRAM interrupts for RZ/G2L and
-> alike SoC's (listed below). Update the IRQC node with the missing
-> interrupts, and additionally, include the 'interrupt-names' property in
-> the IRQC node so that driver can parse the interrupts based on the name.
->
-> - R9A07G043U              - RZ/G2UL
-> - R9A07G044L/R9A07G044LC  - RZ/{G2L,G2LC}
-> - R9A07G054               - RZ/V2L
->
-> Fixes: 5edc51af5b30 ("arm64: dts: renesas: r9a07g044: Add IRQC node")
-> Fixes: 48ab6eddd8bb ("arm64: dts: renesas: r9a07g043u: Add IRQC node")
-> Fixes: 379478ab09e0 ("arm64: dts: renesas: r9a07g054: Add IRQC node")
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Use device life-cycle managed ioremap function to simplify probe and
+exit paths.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.9.
+While here add __iomem to the returned pointer to fix a sparse warning.
 
-Gr{oetje,eeting}s,
+Signed-off-by: Andrew Davis <afd@ti.com>
+---
+ drivers/power/reset/xgene-reboot.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-                        Geert
+diff --git a/drivers/power/reset/xgene-reboot.c b/drivers/power/reset/xgene-reboot.c
+index c2e5a99940d37..6b545a83d8889 100644
+--- a/drivers/power/reset/xgene-reboot.c
++++ b/drivers/power/reset/xgene-reboot.c
+@@ -22,7 +22,7 @@
+ 
+ struct xgene_reboot_context {
+ 	struct device *dev;
+-	void *csr;
++	void __iomem *csr;
+ 	u32 mask;
+ 	struct notifier_block restart_handler;
+ };
+@@ -54,7 +54,7 @@ static int xgene_reboot_probe(struct platform_device *pdev)
+ 	if (!ctx)
+ 		return -ENOMEM;
+ 
+-	ctx->csr = of_iomap(dev->of_node, 0);
++	ctx->csr = devm_platform_ioremap_resource(pdev, 0);
+ 	if (!ctx->csr) {
+ 		dev_err(dev, "can not map resource\n");
+ 		return -ENODEV;
+@@ -67,10 +67,8 @@ static int xgene_reboot_probe(struct platform_device *pdev)
+ 	ctx->restart_handler.notifier_call = xgene_restart_handler;
+ 	ctx->restart_handler.priority = 128;
+ 	err = register_restart_handler(&ctx->restart_handler);
+-	if (err) {
+-		iounmap(ctx->csr);
++	if (err)
+ 		dev_err(dev, "cannot register restart handler (err=%d)\n", err);
+-	}
+ 
+ 	return err;
+ }
+-- 
+2.39.2
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
