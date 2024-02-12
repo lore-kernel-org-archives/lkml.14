@@ -1,139 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70AB482C0;
-	Mon, 12 Feb 2024 20:27:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11A846435
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 20:29:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707769636; cv=none; b=oTeMoDMXO6FcDhtbvk81vUnDxCYzsrbITe9tuhv+tOo5+bcH8/fodtz1f1ogxEJQTz+T671Ob2ToKAtGf4SxRCmLyeI3U7EpILnATbEKomGSebbP9PAMxmHSHBsPOHW8ClkjB9I6BcAE0NmPsYiPaULzbCYY6qW+A3+f+fp9c4E=
+	t=1707769752; cv=none; b=nc5Q+k6/dTY85P+nNd8Rzl/qcUA24ex6i5w+HhjijMX6UIoK+yt8aCiybtAZ3lmcpShUFFLzikO9HIJKq71UkiKLEKu5yIQt+TsUXLY3S2utZcku3Fw+qY9iZ1fDoa87O8JjeXAYiYjQ9j9hyGF+8arPzWvMxY34MAIcIPCMsqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707769636; c=relaxed/simple;
-	bh=pWDQCMLUflAad9f8MUqSo1m1Bx83z4sgVK5qLQvTnNs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=tlSuF4KmbDxR/5kv47hLbGW5CmDvMmP+nIV3/nCThwP8Hj5ZOHE8bdHiqeCxGmH7g5Ad69MzMsRWNviQuwW4oNrzCRv1PI4l+rvGGYVrV6ENDAjUHfzQIy/1wtY8gypwBU1m4dXCYh49crIwJTVjK9HQkgJNBrQ6qV4mCnS8U3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XhINWtyy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707769752; c=relaxed/simple;
+	bh=4DG/2AulWdm1bfaag4echIs9kSH2jj0kQ6qcGW9ZFNI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JxYrQegrqgUGgf/RWNe8NReFq7hODOkCnONShMXVZg8xP5jDzddkgOtFMjsbMNTev2I/rBDKheIZIEdpfJyqRuAYQYv4pubY6EEWWtx8VuCvPxheqWAu7xr61/s4YYCgsdmKd5N1TS46c0wbaryi947n79eL7jWegNQae0HVMds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FPVamoda; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XhINWtyy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2247FC433C7;
-	Mon, 12 Feb 2024 20:27:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707769636;
-	bh=pWDQCMLUflAad9f8MUqSo1m1Bx83z4sgVK5qLQvTnNs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=XhINWtyyG5izYAPM6w22Bfzpl14vWfSd/4cQmzY7gVGFGapkVp8U7T3lQkxHvy+q8
-	 NIqy9EovCPqzr2RUW1H2uogAHdUz6IpNNJz0ZddA6i5WgpDITLF2DMxFMNVrl6MiEu
-	 2Kq4b6z9CPtNBjuBAsa5hQ0X66n+eVqeCxBrRGJnpkXwg3KPhH2EFlsluY6zS9SWiD
-	 iPxr9BUhvNiVV6kGs2h2RiIYn05Sj54aalF4Xohq6cnNwSfkGl4B80O+ZJz9UV0A8l
-	 7ZyaKuMjWctK+5+WzAypZm1TSrn8pgX15xDNhsFnq8nSQu3oz3dBQ4brokGOTs3ya7
-	 /PPdLeK8MufYg==
-Date: Mon, 12 Feb 2024 14:27:14 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Leon Romanovsky <leonro@nvidia.com>
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Jim Harris <jim.harris@samsung.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@nvidia.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Pierre =?utf-8?Q?Cr=C3=A9gut?= <pierre.cregut@orange.com>
-Subject: Re: [PATCH v2 1/2] PCI/IOV: Revert "PCI/IOV: Serialize sysfs
- sriov_numvfs reads vs writes"
-Message-ID: <20240212202714.GA1142983@bhelgaas>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FPVamoda"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-560530f4e21so2815a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 12:29:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707769749; x=1708374549; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OGH4gStnAh2cVluN25q7Y7nHy88Q9ENXq3FqeNVOM/s=;
+        b=FPVamodaZe9hN1dQI9wgE0+u2VWM4vC4Wopi+kKYErkIx/NvB0F+QYpwik5FcC+U6t
+         itwG93iP7mXIw5M3gvtcH5y9UK/Y7i9TuN5O20bOAlomWW38GMjeBP2l6Fq69D0Zk3+Z
+         IiINFOOYYP2/9D1hTrrsmgGRjHGs6QW17dFURb/iqCZAdSakBZQ/XhkGF2fwXAsMqNK9
+         I1vBVkquMRUkJiyf/9DkqptglzPRmp2TXcTt9P7kUS80oq7+85JONT2GpWjPblRw2U7R
+         8Kp4ndITC/euRF2dUI6OJTM3QFtG8S9MXIE9E4oSqNjIYix4omFIGHzzTY9m4tmmsD+D
+         6RiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707769749; x=1708374549;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OGH4gStnAh2cVluN25q7Y7nHy88Q9ENXq3FqeNVOM/s=;
+        b=EO2kipIBNmmxbpUPcNk48TJIaHFA76CtQ9gq4mEwWMWFeZcSaO/aKIwVQjpONBaJBO
+         ZSrhZB6IoF9UMtBJHdHj3uICrDOdT90c0De+Ft35QFokjMM88NVVEv78rx8NWSd5G+pn
+         IvZXmbzfHkooNdSvlEuEyZZOM4QAfYOF78N+MrAK9UM1VOhukjm7tHdGKSAB3bqb1uaU
+         +rPEe10w1vphxC6bqcMYIhSmCm34Yju7SjcEZWmOXfIP7i/zENbSOzu14w/EtgJWzYTG
+         3IpaXqrTeTH3S5TBUSH+1vrBcRzQJWxZJd2wJm6TuwoK1iT4xqaJrZGfUSb41XVccFic
+         ihjA==
+X-Forwarded-Encrypted: i=1; AJvYcCWi6m/zljE7iHkKUSelJrtqgwkoOglhAx/Ibi2y/0p1xq509sf7k/uSqv/CeBkTcUAfjSLVGYCYmke9r0cpX98EToc1VscgK3tmy2Vr
+X-Gm-Message-State: AOJu0YxxowGtWVKPtLZ0VyjTRLefZrT8h0fXHVnLlRTb4b8yWgjdLjDN
+	IIPY7w+3r1a/HK1QPfGuijTkQIJ+2cYRFcQljcefqnaSUhIl1BQ8QO5/T15tBU8Lh8YpSPjVKvi
+	R2hcZG8PSyFQD94siybXrnhv9YllFwhD5eXpg
+X-Google-Smtp-Source: AGHT+IGuYchSscpq9fWAFb5Vzs8WMDTwNcFt6X4bssqA5EbwrkI48Fp8X67xME2pYpEP1CvrnyG7xZmyeKfe2FxC1Ig=
+X-Received: by 2002:a50:8a9e:0:b0:560:f37e:2d5d with SMTP id
+ j30-20020a508a9e000000b00560f37e2d5dmr295831edj.5.1707769748536; Mon, 12 Feb
+ 2024 12:29:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240211084844.GA805332@unreal>
+References: <20220825122726.20819-1-vincent.guittot@linaro.org> <20220825122726.20819-2-vincent.guittot@linaro.org>
+In-Reply-To: <20220825122726.20819-2-vincent.guittot@linaro.org>
+From: Josh Don <joshdon@google.com>
+Date: Mon, 12 Feb 2024 12:28:55 -0800
+Message-ID: <CABk29NsQf_xStzWg8bB_hpNpPC_LduMs-M058LjdhnDG16wN_A@mail.gmail.com>
+Subject: Re: [PATCH 1/4] sched/fair: make sure to try to detach at least one
+ movable task
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
+	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, 
+	linux-kernel@vger.kernel.org, zhangqiao22@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Feb 11, 2024 at 10:48:44AM +0200, Leon Romanovsky wrote:
-> On Fri, Feb 09, 2024 at 07:20:28PM -0800, Kuppuswamy Sathyanarayanan wrote:
-> > On 2/9/24 3:52 PM, Jim Harris wrote:
-> > > If an SR-IOV enabled device is held by vfio, and the device is removed,
-> > > vfio will hold device lock and notify userspace of the removal. If
-> > > userspace reads the sriov_numvfs sysfs entry, that thread will be blocked
-> > > since sriov_numvfs_show() also tries to acquire the device lock. If that
-> > > same thread is responsible for releasing the device to vfio, it results in
-> > > a deadlock.
-> > >
-> > > The proper way to detect a change to the num_VFs value is to listen for a
-> > > sysfs event, not to add a device_lock() on the attribute _show() in the
-> > > kernel.
+Hi Vincent,
 
-The lock was not about detecting a change; Pierre did this:
+On Thu, Aug 25, 2022 at 5:27=E2=80=AFAM Vincent Guittot
+<vincent.guittot@linaro.org> wrote:
+>
+> During load balance, we try at most env->loop_max time to move a task.
+> But it can happen that the loop_max LRU tasks (ie tail of
+> the cfs_tasks list) can't be moved to dst_cpu because of affinity.
+> In this case, loop in the list until we found at least one.
 
-  ip monitor dev ${DEVICE} | grep --line-buffered "^${id}:" | while read line; do \
-    cat ${path}/device/sriov_numvfs; \
+We had a user recently trigger a hard lockup which we believe is due
+to this patch. The user in question had O(10k) threads affinitized to
+a cpu; seems like the process had an out of control thread spawning
+issue, and was in the middle of getting killed. However, that was
+being slowed down due to the fact that load balance was iterating all
+these threads and bouncing the rq lock (and making no progress due to
+ALL_PINNED). Before this patch, load balance would quit after hitting
+loop_max.
 
-which I assume works by listening for sysfs events.  The problem was
-that after the event occurred, the sriov_numvfs read got a stale value
-(see https://bugzilla.kernel.org/show_bug.cgi?id=202991).
+Even ignoring that specific instance, it seems pretty easy for this
+patch to cause a softlockup due to a buggy or malicious process.
 
-So I would drop this sentence because I don't think it accurately
-reflects the reason for 35ff867b7657.
+For the tradeoff you were trying to make in this patch (spend more
+time searching in the hopes that there's something migratable further
+in the list), perhaps it would be better to adjust
+sysctl.sched_nr_migrate instead of baking this into the kernel?
 
-> > Since you are reverting a commit that synchronizes SysFS read
-> > /write, please add some comments about why it is not an
-> > issue anymore.
-> 
-> It was never an issue, the idea that sysfs read and write should be
-> serialized by kernel is not correct by definition. 
+Best,
+Josh
 
-I think it *was* an issue.  The behavior Pierre observed at was
-clearly wrong, and we added 35ff867b7657 ("PCI/IOV: Serialize sysfs
-sriov_numvfs reads vs writes") to resolve it.
-
-We should try to avoid reintroducing the problem, so I think we should
-probably squash these two patches and describe it as a deadlock fix
-instead of dismissing 35ff867b7657 as being based on false premises.
-
-It would be awesome if you had time to verify that these patches also
-resolve the problem you saw, Pierre.
-
-I think we should also add:
-
-  Fixes: 35ff867b7657 ("PCI/IOV: Serialize sysfs sriov_numvfs reads vs writes")
-
-as a trigger for backporting this to kernels that include
-35ff867b7657.
-
-Bjorn
-
-> > > This reverts commit 35ff867b76576e32f34c698ccd11343f7d616204.
-> > > Revert had a small conflict, the sprintf() is now changed to sysfs_emit().
-> > >
-> > > Link: https://lore.kernel.org/linux-pci/ZXJI5+f8bUelVXqu@ubuntu/
-> > > Suggested-by: Leon Romanovsky <leonro@nvidia.com>
-> > > Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
-> > > Signed-off-by: Jim Harris <jim.harris@samsung.com>
-> > > ---
-> > >  drivers/pci/iov.c |    8 +-------
-> > >  1 file changed, 1 insertion(+), 7 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> > > index aaa33e8dc4c9..0ca20cd518d5 100644
-> > > --- a/drivers/pci/iov.c
-> > > +++ b/drivers/pci/iov.c
-> > > @@ -395,14 +395,8 @@ static ssize_t sriov_numvfs_show(struct device *dev,
-> > >  				 char *buf)
-> > >  {
-> > >  	struct pci_dev *pdev = to_pci_dev(dev);
-> > > -	u16 num_vfs;
-> > > -
-> > > -	/* Serialize vs sriov_numvfs_store() so readers see valid num_VFs */
-> > > -	device_lock(&pdev->dev);
-> > > -	num_vfs = pdev->sriov->num_VFs;
-> > > -	device_unlock(&pdev->dev);
-> > >  
-> > > -	return sysfs_emit(buf, "%u\n", num_vfs);
-> > > +	return sysfs_emit(buf, "%u\n", pdev->sriov->num_VFs);
-> > >  }
-> > >  
-> > >  /*
-> > >
-> > -- 
-> > Sathyanarayanan Kuppuswamy
-> > Linux Kernel Developer
-> > 
+>
+> The maximum of detached tasks remained the same as before.
+>
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> ---
+>  kernel/sched/fair.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index da388657d5ac..02b7b808e186 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -8052,8 +8052,12 @@ static int detach_tasks(struct lb_env *env)
+>                 p =3D list_last_entry(tasks, struct task_struct, se.group=
+_node);
+>
+>                 env->loop++;
+> -               /* We've more or less seen every task there is, call it q=
+uits */
+> -               if (env->loop > env->loop_max)
+> +               /*
+> +                * We've more or less seen every task there is, call it q=
+uits
+> +                * unless we haven't found any movable task yet.
+> +                */
+> +               if (env->loop > env->loop_max &&
+> +                   !(env->flags & LBF_ALL_PINNED))
+>                         break;
+>
+>                 /* take a breather every nr_migrate tasks */
+> @@ -10182,7 +10186,9 @@ static int load_balance(int this_cpu, struct rq *=
+this_rq,
+>
+>                 if (env.flags & LBF_NEED_BREAK) {
+>                         env.flags &=3D ~LBF_NEED_BREAK;
+> -                       goto more_balance;
+> +                       /* Stop if we tried all running tasks */
+> +                       if (env.loop < busiest->nr_running)
+> +                               goto more_balance;
+>                 }
+>
+>                 /*
+> --
+> 2.17.1
+>
