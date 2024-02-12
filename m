@@ -1,104 +1,191 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8EE3C46E
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 15:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B433B282
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 15:02:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707750085; cv=none; b=EYDoVsh75nPYZlgTFSq2E8Kf1AHPnfPh2VGPeclGVh2LD9054GPT25LVVF4+4qfz7YamFnFevknrfKMweCdgb79yDdiqVTOoHFHkVdr6UuEL3ZFcVHoUqfPCjiGLn5SDGGzCJISEm6fFbsdSzH8EAIW2gAvUuy97vgiaZaa2Oww=
+	t=1707750174; cv=none; b=bEL2mkCZSA6+nxAYUFjZGZvPZ2vR0uWEv3dOR0rtif6nHL38jtz3t6TI2PLlzsqJ690cRQ+FgpqCXU9neSZU/FhXqzEA/T+1aFAjdlvKWifb0c3WIZ4K4s4VQA8xVSQEdf6QBI5vDXNgo+jSFY+Eod1C8SzRqX1vid7uQyBjNVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707750085; c=relaxed/simple;
-	bh=5ET/+ywHrfQ2igMiio3kOR+E5f7alalaj3ZSVBSVj3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qwXKGdjTsmPFNMiMiLDQvZiSl7NMxRKt3P5IobZSML0Yi5rXEq/OfSWJ9SwA3R7+rE+eJsG5j+QrUcgmysXjE67V+p6uloDcwDcTZyA36ahztQpyqEZ4EK8TkQfbZi4BCAfEopRHoID9N3VAr8YIoYFXB0yYDHRl4yQkcyzYGVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=cT3sgJxJ; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1707750174; c=relaxed/simple;
+	bh=zcJnISncWc0lol6NWfWUz+RXZL98nm6ftE77+aGLYWk=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Fez2rZsxlv8A/2VQJlrAIuHGCn1L1n0V35HVELyi9MU2DJtOLUQ8o4/AVxhm3JCazEQTpQ/m8WjWZStbZe7NyPDY2oL2pqfoWiIWbresZcNq49OzN0pNr+GR7aVk0Kwwlq9KstdvUAtrAF44pkbZFeiTGdAqZAmom5nhbGrBmI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=P0F+OPX3; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="cT3sgJxJ"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8837440E0256;
-	Mon, 12 Feb 2024 15:01:19 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 2MssPnb7UQOE; Mon, 12 Feb 2024 15:01:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1707750076; bh=niftb5ulUuRKgvqltBydGR3ZDoIKCm7EqemWD0my8+Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cT3sgJxJEUQL3sUMBYE2zL6pDBagFdBpHHyPhrXcB2azluuIoE2FOP7ISTZi4UHqo
-	 9GsBD5Fk0JKoq+htXXpfjOvYU+SZtk+/0APaRzC5KnFBL/PzSRw3bMepPHm56HwBXR
-	 0T82qzNiteh7lsxLqUhBoumBTdXS4CjfPUlab872RiKTaZoA7EEk6YtHWvG3hR1+R4
-	 yfYFwH0suSs4WKlB9mX3ZlosbXNT6iGk4ztgeOZ74fF992M6C/WSl0W5Mgl+vbIjN+
-	 ApFVHmxnbVjmCyInCBFoSGng4Wf3lLdY0UP58SmPgVR78X9j8fTAwUUt39qoHO2hoG
-	 4lYXoHxg9MEYZkk+VB2GHegPCnissXNJJVYKV4qmsqLRqkACOijixKrYOnfgMXWdCg
-	 oZe+xPtP3+z8rqNsDDLpvCJkH0klIDdo0Wn48BV8Sxq8CHcZAHdwn27l9t2WSXnxV5
-	 qGRY6ZiPES0aulRO0tl5vZ0QvW296+pjJsn67A2eLA649y2uUIu9+CsmPSKar03CzU
-	 w//ZmAJ5LAfAoDGmRdJSiQs07LVts1aYYiwfEaacKZ03jjOCmlokwtp4af8j+I6mja
-	 Hth/AHjuNCl4x4iMbQW64mos+24Bu69Q3iJtqp+qBynw3zlSuIb+kNQHGh8vswGlI9
-	 sQM7Z6Xxsa8//hXcb/VGZBOY=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 56F4840E01A9;
-	Mon, 12 Feb 2024 15:00:58 +0000 (UTC)
-Date: Mon, 12 Feb 2024 16:00:53 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Arjan van de Ven <arjan@linux.intel.com>,
-	Huang Rui <ray.huang@amd.com>, Juergen Gross <jgross@suse.com>,
-	Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Zhang Rui <rui.zhang@intel.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Feng Tang <feng.tang@intel.com>,
-	Andy Shevchenko <andy@infradead.org>,
-	Michael Kelley <mhklinux@outlook.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: Re: [patch v5 06/19] x86/cpu: Provide a sane leaf 0xb/0x1f parser
-Message-ID: <20240212150053.GEZcoypaBQPB1IcZGY@fat_crate.local>
-References: <20240117115752.863482697@linutronix.de>
- <20240117115908.674834306@linutronix.de>
- <20240130193102.GEZblOdor_bzoVhT0f@fat_crate.local>
- <87il2tlqba.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P0F+OPX3"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-410cd2c7f27so8267915e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 07:02:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707750170; x=1708354970; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :references:cc:to:content-language:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mIRWEDm6h5i0aEXk2izLz4ROYQAZ1PoRscFJzI24z3c=;
+        b=P0F+OPX3XMjgtw04M9SM1e2GulZZowbrqszY9y5ouhcPkOr8NzN6BQmcB/+G/y9Yxo
+         fytrXpYwPmEpcpPk4fDpiWU0nNt9QNBFEUMl/Colk6zHaKkScAlgkTPEQ8ps7YS9O35h
+         XF+WMgzk+4WwTzPjMziKayQzzR4krL/wbbPhyvkrVp+KVYVu8bpz4mBaUHS+eENMxaiw
+         IYmMdceOfSHKlF9AWK7hIqwWe+i83g2D1X7lcQXXB4pJK29GHIluuW4eaHUjzBrYYEcQ
+         XHb4BZZCdjuFMThIPljp43KbP2IJaNaqeCq6qLSMzhfFSe8ffkOvT1N3nBrCN4YQAaEC
+         +v6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707750170; x=1708354970;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :references:cc:to:content-language:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=mIRWEDm6h5i0aEXk2izLz4ROYQAZ1PoRscFJzI24z3c=;
+        b=cdwLtlVcOO1XWrqUgh3STbXworKlDuJqRanvDMjTMSU/INp74OOF/P8oWsZ/Ayo1LM
+         Rkk+1qCNbVChqvQ1xR3ruLRej9ylLPd1qeizDIgr2OZX0MF/toHpbhDd//NW3hYmZ8x1
+         JDvyOQ1tbchwaUxNsp6Wp1lABkJTvzZqSDtmrZCnDLXF5ZOaPrV4eQVrjps9x9iZ7gQd
+         hggClBqHnNvot3+rOZKaNvGXWHj23v0e2ajEx8lYazrOok7JW0BzablP64Is9VhsKTWL
+         OYPL/Y8d4yRnF9R6PaUgqKL6WLFSyqn1tltcySF77PP765xzxtYH10OGpjSyUp4kywff
+         HnTw==
+X-Forwarded-Encrypted: i=1; AJvYcCXhsMJcvOGr3BpQtV6tICtgpwHe/7LzxdqTNvNZll3xl/IOHhwLmOpNBx8V3MlTlpLaStscoaVxeHs3rLcIfQ6QyKRARVuXjQqhxo0g
+X-Gm-Message-State: AOJu0YxQ3wRQgAJHsm7OoSNxx2vnkHob4JMJ8GcZqevJhelnZHOWHLRq
+	Y1wQbwXLT3CGEcr0wrVsszg1ao/YE7fRuR7ksvQiZSN6ttB21/IB4HGoBIifZt8=
+X-Google-Smtp-Source: AGHT+IFh+pVFPAbvo6g79lrwPbn+/Zl7HOPoCDqM/zZ00e/CgPffec7sh8ISXxyHAMIWJdvNSSlz9w==
+X-Received: by 2002:a05:600c:5117:b0:40f:df31:6cac with SMTP id o23-20020a05600c511700b0040fdf316cacmr6697375wms.4.1707750170486;
+        Mon, 12 Feb 2024 07:02:50 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUAvmhDqvYFlu6It9fZlStTBc8BRZBjdwuj34Z/s8MjeDVpwFU/bsg2EF4KGtARGSM3WmB1yc8nf1Dz4Ej9coe7ptGP9SLbh022GBRPDE6BE1N55JbpD48skceIYaaa1Gz2OS4l9kryXMupHZttgIewiLdFlsXCbxpKWxdXx0qeZ6vTbm0iSJPumtvorGTq43KtV6ChNx7W4EX9BKBcHpd7sx4vpaKo2+8at1ztXR2QDpBMe5sDAQlgkTxyBbj/JJcyAab2sqRyibW1nXJ2GizTba9F9cxSSidDBcURv4K1hBy6KWuIuddwLdxX7dpWhZ1HKT7qiHUKlF/xSO+im+G4PVzu9Q1bd88GpWsn8JzBRz8Ff527u6ehbS9bWF1D9hBgQgHmkj2ZhSuy9PYNU1yNyyVPqYsmRoNJJh2xKUNBVqzP4xMeQWFfBnUFIUEeegDt2blvn4TqR4DwHL9rrXOuZXNKTtmwpUySS3GLO3J0LdNXHj9hOUEsPLdYYFWgY7+z/KwYcS0UOIZG6vJsRy6Sod72xBc9Ts0R1Ylfic/m2c5sZtJ20eD0X1TIDQ==
+Received: from ?IPV6:2a01:e0a:982:cbb0:fcee:f026:296d:135f? ([2a01:e0a:982:cbb0:fcee:f026:296d:135f])
+        by smtp.gmail.com with ESMTPSA id fm8-20020a05600c0c0800b0040ef718cf81sm9146044wmb.28.2024.02.12.07.02.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 Feb 2024 07:02:50 -0800 (PST)
+Message-ID: <34ee9676-567f-4c07-83b0-f3b8b1e08db9@linaro.org>
+Date: Mon, 12 Feb 2024 16:02:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87il2tlqba.ffs@tglx>
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v1 2/2] arm64: dts: amlogic: axg: initialize default SoC
+ capacitance
+Content-Language: en-US, fr
+To: Dmitry Rokosov <ddrokosov@salutedevices.com>, jbrunet@baylibre.com,
+ mturquette@baylibre.com, adeep@lexina.in, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, khilman@baylibre.com,
+ martin.blumenstingl@googlemail.com, conor+dt@kernel.org
+Cc: kernel@sberdevices.ru, sdfw_system_team@sberdevices.ru,
+ rockosov@gmail.com, linux-amlogic@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20240209212816.11187-1-ddrokosov@salutedevices.com>
+ <20240209212816.11187-3-ddrokosov@salutedevices.com>
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro Developer Services
+In-Reply-To: <20240209212816.11187-3-ddrokosov@salutedevices.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 12, 2024 at 03:17:45PM +0100, Thomas Gleixner wrote:
-> Especially x2apic_shift is horrible and the comments of EBX are visually
-> impaired while with the C++ comments x2apic_shift looks natural and the
-> EBX comments are just open to the right and therefore simpler.
+On 09/02/2024 22:28, Dmitry Rokosov wrote:
+> The capacitance value is required for the usage of the cpufreq cooling
+> device and power_allocator thermal governor in the appropriate energy
+> model.
+> 
+> It helps to compute the power estimated by the SoC at the appropriate
+> frequency. If it is the frequency of an existing OPP, or at the
+> frequency of the first OPP above the requested value otherwise.
+> 
+> The power is estimated as P = C * V^2 * f, with C being the SoC's
+> capacitance and V and f respectively representing the voltage and
+> frequency of the OPP.
+> 
+> Since AXG SoC doesn't have SCMI protocol support, we need to initialize
+> capacitance using the 'dynamic-power-coefficient' DT entry. Its value is
+> retrieved from the vendor kernel, and it gives us the following
+> freq2power mapping:
+>      +-----------+--------+
+>      | frequency,| power, |
+>      |    MHz    |   uW   |
+>      +-----------+--------+
+>      |     100   |  10354 |
+>      +-----------+--------+
+>      |     250   |  27104 |
+>      +-----------+--------+
+>      |     500   |  55447 |
+>      +-----------+--------+
+>      |     667   |  77327 |
+>      +-----------+--------+
+>      |    1000   | 129024 |
+>      +-----------+--------+
+>      |    1200   | 164656 |
+>      +-----------+--------+
+>      |    1296   | 192489 |
+>      +-----------+--------+
+>      |    1416   | 239870 |
+>      +-----------+--------+
+> 
+> Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
+> ---
+>   arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> index ea96fef328e8..6d12b760b90f 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> @@ -74,6 +74,7 @@ cpu0: cpu@0 {
+>   			enable-method = "psci";
+>   			next-level-cache = <&l2>;
+>   			clocks = <&scpi_dvfs 0>;
+> +			dynamic-power-coefficient = <140>;
+>   			#cooling-cells = <2>;
+>   		};
+>   
+> @@ -84,6 +85,7 @@ cpu1: cpu@1 {
+>   			enable-method = "psci";
+>   			next-level-cache = <&l2>;
+>   			clocks = <&scpi_dvfs 0>;
+> +			dynamic-power-coefficient = <140>;
+>   			#cooling-cells = <2>;
+>   		};
+>   
+> @@ -94,6 +96,7 @@ cpu2: cpu@2 {
+>   			enable-method = "psci";
+>   			next-level-cache = <&l2>;
+>   			clocks = <&scpi_dvfs 0>;
+> +			dynamic-power-coefficient = <140>;
+>   			#cooling-cells = <2>;
+>   		};
+>   
+> @@ -104,6 +107,7 @@ cpu3: cpu@3 {
+>   			enable-method = "psci";
+>   			next-level-cache = <&l2>;
+>   			clocks = <&scpi_dvfs 0>;
+> +			dynamic-power-coefficient = <140>;
+>   			#cooling-cells = <2>;
+>   		};
+>   
 
-I'd say, put comments *above* the member versus on the side. We don't
-like side comments, if you remember. :-)
-
-And, for example, the commenting in arch/x86/include/asm/fpu/types.h is
-not half as bad and works real nice for struct definitions, I'd say.
-
-But if you want to make that into a rule to have C++, side comments for
-struct members I guess I'll get accustomed to it eventually.
-
-> If it's caught in early testing, this should be fixed, no?
-
-Hope dies last. :)
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
