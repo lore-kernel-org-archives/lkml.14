@@ -1,35 +1,35 @@
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA75F9FD;
-	Mon, 12 Feb 2024 07:57:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3E6125CB;
+	Mon, 12 Feb 2024 07:57:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707724636; cv=none; b=UpvhKh/nmtCJrqrgFcNd8JSh4G9FyjjBsbk6jO+rVaJsT2x7vlXoC9PzONTdvMBrW4Z2gsHGan7/3sLA0MJ4aOl90NICV34FL3TlBNafgkpruV759rZLN8AWKKkpWQ/5fpSu9z7Axy8FiWnZA1QkTi1iOO0DLTlHf5UjRouWVRI=
+	t=1707724638; cv=none; b=N5z5RXdQ2gO5mqg3tz8TBL9PrPlTxMdW6DbVYjgzAgSFJT0ZeMaLNJC7q6HV3r+f9ZlWegJOMN7jodaHYdw8W8wMUzlGNkVs8JBPuEcEGR3oo+O0WFeqXsj/ztk7Va34KwfjJF+mC/2d9e+sNEhi7nSybqjf1l+IuQP+ysrMRFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707724636; c=relaxed/simple;
+	s=arc-20240116; t=1707724638; c=relaxed/simple;
 	bh=hU4776sYBDi68msbbKmdhIQkHDVJX9tyYRGpSrCg92A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jE0aFGNKZLu6yzOaFGIUOReh7WFjCPwZKns9n9yPLpRa+HB7VLkHFKUTZKjQ8sTx5IoBGkn2bUO9AWTQMzIDUBNf2GRipXiJJHjk6wtyTm0PNuhdYksmlfElvWmg9YQAisX+hPAQiPWDRuMJhgCZi70wdOgjCijtaUH4kqKh9BA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=YTLixMEz; arc=none smtp.client-ip=217.70.183.194
+	 MIME-Version; b=aENA17VQZOVVaU2tOJsdoMZfUn6OWOXR3lB5RP9JA8NttTb2TpT3dHFx7EYbZaI38NMmW+1NXbrI5zDsHZdlN1Pgpl3Az035HocQhzNED7vGxepR0ACsDUvUv1it4kM4Aizf1BRz14dfIkctuTzWsfAD60dxPLf4dqxccaHFHj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RNE1rJyW; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="YTLixMEz"
-Received: by mail.gandi.net (Postfix) with ESMTPA id 6801840011;
-	Mon, 12 Feb 2024 07:57:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RNE1rJyW"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 21E0940018;
+	Mon, 12 Feb 2024 07:57:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1707724627;
+	t=1707724632;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
 	bh=BiEtrlkAacMQ7ZsOH+miZS1Nj46VD4t7KhVmkzLQVRU=;
-	b=YTLixMEzeut5Jpj+DJhJpSiZBGX9OG6gnBQ5t1PW7jinImQt3i5ynTqGMiAj18hDs1xkP/
-	KI5oEOSXmtGxuMgILH8zIOUqgh0etpj0kBPfmTDmd31Y/fFrOJ+ZSLeIGZM+k3wMi0BS6q
-	+9vakHCwn90Yj0nrY3u97A1rgNiqoJU5qEQBFCp20s2xC3esatNCJa0PzHQgBcU0NXWpCA
-	uc2rQkk8ICbF1dR+YeM6OcO54xQ1+KDTPGR06QklR3+gnN21CLc50w7nTGx13IdyhMR/7P
-	q2KKjCmXAnSILZIXTDN9t3IIidJRawnbkrBj7rnNImbu3E5kFOceumasF8FNpw==
+	b=RNE1rJyWwQDpyiaWdycpjM2jgoow5Mv6A4kE9OaIDmjA3+zZGPGvumbjwgPWty+eoRYk+C
+	J2vIjSgwud4uYffaEnKbLx1yXjQvdp221f1npLRBbDKHyCuyjJpbotjECNfJ8457aowLGP
+	dyg33RwB3GC3j80EP6jHxKh+s9kcOi2W90HBPaKgHhC5J4zOlv+CCmlv+auUMB7DAvQzZw
+	xFbP6dd5vQkprWOp1W0+6cRu1AwERSyQv3bPvLmTvxk8rC/kOozU2wqPl6I72aO8ov9VIl
+	WJ+3vR3vgfszSLidCFR5N8qldNp+HtSDLgGi+4S/dRap8sE3w7Tn+GQylrr5qQ==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
 	"David S. Miller" <davem@davemloft.net>,
@@ -47,9 +47,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Mark Brown <broonie@kernel.org>,
 	Christophe Leroy <christophe.leroy@csgroup.eu>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v3 RESEND 6/6] net: wan: fsl_qmc_hdlc: Add framer support
-Date: Mon, 12 Feb 2024 08:56:34 +0100
-Message-ID: <20240212075646.19114-7-herve.codina@bootlin.com>
+Subject: [RESEND PATCH v3 6/6] net: wan: fsl_qmc_hdlc: Add framer support
+Date: Mon, 12 Feb 2024 08:56:41 +0100
+Message-ID: <20240212075646.19114-14-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240212075646.19114-1-herve.codina@bootlin.com>
 References: <20240212075646.19114-1-herve.codina@bootlin.com>
