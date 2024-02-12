@@ -1,66 +1,33 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp107.iad3a.emailsrvr.com (smtp107.iad3a.emailsrvr.com [173.203.187.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C8F17BD5
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 10:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A4B17BBE
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 10:11:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.203.187.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707732714; cv=none; b=gvlbD6PKEYZ716KIvgHp9XvdvNH9Pg++Vr2R1cja+iMfwvgbhnTbU+7Dk6OskzLSGi66AbrT4l4lw008VcsOXTBkOKrlSSCt/TyVcYIoEkBMgDYWZfOfTc2LKf53deX+xlO91L8Fy1Xg0L6JdoarPGAfzl+odBrXvF3W7yu2zUw=
+	t=1707732715; cv=none; b=G4KTcRIXWBUXV4njEd5ZRXUisZ2ulB5CaK0DJfrIGP6bebn9wXICvv1t8Nlk3gWXnCsVghXOt+v4PaH1kz0ERSeBAn4ex37oB7MehwEV8Cd7tOGUWTdkcVAf5b4auhihodr2WY1JjXWHrdv2C97fsS2tZ9OX6X/g6kzXPeIEy2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707732714; c=relaxed/simple;
-	bh=EsDLRCNgBBkHpMvWo3dkQLR5TLheexE1oSgsf7G0GBQ=;
+	s=arc-20240116; t=1707732715; c=relaxed/simple;
+	bh=2wyzB0QE3kpdGWU3sblt9oxOWxZLihwNJBrY33Ct7PI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CpjwPbdbyf1ZCfNVn86z8S40WhiaEZinkPVws556lKB9lIN9bPFL60kgaMQ7pw47PzhygIgvyr/OBQ5pI0fEEDFI+2HiByDYKMYZk2swgZSQ7l2TcCNVacbfLUfTCd4jfd6SjrQxLJjaRelf9UMwiDXginEXUx/KSIbFvLqawLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cn+lP0go; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=r5e7VCmYBRx5cCENqdCGAzvGoitNEXFVkROgzNxIwngfpZiDnEtkpHDLyGau8KeX2pTC2qexujohKZ1ifPR5Q9f2Jlo/1c8EPA3Yha/xTbFuynKVcKl3O5BQxnqt39MkmlFu7Hu5lNsfcBLUdDwVfIMH3CyCkMSitEqvpEDgzJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=x1J7Ug7u; arc=none smtp.client-ip=173.203.187.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mev.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cn+lP0go"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707732710;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=+2pRSCdMqyAZN8/VuuYCHaUNoBN7lwTPUXnd9XEGQ+w=;
-	b=cn+lP0goCPBVtsDhdpAR8yvB98CoHTvJlcValHa3p0dZl0mRvkUqZB7mbvsAOcvg9bW4r3
-	9YHTN1CCBjoUnY9IRLi7cARWyKJy9pJtDbBuuPcV8HIuHmhIuRifFA0o6Q3CdxVuNLSJoV
-	inKSjpx8JMC1kRTXf3cTa0ICgNkFMWM=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-453-uZjpWf5kM7eMIzqFkTXQ_g-1; Mon, 12 Feb 2024 05:11:48 -0500
-X-MC-Unique: uZjpWf5kM7eMIzqFkTXQ_g-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-40ef9e08fffso15893815e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 02:11:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707732707; x=1708337507;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :references:cc:to:content-language:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+2pRSCdMqyAZN8/VuuYCHaUNoBN7lwTPUXnd9XEGQ+w=;
-        b=n2CYj5qxG7qnePxiV9G0gRyXNnaY2/jpVRfZ30lttfrodZ9s+LY/fr980tOXmBYoYh
-         2649xEatsLbCH29i1YcomRZAcBMk5JiWlmy4mOBOaKJbT8xwn32S251T3bzHpB99eQAV
-         t5V27JZmgfY18WdJOCgjSC2h7lqoVi32RjOkLX376oaUrmRLJwx6hFMjPBRNF2hrlCT3
-         CTfJ0Km2DqwIt/ltpt29RXbHceYotMRyg2KqU1773H3zp/Ss9u8FNb4RaWswPmbyMmuT
-         pYwxT6B2Nlf4QZWpKLGTMKMgSSK/+GhYLpbaciEAPc1kkeRBK72+mnYqofEthsWWYGQV
-         EmfQ==
-X-Gm-Message-State: AOJu0YxzvQ0MsfXKr6DHtiubNvDdRFBjXX4ZygY1AQ9QPuA4HXQEreNW
-	vj1oj+7RuPaNKmYLkewrWLof2hcNbozZzdmaIr4AazflM3D36SXaIhvwIAB03Xbzi4YBx9J3OiY
-	entFUCCxvVrAXY4h0sn3mPZ8kgUX/8l1UKK9sa9oVa71KR1BLyAuQKjRPUzaCEQ==
-X-Received: by 2002:a05:600c:600e:b0:410:be25:12bf with SMTP id az14-20020a05600c600e00b00410be2512bfmr2510586wmb.38.1707732707073;
-        Mon, 12 Feb 2024 02:11:47 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH+hlQMe30T62KMwr+luZOaXUQu5EKvOVB62I9SuHj1bCg0U6QR5ufA6j/zcrcMvqTl++iPog==
-X-Received: by 2002:a05:600c:600e:b0:410:be25:12bf with SMTP id az14-20020a05600c600e00b00410be2512bfmr2510563wmb.38.1707732706666;
-        Mon, 12 Feb 2024 02:11:46 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVwkAeAYQR7Gfoxupr5qBG9m0EFbv7DDI7aCfZtMNyIROIXA/SOrjkaJ59sr8xsqiaVCkCmlEIRjxy3J0wXfxX4p/V/LReolwctKJtaf6B3xBn7OrP0bc+txI9JVmFNAWwZNO6OMGWo3IXumCONO6uNSMmNTfbFmAY4pOA1lJgpDYGCD7L+3n273ujqqyssnrkBYDPGUmeZCNVHvSm6nOQmhOiwdAGGkbh9s4spMdJMjZUHweVEwDvqzZu+WY2iXCqg6PvKFOcrzgEd0inHm2VWhnlxmT+IxhcswK98pkwM1pdbqKpMZ8Ajk1JT4NE78LQt/mXy49lkqHahYzz6hjzT+dfzIx4V3DXSeAokKyb1gnl/iSmZRlqLUCcOgsmg3+wwBBOuVupln+MiH6egoWuOb0D3bdc75Mj8jQ3mkZXn+noa+I0RKgGk58qf9AmfYfgmoUeVxAHFDz6H2fGJSuPdxMMemhULInkfywbgcL4XDyX9Z53mEt7zOhan4AtbDYaknEn4fCZ/1MCYlw3aWeqpmwzPFZmOAeLuSio1iOcsGub9eXKx0M2nKuxJ4n1jPEP1oNBvLg89cxTfdtPQA43Yj+xKlc5QfNDyXl6bRRX286HkHyWSz/FRQYbEwdh7nAxD+scmPiWtw4qBIOUM0qZ0NG8OHtJi963eUHH1Om8YBT7l+DoZEuPwB1JBihSLrOPpnPqsDQCQDEYMqPRaoFdAtOdGG27xai7PTo0pl2W0EdZROwY=
-Received: from ?IPV6:2003:cb:c730:2200:7229:83b1:524e:283a? (p200300cbc7302200722983b1524e283a.dip0.t-ipconnect.de. [2003:cb:c730:2200:7229:83b1:524e:283a])
-        by smtp.gmail.com with ESMTPSA id bd27-20020a05600c1f1b00b00410d3b8c4c1sm2565365wmb.31.2024.02.12.02.11.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Feb 2024 02:11:46 -0800 (PST)
-Message-ID: <6c66f7ca-4b14-4bbb-bf06-e81b3481b03f@redhat.com>
-Date: Mon, 12 Feb 2024 11:11:44 +0100
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="x1J7Ug7u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+	s=20221208-6x11dpa4; t=1707732200;
+	bh=2wyzB0QE3kpdGWU3sblt9oxOWxZLihwNJBrY33Ct7PI=;
+	h=Date:Subject:To:From:From;
+	b=x1J7Ug7uhtxfwPCfsgB5EoDPJ2go6hC7AmtiJPip7u520qVNlEYfsxruEn43Rr/0j
+	 DyCh6vmPb0SdSB/doo3/BxJqjCh18kqfZQR+qeunsvlaxPTjWLv3j//2YYtbZwSIN0
+	 4bK+e/xBHI/TIGh9Voxpto+0Sk+wwF5ZMh4SZF4I=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp22.relay.iad3a.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 9E28A1984;
+	Mon, 12 Feb 2024 05:03:19 -0500 (EST)
+Message-ID: <66d15664-0d54-4e89-bf54-508ff072fab8@mev.co.uk>
+Date: Mon, 12 Feb 2024 10:03:18 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,202 +35,136 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 09/10] mm/mmu_gather: improve cond_resched() handling
- with large folios and expensive page freeing
-Content-Language: en-US
-To: Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Yin Fengwei <fengwei.yin@intel.com>, Michal Hocko <mhocko@suse.com>,
- Will Deacon <will@kernel.org>, "Aneesh Kumar K.V"
- <aneesh.kumar@linux.ibm.com>, Nick Piggin <npiggin@gmail.com>,
- Peter Zijlstra <peterz@infradead.org>, Michael Ellerman
- <mpe@ellerman.id.au>, Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
- linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org
-References: <20240209221509.585251-1-david@redhat.com>
- <20240209221509.585251-10-david@redhat.com>
- <f1578e92-4de0-4718-bf79-ec29e9a19fe0@arm.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <f1578e92-4de0-4718-bf79-ec29e9a19fe0@arm.com>
+Subject: Re: [PATCH] comedi: comedi_8255: Correct error in subdevice
+ initialization
+To: Frej Drejhammar <frej.drejhammar@gmail.com>,
+ H Hartley Sweeten <hsweeten@visionengravers.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+References: <20240211175822.1357-1-frej.drejhammar@gmail.com>
+Content-Language: en-GB
+From: Ian Abbott <abbotti@mev.co.uk>
+Organization: MEV Ltd.
+In-Reply-To: <20240211175822.1357-1-frej.drejhammar@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Classification-ID: 13877c57-bc63-4c2e-b481-38fe52eaea54-1-1
 
-Hi Ryan,
-
->> -static void tlb_batch_pages_flush(struct mmu_gather *tlb)
->> +static void __tlb_batch_free_encoded_pages(struct mmu_gather_batch *batch)
->>   {
->> -	struct mmu_gather_batch *batch;
->> -
->> -	for (batch = &tlb->local; batch && batch->nr; batch = batch->next) {
->> -		struct encoded_page **pages = batch->encoded_pages;
->> +	struct encoded_page **pages = batch->encoded_pages;
->> +	unsigned int nr, nr_pages;
->>   
->> +	/*
->> +	 * We might end up freeing a lot of pages. Reschedule on a regular
->> +	 * basis to avoid soft lockups in configurations without full
->> +	 * preemption enabled. The magic number of 512 folios seems to work.
->> +	 */
->> +	if (!page_poisoning_enabled_static() && !want_init_on_free()) {
+On 11/02/2024 17:58, Frej Drejhammar wrote:
+> The refactoring done in commit 5c57b1ccecc7 ("comedi: comedi_8255: Rework
+> subdevice initialization functions") to the initialization of the io
+> field of struct subdev_8255_private broke all cards using the
+> drivers/comedi/drivers/comedi_8255.c module.
 > 
-> Is the performance win really worth 2 separate implementations keyed off this?
-> It seems a bit fragile, in case any other operations get added to free which are
-> proportional to size in future. Why not just always do the conservative version?
-
-I really don't want to iterate over all entries on the "sane" common 
-case. We already do that two times:
-
-a) free_pages_and_swap_cache()
-
-b) release_pages()
-
-Only the latter really is required, and I'm planning on removing the one 
-in (a) to move it into (b) as well.
-
-So I keep it separate to keep any unnecessary overhead to the setups 
-that are already terribly slow.
-
-No need to iterate a page full of entries if it can be easily avoided. 
-Especially, no need to degrade the common order-0 case.
-
+> Prior to 5c57b1ccecc7, __subdev_8255_init() initialized the io field
+> in the newly allocated struct subdev_8255_private to the non-NULL
+> callback given to the function, otherwise it used a flag parameter to
+> select between subdev_8255_mmio and subdev_8255_io. The refactoring
+> removed that logic and the flag, as subdev_8255_mm_init() and
+> subdev_8255_io_init() now explicitly pass subdev_8255_mmio and
+> subdev_8255_io respectively to __subdev_8255_init(), only
+> __subdev_8255_init() never sets spriv->io to the supplied
+> callback. That spriv->io is NULL leads to a later BUG:
 > 
->>   		while (batch->nr) {
->> -			/*
->> -			 * limit free batch count when PAGE_SIZE > 4K
->> -			 */
->> -			unsigned int nr = min(512U, batch->nr);
->> +			nr = min(512, batch->nr);
+> BUG: kernel NULL pointer dereference, address: 0000000000000000
+> PGD 0 P4D 0
+> Oops: 0010 [#1] SMP PTI
+> CPU: 1 PID: 1210 Comm: systemd-udevd Not tainted 6.7.3-x86_64 #1
+> Hardware name: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+> RIP: 0010:0x0
+> Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+> RSP: 0018:ffffa3f1c02d7b78 EFLAGS: 00010202
+> RAX: 0000000000000000 RBX: ffff91f847aefd00 RCX: 000000000000009b
+> RDX: 0000000000000003 RSI: 0000000000000001 RDI: ffff91f840f6fc00
+> RBP: ffff91f840f6fc00 R08: 0000000000000000 R09: 0000000000000001
+> R10: 0000000000000000 R11: 000000000000005f R12: 0000000000000000
+> R13: 0000000000000000 R14: ffffffffc0102498 R15: ffff91f847ce6ba8
+> FS:  00007f72f4e8f500(0000) GS:ffff91f8d5c80000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: ffffffffffffffd6 CR3: 000000010540e000 CR4: 00000000000406f0
+> Call Trace:
+>   <TASK>
+>   ? __die_body+0x15/0x57
+>   ? page_fault_oops+0x2ef/0x33c
+>   ? insert_vmap_area.constprop.0+0xb6/0xd5
+>   ? alloc_vmap_area+0x529/0x5ee
+>   ? exc_page_fault+0x15a/0x489
+>   ? asm_exc_page_fault+0x22/0x30
+>   __subdev_8255_init+0x79/0x8d [comedi_8255]
+>   pci_8255_auto_attach+0x11a/0x139 [8255_pci]
+>   comedi_auto_config+0xac/0x117 [comedi]
+>   ? __pfx___driver_attach+0x10/0x10
+>   pci_device_probe+0x88/0xf9
+>   really_probe+0x101/0x248
+>   __driver_probe_device+0xbb/0xed
+>   driver_probe_device+0x1a/0x72
+>   __driver_attach+0xd4/0xed
+>   bus_for_each_dev+0x76/0xb8
+>   bus_add_driver+0xbe/0x1be
+>   driver_register+0x9a/0xd8
+>   comedi_pci_driver_register+0x28/0x48 [comedi_pci]
+>   ? __pfx_pci_8255_driver_init+0x10/0x10 [8255_pci]
+>   do_one_initcall+0x72/0x183
+>   do_init_module+0x5b/0x1e8
+>   init_module_from_file+0x86/0xac
+>   __do_sys_finit_module+0x151/0x218
+>   do_syscall_64+0x72/0xdb
+>   entry_SYSCALL_64_after_hwframe+0x6e/0x76
+> RIP: 0033:0x7f72f50a0cb9
+> Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 47 71 0c 00 f7 d8 64 89 01 48
+> RSP: 002b:00007ffd47e512d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+> RAX: ffffffffffffffda RBX: 0000562dd06ae070 RCX: 00007f72f50a0cb9
+> RDX: 0000000000000000 RSI: 00007f72f52d32df RDI: 000000000000000e
+> RBP: 0000000000000000 R08: 00007f72f5168b20 R09: 0000000000000000
+> R10: 0000000000000050 R11: 0000000000000246 R12: 00007f72f52d32df
+> R13: 0000000000020000 R14: 0000562dd06785c0 R15: 0000562dcfd0e9a8
+>   </TASK>
+> Modules linked in: 8255_pci(+) comedi_8255 comedi_pci comedi intel_gtt e100(+) acpi_cpufreq rtc_cmos usbhid
+> CR2: 0000000000000000
+> ---[ end trace 0000000000000000 ]---
+> RIP: 0010:0x0
+> Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+> RSP: 0018:ffffa3f1c02d7b78 EFLAGS: 00010202
+> RAX: 0000000000000000 RBX: ffff91f847aefd00 RCX: 000000000000009b
+> RDX: 0000000000000003 RSI: 0000000000000001 RDI: ffff91f840f6fc00
+> RBP: ffff91f840f6fc00 R08: 0000000000000000 R09: 0000000000000001
+> R10: 0000000000000000 R11: 000000000000005f R12: 0000000000000000
+> R13: 0000000000000000 R14: ffffffffc0102498 R15: ffff91f847ce6ba8
+> FS:  00007f72f4e8f500(0000) GS:ffff91f8d5c80000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: ffffffffffffffd6 CR3: 000000010540e000 CR4: 00000000000406f0
 > 
-> If any entries are for more than 1 page, nr_pages will also be encoded in the
-> batch, so effectively this could be limiting to 256 actual folios (half of 512).
-
-Right, in the patch description I state "256 folio fragments". It's up 
-to 512 folios (order-0).
-
-> Is it worth checking for ENCODED_PAGE_BIT_NR_PAGES_NEXT and limiting accordingly?
-
-At least with 4k page size, we never have more than 510 (IIRC) entries 
-per batch page. So any such optimization would only matter for large 
-page sizes, which I don't think is worth it.
-
-Which exact optimization do you have in mind and would it really make a 
-difference?
-
+> This patch simply corrects the above mistake by initializing spriv->io
+> to the given io callback.
 > 
-> nit: You're using 512 magic number in 2 places now; perhaps make a macro?
-
-I played 3 times with macro names (including just using something 
-"intuitive" like MAX_ORDER_NR_PAGES) but returned to just using 512.
-
-That cond_resched() handling is just absolutely disgusting, one way or 
-the other.
-
-Do you have a good idea for a macro name?
-
+> Fixes: 5c57b1ccecc7 ("comedi: comedi_8255: Rework subdevice initialization functions")
+> Signed-off-by: Frej Drejhammar <frej.drejhammar@gmail.com>
+> Cc: <stable@vger.kernel.org>
+> ---
+>   drivers/comedi/drivers/comedi_8255.c | 1 +
+>   1 file changed, 1 insertion(+)
 > 
->>   
->>   			/*
->>   			 * Make sure we cover page + nr_pages, and don't leave
->> @@ -119,6 +120,37 @@ static void tlb_batch_pages_flush(struct mmu_gather *tlb)
->>   			cond_resched();
->>   		}
->>   	}
->> +
->> +	/*
->> +	 * With page poisoning and init_on_free, the time it takes to free
->> +	 * memory grows proportionally with the actual memory size. Therefore,
->> +	 * limit based on the actual memory size and not the number of involved
->> +	 * folios.
->> +	 */
->> +	while (batch->nr) {
->> +		for (nr = 0, nr_pages = 0;
->> +		     nr < batch->nr && nr_pages < 512; nr++) {
->> +			if (unlikely(encoded_page_flags(pages[nr]) &
->> +				     ENCODED_PAGE_BIT_NR_PAGES_NEXT))
->> +				nr_pages += encoded_nr_pages(pages[++nr]);
->> +			else
->> +				nr_pages++;
->> +		}
-> 
-> I guess worst case here is freeing (511 + 8192) * 64K pages = ~544M. That's up
-> from the old limit of 512 * 64K = 32M, and 511 pages bigger than your statement
-> in the commit log. Are you comfortable with this? I guess the only alternative
-> is to start splitting a batch which would be really messy. I agree your approach
-> is preferable if 544M is acceptable.
+> diff --git a/drivers/comedi/drivers/comedi_8255.c b/drivers/comedi/drivers/comedi_8255.c
+> index e4974b508328..a933ef53845a 100644
+> --- a/drivers/comedi/drivers/comedi_8255.c
+> +++ b/drivers/comedi/drivers/comedi_8255.c
+> @@ -159,6 +159,7 @@ static int __subdev_8255_init(struct comedi_device *dev,
+>   		return -ENOMEM;
+>   
+>   	spriv->context = context;
+> +	spriv->io      = io;
+>   
+>   	s->type		= COMEDI_SUBD_DIO;
+>   	s->subdev_flags	= SDF_READABLE | SDF_WRITABLE;
 
-Right, I have in the description:
+Thanks for the fix. I screwed up!
 
-"if we cannot even free a single MAX_ORDER page on a system without 
-running into soft lockups, something else is already completely bogus.".
-
-That would be 8192 pages on arm64. Anybody freeing a PMD-mapped THP 
-would be in trouble already and should just reconsider life choices 
-running such a machine.
-
-We could have 511 more pages, yes. If 8192 don't trigger a soft-lockup, 
-I am confident that 511 more pages won't make a difference.
-
-But, if that ever is a problem, we can butcher this code as much as we 
-want, because performance with poisoning/zeroing is already down the drain.
-
-As you say, splitting even further is messy, so I rather avoid that 
-unless really required.
+Acked-by: Ian Abbott <abbotti@mev.co.uk>
+Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
 
 -- 
-Cheers,
-
-David / dhildenb
+-=( Ian Abbott <abbotti@mev.co.uk> || MEV Ltd. is a company  )=-
+-=( registered in England & Wales.  Regd. number: 02862268.  )=-
+-=( Regd. addr.: S11 & 12 Building 67, Europa Business Park, )=-
+-=( Bird Hall Lane, STOCKPORT, SK3 0XA, UK. || www.mev.co.uk )=-
 
