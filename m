@@ -1,84 +1,77 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B831E3F8F0
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 13:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D4A3F9D8
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 13:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707745058; cv=none; b=j9MQqTWRu7GtMRrYBZ1Mg7/7NiIzupmalauU3j/S1tTXpXqYOh1cQMMU0MmoP9zqgpqkclBYEbq4jUWqwaRhpj9ofE3Elgc0OD4LZi8N3OshijUCqEVb2HxGJnwX2Ridl77HZPB+vE+PE8vcY5vGd6xP/2e5pJtkfwQ0Q3s3G70=
+	t=1707745061; cv=none; b=rZepW7O94tAvi1JDar2F4i7Va7Hftnq1cYPNT4S2q7wNW4HbEGtyZmRwtMKJY0EDXCZrcB2j/U6kfuMwkNGltBN8Q4L+CPhrPWVe0pCIWD9k/x2brr9ZqhNFbrVrc2cGOiTIERE2b6uABxXzQU76UsgUMQY9+sO4E2UFIa5XyNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707745058; c=relaxed/simple;
-	bh=snujTeGHnR3dPf9//rrzM9yApNcJDQHqczJLK6AWKn0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LQ5NLmroTTBVJpIWIBKWmxVnfrJ9PB2Sx6nsDQ3fJdsWWYV/nbH/zATwiENaZSvf8PuDBH7PSZraeYHo5MTJxEW5HziAUV1EYT8BYb9aC96hwHzUlQbYolq3uCAL2Ni/9dYAYb4NDe5Bqkl+4qJa0/8OiIVG0MUkJLGqJudnSLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jTMCKoR/; arc=none smtp.client-ip=209.85.219.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707745061; c=relaxed/simple;
+	bh=U3HHDxdJjXTkNdoZK6mhtwdYybK7T5L45T+6eT+26Pc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PNWWhqt1WkUnvwj+/kbdPCmhimfOVtXTYAdfyz1jNVu21lMIjB4YL5DdePn+sAFKjPBhUYVQQSwx6fdp258yJaCcBJYoqmLkwK+CQB1Dx1LSueLoigY0lv9TC+w1454wboPrsr3sclkYxS8Ns6eDUuOElBO1glkl2PxbOUwk690=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D93vROQO; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jTMCKoR/"
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dc742543119so2548806276.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 05:37:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707745055; x=1708349855; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=snujTeGHnR3dPf9//rrzM9yApNcJDQHqczJLK6AWKn0=;
-        b=jTMCKoR/HgYNThBCCW0vooMDSyehZLGxoQnni0OcGCu7ca6m/keU9KZhU1h9a1wQAM
-         SduHdAW8RAZORFef1LJ+mbyVFe1lxVGq8LzeBHXTSTNpw/E91e7sfXI8bKhUVq/D8vbM
-         zKE++UL2IZsM5YV4YSsPBNoUIPCQwupdGQnlznTF24rH5kJr1/WXUXLS4qiwkRRuOd9E
-         6mGGeFm6xQoLvPklT+Vk43Jac2JNqTEjC8X+PSQEdQ7RExhnAIeIQMqkZ0Z5xYQ+MFdJ
-         M+J25qVrPMpsAJYnriiI45S1LpinYkosS95u8+h3puplcxmzZxEONb23oYsF1GC/7uce
-         LVkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707745055; x=1708349855;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=snujTeGHnR3dPf9//rrzM9yApNcJDQHqczJLK6AWKn0=;
-        b=qV7Mfg/KAYVOQcn1NetdwnawvNx1JWmzqMkL3Iw8wO5fX5whGB8608v5RiCGPK040U
-         +jIwymDnvPZ1gK2m+GCi1yA8hYl7W+/yT2N0/YnfHeuQzRvTzz2ktpty+7443Bywmdp3
-         YY1qT2Hzx+9QxVS8LA8O6POB8cThoajYbCZ+xDoZkExdfxp2PcBHsLdK2ULb1tsWkiNC
-         MqJOSzY1u8CqcXbk62bfStv4/0JVbcaksKaiYQ0gJfBID1DlPBYkjRuaU5YBO1TqZq8E
-         vwdv8lPhOzpNOpod01cYQVLMaBslqWu/pp5Noy3YpRRCN9/E46Z5eR10gGAccFZvkwqU
-         Zrtg==
-X-Gm-Message-State: AOJu0YwwMs7mgN9NkQGfhoDotMNHsMoVsg+gshG34kIZM9xI26piga2w
-	n0MZajNAq71yKHarnkWEKtzpRQKneXXKN/bpiU/xg/Zc2eVZ0/ekS4pygAgQ3gTbq2qBS8j/miW
-	qMugrfyDVqj7FlnSK3Mzz4D4RNRg=
-X-Google-Smtp-Source: AGHT+IFOu43f96+QadK+r9cBK+ff1oKp4KjmY4DCjk2xEuyJBapWpCL4StASjTys0XLwP4NZ7wFhpXFByv35Kq10kIM=
-X-Received: by 2002:a25:6b4c:0:b0:dc2:279f:f7e with SMTP id
- o12-20020a256b4c000000b00dc2279f0f7emr3359573ybm.10.1707745055682; Mon, 12
- Feb 2024 05:37:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D93vROQO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707745060; x=1739281060;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=U3HHDxdJjXTkNdoZK6mhtwdYybK7T5L45T+6eT+26Pc=;
+  b=D93vROQOi2rp1dmMkRj8yzoxIaeK7MSfC62IVXPPVg7BHCi4ncM3QE8n
+   woygeHaBFH74/eg1xDlh/wz91RlqQp+Kd2DTZmp8PhMbhoVSwFo8ReZ9t
+   cwems6Ps8t9qMbuqmdx349JjMp/pGOERXj+bk8f/Edv51OYDf9VZp0oDF
+   39zxj1cLCB05x75vlmC7/RrPI5ipLHqNXCyq3VZmnuOkY5VauXqDu62BY
+   G/+HYY3MnhgZJocZFROMkSY+nlfQGE9bgA9YsbCARvkHFKcBwn6zJftcQ
+   YdcJsQBEqNIQZa9WMr9pHX9ePYgHr26JczBgBPuSi3HWNtOeW32ve/4m5
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="19226847"
+X-IronPort-AV: E=Sophos;i="6.06,264,1705392000"; 
+   d="scan'208";a="19226847"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 05:37:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="911483984"
+X-IronPort-AV: E=Sophos;i="6.06,264,1705392000"; 
+   d="scan'208";a="911483984"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 05:37:37 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rZWV5-00000003uLq-00Jw;
+	Mon, 12 Feb 2024 15:37:35 +0200
+Date: Mon, 12 Feb 2024 15:37:34 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Thomas Zimmermann <tzimmermann@suse.de>, linux-kernel@vger.kernel.org
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 0/3] auxdisplay: Refresh MAINTAINERS for the subsystem
+Message-ID: <ZcofHlhoUsmPcjqM@smile.fi.intel.com>
+References: <20240212132515.2660837-2-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240212113653.2625776-1-andriy.shevchenko@linux.intel.com> <ZcoSqHIknAvalzf4@smile.fi.intel.com>
-In-Reply-To: <ZcoSqHIknAvalzf4@smile.fi.intel.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 12 Feb 2024 14:37:24 +0100
-Message-ID: <CANiq72kmGVwFo6hakdcFN6Zu9yDg+e+41W4HHEj1q-S_TV079Q@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] auxdisplay: Take over maintainership, but in Odd
- Fixes mode
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240212132515.2660837-2-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Feb 12, 2024 at 1:44=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> Okay, Geert agreed to be a designated reviewer for this and I think I may
-> establish a separate kernel tree on git.kernel.org. I'll send an updated
-> version of this.
+On Mon, Feb 12, 2024 at 03:23:52PM +0200, Andy Shevchenko wrote:
+> Update MAINTAINERS for AUXDISPLAY subsystem in accordance to the last
+> (administrative) changes.
 
-Yeah, of course. We also need to move it in `linux-next`, so I will
-let Stephen know when you have it set it up.
+Found a couple of issues, but I will wait for tags other comments
+and then update the whole series.
 
-Thanks again!
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Cheers,
-Miguel
+
