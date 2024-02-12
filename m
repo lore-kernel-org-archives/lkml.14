@@ -1,107 +1,108 @@
-Received: from dvalin.narfation.org (dvalin.narfation.org [213.160.73.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714B939FD3;
-	Mon, 12 Feb 2024 11:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.160.73.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9EF43A1B5
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 11:32:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707737527; cv=none; b=plIccjlN5GiGqO+H3DGU7Mab3h2wqIs8lCRT64M+c7EAJ0rfVOuHBqFE8dIt02dtSUG6jISSiHgkFU+Fv+ulEZ3I6YTGSI86im/iV5y3lvW/AzTYSlgmmhb0pBLeHWIp2tmy63+kHHefvkWxGsVHWBHmSNL14dRE/rl4Wak5CpY=
+	t=1707737532; cv=none; b=VeR3rbq0ExeJJrKBgCy6S+di/EaYYiRix2CtH0NTFGyeuE0PGP9EHCvgO4l1iIeouSUA23DXa8QyVgjQAkAyBjOm7Mmg3n6WQzFgtB2NUc7I882HHL4JWxkAdjJ6LRbjPZKmiSO1Fu1NdwBJGs61gRyDrTl+fA/SbWsg2rThJOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707737527; c=relaxed/simple;
-	bh=JARpw4xEB9nEe17RqvsCk6HBS6XHVwck7TOuKJZAreY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gQlOswiPflRA8qugnREQttYiFknlLY/0cARLcJuv2xLNtH7wxTo0Nh1mA2BFM87KlNC3czhRgKxEWKz4JLFaCKVYr04S4RjOnDmM9NgduW0+YC421RYwqy7iFVDAdqXR7p3fzLhmVaeCTYf0sF5qgj++sU0RaLA3xyDR7/OPh1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org; spf=pass smtp.mailfrom=narfation.org; dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b=ehnTOX7x; arc=none smtp.client-ip=213.160.73.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=narfation.org
+	s=arc-20240116; t=1707737532; c=relaxed/simple;
+	bh=mehdPdtfuLlY3Wlmm6hizpCRq5FRHuXm40pRRmZ3ubs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s31fY/XWt5On5TSggQmVcwtAGTsKtj9CJUc6tt+ujIllQq2Qwr58KxVw1/COREu5zKIgRV96S9fss2IATqRU6xvYoJFfWsMU3Avl4R8AJLwydvMR25FAszK1qwp4LuOfXu7CuOFC02md3BVhNxjxSWeaISUbcZrVP+/veoVoTwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=TvOtKisP; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="ehnTOX7x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
-	s=20121; t=1707737034;
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="TvOtKisP"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d7881b1843so27766435ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 03:32:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707737529; x=1708342329;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:dkim-signature:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=r1p4l3EWCvJjOeR6nbKxVHb2Brr41nykHfFVXGT0VkU=;
+        b=OYTscRr5JlsAbT7BGLdWXTQXMvT3fmWEQv8l6hgR+Yj6odChN+UlOUHd0Qth/Ybs6h
+         iIOVbNZmNt0xO46bIa3ehTLKxs1PDe72/LsBSRMUd8WeUS8emiZMgMkGRid/mGb2t1RY
+         Z4SoYuO/XCDpr7y1n/7gVc9ZrWc1TWLk4fVfCmXLohgjLfCsU4AYpQpF7TINoKGtng2l
+         8jjU/IT3EVfQnJ2G+pgzdrrUnD+XYSM9lKti1BVWCq69QpfSD22G6iLkdK5FS0G74LLL
+         Up+qu6Adx4towAHMHaJaMHx5EYnyqI1TShekn92ZPHNCBYtP1LJLf0DDEzgu14eJQzDc
+         D7eg==
+X-Gm-Message-State: AOJu0Ywgi92z0S2upEdHtlN0U8MDcOpQT52pYtCRMlpTWOeR0Rr4UXj8
+	rK/T+kNidftON1JnuWanNJM+Iusfp/VdJ9xYnaHewOL/wlTMrFenUjFqq/lpLw1m9Q==
+X-Google-Smtp-Source: AGHT+IGsWOkEHowlUcxiDKbwtYLyUn8pVGHuR1OqUclHXd9BuXZi9tNoo/lOkw1S6fEErDH4UzbV8A==
+X-Received: by 2002:a17:902:dacd:b0:1da:2a89:e5e4 with SMTP id q13-20020a170902dacd00b001da2a89e5e4mr4823100plx.59.1707737528898;
+        Mon, 12 Feb 2024 03:32:08 -0800 (PST)
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id je10-20020a170903264a00b001d937bc5602sm172399plb.227.2024.02.12.03.32.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Feb 2024 03:32:08 -0800 (PST)
+Date: Mon, 12 Feb 2024 08:32:46 -0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2024; t=1707737527;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=IdW3ANPsOumnUTm35YIcSXXwWb81rhjV/4NqYwmk2Pw=;
-	b=ehnTOX7xVqtW5lTFDHFyLRRbQ0lNc35QSCDG8pDLUj2YvuFR1E/SQbn56rHpD4o7qAQz4i
-	qQLzA+okoJLz/xU88ulBpdVRl038dVl4X7/GdX2+71m9DWj3weIZW1UdAZOJLZKrTihze9
-	+obYQ5F+CyocSijNqt9gjiWNU+YscMI=
-From: Sven Eckelmann <sven@narfation.org>
-To: syzbot <syzbot+a6a4b5bb3da165594cff@syzkaller.appspotmail.com>,
- Eric Dumazet <edumazet@google.com>
-Cc: a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org, davem@davemloft.net,
- kuba@kernel.org, linux-kernel@vger.kernel.org, mareklindner@neomailbox.ch,
- netdev@vger.kernel.org, pabeni@redhat.com, sw@simonwunderlich.de,
- syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [batman?] BUG: soft lockup in sys_sendmsg
-Date: Mon, 12 Feb 2024 12:23:51 +0100
-Message-ID: <2173575.irdbgypaU6@ripper>
-In-Reply-To:
- <CANn89iKPYAY226+kV9D0jUn6Kfjq1gQJBAjSRxxFgQJK-QbLwA@mail.gmail.com>
-References:
- <000000000000ae28ce06112cb52e@google.com>
- <CANn89iKPYAY226+kV9D0jUn6Kfjq1gQJBAjSRxxFgQJK-QbLwA@mail.gmail.com>
+	bh=r1p4l3EWCvJjOeR6nbKxVHb2Brr41nykHfFVXGT0VkU=;
+	b=TvOtKisPvjq33MEAambKuB2YbF2vYxqu5uLtq9rzmp4DWyX/ec3mofRAOfgG4JJ+LbQDpn
+	R4M0De3X/MTtUjrKNDb9nyMx60GK+64fcEA2bWXudaE2oLxbF+q7RGVVIZ0eHkzIx7x1sv
+	SwFiJjkKYC9xl9hd9GuwgP6zBp0W5/EJ8qvVqaFK8YGfSUBPnh/s9UgGuIJpswKjp3zePh
+	7g4ciPwh292EWGFRE8G4EGG6xjwYflaeSKHDFTEiqQyn2JrJjfF8q5uQFHnxY4nOP6I7hj
+	x7nQ2GNRnZpH8K4w5ElsCfCzsiwbLvAAuqQE/pXmymuC4c+zA2GjVjOgE1aqRw==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dio: make dio_bus_type const
+Message-ID: <kk66bpxu56ok4lgoeltesbahtyfduggesny2prbtbmtchx5u6h@mtibrwmxaymr>
+References: <20240211-bus_cleanup-dio-v1-1-02140fbc5289@marliere.net>
+ <2024021249-attentive-entity-70d1@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart13450391.uLZWGnKmhe";
- micalg="pgp-sha512"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024021249-attentive-entity-70d1@gregkh>
 
---nextPart13450391.uLZWGnKmhe
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
-From: Sven Eckelmann <sven@narfation.org>
-Subject: Re: [syzbot] [batman?] BUG: soft lockup in sys_sendmsg
-Date: Mon, 12 Feb 2024 12:23:51 +0100
-Message-ID: <2173575.irdbgypaU6@ripper>
-MIME-Version: 1.0
+On 12 Feb 11:44, Greg Kroah-Hartman wrote:
+> On Sun, Feb 11, 2024 at 12:40:16PM -0300, Ricardo B. Marliere wrote:
+> > Now that the driver core can properly handle constant struct bus_type,
+> > move the dio_bus_type variable to be a constant structure as well,
+> > placing it into read-only memory which can not be modified at runtime.
+> > 
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+> > ---
+> >  drivers/dio/dio-driver.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/dio/dio-driver.c b/drivers/dio/dio-driver.c
+> > index 69c46935ffc7..2d9fa6011945 100644
+> > --- a/drivers/dio/dio-driver.c
+> > +++ b/drivers/dio/dio-driver.c
+> > @@ -123,7 +123,7 @@ static int dio_bus_match(struct device *dev, struct device_driver *drv)
+> >  }
+> >  
+> >  
+> > -struct bus_type dio_bus_type = {
+> > +const struct bus_type dio_bus_type = {
+> >  	.name	= "dio",
+> >  	.match	= dio_bus_match,
+> >  	.probe	= dio_device_probe,
+> > 
+> 
+> Don't you also have to change this in include/linux/dio.h?
 
-On Monday, 12 February 2024 11:41:38 CET Eric Dumazet wrote:
-> This patch [1] looks suspicious
+Indeed, I missed it. Will send a v2, thank you.
 
-Shouldn't be caused by this - but this might be another way to trigger the 
-problem. The problem would be visible even without it when a mtu is explicitly 
-set. But the reproducer is not available so I can't actually check what is 
-going on.
-
-> I think batman-adv should reject too small MTU values.
-
-You are refering to the size calculated by 
-batadv_tt_local_table_transmit_size(), right? And yes, I would agree that it 
-looks suspicious and might not have been correctly integrated in 
-batadv_max_header_len() when commit a19d3d85e1b8 ("batman-adv: limit local 
-translation table max size") introduced the code. But I think we also need to 
-remove interfaces again when receiving NETDEV_CHANGEMTU and an interface is 
-not having the correctly sized anymore. So have to check how to do this the 
-best way.
-
-Kind regards,
-	Sven
---nextPart13450391.uLZWGnKmhe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAmXJ/8cACgkQXYcKB8Em
-e0ZZFw/+N3em2ptTXcnr3+ApNV8/D8QriRS0O6mBuF8Hijfj6xnYM1hPFaRImy21
-WtJjnb2ti7uavNtiBKGR71EUpLW8nNsdI/tB/Pc3ndzy/AOMN9/+JqQE6ekD9K0I
-n7rKn5MqBoYjIPMB06lm26Cgx5WyDr3Lkuu3S2OCP3mZZ9+g/p3T0ALJR1c1dkSd
-iTM9Yl5zapFzbtebJEa3ywLfeWVApBh0sTpWgfkevsS1OnkRnep59h/KnOa4oBt/
-V/BuknZ+m8McCLySH8DuuY0XBvah+mWHMGoGY3qpoeqCo447axPSweIAAXs143t3
-ujigchJGL1eaKtOvc/ZeOr2jSwPqmiqIeMN+g7S/mHe7GIW+l6fzH0ZfYm+EADCa
-8yJmtZhhwRtSB5j0QsDDEquWlykluoN+jkB2ysTkb3ATY1S+K1ICVZpVMtZ6jCZr
-PK68KmxnUFaGXdwKAMpDtDi50roDis7kafjRuIT+rSiTsTkR/uEJ7G4AZs7ca0xz
-PfGS7dnXprXm+y/2pQuVXNUzcsuaZxCXzHtjEuzaCEec4qMq4a9QYRrHCLH5xQHE
-LxkEvQ2TElGKTzFiOi2daRAreLUv5iQ6U9Y9taiL8AMsKaIjmDUdOmBAUFPhFHDX
-ixcgudSFeAbYp0bGwjpqdvXkftitKiGESCAvgEDl+MIhIIK/4jI=
-=4r6M
------END PGP SIGNATURE-----
-
---nextPart13450391.uLZWGnKmhe--
-
-
-
+> 
+> thanks,
+> 
+> greg k-h
