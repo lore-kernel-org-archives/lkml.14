@@ -1,123 +1,161 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9281A39FDD;
-	Mon, 12 Feb 2024 12:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2AD3A1A1
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 12:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707741934; cv=none; b=lh9u3sbyYOhP/r6tVMM2sXsgDtxFdLqcT4F8iCMNoijaGTzE18MN0l94T5hTLtTLm6hlkXRyonjNU9upTJZS6FlYDdNlchzaXF1p3nkLwufJdSe+R8HSX1s2h9TOC3OOOm71Xgweh3oYmK7dcySBbo1kY0KDrCsck3sKWPJeMXQ=
+	t=1707741948; cv=none; b=iWE2wNIhaajVjE3GN45Fo+qyfKBVdNpRrhJk98a0+WaYddJCInZi0zYxuhk2wcWWyjKYX5q4afiy3jWOGm/ViZTfCzNIXFPzie52rsrc5fB4XhpGY6t3mYTLuuJmn/fZuMW48qDcxdLMO/GO3v6cTUFadKwGDcsUnFXToJJMaY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707741934; c=relaxed/simple;
-	bh=R7lGqW1nRrkleiW4qjej3N1+KwbZp8lN1euPATaAfwY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AkzPKF+itUnQ+WqM3p6JyS40h6esgda17FKqM0+caxavFfcpTpGkJrNnjBHVwtb+d20Q1PAjfjk6cm7jKRCTRM1I68hiohkgONWjvsfacBnHZIAlMQ+MlIvGgY0GioIlHL6LU8Eg/gmQ3lh8ftNlfya4dye/ZGJ1/cy9L6XbdBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z97Mzfsb; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707741948; c=relaxed/simple;
+	bh=47Vc+He3k3RnRH0Ql7hR/kVezI3csD20gT8aPlqqG/w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hWilx0OCthbURvobHyNaXqWekAUfCn5f7UMxPSbl9h7VFvDEWnvhHvviMyHvqdpLBkZ0Nr0gM0E/cENbKKq74rV6+FMxucH1g6kI5y1eY8IoQtc5APZObjBa/Iyc7HLmAN3YCyriZW8X1gOleSSjp9ejPsADUDbkfWTZCl0FqJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IJO4yTxU; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z97Mzfsb"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d0a0e40672so27578481fa.0;
-        Mon, 12 Feb 2024 04:45:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707741930; x=1708346730; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Zrg9lawr/yZkm6/WrtjsywNEEEuh2zE0RbUtlneaNE=;
-        b=Z97MzfsbWYqxiVawUbq52ea6cVIjsTWAqg1sgEVkC8ihw0Zetqq7FCRSotFW2FjAdc
-         Pe5xsR/vYd1fLARdrz2jpL3Urx2rvBPL0l24TVU/5JEmAGh9BY6Ag2jymSLrOSoPLJCj
-         5r3tk7aSkZjdyTwHnKz9fN4CTWbiWMRmKUAHNKRKqRtifsRSxj/SF8JOO5qCWp3N0wVA
-         o1l+yPmP+VUYmUeT2rIXxYdAB2oie7XNkemtN8kbl3zclEqi+x/APYsDfZssnx6LM7aC
-         XWOHbktopLDftOrd5W2yMsXOePuC3PoVLhV1A4WW2dnPr2lr9FMIFpDWgH7zrBc+hBQN
-         0v9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707741930; x=1708346730;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/Zrg9lawr/yZkm6/WrtjsywNEEEuh2zE0RbUtlneaNE=;
-        b=w9/XrcI5M+XQBucJkMzmmzfxmifqN/CKCuJgGTx3j/W3Iuu2qLRCDbvzys74eyhd76
-         UQpDz9AyQ7zOX8Yh9r0JCAiFvzwd/Isrk/U0piqHLfA6pABzWcpQA9cB/89yhsOEbMGB
-         o484jhEck4WrbzTLCPUOnZoRaFRst5kfpKc0mBDx8LrzOVfdjWurd8vCjUAYvOsWjomy
-         4PfEizNkBqKn25CsRLzChq3rcJm34B40TO13Sk66qPrlCx6sFrixx7DXFnY6cmJTn4nI
-         eOMp9sHn5SbqYOs+9eCRndieOSNW6ZsQP9CcouM2wIkJzFPCJRjEvbTVho4neFKTzy4Y
-         3wcA==
-X-Gm-Message-State: AOJu0YxDEmGpFT49y+E+ACsMmhgKJZJXiApZ9SgE3wFfm0ZWlMZzzcD4
-	cUT12fFwJH39I1kQNk879GnCGknN22JAjNA5bHHfbTQHZwrzcoe+Ac0oSUP0itD5tSVYDta4VdO
-	f/N1FEV6l9B34O2HmwNVVjFn7L7M=
-X-Google-Smtp-Source: AGHT+IEY3KujpPrwM/jn+Ez7992r5LMWGVQ7to0lh415/BYwip6pQ0nVZ1GyESCLTdzpJiqzB4CemULetGxh5/joSps=
-X-Received: by 2002:a2e:86d7:0:b0:2d0:82f0:ba3b with SMTP id
- n23-20020a2e86d7000000b002d082f0ba3bmr2562140ljj.5.1707741930296; Mon, 12 Feb
- 2024 04:45:30 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IJO4yTxU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707741945;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CDSPlvIYjBlKyfzOSysIpxi5bGhwenO4Xb+dpw1JB1E=;
+	b=IJO4yTxU9HC6nXUps5gL36XZmVLsSWPrxmz02UIGsV/7CcQuzDpZbSx/C+YyqMmc6f3soX
+	8GhG8xi/vO7uxZ3WTwIcJtfXcmxUH7ut4BHk2hMW7oosMaDcF8MUzs5YTNoWWfpepdNqcW
+	UVv2ijBgr1fuq1ol68Y5fqVDnTjwnSY=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-417-ba70zfwLNsySkNpyQxSsgg-1; Mon,
+ 12 Feb 2024 07:45:42 -0500
+X-MC-Unique: ba70zfwLNsySkNpyQxSsgg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2CEB81C29EA0;
+	Mon, 12 Feb 2024 12:45:42 +0000 (UTC)
+Received: from bfoster (unknown [10.22.8.118])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9FCFBC2E1E6;
+	Mon, 12 Feb 2024 12:45:41 +0000 (UTC)
+Date: Mon, 12 Feb 2024 07:47:00 -0500
+From: Brian Foster <bfoster@redhat.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Dave Chinner <david@fromorbit.com>, brauner@kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jan Kara <jack@suse.cz>, Dave Chinner <dchinner@redhat.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Theodore Ts'o <tytso@mit.edu>
+Subject: Re: [PATCH v2 3/7] fs: FS_IOC_GETUUID
+Message-ID: <ZcoTROgZiKOfp3iM@bfoster>
+References: <20240206201858.952303-1-kent.overstreet@linux.dev>
+ <20240206201858.952303-4-kent.overstreet@linux.dev>
+ <ZcKsIbRRfeXfCObl@dread.disaster.area>
+ <cm4wbdmpuq6mlyfqrb3qqwyysa3qao6t5sc2eq3ykmgb4ptpab@qkyberqtvrtt>
+ <ZcN+8iOBR97t451x@bfoster>
+ <krc2udjtkvylugzuledk7hre7rizmiajrgkiwvwcmsxtgxobyz@miqndphw7uhi>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240209-realtek_reverse-v6-0-0662f8cbc7b5@gmail.com> <170773502690.28134.16915655104997076968.git-patchwork-notify@kernel.org>
-In-Reply-To: <170773502690.28134.16915655104997076968.git-patchwork-notify@kernel.org>
-From: Luiz Angelo Daros de Luca <luizluca@gmail.com>
-Date: Mon, 12 Feb 2024 09:45:19 -0300
-Message-ID: <CAJq09z44FnZknHAdmbxXf1F_H2QZW9SysqLLkErdzK70S1k1EQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v6 00/11] net: dsa: realtek: variants to drivers,
- interfaces to a common module
-To: patchwork-bot+netdevbpf@kernel.org
-Cc: linus.walleij@linaro.org, alsi@bang-olufsen.dk, andrew@lunn.ch, 
-	f.fainelli@gmail.com, olteanv@gmail.com, davem@davemloft.net, 
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	linux@armlinux.org.uk, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	florian.fainelli@broadcom.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <krc2udjtkvylugzuledk7hre7rizmiajrgkiwvwcmsxtgxobyz@miqndphw7uhi>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-> Hello:
->
-> This series was applied to netdev/net-next.git (main)
-> by David S. Miller <davem@davemloft.net>:
->
-> On Fri, 09 Feb 2024 02:03:36 -0300 you wrote:
-> > The current driver consists of two interface modules (SMI and MDIO) and
-> > two family/variant modules (RTL8365MB and RTL8366RB). The SMI and MDIO
-> > modules serve as the platform and MDIO drivers, respectively, calling
-> > functions from the variant modules. In this setup, one interface module
-> > can be loaded independently of the other, but both variants must be
-> > loaded (if not disabled at build time) for any type of interface. This
-> > approach doesn't scale well, especially with the addition of more switch
-> > variants (e.g., RTL8366B), leading to loaded but unused modules.
-> > Additionally, this also seems upside down, as the specific driver code
-> > normally depends on the more generic functions and not the other way
-> > around.
-> >
-> > [...]
->
-> Here is the summary with links:
->   - [net-next,v6,01/11] net: dsa: realtek: drop cleanup from realtek_ops
->     https://git.kernel.org/netdev/net-next/c/33f4336cbd32
->   - [net-next,v6,02/11] net: dsa: realtek: introduce REALTEK_DSA namespace
->     https://git.kernel.org/netdev/net-next/c/ded3813b44fe
->   - [net-next,v6,03/11] net: dsa: realtek: convert variants into real drivers
->     https://git.kernel.org/netdev/net-next/c/bce254b839ab
->   - [net-next,v6,04/11] net: dsa: realtek: keep variant reference in realtek_priv
->     https://git.kernel.org/netdev/net-next/c/4667a1db2f55
->   - [net-next,v6,05/11] net: dsa: realtek: common rtl83xx module
->     https://git.kernel.org/netdev/net-next/c/8be040ecd94c
->   - [net-next,v6,06/11] net: dsa: realtek: merge rtl83xx and
- interface modules into realtek_dsa
->     https://git.kernel.org/netdev/net-next/c/98b75c1c149c
->   - [net-next,v6,07/11] net: dsa: realtek: get internal MDIO node by name
->     https://git.kernel.org/netdev/net-next/c/8685c98d45c5
->   - [net-next,v6,08/11] net: dsa: realtek: clean user_mii_bus setup
->     https://git.kernel.org/netdev/net-next/c/68c66d8d8a19
->   - [net-next,v6,09/11] net: dsa: realtek: migrate user_mii_bus setup to realtek_dsa
->     https://git.kernel.org/netdev/net-next/c/b4bd77971f3c
->   - [net-next,v6,10/11] net: dsa: realtek: use the same mii bus driver for both interfaces
->     https://git.kernel.org/netdev/net-next/c/bba140a566ed
->   - [net-next,v6,11/11] net: dsa: realtek: embed dsa_switch into realtek_priv
->     https://git.kernel.org/netdev/net-next/c/9fc469b2943d
->
-> You are awesome, thank you!
+On Thu, Feb 08, 2024 at 04:57:02PM -0500, Kent Overstreet wrote:
+> On Wed, Feb 07, 2024 at 08:05:29AM -0500, Brian Foster wrote:
+> > On Tue, Feb 06, 2024 at 05:37:22PM -0500, Kent Overstreet wrote:
+> > > On Wed, Feb 07, 2024 at 09:01:05AM +1100, Dave Chinner wrote:
+> > > > On Tue, Feb 06, 2024 at 03:18:51PM -0500, Kent Overstreet wrote:
+> > > > > +static int ioctl_getfsuuid(struct file *file, void __user *argp)
+> > > > > +{
+> > > > > +	struct super_block *sb = file_inode(file)->i_sb;
+> > > > > +
+> > > > > +	if (!sb->s_uuid_len)
+> > > > > +		return -ENOIOCTLCMD;
+> > > > > +
+> > > > > +	struct fsuuid2 u = { .len = sb->s_uuid_len, };
+> > > > > +	memcpy(&u.uuid[0], &sb->s_uuid, sb->s_uuid_len);
+> > > > > +
+> > > > > +	return copy_to_user(argp, &u, sizeof(u)) ? -EFAULT : 0;
+> > > > > +}
+> > > > 
+> > > > Can we please keep the declarations separate from the code? I always
+> > > > find this sort of implicit scoping of variables both difficult to
+> > > > read (especially in larger functions) and a landmine waiting to be
+> > > > tripped over. This could easily just be:
+> > > > 
+> > > > static int ioctl_getfsuuid(struct file *file, void __user *argp)
+> > > > {
+> > > > 	struct super_block *sb = file_inode(file)->i_sb;
+> > > > 	struct fsuuid2 u = { .len = sb->s_uuid_len, };
+> > > > 
+> > > > 	....
+> > > > 
+> > > > and then it's consistent with all the rest of the code...
+> > > 
+> > > The way I'm doing it here is actually what I'm transitioning my own code
+> > > to - the big reason being that always declaring variables at the tops of
+> > > functions leads to separating declaration and initialization, and worse
+> > > it leads people to declaring a variable once and reusing it for multiple
+> > > things (I've seen that be a source of real bugs too many times).
+> > > 
+> > 
+> > I still think this is of questionable value. I know I've mentioned
+> > similar concerns to Dave's here on the bcachefs list, but still have not
+> > really seen any discussion other than a bit of back and forth on the
+> > handful of generally accepted (in the kernel) uses of this sort of thing
+> > for limiting scope in loops/branches and such.
+> > 
+> > I was skimming through some more recent bcachefs patches the other day
+> > (the journal write pipelining stuff) where I came across one or two
+> > medium length functions where this had proliferated, and I found it kind
+> > of annoying TBH. It starts to almost look like there are casts all over
+> > the place and it's a bit more tedious to filter out logic from the
+> > additional/gratuitous syntax, IMO.
+> > 
+> > That's still just my .02, but there was also previous mention of
+> > starting/having discussion on this sort of style change. Is that still
+> > the plan? If so, before or after proliferating it throughout the
+> > bcachefs code? ;) I am curious if there are other folks in kernel land
+> > who think this makes enough sense that they'd plan to adopt it. Hm?
+> 
+> That was the discussion :)
+> 
+> bcachefs is my codebase, so yes, I intend to do it there. I really think
+> this is an instance where you and Dave are used to the way C has
+> historically forced us to do things; our brains get wired to read code a
+> certain way and changes are jarring.
+> 
 
-Thank you all involved, especially Vladmir who invested quite some time on this.
+Heh, fair enough. That's certainly your prerogative. I'm certainly not
+trying to tell you what to do or not with bcachefs. That's at least
+direct enough that it's clear it's not worth debating too much. ;)
 
-Regards,
+> But take a step back; if we were used to writing code the way I'm doing
+> it, and you were arguing for putting declarations at the tops of
+> functions, what would the arguments be?
+> 
 
-Luiz
+I think my thought process would be similar. I.e., is the proposed
+benefit of such a change worth the tradeoffs?
+
+> I would say you're just breaking up the flow of ideas for no reason; a
+> chain of related statements now includes a declaration that isn't with
+> the actual logic.
+> 
+> And bugs due to variable reuse, missed initialization - there's real
+> reasons not to do it that way.
+> 
+
+And were I in that position, I don't think I would reduce a decision
+that affects readability/reviewability of my subsystem to a nontrivial
+degree (for other people, at least) to that single aspect. This would be
+the answer to the question: "is this worth considering?"
+
+Brian
+
