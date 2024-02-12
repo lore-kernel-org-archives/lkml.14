@@ -1,200 +1,146 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282C33EA69;
-	Mon, 12 Feb 2024 18:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1726E26AC9;
+	Mon, 12 Feb 2024 18:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707763040; cv=none; b=KmgE2TRccHnr7JWr1tYNLyaZYCqhKQHDeiC746j5AmTRyY1DK/xG7nTvSkI+4pUbQ73ebHWQgRrN603kStZ3pMajITM/CSQZZ7Q2w52gFgoVxksllaeJ3LL59oRW4xAAuCIZYDZWyf26uLaldnnM78m4MJbMLWuAaIqMAh4z9Yc=
+	t=1707763085; cv=none; b=Ft0bNwXk60XaauYlUWYe0qrAEUNyaMYvIXaPBdgz8nvHGX3CBGyir+ClbvddZ3Y7nhKkztr9p9iYHAGBCIaZq/SnDzHHhPwO44t+t8F4AVcL5I65+R/6hmNAeXzbe9wGMN/DdhnjKYzeKIGeO7mmKB73aWX96mjv8bO77Cf8NjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707763040; c=relaxed/simple;
-	bh=Z9CNOqRLKvoHOjRw43D/91gLXSu7vFhS0B+8n0+qvXI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eUoinq+TcDw3kBT7gjvSywXpswRITVZLcq6TrUGw2L+WoNc91y5rp/d5TdlUByFxlU1GPkx+z4UUnhMzsk9FCQh5MHjpO14EKEREIhc0PgSZJB3TAcAepL2lLT0Nyh8+qI8imc+bpCwnN3XXp0X7Q/zhjCuS10F/a5bAtn8AYX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eiSDRKBg; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1707763085; c=relaxed/simple;
+	bh=0lGQUm+90KYZlz47xHNxcrHu+599ngPLg8L6TVE81vo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=nW1KVjEc3yXPG7a7mjaiUnyplMxLtsaHAG5/6NgjCZ1tIRc07nVEIvaKxWWgNMf1pl5A84Jl2QZGr94Th4BP7RLfhhetPPU4f7yY9dmPcmqgkcCKZeMfutNtClmYIvK0MWmTEmrnNDs8tb51bUylNogW5DdKcyxiKgr986F8Ggs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=WQ43ewbJ; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eiSDRKBg"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6077444cb51so4665267b3.1;
-        Mon, 12 Feb 2024 10:37:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707763038; x=1708367838; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Urk/xvX+UKbKGSqpVvdQe9PJXR++Pgpk6nNhD2JHitg=;
-        b=eiSDRKBg+uM1R5sCIDscGdlG6Flja1mpbIF9fVdzIw4tIWA1bqGxLKJkDUuqUgcMTx
-         8NH/JRU+pCONwiiEwfwb8gBuOEIEipdpuGPFcOgg4KjH4mBQ/kGCTiaDNiskIW+UXwBS
-         VQ7CpXpsoaHrx3w7HYotQlDe6tdX7QmKOI+mZ9KsJp0hwBMOkKyheGMx6GWgxdCRQk+J
-         33eMIavefXQhq2Gob7RRZZzGIPdfWVBDWzmfOZdjSKMp4D+RbJ7O1lN5oYijwY9VsR9B
-         F7V473m45SQXQEsy1QVirhT0g/9mumeOAHFTPxIj2j+zH3781b60fVhg1gQBGl8ycRJC
-         hj6w==
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="WQ43ewbJ"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-363d85fda93so11659515ab.1;
+        Mon, 12 Feb 2024 10:38:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707763038; x=1708367838;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1707763083; x=1708367883;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Urk/xvX+UKbKGSqpVvdQe9PJXR++Pgpk6nNhD2JHitg=;
-        b=QICTguyZHYUP1DKXGgYWM+wTpY3AX2bEyaNlN5eB8vO+w4EgDL5hhZV6ooM3xjjBhs
-         klPutTZxAffWi/L+nJ/9r90S1EkvVvFGcX0TxXJ/rFoiVWcyS+MPMzcInSxa1LBN8NVV
-         jO3c6msQFlwKHROxuOg+YllBM18vZwVB6UTF1nvzoXYPd13IoZha7on3M0JbmfGOpy2v
-         QIc0/GmcW3605D4ZQZFruQfk1dHxS4aJyvko8uptiGgwX1MKg4/r+jnSVl8Rcv3OrMBk
-         1150lmZcoUZ2ImCwa8ZUcv24wT3pn1TCUglE9qLvIPEVAfZN8zeVB8KGPd5vOIFobrge
-         Iq7w==
-X-Gm-Message-State: AOJu0YwZHdzEMoO30XpSdrDxj/9EylApuKK96oG8JbmWChnaN/Kon6R4
-	wsvuj5t+yuxwd43/iYb0PdkLQjCso0yUrZBHM2tOtKwhcRAz8jiy
-X-Google-Smtp-Source: AGHT+IEpd+QbpXDB2ycV1t5rD40xn6kwWMLP7zDSBdWBR9zSWASGH0Ugsa2ib4yux5Jw29DdKmxVfQ==
-X-Received: by 2002:a0d:e845:0:b0:604:7bab:dac1 with SMTP id r66-20020a0de845000000b006047babdac1mr280436ywe.15.1707763037858;
-        Mon, 12 Feb 2024 10:37:17 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX3NpMjINqr6ODt3JXMsBQ2F7ZuSuRpJICxX/qJB2m9t0QalgdEtK0ncdpG0yVeSPZ/yP3zUrMapSAKaZj9rpBe2GZNRkETsKAD5rS+mENVDa89pdt9a4n7q5aiKdA8qolC3e31vAcyVX+cuf8qFx4B15M9rwRVbFa5hxEXSqiCUoIrFiCHBnlTsobXFzfu5JZqOvpN8C/IOL4rfQQvyXw2sC9ehwfFsMfM16UF7E4q50Le0Cff2D1q0R9DCqAt5O9uG1NvIaijR34dj+/roSDDzr3rRkVM6ODiyZ4WRI2+VHGFBJ5y/6mQUfeO2lvlCZ3yAWWjPGXPFXngsUduXc6DFtsriqURsX64W2MlhIGwJuy1fN8J45LYDAOj+QWczUN4sskDZF6ZglcGuUXogIWlE8WHANXvkL2c3kfA9+do50Z2EksJwGCMvEy3Q1EsivNvnIIVTjLsHGND3764tAOf/861BfL4wn/iJrO6QQ==
-Received: from localhost ([2601:344:8301:57f0:85b5:dd54:cd99:b])
-        by smtp.gmail.com with ESMTPSA id n133-20020a81728b000000b006041221d0ccsm1275634ywc.68.2024.02.12.10.37.16
+        bh=bNiM+AN62rI0NY0c9YiwkLlKxLPUGxqDQX5HJ1+BhGg=;
+        b=IJ/ia/ItIphxaBmhQRiqRaiOl4QwzFyCAMnWIJC0yqr//hb7hzUcxoHOclcACIM5X+
+         O7JXOJl50m9hLXxaXzddqzAthbml68lCwhk1YL3ceW7QqostYguPPfh46CmAlTJ92mga
+         VP3aPxCj+/3gPKQz7gne1eXhmDmKGKChXcre3WK9Ajzo13nj4gvncZiBgoZuiNdZSjdN
+         aHoyrmaX5jolbt/Rp+p1t+MhGk7x7xToeoDbxOqgI6BqKaRi3U2NIqOuRXHrRZeRwRZG
+         Y3YEqOuSNd6ZB0609kaYHBbyUzEcJs9pS/TfQOcTFgVDyVaEgDMCBN4EOeZzQ4jCfZ3L
+         M6rQ==
+X-Gm-Message-State: AOJu0YwVRqvX3Ho9pwOlWshfE4tOlFPQipwIj3avFs8JO0RrwCYFLQWg
+	PZqwN0hUUsQS4WcQOwNVmGafGJjvRQy63Ig/FRuzW23bT9bRfwt9
+X-Google-Smtp-Source: AGHT+IFFmvWkuM4WujnnyAcBACdfqGZnKD0NTa4x68Ww7GK0iUhFM2efjjWt+7Q641UuAEnz+OFs8g==
+X-Received: by 2002:a05:6e02:2193:b0:364:12e5:c7d6 with SMTP id j19-20020a056e02219300b0036412e5c7d6mr2175633ila.12.1707763083137;
+        Mon, 12 Feb 2024 10:38:03 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW7enC5WzJ72fjDcMepZ8KDO1TjTjz7aFO4Nhd8iPJZjMRjF/MJFBfpP1u1DtqgMPfLZNQJnAmIiRz882nXmS4l4jEEVLvHeXMYAIHWUzCXeCAgn2GQMAo6QuMf4+vERJ/TjnYpL+FlmEUS1GThjwFX9UI5brTGCEFF7qUTtCl0lm4pPoo=
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id l193-20020a633eca000000b005cf450e91d2sm767004pga.52.2024.02.12.10.38.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 10:37:17 -0800 (PST)
-Date: Mon, 12 Feb 2024 10:37:15 -0800
-From: Yury Norov <yury.norov@gmail.com>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, Andrew Lunn <andrew@lunn.ch>,
-	Mark Brown <broonie@kernel.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 RESEND 4/6] bitmap: Introduce bitmap_off()
-Message-ID: <ZcplW2mXObOZUtR7@yury-ThinkPad>
-References: <20240212075646.19114-1-herve.codina@bootlin.com>
- <20240212075646.19114-5-herve.codina@bootlin.com>
+        Mon, 12 Feb 2024 10:38:02 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2024; t=1707763080;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=bNiM+AN62rI0NY0c9YiwkLlKxLPUGxqDQX5HJ1+BhGg=;
+	b=WQ43ewbJt4U319YlseqJJU1tKH6gs9A4WIQvLGmCkzw6Elubeg/r9OtkpsVjFolN7BR512
+	ku/rkFKNRm9LabXRu/pwN3J63i5Wh1UiyyEgxbkdOp3x2I8gZlUa0ohux0hsaUpngLL/6E
+	uWjlze1K9tLfU1HLHpBKurRrC5o55IAOFkVKOxQVVKXFJJQWW0c97n5iyqtWATks8yLU7v
+	dMhcru7ejs00hWLS+8plF62ZjkC9sNW1mErOERHyMyQmsXDJrVvk+Sre4NHQnWKXMu2t3u
+	hZ9tj5FG31yQ8IzXjDyJfHiZOp7LCeW54ZxH8/T+PX5xfA8DyFOVPg2GIdSNlA==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Date: Mon, 12 Feb 2024 15:38:37 -0300
+Subject: [PATCH v2] scsi: Make scsi_bus_type const
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240212075646.19114-5-herve.codina@bootlin.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240212-bus_cleanup-scsi2-v2-1-65004493ff09@marliere.net>
+X-B4-Tracking: v=1; b=H4sIAKxlymUC/32NQQrCMBBFr1JmbSQTS1FX3kOKJOnEDtS0ZNqil
+ Nzd2AO4fA/++xsIJSaBa7VBopWFx1jAHCrwvY1PUtwVBqNNrQ2icos8/EA2LpMSL2wUNv7kg7M
+ XtAHKbkoU+L03723hnmUe02e/WPFn/9VWVKi6TtdEZ0ON07eXTQNTomOkGdqc8xfhtMxTtQAAA
+ A==
+To: "James E.J. Bottomley" <jejb@linux.ibm.com>, 
+ "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2009; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=0lGQUm+90KYZlz47xHNxcrHu+599ngPLg8L6TVE81vo=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlymWvEaMUcbqZliWm13EdoggzqpVzGtyKn0NtO
+ z/tCOLLZjyJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZcplrwAKCRDJC4p8Y4ZY
+ pvHhD/93Yw+N/lWfQNo8IvQP3P6fmgKghr3f+sctlJx8HtP8R7YcMW/5CJ66O8MyXonvjhKNPnd
+ B39xJjVpR1nB0gLR1ekJTQIxBdudLKS0AcVHw/mmuwgmLmpYnBbdq2L6A9Bc+/CzsaeUVtKMQt5
+ nSWWtHCzORievpVAqM7xDbhJsXGtYhJAQJcvT6eunx2Z6q7wnIR4r627w4QKus0LgknzxOef9d8
+ ZyEolVTTzcZERsg3/jKq1inazxN6V5qx8p+Eh85VFEyV3ovyo5oflOgBAid08150MTBQV1igth0
+ x5rHG5cS06zy8rDkJU5QVbEcgkTHuFNadCdT49TboXltpsZp8fGQfc7yteWd+4oHAjXgWZeqDfu
+ 8pQ9nc2ewNhCfbzrFAOLAacfrLexjSUpU7+lsJAOwEl1oQW4u/Rvx3R+hcGzih9UdtUNZsCPsPp
+ +AT3/nhr1htBwH8vrbjfgcHVbLu0NTOnEOUSv8lj1tLhe39MEo6uNOa78aTib/AHH15Ectvl0GW
+ RoI/D/CKSmeMrRLRqPe8eTOmYvhvUphfrQQkB+Y+DGkRlEFUliGUYBDH7KsGDIQvwKdMC+9aWNX
+ zvtmdKIMZJEnrl064iVLuG+dRUWdcMbbbwrPEsiCKBbD8WWUCvo3rQ4j7vK+DwpwK5DZdGk19eS
+ ygKf3BiBeFUMuUA==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
-On Mon, Feb 12, 2024 at 08:56:32AM +0100, Herve Codina wrote:
-> The bitmap_onto() function translates one bitmap relative to another but
-> no function are present to perform the reverse translation.
-> 
-> Introduce bitmap_off() to fill this hole.
-> 
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> ---
->  include/linux/bitmap.h |  3 +++
->  lib/bitmap.c           | 42 ++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 45 insertions(+)
-> 
-> diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
-> index 99451431e4d6..5ecfcbbc91f4 100644
-> --- a/include/linux/bitmap.h
-> +++ b/include/linux/bitmap.h
-> @@ -65,6 +65,7 @@ struct device;
->   *  bitmap_remap(dst, src, old, new, nbits)     *dst = map(old, new)(src)
->   *  bitmap_bitremap(oldbit, old, new, nbits)    newbit = map(old, new)(oldbit)
->   *  bitmap_onto(dst, orig, relmap, nbits)       *dst = orig relative to relmap
-> + *  bitmap_off(dst, orig, relmap, nbits)        *dst = bitmap_onto() reverse operation
->   *  bitmap_fold(dst, orig, sz, nbits)           dst bits = orig bits mod sz
->   *  bitmap_parse(buf, buflen, dst, nbits)       Parse bitmap dst from kernel buf
->   *  bitmap_parse_user(ubuf, ulen, dst, nbits)   Parse bitmap dst from user buf
-> @@ -208,6 +209,8 @@ int bitmap_bitremap(int oldbit,
->  		const unsigned long *old, const unsigned long *new, int bits);
->  void bitmap_onto(unsigned long *dst, const unsigned long *orig,
->  		const unsigned long *relmap, unsigned int bits);
-> +void bitmap_off(unsigned long *dst, const unsigned long *orig,
-> +		const unsigned long *relmap, unsigned int bits);
->  void bitmap_fold(unsigned long *dst, const unsigned long *orig,
->  		unsigned int sz, unsigned int nbits);
->  
-> diff --git a/lib/bitmap.c b/lib/bitmap.c
-> index 2feccb5047dc..71343967335e 100644
-> --- a/lib/bitmap.c
-> +++ b/lib/bitmap.c
-> @@ -682,6 +682,48 @@ void bitmap_onto(unsigned long *dst, const unsigned long *orig,
->  }
->  EXPORT_SYMBOL(bitmap_onto);
->  
-> +/**
-> + * bitmap_off - revert operation done by bitmap_onto()
+Since commit d492cc2573a0 ("driver core: device.h: make struct
+bus_type a const *"), the driver core can properly handle constant
+struct bus_type, move the scsi_bus_type variable to be a constant
+structure as well, placing it into read-only memory which can not be
+modified at runtime.
 
-This is definitely a bad name. I've no a better idea, but even
-bitmap_onto_revert() would be better.
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+---
+Changes in v2:
+- Improved changelog to remove the word "Now".
+- Removed unrelated whitespace cleanup.
+- Link to v1: https://lore.kernel.org/r/20240211-bus_cleanup-scsi2-v1-1-dd04ee82e6b0@marliere.net
+---
+ drivers/scsi/scsi_priv.h  | 2 +-
+ drivers/scsi/scsi_sysfs.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-> + *     @dst: resulting translated bitmap
-> + *     @orig: original untranslated bitmap
-> + *     @relmap: bitmap relative to which translated
-> + *     @bits: number of bits in each of these bitmaps
-> + *
-> + * Suppose onto computed using bitmap_onto(onto, src, relmap, n)
-> + * The operation bitmap_off(result, onto, relmap, n) leads to a
-> + * result equal or equivalent to src.
+diff --git a/drivers/scsi/scsi_priv.h b/drivers/scsi/scsi_priv.h
+index 1fbfe1b52c9f..9fc397a9ce7a 100644
+--- a/drivers/scsi/scsi_priv.h
++++ b/drivers/scsi/scsi_priv.h
+@@ -156,7 +156,7 @@ extern void scsi_sysfs_device_initialize(struct scsi_device *);
+ extern struct scsi_transport_template blank_transport_template;
+ extern void __scsi_remove_device(struct scsi_device *);
+ 
+-extern struct bus_type scsi_bus_type;
++extern const struct bus_type scsi_bus_type;
+ extern const struct attribute_group *scsi_shost_groups[];
+ 
+ /* scsi_netlink.c */
+diff --git a/drivers/scsi/scsi_sysfs.c b/drivers/scsi/scsi_sysfs.c
+index 24f6eefb6803..14d0be0da0c6 100644
+--- a/drivers/scsi/scsi_sysfs.c
++++ b/drivers/scsi/scsi_sysfs.c
+@@ -549,7 +549,7 @@ static int scsi_bus_uevent(const struct device *dev, struct kobj_uevent_env *env
+ 	return 0;
+ }
+ 
+-struct bus_type scsi_bus_type = {
++const struct bus_type scsi_bus_type = {
+         .name		= "scsi",
+         .match		= scsi_bus_match,
+ 	.uevent		= scsi_bus_uevent,
 
-Agree with Rasmus. This should be well tested.
+---
+base-commit: 59828c7b5975f442ad5bb74a031fe388341f323e
+change-id: 20240211-bus_cleanup-scsi2-16c3cfba91af
 
-> + * The result can be 'equivalent' because bitmap_onto() and
-> + * bitmap_off() are not bijective.
-> + * The result and src values are equivalent in that sense that a
-> + * call to bitmap_onto(onto, src, relmap, n) and a call to
-> + * bitmap_onto(onto, result, relmap, n) will lead to the same onto
-> + * value.
+Best regards,
+-- 
+Ricardo B. Marliere <ricardo@marliere.net>
 
-Did you mean "a call to bitmap_onto(onto, src, relmap, n) and a
-call to bitmap_off(onto, result, relmap, n)"? 
-
-I think the whole paragraph adds more confusion than explanations.
-If a new function is supposed to revert the result of some other
-function, I'd better focus on testing that it actually reverts as
-advertised, and keep description as brief as possible.
-
-> + * If either of @orig or @relmap is empty (no set bits), then @dst
-> + * will be returned empty.
-
-Is this an exception from the 'revert' policy? Doesn't look like that.
-So, what for mentioning this specific case?
-
-> + * All bits in @dst not set by the above rule are cleared.
-
-The above rule is about empty @orig and @relmap, not about setting
-bits. What did you mean here?
-
-> + */
-> +void bitmap_off(unsigned long *dst, const unsigned long *orig,
-> +		const unsigned long *relmap, unsigned int bits)
-> +{
-> +	unsigned int n, m;      /* same meaning as in above comment */
-
-In the above comment, n means the size of bitmaps, and m is not
-mentioned at all.
-
-> +	if (dst == orig)        /* following doesn't handle inplace mappings */
-> +		return;
-> +	bitmap_zero(dst, bits);
-
-Can you add an empty line after 'return'.
-
-> +	m = 0;
-> +	for_each_set_bit(n, relmap, bits) {
-> +		/* m == bitmap_pos_to_ord(relmap, n, bits) */
-
-Don't think we need this comment here. If you want to underline that
-m tracks bit order, can you just give it a more explanatory name. For
-example, 'bit_order'.
-
-> +		if (test_bit(n, orig))
-> +			set_bit(m, dst);
-> +		m++;
-> +	}
-> +}
-> +EXPORT_SYMBOL(bitmap_off);
-> +
->  #ifdef CONFIG_NUMA
->  /**
->   * bitmap_fold - fold larger bitmap into smaller, modulo specified size
-> -- 
-> 2.43.0
