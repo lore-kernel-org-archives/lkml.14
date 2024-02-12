@@ -1,73 +1,104 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC643C46C;
-	Mon, 12 Feb 2024 15:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8EE3C46E
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 15:01:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707750080; cv=none; b=gH9ODy6ijT68oVdUutbdmB3wYieBsplI4JgY9YMXpX+LIohk/Ags9zzdDRdL8LJ4CksNO0e01c3iuuxGw4KzjGtgPm2Kw5ZqSh4ACAxHaBFEHTklygEQGovU5yBLObrh3sM/fB6IUJSO7mZaUDXcAx6CJ0ipWNUmBDmliMrALzs=
+	t=1707750085; cv=none; b=EYDoVsh75nPYZlgTFSq2E8Kf1AHPnfPh2VGPeclGVh2LD9054GPT25LVVF4+4qfz7YamFnFevknrfKMweCdgb79yDdiqVTOoHFHkVdr6UuEL3ZFcVHoUqfPCjiGLn5SDGGzCJISEm6fFbsdSzH8EAIW2gAvUuy97vgiaZaa2Oww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707750080; c=relaxed/simple;
-	bh=84ZlsfUCbgrLSlPwH1NEYTwV7mGy7VAwpen0lKDl+/Y=;
+	s=arc-20240116; t=1707750085; c=relaxed/simple;
+	bh=5ET/+ywHrfQ2igMiio3kOR+E5f7alalaj3ZSVBSVj3Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uzZAMLdDaAemqQKmwAQwOuXaWjZVhxS9WzFh6WqQ6JHhBzSj2ff7r7QMt4TCtn3dXdMxdn02z3jkVo3NQRBPD63w2hL0xLt7n0eNp1b0gv1dNI48RH6jppK5bgt/5Pj3P/6H2dQa1qKZMESx16ZRFNC4vIXWpEXcQoCXEQuzzmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=AfdM6/Fl; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=qwXKGdjTsmPFNMiMiLDQvZiSl7NMxRKt3P5IobZSML0Yi5rXEq/OfSWJ9SwA3R7+rE+eJsG5j+QrUcgmysXjE67V+p6uloDcwDcTZyA36ahztQpyqEZ4EK8TkQfbZi4BCAfEopRHoID9N3VAr8YIoYFXB0yYDHRl4yQkcyzYGVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=cT3sgJxJ; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="AfdM6/Fl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1707750077;
-	bh=84ZlsfUCbgrLSlPwH1NEYTwV7mGy7VAwpen0lKDl+/Y=;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="cT3sgJxJ"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8837440E0256;
+	Mon, 12 Feb 2024 15:01:19 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 2MssPnb7UQOE; Mon, 12 Feb 2024 15:01:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1707750076; bh=niftb5ulUuRKgvqltBydGR3ZDoIKCm7EqemWD0my8+Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AfdM6/FlyyUcs9EppKi7/sYeRLSK2v6ydSeMsNNXTyacNEwT04zoV5qhEm0bH2TD9
-	 quA1VOU4qZq6ZQs/mXwvhzs3y+Vv6k5N3RfjI50+7tm4kU8tt/5KzVQdCyjs9eTHmo
-	 dAnHsLQlcAo4TGkrjEfp9Mh19HXRkVBa5c/JgnKk4t5twyGyRPbk5aeaJOc/oSOJCJ
-	 DJyGuVunI75m55twh7AJHPu8W9p0KyHbK0uhbZP9m0I256ezKdFQebMuEtJi1aleZ9
-	 EpEo9YSsHinZQiLFQucVWiQBLf3/68hDJpIEPeWIKVTEQe2F/VNKcDuuRCmak7bKF7
-	 SugK6NUu2c5jg==
-Received: from notapiano (zone.collabora.co.uk [167.235.23.81])
+	b=cT3sgJxJEUQL3sUMBYE2zL6pDBagFdBpHHyPhrXcB2azluuIoE2FOP7ISTZi4UHqo
+	 9GsBD5Fk0JKoq+htXXpfjOvYU+SZtk+/0APaRzC5KnFBL/PzSRw3bMepPHm56HwBXR
+	 0T82qzNiteh7lsxLqUhBoumBTdXS4CjfPUlab872RiKTaZoA7EEk6YtHWvG3hR1+R4
+	 yfYFwH0suSs4WKlB9mX3ZlosbXNT6iGk4ztgeOZ74fF992M6C/WSl0W5Mgl+vbIjN+
+	 ApFVHmxnbVjmCyInCBFoSGng4Wf3lLdY0UP58SmPgVR78X9j8fTAwUUt39qoHO2hoG
+	 4lYXoHxg9MEYZkk+VB2GHegPCnissXNJJVYKV4qmsqLRqkACOijixKrYOnfgMXWdCg
+	 oZe+xPtP3+z8rqNsDDLpvCJkH0klIDdo0Wn48BV8Sxq8CHcZAHdwn27l9t2WSXnxV5
+	 qGRY6ZiPES0aulRO0tl5vZ0QvW296+pjJsn67A2eLA649y2uUIu9+CsmPSKar03CzU
+	 w//ZmAJ5LAfAoDGmRdJSiQs07LVts1aYYiwfEaacKZ03jjOCmlokwtp4af8j+I6mja
+	 Hth/AHjuNCl4x4iMbQW64mos+24Bu69Q3iJtqp+qBynw3zlSuIb+kNQHGh8vswGlI9
+	 sQM7Z6Xxsa8//hXcb/VGZBOY=
+Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 652623780A0B;
-	Mon, 12 Feb 2024 15:01:15 +0000 (UTC)
-Date: Mon, 12 Feb 2024 10:01:13 -0500
-From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
-To: Laura Nao <laura.nao@collabora.com>
-Cc: Shuah Khan <shuah@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Miguel Ojeda <ojeda@kernel.org>, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	kernel@collabora.com
-Subject: Re: [PATCH] selftests: Move KTAP bash helpers to selftests common
- folder
-Message-ID: <5b14aa28-a239-4204-a8ce-8d37f19b724b@notapiano>
-References: <20240102141528.169947-1-laura.nao@collabora.com>
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 56F4840E01A9;
+	Mon, 12 Feb 2024 15:00:58 +0000 (UTC)
+Date: Mon, 12 Feb 2024 16:00:53 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Arjan van de Ven <arjan@linux.intel.com>,
+	Huang Rui <ray.huang@amd.com>, Juergen Gross <jgross@suse.com>,
+	Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+	Sohil Mehta <sohil.mehta@intel.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Zhang Rui <rui.zhang@intel.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Feng Tang <feng.tang@intel.com>,
+	Andy Shevchenko <andy@infradead.org>,
+	Michael Kelley <mhklinux@outlook.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [patch v5 06/19] x86/cpu: Provide a sane leaf 0xb/0x1f parser
+Message-ID: <20240212150053.GEZcoypaBQPB1IcZGY@fat_crate.local>
+References: <20240117115752.863482697@linutronix.de>
+ <20240117115908.674834306@linutronix.de>
+ <20240130193102.GEZblOdor_bzoVhT0f@fat_crate.local>
+ <87il2tlqba.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240102141528.169947-1-laura.nao@collabora.com>
+In-Reply-To: <87il2tlqba.ffs@tglx>
 
-On Tue, Jan 02, 2024 at 03:15:28PM +0100, Laura Nao wrote:
-> Move bash helpers for outputting in KTAP format to the common selftests
-> folder. This allows kselftests other than the dt one to source the file
-> and make use of the helper functions.
-> Define pass, fail and skip codes in the same file too.
-> 
-> Signed-off-by: Laura Nao <laura.nao@collabora.com>
-> ---
+On Mon, Feb 12, 2024 at 03:17:45PM +0100, Thomas Gleixner wrote:
+> Especially x2apic_shift is horrible and the comments of EBX are visually
+> impaired while with the C++ comments x2apic_shift looks natural and the
+> EBX comments are just open to the right and therefore simpler.
 
-Hi Shuah, any thoughts on this patch?
+I'd say, put comments *above* the member versus on the side. We don't
+like side comments, if you remember. :-)
 
-It's gotten Rob's ack, so I take this will be merged through your tree.
+And, for example, the commenting in arch/x86/include/asm/fpu/types.h is
+not half as bad and works real nice for struct definitions, I'd say.
 
-Thanks,
-Nícolas
+But if you want to make that into a rule to have C++, side comments for
+struct members I guess I'll get accustomed to it eventually.
+
+> If it's caught in early testing, this should be fixed, no?
+
+Hope dies last. :)
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
