@@ -1,124 +1,98 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B533F9EF
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 18:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8FB3AC14;
+	Mon, 12 Feb 2024 18:20:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707761866; cv=none; b=Raf+zPWm3QwvfKR26iOO0yMztqV2akpeJHpZj0eBxqyjKdKSSnjJhc13+m67aDv0J6eoCI+7Rg+PQnyjVJn35yACsT5/C9OK/SzCmRWvovTZg7R+869PzfTT4OzRz1+MwyF9OWRPvnbUqZypv77b4oHamjPZMdzBrI/ViIizaZs=
+	t=1707762015; cv=none; b=o45UhjQF1GqpkoCCempLI84b0QB70AG70yJ9t6epM+ny/JE82mWVwwTMvSLKTO6/oF6owVEEYaqWK9AOl5FZJymBCJy4kNwdIWPaf4IAjWulMaYRFt8R/Y2Vi0msvvh4N5VecMnqJdTTZphc364zE/d8maOfPjnrUMsrEiy0nVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707761866; c=relaxed/simple;
-	bh=OuVQyReUhmWA7cjuqV/eaPWLWq5ZP0unDqloNtX8MBs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DPg4oktAT1VdhSPi1wG0q13Wm/UUx5fYA0c5c0bMdl9gSGU0pKEQaiPok0qMTe6fsB+/uw2FfQKLYcSf7TT2p9P14wlJhL5y4UFuK5NSlsk+xgvLhV+8m2aXsUAb71WdA+tD9ByAT9EgcITDQPe+SHFzfFoNttQr/ZAQj391ocY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zt0KQjlA; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707762015; c=relaxed/simple;
+	bh=ZCP+w/TITlYZsUPwBTl2RYdQNsKViaFu9DOVpb01ld4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BOCpH7B3oeGvjKA7qR0dfbpV0MTfQ/L+X1nvyxckOejKcJmf8NeYUKTSrilMEfgKDEuuzUEfoAamSEDNVpaq99vfU2TUlkOgRIxbgim160E2dcqevi7BGpGvppaFo9LHzfStok/SOlzTE0SDn4CrMYCv5UYn4GVy6HkQYtU76Ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=DcuaivSv; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zt0KQjlA"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-561e9237945so989a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 10:17:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707761863; x=1708366663; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FyLZXvCY9wm2y5DdIdleupGuCZI2JHWkk2fffy9JDlI=;
-        b=zt0KQjlAewNUVCr6aGx+GVSfb+7z+Ok5oO85rRkWvxvbgJhSyxjiCofCVSmVNqT0o3
-         etHlV5U76cbo1TawEu3uIKJpaN13099RksexYtu4Po4/5D+2RMNhMwZEM4C6tAnGoc59
-         8e5GBpExgB4a7OcyQaS+3iW5IEXRQoVSj7batcgN3EVYs8r9wBQUsrorViNnLMfL3PNL
-         nwmPgljYKtTu19fEtJ4BcqNtu3dbkqyZeN7jDoiVkfBVuqwSZcrlcevEs/PHl4hbwEQF
-         Kg57DlvietJVPVsDon8w9CuZuY7cH1GNDVwF1m5cxllgf2a7VX9/rvQqwtkU63DpX+nU
-         wkvw==
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="DcuaivSv"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d51ba18e1bso34481525ad.0;
+        Mon, 12 Feb 2024 10:20:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707761863; x=1708366663;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FyLZXvCY9wm2y5DdIdleupGuCZI2JHWkk2fffy9JDlI=;
-        b=qjYKRpSZlSE/FLFwQUv1PgekXZ8yMzB9hXSEK+rSu5N9bBoi++Gek05fMIDBa4xj8u
-         tjh5jLrxlp7RMC54w98YpQg9bvXTcKJF0Oay48lgWEpkZfS04UOKdo7mONsusu7qgp7F
-         ezm+pLIbApvDmqE4zgugBzLo1NxjyGAUE46KIyZQBJ981tiSl6pahOV92DgZGXQil4C2
-         hfv04hQJr3ZylMWhI5pjYN6FXXhg8qzxLlPZSemD13L8aQz2TifkaPj0NQnTuh1D23Ae
-         xJYM2I58mrhRfVam9IsFJSzJz1hYWQNHC1xap1lewLRCc4C3V9i1IkGR/tl2IzEli0lE
-         2HwA==
-X-Gm-Message-State: AOJu0YwZRkU78Fc0acm+sUXRoGTboN+/bBe17m9x8xrZ57GU9ayxW4CO
-	il3falKBq1li14yWY2UpngiE0LaUtoj+cayV0knNWpuBpbtAFeuqcbSeT6cj3UAz5SGaGt9x7mf
-	G7HJcjQ/Obh585FdHGbChiV3Iez8AUVz+sPNQfGV43i2Z8mM1evg=
-X-Google-Smtp-Source: AGHT+IGlAfPWDCSfPLGfphGq+6Jhtzs5AaCpWQ5phfDVl8jekoMJCZRYbtSXqW+sfZNPEXNCKkVDzVaU/guvvN8KCvQ=
-X-Received: by 2002:a50:d496:0:b0:560:e82e:2cc4 with SMTP id
- s22-20020a50d496000000b00560e82e2cc4mr239846edi.3.1707761862719; Mon, 12 Feb
- 2024 10:17:42 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707762013; x=1708366813;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:dkim-signature:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=DGDodchALbPjD8ImhFj8RtfLwSSDNT1+KG3XSVPPKB0=;
+        b=vUxyAgtGdXZXuQuHr6VW5JGpIy4orVIRSdDg3bzRQ6Rr0ZXiHnLZD4RZgLAfMSLvHH
+         Xa8MY1+FUcL/72zWiA/bSpVhVfouiQN8OSCcNyCB72Altunt1HjFf4VuorY1WzWhf0BX
+         2EBu0eBJTO4qN2G3rwDtbB/1+02drNKyzjZBjCjZHQiDUnStv/FQV3Hr8YkCbcG47OiC
+         rOaWfQuIGcxC5pHS6Pr1Ib1lRTzqPGLrKNRwqacTz61YnwD+stGgpZLPGOmQATl5vG0v
+         n9T6j1lehdD9kI/d6RjGA2CFCl2ZyGJdGKrcEYy+9atP2shzQk8KnwVEi4lGFKnwfTwe
+         hPjw==
+X-Forwarded-Encrypted: i=1; AJvYcCVRQjLnZe4D2uOmV2WNoAIQYK4bwP3eOUzl/ekHnwjWCMtqoApr1jEOFkyc1qdG9nclX9Y5cvWZDUxMuQOcAnk8q3tbQxFksfPib6IAFFza+r4lOCjD8+lwwruT+jO6VRf//5rdqtkjxw==
+X-Gm-Message-State: AOJu0YzXCnMgWg9DC8LEhpptVQkWKn7eLA5rUwG23FfPnc23gRjUBCrJ
+	jmQlUaYqsDFDhrC1opLUH++dd/pyQB4IgH3OONPYBmKeDg2dFAWM
+X-Google-Smtp-Source: AGHT+IHYN52DdD2VqIpGmZMxcZhgZDVehkUp2p0cSRubiFOSjZa0mrvp9OCrMfalT0t7DGKG5Qsopw==
+X-Received: by 2002:a17:903:25d2:b0:1d9:a50f:9419 with SMTP id jc18-20020a17090325d200b001d9a50f9419mr7837976plb.40.1707762013104;
+        Mon, 12 Feb 2024 10:20:13 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWuH9K6UKesaBEq5fAhecLwkjwai79dwPPclSnTWn4bxr9cTjQl/0CPb8dKDFuSzaCqr73QDTf5AfpdJA6KoISslO/1LjRDbogui/yltidMZ6iJrSC11QBp9/GT/AhDiWGRMHYFzPxtM6qGDmvROu6Gz7TQWDo3wbFeT42EM+UFVXvsD2WMGjannauFE0F3QvrW+ggGdckHig==
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id y18-20020a170902b49200b001db2b8b2da7sm97036plr.122.2024.02.12.10.20.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Feb 2024 10:20:12 -0800 (PST)
+Date: Mon, 12 Feb 2024 15:20:47 -0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2024; t=1707762011;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DGDodchALbPjD8ImhFj8RtfLwSSDNT1+KG3XSVPPKB0=;
+	b=DcuaivSvY66A+jJnfMd/IQo9yo1GJrDPlYF70FJjO4nDObSIB8XSC2J5OHAmMQTiYHgsLW
+	CmvHI3j+Zw0V8DmDdw0tHWtN6XXGgLJm4WFgtr75Srs6r9HmqdUNGqQlJd5nZsUD8+kAyq
+	x5CKGuTrZol4WzqgVwDFhHO3R1x/VIkm05mfHJP/PpIaeAIzNRdmL7rWQKM2WQhmWnJdHJ
+	Sp8dKvhEPLwnJ3OrodmkD9fD0cmsMBEh7IVxUXrfFKNUIpAzvjn+1tTOSr5ATrAuTykxkU
+	KBcbpMQ6Jn19e+QAKiHa7RnRD7nB0d9jFsg4U3SJfvOROf9zsz6Kj3Ki//gGEg==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+To: Bart Van Assche <bvanassche@acm.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
+	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: Make scsi_bus_type const
+Message-ID: <kjk4kdd6tqbss2ygyrum5skmyypcom2jqm6bhqhi27zkjiktb6@ljtg3nf4nyc6>
+References: <20240211-bus_cleanup-scsi2-v1-1-dd04ee82e6b0@marliere.net>
+ <2024021246-canon-planner-2bf6@gregkh>
+ <zcv7kteidcnqj3kpiwwmpdytuirhxbdnzri2rfmumujftthyft@xvcqzmyr2clb>
+ <8d86ebfa-98bc-4752-b413-1ebb98276082@acm.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240210002328.4126422-1-jstultz@google.com> <0a9afba6-2e25-44fa-b9d2-3e57cc6708ce@arm.com>
-In-Reply-To: <0a9afba6-2e25-44fa-b9d2-3e57cc6708ce@arm.com>
-From: John Stultz <jstultz@google.com>
-Date: Mon, 12 Feb 2024 10:17:30 -0800
-Message-ID: <CANDhNCpGLZ0b9Se7P2dG7mYXePW0kqx+Be8dfkspwwvzPV6NqA@mail.gmail.com>
-Subject: Re: [PATCH v8 0/7] Preparatory changes for Proxy Execution v8
-To: Metin Kaya <metin.kaya@arm.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Joel Fernandes <joelaf@google.com>, 
-	Qais Yousef <qyousef@google.com>, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Valentin Schneider <vschneid@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Zimuzo Ezeozue <zezeozue@google.com>, 
-	Youssef Esmat <youssefesmat@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Daniel Bristot de Oliveira <bristot@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Xuewen Yan <xuewen.yan94@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8d86ebfa-98bc-4752-b413-1ebb98276082@acm.org>
 
-On Mon, Feb 12, 2024 at 7:50=E2=80=AFAM Metin Kaya <metin.kaya@arm.com> wro=
-te:
-> On 10/02/2024 12:23 am, John Stultz wrote:
-> > After sending out v7 of Proxy Execution, I got feedback that the
-> > patch series was getting a bit unwieldy to review, and Qais
-> > suggested I break out just the cleanups/preparatory components of
-> > the patch series and submit them on their own in the hope we can
-> > start to merge the less complex bits and discussion can focus on
-> > the more complicated portions afterwards.
-> >
-> > So for the v8 of this series, I=E2=80=99m only submitting those earlier
-> > cleanup/preparatory changes here. However work on the full series
-> > has continued, with some nice progress on the performance front.
->
-> I guess we can also cherry-pick 1st [1], 20th [2] and 22th [3] patches
-> of v7 into this series?
->
-> [1]
-> https://lore.kernel.org/lkml/20231220001856.3710363-9-jstultz@google.com/=
-T/#m1e6ef390bf9044ca69818549bccec1ada221cd32
+Hi Bart,
 
-That one already landed upstream w/ the deadline server changes:
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
-/?id=3D5d69eca542ee17c618f9a55da52191d5e28b435f
+On 12 Feb 09:42, Bart Van Assche wrote:
+> On 2/12/24 03:30, Ricardo B. Marliere wrote:
+> >>> Remove some extraneous whitespace.
+> > 
+> > I saw some patches did this, thought it would ok to add.
+> 
+> Please don't do that. Each patch should only make a single logical change.
+> Additionally, making unnecessary whitespace changes is controversial because
+> it makes reviewing and backporting patches harder than necessary.
 
-> [2]
-> https://lore.kernel.org/lkml/20231220001856.3710363-9-jstultz@google.com/=
-T/#m638575b42057e1d2cc3a82d4bdea7308eb85b461
+Ack. Will send a v2.
 
-On this one, I wanted to get some more review of the chain-migration
-logic before really pushing it.
+Thanks,
+-	Ricardo.
 
-> [3]
-> https://lore.kernel.org/lkml/20231220001856.3710363-9-jstultz@google.com/=
-T/#mafcb432d20c6b545998da56ba92fc51ba8a07b42
 
-I do agree this is more of a cleanup, but I also want to try to
-refactor it a touch to try to consolidate the logic, so it's not quite
-ready.
-
-So I'm just submitting the set here for now to try to get the ball
-rolling, but I'll continue working on the larger series and will pull
-things down as they make sense.
-
-thanks
--john
+> 
+> Bart.
