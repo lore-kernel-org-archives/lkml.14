@@ -1,104 +1,177 @@
-Received: from mail.actia.se (mail.actia.se [212.181.117.226])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D2B03B1AC;
-	Mon, 12 Feb 2024 10:50:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941773B78E
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 10:50:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707735044; cv=none; b=PfqNI8iAE+GK9Ag84U0TkYcC+ha4E6ib+631URnszKkwtQuohVxNaLBd4N5r2GO80nTVnbjJer9qdProfkS8n6sBYPNusZm4Jdqcco4Nwj5uDs4videK/Kb1iknD33zxQtFaP641VKagHswAoJJPpguC0ehIocH7Dz1vnLRi7Vc=
+	t=1707735045; cv=none; b=gAyUusj1+0UyEDuB71il4Q6p1wckAqit75YcCHV+pSS4+E8ZG16sXosiCtQ/cKOTIzJR2f8js6wQRtj+ZvQmD1tMHx63JDioHz2N8yYqLDXJ4U/0Hbb3kyg/5Yob5vlhC0nwJgkbuuqtJb6qatxYjXp8L7LMHGfnQm5ySRspKyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707735044; c=relaxed/simple;
-	bh=DslaFWZZuV/SwGQuQpMrEYo+M/OcOIqoqJTfsY93H9U=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=ORr5cz/Zey7vRqygcj/cbdB4SKMdcKMSZKn5xALxGbomL+oI5YLKtf+VokOxmTdFkxIfdo0PzSNL/WrmEvQG8pm4aIiGZVYSAQ5P/Lw7bb7LAhOTbNWyNbw34x+JI4p9wpnGx9kOBK9+AqkTHB7OKnm11ZYJa/dr7RY3YWs7B0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=actia.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
-Received: from S036ANL.actianordic.se (10.12.31.117) by S036ANL.actianordic.se
- (10.12.31.117) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 12 Feb
- 2024 11:50:30 +0100
-Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
- S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69%4]) with mapi id
- 15.01.2507.035; Mon, 12 Feb 2024 11:50:30 +0100
-From: John Ernberg <john.ernberg@actia.se>
-To: Wei Fang <wei.fang@nxp.com>
-CC: Shenwei Wang <shenwei.wang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
-	NXP Linux Team <linux-imx@nxp.com>, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, "Paolo
- Abeni" <pabeni@redhat.com>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, John Ernberg <john.ernberg@actia.se>
-Subject: [PATCH net-next] net: fec: Always call fec_restart() in resume path
-Thread-Topic: [PATCH net-next] net: fec: Always call fec_restart() in resume
- path
-Thread-Index: AQHaXaFLRIYd45z3UU+7Sl3MRdVj/Q==
-Date: Mon, 12 Feb 2024 10:50:30 +0000
-Message-ID: <20240212105010.2258421-1-john.ernberg@actia.se>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-mailer: git-send-email 2.43.0
-x-esetresult: clean, is OK
-x-esetid: 37303A2958D72955617D6A
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1707735045; c=relaxed/simple;
+	bh=Lr66KmZnVLS82nRgdt+beezb2jJBazpmkeYHKLN/A9Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Iy03VMpyraMKrikMTDiLMRuYaZi1/OrbND13Oq6rRy0sipzPtBx4wESsqGDYl4/wJaGFF/YbqqmLQzQcpMXafOOj5iR/VIukh/o6RmiQSpqxefdua3+UPY7pGnevbRDsitBESXMouMetrkrM3IEuGvA3gOtNx61tWDMpFMXWI3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M4V85FiM; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M4V85FiM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707735042;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CGzi02Tn24h+4KX7saOQvUPo/IOGq4TShidAZaCvX4Q=;
+	b=M4V85FiMpVf9ad8urNi0YLTZhEIaligdCP40ZSJMQuB/+e88t892IdYfQf7tpsPXcVVIRU
+	lNvneXKfh6Qhgysh2A7uaPzLn4Ky6H1JlxEvfcY/5k919GzwiqhcwaaOXwTehtM2Yrwi0x
+	SLJyCK4L9RQwg6lRXGq9H4HAyCbo0Jc=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-287-tXh2x5FaM6yVmA2B_wqw9Q-1; Mon, 12 Feb 2024 05:50:41 -0500
+X-MC-Unique: tXh2x5FaM6yVmA2B_wqw9Q-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a29bb25df84so214521766b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 02:50:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707735040; x=1708339840;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CGzi02Tn24h+4KX7saOQvUPo/IOGq4TShidAZaCvX4Q=;
+        b=gqnrxjKYujHA9xiuOry1KXN3aDdkX50WdVD/BZt8lXlogBmnOJvD8J+H2MNcfdSVIj
+         B/IGXT4VF8oBUHYBlL5XNoEe4QlpQdLz1b5O0Ljo732z/24df9OBk1wNZXjvrpS04Q5k
+         OPg7rFBHSbVcjR8EiHm8Mu6oL67i2rsjxianOq323PlHRU9hcXu2upmghpAKp93FQUAp
+         1XXfXgiLLsZ5ZqO1T+ZTcIvY+h758p8bJxknGUcz/6xr+N0CibMsE7tBTd5ucbciE3ni
+         9verVhskwh98o1cIEpxxWNUNfTX/qWIEuEMPMjMy6BY6+9Zo1aoaNm2KM538lt7RiYZQ
+         Guig==
+X-Gm-Message-State: AOJu0Yy7M6HSdFIBmvt3r5bPd8rHGUu/R0+KZ+kTKnAV/R8bJOTc4V22
+	Nl5egih/X8x0n2gn0p2KI509EXXrSr1p2BAFthlo/hGNo8IIQtXXP9KppIl3asNUcYIGI2SujOE
+	pggapRGvjnwgwxTKDudU4q11jQCNZnQP23TP7WzYIlKOIzCGKQPPk5ZsqgS4ln07l/wc6dVlQ8p
+	GoAX7UP/iJkzkfVW4YBT/i+GPBSv4cxbmUb7zp
+X-Received: by 2002:a17:906:3507:b0:a3c:2293:6500 with SMTP id r7-20020a170906350700b00a3c22936500mr3694526eja.62.1707735039900;
+        Mon, 12 Feb 2024 02:50:39 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEs/dTfWeYlV2h3bAXvOeCpDOIaWG7ELxlYs012S707SouVNragOMr+4A+e87Se2En7qrc/XFhuu59BW51wQ4A=
+X-Received: by 2002:a17:906:3507:b0:a3c:2293:6500 with SMTP id
+ r7-20020a170906350700b00a3c22936500mr3694493eja.62.1707735039576; Mon, 12 Feb
+ 2024 02:50:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20231230172351.574091-1-michael.roth@amd.com> <20231230172351.574091-31-michael.roth@amd.com>
+In-Reply-To: <20231230172351.574091-31-michael.roth@amd.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Mon, 12 Feb 2024 11:50:26 +0100
+Message-ID: <CABgObfYX74NwYPV8dHGfLjBBp5JMGsN5OSQaJrgHQTghVdrD1g@mail.gmail.com>
+Subject: Re: [PATCH v11 30/35] KVM: x86: Add gmem hook for determining max NPT
+ mapping level
+To: Michael Roth <michael.roth@amd.com>
+Cc: kvm@vger.kernel.org, linux-coco@lists.linux.dev, linux-mm@kvack.org, 
+	linux-crypto@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, jroedel@suse.de, 
+	thomas.lendacky@amd.com, hpa@zytor.com, ardb@kernel.org, seanjc@google.com, 
+	vkuznets@redhat.com, jmattson@google.com, luto@kernel.org, 
+	dave.hansen@linux.intel.com, slp@redhat.com, pgonda@google.com, 
+	peterz@infradead.org, srinivas.pandruvada@linux.intel.com, 
+	rientjes@google.com, dovmurik@linux.ibm.com, tobin@ibm.com, bp@alien8.de, 
+	vbabka@suse.cz, kirill@shutemov.name, ak@linux.intel.com, tony.luck@intel.com, 
+	sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com, 
+	jarkko@kernel.org, ashish.kalra@amd.com, nikunj.dadhania@amd.com, 
+	pankaj.gupta@amd.com, liam.merwick@oracle.com, zhi.a.wang@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When trying to resume from suspend the following can be observed:
+On Sat, Dec 30, 2023 at 6:32=E2=80=AFPM Michael Roth <michael.roth@amd.com>=
+ wrote:
+>         int max_order, r;
+> +       u8 max_level;
+>
+>         if (!kvm_slot_can_be_private(fault->slot)) {
+>                 kvm_mmu_prepare_memory_fault_exit(vcpu, fault);
+> @@ -4321,8 +4322,15 @@ static int kvm_faultin_pfn_private(struct kvm_vcpu=
+ *vcpu,
+>                 return r;
+>         }
+>
+> -       fault->max_level =3D min(kvm_max_level_for_order(max_order),
+> -                              fault->max_level);
+> +       max_level =3D kvm_max_level_for_order(max_order);
+> +       r =3D static_call(kvm_x86_gmem_max_level)(vcpu->kvm, fault->pfn,
+> +                                               fault->gfn, &max_level);
 
-    fec 5b040000.ethernet eth0: MDIO read timeout
-    Microchip LAN87xx T1 5b040000.ethernet-1:04: PM: dpm_run_callback(): md=
-io_bus_phy_resume+0x0/0xc8 returns -110
-    Microchip LAN87xx T1 5b040000.ethernet-1:04: PM: failed to resume: erro=
-r -110
+Might as well pass &fault->max_level directly to the callback, with no
+change to the vendor-specific code.
 
-This is because the MAC is left powered down after resuming from suspend.
+I'll include the MMU part in a generic series to be the base for both
+Intel TDX and AMD SEV-SNP, and will do that change.
 
-The MAC is brought up in both probe and open, so leaving it off in resume
-from suspend is an imbalance.
-This imbalance combined with a LAN8700R that is permanently powered
-results in unusuable networking if the board would happen to suspend before
-the link is brought up, and the only way to get out of it would be a full
-power cycle.
+Paolo
 
-NOTE: With this change the PHY ends up taking different resume paths when
-the link has never been up compared to once the link has been up. Currently
-the resume process is identical and just happens at different times, so
-this *should* not have any unforseen consequences.
+> +       if (r) {
+> +               kvm_release_pfn_clean(fault->pfn);
+> +               return r;
+> +       }
+> +
+> +       fault->max_level =3D min(max_level, fault->max_level);
+>         fault->map_writable =3D !(fault->slot->flags & KVM_MEM_READONLY);
+>
+>         return RET_PF_CONTINUE;
+> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> index 85f63b6842b6..5eb836b73131 100644
+> --- a/arch/x86/kvm/svm/sev.c
+> +++ b/arch/x86/kvm/svm/sev.c
+> @@ -4315,3 +4315,30 @@ void sev_gmem_invalidate(kvm_pfn_t start, kvm_pfn_=
+t end)
+>                 pfn +=3D use_2m_update ? PTRS_PER_PMD : 1;
+>         }
+>  }
+> +
+> +int sev_gmem_max_level(struct kvm *kvm, kvm_pfn_t pfn, gfn_t gfn, u8 *ma=
+x_level)
+> +{
+> +       int level, rc;
+> +       bool assigned;
+> +
+> +       if (!sev_snp_guest(kvm))
+> +               return 0;
+> +
+> +       rc =3D snp_lookup_rmpentry(pfn, &assigned, &level);
+> +       if (rc) {
+> +               pr_err_ratelimited("SEV: RMP entry not found: GFN %llx PF=
+N %llx level %d error %d\n",
+> +                                  gfn, pfn, level, rc);
+> +               return -ENOENT;
+> +       }
+> +
+> +       if (!assigned) {
+> +               pr_err_ratelimited("SEV: RMP entry is not assigned: GFN %=
+llx PFN %llx level %d\n",
+> +                                  gfn, pfn, level);
+> +               return -EINVAL;
+> +       }
+> +
+> +       if (level < *max_level)
+> +               *max_level =3D level;
+> +
+> +       return 0;
+> +}
+> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> index f26b8c2a8be4..f745022f7454 100644
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -5067,6 +5067,7 @@ static struct kvm_x86_ops svm_x86_ops __initdata =
+=3D {
+>         .alloc_apic_backing_page =3D svm_alloc_apic_backing_page,
+>
+>         .gmem_prepare =3D sev_gmem_prepare,
+> +       .gmem_max_level =3D sev_gmem_max_level,
+>         .gmem_invalidate =3D sev_gmem_invalidate,
+>  };
+>
+> --
+> 2.25.1
+>
 
-Signed-off-by: John Ernberg <john.ernberg@actia.se>
----
-
-Tested on 6.1 kernel and forward ported. I discovered this when we
-upgraded from 5.10 to 6.1, but the resume path in the FEC driver has had
-this imbalance since at least 2009.
-
-This is also why I target the -next tree, I can't identify a proper commit
-to blame with a Fixes. Let me know if this should be the net tree anyway.
-
- drivers/net/ethernet/freescale/fec_main.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethern=
-et/freescale/fec_main.c
-index 42bdc01a304e..e6804c068d6b 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -4706,6 +4706,8 @@ static int __maybe_unused fec_resume(struct device *d=
-ev)
- 		napi_enable(&fep->napi);
- 		phy_init_hw(ndev->phydev);
- 		phy_start(ndev->phydev);
-+	} else {
-+		fec_restart(ndev);
- 	}
- 	rtnl_unlock();
-=20
---=20
-2.43.0
