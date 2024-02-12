@@ -1,35 +1,35 @@
 Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07C13D994;
-	Mon, 12 Feb 2024 17:33:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752BD3F8DE;
+	Mon, 12 Feb 2024 17:33:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707759196; cv=none; b=LUnBv5ue2tbHdtuxqmugcOw2rdUIBom7NGeH0MsMa7WxWZU0dm2JwqiWnasGlONZPyxHaAyGIQvFX6dadyCNaEuBOpJFAFAayEUoMiksiqgRbeK+T9ZwnMYlgoQNg73MJCz2aQtjhW6jHILdNmHgyexcxG1HRZ1nEmqvZ27TMyw=
+	t=1707759197; cv=none; b=CRCjSXQmT2dt3jmXdGlpl/THZp3Rp+QfduG/8D4i4HqjXhtLTJ5AeJw4eXCy5RT7roncMjrEbBSh2Bk4dKHzxbrPz6b8AfpX5yL2qTAI0u/TjYHdTFXmDW7AbH/mBZTPfZUuPq7+xuYh0TxG3KL2jdyaCzu1qg358zs/hyhDj6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707759196; c=relaxed/simple;
-	bh=iPEASSYlDcjrlPwsGBPKNYL9SBV46Dl15cGG7NcwLpM=;
+	s=arc-20240116; t=1707759197; c=relaxed/simple;
+	bh=i3tBLXpDgL97ApAAc/myRBKDc6BXBci9AQkztMAQQSg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZaMsIF08fObnCjkhnYf1CBennYxi0OhRUuLIlgijCJT1SjR67ke18MED9GnelqlOmeDbJR9jXI2OUW7Godze3kA8HsOAkwECN1orlrAz+DsoDPH4k3rEYPESXhl5OtUeu6dK/uweHPMG7XzOGH0eR/U97mssvbQ+BWzQXnIRips=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Wul86u3F; arc=none smtp.client-ip=217.70.183.193
+	 MIME-Version; b=iXouoHfpwbwqGkSIC7cy9t0KOJBK8Hk3dTaNusbwBoHYCsq8aX+BsjNGqD9phDUdBVNYj+0JcfRb8IKAhMjRgmb3NYznoPvBOiJcOJz2VYH0hwAe6mGhDPGkzW7eaFq1adlhpoQyjkfjU7A7jpcJkQPpdmCoD4nwCxjOG3HBtxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GEnv0Joe; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Wul86u3F"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 372FF240003;
-	Mon, 12 Feb 2024 17:33:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GEnv0Joe"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0051A24000C;
+	Mon, 12 Feb 2024 17:33:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1707759191;
+	t=1707759193;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=yw66TIimhTJfNownIQ4rCrh/cxjyJxNv0GJT7l+wY1s=;
-	b=Wul86u3F3IIpXicG6XPUT6nASTZle8eza9PgFc6ovn0K2mM6fnq0u6BMQ5LII4CCKJ93Kc
-	l+PXm9YYK+/g6WFdCHVxeMhjOgygV9/tVYilxRaNjtu9aQS+rs3gpDOcbxXX2Tq5F5kp1A
-	O6iqe4+My8ILDA3Y16ceXMV+/QDJMM3VOnzGYhK0H2uP266ODxwbxoq53NXcJEQkqLGEZ9
-	Q6XEjImE2Yfe7sVtIFivot1xayxeGJDGWyNu0Unm7vaAlh7H2L3i33e+ojGwYO3Ae2vVAI
-	pXpotR5qF+1Jee2+wqq9NktuE+Xdo90abtl8HoCR8xY8b6nQx878u6c+YHcXSg==
+	bh=OqMyrFgvZSVFVEQbpSUBQUwWGZOOdWjRIaxjKm9ptpQ=;
+	b=GEnv0JoelA7Iu+UQnmNreAfbqeUVGbH+VJFW0Wx2kgYwoVTBYxA0U7pQj3bMCI+KEqZDtJ
+	LEO5s6MRucjZqsXsB4P5J9da01tihMx3i8B3bb3f4431i4EPKv3GDVqlHyEcgeGxIQSikC
+	Yxk4xi+uhdBt2TrAdqESawJ1JoO6giLawy/hFG7hxaihEg3Nn70U9s9u3puwupSRw0mlAb
+	l4cypgQHHnNOtRQKCEb+k6Cp/sN0djKByZ1Vo8++hUbha+INNv9GE1Z/OX1evbO499z6K/
+	So2MMF+B8L9i/s0qXVGdKY+8kLtqvIkb3DnkiTUMcPNB0TZadQCSOKe5yjMhog==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: Andrew Lunn <andrew@lunn.ch>,
 	Heiner Kallweit <hkallweit1@gmail.com>,
@@ -48,9 +48,9 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	linux-kernel@vger.kernel.org,
 	thomas.petazzoni@bootlin.com,
 	=?UTF-8?q?K=C3=B6ry=20Maincent?= <kory.maincent@bootlin.com>
-Subject: [PATCH net-next 1/3] net: phy: Add support for inband extensions
-Date: Mon, 12 Feb 2024 18:33:04 +0100
-Message-ID: <20240212173307.1124120-2-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next 3/3] net: phy: micrel: Add QUSGMII support and PCH extension
+Date: Mon, 12 Feb 2024 18:33:06 +0100
+Message-ID: <20240212173307.1124120-4-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240212173307.1124120-1-maxime.chevallier@bootlin.com>
 References: <20240212173307.1124120-1-maxime.chevallier@bootlin.com>
@@ -63,261 +63,172 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-The USGMII Standard by Cisco introduces the notion of extensions used
-in the preamble. The standard proposes a "PCH" extension, which allows
-passing timestamps in the preamble. However, other alternatives are
-possible, like Microchip's "MCH" mode, that allows passing indication to
-a PHY telling whether or not the PHY should timestamp an outgoing packet,
-therefore removing the need for the PHY to have an internal classifier.
+This commit adds support for the PCH extension in the Lan8814 PHY,
+allowing the PHY to report RX timestamps to the MAC in the ethernet
+preamble.
 
-This commit allows reporting the various extensions a PHY supports,
-without tying them to the actual PHY mode. This is done 1) because there
-are multiple variants of the USGMII mode, like QUSGMII and OUSGMII, and
-2) because other non-cisco standards might one day propose a similar
-mechanism.
+When using the PCH extension, the PHY will only report the nanoseconds
+part of the timestamp in-band, and the seconds part out-of-band.
+The main goal in the end is to lower the pressure on the MDIO bus, which
+may get pushed to its limit on 48 ports switches doing PTP at a high
+rate.
 
 Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 ---
- Documentation/networking/phy.rst | 70 ++++++++++++++++++++++++++
- drivers/net/phy/phy.c            | 86 ++++++++++++++++++++++++++++++++
- include/linux/phy.h              | 28 +++++++++++
- 3 files changed, 184 insertions(+)
+ drivers/net/phy/micrel.c | 84 ++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 80 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/networking/phy.rst b/Documentation/networking/phy.rst
-index 1283240d7620..f10a45ac7053 100644
---- a/Documentation/networking/phy.rst
-+++ b/Documentation/networking/phy.rst
-@@ -538,6 +538,76 @@ Call one of following function before unloading module::
-  int phy_unregister_fixup_for_uid(u32 phy_uid, u32 phy_uid_mask);
-  int phy_register_fixup_for_id(const char *phy_id);
+diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+index 9b6973581989..d8084174c5a7 100644
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -149,6 +149,10 @@
+ #define LTC_HARD_RESET				0x023F
+ #define LTC_HARD_RESET_				BIT(0)
  
-+Inband Extensions
-+=================
++#define TSU_GENERAL_CONFIG			0x2C0
++#define TSU_GENERAL_CONFIG_TSU_ENABLE_		BIT(0)
++#define TSU_GENERAL_CONFIG_TSU_ENABLE_PCH_	BIT(1)
 +
-+The USGMII Standard allows the possibility to re-use the full-length 7-bytes
-+frame preamble to convey meaningful data. This is already partly used by modes
-+like QSGMII, which passes the port number in the preamble.
-+
-+In USGMII, we have a standardized approach to allow the MAC and PHY to pass
-+such data in the preamble, which looks like this :
-+
-+|  0   |  1   |  2  |  3  |  4  |  5  |  6  |  7  |  Frame data
-+| SoP  |      |      Extension              | CRC |
-+|     /        \_______________             |     |
-+|    /                         \            |     |
-+|   | type | subport | ext type |           |     |
-+
-+The preamble in that case uses the Packet Control Header (PCH) format, where
-+the byte 1 is used as a control field with :
-+
-+type - 2 bits :
-+        - 00 : Packet with PCH
-+        - 01 : Packet without PCH
-+        - 10 : Idle Packet, without data
-+        - 11 : Reserved
-+
-+subport - 4 bits : The subport identifier. For QUSGMII, this field ranges from
-+                   0 to 3, and for OUSGMII, it ranges from 0 to 7.
-+
-+ext type - 2 bits : Indicated the type of data conveyed in the extension
-+        - 00 : Ignore extension
-+        - 01 : 8 bits reserved + 32 timestamp
-+        - 10 : Reserved
-+        - 11 : Reserved
-+
-+It is possible for vendors to use the extensions mechanism without relying on
-+the PCH formatting.
-+
-+In order to leverage such extensions, both the MAC and the PHY have to agree on
-+which extension to use. The current model has the PHY expose the possible
-+available extensions with ::
-+
-+  bool phy_inband_ext_available(struct phy_device *phydev, enum phy_inband_ext ext);
-+
-+The PHY driver decides which extensions are available to use at any given time,
-+as they can only be used if ::
-+  - A compatible PHY mode is used, such as USXGMII or QUSGMII
-+  - The PHY can use the required mode at that moment
-+
-+A PHY driver can register available modes with::
-+
-+  int phy_inband_ext_set_available(struct phy_device *phydev, enum phy_inband_ext ext);
-+  int phy_inband_ext_set_unavailable(struct phy_device *phydev, enum phy_inband_ext ext);
-+
-+It's then up to the MAC driver to enable/disable the extension in the PHY as
-+needed. This was designed to fit the timestamping configuration model, as it
-+is the only mode supported so far.
-+
-+Enabling/Disabling an extension is done from the MAC driver through::
-+
-+  int phy_inband_ext_enable(struct phy_device *phydev, enum phy_inband_ext ext);
-+  int phy_inband_ext_disable(struct phy_device *phydev, enum phy_inband_ext ext);
-+
-+These functions will cause the relevant callback to be called in the PHY driver::
-+
-+  int (*set_inband_ext)(struct phy_device *dev, enum phy_inband_ext ext, bool enable);
-+
-+The state of currently enabled extensions can be queried with::
-+
-+  bool phy_inband_ext_enabled(struct phy_device *phydev, enum phy_inband_ext ext);
-+
- Standards
- =========
+ #define TSU_HARD_RESET				0x02C1
+ #define TSU_HARD_RESET_				BIT(0)
  
-diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index 3b9531143be1..4b6cf94f51d5 100644
---- a/drivers/net/phy/phy.c
-+++ b/drivers/net/phy/phy.c
-@@ -1760,3 +1760,89 @@ int phy_ethtool_nway_reset(struct net_device *ndev)
- 	return ret;
+@@ -174,6 +178,7 @@
+ 
+ #define PTP_OPERATING_MODE			0x0241
+ #define PTP_OPERATING_MODE_STANDALONE_		BIT(0)
++#define PTP_OPERATING_MODE_PCH_			BIT(1)
+ 
+ #define PTP_TX_MOD				0x028F
+ #define PTP_TX_MOD_TX_PTP_SYNC_TS_INSERT_	BIT(12)
+@@ -2360,6 +2365,16 @@ static void lan8814_ptp_rx_ts_get(struct phy_device *phydev,
+ 	*seq_id = lanphy_read_page_reg(phydev, 5, PTP_RX_MSG_HEADER2);
  }
- EXPORT_SYMBOL(phy_ethtool_nway_reset);
-+
-+/**
-+ * PHY modes in the USXGMII family can have extensions, with data transmitted
-+ * in the frame preamble.
-+ * For now, only QUSGMII is supported, but other variants like USGMII and
-+ * OUSGMII can be added in the future.
-+ */
-+static inline bool phy_interface_has_inband_ext(phy_interface_t interface)
+ 
++static void lan8814_ptp_rx_ts_get_partial(struct phy_device *phydev,
++					  u32 *seconds, u16 *seq_id)
 +{
-+	return interface == PHY_INTERFACE_MODE_QUSGMII;
++	*seconds = lanphy_read_page_reg(phydev, 5, PTP_RX_INGRESS_SEC_HI);
++	*seconds = (*seconds << 16) |
++		   lanphy_read_page_reg(phydev, 5, PTP_RX_INGRESS_SEC_LO);
++
++	*seq_id = lanphy_read_page_reg(phydev, 5, PTP_RX_MSG_HEADER2);
 +}
 +
-+bool phy_inband_ext_available(struct phy_device *phydev, enum phy_inband_ext ext)
-+{
-+	return !!(phydev->inband_ext.available & ext);
-+}
-+EXPORT_SYMBOL(phy_inband_ext_available);
-+
-+bool phy_inband_ext_enabled(struct phy_device *phydev, enum phy_inband_ext ext)
-+{
-+	return !!(phydev->inband_ext.enabled & ext);
-+}
-+EXPORT_SYMBOL(phy_inband_ext_enabled);
-+
-+static int phy_set_inband_ext(struct phy_device *phydev,
-+			      enum phy_inband_ext ext,
-+			      bool enable)
-+{
-+	int ret;
-+
-+	if (!phy_interface_has_inband_ext(phydev->interface))
-+		return -EOPNOTSUPP;
-+
-+	if (!phydev->drv->set_inband_ext)
-+		return -EOPNOTSUPP;
-+
-+	mutex_lock(&phydev->lock);
-+	ret = phydev->drv->set_inband_ext(phydev, ext, enable);
-+	mutex_unlock(&phydev->lock);
-+	if (ret)
-+		return ret;
-+
-+	if (enable)
-+		phydev->inband_ext.enabled |= BIT(ext);
+ static void lan8814_ptp_tx_ts_get(struct phy_device *phydev,
+ 				  u32 *seconds, u32 *nano_seconds, u16 *seq_id)
+ {
+@@ -2504,6 +2519,12 @@ static int lan8814_hwtstamp(struct mii_timestamper *mii_ts,
+ 	lan8814_flush_fifo(ptp_priv->phydev, false);
+ 	lan8814_flush_fifo(ptp_priv->phydev, true);
+ 
++	if (phydev->interface == PHY_INTERFACE_MODE_QUSGMII &&
++	    ptp_priv->hwts_tx_type == HWTSTAMP_TX_ON)
++		phy_inband_ext_set_available(phydev, PHY_INBAND_EXT_PCH_TIMESTAMP);
 +	else
-+		phydev->inband_ext.enabled &= ~BIT(ext);
++		phy_inband_ext_set_unavailable(phydev, PHY_INBAND_EXT_PCH_TIMESTAMP);
 +
-+	return 0;
-+}
-+
-+int phy_inband_ext_enable(struct phy_device *phydev, enum phy_inband_ext ext)
-+{
-+	if (!phy_inband_ext_available(phydev, ext))
-+		return -EOPNOTSUPP;
-+
-+	return phy_set_inband_ext(phydev, ext, true);
-+}
-+EXPORT_SYMBOL(phy_inband_ext_enable);
-+
-+int phy_inband_ext_disable(struct phy_device *phydev, enum phy_inband_ext ext)
-+{
-+	return phy_set_inband_ext(phydev, ext, false);
-+}
-+EXPORT_SYMBOL(phy_inband_ext_disable);
-+
-+int phy_inband_ext_set_available(struct phy_device *phydev, enum phy_inband_ext ext)
-+{
-+	if (!(BIT(ext) & phydev->drv->inband_ext))
-+		return -EOPNOTSUPP;
-+
-+	phydev->inband_ext.available |= BIT(ext);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(phy_inband_ext_set_available);
-+
-+int phy_inband_ext_set_unavailable(struct phy_device *phydev, enum phy_inband_ext ext)
-+{
-+	if (!(BIT(ext) & phydev->drv->inband_ext))
-+		return -EOPNOTSUPP;
-+
-+	phydev->inband_ext.available &= ~BIT(ext);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(phy_inband_ext_set_unavailable);
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index a66f07d3f5f4..b358a96f71e7 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -202,6 +202,25 @@ static inline void phy_interface_set_rgmii(unsigned long *intf)
- 	__set_bit(PHY_INTERFACE_MODE_RGMII_TXID, intf);
+ 	return 0;
  }
  
-+/**
-+ * enum phy_inband_ext - Inband extensions
-+ *
-+ * @PHY_INBAND_EXT_PCH_TIMESTAMP: Transmit the nanoseconds part of a timestamp,
-+ *				  Using the PCH format.
-+ *
-+ * Describes the inband extensions that can be conveyed in the ethernet preamble
-+ */
-+enum phy_inband_ext {
-+	PHY_INBAND_EXT_PCH_TIMESTAMP = 0,
-+};
-+
-+int phy_inband_ext_enable(struct phy_device *phydev, enum phy_inband_ext ext);
-+int phy_inband_ext_disable(struct phy_device *phydev, enum phy_inband_ext ext);
-+int phy_inband_ext_set_available(struct phy_device *phydev, enum phy_inband_ext ext);
-+int phy_inband_ext_set_unavailable(struct phy_device *phydev, enum phy_inband_ext ext);
-+bool phy_inband_ext_available(struct phy_device *phydev, enum phy_inband_ext ext);
-+bool phy_inband_ext_enabled(struct phy_device *phydev, enum phy_inband_ext ext);
-+
- /*
-  * phy_supported_speeds - return all speeds currently supported by a PHY device
-  */
-@@ -678,6 +697,11 @@ struct phy_device {
- 	phy_interface_t interface;
- 	DECLARE_PHY_INTERFACE_MASK(possible_interfaces);
+@@ -2917,8 +2938,20 @@ static bool lan8814_match_skb(struct kszphy_ptp_priv *ptp_priv,
  
-+	struct {
-+		u32 available;
-+		u32 enabled;
-+	} inband_ext;
+ 	if (ret) {
+ 		shhwtstamps = skb_hwtstamps(skb);
+-		memset(shhwtstamps, 0, sizeof(*shhwtstamps));
+-		shhwtstamps->hwtstamp = ktime_set(rx_ts->seconds, rx_ts->nsec);
 +
- 	/*
- 	 * forced speed & duplex (no autoneg)
- 	 * partner speed & duplex & pause (autoneg)
-@@ -908,6 +932,7 @@ struct phy_driver {
- 	u32 phy_id_mask;
- 	const unsigned long * const features;
- 	u32 flags;
-+	u32 inband_ext;
- 	const void *driver_data;
++		if (phy_inband_ext_enabled(ptp_priv->phydev, PHY_INBAND_EXT_PCH_TIMESTAMP)) {
++			/* When using the PCH extension, we get the seconds part
++			 * from MDIO accesses, but the seconds part gets
++			 * set by the MAC driver according to the PCH data in the
++			 * preamble
++			 */
++			struct timespec64 ts = ktime_to_timespec64(shhwtstamps->hwtstamp);
++
++			shhwtstamps->hwtstamp = ktime_set(rx_ts->seconds, ts.tv_nsec);
++		} else {
++			memset(shhwtstamps, 0, sizeof(*shhwtstamps));
++			shhwtstamps->hwtstamp = ktime_set(rx_ts->seconds, rx_ts->nsec);
++		}
+ 		netif_rx(skb);
+ 	}
  
- 	/**
-@@ -1167,6 +1192,9 @@ struct phy_driver {
- 	 */
- 	int (*led_polarity_set)(struct phy_device *dev, int index,
- 				unsigned long modes);
-+	/** @set_inband_ext: Enable or disable a given extension*/
-+	int (*set_inband_ext)(struct phy_device *dev, enum phy_inband_ext ext,
-+			      bool enable);
- };
- #define to_phy_driver(d) container_of(to_mdio_common_driver(d),		\
- 				      struct phy_driver, mdiodrv)
+@@ -2953,8 +2986,18 @@ static void lan8814_get_rx_ts(struct kszphy_ptp_priv *ptp_priv)
+ 		if (!rx_ts)
+ 			return;
+ 
+-		lan8814_ptp_rx_ts_get(phydev, &rx_ts->seconds, &rx_ts->nsec,
+-				      &rx_ts->seq_id);
++		/* When using PCH mode, the nanoseconds part of the timestamp is
++		 * transmitted inband through the ethernet preamble. We only need
++		 * to retrieve the seconds part along with the seq_id, the MAC
++		 * driver will fill-in the nanoseconds part itself
++		 */
++		if (phy_inband_ext_enabled(ptp_priv->phydev, PHY_INBAND_EXT_PCH_TIMESTAMP))
++			lan8814_ptp_rx_ts_get_partial(phydev, &rx_ts->seconds,
++						      &rx_ts->seq_id);
++		else
++			lan8814_ptp_rx_ts_get(phydev, &rx_ts->seconds,
++					      &rx_ts->nsec, &rx_ts->seq_id);
++
+ 		lan8814_match_rx_ts(ptp_priv, rx_ts);
+ 
+ 		/* If other timestamps are available in the FIFO,
+@@ -3240,6 +3283,37 @@ static void lan8814_setup_led(struct phy_device *phydev, int val)
+ 	lanphy_write_page_reg(phydev, 5, LAN8814_LED_CTRL_1, temp);
+ }
+ 
++static int lan8814_set_inband_ext(struct phy_device *phydev,
++				  enum phy_inband_ext ext, bool enable)
++{
++	u32 tsu_cfg;
++
++	if (ext != PHY_INBAND_EXT_PCH_TIMESTAMP)
++		return -EOPNOTSUPP;
++
++	tsu_cfg = ~TSU_GENERAL_CONFIG_TSU_ENABLE_;
++
++	lanphy_write_page_reg(phydev, 5, TSU_GENERAL_CONFIG, tsu_cfg);
++
++	if (enable) {
++		lanphy_write_page_reg(phydev, 4, PTP_OPERATING_MODE,
++				      PTP_OPERATING_MODE_PCH_);
++
++		tsu_cfg |= TSU_GENERAL_CONFIG_TSU_ENABLE_PCH_;
++	} else {
++		lanphy_write_page_reg(phydev, 4, PTP_OPERATING_MODE,
++				      PTP_OPERATING_MODE_STANDALONE_);
++
++		tsu_cfg &= ~TSU_GENERAL_CONFIG_TSU_ENABLE_PCH_;
++	}
++
++	tsu_cfg |= TSU_GENERAL_CONFIG_TSU_ENABLE_;
++
++	lanphy_write_page_reg(phydev, 5, TSU_GENERAL_CONFIG, tsu_cfg);
++
++	return 0;
++}
++
+ static int lan8814_config_init(struct phy_device *phydev)
+ {
+ 	struct kszphy_priv *lan8814 = phydev->priv;
+@@ -4805,6 +4879,7 @@ static struct phy_driver ksphy_driver[] = {
+ 	.phy_id_mask	= MICREL_PHY_ID_MASK,
+ 	.name		= "Microchip INDY Gigabit Quad PHY",
+ 	.flags          = PHY_POLL_CABLE_TEST,
++	.inband_ext	= PHY_INBAND_EXT_PCH_TIMESTAMP,
+ 	.config_init	= lan8814_config_init,
+ 	.driver_data	= &lan8814_type,
+ 	.probe		= lan8814_probe,
+@@ -4819,6 +4894,7 @@ static struct phy_driver ksphy_driver[] = {
+ 	.handle_interrupt = lan8814_handle_interrupt,
+ 	.cable_test_start	= lan8814_cable_test_start,
+ 	.cable_test_get_status	= ksz886x_cable_test_get_status,
++	.set_inband_ext = lan8814_set_inband_ext,
+ }, {
+ 	.phy_id		= PHY_ID_LAN8804,
+ 	.phy_id_mask	= MICREL_PHY_ID_MASK,
 -- 
 2.43.0
 
