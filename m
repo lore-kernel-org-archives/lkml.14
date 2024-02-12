@@ -1,99 +1,82 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from 3.mo576.mail-out.ovh.net (3.mo576.mail-out.ovh.net [188.165.52.203])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB5853D97F
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 18:56:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B7341233
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 18:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.52.203
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707764203; cv=none; b=tEqdAjQDTr+JIUxGLazL3iRvBjDHdfAwrSGrpWS7F1z94N0+sPzq39Wn76L+VXP5DusUC4Vzv7Wmeo9/UWFBIvJofF/0WVl/gpJ8W2Q5LbmOL/rvT5ipvCQH21XWhPSZMwu8OqwBSPi/Y5b4Ufsviqzau7oBqDA3jgLZIy2/MXc=
+	t=1707764283; cv=none; b=U2ISnuru999kzobsZA56CA9TOQ10DlYMxuZrrOIcyDDUpP0ZGVHqK4UXR/hV+m8D8UI9mIyhYjINEXK547RiGuztiMXUADdurEOI77EJDguXVfwwY9BiWGHHN/OlfMlPmFD9o9Hr6h6seKbJKYwVq7aMokr5q7AHmScHQlG47qI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707764203; c=relaxed/simple;
-	bh=8magsPAXosweiCdJmUy4LFIqGQ2gqWbDO4Z10h/F4rU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cv+LH0Rtqe9FWR8UHDT3FhVaXra2pVFd5fHJXJScSeNN5dFxCqshShyF8OVgQTXccBVHdYvxs4Ya5F9fFhzQvW4kL3OjgDeppGN90kIIhhaZd47FPAOzJ2L9rFYezESQPIl5zKjsxkF+YLnaIQQdOdMDHrN2HzIQIzZbQRFYnSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KhAJpP54; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KhAJpP54"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=m1baTKysIwyuQiFpS2joxHLjhtugrGXccjQD8FWaWpM=; b=KhAJpP54KtaON/ePLNbrIZ796l
-	oRDSVhHpT0MVSmrExhD+m9suBWnsIAo+aJtfBVjHJPfau9OcjKIN0zNWW9VRryFtcH1ey3isGwqb4
-	WIT8o183YuI/QD0oZNlilpYRFGo4hzVAZyhieJ+K03q2/G7TEYVxwJRXaekWMbPkn8mwHhXzIpU73
-	ZeiQcfA40Tt7KOas6rApISSP/Oce8pXuQf/SU+Vbw7KBzKUkm4g9dpK6AfgmKVmEH7y7r8ycxHszm
-	qfq5QPVkcsyPAQD+JQAYNPsrbTbYxeSIZSJ63ydW1zQmPaYK5Lv782PF92VK+kmgjIgdTh7b1qjxb
-	W7qvWR9w==;
-Received: from [50.53.50.0] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rZbTt-00000006hRv-1BZe;
-	Mon, 12 Feb 2024 18:56:41 +0000
-Message-ID: <4f3fa9e4-3000-4a96-a7f6-e32e69b57a84@infradead.org>
-Date: Mon, 12 Feb 2024 10:56:40 -0800
+	s=arc-20240116; t=1707764283; c=relaxed/simple;
+	bh=jO/LDfn6aDcYiqRM9lNKahIwQkbLK8dKdTIoaO+VCXE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=SklZADKJitNd9oFMBtbezIp0tcVPf/+GSyyF8aAO8Q+4ttMv1iyuLGyHUDYsm58jDYDVIkKDI2jO4nBMit+NDTvS4tnAcV0KcRj1xNv0fipgwMxn9dnPuNeeGl94LaFfnaEk7jyAIyJGQAH+HbJ2XVFJvbP32gTnorEMQ816+yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=188.165.52.203
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
+Received: from director10.ghost.mail-out.ovh.net (unknown [10.108.2.160])
+	by mo576.mail-out.ovh.net (Postfix) with ESMTP id 4TYVLY5xLbz1Tyb
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 16:30:29 +0000 (UTC)
+Received: from ghost-submission-6684bf9d7b-r9552 (unknown [10.110.96.92])
+	by director10.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 5F6291FD3F;
+	Mon, 12 Feb 2024 16:30:27 +0000 (UTC)
+Received: from etezian.org ([37.59.142.95])
+	by ghost-submission-6684bf9d7b-r9552 with ESMTPSA
+	id 6FC5CKNHymUtFhgA7JOU9g
+	(envelope-from <andi@etezian.org>); Mon, 12 Feb 2024 16:30:27 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-95G0010dc3974b-9b21-4c2d-b831-50956c5a016a,
+                    DC9C46711153F1AB5CCD62E60A4660431976F56E) smtp.auth=andi@etezian.org
+X-OVh-ClientIp:89.217.109.169
+From: Andi Shyti <andi.shyti@kernel.org>
+To: andersson@kernel.org, konrad.dybcio@linaro.org, 
+ linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, vkoul@kernel.org, quic_bjorande@quicinc.com, 
+ manivannan.sadhasivam@linaro.org, bryan.odonoghue@linaro.org, 
+ dmitry.baryshkov@linaro.org, Viken Dadhaniya <quic_vdadhani@quicinc.com>
+Cc: quic_msavaliy@quicinc.com, quic_vtanuku@quicinc.com
+In-Reply-To: <20240212125239.7764-1-quic_vdadhani@quicinc.com>
+References: <20240212125239.7764-1-quic_vdadhani@quicinc.com>
+Subject: Re: [PATCH v4] i2c: i2c-qcom-geni: Correct I2C TRE sequence
+Message-Id: <170775542582.4034843.13903178827406662061.b4-ty@kernel.org>
+Date: Mon, 12 Feb 2024 17:30:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND] iosys-map: fix typos
-Content-Language: en-US
-To: Thomas Zimmermann <tzimmermann@suse.de>, linux-kernel@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-References: <20240212042837.21071-1-rdunlap@infradead.org>
- <bf0d02d4-2c90-40a4-8018-bd96a01f2751@suse.de>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <bf0d02d4-2c90-40a4-8018-bd96a01f2751@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.4
+X-Ovh-Tracer-Id: 5162532548027026139
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: 0
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrudefgdekkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecunecujfgurhephffvvegjfhfukfffgggtgffosehtjeertdertdejnecuhfhrohhmpeetnhguihcuufhhhihtihcuoegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpeffteehudffvdfhudfgffdugfejjeduheehgeefgeeuhfeiuefghffgueffvdfgfeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduvdejrddtrddtrddupdekledrvddujedruddtledrudeiledpfeejrdehledrudegvddrleehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpeeorghnughisegvthgviihirghnrdhorhhgqedpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheejiedpmhhouggvpehsmhhtphhouhht
 
+Hi
 
-
-On 2/11/24 23:13, Thomas Zimmermann wrote:
-> Hi
+On Mon, 12 Feb 2024 18:22:39 +0530, Viken Dadhaniya wrote:
+> For i2c read operation in GSI mode, we are getting timeout
+> due to malformed TRE basically incorrect TRE sequence
+> in gpi(drivers/dma/qcom/gpi.c) driver.
 > 
-> Am 12.02.24 um 05:28 schrieb Randy Dunlap:
->> Correct spellos/typos in comments.
->>
->> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->> Cc: Thomas Zimmermann <tzimmermann@suse.de>
->> Cc: dri-devel@lists.freedesktop.org
->> ---
->>   include/linux/iosys-map.h |    4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff -- a/include/linux/iosys-map.h b/include/linux/iosys-map.h
->> --- a/include/linux/iosys-map.h
->> +++ b/include/linux/iosys-map.h
->> @@ -34,7 +34,7 @@
->>    * the same driver for allocation, read and write operations.
->>    *
->>    * Open-coding access to :c:type:`struct iosys_map <iosys_map>` is considered
->> - * bad style. Rather then accessing its fields directly, use one of the provided
->> + * bad style. Rather than accessing its fields directly, use one of the provided
-> Ok.
->>    * helper functions, or implement your own. For example, instances of
->>    * :c:type:`struct iosys_map <iosys_map>` can be initialized statically with
->>    * IOSYS_MAP_INIT_VADDR(), or at runtime with iosys_map_set_vaddr(). These
->> @@ -85,7 +85,7 @@
->>    *    if (iosys_map_is_equal(&sys_map, &io_map))
->>    *        // always false
->>    *
->> - * A set up instance of struct iosys_map can be used to access or manipulate the
->> + * A setup instance of struct iosys_map can be used to access or manipulate the
-> That's not a typo. This refers to "an instance that has been set up".
+> I2C driver has geni_i2c_gpi(I2C_WRITE) function which generates GO TRE and
+> geni_i2c_gpi(I2C_READ)generates DMA TRE. Hence to generate GO TRE before
+> DMA TRE, we should move geni_i2c_gpi(I2C_WRITE) before
+> geni_i2c_gpi(I2C_READ) inside the I2C GSI mode transfer function
+> i.e. geni_i2c_gpi_xfer().
 > 
+> [...]
 
-Thanks. I'll drop that part and resend the other.
+Applied to i2c/i2c-host-fixes on
 
-> 
->>    * buffer memory. Depending on the location of the memory, the provided helpers
->>    * will pick the correct operations. Data can be copied into the memory with
->>    * iosys_map_memcpy_to(). The address can be manipulated with iosys_map_incr().
-> 
+git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
 
--- 
-#Randy
+Thank you,
+Andi
+
+Patches applied
+===============
+[1/1] i2c: i2c-qcom-geni: Correct I2C TRE sequence
+      commit: 32e9b680de4b46cfe835cbc7ee3dc721f7cc65fb
+
