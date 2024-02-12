@@ -1,182 +1,153 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A94339857;
-	Mon, 12 Feb 2024 11:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B06539867
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 11:48:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707738465; cv=none; b=QgikOfBGLR2V1ddrQzB2/7Z0agzN1Oa3umfHhcFr3a/qzMPQutFjF2skmSnsboPzJinHKppve5m6PXZnFZe/4JM1+Thv7vjF7vmAukFntx1+CUs1Md9DZSna/JbPqNXPD2oRg5z1ROD18f8W24Y3htT1XU1ljinz8FTcPF+Q8bs=
+	t=1707738520; cv=none; b=oxXcb5lE3AEnakdKI2+OWY3o+AqSlFZIbrzMwd3JvtHdjLoWDhaEQDPenjv5PrWW55385/Q+ufZkyKQ6i1B9UjzskNBgyokXzvmXHtSqU19Ub/UjRIu/D8p04ywIw3EXw/rv9HV2XX0K7WmMe6amiwTJamBI2VAqTCISiU1Hez8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707738465; c=relaxed/simple;
-	bh=2LLuzt/utxNQeoYBEvSpGD3oWa0MmajxLM7auRqCFHU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LkP7furnguNf3GhTe3YxWX7LO2lG7peccn9pjlmqGPDUXakr3JCzMnOIFmYlQFH8wYASo2Y8Sj/F4kFh5ABEdmg3SLwOxhsnOR40ty/zQ48F2xNU+TGXOaIyFjY2Klfxm92FpTzLlm+ZsABYQX/wbaQwzveOc5rJsXqLeiDD7q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TYMzk396jz6JB09;
-	Mon, 12 Feb 2024 19:43:46 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2A717140136;
-	Mon, 12 Feb 2024 19:47:40 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 12 Feb
- 2024 11:47:39 +0000
-Date: Mon, 12 Feb 2024 11:47:38 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: =?UTF-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
-CC: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	Andrey Skvortsov <andrej.skvortzov@gmail.com>, Icenowy Zheng
-	<icenowy@aosc.io>, <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/4] dt-bindings: iio: magnetometer: Add DT binding for
- Voltafield AF8133J
-Message-ID: <20240212114738.0000535b@Huawei.com>
-In-Reply-To: <20240211205211.2890931-3-megi@xff.cz>
-References: <20240211205211.2890931-1-megi@xff.cz>
-	<20240211205211.2890931-3-megi@xff.cz>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1707738520; c=relaxed/simple;
+	bh=XY8pKtMOGlU8E7fmXXTFQQ5wVyVh12EH/rjSh7TceOU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F92KSxSXhwmoKRynzFWvrwYk4mcd+cjupIS1CnyzTUKogBnT1M+jcF2hVV+Reej21Qj1zDhePoJLxMwsNwtIgMoaRj4SKAvm8JBpkywX63GG75YgBAneFUzrUu/Usy150wc3zMN7cfwH4nwvb+ujHpaFPAw5HxbYPST5vUC4glI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OekmQbST; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OekmQbST"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-411a5a86078so206035e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 03:48:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707738517; x=1708343317; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XY8pKtMOGlU8E7fmXXTFQQ5wVyVh12EH/rjSh7TceOU=;
+        b=OekmQbSTu2WdDQbk0zuQmLPMqBltcxOxPuMuenfDspiFKifJ0To6npllULofDgg5F1
+         lI85zsOhTBQx3Y2qZ/CpZKjN/vGG3yIBkEDszAadYb3ieapuw2eOsXXsJoFWhQpPNkcx
+         RoBV4Myy3893CIiXnwmrE3/Krj2zMDd7Gl57aTpkh/8jDTwhP0qsAEFHx4iiIzTErYfC
+         z7quI+P13bV8LDm69k3fJspSYsVgZXNwcz5VF++7BsdjQWY/tJA3Sy4p3gzpxyvIK3Gs
+         lsDbLfmtu2JxXoCj8m5mYQll1JcS/73i8z5qWG3h0TIy4tVTJySggXB9EUDMarE/r23I
+         X91A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707738517; x=1708343317;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XY8pKtMOGlU8E7fmXXTFQQ5wVyVh12EH/rjSh7TceOU=;
+        b=sGmTdL25igYWhDMSgVCt0s5GFbMbvotFv7xMNTrKlMNBwr1FD4IH7mc0INKQli41Zk
+         KFo/CjIh4wbdEKdUzirHA324oI+ceBK4OL4EWrEbFJrzeylCKampvRcvfjsFdMkdcqxn
+         ipU8Sh95kep6Qkzsp33STn/iDbXzUHk68QVX9Bdo2IEAruOAeCP3g5cz7cHaz6+WCs2g
+         C6sLZSQ9wRNeB2RGWrJ+VoRkGMnaoAc/M4NZC2g4cyKubyZdc3kYy3PrmL2f5paoHMC/
+         L016kXrhX9FqKXAuUa3/0OJaB0WQKyUZNy1Kxl2jEsSf6vbAS+HqqOhMUgXZBkggrv1k
+         LkWg==
+X-Forwarded-Encrypted: i=1; AJvYcCW5EWsBmsKZTsy2oL5ipjhmQQBa0z2kq+1CAGly+/zRU4XIZCP1Onj/uk9Rd38+qWmEDFKfIrR8ONlNsOKxZAPJdMU0MakUxlDBQEVi
+X-Gm-Message-State: AOJu0Yxfbe9iTbpded/Uj4szRyAo3guQAOQOswNuL54McynHuHIcMQ68
+	lnW3OG/N5dcsuTyZsCDz7ODcyt2KIvkr2mUYCBuzaejIrLEr2cnfwCjG4Ww/XlM=
+X-Google-Smtp-Source: AGHT+IEj/Q4zQlqs72828T06S++ozVybJYIXY6j9E9iaa2Mnn8VzBE59Jj+r+vXY1CShCioQgfHvPw==
+X-Received: by 2002:a05:600c:35cb:b0:410:7635:4087 with SMTP id r11-20020a05600c35cb00b0041076354087mr5827825wmq.6.1707738516774;
+        Mon, 12 Feb 2024 03:48:36 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUo0qHvCZ9OtMAIWgbHvTSRPHG/XfC22CJDRaGbafxNCKCLhhTNC7VaWxLS19l1DQjKQmXoFgR9BvtCehN8Vi8OnTc+sTVGAseNHUUFEnYz/brSlV7Ic16bADpxdRShfcQsMSgj/DmRSUhROXdD3YXgxM0RjvbZ5QA73A4UmtayR2CstYjuNvZIHMc1oFQ9Ld9oQr9nRRMcCp8blNLT0rlbK3B5M+qS/+SQOt/ff83+t3Miz8RCSN9mV3Vm+0dKunCx7UP7Ux0dD1wEV2rzMBaDhFSwbnz1Ei8+2fWmRlwGwDl6EL7iq4+Nd3eODT3ar4xjnU548q95RH62lvxK5cu5v2kIce3z7h0x+uTgdcryyGwsO6o4cYXymSZ+6IjSdsZ99FS5rx28LeFcwYXYWcXBUk7ha2/Z9cVAE7eHO7IeG9y5BxfDuI65H9C4DuSwFnr1Gx0STRxUktoPzwVzLwX7tOcmAGmP
+Received: from [192.168.1.20] ([178.197.223.6])
+        by smtp.gmail.com with ESMTPSA id r2-20020a056000014200b0033b4acb999dsm6536583wrx.98.2024.02.12.03.48.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 Feb 2024 03:48:36 -0800 (PST)
+Message-ID: <e1e2f1b5-efc6-4f87-9549-f395a1005c22@linaro.org>
+Date: Mon, 12 Feb 2024 12:48:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: sm8650: Add dma-coherent property
+Content-Language: en-US
+To: Ling Xu <quic_lxu5@quicinc.com>, andersson@kernel.org,
+ konrad.dybcio@linaro.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
+Cc: quic_kuiw@quicinc.com, quic_ekangupt@quicinc.com, kernel@quicinc.com,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, "Aiqun Yu (Maria)" <quic_aiquny@quicinc.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>
+References: <20240125102413.3016-1-quic_lxu5@quicinc.com>
+ <20240125102413.3016-3-quic_lxu5@quicinc.com>
+ <069b82ac-b59c-4665-8a77-6c11a2463faa@linaro.org>
+ <690e64d6-8888-4f99-9ee0-c731aeea7762@linaro.org>
+ <7edfed88-d84f-41e1-8c10-4af6efe53c4c@quicinc.com>
+ <ed9bf914-8b3e-401e-93c0-77eae97e2ab8@linaro.org>
+ <73cdc81b-f58f-4eb5-b6ad-3011768781bd@quicinc.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <73cdc81b-f58f-4eb5-b6ad-3011768781bd@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, 11 Feb 2024 21:51:58 +0100
-Ond=C5=99ej Jirman <megi@xff.cz> wrote:
+On 12/02/2024 12:45, Ling Xu wrote:
+>>>> https://lore.kernel.org/linux-devicetree/254c1d14-25e3-4f4c-9e79-4ef7cec4d22f@linaro.org/T/#t
+>>>>
+>>>> Best regards,
+>>>> Krzysztof
+>>>>
+>>> Hi Krzysztof,
+>>> Add dma-coherent: true in this file: Documentation/devicetree/bindings/misc/qcom,fastrpc.yaml at line number 89 can pass the DTcheck.
+>>
+>> I don't understand your comment. Did you read the link above?
+>>
+>> Anyway, I was asking: are you testing the patches before sending?
+>>
+>> Best regards,
+>> Krzysztof
+>>
+> Yes, I tested before sending.
 
-> From: Icenowy Zheng <icenowy@aosc.io>
+Then I am confused why there is a warning. If this was tested and sent,
+it means you sent code with a known warning.
 
-Title doesn't need to mention binding (it's implicit from the dt-bindings b=
-it
-dt-bindings: iio: magnetometer: Add Voltafield AF8133J
-
->=20
-> Voltafield AF8133J is a simple magnetometer sensor produced by Voltafield
-> Technology Corp, with dual power supplies (one for core and one for I/O)
-> and active-low reset pin.
->=20
-> The sensor has configurable range 1.2 - 2.2 mT and a software controlled
-> standby mode.
->=20
-> Add a device tree binding for it.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Ond=C5=99ej Jirman <megi@xff.cz>
-
-Hi Ond=C5=99ej
-
-A few quick comments.
-
-
-> ---
->  .../iio/magnetometer/voltafield,af8133j.yaml  | 58 +++++++++++++++++++
->  1 file changed, 58 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/vo=
-ltafield,af8133j.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/voltafiel=
-d,af8133j.yaml b/Documentation/devicetree/bindings/iio/magnetometer/voltafi=
-eld,af8133j.yaml
-> new file mode 100644
-> index 000000000000..ab56c0f798ad
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/magnetometer/voltafield,af813=
-3j.yaml
-> @@ -0,0 +1,58 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/magnetometer/voltafield,af8133j.y=
-aml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Voltafield AF8133J magnetometer sensor
-> +
-> +maintainers:
-> +  - Ond=C5=99ej Jirman <megi@xff.cz>
-> +
-> +properties:
-> +  compatible:
-> +    - voltafield,af8133j
-Test your bindings (as described in the bot message).
-    const: voltafield,af8133j
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  reset-gpios:
-> +    description: |
-No need for the | as the formatting doesn't need to be preserved.
-
-> +      an pin needed for AF8133J to set the reset state. This should be u=
-sually
-
-A pin
-
-> +      active low.
-> +
-> +  avdd-supply:
-> +    description: |
-> +      an optional regulator that needs to be on to provide AVDD power (W=
-orking
-
-An optional (if it were optional, A regulator if not)
-
-> +      power, usually 3.3V) to the sensor.
-Seems unlikely the power supply is optional (though specifying it in DT mig=
-ht be -
-however see below).
-
-> +
-> +  dvdd-supply:
-> +    description: |
-> +      an optional regulator that needs to be on to provide DVDD power (D=
-igital
-> +      IO power, 1.8V~AVDD) to the sensor.
-> +
-> +  mount-matrix:
-> +    description: an optional 3x3 mounting rotation matrix.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-
-Any power supply that is required for operation should be listed here (even=
- though
-we can rely on the stub supplies if it isn't in the DT).
-I used to think this wasn't necessary, so lots of bindings upstream don't y=
-et
-have it.
-
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    i2c {
-> +        #address-cells =3D <1>;
-> +        #size-cells =3D <0>;
-> +
-> +        magnetometer@1c {
-> +            compatible =3D "voltafield,af8133j";
-> +            reg =3D <0x1c>;
-> +            avdd-supply =3D <&reg_dldo1>;
-> +            dvdd-supply =3D <&reg_dldo1>;
-> +            reset-gpios =3D <&pio 1 1 GPIO_ACTIVE_LOW>;
-> +        };
-> +    };
+Best regards,
+Krzysztof
 
