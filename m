@@ -1,28 +1,28 @@
 Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23CF3FE36;
-	Mon, 12 Feb 2024 18:42:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC21B3FE44;
+	Mon, 12 Feb 2024 18:42:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707763354; cv=none; b=c8ZZycxkYQ+g0ZOla0f+i8uiNngM8E4elzkdP1UMKwJDh+xrjQlxfIzbQ0KbBKz1QBlsK01KFeECRxmsCNWTKzws4EN0am3Tx/MkXP0W8D7P9zThemKQQHsB45MweeWNFBjY9E+NqW3iw/5UolNfqylCvK4zGRivSaJMGjPRPyg=
+	t=1707763355; cv=none; b=kZj2N1GMp61RygJFLN6KheHfv5jwLd5Gu8LoouABzpFn9CsAg5pZ8cPaWL42zkIGzj9PxT1YFaXGfMw7Yg8Xg7OK0fKWWy4Jmu9zHy41UDZ/oJ79cTSqVR6ufya9FIAbNgeRQRdvsZzu3HX0wpNBU8q46XrdIfV0+HR0MIFO0XI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707763354; c=relaxed/simple;
-	bh=L3NRX4YCC5wAmVuFoBGeSlDkUFlbjD5+xbxslNXvKy0=;
+	s=arc-20240116; t=1707763355; c=relaxed/simple;
+	bh=0fjHyFCgQiCJ7Xf9wqWXnNvGeNJWsCVj3Z7wFx692qc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OJUkBZLxTH+lo/cDoOv3pgz0wnyWw2ycPO1VqOtY1LiwGwFrkzb0Z9bX9te75zH++AY0RQ4whXlJopHSM8fyy8LtcyqCwUZb+7ZwWIxoEeuac54owHBwQSQxbqXDEV6vJecfNjdcTJyJLMITNS/JjRreDRd5Li9IAogg/ektEMs=
+	 MIME-Version:Content-Type; b=ogUnMkS7nCblb10QkqU3rySOZBGpWtZ4Rm9oiJlxmMwaIEvbTmac0py1hw4x0MiPz00D8dB/LAu+CGhV+OIdGu4oGLEFmL7qfD8M27e9eI5Q0XcTIEMdGq2xuIOGBmLKcEAnzO3tVhnLrPIT93owoBoKFozxmzPQxl3JTcKiFSw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; arc=none smtp.client-ip=79.96.170.134
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
  by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.4.0)
- id 0f78f23c5a53093c; Mon, 12 Feb 2024 19:42:29 +0100
+ id e1f8ca868e59d311; Mon, 12 Feb 2024 19:42:30 +0100
 Received: from kreacher.localnet (unknown [195.136.19.94])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 9385C669CF2;
-	Mon, 12 Feb 2024 19:42:28 +0100 (CET)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 2107C669CF2;
+	Mon, 12 Feb 2024 19:42:30 +0100 (CET)
 From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To: Linux PM <linux-pm@vger.kernel.org>
 Cc: Lukasz Luba <lukasz.luba@arm.com>, LKML <linux-kernel@vger.kernel.org>,
@@ -36,9 +36,10 @@ Cc: Lukasz Luba <lukasz.luba@arm.com>, LKML <linux-kernel@vger.kernel.org>,
  Sascha Hauer <s.hauer@pengutronix.de>,
  Pengutronix Kernel Team <kernel@pengutronix.de>,
  Manaf Meethalavalappu Pallikunhi <quic_manafm@quicinc.com>
-Subject: [PATCH v2 8/9] thermal: of: Set THERMAL_TRIP_FLAG_RW_TEMP directly
-Date: Mon, 12 Feb 2024 19:40:34 +0100
-Message-ID: <9235101.CDJkKcVGEf@kreacher>
+Subject:
+ [PATCH v2 6/9] wifi: iwlwifi: mvm: Set THERMAL_TRIP_FLAG_RW_TEMP directly
+Date: Mon, 12 Feb 2024 19:38:07 +0100
+Message-ID: <22182690.EfDdHjke4D@kreacher>
 In-Reply-To: <6017196.lOV4Wx5bFT@kreacher>
 References: <6017196.lOV4Wx5bFT@kreacher>
 Precedence: bulk
@@ -60,7 +61,7 @@ From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 It is now possible to flag trip points with THERMAL_TRIP_FLAG_RW_TEMP
 to allow their temperature to be set from user space via sysfs instead
 of using a nonzero writable trips mask during thermal zone registration,
-so make the OF thermal code do that.
+so make the iwlwifi code do that.
 
 No intentional functional impact.
 
@@ -70,51 +71,43 @@ thermal_zone_device_register_with_trips() going forward.
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
 
-v1 -> v2: Rename trip flag (Stanislaw).
+v1 -> v2:
+   * Rename trip flag (Stanislaw).
+   * Fix coding mistake in iwl_mvm_thermal_zone_register().
+   * Add "wifi:" prefix to the subject (Kalle).
 
 ---
- drivers/thermal/thermal_of.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/tt.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-Index: linux-pm/drivers/thermal/thermal_of.c
+Index: linux-pm/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
 ===================================================================
---- linux-pm.orig/drivers/thermal/thermal_of.c
-+++ linux-pm/drivers/thermal/thermal_of.c
-@@ -117,6 +117,8 @@ static int thermal_of_populate_trip(stru
- 		return ret;
- 	}
+--- linux-pm.orig/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
++++ linux-pm/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
+@@ -667,9 +667,6 @@ static  struct thermal_zone_device_ops t
+ 	.set_trip_temp = iwl_mvm_tzone_set_trip_temp,
+ };
  
-+	trip->flags = THERMAL_TRIP_FLAG_RW_TEMP;
-+
- 	return 0;
- }
- 
-@@ -477,7 +479,7 @@ static struct thermal_zone_device *therm
- 	struct device_node *np;
- 	const char *action;
- 	int delay, pdelay;
--	int ntrips, mask;
-+	int ntrips;
- 	int ret;
- 
- 	of_ops = kmemdup(ops, sizeof(*ops), GFP_KERNEL);
-@@ -510,15 +512,13 @@ static struct thermal_zone_device *therm
- 	of_ops->bind = thermal_of_bind;
- 	of_ops->unbind = thermal_of_unbind;
- 
--	mask = GENMASK_ULL((ntrips) - 1, 0);
+-/* make all trips writable */
+-#define IWL_WRITABLE_TRIPS_MSK (BIT(IWL_MAX_DTS_TRIPS) - 1)
 -
- 	ret = of_property_read_string(np, "critical-action", &action);
- 	if (!ret)
- 		if (!of_ops->critical && !strcasecmp(action, "reboot"))
- 			of_ops->critical = thermal_zone_device_critical_reboot;
- 
- 	tz = thermal_zone_device_register_with_trips(np->name, trips, ntrips,
--						     mask, data, of_ops, &tzp,
-+						     0, data, of_ops, &tzp,
- 						     pdelay, delay);
- 	if (IS_ERR(tz)) {
- 		ret = PTR_ERR(tz);
+ static void iwl_mvm_thermal_zone_register(struct iwl_mvm *mvm)
+ {
+ 	int i, ret;
+@@ -692,11 +689,12 @@ static void iwl_mvm_thermal_zone_registe
+ 	for (i = 0 ; i < IWL_MAX_DTS_TRIPS; i++) {
+ 		mvm->tz_device.trips[i].temperature = THERMAL_TEMP_INVALID;
+ 		mvm->tz_device.trips[i].type = THERMAL_TRIP_PASSIVE;
++		mvm->tz_device.trips[i].flags = THERMAL_TRIP_FLAG_RW_TEMP;
+ 	}
+ 	mvm->tz_device.tzone = thermal_zone_device_register_with_trips(name,
+ 							mvm->tz_device.trips,
+ 							IWL_MAX_DTS_TRIPS,
+-							IWL_WRITABLE_TRIPS_MSK,
++							0,
+ 							mvm, &tzone_ops,
+ 							NULL, 0, 0);
+ 	if (IS_ERR(mvm->tz_device.tzone)) {
 
 
 
