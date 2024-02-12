@@ -1,278 +1,126 @@
-Received: from mail.katalix.com (mail.katalix.com [3.9.82.81])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 882504CE02;
-	Mon, 12 Feb 2024 21:34:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.9.82.81
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115C64CDE5;
+	Mon, 12 Feb 2024 21:34:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707773671; cv=none; b=Kn7OWWxQ98cmRElhUWwzpnURkYfCZOUhVfJ0OraL3gl+9jM2wWUxbvaxp4Wn/qH2h64QEjv6T+EfQ78PpAw+/kQlvqBven/2OG/15VQQeqwp4MdwT82hzkYYwlkc4m0JGDyA7o2Jy6QCvr+QHvhlXhUPUDFF7nzXv5W7X8tmcv0=
+	t=1707773699; cv=none; b=TeJ228RY/RB1l/IYfeRwz7Xr9xe4pxXFx/kXBiUUGyZsyhHrmCo+Q8b059u+8cUAsnY6n+5aHESNBZYWoZL/CWtbJi2Ese65fg6z/4qfdci91Bo0QLQbzlURLsS+GQmae6qNREM+5qSNBu/vs0pTQyPZt7SZ6UVZpzYoXfU8X5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707773671; c=relaxed/simple;
-	bh=+qcu0DYPNoQipBt7EpDCR2pS5408YGljc/2HyDR4pFU=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jS2flfCEZD14g3trC0Xq/m5kssMXMno9BYNKfRb5K0t46D1KuFVj7nk95GEj0ID++zqKPQqq8u8JB5TXf8AXzPZLcHAHuvnTz47pf2QR+MDsS9pojAVJ5vVuDvvjG2livUgloN6aZt0K4xIE2Bwqa8W5wSWzMzIT/5YngSG7PK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=katalix.com; spf=pass smtp.mailfrom=katalix.com; dkim=pass (2048-bit key) header.d=katalix.com header.i=@katalix.com header.b=0OYZVpUe; arc=none smtp.client-ip=3.9.82.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=katalix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=katalix.com
+	s=arc-20240116; t=1707773699; c=relaxed/simple;
+	bh=MEChIYkvQHqxWqS/fjWdPqFHkAIj3ZLNWN4rsNfct7g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=nnjwAZthRZ3ipTyVom6fWNRvup98//CZ3gBS4krVvL2PM3GGL+rmESFaghc+sc7P6JvCZ0TnLDz2mppWzSwI2ysDn+6vlWXUh3JKM9aKOGkDnzpfrrIp9WBST42gEpPJCa9fr1nbgZtGo7rwPfT7asfF2ceF1yPzdLbtP2U9Q64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EKSdDu0p; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=katalix.com header.i=@katalix.com header.b="0OYZVpUe"
-Received: from localhost (unknown [IPv6:2a02:8012:909b:0:a903:359f:8aea:3bdc])
-	(Authenticated sender: tom)
-	by mail.katalix.com (Postfix) with ESMTPSA id 4C7B67D118;
-	Mon, 12 Feb 2024 21:25:33 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=katalix.com; s=mail;
-	t=1707773133; bh=+qcu0DYPNoQipBt7EpDCR2pS5408YGljc/2HyDR4pFU=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Disposition:In-Reply-To:From;
-	z=Date:=20Mon,=2012=20Feb=202024=2021:25:32=20+0000|From:=20Tom=20P
-	 arkin=20<tparkin@katalix.com>|To:=20Samuel=20Thibault=20<samuel.th
-	 ibault@ens-lyon.org>,=0D=0A=09James=20Chapman=20<jchapman@katalix.
-	 com>,=20edumazet@google.com,=0D=0A=09gnault@redhat.com,=20davem@da
-	 vemloft.net,=20kuba@kernel.org,=0D=0A=09pabeni@redhat.com,=20corbe
-	 t@lwn.net,=20netdev@vger.kernel.org,=0D=0A=09linux-doc@vger.kernel
-	 .org,=20linux-kernel@vger.kernel.org|Subject:=20Re:=20[PATCHv3]=20
-	 PPPoL2TP:=20Add=20more=20code=20snippets|Message-ID:=20<ZcqMzP1RQy
-	 e9o4eB@katalix.com>|References:=20<20240203223513.f2nfgaamgffz6dno
-	 @begin>|MIME-Version:=201.0|Content-Disposition:=20inline|In-Reply
-	 -To:=20<20240203223513.f2nfgaamgffz6dno@begin>;
-	b=0OYZVpUe9YP/RBA64d2L6QacwiRppeqvdukjETNhog6SriqbA1jeDj9rV48kT/wdt
-	 YeLNm/ijC9vkTkLxNW3FlhWevP7FTdkOs6USVYeR32pslQCrEGUBciUctrR5fkDqQy
-	 iNOb+161qhJsBqMnBayut8Pxjr1X7WQHqi7y1axCot7u3kD0h7fu+9vDKfcLH0WUsV
-	 lxVrMmn1GYEj93OyD9l7Q6dOUy78P9dhCN0LToDKrdEn0FLS5WWpqLGJsOGD8fVQCl
-	 lbuiipIR5v+9A1bVbWevCt5+WJqHFxDwj0aEcVqRmjd5tYZLX+h/ybXkXLt5PC6t/S
-	 d0ugTHrWtN1fg==
-Date: Mon, 12 Feb 2024 21:25:32 +0000
-From: Tom Parkin <tparkin@katalix.com>
-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
-	James Chapman <jchapman@katalix.com>, edumazet@google.com,
-	gnault@redhat.com, davem@davemloft.net, kuba@kernel.org,
-	pabeni@redhat.com, corbet@lwn.net, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv3] PPPoL2TP: Add more code snippets
-Message-ID: <ZcqMzP1RQye9o4eB@katalix.com>
-References: <20240203223513.f2nfgaamgffz6dno@begin>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKSdDu0p"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d99c5f6bfeso28170765ad.1;
+        Mon, 12 Feb 2024 13:34:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707773697; x=1708378497; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZlNDhKCKO6Zl/pUC+lksP8PSO2guoSsHXwPfuNxeEAk=;
+        b=EKSdDu0pvGj7E3Obwa/IjdVvtRvm1Airvo2CYPmBABfTQpPvrt2QB0IaAPRK796UDT
+         cncQ9ES+AyhXZNMRbhS4rzZhWUBqw4r02FQ26QZBN9dUS4QPv4L6LREdSpNNcbYDZXxv
+         shDtIbQxnqhZpx1QaoJAMmDWa3/Jp9iNUStiZMtSMAUY8NIzkDSk9pZkPSzBZh7DCFme
+         hFBu2/I5MsLFr3qhVkI/7gEaCDJtRM2WJRQUvS60AKcy0rOoOvqrmAHIix8GL+J3xFPC
+         Ku5G1wmTqFLOI19t2l/X4HCXmkioM7xKunLDQDMsMgqLw/hQdcpop1+7E6rAQcnlxgHc
+         ZCDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707773697; x=1708378497;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZlNDhKCKO6Zl/pUC+lksP8PSO2guoSsHXwPfuNxeEAk=;
+        b=lCtzw9RexPp/fvBHYDaDYOR8z0+J4k7qHSYLFtLhW8m8c2trnpYstrwFr3sqACpmxq
+         QupdzQyt+p/3rKEIIX1MYxjSrFzXqr2YE0HTs4GzUGyxbUyqCbViZaYuYxsEXL5SANf/
+         Ed265Ew70EU1/ocK+F0KNLKZryp4gEgMiJdgtsybZ39+4HZOrxsmVNtce2bJJmls3p/d
+         k/mdHURLmlA+hccDxQJSlaL7scOIJ9A3jdtQTwxBuaiilmDEr/CAh9SWR2zJbPXsJRCd
+         X5nStJ5cGShHUwBPY6+niZ4mYAXzXGAH+ASlh5zbV9OHsY0mmgpCJFJwpGWjpZ+/gDBt
+         1DlA==
+X-Forwarded-Encrypted: i=1; AJvYcCVpFoVjGuKfeYxeJQQiEnDYOqIAbH+E/pUZ4Fj7PFbNv2UG5yfLRUmN1kYi3+Jk+PdJmnQQO5pOsJ/Sb26jDrAUFn0lwSxd5lpLTsJz
+X-Gm-Message-State: AOJu0YzeCE4Rfuc7W77fwKLhCCz0MeVA5AYWA2Dqwm/j6OJQyPJu05vQ
+	V+Elon/SsW9IlVNLSU3dWFXbVD+S9yPVjqH/ojzu1Z3DvVi+3gLNwU/P5fkRMrc=
+X-Google-Smtp-Source: AGHT+IHwG8ZQ78DWxKJXaa4Y4H+scVFTspOdR2ITBiwAOR6QL2NZ98AKmOKV0dXKMEHndtdjhS4cog==
+X-Received: by 2002:a17:902:e74a:b0:1d9:39b4:2039 with SMTP id p10-20020a170902e74a00b001d939b42039mr821746plf.30.1707773697234;
+        Mon, 12 Feb 2024 13:34:57 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWqB0dGX0zbAujuGkYeJJU7kS/llOmthnOh3ugaq65OokgL85NZt+gqCzNrHjhq7Iq1ZQkPGd/+yeA0rVV0IGhBpL/wkHVEU9/7K+6pc/DCPMl7axF1h1rOgc6mR0rCDRev9JZ7rHQcfTKC3SVZeJQORjrUIOJ5f8GkklvR9KvaZWwJtWHykOr2AopfpNPUiVETKiOpVM8J4zhy4jVe9yarC4dDd50yda7vDX8PXei2gdKuNr5X+xpxSef3HVAxZxVfNA/oOF/0WyFQ2UNGvD7I1vfQkDq0yV0H4wAoLRYAwbcrJAylbaE+V1CLpKQDIDSs89aF16/ERjJP6hIU
+Received: from tresc054937.tre-sc.gov.br ([2804:c:204:200:2be:43ff:febc:c2fb])
+        by smtp.gmail.com with ESMTPSA id f14-20020a170902ce8e00b001d7252fef6bsm762956plg.299.2024.02.12.13.34.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Feb 2024 13:34:56 -0800 (PST)
+From: Luiz Angelo Daros de Luca <luizluca@gmail.com>
+Date: Mon, 12 Feb 2024 18:34:33 -0300
+Subject: [PATCH net-next] net: dsa: realtek: fix digital interface select
+ macro for EXT0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="TYbjNzr0z0MM3ovf"
-Content-Disposition: inline
-In-Reply-To: <20240203223513.f2nfgaamgffz6dno@begin>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240212-realtek-fix_ext0-v1-1-f3d2536d191a@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAOiOymUC/x2MUQqDQAwFryL5NrBGqaVXKSKhPtvQspbdpQiLd
+ zf0c3jzplJGMmS6NZUSfpZtiw5d29DjpfEJtsWZJMgQpBNO0E/Bm1fbZ+wl8DUMqr2MouOF/PZ
+ N8O2fvFNE4egaTcdxAi9GubJsAAAA
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ =?utf-8?q?Alvin_=C5=A0ipraga?= <alsi@bang-olufsen.dk>, 
+ Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, 
+ Vladimir Oltean <olteanv@gmail.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Luiz Angelo Daros de Luca <luizluca@gmail.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1468; i=luizluca@gmail.com;
+ h=from:subject:message-id; bh=MEChIYkvQHqxWqS/fjWdPqFHkAIj3ZLNWN4rsNfct7g=;
+ b=owEBbQGS/pANAwAIAbsR27rRBztWAcsmYgBlyo7znpm3TMVYV+rMp8H5VWOfgNuidW22MQpAi
+ ZRKysK4idqJATMEAAEIAB0WIQQRByhHhc1bOhL6L/i7Edu60Qc7VgUCZcqO8wAKCRC7Edu60Qc7
+ Vru+B/4gjK3xAOWMDgfjdQGY0I6pSnDf1ElWlwq2ppFwBs1+++JCKGj6gpyH4hXwWqU5+klLR/U
+ rlUyz8sRFrcCbk2TZx+fMsZMlTpwZrTE/5rH1neV38lV+XuNs0SWYZBPLmvGw8IfhB51P48pHCG
+ CMDBn7o2HLUAP5PUSah4BgVfQua9zvaCDrlec7RwG/Uy1+91/VwzBhxB1Ee8devv8HiD8iJNEHu
+ XEn36Sr4KCo5nz/M166byb+wH9XiN52HrWibnN+jEoZ5kN4qyJL2DSAD1czp1RhE0lAwsvMp0xL
+ KAhwlav3K8aQOI3AssJJaaoRHTCWZuluJ9PXlt+FsU0CBaTq
+X-Developer-Key: i=luizluca@gmail.com; a=openpgp;
+ fpr=1107284785CD5B3A12FA2FF8BB11DBBAD1073B56
 
+While no supported devices currently utilize EXT0, the register reserves
+the bits for an EXT0. EXT0 is utilized by devices from the generation
+prior to rtl8365mb, such as those supported by the driver library
+rtl8367b.
 
---TYbjNzr0z0MM3ovf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Luiz Angelo Daros de Luca <luizluca@gmail.com>
+---
+ drivers/net/dsa/realtek/rtl8365mb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks Samuel, comments inline below.
+diff --git a/drivers/net/dsa/realtek/rtl8365mb.c b/drivers/net/dsa/realtek/rtl8365mb.c
+index be56373e9473..12665a8a3412 100644
+--- a/drivers/net/dsa/realtek/rtl8365mb.c
++++ b/drivers/net/dsa/realtek/rtl8365mb.c
+@@ -209,10 +209,10 @@
+ #define RTL8365MB_EXT_PORT_MODE_100FX		13
+ 
+ /* External interface mode configuration registers 0~1 */
+-#define RTL8365MB_DIGITAL_INTERFACE_SELECT_REG0		0x1305 /* EXT1 */
++#define RTL8365MB_DIGITAL_INTERFACE_SELECT_REG0		0x1305 /* EXT0,EXT1 */
+ #define RTL8365MB_DIGITAL_INTERFACE_SELECT_REG1		0x13C3 /* EXT2 */
+ #define RTL8365MB_DIGITAL_INTERFACE_SELECT_REG(_extint) \
+-		((_extint) == 1 ? RTL8365MB_DIGITAL_INTERFACE_SELECT_REG0 : \
++		((_extint) <= 1 ? RTL8365MB_DIGITAL_INTERFACE_SELECT_REG0 : \
+ 		 (_extint) == 2 ? RTL8365MB_DIGITAL_INTERFACE_SELECT_REG1 : \
+ 		 0x0)
+ #define   RTL8365MB_DIGITAL_INTERFACE_SELECT_MODE_MASK(_extint) \
 
-On  Sat, Feb 03, 2024 at 23:35:13 +0100, Samuel Thibault wrote:
-> The existing documentation was not telling that one has to create a PPP
-> channel and a PPP interface to get PPPoL2TP data offloading working.
->=20
-> Also, tunnel switching was not mentioned, so that people were thinking
-> it was not supported, while it actually is.
->=20
-> Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
->=20
-> ---
-> Difference from v1:
-> - follow kernel coding style
-> - check for failures
-> - also mention netlink and ip for configuring the link
-> - fix bridging channels
->=20
-> Difference from v2:
-> - fix text alignment
->=20
->  Documentation/networking/l2tp.rst |   99 +++++++++++++++++++++++++++++++=
-+++++--
->  1 file changed, 95 insertions(+), 4 deletions(-)
->=20
-> --- a/Documentation/networking/l2tp.rst
-> +++ b/Documentation/networking/l2tp.rst
-> @@ -387,11 +387,16 @@ Sample userspace code:
->    - Create session PPPoX data socket::
-> =20
->          struct sockaddr_pppol2tp sax;
-> -        int fd;
-> +        int session_fd;
-> +        int ret;
-> =20
->          /* Note, the tunnel socket must be bound already, else it
->           * will not be ready
->           */
-> +        session_fd =3D socket(AF_PPPOX, SOCK_DGRAM, PX_PROTO_OL2TP);
-> +        if (session_fd < 0)
-> +                return -errno;
-> +
->          sax.sa_family =3D AF_PPPOX;
->          sax.sa_protocol =3D PX_PROTO_OL2TP;
->          sax.pppol2tp.fd =3D tunnel_fd;
-> @@ -406,11 +411,97 @@ Sample userspace code:
->          /* session_fd is the fd of the session's PPPoL2TP socket.
->           * tunnel_fd is the fd of the tunnel UDP / L2TPIP socket.
->           */
-> -        fd =3D connect(session_fd, (struct sockaddr *)&sax, sizeof(sax));
-> -        if (fd < 0 ) {
-> +        ret =3D connect(session_fd, (struct sockaddr *)&sax, sizeof(sax)=
-);
-> +        if (ret < 0 ) {
-> +                close(session_fd);
-> +                return -errno;
-> +        }
-> +
-> +        return session_fd;
-> +
-> +L2TP control packets will still be available for read on `tunnel_fd`.
-> +
-> +  - Create PPP channel::
-> +
-> +        int chindx;
-> +        int ppp_chan_fd;
-> +
-> +        ret =3D ioctl(session_fd, PPPIOCGCHAN, &chindx);
-> +        if (ret < 0)
-> +                return -errno;
-> +
-> +        ppp_chan_fd =3D open("/dev/ppp", O_RDWR);
-> +        if (ppp_chan_fd < 0)
-> +                return -errno;
-> +
-> +        ret =3D ioctl(ppp_chan_fd, PPPIOCATTCHAN, &chindx);
-> +        if (ret < 0) {
-> +                close(ppp_chan_fd);
-> +                return -errno;
-> +        }
-> +
-> +        return ppp_chan_fd;
-> +
-> +LCP PPP frames will be available for read on `ppp_chan_fd`.
-> +
-> +  - Create PPP interface::
-> +
-> +        int ppp_if_fd;
-> +        int ifunit =3D -1;
-> +
-> +        ppp_if_fd =3D open("/dev/ppp", O_RDWR);
-> +        if (ppp_chan_fd < 0)
+---
+base-commit: 0f37666d87d2dea42ec21776c3d562b7cbd71612
+change-id: 20240212-realtek-fix_ext0-804aa3272a76
 
-I think this should be 'if (ppp_if_fd < 0)' ..?
+Best regards,
+-- 
+Luiz Angelo Daros de Luca <luizluca@gmail.com>
 
-> +                return -errno;
-> +
-> +        ret =3D ioctl(ppp_if_fd, PPPIOCNEWUNIT, &ifunit);
-> +        if (ret < 0) {
-> +                close(ppp_if_fd);
-> +                return -errno;
-> +        }
-> +
-> +        ret =3D ioctl(ppp_chan_fd, PPPIOCCONNECT, ifunit);
-> +        if (ret < 0) {
-> +                close(ppp_if_fd);
-> +                return -errno;
-> +        }
-> +
-> +        return ppp_chan_fd;
-
-=2E..and this should be 'return ppp_if_fd'.
-
-> +
-> +IPCP/IPv6CP PPP frames will be available for read on `ppp_if_fd`.
-> +
-> +The ppp<ifunit> interface can then be configured as usual with netlink's
-> +RTM_NEWLINK, RTM_NEWADDR, RTM_NEWROUTE, or ioctl's SIOCSIFMTU, SIOCSIFAD=
-DR,
-> +SIOCSIFDSTADDR, SIOCSIFNETMASK, SIOCSIFFLAGS, or with the `ip` command.
-> +
-> +  - L2TP session bridging (also called L2TP tunnel switching or L2TP mul=
-tihop)
-> +    is supported by bridging the ppp channels of the two L2TP sessions t=
-o be
-> +    bridged::
-
-Since we're in L2TP-world here it is probably worth making it clear
-that this only applies to PPP pseudowire types.
-
-> +
-> +        int chindx1;
-> +        int chindx2;
-> +        int ppp_chan_fd;
-> +
-> +        ret =3D ioctl(session_fd1, PPPIOCGCHAN, &chindx1);
-> +        if (ret < 0)
-> +                return -errno;
-> +
-> +        ret =3D ioctl(session_fd2, PPPIOCGCHAN, &chind2x);
-
-Typo here I think: s/chind2x/chindx2/ ?
-
-> +        if (ret < 0)
-> +                return -errno;
-> +
-> +        ppp_chan_fd =3D open("/dev/ppp", O_RDWR);
-
-Missing a check on ppp_chan_fd -- we might as well check it since
-we're checking returns everywhere else.
-
-> +        ret =3D ioctl(ppp_chan_fd, PPPIOCATTCHAN, &chindx1);
-> +        if (ret < 0) {
-> +                close(ppp_chan_fd);
->                  return -errno;
->          }
-> -        return 0;
-> +
-> +        ret =3D ioctl(ppp_chan_fd, PPPIOCBRIDGECHAN, &chindx2);
-> +        close(ppp_chan_fd);
-> +        if (ret < 0)
-> +                return -errno;
-> +
-> +See more details for the PPP side in ppp_generic.rst.
-
-I think we need to be clear here in this example what session_fd1 and
-session_fd2 are, and how they have come to be, since they haven't been
-mentioned in the examples so far.
-
-I'm not sure whether it helps or not, but when we were working on l2tp-ktest
-initially we had tests for the bridge ioctl.  The tests bridged a PPPoE
-channel with a PPPoL2TP one (which was the original motivation for
-PPPIOCBRIDGECHAN).  The code is here:
-
-https://github.com/katalix/l2tp-ktest/blob/master/src/util.c#L592
-
-So in that codebase we have a pppoe fd and a pppol2tp fd, both of
-which have had been attached using PPPIOCATTCHAN.
-
-We then bridge those two channels using PPPIOCBRIDGECHAN.
-
-I think the bridging is a complex use-case for what is already quite
-an involved API (lots of file descriptors and indices to keep track
-of!).  So I think the code snippet needs to be as clear as we can make
-it.
-
-Thanks again for your work on the documentation.
-
---=20
-Tom Parkin
-Katalix Systems Ltd
-https://katalix.com
-Catalysts for your Embedded Linux software development
-
---TYbjNzr0z0MM3ovf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEsUkgyDzMwrj81nq0lIwGZQq6i9AFAmXKjMkACgkQlIwGZQq6
-i9BXwQgAoHqydyEGowgf3EVzDNRudUQUPc1Sk7KFUzOy21wjqyINwlRuoVVVd/W4
-L0W2k6uCVv+BusU/A4Erubug2kVtGx/xf+DoK2uHYw6Qlrqwy3qtSa48eyvCZBhc
-YPQhGqT4h9q7ijvW4ivndSpzzT2NHt3v56dWubs4UZd0PmW5gXjsqI73cOK/NjAs
-dod8Ia25mgMuf+Eop/EvwKJQIDTkwJ/vJ8+r1oQ/EZh/gCXolxv8InaDoFyW3B7m
-FPMZCqhF9e+MX7E9U8jrFerl5QMXsmAwz+lJGlmsD/HTABI+5PnwiiKNNGE5+jBN
-ISeAuB0igrd7Pg4q7J4dh3ghr8zW5Q==
-=udhW
------END PGP SIGNATURE-----
-
---TYbjNzr0z0MM3ovf--
