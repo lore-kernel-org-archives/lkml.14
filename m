@@ -1,89 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 117DC3D0A4;
-	Mon, 12 Feb 2024 16:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7373CF49;
+	Mon, 12 Feb 2024 16:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707753755; cv=none; b=psnAn8N8QLL+U2Ih9ahNcVw9rjlXzxNyCynGJIxD2chwrF6HmsLgXuxIaKPqEqozhDjy9kVlNvDRTvsf2zRwismVowUI83J1cp0WkrYj9AdJdzOh2zXrQOmGqKjsQNR6esj/ZOmMi+ZAw8HyCZpV0yvc7jD6Yha6czG5Rhsnh+4=
+	t=1707753852; cv=none; b=Zp+6QLpynLpCYO1ucv10emY3zXcrjjrzqHfZ6Ab1h7hFVhfW73vqQpRMEjfNcANg/UVM//NLW2DEZLTg8bkzxAI1x4gyM/t7EBN7cnDogA8pkKmBNXX8+sq4BP9UZlS29yezNWMcvYC61CpeJ2ZpNU2js6HMRJhiuq8y6Gsb8wE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707753755; c=relaxed/simple;
-	bh=BO82b3pF0PgWZbp7XtrFt5+deNdyxcVfHCqOz7Kr9Us=;
-	h=Content-Type:Date:Message-Id:Subject:Cc:From:To:References:
-	 In-Reply-To; b=OxvKBCNG25TsayJNDvB0TipjdSIQ+fza0xeKv/zctZhGQ3+kDDV5SKmtFGFXwoVavruKUssnULIWYSyecplQR8hUVdQr9KlpU0SKo118AAVF6OCkMrWKT8DctkCPalGnrszT+H/71pyuVo0gqYXy3bwettKoVbuUF+/ioMax3vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TujBrWeB; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TujBrWeB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16B67C433F1;
-	Mon, 12 Feb 2024 16:02:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707753754;
-	bh=BO82b3pF0PgWZbp7XtrFt5+deNdyxcVfHCqOz7Kr9Us=;
-	h=Date:Subject:Cc:From:To:References:In-Reply-To:From;
-	b=TujBrWeBJT+lImis8uQdYb3Iw8y7ZrBPelEPlFc7/JVzV/uLFR5WBrp5XFNsLMILQ
-	 rUAgsBTbUWdq+SULdLgg3/3HnEsDaEqvvdYi0bmeguYyj9mhs/CC1ZXlu81dqAq+qf
-	 YEE6IzXXI2rDiCANqzvLbss0xHw1Sehrhw05/75gxYX6wlLSlcCmywGvQYXVppUbhu
-	 kTO8g7S4Iu1sDj5hoKVDyxlzLTv5EngrCz/yNU0j5xhQfO/C/moznk2rXyoxw7qRQI
-	 R96Rc1rXQqOI+416w/QJKP8uFAtMNuMNxTPmGTdgwci9mLRnQ44i6UZXw06OIeT0UX
-	 E14MSFs4+esng==
-Content-Type: multipart/signed;
- boundary=05d8fdd48591a07013dcd1904d8242782772683d9de18a86a0b1a38b036b;
- micalg=pgp-sha256; protocol="application/pgp-signature"
-Date: Mon, 12 Feb 2024 17:02:31 +0100
-Message-Id: <CZ386ITQ83KH.1KNOV5MXLXPBF@kernel.org>
-Subject: Re: [PATCH v2 3/3] arm64: dts: ti: Add support for TI J722S
- Evaluation Module
-Cc: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>, <j-choudhary@ti.com>
-From: "Michael Walle" <mwalle@kernel.org>
-To: "Andrew Davis" <afd@ti.com>, "Vaishnav Achath" <vaishnav.a@ti.com>,
- <nm@ti.com>, <vigneshr@ti.com>, <conor+dt@kernel.org>,
- <krzysztof.kozlowski+dt@linaro.org>, <kristo@kernel.org>,
- <robh+dt@kernel.org>
-X-Mailer: aerc 0.16.0
-References: <20240206100608.127702-1-vaishnav.a@ti.com>
- <20240206100608.127702-4-vaishnav.a@ti.com>
-In-Reply-To: <20240206100608.127702-4-vaishnav.a@ti.com>
+	s=arc-20240116; t=1707753852; c=relaxed/simple;
+	bh=PNP72Px6S3AEEfMX7LEV922c1w+0cE2o1GDnrSE2VMs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Lw+8ITj1y9PInDa/FRndc1ruLVQmeHuHPqPAnxHjqWbmAQUg/+R9CGm+N2xdJC5B1IHFvc1FQOIjlRhgbt6J0deIBPQo7TPQIZrAeNpUVkRmT+u32FzyA0w1h9s+gg24W+ebcExcT3W9Pp7p4qwB58zi9BHkTQTkcXKHFKwg8UM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-6e2e48e8588so25443a34.1;
+        Mon, 12 Feb 2024 08:04:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707753850; x=1708358650;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=F4581LG9FrG93qfAY82tZ3PZZpo3QUac35GBmxdsylQ=;
+        b=s1F2Bwa3w2eCR/+7z6NvkS2oM1+iapAFCZPh5Pdcg1zbP3yY63AFsA4zVdq6DZ/LT0
+         gs9SFFZmbvaB8f2/wFQpG8/W4em9qt92hV8XmFhWG3XXHRlqlPi2j4qH6eQatmqQZl5x
+         7WH60vvubKmft/O0dywwtnWJIF7wPvSvrlaREaSsCFsZqyLHh6tMLJW+VWm1imbleWCT
+         dVch6SkRdNEX/0SIsBUXTAfr+6PhU1OaiSyvZmV4l9JfxH4evjRteJbS7iIFuDa9wyVi
+         ZhK9rtymQpoTigyE5MZxPEUEIUjqj0JmRW+vsdI2WivXVTxn4SC2T2kx8XPngAxI0uVZ
+         uF8w==
+X-Gm-Message-State: AOJu0Ywz+Box5t7TZKuk+KkzANESFbudA/HJDl/Rgh/O1dUu3t4zgIxu
+	AUQBq0R6awtBzq1F/vQQDA2Eb6FQs7NfsKDMUWJpvDceKRXnhtrruIy3oQv8onjqP2/0/7KP6un
+	dUE8yznUtTOWKQxmGlT+uigZPZ+yzNWRv
+X-Google-Smtp-Source: AGHT+IEwFJdlGU3bgtguTa/hZodZRild+iV5zfGercFm93WqOfQuZFX0obHHFXe5Y1QQXqtFfSZZrkXwWFyQc0J8Bv8=
+X-Received: by 2002:a4a:ce94:0:b0:59a:bfb:f556 with SMTP id
+ f20-20020a4ace94000000b0059a0bfbf556mr5719864oos.0.1707753850512; Mon, 12 Feb
+ 2024 08:04:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-
---05d8fdd48591a07013dcd1904d8242782772683d9de18a86a0b1a38b036b
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20240111135950.17016-1-parshuram.sangle@intel.com> <ZbvmrdBkeOK71KGg@tpad>
+In-Reply-To: <ZbvmrdBkeOK71KGg@tpad>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 12 Feb 2024 17:03:59 +0100
+Message-ID: <CAJZ5v0jyUSWuj0RZg9o2yASZjkxf+X3_J52jiUwQuzeCKN88_w@mail.gmail.com>
+Subject: Re: [PATCH] cpuidle: do not shrink guest poll_limit_ns below grow_start
+To: Marcelo Tosatti <mtosatti@redhat.com>, Parshuram Sangle <parshuram.sangle@intel.com>
+Cc: rafael@kernel.org, daniel.lezcano@linaro.org, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, jaishankar.rajendran@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
 
-Hi,
+On Thu, Feb 1, 2024 at 8:56=E2=80=AFPM Marcelo Tosatti <mtosatti@redhat.com=
+> wrote:
+>
+> On Thu, Jan 11, 2024 at 07:29:50PM +0530, Parshuram Sangle wrote:
+> > While adjusting guest halt poll limit, grow block starts at
+> > guest_halt_poll_grow_start without taking intermediate values.
+> > Similar behavior is expected while shrinking the value. This
+> > avoids short interval values which are really not required.
+> >
+> > VCPU1 trace (guest_halt_poll_shrink equals 2):
+> >
+> > VCPU1 grow 10000
+> > VCPU1 shrink 5000
+> > VCPU1 shrink 2500
+> > VCPU1 shrink 1250
+> > VCPU1 shrink 625
+> > VCPU1 shrink 312
+> > VCPU1 shrink 156
+> > VCPU1 shrink 78
+> > VCPU1 shrink 39
+> > VCPU1 shrink 19
+> > VCPU1 shrink 9
+> > VCPU1 shrink 4
+> >
+> > Similar change is done in KVM halt poll flow with below patch:
+> > Link: https://lore.kernel.org/kvm/20211006133021.271905-3-sashal@kernel=
+.org/
+> >
+> > Co-developed-by: Rajendran Jaishankar <jaishankar.rajendran@intel.com>
+> > Signed-off-by: Rajendran Jaishankar <jaishankar.rajendran@intel.com>
+> > Signed-off-by: Parshuram Sangle <parshuram.sangle@intel.com>
+> > ---
+> >  drivers/cpuidle/governors/haltpoll.c | 9 +++++++--
+> >  1 file changed, 7 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/cpuidle/governors/haltpoll.c b/drivers/cpuidle/gov=
+ernors/haltpoll.c
+> > index 1dff3a52917d..663b7f164d20 100644
+> > --- a/drivers/cpuidle/governors/haltpoll.c
+> > +++ b/drivers/cpuidle/governors/haltpoll.c
+> > @@ -98,10 +98,15 @@ static void adjust_poll_limit(struct cpuidle_device=
+ *dev, u64 block_ns)
+> >               unsigned int shrink =3D guest_halt_poll_shrink;
+> >
+> >               val =3D dev->poll_limit_ns;
+> > -             if (shrink =3D=3D 0)
+> > +             if (shrink =3D=3D 0) {
+> >                       val =3D 0;
+> > -             else
+> > +             } else {
+> >                       val /=3D shrink;
+> > +                     /* Reset value to 0 if shrunk below grow_start */
+> > +                     if (val < guest_halt_poll_grow_start)
+> > +                             val =3D 0;
+> > +             }
+> > +
+> >               trace_guest_halt_poll_ns_shrink(val, dev->poll_limit_ns);
+> >               dev->poll_limit_ns =3D val;
+> >       }
+> > --
+> > 2.17.1
+> >
+> >
+> >
+>
+> Looks good.
+>
+> Reviewed-by: Marcelo Tosatti <mtosatti@redhat.com>
 
-On Tue Feb 6, 2024 at 11:06 AM CET, Vaishnav Achath wrote:
-> +# Boards with J722s SoC
-> +dtb-$(CONFIG_ARCH_K3) +=3D k3-j722s-evm.dtb
-
-I'm a bit confused by your names. What are the new/correct ones now?
-Some seem to use the amXX names and some the jXX ones. I've read [1]
-and it appears it was suggested to use the am67 names for the device
-trees. Esp. because there is already, am62, am64, am65, am68 and
-am69 in as names for the device trees.
-
-The TRM you've linked in the cover letter doesn't shed much light
-either. It just lists both.
-
--michael
-
-[1] https://lore.kernel.org/all/81f90d13-da10-4a68-a0e7-95212f40b3e8@ti.com=
-/           =20
-
---05d8fdd48591a07013dcd1904d8242782772683d9de18a86a0b1a38b036b
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iIgEABYIADAWIQQCnWSOYTtih6UXaxvNyh2jtWxG+wUCZcpBFxIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQzcodo7VsRvv0uwEA4jm13dBnm43Oj2GFAFm9iSVBGGpr5Z5A
-SSqmgG6p8ooBAMXFFQ4/G3rtFucR6XBarqueSUXKQmTbzoaXpC4t1a8B
-=hBTt
------END PGP SIGNATURE-----
-
---05d8fdd48591a07013dcd1904d8242782772683d9de18a86a0b1a38b036b--
+Applied as 6.9 (with a minor change in the subject), thanks!
