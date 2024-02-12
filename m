@@ -1,57 +1,57 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2601E41A85
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 13:14:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4144F4597C
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 13:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707743667; cv=none; b=fTQ4oVs/KuW4HB8dck5357icHg0YhGyb9zJct/xEUKDz62yujvL6vju5nEWIbgTZnoqobzEVDLi2duCanmQACiwGo57bCag+HM1qDfBvQ4TNyVdWEDjvqra5IsQ0yE7J4bKhRJ30Bu+Md2symOmeI68n0Z6XcleT3Bam7mHNfFs=
+	t=1707743669; cv=none; b=RCk0hHd65ED+/dVce/eR2O9NUa9dmy/khXNYpJwACYSNFB0hUcP/Pk0JWLdG6P0510OM6TMsD593rhUad5YyS6w98ALRNTnRYetIGvGAGiRskgaZ9f2qAQCyD5xrk0OrW/w2wfKAZcEnq4drdVppwRO2ZkR8c+wLiLQmMRP9gfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707743667; c=relaxed/simple;
-	bh=EduHQTMkW7M9PuCv7DD8a87vLU/tqTiTdiEeV+xNUlQ=;
+	s=arc-20240116; t=1707743669; c=relaxed/simple;
+	bh=a9pxujH5PHZG0UGOA2G3s/Ee5bI2Qul5wfUj2II7oQM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=endy3QSiGbQjk4+hEdF+Ci0IJC9AwdNLZDtqYAT8V5OV97ZuwyAlX+IVJUgt6MJcCVzqoQfgDOHAV+Q/9AHuT/+jriQZwxy6R1FPmuXGQgAIhrQkAXxq846r82RgIROaQw1XoPqwyADEAeMlWTyEl5JkPfLOH1ocrEdTUgmYMmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--panikiel.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GKpcq2Eg; arc=none smtp.client-ip=209.85.128.73
+	 To:Cc:Content-Type; b=f3mI7Qc1A/rMDYvRFoHiJCb3vdlp68t3rTQvVWlvnZsM+6cMQ6H3rMlvXTieVNyXw4fZBee+EDOJZ9v1xcB8n8aqJ/+HhHrts8L3EmMW03B6c8CNtArGzgFndEUGQBQQ+A2YiVn648oUr7p1DlCJJxRmacIiTJFFHWHhqw+eceA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--panikiel.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ERFJ23DD; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--panikiel.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GKpcq2Eg"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-40fb505c97aso19809445e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 05:14:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ERFJ23DD"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dbe9e13775aso4864416276.1
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 05:14:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707743663; x=1708348463; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1707743666; x=1708348466; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=C857fcvjN2Q61CMGefzqTDLbKskpX9Jvk37xAZm0WZQ=;
-        b=GKpcq2EgIwaLGMey1DaJ8Lju3zH/tPZ/MWdR39oo5oS00nvHzSNityNdG7ic42oxOA
-         BhUPKreq8Yws8iciCOxUJN3Ok/52gQk3fuVhmRFpFyFw2y0hsmnp7qtWelA8FEQhPLo9
-         wyFJmN4IcPi8+Lyh2MwJ2hegGPoO0zJjp7rJ6qWneoGTF/4Vym5/VqGoAgYAr6NRQbxi
-         9jpRz5rCDxryOvWh3wN9VuGrsm2UHTBeMjbvcumRqJNz3ApDT30L4ux5m5lAeyYpFmHW
-         6CJURSVZnsL2k6t7XsvIRkbHo/SqxM6k1nR2ENJBwN/I1/ha0h65ys8x1vfNYklsKufz
-         b0eA==
+        bh=8xYmC6/7GB0cnLvoqQ6/O63HTLhsqtwrPQr/DNWfuhA=;
+        b=ERFJ23DD8hfWbfKTs8r5GBhmKa25ypfb55bv5P1euHXG+2Pp4e08H9H73JhmYQtd+5
+         CFsRLKXdrMuKi/TUmDYHnWo9gc/vY4aUUyHbQ0akJ3s2ZFimMTIc9w/oadkhcu+0yBIw
+         ZD2R2KXu1aORsSc6TkKFWjeQ2W1ggaebYSAjbbH6yOPKyPdW5ndYHxxywA3xHi6gDMD6
+         sKCqiAY8I9gW9Nzbya+kUIYRsoxaj+dbW9uGp00OrHxPYL1FGELVQsTiF5HnvYTBiWd7
+         eRbqYrZaSzOmETJCUosGLOdKy0eq3SLeM8XGll0yPCoLCvF/AZJHhXW6zJzi8jLT+Jjh
+         rt6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707743663; x=1708348463;
+        d=1e100.net; s=20230601; t=1707743666; x=1708348466;
         h=content-transfer-encoding:cc:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=C857fcvjN2Q61CMGefzqTDLbKskpX9Jvk37xAZm0WZQ=;
-        b=XNjPW+MD2nOabm0iQK2+k5mXXWYfZm4FlHk5oqDkxD5M7PR1EnO89iRRyUx/Wars+D
-         780SJkjt1dlOd6FcTRWrp6iW0Z/Qs3Av6VNdQzvXPgzkLqvZDRNDWZFOIvm1oHKaxNtr
-         ERHwqc8VZfE9avxc/2O6IVZmn38DGEz6Z0hgWSWo+WyR+4JAzGc4i9LO1+fUnxsa+R68
-         3yOp/mgAhQXCaDOK3z8VtLokrpD8DbWM2etJr0MlBhavYt7C/YhJaEHEFx8FVcXLJuJ4
-         AjVUX4B9EyntGPOWEhZy3gPUXnaO9TahSFJAFFmCy2zL/+rZi7yNX01Ytqe42UGazKfQ
-         dXFw==
-X-Forwarded-Encrypted: i=1; AJvYcCUwbBUzjH7v9bgwY5njrxrp3PSKbY0VXtDJBclSerK+dLIHRetBRS2K29KKcfCl2LBm5N8x5yI96oLqlmOAEhndnHj3aw9+83Jz+qHM
-X-Gm-Message-State: AOJu0YzR0vsIcmJz8x6QN5v1SFlfdXabbF+a94KOVO2FpEAfOT3jxgnG
-	D+fJw7kRm3o3xIw33DhnjGJVjNuIm8UdDgGr+Ha4+QLwgBosNMl3eyo3KZp+tVphDWZaAmq9sQK
-	0UHm+4NhC+w==
-X-Google-Smtp-Source: AGHT+IG5xi/ZS1yrFRFK1RW2aagwmX6KzFfQ5/5hjVdtE12WQdvMnvFrXJog3nKIuyfDcEXqGAW89Ra+zqrGCw==
+        bh=8xYmC6/7GB0cnLvoqQ6/O63HTLhsqtwrPQr/DNWfuhA=;
+        b=ammA61rrvDDh+ndJ+9/iJfsJHkffAEfzy2AoY66sVSsfoPnEvTT4iDt5B48CTFgzNH
+         pLs7RfT3WZdfLCeDpU11sNzSd6fA78xcNrT4DBIOfto/lLmRXOoNBrdswApCkJn3Uwfw
+         am83CNA1Igu6va7wQza4H4eDnEgGEScqQb/uMKmC9xVNj/MfAWbSxYcTRWhaTayWtl8P
+         UqE4yXt8ilx4Asscukn3U4BGtJ1fpEJ4Yqc3ZctxzJLjDtqhytIWDLZW/u9NsSqBJULK
+         c7WqwOOXu7UXya8fsmwtA4+bDcy6nXxL1lxGfQ2ZSkRF9fHkH3rJ5+fdf0BVGuVjuUWq
+         Z0vg==
+X-Forwarded-Encrypted: i=1; AJvYcCUtUOBukieYZ+GstgXHNwT9/DqQQI5kGJu4vKPaprK/Pjms74AiXgCb4PYpute1gbYyaerVeOm0sm+MxBF3vbHr24Y30nH0nwDwHqf9
+X-Gm-Message-State: AOJu0YyeK8Fawc90T54rPpD3LLXiKNL1hLrLoHkz9/9eku5P7HH/nSjM
+	9FgEEkmxA0l7mmGTDjMkm7tMex/+rhqLQZVwiP9YlW/oE2d/Y+s+QkUnag76/mGpQoC0E4hOBGq
+	jErI6e13buw==
+X-Google-Smtp-Source: AGHT+IGr/8RYkrogU8h5JqNlm8G2W8mO4LpimxJKVyG5rXvwK9zlBMJNVG0OW3CPbZyD6F94Yb4Gk8OO+lh9AA==
 X-Received: from szatan.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2d83])
- (user=panikiel job=sendgmr) by 2002:a5d:5a1a:0:b0:33b:1da0:a7cb with SMTP id
- bq26-20020a5d5a1a000000b0033b1da0a7cbmr36157wrb.4.1707743663594; Mon, 12 Feb
- 2024 05:14:23 -0800 (PST)
-Date: Mon, 12 Feb 2024 13:13:17 +0000
+ (user=panikiel job=sendgmr) by 2002:a05:6902:102c:b0:dc7:49a9:6666 with SMTP
+ id x12-20020a056902102c00b00dc749a96666mr1825457ybt.3.1707743666187; Mon, 12
+ Feb 2024 05:14:26 -0800 (PST)
+Date: Mon, 12 Feb 2024 13:13:18 +0000
 In-Reply-To: <20240212131323.2162161-1-panikiel@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240212131323.2162161-1-panikiel@google.com>
 X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
-Message-ID: <20240212131323.2162161-4-panikiel@google.com>
-Subject: [PATCH 3/9] drm/dp_mst: Move DRM-independent structures to separate header
+Message-ID: <20240212131323.2162161-5-panikiel@google.com>
+Subject: [PATCH 4/9] lib: Move DisplayPort CRC functions to common lib
 From: "=?UTF-8?q?Pawe=C5=82=20Anikiel?=" <panikiel@google.com>
 To: airlied@gmail.com, akpm@linux-foundation.org, conor+dt@kernel.org, 
 	daniel@ffwll.ch, dinguyen@kernel.org, hverkuil-cisco@xs4all.nl, 
@@ -76,512 +76,296 @@ Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Move structures describing MST sideband messages into a separate header
-so that non-DRM code can use them.
+The CRC functions found in drivers/gpu/drm/display/drm_dp_mst_topology.c
+may be useful for other non-DRM code that deals with DisplayPort, e.g.
+v4l2 drivers for DP receivers. Move these functions to /lib.
 
 Signed-off-by: Pawe=C5=82 Anikiel <panikiel@google.com>
 ---
- include/drm/display/drm_dp_mst.h        | 238 ++++++++++++++++++++++++
- include/drm/display/drm_dp_mst_helper.h | 232 +----------------------
- 2 files changed, 239 insertions(+), 231 deletions(-)
- create mode 100644 include/drm/display/drm_dp_mst.h
+ drivers/gpu/drm/display/Kconfig               |  1 +
+ drivers/gpu/drm/display/drm_dp_mst_topology.c | 76 ++----------------
+ include/linux/crc-dp.h                        | 10 +++
+ lib/Kconfig                                   |  8 ++
+ lib/Makefile                                  |  1 +
+ lib/crc-dp.c                                  | 78 +++++++++++++++++++
+ 6 files changed, 103 insertions(+), 71 deletions(-)
+ create mode 100644 include/linux/crc-dp.h
+ create mode 100644 lib/crc-dp.c
 
-diff --git a/include/drm/display/drm_dp_mst.h b/include/drm/display/drm_dp_=
-mst.h
+diff --git a/drivers/gpu/drm/display/Kconfig b/drivers/gpu/drm/display/Kcon=
+fig
+index 09712b88a5b8..c615f50152f2 100644
+--- a/drivers/gpu/drm/display/Kconfig
++++ b/drivers/gpu/drm/display/Kconfig
+@@ -14,6 +14,7 @@ config DRM_DISPLAY_HELPER
+ config DRM_DISPLAY_DP_HELPER
+ 	bool
+ 	depends on DRM_DISPLAY_HELPER
++	select CRC_DP
+ 	help
+ 	  DRM display helpers for DisplayPort.
+=20
+diff --git a/drivers/gpu/drm/display/drm_dp_mst_topology.c b/drivers/gpu/dr=
+m/display/drm_dp_mst_topology.c
+index f7c6b60629c2..ada1f90fa808 100644
+--- a/drivers/gpu/drm/display/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/display/drm_dp_mst_topology.c
+@@ -22,6 +22,7 @@
+=20
+ #include <linux/bitfield.h>
+ #include <linux/delay.h>
++#include <linux/crc-dp.h>
+ #include <linux/errno.h>
+ #include <linux/i2c.h>
+ #include <linux/init.h>
+@@ -195,73 +196,6 @@ drm_dp_mst_rad_to_str(const u8 rad[8], u8 lct, char *o=
+ut, size_t len)
+ }
+=20
+ /* sideband msg handling */
+-static u8 drm_dp_msg_header_crc4(const uint8_t *data, size_t num_nibbles)
+-{
+-	u8 bitmask =3D 0x80;
+-	u8 bitshift =3D 7;
+-	u8 array_index =3D 0;
+-	int number_of_bits =3D num_nibbles * 4;
+-	u8 remainder =3D 0;
+-
+-	while (number_of_bits !=3D 0) {
+-		number_of_bits--;
+-		remainder <<=3D 1;
+-		remainder |=3D (data[array_index] & bitmask) >> bitshift;
+-		bitmask >>=3D 1;
+-		bitshift--;
+-		if (bitmask =3D=3D 0) {
+-			bitmask =3D 0x80;
+-			bitshift =3D 7;
+-			array_index++;
+-		}
+-		if ((remainder & 0x10) =3D=3D 0x10)
+-			remainder ^=3D 0x13;
+-	}
+-
+-	number_of_bits =3D 4;
+-	while (number_of_bits !=3D 0) {
+-		number_of_bits--;
+-		remainder <<=3D 1;
+-		if ((remainder & 0x10) !=3D 0)
+-			remainder ^=3D 0x13;
+-	}
+-
+-	return remainder;
+-}
+-
+-static u8 drm_dp_msg_data_crc4(const uint8_t *data, u8 number_of_bytes)
+-{
+-	u8 bitmask =3D 0x80;
+-	u8 bitshift =3D 7;
+-	u8 array_index =3D 0;
+-	int number_of_bits =3D number_of_bytes * 8;
+-	u16 remainder =3D 0;
+-
+-	while (number_of_bits !=3D 0) {
+-		number_of_bits--;
+-		remainder <<=3D 1;
+-		remainder |=3D (data[array_index] & bitmask) >> bitshift;
+-		bitmask >>=3D 1;
+-		bitshift--;
+-		if (bitmask =3D=3D 0) {
+-			bitmask =3D 0x80;
+-			bitshift =3D 7;
+-			array_index++;
+-		}
+-		if ((remainder & 0x100) =3D=3D 0x100)
+-			remainder ^=3D 0xd5;
+-	}
+-
+-	number_of_bits =3D 8;
+-	while (number_of_bits !=3D 0) {
+-		number_of_bits--;
+-		remainder <<=3D 1;
+-		if ((remainder & 0x100) !=3D 0)
+-			remainder ^=3D 0xd5;
+-	}
+-
+-	return remainder & 0xff;
+-}
+ static inline u8 drm_dp_calc_sb_hdr_size(struct drm_dp_sideband_msg_hdr *h=
+dr)
+ {
+ 	u8 size =3D 3;
+@@ -284,7 +218,7 @@ static void drm_dp_encode_sideband_msg_hdr(struct drm_d=
+p_sideband_msg_hdr *hdr,
+ 		(hdr->msg_len & 0x3f);
+ 	buf[idx++] =3D (hdr->somt << 7) | (hdr->eomt << 6) | (hdr->seqno << 4);
+=20
+-	crc4 =3D drm_dp_msg_header_crc4(buf, (idx * 2) - 1);
++	crc4 =3D crc_dp_msg_header(buf, (idx * 2) - 1);
+ 	buf[idx - 1] |=3D (crc4 & 0xf);
+=20
+ 	*len =3D idx;
+@@ -305,7 +239,7 @@ static bool drm_dp_decode_sideband_msg_hdr(const struct=
+ drm_dp_mst_topology_mgr
+ 	len +=3D ((buf[0] & 0xf0) >> 4) / 2;
+ 	if (len > buflen)
+ 		return false;
+-	crc4 =3D drm_dp_msg_header_crc4(buf, (len * 2) - 1);
++	crc4 =3D crc_dp_msg_header(buf, (len * 2) - 1);
+=20
+ 	if ((crc4 & 0xf) !=3D (buf[len - 1] & 0xf)) {
+ 		drm_dbg_kms(mgr->dev, "crc4 mismatch 0x%x 0x%x\n", crc4, buf[len - 1]);
+@@ -725,7 +659,7 @@ static void drm_dp_crc_sideband_chunk_req(u8 *msg, u8 l=
+en)
+ {
+ 	u8 crc4;
+=20
+-	crc4 =3D drm_dp_msg_data_crc4(msg, len);
++	crc4 =3D crc_dp_msg_data(msg, len);
+ 	msg[len] =3D crc4;
+ }
+=20
+@@ -782,7 +716,7 @@ static bool drm_dp_sideband_append_payload(struct drm_d=
+p_sideband_msg_rx *msg,
+=20
+ 	if (msg->curchunk_idx >=3D msg->curchunk_len) {
+ 		/* do CRC */
+-		crc4 =3D drm_dp_msg_data_crc4(msg->chunk, msg->curchunk_len - 1);
++		crc4 =3D crc_dp_msg_data(msg->chunk, msg->curchunk_len - 1);
+ 		if (crc4 !=3D msg->chunk[msg->curchunk_len - 1])
+ 			print_hex_dump(KERN_DEBUG, "wrong crc",
+ 				       DUMP_PREFIX_NONE, 16, 1,
+diff --git a/include/linux/crc-dp.h b/include/linux/crc-dp.h
 new file mode 100644
-index 000000000000..4e398bfd3ee3
+index 000000000000..b63435c82b96
 --- /dev/null
-+++ b/include/drm/display/drm_dp_mst.h
-@@ -0,0 +1,238 @@
-+/* SPDX-License-Identifier: MIT */
-+
-+#ifndef _DRM_DP_MST_H_
-+#define _DRM_DP_MST_H_
++++ b/include/linux/crc-dp.h
+@@ -0,0 +1,10 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_CRC_DP_H
++#define _LINUX_CRC_DP_H
 +
 +#include <linux/types.h>
 +
-+struct drm_dp_nak_reply {
-+	u8 guid[16];
-+	u8 reason;
-+	u8 nak_data;
-+};
++u8 crc_dp_msg_header(const uint8_t *data, size_t num_nibbles);
++u8 crc_dp_msg_data(const uint8_t *data, u8 number_of_bytes);
 +
-+struct drm_dp_link_address_ack_reply {
-+	u8 guid[16];
-+	u8 nports;
-+	struct drm_dp_link_addr_reply_port {
-+		bool input_port;
-+		u8 peer_device_type;
-+		u8 port_number;
-+		bool mcs;
-+		bool ddps;
-+		bool legacy_device_plug_status;
-+		u8 dpcd_revision;
-+		u8 peer_guid[16];
-+		u8 num_sdp_streams;
-+		u8 num_sdp_stream_sinks;
-+	} ports[16];
-+};
-+
-+struct drm_dp_remote_dpcd_read_ack_reply {
-+	u8 port_number;
-+	u8 num_bytes;
-+	u8 bytes[255];
-+};
-+
-+struct drm_dp_remote_dpcd_write_ack_reply {
-+	u8 port_number;
-+};
-+
-+struct drm_dp_remote_dpcd_write_nak_reply {
-+	u8 port_number;
-+	u8 reason;
-+	u8 bytes_written_before_failure;
-+};
-+
-+struct drm_dp_remote_i2c_read_ack_reply {
-+	u8 port_number;
-+	u8 num_bytes;
-+	u8 bytes[255];
-+};
-+
-+struct drm_dp_remote_i2c_read_nak_reply {
-+	u8 port_number;
-+	u8 nak_reason;
-+	u8 i2c_nak_transaction;
-+};
-+
-+struct drm_dp_remote_i2c_write_ack_reply {
-+	u8 port_number;
-+};
-+
-+struct drm_dp_query_stream_enc_status_ack_reply {
-+	/* Bit[23:16]- Stream Id */
-+	u8 stream_id;
-+
-+	/* Bit[15]- Signed */
-+	bool reply_signed;
-+
-+	/* Bit[10:8]- Stream Output Sink Type */
-+	bool unauthorizable_device_present;
-+	bool legacy_device_present;
-+	bool query_capable_device_present;
-+
-+	/* Bit[12:11]- Stream Output CP Type */
-+	bool hdcp_1x_device_present;
-+	bool hdcp_2x_device_present;
-+
-+	/* Bit[4]- Stream Authentication */
-+	bool auth_completed;
-+
-+	/* Bit[3]- Stream Encryption */
-+	bool encryption_enabled;
-+
-+	/* Bit[2]- Stream Repeater Function Present */
-+	bool repeater_present;
-+
-+	/* Bit[1:0]- Stream State */
-+	u8 state;
-+};
-+
-+#define DRM_DP_MAX_SDP_STREAMS 16
-+struct drm_dp_allocate_payload {
-+	u8 port_number;
-+	u8 number_sdp_streams;
-+	u8 vcpi;
-+	u16 pbn;
-+	u8 sdp_stream_sink[DRM_DP_MAX_SDP_STREAMS];
-+};
-+
-+struct drm_dp_allocate_payload_ack_reply {
-+	u8 port_number;
-+	u8 vcpi;
-+	u16 allocated_pbn;
-+};
-+
-+struct drm_dp_connection_status_notify {
-+	u8 guid[16];
-+	u8 port_number;
-+	bool legacy_device_plug_status;
-+	bool displayport_device_plug_status;
-+	bool message_capability_status;
-+	bool input_port;
-+	u8 peer_device_type;
-+};
-+
-+struct drm_dp_remote_dpcd_read {
-+	u8 port_number;
-+	u32 dpcd_address;
-+	u8 num_bytes;
-+};
-+
-+struct drm_dp_remote_dpcd_write {
-+	u8 port_number;
-+	u32 dpcd_address;
-+	u8 num_bytes;
-+	u8 *bytes;
-+};
-+
-+#define DP_REMOTE_I2C_READ_MAX_TRANSACTIONS 4
-+struct drm_dp_remote_i2c_read {
-+	u8 num_transactions;
-+	u8 port_number;
-+	struct drm_dp_remote_i2c_read_tx {
-+		u8 i2c_dev_id;
-+		u8 num_bytes;
-+		u8 *bytes;
-+		u8 no_stop_bit;
-+		u8 i2c_transaction_delay;
-+	} transactions[DP_REMOTE_I2C_READ_MAX_TRANSACTIONS];
-+	u8 read_i2c_device_id;
-+	u8 num_bytes_read;
-+};
-+
-+struct drm_dp_remote_i2c_write {
-+	u8 port_number;
-+	u8 write_i2c_device_id;
-+	u8 num_bytes;
-+	u8 *bytes;
-+};
-+
-+struct drm_dp_query_stream_enc_status {
-+	u8 stream_id;
-+	u8 client_id[7];	/* 56-bit nonce */
-+	u8 stream_event;
-+	bool valid_stream_event;
-+	u8 stream_behavior;
-+	u8 valid_stream_behavior;
-+};
-+
-+/* this covers ENUM_RESOURCES, POWER_DOWN_PHY, POWER_UP_PHY */
-+struct drm_dp_port_number_req {
-+	u8 port_number;
-+};
-+
-+struct drm_dp_enum_path_resources_ack_reply {
-+	u8 port_number;
-+	bool fec_capable;
-+	u16 full_payload_bw_number;
-+	u16 avail_payload_bw_number;
-+};
-+
-+/* covers POWER_DOWN_PHY, POWER_UP_PHY */
-+struct drm_dp_port_number_rep {
-+	u8 port_number;
-+};
-+
-+struct drm_dp_query_payload {
-+	u8 port_number;
-+	u8 vcpi;
-+};
-+
-+struct drm_dp_resource_status_notify {
-+	u8 port_number;
-+	u8 guid[16];
-+	u16 available_pbn;
-+};
-+
-+struct drm_dp_query_payload_ack_reply {
-+	u8 port_number;
-+	u16 allocated_pbn;
-+};
-+
-+struct drm_dp_sideband_msg_req_body {
-+	u8 req_type;
-+	union ack_req {
-+		struct drm_dp_connection_status_notify conn_stat;
-+		struct drm_dp_port_number_req port_num;
-+		struct drm_dp_resource_status_notify resource_stat;
-+
-+		struct drm_dp_query_payload query_payload;
-+		struct drm_dp_allocate_payload allocate_payload;
-+
-+		struct drm_dp_remote_dpcd_read dpcd_read;
-+		struct drm_dp_remote_dpcd_write dpcd_write;
-+
-+		struct drm_dp_remote_i2c_read i2c_read;
-+		struct drm_dp_remote_i2c_write i2c_write;
-+
-+		struct drm_dp_query_stream_enc_status enc_status;
-+	} u;
-+};
-+
-+struct drm_dp_sideband_msg_reply_body {
-+	u8 reply_type;
-+	u8 req_type;
-+	union ack_replies {
-+		struct drm_dp_nak_reply nak;
-+		struct drm_dp_link_address_ack_reply link_addr;
-+		struct drm_dp_port_number_rep port_number;
-+
-+		struct drm_dp_enum_path_resources_ack_reply path_resources;
-+		struct drm_dp_allocate_payload_ack_reply allocate_payload;
-+		struct drm_dp_query_payload_ack_reply query_payload;
-+
-+		struct drm_dp_remote_dpcd_read_ack_reply remote_dpcd_read_ack;
-+		struct drm_dp_remote_dpcd_write_ack_reply remote_dpcd_write_ack;
-+		struct drm_dp_remote_dpcd_write_nak_reply remote_dpcd_write_nack;
-+
-+		struct drm_dp_remote_i2c_read_ack_reply remote_i2c_read_ack;
-+		struct drm_dp_remote_i2c_read_nak_reply remote_i2c_read_nack;
-+		struct drm_dp_remote_i2c_write_ack_reply remote_i2c_write_ack;
-+
-+		struct drm_dp_query_stream_enc_status_ack_reply enc_status;
-+	} u;
-+};
-+
-+#endif
-diff --git a/include/drm/display/drm_dp_mst_helper.h b/include/drm/display/=
-drm_dp_mst_helper.h
-index 9b19d8bd520a..61add6f6accd 100644
---- a/include/drm/display/drm_dp_mst_helper.h
-+++ b/include/drm/display/drm_dp_mst_helper.h
-@@ -23,6 +23,7 @@
- #define _DRM_DP_MST_HELPER_H_
++#endif /* _LINUX_CRC_DP_H */
+diff --git a/lib/Kconfig b/lib/Kconfig
+index 5ddda7c2ed9b..28f9f6cfec9f 100644
+--- a/lib/Kconfig
++++ b/lib/Kconfig
+@@ -171,6 +171,14 @@ config CRC_ITU_T
+ 	  the kernel tree does. Such modules that use library CRC ITU-T V.41
+ 	  functions require M here.
 =20
- #include <linux/types.h>
-+#include <drm/display/drm_dp_mst.h>
- #include <drm/display/drm_dp_helper.h>
- #include <drm/drm_atomic.h>
- #include <drm/drm_fixed.h>
-@@ -248,237 +249,6 @@ struct drm_dp_mst_branch {
- 	u8 guid[16];
- };
++config CRC_DP
++	tristate "CRC DisplayPort MST functions"
++	help
++	  This option is provided for the case where no in-kernel-tree
++	  modules require CRC DisplayPort MST functions, but a module built outsi=
+de
++	  the kernel tree does. Such modules that use library CRC DisplayPort MST
++	  functions require M here.
++
+ config CRC32
+ 	tristate "CRC32/CRC32c functions"
+ 	default y
+diff --git a/lib/Makefile b/lib/Makefile
+index 6b09731d8e61..e4d7ffa260b3 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -188,6 +188,7 @@ obj-$(CONFIG_CRC7)	+=3D crc7.o
+ obj-$(CONFIG_LIBCRC32C)	+=3D libcrc32c.o
+ obj-$(CONFIG_CRC8)	+=3D crc8.o
+ obj-$(CONFIG_CRC64_ROCKSOFT) +=3D crc64-rocksoft.o
++obj-$(CONFIG_CRC_DP)	+=3D crc-dp.o
+ obj-$(CONFIG_XXHASH)	+=3D xxhash.o
+ obj-$(CONFIG_GENERIC_ALLOCATOR) +=3D genalloc.o
 =20
--
--struct drm_dp_nak_reply {
--	u8 guid[16];
--	u8 reason;
--	u8 nak_data;
--};
--
--struct drm_dp_link_address_ack_reply {
--	u8 guid[16];
--	u8 nports;
--	struct drm_dp_link_addr_reply_port {
--		bool input_port;
--		u8 peer_device_type;
--		u8 port_number;
--		bool mcs;
--		bool ddps;
--		bool legacy_device_plug_status;
--		u8 dpcd_revision;
--		u8 peer_guid[16];
--		u8 num_sdp_streams;
--		u8 num_sdp_stream_sinks;
--	} ports[16];
--};
--
--struct drm_dp_remote_dpcd_read_ack_reply {
--	u8 port_number;
--	u8 num_bytes;
--	u8 bytes[255];
--};
--
--struct drm_dp_remote_dpcd_write_ack_reply {
--	u8 port_number;
--};
--
--struct drm_dp_remote_dpcd_write_nak_reply {
--	u8 port_number;
--	u8 reason;
--	u8 bytes_written_before_failure;
--};
--
--struct drm_dp_remote_i2c_read_ack_reply {
--	u8 port_number;
--	u8 num_bytes;
--	u8 bytes[255];
--};
--
--struct drm_dp_remote_i2c_read_nak_reply {
--	u8 port_number;
--	u8 nak_reason;
--	u8 i2c_nak_transaction;
--};
--
--struct drm_dp_remote_i2c_write_ack_reply {
--	u8 port_number;
--};
--
--struct drm_dp_query_stream_enc_status_ack_reply {
--	/* Bit[23:16]- Stream Id */
--	u8 stream_id;
--
--	/* Bit[15]- Signed */
--	bool reply_signed;
--
--	/* Bit[10:8]- Stream Output Sink Type */
--	bool unauthorizable_device_present;
--	bool legacy_device_present;
--	bool query_capable_device_present;
--
--	/* Bit[12:11]- Stream Output CP Type */
--	bool hdcp_1x_device_present;
--	bool hdcp_2x_device_present;
--
--	/* Bit[4]- Stream Authentication */
--	bool auth_completed;
--
--	/* Bit[3]- Stream Encryption */
--	bool encryption_enabled;
--
--	/* Bit[2]- Stream Repeater Function Present */
--	bool repeater_present;
--
--	/* Bit[1:0]- Stream State */
--	u8 state;
--};
--
--#define DRM_DP_MAX_SDP_STREAMS 16
--struct drm_dp_allocate_payload {
--	u8 port_number;
--	u8 number_sdp_streams;
--	u8 vcpi;
--	u16 pbn;
--	u8 sdp_stream_sink[DRM_DP_MAX_SDP_STREAMS];
--};
--
--struct drm_dp_allocate_payload_ack_reply {
--	u8 port_number;
--	u8 vcpi;
--	u16 allocated_pbn;
--};
--
--struct drm_dp_connection_status_notify {
--	u8 guid[16];
--	u8 port_number;
--	bool legacy_device_plug_status;
--	bool displayport_device_plug_status;
--	bool message_capability_status;
--	bool input_port;
--	u8 peer_device_type;
--};
--
--struct drm_dp_remote_dpcd_read {
--	u8 port_number;
--	u32 dpcd_address;
--	u8 num_bytes;
--};
--
--struct drm_dp_remote_dpcd_write {
--	u8 port_number;
--	u32 dpcd_address;
--	u8 num_bytes;
--	u8 *bytes;
--};
--
--#define DP_REMOTE_I2C_READ_MAX_TRANSACTIONS 4
--struct drm_dp_remote_i2c_read {
--	u8 num_transactions;
--	u8 port_number;
--	struct drm_dp_remote_i2c_read_tx {
--		u8 i2c_dev_id;
--		u8 num_bytes;
--		u8 *bytes;
--		u8 no_stop_bit;
--		u8 i2c_transaction_delay;
--	} transactions[DP_REMOTE_I2C_READ_MAX_TRANSACTIONS];
--	u8 read_i2c_device_id;
--	u8 num_bytes_read;
--};
--
--struct drm_dp_remote_i2c_write {
--	u8 port_number;
--	u8 write_i2c_device_id;
--	u8 num_bytes;
--	u8 *bytes;
--};
--
--struct drm_dp_query_stream_enc_status {
--	u8 stream_id;
--	u8 client_id[7];	/* 56-bit nonce */
--	u8 stream_event;
--	bool valid_stream_event;
--	u8 stream_behavior;
--	u8 valid_stream_behavior;
--};
--
--/* this covers ENUM_RESOURCES, POWER_DOWN_PHY, POWER_UP_PHY */
--struct drm_dp_port_number_req {
--	u8 port_number;
--};
--
--struct drm_dp_enum_path_resources_ack_reply {
--	u8 port_number;
--	bool fec_capable;
--	u16 full_payload_bw_number;
--	u16 avail_payload_bw_number;
--};
--
--/* covers POWER_DOWN_PHY, POWER_UP_PHY */
--struct drm_dp_port_number_rep {
--	u8 port_number;
--};
--
--struct drm_dp_query_payload {
--	u8 port_number;
--	u8 vcpi;
--};
--
--struct drm_dp_resource_status_notify {
--	u8 port_number;
--	u8 guid[16];
--	u16 available_pbn;
--};
--
--struct drm_dp_query_payload_ack_reply {
--	u8 port_number;
--	u16 allocated_pbn;
--};
--
--struct drm_dp_sideband_msg_req_body {
--	u8 req_type;
--	union ack_req {
--		struct drm_dp_connection_status_notify conn_stat;
--		struct drm_dp_port_number_req port_num;
--		struct drm_dp_resource_status_notify resource_stat;
--
--		struct drm_dp_query_payload query_payload;
--		struct drm_dp_allocate_payload allocate_payload;
--
--		struct drm_dp_remote_dpcd_read dpcd_read;
--		struct drm_dp_remote_dpcd_write dpcd_write;
--
--		struct drm_dp_remote_i2c_read i2c_read;
--		struct drm_dp_remote_i2c_write i2c_write;
--
--		struct drm_dp_query_stream_enc_status enc_status;
--	} u;
--};
--
--struct drm_dp_sideband_msg_reply_body {
--	u8 reply_type;
--	u8 req_type;
--	union ack_replies {
--		struct drm_dp_nak_reply nak;
--		struct drm_dp_link_address_ack_reply link_addr;
--		struct drm_dp_port_number_rep port_number;
--
--		struct drm_dp_enum_path_resources_ack_reply path_resources;
--		struct drm_dp_allocate_payload_ack_reply allocate_payload;
--		struct drm_dp_query_payload_ack_reply query_payload;
--
--		struct drm_dp_remote_dpcd_read_ack_reply remote_dpcd_read_ack;
--		struct drm_dp_remote_dpcd_write_ack_reply remote_dpcd_write_ack;
--		struct drm_dp_remote_dpcd_write_nak_reply remote_dpcd_write_nack;
--
--		struct drm_dp_remote_i2c_read_ack_reply remote_i2c_read_ack;
--		struct drm_dp_remote_i2c_read_nak_reply remote_i2c_read_nack;
--		struct drm_dp_remote_i2c_write_ack_reply remote_i2c_write_ack;
--
--		struct drm_dp_query_stream_enc_status_ack_reply enc_status;
--	} u;
--};
--
- /* msg is queued to be put into a slot */
- #define DRM_DP_SIDEBAND_TX_QUEUED 0
- /* msg has started transmitting on a slot - still on msgq */
+diff --git a/lib/crc-dp.c b/lib/crc-dp.c
+new file mode 100644
+index 000000000000..95b58bc436d4
+--- /dev/null
++++ b/lib/crc-dp.c
+@@ -0,0 +1,78 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/crc-dp.h>
++
++/*
++ * Sideband MSG Header CRC
++ * Defined in DisplayPort 1.2 spec, section 2.11.3.1.9
++ */
++u8 crc_dp_msg_header(const uint8_t *data, size_t num_nibbles)
++{
++	u8 bitmask =3D 0x80;
++	u8 bitshift =3D 7;
++	u8 array_index =3D 0;
++	int number_of_bits =3D num_nibbles * 4;
++	u8 remainder =3D 0;
++
++	while (number_of_bits !=3D 0) {
++		number_of_bits--;
++		remainder <<=3D 1;
++		remainder |=3D (data[array_index] & bitmask) >> bitshift;
++		bitmask >>=3D 1;
++		bitshift--;
++		if (bitmask =3D=3D 0) {
++			bitmask =3D 0x80;
++			bitshift =3D 7;
++			array_index++;
++		}
++		if ((remainder & 0x10) =3D=3D 0x10)
++			remainder ^=3D 0x13;
++	}
++
++	number_of_bits =3D 4;
++	while (number_of_bits !=3D 0) {
++		number_of_bits--;
++		remainder <<=3D 1;
++		if ((remainder & 0x10) !=3D 0)
++			remainder ^=3D 0x13;
++	}
++
++	return remainder;
++}
++
++/*
++ * Sideband MSG Data CRC
++ * Defined in DisplayPort 1.2 spec, section 2.11.3.2.2
++ */
++u8 crc_dp_msg_data(const uint8_t *data, u8 number_of_bytes)
++{
++	u8 bitmask =3D 0x80;
++	u8 bitshift =3D 7;
++	u8 array_index =3D 0;
++	int number_of_bits =3D number_of_bytes * 8;
++	u16 remainder =3D 0;
++
++	while (number_of_bits !=3D 0) {
++		number_of_bits--;
++		remainder <<=3D 1;
++		remainder |=3D (data[array_index] & bitmask) >> bitshift;
++		bitmask >>=3D 1;
++		bitshift--;
++		if (bitmask =3D=3D 0) {
++			bitmask =3D 0x80;
++			bitshift =3D 7;
++			array_index++;
++		}
++		if ((remainder & 0x100) =3D=3D 0x100)
++			remainder ^=3D 0xd5;
++	}
++
++	number_of_bits =3D 8;
++	while (number_of_bits !=3D 0) {
++		number_of_bits--;
++		remainder <<=3D 1;
++		if ((remainder & 0x100) !=3D 0)
++			remainder ^=3D 0xd5;
++	}
++
++	return remainder & 0xff;
++}
 --=20
 2.43.0.687.g38aa6559b0-goog
 
