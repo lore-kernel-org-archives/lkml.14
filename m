@@ -1,95 +1,87 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CDA53CF7E
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 13:44:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535AB3D0A9
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 13:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707745443; cv=none; b=nqrLKN6NQPJAiRdAIuOyZsBGFW/qtw/2rgrh4K0JSY5rrp8KXbm2rla07X4dNandPeZx3BOf24OtIFiDVbrfKI+ENBC4k/Sgd5ucuQ7Tlkvq8I+IKAcGGFfD55c8XgzQ46WWX8X50Tl2txUi4IkuD/Tbw+EGs3WAKXF/5uK+3Iw=
+	t=1707745444; cv=none; b=f1weOdUeK2nNjxRlJLhPxKPrpUSlmO3khOexWPIUeDutDXb0YU2Cc47VMTzQ8AnpYGcfNG68/jh8507DH84c3UPTBS8hDUzkv/c10MQXQpsDA2MKHsAslz8wWUyQYgyEz++IqRL5ey1KbtAmxwfXVHrvsiBXoyPRt22iqwzmQ5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707745443; c=relaxed/simple;
-	bh=Y+oWpdVP4KIxwkjcA9JOBMID67f3fKYDpMI6I5C8C5I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pxadzeinc48Z/3TV672huL7iBKL8SBsXhomOVMgz0miA+rV+UVeN3hGpPbua16Vi4HFmyefiFU0jLYxbFeUEtBOj2/pPAm+U/kUS1EbLf+wqrq6hRTjE585OWMPVboBdUNPcqFE9jddOOI71OFsNe8J7UoYYnFAAkLBRjdrZyHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-607754a6298so2205057b3.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 05:44:01 -0800 (PST)
+	s=arc-20240116; t=1707745444; c=relaxed/simple;
+	bh=B4yt/3c18pH1ffL1g+M5DkAR20GAl3UBFB3rTEBPRIU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SqZhL+mM9y00vj2AFbl955XD9sYVL+ysftMD22HO6FM08Bh+L5QyoHd4gXjJzhBLpTdMFqGFzjPHBcItICxXLaiEh7QKoR2sKjw2EG2Rx14GPqAYnM6tX6t2PEwxrsXu1SRJcvXRmhN6WvKMWRcevokpEcvQdGCU0/nGQha50Og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=gQ+gKrP4; arc=none smtp.client-ip=209.85.160.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="gQ+gKrP4"
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2185739b64cso2157385fac.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 05:44:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1707745440; x=1708350240; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lxjh2nYflElEAJrdIUMq3Id0Sceurf4l3jYjbgjuJqQ=;
+        b=gQ+gKrP4p5VBADptaVMYCktRPxhYp3OVowds79ysa3QhkhmWOSHYX1ohUem0qVzEEd
+         ds90tKh7HRWBu53KUaIzVkYK5kWo+XcCs6+GH5kO0wyMlATax8sR3ha8Gn+od6j743YR
+         pJgsQ9Sfszw+TreZ4iC4quEGDHOfWKqP6uOUUlDzAa2GMdtjCATPNZ+SkyX/0Odd/cZ2
+         t4KGmPH764/SqrnMV5E+KM1GmDe66N68Skzx9UmG5ruLhlVSYpJPYQC9lKXpTRSJYLvN
+         /2WUkt672h5KFpKX0+tmPqAGXLlspxrqDLprk3TD5WWpQMt39p2TLhp3vskMKNCynMeL
+         labw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1707745440; x=1708350240;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/nt0mP6yrOMcEPHaPnk/8W0ESIR1FuzksbltcgTisI8=;
-        b=P0WjQDftkydkgw0eyhDYoW+FHlXkHrkre4Zh3rDpbSlBPhLgccNmy7tFpGT55TWPai
-         HkusKhfw5oFHFRxGl8YuR+FlXjxoUq1kaRkNYPCtvFsALPHFgt+bUdBBRKZgFVHyTWzQ
-         25hOMgqk/1DzIXgLva8rTkKbnb+hgoUkoAOpakF4AKuEcP1hgK/mrZf9C4dcfBWSPaHg
-         dU1d6jtqLx+2LDPPcGjhi3/OyOrpviFqrZQ4MDyPy2R5mwSBNYtzQVRvj8yOzVJbQNdR
-         p1d58MqPjHteYKWyhGx7fSp00VL9A4+svES9WwxHYVVNuJV7ptPYA8ygcdjlY5hYezRI
-         uO4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCViC1FYwOKJH6c4Ml3U4NTSfksCuZ8XaPoEiReMkEvFelZXlVfqOjtvkzdDZ20vs5gddL/ZHY//W3bYI2Jz+E0jqsL8sU/GRqDFrNJU
-X-Gm-Message-State: AOJu0YzZV9uvQmitmeZJo57DyleNoq9oxyFyw83f96R7JzBHMsPkfR8I
-	t8Hq5es6x1DVdlPx3HjOsKNfU8ZPtj8F+IE2EJnxgAIGuFUi3kcPj/2iFMMmuaE=
-X-Google-Smtp-Source: AGHT+IEykx/auhWkYcgOzZ1Xr+Bv/5ESFwZRTVvVyXzslgHJ6QT7/T8SjeQy9bWEBl6NpqbGFLM0AQ==
-X-Received: by 2002:a0d:d555:0:b0:5ff:481b:b7e2 with SMTP id x82-20020a0dd555000000b005ff481bb7e2mr4986580ywd.23.1707745439713;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lxjh2nYflElEAJrdIUMq3Id0Sceurf4l3jYjbgjuJqQ=;
+        b=BzLDElNjRT+F+hPwgOTCwVRk+tatbUBpQ6Ru7aMJ1/Mxk+3oiz20s1rB2MC9TRz1gp
+         VwhGohR+WbdWUfSWfSoZo6fnoFrM6sH8MYS9xXgJmVACP0zoUYEc2OtD1OsZ4bKIAjcD
+         5ugQVuyOfxqQzHj2py2PQNOYc0fz1idYIHmHG4YVlHkkcYY9NUUlkXk7F1wXbdM3iGdJ
+         M3KFahawYfTSH4V5o6P21m22dybqVRfGg/aK2/dcythw5EA4UOyox+sppznZeUS/CnLZ
+         ZTWa9wrsWgJ2VeOL4g58qL2MEaQwgYWPOVkhtbf4a28LtJl3xT3PwJ6N5eWpWUdEb128
+         w++g==
+X-Gm-Message-State: AOJu0YwzWjLANk3R+kxckOGHyb5g7UWFrkccuu2nTiyT0R9a/u9CS25E
+	8EEFfRMC0QxnKSv8nrPK63ddzdHM0jNA5zBn4BgSQ5j+fvbTneJJaPbB6RMyzYr4L7vJE2tNlsF
+	O
+X-Google-Smtp-Source: AGHT+IERc38GiMok/nQ6Rr78ypiB7l2ODyZK6ToRnzZO4gdy6yrCuL2f7Ll2ZkXTckymQay7YmfN+w==
+X-Received: by 2002:a05:6870:56a1:b0:214:e52c:ae30 with SMTP id p33-20020a05687056a100b00214e52cae30mr7203556oao.54.1707745440268;
+        Mon, 12 Feb 2024 05:44:00 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id j25-20020a9d7d99000000b006e2e57a9f19sm62103otn.19.2024.02.12.05.43.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 12 Feb 2024 05:43:59 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVmE69GKM7lEir3wWji63+wxyl9VO9pDLNYKmFsrgrRbqW2DadEEbF+slCqPqlEQ0QIeKRXXtGIPZKnQFz9LWni1pJjyqAsGRpdjzP2
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com. [209.85.219.173])
-        by smtp.gmail.com with ESMTPSA id z19-20020a81a253000000b00604d60609d9sm1146330ywg.121.2024.02.12.05.43.59
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Feb 2024 05:43:59 -0800 (PST)
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dc755832968so2342818276.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 05:43:59 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUZGBXMc/xNI+Kysb/iD3XIq6iN6enroMf+27lb74MyYUMCGE/Ug8wJHPgea1QfvTM5oBJrQcrZwPpoYExRezzGL3h70d4U7DTuiMzO
-X-Received: by 2002:a05:6902:1b93:b0:dc6:9c51:760f with SMTP id
- ei19-20020a0569021b9300b00dc69c51760fmr5835849ybb.56.1707745439274; Mon, 12
- Feb 2024 05:43:59 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1rZWbG-00Gwj0-Q6;
+	Mon, 12 Feb 2024 09:43:58 -0400
+Date: Mon, 12 Feb 2024 09:43:58 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Max Kellermann <max.kellermann@ionos.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/35] Fast kernel headers: reduce header dependencies
+Message-ID: <20240212134358.GB765010@ziepe.ca>
+References: <20240211231518.349442-1-max.kellermann@ionos.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240212132515.2660837-2-andriy.shevchenko@linux.intel.com>
- <20240212132515.2660837-3-andriy.shevchenko@linux.intel.com> <ZcoezKt4zKvO8jOf@smile.fi.intel.com>
-In-Reply-To: <ZcoezKt4zKvO8jOf@smile.fi.intel.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 12 Feb 2024 14:43:47 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVeSMavAdZxCxh7wFLcXQu-wE_vvDvpA1WV-R3mrZ2-DQ@mail.gmail.com>
-Message-ID: <CAMuHMdVeSMavAdZxCxh7wFLcXQu-wE_vvDvpA1WV-R3mrZ2-DQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] auxdisplay: Take over maintainership, but in Odd
- Fixes mode
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>, linux-kernel@vger.kernel.org, 
-	Miguel Ojeda <ojeda@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240211231518.349442-1-max.kellermann@ionos.com>
 
-On Mon, Feb 12, 2024 at 2:36=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> On Mon, Feb 12, 2024 at 03:23:53PM +0200, Andy Shevchenko wrote:
-> > I have no time for this, but since it looks like I'm the main
-> > contributor for the last few years to the subsystem, I'll take
-> > it for now. Geert agreed to help me with as a designated reviwer.
->
-> The typo ("reviewer") has been fixed locally.
+On Mon, Feb 12, 2024 at 12:14:43AM +0100, Max Kellermann wrote:
+> This patch set aims to reduce the dependencies between headers, in
+> order to have cleaner code and speed up the build.  It continues
+> previous efforts by other developers.
 
-Please drop the "with" before "as", too.
+May I suggest if you are going to do this work you talk to the Intel
+0-day folks about getting your git tree linked into automatic testing
+so you can post patches that don't immediately trigger a 0-day report?
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+I've found this invaluable for my own work.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Thanks,
+Jason
