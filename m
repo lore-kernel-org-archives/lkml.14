@@ -1,74 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A484C2555B
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 10:44:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3988F38F84;
+	Mon, 12 Feb 2024 10:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707734660; cv=none; b=UxUkGYRyxdVYClRD+g79hSI1mm/L/VyaT0gQ+CjCAbihfyzw7n5AJOjJNWnBecUfoayEExAkIvguQdO32Z4H9sbigHftEkC9gIDb6j/udQzB0ah8rchbTbvdkrg17Jry4Kinr6FHTrisV+lh5gcilmG5uJJluvaDqieEzFovWf0=
+	t=1707734666; cv=none; b=G4mYZuQ2V2HYbfXXitpZUOtoLyC5EMuylUKD9XIrpV63eRYUXTN7e5i8+XBNNcmnlUbBjGeu2gFVKiTM0C0UX+DG+t05/lqlglx57B6njwl/At0yxSjEy63sm5T1/o8VtOkzvuB0vy5DnECkqnkrs8qlcOOt1/it/N3UiwYX9LE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707734660; c=relaxed/simple;
-	bh=vNzkjdn0gSBwAlVWWR/zTEpCS7Bsjr2/ZcZyQ7gmWmU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=groAQmoknAwazcQO8CTgKyOcsE+HqVGgx3IMphRjAhzv/c3jVzd/JmEBoUkX92jxV2dKiheXen/L1Io6h6mZLFAErr5ekuHdoCDkrtl7yHW6iFheRCMA1+6jwCZ0i/3EobNqmWf+9Z2D6n5hKUXZnCCRg29gZxcg1rFUJEZCKW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=uTT7Bizo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707734666; c=relaxed/simple;
+	bh=5hYF460/+htzfJ1okNx/pGu468s50PBHNVmfUoC+QnM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=neZEtHuu71O4grTNUNvjBmZf0bAQJSKq5a2o78dZnTjtml+sfyc/l1gUXHechilEQI1Ac3RCWvQvVUhtpxBuN2TAsSqxyl+NNB6WkZOJ+qSnYWHQ+C7i7Hi+RHb4tJdOTrWN933TJALT9snTQs2+ShKSl9BfWDkC6bfc4GxcQYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=oWL2KptG; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="uTT7Bizo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D75EC43390;
-	Mon, 12 Feb 2024 10:44:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1707734660;
-	bh=vNzkjdn0gSBwAlVWWR/zTEpCS7Bsjr2/ZcZyQ7gmWmU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uTT7Bizo1IVswwVdUAgDWtuso5a5RKUVEe82fo7N9uwSqB5B0t7AIC0m1l22rsRn1
-	 rAhlKSndlqjS4H8+we9U7Qcoi03fObS+2eUQilBMRFr68qIXejve0TVvp48LpCCAOf
-	 OYrqaHbBcx6I3ElR8x/Y5FhSHoY6R52S3JuQ/npQ=
-Date: Mon, 12 Feb 2024 11:44:16 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dio: make dio_bus_type const
-Message-ID: <2024021249-attentive-entity-70d1@gregkh>
-References: <20240211-bus_cleanup-dio-v1-1-02140fbc5289@marliere.net>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oWL2KptG"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41CAiIZA115366;
+	Mon, 12 Feb 2024 04:44:18 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1707734658;
+	bh=b4JbmEa2Ee7tdYYKJ1dwvz/r7NVCdNPG0jCwiAuAacM=;
+	h=From:To:CC:Subject:Date;
+	b=oWL2KptGhA4NlMwLucPzbn6vW9yD6cAg12hFipVrJJLMUQX2vMlJ62Rcm3/9Y4gSE
+	 wCUb9kuZm8wikuGTd7Z/AQsDhpenB7SWKYgy3qchje/coCXFRf+2bfIvtvDqF1yUuQ
+	 IlFyE07gmlVma2ZR+umBl2eaHdl5+m7HfqXMwUXQ=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41CAiI04075965
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 12 Feb 2024 04:44:18 -0600
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 12
+ Feb 2024 04:44:18 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 12 Feb 2024 04:44:18 -0600
+Received: from localhost (a0498981-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.68.216])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41CAiHSB116417;
+	Mon, 12 Feb 2024 04:44:18 -0600
+From: Bhavya Kapoor <b-kapoor@ti.com>
+To: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <b-kapoor@ti.com>
+Subject: [RESEND PATCH v2 0/4] arm64: dts: ti: Modify pinmux for wkup_uart0 and mcu_uart0
+Date: Mon, 12 Feb 2024 16:14:13 +0530
+Message-ID: <20240212104417.1058993-1-b-kapoor@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240211-bus_cleanup-dio-v1-1-02140fbc5289@marliere.net>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Sun, Feb 11, 2024 at 12:40:16PM -0300, Ricardo B. Marliere wrote:
-> Now that the driver core can properly handle constant struct bus_type,
-> move the dio_bus_type variable to be a constant structure as well,
-> placing it into read-only memory which can not be modified at runtime.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
-> ---
->  drivers/dio/dio-driver.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dio/dio-driver.c b/drivers/dio/dio-driver.c
-> index 69c46935ffc7..2d9fa6011945 100644
-> --- a/drivers/dio/dio-driver.c
-> +++ b/drivers/dio/dio-driver.c
-> @@ -123,7 +123,7 @@ static int dio_bus_match(struct device *dev, struct device_driver *drv)
->  }
->  
->  
-> -struct bus_type dio_bus_type = {
-> +const struct bus_type dio_bus_type = {
->  	.name	= "dio",
->  	.match	= dio_bus_match,
->  	.probe	= dio_device_probe,
-> 
+WKUP_PADCONFIG registers for wkup_uart0 and mcu_uart0 lies under
+wkup_pmx2 for J7200. Thus, modify pinmux for both of them. Also,
+remove the redundant clock-frequency property from mcu_uart0 node.
 
-Don't you also have to change this in include/linux/dio.h?
+Only Tx and Rx Signal lines for wkup_uart0 are brought out on
+J721S2 Common Proc Board and J784S4 EVM, but CTS and RTS signal lines
+are not brought out. Thus, remove pinmux for CTS and RTS signal lines
+for wkup_uart0 in J721S2 and J784S4.
 
-thanks,
+v1 Link : https://lore.kernel.org/all/20240208110602.931573-1-b-kapoor@ti.com/
 
-greg k-h
+Changelog v1->v2:
+ - Divided Pinmux and clock frequency patch(1/3) for J7200 into 2 patches
+ - Change commit message to include wkup_uart0 for referring to the instance
+
+Rebased to 20240212
+
+Bhavya Kapoor (4):
+  arm64: dts: ti: k3-j7200-common-proc-board: Modify Pinmux for
+    wkup_uart0 and mcu_uart0
+  arm64: dts: ti: k3-j7200-common-proc-board: Remove clock-frequency
+    from mcu_uart0
+  arm64: dts: ti: k3-j721s2-common-proc-board: Remove Pinmux for CTS and
+    RTS in wkup_uart0
+  arm64: dts: ti: k3-j784s4-evm: Remove Pinmux for CTS and RTS in
+    wkup_uart0
+
+ .../boot/dts/ti/k3-j7200-common-proc-board.dts | 18 +++++++++---------
+ .../dts/ti/k3-j721s2-common-proc-board.dts     |  2 --
+ arch/arm64/boot/dts/ti/k3-j784s4-evm.dts       |  2 --
+ 3 files changed, 9 insertions(+), 13 deletions(-)
+
+-- 
+2.34.1
+
