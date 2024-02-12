@@ -1,90 +1,54 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E606439ACB;
-	Mon, 12 Feb 2024 10:44:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2330A3A1B7;
+	Mon, 12 Feb 2024 10:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707734671; cv=none; b=dHgqNeNCj5I3B2zgvoP5cHnBIzBJKga+BYNO1tslXvRdxCQsNXeb5/a6W9iEAMTm6H1W0LmpM5MgEDHHYG22JpRo4i3pQ8lvTO1YIYgoiqfCVrsQ4FrXN5LTmnyrGZ8D4zwXdEcedrsHeboSPu1t3lHUHKGd+NhFDcWOFtcSNBs=
+	t=1707734677; cv=none; b=V1Nm/NGa6YxshZylnQcWqaVZ0S3N3/Dd9bpuXaDdBtBZiHIWqhp6THx+E0kHXF06YPYfQdEwrKl5L/Ip068y9KaTUApPZvt8DkPsn/aaqvo4TS9LG/hEBQpT7rqxSA9dmVmBXBT6ApC/38OWwBLVTxSJHH0H2IGXrcKlAMH9zWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707734671; c=relaxed/simple;
-	bh=79h02SKnHn85By8nwhOQ8fXoYo789J6KzeEqn3I9HJY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QNAzwszVH9cfVy6xryv/3Kcb+uaRJvLoAPmDs3iW9djWpYlteN/eaaR23CDd6/voDVUUbBhO33TnmJWEzzBvTf73GiB+bcEcSPqt1poK8Z/P4s4E2GsW/PAatMwXyZAZClmtJ+SFf6Im/54YvVrEopkQc0lymZQoQBxHNQnpNzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=EhkJ1KRB; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1707734677; c=relaxed/simple;
+	bh=1Da0/DMjh5jC40KWF36hmD167HiYbe6VGLGiN6+EOZY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aXkJbjo21WLsxXWg9xEqn0MXN4P50o0oIBtJY6N1PsM2oxesI3iYoFQm7D2Iykj3Y5O5LofRNpQlfvmJ/g2h3oh0a8j8pgPtOsG6RxMnUbL03Iwxg0EEhS4tRey9Bt89GIOcX+oxmUCjqUOvPjSNSkWij5lOTC8dVU70HGVi6m8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=slSS0wKF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EhkJ1KRB"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41CAiOY7048648;
-	Mon, 12 Feb 2024 04:44:24 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707734664;
-	bh=l6PYv7DW5Jf8xUFD8TY4ICh4k/rvsScmajdO5F2cwJo=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=EhkJ1KRB2A3Vr83Tps7BLo+Fw2EqOO7f7gPpGVHS5r1yNJ48DLJWet4QnPK+cV6Ii
-	 S/UO7G2sFU5e0z5uMycQRf3T5EQ0o/4XUzc81vam5/5XcYK4xpqy5v8j5WIAzJBOHJ
-	 D3Kpv0RKr0/WQlxuyJdBIc3IHm9chSyo8XmxxDuA=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41CAiO9Q071147
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 12 Feb 2024 04:44:24 -0600
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 12
- Feb 2024 04:44:24 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 12 Feb 2024 04:44:23 -0600
-Received: from localhost (a0498981-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.68.216])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41CAiNFv114431;
-	Mon, 12 Feb 2024 04:44:23 -0600
-From: Bhavya Kapoor <b-kapoor@ti.com>
-To: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <b-kapoor@ti.com>
-Subject: [RESEND PATCH v2 4/4] arm64: dts: ti: k3-j784s4-evm: Remove Pinmux for CTS and RTS in wkup_uart0
-Date: Mon, 12 Feb 2024 16:14:17 +0530
-Message-ID: <20240212104417.1058993-5-b-kapoor@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240212104417.1058993-1-b-kapoor@ti.com>
-References: <20240212104417.1058993-1-b-kapoor@ti.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="slSS0wKF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BB1FC43394;
+	Mon, 12 Feb 2024 10:44:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1707734676;
+	bh=1Da0/DMjh5jC40KWF36hmD167HiYbe6VGLGiN6+EOZY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=slSS0wKFkfcyIET03u1K8ISsRUBgHmeTeW7JXq7Hgekjzt80kPsKab34n/6p5qIRl
+	 mjVDYgXNTcOQeKrNcOhkNkt0RHoKj1R8+oltlQuHKXtWdzL+5q2da8gsDY8exI9eEe
+	 9a9++SciZK5Q6Xc8EShZALY4pJt2wRzEWusoeTzE=
+Date: Mon, 12 Feb 2024 11:44:34 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: "Ricardo B. Marliere" <ricardo@marliere.net>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	Robert Moore <robert.moore@intel.com>, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, acpica-devel@lists.linux.dev
+Subject: Re: [PATCH] ACPI: bus: make acpi_bus_type const
+Message-ID: <2024021222-overhead-kudos-3565@gregkh>
+References: <20240211-bus_cleanup-acpi-v1-1-08540c6e9458@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240211-bus_cleanup-acpi-v1-1-08540c6e9458@marliere.net>
 
-Only Tx and Rx Signal lines for wkup_uart0 are brought out on
-the J784S4 EVM from SoC, but CTS and RTS signal lines are not
-brought on the EVM. Thus, remove pinmux for CTS and RTS signal
-lines for wkup_uart0 in J784S4.
+On Sun, Feb 11, 2024 at 12:37:11PM -0300, Ricardo B. Marliere wrote:
+> Now that the driver core can properly handle constant struct bus_type,
+> move the acpi_bus_type variable to be a constant structure as well,
+> placing it into read-only memory which can not be modified at runtime.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
 
-Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
----
- arch/arm64/boot/dts/ti/k3-j784s4-evm.dts | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-index 57e7cb8ea2b8..9f16642ccd5f 100644
---- a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-@@ -336,8 +336,6 @@ &wkup_pmx2 {
- 	wkup_uart0_pins_default: wkup-uart0-default-pins {
- 		bootph-all;
- 		pinctrl-single,pins = <
--			J721S2_WKUP_IOPAD(0x070, PIN_INPUT, 0) /* (L37) WKUP_GPIO0_6.WKUP_UART0_CTSn */
--			J721S2_WKUP_IOPAD(0x074, PIN_INPUT, 0) /* (L36) WKUP_GPIO0_7.WKUP_UART0_RTSn */
- 			J721S2_WKUP_IOPAD(0x048, PIN_INPUT, 0) /* (K35) WKUP_UART0_RXD */
- 			J721S2_WKUP_IOPAD(0x04c, PIN_INPUT, 0) /* (K34) WKUP_UART0_TXD */
- 		>;
--- 
-2.34.1
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
