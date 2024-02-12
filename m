@@ -1,485 +1,232 @@
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A8F3D387
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 16:35:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90064210E4;
+	Mon, 12 Feb 2024 16:39:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707755720; cv=none; b=nQ+6allju67Z7aVTAvswtCpmk8LtAPSiA9VmTpfLV5rQGFtl5vUjGAKfVsaeB1+WCLPh5qDdc/MXCwWbc7qS+PRQjuWRoa9goBFDzkALYZX9KbY8gt/iPGRQufpRNXoUSe3tiIv3qHgDafYlCMGMOReQ7ys6skimkGhlHfsMBkk=
+	t=1707755949; cv=none; b=BLQijGk579GezfelYXtFv27Iv6GwelCP/WgjtDFtUsH+ubvQEYy5agizWNS56vnL12HEauv/3rVhYALQDG3ty8EBM5mtArEJtPhP3aPW6NL6ZMrer62q+lQQ6YMRwmdzCtAldRogEA1dCDZfEYahsEMlZrgmpHk2cpm/3epuFds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707755720; c=relaxed/simple;
-	bh=c0MezdnPCS8H83FymjQKvW+cMQWctMVlgbhdNS11PR4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cYderTdcqKWD1+yIjXvjXOo3JN4IZ6xv+3nMq9KvgEg1P8z7ODSKtAEkeVxpQtVrHrGjlVR6WejKUPL06fNwQ567Bkp+4MuKK8cMNEPDwWouc4kvAAkuLejv6xXCb1PQu8mnuwt5k4Jciw0msEY3JzXhK9EQIZf0TOBjpEEx3EU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=se/Q6FkL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ImBydCTL; arc=none smtp.client-ip=66.111.4.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sent.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="se/Q6FkL";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ImBydCTL"
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailout.nyi.internal (Postfix) with ESMTP id A7E3D5C00C8;
-	Mon, 12 Feb 2024 11:35:16 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Mon, 12 Feb 2024 11:35:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
-	1707755716; x=1707842116; bh=3/do+jCg6xGopLyF8AQICQ7f8a7A13gcREh
-	u4u6OZjc=; b=se/Q6FkLXP40qfmFo4pcJn3Eaf8WLvKiJATfnF5UEZg376oeDPb
-	tM9SaoYp3P5N6F9m8lyknvvE58fCHA9T7MMh4i0pzRwU64MKpjaEcooaY519xvnE
-	vHh//XgphuqWOQqe9lyCDODT6C3HyKN4bRt6xArsllfxhK6lndi130GrzwL/NJQh
-	/G+gF7nJtiefXgKGA1Om4XlVsacE1kDbxhcMpE1HE9OyM8DKUpE6TWGvj0Jja17w
-	Tq+74VDT1JGvvtLaxWbFD2fhcwZxjRYQaeIQCZIRQWvTG/BayNN8gngIzsd06PUZ
-	iPApQP+xVk0X4eiJ4GoA2aThUFkcJlKGwCw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1707755716; x=1707842116; bh=3/do+jCg6xGopLyF8AQICQ7f8a7A13gcREh
-	u4u6OZjc=; b=ImBydCTLVmiKMEGP2WjM5cX1xr393GEW9AVH42KHS5CLoSZI2SP
-	nwmquPp4g478Szqz9juk4iz/6UlIB/4nX4DaHlFi9MzMGj2oT/GIX/r9QIh35UNh
-	OUUvy96AwDUeX8AVa66U+Q7b2K2L1hEVd5xDURHhZa/3fMtYKAZcPGwGI+jMHi8j
-	GLJ6QBlmrdUHTzDLNDHNSkG3jbLtHx1v8py/4QGYl9R4DDjSC7Bp0OcWinGINbRG
-	m2xNBywaSOx5eu5zJr2HD8WZGpjT4TutGYMQh/t77b/1ZBlv8V++2ugaQbwJYz7P
-	0GfLbvFVTMDD6NWqXdiydWKKGlqt4PG/prg==
-X-ME-Sender: <xms:xEjKZVBFHWXT3nA9PIfCL0y5B7e1jl7SVaDZk72jp5H9BSjsdnAs1w>
-    <xme:xEjKZTh_cudepHIxX_NGNYhvHegJY1uO6o0y0IFOW9i0YFVFSfGfjZVjqqj9Cag70
-    to6S6Ktmn42sGcopg>
-X-ME-Received: <xmr:xEjKZQnTDDlGoVz7tkm9A9_k8NO9JEOeFxPY6Zt48-zt6Qe1xj1TbqSARI1Xo_lAIghf0Dp0ZLEYd8UqmQkc7hnzBwzFgABgmABrC2IJh1DhQk9XvZH57Fye>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudefgdeklecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvfevufffkffojghfrhggtgfgsehtkeertdertdejnecuhfhrohhmpegkihcu
-    jggrnhcuoeiiihdrhigrnhesshgvnhhtrdgtohhmqeenucggtffrrghtthgvrhhnpeejke
-    etkeffleelkeduffdtfedvtdejjeeutdeutdetgeejgfevtdefudejkeeiveenucevlhhu
-    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpeiiihdrhigrnhessh
-    gvnhhtrdgtohhm
-X-ME-Proxy: <xmx:xEjKZfxcP29jHFq0TWE89FIhUNXrZ5bqXaf5_FPX-fS-R08czjP3tA>
-    <xmx:xEjKZaTDGMhNEwufOGSVSMghSmynW6ola4uRIS9OorkzFAm-jKxNew>
-    <xmx:xEjKZSZBZ4biVqezQR1Ugo4zB3oZd3jSl3ysgvqU-H3nJskuR0Zdwg>
-    <xmx:xEjKZbKkB-TJ3G7qcVV6R9uPLomRnbvlZpZn3UVuXxSgyHl4S6rBdQ>
-Feedback-ID: iccd040f4:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 12 Feb 2024 11:35:15 -0500 (EST)
-From: Zi Yan <zi.yan@sent.com>
-To: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Cc: Zi Yan <ziy@nvidia.com>,
-	"Huang, Ying" <ying.huang@intel.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	David Hildenbrand <david@redhat.com>,
-	"Yin, Fengwei" <fengwei.yin@intel.com>,
-	Yu Zhao <yuzhao@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Kemeng Shi <shikemeng@huaweicloud.com>,
-	Mel Gorman <mgorman@techsingularity.net>,
-	Rohan Puri <rohan.puri15@gmail.com>,
-	Mcgrof Chamberlain <mcgrof@kernel.org>,
-	Adam Manzanares <a.manzanares@samsung.com>,
-	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-Subject: [PATCH v4 2/3] mm/compaction: add support for >0 order folio memory compaction.
-Date: Mon, 12 Feb 2024 11:35:09 -0500
-Message-ID: <20240212163510.859822-3-zi.yan@sent.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240212163510.859822-1-zi.yan@sent.com>
-References: <20240212163510.859822-1-zi.yan@sent.com>
-Reply-To: Zi Yan <ziy@nvidia.com>
+	s=arc-20240116; t=1707755949; c=relaxed/simple;
+	bh=vcordRo2KvlABpChEq+Z7OeNWOiTzGB0Zd1pEepkQ9A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ppGFFNJJWnPF8DFkrVH1/6osfz9NJ0qtAcJoETyvVD6rhUUkpNeuJwAkb37sXnETTQorss+s5T3ia5UBAW26ReZuV+p+bQzyPsUp/ip/M+PfRFfg0ZRN3TxcIUK6IjPEox8y6/jfAIEgi1Q3b3qN7SplZEAS6ZZImP1fWoAchR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C339C433C7;
+	Mon, 12 Feb 2024 16:39:05 +0000 (UTC)
+Message-ID: <0b3e31e6-34ae-46e3-a43d-bc4895542d8a@xs4all.nl>
+Date: Mon, 12 Feb 2024 17:39:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 08/44] drm/connector: hdmi: Add Broadcast RGB property
+Content-Language: en-US, nl
+To: =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>
+Cc: Sebastian Wick <sebastian.wick@redhat.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Emma Anholt <emma@anholt.net>,
+ Jonathan Corbet <corbet@lwn.net>, Sandy Huang <hjc@rock-chips.com>,
+ =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-rockchip@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+References: <20231207-kms-hdmi-connector-state-v5-8-6538e19d634d@kernel.org>
+ <20240115143308.GA159345@toolbox> <20240115143720.GA160656@toolbox>
+ <73peztbeeikb3fg6coxu3punxllgtyrmgco34tnxkojtsjbr3s@26bud3sjbcez>
+ <Zb0M_2093UwPXK8y@intel.com>
+ <hez2m57ogqx3yyqk45tzdkvxvhrbdepgm244i4m2aty2xhf5b5@acqgvmxhmmvr>
+ <Zb0aYAapkxQ2kopt@intel.com>
+ <zml6j27skvjmbrfyz7agy5waxajv4p4asbemeexelm3wuv4o7j@xkd2wvnxhbuc>
+ <20240209203435.GB996172@toolbox>
+ <ahfl6f72lpgpsbnrbgvbsh4db4npr2hh36kua2c6krh544hv5r@dndw4hz2mu2g>
+ <Zco-DQaXqae7B1jt@intel.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Autocrypt: addr=hverkuil@xs4all.nl; keydata=
+ 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
+In-Reply-To: <Zco-DQaXqae7B1jt@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Zi Yan <ziy@nvidia.com>
+On 12/02/2024 16:49, Ville Syrjälä wrote:
+> On Mon, Feb 12, 2024 at 11:01:07AM +0100, Maxime Ripard wrote:
+>> On Fri, Feb 09, 2024 at 09:34:35PM +0100, Sebastian Wick wrote:
+>>> On Mon, Feb 05, 2024 at 10:39:38AM +0100, Maxime Ripard wrote:
+>>>> On Fri, Feb 02, 2024 at 06:37:52PM +0200, Ville Syrjälä wrote:
+>>>>> On Fri, Feb 02, 2024 at 04:59:30PM +0100, Maxime Ripard wrote:
+>>>>>> On Fri, Feb 02, 2024 at 05:40:47PM +0200, Ville Syrjälä wrote:
+>>>>>>> On Fri, Feb 02, 2024 at 02:01:39PM +0100, Maxime Ripard wrote:
+>>>>>>>> Hi,
+>>>>>>>>
+>>>>>>>> On Mon, Jan 15, 2024 at 03:37:20PM +0100, Sebastian Wick wrote:
+>>>>>>>>>>>  /**
+>>>>>>>>>>>   * DOC: HDMI connector properties
+>>>>>>>>>>>   *
+>>>>>>>>>>> + * Broadcast RGB
+>>>>>>>>>>> + *      Indicates the RGB Quantization Range (Full vs Limited) used.
+>>>>>>>>>>> + *      Infoframes will be generated according to that value.
+>>>>>>>>>>> + *
+>>>>>>>>>>> + *      The value of this property can be one of the following:
+>>>>>>>>>>> + *
+>>>>>>>>>>> + *      Automatic:
+>>>>>>>>>>> + *              RGB Range is selected automatically based on the mode
+>>>>>>>>>>> + *              according to the HDMI specifications.
+>>>>>>>>>>> + *
+>>>>>>>>>>> + *      Full:
+>>>>>>>>>>> + *              Full RGB Range is forced.
+>>>>>>>>>>> + *
+>>>>>>>>>>> + *      Limited 16:235:
+>>>>>>>>>>> + *              Limited RGB Range is forced. Unlike the name suggests,
+>>>>>>>>>>> + *              this works for any number of bits-per-component.
+>>>>>>>>>>> + *
+>>>>>>>>>>> + *      Drivers can set up this property by calling
+>>>>>>>>>>> + *      drm_connector_attach_broadcast_rgb_property().
+>>>>>>>>>>> + *
+>>>>>>>>>>
+>>>>>>>>>> This is a good time to document this in more detail. There might be two
+>>>>>>>>>> different things being affected:
+>>>>>>>>>>
+>>>>>>>>>> 1. The signalling (InfoFrame/SDP/...)
+>>>>>>>>>> 2. The color pipeline processing
+>>>>>>>>>>
+>>>>>>>>>> All values of Broadcast RGB always affect the color pipeline processing
+>>>>>>>>>> such that a full-range input to the CRTC is converted to either full- or
+>>>>>>>>>> limited-range, depending on what the monitor is supposed to accept.
+>>>>>>>>>>
+>>>>>>>>>> When automatic is selected, does that mean that there is no signalling,
+>>>>>>>>>> or that the signalling matches what the monitor is supposed to accept
+>>>>>>>>>> according to the spec? Also, is this really HDMI specific?
+>>>>>>>>>>
+>>>>>>>>>> When full or limited is selected and the monitor doesn't support the
+>>>>>>>>>> signalling, what happens?
+>>>>>>>>>
+>>>>>>>>> Forgot to mention: user-space still has no control over RGB vs YCbCr on
+>>>>>>>>> the cable, so is this only affecting RGB? If not, how does it affect
+>>>>>>>>> YCbCr?
+>>>>>>>>
+>>>>>>>> So I dug a bit into both the i915 and vc4 drivers, and it looks like if
+>>>>>>>> we're using a YCbCr format, i915 will always use a limited range while
+>>>>>>>> vc4 will follow the value of the property.
+>>>>>>>
+>>>>>>> The property is literally called "Broadcast *RGB*".
+>>>>>>> That should explain why it's only affecting RGB.
+>>>>>>
+>>>>>> Right. And the limited range option is called "Limited 16:235" despite
+>>>>>> being usable on bpc > 8 bits. Naming errors occurs, and history happens
+>>>>>> to make names inconsistent too, that's fine and not an argument in
+>>>>>> itself.
+>>>>>>
+>>>>>>> Full range YCbCr is a much rarer beast so we've never bothered
+>>>>>>> to enable it.
+>>>>>>
+>>>>>> vc4 supports it.
+>>>>>
+>>>>> Someone implemented it incorrectly then.
+>>>>
+>>>> Incorrectly according to what documentation / specification? I'm sorry,
+>>>> but I find it super ironic that i915 gets to do its own thing, not
+>>>> document any of it, and when people try to clean things up they get told
+>>>> that we got it all wrong.
+>>>
+>>> FWIW, this was an i915 property and if another driver uses the same
+>>> property name it must have the same behavior. Yes, it isn't standardized
+>>> and yes, it's not documented (hence this effort here) but it's still on
+>>> vc4 to make the property compatible.
+>>
+>> How is it not compatible? It's a superset of what i915 provides, but
+>> it's strictly compatible with it.
+> 
+> No it is not. Eg. what happens if you set the thing to full range for
+> RGB (which you must on many broken monitors), and then the kernel
+> automagically switches to YCbCr (for whatever reason) but the monitor
+> doesn't support full range YCbCr? Answer: you get crap output.
 
-Before last commit, memory compaction only migrates order-0 folios and
-skips >0 order folios.  Last commit splits all >0 order folios during
-compaction.  This commit migrates >0 order folios during compaction by
-keeping isolated free pages at their original size without splitting them
-into order-0 pages and using them directly during migration process.
+The Broadcast RGB setting is really specific to RGB output. That's where
+you need it, since due to messed up standards in the past it is common to
+have to override this.
 
-What is different from the prior implementation:
-1. All isolated free pages are kept in a NR_PAGE_ORDERS array of page
-   lists, where each page list stores free pages in the same order.
-2. All free pages are not post_alloc_hook() processed nor buddy pages,
-   although their orders are stored in first page's private like buddy
-   pages.
-3. During migration, in new page allocation time (i.e., in
-   compaction_alloc()), free pages are then processed by post_alloc_hook().
-   When migration fails and a new page is returned (i.e., in
-   compaction_free()), free pages are restored by reversing the
-   post_alloc_hook() operations using newly added
-   free_pages_prepare_fpi_none().
+For YCbCr it is not needed since it is always limited range in practice.
+If there is ever a need to support full range YCbCr, then a new "Broadcast YCbCr"
+setting should be created.
 
-Step 3 is done for a latter optimization that splitting and/or merging
-free pages during compaction becomes easier.
+The only place were you see full range YCbCr being used is in combination with
+JPEG codecs, since JPEG uses full range YCbCr. But it does not normally occur
+on video output interfaces.
 
-Note: without splitting free pages, compaction can end prematurely due to
-migration will return -ENOMEM even if there is free pages.  This happens
-when no order-0 free page exist and compaction_alloc() return NULL.
+Regards,
 
-Signed-off-by: Zi Yan <ziy@nvidia.com>
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-Tested-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: Adam Manzanares <a.manzanares@samsung.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Huang Ying <ying.huang@intel.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Vishal Moola (Oracle) <vishal.moola@gmail.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Yin Fengwei <fengwei.yin@intel.com>
-Cc: Yu Zhao <yuzhao@google.com>
----
- mm/compaction.c | 143 +++++++++++++++++++++++++++---------------------
- mm/internal.h   |   4 +-
- mm/page_alloc.c |   6 ++
- 3 files changed, 91 insertions(+), 62 deletions(-)
+	Hans
 
-diff --git a/mm/compaction.c b/mm/compaction.c
-index aa6aad805c4d..d0a05a621b67 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -66,45 +66,56 @@ static inline void count_compact_events(enum vm_event_item item, long delta)
- #define COMPACTION_HPAGE_ORDER	(PMD_SHIFT - PAGE_SHIFT)
- #endif
- 
--static unsigned long release_freepages(struct list_head *freelist)
-+static void split_map_pages(struct list_head *freepages)
- {
-+	unsigned int i, order;
- 	struct page *page, *next;
--	unsigned long high_pfn = 0;
-+	LIST_HEAD(tmp_list);
- 
--	list_for_each_entry_safe(page, next, freelist, lru) {
--		unsigned long pfn = page_to_pfn(page);
--		list_del(&page->lru);
--		__free_page(page);
--		if (pfn > high_pfn)
--			high_pfn = pfn;
--	}
-+	for (order = 0; order < NR_PAGE_ORDERS; order++) {
-+		list_for_each_entry_safe(page, next, &freepages[order], lru) {
-+			unsigned int nr_pages;
- 
--	return high_pfn;
-+			list_del(&page->lru);
-+
-+			nr_pages = 1 << order;
-+
-+			post_alloc_hook(page, order, __GFP_MOVABLE);
-+			if (order)
-+				split_page(page, order);
-+
-+			for (i = 0; i < nr_pages; i++) {
-+				list_add(&page->lru, &tmp_list);
-+				page++;
-+			}
-+		}
-+		list_splice_init(&tmp_list, &freepages[0]);
-+	}
- }
- 
--static void split_map_pages(struct list_head *list)
-+static unsigned long release_free_list(struct list_head *freepages)
- {
--	unsigned int i, order, nr_pages;
--	struct page *page, *next;
--	LIST_HEAD(tmp_list);
--
--	list_for_each_entry_safe(page, next, list, lru) {
--		list_del(&page->lru);
-+	int order;
-+	unsigned long high_pfn = 0;
- 
--		order = page_private(page);
--		nr_pages = 1 << order;
-+	for (order = 0; order < NR_PAGE_ORDERS; order++) {
-+		struct page *page, *next;
- 
--		post_alloc_hook(page, order, __GFP_MOVABLE);
--		if (order)
--			split_page(page, order);
-+		list_for_each_entry_safe(page, next, &freepages[order], lru) {
-+			unsigned long pfn = page_to_pfn(page);
- 
--		for (i = 0; i < nr_pages; i++) {
--			list_add(&page->lru, &tmp_list);
--			page++;
-+			list_del(&page->lru);
-+			/*
-+			 * Convert free pages into post allocation pages, so
-+			 * that we can free them via __free_page.
-+			 */
-+			post_alloc_hook(page, order, __GFP_MOVABLE);
-+			__free_pages(page, order);
-+			if (pfn > high_pfn)
-+				high_pfn = pfn;
- 		}
- 	}
--
--	list_splice(&tmp_list, list);
-+	return high_pfn;
- }
- 
- #ifdef CONFIG_COMPACTION
-@@ -657,7 +668,7 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
- 		nr_scanned += isolated - 1;
- 		total_isolated += isolated;
- 		cc->nr_freepages += isolated;
--		list_add_tail(&page->lru, freelist);
-+		list_add_tail(&page->lru, &freelist[order]);
- 
- 		if (!strict && cc->nr_migratepages <= cc->nr_freepages) {
- 			blockpfn += isolated;
-@@ -722,7 +733,11 @@ isolate_freepages_range(struct compact_control *cc,
- 			unsigned long start_pfn, unsigned long end_pfn)
- {
- 	unsigned long isolated, pfn, block_start_pfn, block_end_pfn;
--	LIST_HEAD(freelist);
-+	int order;
-+	struct list_head tmp_freepages[NR_PAGE_ORDERS];
-+
-+	for (order = 0; order < NR_PAGE_ORDERS; order++)
-+		INIT_LIST_HEAD(&tmp_freepages[order]);
- 
- 	pfn = start_pfn;
- 	block_start_pfn = pageblock_start_pfn(pfn);
-@@ -753,7 +768,7 @@ isolate_freepages_range(struct compact_control *cc,
- 			break;
- 
- 		isolated = isolate_freepages_block(cc, &isolate_start_pfn,
--					block_end_pfn, &freelist, 0, true);
-+					block_end_pfn, tmp_freepages, 0, true);
- 
- 		/*
- 		 * In strict mode, isolate_freepages_block() returns 0 if
-@@ -770,15 +785,15 @@ isolate_freepages_range(struct compact_control *cc,
- 		 */
- 	}
- 
--	/* __isolate_free_page() does not map the pages */
--	split_map_pages(&freelist);
--
- 	if (pfn < end_pfn) {
- 		/* Loop terminated early, cleanup. */
--		release_freepages(&freelist);
-+		release_free_list(tmp_freepages);
- 		return 0;
- 	}
- 
-+	/* __isolate_free_page() does not map the pages */
-+	split_map_pages(tmp_freepages);
-+
- 	/* We don't use freelists for anything. */
- 	return pfn;
- }
-@@ -1494,7 +1509,7 @@ fast_isolate_around(struct compact_control *cc, unsigned long pfn)
- 	if (!page)
- 		return;
- 
--	isolate_freepages_block(cc, &start_pfn, end_pfn, &cc->freepages, 1, false);
-+	isolate_freepages_block(cc, &start_pfn, end_pfn, cc->freepages, 1, false);
- 
- 	/* Skip this pageblock in the future as it's full or nearly full */
- 	if (start_pfn == end_pfn && !cc->no_set_skip_hint)
-@@ -1623,7 +1638,7 @@ static void fast_isolate_freepages(struct compact_control *cc)
- 				nr_scanned += nr_isolated - 1;
- 				total_isolated += nr_isolated;
- 				cc->nr_freepages += nr_isolated;
--				list_add_tail(&page->lru, &cc->freepages);
-+				list_add_tail(&page->lru, &cc->freepages[order]);
- 				count_compact_events(COMPACTISOLATED, nr_isolated);
- 			} else {
- 				/* If isolation fails, abort the search */
-@@ -1700,13 +1715,12 @@ static void isolate_freepages(struct compact_control *cc)
- 	unsigned long isolate_start_pfn; /* exact pfn we start at */
- 	unsigned long block_end_pfn;	/* end of current pageblock */
- 	unsigned long low_pfn;	     /* lowest pfn scanner is able to scan */
--	struct list_head *freelist = &cc->freepages;
- 	unsigned int stride;
- 
- 	/* Try a small search of the free lists for a candidate */
- 	fast_isolate_freepages(cc);
- 	if (cc->nr_freepages)
--		goto splitmap;
-+		return;
- 
- 	/*
- 	 * Initialise the free scanner. The starting point is where we last
-@@ -1766,7 +1780,7 @@ static void isolate_freepages(struct compact_control *cc)
- 
- 		/* Found a block suitable for isolating free pages from. */
- 		nr_isolated = isolate_freepages_block(cc, &isolate_start_pfn,
--					block_end_pfn, freelist, stride, false);
-+					block_end_pfn, cc->freepages, stride, false);
- 
- 		/* Update the skip hint if the full pageblock was scanned */
- 		if (isolate_start_pfn == block_end_pfn)
-@@ -1807,10 +1821,6 @@ static void isolate_freepages(struct compact_control *cc)
- 	 * and the loop terminated due to isolate_start_pfn < low_pfn
- 	 */
- 	cc->free_pfn = isolate_start_pfn;
--
--splitmap:
--	/* __isolate_free_page() does not map the pages */
--	split_map_pages(freelist);
- }
- 
- /*
-@@ -1821,24 +1831,22 @@ static struct folio *compaction_alloc(struct folio *src, unsigned long data)
- {
- 	struct compact_control *cc = (struct compact_control *)data;
- 	struct folio *dst;
-+	int order = folio_order(src);
- 
--	/* this makes migrate_pages() split the source page and retry */
--	if (folio_test_large(src) > 0)
--		return NULL;
--
--	if (list_empty(&cc->freepages)) {
-+	if (list_empty(&cc->freepages[order])) {
- 		isolate_freepages(cc);
--
--		if (list_empty(&cc->freepages))
-+		if (list_empty(&cc->freepages[order]))
- 			return NULL;
- 	}
- 
--	dst = list_entry(cc->freepages.next, struct folio, lru);
-+	dst = list_first_entry(&cc->freepages[order], struct folio, lru);
- 	list_del(&dst->lru);
--	cc->nr_freepages--;
--	cc->nr_migratepages -= 1 << folio_order(src);
--
--	return dst;
-+	post_alloc_hook(&dst->page, order, __GFP_MOVABLE);
-+	if (order)
-+		prep_compound_page(&dst->page, order);
-+	cc->nr_freepages -= 1 << order;
-+	cc->nr_migratepages -= 1 << order;
-+	return page_rmappable_folio(&dst->page);
- }
- 
- /*
-@@ -1849,10 +1857,22 @@ static struct folio *compaction_alloc(struct folio *src, unsigned long data)
- static void compaction_free(struct folio *dst, unsigned long data)
- {
- 	struct compact_control *cc = (struct compact_control *)data;
-+	int order = folio_order(dst);
-+	struct page *page = &dst->page;
-+
-+	if (folio_put_testzero(dst)) {
-+		free_pages_prepare_fpi_none(page, order);
-+
-+		INIT_LIST_HEAD(&dst->lru);
- 
--	list_add(&dst->lru, &cc->freepages);
--	cc->nr_freepages++;
--	cc->nr_migratepages += 1 << folio_order(dst);
-+		list_add(&dst->lru, &cc->freepages[order]);
-+		cc->nr_freepages += 1 << order;
-+		cc->nr_migratepages += 1 << order;
-+	}
-+	/*
-+	 * someone else has referenced the page, we cannot take it back to our
-+	 * free list.
-+	 */
- }
- 
- /* possible outcome of isolate_migratepages */
-@@ -2476,6 +2496,7 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
- 	const bool sync = cc->mode != MIGRATE_ASYNC;
- 	bool update_cached;
- 	unsigned int nr_succeeded = 0;
-+	int order;
- 
- 	/*
- 	 * These counters track activities during zone compaction.  Initialize
-@@ -2485,7 +2506,8 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
- 	cc->total_free_scanned = 0;
- 	cc->nr_migratepages = 0;
- 	cc->nr_freepages = 0;
--	INIT_LIST_HEAD(&cc->freepages);
-+	for (order = 0; order < NR_PAGE_ORDERS; order++)
-+		INIT_LIST_HEAD(&cc->freepages[order]);
- 	INIT_LIST_HEAD(&cc->migratepages);
- 
- 	cc->migratetype = gfp_migratetype(cc->gfp_mask);
-@@ -2671,7 +2693,7 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
- 	 * so we don't leave any returned pages behind in the next attempt.
- 	 */
- 	if (cc->nr_freepages > 0) {
--		unsigned long free_pfn = release_freepages(&cc->freepages);
-+		unsigned long free_pfn = release_free_list(cc->freepages);
- 
- 		cc->nr_freepages = 0;
- 		VM_BUG_ON(free_pfn == 0);
-@@ -2690,7 +2712,6 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
- 
- 	trace_mm_compaction_end(cc, start_pfn, end_pfn, sync, ret);
- 
--	VM_BUG_ON(!list_empty(&cc->freepages));
- 	VM_BUG_ON(!list_empty(&cc->migratepages));
- 
- 	return ret;
-diff --git a/mm/internal.h b/mm/internal.h
-index 1e29c5821a1d..9925291e7704 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -447,6 +447,8 @@ extern void prep_compound_page(struct page *page, unsigned int order);
- 
- extern void post_alloc_hook(struct page *page, unsigned int order,
- 					gfp_t gfp_flags);
-+extern bool free_pages_prepare_fpi_none(struct page *page, unsigned int order);
-+
- extern int user_min_free_kbytes;
- 
- extern void free_unref_page(struct page *page, unsigned int order);
-@@ -481,7 +483,7 @@ int split_free_page(struct page *free_page,
-  * completes when free_pfn <= migrate_pfn
-  */
- struct compact_control {
--	struct list_head freepages;	/* List of free pages to migrate to */
-+	struct list_head freepages[NR_PAGE_ORDERS];	/* List of free pages to migrate to */
- 	struct list_head migratepages;	/* List of pages being migrated */
- 	unsigned int nr_freepages;	/* Number of isolated free pages */
- 	unsigned int nr_migratepages;	/* Number of pages to migrate */
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 7ae4b74c9e5c..e6e2ac722a82 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1179,6 +1179,12 @@ static __always_inline bool free_pages_prepare(struct page *page,
- 	return true;
- }
- 
-+__always_inline bool free_pages_prepare_fpi_none(struct page *page,
-+			unsigned int order)
-+{
-+	return free_pages_prepare(page, order, FPI_NONE);
-+}
-+
- /*
-  * Frees a number of pages from the PCP lists
-  * Assumes all pages on list are in same zone.
--- 
-2.43.0
+> 
+>>
+>> I would argue that i915 is the broken one since userspace could force a
+>> full range output, but since the driver takes the YUV vs RGB decision
+>> itself and only supports limited range for YUV, the driver would
+>> effectively ignore that user-space property, without the user-space
+>> being able to tell it was ignored in the first place.
+>>
+>>> Trying to make the property handle YCbCr is very much in the "let's try
+>>> to fix the property" territory that I want to avoid, so I'm in favor of
+>>> adjusting vc4.
+>>
+>> Breaking the ABI in the process. For something that is explicitly
+>> supported by the spec, the driver, and the hardware. On a property that
+>> never said it wasn't meant to be used that way, and with semantics based
+>> on a driver that never provided a way to check those restrictions in the
+>> first place.
+>>
+>> And it's not like i915 is going to use that code anyway.
+>>
+>> Maxime
+> 
+> 
+> 
 
