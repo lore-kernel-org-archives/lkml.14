@@ -1,225 +1,193 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2057.outbound.protection.outlook.com [40.107.243.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B99F9F6
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 15:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707750039; cv=fail; b=P+SWEbypbZWfXvjkFwwy8o2/NYyd0kW8f/v0OfO15ozzvw6ySd4NeOAiCoOn2KeT5xyX6LxRs91yuB8MJmg8u/4nKF6MNaqW39xJ9ynJmXzSDMVe3d0eoAId7Iqdvi1J++Zap/Gi/LiIbhbjzlMcg1uVyVXCf7ZktQLuBR+WeBQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707750039; c=relaxed/simple;
-	bh=bCmxVlshXpiYgyelAwkdBL2Qob1SHdVqaBxfKOVF9F8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lvt1gwGOzINjhklRd0yD8rIk/uLLdch5mtK5FKGXzojjdT3/2Jo92TY17fX/07SwWzKiliaGLLo/OWerdyvSuIMDXTN3wbqeL2G42ySTahVdYAITIESC60SKdP8EQ6fdYF2fCU8kCBFYwxsGuFBVa4OzeeCF5JFkxGGZCygWnEE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Zb6UvmYc; arc=fail smtp.client-ip=40.107.243.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Zb6UvmYc"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=B395O5/ahsUMfvz9hJQgI/6hlLgMDk357hA/mB017YGY20dwVPpLu7J0OlRltLlPaUqnXoc6h+2JbytMXsgLyvdAE5AlKJkLJ4K7K+5OY1zrtkjpsgkgwAGum8jBpyxM0/eRM2dT9kyHdsE6LFE4mTRnAG8FpCkMuhOL4rwSLJmgaXN9s/EK0Py9I61YT4qw17szGzrZdy4zqpGCHWPlPPXOtpPQEIUjb7RdUXFex1Et0WnJ1o/8C9yBGs3AF22RBkzTzdHfhwtfRCg6LwwWo1/y6I4DewZj+v9L4g6HrnlMSb8HhT65pasUVYq5ucuRNzGp17CuSaKEZtK4EkJ7JA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BojszTW/dlnounflia3xR+ZHbgYeAPjdtACJGZ0fIlg=;
- b=GL5IFHjBWCuuUdDrWTQHuRw+23P7QwzOoJ2b802sg7JygtWfOUb9vxHztMcJE00NNblnwfPnCJv+qQP0iIyCyl1IQMOERKSKbPkJwY8V9R+7hSTfQ/FqzHW95SeMYx+ETu+m8PrgR0KZKfecDMiYhI6o9WFPNZHSP37KH+x302cmxfMDIYx+Pf+ac9WJnmmtMUjtmFfW+LQHSwUxev/B9ilBogdHXfVga8lBNToahF7pWRWFGh1WVnuDQiGHSBh1j4Gfn8EiSV65zlC2+IiUGoqglzEPO4hWnA88tX0nuknlDWhzarkrX9i2kXn9vGRGULDoo1fi2d1e2XNBZWtLVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BojszTW/dlnounflia3xR+ZHbgYeAPjdtACJGZ0fIlg=;
- b=Zb6UvmYcmbzRA/5HDantrAsLWxJVXsxHMLwQp5JrGqd6jIjkb9hgPLKtKl/9+ESlWIenQm2gqIaQoHPuJx12R1EBT381bZAhJwj/uE/tv7w72QE4bC6E6sFU3k/8oSFkRlXnJYW04StvSW045snvzqJclZJOmzRyeefXTwOVyMz/+l4SE0SCpC3BaFMGEuuSECxay6WwYzKzYczPTlIZu2xPXClnicPzxxTeOSSIWoD5dUEuYyV6wER2F71mzgh69euVEo608wQAuF0bXFma1PVvgtBv7oFBOnyXAe5A83rO0yF1HuwuemqW3Kt+IGqL6haMZR38UBzlLtw6d98iiw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB5744.namprd12.prod.outlook.com (2603:10b6:8:73::18) by
- LV8PR12MB9418.namprd12.prod.outlook.com (2603:10b6:408:202::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.14; Mon, 12 Feb
- 2024 15:00:34 +0000
-Received: from DS7PR12MB5744.namprd12.prod.outlook.com
- ([fe80::db3e:28df:adc1:9c15]) by DS7PR12MB5744.namprd12.prod.outlook.com
- ([fe80::db3e:28df:adc1:9c15%5]) with mapi id 15.20.7292.013; Mon, 12 Feb 2024
- 15:00:34 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Vlastimil Babka <vbabka@suse.cz>,
- Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: akpm@linux-foundation.org, mgorman@techsingularity.net,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm: compaction: limit the suitable target page order
- to be less than cc->order
-Date: Mon, 12 Feb 2024 10:00:31 -0500
-X-Mailer: MailMate (1.14r6018)
-Message-ID: <5277627F-6791-46A1-AFC2-54FBF0DABF1A@nvidia.com>
-In-Reply-To: <20c8fa7c-62ae-4e48-aaec-8b512519cee9@suse.cz>
-References: <afcd9377351c259df7a25a388a4a0d5862b986f4.1705928395.git.baolin.wang@linux.alibaba.com>
- <20c8fa7c-62ae-4e48-aaec-8b512519cee9@suse.cz>
-Content-Type: multipart/signed;
- boundary="=_MailMate_EC359E8B-9628-4E0A-93E7-7B79D4DB9C6E_=";
- micalg=pgp-sha512; protocol="application/pgp-signature"
-X-ClientProxiedBy: MN2PR16CA0013.namprd16.prod.outlook.com
- (2603:10b6:208:134::26) To DS7PR12MB5744.namprd12.prod.outlook.com
- (2603:10b6:8:73::18)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB8B33BB2E
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 15:01:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707750068; cv=none; b=fVpizzZS7KBYHypIFXbYr+8d7rfuw7B9Hj6AhnFtrNwrgUGksukW5vRwSumse26G83JOO5e65WFt+kSetjn5y8LWFkhcXIWuITfG3prnOa65H6vmojGXkTmlVMVIj4LKKUsgS6Bl+w/PlStTe4XrdIZ6pIwNy0VW1O31pnQVHWY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707750068; c=relaxed/simple;
+	bh=nbGZ63cLTf3g2IlHyrB+vfHu7aulRyPBExsEoQ4Ay9U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rrtfgMUqiXQwexwz9wBLBIma8utumgGAqadB9b5W8QLndesv7jxWMu8gIo4R3LEXFNeCtu7lGtXTTEPzwnI8MFMybcFkmBN07FSdPnRz5UOe/gzXtg549WVZw7bu3WaDxZHGitzLDoB8qvMwoaCx2xdWPMyjfofCrRUqIZQbYzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E49D0DA7;
+	Mon, 12 Feb 2024 07:01:45 -0800 (PST)
+Received: from [10.57.78.115] (unknown [10.57.78.115])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 836C53F766;
+	Mon, 12 Feb 2024 07:01:00 -0800 (PST)
+Message-ID: <13c6dc7b-7cc5-4cd1-8d6b-4574c4386076@arm.com>
+Date: Mon, 12 Feb 2024 15:00:58 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB5744:EE_|LV8PR12MB9418:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8b24bb6a-5bb5-4268-4bb0-08dc2bdb5d2b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	R6dgQEFIvd075WYjhoQwbLpv9wKjTizKPvNRJ6kw37d3MS80FPUhUV1axk3EbBvrpWJW9z/qU2aYBRIDIvevv7tfe1Ez9EwrnkgPdlk8f4nWK4XZ8W8E2AAl7059FR9nPjm1yS3P00Xp+/x8tluJAb2GNNB51ujhFPnsFAV/t2XcDGu21Zehtj2hdkJVsiG1VPX+CdM5bBMpRF0WToj850AcLfHiCUiyKwFELfIy58J44Lzvn6wKsr7Tsa1xdln8Pn+XRjkYj8xaHz4c3BvAqRO0te2sLuXZ/HfUpGOyvNgCvQ9tcPpGD2Cqr8c58Lm3qLRQ2etSN6aPgjKRptx0KNBuRsRQM01RV2a1uDbY/d/jguh8fckEtZDWt0KW8f0aFagfDQC6mxhQa3anW2dBZY+m4nK6DGOojfrwFlQiwmKI6meLH6RVo0Y/dncE6kgvp7LK+CjrohU3kjReDHsG7GO/ns39worvbtU8ker7c7cG76SPFKLXMiN6BqiuQwWFn78X7nrvbWp26xTC3TCbGwWMyd+M2lXC0U6yzHwYRLaFI6ZpYz0qHODO/5a17DmL
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB5744.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(39860400002)(366004)(376002)(346002)(396003)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(33656002)(316002)(4326008)(26005)(2616005)(53546011)(478600001)(36756003)(41300700001)(66476007)(66946007)(83380400001)(66556008)(5660300002)(235185007)(6506007)(8676002)(8936002)(6486002)(110136005)(6512007)(6666004)(38100700002)(86362001)(2906002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Lmp7/4f3Eu1ZLp2ghQrqdnuSIlT2X7DOg18UFcLpM3kQ5zj2xSp7Ys9BIVtl?=
- =?us-ascii?Q?yiHTSd1JpyxaKmaT2jIeEOMlq1yqA048GiCjhBOqggyYhN0jLN0wmcKeYXRJ?=
- =?us-ascii?Q?qjxpsDNB8lUxDqysdwKIsGP2v7Abi3Z/mLnpna9N3uq0l42Zsk8WQfQhcUp0?=
- =?us-ascii?Q?lnq2itnrrYlRbvB5vQ2R8tQ7bk/npva2GqBABGbWoI7fdKTTw5kYz1AvOs5c?=
- =?us-ascii?Q?yVPVO6cUvb3jLunQF4zniTrGGTUX6m2Rieyn6aXMUVdABcb5IslBNj5UPCyF?=
- =?us-ascii?Q?DfoJz2mcAoIoFDgJA5mUaZoeuWEHRNanvkaz0/wCKxqKyZN1WCd/WHyg/37I?=
- =?us-ascii?Q?lKF7kwtuUODkFFfSjgeYGZmEt5j3Lg1uaF+kL2wrI6n/3GiB/tUfhukh0UHu?=
- =?us-ascii?Q?3UgP+1ZcjU4Z/wUFJ14Xnq/Jq/IYeUTJXJpiYFog9VRbx0wt8+QF/5YMCV9V?=
- =?us-ascii?Q?5U+4qutiYhyG+dHz09atwGbUomgEWUBEl1crXPndHcvkMwLQkb0q/ZTdQBSc?=
- =?us-ascii?Q?AsXc7KatkGQxTyvyHAm+JPKjZ8Gdi6OPO4qiGiqJVRIcPufuAUeBY+/ROX5a?=
- =?us-ascii?Q?PRqKuvdv6nK8LIClV90aXD3wq9FfzjCVLvAGlFzhjoPz/wMAfltWfVNjn9Pg?=
- =?us-ascii?Q?EOzbWeRifdzN1CWr6Av/6mb4LinGiP6QcWWPKRNM83GUoqjJDmy4pEu+Yadg?=
- =?us-ascii?Q?O1gqy6+LimvCIG9pjMCHAFlujzmSw+aw3ywiy4fjajbZ8ORbsqGi905DtF+p?=
- =?us-ascii?Q?yzrUos5tNdBtkeHznRkWGW7F/xvoiwjItbmJfIlguosJDCQFAOuyYH2v3DHm?=
- =?us-ascii?Q?2T4NYGfJcwHl+KvfTKpQHrO0C7bXF/TQ0gLKMA/Yx18H9GPjDszFHbrXPsMz?=
- =?us-ascii?Q?bu4pIxFmKoPI3WIgs2RalPkroJAM8vY0QPWXHK+y5hR8UEjSC85a+vw8bcUi?=
- =?us-ascii?Q?6fONri4iiooSIllebHbcvpdDBn5Yr5JZ1XgiwxW5+PkWwC333BBiCzhKK+02?=
- =?us-ascii?Q?hSkDCyKBJ6You0aL/lqR4sX65+Kw4Bt6aGY1tNXVLyQ1MlqGVErZBk5+fELW?=
- =?us-ascii?Q?8C+G5Z/Agl30yB1SwmjVUDsNcsvHOYkj0rs8NrZUFujdvESDTSux1yzBkYMh?=
- =?us-ascii?Q?gIopLegZ7jin6GAPmCkaeZx0/rWR1XP2APazqcnok1P5ckuWYbb0hM5obVCz?=
- =?us-ascii?Q?6OfeI7oTAWRm8Px/w2Mr/9e2ywQQfSgQnT97x716M9fjXQ06eTIQuBsDWOUF?=
- =?us-ascii?Q?JCy9o13U8bboXUGS9ULNFiEZJLHFVvdBgJMbtI1rOjMvF5j+XTEFscKcQTFu?=
- =?us-ascii?Q?mkdo/9uzTizCHKA+9DSPYilKYtldpRt4mHE55DE1jg8RYdSm2SD2Aqxh/jtZ?=
- =?us-ascii?Q?2ILtF7CNzpZ3PoLKMF2GQtifo1i7NXoPx7CIlHKUs/LDrTcNejmVHjYrLaJ1?=
- =?us-ascii?Q?DnxTx9+oQ4z7haTC1ijaT0ybQQ2CE8BY/WRuD1PHdhlDbOmoRljcW0cGAOPp?=
- =?us-ascii?Q?YQfJpBrTdbkz000LN9lQXAdzu/mBF+Q7Z5RMjV/N7pRRdHO2GJ39IWt3QYN+?=
- =?us-ascii?Q?cyPnh7J1mkg1BB0VKgwrm0EQkPY2stp5+GO5wggh?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b24bb6a-5bb5-4268-4bb0-08dc2bdb5d2b
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB5744.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2024 15:00:34.3333
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Zo6NysN9FqEGPjF7PWb2Fm284wc6peT1+TMpGOW08088Y7Mp+E9TckHMasBNPSvJ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9418
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 22/25] mm: Add pte_batch_hint() to reduce scanning in
+ folio_pte_batch()
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Ard Biesheuvel <ardb@kernel.org>, Marc Zyngier <maz@kernel.org>,
+ James Morse <james.morse@arm.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, Mark Rutland <mark.rutland@arm.com>,
+ Kefeng Wang <wangkefeng.wang@huawei.com>, John Hubbard
+ <jhubbard@nvidia.com>, Zi Yan <ziy@nvidia.com>,
+ Barry Song <21cnbao@gmail.com>, Alistair Popple <apopple@nvidia.com>,
+ Yang Shi <shy828301@gmail.com>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20240202080756.1453939-1-ryan.roberts@arm.com>
+ <20240202080756.1453939-23-ryan.roberts@arm.com>
+ <6d452a1a-1edc-4e97-8b39-99dc48315bb8@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <6d452a1a-1edc-4e97-8b39-99dc48315bb8@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
---=_MailMate_EC359E8B-9628-4E0A-93E7-7B79D4DB9C6E_=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-On 12 Feb 2024, at 4:13, Vlastimil Babka wrote:
-
-> On 1/22/24 14:01, Baolin Wang wrote:
->> It can not improve the fragmentation if we isolate the target free pag=
-es
->> exceeding cc->order, especially when the cc->order is less than pagebl=
-ock_order.
->> For example, suppose the pageblock_order is MAX_ORDER (size is 4M) and=
- cc->order
->> is 2M THP size, we should not isolate other 2M free pages to be the mi=
-gration
->> target, which can not improve the fragmentation.
+On 12/02/2024 13:43, David Hildenbrand wrote:
+> On 02.02.24 09:07, Ryan Roberts wrote:
+>> Some architectures (e.g. arm64) can tell from looking at a pte, if some
+>> follow-on ptes also map contiguous physical memory with the same pgprot.
+>> (for arm64, these are contpte mappings).
 >>
->> Moreover this is also applicable for large folio compaction.
->
-> So why not Cc: Zi Yan? (done)
->
-
-Thanks.
-
-Hi Baolin,
-
-How often do you see this happening?
-
->> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->
-> I doubt this will make much difference, because if such a larger order =
-free
-> page exists, we shouldn't have a reason to be compacting for a lower or=
-der
-> in the first place?
-
-Unless kswapd gets us such a free block in the background right after
-get_page_from_freelist() and before compaction finishes in the allocation=
-
-slow path.
-
-If this happens often and cc->order is not -1, it might be better to stop=
-
-compaction and get_page_from_freelist() to save cycles on unnecessary pfn=
-
-scanning. For completeness, when cc->order =3D=3D -1, the logic does not =
-change.
-
-
->
+>> Take advantage of this knowledge to optimize folio_pte_batch() so that
+>> it can skip these ptes when scanning to create a batch. By default, if
+>> an arch does not opt-in, folio_pte_batch() returns a compile-time 1, so
+>> the changes are optimized out and the behaviour is as before.
+>>
+>> arm64 will opt-in to providing this hint in the next patch, which will
+>> greatly reduce the cost of ptep_get() when scanning a range of contptes.
+>>
+>> Tested-by: John Hubbard <jhubbard@nvidia.com>
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
 >> ---
->>  mm/compaction.c | 4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>   include/linux/pgtable.h | 18 ++++++++++++++++++
+>>   mm/memory.c             | 20 +++++++++++++-------
+>>   2 files changed, 31 insertions(+), 7 deletions(-)
 >>
->> diff --git a/mm/compaction.c b/mm/compaction.c
->> index 27ada42924d5..066b72b3471a 100644
->> --- a/mm/compaction.c
->> +++ b/mm/compaction.c
->> @@ -1346,12 +1346,14 @@ static bool suitable_migration_target(struct c=
-ompact_control *cc,
->>  {
->>  	/* If the page is a large free page, then disallow migration */
->>  	if (PageBuddy(page)) {
->> +		int order =3D cc->order > 0 ? cc->order : pageblock_order;
+>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+>> index 50f32cccbd92..cba31f177d27 100644
+>> --- a/include/linux/pgtable.h
+>> +++ b/include/linux/pgtable.h
+>> @@ -212,6 +212,24 @@ static inline int pmd_dirty(pmd_t pmd)
+>>   #define arch_flush_lazy_mmu_mode()    do {} while (0)
+>>   #endif
+>>   +#ifndef pte_batch_hint
+>> +/**
+>> + * pte_batch_hint - Number of pages that can be added to batch without scanning.
+>> + * @ptep: Page table pointer for the entry.
+>> + * @pte: Page table entry.
+>> + *
+>> + * Some architectures know that a set of contiguous ptes all map the same
+>> + * contiguous memory with the same permissions. In this case, it can provide a
+>> + * hint to aid pte batching without the core code needing to scan every pte.
+> 
+> I think we might want to document here the expectation regarding
+> dirty/accessed bits. folio_pte_batch() will ignore dirty bits only with
+> FPB_IGNORE_DIRTY. But especially for arm64, it makes sense to ignore them
+> always when batching, because the dirty bit may target any pte part of the
+> cont-pte group either way.
+> 
+> Maybe something like:
+> 
+> "
+> An architecture implementation may only ignore the PTE accessed and dirty bits.
+> Further, it may only ignore the dirty bit if that bit is already not
+> maintained with precision per PTE inside the hinted batch, and ptep_get()
+> would already have to collect it from various PTEs.
+> "
+
+Yep, sounds good. I'll add it in next version.
+
+> 
+> I think there are some more details to it, but I'm hoping something along
+> the lines above is sufficient.
+> 
+> 
 >> +
->>  		/*
->>  		 * We are checking page_order without zone->lock taken. But
->>  		 * the only small danger is that we skip a potentially suitable
->>  		 * pageblock, so it's not worth to check order for valid range.
->>  		 */
->> -		if (buddy_order_unsafe(page) >=3D pageblock_order)
->> +		if (buddy_order_unsafe(page) >=3D order)
->>  			return false;
->>  	}
->>
+>>   #ifndef pte_advance_pfn
+>>   static inline pte_t pte_advance_pfn(pte_t pte, unsigned long nr)
+>>   {
+>> diff --git a/mm/memory.c b/mm/memory.c
+>> index 65fbe4f886c1..902665b27702 100644
+>> --- a/mm/memory.c
+>> +++ b/mm/memory.c
+>> @@ -988,16 +988,21 @@ static inline int folio_pte_batch(struct folio *folio,
+>> unsigned long addr,
+>>   {
+>>       unsigned long folio_end_pfn = folio_pfn(folio) + folio_nr_pages(folio);
+>>       const pte_t *end_ptep = start_ptep + max_nr;
+>> -    pte_t expected_pte = __pte_batch_clear_ignored(pte_advance_pfn(pte, 1),
+>> flags);
+>> -    pte_t *ptep = start_ptep + 1;
+>> +    pte_t expected_pte = __pte_batch_clear_ignored(pte, flags);
+>> +    pte_t *ptep = start_ptep;
+>>       bool writable;
+>> +    int nr;
+>>         if (any_writable)
+>>           *any_writable = false;
+>>         VM_WARN_ON_FOLIO(!pte_present(pte), folio);
+>>   -    while (ptep != end_ptep) {
+>> +    nr = pte_batch_hint(ptep, pte);
+>> +    expected_pte = pte_advance_pfn(expected_pte, nr);
+>> +    ptep += nr;
+>> +
+> 
+> *Maybe* it's easier to get when initializing expected_pte+ptep only once.
+> 
+> Like:
+> 
+> [...]
+> pte_t expected_pte, *ptep;
+> [...]
+> 
+> nr = pte_batch_hint(start_ptep, pte);
+> expected_pte = __pte_batch_clear_ignored(pte_advance_pfn(pte, nr), flags);
+> ptep = start_ptep + nr;
 
+Yeah that works for me. Will change for next version.
 
---
-Best Regards,
-Yan, Zi
+> 
+>> +    while (ptep < end_ptep) {
+>>           pte = ptep_get(ptep);
+>>           if (any_writable)
+>>               writable = !!pte_write(pte);
+>> @@ -1011,17 +1016,18 @@ static inline int folio_pte_batch(struct folio *folio,
+>> unsigned long addr,
+>>            * corner cases the next PFN might fall into a different
+>>            * folio.
+>>            */
+>> -        if (pte_pfn(pte) == folio_end_pfn)
+>> +        if (pte_pfn(pte) >= folio_end_pfn)
+>>               break;
+>>             if (any_writable)
+>>               *any_writable |= writable;
+>>   -        expected_pte = pte_advance_pfn(expected_pte, 1);
+>> -        ptep++;
+>> +        nr = pte_batch_hint(ptep, pte);
+>> +        expected_pte = pte_advance_pfn(expected_pte, nr);
+>> +        ptep += nr;
+>>       }
+>>   -    return ptep - start_ptep;
+>> +    return min(ptep - start_ptep, max_nr);
+>>   }
+> 
+> Acked-by: David Hildenbrand <david@redhat.com>
 
---=_MailMate_EC359E8B-9628-4E0A-93E7-7B79D4DB9C6E_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename=signature.asc
-Content-Type: application/pgp-signature; name=signature.asc
+Thanks!
 
------BEGIN PGP SIGNATURE-----
+> 
 
-iQJDBAEBCgAtFiEE6rR4j8RuQ2XmaZol4n+egRQHKFQFAmXKMpAPHHppeUBudmlk
-aWEuY29tAAoJEOJ/noEUByhUgSYQAJA+p8PbfyilA4bzNyOm4SFYsVwTUN1nvWJL
-CsitHbqCwgkeuHaaaPLBk+GKglYNFbwP1D1qILXtWs8fj+1q4hQb1+0WZTvLp/VE
-Z9gY6K68PtUk4J5UZrNVAk54ak9kYS5qVyEAbWLLbZEP8r2r6C3PDXtWusEOTvQo
-IwE4faMLrt8CChKlceiBMKaSISQQlaNahM41iy/bu3cat2XCwuZT23KjXQgcYJe8
-qfwHMme4X5JOEZD249QYv57YZMp0OW4zQ88sxwHip4cMV6hXeA6yfbIBpMLO/au4
-38S6ANiMBPFBGCCrnTCPUlaYareFaBB7R6z+oPg0Ufp75Oc7vtrsXCLpDyCplNlZ
-/JhjUpRfULSaGQsVW9Bmq6WypdP38J9pZx8sd/lao1Hj10HnkGIjKaZYli3a6xAQ
-7lePrycOW2fP7FvBisND6aWpVBKnBFmYJb17kK1MRQhM4r+OhcKtG77rEOb/ed2E
-pXplXfi2np6iVQ1sJLCkgLkL7xseuXsIm914zh4fJTV6Xeh5rVQf1fYauWjnmmiB
-uRIki4a3tlSFpVl5Q5W04xb63aRUrlB1mhlekPBiM7RmGXZy2R4Q1M4lcam9aenU
-FpRNeAFf6TZbbl//haxXrmjdEZmuVEmN5naeLQc+p77wZtEVfyFrH1k7dwalJSws
-IBHDpuQR
-=IYH7
------END PGP SIGNATURE-----
-
---=_MailMate_EC359E8B-9628-4E0A-93E7-7B79D4DB9C6E_=--
