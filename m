@@ -1,150 +1,146 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2D13D0A8;
-	Mon, 12 Feb 2024 12:02:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 348283D3A8;
+	Mon, 12 Feb 2024 12:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707739374; cv=none; b=LXrx1MDm6WZfVyzEYIlyEqAVDrppI4z7aEZDvE9HXY7T27eHeoSdEeV+xwYVvdZE0Bk1AWLKizB4AclNuTvIQQch4bWH9aL11CyM5+LYcm0SaZBFfwKEHh0uGnUF5Lei5rLA0FkLxj/BxUnOlHQSy9mUBNbIZf0o/nyOSQxSXzw=
+	t=1707739382; cv=none; b=Ez/SMGd5QtlQ3CPKtkhOx6yOdtVTkYS5q7wgjVPNbD8rJ29w/IGa0AMQqYecDwfg83f0hElHtocqqnoBtiPiXXzqTDHg965fgXd4lHpxphClZ8VJctciTL4CncQo/78LOTNFnr+sVkfKTP8EVZN6xV5sKLjVfawzdORRt5ppmio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707739374; c=relaxed/simple;
-	bh=qTs4pmRhkWrU86rLUbk4gL5rcAV4yNZx6VSPad5e3vs=;
+	s=arc-20240116; t=1707739382; c=relaxed/simple;
+	bh=ApJjDeIIKrDznGMpwQqBzha7bOkPels9yAEp1nMU498=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DMteucOGZtgFF4dtPBp8HUR7+TNbXsvPE6q9R0S7wxlwiIG8VEIisa1dR1x3QbQES2eFxEMljZ3Me/NwCMEwpSMLuTn9fWROpYc4zTj9wkThujVMa7jEJw6DhG8/p+dYBpbTjNasXUUXjn3rup6smy0Rl3RRvdmCQIKTWA+WRco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LEhPO0Y2; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LEhPO0Y2"
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41CBxpc8019223;
-	Mon, 12 Feb 2024 12:02:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=YJwOyB26zpENJsbMFuKna5WNVCpfnRlTrcC0jJUIE6I=;
- b=LEhPO0Y2LgHEhBSc2hT2MvSoUOspss/4W+42H4wTvZXpxNugAPXQkLnDhDx4dS5ERovW
- evtrC6nWeJLLUk7t7GCXJzCbLMIVDMscaDm2hMW+WkhpZCGtZoJr4Ol2BHH/w/jjfOff
- WYWweAfSyLGUV7VWuu+GmmyypPJ1FxTllSHZN/Z6HEHkCKaKGENks2ONa6qd7khN0LAq
- HZ3qyPdnCw1LflWEeUVEkeVL5+Ls4vclGPC6QAFpi8LdWA4Bo12RPIWuI66KC7iOAjzG
- W8Lwnr2GSRZaAYzSd32hAJ4+GX2xsZ/bBJWCB0a/l5WMIZthLIDaOHv+YOKJ69KUsVtj UA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w7jxt8517-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Feb 2024 12:02:28 +0000
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41CC07Lu020727;
-	Mon, 12 Feb 2024 12:02:12 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w7jxt84fk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Feb 2024 12:02:12 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41C9KOSa032596;
-	Mon, 12 Feb 2024 12:01:32 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3w6kft8nfn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Feb 2024 12:01:32 +0000
-Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41CC1TE710617556
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 12 Feb 2024 12:01:31 GMT
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4AE2658064;
-	Mon, 12 Feb 2024 12:01:29 +0000 (GMT)
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CAA1158066;
-	Mon, 12 Feb 2024 12:01:21 +0000 (GMT)
-Received: from [9.109.198.187] (unknown [9.109.198.187])
-	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 12 Feb 2024 12:01:21 +0000 (GMT)
-Message-ID: <76b6067f-109f-464c-97fb-fa519f3d1c56@linux.ibm.com>
-Date: Mon, 12 Feb 2024 17:31:20 +0530
+	 In-Reply-To:Content-Type; b=Uq8/5uPpbIrWqLgn6ZuuVHLi6Xy7+jnN2739rSvFsmYwEWUnWrQw5/nfYAQM4JDQfJn8Sw+wXmsfYOBqqnoIQ4Cfvo/2E26LTmOp0BVkAkXhUD8mRRm4RWMqelA3qgHbjRbfFoZkmwRJJKcFHRVnvmveL/KpW3e3yt4H1Pu26iA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0AC2EDA7;
+	Mon, 12 Feb 2024 04:03:41 -0800 (PST)
+Received: from [192.168.1.100] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 808D63F7BD;
+	Mon, 12 Feb 2024 04:02:57 -0800 (PST)
+Message-ID: <60499829-a5fa-54e6-42e3-bd48f25a65dc@arm.com>
+Date: Mon, 12 Feb 2024 12:02:55 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 09/15] block: Add checks to merging of atomic writes
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH V4 00/11] coresight: Move remaining AMBA ACPI devices into
+ platform driver
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ linux-arm-kernel@lists.infradead.org, suzuki.poulose@arm.com
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Sudeep Holla <sudeep.holla@arm.com>, Mike Leach <mike.leach@linaro.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+ linux-stm32@st-md-mailman.stormreply.com
+References: <20240123054608.1790189-1-anshuman.khandual@arm.com>
 Content-Language: en-US
-To: John Garry <john.g.garry@oracle.com>
-Cc: axboe@kernel.dk, brauner@kernel.org, bvanassche@acm.org,
-        dchinner@redhat.com, djwong@kernel.org, hch@lst.de, jack@suse.cz,
-        jbongio@google.com, jejb@linux.ibm.com, kbusch@kernel.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-scsi@vger.kernel.org, linux-xfs@vger.kernel.org,
-        martin.petersen@oracle.com, ming.lei@redhat.com, ojaswin@linux.ibm.com,
-        sagi@grimberg.me, tytso@mit.edu, viro@zeniv.linux.org.uk
-References: <20240124113841.31824-10-john.g.garry@oracle.com>
- <20240212105444.43262-1-nilay@linux.ibm.com>
- <484a449b-5c7e-4766-97d3-36b01c78687c@oracle.com>
-From: Nilay Shroff <nilay@linux.ibm.com>
-In-Reply-To: <484a449b-5c7e-4766-97d3-36b01c78687c@oracle.com>
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <20240123054608.1790189-1-anshuman.khandual@arm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: B2dfMfSJRgps0Gdgt4dUb_kj3eYMZmpg
-X-Proofpoint-GUID: HOcnTpxZ3fhpvWkDTSso8nxFZzTevVO8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-12_09,2024-02-12_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- clxscore=1015 mlxlogscore=979 spamscore=0 lowpriorityscore=0 adultscore=0
- malwarescore=0 phishscore=0 mlxscore=0 impostorscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2402120091
+Content-Transfer-Encoding: 7bit
 
 
 
-On 2/12/24 16:50, John Garry wrote:
-> I'm not sure what is going on with your mail client here.
+On 23/01/2024 05:45, Anshuman Khandual wrote:
+> This moves remaining AMBA ACPI devices into respective platform drivers for
+> enabling ACPI based power management support. This series applies on kernel
+> v6.8-rc1 release. This series has been built, and boot tested on a DT based
+> coresight platform. Although this still requires some more testing on ACPI
+> based coresight platforms.
+> 
+> https://git.gitlab.arm.com/linux-arm/linux-anshuman.git (amba_other_acpi_migration_v4)
+> 
+> Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Mike Leach <mike.leach@linaro.org>
+> Cc: James Clark <james.clark@arm.com>
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
+> Cc: linux-acpi@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: coresight@lists.linaro.org
+> Cc: linux-stm32@st-md-mailman.stormreply.com
+> 
 
-Sorry for the inconvenience, I will check the settings.
+Reviewed-by: James Clark <james.clark@arm.com>
 
->>
->> So is it a good idea to validate here whether we could potentially exceed
->>
->> the atomic-write-max-unit-size supported by device before we allow merging?
+> Changes in V4:
 > 
-> Note that we have atomic_write_max_bytes and atomic_write_max_unit_size, and they are not always the same thing.
+> - Fixed PM imbalance in etm4_probe() error path with pm_runtime_disable()
+> - Restored back the pm_runtime_disable() on platform probe error paths
+>   in replicator, funnel, catu, tpiu, tmc and stm devices
+> - Dropped dev_caps argument from __tmc_probe()
+> - Changed xxxx_platform_remove() for platform_driver->remove_new() callback
 > 
->>
->> In case we exceed the atomic-write-max-unit-size post merge then don't allow
->>
->> merging?
+> Changes in V3:
 > 
-> We check this elsewhere. I just expanded the normal check for max request size to cover atomic writes.
+> https://lore.kernel.org/all/20231208053939.42901-1-anshuman.khandual@arm.com/
 > 
-> Normally we check that a merged request would not exceed max_sectors value, and this max_sectors value can be got from blk_queue_get_max_sectors().
+> - Split coresight_init_driver/remove_driver() helpers into a separate patch
+> - Added 'drvdata->pclk' comments in replicator, funnel, tpiu, tmc, and stm devices
+> - Updated funnel, and replicator drivers to use these new helpers
+> - Check for drvdata instead of drvdata->pclk in suspend and resume paths in catu,
+>   tmc and debug devices
+> - Added patch to extract device name from AMBA pid based table lookup for stm
+> - Added patch to extract device properties from AMBA pid based table look for tmc
+> - Dropped pm_runtime_put() from common __probe() functions
+> - Handled pm_runtime_put() in AMBA driver in success path
+> - Handled pm_runtime_put() in platform driver in both success and error paths
 > 
-> So if you check a function like ll_back_merge_fn(), we have a merging size check:
+> Changes in V2:
 > 
->     if (blk_rq_sectors(req) + bio_sectors(bio) >
->         blk_rq_get_max_sectors(req, blk_rq_pos(req))) {
->         req_set_nomerge(req->q, req);
->         return 0;
->     }
+> https://lore.kernel.org/all/20231201062053.1268492-1-anshuman.khandual@arm.com/
 > 
-> And here the blk_rq_get_max_sectors() -> blk_queue_get_max_sectors() call now also supports atomic writes (see patch #7):
-OK got it. I think I have missed this part.
-
+> - Dropped redundant devm_ioremap_resource() hunk from tmc_platform_probe()
+> - Defined coresight_[init|remove]_driver() for both AMBA/platform drivers
+> - Changed catu, tmc, tpiu, stm and debug coresight drivers to use the new
+>   helpers avoiding build issues arising from module_amba_driver(), and
+>   module_platform_driver() being on the same file
 > 
-> @@ -167,7 +167,16 @@ static inline unsigned get_max_io_size(struct bio *bio,
->  {
-> ...
+> Changes in V1:
 > 
-> +    if (bio->bi_opf & REQ_ATOMIC)
-> +        max_sectors = lim->atomic_write_max_sectors;
-> +    else
-> +        max_sectors = lim->max_sectors;
+> https://lore.kernel.org/all/20231027072943.3418997-1-anshuman.khandual@arm.com/
 > 
-> Note that we do not allow merging of atomic and non-atomic writes.
+> - Replaced all IS_ERR() instances with IS_ERR_OR_NULL() as per Suzuki
 > 
-Yeah 
-
-Thanks,
---Nilay
+> Changes in RFC:
+> 
+> https://lore.kernel.org/all/20230921042040.1334641-1-anshuman.khandual@arm.com/
+> 
+> Anshuman Khandual (11):
+>   coresight: etm4x: Fix unbalanced pm_runtime_enable()
+>   coresight: stm: Extract device name from AMBA pid based table lookup
+>   coresight: tmc: Extract device properties from AMBA pid based table lookup
+>   coresight: Add helpers registering/removing both AMBA and platform drivers
+>   coresight: replicator: Move ACPI support from AMBA driver to platform driver
+>   coresight: funnel: Move ACPI support from AMBA driver to platform driver
+>   coresight: catu: Move ACPI support from AMBA driver to platform driver
+>   coresight: tpiu: Move ACPI support from AMBA driver to platform driver
+>   coresight: tmc: Move ACPI support from AMBA driver to platform driver
+>   coresight: stm: Move ACPI support from AMBA driver to platform driver
+>   coresight: debug: Move ACPI support from AMBA driver to platform driver
+> 
+>  drivers/acpi/arm64/amba.c                     |   8 -
+>  drivers/hwtracing/coresight/coresight-catu.c  | 142 +++++++++++++---
+>  drivers/hwtracing/coresight/coresight-catu.h  |   1 +
+>  drivers/hwtracing/coresight/coresight-core.c  |  29 ++++
+>  .../hwtracing/coresight/coresight-cpu-debug.c | 141 ++++++++++++++--
+>  .../coresight/coresight-etm4x-core.c          |   3 +
+>  .../hwtracing/coresight/coresight-funnel.c    |  86 +++++-----
+>  drivers/hwtracing/coresight/coresight-priv.h  |  10 ++
+>  .../coresight/coresight-replicator.c          |  81 ++++-----
+>  drivers/hwtracing/coresight/coresight-stm.c   | 117 +++++++++++--
+>  .../hwtracing/coresight/coresight-tmc-core.c  | 158 +++++++++++++++---
+>  drivers/hwtracing/coresight/coresight-tmc.h   |   2 +
+>  drivers/hwtracing/coresight/coresight-tpiu.c  | 102 +++++++++--
+>  include/linux/coresight.h                     |   7 +
+>  14 files changed, 726 insertions(+), 161 deletions(-)
+> 
