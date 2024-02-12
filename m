@@ -1,104 +1,155 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F6512B7D;
-	Mon, 12 Feb 2024 09:29:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4952F51F
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 09:30:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707730174; cv=none; b=Gcn3JmvYaj1bpS4QtPGdUXmXIMI0gmnDcLQctpK5Opbqpia04ojkc1BQN6zsnn5gGS/xN6sWeJnWu7SVzEio9XNr/rwIWvfHTKLYCFDBKObsgWUPmn22EHtRQ9Ck5Ubj9+lERmr2172vFRCTyjIuaIr4cOCD0SaRfFqATuPLjGI=
+	t=1707730238; cv=none; b=BazYoFdxJ8xr0Ao8Q3UnQV0CW23qkrkmzAVaSy8d2hI17rq0vKd9viSQGAsB3gyIdvKJXgOLL3alWJZS0RFuj+e48e648YX7BrxYm28GYRrhl5uQ/EsQHokPxICYm29m6temTY4iuVAsg7+h7lN1Mg7UYq6sH80Zuoo4ddLICIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707730174; c=relaxed/simple;
-	bh=EJ5BTPRVj13kfwymPH+wIPG9mOFx9DxZcpXeSgKSC7w=;
+	s=arc-20240116; t=1707730238; c=relaxed/simple;
+	bh=fJCVsH6s+Zxu49DLLCaFI4lLD0w0UXKMyNeLa/ZMEC4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dqKlOLJ0DYu9VsIAtcW8IE+APOGLjSlDKqRwLjXsT2cRtL/BScJIOzTHdn3XCRljydKRkuETBcp1m/eulFucg1NlxbkLT7047Lk3cG/SBL+lmwZIfREJCC12enOMHJ0jAP+HWb/L0wH5zlHm9m7C6t1aa56EAoAS+GGwdG9NAx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mwcceRaS; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=pIqt+/75FdB7gOT1vu4bsK551jJSdcoyi2+SA3/v/DtsVNQyX+PS+tglE0PZ0gTZEi4u+jp0T2FEUY8eD2z7QKon+xlh9zknsSTLLu6FIUs/RdAqnSIczmfcfEs2hF2ExvVfVFGoCGZDmF9A4d9RQ8/6rYVzUqvuppaDtvidWIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=o8Y11mry; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mwcceRaS"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5610cc8cc1aso2998749a12.1;
-        Mon, 12 Feb 2024 01:29:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o8Y11mry"
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-4c0819d4890so20092e0c.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 01:30:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707730171; x=1708334971; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1707730235; x=1708335035; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EJ5BTPRVj13kfwymPH+wIPG9mOFx9DxZcpXeSgKSC7w=;
-        b=mwcceRaSMK2KRT1cMp7c7nJRk6QikkzrXQBWDaOGi9Y98SMeYUzGVqzvl3U+/+DsB/
-         /9IJyAqXpiAAdfPgYEvUtPoRFDEv+1YjFPKKrHCbHWALsOz1WPNclL429YAIvxyCugbO
-         OIFPK1NZu9disaZzhqoWmJf5apQtmGG9gts3E2XD7oAUMsVZQf3EfCDeMu31t317rLWD
-         oG5jOyWxLxoy4wr2QOTu36KiiWES1DxQ08lM2pCL9HfQ4atBA/thl+82OEbThRPy6RRn
-         cNePS0X1CYPw6Jq20LnX6XsLHuP2Z3KOiux1C0KQseAimU+mkFk6qFX8kgcIoauoCuR7
-         tA3g==
+        bh=aVJXg04dDq3HdGdQbSODm4X+NrUwFF5O5k1QDLQ/4FQ=;
+        b=o8Y11mryL+1tO7qvJhQ7fZJX4WaBM581uvW7l1spOOQ0EuC7IDP2pPEI+8ZkRxVYa+
+         Mp2F0UZE6XjEkgwhTJgeBeo+K1fyo3QXd3829M3DDWRas3ydR+zINRpOkwJwWcZRqSKn
+         Rvp9pBhZUuk9GlD2ZPH8bg/WtRdluyrlKHnVfaJPmYxeFctNxYA9B8Pitno5xHdZCwJD
+         fzWPl4gGMu/hNYbwvIoEWTgDkExs++xsihc3joXAOWL3iYWf5ZATvItUBe2v2anHJWQP
+         0EqBdPKjICQgb6wIiFpoQo/6Jf88hS0XINgKnU4ALcICC6loObx1fOSAGq1cANPeoCc7
+         PXdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707730171; x=1708334971;
+        d=1e100.net; s=20230601; t=1707730235; x=1708335035;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EJ5BTPRVj13kfwymPH+wIPG9mOFx9DxZcpXeSgKSC7w=;
-        b=jGFhu3q/0If3y6lKtDRPGbSUFOTphF5UlPfauW9mlEpYX2FjeuaTVEXGGxcf8trEdx
-         ytO/YdK5ddgQ3IcSC9PVav1jbg/2c6zl1XdD6svFlUisXKEp47Rkdjr9gnc4Mld50Cs4
-         MT2khIVRUi3lTT4dpdfs3A9QbIUqCj9sYUxpmZa32OgjWxvkQIph6gvcPBBzQmuyPXhu
-         63G/PLX0uxSGjvxil+sz8vcwARVMDNf5yVEjx0khpErviAgbrYvDb9KADU7wIPNeoTi/
-         nYqjO39DChXmvRcxl8KFttDDxr4FHRnPX5Ccjot2hafaXfhxFnC5RuKvDmB6gEaIc6T4
-         rqrA==
-X-Gm-Message-State: AOJu0YxiBbAS3cxPhbvBHpTNL5MfE+4gudNIKBIYOzwL55sd8vx6e6El
-	9uOfI7xHOYh8hE0dxrbDQCH+Tm1s3BPV697QQUS1n/gKyzVvWBoMMitwZOsYSpwrX1EAcQamWWe
-	UCkhOFrW0nNqWkIwGLOik3sCqxHs=
-X-Google-Smtp-Source: AGHT+IGhoK3hwkx7RRINlSWGp87qr2pxc9KZEXT4C+i4t0vWMfhkS6eIwosQ/d4wMgNYAogOQ7ZaucnMVGTvw7ZnqwE=
-X-Received: by 2002:a17:906:dd0:b0:a3c:2c1:5fea with SMTP id
- p16-20020a1709060dd000b00a3c02c15feamr4088132eji.75.1707730171202; Mon, 12
- Feb 2024 01:29:31 -0800 (PST)
+        bh=aVJXg04dDq3HdGdQbSODm4X+NrUwFF5O5k1QDLQ/4FQ=;
+        b=c8N5JggLtvMELp8IPcfehRat8n5DBHtf+DDCJSLrFKiDAEnANb/NjwXrNh8MUmRzT2
+         evUOGNEgjP3IBdnaG0HKb1SU+aK1j6q/qa6TdHaRA63GZ7Z2lpm6xjA7MzWLYT9bxYdo
+         cX4rRq7o6zYnMLIvsR6Y4QEm7QLrtmMBqZ4JEA9HsrQ4VX39/jV0J4e+1fHABdjjxO3j
+         o5tt74qqPbO50lh0PiUAIXlqjn+Anv46oRbmNUOb5r8aiUdyT6w92IOhiGcucyGSk5Sj
+         O8UjMfrWPmNX2fDB1n2R1zHPAbgFizvUpN9OaWMZLXIeVx4X54VU3fzFiLF0F2QKuqBT
+         VTLA==
+X-Forwarded-Encrypted: i=1; AJvYcCXpvrKdfQTAY9FYqLW+VvvgT4x2MoGE/A767hlcel/pf+SBomJtRVxW2QOmOc8LwvCrKhsuCI5u8vK8171Tj1xZmhz4yL5dQ8YXaBGo
+X-Gm-Message-State: AOJu0YyE9hixMtyhGylUGIbg9zydw6sabYDnRFdN/vF6NySTd08D/Nz2
+	vPEI2XlwKYiJKz0DT97maLnQg1KAII7mTHyX0pgHhaPSKuwJZFJtBPn+nCROUGMLF73zddR86/F
+	s5IAEXem6aauggvX8+V/MMHxez+1Yiojo0wSr
+X-Google-Smtp-Source: AGHT+IHjV73mgJjltlbGotOak1PzxKLwy9aSO2nJ7D7f32xXmGKQCv9rUvPaFsRmWhNsUhe7k0oa8HywUsDXuUQEtS8=
+X-Received: by 2002:a1f:e403:0:b0:4c0:3552:bd07 with SMTP id
+ b3-20020a1fe403000000b004c03552bd07mr2504043vkh.9.1707730235423; Mon, 12 Feb
+ 2024 01:30:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240211101421.166779-1-warthog618@gmail.com> <CAHp75VeSLvrxMOARDBHBJ5VGVR-Jv-7saxjJiN-NOPMyTwit3Q@mail.gmail.com>
- <20240211231321.GA4748@rigel>
-In-Reply-To: <20240211231321.GA4748@rigel>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 12 Feb 2024 11:28:54 +0200
-Message-ID: <CAHp75VddjcLaRqugKuk+eejYx_0AHVL4SjYcdh7zUKDj8SpcQw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: uapi: clarify default_values being logical
-To: Kent Gibson <warthog618@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl, 
-	linus.walleij@linaro.org, andy@kernel.org
+References: <20240124-alice-mm-v1-0-d1abcec83c44@google.com>
+ <20240124-alice-mm-v1-1-d1abcec83c44@google.com> <CALNs47uDaD05oD8TtZoSqUBc4SaRig80u2_1P0qMCXtE3H9_Vw@mail.gmail.com>
+ <CAH5fLggdwWoq4wKv7VxZ-_VbWMV_Ui03rGOCMPbWn8=ewznmvA@mail.gmail.com> <405e8b56cd0c48d0ba640e8d9c60179e@AcuMS.aculab.com>
+In-Reply-To: <405e8b56cd0c48d0ba640e8d9c60179e@AcuMS.aculab.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 12 Feb 2024 10:30:24 +0100
+Message-ID: <CAH5fLgiRgg2zD3tJ9Xrvk+bvH3srDGw9ud_gjRa97cd7a+jROA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] rust: add userspace pointers
+To: David Laight <David.Laight@aculab.com>
+Cc: Trevor Gross <tmgross@umich.edu>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Kees Cook <keescook@chromium.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	=?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
+	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, 
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>, Christian Brauner <brauner@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 12, 2024 at 1:13=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
-wrote:
-> On Sun, Feb 11, 2024 at 06:58:14PM +0200, Andy Shevchenko wrote:
-> > On Sun, Feb 11, 2024 at 12:14=E2=80=AFPM Kent Gibson <warthog618@gmail.=
-com> wrote:
+On Sat, Feb 10, 2024 at 3:15=E2=80=AFPM David Laight <David.Laight@aculab.c=
+om> wrote:
+>
+> ...
+> > > Maybe something like
 > > >
-> > > The documentation for default_values mentions high/low which can be
-> > > confusing, particularly when the ACTIVE_LOW flag is set.
-> > >
-> > > Replace high/low with active/inactive to clarify that the values are
-> > > logical not physical.
-> > >
-> > > Similarly, clarify the interpretation of values in struct gpiohandle_=
-data.
+> > >     Every time a memory location is read, the reader's position is ad=
+vanced by
+> > >     the read length and the next read will start from there. This hel=
+ps prevent
+> > >     accidentally reading the same location twice and causing a TOCTOU=
+ bug.
+>
+> WTF TOCTOU? I'm guessing it is reading things twice and getting
+> different answers.
+
+Yes. In v2 of this patchset [1], I expanded TOCTOU to "time-of-check
+to time-of-use" at the first use to reduce this confusion.
+
+> That really doesn't match how copying from userspace is used is many plac=
+es.
+> Sometimes you really do want to be using offsets and lengths.
+> For instance the user buffer might contain offsets of items further
+> down the buffer.
+
+For this use-case, you can call UserSlice::new multiple times, or use
+clone_reader. This use-case does appear sometimes in Rust Binder and
+is supported, but I didn't find it to be the most common use-case.
+
+> There is also the code (eg ioctl) that does a read-modify-write
+> on a buffer.
+
+The read-modify-write use-case is quite common in Rust Binder and is
+supported by the API provided by this patchset. When you call
+reader_writer, you get a separate reader and writer. Then, you first
+use the reader to read the data. Then you modify it. Then you use the
+writer to write it back.
+
+> > > +    /// Reads the entirety of the user slice.
+> > > +    ///
+> > > +    /// Returns `EFAULT` if the address does not currently point to
+> > > +    /// mapped, readable memory.
+> > > +    pub fn read_all(self) -> Result<Vec<u8>> {
+> > > +        self.reader().read_all()
+> > > +    }
 > >
-> > I'm not against this particular change, but I want the entire GPIO
-> > documentation to be aligned in the terminology aspect. Is this the
-> > case after this patch? I.o.w. have we replaced all leftovers?
+> > If I understand it correctly, the function will return `EFAULT` if _any=
+_
+> > address in the interval `[self.0, self.0 + self.1)` does not point to
+> > mapped, readable memory. Maybe the docs could be more explicit.
 >
-> Agreed. Those are the last remnants of the low/high terminolgy that I am
-> aware of, certainly the last in gpio.h.
+> That isn't (and can't be) how it works.
+> access_ok() checks that the buffer isn't in kernel space.
+> The copy is then done until it actually faults on an invalid address.
+> In that case the destination buffer has been updated to the point
+> of failure.
 >
-> Having a closer look to double check...
->
-> Ah - it is still used in Documentation/userspace-api/gpio/sysfs.rst -
-> not somewhere I go very often.
-> Would you like that updated in a separate patch?
+> You can't do a check before the copy because another thread can
+> change the mapping (it would also be horribly expensive).
 
-Yes, please. For this one
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+This was reworded in v2 [1]:
 
---=20
-With Best Regards,
-Andy Shevchenko
+/// Fails with `EFAULT` if the read encounters a page fault.
+
+But ultimately, the real condition here is just that it returns EFAULT
+if copy_from_user fails. I'm happy to reword further.
+
+Alice
+
+[1]: https://lore.kernel.org/all/20240208-alice-mm-v2-1-d821250204a6@google=
+.com/
