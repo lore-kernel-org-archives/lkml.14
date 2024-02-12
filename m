@@ -1,63 +1,63 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC49539AE6
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 11:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC023C491
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 11:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707738940; cv=none; b=S6rmueJmaAciA4oY4IFpNAzOscDpLHYczsrLmVMhcIcyz/bnrG+21xd0mzs+2TJDFA4AVv/mDTzokCa6t0748n5u5aBNcpBUC9Vw37eQjiJTQft0fuP7VN0oUyqdY7G34ABpEa2Qj5s/HmT+6sXtt1mrZ5w7amGC/D3hT4N0xG4=
+	t=1707738947; cv=none; b=qQ1Q4tXFA31f9oPddj5nwVO9V1bvzsWaLRZFKw+/qgsiAnzmlNlttGvlD3aKE9+lK2RVazzBTJYna5BcY5DHKdD3+U6W1qWcpSk3c4W6rovyp8xi0n9CS/uyaQ7PJqodtj6UK5KX6bxLyQYgO7MVrIMlmSbICZB5WSk6VkwRIYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707738940; c=relaxed/simple;
-	bh=vnpHwrQqTGh83jGF/mOVjN3+jGO3XbGrHiR+lyiDEhI=;
+	s=arc-20240116; t=1707738947; c=relaxed/simple;
+	bh=TFd3IriyRtV14Q4iD6Y0DJVRX/3NF3OaAnuGRDo5Gn4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fy/wpdaEjUCqDd+dVNhJCdq/JrV+Su+FQril5ba/ieO5zPyfLTr6MI1miuZHY05o+k10YwDj4fB38XCmMq6e0yDU66Cbn6xolNMcJSPjjHz+g0tOcmM5ljJiOpGuq8M7j9B8fdK9aGmB3Iw4EVQNnKJhekcSIB8hKGWpBRbgfhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=Vsoo8FPP; arc=none smtp.client-ip=209.85.208.41
+	 MIME-Version; b=hiGyqiZt8WepoN13zt/lT2OfygwfJWM+mb5oKb7x8R5ygfQJSI9+ZY5XZHuHZO3fr+zT5eGSjcnLgx2amXRzMvxEVQ0cmOYy/K6AIXkJ5zHY1o8iUvTPJqwCEjH8qFixP0F+1JG/sDLdLSA96Qza260gcvEajpu1gOI2i5aM73I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=TcT9R0Fc; arc=none smtp.client-ip=209.85.167.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="Vsoo8FPP"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5600c43caddso3694672a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 03:55:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="TcT9R0Fc"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-51178bbb5d9so2565701e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 03:55:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1707738936; x=1708343736; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1707738941; x=1708343741; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1wz2gqR1nPObBws/2+IzSMmJxUoIVsWcR8/Agl6zU7c=;
-        b=Vsoo8FPPjdSBGPALb0JUSN/yZTbauqU9oT7HgL5WSMNGdcrmPJqQ59KH8BP+4yZUqw
-         CTQ3sb9NlTgDx75j2YNiO6Bgbfu2Y6VIMrM5X2H2gXg4YXxcxZvDHGi4+9R5IcCY1e2e
-         MQtRO0GGBZp/HH3iQP2j4MBc1ogsUF0TD53Ws0yfjAyQfOUGy83su6uYA8Sv0uEBxZ8E
-         0dgiJwRUC6pGG275hT7C1tP34jfyTrvMg4pcXMSbs30otWmZGQ/UzVyEpjzCaDI6PEAE
-         WeLt8FJSy7+aJf+FFTNC2EhcoGjg2jox2gEt5LsI/JdSaeJdT+NHF1v/ob5QocYMPc/A
-         vkmA==
+        bh=loiHli0V/kSRYrYi4oxN9uOqze2d5xYhhe5Mm1BFOuo=;
+        b=TcT9R0FcR6zRsWZHjKefGF3tcdpw8xs7987BQaK2mG2PhfI1bsoB0M1zsT8sFZPpuW
+         9KWGFr1QDGKSO1ng89wnKk+MU4qJGZ6Jo8tlSj4VsTw6jp5SiTGZvQyXvoildVhqf/fJ
+         4TDFbmLNOeCVgDUtlllEm1wFBJoe2+dY+Ey+JM0bTWaD/ZH+WKd3Sd3+/w5ZltscYfxy
+         oUym2HTvvDh6m88O4WppazMWOUQJXsT0/4GCL9ZK0u9G3GTskbmpKMNg9sr21JHoiqoM
+         K2mwZpz9DXAAJWCzah69LDQ+laahZPx6lxOD7HM+c3y8ZdUJ26Rgq6EC5shz18F3rfoy
+         rXWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707738936; x=1708343736;
+        d=1e100.net; s=20230601; t=1707738941; x=1708343741;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1wz2gqR1nPObBws/2+IzSMmJxUoIVsWcR8/Agl6zU7c=;
-        b=wf3fXB/ETHund7zigGaPMoPThCoVXd/SazyDFmgXZj61D84OIv89k7IW/zbUa8pQK4
-         0FTm7z3yLcSBbQN5Dj40NxlQCxfK/JblrckJI02dzFhQqJuvR3QDfVbBRo0RP7FI1sZg
-         zbSBEVIcygMMRPjP78pNiTJ1Z6opq0Y61XdHY3pezYNETrzwhgig1ChrjbCYnyZ0D4cb
-         c+97s9W7gacHJy+bfyE88oL6UC1QTLnzLT9CGpPuxSd1lEbje0XlnXISx1byMhBxYB4h
-         mxuW4fnMgkWpdgvHR0H3fUWhQF0Y9GiZiPqb+XDDN//0WkrmAJL78Jo0KA4Rn5+z1aau
-         JlGw==
-X-Gm-Message-State: AOJu0Yw28uWIH991dJFS6E5hbLfkCuyAQiQaHr3KEs22PQTENXwTAVp/
-	XE/h/Kz0vL9CgcAgAPOUql/Ylc/6OkZrqftFDhWGBmgA0XOW7n2hNxlBvosJWgnS8b7hXn3XhzV
-	J
-X-Google-Smtp-Source: AGHT+IFS0/DruPSPpAd8quACT8RJpfQc9p4hNFPsoV86Hhiv3i78lVMAegdZQQthSd3V4zWA9hOg7g==
-X-Received: by 2002:a17:906:af10:b0:a3c:b14:32e with SMTP id lx16-20020a170906af1000b00a3c0b14032emr5020901ejb.47.1707738935915;
-        Mon, 12 Feb 2024 03:55:35 -0800 (PST)
+        bh=loiHli0V/kSRYrYi4oxN9uOqze2d5xYhhe5Mm1BFOuo=;
+        b=oqXqZsGaYBqPxC5+HOEjq0R4oMT49sr9v7QwuBC7D5nJOJEIXwrpLlVDIs7QE2RmGb
+         lSUWaX+EPamvdse/yFyjgEgt0xtDm/xrSM3g5OoN7pFpWBRoDFpKBRmnl7xG1PF8bYx9
+         lwylNMr3kx/CHUI5c/Pu5Il1f4BE4CdFSocX8N/gRhNZoO4/BK+sN0F7kI8FtSUoTo7j
+         IEZ7Kqgqqd/F5HeJ8BN8GNpoMr9/LOaFWqDFg978Z9JbuFnGBpV4R0kFVLL1GzUVcU/X
+         lHo5cNE2DN3JL31/WV65c6BsWJye963uY5bhF4oO+lPxzKXHFLnMXXIUqilKVpsCj5gY
+         A+Mg==
+X-Gm-Message-State: AOJu0Yy4HXzJikQi5AYy2qjLmULSjFZhUjDQii6zbrp2nqiXCclRO8a4
+	RaRo26i8eI33gyI4PNIHeCxeQDh+IKzVasiZzITQckOoNq4C9DMNbc1in1y/Ppz6LnHjS1LYwsx
+	9
+X-Google-Smtp-Source: AGHT+IHgMMK+MM2i1oyXUi1NHtcI9/GAyhfH519uslD8yr5dHsx82ozuJ61sqma2t9orkilGTdLDmQ==
+X-Received: by 2002:a05:6512:39d1:b0:511:3a93:5b7a with SMTP id k17-20020a05651239d100b005113a935b7amr5006311lfu.21.1707738941318;
+        Mon, 12 Feb 2024 03:55:41 -0800 (PST)
 Received: from raven.blarg.de (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id m1-20020a17090607c100b00a36c3e2e52dsm139203ejc.61.2024.02.12.03.55.35
+        by smtp.gmail.com with ESMTPSA id m1-20020a17090607c100b00a36c3e2e52dsm139203ejc.61.2024.02.12.03.55.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 03:55:35 -0800 (PST)
+        Mon, 12 Feb 2024 03:55:40 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: linux-kernel@vger.kernel.org
 Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v5 23/35] sbitmap.h: move declarations to sbitmap_types.h
-Date: Mon, 12 Feb 2024 12:54:48 +0100
-Message-Id: <20240212115500.2078463-24-max.kellermann@ionos.com>
+Subject: [PATCH v5 28/35] radix-tree.h: move declarations to radix-tree_types.h
+Date: Mon, 12 Feb 2024 12:54:53 +0100
+Message-Id: <20240212115500.2078463-29-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240212115500.2078463-1-max.kellermann@ionos.com>
 References: <20240212115500.2078463-1-max.kellermann@ionos.com>
@@ -74,321 +74,231 @@ dependencies.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- block/blk-mq.h                |   1 +
- include/linux/blk-mq.h        |   2 +-
- include/linux/sbitmap.h       | 124 +-------------------------------
- include/linux/sbitmap_types.h | 129 ++++++++++++++++++++++++++++++++++
- 4 files changed, 132 insertions(+), 124 deletions(-)
- create mode 100644 include/linux/sbitmap_types.h
+ drivers/usb/cdns3/cdnsp-mem.c    |  1 +
+ include/linux/backing-dev-defs.h |  2 +-
+ include/linux/iocontext.h        |  2 +-
+ include/linux/irqdomain.h        |  2 +-
+ include/linux/mlx4/device.h      |  2 +-
+ include/linux/radix-tree.h       | 44 +---------------------------
+ include/linux/radix-tree_types.h | 50 ++++++++++++++++++++++++++++++++
+ kernel/dma/debug.c               |  1 +
+ kernel/irq/irqdomain.c           |  1 +
+ 9 files changed, 58 insertions(+), 47 deletions(-)
+ create mode 100644 include/linux/radix-tree_types.h
 
-diff --git a/block/blk-mq.h b/block/blk-mq.h
-index f75a9ecfebde..cc8e690171db 100644
---- a/block/blk-mq.h
-+++ b/block/blk-mq.h
-@@ -3,6 +3,7 @@
- #define INT_BLK_MQ_H
+diff --git a/drivers/usb/cdns3/cdnsp-mem.c b/drivers/usb/cdns3/cdnsp-mem.c
+index 97866bfb2da9..bab13f8a0b62 100644
+--- a/drivers/usb/cdns3/cdnsp-mem.c
++++ b/drivers/usb/cdns3/cdnsp-mem.c
+@@ -12,6 +12,7 @@
  
- #include <linux/blk-mq.h>
-+#include <linux/sbitmap.h>
- #include "blk-stat.h"
- 
- struct blk_mq_tag_set;
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index ed3760b04baa..201ee354a3d5 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -4,7 +4,7 @@
- 
- #include <linux/bio.h>
- #include <linux/blkdev.h>
--#include <linux/sbitmap.h>
-+#include <linux/sbitmap_types.h>
- #include <linux/lockdep_types.h>
- #include <linux/scatterlist.h>
- #include <linux/prefetch.h>
-diff --git a/include/linux/sbitmap.h b/include/linux/sbitmap.h
-index f7279f7632fe..c43d1c0eafbb 100644
---- a/include/linux/sbitmap.h
-+++ b/include/linux/sbitmap.h
-@@ -9,142 +9,20 @@
- #ifndef __LINUX_SCALE_BITMAP_H
- #define __LINUX_SCALE_BITMAP_H
- 
-+#include <linux/sbitmap_types.h>
- #include <linux/atomic.h>
- #include <linux/bitops.h>
--#include <linux/cache.h>
- #include <linux/list.h>
- #include <linux/log2.h>
- #include <linux/minmax.h>
- #include <linux/percpu.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/dmapool.h>
++#include <linux/radix-tree.h>
  #include <linux/slab.h>
--#include <linux/types.h>
--#include <linux/wait_types.h>
+ #include <linux/usb.h>
  
- struct seq_file;
+diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
+index 068fc9f3e883..459ad296f822 100644
+--- a/include/linux/backing-dev-defs.h
++++ b/include/linux/backing-dev-defs.h
+@@ -3,7 +3,7 @@
+ #define __LINUX_BACKING_DEV_DEFS_H
  
--/**
-- * struct sbitmap_word - Word in a &struct sbitmap.
-- */
--struct sbitmap_word {
--	/**
--	 * @word: word holding free bits
--	 */
--	unsigned long word;
+ #include <linux/list.h>
+-#include <linux/radix-tree.h>
++#include <linux/radix-tree_types.h>
+ #include <linux/rbtree_types.h>
+ #include <linux/spinlock_types.h>
+ #include <linux/percpu_counter_types.h>
+diff --git a/include/linux/iocontext.h b/include/linux/iocontext.h
+index a05d8a45cce5..aa1409bd9edd 100644
+--- a/include/linux/iocontext.h
++++ b/include/linux/iocontext.h
+@@ -2,7 +2,7 @@
+ #ifndef IOCONTEXT_H
+ #define IOCONTEXT_H
+ 
+-#include <linux/radix-tree.h>
++#include <linux/radix-tree_types.h>
+ #include <linux/rcupdate.h>
+ #include <linux/workqueue_types.h>
+ 
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index 0503bd4ea55b..c439d47b37a9 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -35,7 +35,7 @@
+ #include <linux/irqhandler.h>
+ #include <linux/of.h>
+ #include <linux/mutex_types.h>
+-#include <linux/radix-tree.h>
++#include <linux/radix-tree_types.h>
+ 
+ struct device_node;
+ struct fwnode_handle;
+diff --git a/include/linux/mlx4/device.h b/include/linux/mlx4/device.h
+index 18d71b808bc2..e354c967a21d 100644
+--- a/include/linux/mlx4/device.h
++++ b/include/linux/mlx4/device.h
+@@ -37,7 +37,7 @@
+ #include <linux/if_ether.h>
+ #include <linux/pci.h>
+ #include <linux/completion_types.h>
+-#include <linux/radix-tree.h>
++#include <linux/radix-tree_types.h>
+ #include <linux/cpu_rmap.h>
+ #include <linux/crash_dump.h>
+ 
+diff --git a/include/linux/radix-tree.h b/include/linux/radix-tree.h
+index 231c526ec9b8..eb28f5be02cd 100644
+--- a/include/linux/radix-tree.h
++++ b/include/linux/radix-tree.h
+@@ -8,6 +8,7 @@
+ #ifndef _LINUX_RADIX_TREE_H
+ #define _LINUX_RADIX_TREE_H
+ 
++#include <linux/radix-tree_types.h>
+ #include <linux/bitops.h>
+ #include <linux/gfp_types.h>
+ #include <linux/list.h>
+@@ -20,10 +21,6 @@
+ #include <linux/xarray.h>
+ #include <linux/local_lock.h>
+ 
+-/* Keep unconverted code working */
+-#define radix_tree_root		xarray
+-#define radix_tree_node		xa_node
 -
--	/**
--	 * @cleared: word holding cleared bits
--	 */
--	unsigned long cleared ____cacheline_aligned_in_smp;
--} ____cacheline_aligned_in_smp;
+ struct radix_tree_preload {
+ 	local_lock_t lock;
+ 	unsigned nr;
+@@ -70,45 +67,6 @@ static inline bool radix_tree_is_internal_node(void *ptr)
+ #define RADIX_TREE_MAX_PATH (DIV_ROUND_UP(RADIX_TREE_INDEX_BITS, \
+ 					  RADIX_TREE_MAP_SHIFT))
+ 
+-/* The IDR tag is stored in the low bits of xa_flags */
+-#define ROOT_IS_IDR	((__force gfp_t)4)
+-/* The top bits of xa_flags are used to store the root tags */
+-#define ROOT_TAG_SHIFT	(__GFP_BITS_SHIFT)
+-
+-#define RADIX_TREE_INIT(name, mask)	XARRAY_INIT(name, mask)
+-
+-#define RADIX_TREE(name, mask) \
+-	struct radix_tree_root name = RADIX_TREE_INIT(name, mask)
+-
+-#define INIT_RADIX_TREE(root, mask) xa_init_flags(root, mask)
+-
+-static inline bool radix_tree_empty(const struct radix_tree_root *root)
+-{
+-	return root->xa_head == NULL;
+-}
 -
 -/**
-- * struct sbitmap - Scalable bitmap.
+- * struct radix_tree_iter - radix tree iterator state
 - *
-- * A &struct sbitmap is spread over multiple cachelines to avoid ping-pong. This
-- * trades off higher memory usage for better scalability.
-- */
--struct sbitmap {
--	/**
--	 * @depth: Number of bits used in the whole bitmap.
--	 */
--	unsigned int depth;
--
--	/**
--	 * @shift: log2(number of bits used per word)
--	 */
--	unsigned int shift;
--
--	/**
--	 * @map_nr: Number of words (cachelines) being used for the bitmap.
--	 */
--	unsigned int map_nr;
--
--	/**
--	 * @round_robin: Allocate bits in strict round-robin order.
--	 */
--	bool round_robin;
--
--	/**
--	 * @map: Allocated bitmap.
--	 */
--	struct sbitmap_word *map;
--
--	/*
--	 * @alloc_hint: Cache of last successfully allocated or freed bit.
--	 *
--	 * This is per-cpu, which allows multiple users to stick to different
--	 * cachelines until the map is exhausted.
--	 */
--	unsigned int __percpu *alloc_hint;
--};
--
- #define SBQ_WAIT_QUEUES 8
- #define SBQ_WAKE_BATCH 8
- 
--/**
-- * struct sbq_wait_state - Wait queue in a &struct sbitmap_queue.
-- */
--struct sbq_wait_state {
--	/**
--	 * @wait: Wait queue.
--	 */
--	wait_queue_head_t wait;
--} ____cacheline_aligned_in_smp;
--
--/**
-- * struct sbitmap_queue - Scalable bitmap with the added ability to wait on free
-- * bits.
+- * @index:	index of current slot
+- * @next_index:	one beyond the last index for this chunk
+- * @tags:	bit-mask for tag-iterating
+- * @node:	node that contains current slot
 - *
-- * A &struct sbitmap_queue uses multiple wait queues and rolling wakeups to
-- * avoid contention on the wait queue spinlock. This ensures that we don't hit a
-- * scalability wall when we run out of free bits and have to start putting tasks
-- * to sleep.
+- * This radix tree iterator works in terms of "chunks" of slots.  A chunk is a
+- * subinterval of slots contained within one radix tree leaf node.  It is
+- * described by a pointer to its first slot and a struct radix_tree_iter
+- * which holds the chunk's position in the tree and its size.  For tagged
+- * iteration radix_tree_iter also holds the slots' bit-mask for one chosen
+- * radix tree tag.
 - */
--struct sbitmap_queue {
--	/**
--	 * @sb: Scalable bitmap.
--	 */
--	struct sbitmap sb;
--
--	/**
--	 * @wake_batch: Number of bits which must be freed before we wake up any
--	 * waiters.
--	 */
--	unsigned int wake_batch;
--
--	/**
--	 * @wake_index: Next wait queue in @ws to wake up.
--	 */
--	atomic_t wake_index;
--
--	/**
--	 * @ws: Wait queues.
--	 */
--	struct sbq_wait_state *ws;
--
--	/*
--	 * @ws_active: count of currently active ws waitqueues
--	 */
--	atomic_t ws_active;
--
--	/**
--	 * @min_shallow_depth: The minimum shallow depth which may be passed to
--	 * sbitmap_queue_get_shallow()
--	 */
--	unsigned int min_shallow_depth;
--
--	/**
--	 * @completion_cnt: Number of bits cleared passed to the
--	 * wakeup function.
--	 */
--	atomic_t completion_cnt;
--
--	/**
--	 * @wakeup_cnt: Number of thread wake ups issued.
--	 */
--	atomic_t wakeup_cnt;
+-struct radix_tree_iter {
+-	unsigned long	index;
+-	unsigned long	next_index;
+-	unsigned long	tags;
+-	struct radix_tree_node *node;
 -};
 -
  /**
-  * sbitmap_init_node() - Initialize a &struct sbitmap on a specific memory node.
-  * @sb: Bitmap to initialize.
-diff --git a/include/linux/sbitmap_types.h b/include/linux/sbitmap_types.h
+  * Radix-tree synchronization
+  *
+diff --git a/include/linux/radix-tree_types.h b/include/linux/radix-tree_types.h
 new file mode 100644
-index 000000000000..078c7859905c
+index 000000000000..d0d4e051a424
 --- /dev/null
-+++ b/include/linux/sbitmap_types.h
-@@ -0,0 +1,129 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef __LINUX_SCALE_BITMAP_TYPES_H
-+#define __LINUX_SCALE_BITMAP_TYPES_H
++++ b/include/linux/radix-tree_types.h
+@@ -0,0 +1,50 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++#ifndef _LINUX_RADIX_TREE_TYPES_H
++#define _LINUX_RADIX_TREE_TYPES_H
 +
-+#include <linux/cache.h>
-+#include <linux/types.h>
-+#include <linux/wait_types.h>
++#include <linux/xarray_types.h>
++
++/* Keep unconverted code working */
++#define radix_tree_root		xarray
++#define radix_tree_node		xa_node
++
++#define RADIX_TREE_INIT(name, mask)	XARRAY_INIT(name, mask)
++
++#define RADIX_TREE(name, mask) \
++	struct radix_tree_root name = RADIX_TREE_INIT(name, mask)
++
++#define INIT_RADIX_TREE(root, mask) xa_init_flags(root, mask)
++
++static inline bool radix_tree_empty(const struct radix_tree_root *root)
++{
++	return root->xa_head == NULL;
++}
 +
 +/**
-+ * struct sbitmap_word - Word in a &struct sbitmap.
-+ */
-+struct sbitmap_word {
-+	/**
-+	 * @word: word holding free bits
-+	 */
-+	unsigned long word;
-+
-+	/**
-+	 * @cleared: word holding cleared bits
-+	 */
-+	unsigned long cleared ____cacheline_aligned_in_smp;
-+} ____cacheline_aligned_in_smp;
-+
-+/**
-+ * struct sbitmap - Scalable bitmap.
++ * struct radix_tree_iter - radix tree iterator state
 + *
-+ * A &struct sbitmap is spread over multiple cachelines to avoid ping-pong. This
-+ * trades off higher memory usage for better scalability.
++ * @index:	index of current slot
++ * @next_index:	one beyond the last index for this chunk
++ * @tags:	bit-mask for tag-iterating
++ * @node:	node that contains current slot
++ *
++ * This radix tree iterator works in terms of "chunks" of slots.  A chunk is a
++ * subinterval of slots contained within one radix tree leaf node.  It is
++ * described by a pointer to its first slot and a struct radix_tree_iter
++ * which holds the chunk's position in the tree and its size.  For tagged
++ * iteration radix_tree_iter also holds the slots' bit-mask for one chosen
++ * radix tree tag.
 + */
-+struct sbitmap {
-+	/**
-+	 * @depth: Number of bits used in the whole bitmap.
-+	 */
-+	unsigned int depth;
-+
-+	/**
-+	 * @shift: log2(number of bits used per word)
-+	 */
-+	unsigned int shift;
-+
-+	/**
-+	 * @map_nr: Number of words (cachelines) being used for the bitmap.
-+	 */
-+	unsigned int map_nr;
-+
-+	/**
-+	 * @round_robin: Allocate bits in strict round-robin order.
-+	 */
-+	bool round_robin;
-+
-+	/**
-+	 * @map: Allocated bitmap.
-+	 */
-+	struct sbitmap_word *map;
-+
-+	/*
-+	 * @alloc_hint: Cache of last successfully allocated or freed bit.
-+	 *
-+	 * This is per-cpu, which allows multiple users to stick to different
-+	 * cachelines until the map is exhausted.
-+	 */
-+	unsigned int __percpu *alloc_hint;
++struct radix_tree_iter {
++	unsigned long	index;
++	unsigned long	next_index;
++	unsigned long	tags;
++	struct radix_tree_node *node;
 +};
 +
-+/**
-+ * struct sbq_wait_state - Wait queue in a &struct sbitmap_queue.
-+ */
-+struct sbq_wait_state {
-+	/**
-+	 * @wait: Wait queue.
-+	 */
-+	wait_queue_head_t wait;
-+} ____cacheline_aligned_in_smp;
++/* The IDR tag is stored in the low bits of xa_flags */
++#define ROOT_IS_IDR	((__force gfp_t)4)
++/* The top bits of xa_flags are used to store the root tags */
++#define ROOT_TAG_SHIFT	(__GFP_BITS_SHIFT)
 +
-+/**
-+ * struct sbitmap_queue - Scalable bitmap with the added ability to wait on free
-+ * bits.
-+ *
-+ * A &struct sbitmap_queue uses multiple wait queues and rolling wakeups to
-+ * avoid contention on the wait queue spinlock. This ensures that we don't hit a
-+ * scalability wall when we run out of free bits and have to start putting tasks
-+ * to sleep.
-+ */
-+struct sbitmap_queue {
-+	/**
-+	 * @sb: Scalable bitmap.
-+	 */
-+	struct sbitmap sb;
-+
-+	/**
-+	 * @wake_batch: Number of bits which must be freed before we wake up any
-+	 * waiters.
-+	 */
-+	unsigned int wake_batch;
-+
-+	/**
-+	 * @wake_index: Next wait queue in @ws to wake up.
-+	 */
-+	atomic_t wake_index;
-+
-+	/**
-+	 * @ws: Wait queues.
-+	 */
-+	struct sbq_wait_state *ws;
-+
-+	/*
-+	 * @ws_active: count of currently active ws waitqueues
-+	 */
-+	atomic_t ws_active;
-+
-+	/**
-+	 * @min_shallow_depth: The minimum shallow depth which may be passed to
-+	 * sbitmap_queue_get_shallow()
-+	 */
-+	unsigned int min_shallow_depth;
-+
-+	/**
-+	 * @completion_cnt: Number of bits cleared passed to the
-+	 * wakeup function.
-+	 */
-+	atomic_t completion_cnt;
-+
-+	/**
-+	 * @wakeup_cnt: Number of thread wake ups issued.
-+	 */
-+	atomic_t wakeup_cnt;
-+};
-+
-+#endif /* __LINUX_SCALE_BITMAP_TYPES_H */
++#endif /* _LINUX_RADIX_TREE_TYPES_H */
+diff --git a/kernel/dma/debug.c b/kernel/dma/debug.c
+index e7e236599307..1e892a5b0d93 100644
+--- a/kernel/dma/debug.c
++++ b/kernel/dma/debug.c
+@@ -20,6 +20,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/export.h>
+ #include <linux/device.h>
++#include <linux/radix-tree.h>
+ #include <linux/types.h>
+ #include <linux/sched.h>
+ #include <linux/ctype.h>
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index d3431093c40d..d3313b7a22c8 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -14,6 +14,7 @@
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/of_irq.h>
++#include <linux/radix-tree.h>
+ #include <linux/sprintf.h>
+ #include <linux/topology.h>
+ #include <linux/seq_file.h>
 -- 
 2.39.2
 
