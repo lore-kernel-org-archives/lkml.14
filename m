@@ -1,48 +1,66 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F053F9CC;
-	Mon, 12 Feb 2024 17:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 114913E49E;
+	Mon, 12 Feb 2024 17:48:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707760043; cv=none; b=BSyStFC+Wrc/y+LcDABQv40EMMiO2Isv6iavjm0qUJ0T3GKtA2Yvu6PNK6R+cC1ImaxqokSLpn1QwlKBK67krCnS4H+DLavSCVURP87bAQHUTNhws/eKRKyJs7YcFQTjszdXgTTy260M+rRKHPEBRNLDpfeQ0nch+d1Ru9LpCLI=
+	t=1707760128; cv=none; b=gxpCgRPH6himCzoyasBsu73DWcCxshq6XLhE7Og95nsgOWR0sIlU42oe8qbm6rIuZNrSu3yFI8k4TsIPp7dXaq6aOyUyGZx+WEC27emeYQ6AHLsJChde1ERz3i6V1EzuHPAmDSqr9pleAVT3cjMaIUjRcoX6T85TzBv50j9Wc9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707760043; c=relaxed/simple;
-	bh=OybOR9kPB3GYPxQJUA5gaQ/HEOlZCcTK9qUs25f+0yI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=k4NbIM5wYadpLJX5PTmkjsD6HmKv6202Gi5v42DnYPgC9iUmtbl4gHd92W5ztJG/baVoD+91TewFHOSd09agNOLEz0XXmXhHjs1D6pueN08bX6p2Ha9RSMcQYqQxoLLpJO33faR20YwD030kok2qeKjUx8yeG+HRQfx9JVOqeVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=P3DFtDVk; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1707760128; c=relaxed/simple;
+	bh=fg208aqq/dk9zqQHNCp4uzls8PkYl7qxboWUqwuQpQE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZaBWwwXZtH0nECm6GSe7E/LH1CXD2fZY/mBxx0G3MUOPOMk4QTmX8+8LhnWEaa1ri6A0OPLAnr71SBftO4nhrBNtGQBeNE8Ne603uE4ylIPfU9kMdbVYMqfhJGLJu19lxVFMvMJ3Cb8SSBiH10JRERgCmuA/b9RWr0bflGntU8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nsrl8yIb; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="P3DFtDVk"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41CGwOcI009214;
-	Mon, 12 Feb 2024 17:47:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=Fgr6iY1ALVYW9Zu2xd74cVCtBaZ1e9imGCIaF5VTL4M=; b=P3
-	DFtDVk+HAqQHXwUvM8T90+5WkO5v9aCuZDglBlpiiL1Vngr50CPpGS4SO8ukpsKz
-	wYGYtFp6IRrf8bi9rxInt7DghqeejpCRPkpI+X8OOuhC2StRwEeHUhrhA+pvbSBy
-	1V4S7Tl6xYqrFQwbMUHnz34F+EYqtX5idVWLUUoNMGqSMniSbWSfxL/6XTXDYE/Z
-	O40I2+ew5xF7gfD8uD47PnBlXDQYYHjzPAJY1DwlXLpcrOeSxPEYl3/K8VS8QrJC
-	eZNpHsTB1siAjHc1LEkhXdqQFicXvb907oXlHX8Dm0CEc6tE2Uiy/kwY7OXicWfJ
-	zIquQs5wfhH72nPE0rZA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w7nk90ceu-1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nsrl8yIb"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41CHgrrb019260;
+	Mon, 12 Feb 2024 17:48:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=fJVNv/6nZjWeb7KILVPEur4+gl0mUhLZHgPunP6732g=;
+ b=nsrl8yIblo/4b4jgIGYcob76ZTrOiuPBgqKmENaL3i9++PU5lXKpSGtaxj6ocdbKwq3f
+ pD4Y7ripUyoZ0n/RIc7Syth+DdsPTHecTY72ZuWjovSZ2jKlNRn/UkYiinvryGwsPbT8
+ HU/pF2sK/zbDVz0uWAw/z5Z+BDdvRnNFyQ1MfhRqMZGdasgdhv8fkKy17GYBAdeHBEJF
+ H/+dt7+Gbix8RU4J//AhNcnufTBlUlN/F/58yYoyk25A3W3ji6NJtbp91NxGiNJEx3/t
+ lh692v+RrvllD4ARBqiZRFuT3tagOt314C1qP8NDfX+b7Av0kn80cMrG5jVAqC/w7Y/X pA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w7qyng4vs-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Feb 2024 17:47:17 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41CHlHw5004519
+	Mon, 12 Feb 2024 17:48:09 +0000
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41CHhJ25020005;
+	Mon, 12 Feb 2024 17:48:08 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w7qyng4td-5
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Feb 2024 17:47:17 GMT
-Received: from [10.110.51.3] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 12 Feb
- 2024 09:47:14 -0800
-Message-ID: <989fa518-4f02-4725-97a4-2f711126939d@quicinc.com>
-Date: Mon, 12 Feb 2024 09:47:09 -0800
+	Mon, 12 Feb 2024 17:48:08 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41CGSUOs024878;
+	Mon, 12 Feb 2024 17:37:29 GMT
+Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w6mfp200h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 Feb 2024 17:37:29 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41CHbQED43123078
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 12 Feb 2024 17:37:28 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B22FC58061;
+	Mon, 12 Feb 2024 17:37:24 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0C1C95805E;
+	Mon, 12 Feb 2024 17:37:21 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 12 Feb 2024 17:37:20 +0000 (GMT)
+Message-ID: <fd6ddc3d-e5d3-4b9c-b00b-ac2b1f22d653@linux.ibm.com>
+Date: Mon, 12 Feb 2024 12:37:20 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,58 +68,200 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] soc: qcom: llcc: Check return value on Broadcast_OR
- reg read
+Subject: Re: [PATCH v9 19/25] integrity: Move
+ integrity_kernel_module_request() to IMA
 Content-Language: en-US
-To: Jeff Johnson <quic_jjohnson@quicinc.com>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Abel Vesa
-	<abel.vesa@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel@quicinc.com>, Elliot Berman <quic_eberman@quicinc.com>
-References: <20240210011415.3440236-1-quic_uchalich@quicinc.com>
- <cfc42c1f-ff17-4d66-8e88-cbd4230e7d7b@quicinc.com>
-From: Unnathi Chalicheemala <quic_uchalich@quicinc.com>
-In-Reply-To: <cfc42c1f-ff17-4d66-8e88-cbd4230e7d7b@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>, viro@zeniv.linux.org.uk,
+        brauner@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org,
+        neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
+        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com,
+        eric.snowberg@oracle.com, dhowells@redhat.com, jarkko@kernel.org,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        casey@schaufler-ca.com, shuah@kernel.org, mic@digikod.net
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        selinux@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Roberto Sassu <roberto.sassu@huawei.com>
+References: <20240115181809.885385-1-roberto.sassu@huaweicloud.com>
+ <20240115181809.885385-20-roberto.sassu@huaweicloud.com>
+From: Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <20240115181809.885385-20-roberto.sassu@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: H_zfbY_f6YAQn6GggDBPV9NNdtVFcC3q
-X-Proofpoint-ORIG-GUID: H_zfbY_f6YAQn6GggDBPV9NNdtVFcC3q
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: EjolkXjCCnV6IXr0rLl_iQi_aPKLzovk
+X-Proofpoint-ORIG-GUID: FcZAfoeYEX1DkXNqmP6J6TNlDhQJioeb
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-12_14,2024-02-12_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- lowpriorityscore=0 adultscore=0 spamscore=0 malwarescore=0 mlxscore=0
- bulkscore=0 priorityscore=1501 mlxlogscore=503 impostorscore=0
- clxscore=1015 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2401310000 definitions=main-2402120135
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 phishscore=0 mlxscore=0 adultscore=0 spamscore=0
+ mlxlogscore=999 malwarescore=0 priorityscore=1501 clxscore=1015
+ bulkscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402120135
 
-On 2/9/2024 5:30 PM, Jeff Johnson wrote:
-> On 2/9/2024 5:14 PM, Unnathi Chalicheemala wrote:
->> Commit c72ca343f911 ("soc: qcom: llcc: Add v4.1 HW version support")
->> introduced a new 4.1 if statement in llcc_update_act_ctrl() without
->> considering that ret might be overwritten. So, adding return value check
+
+
+On 1/15/24 13:18, Roberto Sassu wrote:
+> From: Roberto Sassu <roberto.sassu@huawei.com>
 > 
-> nit: s/adding/add/ (use imperative voice)
+> In preparation for removing the 'integrity' LSM, move
+> integrity_kernel_module_request() to IMA, and rename it to
+> ima_kernel_module_request().
 > 
-
-Ack.
-
->> after Broadcast_OR register read in llcc_update_act_ctrl().
->>
->> Fixes: c72ca343f911 ("soc: qcom: llcc: Add v4.1 HW version support">
+> Compile it conditionally if CONFIG_INTEGRITY_ASYMMETRIC_KEYS is enabled,
+> and call it from security.c (removed afterwards with the move of IMA to the
+> LSM infrastructure).
 > 
-> remove this blank line -- the Fixes tag should be grouped with the other
-> tags
+> Adding this hook cannot be avoided, since IMA has no control on the flags
+> passed to crypto_alloc_sig() in public_key_verify_signature(), and thus
+> cannot pass CRYPTO_NOLOAD, which solved the problem for EVM hashing with
+> commit e2861fa71641 ("evm: Don't deadlock if a crypto algorithm is
+> unavailable").
 > 
+> EVM alone does not need to implement this hook, first because there is no
+> mutex to deadlock, and second because even if it had it, there should be a
+> recursive call. However, since verification from EVM can be initiated only
+> by setting inode metadata, deadlock would occur if modprobe would do the
+> same while loading a kernel module (which is unlikely).
+> 
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> ---
+>   include/linux/ima.h                    | 10 +++++++++
+>   include/linux/integrity.h              | 13 ------------
+>   security/integrity/digsig_asymmetric.c | 23 --------------------
+>   security/integrity/ima/ima_main.c      | 29 ++++++++++++++++++++++++++
+>   security/security.c                    |  2 +-
+>   5 files changed, 40 insertions(+), 37 deletions(-)
+> 
+> diff --git a/include/linux/ima.h b/include/linux/ima.h
+> index 31ef6c3c3207..0f9af283cbc8 100644
+> --- a/include/linux/ima.h
+> +++ b/include/linux/ima.h
+> @@ -256,4 +256,14 @@ static inline bool ima_appraise_signature(enum kernel_read_file_id func)
+>   	return false;
+>   }
+>   #endif /* CONFIG_IMA_APPRAISE && CONFIG_INTEGRITY_TRUSTED_KEYRING */
+> +
+> +#if defined(CONFIG_IMA) && defined(CONFIG_INTEGRITY_ASYMMETRIC_KEYS)
+> +extern int ima_kernel_module_request(char *kmod_name);
+> +#else
+> +static inline int ima_kernel_module_request(char *kmod_name)
+> +{
+> +	return 0;
+> +}
+> +
+> +#endif
+>   #endif /* _LINUX_IMA_H */
+> diff --git a/include/linux/integrity.h b/include/linux/integrity.h
+> index 2ea0f2f65ab6..ef0f63ef5ebc 100644
+> --- a/include/linux/integrity.h
+> +++ b/include/linux/integrity.h
+> @@ -42,17 +42,4 @@ static inline void integrity_load_keys(void)
+>   }
+>   #endif /* CONFIG_INTEGRITY */
+>   
+> -#ifdef CONFIG_INTEGRITY_ASYMMETRIC_KEYS
+> -
+> -extern int integrity_kernel_module_request(char *kmod_name);
+> -
+> -#else
+> -
+> -static inline int integrity_kernel_module_request(char *kmod_name)
+> -{
+> -	return 0;
+> -}
+> -
+> -#endif /* CONFIG_INTEGRITY_ASYMMETRIC_KEYS */
+> -
+>   #endif /* _LINUX_INTEGRITY_H */
+> diff --git a/security/integrity/digsig_asymmetric.c b/security/integrity/digsig_asymmetric.c
+> index 895f4b9ce8c6..de603cf42ac7 100644
+> --- a/security/integrity/digsig_asymmetric.c
+> +++ b/security/integrity/digsig_asymmetric.c
+> @@ -132,26 +132,3 @@ int asymmetric_verify(struct key *keyring, const char *sig,
+>   	pr_debug("%s() = %d\n", __func__, ret);
+>   	return ret;
+>   }
+> -
+> -/**
+> - * integrity_kernel_module_request - prevent crypto-pkcs1pad(rsa,*) requests
+> - * @kmod_name: kernel module name
+> - *
+> - * We have situation, when public_key_verify_signature() in case of RSA
+> - * algorithm use alg_name to store internal information in order to
+> - * construct an algorithm on the fly, but crypto_larval_lookup() will try
+> - * to use alg_name in order to load kernel module with same name.
+> - * Since we don't have any real "crypto-pkcs1pad(rsa,*)" kernel modules,
+> - * we are safe to fail such module request from crypto_larval_lookup().
+> - *
+> - * In this way we prevent modprobe execution during digsig verification
+> - * and avoid possible deadlock if modprobe and/or it's dependencies
+> - * also signed with digsig.
+> - */
+> -int integrity_kernel_module_request(char *kmod_name)
+> -{
+> -	if (strncmp(kmod_name, "crypto-pkcs1pad(rsa,", 20) == 0)
+> -		return -EINVAL;
+> -
+> -	return 0;
+> -}
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index 02021ee467d3..908fa026ec58 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -1091,6 +1091,35 @@ int ima_measure_critical_data(const char *event_label,
+>   }
+>   EXPORT_SYMBOL_GPL(ima_measure_critical_data);
+>   
+> +#ifdef CONFIG_INTEGRITY_ASYMMETRIC_KEYS
+> +
+> +/**
+> + * ima_kernel_module_request - Prevent crypto-pkcs1pad(rsa,*) requests
+> + * @kmod_name: kernel module name
+> + *
+> + * We have situation, when public_key_verify_signature() in case of RSA > + * algorithm use alg_name to store internal information in order to
+> + * construct an algorithm on the fly, but crypto_larval_lookup() will try
+> + * to use alg_name in order to load kernel module with same name.
+> + * Since we don't have any real "crypto-pkcs1pad(rsa,*)" kernel modules,
+> + * we are safe to fail such module request from crypto_larval_lookup().
+> + *
+> + * In this way we prevent modprobe execution during digsig verification
+> + * and avoid possible deadlock if modprobe and/or it's dependencies
+> + * also signed with digsig.
 
-Ack. I'll post v3 with these changes, thanks Jeff.
+This text needs to some reformulation at some point..
 
->> Signed-off-by: Unnathi Chalicheemala <quic_uchalich@quicinc.com>
->> Reviewed-by: Elliot Berman <quic_eberman@quicinc.com>
+> + *
+> + * Return: Zero if it is safe to load the kernel module, -EINVAL otherwise.
+> + */
+> +int ima_kernel_module_request(char *kmod_name)
+> +{
+> +	if (strncmp(kmod_name, "crypto-pkcs1pad(rsa,", 20) == 0)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +#endif /* CONFIG_INTEGRITY_ASYMMETRIC_KEYS */
+> +
+>   static int __init init_ima(void)
+>   {
+>   	int error;
+> diff --git a/security/security.c b/security/security.c
+> index d2a1226e6e69..6c6571a141a1 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -3255,7 +3255,7 @@ int security_kernel_module_request(char *kmod_name)
+>   	ret = call_int_hook(kernel_module_request, 0, kmod_name);
+>   	if (ret)
+>   		return ret;
+> -	return integrity_kernel_module_request(kmod_name);
+> +	return ima_kernel_module_request(kmod_name);
+>   }
+>   
+>   /**
+
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
