@@ -1,133 +1,104 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3894CE13
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 14:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CD934CE13;
+	Mon, 12 Feb 2024 14:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707746648; cv=none; b=B1E8myiFZblfRHRB+C9rUWV2fBYlEPTnJz90GD1Tb1tXgE0ei7iwYe1+WwAn4rcL0QVmgr7WtIggwzC7gHUBNCcQmS2jjoAHOss4glXLDmcsMy5B1iGPS6Vhio9+A+o5QiIHbOWdOI1/x2z9X3jq1OEXQL/b2laq3pHyqhj6Hgg=
+	t=1707746659; cv=none; b=SHtS6L/RhRzNLMLL9RrxXB9PTJlX26tjPP+eyXVCiLODCrDdmWIsSpScccr92XZ5N7i+8/+DwQU5x2YO5z9E6+Oa6lTRqI9yR4HJUcDiu9quhP9o73td/pC1Z3gkdRrjZOQVQmtb/o0qMIH9WiikvJm05u6NiSZcfgzgHmrzruo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707746648; c=relaxed/simple;
-	bh=QDMQ1KkcYtiV6MjOl7LHm4vYVsmfWSXZLbn40VwBYc8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ApJMGJg069imRzlxq3ilNA318sRkgMZKlj3QZ7xAyyezfi+L8rvVVbsHDB1/7kBy0uBlnVzwClYPAET8zpypcVJ1U+NornYfWSAMgy0d+a6Qi13ZlYHCzbtg3WqtNf0i2oxdXT+t4vhyhbiKW5Iv/NLAcveHU4LWNLudB+fLQJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A8vYvTgz; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707746659; c=relaxed/simple;
+	bh=kzWubUFjeWgniWqds5o3I9UShRuEGy8wlJtxZHCh1NY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kzin1R0z1tosMB2+awIWdXfAmdjaXvrzleLpATkyeP3r0GBby7boI4HTNzhaeWcYOfiHAZAZ0rNKEw/8hrpOhYqD4/qzjXVm2xZS1rM08ScN9jLaf4OzB5mFaVHza/cpipq8VE+QRKOre1H744K/s3Iukk63j599DDzXKvkYDw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n33n+3iX; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A8vYvTgz"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-33b0ecb1965so1756201f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 06:04:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707746645; x=1708351445; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dzqxKaIV5lycuIt7a1okhuIIh6nU9oeZCJpLQ+HKFAg=;
-        b=A8vYvTgzQnYDCOacYkD8QoBCFrIExkw5mJYZKKo5Y61ZCuX9yD2upsqKDyqYEEUTMO
-         fyIkhNAH3tclSs/A/Lctckf2dRnyyR8gtkz7zOoYr7qVUjWRKdX86/bhJNvbt7sq++AM
-         aEcBOVsYiVKUhP6tctB864/ak1wvIc4LkgwJcNaUZnA8Qrc/M8Xhzr2ZzHT9Ww/+YC1O
-         k4nrYg9KnrNsOg3KLEuBilrAZ+6AVPCO1AC4/hemsUzhDhUCVvRvNN5LWZKRol99wZqK
-         juyIpnfq4J9kq2Fa4ay/7IHKw95lSzS5U+EE1RSNW0UQnIMwNxXQixjfD1jONJc4sHvf
-         jFYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707746645; x=1708351445;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dzqxKaIV5lycuIt7a1okhuIIh6nU9oeZCJpLQ+HKFAg=;
-        b=o63Blt7w4MAd7hPBoRi3O1o02if5hIKoH+kFc6n5tcsThKhBm6LzBbep4zPCLEy0G4
-         P4tNumUrrPb6KbKZY5yHxnXN0GB9jqGuIUiajYLV+xGVjOzpYa18uCqcOTHjEylb77Rb
-         ZikPgemJirPq5+vWfESH7L+NwNlCWiO/Hp/L4vEY4KZzIXzntpyhNdf6VcQjvyitXqcF
-         2Y+neiGKbyzPbQjy5KpvpAR3vngn4n4HebCcyV2HuKhRmYAZBrZH2VQv9z8AdJmofxC/
-         icsJOHSoxBV67vWXLrRZMfxh7zyiLsDgu9TnA4wu7pQ/9Qygo1+JSSw0DjCvnAyPOY8s
-         r/GA==
-X-Forwarded-Encrypted: i=1; AJvYcCUQF3JuZIJ1Vs3rxZPorzmzoecQk0FYxr5F9PhdGqIbDb070rSBHspxShxzVOgNle3MEL4g/miQlM4aee2x4eETpRs02vGoxm0M+a94
-X-Gm-Message-State: AOJu0Yz5e2SiH905CC9TUjI/I3Q4brRocCgPfcXHq5qXVGsRkEFFtS2u
-	P8CLXtN6ascQ5oE9nLEWA0OzWPG4sVcb7OhCMR+ExMxfUpthODVYMR/PRZddtgE=
-X-Google-Smtp-Source: AGHT+IFy6aDhjr2oJ130HcAfkLOXkvU+O+ob16/LkBpNY5N4HcWxyaK6sZ3E8EGV969nAunN59KVVg==
-X-Received: by 2002:adf:eac9:0:b0:33b:7947:d22 with SMTP id o9-20020adfeac9000000b0033b79470d22mr2896136wrn.57.1707746645615;
-        Mon, 12 Feb 2024 06:04:05 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVoAQdPDjEx05yUQKNJ5YW19Z+nEZfGE5BKVBETz8rQvifVDgKkiVcO2vhxCGv7I3abloAAQMUTrSt3HZUu1hnKRQmjgYWEdx3Fx417AKeLfYRrdURrCKf4u8fvJAe9X7N3swQHP6jLMIjBj+8WOHIMkkdBzWRKTvKoZbcKRxdNLc0ZI2Rw5uIUmtM+GGw8bid4nqe5Fh37dNlKfvZ/nlCDHIS8xr/6X1Z01RvFMZShuEoyxy0MGsUTpCHdLqJIFywsuWJTRiRWWhdFfATqmkIxEdofDlg5oqd9yJXDCAWhTEXahk9yFIK9T45xAWj1hcYX/WhdX4IMO2Gxl4F+VTObdCr+2qnUSjaxjCZxAZAj4ZxpNrteSsVEX/ErAfECV2CzTZWl2fzgQuIF245xuPavSmSrbyjpYlgFquvUeFtcRHqloQftpPqSxgbNGv20faz67RIPgKmiUoL+tT++3P/zr7X1KxetLFSF3QG7H2oPKBtk66Da+ISCcfq1f1171mbUEcMyJqwWdSAx2seFVEBe8+SV2QmKn5X1Zxs3VGwTkol4yU0hzrw7XppoOsX2GyE/kKwEIcEswoxvkqdETEZzv7Djj3EyuUGEaZLE9B/7v2ILTvA=
-Received: from ta2.c.googlers.com.com (105.168.195.35.bc.googleusercontent.com. [35.195.168.105])
-        by smtp.gmail.com with ESMTPSA id v9-20020a5d4b09000000b0033b843786e1sm2135356wrq.51.2024.02.12.06.04.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 06:04:04 -0800 (PST)
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-To: broonie@kernel.org,
-	robh@kernel.org,
-	andi.shyti@kernel.org,
-	krzysztof.kozlowski@linaro.org,
-	semen.protsenko@linaro.org,
-	conor+dt@kernel.org
-Cc: alim.akhtar@samsung.com,
-	linux-spi@vger.kernel.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	andre.draszik@linaro.org,
-	peter.griffin@linaro.org,
-	kernel-team@android.com,
-	willmcvicker@google.com,
-	devicetree@vger.kernel.org,
-	arnd@arndb.de,
-	Tudor Ambarus <tudor.ambarus@linaro.org>
-Subject: [PATCH v2 12/12] spi: s3c64xx: switch exynos850 to new port config data
-Date: Mon, 12 Feb 2024 14:03:31 +0000
-Message-ID: <20240212140331.915498-13-tudor.ambarus@linaro.org>
-X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
-In-Reply-To: <20240212140331.915498-1-tudor.ambarus@linaro.org>
-References: <20240212140331.915498-1-tudor.ambarus@linaro.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n33n+3iX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707746658; x=1739282658;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kzWubUFjeWgniWqds5o3I9UShRuEGy8wlJtxZHCh1NY=;
+  b=n33n+3iXu6VdKe3eaXoKRu8ZhOKili5xDihavmmgWdCBdTxNxR/kyLAK
+   DKuVDiXeabpZ/SYo/kWHWCtDKK/gfK7DL0asBRXluPMmOONPFyjaljy4b
+   rHc1Wh8JAVLcoEw2TL1QpuwsIUrfW4pzgvmupiWobH9EaYBiyeOtY882T
+   HLnarCBVwL4289OMEbHEdZPg2kVCXnwltLH5FkuwGxrWxIgIPDCIGdzcJ
+   wyFAOTNws6tCTgO37pJbz6bQo/ZXUOWkxmWeKetI3tVZbHJ4DYzvZ/wxZ
+   dEyQpsr2+e/H6UEqDqT/LEyKgOKNGtEFke3mPRWlZicO6BGWQ120gQG2D
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="5536271"
+X-IronPort-AV: E=Sophos;i="6.06,264,1705392000"; 
+   d="scan'208";a="5536271"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 06:04:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="911491167"
+X-IronPort-AV: E=Sophos;i="6.06,264,1705392000"; 
+   d="scan'208";a="911491167"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 06:04:12 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rZWun-00000003upH-2z5c;
+	Mon, 12 Feb 2024 16:04:09 +0200
+Date: Mon, 12 Feb 2024 16:04:09 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Ralf Schlatterbeck <rsc@runtux.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Miguel Ojeda <ojeda@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Robin van der Gracht <robin@protonic.nl>,
+	Paul Burton <paulburton@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: auxdisplay: hit, hd44780: drop
+ redundant GPIO node
+Message-ID: <ZcolWdCeLf0nDPdY@smile.fi.intel.com>
+References: <20240212083426.26757-1-krzysztof.kozlowski@linaro.org>
+ <CAMuHMdU-c5_Z2AMNtNH4Cc4JUrn+oKU-1CumEOAP6=5Zomcj_A@mail.gmail.com>
+ <2922eece-5486-4eff-af99-f7060cb61d17@linaro.org>
+ <20240212115837.efz73yxinkysdmgh@runtux.com>
+ <e2a5b005-7916-4296-b072-c24efd4b3357@linaro.org>
+ <Zcogl6tqbMdQldKA@smile.fi.intel.com>
+ <d603a588-d312-486e-b6c9-647a6b90580c@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d603a588-d312-486e-b6c9-647a6b90580c@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Exynos850 has the same version of USI SPI (v2.1) as GS101.
-Drop the fifo_lvl_mask and rx_lvl_offset and switch to the new port
-config data.
+On Mon, Feb 12, 2024 at 02:59:02PM +0100, Krzysztof Kozlowski wrote:
+> On 12/02/2024 14:43, Andy Shevchenko wrote:
+> > On Mon, Feb 12, 2024 at 02:38:27PM +0100, Krzysztof Kozlowski wrote:
+> >> On 12/02/2024 12:58, Ralf Schlatterbeck wrote:
 
-Backward compatibility with DT is not broken because when alises are
-set:
-- the SPI core will set the bus number according to the alias ID
-- the FIFO depth is always the same size for exynos850 (64 bytes) no
-  matter the alias ID number.
+...
 
-Advantages of the change:
-- drop dependency on the OF alias ID.
-- FIFO depth is inferred from the compatible. Exynos850 integrates 3 SPI
-  IPs, all with 64 bytes FIFO depths.
-- use full mask for SPI_STATUS.{RX, TX}_FIFO_LVL fields. Using partial
-  masks is misleading and can hide problems of the driver logic.
+> >> Anyway, binding examples should not be collection of unrelated
+> >> solutions, because then we should accept for each device schema several
+> >> other variations and combinations.
+> > 
+> > Is this documented?
+> 
+> Yes, writing schema says what the example is. We repeated it multiple
+> times on multiple reviews, we made multiple commits multiple times and I
+> briefly mentioned it also in my talks.
 
-Just compiled tested.
+Good to know, thanks!
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
----
- drivers/spi/spi-s3c64xx.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-index 784786407d2e..9fcbe040cb2f 100644
---- a/drivers/spi/spi-s3c64xx.c
-+++ b/drivers/spi/spi-s3c64xx.c
-@@ -1576,10 +1576,9 @@ static const struct s3c64xx_spi_port_config exynos5433_spi_port_config = {
- };
- 
- static const struct s3c64xx_spi_port_config exynos850_spi_port_config = {
--	/* fifo_lvl_mask is deprecated. Use {rx, tx}_fifomask instead. */
--	.fifo_lvl_mask	= { 0x7f, 0x7f, 0x7f },
--	/* rx_lvl_offset is deprecated. Use {rx, tx}_fifomask instead. */
--	.rx_lvl_offset	= 15,
-+	.fifo_depth	= 64,
-+	.rx_fifomask	= S3C64XX_SPI_ST_RX_FIFO_RDY_V2,
-+	.tx_fifomask	= S3C64XX_SPI_ST_TX_FIFO_RDY_V2,
- 	.tx_st_done	= 25,
- 	.clk_div	= 4,
- 	.high_speed	= true,
 -- 
-2.43.0.687.g38aa6559b0-goog
+With Best Regards,
+Andy Shevchenko
+
 
