@@ -1,120 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE75FC16;
-	Mon, 12 Feb 2024 14:31:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927E136B08;
+	Mon, 12 Feb 2024 14:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707748317; cv=none; b=GSKXJvQup/zOSWctbq7jPkEC3o1HWgyo11v9TYyZ11tXy6C+dVkamYzF6lzANgf5Sf4lJQ5WIzhxn/B1btrnH55ioCY4phls58418bK8D0y+ijytGTqHZMnFj45WhJiizURhMhZHezBWflFD/byv0tmSFaVshHIh6XRLfG4K/jw=
+	t=1707748548; cv=none; b=uQh8oCxwG5s3d38gmpm+4VWC4mjh3jjVzIhmsyYCeamyl34zE/iU729RsgeTuzaNoexptOyCrwibsXxaOn+DONgJOeraD7hwWPM+w7KURM4YFcTr64MfwYA3YnXvu+lrP0VdJhSnKCvERzM+5f9EkX5SffHYa2wWq5Xm3UU4zCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707748317; c=relaxed/simple;
-	bh=3JKFf0dcMk7JwnUdDXS61uJeYNwcS3K7/8lxDPV9RgE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oeS2BSZWVoM/Ei0zqE5jBwtybW5wQOGVdI0sxb4ElrtZd+GOS+m+Qh3UJDPleLFDm9TmY2ktJcEvFsNGjVJln8vsglI35FyZAd6xOIeMUaRxnBcqLAmTUJdmFL1aHCJgDVZ1F0JYZJ4Tfyhwt+Q3UZMHnlUyh7ijs9+U6Kw0sTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AYdgzBft; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707748548; c=relaxed/simple;
+	bh=FEZEKqY3PEPBoYpj0jiC+YPZPIyblBQmDkJBM9b5JJo=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=r4rp9lD9ra1s+R5F/avLTvhEyqtyK8blGGTaOwOviOmDjnotqef6sEd8ko1j+Ku5PvSVBKoNxwKBNZkcidyxR/zu9gzY9tvKqDiCJBRLDcRlwmukRMdxCUPipCeDlwbI/tRaTuHtULWCEpMCpKBndoz32qOvDA2l3y1B1+OrF/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aa66Rotz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AYdgzBft"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707748317; x=1739284317;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3JKFf0dcMk7JwnUdDXS61uJeYNwcS3K7/8lxDPV9RgE=;
-  b=AYdgzBftByJ9b3K/t/7JXfNkdatGGyVw1sIZM1siuQDWHb3pydei2Nfn
-   LnFaH7pUqe4E//WodbSEnBxDaxpUvcSUMGc8Diu8UwBsxXUzpqNi8fhMP
-   VuE5IDgnum4RmAuU70ux9/Y8zWD6Xnw3BmFLSwksUuRmbzu3VK1okc6lk
-   wqpc9+RBfziIUQa75+AXB8XIJMTYRUSj6U0V4uPjlOh51260b0vsemfad
-   IOA7H5nquR1BQ0BIcel6iIHGs3TKfHrzRYDPEMPz9EfF0Mkrz/cqWnOxU
-   VRSS0jesQUwhDUXOzXrV0Onz5QrkjRKdH1bYyImhdrwqtae8aEu2+5JNG
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="12814863"
-X-IronPort-AV: E=Sophos;i="6.06,264,1705392000"; 
-   d="scan'208";a="12814863"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 06:31:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="911497299"
-X-IronPort-AV: E=Sophos;i="6.06,264,1705392000"; 
-   d="scan'208";a="911497299"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 06:31:52 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rZXLZ-00000003vFt-1yfL;
-	Mon, 12 Feb 2024 16:31:49 +0200
-Date: Mon, 12 Feb 2024 16:31:49 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Miguel Ojeda <ojeda@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Robin van der Gracht <robin@protonic.nl>,
-	Paul Burton <paulburton@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: auxdisplay: hit,hd44780: drop redundant
- GPIO node
-Message-ID: <Zcor1RYVMh3-V-wL@smile.fi.intel.com>
-References: <20240212083426.26757-1-krzysztof.kozlowski@linaro.org>
- <ZcofhWb8stiddmru@smile.fi.intel.com>
- <906db6a6-48ba-41e5-be23-1dea0ecf96ee@linaro.org>
- <Zcomjp9oH9VfO3NA@smile.fi.intel.com>
- <b836cf9d-dc71-4835-b45f-1092aafa1dfd@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aa66Rotz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6E1EC433C7;
+	Mon, 12 Feb 2024 14:35:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707748548;
+	bh=FEZEKqY3PEPBoYpj0jiC+YPZPIyblBQmDkJBM9b5JJo=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=Aa66RotzZ/7KLs3BaxzMWXwX8lDZZJHKqICiSM3w/tEa0lRoqjGhYM7Io5qB3Ndl5
+	 USyP07zjAul+LXOyPLKpyGBrX5IvaOe5uJeBMJPdOD0RbPFEZx+8gr8Zl0Td7e+Y3h
+	 Zx/Wxb60iLlGys9Tj8qop6N56kwjz6C1ZfOykK/6cgvJKDiGVRo1ESoZbl0x4n28s9
+	 gjTGnU5Bvz1r2U9SNgyU+4bI4yO2WR70qY75tysgz95BBKKVk34LWRBbO4Ht2FmNKw
+	 W3EFeqXbOr5q0zMvTj/ULtV6fiHBB/dDHP/3GGK6KR3sjFjBNEtToY28mw4v0Yy/Sf
+	 hBtu6c2wFExrQ==
+Date: Mon, 12 Feb 2024 08:35:46 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b836cf9d-dc71-4835-b45f-1092aafa1dfd@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Rob Herring <robh@kernel.org>
+To: =?utf-8?q?Pawe=C5=82_Anikiel?= <panikiel@google.com>
+Cc: chromeos-krk-upstreaming@google.com, tzimmermann@suse.de, 
+ maarten.lankhorst@linux.intel.com, hverkuil-cisco@xs4all.nl, 
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ mchehab@kernel.org, ribalda@chromium.org, robh+dt@kernel.org, 
+ mripard@kernel.org, airlied@gmail.com, linux-media@vger.kernel.org, 
+ akpm@linux-foundation.org, dinguyen@kernel.org, devicetree@vger.kernel.org, 
+ daniel@ffwll.ch, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
+In-Reply-To: <20240212131323.2162161-8-panikiel@google.com>
+References: <20240212131323.2162161-1-panikiel@google.com>
+ <20240212131323.2162161-8-panikiel@google.com>
+Message-Id: <170774854498.294434.14234480400138512065.robh@kernel.org>
+Subject: Re: [PATCH 7/9] media: dt-bindings: Add Chameleon v3 framebuffer
 
-On Mon, Feb 12, 2024 at 03:20:26PM +0100, Krzysztof Kozlowski wrote:
-> On 12/02/2024 15:09, Andy Shevchenko wrote:
-> > On Mon, Feb 12, 2024 at 02:56:43PM +0100, Krzysztof Kozlowski wrote:
-> >> On 12/02/2024 14:39, Andy Shevchenko wrote:
-> >>> On Mon, Feb 12, 2024 at 09:34:24AM +0100, Krzysztof Kozlowski wrote:
 
-...
-
-> >>>> -    i2c {
-> >>>> -            #address-cells = <1>;
-> >>>> -            #size-cells = <0>;
-> >>>>  
-> >>>> -            pcf8574: pcf8574@27 {
-> >>>> -                    compatible = "nxp,pcf8574";
-> >>>> -                    reg = <0x27>;
-> >>>> -                    gpio-controller;
-> >>>> -                    #gpio-cells = <2>;
-> >>>> -            };
-> >>>> -    };
-> >>>
-> >>> In patch 3 you updated the lines that have lost their sense due to this one.
-> >>
-> >> How did they lose it?
-> > 
-> > Now they are referring to the non-existed node in the example. OTOH, there is
-> > already hc595 case...
+On Mon, 12 Feb 2024 13:13:21 +0000, Paweł Anikiel wrote:
+> The Chameleon v3 uses the framebuffer IP core to take the video signal
+> from different sources and directly write frames into memory.
 > 
-> All of the bindings examples do it. It's expected.
+> Signed-off-by: Paweł Anikiel <panikiel@google.com>
+> ---
+>  .../bindings/media/google,chv3-fb.yaml        | 77 +++++++++++++++++++
+>  1 file changed, 77 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/google,chv3-fb.yaml
 > 
-> > 
-> > The Q here (as you pointed out that it's better to name nodes in generic way),
-> > how these names are okay with the schema (hc595, pcf8574) as being referred to?
-> 
-> They are not OK, although I don't see the name "hc595". There is phandle
-> to the hc595 label, but that's fine. Not a node name.
 
-Ah, okay, so it's a semantic difference. Thank you for your patience and elaboration!
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
--- 
-With Best Regards,
-Andy Shevchenko
+yamllint warnings/errors:
 
+dtschema/dtc warnings/errors:
+Error: Documentation/devicetree/bindings/media/google,chv3-fb.example.dts:28.27-28 syntax error
+FATAL ERROR: Unable to parse input tree
+make[2]: *** [scripts/Makefile.lib:419: Documentation/devicetree/bindings/media/google,chv3-fb.example.dtb] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1428: dt_binding_check] Error 2
+make: *** [Makefile:240: __sub-make] Error 2
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240212131323.2162161-8-panikiel@google.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
