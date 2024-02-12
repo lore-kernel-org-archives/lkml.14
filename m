@@ -1,190 +1,97 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B1B3D65
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 07:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB85579F1;
+	Mon, 12 Feb 2024 07:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707722024; cv=none; b=RJGSX0+e0oue6UlmOE5OCMSW2YXeN1XO4ItQEegHvONPDen/Scv41/xv4ounR4pqvT3oqMi18N/5H1rTFv184xQOC3zKdvoIKH/NWxAz6sro6QuS7fnFyoNPqpwGJgjkvQ3g7dMqhyhGUApi64bVisKkbfxgZfMFPrktT4PoUZw=
+	t=1707722041; cv=none; b=LbaI2HOsZQnjo37L/J2zwJkKA6o1YGA8rHgW7L/3zNS6aoGtR3TG7gT4wP0GskbjjBMkefMoZ7ovDnNPUWEYKpqnQGs0WJA9f5tYSYM2LOckFWwOC00tYHn4DKS397tnYQmEKeqhqAmtcukhiZGid1iaAtiWXLh56fJ9a7GLQl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707722024; c=relaxed/simple;
-	bh=p2ZQAoNOIYqxMWKVK1KPOXSBJsvB6Ou418OFph63PiY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A9sSHKxua73kasOCr+BblVayhpSWyV4zRSbCKHL0bIjKXeHCvuYfv/viLiKG/gxD5O8AH0IqClDmT9JbO+bhhTz6XCLUl0Fjp1xT6k6o0sFqCrPuQmXrpzYVR142WVsODgTnlJThIv/RSZe8pkFJcPBpw8uUqGEy6urjzOnm1IY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vBdU6k13; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=N+6N/5Ua; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vBdU6k13; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=N+6N/5Ua; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1707722041; c=relaxed/simple;
+	bh=aH+LQ+OWUJrSKdONb2E3wcTN0nj8/ltVMlR9ZqYEZzU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pWrm4gfz7SAt5Xs0iDA5CKlWewI1oUSqNIu9TchSi+dgekt/w1wzYHjMJa70sNexymXy86l3LOFQUcVOTZQ/hhPyP8aIUZcTGyre85lj/Ims9JhSuXl57EiCT+Ys4QhvhDu5x9aQ14CG71jlGmBSIZ8w55IiFAUd6qQ4Xa+upVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=4aqPVakn; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vBdU6k13";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="N+6N/5Ua";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vBdU6k13";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="N+6N/5Ua"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B489B21FCE;
-	Mon, 12 Feb 2024 07:13:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707722020; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=1WOjUnpnGkXzNsMkm2Jun5Zhamu1kXqO02gV7jrxbkw=;
-	b=vBdU6k13teUUW7vZs32TX5nIBR5LRtxqQvbb8sZJkRqTdfl9RYG2b+dN/IBsPw3r/CjPkJ
-	dmWod4S1vAZWyaq1VxW4q6yhQjOLYq1iIuTAD/fN2rb9KuiOEhw7KqzPWbeHFkcdzNOkfQ
-	UyhV8uKu22M14UOLyvoYHSTQVQRw8Xg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707722020;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=1WOjUnpnGkXzNsMkm2Jun5Zhamu1kXqO02gV7jrxbkw=;
-	b=N+6N/5UaAPszhxbbiIOEG+LyGvHqlTqBwhNgXQIY9cXFW3Mx8+vplQqY6nqB/fHDDcXd+t
-	CyR51MZppnsav+AA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707722020; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=1WOjUnpnGkXzNsMkm2Jun5Zhamu1kXqO02gV7jrxbkw=;
-	b=vBdU6k13teUUW7vZs32TX5nIBR5LRtxqQvbb8sZJkRqTdfl9RYG2b+dN/IBsPw3r/CjPkJ
-	dmWod4S1vAZWyaq1VxW4q6yhQjOLYq1iIuTAD/fN2rb9KuiOEhw7KqzPWbeHFkcdzNOkfQ
-	UyhV8uKu22M14UOLyvoYHSTQVQRw8Xg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707722020;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=1WOjUnpnGkXzNsMkm2Jun5Zhamu1kXqO02gV7jrxbkw=;
-	b=N+6N/5UaAPszhxbbiIOEG+LyGvHqlTqBwhNgXQIY9cXFW3Mx8+vplQqY6nqB/fHDDcXd+t
-	CyR51MZppnsav+AA==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 8380313212;
-	Mon, 12 Feb 2024 07:13:40 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id Ua78HSTFyWUPWQAAn2gu4w
-	(envelope-from <tzimmermann@suse.de>); Mon, 12 Feb 2024 07:13:40 +0000
-Message-ID: <bf0d02d4-2c90-40a4-8018-bd96a01f2751@suse.de>
-Date: Mon, 12 Feb 2024 08:13:40 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="4aqPVakn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=F97bLYKX+BtaQqdKvZ6zCKr5tPLYltyO5pB8VnB7DyA=; b=4aqPVaknlyIJIU/z9Rj2PWIFIR
+	gWqDxrfe5riQ85yrUwhbveTBuNTrirZObB9P/jMU7KtJMbKyYUBw6SNKsJqThxbUWHxEpkQxdlq5T
+	yHVvpIkL34rbjQYM87m42lQmG7s0YeDzRLOse5XSIULK03Dmork+2CEUhoDf36pDaxjpm0AWVwG0Y
+	Q7wwTmh3m18pwDpkodGLUxNCmk1d6CnoSPLx03FGnUHKtKw2rglu9qBDBfJjX66LSyjNDh43ur9ds
+	Bzdx+PNRH6p8wrWY4E1MPXuTWnEZ++H+uSunR3UctYA8QJ/xRrhGBMiYUJ8XHfOkESLoaBY96PSqs
+	VYA0UW+g==;
+Received: from [2001:4bb8:190:6eab:75e9:7295:a6e3:c35d] (helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rZQVo-00000004Slf-2xag;
+	Mon, 12 Feb 2024 07:13:57 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: linux-mm@kvack.org
+Cc: Matthew Wilcox <willy@infradead.org>,
+	Jan Kara <jack@suse.com>,
+	David Howells <dhowells@redhat.com>,
+	Brian Foster <bfoster@redhat.com>,
+	Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: convert write_cache_pages() to an iterator v7
+Date: Mon, 12 Feb 2024 08:13:34 +0100
+Message-Id: <20240212071348.1369918-1-hch@lst.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND] iosys-map: fix typos
-To: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-References: <20240212042837.21071-1-rdunlap@infradead.org>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20240212042837.21071-1-rdunlap@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -4.29
-X-Spamd-Result: default: False [-4.29 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 XM_UA_NO_VERSION(0.01)[];
-	 FROM_HAS_DN(0.00)[];
-	 RCPT_COUNT_THREE(0.00)[3];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 BAYES_HAM(-3.00)[100.00%];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,infradead.org:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[]
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Hi
+Hi all,
 
-Am 12.02.24 um 05:28 schrieb Randy Dunlap:
-> Correct spellos/typos in comments.
->
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> Cc: dri-devel@lists.freedesktop.org
-> ---
->   include/linux/iosys-map.h |    4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff -- a/include/linux/iosys-map.h b/include/linux/iosys-map.h
-> --- a/include/linux/iosys-map.h
-> +++ b/include/linux/iosys-map.h
-> @@ -34,7 +34,7 @@
->    * the same driver for allocation, read and write operations.
->    *
->    * Open-coding access to :c:type:`struct iosys_map <iosys_map>` is considered
-> - * bad style. Rather then accessing its fields directly, use one of the provided
-> + * bad style. Rather than accessing its fields directly, use one of the provided
-Ok.
->    * helper functions, or implement your own. For example, instances of
->    * :c:type:`struct iosys_map <iosys_map>` can be initialized statically with
->    * IOSYS_MAP_INIT_VADDR(), or at runtime with iosys_map_set_vaddr(). These
-> @@ -85,7 +85,7 @@
->    *	if (iosys_map_is_equal(&sys_map, &io_map))
->    *		// always false
->    *
-> - * A set up instance of struct iosys_map can be used to access or manipulate the
-> + * A setup instance of struct iosys_map can be used to access or manipulate the
-That's not a typo. This refers to "an instance that has been set up".
+this is an evolution of the series Matthew Wilcox originally sent in June
+2023, which has changed quite a bit since and now has a while based
+iterator.
 
-Best regards
-Thomas
+Note that in this version two patches are so different from the previous
+version that I've not kept any Reviews or Acks for them, even if the
+final result look almost the same as the previous patches with the
+incremental patch on the list.
 
->    * buffer memory. Depending on the location of the memory, the provided helpers
->    * will pick the correct operations. Data can be copied into the memory with
->    * iosys_map_memcpy_to(). The address can be manipulated with iosys_map_incr().
+Changes since v6:
+ - don't access folio->index after releasing the folio batch
+ - add a new patch to fix a pre-existing bug where a positive value is
+   passed to mapping_set_error
 
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+Changes since v5:
+ - completely reshuffle the series to directly prepare for the
+   writeback_iter() style.
+ - don't require *error to be initialized on first call
+ - improve various comments
+ - fix a bisection hazard where write_cache_pages don't return delayed
+   error for a few commits
+ - fix a whitespace error
+ - drop the iomap patch again for now as the iomap map multiple blocks
+   series isn't in mainline yet
 
+Changes since v4:
+ - added back the (rebased) iomap conversion now that the conflict is in
+   mainline
+ - add a new patch to change the iterator
+
+Changes since v3:
+ - various commit log spelling fixes
+ - remove a statement from a commit log that isn't true any more with the
+   changes in v3
+ - rename a function
+ - merge two helpers
+
+Diffstat:
+ include/linux/pagevec.h   |   18 ++
+ include/linux/writeback.h |   12 +
+ mm/page-writeback.c       |  389 ++++++++++++++++++++++++++--------------------
+ 3 files changed, 249 insertions(+), 170 deletions(-)
