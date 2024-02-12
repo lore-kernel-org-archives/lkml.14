@@ -1,120 +1,260 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4585538F86;
-	Mon, 12 Feb 2024 10:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23DF1A29F
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 10:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707734891; cv=none; b=DW4x9e9Nf3G7w0GC69RpW+P+NwmfrTCH++a64r4LOl+9l3frbt8UWiNeaxoNC838XWEJEdy/VAq1FwqRERWQe9gVe8E3jPkv2+oM+iwWFTDnNANNklQCefqiAzgGKh30mzWkRtRQwyPQungJl9I4bTQ5OYboCBB+t1zLE67bhWA=
+	t=1707735020; cv=none; b=qUP6ikzgtQcIAIBVps8H/NeeTNOp+K6EPsTR6/Rv9odaQTwFnnlPbHSI1zjSO0E60hKbFkEFaZPz41qWIZ2hI+CKMdaOw9tCXUF2gwVFomDdVwVkI2BDl/le4qaxy+3XPQiFQlwiS5nk0oxPyNnOEfwbNHdkG3Wy1XexnfFhnss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707734891; c=relaxed/simple;
-	bh=33VlHW6tG6RBpKyaXFo4ViMfDvaBlB4JaKCY3aSVkss=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=VQlz0kHPTwH+eqb3krPPGxipi39ut9gJ5stW8eTOnnYA0jHn/FGM63Mi3ccOYWtW3nYpCDR2QtRUbQX5/KT+rssVmS5+apqPrkGbcddiYCKAEuO7ABDoUEtNqMPoUeieVlsRar6sHxND1C8ZHHebRQz2ioRjKCQcpz1lw48XeKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=caw9aptx; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="caw9aptx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59D62C433F1;
-	Mon, 12 Feb 2024 10:48:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707734890;
-	bh=33VlHW6tG6RBpKyaXFo4ViMfDvaBlB4JaKCY3aSVkss=;
-	h=From:Date:Subject:To:Cc:From;
-	b=caw9aptxYciK7woZ+Znptsxd+4JBaSsjf2+XrG+nV4ndr1u+Dk2b59hPjR56TLQE+
-	 XGsDayWpjFXjoXtCDMhNMpf9AO6j80zBcBKt5dYbkIYTpzH5blqPhpfTJoWJLNiYjM
-	 smMiz5yiWAbpevF0Yej20x5KC7qsWF61hIFBbkWgkGpZwJOBTXG5KUTgjIZp2gmBbO
-	 ia9KOhB9r+eS1E7qGeWyH9TOhhiRmyWvDiMn9qXvPH+IeqsiHHR8nZrrS7h5AhILj7
-	 Dg/GRSc9/osqPXnZbZbpcRiO9vh5Q0aSK19z5NUOZ9YebPzq6++wyL2yCW2roYwkl3
-	 fnp7iTw/RFb7Q==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 12 Feb 2024 11:47:14 +0100
-Subject: [PATCH] configs/debug: add NET debug config
+	s=arc-20240116; t=1707735020; c=relaxed/simple;
+	bh=HazBJsus7fV6Ulvi+rysa8Q+HVfFSfcTdlNPOwAKRMg=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=d7eGz38u0RJUzfp9e7wOv4/KGIh6JP5Pnz2SmOcAWQ/HeRWkmqxeaj2b5cwkpTIaN8RhPztcEPvDN/zN82Y10c/HtB+A2UpTJZhcUBsX4kDP8e1GEglS+9m2HB/fyVc1QiF6OCfaiGAceDHDOQSjEn+d6or/1Uli6F35tsgXadM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-363d6348a07so26848495ab.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 02:50:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707735018; x=1708339818;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1VCZB2mVu30dr1aBo+64MSQeINmrCNIHAyvRluyebi4=;
+        b=B5TfMBYoWuNzS1K2TB/24KXbPD8NLYW+siJCw7PsbDN4oXZ7UQmC8byFrVnenbnFQ0
+         q/yIvcG5nMplsVUZxW4IwFdHrLIzLdeu2E7GZULhqCIqGaGoa9BDDGhPYfO7Er/LDF5i
+         U/10iU7s09a3baTa9wfg3ukah1FvxPwol9BY5VU6Lk0nhyfmm0FSUN8QGRpa1RN+4byA
+         ZIEyq9h4xiEDrbkbvwvti0HR/0nuz3aqqw1pNV2qG/BYVFQKRZ7utD6r719ryYfPid+m
+         s06Qwpof/X7nBChA4rY7KzhtrxhkDJV1KxSqpTKfgWpcIwevpnbLxbtukzIAuhdczIyZ
+         Lcmg==
+X-Gm-Message-State: AOJu0YxJTgj4VkrqCWr8sGCpkAfCX4TW2RCfgpG0UnzKjFphx2rfS0vu
+	MzNyrTD0BR2I4dMuom7ML8XAtdPcPfyhP//Eo4c25a0mst9ZEDF482N9Su4BRbKudPa6Gz/y/9c
+	pOlHmqlks4ZG/5h6QNhgG8hlJOXbBAax9Rx9OvISSOvmPaTcrVG4C8C0=
+X-Google-Smtp-Source: AGHT+IHJXnxxGChdKBRrRf5hWipSCUqyHOaLERMhW7VbimE+uIkji+HTBTPq0f1SdtJkUQQ+27i1n27wmFTG72yoNiAkNTu3wcUK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240212-kconfig-debug-enable-net-v1-1-fb026de8174c@kernel.org>
-X-B4-Tracking: v=1; b=H4sIADH3yWUC/x3MQQqDMBBG4avIrB1IhtpFryJdaPIbh5ZRkioF8
- e4Gl9/ivYMKsqLQqzkoY9eii1X4tqEwD5bAGqtJnDyceOFPWGzSxBHjlhg2jF+w4cdBYnh650Q
- 6oZqvGZP+73X/Ps8LnkNLImoAAAA=
-To: linux-kernel@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Qian Cai <quic_qiancai@quicinc.com>, 
- Kees Cook <keescook@chromium.org>, mptcp@lists.linux.dev, 
- netdev@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1883; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=33VlHW6tG6RBpKyaXFo4ViMfDvaBlB4JaKCY3aSVkss=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlyfdo2EU3gz8te8tWN2NgzXSfDNfXwe0Vg1Nu+
- cfZL5tRm2iJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZcn3aAAKCRD2t4JPQmmg
- c2HYD/0SmdRvuXq/A7Au2J0oT3t9EzkMu7KVbSKecDAxR/eUcjb4zqviltUibKCFnLmSjI2ytEa
- AdItLkDYHRZVWCuOOkgiHNLxb01uqpSzvkQMLvvzgh85rW1ajWrjoQ3OpwZqMJNX+xvYXh5wcMr
- 4sbyDH88vMyDqXEkP40JgzPDWJ7Iu/9BUNWy0+fXOO3kvkg5xbRnkZlrARWHDTXGlTpCRoBDaqp
- h/Lx27W9to+iLxxGScjErd4nG7BTFnSGN1srkA8CCu5nYzAe1tSoMHI4jcRyIAOYMgqPM/R028h
- BRdVVuVH3U1c2PLjey4iVlXxuS5Wi6AC7+9pguUb/CMCPT4CyXow1zXWW2iLmVWUVX35Z2XkJ+n
- 0U2FnNcmx6BbqgA8kVCPDWgRMNZWhq7lZSX//9+1pH1/LTHPtSn1YH2igNlDuKkrvR9Yx2fKzgu
- hYtc9/qiloDNkWUnc3E8Gz8lZgmB8YVmOStl2k61MM9W34wylfftOZAMRi11P/8VVh168F+xJXS
- g+mN31xdrtqXbVW3cWbQwAxj4gl8NUx1SXgpiVkk4FWD5E0HOTGlLykdzrrcscGF7j9YrEPDaz+
- nWoqdsKBORqV5j+3UH1lefvjxhJMKm7VaJG2Lps/APVnzkWJHxMJBWy7PJbElZ8vOVUGrOvatBa
- UgS7P+J0YKmXiHw==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+X-Received: by 2002:a05:6e02:180e:b0:363:9343:cbfb with SMTP id
+ a14-20020a056e02180e00b003639343cbfbmr469220ilv.2.1707735017912; Mon, 12 Feb
+ 2024 02:50:17 -0800 (PST)
+Date: Mon, 12 Feb 2024 02:50:17 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001d010d06112d0bf2@google.com>
+Subject: [syzbot] [dri?] KASAN: slab-use-after-free Read in
+ drm_atomic_helper_wait_for_vblanks (2)
+From: syzbot <syzbot+0f999d26a4fd79c3a23b@syzkaller.appspotmail.com>
+To: airlied@gmail.com, daniel@ffwll.ch, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com, 
+	mripard@kernel.org, syzkaller-bugs@googlegroups.com, tzimmermann@suse.de
+Content-Type: text/plain; charset="UTF-8"
 
-The debug.config file is really great to easily enable a bunch of
-general debugging features on a CI-like setup. But it would be great to
-also include core networking debugging config.
+Hello,
 
-A few CI's validating features from the Net tree also enable a few other
-debugging options on top of debug.config. A small selection is quite
-generic for the whole net tree. They validate some assumptions in
-different parts of the core net tree. As suggested by Jakub Kicinski in
-[1], having them added to this debug.config file would help other CIs
-using network features to find bugs in this area.
+syzbot found the following issue on:
 
-Note that the two REFCNT configs also select REF_TRACKER, which doesn't
-seem to be an issue.
+HEAD commit:    a5b6244cf87c Merge tag 'block-6.8-2024-02-10' of git://git..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15e9ad50180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=53985487b59d9442
+dashboard link: https://syzkaller.appspot.com/bug?extid=0f999d26a4fd79c3a23b
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-Link: https://lore.kernel.org/netdev/20240202093148.33bd2b14@kernel.org/T/ [1]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-a5b6244c.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/08ca7654741a/vmlinux-a5b6244c.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/0396d079aa1e/bzImage-a5b6244c.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+0f999d26a4fd79c3a23b@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: slab-use-after-free in drm_atomic_helper_wait_for_vblanks.part.0+0x84f/0x930 drivers/gpu/drm/drm_atomic_helper.c:1661
+Read of size 1 at addr ffff888026066009 by task kworker/u16:8/1094
+
+CPU: 2 PID: 1094 Comm: kworker/u16:8 Not tainted 6.8.0-rc3-syzkaller-00293-ga5b6244cf87c #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+Workqueue: events_unbound commit_work
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0xd9/0x1b0 lib/dump_stack.c:106
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0xc4/0x620 mm/kasan/report.c:488
+ kasan_report+0xda/0x110 mm/kasan/report.c:601
+ drm_atomic_helper_wait_for_vblanks.part.0+0x84f/0x930 drivers/gpu/drm/drm_atomic_helper.c:1661
+ drm_atomic_helper_wait_for_vblanks drivers/gpu/drm/drm_atomic_helper.c:1657 [inline]
+ drm_atomic_helper_commit_tail+0xcb/0xf0 drivers/gpu/drm/drm_atomic_helper.c:1757
+ commit_tail+0x356/0x410 drivers/gpu/drm/drm_atomic_helper.c:1834
+ process_one_work+0x889/0x15e0 kernel/workqueue.c:2633
+ process_scheduled_works kernel/workqueue.c:2706 [inline]
+ worker_thread+0x8b9/0x12a0 kernel/workqueue.c:2787
+ kthread+0x2c6/0x3b0 kernel/kthread.c:388
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1b/0x30 arch/x86/entry/entry_64.S:242
+ </TASK>
+
+Allocated by task 16480:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:372 [inline]
+ __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:389
+ kmalloc include/linux/slab.h:590 [inline]
+ drm_atomic_helper_crtc_duplicate_state+0x70/0xd0 drivers/gpu/drm/drm_atomic_state_helper.c:177
+ drm_atomic_get_crtc_state+0x162/0x440 drivers/gpu/drm/drm_atomic.c:362
+ page_flip_common+0x57/0x320 drivers/gpu/drm/drm_atomic_helper.c:3629
+ drm_atomic_helper_page_flip+0xb6/0x190 drivers/gpu/drm/drm_atomic_helper.c:3690
+ drm_mode_page_flip_ioctl+0x103f/0x1470 drivers/gpu/drm/drm_plane.c:1489
+ drm_ioctl_kernel+0x1ec/0x3e0 drivers/gpu/drm/drm_ioctl.c:744
+ drm_ioctl+0x5d8/0xc00 drivers/gpu/drm/drm_ioctl.c:841
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:871 [inline]
+ __se_sys_ioctl fs/ioctl.c:857 [inline]
+ __x64_sys_ioctl+0x193/0x220 fs/ioctl.c:857
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xd5/0x270 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x6f/0x77
+
+Freed by task 16474:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ kasan_save_free_info+0x3f/0x60 mm/kasan/generic.c:640
+ poison_slab_object mm/kasan/common.c:241 [inline]
+ __kasan_slab_free+0x121/0x1c0 mm/kasan/common.c:257
+ kasan_slab_free include/linux/kasan.h:184 [inline]
+ slab_free_hook mm/slub.c:2121 [inline]
+ slab_free mm/slub.c:4299 [inline]
+ kfree+0x124/0x370 mm/slub.c:4409
+ drm_atomic_state_default_clear+0x3aa/0xde0 drivers/gpu/drm/drm_atomic.c:225
+ drm_atomic_state_clear drivers/gpu/drm/drm_atomic.c:294 [inline]
+ __drm_atomic_state_free+0x185/0x2b0 drivers/gpu/drm/drm_atomic.c:311
+ kref_put include/linux/kref.h:65 [inline]
+ drm_atomic_state_put include/drm/drm_atomic.h:490 [inline]
+ drm_client_modeset_commit_atomic+0x6db/0x810 drivers/gpu/drm/drm_client_modeset.c:1057
+ drm_client_modeset_commit_locked+0x14d/0x580 drivers/gpu/drm/drm_client_modeset.c:1154
+ drm_client_modeset_commit+0x4f/0x80 drivers/gpu/drm/drm_client_modeset.c:1180
+ __drm_fb_helper_restore_fbdev_mode_unlocked drivers/gpu/drm/drm_fb_helper.c:251 [inline]
+ __drm_fb_helper_restore_fbdev_mode_unlocked drivers/gpu/drm/drm_fb_helper.c:230 [inline]
+ drm_fb_helper_restore_fbdev_mode_unlocked drivers/gpu/drm/drm_fb_helper.c:278 [inline]
+ drm_fb_helper_lastclose+0xc7/0x160 drivers/gpu/drm/drm_fb_helper.c:2005
+ drm_fbdev_generic_client_restore+0x2c/0x40 drivers/gpu/drm/drm_fbdev_generic.c:258
+ drm_client_dev_restore+0x188/0x2a0 drivers/gpu/drm/drm_client.c:247
+ drm_release+0x32f/0x3e0 drivers/gpu/drm/drm_file.c:437
+ __fput+0x270/0xb80 fs/file_table.c:376
+ __fput_sync+0x47/0x50 fs/file_table.c:461
+ __do_sys_close fs/open.c:1554 [inline]
+ __se_sys_close fs/open.c:1539 [inline]
+ __x64_sys_close+0x87/0x100 fs/open.c:1539
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xd5/0x270 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x6f/0x77
+
+The buggy address belongs to the object at ffff888026066000
+ which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 9 bytes inside of
+ freed 512-byte region [ffff888026066000, ffff888026066200)
+
+The buggy address belongs to the physical page:
+page:ffffea0000981900 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x26064
+head:ffffea0000981900 order:2 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+anon flags: 0xfff00000000840(slab|head|node=0|zone=1|lastcpupid=0x7ff)
+page_type: 0xffffffff()
+raw: 00fff00000000840 ffff888014c42c80 0000000000000000 dead000000000001
+raw: 0000000000000000 0000000080100010 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 2, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 28, tgid 28 (kworker/1:0), ts 50737339083, free_ts 50338469746
+ set_page_owner include/linux/page_owner.h:31 [inline]
+ post_alloc_hook+0x2d4/0x350 mm/page_alloc.c:1533
+ prep_new_page mm/page_alloc.c:1540 [inline]
+ get_page_from_freelist+0xa28/0x3780 mm/page_alloc.c:3311
+ __alloc_pages+0x22f/0x2440 mm/page_alloc.c:4567
+ __alloc_pages_node include/linux/gfp.h:238 [inline]
+ alloc_pages_node include/linux/gfp.h:261 [inline]
+ alloc_slab_page mm/slub.c:2190 [inline]
+ allocate_slab mm/slub.c:2354 [inline]
+ new_slab+0xcc/0x3a0 mm/slub.c:2407
+ ___slab_alloc+0x4af/0x19a0 mm/slub.c:3540
+ __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3625
+ __slab_alloc_node mm/slub.c:3678 [inline]
+ slab_alloc_node mm/slub.c:3850 [inline]
+ kmalloc_trace+0x30b/0x340 mm/slub.c:4007
+ kmalloc include/linux/slab.h:590 [inline]
+ kzalloc include/linux/slab.h:711 [inline]
+ mca_alloc net/ipv6/mcast.c:880 [inline]
+ __ipv6_dev_mc_inc+0x2b7/0xc50 net/ipv6/mcast.c:936
+ addrconf_join_solict net/ipv6/addrconf.c:2192 [inline]
+ addrconf_dad_begin net/ipv6/addrconf.c:4037 [inline]
+ addrconf_dad_work+0x232/0x14c0 net/ipv6/addrconf.c:4162
+ process_one_work+0x889/0x15e0 kernel/workqueue.c:2633
+ process_scheduled_works kernel/workqueue.c:2706 [inline]
+ worker_thread+0x8b9/0x12a0 kernel/workqueue.c:2787
+ kthread+0x2c6/0x3b0 kernel/kthread.c:388
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1b/0x30 arch/x86/entry/entry_64.S:242
+page last free pid 5180 tgid 5180 stack trace:
+ reset_page_owner include/linux/page_owner.h:24 [inline]
+ free_pages_prepare mm/page_alloc.c:1140 [inline]
+ free_unref_page_prepare+0x527/0xb10 mm/page_alloc.c:2346
+ free_unref_page+0x33/0x3c0 mm/page_alloc.c:2486
+ qlink_free mm/kasan/quarantine.c:160 [inline]
+ qlist_free_all+0x58/0x150 mm/kasan/quarantine.c:176
+ kasan_quarantine_reduce+0x192/0x1e0 mm/kasan/quarantine.c:283
+ __kasan_slab_alloc+0x69/0x90 mm/kasan/common.c:324
+ kasan_slab_alloc include/linux/kasan.h:201 [inline]
+ slab_post_alloc_hook mm/slub.c:3813 [inline]
+ slab_alloc_node mm/slub.c:3860 [inline]
+ kmalloc_trace+0x148/0x340 mm/slub.c:4007
+ kmalloc include/linux/slab.h:590 [inline]
+ kzalloc include/linux/slab.h:711 [inline]
+ ref_tracker_alloc+0x17c/0x5b0 lib/ref_tracker.c:203
+ __netdev_tracker_alloc include/linux/netdevice.h:4147 [inline]
+ netdev_hold include/linux/netdevice.h:4176 [inline]
+ netdev_hold include/linux/netdevice.h:4171 [inline]
+ netdev_queue_add_kobject net/core/net-sysfs.c:1703 [inline]
+ netdev_queue_update_kobjects+0x1b3/0x520 net/core/net-sysfs.c:1758
+ register_queue_kobjects net/core/net-sysfs.c:1819 [inline]
+ netdev_register_kobject+0x290/0x3f0 net/core/net-sysfs.c:2059
+ register_netdevice+0x1392/0x1db0 net/core/dev.c:10261
+ geneve_configure+0x6a7/0xa10 drivers/net/geneve.c:1366
+ geneve_newlink+0x12f/0x2b0 drivers/net/geneve.c:1617
+ rtnl_newlink_create net/core/rtnetlink.c:3515 [inline]
+ __rtnl_newlink+0x1197/0x1960 net/core/rtnetlink.c:3735
+ rtnl_newlink+0x67/0xa0 net/core/rtnetlink.c:3748
+ rtnetlink_rcv_msg+0x3c7/0xe10 net/core/rtnetlink.c:6615
+ netlink_rcv_skb+0x16b/0x440 net/netlink/af_netlink.c:2543
+
+Memory state around the buggy address:
+ ffff888026065f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888026065f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff888026066000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                      ^
+ ffff888026066080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888026066100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
 ---
-Notes:
-  - It looks like this debug.config doesn't have a specific maintainer.
-    If this patch is not rejected, I don't know if this modification can
-    go through the net tree, or if it should be handled by Andrew.
-    Probably the latter? I didn't add [net-next] in the subject for this
-    reason.
----
- kernel/configs/debug.config | 6 ++++++
- 1 file changed, 6 insertions(+)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/kernel/configs/debug.config b/kernel/configs/debug.config
-index 4722b998a324..509ee703de15 100644
---- a/kernel/configs/debug.config
-+++ b/kernel/configs/debug.config
-@@ -40,6 +40,12 @@ CONFIG_UBSAN_ENUM=y
- CONFIG_UBSAN_SHIFT=y
- CONFIG_UBSAN_UNREACHABLE=y
- #
-+# Networking Debugging
-+#
-+CONFIG_NET_DEV_REFCNT_TRACKER=y
-+CONFIG_NET_NS_REFCNT_TRACKER=y
-+CONFIG_DEBUG_NET=y
-+#
- # Memory Debugging
- #
- # CONFIG_DEBUG_PAGEALLOC is not set
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
----
-base-commit: 841c35169323cd833294798e58b9bf63fa4fa1de
-change-id: 20240212-kconfig-debug-enable-net-c2dc61002252
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-Best regards,
--- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
