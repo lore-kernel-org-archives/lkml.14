@@ -1,146 +1,134 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF69F4D599
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 22:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FCF4E1C5;
+	Mon, 12 Feb 2024 22:42:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707777729; cv=none; b=V6WvZGVJjsdxXVk1h5A6xBDHkAd6eWLfksFBgbdv1R5sWmzYz44eKVf/jvjtsTPxVeVXdi8OS16W8K5QrkZPoLvpL+7G+Nz2zDD+8/nSFT3pcXAa/H3gNFKcwLrYU3EQBpIVeMBz38kg826f13eZbnvbOkV7wLsdag1WiQ+l2g8=
+	t=1707777762; cv=none; b=AL+pG1QSglOeJ+tWNs8OJJbf4OZMuB+BkGQZMPReMqO7QGwEwLeh9UOOyNudeeMEWOdgWEuWqtokRy9hyK5ofprBUS5k59HFvheX3xC8bvA60h9sitDvULRKMSRSWOLYWCxQV75CAroA/9NpsfSBgI8fOOoP1Hn2NBG0ZK/KstY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707777729; c=relaxed/simple;
-	bh=3vgcjHLfq/00X/yUP8BO5uRZWk5ZVbqXQ+PqVJG2mXE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HhQYlZpf4Qbs2F/UhEAA3V2n1aOJrWEp0N6rUUdAA6NpWuemuDrUuQtoz5gDc/A1Gmtr+aztCq9GuurjL5BLTGzxPkHaCojfplXbzAjWBYcYWM3a37/d93mxPymwZKE0PBMy6I+c2iH5X+SGp2X8bFbXFyjknMYi+7nTbMN0kuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QCuOld+X; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707777762; c=relaxed/simple;
+	bh=8kXPD0fz3eMvLUNOcgV0WOmnWYLHc75zgudLhPqDaG0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dHM6v3oN8CSvIrlCfn5QK6dXBocoG01gibCQQMbqafAnaMFw3qTfmJD5Gl+lEMQwndOnf5ijy8Zpo3fFp0hkI+ClhpI64B5Nr1A7QnZRsl4EcsCdPG5+R9VtSkW9gD8MAUJtD3pUAmPtTyL5GknKiY9Xlf/qR1T+HY6NRaZjDU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=WC6GNWEd; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QCuOld+X"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-55a179f5fa1so5010768a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 14:42:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707777726; x=1708382526; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+NC5nXZUhD7OgbbLjAWuedjAC2AnjYG2VXHEAtTQZ1k=;
-        b=QCuOld+XYO0cYJbfJKRJt1AzB96r8vn/zf2Hih01Id1oB1f1g8aUAM57keDxrLp6Ak
-         +wNyfAkwYpnfLKpYCkWmep2/lBPFqqUICdvx7jA+ygPthqoZ84Xnb5rvSnjbfzByutBH
-         PSMEmD44a0ODoc8Bimzl6Aq8Ks34WcC7vzNXgxGXV204/msdIk/484Xf3+ETqeVY87mo
-         hekQ9IsnkQBMQk8lAjYqrXUJA1hb1ZmEs8ghNOVVzaELYlyb/yrjOPMhgziWz3Rnj8P/
-         jYKhEbE/YhAe/6/gEsySNB0CC1KVWmi4WUUncYG5wr0I/StiOGFJpnu++MzJoLuVYWrG
-         6iYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707777726; x=1708382526;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+NC5nXZUhD7OgbbLjAWuedjAC2AnjYG2VXHEAtTQZ1k=;
-        b=P+OA7pgsxFJmtGfZEyMdsugjLc4qdLlgOUXjYT9FzXpgZT49HpjXsOiVF6Rg4gyO9X
-         9SGo+Xg6ovx4AS8dIkOMHm/aTCOrE3TLFAIw9GbRy6eVYXOMjls9skmjSKmf5Izs3ps8
-         bHwuAxtGJp2HV/29fQKNhpbqsXPZXJnAn13pA9VI96WTn36+xB59fGJsh6+pyDUsA5Gl
-         d1tguRuvs9Rw7rt+LhxF4CPbh1GG54NDe3sUhL53UT9yqfl4V67whCIs2+Z9OFerzElq
-         tfGMqO8L2ehKbVI4ujTirxIYYDYWuSu0TMOa14/h/hNWt1RENhosvP4pWPe3dai+gG7Y
-         ccYQ==
-X-Gm-Message-State: AOJu0Yz9qA4mfiPnLWcEEdQkZbmAoFhAdg6BHlqbcL1ua40XjVBjIX6q
-	GCEIAB5nRzkkQPLEDOpPlSVM6stvnue8ZJLsW4BBZzwXXY52KSf0QuMr9uzL7EM=
-X-Google-Smtp-Source: AGHT+IFnrOmQoo6eJe1/RxznBdECXPfen0HdUphSAC9KrCi2m89MpvKcbiuhkfeA9VZKPwLLLd5Y1g==
-X-Received: by 2002:aa7:d614:0:b0:55f:2f0a:d959 with SMTP id c20-20020aa7d614000000b0055f2f0ad959mr5696422edr.37.1707777726065;
-        Mon, 12 Feb 2024 14:42:06 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWOI5WW/OVCweeWd3zCJ9WQtpFTgK5uz7v2v3QjvO2e+u2RQH6A+nRA3G+I/CbKdMoiHvD78DHdo2ZYR52UOJOANaw/f4hhreVUsTAtN03QsVSBBrFMK7Q5DcoRdaO7sGarH4YgMW2Bxs2+wtEftIz/0ivBsawQD+Cm6kLklCy1Y0Z9rRrjo933mti9HjNR6x026Ya5TGTqka+3yy2Ju2SE4BNkj6YOSR91+vTSIyzztz+ExVy7Y8DV7ANbJq0BUdoIJ8thM02wdrI/FBbjG8kcPgXj/vPKcNqPYn/EZcoHJAMigVG8ujKTn2x8VE1tjw==
-Received: from [192.168.192.135] (037008245233.garwolin.vectranet.pl. [37.8.245.233])
-        by smtp.gmail.com with ESMTPSA id ig4-20020a056402458400b0056098a293cdsm3107887edb.69.2024.02.12.14.42.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Feb 2024 14:42:05 -0800 (PST)
-Message-ID: <f108d588-c6ba-4efd-9792-bd4dbd68fb7d@linaro.org>
-Date: Mon, 12 Feb 2024 23:42:04 +0100
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="WC6GNWEd"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D3FE640E0196;
+	Mon, 12 Feb 2024 22:42:37 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id KTOy966-kHxz; Mon, 12 Feb 2024 22:42:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1707777754; bh=yCQoPT3adfRBUxB8UAr04/eO8kc2ia97mmC+gu+LmLg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WC6GNWEdjii1xe0PyUrWAhXzH0uHXo/P52/l9NJtnl3OuzIYpxh72H25qDzr5mvQY
+	 6w9iuIcyYbN0FCo+sZygwi1I6uk2HTX65wgiFPo3xpkhVXVzLL0VR+qkricxEUlTqk
+	 EbvCRm4eJJDwLEhDO0USw29n+Hu4iphAX+R7jbIY/6W1zPxyoeMcPYvHLBJnqQVEdc
+	 ImefsYUeV21fRg6h3ojXgLyJ/b8jtDlljeYkd2Vi/Ryg9rxopELt2rjI/hupHi2huz
+	 ojYBYqiYct5npWxspppJpM4Oxa1++tL+vEdJwmobvSM1xtFHU2H8pUbq27ieaqJAlZ
+	 FeE88k2guk6zKR7Yj/Wj/rfIe8mdLjW7zsXt0i8zbaBgvl4pwIi06fkmpE1/9WWp/p
+	 AOaty/WJk6Y+XTVaAr5onr7hmDzX2tIRYWaO0+n2XUeDL/VwFUWIVR/oB4g5eElcZo
+	 pm/AYTMz8Maw5SJNzbRuylborkYa1uZFoy4Mr+gK5/P0pdKpWq5yRV62i5tSdGZ4OQ
+	 lOW+pfblxVZ6U0dzpEp2ZUmbY4+uSZuZZPwMy+mYtuwi8X5XYachSWKkG0ev+6tvya
+	 JBJYhLlRaJjKGtSUoEYsYcUGJEXlPD+YkkLySpIEcYERtX5Qe76VkLgQI6YrTTOXz0
+	 oIDZ4yLy4BhiyQRfEOdFcrHY=
+Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1EA0240E01A9;
+	Mon, 12 Feb 2024 22:42:26 +0000 (UTC)
+Date: Mon, 12 Feb 2024 23:42:20 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Tony Luck <tony.luck@intel.com>
+Cc: "Naik, Avadhut" <avadnaik@amd.com>,
+	"Mehta, Sohil" <sohil.mehta@intel.com>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
+	Avadhut Naik <avadhut.naik@amd.com>
+Subject: Re: [PATCH 2/2] x86/MCE: Add command line option to extend MCE
+ Records pool
+Message-ID: <20240212224220.GSZcqezMhPojxvIcvO@fat_crate.local>
+References: <20240212085801.GAZcndma4UTPtKm33e@fat_crate.local>
+ <20240212093246.GBZcnlvkPKDC8C7rv5@fat_crate.local>
+ <SJ1PR11MB6083B3511D18787BE823AB2CFC482@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <20240212175408.GIZcpbQHVjEtwRKLS-@fat_crate.local>
+ <SJ1PR11MB60830AF35FA89C7869B8C11EFC482@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <20240212191401.GLZcpt-XHFqPg3cDw-@fat_crate.local>
+ <SJ1PR11MB6083C60D7584B02E9CAF19D5FC482@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <ZcqPhVO_DtD2x5N7@agluck-desk3>
+ <20240212220833.GQZcqW4WxKH34i-oBR@fat_crate.local>
+ <20240212221913.GRZcqZYRd6EPTTnN97@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: sm6115p-j606f: Add some peripherals
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240212-topic-j606f_periphs-v1-1-5dcacd483e28@linaro.org>
- <CAA8EJppHv9g4HnEFaEaCH=FnvJdnFfnr+rt=Onyqh-er8UA6TQ@mail.gmail.com>
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
- BB/OmIWU6X+LZW6P88ZmHe+KeyABLMP5s1tJNK1j4ntT7mECcWZDzafPWF4F6m4WJOG27kTJ
- HGWdmtO+RvadOVi6CoUDqALsmfS3MUG5Pj2Ne9+0jRg4hEnB92AyF9rW2G3qisFcwPgvatt7
- TXD5E38mLyOPOUyXNj9XpDbt1hNwKQfiidmPh5e7VNAWRnW1iCMMoKqzM1Anzq7e5Afyeifz
- zRcQPLaqrPjnKqZGL2BKQSZDh6NkI5ZLRhhHQf61fkWcUpTp1oDC6jWVfT7hwRVIQLrrNj9G
- MpPzrlN4YuAqKeIer1FMt8cq64ifgTzxHzXsMcUdclzq2LTk2RXaPl6Jg/IXWqUClJHbamSk
- t1bfif3SnmhA6TiNvEpDKPiT3IDs42THU6ygslrBxyROQPWLI9IL1y8S6RtEh8H+NZQWZNzm
- UQ3imZirlPjxZtvz1BtnnBWS06e7x/UEAguj7VHCuymVgpl2Za17d1jj81YN5Rp5L9GXxkV1
- aUEwONM3eCI3qcYm5JNc5X+JthZOWsbIPSC1Rhxz3JmWIwP1udr5E3oNRe9u2LIEq+wH/toH
- kpPDhTeMkvt4KfE5m5ercid9+ZXAqoaYLUL4HCEw+HW0DXcKDwARAQABzShLb25yYWQgRHli
- Y2lvIDxrb25yYWQuZHliY2lvQGxpbmFyby5vcmc+wsGOBBMBCAA4FiEEU24if9oCL2zdAAQV
- R4cBcg5dfFgFAmQ5bqwCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQR4cBcg5dfFjO
- BQ//YQV6fkbqQCceYebGg6TiisWCy8LG77zV7DB0VMIWJv7Km7Sz0QQrHQVzhEr3trNenZrf
- yy+o2tQOF2biICzbLM8oyQPY8B///KJTWI2khoB8IJSJq3kNG68NjPg2vkP6CMltC/X3ohAo
- xL2UgwN5vj74QnlNneOjc0vGbtA7zURNhTz5P/YuTudCqcAbxJkbqZM4WymjQhe0XgwHLkiH
- 5LHSZ31MRKp/+4Kqs4DTXMctc7vFhtUdmatAExDKw8oEz5NbskKbW+qHjW1XUcUIrxRr667V
- GWH6MkVceT9ZBrtLoSzMLYaQXvi3sSAup0qiJiBYszc/VOu3RbIpNLRcXN3KYuxdQAptacTE
- mA+5+4Y4DfC3rUSun+hWLDeac9z9jjHm5rE998OqZnOU9aztbd6zQG5VL6EKgsVXAZD4D3RP
- x1NaAjdA3MD06eyvbOWiA5NSzIcC8UIQvgx09xm7dThCuQYJR4Yxjd+9JPJHI6apzNZpDGvQ
- BBZzvwxV6L1CojUEpnilmMG1ZOTstktWpNzw3G2Gis0XihDUef0MWVsQYJAl0wfiv/0By+XK
- mm2zRR+l/dnzxnlbgJ5pO0imC2w0TVxLkAp0eo0LHw619finad2u6UPQAkZ4oj++iIGrJkt5
- Lkn2XgB+IW8ESflz6nDY3b5KQRF8Z6XLP0+IEdLOOARkOW7yEgorBgEEAZdVAQUBAQdAwmUx
- xrbSCx2ksDxz7rFFGX1KmTkdRtcgC6F3NfuNYkYDAQgHwsF2BBgBCAAgFiEEU24if9oCL2zd
- AAQVR4cBcg5dfFgFAmQ5bvICGwwACgkQR4cBcg5dfFju1Q//Xta1ShwL0MLSC1KL1lXGXeRM
- 8arzfyiB5wJ9tb9U/nZvhhdfilEDLe0jKJY0RJErbdRHsalwQCrtq/1ewQpMpsRxXzAjgfRN
- jc4tgxRWmI+aVTzSRpywNahzZBT695hMz81cVZJoZzaV0KaMTlSnBkrviPz1nIGHYCHJxF9r
- cIu0GSIyUjZ/7xslxdvjpLth16H27JCWDzDqIQMtg61063gNyEyWgt1qRSaK14JIH/DoYRfn
- jfFQSC8bffFjat7BQGFz4ZpRavkMUFuDirn5Tf28oc5ebe2cIHp4/kajTx/7JOxWZ80U70mA
- cBgEeYSrYYnX+UJsSxpzLc/0sT1eRJDEhI4XIQM4ClIzpsCIN5HnVF76UQXh3a9zpwh3dk8i
- bhN/URmCOTH+LHNJYN/MxY8wuukq877DWB7k86pBs5IDLAXmW8v3gIDWyIcgYqb2v8QO2Mqx
- YMqL7UZxVLul4/JbllsQB8F/fNI8AfttmAQL9cwo6C8yDTXKdho920W4WUR9k8NT/OBqWSyk
- bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
- nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
- izWDgYvmBE8=
-In-Reply-To: <CAA8EJppHv9g4HnEFaEaCH=FnvJdnFfnr+rt=Onyqh-er8UA6TQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240212221913.GRZcqZYRd6EPTTnN97@fat_crate.local>
 
-On 12.02.2024 22:19, Dmitry Baryshkov wrote:
-> On Mon, 12 Feb 2024 at 15:44, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
->>
->> This tablet features quite a bunch of I2C-connected devices, such as
->> a Richtek RT1715 USB-C controller, a MM8013 fuel gauge, FSA4480 Type-C
->> audio mux, TPS65132 regulator and some more.
->>
->> Add the aforementioned ones and document others.
->>
->> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
->> ---
-
-[...]
-
->> +                       /* TODO: Add a proper PD setup */
->> +                       typec-power-opmode = "default";
->> +                       try-power-role = "sink";
->> +                       power-role = "dual";
->> +                       pd-disable;
->> +
->> +                       port {
->> +                               rt1715_hs_ep: endpoint {
->> +                                       remote-endpoint = <&usb_dwc3_hs>;
+On Mon, Feb 12, 2024 at 11:19:13PM +0100, Borislav Petkov wrote:
+> On Mon, Feb 12, 2024 at 11:08:33PM +0100, Borislav Petkov wrote:
+> > I'll have to dig into my archives tomorrow, on a clear head...
 > 
-> Most likely this port should have the SBU endpoint connected to
-> fsa4480. Also, if SS lines are connected, there should be a link
-> between this connector and the QMP PHY.
+> So I checked out 648ed94038c030245a06e4be59744fd5cdc18c40 which is
+> 4.2-something.
+> 
+> And even back then, mcheck_cpu_init() gets called *after* mm_init()
+> which already initializes the allocators. So why did we allocate that
+> buffer statically?
 
-I wish there was usb3. Unless lenovo did that in hw and didn't hook it up
-in software, but that's just wishful thinking. I'll give it a shot anyway :P
+Found it in my archives. You should have it too:
 
-Konrad
+Date: Thu, 31 Jul 2014 02:51:25 -0400
+From: "Chen, Gong" <gong.chen@linux.intel.com>
+To: tony.luck@intel.com, bp@alien8.de
+Subject: Re: [RFC PATCH untest v2 1/4] x86, MCE: Provide a lock-less memory pool to save error record
+Message-ID: <20140731065125.GA5999@gchen.bj.intel.com>
+
+and that's not on any ML that's why I can't find it on lore...
+
+There's this fragment from Chen:
+
+--------
+> diff --git a/arch/x86/kernel/cpu/mcheck/mce.c b/arch/x86/kernel/cpu/mcheck/mce.c
+> index bb92f38..a1b6841 100644
+> --- a/arch/x86/kernel/cpu/mcheck/mce.c
+> +++ b/arch/x86/kernel/cpu/mcheck/mce.c
+> @@ -2023,6 +2023,9 @@ int __init mcheck_init(void)
+>  {
+>       mcheck_intel_therm_init();
+>  
+> +     if (!mce_genpool_init())
+> +             mca_cfg.disabled = true;
+> +
+when setup_arch is called, memory subsystem hasn't been initialized,
+which means I can't use regular page allocation function. So I still
+need to put genpool init in mcheck_cpu_init.
+--------
+
+And that is still the case - mcheck_init() gets called in setup_arch()
+and thus before before mm_init() which is called mm_core_init() now.
+
+And on that same thread we agree that we should allocate it statically
+but then the call to mce_gen_pool_init() ended up in mcheck_cpu_init()
+which happens *after* mm_init().
+
+What a big fscking facepalm. :-\
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
