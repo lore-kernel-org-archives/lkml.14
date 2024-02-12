@@ -1,175 +1,102 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295334C626
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 13:14:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 838D84D138;
+	Mon, 12 Feb 2024 13:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707743677; cv=none; b=nNAf77iag4FGRQByPGPeW1cvVQNCZZu4tslsOgfeZeLWeET5xUcVZ8c5EM9Cv0lKeQHwLSre+HRn+REH9ZzAB3u07jC5gD3E6YS+nWgf2oqWBkA19HxhVnbtTok5/RP/zbGIHk690kb9tQ9vnGlSuT7t6M1fPAudcjr+JgZMgBc=
+	t=1707743680; cv=none; b=EJT/dnIEq9yZLQ+fSQ0x/9EWVYlmLYEcjtQuErMHdwCbaAI6YS7xWTl4CsEF8u7AreQBqjWUOhwOmWfuX9ubdGtqNi44pzy275IcAhkjji5M6m/mIprL6orJcTVncGU5o/6eDaWg2PhGXGcUonr/gLVSEm9cmGS5symbPHPUmA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707743677; c=relaxed/simple;
-	bh=MGljuiY0b08CbfXabKHR3arSgSpNqpPXAmOerQ85JFw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DfmUjO1y4vaB3z8bArNb/N4/O28ByBHIhIanw+Z5h5k2du3da20IMYvJUMW4QUbLaiEft0vFojNU2gvd2wLPyq1RNdah281jC/F+Zdx2lSEBreSWao9aeq2XmJU+CIcaBvxeNEigHYbZip4jXO26IFxkjCYdJf6HQwn2iankPAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--panikiel.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VvujglPx; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--panikiel.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VvujglPx"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-410d0660929so4553595e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 05:14:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707743673; x=1708348473; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rRe13GXsBNZ8mkxLlyJ1MfL527/NzLwP4cfZxeK7UxI=;
-        b=VvujglPxX48kcJgSADWgCn1UVFBsld3Ij/wDfqpgYVn1zsXY7SmwUjSAXwBSXV6HLb
-         sM2IGHWBSjEZnICV1NG4pJK7rWTKtGuiGMaRcq6MfC0O+gjilZZyClxo0KtLMpM6j9Cg
-         qEcQ6hWQO2s7xB85rujQcKjApX1kT7AhRVdDxnrTTtf3RhcExrZZqZXPmFYw7Nw66UYH
-         fBAv9sePGF2NYVitZGth4lA618JHCqS8Be/dus8MoINpvDWxpN+1jEQUz6FleyB0nu5K
-         lo3N39KUVh+xLXS5yC2P7uYt4UszfaJAFNYtDQHtB1bUw5n/9qjmZe49Tv7k3xTSZ24F
-         /cGA==
+	s=arc-20240116; t=1707743680; c=relaxed/simple;
+	bh=xLrubvOXIWaG5ypIlIgyoaUmN6jnod09uqn4rzwa6HI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Xl1uvLV9JY6ZwRt9SFL5QDVmyHT6Rn5yhi86siXalFZ+0WPKSOUXQhwblMg9o0SgO2AYNx10MOO2Mb5Z3Ez6DObibhb23kYQK0z0b6yW/+QF1aGLbRO0buZ77c349N00to+ex2eaXddb/e51nN6mC25xkHmB4WH1QsWUnGjWFTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-59cbf204d52so224232eaf.1;
+        Mon, 12 Feb 2024 05:14:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707743673; x=1708348473;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=rRe13GXsBNZ8mkxLlyJ1MfL527/NzLwP4cfZxeK7UxI=;
-        b=SP3a0doTwJ/Nl1SWdEADkoiz46dk4XWL8Vo+AYcF8pozi0NecnUBkyVuIMoXSGWEKb
-         LW/VGH4QG/KurcIS+HmB4m2kBfUOsTJqp2InSAHSQD6+ZP7BFbOYaNX0CBXlz6RyF4XF
-         ylRlDX56NfVqzSSADau37k0RsJ1NODxDE9P1qBJXtyViLc8J6pddqovFQ3mBB8oGrvRV
-         W0+MFvwbEn/5BU9A+YbYrBXnDMHHXUxkOxTtJHKZ0RpvBFPm2wCZ/cMdQGeoCBInHnjf
-         smRNTEtEHc3nbRn2ZDB5b73QM/jAqUgyfKXZuLm1zQ4k61jYlyRxpifDkz4NxsatxzGv
-         vjYQ==
-X-Gm-Message-State: AOJu0Yzxfq/JH784iPmSH8eHyfzx+vILkmqwg4M/yikW7npLWddadkW0
-	/pcvrsMEpOSTcg/Sm1VNuxGIPe2UJPWBH3pK3f6uiNeSISKG1FCiajwSWQZ+w3VgKO1uhYcXnar
-	c4kFtYPLXGA==
-X-Google-Smtp-Source: AGHT+IHeUQzQJMGFa36yvvo79Gf3XEOqIP1Fw3gP4UC8etm91PZ2z+b4H4rGeV3pFlboBijII39ElfpdFik0Kw==
-X-Received: from szatan.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2d83])
- (user=panikiel job=sendgmr) by 2002:a05:600c:4c96:b0:410:bb99:7ea2 with SMTP
- id g22-20020a05600c4c9600b00410bb997ea2mr35246wmp.3.1707743673486; Mon, 12
- Feb 2024 05:14:33 -0800 (PST)
-Date: Mon, 12 Feb 2024 13:13:21 +0000
-In-Reply-To: <20240212131323.2162161-1-panikiel@google.com>
+        d=1e100.net; s=20230601; t=1707743677; x=1708348477;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Pxvkc38U9s3DcZdB/JiCA8P1fxWR4fG0EKloHutaJ/Q=;
+        b=Z2qXjNsCX2qDvQpg9VrzGeRcJrRh8nDXa4lj2hZFwXkZ/xaCy2EkjTpDsoQh00hBNF
+         EavS6UQ9B7dsb7ohFn7E+TF5P4hyzUVLnSRG5Fp9AZ2RfyOPa9W9hjR47HMLNqCwRMwf
+         Y7/AHenxOvylJZgGvCST5AWOoPrhBP6bF8Ks62gfvrK6nt3kYdw7zgwCLSt+F0KSnWXu
+         VwNCrr6WBuL4MTiVOt/n7oeuEyXgM06TgDEWiwp6FRM39kmfm9WwOYOc5S2d3rgA+25r
+         nq6k6Ucg8odeQSvLbesXgd1lnnFqYBze6TmanGkQn4uD/JCz3LV69p2FGxsL4R1y2MZu
+         g34A==
+X-Gm-Message-State: AOJu0YyQSa+BoQ8Ra5psznuzb4DXqy4wni4t2sRuNxZ0J4cln9F680Rt
+	C1TTxymxugJpfmeySxKehg5ukgb0UVLW8xG/MzkZBzMOS7dn1RFo1Yc9ocdg7WJy2EKIX3mmTKM
+	RWnABRiPP760Y9fszsqKiet9EyE6iktQK
+X-Google-Smtp-Source: AGHT+IGapQqegXlSqDCpTcHwaawdnbFBDRDPO60i3uPd2gLv3x7/jAKo5OyG5JdMpwm36eD3JU1HFtZkSzzAOHkJX7U=
+X-Received: by 2002:a4a:ce94:0:b0:59a:bfb:f556 with SMTP id
+ f20-20020a4ace94000000b0059a0bfbf556mr5298057oos.0.1707743677486; Mon, 12 Feb
+ 2024 05:14:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240212131323.2162161-1-panikiel@google.com>
-X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
-Message-ID: <20240212131323.2162161-8-panikiel@google.com>
-Subject: [PATCH 7/9] media: dt-bindings: Add Chameleon v3 framebuffer
-From: "=?UTF-8?q?Pawe=C5=82=20Anikiel?=" <panikiel@google.com>
-To: airlied@gmail.com, akpm@linux-foundation.org, conor+dt@kernel.org, 
-	daniel@ffwll.ch, dinguyen@kernel.org, hverkuil-cisco@xs4all.nl, 
-	krzysztof.kozlowski+dt@linaro.org, maarten.lankhorst@linux.intel.com, 
-	mchehab@kernel.org, mripard@kernel.org, robh+dt@kernel.org, 
-	tzimmermann@suse.de
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	chromeos-krk-upstreaming@google.com, ribalda@chromium.org, 
-	"=?UTF-8?q?Pawe=C5=82=20Anikiel?=" <panikiel@google.com>
+MIME-Version: 1.0
+References: <20240207020923.4720-1-di.shen@unisoc.com>
+In-Reply-To: <20240207020923.4720-1-di.shen@unisoc.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 12 Feb 2024 14:14:25 +0100
+Message-ID: <CAJZ5v0jTY+_YYfeTzf0vNKogGAd334pUH5-W1xXiDL2REroViA@mail.gmail.com>
+Subject: Re: [RESEND][PATCH V2] thermal: power_allocator: Avoid overwriting
+ PID coefficients from setup time
+To: Di Shen <di.shen@unisoc.com>
+Cc: lukasz.luba@arm.com, rafael@kernel.org, daniel.lezcano@linaro.org, 
+	rui.zhang@intel.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	xuewen.yan@unisoc.com, zhanglyra@gmail.com, orsonzhai@gmail.com, 
+	cindygm567@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-The Chameleon v3 uses the framebuffer IP core to take the video signal
-from different sources and directly write frames into memory.
+On Wed, Feb 7, 2024 at 3:09=E2=80=AFAM Di Shen <di.shen@unisoc.com> wrote:
+>
+> When the PID coefficients k_* are set via sysfs before the IPA
+> algorithm is triggered then the coefficients would be overwritten after
+> IPA throttle() is called. The old configuration values might be
+> different than the new values estimated by the IPA internal algorithm.
+>
+> There might be a time delay when this overwriting happens. It
+> depends on the thermal zone temperature value. The temperature value
+> needs to cross the first trip point value then IPA algorithms start
+> operating. Although, the PID coefficients setup time should not be
+> affected or linked to any later operating phase and values must not be
+> overwritten.
+>
+> This patch initializes params->sustainable_power when the governor
+> binds to thermal zone to avoid overwriting k_*. The basic function won't
+> be affected, as the k_* still can be estimated if the sustainable_power
+> is modified.
+>
+> Signed-off-by: Di Shen <di.shen@unisoc.com>
+> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+> ---
+>  drivers/thermal/gov_power_allocator.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/thermal/gov_power_allocator.c b/drivers/thermal/gov_=
+power_allocator.c
+> index 81e061f183ad..1b17dc4c219c 100644
+> --- a/drivers/thermal/gov_power_allocator.c
+> +++ b/drivers/thermal/gov_power_allocator.c
+> @@ -711,6 +711,8 @@ static int power_allocator_bind(struct thermal_zone_d=
+evice *tz)
+>
+>         if (!tz->tzp->sustainable_power)
+>                 dev_warn(&tz->device, "power_allocator: sustainable_power=
+ will be estimated\n");
+> +       else
+> +               params->sustainable_power =3D tz->tzp->sustainable_power;
+>
+>         estimate_pid_constants(tz, tz->tzp->sustainable_power,
+>                                params->trip_switch_on,
+> --
 
-Signed-off-by: Pawe=C5=82 Anikiel <panikiel@google.com>
----
- .../bindings/media/google,chv3-fb.yaml        | 77 +++++++++++++++++++
- 1 file changed, 77 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/google,chv3-fb.=
-yaml
-
-diff --git a/Documentation/devicetree/bindings/media/google,chv3-fb.yaml b/=
-Documentation/devicetree/bindings/media/google,chv3-fb.yaml
-new file mode 100644
-index 000000000000..ba6643cc7232
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/google,chv3-fb.yaml
-@@ -0,0 +1,77 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/google,chv3-fb.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Google Chameleon v3 video framebuffer
-+
-+maintainers:
-+  - Pawe=C5=82 Anikiel <panikiel@google.com>
-+
-+properties:
-+  compatible:
-+    const: google,chv3-fb
-+
-+  reg:
-+    items:
-+      - description: core registers
-+      - description: irq registers
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  google,legacy-format:
-+    type: boolean
-+    description: The incoming video stream is in 32-bit padded mode.
-+
-+  google,no-endpoint:
-+    type: boolean
-+    description:
-+      The framebuffer isn't connected to a controllable endpoint.
-+      The video interface still works, but EDID control is unavailable
-+      and DV timing information only reports the active video width/height=
-.
-+
-+  port:
-+    $ref: /schemas/graph.yaml#/properties/port
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+allOf:
-+  - if:
-+      not:
-+        required:
-+          - google,no-endpoint
-+    then:
-+      required:
-+        - port
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    video@c0060500 {
-+        compatible =3D "google,chv3-fb";
-+        reg =3D <0xc0060500 0x100>,
-+              <0xc0060f20 0x10>;
-+        interrupts =3D <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
-+        google,legacy-format;
-+        google,no-endpoint;
-+    };
-+
-+  - |
-+    video@c0060600 {
-+        compatible =3D "google,chv3-fb";
-+        reg =3D <0xc0060600 0x100>,
-+              <0xc0060f30 0x10>;
-+        interrupts =3D <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
-+
-+        port {
-+            fb_mst0_0: endpoint {
-+                remote-endpoint =3D <&dprx_mst_0>;
-+            };
-+        };
-+    };
---=20
-2.43.0.687.g38aa6559b0-goog
-
+Applied as 6.9 material, thanks!
