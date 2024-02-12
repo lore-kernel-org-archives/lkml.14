@@ -1,159 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD8939FC4;
-	Mon, 12 Feb 2024 11:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A2E439FC0;
+	Mon, 12 Feb 2024 11:52:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707738735; cv=none; b=PScrCIgJsxyJ+x8uxK2w1gHxLr3lDsIhFmeNQKDD3MphxCDGOwvGOWRXyc0QTTo7P0Sh0SZSXD+JIL0TQnINiCKw5NgUeJExSgaVuNJqir4qD9w06rCsIfTzlHDuK9QO7qWBpByC9s/Em5l5f/Yva15OBgAh7rkuLp15C63fXF0=
+	t=1707738736; cv=none; b=M7XOTWt0nxFJm1FaEXAcX8eOzEqEvFhiJqU0HQuOFpgybLM3s22JxKdVSpEbr5j1JJ6aJuIuM4TaSNx7829hmp8olvDxVkbmZi1oin8fpkUuSla8beipGt7iE7Ge3Gk16KYtze/jP5GOQ07zErt/G62dFz8Z0aIB19mGHB7Zo9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707738735; c=relaxed/simple;
-	bh=IIJ7UpRpiR1RBF6szjseHmqF1nSqMFZ/aVFQ4VSgasw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X4J58Sw2Pz+iZDFpa7lDKTdgH7J6+9aY0QHCMKuiexnC4lUsAii984xZXyqjb4YZ8JotlKZ2+TV8ioepC4305FHTZ1Uju+nP/kLLWzJrq6cnsArxahb4sSOMxVzAINmsaiOzZq4ivjp2CDX6auRtp1tuSlMfEzZmzXHZ6j22YoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ph08Ib4t; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707738736; c=relaxed/simple;
+	bh=PV2lBZbbqCKXVMgJIwrV7NXS33dE9Xu1xgpMJAFRNHk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n56lhxK+nS8tnrK7mg7HIUdCig1moO2lpu39eSbfqpPqtPrwpe63Z5nz0bSi7CkerkL29FaGdnGNfc7DiNgDrJdFPfa30TjL0w+gTbLaV4+X0rI2LicVHYmxuEcGhjU3JjUS60N+vRDpUMPEuApD8lBSe2CI2klf0W/RUSEXHDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ai43QcZW; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ph08Ib4t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0736CC43141;
-	Mon, 12 Feb 2024 11:52:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707738735;
-	bh=IIJ7UpRpiR1RBF6szjseHmqF1nSqMFZ/aVFQ4VSgasw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ph08Ib4tPhjF9EVhTqiNqzvW+zuB8MKz+XkCEHArV41h19NHHUeB6lTz+dtbxYhJo
-	 zx4H73c0Q4SGtpr8tougDWEAgYDRxeX82TXaYy7CEjWptHrI2rXii62/CSuavRi3IM
-	 u3P4uVR0VUE3nxT+taLWmqt7f1NrPmlkC1YlcIOkdqpm7o6qvA5zNEDu8IJaZZsu7R
-	 uU9hpxlcTUWlBfiFD5g74W61I2tdPWFt2U4tsU9M+NmaoKkF3AuBwYSU6pEqHf4XF6
-	 JuCzLQJK13vDOTdz3D6DxHeJOoxIGT2b+cb9mK8HiF87N0GCN8xr3hz65MVYI+l510
-	 JC2krlyT54j1w==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-511821e60c2so1924764e87.2;
-        Mon, 12 Feb 2024 03:52:14 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW58M/vIlDU+2rSHK/Vf/OIsnzfXRHE2kdZxA4J3gw/AACBFoX0yMKb/s20TAvdn0xz4Sh+n/NplHlcICEegZk1dnf//j2U5D/ltQ+2alxRjgrrxT1zkExgJEl9Jco/FerbZotlbD4DUg==
-X-Gm-Message-State: AOJu0YyKEFGmBailDgf+WHfrpe2XpvCCi1+mcB6tIaU/apqfx0s2VlV+
-	2gy/ah7u3fuvdO1R0GvRLZb7X/lzb+IxMXrjBIHy8IcBJDEhwzVkQsQvG25TZO6qUlvau7xlLZa
-	ZsDYXGbN79tVzO5JQ989OsRDEPxo=
-X-Google-Smtp-Source: AGHT+IEU3p/a6dR89ftZiMJ/2uAey8PZzo/ZBrpk8p+hlzOP+4Q+BDJs4qS3F4Z4AygUj+xfJErPICriWOikHjKTGL0=
-X-Received: by 2002:a05:6512:2824:b0:511:4683:d537 with SMTP id
- cf36-20020a056512282400b005114683d537mr4364819lfb.55.1707738733104; Mon, 12
- Feb 2024 03:52:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ai43QcZW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707738735; x=1739274735;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=PV2lBZbbqCKXVMgJIwrV7NXS33dE9Xu1xgpMJAFRNHk=;
+  b=Ai43QcZWmdkNVWfWgjlEgre95b5H99LHtK77e+DSJrBAj/3NF35++aUj
+   Gqb72gdy2kdlmex/2rKC2EUlRhkd/0NLSBeP8kdeX9O13cYDX7+3dSjxs
+   fXCkn/a0QYrhESWYPwfuXjw1I3C2pg+g9V1is3lygoisFhYORDX9kGQnR
+   gOhuE4gEI7veuRBLhhvh6WVlZL1AhRjVXjFj6xzg+61VYmaWQGYPAic8U
+   ZFyOortGEei8mHNjM8irRUbhCXKMPwfDLKs+BmF5UlBB/srYjM92bePOR
+   SgCxsNIuZzZNUKR90LrOixEEmh96a/g/vGKbaGcoAhr5ey+IEWrnykNh0
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="2055195"
+X-IronPort-AV: E=Sophos;i="6.06,263,1705392000"; 
+   d="scan'208";a="2055195"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 03:52:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="911460587"
+X-IronPort-AV: E=Sophos;i="6.06,263,1705392000"; 
+   d="scan'208";a="911460587"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 03:52:12 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rZUr3-00000003svU-3miA;
+	Mon, 12 Feb 2024 13:52:09 +0200
+Date: Mon, 12 Feb 2024 13:52:09 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: u.kleine-koenig@pengutronix.de, jarkko.nikula@linux.intel.com,
+	mika.westerberg@linux.intel.com, lakshmi.sowjanya.d@intel.com,
+	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] pwm: dwc: simplify error handling
+Message-ID: <ZcoGaWyvDTk_jWXy@smile.fi.intel.com>
+References: <20240208070529.28562-1-raag.jadav@intel.com>
+ <20240208070529.28562-4-raag.jadav@intel.com>
+ <ZcUNxT4lxFYhZNBB@smile.fi.intel.com>
+ <ZcaL_VH2l5t9cx6m@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240129180502.4069817-21-ardb+git@google.com>
- <20240129180502.4069817-29-ardb+git@google.com> <20240212102901.GVZcny7WeK_ZWt0HEP@fat_crate.local>
-In-Reply-To: <20240212102901.GVZcny7WeK_ZWt0HEP@fat_crate.local>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 12 Feb 2024 12:52:01 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXH2uwLT-EgqYFRcC0OH524W=sYtDoFC-x+isifzsia17w@mail.gmail.com>
-Message-ID: <CAMj1kXH2uwLT-EgqYFRcC0OH524W=sYtDoFC-x+isifzsia17w@mail.gmail.com>
-Subject: Re: [PATCH v3 08/19] x86/head64: Replace pointer fixups with PIE codegen
-To: Borislav Petkov <bp@alien8.de>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
-	Kevin Loughlin <kevinloughlin@google.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Dionna Glaze <dionnaglaze@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Kees Cook <keescook@chromium.org>, Brian Gerst <brgerst@gmail.com>, linux-arch@vger.kernel.org, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZcaL_VH2l5t9cx6m@black.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, 12 Feb 2024 at 11:29, Borislav Petkov <bp@alien8.de> wrote:
->
-> On Mon, Jan 29, 2024 at 07:05:11PM +0100, Ard Biesheuvel wrote:
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> >
-> > Some of the C code in head64.c may be called from a different virtual
-> > address than it was linked at. Currently, we deal with this by using
->
-> Yeah, make passive pls: "Currently, this is done by using... "
->
-> > ordinary, position dependent codegen, and fixing up all symbol
-> > references on the fly. This is fragile and tricky to maintain. It is
-> > also unnecessary: we can use position independent codegen (with hidden
->                    ^^^
-> Ditto: "use ..."
->
-> In the comments below too, pls, where it says "we".
->
+On Fri, Feb 09, 2024 at 10:33:01PM +0200, Raag Jadav wrote:
+> On Thu, Feb 08, 2024 at 07:22:13PM +0200, Andy Shevchenko wrote:
+> > On Thu, Feb 08, 2024 at 12:35:27PM +0530, Raag Jadav wrote:
 
-Ack.
+...
 
-> > visibility) to ensure that all compiler generated symbol references are
-> > RIP-relative, removing the need for fixups entirely.
-> >
-> > It does mean we need explicit references to kernel virtual addresses to
-> > be generated by hand, so generate those using a movabs instruction in
-> > inline asm in the handful places where we actually need this.
-> >
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > ---
-> >  arch/x86/Makefile                 |  8 ++
-> >  arch/x86/boot/compressed/Makefile |  2 +-
-> >  arch/x86/include/asm/desc.h       |  3 +-
-> >  arch/x86/include/asm/setup.h      |  4 +-
-> >  arch/x86/kernel/Makefile          |  5 ++
-> >  arch/x86/kernel/head64.c          | 88 +++++++-------------
-> >  arch/x86/kernel/head_64.S         |  5 +-
-> >  7 files changed, 51 insertions(+), 64 deletions(-)
-> >
-> > diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-> > index 1a068de12a56..2b5954e75318 100644
-> > --- a/arch/x86/Makefile
-> > +++ b/arch/x86/Makefile
-> > @@ -168,6 +168,14 @@ else
-> >          KBUILD_CFLAGS += -mcmodel=kernel
-> >          KBUILD_RUSTFLAGS += -Cno-redzone=y
-> >          KBUILD_RUSTFLAGS += -Ccode-model=kernel
-> > +
-> > +     PIE_CFLAGS-$(CONFIG_STACKPROTECTOR)     += -fno-stack-protector
->
-> Main Makefile has
->
-> KBUILD_CFLAGS += -fno-PIE
->
-> and this ends up being:
->
-> gcc -Wp,-MMD,arch/x86/kernel/.head64.s.d -nostdinc ... -fno-PIE ... -fpie ... -fverbose-asm -S -o arch/x86/kernel/head64.s arch/x86/kernel/head64.c
->
-> Can you pls remove -fno-PIE from those TUs which use PIE_CFLAGS so that
-> there's no confusion when staring at V=1 output?
->
+> > > +		return dev_err_probe(dev, ret, "Failed to enable device (%pe)\n", ERR_PTR(ret));
+> > 
+> > Have you checked the output?
+> > Note, it will duplicate error codes which we don't want.
+> 
+> True. Does it make sense to remove it?
 
-Yeah. That would means adding PIE_CFLAGS_REMOVE alongside PIE_CFLAGS
-and applying both in every place it is used, but we are only dealing
-with a handful of object files here.
+"...which we don't want." had been stated above :-)
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-> > +     PIE_CFLAGS-$(CONFIG_LTO)                += -fno-lto
-> > +
-> > +     PIE_CFLAGS := -fpie -mcmodel=small $(PIE_CFLAGS-y) \
-> > +                   -include $(srctree)/include/linux/hidden.h
-> > +
-> > +     export PIE_CFLAGS
-> >  endif
-> >
-> >  #
->
-> Other than that, that code becomes much more readable, cool!
->
-
-Thanks. But now that we have RIP_REL_REF(), I might split the cleanup
-from the actual switch to -fpie, which I am still a bit on the fence
-about, given different compiler versions, LTO, etc.
-
-RIP_REL_REF(foo) just turns into 'foo' when compiling with -fpie and
-we could drop those piecemeal once we are confident that -fpie does
-not cause any regressions.
-
-Note that I have some reservations now about .pi.text as well: it is a
-bit intrusive, and on x86, we might just as well move everything that
-executes from the 1:1 mapping into .head.text, and teach objtool that
-those sections should not contain any ELF relocations involving
-absolute addresses. But this is another thing that I want to spend a
-bit more time on before I respin it, so I will just do the cleanup in
-the next revision, and add the rigid correctness checks the next
-cycle.
