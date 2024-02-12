@@ -1,108 +1,103 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C694D135
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 22:08:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAAC64EB3D;
+	Mon, 12 Feb 2024 22:08:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707775722; cv=none; b=VAr1819swJI3sosNLPQGgm3gKJTKoudERZ7py04+SFUVCtyIg3JmauVQx1IqJM9IUhpP1Vhb6dcXHOM1bqWQwyexK+LJ3VXBwH7k9+jurzXCYvaC+bzlrTmVt07KGn0W4PKNLB93GLsi/Cy898IVBiejBMf3L28XADNHxqq/rFY=
+	t=1707775735; cv=none; b=ki8DubXAbepLM43s6Wt14G8ffMa7PGju8XB77If6j3INhIWlYGt+NRX5f6VObuVBJKX4PGZQl4Q1jeRVK6emY+dx2wT8qUKcOLRWa2VgexVrq0sKayacwjBBgl4n8uA69GmIWDWpKDE68eqEGn0gzTfi2PwuHM1PL1VJ6MNJoSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707775722; c=relaxed/simple;
-	bh=gAbe+DaZz7ho9Xs/O1+sZUd+Q7Ss16k+L7gT59qsNpo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=upOp+tUY4eV4eKn5hRVmTo38Zh1wb/rGRwrSWtg82mRSsmjv4MDtUc8FbUWRcRpZ6FccPkM9lfZBzeA9AOswD5EiDzuh62/jOIsfke4HVs8btus6C1Ntx8saWzGX5XAXsipfYH2nzexTO52+FoEZAYn/GPXmpZbp8CZybG0edHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Uin792MN; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1707775735; c=relaxed/simple;
+	bh=0wF0cKT0EXGdUjS1bSMv6RN0BhD7RAd8cRtVDioiiVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h8lmLfixFVDgHJJ/3cVNOFAfMSwLZmGhF+jYgxjU+h/x+dhk+DXF3ERygG02HhuCrYt/7y1uZjs0QaS/r6lxiDxKP+mXx0hGk0ceCDikKzxD9xdxwm7ZLItxAcwvKJtxIt/QMfE20MkeFEq2YngNvRywgsywAVMrBHrzDCVTPCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Xq7jEqcW; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Uin792MN"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-561519f8698so4073724a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 14:08:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1707775719; x=1708380519; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=uavn2lIFtdjKttrhD59+foSMVfR1WVZExe9j9lqEZVs=;
-        b=Uin792MNjE0TRZnpj2U2D67WjrUmFSXtD3Q/ir6YODqIQtH0gzeSGrurZHjIjayIsi
-         fUxkxJ5uK6DZs+M5lySFGq+r+U4gVbSN+3ER81p2+EVre0TRetvLAC2D1CdQw2jp1Vyy
-         8e58BQPUuzuewQz9M2ykJ6QIvxcJoL4zRQ1Fo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707775719; x=1708380519;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uavn2lIFtdjKttrhD59+foSMVfR1WVZExe9j9lqEZVs=;
-        b=OJTBU8gSLuOCWieol4HeIZANj9LBAmLfCjsyzGzjAwdfsSB8nEIb4rbezvn87Z+zJv
-         fI0HliDd7CdQfzagxx+5MiVl0/EEsskcahFA0d3BUnNoVnTLR2p4HhcT+7UxMAV34lXT
-         1P6DJ0TZOSdo/njKz7BEGs4bAvdc4hA20t9Y/JBtfWTo9qMGhYTZWB12HPpxG+bH7/Un
-         Oe+/kOzeQ82Eal3GpumHZ++nG7AcwQlNLvUA8lhAyP9W+p5Wko1DydmhzadUajo6y8iQ
-         UYIx+LBupAk0dw2Pif3b22rbSHKHVWzQA2IEp/9HW2p5IDcqQZGSgkz+hk+NrnVjB8jf
-         s5/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWQInDOUfgpabuq2jzIwFz1KfJ90hvKOGlrZ3YPU9ZiHQZknh7fdlZawWjUsKxE1MTEOtkKomOk0jhMkEk68GfW36Xm3nXWmV6SPHby
-X-Gm-Message-State: AOJu0Yznjsc/sOujxO5oSjElerpfpGgacLCUfqFv15OCG9kp6Zs9bGIZ
-	GC1TgBSkV2/P+XoO/E/pi70CHpdmYzNAIgYl164EpnkQsYCFjPQTKUXBfEFCkhbs9tarrg4HuUV
-	RKI0=
-X-Google-Smtp-Source: AGHT+IE0qpGkGHGylUZvi4BLGt2DW4pi/HoDWClvNeiVVR2PBy9g1PoaXv5RuCycQR8E0nRdQohY2g==
-X-Received: by 2002:a50:fb0c:0:b0:561:ee74:51d9 with SMTP id d12-20020a50fb0c000000b00561ee7451d9mr158897edq.20.1707775719067;
-        Mon, 12 Feb 2024 14:08:39 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV+xavRfnFww++ulzaA64sJaFY6XwKL/UV3dm6g4N8D+vCjVIfkYSvPJwxdcQD96+U39qlx8y1ThSGnl6VjPx4DPdjos2AklmN+M9us
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com. [209.85.208.52])
-        by smtp.gmail.com with ESMTPSA id cs12-20020a0564020c4c00b00561e675a3casm302494edb.68.2024.02.12.14.08.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Feb 2024 14:08:38 -0800 (PST)
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-55ff5f6a610so4427842a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 14:08:37 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUtSyS7CYLIOWe8NwROtNblOsBDfcAqVjdQVifUFprzC3fHyDp5A0qBFxhQIl/Atxf12a+vg3AA0vopoew/j8/7F4Rb/5PLtJ8xqTPr
-X-Received: by 2002:aa7:cd66:0:b0:561:f173:6611 with SMTP id
- ca6-20020aa7cd66000000b00561f1736611mr60172edb.35.1707775717604; Mon, 12 Feb
- 2024 14:08:37 -0800 (PST)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Xq7jEqcW"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 505DF40E01BB;
+	Mon, 12 Feb 2024 22:08:50 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 6-v2LGsbJJfl; Mon, 12 Feb 2024 22:08:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1707775728; bh=nr2K5kbVCtDalYxSYbdURjwJgeoC1QmXrEfXCA1PjV4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Xq7jEqcW0w8WY55Wjnp/G7wvIrnXEBRhQD8GKtSu2gR/ZDXOkYfae80gnsW0hb5C4
+	 rnHcQYlK2HCC43Cyjzjc1Zb6VFXUvMZqU4jK8tF8ikh2ZTPn0BBAd6JrNMxIfi2G4I
+	 wR9sl21d6sM/u3q/Qnunw6+9vuDNzwZW0Vu3vH6K7h9EVl773DwEOhUamZySkDgWMu
+	 eoTZEv/rfsHXzIGzE7Fnu2oQAv/MAxVrVQrfFfoJLKTN7Od8pVuIYrjRiAbbLaFCEV
+	 d3QQ81Ioub24KIa49bJyznB3IpA75h6buTcD+On5VibRpPrrn8tyP884Ubqqub1b/H
+	 LPWnYU4QT3v+p6fuM7iJdU0hSmdeuiZ+nN4GYiazxr+mxbzcDgT9XeME9yqN7skZXw
+	 NIjV+gt6Vs0k39zdquVm5QsWBWCBFJtX0JA/s3+RFuBOTc+LaawhSsrFukwtPmgNIg
+	 ZnGlttaLGkRv/F3T7Wpa/LWPBS0zY/emhc7PrSw8oTFE5FEMMb1MgrmUdQchCNVa/P
+	 9AuFYb9HZ+NF3HwKj2Kdz+yUHHj1eFV/L/HrVSbFfQNLMqXsYq9bEs03y8QD63TKDC
+	 2y338gmH2kjNSvt5fyE6nfNWZRJKfdZHOLcwhRVPCP96Za2LvA5p9GZvOZvKzhzahP
+	 F3SQuOsGp/IkORmiLyzH/+NE=
+Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id ED79E40E0192;
+	Mon, 12 Feb 2024 22:08:39 +0000 (UTC)
+Date: Mon, 12 Feb 2024 23:08:33 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Tony Luck <tony.luck@intel.com>
+Cc: "Naik, Avadhut" <avadnaik@amd.com>,
+	"Mehta, Sohil" <sohil.mehta@intel.com>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
+	Avadhut Naik <avadhut.naik@amd.com>
+Subject: Re: [PATCH 2/2] x86/MCE: Add command line option to extend MCE
+ Records pool
+Message-ID: <20240212220833.GQZcqW4WxKH34i-oBR@fat_crate.local>
+References: <20240211111455.GAZcisL09LeFPWa2EI@fat_crate.local>
+ <774e7ca5-154d-4ca4-bc4c-2f945c20b938@amd.com>
+ <20240212085801.GAZcndma4UTPtKm33e@fat_crate.local>
+ <20240212093246.GBZcnlvkPKDC8C7rv5@fat_crate.local>
+ <SJ1PR11MB6083B3511D18787BE823AB2CFC482@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <20240212175408.GIZcpbQHVjEtwRKLS-@fat_crate.local>
+ <SJ1PR11MB60830AF35FA89C7869B8C11EFC482@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <20240212191401.GLZcpt-XHFqPg3cDw-@fat_crate.local>
+ <SJ1PR11MB6083C60D7584B02E9CAF19D5FC482@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <ZcqPhVO_DtD2x5N7@agluck-desk3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240212163101.19614-1-mathieu.desnoyers@efficios.com>
- <20240212163101.19614-6-mathieu.desnoyers@efficios.com> <65ca95d086dfd_d2d429470@dwillia2-xfh.jf.intel.com.notmuch>
-In-Reply-To: <65ca95d086dfd_d2d429470@dwillia2-xfh.jf.intel.com.notmuch>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 12 Feb 2024 14:08:20 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiqaENZFBiAihFxdLr2E+kSM4P64M3uPzwT4-K9NiVSmw@mail.gmail.com>
-Message-ID: <CAHk-=wiqaENZFBiAihFxdLr2E+kSM4P64M3uPzwT4-K9NiVSmw@mail.gmail.com>
-Subject: Re: [PATCH v5 5/8] virtio: Treat alloc_dax() -EOPNOTSUPP failure as non-fatal
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Dave Chinner <david@fromorbit.com>, linux-kernel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, 
-	Russell King <linux@armlinux.org.uk>, linux-arch@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-xfs@vger.kernel.org, dm-devel@lists.linux.dev, nvdimm@lists.linux.dev, 
-	linux-s390@vger.kernel.org, Alasdair Kergon <agk@redhat.com>, 
-	Mike Snitzer <snitzer@kernel.org>, Mikulas Patocka <mpatocka@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZcqPhVO_DtD2x5N7@agluck-desk3>
 
-On Mon, 12 Feb 2024 at 14:04, Dan Williams <dan.j.williams@intel.com> wrote:
->
-> This works because the internals of virtio_fs_cleanup_dax(), "kill_dax()
-> and put_dax()", know how to handle a NULL @dax_dev. It is still early
-> days with the "cleanup" helpers, but I wonder if anyone else cares that
-> the DEFINE_FREE() above does not check for NULL?
+On Mon, Feb 12, 2024 at 01:37:09PM -0800, Tony Luck wrote:
+> This made me question the "we don't have an allocator in
+> mce_gen_pool_init()". Because if we got through all the
+> ACPI stuff, we surely have an allocator.
+> 
+> Below patch doesn't explode at runtime.
 
-Well, the main reason for DEFINE_FREE() to check for NULL is not
-correctness, but code generation. See the comment about kfree() in
-<linux/cleanup.h>:
+Yap, I see it.
 
- * NOTE: the DEFINE_FREE()'s @free expression includes a NULL test even though
- * kfree() is fine to be called with a NULL value. This is on purpose. This way
- * the compiler sees the end of our alloc_obj() function as [...]
+And I can't dig out why it didn't use to work and we had to do it this
+way. The earliest thing I found is:
 
-with the full explanation there.
+https://lore.kernel.org/all/1432150538-3120-2-git-send-email-gong.chen@linux.intel.com/T/#mf673ed669ee0d4c27b75bd48450c13c01cbb2cbf
 
-Now, whether the code wants to actually use the cleanup() helpers for
-a single use-case is debatable.
+I'll have to dig into my archives tomorrow, on a clear head...
 
-But yes, if it does, I suspect it should use !IS_ERR_OR_NULL(ptr).
+Thx.
 
-            Linus
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
