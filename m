@@ -1,122 +1,97 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93284182AF
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 10:31:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E69182C7;
+	Mon, 12 Feb 2024 10:31:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707733872; cv=none; b=HWzWl14ts4a6K1FwHeMwbrPTNPCsYkSVsQg+9CyB9eMqZmYZcrKRgLaGi4rX7ewe+pnbLCvi2Uqok/8RSqYWNsrJqFf0lVr1LXXPNu/Wg5UeeVCBWeNLeTbDcSRxYrVbXEAFFhnFwGZbB/Hx+hN4Y2Y6bsn1gqRj4MfA7arDPwE=
+	t=1707733897; cv=none; b=FLCEkE9AGSpZ9woFK2dISdMXKdJV8FWjGdX7lNNTdLBWjzsjbCZcsvCBA9RF1eSR8ns22r2ni5V/VXoHiJ+uyFR3sB3FXrML86+0HB5urJsJjFFGVfaRtrhieige6pqXkiiQKoxMZOhexW1ke86LcfsHd/zHk0BNnW4UNc2HXkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707733872; c=relaxed/simple;
-	bh=0KQsUMRuvZ9A1LtHxdaXPH5EiJdnjk1zjtv1t86DCpQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CBu2voL5+0LLHHrd0ibR1HWkabgF5OPOVjJB+u8fZZHI260Ro0/wj9HAc+bwO4mhB+MhBlafHKIzUByGIgcQz2qYdJ1RUCaSPkrDB4IAE6NMSkN2taQJEdw2HvaIzS2YOMEvhRIgGShprwhCwR99HYGz0DvRXFXwGCMa1TcI3+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pOhO/3Jd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=NeUOnyoA; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pOhO/3Jd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=NeUOnyoA; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1707733897; c=relaxed/simple;
+	bh=ZUr3j8LXsXZQWjcUq4Q+7Cm4KOboTaTOCh0CLeRg8kQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=OUH+W7ejxDAAENsTxgxRU/kJvrb7PaEf4TpIAdp7kuya9JTzFrzx8rbQH+52YB4LMfdqyXW+sJsJj9jNS5tBkleKA0Gl0OaaxuXGjfjtQCENF3J4t0TW352KJQp1gJ26V6pm0XHhay4WpmDDX0ZfrQtXaHjBJDyTlR1NfzeIzo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=seS7Io0n; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pOhO/3Jd";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="NeUOnyoA";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pOhO/3Jd";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="NeUOnyoA"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id BE93922150;
-	Mon, 12 Feb 2024 10:31:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707733868; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0KQsUMRuvZ9A1LtHxdaXPH5EiJdnjk1zjtv1t86DCpQ=;
-	b=pOhO/3JdQaXLpYApqTZSH8xxg2XOuI9uLnL6Htd2aZVny8ClVeaJT8STJeCK/R6Z0EuwIf
-	6Z2/hFB3sOEwyNxOn5SRGiXMVut6/IsTb0Pig1o3rbpBPa5OIlSBaTgPd3OR5R9ltOCGHX
-	VQ8jhAC64ORNcW+70T7hMublScVcOcg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707733868;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0KQsUMRuvZ9A1LtHxdaXPH5EiJdnjk1zjtv1t86DCpQ=;
-	b=NeUOnyoAlr116GKVt4Qmx/2tGtja7xZ5TOeZ9xTAceoEA9B/Tl5duJAvWJvv/N02BtYe3K
-	/uQTc9H4xTmfUdCA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707733868; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0KQsUMRuvZ9A1LtHxdaXPH5EiJdnjk1zjtv1t86DCpQ=;
-	b=pOhO/3JdQaXLpYApqTZSH8xxg2XOuI9uLnL6Htd2aZVny8ClVeaJT8STJeCK/R6Z0EuwIf
-	6Z2/hFB3sOEwyNxOn5SRGiXMVut6/IsTb0Pig1o3rbpBPa5OIlSBaTgPd3OR5R9ltOCGHX
-	VQ8jhAC64ORNcW+70T7hMublScVcOcg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707733868;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0KQsUMRuvZ9A1LtHxdaXPH5EiJdnjk1zjtv1t86DCpQ=;
-	b=NeUOnyoAlr116GKVt4Qmx/2tGtja7xZ5TOeZ9xTAceoEA9B/Tl5duJAvWJvv/N02BtYe3K
-	/uQTc9H4xTmfUdCA==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id AE1C913A0E;
-	Mon, 12 Feb 2024 10:31:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id paoQKWzzyWWqCQAAn2gu4w
-	(envelope-from <dwagner@suse.de>); Mon, 12 Feb 2024 10:31:08 +0000
-Date: Mon, 12 Feb 2024 11:31:08 +0100
-From: Daniel Wagner <dwagner@suse.de>
-To: Keith Busch <kbusch@kernel.org>
-Cc: Hannes Reinecke <hare@suse.de>, James Smart <james.smart@broadcom.com>, 
-	Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH v5 12/12] nvmet-fc: use RCU list iterator for
- assoc_list
-Message-ID: <hpcmiagru7r2uuajov6a6fuakitx77na4susy7qrzofts7atyd@rcu4dmxqnfih>
-References: <20240131085112.21668-1-dwagner@suse.de>
- <20240131085112.21668-13-dwagner@suse.de>
- <b19e0b0f-6b1c-4126-931b-d7b0d01fb3da@suse.de>
- <ZcKHCXtXWVCdi9Ae@kbusch-mbp.mynextlight.net>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="seS7Io0n"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=xAXBzZTraFRQ7cvwghHUqqv7zNWQZICWaeAHfCkxYcU=;
+	t=1707733895; x=1708943495; b=seS7Io0ngdaM/b9JwMVvkW3NPRw6BO2qlnm8zIHMgSsnrcr
+	fTR6XggweaS0lwSLY8LPbZ/qa/dpQrvxctgGJ+6Jssv1uJY4x1knohyppPKIjlJ0G1N6uLpx7Zv1C
+	Hn5g3Cy83GQ03FHhFvYgT4E833xAOKvBE8qOdt3ravkHCjYrqUt971bT2e8dK22m4TOmIE9Loz1Mk
+	a/ipoChzqUTenvSZFu4lGXzZJtNbeBeTP0XD2WSMLs5B04qRTsc1XHB08cU0S2XpNcoTrAFuJ8it+
+	PS5WQTRAL8KFS0oZOdl3zRzcfn740FWX+V2TWari8a8wj1KBQoSAHh4Ayx/xNs9A==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1rZTay-00000005yIY-3uZo;
+	Mon, 12 Feb 2024 11:31:29 +0100
+Message-ID: <35d4ae8f4c5157e3d0da39295a5b15eced367ab6.camel@sipsolutions.net>
+Subject: Re: [PATCH v1 6/9] iwlwifi: mvm: Set THERMAL_TRIP_WRITABLE_TEMP
+ directly
+From: Johannes Berg <johannes@sipsolutions.net>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Stanislaw Gruszka
+	 <stanislaw.gruszka@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM
+ <linux-pm@vger.kernel.org>,  Miri Korenblit
+ <miriam.rachel.korenblit@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+ LKML <linux-kernel@vger.kernel.org>, Daniel Lezcano
+ <daniel.lezcano@linaro.org>,  Srinivas Pandruvada
+ <srinivas.pandruvada@linux.intel.com>, Zhang Rui <rui.zhang@intel.com>,
+ netdev@vger.kernel.org, Ido Schimmel <idosch@nvidia.com>, Petr Machata
+ <petrm@nvidia.com>, linux-wireless@vger.kernel.org,  Shawn Guo
+ <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Manaf Meethalavalappu Pallikunhi
+ <quic_manafm@quicinc.com>
+Date: Mon, 12 Feb 2024 11:31:27 +0100
+In-Reply-To: <CAJZ5v0gZ1tpNmdkvRLA6-ydnhKPKgsM_FCwrW+q1=5ZiD=vbWA@mail.gmail.com>
+References: <3232442.5fSG56mABF@kreacher> <3757041.MHq7AAxBmi@kreacher>
+	 <ZcY7jyyFJq1yfOCj@linux.intel.com>
+	 <CAJZ5v0gZ1tpNmdkvRLA6-ydnhKPKgsM_FCwrW+q1=5ZiD=vbWA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZcKHCXtXWVCdi9Ae@kbusch-mbp.mynextlight.net>
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -3.78
-X-Spamd-Result: default: False [-3.78 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCPT_COUNT_FIVE(0.00)[6];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-2.98)[99.92%]
-X-Spam-Flag: NO
+X-malware-bazaar: not-scanned
 
-On Tue, Feb 06, 2024 at 11:22:49AM -0800, Keith Busch wrote:
-> That said, the rcu_read_lock() seems like it should be moved to
-> nvmet_fc_assoc_exits() since that's the only part reading rcu protected
-> structures.
+On Fri, 2024-02-09 at 17:15 +0100, Rafael J. Wysocki wrote:
+> > >       for (i =3D 0 ; i < IWL_MAX_DTS_TRIPS; i++) {
+> > >               mvm->tz_device.trips[i].temperature =3D THERMAL_TEMP_IN=
+VALID;
+> > >               mvm->tz_device.trips[i].type =3D THERMAL_TRIP_PASSIVE;
+> > > +             mvm->tz_device.trips[i].type =3D THERMAL_TRIP_WRITABLE_=
+TEMP;
+> >=20
+> >                 mvm->tz_device.trips[i].flags =3D THERMAL_TRIP_WRITABLE=
+_TEMP;
+> >=20
+> > Consider using diffrent prefix for constants to diffrenciate flags and =
+types.
+>=20
+> Well, I can use THERMAL_TRIP_FLAG_RW_TEMP or similar, but is it really
+> so confusing?
+>=20
+> I'm wondering what others think.
+>=20
 
-FTR, here is a fix:
+I'd tend to agree with Stanislaw. I did (eventually) notice the double
+assignment to .type above, but had that not been visible in the context,
+or you'd have removed the first one by accident, I'd really not have
+thought about it twice.
 
-https://lore.kernel.org/linux-nvme/20240212102940.11137-1-dwagner@suse.de/
+The bug also makes it look like you even confused yourself ;-)
+
+So having a clearer indication that it's a flag would make sense, I'd
+say.
+
+johannes
