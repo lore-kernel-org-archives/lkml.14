@@ -1,334 +1,587 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9AF45BE3;
-	Mon, 12 Feb 2024 13:14:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2601E41A85
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 13:14:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707743668; cv=none; b=m4XqCHZgj5ws3HfyvRUNkaU+9pjZkdUk9hqxHxpiqvP8Hc3dXOi+938+lN6BUJ1E1d8JogKxU3KUzUYrtwScZlJFtZK6BDlJnbnmEPcVdCCu+9lageWWxLhcEHRyQhzz9jkREukGRPQYjHBefOFkqZzcv0Ay2KRjBCbh4q3fSwM=
+	t=1707743667; cv=none; b=fTQ4oVs/KuW4HB8dck5357icHg0YhGyb9zJct/xEUKDz62yujvL6vju5nEWIbgTZnoqobzEVDLi2duCanmQACiwGo57bCag+HM1qDfBvQ4TNyVdWEDjvqra5IsQ0yE7J4bKhRJ30Bu+Md2symOmeI68n0Z6XcleT3Bam7mHNfFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707743668; c=relaxed/simple;
-	bh=LhniIRDebcQ1WtQbDyA1K0rXNp4WmruPrv/0+dGUHSk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Mcx7aIzOn5X9VdH6XHMMMTPOm/TScT359Buahm1i8+n7P9DDByDbidcPyjPyio5usWeAM7JZ/FQfCo8NjiN3B8iv0dBVkrrO/SRDpARBC2vj9ODQz5GhotjVwQLCxLHlp68ydnd9UleNuUGbfo1+B1GqOo/V6Bq+jDFpf5vBt2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RGARsEI9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707743667; c=relaxed/simple;
+	bh=EduHQTMkW7M9PuCv7DD8a87vLU/tqTiTdiEeV+xNUlQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=endy3QSiGbQjk4+hEdF+Ci0IJC9AwdNLZDtqYAT8V5OV97ZuwyAlX+IVJUgt6MJcCVzqoQfgDOHAV+Q/9AHuT/+jriQZwxy6R1FPmuXGQgAIhrQkAXxq846r82RgIROaQw1XoPqwyADEAeMlWTyEl5JkPfLOH1ocrEdTUgmYMmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--panikiel.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GKpcq2Eg; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--panikiel.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RGARsEI9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 602A9C433B2;
-	Mon, 12 Feb 2024 13:14:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707743667;
-	bh=LhniIRDebcQ1WtQbDyA1K0rXNp4WmruPrv/0+dGUHSk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=RGARsEI9kyGSSVGtidFq+XfP5T8+mkOh/+uHtPtUy5kGKrS09eIDPwqBXVkoS4Lwo
-	 ORcSZfKmfLMft2CfVpQNWMK8yhuM7uaVxc+pB0J3BqTxLWo0Dms0rIA5kZAlGSyO+L
-	 XLgHAgDzxKyck6g6UqMZimOkXrHRSFVkXonp4synnOmlZBW1+jM857op3o+9AJIkai
-	 d6cL5+/M61LR/kfHDxkWnCw5tD3Ox344Myht0BuiAwu4DLgbAAO2lIfJ24yacdNu8o
-	 klzSxIMQ4ALpyhLGfZ2EIdxBj/RwKj6+aSC0A7re2GResTmNN6j0cVWfP+mlYgim+T
-	 USPcSwa7EbgRA==
-From: Maxime Ripard <mripard@kernel.org>
-Date: Mon, 12 Feb 2024 14:13:04 +0100
-Subject: [PATCH v6 21/36] drm/connector: hdmi: Add custom hook to filter
- TMDS character rate
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GKpcq2Eg"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-40fb505c97aso19809445e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 05:14:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707743663; x=1708348463; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=C857fcvjN2Q61CMGefzqTDLbKskpX9Jvk37xAZm0WZQ=;
+        b=GKpcq2EgIwaLGMey1DaJ8Lju3zH/tPZ/MWdR39oo5oS00nvHzSNityNdG7ic42oxOA
+         BhUPKreq8Yws8iciCOxUJN3Ok/52gQk3fuVhmRFpFyFw2y0hsmnp7qtWelA8FEQhPLo9
+         wyFJmN4IcPi8+Lyh2MwJ2hegGPoO0zJjp7rJ6qWneoGTF/4Vym5/VqGoAgYAr6NRQbxi
+         9jpRz5rCDxryOvWh3wN9VuGrsm2UHTBeMjbvcumRqJNz3ApDT30L4ux5m5lAeyYpFmHW
+         6CJURSVZnsL2k6t7XsvIRkbHo/SqxM6k1nR2ENJBwN/I1/ha0h65ys8x1vfNYklsKufz
+         b0eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707743663; x=1708348463;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=C857fcvjN2Q61CMGefzqTDLbKskpX9Jvk37xAZm0WZQ=;
+        b=XNjPW+MD2nOabm0iQK2+k5mXXWYfZm4FlHk5oqDkxD5M7PR1EnO89iRRyUx/Wars+D
+         780SJkjt1dlOd6FcTRWrp6iW0Z/Qs3Av6VNdQzvXPgzkLqvZDRNDWZFOIvm1oHKaxNtr
+         ERHwqc8VZfE9avxc/2O6IVZmn38DGEz6Z0hgWSWo+WyR+4JAzGc4i9LO1+fUnxsa+R68
+         3yOp/mgAhQXCaDOK3z8VtLokrpD8DbWM2etJr0MlBhavYt7C/YhJaEHEFx8FVcXLJuJ4
+         AjVUX4B9EyntGPOWEhZy3gPUXnaO9TahSFJAFFmCy2zL/+rZi7yNX01Ytqe42UGazKfQ
+         dXFw==
+X-Forwarded-Encrypted: i=1; AJvYcCUwbBUzjH7v9bgwY5njrxrp3PSKbY0VXtDJBclSerK+dLIHRetBRS2K29KKcfCl2LBm5N8x5yI96oLqlmOAEhndnHj3aw9+83Jz+qHM
+X-Gm-Message-State: AOJu0YzR0vsIcmJz8x6QN5v1SFlfdXabbF+a94KOVO2FpEAfOT3jxgnG
+	D+fJw7kRm3o3xIw33DhnjGJVjNuIm8UdDgGr+Ha4+QLwgBosNMl3eyo3KZp+tVphDWZaAmq9sQK
+	0UHm+4NhC+w==
+X-Google-Smtp-Source: AGHT+IG5xi/ZS1yrFRFK1RW2aagwmX6KzFfQ5/5hjVdtE12WQdvMnvFrXJog3nKIuyfDcEXqGAW89Ra+zqrGCw==
+X-Received: from szatan.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2d83])
+ (user=panikiel job=sendgmr) by 2002:a5d:5a1a:0:b0:33b:1da0:a7cb with SMTP id
+ bq26-20020a5d5a1a000000b0033b1da0a7cbmr36157wrb.4.1707743663594; Mon, 12 Feb
+ 2024 05:14:23 -0800 (PST)
+Date: Mon, 12 Feb 2024 13:13:17 +0000
+In-Reply-To: <20240212131323.2162161-1-panikiel@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240212-kms-hdmi-connector-state-v6-21-f4bcdc979e6f@kernel.org>
-References: <20240212-kms-hdmi-connector-state-v6-0-f4bcdc979e6f@kernel.org>
-In-Reply-To: <20240212-kms-hdmi-connector-state-v6-0-f4bcdc979e6f@kernel.org>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
- Daniel Vetter <daniel@ffwll.ch>, Emma Anholt <emma@anholt.net>, 
- Jonathan Corbet <corbet@lwn.net>, Sandy Huang <hjc@rock-chips.com>, 
- =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, dri-devel@lists.freedesktop.org, 
- linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
- linux-rockchip@lists.infradead.org, linux-sunxi@lists.linux.dev, 
- Maxime Ripard <mripard@kernel.org>, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10268; i=mripard@kernel.org;
- h=from:subject:message-id; bh=LhniIRDebcQ1WtQbDyA1K0rXNp4WmruPrv/0+dGUHSk=;
- b=owGbwMvMwCX2+D1vfrpE4FHG02pJDKmnJLN3FTwN/cr+uzvNdveV3+9Fp6W2bDK24LiV/Ps8q
- 2rWj5vRHaUsDGJcDLJiiiwxwuZL4k7Net3JxjcPZg4rE8gQBi5OAZjIAkuGv4Kcxb3h/SycSWdm
- RT28sEqE35rx/cJiCW1PQyP1SwfzWBn+8PHFFCdafdlhXcpzuuGuw9R/LpKftwc/XyReXLZoa2U
- DGwA=
-X-Developer-Key: i=mripard@kernel.org; a=openpgp;
- fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
+Mime-Version: 1.0
+References: <20240212131323.2162161-1-panikiel@google.com>
+X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
+Message-ID: <20240212131323.2162161-4-panikiel@google.com>
+Subject: [PATCH 3/9] drm/dp_mst: Move DRM-independent structures to separate header
+From: "=?UTF-8?q?Pawe=C5=82=20Anikiel?=" <panikiel@google.com>
+To: airlied@gmail.com, akpm@linux-foundation.org, conor+dt@kernel.org, 
+	daniel@ffwll.ch, dinguyen@kernel.org, hverkuil-cisco@xs4all.nl, 
+	krzysztof.kozlowski+dt@linaro.org, maarten.lankhorst@linux.intel.com, 
+	mchehab@kernel.org, mripard@kernel.org, robh+dt@kernel.org, 
+	tzimmermann@suse.de
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	chromeos-krk-upstreaming@google.com, ribalda@chromium.org, 
+	"=?UTF-8?q?Pawe=C5=82=20Anikiel?=" <panikiel@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Most of the HDMI controllers have an upper TMDS character rate limit
-they can't exceed. On "embedded"-grade display controllers, it will
-typically be lower than what high-grade monitors can provide these days,
-so drivers will filter the TMDS character rate based on the controller
-capabilities.
+Move structures describing MST sideband messages into a separate header
+so that non-DRM code can use them.
 
-To make that easier to handle for drivers, let's provide an optional
-hook to be implemented by drivers so they can tell the HDMI controller
-helpers if a given TMDS character rate is reachable for them or not.
-
-This will then be useful to figure out the best format and bpc count for
-a given mode.
-
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Pawe=C5=82 Anikiel <panikiel@google.com>
 ---
- drivers/gpu/drm/drm_atomic_state_helper.c          |  9 +++++++
- drivers/gpu/drm/drm_connector.c                    |  4 +++
- .../gpu/drm/tests/drm_atomic_state_helper_test.c   |  4 +++
- drivers/gpu/drm/tests/drm_connector_test.c         | 15 +++++++++++
- include/drm/drm_connector.h                        | 30 ++++++++++++++++++++++
- 5 files changed, 62 insertions(+)
+ include/drm/display/drm_dp_mst.h        | 238 ++++++++++++++++++++++++
+ include/drm/display/drm_dp_mst_helper.h | 232 +----------------------
+ 2 files changed, 239 insertions(+), 231 deletions(-)
+ create mode 100644 include/drm/display/drm_dp_mst.h
 
-diff --git a/drivers/gpu/drm/drm_atomic_state_helper.c b/drivers/gpu/drm/drm_atomic_state_helper.c
-index ac77d47a0ce3..3a965c4aa59b 100644
---- a/drivers/gpu/drm/drm_atomic_state_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_state_helper.c
-@@ -688,11 +688,20 @@ hdmi_clock_valid(const struct drm_connector *connector,
- 		 const struct drm_display_mode *mode,
- 		 unsigned long long clock)
- {
-+	const struct drm_connector_hdmi_funcs *funcs = connector->hdmi.funcs;
- 	const struct drm_display_info *info = &connector->display_info;
- 
- 	if (info->max_tmds_clock && clock > info->max_tmds_clock * 1000)
- 		return MODE_CLOCK_HIGH;
- 
-+	if (funcs && funcs->tmds_char_rate_valid) {
-+		enum drm_mode_status status;
+diff --git a/include/drm/display/drm_dp_mst.h b/include/drm/display/drm_dp_=
+mst.h
+new file mode 100644
+index 000000000000..4e398bfd3ee3
+--- /dev/null
++++ b/include/drm/display/drm_dp_mst.h
+@@ -0,0 +1,238 @@
++/* SPDX-License-Identifier: MIT */
 +
-+		status = funcs->tmds_char_rate_valid(connector, mode, clock);
-+		if (status != MODE_OK)
-+			return status;
-+	}
++#ifndef _DRM_DP_MST_H_
++#define _DRM_DP_MST_H_
 +
- 	return MODE_OK;
- }
- 
-diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connector.c
-index 332477c6a987..a4466a79421e 100644
---- a/drivers/gpu/drm/drm_connector.c
-+++ b/drivers/gpu/drm/drm_connector.c
-@@ -457,6 +457,7 @@ EXPORT_SYMBOL(drmm_connector_init);
-  * @dev: DRM device
-  * @connector: A pointer to the HDMI connector to init
-  * @funcs: callbacks for this connector
-+ * @hdmi_funcs: HDMI-related callbacks for this connector
-  * @connector_type: user visible type of the connector
-  * @ddc: optional pointer to the associated ddc adapter
-  * @supported_formats: Bitmask of @hdmi_colorspace listing supported output formats
-@@ -476,6 +477,7 @@ EXPORT_SYMBOL(drmm_connector_init);
- int drmm_connector_hdmi_init(struct drm_device *dev,
- 			     struct drm_connector *connector,
- 			     const struct drm_connector_funcs *funcs,
-+			     const struct drm_connector_hdmi_funcs *hdmi_funcs,
- 			     int connector_type,
- 			     struct i2c_adapter *ddc,
- 			     unsigned long supported_formats,
-@@ -512,6 +514,8 @@ int drmm_connector_hdmi_init(struct drm_device *dev,
- 	if (max_bpc > 8)
- 		drm_connector_attach_hdr_output_metadata_property(connector);
- 
-+	connector->hdmi.funcs = hdmi_funcs;
++#include <linux/types.h>
 +
- 	return 0;
- }
- EXPORT_SYMBOL(drmm_connector_hdmi_init);
-diff --git a/drivers/gpu/drm/tests/drm_atomic_state_helper_test.c b/drivers/gpu/drm/tests/drm_atomic_state_helper_test.c
-index d76fafb91025..a43bbfc2c2d0 100644
---- a/drivers/gpu/drm/tests/drm_atomic_state_helper_test.c
-+++ b/drivers/gpu/drm/tests/drm_atomic_state_helper_test.c
-@@ -110,6 +110,9 @@ static int set_connector_edid(struct kunit *test, struct drm_connector *connecto
- 	return 0;
- }
- 
-+static const struct drm_connector_hdmi_funcs dummy_connector_hdmi_funcs = {
++struct drm_dp_nak_reply {
++	u8 guid[16];
++	u8 reason;
++	u8 nak_data;
 +};
 +
- static int dummy_connector_get_modes(struct drm_connector *connector)
- {
- 	struct drm_atomic_helper_connector_hdmi_priv *priv =
-@@ -192,6 +195,7 @@ drm_atomic_helper_connector_hdmi_init(struct kunit *test,
- 	conn = &priv->connector;
- 	ret = drmm_connector_hdmi_init(drm, conn,
- 				       &dummy_connector_funcs,
-+				       &dummy_connector_hdmi_funcs,
- 				       DRM_MODE_CONNECTOR_HDMIA,
- 				       NULL,
- 				       formats,
-diff --git a/drivers/gpu/drm/tests/drm_connector_test.c b/drivers/gpu/drm/tests/drm_connector_test.c
-index 0a838924a546..6a3651b08c81 100644
---- a/drivers/gpu/drm/tests/drm_connector_test.c
-+++ b/drivers/gpu/drm/tests/drm_connector_test.c
-@@ -22,6 +22,9 @@ struct drm_connector_init_priv {
- 	struct i2c_adapter ddc;
- };
- 
-+static const struct drm_connector_hdmi_funcs dummy_hdmi_funcs = {
++struct drm_dp_link_address_ack_reply {
++	u8 guid[16];
++	u8 nports;
++	struct drm_dp_link_addr_reply_port {
++		bool input_port;
++		u8 peer_device_type;
++		u8 port_number;
++		bool mcs;
++		bool ddps;
++		bool legacy_device_plug_status;
++		u8 dpcd_revision;
++		u8 peer_guid[16];
++		u8 num_sdp_streams;
++		u8 num_sdp_stream_sinks;
++	} ports[16];
 +};
 +
- static const struct drm_connector_funcs dummy_funcs = {
- 	.atomic_destroy_state	= drm_atomic_helper_connector_destroy_state,
- 	.atomic_duplicate_state	= drm_atomic_helper_connector_duplicate_state,
-@@ -187,6 +190,7 @@ static void drm_test_connector_hdmi_init_valid(struct kunit *test)
- 
- 	ret = drmm_connector_hdmi_init(&priv->drm, &priv->connector,
- 				       &dummy_funcs,
-+				       &dummy_hdmi_funcs,
- 				       DRM_MODE_CONNECTOR_HDMIA,
- 				       &priv->ddc,
- 				       BIT(HDMI_COLORSPACE_RGB),
-@@ -205,6 +209,7 @@ static void drm_test_connector_hdmi_init_null_ddc(struct kunit *test)
- 
- 	ret = drmm_connector_hdmi_init(&priv->drm, &priv->connector,
- 				       &dummy_funcs,
-+				       &dummy_hdmi_funcs,
- 				       DRM_MODE_CONNECTOR_HDMIA,
- 				       NULL,
- 				       BIT(HDMI_COLORSPACE_RGB),
-@@ -223,6 +228,7 @@ static void drm_test_connector_hdmi_init_bpc_invalid(struct kunit *test)
- 
- 	ret = drmm_connector_hdmi_init(&priv->drm, &priv->connector,
- 				       &dummy_funcs,
-+				       &dummy_hdmi_funcs,
- 				       DRM_MODE_CONNECTOR_HDMIA,
- 				       &priv->ddc,
- 				       BIT(HDMI_COLORSPACE_RGB),
-@@ -241,6 +247,7 @@ static void drm_test_connector_hdmi_init_bpc_null(struct kunit *test)
- 
- 	ret = drmm_connector_hdmi_init(&priv->drm, &priv->connector,
- 				       &dummy_funcs,
-+				       &dummy_hdmi_funcs,
- 				       DRM_MODE_CONNECTOR_HDMIA,
- 				       &priv->ddc,
- 				       BIT(HDMI_COLORSPACE_RGB),
-@@ -263,6 +270,7 @@ static void drm_test_connector_hdmi_init_bpc_8(struct kunit *test)
- 
- 	ret = drmm_connector_hdmi_init(&priv->drm, connector,
- 				       &dummy_funcs,
-+				       &dummy_hdmi_funcs,
- 				       DRM_MODE_CONNECTOR_HDMIA,
- 				       &priv->ddc,
- 				       BIT(HDMI_COLORSPACE_RGB),
-@@ -297,6 +305,7 @@ static void drm_test_connector_hdmi_init_bpc_10(struct kunit *test)
- 
- 	ret = drmm_connector_hdmi_init(&priv->drm, connector,
- 				       &dummy_funcs,
-+				       &dummy_hdmi_funcs,
- 				       DRM_MODE_CONNECTOR_HDMIA,
- 				       &priv->ddc,
- 				       BIT(HDMI_COLORSPACE_RGB),
-@@ -331,6 +340,7 @@ static void drm_test_connector_hdmi_init_bpc_12(struct kunit *test)
- 
- 	ret = drmm_connector_hdmi_init(&priv->drm, connector,
- 				       &dummy_funcs,
-+				       &dummy_hdmi_funcs,
- 				       DRM_MODE_CONNECTOR_HDMIA,
- 				       &priv->ddc,
- 				       BIT(HDMI_COLORSPACE_RGB),
-@@ -361,6 +371,7 @@ static void drm_test_connector_hdmi_init_formats_empty(struct kunit *test)
- 
- 	ret = drmm_connector_hdmi_init(&priv->drm, &priv->connector,
- 				       &dummy_funcs,
-+				       &dummy_hdmi_funcs,
- 				       DRM_MODE_CONNECTOR_HDMIA,
- 				       &priv->ddc,
- 				       0,
-@@ -379,6 +390,7 @@ static void drm_test_connector_hdmi_init_formats_no_rgb(struct kunit *test)
- 
- 	ret = drmm_connector_hdmi_init(&priv->drm, &priv->connector,
- 				       &dummy_funcs,
-+				       &dummy_hdmi_funcs,
- 				       DRM_MODE_CONNECTOR_HDMIA,
- 				       &priv->ddc,
- 				       BIT(HDMI_COLORSPACE_YUV422),
-@@ -398,6 +410,7 @@ static void drm_test_connector_hdmi_init_type_valid(struct kunit *test)
- 
- 	ret = drmm_connector_hdmi_init(&priv->drm, &priv->connector,
- 				       &dummy_funcs,
-+				       &dummy_hdmi_funcs,
- 				       connector_type,
- 				       &priv->ddc,
- 				       BIT(HDMI_COLORSPACE_RGB),
-@@ -431,6 +444,7 @@ static void drm_test_connector_hdmi_init_type_invalid(struct kunit *test)
- 
- 	ret = drmm_connector_hdmi_init(&priv->drm, &priv->connector,
- 				       &dummy_funcs,
-+				       &dummy_hdmi_funcs,
- 				       connector_type,
- 				       &priv->ddc,
- 				       BIT(HDMI_COLORSPACE_RGB),
-@@ -695,6 +709,7 @@ static void drm_test_drm_connector_attach_broadcast_rgb_property_hdmi_connector(
- 
- 	ret = drmm_connector_hdmi_init(&priv->drm, connector,
- 				       &dummy_funcs,
-+				       &dummy_hdmi_funcs,
- 				       DRM_MODE_CONNECTOR_HDMIA,
- 				       &priv->ddc,
- 				       BIT(HDMI_COLORSPACE_RGB),
-diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-index 59016d9c17f5..3eaf4d54364d 100644
---- a/include/drm/drm_connector.h
-+++ b/include/drm/drm_connector.h
-@@ -1093,6 +1093,30 @@ struct drm_connector_state {
- 	} hdmi;
- };
- 
-+/**
-+ * struct drm_connector_hdmi_funcs - drm_hdmi_connector control functions
-+ */
-+struct drm_connector_hdmi_funcs {
-+	/**
-+	 * @tmds_char_rate_valid:
-+	 *
-+	 * This callback is invoked at atomic_check time to figure out
-+	 * whether a particular TMDS character rate is supported by the
-+	 * driver.
-+	 *
-+	 * The @tmds_char_rate_valid callback is optional.
-+	 *
-+	 * Returns:
-+	 *
-+	 * Either &drm_mode_status.MODE_OK or one of the failure reasons
-+	 * in &enum drm_mode_status.
-+	 */
-+	enum drm_mode_status
-+	(*tmds_char_rate_valid)(const struct drm_connector *connector,
-+				const struct drm_display_mode *mode,
-+				unsigned long long tmds_rate);
++struct drm_dp_remote_dpcd_read_ack_reply {
++	u8 port_number;
++	u8 num_bytes;
++	u8 bytes[255];
 +};
 +
- /**
-  * struct drm_connector_funcs - control connectors on a given device
-  *
-@@ -1967,6 +1991,11 @@ struct drm_connector {
- 		 * supported by the controller.
- 		 */
- 		unsigned long supported_formats;
++struct drm_dp_remote_dpcd_write_ack_reply {
++	u8 port_number;
++};
 +
-+		/**
-+		 * @funcs: HDMI connector Control Functions
-+		 */
-+		const struct drm_connector_hdmi_funcs *funcs;
- 	} hdmi;
++struct drm_dp_remote_dpcd_write_nak_reply {
++	u8 port_number;
++	u8 reason;
++	u8 bytes_written_before_failure;
++};
++
++struct drm_dp_remote_i2c_read_ack_reply {
++	u8 port_number;
++	u8 num_bytes;
++	u8 bytes[255];
++};
++
++struct drm_dp_remote_i2c_read_nak_reply {
++	u8 port_number;
++	u8 nak_reason;
++	u8 i2c_nak_transaction;
++};
++
++struct drm_dp_remote_i2c_write_ack_reply {
++	u8 port_number;
++};
++
++struct drm_dp_query_stream_enc_status_ack_reply {
++	/* Bit[23:16]- Stream Id */
++	u8 stream_id;
++
++	/* Bit[15]- Signed */
++	bool reply_signed;
++
++	/* Bit[10:8]- Stream Output Sink Type */
++	bool unauthorizable_device_present;
++	bool legacy_device_present;
++	bool query_capable_device_present;
++
++	/* Bit[12:11]- Stream Output CP Type */
++	bool hdcp_1x_device_present;
++	bool hdcp_2x_device_present;
++
++	/* Bit[4]- Stream Authentication */
++	bool auth_completed;
++
++	/* Bit[3]- Stream Encryption */
++	bool encryption_enabled;
++
++	/* Bit[2]- Stream Repeater Function Present */
++	bool repeater_present;
++
++	/* Bit[1:0]- Stream State */
++	u8 state;
++};
++
++#define DRM_DP_MAX_SDP_STREAMS 16
++struct drm_dp_allocate_payload {
++	u8 port_number;
++	u8 number_sdp_streams;
++	u8 vcpi;
++	u16 pbn;
++	u8 sdp_stream_sink[DRM_DP_MAX_SDP_STREAMS];
++};
++
++struct drm_dp_allocate_payload_ack_reply {
++	u8 port_number;
++	u8 vcpi;
++	u16 allocated_pbn;
++};
++
++struct drm_dp_connection_status_notify {
++	u8 guid[16];
++	u8 port_number;
++	bool legacy_device_plug_status;
++	bool displayport_device_plug_status;
++	bool message_capability_status;
++	bool input_port;
++	u8 peer_device_type;
++};
++
++struct drm_dp_remote_dpcd_read {
++	u8 port_number;
++	u32 dpcd_address;
++	u8 num_bytes;
++};
++
++struct drm_dp_remote_dpcd_write {
++	u8 port_number;
++	u32 dpcd_address;
++	u8 num_bytes;
++	u8 *bytes;
++};
++
++#define DP_REMOTE_I2C_READ_MAX_TRANSACTIONS 4
++struct drm_dp_remote_i2c_read {
++	u8 num_transactions;
++	u8 port_number;
++	struct drm_dp_remote_i2c_read_tx {
++		u8 i2c_dev_id;
++		u8 num_bytes;
++		u8 *bytes;
++		u8 no_stop_bit;
++		u8 i2c_transaction_delay;
++	} transactions[DP_REMOTE_I2C_READ_MAX_TRANSACTIONS];
++	u8 read_i2c_device_id;
++	u8 num_bytes_read;
++};
++
++struct drm_dp_remote_i2c_write {
++	u8 port_number;
++	u8 write_i2c_device_id;
++	u8 num_bytes;
++	u8 *bytes;
++};
++
++struct drm_dp_query_stream_enc_status {
++	u8 stream_id;
++	u8 client_id[7];	/* 56-bit nonce */
++	u8 stream_event;
++	bool valid_stream_event;
++	u8 stream_behavior;
++	u8 valid_stream_behavior;
++};
++
++/* this covers ENUM_RESOURCES, POWER_DOWN_PHY, POWER_UP_PHY */
++struct drm_dp_port_number_req {
++	u8 port_number;
++};
++
++struct drm_dp_enum_path_resources_ack_reply {
++	u8 port_number;
++	bool fec_capable;
++	u16 full_payload_bw_number;
++	u16 avail_payload_bw_number;
++};
++
++/* covers POWER_DOWN_PHY, POWER_UP_PHY */
++struct drm_dp_port_number_rep {
++	u8 port_number;
++};
++
++struct drm_dp_query_payload {
++	u8 port_number;
++	u8 vcpi;
++};
++
++struct drm_dp_resource_status_notify {
++	u8 port_number;
++	u8 guid[16];
++	u16 available_pbn;
++};
++
++struct drm_dp_query_payload_ack_reply {
++	u8 port_number;
++	u16 allocated_pbn;
++};
++
++struct drm_dp_sideband_msg_req_body {
++	u8 req_type;
++	union ack_req {
++		struct drm_dp_connection_status_notify conn_stat;
++		struct drm_dp_port_number_req port_num;
++		struct drm_dp_resource_status_notify resource_stat;
++
++		struct drm_dp_query_payload query_payload;
++		struct drm_dp_allocate_payload allocate_payload;
++
++		struct drm_dp_remote_dpcd_read dpcd_read;
++		struct drm_dp_remote_dpcd_write dpcd_write;
++
++		struct drm_dp_remote_i2c_read i2c_read;
++		struct drm_dp_remote_i2c_write i2c_write;
++
++		struct drm_dp_query_stream_enc_status enc_status;
++	} u;
++};
++
++struct drm_dp_sideband_msg_reply_body {
++	u8 reply_type;
++	u8 req_type;
++	union ack_replies {
++		struct drm_dp_nak_reply nak;
++		struct drm_dp_link_address_ack_reply link_addr;
++		struct drm_dp_port_number_rep port_number;
++
++		struct drm_dp_enum_path_resources_ack_reply path_resources;
++		struct drm_dp_allocate_payload_ack_reply allocate_payload;
++		struct drm_dp_query_payload_ack_reply query_payload;
++
++		struct drm_dp_remote_dpcd_read_ack_reply remote_dpcd_read_ack;
++		struct drm_dp_remote_dpcd_write_ack_reply remote_dpcd_write_ack;
++		struct drm_dp_remote_dpcd_write_nak_reply remote_dpcd_write_nack;
++
++		struct drm_dp_remote_i2c_read_ack_reply remote_i2c_read_ack;
++		struct drm_dp_remote_i2c_read_nak_reply remote_i2c_read_nack;
++		struct drm_dp_remote_i2c_write_ack_reply remote_i2c_write_ack;
++
++		struct drm_dp_query_stream_enc_status_ack_reply enc_status;
++	} u;
++};
++
++#endif
+diff --git a/include/drm/display/drm_dp_mst_helper.h b/include/drm/display/=
+drm_dp_mst_helper.h
+index 9b19d8bd520a..61add6f6accd 100644
+--- a/include/drm/display/drm_dp_mst_helper.h
++++ b/include/drm/display/drm_dp_mst_helper.h
+@@ -23,6 +23,7 @@
+ #define _DRM_DP_MST_HELPER_H_
+=20
+ #include <linux/types.h>
++#include <drm/display/drm_dp_mst.h>
+ #include <drm/display/drm_dp_helper.h>
+ #include <drm/drm_atomic.h>
+ #include <drm/drm_fixed.h>
+@@ -248,237 +249,6 @@ struct drm_dp_mst_branch {
+ 	u8 guid[16];
  };
- 
-@@ -1989,6 +2018,7 @@ int drmm_connector_init(struct drm_device *dev,
- int drmm_connector_hdmi_init(struct drm_device *dev,
- 			     struct drm_connector *connector,
- 			     const struct drm_connector_funcs *funcs,
-+			     const struct drm_connector_hdmi_funcs *hdmi_funcs,
- 			     int connector_type,
- 			     struct i2c_adapter *ddc,
- 			     unsigned long supported_formats,
-
--- 
-2.43.0
+=20
+-
+-struct drm_dp_nak_reply {
+-	u8 guid[16];
+-	u8 reason;
+-	u8 nak_data;
+-};
+-
+-struct drm_dp_link_address_ack_reply {
+-	u8 guid[16];
+-	u8 nports;
+-	struct drm_dp_link_addr_reply_port {
+-		bool input_port;
+-		u8 peer_device_type;
+-		u8 port_number;
+-		bool mcs;
+-		bool ddps;
+-		bool legacy_device_plug_status;
+-		u8 dpcd_revision;
+-		u8 peer_guid[16];
+-		u8 num_sdp_streams;
+-		u8 num_sdp_stream_sinks;
+-	} ports[16];
+-};
+-
+-struct drm_dp_remote_dpcd_read_ack_reply {
+-	u8 port_number;
+-	u8 num_bytes;
+-	u8 bytes[255];
+-};
+-
+-struct drm_dp_remote_dpcd_write_ack_reply {
+-	u8 port_number;
+-};
+-
+-struct drm_dp_remote_dpcd_write_nak_reply {
+-	u8 port_number;
+-	u8 reason;
+-	u8 bytes_written_before_failure;
+-};
+-
+-struct drm_dp_remote_i2c_read_ack_reply {
+-	u8 port_number;
+-	u8 num_bytes;
+-	u8 bytes[255];
+-};
+-
+-struct drm_dp_remote_i2c_read_nak_reply {
+-	u8 port_number;
+-	u8 nak_reason;
+-	u8 i2c_nak_transaction;
+-};
+-
+-struct drm_dp_remote_i2c_write_ack_reply {
+-	u8 port_number;
+-};
+-
+-struct drm_dp_query_stream_enc_status_ack_reply {
+-	/* Bit[23:16]- Stream Id */
+-	u8 stream_id;
+-
+-	/* Bit[15]- Signed */
+-	bool reply_signed;
+-
+-	/* Bit[10:8]- Stream Output Sink Type */
+-	bool unauthorizable_device_present;
+-	bool legacy_device_present;
+-	bool query_capable_device_present;
+-
+-	/* Bit[12:11]- Stream Output CP Type */
+-	bool hdcp_1x_device_present;
+-	bool hdcp_2x_device_present;
+-
+-	/* Bit[4]- Stream Authentication */
+-	bool auth_completed;
+-
+-	/* Bit[3]- Stream Encryption */
+-	bool encryption_enabled;
+-
+-	/* Bit[2]- Stream Repeater Function Present */
+-	bool repeater_present;
+-
+-	/* Bit[1:0]- Stream State */
+-	u8 state;
+-};
+-
+-#define DRM_DP_MAX_SDP_STREAMS 16
+-struct drm_dp_allocate_payload {
+-	u8 port_number;
+-	u8 number_sdp_streams;
+-	u8 vcpi;
+-	u16 pbn;
+-	u8 sdp_stream_sink[DRM_DP_MAX_SDP_STREAMS];
+-};
+-
+-struct drm_dp_allocate_payload_ack_reply {
+-	u8 port_number;
+-	u8 vcpi;
+-	u16 allocated_pbn;
+-};
+-
+-struct drm_dp_connection_status_notify {
+-	u8 guid[16];
+-	u8 port_number;
+-	bool legacy_device_plug_status;
+-	bool displayport_device_plug_status;
+-	bool message_capability_status;
+-	bool input_port;
+-	u8 peer_device_type;
+-};
+-
+-struct drm_dp_remote_dpcd_read {
+-	u8 port_number;
+-	u32 dpcd_address;
+-	u8 num_bytes;
+-};
+-
+-struct drm_dp_remote_dpcd_write {
+-	u8 port_number;
+-	u32 dpcd_address;
+-	u8 num_bytes;
+-	u8 *bytes;
+-};
+-
+-#define DP_REMOTE_I2C_READ_MAX_TRANSACTIONS 4
+-struct drm_dp_remote_i2c_read {
+-	u8 num_transactions;
+-	u8 port_number;
+-	struct drm_dp_remote_i2c_read_tx {
+-		u8 i2c_dev_id;
+-		u8 num_bytes;
+-		u8 *bytes;
+-		u8 no_stop_bit;
+-		u8 i2c_transaction_delay;
+-	} transactions[DP_REMOTE_I2C_READ_MAX_TRANSACTIONS];
+-	u8 read_i2c_device_id;
+-	u8 num_bytes_read;
+-};
+-
+-struct drm_dp_remote_i2c_write {
+-	u8 port_number;
+-	u8 write_i2c_device_id;
+-	u8 num_bytes;
+-	u8 *bytes;
+-};
+-
+-struct drm_dp_query_stream_enc_status {
+-	u8 stream_id;
+-	u8 client_id[7];	/* 56-bit nonce */
+-	u8 stream_event;
+-	bool valid_stream_event;
+-	u8 stream_behavior;
+-	u8 valid_stream_behavior;
+-};
+-
+-/* this covers ENUM_RESOURCES, POWER_DOWN_PHY, POWER_UP_PHY */
+-struct drm_dp_port_number_req {
+-	u8 port_number;
+-};
+-
+-struct drm_dp_enum_path_resources_ack_reply {
+-	u8 port_number;
+-	bool fec_capable;
+-	u16 full_payload_bw_number;
+-	u16 avail_payload_bw_number;
+-};
+-
+-/* covers POWER_DOWN_PHY, POWER_UP_PHY */
+-struct drm_dp_port_number_rep {
+-	u8 port_number;
+-};
+-
+-struct drm_dp_query_payload {
+-	u8 port_number;
+-	u8 vcpi;
+-};
+-
+-struct drm_dp_resource_status_notify {
+-	u8 port_number;
+-	u8 guid[16];
+-	u16 available_pbn;
+-};
+-
+-struct drm_dp_query_payload_ack_reply {
+-	u8 port_number;
+-	u16 allocated_pbn;
+-};
+-
+-struct drm_dp_sideband_msg_req_body {
+-	u8 req_type;
+-	union ack_req {
+-		struct drm_dp_connection_status_notify conn_stat;
+-		struct drm_dp_port_number_req port_num;
+-		struct drm_dp_resource_status_notify resource_stat;
+-
+-		struct drm_dp_query_payload query_payload;
+-		struct drm_dp_allocate_payload allocate_payload;
+-
+-		struct drm_dp_remote_dpcd_read dpcd_read;
+-		struct drm_dp_remote_dpcd_write dpcd_write;
+-
+-		struct drm_dp_remote_i2c_read i2c_read;
+-		struct drm_dp_remote_i2c_write i2c_write;
+-
+-		struct drm_dp_query_stream_enc_status enc_status;
+-	} u;
+-};
+-
+-struct drm_dp_sideband_msg_reply_body {
+-	u8 reply_type;
+-	u8 req_type;
+-	union ack_replies {
+-		struct drm_dp_nak_reply nak;
+-		struct drm_dp_link_address_ack_reply link_addr;
+-		struct drm_dp_port_number_rep port_number;
+-
+-		struct drm_dp_enum_path_resources_ack_reply path_resources;
+-		struct drm_dp_allocate_payload_ack_reply allocate_payload;
+-		struct drm_dp_query_payload_ack_reply query_payload;
+-
+-		struct drm_dp_remote_dpcd_read_ack_reply remote_dpcd_read_ack;
+-		struct drm_dp_remote_dpcd_write_ack_reply remote_dpcd_write_ack;
+-		struct drm_dp_remote_dpcd_write_nak_reply remote_dpcd_write_nack;
+-
+-		struct drm_dp_remote_i2c_read_ack_reply remote_i2c_read_ack;
+-		struct drm_dp_remote_i2c_read_nak_reply remote_i2c_read_nack;
+-		struct drm_dp_remote_i2c_write_ack_reply remote_i2c_write_ack;
+-
+-		struct drm_dp_query_stream_enc_status_ack_reply enc_status;
+-	} u;
+-};
+-
+ /* msg is queued to be put into a slot */
+ #define DRM_DP_SIDEBAND_TX_QUEUED 0
+ /* msg has started transmitting on a slot - still on msgq */
+--=20
+2.43.0.687.g38aa6559b0-goog
 
