@@ -1,75 +1,102 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4E738FB0
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 11:07:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C26E39ACC
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 11:07:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707736025; cv=none; b=L+VY+9N7AnHklp2mk32OQAu7u+GVdC9ArYa2d8FrmB6kM7uQldJnnT1gMJ7La5wvetW+e81O7G/NfrIYmaPo6ep9lh3RvVuSXxbsRkz09gvi9riVh58ZPsesySme9Ghkl+JFX+O98H8CeWeYNflJ1VqTbPcvjCA8uwXYR3NyrtQ=
+	t=1707736029; cv=none; b=HWX0ZYdcovYQThF3l2M4fB+LvXxPk2rjBP6rXoUtpVjx7Yd1lv6QpYiZa5+cpmvRrSv/4P56WeEHA09hrhQkfQ8ZvNyqWLueUBvLxUQ7BCpJj+RrncyZ84lod4pzlXjPbOBrFOWzkAnHeJCrP2wj40nSK3TR6UMHe7usF0QXvDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707736025; c=relaxed/simple;
-	bh=TiTTw+hGF84P0tRgaBMy2VpXj54TRkQdwyGXOuSJuRg=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=TW4luAjAc/sgqnzl9GJe/x0UDpl0aFcFXog5pnYvpVYs9riu4itF8s/W47tvJINOTNk1SLVrHUI+x7lMeAWjbtoS1JdyDO500yuiQ48iwhyE903WqGVK2QjG1Ea7joOPKlgK4t1rNa0xNiyQxN4vJlfVbTKA97vAcmCQd5JLWoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-363d5475522so20553285ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 03:07:04 -0800 (PST)
+	s=arc-20240116; t=1707736029; c=relaxed/simple;
+	bh=DY8o/VQXRUa5QoIDTX00ECuxzx1WqON+8o6HzkJeLU8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kUwd3KcxpFz+sZgDWiQK50jitnDxntYNWe4NaCJX8waQC0LMCBx2baBfcMef1M3SIn8oPXa9Fc2REjU0zjJEeLIMrY48RI4dIL/VHKiNdCWIMktrmYej9Pq4L9hlyphbTBPTTKhNexIWP1495DriQGyHILx9oGeTneasJ9FasNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VbfhFC6D; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VbfhFC6D"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-51167e470f7so3656168e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 03:07:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707736025; x=1708340825; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1+V+DtL3M3Rj9vRnNZ3NZn5Sw4Np7ene/6WMj7oNvNE=;
+        b=VbfhFC6DDj+x2O+/5jfNDWSFoDfEgJVcTbo/25FDTksBJlH8zJVnz/YvBatdNVyxBZ
+         F1cz1K+nXnB8x4hOrCqdVS/y1H5aL70PEIl093w6xSYXb8WPjWsbFklHBE01AZx+Yg2E
+         hMvFMwhf2tSKg9YL1GNyF4J3Vb0viaczbZLIlyDyJ2ZtFSTp+d38Gxi9OZ9Ulank7n+m
+         CUkom+5BGbaji6KixfBadIt/uhwYejAs5ZXbAJwEL0Omj0s8H/ToBQUEj1bV+qeRYqKd
+         NHW5QR8tEOEOZw0YgZ38Xkf/UMz7fVze9VzTxrOoAvAv2ALSV0/a4CzdHMIFrIjYwdhp
+         096g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707736023; x=1708340823;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x/xJQPp3141bB6LLHb+O47KgAgODwbbVCXQLBM4yS0E=;
-        b=DF6MgSk5qRjGkuvij07KJwIdkTBFKT3rh1URewHmRprR1KLxd8AOlj+JRbbzy9zeoE
-         Rwm59R/GLMsOelbjs/3Vb9daQddoCBCKkXe0V9Mc17rcRFzqZAzCtlOFGwbgyRZJBqTZ
-         Vk8DBLVt69LvWUYnQ2uh8DjzIN6AKwEdf7qbBi16m4OIAzDSUEoKMCzsYh6hSoggbRcA
-         j3T+j0Ve6RvnRfae3UefaF044i3SzxZLIpu4W8S2O4a07YlAfYsMCS0B5OEkRs+6DGdh
-         6Mex8TLZo6i7uX41fkOaEphwNdgecnsU+9BWilLGc3nHiWeJdibzuJPoZ9NgknBw5Ito
-         1qdQ==
-X-Gm-Message-State: AOJu0Yz8/1VJRWFgJCS+NpQQbje4L8NzUT82lpH0279Fitg3ZlBUej55
-	NAW/QmSEg5O+Y398SqFrBbr+mdICO5mOmXRz5ZZqKQjQf3xYjUIi422E3Xo/Q3FYLz2+hiLuwKe
-	TRJUiCJilPtO47DhAZdVxtb6H5iUwPPZpC6be9n+5tbfftJIQ+L8oraE=
-X-Google-Smtp-Source: AGHT+IH16WGqEbfrd3+o1CSIasNblQnZGNn7ZhqheuO8ThHR5IJ3F8URiBZA5m1q8b0W7FZFL4ADFHowhQo3vgmeTSNPXWhV6RB9
+        d=1e100.net; s=20230601; t=1707736025; x=1708340825;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1+V+DtL3M3Rj9vRnNZ3NZn5Sw4Np7ene/6WMj7oNvNE=;
+        b=ANTCpJNagrSTA5QtyySePqqIUtpyisYfuq8tUSJz0BoiORYqvs61fntSOPfesOejuT
+         9qNVM3pXrVZgWK+EinelhgMwRyJlmm/beY7pFyIBpt6l4PGlsZTVeXg5ecoZdAS6tcxz
+         K/mN8ZwfRdf/XSUMmFc6hymWK7v+VvP7uN6be9TpMeDeibVj7tEzVYASyPMjXSn55APF
+         zc/mWO8sbJ5bsOsFExs/U1xz8ORk7Ie+rO44yjPpQwhKPNtae0xmi68kAYWrtvZ6jHua
+         vknh5Y1mkEEiixf3ttpQR637f5zmnaoRe/bkhOFJBLbDBD7htP+484Fn08afA7FHd0p4
+         pC/w==
+X-Gm-Message-State: AOJu0Yyz4gFI/FmzKIQLnVDDgTDMOe+rwoX+4VmYdog+6CqGqmDt6W4H
+	sLDyBNF3ftivb/ew56leY3JSg0FNlGlDo7csg1YnvxTn/WqYVyffQxxjcMLLVvo=
+X-Google-Smtp-Source: AGHT+IEnEDr5gsCbLJgFDMFEY5M22eDodlKJiLGCqkGUnM0t1LCQruxYy9V51zcei2bYBNfvPp8wFQ==
+X-Received: by 2002:a05:6512:54c:b0:511:fb6:b1a0 with SMTP id h12-20020a056512054c00b005110fb6b1a0mr3959494lfl.52.1707736025497;
+        Mon, 12 Feb 2024 03:07:05 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXaBfnzmJBmbV9qNbkHkX1vXjbHEfJwRuyb/GnkZgxZZXFYaUdh5X6HksxuofKt49BdfajkqO67fTexlfe0VR3tZHxs8C4t/qBul62EC1cqyH5rd/C1r2QEZYEjPEsDj7n3UBhZFEbzAPJg147HXH6caCT5WeQrCzG0BxHk/iYTZMCFzxNu8eeSuzT0DUgBxzYHqe3SKsMCN5qowEEdCwEPiIy3huL+dB61OQjlwlXEuMiltxaWi5XnzE2bUFD3/qRgFZZGxppIMdjRS3mow3rmljzLjw48WfgOCavtc9JMy/dgYp1xVZoxVK3ggMVuVqShfzbDwiLv
+Received: from krzk-bin.. ([178.197.223.6])
+        by smtp.gmail.com with ESMTPSA id v1-20020a05600c214100b00410395dc7d1sm8256067wml.7.2024.02.12.03.07.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Feb 2024 03:07:05 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Amol Maheshwari <amahesh@qti.qualcomm.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] misc: qcom,fastrpc: Compute callbacks can be DMA coherent
+Date: Mon, 12 Feb 2024 12:06:36 +0100
+Message-Id: <20240212110636.57945-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a2e:b0:363:ac48:e28d with SMTP id
- g14-20020a056e021a2e00b00363ac48e28dmr679193ile.3.1707736023784; Mon, 12 Feb
- 2024 03:07:03 -0800 (PST)
-Date: Mon, 12 Feb 2024 03:07:03 -0800
-In-Reply-To: <000000000000ddb17905ee995d32@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000011649a06112d474c@google.com>
-Subject: Re: [syzbot] [reiserfs?] KASAN: use-after-free Read in reiserfs_release_objectid
-From: syzbot <syzbot+909a2191a4352fd77d25@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, brauner@kernel.org, jack@suse.cz, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	reiserfs-devel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-syzbot suspects this issue was fixed by commit:
+Apparently on Qualcomm SM8550 and SM8650 the FastRPC compute callbacks
+are DMA coherent:
 
-commit 6f861765464f43a71462d52026fbddfc858239a5
-Author: Jan Kara <jack@suse.cz>
-Date:   Wed Nov 1 17:43:10 2023 +0000
+  sm8650-qrd.dtb: fastrpc: compute-cb@2: 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
 
-    fs: Block writes to mounted block devices
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ Documentation/devicetree/bindings/misc/qcom,fastrpc.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14df7cec180000
-start commit:   ca57f02295f1 afs: Fix fileserver probe RTT handling
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2325e409a9a893e1
-dashboard link: https://syzkaller.appspot.com/bug?extid=909a2191a4352fd77d25
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1563673d880000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=134d9425880000
+diff --git a/Documentation/devicetree/bindings/misc/qcom,fastrpc.yaml b/Documentation/devicetree/bindings/misc/qcom,fastrpc.yaml
+index 2dc3e245fa5d..c27a8f33d8d7 100644
+--- a/Documentation/devicetree/bindings/misc/qcom,fastrpc.yaml
++++ b/Documentation/devicetree/bindings/misc/qcom,fastrpc.yaml
+@@ -77,6 +77,8 @@ patternProperties:
+       reg:
+         maxItems: 1
+ 
++      dma-coherent: true
++
+       iommus:
+         minItems: 1
+         maxItems: 3
+-- 
+2.34.1
 
-If the result looks correct, please mark the issue as fixed by replying with:
-
-#syz fix: fs: Block writes to mounted block devices
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
