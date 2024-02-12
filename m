@@ -1,102 +1,84 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946513EA98;
-	Mon, 12 Feb 2024 13:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B831E3F8F0
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 13:37:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707745038; cv=none; b=HdxMnXSCEFsOYopW8rjH+UopR/ZX50j1RvgRroEdtk4tStFvKY2ecdnOPy7Smo3gJGA51vyJ78A322lZe8RqXWi6P1fFsY/NX0ud6WRCubgUEz+2dvLrjYsazn++gT5eTYv5NZ+lT/fc0XFfGNonDOGOIPkCcWhEWQLqEKKMJgs=
+	t=1707745058; cv=none; b=j9MQqTWRu7GtMRrYBZ1Mg7/7NiIzupmalauU3j/S1tTXpXqYOh1cQMMU0MmoP9zqgpqkclBYEbq4jUWqwaRhpj9ofE3Elgc0OD4LZi8N3OshijUCqEVb2HxGJnwX2Ridl77HZPB+vE+PE8vcY5vGd6xP/2e5pJtkfwQ0Q3s3G70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707745038; c=relaxed/simple;
-	bh=F//opeBQLHL9vnvCVwkl/A7cs5ydPs9MIEctpGlDv58=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Fuke3xvykRigOMj7bxEwqvOpWjDZqJBp1wJxk62pZ0/0VFw+9fxeBR2wDd+BfRMLjGVQ4Owlrhe/BNmLYFfmjw3ZCqyLzoP5Wi58Wrv5HpainIG/7QtocWcgNq3l7U5XzOFrmVfcdaDdFt/tdHCUEq+hNlv60db93t8zXK6P+o0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VN8S596l; arc=none smtp.client-ip=209.85.208.49
+	s=arc-20240116; t=1707745058; c=relaxed/simple;
+	bh=snujTeGHnR3dPf9//rrzM9yApNcJDQHqczJLK6AWKn0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LQ5NLmroTTBVJpIWIBKWmxVnfrJ9PB2Sx6nsDQ3fJdsWWYV/nbH/zATwiENaZSvf8PuDBH7PSZraeYHo5MTJxEW5HziAUV1EYT8BYb9aC96hwHzUlQbYolq3uCAL2Ni/9dYAYb4NDe5Bqkl+4qJa0/8OiIVG0MUkJLGqJudnSLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jTMCKoR/; arc=none smtp.client-ip=209.85.219.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VN8S596l"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-55f0b2c79cdso4422715a12.3;
-        Mon, 12 Feb 2024 05:37:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jTMCKoR/"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dc742543119so2548806276.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 05:37:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707745034; x=1708349834; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=laRfN/HWi9oFcahbxDTMU1nfn0SEB7plYdxrJOODhts=;
-        b=VN8S596l9tykyZDuGE4KuoerZESQZP16PLr0jGr+uu0MONZMFXhgVJMGiU0Rxszfeo
-         Al1n8enrilZ1+MocpvfJRCZqevhxTeq5XBjmyzJt4t+1t2NM7e+xMD66GMYtoILlGMAO
-         nLknkuN+GoyXctrAobQA7uBD6UwV/IBkR/zehGknt8rt8y+CWtdrtx6IvUfOR4mwRSDS
-         ZpHDDqGH2pF7Do3926meSLSWvF73sgQvJnbMup9xxe2tYHuj4lS+KA6ShMCV0uC8n33h
-         TZBFI9oUGw3VP2ETMmou/nnb7NNbImDkYwJR3irp66HwlCQph8NnMlqQ61cy9QcgeDm9
-         A+Ug==
+        d=gmail.com; s=20230601; t=1707745055; x=1708349855; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=snujTeGHnR3dPf9//rrzM9yApNcJDQHqczJLK6AWKn0=;
+        b=jTMCKoR/HgYNThBCCW0vooMDSyehZLGxoQnni0OcGCu7ca6m/keU9KZhU1h9a1wQAM
+         SduHdAW8RAZORFef1LJ+mbyVFe1lxVGq8LzeBHXTSTNpw/E91e7sfXI8bKhUVq/D8vbM
+         zKE++UL2IZsM5YV4YSsPBNoUIPCQwupdGQnlznTF24rH5kJr1/WXUXLS4qiwkRRuOd9E
+         6mGGeFm6xQoLvPklT+Vk43Jac2JNqTEjC8X+PSQEdQ7RExhnAIeIQMqkZ0Z5xYQ+MFdJ
+         M+J25qVrPMpsAJYnriiI45S1LpinYkosS95u8+h3puplcxmzZxEONb23oYsF1GC/7uce
+         LVkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707745034; x=1708349834;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=laRfN/HWi9oFcahbxDTMU1nfn0SEB7plYdxrJOODhts=;
-        b=nXnMas1al353jIl6fwsTK2L6VSWL2io0/h5Xzq+HaJ6dRTzEVVNr3jMKFPtbxh4svx
-         NBGPNybZmGB8pRxx3CWgs9syuY7ryXWI9HtqOGyKLJZymrYqK0Vj3mg/SfFXW1GwbVLF
-         zkozd7G/VEEnusfr97oUQK/+0NIUmwKAvS11vmRuwNCkK5A3LysjeFyFrFaWruUQ33mc
-         zQ7D9dzcc/ut6l+8FkiU9EVPdOr/01/44hrgXyvXMGGn8ubQ+wiuy0ge7zHOxfMS+2ma
-         MiSCB/TCR9zDIhkkNm1UwXmV8jqko56DHnbHs2pr1JKXLJEjZ3vfvvNimSgWw2VHrTYq
-         xf4g==
-X-Forwarded-Encrypted: i=1; AJvYcCUj7j9I5KOrdAkrWVXMainLYgWXdx3qmYHh3PEZPwgRn/v28/lyIU9W3WDxl1L3NEwcbHtuLEnqC8TpQCR9uDc7ZHh3+j2qQTBZBD3bc2zpDZwj3ZPIi6oqw3yxCTnCE++PPaHGXcQ4jBE=
-X-Gm-Message-State: AOJu0Ywgacedp7g49kKR8FsV8dCfesYhCJ1cQmVL3lpSbeutBXPVZ0Aq
-	JCTsnlOVS7ZM1Gp3sdG6BYsXzkljARMxjwohI9vAHxEnPD0Kj8vDlHyrTJgEHQE=
-X-Google-Smtp-Source: AGHT+IHClMT+6z/F2LOpPmY+C90cvi23oE87OBATifYkMwiSVZ7weG3wvapxuODx9ah9CqYEZSSRKQ==
-X-Received: by 2002:a17:906:af94:b0:a2d:a6a7:b3bc with SMTP id mj20-20020a170906af9400b00a2da6a7b3bcmr4914263ejb.4.1707745033563;
-        Mon, 12 Feb 2024 05:37:13 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXe432sCq8gKTTI0yG5pfLkQIYtqJ861AS8PZqUqhhYamDxyw7VdxiA2uix2eU872LkARzAtoE46oCSfAsRpuqm4Oa7niFQkv0IzqTpadWZ6HfO81nB7lzr4NYa94oJXYGqYev2IFT637FH4p/nM1HNZxXSlKg3qwgfsFA2YRY+l1lPcNqZ+baDql4Xb7RodzRqCAGV1yuVPh14jq+ZMQ==
-Received: from pinguine.lan (ip-176-198-146-182.um43.pools.vodafone-ip.de. [176.198.146.182])
-        by smtp.gmail.com with ESMTPSA id v16-20020a17090606d000b00a389838037bsm221777ejb.94.2024.02.12.05.37.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 05:37:13 -0800 (PST)
-From: "Moritz C. Weber" <mo.c.weber@gmail.com>
-To: marvin24@gmx.de
-Cc: ac100@lists.launchpad.net,
-	linux-tegra@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	"Moritz C. Weber" <mo.c.weber@gmail.com>
-Subject: [PATCH] Staging: nvec: nvec: fixed two usleep_range is preferred over udelay warnings
-Date: Mon, 12 Feb 2024 14:36:45 +0100
-Message-Id: <20240212133645.1836-1-mo.c.weber@gmail.com>
-X-Mailer: git-send-email 2.30.2
+        d=1e100.net; s=20230601; t=1707745055; x=1708349855;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=snujTeGHnR3dPf9//rrzM9yApNcJDQHqczJLK6AWKn0=;
+        b=qV7Mfg/KAYVOQcn1NetdwnawvNx1JWmzqMkL3Iw8wO5fX5whGB8608v5RiCGPK040U
+         +jIwymDnvPZ1gK2m+GCi1yA8hYl7W+/yT2N0/YnfHeuQzRvTzz2ktpty+7443Bywmdp3
+         YY1qT2Hzx+9QxVS8LA8O6POB8cThoajYbCZ+xDoZkExdfxp2PcBHsLdK2ULb1tsWkiNC
+         MqJOSzY1u8CqcXbk62bfStv4/0JVbcaksKaiYQ0gJfBID1DlPBYkjRuaU5YBO1TqZq8E
+         vwdv8lPhOzpNOpod01cYQVLMaBslqWu/pp5Noy3YpRRCN9/E46Z5eR10gGAccFZvkwqU
+         Zrtg==
+X-Gm-Message-State: AOJu0YwwMs7mgN9NkQGfhoDotMNHsMoVsg+gshG34kIZM9xI26piga2w
+	n0MZajNAq71yKHarnkWEKtzpRQKneXXKN/bpiU/xg/Zc2eVZ0/ekS4pygAgQ3gTbq2qBS8j/miW
+	qMugrfyDVqj7FlnSK3Mzz4D4RNRg=
+X-Google-Smtp-Source: AGHT+IFOu43f96+QadK+r9cBK+ff1oKp4KjmY4DCjk2xEuyJBapWpCL4StASjTys0XLwP4NZ7wFhpXFByv35Kq10kIM=
+X-Received: by 2002:a25:6b4c:0:b0:dc2:279f:f7e with SMTP id
+ o12-20020a256b4c000000b00dc2279f0f7emr3359573ybm.10.1707745055682; Mon, 12
+ Feb 2024 05:37:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240212113653.2625776-1-andriy.shevchenko@linux.intel.com> <ZcoSqHIknAvalzf4@smile.fi.intel.com>
+In-Reply-To: <ZcoSqHIknAvalzf4@smile.fi.intel.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 12 Feb 2024 14:37:24 +0100
+Message-ID: <CANiq72kmGVwFo6hakdcFN6Zu9yDg+e+41W4HHEj1q-S_TV079Q@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] auxdisplay: Take over maintainership, but in Odd
+ Fixes mode
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fixed a code style issue raised by checkpatch.
----
- drivers/staging/nvec/nvec.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Mon, Feb 12, 2024 at 1:44=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> Okay, Geert agreed to be a designated reviewer for this and I think I may
+> establish a separate kernel tree on git.kernel.org. I'll send an updated
+> version of this.
 
-diff --git a/drivers/staging/nvec/nvec.c b/drivers/staging/nvec/nvec.c
-index 2823cacde..18c5471d5 100644
---- a/drivers/staging/nvec/nvec.c
-+++ b/drivers/staging/nvec/nvec.c
-@@ -627,7 +627,7 @@ static irqreturn_t nvec_interrupt(int irq, void *dev)
- 		break;
- 	case 2:		/* first byte after command */
- 		if (status == (I2C_SL_IRQ | RNW | RCVD)) {
--			udelay(33);
-+			usleep_range(32, 33);
- 			if (nvec->rx->data[0] != 0x01) {
- 				dev_err(nvec->dev,
- 					"Read without prior read command\n");
-@@ -714,7 +714,7 @@ static irqreturn_t nvec_interrupt(int irq, void *dev)
- 	 * We experience less incomplete messages with this delay than without
- 	 * it, but we don't know why. Help is appreciated.
- 	 */
--	udelay(100);
-+	usleep_range(99, 100);
- 
- 	return IRQ_HANDLED;
- }
--- 
-2.30.2
+Yeah, of course. We also need to move it in `linux-next`, so I will
+let Stephen know when you have it set it up.
 
+Thanks again!
+
+Cheers,
+Miguel
