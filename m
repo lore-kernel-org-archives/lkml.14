@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28AC43D3A1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B103D3A8;
 	Mon, 12 Feb 2024 16:53:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707756819; cv=none; b=P+CXdLnauS5sM1syTy4uBlQ60TQG0vk7Efie0VTYnf+TTELVNIfYx6q9/uxtp5RPZUjS9Z7z24oc3jfdJiI7zp+2iU/DEbW35/p2fWQmci3gg2rHgnLaeZFQ3DLV2KIHWyrjkeFo9UO1cUeg12k/rpWSJ8n6M1QSP5Qx5nGTP4k=
+	t=1707756819; cv=none; b=DSPDbv/osGyaFEtXwpl8mm5Do7eKkksxaEnBbx8MY7tcR4QTkIDfi/Ubu/PRkUr2/nBAsP/bwpgDHwp+tHKLBobsoQ6aU7KbOULwtt12s2MpuZxiPCATRLLODPvkoUIYfT/6A0k30UFDtYkJYNXEgTd45PVUocTjjiDYveRv4MM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707756819; c=relaxed/simple;
-	bh=nc4MqV6YaWXP4nv2pZ90dCQqT4i4GYj2D270C7X4X5g=;
+	bh=52V8VIBZ6Aa9byRanT+AhHOKtM3PttwSwaL5Jh235Ts=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JAHlXxCIcRPm2CBOXOoLvs2rcJBhu+ByzTTC1BMvLSmtRamZFaIGpQ189yB3KF2ajHOrKwHQ3j3hgjkAKiNaZ2IyLXrn9a6+5bX8e7j9kZUpoqTdqa2KHS1wwKwSuhmHvOaGmAgry2n84nIeNnaGK1nusT8MQS5PSnPaCD7Wb2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YkJ9Yqxe; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IQVsSAFQo+ur65RE7ayKQAv5tS5/P4OeQAOTjtJ0Eszh2bknkLAN1sGkO6L8qxMv+Fus7S5OdoxwyXw/Lc5zvDKYsZkhSADpnBVe4shr4wYezMGYf3yZo20fMx6zbtRpIl0kryADaIvLWpHUfao3Sm86vByXRwfBj0sqdtkmyUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DHZlh1Vz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YkJ9Yqxe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5C7FC43399;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DHZlh1Vz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F34EC433F1;
 	Mon, 12 Feb 2024 16:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1707756818;
-	bh=nc4MqV6YaWXP4nv2pZ90dCQqT4i4GYj2D270C7X4X5g=;
+	bh=52V8VIBZ6Aa9byRanT+AhHOKtM3PttwSwaL5Jh235Ts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YkJ9Yqxe2rkvBsFYQXHVLOHTbYd1bYXt3mmVLH0Uis9itgcKVJJd7cDhi/KtBLHpM
-	 yWikgU5w6EiQaofDMr54Sh5raJbarLkP+olgFIvp+wlW16eOaAIQoZTbcT9HwH6b1D
-	 xhG0gJDLZMh/6dRjgMaZxMg8Sy2GAMPFyUfyYO2uZzp8AuhoE36LzLbPBuwa6XM2+s
-	 Q6uZTdQycmOaVNteQQGhxC7UElnZgVst+TVsyH4zg1ZICmQDzcOJA+35/0q08cjzv8
-	 rQJqRlbvyRZTn9BnLXfESp38OPFYGrxCA87WqZ+Sa7arrIhP/h/M32J6h6duojKDiQ
-	 mUQ1RiocdSKNA==
+	b=DHZlh1VzVUm+VRt1myKtgo3wHiiHaxhk32t7JnMbWdCainbIcl+pQsRJnMuI4rSiU
+	 OAZh0osLEpPBdP4csdJyFjT4niZARt5zCXz4l+q1tIftgTFGKWyJtNjTW7/Kxz0CIk
+	 I2/Cz5aB7KQcawEUxbePuzGOe2lvXMpasBQNGaQUh+IFDTPzIXIbtJcUIxIPRcNZqm
+	 RzLANQTh45BhFaw/H/jb8WclJionZ9njZI9BEt1535qFQA8qm6FeqSYOPmvLFDxTHZ
+	 uqNHthowf632JN0sLPmY1j7wcxEIa79XKBJ26fRK7As0ed5vlhQ4xtbFEVEfrCoxWb
+	 nrbivMPGoCqww==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1rZZZ2-000000007NB-3T1E;
+	id 1rZZZ2-000000007N5-2R4q;
 	Mon, 12 Feb 2024 17:53:52 +0100
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Bjorn Andersson <andersson@kernel.org>,
@@ -45,9 +45,9 @@ Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: [RFC 07/10] dt-bindings: PCI: qcom: Allow 'aspm-no-l0s'
-Date: Mon, 12 Feb 2024 17:50:40 +0100
-Message-ID: <20240212165043.26961-8-johan+linaro@kernel.org>
+Subject: [PATCH 04/10] arm64: dts: qcom: sc8280xp-crd: limit pcie4 link speed
+Date: Mon, 12 Feb 2024 17:50:37 +0100
+Message-ID: <20240212165043.26961-5-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240212165043.26961-1-johan+linaro@kernel.org>
 References: <20240212165043.26961-1-johan+linaro@kernel.org>
@@ -59,27 +59,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add 'aspm-no-l0s', which can be used to indicate that ASPM L0s is not
-supported, to the binding.
+Limit the WiFi PCIe link speed to Gen2 speed (500 GB/s), which is the
+speed that Windows uses.
 
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 2 ++
+ arch/arm64/boot/dts/qcom/sc8280xp-crd.dts | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index b28517047db2..4d1060b52592 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -130,6 +130,8 @@ properties:
-     description: GPIO controlled connection to WAKE# signal
-     maxItems: 1
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-crd.dts b/arch/arm64/boot/dts/qcom/sc8280xp-crd.dts
+index f34c572253f5..8c1fccf8847a 100644
+--- a/arch/arm64/boot/dts/qcom/sc8280xp-crd.dts
++++ b/arch/arm64/boot/dts/qcom/sc8280xp-crd.dts
+@@ -563,6 +563,8 @@ &pcie3a_phy {
+ };
  
-+  aspm-no-l0s: true
+ &pcie4 {
++	max-link-speed = <2>;
 +
- required:
-   - compatible
-   - reg
+ 	perst-gpios = <&tlmm 141 GPIO_ACTIVE_LOW>;
+ 	wake-gpios = <&tlmm 139 GPIO_ACTIVE_LOW>;
+ 
 -- 
 2.43.0
 
