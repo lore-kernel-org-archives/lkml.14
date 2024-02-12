@@ -1,73 +1,40 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4B83C6A3
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 15:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57A03D3A1;
+	Mon, 12 Feb 2024 15:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707751968; cv=none; b=FX/QtJrp4JYKZFoEdB6Zz9pJ6QL5BY3Y69+pnxSqZ0byWbWlCecefBAKjZpYGpmAWCQ4BCM6kMZ4zfFv//hvwv5KyGitOXc3ovSXGeG2F2Qtiz9wftqkUfZGwvN+fwURwzOMw/DjEFBuaqgEf2IE9ZtsIkgXgGPDt2lzDTAQiv4=
+	t=1707752002; cv=none; b=BcIudWfI6IG+Q/WJJdRx1/rCpTmRqUse9HA75eI3N9QFCk4xsZdvXvMHV13fVobwuF6fLOpkSe4IuTyzoNyXRL8GNAfnem2nIoZigoYqFCARIvPA+AZbHbqC24wDAUOSTfN+VvRwU6EyHTLKuoqQ6ieHA/hk3VK1n6HXpNqOktE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707751968; c=relaxed/simple;
-	bh=bkIEBakJHgzcITFpIpV/EovxuKe348rKh+SCyNQmYHg=;
+	s=arc-20240116; t=1707752002; c=relaxed/simple;
+	bh=0lCFdr7xhbejL/c2fUAqXPWoHxOMR5vUxCIx9U37deA=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=OoLg71ixLjeq8B8bXIfs4Z1Afyuwvm8bJI8Pw43mNfd63eB796e2biVyjSAPMW7p+/zxcwJML8NJOk5F2jWhqH3ewsMdrmFVFvwuoD1yyIoK0SpQMAUtjZROSSVkqMrZTGY+o3iIMaztPq95zd3cvvq7tNRvWUgrnTsZeWiCSFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EIfXYpzq; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 MIME-Version:Content-Type; b=KRwjTdoPXC0fgIPvVYRso3GZlVh7G2q/hqbyApSrKmIa1FGPI5HA+QTwFRwOeaMOw+1yPx4v3lA1B314tFJgRIXjMj3X47p9bf4HtuaByIeyyo99O+h+m4/i7o143FH2RDvuITetDWjX62XdVkkRWTNwB4YRdTJvR8rgGVkQ8KQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tVq8snFF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EIfXYpzq"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-51183b02564so1749286e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 07:32:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707751964; x=1708356764; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mLSV6GjpLboPb6N+6P/meSbXl15EO0I8zNkKPhFyDy4=;
-        b=EIfXYpzqmyRazoMq/7ZVQW82UExYibnw8FDc0B+MgEs0/EowxeD4AEYirwtYaJMjQq
-         B85MZa8PgZfsSufBCg01mlYnFygVHEt5AJEa3zptvBdvI64CweD1jlvmji2timj1eder
-         TCR7J3KKEKF5aeIbaV18dwhEEL0HsVWqbwwomma4y4qFG/coAQpeFewOYpuVpmeTp6CY
-         eAO1f6uJNDYvRXn0Ka6wHx/BNEnB/NDSdpcXcbqFcdHZj9HJCBMShxf3HuA8rOVSKebO
-         HFtwFtMhe+MnAZyuhjFHgTsWQt5kHVnwk0oNOOtXyD0TJsr7a5XfgumKwZA2CrYbJdXm
-         xRww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707751964; x=1708356764;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mLSV6GjpLboPb6N+6P/meSbXl15EO0I8zNkKPhFyDy4=;
-        b=gg1DE0ANqsvzb5jEsJXGmnsYVnmkTlsKnc1xlHXIX08Lp74ACN4Hh2hsMqfP3BCcVl
-         foKAon6+apUTE49AFwYyw21N16/vAocEBY4uFZGCGdUZJ7GJcCJqKRoDxTI1o16gtn58
-         eDp6Mf2MskIyWVjVzKXzKOrKl/McTOIEOvKS9ENAEE4fmBmYi5lULKAb2+tjgHBsiwwT
-         dZBmFv7AtJClHEzDv6k3zEI5Q+d4IllenXT+1qEQHRDHktQgiQbsHC9SCw+g8AOUqwdM
-         WFs5koRU4G+aF9L8VctUB/jNFXY4MPuMqA9ye20C7lQmAXpg4UYvEi7dnx7XnxFxS369
-         R1xQ==
-X-Gm-Message-State: AOJu0Yw8ut3IwgAtxg9UTyEEcnNHDslS1QqV32lbQ5LNd+wZyJIA1/vk
-	NsAE9IPpU7lHOwAmUd0opGihhbnWMmFM1EtE9pMYrHQJ9yK/ticaBBwEbhZRyE4=
-X-Google-Smtp-Source: AGHT+IFkktTI7b8C/0MZmf1ZoZaTMWPEwtj/4mwT3DX5ltYcu8ivv0j2DVv+6Kjcd9DXtG857xoIHQ==
-X-Received: by 2002:a05:6512:3b6:b0:511:4e64:fe09 with SMTP id v22-20020a05651203b600b005114e64fe09mr4117367lfp.43.1707751964099;
-        Mon, 12 Feb 2024 07:32:44 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXul3/DI8HHdRFW6INdE1VLow1IRySwSgACJ5O7Uqxk5j1nww3ybk1876pVa0LwgPTV8xoo0ZagV6dkrF0CWcVGZtnMICL17556kAyLZDBMzVPJYEt2c35OYF7bDki4NmVwEgWqrImmPP1DIqRMfVBHuVCZuaVAYgaAyiO2drHXW8TkKkMMOW4eF7rW5WpcfM506+gTwAsl+jCJSr7fH/BXrQvmdiUBc10ZL05LSsoxvgXI8o0toAFIZaWjbgA5JA925WygLiZrIHsGEs4SemQ+r4IVcprXPl1DjD4V/EtNSnC2OvDOFoW2vvcvew2T64kihmEw52tLgwqC6cTB3CB6NItbBr/ZHDP5tExN15JKkw+WxcuLeZ7m
-Received: from [127.0.1.1] ([178.197.223.6])
-        by smtp.gmail.com with ESMTPSA id a1-20020a05600c348100b00410a843b57dsm5819675wmq.43.2024.02.12.07.32.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 07:32:43 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Rob Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
- Rob Herring <robh@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Jiri Slaby <jirislaby@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Jonathan Corbet <corbet@lwn.net>, 
- Christoph Winklhofer <cj.winklhofer@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-serial@vger.kernel.org, linux-doc@vger.kernel.org
-In-Reply-To: <20240209-w1-uart-v6-2-3e753c149196@gmail.com>
-References: <20240209-w1-uart-v6-0-3e753c149196@gmail.com>
- <20240209-w1-uart-v6-2-3e753c149196@gmail.com>
-Subject: Re: (subset) [PATCH v6 2/3] dt-bindings: w1: UART 1-Wire bus
-Message-Id: <170775196240.98164.13229670157028243681.b4-ty@linaro.org>
-Date: Mon, 12 Feb 2024 16:32:42 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tVq8snFF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 136A7C43394;
+	Mon, 12 Feb 2024 15:33:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707752002;
+	bh=0lCFdr7xhbejL/c2fUAqXPWoHxOMR5vUxCIx9U37deA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=tVq8snFFHORknqktib7ju117kTqWJ4H0gi/qTv2RW7se3pGL+yrYFPTXF3EyHQc4d
+	 EEiMI5VyQto2eAV9oJ51q/mECkSAd2sGcQAXr8hOstx/TwpbZZ/Qz+Fp6tsa6+NEv+
+	 I0iDqvgiHflcZdHOQDK8SJXq4fEwt9NKW3e0DUDuJ/kuQQC6dwriOZ0F2z6qoaZppB
+	 eKoNfmABT2hW6yGHhnBkoRYv/5UgC+bZjyYO9sOL1aCU5mFlwrZXnTqCtztj3nzRHG
+	 RVBn3c8J+V79URhrE2vKGa9HbrIP4sEEDjTA3trUQBvT126LO3wXBxftrRHTWDzx8r
+	 bMinPCmspJ6UA==
+From: Mark Brown <broonie@kernel.org>
+To: Vaishnav Achath <vaishnav.a@ti.com>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ vigneshr@ti.com, u-kumar1@ti.com
+In-Reply-To: <20240212120049.438495-1-vaishnav.a@ti.com>
+References: <20240212120049.438495-1-vaishnav.a@ti.com>
+Subject: Re: [PATCH] spi: omap2-mcspi: Revert FIFO support without DMA
+Message-Id: <170775200080.46149.6260047434970051936.b4-ty@kernel.org>
+Date: Mon, 12 Feb 2024 15:33:20 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,20 +43,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.4
+X-Mailer: b4 0.13-dev-a684c
 
-
-On Fri, 09 Feb 2024 07:22:38 +0100, Christoph Winklhofer wrote:
-> Add device tree binding for UART 1-Wire bus.
+On Mon, 12 Feb 2024 17:30:49 +0530, Vaishnav Achath wrote:
+> MCSPI controller have few limitations regarding the transaction
+> size when the FIFO buffer is enabled and the WCNT feature is used
+> to find the end of word, in this case if WCNT is not a multiple of
+> the FIFO Almost Empty Level (AEL), then the FIFO empty event is not
+> generated correctly. In addition to this limitation, few other unknown
+> sequence of events that causes the FIFO empty status to not reflect the
+> exact status were found when FIFO is being used without DMA enabled
+> during extended testing in AM65x platform. Till the exact root cause
+> is found and fixed, revert the FIFO support without DMA.
 > 
-> 
+> [...]
 
-Applied, thanks!
+Applied to
 
-[2/3] dt-bindings: w1: UART 1-Wire bus
-      https://git.kernel.org/krzk/linux-w1/c/56552c1a412fd7cce65d95786ed5f05fe157a714
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Thanks!
+
+[1/1] spi: omap2-mcspi: Revert FIFO support without DMA
+      commit: e56c671c2272d939d48a66be7e73b92b74c560c2
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
