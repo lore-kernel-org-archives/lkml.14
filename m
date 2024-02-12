@@ -1,126 +1,109 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB84439AC5;
-	Mon, 12 Feb 2024 11:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E0D39860;
+	Mon, 12 Feb 2024 11:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707738650; cv=none; b=GkboYvZlip2J9bBuIdIPYqYkoD58BhbP1ohocMF2iqohR58U5cRCxXVZz6Lx69Dioq6QKI1gIbHqEIy8ZqVnG4rRnZbbH+B6C7vfYHD406TdFHJsPjxq5kpBhKyE/gPVY35AQB/YU48qXMyYYZ5C94qg1QTnKYPwVdpHq03V0hI=
+	t=1707738706; cv=none; b=Ny+JWZE2B5usAFeBeowN/9u7quLE4upACQU7CRyKNiFu9PtD1t3HfzmxZIzsh00uCuxTw7lI+0c0uJSte/pMCWArOMfpjS4vlZRVcdjzI0TXvhcVviMraGKad3k3DZWJCuwfuvw4lguvawNvvwF6Sr2mf7/12vuwyPY7pLEIpn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707738650; c=relaxed/simple;
-	bh=/kq5w1POb6DWCXoFZuLee/5Hf4I/xNQaA8461i2aYSA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V1bg31JkKIFkvKMqkdpc5g4l15MPJFBRTYTB7kHxunr0DhRYKCowTngf6db3UypbupvdKaJqggY0pJOmMcsSuENO0ku6cT2g7DpnYpB61t3YyJCdszHyadZL/XZ0Pb3mkjditRlweJUFytDUrue2PjLZzzaMX+0UCKoCIaW4JSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FTLBdJQ2; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707738706; c=relaxed/simple;
+	bh=bTVJvlBr8xA7AJ8ry9czvvHc5Z9HCrBIlnOGVk+k5kc=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Lm58nMLKjhXFzJizaa8lswWYHELFv5y73ulS1hbqUC0CdMqhkb/gvcxb0lhW3ylO3jCB/I0cXHfL2YgErUyln1UaeDUJgJcUxywHCX7ONoK7f/e6RBBIEqNTOgnk7SKBRe+bToprrOr1aBnTpU4BNLaPHpxiL8BIA0Q7HyApTmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jNRa8rWT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FTLBdJQ2"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-56003c97d98so3747899a12.3;
-        Mon, 12 Feb 2024 03:50:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707738647; x=1708343447; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DI/JPUx6NGwjBeuZnuCsSQdfuZnc/sODY2AjTvUNJeU=;
-        b=FTLBdJQ283KTR3DsSkmPReJMxq+6GmAgDKfzHv58ydao6ChRYDucKmH57R5O6Cf06k
-         fYWex8vEV+Z01Up50kAa1sPXAB/lPo/N0C6GSDItfSqifeIbGq4Vf7U+sCE0FX2e4lJl
-         MZoFoH4U+DA1hhJJWwmqGdsbDKUxrI9FYkwEThX9MQBBVSces5AUDkboQDNL4Ljkst23
-         QOeL2szXyTTMW/O6lZgGSA2+yGVMY7XP7rzzQpk4S1ilCKyp7KXagtCVy5Rga16+4hEp
-         vDO3QvORc6Km/66mYvobUnezm4VOnUtC4hFEyzu6VdQjubpFWSdYr4Y5bihP9RxdO9XT
-         O2Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707738647; x=1708343447;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DI/JPUx6NGwjBeuZnuCsSQdfuZnc/sODY2AjTvUNJeU=;
-        b=jTQa4tWLjcZoDd0Yz/33y5ONVqPBuIf0v92sRdSjEFYdFU8HaJZf6ODL+E2W9KdDYu
-         lcluKooKDN7RYOcLMMtGwJZpvzxx7qxuChWNfIN9w9XLXiWWVNlN6vt1DCjh6wfuhuV1
-         XrGJNFcNwQu7MQ1VfFN1bb/wDY48zKG7xMwf/XfCbEufnFFgshbkjthOkCTp+RciUJgJ
-         16Cg/XsFDgUmkLrkmVtCjlgQxYjwCD81yTAKcgzDbHktYlKO8+AmHGXAtxLqdMPutiTL
-         pJBw23Ua7rNLlp7u/8L+VRF6bBkWiGW+noN14ZIA5L4sjjYsWrmJ9n3iqazqHViS1tJq
-         qB5A==
-X-Gm-Message-State: AOJu0YxJ8chfxpTBZ6UKU76bh3BTZWi1MT4mjDhtShGrxXK7pIWK0Cfb
-	Qi+kvHK11jFshxqBoc2t5To2H0suvGXEIXPB7y+NEH12hvBrIrpoN/20mkq2bpI=
-X-Google-Smtp-Source: AGHT+IFcNWXSpVUAtM81ZjcoJhdC3f4B9acvTAZjJbOBfs2ULW0y91rwCOZxrk8rrBNqgASUjBtIxg==
-X-Received: by 2002:a17:906:2787:b0:a3c:c451:2115 with SMTP id j7-20020a170906278700b00a3cc4512115mr845655ejc.77.1707738646617;
-        Mon, 12 Feb 2024 03:50:46 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUvVnYjwl1kXCkY6Q5HCHxosLviHu0mbZd4UfAyKqv/n4THscQ62fBfKS0esaHexyd7rx/jI8u3C4ruKxWli4Q/3iGG+VrFG6IOMgbY4mNC7CJ4YU1vAf9baLjz74PpeNf7ph4jCRpOvOQhGSxDvv5HUOrQGEC6a57CzVLBjACv6guMqWBVuf2SGTE8KqtJBvSDLYKj0mO3Iozednaii92VE5UZmu7C9TwJh5tGJiaE5NwhylMcoOPqtcH41jRzk96pKfZJJr+uQOwmpOSxlFf4cnBrBXfHlUIzmHgX8enw4w0RDuGX0kkGbV8mBD5aBxRg2wAcwrNwvqNVys5J4KR3jlvydQfwBsGwUJAE/Pj8g3UjuGEe6Vf+ICImwdeN+RvHvE03uecQLUG9IFfP4Js3k0TKvz7SjprkDf5Q1D4=
-Received: from fedora.. (cpe-109-60-83-183.zg3.cable.xnet.hr. [109.60.83.183])
-        by smtp.googlemail.com with ESMTPSA id n7-20020a170906118700b00a3845a75eb7sm126534eja.189.2024.02.12.03.50.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 03:50:46 -0800 (PST)
-From: Robert Marko <robimarko@gmail.com>
-To: andersson@kernel.org,
-	konrad.dybcio@linaro.org,
-	andrew@lunn.ch,
-	hkallweit1@gmail.com,
-	linux@armlinux.org.uk,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	ansuelsmth@gmail.com,
-	linux-arm-msm@vger.kernel.org,
-	netdev@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jNRa8rWT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF1D3C433C7;
+	Mon, 12 Feb 2024 11:51:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707738706;
+	bh=bTVJvlBr8xA7AJ8ry9czvvHc5Z9HCrBIlnOGVk+k5kc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jNRa8rWTI8Tc3Pr4lUPjevvzTe7pAKhaadCCx0fkI019EIQ18Zdr6dJy3WPzLYCbD
+	 uCOjznDFiOybYCIq/C8Z4opYCEcxkGGWHuSOcDqLSsM4SwNstzL/qc54RqeV45IdxE
+	 rDWg9wmVSYMIeP+WQgrYSZmzHIHFVANpFtVGOtve2Y57b4a2IRAsZRkIcUOFjzunE1
+	 w5XReuwsR865lfiQmt6n9ninpXl24MCqdW1mjY4znTQbot3W2I9YzG83YR7p65dIQJ
+	 R8iKRkp6A4VaQNLEsot+ptjtRg45bfkP2VW1MJIcRaZB9sEYFnCFYX4YvF3DI4PX1w
+	 nZiyVOBKgHBVg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rZUqd-002OGl-Ck;
+	Mon, 12 Feb 2024 11:51:43 +0000
+Date: Mon, 12 Feb 2024 11:51:42 +0000
+Message-ID: <86frxx6gtt.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>,
+	David Matlack <dmatlack@google.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Sean Christopherson <seanjc@google.com>,
+	Fuad Tabba <tabba@google.com>,
+	Shaoqin Huang <shahuang@redhat.com>,
+	Chao Peng <chao.p.peng@linux.intel.com>,
+	kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Robert Marko <robimarko@gmail.com>
-Subject: [PATCH net-next] net: phy: qca807x: move interface mode check to .config_init_once
-Date: Mon, 12 Feb 2024 12:49:34 +0100
-Message-ID: <20240212115043.1725918-1-robimarko@gmail.com>
-X-Mailer: git-send-email 2.43.0
+Subject: Re: [PATCH] KVM: fix kvm_mmu_memory_cache allocation warning
+In-Reply-To: <20240212112419.1186065-1-arnd@kernel.org>
+References: <20240212112419.1186065-1-arnd@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: arnd@kernel.org, pbonzini@redhat.com, dmatlack@google.com, arnd@arndb.de, seanjc@google.com, tabba@google.com, shahuang@redhat.com, chao.p.peng@linux.intel.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Currently, we are checking whether the PHY package mode matches the
-individual PHY interface modes at PHY package probe time, but at that time
-we only know the PHY package mode and not the individual PHY interface
-modes as of_get_phy_mode() that populates it will only get called once the
-netdev to which PHY-s are attached to is being probed and thus this check
-will always fail and return -EINVAL.
+On Mon, 12 Feb 2024 11:24:10 +0000,
+Arnd Bergmann <arnd@kernel.org> wrote:
+> 
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> gcc-14 notices that the arguments to kvmalloc_array() are mixed up:
+> 
+> arch/x86/kvm/../../../virt/kvm/kvm_main.c: In function '__kvm_mmu_topup_memory_cache':
+> arch/x86/kvm/../../../virt/kvm/kvm_main.c:424:53: error: 'kvmalloc_array' sizes specified with 'sizeof' in the earlier argument and not in the later argument [-Werror=calloc-transposed-args]
+>   424 |                 mc->objects = kvmalloc_array(sizeof(void *), capacity, gfp);
+>       |                                                     ^~~~
+> arch/x86/kvm/../../../virt/kvm/kvm_main.c:424:53: note: earlier argument should specify number of elements, later size of each element
+> 
+> The code still works correctly, but the incorrect order prevents the compiler
+> from properly tracking the object sizes.
+> 
+> Fixes: 837f66c71207 ("KVM: Allow for different capacities in kvm_mmu_memory_cache structs")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  virt/kvm/kvm_main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 8f03b56dafbd..4c48f61cae35 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -421,7 +421,7 @@ int __kvm_mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int capacity,
+>  		if (WARN_ON_ONCE(!capacity))
+>  			return -EIO;
+>  
+> -		mc->objects = kvmalloc_array(sizeof(void *), capacity, gfp);
+> +		mc->objects = kvmalloc_array(capacity, sizeof(void *), gfp);
+>  		if (!mc->objects)
+>  			return -ENOMEM;
+>  
 
-So, lets move this check to .config_init_once as at that point individual
-PHY interface modes should be populated.
+Huh, well spotted GCC. And thanks Arnd for the fix.
 
-Fixes: d1cb613efbd3 ("net: phy: qcom: add support for QCA807x PHY Family")
-Signed-off-by: Robert Marko <robimarko@gmail.com>
----
- drivers/net/phy/qcom/qca807x.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Reviewed-by: Marc Zyngier <maz@kernel.org>
 
-diff --git a/drivers/net/phy/qcom/qca807x.c b/drivers/net/phy/qcom/qca807x.c
-index 01815f947060..780c28e2e4aa 100644
---- a/drivers/net/phy/qcom/qca807x.c
-+++ b/drivers/net/phy/qcom/qca807x.c
-@@ -562,6 +562,11 @@ static int qca807x_phy_package_config_init_once(struct phy_device *phydev)
- 	struct qca807x_shared_priv *priv = shared->priv;
- 	int val, ret;
- 
-+	/* Make sure PHY follow PHY package mode if enforced */
-+	if (priv->package_mode != PHY_INTERFACE_MODE_NA &&
-+	    phydev->interface != priv->package_mode)
-+		return -EINVAL;
-+
- 	phy_lock_mdio_bus(phydev);
- 
- 	/* Set correct PHY package mode */
-@@ -718,11 +723,6 @@ static int qca807x_probe(struct phy_device *phydev)
- 	shared = phydev->shared;
- 	shared_priv = shared->priv;
- 
--	/* Make sure PHY follow PHY package mode if enforced */
--	if (shared_priv->package_mode != PHY_INTERFACE_MODE_NA &&
--	    phydev->interface != shared_priv->package_mode)
--		return -EINVAL;
--
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
+	M.
+
 -- 
-2.43.0
-
+Without deviation from the norm, progress is not possible.
