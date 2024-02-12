@@ -1,204 +1,117 @@
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E609053A1;
-	Mon, 12 Feb 2024 01:50:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.205
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0892217C2;
+	Mon, 12 Feb 2024 02:00:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707702606; cv=none; b=tvRZxtE3KQeMUsKVO1EbMIk35SwBsPp2RuNQ1vwCMmCXjjwZ5pIMWW06QHuC7gX42jxa866wDxUbejhMfyP75a6/HIVONLuv2QMI2X98NN2GplgweU/vs5ELRcupKGQ93MAEFtq7Vpf2tFsxPBCd7AxOv94GxAbGYR7AExiRFE0=
+	t=1707703251; cv=none; b=I4Nv1FBCepaOfAyXDEmdMB3TzRCliLYcDqYMKIPFAEEKD7kPIA4gdTUk5hnBcrYJPDCRdWtoqS3chN90xr/FbqD2nN78rc7LCQuNMDqfzbY4jjqNqY1EezKBDpt2L2/DTFP7r7Hms9t95t+oel3AdegGVehZ2/A0Zp74DPe4Yz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707702606; c=relaxed/simple;
-	bh=4H4FN5p/dLRBc4UInIB5xEnrfCp5/nfaFL6RntBbI4E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jIB6RtcZ6boft/D89Da8SZ8Sil31BROZnxWTkDx/VrCLM3PGkZGVZ1513+DYxsWTRoeUcJYx1QpyAeCWagWmlh/2mW3Lqz9yuhPay+d6mp1+skF6BjI5LHccNqIlZjHZjyyjuGLyeyabj41b1ENaa0rIHH+eBn7S1j4oVVzfjtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=aic1is5C; arc=none smtp.client-ip=192.19.144.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="aic1is5C"
-Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 71018C0000D8;
-	Sun, 11 Feb 2024 17:49:58 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 71018C0000D8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1707702598;
-	bh=4H4FN5p/dLRBc4UInIB5xEnrfCp5/nfaFL6RntBbI4E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aic1is5CI6YlvWP+lfvNuE64DAajWXAw/jyVZic6AqDZjSFpGMtUFirzZ6RR6jS9m
-	 HzxqD7P65xYTetD5zSV4uak2/sktvjziVMDWCuyOXZBWdq6YFtADWj6EolKP1JyEBI
-	 gD0Z5nYgDzKx30eNDRFm5yfaljBE+kGZpCTsr0rk=
-Received: from stbirv-lnx-1.igp.broadcom.net (stbirv-lnx-1.igp.broadcom.net [10.67.48.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id B6BD918041CAC4;
-	Sun, 11 Feb 2024 17:49:56 -0800 (PST)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: stable@vger.kernel.org
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Russell King <rmk+kernel@armlinux.org.uk>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Doug Berger <opendmb@gmail.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM GENET ETHERNET DRIVER),
-	netdev@vger.kernel.org (open list:BROADCOM GENET ETHERNET DRIVER),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH stable 5.15 v3] net: bcmgenet: Fix EEE implementation
-Date: Sun, 11 Feb 2024 17:48:58 -0800
-Message-Id: <20240212014859.3860032-2-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240212014859.3860032-1-florian.fainelli@broadcom.com>
-References: <20240212014859.3860032-1-florian.fainelli@broadcom.com>
+	s=arc-20240116; t=1707703251; c=relaxed/simple;
+	bh=6Lf06nnCwCLxaCHtDslobILzwXHZSIpo66gcQObBuEo=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=IifZjXZeo27JALVm9EgPwJDFq+05dZykjqc7G3aZWLUnBxJ+CbVJCtO3kJkFTl005oF+aohZBODMOPeo74h1MnbRIwM1n9ADhmZbcXrCItZH5tdXfgLCrxCfr3YmVMTX8UUylE5ySuWafuuhwknZqKGqOwtq9IdVjrsFQFgtEqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 22A1BDA7;
+	Sun, 11 Feb 2024 18:01:27 -0800 (PST)
+Received: from [10.162.40.23] (unknown [10.162.40.23])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0AA2A3F762;
+	Sun, 11 Feb 2024 18:00:43 -0800 (PST)
+Message-ID: <e0521fe5-f7d5-404a-b646-6630ddd8a244@arm.com>
+Date: Mon, 12 Feb 2024 07:30:40 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH] fs/proc/task_mmu: Add display flag for VM_MAYOVERLAY
+To: David Hildenbrand <david@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org
+References: <20240208084805.1252337-1-anshuman.khandual@arm.com>
+ <fb157154-5661-4925-b2c5-7952188b28f5@redhat.com>
+ <20240208124035.1c96c256d6e8c65f70b18675@linux-foundation.org>
+ <2e7496af-0988-49fb-9582-bf6a94f08198@redhat.com>
+Content-Language: en-US
+In-Reply-To: <2e7496af-0988-49fb-9582-bf6a94f08198@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-commit a9f31047baca57d47440c879cf259b86f900260c upstream
 
-We had a number of short comings:
+On 2/10/24 04:01, David Hildenbrand wrote:
+> On 08.02.24 21:40, Andrew Morton wrote:
+>> On Thu, 8 Feb 2024 17:48:26 +0100 David Hildenbrand <david@redhat.com> wrote:
+>>
+>>> On 08.02.24 09:48, Anshuman Khandual wrote:
+>>>> VM_UFFD_MISSING flag is mutually exclussive with VM_MAYOVERLAY flag as they
+>>>> both use the same bit position i.e 0x00000200 in the vm_flags. Let's update
+>>>> show_smap_vma_flags() to display the correct flags depending on CONFIG_MMU.
+>>>>
+>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>>> Cc: David Hildenbrand <david@redhat.com>
+>>>> Cc: linux-kernel@vger.kernel.org
+>>>> Cc: linux-fsdevel@vger.kernel.org
+>>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>>>> ---
+>>>> This applies on v6.8-rc3
+>>>>
+>>>>    fs/proc/task_mmu.c | 4 ++++
+>>>>    1 file changed, 4 insertions(+)
+>>>>
+>>>> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+>>>> index 3f78ebbb795f..1c4eb25cfc17 100644
+>>>> --- a/fs/proc/task_mmu.c
+>>>> +++ b/fs/proc/task_mmu.c
+>>>> @@ -681,7 +681,11 @@ static void show_smap_vma_flags(struct seq_file *m, struct vm_area_struct *vma)
+>>>>            [ilog2(VM_HUGEPAGE)]    = "hg",
+>>>>            [ilog2(VM_NOHUGEPAGE)]    = "nh",
+>>>>            [ilog2(VM_MERGEABLE)]    = "mg",
+>>>> +#ifdef CONFIG_MMU
+>>>>            [ilog2(VM_UFFD_MISSING)]= "um",
+>>>> +#else
+>>>> +        [ilog2(VM_MAYOVERLAY)]    = "ov",
+>>>> +#endif /* CONFIG_MMU */
+>>>>            [ilog2(VM_UFFD_WP)]    = "uw",
+>>>>    #ifdef CONFIG_ARM64_MTE
+>>>>            [ilog2(VM_MTE)]        = "mt",
+>>>
+>>> Reviewed-by: David Hildenbrand <david@redhat.com>
+>>
+>> I'm thinking
+>>
+>> Fixes: b6b7a8faf05c ("mm/nommu: don't use VM_MAYSHARE for MAP_PRIVATE mappings")
+>> Cc: <stable@vger.kernel.org>
+> 
+> I'm having a hard time believing that anybody that runs a !MMU kernel would actually care about this bit being exposed as "ov" instead of "uw".
+> 
+> So in my thinking, one could even update Documentation/filesystems/proc.rst to just mention that "uw" on !MMU is only used for internal purposes.
+> 
+> But now, I actually read what that structure says:
+> 
+> "Don't forget to update Documentation/ on changes."
+> 
+> So, let's look there: Documentation/filesystems/proc.rst
+> 
+> "Note that there is no guarantee that every flag and associated mnemonic will be present in all further kernel releases. Things get changed, the flags may be vanished or the reverse -- new added. Interpretation of their meaning might change in future as well. So each consumer of these flags has to follow each specific kernel version for the exact semantic.
+> 
+> This file is only present if the CONFIG_MMU kernel configuration option is enabled."
+> 
+> And in fact
+> 
+> $ git grep MMU fs/proc/Makefile
+> fs/proc/Makefile:proc-$(CONFIG_MMU)     := task_mmu.o
 
-- EEE must be re-evaluated whenever the state machine detects a link
-  change as wight be switching from a link partner with EEE
-  enabled/disabled
+Ahh! you are right, completely missed that.
 
-- tx_lpi_enabled controls whether EEE should be enabled/disabled for the
-  transmit path, which applies to the TBUF block
+> 
+> 
+> So I rewoke my RB, this patch should be dropped and was never even tested unless I am missing something important.
 
-- We do not need to forcibly enable EEE upon system resume, as the PHY
-  state machine will trigger a link event that will do that, too
-
-Fixes: 6ef398ea60d9 ("net: bcmgenet: add EEE support")
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Link: https://lore.kernel.org/r/20230606214348.2408018-1-florian.fainelli@broadcom.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
----
-Changes in v3:
-
-- correctly apply to the 5.15 queue
-
- .../net/ethernet/broadcom/genet/bcmgenet.c    | 22 +++++++------------
- .../net/ethernet/broadcom/genet/bcmgenet.h    |  3 +++
- drivers/net/ethernet/broadcom/genet/bcmmii.c  |  6 +++++
- 3 files changed, 17 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index eeadeeec17ba..380bf7a328ba 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -1018,7 +1018,8 @@ static void bcmgenet_get_ethtool_stats(struct net_device *dev,
- 	}
- }
- 
--static void bcmgenet_eee_enable_set(struct net_device *dev, bool enable)
-+void bcmgenet_eee_enable_set(struct net_device *dev, bool enable,
-+			     bool tx_lpi_enabled)
- {
- 	struct bcmgenet_priv *priv = netdev_priv(dev);
- 	u32 off = priv->hw_params->tbuf_offset + TBUF_ENERGY_CTRL;
-@@ -1038,7 +1039,7 @@ static void bcmgenet_eee_enable_set(struct net_device *dev, bool enable)
- 
- 	/* Enable EEE and switch to a 27Mhz clock automatically */
- 	reg = bcmgenet_readl(priv->base + off);
--	if (enable)
-+	if (tx_lpi_enabled)
- 		reg |= TBUF_EEE_EN | TBUF_PM_EN;
- 	else
- 		reg &= ~(TBUF_EEE_EN | TBUF_PM_EN);
-@@ -1059,6 +1060,7 @@ static void bcmgenet_eee_enable_set(struct net_device *dev, bool enable)
- 
- 	priv->eee.eee_enabled = enable;
- 	priv->eee.eee_active = enable;
-+	priv->eee.tx_lpi_enabled = tx_lpi_enabled;
- }
- 
- static int bcmgenet_get_eee(struct net_device *dev, struct ethtool_eee *e)
-@@ -1074,6 +1076,7 @@ static int bcmgenet_get_eee(struct net_device *dev, struct ethtool_eee *e)
- 
- 	e->eee_enabled = p->eee_enabled;
- 	e->eee_active = p->eee_active;
-+	e->tx_lpi_enabled = p->tx_lpi_enabled;
- 	e->tx_lpi_timer = bcmgenet_umac_readl(priv, UMAC_EEE_LPI_TIMER);
- 
- 	return phy_ethtool_get_eee(dev->phydev, e);
-@@ -1083,7 +1086,6 @@ static int bcmgenet_set_eee(struct net_device *dev, struct ethtool_eee *e)
- {
- 	struct bcmgenet_priv *priv = netdev_priv(dev);
- 	struct ethtool_eee *p = &priv->eee;
--	int ret = 0;
- 
- 	if (GENET_IS_V1(priv))
- 		return -EOPNOTSUPP;
-@@ -1094,16 +1096,11 @@ static int bcmgenet_set_eee(struct net_device *dev, struct ethtool_eee *e)
- 	p->eee_enabled = e->eee_enabled;
- 
- 	if (!p->eee_enabled) {
--		bcmgenet_eee_enable_set(dev, false);
-+		bcmgenet_eee_enable_set(dev, false, false);
- 	} else {
--		ret = phy_init_eee(dev->phydev, 0);
--		if (ret) {
--			netif_err(priv, hw, dev, "EEE initialization failed\n");
--			return ret;
--		}
--
-+		p->eee_active = phy_init_eee(dev->phydev, false) >= 0;
- 		bcmgenet_umac_writel(priv, e->tx_lpi_timer, UMAC_EEE_LPI_TIMER);
--		bcmgenet_eee_enable_set(dev, true);
-+		bcmgenet_eee_enable_set(dev, p->eee_active, e->tx_lpi_enabled);
- 	}
- 
- 	return phy_ethtool_set_eee(dev->phydev, e);
-@@ -3688,9 +3685,6 @@ static int bcmgenet_resume(struct device *d)
- 	if (!device_may_wakeup(d))
- 		phy_resume(dev->phydev);
- 
--	if (priv->eee.eee_enabled)
--		bcmgenet_eee_enable_set(dev, true);
--
- 	bcmgenet_netif_start(dev);
- 
- 	netif_device_attach(dev);
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.h b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-index 5b7c2f9241d0..29bf256d13f6 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-@@ -736,4 +736,7 @@ int bcmgenet_wol_power_down_cfg(struct bcmgenet_priv *priv,
- void bcmgenet_wol_power_up_cfg(struct bcmgenet_priv *priv,
- 			       enum bcmgenet_power_mode mode);
- 
-+void bcmgenet_eee_enable_set(struct net_device *dev, bool enable,
-+			     bool tx_lpi_enabled);
-+
- #endif /* __BCMGENET_H__ */
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-index 2fbec2acb606..026f00ccaa0c 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-@@ -25,6 +25,7 @@
- 
- #include "bcmgenet.h"
- 
-+
- /* setup netdev link state when PHY link status change and
-  * update UMAC and RGMII block when link up
-  */
-@@ -96,6 +97,11 @@ void bcmgenet_mii_setup(struct net_device *dev)
- 			       CMD_RX_PAUSE_IGNORE | CMD_TX_PAUSE_IGNORE);
- 		reg |= cmd_bits;
- 		bcmgenet_umac_writel(priv, reg, UMAC_CMD);
-+
-+		priv->eee.eee_active = phy_init_eee(phydev, 0) >= 0;
-+		bcmgenet_eee_enable_set(dev,
-+					priv->eee.eee_enabled && priv->eee.eee_active,
-+					priv->eee.tx_lpi_enabled);
- 	} else {
- 		/* done if nothing has changed */
- 		if (!status_changed)
--- 
-2.34.1
-
+Fair enough, let's drop this patch. I found this via code inspection while
+looking into VM_UFFD_MISSING definition, booted with default configs which
+has CONFIG_MMU enabled. But this was an oversight, my bad.
