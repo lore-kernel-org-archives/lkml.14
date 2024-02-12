@@ -1,63 +1,63 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 907163CF42
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 11:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC49539AE6
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 11:55:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707738947; cv=none; b=HwDyh4HuTeOTbq1A7V0dNUDWt/rFtmu11yqb6L6k4pF6iXOiA6MQJ1lG+ZhiCam7oGiI/pREtQGi4HF9SmhzaYfKyZO0mjNAM4mFhJguA3ppWqBclDByK8Z6tE8508J9N+7Ig0SLBQhBBB3X3wvn0CAH4QmHEn8GOa2FxaCWFNQ=
+	t=1707738940; cv=none; b=S6rmueJmaAciA4oY4IFpNAzOscDpLHYczsrLmVMhcIcyz/bnrG+21xd0mzs+2TJDFA4AVv/mDTzokCa6t0748n5u5aBNcpBUC9Vw37eQjiJTQft0fuP7VN0oUyqdY7G34ABpEa2Qj5s/HmT+6sXtt1mrZ5w7amGC/D3hT4N0xG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707738947; c=relaxed/simple;
-	bh=FaWrvDRhCn6qo66e2LFY1/am/fRiqeQ00xmmtBjY9fQ=;
+	s=arc-20240116; t=1707738940; c=relaxed/simple;
+	bh=vnpHwrQqTGh83jGF/mOVjN3+jGO3XbGrHiR+lyiDEhI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qVR5pkhZj4S5LGNOfNZRCkk1crvK51pY3t97DXLFdXBFOQDTffBL0PnhxjV8YL3JaYn1qfN1alWKC+sOoRdHnjDvKd6G9Myv7Mfsmuv/AO0g5AgIpkuHZBbopcgJC0VIvR9hYYRPbolBXYDLuU+aLWXoVcPt0To/JU16Sqxv90g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=eIycTmV2; arc=none smtp.client-ip=209.85.208.52
+	 MIME-Version; b=fy/wpdaEjUCqDd+dVNhJCdq/JrV+Su+FQril5ba/ieO5zPyfLTr6MI1miuZHY05o+k10YwDj4fB38XCmMq6e0yDU66Cbn6xolNMcJSPjjHz+g0tOcmM5ljJiOpGuq8M7j9B8fdK9aGmB3Iw4EVQNnKJhekcSIB8hKGWpBRbgfhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=Vsoo8FPP; arc=none smtp.client-ip=209.85.208.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="eIycTmV2"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5610b9855a8so6980414a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 03:55:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="Vsoo8FPP"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5600c43caddso3694672a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 03:55:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1707738942; x=1708343742; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1707738936; x=1708343736; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dhd0Wyk/ZgeZM/EU3KZ6LbkcM94I0OFOZkDaLa9LsZQ=;
-        b=eIycTmV2JrToWcqablESKF35/cgEu/gFA6Wwmy0knNwV5mQUahf/CNfITqsIMsRF/D
-         wWMDFTocGyUOgrAQDlXvz603U2bkcOKJXTyU1SLlinZiVWPFDxjDqxX49QJ6bvNAktu0
-         Dq2VDBGYg/Y4/u5ngrhuJ/Xk+NOfQwMijU0J3Sfl1lDNjEt4JaHH01zUq06Yd/IWUeo3
-         yQt3IJYH+Y+iozsKVtqVVYEJoeJAaQiQZjStfJrhDw66EQGK/34yGyNYfOrssdRSaE0V
-         e8mcbn1kFIKqJKiNkZj2PfuMi747Zl0fBliNNmcHYEV0zImIq+4b14k/H96ITemKJmmi
-         mk3Q==
+        bh=1wz2gqR1nPObBws/2+IzSMmJxUoIVsWcR8/Agl6zU7c=;
+        b=Vsoo8FPPjdSBGPALb0JUSN/yZTbauqU9oT7HgL5WSMNGdcrmPJqQ59KH8BP+4yZUqw
+         CTQ3sb9NlTgDx75j2YNiO6Bgbfu2Y6VIMrM5X2H2gXg4YXxcxZvDHGi4+9R5IcCY1e2e
+         MQtRO0GGBZp/HH3iQP2j4MBc1ogsUF0TD53Ws0yfjAyQfOUGy83su6uYA8Sv0uEBxZ8E
+         0dgiJwRUC6pGG275hT7C1tP34jfyTrvMg4pcXMSbs30otWmZGQ/UzVyEpjzCaDI6PEAE
+         WeLt8FJSy7+aJf+FFTNC2EhcoGjg2jox2gEt5LsI/JdSaeJdT+NHF1v/ob5QocYMPc/A
+         vkmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707738942; x=1708343742;
+        d=1e100.net; s=20230601; t=1707738936; x=1708343736;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dhd0Wyk/ZgeZM/EU3KZ6LbkcM94I0OFOZkDaLa9LsZQ=;
-        b=VBYi4mop9+k2sC2v+1WZRsaoosi9upjyfLoE93FKdgwNwJyXKwBUlUGW3lO0y4feSH
-         49l266d/cd5VIoeNOL5ExDIkM065nEkdVKIRzio9cWA4M+SnCrBc4p54peO5rx9XV568
-         EDsCAs7pRn8+vGtJqxNQJwKljws602XYf1RsO1MeGV8MX9qO78b3mNS1qzmyEyTEu3+h
-         IziaVd0b5SLBotMHFgopSV2KmnFqCzX2EG3ZkaS5n9qqhZZEfx1aKD0PSMiDkmkygbj5
-         gsWzLjJ85wZQsnervupV8zXzQPe3FPHqVHPfMiMVDj1ojFH9n2j1pkrggbvqdOXcIczi
-         y0cA==
-X-Gm-Message-State: AOJu0Yy5fv1O3t7EPhRh5eQYNAKYwxbhqJ3arY3NmKCkGtJOpCtCJArc
-	YTVxebPS2+CmmEjPKSMS+XCXQl1tI8opdmPzWut1aV5iOu7XtJfxWtREJ60CCgC2tp6F/wobOef
-	Y
-X-Google-Smtp-Source: AGHT+IEC1SR/DxJxs59aMIjoXbVJ42TMv4N4qUHQUX9W5Rsf2/e25RTaSuMxwBqsVbVKnmYJCNseBA==
-X-Received: by 2002:a17:906:d293:b0:a35:e5bf:b585 with SMTP id ay19-20020a170906d29300b00a35e5bfb585mr5021249ejb.35.1707738942622;
-        Mon, 12 Feb 2024 03:55:42 -0800 (PST)
+        bh=1wz2gqR1nPObBws/2+IzSMmJxUoIVsWcR8/Agl6zU7c=;
+        b=wf3fXB/ETHund7zigGaPMoPThCoVXd/SazyDFmgXZj61D84OIv89k7IW/zbUa8pQK4
+         0FTm7z3yLcSBbQN5Dj40NxlQCxfK/JblrckJI02dzFhQqJuvR3QDfVbBRo0RP7FI1sZg
+         zbSBEVIcygMMRPjP78pNiTJ1Z6opq0Y61XdHY3pezYNETrzwhgig1ChrjbCYnyZ0D4cb
+         c+97s9W7gacHJy+bfyE88oL6UC1QTLnzLT9CGpPuxSd1lEbje0XlnXISx1byMhBxYB4h
+         mxuW4fnMgkWpdgvHR0H3fUWhQF0Y9GiZiPqb+XDDN//0WkrmAJL78Jo0KA4Rn5+z1aau
+         JlGw==
+X-Gm-Message-State: AOJu0Yw28uWIH991dJFS6E5hbLfkCuyAQiQaHr3KEs22PQTENXwTAVp/
+	XE/h/Kz0vL9CgcAgAPOUql/Ylc/6OkZrqftFDhWGBmgA0XOW7n2hNxlBvosJWgnS8b7hXn3XhzV
+	J
+X-Google-Smtp-Source: AGHT+IFS0/DruPSPpAd8quACT8RJpfQc9p4hNFPsoV86Hhiv3i78lVMAegdZQQthSd3V4zWA9hOg7g==
+X-Received: by 2002:a17:906:af10:b0:a3c:b14:32e with SMTP id lx16-20020a170906af1000b00a3c0b14032emr5020901ejb.47.1707738935915;
+        Mon, 12 Feb 2024 03:55:35 -0800 (PST)
 Received: from raven.blarg.de (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id m1-20020a17090607c100b00a36c3e2e52dsm139203ejc.61.2024.02.12.03.55.41
+        by smtp.gmail.com with ESMTPSA id m1-20020a17090607c100b00a36c3e2e52dsm139203ejc.61.2024.02.12.03.55.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 03:55:41 -0800 (PST)
+        Mon, 12 Feb 2024 03:55:35 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: linux-kernel@vger.kernel.org
 Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v5 29/35] linux/random.h: reduce dependencies on linux/kernel.h
-Date: Mon, 12 Feb 2024 12:54:54 +0100
-Message-Id: <20240212115500.2078463-30-max.kellermann@ionos.com>
+Subject: [PATCH v5 23/35] sbitmap.h: move declarations to sbitmap_types.h
+Date: Mon, 12 Feb 2024 12:54:48 +0100
+Message-Id: <20240212115500.2078463-24-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240212115500.2078463-1-max.kellermann@ionos.com>
 References: <20240212115500.2078463-1-max.kellermann@ionos.com>
@@ -69,25 +69,326 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
+By providing declarations in a lean header, we can reduce header
+dependencies.
+
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- include/linux/random.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ block/blk-mq.h                |   1 +
+ include/linux/blk-mq.h        |   2 +-
+ include/linux/sbitmap.h       | 124 +-------------------------------
+ include/linux/sbitmap_types.h | 129 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 132 insertions(+), 124 deletions(-)
+ create mode 100644 include/linux/sbitmap_types.h
 
-diff --git a/include/linux/random.h b/include/linux/random.h
-index 70e5250f3bc4..3183025ddda9 100644
---- a/include/linux/random.h
-+++ b/include/linux/random.h
-@@ -4,7 +4,8 @@
- #define _LINUX_RANDOM_H
+diff --git a/block/blk-mq.h b/block/blk-mq.h
+index f75a9ecfebde..cc8e690171db 100644
+--- a/block/blk-mq.h
++++ b/block/blk-mq.h
+@@ -3,6 +3,7 @@
+ #define INT_BLK_MQ_H
  
- #include <linux/bug.h>
--#include <linux/kernel.h>
-+#include <linux/limits.h> // for U32_MAX
-+#include <linux/log2.h> // for is_power_of_2()
+ #include <linux/blk-mq.h>
++#include <linux/sbitmap.h>
+ #include "blk-stat.h"
  
- #include <uapi/linux/random.h>
+ struct blk_mq_tag_set;
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index ed3760b04baa..201ee354a3d5 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -4,7 +4,7 @@
  
+ #include <linux/bio.h>
+ #include <linux/blkdev.h>
+-#include <linux/sbitmap.h>
++#include <linux/sbitmap_types.h>
+ #include <linux/lockdep_types.h>
+ #include <linux/scatterlist.h>
+ #include <linux/prefetch.h>
+diff --git a/include/linux/sbitmap.h b/include/linux/sbitmap.h
+index f7279f7632fe..c43d1c0eafbb 100644
+--- a/include/linux/sbitmap.h
++++ b/include/linux/sbitmap.h
+@@ -9,142 +9,20 @@
+ #ifndef __LINUX_SCALE_BITMAP_H
+ #define __LINUX_SCALE_BITMAP_H
+ 
++#include <linux/sbitmap_types.h>
+ #include <linux/atomic.h>
+ #include <linux/bitops.h>
+-#include <linux/cache.h>
+ #include <linux/list.h>
+ #include <linux/log2.h>
+ #include <linux/minmax.h>
+ #include <linux/percpu.h>
+ #include <linux/slab.h>
+-#include <linux/types.h>
+-#include <linux/wait_types.h>
+ 
+ struct seq_file;
+ 
+-/**
+- * struct sbitmap_word - Word in a &struct sbitmap.
+- */
+-struct sbitmap_word {
+-	/**
+-	 * @word: word holding free bits
+-	 */
+-	unsigned long word;
+-
+-	/**
+-	 * @cleared: word holding cleared bits
+-	 */
+-	unsigned long cleared ____cacheline_aligned_in_smp;
+-} ____cacheline_aligned_in_smp;
+-
+-/**
+- * struct sbitmap - Scalable bitmap.
+- *
+- * A &struct sbitmap is spread over multiple cachelines to avoid ping-pong. This
+- * trades off higher memory usage for better scalability.
+- */
+-struct sbitmap {
+-	/**
+-	 * @depth: Number of bits used in the whole bitmap.
+-	 */
+-	unsigned int depth;
+-
+-	/**
+-	 * @shift: log2(number of bits used per word)
+-	 */
+-	unsigned int shift;
+-
+-	/**
+-	 * @map_nr: Number of words (cachelines) being used for the bitmap.
+-	 */
+-	unsigned int map_nr;
+-
+-	/**
+-	 * @round_robin: Allocate bits in strict round-robin order.
+-	 */
+-	bool round_robin;
+-
+-	/**
+-	 * @map: Allocated bitmap.
+-	 */
+-	struct sbitmap_word *map;
+-
+-	/*
+-	 * @alloc_hint: Cache of last successfully allocated or freed bit.
+-	 *
+-	 * This is per-cpu, which allows multiple users to stick to different
+-	 * cachelines until the map is exhausted.
+-	 */
+-	unsigned int __percpu *alloc_hint;
+-};
+-
+ #define SBQ_WAIT_QUEUES 8
+ #define SBQ_WAKE_BATCH 8
+ 
+-/**
+- * struct sbq_wait_state - Wait queue in a &struct sbitmap_queue.
+- */
+-struct sbq_wait_state {
+-	/**
+-	 * @wait: Wait queue.
+-	 */
+-	wait_queue_head_t wait;
+-} ____cacheline_aligned_in_smp;
+-
+-/**
+- * struct sbitmap_queue - Scalable bitmap with the added ability to wait on free
+- * bits.
+- *
+- * A &struct sbitmap_queue uses multiple wait queues and rolling wakeups to
+- * avoid contention on the wait queue spinlock. This ensures that we don't hit a
+- * scalability wall when we run out of free bits and have to start putting tasks
+- * to sleep.
+- */
+-struct sbitmap_queue {
+-	/**
+-	 * @sb: Scalable bitmap.
+-	 */
+-	struct sbitmap sb;
+-
+-	/**
+-	 * @wake_batch: Number of bits which must be freed before we wake up any
+-	 * waiters.
+-	 */
+-	unsigned int wake_batch;
+-
+-	/**
+-	 * @wake_index: Next wait queue in @ws to wake up.
+-	 */
+-	atomic_t wake_index;
+-
+-	/**
+-	 * @ws: Wait queues.
+-	 */
+-	struct sbq_wait_state *ws;
+-
+-	/*
+-	 * @ws_active: count of currently active ws waitqueues
+-	 */
+-	atomic_t ws_active;
+-
+-	/**
+-	 * @min_shallow_depth: The minimum shallow depth which may be passed to
+-	 * sbitmap_queue_get_shallow()
+-	 */
+-	unsigned int min_shallow_depth;
+-
+-	/**
+-	 * @completion_cnt: Number of bits cleared passed to the
+-	 * wakeup function.
+-	 */
+-	atomic_t completion_cnt;
+-
+-	/**
+-	 * @wakeup_cnt: Number of thread wake ups issued.
+-	 */
+-	atomic_t wakeup_cnt;
+-};
+-
+ /**
+  * sbitmap_init_node() - Initialize a &struct sbitmap on a specific memory node.
+  * @sb: Bitmap to initialize.
+diff --git a/include/linux/sbitmap_types.h b/include/linux/sbitmap_types.h
+new file mode 100644
+index 000000000000..078c7859905c
+--- /dev/null
++++ b/include/linux/sbitmap_types.h
+@@ -0,0 +1,129 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef __LINUX_SCALE_BITMAP_TYPES_H
++#define __LINUX_SCALE_BITMAP_TYPES_H
++
++#include <linux/cache.h>
++#include <linux/types.h>
++#include <linux/wait_types.h>
++
++/**
++ * struct sbitmap_word - Word in a &struct sbitmap.
++ */
++struct sbitmap_word {
++	/**
++	 * @word: word holding free bits
++	 */
++	unsigned long word;
++
++	/**
++	 * @cleared: word holding cleared bits
++	 */
++	unsigned long cleared ____cacheline_aligned_in_smp;
++} ____cacheline_aligned_in_smp;
++
++/**
++ * struct sbitmap - Scalable bitmap.
++ *
++ * A &struct sbitmap is spread over multiple cachelines to avoid ping-pong. This
++ * trades off higher memory usage for better scalability.
++ */
++struct sbitmap {
++	/**
++	 * @depth: Number of bits used in the whole bitmap.
++	 */
++	unsigned int depth;
++
++	/**
++	 * @shift: log2(number of bits used per word)
++	 */
++	unsigned int shift;
++
++	/**
++	 * @map_nr: Number of words (cachelines) being used for the bitmap.
++	 */
++	unsigned int map_nr;
++
++	/**
++	 * @round_robin: Allocate bits in strict round-robin order.
++	 */
++	bool round_robin;
++
++	/**
++	 * @map: Allocated bitmap.
++	 */
++	struct sbitmap_word *map;
++
++	/*
++	 * @alloc_hint: Cache of last successfully allocated or freed bit.
++	 *
++	 * This is per-cpu, which allows multiple users to stick to different
++	 * cachelines until the map is exhausted.
++	 */
++	unsigned int __percpu *alloc_hint;
++};
++
++/**
++ * struct sbq_wait_state - Wait queue in a &struct sbitmap_queue.
++ */
++struct sbq_wait_state {
++	/**
++	 * @wait: Wait queue.
++	 */
++	wait_queue_head_t wait;
++} ____cacheline_aligned_in_smp;
++
++/**
++ * struct sbitmap_queue - Scalable bitmap with the added ability to wait on free
++ * bits.
++ *
++ * A &struct sbitmap_queue uses multiple wait queues and rolling wakeups to
++ * avoid contention on the wait queue spinlock. This ensures that we don't hit a
++ * scalability wall when we run out of free bits and have to start putting tasks
++ * to sleep.
++ */
++struct sbitmap_queue {
++	/**
++	 * @sb: Scalable bitmap.
++	 */
++	struct sbitmap sb;
++
++	/**
++	 * @wake_batch: Number of bits which must be freed before we wake up any
++	 * waiters.
++	 */
++	unsigned int wake_batch;
++
++	/**
++	 * @wake_index: Next wait queue in @ws to wake up.
++	 */
++	atomic_t wake_index;
++
++	/**
++	 * @ws: Wait queues.
++	 */
++	struct sbq_wait_state *ws;
++
++	/*
++	 * @ws_active: count of currently active ws waitqueues
++	 */
++	atomic_t ws_active;
++
++	/**
++	 * @min_shallow_depth: The minimum shallow depth which may be passed to
++	 * sbitmap_queue_get_shallow()
++	 */
++	unsigned int min_shallow_depth;
++
++	/**
++	 * @completion_cnt: Number of bits cleared passed to the
++	 * wakeup function.
++	 */
++	atomic_t completion_cnt;
++
++	/**
++	 * @wakeup_cnt: Number of thread wake ups issued.
++	 */
++	atomic_t wakeup_cnt;
++};
++
++#endif /* __LINUX_SCALE_BITMAP_TYPES_H */
 -- 
 2.39.2
 
