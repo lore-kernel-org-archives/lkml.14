@@ -1,167 +1,117 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732F6405FD
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 18:34:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E223FE24;
+	Mon, 12 Feb 2024 18:35:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707762854; cv=none; b=J2SBsKF1qOJ0QtdXqSSl1c1o70etFtm9vwnbr3ROtHGl9gE3Y/ahvfTxfDCNgmmIZ3wsXJfw6YzW+EgGGgf1T5qBvk02Y4u/zYIdWVOiVJOGpBE8EPZ4BzcuY72R1ZS7mc0zVBTPAmTnRrNA4fV+Z3dgMHBEqBGPE4YZb8coT9s=
+	t=1707762933; cv=none; b=g32SiPHAJ+nXnXEBjPAoikBgjwxrnr0gF4STYvg/vczRqSet4Ebv5F2Rv66DDPUSDYlftnDumcSs5GaIfb29gA/qWxEY5nDhCWIen5WOllJEri4jLEwYQvrEQP5kU9YbZwnXGx0ktjzEhvndrwZKD9+HQa0GMWIBjI500t84mBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707762854; c=relaxed/simple;
-	bh=rLdlJk7YMDLMzy9CS/8OoqlIhyb+H0Bw/6gJglvDQ/0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XkQXBMgzZRqF0lSyCctaUleXg3sWUqxcbScu2EAPM6AaL7oc92350HrdNdwNjjyFgYvZPJy5iSrc5HKh0yd+CYR7Y87kJimiM18tmFQLF53nzc27C3hQrlBx+CjGiBODkev4r9sQKaGE6mC09NMC2LDml2MZDXORBlAj4ENL1sM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NkjsHmxc; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707762933; c=relaxed/simple;
+	bh=U/7Lj3FWbjI2GjLaSoK/nsKWyLH6E74rVAh9DUsfCWc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LPPsutqwtqVwBYFGox7UXyUJ5MgfTYUp+oNZmVTaLaQdFQv0mDc35De9zpvEpJVfdrAcjKBFZ7aMZ8DXSXIwdXUVlcmeYx35gJpe7c5rWCGjChonnBhVw768p/Rgt+ZJiwLq08O+41jsoRjL3mTOTP13tuQFABIA0k7wtJIMV/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OT8S7QNM; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NkjsHmxc"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1da0cd9c0e5so25006875ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 10:34:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707762852; x=1708367652; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=8xZH+LJYr2ytTKnIB9iZBFvkzmm+Pih3Yq/pScGROjM=;
-        b=NkjsHmxcxwY5KDsMTb5LF9A/eKo5H3m61zJA8P92Qw3MD88oW2yyOrI/oof1K/HxwJ
-         rKCTjWETzJqCjV7lcSRhP10DQYhHpfM8Y/3q3zEd47jcZrK9vZocHhId4Lsjr3g2FeAd
-         vN04oDFDeB4tzLW4esUV0mjmdV05yeTl96LW7WIOhjp7Q6rPJHNYevB4VN0XBwXA0A6y
-         qSfVt7xAEKlkNVGRrT7xxdl0eDKSbtiQH3EnxugmjfBvrfLRfaKm451enrY/df8fF2vy
-         0v0Fyq4S+I2MZluOY66B0tWatnMmzSvsY2OoypssbjAUfdK9ZQ3J0409LVNN7t2wJwFn
-         S/Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707762852; x=1708367652;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8xZH+LJYr2ytTKnIB9iZBFvkzmm+Pih3Yq/pScGROjM=;
-        b=MKOYeCFm4brxNEu1uxtQAvBBs+NtrGUv3gToURAa6ptKm8wbzdSV/JqtTAk7d57UzW
-         Mal27t0UBnM5dGNv9yLEe5BDOLqzkq34YoJDcB+iBR2AA+ZBc5ajO7Yz2IZ6jVApD+PY
-         XrwjpXV/UF4u2Et++HLmz1v2fCEmdoZyKhijBeftxCLUU8AwPtP7M6VLxyODVB5wD6QP
-         bGSoNs95LZ/ZB5PBTkRW+aa+LOKzjWIoadpzxb2l5DAhLuyeszM+QAI3TyUsSyFmrUuu
-         CAEDjJFgBP7BZ0ub/AdY1+7SNDpuVDdnwwLkD0L/0RK+Ct5GV6hdiwbcYqvStIsOYLLt
-         +g0w==
-X-Forwarded-Encrypted: i=1; AJvYcCValvILMyeY/3Bs1VHjSaKrhYN7chaVsNGA8EAvF+IJsz/EfeoJuEy0k/LpmGmFqBjc6uH99jMR7G5P5ETwAjTAvExTP24jwyJWlTo/
-X-Gm-Message-State: AOJu0Yw0xOpDvnjZiKjLy9RlzJ2eliPnlH5ivqgD7bUOwIT79WA4PD0o
-	3NcliA2w5uO+uRS9gk9hfh2Ax+R8slWAlDO7bS+plmYrD9bOF46dYaAwu63A
-X-Google-Smtp-Source: AGHT+IF9qWp2tvcoUQZZslN+wkVhSxCc9OrI7jwdPqwNrS/fC0pl+enR/wZMBiggGGsN3bhrrjbhkg==
-X-Received: by 2002:a17:903:32c3:b0:1d9:7587:8298 with SMTP id i3-20020a17090332c300b001d975878298mr371566plr.23.1707762851651;
-        Mon, 12 Feb 2024 10:34:11 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUQU8W767PmlSwLi9hHXQE6YkfKKIqjtr3nPZAFxfqS9iKxlNwTsW1fuNwsFnWIIvJRh6iPpkXWrgHl+Ql6F/HIZar14eynHFYYh7+loi7a+9+nPi5cLRxUZHdxx+2MiswwEdTvBzh0TO2ctSktuBQUwFgbLMFK3Db0SJvOP3iplsMJCxUffhkXNPG2dgR8WQi/J2PA
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id iw11-20020a170903044b00b001d986ce6893sm649405plb.198.2024.02.12.10.34.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Feb 2024 10:34:11 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <c5d8a333-aff5-49e1-a7ee-29a023266d2d@roeck-us.net>
-Date: Mon, 12 Feb 2024 10:34:10 -0800
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OT8S7QNM"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41CCZTOL021818;
+	Mon, 12 Feb 2024 18:35:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=GS9jj+f
+	pf7KW1J3SmhSNAEWkbpmxAkYxeZmABJ8VC8g=; b=OT8S7QNMjhq1nu5Xihb2fXL
+	N0U0Mi+WDYo8ukNkuO4D0GK5DeMyTPmK8fbOuE1fRk9ytyMq1pXQ6E32Tjsl92Zn
+	pBn1bTZ9DIQGZJ2Qlbukhb3pSM3pJ9N/uPqPNb2hs9oByPRuf/wDdR1Ms4WaTC1N
+	mxk06pS5GEhiuleeWOgdfCw0Hqp2PDZQEh4qQVKM/XTNkdS45/njKf9Ngo+OT8E/
+	07hg0g9+i0E5ieYSxVoNSl9A6JxvUoxWUK+zHoIShz30Ch52MExsbB6t6uGlt3ux
+	dakPt9P14C53+YQoYYYhx/ujTTAEOO32vCqcotUNJxj5u7B32KaokZsqrFG3JsA=
+	=
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w7gs1h7vk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 Feb 2024 18:35:28 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41CIZRn9002336
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 Feb 2024 18:35:27 GMT
+Received: from hu-uchalich-lv.qualcomm.com (10.49.16.6) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 12 Feb 2024 10:35:25 -0800
+From: Unnathi Chalicheemala <quic_uchalich@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Abel Vesa <abel.vesa@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel@quicinc.com>, Elliot Berman <quic_eberman@quicinc.com>
+Subject: [PATCH v3] soc: qcom: llcc: Check return value on Broadcast_OR reg read
+Date: Mon, 12 Feb 2024 10:35:15 -0800
+Message-ID: <20240212183515.433873-1-quic_uchalich@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/2] lib: checksum: Use aligned accesses for
- ip_fast_csum and csum_ipv6_magic tests
-Content-Language: en-US
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Charlie Jenkins <charlie@rivosinc.com>,
- David Laight <David.Laight@aculab.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org
-References: <20240207-fix_sparse_errors_checksum_tests-v6-0-4caa9629705b@rivosinc.com>
- <20240207-fix_sparse_errors_checksum_tests-v6-2-4caa9629705b@rivosinc.com>
- <20240212062614.GI608142@ZenIV>
- <52393411-8313-4e94-9618-916b57f7d52e@roeck-us.net>
- <20240212181217.GK608142@ZenIV>
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20240212181217.GK608142@ZenIV>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: TfFY2h6r_-O0FiK6uGWN5bkyufH-d0kP
+X-Proofpoint-ORIG-GUID: TfFY2h6r_-O0FiK6uGWN5bkyufH-d0kP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-12_16,2024-02-12_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ suspectscore=0 adultscore=0 clxscore=1015 impostorscore=0 mlxscore=0
+ malwarescore=0 spamscore=0 phishscore=0 priorityscore=1501 bulkscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402120142
 
-On 2/12/24 10:12, Al Viro wrote:
-> On Mon, Feb 12, 2024 at 09:18:14AM -0800, Guenter Roeck wrote:
-> 
->> Almost. Turns out the csum parameter of csum_ipv6_magic() needs to be in
->> network byte order, and the length parameter needs to be in host byte order.
->> So instead of
->> 	data.len = data_ptr->len;
->> 	data.csum = (__force __wsum)htonl((__force u32)data_ptr->csum);
->> it needs to be something like
->> 	data.len = ntohl(data_ptr->len);
->> 	data.csum = data_ptr->csum;
->>
->> Also, as you mentioned, either the returned checksum or the expected
->> checksum needs to be converted for the comparison because one is in
->> network byte order and the other in host byte order.
-> 
->          for (int i = 0; i < NUM_IPv6_TESTS; i++) {
-> 		struct args {
-> 			struct in6_addr saddr;
-> 			struct in6_addr daddr;
-> 			__be32 len;
-> 			__wsum csum;
-> 			unsigned char proto;
-> 		} __packed data = (struct args *)(random_buf + i);
->                  CHECK_EQ(cpu_to_le16(expected_csum_ipv6_magic[i]),
->                           csum_ipv6_magic(data.saddr, data.daddr, ntohl(data.len),
-> 					 data.proto, data.sum));
->          }
-> and to hell with field-by-field copying.  __packed here will tell the compiler
-> that alignment of the entire thing is 1 - the total size of fields is 41 bytes,
-> so "no padding" translates into "can't even assume that address is even".
-> 
+Commit c72ca343f911 ("soc: qcom: llcc: Add v4.1 HW version support")
+introduced a new 4.1 if statement in llcc_update_act_ctrl() without
+considering that ret might be overwritten. So, add return value check
+after Broadcast_OR register read in llcc_update_act_ctrl().
 
-Except that the data pointer needs to be aligned because otherwise architectures
-not supporting unaligned accesses will bail out (as observed on mps2-an385).
-But then I am no longer sure if that is correct - maybe csum_ipv6_magic()
-is supposed to be able to handle unaligned accesses. If so, maybe it would be
-more appropriate to skip this test on the affected architectures.
+Fixes: c72ca343f911 ("soc: qcom: llcc: Add v4.1 HW version support")
+Signed-off-by: Unnathi Chalicheemala <quic_uchalich@quicinc.com>
+Reviewed-by: Elliot Berman <quic_eberman@quicinc.com>
 
-Guenter
+---
+Changes in v3:
+- Bunched Fixes tag with other tags.
+- Modified commit message.
+- Link to v2: https://lore.kernel.org/all/20240210011415.3440236-1-quic_uchalich@quicinc.com/
+
+Changes in v2:
+- Referenced right commit to be fixed in the commit message.
+- Added Elliot's R-B tag.
+- Modified commit message to better explain problem statement.
+- Link to v1: https://lore.kernel.org/all/20240202-fix_llcc_update_act_ctrl-v1-1-d36df95c8bd5@quicinc.com/
+
+---
+ drivers/soc/qcom/llcc-qcom.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/soc/qcom/llcc-qcom.c b/drivers/soc/qcom/llcc-qcom.c
+index 4ca88eaebf06..cbef0dea1d5d 100644
+--- a/drivers/soc/qcom/llcc-qcom.c
++++ b/drivers/soc/qcom/llcc-qcom.c
+@@ -859,6 +859,8 @@ static int llcc_update_act_ctrl(u32 sid,
+ 	ret = regmap_read_poll_timeout(drv_data->bcast_regmap, status_reg,
+ 				      slice_status, !(slice_status & status),
+ 				      0, LLCC_STATUS_READ_DELAY);
++	if (ret)
++		return ret;
+ 
+ 	if (drv_data->version >= LLCC_VERSION_4_1_0_0)
+ 		ret = regmap_write(drv_data->bcast_regmap, act_clear_reg,
+-- 
+2.25.1
 
