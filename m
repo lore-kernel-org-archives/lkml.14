@@ -1,280 +1,111 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 354BF3F9F6
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 18:08:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70EBD3FB01;
+	Mon, 12 Feb 2024 18:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707761310; cv=none; b=euDi7ozosKvTE+LswhsGgW8oOYFxb8a4hVHFxtY2jzqOQuC2LcDbR7842wi88TV+6PpmfB3Ohv/aBqBmgR10sriPNXeSfkXNMzvszZXkt07ukXwymAvg8Ywmkki0Wg8kfBKOgZlEGe5PDYYcfSmVVX4tKDSyriAMSoQIjRjmDfM=
+	t=1707761357; cv=none; b=BFiC2SajjWuW+IAx5gnGtBa7gA+WGZthNEjltNf2Hx3jPCy5+zyHG8dTdzLPZSBrAOQr3HuZ8Gg7VHJTaxntbwc8g4ALa0rpqbRDXU4LYlEXnASmyDMNYYlcXMVKiSp0oBwQ1yC3GcjY3c3soKD6Q5snQ2VsoDEFZBfzmoJkDzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707761310; c=relaxed/simple;
-	bh=Zpcn+sDldZR5gKoU79I02xWs3jCCZubXGm7z7r3eaUg=;
+	s=arc-20240116; t=1707761357; c=relaxed/simple;
+	bh=3fdalMzMN7ukZh9oZ+8vAMKHDZRZYLFauerZnk2PYS0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=eKktPP1YdDfda1QXwuvFK56rKI9thiNW4b8hXRywLn6yg8cLWnTj4ED3XFpNk34gvVG5NNUt3yG4ccfWtNNqiycspIBLS1UiLNLosB2zi3WKQxR/mNhyKYhFtk7Zkb/y5xGoHFAFmvqouFHxDgxgnI1jhHBOY/rNubtOrwW/nRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mi32PsGl; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=gmPxbWoZdInc757dlbWPE7e29nOnC2cm/Y4LKX5VjqAzCunpJqZEIHMFzuzARyNr+GJRRGKnhkTy89/P+RCBNjYD+i5Ccq8MQnI+MdkZe2EvN0Y8uohkjAwspFuD7J3vOi120TiKTJC5jenIZIatUt3e03PwGD7ziUIo3KHb+KM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UK+0kKd6; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mi32PsGl"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-33b66a7f859so1254185f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 10:08:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UK+0kKd6"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5d4d15ec7c5so2866939a12.1;
+        Mon, 12 Feb 2024 10:09:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707761306; x=1708366106; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M8eG2vfx+alRR2jEJWaH33x2v1+Lh70lXZyOGEZrheI=;
-        b=mi32PsGlI3/DSlWlmJqfGoDOVMyWpsS9af+/TlX7jqaL5/ZOuV7sch1adhYVB1eDJT
-         YLUJOkko4+OCgnvTyKx2XAlrLzIjU400IOA+jgupVaED6h1UWuMKDMNGrGwgP+gsrTJz
-         YmsUHSNsdFg1a6/5pec0djvCB3nW4AkctRH4agcxTCkfBodaHRBvtd9g8yKRc9ZTMwis
-         0tNcGhNn2i1GD060TNrTwygfdmI5hTGERIM7kTFlx5Dwjf2nCAg4iTAX07d396k1+SGT
-         ALhrTSp2TnxyiXNeHqbcjjAL1w1FnFtwF2qV4fgQrCDz2Z8YxPVh8x/rYwv0ZgSaCgdP
-         5Yuw==
+        d=gmail.com; s=20230601; t=1707761356; x=1708366156; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=tlK519Xw8dMf6gYDy2OSlQP4gUjAd3QrxBkYgmt3+0Q=;
+        b=UK+0kKd6K/edXVzjrDizmzHKvwIxCNZGc3A9wWo0gaZHzsEkWq51c0duJJpev73kqq
+         8XRv8IfLblwkuHO3fhXz+IZhrjeA8vSllHCrXJ/z7wsN1RCW44v4JD8AP6erUjMhFu12
+         UQlGZap69J3doTxDd5Amc7j6RJ59EnHUIxTajgtDEDEYSXJd2mwSg/jU+ME93ar2KpGm
+         NqewEt7gi5F/m/2BfXc6AqH+YC+spVFPDkPn0I/zuGohMz2Su6E6CtazF98MnrP2++n8
+         O6+8u/GXjLZhOcaT2F+w0wpkz/6B/Efo7L7Dw2kLjRjMcon8vhHlW4pcY2EpNodw6KoZ
+         zvRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707761306; x=1708366106;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M8eG2vfx+alRR2jEJWaH33x2v1+Lh70lXZyOGEZrheI=;
-        b=sNKGBxXry6yR/8qx/NJmwIubB+6F8MdFnAUdFt8vUlpyRd6uzFvjEE9tvYhyKwm7G+
-         obP61W4isbxx7NMd9mSwtgsRfK4vFnImL8PaVYizjlHORSr0DZJHBfobwtz5AaSsxNUq
-         FjRWvGQPeRBgcvJcYCUpwyIRiScWOpQFsFQ05r8Qo2dIMLMFHiDluEhAH4qNvKBEq+mU
-         vBBv/u86WMqF7yGYQJON4w7LJF3QUHvqZQW/pQ/rCetznvd+iF53QxcTgrPYxlC0VaQp
-         x7bqu/037WZyIC8YLkNCkb/9cDu1ht62zBcNmZMzOr+feyD1SBESgtP2yLL61/jSsteX
-         mw5A==
-X-Gm-Message-State: AOJu0Yy00w8lrJAeJhZ3Ts1ybAeiiqzx5X6mu/u9rLni1zTJd10iL4Ha
-	wV3LjPGmtGn2zit4S6qvRcx2zaAMqNZXFPMdHJHxFmZUR/ZmcXFQM9GUm51/CZtQBuQlfsrzq+v
-	mUJEq3y6cGQDGmoc3ZAMcMJCXW9HebVCkJJD2
-X-Google-Smtp-Source: AGHT+IGvSi87FXWNJLShT2MHSY/26nRA1F0T3W3Z1QBasH8tQNph0vir2QtvDBXT/NWKQhu2BqbqDAPSLJ4Fg4qtFQM=
-X-Received: by 2002:adf:cd8d:0:b0:33b:66bf:769d with SMTP id
- q13-20020adfcd8d000000b0033b66bf769dmr5366876wrj.61.1707761306190; Mon, 12
- Feb 2024 10:08:26 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707761356; x=1708366156;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tlK519Xw8dMf6gYDy2OSlQP4gUjAd3QrxBkYgmt3+0Q=;
+        b=TuB6/dkb8bIUw1KxVjNxc2WdFIK6BAM4aD+qfEYBamKDBOpSrhVkSZH4BttjNM4i6I
+         HUyxzMlt4bT74Ip9h6rBWTbg30NvYe6UHGtXkWlpPQbT7/ao03MYP63P/vYjowI6WPb8
+         ibAc0GRMdLaZVjdtlJPSDr6E0/+LaSn+1qKxCdfcITTPALXO8ml9jFHMlNKq7M+cH1pw
+         H4X0Cj71p56Fw/tSOAXFWkITkD1W17pNpkQTlZGJLLDiJ8vWwXS5NYtkApgl5hKDdQJY
+         0bSKK1mK1LVGAPyoj7+TX9l7mZb/P6PKwDpUn37bkZ9GZq+pnTsWoQYYUsWMEkgLRD7W
+         nj1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXJIgvFkKlCRzHv2WuFEIZ8KPLhfGTzW2tLDcaraGY3A560/iXTZJY4HJW0rH+EqRXDiDNprH2DbqXGlUwLFUQxcjHH7s8vDT5YKTFFBgpJcUQaPiBYDJ0Sz1Ep19O4X0dCWGfF5ZeZYJX1M9u4sJuKS5eRcNRMTRMRS2NiPP79kKAL0g==
+X-Gm-Message-State: AOJu0YxvxslYbVTj5aDElIdJsxOj6mpMTWO51nxBco/TByeRHrjcUKj/
+	5niY2hSYoWnyJVvWQuzZu22GGSl7L+79ACYCjOlNKfSFc4AKuFP5pMlu3M7h2U21phJeT/M9hnR
+	6qKl4RO5m7bMPJg5HBQ66p4OpkPI=
+X-Google-Smtp-Source: AGHT+IHHkcMjHqzSiMwKs8wUwiY+t9nb8ZJveVjPVPbYXb+S/1cjD9t4+R/FyDDara4HnqWYseDqoBvV2QhwYatjG78=
+X-Received: by 2002:a17:90a:9a8a:b0:296:c78e:c0bc with SMTP id
+ e10-20020a17090a9a8a00b00296c78ec0bcmr6289126pjp.9.1707761355657; Mon, 12 Feb
+ 2024 10:09:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240208212204.2043140-1-lokeshgidra@google.com>
- <20240208212204.2043140-4-lokeshgidra@google.com> <20240209030654.lxh4krmxmiuszhab@revolver>
- <CA+EESO4Ar8o3HMPF_b9KGbH2ytk1gNSJo0ucNAdMDX_OhgTe=A@mail.gmail.com>
- <20240209190605.7gokzhg7afy7ibyf@revolver> <CA+EESO7uR4azkf-V=E4XWTCaDL7xxNwNxcdnRi4hKaJQWxyxcA@mail.gmail.com>
- <20240209193110.ltfdc6nolpoa2ccv@revolver> <CA+EESO4mbS_zB6AutaGZz1Jdx1uLFy5JqhyjnDHND4tY=3bn7Q@mail.gmail.com>
- <20240212151959.vnpqzvpvztabxpiv@revolver>
-In-Reply-To: <20240212151959.vnpqzvpvztabxpiv@revolver>
-From: Lokesh Gidra <lokeshgidra@google.com>
-Date: Mon, 12 Feb 2024 10:08:13 -0800
-Message-ID: <CA+EESO706V0OuX4pmX87t4YqrOxa9cLVXhhTPkFh22wLbVDD8Q@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] userfaultfd: use per-vma locks in userfaultfd operations
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Lokesh Gidra <lokeshgidra@google.com>, 
-	akpm@linux-foundation.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, selinux@vger.kernel.org, surenb@google.com, 
-	kernel-team@android.com, aarcange@redhat.com, peterx@redhat.com, 
-	david@redhat.com, axelrasmussen@google.com, bgeffon@google.com, 
-	willy@infradead.org, jannh@google.com, kaleshsingh@google.com, 
-	ngeoffray@google.com, timmurray@google.com, rppt@kernel.org
+References: <20240212115043.1725918-1-robimarko@gmail.com> <c97d10fa-39c5-4e5e-93ce-1610635cb4d4@lunn.ch>
+In-Reply-To: <c97d10fa-39c5-4e5e-93ce-1610635cb4d4@lunn.ch>
+From: Robert Marko <robimarko@gmail.com>
+Date: Mon, 12 Feb 2024 19:09:04 +0100
+Message-ID: <CAOX2RU6OwiymM_O_62VETgkBNUQP1TuOKJmm0D1ZUXBA7ZPJNA@mail.gmail.com>
+Subject: Re: [PATCH net-next] net: phy: qca807x: move interface mode check to .config_init_once
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: andersson@kernel.org, konrad.dybcio@linaro.org, hkallweit1@gmail.com, 
+	linux@armlinux.org.uk, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, ansuelsmth@gmail.com, 
+	linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 12, 2024 at 7:20=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracl=
-e.com> wrote:
+On Mon, 12 Feb 2024 at 15:51, Andrew Lunn <andrew@lunn.ch> wrote:
 >
-> * Lokesh Gidra <lokeshgidra@google.com> [240209 15:59]:
-> > On Fri, Feb 9, 2024 at 11:31=E2=80=AFAM Liam R. Howlett <Liam.Howlett@o=
-racle.com> wrote:
-> ...
+> On Mon, Feb 12, 2024 at 12:49:34PM +0100, Robert Marko wrote:
+> > Currently, we are checking whether the PHY package mode matches the
+> > individual PHY interface modes at PHY package probe time, but at that time
+> > we only know the PHY package mode and not the individual PHY interface
+> > modes as of_get_phy_mode() that populates it will only get called once the
+> > netdev to which PHY-s are attached to is being probed and thus this check
+> > will always fail and return -EINVAL.
+> >
+> > So, lets move this check to .config_init_once as at that point individual
+> > PHY interface modes should be populated.
 >
-> > > > > > > > +static struct vm_area_struct *lock_vma(struct mm_struct *m=
-m,
-> > > > > > > > +                                    unsigned long address,
-> > > > > > > > +                                    bool prepare_anon)
-> > > > > > > > +{
-> > > > > > > > +     struct vm_area_struct *vma;
-> > > > > > > > +
-> > > > > > > > +     vma =3D lock_vma_under_rcu(mm, address);
-> > > > > > > > +     if (vma) {
-> > > > > > > > +             /*
-> > > > > > > > +              * lock_vma_under_rcu() only checks anon_vma =
-for private
-> > > > > > > > +              * anonymous mappings. But we need to ensure =
-it is assigned in
-> > > > > > > > +              * private file-backed vmas as well.
-> > > > > > > > +              */
-> > > > > > > > +             if (prepare_anon && !(vma->vm_flags & VM_SHAR=
-ED) &&
-> > > > > > > > +                 !vma->anon_vma)
-> > > > > > > > +                     vma_end_read(vma);
-> > > > > > > > +             else
-> > > > > > > > +                     return vma;
-> > > > > > > > +     }
-> > > > > > > > +
-> > > > > > > > +     mmap_read_lock(mm);
-> > > > > > > > +     vma =3D vma_lookup(mm, address);
-> > > > > > > > +     if (vma) {
-> > > > > > > > +             if (prepare_anon && !(vma->vm_flags & VM_SHAR=
-ED) &&
-> > > > > > > > +                 anon_vma_prepare(vma)) {
-> > > > > > > > +                     vma =3D ERR_PTR(-ENOMEM);
-> > > > > > > > +             } else {
-> > > > > > > > +                     /*
-> > > > > > > > +                      * We cannot use vma_start_read() as =
-it may fail due to
-> > > > > > > > +                      * false locked (see comment in vma_s=
-tart_read()). We
-> > > > > > > > +                      * can avoid that by directly locking=
- vm_lock under
-> > > > > > > > +                      * mmap_lock, which guarantees that n=
-obody can lock the
-> > > > > > > > +                      * vma for write (vma_start_write()) =
-under us.
-> > > > > > > > +                      */
-> > > > > > > > +                     down_read(&vma->vm_lock->lock);
-> > > > > > > > +             }
-> > > > > > > > +     }
-> > > > > > > > +
-> > > > > > > > +     mmap_read_unlock(mm);
-> > > > > > > > +     return vma;
-> > > > > > > > +}
-> > > > > > > > +
-> > > > > > > > +static void unlock_vma(struct vm_area_struct *vma)
-> > > > > > > > +{
-> > > > > > > > +     vma_end_read(vma);
-> > > > > > > > +}
-> > > > > > > > +
-> ...
+> Just for my own understanding, not directly about this patch...
 >
-> >
-> > The current implementation has a deadlock problem:
-> >
-> > thread 1
-> >                                      thread 2
-> >
-> > vma_start_read(dst_vma)
-> >
-> >
-> >                                          mmap_write_lock()
-> >
-> >                                          vma_start_write(src_vma)
-> > vma_start_read(src_vma) fails
-> > mmap_read_lock() blocks
-> >
-> >
-> >                                         vma_start_write(dst_vma)
-> > blocks
-> >
-> >
-> > I think the solution is to implement it this way:
-> >
-> > long find_and_lock_vmas(...)
-> > {
-> >               dst_vma =3D lock_vma(mm, dst_start, true);
-> >               if (IS_ERR(dst_vma))
-> >                           return PTR_ERR(vma);
-> >
-> >               src_vma =3D lock_vma_under_rcu(mm, src_start);
-> >               if (!src_vma) {
-> >                             long err;
-> >                             if (mmap_read_trylock(mm)) {
-> >                                             src_vma =3D vma_lookup(mm, =
-src_start);
-> >                                             if (src_vma) {
-> >
-> > down_read(&src_vma->vm_lock->lock);
-> >                                                         err =3D 0;
-> >                                             } else {
-> >                                                        err =3D -ENOENT;
-> >                                             }
-> >                                             mmap_read_unlock(mm);
-> >                                } else {
-> >                                            vma_end_read(dst_vma);
-> >                                            err =3D lock_mm_and_find_vma=
-s(...);
-> >                                            if (!err) {
->
-> Right now lock_mm_and_find_vmas() doesn't use the per-vma locking, so
-> you'd have to lock those here too.  I'm sure you realise that, but this
-> is very convoluted.
+> priv->package_mode is about PSGMII vs QSGMII for one of the SERDES
+> interfaces? We expect the individual PHYs sharing that interface to
+> also indicate PSGMII or QSGMII?
 
-That's right. I realized that after I sent this email.
->
-> >                                                          mmap_read_unlo=
-ck(mm);
-> >                                            }
-> >                                 }
-> >                                 return err;
->
-> On contention you will now abort vs block.
+Yes, that is the idea, all of the individual PHY-s in the package
+should be indicating
+the same PHY interface mode.
 
-Is it? On contention mmap_read_trylock() will fail and we do the whole
-operation using lock_mm_and_find_vmas() which blocks on mmap_lock. Am
-I missing something?
 >
-> >               }
-> >               return 0;
-> > }
-> >
-> > Of course this would need defining lock_mm_and_find_vmas() regardless
-> > of CONFIG_PER_VMA_LOCK. I can also remove the prepare_anon condition
-> > in lock_vma().
->
-> You are adding a lot of complexity for a relatively rare case, which is
-> probably not worth optimising.
->
-> I think you'd be better served by something like :
->
-> if (likely(src_vma))
->         return 0;
->
-> /* Undo any locking */
-> vma_end_read(dst_vma);
->
-> /* Fall back to locking both in mmap_lock critical section */
+> But what about the other SERDES, which can be connected to an SFP
+> cage. You would normally set that to SGMII, or 1000BaseX. When an SFP
+> module is inserted, the correct interface mode is then determined from
+> the contests of the EEPROM and the PCS needs to be reconfigured. So
+> i'm just wondering how this check works in this situation?
 
-Agreed on reduced complexity. But as Suren pointed out in one of his
-replies that lock_vma_under_rcu() may fail due to seq overflow. That's
-why lock_vma() uses vma_lookup() followed by direct down_read() on
-vma-lock. IMHO what we need here is exactly lock_mm_and_find_vmas()
-and the code can be further simplified as follows:
+I just went to retest SFP support and it works as intended, as soon as the SFP
+is inserted, PHY will get reconfigured to "combo" mode so that fifth PHY can
+support both fiber (100Base-FX or 1000Base-X) or regular copper connections.
 
-err =3D lock_mm_and_find_vmas(...);
-if (!err) {
-          down_read(dst_vma...);
-          if (dst_vma !=3D src_vma)
-                       down_read(src_vma....);
-          mmap_read_unlock(mm);
-}
-return err;
+So, the check will not interfere with SFP support.
 
-(another thing I'm fixing in the next version is avoiding locking the
-vma twice if both src_start and dst_start are in same vma)
-
-> mmap_read_lock();
-> /*
->  * probably worth creating an inline function for a single vma
->  * find/populate that can be used in lock_vma() that does the anon vma
->  * population?
->  */
-Good idea. This can simplify both lock_vma() as well as lock_mm_and_find_vm=
-as().
-
-> dst_vm =3D lock_vma_populate_anon();
-> ...
+Regards,
+Robert
 >
-> src_vma =3D lock_vma_under_rcu(mm, src_start);
-> ...
->
->
-> mmap_read_unlock();
-> return 0;
->
-> src_failed:
->         vma_end_read(dst_vma);
-> dst_failed:
-> mmap_read_unlock();
-> return err;
->
-> Thanks,
-> Liam
->
-> ...
->
+>     Andrew
