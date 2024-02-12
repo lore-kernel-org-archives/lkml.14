@@ -1,99 +1,104 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864B73FE2B
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 18:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D238A3FE31;
+	Mon, 12 Feb 2024 18:42:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707763352; cv=none; b=JvJf06gEKU4PBww+Q7I+JhX6N50ABAm8xHmRKnLq4wLAR0YThSxiQj2Dgg/peYwgiXLEdlWvCnGf7ia8J+oSzXshuFFCdmPqMrGFoYkLAPULWqLy9DY8WRnorHCGynTv5by1a6Niiz9W12/64ep0XCrjcXql6/SZl3ztRXuCJbg=
+	t=1707763354; cv=none; b=qYj7bscUMx7srOzWD/tgrLIz5UPFnSSIyKl7Ab1YtVj3ZiGzk+6utbFVZ7kiV9S6Y2YNRd2DR+K8ruiSPw0z9NgBMmpe+NaGGx3iQ7OYHlOjmDFzm2NdtWyYeeNkFw7/Mw907QJMVVk+PHE4kH/05MjbUHPat+2132xshNkGBtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707763352; c=relaxed/simple;
-	bh=Dc5XPnxb7UwGebap8tjBl1xRgA1Ca1uOKkbMPUv6C54=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GBmepKbc5a85SmtMTkuuzvKL7gzT0cEuJ7yngXn9hLjeevkPF2N/bP4EDH+UzwPPI6BTvult/C7nwl0Q3KhXS8+Rrykeg4cn1ruebp2s1iiFe3F/VhyAmSI8abauNyn+KtR31s/+uqeXhBS57HHqvQ1r2BFlt3kRoHVyeUODass=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=CC3IZAjB; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CC3IZAjB"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1d7354ba334so30159525ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 10:42:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707763351; x=1708368151; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C5O/DgDJHKyCX9I0LJ0N7xQAH4vdnIVRZHo7qsnEaBE=;
-        b=CC3IZAjBaE9iTWekttb/pkAkZ6a0cBlFBewIwLi0M0rAWolU2inX9QxcYLGPhZiIzv
-         wLghtnt/+YjMl8X/T+Wgd+3diuASAKvZFBtTDakx/3miBwsfOyeDT+HvjkMkdxKkCP4e
-         +a1qsptJRhZpAFXC8J+gMpUj/ndv+lFL/zyHw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707763351; x=1708368151;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C5O/DgDJHKyCX9I0LJ0N7xQAH4vdnIVRZHo7qsnEaBE=;
-        b=GdOFLJA1fDp64JjcD3ljz/vFYHJ9+9737nH8nN7MlnjJ9dwOrcJwNhftXs0kqK5IPp
-         hMKGIGJS71XspMpPfjR7vjWbDGZmYaxRRrFSioNqR9BuL0RFIfUKB6aOjfioBvwRsD+m
-         ce3exgY3JhRqrDgMp9ljn+G7AXrpp7SoEKdhjPJw/lMUcozRq+lLbjDflLccb2IW4pv1
-         dmDSUaNWALpommd65daQQu7Ec+4gNpDlmDJEjO6T0R8b4K4uA4ELOhkECncFFmVsnwOK
-         YFoq9cKvZF0rE3bI6UJ2jQEp88sZbQH8KTV6TXggc3UZW8x77w8U+aFvWxDMUUc+KQ3/
-         NcMA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEC/y9NbG7oFzpxZUo+9/rNvQ1GA8adU23niGWnodfJxjX55HS5CXUZtsfOTm+TU7UNfgTlmCw0rNMGp1xJApgIFwCFwA8+MW+67D6
-X-Gm-Message-State: AOJu0YwPJMnoiQH0rwqIzGAaOudLWRv/b9M7RK2gmFNPGu4VoKnOmjyz
-	uFhih+FVPBH7lErrMRLcw8uT29NWtbIJSNMkOzLL0Z+v/G/PY4nOeZTg47IlKg==
-X-Google-Smtp-Source: AGHT+IGuNWmmvasCZlNeCuflr/l/B+u8uIsMCuE+Gp+MUi8YBlXHSsSjfuvdTAH3WF0RmOHfbet8rQ==
-X-Received: by 2002:a17:903:228b:b0:1d9:bbc2:87e7 with SMTP id b11-20020a170903228b00b001d9bbc287e7mr10750955plh.36.1707763350839;
-        Mon, 12 Feb 2024 10:42:30 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUlN1kCG4L3xI7IqulfRnGZ15q3ilsPABEiCGdulsJoWDtsXE46LZ/Ym6P5yoP53zCEmaijFBQHFhM01x1GopsuaZFy1q6u6QC9IzmhFBRdPZznJos6l+0lclEdcvZGPvL481HLNn0rjz+zhmE=
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id u11-20020a170903308b00b001d9a146907dsm672613plc.11.2024.02.12.10.42.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 10:42:30 -0800 (PST)
-From: Kees Cook <keescook@chromium.org>
-To: Tycho Andersen <tycho@tycho.pizza>,
-	Arnd Bergmann <arnd@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] samples: user-trap: fix strict-aliasing warning
-Date: Mon, 12 Feb 2024 10:42:27 -0800
-Message-Id: <170776334482.2557794.95461406898503535.b4-ty@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240212111737.917428-1-arnd@kernel.org>
-References: <20240212111737.917428-1-arnd@kernel.org>
+	s=arc-20240116; t=1707763354; c=relaxed/simple;
+	bh=zDdOBevHdsttYnr9NEysVoXU8Nd7W/xppLzV0OLgkD8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JNyPXQR7dpkMhPceZZIlpZLnr0ytDuv0+6Agq1YXnJxwaBQlJ5xs2AdBkbSA6dmiRhu4Z+qVZunQF+qqBjfxKmoqIJJe21sm5Qb0AzzgqrROJOmqTO3QgNCbP/VJMYEnP6Pa2KJXucN1rPyoNIMRhU3aFu96FoXsf3wX0emKsUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.4.0)
+ id 3c1eefc7ffa6d519; Mon, 12 Feb 2024 19:42:30 +0100
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 5E279669CF2;
+	Mon, 12 Feb 2024 19:42:29 +0100 (CET)
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: Lukasz Luba <lukasz.luba@arm.com>, LKML <linux-kernel@vger.kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Zhang Rui <rui.zhang@intel.com>, netdev@vger.kernel.org,
+ Ido Schimmel <idosch@nvidia.com>, Petr Machata <petrm@nvidia.com>,
+ Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+ linux-wireless@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Manaf Meethalavalappu Pallikunhi <quic_manafm@quicinc.com>
+Subject: [PATCH v2 7/9] thermal: imx: Set THERMAL_TRIP_FLAG_RW_TEMP directly
+Date: Mon, 12 Feb 2024 19:39:20 +0100
+Message-ID: <3790563.kQq0lBPeGt@kreacher>
+In-Reply-To: <6017196.lOV4Wx5bFT@kreacher>
+References: <6017196.lOV4Wx5bFT@kreacher>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrudefgdduudegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepvdffueeitdfgvddtudegueejtdffteetgeefkeffvdeftddttdeuhfegfedvjefhnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedpnhgspghrtghpthhtohepudeipdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhukhgrshiirdhluhgsrgesrghrmhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorhhgpdhrtghpthhtohepshhtrghnihhslhgrfidrghhruhhsiihkrgeslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehsrhhinhhivhgrshdrphgrnhgurhhuvhgruggrsehlihhnuhigrdhinhhtvghlrdgtohhm
+X-DCC--Metrics: v370.home.net.pl 1024; Body=16 Fuz1=16 Fuz2=16
 
-On Mon, 12 Feb 2024 12:17:31 +0100, Arnd Bergmann wrote:
-> I started getting warnings for this one file, though I can't see what changed
-> since it was originally introduced in commit fec7b6690541 ("samples: add an
-> example of seccomp user trap").
-> 
-> samples/seccomp/user-trap.c: In function 'send_fd':
-> samples/seccomp/user-trap.c:50:11: warning: dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]
->    50 |         *((int *)CMSG_DATA(cmsg)) = fd;
->       |          ~^~~~~~~~~~~~~~~~~~~~~~~
-> samples/seccomp/user-trap.c: In function 'recv_fd':
-> samples/seccomp/user-trap.c:83:18: warning: dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]
->    83 |         return *((int *)CMSG_DATA(cmsg));
->       |                 ~^~~~~~~~~~~~~~~~~~~~~~~
-> 
-> [...]
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Applied to for-next/seccomp, thanks!
+It is now possible to flag trip points with THERMAL_TRIP_FLAG_RW_TEMP
+to allow their temperature to be set from user space via sysfs instead
+of using a nonzero writable trips mask during thermal zone registration,
+so make the imx thermal code do that.
 
-[1/1] samples: user-trap: fix strict-aliasing warning
-      https://git.kernel.org/kees/c/9ad28ca5238d
+No intentional functional impact.
 
-Take care,
+Note that this change is requisite for dropping the mask argument from
+thermal_zone_device_register_with_trips() going forward.
 
--- 
-Kees Cook
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+v1 -> v2: Rename trip flag (Stanislaw).
+
+---
+ drivers/thermal/imx_thermal.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+Index: linux-pm/drivers/thermal/imx_thermal.c
+===================================================================
+--- linux-pm.orig/drivers/thermal/imx_thermal.c
++++ linux-pm/drivers/thermal/imx_thermal.c
+@@ -115,7 +115,8 @@ struct thermal_soc_data {
+ };
+ 
+ static struct thermal_trip trips[] = {
+-	[IMX_TRIP_PASSIVE]  = { .type = THERMAL_TRIP_PASSIVE  },
++	[IMX_TRIP_PASSIVE]  = { .type = THERMAL_TRIP_PASSIVE,
++				.flags = THERMAL_TRIP_FLAG_RW_TEMP },
+ 	[IMX_TRIP_CRITICAL] = { .type = THERMAL_TRIP_CRITICAL },
+ };
+ 
+@@ -699,7 +700,7 @@ static int imx_thermal_probe(struct plat
+ 	data->tz = thermal_zone_device_register_with_trips("imx_thermal_zone",
+ 							   trips,
+ 							   ARRAY_SIZE(trips),
+-							   BIT(IMX_TRIP_PASSIVE), data,
++							   0, data,
+ 							   &imx_tz_ops, NULL,
+ 							   IMX_PASSIVE_DELAY,
+ 							   IMX_POLLING_DELAY);
+
+
 
