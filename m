@@ -1,269 +1,102 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8DE3EA80
-	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 13:37:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946513EA98;
+	Mon, 12 Feb 2024 13:37:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707745033; cv=none; b=bHoewZsVus5D2aGAypL80Y/2dAZ7TOOV1XxgKOoQ38XANDrbngIAq25izKfQCHoJJ7MhebwA09rUbPoORDbGf7wAQ5DUXEy77jyLBG7VXhtnXso9UMeP1uf6S0Lo+gHCljd3QFAqxqg4jKieZIC1UIiBPmNNT6JsjpyVxq4fsi4=
+	t=1707745038; cv=none; b=HdxMnXSCEFsOYopW8rjH+UopR/ZX50j1RvgRroEdtk4tStFvKY2ecdnOPy7Smo3gJGA51vyJ78A322lZe8RqXWi6P1fFsY/NX0ud6WRCubgUEz+2dvLrjYsazn++gT5eTYv5NZ+lT/fc0XFfGNonDOGOIPkCcWhEWQLqEKKMJgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707745033; c=relaxed/simple;
-	bh=EabtM/lM7B9y8LnUGZv/H+KjH9qiCo4jt/n1JJW5V9Y=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=m3XIMB9HTSmh9U4LvBjnpzvWI7BMFGrhw0tc4+PKIA7csf6ZXIH7bkrwZizszqbt8E8rg4y3yPnAkqpbC1rs5/L22LcKItmxZTdd99yj6EDi8kZBDn/bCBPK+BKqNmQEhQpyldWGFdvRGDjofm5W13Mer8tr21/U5casBHub7+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tH9lQXWR; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707745038; c=relaxed/simple;
+	bh=F//opeBQLHL9vnvCVwkl/A7cs5ydPs9MIEctpGlDv58=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Fuke3xvykRigOMj7bxEwqvOpWjDZqJBp1wJxk62pZ0/0VFw+9fxeBR2wDd+BfRMLjGVQ4Owlrhe/BNmLYFfmjw3ZCqyLzoP5Wi58Wrv5HpainIG/7QtocWcgNq3l7U5XzOFrmVfcdaDdFt/tdHCUEq+hNlv60db93t8zXK6P+o0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VN8S596l; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tH9lQXWR"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a271a28aeb4so400024566b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 05:37:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VN8S596l"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-55f0b2c79cdso4422715a12.3;
+        Mon, 12 Feb 2024 05:37:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707745029; x=1708349829; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=V79hha4/rxfxtxNToMm4h31PlM1pf1aXvBWpdTlosiY=;
-        b=tH9lQXWRONOFb+YGAWa0BNW8g4o9yQBODjMPkhw7Ffp3wfo4/+zVnvRXjR489+JFki
-         nd1FUzAKPVALWdkgaHMwWwKswu1uQckSUC1mG6oPQMD/gjNbzS357XeLwhg187c+WHwS
-         btNSDm3XmJeJsr28Dbwjmv33Zggep0A0kcuGbpvoBM0QuHrt7+MGmMUCXai2sxtgPXYF
-         DFlmZXscQMOkgtKpaD12+8xY7QX/YAf7Eu1qthFVO4M/8Ba1yULrsABYXZKsfv2RoEWH
-         bhFLBVdpt9ucSzFRL4puIV+/cG/ozAyfvVr3uvtM5xV+Il9vo0bYgn26eWyQXiamdJDK
-         uYMQ==
+        d=gmail.com; s=20230601; t=1707745034; x=1708349834; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=laRfN/HWi9oFcahbxDTMU1nfn0SEB7plYdxrJOODhts=;
+        b=VN8S596l9tykyZDuGE4KuoerZESQZP16PLr0jGr+uu0MONZMFXhgVJMGiU0Rxszfeo
+         Al1n8enrilZ1+MocpvfJRCZqevhxTeq5XBjmyzJt4t+1t2NM7e+xMD66GMYtoILlGMAO
+         nLknkuN+GoyXctrAobQA7uBD6UwV/IBkR/zehGknt8rt8y+CWtdrtx6IvUfOR4mwRSDS
+         ZpHDDqGH2pF7Do3926meSLSWvF73sgQvJnbMup9xxe2tYHuj4lS+KA6ShMCV0uC8n33h
+         TZBFI9oUGw3VP2ETMmou/nnb7NNbImDkYwJR3irp66HwlCQph8NnMlqQ61cy9QcgeDm9
+         A+Ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707745029; x=1708349829;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1707745034; x=1708349834;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=V79hha4/rxfxtxNToMm4h31PlM1pf1aXvBWpdTlosiY=;
-        b=D8nZjsUqmkaksqMRRmadYzVqwJE/B/vko+Nj5Ni++BfOBKJ1E6g6OdzW15VZPfY/eC
-         T+1datTF0QDI+Y0TWis2ImpCMrsMrGKmycfk2unvTXu3qyZ4ahfYtWFH+TKOkohVHcUg
-         hyEww9WF1UdS3rb3xwfEnCxcu+6VOZU4NazekIFLamiKeMPD8jxtnu08HRaniS9WNbsI
-         3KM3+hW+cHIDPaKxQYs5269kvND/PevWamiw5O4X1V7/PJSutS/WZ26vGYQ5eUCZeEUa
-         SOo576rFFy97JkztoW90DSeZGdcRjr1iaNFgpYlBliW5K51HXZw2rWc7fyn/1/EXb3Ij
-         ez5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV+kVlxjWALFaSTKNhnpOzLukg0Huhz2YgFTZUgKL6msyFs/zqGWAC63OYINI08bprWeiuAiPLvUzNfSm8t5+QMYnzhH9/453Xwqb6N
-X-Gm-Message-State: AOJu0YwogXn+QG5gDIAXjwsPlFocTV3jpMH8gQ0T5osouUc2TiV8H3IA
-	uBofN56Z3Bm7c3gl9gGABIkif+5tg/iMjDQvmPfcbeUp6bQWJp8UZFNf6hV+09c=
-X-Google-Smtp-Source: AGHT+IGAjvUAMeKyidVeXVi18QPToU+9JBqAD02+uCdTuuvdTYN23BWqJj7iOjEX+0sErkOjQzRiJA==
-X-Received: by 2002:a17:906:b259:b0:a3c:6052:2f53 with SMTP id ce25-20020a170906b25900b00a3c60522f53mr3043573ejb.37.1707745029624;
-        Mon, 12 Feb 2024 05:37:09 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXyzMnDGLin32E472hDHaMUv9aaM/W91vsxYNAH+H7s6LDyYgmU9ezmMG+JiA8Rwg6I9qrN4ad6birgjIV2atCWSlfBh8iMPUXvnEKiBCFF6WWkyRtMy4BjOasFGg+TIR6pK6iQS2YY3HweRvNVjscs/pI9TOfzINsOCQ/FgtWAMIKzu/Fz+7n20xznu3tLCr4WZhxyBtw4c62lXvmLCe/2TTJno/7fiSuJ0776d/QZnmsbJ1qJZ/9dSziAvCJ3BGjmuCDaIoxjGiJYXYrKhSDxGfBRFspEe04QeKHOjTc0PgGoyP7Yy0S492A=
-Received: from [10.167.154.1] (037008245233.garwolin.vectranet.pl. [37.8.245.233])
-        by smtp.gmail.com with ESMTPSA id cu3-20020a170906ba8300b00a3cb30d6271sm217431ejd.143.2024.02.12.05.37.08
+        bh=laRfN/HWi9oFcahbxDTMU1nfn0SEB7plYdxrJOODhts=;
+        b=nXnMas1al353jIl6fwsTK2L6VSWL2io0/h5Xzq+HaJ6dRTzEVVNr3jMKFPtbxh4svx
+         NBGPNybZmGB8pRxx3CWgs9syuY7ryXWI9HtqOGyKLJZymrYqK0Vj3mg/SfFXW1GwbVLF
+         zkozd7G/VEEnusfr97oUQK/+0NIUmwKAvS11vmRuwNCkK5A3LysjeFyFrFaWruUQ33mc
+         zQ7D9dzcc/ut6l+8FkiU9EVPdOr/01/44hrgXyvXMGGn8ubQ+wiuy0ge7zHOxfMS+2ma
+         MiSCB/TCR9zDIhkkNm1UwXmV8jqko56DHnbHs2pr1JKXLJEjZ3vfvvNimSgWw2VHrTYq
+         xf4g==
+X-Forwarded-Encrypted: i=1; AJvYcCUj7j9I5KOrdAkrWVXMainLYgWXdx3qmYHh3PEZPwgRn/v28/lyIU9W3WDxl1L3NEwcbHtuLEnqC8TpQCR9uDc7ZHh3+j2qQTBZBD3bc2zpDZwj3ZPIi6oqw3yxCTnCE++PPaHGXcQ4jBE=
+X-Gm-Message-State: AOJu0Ywgacedp7g49kKR8FsV8dCfesYhCJ1cQmVL3lpSbeutBXPVZ0Aq
+	JCTsnlOVS7ZM1Gp3sdG6BYsXzkljARMxjwohI9vAHxEnPD0Kj8vDlHyrTJgEHQE=
+X-Google-Smtp-Source: AGHT+IHClMT+6z/F2LOpPmY+C90cvi23oE87OBATifYkMwiSVZ7weG3wvapxuODx9ah9CqYEZSSRKQ==
+X-Received: by 2002:a17:906:af94:b0:a2d:a6a7:b3bc with SMTP id mj20-20020a170906af9400b00a2da6a7b3bcmr4914263ejb.4.1707745033563;
+        Mon, 12 Feb 2024 05:37:13 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXe432sCq8gKTTI0yG5pfLkQIYtqJ861AS8PZqUqhhYamDxyw7VdxiA2uix2eU872LkARzAtoE46oCSfAsRpuqm4Oa7niFQkv0IzqTpadWZ6HfO81nB7lzr4NYa94oJXYGqYev2IFT637FH4p/nM1HNZxXSlKg3qwgfsFA2YRY+l1lPcNqZ+baDql4Xb7RodzRqCAGV1yuVPh14jq+ZMQ==
+Received: from pinguine.lan (ip-176-198-146-182.um43.pools.vodafone-ip.de. [176.198.146.182])
+        by smtp.gmail.com with ESMTPSA id v16-20020a17090606d000b00a389838037bsm221777ejb.94.2024.02.12.05.37.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 05:37:09 -0800 (PST)
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Date: Mon, 12 Feb 2024 14:37:04 +0100
-Subject: [PATCH] arm64: dts: qcom: sm6115p-j606f: Add some peripherals
+        Mon, 12 Feb 2024 05:37:13 -0800 (PST)
+From: "Moritz C. Weber" <mo.c.weber@gmail.com>
+To: marvin24@gmx.de
+Cc: ac100@lists.launchpad.net,
+	linux-tegra@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	"Moritz C. Weber" <mo.c.weber@gmail.com>
+Subject: [PATCH] Staging: nvec: nvec: fixed two usleep_range is preferred over udelay warnings
+Date: Mon, 12 Feb 2024 14:36:45 +0100
+Message-Id: <20240212133645.1836-1-mo.c.weber@gmail.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240212-topic-j606f_periphs-v1-1-5dcacd483e28@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAP8eymUC/x3N0QrCMAyF4VcZuTbQdrpNX0WGdG22RkZXGhVh7
- N0NXv4HPs4OQpVJ4NbsUOnDwlvWsKcGQvJ5IeSoDc64s3HW4WsrHPDZmW5+FLUlCQ59jMO1JWs
- uAVROXgin6nNIavN7XXUslWb+/q/u43H8ABFukWt6AAAA
-To: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Konrad Dybcio <konrad.dybcio@linaro.org>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1707745028; l=4159;
- i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
- bh=EabtM/lM7B9y8LnUGZv/H+KjH9qiCo4jt/n1JJW5V9Y=;
- b=AxcNsfocdW3cjHaT9tRn3AFmT3pFhiw1Ozv0R4vN3BuzAIfh6DJ0Q5L1Sz5KlKapEDeccluT4
- mAq3zsYz48AAzZTxBGO96b85ue0ueFZhff2987JNOk1Ab/k9Z8Z9ayT
-X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+Content-Transfer-Encoding: 8bit
 
-This tablet features quite a bunch of I2C-connected devices, such as
-a Richtek RT1715 USB-C controller, a MM8013 fuel gauge, FSA4480 Type-C
-audio mux, TPS65132 regulator and some more.
-
-Add the aforementioned ones and document others.
-
-Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Fixed a code style issue raised by checkpatch.
 ---
- arch/arm64/boot/dts/qcom/sm6115.dtsi              |   7 ++
- arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts | 103 +++++++++++++++++++++-
- 2 files changed, 109 insertions(+), 1 deletion(-)
+ drivers/staging/nvec/nvec.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm6115.dtsi b/arch/arm64/boot/dts/qcom/sm6115.dtsi
-index ee65ab073ba6..7df7b2045b71 100644
---- a/arch/arm64/boot/dts/qcom/sm6115.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm6115.dtsi
-@@ -1676,6 +1676,13 @@ usb_dwc3_ss: endpoint {
- 							remote-endpoint = <&usb_qmpphy_usb_ss_in>;
- 						};
- 					};
-+
-+					port@2 {
-+						reg = <2>;
-+
-+						usb_dwc3_sbu: endpoint {
-+						};
-+					};
- 				};
- 			};
- 		};
-diff --git a/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts b/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts
-index 54da053a8042..eb65c2806345 100644
---- a/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts
-+++ b/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts
-@@ -73,6 +73,81 @@ zap-shader {
- 	};
- };
+diff --git a/drivers/staging/nvec/nvec.c b/drivers/staging/nvec/nvec.c
+index 2823cacde..18c5471d5 100644
+--- a/drivers/staging/nvec/nvec.c
++++ b/drivers/staging/nvec/nvec.c
+@@ -627,7 +627,7 @@ static irqreturn_t nvec_interrupt(int irq, void *dev)
+ 		break;
+ 	case 2:		/* first byte after command */
+ 		if (status == (I2C_SL_IRQ | RNW | RCVD)) {
+-			udelay(33);
++			usleep_range(32, 33);
+ 			if (nvec->rx->data[0] != 0x01) {
+ 				dev_err(nvec->dev,
+ 					"Read without prior read command\n");
+@@ -714,7 +714,7 @@ static irqreturn_t nvec_interrupt(int irq, void *dev)
+ 	 * We experience less incomplete messages with this delay than without
+ 	 * it, but we don't know why. Help is appreciated.
+ 	 */
+-	udelay(100);
++	usleep_range(99, 100);
  
-+&gpi_dma0 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	clock-frequency = <400000>;
-+	status = "okay";
-+
-+	/* Some devices use FUSB302(@22) instead of the RT1715. */
-+
-+	rt1715: typec-portc@4e {
-+		compatible = "richtek,rt1715";
-+		reg = <0x4e>;
-+		interrupts-extended = <&tlmm 97 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-0 = <&typec_int>;
-+		pinctrl-names = "default";
-+
-+		usb_con: connector {
-+			compatible = "usb-c-connector";
-+			label = "USB-C";
-+			data-role = "dual";
-+
-+			/* TODO: Add a proper PD setup */
-+			typec-power-opmode = "default";
-+			try-power-role = "sink";
-+			power-role = "dual";
-+			pd-disable;
-+
-+			port {
-+				rt1715_hs_ep: endpoint {
-+					remote-endpoint = <&usb_dwc3_hs>;
-+				};
-+			};
-+		};
-+	};
-+
-+	fuel-gauge@55 {
-+		compatible = "mitsumi,mm8013";
-+		reg = <0x55>;
-+	};
-+
-+	/* AW882xx speaker amp @ 34, 35, 36, 37 (CHIP_ID = 0x1852) */
-+	/* HID-over-I2C for the touchpad on keyboard folio @ 60 */
-+};
-+
-+&i2c1 {
-+	clock-frequency = <400000>;
-+	status = "okay";
-+
-+	tps65132@3e {
-+		compatible = "ti,tps65132";
-+		reg = <0x3e>;
-+	};
-+
-+	fsa4480: typec-mux@42 {
-+		compatible = "fcs,fsa4480";
-+		reg = <0x42>;
-+		interrupts-extended = <&tlmm 89 IRQ_TYPE_LEVEL_LOW>;
-+		orientation-switch;
-+		mode-switch;
-+
-+		port {
-+			fsa4480_sbu_mux: endpoint {
-+				remote-endpoint = <&usb_dwc3_sbu>;
-+			};
-+		};
-+	};
-+
-+	/* PM8008 @ 8, 9 */
-+	/* SMB1355 @ c */
-+	/* SGM37604A WLED driver @ 36 */
-+	/* ES7210 audio ADC @ 40 */
-+	/* HID-over-I2C for the keyboard on keyboard folio @ 61 */
-+};
-+
- &mdss {
- 	status = "okay";
- };
-@@ -129,6 +204,10 @@ &pon_resin {
- 	status = "okay";
- };
- 
-+&qupv3_id_0 {
-+	status = "okay";
-+};
-+
- &remoteproc_adsp {
- 	firmware-name = "qcom/sm6115/LENOVO/J606F/adsp.mbn";
- 	status = "okay";
-@@ -309,6 +388,12 @@ &sleep_clk {
- 	clock-frequency = <32764>;
- };
- 
-+&spi2 {
-+	status = "okay";
-+
-+	/* HIMAX83102P or NT36523W touchscreen */
-+};
-+
- &tlmm {
- 	gpio-reserved-ranges = <14 4>;
- 
-@@ -337,6 +422,14 @@ mdss_dsi_active: dsi-active-state {
- 		drive-strength = <8>;
- 		bias-disable;
- 	};
-+
-+	typec_int: typec-int-state {
-+		pins = "gpio97";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-pull-up;
-+		input-enable;
-+	};
- };
- 
- &ufs_mem_hc {
-@@ -360,12 +453,20 @@ &usb {
- 
- &usb_dwc3 {
- 	maximum-speed = "high-speed";
--	dr_mode = "peripheral";
-+	dr_mode = "otg";
- 
- 	phys = <&usb_hsphy>;
- 	phy-names = "usb2-phy";
- };
- 
-+&usb_dwc3_hs {
-+	remote-endpoint = <&rt1715_hs_ep>;
-+};
-+
-+&usb_dwc3_sbu {
-+	remote-endpoint = <&fsa4480_sbu_mux>;
-+};
-+
- &usb_hsphy {
- 	vdd-supply = <&pm6125_l4>;
- 	vdda-pll-supply = <&pm6125_l12>;
-
----
-base-commit: ae00c445390b349e070a64dc62f08aa878db7248
-change-id: 20240212-topic-j606f_periphs-87dd893e105c
-
-Best regards,
+ 	return IRQ_HANDLED;
+ }
 -- 
-Konrad Dybcio <konrad.dybcio@linaro.org>
+2.30.2
 
