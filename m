@@ -1,89 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEA017C71;
-	Mon, 12 Feb 2024 07:14:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A39182CA;
+	Mon, 12 Feb 2024 07:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707722067; cv=none; b=JWJncPOBzz/N4Xj0M4mCKaRvjH0sWgSWGPnMoroyyDSNarsYVL5HJg3uYOkhQlSfgdWVlvC98B3MtBbZrJZDPOGzvaN++Mst15NMzk0MuQBSahNgiE0CJ8kPannQUPuBGsR5VRGb7GinfDOjvB1U6cnvRnbpzpi9YXiDrL9v+CI=
+	t=1707722070; cv=none; b=J5/r/PKfFYcGCZUrdiUgM3ccg87gzx+EmbfjLoA/+iFgfbms+Gpk9T6sgTek5RT/euW3xI+loW5P83LofyV7JUFp2eVgV8pKM73+ro1CiSWJ8JguEilA1TheywMWU5EMpaJ9Yf+qZKdnQYkuL2SKCTOr4RNRmOyF+lXYzz6Yi0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707722067; c=relaxed/simple;
-	bh=6lp/WH08J/LRYj3MSpfMxgfWTwohOEkcpPcuQchVods=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=EOhtc2CYcjzmEF8mprbb/n8Rlp/SMAAFG4LTi2XILK0uH3gxEs/hm4sIGXVzRlYQ5PWvKeSOe3O0zTjx6BWKESPbR+imsnp0R+j5h+gLwi+XSy14HqPjeNpj+meZ4v5PgnkWDwvaSDKgcLqLzWngv+DXg51suK/FCrY9G8n0/xI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T2sbedfI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707722070; c=relaxed/simple;
+	bh=8YXecWRICYuMcNttDcOnWW490EjFn6keh2I4C8IPcyw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=cyYN/JNykp3geZanS03QWyQZqSKl3W+QXTfVomlmiDoKZjx43WGtbulkj5ftbD2rVVxwPFXL93xlZCibZApzBmF2q8qJY0y1mDcNLOl+6cSOd6mduFkxOx5rafVSnStzZjdk4gUdXXp65C/FnuBSbrDRFmjsFZ2pmiQ7XhxYLBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KSEDHvnP; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T2sbedfI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33B8CC433C7;
-	Mon, 12 Feb 2024 07:14:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707722067;
-	bh=6lp/WH08J/LRYj3MSpfMxgfWTwohOEkcpPcuQchVods=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=T2sbedfI/LZ26pARy0lxvc9zmdh4lHKKljYEP6/5qJaKWWXBKvA1+OT15u3PB8D8a
-	 RJNdgz8JnnOLnuXe8dBUrGN/dcN/AjpTlwfeyTbQxOiit0OEXRo1w11Vw2aUxlQY/Z
-	 cEs0f4wjhMXPsvEJijvPndqpydpjD7NtGXzwY50CIT0F0esWYu/I0ALEkxJkQ7GYds
-	 iz0XfohaAis2DZzXuqnglZ1OdrkYgoDO71WJJeCtWCz5FPSEVeHPDFWNd2Rrk7Cinf
-	 o+Dnsu6820ngR0j1zxOvI12SLfeHA9PxG5T6MLhd6KEbpkowoVWbqaS+ZHuk63ydtf
-	 nO298PTCVEwCQ==
-From: Kalle Valo <kvalo@kernel.org>
-To: Max Kellermann <max.kellermann@ionos.com>
-Cc: miriam.rachel.korenblit@intel.com,  linux-wireless@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  ayala.barazani@intel.com
-Subject: Re: [PATCH] iwlwifi/uefi: remove CONFIG_ACPI check
-References: <20240211201919.3751551-1-max.kellermann@ionos.com>
-Date: Mon, 12 Feb 2024 09:14:23 +0200
-In-Reply-To: <20240211201919.3751551-1-max.kellermann@ionos.com> (Max
-	Kellermann's message of "Sun, 11 Feb 2024 21:19:19 +0100")
-Message-ID: <87r0hif92o.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KSEDHvnP"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+	:Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=M5Qvp5zNKGHXjXReg58hQjrWh/GgxzXP5maEkxrO/YI=; b=KSEDHvnPO53cQSe7AW5PkM179C
+	0DYoyalxcn+DwuyW53dr955k4BfksGs0A/fvdpCrNU2v6RfJcoVVHZgjOJDRQSk6SLZW/h09KIfpl
+	zmaOnPgCKkPSDxEUIpzJ5N6UpKlyouOnZ7yV02DDBXSQT4lDJFXjCuR22l7N5IlG95PluhMT+qC/E
+	uMHRsQ+YRZRTuyzoAzCxKP4glZ3VsabLC+VtyKBS2vW4d6FWVD4CNp1cJ42IhVaHxcR3TMwfZ8W55
+	oRAplzCHTEm8E2EJI6uaS6wt3snHiqfPsgSmTI4PE/NgzauQVCyCcIuyvEnFJmHKKBXtr8ffw1NUB
+	z92qXtog==;
+Received: from [2001:4bb8:190:6eab:75e9:7295:a6e3:c35d] (helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rZQWI-00000004T1W-297p;
+	Mon, 12 Feb 2024 07:14:26 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: linux-mm@kvack.org
+Cc: Matthew Wilcox <willy@infradead.org>,
+	Jan Kara <jack@suse.com>,
+	David Howells <dhowells@redhat.com>,
+	Brian Foster <bfoster@redhat.com>,
+	Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jan Kara <jack@suse.cz>,
+	Dave Chinner <dchinner@redhat.com>
+Subject: [PATCH 10/14] pagevec: Add ability to iterate a queue
+Date: Mon, 12 Feb 2024 08:13:44 +0100
+Message-Id: <20240212071348.1369918-11-hch@lst.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240212071348.1369918-1-hch@lst.de>
+References: <20240212071348.1369918-1-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Max Kellermann <max.kellermann@ionos.com> writes:
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-> This fixes a build failure on ARCH=arm when CONFIG_EFI is set but
-> CONFIG_ACPI is not, because uefi.h declares iwl_uefi_get_sgom_table()
-> and iwl_uefi_get_uats_table() as dummy inline function, but uefi.c
-> contains the real (non-inline) implementation:
->
->  drivers/net/wireless/intel/iwlwifi/fw/uefi.c:359:6: error: redefinition of 'iwl_uefi_get_sgom_table'
->    359 | void iwl_uefi_get_sgom_table(struct iwl_trans *trans,
->        |      ^~~~~~~~~~~~~~~~~~~~~~~
->  In file included from drivers/net/wireless/intel/iwlwifi/fw/uefi.c:11:
->  drivers/net/wireless/intel/iwlwifi/fw/uefi.h:294:6: note: previous
-> definition of 'iwl_uefi_get_sgom_table' with type 'void(struct
-> iwl_trans *, struct iwl_fw_runtime *)'
->    294 | void iwl_uefi_get_sgom_table(struct iwl_trans *trans, struct iwl_fw_runtime *fwrt)
->        |      ^~~~~~~~~~~~~~~~~~~~~~~
->  drivers/net/wireless/intel/iwlwifi/fw/uefi.c:392:5: error: redefinition of 'iwl_uefi_get_uats_table'
->    392 | int iwl_uefi_get_uats_table(struct iwl_trans *trans,
->        |     ^~~~~~~~~~~~~~~~~~~~~~~
->  drivers/net/wireless/intel/iwlwifi/fw/uefi.h:299:5: note: previous
-> definition of 'iwl_uefi_get_uats_table' with type 'int(struct
-> iwl_trans *, struct iwl_fw_runtime *)'
->    299 | int iwl_uefi_get_uats_table(struct iwl_trans *trans,
->        |     ^~~~~~~~~~~~~~~~~~~~~~~
->
-> I don't know how the driver works, and I do not know why the
-> CONFIG_ACPI check was added in the first place by commit c593d2fae592a
-> ("iwlwifi: support SAR GEO Offset Mapping override via BIOS"), but
-> since it did not add the same #ifdef to uefi.c, my first guess is that
-> this piece of code shall be used even if ACPI is disabled.
->
-> Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
-> ---
->  drivers/net/wireless/intel/iwlwifi/fw/uefi.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Add a loop counter inside the folio_batch to let us iterate from 0-nr
+instead of decrementing nr and treating the batch as a stack.  It would
+generate some very weird and suboptimal I/O patterns for page writeback
+to iterate over the batch as a stack.
 
-"wifi:" missing from title but I'm guessing Johannes can add that.
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Acked-by: Dave Chinner <dchinner@redhat.com>
+---
+ include/linux/pagevec.h | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
+diff --git a/include/linux/pagevec.h b/include/linux/pagevec.h
+index 87cc678adc850b..fcc06c300a72c3 100644
+--- a/include/linux/pagevec.h
++++ b/include/linux/pagevec.h
+@@ -27,6 +27,7 @@ struct folio;
+  */
+ struct folio_batch {
+ 	unsigned char nr;
++	unsigned char i;
+ 	bool percpu_pvec_drained;
+ 	struct folio *folios[PAGEVEC_SIZE];
+ };
+@@ -40,12 +41,14 @@ struct folio_batch {
+ static inline void folio_batch_init(struct folio_batch *fbatch)
+ {
+ 	fbatch->nr = 0;
++	fbatch->i = 0;
+ 	fbatch->percpu_pvec_drained = false;
+ }
+ 
+ static inline void folio_batch_reinit(struct folio_batch *fbatch)
+ {
+ 	fbatch->nr = 0;
++	fbatch->i = 0;
+ }
+ 
+ static inline unsigned int folio_batch_count(struct folio_batch *fbatch)
+@@ -75,6 +78,21 @@ static inline unsigned folio_batch_add(struct folio_batch *fbatch,
+ 	return folio_batch_space(fbatch);
+ }
+ 
++/**
++ * folio_batch_next - Return the next folio to process.
++ * @fbatch: The folio batch being processed.
++ *
++ * Use this function to implement a queue of folios.
++ *
++ * Return: The next folio in the queue, or NULL if the queue is empty.
++ */
++static inline struct folio *folio_batch_next(struct folio_batch *fbatch)
++{
++	if (fbatch->i == fbatch->nr)
++		return NULL;
++	return fbatch->folios[fbatch->i++];
++}
++
+ void __folio_batch_release(struct folio_batch *pvec);
+ 
+ static inline void folio_batch_release(struct folio_batch *fbatch)
 -- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+2.39.2
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
