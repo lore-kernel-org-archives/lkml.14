@@ -1,98 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F5BA35;
-	Mon, 12 Feb 2024 01:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D4010E3;
+	Mon, 12 Feb 2024 01:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707699763; cv=none; b=Yf5R/Yp+1npiriQXs3jY107qo1vGyNBc84OKhAjdApQ083Txevc3aKZesjeotcV24rSwsiXHo1JTYpGT+L9kP+dnYKsPbDFG0giprgk2Ukl9H4gBJgx1XFHbxTnxfleXVIzS6yO2Pn6hHnCYkni6NRJO6yk1GPTc8pzXfKpwLfU=
+	t=1707701123; cv=none; b=BjG3t+TWz1XIhTmiref34VatfhHIKEy9azyy5bscrVe4urKPBQXE9lbqIKq0EBu7rrSYMV11F236g5k6FLKBuFt02cuI/6foiQTbRCrosuw6oY4Y4gE3BkkWUsCDGVqY0ETjOYMIM01x+LjrVijUmJ0aI5Mgw8YCYFgrlcs7GLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707699763; c=relaxed/simple;
-	bh=bx3BxrKGeRBMwdu0aMB0Rsq42isiv7zHhqCkQuDe9ns=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=RtRcqkmjLD1tu0TjtIwbgMckPNOQPfU3WOsbhb/8Qvc43981Z0lcyTz+RkYOHdesnDN9O6gclOxZz1c5Kax8ZPpNnNnzntztLO9LxxpJCvo/PsmddPUZiCAxs7dJxCS5qTowI8r4vNgVWwdPxRlXkS3WbKiqX0H553g70lFobSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kIUgURIN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707701123; c=relaxed/simple;
+	bh=XWNyd93WGKR8pqpLsqtc9/H4L8OIHtDNT7L+k/zJ0dg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cdSa1OQNsBmhgbewo42SiIJ+u+msUI1YfpbCdiXZY+E5TOfvKsfPbnLUuHMj0ZjBk4ZX26+g+NJrxgvT+xwAuGoUCGjT8Ni7Ukn4ihJANwLSFq8w+MjPfTRE6RwPy0ymMMYqaFVdJFUB1B0XDh7AiCbQG6wrDOiAAqGhgM+zBN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=n1Af6FLm; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kIUgURIN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32D16C433F1;
-	Mon, 12 Feb 2024 01:02:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707699763;
-	bh=bx3BxrKGeRBMwdu0aMB0Rsq42isiv7zHhqCkQuDe9ns=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=kIUgURINKrU5X01xZFLE7hy/pRunvsQb3+TJZQz0FwoMG2W+y3rO0Ko0Mu2eCQpuW
-	 P+TipoKgq2iO0jzXC133ZkkR68s4E074pRNnAHz1YLNXNAZei7yg6YbrjaKsrCe+hc
-	 Rvi8VPs7Ua8kwfmzgj1eGeZgtaUEVoHikiZ1+Fq4quIprMkvLW6C5WI+p0tOAyeEsC
-	 MtJos2NMEb2BiNzVIHf7FhuCehe+ONqInQVUGIwFeQ75fixKD7FzgQxJLoHySdfOIk
-	 ONWdBSRs/n8+MS2t8NVz74qG/SY/Jx8gI2B1VCZ03UAxq/ryVSIxwTuZ0ZxMVLNXau
-	 V8RsPINzfppYA==
-From: Mark Brown <broonie@kernel.org>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: kernel@pengutronix.de, Rob Herring <robh@kernel.org>, 
- H Hartley Sweeten <hsweeten@visionengravers.com>, 
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- Stephen Warren <swarren@wwwdotorg.org>, linux-spi@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240210164006.208149-5-u.kleine-koenig@pengutronix.de>
-References: <20240210164006.208149-5-u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 0/3] spi: ppc4xx: Various fixes
-Message-Id: <170769976038.2477676.3054668250534465256.b4-ty@kernel.org>
-Date: Mon, 12 Feb 2024 01:02:40 +0000
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="n1Af6FLm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1707701116;
+	bh=OWesm9ZaPP1Ioi7rhwLGfscD4uWjzx5qKU5sLm4C0BU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=n1Af6FLmpP5iUjXjnwQj9zU0gwLvuidHJ1gB2y5cYiGTabr+qRn5yWzmoEO2guwVL
+	 HQu3rSc/BIMZsif+RMDGOcE6eE5Ph8U2BsNlBeM+fprVdW/87UzA+xMvG2vCrA+/zH
+	 a3ACJLgcrDYW2u+2tLYkjsNQt22QS2Q1ZUxor9vORzI5+dBvVCeEmwOdUpQK9YU1Gy
+	 E51+yhMhtCiHK3EqzovlxuSXMJoroFhaCwKXabXlyD6fJL21GOl/8VWd4wXs/oEzNd
+	 6cpv0LX1wdCrDQnJQDCU+dJgeKWVeH2S7D230gUJ7pBPO3brtMH2YPp5W7PxS/xfIV
+	 kNXFF7L3PSrRg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TY6G32QKhz4wcY;
+	Mon, 12 Feb 2024 12:25:15 +1100 (AEDT)
+Date: Mon, 12 Feb 2024 12:25:13 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>, Somalapuram
+ Amaranath <Amaranath.Somalapuram@amd.com>, Intel Graphics
+ <intel-gfx@lists.freedesktop.org>, DRI <dri-devel@lists.freedesktop.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>, Dave Airlie <airlied@redhat.com>
+Subject: Re: linux-next: build failure after merge of the drm-misc tree
+Message-ID: <20240212122513.062a3b35@canb.auug.org.au>
+In-Reply-To: <20240206152850.333f620d@canb.auug.org.au>
+References: <20240206152850.333f620d@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.13-dev-0438c
+Content-Type: multipart/signed; boundary="Sig_/x585PivuSvMebdPb5YpnyzL";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Sat, 10 Feb 2024 17:40:05 +0100, Uwe Kleine-König wrote:
-> this series fixes three problems of the spi-ppc4xx driver. One of them
-> was introduced by myself, the other two are already older. I guess they
-> were unhandled before because the driver isn't enabled in any
-> allmodconfig build.
-> 
-> Now that I have this series, I found the first patch to be a duplicate
-> of
-> https://lore.kernel.org/linux-spi/3eb3f9c4407ba99d1cd275662081e46b9e839173.1707490664.git.chunkeey@gmail.com/
-> . Mark claimed to have applied this patch to his for-next branch, but
-> it's not included there yet. So I kept my version of it to please the
-> build bots. (Also my patch has a Fixes: line, which Christian's doesn't.
-> Up to Mark what to do with that.)
-> 
-> [...]
+--Sig_/x585PivuSvMebdPb5YpnyzL
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied to
+Hi all,
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+On Tue, 6 Feb 2024 15:28:50 +1100 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>
+> After merging the drm-misc tree, today's linux-next build (i386 defconfig)
+> failed like this:
+>=20
+> In function 'i915_ttm_placement_from_obj',
+>     inlined from 'i915_ttm_get_pages' at drivers/gpu/drm/i915/gem/i915_ge=
+m_ttm.c:847:2:
+> drivers/gpu/drm/i915/gem/i915_gem_ttm.c:165:18: error: 'places[0].flags' =
+is used uninitialized [-Werror=3Duninitialized]
+>   165 |         places[0].flags |=3D TTM_PL_FLAG_DESIRED;
+>       |         ~~~~~~~~~^~~~~~
+> drivers/gpu/drm/i915/gem/i915_gem_ttm.c: In function 'i915_ttm_get_pages':
+> drivers/gpu/drm/i915/gem/i915_gem_ttm.c:837:26: note: 'places' declared h=
+ere
+>   837 |         struct ttm_place places[I915_TTM_MAX_PLACEMENTS + 1];
+>       |                          ^~~~~~
+>=20
+> Caused by commit
+>=20
+>   a78a8da51b36 ("drm/ttm: replace busy placement with flags v6")
+>=20
+> I applied the following hack for today:
+>=20
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Tue, 6 Feb 2024 15:17:54 +1100
+> Subject: [PATCH] drm/ttm: initialise places
+>=20
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  drivers/gpu/drm/i915/gem/i915_gem_ttm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_ttm.c b/drivers/gpu/drm/i9=
+15/gem/i915_gem_ttm.c
+> index 80c6cafc8887..34e699e67c25 100644
+> --- a/drivers/gpu/drm/i915/gem/i915_gem_ttm.c
+> +++ b/drivers/gpu/drm/i915/gem/i915_gem_ttm.c
+> @@ -834,7 +834,7 @@ static int __i915_ttm_get_pages(struct drm_i915_gem_o=
+bject *obj,
+> =20
+>  static int i915_ttm_get_pages(struct drm_i915_gem_object *obj)
+>  {
+> -	struct ttm_place places[I915_TTM_MAX_PLACEMENTS + 1];
+> +	struct ttm_place places[I915_TTM_MAX_PLACEMENTS + 1] =3D {};
+>  	struct ttm_placement placement;
+> =20
+>  	/* restricted by sg_alloc_table */
+> --=20
+> 2.43.0
 
-Thanks!
+I am still applying the above patch :-(
 
-[1/3] spi: ppc4xx: Fix fallout from include cleanup
-      commit: 6f98e44984d5eff599906c0376c027df985bf38b
-[2/3] spi: ppc4xx: Fix fallout from rename in struct spi_bitbang
-      commit: de4af897ddf242aea18ee90d3ad2e21b4e64359c
-[3/3] spi: ppc4xx: Drop write-only variable
-      commit: b3aa619a8b4706f35cb62f780c14e68796b37f3f
+--=20
+Cheers,
+Stephen Rothwell
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+--Sig_/x585PivuSvMebdPb5YpnyzL
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+-----BEGIN PGP SIGNATURE-----
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXJc3kACgkQAVBC80lX
+0GzyWQf8DEwy3D9cj8T/rxk2jdAB76rQVtp4C8LU3BXNWH9jjryjtoepjKDPtkcW
+txcB8O417p3T5fX/UHxamm0B/rWKYqIzdMWxwUpFb0s1MAIt3BxAGrdlH3TaS9BN
+u6OrWNQo/3W7ixjuGT5jJJwuEPnGVGPOSlDRswUPON711II3epDR7zuEX/isqByJ
+HjXh2DK8vJR4TFX559KwJfM7i7yhOKaleGks1I1t2+iE4zEInibmaCbXAKVYG4i9
+OccXLh2o18szdq6feUSts4BzZAIav+tZp9BdcvM9XGphJZvLMbwwqpy8sZcTrAJl
+I8cfLQdibIufuKx9+v6vwhQlySWBsw==
+=dfOJ
+-----END PGP SIGNATURE-----
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+--Sig_/x585PivuSvMebdPb5YpnyzL--
