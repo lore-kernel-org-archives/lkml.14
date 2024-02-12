@@ -1,133 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7248C4F611;
-	Mon, 12 Feb 2024 23:36:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565D94F8A3
+	for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 23:36:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707780978; cv=none; b=IHVCINJtCsJHD+HZdC8Xf/H5WwHM7utNZJ+q6DgTHh0cm5gG3bxi1k0Mx/ncDcZAePMW6/00noLS3CQGZZTybXGVMyOjQnjip97V2xRCOAaj0QjuyPSZ+fuVjYM79NbpQABLe3Yyx5LIwFz4vMDy1rlycrlMzOQGYDD5peBTPx8=
+	t=1707780995; cv=none; b=IWFvN+eH+1a4oHGYNE4yC3tSu0Nx7CJcJ3M+CGBN9x1Ktxs5guTur56fanoHIyp/2X3xiLIYsaGRcmkAXw5S92vL9+xGROT9P1hMg6dPBL9hBtS20mFuPQavJ86DeqB3h9oYKfxaM0sRmOUECxaZAi/KHSe0xcA/TYujjI9HRx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707780978; c=relaxed/simple;
-	bh=wDhcWRCmEINJ3bjI2gAhFxFaF9zFLEJA9Bnbfrz58rU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=VDbT2CMjHtEYvYbxdeM4POxg45zTdWAmrb2YKx59SEV76Fjjqe44ubuFAKm1ADHezDai4kN+bqnOjPMSy/l1HyqIkUtBFAgG4YSykMgjdJIwG+/e89M71ffevDxafP1uUEoQIwaIxYcCE/D7nLD5RI08Qw6RrjqltFlnrzxhOPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FceIkvCk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707780995; c=relaxed/simple;
+	bh=23qauOezLdGd/qvi+eoGfAUmo21GdLnF/O1XuhUSBhA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=CdHwGeeKc/7lMkx5cNwojTuL9j48SP6fJU+EuNk7xSPCShKhqFvzp07VDRZ9Upmb+Aebi4vDfeh0waf3LTeaf5/ue57MLPP8nZTLz0Xt6cwIzOHJFPh1C8ZK1mWoBSrQ+9H++hsH2sFHHa+YPEJnbFftku3WwG0xUmMjwnqnfuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=tf4ChCzx; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FceIkvCk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C8E9C433F1;
-	Mon, 12 Feb 2024 23:36:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707780978;
-	bh=wDhcWRCmEINJ3bjI2gAhFxFaF9zFLEJA9Bnbfrz58rU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=FceIkvCkZfBR1eVZ2W3IXtAEwIPYWgKiGc2uwItboGq0WDB99rK4iYaAH2SgQ+Mmk
-	 yrc2eudriIYcZlbqlaG4PuzpxM8Mlqpd4Tx8kcEiKTyaicwNh/Oj9PHW++l90d/D4h
-	 axhVRgiTJWQly8JHcHxGt+gs9oYd4lLOTovVOO+6SSaLYwO9cCzvQwpJITuA2YxK3+
-	 xvVqmPQTyxop7UG8BFQ6pIsGRLwjf/ZiJ8TaAsaMGCD3nEVtSDEuYo4lmOtk9PWbjK
-	 Ic6lDDwflWP8tluLU5EOSp7JO94Mx5N+tXwfwMe4PzV42JXkxEVAwclfbSxmvSkon6
-	 gz+TPCjPUIIUw==
-Date: Tue, 13 Feb 2024 08:36:13 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mark Rutland <mark.rutland@arm.com>, Tim Chen <tim.c.chen@linux.intel.com>,
- Vincent Donnefort <vdonnefort@google.com>, Sven Schnelle
- <svens@linux.ibm.com>, Mete Durlu <meted@linux.ibm.com>
-Subject: Re: [PATCH] tracing: Have saved_cmdlines arrays all in one
- allocation
-Message-Id: <20240213083613.dc8e7ad487988542a6890b2c@kernel.org>
-In-Reply-To: <20240212180941.379c419b@gandalf.local.home>
-References: <20240212180941.379c419b@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="tf4ChCzx"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1d71cb97937so35724615ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 15:36:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1707780992; x=1708385792; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Olje9xypbAZ3WrcqD8VBFVJOFseKRGh8fXym/RnF5g8=;
+        b=tf4ChCzx/Hj+RYsN6Ac80lxqJv3vYBSruRXqTZk1FxjhH4uAwbk3vEOmYcUrVNBiV+
+         CX+emMhJMtE4DWMVm1q3InjvIYO06AHPco8+E9evzXat++4qDL1DL17qqU9gyb/kfWpO
+         jr6jl1AC4isis+UeI+BHTMOnlzH77HYPJKFefnYtZtYP53y8LAprhU2PCufvDPS4fya0
+         5HtNINojcz5yqQSsV4GZ4zDMTQjIdHWdlynNv35cC5bxbUKTzgVgsX/G2gMnvaUbO5s6
+         zN4WKQi0Ltd9zrexwPJB+lHIzt3yUxmtlqbrBez+WvhJtOc9hL9qmz2w9iUCnoJt9ldg
+         jitg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707780992; x=1708385792;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Olje9xypbAZ3WrcqD8VBFVJOFseKRGh8fXym/RnF5g8=;
+        b=f9koifNEgN6/WZ/7ecXmdN9qjESze3K85DDonQBHp/bTOFQyhZjR1H8JAxdvFvE56L
+         e6er6HewOX6Q+pZpM1POdj9jxSUfeSYXXIiHajsR1jIqdLYccVIRI1wX1XnbydBJ8tjP
+         KOSYiePdlFj4P6n65gkRehR0xLlhpMS68utAnkYdy81bA1S6pNnWzDotKnytlWGYiMXt
+         6tRisawE6h00PpOIkzmkQVAcClFE7xLtlCDl75E0HxKi5M0Xh2nXtUc79cAbmLNyyc1G
+         fRM4+o1Ne92elufFK0fMuXkQRawl2Dh93VMf1lSJW+9X1l1Xdoy+HhYE/fjoGMaeGjfK
+         MvOw==
+X-Gm-Message-State: AOJu0YxiCh2u8csGXw7exkmWdtV/CTJy84LydVWRxWEVdISM2FFNAvWY
+	Z3f8Kgbo9mmoyniFuRUTtS80qNdgQtXjjCXsPnqqFeVL04LUCNryxej14MlxDnc=
+X-Google-Smtp-Source: AGHT+IGOdL3DrCigpJSkV5Hyr5gHXGMCKTbmU/aGTha2J+6odxlz/IBG86EKAkZRn2/3Gp0s/00GPw==
+X-Received: by 2002:a17:903:110f:b0:1d8:a93f:a5b2 with SMTP id n15-20020a170903110f00b001d8a93fa5b2mr8982004plh.12.1707780992600;
+        Mon, 12 Feb 2024 15:36:32 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX9IHTBBsAU+LBcf9fWTCl49GRnlyxiyibnmfNmj/O7/h+tbt6+9IJmYjNakft2CXqPJE2jvAw7F08375+jC2mD8UEKwPVTypk5fDmJjKI4eySgbBuL41RNQiPmVh/G39Mt/x9gU7kceMUF8weph87jKzxgRSZYh2uoc0/jU3QHfpFOt++Vig/JOI89YyFKpz9KzEiw5gqb52lYt9ZyFN1i9QwIao8p3HsGo7mlb0dGMvYrmwUGIh7WwIBRywBXQ81Dsu7c6/iZGoPu/ACXbxByF8/LQ5BzCqKpUcLiixH9vZw4FNFoWJ0s74FhJty9ej228GQJZAzOn8FA1/UJvVNtlr65vPY33AkHuEDcnKBD5Ygcf073mQheXvc3jmkAooEpSecmNLA=
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id b5-20020a170902650500b001da153682c5sm888693plk.261.2024.02.12.15.36.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Feb 2024 15:36:32 -0800 (PST)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Date: Mon, 12 Feb 2024 15:36:26 -0800
+Subject: [PATCH v11 1/4] riscv: Remove unnecessary irqflags processor.h
+ include
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240212-fencei-v11-1-e1327f25fe10@rivosinc.com>
+References: <20240212-fencei-v11-0-e1327f25fe10@rivosinc.com>
+In-Reply-To: <20240212-fencei-v11-0-e1327f25fe10@rivosinc.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Jonathan Corbet <corbet@lwn.net>, Conor Dooley <conor.dooley@microchip.com>, 
+ =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <cleger@rivosinc.com>, 
+ Atish Patra <atishp@atishpatra.org>, Randy Dunlap <rdunlap@infradead.org>, 
+ Alexandre Ghiti <alex@ghiti.fr>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-doc@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1707780989; l=639;
+ i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
+ bh=23qauOezLdGd/qvi+eoGfAUmo21GdLnF/O1XuhUSBhA=;
+ b=3fk1hPn8uk0LHRB8yl3Y0RYndhVQhDbBlNi5Ce1BSrXXKhsMTW4JUlwl8LFpuZbLYzru9RLEH
+ y8tsCF/wTQcAF+CZe6nMI0QqK6iZZlmz8RM55ve7LYSJeVzXo12jwfv
+X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
+ pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
 
-On Mon, 12 Feb 2024 18:09:41 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+This include is not used. Remove it to avoid a circular dependency in
+the next patch in the series.
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> The saved_cmdlines have three arrays for mapping PIDs to COMMs:
-> 
->  - map_pid_to_cmdline[]
->  - map_cmdline_to_pid[]
->  - saved_cmdlines
-> 
-> The map_pid_to_cmdline[] is PID_MAX_DEFAULT in size and holds the index
-> into the other arrays. The map_cmdline_to_pid[] is a mapping back to the
-> full pid as it can be larger than PID_MAX_DEFAULT. And the
-> saved_cmdlines[] just holds the COMMs associated to the pids.
-> 
-> Currently the map_pid_to_cmdline[] and saved_cmdlines[] are allocated
-> together (in reality the saved_cmdlines is just in the memory of the
-> rounding of the allocation of the structure as it is always allocated in
-> powers of two). The map_cmdline_to_pid[] array is allocated separately.
-> 
-> Since the rounding to a power of two is rather large (it allows for 8000
-> elements in saved_cmdlines), also include the map_cmdline_to_pid[] array.
-> (This drops it to 6000 by default, which is still plenty for most use
-> cases). This saves even more memory as the map_cmdline_to_pid[] array
-> doesn't need to be allocated.
-> 
-> Link: https://lore.kernel.org/linux-trace-kernel/20240212174011.068211d9@gandalf.local.home/
-> 
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+---
+ arch/riscv/include/asm/irqflags.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-Looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you,
-
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/trace_sched_switch.c | 13 ++++---------
->  1 file changed, 4 insertions(+), 9 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched_switch.c
-> index e4fbcc3bede5..210c74dcd016 100644
-> --- a/kernel/trace/trace_sched_switch.c
-> +++ b/kernel/trace/trace_sched_switch.c
-> @@ -201,7 +201,7 @@ static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
->  	int order;
->  
->  	/* Figure out how much is needed to hold the given number of cmdlines */
-> -	orig_size = sizeof(*s) + val * TASK_COMM_LEN;
-> +	orig_size = sizeof(*s) + val * (TASK_COMM_LEN + sizeof(int));
->  	order = get_order(orig_size);
->  	size = 1 << (order + PAGE_SHIFT);
->  	page = alloc_pages(GFP_KERNEL, order);
-> @@ -212,16 +212,11 @@ static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
->  	memset(s, 0, sizeof(*s));
->  
->  	/* Round up to actual allocation */
-> -	val = (size - sizeof(*s)) / TASK_COMM_LEN;
-> +	val = (size - sizeof(*s)) / (TASK_COMM_LEN + sizeof(int));
->  	s->cmdline_num = val;
->  
-> -	s->map_cmdline_to_pid = kmalloc_array(val,
-> -					      sizeof(*s->map_cmdline_to_pid),
-> -					      GFP_KERNEL);
-> -	if (!s->map_cmdline_to_pid) {
-> -		free_saved_cmdlines_buffer(s);
-> -		return NULL;
-> -	}
-> +	/* Place map_cmdline_to_pid array right after saved_cmdlines */
-> +	s->map_cmdline_to_pid = (unsigned *)&s->saved_cmdlines[val * TASK_COMM_LEN];
->  
->  	s->cmdline_idx = 0;
->  	memset(&s->map_pid_to_cmdline, NO_CMDLINE_MAP,
-> -- 
-> 2.43.0
-> 
-
+diff --git a/arch/riscv/include/asm/irqflags.h b/arch/riscv/include/asm/irqflags.h
+index 08d4d6a5b7e9..6fd8cbfcfcc7 100644
+--- a/arch/riscv/include/asm/irqflags.h
++++ b/arch/riscv/include/asm/irqflags.h
+@@ -7,7 +7,6 @@
+ #ifndef _ASM_RISCV_IRQFLAGS_H
+ #define _ASM_RISCV_IRQFLAGS_H
+ 
+-#include <asm/processor.h>
+ #include <asm/csr.h>
+ 
+ /* read interrupt enabled status */
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.43.0
+
