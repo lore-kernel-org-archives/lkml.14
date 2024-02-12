@@ -1,95 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A721441206;
-	Mon, 12 Feb 2024 18:52:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B7941C87;
+	Mon, 12 Feb 2024 18:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707763959; cv=none; b=dAd9LRLYcUr724rNp6HGSdZpwaLJu5Uvez7W99UGe/V3YIMHXueC+JPyiHBI0rdnYaB9CAwYqZdyxVuyXp116gOTMW1KgJFdsMJ6HKuNxyqa7z1dep0JxMjcKRW+PEwmuIc0ijHN0KEyQTFBT0IgBXbWcQ6Hr7Ygy9VhjDkV+yg=
+	t=1707763990; cv=none; b=RALEd2YlfrJVQVPHaNQKyCpqdolvKhMx/tS2i3ulRRxet+3r+L7dYYqdjhh+LqWwHEI7akI28wIHHR1q6UskXi0Wg+K3qQBEQbv2EadfcwaHZgVqDrZmPOFSaxfbvqJ2mGm99IH35gsc2wSJXbipSNxPpadBgNT168MOvVUIL8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707763959; c=relaxed/simple;
-	bh=Q5A4rNQ8gxAzUuOWSk/FOunFd5wB+QiktWiYf+9QpVA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kX1IdsfHZmmDJi/+egaI0GFO7P3MCHaO8pToQq5JUXByDuvuhWds7WzrkPAF6NcUTOFgfb5LNG7K7Azz9aTa4s3J4VwAHejeDwu1LMC0L/6ZSbuRxLFae03cE3EYqi+ICLptPy8stosJon6jZ1B5WuM4wypa5O8OV3ILaGAmSA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5838AC433C7;
-	Mon, 12 Feb 2024 18:52:38 +0000 (UTC)
-Date: Mon, 12 Feb 2024 13:53:20 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mete Durlu <meted@linux.ibm.com>
-Cc: Sven Schnelle <svens@linux.ibm.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: use ring_buffer_record_is_set_on() in
- tracer_tracing_is_on()
-Message-ID: <20240212135320.26f90f28@gandalf.local.home>
-In-Reply-To: <8c986cb3-61b3-4f65-81c9-ffcfa994390f@linux.ibm.com>
-References: <20240205065340.2848065-1-svens@linux.ibm.com>
-	<20240205075504.1b55f29c@rorschach.local.home>
-	<yt9djznj3vbl.fsf@linux.ibm.com>
-	<20240205092353.523cc1ef@rorschach.local.home>
-	<yt9d34u63xxz.fsf@linux.ibm.com>
-	<yt9dsf262d2n.fsf@linux.ibm.com>
-	<20240206060113.39c0f5bc@rorschach.local.home>
-	<yt9deddovn3w.fsf@linux.ibm.com>
-	<20240207060923.182ecb55@rorschach.local.home>
-	<9a062196-ccbe-440e-a2f9-23eb8c5eb837@linux.ibm.com>
-	<20240207072812.4a29235f@rorschach.local.home>
-	<yt9dzfwch00u.fsf@linux.ibm.com>
-	<20240207104703.071ee985@rorschach.local.home>
-	<8c986cb3-61b3-4f65-81c9-ffcfa994390f@linux.ibm.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1707763990; c=relaxed/simple;
+	bh=7nBNtyOe9B7di3tlfXkDPiWXRmeY0kYi18klzwAbx7M=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=SFF7JUghCQbArIwGhvh0KwWW0f7ecQhsg5EBBfX7sRHjon7dLshOWbuuZJek2pPQw7bspqDz1w1UC1C2RQM2COoVGyG8F+fqe2kL6bVX8quy/7OA5Awd0IINrqW1ZdzDak0cL7EVxRDugeVb7rJtNkFD15196M6uri8kPfph1d8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=pqnR+JiL; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="pqnR+JiL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1707763986;
+	bh=7nBNtyOe9B7di3tlfXkDPiWXRmeY0kYi18klzwAbx7M=;
+	h=From:Subject:Date:To:Cc:From;
+	b=pqnR+JiLiFvgv1Kduw36CAl7PtOEjrU2Qg1ijPxf8BpEuVsk6/mFsV6Dnc/y6xEzv
+	 z2DUMWYek26avU3H837Uh2E89fLMSxkcgn0Z+w5cZWYLKTJYNFpLUPOah44HM4fZBs
+	 R7RcYFqdQQpvOnptNofsr5L16RVzML/J183dPhyRQoQPOrCcMDxB5po8iT4KCrraMz
+	 +NoRMIelwcoPGJl35Q3fJFb7m9raQRu/xsgG+6oKJ2ANtsMXIKOBLAiE00FIueZRPj
+	 Ha8EOtzYqHDp9LD1/lI1YufgREeYc6UUaq599MI0gD6I3BDUZz9Y1M3TKWBANXSS4D
+	 9xVuSSR2LrZSw==
+Received: from localhost (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 977C63782059;
+	Mon, 12 Feb 2024 18:53:06 +0000 (UTC)
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Subject: [PATCH v3 0/2] Add support for RK3588 HDMI/eDP Combo PHY
+Date: Mon, 12 Feb 2024 20:52:28 +0200
+Message-Id: <20240212-phy-hdptx-v3-0-2cde680cd024@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOxoymUC/6WPQQ6CMBBFr2K6dshMqVJceQ/jYijFNkFKSkM0h
+ Ltb3GjcunzJn/f/LGKy0dtJnHaLiHb2kw9DhnK/E8bxcLPg28xColRIUsPonuDaMT1Ac625OWJ
+ L2oqcH6Pt/OPtulwzdzHcIblo+ctANdWlxmNBWKIkBQQm+il5Hgrjg+E+WT6b0PfchMiFCffN7
+ XIkxOd75kxbwx++bdwsPxKJh6+3ZgkIXNEBNSmDqvq9Xtf1BbKtoQc3AQAA
+To: Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Johan Jonker <jbx6244@gmail.com>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, Andy Yan <andy.yan@rock-chips.com>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Algea Cao <algea.cao@rock-chips.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-phy@lists.infradead.org, kernel@collabora.com, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.13-dev-a684c
 
-On Thu, 8 Feb 2024 11:25:50 +0100
-Mete Durlu <meted@linux.ibm.com> wrote:
+Add driver and bindings to add initial support the Rockchip HDMI/eDP TX
+Combo PHY found on RK3588 SoC.
 
-> I have been only able to reliably reproduce this issue when the system
-> is under load from stressors. But I am not sure if it can be considered
-> as *really stressed*.
-> 
-> system : 8 cpus (4 physical cores)
-> load   : stress-ng --fanotify 1 (or --context 2)
-> result : ~5/10 test fails
-> 
-> of course as load increases test starts to fail more often, but a
-> single stressor doesn't seem like much to me for a 4 core machine.
-> 
-> after adding synchronize_rcu() + patch from Sven, I am no longer seeing
-> failures with the setup above. So it seems like synchronize_rcu() did
-> the trick(or at least it helps a lot) for the case described on the
-> previous mail. I couldn't trigger the failure yet, not even with
-> increased load(but now the test case takes > 5mins to finish :) ).
+The PHY is based on a Samsung IP block and supports HDMI 2.1 TMDS, FRL
+and eDP links.
 
-Right, it will definitely force the race window to go away.
+Please note that currently only the TMDS related functionality has been
+implemented.  This has been tested on Radxa ROCK 5B and Rockchip EVB1
+boards.
 
-Can you still trigger this issue with just Sven's patch and not this change?
+Changes in v3:
+- Collected R-b & T-b tags from Heiko
+- Converted all *_REG() args to lowercase (Vinod)
+- Dropped unnecessary register read/write wrappers (Vinod)
+- Added rate overflow check in hdptx_phy_clk_pll_calc() (Luis)
+- Link to v2:
+  https://lore.kernel.org/r/20240205-phy-hdptx-v2-0-a7150814c047@collabora.com
 
--- Steve
+Changes in v2:
+- Rebased series onto next-20240129
+- Removed patch 'dt-bindings: soc: rockchip: Add rk3588 hdptxphy syscon'
+  already applied by Heiko
+- For consistency with SoC TRM, replaced all references to DP with eDP
+- Updated PHY schema per Krzysztof's review; also collected his R-b tag
+- Dropped FRL, EARC and 10-bit color depth functionality until the HDMI
+  configuration options become available in PHY API
+- Squashed lots of regmap_write operations via regmap_multi_reg_write
+  (Sebastian)
+- Introduced parametrized {CMN|SB|LNTOP|LANE}_REG() macros to replace
+  the long list of register defines
+- Optimized handling of the config arrays by using ARRAY_SIZE() (Sascha)
+- Link to v1:
+  https://lore.kernel.org/r/20240119193806.1030214-1-cristian.ciocaltea@collabora.com
 
-> 
-> Here is the diff:
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> @@ -9328,10 +9328,12 @@ rb_simple_write(struct file *filp, const char 
-> __user *ubuf,
->                          val = 0; /* do nothing */
->                  } else if (val) {
->                          tracer_tracing_on(tr);
-> +                       synchronize_rcu();
->                          if (tr->current_trace->start)
->                                  tr->current_trace->start(tr);
->                  } else {
->                          tracer_tracing_off(tr);
-> +                       synchronize_rcu();
->                          if (tr->current_trace->stop)
->                                  tr->current_trace->stop(tr);
-> 
-> Not 100% sure if these were the correct places to add them.
+---
+Cristian Ciocaltea (2):
+      dt-bindings: phy: Add Rockchip HDMI/eDP Combo PHY schema
+      phy: rockchip: Add Samsung HDMI/eDP Combo PHY driver
+
+ .../bindings/phy/rockchip,rk3588-hdptx-phy.yaml    |   91 ++
+ drivers/phy/rockchip/Kconfig                       |    8 +
+ drivers/phy/rockchip/Makefile                      |    1 +
+ drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c  | 1028 ++++++++++++++++++++
+ 4 files changed, 1128 insertions(+)
+---
+base-commit: 596764183be8ebb13352b281a442a1f1151c9b06
+change-id: 20240128-phy-hdptx-8a98ab60d18e
+
