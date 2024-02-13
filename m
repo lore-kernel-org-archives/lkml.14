@@ -1,125 +1,115 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB445DF25;
-	Tue, 13 Feb 2024 15:58:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE25C5D914
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 15:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707839919; cv=none; b=qVyViuAqwqCqU+Ugj1D5K+4zfQ69jCdA/ZM0VwhFygaqtj/o7iPF+RAQ8rHwrzvmeTYGUd6svVnilAE2pN9ccETXqQBfAQobzz0U67MwuMAEP9YrfVlsc0vigfaSWlTIbfrhDJZ1UuuBYszWFoVnDLce9vgrlPuI7zyV7aCvA+o=
+	t=1707839975; cv=none; b=IctPBpOjOsAyJsKNtNEgRQx/Pj45iy+eqltyEJQzOeZ9IQw+r4OmcCuYF5yNAXlhMsYgiO8RwbB792AWEXyam15C2dARfjsa2mV5cf7ZOrqDcmFBMagk/OEEi2ypeWdEITJk19ZvZPnn57UjT0ZQC7NhW1fHuOOYEfmaOHBLgR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707839919; c=relaxed/simple;
-	bh=t9MokVMjIpOEtFvJJN7oiI58o9zM2jVHIUIbGKLKBwA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=eNYxzdPs3HSj/KIBSxQl2gRFWGiQ8qzDzMARcsuFuLMpIKsY2dgGvmK48fAQyBcl7pi+FmA0Ocu1BiYJmXfBhZR2RwvJ7z8SLrNobMZXGlBs0l+PYaoUJ5DXjSqWBkngLawQ+tOS71VZGyZ4WETvp43976yZlcu4/ag2Srz3Z3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Z3OGAhtm; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1707839975; c=relaxed/simple;
+	bh=gRbVmUln/eRZrMgBtMOu95Son0kYgWZtjC+yBqqnV8o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fPO5b8FzkCv6N0CIDNJjk8iWmRYZAH+j0PJ9T2PySGUctKQK++TcwBtMY7+AOdXC4XuNnyy8fRH9n6S7b3sg/Qr+7gqrT1ODqnNBMTO17z/4TSj4o0amK3fDxAcITTKJ4nmfoaPhfdm0L5MThtg5aa3txVccFp/q8pjWC08KyGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YA0fvuSp; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Z3OGAhtm"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41DFfl8Z015351;
-	Tue, 13 Feb 2024 16:58:24 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=/7j7puYAJdXGzVp6s9NPsesdHRXPxVYZpy3cSzTw1+k=; b=Z3
-	OGAhtmBsX3EzNnf9vnuK9f5xiPfL8KXPnbhAUrp8ltB0PpZ84bso1c7mc+arFnoJ
-	t0IUOEepyKndq6KgjWWbRQH8fQzt+/rsoSbsy2GGkTUp42omdve3TN4ku90xQPei
-	vIQtByTB4CFeUaPCe/eP5RcWcgs6qCO9DELiuZTnm/0+ntnwjHGJ/Xj0dUT4Ug6p
-	lwDEPwK8DABFYlEOuA/LOiRd9OQ4/Gnnp20g1uj0oLbtt2VAjzABY65IgDqNZU7Y
-	7MUs15CRtMA4agZy0XNOK1RH81msXYIj5F7GDK6gcToHtSM61EGURc87l1DVX9gi
-	040yBb9Zgx0S2EbzP9VQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3w62jsbpu4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 16:58:24 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 52B4840044;
-	Tue, 13 Feb 2024 16:58:19 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0ADF62747D6;
-	Tue, 13 Feb 2024 16:57:33 +0100 (CET)
-Received: from [10.201.22.200] (10.201.22.200) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 13 Feb
- 2024 16:57:32 +0100
-Message-ID: <44f24885-eb62-4730-86fd-f42b3a3cca34@foss.st.com>
-Date: Tue, 13 Feb 2024 16:57:31 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YA0fvuSp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707839972;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Zq4cGykM54m1GUbpNCYw0KR4tzCwjD4fijC17ReJiPw=;
+	b=YA0fvuSpWkQXsHTZYb2/6JWmV/ZdkKWSQO2dQBkXdTNdH17K05vosWwjzLsj8WqKxImPAl
+	85Di+fSqR7kP/yVapzeaXwcw/LQH8qrROrPOVAa2NSc9DoqXwo2fvcM3zb9R+Ex7pytM6Y
+	WT+22rEwcnQqjroVnZEtyS7Hcaglu6Q=
+Received: from mail-yb1-f200.google.com (mail-yb1-f200.google.com
+ [209.85.219.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-60-YhlK7PuWODqXJ-W0DBiFjw-1; Tue, 13 Feb 2024 10:59:30 -0500
+X-MC-Unique: YhlK7PuWODqXJ-W0DBiFjw-1
+Received: by mail-yb1-f200.google.com with SMTP id 3f1490d57ef6-dcd1779adbeso817643276.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 07:59:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707839970; x=1708444770;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Zq4cGykM54m1GUbpNCYw0KR4tzCwjD4fijC17ReJiPw=;
+        b=jTWhVpLr8xwCa6jbysJMEz7k/i7M9bLNFecRzP8gZoygy2pU9oT3HWl8sTyYXWXSe9
+         btTiIGF2E/ueKFm3PNRakBGd7WbtYY3tLwfKbWHkchVIRj3jR0F9a/jbO7gmUsFRzJ04
+         rZ/pgWAVaD75ekK+q9U/o+vJwnNcPJWXfooNpoIBIA/dyZ4VnpWnKO89TIdmrSHCdAKI
+         fvBJXE2cSdCIykl9D91uzEeVK87ACX9x+0+Cts9IfIU/z+Y2Lirq3jeHLtuRHwEViwgn
+         ilK9A4wlAK2jCTnbniFJZtSAsmX01vbKkOVnPeJQqe+hOqvaPjHtKqXCNh1vCCAy5J99
+         4Rkg==
+X-Forwarded-Encrypted: i=1; AJvYcCVtRLZAjMZIOY/xpe+yl4++Dp+ku/3Zt+rztKvP0tl8//Dk481Oa/yhOWjIhFj8div7fRuO7t2WPzun7LbfpkZKDsumbCKwfsYJtvhQ
+X-Gm-Message-State: AOJu0YxUs/eg4dhvVU59dUhBnBhbYZ4EvKEmO84U4K0i3ZdtJV6fEOAX
+	YBmLxG/xooT77n5xJLpGPg7tCOlykpm4RmgFaJk+KJ6ORX47uXTBDybsbHFKW3JmXjLkOMbulgK
+	cr2u5S7SMLSElem59EOsGM/3B4W0HtZFvfGOH7UnySUfaPcyKr2Mr36mNN/pt2ORCenepfVFDRy
+	BokgLtyDni7wbbdWBC/qdrBIlkS/Dce9dCZ/ji
+X-Received: by 2002:a25:aba3:0:b0:dcb:d0cb:651e with SMTP id v32-20020a25aba3000000b00dcbd0cb651emr3678762ybi.28.1707839970283;
+        Tue, 13 Feb 2024 07:59:30 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF5Y9tRkT/w76lYOCEDhwuuKmO/porv8bn7dSnKt/eWOytIXYIHSKWZ8ZDNwQxpijSKYEbz5UVnSKlp6/P0++k=
+X-Received: by 2002:a25:aba3:0:b0:dcb:d0cb:651e with SMTP id
+ v32-20020a25aba3000000b00dcbd0cb651emr3678746ybi.28.1707839970035; Tue, 13
+ Feb 2024 07:59:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/12] dt-bindings: memory-controller: st,stm32: add
- 'power-domains' property
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Conor Dooley
-	<conor@kernel.org>
-CC: <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>,
-        Patrick Delaunay <patrick.delaunay@foss.st.com>
-References: <20240212174822.77734-1-christophe.kerello@foss.st.com>
- <20240212174822.77734-3-christophe.kerello@foss.st.com>
- <20240212-chemicals-skinny-18eda1cfe781@spud>
- <c57b8094-be08-4ae4-ba85-f48522e5d2a8@foss.st.com>
- <52be1d88-51a1-4ec7-8aaf-6046f5a469f4@linaro.org>
-From: Christophe Kerello <christophe.kerello@foss.st.com>
-In-Reply-To: <52be1d88-51a1-4ec7-8aaf-6046f5a469f4@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-13_08,2024-02-12_03,2023-05-22_02
+References: <1707758174-142161-1-git-send-email-steven.sistare@oracle.com> <1707758174-142161-2-git-send-email-steven.sistare@oracle.com>
+In-Reply-To: <1707758174-142161-2-git-send-email-steven.sistare@oracle.com>
+From: Eugenio Perez Martin <eperezma@redhat.com>
+Date: Tue, 13 Feb 2024 16:58:54 +0100
+Message-ID: <CAJaqyWdOYHA21A2JUwnTmWfSro7H0ZTTTkkH7Ot9F8hwK+TKXw@mail.gmail.com>
+Subject: Re: [PATCH V2 1/3] vhost-vdpa: flush workers on suspend
+To: Steve Sistare <steven.sistare@oracle.com>
+Cc: virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Si-Wei Liu <si-wei.liu@oracle.com>, 
+	Xie Yongji <xieyongji@bytedance.com>, Stefano Garzarella <sgarzare@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Feb 12, 2024 at 6:16=E2=80=AFPM Steve Sistare <steven.sistare@oracl=
+e.com> wrote:
+>
+> Flush to guarantee no workers are running when suspend returns.
+>
+> Signed-off-by: Steve Sistare <steven.sistare@oracle.com>
 
+Acked-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
 
-On 2/13/24 12:57, Krzysztof Kozlowski wrote:
-> On 13/02/2024 11:57, Christophe Kerello wrote:
->>
->>
->> On 2/12/24 19:33, Conor Dooley wrote:
->>> On Mon, Feb 12, 2024 at 06:48:12PM +0100, Christophe Kerello wrote:
->>>> From: Patrick Delaunay <patrick.delaunay@foss.st.com>
->>>>
->>>> On STM32MP25 SOC, STM32 FMC2 memory controller is in a power domain.
->>>> Allow a single 'power-domains' entry for STM32 FMC2.
->>>
->>> This should be squashed with patch 1, since they both modify the same
->>> file and this power-domain is part of the addition of mp25 support.
->>
->> Hi Conor,
->>
->> Ok, I will squash this patch with patch 1.
->>
->>>
->>> If the mp1 doesn't have power domains, shouldn't you constrain the
->>> property to mp25 only?
->>>
->>
->> As this property is optional, I do not see the need to constrain the
->> property to MP25 only, but if you think that it should be the case, I
->> will do it.
-> 
-> The question is: is this property valid for the old/existing variant?
-> 
+Should this have a Fixes tag?
 
-Hi Krzysztof,
+> ---
+>  drivers/vhost/vdpa.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
+> index bc4a51e4638b..a3b986c24805 100644
+> --- a/drivers/vhost/vdpa.c
+> +++ b/drivers/vhost/vdpa.c
+> @@ -594,10 +594,13 @@ static long vhost_vdpa_suspend(struct vhost_vdpa *v=
+)
+>         struct vdpa_device *vdpa =3D v->vdpa;
+>         const struct vdpa_config_ops *ops =3D vdpa->config;
+>         int ret;
+> +       struct vhost_dev *vdev =3D &v->vdev;
+>
+>         if (!ops->suspend)
+>                 return -EOPNOTSUPP;
+>
+> +       vhost_dev_flush(vdev);
+> +
+>         ret =3D ops->suspend(vdpa);
+>         if (!ret)
+>                 v->suspended =3D true;
+> --
+> 2.39.3
+>
 
-It is not currently valid but there is a plan to move MP1 on PSCI 
-OS-initiated.
-
-Regards,
-Christophe Kerello.
-
-> Best regards,
-> Krzysztof
-> 
