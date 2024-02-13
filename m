@@ -1,221 +1,160 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from whm50.louhi.net (whm50.louhi.net [77.240.19.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2C6208C3;
-	Tue, 13 Feb 2024 09:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663B91B7E6
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 09:04:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.240.19.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707814996; cv=none; b=tU3Me9DTsnK7ZiHbNm1dVa5pxnZrCvlGDliw9ZdmmPJNb9auO8pPKiXh8J4GgQPeaFiOJVjbxjQCJRuSZkpdOWh+t7iBWM6b3re4vTZuwMXxLy33DS9JFR35J8HRJeBjgUvQuy0iagf+ir3oQKlaHGQ9cFnlKJ9J+v/7hxfFb8U=
+	t=1707815094; cv=none; b=K7M0NpI4GVNtqZHX4xr5nGAFvj0Hkn81++h+MCKfRZw19rHpJtPybxdDkCE5EAvsbp/6eY50PCAPHUBl4efhzpDXfCYECG/wEkgk2f6GldNmJURnytxDyXoQ1Hv7XT7vfpQLIWNZBNU+hF0a9/wxTKjtK4sT7zTeox2f/7ArYhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707814996; c=relaxed/simple;
-	bh=gLbhyPC1ZnLyN/5YEgFVKTykViATyzllgItFsyVFqmA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=hn5YsKx7wcJY88gGE71W9ReGIQoPDac1kTZ0JjwmaKhUlg4KcetOL0fRZWcOha0dz0StNSEn7p9OqF1dtcYiqdrd/u/jS6Qb4Y+xgZ4dmmZd2wrr6Z+2XCZ7clkR2mJqPPaoOvMRQ5kvXFvfrHOQug4B6Ls8r5ggyOKQAs/6cu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Sndpvb0D; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mPzWZKTX; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1707815094; c=relaxed/simple;
+	bh=Hek6B2b5hqvBzpU1pplaLcjn08MGSZzlnWfzAjJRm0c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RodOvViZTY82qo4R4ZViHVEkiPfNLroF988hIFiYDnp/PPKQEIrCJRW819o7rgnytXxZr0UaS76Axv9oVRfv6xUlKTjIVLxz5EsAvRaNoFFiAbnoo/2OSKLiFr5vbxrYtwmQWgGmBnY8DX1VYWMjat8KrD9qagZz8XBAVFzOPjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=haloniitty.fi; spf=pass smtp.mailfrom=haloniitty.fi; dkim=pass (2048-bit key) header.d=haloniitty.fi header.i=@haloniitty.fi header.b=NTlBAkEv; arc=none smtp.client-ip=77.240.19.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=haloniitty.fi
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=haloniitty.fi
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Sndpvb0D";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mPzWZKTX"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1707814992;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=i6BkF0UFKnJMGjWiJAiIbSA+roMcS63IGX3gCMnqyxY=;
-	b=Sndpvb0DgXvIkTtZrlJB3MFD1BU0yaK89cZb0EVlrgtSomCXTWHy0AXuguSxw0puaBIS17
-	JZOlKdtNHcDdv+sIZxXi8YBAtGnAVEY3QZ8JhkzdnaFiNzuGQmT30hxvCsXcld3WQ4qwV6
-	W3i+V6o6iL6m7Xx6/tWIFxjlON2SPDku6SbAO8u88OoY6ZU6sHidpzQqXTt72RbSNuRD5y
-	tTgKynEFsybdCNic68siTDM2qcgJLYhbiGbJSoDmkzYJuasWokYcWEzVtAGDC/YqUqyd79
-	jPqZLuZ83AgqAkJa9PLU1lNHinnoNWJkbEIHhjCtYqy81AJ5ZbLXsXwnAT2BsQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1707814992;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=i6BkF0UFKnJMGjWiJAiIbSA+roMcS63IGX3gCMnqyxY=;
-	b=mPzWZKTX3Zf0yCuaq/GYMTpdGtQ4v/5pgLbCUkITD6JSXtKcC3fYs70W0AL2SgOwHEqVJD
-	QlZ6bxb3SYxwUqCg==
-To: Changhuang Liang <changhuang.liang@starfivetech.com>, Rob Herring
- <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Ley Foon Tan <leyfoon.tan@starfivetech.com>, Jack Zhu
- <jack.zhu@starfivetech.com>, Changhuang Liang
- <changhuang.liang@starfivetech.com>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] irqchip: Add StarFive external interrupt controller
-In-Reply-To: <20240130055843.216342-3-changhuang.liang@starfivetech.com>
-References: <20240130055843.216342-1-changhuang.liang@starfivetech.com>
- <20240130055843.216342-3-changhuang.liang@starfivetech.com>
-Date: Tue, 13 Feb 2024 10:03:12 +0100
-Message-ID: <87cyt0ivn3.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=haloniitty.fi header.i=@haloniitty.fi header.b="NTlBAkEv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=haloniitty.fi; s=default; h=Content-Type:MIME-Version:References:
+	In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Dqvjpi3gCIFY1y588HKBH0osAieBB4j+AjlVItPgKd4=; b=NTlBAkEvk/1WemzjE/6G/dWwmy
+	ycEmLjF+03GDFUC4BvFLu+LZppfhL0XZlu5MSN/B4qoTnw2TnH467RdcluoX/Hz2FuBDEz7Spufk4
+	1eaPqKdwmdqU/iJTVnsr36Vm7UFOxrBERJQrmojlBgLBeUmaFvcMF9KuDuwuk6IKkwlu3iDkAaQ0P
+	vr2H/+KIQz6R0xLvH4lynHs9JRUVsIQNs5bJ9E1JykbgbZZ/tE48cOrSiUKfADL+BS56A9YUGt186
+	VH7lm6FzwBxxPu1eBCKPhY+u9KiTRip7D9G9orE1zazvUuZH99ug+WiuaGyYKJLWTzmszpUM4TMgf
+	dbmShoYw==;
+Received: from [194.136.85.206] (port=33796 helo=eldfell)
+	by whm50.louhi.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <pekka.paalanen@haloniitty.fi>)
+	id 1rZoiY-0002vt-1d;
+	Tue, 13 Feb 2024 11:04:42 +0200
+Date: Tue, 13 Feb 2024 11:04:40 +0200
+From: Pekka Paalanen <pekka.paalanen@haloniitty.fi>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: Jyri Sarha <jyri.sarha@iki.fi>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Sam Ravnborg <sam@ravnborg.org>, Devarsh
+ Thakkar <devarsht@ti.com>, Aradhya Bhatia <a-bhatia1@ti.com>, Francesco
+ Dolcini <francesco@dolcini.it>, Tomi Valkeinen <tomi.valkeinen@ti.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ "wayland-devel@lists.freedesktop.org" <wayland-devel@lists.freedesktop.org>
+Subject: Re: [PATCH 1/2] drm/tidss: Fix initial plane zpos values
+Message-ID: <20240213110440.13af335a@eldfell>
+In-Reply-To: <20240213-tidss-fixes-v1-1-d709e8dfa505@ideasonboard.com>
+References: <20240213-tidss-fixes-v1-0-d709e8dfa505@ideasonboard.com>
+	<20240213-tidss-fixes-v1-1-d709e8dfa505@ideasonboard.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; boundary="Sig_/sNODGAuo=/Hxc1/SQ_PTM=+";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - whm50.louhi.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - haloniitty.fi
+X-Get-Message-Sender-Via: whm50.louhi.net: authenticated_id: pekka.paalanen@haloniitty.fi
+X-Authenticated-Sender: whm50.louhi.net: pekka.paalanen@haloniitty.fi
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On Mon, Jan 29 2024 at 21:58, Changhuang Liang wrote:
-> +
-> +struct starfive_irq_chip {
-> +	void __iomem *base;
-> +	struct irq_domain *root_domain;
-> +	struct clk *clk;
-> +};
+--Sig_/sNODGAuo=/Hxc1/SQ_PTM=+
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#struct-declarations-and-initializers
+On Tue, 13 Feb 2024 10:16:36 +0200
+Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> wrote:
 
-Please.
+> When the driver sets up the zpos property it sets the default zpos value
+> to the HW id of the plane. That is fine as such, but as on many DSS
+> versions the driver arranges the DRM planes in a different order than
+> the HW planes (to keep the non-scalable planes first), this leads to odd
+> initial zpos values. An example is J721e, where the initial zpos values
+> for DRM planes are 1, 3, 0, 2.
+>=20
+> In theory the userspace should configure the zpos values properly when
+> using multiple planes, and in that sense the initial zpos values
+> shouldn't matter, but there's really no reason not to fix this and help
+> the userspace apps which don't handle zpos perfectly. In particular,
+> Weston seems to have issues dealing with the planes with the current
+> default zpos values.
+>=20
+> So let's change the zpos values for the DRM planes to 0, 1, 2, 3.
+>=20
+> Another option would be to configure the planes marked as primary planes
+> to zpos 0. On a two display system this would give us plane zpos values
+> of 0, 0, 1, 2. The end result and behavior would be very similar in this
+> option, and I'm not aware that this would actually help us in any way.
+> So, to keep the code simple, I opted for the 0, 1, 2, 3 values.
+>=20
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> Fixes: 32a1795f57ee ("drm/tidss: New driver for TI Keystone platform Disp=
+lay SubSystem")
 
-> +static void starfive_intc_mod(struct starfive_irq_chip *irqc, u32 reg, u32 mask, u32 data)
-> +{
-> +	u32 value;
-> +
-> +	value = ioread32(irqc->base + reg) & ~mask;
-> +	data &= mask;
+Hi Tomi,
 
-Why?
+have you reported this to Weston? What exactly is the problem?
 
-> +	data |= value;
-> +	iowrite32(data, irqc->base + reg);
+It doesn't seem like a good idea to work around userspace bugs
+(non-regression, I presume?) with kernel changes.
 
-How is this serialized against concurrent invocations of this code on
-different CPUs for different interrupts?
-
-It's not and this requires a raw_spinlock for protection.
-
-> +}
-> +
-> +static void starfive_intc_unmask(struct irq_data *d)
-> +{
-> +	struct starfive_irq_chip *irqc = irq_data_get_irq_chip_data(d);
-> +
-> +	starfive_intc_mod(irqc, STARFIVE_INTC_SRC0_MASK, BIT(d->hwirq), 0);
-> +}
-> +
-> +static void starfive_intc_mask(struct irq_data *d)
-> +{
-> +	struct starfive_irq_chip *irqc = irq_data_get_irq_chip_data(d);
-> +
-> +	starfive_intc_mod(irqc, STARFIVE_INTC_SRC0_MASK, BIT(d->hwirq), BIT(d->hwirq));
-> +}
-> +
-> +static struct irq_chip intc_dev = {
-> +	.name = "starfive jh8100 intc",
-> +	.irq_unmask = starfive_intc_unmask,
-> +	.irq_mask = starfive_intc_mask,
-> +};
-
-See documentation please.
-
-> +static int starfive_intc_map(struct irq_domain *d, unsigned int irq, irq_hw_number_t hwirq)
-> +{
-> +	irq_domain_set_info(d, irq, hwirq, &intc_dev, d->host_data,
-> +			    handle_level_irq, NULL, NULL);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct irq_domain_ops starfive_intc_domain_ops = {
-> +	.xlate = irq_domain_xlate_onecell,
-> +	.map = starfive_intc_map,
-> +};
-
-Ditto.
-
-> +static void starfive_intc_irq_handler(struct irq_desc *desc)
-> +{
-> +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +	struct starfive_irq_chip *irqc = irq_data_get_irq_handler_data(&desc->irq_data);
-
-https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#variable-declarations
-
-> +	unsigned long value = 0;
-
-Pointless initialization
-
-> +	int hwirq;
-> +
-> +	chained_irq_enter(chip, desc);
-> +
-> +	value = ioread32(irqc->base + STARFIVE_INTC_SRC0_INT);
-> +	while (value) {
-> +		hwirq = ffs(value) - 1;
-> +
-> +		generic_handle_domain_irq(irqc->root_domain, hwirq);
-> +
-> +		starfive_intc_mod(irqc, STARFIVE_INTC_SRC0_CLEAR, BIT(hwirq), BIT(hwirq));
-> +		starfive_intc_mod(irqc, STARFIVE_INTC_SRC0_CLEAR, BIT(hwirq), 0);
-> +
-> +		clear_bit(hwirq, &value);
-> +	}
-> +
-> +	chained_irq_exit(chip, desc);
-> +}
-> +
-> +static int __init starfive_intc_init(struct device_node *intc,
-> +				     struct device_node *parent)
-> +{
-> +	struct starfive_irq_chip *irqc;
-> +	struct reset_control *rst;
-> +	int ret;
-> +	int parent_irq;
-
-See Documentation
-
-> +	irqc = kzalloc(sizeof(*irqc), GFP_KERNEL);
-> +	if (!irqc)
-> +		return -ENOMEM;
-> +
-> +	irqc->base = of_iomap(intc, 0);
-> +	if (!irqc->base) {
-> +		pr_err("Unable to map IC registers\n");
-> +		ret = -ENXIO;
-> +		goto err_free;
-> +	}
-> +
-> +	rst = of_reset_control_get_exclusive(intc, NULL);
-> +	if (IS_ERR(rst)) {
-> +		pr_err("Unable to get reset control %pe\n", rst);
-> +		ret = PTR_ERR(rst);
-> +		goto err_unmap;
-> +	}
-> +
-> +	irqc->clk = of_clk_get(intc, 0);
-> +	if (IS_ERR(irqc->clk)) {
-> +		pr_err("Unable to get clock\n");
-> +		ret = PTR_ERR(irqc->clk);
-> +		goto err_rst;
-> +	}
-> +
-> +	ret = reset_control_deassert(rst);
-> +	if (ret)
-> +		goto err_clk;
-> +
-> +	ret = clk_prepare_enable(irqc->clk);
-> +	if (ret)
-> +		goto err_clk;
-> +
-> +	irqc->root_domain = irq_domain_add_linear(intc, STARFIVE_INTC_SRC_IRQ_NUM,
-> +						  &starfive_intc_domain_ops, irqc);
-> +	if (!irqc->root_domain) {
-> +		pr_err("Unable to create IRQ domain\n");
-> +		ret = -EINVAL;
-> +		goto err_clk;
-> +	}
-> +
-> +	parent_irq = of_irq_get(intc, 0);
-> +	if (parent_irq < 0) {
-> +		pr_err("Failed to get main IRQ: %d\n", parent_irq);
-> +		ret = parent_irq;
-> +		goto err_clk;
-
-Leaks the interrupt domain, no?
 
 Thanks,
+pq
 
-        tglx
+> ---
+>  drivers/gpu/drm/tidss/tidss_plane.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpu/drm/tidss/tidss_plane.c b/drivers/gpu/drm/tidss/=
+tidss_plane.c
+> index e1c0ef0c3894..68fed531f6a7 100644
+> --- a/drivers/gpu/drm/tidss/tidss_plane.c
+> +++ b/drivers/gpu/drm/tidss/tidss_plane.c
+> @@ -213,7 +213,7 @@ struct tidss_plane *tidss_plane_create(struct tidss_d=
+evice *tidss,
+> =20
+>  	drm_plane_helper_add(&tplane->plane, &tidss_plane_helper_funcs);
+> =20
+> -	drm_plane_create_zpos_property(&tplane->plane, hw_plane_id, 0,
+> +	drm_plane_create_zpos_property(&tplane->plane, tidss->num_planes, 0,
+>  				       num_planes - 1);
+> =20
+>  	ret =3D drm_plane_create_color_properties(&tplane->plane,
+>=20
+
+
+--Sig_/sNODGAuo=/Hxc1/SQ_PTM=+
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAmXLMKgACgkQI1/ltBGq
+qqdp1w/8DVuos7vQvXFbkwEi2MmS22UH5pJRSEhtktlmNyHvlwnpQbKg7EPlh48M
+fqjxA28Rxf/CMw0kAz0E6j+IIZ9mfnAUY6GQNtwmV442IfTD5NrkewgVFKA3JpWG
+Ezs1BozIj9KI71Po/4pcIVFfJm5HgUBXMALfz8gp4E/voWBUFPNqyPFVFg6BDiz8
+rinLwLVFVJqzEK40FW9p7LFfwOT2XaN0gkl09ql1XDBuA3CpXNuz53p8KDQy3rnZ
+vu/BmvZYxPCMzULbiqiJelqk0RYwR/XfHPh/sKK88BYvrjtvIKAuOoQd2sBpvcIO
+XoJWb2VtlyMR7jZk+9d8aLrJ+kNoe2GSlo/7CtYBIQYKTR+Zu9oZu+UdiWEFRopM
+tXukYecHIVpG7sDpGgkoIMDcJ32LJDx4ynZcP1173Jrc1sgbmJF+uxRu4JhD7qDN
+/I7uUYbooRFLv+yXu0C19IsSm8NK2T6foeKrj0YPU9idZp2OwEbW9HuKmH7igNdS
+RIIerNbwgOiAbIBTvdzisnlPUDg4K3WIM54faPGBnoKp47xtjNS4ZxbhYWaBsgeM
+j2v2tzIvoac/mNQJswGS5gpB/Gh9wqhtbvzU2c9aPlK3Q8XT3BjYHD2+Lj/tyUV8
+W7ZZ0lfpnk6nNnR7EIYFB609pP/khWL0VotfNxJJJMRFMH9/rc0=
+=iaMj
+-----END PGP SIGNATURE-----
+
+--Sig_/sNODGAuo=/Hxc1/SQ_PTM=+--
