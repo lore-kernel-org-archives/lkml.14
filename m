@@ -1,93 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82FE62810
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 23:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9DD62807
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 23:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707865634; cv=none; b=XXsNyY33DRgaGWayPF5fH14aBCGQn5tceHTlLjwgbZsQMexCO7flloBymaWEzx1kKt6lak/dFmXwVChG5VZe7L+FySqL8zg+fI7GwE6/MVRyp1C7x9sXFQGKM0MhNdZyp6MIaddQtR5blVMjmctXB0U9GNhpzNSiwcmrVFBs/Sc=
+	t=1707865635; cv=none; b=SgGl/OrFkUeZd+mZ95dtgytzWayiAnAxb+hLCRhERfkW6+vzFtqLoyxbXKGBVuAox0R1Hx5EQIhwlqBoRQkKWFmf3rzfkz9YRvNgaZ7tZI3OOjlO55r9lFBu9khEPcF8Y+uthCFIGZx7PYtKw9oioAO6HLKg/dVm4j2ZEvQFstQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707865634; c=relaxed/simple;
-	bh=f2Cdl3IDDtVePEix7n4iaiKSi9bMZGjncwLg38ulR7U=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=F+mRC2TN6q0ufyc3a+Fo55JFYM4xiS2toMvySyu3esyLVHxlrc+fK+zh5zTsZl6gsYoQhEVWaPL2iF3N2g0EleByMY2awuannBGWTCrH7f374W2Z17wqfu7yLAU45tsWcT0zLLhl8YWeKWS0mQ7AaVEy0tokcG5dMPiutLwXfS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qOekE/Wg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707865635; c=relaxed/simple;
+	bh=MjAOKycBPzBk4VO9jkOkv9nBTectr6pmu0X6Zna2BAc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aoW7zd2Fy7cTGbXuJ4G+X7MUjEZjfC7rfoGJdw3J7sEt1KXa9V9NJWOD+qO2sk74CDUny5naEp1vjDKF/5+yr7QX9/a/xvt4kjTnq8SRh0VVeT73enmUyfg6U1gCKaTR8LANyKzggoC/vkGPTuGw7O7LW9BOiM4DP9x9IM2UJqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M0ya3bvw; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qOekE/Wg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B45A0C433F1;
-	Tue, 13 Feb 2024 23:07:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707865634;
-	bh=f2Cdl3IDDtVePEix7n4iaiKSi9bMZGjncwLg38ulR7U=;
-	h=From:Subject:Date:To:Cc:From;
-	b=qOekE/Wg1oH05btXKZszw40TIAQU+iF2PFDcEq+hVEad1Nfkdq6i02JSUtVf256+H
-	 WKLoMOYOyUw74OSOnO6cPdFgaZtsqcSIEePdtyyBM0j0LrtMwqKoM4PfyAf+LfLAG1
-	 7noTdNKjw7A6u/Mk/PRQKMiRfIVkhgTN6hiM1JZ6svoU6F+chPatQbF2GaQlAlH/Y9
-	 P+KyWgm7KLQ8ZxVdkNkWiWequ2J0xmGIeiCzs1qqLo/Mex18HnwANbUTj/Lp0QGyVT
-	 Mswr6YIkirZgjgfbG5AElRUIBByqqSn7sqE/vlUV5DM8WVFEBn6FBuEPuvCpOW51ID
-	 zDgFM6eDAKulg==
-From: Mark Brown <broonie@kernel.org>
-Subject: [PATCH v3 0/2] arm64/sme: Fix handling of traps on resume
-Date: Tue, 13 Feb 2024 23:06:31 +0000
-Message-Id: <20240213-arm64-sme-resume-v3-0-17e05e493471@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M0ya3bvw"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dc6d8bd618eso5063987276.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 15:07:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707865632; x=1708470432; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MjAOKycBPzBk4VO9jkOkv9nBTectr6pmu0X6Zna2BAc=;
+        b=M0ya3bvwdjzmfbQmWgeeOPVTgAmATTw/AiXusdZXqHr87FBmqE3yJcAb36e7/dW73r
+         rkHaB4dQGzBwpztpthLfnK9yeM2PmCpRoVSo9DTKTZodwsx5w/Dt5LXuND+76+zMKTX+
+         E6A02VHP1FhCYWolYnUyXkNeuAXJnqsYmctJdpKt1LITjJUWRODA9s4bxNgGkbutb5HF
+         qBoAVjiR4Ig+M2sgxkkaaPBzarXe5/gkIBeyNB+7Kpfe8xx/K1f7RHuzfCA//AWkr0cI
+         ru86TZY+WZa8ierXsqezE8DD6V+XddnSYEvEXohoChDfIFyZ48dYPHpbWlbcFAqzOWOu
+         m96Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707865632; x=1708470432;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MjAOKycBPzBk4VO9jkOkv9nBTectr6pmu0X6Zna2BAc=;
+        b=a3u+yeHgHs/8HnmMs/kpOv3YePSRTILSoN9azc8X5PZzgnSR1pHaNpjIY0x6z/2/+F
+         G0N7DS8QPbFiGK/yJ+WGc6MraQzSMIPws9YvIPvTIX/DMrqFtqWrA5CJvUGehQHMnDIB
+         JSmIZDG8ryk8sr/RV1av+q8f4QXgml205k2rJFnL2aNev5CrsDLnC/bjKlYifg36oy2X
+         3QwZl/rKcJkMUiTlL7UAwvet/b/TrRDXlkkLzITJYCM6qP4uFLjWBvTLDaNzPyMn3htJ
+         kRNo15VlAWH2NRunWeA8EMtwDiZi5u5LbU3BWiQKEFySBm0zT0LJI1pJ0+DwFZxRCD6I
+         fhdA==
+X-Forwarded-Encrypted: i=1; AJvYcCVxrP951idR5RvuYR8Sg7kYYYKx8x3bYS1N8JDWBvjqnS2PcAa4bBT1jgF1ou/lnRB/HA8abzh4YbGKCtj3urpY09gzsCEy3FZ+pIpD
+X-Gm-Message-State: AOJu0YxRyUH1otiktNkcso56Npm/LkYenKTvRhhrA+8bhw+YDgq80Ahb
+	ggvHoykTvnaH1VjgCymhIjE967bhftqQIsBZWVHzJQdweemkPcHJBMkwNQJiD1zm8eyRW3jle0V
+	f3Y+7rp1u23KVzPcNr4vOGyLVeKqkOdIfD8K/aA==
+X-Google-Smtp-Source: AGHT+IH0A57JXze3tzIP18mqi1HPtHwASPch1852QaRs+J14eOrw3rz4b87JD/2SNy7XjqOkxXDiVmzM6XYJUMCpeIY=
+X-Received: by 2002:a25:8691:0:b0:dc2:232d:7fde with SMTP id
+ z17-20020a258691000000b00dc2232d7fdemr792874ybk.13.1707865632236; Tue, 13 Feb
+ 2024 15:07:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAPj1y2UC/23NwQrCMAyA4VcZPVtp0644T76HeGjXbCu6TVIty
- ti72w1BRE/hD+TLxCJSwMj2xcQIU4hhHHKoTcHqzg4t8uBzMxCghYSKW+qN5rFHThjveSgwRpY
- CKnCG5bMrYRMeK3k85e5CvI30XD8kuWzfmBK/WJJccIFGoHNW7nxzOCMNeNmO1LJFS/ARQKg/A
- mTBysZZ72utofwS5nl+Af/ek9jzAAAA
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>
-Cc: Dave Martin <Dave.Martin@arm.com>, 
- Jackson Cooper-Driver <Jackson.Cooper-Driver@arm.com>, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.13-dev-a684c
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1028; i=broonie@kernel.org;
- h=from:subject:message-id; bh=f2Cdl3IDDtVePEix7n4iaiKSi9bMZGjncwLg38ulR7U=;
- b=owGbwMvMwMWocq27KDak/QLjabUkhtTT3+RCY892RR1RDYhT7W0o+B9V0yW9ViFhrZKzwr3K0r1f
- v57tZDRmYWDkYpAVU2RZ+yxjVXq4xNb5j+a/ghnEygQyhYGLUwAmMruR/a+sWoy8GPdVrq3axQx6MZ
- N/HFTmvrmtYqfFfqv7pYV2zmm5gckrtjG1Srxec+52/5Ylp+qqbi99csrZLWaBVdLkxn72o/s3BEau
- Xvqz+/9EieMhn5/Yr/18ZocUS/S5I70LhJ+857QS9gmvNrHJE3BK9mueH6QaXKA99xB/f0OqQITJTr
- lNsbN7bYptlPplCxeKeN56U5Soqbg9nn2uwqnYKrf/91ZX3NDNdPDlClZnM5zrbZ+xdoGfQK3RDkWR
- zROEE9RkiwQWWMRuYBF53VPrm6tTblbY0eXy/9iFRetEr996LtjnduaYYJKelP0/+1d/S6o2potZNO
- 5e6/k1UfHRvvA9ywx+/Tj7bcYbAA==
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+References: <20240213220331.239031-1-paweldembicki@gmail.com> <20240213220331.239031-2-paweldembicki@gmail.com>
+In-Reply-To: <20240213220331.239031-2-paweldembicki@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 14 Feb 2024 00:07:00 +0100
+Message-ID: <CACRpkdaKRPV=mRkTcOMGgnozxNS=fojWJ4nSnK1GEBSGSM9NMQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v4 01/15] net: dsa: vsc73xx: use
+ read_poll_timeout instead delay loop
+To: Pawel Dembicki <paweldembicki@gmail.com>
+Cc: netdev@vger.kernel.org, Russell King <linux@armlinux.org.uk>, 
+	Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, 
+	Vladimir Oltean <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Claudiu Manoil <claudiu.manoil@nxp.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	UNGLinuxDriver@microchip.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The fast model was recently changed to reset system registers to 0 on
-resume, exposing the fact that for SME we do not restore the
-configuration of traps for extensions that add state.  Fix this.
+On Tue, Feb 13, 2024 at 11:04=E2=80=AFPM Pawel Dembicki <paweldembicki@gmai=
+l.com> wrote:
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
-Changes in v3:
-- Tweak commit message.
-- Link to v2: https://lore.kernel.org/r/20240203-arm64-sme-resume-v2-0-a1fbaddc4425@kernel.org
 
-Changes in v2:
-- Also reinitialise SMPRI_EL1.
-- Link to v1: https://lore.kernel.org/r/20240130-arm64-sme-resume-v1-0-0e60ebba18df@kernel.org
+> This commit switches delay loop to read_poll_timeout macro during
+> Arbiter empty check in adjust link function.
+>
+> As Russel King suggested:
+>
+> "This [change] avoids the issue that on the last iteration, the code read=
+s
+> the register, test it, find the condition that's being waiting for is
+> false, _then_ waits and end up printing the error message - that last
+> wait is rather useless, and as the arbiter state isn't checked after
+> waiting, it could be that we had success during the last wait."
+>
+> It also remove one short msleep delay.
+>
+> Suggested-by: Russell King <linux@armlinux.org.uk>
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
----
-Mark Brown (2):
-      arm64/sme: Restore SME registers on exit from suspend
-      arm64/sme: Restore SMCR_EL1.EZT0 on exit from suspend
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
- arch/arm64/include/asm/fpsimd.h |  2 ++
- arch/arm64/kernel/fpsimd.c      | 16 ++++++++++++++++
- arch/arm64/kernel/suspend.c     |  3 +++
- 3 files changed, 21 insertions(+)
----
-base-commit: 41bccc98fb7931d63d03f326a746ac4d429c1dd3
-change-id: 20240129-arm64-sme-resume-3266150292b6
-
-Best regards,
--- 
-Mark Brown <broonie@kernel.org>
-
+Yours,
+Linus Walleij
