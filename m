@@ -1,97 +1,96 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568E48480;
-	Tue, 13 Feb 2024 22:45:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075DA626B2;
+	Tue, 13 Feb 2024 22:46:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707864345; cv=none; b=U1V6+2NDVgjSuB0bQLI3CNKHlypT7FrgaVS2liboer+aJVuRxUoCEO0+H/EHSzXAJklZPr2f0EbF1a4JfXHfqj92LMgrV4/DJ6w1cEjVcBrGpqp1ccGtZ6+RZ5JIuPp4xQRnPSbQMk4KCp6SyDXT2fw9hg72qSrpwy+MVOMid3o=
+	t=1707864372; cv=none; b=uFfAUCfKb1k+vMYIpdbZofbIhyvzVzcovZRkfuwhkj8PwIvdg/jhM4KxIlOMYPi8i98pu9kRtHUz+LrSTSqv4vj7iGs8YmdWKJZWNQxHuwp8lJIExNP6htXT2eVkH8RyBI5KfFOXp2bVyr9dIMLqX7Ks1veUa2CIlhPySusbgKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707864345; c=relaxed/simple;
-	bh=KLYrH8Ylikqod5SY8xZFc7IShzY791qjEAAqCu3NKE8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DFoL2DaWiLfNiHlOe99Vbt3icLGQKca9a9ZIMfjN+5fdMRBHw69aDIcvk7qXApzGktgqmKUBnsOQNucDvXXVTMnO8TEO3zYwk6joLvFz75WmDwt6VQ/SAVbK7ZmUYBeJ0U/mEQL0BXCyxY+7iCfTSy03aQ6NnN18R3N71/YLF10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=KHU+A3iT; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="KHU+A3iT"
-Received: from heihei.fritz.box (ppp14-2-125-29.adl-apt-pir-bras32.tpg.internode.on.net [14.2.125.29])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 9AC79201BD;
-	Wed, 14 Feb 2024 06:45:20 +0800 (AWST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1707864333;
-	bh=rroNdU9BVPUWE5wDt+3REaeJt2znsw1CC54JRzmWpmY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=KHU+A3iT+rXyEDnXx+5mY8gdyPd9RWW+IqjkatculYf0WMU9pEWV3lRQCkTDA0EzI
-	 xaQRdVv6ONl5bSVVt+LS/QHv9KXR0YT+wOKEzHEk6ENorzt6peBUrGxgmVVbj1w/iy
-	 1HjnEw+ZCd2iWua115sYd63cgh4PNaf4kwKyTyoar7mOLyZhESbJxdxIq+yzZzyaNX
-	 SW0fRRSQjx4ywPBzEZtsbYSOEQ+k4WVQplTD0W2lni1ygtrlTWCGNAeTjZ9xaf0EWM
-	 Dto/KMIkfYa0O5HKCg8KnOdWszlCAKyfH/kkPoEvmSP1qCSUbu5pEXrDsZ9ADFy8aH
-	 cV53xTq95Tecw==
-Message-ID: <9a67cee101e7e15d5e70553e3929ee2fbd480c1f.camel@codeconstruct.com.au>
-Subject: Re: [PATCH 2/6] arm: dts: Fix dtc interrupt_provider warnings
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Rob Herring <robh@kernel.org>, soc@kernel.org, Shawn Guo
- <shawnguo@kernel.org>,  Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,  Conor Dooley
- <conor+dt@kernel.org>, Tsahee Zidenberg <tsahee@annapurnalabs.com>, Antoine
- Tenart <atenart@kernel.org>, Joel Stanley <joel@jms.id.au>, Ray Jui
- <rjui@broadcom.com>,  Scott Branden <sbranden@broadcom.com>, Broadcom
- internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Andrew
- Lunn <andrew@lunn.ch>,  Gregory Clement <gregory.clement@bootlin.com>,
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,  Jonathan
- =?ISO-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>, Thierry Reding
- <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Stefan
- Agner <stefan@agner.ch>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,  =?ISO-8859-1?Q?Beno=EEt?=
- Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Chanho
- Min <chanho.min@lge.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Geert
- Uytterhoeven <geert+renesas@glider.be>, Magnus Damm
- <magnus.damm@gmail.com>, Linus Walleij <linusw@kernel.org>, Imre Kaloz
- <kaloz@openwrt.org>, Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio
- <konrad.dybcio@linaro.org>, Masahiro Yamada <masahiroy@kernel.org>, Nathan
- Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, 
-	openbmc@lists.ozlabs.org, linux-tegra@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, linux-omap@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-kbuild@vger.kernel.org
-Date: Wed, 14 Feb 2024 09:15:14 +1030
-In-Reply-To: <20240213-arm-dt-cleanups-v1-2-f2dee1292525@kernel.org>
-References: <20240213-arm-dt-cleanups-v1-0-f2dee1292525@kernel.org>
-	 <20240213-arm-dt-cleanups-v1-2-f2dee1292525@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1707864372; c=relaxed/simple;
+	bh=6AWrD9fLn9rIoWsfdQ1zN/JM/sKG+z0lxc9s0V1f1BY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=K2L2GgG5UXbunjvUu53WSY3kBT4M1pNs7CWMYUv5/4CXZ9oFFgfgHlr30XzzZiXNhovAWcEivwrIl3J42LMBLVy6E0T8zR+WXp/9bEdqbxeV7sEMkGhvLgnEIEUb/NeWb2QacjiR7i8+2XL5vOcM4/wdBQlEsWLJJero2/+71fA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29488C433C7;
+	Tue, 13 Feb 2024 22:46:04 +0000 (UTC)
+Date: Tue, 13 Feb 2024 17:47:33 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Suren Baghdasaryan <surenb@google.com>, "Darrick J. Wong"
+ <djwong@kernel.org>, akpm@linux-foundation.org, kent.overstreet@linux.dev,
+ mhocko@suse.com, vbabka@suse.cz, hannes@cmpxchg.org,
+ roman.gushchin@linux.dev, mgorman@suse.de, dave@stgolabs.net,
+ willy@infradead.org, liam.howlett@oracle.com, corbet@lwn.net,
+ void@manifault.com, peterz@infradead.org, juri.lelli@redhat.com,
+ catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de,
+ tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+ x86@kernel.org, peterx@redhat.com, david@redhat.com, axboe@kernel.dk,
+ mcgrof@kernel.org, masahiroy@kernel.org, nathan@kernel.org,
+ dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev, rppt@kernel.org,
+ paulmck@kernel.org, pasha.tatashin@soleen.com, yosryahmed@google.com,
+ yuzhao@google.com, dhowells@redhat.com, hughd@google.com,
+ andreyknvl@gmail.com, ndesaulniers@google.com, vvvvvv@google.com,
+ gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com,
+ vincent.guittot@linaro.org, dietmar.eggemann@arm.com, bsegall@google.com,
+ bristot@redhat.com, vschneid@redhat.com, cl@linux.com, penberg@kernel.org,
+ iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com,
+ elver@google.com, dvyukov@google.com, shakeelb@google.com,
+ songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com,
+ minchan@google.com, kaleshsingh@google.com, kernel-team@android.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ iommu@lists.linux.dev, linux-arch@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-modules@vger.kernel.org, kasan-dev@googlegroups.com,
+ cgroups@vger.kernel.org
+Subject: Re: [PATCH v3 13/35] lib: add allocation tagging support for memory
+ allocation profiling
+Message-ID: <20240213174733.086b2e3e@gandalf.local.home>
+In-Reply-To: <202402131436.2CA91AE@keescook>
+References: <20240212213922.783301-1-surenb@google.com>
+	<20240212213922.783301-14-surenb@google.com>
+	<202402121433.5CC66F34B@keescook>
+	<CAJuCfpGU+UhtcWxk7M3diSiz-b7H64_7NMBaKS5dxVdbYWvQqA@mail.gmail.com>
+	<20240213222859.GE6184@frogsfrogsfrogs>
+	<CAJuCfpGHrCXoK828KkmahJzsO7tJsz=7fKehhkWOT8rj-xsAmA@mail.gmail.com>
+	<202402131436.2CA91AE@keescook>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, 2024-02-13 at 13:34 -0600, Rob Herring wrote:
-> The dtc interrupt_provider warning is off by default. Fix all the warning=
-s
-> so it can be enabled.
->=20
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  arch/arm/boot/dts/amazon/alpine.dtsi                   |  1 -
->  arch/arm/boot/dts/aspeed/aspeed-g4.dtsi                | 14 ------------=
---
->  arch/arm/boot/dts/aspeed/aspeed-g5.dtsi                | 15 +-----------=
----
->  arch/arm/boot/dts/aspeed/aspeed-g6.dtsi                | 18 ++----------=
-------
+On Tue, 13 Feb 2024 14:38:16 -0800
+Kees Cook <keescook@chromium.org> wrote:
 
-I wrote a very similar patch just a day or so ago, so thanks :)
+> > > Save yourself a cycle of "rework the whole fs interface only to have
+> > > someone else tell you no" and put it in debugfs, not sysfs.  Wrangling
+> > > with debugfs is easier than all the macro-happy sysfs stuff; you don't
+> > > have to integrate with the "device" model; and there is no 'one value
+> > > per file' rule.  
+> > 
+> > Thanks for the input. This file used to be in debugfs but reviewers
+> > felt it belonged in /proc if it's to be used in production
+> > environments. Some distros (like Android) disable debugfs in
+> > production.  
+> 
+> FWIW, I agree debugfs is not right. If others feel it's right in /proc,
+> I certainly won't NAK -- it's just been that we've traditionally been
+> trying to avoid continuing to pollute the top-level /proc and instead
+> associate new things with something in /sys.
 
-For the Aspeed portions:
+You can create your own file system, but I would suggest using kernfs for it ;-)
 
-Reviewed-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+If you look in /sys/kernel/ you'll see a bunch of kernel file systems already there:
+
+ ~# mount |grep kernel
+ securityfs on /sys/kernel/security type securityfs (rw,nosuid,nodev,noexec,relatime)
+ debugfs on /sys/kernel/debug type debugfs (rw,nosuid,nodev,noexec,relatime)
+ tracefs on /sys/kernel/tracing type tracefs (rw,nosuid,nodev,noexec,relatime)
+ configfs on /sys/kernel/config type configfs (rw,nosuid,nodev,noexec,relatime)
+
+-- Steve
