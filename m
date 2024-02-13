@@ -1,216 +1,192 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9DB114271;
-	Tue, 13 Feb 2024 08:35:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E985318026;
+	Tue, 13 Feb 2024 08:39:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707813357; cv=none; b=jZJE6NzLIRhENVEvDbakDfJLThUEbNLrwpH9vKfXENtYugLiuXutPQ1Oc9WeamVAdZAf3rwtBKih/0iYM1Ae/nTSqTY+OcxWl/YiqTAsVMxBLI+6lxJuCwZ1hBl504wWuLu06RguMu9C24TZnLiTvSZGYSRQqUurAEddE4TN6rs=
+	t=1707813546; cv=none; b=MhQ2f/JsYWLSWtDp+3bU6FobzO0dscvGpCQozwMMOj+aqezwwj+v6onr2ZvNyW5+A8syGf79OQn0u855smNcsqvOjDhUACUfTXLR4TCJLShucgYzKJHfv3d9nIDddfPgwGx/RgrirJ5YZQqAuFWAYTjPMO/ZBTrZlDSTm8jQCxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707813357; c=relaxed/simple;
-	bh=3hSD/Ts4z8au2F6bCOeibfMwFtuh88HvEP7ks4mhQB4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=LHKykn/SaDPKy+wgQcaMNQ2QXd0CVvPA3SNBx3so8VpTW15w3+CzJI/cEnGDEaHtwGoIH19h6R1zE3H4IWjohulg1Te0L14WxbFdPke3VYszPuTVn6P3kDm7yYFarhsstaUx/jSkfhGDouwWw+6o55uwjrh53VegP5Yqyixufq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=EVoz4Dn5; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1707813546; c=relaxed/simple;
+	bh=EW4hyg6ywuwUU3ETBIP6P9hAzw5rF+JafXM/qqClrws=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=avs1y9JDav9cQD5zsRLTMUBxkDPAOs3zyUFHxzAUysHsG58QlO3JT1W3zWdul7qKmur+MMBSWvetj32PgkP4gXv6MYO/e2vqimmpdvxkOdMMVWRpOxkhZRcNvwhlp71RDGMjEbbAJGcW6Q+jg5D8w75ntp1nf76l9hMonwTQimI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nq+FAIFG; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="EVoz4Dn5"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41D5Bt0w018721;
-	Tue, 13 Feb 2024 08:35:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=5VlOp9s6RWEnlxHGCNNtLxbUChTO7sBk0SVwHCFI4Yc=; b=EV
-	oz4Dn5XvoFZpaXNtrGusPvh06dPsJU5wGPfPlGNgNceq5D+ac2oVNdIyRT3OlpNs
-	e5j2MGqq/+ijWSm2fwiMvqGgD0DCoawTCvPDSmmkCG0HndafLkWL+lwI8+Fo82+s
-	dT781rAAf883omT9xRuM0F3l3MzavpHXfPgRMezICSY1WnThjYZvCeXYBCrBAXOa
-	0y7E6vGpMZvffIzrAK0rxw8L0q2DJlbekU1dxROg43mpccBzDJ+Rnao8pdjjcqrK
-	Loj/LbzZ+Z2eRXRUVLxMyqFQ0dLk3Lt9xpPk3Uv8XAYGNOF1TK91JLcKlI//pPqr
-	MG8FhFXa7xxkiKnaghsg==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w7q2y1jhp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 08:35:44 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41D8ZiZ4009545
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 08:35:44 GMT
-Received: from [10.131.33.37] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 13 Feb
- 2024 00:35:40 -0800
-Message-ID: <01b3d0ed-3fd3-86c6-7b0f-48d34a5d9ba8@quicinc.com>
-Date: Tue, 13 Feb 2024 14:05:35 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nq+FAIFG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707813545; x=1739349545;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=EW4hyg6ywuwUU3ETBIP6P9hAzw5rF+JafXM/qqClrws=;
+  b=Nq+FAIFGZ+vbGpaspxZZQWfqyNugROV6PtXFRLG/ecZM05I1/hnl5Pch
+   1RfZ+UCB4q1eY0D1957NvXPYbXm1dN0/NHh1y3Na4VTGMVkqeZ4GUQSNQ
+   FzuqXLKQ+CmnNYP2uFwgegqjOUA1fH/lfeM38NOhD0qF92noIQkCoigF8
+   28JL7YE2j7XLam03dRHI4NiiDeWnBPpAq5j3bOjFZ/GHAQuTkzs0ucVTT
+   IayjMpdrHnakqd9B6+uKfNjOLjOvrVsK7KWA/U/Jt1jBfJbAxL5oUxWnW
+   03GgYBbZTd3mldytNV4biVsnNmBs4ohpCeBeqKIsUhk2qGofs3scxjyxR
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="5629257"
+X-IronPort-AV: E=Sophos;i="6.06,156,1705392000"; 
+   d="scan'208";a="5629257"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 00:39:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="826052613"
+X-IronPort-AV: E=Sophos;i="6.06,156,1705392000"; 
+   d="scan'208";a="826052613"
+Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
+  by orsmga001.jf.intel.com with SMTP; 13 Feb 2024 00:38:57 -0800
+Received: by stinkbox (sSMTP sendmail emulation); Tue, 13 Feb 2024 10:38:56 +0200
+Date: Tue, 13 Feb 2024 10:38:56 +0200
+From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Sebastian Wick <sebastian.wick@redhat.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Emma Anholt <emma@anholt.net>, Jonathan Corbet <corbet@lwn.net>,
+	Sandy Huang <hjc@rock-chips.com>,
+	Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	linux-rockchip@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Subject: Re: Re: Re: Re: Re: Re: [PATCH v5 08/44] drm/connector: hdmi: Add
+ Broadcast RGB property
+Message-ID: <ZcsqoPCJDjA5PJUF@intel.com>
+References: <20240115143720.GA160656@toolbox>
+ <73peztbeeikb3fg6coxu3punxllgtyrmgco34tnxkojtsjbr3s@26bud3sjbcez>
+ <Zb0M_2093UwPXK8y@intel.com>
+ <hez2m57ogqx3yyqk45tzdkvxvhrbdepgm244i4m2aty2xhf5b5@acqgvmxhmmvr>
+ <Zb0aYAapkxQ2kopt@intel.com>
+ <zml6j27skvjmbrfyz7agy5waxajv4p4asbemeexelm3wuv4o7j@xkd2wvnxhbuc>
+ <20240209203435.GB996172@toolbox>
+ <ahfl6f72lpgpsbnrbgvbsh4db4npr2hh36kua2c6krh544hv5r@dndw4hz2mu2g>
+ <Zco-DQaXqae7B1jt@intel.com>
+ <yx2t7xltxxgsngdsxamsfq6y7dze3wzegxcqwmsb5yrxen73x6@u3vilqhpci4w>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH 0/3] cpufreq: scmi: Add boost frequency support
-Content-Language: en-US
-To: Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Sudeep Holla
-	<sudeep.holla@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-CC: <cristian.marussi@arm.com>, <rafael@kernel.org>,
-        <morten.rasmussen@arm.com>, <lukasz.luba@arm.com>, <sboyd@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_mdtipton@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <nm@ti.com>
-References: <20240117110443.2060704-1-quic_sibis@quicinc.com>
- <20240123060827.a3vszziftj6pszt3@vireshk-i7> <Za-RtBrSxI-j4Jdx@bogus>
- <e968092a-dc2b-4351-9489-acf874bbc7b6@arm.com>
-From: Sibi Sankar <quic_sibis@quicinc.com>
-In-Reply-To: <e968092a-dc2b-4351-9489-acf874bbc7b6@arm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: A9k6MrupdilpPwfFiwx62WxJAfh9gT_v
-X-Proofpoint-ORIG-GUID: A9k6MrupdilpPwfFiwx62WxJAfh9gT_v
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-13_04,2024-02-12_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 clxscore=1015
- adultscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402130066
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <yx2t7xltxxgsngdsxamsfq6y7dze3wzegxcqwmsb5yrxen73x6@u3vilqhpci4w>
+X-Patchwork-Hint: comment
 
+On Mon, Feb 12, 2024 at 05:53:48PM +0100, Maxime Ripard wrote:
+> On Mon, Feb 12, 2024 at 05:49:33PM +0200, Ville Syrjälä wrote:
+> > On Mon, Feb 12, 2024 at 11:01:07AM +0100, Maxime Ripard wrote:
+> > > On Fri, Feb 09, 2024 at 09:34:35PM +0100, Sebastian Wick wrote:
+> > > > On Mon, Feb 05, 2024 at 10:39:38AM +0100, Maxime Ripard wrote:
+> > > > > On Fri, Feb 02, 2024 at 06:37:52PM +0200, Ville Syrjälä wrote:
+> > > > > > On Fri, Feb 02, 2024 at 04:59:30PM +0100, Maxime Ripard wrote:
+> > > > > > > On Fri, Feb 02, 2024 at 05:40:47PM +0200, Ville Syrjälä wrote:
+> > > > > > > > On Fri, Feb 02, 2024 at 02:01:39PM +0100, Maxime Ripard wrote:
+> > > > > > > > > Hi,
+> > > > > > > > > 
+> > > > > > > > > On Mon, Jan 15, 2024 at 03:37:20PM +0100, Sebastian Wick wrote:
+> > > > > > > > > > > >  /**
+> > > > > > > > > > > >   * DOC: HDMI connector properties
+> > > > > > > > > > > >   *
+> > > > > > > > > > > > + * Broadcast RGB
+> > > > > > > > > > > > + *      Indicates the RGB Quantization Range (Full vs Limited) used.
+> > > > > > > > > > > > + *      Infoframes will be generated according to that value.
+> > > > > > > > > > > > + *
+> > > > > > > > > > > > + *      The value of this property can be one of the following:
+> > > > > > > > > > > > + *
+> > > > > > > > > > > > + *      Automatic:
+> > > > > > > > > > > > + *              RGB Range is selected automatically based on the mode
+> > > > > > > > > > > > + *              according to the HDMI specifications.
+> > > > > > > > > > > > + *
+> > > > > > > > > > > > + *      Full:
+> > > > > > > > > > > > + *              Full RGB Range is forced.
+> > > > > > > > > > > > + *
+> > > > > > > > > > > > + *      Limited 16:235:
+> > > > > > > > > > > > + *              Limited RGB Range is forced. Unlike the name suggests,
+> > > > > > > > > > > > + *              this works for any number of bits-per-component.
+> > > > > > > > > > > > + *
+> > > > > > > > > > > > + *      Drivers can set up this property by calling
+> > > > > > > > > > > > + *      drm_connector_attach_broadcast_rgb_property().
+> > > > > > > > > > > > + *
+> > > > > > > > > > > 
+> > > > > > > > > > > This is a good time to document this in more detail. There might be two
+> > > > > > > > > > > different things being affected:
+> > > > > > > > > > > 
+> > > > > > > > > > > 1. The signalling (InfoFrame/SDP/...)
+> > > > > > > > > > > 2. The color pipeline processing
+> > > > > > > > > > > 
+> > > > > > > > > > > All values of Broadcast RGB always affect the color pipeline processing
+> > > > > > > > > > > such that a full-range input to the CRTC is converted to either full- or
+> > > > > > > > > > > limited-range, depending on what the monitor is supposed to accept.
+> > > > > > > > > > > 
+> > > > > > > > > > > When automatic is selected, does that mean that there is no signalling,
+> > > > > > > > > > > or that the signalling matches what the monitor is supposed to accept
+> > > > > > > > > > > according to the spec? Also, is this really HDMI specific?
+> > > > > > > > > > > 
+> > > > > > > > > > > When full or limited is selected and the monitor doesn't support the
+> > > > > > > > > > > signalling, what happens?
+> > > > > > > > > > 
+> > > > > > > > > > Forgot to mention: user-space still has no control over RGB vs YCbCr on
+> > > > > > > > > > the cable, so is this only affecting RGB? If not, how does it affect
+> > > > > > > > > > YCbCr?
+> > > > > > > > > 
+> > > > > > > > > So I dug a bit into both the i915 and vc4 drivers, and it looks like if
+> > > > > > > > > we're using a YCbCr format, i915 will always use a limited range while
+> > > > > > > > > vc4 will follow the value of the property.
+> > > > > > > > 
+> > > > > > > > The property is literally called "Broadcast *RGB*".
+> > > > > > > > That should explain why it's only affecting RGB.
+> > > > > > > 
+> > > > > > > Right. And the limited range option is called "Limited 16:235" despite
+> > > > > > > being usable on bpc > 8 bits. Naming errors occurs, and history happens
+> > > > > > > to make names inconsistent too, that's fine and not an argument in
+> > > > > > > itself.
+> > > > > > > 
+> > > > > > > > Full range YCbCr is a much rarer beast so we've never bothered
+> > > > > > > > to enable it.
+> > > > > > > 
+> > > > > > > vc4 supports it.
+> > > > > > 
+> > > > > > Someone implemented it incorrectly then.
+> > > > > 
+> > > > > Incorrectly according to what documentation / specification? I'm sorry,
+> > > > > but I find it super ironic that i915 gets to do its own thing, not
+> > > > > document any of it, and when people try to clean things up they get told
+> > > > > that we got it all wrong.
+> > > > 
+> > > > FWIW, this was an i915 property and if another driver uses the same
+> > > > property name it must have the same behavior. Yes, it isn't standardized
+> > > > and yes, it's not documented (hence this effort here) but it's still on
+> > > > vc4 to make the property compatible.
+> > > 
+> > > How is it not compatible? It's a superset of what i915 provides, but
+> > > it's strictly compatible with it.
+> > 
+> > No it is not.
+> 
+> The property is compatible with i915 interpretation of it, whether you
+> like it or not. And that's what Sebastian was referring to.
+> 
+> > Eg. what happens if you set the thing to full range for RGB (which you
+> > must on many broken monitors), and then the kernel automagically
+> > switches to YCbCr (for whatever reason) but the monitor doesn't
+> > support full range YCbCr? Answer: you get crap output.
+> 
+> And that part is just moving goalposts.
 
+No. Allowing users to get correct colors with broken displays
+is the sole reason why this property even exists.
 
-On 1/31/24 20:37, Dietmar Eggemann wrote:
-> On 23/01/2024 11:15, Sudeep Holla wrote:
->> On Tue, Jan 23, 2024 at 11:38:27AM +0530, Viresh Kumar wrote:
->>> On 17-01-24, 16:34, Sibi Sankar wrote:
->>>> This series adds provision to mark dynamic opps as boost capable and adds
->>>> boost frequency support to the scmi cpufreq driver.
->>>>
->>>> Depends on:
->>>> HW pressure v4: https://patchwork.kernel.org/project/linux-arm-msm/cover/20240109164655.626085-1-vincent.guittot@linaro.org/
->>>> scmi notification v2: https://patchwork.kernel.org/project/linux-arm-msm/cover/20240117104116.2055349-1-quic_sibis@quicinc.com/
->>>>
->>>> Sibi Sankar (3):
->>>>    OPP: Extend dev_pm_opp_data with turbo support
->>>>    firmware: arm_scmi: Add support for marking certain frequencies as
->>>>      boost
->>>>    cpufreq: scmi: Enable boost support
->>>
->>> Sudeep, please lemme know if you are okay with the changes. Will apply
->>> them.
->>
->> I was planning to look at it once Lukasz/Dietmar confirm that this concept
->> doesn't change anything fundamental in the way EAS related changes work
->> today. I know I suggested the change as that seem to be right way to do
->> but I haven't analysed if this has any negative impact on the existing
->> features as this change will impact all the existing platform with OPPs
->> above sustained performance/frequency advertised from the SCMI platform
->> firmware.
-> 
-> I was mostly concerned about the settings for the CPU frequency
-> invariance implementation in [drivers/base/arch_topology.c]:
-> 
-> #define arch_scale_freq_capacity topology_get_freq_scale
-> 
-> But per_cpu(capacity_freq_ref, cpu) is still set to
-> 'policy->cpuinfo.max_freq' in init_cpu_capacity_callback()
-> which stays the same.
-> 
-> With some extra debugging I get the following on Juno-r0 [L b b L L L]:
-> 
-> root@juno:~# dmesg -w | grep -i "freq\|boost\|noti\|OPP\|cap"
-> 
-> [    1.768414] arm-scmi firmware:scmi: SCMI Notifications - Core Enabled.
-> [    1.793084] [1][LITTLE_CPU]:: Registered OPP[0] 450000000
-> [    1.798624] [1][LITTLE_CPU]:: Registered OPP[1] 575000000
-> [    1.804131] [1][LITTLE_CPU]:: Registered OPP[2] 700000000
-> [    1.809552] scmi_dvfs_device_opps_add() sustained_freq=700000000 freq=775000000
-> [    1.816971] [1][LITTLE_CPU]:: Registered OPP[3] 775000000
-> [    1.822392] scmi_dvfs_device_opps_add() sustained_freq=700000000 freq=850000000
-> [    1.829800] [1][LITTLE_CPU]:: Registered OPP[4] 850000000
-> [    1.835268] enabled boost: 0
-> [    1.838173] init_cpu_capacity_callback() cpu=0 max_freq=850000
-> [    1.844032] init_cpu_capacity_callback() cpu=3 max_freq=850000
-> [    1.849886] init_cpu_capacity_callback() cpu=4 max_freq=850000
-> [    1.855743] init_cpu_capacity_callback() cpu=5 max_freq=850000
-> [    1.866324] cpufreq_update_pressure() cpu=0 cpufreq_pressure=0
-> [    1.872178] cpufreq_update_pressure() cpu=3 cpufreq_pressure=0
-> [    1.878026] cpufreq_update_pressure() cpu=4 cpufreq_pressure=0
-> [    1.883874] cpufreq_update_pressure() cpu=5 cpufreq_pressure=0
-> [    1.890633] [0][BIG_CPU]:: Registered OPP[0] 450000000
-> [    1.895892] [0][BIG_CPU]:: Registered OPP[1] 625000000
-> [    1.901129] [0][BIG_CPU]:: Registered OPP[2] 800000000
-> [    1.906286] scmi_dvfs_device_opps_add() sustained_freq=800000000 freq=950000000
-> [    1.906381] [0][BIG_CPU]:: Registered OPP[3] 950000000
-> [    1.917377] scmi_dvfs_device_opps_add() sustained_freq=800000000 freq=1100000000
-> [    1.917468] [0][BIG_CPU]:: Registered OPP[4] 1100000000
-> [    1.939237] enabled boost: 0
-> [    1.942134] init_cpu_capacity_callback() cpu=1 max_freq=1100000
-> [    1.948078] init_cpu_capacity_callback() cpu=2 max_freq=1100000
-> [    1.959003] cpufreq_update_pressure() cpu=1 cpufreq_pressure=0
-> [    1.964853] cpufreq_update_pressure() cpu=2 cpufreq_pressure=0
-> 
-> root@juno:/sys/devices/system/cpu/cpufreq# cat boost policy*/boost
-> 1
-> 0
-> 0
-> 
-> root@juno:/sys/devices/system/cpu/cpufreq# cat policy*/scaling_available_frequencies policy*/scaling_boost_frequencies
-> 450000 575000 700000
-> 450000 625000 800000
-> 775000 850000
-> 950000 1100000
-> 
-> If I disable system-wide boost I see the correct influence on
-> 'cpufreq_pressure':
-> 
-> root@juno:/sys/devices/system/cpu/cpufreq# echo 0 > boost
-> 
-> [  439.466682] cpufreq_update_pressure() cpu=1 cpufreq_pressure=280
-> [  439.472797] cpufreq_update_pressure() cpu=2 cpufreq_pressure=280
-> [  439.478889] cpufreq_update_pressure() cpu=0 cpufreq_pressure=79
-> [  439.484852] cpufreq_update_pressure() cpu=3 cpufreq_pressure=79
-> [  439.490843] cpufreq_update_pressure() cpu=4 cpufreq_pressure=79
-> [  439.499621] cpufreq_update_pressure() cpu=5 cpufreq_pressure=79
-> 
-> reflecting the max frequency change from '1100000 to 800000' on CPU1,2
-> and from '850000 to 700000' on CPU0,3-5.
-> 
-> root@juno:/sys/devices/system/cpu/cpufreq# echo 1 > boost
-> 
-> [ 2722.693113] cpufreq_update_pressure() cpu=1 cpufreq_pressure=0
-> [ 2722.699041] cpufreq_update_pressure() cpu=2 cpufreq_pressure=0
-> [ 2722.704962] cpufreq_update_pressure() cpu=0 cpufreq_pressure=0
-> [ 2722.710842] cpufreq_update_pressure() cpu=3 cpufreq_pressure=0
-> [ 2722.719644] cpufreq_update_pressure() cpu=4 cpufreq_pressure=0
-> [ 2722.728224] cpufreq_update_pressure() cpu=5 cpufreq_pressure=0
-> 
-> What doesn't work for me is to disable boost per policy:
-> 
-> root@juno:/sys/devices/system/cpu/cpufreq# echo 1 > boost
-> root@juno:/sys/devices/system/cpu/cpufreq# echo 0 > policy0/boost
-> root@juno:/sys/devices/system/cpu/cpufreq# echo 0 > policy1/boost
-> 
-> Here I don't see 'cpufreq_pressure' changes.
-> 
-> BTW, what's the use case you have in mind for this feature? Is it to cap
-> high OPPs for CPUs in a certain CPUfreq policy?
-
-Yeah, that's exactly the use case for X1E. Boost frequencies defined in
-the SoC are achievable by only one CPU in a cluster i.e. either the
-other CPUs in the same cluster should be in low power mode or offline.
-So it's mostly for book keeping i.e. we wouldn't to intimate incorrectly
-that the CPUs are running at max possible frequency when it's actually
-running at a lower frequency.
-
--Sibi
-
-> 
-> 
+-- 
+Ville Syrjälä
+Intel
