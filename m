@@ -1,48 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A2C383B2;
-	Tue, 13 Feb 2024 11:41:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA393376F3;
+	Tue, 13 Feb 2024 11:42:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707824478; cv=none; b=QLWu4yY9JfHD+JwH3ihzDiAwbwltHATLGlLt6xKNAfYb068HCcWdyRIpAjgp7wZ6gkK6sdlnIDZ+Zx3S/CLROdzgnwmI08kh0hDa3Q/F2QPZ0YYQY8fXl5K6X1X47y4yxScuOP8qblK45ORVAsBdCz8PbBUegeUih3/ck5mwSME=
+	t=1707824521; cv=none; b=KJmIemVvSu9Ih3vwwjBscVbZtCSKu172ys2eLgh6K5NCv7s+dIll4x524zdlPCD+7LTWpRGd5xOBi1mtkVe9UObFZJ3HFdjigtDEQ6Nizjrt28YuJ54HIvAVN7IMxIYZz759pEcblGMOTTPpYmlKExwsZSgBPn9kp3TAk012Y1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707824478; c=relaxed/simple;
-	bh=vcE4VEnsqCeEFS58nCHqwFF96GXVJtY39V+7YxzpGJQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DmX0o3yDYW9Jmnkn4pJfTyVQTmCQh5I+/g5u10nEUkqe8HNU4AsMS9YWukuFILXjVe9bT6zv1XowLLnkjtJ5oEtGIXu+6JVAyDqvMEooRbd7Dnv0I2LgLw20maj87aGye0EQu3bL/2IkirBziaMh0Xa75KmukyBJPAjoPgCdnC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D9hFuNLe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707824521; c=relaxed/simple;
+	bh=1GtEqKV+wQs0MT2SIs+9S6c4LRpp7sxXEmK272Gtxpg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=S32zIvEFuX6zTXkA5Qg9jiaUT8nleJrj8N0vi7s4otDpvMiU8qowEtlENoDSAqdhhUAsDeZKlUmKPqosq2ItYwAWI/jTwe6w3skbv9eVMEDrDKn2axadAcX68Cs071oeZ0+Pg/a4WoeXI/65xUlCjqu75ohduPWkxbn5jfmTVmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZGgT/ET7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D9hFuNLe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9924EC433C7;
-	Tue, 13 Feb 2024 11:41:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZGgT/ET7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ED0DC433C7;
+	Tue, 13 Feb 2024 11:42:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707824478;
-	bh=vcE4VEnsqCeEFS58nCHqwFF96GXVJtY39V+7YxzpGJQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D9hFuNLeBmxFMZ2fEls4m360KhrHa7/r5yzhaHxZEIJJ/KOMNQaIspdeJ6qNkAGf7
-	 om3V5xII6BmPVrnUd+Gf2uSJD54jTLiZLemsNeEsijEQG0JueGpvUWEphph8M7aCrb
-	 UGKj9B2TRyQFgBNV2pi0J7wsXaUedkxT2VibHAVnD+185w1/MlhQfYVuY3HKi6xJ9+
-	 eX+b3gJxUIo/otji1LhMgRhQhd3HloVXA2gJxSrHdHipV0HZR2kUIwRxu1D0lMlUlR
-	 ZM5sdFoNfW2bkFzqBu4rX8JoFSKhrdZyskDt1Sttj04HvEeTme61/Vt4cTqLht2T5U
-	 tGTaG/DoDvDBA==
-Date: Tue, 13 Feb 2024 12:41:10 +0100
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: bhelgaas@google.com, conor+dt@kernel.org, devicetree@vger.kernel.org,
-	festevam@gmail.com, helgaas@kernel.org, hongxing.zhu@nxp.com,
-	imx@lists.linux.dev, kernel@pengutronix.de,
-	krzysztof.kozlowski+dt@linaro.org, krzysztof.kozlowski@linaro.org,
-	kw@linux.com, l.stach@pengutronix.de,
-	linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	s.hauer@pengutronix.de, shawnguo@kernel.org
-Subject: Re: [PATCH v10 03/14] PCI: imx6: Simplify reset handling by using by
- using *_FLAG_HAS_*_RESET
-Message-ID: <ZctVVjjHYVczweta@lpieralisi>
-References: <20240205173335.1120469-1-Frank.Li@nxp.com>
- <20240205173335.1120469-4-Frank.Li@nxp.com>
+	s=k20201202; t=1707824521;
+	bh=1GtEqKV+wQs0MT2SIs+9S6c4LRpp7sxXEmK272Gtxpg=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ZGgT/ET7ls9NrBGdLxIAC0UWI4xJYDbxoV9/v+C/uAWRn0JFRVxM93plQwxAKyLBb
+	 Hly2wL+syAtopYQ6Vb0znNINhkDdxjsOgd6XDrJ/vYfJnBPNgL70AQ6H4UdXSvYzRn
+	 Zx1Qzk++dZx9WWT/Iuwgjuo7p5Fd0dchYjhkL2a9GRD1nLavEoBWbEp0L4ySefp8Zf
+	 HN1WV6a5QHbOLs1Ffj2qyxMCx3LgyOW0TfSGwARG1bByAPHEJ0DBI4EhmkzsduosLi
+	 9E6eiG7fR899DrgOlWWMXVGz+feqhf4OLNnJi8uOoR6VgK9cWa1nfDbJADd58FIJDz
+	 OCMMIQT1kIujA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rZrB2-000000007yd-1wrs;
+	Tue, 13 Feb 2024 12:42:17 +0100
+Date: Tue, 13 Feb 2024 12:42:16 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Rob Clark <robdclark@gmail.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Kuogee Hsieh <quic_khsieh@quicinc.com>
+Cc: Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	quic_jesszhan@quicinc.com, quic_sbillaka@quicinc.com,
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: drm/msm: DisplayPort regressions in 6.8-rc1
+Message-ID: <ZctVmLK4zTwcpW3A@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,264 +54,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240205173335.1120469-4-Frank.Li@nxp.com>
 
-On Mon, Feb 05, 2024 at 12:33:24PM -0500, Frank Li wrote:
-> Refactors the reset handling logic in the imx6 PCI driver by adding
-> IMX6_PCIE_FLAG_HAS_*_RESET bitmask define for drvdata::flags.
-> 
-> The drvdata::flags and a bitmask ensures a cleaner and more scalable
-> switch-case structure for handling reset.
-> 
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> 
-> Notes:
->     Change from v4 to v5:
->     - Add Mani's Reviewed-by tag
->     - Fixed MQ_EP's flags
->     
->     Chagne from v3 to v4:
->     - none
->     Change from v2 to v3:
->     - add Philipp's Reviewed-by tag
->     Change from v1 to v2:
->     - remove condition check before reset_control_(de)assert() because it is
->       none ops if a NULL pointer pass down.
->     - still keep condition check at probe to help identify dts file mismatch
->       problem.
->     
->     Change from v1 to v2:
->     - remove condition check before reset_control_(de)assert() because it is
->       none ops if a NULL pointer pass down.
->     - still keep condition check at probe to help identify dts file mismatch
->       problem.
-> 
->  drivers/pci/controller/dwc/pci-imx6.c | 105 ++++++++++----------------
->  1 file changed, 39 insertions(+), 66 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 59f117f855c26..a1653b58051b7 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -61,6 +61,8 @@ enum imx6_pcie_variants {
->  #define IMX6_PCIE_FLAG_IMX6_SPEED_CHANGE	BIT(1)
->  #define IMX6_PCIE_FLAG_SUPPORTS_SUSPEND		BIT(2)
->  #define IMX6_PCIE_FLAG_HAS_PHYDRV			BIT(3)
-> +#define IMX6_PCIE_FLAG_HAS_APP_RESET		BIT(4)
-> +#define IMX6_PCIE_FLAG_HAS_PHY_RESET		BIT(5)
->  
->  #define imx6_check_flag(pci, val)     (pci->drvdata->flags & val)
->  
-> @@ -661,18 +663,10 @@ static void imx6_pcie_clk_disable(struct imx6_pcie *imx6_pcie)
->  
->  static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
->  {
-> +	reset_control_assert(imx6_pcie->pciephy_reset);
-> +	reset_control_assert(imx6_pcie->apps_reset);
-> +
->  	switch (imx6_pcie->drvdata->variant) {
-> -	case IMX7D:
-> -	case IMX8MQ:
-> -	case IMX8MQ_EP:
-> -		reset_control_assert(imx6_pcie->pciephy_reset);
-> -		fallthrough;
-> -	case IMX8MM:
-> -	case IMX8MM_EP:
-> -	case IMX8MP:
-> -	case IMX8MP_EP:
-> -		reset_control_assert(imx6_pcie->apps_reset);
-> -		break;
->  	case IMX6SX:
->  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
->  				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN,
-> @@ -693,6 +687,8 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
->  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
->  				   IMX6Q_GPR1_PCIE_REF_CLK_EN, 0 << 16);
->  		break;
-> +	default:
-> +		break;
->  	}
->  
->  	/* Some boards don't have PCIe reset GPIO. */
-> @@ -706,14 +702,10 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
->  	struct dw_pcie *pci = imx6_pcie->pci;
->  	struct device *dev = pci->dev;
->  
-> +	reset_control_deassert(imx6_pcie->pciephy_reset);
-> +
->  	switch (imx6_pcie->drvdata->variant) {
-> -	case IMX8MQ:
-> -	case IMX8MQ_EP:
-> -		reset_control_deassert(imx6_pcie->pciephy_reset);
-> -		break;
->  	case IMX7D:
-> -		reset_control_deassert(imx6_pcie->pciephy_reset);
-> -
->  		/* Workaround for ERR010728, failure of PCI-e PLL VCO to
->  		 * oscillate, especially when cold.  This turns off "Duty-cycle
->  		 * Corrector" and other mysterious undocumented things.
-> @@ -745,11 +737,7 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
->  
->  		usleep_range(200, 500);
->  		break;
-> -	case IMX6Q:		/* Nothing to do */
-> -	case IMX8MM:
-> -	case IMX8MM_EP:
-> -	case IMX8MP:
-> -	case IMX8MP_EP:
-> +	default:
->  		break;
->  	}
->  
-> @@ -796,16 +784,11 @@ static void imx6_pcie_ltssm_enable(struct device *dev)
->  				   IMX6Q_GPR12_PCIE_CTL_2,
->  				   IMX6Q_GPR12_PCIE_CTL_2);
->  		break;
-> -	case IMX7D:
-> -	case IMX8MQ:
-> -	case IMX8MQ_EP:
-> -	case IMX8MM:
-> -	case IMX8MM_EP:
-> -	case IMX8MP:
-> -	case IMX8MP_EP:
-> -		reset_control_deassert(imx6_pcie->apps_reset);
-> +	default:
->  		break;
->  	}
-> +
-> +	reset_control_deassert(imx6_pcie->apps_reset);
+Hi,
 
-You rely on the fact that passing NULL is a no-op on platforms where
-this wasn't called before (valid question for other hunks in this commit),
-correct ?
+Since 6.8-rc1 the internal eDP display on the Lenovo ThinkPad X13s does
+not always show up on boot.
 
-Just checking, it does not make things much cleaner but I am not opposed to
-this change.
+The logs indicate problems with the runtime PM and eDP rework that went
+into 6.8-rc1:
 
-Thanks,
-Lorenzo
+	[    6.006236] Console: switching to colour dummy device 80x25
+	[    6.007542] [drm:dpu_kms_hw_init:1048] dpu hardware revision:0x80000000
+	[    6.007872] [drm:drm_bridge_attach [drm]] *ERROR* failed to attach bridge /soc@0/phy@88eb000 to encoder TMDS-31: -16
+	[    6.007934] [drm:dp_bridge_init [msm]] *ERROR* failed to attach panel bridge: -16
+	[    6.007983] msm_dpu ae01000.display-controller: [drm:msm_dp_modeset_init [msm]] *ERROR* failed to create dp bridge: -16
+	[    6.008030] [drm:_dpu_kms_initialize_displayport:588] [dpu error]modeset_init failed for DP, rc = -16
+	[    6.008050] [drm:_dpu_kms_setup_displays:681] [dpu error]initialize_DP failed, rc = -16
+	[    6.008068] [drm:dpu_kms_hw_init:1153] [dpu error]modeset init failed: -16
+	[    6.008388] msm_dpu ae01000.display-controller: [drm:msm_drm_kms_init [msm]] *ERROR* kms hw init failed: -16
+	
+and this can also manifest itself as a NULL-pointer dereference:
 
->  }
->  
->  static void imx6_pcie_ltssm_disable(struct device *dev)
-> @@ -819,16 +802,11 @@ static void imx6_pcie_ltssm_disable(struct device *dev)
->  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
->  				   IMX6Q_GPR12_PCIE_CTL_2, 0);
->  		break;
-> -	case IMX7D:
-> -	case IMX8MQ:
-> -	case IMX8MQ_EP:
-> -	case IMX8MM:
-> -	case IMX8MM_EP:
-> -	case IMX8MP:
-> -	case IMX8MP_EP:
-> -		reset_control_assert(imx6_pcie->apps_reset);
-> +	default:
->  		break;
->  	}
-> +
-> +	reset_control_assert(imx6_pcie->apps_reset);
->  }
->  
->  static int imx6_pcie_start_link(struct dw_pcie *pci)
-> @@ -1287,38 +1265,26 @@ static int imx6_pcie_probe(struct platform_device *pdev)
->  					     "failed to get pcie phy\n");
->  	}
->  
-> +	if (imx6_check_flag(imx6_pcie, IMX6_PCIE_FLAG_HAS_APP_RESET)) {
-> +		imx6_pcie->apps_reset = devm_reset_control_get_exclusive(dev, "apps");
-> +		if (IS_ERR(imx6_pcie->apps_reset))
-> +			return dev_err_probe(dev, PTR_ERR(imx6_pcie->apps_reset),
-> +					     "failed to get pcie apps reset control\n");
-> +	}
-> +
-> +	if (imx6_check_flag(imx6_pcie, IMX6_PCIE_FLAG_HAS_PHY_RESET)) {
-> +		imx6_pcie->pciephy_reset = devm_reset_control_get_exclusive(dev, "pciephy");
-> +		if (IS_ERR(imx6_pcie->pciephy_reset))
-> +			return dev_err_probe(dev, PTR_ERR(imx6_pcie->pciephy_reset),
-> +					     "Failed to get PCIEPHY reset control\n");
-> +	}
-> +
->  	switch (imx6_pcie->drvdata->variant) {
->  	case IMX8MQ:
->  	case IMX8MQ_EP:
->  	case IMX7D:
->  		if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
->  			imx6_pcie->controller_id = 1;
-> -
-> -		imx6_pcie->pciephy_reset = devm_reset_control_get_exclusive(dev,
-> -									    "pciephy");
-> -		if (IS_ERR(imx6_pcie->pciephy_reset)) {
-> -			dev_err(dev, "Failed to get PCIEPHY reset control\n");
-> -			return PTR_ERR(imx6_pcie->pciephy_reset);
-> -		}
-> -
-> -		imx6_pcie->apps_reset = devm_reset_control_get_exclusive(dev,
-> -									 "apps");
-> -		if (IS_ERR(imx6_pcie->apps_reset)) {
-> -			dev_err(dev, "Failed to get PCIE APPS reset control\n");
-> -			return PTR_ERR(imx6_pcie->apps_reset);
-> -		}
-> -		break;
-> -	case IMX8MM:
-> -	case IMX8MM_EP:
-> -	case IMX8MP:
-> -	case IMX8MP_EP:
-> -		imx6_pcie->apps_reset = devm_reset_control_get_exclusive(dev,
-> -									 "apps");
-> -		if (IS_ERR(imx6_pcie->apps_reset))
-> -			return dev_err_probe(dev, PTR_ERR(imx6_pcie->apps_reset),
-> -					     "failed to get pcie apps reset control\n");
-> -
-> -		break;
->  	default:
->  		break;
->  	}
-> @@ -1448,13 +1414,17 @@ static const struct imx6_pcie_drvdata drvdata[] = {
->  	},
->  	[IMX7D] = {
->  		.variant = IMX7D,
-> -		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
-> +		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND |
-> +			 IMX6_PCIE_FLAG_HAS_APP_RESET |
-> +			 IMX6_PCIE_FLAG_HAS_PHY_RESET,
->  		.gpr = "fsl,imx7d-iomuxc-gpr",
->  		.clk_names = imx6q_clks,
->  		.clks_cnt = ARRAY_SIZE(imx6q_clks),
->  	},
->  	[IMX8MQ] = {
->  		.variant = IMX8MQ,
-> +		.flags = IMX6_PCIE_FLAG_HAS_APP_RESET |
-> +			 IMX6_PCIE_FLAG_HAS_PHY_RESET,
->  		.gpr = "fsl,imx8mq-iomuxc-gpr",
->  		.clk_names = imx8mq_clks,
->  		.clks_cnt = ARRAY_SIZE(imx8mq_clks),
-> @@ -1471,13 +1441,16 @@ static const struct imx6_pcie_drvdata drvdata[] = {
->  	[IMX8MP] = {
->  		.variant = IMX8MP,
->  		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND |
-> -			 IMX6_PCIE_FLAG_HAS_PHYDRV,
-> +			 IMX6_PCIE_FLAG_HAS_PHYDRV |
-> +			 IMX6_PCIE_FLAG_HAS_APP_RESET,
->  		.gpr = "fsl,imx8mp-iomuxc-gpr",
->  		.clk_names = imx8mm_clks,
->  		.clks_cnt = ARRAY_SIZE(imx8mm_clks),
->  	},
->  	[IMX8MQ_EP] = {
->  		.variant = IMX8MQ_EP,
-> +		.flags = IMX6_PCIE_FLAG_HAS_APP_RESET |
-> +			 IMX6_PCIE_FLAG_HAS_PHY_RESET,
->  		.mode = DW_PCIE_EP_TYPE,
->  		.gpr = "fsl,imx8mq-iomuxc-gpr",
->  		.clk_names = imx8mq_clks,
-> -- 
-> 2.34.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+	[    7.339447] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+	
+	[    7.643705] pc : drm_bridge_attach+0x70/0x1a8 [drm]
+	[    7.686415] lr : drm_aux_bridge_attach+0x24/0x38 [aux_bridge]
+	
+	[    7.769039] Call trace:
+	[    7.771564]  drm_bridge_attach+0x70/0x1a8 [drm]
+	[    7.776234]  drm_aux_bridge_attach+0x24/0x38 [aux_bridge]
+	[    7.781782]  drm_bridge_attach+0x80/0x1a8 [drm]
+	[    7.786454]  dp_bridge_init+0xa8/0x15c [msm]
+	[    7.790856]  msm_dp_modeset_init+0x28/0xc4 [msm]
+	[    7.795617]  _dpu_kms_drm_obj_init+0x19c/0x680 [msm]
+	[    7.800731]  dpu_kms_hw_init+0x348/0x4c4 [msm]
+	[    7.805306]  msm_drm_kms_init+0x84/0x324 [msm]
+	[    7.809891]  msm_drm_bind+0x1d8/0x3a8 [msm]
+	[    7.814196]  try_to_bring_up_aggregate_device+0x1f0/0x2f8
+	[    7.819747]  __component_add+0xa4/0x18c
+	[    7.823703]  component_add+0x14/0x20
+	[    7.827389]  dp_display_probe+0x47c/0x568 [msm]
+	[    7.832052]  platform_probe+0x68/0xd8
+
+Users have also reported random crashes at boot since 6.8-rc1, and I've
+been able to trigger hard crashes twice when testing an external display
+(USB-C/DP), which may also be related to the DP regressions.
+
+I've opened an issue here:
+
+	https://gitlab.freedesktop.org/drm/msm/-/issues/51
+
+but I also want Thorsten's help to track this so that it gets fixed
+before 6.8 is released.
+
+#regzbot introduced: v6.7..v6.8-rc1
+
+The following series is likely the culprit:
+
+	https://lore.kernel.org/all/1701472789-25951-1-git-send-email-quic_khsieh@quicinc.com/
+
+Johan
