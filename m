@@ -1,154 +1,152 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9875A3D54D;
-	Tue, 13 Feb 2024 12:24:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41892BB02
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 12:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707827060; cv=none; b=MjomBmL9hWZIn8O0IV04LYrGCrDyNhTyinNP9Lf8fUYMDW1sboG0yAU/9TWOCqtVEmi+9FTYqqQe0hGYL2Xr0gqXbbWZu9kUVI/1leuKyP+8GyKpWYwMZyytwxflaLONH0XC4UYz8n25Dx8mQDV609Rc6JS6/GCv1jtHTcQOC1Q=
+	t=1707827222; cv=none; b=hAqWtJl+2Z3BlDTqcmyRqAlpBU6NqseAMfNHFuUbHikSHo8qpjDXKeEe6R9VMtIhtFX7HWaSCJS0uc6qW6cQYXk/S0WG7TLns+rGnFuOAjVbAAcrIx1C4mUR+4RWqY9lFPYNBjcZ9eaKyUC9TekJdcr1v+E4gduCKl8B7e+vkvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707827060; c=relaxed/simple;
-	bh=KM6zxaaoOFSyFZ5noXN1PyDk4COINjZTnbDT7nk2jc4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nMROOOTTV6lrv4shUBU+r4D0+Omp/kAQe8tHl6VSmKumRzuuypBqZ9ZOKctQVpPmTnPnVfwoTJOJ5a4iBFHAqpupYxocioQPsPh7iNF13zxe0oeieoI+FCx1TROhqYg083xLwv1xMCx5r5qhA2aL+3M0JmgxhIaugBrXSi5KIls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=oPNMu0/3; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=oPNMu0/3; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1707827222; c=relaxed/simple;
+	bh=2bUi5ocU7hGIKKXsYhWjmW0y66Qa9iTEbHZUbBCfOHg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fTaXX9kE2ugApard+0gNsvDHdgIIkkntHF9toMH6lNGbgMvrrD3zdegkICYe9mZb9XNAIY32nB087BCqXRDWZ6T0DY1MksjGXeFX2NaStg4IJnw207+83UHuo80SvOV8wZKDmcdRwC+Lt8tT6cjj8klLIdyJEr/+9nyCTQYq5U0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=l7WIuQDz; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="oPNMu0/3";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="oPNMu0/3"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B2D4722206;
-	Tue, 13 Feb 2024 12:24:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1707827056; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zXbOiQIN7neMTyajtp5U/4Xc00nM1Z7564QKlnGLw3E=;
-	b=oPNMu0/3kyHrjKXlmWcSVvIaXSDVbOqkAyBWw+GM976X053z77ogsr0EDbHX/7ytpQYyy9
-	SyG7mHOiNYd83sIJtiREPWMY5thldH58zWZvsioUSDVozZuC7lw84nRpXvaSjzQ83Bc875
-	OeMyCboEUx7oHjBoCcViZ4MERhSiPOw=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1707827056; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zXbOiQIN7neMTyajtp5U/4Xc00nM1Z7564QKlnGLw3E=;
-	b=oPNMu0/3kyHrjKXlmWcSVvIaXSDVbOqkAyBWw+GM976X053z77ogsr0EDbHX/7ytpQYyy9
-	SyG7mHOiNYd83sIJtiREPWMY5thldH58zWZvsioUSDVozZuC7lw84nRpXvaSjzQ83Bc875
-	OeMyCboEUx7oHjBoCcViZ4MERhSiPOw=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8BA931370C;
-	Tue, 13 Feb 2024 12:24:16 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 4rhuIXBfy2WUCAAAD6G6ig
-	(envelope-from <mhocko@suse.com>); Tue, 13 Feb 2024 12:24:16 +0000
-Date: Tue, 13 Feb 2024 13:24:11 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, vbabka@suse.cz,
-	hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de,
-	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com,
-	corbet@lwn.net, void@manifault.com, peterz@infradead.org,
-	juri.lelli@redhat.com, catalin.marinas@arm.com, will@kernel.org,
-	arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com,
-	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com,
-	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org,
-	masahiroy@kernel.org, nathan@kernel.org, dennis@kernel.org,
-	tj@kernel.org, muchun.song@linux.dev, rppt@kernel.org,
-	paulmck@kernel.org, pasha.tatashin@soleen.com,
-	yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com,
-	hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org,
-	ndesaulniers@google.com, vvvvvv@google.com,
-	gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, bristot@redhat.com,
-	vschneid@redhat.com, cl@linux.com, penberg@kernel.org,
-	iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com,
-	elver@google.com, dvyukov@google.com, shakeelb@google.com,
-	songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com,
-	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev, linux-arch@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com,
-	cgroups@vger.kernel.org
-Subject: Re: [PATCH v3 00/35] Memory allocation profiling
-Message-ID: <Zctfa2DvmlTYSfe8@tiehlicka>
-References: <20240212213922.783301-1-surenb@google.com>
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="l7WIuQDz"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d09bdddfc9so56938301fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 04:26:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1707827217; x=1708432017; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AiPjHiM2hRS+OoUkP3LtwjwT4ETlSRpcnKvPYoLHR4I=;
+        b=l7WIuQDz5jQQCUfXtLRB6sf+V7xIt/qkHOpuiV3w1fbmcrL1+FBDjVV8ijwyWb7j1F
+         +ZKcglSCMewJBJSKOp4ljSkjiXfIP6zQGRT9wlye+9/Ts+4D8CvfoLGiHAqR+CLS8uyr
+         1QzCCMvGASIblpZNGeZEEd0XAn76JZ6FcWSZHasxOLG77/qUFoXm/SNjgNrP38jhofuN
+         oG6kR43NlJXR45nNwDdbfowQI/P6NIk2UxVy0DVYtirWEwuPFopLxKbZpy43lWYXMlxj
+         /guGSDC5fYr2ICeLZmL9I/rbwGA+wLqqJmgtJfTQqwtsICGcr7LKuR5lrttKgF6DHi/j
+         vEgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707827217; x=1708432017;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AiPjHiM2hRS+OoUkP3LtwjwT4ETlSRpcnKvPYoLHR4I=;
+        b=NO3lqKID3SKT59+K3h1t2j2X0+cjeiysSnj4eeVvaOwqylUGExpuDke8VZWQ+F+T5X
+         j+3euV7yU8PQ6WrLoacF/L7JR1UWzLAMCVDsbYw0UBpnUtWEQYjDar22GVvLyojsAzQg
+         lTyJW4EkMYLCVdI+gwN2I/6ubahHjHmDAOYBwDx+O1bnRrX70cBB3tckq3megqblO89O
+         TLbaeRnbxi/N6pB5GinMOngwsudswpY1PIzVIV2XOtWkgnOqWuCMgW+oQV6tvBqRO+nI
+         2Z7aDEyRsDQJeOcFkTU4E6Mc4rxzoviw5fuWGICYfcRKuQQUFNmxVdUId8zqcawcTEuG
+         95NQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUSYFaua1eiuSQp49+Ck5wJ8ZKjh/wcmBO/kCvrAfycCjo00moJJ6RELyrMufpUXrnqyx0x4q5Rz+ACHkJ9ynqzxme/AZv0glcWnj8L
+X-Gm-Message-State: AOJu0YzH8yGXOFMzY88UdxudB5G3X7O6R+KptRgF/iPEDqTZ7jPQEzHs
+	1hLEvzcYcKD0MbhuxtPo2SjNoTCwjjgLsl8H3INeI7ZvC9+UGkNvd00/VPdd530=
+X-Google-Smtp-Source: AGHT+IEt67WUBHbKpCxVtemm/Vm7tBxAQm62HxQJ0X7AMI9PDt8IG937eE32+LLj0r6JPBOUwbI8pg==
+X-Received: by 2002:a2e:87cb:0:b0:2d0:dfa7:8a87 with SMTP id v11-20020a2e87cb000000b002d0dfa78a87mr6577428ljj.8.1707827216914;
+        Tue, 13 Feb 2024 04:26:56 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW3t52NRpuLVWSjP60f+B3gFgGqGMkEgJbn/JTKGOAbhNlQzBS9KzWwy+lM+Xk7C58NBXRTGq5Wqa0N9OBBX6X+qf3QDhqjLQ5jYSd4eQTd8ICqCpY0sREytYemlYT7QsVxCroAQEx6iOqGQbWTTgVbgnKxncJzY3/FYOhI50REQZw/pRJqBkjlrmORshYgUFUwQ50gbU72XgxcJ1l/
+Received: from fedora.fritz.box (aftr-82-135-80-242.dynamic.mnet-online.de. [82.135.80.242])
+        by smtp.gmail.com with ESMTPSA id jx6-20020a05600c578600b0040ffd94cd27sm11444420wmb.45.2024.02.13.04.26.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 04:26:56 -0800 (PST)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: Shuah Khan <shuah@kernel.org>
+Cc: Mykola Lysenko <mykolal@fb.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] tools: selftests: Remove unnecessary semicolons
+Date: Tue, 13 Feb 2024 13:23:18 +0100
+Message-ID: <20240213122317.1883-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240212213922.783301-1-surenb@google.com>
-X-Spam-Level: 
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b="oPNMu0/3"
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.07 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 TO_DN_SOME(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_TRACE(0.00)[suse.com:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_GT_50(0.00)[73];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 BAYES_HAM(-0.06)[60.75%];
-	 ARC_NA(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	 RCVD_DKIM_ARC_DNSWL_HI(-1.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 DWL_DNSWL_MED(-2.00)[suse.com:dkim];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	 TO_MATCH_ENVRCPT_SOME(0.00)[];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 FREEMAIL_CC(0.00)[linux-foundation.org,linux.dev,suse.cz,cmpxchg.org,suse.de,stgolabs.net,infradead.org,oracle.com,lwn.net,manifault.com,redhat.com,arm.com,kernel.org,arndb.de,linutronix.de,linux.intel.com,kernel.dk,soleen.com,google.com,gmail.com,chromium.org,linuxfoundation.org,linaro.org,goodmis.org,linux.com,lge.com,bytedance.com,akamai.com,android.com,vger.kernel.org,lists.linux.dev,kvack.org,googlegroups.com];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[];
-	 RCVD_IN_DNSWL_HI(-0.50)[2a07:de40:b281:104:10:150:64:97:from]
-X-Spam-Score: -3.07
-X-Rspamd-Queue-Id: B2D4722206
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
 
-On Mon 12-02-24 13:38:46, Suren Baghdasaryan wrote:
-[...]
-> We're aiming to get this in the next merge window, for 6.9. The feedback
-> we've gotten has been that even out of tree this patchset has already
-> been useful, and there's a significant amount of other work gated on the
-> code tagging functionality included in this patchset [2].
+Remove unnecessary semicolons reported by Coccinelle/coccicheck and the
+semantic patch at scripts/coccinelle/misc/semicolon.cocci.
 
-I suspect it will not come as a surprise that I really dislike the
-implementation proposed here. I will not repeat my arguments, I have
-done so on several occasions already. 
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+ tools/testing/selftests/bpf/benchs/bench_local_storage_create.c | 2 +-
+ tools/testing/selftests/kvm/access_tracking_perf_test.c         | 2 +-
+ tools/testing/selftests/timers/nanosleep.c                      | 2 +-
+ tools/testing/selftests/timers/nsleep-lat.c                     | 2 +-
+ tools/testing/selftests/timers/set-timer-lat.c                  | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
-Anyway, I didn't go as far as to nak it even though I _strongly_ believe
-this debugging feature will add a maintenance overhead for a very long
-time. I can live with all the downsides of the proposed implementation
-_as long as_ there is a wider agreement from the MM community as this is
-where the maintenance cost will be payed. So far I have not seen (m)any
-acks by MM developers so aiming into the next merge window is more than
-little rushed. 
-
->  81 files changed, 2126 insertions(+), 695 deletions(-)
+diff --git a/tools/testing/selftests/bpf/benchs/bench_local_storage_create.c b/tools/testing/selftests/bpf/benchs/bench_local_storage_create.c
+index b36de42ee4d9..e2ff8ea1cb79 100644
+--- a/tools/testing/selftests/bpf/benchs/bench_local_storage_create.c
++++ b/tools/testing/selftests/bpf/benchs/bench_local_storage_create.c
+@@ -186,7 +186,7 @@ static void *task_producer(void *input)
+ 
+ 		for (i = 0; i < batch_sz; i++) {
+ 			if (!pthd_results[i])
+-				pthread_join(pthds[i], NULL);;
++				pthread_join(pthds[i], NULL);
+ 		}
+ 	}
+ 
+diff --git a/tools/testing/selftests/kvm/access_tracking_perf_test.c b/tools/testing/selftests/kvm/access_tracking_perf_test.c
+index 3c7defd34f56..447e619cf856 100644
+--- a/tools/testing/selftests/kvm/access_tracking_perf_test.c
++++ b/tools/testing/selftests/kvm/access_tracking_perf_test.c
+@@ -239,7 +239,7 @@ static void vcpu_thread_main(struct memstress_vcpu_args *vcpu_args)
+ 		case ITERATION_MARK_IDLE:
+ 			mark_vcpu_memory_idle(vm, vcpu_args);
+ 			break;
+-		};
++		}
+ 
+ 		vcpu_last_completed_iteration[vcpu_idx] = current_iteration;
+ 	}
+diff --git a/tools/testing/selftests/timers/nanosleep.c b/tools/testing/selftests/timers/nanosleep.c
+index df1d03516e7b..34e61507fa1f 100644
+--- a/tools/testing/selftests/timers/nanosleep.c
++++ b/tools/testing/selftests/timers/nanosleep.c
+@@ -72,7 +72,7 @@ char *clockstring(int clockid)
+ 		return "CLOCK_BOOTTIME_ALARM";
+ 	case CLOCK_TAI:
+ 		return "CLOCK_TAI";
+-	};
++	}
+ 	return "UNKNOWN_CLOCKID";
+ }
+ 
+diff --git a/tools/testing/selftests/timers/nsleep-lat.c b/tools/testing/selftests/timers/nsleep-lat.c
+index edb5acacf214..d839fa4e6e08 100644
+--- a/tools/testing/selftests/timers/nsleep-lat.c
++++ b/tools/testing/selftests/timers/nsleep-lat.c
+@@ -72,7 +72,7 @@ char *clockstring(int clockid)
+ 		return "CLOCK_BOOTTIME_ALARM";
+ 	case CLOCK_TAI:
+ 		return "CLOCK_TAI";
+-	};
++	}
+ 	return "UNKNOWN_CLOCKID";
+ }
+ 
+diff --git a/tools/testing/selftests/timers/set-timer-lat.c b/tools/testing/selftests/timers/set-timer-lat.c
+index 50da45437daa..d60bbcad487f 100644
+--- a/tools/testing/selftests/timers/set-timer-lat.c
++++ b/tools/testing/selftests/timers/set-timer-lat.c
+@@ -80,7 +80,7 @@ char *clockstring(int clockid)
+ 		return "CLOCK_BOOTTIME_ALARM";
+ 	case CLOCK_TAI:
+ 		return "CLOCK_TAI";
+-	};
++	}
+ 	return "UNKNOWN_CLOCKID";
+ }
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.43.0
+
