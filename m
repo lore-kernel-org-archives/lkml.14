@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09AD692FF;
-	Tue, 13 Feb 2024 01:03:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0504D69953;
+	Tue, 13 Feb 2024 01:03:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707786235; cv=none; b=ObTn5EPqpZlp+t9XiKTPjdhemprpi7VIphIz1DVEIem8ek8S5mYp35fEHLBTYjnM4KR2BA88VZuCNhmjN7Yhb1XC/Xe7BEH1IV/0KadyYSyMgXqmTOun4Kdew7qyQi1xg3GQOEcVLVpGMZH+4lvwZZS2avmAMFl6oveHcr/kHwQ=
+	t=1707786236; cv=none; b=ge6qs1ee71z3DQbtn07FrJok4ersRPNIzDWnJF5DiCUdREL1bxtdmKfOMmQy9L/CQQ4YYEr2D6mOgDI+wxmNu13OkUpVat7MW75CTGeVDIN2gZn/p7ISTkxEZG74WHgAo1czcY4ggAmPIOSZgbyfeO/GasAyUvIbqHLfhMJNdxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707786235; c=relaxed/simple;
-	bh=pSvctDHxVCaAu+4cZjOT/I3a/3LHsGScFSRvh9RHyIQ=;
+	s=arc-20240116; t=1707786236; c=relaxed/simple;
+	bh=rUmJV8kGaEHJUfJDmv7OgUPHvh7znQWSM5zbc3u5TGM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sbviJTrIJa+p9PfqFG1+g67KfOnL7z/+wsEFS/JHHxdZioThleE39h5PKLtJdQT5JLL6pgADDXV8JGWBQcFoQ10Af6PWe2f50qOo5/+Eo+uGxMI/lCPPKVECIE2OyUjsGDGQrlD5xmOny/sMuZoKMVSN5ZbJq7oy+lirlY40rYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WP/DvuEd; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=u+z5ov3ldAqKzkW7J+npsOvOg7+QofFc+l6zfetqQwfjP6wQpi7iF0C86yyU8mHrZ7s97mRn4NC3S5L3Qv8yVGUbA7IOzLXAZEtvBLaKx5K7ko/NBt4vXSdeLF1i2z/L+DtQ8xsG6r1BeQtdFzrXPh1CmoK54hpmrc8mb3Aqk24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fcZyXGBv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WP/DvuEd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B8B3C43399;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fcZyXGBv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 925CCC4166A;
 	Tue, 13 Feb 2024 01:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1707786235;
-	bh=pSvctDHxVCaAu+4cZjOT/I3a/3LHsGScFSRvh9RHyIQ=;
+	bh=rUmJV8kGaEHJUfJDmv7OgUPHvh7znQWSM5zbc3u5TGM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WP/DvuEdP2yZwW7/I6LJRn5k8K8J2czcQ8L5O3VNIQE6QH1HbnIR5nzJqr/hOsPvm
-	 ZDQCnQ4gTVfrCPpP6g3tirV5rJD4B3JeMR03dtFh9F/rvZB40s96TYCFNYf314qlE3
-	 3CxbXyWM6ZVJZJVqjwJ4AtGfRLJ6Z8CkPf0606/6XiPIvYKu+YgtzCM/vvFBWuix+1
-	 QicoKhdeYMJ39nDPvQk0q9zKQOSX4ePnOP4W1zXe1yk2Ko4woIQB8hBAJMqoDimuQM
-	 PHRMgeRaeUsMkm/29+HuzDYYPIIHMndpxMIklH8Z/CyY/SqLUHTwxAbie3+mWSoNJD
-	 Dy1H8K/YJXmxw==
+	b=fcZyXGBvYyPxvMGxP6sQPcoStEP9d84MovkhPd7L0h2xN4XmGz3UNg4JDNwQmuqIu
+	 5N6RWdcFLw80LLYMkq5+MzIJdsuW5GOdwLWmn2IFGZGSg5w2scL3c2jinZU9O1g653
+	 qpcjwp8jN7RWEPP2YidOldw7rjvvFGEOingg1PqPHrLVNqVLFfjjtEwJ2egH6FCWyP
+	 CiWGhVPVWiyyMboZnztTEbGknrvOV0CL4oamus1tDR+z9lGy6HA4Pqkfr1SslLDgbC
+	 U0jRlQmFbXHuYxzZ39M5j0W7bRZ+q/xJlZWVYBIsF07II3/XqGOpZ/UtR/cPnRrNbY
+	 28Y3c1Ds96xWA==
 Received: by mercury (Postfix, from userid 1000)
-	id 58C5F106D638; Tue, 13 Feb 2024 02:03:49 +0100 (CET)
+	id 46B97106A85F; Tue, 13 Feb 2024 02:03:49 +0100 (CET)
 From: Sebastian Reichel <sre@kernel.org>
 To: Sebastian Reichel <sre@kernel.org>,
 	Rob Herring <robh+dt@kernel.org>,
@@ -44,10 +44,11 @@ Cc: Dong Aisheng <aisheng.dong@nxp.com>,
 	Mark Brown <broonie@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
 	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 10/17] ARM: dts: imx6ul: Remove fsl,anatop from usbotg1
-Date: Tue, 13 Feb 2024 02:00:59 +0100
-Message-ID: <20240213010347.1075251-11-sre@kernel.org>
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2 07/17] dt-bindings: lcdif: Do not require power-domains for i.MX6ULL
+Date: Tue, 13 Feb 2024 02:00:56 +0100
+Message-ID: <20240213010347.1075251-8-sre@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240213010347.1075251-1-sre@kernel.org>
 References: <20240213010347.1075251-1-sre@kernel.org>
@@ -59,25 +60,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-fsl,anatop should only be added to the usbphy nodes.
+i.MX6UL(L) uses "fsl,imx6sx-lcdif" as fallback compatible string,
+but has only very lightweight DISPLAY power domain. Its DISPLAY
+power domain is not supported by the binding / Linux kernel at
+the moment. Since the current setup is working, let's remove the
+power-domain from being required for that platform to fix the warning
+printed by CHECK_DTBS=y.
 
+Fixes: f62678a77d58 ("dt-bindings: mxsfb: Document i.MX8M/i.MX6SX/i.MX6SL power-domains property")
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Sebastian Reichel <sre@kernel.org>
 ---
- arch/arm/boot/dts/nxp/imx/imx6ul.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+ Documentation/devicetree/bindings/display/fsl,lcdif.yaml | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
-index a27a7554c2e7..9eb4eee0c272 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
-@@ -855,7 +855,6 @@ usbotg1: usb@2184000 {
- 				clocks = <&clks IMX6UL_CLK_USBOH3>;
- 				fsl,usbphy = <&usbphy1>;
- 				fsl,usbmisc = <&usbmisc 0>;
--				fsl,anatop = <&anatop>;
- 				ahb-burst-config = <0x0>;
- 				tx-burst-size-dword = <0x10>;
- 				rx-burst-size-dword = <0x10>;
+diff --git a/Documentation/devicetree/bindings/display/fsl,lcdif.yaml b/Documentation/devicetree/bindings/display/fsl,lcdif.yaml
+index 1c2be8d6f633..0681fc49aa1b 100644
+--- a/Documentation/devicetree/bindings/display/fsl,lcdif.yaml
++++ b/Documentation/devicetree/bindings/display/fsl,lcdif.yaml
+@@ -120,13 +120,19 @@ allOf:
+           maxItems: 1
+         clock-names:
+           maxItems: 1
++  - if:
++      properties:
++        compatible:
++          const: fsl,imx6sx-lcdif
++    then:
++      required:
++        - power-domains
+   - if:
+       properties:
+         compatible:
+           contains:
+             enum:
+               - fsl,imx6sl-lcdif
+-              - fsl,imx6sx-lcdif
+               - fsl,imx8mm-lcdif
+               - fsl,imx8mn-lcdif
+               - fsl,imx8mp-lcdif
 -- 
 2.43.0
 
