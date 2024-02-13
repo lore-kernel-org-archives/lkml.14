@@ -1,112 +1,186 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C695F863
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 15:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D335F845;
+	Tue, 13 Feb 2024 15:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707838565; cv=none; b=dcsg4r+P1qd/64iNTNMTXhvDsVl+JndEbc+rtwrduR67C1gHnJHXSLTU/w/vO9drRSgjKx8XOP5IxB8MNwOGT29FmfsOvppoLUn2CANZDiua9x/ZM9GwTyaPcLz8bIyoKLvuAXHOW24PpbEOD94zAU/Lixa6UiWp3mnMNm4pwfg=
+	t=1707838564; cv=none; b=jAntLlrh4mXK+LF144O6AjgIvN75y4zF5CPlq+CRSibSFlwJkX9qjI4WpBFgJKt6zvZZYLkt8bgODNRRpXmdHvCoWQVlYjXcCCJLHRkx4hG/7Zb+RjHOe8KnPcjnjsSdfN1oKE0qWxvDyWF9p/OAv5BEEENmDHNjhlX/0izYbck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707838565; c=relaxed/simple;
-	bh=xZUB8BUYh9q0K4zYhrKO5UiHbHyA8zQWz3EYhJ1Eclw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OgDJL/jDwrxQoxzr3swJ2eEdHCjPQO287DCXOhAVQRsPRmzT3ThvB9Geg0CJm2q/fKi1Kdv+V8mU4alBu7UQ0z2TW94Q27V5pbck9VQBpPAxa6IzdfTz4bxSQxfoGDNd67IdlRL5P3NXiaH5k+cqwTEXbLkyUANQVp6DRpekHFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id EB2BA22017;
-	Tue, 13 Feb 2024 15:36:01 +0000 (UTC)
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CD70D1370C;
-	Tue, 13 Feb 2024 15:36:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id M+mrMWGMy2VzQAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 13 Feb 2024 15:36:01 +0000
-Message-ID: <ff695557-603c-4bbd-ac6e-3a35ae6ed74f@suse.cz>
-Date: Tue, 13 Feb 2024 16:36:01 +0100
+	s=arc-20240116; t=1707838564; c=relaxed/simple;
+	bh=2C083pQq7ejIrNta8rh79xzMjzLHYxYyMm1x6sR7OFM=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Uv5RzOCw1Xtb4PXSGyggwNrSUKzOr8BWe9DefjBwh2clpdVS+oMtNKuyePpS8O4hzrUwCk7cVeBmDZ+02jJPCpGpPgnvqF3Ke0oK/U1+v7YDNHlQCSt4Pxi/88yV1UVaHSdci7HMBGFn/4mtPt9U3X5f0iUPtUKOcMX/TXFQUek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OblL9XPv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NhPku5T1; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OblL9XPv";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NhPku5T1"
+Date: Tue, 13 Feb 2024 15:35:59 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1707838560;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qAKmX6rPfaSfxw6d+7kK2rtkhTI+gZJ1FunDM/XzF6k=;
+	b=OblL9XPv4uv5vc7YMGp0fC3axOAL58Utj2Gw99L85USrtYbDmth5eWj+0QStqa5j14YK36
+	8xg40QIIuwwxG9fkcPePcNgHwSOQawLEIqFh/Irj2qnlzlytuxw9HnpYRLW2IESCFm0hVX
+	OZvktqEg2SdvqcUujVprlvGAhoviaW32ZzlhxwM6FlTWBiXDxXD+hg6LB3YParqzXNTdWV
+	4mfClZDsa/Raqy2Q1U+yVzstkCmEQkxR1P1uidNXVPmntHyzQONGSFJWDyS3nc5fBYJMVB
+	5zvbgUk7BkVeKHJYd+g6Ge/LQBiB57ABdyvNFQoEKWE3AyJZQXY7CAd/1QjcnA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1707838560;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qAKmX6rPfaSfxw6d+7kK2rtkhTI+gZJ1FunDM/XzF6k=;
+	b=NhPku5T1HgkM7WBIW7SIMgHNiOpN7R7vpQi87xVQ91lnypVzYG6He9lMl5YzQxftfva77Q
+	kQ4zQsRdCNd2QRDw==
+From: "tip-bot2 for Borislav Petkov (AMD)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/alternatives] x86/alternatives: Get rid of __optimize_nops()
+Cc: "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240130105941.19707-3-bp@alien8.de>
+References: <20240130105941.19707-3-bp@alien8.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 3/5] mm,page_owner: Display all stacks and their count
-Content-Language: en-US
-To: Oscar Salvador <osalvador@suse.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>,
- Marco Elver <elver@google.com>, Andrey Konovalov <andreyknvl@gmail.com>,
- Alexander Potapenko <glider@google.com>
-References: <20240212223029.30769-1-osalvador@suse.de>
- <20240212223029.30769-4-osalvador@suse.de>
- <b706176a-c60a-4960-ba4a-2755c612d9c8@suse.cz>
- <ZcuLyjU52Gd3xJI8@localhost.localdomain>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <ZcuLyjU52Gd3xJI8@localhost.localdomain>
-Content-Type: text/plain; charset=UTF-8
+Message-ID: <170783855963.398.15553842134757811644.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	 REPLY(-4.00)[]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: EB2BA22017
-X-Spam-Level: 
-X-Spam-Score: -4.00
-X-Spam-Flag: NO
 
-On 2/13/24 16:33, Oscar Salvador wrote:
-> On Tue, Feb 13, 2024 at 03:25:26PM +0100, Vlastimil Babka wrote:
->> On 2/12/24 23:30, Oscar Salvador wrote:
->> > +static int stack_print(struct seq_file *m, void *v)
->> > +{
->> > +	char *buf;
->> > +	int ret = 0;
->> > +	struct stack *stack = v;
->> > +	struct stack_record *stack_record = stack->stack_record;
->> > +
->> > +	if (!stack_record->size || stack_record->size < 0 ||
->> > +	    refcount_read(&stack_record->count) < 2)
->> > +		return 0;
->> > +
->> > +	buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
->> > +
->> > +	ret += stack_trace_snprint(buf, PAGE_SIZE, stack_record->entries,
->> > +				   stack_record->size, 0);
->> > +	if (!ret)
->> > +		goto out;
->> > +
->> > +	scnprintf(buf + ret, PAGE_SIZE - ret, "stack_count: %d\n\n",
->> > +		  refcount_read(&stack_record->count));
->> > +
->> > +	seq_printf(m, buf);
->> > +	seq_puts(m, "\n\n");
->> > +out:
->> > +	kfree(buf);
->> 
->> Seems rather wasteful to do kzalloc/kfree so you can print into that buffer
->> first and then print/copy it again using seq_printf. If you give up on using
->> stack_trace_snprintf() it's not much harder to print the stack directly with
->> a loop of seq_printf. See e.g. slab_debugfs_show().
-> 
-> Well, I thought about not reinventing the wheel there, but fair enough
-> than performing a kmalloc/free op on every print might be suboptimal.
-> I will try to do ir with seq_printf alone.
+The following commit has been merged into the x86/alternatives branch of tip:
 
-Of course once there's more than one stackdepot user printing into a
-seq_file, creating a common seq_file helper analogy of
-stack_trace_snprintf() and using it from all places, would also be an option :)
+Commit-ID:     f9265b75648165f61467a7ea3c9bbae33be7ce27
+Gitweb:        https://git.kernel.org/tip/f9265b75648165f61467a7ea3c9bbae33be7ce27
+Author:        Borislav Petkov (AMD) <bp@alien8.de>
+AuthorDate:    Tue, 30 Jan 2024 11:59:39 +01:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Tue, 13 Feb 2024 16:25:46 +01:00
 
-> Thanks
->  
-> 
+x86/alternatives: Get rid of __optimize_nops()
 
+There's no need to carve out bits of the NOP optimization functionality
+and look at JMP opcodes - simply do one more NOPs optimization pass
+at the end of patching.
+
+A lot simpler code.
+
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Link: https://lore.kernel.org/r/20240130105941.19707-3-bp@alien8.de
+---
+ arch/x86/kernel/alternative.c | 52 ++++++----------------------------
+ 1 file changed, 10 insertions(+), 42 deletions(-)
+
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 835e343..cdbece3 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -217,46 +217,11 @@ static int skip_nops(u8 *buf, int offset, int len)
+ }
+ 
+ /*
+- * Optimize a sequence of NOPs, possibly preceded by an unconditional jump
+- * to the end of the NOP sequence into a single NOP.
+- */
+-static bool __init_or_module
+-__optimize_nops(const u8 * const instr, u8 *buf, size_t len, struct insn *insn, int *next, int *prev, int *target)
+-{
+-	int i = *next - insn->length;
+-
+-	switch (insn->opcode.bytes[0]) {
+-	case JMP8_INSN_OPCODE:
+-	case JMP32_INSN_OPCODE:
+-		*prev = i;
+-		*target = *next + insn->immediate.value;
+-		return false;
+-	}
+-
+-	if (insn_is_nop(insn)) {
+-		int nop = i;
+-
+-		*next = skip_nops(buf, *next, len);
+-		if (*target && *next == *target)
+-			nop = *prev;
+-
+-		add_nop(buf + nop, *next - nop);
+-		DUMP_BYTES(ALT, buf, len, "%px: [%d:%d) optimized NOPs: ", instr, nop, *next);
+-		return true;
+-	}
+-
+-	*target = 0;
+-	return false;
+-}
+-
+-/*
+  * "noinline" to cause control flow change and thus invalidate I$ and
+  * cause refetch after modification.
+  */
+ static void __init_or_module noinline optimize_nops(const u8 * const instr, u8 *buf, size_t len)
+ {
+-	int prev, target = 0;
+-
+ 	for (int next, i = 0; i < len; i = next) {
+ 		struct insn insn;
+ 
+@@ -265,7 +230,14 @@ static void __init_or_module noinline optimize_nops(const u8 * const instr, u8 *
+ 
+ 		next = i + insn.length;
+ 
+-		__optimize_nops(instr, buf, len, &insn, &next, &prev, &target);
++		if (insn_is_nop(&insn)) {
++			int nop = i;
++
++			next = skip_nops(buf, next, len);
++
++			add_nop(buf + nop, next - nop);
++			DUMP_BYTES(ALT, buf, len, "%px: [%d:%d) optimized NOPs: ", instr, nop, next);
++		}
+ 	}
+ }
+ 
+@@ -342,8 +314,6 @@ bool need_reloc(unsigned long offset, u8 *src, size_t src_len)
+ static void __init_or_module noinline
+ apply_relocation(const u8 * const instr, u8 *buf, size_t len, u8 *src, size_t src_len)
+ {
+-	int prev, target = 0;
+-
+ 	for (int next, i = 0; i < len; i = next) {
+ 		struct insn insn;
+ 
+@@ -352,9 +322,6 @@ apply_relocation(const u8 * const instr, u8 *buf, size_t len, u8 *src, size_t sr
+ 
+ 		next = i + insn.length;
+ 
+-		if (__optimize_nops(instr, buf, len, &insn, &next, &prev, &target))
+-			continue;
+-
+ 		switch (insn.opcode.bytes[0]) {
+ 		case 0x0f:
+ 			if (insn.opcode.bytes[1] < 0x80 ||
+@@ -533,7 +500,8 @@ void __init_or_module noinline apply_alternatives(struct alt_instr *start,
+ 		for (; insn_buff_sz < a->instrlen; insn_buff_sz++)
+ 			insn_buff[insn_buff_sz] = 0x90;
+ 
+-		apply_relocation(instr, insn_buff, a->instrlen, replacement, a->replacementlen);
++		apply_relocation(instr, insn_buff, a->instrlen, replacement, insn_buff_sz);
++		optimize_nops(instr, insn_buff, insn_buff_sz);
+ 
+ 		DUMP_BYTES(ALT, instr, a->instrlen, "%px:   old_insn: ", instr);
+ 		DUMP_BYTES(ALT, replacement, a->replacementlen, "%px:   rpl_insn: ", replacement);
