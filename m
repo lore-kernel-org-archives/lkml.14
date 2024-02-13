@@ -1,94 +1,109 @@
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01F860263;
-	Tue, 13 Feb 2024 19:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963D26088C;
+	Tue, 13 Feb 2024 19:36:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707852978; cv=none; b=bg7Ip6XIdYRo7dfou0uOrZM5KIA5k/vnKjSa7NgEsRR/a6CXkK6QbRgMswkvgFVFuHVHKWw3adwFTy06zEHoxqYlwqaV3yI0R63ezpqSCXkEVvitH0okex/21bwipIQLKBJyNoKRPSVfceLAsf1Ex+zxFfyX0w+wG9lNuGnzIyk=
+	t=1707853015; cv=none; b=RrgnsFSvRzOR27Q6HIfS1EFx5GpYGFVNBsx87DxnwknTPYPMPy3gdIcvaf5VRGZMGqLrpQSOYKNtq8lyDMl9OxTnG92R5CN+iRgXSHOr7kuzFM1ImyBDLPwOFTDVH6bhlmD/WrBsYim8ttselgrPyJUmGFRTRdvV+HKCE2AgUT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707852978; c=relaxed/simple;
-	bh=d7K2JQulCuhpnm56OWHlm77lVRR8659PaC63yui03SU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=umfTJCdi7n9OFUsAStcxCCGVK0emlNqTv2pvBFHbmGu4AsjI+m2iqnKEivDxna9WiGaNcmy5CM3UAwlJgUEltPZ6UNbP8x/Zxn0tad/OWc9hBbkeBeSGi6bD07iPG1wX/XpN4mBbyzatt3NyWH5HT7X4EUZ/WrH3eQ47UvvnqKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=n2tBm63M; arc=none smtp.client-ip=178.238.236.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="n2tBm63M"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:Content-Type:
-	MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=eT8/BFgimu3HSsjaK7aAfhbdMsoZx19Yyb187hpoUJ8=; b=n2tBm63M5QFHlcpMTWOGDXk9Cp
-	fDFJHXpK8edY+o4kBSSuO00IculrrCK2RwfVcWoSzvmkgEimLrIwP6Q8oq3lC6QRLVVYtors1gdaS
-	hRcbGxPOp1SfSwebpbbPp07UHm8XCUyKezklGKguD0P+WKY+btE7BCDcf+N4+FoP8jNb3IGV7cf0u
-	5r9nlv+Dhlf0e0x8d9iXyh3NsA8ySt2VO4GEG+oN6hy4k6JBTzqNCocuz/Re7PGs9/3Ex2MKAHmYK
-	6OTMOVANrOeakpoEc1QyHFet1ZyOf3IggRDAJZZ8QCMvdeg/njmVTEJVkvkrVn7edBGirjb0UXw9V
-	4MolsIQA==;
-Received: from p2003010777002c001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:107:7700:2c00:1a3d:a2ff:febf:d33a] helo=aktux)
-	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <andreas@kemnade.info>)
-	id 1rZyKH-009PSB-H1; Tue, 13 Feb 2024 20:20:17 +0100
-Date: Tue, 13 Feb 2024 20:20:15 +0100
-From: Andreas Kemnade <andreas@kemnade.info>
-To: Adam Ford <aford173@gmail.com>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, luiz.dentz@gmail.com,
- johan@kernel.org, jirislaby@kernel.org, gregkh@linuxfoundation.org,
- linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, Tony
- Lindgren <tony@atomide.com>, tomi.valkeinen@ideasonboard.com,
- =?UTF-8?B?UMOpdGVy?= Ujfalusi <peter.ujfalusi@gmail.com>, robh@kernel.org,
- hns@goldelico.com
-Subject: Re: [RFC PATCH v2 3/3] gnss: Add driver for AI2 protocol
-Message-ID: <20240213202015.08a0a3ad@aktux>
-In-Reply-To: <CAHCN7x+rfwNeb+xOnLmQR78MQVDwGOOEHqnEceJcDkMrRJtE5Q@mail.gmail.com>
-References: <20240128173352.2714442-1-andreas@kemnade.info>
-	<20240128173352.2714442-4-andreas@kemnade.info>
-	<CAHCN7x+rfwNeb+xOnLmQR78MQVDwGOOEHqnEceJcDkMrRJtE5Q@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1707853015; c=relaxed/simple;
+	bh=T2Vw6Cyd4ALeInAbpcgzv4+Dn5Of+UHVZntCCS/oQDk=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=pqQ18DoIR+M5nVZ6hBcTg4iAdS/32GJLzy3ZNH+Tw0jdyYChgZoIhgKNiTR9FULVNg7BJuDBXxMLDt6kIRXtlzjHMmg4kfyg+6PE0IgWCa5oIKruEYetpqFJcy9P4kk5v27DlU+ymIHCSOciLSMp3KxHXpk5d2Nevj76JDfQF8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.1.105] (178.176.75.253) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Tue, 13 Feb
+ 2024 22:36:46 +0300
+Subject: Re: [PATCH net-next v3 4/6] net: ravb: Move the update of
+ ndev->features to ravb_set_features()
+To: Claudiu <claudiu.beznea@tuxon.dev>, <davem@davemloft.net>,
+	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<biju.das.jz@bp.renesas.com>
+CC: <netdev@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Claudiu Beznea
+	<claudiu.beznea.uj@bp.renesas.com>
+References: <20240213094110.853155-1-claudiu.beznea.uj@bp.renesas.com>
+ <20240213094110.853155-5-claudiu.beznea.uj@bp.renesas.com>
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <9fd3591a-99ba-7f40-551a-94648392c325@omp.ru>
+Date: Tue, 13 Feb 2024 22:36:45 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240213094110.853155-5-claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 02/13/2024 19:20:49
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 0
+X-KSE-AntiSpam-Info: Lua profiles 183416 [Feb 13 2024]
+X-KSE-AntiSpam-Info: Version: 6.1.0.3
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info:
+	127.0.0.199:7.1.2;omp.ru:7.1.1;178.176.75.253:7.7.3,7.4.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
+X-KSE-AntiSpam-Info: {cloud_iprep_silent}
+X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.75.253
+X-KSE-AntiSpam-Info: Rate: 0
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 02/13/2024 19:24:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 2/13/2024 4:21:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-On Tue, 13 Feb 2024 07:57:10 -0600
-Adam Ford <aford173@gmail.com> wrote:
+On 2/13/24 12:41 PM, Claudiu wrote:
 
-> On Sun, Jan 28, 2024 at 11:34=E2=80=AFAM Andreas Kemnade <andreas@kemnade=
-.info> wrote:
-> >
-> > Add a driver for the Air Independent Interface protocol used by some TI
-> > Wilink combo chips. Per default, send out just NMEA to userspace and tu=
-rn
-> > on/off things at open()/close() but keep the door open for any
-> > sophisticated development regarding the AI2 protocol by having a kernel
-> > parameter to turn it into raw mode resembling /dev/tigps provided by so=
-me
-> > TI vendor kernels.
-> >
-> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info> =20
->=20
-> I am still trying to find a GPS antenna for the Logic PD board I have,
-> but it occurred to me that the kit that I have used may require
-> special GPS firmware.  Are you using any special firmware in the radio
-> in conjunction with these driver patches or are you using the standard
-> bts files?
->=20
-Just
-https://github.com/TI-ECS/bt-firmware/raw/master/TIInit_10.6.15.bts
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> 
+> Commit c2da9408579d ("ravb: Add Rx checksum offload support for GbEth")
+> introduced support for setting GbEth features. With this the IP-specific
+> features update functions update the ndev->features individually.
+> 
+> Next commits add runtime PM support for the ravb driver. The runtime PM
+> implementation will enable/disable the IP clocks on
+> the ravb_open()/ravb_close() functions. Accessing the IP registers with
+> clocks disabled blocks the system.
+> 
+> The ravb_set_features() function could be executed when the Ethernet
+> interface is closed so we need to ensure we don't access IP registers while
+> the interface is down when runtime PM support will be in place.
+> 
+> For these, move the update of ndev->features to ravb_set_features() and
+> make the IP-specific features set function return int. In this way we
+> update the ndev->features only when the IP-specific features set function
+> returns success and we can avoid code duplication when introducing
+> runtime PM registers protection.
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-I removed one command (by setting type to commment) regarding some clock
-configuration.
+Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
 
-Well, maybe you see NMEA without antenna, maybe you get an error message
-because the module "feels" the absence of an antenna...
+[...]
 
-Regards,
-Andreas
+MBR, Sergey
