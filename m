@@ -1,82 +1,108 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B12F627E1
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 21:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A93627F7;
+	Tue, 13 Feb 2024 21:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707860421; cv=none; b=m0A2U7/eeQyl5jODTgUF/3IPh55RNFLRFIBC3SuzRwDximVpsxCjBwPJfS9UjhSSv0UXgSFINn1tRC2IAsoDCsEWBbHOdP1yKVKLOIqPseR9C/X+my13xPX73ZvBAtuoJ898t5rsXZXd9VaLVa/gyzg3J9ydleCzGBoRQb/L5fA=
+	t=1707860423; cv=none; b=JHbIhsekX/e3LgJC16Plg9u+mwdTn2Nqznp112nyYysO78A0t3D3U7KSguJDC5dRPlhVHdZ8eLxsHKBLSePC25982tLZ7uolwU7ZF+Ze8bcvsBychmblsBaq6excMHLYshmqTfXoWLX5am6nnojw3H2jMsEStEaYC4oolDM9KLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707860421; c=relaxed/simple;
-	bh=dbFTyn7f3Bl53OcK8D9X/nWjgslx47eYuZAqktCtuuk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=brCj+/Uq1y/2bTu4fDJT/LgL1AgMcV9khmEsbSZxLyN+hK6cttSt9QjRMiSIVY1bXxxusfqM72jVTBaXGM0+Ea/YCJfp2N/tmhJB+Ec6yj5MGGenDTeMjuieBKxPbAuTMajAMgwkgoR6NWWybP/6tipM248RSYA7Cl3I6nBSSok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Nu+rDl5z; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707860423; c=relaxed/simple;
+	bh=cFyzorVyt7pR+oxl9oSqdJVk3CnfNL+zpcN7YvtmWuI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=mcmcBJXle0vb2kS6+3ZSAAYE3HO04ikdqTIVJh0cpXH2WFohrdxFuCl3Ut2chB0n+kjk+LMN+IxlrE16AEZZHBkrgdEC+p+HMEfpZm5Kf5sCQkQoDUJflpaoz4+VFEnkgB7Z5Q2Lruj+T4EmWPrVaZB28OUdsdKi8fDSNROWzwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yj8Y5Wli; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nu+rDl5z"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dcd94fb9e4dso380784276.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 13:40:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yj8Y5Wli"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-56001d49cc5so6053713a12.2;
+        Tue, 13 Feb 2024 13:40:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707860419; x=1708465219; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1707860420; x=1708465220; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dbFTyn7f3Bl53OcK8D9X/nWjgslx47eYuZAqktCtuuk=;
-        b=Nu+rDl5zo4iTrqjqPj78xjkzT4cMscx1PPubPBWe5N2cMjjLIDO18lFH3dM1JFSKZq
-         26UjzIah0cH/OWRiTC0v2MkcZ3kh8jFe6Nlwtqfe3yS7f2EmM8iPK64w3r05XpiJxnNh
-         RcjkbuHwbZxK+J1HqDufXLVPgSXUQ29zYnFPWGti6W7VxOgddSZcfIBHjTpHg6wpQ4Rs
-         CWQU0ydzXJNutGwSBXpJWpJ8ETw40aPHfruES92QxaBFcp90uiR8oOQRhAPE24GfTRGb
-         z2LpAPJ3LVxEoRrd5o3OczWvjTD9cQpM62f2ZRG1qjiNpY+Z4snzZ+N/X4Z5j2jxhcH8
-         rVIQ==
+        bh=AH7FjojSelKl6RFjaMdeJGd9WEI2qrfj4ii5ApRFD+M=;
+        b=Yj8Y5Wli3o5mx+vto7xy18gphrhWWWVm8xG8Qb5+vtMGqbWMZnoq8TMlpFt/v7Qx6j
+         Dr6giy6QiMokvwpomDtBpJ4utsHrkWGFgIJtwR7xb7U3d0fOUyJA6n0bdnWf6qNRAA3h
+         I4sWiizFD85Jv7gc3jOuOTsBOQ+UNHAtFAa+WB/YE9l1Ew3zONF/dKIyHRecZrGCxPsV
+         6ZODIHPNPXZEEEFb2IGveP6b1fKOE0RJQwKNKnGzWS6t5vvU1jU9FT0+PB8rEay4dYzD
+         LiXgg8Lj7cL6nGhBSc6yNwN+Tae6UT6eIE70hgmzHeQAmjWxpnmT3U6fc+Ht7HACRKMk
+         JNQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707860419; x=1708465219;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1707860420; x=1708465220;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dbFTyn7f3Bl53OcK8D9X/nWjgslx47eYuZAqktCtuuk=;
-        b=GxPtCOr2PBRMUCgK3XuZQvCMaSpSn1dr/cEjm5aJbSZsA6b3HN0dAwbzSxH+5sSGuP
-         MrUmi9B8LqmPOLM9VmQQIgtM6h8NeCT0XB4l8Yfa+8zyRgJDX2JwSJi8zldQ8bwoupRn
-         xCEBr2zrcnC2NxfsRDFQSOndvsuIpKIHFfpCmfbHo41IIKeeW2zKX+vWYfPf4jsS23Or
-         mltxEFa54rgsVLfWLljx5O6XHU5l+G9H+VYyPUoTF7WaRoo++yaT3JoCPnI8n0PhOx4R
-         hCBn6hKF3muHTbKHOhgttEQZV9WfFjXluIqAZHoRkh1H4hjiPK5r3xN6pgBph4NedRc5
-         f44g==
-X-Gm-Message-State: AOJu0Yzual66LFI1cI0ooE1rJSSRWYgKwWFiQPtBojWQeei6HYRJR+Ix
-	lRLkqR2VN5MXJJf+kgveNbbry4GxMW3gXU1UhpQF7sdu67C5yWwviDNbeCmQZc3jrc3Zc8w/Ti+
-	WVhUrMSDCVD7UmgpoBXNI/AveBQ164/VXmXmudg==
-X-Google-Smtp-Source: AGHT+IG+DrTkq+6t5fDsH9BhBPiao8mavkN9+7BGb5kbh070ERv4KU9R3wW6RVskOso+QLGC3mPrRgt0YTpbyg4aQl0=
-X-Received: by 2002:a25:ac18:0:b0:dcc:787:e8f9 with SMTP id
- w24-20020a25ac18000000b00dcc0787e8f9mr426631ybi.51.1707860419256; Tue, 13 Feb
- 2024 13:40:19 -0800 (PST)
+        bh=AH7FjojSelKl6RFjaMdeJGd9WEI2qrfj4ii5ApRFD+M=;
+        b=SeHm1agnaQwvi3q4LmR6EFqPebuNk7/IT2Q2X7o67+VhYb7kFx3Ssn/CP2olWXhtLr
+         lR3sHH/fO1g1y++MGc4f2uEM/9RSIMovfSn7MBbCrAbSHwotOCRbLjAGA4F7Bw7Xa7XZ
+         vVh5xNK0fCG2mfZQyjp63ep0JiD3aKGNNclhQQPi0egxcXPMSW1W4tRI2A/M5LKJWedV
+         7aeahf5LghHc+C0fTyKF0t35shdeVOoCwWNlWfqMXFNGZ0TsonZKiHnU88OiSXESDdAZ
+         IlFZj0CDQwOmRgv6eTr5fkyn09MJTq2ny7bimgboWogZbi+iL/QOpQiZFzxzZlGlbZ0R
+         lfTg==
+X-Forwarded-Encrypted: i=1; AJvYcCUS093wW2+wEXP8NgqaPr/v3mgTDy2jUQNfPudDv4/WeMANop+DZx5v/bfnjcEGhFXQ2WxBwKu1YGu6XDpswvybV1P2Qz9234M9HRRYjsFkbh6piiCC8XLPdiGOGbl1HTpoPeqx
+X-Gm-Message-State: AOJu0YxWNcarblHmDHFjL+us+m9JRoT3DypNxJ3hLuZ/8510KyZi3EMy
+	gsxgXxQG9R9EXeXHu0ikXUCeVRAZ5XkO/QQbz4eANZL+GsTPQBbT
+X-Google-Smtp-Source: AGHT+IFpWcx6761os9cY463iuCWj1XL4UFa7Ld5yCw6fna2rdMN3IzUFuO9OuDGXe4y1loKdEOgQnQ==
+X-Received: by 2002:a05:6402:6c7:b0:55e:ef54:a4dc with SMTP id n7-20020a05640206c700b0055eef54a4dcmr640135edy.23.1707860419584;
+        Tue, 13 Feb 2024 13:40:19 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXQ9zxyD1Pggf8hY8RG7yzYR1rUCtJlOfqguf2JMEViHGgeozHqBSMHfcHcq18/kVmc8lbBlvYfCqaPW8DN13ZvkUJro2NfdJX+YRmyPqOs0bX9EpLSsppaI5EUnxABecsqYr9L+hmUjWOzcMG82Klfoha28LfRnT43kqbWBlQsR+eXrKK/kpuefAUY3PnYvhYwiGjsQIZh4cJo4kGCTwJOj/tceNzvVbCXshXisED05st5gn8Bek2fM+WxHPPMmX1EvoBZEMXcBWuDT+H65FjXEMv9u/NAhx/WnHHZLpFa73NzpdAMC/DXqKo+epyhfAKF0Zx+7IuIaXNBDcgBlOLTF7s=
+Received: from debian.fritz.box ([93.184.186.109])
+        by smtp.gmail.com with ESMTPSA id k23-20020a05640212d700b005612987a525sm4003913edx.89.2024.02.13.13.40.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 13:40:19 -0800 (PST)
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: 
+Cc: Dimitri Fedrau <dima.fedrau@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Stefan Eichenberger <eichest@gmail.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6 net-next 03/14] net: phy: c45: detect 100/1000BASE-T1 linkmode advertisements
+Date: Tue, 13 Feb 2024 22:39:42 +0100
+Message-Id: <20240213213955.178762-4-dima.fedrau@gmail.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240213213955.178762-1-dima.fedrau@gmail.com>
+References: <20240213213955.178762-1-dima.fedrau@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240213141222.382457-1-warthog618@gmail.com>
-In-Reply-To: <20240213141222.382457-1-warthog618@gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 13 Feb 2024 22:40:08 +0100
-Message-ID: <CACRpkdYGTay1s=yK6nWXar-AoVzyZhd=i-h2Ff9xdH7_CO=gdA@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: gpio: consistent use of logical line value terminology
-To: Kent Gibson <warthog618@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-doc@vger.kernel.org, brgl@bgdev.pl, andy@kernel.org, corbet@lwn.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 13, 2024 at 3:12=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
-wrote:
+Set 100BT1 and 1000BT1 linkmode advertisement bits to adv_l_mask to
+enable detection.
 
-> Consistently use active/inactive to describe logical line values, rather
-> than high/low, which is used for physical values, or asserted/de-asserted
-> which is awkward.
->
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
+---
+ drivers/net/phy/phy-c45.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+diff --git a/drivers/net/phy/phy-c45.c b/drivers/net/phy/phy-c45.c
+index 747d14bf152c..de8f5dc8be12 100644
+--- a/drivers/net/phy/phy-c45.c
++++ b/drivers/net/phy/phy-c45.c
+@@ -208,7 +208,8 @@ static int genphy_c45_baset1_an_config_aneg(struct phy_device *phydev)
+ 
+ 	adv_l_mask = MDIO_AN_T1_ADV_L_FORCE_MS | MDIO_AN_T1_ADV_L_PAUSE_CAP |
+ 		MDIO_AN_T1_ADV_L_PAUSE_ASYM;
+-	adv_m_mask = MDIO_AN_T1_ADV_M_MST | MDIO_AN_T1_ADV_M_B10L;
++	adv_m_mask = MDIO_AN_T1_ADV_M_1000BT1 | MDIO_AN_T1_ADV_M_100BT1 |
++		MDIO_AN_T1_ADV_M_MST | MDIO_AN_T1_ADV_M_B10L;
+ 
+ 	switch (phydev->master_slave_set) {
+ 	case MASTER_SLAVE_CFG_MASTER_FORCE:
+-- 
+2.39.2
 
-Yours,
-Linus Walleij
