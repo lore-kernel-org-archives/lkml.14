@@ -1,78 +1,60 @@
-Received: from out203-205-221-231.mail.qq.com (out203-205-221-231.mail.qq.com [203.205.221.231])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205A424B23
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 10:43:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC1322625;
+	Tue, 13 Feb 2024 10:44:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707821038; cv=none; b=DfiMU/2wOeOVafHtdq9qF6dPlHpP5KJMxK4NSedH4FmODsD3GYKeCTrScOVkCKq4mLayyUhODjohDDQPNOuI9+33uOU22JhQSNOGTzn6dM50vU2KXsDYmZKY9oizqc4yCTuMwaml+NU1Fs/us1MT0AJGZl6kaJmbfHMzWsjUiMY=
+	t=1707821078; cv=none; b=gfD7mNzYC8fIEBYb0DetJqdxNgFdhvZYCjPqTfjomUgiFuRwciSo0Q53geNuJ/pd+aIidQzR4GpW92a8XuIGuFYuOG3itU4+jUMlA+dIyqD+EzxwW2V0j4tLDHVo0mNmV+qpScZcqa4lduwI0w6X0xesnnnyfoFF3bjCB0bwO7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707821038; c=relaxed/simple;
-	bh=h3vHrYD7hhov7txanSMDe7pCpaatJhH7Xwj2ojnf8Rg=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=BXuM/AlzXJ768B5qXSHRjUWYr7YREZX7RhyQVLjkXggZhpOeswouIcaglgwvaZsVoZ6YvmdB3MjJ7Rt6KYFBltRBSeCBMvab7LEfKFtxQ4RKtrzL5Cp7uKoVrs4G8Ynd7hbQGQbI4n0HvZLTPoOoi0E1Sr2vOYSCaDM6/6jL5gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=X59T67pM; arc=none smtp.client-ip=203.205.221.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1707821078; c=relaxed/simple;
+	bh=DZLXr7sorwE8AqL56wu59XKC71pXIzKxx9FPaPR8HSs=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=pw26mjMgYDsl1eIT9K21rLiQ6iI25ArsWAoXfnNcDtGlOzyxdq+HlK4Ce01hqE/OOmEnoN7SlnAxfYjlVNxAmPaf4FPLr4NXNqpLMvl5B8SQtcsfTYpDxE1oQpJEhuwnDHTUh4Isu3DPeIUYsKE7+WlKLilDhrscbqffaohLivM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XKIcI7e8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="X59T67pM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1707821027; bh=sEZ6YMGniVm+AtqGa4bZU5AbsOVmzpZP7amUT7bfhUo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=X59T67pMbYsdeIQ2s35KjiKzNz96km9WTfhgnl5Bz4b5n8iR04Y4vQY1Olg1EvJpZ
-	 fzHf9FT9sf0HRkEyRjkDHg7jwCD256Pgr2/8//uYdQXyJtMs0Jq3akXFCrEbjWylis
-	 mSdOgvcNOFGeHVSYATvm2imKQ4LHnMJVufvSZrGM=
-Received: from pek-lxu-l1.wrs.com ([36.129.58.158])
-	by newxmesmtplogicsvrszc5-2.qq.com (NewEsmtp) with SMTP
-	id 961908ED; Tue, 13 Feb 2024 18:37:33 +0800
-X-QQ-mid: xmsmtpt1707820653tv66kw34l
-Message-ID: <tencent_E2FE25978DA612195DF45DCD191D4FAF8D07@qq.com>
-X-QQ-XMAILINFO: NyTsQ4JOu2J2lMdCi18gEdOs0z7aETiwKrih2512wr3PfbM2scpmQRortbAmgR
-	 RAH/flE3RMECRy4iV0ookU809CcnopizHysyNuPqhNZ1birOD/82ycS2khAhqNoFsuFPiIgGU07f
-	 SZ4b+RaygMakxnHsfeUSRxuWGvp5O6fj3bjU98TWzuFAahFGyh/gngb2oilRB8/Ml8qXKCCYOW/a
-	 mKfxE4ZXPCaqzhk0ZhrpQ1DdhqECtyQhb9izj+2Wg4s9Zy10Cq+qLBm1NEBzqUZnJNOoiuylGLI6
-	 +CtUVTcV/AWfEphp9fs0JiVOXO0VKL2B7G+bgekbIn+DUVhd5cJfXsN325ubSTwhBcOC5nYojgH0
-	 Wssb59LhM+08nwOms2FHVQ1Z4iKl9/b1s1WZ8p5KPryDUuqLDK9XTG8WMzYzl8iR6p7HZly/2jE5
-	 7EgJLCYC5W4A06FFpLA5elwv9ApBn3qwHZmIKFKU7zP2r/yrTLfIFbsUjvEl6o9OlTOn2aWl1F3a
-	 jAQGHZdF6w3OeX/KCqU+2Hp7oJbqRep82Km5UZYyev3RyU4wqD5GZSq1xOc4UuywQKabmrXVXWhE
-	 hElCrD1PGf1E+KHS70c/1HQzZxZgnRWB24/WK1A3L23x2GXYMkdpy4OAZ9vnlUcnYoKDU9zHD3pV
-	 NBvUKNWEX0cVQO5pCv2h+UAXu/+jfaI7vZwRq1IP7L0vhJUTdwHzeRgkkc1bQsm+QL4b8+/WESVy
-	 RKJGklchCTkGL/6SacOp+nFNEIop8eo7dkWXxVyUKQDg54RFIGidaTPmb0tkqS2Kt1/3X+vuiYxD
-	 SbTx/RipNaG8Cxbd2IeUWq4Vf7b1eJrHZuF1/ORmrjmX2y+IQniQFdEvD7JAQNEfiwZMZdB+nCQ8
-	 bYYoZ9C5Xd7StO6L74h8XlT3chC6s8wyO1aL2s6VBFbI9M4cputIFicP+VuuXuUQ==
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+c2ada45c23d98d646118@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [ntfs3?] possible deadlock in ntfs_set_state (2)
-Date: Tue, 13 Feb 2024 18:37:34 +0800
-X-OQ-MSGID: <20240213103733.997747-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000998cff06113e1d91@google.com>
-References: <000000000000998cff06113e1d91@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XKIcI7e8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2BC6C433F1;
+	Tue, 13 Feb 2024 10:44:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707821078;
+	bh=DZLXr7sorwE8AqL56wu59XKC71pXIzKxx9FPaPR8HSs=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=XKIcI7e8EmEfyhvkhPy4aHdK1fwypptkv88HdyKF6AKrZLuh3QV1lu4i0Sc/qDvqC
+	 pAsdKkWLbr2ITFGIczHCCMqYnxsLIYurVSQeXvfTJiy6z08P0EWeR8bJNYbvXjTxYS
+	 08r/D5yAfq5a9wncn4MXXZRaJ7ME+7nKIziA/tg3/At4xd9LcrBePUTuc4uNK0Llsn
+	 sdKkAtYcR4iY+VFZ381gnzRHnxPZ2orEYFMJh4TuoQchflUAiPTqdLeE4IngADfoEC
+	 +0BqekiHvP7L7ExyY4ogRt3RIjeHN0Wg9l/mqExy8B8pZnl4lUpXUKtThv4Xqtcrqg
+	 Pt0A/SO95AFFg==
+Date: Tue, 13 Feb 2024 11:44:38 +0100 (CET)
+From: Jiri Kosina <jikos@kernel.org>
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/7] HID: unused struct members cleanup
+In-Reply-To: <20240201115320.684-1-jirislaby@kernel.org>
+Message-ID: <nycvar.YFH.7.76.2402131144190.21798@cbobk.fhfr.pm>
+References: <20240201115320.684-1-jirislaby@kernel.org>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-please test deadlock in ntfs_set_state 
+On Thu, 1 Feb 2024, Jiri Slaby (SUSE) wrote:
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> Hi,
+> 
+> the patches deal with unused members of structures as found by
+> clang-struct.
+> 
+> Sometimes even whole structures are removed.
 
-diff --git a/fs/ntfs3/frecord.c b/fs/ntfs3/frecord.c
-index 3b42938a9d3b..1dfc933b58ad 100644
---- a/fs/ntfs3/frecord.c
-+++ b/fs/ntfs3/frecord.c
-@@ -3210,7 +3210,6 @@ static bool ni_update_parent(struct ntfs_inode *ni, struct NTFS_DUP_INFO *dup,
- 
- 		/* Check simple case when parent inode equals current inode. */
- 		if (ino_get(&fname->home) == ni->vfs_inode.i_ino) {
--			ntfs_set_state(sbi, NTFS_DIRTY_ERROR);
- 			continue;
- 		}
- 
+Good stuff, thanks. Applied to hid.git#for-6.9/unused-struct-removal.
+
+-- 
+Jiri Kosina
+SUSE Labs
 
