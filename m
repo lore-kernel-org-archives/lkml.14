@@ -1,58 +1,58 @@
 Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E138F8F5C
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 03:37:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A160BE5B
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 03:37:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707795470; cv=none; b=DdEZPi/A6H4vArF5NKxUc3pVd9HvkrldPndQKIe3IE7AVLMjlJWetsPOZ9YCL6uSsf6DBQacKTerj1t9EmEQif2kcrFBUT9iIZl03cCJaqw4LU1nsShjHRg6ZStNwZgpt2lvMWgGifi+jLmholyZNt/+LY7t9Z0BRAA6SIgdDTk=
+	t=1707795472; cv=none; b=o1lmTC/wgCejwQTns+j1Q8dxG3SEEzhXuBn7233EyijOHQPQQ8hknNlxDfjNPLiiPJ3CCc9DjpqRSDBdRKKfKCzQ8AWDcKe7xYLst4DoN9HSdxxyk0CL+6WaD4+ljVGhMR5AfqIgtAaha4LAEebMEK/GpcRS1BqokXk7rie+XHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707795470; c=relaxed/simple;
-	bh=whB7Ohz/aZw41jDLmsNbB2EZqD6VWqw1GxgDMy7wNzw=;
+	s=arc-20240116; t=1707795472; c=relaxed/simple;
+	bh=+XzSJU8wJISBeAeCiej2B/wBCsa3VX7K7aJaMYWlWHo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HDUQ26GCi8cLXqCsEVb6DYEGEdwJJU4fo/h4oxOz4HzxRz8NV4kowZIXnp0Y0fuS8EwHXOMhzP+vV/2MHSnj4LEDnmg+ylE8sIOChoNlT9MjFrH87HqNpf1I1lvxzFz09eezM0bMiqBJRBGb42DpFZLD3FCkClNutqP7mmaAvsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=SvBXWl4W; arc=none smtp.client-ip=209.85.167.170
+	 MIME-Version; b=iN2aozxKqDNW/iuAoPJAeb4pIAmGWbp/JCHDPU/5tNYCj09TuZUF5IjsUAbQvSqtubN2nWIiLeJnkwBwf0c5Zrn6iZv31V7X9u2CXb38o24/pT7XLhFG9h+IkBSMI3upbJGrEatq3M9Q/SXzGj8Rgw0OQbWwFuSvYObNR/yoMsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=XJFJzuM6; arc=none smtp.client-ip=209.85.167.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="SvBXWl4W"
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3c031776e0cso2024250b6e.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 19:37:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="XJFJzuM6"
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3be9e11ee59so1944523b6e.1
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 19:37:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1707795467; x=1708400267; darn=vger.kernel.org;
+        d=sifive.com; s=google; t=1707795470; x=1708400270; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DbCTJ5IGhkP1LmE7TbGdUdt79kYAcBAyFyeC8QWmnbA=;
-        b=SvBXWl4WKjxR5Y3T4VaBEtbfraAgYkc6DGXqjjJNhrjAo3vODTqocVNk8XZE+89vMe
-         25c2j+Zz/fHPAhE+zswA3Y1ecBRLnB6jUSMI9oVZkWa94c+8HlI/EVl1Wi2Pm2QuGsxZ
-         bHopgMvFVS5V9F8GrzW7cxpAeIg7gtV0JSluyqf9zp8Pn2ZdTOtkV82nPVhxqe2dzdHY
-         STlOTg6tdsJXP2p2tg1ths9t3gbvYM5kv67I3VvNKSrEDYAscoWkPsOwry3OpxiJlXBJ
-         EDuvkPQybc7wRsWpUVXZt6XPVWBw+Ot/AoEhToxpkVJjgU+YvMOHW032WbQO5bC1eqGV
-         dHUw==
+        bh=Xt5jr7Ps3GScSgM4o7qnaO9gd+HMLeMAVDsngYj3hEM=;
+        b=XJFJzuM67MXtfpkGs0KHvLwS+pPs4cY4Qf7d8/7K691a5Wo7068Y+7x9taLX3Te7lF
+         4Zi/enU/fL4vFuVicBRhMa2tnYTB+qeXbgw28X0SPbez7cDGlsSjXL9yBuBlM3eoKo7t
+         u3s3pKV6d6nTPuJt1vgvWPwMmXa3vyNBrXXYnUS3Y7gwbemmVROA/7ZRfp3qA/6XTt2E
+         3YuiVI2Ue4kbid4qvzFPa9FJFHmBsXoapFUfmHzSRTmQGCiYO/QiJf7hqA4XGDSYxjCO
+         Zpc1GQad9l44MaDubenm0oXXheawV/OuGIK2XrFkvZMk9NoZ5Hse3uydfJFTVPgAZSZa
+         T4RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707795467; x=1708400267;
+        d=1e100.net; s=20230601; t=1707795470; x=1708400270;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DbCTJ5IGhkP1LmE7TbGdUdt79kYAcBAyFyeC8QWmnbA=;
-        b=NWuGAe7Ys2YzmB+QqxVhQYqffjbelDhZwRzrt0plpc2mcJjhrzGm/t6j4ft0yCAYlc
-         W8PatIp7u03w297oO9peESuO6KcmZKawjkRfItFwNsfwg1afN6HWMYkJ0fm2V2tIxxRI
-         BhDzAAk7gy4nefdN+xHMpPjkqDFLUEY6mm6LABCVeXbyhaH+VFXoTEeWtGHnojrG286Y
-         oRKfz2stT6tTk97XRQ2xrtp2XmlWNSxKgnTmzrq1IUR5uY5IdW2P6V1qPQPI6lyp+TcD
-         ea0JpZpxrCAMCEDXSgr/FWUSVaSU+90zzX0nYs74Wf489Dgx9921QTy3ecgccshEBVog
-         CcuA==
-X-Forwarded-Encrypted: i=1; AJvYcCXIypVg/qDSyeIUekx3a9N2ob6g5DkB7jwWJetNdmCs2S103dJYK8M+Me3n/RwAP0W7O/+mfc3F3Ii/1NROcSH06rq2w66HYVlz8GLN
-X-Gm-Message-State: AOJu0YwYQuf4j8uTvXKYPLW34/FWj6gkKB6j8zKHHUmDvbZriGLUQ/8C
-	slQD+/K3Ke9eFnSQC5u5q3uHPPxBwDiuorvFpmEUp6my013P2yxLH0HsOAaCp8s=
-X-Google-Smtp-Source: AGHT+IE+bElS9VOEBRZYkJMFWhhPq2JzIWq5hlj3C9o2gaDkJNP1gz6btAf9jVpFKefBHdsEY+u7+g==
-X-Received: by 2002:a05:6808:298d:b0:3c0:2a95:d3c6 with SMTP id ex13-20020a056808298d00b003c02a95d3c6mr8180720oib.23.1707795466997;
-        Mon, 12 Feb 2024 19:37:46 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVG/9tEvERy1/zBWmZWATN9vy2GlKgAccgGMVroA50EeE7/5k30EBoGfGzSPQVGrAPHngcjrgBYvF+RvNslSmRsSoRygVpR8QgfaonMsrMhR8Acp+tY2Km1utekPImLqFVD+seoCQDmoakBzopdLkYZdAgIlb3PDYm9oavZ06D3knOGVT+4oc8cObDPMQHZZNXQ3vsaHWtRonDxS4SpF6AEPKFEoBLA/OuzoSULbJ3HoFmYvyFM
+        bh=Xt5jr7Ps3GScSgM4o7qnaO9gd+HMLeMAVDsngYj3hEM=;
+        b=nK0YMNrLaf3ujJjF4dTlLcqN7FcOTP/JelLqkqilAbap47N3iFt0TAKHafPmyNuqNN
+         ksBUxo8HNnU+PAyI+LvaNQZ41TZcqh9ticZVyaRfhbb8/QdmBIQDnzeXfq9M83Z2eSds
+         UTThLZTLqKHY/vrZXRLBrCdaVBrviniGWtfFWGfyvh5bBWqRMfMADnQMagLXF2d7yXD7
+         DveynSLAj/M6HpeuZHAGMI8tQBtJfwR2ULZHp1cqbbbe9VcghY23h6kkMvvEKsEttT19
+         hw/zSOyU0a//3fNAXoXGTV7duFT1H5qfCg5S18RBpEN6k7JwTqCBnvWEd0IO2FIKl79j
+         ZKVg==
+X-Forwarded-Encrypted: i=1; AJvYcCWqdnN/qKMv3esE6j0BFs115IDYx1rjaLUlsckasTXB/AVcakxwlviX6ihSSsUn/T2HNC16cIWP1kIsxi7XIQcaJbxrarU4z23IpkV2
+X-Gm-Message-State: AOJu0YzLJZg5KnSomudOOARTHObK6nq9rPwPE3vOxTBwBd2qXhJGtdM7
+	jHwS8dShqwsQMRoK8Vc2iipvYdCAWR3oFpQdAu0NMqTALJg6lpvagRble51Ef2c=
+X-Google-Smtp-Source: AGHT+IFxDqSZbCOTRS1NHVNzCKhxZQyImRcw90Jz8SlHs0SSV2MQ75bbrukIBm2CKyA3KzugicZ3nw==
+X-Received: by 2002:a05:6808:318e:b0:3c0:3e26:5259 with SMTP id cd14-20020a056808318e00b003c03e265259mr3613268oib.55.1707795470293;
+        Mon, 12 Feb 2024 19:37:50 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU1Rc/sB1dWFTQwmx8p2iRKVv5LgWrJCCSeKr8P6rkMbd1uH7JfQSG1Hh74JOY/jKeiuxbEy02WDs3e/g0A9q30Q69s839YsJVcUxX+VSSGNa6J9l4dlN7oNmWZViRGWfRPnJ4HGTtAfEOZMIknw36bZj+YL2HlkbpMT607pb4e7y6zq/Em6Inl3R1cLd8ht02GMlwLAyCC8dUbcCwwaoAhdKHd9WN0x4go0e/Cp4Rmx44os1Oj
 Received: from sw06.internal.sifive.com ([4.53.31.132])
-        by smtp.gmail.com with ESMTPSA id v11-20020a056a00148b00b006e0334e3dd9sm6188633pfu.76.2024.02.12.19.37.46
+        by smtp.gmail.com with ESMTPSA id v11-20020a056a00148b00b006e0334e3dd9sm6188633pfu.76.2024.02.12.19.37.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 19:37:46 -0800 (PST)
+        Mon, 12 Feb 2024 19:37:49 -0800 (PST)
 From: Samuel Holland <samuel.holland@sifive.com>
 To: Palmer Dabbelt <palmer@dabbelt.com>
 Cc: Andrew Jones <ajones@ventanamicro.com>,
@@ -61,9 +61,9 @@ Cc: Andrew Jones <ajones@ventanamicro.com>,
 	Stefan O'Rear <sorear@fastmail.com>,
 	Samuel Holland <samuel.holland@sifive.com>,
 	stable@vger.kernel.org
-Subject: [PATCH -fixes v2 1/4] riscv: Fix enabling cbo.zero when running in M-mode
-Date: Mon, 12 Feb 2024 19:37:32 -0800
-Message-ID: <20240213033744.4069020-2-samuel.holland@sifive.com>
+Subject: [PATCH -fixes v2 4/4] riscv: Save/restore envcfg CSR during CPU suspend
+Date: Mon, 12 Feb 2024 19:37:35 -0800
+Message-ID: <20240213033744.4069020-5-samuel.holland@sifive.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240213033744.4069020-1-samuel.holland@sifive.com>
 References: <20240213033744.4069020-1-samuel.holland@sifive.com>
@@ -75,54 +75,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When the kernel is running in M-mode, the CBZE bit must be set in the
-menvcfg CSR, not in senvcfg.
+The value of the [ms]envcfg CSR is lost when entering a nonretentive
+idle state, so the CSR must be rewritten when resuming the CPU.
 
-Cc: <stable@vger.kernel.org>
+Cc: <stable@vger.kernel.org> # v6.7+
 Fixes: 43c16d51a19b ("RISC-V: Enable cbo.zero in usermode")
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
 Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
 ---
 
-(no changes since v1)
+Changes in v2:
+ - Check for privileged ISA v1.12 instead of the specific CSR
+ - Use riscv_has_extension_likely() instead of new ALTERNATIVE()s
 
- arch/riscv/include/asm/csr.h   | 2 ++
- arch/riscv/kernel/cpufeature.c | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ arch/riscv/include/asm/suspend.h | 1 +
+ arch/riscv/kernel/suspend.c      | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
-index 510014051f5d..2468c55933cd 100644
---- a/arch/riscv/include/asm/csr.h
-+++ b/arch/riscv/include/asm/csr.h
-@@ -424,6 +424,7 @@
- # define CSR_STATUS	CSR_MSTATUS
- # define CSR_IE		CSR_MIE
- # define CSR_TVEC	CSR_MTVEC
-+# define CSR_ENVCFG	CSR_MENVCFG
- # define CSR_SCRATCH	CSR_MSCRATCH
- # define CSR_EPC	CSR_MEPC
- # define CSR_CAUSE	CSR_MCAUSE
-@@ -448,6 +449,7 @@
- # define CSR_STATUS	CSR_SSTATUS
- # define CSR_IE		CSR_SIE
- # define CSR_TVEC	CSR_STVEC
-+# define CSR_ENVCFG	CSR_SENVCFG
- # define CSR_SCRATCH	CSR_SSCRATCH
- # define CSR_EPC	CSR_SEPC
- # define CSR_CAUSE	CSR_SCAUSE
-diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-index 89920f84d0a3..c5b13f7dd482 100644
---- a/arch/riscv/kernel/cpufeature.c
-+++ b/arch/riscv/kernel/cpufeature.c
-@@ -950,7 +950,7 @@ arch_initcall(check_unaligned_access_all_cpus);
- void riscv_user_isa_enable(void)
+diff --git a/arch/riscv/include/asm/suspend.h b/arch/riscv/include/asm/suspend.h
+index 02f87867389a..491296a335d0 100644
+--- a/arch/riscv/include/asm/suspend.h
++++ b/arch/riscv/include/asm/suspend.h
+@@ -14,6 +14,7 @@ struct suspend_context {
+ 	struct pt_regs regs;
+ 	/* Saved and restored by high-level functions */
+ 	unsigned long scratch;
++	unsigned long envcfg;
+ 	unsigned long tvec;
+ 	unsigned long ie;
+ #ifdef CONFIG_MMU
+diff --git a/arch/riscv/kernel/suspend.c b/arch/riscv/kernel/suspend.c
+index 239509367e42..be03615486ed 100644
+--- a/arch/riscv/kernel/suspend.c
++++ b/arch/riscv/kernel/suspend.c
+@@ -15,6 +15,8 @@
+ void suspend_save_csrs(struct suspend_context *context)
  {
- 	if (riscv_cpu_has_extension_unlikely(smp_processor_id(), RISCV_ISA_EXT_ZICBOZ))
--		csr_set(CSR_SENVCFG, ENVCFG_CBZE);
-+		csr_set(CSR_ENVCFG, ENVCFG_CBZE);
- }
+ 	context->scratch = csr_read(CSR_SCRATCH);
++	if (riscv_has_extension_likely(RISCV_ISA_EXT_Sx1p12))
++		context->envcfg = csr_read(CSR_ENVCFG);
+ 	context->tvec = csr_read(CSR_TVEC);
+ 	context->ie = csr_read(CSR_IE);
  
- #ifdef CONFIG_RISCV_ALTERNATIVE
+@@ -36,6 +38,8 @@ void suspend_save_csrs(struct suspend_context *context)
+ void suspend_restore_csrs(struct suspend_context *context)
+ {
+ 	csr_write(CSR_SCRATCH, context->scratch);
++	if (riscv_has_extension_likely(RISCV_ISA_EXT_Sx1p12))
++		csr_write(CSR_ENVCFG, context->envcfg);
+ 	csr_write(CSR_TVEC, context->tvec);
+ 	csr_write(CSR_IE, context->ie);
+ 
 -- 
 2.43.0
 
