@@ -1,173 +1,159 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127CF5FF09;
-	Tue, 13 Feb 2024 16:05:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9BB25FF18
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 16:05:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707840360; cv=none; b=LmrLCCgbBtW8mCw3O1B1MJjUgo14HMlAWLOfy9oZOmt7T804y/RIYJqv7lrgFro+wk/4bhhBxSD1epNdvvZ34fIuJbSXyL2qBpBpokJJyEwopKZl6yjMotm8RrJmfujlGmhc5FTgTWI99aM5iDdHi2gSzPZehsbzpx0pDsSgMmo=
+	t=1707840360; cv=none; b=BISCtFIKaC2kwiFIH+Avfd4Rd1IavJdKrmQCKXoKs0WV+w+K42evwcC88FmtJiWSV4TO+Mrvk8biRqdfhl457QZd7rKw1NPhQaqZQByJ7ruLNItCSj4YB8j2HNruEiN5SMWcgfJrIKwZCvXiSAbIV31Z1PoCDT5ZPK+IjQWo8zA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707840360; c=relaxed/simple;
-	bh=RSfgWvK3PUkWv6IYeIUP4jd95r0kAZpMfmZQzwkXJMs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E0HHbCl39CkFmc1Rz44+Qqg5Nc7FqGFuUGr0OU9OJtB9EzOpzrdZN1C83x2JZp8z1HiquYvAP3ju5tog82XWbfYW+AOOelh/7pcVUaY0ZXDTJ/ng8JvKkqqYpwMwXxYFWj4qZbTlFr14N2u2CJwoOCwAQgw7hy66HC+8RyjeVCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=IOrx63uV; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kmvH+est; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=mZm9Vi3Y; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=MomgODCR; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	bh=WhRGfWz3VszioO4GYJaeKnZpFuWS7voXVPXzKT0NYqQ=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=H03uuq+6d7A+ckTfo7Sghf/jTYISCab01KdHg2lsZvMJPqkaEMYFSlGh03hCvUYDwOqLnclh9SaHrN+XoyQTSLvsMcg4Fdi/Le8/Umi74ZzB6f3+chUKknHYq4E4bGE/MQMrOZzRqiZJuSjqG8GJwoZCTNi35qlyPX5mwrhVSN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=RbOfyOcL; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="IOrx63uV";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kmvH+est";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="mZm9Vi3Y";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="MomgODCR"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2566221B5D;
-	Tue, 13 Feb 2024 16:05:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1707840356; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gb3KHU7wx9iO7ZIvkAPLliWDZuFR1RA9JAptAreeXbE=;
-	b=IOrx63uVQVWyK4sTh72r+QBXSUlKnXvRLBQTYUZxwsPVIng+KnPht+hdxH74ZevHk2i+Hq
-	poZP1BPxvKr6pmMDuRZa0QLE4CCzarVS1MCMTY4xI9HMLwJUgb5UHhEyowNcjiwSdB4tjw
-	c75NBOheKXJ9OmNDn0yfhjSP9UFPyuU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1707840356;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gb3KHU7wx9iO7ZIvkAPLliWDZuFR1RA9JAptAreeXbE=;
-	b=kmvH+estBDgz5BZMOHOABGKjgQ1cXJkW60GByBv+gYp7aZlsM94d7V3VUr/cNvJkPiF5A7
-	whtLDu11y2jgiPAQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1707840355; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gb3KHU7wx9iO7ZIvkAPLliWDZuFR1RA9JAptAreeXbE=;
-	b=mZm9Vi3YU97Ie0hXf31KuZp1xOvi+KPptoKthnUd14EAqLZk2KaQ/BnS5hnQ1dQGVaTjW6
-	m/AbrCd90lCCwt0GGjKyC3H7SFl4QT4FL+6n8Uh+Jg6teU3t68XNrIk0nEm99Z1or62Pyq
-	oFABIe2rRV+C6XypO7bQpFwdGdJMXF4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1707840355;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gb3KHU7wx9iO7ZIvkAPLliWDZuFR1RA9JAptAreeXbE=;
-	b=MomgODCRjmGnifLMGtardNXqbYGmusZGiFdI/SyIuwMn/y6ZjPoB4eYT7qD8JbSw0nQNcw
-	+5gHIMOwEhrtfEAA==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 16DF81329E;
-	Tue, 13 Feb 2024 16:05:55 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id SjqPBWOTy2XqBQAAn2gu4w
-	(envelope-from <jack@suse.cz>); Tue, 13 Feb 2024 16:05:55 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id B09B2A0809; Tue, 13 Feb 2024 17:05:54 +0100 (CET)
-Date: Tue, 13 Feb 2024 17:05:54 +0100
-From: Jan Kara <jack@suse.cz>
-To: Baokun Li <libaokun1@huawei.com>
-Cc: linux-ext4@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
-	jack@suse.cz, ritesh.list@gmail.com, linux-kernel@vger.kernel.org,
-	yi.zhang@huawei.com, yangerkun@huawei.com, chengzhihao1@huawei.com,
-	yukuai3@huawei.com
-Subject: Re: [PATCH 1/7] ext4: avoid overflow when setting values via sysfs
-Message-ID: <20240213160554.35cpsfqqeqpgtux2@quack3>
-References: <20240126085716.1363019-1-libaokun1@huawei.com>
- <20240126085716.1363019-2-libaokun1@huawei.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RbOfyOcL"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41DFpPJk011016;
+	Tue, 13 Feb 2024 16:05:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : from : to : cc
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=rLxtQUcCyyKuXIeB9jaP75L5+oTLQrw5RzCxx4o/DO0=;
+ b=RbOfyOcLweilCV7WEB9RtEFP7Z/7BE3emiWTH+70aTHzuX8qXj9CfuEq0MLj1MhyOe3t
+ 8jjUoaCsKuXbltAChkcqGpPob+RgY745VpuE3r0R/8ulmFJzLIuxItmr5tYW+bZb+V76
+ 8h2jDAOgA7PfmowBUKhkhdf+Qco16W9/xAr5RSd8GdTHBz8QACd0aVzBRPXL9poiA2YN
+ IzTTzyjJfmy4cP+RRzaUNRI9vH1sQ0/7Q8RUXZnkuwHtq51bgrudoSDKJd4x3H9+wfPK
+ sL55cQo4i4ABDh0exIqAEl1hkn/ag1GBSnjuwN9l9Z2CsuDIColP5quTVYSDsIq3W4Dk YA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w876tqjkr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Feb 2024 16:05:33 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41DFqQFR016291;
+	Tue, 13 Feb 2024 16:05:32 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w876tqjk9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Feb 2024 16:05:32 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41DDEqbZ009914;
+	Tue, 13 Feb 2024 16:05:31 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3w6p62quhh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Feb 2024 16:05:31 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41DG5QOO25494264
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 13 Feb 2024 16:05:28 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 482C52004F;
+	Tue, 13 Feb 2024 16:05:26 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9AB8320043;
+	Tue, 13 Feb 2024 16:05:23 +0000 (GMT)
+Received: from ltcd48-lp2.aus.stglab.ibm.com (unknown [9.3.101.175])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 13 Feb 2024 16:05:23 +0000 (GMT)
+Subject: [PATCH] powerpc/iommu: Fix the missing iommu_group_put() during
+ platform domain attach
+From: Shivaprasad G Bhat <sbhat@linux.ibm.com>
+To: iommu@lists.linux.dev, linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, mpe@ellerman.id.au, npiggin@gmail.com,
+        christophe.leroy@csgroup.eu, aneesh.kumar@kernel.org,
+        naveen.n.rao@linux.ibm.com, jgg@ziepe.ca, jroedel@suse.de,
+        tpearson@raptorengineering.com, aik@amd.com, bgray@linux.ibm.com,
+        gregkh@linuxfoundation.org, sbhat@linux.ibm.com,
+        gbatra@linux.vnet.ibm.com, vaibhav@linux.ibm.com,
+        venkat88@linux.vnet.ibm.com
+Date: Tue, 13 Feb 2024 10:05:22 -0600
+Message-ID: <170784021983.6249.10039296655906636112.stgit@linux.ibm.com>
+User-Agent: StGit/1.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240126085716.1363019-2-libaokun1@huawei.com>
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -2.30
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_SEVEN(0.00)[11];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 FREEMAIL_CC(0.00)[vger.kernel.org,mit.edu,dilger.ca,suse.cz,gmail.com,huawei.com];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Spam-Flag: NO
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: jfJf4Z8YxA_Y0Rk2X8-LmH_n6-rB5V3Y
+X-Proofpoint-GUID: q0OqJzcgkPMFV6-hjCFOY-jRUaoT6lUg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-13_08,2024-02-12_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ spamscore=0 bulkscore=0 mlxlogscore=339 phishscore=0 impostorscore=0
+ clxscore=1011 mlxscore=0 suspectscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402130126
 
-On Fri 26-01-24 16:57:10, Baokun Li wrote:
-> When setting values of type unsigned int through sysfs, we use kstrtoul()
-> to parse it and then truncate part of it as the final set value, when the
-> set value is greater than UINT_MAX, the set value will not match what we
-> see because of the truncation. As follows:
-> 
->   $ echo 4294967296 > /sys/fs/ext4/sda/mb_max_linear_groups
->   $ cat /sys/fs/ext4/sda/mb_max_linear_groups
->     0
-> 
-> So when the value set is outside the variable type range, -EINVAL is
-> returned to avoid the inconsistency described above. In addition, a
-> judgment is added to avoid setting s_resv_clusters less than 0.
-> 
-> Signed-off-by: Baokun Li <libaokun1@huawei.com>
-> ---
->  fs/ext4/sysfs.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/ext4/sysfs.c b/fs/ext4/sysfs.c
-> index 6d332dff79dd..3671a8aaf4af 100644
-> --- a/fs/ext4/sysfs.c
-> +++ b/fs/ext4/sysfs.c
-> @@ -104,7 +104,7 @@ static ssize_t reserved_clusters_store(struct ext4_sb_info *sbi,
->  	int ret;
->  
->  	ret = kstrtoull(skip_spaces(buf), 0, &val);
-> -	if (ret || val >= clusters)
-> +	if (ret || val >= clusters || (s64)val < 0)
->  		return -EINVAL;
+The function spapr_tce_platform_iommu_attach_dev() is missing to call
+iommu_group_put() when the domain is already set. This refcount leak
+shows up with BUG_ON() during DLPAR remove operation as,
 
-This looks a bit pointless, doesn't it? 'val' is u64, clusters is u64. We
-know that val < clusters so how could (s64)val be < 0?
+  KernelBug: Kernel bug in state 'None': kernel BUG at arch/powerpc/platforms/pseries/iommu.c:100!
+  Oops: Exception in kernel mode, sig: 5 [#1]
+  LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=8192 NUMA pSeries
+  <snip>
+  Hardware name: IBM,9080-HEX POWER10 (raw) 0x800200 0xf000006 of:IBM,FW1060.00 (NH1060_016) hv:phyp pSeries
+  NIP:  c0000000000ff4d4 LR: c0000000000ff4cc CTR: 0000000000000000
+  REGS: c0000013aed5f840 TRAP: 0700   Tainted: G          I         (6.8.0-rc3-autotest-g99bd3cb0d12e)
+  MSR:  8000000000029033 <SF,EE,ME,IR,DR,RI,LE>  CR: 44002402  XER: 20040000
+  CFAR: c000000000a0d170 IRQMASK: 0
+  GPR00: c0000000000ff4cc c0000013aed5fae0 c000000001512700 c0000013aa362138
+  GPR04: 0000000000000000 0000000000000000 0000000000000000 0000000119c8afd0
+  GPR08: 0000000000000000 c000001284442b00 0000000000000001 0000000000001003
+  GPR12: 0000000300000000 c0000018ffff2f00 0000000000000000 0000000000000000
+  GPR16: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+  GPR20: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+  GPR24: c0000013aed5fc40 0000000000000002 0000000000000000 c000000002757d90
+  GPR28: c0000000000ff440 c000000002757cb8 c00000183799c1a0 c0000013aa362b00
+  NIP [c0000000000ff4d4] iommu_reconfig_notifier+0x94/0x200
+  LR [c0000000000ff4cc] iommu_reconfig_notifier+0x8c/0x200
+  Call Trace:
+  [c0000013aed5fae0] [c0000000000ff4cc] iommu_reconfig_notifier+0x8c/0x200 (unreliable)
+  [c0000013aed5fb10] [c0000000001a27b0] notifier_call_chain+0xb8/0x19c
+  [c0000013aed5fb70] [c0000000001a2a78] blocking_notifier_call_chain+0x64/0x98
+  [c0000013aed5fbb0] [c000000000c4a898] of_reconfig_notify+0x44/0xdc
+  [c0000013aed5fc20] [c000000000c4add4] of_detach_node+0x78/0xb0
+  [c0000013aed5fc70] [c0000000000f96a8] ofdt_write.part.0+0x86c/0xbb8
+  [c0000013aed5fce0] [c00000000069b4bc] proc_reg_write+0xf4/0x150
+  [c0000013aed5fd10] [c0000000005bfeb4] vfs_write+0xf8/0x488
+  [c0000013aed5fdc0] [c0000000005c0570] ksys_write+0x84/0x140
+  [c0000013aed5fe10] [c000000000033358] system_call_exception+0x138/0x330
+  [c0000013aed5fe50] [c00000000000d05c] system_call_vectored_common+0x15c/0x2ec
+  --- interrupt: 3000 at 0x20000433acb4
+  <snip>
+  ---[ end trace 0000000000000000 ]---
 
-> @@ -463,6 +463,8 @@ static ssize_t ext4_attr_store(struct kobject *kobj,
->  		ret = kstrtoul(skip_spaces(buf), 0, &t);
->  		if (ret)
->  			return ret;
-> +		if (t != (unsigned int)t)
-> +			return -EINVAL;
->  		if (a->attr_ptr == ptr_ext4_super_block_offset)
->  			*((__le32 *) ptr) = cpu_to_le32(t);
->  		else
+The patch adds the missing iommu_group_put() call.
 
-I kind of agree with Alexey that using kstrtouint() here instead would look
-nicer. And it isn't like you have to define many new variables. You just
-need unsigned long for attr_pointer_ul and unsigned int for
-attr_pointer_ui.
+Fixes: a8ca9fc9134c ("powerpc/iommu: Do not do platform domain attach atctions after probe")
+Signed-off-by: Shivaprasad G Bhat <sbhat@linux.ibm.com>
+---
+ arch/powerpc/kernel/iommu.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+diff --git a/arch/powerpc/kernel/iommu.c b/arch/powerpc/kernel/iommu.c
+index d71eac3b2887..a9bebfd56b3b 100644
+--- a/arch/powerpc/kernel/iommu.c
++++ b/arch/powerpc/kernel/iommu.c
+@@ -1289,8 +1289,10 @@ spapr_tce_platform_iommu_attach_dev(struct iommu_domain *platform_domain,
+ 	struct iommu_table_group *table_group;
+ 
+ 	/* At first attach the ownership is already set */
+-	if (!domain)
++	if (!domain) {
++		iommu_group_put(grp);
+ 		return 0;
++	}
+ 
+ 	table_group = iommu_group_get_iommudata(grp);
+ 	/*
+
+
