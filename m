@@ -1,112 +1,87 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B5938DF5;
-	Tue, 13 Feb 2024 11:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707822135; cv=pass; b=FPeFfK19y1CLXA+POfZpFSiqNeoCGjcNv8edTqWDFGnnSBJJgpfRMdGngDyBQdy+x5BmNuDlpBrXwcfyJNKgmiXNF0ioNKrwAhfavDKsPPVyMdq6KYFxoontCFTPKtxqzfZMTTuaPNLTm9+0UP1Jqw+OScmqBzDrKY1M50TW1hQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707822135; c=relaxed/simple;
-	bh=ZZJDvmwgaVNUkd/QLeaQQXIy40n2tDqzdfn4OklKNVA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uWkqSrr8Q/nLiiRwBO7po4pGhxNHNJIaGUIyHChgVxdSD0UTfHSt/Az4ryKE2PGAe/y4eUI0fNjGbbivD1i6aOn5flHYCDUPipBBM6xKGD2GAOfpfrZg5baaU1Eiwt0UnM3konKJYlQj6Vnd/p9FxN8V2fgzi9wHcU1DsJz8u78=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b=fa5EyQD3; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888402C697
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 11:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707822291; cv=none; b=I2TzMMPyH3QuY1DqDq28F+LXJqXkMfQYqgf6QUn9gIvFXQJ0T6/rBz9L3kZFwlCQJm60rnjfGyxAjH//ZaHmTWBqXZxPgX3XNkNy2Ikn1JCcnnBtXx56CtwpsDs+cxqA3br2Z5OkacKlKUMg2QmEsXz59WYoN8f2YQM2OTaITgM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707822291; c=relaxed/simple;
+	bh=EYCv+DL+eV5ThLL4UKQHtVxj82o1lGzydAly5t5mYS4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=kpANkNGvBP6JtfWEVfL5xbPwBtVUZDKCKoSwrM2+TUdSh0w4E8oyXlliFniIc+L5M3pO0q9DqQztTTpNIcf4ZdjTSIpX+9pMUpqlK+UM3N7nJi/vJXiP+HIm1i7X6VWZ3V3AJ6Ww6pLLElJ8XPcFYF4t0Yu5liZwcVus/DHnZ/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X8vvQDaR; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b="fa5EyQD3"
-ARC-Seal: i=1; a=rsa-sha256; t=1707822129; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=d9HezmARuJAYGFSwJ1LTdYoq58QKthHAhTLkBJUXfgzvkgS+sQ19AgrGLNgubdhIQFVB+epcMX8Iz4w4NTj6szBFPYNS5LCJonn3DaF0rxI3WCYsDvinwURYYxdUxFHWHqNQ+xVHEwm0bWF1GYJr1vAoY1RUOkA/tXKAbAY7y5U=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1707822129; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=j651x5Hilte5Xbmo4xSk1+lCVyQJvHUohQWSnBdMyQw=; 
-	b=g4Mtnz7meTtxytGrX+owcyM+GlPTo8tAatTZ9ydEtHIc8NWb6BNd4QnbiEEdFDyrkZo4qqtG7LPm/HDgn4fXetc5cX0VoPsCzCH0gtq4jveKQuk5OrK/csN+5iGGNI+26ZMdUADWoRVavwB4VNk2ImU6tsPZr5shIbAxGTAyRHg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1707822129;
-	s=zmail; d=rong.moe; i=i@rong.moe;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=j651x5Hilte5Xbmo4xSk1+lCVyQJvHUohQWSnBdMyQw=;
-	b=fa5EyQD3TQShmT/mjR+73kLJ1n6QjAdQ7jw85rRFHkeNOJ0pPs+JebFFtqAocqd9
-	t1Le7wL/er9mmXCG/+BqYHW7XTDtWX40gr3T+vHUfqf5+GbyBoKGoGxu4dWGJtRKhvb
-	PYrbppfHeIjM9w8hAb3QQxqOWMdvLd5Q/5ohdSZ8=
-Received: from localhost.localdomain (163.142.242.182 [163.142.242.182]) by mx.zohomail.com
-	with SMTPS id 1707822126636336.74326025946925; Tue, 13 Feb 2024 03:02:06 -0800 (PST)
-From: Rong Zhang <i@rong.moe>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Rong Zhang <i@rong.moe>,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Icenowy Zheng <uwu@icenowy.me>
-Subject: [PATCH v3 4/4] ARM: dts: qcom: msm8974: Add DTS for Samsung Galaxy S5 China (kltechn)
-Date: Tue, 13 Feb 2024 18:58:39 +0800
-Message-ID: <20240213110137.122737-5-i@rong.moe>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240213110137.122737-1-i@rong.moe>
-References: <20240213110137.122737-1-i@rong.moe>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X8vvQDaR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707822289; x=1739358289;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=EYCv+DL+eV5ThLL4UKQHtVxj82o1lGzydAly5t5mYS4=;
+  b=X8vvQDaRgWW6OrUBougyMJij6wysEK4jw9mH6+/5bBANEsei+0J3moJ1
+   XKrwxqzTBd8FOgtR+mR5/34A+cMjy7WuNGLWKB7LYY/YKaNTi/mWRfvu/
+   9zW4Qx3EHoSVhHMHkp9ZDYNNp2QDiu3faB/bBTNw7tzw8JX7N10AX4h48
+   8yFz3buiuooscf9p7aQUBPt9r7B8kVtNApibpxqIrutSQtjR2mmqTeuWI
+   jL67/NlpaiTQPD7ISr/OR8xlW0LJFhhEVsbiypKhlN5EpSgijbvOj0fHj
+   K7HamPvmUasb6QVJbqAi4Qh6Xl70V14LkMMq1sPaI6W1W66cnZdHf7QJ5
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="5641762"
+X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
+   d="scan'208";a="5641762"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 03:04:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="935325723"
+X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
+   d="scan'208";a="935325723"
+Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 13 Feb 2024 03:04:46 -0800
+Received: from kbuild by 01f0647817ea with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rZqai-0007gc-0N;
+	Tue, 13 Feb 2024 11:04:44 +0000
+Date: Tue, 13 Feb 2024 19:04:43 +0800
+From: kernel test robot <lkp@intel.com>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Michael Ellerman <mpe@ellerman.id.au>
+Subject: powerpc-linux-ld: debug_vm_pgtable.c:undefined reference to
+ `pud_set_huge'
+Message-ID: <202402131836.OU1TDuoi-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The only difference between Samsung Galaxy S5 China (kltechn) and klte
-is the gpio pins of i2c_led_gpio. With pins corrected, the LEDs and WiFi
-are able to work properly.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   c664e16bb1ba1c8cf1d7ecf3df5fd83bbb8ac15a
+commit: b49e578b9314db051da0ad72bba24094193f9bd0 Revert "powerpc/bug: Provide better flexibility to WARN_ON/__WARN_FLAGS() with asm goto"
+date:   7 months ago
+config: powerpc-buildonly-randconfig-r001-20230115 (https://download.01.org/0day-ci/archive/20240213/202402131836.OU1TDuoi-lkp@intel.com/config)
+compiler: powerpc-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240213/202402131836.OU1TDuoi-lkp@intel.com/reproduce)
 
-Signed-off-by: Rong Zhang <i@rong.moe>
----
- arch/arm/boot/dts/qcom/Makefile                  |  1 +
- .../dts/qcom/qcom-msm8974pro-samsung-kltechn.dts | 16 ++++++++++++++++
- 2 files changed, 17 insertions(+)
- create mode 100644 arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-kltechn.dts
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202402131836.OU1TDuoi-lkp@intel.com/
 
-diff --git a/arch/arm/boot/dts/qcom/Makefile b/arch/arm/boot/dts/qcom/Makefile
-index 9cc1e14e6cd0..5d7a34adf826 100644
---- a/arch/arm/boot/dts/qcom/Makefile
-+++ b/arch/arm/boot/dts/qcom/Makefile
-@@ -44,6 +44,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-msm8974pro-fairphone-fp2.dtb \
- 	qcom-msm8974pro-oneplus-bacon.dtb \
- 	qcom-msm8974pro-samsung-klte.dtb \
-+	qcom-msm8974pro-samsung-kltechn.dtb \
- 	qcom-msm8974pro-sony-xperia-shinano-castor.dtb \
- 	qcom-mdm9615-wp8548-mangoh-green.dtb \
- 	qcom-sdx55-mtp.dtb \
-diff --git a/arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-kltechn.dts b/arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-kltechn.dts
-new file mode 100644
-index 000000000000..b902e31b16c2
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-kltechn.dts
-@@ -0,0 +1,16 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "qcom-msm8974pro-samsung-klte-common.dtsi"
-+
-+/ {
-+	model = "Samsung Galaxy S5 China";
-+	compatible = "samsung,kltechn", "samsung,klte", "qcom,msm8974pro", "qcom,msm8974";
-+};
-+
-+&i2c_led_gpio {
-+	scl-gpios = <&tlmm 61 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+	sda-gpios = <&tlmm 60 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+};
-+
-+&i2c_led_gpioex_pins {
-+	pins = "gpio60", "gpio61";
-+};
+All errors (new ones prefixed by >>):
+
+   powerpc-linux-ld: mm/vmalloc.o: in function `vmap_range_noflush':
+   vmalloc.c:(.text+0xf84): undefined reference to `pmd_free_pte_page'
+   powerpc-linux-ld: vmalloc.c:(.text+0xfa0): undefined reference to `pmd_set_huge'
+   powerpc-linux-ld: mm/debug_vm_pgtable.o: in function `debug_vm_pgtable':
+   debug_vm_pgtable.c:(.init.text+0xb50): undefined reference to `pmd_set_huge'
+>> powerpc-linux-ld: debug_vm_pgtable.c:(.init.text+0xc40): undefined reference to `pud_set_huge'
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
