@@ -1,86 +1,112 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38B963103
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 23:32:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A4A63101
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 23:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707867129; cv=none; b=j0OOFETEy+E00MfDrCVN2Y4gD4iZeDH8BBG5ycU34YR2LFuxdLOxLz+hTG2GNUFMFXijR7oFdWreFDmjhOH0HIfCXLYd3a4DCDLAUrKzh2gtdsjjLJtP7HPkByg6xmARlePxIeyzbZ/jnWFntjMs27iVBJpX4LYaw9UfK6M7CHw=
+	t=1707867143; cv=none; b=KeiNn4MSRbD7aYgIoYlCgBfy+MTIHVp5hmrdc+iczTpM7F90XUMCPqaGQ+hYi6KlUNN68zGsxnfeO2Nb8U5kJzuZl57oSpUfXXQQ/p7hQndmRm1yxivcC0E8zSflPl0VzCy8MkqlRd2xYLwKbaVDXjwqPdvdRSJk/zFx+3FM1Wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707867129; c=relaxed/simple;
-	bh=FXv/Vo1WmMGv7AFSR6AVe33vs054JP6t/z3Pasq2Av4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=e5QkiBs5PnRElJEGi9lISxV3Fa6QpitQaz2ZhfV92jB4bIcEvNz0/R0GkB53icSDQboN6a1GEVuorEQnK1m6t0xM+d/PKzduyx0FW6ZvYECESK+UCC8XxkFcTRroUYu4LEaBUxJrtg5NtIuyXBNSRZJQCE+JIWyvEuylTN74g7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Buqv5oDt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DrTzMJIu; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1707867143; c=relaxed/simple;
+	bh=bcNZkTfy8xF0KWYq2Ov+PCZSbZ3Z6PXo5Nj4PAZaHYw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XjQM0HTRjqFggw+W7X+0BfnceXsx2wXkcTXGtauEmb4v9gPwu6wO7qajFuzGQZ+f6daYLByjkhQiEQZ1m2WSFqfJR0iDGSTLPIHpCknQqoXhPYQ947IsXzAA3IF5sS9yyLz7H32uAgrrhUAQTskzjvQp09RUHhclAX2s87wYUTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=k1bf6dtd; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Buqv5oDt";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DrTzMJIu"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1707867125;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rU1FgLsKHAJWf7CpAomdWuiPOAofXzn8IOSddAMdtG8=;
-	b=Buqv5oDtIzARJ+pHYK5j1F/pjwRYnFB0SQEsFR/fcGXtcPuiNOUur5fkFcXvFmspx24SkH
-	7C8cR/Ums7FFjC3axtlc9jT34096Ul3rb4PhooOEQjMJm6k6ayMndGoSUP4Fo9EL2HMH5u
-	4N/FQJTSRhwNljeF6x2XEOUwJk5gAoAxtJBTtnRmp+m4b2EqZoLpals+KBjN6XuodJtCMT
-	gxZb7PCwPJRK8Rx+DBGonH+MKdUs6LhKAxFqHIL25ZZoKTKdmo/E/IeJjn949ejTXW6zND
-	NOJRmP6Kq+lmjKexKpqdsBcVYE10rG3NHTDDPoLMJh+uBsHMPKZi8sEZkjvqcA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1707867125;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rU1FgLsKHAJWf7CpAomdWuiPOAofXzn8IOSddAMdtG8=;
-	b=DrTzMJIuT/de4iUpRBFmLXj1J29CdpEOLZz06FYaNFW4L3ep2tEofYYDzdMIyH16hDd4nV
-	YCfhqP4307rJO3Dg==
-To: Borislav Petkov <bp@alien8.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org, Tom Lendacky
- <thomas.lendacky@amd.com>, Andrew Cooper <andrew.cooper3@citrix.com>,
- Arjan van de Ven <arjan@linux.intel.com>, Huang Rui <ray.huang@amd.com>,
- Juergen Gross <jgross@suse.com>, Dimitri Sivanich
- <dimitri.sivanich@hpe.com>, Sohil Mehta <sohil.mehta@intel.com>, K Prateek
- Nayak <kprateek.nayak@amd.com>, Kan Liang <kan.liang@linux.intel.com>,
- Zhang Rui <rui.zhang@intel.com>, "Paul E. McKenney" <paulmck@kernel.org>,
- Feng Tang <feng.tang@intel.com>, Andy Shevchenko <andy@infradead.org>,
- Michael Kelley <mhklinux@outlook.com>, "Peter Zijlstra (Intel)"
- <peterz@infradead.org>, Wang Wendy <wendy.wang@intel.com>
-Subject: Re: [patch V6 01/19] x86/cpu: Provide cpuid_read() et al.
-In-Reply-To: <20240213213650.GEZcvg8uvjPXTVhmHv@fat_crate.local>
-References: <20240212153109.330805450@linutronix.de>
- <20240212153624.516965279@linutronix.de>
- <20240213213650.GEZcvg8uvjPXTVhmHv@fat_crate.local>
-Date: Wed, 14 Feb 2024 00:32:05 +0100
-Message-ID: <87v86seya2.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k1bf6dtd"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-558f523c072so7505871a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 15:32:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1707867139; x=1708471939; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=owV9kvvQ01YV0IOM7V6TZ+A51SR1Xuk2YazbU2H7zpE=;
+        b=k1bf6dtdGVHiJVSaTEWCS45bE114FF325Zy7Qqu1iv82knnNs0Q/vdb6k5PC3LJ1Bp
+         EKA/BVFUDrEH4FU878Rp5iFNTHjkvJ4Xsic1CSHAqM4srp7LFliqIpYMkJ93+3B2KmtL
+         hLA1wPEvQM+vWBuIQNfdKFCVl2N8YYBQKNZSY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707867139; x=1708471939;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=owV9kvvQ01YV0IOM7V6TZ+A51SR1Xuk2YazbU2H7zpE=;
+        b=D679U6Qexb0LErYjkxeJvaDk8PLP15VBrqoivziQjCh+ZLDHAcW7L898eQyyPEdZcY
+         HTx9btwjMEpgAoLn3t/aLbwBoo4ciQPGWXTXH20qQ/ipuKirxf/aqBOG2xFnBI5Ashgt
+         +aZi5LysNgFL2of0Wa5vI9py4JeQu/A+1izlHLcEEFwGSM8nQ/eZ3o72T60vl47QpMmt
+         FCgNsurJiiJgDB2lCEbZfTj/lRaAMFzgYClg56a4TdCf7bIBEujG7gzoRYRauanFUr8E
+         8PpgsHdHbMun+aA8sB7yopYDsyZZiOxOfQ9fYDJfJjVRP/ufFyMwEgC4Nl5kTJpW+Gtn
+         zAAw==
+X-Forwarded-Encrypted: i=1; AJvYcCXuDBTnWj2l+G9fPtRZFWMNOf3+Wk0hdbuoeODCpc/FQqIx/MXRvNFOxwXGyg955IzF+bbiElbzL4/U6VIJ7JRyHxeZGzE5/QKvt0yy
+X-Gm-Message-State: AOJu0YyjcudRIpphtRMX/NAoky3fxdktDTIW7KC8YS0d6Q7MTUvLrVzQ
+	oKs5XoT7DSmAPOLWjbyGeHQC4UYxO4jHuMLRZUihXj2ZZJwpQMXVOQXmff91ACAxv4kcRY6dcP0
+	0N8vK
+X-Google-Smtp-Source: AGHT+IEnOtaNW/gKtdmiCu+gV7jA1Oc5QRvupWGFPdGEsote3HvW1BoF9iEbpM2c5X6nn5tUdpq1Rg==
+X-Received: by 2002:a05:6402:12d3:b0:560:ea64:3810 with SMTP id k19-20020a05640212d300b00560ea643810mr875024edx.8.1707867139681;
+        Tue, 13 Feb 2024 15:32:19 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWalJlx88lgBTSoVJ54/OR67L8uCBuQwGxiBs9v5Rx2dPCdnm1Qa7VIm6gxnV4mZifi7y1vPqtC7yN5gvzk+3PpWQV2HxXSlfXSXGJ3
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com. [209.85.128.49])
+        by smtp.gmail.com with ESMTPSA id g14-20020a056402428e00b0055fba4996d9sm4125646edc.71.2024.02.13.15.32.19
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Feb 2024 15:32:19 -0800 (PST)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-410acf9e776so97045e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 15:32:19 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWaJpngyx+eMluWeTUUnxe3fMoHcG5tPy8R/3Q+orpr9gaHQZmyTDMMgyNg482HnkiZBRPFJEXJfcy1nRCbFYfYhhvZLu0qoo/hzz3n
+X-Received: by 2002:a05:600c:a01a:b0:411:e72d:e5c9 with SMTP id
+ jg26-20020a05600ca01a00b00411e72de5c9mr7584wmb.5.1707866675833; Tue, 13 Feb
+ 2024 15:24:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20240210070934.2549994-1-swboyd@chromium.org> <20240210070934.2549994-21-swboyd@chromium.org>
+In-Reply-To: <20240210070934.2549994-21-swboyd@chromium.org>
+From: Doug Anderson <dianders@chromium.org>
+Date: Tue, 13 Feb 2024 15:24:20 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=XH=yJdEKSmOq50mXw12hsBc0-oWmhnc4h_itGqfoEjfA@mail.gmail.com>
+Message-ID: <CAD=FV=XH=yJdEKSmOq50mXw12hsBc0-oWmhnc4h_itGqfoEjfA@mail.gmail.com>
+Subject: Re: [PATCH 20/22] arm64: dts: qcom: sc7180: pazquel: Add missing
+ comment header
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	patches@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	Pin-yen Lin <treapking@chromium.org>, cros-qcom-dts-watchers@chromium.org, 
+	Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 13 2024 at 22:36, Borislav Petkov wrote:
+Hi,
 
-> On Tue, Feb 13, 2024 at 10:04:00PM +0100, Thomas Gleixner wrote:
->> +static inline void __cpuid_read(unsigned int leaf, unsigned int subleaf, u32 *regs)
->> +{
->> +	regs[CPUID_EAX] = leaf;
->> +	regs[CPUID_ECX] = subleaf;
->> +	__cpuid(regs, regs + 1, regs + 2, regs + 3);
+On Fri, Feb 9, 2024 at 11:10=E2=80=AFPM Stephen Boyd <swboyd@chromium.org> =
+wrote:
 >
-> Yeah, 
+> We put a header before modifying pinctrl nodes defined in
+> sc7180-trogdor.dtsi in every other file. Add one here so we know that
+> this section is for pinctrl modifications.
 >
-> 	__cpuid(regs, regs + CPUID_EBX, regs + CPUID_ECX, regs + CPUID_EDX);
->
-> explains what those numbers are.
+> Cc: <cros-qcom-dts-watchers@chromium.org>
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <andersson@kernel.org>
+> Cc: Konrad Dybcio <konrad.dybcio@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+> Cc: Conor Dooley <conor+dt@kernel.org>
+> Cc: <linux-arm-msm@vger.kernel.org>
+> Cc: <devicetree@vger.kernel.org>
+> Cc: Pin-yen Lin <treapking@chromium.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180-trogdor-pazquel.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Oops. Sorry, I missed that part of your previous reply and just
-responded to the u32 *regs part. I'll send an update tomorrow.
+Bjorn: happy to see this landed any time to shorten Stephen's series.
 
-Thanks,
-
-        tglx
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
