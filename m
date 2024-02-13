@@ -1,71 +1,187 @@
-Received: from smtp15.bhosted.nl (smtp15.bhosted.nl [94.124.121.26])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B55250E5
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 10:54:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.124.121.26
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0635532C60;
+	Tue, 13 Feb 2024 10:54:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707821691; cv=none; b=Dqg9rE2y6p1Chz3EGmvnCihUcldnEsAoavmyoObAylQ7dN2eM+WQUDKNHynjhTUdBrDD37sg6Wykkmjk4rnDc/2YkaoRcSp1y8f1kK1FdZV0HhfQ3fMTDBdhlYBm4fuKQVhRGv8yib3VZZygbT0uRWl0UIpo0yDxJdAegHHlZLE=
+	t=1707821699; cv=none; b=Q9rlhBAfiTZ4+VkOPxVkidekELaii/W+iP722QshF9XDTpTyCuRBhBNbK90GIOBVJTwGR/6UzwVKUsS5WbT837ydQM1v4pyfqcfeTHpRczt6DWDJlRgFyINEKBEyWuC4JwqTJj7FF7pRoqRumMNzK8MAHLmuTjMUeVSkPL0qHVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707821691; c=relaxed/simple;
-	bh=U6sw6/b7Wo9TPD1nNjD1SdrmI2VZciuOyU4cyudmr0U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SzuXOO7fUrkilnu2Uz9vIBrkS/VZet76+FKDAaGPEhke193Q/Vnd74bjdiyHBnEJPzyggKrXYnTudkAGzCMxat4314GEigiafUMlXAYLMuXt4rDFbHPmuWeuMVAbZHpNIa8/pu1hXgpY5mjDPdbELKUw5oEpXj1fuYf5dg5lsk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl; spf=pass smtp.mailfrom=protonic.nl; dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b=wnGlKvIv; arc=none smtp.client-ip=94.124.121.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonic.nl
+	s=arc-20240116; t=1707821699; c=relaxed/simple;
+	bh=K3t6IqIKVeRKOMmSmTLavxByRukWLKFnqr8MqyIR7DE=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t1T+KmhCKPyPSiTWCwo+8VXi+eAv4umXsKDwZcLhQtg/77OHoz8piX4AqKfwuI3ElDe2m2hOUs8Y119HcvqV4rgJi/bf1KnElfUaavm3GwJhSpZpnALeyc2N4lClJRsCk4C47UCHUwgGt+DJdOp3Tf+fmF+BV5/9Cs6HWmck20w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ptWaMmHC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=utgGMOWR; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ptWaMmHC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=utgGMOWR; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b="wnGlKvIv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=protonic.nl; s=202111;
-	h=content-transfer-encoding:content-type:mime-version:references:in-reply-to:
-	 message-id:subject:cc:to:from:date:from;
-	bh=U6sw6/b7Wo9TPD1nNjD1SdrmI2VZciuOyU4cyudmr0U=;
-	b=wnGlKvIv1slYWYzQEBrWd562FM3Cqqr5ngwXuAMN/Pw3ciXu4VaGQzCANZyelSPIw8xFujzEjfx26
-	 u6EkCmTWAaVxZ/MUyThc7tWsWjBdQV2EHCgF604wYcKONqNgflwU/EVke6/QQthE/z1NGlxNaImDFa
-	 i57TTXbj+rQ6n0OHl1n+GYi3VweVVYj78CDX4L1VegvH2056Dmk4nYWEJMqLaYHDcegzrJ9VzFge2o
-	 gCt1VBKVwIU7mwO2eNrXb4njSAFL6+smDV8RBs+NDznTAU3VnvItZOVMGKVtFUltpOGEBqjIR6Ifsf
-	 9AiAJodlgrJOAZ5qHbbw8I9Zx8USeyQ==
-X-MSG-ID: 248259d2-ca5e-11ee-8d57-00505681446f
-Date: Tue, 13 Feb 2024 11:53:38 +0100
-From: Robin van der Gracht <robin@protonic.nl>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Miguel Ojeda
- <ojeda@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Paul Burton <paulburton@kernel.org>, Geert Uytterhoeven
- <geert+renesas@glider.be>
-Subject: Re: [PATCH v1 10/15] auxdisplay: linedisp: Provide a small buffer
- in the struct linedisp
-Message-ID: <20240213115338.2311c4b6@ERD993>
-In-Reply-To: <ZcpMLXTfc95fGTae@smile.fi.intel.com>
-References: <20240208184919.2224986-1-andriy.shevchenko@linux.intel.com>
-	<20240208184919.2224986-11-andriy.shevchenko@linux.intel.com>
-	<20240212092500.62f006cc@ERD993>
-	<ZcoF9ZxPBkVS_6Da@smile.fi.intel.com>
-	<ZcpMLXTfc95fGTae@smile.fi.intel.com>
-Organization: Protonic Holland
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ptWaMmHC";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="utgGMOWR";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ptWaMmHC";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="utgGMOWR"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 193D01FC81;
+	Tue, 13 Feb 2024 10:54:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707821696; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cBmU54n2WXwfimAjDCe1BZ77s/sceqYcDk/8NeTsA4A=;
+	b=ptWaMmHCu0WmXUctmHEU4mCeId9zOiG5a0iQQBRxFuY8QC/GafoaKTiU1V2jEmQDgCPwCQ
+	VTR3JZyPeesRR0C8sdcg3xYe2D1HV5oPut5gyCIuGktzlytdfqvGffdACMFJQEwvVMZmzN
+	K5pD4u0APQoNHkN/ZmV7xEtABWhhXJM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707821696;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cBmU54n2WXwfimAjDCe1BZ77s/sceqYcDk/8NeTsA4A=;
+	b=utgGMOWRS0M2GQZ6TPczOuJhSlppGUoiB+pe2BYHst1BPNtqP56qiBOaCPVFDbN+u4MGVy
+	yLrTGGdjCV86kaAw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707821696; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cBmU54n2WXwfimAjDCe1BZ77s/sceqYcDk/8NeTsA4A=;
+	b=ptWaMmHCu0WmXUctmHEU4mCeId9zOiG5a0iQQBRxFuY8QC/GafoaKTiU1V2jEmQDgCPwCQ
+	VTR3JZyPeesRR0C8sdcg3xYe2D1HV5oPut5gyCIuGktzlytdfqvGffdACMFJQEwvVMZmzN
+	K5pD4u0APQoNHkN/ZmV7xEtABWhhXJM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707821696;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cBmU54n2WXwfimAjDCe1BZ77s/sceqYcDk/8NeTsA4A=;
+	b=utgGMOWRS0M2GQZ6TPczOuJhSlppGUoiB+pe2BYHst1BPNtqP56qiBOaCPVFDbN+u4MGVy
+	yLrTGGdjCV86kaAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D2B4C13404;
+	Tue, 13 Feb 2024 10:54:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id PNvnMn9Ky2WsbwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 13 Feb 2024 10:54:55 +0000
+Date: Tue, 13 Feb 2024 11:54:55 +0100
+Message-ID: <87y1boy6ps.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Wesley Cheng <quic_wcheng@quicinc.com>
+Cc: <srinivas.kandagatla@linaro.org>,
+	<mathias.nyman@intel.com>,
+	<perex@perex.cz>,
+	<conor+dt@kernel.org>,
+	<corbet@lwn.net>,
+	<lgirdwood@gmail.com>,
+	<andersson@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>,
+	<gregkh@linuxfoundation.org>,
+	<Thinh.Nguyen@synopsys.com>,
+	<broonie@kernel.org>,
+	<bgoswami@quicinc.com>,
+	<tiwai@suse.com>,
+	<robh+dt@kernel.org>,
+	<konrad.dybcio@linaro.org>,
+	<linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>,
+	<linux-sound@vger.kernel.org>,
+	<linux-usb@vger.kernel.org>,
+	<linux-arm-msm@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>,
+	<alsa-devel@alsa-project.org>
+Subject: Re: [PATCH v15 39/50] ASoC: Introduce SND kcontrols to select sound card and PCM device
+In-Reply-To: <20240213005422.3121-40-quic_wcheng@quicinc.com>
+References: <20240213005422.3121-1-quic_wcheng@quicinc.com>
+	<20240213005422.3121-40-quic_wcheng@quicinc.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ptWaMmHC;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=utgGMOWR
+X-Spamd-Result: default: False [0.88 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 TO_DN_SOME(0.00)[];
+	 R_RATELIMIT(0.00)[to_ip_from(RLe67txhfobum3fqdb5xx8e3au)];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 BAYES_HAM(-0.31)[75.28%];
+	 ARC_NA(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[dt];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DWL_DNSWL_LOW(-1.00)[suse.de:dkim];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 RCPT_COUNT_TWELVE(0.00)[23];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FREEMAIL_CC(0.00)[linaro.org,intel.com,perex.cz,kernel.org,lwn.net,gmail.com,linuxfoundation.org,synopsys.com,quicinc.com,suse.com,vger.kernel.org,alsa-project.org];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: 0.88
+X-Rspamd-Queue-Id: 193D01FC81
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Bar: /
 
-Hi Andy,
+On Tue, 13 Feb 2024 01:54:11 +0100,
+Wesley Cheng wrote:
+> 
+> +static int soc_usb_get_offload_dev(struct snd_kcontrol *kcontrol,
+> +				   struct snd_ctl_elem_value *ucontrol)
+> +{
+> +	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
+> +	struct snd_soc_usb *ctx = snd_soc_usb_find_priv_data(component->dev);
+> +	int ret = 0;
+> +
+> +	mutex_lock(&ctx_mutex);
+> +	if (ctx && ctx->get_offload_dev)
+> +		ret = ctx->get_offload_dev(kcontrol, ucontrol);
+> +	mutex_unlock(&ctx_mutex);
 
-On Mon, 12 Feb 2024 18:49:49 +0200
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+It might be safer to initialize the values with -1 in case when the
+callback isn't available?
 
-> Looking again into it, the allocation separately with linedisp structure
-> is indeed too much invasive. I prefer (as we save lines of code and deduplicate
-> the buffer at least for two drivers, including a new one) to leave this patch
-> for now. We may rework it later on. Do you agree?
+>  /**
+>   * snd_soc_usb_get_components_tag() - Retrieve SOC USB component tag
+>   * @playback: direction of audio stream
+> @@ -157,6 +218,12 @@ EXPORT_SYMBOL_GPL(snd_soc_usb_free_port);
+>   */
+>  int snd_soc_usb_add_port(struct snd_soc_usb *usb)
+>  {
+> +	int ret;
+> +
+> +	ret = snd_soc_usb_control_init(usb->component);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	mutex_lock(&ctx_mutex);
+>  	list_add_tail(&usb->list, &usb_ctx_list);
+>  	mutex_unlock(&ctx_mutex);
 
-Agreed. The additional overhead is probably not worth it. If the buffer size
-needs to be increased later on we'll take another look.
+We may need to remove the control element upon the driver removal,
+too?  In theory, you can unload the offload stuff while snd-usb-audio
+is still active.
 
-Robin
+
+thanks,
+
+Takashi
