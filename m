@@ -1,58 +1,58 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EAF81755C
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 09:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9666E224F2
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 09:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707816675; cv=none; b=qngFDLrdy9x2QvCNL3aZVBpReVN35tYbHqU3QotfiqPDmm8qK9TPw/jsfCNSVE36H/5GP8tgI8Tt+2nT2PphM156dmzsBZcuOONqj0NXQoR9mhfYuEzE8j83FtGX18j6mteAGqty6i9tEl53B7XZva2mnHUB1JHUAjUnL/4Ac+I=
+	t=1707816678; cv=none; b=qIty0t9uk/5O3kQMnw/MMGR1VUtcTQgpBSLFjZk931YNf5qkNBLB/cUWNVApFPMSmRGJ5G3BFlWRuXzHCeAnpqNoREX6RKBFgcfeUKX1xElWyZBuYBKXVfMITWKPwJHhnzKBiAqy1iTapzPqsccZ2HJhq6kGR5CA603BUZsH/nA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707816675; c=relaxed/simple;
-	bh=una9vqr9afr38wBVZw0pqukTIf2ij0dBOF7F5Fkbkck=;
+	s=arc-20240116; t=1707816678; c=relaxed/simple;
+	bh=bA1DQr6eNnKSnBh6jQHkYSW2oFUilm3Qa6INtty5rTg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LMCSiS9kwQLJ9FXLxLq8YMliHcs1tLT6QTvMKsQFCc7S5UjS9WsV+L+8S1j6D9f2y8KDV8Q1A+UcYOSw3wctIxwxERh2hTfhGuCo6Kj0AbVVawMLKhujHQz8ONzqB1mu5i0yEa2kTcXlTywf+m62EiHHGNSfEWzm2uRnLm9mZf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Fd7Rhiyl; arc=none smtp.client-ip=209.85.221.51
+	 MIME-Version; b=HM+JbVbf/8RjEgSrlNDrH4LArhYS2bAIy6pbPK3iCfcch4/0P+/RJFuiwf4ImSnGEnpt+qSITkhT66IiTC/8QgCy7LPZH3ukFgD+a11sjcCm7TrENslPpa1tupOR6cPr248FvPgEtvk1TNXOqpXH4pwP6klHf8aCO8WJBruhtu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=3JphTJhu; arc=none smtp.client-ip=209.85.221.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Fd7Rhiyl"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-33b66883de9so2888072f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 01:31:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="3JphTJhu"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-33ce0802f17so89435f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 01:31:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707816672; x=1708421472; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707816675; x=1708421475; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wG6v3UogFkM+UNCdDFGKO2I94s5BqeEYEkiY+5bnH8M=;
-        b=Fd7RhiylHIo9uPmZ7YhBGmnlLqbgsyqGu+Bylz5c184pkmkMOpxSfxhyYM32Q4ZIUl
-         wlE0VxOsTUBQ3MjgTnokL2KmzGLI3KXFgE19GnEZKbMFB+DjYU1CXbRFxiQx66yIoSkA
-         Fnf+mWWc9e8xmw2JKoFSxbOSACS39Qp2WVbheCZrBCOAAyC30CfkpLwVXBn4d7+mft+B
-         Ncax6JnMo+dQDUEKZwkw+8kzLjwkUcJNO22XNRZr34Vpq0WCDtgNJMjBzB7yFge9SVQe
-         7tJ15MOXAmIQ1Uks5bGJbuIAYQsmwwdwSRZZ/QSsjNO6uyyftB34VCcc+ZqOPEi/CPSu
-         Nhpw==
+        bh=Mgf3CLa998KoIkw7FSWo/gVoKncfOZNXGb2ZGFv5c5c=;
+        b=3JphTJhul1nLTufgIkRV/OjKia16bvHmtq+WgflQWzu0wT9JCYwYUFtpDkN8AE+NE+
+         m1Nf5Xk1rkjGUeBZzCteTHI0pHK4WMqsxM7dvGsL2hTc1qNnMJETGifnzrrPZ2JU0eTk
+         UNj7kG083YM//xu0RpEyyZFXnMeOsNGcEOk5WUlp/YCOvNodqaAU5oKXTjK2JtxlIfav
+         i5TRT+n0gyVL/2jjKNvAK4UE7UyQszOafxUkImiatRXbMljod9KKwnav6Hw2BWLEsD8I
+         Xn0gp+WTW6bnapmqp+TVt230gEysUwFr69N+DW/dHmTwLRLdxTutB5L1M/QTov8BxZWN
+         pI+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707816672; x=1708421472;
+        d=1e100.net; s=20230601; t=1707816675; x=1708421475;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wG6v3UogFkM+UNCdDFGKO2I94s5BqeEYEkiY+5bnH8M=;
-        b=gSJQj7Lz6yQxehcSebR/vYJEF8UowjTz99uDBX2TfsOPxITZwdB6xxMIARbT+Q7LZf
-         xMH8PHol0SEDWgO9BVyKGRSfJBIi9unWjAWOUQQoxhuZxsolkC7QTHaen7x/uXLYEdlA
-         QllTRHZO0SHlI8lDUV8Nj4I7DbhiXZ9l7WFiZdXyXsRzPZ7kNDtMc6Jk0e5Bl6i6iSq6
-         Hh+p3XPXOek+aOJgKaP0z0YdECihELLuYaiBd8KCPmLdXsomdCESyFUjDD6N+44YSF7E
-         3gs3Z+O+lfc2vPGIGs9P4f+MWkNbr2E+fsgZiti9XhtVdACZPhG5peMX7fnrVz9ku4YB
-         RShQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVywKgstZJeAwHXeG9RTdA9YoxLPQeF0cgw6GYAs7KS3OUWRAA9k7hpz650wCKiowWUf+4fZxMdcoPtEJNt8sfRJsv/YsEj//qrM6eH
-X-Gm-Message-State: AOJu0YwS0a69+PxWfpIhhktvC68UFEIC5LmBmR7gcddtoQYFoG+y/1X2
-	TG8QsMnprx8TbuSk38PwNayu977iCG5ADoxHeyU/JnSGCWhSc5VGE7GH3a2zDTk=
-X-Google-Smtp-Source: AGHT+IHrGOprDXRDU7JOCzMSSH5ai8tt7kG/V3VKXT3yiXGl9NEsi00kOEQxL3WcZ+0+OI+DO65/Bg==
-X-Received: by 2002:adf:fd4e:0:b0:33c:e1ec:1963 with SMTP id h14-20020adffd4e000000b0033ce1ec1963mr74560wrs.64.1707816672453;
-        Tue, 13 Feb 2024 01:31:12 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVDrLAvbks5O/HaHn03tFg6aPUQ5rLMoNBA4lCA8LPd5q0Qxkfzkhm0ucHBOyIJnKADycj5qtAhKGbpSIGFcPS8aZILTvcbC+L7TtIXphpiMpxB+tSKC+suPw+HRlf7QiOeuzD3Xd07BgTByqrngMxBOSuBCwf5H+uZxsiYUdGcLTygewrGk4IGuZKG4gSacqNCgqPf2MAjkra5tSRjDWtncG9YmBLRnYThmsygbJKpMqI6QsslPSWjEzkD+PPtD+13VyAss/bPdlk91p3wrgiLauwL8XNrMLs+Fo2ZBO6vdQm6LbKLiCUCwJJ2Gxn2tlzAkbphOG0yzFCePFG2tcYWnFwgDzV4LS2y3KmqUm0=
+        bh=Mgf3CLa998KoIkw7FSWo/gVoKncfOZNXGb2ZGFv5c5c=;
+        b=RqM6pwsgaSjIFwUPlfAt/f9VMSYJXALku6IMcsdF4g1xfu6CgJHkLgrscpxDe65nj6
+         T02xScAJVmR6k665p72n9DA5UFe1MS1ZE9XTdoZSW5GfQVpPWNIPPCYvJV5iR+nDeL5R
+         jrOXhQw82eQ/03FnBXEQvQx15/vv5W6vgFSh+3uWlrPsB9e8ZUWS9uOeDvgz1mRqd56p
+         I44mfp9TJYC4WsgczOibdUp+vZ6n3uZKkeh2PLj5z//i3G+psYoZQgPiA0gL0ZkqH9as
+         3DswqMh9GD3WNvs4RCuNZ7+8PI8b7I7113q5l28CZxSAlFIej6UuUWjgPTVQMMjadjP1
+         zT4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUbbR79KixB0+JM2OECZW0gwc6YJIUmpXVkYJd3dma8NmX3aCn1+lKij5D30NAOcZQF0aSOMIBVYq3olnxwGuXyHgS+b+fT/TDu8MHI
+X-Gm-Message-State: AOJu0YynHr79VFy0IWqaDS2gaR5kNJBPU7xM+0mueWuKdQ1Spj+5rggv
+	fru/y6OX5Wmfrt63CROb6pOHLt8My5PbTSwhjFF6eXISOBgbk2DG/h19pV+dovo=
+X-Google-Smtp-Source: AGHT+IGu7AV2g+1a36De252fFR0xcNPrjo1k8rYbx+lJBpIvj5d/fm5Zh6zPQRv4el6GZ7jSXCC8kA==
+X-Received: by 2002:adf:f60d:0:b0:33c:dec9:a269 with SMTP id t13-20020adff60d000000b0033cdec9a269mr401577wrp.57.1707816674892;
+        Tue, 13 Feb 2024 01:31:14 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWBfUUc+m/zso3LmxVL3ectj0GR5TFj6O0zYCe7BNEZt/73ERjArn95DGehdmTOb9lieFNOXZrX9X8WnhABHgbk6/acXcpquEdsU7HOXeUmZz7rY9LKQawaFqddadrkjFUP1jl9kl+7zVpiGOIAzCwqB1LjAcQP3Pb97eDroOD2RxGyrQV1MnFZ8w+uPwgve4vVnjRAHVFnPFyM5HLq+OeIWvFqFouqYyK5m5BZKuj4INOIxAKk2ahGE1lT0VfyHkR4VvEmNiRhQ/edZIfP7sYxq3B4hD88v+2wzhzI+G7WvlQk6yEeHd9vaGDe3aTmYgLYQ5+NejUO//U6pRCtA/JCd4lp33p1mLYFR1MtpM0=
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:f634:2e37:58a9:242a])
-        by smtp.gmail.com with ESMTPSA id p16-20020adfcc90000000b0033b2497fdaesm8980897wrj.95.2024.02.13.01.31.11
+        by smtp.gmail.com with ESMTPSA id p16-20020adfcc90000000b0033b2497fdaesm8980897wrj.95.2024.02.13.01.31.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 01:31:11 -0800 (PST)
+        Tue, 13 Feb 2024 01:31:14 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Kent Gibson <warthog618@gmail.com>,
@@ -65,9 +65,9 @@ Cc: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	kernel test robot <oliver.sang@intel.com>
-Subject: [PATCH 1/3] gpio: take the SRCU read lock in gpiod_hog()
-Date: Tue, 13 Feb 2024 10:31:06 +0100
-Message-Id: <20240213093108.13922-2-brgl@bgdev.pl>
+Subject: [PATCH 3/3] gpio: use rcu_dereference_protected() to make lockdep happy
+Date: Tue, 13 Feb 2024 10:31:08 +0100
+Message-Id: <20240213093108.13922-4-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240213093108.13922-1-brgl@bgdev.pl>
 References: <20240213093108.13922-1-brgl@bgdev.pl>
@@ -81,54 +81,85 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-gpiod_hog() may be called without the gpio_device SRCU read lock taken
-so we need to do it here as well. It's alright if someone else is
-already holding the lock as SRCU read critical sections can be nested.
+Lockdep with CONFIG_PROVE_RCU enabled reports false positives about
+suspicious rcu_dereference() usage. Let's silence it by using
+rcu_dereference_protected().
 
 Fixes: d83cee3d2bb1 ("gpio: protect the pointer to gpio_chip in gpio_device with SRCU")
 Reported-by: kernel test robot <oliver.sang@intel.com>
 Closes: https://lore.kernel.org/oe-lkp/202402122234.d85cca9b-lkp@intel.com
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/gpio/gpiolib.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/gpio/gpiolib.c | 12 ++++++++----
+ drivers/gpio/gpiolib.h |  4 +++-
+ 2 files changed, 11 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 82811d9a4477..c1391a9a0af6 100644
+index c1391a9a0af6..d7503376b918 100644
 --- a/drivers/gpio/gpiolib.c
 +++ b/drivers/gpio/gpiolib.c
-@@ -4492,24 +4492,27 @@ EXPORT_SYMBOL_GPL(gpiod_get_index_optional);
- int gpiod_hog(struct gpio_desc *desc, const char *name,
- 	      unsigned long lflags, enum gpiod_flags dflags)
+@@ -109,7 +109,8 @@ const char *gpiod_get_label(struct gpio_desc *desc)
+ 		return "interrupt";
+ 
+ 	return test_bit(FLAG_REQUESTED, &flags) ?
+-			rcu_dereference(desc->label) : NULL;
++			rcu_dereference_protected(desc->label,
++					lockdep_is_held(&desc->srcu)) : NULL;
+ }
+ 
+ static int desc_set_label(struct gpio_desc *desc, const char *label)
+@@ -2978,7 +2979,8 @@ static int gpiod_get_raw_value_commit(const struct gpio_desc *desc)
+ 
+ 	guard(srcu)(&gdev->srcu);
+ 
+-	gc = rcu_dereference(gdev->chip);
++	gc = rcu_dereference_protected(gdev->chip,
++				       lockdep_is_held(&gdev->srcu));
+ 	if (!gc)
+ 		return -ENODEV;
+ 
+@@ -3012,7 +3014,8 @@ static bool gpio_device_chip_cmp(struct gpio_device *gdev, struct gpio_chip *gc)
  {
--	struct gpio_chip *gc;
-+	struct gpio_device *gdev = desc->gdev;
- 	struct gpio_desc *local_desc;
- 	int hwnum;
- 	int ret;
+ 	guard(srcu)(&gdev->srcu);
  
-+	CLASS(gpio_chip_guard, guard)(desc);
-+	if (!guard.gc)
-+		return -ENODEV;
-+
- 	if (test_and_set_bit(FLAG_IS_HOGGED, &desc->flags))
- 		return 0;
+-	return gc == rcu_dereference(gdev->chip);
++	return gc == rcu_dereference_protected(gdev->chip,
++					       lockdep_is_held(&gdev->srcu));
+ }
  
--	gc = gpiod_to_chip(desc);
- 	hwnum = gpio_chip_hwgpio(desc);
+ int gpiod_get_array_value_complex(bool raw, bool can_sleep,
+@@ -3593,7 +3596,8 @@ int gpiod_to_irq(const struct gpio_desc *desc)
+ 	gdev = desc->gdev;
+ 	/* FIXME Cannot use gpio_chip_guard due to const desc. */
+ 	guard(srcu)(&gdev->srcu);
+-	gc = rcu_dereference(gdev->chip);
++	gc = rcu_dereference_protected(gdev->chip,
++				       lockdep_is_held(&gdev->srcu));
+ 	if (!gc)
+ 		return -ENODEV;
  
--	local_desc = gpiochip_request_own_desc(gc, hwnum, name,
-+	local_desc = gpiochip_request_own_desc(guard.gc, hwnum, name,
- 					       lflags, dflags);
- 	if (IS_ERR(local_desc)) {
- 		clear_bit(FLAG_IS_HOGGED, &desc->flags);
- 		ret = PTR_ERR(local_desc);
- 		pr_err("requesting hog GPIO %s (chip %s, offset %d) failed, %d\n",
--		       name, gc->label, hwnum, ret);
-+		       name, gdev->label, hwnum, ret);
- 		return ret;
- 	}
+diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+index 07443d26cbca..a857848b8955 100644
+--- a/drivers/gpio/gpiolib.h
++++ b/drivers/gpio/gpiolib.h
+@@ -14,6 +14,7 @@
+ #include <linux/err.h>
+ #include <linux/gpio/consumer.h> /* for enum gpiod_flags */
+ #include <linux/gpio/driver.h>
++#include <linux/lockdep.h>
+ #include <linux/module.h>
+ #include <linux/notifier.h>
+ #include <linux/srcu.h>
+@@ -202,7 +203,8 @@ DEFINE_CLASS(gpio_chip_guard,
  
+ 		_guard.gdev = desc->gdev;
+ 		_guard.idx = srcu_read_lock(&_guard.gdev->srcu);
+-		_guard.gc = rcu_dereference(_guard.gdev->chip);
++		_guard.gc = rcu_dereference_protected(_guard.gdev->chip,
++					lockdep_is_held(&_guard.gdev->srcu));
+ 
+ 		_guard;
+ 	     }),
 -- 
 2.40.1
 
