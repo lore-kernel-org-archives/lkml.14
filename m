@@ -1,44 +1,41 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0088B2BB14;
-	Tue, 13 Feb 2024 13:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4143455760;
+	Tue, 13 Feb 2024 13:19:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707830379; cv=none; b=fjKvUdcfItQZTMMHXdRDidSbxeajPPgRjHTUrxHt5FndquY2sfSsGSaoW5vzIq1st1cNDbsNZKbypSG3bxq+VhXeB67BsqHNEDbxkRzZv3KpYP01YVQn+IrA1shixjnsxTH43bCcsblkayuJvKZNwvhYqMB0C3DPTxpExYyfFaw=
+	t=1707830398; cv=none; b=HUxLRm0lo52m39JVWXG6jYtIv1+nwGm9zTgfYA0Omij0rdy9mdfG/uceNqGeTCn66QgR6xvC6vGeDHt4RUfzaFyldis25RyXV5HqFe/+z0UQobMlyka3oIKH+O880zeyVw7QCMXrEwU6oD+SCbSlIHu8devSPYeiE16s/etvMbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707830379; c=relaxed/simple;
-	bh=fByT2UUftBCR45CYsAl+T8nyHT82IpA746ur+u10NpM=;
+	s=arc-20240116; t=1707830398; c=relaxed/simple;
+	bh=2jm6cvRsD9MqO/2C5y1bPrUZKUrWefhJVqIriw/qqGQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ptX5pzI62E8SMP3z22F9Fe7kZTwLfjX75J8xpe6ljEax6olsBN7MI1167w2MAavbC+EH7mr9HRbw/A13z+CMCRzTSkGFUTLnpjJ3kr7ARhC/YVE1yiJih8bZ1BVbNsP4JQMnaaxwoKuK9xKA7LIbgEzTfokRR0E+ZCwVTtkSYCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=nKfhvDUq; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=KPyHkFBBivSbkWfQjPKu4WBwTjeM5BAXectWVWXQTLQvSjscdGZ/ReHkW4xGn0XXhns3G5gkgioOtGnOy63wOrJl4xdYTtKI7UYC7TX+PRt/VKCvLip/uUt47dBMiWKnUXaoFHHX2r7J94aLjXqVKKrppdTgwdu1eQsM3UjhLPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OJT6OEDq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="nKfhvDUq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=/xBCE8NGNltY8hI4n/J/zJtrAUlwhkdXFeiaX3Edki4=; b=nKfhvDUquN80pPtU1+yVCOVAYl
-	Esev4o2zHClUGE2pFfec0t4BlpzDyniz4i03sbpMmVwkMnPnWMk/0fKJbYF12dibXZ9U7pssH55EN
-	mTuAx4ng7/o1yJPh/XTt6TigX4wfq90JvUfWMjFVw4g2Bc0yJVjetAqe6eLPaNm4tlW8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rZshH-007gB8-7l; Tue, 13 Feb 2024 14:19:39 +0100
-Date: Tue, 13 Feb 2024 14:19:39 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Breno Leitao <leitao@debian.org>
-Cc: kuba@kernel.org, davem@davemloft.net, pabeni@redhat.com,
-	edumazet@google.com, Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, horms@kernel.org
-Subject: Re: [PATCH net 6/7] net: fill in MODULE_DESCRIPTION()s for
- mdio_devres
-Message-ID: <045f7cdb-7f99-4182-8c75-097be8a5a7d0@lunn.ch>
-References: <20240213112122.404045-1-leitao@debian.org>
- <20240213112122.404045-7-leitao@debian.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OJT6OEDq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E770C433F1;
+	Tue, 13 Feb 2024 13:19:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707830397;
+	bh=2jm6cvRsD9MqO/2C5y1bPrUZKUrWefhJVqIriw/qqGQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OJT6OEDqQIVbbmMIsi2xbmJY3Xcypz6eBeHZtd2JomM+uI2LfS4WwpD8OaINXEWTv
+	 N/jiZ8XYiyQSO9dglOTxsVn7nbJiBG3yn8egZELWh6m7tim3473XVpvfXGvlLEzg/l
+	 Ehep6NKbh3h276/7XvCLJdlJsUdWxtuWVxksQyOq4LvHlcHxAroc1epRQigkjYBHgH
+	 oEV/ZwaQhrpJNPDmwnYRhTsI9eQ9aQrY9mHIBp+Lp7DKf4j+Pzr66ryLRVWBuOrLVs
+	 qBr1sN0XvqKXIdS24ngyImANSJXwIfO1E8GQlMqpJZXXEbjs6piE4SwsqcWunAAWtS
+	 X2FMCOCIQxiGg==
+Date: Tue, 13 Feb 2024 13:19:52 +0000
+From: Will Deacon <will@kernel.org>
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>, Robin Murphy <robin.murphy@arm.com>,
+	Joerg Roedel <joro@8bytes.org>, iommu@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iommu/arm-smmu-qcom: Add X1E80100 MDSS compatible
+Message-ID: <20240213131952.GB28926@willie-the-truck>
+References: <20240131-x1e80100-iommu-arm-smmu-qcom-v1-1-c1240419c718@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,29 +44,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240213112122.404045-7-leitao@debian.org>
+In-Reply-To: <20240131-x1e80100-iommu-arm-smmu-qcom-v1-1-c1240419c718@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Tue, Feb 13, 2024 at 03:21:21AM -0800, Breno Leitao wrote:
-> W=1 builds now warn if module is built without a MODULE_DESCRIPTION().
-> Add descriptions to the PHY MDIO helpers.
+On Wed, Jan 31, 2024 at 02:35:16PM +0200, Abel Vesa wrote:
+> Add the X1E80100 MDSS compatible to clients compatible list, as it also
+> needs the workarounds.
 > 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 > ---
->  drivers/net/phy/mdio_devres.c | 1 +
+>  drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 1 +
 >  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/net/phy/mdio_devres.c b/drivers/net/phy/mdio_devres.c
-> index 69b829e6ab35..8921fa22bdbd 100644
-> --- a/drivers/net/phy/mdio_devres.c
-> +++ b/drivers/net/phy/mdio_devres.c
-> @@ -131,4 +131,5 @@ int __devm_of_mdiobus_register(struct device *dev, struct mii_bus *mdio,
->  EXPORT_SYMBOL(__devm_of_mdiobus_register);
->  #endif /* CONFIG_OF_MDIO */
->  
-> +MODULE_DESCRIPTION("Network PHY MDIO devres helpers");
+> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+> index 8b04ece00420..5c7cfc51b57c 100644
+> --- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+> @@ -260,6 +260,7 @@ static const struct of_device_id qcom_smmu_client_of_match[] __maybe_unused = {
+>  	{ .compatible = "qcom,sm6375-mdss" },
+>  	{ .compatible = "qcom,sm8150-mdss" },
+>  	{ .compatible = "qcom,sm8250-mdss" },
+> +	{ .compatible = "qcom,x1e80100-mdss" },
 
-"Network MDIO bus devres helpers"
+I think this needs adding to the bindings Documentation first.
 
-There is nothing PHY related in here, its all mdio bus.
-
-      Andrew
+Will
