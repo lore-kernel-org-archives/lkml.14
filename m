@@ -1,45 +1,45 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3C9633F3;
-	Tue, 13 Feb 2024 23:57:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE7EB633E0;
+	Tue, 13 Feb 2024 23:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707868638; cv=none; b=FUgst+NJO9aDElBZSVpG4hf1hfxKbyMpSwC9vIhfRBG5fknpg7NTsMB+2hJGyEvg3pkwqIRmGyuMO0Qq/c6Khy48+PXqDjqNYcFlvhCArAnO6MHwfcPRe6SdFSC8yY3dERwAi30lhOCiRswxXwlA4HOJasgwnjOcZP8aHY/AV+s=
+	t=1707868636; cv=none; b=MrEPZPCT08A9looHLsKy1F+hRlIoxBYtbfLcH3mUqirnlEMCAaKDLqd7SswW86Z7Ii6+4pzdli1DOp8EdFo/Q5cZLR0T6c+OmdgHi+k71Ldp3VzysXN1NJ/blha0hj2JMuCncsMPxAeZvkbKjVuVyzIOjUgt3nDdQy7QlTG+U7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707868638; c=relaxed/simple;
-	bh=57r85c04iS9y0+WXgj8NTwDbeA0OfAOD5FJ8OH/vvkY=;
+	s=arc-20240116; t=1707868636; c=relaxed/simple;
+	bh=WFzc41RuG/3SZT/HB8xQNIW2yFJgb6Su6As9DZqk6oc=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rn+IMjH0ZB/p2ERz2yGbGAyvPxGNxNLjZRikyo+AqmeuDWNIJceFhxgIvEIr0uE0LM39hiNATCli9NTjDKEkdwtFxzF9lVE0whVhstxywRSbgyO7vrFiXd6hlQi/5vT3UUr3z0kh69CRLQ9f+QTlS9LItAO7YEign5f6S/sonA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=bCgSOrlC; arc=none smtp.client-ip=198.47.19.142
+	 MIME-Version:Content-Type; b=jJLM51KIbihHlp5aqplaX6DhSwjSEsIxWyX7jWXHTHugUAk8INtIuPneScD7xyiESSzxd9MuCiVS2ifDSr2kE75NjQ0F1nO+Dic4JeXI7GvnjGAF2jhGYL2iLG1aD6aPKZnODrHkUgkxs7PNW6v5c1UL6hHTtg9hzpgDd14bh3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=QQbEKGsw; arc=none smtp.client-ip=198.47.23.248
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bCgSOrlC"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QQbEKGsw"
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41DNv2St010139;
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41DNv23V011599;
 	Tue, 13 Feb 2024 17:57:02 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
 	s=ti-com-17Q1; t=1707868622;
-	bh=IC7kRIKyFObrP/W+da1WQgI1+htnvFrJ5WDTTLcimCA=;
+	bh=0hp3/TDhK5CfOBgxSbMqY7rvFItf3jeKxvWhQfzAsJc=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=bCgSOrlCR2oqr94yx/IJqnD76+FoQhTr8jCF2GzOKBcSkHXbjvdYXSlcPv2gkhVZK
-	 2sNUdVjkAzndB5Sf9+g2RxqhdX16IxZbQEm6HwhTK66VFVnA8kh1KkSt2qE+WaProI
-	 bA//BwV63Q0owOg47KGpHRPNUsOs+OVogMCaJOVY=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41DNv2wn075705
+	b=QQbEKGswyb4yXDAGLr11ClD/wkOEkP+CSCP8BedFH1EeysNPL2KSw+wOXaGCsJ1Nv
+	 2tZ6koLnxfQpR65fQuFol82v8Ed9DnCqu43VnLlo9OFLqHcUGDImgL1w+liNFhf77O
+	 iAx4kc2mj6p+srC1NZjiHSEYJ+cXLt1s8i3M1FRQ=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41DNv23n075722
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
 	Tue, 13 Feb 2024 17:57:02 -0600
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 13
  Feb 2024 17:57:01 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
  Frontend Transport; Tue, 13 Feb 2024 17:57:01 -0600
 Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41DNv1R7091761;
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41DNv1RA091761;
 	Tue, 13 Feb 2024 17:57:01 -0600
 From: Judith Mendez <jm@ti.com>
 To: Rob Herring <robh+dt@kernel.org>,
@@ -53,9 +53,9 @@ CC: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
         <linux-kernel@vger.kernel.org>, Wadim Egorov
 	<w.egorov@phytec.de>,
         Francesco Dolcini <francesco.dolcini@toradex.com>
-Subject: [PATCH v3 3/9] arm64: dts: ti: k3-am62a7-sk: Enable eMMC support
-Date: Tue, 13 Feb 2024 17:56:55 -0600
-Message-ID: <20240213235701.2438513-4-jm@ti.com>
+Subject: [PATCH v3 6/9] arm64: dts: ti: k3-am6*: Remove DLL properties for soft PHYs
+Date: Tue, 13 Feb 2024 17:56:58 -0600
+Message-ID: <20240213235701.2438513-7-jm@ti.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240213235701.2438513-1-jm@ti.com>
 References: <20240213235701.2438513-1-jm@ti.com>
@@ -69,71 +69,288 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-From: Nitin Yadav <n-yadav@ti.com>
+Remove DLL properties which are not applicable for soft PHYs
+since these PHYs do not have a DLL to enable.
 
-Add support for 32GB eMMC card on AM62A7 SK. Includes adding mmc0
-pins settings. Add mmc0 alias for sdhci0 in k3-am62a7-sk.dts.
-
-Signed-off-by: Nitin Yadav <n-yadav@ti.com>
+Acked-by: Francesco Dolcini <francesco.dolcini@toradex.com> # Verdin AM62
 Signed-off-by: Judith Mendez <jm@ti.com>
 ---
 Changes since V3:
-- No change
+- Remove ti,driver-strength-ohm property in sdhci1 node for
+ k3-am642-tqma64xxl-mbax4xxl and k3-am642-phyboard-electra-rdk board files.
+- Add Francesco's Acked-by
 ---
- arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 26 +++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ arch/arm64/boot/dts/ti/k3-am62-main.dtsi                 | 3 ---
+ arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi          | 1 -
+ arch/arm64/boot/dts/ti/k3-am62-verdin-dahlia.dtsi        | 1 -
+ arch/arm64/boot/dts/ti/k3-am62-verdin-dev.dtsi           | 1 -
+ arch/arm64/boot/dts/ti/k3-am62-verdin-wifi.dtsi          | 1 -
+ arch/arm64/boot/dts/ti/k3-am62-verdin.dtsi               | 2 --
+ arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts           | 3 ---
+ arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dts    | 1 -
+ arch/arm64/boot/dts/ti/k3-am62a-main.dtsi                | 1 -
+ arch/arm64/boot/dts/ti/k3-am62a7-sk.dts                  | 1 -
+ arch/arm64/boot/dts/ti/k3-am62p5-sk.dts                  | 1 -
+ arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi           | 2 --
+ arch/arm64/boot/dts/ti/k3-am64-main.dtsi                 | 1 -
+ arch/arm64/boot/dts/ti/k3-am642-evm.dts                  | 1 -
+ arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts | 1 -
+ arch/arm64/boot/dts/ti/k3-am642-sk.dts                   | 1 -
+ arch/arm64/boot/dts/ti/k3-am642-tqma64xxl-mbax4xxl.dts   | 1 -
+ 17 files changed, 23 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-index f5ae91bf1bdb..c99b2e90f76d 100644
---- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-@@ -20,6 +20,7 @@ aliases {
- 		serial0 = &wkup_uart0;
- 		serial2 = &main_uart0;
- 		serial3 = &main_uart1;
-+		mmc0 = &sdhci0;
- 		mmc1 = &sdhci1;
- 	};
+diff --git a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+index fe0cc4a9a501..79ed5cbbbda1 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+@@ -561,7 +561,6 @@ sdhci0: mmc@fa10000 {
+ 		assigned-clock-parents = <&k3_clks 57 8>;
+ 		mmc-ddr-1_8v;
+ 		mmc-hs200-1_8v;
+-		ti,trm-icp = <0x2>;
+ 		bus-width = <8>;
+ 		ti,clkbuf-sel = <0x7>;
+ 		ti,otap-del-sel-legacy = <0x0>;
+@@ -580,7 +579,6 @@ sdhci1: mmc@fa00000 {
+ 		power-domains = <&k3_pds 58 TI_SCI_PD_EXCLUSIVE>;
+ 		clocks = <&k3_clks 58 5>, <&k3_clks 58 6>;
+ 		clock-names = "clk_ahb", "clk_xin";
+-		ti,trm-icp = <0x2>;
+ 		ti,otap-del-sel-legacy = <0x8>;
+ 		ti,otap-del-sel-sd-hs = <0x0>;
+ 		ti,otap-del-sel-sdr12 = <0x0>;
+@@ -604,7 +602,6 @@ sdhci2: mmc@fa20000 {
+ 		power-domains = <&k3_pds 184 TI_SCI_PD_EXCLUSIVE>;
+ 		clocks = <&k3_clks 184 5>, <&k3_clks 184 6>;
+ 		clock-names = "clk_ahb", "clk_xin";
+-		ti,trm-icp = <0x2>;
+ 		ti,otap-del-sel-legacy = <0x8>;
+ 		ti,otap-del-sel-sd-hs = <0x0>;
+ 		ti,otap-del-sel-sdr12 = <0x0>;
+diff --git a/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi b/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi
+index 3372a256c90f..43488cc8bcb1 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi
+@@ -317,7 +317,6 @@ serial_flash: flash@0 {
+ &sdhci0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&main_mmc0_pins_default>;
+-	ti,driver-strength-ohm = <50>;
+ 	disable-wp;
+ 	non-removable;
+ 	status = "okay";
+diff --git a/arch/arm64/boot/dts/ti/k3-am62-verdin-dahlia.dtsi b/arch/arm64/boot/dts/ti/k3-am62-verdin-dahlia.dtsi
+index bf6d27e70bc4..6c4cec8728e4 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62-verdin-dahlia.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62-verdin-dahlia.dtsi
+@@ -185,7 +185,6 @@ &ospi0 {
  
-@@ -263,6 +264,22 @@ AM62AX_IOPAD(0x0b4, PIN_INPUT_PULLUP, 1) /* (K24) GPMC0_CSn3.I2C2_SDA */
- 		>;
- 	};
- 
-+	main_mmc0_pins_default: main-mmc0-default-pins {
-+		pinctrl-single,pins = <
-+			AM62AX_IOPAD(0x220, PIN_INPUT, 0) /* (Y3) MMC0_CMD */
-+			AM62AX_IOPAD(0x218, PIN_INPUT, 0) /* (AB1) MMC0_CLKLB */
-+			AM62AX_IOPAD(0x21c, PIN_INPUT, 0) /* (AB1) MMC0_CLK */
-+			AM62AX_IOPAD(0x214, PIN_INPUT, 0) /* (AA2) MMC0_DAT0 */
-+			AM62AX_IOPAD(0x210, PIN_INPUT_PULLUP, 0) /* (AA1) MMC0_DAT1 */
-+			AM62AX_IOPAD(0x20c, PIN_INPUT_PULLUP, 0) /* (AA3) MMC0_DAT2 */
-+			AM62AX_IOPAD(0x208, PIN_INPUT_PULLUP, 0) /* (Y4) MMC0_DAT3 */
-+			AM62AX_IOPAD(0x204, PIN_INPUT_PULLUP, 0) /* (AB2) MMC0_DAT4 */
-+			AM62AX_IOPAD(0x200, PIN_INPUT_PULLUP, 0) /* (AC1) MMC0_DAT5 */
-+			AM62AX_IOPAD(0x1fc, PIN_INPUT_PULLUP, 0) /* (AD2) MMC0_DAT6 */
-+			AM62AX_IOPAD(0x1f8, PIN_INPUT_PULLUP, 0) /* (AC2) MMC0_DAT7 */
-+		>;
-+	};
-+
- 	main_mmc1_pins_default: main-mmc1-default-pins {
- 		pinctrl-single,pins = <
- 			AM62AX_IOPAD(0x23c, PIN_INPUT, 0) /* (A21) MMC1_CMD */
-@@ -550,6 +567,15 @@ &main_i2c2 {
- 	clock-frequency = <400000>;
+ /* Verdin SD_1 */
+ &sdhci1 {
+-	ti,driver-strength-ohm = <33>;
+ 	status = "okay";
  };
  
-+&sdhci0 {
-+	/* eMMC */
-+	status = "okay";
-+	non-removable;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&main_mmc0_pins_default>;
-+	disable-wp;
-+};
-+
+diff --git a/arch/arm64/boot/dts/ti/k3-am62-verdin-dev.dtsi b/arch/arm64/boot/dts/ti/k3-am62-verdin-dev.dtsi
+index 680071688dcb..be62648e7818 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62-verdin-dev.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62-verdin-dev.dtsi
+@@ -206,7 +206,6 @@ &ospi0 {
+ 
+ /* Verdin SD_1 */
  &sdhci1 {
- 	/* SD/MMC */
+-	ti,driver-strength-ohm = <33>;
  	status = "okay";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/ti/k3-am62-verdin-wifi.dtsi b/arch/arm64/boot/dts/ti/k3-am62-verdin-wifi.dtsi
+index a6808b10c7b2..4768ef42c4fc 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62-verdin-wifi.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62-verdin-wifi.dtsi
+@@ -26,7 +26,6 @@ &sdhci2 {
+ 	mmc-pwrseq = <&wifi_pwrseq>;
+ 	non-removable;
+ 	ti,fails-without-test-cd;
+-	ti,driver-strength-ohm = <50>;
+ 	vmmc-supply = <&reg_3v3>;
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/ti/k3-am62-verdin.dtsi b/arch/arm64/boot/dts/ti/k3-am62-verdin.dtsi
+index 6a06724b6d16..d68310444bcb 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62-verdin.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62-verdin.dtsi
+@@ -1407,7 +1407,6 @@ &sdhci0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_sdhci0>;
+ 	non-removable;
+-	ti,driver-strength-ohm = <50>;
+ 	status = "okay";
+ };
+ 
+@@ -1416,7 +1415,6 @@ &sdhci1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_sdhci1>;
+ 	disable-wp;
+-	ti,driver-strength-ohm = <50>;
+ 	vmmc-supply = <&reg_sdhc1_vmmc>;
+ 	vqmmc-supply = <&reg_sdhc1_vqmmc>;
+ 	status = "disabled";
+diff --git a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+index 3b4246ce49de..bb6a5837bcb3 100644
+--- a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
++++ b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+@@ -819,7 +819,6 @@ &sdhci0 {
+ 	bootph-all;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&emmc_pins_default>;
+-	ti,driver-strength-ohm = <50>;
+ 	disable-wp;
+ 	status = "okay";
+ };
+@@ -832,7 +831,6 @@ &sdhci1 {
+ 
+ 	vmmc-supply = <&vdd_3v3_sd>;
+ 	vqmmc-supply = <&vdd_sd_dv>;
+-	ti,driver-strength-ohm = <50>;
+ 	disable-wp;
+ 	cd-gpios = <&main_gpio1 48 GPIO_ACTIVE_LOW>;
+ 	cd-debounce-delay-ms = <100>;
+@@ -849,7 +847,6 @@ &sdhci2 {
+ 	ti,fails-without-test-cd;
+ 	cap-power-off-card;
+ 	keep-power-in-suspend;
+-	ti,driver-strength-ohm = <50>;
+ 	assigned-clocks = <&k3_clks 157 158>;
+ 	assigned-clock-parents = <&k3_clks 157 160>;
+ 	#address-cells = <1>;
+diff --git a/arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dts b/arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dts
+index 5c31f0453def..a83a90497857 100644
+--- a/arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dts
++++ b/arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dts
+@@ -334,7 +334,6 @@ &sdhci1 {
+ 	vqmmc-supply = <&vddshv5_sdio>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&main_mmc1_pins_default>;
+-	ti,driver-strength-ohm = <50>;
+ 	disable-wp;
+ 	no-1-8-v;
+ 	status = "okay";
+diff --git a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
+index 6806288ec227..f283777d54b4 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
+@@ -561,7 +561,6 @@ sdhci1: mmc@fa00000 {
+ 		power-domains = <&k3_pds 58 TI_SCI_PD_EXCLUSIVE>;
+ 		clocks = <&k3_clks 58 5>, <&k3_clks 58 6>;
+ 		clock-names = "clk_ahb", "clk_xin";
+-		ti,trm-icp = <0x2>;
+ 		ti,otap-del-sel-legacy = <0x0>;
+ 		ti,otap-del-sel-sd-hs = <0x0>;
+ 		ti,otap-del-sel-sdr12 = <0xf>;
+diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+index c99b2e90f76d..f241637a5642 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
++++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+@@ -582,7 +582,6 @@ &sdhci1 {
+ 	vmmc-supply = <&vdd_mmc1>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&main_mmc1_pins_default>;
+-	ti,driver-strength-ohm = <50>;
+ 	disable-wp;
+ };
+ 
+diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
+index 8c73587b0b62..5c9b73726ebd 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
++++ b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
+@@ -422,7 +422,6 @@ &sdhci1 {
+ 	vqmmc-supply = <&vddshv_sdio>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&main_mmc1_pins_default>;
+-	ti,driver-strength-ohm = <50>;
+ 	disable-wp;
+ 	bootph-all;
+ };
+diff --git a/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi b/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
+index 6dd496cd459a..3c45782ab2b7 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
+@@ -411,7 +411,6 @@ &sdhci0 {
+ 	status = "okay";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&main_mmc0_pins_default>;
+-	ti,driver-strength-ohm = <50>;
+ 	disable-wp;
+ };
+ 
+@@ -421,7 +420,6 @@ &sdhci1 {
+ 	status = "okay";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&main_mmc1_pins_default>;
+-	ti,driver-strength-ohm = <50>;
+ 	disable-wp;
+ };
+ 
+diff --git a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
+index 9bfa0a969bfc..a29847735c6e 100644
+--- a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
+@@ -646,7 +646,6 @@ sdhci1: mmc@fa00000 {
+ 		power-domains = <&k3_pds 58 TI_SCI_PD_EXCLUSIVE>;
+ 		clocks = <&k3_clks 58 3>, <&k3_clks 58 4>;
+ 		clock-names = "clk_ahb", "clk_xin";
+-		ti,trm-icp = <0x2>;
+ 		ti,otap-del-sel-legacy = <0x0>;
+ 		ti,otap-del-sel-sd-hs = <0x0>;
+ 		ti,otap-del-sel-sdr12 = <0xf>;
+diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm.dts b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
+index 5c546ae76d3e..f308076d608a 100644
+--- a/arch/arm64/boot/dts/ti/k3-am642-evm.dts
++++ b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
+@@ -508,7 +508,6 @@ &sdhci1 {
+ 	pinctrl-names = "default";
+ 	bus-width = <4>;
+ 	pinctrl-0 = <&main_mmc1_pins_default>;
+-	ti,driver-strength-ohm = <50>;
+ 	disable-wp;
+ };
+ 
+diff --git a/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts b/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts
+index c0c45b8a0245..8237b8c815b8 100644
+--- a/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts
++++ b/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts
+@@ -292,7 +292,6 @@ &sdhci1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&main_mmc1_pins_default>;
+ 	bus-width = <4>;
+-	ti,driver-strength-ohm = <50>;
+ 	disable-wp;
+ 	no-1-8-v;
+ };
+diff --git a/arch/arm64/boot/dts/ti/k3-am642-sk.dts b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
+index cce04e188ff6..b286eaa02ada 100644
+--- a/arch/arm64/boot/dts/ti/k3-am642-sk.dts
++++ b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
+@@ -471,7 +471,6 @@ &sdhci1 {
+ 	pinctrl-names = "default";
+ 	bus-width = <4>;
+ 	pinctrl-0 = <&main_mmc1_pins_default>;
+-	ti,driver-strength-ohm = <50>;
+ 	disable-wp;
+ };
+ 
+diff --git a/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl-mbax4xxl.dts b/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl-mbax4xxl.dts
+index 55102d35cecc..1f4dc5ad1696 100644
+--- a/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl-mbax4xxl.dts
++++ b/arch/arm64/boot/dts/ti/k3-am642-tqma64xxl-mbax4xxl.dts
+@@ -422,7 +422,6 @@ &sdhci1 {
+ 	cd-gpios = <&main_gpio1 77 GPIO_ACTIVE_LOW>;
+ 	disable-wp;
+ 	no-mmc;
+-	ti,driver-strength-ohm = <50>;
+ 	ti,fails-without-test-cd;
+ 	/* Enabled by overlay */
+ };
 -- 
 2.43.0
 
