@@ -1,288 +1,219 @@
-Received: from fout6-smtp.messagingengine.com (fout6-smtp.messagingengine.com [103.168.172.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB4260257;
-	Tue, 13 Feb 2024 17:52:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11F15FF1A;
+	Tue, 13 Feb 2024 17:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707846757; cv=none; b=pLSh5zWtJSkcX3fgqp3k4zNMEPjtEOGvcBeWsnb6+wJ/1U29n/DgvTtO8uIbjUM484Xi3lxIdD+q8nk6NkLadlE0Hb9s7zJkvaqqVCFO6Jg2lIpeb1RSf8A9qu+ZbUJZLzzxRT/rm7mjbK9tQXoGB+LUVIjkM8VINtWlFTn3g9s=
+	t=1707846816; cv=none; b=CmyehDEm0Iyivi0RaJoSpi7FPMJr1qovghkDHICniYCfSDb0Vnx31EPhPqXq095Vx9z7STIa+1xvnaCEJ82eJiXaBMKN68i36dYa9lS+OkHEI159mT7ayiNFiAYCrSzfTKhcgnabLShQVspt8441zkO1VqTdqFrHNRVHv4tBOXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707846757; c=relaxed/simple;
-	bh=GOhCyQtvc/6VfxHdGUJKfa/jvngt1ALNRbcuWBvzI5M=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=VvA9QarNYIsxC4BnMnkqI+6yLOx9fJ+o9W8jWPo5CZqPkNnBcSW7wdvjy5ytaEYB1WjZXPbcRTydzNunrVIINND0izR37xAgrV2EBh2XIzh+y1bx5wicW0A8P1IN6jGoYxZTldj/wzZIxoxO3/1Gm7wG8Jo2U0USjXIHcPiYWhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com; spf=pass smtp.mailfrom=fastmail.com; dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b=cKKvjeRU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bSOoRBZA; arc=none smtp.client-ip=103.168.172.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b="cKKvjeRU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bSOoRBZA"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfout.nyi.internal (Postfix) with ESMTP id CAF8C13800FB;
-	Tue, 13 Feb 2024 12:52:33 -0500 (EST)
-Received: from imap50 ([10.202.2.100])
-  by compute3.internal (MEProxy); Tue, 13 Feb 2024 12:52:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1707846753; x=1707933153; bh=vhIUZMkM/x
-	km+Xv7l4njwVz/7cIEtITlcl0X+PsN0Os=; b=cKKvjeRUhSWp6+KhNtBeyKLCaP
-	ARMNVL/sNSqKUPXeEIvvmdrmznNX3hSweyArhvGRaXMdXCuSwGTT94uwp9tdyHEh
-	QDMKJxANH7X9ypCfoDN4sHAx3qWkvtrnHa/D9EbMiXb865qnBoha6dbnM9zFjqMi
-	PImaRO78/kcizAGxrfhDBxmRp00OvcvJLxmNM1oPQ8xYKea72hJv2n9yPTEHlNb+
-	SRDmJdU1HM2QAQLuSDd+GWhM+lR7Nm0rHtWZukQZ6WFDjnDUXtBJe1ykZ4fDyeTt
-	JKmXQL7SIoi3wKNtP34jhWCLS3xkJ/0QkmsqxphIw6SJpE77GcYpEm8ozzoA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1707846753; x=1707933153; bh=vhIUZMkM/xkm+Xv7l4njwVz/7cIE
-	tITlcl0X+PsN0Os=; b=bSOoRBZAsw7JU0umqY2910XERNx6hsT0mxYGuPfhxfqk
-	eO94kt9BRz2YIPa+oo26NydGk6OvpWXgdRu5rDrUABXrP/SAdOmmlK2UC8KE/9rq
-	+ieKjARFMQgIL2Do6Rl4WRyxC12Z1oxff9EVrun5rHvK3PZbkFDHRgUmUELdptGk
-	cNgyz3gHwAYi8LlLXUG1/duYNwbs5iEF3GpDu9oMOYf4SdQ1znL+zdvllVKJ1wCG
-	MM5bdFiMNdiSDy3N/5qhwZFXcUrZ/7xVKTHqs3qC+lSjHFnRqpq6jQEs11ZLvrjE
-	0YR6Qj4Be3+2Cuyge0Web+zRRZnpeKSgTvp7dnxPGg==
-X-ME-Sender: <xms:YazLZfElPhnISDzsnbD26WHbam4Vxj-EptGnSboc52H60kijlPdlmg>
-    <xme:YazLZcXJrtXEIQLT86At18cbqeXMrZNRkWy3zkXfG_xVZT9BL1yNw9TrO9RgcYT9Y
-    OlmkP4idn2SqjIplA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudehgddutdehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfufht
-    vghfrghnucfqkdftvggrrhdfuceoshhorhgvrghrsehfrghsthhmrghilhdrtghomheqne
-    cuggftrfgrthhtvghrnhephfevteethfetjeegjeehjeehieejuddtfeevtedtvddtudet
-    ffduvdfggeefgeeunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpihhnfhhrrgguvg
-    grugdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
-    ohhmpehsohhrvggrrhesfhgrshhtmhgrihhlrdgtohhm
-X-ME-Proxy: <xmx:YazLZRI_r9PXxz_Q1QL5g5mjArI6GBlvR_cfyX_PFzRX87lu-k4X0Q>
-    <xmx:YazLZdFyw5m1CczybkpOv7laYymyu1RrDybDKKtqKJRP59hOuJZxjA>
-    <xmx:YazLZVVtT2SaLtCDdZ6rexlm_Z-hJsN78gtNCR6rwy5ebxMMKo45ZQ>
-    <xmx:YazLZTc7Agvzm5Naz1oNFwqv_6vDEP8ELDt_4ZdUnmcj4WJXbG5n6Q>
-Feedback-ID: i84414492:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 908C41700096; Tue, 13 Feb 2024 12:52:33 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-144-ge5821d614e-fm-20240125.002-ge5821d61
+	s=arc-20240116; t=1707846816; c=relaxed/simple;
+	bh=7WcguzORNUncVMI8yVHuEyVH6gHiNRJ99ytpWlcFL3k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VFPulARuy5GG+2UZfnnTrY2phOCEqMJpJCPIPijJI1mFkHFIqdSUsa3NpJmDZI4kzngTrXt55TB+kJpEP/NJtC8vsJ4CeG6YEl+ecW0v7/cQFXJe7ae8pYICeeQJNLbgBLZq2CVrwWF6fC2Q5QbOnhZRLyENeM1uStXNsE56yeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5ce07cf1e5dso3560604a12.2;
+        Tue, 13 Feb 2024 09:53:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707846814; x=1708451614;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jIAYX2by5VkQGQHZUnXlAIcJ91jHMtAdkIYxHslLShk=;
+        b=GIOl3Sa7sIotJN2x0eqwE3AVPICmLFiM3IuAHdp0szAgWJybgpKNwLtzpCX2nBT/jk
+         hTDJLZnuypxczgjgbDSorE2fRP1CMKQCDZ07gp/FqMbSCxfLW/Mwvf3crGP8lX+VuzLS
+         +KWbJORmtQJe5ksx4GEUja99NXESkNTJPxSCUxunyAhEIKPemdUB10Ve3YNssZl3Guy7
+         dZvqifJA4aPr6vuQf7hi5CUWT7uMPQi2IVCbZAv6REvKGZn+Zv1Uj8xZ40H5dnLLmVAk
+         A6VMl50K50rC7FVBEV79KUeQAj0pXrOFcpSoQAVZXYKPG7vmTeeOz2YxTJZVTk/+mUTW
+         8RlA==
+X-Forwarded-Encrypted: i=1; AJvYcCUxVtfvAvV2MVOU4+TaJvC9BNjlSSzlN2uOdyqe0yKVT6XeOkXLapZ/npd0mq3Sw/8xAx5oTfShJLeiEWHKF1AUpivj4MmLCZY9O79JxzYKXk7UnTV5Pw6ejLSpZ0ibrI1rfFLLoccb89UfgjH0pXjjD1JmbnbLPDnuK8lNuxrpv032XA==
+X-Gm-Message-State: AOJu0YzbsdCjDU4kRq5WbCWkbGvjys1rxzzc/4bieu9fa72P5tGAu6TE
+	nj70df0MZOwFHTdENEViRwlVkEfXRdBzszyhPe1pebZZtbfk4hMQwgj9m4qQT6/prY34OkRMQHM
+	P8kKOnM4GYL4fjoG635uXU7Og2Lw=
+X-Google-Smtp-Source: AGHT+IG/7yPnHipxkvG4GDwHRmNgX66LCK7NFEi9SYooQTwor/KSzpLbexwipqs0oK/vZHTUoy/+Fp9QbVLRF1qnt4I=
+X-Received: by 2002:a05:6a20:21ca:b0:19e:a9bf:d51a with SMTP id
+ p10-20020a056a2021ca00b0019ea9bfd51amr272928pzb.32.1707846813997; Tue, 13 Feb
+ 2024 09:53:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <1c93421f-a70b-46ba-a25c-50cde87bf64d@app.fastmail.com>
-In-Reply-To: <20240213-1835b458d8cad71a76fa7322@orel>
-References: <20240213033744.4069020-1-samuel.holland@sifive.com>
- <20240213033744.4069020-4-samuel.holland@sifive.com>
- <20240213-1835b458d8cad71a76fa7322@orel>
-Date: Tue, 13 Feb 2024 12:52:10 -0500
-From: "Stefan O'Rear" <sorear@fastmail.com>
-To: "Andrew Jones" <ajones@ventanamicro.com>,
- "Samuel Holland" <samuel.holland@sifive.com>
-Cc: "Palmer Dabbelt" <palmer@dabbelt.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH -fixes v2 3/4] riscv: Add ISA extension parsing for Sm and Ss
-Content-Type: text/plain
+References: <20240207223639.3139601-1-irogers@google.com> <CAM9d7chBixXozCQztM2WKGbfs_8C70vy6ROzKpwLSqq-upz5iQ@mail.gmail.com>
+ <CAP-5=fUVkaq3dDoeMYYEN1N-ghnL-GiP8PV3N3pWpjQKpDTCHw@mail.gmail.com>
+ <CAP-5=fXs8=HvjGpkLwuZBi0Hh8jtmz7=0Tp7HRgU8FOFN0GZvg@mail.gmail.com>
+ <CAM9d7choe-CruqcdkLMPC1Eu4Oca0CBaaq-uiCd=csiLY60NBw@mail.gmail.com> <CAP-5=fXAkbnpKpkCM8soy7pHzCZZJ8VWYrd9ewFtZoaoA6vZnQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fXAkbnpKpkCM8soy7pHzCZZJ8VWYrd9ewFtZoaoA6vZnQ@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 13 Feb 2024 09:53:21 -0800
+Message-ID: <CAM9d7cgGGw20t+VqzCd31CDUqo4roihknyH=2+_7CHuFhHh5fQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] maps memory improvements and fixes
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Song Liu <song@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Liam Howlett <liam.howlett@oracle.com>, 
+	Colin Ian King <colin.i.king@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Artem Savkov <asavkov@redhat.com>, Changbin Du <changbin.du@huawei.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	James Clark <james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 13, 2024, at 10:14 AM, Andrew Jones wrote:
-> On Mon, Feb 12, 2024 at 07:37:34PM -0800, Samuel Holland wrote:
->> Previously, all extension version numbers were ignored. However, the
->> version number is important for these two extensions. The simplest way
->> to implement this is to use a separate bitmap bit for each supported
->> version, with each successive version implying all of the previous ones.
->> This allows alternatives and riscv_has_extension_[un]likely() to work
->> naturally.
->>
->> To avoid duplicate extensions in /proc/cpuinfo, the new successor_id
->> field allows hiding all but the newest implemented version of an
->> extension.
->> 
->> Cc: <stable@vger.kernel.org> # v6.7+
->> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
->> ---
->> 
->> Changes in v2:
->>  - New patch for v2
->> 
->>  arch/riscv/include/asm/cpufeature.h |  1 +
->>  arch/riscv/include/asm/hwcap.h      |  8 ++++++
->>  arch/riscv/kernel/cpu.c             |  5 ++++
->>  arch/riscv/kernel/cpufeature.c      | 42 +++++++++++++++++++++++++----
->>  4 files changed, 51 insertions(+), 5 deletions(-)
->> 
->> diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/asm/cpufeature.h
->> index 0bd11862b760..ac71384e7bc4 100644
->> --- a/arch/riscv/include/asm/cpufeature.h
->> +++ b/arch/riscv/include/asm/cpufeature.h
->> @@ -61,6 +61,7 @@ struct riscv_isa_ext_data {
->>  	const char *property;
->>  	const unsigned int *subset_ext_ids;
->>  	const unsigned int subset_ext_size;
->> +	const unsigned int successor_id;
->>  };
->>  
->>  extern const struct riscv_isa_ext_data riscv_isa_ext[];
->> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
->> index 5340f818746b..5b51aa1db15b 100644
->> --- a/arch/riscv/include/asm/hwcap.h
->> +++ b/arch/riscv/include/asm/hwcap.h
->> @@ -80,13 +80,21 @@
->>  #define RISCV_ISA_EXT_ZFA		71
->>  #define RISCV_ISA_EXT_ZTSO		72
->>  #define RISCV_ISA_EXT_ZACAS		73
->> +#define RISCV_ISA_EXT_SM1p11		74
->> +#define RISCV_ISA_EXT_SM1p12		75
->> +#define RISCV_ISA_EXT_SS1p11		76
->> +#define RISCV_ISA_EXT_SS1p12		77
->>  
->>  #define RISCV_ISA_EXT_MAX		128
->>  #define RISCV_ISA_EXT_INVALID		U32_MAX
->>  
->>  #ifdef CONFIG_RISCV_M_MODE
->> +#define RISCV_ISA_EXT_Sx1p11		RISCV_ISA_EXT_SM1p11
->> +#define RISCV_ISA_EXT_Sx1p12		RISCV_ISA_EXT_SM1p12
->>  #define RISCV_ISA_EXT_SxAIA		RISCV_ISA_EXT_SMAIA
->>  #else
->> +#define RISCV_ISA_EXT_Sx1p11		RISCV_ISA_EXT_SS1p11
->> +#define RISCV_ISA_EXT_Sx1p12		RISCV_ISA_EXT_SS1p12
->>  #define RISCV_ISA_EXT_SxAIA		RISCV_ISA_EXT_SSAIA
->>  #endif
->>  
->> diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
->> index d11d6320fb0d..2e6b90ed0d51 100644
->> --- a/arch/riscv/kernel/cpu.c
->> +++ b/arch/riscv/kernel/cpu.c
->> @@ -215,6 +215,11 @@ static void print_isa(struct seq_file *f, const unsigned long *isa_bitmap)
->>  		if (!__riscv_isa_extension_available(isa_bitmap, riscv_isa_ext[i].id))
->>  			continue;
->>  
->> +		/* Only show the newest implemented version of an extension */
->> +		if (riscv_isa_ext[i].successor_id != RISCV_ISA_EXT_INVALID &&
->> +		    __riscv_isa_extension_available(isa_bitmap, riscv_isa_ext[i].successor_id))
->> +			continue;
+On Mon, Feb 12, 2024 at 12:22=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
 >
-> I'm not sure we need this. Expanding Ss1p12 to 'Ss1p11 Ss1p12' and then
-> outputting both in the ISA string doesn't seem harmful to me. Also, using
-> a successor field instead of supersedes field may make this logic easy,
-> but it'll require updating old code (changing RISCV_ISA_EXT_INVALID to the
-> new version extension ID) when new versions are added. A supersedes field
-> wouldn't require old code updates and would match the profiles spec which
-> have explicit 'Ss1p12 supersedes Ss1p11.' type sentences.
-
-Seconding - suppressing implied extensions in /proc/cpuinfo will require anything
-that parses /proc/cpuinfo to know about extension implication in order to
-generate the complete list.
-
->> +
->>  		/* Only multi-letter extensions are split by underscores */
->>  		if (strnlen(riscv_isa_ext[i].name, 2) != 1)
->>  			seq_puts(f, "_");
->> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
->> index c5b13f7dd482..8e10b50120e9 100644
->> --- a/arch/riscv/kernel/cpufeature.c
->> +++ b/arch/riscv/kernel/cpufeature.c
->> @@ -113,23 +113,29 @@ static bool riscv_isa_extension_check(int id)
->>  	return true;
->>  }
->>  
->> -#define _RISCV_ISA_EXT_DATA(_name, _id, _subset_exts, _subset_exts_size) {	\
->> +#define _RISCV_ISA_EXT_DATA(_name, _id, _subset_exts, _subset_exts_size, _successor) {	\
->>  	.name = #_name,								\
->>  	.property = #_name,							\
->>  	.id = _id,								\
->>  	.subset_ext_ids = _subset_exts,						\
->> -	.subset_ext_size = _subset_exts_size					\
->> +	.subset_ext_size = _subset_exts_size,					\
->> +	.successor_id = _successor,						\
->>  }
->>  
->> -#define __RISCV_ISA_EXT_DATA(_name, _id) _RISCV_ISA_EXT_DATA(_name, _id, NULL, 0)
->> +#define __RISCV_ISA_EXT_DATA(_name, _id) \
->> +	_RISCV_ISA_EXT_DATA(_name, _id, NULL, 0, RISCV_ISA_EXT_INVALID)
->>  
->>  /* Used to declare pure "lasso" extension (Zk for instance) */
->>  #define __RISCV_ISA_EXT_BUNDLE(_name, _bundled_exts) \
->> -	_RISCV_ISA_EXT_DATA(_name, RISCV_ISA_EXT_INVALID, _bundled_exts, ARRAY_SIZE(_bundled_exts))
->> +	_RISCV_ISA_EXT_DATA(_name, RISCV_ISA_EXT_INVALID, \
->> +			    _bundled_exts, ARRAY_SIZE(_bundled_exts), RISCV_ISA_EXT_INVALID)
->>  
->>  /* Used to declare extensions that are a superset of other extensions (Zvbb for instance) */
->>  #define __RISCV_ISA_EXT_SUPERSET(_name, _id, _sub_exts) \
->> -	_RISCV_ISA_EXT_DATA(_name, _id, _sub_exts, ARRAY_SIZE(_sub_exts))
->> +	_RISCV_ISA_EXT_DATA(_name, _id, _sub_exts, ARRAY_SIZE(_sub_exts), RISCV_ISA_EXT_INVALID)
->> +
->> +#define __RISCV_ISA_EXT_VERSION(_name, _id, _preds, _preds_size, _successor) \
->> +	_RISCV_ISA_EXT_DATA(_name, _id, _preds, _preds_size, _successor)
->>  
->>  static const unsigned int riscv_zk_bundled_exts[] = {
->>  	RISCV_ISA_EXT_ZBKB,
->> @@ -201,6 +207,16 @@ static const unsigned int riscv_zvbb_exts[] = {
->>  	RISCV_ISA_EXT_ZVKB
->>  };
->>  
->> +static const unsigned int riscv_sm_ext_versions[] = {
->> +	RISCV_ISA_EXT_SM1p11,
->> +	RISCV_ISA_EXT_SM1p12,
->> +};
->> +
->> +static const unsigned int riscv_ss_ext_versions[] = {
->> +	RISCV_ISA_EXT_SS1p11,
->> +	RISCV_ISA_EXT_SS1p12,
->> +};
->> +
->>  /*
->>   * The canonical order of ISA extension names in the ISA string is defined in
->>   * chapter 27 of the unprivileged specification.
->> @@ -299,8 +315,16 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
->>  	__RISCV_ISA_EXT_DATA(zvksh, RISCV_ISA_EXT_ZVKSH),
->>  	__RISCV_ISA_EXT_BUNDLE(zvksg, riscv_zvksg_bundled_exts),
->>  	__RISCV_ISA_EXT_DATA(zvkt, RISCV_ISA_EXT_ZVKT),
->> +	__RISCV_ISA_EXT_VERSION(sm1p11, RISCV_ISA_EXT_SM1p11, riscv_sm_ext_versions, 0,
->> +				RISCV_ISA_EXT_SM1p12),
->> +	__RISCV_ISA_EXT_VERSION(sm1p12, RISCV_ISA_EXT_SM1p12, riscv_sm_ext_versions, 1,
->> +				RISCV_ISA_EXT_INVALID),
->>  	__RISCV_ISA_EXT_DATA(smaia, RISCV_ISA_EXT_SMAIA),
->>  	__RISCV_ISA_EXT_DATA(smstateen, RISCV_ISA_EXT_SMSTATEEN),
->> +	__RISCV_ISA_EXT_VERSION(ss1p11, RISCV_ISA_EXT_SS1p11, riscv_ss_ext_versions, 0,
->> +				RISCV_ISA_EXT_SS1p12),
->> +	__RISCV_ISA_EXT_VERSION(ss1p12, RISCV_ISA_EXT_SS1p12, riscv_ss_ext_versions, 1,
->> +				RISCV_ISA_EXT_INVALID),
->>  	__RISCV_ISA_EXT_DATA(ssaia, RISCV_ISA_EXT_SSAIA),
->>  	__RISCV_ISA_EXT_DATA(sscofpmf, RISCV_ISA_EXT_SSCOFPMF),
->>  	__RISCV_ISA_EXT_DATA(sstc, RISCV_ISA_EXT_SSTC),
->> @@ -414,6 +438,14 @@ static void __init riscv_parse_isa_string(unsigned long *this_hwcap, struct risc
->>  				;
->>  
->>  			++ext_end;
->> +
->> +			/*
->> +			 * As a special case for the Sm and Ss extensions, where the version
->> +			 * number is important, include it in the extension name.
->> +			 */
->> +			if (ext_end - ext == 2 && tolower(ext[0]) == 's' &&
->> +			    (tolower(ext[1]) == 'm' || tolower(ext[1]) == 's'))
->> +				ext_end = isa;
-
-Per the strategy in [1] we treat every ratified version of every extension as a
-unique extension; the unique aspect here is that more than one version of Sm/Ss
-is defined.
-
-[1]: https://lore.kernel.org/linux-riscv/20230608-sitting-bath-31eddc03c5a5@spud/
-
--s
-
->>  			break;
->>  		default:
->>  			/*
->> -- 
->> 2.43.0
->>
+> On Mon, Feb 12, 2024 at 12:10=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
+g> wrote:
+> >
+> > On Sat, Feb 10, 2024 at 10:08=E2=80=AFAM Ian Rogers <irogers@google.com=
+> wrote:
+> > >
+> > > On Fri, Feb 9, 2024 at 6:46=E2=80=AFPM Ian Rogers <irogers@google.com=
+> wrote:
+> > > >
+> > > > On Thu, Feb 8, 2024 at 9:44=E2=80=AFAM Namhyung Kim <namhyung@kerne=
+l.org> wrote:
+> > > > >
+> > > > > Hi Ian,
+> > > > >
+> > > > > On Wed, Feb 7, 2024 at 2:37=E2=80=AFPM Ian Rogers <irogers@google=
+.com> wrote:
+> > > > > >
+> > > > > > First 6 patches from:
+> > > > > > https://lore.kernel.org/lkml/20240202061532.1939474-1-irogers@g=
+oogle.com/
+> > > > > >
+> > > > > > v2. Fix NO_LIBUNWIND=3D1 build issue.
+> > > > > >
+> > > > > > Ian Rogers (6):
+> > > > > >   perf maps: Switch from rbtree to lazily sorted array for addr=
+esses
+> > > > > >   perf maps: Get map before returning in maps__find
+> > > > > >   perf maps: Get map before returning in maps__find_by_name
+> > > > > >   perf maps: Get map before returning in maps__find_next_entry
+> > > > > >   perf maps: Hide maps internals
+> > > > > >   perf maps: Locking tidy up of nr_maps
+> > > > >
+> > > > > Now I see a perf test failure on the vmlinux test:
+> > > > >
+> > > > > $ sudo ./perf test -v vmlinux
+> > > > >   1: vmlinux symtab matches kallsyms                             =
+    :
+> > > > > --- start ---
+> > > > > test child forked, pid 4164115
+> > > > > /proc/{kallsyms,modules} inconsistency while looking for
+> > > > > "[__builtin__kprobes]" module!
+> > > > > /proc/{kallsyms,modules} inconsistency while looking for
+> > > > > "[__builtin__kprobes]" module!
+> > > > > /proc/{kallsyms,modules} inconsistency while looking for
+> > > > > "[__builtin__ftrace]" module!
+> > > > > Looking at the vmlinux_path (8 entries long)
+> > > > > Using /usr/lib/debug/boot/vmlinux-6.5.13-1rodete2-amd64 for symbo=
+ls
+> > > > > perf: Segmentation fault
+> > > > > Obtained 16 stack frames.
+> > > > > ./perf(+0x1b7dcd) [0x55c40be97dcd]
+> > > > > ./perf(+0x1b7eb7) [0x55c40be97eb7]
+> > > > > /lib/x86_64-linux-gnu/libc.so.6(+0x3c510) [0x7f33d7a5a510]
+> > > > > ./perf(+0x1c2e9c) [0x55c40bea2e9c]
+> > > > > ./perf(+0x1c43f6) [0x55c40bea43f6]
+> > > > > ./perf(+0x1c4649) [0x55c40bea4649]
+> > > > > ./perf(+0x1c46d3) [0x55c40bea46d3]
+> > > > > ./perf(+0x1c7303) [0x55c40bea7303]
+> > > > > ./perf(+0x1c70b5) [0x55c40bea70b5]
+> > > > > ./perf(+0x1c73e6) [0x55c40bea73e6]
+> > > > > ./perf(+0x11833e) [0x55c40bdf833e]
+> > > > > ./perf(+0x118f78) [0x55c40bdf8f78]
+> > > > > ./perf(+0x103d49) [0x55c40bde3d49]
+> > > > > ./perf(+0x103e75) [0x55c40bde3e75]
+> > > > > ./perf(+0x1044c0) [0x55c40bde44c0]
+> > > > > ./perf(+0x104de0) [0x55c40bde4de0]
+> > > > > test child interrupted
+> > > > > ---- end ----
+> > > > > vmlinux symtab matches kallsyms: FAILED!
+> > > >
+> > > > Ah, tripped over a latent bug summarized in this part of an asan st=
+ack trace:
+> > > > ```
+> > > > freed by thread T0 here:
+> > > >    #0 0x7fa13bcd74b5 in __interceptor_realloc
+> > > > ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:85
+> > > >    #1 0x561d66377713 in __maps__insert util/maps.c:353
+> > > >    #2 0x561d66377b89 in maps__insert util/maps.c:413
+> > > >    #3 0x561d6652911d in dso__process_kernel_symbol util/symbol-elf.=
+c:1460
+> > > >    #4 0x561d6652aaae in dso__load_sym_internal util/symbol-elf.c:16=
+75
+> > > >    #5 0x561d6652b6dc in dso__load_sym util/symbol-elf.c:1771
+> > > >    #6 0x561d66321a4e in dso__load util/symbol.c:1914
+> > > >    #7 0x561d66372cd9 in map__load util/map.c:353
+> > > >    #8 0x561d663730e7 in map__find_symbol_by_name_idx util/map.c:397
+> > > >    #9 0x561d663731e7 in map__find_symbol_by_name util/map.c:410
+> > > >    #10 0x561d66378208 in maps__find_symbol_by_name_cb util/maps.c:5=
+24
+> > > >    #11 0x561d66377f49 in maps__for_each_map util/maps.c:471
+> > > >    #12 0x561d663784a0 in maps__find_symbol_by_name util/maps.c:546
+> > > >    #13 0x561d662093e8 in machine__find_kernel_symbol_by_name util/m=
+achine.h:243
+> > > >    #14 0x561d6620abbd in test__vmlinux_matches_kallsyms
+> > > > tests/vmlinux-kallsyms.c:330
+> > > > ...
+> > > > ```
+> > > > dso__process_kernel_symbol rewrites the kernel maps here:
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
+t.git/tree/tools/perf/util/symbol-elf.c#n1378
+> > > > which resizes the maps_by_address array causing the maps__for_each_=
+map
+> > > > iteration in frame 11 to be iterating over a stale/freed value.
+> > > >
+> > > > The most correct solutions would be to clone the maps_by_address ar=
+ray
+> > > > prior to iteration, or reference count maps_by_address and its size=
+.
+> > > > Neither of these solutions particularly appeal, so just reloading t=
+he
+> > > > maps_by_address and size on each iteration also fixes the problem, =
+but
+> > > > possibly causes some maps to be skipped/repeated. I think this is
+> > > > acceptable correctness for the performance.
+> >
+> > Can we move map__load() out of maps__for_each_map() ?
+> > I think the callback should just return the map and break the loop.
+> > And it can call the map__load() out of the read lock.
 >
-> Thanks,
-> drew
+> It would need a rewrite of map__find_symbol_by_name which is being
+> called by a callback from maps__find_symbol_by_name. Perhaps an
+> initial pass to ensure everything is loaded and a safe version of the
+> loop that copies the maps_by_address ahead of copying it. It'd be of a
+> scope that'd be worth its own patch set.
+
+Right, let's do it in a separate work.
+
 >
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> > >
+> > > An aside, shouldn't taking a write lock to modify the maps deadlock
+> > > with holding the read lock for iteration? Well no because
+> > > perf_singlethreaded is true for the test:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/tree/tools/perf/util/rwsem.c#n17
+> > > Another perf_singlethreaded considered evil :-) Note, just getting ri=
+d
+> > > of perf_singlethreaded means latent bugs like this will pop up and
+> > > will need resolution.
+> >
+> > Yeah, maybe.  How about turning it on in the test code?
+>
+> Agreed, but I think it should be a follow up.
+
+Sounds good.
+
+Thanks,
+Namhyung
