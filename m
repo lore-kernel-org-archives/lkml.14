@@ -1,167 +1,121 @@
-Received: from r3-11.sinamail.sina.com.cn (r3-11.sinamail.sina.com.cn [202.108.3.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F93E38DD9
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 11:42:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.108.3.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16FD3364C1
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 11:43:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707824539; cv=none; b=by26Elcg9L2pRXOk1oXPWylQD1u0lsqKoO5dPuZ/9I9R9fDKW3LqMH3DecuVLmgBGbaPI7Qz855c1Ob5E6cx0d8Tne/1l2tt8WaLSPGCBGB+ti66CcyMWCdT2xoAfFzKN+vE2Jl1pivC3kzxxseoVaLHVOPZm8oOvJU/3M23ZJ0=
+	t=1707824614; cv=none; b=jPe5GSt0TXiDaqBPxGVexAW9Io2y8+TXBDamOyiFgrotIdcJqcB+begOIQmQ3EsxQXMmb1GQE66ofj8NyzLotmjbUksObJTEDgGXOdJtPbI5h8iQwIHpOkfMRtIGjW/0sM9RXdB+ByOKAJbkTge5B7QeYth2fdex4KpBguj4qbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707824539; c=relaxed/simple;
-	bh=oSxe1FJZlCGcbRapDJTRHz75Y/P6sXJvOGbg3MtEggU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SfvJgWCIa5Tz/bFUO7ufjgLjZwT5pxxp7FylGLo9CKrSrnL6bbjhJkU1W7ZnR2Glw3EatfRmOkNLMh9V7NQXI9EZdsvaWX4E2iORrFe8xprG3AJCuLRgM4qK3o40ScI4opDXaYXAKTn49xsO6pTVsARNFJJxpbRXrJW3U4pD1o8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=202.108.3.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([114.249.59.61])
-	by sina.com (10.182.253.22) with ESMTP
-	id 65CB558C00007BC9; Tue, 13 Feb 2024 19:42:06 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 3290486816228
-X-SMAIL-UIID: FEEA4E0FB2D3410CBE3ECB306D4FB6FA-20240213-194206-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+c2ada45c23d98d646118@syzkaller.appspotmail.com>
-Cc: almaz.alexandrovich@paragon-software.com,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ntfs3@lists.linux.dev,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [ntfs3?] possible deadlock in ntfs_set_state (2)
-Date: Tue, 13 Feb 2024 19:41:50 +0800
-Message-ID: <20240213114151.982-1-hdanton@sina.com>
-In-Reply-To: <000000000000998cff06113e1d91@google.com>
-References: 
+	s=arc-20240116; t=1707824614; c=relaxed/simple;
+	bh=j0EcmW86LVwxDZD8jjvR3IIBsMo9Vd5fN53o5Q4wNco=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=ZqVRiGLElzwS1o7TPcXHSJGEfw4TA/9oDAy5T5gRSB/hYWSz5d0NRsuDzwd1x1QTkWkquS8Yg2BTqSB9Nh9d64bsVOQG2phVhY4Ojaogq+3TNZ7pcYTxREzAXsDnvXa5sMPP2eotLRs3gY3k2bDD7SEEj39/cjWompGEShAekLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=MvhAkUC9; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="MvhAkUC9"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-33b2960ff60so3002900f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 03:43:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1707824610; x=1708429410; darn=vger.kernel.org;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=E9Sow8wf4cLhsoNjPkxy+Vy7mK54b8EsDuIPycqqMjY=;
+        b=MvhAkUC9tng24+xCuIdEMwNnVoqKqTUqsjzOwfRCIUcBsenLYgP3AnbEHrYA+o85u4
+         tqFGfknQAezY3HaXNJL+W2xiWpXr1vsT814jBr5jVxCZnDBubbJJhsiXGGciPAxM2A1b
+         BL131n7PmYd4ypfP0BZKhryTh/1j5RizR9BS1lRllGOwBaDum1LOJE1VLiVMD20edl2H
+         URiNK1t9b3nNGfBpvu1hIqH1O1O6BjzkUeiBHvcsOahvX+mpgRtYL8XowyIPB+4Yy4gR
+         muptTIiHU3464FcEeY3OxWuTCdFV4IccwREG/StJ2tVKMJUxqtk3PZ+rRchb1Ntua7XJ
+         Wc6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707824610; x=1708429410;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E9Sow8wf4cLhsoNjPkxy+Vy7mK54b8EsDuIPycqqMjY=;
+        b=qdLU95zfRwyEGYmrGi26iKouguF8uJ60HB+QC3apdojiscuIPNliZ5e/PTok0YVilg
+         MLJkacTe9veKEKFHX3u6OmStYouW2aT9H6mZ36rFVOpyXpiGiqSa8KB+8FALCBjVtxMV
+         g2F62pEAZF16dsf+g4DYHl0YHjk59ywBjF4JTjaSqfhdraQbhJveRHDStjmKbUtM41OH
+         xt7IwjVrOjbZSZY7SZ/s3huTyi/hHKvPFR1QlfVXgYSIDWW5H/4eIDrqJLxXUeE5rydo
+         rniUoHKSw2cwLy65KllMZDQ8XWN5vte18cl9qkOGcRfhQHc2DkxeKBbvvPQ059I5EXjl
+         2ZfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUxde7d/XYlweHBT/m2x48PQbNgyZWQxyvYl0izm//hyQqgI7gwn8ytG1RSLSginCM+njvKZOOQu5OvQ8pzlfiEaag9qB9Xg3DoFH3h
+X-Gm-Message-State: AOJu0Yzn7PtT1w65hGj7i9AXnkCkkWfsObvvbXY1zR2s/h6DrfNBZtew
+	dTmDNHcCO3IFUFMkZn5ECMu7GECRylhoBU9XFeL+4QQDZHNFoXRvZsoFYcLHoag=
+X-Google-Smtp-Source: AGHT+IG5/46zhd1eOGmh0ra4YTAm6cqkOsrOZ3nHpxyZmRoQkb4L9iG9KRCKL7XD6RvIzjKFdLIpsQ==
+X-Received: by 2002:adf:e501:0:b0:33c:ddf1:4e70 with SMTP id j1-20020adfe501000000b0033cddf14e70mr954874wrm.32.1707824610355;
+        Tue, 13 Feb 2024 03:43:30 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV7XrcP98bixIaJaWBm55q3RGYgSAE7tBhAYxKCoTsFS3k+4Ze4N9ov5S7jgh/2kJS+irBO7hxgVQEv5sDqQLLxPDbHWC/Gs9TNJlYjDEdufmt8KqWgoLUap5P3RpuWSetm000MWsh8TG+RUnCiXYaeMS5P0KNR3vebzw4AK/Q7JSo2GChThL92QnUXlhhiqm3T+6Rm3bvBKFEBzRlNWsZ+oOtKvz4oZ5nrlk648f3KJ2YpB/AX8hYJ587hDFDHo7r1dZijD51CXUPKlm5Vvhyal5Vcu8pdKF6uRZUApCiCyWoYNna6+r1jeyiDnM+GrXyNfiI2jbQ39aZMPjTPS8Zd3pV6gPE6Q7iU5e+r5dq5ve8rVNhCu75nGRzfJSoMnFhhSRik6L03/9iH7StxCOiMjhlgvJXp0QLxcfnI7mQfyKBVWxmvK2n71BqvpzozyhkCuO8AO5J3tR81TAvxXYjA7ctciW/JxNy+0RD/Pu/DIgB3TrohH6Ieb4EtEjvFx//s0BbxRWmV5YdUNG0mEtgvFkabj7dgVuJmSkIyba37uRJ9Nj4vceMwV61cZXHq4Bloh/1m9MdaDSFr4L6+ysW0lgb2UhEH255fGSjDzoKUuGFhCI24w+H3rJL0zLOVpS/KYYbMSbqL1GxJsA+mmbtlzt0e6TZAQ/d1Iwa3
+Received: from localhost ([2a01:e0a:3c5:5fb1:509b:4241:48a3:e3e0])
+        by smtp.gmail.com with ESMTPSA id m18-20020a5d56d2000000b0033b60bad2fcsm9261852wrw.113.2024.02.13.03.43.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 03:43:29 -0800 (PST)
+References: <20240213101220.459641-1-arnd@kernel.org>
+ <1jbk8kk5pk.fsf@starbuckisacylon.baylibre.com>
+ <c61d7daf-1b13-4ff8-aeae-7dcd8dd02131@app.fastmail.com>
+User-agent: mu4e 1.10.8; emacs 29.1
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Arnd Bergmann <arnd@kernel.org>,
+ Stephen Boyd <sboyd@kernel.org>, Mark Brown <broonie@kernel.org>, Liam
+ Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi
+ Iwai <tiwai@suse.com>, Neil Armstrong <neil.armstrong@linaro.org>, Kevin
+ Hilman <khilman@baylibre.com>, Martin Blumenstingl
+ <martin.blumenstingl@googlemail.com>, Nathan Chancellor
+ <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, Bill
+ Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH] ASoC: meson: add helpers for clk_disable_unprepare
+Date: Tue, 13 Feb 2024 12:09:52 +0100
+In-reply-to: <c61d7daf-1b13-4ff8-aeae-7dcd8dd02131@app.fastmail.com>
+Message-ID: <1j7cj8k2se.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Mon, 12 Feb 2024 23:12:22 -0800
-> HEAD commit:    716f4aaa7b48 Merge tag 'vfs-6.8-rc5.fixes' of git://git.ke..
-> git tree:       upstream
-> console+strace: https://syzkaller.appspot.com/x/log.txt?x=100fd062180000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=1d7c92dd8d5c7a1e
-> dashboard link: https://syzkaller.appspot.com/bug?extid=c2ada45c23d98d646118
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11fcbd48180000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17f6e642180000
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/ca4bf59e5a18/disk-716f4aaa.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/3d7ade517e63/vmlinux-716f4aaa.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/e13f7054c0c1/bzImage-716f4aaa.xz
-> mounted in repro: https://storage.googleapis.com/syzbot-assets/00ba9c2f3dd0/mount_0.gz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+c2ada45c23d98d646118@syzkaller.appspotmail.com
-> 
-> loop0: detected capacity change from 0 to 4096
-> ntfs3: loop0: Different NTFS sector size (4096) and media sector size (512).
-> ntfs3: loop0: ino=5, "/" ntfs_iget5
-> ============================================
-> WARNING: possible recursive locking detected
-> 6.8.0-rc4-syzkaller-00003-g716f4aaa7b48 #0 Not tainted
-> --------------------------------------------
-> syz-executor354/5071 is trying to acquire lock:
-> ffff888070ee0100 (&ni->ni_lock#3){+.+.}-{3:3}, at: ntfs_set_state+0x1ff/0x6c0 fs/ntfs3/fsntfs.c:947
-> 
-> but task is already holding lock:
-> ffff888070de3c00 (&ni->ni_lock#3){+.+.}-{3:3}, at: ni_trylock fs/ntfs3/ntfs_fs.h:1141 [inline]
-> ffff888070de3c00 (&ni->ni_lock#3){+.+.}-{3:3}, at: ni_write_inode+0x1bc/0x1010 fs/ntfs3/frecord.c:3265
-> 
-This report looks false positive but raises the question -- what made lockedp
-pull the wrong trigger? Because of the correct lock_class_key in mutex_init()
-instead of &ni->ni_lock?
 
-> other info that might help us debug this:
->  Possible unsafe locking scenario:
-> 
->        CPU0
->        ----
->   lock(&ni->ni_lock#3);
->   lock(&ni->ni_lock#3);
-> 
->  *** DEADLOCK ***
-> 
->  May be due to missing lock nesting notation
-> 
-> 3 locks held by syz-executor354/5071:
->  #0: ffff88802223a420 (sb_writers#9){.+.+}-{0:0}, at: do_sys_ftruncate+0x25c/0x390 fs/open.c:191
->  #1: ffff888070de3ea0 (&sb->s_type->i_mutex_key#15){+.+.}-{3:3}, at: inode_lock include/linux/fs.h:802 [inline]
->  #1: ffff888070de3ea0 (&sb->s_type->i_mutex_key#15){+.+.}-{3:3}, at: do_truncate+0x20c/0x310 fs/open.c:64
->  #2: ffff888070de3c00 (&ni->ni_lock#3){+.+.}-{3:3}, at: ni_trylock fs/ntfs3/ntfs_fs.h:1141 [inline]
->  #2: ffff888070de3c00 (&ni->ni_lock#3){+.+.}-{3:3}, at: ni_write_inode+0x1bc/0x1010 fs/ntfs3/frecord.c:3265
-> 
-> stack backtrace:
-> CPU: 0 PID: 5071 Comm: syz-executor354 Not tainted 6.8.0-rc4-syzkaller-00003-g716f4aaa7b48 #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
-> Call Trace:
->  <TASK>
->  __dump_stack lib/dump_stack.c:88 [inline]
->  dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
->  check_deadlock kernel/locking/lockdep.c:3062 [inline]
->  validate_chain+0x15c0/0x58e0 kernel/locking/lockdep.c:3856
->  __lock_acquire+0x1345/0x1fd0 kernel/locking/lockdep.c:5137
->  lock_acquire+0x1e3/0x530 kernel/locking/lockdep.c:5754
->  __mutex_lock_common kernel/locking/mutex.c:608 [inline]
->  __mutex_lock+0x136/0xd70 kernel/locking/mutex.c:752
->  ntfs_set_state+0x1ff/0x6c0 fs/ntfs3/fsntfs.c:947
->  ntfs_iget5+0x3f0/0x3b70 fs/ntfs3/inode.c:535
->  ni_update_parent+0x943/0xdd0 fs/ntfs3/frecord.c:3218
->  ni_write_inode+0xde9/0x1010 fs/ntfs3/frecord.c:3324
->  ntfs_truncate fs/ntfs3/file.c:410 [inline]
->  ntfs3_setattr+0x950/0xb40 fs/ntfs3/file.c:703
->  notify_change+0xb9f/0xe70 fs/attr.c:499
->  do_truncate+0x220/0x310 fs/open.c:66
->  do_sys_ftruncate+0x2f7/0x390 fs/open.c:194
->  do_syscall_64+0xfb/0x240
->  entry_SYSCALL_64_after_hwframe+0x6f/0x77
-> RIP: 0033:0x7fd0ca446639
-> Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 61 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007fff0baab678 EFLAGS: 00000246 ORIG_RAX: 000000000000004d
-> RAX: ffffffffffffffda RBX: 00007fff0baab848 RCX: 00007fd0ca446639
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000004
-> RBP: 00007fd0ca4d8610 R08: 0000000000000000 R09: 00007fff0baab848
-> R10: 000000000001f20a R11: 0000000000000246 R12: 0000000000000001
-> R13: 00007fff0baab838 R14: 0000000000000001 R15: 0000000000000001
->  </TASK>
-> 
-> 
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> 
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
-> 
-> If you want syzbot to run the reproducer, reply with:
-> #syz test: git://repo/address.git branch-or-commit-hash
-> If you attach or paste a git patch, syzbot will apply it before testing.
-> 
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
-> 
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
-> 
-> If you want to undo deduplication, reply with:
-> #syz undup
-> 
+On Tue 13 Feb 2024 at 11:52, "Arnd Bergmann" <arnd@arndb.de> wrote:
+
+> On Tue, Feb 13, 2024, at 11:36, Jerome Brunet wrote:
+>> On Tue 13 Feb 2024 at 11:11, Arnd Bergmann <arnd@kernel.org> wrote:
+>
+>> This probably pre-dates the introduction of devm_clk_get_enabled()
+>> It would probably be better to use that instead of duplicating helper
+>> functions which do the same thing.
+>
+> Ah, I had not thought of that interface either, so you are probably
+> right that this is the best way to do it.
+> Can you send a replacement patch then and add my Reported-by?
+
+Sure.
+
+How may I reproduce the problem ?
+Just tried with 'Debian clang version 16.0.6 (19)', no warning.
+
+I suppose I need to add something ?
+
+>
+> I also sent the same patch for drivers/nvmem/meson-efuse.c, which
+> I guess will also need the same treatment. I also checked and saw
+> that all three files already had this code in linux-6.0 when
+> devm_clk_get_enabled() got added.
+>
+>> If for any reason it is not possible, a common helper in clk.h would
+>> preferable I think.
+>
+> I can't think of anything that prevents us from using
+> devm_clk_get_enabled() here.
+>
+>     Arnd
+
+
+-- 
+Jerome
