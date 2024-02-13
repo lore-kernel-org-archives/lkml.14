@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E753D63100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E758363101
 	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 23:28:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707866905; cv=none; b=ZpOY/uVWqIuSSKqFC2/ChmeViZ45n7omfEnozpx+RkI6OWb3zxPWiBaLk1nDUBqKRkg4K50cQy4n2pg6rPy8JyJZ86Cn7Loyxi+frExVeL39rhMBx/FqBjmPhfNCif5iYn0OlS0H96/LQNTL55+7R4Cm2rSVwdYp2h9yWLYEPrY=
+	t=1707866905; cv=none; b=IIOllSbt7gwsDJT3rDiz50HxNV2R7tkMMc6MCfG8v/4FxpWGib4Hw4rLKiHMgDUpcUssClq7HHheKkKoS3bvm6UBPYbL+H6x2QXxGiXJpaNUZensQbYRNFqokPIEpd2v6Qp8tG+dLDHII1drsbCnAMa8lelSRpDxgcL7Ylzm/pY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707866905; c=relaxed/simple;
-	bh=CVvV8hDYr9bL6m/v186v76mN5LV1BfGeIcNkfm5yuxU=;
+	bh=IQ3Y/e/zPuJO66WvMrusL0LrQcoWvCq272yYuoXcg8I=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bBb16mw4KHbyJwRaSFR6JOb6WuOGU3aKAgcGCF6OAar5naAs2RhuJAp+L71oGxoI08bBs/GBJzsqhauJ2aGK1+vB5izHS4PnftvJ5l/f+jdcnA4PlSJZmjuiSYDUSU1hTBmpg6/2hjeIATPJmrYiyjtJ8IG5zeif2AF4vtmcNfM=
+	 In-Reply-To:To:Cc; b=SnUq4at8De0kbww9/Ghi9c30r3D48iVo5DfeROrDuYdioSVEgDm2+Q0Ic7B59pqBn5mjFcZGZg+8N94nlbpTHED0NbGZ9j6Bi1Jo5leM6MxCGyZ63+jDgUADajV92Ve6SpVNyYpKaT1+je8eGUD2Ekt8LgTcGD4zn0TJu3qxkR8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,21 +18,20 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <m.grzeschik@pengutronix.de>)
-	id 1ra2CI-0000eT-Ig; Wed, 14 Feb 2024 00:28:18 +0100
+	id 1ra2CI-0000eU-Ih; Wed, 14 Feb 2024 00:28:18 +0100
 Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <m.grzeschik@pengutronix.de>)
-	id 1ra2CH-000Zco-UN; Wed, 14 Feb 2024 00:28:17 +0100
+	id 1ra2CH-000Zcq-V8; Wed, 14 Feb 2024 00:28:17 +0100
 Received: from localhost ([::1] helo=dude04.red.stw.pengutronix.de)
 	by dude04.red.stw.pengutronix.de with esmtp (Exim 4.96)
 	(envelope-from <m.grzeschik@pengutronix.de>)
-	id 1ra2CH-002uYW-2s;
+	id 1ra2CH-002uYW-2u;
 	Wed, 14 Feb 2024 00:28:17 +0100
 From: Michael Grzeschik <m.grzeschik@pengutronix.de>
-Date: Wed, 14 Feb 2024 00:28:00 +0100
-Subject: [PATCH 1/3] usb: gadget: uvc: drop unnecessary check for always
- set req
+Date: Wed, 14 Feb 2024 00:28:02 +0100
+Subject: [PATCH 3/3] usb: gadget: uvc: rework complete handler
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240214-uvc-gadget-cleanup-v1-1-de6d78780459@pengutronix.de>
+Message-Id: <20240214-uvc-gadget-cleanup-v1-3-de6d78780459@pengutronix.de>
 References: <20240214-uvc-gadget-cleanup-v1-0-de6d78780459@pengutronix.de>
 In-Reply-To: <20240214-uvc-gadget-cleanup-v1-0-de6d78780459@pengutronix.de>
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
@@ -50,21 +49,21 @@ To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
 Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Michael Grzeschik <m.grzeschik@pengutronix.de>
 X-Mailer: b4 0.12.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1032;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5140;
  i=m.grzeschik@pengutronix.de; h=from:subject:message-id;
- bh=CVvV8hDYr9bL6m/v186v76mN5LV1BfGeIcNkfm5yuxU=;
- b=owEBbQKS/ZANAwAKAb9pWET5cfSrAcsmYgBly/sQQgP/ZZy8ylorPv7GT/3A9CuCeeR014oGi
- 9Gb6LEjUnKJAjMEAAEKAB0WIQQV2+2Fpbqd6fvv0Gi/aVhE+XH0qwUCZcv7EAAKCRC/aVhE+XH0
- q4VlD/9MdVUKJntclRLZA9+6LfgBeSjMnA8IU3fGMyrHpVnji8ec9PYNN6B32ZBAwLVrXO2AJMe
- /uwnF1rwcMZh3SNwuYd8/F4KNHoGczMBLKde7lMbMqe/dw/ZMFmfu+X8vSFtsEiG7tglYclDVF9
- b7dPDaWNtDfC8NFeDDSpEBXKt6IXAmvrmnU7O2gjA/C7jEwRiVNlwNHemS5aGag001x+ZMCePUJ
- ERP9/oKtX/YbayjsgX8ELtbKtTXP7JafYBCluP2wVCi61KH3hsAr2htd64TEj6Rt9g6F0oWYqqj
- dAgf+AxbexdinTMdIIeUX/pzFKsIQ6vMUctyzGEzRvjrK7YoIIE4SC4ojlEWYqajkKs68KFUvS0
- zVld8t8K7bXeOQjBd5b4p5glYwR5pelkZbqansD/CF105Bg5slCKJeAXb1XEQaN11HtATeYsjkj
- wsSHPL0KuzvE2+BGCSpkRWT+HgiYpDk+k/iAm3i5p8EGPWcFmAlVWzitrbGfxDBQoRiSVbJj12g
- 8WkmKm194XIg11UAXmxfLaOHF7N285QK816uedbPsDfKpebN8nbGjZxdNQOpXbVvH+CVNgBZtJ8
- o5uqotVDYFQLZxDLd30L6W5x68yJsfNr+BhHIYBga1tPOXKeBITfsn7ku/Win2YMAuqmrK8qYJ4
- aeAfTYjv/EL7ImQ==
+ bh=IQ3Y/e/zPuJO66WvMrusL0LrQcoWvCq272yYuoXcg8I=;
+ b=owEBbQKS/ZANAwAKAb9pWET5cfSrAcsmYgBly/sRqPjQgnXhsPN6K1krJXPbN4oO0gMIjSHDh
+ ODyESfaFlCJAjMEAAEKAB0WIQQV2+2Fpbqd6fvv0Gi/aVhE+XH0qwUCZcv7EQAKCRC/aVhE+XH0
+ q/CaEACMk8xx1roCJwuAZ81Qtu6o3wB2rl5GyAJ4TGAKUYLFtMwIMvqir785IWJBD5ddVQqosrW
+ 9AmHSNjTDXGpvYDLg5QjBwffQ/49LmMYf+Mrlsk/In1oRHlnFCIdN9geB4tFvClyzHf0H315nQa
+ SjCyO62cqg/XRccWR+iJTyiD76bvAxHhWQDYr/UAWy4uei2gM48q2qYK4V3fVtMsfGqpihMBkjM
+ VL+aOLY7UEPz3AG2l2CtdKF3/BrVROox+N3BMnuREWleGZua1UXL0YAuHoxwW66GVZbBYWSlbJr
+ JsjkX4cnVOFb5bIdQZP1ljgCss2dFsYoI/QAv+gbWDLCRIfKKRNGE+uYIJ7D7eDMt/nmCr1nS6h
+ DjjkpfqWil5Hxr6N9L21BBWmPSV6lTG7OAE7tF4+zyvAL802Bj1tbJQFr0lJ48D5dlklKS93+X2
+ HGA44nijWDtmAiL43lHs4CDVMMA3juRa4rQazbVo9KsWP3m2PORNs1aktfGlMjZbFbGlhqS77NZ
+ imRt0DdYrCsK+dISSMAR+Di2DXMiVsrlsxmAq7UWZw74yo49LkFclNVjGTMaU5zGe6sDAL/QkfA
+ kEAgkORQJe3uR9ZdEgblKvQQprgjcFvIhTCOwlP8z8VpbhZ4MAanquiH1+ZCGyXuElIo2xzYhE9
+ 0y7ceOz4sHl6/gA==
 X-Developer-Key: i=m.grzeschik@pengutronix.de; a=openpgp;
  fpr=957BC452CE953D7EA60CF4FC0BE9E3157A1E2C64
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -72,35 +71,135 @@ X-SA-Exim-Mail-From: m.grzeschik@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The pump function is running in an while(1) loop. The only case this
-loop will be escaped is the two breaks. In both cases the req is valid.
-Therefor the check for an not set req can be dropped and setting the req
-to NULL does also has never any effect.
+We refactor the complete handler since the return path with the
+locking are really difficult to follow. Just simplify the function by
+switching the logic return it on an disabled endpoint early. This way
+the second level of indentation can be removed.
 
 Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
 ---
- drivers/usb/gadget/function/uvc_video.c | 7 -------
- 1 file changed, 7 deletions(-)
+ drivers/usb/gadget/function/uvc_video.c | 95 +++++++++++++++++----------------
+ 1 file changed, 48 insertions(+), 47 deletions(-)
 
 diff --git a/drivers/usb/gadget/function/uvc_video.c b/drivers/usb/gadget/function/uvc_video.c
-index dd3241fc6939d..b17c61c932652 100644
+index b4f3b3c784218..ff7c1fa5c48f3 100644
 --- a/drivers/usb/gadget/function/uvc_video.c
 +++ b/drivers/usb/gadget/function/uvc_video.c
-@@ -623,14 +623,7 @@ static void uvcg_video_pump(struct work_struct *work)
- 			uvcg_queue_cancel(queue, 0);
- 			break;
- 		}
+@@ -370,6 +370,7 @@ uvc_video_complete(struct usb_ep *ep, struct usb_request *req)
+ 	struct uvc_video *video = ureq->video;
+ 	struct uvc_video_queue *queue = &video->queue;
+ 	struct uvc_buffer *last_buf;
++	struct usb_request *to_queue = req;
+ 	unsigned long flags;
+ 	bool is_bulk = video->max_payload_size;
+ 	int ret = 0;
+@@ -425,59 +426,59 @@ uvc_video_complete(struct usb_ep *ep, struct usb_request *req)
+ 	 * we're still streaming before queueing the usb_request
+ 	 * back to req_free
+ 	 */
+-	if (video->is_enabled) {
++	if (!video->is_enabled) {
++		uvc_video_free_request(ureq, ep);
++		spin_unlock_irqrestore(&video->req_lock, flags);
++		uvcg_queue_cancel(queue, 0);
++
++		return;
++	}
++
++	/*
++	 * Here we check whether any request is available in the ready
++	 * list. If it is, queue it to the ep and add the current
++	 * usb_request to the req_free list - for video_pump to fill in.
++	 * Otherwise, just use the current usb_request to queue a 0
++	 * length request to the ep. Since we always add to the req_free
++	 * list if we dequeue from the ready list, there will never
++	 * be a situation where the req_free list is completely out of
++	 * requests and cannot recover.
++	 */
++	to_queue->length = 0;
++	if (!list_empty(&video->req_ready)) {
++		to_queue = list_first_entry(&video->req_ready,
++			struct usb_request, list);
++		list_del(&to_queue->list);
++		list_add_tail(&req->list, &video->req_free);
+ 		/*
+-		 * Here we check whether any request is available in the ready
+-		 * list. If it is, queue it to the ep and add the current
+-		 * usb_request to the req_free list - for video_pump to fill in.
+-		 * Otherwise, just use the current usb_request to queue a 0
+-		 * length request to the ep. Since we always add to the req_free
+-		 * list if we dequeue from the ready list, there will never
+-		 * be a situation where the req_free list is completely out of
+-		 * requests and cannot recover.
++		 * Queue work to the wq as well since it is possible that a
++		 * buffer may not have been completely encoded with the set of
++		 * in-flight usb requests for whih the complete callbacks are
++		 * firing.
++		 * In that case, if we do not queue work to the worker thread,
++		 * the buffer will never be marked as complete - and therefore
++		 * not be returned to userpsace. As a result,
++		 * dequeue -> queue -> dequeue flow of uvc buffers will not
++		 * happen.
+ 		 */
+-		struct usb_request *to_queue = req;
 -
--		/* The request is owned by  the endpoint / ready list. */
--		req = NULL;
+-		to_queue->length = 0;
+-		if (!list_empty(&video->req_ready)) {
+-			to_queue = list_first_entry(&video->req_ready,
+-				struct usb_request, list);
+-			list_del(&to_queue->list);
+-			list_add_tail(&req->list, &video->req_free);
+-			/*
+-			 * Queue work to the wq as well since it is possible that a
+-			 * buffer may not have been completely encoded with the set of
+-			 * in-flight usb requests for whih the complete callbacks are
+-			 * firing.
+-			 * In that case, if we do not queue work to the worker thread,
+-			 * the buffer will never be marked as complete - and therefore
+-			 * not be returned to userpsace. As a result,
+-			 * dequeue -> queue -> dequeue flow of uvc buffers will not
+-			 * happen.
+-			 */
+-			queue_work(video->async_wq, &video->pump);
+-		}
++		queue_work(video->async_wq, &video->pump);
++	}
++	/*
++	 * Queue to the endpoint. The actual queueing to ep will
++	 * only happen on one thread - the async_wq for bulk endpoints
++	 * and this thread for isoc endpoints.
++	 */
++	ret = uvcg_video_usb_req_queue(video, to_queue, !is_bulk);
++	if (ret < 0) {
+ 		/*
+-		 * Queue to the endpoint. The actual queueing to ep will
+-		 * only happen on one thread - the async_wq for bulk endpoints
+-		 * and this thread for isoc endpoints.
++		 * Endpoint error, but the stream is still enabled.
++		 * Put request back in req_free for it to be cleaned
++		 * up later.
+ 		 */
+-		ret = uvcg_video_usb_req_queue(video, to_queue, !is_bulk);
+-		if (ret < 0) {
+-			/*
+-			 * Endpoint error, but the stream is still enabled.
+-			 * Put request back in req_free for it to be cleaned
+-			 * up later.
+-			 */
+-			list_add_tail(&to_queue->list, &video->req_free);
+-		}
+-	} else {
+-		uvc_video_free_request(ureq, ep);
+-		ret = 0;
++		list_add_tail(&to_queue->list, &video->req_free);
  	}
--
--	if (!req)
--		return;
--
- 	spin_lock_irqsave(&video->req_lock, flags);
- 	if (video->is_enabled)
- 		list_add_tail(&req->list, &video->req_free);
++
+ 	spin_unlock_irqrestore(&video->req_lock, flags);
+-	if (ret < 0)
+-		uvcg_queue_cancel(queue, 0);
+ }
+ 
+ static int
 
 -- 
 2.39.2
