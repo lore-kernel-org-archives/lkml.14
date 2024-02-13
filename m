@@ -1,97 +1,71 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp15.bhosted.nl (smtp15.bhosted.nl [94.124.121.26])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6332228E3E
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 10:54:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B55250E5
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 10:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.124.121.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707821677; cv=none; b=aVoAQF3PHkTIqWgcKc2oI7WKw2ETCOyoi83wOCo9HUghzoZFliecjsqbYKG1HI33ru5ngjZaJNOk/ZtKQUBMd2SXhxB7+ZRyL9gyRUlyuaJaqieiHie0MSs6jUPKozLx5Rn9ktka1lWAatkKon3sZfWhF6A57J+gotviVOSQNLU=
+	t=1707821691; cv=none; b=Dqg9rE2y6p1Chz3EGmvnCihUcldnEsAoavmyoObAylQ7dN2eM+WQUDKNHynjhTUdBrDD37sg6Wykkmjk4rnDc/2YkaoRcSp1y8f1kK1FdZV0HhfQ3fMTDBdhlYBm4fuKQVhRGv8yib3VZZygbT0uRWl0UIpo0yDxJdAegHHlZLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707821677; c=relaxed/simple;
-	bh=gYHrqM3G3kRoZsoYastsq+KgNzJfw/bctahA7VNbwNQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dCmDWiViB5NlmH+0HagybPMYMuMTwzX3Ss+kajHl4kXXowkE5VcbLnCuIq0H0L99EGDig5cFSZiEkjgB0WaodyA0cl7cNdPl/2lT/ELKVdpOVGWw1dRPCbuLVPj99dq9b2H6qAMREu71ssxHnt62ohriCJAQkPZc+Ubi2gQig0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Uxh2Rp0T; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707821691; c=relaxed/simple;
+	bh=U6sw6/b7Wo9TPD1nNjD1SdrmI2VZciuOyU4cyudmr0U=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SzuXOO7fUrkilnu2Uz9vIBrkS/VZet76+FKDAaGPEhke193Q/Vnd74bjdiyHBnEJPzyggKrXYnTudkAGzCMxat4314GEigiafUMlXAYLMuXt4rDFbHPmuWeuMVAbZHpNIa8/pu1hXgpY5mjDPdbELKUw5oEpXj1fuYf5dg5lsk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl; spf=pass smtp.mailfrom=protonic.nl; dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b=wnGlKvIv; arc=none smtp.client-ip=94.124.121.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonic.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Uxh2Rp0T"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dcbef31a9dbso809739276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 02:54:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b="wnGlKvIv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707821675; x=1708426475; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=U1uzd+QYrNr3GtaEVm7817MCVofpByYmPHh8dkivfTM=;
-        b=Uxh2Rp0T2SPY6/aSaLGY+K3wzeoyzUmbEPLlrfQ+CoCRg0lGtdMDsJb80qNmYkHCa3
-         ubf6NoOCpwgKlDYZDNJYGbJ25rvGPrQXCiXaMsnvA5TBQKhskIe4xrR6sv7MvGib7k9x
-         +Jwj9KxqMZOkztIT9hV/yWWfhPtDShrR3QmQnz37s5snIg2tbsXMWNChzpsamixC8bhW
-         dAbXkZwgUpH4/DtQ+2F59Qj+GIOw8+OFBHpEBaNvfnIQqzVGSsZ5M0Nrh+tZg1e1vIKY
-         w7hiAUcPswKg4Sr00bdOB2A4eAEOfNWLbAn4FX8udlQl4t/3g75ctbFF4AY5tux2xSD+
-         d7Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707821675; x=1708426475;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=U1uzd+QYrNr3GtaEVm7817MCVofpByYmPHh8dkivfTM=;
-        b=MlxyF/QNjye6KS7OeYmtdn8VhoY82DPMS2vFU0LtEMjiL1Bx3FP0hSQGHwZ0EhvxYh
-         cg8u08k7q83PuSlprhcM2X7Sfo+RGvgeQX7Yy/uxrjcnKvUTVDBqxSHp1KPG/hbGDN0D
-         6+ER8x4jjnSV2H3YPXsNza+TcEEbV4x251f1zzZCR+Zsbid6urPeG9elm+EWBBT7JXWp
-         UqsewqS9yCGB/0H8W9tKjbmClewb+bpW26KDCpd5GAsLL7xZt99m9k2WzgBg2wIOiIcr
-         1E0aS7ejJ4s42VF7jZNImRZgcpH6LrtKdp9ExHStDUY7tZFhbqRPGFcxrN0izFZKx18I
-         gv/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXH9ejfrYY5VNRlRyzcvmkdtIjxbpvzqj11AO0L86If0VoFXj4YXifOOaq3a6BcpBfyozDoxy9hbG9NKAK9N2jKheqd2J3s6AsSKB1c
-X-Gm-Message-State: AOJu0YyU53KdaFr9MjdX/UG22UwstELtr798Tp1GkRarPtNdy/C9bVfz
-	jbaTb3yDMuIntFpFXI2AeUVnDtG1gME9sELqblBdH0YCIONgZHxZ5ZATjPCB6x5islTmjZbwQwT
-	r08uKZW/1Zdsqv2IeQI/gqEClRStGKZaPCTZ67Q==
-X-Google-Smtp-Source: AGHT+IFAWLxJcI5gkouU1r1s5LPV7Trnv3iW1vw8OhO7CT8+bqdVLybIeh0ETpjhTb6NanG6KbE/5Wo7b825LL+mGTQ=
-X-Received: by 2002:a25:9703:0:b0:dc2:234d:214d with SMTP id
- d3-20020a259703000000b00dc2234d214dmr7312147ybo.40.1707821675312; Tue, 13 Feb
- 2024 02:54:35 -0800 (PST)
+	d=protonic.nl; s=202111;
+	h=content-transfer-encoding:content-type:mime-version:references:in-reply-to:
+	 message-id:subject:cc:to:from:date:from;
+	bh=U6sw6/b7Wo9TPD1nNjD1SdrmI2VZciuOyU4cyudmr0U=;
+	b=wnGlKvIv1slYWYzQEBrWd562FM3Cqqr5ngwXuAMN/Pw3ciXu4VaGQzCANZyelSPIw8xFujzEjfx26
+	 u6EkCmTWAaVxZ/MUyThc7tWsWjBdQV2EHCgF604wYcKONqNgflwU/EVke6/QQthE/z1NGlxNaImDFa
+	 i57TTXbj+rQ6n0OHl1n+GYi3VweVVYj78CDX4L1VegvH2056Dmk4nYWEJMqLaYHDcegzrJ9VzFge2o
+	 gCt1VBKVwIU7mwO2eNrXb4njSAFL6+smDV8RBs+NDznTAU3VnvItZOVMGKVtFUltpOGEBqjIR6Ifsf
+	 9AiAJodlgrJOAZ5qHbbw8I9Zx8USeyQ==
+X-MSG-ID: 248259d2-ca5e-11ee-8d57-00505681446f
+Date: Tue, 13 Feb 2024 11:53:38 +0100
+From: Robin van der Gracht <robin@protonic.nl>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Miguel Ojeda
+ <ojeda@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Paul Burton <paulburton@kernel.org>, Geert Uytterhoeven
+ <geert+renesas@glider.be>
+Subject: Re: [PATCH v1 10/15] auxdisplay: linedisp: Provide a small buffer
+ in the struct linedisp
+Message-ID: <20240213115338.2311c4b6@ERD993>
+In-Reply-To: <ZcpMLXTfc95fGTae@smile.fi.intel.com>
+References: <20240208184919.2224986-1-andriy.shevchenko@linux.intel.com>
+	<20240208184919.2224986-11-andriy.shevchenko@linux.intel.com>
+	<20240212092500.62f006cc@ERD993>
+	<ZcoF9ZxPBkVS_6Da@smile.fi.intel.com>
+	<ZcpMLXTfc95fGTae@smile.fi.intel.com>
+Organization: Protonic Holland
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240213104754.8195-1-quic_riteshk@quicinc.com> <20240213104754.8195-2-quic_riteshk@quicinc.com>
-In-Reply-To: <20240213104754.8195-2-quic_riteshk@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 13 Feb 2024 12:54:24 +0200
-Message-ID: <CAA8EJpq0AnPgcP_zWw2hOYKeZ7uvuf9f=Z6=af5H4BCE7TC-Dg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] arm64: defconfig: enable Novatek NT36672E DSI
- Panel driver
-To: Ritesh Kumar <quic_riteshk@quicinc.com>
-Cc: andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	catalin.marinas@arm.com, will@kernel.org, quic_bjorande@quicinc.com, 
-	geert+renesas@glider.be, arnd@arndb.de, neil.armstrong@linaro.org, 
-	nfraprado@collabora.com, m.szyprowski@samsung.com, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	quic_abhinavk@quicinc.com, quic_rajeevny@quicinc.com, 
-	quic_vproddut@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, 13 Feb 2024 at 12:48, Ritesh Kumar <quic_riteshk@quicinc.com> wrote:
->
-> Build the Novatek NT36672E DSI Panel driver as module
-> because it is used on Qualcomm qcm6490 idp board.
->
-> Signed-off-by: Ritesh Kumar <quic_riteshk@quicinc.com>
+Hi Andy,
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+On Mon, 12 Feb 2024 18:49:49 +0200
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
->
-> ---
-> v2: Fixed review comment from Dmitry
->       - updated commit text.
-> ---
->  arch/arm64/configs/defconfig | 1 +
->  1 file changed, 1 insertion(+)
+> Looking again into it, the allocation separately with linedisp structure
+> is indeed too much invasive. I prefer (as we save lines of code and deduplicate
+> the buffer at least for two drivers, including a new one) to leave this patch
+> for now. We may rework it later on. Do you agree?
 
+Agreed. The additional overhead is probably not worth it. If the buffer size
+needs to be increased later on we'll take another look.
 
--- 
-With best wishes
-Dmitry
+Robin
