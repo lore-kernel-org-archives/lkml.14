@@ -1,112 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39B360B95;
-	Tue, 13 Feb 2024 19:39:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BAE56089D
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 19:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707853173; cv=none; b=MsxtiJb2kjFi+QpdaKXwGXklAqwvug5gnKpH342EsYFk4oQPhs+rEvNzSxn7Mg+g7QqH+wnJrorDXNJMav1OGjWf0Q+XV0Or58gUYhlFJUKEtm4gO4Jg5ws2dqGPdL5LRLqVZmt1z1/xqk4FOqj7PGQH4R1UmMwz6TEMx9iOxmM=
+	t=1707853173; cv=none; b=nFiV2HN8ElAFWXyRksoWJTRxVhW7TBkzQzFbiXtTnY1uodh+z0KiKondIvb6hgBHNHCsblyeAPRra4OLvvXdu7bvOtnc2JD2SLrOBhm0Qbzan8P8KezQIAnCS/iKoAH3F9B2QKCmIfHIPQglKI1YXqS3dPAIPKO5Kw3WZ9GVJk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707853173; c=relaxed/simple;
-	bh=0WYqFpS6lVIKr0IPitF5mhy3240hE8VfeutslmE3sd4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QFQZ7H4CjAW+/G20Jx9Aqs9z9dQZ8an1kjC+tnNwBL0PKFWnE0rvfA4wUjfV0n2JXdpeeT4OPEmk5K9yazI+bAiwTFNGauTIOA6WgpzyUAuope2IqS7sMWYXryVDigRENS4+8fG23eBf1KCYyI0xH73bcoSYewWpj8yAhKvKGgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eucP4j5R; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=WugeM4ood6CkrQx4S8VYLxOYhsFp0MouGTEG4EYnhvc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kDUEnVMULlvWvT2GITDClHq1R0NQN427MatAFDRZWJBtYi1myUafpTNOAhtyAnJ4aP3f6VBEfiXQlgmMBfM6JrdcHWQpPmfBv0/i4xVnAKNwiUl/M1coHwgwHjM7RPzwp+W5yHYRM4iwi0Ce9YfHqHPswjyRxcadfIipFzQEVkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AcOEiBsi; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eucP4j5R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707853172; x=1739389172;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=0WYqFpS6lVIKr0IPitF5mhy3240hE8VfeutslmE3sd4=;
-  b=eucP4j5RnGCEyxDPXZaR/8iJLZ0+dxZqtt/8weGZfA8duZyMcegAbeRt
-   Fr56FuKU0FCgZoSIYtSPJqKiyiLQhNiS2Tzmq0fuwGsb2Q0idSD0y5p0J
-   6WVOCM/gly3MuBYL62IgBiNQ7REaxEvVZ1cebo8c9H7D6O+kTAfx0iYEA
-   1fzsTYUNKK02JJY6AHmH/EAvGPAifTFqCIAxPQPV4k88SwyHYoHeqatUV
-   qF/ev2H6P4jDMck/V5aLqHTvlsHU9bkRGSHCRKQSZ2/nNYc7UGT44AtHq
-   Vxcf5irGzU5Zn6sB0E5lalfzNj2RD3aXkP+qzEpM3bTxFqGu8opGWbuIr
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="1784956"
-X-IronPort-AV: E=Sophos;i="6.06,158,1705392000"; 
-   d="scan'208";a="1784956"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 11:39:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,158,1705392000"; 
-   d="scan'208";a="26149137"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 11:39:29 -0800
-Date: Tue, 13 Feb 2024 11:44:57 -0800
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: LKML <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>, Peter
- Zijlstra <peterz@infradead.org>, iommu@lists.linux.dev, Thomas Gleixner
- <tglx@linutronix.de>, "Lu Baolu" <baolu.lu@linux.intel.com>,
- kvm@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, Joerg Roedel
- <joro@8bytes.org>, "H. Peter Anvin" <hpa@zytor.com>, "Borislav Petkov"
- <bp@alien8.de>, "Ingo Molnar" <mingo@redhat.com>
-Cc: Paul Luse <paul.e.luse@intel.com>, Dan Williams
- <dan.j.williams@intel.com>, Jens Axboe <axboe@kernel.dk>, Raj Ashok
- <ashok.raj@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
- maz@kernel.org, seanjc@google.com, "Robin Murphy" <robin.murphy@arm.com>,
- jacob.jun.pan@linux.intel.com, oliver.sang@intel.com
-Subject: Re: [PATCH 06/15] x86/irq: Set up per host CPU posted interrupt
- descriptors
-Message-ID: <20240213114457.64a056a8@jacob-builder>
-In-Reply-To: <20240126234237.547278-7-jacob.jun.pan@linux.intel.com>
-References: <20240126234237.547278-1-jacob.jun.pan@linux.intel.com>
-	<20240126234237.547278-7-jacob.jun.pan@linux.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AcOEiBsi"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6e1040455b5so379926b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 11:39:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1707853172; x=1708457972; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ietkBkC2vKvuAqqNl42bgKpXgTuLqEZ+6d6zSno8GJQ=;
+        b=AcOEiBsi26nUwX2RYbHdE8FZrY84ATUWIY03Jskk0jVgnFJ+zqr1qZ64KOrxItM1CI
+         yrzKFYvMg8CwWi86Z7nMbUh2ExPtsBNMwWwyzQhm00k2XYaPrxwYgeSKXmK7G4uwlUSh
+         AAs1a+vR3QPpLtD83neD4qDysLvTWnZ0p7rwk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707853172; x=1708457972;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ietkBkC2vKvuAqqNl42bgKpXgTuLqEZ+6d6zSno8GJQ=;
+        b=pGFrGS9KSmmy8wZz8Ul+pymzajQnFgdwBx/Gyay8zFGZcPyOaq+at/FidvFnSSXB0v
+         mP1MZ13CLK7tVdXrLIewIP6njmcWYbPAJDTTRRmryap+B6mg35Kncs52JLhlAnesxcq8
+         +t9uDSrooac0+dMl1P1FN/Uce8ssUrvnvqRGmDaQ9W/X0QSuPiaKLJTg7G7KHVRlGSm5
+         FPAQDFAGg40TOcz+F0Z6VzXDa49aNuKWPJ0jTyrrxqH9izbeX38iIg+/IVt7ilpkkhEc
+         DnhCrf4hVwDj8WyADwnvGwnAxXXrp6oVOjwBvOLJ5bt6Kt77npEaB/6ZoZEMsXrTKQ3Z
+         c5lQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVIelIzZ3ZL8Eh1QL6TCeOiThwQOuPn1h1PTok4hEPfcFjLvRbH4+qAm9I4OjnsLdUz3KyiMsybCbglECToFy0hh7VRQ0QDxRsyyVs3
+X-Gm-Message-State: AOJu0YxhforbDckDLeX+W4aavolChBRT4AwjEtQif/vYQLcDG6H5LAwr
+	waY/5SwlvE5YJE87DuA31qfp/yjBFUMC793nIus1dBZV+U2R6i1iJLCCgyc99L9hJn4xy/tZMKs
+	=
+X-Google-Smtp-Source: AGHT+IGI5hhbR76SaMhvMS6rpO7UF0lyS4/ap6HuK71delvjMtqUQfVpDb93oQnS/myoTiGFaT2DpA==
+X-Received: by 2002:a05:6a20:9597:b0:19c:9eea:e731 with SMTP id iu23-20020a056a20959700b0019c9eeae731mr714528pzb.40.1707853171791;
+        Tue, 13 Feb 2024 11:39:31 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWyG9gxyXGlbRRdmOV6B4qvcgJ5aoPE54mlbk3MLiCBp0xMgkE4p2+fWrPvq110VLKaYQfADCqz80FoPr9CtX4DoLVfpMrmhnP3Ui0m7n4g4IeJ8jzvSaR3Hh+QGlzwGUiS05714tdUeaBEKScY9Ts6eDsR4exJSc+J2dCHQa4AgMk8JIcJYf9zx94cAyQzX7SkHpJRGsrUEzs6Oql36rCEMM8qQMU4aGGieauO+T4Jr4GuLnYa9Z82LDWaKIfDEmvwYsAN8WRhlNY7/SMWBesK08wvZNAWhnIV3N6prHisQ6PMqW1AlivXMKXJl0lxuMY/NTSC4XMYRydKOcCxEZC3SzLIzUhKUVetqbrlxCDuJ3XYRZEL++RrARyIPRimYwFGfFA=
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id p19-20020a056a0026d300b006e0e3ef5f23sm3769549pfw.101.2024.02.13.11.39.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 11:39:31 -0800 (PST)
+Date: Tue, 13 Feb 2024 11:39:30 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Florian Weimer <fweimer@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+	x86@kernel.org, Eric Biederman <ebiederm@xmission.com>,
+	linux-mm@kvack.org
+Subject: Re: [PATCH v4] ELF: AT_PAGE_SHIFT_MASK -- supply userspace with
+ available page shifts
+Message-ID: <202402131138.2CFC8CD5E@keescook>
+References: <ecb049aa-bcac-45c7-bbb1-4612d094935a@p183>
+ <202402050445.0331B94A73@keescook>
+ <acd02481-ca2e-412a-8c6b-d9dff1345139@p183>
+ <202402091625.4DF63CDD0B@keescook>
+ <54774e70-1e94-44f5-b318-fdfd5115041d@p183>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <54774e70-1e94-44f5-b318-fdfd5115041d@p183>
 
+On Tue, Feb 13, 2024 at 09:51:01PM +0300, Alexey Dobriyan wrote:
+> On Fri, Feb 09, 2024 at 04:41:36PM -0800, Kees Cook wrote:
+> > On Fri, Feb 09, 2024 at 03:30:37PM +0300, Alexey Dobriyan wrote:
+> > > On Mon, Feb 05, 2024 at 04:48:08AM -0800, Kees Cook wrote:
+> > > > On Mon, Feb 05, 2024 at 12:51:43PM +0300, Alexey Dobriyan wrote:
+> > > > > +#define ARCH_AT_PAGE_SHIFT_MASK					\
+> > > > > +	do {							\
+> > > > > +		u32 val = 1 << 12;				\
+> > > > > +		if (boot_cpu_has(X86_FEATURE_PSE)) {		\
+> > > > > +			val |= 1 << 21;				\
+> > > > > +		}						\
+> > > > > +		if (boot_cpu_has(X86_FEATURE_GBPAGES)) {	\
+> > > > > +			val |= 1 << 30;				\
+> > > > > +		}						\
+> > > > 
+> > > > Can we use something besides literal "12", "21", and "30" values here?
+> > > 
+> > > Ehh, no, why? Inside x86_64 the page shifts are very specific numbers,
+> > > they won't change.
+> > 
+> > Well, it's nicer to have meaningful words to describe these things.
+> 
+> Not really. Inside specific arch page shifts are fixed, so using names
+> is just more macros one need to remember.
+> 
+> If I were to invent names (which I wouldn't), the best names are
+> 
+> 	PAGE_SHIFT
+> 	PAGE_SHIFT2
+> 	PAGE_SHIFT3
+> 	...
+> 
+> with PAGE_SHIFT2, PAGE_SHIFT3 being optional macros if arch doesn't support
+> multiple page sizes.
+> 
+> > In fact, PAGE_SHIFT already exists for 12, and HPAGE_SHIFT already exists
+> > for 21. Please use those, and add another, perhaps GBPAGE_SHIFT, for 30.
+> 
+> HPAGE_SHIFT is bad name, H doesn't describe anything unless arch is
+> known. Hugepages is marketing name. If GBPAGE_SHIFT is good name,
+> then HPAGE_SHIFT is bad name, it should've been MBPAGE_SHIFT, which
+> wrong because it is 2 MiB not 1 MiB.
+> 
+> BTW parisc has REAL_HPAGE_SHIFT !
 
-On Fri, 26 Jan 2024 15:42:28 -0800, Jacob Pan
-<jacob.jun.pan@linux.intel.com> wrote:
-I have made a couple of mistakes here, caught by LKP testing.
-Reported by Oliver Sang.
+Sure, I mean, we've got an x86-specific function here, so let's use the
+x86-specific macros we already have for 12 and 21, and then add the
+missing one for 30.
 
->  
-> +#ifdef CONFIG_X86_POSTED_MSI
-> +
-> +/* Posted Interrupt Descriptors for coalesced MSIs to be posted */
-> +DEFINE_PER_CPU_ALIGNED(struct pi_desc, posted_interrupt_desc);
-> +
-> +void intel_posted_msi_init(void)
-> +{
-> +	struct pi_desc *pid = this_cpu_ptr(&posted_interrupt_desc);
-> +
-> +	pid->nv = POSTED_MSI_NOTIFICATION_VECTOR;
-> +	pid->ndst = this_cpu_read(x86_cpu_to_apicid);
-Based on VT-d specification 9.11, middle portion of the 32 bit field
-are used in xAPIC mode instead of the lowest 8 bit. Not sure why it was
-designed this way, making sure people ready the spec carefully :)
-
-xAPIC Mode (Physical): 
- 319:304 - Reserved (0)
- 303:296 - APIC DestinationID[7:0]
- 295:288 - Reserved (0)
-x2APIC Mode (Physical):
- 319:288 - APIC DestinationID[31:0]
-
-So it should be something like:
-	pid->ndst = x2apic_enabled() ? apic_id : apic_id << 8;
-
-> +}
-> +}
-partitioning mistake, will fix.
-
-> +#endif /* X86_POSTED_MSI */
-
-Thanks,
-
-Jacob
+-- 
+Kees Cook
