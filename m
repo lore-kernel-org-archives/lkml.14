@@ -1,151 +1,106 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86DAE839E7
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 21:06:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0DFD839ED;
+	Tue, 13 Feb 2024 21:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707858364; cv=none; b=CwtjeUYKI4qNC48koSkRadENcqefIhsZdiVyCRWrc1MksqvYHZHNJ/OwnlhOSkHWkqtLEDLNQUui8tlWt69vqeaj856e2bkMSy21bd160PVk35m/Fdx1+pS89aNJyommLtMU16iqTsQuDbos5/cXZzK6gbRMSjSTjs9GRwc/2fs=
+	t=1707858365; cv=none; b=XlUYMtpRJOd+/6HgZ+WbNankB8F0lbNbe80B0f7GUgNuCfaXsD7Tm+6mSsLYrsVul/YtSIB4lCNdcz3qIZTOWuKMpjg5deCHqVKZP7oR8X9qrOGRVHO566MC2l1hbW/9cJ5OekbZTRi7eb+pb8dM0FFlYBzHIj8LMGcDcjCMwAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707858364; c=relaxed/simple;
-	bh=rLsp+V/ZBSzycpeyYr3sAEzojATjfDc9ZcQACwfYXk0=;
-	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=VQDYbK4WdVn4nIESp8wM5SbBPRW7laapD366mrYh5gPs3C7omByM3j/7wR/pj/J4Fdxt55Ba+byGfy4VdfcmPAFxcdrTSMZqijtxtE/D0wcq0hmmBQqQhd3wakjIdKUbZ5HPpnVM1Cp1O++xyfGV/r5as1ajqdz0CWpTFN2dNHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Wt+Q6owG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=a1Vsgm7b; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1707858365; c=relaxed/simple;
+	bh=xgl7lHB5nFNYdQ9gjvd365a6aa0rerNmO4jYedWe+RU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RpTp32o6ttj7XBlYO8yCtjjnIPNHnsSWQ9oil+x1B0zu3Vf9f0IQCPoqSZojd7tPh7BvqkRXst4N1lSLgCX8HX0Aw+jpkRqBkD3XqEAG9ENTgcjRm02a1P9P7Novz1OVmrHw+gkaxsGgzw5x4c3Yd6hLEooA2TsIgy8sZ5kjAYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=ZG4QS4o8; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Wt+Q6owG";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="a1Vsgm7b"
-Message-ID: <20240213210252.571795063@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1707858361;
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="ZG4QS4o8"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4TZDPy5hp7z9smr;
+	Tue, 13 Feb 2024 22:05:58 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1707858358;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=l5IIheic7HTdLbtL8FePLNCYvWctux8lTDROKkU5h0g=;
-	b=Wt+Q6owGWnrNJeI13LNavmxTt5Lzs5ThH/dQXT6qesO4DKSLqgiS3ondhGjNgKOQbCvDgW
-	9R2GOO5EAsdXU6sSJ+htWRBEmUrGCB/661l3aSPAsEEpCKKyJESlpafzVFP+cGSmVB8bkc
-	42kYfpgOCQyZ65aXNn24eWvGdmVh708pAxPG7xivimdq00BIo+iv0VJwEIN8EPlJs3KfTT
-	pII6gtnyJR95M5aNNod+zIBJybHtvUj0Z4gdtEQPnXXLSi9zCKzmUa7KMd2CmdMBycl8c/
-	T1vcJwagFyvVJrB9cilnL4xYqhZO2Ghot1WZ8m60nRit2K8h4+U9Y0Z0rs1LtQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1707858361;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=l5IIheic7HTdLbtL8FePLNCYvWctux8lTDROKkU5h0g=;
-	b=a1Vsgm7b2KoILqZlz/V01LMAGTu+EopHn2bXvBSK5ls0/E3HO1hQG+Dc294cj3B67tmfnk
-	WaGUvLvojc1mH2DQ==
-From: Thomas Gleixner <tglx@linutronix.de>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: x86@kernel.org,
- Tom Lendacky <thomas.lendacky@amd.com>,
- Andrew Cooper <andrew.cooper3@citrix.com>,
- Arjan van de Ven <arjan@linux.intel.com>,
- Huang Rui <ray.huang@amd.com>,
- Juergen Gross <jgross@suse.com>,
- Dimitri Sivanich <dimitri.sivanich@hpe.com>,
- Sohil Mehta <sohil.mehta@intel.com>,
- K Prateek Nayak <kprateek.nayak@amd.com>,
- Kan Liang <kan.liang@linux.intel.com>,
- Zhang Rui <rui.zhang@intel.com>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- Feng Tang <feng.tang@intel.com>,
- Andy Shevchenko <andy@infradead.org>,
- Michael Kelley <mhklinux@outlook.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch 19/30] x86/xen/smp_pv: Count number of vCPUs early
-References: <20240213205415.307029033@linutronix.de>
+	 in-reply-to:in-reply-to:references:references;
+	bh=rlGuEk+lrsb7TKIHP84bbBdxjJkSQOe0GzEds4VJ6uo=;
+	b=ZG4QS4o883VynvBzMh26WK5TOHr+yNiz10QE3/MYTdpyJpXlNQqm8MlMY0oqBHmrcxR/U2
+	gfSusG0OqEUHDp90Y/iktmMcvIgx+9GuKg3P8OnIkbBbRqYxmqNVWUGmQPBpBRo7pEPsbc
+	Sb5QjfDMhZl9fIaTZ+Hzjf+/pfS1LjAo1I5rwJoG+hiMoXlZ6pSsNWnTA9aPQSObgodAZc
+	9W+bG8TtxtZ7w7jkMVvPfgCf/ESTLeAZeTcG9cKXaFMzmCdY8V1XBUK7bXjvvz/SZt8KyJ
+	wFB462Hdk6dO/xWQLnJgY8R/EtL3P+irS0UR8Nyp/iBAViXjWL92ymaGxC5zzQ==
+Date: Tue, 13 Feb 2024 22:05:54 +0100
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	mcgrof@kernel.org, gost.dev@samsung.com, akpm@linux-foundation.org, 
+	kbusch@kernel.org, chandan.babu@oracle.com, p.raghav@samsung.com, 
+	linux-kernel@vger.kernel.org, hare@suse.de, willy@infradead.org, linux-mm@kvack.org, 
+	david@fromorbit.com
+Subject: Re: [RFC v2 01/14] fs: Allow fine-grained control of folio sizes
+Message-ID: <xy45wh2y55oinrvkhea36yxtnqmsoikp7eawaa2b5ejivfv4ku@ob72fvbkj4uh>
+References: <20240213093713.1753368-1-kernel@pankajraghav.com>
+ <20240213093713.1753368-2-kernel@pankajraghav.com>
+ <20240213163431.GS6184@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 13 Feb 2024 22:06:00 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240213163431.GS6184@frogsfrogsfrogs>
 
-From: Thomas Gleixner <tglx@linutronix.de>
+On Tue, Feb 13, 2024 at 08:34:31AM -0800, Darrick J. Wong wrote:
+> On Tue, Feb 13, 2024 at 10:37:00AM +0100, Pankaj Raghav (Samsung) wrote:
+> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > 
+> > Some filesystems want to be able to limit the maximum size of folios,
+> > and some want to be able to ensure that folios are at least a certain
+> > size.  Add mapping_set_folio_orders() to allow this level of control.
+> > The max folio order parameter is ignored and it is always set to
+> > MAX_PAGECACHE_ORDER.
+> 
+> Why?  If MAX_PAGECACHE_ORDER is 8 and I instead pass in max==3, I'm
+> going to be surprised by my constraint being ignored.  Maybe I said that
+> because I'm not prepared to handle an order-7 folio; or some customer
+> will have some weird desire to twist this knob to make their workflow
+> faster.
+> 
+> --D
+Maybe I should have been explicit. We are planning to add support
+for min order in the first round, and we want to add support for max order
+once the min order support is upstreamed. It was done mainly to reduce
+the scope and testing of this series.
 
-XEN/PV has a completely broken vCPU enumeration scheme, which just works by
-chance and provides zero topology information. Each vCPU ends up being a
-single core package.
+I definitely agree there are usecases for setting the max order. It is
+also the feedback we got from LPC.
 
-Dom0 provides MADT which can be used for topology information, but that
-table is the unmodified host table, which means that there can be more CPUs
-registered than the number of vCPUs XEN provides for the dom0 guest.
+So one idea would be not to expose max option until we add the support
+for max order? So filesystems can only set the min_order with the
+initial support?
 
-DomU does not have ACPI and both rely on counting the possible vCPUs via an
-hypercall.
-
-To prepare for using CPUID topology information either via MADT or via fake
-APIC IDs count the number of possible CPUs during early boot and adjust
-nr_cpu_ids() accordingly.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-
-
-
-
----
- arch/x86/xen/enlighten_pv.c |    3 +++
- arch/x86/xen/smp.h          |    2 ++
- arch/x86/xen/smp_pv.c       |   14 ++++++++++++++
- 3 files changed, 19 insertions(+)
----
-
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -200,6 +200,9 @@ static void __init xen_pv_init_platform(
- 		xen_set_mtrr_data();
- 	else
- 		mtrr_overwrite_state(NULL, 0, MTRR_TYPE_WRBACK);
-+
-+	/* Adjust nr_cpu_ids before "enumeration" happens */
-+	xen_smp_count_cpus();
- }
- 
- static void __init xen_pv_guest_late_init(void)
---- a/arch/x86/xen/smp.h
-+++ b/arch/x86/xen/smp.h
-@@ -19,6 +19,7 @@ extern void xen_smp_intr_free(unsigned i
- int xen_smp_intr_init_pv(unsigned int cpu);
- void xen_smp_intr_free_pv(unsigned int cpu);
- 
-+void xen_smp_count_cpus(void);
- void xen_smp_cpus_done(unsigned int max_cpus);
- 
- void xen_smp_send_reschedule(int cpu);
-@@ -44,6 +45,7 @@ static inline int xen_smp_intr_init_pv(u
- 	return 0;
- }
- static inline void xen_smp_intr_free_pv(unsigned int cpu) {}
-+static inline void xen_smp_count_cpus(void) { }
- #endif /* CONFIG_SMP */
- 
- #endif
---- a/arch/x86/xen/smp_pv.c
-+++ b/arch/x86/xen/smp_pv.c
-@@ -411,6 +411,20 @@ static irqreturn_t xen_irq_work_interrup
- 	return IRQ_HANDLED;
- }
- 
-+void __init xen_smp_count_cpus(void)
-+{
-+	unsigned int cpus;
-+
-+	for (cpus = 0; cpus < nr_cpu_ids; cpus++) {
-+		if (HYPERVISOR_vcpu_op(VCPUOP_is_up, cpus, NULL) < 0)
-+			break;
-+	}
-+
-+	pr_info("Xen PV: Detected %u vCPUS\n", cpus);
-+	if (cpus < nr_cpu_ids)
-+		set_nr_cpu_ids(cpus);
-+}
-+
- static const struct smp_ops xen_smp_ops __initconst = {
- 	.smp_prepare_boot_cpu = xen_pv_smp_prepare_boot_cpu,
- 	.smp_prepare_cpus = xen_pv_smp_prepare_cpus,
-
-
-
+> > +static inline void mapping_set_folio_orders(struct address_space *mapping,
+> > +					    unsigned int min, unsigned int max)
+> > +{
+> > +	if (min == 1)
+> > +		min = 2;
+> > +	if (max < min)
+> > +		max = min;
+> > +	if (max > MAX_PAGECACHE_ORDER)
+> > +		max = MAX_PAGECACHE_ORDER;
+> > +
+> > +	/*
+> > +	 * XXX: max is ignored as only minimum folio order is supported
+> > +	 * currently.
+> > +	 */
+> > +	mapping->flags = (mapping->flags & ~AS_FOLIO_ORDER_MASK) |
+> > +			 (min << AS_FOLIO_ORDER_MIN) |
+> > +			 (MAX_PAGECACHE_ORDER << AS_FOLIO_ORDER_MAX);
+> > +}
+> > +
