@@ -1,193 +1,181 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC60604BC;
-	Tue, 13 Feb 2024 17:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0A160277;
+	Tue, 13 Feb 2024 17:37:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707845754; cv=none; b=fcIH73j84jZ6uwXhkpyK/cU91EgHxo7i/w8Hl3kBy/Dgox5fEDyOXvj7pzzuQWKZ0ooreXw+5bhUGBalQ8n63I+WPJW+hLf9xDitzKPGHKYA98qYfB2t3IYGyZMUT0oAT2Kc6zAVsouHU/WpVqiCPMyaHeIMRexGso6c8jF4tOo=
+	t=1707845825; cv=none; b=GUyo34wwukATmeCBmy4UJYYnWuu+hUz3fAYIhcCkWIgimHIm6NEywo3+rWCaDuL3aCfL/bnP9WWPTR0r78V7hfhjLdlRwIrcVTZFgXGcbdLi5IQZ/dUcuhxvXSkZuEaFY1h3jFdLneGYrvZX+Ab4WzXvyLZQOxhtai0gJpMUEBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707845754; c=relaxed/simple;
-	bh=w1JomXnVeLI4MA0rDKNXo6hV6XaIbmS9RWIewRAWYFU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ilKFHE6xncmCaSkg+4KKfWtibJmR7NEUn0GCmTcx7YfJ96aruP0H4mzzVukmRLtq+wXbMoRf7fcuqGzfr3HuH8EC5TWR9FZ5hqJWGWOcQ1eDfga2EflrCwEa1FKbGznom4HWf7Jj725mudY0JymzsxPrLKjDBN/D7YhCJhcziDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d73066880eso42553895ad.3;
-        Tue, 13 Feb 2024 09:35:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707845752; x=1708450552;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=whrnsXTyKI9UGwzj48XrHgmMnZYTDLT9RoWvxO8dIUQ=;
-        b=flPKUS7wgC+6gJMUoQw+P9rS8A937fY2GyChAp2KD9lQUrJEGZFLF2JHWuml1byart
-         x27PyjRumK/PXRc/XrOt9izxUy1UqDpbre1KTxLaijKzorcg39+0m+IXpuqHkOBLBJqE
-         pj6QgW1x9QyGH9xUT/zI0G4IAHMilo2DMcJFdhqsJQ4u+yjRLhwdA2o1wtDC3qe1y+/Y
-         yTFxM3IsO5fgqK13EUiHrMAtnSVKwgtLQ/x2mzcZYaWviMZQxkXeWu2ZkD+1iKfAJ47B
-         CQJlTLZnKacIgLA8sh2mOShkIlBfzZRVaBb3KCX6NorG192DVFJ/lL3VgIern4Gb8iUR
-         t0MQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVNbNsk/OO5l+dkENVYSDVuvtWqWjSceuzWbyZ2A/yXSn5Q85tG6w7rPQXD601zoAbX2Q3YxKil4qW7iAyVQZtrI3q0UeJfs0jrN6UMoaDFaRYwXPenFmAOiF7WfeHGRARh
-X-Gm-Message-State: AOJu0Yx3JtvdLGxv5ScJ207kHfNMPtb7BXVA26M4Zz6XWhv6ZcOsHPBx
-	4S4C19E1G6r97ofPuvkj+cw1RG9Aj5GSZbIJrQ/iXYkEgyapePF3dfqJdMKmf0EYdkx6q56UqmL
-	Xw2kljckPS0h27pSRr8F7r9r+gyc=
-X-Google-Smtp-Source: AGHT+IGsJHfa6vUZvMxcrVEarhYgpxxjvzmv0NPalE8qE+SJN0CHD1l4sGTv0XjvlcsqBIaw/bHlCbpOgnu/i/eLcyE=
-X-Received: by 2002:a17:902:cecc:b0:1d9:87b6:e09e with SMTP id
- d12-20020a170902cecc00b001d987b6e09emr256807plg.21.1707845751877; Tue, 13 Feb
- 2024 09:35:51 -0800 (PST)
+	s=arc-20240116; t=1707845825; c=relaxed/simple;
+	bh=weTfkdDGfVyj9ft48D1i7g/tBfv43g3swJkzlG5GT7Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E1KU2SKw4JXvkeWdc0BJWm7Cf6QL/5zVGfAiWgy+KkCKzxWYeeT5lFi+utGRsm4+X3bezpImAXYzEXQrLZPH3hidCYzFYRpUl/Ib/1LWdAYVihM6ql5kUBWeHecgAS6X224pOH6uPmREePSK9zsfTQzdhn3jb8TYQPmUub+YyBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uRgat5YL; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uRgat5YL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 299A0C43390;
+	Tue, 13 Feb 2024 17:37:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707845825;
+	bh=weTfkdDGfVyj9ft48D1i7g/tBfv43g3swJkzlG5GT7Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uRgat5YLmBlCUakEyYE3n6PfDxy+ugO7fNxY/oIoUHCH/jNIZxiw6luO2bZ5Ln0zO
+	 8dc2au/LoB7zgGiIqfXN45FSe5p2blBJknTqydtiZ5Ak86al+yRm58ncY3pAebrBbv
+	 pZh26fXkrJcJz17DKn+pcumVclhI3SyOUOl5FryZ6geh2yOfbenW3zn4VxUAzTPCrQ
+	 VJ6cuGU2+fPCKziiJ9wOSjb72APkkw65xXOGXGRCef/mDtszsyeBFPd82tpsMGFw4Z
+	 PuQ8u9bpTNFpGL/6PzGEHFEMEe/61VgPTK+60+5NtxPhh2jDpvdt441hr8FFl94DDd
+	 7N73lD7HI2dKQ==
+Date: Tue, 13 Feb 2024 09:37:04 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: hch@lst.de, viro@zeniv.linux.org.uk, brauner@kernel.org,
+	dchinner@redhat.com, jack@suse.cz, chandan.babu@oracle.com,
+	martin.petersen@oracle.com, linux-kernel@vger.kernel.org,
+	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	tytso@mit.edu, jbongio@google.com, ojaswin@linux.ibm.com
+Subject: Re: [PATCH 4/6] fs: xfs: Support atomic write for statx
+Message-ID: <20240213173704.GB6184@frogsfrogsfrogs>
+References: <20240124142645.9334-1-john.g.garry@oracle.com>
+ <20240124142645.9334-5-john.g.garry@oracle.com>
+ <20240202180517.GJ6184@frogsfrogsfrogs>
+ <9b966c59-3b9f-4093-9913-c9b8a3469a8b@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240122062535.8265-1-khuey@kylehuey.com> <CAP045Apecy=G_Wmcw6TMjSDfa3TbkMfFVkzGDJ9xTVksCLkZ0w@mail.gmail.com>
- <CAADnVQ+tRwMZiPa9Zrf6nD22dfF9MAiqv-1ML5Z2pELFNKa9KQ@mail.gmail.com> <CAP045Aoc3e1NE8VMWz67LZNVo68nGhxfgapjd30vAaSyBD4kFg@mail.gmail.com>
-In-Reply-To: <CAP045Aoc3e1NE8VMWz67LZNVo68nGhxfgapjd30vAaSyBD4kFg@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 13 Feb 2024 09:35:39 -0800
-Message-ID: <CAM9d7chDGjpQ7dJ_EvhaV3RpudDw6e1ns-MZ=T0Q_nkKb4NvEQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/4] Combine perf and bpf for fast eval of hw
- breakpoint conditions
-To: Kyle Huey <me@kylehuey.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Kyle Huey <khuey@kylehuey.com>, 
-	LKML <linux-kernel@vger.kernel.org>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Marco Elver <elver@google.com>, 
-	Yonghong Song <yonghong.song@linux.dev>, "Robert O'Callahan" <robert@ocallahan.org>, 
-	bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9b966c59-3b9f-4093-9913-c9b8a3469a8b@oracle.com>
 
-Hello,
+On Mon, Feb 05, 2024 at 01:10:54PM +0000, John Garry wrote:
+> On 02/02/2024 18:05, Darrick J. Wong wrote:
+> > On Wed, Jan 24, 2024 at 02:26:43PM +0000, John Garry wrote:
+> > > Support providing info on atomic write unit min and max for an inode.
+> > > 
+> > > For simplicity, currently we limit the min at the FS block size, but a
+> > > lower limit could be supported in future.
+> > > 
+> > > The atomic write unit min and max is limited by the guaranteed extent
+> > > alignment for the inode.
+> > > 
+> > > Signed-off-by: John Garry <john.g.garry@oracle.com>
+> > > ---
+> > >   fs/xfs/xfs_iops.c | 45 +++++++++++++++++++++++++++++++++++++++++++++
+> > >   fs/xfs/xfs_iops.h |  4 ++++
+> > >   2 files changed, 49 insertions(+)
+> > > 
+> > > diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> > > index a0d77f5f512e..0890d2f70f4d 100644
+> > > --- a/fs/xfs/xfs_iops.c
+> > > +++ b/fs/xfs/xfs_iops.c
+> > > @@ -546,6 +546,44 @@ xfs_stat_blksize(
+> > >   	return PAGE_SIZE;
+> > >   }
+> > > +void xfs_get_atomic_write_attr(
+> > 
+> > static void?
+> 
+> We use this in the iomap and statx code
+> 
+> > 
+> > > +	struct xfs_inode *ip,
+> > > +	unsigned int *unit_min,
+> > > +	unsigned int *unit_max)
+> > 
+> > Weird indenting here.
+> 
+> hmmm... I thought that this was the XFS style
+> 
+> Can you show how it should look?
 
-On Mon, Feb 12, 2024 at 7:57=E2=80=AFPM Kyle Huey <me@kylehuey.com> wrote:
->
-> On Mon, Feb 12, 2024 at 6:42=E2=80=AFPM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
-> >
-> > On Mon, Feb 12, 2024 at 8:37=E2=80=AFAM Kyle Huey <me@kylehuey.com> wro=
-te:
-> > >
-> > > On Sun, Jan 21, 2024 at 10:25=E2=80=AFPM Kyle Huey <me@kylehuey.com> =
-wrote:
-> > > >
-> > > > rr, a userspace record and replay debugger[0], replays asynchronous=
- events
-> > > > such as signals and context switches by essentially[1] setting a br=
-eakpoint
-> > > > at the address where the asynchronous event was delivered during re=
-cording
-> > > > with a condition that the program state matches the state when the =
-event
-> > > > was delivered.
-> > > >
-> > > > Currently, rr uses software breakpoints that trap (via ptrace) to t=
-he
-> > > > supervisor, and evaluates the condition from the supervisor. If the
-> > > > asynchronous event is delivered in a tight loop (thus requiring the
-> > > > breakpoint condition to be repeatedly evaluated) the overhead can b=
-e
-> > > > immense. A patch to rr that uses hardware breakpoints via perf even=
-ts with
-> > > > an attached BPF program to reject breakpoint hits where the conditi=
-on is
-> > > > not satisfied reduces rr's replay overhead by 94% on a pathological=
- (but a
-> > > > real customer-provided, not contrived) rr trace.
-> > > >
-> > > > The only obstacle to this approach is that while the kernel allows =
-a BPF
-> > > > program to suppress sample output when a perf event overflows it do=
-es not
-> > > > suppress signalling the perf event fd or sending the perf event's S=
-IGTRAP.
-> > > > This patch set redesigns __perf_overflow_handler() and
-> > > > bpf_overflow_handler() so that the former invokes the latter direct=
-ly when
-> > > > appropriate rather than through the generic overflow handler machin=
-ery,
-> > > > passes the return code of the BPF program back to __perf_overflow_h=
-andler()
-> > > > to allow it to decide whether to execute the regular overflow handl=
-er,
-> > > > reorders bpf_overflow_handler() and the side effects of perf event
-> > > > overflow, changes __perf_overflow_handler() to suppress those side =
-effects
-> > > > if the BPF program returns zero, and adds a selftest.
-> > > >
-> > > > The previous version of this patchset can be found at
-> > > > https://lore.kernel.org/linux-kernel/20240119001352.9396-1-khuey@ky=
-lehuey.com/
-> > > >
-> > > > Changes since v4:
-> > > >
-> > > > Patches 1, 2, 3, 4 added various Acked-by.
-> > > >
-> > > > Patch 4 addresses additional nits from Song.
-> > > >
-> > > > v3 of this patchset can be found at
-> > > > https://lore.kernel.org/linux-kernel/20231211045543.31741-1-khuey@k=
-ylehuey.com/
-> > > >
-> > > > Changes since v3:
-> > > >
-> > > > Patches 1, 2, 3 added various Acked-by.
-> > > >
-> > > > Patch 4 addresses Song's review comments by dropping signals_expect=
-ed and the
-> > > > corresponding ASSERT_OKs, handling errors from signal(), and fixing=
- multiline
-> > > > comment formatting.
-> > > >
-> > > > v2 of this patchset can be found at
-> > > > https://lore.kernel.org/linux-kernel/20231207163458.5554-1-khuey@ky=
-lehuey.com/
-> > > >
-> > > > Changes since v2:
-> > > >
-> > > > Patches 1 and 2 were added from a suggestion by Namhyung Kim to ref=
-actor
-> > > > this code to implement this feature in a cleaner way. Patch 2 is se=
-parated
-> > > > for the benefit of the ARM arch maintainers.
-> > > >
-> > > > Patch 3 conceptually supercedes v2's patches 1 and 2, now with a cl=
-eaner
-> > > > implementation thanks to the earlier refactoring.
-> > > >
-> > > > Patch 4 is v2's patch 3, and addresses review comments about C++ st=
-yle
-> > > > comments, getting a TRAP_PERF definition into the test, and unneces=
-sary
-> > > > NULL checks.
-> > > >
-> > > > [0] https://rr-project.org/
-> > > > [1] Various optimizations exist to skip as much as execution as pos=
-sible
-> > > > before setting a breakpoint, and to determine a set of program stat=
-e that
-> > > > is practical to check and verify.
-> > >
-> > > Since everyone seems to be satisfied with this now, can we get it int=
-o
-> > > bpf-next (or wherever) for 6.9?
-> >
-> > The changes look fine, but since they change perf side we need
-> > perf maintainer's ack-s before we can land the patches.
-> > And none of them were cc-ed.
-> > So please resend the whole set and cc
-> > PERFORMANCE EVENTS SUBSYSTEM
-> > M:      Peter Zijlstra <peterz@infradead.org>
-> > M:      Ingo Molnar <mingo@redhat.com>
-> > M:      Arnaldo Carvalho de Melo <acme@kernel.org>
-> > M:      Namhyung Kim <namhyung@kernel.org>
->
-> They're all CCd to the three non-test patches in this set, Namhyung
-> Kim is CCd to all of them and this cover email, and he both suggested
-> the first patch and acked the third.
+The parameter declarations should line up with the local variables:
 
-I think we need to wait for Peter or Ingo for the kernel part.
+void
+xfs_get_atomic_write_attr(
+	struct xfs_inode	*ip,
+	unsigned int		*unit_min,
+	unsigned int		*unit_max)
+{
+	struct xfs_buftarg	*target = xfs_inode_buftarg(ip);
+	struct block_device	*bdev = target->bt_bdev;
+	struct request_queue	*q = bdev->bd_queue;
+	struct xfs_mount	*mp = ip->i_mount;
+	unsigned int		awu_min, awu_max, align;
+	xfs_extlen_t		extsz = xfs_get_extsz(ip);
 
-Thanks,
-Namhyung
+> > 
+> > > +{
+> > > +	xfs_extlen_t		extsz = xfs_get_extsz(ip);
+> > > +	struct xfs_buftarg	*target = xfs_inode_buftarg(ip);
+> > > +	struct block_device	*bdev = target->bt_bdev;
+> > > +	unsigned int		awu_min, awu_max, align;
+> > > +	struct request_queue	*q = bdev->bd_queue;
+> > > +	struct xfs_mount	*mp = ip->i_mount;
+> > > +
+> > > +	/*
+> > > +	 * Convert to multiples of the BLOCKSIZE (as we support a minimum
+> > > +	 * atomic write unit of BLOCKSIZE).
+> > > +	 */
+> > > +	awu_min = queue_atomic_write_unit_min_bytes(q);
+> > > +	awu_max = queue_atomic_write_unit_max_bytes(q);
+> > > +
+> > > +	awu_min &= ~mp->m_blockmask;
+> > 
+> > Why do you round /down/ the awu_min value here?
+> 
+> This is just to ensure that we returning *unit_min >= BLOCKSIZE
+> 
+> For example, if awu_min, max 1K, 64K from the bdev, we now have 0 and 64K.
+> And below this gives us awu_min, max of 4k, 64k.
+> 
+> Maybe there is a more logical way of doing this.
+
+	awu_min = roundup(queue_atomic_write_unit_min_bytes(q),
+			  mp->m_sb.sb_blocksize);
+
+?
+
+> 
+> > 
+> > > +	awu_max &= ~mp->m_blockmask;
+> > 
+> > Actually -- since the atomic write units have to be powers of 2, why is
+> > rounding needed here at all?
+> 
+> Sure, but the bdev can report a awu_min < BLOCKSIZE
+> 
+> > 
+> > > +
+> > > +	align = XFS_FSB_TO_B(mp, extsz);
+> > > +
+> > > +	if (!awu_max || !xfs_inode_atomicwrites(ip) || !align ||
+> > > +	    !is_power_of_2(align)) {
+> > 
+> > ...and if you take my suggestion to make a common helper to validate the
+> > atomic write unit parameters, this can collapse into:
+> > 
+> > 	alloc_unit_bytes = xfs_inode_alloc_unitsize(ip);
+> > 	if (!xfs_inode_has_atomicwrites(ip) ||
+> > 	    !bdev_validate_atomic_write(bdev, alloc_unit_bytes))  > 		/* not supported, return zeroes */
+> > 		*unit_min = 0;
+> > 		*unit_max = 0;
+> > 		return;
+> > 	}
+> > 
+> > 	*unit_min = max(alloc_unit_bytes, awu_min);
+> > 	*unit_max = min(alloc_unit_bytes, awu_max);
+> 
+> Again, we need to ensure that *unit_min >= BLOCKSIZE
+
+The file allocation unit and hence the return value of
+xfs_inode_alloc_unitsize is always a multiple of sb_blocksize.
+
+--D
+
+> Thanks,
+> John
+> 
+> 
