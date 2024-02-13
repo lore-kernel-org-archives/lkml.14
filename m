@@ -1,95 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC05605C8;
-	Tue, 13 Feb 2024 19:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD306086A
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 19:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707852376; cv=none; b=Bb4AMFNc5tzTW3q74rEBQPbrChm3b0xo4m/MLm+f15/r+p6hzGmcH8Ry9NBsowjb97QQvc3wC9mCGWNCGMQgaOEvfAr8byXe8+8Lp6KvVEQUNqaUKij7BEGIV1uhBAW0fvCNH8jhBvlsjJUA/YrtvjBGZIzjch4NYXPgv8dJSkU=
+	t=1707852377; cv=none; b=uOE+xf130YBXKsLoOOweYY4+8waXQ/Tc7vI35TAwFLYJzShXw6bmvjaPCS8fqFvxr79gDcMWtDj6SjIr9quQJLFaFZfKJiV+V5JWWyGLumeXtpe79lo86tihWvG/MUOgJW514frWFzHCpY5Q4z0XfjNkR5Q/5QJbJBr8mhPGstw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707852376; c=relaxed/simple;
-	bh=BO77RV+GIQjk9Z58R/dxnr2s1En8OoXSBgchfvm6cJM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ioBZZSDFGjC1uBh6HF/CzRMxxhJjSIJPYLeM6nyueTkSGIzXT1+PmxqriLMiJ+FQ+u/6Mh7TRr5oQVUzhqQ4JaOmMuH6yp6A92qNup/dB7pCFdI5XLD127bkfjb8AHw/j5rb/W+OJ1Oe6+daqFq89//h3JzJwDe2ZcZqmLrh0A4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e1z/5+iT; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707852377; c=relaxed/simple;
+	bh=FcIUCjZjJtIJsey1BGn6tsDk+4jnwfVq1Ekp8PG/kYY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PoL7Wnpp8Hv+wmIVAbipRZnTWnkfxNaGFuArikkeFCoxTF8c4TDMvhRjqTbw0Tm4DQxgcHety9cL3YgvUin/qLq7dgXhIwW7pj9mB05Alk61qJY0PhZZ3kg3FHRo+vm6ASqgh97DP8Se7DqTi9fA2SNTzoO2XTzuuvM7hGHC3nY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=B9p/ZIkO; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e1z/5+iT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707852376; x=1739388376;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=BO77RV+GIQjk9Z58R/dxnr2s1En8OoXSBgchfvm6cJM=;
-  b=e1z/5+iTWeS/YkGImRHey+UW9D9G7rOTtjWSlm2l56ffSx3W/ceT2H5t
-   pB2LfLKWzXwN5RCqnsQaciyq6aEbOtgirorX5kqSSTnGwLsAHUVmRgn8h
-   KlHmaOgwYwSqIjLHcP1va1hU6VLopS4LErQjZQpdR33EmiV4zKl1OQWep
-   3JHPj38xWUd2dS0xV2r8GxSQkH7MAmeH4nZHg4hyT5SA+viDJF5SFVbA6
-   sTO34EzfXR07k4xAiGOnFC/k/iFh0zG6XUUYu43UnweuGC2Qo8P3oDdha
-   XNVPl0uluaPnNLc9pHZkjmCo9P2oPaVCdOnLypOcZ4KB6FPFfFXtebb6A
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="12967593"
-X-IronPort-AV: E=Sophos;i="6.06,158,1705392000"; 
-   d="scan'208";a="12967593"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 11:26:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,158,1705392000"; 
-   d="scan'208";a="7731030"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 11:26:14 -0800
-Date: Tue, 13 Feb 2024 11:31:42 -0800
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>,
- iommu@lists.linux.dev, Lu Baolu <baolu.lu@linux.intel.com>,
- kvm@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, Joerg Roedel
- <joro@8bytes.org>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov
- <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, Raj Ashok
- <ashok.raj@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
- maz@kernel.org, peterz@infradead.org, seanjc@google.com, Robin Murphy
- <robin.murphy@arm.com>, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH RFC 12/13] iommu/vt-d: Add a helper to retrieve PID
- address
-Message-ID: <20240213113142.6b7459e1@jacob-builder>
-In-Reply-To: <87le7oixk4.ffs@tglx>
-References: <20231112041643.2868316-1-jacob.jun.pan@linux.intel.com>
-	<20231112041643.2868316-13-jacob.jun.pan@linux.intel.com>
-	<874jgvuls0.ffs@tglx>
-	<20240126153047.5e42e5d0@jacob-builder>
-	<87le7oixk4.ffs@tglx>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="B9p/ZIkO"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2d073b54359so69628251fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 11:26:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1707852374; x=1708457174; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NeIn4TTu9vCR66Yqi85vfwq7rwhNbFFNwfgKW6lLC1s=;
+        b=B9p/ZIkO/Fqg3nbHDnYPQj9DG3QixoGNL3wzmywUEp4S08vcYr6bq3IMapLcPGCPPE
+         lVdnRmIxu0eLVKGTJ1aqxx61SV8AgS3w/m1mOMwjtiNKgOuO9wCdcn6VIi6Yyg8GI9Qk
+         +nrfQvfRBnl9dzbEU2tXKl73GgX/SOxyIt4Eh9kMtoLO+4UOhauVgYiaQyF0KIyZamIh
+         ARgcTgEvtCFQE2fQ86MdwBYARZgV0HB9xPOAlFf9rYt439mYwOCR8buuYgUewWHMaHba
+         smMGH2mU32b37EhGyWdJgFlBeoTyEkvh/RsMK1V3YWiRSS5aU7u63TSCnkIXq6leJrMh
+         4dQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707852374; x=1708457174;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NeIn4TTu9vCR66Yqi85vfwq7rwhNbFFNwfgKW6lLC1s=;
+        b=MLVMb8NLtUpDPCHxFDuNXvjtnP5wXIL/q71mSLcsEFSCTpPllstNxtnGBWpHWdzjFN
+         YOyG/bOQQFyCkLBxlApYohkzlapLA7pniDbGME79B0MnBzRP5fNse2fy4OXQPeN8FJqj
+         yoMLS+3mq+gRaifQbb2wlEu6vFxLOuXWt34l98FuORT0fZlFmmLpL0wRjnWeFTVcFmmn
+         s/Wf1ddhY8AUiOy5l6ASAmtzcwjS/3Qgff0NAhDnD27MqwyQNGDi0Vo8BrQ+pLWc0xGZ
+         RyJ+M9YE7ID51ZItFOrvyfIf8Iiwt8Pp+ssheHGush+WdkW9HGXA4xKoLQXnlOP78hBm
+         6t5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWbRpav9o9hA4X9evu8NwyeH1GbWTzuePfGdQjFPU+ZN1glnh5zwWIYS4YYGAtWfZoPCV8buPq4Ja4KPO3LlpGUdVxH5lGBDCzBbvPD
+X-Gm-Message-State: AOJu0YxdMDOkcvWXOWzvvS6O/NwH4p6ggXwKQID7Dv9MI/OZFO1K5EeY
+	96A0oG4Tzxi0WWv0VDZP8e04Nlp3qgoZNsdKnBgqKl9Xxj41QDXYJin+rBrTYCHMS7nWstOhFoY
+	0B20xVzsiijSEW6vmv0Ll+lsminocrZVctWVsxA==
+X-Google-Smtp-Source: AGHT+IE+m+Xi/dgb97e63/2F5Xl8+lxhih+9in0RcqGziZ5Ue+ulbC6JY4e+xfOXYEfnyTe7a0nKHshr37VCCQ3ysW4=
+X-Received: by 2002:a2e:88cf:0:b0:2d0:cfe6:4364 with SMTP id
+ a15-20020a2e88cf000000b002d0cfe64364mr500467ljk.36.1707852373843; Tue, 13 Feb
+ 2024 11:26:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240212-mainline-spi-precook-message-v1-0-a2373cd72d36@baylibre.com>
+ <20240212-mainline-spi-precook-message-v1-1-a2373cd72d36@baylibre.com> <54623b74-872a-41dc-992f-71a586d145ec@sirena.org.uk>
+In-Reply-To: <54623b74-872a-41dc-992f-71a586d145ec@sirena.org.uk>
+From: David Lechner <dlechner@baylibre.com>
+Date: Tue, 13 Feb 2024 13:26:02 -0600
+Message-ID: <CAMknhBGt0EyA_FcpXbmT-PStZqmZ_PUENHbVfgDFOwWcv5gTAw@mail.gmail.com>
+Subject: Re: [PATCH 1/5] spi: add spi_optimize_message() APIs
+To: Mark Brown <broonie@kernel.org>
+Cc: Martin Sperl <kernel@martin.sperl.org>, David Jander <david@protonic.nl>, 
+	Jonathan Cameron <jic23@kernel.org>, Michael Hennerich <michael.hennerich@analog.com>, 
+	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Alain Volmat <alain.volmat@foss.st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-spi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Thomas,
+On Tue, Feb 13, 2024 at 12:55=E2=80=AFPM Mark Brown <broonie@kernel.org> wr=
+ote:
+>
+> On Mon, Feb 12, 2024 at 05:26:41PM -0600, David Lechner wrote:
+>
+> > +static int __spi_optimize_message(struct spi_device *spi,
+> > +                               struct spi_message *msg,
+> > +                               bool pre_optimized)
+> > +{
+> > +     struct spi_controller *ctlr =3D spi->controller;
+> > +     int ret;
+> > +
+> > +     ret =3D __spi_validate(spi, msg);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     if (ctlr->optimize_message) {
+> > +             ret =3D ctlr->optimize_message(msg);
+> > +             if (ret)
+> > +                     return ret;
+> > +     }
+> > +
+> > +     msg->pre_optimized =3D pre_optimized;
+>
+> It would probably be clearer to name the parameter pre_optimising rather
+> than pre_optimized, as it is the logic is a bit confusing.  Either that
+> or some comments.  A similar issue applies on the cleanup path.
 
-On Tue, 13 Feb 2024 09:21:47 +0100, Thomas Gleixner <tglx@linutronix.de>
-wrote:
-
-> > Here the parent APIC chip does apic_set_affinity() which will set up
-> > effective mask before posted MSI affinity change.
-> >
-> > Maybe I missed some cases?  
-> 
-> The function is only used in intel_ir_reconfigure_irte_posted() in the
-> next patch, but it's generally available. So I asked that question
-> because if it's called in some other context then it's going to be not
-> guaranteed.
-> 
-> That also begs the question why this function exists in the first
-> place. This really can be part of intel_ir_reconfigure_irte_posted(),
-> which makes it clear what the context is, no?
-Make sense, will fold it in next time.
-
-Thanks,
-
-Jacob
+Per Jonathan's suggestion, I plan to remove the parameter from this
+function and handle this flag at the call site instead.
