@@ -1,108 +1,111 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A93627F7;
-	Tue, 13 Feb 2024 21:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B7FE626DB;
+	Tue, 13 Feb 2024 21:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707860423; cv=none; b=JHbIhsekX/e3LgJC16Plg9u+mwdTn2Nqznp112nyYysO78A0t3D3U7KSguJDC5dRPlhVHdZ8eLxsHKBLSePC25982tLZ7uolwU7ZF+Ze8bcvsBychmblsBaq6excMHLYshmqTfXoWLX5am6nnojw3H2jMsEStEaYC4oolDM9KLc=
+	t=1707860424; cv=none; b=pCt5nSyZb7EWMSuYv2cq78nQWHs3LV6VzgV4/9dBXaOiKjW9aVMYsg48pRGz/P9OWiM6XNL/7shpur2eHOU5nqLT7DREzKxnykhFRgq+Indu3eP9DWB/2aUHZG9J3ooC2KpmY5F1YkUlJqd1rruW8cjW2jNBNBJe7fS7Uq1zMUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707860423; c=relaxed/simple;
-	bh=cFyzorVyt7pR+oxl9oSqdJVk3CnfNL+zpcN7YvtmWuI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mcmcBJXle0vb2kS6+3ZSAAYE3HO04ikdqTIVJh0cpXH2WFohrdxFuCl3Ut2chB0n+kjk+LMN+IxlrE16AEZZHBkrgdEC+p+HMEfpZm5Kf5sCQkQoDUJflpaoz4+VFEnkgB7Z5Q2Lruj+T4EmWPrVaZB28OUdsdKi8fDSNROWzwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yj8Y5Wli; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707860424; c=relaxed/simple;
+	bh=Am0SdY5XDfkfN9XClvIWzxvrMD3Ma/uMq9rRKBz1zVM=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=N3hXwcOya6zAjAvPwBj/xuZSkphJPBdtQfgHuwvXDrLv/hONLDhfq2OV4JYyxbeJ7U15c9vcTihlr0byHH0l20S8lMphV0WJ5g0H1UroL97czyqHgPMXG2m1aJS1t5iS6NB7L6Nyzq9i3uceOQoxdqXerBQXqGpEHFxMqJi+gmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=hbXXMyCc; arc=none smtp.client-ip=208.88.110.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yj8Y5Wli"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-56001d49cc5so6053713a12.2;
-        Tue, 13 Feb 2024 13:40:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="hbXXMyCc"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 549859C4408;
+	Tue, 13 Feb 2024 16:40:13 -0500 (EST)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id 0AR89831jv7z; Tue, 13 Feb 2024 16:40:12 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id AB8A99C48F2;
+	Tue, 13 Feb 2024 16:40:12 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com AB8A99C48F2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707860420; x=1708465220; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AH7FjojSelKl6RFjaMdeJGd9WEI2qrfj4ii5ApRFD+M=;
-        b=Yj8Y5Wli3o5mx+vto7xy18gphrhWWWVm8xG8Qb5+vtMGqbWMZnoq8TMlpFt/v7Qx6j
-         Dr6giy6QiMokvwpomDtBpJ4utsHrkWGFgIJtwR7xb7U3d0fOUyJA6n0bdnWf6qNRAA3h
-         I4sWiizFD85Jv7gc3jOuOTsBOQ+UNHAtFAa+WB/YE9l1Ew3zONF/dKIyHRecZrGCxPsV
-         6ZODIHPNPXZEEEFb2IGveP6b1fKOE0RJQwKNKnGzWS6t5vvU1jU9FT0+PB8rEay4dYzD
-         LiXgg8Lj7cL6nGhBSc6yNwN+Tae6UT6eIE70hgmzHeQAmjWxpnmT3U6fc+Ht7HACRKMk
-         JNQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707860420; x=1708465220;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AH7FjojSelKl6RFjaMdeJGd9WEI2qrfj4ii5ApRFD+M=;
-        b=SeHm1agnaQwvi3q4LmR6EFqPebuNk7/IT2Q2X7o67+VhYb7kFx3Ssn/CP2olWXhtLr
-         lR3sHH/fO1g1y++MGc4f2uEM/9RSIMovfSn7MBbCrAbSHwotOCRbLjAGA4F7Bw7Xa7XZ
-         vVh5xNK0fCG2mfZQyjp63ep0JiD3aKGNNclhQQPi0egxcXPMSW1W4tRI2A/M5LKJWedV
-         7aeahf5LghHc+C0fTyKF0t35shdeVOoCwWNlWfqMXFNGZ0TsonZKiHnU88OiSXESDdAZ
-         IlFZj0CDQwOmRgv6eTr5fkyn09MJTq2ny7bimgboWogZbi+iL/QOpQiZFzxzZlGlbZ0R
-         lfTg==
-X-Forwarded-Encrypted: i=1; AJvYcCUS093wW2+wEXP8NgqaPr/v3mgTDy2jUQNfPudDv4/WeMANop+DZx5v/bfnjcEGhFXQ2WxBwKu1YGu6XDpswvybV1P2Qz9234M9HRRYjsFkbh6piiCC8XLPdiGOGbl1HTpoPeqx
-X-Gm-Message-State: AOJu0YxWNcarblHmDHFjL+us+m9JRoT3DypNxJ3hLuZ/8510KyZi3EMy
-	gsxgXxQG9R9EXeXHu0ikXUCeVRAZ5XkO/QQbz4eANZL+GsTPQBbT
-X-Google-Smtp-Source: AGHT+IFpWcx6761os9cY463iuCWj1XL4UFa7Ld5yCw6fna2rdMN3IzUFuO9OuDGXe4y1loKdEOgQnQ==
-X-Received: by 2002:a05:6402:6c7:b0:55e:ef54:a4dc with SMTP id n7-20020a05640206c700b0055eef54a4dcmr640135edy.23.1707860419584;
-        Tue, 13 Feb 2024 13:40:19 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXQ9zxyD1Pggf8hY8RG7yzYR1rUCtJlOfqguf2JMEViHGgeozHqBSMHfcHcq18/kVmc8lbBlvYfCqaPW8DN13ZvkUJro2NfdJX+YRmyPqOs0bX9EpLSsppaI5EUnxABecsqYr9L+hmUjWOzcMG82Klfoha28LfRnT43kqbWBlQsR+eXrKK/kpuefAUY3PnYvhYwiGjsQIZh4cJo4kGCTwJOj/tceNzvVbCXshXisED05st5gn8Bek2fM+WxHPPMmX1EvoBZEMXcBWuDT+H65FjXEMv9u/NAhx/WnHHZLpFa73NzpdAMC/DXqKo+epyhfAKF0Zx+7IuIaXNBDcgBlOLTF7s=
-Received: from debian.fritz.box ([93.184.186.109])
-        by smtp.gmail.com with ESMTPSA id k23-20020a05640212d700b005612987a525sm4003913edx.89.2024.02.13.13.40.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 13:40:19 -0800 (PST)
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-To: 
-Cc: Dimitri Fedrau <dima.fedrau@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Stefan Eichenberger <eichest@gmail.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 net-next 03/14] net: phy: c45: detect 100/1000BASE-T1 linkmode advertisements
-Date: Tue, 13 Feb 2024 22:39:42 +0100
-Message-Id: <20240213213955.178762-4-dima.fedrau@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240213213955.178762-1-dima.fedrau@gmail.com>
-References: <20240213213955.178762-1-dima.fedrau@gmail.com>
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1707860412; bh=OLowQGLdyAKcj7Y0FKOcf7tGXW+sq0JROGANmY0A+Wo=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=hbXXMyCcnSbiDOis84z1rPH366GZ/q0jOZVSHbHn0xnHvkXnwSMCSxR9jgMzNWM+v
+	 +WBSNXUDBCfLaVYa3cibhNRdQnV+nbladEQVdqH1XFbrPlQH50Uf7zIIf2AqEIlmHG
+	 nKBMswF0NeFMsaz29PxRdtEsZbldtvsEj9SQdOEexxvDh7V+CtSfjg6t9s0AkOPpAg
+	 8scqu6e+i2ymw+OOB+BEv63fKn2ieEptqDJdssZT/Ecsi9jJ390xwrmKcNpTnzUIDU
+	 e81yECbOHQTVxhu3+VBA5TCIQKeBAYkDYZrQPDlG16O4FHzEqDneUJ1HiMPSil3Wri
+	 r/bW5/g7MlgCw==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id W4wzPNlSx12O; Tue, 13 Feb 2024 16:40:12 -0500 (EST)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [192.168.48.237])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 6FBCD9C4408;
+	Tue, 13 Feb 2024 16:40:12 -0500 (EST)
+Date: Tue, 13 Feb 2024 16:40:12 -0500 (EST)
+From: Charles Perry <charles.perry@savoirfairelinux.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: mdf <mdf@kernel.org>, Allen VANDIVER <avandiver@markem-imaje.com>, 
+	Brian CODY <bcody@markem-imaje.com>, hao wu <hao.wu@intel.com>, 
+	yilun xu <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	krzysztof kozlowski+dt <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, 
+	Michal Simek <michal.simek@amd.com>, 
+	kishore Manne <nava.kishore.manne@amd.com>, 
+	linux-fpga <linux-fpga@vger.kernel.org>, 
+	devicetree <devicetree@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Message-ID: <1139371633.970589.1707860412394.JavaMail.zimbra@savoirfairelinux.com>
+In-Reply-To: <69679d9a-02e9-498f-8f5a-7c029059a8c1@linaro.org>
+References: <20240207180142.79625-1-charles.perry@savoirfairelinux.com> <20240207180142.79625-3-charles.perry@savoirfairelinux.com> <69679d9a-02e9-498f-8f5a-7c029059a8c1@linaro.org>
+Subject: Re: [PATCH v3 2/5] dt-bindings: fpga: xlnx,fpga-slave-serial:
+ rename gpios
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.8.15_GA_4581 (ZimbraWebClient - FF120 (Linux)/8.8.15_GA_4581)
+Thread-Topic: dt-bindings: fpga: xlnx,fpga-slave-serial: rename gpios
+Thread-Index: JNVv3qISWN3DobtT0S2yFs/0J3QuiQ==
 
-Set 100BT1 and 1000BT1 linkmode advertisement bits to adv_l_mask to
-enable detection.
+On Feb 11, 2024, at 10:39 AM, Krzysztof Kozlowski krzysztof.kozlowski@linaro.org wrote:
+> On 07/02/2024 19:01, Charles Perry wrote:
+>> By convention, gpio consumer names should not contain underscores
+>> (prog_b here) and shouldn't contain active low suffixes (-b here).
+>> 
+>> Signed-off-by: Charles Perry <charles.perry@savoirfairelinux.com>
+>> ---
+>>  .../bindings/fpga/xlnx,fpga-slave-serial.yaml        | 12 ++++++------
+>>  1 file changed, 6 insertions(+), 6 deletions(-)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/fpga/xlnx,fpga-slave-serial.yaml
+>> b/Documentation/devicetree/bindings/fpga/xlnx,fpga-slave-serial.yaml
+>> index 614d86ad825f3..650a4d8792b64 100644
+>> --- a/Documentation/devicetree/bindings/fpga/xlnx,fpga-slave-serial.yaml
+>> +++ b/Documentation/devicetree/bindings/fpga/xlnx,fpga-slave-serial.yaml
+>> @@ -36,7 +36,7 @@ properties:
+>>    reg:
+>>      maxItems: 1
+>>  
+>> -  prog_b-gpios:
+>> +  prog-gpios:
+> 
+> Please deprecate old property and add allOf excluding the usage of both.
+> Driver still parses old property, so we should have it documented.
+> 
+> https://lore.kernel.org/all/20230118163208.GA117919-robh@kernel.org/
+> 
+> Best regards,
+> Krzysztof
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
----
- drivers/net/phy/phy-c45.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Ok. Thank you for the example.
 
-diff --git a/drivers/net/phy/phy-c45.c b/drivers/net/phy/phy-c45.c
-index 747d14bf152c..de8f5dc8be12 100644
---- a/drivers/net/phy/phy-c45.c
-+++ b/drivers/net/phy/phy-c45.c
-@@ -208,7 +208,8 @@ static int genphy_c45_baset1_an_config_aneg(struct phy_device *phydev)
- 
- 	adv_l_mask = MDIO_AN_T1_ADV_L_FORCE_MS | MDIO_AN_T1_ADV_L_PAUSE_CAP |
- 		MDIO_AN_T1_ADV_L_PAUSE_ASYM;
--	adv_m_mask = MDIO_AN_T1_ADV_M_MST | MDIO_AN_T1_ADV_M_B10L;
-+	adv_m_mask = MDIO_AN_T1_ADV_M_1000BT1 | MDIO_AN_T1_ADV_M_100BT1 |
-+		MDIO_AN_T1_ADV_M_MST | MDIO_AN_T1_ADV_M_B10L;
- 
- 	switch (phydev->master_slave_set) {
- 	case MASTER_SLAVE_CFG_MASTER_FORCE:
--- 
-2.39.2
-
+Regards,
+Charles
