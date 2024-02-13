@@ -1,117 +1,64 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B66F5788A;
-	Tue, 13 Feb 2024 14:12:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E095731B
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 14:13:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707833558; cv=none; b=oZfnYDMglNt04d+iKpVDFDHvUhpRrxobFR6JMDVjZbUeqULtPsgEBVUTYYD62Ah3JYBNCLQFY0GcvwLspqZkmrchi6a9GADQWmR06ZMRz0oVnYDfvsF+mwj+OPPmkPqYPkcn9o4Ah8p3yFjCszGDYpbU21fYL+BZ4TtyCOwGSiU=
+	t=1707833598; cv=none; b=ohMiKFajz/1iN6FsRTufzj5YOfj7qnfw7Lj/7mKIRQnCzez4l5pc1Pi+4Km3I3G7L1QniH3h66tkQMlM0skM0W0Hi75PAtzgO4sODxXz52W5Ox0rn1DwN7H7VT+kiUBix1FaXFk/vQPyu8gwlZef7fC3362cgVZTkxwxQdUm8Gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707833558; c=relaxed/simple;
-	bh=M60rv+CFL/yd6aFL1rLXU9HDgeU7hqolVlwtimAxAro=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aI51IBoN0M4xQhff2iAI6gBxz4FB3wHzKXXH483k/bDEWOaRoIpRlk95Ph9l5t4J8iNDRvgLasEWmLqr4SaeJJixA38Iktja2itQ0DeEVkV75HBSAMi49R6WiHmJSueWc6LtfGZGD1074X4/uCGt2lcFwdiVTlR53fW+jtubr4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mPsIJudx; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mPsIJudx"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d7881b1843so39684245ad.3;
-        Tue, 13 Feb 2024 06:12:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707833555; x=1708438355; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ClcF49SW9TVyg+8qgV4EbQKNakwAki5xkRZzYfgJ398=;
-        b=mPsIJudxJdLUGzOAZ/x2iRqjeXRYpCVQA5Acz6YxAq8bdrHP1LxmR8tomsel70zXS9
-         VnOwLZWQlO9GUicNsBFrVd69w6RVINV9iwlLeqfwECIboHEomM7Pl53hzB/I+13IK1T/
-         0eTdWe6joP5BzV0e3QkyLCLubPKgV6Qm8lL1XkcR3CwMVmzABJC8MQdXlPev+5THTZqv
-         uKlGfiSOJSX/JJ8qdz5MogFoFHAK0HLeM22L/ZNZHrulEsyMk8Pyd7sUWC/HOuZLAO3+
-         djZW+761GUkrE+4wbq2J/jkRU+68B9yIPEMsiGHg8y7wpUWeSPOdo5YPYHtw65KfO2dG
-         fM6Q==
+	s=arc-20240116; t=1707833598; c=relaxed/simple;
+	bh=PEVdEyWMp3HVrKR9TYMKV3fjkz7arurJjIDXn+uMMzE=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=vEfHYWOdPm36uh9Fpkgh9GS31+EjSfzz8DO4Uwh0VT6PQXbJM8gbFHQi1aCggZFgd5YhRS9NbFKM6KGKGbTIE3ss7Je+MP9CR80wLf7ySmINekwFwCpLoJHxwa6Y1vTcOcvq7OMKUmI+HFpi36WBVf7BNM8UsZkoRFOvGYYCnxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-363bde409b2so34044135ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 06:13:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707833555; x=1708438355;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ClcF49SW9TVyg+8qgV4EbQKNakwAki5xkRZzYfgJ398=;
-        b=l86TupZk3jxXRlFTNY2F8FqXeL2RLqvUUnGj+mqCW67nNmTD5zkm90PateRgNy5A8W
-         OcG9lRbCJQdn9YfVE8s0FXRABSacC/5GzYFnpOyxHTQ+//0bjTf1sVTI9lYDFFFcD9Ou
-         DupJS/0B+FWJNbJylQ8AVD7EjndljM4hKzCd7DoazwjO9xxtU8abNsxUKtJR5+BwiWfy
-         C606Np8+86IAkRAJiBdiUUQH9C+E2JYjdk8eg2ZNPGOlCYI/SzVVP8MIHlbzt5UIgBwR
-         ST4btQJD1cB0DVfdd0BcQqaUqYSz8NZLb+LTYgywrxG2TVoWTl0L91iz+xlqXtwyHRNK
-         0rxw==
-X-Forwarded-Encrypted: i=1; AJvYcCWoJimo05nfWQvtdi1fEItrGByBaY66iODRwKsUni8iGwnQ3ZQS5pEbh2MtZqsMjn19QFoJHJEWFZjuJRPv3Y7yQ/izxgFSJAbnr/7psisjq8VQH+1IhMxb/DJPT4JaxqFXQFLrlg==
-X-Gm-Message-State: AOJu0YxK61E/ZRB4r6H/TRboc41Unpi/gSnG+xk8ivzcqwn/pmLsmTMb
-	7SJMbkIPM7OOa11Dqz2pkQeVEXepLQQBBOG0QytLujUBPQrPbYeXaQgLXRLV
-X-Google-Smtp-Source: AGHT+IFtXwt7v2/zfPpSeohh2Tq3mh2ZhcSZZHS+OaRwI+Y+j7TDWyiP9/yorScurNMnVufD/71ZMA==
-X-Received: by 2002:a17:903:595:b0:1db:499c:9b9e with SMTP id jv21-20020a170903059500b001db499c9b9emr410904plb.9.1707833555377;
-        Tue, 13 Feb 2024 06:12:35 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXe0AsYir0yCs/ajc1GJvax+XrOTKOsqxoO9LwwnmkIvzXAeYLWZat40/AsaJlvqyOnZD/s0Of4HrjDu6FF3d7pPW77Cr4NFypnqDEcm3/9rOo+m4ft7ojFttbjYTTUI1qwFa2hGvaGeM0AC3fN9o/qHdWtdRfnnZwZVeQLz+rvXN6CWcQVozFzy3Nelc4ukGkIo+YuopSZYLEfRTMLtn7rvKYk/566fb94+OHoP/j9
-Received: from rigel.home.arpa ([220.235.35.85])
-        by smtp.gmail.com with ESMTPSA id ld11-20020a170902facb00b001d9a42f6183sm2151102plb.45.2024.02.13.06.12.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 06:12:35 -0800 (PST)
-From: Kent Gibson <warthog618@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	brgl@bgdev.pl,
-	linus.walleij@linaro.org,
-	andy@kernel.org,
-	corbet@lwn.net
-Cc: Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH] Documentation: gpio: consistent use of logical line value terminology
-Date: Tue, 13 Feb 2024 22:12:22 +0800
-Message-Id: <20240213141222.382457-1-warthog618@gmail.com>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20230601; t=1707833595; x=1708438395;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PEVdEyWMp3HVrKR9TYMKV3fjkz7arurJjIDXn+uMMzE=;
+        b=SObEB5gk58MDRyA2yWm+OpPh9X/g0l+lizwrKMezU1mT1XeSBy6/dAn72DZ0lpC8NX
+         dxoFUX4wPxf6mxFz3Wg3CyAZ8peuXzc/oAZOHCwmTHC7gBqw32zcLpOVMha/mV8V+6n0
+         nTC/Dhgk0ZyqbGh/v1aR8taMds6jSAu1F6qWeiLiWivb3qXmGlluwtEeTqdmBd+kY3Zn
+         ct/eJmiRx94zOmDb4QMtahjjJFS7nPckulyAREyPFOXi7kF1WnG3UQu3NMQm3F85dodH
+         SDvaBL1C2g6ksRKsNc7v/1SHTrEDdeGNJd+ME2CyyvVUxciS3TAXlzlHtSjnv3Mpakbe
+         5+cQ==
+X-Gm-Message-State: AOJu0YxUR7e08J9Tjdm6kfKPQc48wuo+j97pH1io2iWLxg/TLVq95jhz
+	l2EeziZYh8vh5WIB2eUwwSYcijvCZUZttrIv57IBJM5hKOc1MFC2I/oscppr72wajPBugJvsEb4
+	Jcd5capwI0hk16L9H4QtGPp5XA+Ilf2CM/UOdHBnQrsVHp8z8csyFCPlgoQ==
+X-Google-Smtp-Source: AGHT+IHsR62WEqRZpM+f3SRViO4NCXH2qW/89hZa/womdZZuuLUL2F6K9YLaVtbDAMEgzKDvoI+lJC+4iFWm3NiTosxu26x5M0Oa
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:6207:b0:471:805a:3552 with SMTP id
+ fg7-20020a056638620700b00471805a3552mr63050jab.1.1707833595858; Tue, 13 Feb
+ 2024 06:13:15 -0800 (PST)
+Date: Tue, 13 Feb 2024 06:13:15 -0800
+In-Reply-To: <000000000000708723060df6ab96@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d1143e061143fe2e@google.com>
+Subject: Re: [syzbot] [syzbot] [wpan?] KMSAN: uninit-value in
+ ieee802154_hdr_push (2)
+From: syzbot <syzbot+60a66d44892b66b56545@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Consistently use active/inactive to describe logical line values, rather
-than high/low, which is used for physical values, or asserted/de-asserted
-which is awkward.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- Documentation/driver-api/gpio/consumer.rst | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+***
 
-diff --git a/Documentation/driver-api/gpio/consumer.rst b/Documentation/driver-api/gpio/consumer.rst
-index 3e588b9d678c..ab56ab0dd7a6 100644
---- a/Documentation/driver-api/gpio/consumer.rst
-+++ b/Documentation/driver-api/gpio/consumer.rst
-@@ -222,9 +222,9 @@ Use the following calls to access GPIOs from an atomic context::
- 	int gpiod_get_value(const struct gpio_desc *desc);
- 	void gpiod_set_value(struct gpio_desc *desc, int value);
- 
--The values are boolean, zero for low, nonzero for high. When reading the value
--of an output pin, the value returned should be what's seen on the pin. That
--won't always match the specified output value, because of issues including
-+The values are boolean, zero for inactive, nonzero for active. When reading the
-+value of an output pin, the value returned should be what's seen on the pin.
-+That won't always match the specified output value, because of issues including
- open-drain signaling and output latencies.
- 
- The get/set calls do not return errors because "invalid GPIO" should have been
-@@ -277,11 +277,11 @@ switch their output to a high impedance value. The consumer should not need to
- care. (For details read about open drain in driver.rst.)
- 
- With this, all the gpiod_set_(array)_value_xxx() functions interpret the
--parameter "value" as "asserted" ("1") or "de-asserted" ("0"). The physical line
-+parameter "value" as "active" ("1") or "inactive" ("0"). The physical line
- level will be driven accordingly.
- 
- As an example, if the active low property for a dedicated GPIO is set, and the
--gpiod_set_(array)_value_xxx() passes "asserted" ("1"), the physical line level
-+gpiod_set_(array)_value_xxx() passes "active" ("1"), the physical line level
- will be driven low.
- 
- To summarize::
--- 
-2.39.2
+Subject: [syzbot] [wpan?] KMSAN: uninit-value in ieee802154_hdr_push (2)
+Author: n.zhandarovich@fintech.ru
 
+Check that issue is still active.
+
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
