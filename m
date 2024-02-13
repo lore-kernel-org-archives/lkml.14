@@ -1,238 +1,181 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5306C1EEF7;
-	Tue, 13 Feb 2024 10:32:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D87A224D4;
+	Tue, 13 Feb 2024 10:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707820362; cv=none; b=Nxq5A8pLMr7vKvFlXjbxId9cG7XYeqmAEEMljJlc/xiieGNrecLEh8Ly8mqo4Ap3pgchwFDv5FMpmKS1KL6JGNTrEzAYA1wd5s1bb+GPA74Mk9A/iMu8SHlRIPLUj/YC41ClCo/3asAind+5cu4utcYYf7AN4OCZYW86grtTMXY=
+	t=1707820480; cv=none; b=oN8PX0VCIzBCcReLYUrvx3/FF7R+yknL0wmVTAqcSK9dXxgc/5k94H6KLR0FtTCW7L0kNi3v+5wPtiFqMWXrm/uPD6xshqsKH7u1UN9eZUZQMNtzpD/pEQwqp3WEyUa+lhN9sftrvmWEf5z53WCArDGnDXxfibqd9xTzpqofZpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707820362; c=relaxed/simple;
-	bh=JXf3FW715Hij2/rVgflMXeAgFq6KllbSfYEa5EbJNnY=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kThBDMC4LMzklsE+KJqqUDY4sP6qKuD3qJUZIpkFna/KTlvg8IL8nWSW4p1UJ+0WRncKjrEoQ/YC+AN7vTeM02ASU8+di363QLyEpAt49w8/Dmvp0TnxNJk8dDyrstYj2JndnsGMHiYN8zXvsF7JKTTqLa7qS0KY+RsZcEN3o3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=yoETFqjZ; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1707820480; c=relaxed/simple;
+	bh=n+mIwM5bfg0kfua6+c13QqD9H2W99vr9IltUa71S+Jo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cRmKTJQ7X79sPqXDz608RZgyCI45BpzThGx8Z3A5W2JUwMG+jSch/muIKQLI4wwkEu9akVp0TznaHB4ii2z8FYlSuqEsn0DOqobRSZXm7480Nfsp7HYlNnFP3h7gP9iWN+AmI1DJ5tIChTisFaBJ3szwjqhE2wHMpkx+6/P/Ibk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SVivYR3z; arc=none smtp.client-ip=209.85.167.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="yoETFqjZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1707820360; x=1739356360;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=JXf3FW715Hij2/rVgflMXeAgFq6KllbSfYEa5EbJNnY=;
-  b=yoETFqjZ0XYy8xwqsMrpkY2aB5+NKM8zX1JGGQrcmLdC8Lz0D/hupoNU
-   Ho5IJNVodwuxigMR1XEs8R6mLJIxa9h1UFatH8rk8WRKPed23DqX4gZLB
-   eOIuQwbOIMec3bbyp5P5ezWdtSZpQgSXRbCbfNeJ3Vzw/Bz+/Gen6146A
-   Dp5FR8k6vhKoP9L0F8dBeMEuL2l83W+Jff2FyxD471Czfply4jLaI03To
-   iu/sOvRLg53+HXWaMIM2Rqggb56UKTK2GlbF0RnMvSjcPbFQUC/43AUu7
-   oy9LmG9nUBn/Dlg4yi51N6MqHeLrKgT74+xOdNBxDBi65vPtTXBcpF1Vg
-   w==;
-X-CSE-ConnectionGUID: s6Tn9VPjQXCSnrMkzhF8Kg==
-X-CSE-MsgGUID: iHJrIj/tRK+lriDzJMhb5g==
-X-IronPort-AV: E=Sophos;i="6.06,156,1705388400"; 
-   d="scan'208";a="16162729"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 13 Feb 2024 03:32:37 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 13 Feb 2024 03:31:57 -0700
-Received: from localhost (10.10.85.11) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Tue, 13 Feb 2024 03:31:56 -0700
-Date: Tue, 13 Feb 2024 11:31:56 +0100
-From: Horatiu Vultur <horatiu.vultur@microchip.com>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-CC: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>, <davem@davemloft.net>, Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Richard Cochran
-	<richardcochran@gmail.com>, <UNGLinuxDriver@microchip.com>,
-	<netdev@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <thomas.petazzoni@bootlin.com>,
-	=?utf-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
-Subject: Re: [PATCH net-next 2/3] net: lan966x: Allow using PCH extension for
- PTP
-Message-ID: <20240213103156.rl4kzwpmxn3haz7y@DEN-DL-M31836.microchip.com>
-References: <20240212173307.1124120-1-maxime.chevallier@bootlin.com>
- <20240212173307.1124120-3-maxime.chevallier@bootlin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SVivYR3z"
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3bd72353d9fso3088700b6e.3;
+        Tue, 13 Feb 2024 02:34:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707820478; x=1708425278; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=n+mIwM5bfg0kfua6+c13QqD9H2W99vr9IltUa71S+Jo=;
+        b=SVivYR3zfKVFft3grLE/s17s3r7zr1oIVxw/uQVsfe5VjU0whmEuZWamPF0jDEhGg2
+         5EiakX2ODgH9GtdL+2qOm2EUSIHrUfdwrXlWqErDk3ZC8FxVnCpzRj5MkUSUjTwTEd54
+         Cx8JdXsDMTy4g3Fo3clyx/ELb3dYuaAnvwnbFqMSRrVjRiMnTOiUbibC5rzAeJjCRgCG
+         w17NizM6zInB3MjLBaijDEO+TalVkrPfqkxJI2tZgvQm8H30R6laK5Qld2cjZiohn3F5
+         +94Xaf1fdXvbK89DMu3T5u6EIv6qAHqzraa7QjfobTzQ9/49ttFzF7YHL6NzNb9msIza
+         3Qdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707820478; x=1708425278;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=n+mIwM5bfg0kfua6+c13QqD9H2W99vr9IltUa71S+Jo=;
+        b=YHXz+g7sFQODL1Qa26EY80NXyPsX0wERB1mG6laungxQnKcS0fDMWom8SBayucM55S
+         2mNcuuNz5snYu4v3bEzIn92DTPoXJUcRvpumjdudUm0hPAHCnpSsBm809j2Bd/O55DZI
+         FmBh28xUwo72LTlKYNuYopPhTaAUNPOca6dDuiZPMMYru49h0EyYY+nLkVs3uR7G5nRp
+         gD0KWIRkQgTPM21RioE8Lo2h5ob12TQRrT8w0CdB6QNQorN4hw2x5uNFIqErNmIvfAF1
+         J5JLbPGC+IEFsTAp9Ab2SMEQTlBtlXtnWRU5QayZ3lLkZ+UtsrAnlG8rkyhZHGAQoAZK
+         6YTA==
+X-Forwarded-Encrypted: i=1; AJvYcCVEZjH1LPo3lNHwPwgpt37AaeIhKRu7B7/fvMzNr1M/P3BI+b2MbzUK8OHOGDZCo+lud2+IY3VvhwD5P/kF5jx7FlQU7iHHoyVaEQ==
+X-Gm-Message-State: AOJu0Ywy+7S3UfOF4km2YHPQ+smoUePl0NG8JwtD6IOHOBuFYZub4BOB
+	G4QBCb78nNfgYqD/8KNKPSfjBmkWPGyVwcsQwzNcvdN6kOIKSF0V
+X-Google-Smtp-Source: AGHT+IFCZwgKrh0/FpPp+LNk8Fihikr8X/13T4IV1SXzwRmQAgU3WySrwdbv+9xrEOLIVOhYUH6cjg==
+X-Received: by 2002:a05:6358:895:b0:17a:d4c0:d59f with SMTP id m21-20020a056358089500b0017ad4c0d59fmr8590441rwj.4.1707820478348;
+        Tue, 13 Feb 2024 02:34:38 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWVr1VRSr3Abkn6yFoVxdeXnex6UspkJ4XFti7+v03ZZUFwQa7mbH+5An9fWSNmrIg1FHoCGS8tdcNAcC/x+Z3xj5G55SnVIHG9VAaP24Br6LvV5z8n/YOlZSPjGABL2YXREesEp6IwBf9n+QTBb/5CVrd5SApUHZfMefHnwx4eazjE1JM=
+Received: from rigel ([220.235.35.85])
+        by smtp.gmail.com with ESMTPSA id oj10-20020a17090b4d8a00b00296e04442b8sm2110081pjb.41.2024.02.13.02.34.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 02:34:37 -0800 (PST)
+Date: Tue, 13 Feb 2024 18:34:33 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl,
+	linus.walleij@linaro.org, andy@kernel.org
+Subject: Re: [PATCH] gpio: uapi: clarify default_values being logical
+Message-ID: <20240213103433.GA191617@rigel>
+References: <20240211101421.166779-1-warthog618@gmail.com>
+ <CAHp75VeSLvrxMOARDBHBJ5VGVR-Jv-7saxjJiN-NOPMyTwit3Q@mail.gmail.com>
+ <20240211231321.GA4748@rigel>
+ <CAHp75VddjcLaRqugKuk+eejYx_0AHVL4SjYcdh7zUKDj8SpcQw@mail.gmail.com>
+ <CAHp75VcjsVasfaZe25fWzzV-5vv7m7O0-v4j=pcvtWQGKtY5BQ@mail.gmail.com>
+ <20240212095607.GA388487@rigel>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240212173307.1124120-3-maxime.chevallier@bootlin.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240212095607.GA388487@rigel>
 
-The 02/12/2024 18:33, Maxime Chevallier wrote:
-> [Some people who received this message don't often get email from maxime.chevallier@bootlin.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
+On Mon, Feb 12, 2024 at 05:56:07PM +0800, Kent Gibson wrote:
+> On Mon, Feb 12, 2024 at 11:44:02AM +0200, Andy Shevchenko wrote:
+> > On Mon, Feb 12, 2024 at 11:28 AM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > >
+> > > On Mon, Feb 12, 2024 at 1:13 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > > On Sun, Feb 11, 2024 at 06:58:14PM +0200, Andy Shevchenko wrote:
+> > > > > On Sun, Feb 11, 2024 at 12:14 PM Kent Gibson <warthog618@gmail.com> wrote:
+> > > > > >
+> > > > > > The documentation for default_values mentions high/low which can be
+> > > > > > confusing, particularly when the ACTIVE_LOW flag is set.
+> > > > > >
+> > > > > > Replace high/low with active/inactive to clarify that the values are
+> > > > > > logical not physical.
+> > > > > >
+> > > > > > Similarly, clarify the interpretation of values in struct gpiohandle_data.
+> > > > >
+> > > > > I'm not against this particular change, but I want the entire GPIO
+> > > > > documentation to be aligned in the terminology aspect. Is this the
+> > > > > case after this patch? I.o.w. have we replaced all leftovers?
+> > > >
+> > > > Agreed. Those are the last remnants of the low/high terminolgy that I am
+> > > > aware of, certainly the last in gpio.h.
+> > > >
+> > > > Having a closer look to double check...
+> > > >
+> > > > Ah - it is still used in Documentation/userspace-api/gpio/sysfs.rst -
+> > > > not somewhere I go very often.
+> > > > Would you like that updated in a separate patch?
+> > >
+> > > Yes, please. For this one
+> > > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> >
 
-Hi Maxime,
+In response after re-reading these docs:
 
-I have tried your patches on pcb8291, which is a lan966x without PHYs
-that support timestamping. And on this platform this patch breaks up the
-things. Because it should just do the timestamping the MAC in that case,
-but with this patch it doesn't get any time.
-The same issue can be reproduced on pcb8280 and then disable PHY
-timestamping, or change the lan8814 not to support HW timestamping.
+> > Also
+> > "The values are boolean, zero for low, nonzero for high."
+> > https://docs.kernel.org/driver-api/gpio/consumer.html
+> >
 
-Please see bellow the reason why.
+That one is logical and should be changed.
 
-> 
-> +/* Enable or disable PCH timestamp transmission. This uses the USGMII PCH
-> + * extensions to transmit the timestamps in the frame preamble.
-> + */
-> +static void lan966x_ptp_pch_configure(struct lan966x_port *port, bool *enable)
-> +{
-> +       struct phy_device *phydev = port->dev->phydev;
-> +       int ret;
-> +
-> +       if (!phydev)
-> +               *enable = false;
-> +
-> +       if (*enable) {
-> +               /* If we cannot enable inband PCH mode, we fallback to classic
-> +                * timestamping
-> +                */
-> +               if (phy_inband_ext_available(phydev, PHY_INBAND_EXT_PCH_TIMESTAMP)) {
-> +                       ret = phy_inband_ext_enable(phydev, PHY_INBAND_EXT_PCH_TIMESTAMP);
-> +                       if (ret)
-> +                               *enable = false;
-> +               } else {
-> +                       *enable = false;
-> +               }
-> +       } else {
-> +               phy_inband_ext_disable(phydev, PHY_INBAND_EXT_PCH_TIMESTAMP);
-> +       }
-> +
-> +       lan_rmw(SYS_PCH_CFG_PCH_SUB_PORT_ID_SET(port->chip_port % 4) |
-> +               SYS_PCH_CFG_PCH_TX_MODE_SET(*enable) |
-> +               SYS_PCH_CFG_PCH_RX_MODE_SET(*enable),
-> +               SYS_PCH_CFG_PCH_SUB_PORT_ID |
-> +               SYS_PCH_CFG_PCH_TX_MODE |
-> +               SYS_PCH_CFG_PCH_RX_MODE,
-> +               port->lan966x, SYS_PCH_CFG(port->chip_port));
-> +}
-> +
->  int lan966x_ptp_hwtstamp_set(struct lan966x_port *port,
->                              struct kernel_hwtstamp_config *cfg,
->                              struct netlink_ext_ack *extack)
->  {
->         struct lan966x *lan966x = port->lan966x;
-> +       bool timestamp_in_pch = false;
->         struct lan966x_phc *phc;
-> 
->         switch (cfg->tx_type) {
-> @@ -303,10 +339,18 @@ int lan966x_ptp_hwtstamp_set(struct lan966x_port *port,
->                 return -ERANGE;
->         }
-> 
-> +       if (cfg->source == HWTSTAMP_SOURCE_PHYLIB &&
-> +           cfg->tx_type == HWTSTAMP_TX_ON &&
-> +           port->config.portmode == PHY_INTERFACE_MODE_QUSGMII)
-> +               timestamp_in_pch = true;
-> +
-> +       lan966x_ptp_pch_configure(port, &timestamp_in_pch);
-> +
->         /* Commit back the result & save it */
->         mutex_lock(&lan966x->ptp_lock);
->         phc = &lan966x->phc[LAN966X_PHC_PORT];
->         phc->hwtstamp_config = *cfg;
-> +       phc->pch = timestamp_in_pch;
+> > And there as well
+> > "With this, all the gpiod_set_(array)_value_xxx() functions interpret
+> > the parameter "value" as "asserted" ("1") or "de-asserted" ("0")."
+> > So, should we use asserted-deasserted?
+> >
 
-Here we figure out if pch is enabled or not. If the cfg->source is not
-PHYLIB or the interface is not QUSGMII then timestamp_in_pch will stay
-false.
+We should use active/inactive rather than asserted/de-asserted. This is
+the only place that terminology is used - which is ironic as it is this
+section (_active_low_semantics) that explicitly describes the
+physical/logical mapping.
 
->         mutex_unlock(&lan966x->ptp_lock);
-> 
->         return 0;
-> @@ -397,6 +441,7 @@ int lan966x_ptp_txtstamp_request(struct lan966x_port *port,
->         LAN966X_SKB_CB(skb)->jiffies = jiffies;
-> 
->         lan966x->ptp_skbs++;
-> +
+> >
+> > On https://docs.kernel.org/driver-api/gpio/
+> > "get
+> > returns value for signal "offset", 0=low, 1=high, or negative error
+> >
+> > ...
 
-I think this is just a small style change. So maybe it shouldn't be in
-here.
+The struct gpio_chip interface is physical, not logical - the active low
+conversion is handled in gpiolib, so this (driver.h) is correct as is.
 
->         port->ts_id++;
->         if (port->ts_id == LAN966X_MAX_PTP_ID)
->                 port->ts_id = 0;
-> @@ -500,6 +545,27 @@ irqreturn_t lan966x_ptp_irq_handler(int irq, void *args)
->                 /* Read RX timestamping to get the ID */
->                 id = lan_rd(lan966x, PTP_TWOSTEP_STAMP);
-> 
-> +               /* If PCH is enabled, there is a "feature" that also the MAC
-> +                * will generate an interrupt for transmitted frames. This
-> +                * interrupt should be ignored, so clear the allocated resources
-> +                * and try to get the next timestamp. Maybe should clean the
-> +                * resources on the TX side?
-> +                */
-> +               if (phy_inband_ext_enabled(port->dev->phydev,
-> +                                          PHY_INBAND_EXT_PCH_TIMESTAMP)) {
-> +                       spin_lock(&lan966x->ptp_ts_id_lock);
-> +                       lan966x->ptp_skbs--;
-> +                       spin_unlock(&lan966x->ptp_ts_id_lock);
-> +
-> +                       dev_kfree_skb_any(skb_match);
-> +
-> +                       lan_rmw(PTP_TWOSTEP_CTRL_NXT_SET(1),
-> +                               PTP_TWOSTEP_CTRL_NXT,
-> +                               lan966x, PTP_TWOSTEP_CTRL);
-> +
-> +                       continue;
-> +               }
-> +
->                 spin_lock_irqsave(&port->tx_skbs.lock, flags);
->                 skb_queue_walk_safe(&port->tx_skbs, skb, skb_tmp) {
->                         if (LAN966X_SKB_CB(skb)->ts_id != id)
-> @@ -1088,19 +1154,27 @@ void lan966x_ptp_rxtstamp(struct lan966x *lan966x, struct sk_buff *skb,
->         struct timespec64 ts;
->         u64 full_ts_in_ns;
-> 
-> +       phc = &lan966x->phc[LAN966X_PHC_PORT];
-> +
->         if (!lan966x->ptp ||
-> -           !lan966x->ports[src_port]->ptp_rx_cmd)
-> +           !lan966x->ports[src_port]->ptp_rx_cmd ||
-> +           !phc->pch)
+> >
+> > reg_set
+> > output set register (out=high) for generic GPIO
+> >
+> > reg_clr
+> > output clear register (out=low) for generic GPIO"
+> > (Not sure about the last two, though)
+> >
+> > https://docs.kernel.org/driver-api/gpio/intro.html
+> > "Output values are writable (high=1, low=0)."
+> >
 
-And here because phc->pch is false, it would just return.
-Meaning that it would never be able to get the time.
-I presume that this check should not be modified.
+I read that to be physical values, so good as is.
 
->                 return;
-> 
-> -       phc = &lan966x->phc[LAN966X_PHC_PORT];
-> -       lan966x_ptp_gettime64(&phc->info, &ts);
-> -
-> -       /* Drop the sub-ns precision */
-> -       timestamp = timestamp >> 2;
-> -       if (ts.tv_nsec < timestamp)
-> -               ts.tv_sec--;
-> -       ts.tv_nsec = timestamp;
-> -       full_ts_in_ns = ktime_set(ts.tv_sec, ts.tv_nsec);
-> +       if (phc->pch) {
-> +               /* Drop the sub-ns precision */
-> +               timestamp = timestamp >> 2;
-> +               full_ts_in_ns = lower_32_bits(timestamp);
-> +       } else {
-> +               lan966x_ptp_gettime64(&phc->info, &ts);
-> +
-> +               /* Drop the sub-ns precision */
-> +               timestamp = timestamp >> 2;
-> +               if (ts.tv_nsec < timestamp)
-> +                       ts.tv_sec--;
-> +               ts.tv_nsec = timestamp;
-> +               full_ts_in_ns = ktime_set(ts.tv_sec, ts.tv_nsec);
-> +       }
- 
+> >
+> > A-ha, here is the section about this:
+> > https://docs.kernel.org/driver-api/gpio/intro.html#active-high-and-active-low.
+> >
+> >
+> > On https://docs.kernel.org/driver-api/gpio/drivers-on-gpio.html
+> > "ledtrig-gpio: drivers/leds/trigger/ledtrig-gpio.c will provide a LED
+> > trigger, i.e. a LED will turn on/off in response to a GPIO line going
+> > high or low (and that LED may in turn use the leds-gpio as per
+> > above)."
+> >
 
--- 
-/Horatiu
+Ditto - physical values.
+
+> > So, can you re-read all of it for high/low asserted/deasserted,
+> > active/inactive and amend accordingly?
+> >
+>
+
+So, from these, consumer.rst is the only file requiring any change.
+I'll submit a patch for that shortly.
+
+Cheers,
+Kent.
