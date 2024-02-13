@@ -1,105 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8191714010;
-	Tue, 13 Feb 2024 01:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1FD418059;
+	Tue, 13 Feb 2024 01:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707787829; cv=none; b=e7Bi0P1VzUiFxDzsVRv/snh/FAL6brTjpnQ01T2Hg1sF8Tq9IyG6YdoKU5jBPguCk5sYJkeym+i515St7R2LOWMG+gyk8adiNZLfn7Wn19YZEP6Sbnb2HzVJfZfcJ9ehexb4MWm3W1iMonv6LbZaq01Tie8ImDmp8DDKhSH/ag4=
+	t=1707788004; cv=none; b=ifshXZGkWDxmSXekUdDgBY77Q7eiAlB8pHCd6kfbVQddtabzR5IUieRRcWFwzNbQ5tVEA+M1WiO8gLmF+Ul458SwtqtiF6EGrNNF9fej5awEquVU9sEJYriBGeoCDTyDykVuARvZVzpZl8xFV0fL3vur5kjtiVy9ZikW7YNGttM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707787829; c=relaxed/simple;
-	bh=5YUUpkVeGZf2ULKeV0s8gYOnI9Ho0baFiYcgz1YGhG0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=oCJt2fUNs23O/PW/fTbIh8khKEtnvSC4rqYqnr834+d5RCtTqAE3ujaA1nzi0QPc4QQAPkkD5p4s0Wjyc9vx4iDUEVlbqrS/xPYv0BFZmcp4bs5lhRtjiLpv5w6OnSfREZ+CUlHDCJv7hbr3KM/MIm1dxOfBl/Bf+aQOX8jZgPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4349C43390;
-	Tue, 13 Feb 2024 01:30:28 +0000 (UTC)
-Received: by mercury (Postfix, from userid 1000)
-	id 9E53A106A041; Tue, 13 Feb 2024 02:30:25 +0100 (CET)
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Sebastian Reichel <sre@kernel.org>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Cristian Ciocaltea <cristian.ciocaltea@gmail.com>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Sean Wang <sean.wang@mediatek.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Andrew Davis <afd@ti.com>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-actions@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-In-Reply-To: <20240212162831.67838-1-afd@ti.com>
-References: <20240212162831.67838-1-afd@ti.com>
-Subject: Re: [PATCH v4 00/19] Remove pm_power_off use in
- drivers/power/reset
-Message-Id: <170778782561.1080348.15486414819584613989.b4-ty@collabora.com>
-Date: Tue, 13 Feb 2024 02:30:25 +0100
+	s=arc-20240116; t=1707788004; c=relaxed/simple;
+	bh=oMSbIyb+LZ3e01aikg72/MR6b0mA4KQo1k/aocJA1wM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Any6deIM5bvBg19UphHBdErRDDbWUOozAsupX99DQ9F3gvGahat0P+qO2XEHiJSjwGxqWRR6vmLU3SFF3hFCc5yCCn8wq0OCAAqWKtle6N7mlKKJ5BpnImbxy+t2qZ63o0+0jukqoqiMWQ8X7z1uq6vIL/YXunRDpf88whyGSK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-d85ff70000001748-64-65cac3510c41
+Date: Tue, 13 Feb 2024 10:18:04 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, kernel_team@skhynix.com,
+	torvalds@linux-foundation.org, damien.lemoal@opensource.wdc.com,
+	linux-ide@vger.kernel.org, adilger.kernel@dilger.ca,
+	linux-ext4@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
+	will@kernel.org, rostedt@goodmis.org, joel@joelfernandes.org,
+	sashal@kernel.org, daniel.vetter@ffwll.ch, duyuyang@gmail.com,
+	johannes.berg@intel.com, tj@kernel.org, tytso@mit.edu,
+	willy@infradead.org, david@fromorbit.com, amir73il@gmail.com,
+	gregkh@linuxfoundation.org, kernel-team@lge.com, linux-mm@kvack.org,
+	akpm@linux-foundation.org, mhocko@kernel.org, minchan@kernel.org,
+	hannes@cmpxchg.org, vdavydov.dev@gmail.com, sj@kernel.org,
+	jglisse@redhat.com, dennis@kernel.org, cl@linux.com,
+	penberg@kernel.org, rientjes@google.com, vbabka@suse.cz,
+	ngupta@vflare.org, linux-block@vger.kernel.org,
+	josef@toxicpanda.com, linux-fsdevel@vger.kernel.org,
+	viro@zeniv.linux.org.uk, jack@suse.cz, jlayton@kernel.org,
+	dan.j.williams@intel.com, hch@infradead.org, djwong@kernel.org,
+	dri-devel@lists.freedesktop.org, rodrigosiqueiramelo@gmail.com,
+	melissa.srw@gmail.com, hamohammed.sa@gmail.com, 42.hyeyoo@gmail.com,
+	chris.p.wilson@intel.com, gwan-gyeong.mun@intel.com,
+	max.byungchul.park@gmail.com, boqun.feng@gmail.com,
+	longman@redhat.com, hdanton@sina.com, her0gyugyu@gmail.com
+Subject: Re: [PATCH v11 14/26] locking/lockdep, cpu/hotplus: Use a weaker
+ annotation in AP thread
+Message-ID: <20240213011804.GA4147@system.software.com>
+References: <20240124115938.80132-1-byungchul@sk.com>
+ <20240124115938.80132-15-byungchul@sk.com>
+ <87il3ggfz9.ffs@tglx>
+ <20240130025836.GA49173@system.software.com>
+ <871q9hlnl2.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <871q9hlnl2.ffs@tglx>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUxTVxjHc86999zbxi53FfUMkm2WyQyLiobNZ4vZzJZlN3vLlhk/6KI0
+	cCONQEmrKHsLykuYIBMMLy3ElGpqAwhSDMGXshZioTSDCkyQQTcYBJm8RLbiGAxWSsz8cvLL
+	ef7PL/8Pj8CoV7lIQZd2QjakaVM0RMkqZzZU7/i8vUuO65wEKC6Mg+Bf+SxUNdQR8NfXIqi7
+	cQbD1N0PYGBhGsHSTz0MlJf6EVSPjjBwwxNA4LSfJdA3/hz0B+cIeEsLCGRfbiBw79EyhuGy
+	Egy1jk/Ad8GKwbU4yUL5FIHK8mwceh5iWLTV8GDL2gZjdjMPy6O7wRu4z4Fz6DUwXRomcMfp
+	ZcHTMoah71YVgUDdKgc+TycL/uLzHFybtRJ4tGBjwBac46HXZcFwPSckyvtzhYOO8y4MeVca
+	MfQ/uI2gNf83DI66+wTag9MYmhylDPxz9S6CsaIZHnILF3moPFOEoCC3jIWefzs4yBl+HZb+
+	riL735Lap+cYKafplORcsLBSl5VKN80jvJTTOsRLFsdJqckeK12+M4Wl6vkgJzlqvieSY76E
+	l87N9GNptrublzorllhpvL8cfxZ1SLkvSU7RZciGXW8nKJOv9w2Q9NvK0/UWmoWqhXNIIVAx
+	nlqfdOOn3Jb9mKwxK26jtcU/MGtMxFfp4OBimCPE7bSxdyjMjOhVUr/13TXeKCbSB7+7uTVW
+	iXupO/Aw7FSLbkR9jfvX/5+nXtM4u74bSwdXpkIZIcRR9OpKuI5C1FB7d204skmMpq7mjlBE
+	GarWpKAXXSZmvecL1G0fZC8g0fyM1vyM1vy/1oKYGqTWpWWkanUp8TuTM9N0p3cm6lMdKHSW
+	tm+XD7egef8XbUgUkGaDKuGVLlnNaTOMmaltiAqMJkLVW9Epq1VJ2syvZIP+qOFkimxsQ1EC
+	q9mi2rNwKkktHtOekI/LcrpseDrFgiIyCyW9/M7E8QMNv0bb4wYujahLN25qTkj+Q2y5V08i
+	8wZ6X6x4z1PwS/6Ooq09+kn2YC532POkpHB1gn9/tMzdU2l682jMxwc/TPxGv+xrXYn+8tND
+	lS1fR03o52K+27U3XrH11ktXsszG9o/2benb/kaEyvej6WKzc/bx2c17AjFHfnam+8c0rDFZ
+	uzuWMRi1/wG/hCFpkgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SW0yTWRDHPee70ljzbcV4AvpgFXYDETVZ4kSNtwc9MdHogxr1QRr4Io3c
+	bAVFswZtUbygYgS0oBbQgtBFKYZ4q3IJl9IVkBLAikRYohARUCkRQbTFGH2Z/DLz/03mYURG
+	1cMFiNq4g7IuThOj5hWsYstKw+JtNY3yUpthAWScWwqe0TQWcu9YeWgpLUFgvXccw0DtRugY
+	G0Qw8ayZgezMFgR5Pa8YuFfXjcBedIIHV98saPMM8+DIPMuDoeAOD8/fTWLoyrqEocS2GZwX
+	8zFUjr9lIXuAh5xsA/aWfgzjlmIBLClB0FtkEmCyZxk4uts5qLnm4MDuDoWr17t4eGx3sFB3
+	vxeD62EuD93Wbxw46xpYaMlI5+DfoXwe3o1ZGLB4hgVorTRjuGv0bjv5aYqD+vRKDCdvlmFo
+	e/EIwZO01xhs1nYeajyDGMptmQx8KaxF0Hv+vQCp58YFyDl+HsHZ1CwWmr/Wc2DsCoeJz7n8
+	2pW0ZnCYocbyQ9Q+ZmZpYz6hD0yvBGp84hao2ZZIy4tCaMHjAUzzPno4ais+zVPbx0sCPfO+
+	DdOhpiaBNlyZYGlfWzbeOm+3YlWUHKNNknVLVkcoou+6OviER4rDpWaSgvLEM8hPJNLfpNrw
+	gfcxKwWRkowLjI956U/S2Tk+zf7SX6Ss1T3NjORQkJb89T6eLUWSF/9XcT5WSstJVXc/9rFK
+	qkLEWbb2R/8P4rjax/5wQ0jn1IA3I3o5kBROTZ/gJ6lJUVPJdGSOtJBUVtTji0hp+s02/Wab
+	ftlmxBQjf21cUqxGGxMept8fnRynPRwWGR9rQ97Hs/wzmXEfjbo2ViNJROqZyohFjbKK0yTp
+	k2OrEREZtb+y9UqDrFJGaZKPyLr4vbrEGFlfjQJFVj1XuWmnHKGS9mkOyvtlOUHW/Zxi0S8g
+	BR0NfenelLrtWemt9Kr5K54Wbnid67i8ne6JdBlHhwpHnBXXpIIbUrQ5eKr9zdEsu9YY7FwT
+	rwxOSEs3tY59211vmvyUrGXCT1wP+8/oloJw6ayOdZp5UbcrckaSQp2LrV/6L+wgWosnIHEL
+	0P5Tgce6RmrX7DpQNto3o/N588ztalYfrVkWwuj0mu/gxPrBdAMAAA==
+X-CFilter-Loop: Reflected
 
-
-On Mon, 12 Feb 2024 10:28:12 -0600, Andrew Davis wrote:
-> Use of pm_power_off is considered legacy and should be replaced with
-> register_sys_off*(). Same for register_restart_handler(). Do this
-> for the drivers/power/reset subsystem for all trivial cases.
+On Mon, Feb 12, 2024 at 04:16:41PM +0100, Thomas Gleixner wrote:
+> On Tue, Jan 30 2024 at 11:58, Byungchul Park wrote:
+> > On Fri, Jan 26, 2024 at 06:30:02PM +0100, Thomas Gleixner wrote:
+> >> On Wed, Jan 24 2024 at 20:59, Byungchul Park wrote:
+> >> 
+> >> Why is lockdep in the subsystem prefix here? You are changing the CPU
+> >> hotplug (not hotplus) code, right?
+> >> 
+> >> > cb92173d1f0 ("locking/lockdep, cpu/hotplug: Annotate AP thread") was
+> >> > introduced to make lockdep_assert_cpus_held() work in AP thread.
+> >> >
+> >> > However, the annotation is too strong for that purpose. We don't have to
+> >> > use more than try lock annotation for that.
+> >> 
+> >> This lacks a proper explanation why this is too strong.
+> >> 
+> >> > Furthermore, now that Dept was introduced, false positive alarms was
+> >> > reported by that. Replaced it with try lock annotation.
+> >> 
+> >> I still have zero idea what this is about.
+> >
+> > 1. can track PG_locked that is a potential deadlock trigger.
+> >
+> >    https://lore.kernel.org/lkml/1674268856-31807-1-git-send-email-byungchul.park@lge.com/
 > 
-> Thanks,
-> Andrew
-> 
-> [...]
+> Sure, but that wants to be explicitely explained in the changelog and
+> not with a link. 'Now that Dept was introduced ...' is not an
+> explanation.
 
-Applied, thanks!
+Admit. I will fix it from the next spin. Thanks.
 
-[01/19] power: reset: atc260x-poweroff: Use devm_register_sys_off_handler(RESTART)
-        commit: f22e835028902b01915f584d2912cc25a397c84e
-[02/19] power: reset: atc260x-poweroff: Use devm_register_sys_off_handler(POWER_OFF)
-        commit: ab1439b05168dc73539e78d8b3100a0336a83bca
-[03/19] power: reset: xgene-reboot: Use devm_platform_ioremap_resource() helper
-        commit: 7ddfd33c6ee58ee915d09177a7dbac2c5be7b536
-[04/19] power: reset: xgene-reboot: Use devm_register_sys_off_handler(RESTART)
-        commit: 6af1ee028537be0a43ce939eb8f5321096208667
-[05/19] power: reset: tps65086-restart: Use devm_register_sys_off_handler(RESTART)
-        commit: e68b71812ebf385317c5bcf82674c109806be452
-[06/19] power: reset: tps65086-restart: Remove unneeded device data struct
-        commit: 11d2642e14ad022de13f261370ccddd33693c045
-[07/19] power: reset: brcm-kona-reset: Use devm_register_sys_off_handler(RESTART)
-        commit: 45079f206e635a08cba395a08dd3fd7629dbb24d
-[08/19] power: reset: axxia-reset: Use devm_register_sys_off_handler(RESTART)
-        commit: ad8d7b8002a1d3a673f2d6f110b378d137f61037
-[09/19] power: reset: rmobile-reset: Use devm_platform_ioremap_resource() helper
-        commit: 0867276eb12230a5e94ec2b28eba718e76b77eb1
-[10/19] power: reset: rmobile-reset: Use devm_register_sys_off_handler(RESTART)
-        commit: ba1188ea8be80a7bc091073792d404ab54b187b1
-[11/19] power: reset: mt6323-poweroff: Use devm_register_sys_off_handler(POWER_OFF)
-        commit: 6ab9137719a719f39e000aa62887ae25e1194815
-[12/19] power: reset: msm-poweroff: Use devm_register_sys_off_handler(POWER_OFF)
-        commit: b5711ff9171325261a7d6406b3c2b3c7752b6b8a
-[13/19] power: reset: msm-poweroff: Use devm_register_sys_off_handler(RESTART)
-        commit: 00ae86ebf893e0c89a7af6bfd270259e3ded93d1
-[14/19] power: reset: regulator-poweroff: Use devm_register_sys_off_handler(POWER_OFF)
-        commit: 77b61173c2d0ff42e5d609dc1fad137f1229f03b
-[15/19] power: reset: as3722-poweroff: Use devm_register_sys_off_handler(POWER_OFF)
-        commit: 348fde771ce7f5219a73750bd7a0d4c4497b1223
-[16/19] power: reset: gemini-poweroff: Use devm_register_sys_off_handler(POWER_OFF)
-        commit: b6475c3f81c13d6d69113f69a668c96af3a5af51
-[17/19] power: reset: restart-poweroff: Use devm_register_sys_off_handler(POWER_OFF)
-        commit: c3ede0b6f7dd345d8986cb69b861cadb9976782f
-[18/19] power: reset: syscon-poweroff: Move device data into a struct
-        commit: ffa212831289f15a92fe295a371157290619bb8f
-[19/19] power: reset: syscon-poweroff: Use devm_register_sys_off_handler(POWER_OFF)
-        commit: 14c5678720bdee7c5b582839a8dbcffd0c50de5c
-
-Best regards,
--- 
-Sebastian Reichel <sebastian.reichel@collabora.com>
-
+	Byungchul
