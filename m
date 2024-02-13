@@ -1,192 +1,113 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF2A2BB09;
-	Tue, 13 Feb 2024 10:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27852BB0B;
+	Tue, 13 Feb 2024 10:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707821908; cv=none; b=sq/heuUtQ6cWzrr4ktrTK5LYGujSV7szUH6KpFOQE16uZELiwKx6nS8YLogPoC7u5+sZvskIgj+WP7HpUawGFEDmLmhHIiToyibyfYB6WC03oAedMnIg6uPfAJN/Q8AhDqR6f2Qhcz10dM0uWVmBUzpAjdEiG6l54ZNeTfxX3SM=
+	t=1707821969; cv=none; b=e4J7i0El5Q+meBDhkiv4g3QJrvWEWJMUcti82XjFPBiG8EUYiCEQP5nf6NVTs9vUvmGr7Sw3KQoT7FT/Ae780ejEsBiYO4kT3FuF3yaY78kgsu3HA2tt5cia4e9i4hap5qJg0YAAYAufcnTR8QM5NkFeB+t+C3gtYPpIaWy+xH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707821908; c=relaxed/simple;
-	bh=0WirMBbWssbyY1Zxpsq0pBMfD2qxvM/rMR6Y+Q2bQyU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ZoiJWiidTOjUH+NcYPKDntkOjasASNO+yWhFic1DEVtAv0SlryuVah2i3TAWqUh/NQJRaCJD5bfSt4qJyuB4clPxP3DjGoA35Oh1hfTzhml1K+tIi1OVxlZVI4HppS+Cwrg54vCTtOZ6LJKYrPz4INZ+uAzX/BkX8Te1Y3dTzPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=4lKeigsm; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1707821969; c=relaxed/simple;
+	bh=LqehTDmV+5jKDLejDBoN3BNf/TlQhPLKg2oxo/V0vyY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IgMljP7JBxymsvnxGxOgGg1rO/F6oT948TLbVcX7hX53wuS/XGnyy37Wpn1uo7DWcQb0F/IuDpCdOCwLSXxBXz2XS64vVz35xGRVtjr700z0eXgYltvw8h4XNEU+Q7kFR0x+gYZlXPz9va6r+gUEti9ae/u2wGOjyOtlSDziFrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bE4BrgNT; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="4lKeigsm"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41DA9Si1026396;
-	Tue, 13 Feb 2024 11:58:08 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=1J5ztYg9uk0Ni/zb1+iLOfL8R7ELBVGeERYFdVqxo4k=; b=4l
-	KeigsmJRyRSZpDB1GGpZeGwsU+pxVgR5svCf0mUhv4HRWOKBopyE/cjDw8pfG5MY
-	1X/2MSOr7n3mRjNQ4NCjlj0G24eGjJ2rCmnGP94JlQYEtqJmvPV472r8hkSgONFp
-	sOo1C7E6uory1zMAPzC6LkjgG/RvRdi6CwwfAMBRhwfyxj3HiY+yDWtvpexGvAst
-	NNhTjTGSq/P52etuCNGLWx27555zq/dpT4S5P07XC7thxZfm2zHYxq+ztRFYnQk8
-	MZn4FFIxbLMYVjkziRIhgZHwuJPJ9Im66MWQugZk92r3V8+t+R2esBoS7GlcRCz/
-	RykY3g4r9eUJq1U4xnIA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3w6kk4r3h2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 11:58:08 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5C7D140049;
-	Tue, 13 Feb 2024 11:58:05 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0E12A22D19E;
-	Tue, 13 Feb 2024 11:57:28 +0100 (CET)
-Received: from [10.201.22.200] (10.201.22.200) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 13 Feb
- 2024 11:57:27 +0100
-Message-ID: <4ec4a926-fd1c-44e7-990b-4af0e09b9224@foss.st.com>
-Date: Tue, 13 Feb 2024 11:57:27 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bE4BrgNT"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a3cfacf0eadso62940766b.2;
+        Tue, 13 Feb 2024 02:59:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707821966; x=1708426766; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LqehTDmV+5jKDLejDBoN3BNf/TlQhPLKg2oxo/V0vyY=;
+        b=bE4BrgNTOwF2AtE4WgyGGDIk1FW5/1OHwxW8rUOsD/3oblRj3bKkZTA8bYrqf3QfIZ
+         uWI0p1h1kFFbY9WmCy+4xwBqVHcVqxDRCj36qeCF8bpdtRgT7K1H15Q3fGP816BKl5kB
+         xD8ECTSEonAWMdaZdKrw4HYDFySh1YQQdavhkCoUf6e/8iKGQEJEjcv/z9aR/33e3Mni
+         p+e0xNxyw06P2WOHAQrbvym19YKe/7UCbWEhErRZyUc1ogGPm21vPwxQRjcdQ7TCllYJ
+         tNmCz0KlZL2WiwG52au4EetYbcVSdWPilvJCwsX9MEf/E1Jb4EFdHhxE6UvwLdJSc3oa
+         ROJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707821966; x=1708426766;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LqehTDmV+5jKDLejDBoN3BNf/TlQhPLKg2oxo/V0vyY=;
+        b=P5ztYXC5wuQcNyEid5yBnNZumQc+u2Bp2424gEFC6nA7goHe37ICcWmVJyi7i0bjfh
+         j26YElDmMh8ZLcFP42o1njxMPHE3w1Xn3kExqBaqbxPuIMpmzTvJAZhpQiBwQx6WMMj+
+         p46VORPOch7ZctJNf2h++8DxHZ5n4+VlssV2Bj24ggDMEmkBTnIEGBdrj4i6sidPKt01
+         ilGX2iJ1rGMsErIRLTeczVEz7bYXmptPgjOo10wssgjkIzD5ccV/eQT7ZX05hF/9dNh+
+         cQS0kAzwYrO04LwYN2PMRB1IM+ym7u2KieaGJmEHXFFeXS4MqU776QZbFd9nZwcrpOmo
+         s7KQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUqQdXJsK0Dt0UnaaR79/xAha2yLAxPuBWD5Z4Jo9609RE3sBrjpDg/eUPAHLqa9ahYeI1ILodeaLs44B4p7FGtkUzx0LJfeY8hXA==
+X-Gm-Message-State: AOJu0YwEzHbe1OkboGD383/xXGyWP8w7KwYJ3y0W9EN9cOhgqpKs7G0K
+	3epl1/p+4UOjCo/ujdxjaBZxiEbfN1os4+jhzWUuDAGUOwyG9XLdHTPkQOJ32Is1SdNALo6S6Ar
+	cl2DEseWmTEcTsbwgXysCcdCxoR8=
+X-Google-Smtp-Source: AGHT+IH6bTOc1rk5vP/88wLzWHsc1LGJ+2qG5hyzpPW7yqxehCV9Mg9yXGtDaAZ6gA8lVd9jbrKTi+QDJWjhmR5Pzjc=
+X-Received: by 2002:a17:906:f8c7:b0:a3d:311:e132 with SMTP id
+ lh7-20020a170906f8c700b00a3d0311e132mr835758ejb.11.1707821965586; Tue, 13 Feb
+ 2024 02:59:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 08/12] dt-bindings: mtd: st,stm32: add MP25 support
-Content-Language: en-US
-To: Conor Dooley <conor@kernel.org>
-CC: <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
-        <krzysztof.kozlowski@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>
-References: <20240212174822.77734-1-christophe.kerello@foss.st.com>
- <20240212174822.77734-9-christophe.kerello@foss.st.com>
- <20240212-squeak-mortality-5a53a4d1039c@spud>
-From: Christophe Kerello <christophe.kerello@foss.st.com>
-In-Reply-To: <20240212-squeak-mortality-5a53a4d1039c@spud>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-13_05,2024-02-12_03,2023-05-22_02
+References: <20240211101421.166779-1-warthog618@gmail.com> <CAHp75VeSLvrxMOARDBHBJ5VGVR-Jv-7saxjJiN-NOPMyTwit3Q@mail.gmail.com>
+ <20240211231321.GA4748@rigel> <CAHp75VddjcLaRqugKuk+eejYx_0AHVL4SjYcdh7zUKDj8SpcQw@mail.gmail.com>
+ <CAHp75VcjsVasfaZe25fWzzV-5vv7m7O0-v4j=pcvtWQGKtY5BQ@mail.gmail.com>
+ <20240212095607.GA388487@rigel> <20240213103433.GA191617@rigel>
+In-Reply-To: <20240213103433.GA191617@rigel>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 13 Feb 2024 12:58:49 +0200
+Message-ID: <CAHp75VcBOCinUup=DXE-CqNos4c0aEceSTVsnb6fRy06-rFheA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: uapi: clarify default_values being logical
+To: Kent Gibson <warthog618@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl, 
+	linus.walleij@linaro.org, andy@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Feb 13, 2024 at 12:34=E2=80=AFPM Kent Gibson <warthog618@gmail.com>=
+ wrote:
+> On Mon, Feb 12, 2024 at 05:56:07PM +0800, Kent Gibson wrote:
+> > On Mon, Feb 12, 2024 at 11:44:02AM +0200, Andy Shevchenko wrote:
+> > > On Mon, Feb 12, 2024 at 11:28=E2=80=AFAM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
 
+...
 
-On 2/12/24 19:38, Conor Dooley wrote:
-> On Mon, Feb 12, 2024 at 06:48:18PM +0100, Christophe Kerello wrote:
->> Add 2 new compatible strings to support MP25 SOC.
->> MP25 SOC supports up to 4 chip select.
-> 
-> Again, please explain why the new device is not compatible with the
-> existing ones. Also, please explain why two compatibles are required for
-> the mp25.
-> 
+> In response after re-reading these docs:
+>
+> > > Also
+> > > "The values are boolean, zero for low, nonzero for high."
+> > > https://docs.kernel.org/driver-api/gpio/consumer.html
+>
+> That one is logical and should be changed.
+>
+> > > And there as well
+> > > "With this, all the gpiod_set_(array)_value_xxx() functions interpret
+> > > the parameter "value" as "asserted" ("1") or "de-asserted" ("0")."
+> > > So, should we use asserted-deasserted?
+>
+> We should use active/inactive rather than asserted/de-asserted. This is
+> the only place that terminology is used - which is ironic as it is this
+> section (_active_low_semantics) that explicitly describes the
+> physical/logical mapping.
 
-Hi Conor,
+...
 
-FMC2 IP supports up to 4 chip select. On MP1 SoC, only 2 of them are 
-available when on MP25 SoC, the 4 chip select are available.
+> > > So, can you re-read all of it for high/low asserted/deasserted,
+> > > active/inactive and amend accordingly?
+>
+> So, from these, consumer.rst is the only file requiring any change.
+> I'll submit a patch for that shortly.
 
-MP1 SoC also embeds revision 1.1 of the FMC2 IP when MP25 SoC embeds 
-revision 2.0 of the FMC2 IP.
+Thanks for taking care of this!
 
-I will add this explanation in the commit message.
-
-Regards,
-Christophe Kerello.
-
-> Thanks,
-> Conor.
-> 
->>
->> Signed-off-by: Christophe Kerello <christophe.kerello@foss.st.com>
->> ---
->>   .../bindings/mtd/st,stm32-fmc2-nand.yaml      | 58 ++++++++++++++++++-
->>   1 file changed, 57 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
->> index e72cb5bacaf0..33a753c8877b 100644
->> --- a/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
->> +++ b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
->> @@ -14,10 +14,12 @@ properties:
->>       enum:
->>         - st,stm32mp15-fmc2
->>         - st,stm32mp1-fmc2-nfc
->> +      - st,stm32mp25-fmc2
->> +      - st,stm32mp25-fmc2-nfc
->>   
->>     reg:
->>       minItems: 6
->> -    maxItems: 7
->> +    maxItems: 13
->>   
->>     interrupts:
->>       maxItems: 1
->> @@ -92,6 +94,60 @@ allOf:
->>               - description: Chip select 1 command
->>               - description: Chip select 1 address space
->>   
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            const: st,stm32mp25-fmc2
->> +    then:
->> +      properties:
->> +        reg:
->> +          items:
->> +            - description: Registers
->> +            - description: Chip select 0 data
->> +            - description: Chip select 0 command
->> +            - description: Chip select 0 address space
->> +            - description: Chip select 1 data
->> +            - description: Chip select 1 command
->> +            - description: Chip select 1 address space
->> +            - description: Chip select 2 data
->> +            - description: Chip select 2 command
->> +            - description: Chip select 2 address space
->> +            - description: Chip select 3 data
->> +            - description: Chip select 3 command
->> +            - description: Chip select 3 address space
->> +
->> +        clocks:
->> +          maxItems: 1
->> +
->> +        resets:
->> +          maxItems: 1
->> +
->> +      required:
->> +        - clocks
->> +
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            const: st,stm32mp25-fmc2-nfc
->> +    then:
->> +      properties:
->> +        reg:
->> +          items:
->> +            - description: Chip select 0 data
->> +            - description: Chip select 0 command
->> +            - description: Chip select 0 address space
->> +            - description: Chip select 1 data
->> +            - description: Chip select 1 command
->> +            - description: Chip select 1 address space
->> +            - description: Chip select 2 data
->> +            - description: Chip select 2 command
->> +            - description: Chip select 2 address space
->> +            - description: Chip select 3 data
->> +            - description: Chip select 3 command
->> +            - description: Chip select 3 address space
->> +
->>   required:
->>     - compatible
->>     - reg
->> -- 
->> 2.25.1
->>
+--=20
+With Best Regards,
+Andy Shevchenko
