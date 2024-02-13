@@ -1,77 +1,46 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53BBA54BCB
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 09:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5035578B
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 09:41:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707817312; cv=none; b=Qqg4oSHTWbV4jzMDBXh1xR19ryzrbfi9Mz9tJ7MzR2JNdeQ7awyK2a08RNhBCS2wZ63Aoe6aQOXi0p3obwxb7vruJiR8oKS8zMRjVEuLMQ+VH0CRJbDr6MPTwuFGmOQEK9tUmFIsksdmMQTYlCHVHmIz2RA69MS/MjGooFsl60k=
+	t=1707817315; cv=none; b=pPDkw50rPRj+v0yVsBrGkploosjEG0sYwfzrjuYejgp6zCay9a2x+RdWVpOT/8nCX0tDllcsCOAr7TspexOZ8nYs4cUtSV+BOu+uuayBbv2otI+mBrskaLPGASUkt83QhPG7yjaRqstl5Lg50jW129IJjTcc87a/sXpze5ngU3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707817312; c=relaxed/simple;
-	bh=fmzS2Yan2keHs53R4x+qMd55iIATYx4wBLC/B6HhXB8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Smx+M6sVWBVJdAuDqLMVo9zvSgUIWGJvw6f3Jyw1pUeVrQWNWG1BSe3VyqecGXGtBBPG7ZN4fBO17IzRxV/JIxtFvlmgzEfcMEgLErvdgU9Ij9nEWPyyhTBZ9mDyAansDtpu8AjqRWQ4b8Y1WZ8az3aee4LerGRDj54VApOt/oY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=jbKsIs1S; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1707817315; c=relaxed/simple;
+	bh=LfIizmE1ae4sFNPaSEw/Hx7kqnSpkrUJGFdC2oe/wBw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=k/Qh3m+DjW3MbjVaqGPgtl149zyDjMbNjySoF7zLQbGMfmxWAP2v28YApigOBbgDTr8hFtQBnIJCxj/RhPc2A1Am4i/wcgeLdrVY/+7d6100Bn5w0mPvN4GbLFO8AYBwRHH25jt75p0q5u6mJ9MMArOA5Ngc6CPUdJVfhjGmsGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fnhsyHji; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="jbKsIs1S"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-51176eb6a4bso4134279e87.3
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 01:41:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1707817308; x=1708422108; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J4yzSzCHL5tZEjla4g9SMO0ApNhYh0fsLQEGXJT8U68=;
-        b=jbKsIs1SclKnjQ5ATPFcUEyiVmAx1FZPlVLf2181zVTwPJpFSHQNcNIRMNY4Vu04b5
-         xmW3s1Lam6j2AfH1kmsxH5NXcjxZZIGoW8+VzwySDqHhrtlx6VXjLy4npok3kfDjQc1K
-         zuipQK9sYk2fx8gGie8vsJO0QRju6wygmGsxj0NIE9ey8xRhJWOoxrPVfvajHC6R+zTJ
-         84ypKKKvBCkq9fg1e8K6uXuhEZ2Zt2CiKq15wPkimPsixDzE0HGQIW0ILecw8aTyAsyb
-         m9p6nok9uE1iUEz5yvo7ZGCRCH+Qp7PXPGk1G4R55vGDp8kwu17hSRoVaLmdcmwWdMSe
-         zKNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707817308; x=1708422108;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=J4yzSzCHL5tZEjla4g9SMO0ApNhYh0fsLQEGXJT8U68=;
-        b=dl8q4aBErCUA/Lf/UYjDYZQJ4AAMzRit/MafVKmmVmF5TwQtSrzmdwBkG28opU/U4F
-         gI8gXC1En2RdqhB6+0sFPRCWFUJP5m0I58khstNI8n0Upb6oOcpYYUzL6R6yOEugnBp2
-         w4IJe+sKQTbUa3zrTczz7E3vS0/u1wPoj2qzgLtNwz0H/o3p4SXZuWSL/9p4gbwmtap6
-         Cr0OzQvCK1I6qx9D5gPHMu/wSk+P0TZe3r5dWINqW5mn7innsHMrW5AUOHLgUrBt2FsI
-         NqiZf5++x2h1/AIV8qfnXxz+mtU48ZDRgaiLdWJENNeKqYtZLbV6BzD/zOT0xS4MBDlP
-         Lg8w==
-X-Forwarded-Encrypted: i=1; AJvYcCXNicN0yj571/sdJruz/d1xhR1mn4nccrnooFk+pPkTrF61tPsdFJO1bMrejq5ra1FZ33t52+FQBhqPlVOZZeXzy2aDySBIvL6vtMaC
-X-Gm-Message-State: AOJu0YxJeimIpTawKT+rReYKn0mH34axC939X3DlPGbSBn21dowBvVI+
-	aa6nK7ayKeGOG4bs/358FN7XQ+One0BWTYA0CmnUSJXBGMO66wfzDYIvpofxEBY=
-X-Google-Smtp-Source: AGHT+IEVzdayMM+BRXxhLfMHE4x2j0UZkfG8mlaWyqLGaC0qX2RaAhJUayyUwDYZPowrqCPvSMSgkg==
-X-Received: by 2002:a05:6512:eaa:b0:511:87b4:d01 with SMTP id bi42-20020a0565120eaa00b0051187b40d01mr5770164lfb.27.1707817308520;
-        Tue, 13 Feb 2024 01:41:48 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUL7UtBYOYE16wvxX8CYyA+8ywuXQvbt/fW3DEuuyGoO7IhMSzDZacgkkn+aMm0J28D3Vq0lJU2IVf+dCi/Q+SDQP3yGeqXBijeWPFMNrjplKQU6PIGO2zNHaf6maqZ3NTGOX5BS8x0HUpuVT27f7uxK5TH+vb6BDo8lquohy0GlrVtP/R4I32TGqCPpcLVy4Tc8UWzuzx9ztMgYGPfJORaLUKmQwgfF4J35ev3hCS7hNUuMPP5s8k2F/67ZrR9gYQp2OFg523ehSWDtOBEo4mHyIk9xYq+Nn1+0Y+ZLhHwmy8L/qq57GY8v1njFDzphUF3T5H9BeTiVt5DSO2914NCNBM1De6A0ea35WH7TLXLAXdDtiv4
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.20])
-        by smtp.gmail.com with ESMTPSA id fs20-20020a05600c3f9400b00410232ffb2csm11207446wmb.25.2024.02.13.01.41.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 01:41:48 -0800 (PST)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: s.shtylyov@omp.ru,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	biju.das.jz@bp.renesas.com
-Cc: netdev@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fnhsyHji"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1707817311;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cnCi4BYIqMn8+Kc3y6O2Ph5n/B+/QtuSdPhWS/W9G2A=;
+	b=fnhsyHjiUGadzULajmuLUrF0hDvKZSO4srOYrhf2IeX3GRiXL//klQxXw/rurnNZhNr9nP
+	jj7nNFXEKEB2AIDKUw/llicgcNS7k/2TxnKtp4W2cdIf4xryaW7szE89B6sa3URnxcXgKm
+	9R4Wb9I7kXQOYhAUbbVdKvesvny1ADg=
+From: Oliver Upton <oliver.upton@linux.dev>
+To: kvmarm@lists.linux.dev
+Cc: kvm@vger.kernel.org,
+	Marc Zyngier <maz@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
 	linux-kernel@vger.kernel.org,
-	claudiu.beznea@tuxon.dev,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH net-next v3 6/6] net: ravb: Add runtime PM support
-Date: Tue, 13 Feb 2024 11:41:10 +0200
-Message-Id: <20240213094110.853155-7-claudiu.beznea.uj@bp.renesas.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240213094110.853155-1-claudiu.beznea.uj@bp.renesas.com>
-References: <20240213094110.853155-1-claudiu.beznea.uj@bp.renesas.com>
+	Oliver Upton <oliver.upton@linux.dev>
+Subject: [PATCH v2 20/23] KVM: selftests: Add helper for enabling LPIs on a redistributor
+Date: Tue, 13 Feb 2024 09:41:41 +0000
+Message-ID: <20240213094141.3962026-1-oliver.upton@linux.dev>
+In-Reply-To: <20240213093250.3960069-1-oliver.upton@linux.dev>
+References: <20240213093250.3960069-1-oliver.upton@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,216 +48,131 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+The selftests GIC library presently does not support LPIs. Add a
+userspace helper for configuring a redistributor for LPIs, installing
+an LPI configuration table and LPI pending table.
 
-Add runtime PM support for the ravb driver. As the driver is used by
-different IP variants, with different behaviors, to be able to have the
-runtime PM support available for all devices, the preparatory commits
-moved all the resources parsing and allocations in the driver's probe
-function and kept the settings for ravb_open(). This is due to the fact
-that on some IP variants-platforms tuples disabling/enabling the clocks
-will switch the IP to the reset operation mode where register contents is
-lost and reconfiguration needs to be done. For this the rabv_open()
-function enables the clocks, switches the IP to configuration mode, applies
-all the register settings and switches the IP to the operational mode. At
-the end of ravb_open() IP is ready to send/receive data.
-
-In ravb_close() necessary reverts are done (compared with ravb_open()), the
-IP is switched to reset mode and clocks are disabled.
-
-The ethtool APIs or IOCTLs that might execute while the interface is down
-are either cached (and applied in ravb_open()) or rejected (as at that time
-the IP is in reset mode). Keeping the IP in the reset mode also increases
-the power saved (according to the hardware manual).
-
-Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
 ---
+ .../selftests/kvm/include/aarch64/vgic.h      |  4 +
+ .../testing/selftests/kvm/lib/aarch64/vgic.c  | 78 +++++++++++++++++++
+ 2 files changed, 82 insertions(+)
 
-Changes in v3:
-- fixed typo in patch description
-
-Changes in v2:
-- none
-
-Changes since [2]:
-- none
-- didn't returned directly the ret code of pm_runtime_put_autosuspend()
-  as, in theory, it might return 1 in case device is suspended through
-  this calltrace:
-  pm_runtime_put_autosuspend() ->
-    __pm_runtime_suspend() ->
-      rpm_suspend() ->
-        rpm_check_suspend_allowed()
-
-Changes in v3 of [2]:
-- this was patch 21/21 in v2
-- collected tags
-- fixed typos in patch description
-
-Changes in v2 of [2]:
-- keep RPM support for all platforms
-
-[2] https://lore.kernel.org/all/20240105082339.1468817-1-claudiu.beznea.uj@bp.renesas.com/
-
- drivers/net/ethernet/renesas/ravb_main.c | 54 ++++++++++++++++++++++--
- 1 file changed, 50 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index 4dd0520dea90..1d3de2e3f917 100644
---- a/drivers/net/ethernet/renesas/ravb_main.c
-+++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -1939,16 +1939,21 @@ static int ravb_open(struct net_device *ndev)
+diff --git a/tools/testing/selftests/kvm/include/aarch64/vgic.h b/tools/testing/selftests/kvm/include/aarch64/vgic.h
+index d45b2902439d..ae6a54453c62 100644
+--- a/tools/testing/selftests/kvm/include/aarch64/vgic.h
++++ b/tools/testing/selftests/kvm/include/aarch64/vgic.h
+@@ -32,6 +32,10 @@ void kvm_irq_write_isactiver(int gic_fd, uint32_t intid, struct kvm_vcpu *vcpu);
+ 
+ #define KVM_IRQCHIP_NUM_PINS	(1020 - 32)
+ 
++void vgic_rdist_enable_lpis(int gic_fd, struct kvm_vcpu *vcpu,
++			    vm_paddr_t cfg_table, size_t cfg_table_size,
++			    vm_paddr_t pend_table);
++
+ struct vgic_its {
+ 	int	its_fd;
+ 	void 	*cmdq_hva;
+diff --git a/tools/testing/selftests/kvm/lib/aarch64/vgic.c b/tools/testing/selftests/kvm/lib/aarch64/vgic.c
+index fc7b4fbe6453..2e1e0aa8cabc 100644
+--- a/tools/testing/selftests/kvm/lib/aarch64/vgic.c
++++ b/tools/testing/selftests/kvm/lib/aarch64/vgic.c
+@@ -3,8 +3,10 @@
+  * ARM Generic Interrupt Controller (GIC) v3 host support
+  */
+ 
++#include <linux/kernel.h>
+ #include <linux/kvm.h>
+ #include <linux/sizes.h>
++#include <asm/cputype.h>
+ #include <asm/kvm_para.h>
+ #include <asm/kvm.h>
+ 
+@@ -168,6 +170,82 @@ void kvm_irq_write_isactiver(int gic_fd, uint32_t intid, struct kvm_vcpu *vcpu)
+ 	vgic_poke_irq(gic_fd, intid, vcpu, GICD_ISACTIVER);
+ }
+ 
++#define VGIC_AFFINITY_0_SHIFT 0
++#define VGIC_AFFINITY_1_SHIFT 8
++#define VGIC_AFFINITY_2_SHIFT 16
++#define VGIC_AFFINITY_3_SHIFT 24
++
++#define MPIDR_TO_VGIC_LEVEL(mpidr, level) \
++	((((mpidr) >> MPIDR_LEVEL_SHIFT(level)) & MPIDR_LEVEL_MASK) << \
++	 VGIC_AFFINITY_## level ##_SHIFT)
++
++#define MPIDR_TO_VGIC(mpidr) \
++	((MPIDR_TO_VGIC_LEVEL(mpidr, 0) | \
++	 MPIDR_TO_VGIC_LEVEL(mpidr, 1) | \
++	 MPIDR_TO_VGIC_LEVEL(mpidr, 2) | \
++	 MPIDR_TO_VGIC_LEVEL(mpidr, 3)) << 32)
++
++static u32 vgic_rdist_read_reg(int gic_fd, struct kvm_vcpu *vcpu,
++			       unsigned long offset)
++{
++	u64 mpidr, attr;
++	u32 val;
++
++	vcpu_get_reg(vcpu, KVM_ARM64_SYS_REG(SYS_MPIDR_EL1), &mpidr);
++
++	attr = MPIDR_TO_VGIC(mpidr) | offset;
++	kvm_device_attr_get(gic_fd, KVM_DEV_ARM_VGIC_GRP_REDIST_REGS,
++			    attr, &val);
++
++	return val;
++}
++
++static void vgic_rdist_write_reg(int gic_fd, struct kvm_vcpu *vcpu,
++				 unsigned long offset, u32 val)
++{
++	u64 mpidr, attr;
++
++	vcpu_get_reg(vcpu, KVM_ARM64_SYS_REG(SYS_MPIDR_EL1), &mpidr);
++
++	attr = MPIDR_TO_VGIC(mpidr) | offset;
++	kvm_device_attr_set(gic_fd, KVM_DEV_ARM_VGIC_GRP_REDIST_REGS,
++			    attr, &val);
++}
++
++static void vgic_rdist_write_baser(int gic_fd, struct kvm_vcpu *vcpu,
++				   unsigned long offset, u64 val)
++{
++	u32 attr = val;
++
++	vgic_rdist_write_reg(gic_fd, vcpu, offset, attr);
++
++	attr = val >> 32;
++	vgic_rdist_write_reg(gic_fd, vcpu, offset + 4, attr);
++}
++
++void vgic_rdist_enable_lpis(int gic_fd, struct kvm_vcpu *vcpu,
++			    vm_paddr_t cfg_table, size_t cfg_table_size,
++			    vm_paddr_t pend_table)
++{
++	u32 ctlr;
++	u64 val;
++
++	val = (cfg_table |
++	       GICR_PROPBASER_InnerShareable |
++	       GICR_PROPBASER_RaWaWb |
++	       ((ilog2(cfg_table_size) - 1) & GICR_PROPBASER_IDBITS_MASK));
++	vgic_rdist_write_baser(gic_fd, vcpu, GICR_PROPBASER, val);
++
++	val = (pend_table |
++	       GICR_PENDBASER_InnerShareable |
++	       GICR_PENDBASER_RaWaWb);
++	vgic_rdist_write_baser(gic_fd, vcpu, GICR_PENDBASER, val);
++
++	ctlr = vgic_rdist_read_reg(gic_fd, vcpu, GICR_CTLR);
++	ctlr |= GICR_CTLR_ENABLE_LPIS;
++	vgic_rdist_write_reg(gic_fd, vcpu, GICR_CTLR, ctlr);
++}
++
+ static u64 vgic_its_read_reg(int its_fd, unsigned long offset)
  {
- 	struct ravb_private *priv = netdev_priv(ndev);
- 	const struct ravb_hw_info *info = priv->info;
-+	struct device *dev = &priv->pdev->dev;
- 	int error;
- 
- 	napi_enable(&priv->napi[RAVB_BE]);
- 	if (info->nc_queues)
- 		napi_enable(&priv->napi[RAVB_NC]);
- 
-+	error = pm_runtime_resume_and_get(dev);
-+	if (error < 0)
-+		goto out_napi_off;
-+
- 	/* Set AVB config mode */
- 	error = ravb_set_config_mode(ndev);
- 	if (error)
--		goto out_napi_off;
-+		goto out_rpm_put;
- 
- 	ravb_set_delay_mode(ndev);
- 	ravb_write(ndev, priv->desc_bat_dma, DBAT);
-@@ -1982,6 +1987,9 @@ static int ravb_open(struct net_device *ndev)
- 	ravb_stop_dma(ndev);
- out_set_reset:
- 	ravb_set_opmode(ndev, CCC_OPC_RESET);
-+out_rpm_put:
-+	pm_runtime_mark_last_busy(dev);
-+	pm_runtime_put_autosuspend(dev);
- out_napi_off:
- 	if (info->nc_queues)
- 		napi_disable(&priv->napi[RAVB_NC]);
-@@ -2322,6 +2330,8 @@ static int ravb_close(struct net_device *ndev)
- 	struct ravb_private *priv = netdev_priv(ndev);
- 	const struct ravb_hw_info *info = priv->info;
- 	struct ravb_tstamp_skb *ts_skb, *ts_skb2;
-+	struct device *dev = &priv->pdev->dev;
-+	int error;
- 
- 	netif_tx_stop_all_queues(ndev);
- 
-@@ -2371,7 +2381,14 @@ static int ravb_close(struct net_device *ndev)
- 	ravb_get_stats(ndev);
- 
- 	/* Set reset mode. */
--	return ravb_set_opmode(ndev, CCC_OPC_RESET);
-+	error = ravb_set_opmode(ndev, CCC_OPC_RESET);
-+	if (error)
-+		return error;
-+
-+	pm_runtime_mark_last_busy(dev);
-+	pm_runtime_put_autosuspend(dev);
-+
-+	return 0;
- }
- 
- static int ravb_hwtstamp_get(struct net_device *ndev, struct ifreq *req)
-@@ -2927,6 +2944,8 @@ static int ravb_probe(struct platform_device *pdev)
- 	clk_prepare(priv->refclk);
- 
- 	platform_set_drvdata(pdev, ndev);
-+	pm_runtime_set_autosuspend_delay(&pdev->dev, 100);
-+	pm_runtime_use_autosuspend(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
- 	error = pm_runtime_resume_and_get(&pdev->dev);
- 	if (error < 0)
-@@ -3032,6 +3051,9 @@ static int ravb_probe(struct platform_device *pdev)
- 	netdev_info(ndev, "Base address at %#x, %pM, IRQ %d.\n",
- 		    (u32)ndev->base_addr, ndev->dev_addr, ndev->irq);
- 
-+	pm_runtime_mark_last_busy(&pdev->dev);
-+	pm_runtime_put_autosuspend(&pdev->dev);
-+
- 	return 0;
- 
- out_napi_del:
-@@ -3049,6 +3071,7 @@ static int ravb_probe(struct platform_device *pdev)
- 	pm_runtime_put(&pdev->dev);
- out_rpm_disable:
- 	pm_runtime_disable(&pdev->dev);
-+	pm_runtime_dont_use_autosuspend(&pdev->dev);
- 	clk_unprepare(priv->refclk);
- out_reset_assert:
- 	reset_control_assert(rstc);
-@@ -3062,6 +3085,12 @@ static void ravb_remove(struct platform_device *pdev)
- 	struct net_device *ndev = platform_get_drvdata(pdev);
- 	struct ravb_private *priv = netdev_priv(ndev);
- 	const struct ravb_hw_info *info = priv->info;
-+	struct device *dev = &priv->pdev->dev;
-+	int error;
-+
-+	error = pm_runtime_resume_and_get(dev);
-+	if (error < 0)
-+		return;
- 
- 	unregister_netdev(ndev);
- 	if (info->nc_queues)
-@@ -3073,8 +3102,9 @@ static void ravb_remove(struct platform_device *pdev)
- 	dma_free_coherent(ndev->dev.parent, priv->desc_bat_size, priv->desc_bat,
- 			  priv->desc_bat_dma);
- 
--	pm_runtime_put_sync(&pdev->dev);
-+	pm_runtime_put_sync_suspend(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
-+	pm_runtime_dont_use_autosuspend(dev);
- 	clk_unprepare(priv->refclk);
- 	reset_control_assert(priv->rstc);
- 	free_netdev(ndev);
-@@ -3156,6 +3186,10 @@ static int ravb_suspend(struct device *dev)
- 	if (ret)
- 		return ret;
- 
-+	ret = pm_runtime_force_suspend(&priv->pdev->dev);
-+	if (ret)
-+		return ret;
-+
- reset_assert:
- 	return reset_control_assert(priv->rstc);
- }
-@@ -3178,16 +3212,28 @@ static int ravb_resume(struct device *dev)
- 		ret = ravb_wol_restore(ndev);
- 		if (ret)
- 			return ret;
-+	} else {
-+		ret = pm_runtime_force_resume(dev);
-+		if (ret)
-+			return ret;
- 	}
- 
- 	/* Reopening the interface will restore the device to the working state. */
- 	ret = ravb_open(ndev);
- 	if (ret < 0)
--		return ret;
-+		goto out_rpm_put;
- 
- 	ravb_set_rx_mode(ndev);
- 	netif_device_attach(ndev);
- 
-+	return 0;
-+
-+out_rpm_put:
-+	if (!priv->wol_enabled) {
-+		pm_runtime_mark_last_busy(dev);
-+		pm_runtime_put_autosuspend(dev);
-+	}
-+
- 	return ret;
- }
- 
+ 	u64 attr;
 -- 
-2.39.2
+2.43.0.687.g38aa6559b0-goog
 
