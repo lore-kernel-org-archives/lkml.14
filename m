@@ -1,106 +1,126 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9162375F
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 09:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA5424215;
+	Tue, 13 Feb 2024 09:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707817692; cv=none; b=SLe6AbSgdRC4A1YY8hkcQtHdbNfS1fWq5fIFHSDi8wldzhThF6DO7sEzkfzjuEaiP6jApbRP1nMmTiKIyqfQczwjxuC3YMEZQw5gwjfSGAVUg4EPKiJmW3Oj5dFfXeFylHnNPhOCnqJf2EHtIgDq+0Q31fVu3zHwIGG+IFszSCg=
+	t=1707817712; cv=none; b=M0PyuvCoALedSxJbbPdvDqEfOltcNa/X620RtJVDYFk7AXqtoxiLQ4Naw5gkDTMUN8u82n6CB6DHnB3v275nIyzBp97J9xE3VTqqHc5ZqShbtvbnSXwfm01HTKH/gtfrM+WaN4KfjQlSq8LXCfCzsoIN9g9Rw9idYZOBQP4htuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707817692; c=relaxed/simple;
-	bh=8AK3cgx3MUVUYDzTDSdES6qOJwGDLNZ5wrsqdVzP8Ac=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IuPnusP9s8kdQkkxkJyHR0uRN/6VTscw46UwKrmpLnb9/+0GZSzhmof5D1O2LAHNT65bRuJDA0aRdP7Goulbw+toQXpXQonMYOtXLQm54XfBrxMbnfWXn0HWyqxuSwFbAFz6abQ3H+m013ADArJ9iftVnSX/vDzWIeEVUljAesg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-60778d7b02bso12106807b3.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 01:48:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707817687; x=1708422487;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=y1CaRShlNFED4/8VznKN1KNzTk/U5YKiI8Uuiz6aLE4=;
-        b=e+EG26xzvqbIkcGJQgB+ZF20DjuN3NHZcwmVYSq8iLItW6ulcCM0G1bdModP3mK6oK
-         bG2Kq5F0UlRI8ggrMBCSBvzLAMMve74zhm9CYrYD/cvcLQCBtxBD6ARitm5jI320Wtvc
-         8qAmCp5EB8XqI2D/XjRo6H/DRVKozLh3inMYkzOnAt3Bj1n+foCakIFYOLN5BtgJ/ins
-         9eWyVfmvnB8al15Vc3OUyqNILY+8rp/Ms6ufKFmfjBu76RyVPr1WZZvAve75ytEt+qxI
-         PIWRkyDlzMp/GBtrEArcTOu8LzzpaIMKXXpWh7OjQ5MYkZxkq+WpZpyaLTNR9HXaaE1w
-         sdUQ==
-X-Gm-Message-State: AOJu0Yzua8wyjnQ//t0bvGfhhEzcsiai38n1yyX/GqNk3U6SQeBM4HUx
-	7dOaqlev9DbM77kP0P/RpSk++JfWOCSzc2Ek1kAXguOm99IP8lParG+Rk+eBKHA=
-X-Google-Smtp-Source: AGHT+IHUuGIk9MDPzGstYLK1zpkt2QbjTfRrwv2RqiahCvh88IzUqgJcWfJL52ufKQ1RpV3Cg6uZUg==
-X-Received: by 2002:a81:4fcc:0:b0:607:8472:f33d with SMTP id d195-20020a814fcc000000b006078472f33dmr1104920ywb.25.1707817687672;
-        Tue, 13 Feb 2024 01:48:07 -0800 (PST)
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
-        by smtp.gmail.com with ESMTPSA id w184-20020a817bc1000000b0060493d50392sm1640828ywc.103.2024.02.13.01.48.07
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Feb 2024 01:48:07 -0800 (PST)
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dcbc6a6808fso1310685276.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 01:48:07 -0800 (PST)
-X-Received: by 2002:a25:6606:0:b0:dc6:b779:7887 with SMTP id
- a6-20020a256606000000b00dc6b7797887mr6918280ybc.20.1707817686859; Tue, 13 Feb
- 2024 01:48:06 -0800 (PST)
+	s=arc-20240116; t=1707817712; c=relaxed/simple;
+	bh=+jlu/AYL7Pn+riEIViebhkB7TWBJwXJgw9NTINuKLcs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qh/6u+BlGZFRS1MQwOQsZByVsvnX/UmGn/dx7kXCpfqF82FM6EyW4N8Lj0gp6O/OWmiS6Rem6l0gUeRTXA/vrsBRdfXExPf6Nm4HXzEtX5fVyX/kPr7mmEkLfkHzbGGT5hNGsZzBwENxZ3VWHNxprqqvCEkVFQjrMRvCPKpqLLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tbmsOADy; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tbmsOADy"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41D9bvfX002328;
+	Tue, 13 Feb 2024 09:48:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=dT3athFFB1S90PGKQU187mvJ77v2TNl0tjUJCAHu78Q=;
+ b=tbmsOADyQroCb2P3YSOtaq9OGEEPInlOGFMIr4tf8vayEG0/u5BV3S896OqzcacZCt6N
+ nzuikdevQyfoWuU88iPHvKPL/ZMP0xGi96xJywauO0x0jh86pmFNhSku5cALaxQpmutN
+ kBBvVRJAWZP95F5Oasi2XrWSPnDOQrmz9VJMpAJHxo18S7lnaxXozq8DJ247ug3DEVhI
+ 7uKQ1k5XxY1Gqfj/Kw0wLb6KtnOEIdKXNlUqld70iARDf0RoHk0sNlSxkDPCnQgjvGCn
+ MAcHKqj7PB0EtG1rG5/CYKgSbW5rVq1gcyI4Qp4qKmrrsN7j+zMFfEyhXftAYSVdX+i6 Mw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w85y4gbr6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Feb 2024 09:48:11 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41D9eKse010951;
+	Tue, 13 Feb 2024 09:48:11 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w85y4gbqm-3
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Feb 2024 09:48:10 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41D8bokT016184;
+	Tue, 13 Feb 2024 09:36:30 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w6mymecq5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Feb 2024 09:36:30 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41D9aPsl13501118
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 13 Feb 2024 09:36:27 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9E59A2004B;
+	Tue, 13 Feb 2024 09:36:25 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8A6AA2004E;
+	Tue, 13 Feb 2024 09:36:20 +0000 (GMT)
+Received: from li-c9696b4c-3419-11b2-a85c-f9edc3bf8a84.in.ibm.com (unknown [9.109.198.187])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 13 Feb 2024 09:36:20 +0000 (GMT)
+From: Nilay Shroff <nilay@linux.ibm.com>
+To: john.g.garry@oracle.com
+Cc: axboe@kernel.dk, brauner@kernel.org, bvanassche@acm.org,
+        dchinner@redhat.com, djwong@kernel.org, hch@lst.de, jack@suse.cz,
+        jbongio@google.com, jejb@linux.ibm.com, kbusch@kernel.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-scsi@vger.kernel.org, linux-xfs@vger.kernel.org,
+        martin.petersen@oracle.com, ming.lei@redhat.com, ojaswin@linux.ibm.com,
+        sagi@grimberg.me, tytso@mit.edu, viro@zeniv.linux.org.uk
+Subject: Re:[PATCH v3 10/15] block: Add fops atomic write support
+Date: Tue, 13 Feb 2024 15:06:19 +0530
+Message-ID: <20240213093619.106770-1-nilay@linux.ibm.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240124113841.31824-11-john.g.garry@oracle.com>
+References: <20240124113841.31824-11-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240213055554.1802415-1-ankur.a.arora@oracle.com>
-In-Reply-To: <20240213055554.1802415-1-ankur.a.arora@oracle.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 13 Feb 2024 10:47:54 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdV-JXjXmd5yan0-on52oH1dbRg1=N9OL2C7FAhLaOsTgQ@mail.gmail.com>
-Message-ID: <CAMuHMdV-JXjXmd5yan0-on52oH1dbRg1=N9OL2C7FAhLaOsTgQ@mail.gmail.com>
-Subject: Re: [PATCH 00/30] PREEMPT_AUTO: support lazy rescheduling
-To: Ankur Arora <ankur.a.arora@oracle.com>
-Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, peterz@infradead.org, 
-	torvalds@linux-foundation.org, paulmck@kernel.org, akpm@linux-foundation.org, 
-	luto@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
-	mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org, 
-	willy@infradead.org, mgorman@suse.de, jpoimboe@kernel.org, 
-	mark.rutland@arm.com, jgross@suse.com, andrew.cooper3@citrix.com, 
-	bristot@kernel.org, mathieu.desnoyers@efficios.com, 
-	glaubitz@physik.fu-berlin.de, anton.ivanov@cambridgegreys.com, 
-	mattst88@gmail.com, krypton@ulrich-teichert.org, rostedt@goodmis.org, 
-	David.Laight@aculab.com, richard@nod.at, mjguzik@gmail.com, jon.grimm@amd.com, 
-	bharata@amd.com, raghavendra.kt@amd.com, boris.ostrovsky@oracle.com, 
-	konrad.wilk@oracle.com
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 9Y3xpgl7YZgmt7bLwj052NiHim_kCSSt
+X-Proofpoint-ORIG-GUID: wcW_-f-Ig0-0IoXex2Lkk7VjzuJEeuiu
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-13_04,2024-02-12_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ clxscore=1015 priorityscore=1501 spamscore=0 suspectscore=0 malwarescore=0
+ mlxlogscore=998 bulkscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2402130076
 
-Hi Ankur,
-
-On Tue, Feb 13, 2024 at 6:56=E2=80=AFAM Ankur Arora <ankur.a.arora@oracle.c=
-om> wrote:
-> This series adds a new scheduling model PREEMPT_AUTO, which like
-> PREEMPT_DYNAMIC allows dynamic switching between a none/voluntary/full
-> preemption model. However, unlike PREEMPT_DYNAMIC, it doesn't depend
-> on explicit preemption points for the voluntary models.
-
-Thanks for your series!
-
-Can you please reduce the CC list for future submissions?
-It is always a good idea to have a closer look at the output of
-scripts/get_maintainer.pl, and edit it manually. There is usually no
-need to include everyone who ever contributed a tiny change to one of
-the affected files.
-
-Thanks again!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+>+static bool blkdev_atomic_write_valid(struct block_device *bdev, loff_t p=
+os,=0D
+>+				      struct iov_iter *iter)=0D
+>+{=0D
+>+	struct request_queue *q =3D bdev_get_queue(bdev);=0D
+>+	unsigned int min_bytes =3D queue_atomic_write_unit_min_bytes(q);=0D
+>+	unsigned int max_bytes =3D queue_atomic_write_unit_max_bytes(q);=0D
+>+=0D
+>+	if (!iter_is_ubuf(iter))=0D
+>+		return false;=0D
+>+	if (iov_iter_count(iter) & (min_bytes - 1))=0D
+>+		return false;=0D
+>+	if (!is_power_of_2(iov_iter_count(iter)))=0D
+>+		return false;=0D
+>+	if (pos & (iov_iter_count(iter) - 1))=0D
+>+		return false;=0D
+>+	if (iov_iter_count(iter) > max_bytes)=0D
+>+		return false;=0D
+>+	return true;=0D
+>+}=0D
+=0D
+Here do we need to also validate whether the IO doesn't straddle =0D
+the atmic bondary limit (if it's non-zero)? We do check that IO =0D
+doesn't straddle the atomic boundary limit but that happens very =0D
+late in the IO code path either during blk-merge or in NVMe driver =0D
+code.=0D
+=0D
+Thanks,=0D
+--Nilay=0D
+=0D
