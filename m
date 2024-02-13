@@ -1,172 +1,96 @@
-Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3352137E;
-	Tue, 13 Feb 2024 08:46:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C79224C6;
+	Tue, 13 Feb 2024 08:46:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707813989; cv=none; b=TwF7wnMTU8xPYM4+VuaQljp2UMbW172ohfvZIEKZgMMhEmCcODR/D4rxv6giQvinxm78ltSdIteg3lJz+VK7zDm5h6bW4XhPscniygCVKUTgITl/xTczaW+g5+X//ysNNvKp5nRzOgAtqQV/XDpin0j3yM6igvz/fJTOsLYTYu4=
+	t=1707814002; cv=none; b=B33jJK8HCcNIO/XbOgylW+Ga1qw6JMvAB1tEbqHthaJWPLj2w2ha70FTP3/pNS4dheH9im2RxeQIEp1rF3MvKASYuZg56KIJMg396WHnouKego5h21+QODJhi+KzytBYvjVjebKbEKW76g0b7XzLG8cDOiI54BRfad6O83jPdsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707813989; c=relaxed/simple;
-	bh=I8Dk1CjqScKBtQApLfXJ53Ss9d0W5sdwa22iNPoG3vY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NcvKE8BnhIAKfKNWemNqyKZtRFyAOODcGfC2c9J5vto7erP6LFC5H+YKHJa19ueN5CO2l1OHuWBdPvZGkes5Gi0xVl7FyjSasN3OMNLEnsBlKAMITf7HNbxBKAfdVtZ0OFVjEJ7Wcjj1iOGblLr5GCO2jfbq4Gdp6/ePh/NbjD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=rsbHN13g; arc=none smtp.client-ip=74.50.62.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
+	s=arc-20240116; t=1707814002; c=relaxed/simple;
+	bh=qQiwpn09B4+vwleHQGtUBug9CbJpwTwlrCSrjzBa3z4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=UObQu9QBk0O1mT3GE4UBEd97z+m1Wrl4sVFuf2/shfQUrzOYdDH8jmgf2Cpg2DpKTFNeXWL4d+AtafeABBmYzH5HIRrIdbLUDnOgMndMQRyAwUo6fJlQJhzKFkGLdayHfI+eXbqfNwWjBHQsOeozDGLTks8uGGkke6d3nWZtpYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PfBosD5V; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=d3EQaR1t; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="rsbHN13g"
-Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
-	by mail5.25mail.st (Postfix) with ESMTPSA id F19C660505;
-	Tue, 13 Feb 2024 08:45:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
-	s=25mailst; t=1707813986;
-	bh=I8Dk1CjqScKBtQApLfXJ53Ss9d0W5sdwa22iNPoG3vY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=rsbHN13gdMiK4m9PKkNyMA1M8Q5mkR0/0IQLimo4d40yCOjKmDidzP7oq1srnvx4e
-	 XJQQZRaDQqmIJFECD56kppnBRsANTSkCOAfdVgfCvGG3X598eCNbl8XWrIrNyG8xxB
-	 p5fgc5JFCo0HCqh0N6Axky9kOHyOSnV8wjhY/8egBRP7LMxZMCpcOtvc3pQjI+0V0e
-	 oqAlNLqGaBea57x3shI1Y2TYYgnU7dExn6lKDbNJ+gcg4QYmzi2GhF2KhQQSc00xlA
-	 fPNR4g3/jBpXYsDiPPm7noT1MpoyPTn3t3/FKG+KxU7TPk7M34wT1XBrJlMy/rVE8Z
-	 O8cUomo+8Km2g==
-From: Tony Lindgren <tony@atomide.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: "David S . Miller" <davem@davemloft.net>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Dhruva Gole <d-gole@ti.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Johan Hovold <johan@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: [PATCH v6 0/6] Add support for DEVNAME:0.0 style hardware based addressing
-Date: Tue, 13 Feb 2024 10:45:07 +0200
-Message-ID: <20240213084545.40617-1-tony@atomide.com>
-X-Mailer: git-send-email 2.43.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PfBosD5V";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d3EQaR1t"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1707813999;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sv7XIDRdwrOpwhStOB8VNj5SMdSkv/7xoAweXnGu+b0=;
+	b=PfBosD5V0ngTuqtDPittmA5h/Gr0F4p9mccJqaALyIIvxeMC1WkTdYQIVkUDnP5g7tT4HC
+	nVI6onaEYHpm7OD+KkOlUeeZ+6Y9DvYQTFeaooJ1wvS7gYbAdbZT76SC8GIZKKFbx+Oscp
+	rSWrsHFnYxFXBCbTv7S84ood32Em5nLWbFWwdvtwsiqZu7nCmZPuXsb4+oInKgr5rUs+Wj
+	ys88ZB+nuhQPgMC5GeOwT+XSm0ZMEbvfWCyfIJO7OoIf36eNmLKR0wXVswNHBayos9H2Dx
+	3bxg34TMU2wPA08iMfOkXbt7DpONHwpcIogb5tf/VsV1ill6B45DHk2P9XjLLA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1707813999;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sv7XIDRdwrOpwhStOB8VNj5SMdSkv/7xoAweXnGu+b0=;
+	b=d3EQaR1tV6hGzu+06Fh8PgLDPqDxQfWAfnF1J0MzvPuDhoSppXX/D8yErXivQ+0cYj+POq
+	h8dzB4ZaYwCmjcDQ==
+To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, Sergey
+ Shtylyov <s.shtylyov@omp.ru>, lvjianmin@loongson.cn, Huacai Chen
+ <chenhuacai@loongson.cn>
+Subject: Re: [PATCH v5 1/3] irqchip/loongson-eiointc: Typo fix in function
+ eiointc_domain_alloc
+In-Reply-To: <20240130082722.2912576-2-maobibo@loongson.cn>
+References: <20240130082722.2912576-1-maobibo@loongson.cn>
+ <20240130082722.2912576-2-maobibo@loongson.cn>
+Date: Tue, 13 Feb 2024 09:46:39 +0100
+Message-ID: <87frxwiweo.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Hi all,
+On Tue, Jan 30 2024 at 16:27, Bibo Mao wrote:
+> There is small typo in function eiointc_domain_alloc(), and there is
+> no
 
-With the recent serial core changes, we can now add DEVNAME:0.0 style
-addressing for the serial ports. When using DEVNAME:0.0 naming, we don't
-need to care which ttyS instance number is allocated depending on HSUART
-settings or if the devicetree has added aliases for all the ports.
+This is not a typo. The code uses an undeclared struct type, no?
 
-We also prepare the serial core to handle the ttyS related quirks done
-in console_setup() to prepare things for eventually dropping the parsing
-from console_setup().
+> definition about eiointc struct, instead its name should be eiointc_priv
+> struct. It is strange that there is no warning with gcc compiler.
 
-These patches are against tty-next, but apply with fuzz also against Linux
-next with the recent printk changes.
+It's absolutely not strange. The compiler treats 'struct eiointc *priv'
+as forward declaration and it does not complain because the assignment
+is a void pointer and it's handed into irq_domain_set_info() as a void
+pointer argument. C is wonderful, isn't it?
 
-Regards,
+> This patch fixes the small typo issue.
 
-Tony
+# git grep 'This patch' Documentation/process/
 
-Changes since v5:
-- Include types.h as noted by Andy
-
-- Update patch description to use serial_base_add_one_prefcon() as noded
-  by Andy
-
-Changes since v4:
-- Fix passing empty brl_opt to add_preferred_console() instead of NULL
-
-- Fix console_setup() trying to parse a console index out of a DEVNAME:0.0
-  option that can be an IO address instead of an index
-
-- Fix issue with default console getting enabled before DEVNAME:0.0
-  handling device driver calls add_preferred_console()
-
-- Fix error check for kasprintf(), use serial_base_add_one_prefcon() and
-  coding suggestions by Andy
-
-- Fixed compile errors if console is not enabled in .config as noted
-  by kernel test robot
-
-Changes since v3:
-- Fix handling of brl_options by saving them too in console_opt_save()
-
-- Drop changes to remove console_setup() parsing, further changes to
-  register_console() are still needed before can leave out the early
-  parsing
-
-- Added a patch for serial8250_isa_init_preferred_console(), otherwise
-  the console gets initialized later for x86 when the console_setup()
-  parsing is dropped as pointed out by Petr
-
-- Initialize __free() variables to NULL as noted by Dan
-
-- Return handled in console_setup() if saving console options fails
-
-- Simplify serial_base_add_preferred_console() and add a helper for
-  serial_base_add_one_prefcon() as suggested by Andy
-
-- Header include changes to kernel/printk/conopt.c as suggested by Andy
-
-Changes since v2:
-
-- Console name got constified and already applied as suggested by Ilpo
-  and Andy
-
-- Add printk/conopt.c to save console command line options
-
-- Add a patch to drop old console_setup() character device name parsing
-
-- Use cleanup.h to simplify freeing as suggested by Andy
-
-- Use types.h instead of kernel.h as suggested by Andy
-
-- Use strcspn() as suggested by Andy
-
-- Various coding improvments suggested by Andy
-
-Changes since v1:
-
-- Constify printk add_preferred_console() as suggested by Jiri
-
-- Use proper kernel command line helpers for parsing console as
-  suggested by Jiri
-
-- Update description for HSUART based on Andy's comments
-
-- Standardize on DEVNAME:0.0 style naming as suggested by Andy
-
-- Added missing put_device() calls paired with device_find_child()
-
-Tony Lindgren (6):
-  printk: Save console options for add_preferred_console_match()
-  printk: Don't try to parse DEVNAME:0.0 console options
-  printk: Flag register_console() if console is set on command line
-  serial: core: Add support for DEVNAME:0.0 style naming for kernel
-    console
-  serial: core: Handle serial console options
-  serial: 8250: Add preferred console in serial8250_isa_init_ports()
-
- drivers/tty/serial/8250/8250_core.c  |   5 +
- drivers/tty/serial/serial_base.h     |  24 +++++
- drivers/tty/serial/serial_base_bus.c | 136 +++++++++++++++++++++++++
- drivers/tty/serial/serial_core.c     |   4 +
- include/linux/printk.h               |   3 +
- kernel/printk/Makefile               |   2 +-
- kernel/printk/conopt.c               | 143 +++++++++++++++++++++++++++
- kernel/printk/console_cmdline.h      |   6 ++
- kernel/printk/printk.c               |  23 ++++-
- 9 files changed, 341 insertions(+), 5 deletions(-)
- create mode 100644 kernel/printk/conopt.c
-
-
-base-commit: 6cc3028f797a549f256d593867a769ab6a8265f2
--- 
-2.43.1
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>  drivers/irqchip/irq-loongson-eiointc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
+> index 1623cd779175..b3736bdd4b9f 100644
+> --- a/drivers/irqchip/irq-loongson-eiointc.c
+> +++ b/drivers/irqchip/irq-loongson-eiointc.c
+> @@ -241,7 +241,7 @@ static int eiointc_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>  	int ret;
+>  	unsigned int i, type;
+>  	unsigned long hwirq = 0;
+> -	struct eiointc *priv = domain->host_data;
+> +	struct eiointc_priv *priv = domain->host_data;
+>  
+>  	ret = irq_domain_translate_onecell(domain, arg, &hwirq, &type);
+>  	if (ret)
