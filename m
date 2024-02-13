@@ -1,203 +1,126 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D95627E7;
-	Tue, 13 Feb 2024 20:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4487B60872;
+	Tue, 13 Feb 2024 20:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707857575; cv=none; b=rrgk5Or6tdXhDWY5fHJdqFlVwHneD/wKP/N9JeREuHkdfTr1Sptkxn9JFitKTAAOrQr5xc61Z0FNxLVMxTk2M1+dMhjkwTYcUPV6tOFwi9mTA0LbyCuOHeTmvveycOLtgWT44XKmbnoJGTbcexwaabzaABA7al9/AQ9iNDOvgCE=
+	t=1707857799; cv=none; b=fo1cv/fGj81U9bevWoFhYckXFrF6N9lHwTNLWUXiPexX9gmPAruhVWmtWWmRmY5THhwtSlocjnKkH8F1ovOMARBDY4NJsm2qM4fyuCLmb+g8onAsA01GCtwc0tar7+7fyfEvj6g8npr6lC8o5us1Mh0My9d7N0JTAtJhJzosKr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707857575; c=relaxed/simple;
-	bh=9PwvXRhAMugLtHuzOt+aDQ3KQbytSBWLZhzNRbCHAUo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eBgWdGjSC1ARBJh+sAdOOo8FmjT4f8WP6jeZOAJRQGyukGmoFnNeLY2NegEUxhGUgvT4wiQwZ2voa8EkjD5tn1IPkoZIELaXOxhzaTieZQ94nLzZRr9hqUF7HNuGSegA3isBIJ9BEnakNHCE9ishgzRGRvIz0a39AQ9xbwmBfd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DdCmCYZS; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707857799; c=relaxed/simple;
+	bh=D4LSaj+s1Zug+tnZej27exr9mIRN2BETmj/yUE3GRW0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gxZNvpX7MZqxVJmddaKS/aQuyAWfcVTDSK26tOaflWI7lFVEJZATT7oTbGpCPbiJryUIdHR0wRK4jSHpCgdLcgTE/d7yWsGcNNKZoUjoKRwXMy/k2uToCjTeqFsb8iLYZjXcH8pDx+WY8SQxn4cN6OERIcR0K6Wwx3nT1gNzZvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h8z167fI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DdCmCYZS"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-296d24631c0so2805017a91.3;
-        Tue, 13 Feb 2024 12:52:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707857573; x=1708462373; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=6oMv83TSgQDRLR6Sio2134HLfx7oE5pFJJA1vfpzEPI=;
-        b=DdCmCYZScjzHzvNqnWEW1uWEgFmUWPunr7Nmm93TKnrVQVk9hOzq6y4y4aJ6acR5I+
-         Ninf9c0MIte7jcFSoUh7hByqzODVQ/UJIFycO5SepgfalXh9ZozlFUs1MUrGYjLH9Pii
-         PPjvltsoeKso8F4401//QfCE3pjNEwluhB5WaPilOQ2Tx21DalhSocu4QrKzqrw4SBDw
-         Phq053FWjfXpc30HeDDveMAiYkStxrZgaormU8BAy8geGPCDz4oEHhS1Sh61Hft6pt/Z
-         TsQ5bQX6IzkgHsNq1EXPvocBLOAP7GztFKp2s5GOZ6CeSHgsVrFBO0YNLf3ScoWkRA/H
-         a4jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707857573; x=1708462373;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6oMv83TSgQDRLR6Sio2134HLfx7oE5pFJJA1vfpzEPI=;
-        b=b0/QTG/DCVB4uBiQxdOy/DlH33wSHr21Jiy8zA+kRfUwfjgH/BKzr46TNyFJ7gtalW
-         06GCHWvB0LpS2WU+Yrx+wOaDDUr53SJOLJqeOvILq6DXrzPsr+2zm7xMdod/oeWk8y0U
-         QKiFj+ehzJi/T6vg1JhfIqUaInnAZYPZ6/RCeIT64Gk3bDbFYcqRlaM6YhnFw+d12iIb
-         dyRBtZXfYlIDZJFq3r0As9cMeArcBWpTrUov1oUVpjUpEgGKV6XOKZ9PqkABDEcbUDPa
-         NfPptvuMw2jUtNsxAFeVTcnjiC+oOebU0ghrkBtRNtasiYF6+66QO2i62MXgWJeO4Rdd
-         AHmA==
-X-Forwarded-Encrypted: i=1; AJvYcCUruUygb7Xvm4mRLOiLFhJ8rkuQSypTMZMOeAuJ2zOctKcEIBDvxHEqseK3nkbh6AD3axUm0qzt2puwJNwkiIgRGvEtjZ6KpIeAFFZYvO7AEkAKSplp/b7FGerl2T0ZNF3Ale3XozdGoYBnz9zIulbSIAhOGHKyb2wEJE8mSB9kvmf3gz+PWIBkZDEa5W7PKiDCsjgZ838YPS5pkPXMOmY0dTmGXfidkUhzPunqlQvOEB20XudsveFMPIQ=
-X-Gm-Message-State: AOJu0Ywe81isc/bleaz/LXQJm7YTFlrxBw8cpcBpCBMhG40O7Z/0Br9F
-	F9NXnQeSD8hwc8lD9yyaOKRF4rxq+Sz3K+TdrFIJQ3eLX4JvRMep
-X-Google-Smtp-Source: AGHT+IHE7IRAy6H5onujqJT/ftqmB93CgRKWtRpljbAkBkwOoObI6kOILuCJtaTXA2cYq7usG9E45w==
-X-Received: by 2002:a17:90a:eb0e:b0:297:2f49:7aa with SMTP id j14-20020a17090aeb0e00b002972f4907aamr581305pjz.43.1707857572667;
-        Tue, 13 Feb 2024 12:52:52 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXQX4P2q4KPM9M0RPcwWGMfbHa16M6MAKUtvc44DFjC0I+o5aUdqeRReIvnRyuJ2d89DmnqSA7k9VLwU8ANpllpxzKV9ULYoqGccwf6+8PMw7ys5HYrHk8kDM2WkSuFqCgbvrr31ZiQVNRXuHH1AWYu5GFloJ7WZYk/pTJJ6ZWrM7Rjl/mtWiU7eHynd64EuaZqpMQC/KKCPqsBeaqExdPg2qEStG3eO20xTOD1gS0mYbGjgNqAjc/WY20o2QZTraJTY/ooqb3Gddcu+xfEOCnvN8ycs/RcqVw+9kaPSIT4kTqAtWW/0LdqqpeN6azTxYPgwsF4wTZoS/RUZD4HCT4LLWXrmz5gzcLuNI4TSjTpqzbXUPkcoDn1/bHSaiX56JD4VpadM8hyDsyNNlBD8AVscR8FiR/M0dbsbrxu1CpXedBC/ZmKNYq83+/jy9UfbdewaSZS8K893TAevC+K47QKGe9zIskiGByd7NnKdm5xDW+fxZFFOK0jisUY0zc3uKXifkihsm0+k8qZzIymf8J35/BTzGbIWCDhADxaQwiVxIgYNItAdOPTcFTwavuYIeBri35Uus/ENPtNt0JnCF1x4E5t1KCa48J3mvrHnTJKZV7ztkS3GQLK7zy9vNl9aLeIN2J9ucS5jIbBqxRtXdzk7jxMdM0S9fzvSIZ8LvfUuMnn8Y0u6DC1MpBdkAFswGk=
-Received: from macbook-pro-49.dhcp.thefacebook.com ([2620:10d:c090:500::6:7312])
-        by smtp.gmail.com with ESMTPSA id fa3-20020a17090af0c300b00296e2434e7esm2958426pjb.53.2024.02.13.12.52.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 12:52:52 -0800 (PST)
-Date: Tue, 13 Feb 2024 12:52:49 -0800
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-Cc: Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
-	Benjamin Tissoires <bentiss@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Jiri Kosina <jikos@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH RFC bpf-next 0/9] allow HID-BPF to do device IOs
-Message-ID: <b2k6rlzu5vgpouedwjbsigoteo43nwfk6qeeb2pc7c3r4ejnm6@nml66ds6wbeo>
-References: <87bk8pve2z.fsf@toke.dk>
- <CAO-hwJ+UeaBydN9deA8KBbgBiC_UCt6oXX-wGnNuSr8fhUrkXw@mail.gmail.com>
- <875xyxva9u.fsf@toke.dk>
- <CAO-hwJLvEGNRXc8G2PR+AQ6kJg+k5YqSt3F7LCSc0zWnmFfe5g@mail.gmail.com>
- <87r0hhfudh.fsf@toke.dk>
- <CAO-hwJLxkt=THKBjxDA6KZsC5h52rCXZ-2RNKPCiYMHNjhQJNg@mail.gmail.com>
- <CAADnVQKt7zu2OY0xHCkTb=KSXO33Xj8H4vVYMqP51ZJ_Kj1sZA@mail.gmail.com>
- <zybv26nmqtmyghakbebwxanzgzsfm6brvi7qw3ljoh4dijbjki@ub7atnumzuhy>
- <CAP01T75Giw_5j0RXaaxX0rDzCcXXZgmHrw7QZ_Ayib8rHgunBQ@mail.gmail.com>
- <877cj8f8ht.fsf@toke.dk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h8z167fI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15F96C43394;
+	Tue, 13 Feb 2024 20:56:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707857799;
+	bh=D4LSaj+s1Zug+tnZej27exr9mIRN2BETmj/yUE3GRW0=;
+	h=References:In-Reply-To:From:Date:Subject:To:List-Id:Cc:From;
+	b=h8z167fI+5EvVkodKTckqmfSIQBf8bdxud3DuPAkVZ5nSxa6AgTf5i7nXqeViSnpi
+	 NzO6i/FEKZSrNSaZhsZiu2isfEu9pYLf9ncp9DW53jt4N2LykEt8h44nUoOhqQ6wzq
+	 Ggcsv4u6mzWx2wdqmvlX28t9zk2NlXqOWy5t5t4fQeo+oWFyEFkOS0xLVSr/qesP2L
+	 fwdUdRaFtwEmZNvFvliwu+RdNbxIx3QOILsH4x+QzGQ1ZxuRAimv1Lf9dytp6XdUoL
+	 Ta4KKLP5W5oz3ppD6qfiudZEwLy9x5gy5g8BMoIVZOsaUuW10i9gm2Sv5wKnvMmJkQ
+	 aanImS7s/f5Fg==
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-511831801f3so3675805e87.2;
+        Tue, 13 Feb 2024 12:56:39 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXA8wu8fK8fTvxPEq9xriH32femcjagzaIPCBUwIfKksWPkLCvTl584fUnYLejXqQHi4WITcKk/wnWXd6cEQPN8npK9cPlIDYytrFAYvXy2ZTexJ47GN6kslCwG+IOz74yxdAaHyIA87iM/mEb5IWjXJd7UifhphWCSmrMMsQ3w1h1tNR+wHcle661K3TBeSIn5o+Y8NyKYHfHBZw5CtJLwIfyaiTba96PhZiQF3xBblKiWC53n7UcwWGCzmP9Xczhx1SDoQl8/mVyMbSVotddIaJhulLJyXnRpcb8cRMX7iQpYH+qa+AZzeXIHn+anprL9j+TTnHN0/6nF7K1fjx3I3w==
+X-Gm-Message-State: AOJu0YwXH0G2Okbc2oV2YVFjnP4M/CAkWe517YSbeLiG6WZ8lMG+AGb3
+	SUbxv3Lf38Rcnrcfa2C77dfM7zFCLcrp+XyC69Kgc8suVAcylnqZ9NKi74P6x4xLBOtmsbBtmve
+	Jw4nXqb2rVHQ+JlxYg3oiWRoXlQ==
+X-Google-Smtp-Source: AGHT+IHaVnixOZOBNn0WypWTPscuLN4ELDvcVIU+BZ+gCn9OLEVbEJc+WSHECitxZrPyjoAQls55JHpdFFIbqmURVBc=
+X-Received: by 2002:a2e:9bc7:0:b0:2d1:107b:3bbd with SMTP id
+ w7-20020a2e9bc7000000b002d1107b3bbdmr506655ljj.9.1707857776326; Tue, 13 Feb
+ 2024 12:56:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <877cj8f8ht.fsf@toke.dk>
+References: <20240213-arm-dt-cleanups-v1-0-f2dee1292525@kernel.org> <20240213-wafer-garnish-88287bc5d4a5@spud>
+In-Reply-To: <20240213-wafer-garnish-88287bc5d4a5@spud>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 13 Feb 2024 20:56:03 +0000
+X-Gmail-Original-Message-ID: <CAL_Jsq+9BwYyV9Vu1gfCnK_QjdRHvw2anM==Z6fsJvjyqLYFLw@mail.gmail.com>
+Message-ID: <CAL_Jsq+9BwYyV9Vu1gfCnK_QjdRHvw2anM==Z6fsJvjyqLYFLw@mail.gmail.com>
+Subject: Re: [PATCH 0/6] dts: Fix dtc interrupt warnings
+To: Conor Dooley <conor@kernel.org>
+Cc: soc@kernel.org, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Tsahee Zidenberg <tsahee@annapurnalabs.com>, Antoine Tenart <atenart@kernel.org>, 
+	Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@codeconstruct.com.au>, 
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Gregory Clement <gregory.clement@bootlin.com>, 
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
+	=?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Stefan Agner <stefan@agner.ch>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, 
+	Tony Lindgren <tony@atomide.com>, Chanho Min <chanho.min@lge.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Linus Walleij <linusw@kernel.org>, Imre Kaloz <kaloz@openwrt.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, linux-arm-kernel@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, 
+	linux-tegra@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-omap@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 13, 2024 at 08:51:26PM +0100, Toke Høiland-Jørgensen wrote:
-> Kumar Kartikeya Dwivedi <memxor@gmail.com> writes:
-> 
-> > On Tue, 13 Feb 2024 at 18:46, Benjamin Tissoires <bentiss@kernel.org> wrote:
-> >>
-> >> On Feb 12 2024, Alexei Starovoitov wrote:
-> >> > On Mon, Feb 12, 2024 at 10:21 AM Benjamin Tissoires
-> >> > <benjamin.tissoires@redhat.com> wrote:
-> >> > >
-> >> > > On Mon, Feb 12, 2024 at 6:46 PM Toke Høiland-Jørgensen <toke@redhat.com> wrote:
-> >> > > >
-> >> > > > Benjamin Tissoires <benjamin.tissoires@redhat.com> writes:
-> >> > > >
-> >> [...]
-> >> > I agree that workqueue delegation fits into the bpf_timer concept and
-> >> > a lot of code can and should be shared.
-> >>
-> >> Thanks Alexei for the detailed answer. I've given it an attempt but still can not
-> >> figure it out entirely.
-> >>
-> >> > All the lessons(bugs) learned with bpf_timer don't need to be re-discovered :)
-> >> > Too bad, bpf_timer_set_callback() doesn't have a flag argument,
-> >> > so we need a new kfunc to set a sleepable callback.
-> >> > Maybe
-> >> > bpf_timer_set_sleepable_cb() ?
-> >>
-> >> OK. So I guess I should drop Toke's suggestion with the bpf_timer_ini() flag?
-> >>
-> >> > The verifier will set is_async_cb = true for it (like it does for regular cb-s).
-> >> > And since prog->aux->sleepable is kinda "global" we need another
-> >> > per subprog flag:
-> >> > bool is_sleepable: 1;
-> >>
-> >> done (in push_callback_call())
-> >>
-> >> >
-> >> > We can factor out a check "if (prog->aux->sleepable)" into a helper
-> >> > that will check that "global" flag and another env->cur_state->in_sleepable
-> >> > flag that will work similar to active_rcu_lock.
-> >>
-> >> done (I think), cf patch 2 below
-> >>
-> >> > Once the verifier starts processing subprog->is_sleepable
-> >> > it will set cur_state->in_sleepable = true;
-> >> > to make all subprogs called from that cb to be recognized as sleepable too.
-> >>
-> >> That's the point I don't know where to put the new code.
-> >>
+On Tue, Feb 13, 2024 at 2:27=E2=80=AFPM Conor Dooley <conor@kernel.org> wro=
+te:
+>
+> On Tue, Feb 13, 2024 at 01:34:24PM -0600, Rob Herring wrote:
+> > I had a branch with most of these changes sitting in my tree for some
+> > time. Geert's asking about some errors not getting found prompted me to
+> > clean it up and send it out. This series fixes all* interrupt related
+> > warnings and enables the check by default.
 > >
-> > I think that would go in the already existing special case for
-> > push_async_cb where you get the verifier state of the async callback.
-> > You can make setting the boolean in that verifier state conditional on
-> > whether it's your kfunc/helper you're processing taking a sleepable
-> > callback.
+> > SoC maintainers, Can you please take this series directly.
 > >
-> >> It seems the best place would be in do_check(), but I am under the impression
-> >> that the code of the callback is added at the end of the instruction list, meaning
-> >> that I do not know where it starts, and which subprog index it corresponds to.
-> >>
-> >> >
-> >> > A bit of a challenge is what to do with global subprogs,
-> >> > since they're verified lazily. They can be called from
-> >> > sleepable and non-sleepable contex. Should be solvable.
-> >>
-> >> I must confess this is way over me (and given that I didn't even managed to make
-> >> the "easy" case working, that might explain things a little :-P )
-> >>
+> > Rob
 > >
-> > I think it will be solvable but made somewhat difficult by the fact
-> > that even if we mark subprog_info of some global_func A as
-> > in_sleepable, so that we explore it as sleepable during its
-> > verification, we might encounter later another global_func that calls
-> > a global func, already explored as non-sleepable, in sleepable
-> > context. In this case I think we need to redo the verification of that
-> > global func as sleepable once again. It could be that it is called
-> > from both non-sleepable and sleepable contexts, so both paths
-> > (in_sleepable = true, and in_sleepable = false) need to be explored,
-> > or we could reject such cases, but it might be a little restrictive.
+> > *There's a few Renesas warnings still Geert said he would fix.
 > >
-> > Some common helper global func unrelated to caller context doing some
-> > auxiliary work, called from sleepable timer callback and normal main
-> > subprog might be an example where rejection will be prohibitive.
-> >
-> > An approach might be to explore main and global subprogs once as we do
-> > now, and then keep a list of global subprogs that need to be revisited
-> > as in_sleepable (due to being called from a sleepable context) and
-> > trigger do_check_common for them again, this might have to be repeated
-> > as the list grows on each iteration, but eventually we will have
-> > explored all of them as in_sleepable if need be, and the loop will
-> > end. Surely, this trades off logical simplicity of verifier code with
-> > redoing verification of global subprogs again.
-> >
-> > To add items to such a list, for each global subprog we encounter that
-> > needs to be analyzed as in_sleepable, we will also collect all its
-> > callee global subprogs by walking its instructions (a bit like
-> > check_max_stack_depth does).
-> 
-> Sorry if I'm being dense, but why is all this needed if it's already
-> possible to just define the timer callback from a program type that
-> allows sleeping, and then set the actual timeout from a different
-> program that is not sleepable? Isn't the set_sleepable_cb() kfunc just a
-> convenience then? Or did I misunderstand and it's not actually possible
-> to mix callback/timer arming from different program types?
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> > Rob Herring (6):
+> >       arm64: dts: freescale: Disable interrupt_map check
+> >       arm: dts: Fix dtc interrupt_provider warnings
+> >       arm64: dts: Fix dtc interrupt_provider warnings
+> >       arm: dts: Fix dtc interrupt_map warnings
+> >       arm64: dts: qcom: Fix interrupt-map cell sizes
+> >       dtc: Enable dtc interrupt_provider check
+>
+> Only fixing it for arm, Sadge.
 
-More than just convience.
-bpf_set_sleepable_cb() might need to be called from non-sleepable and
-there could be no way to hack it around with fake sleepable entry.
-bpf_timer_cancel() clears callback_fn.
-So if prog wants to bpf_timer_start() and later bpf_timer_cancel()
-it would need to bpf_set_sleepable_cb() every time before bpf_timer_start().
-And at that time it might be in non-sleepable ctx.
+I was assuming you had things in order. ;)
+
+> Co-incidentally I noticed there was one for riscv while looking at
+> Krzysztof's underscore in node name patch earlier, so I'd already
+> written a patch to fix it :)
+
+See, I was right.
+
+Actually, I did remember to check right after I sent this and noticed the s=
+ame.
+
+For powerpc, no one else can be bothered to care, so neither do I. I
+think powerpc has been spewing dtc warnings by default for some time
+now.
+
+Rob
