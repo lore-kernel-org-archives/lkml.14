@@ -1,85 +1,50 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B535DF3E
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 15:32:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63CE5EE62;
+	Tue, 13 Feb 2024 15:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707838345; cv=none; b=Kh5yq37AvrzLWqNftrygQRL5aFCtG3L9kJ8GxaiWs9NMjU4fP1klH8UbpXAk8MhaBVYpDI0NMorF29gjxwGqIHoPmMC5WsnmkdxVEcokHLMOpbJ4mjG0b9S+cIhiYrlcPa36qhvXaZ088Br5B7T0lF8/ZVspmx1Cp6IJCq7fUDo=
+	t=1707838345; cv=none; b=OmBcAwCEH1dc89kQDEyMSRhg1o7hy/dQ1Yw3UKY9RgrbXfWcI5JFlSihBlifDWsqk8Gj1kHmuLv24u5ruWn6VAw8Fb5B1Xsjp6fngVXIOPU9sw/7lFY4sz3bs7/qWy4L2Fz5HjHg2b+Mc0R12criMu7dzm2jybULTElA5DfSRBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707838345; c=relaxed/simple;
-	bh=Jy8VoZSnqR67yqm7MPHgwgHoYLAdDwVSuN2jp8+Gmis=;
+	bh=/9+yZy9vqCMDyXJC6a9Rn+/0ekeUlaGK/0cw1Q1T5/8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BkZ3wKcXQb+ERMXZ3Lozg/LPtT0Luxj185kCkbbCMm7cuBZ6MXJYpnkuoNlrcbeU+CHrfvOjmemhXxMiGRn8zwqSiz+pnQ4K7m/IWboNiMfboriwfQabN+rJxXKR8iU57dmhPFwG7IG88WsCSuZuOxdyxWOn9M9VdTmWS8mrN5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=es4UNiST; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+mHTXTqZ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=es4UNiST; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+mHTXTqZ; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=buRi/Syq8cZnI0By9y1yTcq4mm+6b+upqqjuTF1DhBQiXFjoPGb7JUZXF/10a5KIFGSO9WY2OavqS3A5f74RiipPvgluR6t/hNYb71Wx9VF/RB6/fLlMxV2wAXEcvxS0s/raPdhijnsN0Kfg+GWxPI/BRkJlB55vZOGv0oHGB+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fTDiGHXV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="es4UNiST";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+mHTXTqZ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="es4UNiST";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+mHTXTqZ"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id E424C1FCE2;
-	Tue, 13 Feb 2024 15:32:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707838341; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Lwad023+VpCp8Em+c31I+OWYiRbkKktBQYYUbNSO2Bg=;
-	b=es4UNiSTfoBYDBzKtt5jQvZx0jSaafqS3+MdTQ9QMIP69JC8IMTGc8cf4E31MEQodQbx9E
-	9i2seiwxuXdntZep8C6D4x2KTFYjAQKBe8OzDC4in0JQbXaaP1bh2pMAWZzxU6Oc6/SD3r
-	ZJembWCzqMx94E4v7Q5J7LU7ZgZPKlc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707838341;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Lwad023+VpCp8Em+c31I+OWYiRbkKktBQYYUbNSO2Bg=;
-	b=+mHTXTqZ1+F6RWZObuc1tTqn3dwoELDnmrt3xxLyML731VQ5NkPkZtL/Tn8rXmyVlITN2x
-	1J9hS91wKUwmt/CQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707838341; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Lwad023+VpCp8Em+c31I+OWYiRbkKktBQYYUbNSO2Bg=;
-	b=es4UNiSTfoBYDBzKtt5jQvZx0jSaafqS3+MdTQ9QMIP69JC8IMTGc8cf4E31MEQodQbx9E
-	9i2seiwxuXdntZep8C6D4x2KTFYjAQKBe8OzDC4in0JQbXaaP1bh2pMAWZzxU6Oc6/SD3r
-	ZJembWCzqMx94E4v7Q5J7LU7ZgZPKlc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707838341;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Lwad023+VpCp8Em+c31I+OWYiRbkKktBQYYUbNSO2Bg=;
-	b=+mHTXTqZ1+F6RWZObuc1tTqn3dwoELDnmrt3xxLyML731VQ5NkPkZtL/Tn8rXmyVlITN2x
-	1J9hS91wKUwmt/CQ==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 65EAA13A0E;
-	Tue, 13 Feb 2024 15:32:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id NYe6FYWLy2UPfQAAn2gu4w
-	(envelope-from <osalvador@suse.de>); Tue, 13 Feb 2024 15:32:21 +0000
-Date: Tue, 13 Feb 2024 16:33:30 +0100
-From: Oscar Salvador <osalvador@suse.de>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>,
-	Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Alexander Potapenko <glider@google.com>
-Subject: Re: [PATCH v8 3/5] mm,page_owner: Display all stacks and their count
-Message-ID: <ZcuLyjU52Gd3xJI8@localhost.localdomain>
-References: <20240212223029.30769-1-osalvador@suse.de>
- <20240212223029.30769-4-osalvador@suse.de>
- <b706176a-c60a-4960-ba4a-2755c612d9c8@suse.cz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fTDiGHXV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 644E0C433F1;
+	Tue, 13 Feb 2024 15:32:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707838345;
+	bh=/9+yZy9vqCMDyXJC6a9Rn+/0ekeUlaGK/0cw1Q1T5/8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fTDiGHXVrDbi/P30WJStoHW6bpcHZ/3WbrqEbbIdXUy0VpdVMiMNhEUkIGoO1jIGx
+	 DzLnROy4Vnm0s8CXsX8u1SAo8slhaUUG7Bsfno8CYGmy1hFNzSORMVQFokiCHPErBM
+	 Xy/hMtze3wk/g35NhJDxMPM3V0zb+UIavYUtdTcgwhlIf791HdXwgLH0003u7nznN9
+	 RhF47qP9ojtwDQ+UqSNPD7I+bO//P//dBidD+IsRHmTUH2TQDzSoJZCnqSi1+OT43f
+	 SPSkMQoq8RzQVJlDn1yPBOX7i9syTQwZIlXpTQ7HRKtKJ/834Qf1bs6/8CvFfcdrZU
+	 u6TNKV3PQCveg==
+Date: Tue, 13 Feb 2024 09:32:23 -0600
+From: Rob Herring <robh@kernel.org>
+To: Krishna Kurapati <quic_kriskura@quicinc.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Wesley Cheng <quic_wcheng@quicinc.com>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, quic_ppratap@quicinc.com,
+	quic_jackp@quicinc.com
+Subject: Re: [PATCH v14 5/9] dt-bindings: usb: qcom,dwc3: Add bindings for
+ SC8280 Multiport
+Message-ID: <20240213153223.GA1409056-robh@kernel.org>
+References: <20240206051825.1038685-1-quic_kriskura@quicinc.com>
+ <20240206051825.1038685-6-quic_kriskura@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -88,71 +53,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b706176a-c60a-4960-ba4a-2755c612d9c8@suse.cz>
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spamd-Result: default: False [-7.00 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 REPLY(-4.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCPT_COUNT_SEVEN(0.00)[8];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[linux-foundation.org,vger.kernel.org,kvack.org,suse.com,google.com,gmail.com];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-2.90)[99.57%]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -7.00
+In-Reply-To: <20240206051825.1038685-6-quic_kriskura@quicinc.com>
 
-On Tue, Feb 13, 2024 at 03:25:26PM +0100, Vlastimil Babka wrote:
-> On 2/12/24 23:30, Oscar Salvador wrote:
-> > +static int stack_print(struct seq_file *m, void *v)
-> > +{
-> > +	char *buf;
-> > +	int ret = 0;
-> > +	struct stack *stack = v;
-> > +	struct stack_record *stack_record = stack->stack_record;
-> > +
-> > +	if (!stack_record->size || stack_record->size < 0 ||
-> > +	    refcount_read(&stack_record->count) < 2)
-> > +		return 0;
-> > +
-> > +	buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
-> > +
-> > +	ret += stack_trace_snprint(buf, PAGE_SIZE, stack_record->entries,
-> > +				   stack_record->size, 0);
-> > +	if (!ret)
-> > +		goto out;
-> > +
-> > +	scnprintf(buf + ret, PAGE_SIZE - ret, "stack_count: %d\n\n",
-> > +		  refcount_read(&stack_record->count));
-> > +
-> > +	seq_printf(m, buf);
-> > +	seq_puts(m, "\n\n");
-> > +out:
-> > +	kfree(buf);
+On Tue, Feb 06, 2024 at 10:48:21AM +0530, Krishna Kurapati wrote:
+> Add the compatible string for SC8280 Multiport USB controller from
+> Qualcomm.
 > 
-> Seems rather wasteful to do kzalloc/kfree so you can print into that buffer
-> first and then print/copy it again using seq_printf. If you give up on using
-> stack_trace_snprintf() it's not much harder to print the stack directly with
-> a loop of seq_printf. See e.g. slab_debugfs_show().
+> There are 4 power event irq interrupts supported by this controller
+> (one for each port of multiport). Added all the 4 as non-optional
+> interrupts for SC8280XP-MP
+> 
+> Also each port of multiport has one DP and oen DM IRQ. Add all DP/DM
+> IRQ's related to 4 ports of SC8280XP Teritiary controller.
+> 
+> Also added ss phy irq for both SS Ports.
+> 
+> Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
+> ---
+>  .../devicetree/bindings/usb/qcom,dwc3.yaml    | 33 +++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+> index 63d150b216c5..cc7cf592c029 100644
+> --- a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+> +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+> @@ -30,6 +30,7 @@ properties:
+>            - qcom,sc7180-dwc3
+>            - qcom,sc7280-dwc3
+>            - qcom,sc8280xp-dwc3
+> +          - qcom,sc8280xp-dwc3-mp
+>            - qcom,sdm660-dwc3
+>            - qcom,sdm670-dwc3
+>            - qcom,sdm845-dwc3
+> @@ -282,6 +283,7 @@ allOf:
+>            contains:
+>              enum:
+>                - qcom,sc8280xp-dwc3
+> +              - qcom,sc8280xp-dwc3-mp
+>                - qcom,x1e80100-dwc3
+>      then:
+>        properties:
+> @@ -470,6 +472,37 @@ allOf:
+>              - const: dm_hs_phy_irq
+>              - const: ss_phy_irq
+>  
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - qcom,sc8280xp-dwc3-mp
+> +    then:
+> +      properties:
+> +        interrupts:
+> +          maxItems: 18
 
-Well, I thought about not reinventing the wheel there, but fair enough
-than performing a kmalloc/free op on every print might be suboptimal.
-I will try to do ir with seq_printf alone.
+Need 'minItems: 18' as well.
 
-Thanks
- 
+With that,
 
--- 
-Oscar Salvador
-SUSE Labs
+Reviewed-by: Rob Herring <robh@kernel.org>
