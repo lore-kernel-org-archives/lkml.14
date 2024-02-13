@@ -1,95 +1,149 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAFBA5FB81
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 14:55:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308CA5FB8E
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 14:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707836120; cv=none; b=fVl+LLd4Ix9ote2beqTKobNb3VyboCGT16s6YyP8tckhc6AJf295ehdFb0zOIIF1XzvIItfNG+oZ5I9NdWWAUJpcpVIdJmKGeGAf6ouXFNvYKfiYzRxLagQerwuBCxysHJCplGzG8V0LXPXFxpNO4uyYiEdsdeVuSxeJHE5ryW0=
+	t=1707836134; cv=none; b=EMOEVfCMmZ7YnZbnKfMW7dTub1JVttaxOAMxhnMqPFmy8KmOKM/xJdEcQfa9h8MH/lHEA3sSZa1EN1PHU0grk3PzQrVbSFW4WhLAkFsALk/YELBga6MN79SupuP/8Y/DzONr1NMv676EREtONWqGd/aGZ0rMH+NfjdULmYo+Glo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707836120; c=relaxed/simple;
-	bh=pbQ9YJSw5E0+ttHRSXOOHeePYtcyL9fOOfJ+pMzPZjw=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=q9sfuDGrmzM+QjQLsP2apgLMlPpTLPtcRCvcuo5ifXX1uGEG/yQC5eEatNFvRZySBZOxNw7miISO5MjfCKgy9UU236KYD4FonuoqQCo6++yx2bLrm6nmSSCLuDkaIP9vIJ8UMwMjj3UyJE5LvZHzbVjsxE8KCRHj/2+cejOq3rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KYTVHJp3; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1707836134; c=relaxed/simple;
+	bh=MoHdc6EF3z9cqmLP2aU52le9p1v/TRksfdQWzUA0huw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I7vUjkGZOoen41fOYAvz14XMZeKIUWG6Y1OtT3um45NGOwQqbMHsOt0Uekvt+ItZ76haLPLwstqZgowtTiasr+2G6mkP5gwBiw6dyhNm/4PUNqQYtm/Guyb9WA7md1HGqt9gCOWyzhEUcgtjWM3NGiSBOkwnUXxmrsHuWZIDAEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h8WEbRNY; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KYTVHJp3"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1707836115;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=odYQg0X9p03RWw1VAUk5+w53bWUrUJQlPaSag6Pv+fw=;
-	b=KYTVHJp3bZ4HyXSa9gVUA7hxufisU/fPUeL6G7jUuLNTFkA3o2EphAGK6sIdAS3pHd1Lcl
-	D8+S9dbL//Ecx9d2IEUQN2TwTFketNEQ1ZSC46SW7H0oCvZdkaeICRdoYwZtJLsUPfay7y
-	E3sVn7QZdsvgvCcd3ijFrW1zjH8362s=
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h8WEbRNY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707836133; x=1739372133;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=MoHdc6EF3z9cqmLP2aU52le9p1v/TRksfdQWzUA0huw=;
+  b=h8WEbRNYZNFPyapR4wVcwpvElPQFcGi9rjx11D9l3XGKKx8KPunJ7G9b
+   EVTJX1UQJ6ha6n36Jk6seI44E6uc4ysM2CckhL2VVpLAMkJIOqICtkIke
+   5OVWaPUMJS2MZ6ZQnLNNFzWZyq+pfhOGgxbjm9FPN4uK0HGSJ3JBnlw/D
+   cMfKIrI+RUWJRE+xnVoROBCZFaFzrDjSxo8OHscjdiJe07seh8btJh3wr
+   uQcwx3ER1vcTesr1eyRo3b0ZUltsFqZMK/iu4cUYBDKok0RdD/dl83b0p
+   EdDKCmn7Q5jiUd5tUc7JSu2oD/uFZfEo8dPCq2pkt/LSV43x2NQcWCdMU
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="4809025"
+X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
+   d="scan'208";a="4809025"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 06:55:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="911804273"
+X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
+   d="scan'208";a="911804273"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 06:55:28 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rZuBz-00000004FFD-0S6x;
+	Tue, 13 Feb 2024 16:55:27 +0200
+Date: Tue, 13 Feb 2024 16:55:26 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Javier Martinez Canillas <javierm@redhat.com>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>, linux-kernel@vger.kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 1/3] auxdisplay: Take over maintainership, but in Odd
+ Fixes mode
+Message-ID: <ZcuC3jGSVI4MqDeN@smile.fi.intel.com>
+References: <20240212132515.2660837-2-andriy.shevchenko@linux.intel.com>
+ <20240212132515.2660837-3-andriy.shevchenko@linux.intel.com>
+ <9c7df0e5-31a9-4c86-b996-4cba82c4ea2f@suse.de>
+ <ZcpKh_EgNM5IaV-P@smile.fi.intel.com>
+ <ZcpKwz8J8OoODMYl@smile.fi.intel.com>
+ <87sf1wkcmv.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: Re: [PATCH v1 2/2] hugetlb: process multiple lists in
- gather_bootmem_prealloc_parallel
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <20240213111347.3189206-3-gang.li@linux.dev>
-Date: Tue, 13 Feb 2024 22:54:40 +0800
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Steffen Klassert <steffen.klassert@secunet.com>,
- Daniel Jordan <daniel.m.jordan@oracle.com>,
- Jane Chu <jane.chu@oracle.com>,
- "Paul E . McKenney" <paulmck@kernel.org>,
- Randy Dunlap <rdunlap@infradead.org>,
- kernel test robot <lkp@intel.com>,
- Gang Li <ligang.bdlg@bytedance.com>,
- linux-kernel@vger.kernel.org,
- linux-mm@kvack.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <1B2A09F0-8F2B-426A-9D1D-6A39C3A6CF64@linux.dev>
-References: <20240213111347.3189206-1-gang.li@linux.dev>
- <20240213111347.3189206-3-gang.li@linux.dev>
-To: Gang Li <gang.li@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87sf1wkcmv.fsf@minerva.mail-host-address-is-not-set>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
+On Tue, Feb 13, 2024 at 09:10:48AM +0100, Javier Martinez Canillas wrote:
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
+> > On Mon, Feb 12, 2024 at 06:42:48PM +0200, Andy Shevchenko wrote:
+> >> On Mon, Feb 12, 2024 at 05:33:39PM +0100, Thomas Zimmermann wrote:
+> >> > Am 12.02.24 um 14:23 schrieb Andy Shevchenko:
 
+...
 
-> On Feb 13, 2024, at 19:13, Gang Li <gang.li@linux.dev> wrote:
+> >> > > I have no time for this, but since it looks like I'm the main
+> >> > > contributor for the last few years to the subsystem, I'll take
+> >> > > it for now. Geert agreed to help me with as a designated reviwer.
+> >> > > Let's see how it will go...
 > 
-> gather_bootmem_prealloc_node currently only process one list in
-> huge_boot_pages array. So gather_bootmem_prealloc expects
-> padata_do_multithreaded to run num_node_state(N_MEMORY) instances of
-> gather_bootmem_prealloc_node to process all lists in huge_boot_pages.
+> AFAICT Miguel Ojeda is quite responsive and is still doing reviews/acks
+> for auxdisplay patches. Can you elaborate why the maintainership change
+> has to be made?
 > 
-> This works well in current padata_do_multithreaded implementation.
-> It guarantees that size/min_chunk <= thread num <= max_threads.
-> 
-> ```
-> /* Ensure at least one thread when size < min_chunk. */
-> nworks = max(job->size / max(job->min_chunk, job->align), 1ul);
-> nworks = min(nworks, job->max_threads);
-> 
-> ps.nworks      = padata_work_alloc_mt(nworks, &ps, &works);
-> ```
-> 
-> However, the comment of padata_do_multithreaded API only promises a
-> maximum value for the number of threads and does not specify a
-> minimum value. Which may pass multiple nodes to
-> gather_bootmem_prealloc_node and only one node will be processed.
-> 
-> To avoid potential errors, introduce gather_bootmem_prealloc_parallel
-> to handle the case where the number of threads does not meet the
-> requirement of max_threads.
-> 
-> Fixes: 0306f03dcbd7 ("hugetlb: parallelize 1G hugetlb initialization")
-> Signed-off-by: Gang Li <ligang.bdlg@bytedance.com>
+> You can still be listed as co-maintainer of course, and maybe Miguel is
+> on board to drop this but then I think that should be mentioned in your
+> commit message (and have an ack from him).
 
-Reviewed-by: Muchun Song <muchun.song@linux.dev>
+He answered you in a separate email. I have nothing to add.
 
-Thanks.
+...
+
+> >> > A few days ago, I talked to Javier about how auxdisplay is a hotchpodge of
+> >> > various drivers that seem to belong into other subsystems. Could we attempt
+> >> > to move all drivers into other places and then remove the auxdisplay
+> >> > subsystem?
+> >> 
+> >> Can you be more precise on how it can be done? We have at least two clusters of
+> >> the displays: line-display and HD44780-based ones. Moreover, the latter might
+> >> use the former in the future (in some cases).
+> 
+> For line-display and 7-segment display I'm less sure, and it may be that
+> we do need a specific subsystem for those. But then maybe it has to be
+> renamed to text-based or character based displays instead ?
+
+"text" is incorrect term here, as 7-segment LEDs can only emulate text to some
+extent. Poorly TBH. HD44780 can hold the overrides for the font, which makes
+it not so text either (yes, the old xGA [x = C,E,V,...] display controllers
+already can do the same in some text modes).
+
+> I wonder though if these can be modeled as an output only tty instead.
+> 
+> There are though more than these two types of display, for example the
+> cfag12864bfb driver is a FB_VISUAL_MONO10 fbdev driver:
+> 
+> https://elixir.bootlin.com/linux/latest/source/drivers/auxdisplay/cfag12864bfb.c
+> 
+> Now that we have better support in DRM/KMS for monochrome displays, it
+> seems to me that could be even ported and be a modesetting driver. I've
+> mentioned this to a colleague who wants to get start with Linux graphics
+> as a good learning exercise.
+
+I believe you are too much focused on the _exceptional_ drivers, most of which
+are _not_ FB ones.
+
+> I believe the problem is that auxdisplay is too vague of a term, so anything
+> could be an "auxdisplay". Even tiny I2C/SPI panels could be defined as that.
+
+I understand the term well, SPI/I2C display, when it's the main one can't be
+aux. The latter one, e.g., is an LCD on the server panel, or 7-segment LEDs
+on the motherboard for debug.
+
+Definitely, as a maintainer, I would not accept the driver that belongs to
+FB/DRM if it's clear that it has no tights to the 7-seg/N-seg / line or its
+main usage is display panels.
+
+> > Btw, I have no time for major things here, if you wish, please take over,
+> > I will be happy to get rid of this.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
