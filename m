@@ -1,88 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE565F467
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 15:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8FEF5F846;
+	Tue, 13 Feb 2024 15:36:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707838554; cv=none; b=frRvFGJb7JATspCK7S3z2J/WgleJ8wHnK4K4FVabqTIxR/jKCjYr9wXEIW7V3dVySdLUTgIsu3bldf7lMZXIhGdy8Mep2OBT+D2df9cROjxaubJOgTLwNwdGG2ZZHu5EPdBFVef7bZ7xUF6nG+QiRqHtR0Mwbd6Rq+EnMdgFhtk=
+	t=1707838562; cv=none; b=PlP5RFP0P8x2oET9ZhMgGmTtPMFJbMStaumzKfSifztHDjpNiAEJ9Ac31d42OzxGt4EyILXCJmip4yyJO6UByd+t6ZgbN57b6qILC1BNu8+PKwxnxvYZdoFB5MGsK0bLY8nCLdp4kd+D2KwtLvO6QAuyNO6m0vxaNqcAIxJljhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707838554; c=relaxed/simple;
-	bh=3QP5xdQgCtutqWVSSb21JK6+dtuADu8WvFbwQO2EMwE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CqI61iJgjkcmn9DjAqkGcLhSDk9OPBeZHy5nZgXtufVPoMP7EW9TS26K/EuCE/lqPNLnFOVYSzVThX9AyX6bYXzoRPmr5HJoKqPadjPhiLBgn1s47kdFezXoiz9nLlMsYq3dj3LCC4IRyzhdS7ccXuLTpzqlNc2sQQyFTMj5T7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z0CcMPpP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707838562; c=relaxed/simple;
+	bh=KrXJMOr+miGtPlSb4230hrRQT3uPQwaTq8pQKITfexQ=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=inp4ma5q3KwWCmnRjXjm3TExRgXcDAlRvWUnqAxkWgoJFEXMQPGTSqa7SlUBuLrzYI/GPtSk4XPYX5qSH1Fsho48QPl4NPl48nKeMHRxt1ioLXhanDZepRmlKobsz5WE4Ye1v+XCOodjpRtmqDZyrdJMISIcqvCRm3/jalr0NHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jOALD4HG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Te7dU6vy; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z0CcMPpP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C3C0C433F1;
-	Tue, 13 Feb 2024 15:35:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707838554;
-	bh=3QP5xdQgCtutqWVSSb21JK6+dtuADu8WvFbwQO2EMwE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Z0CcMPpPKSEqSEkrJ8GWhfqOB59+LE1ZCYDCIWlQUQxGvnHCc5UcuvW7hTvKzjEct
-	 VVzNQLvxGHww6+0O28Vk2HqP7LwI8R4iEkLpIOJMm/yhR5IthxW5z8DUGPMUVBzB/S
-	 ngXi/4fauKql39WahyPOmof613fXlhQ0Vz0KPKa3tgD4ySdLvBinkNQqbzlB2UYQqB
-	 BSuzgpuO6zhhfWmNUyNIAlJ6WiY/gBK44cFnBmKsHsArls4n+GeFanY0QnH9BLIQEQ
-	 ZIFOjlouV0DmK1Pd6T4XyzfVRQdtykc1GjSXvelON6WCVhaym3binh+CYHKuEXVeJl
-	 Kd/5CjcsEwvRQ==
-From: Mark Brown <broonie@kernel.org>
-Date: Tue, 13 Feb 2024 15:32:46 +0000
-Subject: [PATCH 2/2] arm64/sme: Ensure that all fields in SMCR_EL1 are set
- to known values
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jOALD4HG";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Te7dU6vy"
+Date: Tue, 13 Feb 2024 15:35:57 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1707838559;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SeI03GZmt+0/zsMYnwsiUarLlYtlM+rkTcW/EfReI5k=;
+	b=jOALD4HGjkmsmSSV55b03yzJWWj22vS8at1jfld4iVp0vxx+PKiQ95a/acsR2na6h6+loS
+	cRR8XWQkPixWR4Kn70T8m2PXbPIT2yJdvN4iTAmi8MamK5QOmf8eNBcPklb+m/7x3Dz1k2
+	iGesztm21qZ3v8toyFtXgil89YOpbPFao80Fqhtp6CUEfRkzlNtHaQYRFyBzcrG/2VD1kc
+	j492Nq2Ck/+h/TZr6x1hBvRKBnQtjx2+HbY72Ea69kPydAKh6iM72Uz8JsokDRHNMRXWu6
+	PtakF2VnrPz51tS3AjQ0nP0EDGUfZqrMerOTi7I3i3QXDv2uHsU9/bkjvLaJGA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1707838559;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SeI03GZmt+0/zsMYnwsiUarLlYtlM+rkTcW/EfReI5k=;
+	b=Te7dU6vyUh72zJ9ZCv2ezJVmn2f1Ez7MheeAGLW54VRAe7qraENFe6AKyRlIJIfmeTvGlX
+	QNmhZQSqboJK4GCA==
+From: "tip-bot2 for Borislav Petkov (AMD)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/alternatives] x86/alternatives: Sort local vars in
+ apply_alternatives()
+Cc: "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240130105941.19707-5-bp@alien8.de>
+References: <20240130105941.19707-5-bp@alien8.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Message-ID: <170783855789.398.9923650720518736029.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240213-arm64-fp-init-vec-cr-v1-2-7e7c2d584f26@kernel.org>
-References: <20240213-arm64-fp-init-vec-cr-v1-0-7e7c2d584f26@kernel.org>
-In-Reply-To: <20240213-arm64-fp-init-vec-cr-v1-0-7e7c2d584f26@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>
-Cc: Dave Martin <Dave.Martin@arm.com>, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.13-dev-a684c
-X-Developer-Signature: v=1; a=openpgp-sha256; l=981; i=broonie@kernel.org;
- h=from:subject:message-id; bh=3QP5xdQgCtutqWVSSb21JK6+dtuADu8WvFbwQO2EMwE=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBly4xUA3rs0ghZm22tJlDf7DiTmlghGGgzwk5+CB7+
- o8iscR+JATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZcuMVAAKCRAk1otyXVSH0A3DB/
- 4nCFlJDvs+F0CTlMKwubqM8n+bW2BzQNqbAeq+wTMLRi7W6b6FyPofh0STmmfdePtpS4d1Y4jR16Ce
- 21nbI1rJfcnJhj0i4VofrhgfcYjvkEVXRJc6GTDWMOgpZj1pOno/HCUbKHZz+icpqMXuqlMRTQu+lg
- zM+sA2yJpndyJRBtrXYShEiYLdo+tS4Xo+yQgGdXBuf/dN+cUTYRNAHwQxEsK/BHPb9A5UlcF3ApCR
- XK6RyI+8Z4gRKs0dggA8u6rSIdt4fQjzG+qh0xkn1b7uwrkTP2uJgG0RnZRgehnrNx0gzdlTZVrQeh
- 8WLSDDH8meCJ2fQkPPMkavpklqjWbA
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-At present nothing in our CPU initialisation code ever sets unknown fields
-in SMCR_EL1 to known values, all updates to SMCR_EL1 are read/modify/write
-sequences. All the unknown fields are RES0, explicitly initialise them as
-such to avoid future surprises.
+The following commit has been merged into the x86/alternatives branch of tip:
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Commit-ID:     cadb7de3170e22893b617276c297216039aad88d
+Gitweb:        https://git.kernel.org/tip/cadb7de3170e22893b617276c297216039aad88d
+Author:        Borislav Petkov (AMD) <bp@alien8.de>
+AuthorDate:    Tue, 30 Jan 2024 11:59:41 +01:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Tue, 13 Feb 2024 16:27:46 +01:00
+
+x86/alternatives: Sort local vars in apply_alternatives()
+
+In a reverse x-mas tree.
+
+No functional changes.
+
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Link: https://lore.kernel.org/r/20240130105941.19707-5-bp@alien8.de
 ---
- arch/arm64/kernel/fpsimd.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/kernel/alternative.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
-index cc3c9ad877a8..f96907b813fa 100644
---- a/arch/arm64/kernel/fpsimd.c
-+++ b/arch/arm64/kernel/fpsimd.c
-@@ -1247,6 +1247,9 @@ void cpu_enable_sme(const struct arm64_cpu_capabilities *__always_unused p)
- 	write_sysreg(read_sysreg(CPACR_EL1) | CPACR_EL1_SMEN_EL1EN, CPACR_EL1);
- 	isb();
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 1ceaaab..9aaf703 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -440,9 +440,9 @@ static int alt_replace_call(u8 *instr, u8 *insn_buff, struct alt_instr *a)
+ void __init_or_module noinline apply_alternatives(struct alt_instr *start,
+ 						  struct alt_instr *end)
+ {
+-	struct alt_instr *a;
+-	u8 *instr, *replacement;
+ 	u8 insn_buff[MAX_PATCH_LEN];
++	u8 *instr, *replacement;
++	struct alt_instr *a;
  
-+	/* Ensure all bits in SMCR are set to known values */
-+	write_sysreg_s(0, SYS_SMCR_EL1);
-+
- 	/* Allow EL0 to access TPIDR2 */
- 	write_sysreg(read_sysreg(SCTLR_EL1) | SCTLR_ELx_ENTP2, SCTLR_EL1);
- 	isb();
-
--- 
-2.30.2
-
+ 	DPRINTK(ALT, "alt table %px, -> %px", start, end);
+ 
