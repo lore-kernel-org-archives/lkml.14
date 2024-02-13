@@ -1,100 +1,187 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2895D1775C;
-	Tue, 13 Feb 2024 10:47:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945671775C;
+	Tue, 13 Feb 2024 10:48:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707821245; cv=none; b=ZssUiCFkslxCBRdCeqac/qGtNBF3AJi9I3DshU+cUQr1mJSE/Ve6n5AjXbpTj/EgiGDHQpsve2FExC7qRcT0aTktFqTL8yEGwWFWP+V2HatjVUa/jN3OUBnB4qoY0CikR/m4qWxKOPxT9nDOWZ6hWA97Ib/mL7VQ9eQyyPk7SVM=
+	t=1707821288; cv=none; b=CK9Xc24Jesjke+xTiNbcheNSWHQR3BPxmNyCpztjVcRBQlevnEqhWb0NUfUYqfB4+UZksgMOSRZl49cvl3Vcb0EaPaCNig05RJtjNWe7mqFZ7wdKvm88sRodyum9vbaw+DTxPivl1pYEngskrj+x9Gi3GQ4iV6acRuqhDflIips=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707821245; c=relaxed/simple;
-	bh=LuZVB9/U46GxT3gi1nHL2CZ0+ZTFaMf0rDsOE7bl3hk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uYOwy8fdnzpRniTJOkdVxnE5L5lU6RhNqGtst0Yk0bWEXJMpkSECmDrNrwSoMUdcT0WTcQBhnFvfUTkTUXKkJFEG/mgxP3myTLY3gcnm5zkugkVYFL4kMsb3We+RIZJ5SjmpmaV5Jg4kzeUypfPNJar4N090MfGVQEMVbe1qCog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=TmEu4/T4; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1707821288; c=relaxed/simple;
+	bh=3U05UCAq1LKPx4ylCJPyDo9lukWD3K8+5PwEuPQdu/o=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qpvHEiNbjuEiQkRmcr3M7oY2P0P3V3w1uhFo+mozrDRkjt0B3u4Mvl1tE0/YboqaoEtbuBRby4MByFB7yiwHNlHFX+oEEfqlnNeXoUckmYOizRUwqRNv6mm8WOnBCGS1PsyoOsUzPCV1q2XtGPGPvoL1VZ94PqS0ZBE8fiwr1fM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1rKgP++3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=apC07bjj; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1rKgP++3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=apC07bjj; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="TmEu4/T4"
-Received: from pendragon.ideasonboard.com (unknown [109.130.69.237])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1569C675;
-	Tue, 13 Feb 2024 11:47:20 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1707821240;
-	bh=LuZVB9/U46GxT3gi1nHL2CZ0+ZTFaMf0rDsOE7bl3hk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TmEu4/T4muelKKgbtFKqcPolTwHWbmCtPpMzX1aE0RScaQOkVU/BGQgyw6wrWKzCD
-	 ruxiLIkknUu5+KyeEq5ajNihe/TYwdmADq3l6qko5002lmZCjS4dv4J2QvBQXbf9+2
-	 cX5Q1mqXJZFRmShzYgg4q5TfIhlfbBNL2BMKFsRs=
-Date: Tue, 13 Feb 2024 12:47:25 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Oliver Neukum <oneukum@suse.com>,
-	Ricardo Ribalda <ribalda@chromium.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v4] media: ucvideo: Add quirk for Logitech Rally Bar
-Message-ID: <20240213104725.GC5012@pendragon.ideasonboard.com>
-References: <20240108-rallybar-v4-1-a7450641e41b@chromium.org>
- <20240204105227.GB25334@pendragon.ideasonboard.com>
- <ca89eb86-a566-422c-9448-d8d5254d54b8@suse.com>
- <6aade777-d97c-4c65-b542-14ce5b39abb6@rowland.harvard.edu>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1rKgP++3";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="apC07bjj";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1rKgP++3";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="apC07bjj"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id ABE8C1FC81;
+	Tue, 13 Feb 2024 10:48:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707821284; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+fmGgJEKlpIBOZTyUzn23meJGrW/K86RdyX8/Qka9Pc=;
+	b=1rKgP++34WbapWVIwZ/rbpaWLAathMQ69A9jkI+8TeMSM1V655GQzx/fNAGI3rmPnSiHQG
+	wDtb2rQw0jW0ygX8ONm/gMH0LwMvAFgO451zB1aZzeYx52SrU8wspbS7aowj7Nh2qydvH8
+	dmoVyZoaC+6yB7yybtUo9TlLyRIB07c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707821284;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+fmGgJEKlpIBOZTyUzn23meJGrW/K86RdyX8/Qka9Pc=;
+	b=apC07bjjmW4Lg467s45A6nN999r+fIhfE3gNN8cBieQvW8QpZZNf5UBjN9PlnWr1TLnRih
+	DLmg6gKN5pQ2a6AQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707821284; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+fmGgJEKlpIBOZTyUzn23meJGrW/K86RdyX8/Qka9Pc=;
+	b=1rKgP++34WbapWVIwZ/rbpaWLAathMQ69A9jkI+8TeMSM1V655GQzx/fNAGI3rmPnSiHQG
+	wDtb2rQw0jW0ygX8ONm/gMH0LwMvAFgO451zB1aZzeYx52SrU8wspbS7aowj7Nh2qydvH8
+	dmoVyZoaC+6yB7yybtUo9TlLyRIB07c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707821284;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+fmGgJEKlpIBOZTyUzn23meJGrW/K86RdyX8/Qka9Pc=;
+	b=apC07bjjmW4Lg467s45A6nN999r+fIhfE3gNN8cBieQvW8QpZZNf5UBjN9PlnWr1TLnRih
+	DLmg6gKN5pQ2a6AQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6B66413404;
+	Tue, 13 Feb 2024 10:48:04 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id gvaAGeRIy2XcbQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 13 Feb 2024 10:48:04 +0000
+Date: Tue, 13 Feb 2024 11:48:04 +0100
+Message-ID: <87zfw4y717.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Wesley Cheng <quic_wcheng@quicinc.com>
+Cc: <srinivas.kandagatla@linaro.org>,
+	<mathias.nyman@intel.com>,
+	<perex@perex.cz>,
+	<conor+dt@kernel.org>,
+	<corbet@lwn.net>,
+	<lgirdwood@gmail.com>,
+	<andersson@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>,
+	<gregkh@linuxfoundation.org>,
+	<Thinh.Nguyen@synopsys.com>,
+	<broonie@kernel.org>,
+	<bgoswami@quicinc.com>,
+	<tiwai@suse.com>,
+	<robh+dt@kernel.org>,
+	<konrad.dybcio@linaro.org>,
+	<linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>,
+	<linux-sound@vger.kernel.org>,
+	<linux-usb@vger.kernel.org>,
+	<linux-arm-msm@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>,
+	<alsa-devel@alsa-project.org>
+Subject: Re: [PATCH v15 18/50] ASoC: Add SOC USB APIs for adding an USB backend
+In-Reply-To: <20240213005422.3121-19-quic_wcheng@quicinc.com>
+References: <20240213005422.3121-1-quic_wcheng@quicinc.com>
+	<20240213005422.3121-19-quic_wcheng@quicinc.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <6aade777-d97c-4c65-b542-14ce5b39abb6@rowland.harvard.edu>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=1rKgP++3;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=apC07bjj
+X-Spamd-Result: default: False [1.10 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 TO_DN_SOME(0.00)[];
+	 R_RATELIMIT(0.00)[to_ip_from(RLe67txhfobum3fqdb5xx8e3au)];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 BAYES_HAM(-0.09)[64.62%];
+	 ARC_NA(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[dt];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DWL_DNSWL_LOW(-1.00)[suse.de:dkim];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 RCPT_COUNT_TWELVE(0.00)[23];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FREEMAIL_CC(0.00)[linaro.org,intel.com,perex.cz,kernel.org,lwn.net,gmail.com,linuxfoundation.org,synopsys.com,quicinc.com,suse.com,vger.kernel.org,alsa-project.org];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: 1.10
+X-Rspamd-Queue-Id: ABE8C1FC81
+X-Spam-Level: *
+X-Spam-Flag: NO
+X-Spamd-Bar: +
 
-On Mon, Feb 12, 2024 at 02:04:31PM -0500, Alan Stern wrote:
-> On Mon, Feb 12, 2024 at 01:22:42PM +0100, Oliver Neukum wrote:
-> > On 04.02.24 11:52, Laurent Pinchart wrote:
-> > > Hi Ricardo,
-> > > 
-> > > Thank you for the patch.
-> > 
-> > Hi,
-> > 
-> > sorry for commenting on this late, but this patch has
-> > a fundamental issue. In fact this issue is the reason the
-> > handling for quirks is in usbcore at all.
-> > 
-> > If you leave the setting/clearing of this flag to a driver you
-> > are introducing a race condition. The driver may or may not be
-> > present at the time a device is enumerated. And you have
-> > no idea how long the autosuspend delay is on a system
-> > and what its default policy is regarding suspending
-> > devices.
-> > That means that a device can have been suspended and
-> > resumed before it is probed. On a device that needs
-> > RESET_RESUME, we are in trouble.
+On Tue, 13 Feb 2024 01:53:50 +0100,
+Wesley Cheng wrote:
 > 
-> Not necessarily.  If the driver knows that one of these devices may 
-> already have been suspend and resumed, it can issue its own preemptive 
-> reset at probe time.
-> 
-> > The inverse issue will arise if a device does not react
-> > well to RESET_RESUME. You cannot rule out that a device
-> > that must not be reset will be reset.
-> 
-> That's a separate issue, with its own list of potential problems.
-> 
-> > I am sorry, but it seems to me that the exceptions need
-> > to go into usbcore.
-> 
-> If we do then we may want to come up with a better scheme for seeing 
-> which devices need to have a quirk flag set.  A static listing probably 
-> won't be good enough; the decision may have to be made dynamically.
+> --- a/sound/soc/Kconfig
+> +++ b/sound/soc/Kconfig
+> @@ -76,6 +76,15 @@ config SND_SOC_UTILS_KUNIT_TEST
+>  config SND_SOC_ACPI
+>  	tristate
+>  
+> +config SND_SOC_USB
+> +	bool "SoC based USB audio offloading"
+> +	help
+> +	  Enable this option if an ASoC platform card has support to handle
+> +	  USB audio offloading.  This enables the SoC USB layer, which will
+> +	  notifies the ASoC USB DPCM backend DAI link about available USB audio
+> +	  devices.  Based on the notifications, sequences to enable the audio
+> +	  stream can be taken based on the design.
 
-I don't mind either way personally. Oliver, could you try to find a good
-solution with Ricardo ? I'll merge the outcome.
+This should be tristate, and...
 
--- 
-Regards,
+> --- a/sound/soc/Makefile
+> +++ b/sound/soc/Makefile
+> @@ -31,6 +31,10 @@ endif
+>  
+>  obj-$(CONFIG_SND_SOC_ACPI) += snd-soc-acpi.o
+>  
+> +ifneq ($(CONFIG_SND_SOC_USB),)
+> +snd-soc-core-objs += soc-usb.o
+> +endif
 
-Laurent Pinchart
+... split it to an individual module, i.e.:
+
+snd-soc-usb-objs := soc-usb.o
+obj-$(CONFIG_SND_SOC_USB) += snd-soc-usb.o
+
+Otherwise it'll lead to a hard-dependency to snd-soc-core on
+snd-usb-audio, which is utterly unnecessary for most of other
+devices.
+
+
+thanks,
+
+Takashi
