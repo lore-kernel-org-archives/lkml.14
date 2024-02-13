@@ -1,40 +1,41 @@
 Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E511C687;
-	Tue, 13 Feb 2024 11:01:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B009A36AFD;
+	Tue, 13 Feb 2024 11:02:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707822120; cv=pass; b=sT0RmKD64JNRRxLOulXpo2eg8dfLrxhNapwDJJ1MIBaUpPQewzkqGApeo/29VJa4sYkbyT1j5dVT9PlotVDSkUnI06P9HwBpLQ/aKziAaFQ2PcXUS/ndsm4oYunN5XYLfmo44JBfqbXjVlJIclJBH0CPZWd+NV8nAPg4H7D4VNw=
+	t=1707822128; cv=pass; b=JQ4PbzjCZ6LA2Sp6uRqe8rLenQsBnIp6lwik6rl5EC9nZXEJs3g91xFtq9bivPZoL2X0Pn5XkotgWpk3Lk24CmtJKNFRjIuxGuR5Z/5y9YbtI7IifLjxDUewKlkmpIKo4j/MAuQWCdWQHe6X3GSJ6VXzIk6YcKrzw43gXGfPvHw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707822120; c=relaxed/simple;
-	bh=f4AEw6JtPd+YXQjqhXGB59pRO286WMZxRukNCFc/v/s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WGXKUeb6QbdZArKL1PPhABwfEYFP/cLpcc0dEvWBcfLbEQS51i5321xc7852rny3e+OObM6wqXeglGcFv44bvY+/x42vh6lZj/eTvFzLYX487ou8A7Ib5rtlhwpzHPNRGGXvCftpIl7IbVJbpHFKbwq8XbP6wQPS++54QsqJ/S4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b=EAtzSn9r; arc=pass smtp.client-ip=136.143.188.15
+	s=arc-20240116; t=1707822128; c=relaxed/simple;
+	bh=8snw/S9bFuqeaPU/SR/M26e9RHX4wd3kkLrnrLkpZ/E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tQwjLUA4S9G+9Mogd6s97HR7IMwsMXJs0L77bkoKWQjZrGLSq7Z0Wp0xiK3nUiDdEIuNuX82cxh7xFRH5gsK6iHjxn+1ZyW1wygX7lRzzcceOf3CXXyfIeTJ4gduQ2KihKQXtnTmzJBh8RU2W95TZNwhpeLZsE7sfGKBYSVuzP8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b=sLUY8/ud; arc=pass smtp.client-ip=136.143.188.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rong.moe
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b="EAtzSn9r"
-ARC-Seal: i=1; a=rsa-sha256; t=1707822112; cv=none; 
+	dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b="sLUY8/ud"
+ARC-Seal: i=1; a=rsa-sha256; t=1707822120; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=FXyuTRe9yCy7BfKVVddph7eJknXcyEe9JaKzXrQVWU91Y2oJMzi+fnqPLyzpbiGcZRPlMCXhMMA7V+GanidJnSJ1iDddXsDhawfYrVG3Pik8HcePXs8dgTFE7HNgk+rgWhmP27Nd1Mihct8M9hfc+hkjbHX8qIvDpQIZjyCCVHs=
+	b=YZMpTHWMBBTIfEzXCAeNiiMxDTqoknzKi0U3h5MPF18l2j6E/8TVi7e2Bdv/Y42Cphg96JggwYGUXs1I7HFnMA9OnVxoS0++SsxNi4ej3MhKJwQkOdA73c3PL3ePTnaLPSaCN4SryA7hpx6+Wq5/eGqfaMFAmytRNEXyzOeeUJQ=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1707822112; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=tKORHJW9ZJ+RKaYm7ZjJh+PgSp3vc2jvm+w5YVR/ZuA=; 
-	b=FpNmfhJs8XXADoEOcluyGgHqOVB1jlV58S+TPErbrT1oBE4prTjiIu5kkNPoWDshXUq+loIMIQFn6HOEbHvpDgXlknVwOU7qqWjDPpY5HBWA1CS4eVCwg0vgWit2xr1Odxw5i7IO+7l8qKjP3cXXOc8dLc7koiQahcbD1YaYehk=
+	t=1707822120; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=pauhXQflxiHTx3+ep5HdmtF4d2AedYZI1LAzRZrEGCM=; 
+	b=D+MV36OxvD/QRrYuXEcdG3FaFamRXV26CrEIRdPYWvUi+IOfbKYqUaHnxib1ChDUE/x4EWoaLfYNRBv5O2LYqIP/1wB224JbSoQ05bDBqYAsFXula4jvsSwga18uGxRQdKofphOfEVPX3OjAPKnJNhiCfEzxIOw3ER/N6+eSEa8=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=rong.moe;
 	spf=pass  smtp.mailfrom=i@rong.moe;
 	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1707822112;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1707822120;
 	s=zmail; d=rong.moe; i=i@rong.moe;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=tKORHJW9ZJ+RKaYm7ZjJh+PgSp3vc2jvm+w5YVR/ZuA=;
-	b=EAtzSn9rhpqmCUvJXJ9p/v9/S0L1J+vOTK4avcAmroHqZqRXNLpfTEcgP5Z0hinF
-	eTx5J9kLuPeQM4nG/6MSnT5I+6GNItFqtXNVRcD4SyrULuNNkfvyxSEoNhTboatkzGF
-	5EHPUS6+1MuJlc/CCSqKybu2mr88EgB0dpapn1qY=
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=pauhXQflxiHTx3+ep5HdmtF4d2AedYZI1LAzRZrEGCM=;
+	b=sLUY8/udeY1f4P3pmePAoRWwsLnaP7z9+i444E0gcTEktohb9bl4iIZl2DOa1D0D
+	9nx6vmJjvHxzS9unL/6Pm3llpr6GzVtZdawVPt7SgZ9hTYqA76zo5//u2J0hesJLq9Q
+	LK/d91moDdOOkfW/GNuncJEeHYIAxy3vncBt++/A=
 Received: from localhost.localdomain (163.142.242.182 [163.142.242.182]) by mx.zohomail.com
-	with SMTPS id 1707822111321938.4238314459632; Tue, 13 Feb 2024 03:01:51 -0800 (PST)
+	with SMTPS id 1707822119295716.8504126918681; Tue, 13 Feb 2024 03:01:59 -0800 (PST)
 From: Rong Zhang <i@rong.moe>
 To: Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konrad.dybcio@linaro.org>,
@@ -46,10 +47,12 @@ Cc: Rong Zhang <i@rong.moe>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Icenowy Zheng <uwu@icenowy.me>
-Subject: [PATCH v3 0/4] ARM: dts: qcom: msm8974: Add Samsung Galaxy S5 China support
-Date: Tue, 13 Feb 2024 18:58:35 +0800
-Message-ID: <20240213110137.122737-1-i@rong.moe>
+Subject: [PATCH v3 2/4] ARM: dts: qcom: msm8974-klte-common: Pin WiFi board type
+Date: Tue, 13 Feb 2024 18:58:37 +0800
+Message-ID: <20240213110137.122737-3-i@rong.moe>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240213110137.122737-1-i@rong.moe>
+References: <20240213110137.122737-1-i@rong.moe>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,51 +62,33 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-Samsung Galaxy S5 has many variants. Currently, the only supported one
-is klte. Samsung Galaxy S5 China (kltechn) is the China edition of
-klte, and it can mostly work with the klte DTB, with only LEDs and WiFi
-missing.
-
-This patchset splits out the common part of klte DTS into klte-common
-DTSI, and adds DTS for kltechn by fixing up the GPIO pins for the LEDs
-and GPIO expander connected by the WiFi module. A "brcm,board-type"
-property is added into the wifi@1 node of the common DTSI to allow all
-klte* variants to load the same NVRAM file.
+klte* variants have little difference in the WiFi part. Without
+"brcm,board-type", variant-specific NVRAM file will be probed (e.g.,
+klte probes samsung,klte). Pin it to "samsung,klte" to allow klte* to
+load the same NVRAM file as klte.
 
 Signed-off-by: Rong Zhang <i@rong.moe>
 ---
-Changes in v3:
-- Regenerate the patchset with code move detection (-B -M -C).
-- Fix "changes in v2" below to state why a tag was not added.
-- Link to v2: https://lore.kernel.org/r/20240127172155.63624-1-i@rong.moe/
+ .../boot/dts/qcom/qcom-msm8974pro-samsung-klte-common.dtsi  | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Changes in v2:
-- Split out the common part of klte DTS into klte-common DTSI.
-- Fix dt-binding to make it consistent with the compatible chain in
-kltechn DTS. In other words, make kltechn a subvariant of klte.
-  - [PATCH 3/4] in v1 had received "Acked-by: Krzysztof Kozlowski
-  <krzysztof.kozlowski@linaro.org>" but this was not added in the v2
-  patch due to the change.
-- Link to v1: https://lore.kernel.org/r/20240121154010.168440-1-i@rong.moe/
-
-Rong Zhang (4):
-  ARM: dts: qcom: msm8974: Split out common part of samsung-klte
-  ARM: dts: qcom: msm8974-klte-common: Pin WiFi board type
-  dt-bindings: arm: qcom: Add Samsung Galaxy S5 China (kltechn)
-  ARM: dts: qcom: msm8974: Add DTS for Samsung Galaxy S5 China (kltechn)
-
- .../devicetree/bindings/arm/qcom.yaml         |   7 +
- arch/arm/boot/dts/qcom/Makefile               |   1 +
- ... qcom-msm8974pro-samsung-klte-common.dtsi} |  13 +-
- .../dts/qcom/qcom-msm8974pro-samsung-klte.dts | 833 +-----------------
- .../qcom/qcom-msm8974pro-samsung-kltechn.dts  |  16 +
- 5 files changed, 47 insertions(+), 823 deletions(-)
- copy arch/arm/boot/dts/qcom/{qcom-msm8974pro-samsung-klte.dts => qcom-msm8974pro-samsung-klte-common.dtsi} (98%)
- rewrite arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte.dts (99%)
- create mode 100644 arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-kltechn.dts
-
-
-base-commit: c664e16bb1ba1c8cf1d7ecf3df5fd83bbb8ac15a
+diff --git a/arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte-common.dtsi b/arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte-common.dtsi
+index 11e35b34ebd6..b5443fd5b425 100644
+--- a/arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte-common.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte-common.dtsi
+@@ -661,6 +661,12 @@ wifi@1 {
+ 		reg = <1>;
+ 		compatible = "brcm,bcm4329-fmac";
+ 
++		/*
++		 * Allow all klte* variants to load the same NVRAM file,
++		 * as they have little difference in the WiFi part.
++		 */
++		brcm,board-type = "samsung,klte";
++
+ 		interrupt-parent = <&tlmm>;
+ 		interrupts = <92 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-names = "host-wake";
 -- 
 2.43.0
 
