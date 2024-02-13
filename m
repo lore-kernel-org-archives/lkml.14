@@ -1,319 +1,118 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F129263100
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 23:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B540F633F0
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 23:42:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707867688; cv=none; b=QNeTpUUntT0p8zWFn+R/8gIk+RSMN/E25E4EyVdUUiG0LyCuz6kFfysk9vhP1VV1I8gyrgJmi8d+P8BUj7FYcANyCCOcsn4ms92bLHdgKJvbKO+tkRShoi9bYKxTGaehpMjgCx5eUuvET1/PHiip9E57FYPBctLUGMfRcN+qZ/0=
+	t=1707867736; cv=none; b=L+0BSySGymmX2yZqRYpu/BKtW8wa1BBv2/RHQt8vRsNBMgT/YGqlrtujsUI6+jlC3H2WE+Xr3bpl02wWY8ggFfeq0Mv4OUkXgiWMIxvcXqsLk3necFsnYkFII8yiw4/dkYPy7Q9SfbrgGaDPyr6mNYgjVUPeziY2YwowFBbPe1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707867688; c=relaxed/simple;
-	bh=WI2GnT+vC0KiVMhZ9Ar84tFqH3guao33O9rqHzUIswI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BJwQX2AEjcDhz7U378hd58GFfIckyJqkUmytTIkAud91jLLEwasF1mdJPMVvkoNcH48tqtWqwRkYU4HbiQ7DsxSkx0DLv5AD8/4DRU2s4hHW3WMqRZJZzIUi5uLX5POsO6R+BQi3DuBaIuIR0/9y5tnSGm4WFcUpQJa1fl5Ubwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=0s9N0syX; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+	s=arc-20240116; t=1707867736; c=relaxed/simple;
+	bh=JaLcS0MhnhYo6HqFOcWGWSj+KGWfIIInyL0CMdYPrLw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=MaRGE4ljqPwMcoECiSASIWd5OP4VomotWPKuu/PldY4gXSYVcskgM7u+EqyX8jXM4fq7RdtCu+dFYYi2gjulZ1N5XEvtRL0Vc1SNEV3n1WRTv0PvNzMjqJoUs+1aDoRff0U9a4xqa8OxmwbmHzyfMQawUxUHhGHrG0D/mcrNbGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=heaiVvIL; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="0s9N0syX"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1db5212e2f6so1914925ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 15:41:26 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="heaiVvIL"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-290d59df3f0so3575215a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 15:42:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1707867686; x=1708472486; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FtKSMEnFoPA+nA84WrGrOflFWRO7/iUydiSxZxN5LOQ=;
-        b=0s9N0syX8WY1wxpuMTj9j8uB7NUODmTwOXp+wddKfknO/3kVjTrlA2JIJMGYc+BXnX
-         FbLqHIM0LCyFYcbEYQcTs69nBLf8u8wsByq23vcH4yME7f0GoFjUxci4JB7z/2oWvtJi
-         8Y+HntbNzHBWSb/5zb5zuoAHUs6Z+Dw2IQoyie2L6V1w2NbPA0/FJL5ctxjT8CMEBm7P
-         ed4rDbE+j8pI8dLJL1QVpQkVs9sYiyk6MZ9KAMm0hArmwOsZKnJIajXXBCmHpTpJQS0E
-         8IQ6/tCaa53ZAxFHjvq6nl8lWINZNd1BTciBm74tUNfI67ZzzKa09Mlj5pU+RLSaAb2q
-         K0tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707867686; x=1708472486;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1707867734; x=1708472534; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FtKSMEnFoPA+nA84WrGrOflFWRO7/iUydiSxZxN5LOQ=;
-        b=TZ2EbJS/ng6uxpJ/dyomIJZ3nIUkUt+9T8qgq07sL4Wg76HwjS913a8VF417kx3S1P
-         HaiS0yI0cc84tJZjOiqLD+9rRVNfklw7BCv22SZagaKXwGd0EnOrNleussqI69I0wjQp
-         u+y6V/1lpu+QOPb0soNtw7AINpEtJA5lki6e5uM9J2q7/uI9Gq2FZ1nW4TAjEDevtb/Q
-         Lb8ca6ngxFKB3HMYd/A+8ThVDHJ89SzYAzvjUrYaZtL1HYVxZwQ6USFM6Y81Qh0k/gtC
-         aRvdd8G4sycABgoK677OlWHWz/IlygUjkvSTESyrqmen0nbDGJ7glqCPv7dMaAKDSbao
-         uQhw==
-X-Forwarded-Encrypted: i=1; AJvYcCVXyAkKZt5CjSNABwcA55AgXlF9FJpSG3qFQEMEMTaf8ILefaaCtJxuC4bKm06SqnGTgUN75JbbmFQ6Cl1cC07I4o83D/GQ0uSuxxSF
-X-Gm-Message-State: AOJu0YyuR8dSc49y1eEcwsGLDZx4v387zKMx4yhJUoFqMAVchatT9nSn
-	nJphIWzB0zWHRCnR/rsWO59fL2L/ZLeZuQbMhXzdA/JELsp0mDFf2QzOcX0THTo=
-X-Google-Smtp-Source: AGHT+IENVDkz/7KIUkI7OXotV7catU6i63fOrtlb2lZJQVaIC6sDKnurb1zN4PhDJQDsy6Vbd3Dl9A==
-X-Received: by 2002:a17:902:dac1:b0:1d7:55b1:4a3 with SMTP id q1-20020a170902dac100b001d755b104a3mr575392plx.11.1707867686175;
-        Tue, 13 Feb 2024 15:41:26 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW9pZDsl9PLEQcD0xZoKZH3APRkV3ymaTfKZ5iPyi2rNsSs2R/DKLSK44/NPHk0FuS2PduCnaeb/i2V7SajcJIMtxfyWad4W0KYUi/0fwpddOTmfI7AjGf3/CAkBIFzXy8u2YRsm8IYJyMuVCNlKWwo2adIIteFvo+cUtIXFhHHe/3rW2XC0Jt6vhLX8n0w0bozVNQHBnvlsKClcnB/KotfmhiHst4Df3wcuKuAtnKQRsz9NVXF07y8vpeGojYb2KAyiH52RLta7JHKtY8Pk6KcWiYxL8aD6DLab7zxeOifizGLFr0Xju2XSAmTaIah+Zo3JrGtBG+MUp1QeoN1Di8BD8ecfpafZ0k2Go1oiSMkELy2v02Ld1i0Ws3NbPcHkhu52R/KXWv3H9+O+249cstC5DvG5cLBErWCAovH5elE4S/c1xKlQ9wFe0m0yBhETjpW
-Received: from dread.disaster.area (pa49-181-38-249.pa.nsw.optusnet.com.au. [49.181.38.249])
-        by smtp.gmail.com with ESMTPSA id 77-20020a630150000000b005dab535fac2sm2914669pgb.90.2024.02.13.15.41.25
+        bh=in33zmkUwO/lJCZx5ql5VPHI+fJoeC5L2QBdGV5S4os=;
+        b=heaiVvIL7p1+JZGvP0iOwvDgcGu/fxW7meOB/pjLgJAoF0/QXH7oF21t33SY3q3pXJ
+         yDnjXvn3Gt8+Ea1HD1xmZGB94kGDzp0lMya85g8nqhjiqlbt+jJw+mVdt6g62zDTpo1n
+         ctP5yc/UOPXm/VYSB5cDnwNnwy/D8FhB3u2aI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707867734; x=1708472534;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=in33zmkUwO/lJCZx5ql5VPHI+fJoeC5L2QBdGV5S4os=;
+        b=HrrAD+zLOax5p6wHaJ3P2pDGrFYmSVYNcWTtzcDJl/FQhzWs0o/BFwx4No/kE/zmDd
+         kKyIhtGmTcqvPAIVJzHW+ASMKk2FIPNeix7CcqBewOjwOeUkOORS48jbbHxPE2gxZJrR
+         ZqKviJDJxyMBbXeoNZaVqTdrw8DX9y2LcEP/pX8H0UlcHHAcGemEEY0X8/Fn/qFu4byQ
+         DOEy8sRPIaZQE6qrLd6lBfijJPquuTKLGLiVypn3ALd/tcUuDW9XHAlECQnylVRBia0w
+         gyqGKbId9a7NOxYkIwit/j/tp+8MiRr15WRtVDC3cPt6W3yxx65HmgjeKCx13Ti4+tjt
+         bg6g==
+X-Forwarded-Encrypted: i=1; AJvYcCXOJQqCRqRU345KPkacLRIbuBotKJKqSNIIlA3hWXw6nIFwSqTljM3bYmc9ME5oWdLYuu44qxSYF4xwItXAvz7Akk0hVIqS+wsaL2cW
+X-Gm-Message-State: AOJu0YyGr22gU6rV/PVl4EH95UQcEMRysEIcMdQTigJG5B8Q9KzvEDfa
+	DsNvRqCuWmOSzF4G5Lo118H4AAfM8UjzM7lCYUuKs05tWIidbsioptWiALVoNg==
+X-Google-Smtp-Source: AGHT+IGSYalst2dKtHcY/eT+/mlGz5OigXUcaMLj6UjOLYc366SR0E5iVkAW+fP8lCyt4hbxMhmC3g==
+X-Received: by 2002:a17:90b:205:b0:296:892b:4c0 with SMTP id fy5-20020a17090b020500b00296892b04c0mr963267pjb.41.1707867734152;
+        Tue, 13 Feb 2024 15:42:14 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVlVHC1f//hzKVyajZIa/bmyDWH5OQtGUzqsr7wgHc7Wl98sibIfjbfMPN1ydIq6ub1TlcIzCDSFA3iXjUdbeDDzsKqqfzpbT+69BWdJ5tIuPQSp667cZav30hy9odQq233bRml1rpMox0+VHwWhXt05zA4AI4b4mpzbY89rm1HAQzAG7Tl6BNMddRAIwzAcx7tYxnjYGb0oI1hdSdFybB5KKyLqVS5zaEeeDKd2n3VxWwJjV1zekHCmDRfBbtO4enBbIYqFxcpcDNFWrZRtxUVV4I6NQJsVgmOpX0kfTFMV+xj7aNsyIxrSuVMcsdGGwYoTO0C3w546gK4aCssnIdxn9DoE1V0CcXvJHpazg+zsgTWAJm5nz8VuzLL6m8SSOZzj0eJAr0iF6APm2jIUn6882qgS5bguwQXCE6rhN3EjAJsny79IHwcHRs2+m+4iUrKnkAhDTXdeBGsrL8JfZktsMjvUTLzG0opYjNjMn1ux70JX2pVBbys+rlXb13/
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id f20-20020a17090ac29400b00298c06d843fsm84671pjt.3.2024.02.13.15.42.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 15:41:25 -0800 (PST)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1ra2Ow-0069Tr-34;
-	Wed, 14 Feb 2024 10:41:22 +1100
-Date: Wed, 14 Feb 2024 10:41:22 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: John Garry <john.g.garry@oracle.com>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, hch@lst.de,
-	viro@zeniv.linux.org.uk, brauner@kernel.org, dchinner@redhat.com,
-	jack@suse.cz, chandan.babu@oracle.com, martin.petersen@oracle.com,
-	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
-	ojaswin@linux.ibm.com
-Subject: Re: [PATCH RFC 5/6] fs: xfs: iomap atomic write support
-Message-ID: <Zcv+IlxgNlc04doJ@dread.disaster.area>
-References: <20240124142645.9334-1-john.g.garry@oracle.com>
- <20240124142645.9334-6-john.g.garry@oracle.com>
- <20240202184758.GA6226@frogsfrogsfrogs>
- <e61cf382-66bd-4091-b49c-afbb5ce67d8f@oracle.com>
- <ZcGIPlNCkL6EDx3Z@dread.disaster.area>
- <434c570e-39b2-4f1c-9b49-ac5241d310ca@oracle.com>
- <ZcLJgVu9A3MsWBI0@dread.disaster.area>
- <a20b3c07-605e-44c2-b562-e98269d37558@oracle.com>
- <ZcWCeU0n7zKEPHk5@dread.disaster.area>
- <20836bd6-7b17-4432-a2b9-085e27014384@oracle.com>
+        Tue, 13 Feb 2024 15:42:13 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Keith Packard <keithp@keithp.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alexey Dobriyan <adobriyan@gmail.com>,
+	Dmitry Antipov <dmantipov@yandex.ru>,
+	Nathan Chancellor <nathan@kernel.org>,
+	kernel test robot <lkp@intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] net/ipv4: Annotate imsf_slist_flex with __counted_by(imsf_numsrc)
+Date: Tue, 13 Feb 2024 15:42:11 -0800
+Message-Id: <20240213234212.3766256-2-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240213234023.it.219-kees@kernel.org>
+References: <20240213234023.it.219-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20836bd6-7b17-4432-a2b9-085e27014384@oracle.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=965; i=keescook@chromium.org; h=from:subject; bh=JaLcS0MhnhYo6HqFOcWGWSj+KGWfIIInyL0CMdYPrLw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBly/5T7cTDxgTr0rDIqvT3vhjqivyAqSR9MrmXk vJe8ulo+06JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZcv+UwAKCRCJcvTf3G3A JjLOD/9kSRrC1i4wpx5fWHuu7VPgWHXMKYgp17lT1gJYIk6Ae40EuhyRDJZR+MqkiW8msoUquzA cDzdbDz26Z0dJgcnpAmerx78u08EYTTHrYMUaZI00fnzYhfO7GrKKNQ2o4i4C2BOt3IuiO1CbMP zJ4di3CiyGy71ooSKn08Z3/5pTLNAdmig+gl3GP2GNI2U5ny8OHZOOdSXxbaaM5059spgeEdSPF nbU6vXD4q5enmZH3V9CBHGOG/uXxO4okDQDH1y0gKDJu/PQ1foGcmqtqlMoXCMF3bKvq4/eiQ/B dTPsR8alCW97wnaa+pi6F8SlkVC8XmxMghe18rGMMBLVOuh/IS/ypL5K0b5TCPKZ7leqWFiRUEZ Vd7OLDIFl2GbI84vzx4s7kbcM9rhX7ADl46J55D0+xFomlstdpJSJapDvEonhrYUda4b18+paY/ 6a9OxcX4ihmoNr83RlW/n9RXCNtBVQin+GylpP5LQvS07iQ8GCZhy1qr4Uajq1qaffdIDYwSS/M FMytHRtpsPJCOMq7evN65jd5bn82KKnoKnoIx/M/IyePgJy3gKPL6+lVP4YU5db/OgXrvDxuFM3 Bf1sZ826NZDOgvVq2QlC3wP9X3CDLTVHF4Ab4de9u15ky7gTRZMgYZ8CpdLqudDhJ3PyovS9e5S StLpaZfKQmBlPeg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 09, 2024 at 12:47:38PM +0000, John Garry wrote:
-> > > > Why should we jump through crazy hoops to try to make filesystems
-> > > > optimised for large IOs with mismatched, overlapping small atomic
-> > > > writes?
-> > > 
-> > > As mentioned, typically the atomic writes will be the same size, but we may
-> > > have other writes of smaller size.
-> > 
-> > Then we need the tiny write to allocate and zero according to the
-> > maximum sized atomic write bounds. Then we just don't care about
-> > large atomic IO overlapping small IO, because the extent on disk
-> > aligned to the large atomic IO is then always guaranteed to be the
-> > correct size and shape.
-> 
-> I think it's worth mentioning that there is currently a separation between
-> how we configure the FS extent size for atomic writes and what the bdev can
-> actually support in terms of atomic writes.
+The size of the imsf_slist_flex member is determined by imsf_numsrc, so
+annotate it as such.
 
-And that's part of what is causing all the issues here - we're
-trying to jump though hoops at the fs level to handle cases that
-they device doesn't support and vice versa.
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-hardening@vger.kernel.org
+Acked-by: Jakub Kicinski <kuba@kernel.org>
+Reviewed-by: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ include/uapi/linux/in.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> Setting the rtvol extsize at mkfs time or enabling atomic writes
-> FS_XFLAG_ATOMICWRITES doesn't check for what the underlying bdev can do in
-> terms of atomic writes.
-
-Which is wrong. mkfs.xfs gets physical information about the volume
-from the kernel and makes the filesystem accounting to that
-information. That's how we do stripe alignment, sector sizing, etc.
-Atomic write support and setting up alignment constraints should be
-no different.
-
-Yes, mkfs allows the user to override the hardware configsi it
-probes, but it also warns when the override is doing something
-sub-optimal (like aligning all AG headers to the same disk in a
-stripe).
-
-IOWs, mkfs should be pulling this atomic write info from the
-hardware and configuring the filesysetm around that information.
-That's the target we should be aiming the kernel implementation at
-and optimising for - a filesystem that is correctly configured
-according to published hardware capability.
-
-Everything else is in the "make it behave correctly, but we don't
-care if it's slow" category.
-
-> This check is not done as it is not fixed what the bdev can do in terms of
-> atomic writes - or, more specifically, what they request_queue reports is
-> not be fixed. There are things which can change this. For example, a FW
-> update could change all the atomic write capabilities of a disk. Or even if
-> we swapped a SCSI disk into another host the atomic write limits may change,
-> as the atomic write unit max depends on the SCSI HBA DMA limits. Changing
-> BIO_MAX_VECS - which could come from a kernel update - could also change
-> what we report as atomic write limit in the request queue.
-
-If that sort of thing happens, then that's too bad. We already have
-these sorts of "do not do if you care about performance"
-constraints. e.g. don't do a RAID restripe that changes the
-alignment/size of the RAID device (e.g. add a single disk and make
-the stripe width wider) because the physical filesystem structure
-will no longer be aligned to the underlying hardware. instead, you
-have to grow striped volumes with compatible stripes in compatible
-sizes to ensure the filesystem remains aligned to the storage...
-
-We don't try to cater for every single possible permutation of
-storage hardware configurations - that way lies madness. Design and
-optimise for the common case of correctly configured and well
-behaved storage, and everything else we just don't care about beyond
-"don't corrupt or lose data".
-
-> > > > And therein lies the problem.
-> > > > 
-> > > > If you are doing sub-rtextent IO at all, then you are forcing the
-> > > > filesystem down the path of explicitly using unwritten extents and
-> > > > requiring O_DSYNC direct IO to do journal flushes in IO completion
-> > > > context and then performance just goes down hill from them.
-> > > > 
-> > > > The requirement for unwritten extents to track sub-rtextsize written
-> > > > regions is what you're trying to work around with XFS_BMAPI_ZERO so
-> > > > that atomic writes will always see "atomic write aligned" allocated
-> > > > regions.
-> > > > 
-> > > > Do you see the problem here? You've explicitly told the filesystem
-> > > > that allocation is aligned to 64kB chunks, then because the
-> > > > filesystem block size is 4kB, it's allowed to track unwritten
-> > > > regions at 4kB boundaries. Then you do 4kB aligned file IO, which
-> > > > then changes unwritten extents at 4kB boundaries. Then you do a
-> > > > overlapping 16kB IO that*requires*  16kB allocation alignment, and
-> > > > things go BOOM.
-> > > > 
-> > > > Yes, they should go BOOM.
-> > > > 
-> > > > This is a horrible configuration - it is incomaptible with 16kB
-> > > > aligned and sized atomic IO.
-> > > 
-> > > Just because the DB may do 16KB atomic writes most of the time should not
-> > > disallow it from any other form of writes.
-> > 
-> > That's not what I said. I said the using sub-rtextsize atomic writes
-> > with single FSB unwritten extent tracking is horrible and
-> > incompatible with doing 16kB atomic writes.
-> > 
-> > This setup will not work at all well with your patches and should go
-> > BOOM. Using XFS_BMAPI_ZERO is hacking around the fact that the setup
-> > has uncoordinated extent allocation and unwritten conversion
-> > granularity.
-> > 
-> > That's the fundamental design problem with your approach - it allows
-> > unwritten conversion at *minimum IO sizes* and that does not work
-> > with atomic IOs with larger alignment requirements.
-> > 
-> > The fundamental design principle is this: for maximally sized atomic
-> > writes to always succeed we require every allocation, zeroing and
-> > unwritten conversion operation to use alignments and sizes that are
-> > compatible with the maximum atomic write sizes being used.
-> > 
-> 
-> That sounds fine.
-> 
-> My question then is how we determine this max atomic write size granularity.
-> 
-> We don't explicitly tell the FS what atomic write size we want for a file.
-> Rather we mkfs with some extsize value which should match our atomic write
-> maximal value and then tell the FS we want to do atomic writes on a file,
-> and if this is accepted then we can query the atomic write min and max unit
-> size, and this would be [FS block size, min(bdev atomic write limit,
-> rtexsize)].
-> 
-> If rtextsize is 16KB, then we have a good idea that we want 16KB atomic
-> writes support. So then we could use rtextsize as this max atomic write
-> size.
-
-Maybe, but I think continuing to focus on this as 'atomic writes
-requires' is wrong.
-
-The filesystem does not carea bout atomic writes. What it cares
-about is the allocation constraints that need to be implemented.
-That constraint is that all BMBT extent operations need to be
-aligned to a specific extent size, not filesystem blocks.
-
-The current extent size hint (and rtextsize) only impact the
--allocation of extents-. They are not directly placing constraints
-on the BMBT layout, they are placing constraints on the free space
-search that the allocator runs on the BNO/CNT btrees to select an
-extent that is then inserted into the BMBT.
-
-The problem is that unwritten extent conversion, truncate, hole
-punching, etc also all need to be correctly aligned for files that
-are configured to support atomic writes. These operations place
-constraints on how the BMBT can modify the existing extent list.
-
-These are different constraints to what rtextsize/extszhint apply,
-and that's the fundamental behavioural difference between existing
-extent size hint behaviour and the behaviour needed by atomic
-writes.
-
-> But I am not 100% sure that it your idea (apologies if I am wrong - I
-> am sincerely trying to follow your idea), but rather it would be
-> min(rtextsize, bdev atomic write limit), e.g. if rtextsize was 1MB and bdev
-> atomic write limit is 16KB, then there is no much point in dealing in 1MB
-> blocks for this unwritten extent conversion alignment.
-
-Exactly my point - there really is no relationship between rtextsize
-and atomic write constraints and that it is a mistake to use
-rtextsize as it stands as a placeholder for atomic write
-constraints.
-
-> If so, then my
-> concern is that the bdev atomic write upper limit is not fixed. This can
-> solved, but I would still like to be clear on this max atomic write size.
-
-Right, we haven't clearly defined how XFS is supposed align BMBT
-operations in a way that is compatible for atomic write operations.
-
-What the patchset does is try to extend and infer things from
-existing allocation alignment constraints, but then not apply those
-constraints to critical extent state operations (pure BMBT
-modifications) that atomic writes also need constrained to work
-correctly and efficiently.
-
-> > i.e. atomic writes need to use max write size granularity for all IO
-> > operations, not filesystem block granularity.
-> > 
-> > And that also means things like rtextsize and extsize hints need to
-> > match these atomic write requirements, too....
-> 
-> As above, I am not 100% sure if you mean these to be the atomic write
-> maximal value.
-
-Yes, they either need to be the same as the atomic write max value
-or, much better, once a hint has been set, then resultant size is
-then aligned up to be compatible with the atomic write constraints.
-
-e.g. set an inode extent size hint of 960kB on a device with 128kB
-atomic write capability. If the inode has the atomic write flag set,
-then allocations need to round the extent size up from 960kB to 1MB
-so that the BMBT extent layout and alignment is compatible with 128kB
-atomic writes.
-
-At this point, zeroing, punching, unwritten extent conversion, etc
-also needs to be done on aligned 128kB ranges to be comaptible with
-atomic writes, rather than filesysetm block boundaries that would
-normally be used if just the extent size hint was set.
-
-This is effectively what the original "force align" inode flag bit
-did - it told the inode that all BMBT manipulations need to be
-extent size hint aligned, not just allocation. It's a generic flag
-that implements specific extent manipulation constraints that happen
-to be compatible with atomic writes when the right extent size hint
-is set.
-
-So at this point, I'm not sure that we should have an "atomic
-writes" flag in the inode. We need to tell BMBT modifications
-to behave in a particular way - forced alignment - not that atomic
-writes are being used in the filesystem....
-
-At this point, the filesystem can do all the extent modification
-alignment stuff that atomic writes require without caring if the
-block device supports atomic writes or even if the
-application is using atomic writes.
-
-This means we can test the BMBT functionality in fstests without
-requiring hardware (or emulation) that supports atomic writes - all
-we need to do is set the forced align flag, an extent size hint and
-go run fsx on it...
-
--Dave.
+diff --git a/include/uapi/linux/in.h b/include/uapi/linux/in.h
+index e682ab628dfa..2f0c4d40bc7b 100644
+--- a/include/uapi/linux/in.h
++++ b/include/uapi/linux/in.h
+@@ -199,7 +199,8 @@ struct ip_msfilter {
+ 	__u32		imsf_numsrc;
+ 	union {
+ 		__be32		imsf_slist[1];
+-		__DECLARE_FLEX_ARRAY(__be32, imsf_slist_flex);
++		__DECLARE_FLEX_ARRAY(__be32, imsf_slist_flex,
++				     __counted_by(imsf_numsrc));
+ 	};
+ };
+ 
 -- 
-Dave Chinner
-david@fromorbit.com
+2.34.1
+
