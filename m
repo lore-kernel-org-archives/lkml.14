@@ -1,62 +1,62 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B8269DE3;
-	Tue, 13 Feb 2024 22:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3557F6FB80;
+	Tue, 13 Feb 2024 22:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707861945; cv=none; b=bka2kDm8sfN3oqfQX/EXAIC6U5nB54rvYONQI95CCajMhlKAqo3EL0atgDo3XnI0BV+j/FBjfUuJWfIo+R0gx3MpZ8jhitv2ATzNq8jRkWa1hSQlBaKfnzC0evKbQ2sSYKYHTx3w6K6xRpfvUsHpnKUkNeWL0cR2dJgLY+klPi0=
+	t=1707861958; cv=none; b=mvHPsEbgJYcmm8M6+SIQemMEo8KfKpy4yu3R7+yiiM6NWFdm3JdYUI0XUb841VJZBZqfKkGYsSVOfLAb1E8Nojc2AysS72c2wW9nVyynzHyd5tvLJo149A7Up1ExDDYvS69XhIKCzSBjqDEA7j2jorQ9ub+HX74vkAOrH1M1ysY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707861945; c=relaxed/simple;
-	bh=lWgQKkjGAD0xvMdwkE5D2xfJl+/qgEiproz1COUTSH0=;
+	s=arc-20240116; t=1707861958; c=relaxed/simple;
+	bh=FWHayuZw/Ot2rSgc/NXoN+gmwi8uEkTj3zeN+fbN+Uk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ozsj9BnF5ve8kGXCyZWO4L1rOPyN5HePfszsG8ReBlcpJqU0BlOg2mXLwPaQAx2uudrZQsM/NDaKqVuegJREQ00CFpt3uomHtSvAU14o6GWM9tc5O6VO61csRZHc6UX6zMYv9XsClXtWeK5HpA1wFYEL0QtHpDcR2uPU62BF2Mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mf+4QnTD; arc=none smtp.client-ip=209.85.218.48
+	 MIME-Version; b=FSSyIEQu3tHy4vPOzGxpVOFxCmMx0njDoPQIv5wu173hghSEeZjNuhs9wS2MLTchP4UPn3AvEYOBjYj/QptV0nc58NMbAE4AiD8A3deDgurMamO9pJdJwMks6MlpKA/N7AHU5aUtx4YZSPOET771U7Lj7kKwvWRITN8yxOomcC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D55JQG4M; arc=none smtp.client-ip=209.85.218.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mf+4QnTD"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a2f79e79f0cso741538966b.2;
-        Tue, 13 Feb 2024 14:05:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D55JQG4M"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a2f22bfb4e6so666336566b.0;
+        Tue, 13 Feb 2024 14:05:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707861940; x=1708466740; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1707861954; x=1708466754; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vzi2NYSYs1dw7+WI8H7EeIeC1vmz6Hbcl0TyOSg0RA8=;
-        b=mf+4QnTDVKVpORzxNTbI2t9j/5TyO6wgyJvHoKoFq/jVNvlOreaNyReigjMr6vFFKb
-         yi6z+02YMYIt2wnbNOt86MD4gRDx3LKm0rrn7IT6RfMWJ0AhCg33a1pI0Kv4p/nka2wF
-         R2vtux9PAfVaHukL4RL3ewpnP1JBYDAy0EyZ2p92Bca2ddKqrvrkzCHD13zsRf90t5ce
-         dRfE0jQMZXjNJMMTi6SGxySTMWCcjXnUCIavLf5friwRh5fRG84kOef8d9ZXte+biOab
-         iU/vkC4txsYouJR9SeP2dQMWNSPQkbVLp8g7CtbUwPJH0emBMaCaVfLCDV/qxKeKBreS
-         OJiw==
+        bh=M+w6iJDAWTcoEwIs/CJsWDUTAWaRRDi08Wez6bn4quw=;
+        b=D55JQG4MmeTh7P/ySczjmRM5QIhRZanRPv2PIQf1kVtwYr3URNqoAoYNPNusrNcJyj
+         m6eTke8v9jtXjHqM+Qs9nH8TuiSeXUkEWfWNoHRK9jI0jazFMzJfAnxYhvCQCLA5tCHO
+         //4AxA9ORo+egcV/KbvKlKk1fBMXENRbb/snCI96ZY0nXs4ICMKYStCGOQchg3rR/Y9f
+         +EXVczLPmxmqVZ9SOUiBnlkkwzrCWNftSW3yyisKlkkzd5AdkgNVevVVMZlcO71CywWI
+         DRUr2oge9xSmJlLuNkPE3DG2GTepJ+hh3O00eAkgRxkuwinFQIozqQA2WaWTqR2mvm8X
+         3UnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707861940; x=1708466740;
+        d=1e100.net; s=20230601; t=1707861954; x=1708466754;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vzi2NYSYs1dw7+WI8H7EeIeC1vmz6Hbcl0TyOSg0RA8=;
-        b=gQFfzXf3ZD8bDwJt96YPR9H067+A6DkpzFgREuAQSq9hqpo9flAMOg9dM4lUlrfqzB
-         gd76ZhePsgY/SZYP2YxplLOX6v12A0lcCAbNrKkoxLbwPSuhDWo6wfVb52kmfPomncwf
-         qShPJLTI1UmOTrXPjsSdSrMn9nBzm46cjV8W6hiR7Insk+TmJ5hXf1r4ku9Nw+TTEaB4
-         CfpZFPEv+6RcsqMKeEr8F/Z8cURm2HJMLCfNnbFF2mKXCyDZCbi5aVIv0KwJIv6ENRoa
-         HC7E6gdJeRSNyC5ugXSZv+niwL7eqC5j8zwy0RRY53yeh4LZSVDm0k9gyY511YNFcLlI
-         58AQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUbk0gjCeWa9GFfh1nX98eONma+5LtaseDfgdc7yE1ych1HtjRn1ZjhNE85Tb++G/0HNFm3m+inMizL5AMBj0hlOSNpfB9VcmO6fsZL
-X-Gm-Message-State: AOJu0YwCVQX2Rfyq8RLJxP8G/NXvaC0KQ+UskiKDzmyvA+4aEyuXmjs2
-	2oADv86zmiK7p68kM5AID3Uzph/GGWEhm1Qe7W07f6bMzTbP0sfAFi+l1lCSFgk=
-X-Google-Smtp-Source: AGHT+IF80JRTzC7TO+UF+a8xtuzla9nL5pr8wmQNcouJToNY45PLc3WvKo3FJS2aNsiY/2ntfJAHNg==
-X-Received: by 2002:a17:906:a451:b0:a3c:930b:2d14 with SMTP id cb17-20020a170906a45100b00a3c930b2d14mr451209ejb.9.1707861940108;
-        Tue, 13 Feb 2024 14:05:40 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUKAal6Mo6RK/gW++Aj54wuQEM03Tqmmipgrvtu3QyJnZqSQ0kV6Uz6bHPSzum5zhUjMDZtjsynzU6o/ctP/kggbc5f80kqxYhezyE01W+KIFmtUcfnfd8Iw09FmM7L13Aap7fPSjzPx2m+Rpp9BPwL4CY8tXrkBZCTmc6mX9E7zITA+G0AesR/ACNvBOSPMrUl4+D8bWmEql7jtPbXsSAwg4XiQ/itrILdyIQRHqtp5YIE8E+XtzkPz4N6uGkWxxBmDfFwSCbiYiDlLGb841GavTXr4qhV6aeOIJyZmtAtNElfVhRJhfcHbJYusHtjqqTPfQRNRWtys4YeWRtV85X4HSKSdR3nDG5HvfGftCt2rkQog7YiHL0b7/m7sBYjd2oFtc4Bs26SIzz39zsyAjdRyPu84WDkXo7aoh8xCKsaWiequyJhSVLsT5caJA6HHW33nV+8DHpXBg==
+        bh=M+w6iJDAWTcoEwIs/CJsWDUTAWaRRDi08Wez6bn4quw=;
+        b=C5aqXJ1M0A5tkwCeoxJotUzhm3cu0dd5zD1+ekShIQU/6GY3mXRj999ChXWPSywu+D
+         xi2HFNhrYd8oDx4x+wdARmdqWiN0ix+HkD9cRbVZt5h4Vrc4GXM5qvOYHwp8vOuYBjZ0
+         xSyqpvo3aHVm1Iyh6SsjR7gGlvHImHys03Z1xPeAQrB6R7uOVI3fgTdloXDYdO/EgNKF
+         msOaXXDd/XHLpr6QL3h+UNyJtr9hrmhzr443+K7V2zO/h+W6Ezebpxb72vnPS1e85pWK
+         YufJIgA8/dh0uRGEP2KU6bazN1Ej3jNBPcN0GeND1bmr79rBnPzrCgMe/SzoILOwAUBd
+         Ps5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUXD3VS+TwzFDmcORQpuZy4znZ0eiVxREGbWQa6sMx+MqeamvzTTfT2PTDhqdZqBfZLfyXDF3EHOWMBf2d3z6wFUVVBAI9VF7eE6HlI
+X-Gm-Message-State: AOJu0YwEaKPTqrN68H8Oz/2c4TwYAwjMnUx7S8KAatHb69nUzxkO+SHi
+	0CVpwkzJjBJpeVXU1bjNBlJc8ubBRUEK1HStvmoyzu9QCVliofr3FA9WHtYPMnI=
+X-Google-Smtp-Source: AGHT+IEgZ4FoV4KG31cK7u3uKfC+VuGEOR3T8DLg9pKmlR4tfjYmTTai/OuO2rD97rsVe5IC0A8WTQ==
+X-Received: by 2002:a17:906:6812:b0:a3d:2146:5703 with SMTP id k18-20020a170906681200b00a3d21465703mr375059ejr.6.1707861953746;
+        Tue, 13 Feb 2024 14:05:53 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU4GyoCdSkhUePgHnQ+n+8+Ok8bk9Nqu7JX5MvMPDSEe7mBwpL+x32F+XSEnfD8JDPCSyBvF4XI0U6bZq6a+Gjm7Y4XCtwjWXh5uewMvafmJcinE1bgeoP7szDCACqbLIC63gNO5nO9sbaZTSo61k0EdPwp1z0XDuSXOhJpjSFqQa/lsosvcASD/J+c6AIsyI0ztmtftDoMtP3kCA/U5a1QQCLjmNNTHwNQNEOOgu8ULivte/bZ3XCUM2VBN1ZHe5t58kNwLpNAbO+CZ2ISpga1PUiexcYlUtiFOQ6qeVkBf5xfcIagSEGTLypU+qi3tpL/bVz9QIt6N3Dkqgnr5lVM7qmVs7M90Twl9yq492I0LFzFQKOomNLYE/mP6C5jCPxOcMXbAyezlk39SCOu2H0SYPX015HgHtHjtJLYZM/SvlN9S9WE3pTYkkekm2LsVC7hmFOXblXcKw==
 Received: from WBEC325.dom.lan ([185.188.71.122])
-        by smtp.gmail.com with ESMTPSA id p12-20020a170906b20c00b00a3bdf8ae86asm1706800ejz.10.2024.02.13.14.05.39
+        by smtp.gmail.com with ESMTPSA id p12-20020a170906b20c00b00a3bdf8ae86asm1706800ejz.10.2024.02.13.14.05.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 14:05:39 -0800 (PST)
+        Tue, 13 Feb 2024 14:05:53 -0800 (PST)
 From: Pawel Dembicki <paweldembicki@gmail.com>
 To: netdev@vger.kernel.org
 Cc: linus.walleij@linaro.org,
-	Pawel Dembicki <paweldembicki@gmail.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
 	Andrew Lunn <andrew@lunn.ch>,
 	Florian Fainelli <f.fainelli@gmail.com>,
 	Vladimir Oltean <olteanv@gmail.com>,
@@ -69,9 +69,9 @@ Cc: linus.walleij@linaro.org,
 	UNGLinuxDriver@microchip.com,
 	Russell King <linux@armlinux.org.uk>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v4 07/15] net: dsa: vsc73xx: Add vlan filtering
-Date: Tue, 13 Feb 2024 23:03:20 +0100
-Message-Id: <20240213220331.239031-8-paweldembicki@gmail.com>
+Subject: [PATCH net-next v4 09/15] net: dsa: tag_sja1105: absorb entire sja1105_vlan_rcv() into dsa_8021q_rcv()
+Date: Tue, 13 Feb 2024 23:03:22 +0100
+Message-Id: <20240213220331.239031-10-paweldembicki@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240213220331.239031-1-paweldembicki@gmail.com>
 References: <20240213220331.239031-1-paweldembicki@gmail.com>
@@ -83,704 +83,194 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch implements VLAN filtering for the vsc73xx driver.
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-After starting VLAN filtering, the switch is reconfigured from QinQ to
-a simple VLAN aware mode. This is required because VSC73XX chips do not
-support inner VLAN tag filtering.
+tag_sja1105 has a wrapper over dsa_8021q_rcv(): sja1105_vlan_rcv(),
+which determines whether the packet came from a bridge with
+vlan_filtering=1 (the case resolved via
+dsa_find_designated_bridge_port_by_vid()), or if it contains a tag_8021q
+header.
 
-Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+Looking at a new tagger implementation for vsc73xx, based also on
+tag_8021q, it is becoming clear that the logic is needed there as well.
+So instead of forcing each tagger to wrap around dsa_8021q_rcv(), let's
+merge the logic into the core.
+
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 ---
 v4:
-  - reworked most of conditional register configs
-  - simplified port_vlan function
-  - move vlan table clearing from port_setup to setup
-  - pvid configuration simplified (now kernel take care about no of
-    pvids per port)
-  - port vlans are stored in list now
-  - introduce implementation of all untagged vlans state
-  - many minor changes
-v3:
-  - reworked all vlan commits
-  - added storage variables for pvid and untagged vlans
-  - move length extender settings to port setup
-  - remove vlan table cleaning in wrong places
-v2:
-  - no changes done
+  - introduced patch
 
- drivers/net/dsa/vitesse-vsc73xx-core.c | 523 ++++++++++++++++++++++++-
- drivers/net/dsa/vitesse-vsc73xx.h      |  25 ++
- 2 files changed, 546 insertions(+), 2 deletions(-)
+ net/dsa/tag_8021q.c        | 34 ++++++++++++++++++++++++++++------
+ net/dsa/tag_8021q.h        |  2 +-
+ net/dsa/tag_ocelot_8021q.c |  2 +-
+ net/dsa/tag_sja1105.c      | 32 ++++----------------------------
+ 4 files changed, 34 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/net/dsa/vitesse-vsc73xx-core.c b/drivers/net/dsa/vitesse-vsc73xx-core.c
-index 1dca3c476fac..6c7bd1c200b4 100644
---- a/drivers/net/dsa/vitesse-vsc73xx-core.c
-+++ b/drivers/net/dsa/vitesse-vsc73xx-core.c
-@@ -21,9 +21,11 @@
- #include <linux/of_mdio.h>
- #include <linux/bitops.h>
- #include <linux/if_bridge.h>
-+#include <linux/if_vlan.h>
- #include <linux/etherdevice.h>
- #include <linux/gpio/consumer.h>
- #include <linux/gpio/driver.h>
-+#include <linux/dsa/8021q.h>
- #include <linux/random.h>
- #include <net/dsa.h>
- 
-@@ -61,6 +63,8 @@
- #define VSC73XX_CAT_DROP	0x6e
- #define VSC73XX_CAT_PR_MISC_L2	0x6f
- #define VSC73XX_CAT_PR_USR_PRIO	0x75
-+#define VSC73XX_CAT_VLAN_MISC	0x79
-+#define VSC73XX_CAT_PORT_VLAN	0x7a
- #define VSC73XX_Q_MISC_CONF	0xdf
- 
- /* MAC_CFG register bits */
-@@ -121,6 +125,17 @@
- #define VSC73XX_ADVPORTM_IO_LOOPBACK	BIT(1)
- #define VSC73XX_ADVPORTM_HOST_LOOPBACK	BIT(0)
- 
-+/*  TXUPDCFG transmit modify setup bits */
-+#define VSC73XX_TXUPDCFG_DSCP_REWR_MODE	GENMASK(20, 19)
-+#define VSC73XX_TXUPDCFG_DSCP_REWR_ENA	BIT(18)
-+#define VSC73XX_TXUPDCFG_TX_INT_TO_USRPRIO_ENA	BIT(17)
-+#define VSC73XX_TXUPDCFG_TX_UNTAGGED_VID	GENMASK(15, 4)
-+#define VSC73XX_TXUPDCFG_TX_UNTAGGED_VID_ENA	BIT(3)
-+#define VSC73XX_TXUPDCFG_TX_UPDATE_CRC_CPU_ENA	BIT(1)
-+#define VSC73XX_TXUPDCFG_TX_INSERT_TAG	BIT(0)
-+
-+#define VSC73XX_TXUPDCFG_TX_UNTAGGED_VID_SHIFT 4
-+
- /* CAT_DROP categorizer frame dropping register bits */
- #define VSC73XX_CAT_DROP_DROP_MC_SMAC_ENA	BIT(6)
- #define VSC73XX_CAT_DROP_FWD_CTRL_ENA		BIT(4)
-@@ -134,6 +149,15 @@
- #define VSC73XX_Q_MISC_CONF_EARLY_TX_512	(1 << 1)
- #define VSC73XX_Q_MISC_CONF_MAC_PAUSE_MODE	BIT(0)
- 
-+/* CAT_VLAN_MISC categorizer VLAN miscellaneous bits*/
-+#define VSC73XX_CAT_VLAN_MISC_VLAN_TCI_IGNORE_ENA BIT(8)
-+#define VSC73XX_CAT_VLAN_MISC_VLAN_KEEP_TAG_ENA BIT(7)
-+
-+/* CAT_PORT_VLAN categorizer port VLAN*/
-+#define VSC73XX_CAT_PORT_VLAN_VLAN_CFI BIT(15)
-+#define VSC73XX_CAT_PORT_VLAN_VLAN_USR_PRIO GENMASK(14, 12)
-+#define VSC73XX_CAT_PORT_VLAN_VLAN_VID GENMASK(11, 0)
-+
- /* Frame analyzer block 2 registers */
- #define VSC73XX_STORMLIMIT	0x02
- #define VSC73XX_ADVLEARN	0x03
-@@ -188,7 +212,8 @@
- #define VSC73XX_VLANACCESS_VLAN_MIRROR		BIT(29)
- #define VSC73XX_VLANACCESS_VLAN_SRC_CHECK	BIT(28)
- #define VSC73XX_VLANACCESS_VLAN_PORT_MASK	GENMASK(9, 2)
--#define VSC73XX_VLANACCESS_VLAN_TBL_CMD_MASK	GENMASK(2, 0)
-+#define VSC73XX_VLANACCESS_VLAN_PORT_MASK_SHIFT	2
-+#define VSC73XX_VLANACCESS_VLAN_TBL_CMD_MASK	GENMASK(1, 0)
- #define VSC73XX_VLANACCESS_VLAN_TBL_CMD_IDLE	0
- #define VSC73XX_VLANACCESS_VLAN_TBL_CMD_READ_ENTRY	1
- #define VSC73XX_VLANACCESS_VLAN_TBL_CMD_WRITE_ENTRY	2
-@@ -343,6 +368,12 @@ static const struct vsc73xx_counter vsc73xx_tx_counters[] = {
- 	{ 29, "TxQoSClass3" }, /* non-standard counter */
- };
- 
-+enum vsc73xx_port_vlan_conf {
-+	VSC73XX_VLAN_FILTER,
-+	VSC73XX_VLAN_FILTER_UNTAG_ALL,
-+	VSC73XX_VLAN_IGNORE,
-+};
-+
- int vsc73xx_is_addr_valid(u8 block, u8 subblock)
- {
- 	switch (block) {
-@@ -560,6 +591,82 @@ static enum dsa_tag_protocol vsc73xx_get_tag_protocol(struct dsa_switch *ds,
- 	return DSA_TAG_PROTO_NONE;
- }
- 
-+static int vsc73xx_wait_for_vlan_table_cmd(struct vsc73xx *vsc)
-+{
-+	int ret, err;
-+	u32 val;
-+
-+	ret = read_poll_timeout(vsc73xx_read, err,
-+				err < 0 || ((val & VSC73XX_VLANACCESS_VLAN_TBL_CMD_MASK) ==
-+					    VSC73XX_VLANACCESS_VLAN_TBL_CMD_IDLE),
-+				1000, 10000, false, vsc, VSC73XX_BLOCK_ANALYZER,
-+				0, VSC73XX_VLANACCESS, &val);
-+	if (ret)
-+		return ret;
-+	return err;
-+}
-+
-+static int
-+vsc73xx_read_vlan_table_entry(struct vsc73xx *vsc, u16 vid, u8 *portmap)
-+{
-+	u32 val;
-+	int ret;
-+
-+	vsc73xx_write(vsc, VSC73XX_BLOCK_ANALYZER, 0, VSC73XX_VLANTIDX, vid);
-+	ret = vsc73xx_wait_for_vlan_table_cmd(vsc);
-+	if (ret)
-+		return ret;
-+	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0, VSC73XX_VLANACCESS,
-+			    VSC73XX_VLANACCESS_VLAN_TBL_CMD_MASK,
-+			    VSC73XX_VLANACCESS_VLAN_TBL_CMD_READ_ENTRY);
-+	ret = vsc73xx_wait_for_vlan_table_cmd(vsc);
-+	if (ret)
-+		return ret;
-+	vsc73xx_read(vsc, VSC73XX_BLOCK_ANALYZER, 0, VSC73XX_VLANACCESS, &val);
-+	*portmap = (val & VSC73XX_VLANACCESS_VLAN_PORT_MASK) >>
-+		   VSC73XX_VLANACCESS_VLAN_PORT_MASK_SHIFT;
-+	return 0;
-+}
-+
-+static int
-+vsc73xx_write_vlan_table_entry(struct vsc73xx *vsc, u16 vid, u8 portmap)
-+{
-+	int ret;
-+
-+	vsc73xx_write(vsc, VSC73XX_BLOCK_ANALYZER, 0, VSC73XX_VLANTIDX, vid);
-+	ret = vsc73xx_wait_for_vlan_table_cmd(vsc);
-+	if (ret)
-+		return ret;
-+
-+	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0, VSC73XX_VLANACCESS,
-+			    VSC73XX_VLANACCESS_VLAN_TBL_CMD_MASK |
-+			    VSC73XX_VLANACCESS_VLAN_SRC_CHECK |
-+			    VSC73XX_VLANACCESS_VLAN_PORT_MASK,
-+			    VSC73XX_VLANACCESS_VLAN_TBL_CMD_WRITE_ENTRY |
-+			    VSC73XX_VLANACCESS_VLAN_SRC_CHECK |
-+			    (portmap << VSC73XX_VLANACCESS_VLAN_PORT_MASK_SHIFT));
-+
-+	return vsc73xx_wait_for_vlan_table_cmd(vsc);
-+}
-+
-+static int
-+vsc73xx_update_vlan_table(struct vsc73xx *vsc, int port, u16 vid, bool set)
-+{
-+	u8 portmap;
-+	int ret;
-+
-+	ret = vsc73xx_read_vlan_table_entry(vsc, vid, &portmap);
-+	if (ret)
-+		return ret;
-+
-+	if (set)
-+		portmap |= BIT(port);
-+	else
-+		portmap &= ~BIT(port);
-+
-+	return  vsc73xx_write_vlan_table_entry(vsc, vid, portmap);
-+}
-+
- static int vsc73xx_setup(struct dsa_switch *ds)
- {
- 	struct vsc73xx *vsc = ds->priv;
-@@ -594,7 +701,7 @@ static int vsc73xx_setup(struct dsa_switch *ds)
- 		      VSC73XX_MACACCESS,
- 		      VSC73XX_MACACCESS_CMD_CLEAR_TABLE);
- 
--	/* Clear VLAN table */
-+	/* Set VLAN table to default values*/
- 	vsc73xx_write(vsc, VSC73XX_BLOCK_ANALYZER, 0,
- 		      VSC73XX_VLANACCESS,
- 		      VSC73XX_VLANACCESS_VLAN_TBL_CMD_CLEAR_TABLE);
-@@ -623,6 +730,9 @@ static int vsc73xx_setup(struct dsa_switch *ds)
- 	vsc73xx_write(vsc, VSC73XX_BLOCK_SYSTEM, 0, VSC73XX_GMIIDELAY,
- 		      VSC73XX_GMIIDELAY_GMII0_GTXDELAY_2_0_NS |
- 		      VSC73XX_GMIIDELAY_GMII0_RXDELAY_2_0_NS);
-+	/* Ingess VLAN reception mask (table 145) */
-+	vsc73xx_write(vsc, VSC73XX_BLOCK_ANALYZER, 0, VSC73XX_VLANMASK,
-+		      0x5f);
- 	/* IP multicast flood mask (table 144) */
- 	vsc73xx_write(vsc, VSC73XX_BLOCK_ANALYZER, 0, VSC73XX_IFLODMSK,
- 		      0xff);
-@@ -635,6 +745,12 @@ static int vsc73xx_setup(struct dsa_switch *ds)
- 
- 	udelay(4);
- 
-+	/* Clear VLAN table*/
-+	for (i = 0; i < VLAN_N_VID; i++)
-+		vsc73xx_write_vlan_table_entry(vsc, i, 0);
-+
-+	INIT_LIST_HEAD(&vsc->vlans);
-+
- 	return 0;
- }
- 
-@@ -1024,6 +1140,405 @@ static void vsc73xx_phylink_get_caps(struct dsa_switch *dsa, int port,
- 	config->mac_capabilities = MAC_SYM_PAUSE | MAC_10 | MAC_100 | MAC_1000;
- }
- 
-+static void
-+vsc73xx_set_vlan_conf(struct vsc73xx *vsc, int port,
-+		      enum vsc73xx_port_vlan_conf port_vlan_conf)
-+{
-+	u32 val = (port_vlan_conf == VSC73XX_VLAN_IGNORE) ?
-+		  VSC73XX_CAT_VLAN_MISC_VLAN_TCI_IGNORE_ENA : 0;
-+
-+	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_MAC, port, VSC73XX_CAT_VLAN_MISC,
-+			    VSC73XX_CAT_VLAN_MISC_VLAN_TCI_IGNORE_ENA, val);
-+
-+	val = (port_vlan_conf == VSC73XX_VLAN_IGNORE) ?
-+	      VSC73XX_CAT_VLAN_MISC_VLAN_KEEP_TAG_ENA : 0;
-+	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_MAC, port, VSC73XX_CAT_VLAN_MISC,
-+			    VSC73XX_CAT_VLAN_MISC_VLAN_KEEP_TAG_ENA, val);
-+
-+	val = (port_vlan_conf == VSC73XX_VLAN_FILTER) ?
-+	      VSC73XX_TXUPDCFG_TX_INSERT_TAG : 0;
-+	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_MAC, port, VSC73XX_TXUPDCFG,
-+			    VSC73XX_TXUPDCFG_TX_INSERT_TAG, val);
-+}
-+
-+static int
-+vsc73xx_vlan_change_untagged(struct vsc73xx *vsc, int port, u16 vid, bool set,
-+			     bool operate_on_storage)
-+{
-+	u32 val;
-+
-+	if (operate_on_storage) {
-+		vsc->untagged_storage[port] = set ? vid : VLAN_N_VID;
-+		return 0;
-+	}
-+
-+	val = set ? VSC73XX_TXUPDCFG_TX_UNTAGGED_VID_ENA : 0;
-+	vid = set ? vid : 0;
-+
-+	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_MAC, port, VSC73XX_TXUPDCFG,
-+			    VSC73XX_TXUPDCFG_TX_UNTAGGED_VID_ENA, val);
-+	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_MAC, port, VSC73XX_TXUPDCFG,
-+			    VSC73XX_TXUPDCFG_TX_UNTAGGED_VID,
-+			    (vid << VSC73XX_TXUPDCFG_TX_UNTAGGED_VID_SHIFT) &
-+			     VSC73XX_TXUPDCFG_TX_UNTAGGED_VID);
-+	return 0;
-+}
-+
-+static int
-+vsc73xx_vlan_change_pvid(struct vsc73xx *vsc, int port, u16 vid, bool set, bool operate_on_storage)
-+{
-+	u32 val;
-+
-+	if (operate_on_storage) {
-+		vsc->pvid_storage[port] = set ? vid : VLAN_N_VID;
-+		return 0;
-+	}
-+
-+	val = set ? 0 : VSC73XX_CAT_DROP_UNTAGGED_ENA;
-+	vid = set ? vid : 0;
-+
-+	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_MAC, port, VSC73XX_CAT_DROP,
-+			    VSC73XX_CAT_DROP_UNTAGGED_ENA, val);
-+
-+	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_MAC, port, VSC73XX_CAT_PORT_VLAN,
-+			    VSC73XX_CAT_PORT_VLAN_VLAN_VID,
-+			    vid & VSC73XX_CAT_PORT_VLAN_VLAN_VID);
-+	return 0;
-+}
-+
-+static bool
-+vsc73xx_port_get_pvid(struct vsc73xx *vsc, int port, u16 *vid, bool operate_on_storage)
-+{
-+	u32 val;
-+
-+	if (operate_on_storage) {
-+		if (vsc->pvid_storage[port] < VLAN_N_VID) {
-+			*vid = vsc->pvid_storage[port];
-+			return true;
-+		}
-+		return false;
-+	}
-+
-+	vsc73xx_read(vsc, VSC73XX_BLOCK_MAC, port, VSC73XX_CAT_DROP, &val);
-+	if (val & VSC73XX_CAT_DROP_UNTAGGED_ENA)
-+		return false;
-+
-+	vsc73xx_read(vsc, VSC73XX_BLOCK_MAC, port, VSC73XX_CAT_PORT_VLAN, &val);
-+	*vid = val & VSC73XX_CAT_PORT_VLAN_VLAN_VID;
-+
-+	return true;
-+}
-+
-+static bool vsc73xx_tag_8021q_active(struct dsa_port *dp)
-+{
-+	return !dsa_port_is_vlan_filtering(dp);
-+}
-+
-+static bool
-+vsc73xx_port_get_untagged(struct vsc73xx *vsc, int port, u16 *vid, bool operate_on_storage)
-+{
-+	u32 val;
-+
-+	if (operate_on_storage) {
-+		if (vsc->untagged_storage[port] < VLAN_N_VID) {
-+			*vid = vsc->untagged_storage[port];
-+			return true;
-+		}
-+		return false;
-+	}
-+
-+	vsc73xx_read(vsc, VSC73XX_BLOCK_MAC, port, VSC73XX_TXUPDCFG, &val);
-+	if (!(val & VSC73XX_TXUPDCFG_TX_UNTAGGED_VID_ENA))
-+		return false;
-+
-+	*vid = (val & VSC73XX_TXUPDCFG_TX_UNTAGGED_VID) >>
-+		VSC73XX_TXUPDCFG_TX_UNTAGGED_VID_SHIFT;
-+
-+	return true;
-+}
-+
-+static struct vsc73xx_bridge_vlan *vsc73xx_bridge_vlan_find(struct vsc73xx *vsc, u16 vid)
-+{
-+	struct vsc73xx_bridge_vlan *vlan;
-+
-+	list_for_each_entry(vlan, &vsc->vlans, list)
-+		if (vlan->vid == vid)
-+			return vlan;
-+
-+	return NULL;
-+}
-+
-+static u16 vsc73xx_bridge_vlan_num_tagged(struct vsc73xx *vsc, int port, u16 ignored_vid)
-+{
-+	struct vsc73xx_bridge_vlan *vlan;
-+	u16 num_tagged = 0;
-+
-+	list_for_each_entry(vlan, &vsc->vlans, list)
-+		if ((vlan->portmask & BIT(port)) &&
-+		    !(vlan->untagged & BIT(port)) &&
-+		    vlan->vid != ignored_vid)
-+			num_tagged++;
-+
-+	return num_tagged;
-+}
-+
-+static u16 vsc73xx_bridge_vlan_num_untagged(struct vsc73xx *vsc, int port, u16 ignored_vid)
-+{
-+	struct vsc73xx_bridge_vlan *vlan;
-+	u16 num_untagged = 0;
-+
-+	list_for_each_entry(vlan, &vsc->vlans, list)
-+		if ((vlan->portmask & BIT(port)) &&
-+		    (vlan->untagged & BIT(port)) &&
-+		    vlan->vid != ignored_vid)
-+			num_untagged++;
-+
-+	return num_untagged;
-+}
-+
-+static u16 vsc73xx_find_first_vlan_untagged(struct vsc73xx *vsc, int port)
-+{
-+	struct vsc73xx_bridge_vlan *vlan;
-+
-+	list_for_each_entry(vlan, &vsc->vlans, list)
-+		if ((vlan->portmask & BIT(port)) &&
-+		    (vlan->untagged & BIT(port)))
-+			return vlan->vid;
-+
-+	return VLAN_N_VID;
-+}
-+
-+static int
-+vsc73xx_port_vlan_filtering(struct dsa_switch *ds, int port,
-+			    bool vlan_filtering, struct netlink_ext_ack *extack)
-+{
-+	enum vsc73xx_port_vlan_conf port_vlan_conf = VSC73XX_VLAN_IGNORE;
-+	struct vsc73xx *vsc = ds->priv;
-+	bool store_untagged  = false;
-+	bool store_pvid = false;
-+	u16 vlan_no, vlan_untagged;
-+
-+	/* The swap processed bellow is required because vsc73xx is using tag8021q.
-+	 * When vlan_filtering is disabled, tag8021q use pvid/untagged vlans for
-+	 * port recognition. The values configured for vlans < 3072 are stored
-+	 * in storage table. When vlan_filtering is enabled, we need to restore
-+	 * pvid/untagged from storage and keep values used for tag8021q.
-+	 */
-+
-+	if (vlan_filtering) {
-+		/* Use VLAN_N_VID to count all vlans */
-+		u16 num_untagged = vsc73xx_bridge_vlan_num_untagged(vsc, port, VLAN_N_VID);
-+
-+		port_vlan_conf = (num_untagged > 1) ?
-+				 VSC73XX_VLAN_FILTER_UNTAG_ALL : VSC73XX_VLAN_FILTER;
-+
-+		vlan_untagged = vsc73xx_find_first_vlan_untagged(vsc, port);
-+		if (vlan_no < VLAN_N_VID) {
-+			store_untagged  = vsc73xx_port_get_untagged(vsc, port, &vlan_no, false);
-+			vsc73xx_vlan_change_untagged(vsc, port, vlan_untagged,
-+						     vlan_untagged < VLAN_N_VID, false);
-+			vsc->untagged_storage[port] = store_untagged ? vlan_no : VLAN_N_VID;
-+		}
-+	} else {
-+		vsc73xx_vlan_change_untagged(vsc, port, vsc->untagged_storage[port],
-+					     vsc->untagged_storage[port] < VLAN_N_VID, false);
-+	}
-+
-+	vsc73xx_set_vlan_conf(vsc, port, port_vlan_conf);
-+
-+	store_pvid = vsc73xx_port_get_pvid(vsc, port, &vlan_no, false);
-+	vsc73xx_vlan_change_pvid(vsc, port, vsc->pvid_storage[port],
-+				 vsc->pvid_storage[port] < VLAN_N_VID, false);
-+	vsc->pvid_storage[port] = store_pvid ? vlan_no : VLAN_N_VID;
-+
-+	return 0;
-+}
-+
-+static int vsc73xx_port_vlan_add(struct dsa_switch *ds, int port,
-+				 const struct switchdev_obj_port_vlan *vlan,
-+				 struct netlink_ext_ack *extack)
-+{
-+	bool untagged = vlan->flags & BRIDGE_VLAN_INFO_UNTAGGED;
-+	bool pvid = vlan->flags & BRIDGE_VLAN_INFO_PVID;
-+	struct vsc73xx_bridge_vlan *vsc73xx_vlan;
-+	u16 vlan_no, num_tagged, num_untagged;
-+	struct vsc73xx *vsc = ds->priv;
-+	int ret;
-+
-+	/* Be sure to deny alterations to the configuration done by tag_8021q.
-+	 */
-+	if (vid_is_dsa_8021q(vlan->vid)) {
-+		NL_SET_ERR_MSG_MOD(extack,
-+				   "Range 3072-4095 reserved for dsa_8021q operation");
-+		return -EBUSY;
-+	}
-+
-+	num_tagged = vsc73xx_bridge_vlan_num_tagged(vsc, port, vlan->vid);
-+	num_untagged = vsc73xx_bridge_vlan_num_untagged(vsc, port, vlan->vid);
-+
-+	/* VSC73XX allow only three untagged states: none, one or all */
-+	if ((untagged && num_tagged > 0 && num_untagged > 0) ||
-+	    (!untagged && num_untagged > 1)) {
-+		NL_SET_ERR_MSG_MOD(extack,
-+				   "Port can have only none, one or all untagged vlan!\n");
-+		return -EBUSY;
-+	}
-+
-+	vsc73xx_vlan = vsc73xx_bridge_vlan_find(vsc, vlan->vid);
-+
-+	if (!vsc73xx_vlan) {
-+		vsc73xx_vlan = kzalloc(sizeof(*vsc73xx_vlan), GFP_KERNEL);
-+		if (!vsc73xx_vlan)
-+			return -ENOMEM;
-+
-+		vsc73xx_vlan->vid = vlan->vid;
-+		vsc73xx_vlan->portmask = BIT(port);
-+		vsc73xx_vlan->untagged |= untagged ? BIT(port) : 0;
-+
-+		INIT_LIST_HEAD(&vsc73xx_vlan->list);
-+		list_add_tail(&vsc73xx_vlan->list, &vsc->vlans);
-+	} else {
-+		vsc73xx_vlan->portmask |= BIT(port);
-+
-+		if (untagged)
-+			vsc73xx_vlan->untagged |= BIT(port);
-+		else
-+			vsc73xx_vlan->untagged &= ~BIT(port);
-+	}
-+
-+	/* CPU port must be always tagged because port separation are based on 8021q.*/
-+	if (port != CPU_PORT) {
-+		bool operate_on_storage = vsc73xx_tag_8021q_active(dsa_to_port(ds, port));
-+
-+		if (!operate_on_storage) {
-+			enum vsc73xx_port_vlan_conf port_vlan_conf = VSC73XX_VLAN_FILTER;
-+
-+			if (num_tagged == 0 && untagged)
-+				port_vlan_conf = VSC73XX_VLAN_FILTER_UNTAG_ALL;
-+			vsc73xx_set_vlan_conf(vsc, port, port_vlan_conf);
-+
-+			if (port_vlan_conf == VSC73XX_VLAN_FILTER) {
-+				if (untagged) {
-+					ret = vsc73xx_vlan_change_untagged(vsc, port, vlan->vid,
-+									   true,
-+									   operate_on_storage);
-+					if (ret)
-+						return ret;
-+				} else if (num_untagged == 1) {
-+					vlan_no = vsc73xx_find_first_vlan_untagged(vsc, port);
-+					ret = vsc73xx_vlan_change_untagged(vsc, port, vlan_no, true,
-+									   operate_on_storage);
-+					if (ret)
-+						return ret;
-+				}
-+			}
-+		}
-+
-+		if (pvid) {
-+			ret = vsc73xx_vlan_change_pvid(vsc, port, vlan->vid, true,
-+						       operate_on_storage);
-+			if (ret)
-+				return ret;
-+		} else {
-+			if (vsc73xx_port_get_pvid(vsc, port, &vlan_no, false) &&
-+			    vlan_no == vlan->vid)
-+				vsc73xx_vlan_change_pvid(vsc, port, 0, false, false);
-+			else if (vsc->pvid_storage[port] == vlan->vid)
-+				vsc73xx_vlan_change_pvid(vsc, port, 0, false, true);
-+		}
-+	}
-+
-+	return vsc73xx_update_vlan_table(vsc, port, vlan->vid, true);
-+}
-+
-+static int vsc73xx_port_vlan_del(struct dsa_switch *ds, int port,
-+				 const struct switchdev_obj_port_vlan *vlan)
-+{
-+	struct vsc73xx_bridge_vlan *vsc73xx_vlan;
-+	u16 vlan_no, num_tagged, num_untagged;
-+	struct vsc73xx *vsc = ds->priv;
-+	bool operate_on_storage;
-+	int ret;
-+
-+	num_tagged = vsc73xx_bridge_vlan_num_tagged(vsc, port, vlan->vid);
-+	num_untagged = vsc73xx_bridge_vlan_num_untagged(vsc, port, vlan->vid);
-+
-+	ret = vsc73xx_update_vlan_table(vsc, port, vlan->vid, false);
-+	if (ret)
-+		return ret;
-+
-+	operate_on_storage = vsc73xx_tag_8021q_active(dsa_to_port(ds, port));
-+
-+	if (!operate_on_storage) {
-+		enum vsc73xx_port_vlan_conf port_vlan_conf = VSC73XX_VLAN_FILTER;
-+
-+		if (num_tagged == 0)
-+			port_vlan_conf = VSC73XX_VLAN_FILTER_UNTAG_ALL;
-+		vsc73xx_set_vlan_conf(vsc, port, port_vlan_conf);
-+
-+		if (num_untagged <= 1) {
-+			vlan_no = vsc73xx_find_first_vlan_untagged(vsc, port);
-+			vsc73xx_vlan_change_untagged(vsc, port, vlan_no, num_untagged, false);
-+		}
-+	} else if (vsc->untagged_storage[port] == vlan->vid) {
-+		vsc73xx_vlan_change_untagged(vsc, port, 0, false, true);
-+	}
-+
-+	if (vsc73xx_port_get_pvid(vsc, port, &vlan_no, false) && vlan_no == vlan->vid)
-+		vsc73xx_vlan_change_pvid(vsc, port, 0, false, false);
-+	else if (vsc->pvid_storage[port] == vlan->vid)
-+		vsc73xx_vlan_change_pvid(vsc, port, 0, false, true);
-+
-+	vsc73xx_vlan = vsc73xx_bridge_vlan_find(vsc, vlan->vid);
-+
-+	if (vsc73xx_vlan) {
-+		vsc73xx_vlan->portmask &= ~BIT(port);
-+
-+		if (vsc73xx_vlan->portmask)
-+			return 0;
-+
-+		list_del(&vsc73xx_vlan->list);
-+		kfree(vsc73xx_vlan);
-+	}
-+
-+	return 0;
-+}
-+
-+static int vsc73xx_port_setup(struct dsa_switch *ds, int port)
-+{
-+	struct vsc73xx *vsc = ds->priv;
-+
-+	/* Those bits are responsible for MTU only. Kernel take care about MTU,
-+	 * let's enable +8 bytes frame length unconditionally.
-+	 */
-+	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_MAC, port, VSC73XX_MAC_CFG,
-+			    VSC73XX_MAC_CFG_VLAN_AWR | VSC73XX_MAC_CFG_VLAN_DBLAWR,
-+			    VSC73XX_MAC_CFG_VLAN_AWR | VSC73XX_MAC_CFG_VLAN_DBLAWR);
-+
-+	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_MAC, port, VSC73XX_CAT_DROP,
-+			    VSC73XX_CAT_DROP_TAGGED_ENA, 0);
-+	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_MAC, port, VSC73XX_CAT_DROP,
-+			    VSC73XX_CAT_DROP_UNTAGGED_ENA,
-+			    VSC73XX_CAT_DROP_UNTAGGED_ENA);
-+	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_MAC, port, VSC73XX_TXUPDCFG,
-+			    VSC73XX_TXUPDCFG_TX_UNTAGGED_VID_ENA, 0);
-+	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_MAC, port, VSC73XX_TXUPDCFG,
-+			    VSC73XX_TXUPDCFG_TX_UNTAGGED_VID, 0);
-+	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_MAC, port, VSC73XX_CAT_PORT_VLAN,
-+			    VSC73XX_CAT_PORT_VLAN_VLAN_VID, 0);
-+
-+	if (port == CPU_PORT)
-+		vsc73xx_set_vlan_conf(vsc, port, VSC73XX_VLAN_FILTER);
-+	else
-+		vsc73xx_set_vlan_conf(vsc, port, VSC73XX_VLAN_IGNORE);
-+
-+	/* Set storage values out of range */
-+	vsc->pvid_storage[port] = VLAN_N_VID;
-+	vsc->untagged_storage[port] = VLAN_N_VID;
-+
-+	return 0;
-+}
-+
- static void vsc73xx_refresh_fwd_map(struct dsa_switch *ds, int port, bool configure)
- {
- 	struct dsa_port *dp = dsa_to_port(ds, port);
-@@ -1107,11 +1622,15 @@ static const struct dsa_switch_ops vsc73xx_ds_ops = {
- 	.get_strings = vsc73xx_get_strings,
- 	.get_ethtool_stats = vsc73xx_get_ethtool_stats,
- 	.get_sset_count = vsc73xx_get_sset_count,
-+	.port_setup = vsc73xx_port_setup,
- 	.port_enable = vsc73xx_port_enable,
- 	.port_disable = vsc73xx_port_disable,
- 	.port_change_mtu = vsc73xx_change_mtu,
- 	.port_max_mtu = vsc73xx_get_max_mtu,
- 	.port_stp_state_set = vsc73xx_port_stp_state_set,
-+	.port_vlan_filtering = vsc73xx_port_vlan_filtering,
-+	.port_vlan_add = vsc73xx_port_vlan_add,
-+	.port_vlan_del = vsc73xx_port_vlan_del,
- 	.phylink_get_caps = vsc73xx_phylink_get_caps,
- };
- 
-diff --git a/drivers/net/dsa/vitesse-vsc73xx.h b/drivers/net/dsa/vitesse-vsc73xx.h
-index 99c5c24ffde0..01eb2dd48f03 100644
---- a/drivers/net/dsa/vitesse-vsc73xx.h
-+++ b/drivers/net/dsa/vitesse-vsc73xx.h
-@@ -24,6 +24,14 @@
-  * @addr: MAC address used in flow control frames
-  * @ops: Structure with hardware-dependent operations
-  * @priv: Pointer to the configuration interface structure
-+ * @pvid_storage: Storage table with PVID configured for other state of vlan_filtering.
-+ *	It have two roles: Keep PVID when PVID is configured but vlan filtering is off
-+ *	and keep PVID necessary for tag8021q operations when vlan filtering is enabled.
-+ * @untagged_storage: Storage table with eggress untagged VLAN configured for
-+ *	other state of vlan_filtering.Keep VID necessary for tag8021q operations when
-+ *	vlan filtering is enabled.
-+ * @vlans: List of configured vlans. Contain port mask and untagged status of every
-+ *	vlan configured in port vlan operation. It doesn't cover tag8021q vlans.
+diff --git a/net/dsa/tag_8021q.c b/net/dsa/tag_8021q.c
+index 3cb0293793a5..332b0ae02645 100644
+--- a/net/dsa/tag_8021q.c
++++ b/net/dsa/tag_8021q.c
+@@ -507,27 +507,39 @@ EXPORT_SYMBOL_GPL(dsa_tag_8021q_find_port_by_vbid);
+  * @vbid: pointer to storage for imprecise bridge ID. Must be pre-initialized
+  *	with -1. If a positive value is returned, the source_port and switch_id
+  *	are invalid.
++ * @vid: pointer to storage for original VID, in case tag_8021q decoding failed.
++ *
++ * If the packet has a tag_8021q header, decode it and set @source_port,
++ * @switch_id and @vbid, and strip the header. Otherwise set @vid and keep the
++ * header in the hwaccel area of the packet.
   */
- struct vsc73xx {
- 	struct device			*dev;
-@@ -34,6 +42,9 @@ struct vsc73xx {
- 	u8				addr[ETH_ALEN];
- 	const struct vsc73xx_ops	*ops;
- 	void				*priv;
-+	u16				pvid_storage[VSC73XX_MAX_NUM_PORTS];
-+	u16				untagged_storage[VSC73XX_MAX_NUM_PORTS];
-+	struct list_head		vlans;
- };
+ void dsa_8021q_rcv(struct sk_buff *skb, int *source_port, int *switch_id,
+-		   int *vbid)
++		   int *vbid, int *vid)
+ {
+ 	int tmp_source_port, tmp_switch_id, tmp_vbid;
+-	u16 vid, tci;
++	__be16 vlan_proto;
++	u16 tmp_vid, tci;
  
- /**
-@@ -48,6 +59,20 @@ struct vsc73xx_ops {
- 		     u32 val);
- };
- 
-+/**
-+ * struct vsc73xx_bridge_vlan - VSC73xx driver structure which keeps vlan database copy
-+ * @vid: VLAN number
-+ * @portmask: each bit represends one port
-+ * @untagged: each bit represends one port configured with @vid untagged
-+ * @list: list structure
-+ */
-+struct vsc73xx_bridge_vlan {
-+	u16 vid;
-+	u8 portmask;
-+	u8 untagged;
-+	struct list_head list;
-+};
+ 	if (skb_vlan_tag_present(skb)) {
++		vlan_proto = skb->vlan_proto;
+ 		tci = skb_vlan_tag_get(skb);
+ 		__vlan_hwaccel_clear_tag(skb);
+ 	} else {
++		struct vlan_ethhdr *hdr = vlan_eth_hdr(skb);
 +
- int vsc73xx_is_addr_valid(u8 block, u8 subblock);
- int vsc73xx_probe(struct vsc73xx *vsc);
- void vsc73xx_remove(struct vsc73xx *vsc);
++		vlan_proto = hdr->h_vlan_proto;
+ 		skb_push_rcsum(skb, ETH_HLEN);
+ 		__skb_vlan_pop(skb, &tci);
+ 		skb_pull_rcsum(skb, ETH_HLEN);
+ 	}
+ 
+-	vid = tci & VLAN_VID_MASK;
++	tmp_vid = tci & VLAN_VID_MASK;
++	if (!vid_is_dsa_8021q(tmp_vid))
++		goto not_tag_8021q;
+ 
+-	tmp_source_port = dsa_8021q_rx_source_port(vid);
+-	tmp_switch_id = dsa_8021q_rx_switch_id(vid);
+-	tmp_vbid = dsa_tag_8021q_rx_vbid(vid);
++	tmp_source_port = dsa_8021q_rx_source_port(tmp_vid);
++	tmp_switch_id = dsa_8021q_rx_switch_id(tmp_vid);
++	tmp_vbid = dsa_tag_8021q_rx_vbid(tmp_vid);
+ 
+ 	/* Precise source port information is unknown when receiving from a
+ 	 * VLAN-unaware bridging domain, and tmp_source_port and tmp_switch_id
+@@ -546,5 +558,15 @@ void dsa_8021q_rcv(struct sk_buff *skb, int *source_port, int *switch_id,
+ 		*vbid = tmp_vbid;
+ 
+ 	skb->priority = (tci & VLAN_PRIO_MASK) >> VLAN_PRIO_SHIFT;
++	return;
++
++not_tag_8021q:
++	if (vid)
++		*vid = tmp_vid;
++	if (vbid)
++		*vbid = -1;
++
++	/* Put the tag back */
++	__vlan_hwaccel_put_tag(skb, vlan_proto, tci);
+ }
+ EXPORT_SYMBOL_GPL(dsa_8021q_rcv);
+diff --git a/net/dsa/tag_8021q.h b/net/dsa/tag_8021q.h
+index 41f7167ac520..0c6671d7c1c2 100644
+--- a/net/dsa/tag_8021q.h
++++ b/net/dsa/tag_8021q.h
+@@ -14,7 +14,7 @@ struct sk_buff *dsa_8021q_xmit(struct sk_buff *skb, struct net_device *netdev,
+ 			       u16 tpid, u16 tci);
+ 
+ void dsa_8021q_rcv(struct sk_buff *skb, int *source_port, int *switch_id,
+-		   int *vbid);
++		   int *vbid, int *vid);
+ 
+ struct net_device *dsa_tag_8021q_find_port_by_vbid(struct net_device *conduit,
+ 						   int vbid);
+diff --git a/net/dsa/tag_ocelot_8021q.c b/net/dsa/tag_ocelot_8021q.c
+index b059381310fe..8e8b1bef6af6 100644
+--- a/net/dsa/tag_ocelot_8021q.c
++++ b/net/dsa/tag_ocelot_8021q.c
+@@ -81,7 +81,7 @@ static struct sk_buff *ocelot_rcv(struct sk_buff *skb,
+ {
+ 	int src_port, switch_id;
+ 
+-	dsa_8021q_rcv(skb, &src_port, &switch_id, NULL);
++	dsa_8021q_rcv(skb, &src_port, &switch_id, NULL, NULL);
+ 
+ 	skb->dev = dsa_conduit_find_user(netdev, switch_id, src_port);
+ 	if (!skb->dev)
+diff --git a/net/dsa/tag_sja1105.c b/net/dsa/tag_sja1105.c
+index 48886d4b7e3e..7639ccb94d35 100644
+--- a/net/dsa/tag_sja1105.c
++++ b/net/dsa/tag_sja1105.c
+@@ -472,37 +472,14 @@ static bool sja1110_skb_has_inband_control_extension(const struct sk_buff *skb)
+ 	return ntohs(eth_hdr(skb)->h_proto) == ETH_P_SJA1110;
+ }
+ 
+-/* If the VLAN in the packet is a tag_8021q one, set @source_port and
+- * @switch_id and strip the header. Otherwise set @vid and keep it in the
+- * packet.
+- */
+-static void sja1105_vlan_rcv(struct sk_buff *skb, int *source_port,
+-			     int *switch_id, int *vbid, u16 *vid)
+-{
+-	struct vlan_ethhdr *hdr = vlan_eth_hdr(skb);
+-	u16 vlan_tci;
+-
+-	if (skb_vlan_tag_present(skb))
+-		vlan_tci = skb_vlan_tag_get(skb);
+-	else
+-		vlan_tci = ntohs(hdr->h_vlan_TCI);
+-
+-	if (vid_is_dsa_8021q(vlan_tci & VLAN_VID_MASK))
+-		return dsa_8021q_rcv(skb, source_port, switch_id, vbid);
+-
+-	/* Try our best with imprecise RX */
+-	*vid = vlan_tci & VLAN_VID_MASK;
+-}
+-
+ static struct sk_buff *sja1105_rcv(struct sk_buff *skb,
+ 				   struct net_device *netdev)
+ {
+-	int source_port = -1, switch_id = -1, vbid = -1;
++	int source_port = -1, switch_id = -1, vbid = -1, vid = -1;
+ 	struct sja1105_meta meta = {0};
+ 	struct ethhdr *hdr;
+ 	bool is_link_local;
+ 	bool is_meta;
+-	u16 vid;
+ 
+ 	hdr = eth_hdr(skb);
+ 	is_link_local = sja1105_is_link_local(skb);
+@@ -525,7 +502,7 @@ static struct sk_buff *sja1105_rcv(struct sk_buff *skb,
+ 	 * a tag_8021q VLAN which we have to strip
+ 	 */
+ 	if (sja1105_skb_has_tag_8021q(skb))
+-		sja1105_vlan_rcv(skb, &source_port, &switch_id, &vbid, &vid);
++		dsa_8021q_rcv(skb, &source_port, &switch_id, &vbid, &vid);
+ 	else if (source_port == -1 && switch_id == -1)
+ 		/* Packets with no source information have no chance of
+ 		 * getting accepted, drop them straight away.
+@@ -660,9 +637,8 @@ static struct sk_buff *sja1110_rcv_inband_control_extension(struct sk_buff *skb,
+ static struct sk_buff *sja1110_rcv(struct sk_buff *skb,
+ 				   struct net_device *netdev)
+ {
+-	int source_port = -1, switch_id = -1, vbid = -1;
++	int source_port = -1, switch_id = -1, vbid = -1, vid = -1;
+ 	bool host_only = false;
+-	u16 vid = 0;
+ 
+ 	if (sja1110_skb_has_inband_control_extension(skb)) {
+ 		skb = sja1110_rcv_inband_control_extension(skb, &source_port,
+@@ -674,7 +650,7 @@ static struct sk_buff *sja1110_rcv(struct sk_buff *skb,
+ 
+ 	/* Packets with in-band control extensions might still have RX VLANs */
+ 	if (likely(sja1105_skb_has_tag_8021q(skb)))
+-		sja1105_vlan_rcv(skb, &source_port, &switch_id, &vbid, &vid);
++		dsa_8021q_rcv(skb, &source_port, &switch_id, &vbid, &vid);
+ 
+ 	if (vbid >= 1)
+ 		skb->dev = dsa_tag_8021q_find_port_by_vbid(netdev, vbid);
 -- 
 2.34.1
 
