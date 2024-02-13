@@ -1,77 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48CCB56768;
-	Tue, 13 Feb 2024 19:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC05605C8;
+	Tue, 13 Feb 2024 19:26:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707852323; cv=none; b=b0eBMKi2fpK4MVl/dlrIBA1pQpToiGcjmGfr/ixdPlePxEO1Oeo6iI3f74Uhs3tiqMjrzrzxKcvgjQLQbSIY4DzQ188b0cOhwG3xoTkNUfnV2NhUze3/HOIzfL+hVTQnIM7JC3gJ8dxiOzg4QBNLck2iXXHCWTOv5ZUdJhJ1hv0=
+	t=1707852376; cv=none; b=Bb4AMFNc5tzTW3q74rEBQPbrChm3b0xo4m/MLm+f15/r+p6hzGmcH8Ry9NBsowjb97QQvc3wC9mCGWNCGMQgaOEvfAr8byXe8+8Lp6KvVEQUNqaUKij7BEGIV1uhBAW0fvCNH8jhBvlsjJUA/YrtvjBGZIzjch4NYXPgv8dJSkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707852323; c=relaxed/simple;
-	bh=I6hO5jlwBaKJFc+VKnC3tf7xGWq+cLtrlW3tHXiWBho=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OSrx26smceRVFm/IhjmuCf0gd3OL8BFRqd2BC/K08tuqAfJgVE/faQEH7g9QeXCKeaUYeBHZlTRee0C4yOPPzK7YcAWWs45SYElDOQjNhQ0K2ZxpW5AqFiNgJ+0AVQ9IKYxu8ED9dcaJReS3BiQDpU1n9Y83TrbOWK993ey8DXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PnUA/PQA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707852376; c=relaxed/simple;
+	bh=BO77RV+GIQjk9Z58R/dxnr2s1En8OoXSBgchfvm6cJM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ioBZZSDFGjC1uBh6HF/CzRMxxhJjSIJPYLeM6nyueTkSGIzXT1+PmxqriLMiJ+FQ+u/6Mh7TRr5oQVUzhqQ4JaOmMuH6yp6A92qNup/dB7pCFdI5XLD127bkfjb8AHw/j5rb/W+OJ1Oe6+daqFq89//h3JzJwDe2ZcZqmLrh0A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e1z/5+iT; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PnUA/PQA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF8B7C433C7;
-	Tue, 13 Feb 2024 19:25:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707852322;
-	bh=I6hO5jlwBaKJFc+VKnC3tf7xGWq+cLtrlW3tHXiWBho=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PnUA/PQAwLP7ry+1TEQd4Dzy+U76NeX7ehNECyNf8BUEVbl7sUR6aLeKiygsvASmM
-	 yBW/mLpsuPR3cq4DfEBWqsmfQ1v7/UqO52m2WIM5MFbhCaXThPYTAR6GbRxO4QbZVx
-	 QdDDst/fWw3i6IRA+KiGIMWCJnkLW/cduT1oNC3/asc3CIcA9wyuSds2FTv165JLA/
-	 aI/PAB8QZM68FSc33cVNCKMvtkHGsp3rIzwiqcbbYlGTeGVyRaBfOO1zLOyxQj+axX
-	 soVuJfXrFgr4/TGuQzyiBkmRSjN+N7xI3CG4lWcHV383Noau/FAJ+CDXNRmVsfKq2g
-	 ybDI1+le7luqw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rZyPA-002tNf-Hf;
-	Tue, 13 Feb 2024 19:25:20 +0000
-From: Marc Zyngier <maz@kernel.org>
-To: Will Deacon <will@kernel.org>,
-	kvmarm@lists.linux.dev
-Cc: linux-arm-kernel@lists.infradead.org,
-	Ricardo Koller <ricarkol@google.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] KVM: arm64: Fix double-free following kvm_pgtable_stage2_free_unlinked()
-Date: Tue, 13 Feb 2024 19:25:16 +0000
-Message-Id: <170785230656.2847941.2376736166184489545.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240212193052.27765-1-will@kernel.org>
-References: <20240212193052.27765-1-will@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e1z/5+iT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707852376; x=1739388376;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=BO77RV+GIQjk9Z58R/dxnr2s1En8OoXSBgchfvm6cJM=;
+  b=e1z/5+iTWeS/YkGImRHey+UW9D9G7rOTtjWSlm2l56ffSx3W/ceT2H5t
+   pB2LfLKWzXwN5RCqnsQaciyq6aEbOtgirorX5kqSSTnGwLsAHUVmRgn8h
+   KlHmaOgwYwSqIjLHcP1va1hU6VLopS4LErQjZQpdR33EmiV4zKl1OQWep
+   3JHPj38xWUd2dS0xV2r8GxSQkH7MAmeH4nZHg4hyT5SA+viDJF5SFVbA6
+   sTO34EzfXR07k4xAiGOnFC/k/iFh0zG6XUUYu43UnweuGC2Qo8P3oDdha
+   XNVPl0uluaPnNLc9pHZkjmCo9P2oPaVCdOnLypOcZ4KB6FPFfFXtebb6A
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="12967593"
+X-IronPort-AV: E=Sophos;i="6.06,158,1705392000"; 
+   d="scan'208";a="12967593"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 11:26:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,158,1705392000"; 
+   d="scan'208";a="7731030"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 11:26:14 -0800
+Date: Tue, 13 Feb 2024 11:31:42 -0800
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>,
+ iommu@lists.linux.dev, Lu Baolu <baolu.lu@linux.intel.com>,
+ kvm@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, Joerg Roedel
+ <joro@8bytes.org>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov
+ <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, Raj Ashok
+ <ashok.raj@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+ maz@kernel.org, peterz@infradead.org, seanjc@google.com, Robin Murphy
+ <robin.murphy@arm.com>, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH RFC 12/13] iommu/vt-d: Add a helper to retrieve PID
+ address
+Message-ID: <20240213113142.6b7459e1@jacob-builder>
+In-Reply-To: <87le7oixk4.ffs@tglx>
+References: <20231112041643.2868316-1-jacob.jun.pan@linux.intel.com>
+	<20231112041643.2868316-13-jacob.jun.pan@linux.intel.com>
+	<874jgvuls0.ffs@tglx>
+	<20240126153047.5e42e5d0@jacob-builder>
+	<87le7oixk4.ffs@tglx>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: will@kernel.org, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, ricarkol@google.com, oliver.upton@linux.dev, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, 12 Feb 2024 19:30:52 +0000, Will Deacon wrote:
-> kvm_pgtable_stage2_free_unlinked() does the final put_page() on the
-> root page of the sub-tree before returning, so remove the additional
-> put_page() invocations in the callers.
+Hi Thomas,
 
-Applied to fixes, thanks!
+On Tue, 13 Feb 2024 09:21:47 +0100, Thomas Gleixner <tglx@linutronix.de>
+wrote:
 
-[1/1] KVM: arm64: Fix double-free following kvm_pgtable_stage2_free_unlinked()
-      commit: c60d847be7b8e69e419e02a2b3d19c2842a3c35d
+> > Here the parent APIC chip does apic_set_affinity() which will set up
+> > effective mask before posted MSI affinity change.
+> >
+> > Maybe I missed some cases?  
+> 
+> The function is only used in intel_ir_reconfigure_irte_posted() in the
+> next patch, but it's generally available. So I asked that question
+> because if it's called in some other context then it's going to be not
+> guaranteed.
+> 
+> That also begs the question why this function exists in the first
+> place. This really can be part of intel_ir_reconfigure_irte_posted(),
+> which makes it clear what the context is, no?
+Make sense, will fold it in next time.
 
-Cheers,
+Thanks,
 
-	M.
--- 
-Without deviation from the norm, progress is not possible.
-
-
+Jacob
