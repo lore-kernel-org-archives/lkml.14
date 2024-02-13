@@ -1,94 +1,224 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E8601D69B;
-	Tue, 13 Feb 2024 19:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D509605C2
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 19:23:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707852198; cv=none; b=g+KEQxSAGxbsDzMRGjHIdGNJteRgWh/K1lJoympxfDdMP+pb41M0FFe1SBNUJeFqq7q6NEnooAcY88qncrihExzypipSx2DF9YQewdxW4qe6veRJ33JO+PiCk7cCna40//v9FZAMp8qXwvPRv4N8xRtmQUgC8UqTgaDVxBxSWE4=
+	t=1707852227; cv=none; b=WVMz2BrpzuLaW+q8+l8FkvA14XFQHSyTn2a/phVvZJiOQDxUCUJQozjYLPVwZM1rJEpcIImaxedaRVuOnbeYtZLerJTSnIChi1saskPYMpm3R7+63Ef5tbWx2PiLwaOxXcQ4LDIlZECth994wTFSdMxq7xTnZThaP4PJmR6fj3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707852198; c=relaxed/simple;
-	bh=hsD+OvmLS+3S0aEg2rHdHXbh2Nru/txjT+9O83/aFoQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N9/BF7lXyQnPyTST0bFTgbi04AV+QcBnFVn1inEn7jzpFcH5dc59qutG/AY1DWid41SIb4XGxjGFhvJ2GT/vVVBbZU1flssG6xnJBPYgX23mTWoGr5xn2s+nUiRmj/6Z5XtB1fiMrAmDYRsPpnXpOnxK3CYwq8YtiC8n1lQ/dCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XcFjL4tV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707852227; c=relaxed/simple;
+	bh=EOHvK7uHwUOOmi6bfq5xmfA3oU4UQjOOq5ueZxiclP4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=CJ2Jlv92JBUozOTeYVpNZw+VqhMreJcmZ9rcC1mTAZuVhihwHAK1EZh7fX0mY8aY1f6D2s/kiq35Oaakgb9D5b+J6EAdtiheHhnlHmIocGL5g6Gb+5vA9KxX+4+z7/2VJnkXdTPSrUCJm5GRFVaDMafcLxw1aslT0vdm+E4qhmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--avagin.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Xtfk4dyZ; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--avagin.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XcFjL4tV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48963C433C7;
-	Tue, 13 Feb 2024 19:23:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707852197;
-	bh=hsD+OvmLS+3S0aEg2rHdHXbh2Nru/txjT+9O83/aFoQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XcFjL4tV96gUavkroHbSO6wiPDCZYUrufMQKW6QmBi/E0wALT9be7dq6C4ndhK6DQ
-	 MRYvZa0RxII85Rj/dFCpyc3YhGhfceMFJMgCNyX+MmMNAUb792xRAEIBsNLsFAiAul
-	 +I3DCwzax15rmVzWlY9MS1zYzPhFUjjnzL/pJEyEyQnDRmTst+3r3U50tfhoRbrfbo
-	 ApMDeFNTo3qFarMHoHr4AmDZ+qO6yEwFQyA3gtSRiiPwhCDXSW3BMobl0K4RPRDTCP
-	 zKzOFLIIUEEfhPIUVUCL2BdTR2a0riZssJdflSawKm5wwj25f3pwyaVhuWRN0NViyL
-	 GRQEA06Yra33g==
-Date: Tue, 13 Feb 2024 19:23:13 +0000
-From: Conor Dooley <conor@kernel.org>
-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andrey Skvortsov <andrej.skvortzov@gmail.com>,
-	Icenowy Zheng <icenowy@aosc.io>, Dalton Durst <dalton@ubports.com>,
-	Shoji Keita <awaittrot@shjk.jp>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] dt-bindings: iio: magnetometer: Add Voltafield
- AF8133J
-Message-ID: <20240213-bath-plenty-6349eab2f9ff@spud>
-References: <20240212175410.3101973-1-megi@xff.cz>
- <20240212175410.3101973-3-megi@xff.cz>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xtfk4dyZ"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5cf2714e392so73643a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 11:23:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707852225; x=1708457025; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ExCkZDXy1AVqJwQCfKejHjr8UJa3r0tbqmV1p94ofSE=;
+        b=Xtfk4dyZhI0vBzCcdIXjEIN10AxO9dOvPwC+1GDbYeiIAXciPS0dX6SciiLHTZjhz7
+         ZQITVfo4d9bk2YDA4gV6QjXH3wg1VmCks8J4WFzO0IL4CK9BUumN8T0B2JfD4BHbbm9H
+         UxyCBwzNUDeRvrupekPFkDlaV4p0CztMhSNC4pXWZ4OWjZj5Gjny0dym0uVg5eXYcLal
+         Mt8MAgrtpKkHweniXcrGRRa7CCaD8Mvo0mkxVapek+HfmJBXfr3vUHkpiY30aBFWKbBk
+         y1OgtNs0tvY7JcG2TUpLSCx33CQ9s7bztJkGUQA6XRTIaza2P0g6lQF7Wnseoj3eSe9w
+         tX2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707852225; x=1708457025;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ExCkZDXy1AVqJwQCfKejHjr8UJa3r0tbqmV1p94ofSE=;
+        b=i6YGVQCoLFKKLgMXLN+SLh0k+RPU0BN/NMphXBiy+RPqdjkng+xmZ5qwCStCDWa54P
+         h0v68GgKoWlOU6GvLKFI1JtR94gP7C8sp5L95HqN1j7N0ZNUTa8yjpSgIaZxrqDV3Cwm
+         B6wcjp8/BIJor1JXJRdSBH/gDlRhUv4xAgoC1GJQhJewR8AmoA/G+xcpgyOkqLYgVASr
+         hPcroaDBo28+j4ZBrFVb+07udjO+Wkb59c6Y/gktW972GAKETv4oqTOePGO+xL4Ye/uH
+         byYH4fN+HhNpaZvKZV9NCIPdgh+8MbO9b6ru2lYI5y5P2yu/XdTlrXwgZF2Bgg6zBSjf
+         2t6w==
+X-Gm-Message-State: AOJu0Yw8mrI8/LSPRMAH85rmpQ2n9eLxbs+dUlISR0huM+X2KJL9QkGe
+	hovC08/iPkcg+5tkTl0F0YmXI/lU5T2traTtZv5cxkkUF3h7DIhYCTxDyyXg2idTaXQ2Y0S3NhG
+	4sQ==
+X-Google-Smtp-Source: AGHT+IGWi17+EWwj8QqOfMRs/2jzz/wVTn/vSsPpoGbcqSiLu03AJPhqfVkvu4BORpV18AnDW+7qh37OIBA=
+X-Received: from avagin.kir.corp.google.com ([2620:0:1008:10:4c28:d6b4:a5c2:fc22])
+ (user=avagin job=sendgmr) by 2002:a05:6a02:a09:b0:5dc:8203:7285 with SMTP id
+ cm9-20020a056a020a0900b005dc82037285mr1275pgb.0.1707852225590; Tue, 13 Feb
+ 2024 11:23:45 -0800 (PST)
+Date: Tue, 13 Feb 2024 11:23:40 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="UlZTnTUSr/twg2So"
-Content-Disposition: inline
-In-Reply-To: <20240212175410.3101973-3-megi@xff.cz>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
+Message-ID: <20240213192340.2023366-1-avagin@google.com>
+Subject: [PATCH v3] kvm/x86: allocate the write-tracking metadata on-demand
+From: Andrei Vagin <avagin@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kvm@vger.kernel.org, 
+	Andrei Vagin <avagin@google.com>, Zhenyu Wang <zhenyuw@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
+The write-track is used externally only by the gpu/drm/i915 driver.
+Currently, it is always enabled, if a kernel has been compiled with this
+driver.
 
---UlZTnTUSr/twg2So
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Enabling the write-track mechanism adds a two-byte overhead per page across
+all memory slots. It isn't significant for regular VMs. However in gVisor,
+where the entire process virtual address space is mapped into the VM, even
+with a 39-bit address space, the overhead amounts to 256MB.
 
-On Mon, Feb 12, 2024 at 06:53:54PM +0100, Ond=C5=99ej Jirman wrote:
-> From: Icenowy Zheng <icenowy@aosc.io>
->=20
-> Voltafield AF8133J is a simple magnetometer sensor produced by Voltafield
-> Technology Corp, with dual power supplies (one for core and one for I/O)
-> and active-low reset pin.
->=20
-> The sensor has configurable range 1.2 - 2.2 mT and a software controlled
-> standby mode.
->=20
-> Add a device tree binding for it.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Ond=C5=99ej Jirman <megi@xff.cz>
+Rework the write-tracking mechanism to enable it on-demand in
+kvm_page_track_register_notifier.
 
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Here is Sean's comment about the locking scheme:
 
-Cheers,
-Conor.
+The only potential hiccup would be if taking slots_arch_lock would
+deadlock, but it should be impossible for slots_arch_lock to be taken in
+any other path that involves VFIO and/or KVMGT *and* can be coincident.
+Except for kvm_arch_destroy_vm() (which deletes KVM's internal
+memslots), slots_arch_lock is taken only through KVM ioctls(), and the
+caller of kvm_page_track_register_notifier() *must* hold a reference to
+the VM.
 
---UlZTnTUSr/twg2So
-Content-Type: application/pgp-signature; name="signature.asc"
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>
+Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+Co-developed-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Andrei Vagin <avagin@google.com>
+---
+v1: https://lore.kernel.org/lkml/ZcErs9rPqT09nNge@google.com/T/
+v2: allocate the write-tracking metadata on-demand
+    https://lore.kernel.org/kvm/20240206153405.489531-1-avagin@google.com/
+v3: explicitly track if there are *external* write tracking users.
 
------BEGIN PGP SIGNATURE-----
+ arch/x86/include/asm/kvm_host.h |  9 +++++
+ arch/x86/kvm/mmu/page_track.c   | 68 ++++++++++++++++++++++++++++++++-
+ 2 files changed, 75 insertions(+), 2 deletions(-)
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZcvBoAAKCRB4tDGHoIJi
-0ri4AP98M54wYPIAkwY0P5ptbYpSoDCBlkhcEof3uMjY67FmLgD/e5EwEvFlSPB0
-3FPDwejjegJy/dpDu8IWpUCOu6HDHQY=
-=m3jW
------END PGP SIGNATURE-----
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index d271ba20a0b2..a777ac77b3ea 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1468,6 +1468,15 @@ struct kvm_arch {
+ 	 */
+ 	bool shadow_root_allocated;
+ 
++#ifdef CONFIG_KVM_EXTERNAL_WRITE_TRACKING
++	/*
++	 * If set, the VM has (or had) an external write tracking user, and
++	 * thus all write tracking metadata has been allocated, even if KVM
++	 * itself isn't using write tracking.
++	 */
++	bool external_write_tracking_enabled;
++#endif
++
+ #if IS_ENABLED(CONFIG_HYPERV)
+ 	hpa_t	hv_root_tdp;
+ 	spinlock_t hv_root_tdp_lock;
+diff --git a/arch/x86/kvm/mmu/page_track.c b/arch/x86/kvm/mmu/page_track.c
+index c87da11f3a04..f6448284c18e 100644
+--- a/arch/x86/kvm/mmu/page_track.c
++++ b/arch/x86/kvm/mmu/page_track.c
+@@ -20,10 +20,23 @@
+ #include "mmu_internal.h"
+ #include "page_track.h"
+ 
++static bool kvm_external_write_tracking_enabled(struct kvm *kvm)
++{
++#ifdef CONFIG_KVM_EXTERNAL_WRITE_TRACKING
++	/*
++	 * Read external_write_tracking_enabled before related pointers.  Pairs
++	 * with the smp_store_release in kvm_page_track_write_tracking_enable().
++	 */
++	return smp_load_acquire(&kvm->arch.external_write_tracking_enabled);
++#else
++	return false;
++#endif
++}
++
+ bool kvm_page_track_write_tracking_enabled(struct kvm *kvm)
+ {
+-	return IS_ENABLED(CONFIG_KVM_EXTERNAL_WRITE_TRACKING) ||
+-	       !tdp_enabled || kvm_shadow_root_allocated(kvm);
++	return kvm_external_write_tracking_enabled(kvm) ||
++	       kvm_shadow_root_allocated(kvm) || !tdp_enabled;
+ }
+ 
+ void kvm_page_track_free_memslot(struct kvm_memory_slot *slot)
+@@ -153,6 +166,50 @@ int kvm_page_track_init(struct kvm *kvm)
+ 	return init_srcu_struct(&head->track_srcu);
+ }
+ 
++static int kvm_enable_external_write_tracking(struct kvm *kvm)
++{
++	struct kvm_memslots *slots;
++	struct kvm_memory_slot *slot;
++	int r = 0, i, bkt;
++
++	mutex_lock(&kvm->slots_arch_lock);
++
++	/*
++	 * Check for *any* write tracking user (not just external users) under
++	 * lock.  This avoids unnecessary work, e.g. if KVM itself is using
++	 * write tracking, or if two external users raced when registering.
++	 */
++	if (kvm_page_track_write_tracking_enabled(kvm))
++		goto out_success;
++
++	for (i = 0; i < kvm_arch_nr_memslot_as_ids(kvm); i++) {
++		slots = __kvm_memslots(kvm, i);
++		kvm_for_each_memslot(slot, bkt, slots) {
++			/*
++			 * Intentionally do NOT free allocations on failure to
++			 * avoid having to track which allocations were made
++			 * now versus when the memslot was created.  The
++			 * metadata is guaranteed to be freed when the slot is
++			 * freed, and will be kept/used if userspace retries
++			 * the failed ioctl() instead of killing the VM.
++			 */
++			r = kvm_page_track_write_tracking_alloc(slot);
++			if (r)
++				goto out_unlock;
++		}
++	}
++
++out_success:
++	/*
++	 * Ensure that external_write_tracking_enabled becomes true strictly
++	 * after all the related pointers are set.
++	 */
++	smp_store_release(&kvm->arch.external_write_tracking_enabled, true);
++out_unlock:
++	mutex_unlock(&kvm->slots_arch_lock);
++	return r;
++}
++
+ /*
+  * register the notifier so that event interception for the tracked guest
+  * pages can be received.
+@@ -161,10 +218,17 @@ int kvm_page_track_register_notifier(struct kvm *kvm,
+ 				     struct kvm_page_track_notifier_node *n)
+ {
+ 	struct kvm_page_track_notifier_head *head;
++	int r;
+ 
+ 	if (!kvm || kvm->mm != current->mm)
+ 		return -ESRCH;
+ 
++	if (!kvm_external_write_tracking_enabled(kvm)) {
++		r = kvm_enable_external_write_tracking(kvm);
++		if (r)
++			return r;
++	}
++
+ 	kvm_get_kvm(kvm);
+ 
+ 	head = &kvm->arch.track_notifier_head;
+-- 
+2.43.0.687.g38aa6559b0-goog
 
---UlZTnTUSr/twg2So--
