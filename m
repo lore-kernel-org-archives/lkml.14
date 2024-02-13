@@ -1,124 +1,255 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7FE25543;
-	Tue, 13 Feb 2024 10:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7963D28E3C;
+	Tue, 13 Feb 2024 10:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707821764; cv=none; b=tCx4olqM+Lx9UJGTMW+Mi9313twTUXLgPiUNM2zgFWTQkweYm76agql2ZoQWeLEtmF9vnr04mWNveKpGp1KC5uusWSxwetmc84byjM5lMTmtx1EFsbUE1NAO54y1u8XHipXiogQQu7umv7Ddxe+cNtyaacHsIbf1djzjEcDKcMk=
+	t=1707821883; cv=none; b=KfZYWbKXhk9dH6ZS/dWrWIh7VqZHKnPIy5daib7eftiWNcTbGDFuReTjq72RQ7OObTL4N7g40ashTPvn3S01Ufq4LtmsPduvP7ZVOoR7Rz91Qd3xd3Wn8Sgb2C/ta8aY6RN6x9SwHiKXesacptn+h6lfsU8H1C+W7sqBqph0S18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707821764; c=relaxed/simple;
-	bh=YUurrgB9hKbq8LQjUCjYTYfNwInt+r7uGpXZGPanFts=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PH7YAj+xXWAQbAL9hGj2RpDQA71lI6L7GjqepxvBFeDlXunBR8JriPOXFOO5SgmPkJXhgEPaCv8/sXy2z+FAAK5ESrqEHSsi9g+5wuGijZq2q1isAQJMK+bQFxKy87XWY3e6HK5P4xoMSVIsdxp9BF/BG5WV9Iqjde+nnc4RfXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i0LC7Mu1; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707821883; c=relaxed/simple;
+	bh=UbTGdcO5Bm4Sgp9Ihu7UwBcjhxFPyxzYn0e9t6YIqgI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uIM52w8TH4eZcBrLNVYO4RMOIdZZJHEWvy0B7y1UISKxgUpEhQO74Vf/OYBnNn7uFRD3LGE9Vgdhx+NPYUhf9nDSiY003rI+7msRUSZIQawnu82UMB5qRMMADSUnKaJJuyRb93KYAo8zdDv7qPc6KQj1atcZyiyLFb0Ou2r8oDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=INTKDBba; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i0LC7Mu1"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a3d0d26182dso36305266b.1;
-        Tue, 13 Feb 2024 02:56:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707821761; x=1708426561; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YUurrgB9hKbq8LQjUCjYTYfNwInt+r7uGpXZGPanFts=;
-        b=i0LC7Mu1NYGQfkxAgtcl83Mayvyf3leyTrpTP+Uk9cDqJ+XT9VZWyx8iZmuTHpX0pH
-         LNupEYCKVYB0/aSBgEfbaaUZqrI1MivM1WcRU+F+7tRDhLMBrnMeBQFthNXnqMMSgaYx
-         6zadalcH8rJ9ryILUPeKVTFRnXuLY6s5ldeReINpC9L/SkKX5G9NJKnSL9X3OkHDqQVA
-         v9W7Px7fHupfa0XVJLdqAUWdi53vulmMhgJR9vmYpS8aV916O6DtAsUleqGkjN9b7jQd
-         vvBsMw5EnMFeBS/y1Ni4eQB3rvp3vCac9kqIiC5UoXE+lnkN4mw7A+IbtMjXTUtMYU2q
-         SToA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707821761; x=1708426561;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YUurrgB9hKbq8LQjUCjYTYfNwInt+r7uGpXZGPanFts=;
-        b=Ul9E4i6u7cmNrxghGcU9re9esEHZ/LCysgVb3m053K4u5vmMY+ic8EInGAvKYnLMTA
-         6Xy/i3Kzfi73WKTomrsYp1MLIiHUoK9kSWiUJ4eWyybDjrhsUDPKWgO5wSKWUCo6BBPG
-         nem7mNgz+MON5hM/uFMOOfq7FvtSG3pLbZxb3VHpx8DG3SPnnpyq3uOJOJnDjuvrlbcS
-         ARwBacZEydPnTef6dw3RJ8fltrc6bz7eW6bc+dIlZhlrxkNn3mRqeYNBegH3hbOb2ORn
-         tSQyLYJbCSWuLeHeW8R2hY2i1FohUEBMpeI8z2PTy5Vn8rCju+rdMK5sHtypG6zOsPhb
-         I3QQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXlOBAJVBtCQrdm9jGDLgc9CwBQKneLvorKceWTA72GgRlbj0Rv7yNsBpP3G5NeYpf2i+Dr/nieMekPJCYj8F/K2pRnB+F5H1u+4y3MDXqD92YGK3Ep7SmSGqu+yfGCZKG5KWzChz1cbg==
-X-Gm-Message-State: AOJu0Yw+tvMXQD9OaES8j2JFsBgMdMWpb5hI7xWz019wZsBCP6FKxkHc
-	fv4S2Zq3cZQkaLezlgPM4GGxL1YiG6tMFr0cnmzvG2/R1gGpKWAPDWGJCYrUl0DiFkm14/U0hQG
-	Kcn3+zlRJfZx+Hufuu2fK2F6aBed1BW4toaUONw==
-X-Google-Smtp-Source: AGHT+IFolOxgwWLz8kVogEtlGE21JCzOZgJAa+aH+vEDXUfXHQDponMPU6Br24q1L+ahv8K1sh+Uqz/FoqPf/0eDVC4=
-X-Received: by 2002:a17:906:ae93:b0:a3c:92c2:66e0 with SMTP id
- md19-20020a170906ae9300b00a3c92c266e0mr4060891ejb.64.1707821760864; Tue, 13
- Feb 2024 02:56:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="INTKDBba"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CC3EC433C7;
+	Tue, 13 Feb 2024 10:57:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707821883;
+	bh=UbTGdcO5Bm4Sgp9Ihu7UwBcjhxFPyxzYn0e9t6YIqgI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=INTKDBba8hXyE6vt/uWzBbB8QaeDqCluqtP9DTn56EQMqVjm8m/dZhZOgIWvnp0Lx
+	 RBnicsUYj5AyrzCAHVDl+rD6TT6dW5u64WXYorKlZox6b+otEToPRFEhV/NvJipswD
+	 UfthNFX2YltDLZJg//Skp/N+rWyG17ClDyTLKtRUk+mcQntw02vmltuirlILX+yZNT
+	 jyBWD52c2ztAnHujkwSNhnsToO/T+EyZVPPsCM/wmo1WMMVkerMiQ5nJFUmsuYf88q
+	 dVA6aMdHPEkcp8BDjhqcLyKmAIo0puRTDNnvCZ6FTIg9MP85hJgbPr+Y6+vn1X6Hzp
+	 WZxmOwNmUn5TQ==
+Date: Tue, 13 Feb 2024 11:57:55 +0100
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: manivannan.sadhasivam@linaro.org, bhelgaas@google.com,
+	conor+dt@kernel.org, devicetree@vger.kernel.org, festevam@gmail.com,
+	helgaas@kernel.org, hongxing.zhu@nxp.com, imx@lists.linux.dev,
+	kernel@pengutronix.de, krzysztof.kozlowski+dt@linaro.org,
+	krzysztof.kozlowski@linaro.org, kw@linux.com,
+	l.stach@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+	linux-imx@nxp.com, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, robh@kernel.org, s.hauer@pengutronix.de,
+	shawnguo@kernel.org
+Subject: Re: [PATCH v9 07/16] PCI: imx6: Simplify configure_type() by using
+ mode_off and mode_mask
+Message-ID: <ZctLM7xLf7L3CJrr@lpieralisi>
+References: <20240119171122.3057511-1-Frank.Li@nxp.com>
+ <20240119171122.3057511-8-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231214173614.2820929-1-gnstark@salutedevices.com>
- <20231221151111.GJ10102@google.com> <ZcZcpUHygltD2ETa@smile.fi.intel.com>
- <d844862e-1d1c-4c9a-b7fe-e0ac44f4126e@salutedevices.com> <CAHp75VfQd9e4fLAYkYrMajnJfPQqno6s_aiTarErPiqP-Z6ydg@mail.gmail.com>
- <ae5bf6bc-5f7f-4fe9-a833-c1bfa31ff534@salutedevices.com>
-In-Reply-To: <ae5bf6bc-5f7f-4fe9-a833-c1bfa31ff534@salutedevices.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 13 Feb 2024 12:55:24 +0200
-Message-ID: <CAHp75Vd1FRz9=Q7NRXsbkBu_K0+zRC6uf5nPM1Q+QnJum+74tg@mail.gmail.com>
-Subject: Re: [DMARC error][SPF error] Re: [PATCH v4 00/10] devm_led_classdev_register()
- usage problem
-To: George Stark <gnstark@salutedevices.com>
-Cc: pavel@ucw.cz, vadimp@nvidia.com, mpe@ellerman.id.au, npiggin@gmail.com, 
-	christophe.leroy@csgroup.eu, hdegoede@redhat.com, mazziesaccount@gmail.com, 
-	nikitos.tr@gmail.com, linux-leds@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	Lee Jones <lee@kernel.org>, kernel@salutedevices.com, Waiman Long <longman@redhat.com>, 
-	"peterz@infradead.org" <peterz@infradead.org>, "boqun.feng@gmail.com" <boqun.feng@gmail.com>, 
-	"will@kernel.org" <will@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240119171122.3057511-8-Frank.Li@nxp.com>
 
-On Tue, Feb 13, 2024 at 2:14=E2=80=AFAM George Stark <gnstark@salutedevices=
-.com> wrote:
->
-> Hello Andy
->
-> On 2/12/24 12:53, Andy Shevchenko wrote:
-> > On Mon, Feb 12, 2024 at 1:52=E2=80=AFAM George Stark <gnstark@salutedev=
-ices.com> wrote:
-> >> I haven't lose hope for the devm_mutex thing and keep pinging those gu=
-ys
-> >> from time to time.
-> >
-> > I don't understand. According to v4 thread Christophe proposed on how
-> > the patch should look like. What you need is to incorporate an updated
-> > version into your series. Am I wrong?
->
-> We agreed that the effective way of implementing devm_mutex_init() is in
-> mutex.h using forward declaration of struct device.
-> The only inconvenient thing is that in the mutex.h mutex_init() declared
-> after mutex_destroy() so we'll have to use condition #ifdef
-> CONFIG_DEBUG_MUTEXES twice. Waiman Long proposed great cleanup patch [1]
-> that eliminates the need of doubling #ifdef. That patch was reviewed a
-> bit but it's still unapplied (near 2 months). I'm still trying to
-> contact mutex.h guys but there're no any feedback yet.
+On Fri, Jan 19, 2024 at 12:11:13PM -0500, Frank Li wrote:
+> Add drvdata::mode_off and drvdata::mode_mask to simplify
+> imx6_pcie_configure_type() logic.
+> 
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> 
+> Notes:
+>     Chagne from v8 to v9
+>     - add Manivannan's review tag
+>     Change from v7 to v8
+>     - replace simple with simplify
+>     - remove reduntant comments about FILED_PREP
+>     Change from v3 to v7
+>     - none
+>     Change from v2 to v3
+>     - none
+>     Change from v1 to v2
+>     - use ffs() to fixe build error.
+>     
+>     Change from v2 to v3
+>     - none
+>     Change from v1 to v2
+>     - use ffs() to fixe build error.
+> 
+>  drivers/pci/controller/dwc/pci-imx6.c | 59 ++++++++++++++++++---------
+>  1 file changed, 39 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index d19fcb54fde0d..8df07b71c93e5 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -68,6 +68,7 @@ enum imx6_pcie_variants {
+>  
+>  #define IMX6_PCIE_MAX_CLKS       6
+>  
+> +#define IMX6_PCIE_MAX_INSTANCES			2
+>  struct imx6_pcie_drvdata {
+>  	enum imx6_pcie_variants variant;
+>  	enum dw_pcie_device_mode mode;
+> @@ -78,6 +79,8 @@ struct imx6_pcie_drvdata {
+>  	const u32 clks_cnt;
+>  	const u32 ltssm_off;
+>  	const u32 ltssm_mask;
+> +	const u32 mode_off[IMX6_PCIE_MAX_INSTANCES];
+> +	const u32 mode_mask[IMX6_PCIE_MAX_INSTANCES];
+>  };
+>  
+>  struct imx6_pcie {
+> @@ -174,32 +177,24 @@ static unsigned int imx6_pcie_grp_offset(const struct imx6_pcie *imx6_pcie)
+>  
+>  static void imx6_pcie_configure_type(struct imx6_pcie *imx6_pcie)
+>  {
+> -	unsigned int mask, val, mode;
+> +	const struct imx6_pcie_drvdata *drvdata = imx6_pcie->drvdata;
+> +	unsigned int mask, val, mode, id;
+>  
+> -	if (imx6_pcie->drvdata->mode == DW_PCIE_EP_TYPE)
+> +	if (drvdata->mode == DW_PCIE_EP_TYPE)
+>  		mode = PCI_EXP_TYPE_ENDPOINT;
+>  	else
+>  		mode = PCI_EXP_TYPE_ROOT_PORT;
+>  
+> -	switch (imx6_pcie->drvdata->variant) {
+> -	case IMX8MQ:
+> -	case IMX8MQ_EP:
+> -		if (imx6_pcie->controller_id == 1) {
+> -			mask = IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE;
+> -			val  = FIELD_PREP(IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE,
+> -					  mode);
+> -		} else {
+> -			mask = IMX6Q_GPR12_DEVICE_TYPE;
+> -			val  = FIELD_PREP(IMX6Q_GPR12_DEVICE_TYPE, mode);
+> -		}
+> -		break;
+> -	default:
+> -		mask = IMX6Q_GPR12_DEVICE_TYPE;
+> -		val  = FIELD_PREP(IMX6Q_GPR12_DEVICE_TYPE, mode);
+> -		break;
+> -	}
+> +	id = imx6_pcie->controller_id;
+> +
+> +	/* If mode_mask[id] is zero, means each controller have its individual gpr */
+> +	if (!drvdata->mode_mask[id])
+> +		id = 0;
 
-So the roadmap (as I see it) is:
-- convince Lee to take the first patch while waiting for the others
-- incorporate the above mentioned patch into your series
-- make an ultimatum in case there is no reaction to get it applied on
-deadline, let's say within next cycle (if Lee is okay with a such, but
-this is normal practice when some maintainers are non-responsive)
+I don't understand what this means. If the mode mask for id is == 0, we
+are falling back to mode_mask and mode_off for controller ID 0 ? Is that
+what this code is supposed to do ? If so the comment makes no sense to
+me.
 
-P.S. In case Lee doesn't want to take the first patch separately
-(let's say this week), send a new version with amended patches
-included.
+Lorenzo
 
-> [1]
-> https://lore.kernel.org/lkml/20231216013656.1382213-2-longman@redhat.com/=
-T/#m795b230d662c1debb28463ad721ddba5b384340a
-
-
---=20
-With Best Regards,
-Andy Shevchenko
+> +
+> +	mask = drvdata->mode_mask[id];
+> +	val = mode << (ffs(mask) - 1);
+>  
+> -	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12, mask, val);
+> +	regmap_update_bits(imx6_pcie->iomuxc_gpr, drvdata->mode_off[id], mask, val);
+>  }
+>  
+>  static int pcie_phy_poll_ack(struct imx6_pcie *imx6_pcie, bool exp_val)
+> @@ -1385,6 +1380,8 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+>  		.clks_cnt = ARRAY_SIZE(imx6q_clks),
+>  		.ltssm_off = IOMUXC_GPR12,
+>  		.ltssm_mask = IMX6Q_GPR12_PCIE_CTL_2,
+> +		.mode_off[0] = IOMUXC_GPR12,
+> +		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+>  	},
+>  	[IMX6SX] = {
+>  		.variant = IMX6SX,
+> @@ -1396,6 +1393,8 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+>  		.clks_cnt = ARRAY_SIZE(imx6sx_clks),
+>  		.ltssm_off = IOMUXC_GPR12,
+>  		.ltssm_mask = IMX6Q_GPR12_PCIE_CTL_2,
+> +		.mode_off[0] = IOMUXC_GPR12,
+> +		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+>  	},
+>  	[IMX6QP] = {
+>  		.variant = IMX6QP,
+> @@ -1408,6 +1407,8 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+>  		.clks_cnt = ARRAY_SIZE(imx6q_clks),
+>  		.ltssm_off = IOMUXC_GPR12,
+>  		.ltssm_mask = IMX6Q_GPR12_PCIE_CTL_2,
+> +		.mode_off[0] = IOMUXC_GPR12,
+> +		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+>  	},
+>  	[IMX7D] = {
+>  		.variant = IMX7D,
+> @@ -1417,6 +1418,8 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+>  		.gpr = "fsl,imx7d-iomuxc-gpr",
+>  		.clk_names = imx6q_clks,
+>  		.clks_cnt = ARRAY_SIZE(imx6q_clks),
+> +		.mode_off[0] = IOMUXC_GPR12,
+> +		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+>  	},
+>  	[IMX8MQ] = {
+>  		.variant = IMX8MQ,
+> @@ -1425,6 +1428,10 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+>  		.gpr = "fsl,imx8mq-iomuxc-gpr",
+>  		.clk_names = imx8mq_clks,
+>  		.clks_cnt = ARRAY_SIZE(imx8mq_clks),
+> +		.mode_off[0] = IOMUXC_GPR12,
+> +		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+> +		.mode_off[1] = IOMUXC_GPR12,
+> +		.mode_mask[1] = IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE,
+>  	},
+>  	[IMX8MM] = {
+>  		.variant = IMX8MM,
+> @@ -1434,6 +1441,8 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+>  		.gpr = "fsl,imx8mm-iomuxc-gpr",
+>  		.clk_names = imx8mm_clks,
+>  		.clks_cnt = ARRAY_SIZE(imx8mm_clks),
+> +		.mode_off[0] = IOMUXC_GPR12,
+> +		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+>  	},
+>  	[IMX8MP] = {
+>  		.variant = IMX8MP,
+> @@ -1443,6 +1452,8 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+>  		.gpr = "fsl,imx8mp-iomuxc-gpr",
+>  		.clk_names = imx8mm_clks,
+>  		.clks_cnt = ARRAY_SIZE(imx8mm_clks),
+> +		.mode_off[0] = IOMUXC_GPR12,
+> +		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+>  	},
+>  	[IMX8MQ_EP] = {
+>  		.variant = IMX8MQ_EP,
+> @@ -1452,6 +1463,10 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+>  		.gpr = "fsl,imx8mq-iomuxc-gpr",
+>  		.clk_names = imx8mq_clks,
+>  		.clks_cnt = ARRAY_SIZE(imx8mq_clks),
+> +		.mode_off[0] = IOMUXC_GPR12,
+> +		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+> +		.mode_off[1] = IOMUXC_GPR12,
+> +		.mode_mask[1] = IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE,
+>  	},
+>  	[IMX8MM_EP] = {
+>  		.variant = IMX8MM_EP,
+> @@ -1460,6 +1475,8 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+>  		.gpr = "fsl,imx8mm-iomuxc-gpr",
+>  		.clk_names = imx8mm_clks,
+>  		.clks_cnt = ARRAY_SIZE(imx8mm_clks),
+> +		.mode_off[0] = IOMUXC_GPR12,
+> +		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+>  	},
+>  	[IMX8MP_EP] = {
+>  		.variant = IMX8MP_EP,
+> @@ -1468,6 +1485,8 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+>  		.gpr = "fsl,imx8mp-iomuxc-gpr",
+>  		.clk_names = imx8mm_clks,
+>  		.clks_cnt = ARRAY_SIZE(imx8mm_clks),
+> +		.mode_off[0] = IOMUXC_GPR12,
+> +		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+>  	},
+>  };
+>  
+> -- 
+> 2.34.1
+> 
