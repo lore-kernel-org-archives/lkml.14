@@ -1,218 +1,110 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B1665BD1;
-	Tue, 13 Feb 2024 23:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBAE965BDA;
+	Tue, 13 Feb 2024 23:57:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707868665; cv=none; b=A844o4WkWFBXFpx8tERJJI2KKlkajwlGrEuAg2P5h4HpAMlV3mS0Z51LVBy489OvyK/Ij05hL4mMnY9hso4Nih2Bd4ISrRr/uh83+Unbrj2zPUlqYLJ1ybIn4jlZxVkCvRg7c3fyb6Cdhsm4cwLpxe6NYHi9qEsQ1Ufe9KgN85Y=
+	t=1707868667; cv=none; b=pt4V90ptRADKAZb8/vmzPmSrBXQj1D+icfN3/pO1sJBsiWa4Ug99IlUL/YUODYDOXGvkAiLIFw5Kk1uhMDREljU7mrm4UKltoCElJOkli83barGiXhRigHydIUkiMC4OIg6iv/7D7IEn6SJBBo9Nulo2WTDcGcifXQ6Tt9jBu/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707868665; c=relaxed/simple;
-	bh=i6WiIEqsFU8zLyOp1haUKZufFMK1rTv4kW7VGD+KgQg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SM3V3w5x/3wFsHAepLmVoE/8vfXDQWqxMbg0qTeBxLcjx9DqtP7xWJLPrpSoN/21IUJ4j6VM5BB5cF0oC5XhRtkPRQ0qivG2FI7Ll82FgpnXsb8Uo+JEeoOtmSVvulmj/BU3BcQ6Jl5KIKoeOdwtdrEpOhn9qe0U7Fz0oSiOiZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=tQYFYptP; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1707868667; c=relaxed/simple;
+	bh=fhrVSMq7W/qM+dE3xiVk7RqwqKuIwqDKLHiYuclambg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=PEZqnC/NSKNDC/rVw1PpYW+oHLoPwi6v58D8AzLlhCog7HFSHJ3sPfIrbQ9gIh9ns866b28XMn/tAeT7gvieXp7NSBpzxuK8HJqK40bPc+y3oequkNGAd91FRw6PAWGF5dpe03gKNfW3H1prQcXuFS/wF3dNBRNUX4YvFHyit/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LRCWghsB; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tQYFYptP"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41DNv2iK082884;
-	Tue, 13 Feb 2024 17:57:02 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707868622;
-	bh=/WcExtCyjlnfkA+bJp5aMo+t4fHPF5BrVXG9tvI1no8=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=tQYFYptPV2s427QX6nC3ME5bkbheM1zmZq/3te4kwcei0W/LTfvNKFl6nJT44jfou
-	 MVknRrY/CvOaMteGDmNPi1U7cwRkIVeaTcKC7ccVgWBa9fW8stAZRmeVTsiptwjbpc
-	 YqS5tuw36GMe9TrhSKlbKA4/iTDIUhtK/kBbe0/I=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41DNv2d4050665
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 13 Feb 2024 17:57:02 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 13
- Feb 2024 17:57:01 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 13 Feb 2024 17:57:01 -0600
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41DNv1RC091761;
-	Tue, 13 Feb 2024 17:57:01 -0600
-From: Judith Mendez <jm@ti.com>
-To: Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero
- Kristo <kristo@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Wadim Egorov
-	<w.egorov@phytec.de>,
-        Francesco Dolcini <francesco.dolcini@toradex.com>
-Subject: [PATCH v3 8/9] arm64: dts: ti: k3-am6*: Fix bus-width property in MMC nodes
-Date: Tue, 13 Feb 2024 17:57:00 -0600
-Message-ID: <20240213235701.2438513-9-jm@ti.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240213235701.2438513-1-jm@ti.com>
-References: <20240213235701.2438513-1-jm@ti.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LRCWghsB"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-562117d3dbfso445120a12.1;
+        Tue, 13 Feb 2024 15:57:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707868664; x=1708473464; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=u4gpiGn9ejifW2W661b3tHT38q/IiDuz5CtzD82Voig=;
+        b=LRCWghsB8lQfhcbd8BSYOKyumRo7IIV3E7wRC5U4TeljM3BN/d3cMHtly21jijWajC
+         67VurStYYNRT59mkSTJl37hr15/t2F3A9AVg1kOHx8DpadOy7a3FDwtYvi3LyFSfeXpw
+         47Xj7QZNIGSJ+4sxQF3XFXz6iezkm2VJ5vFedIjVrONn89Mn6hGb9DQuk0RtLFSvrVLk
+         qdsuti0ULT+GH5Mo6E/cFDtJ3svvvkDyLbxXOQaG4dUf6uaX92ifFHs6JTFzBLaIVtw7
+         HFYgqWUuvbC0P2eJjF32NojSGlD+VBDghU6JFQTLhBV3TlTs2d+/VRnkDpItpbRLD8oR
+         5iMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707868664; x=1708473464;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=u4gpiGn9ejifW2W661b3tHT38q/IiDuz5CtzD82Voig=;
+        b=BUoPiXToWi6rfu/kvrslUb/DwpoPAlPHfUdAL5K/0G8BuFKW3RgSPJzs4Hc08IOE26
+         1StGCf0KFl/gQ43J0jfsgkoqFWo4gB2Gb6Nemvc2qYCN+8Mb9Ov34ka5FtvRbhSp/hLl
+         zXOBeHfDAPuvVsl4GAA5h4d0fQ3FjRD45eVHemDIMjlinVQSLH0d12LT2KQ6zEizYaIM
+         avVEUW0t9RxUmsz6s8MCCT4MB5qGOtZoGPmGpYQFU8s7qn+dpAV9NJD6IqL3uQnRx0lc
+         n+Pa0ima7MuInWmfs1f/7bK21e9bmJ47MppCu/S1UWGXc/C+KVDH48dSLl7K+M7SybKt
+         amTw==
+X-Forwarded-Encrypted: i=1; AJvYcCUWy6QlGp27ZfN+Ouapf2GoS6SpOoBO+srlfBugRBDCqWVvTkpIjbq9rqH5U2wBsrXMjMYpfllijLWyBY+PKt0qAsWIHILUxinRb5JXI+pQ8m9vIXCT3F1JJUdrFh6io73Vv8W8FgyS6fTrp1mz
+X-Gm-Message-State: AOJu0YyF2aBSGTeLrXCXy3r1vntldll+uRasKWnrufT6RhI5w66VI1E2
+	vc248gJayjSuPXMVTCtWHNmtpndAItNqQE8zuHquhcIeEEHVENna
+X-Google-Smtp-Source: AGHT+IGlQQQDH+S4iZPiaQ5jrgBJd+pIGXAEKivUjK99BY+4/U3qXLl8iwV+vtsUcBLFAeWJ32kk/g==
+X-Received: by 2002:a17:906:5a8b:b0:a3c:2fcb:97e1 with SMTP id l11-20020a1709065a8b00b00a3c2fcb97e1mr296391ejq.13.1707868664289;
+        Tue, 13 Feb 2024 15:57:44 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVnMdPyVZ1LmJ1rv06or4UJxNCK0LNyfd3bVwoXP9Nym3o9iOZKS6SdbT18B9B2Bcmej9Dg9DckYSxYqP9bQagdNWp4+q0o0KPeU93M+bclwD9rKeT+cH13Smx5sxpDoezzkZoDYs2FhkZN5kUO+UjOtvdywdiMPrVC6IACKHqJR5nqhCyeeWN+7GB5PuQzAhQ43/AbOygtcED9ZsJaD1rE/MnYmTFlbH/H48116GT9lvqW/Pxes9byamsk4aMpjsmOCi8McNj25Amw+eFwnQ==
+Received: from [127.0.1.1] (2a02-8389-41cf-e200-68a7-7041-4298-e66b.cable.dynamic.v6.surfer.at. [2a02:8389:41cf:e200:68a7:7041:4298:e66b])
+        by smtp.gmail.com with ESMTPSA id hg9-20020a170906f34900b00a3d4305a105sm63190ejb.215.2024.02.13.15.57.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 15:57:43 -0800 (PST)
+From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Date: Wed, 14 Feb 2024 00:57:41 +0100
+Subject: [PATCH] selftests: damon: add access_memory to .gitignore
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240214-damon_selftest_gitignore-v1-1-f517d0f9f783@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAPQBzGUC/x3MQQqAIBBA0avErBNSKqKrRITkjA2UhiMRRHdPW
+ r7F/w8IJkaBsXog4cXCMRTouoJ1s8GjYlcMpjFtY3SrnD1iWAR3yih58ZzZh5hQOd0NvTPUDUR
+ Q8jMh8f2vp/l9P1Ply9pqAAAA
+To: SeongJae Park <sj@kernel.org>, Shuah Khan <shuah@kernel.org>, 
+ Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc: damon@lists.linux.dev, linux-mm@kvack.org, 
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>
+X-Mailer: b4 0.13-dev-0434a
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1707868663; l=1010;
+ i=javier.carrasco.cruz@gmail.com; s=20230509; h=from:subject:message-id;
+ bh=fhrVSMq7W/qM+dE3xiVk7RqwqKuIwqDKLHiYuclambg=;
+ b=CyfQLLd1lVsqKj7HYORRBa3nb0qwpRuYqFeHXxSnz5DoaEivTccJJ7MPxRtJ6cTYndaFZmXlB
+ MRA47POfSk8CUB641MYESMHtNzl/DIBHgqsFOKLe1WplkdcJYsjpIm0
+X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
+ pk=tIGJV7M+tCizagNijF0eGMBGcOsPD+0cWGfKjl4h6K8=
 
-Move bus-width property to *main.dtsi, above the OTAP/ITAP
-delay values. While there is no error with where it is
-currently at, it is easier to read the MMC node if the
-bus-width property is located above the OTAP/ITAP delay
-values consistently across MMC nodes.
+This binary is missing in the .gitignore and stays as an untracked file.
 
-Add missing bus-width for MMC2 in k3-am62-main.
-
-Signed-off-by: Judith Mendez <jm@ti.com>
+Reported-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
+Closes: https://lore.kernel.org/all/AS8P193MB1285C963658008F1B2702AF7E4792@AS8P193MB1285.EURP193.PROD.OUTLOOK.COM/
+Reviewed-by: SeongJae Park <sj@kernel.org>
+Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
 ---
-Changes since V3:
-- No change
----
- arch/arm64/boot/dts/ti/k3-am62-main.dtsi       | 5 +++--
- arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts | 1 -
- arch/arm64/boot/dts/ti/k3-am62a-main.dtsi      | 2 +-
- arch/arm64/boot/dts/ti/k3-am64-main.dtsi       | 2 ++
- arch/arm64/boot/dts/ti/k3-am642-evm.dts        | 2 --
- arch/arm64/boot/dts/ti/k3-am642-sk.dts         | 1 -
- 6 files changed, 6 insertions(+), 7 deletions(-)
+ tools/testing/selftests/damon/.gitignore | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
-index 410b390ce5d5..55420eb1c620 100644
---- a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
-@@ -559,9 +559,9 @@ sdhci0: mmc@fa10000 {
- 		clock-names = "clk_ahb", "clk_xin";
- 		assigned-clocks = <&k3_clks 57 6>;
- 		assigned-clock-parents = <&k3_clks 57 8>;
-+		bus-width = <8>;
- 		mmc-ddr-1_8v;
- 		mmc-hs200-1_8v;
--		bus-width = <8>;
- 		ti,clkbuf-sel = <0x7>;
- 		ti,otap-del-sel-legacy = <0x0>;
- 		ti,otap-del-sel-mmc-hs = <0x0>;
-@@ -579,6 +579,7 @@ sdhci1: mmc@fa00000 {
- 		power-domains = <&k3_pds 58 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 58 5>, <&k3_clks 58 6>;
- 		clock-names = "clk_ahb", "clk_xin";
-+		bus-width = <4>;
- 		ti,clkbuf-sel = <0x7>;
- 		ti,otap-del-sel-legacy = <0x8>;
- 		ti,otap-del-sel-sd-hs = <0x0>;
-@@ -591,7 +592,6 @@ sdhci1: mmc@fa00000 {
- 		ti,itap-del-sel-sd-hs = <0x1>;
- 		ti,itap-del-sel-sdr12 = <0xa>;
- 		ti,itap-del-sel-sdr25 = <0x1>;
--		bus-width = <4>;
- 		status = "disabled";
- 	};
- 
-@@ -602,6 +602,7 @@ sdhci2: mmc@fa20000 {
- 		power-domains = <&k3_pds 184 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 184 5>, <&k3_clks 184 6>;
- 		clock-names = "clk_ahb", "clk_xin";
-+		bus-width = <4>;
- 		ti,clkbuf-sel = <0x7>;
- 		ti,otap-del-sel-legacy = <0x8>;
- 		ti,otap-del-sel-sd-hs = <0x0>;
-diff --git a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
-index bb6a5837bcb3..a34e0df2ab86 100644
---- a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
-@@ -842,7 +842,6 @@ &sdhci2 {
- 	vmmc-supply = <&wlan_en>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&wifi_pins_default>, <&wifi_32k_clk>;
--	bus-width = <4>;
- 	non-removable;
- 	ti,fails-without-test-cd;
- 	cap-power-off-card;
-diff --git a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
-index ddb76cd66f88..253c1857eedf 100644
---- a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
-@@ -561,6 +561,7 @@ sdhci1: mmc@fa00000 {
- 		power-domains = <&k3_pds 58 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 58 5>, <&k3_clks 58 6>;
- 		clock-names = "clk_ahb", "clk_xin";
-+		bus-width = <4>;
- 		ti,clkbuf-sel = <0x7>;
- 		ti,otap-del-sel-legacy = <0x0>;
- 		ti,otap-del-sel-sd-hs = <0x0>;
-@@ -573,7 +574,6 @@ sdhci1: mmc@fa00000 {
- 		ti,itap-del-sel-sd-hs = <0x0>;
- 		ti,itap-del-sel-sdr12 = <0x0>;
- 		ti,itap-del-sel-sdr25 = <0x0>;
--		bus-width = <4>;
- 		no-1-8-v;
- 		status = "disabled";
- 	};
-diff --git a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
-index bea05be7cb48..bc9c9ff993e6 100644
---- a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
-@@ -626,6 +626,7 @@ sdhci0: mmc@fa10000 {
- 		power-domains = <&k3_pds 57 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 57 0>, <&k3_clks 57 1>;
- 		clock-names = "clk_ahb", "clk_xin";
-+		bus-width = <8>;
- 		mmc-ddr-1_8v;
- 		mmc-hs200-1_8v;
- 		ti,clkbuf-sel = <0x7>;
-@@ -647,6 +648,7 @@ sdhci1: mmc@fa00000 {
- 		power-domains = <&k3_pds 58 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 58 3>, <&k3_clks 58 4>;
- 		clock-names = "clk_ahb", "clk_xin";
-+		bus-width = <4>;
- 		ti,clkbuf-sel = <0x7>;
- 		ti,otap-del-sel-legacy = <0x0>;
- 		ti,otap-del-sel-sd-hs = <0x0>;
-diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm.dts b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
-index f308076d608a..83f2b00726b5 100644
---- a/arch/arm64/boot/dts/ti/k3-am642-evm.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
-@@ -494,7 +494,6 @@ eeprom@0 {
- /* eMMC */
- &sdhci0 {
- 	status = "okay";
--	bus-width = <8>;
- 	non-removable;
- 	ti,driver-strength-ohm = <50>;
- 	disable-wp;
-@@ -506,7 +505,6 @@ &sdhci1 {
- 	status = "okay";
- 	vmmc-supply = <&vdd_mmc1>;
- 	pinctrl-names = "default";
--	bus-width = <4>;
- 	pinctrl-0 = <&main_mmc1_pins_default>;
- 	disable-wp;
- };
-diff --git a/arch/arm64/boot/dts/ti/k3-am642-sk.dts b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
-index b286eaa02ada..67cd41bf806e 100644
---- a/arch/arm64/boot/dts/ti/k3-am642-sk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
-@@ -469,7 +469,6 @@ &sdhci1 {
- 	status = "okay";
- 	vmmc-supply = <&vdd_mmc1>;
- 	pinctrl-names = "default";
--	bus-width = <4>;
- 	pinctrl-0 = <&main_mmc1_pins_default>;
- 	disable-wp;
- };
+diff --git a/tools/testing/selftests/damon/.gitignore b/tools/testing/selftests/damon/.gitignore
+index d861701f0327..e65ef9d9cedc 100644
+--- a/tools/testing/selftests/damon/.gitignore
++++ b/tools/testing/selftests/damon/.gitignore
+@@ -2,3 +2,4 @@
+ huge_count_read_write
+ debugfs_target_ids_read_before_terminate_race
+ debugfs_target_ids_pid_leak
++access_memory
+
+---
+base-commit: 7e56cf9a7f108e8129d75cea0dabc9488fb4defa
+change-id: 20240214-damon_selftest_gitignore-d1586d2f58ff
+
+Best regards,
 -- 
-2.43.0
+Javier Carrasco <javier.carrasco.cruz@gmail.com>
 
