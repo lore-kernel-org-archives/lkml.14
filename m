@@ -1,125 +1,98 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25045D902;
-	Tue, 13 Feb 2024 15:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD2022066;
+	Tue, 13 Feb 2024 15:25:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707837888; cv=none; b=f4TYqgQfFRuHcwvoFnEssnJ6jzpOmCQBj9M5qGovxCowOdgI3i8I5HlNlaF0BrddMd5bFzXySqFJRnR7os8Ox9WuDE53DTU8+FH6TYNG2bHyTYYEs5OH6ulrR3CVc2Z1zK6qGIYTV3/e2ouANOW8kLW+2r5FKc4s66egxPuQSA4=
+	t=1707837952; cv=none; b=cttg1jNB7DA7ByiCj/E1WQTQFmrOI/J71tijR0cpqkaIQxCwmjOgdsL2TAgxjjKX86K+ThYHixb35UHGEvueHR130gCxX0Zl52/4nEjmBHhyCdGAjGy7pgR/h6eMkOU9plRL57Qk6IDhi1QvwFXgVPU2n/ZkH01oTj6zm2Ea2Zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707837888; c=relaxed/simple;
-	bh=ZRse6JczO8c8briiSuR06UnfYpScvqAmNKuKcNSxv4E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=s+huxKBTuACenrk7I5H9LRQkclTGti4Kn72BePFoJ9jX92c4IINTp1hOO0S4RADMbnh72S7UaRidWAcqQkOU2mQH8bIq32ThdIGe5KwrZYWK3/pMm9WGJtqidqs83jF0di/rKtnpHg6VufadyI9+2aI6kP4y7nLy7qZJsJT7jxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kfaq/68N; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1707837952; c=relaxed/simple;
+	bh=qpzDUE/WnqOWRwlD7R38lMAxQ4FjMR1jKtXHDzKvwvc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ruV4TGIb08BXDmXmuapO+0F7BxpvdD+xoshPAR5rIx262HZcTFLDdJyZvFjKfPKu28meN6wNK9ylSG9iZidxHJyTMecThPvYSAPGnYkI6rh8pPiz30qmBR8cMxNDufBiwDDxKtVD4t4YWmB7Vd22gxq3xu8Eke19FJ7Bj7yclm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ntbnK60A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kfaq/68N"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C49012000B;
-	Tue, 13 Feb 2024 15:24:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1707837877;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=52cY2LUgFu15OCe72LM2FQu+S39du9WmCDQ8io2kZ8M=;
-	b=kfaq/68NzMwiXUkSTseCvfYIiL4b4bIu5M5IexBkVGXzeSEmz1ghDU6VPuKXiseIpxTfgm
-	OX6X86yQEKg3JgHyYBq5oDJ4OzDJM21V6yGD4BUOdbgbqSUHilpQAr/kgPe/uQzcXkmfMW
-	TWllHo+DBBJjAIskfwiu6GvrKkigwvYgeiBvPIsEijh2zu9NsyvORI/AAzZT/XG/iA6PVE
-	vXmzpmaPhgYjsUm7g7bqNz2syNx0S9Go4hlOJP6I+qL+iRR8NzQiNF1+grwWirAvm0+rxj
-	L/4iU5xiIcVO73t9ELMpD6XOGyZTzaH9pRnWZyUrGIkckJNM5+Bva5gD/vqg7g==
-From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-Date: Tue, 13 Feb 2024 16:22:44 +0100
-Subject: [PATCH RFC] wifi: wilc1000: fix reset line assert/deassert
- polarity
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ntbnK60A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5077C433C7;
+	Tue, 13 Feb 2024 15:25:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707837952;
+	bh=qpzDUE/WnqOWRwlD7R38lMAxQ4FjMR1jKtXHDzKvwvc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=ntbnK60Ax4peARXCPzagCcjzTuMAisSQBwieoZZzpUFvY3gj3YQdSdNVxbrB/fQas
+	 5U5SJdhwsrqqB4VmQOOmOAypOGxPYC71V7EopjlO53mRGCWvaOaJoX4nRunytPwTja
+	 3gRseXS1HpH4tAlUIg04wxoWQ7ALCrFIj44R42NQNiCNgShuZywokcNDOaKoSFFrSM
+	 u4gaoUTzCFno+MZ1qcNbWjc0KGsy8ZIQ/ubfrdYXWI9fjlxImx1fJj7LDKFKQZlxot
+	 jIWzn7gKJmRX9LdmgYs3MPbraMWM0CEEF4FQHa7BpUcIW0jnae02Y+GEp9jopL6ac3
+	 Rgq7M2DZQ40xw==
+Date: Tue, 13 Feb 2024 16:25:52 +0100 (CET)
+From: Jiri Kosina <jikos@kernel.org>
+To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+cc: djogorchock@gmail.com, benjamin.tissoires@redhat.com, 
+    linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    Abaci Robot <abaci@linux.alibaba.com>, 
+    Ryan McClelland <rymcclel@gmail.com>
+Subject: Re: [PATCH] HID: nintendo: Remove some unused functions
+In-Reply-To: <20240126075445.15495-1-jiapeng.chong@linux.alibaba.com>
+Message-ID: <nycvar.YFH.7.76.2402131625090.21798@cbobk.fhfr.pm>
+References: <20240126075445.15495-1-jiapeng.chong@linux.alibaba.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240213-wilc_1000_reset_line-v1-1-e01da2b23fed@bootlin.com>
-X-B4-Tracking: v=1; b=H4sIAEOJy2UC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDQ0NL3fLMnOR4QwMDg/ii1OLUkviczLxUXWNLYyNzg7RkE3OTVCWg1oK
- i1LTMCrCx0UpBbs5KsbW1AK54SQtrAAAA
-To: linux-wireless@vger.kernel.org
-Cc: Ajay Singh <ajay.kathat@microchip.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, Kalle Valo <kvalo@kernel.org>, 
- David Mosberger-Tang <davidm@egauge.net>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-X-Mailer: b4 0.12.4
-X-GND-Sasl: alexis.lothore@bootlin.com
+Content-Type: text/plain; charset=US-ASCII
 
-When using a wilc1000 chip over a spi bus, users can optionally define a
-reset gpio and a chip enable gpio. The reset line of wilc1000 is active
-low, so to hold the chip in reset, a low (physical) value must be applied.
+On Fri, 26 Jan 2024, Jiapeng Chong wrote:
 
-The corresponding device tree binding documentation was introduced by
-commit f31ee3c0a555 ("wilc1000: Document enable-gpios and reset-gpios
-properties") and correctly indicates that the reset line is an active-low
-signal. However, the corresponding driver part, brought by commit
-ec031ac4792c ("wilc1000: Add reset/enable GPIO support to SPI driver"), is
-misusing the gpiod APIs and apply an inverted logic when powering up/down
-the chip (for example, setting the reset line to a logic "1" during power
-up, which in fact asserts the reset line when device tree describes the
-reset line as GPIO_ACTIVE_LOW). As a consequence, any platform currently
-using the driver in SPI mode must use a faulty reset line description in
-device tree, or else chip will be maintained in reset and will not even
-allow to bring up the chip.
+> These functions are defined in the hid-nintendo.c file, but not called
+> elsewhere, so delete these unused functions.
+> 
+> drivers/hid/hid-nintendo.c:757:20: warning: unused function 'joycon_type_has_left_controls'.
+> drivers/hid/hid-nintendo.c:763:20: warning: unused function 'joycon_type_has_right_controls'.
+> 
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8060
+> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 
-Fix reset line usage by inverting back the gpiod APIs usage, setting the
-reset line to the logic value "0" when powering the chip, and the logic
-value "1" when powering off the chip.
+No idea why those were added, CCing Ryan, who added those in 94f18bb1994. 
+I've added a Fixes: tag and applied, thanks.
 
-Fixes: ec031ac4792c ("wilc1000: Add reset/enable GPIO support to SPI driver")
-Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
----
-This issue was detected because I struggled a bit to setup a WILC-over-SPI
-setup, and eventually realized that it was due to chip being hold in reset.
+> ---
+>  drivers/hid/hid-nintendo.c | 12 ------------
+>  1 file changed, 12 deletions(-)
+> 
+> diff --git a/drivers/hid/hid-nintendo.c b/drivers/hid/hid-nintendo.c
+> index 7ce6be0a8dee..ab5953fc2436 100644
+> --- a/drivers/hid/hid-nintendo.c
+> +++ b/drivers/hid/hid-nintendo.c
+> @@ -754,18 +754,6 @@ static inline bool joycon_type_is_right_nescon(struct joycon_ctlr *ctlr)
+>  	return ctlr->ctlr_type == JOYCON_CTLR_TYPE_NESR;
+>  }
+>  
+> -static inline bool joycon_type_has_left_controls(struct joycon_ctlr *ctlr)
+> -{
+> -	return joycon_type_is_left_joycon(ctlr) ||
+> -	       joycon_type_is_procon(ctlr);
+> -}
+> -
+> -static inline bool joycon_type_has_right_controls(struct joycon_ctlr *ctlr)
+> -{
+> -	return joycon_type_is_right_joycon(ctlr) ||
+> -	       joycon_type_is_procon(ctlr);
+> -}
+> -
+>  static inline bool joycon_type_is_any_joycon(struct joycon_ctlr *ctlr)
+>  {
+>  	return joycon_type_is_left_joycon(ctlr) ||
+> -- 
+> 2.20.1.7.g153144c
+> 
 
-This patch, if accepted, will force any WILC-over-SPI user to update its
-device tree description: any platform currently working correctly in this
-setup likely have a wrong GPIO_ACTIVE_HIGH used on the reset line device
-tree description, contrary to what the documentation says. I am not sure
-whether this is tolerable ? If not, what would be the proper way to fix
-this ? Make the driver manually parse this flag and somehow make it able
-to deal with both versions (so basically: ignoring the setting) ? Just live
-with it, and possibly document the issue somewhere ?
----
- drivers/net/wireless/microchip/wilc1000/spi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/wireless/microchip/wilc1000/spi.c b/drivers/net/wireless/microchip/wilc1000/spi.c
-index c92ee4b73a74..30eed2ea523d 100644
---- a/drivers/net/wireless/microchip/wilc1000/spi.c
-+++ b/drivers/net/wireless/microchip/wilc1000/spi.c
-@@ -192,11 +192,11 @@ static void wilc_wlan_power(struct wilc *wilc, bool on)
- 		/* assert ENABLE: */
- 		gpiod_set_value(gpios->enable, 1);
- 		mdelay(5);
--		/* assert RESET: */
--		gpiod_set_value(gpios->reset, 1);
--	} else {
- 		/* deassert RESET: */
- 		gpiod_set_value(gpios->reset, 0);
-+	} else {
-+		/* assert RESET: */
-+		gpiod_set_value(gpios->reset, 1);
- 		/* deassert ENABLE: */
- 		gpiod_set_value(gpios->enable, 0);
- 	}
-
----
-base-commit: 246a8c611ace197f43ecc6ea4936c6ca363b8aaa
-change-id: 20240119-wilc_1000_reset_line-393270fc474e
-
-Best regards,
 -- 
-Alexis Lothoré, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Jiri Kosina
+SUSE Labs
 
