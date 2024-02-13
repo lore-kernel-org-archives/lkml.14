@@ -1,140 +1,136 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D5F75DF3C;
-	Tue, 13 Feb 2024 21:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704A361667
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 21:04:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707858193; cv=none; b=lsItq5Y2DhdfajlrjD2W+g3Rt12fBBkFX8mlKEUEy1LU+slQrEUnXJFjRO7MJAfx4BES4eSNUU2zruQMb044wr8+rPUn16Xk8OuUWcjB5KXt+Eo6mCs5vxBEv7OalH0Uz3CwJgwKUw1jDwhdE/DZPrPVkxXBJVCnjI8joapYOME=
+	t=1707858244; cv=none; b=cpgkKVggEaeksZmWYX0KWC6FUcc/mF+lFRiPjKV3LegjQDhFd5r3oNxP2gH4fqBRE9iyfxDIE/X+ZEWOdQ+B7kCPK0UynwvvO6KPChsbDnIo4a/bn52TeUhv7x47gbrt30hV5CVq40SJqJJMYMXpYveJY4Ik1VVjffRzPha7VDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707858193; c=relaxed/simple;
-	bh=D5xFtmJb4RgbEH2NzGRmKv6Ow4RJxAM5+xjvAuR0vAg=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mv3FtgvL09WtT4f5s4lzgyG2whzfdDDKwzeP4qG/j1eBvAjhEKAdEZ9sL7Zf+PBMD/KLwkGReq7r7j5DV8lnJcrJVoVHLRLaUmpL3u9xgAcFafEZKHgOA3B5WTm+c2g+VQFvVnDmSV+bB854/htGgtMwVb3jTL3++O9BY/5+T94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fN3Txu1D; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707858244; c=relaxed/simple;
+	bh=NsdvmTXdQOEAcTe8BH4orT/Rt3CQ5Hp6MYfQha9qhRw=;
+	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Date; b=WlNay15wEjIscWHkhdFWPC32At6z6eHDMtkEnjEy0vZISi2eYXAFnUEluD7bfXbaOfha7ud55CZIltrBwZONucgCoeUbobTpfXH7aiAKgcwWuE8gAtrR/r310ycRMiuzG1Up5FW+04lEO0SWVy//wopL4L95RXdSD6bVUe5IRCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WJZpU80A; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bjtaT4nt; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fN3Txu1D"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-411cf319da4so5274745e9.2;
-        Tue, 13 Feb 2024 13:03:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707858190; x=1708462990; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=T7JblcC+JB2R//36hKalltVDiKFAwpXQUzPo5XAomuI=;
-        b=fN3Txu1DXngtP3UcxMmGntinx+DUUbM0v3YakW0akDhN+4Kgm7ceBqVG8NZbj0cYzs
-         lIgvrTnzsFO+cVaLC1eq08WhPzvl2S01nCeedUCFG5zILBMLN2TPGT1VLF7azHvVKnja
-         wFhf3CA4PcX7qNzC4fEErTv642bRzPWXd5/LxN2fDAuvE7UB3VYg+0VdQgxa+72mmyC+
-         ySIhEVK0wL8FePdEyZfTUyDzrUDfI6vUxVKbb5/H06XgqZ2n09PHOtc0sNed7m0AH+9Q
-         EkmfImI+B3i9iAmzN32ElSNdfRbGxywimA/C4yopGW6uYz+tGTMvI7rHMPXmNZtcUuUo
-         77Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707858190; x=1708462990;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T7JblcC+JB2R//36hKalltVDiKFAwpXQUzPo5XAomuI=;
-        b=ZoYUiudzb/FwhDsv0caQMK9PygHQjTZ6Rz1C8OmFF11+vR8uhTcfc3+rINkfYUhjq/
-         uKfBRBWzqVN/PVlzntI5Z9x5aEkNJYGSd+POsYVtkVDoe8AcCb/d4RrBwlsH2AmQB4RP
-         4cgPeEaMX6UD7a6fxijWjf4zIRIEv5qR4Xlu65SiHvLH7RKUPwIVlmwzUz9MO1UFaRqz
-         izqAVTNBSlA65RF4wrBvYsA1QsJO8RdKFAtf/C49XOQe6cdUF8oMAE52/dU0wvGy76nL
-         cJ7Nn0aa15cLkL/lwmWL5DRDvnI9N6d8FBkAfVv7IvNYP/3VLt9/CgUI7wK+tg2HrkBi
-         cEPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVTw0M4lnOEnC8am4n8GLJ+Sdg6eY0rM/+ovZjcrcYyU652021l0RSXFuySImoDO0FBWYOceR9GPUlILzwqg0doeeNfVga0JWVQ/PEVFCe4/WCufTIrYYtoj2m6PiMO0sqjmvME
-X-Gm-Message-State: AOJu0YxfOKWalJqnH1m9VmWuFTDhdJehlWPKpBSnNmkoFMHDJ2KZI5+s
-	7mKDZHr4jwR6n0d51cSEpKS1giGeo7v1Pe1tIGucR1hvubjPxfiN
-X-Google-Smtp-Source: AGHT+IH1XVcUK6ueE64QAIlOTg+53cNJbv+iJ/6bp2JHcj0RKJfXNLJouG5Xg48S8wdA39wTZyb5Fg==
-X-Received: by 2002:a05:600c:a0f:b0:40f:d3d8:c8d5 with SMTP id z15-20020a05600c0a0f00b0040fd3d8c8d5mr593287wmp.9.1707858190208;
-        Tue, 13 Feb 2024 13:03:10 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWAROk4WfrZ5TMysnobPXA89x7N5PcGYTomnuvtH2fqPKqmZAPgpPJAPknPpRnNpKqR4l6qujQrCQ6guVPp8IiQoAhaE0wstMfOMTQVf3SHcCRn3He9mkBomlELEvbqWUrUc7gEDEyc17qs1H39aCf7cvYN7fnE5J/nIH6R6W3qlctfO0tyD3ou/xe/a5zns8n8xo5iOR7wStwqFR72S7a64Sfiy0A9SnwsvrIVDa9o47NjHVxuMt3XpPCDHuNDfHchFeV3DKWjhr6ui64IgXCOpF50Vd4yaXyDC9/M6ZEr2DGrjRpaJUjxBZ+UbvWIWvvbB9poHGDvP8Pv
-Received: from Ansuel-XPS. (93-34-89-13.ip49.fastwebnet.it. [93.34.89.13])
-        by smtp.gmail.com with ESMTPSA id i5-20020a05600c290500b0040ef95e1c78sm12665359wmd.3.2024.02.13.13.03.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 13:03:09 -0800 (PST)
-Message-ID: <65cbd90d.050a0220.7cc10.ef02@mx.google.com>
-X-Google-Original-Message-ID: <ZcvZCZOzG2BJOEwt@Ansuel-XPS.>
-Date: Tue, 13 Feb 2024 22:03:05 +0100
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Robert Marko <robimarko@gmail.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [net-next RFC PATCH 0/2] net: phy: aquantia: fix system
- interface provision
-References: <20240213182415.17223-1-ansuelsmth@gmail.com>
- <ee00b11a-4679-4ba4-be42-10f15d5e9f65@lunn.ch>
- <65cbbacb.050a0220.b81d1.eb5b@mx.google.com>
- <a71e473e-bb92-4769-9f52-53de63f6a4ae@lunn.ch>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WJZpU80A";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bjtaT4nt"
+Message-ID: <20240212153624.516965279@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1707858240;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 references:references; bh=POkOPr2xnUjR9qaFo3XT8NSa9LY45PY9NSX9q3xq04M=;
+	b=WJZpU80AM+0zTcisR+tQshP4J32JDsv0HJxayl6DhfkXVNYJWDEYUxPozZHsVpIt6s7wJg
+	Ny3NZVpIbzMl8Cbzin397wrUz3Tha166670s5fpzGIgRVoZh2yrmIgLYxQlGVgkgZ0hEZb
+	01xgNm6KxVQCLwSWNUNuH7A/7YoJ+RregUJXaDWtLUnBaGs8oAqU+iJmFWdXvIA3aKLWFQ
+	9CGjomTB8HEV/Zuq5Gks5Pg7yDE57XM5OPOlFhZyLx97qd8afV2yLIvG7F1vOPQdK99BoE
+	3yrIfnB9hRLesrqeyZ+dlV9YLJ5bsN6ErpXOGrJORjVkwHoWx6q6oZnqn/8qTA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1707858240;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 references:references; bh=POkOPr2xnUjR9qaFo3XT8NSa9LY45PY9NSX9q3xq04M=;
+	b=bjtaT4ntD5roAOEKcqJx5a2m43epaxATRzOPSRT8ELBv7ps3lxctmWaxVTwEPJ0gabEuxy
+	C/V2Gw+NAZkAm6Cg==
+From: Thomas Gleixner <tglx@linutronix.de>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: x86@kernel.org,
+ Tom Lendacky <thomas.lendacky@amd.com>,
+ Andrew Cooper <andrew.cooper3@citrix.com>,
+ Arjan van de Ven <arjan@linux.intel.com>,
+ Huang Rui <ray.huang@amd.com>,
+ Juergen Gross <jgross@suse.com>,
+ Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+ Sohil Mehta <sohil.mehta@intel.com>,
+ K Prateek Nayak <kprateek.nayak@amd.com>,
+ Kan Liang <kan.liang@linux.intel.com>,
+ Zhang Rui <rui.zhang@intel.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ Feng Tang <feng.tang@intel.com>,
+ Andy Shevchenko <andy@infradead.org>,
+ Michael Kelley <mhklinux@outlook.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Wang Wendy <wendy.wang@intel.com>
+Subject: [patch V6 01/19] x86/cpu: Provide cpuid_read() et al.
+References: <20240212153109.330805450@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a71e473e-bb92-4769-9f52-53de63f6a4ae@lunn.ch>
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 13 Feb 2024 22:04:00 +0100 (CET)
 
-On Tue, Feb 13, 2024 at 09:58:59PM +0100, Andrew Lunn wrote:
-> > > So in effect, the driver needs to write every single register it
-> > > depends on.
-> > >
-> > 
-> > Well if that's the case then this RFC patch is a must. With a
-> > misconfigured System Interface configuration, the PHY can't comunicate
-> > with the MAC.
-> > 
-> > > > This might be the safest change but again would not give us 100% idea that
-> > > > the thing provision by the FW are correct.
-> > > 
-> > > I would say, we have to assume provision is 100% wrong. Write every
-> > > single register with the needed value.
-> > > 
-> > > Is the provisioning information available? Can it be read from the
-> > > flash? Can it be dumped from firmware we have on disk? Dumping it for
-> > > a number of devices could give a list of register values which are
-> > > highly suspect, ones that OEMs typically mess with. We could start by
-> > > always setting those registers.
-> > >
-> > 
-> > We know where they are stored in the FW but it's not documented how the
-> > provision values are stored in the FW. (the format, how they are
-> > organized...) I can waste some time trying to reverse it and produce a
-> > tool to parse them if needed.
-> 
-> It might be worth it. How complex could it be? The obvious format is a
-> C45 mmd.reg pair and a value.
->
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Working on it. I already confirmed the FW have actually a provision part
-and is not empty.
+Provide a few helper functions to read CPUID leafs or individual registers
+into a data structure without requiring unions.
 
-The format looks to be u16 reg 16 value but I need to understand it
-better as not everything about provision is in mmd 1e so there must be
-some magic values to signal where the section has to be appled.
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Juergen Gross <jgross@suse.com>
+Tested-by: Sohil Mehta <sohil.mehta@intel.com>
+Tested-by: Michael Kelley <mhklinux@outlook.com>
+Tested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Tested-by: Zhang Rui <rui.zhang@intel.com>
+Tested-by: Wang Wendy <wendy.wang@intel.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-> > Would love also some comments by Russell about this, there was a patch
-> > adding support for WoL where another user was messing with these regs
-> > and he was with the idea of being careful with overwriting the provision
-> > values.
-> 
-> I expect the SERDES eye configuration is in there somewhere, and we
-> should not touch that. That was one of the arguments Aquantia made at
-> the time, that needs to be stored somewhere, and is board specific.
-> 
-> But knowing what standard 802.3 registers are commonly changed would
-> be useful, and could help track down silly problems like the
-> transmitter being disabled by default by provisioning.
->
 
-Yes having a tool to parse them would probably be useful and eventually
-even apply fixup in the firmware loading (if we really want)
 
--- 
-	Ansuel
+---
+ arch/x86/include/asm/cpuid.h |   36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+---
+
+--- a/arch/x86/include/asm/cpuid.h
++++ b/arch/x86/include/asm/cpuid.h
+@@ -127,6 +127,42 @@ static inline unsigned int cpuid_edx(uns
+ 	return edx;
+ }
+ 
++static inline void __cpuid_read(unsigned int leaf, unsigned int subleaf, u32 *regs)
++{
++	regs[CPUID_EAX] = leaf;
++	regs[CPUID_ECX] = subleaf;
++	__cpuid(regs, regs + 1, regs + 2, regs + 3);
++}
++
++#define cpuid_subleaf(leaf, subleaf, regs) {		\
++	BUILD_BUG_ON(sizeof(*(regs)) != 16);		\
++	__cpuid_read(leaf, subleaf, (u32 *)(regs));	\
++}
++
++#define cpuid_leaf(leaf, regs) {			\
++	BUILD_BUG_ON(sizeof(*(regs)) != 16);		\
++	__cpuid_read(leaf, 0, (u32 *)(regs));		\
++}
++
++static inline void __cpuid_read_reg(unsigned int leaf, unsigned int subleaf,
++				    enum cpuid_regs_idx regidx, u32 *reg)
++{
++	u32 regs[4];
++
++	__cpuid_read(leaf, subleaf, regs);
++	*reg = regs[regidx];
++}
++
++#define cpuid_subleaf_reg(leaf, subleaf, regidx, reg) {		\
++	BUILD_BUG_ON(sizeof(*(reg)) != 4);			\
++	__cpuid_read_reg(leaf, subleaf, regidx, (u32 *)(reg));	\
++}
++
++#define cpuid_leaf_reg(leaf, regidx, reg) {			\
++	BUILD_BUG_ON(sizeof(*(reg)) != 4);			\
++	__cpuid_read_reg(leaf, 0, regidx, (u32 *)(reg));	\
++}
++
+ static __always_inline bool cpuid_function_is_indexed(u32 function)
+ {
+ 	switch (function) {
+
+
+
