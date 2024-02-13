@@ -1,161 +1,79 @@
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F081CAA3
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 19:32:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE48F60263;
+	Tue, 13 Feb 2024 19:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707852753; cv=none; b=dwtyjl81Tx1hMoQSP6frTbW6IA0faygWax+BY3sifrScYAB+KeZOe29KGH+d0Y1zm86q7r53aeRm4eqTADsGNg/BOnzbDVeu5PDqA1l+GY/+UaEXXGHnNmwiQZELQ7f1nltF12VcS1nfgfM3euN0OnrO6eI0HooE3UYCYHqaZVw=
+	t=1707852902; cv=none; b=SzRqLAql57cAdkB91DKBlQW0fOy1GQM2jV8rdjQUycdiBZ/58ac/laP+qbHbsxaVeM62KldHJOO7BEBZwtOrXpGX2iB8MuYRFP7zIIv97InMRl6yd8Z/wQPNKL4edYFPQtGfUf/cw8yc0mh+uCYCfb4+TmlpfqhDEWGsgvOlqsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707852753; c=relaxed/simple;
-	bh=t3pGuIMAeZfDG+Nm+EbDi25ksSmaX2ngcVn9XDu9vc4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Eh2xR/Leb7gwul8yBW5PEr/UqRGQ7pexfQlthkfRpuR+ZWOq4CZCGBasKX6l8d9DIpIoKFNQS65Tg9OXvY0lgM7rkpFYFSfHYtPpesa8BjhTV78ZufsN7oNDysbz6XFvTHq8CEdhOq2No28v3VAGrU0lXFDdPipw71vg5ZVF3JU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Jon8VBr0; arc=none smtp.client-ip=209.85.161.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jon8VBr0"
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-59d11e0b9e1so2823452eaf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 11:32:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707852750; x=1708457550; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rymEGgxm+55ne6xbo9ccaE33zwysrx5gpeBPKrQKGdo=;
-        b=Jon8VBr0D6ju45gTv6XMepJF/4uvhaXJFN4QH7qdemSPI8KmcMK5IuCRTLNyays/tJ
-         9AFTAXQT1qGBPccP66akBXjjgBeKl0UeU5pdl0nletZLRQ0ei6QAWs1eryZ0hNef5ePy
-         NKh8ZQCrCoMJyT6A1LUohs6AQo6jkfv15hRovL/RxaZhYFBN3g9gOcrD0cwJUvXmRxR6
-         M8/Xm3EFH5wCqA7ZEOk54ny0WoErixLYQjFeLnUFepTHEOrKm5r6IAIr+CmA41OE2pRl
-         Z2h3Md9XQyHCZ6IBMw9BY+XtLZEK4Mjt2VaesN9JEB9obK2yI4sKSaIkNSdn2/q8hl0x
-         9nfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707852750; x=1708457550;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rymEGgxm+55ne6xbo9ccaE33zwysrx5gpeBPKrQKGdo=;
-        b=TosXsTuVWO7TAahdyoa1IDudChJkMgNxO/hcLlhE7BI/WD1lldlaWOpr5/apE0WzzW
-         746nmQkptzBVv/KzrPTj9Zwy3PjX7YdmWNMN0tKP3JTsV/j7/kbJ64GxKYWTZmiQmzzM
-         aSCTcjg+D0aHywlh6wh1/iI3nRJsXfe5Eb/ZwnKn0gsgDiixUugkPORW1McpWp2+/RzJ
-         ZaiCmoiPFf4OpO0Ccmbt0yGwiq/BX0BCGD2kbvjHZMqE1sqR/5Mpy8BChTdyKvE7dyt4
-         ZlznVR7gdDkwDa/h7Vc/stQ1mpN+9zR5IVPSmzvAUeTD5RzMDA2PoxvpVDY124/7r/4K
-         MKDA==
-X-Forwarded-Encrypted: i=1; AJvYcCUtKBkrauDYbsGvimpFAva3s8hjZqNIcPJQ+kNlHopFdwQv4GHnewSeNwkneZR8nRdrF80DsfnZ3Q+sGDbYqVvtRICP9N+DMcNWOReu
-X-Gm-Message-State: AOJu0YxFwiyaBNxfWEdfycxFGO4ccjQvN9zJ06Kblgq7WVOXxwGdF+62
-	3AU9wFzavYtPVXobMBwTNEtCBXJxynA1DmX9sMoN2AXQrtcOJ1Ymv8AflCfS0TV8K4nZF6mxtes
-	EE1AjvPO/uMD/bKFk+zPDF+xC3Cmj4pbqjldz
-X-Google-Smtp-Source: AGHT+IEp5DLRKl4WmMWFKz448wdqBHqEkoU9rO21Ie/NNxREpveSx1dNQrQHhbxeUkU/xxk6YvLS5sKAohRXRmJrsWE=
-X-Received: by 2002:a4a:e615:0:b0:59d:d416:3372 with SMTP id
- f21-20020a4ae615000000b0059dd4163372mr582997oot.0.1707852750038; Tue, 13 Feb
- 2024 11:32:30 -0800 (PST)
+	s=arc-20240116; t=1707852902; c=relaxed/simple;
+	bh=aJWJrXyLc63CPeKY3I4R5D1IGFgFdyU8SgZEuYZ0nTQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AovsCEZ8SNJ/B+R2D2hCpZFAi+xwl1slfzwvLsbg4HmZ/xS4wBpZ7JnDt5m54Gmo+htCVD4J3wCcrb+0F/JQjzqEbTSWpMBZdJu7Smj4ldni1gJNSgwJH5ubGVr9wMdzsU3vUN32xw3OYvMx2klxLtLRigzeuKCHAGBKbcvvRb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de; spf=fail smtp.mailfrom=denx.de; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=denx.de
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 94B511C0082; Tue, 13 Feb 2024 20:34:56 +0100 (CET)
+Date: Tue, 13 Feb 2024 20:34:56 +0100
+From: Pavel Machek <pavel@denx.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, allen.lkml@gmail.com
+Subject: Re: [PATCH 6.1 00/64] 6.1.78-rc1 review
+Message-ID: <ZcvEYEubgjxVqfBl@duo.ucw.cz>
+References: <20240213171844.702064831@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240206153405.489531-1-avagin@google.com> <ZcujIJemLxhjnjfN@google.com>
-In-Reply-To: <ZcujIJemLxhjnjfN@google.com>
-From: Andrei Vagin <avagin@google.com>
-Date: Tue, 13 Feb 2024 11:32:18 -0800
-Message-ID: <CAEWA0a78GhJ1FUmk7JX-kCKTCD2vjvzNoBbFODV6BJeu=1mKLg@mail.gmail.com>
-Subject: Re: [PATCH v2] kvm/x86: allocate the write-tracking metadata on-demand
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	kvm@vger.kernel.org, Zhenyu Wang <zhenyuw@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mv6UydqCPo68S79Z"
+Content-Disposition: inline
+In-Reply-To: <20240213171844.702064831@linuxfoundation.org>
+
+
+--mv6UydqCPo68S79Z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 13, 2024 at 9:13=E2=80=AFAM Sean Christopherson <seanjc@google.=
-com> wrote:
->
-> On Tue, Feb 06, 2024, Andrei Vagin wrote:
-> > The write-track is used externally only by the gpu/drm/i915 driver.
-> > Currently, it is always enabled, if a kernel has been compiled with thi=
-s
-> > driver.
-> >
-> > Enabling the write-track mechanism adds a two-byte overhead per page ac=
-ross
-> > all memory slots. It isn't significant for regular VMs. However in gVis=
-or,
-> > where the entire process virtual address space is mapped into the VM, e=
-ven
-> > with a 39-bit address space, the overhead amounts to 256MB.
-> >
-> > This change rework the write-tracking mechanism to enable it on-demand
-> > in kvm_page_track_register_notifier.
->
-> Don't use "this change", "this patch", or any other variant of "this blah=
-" that
-> you come up with.  :-)  Simply phrase the changelog as a command.
+Hi!
 
-ok:)
+> This is the start of the stable review cycle for the 6.1.78 release.
+> There are 64 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
->
-> > Here is Sean's comment about the locking scheme:
-> >
-> > The only potential hiccup would be if taking slots_arch_lock would
-> > deadlock, but it should be impossible for slots_arch_lock to be taken i=
-n
-> > any other path that involves VFIO and/or KVMGT *and* can be coincident.
-> > Except for kvm_arch_destroy_vm() (which deletes KVM's internal
-> > memslots), slots_arch_lock is taken only through KVM ioctls(), and the
-> > caller of kvm_page_track_register_notifier() *must* hold a reference to
-> > the VM.
-> >
-> > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > Cc: Sean Christopherson <seanjc@google.com>
-> > Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
-> > Suggested-by: Sean Christopherson <seanjc@google.com>
-> > Signed-off-by: Andrei Vagin <avagin@google.com>
-> > ---
-> > v1: https://lore.kernel.org/lkml/ZcErs9rPqT09nNge@google.com/T/
-> > v2: allocate the write-tracking metadata on-demand
-> >
-> >  arch/x86/include/asm/kvm_host.h |  2 +
-> >  arch/x86/kvm/mmu/mmu.c          | 24 +++++------
-> >  arch/x86/kvm/mmu/page_track.c   | 74 ++++++++++++++++++++++++++++-----
-> >  arch/x86/kvm/mmu/page_track.h   |  3 +-
-> >  4 files changed, 78 insertions(+), 25 deletions(-)
-> >
-> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm=
-_host.h
-> > index d271ba20a0b2..c35641add93c 100644
-> > --- a/arch/x86/include/asm/kvm_host.h
-> > +++ b/arch/x86/include/asm/kvm_host.h
-> > @@ -1503,6 +1503,8 @@ struct kvm_arch {
-> >        */
-> >  #define SPLIT_DESC_CACHE_MIN_NR_OBJECTS (SPTE_ENT_PER_PAGE + 1)
-> >       struct kvm_mmu_memory_cache split_desc_cache;
-> > +
-> > +     bool page_write_tracking_enabled;
->
-> Rather than a generic page_write_tracking_enabled, I think it makes sense=
- to
-> explicitly track if there are *external* write tracking users.  One could=
- argue
-> it makes the total tracking *too* fine grained, but I think it would be h=
-elpful
-> for readers to when KVM itself is using write tracking (shadow paging) ve=
-rsus
-> when KVM has write tracking enabled, but has not allocated rmaps (externa=
-l write
-> tracking user).
->
-> That way, kernels with CONFIG_KVM_EXTERNAL_WRITE_TRACKING=3Dn don't need =
-to check
-> the bool (though they'll still check kvm_shadow_root_allocated()).  And a=
-s a
-> bonus, the diff is quite a bit smaller.
->
+CIP testing did not find any problems here:
 
-Your patch looks good to me. I ran kvm and gvisor tests and didn't
-find any issues. I sent it as v3:
-https://lkml.org/lkml/2024/2/13/1181
+https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
+6.1.y
 
-I didn't do any changes, so feel free to change the author.
+Tested-by: Pavel Machek (CIP) <pavel@denx.de>
 
-Thanks for the help.
+Best regards,
+                                                                Pavel
+--=20
+DENX Software Engineering GmbH,        Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--mv6UydqCPo68S79Z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZcvEYAAKCRAw5/Bqldv6
+8gomAKCmmZDB14Ev4n6BmpMyHpPywRDJ1gCgnjNZTCgbIBRv8U+aNqIB9cXTjYM=
+=jV3Y
+-----END PGP SIGNATURE-----
+
+--mv6UydqCPo68S79Z--
