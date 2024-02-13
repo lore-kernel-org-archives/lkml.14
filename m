@@ -1,146 +1,92 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723ED5B05E
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 14:56:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F5865EE7C;
+	Tue, 13 Feb 2024 14:56:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707836178; cv=none; b=spRFr11AskJZim+koaoQRuA0gcyAWlh36E3f5RQy52J4zQD5kY5ptPZLujpIYfB9xnMjwaYRr8JG6Ds/7o1UmOWDuminUWwKK68Zk1f8fUDayRnbP3UPtb12xQ+FnjbH4ZKfMK2u2Kc/UPZXL1nPPFQqxEsHQ+lp7dznhz2JUO0=
+	t=1707836179; cv=none; b=DzRCa1fmKp2PP9IG1RaEXMTb6qQ+a3nDKk52KbwcEvcvE8dyil4xIg/4n8M70WoZGR8RMv7tl4XtGU4Hrt+wU1zM45tzHQet4Z4IQ6qrHyYuM/gzCHJ9eheutMb3BgKcW7ac1/wFmvQdOtxZa+VFCCaYYwDxDWsyNptdxUKaRkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707836178; c=relaxed/simple;
-	bh=HKtresPiT6cFIZNqHkF0PAC254gqBTnOeejLfEvIDK8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gYYfSEaAbiBOHsA7lIEm8PtA5FPKzdckNkMWVwSTBVYKVO7/M3aO1Ay4/HkTDiyrfS2iMpmwH9MlTqIj+Xiqnq9W+SHuG0aigczOgiVjRfptK8bdpkY4HJMIpAbZjPPy0IveT8tVzxpCk3KNT28x4dxaK9LZ5PdEdt6CEWAm7t4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=DiHQcjrL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=+mPykfoK; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=DiHQcjrL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=+mPykfoK; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1707836179; c=relaxed/simple;
+	bh=4GHGNBpN50CmynGXCsPvcgdJAlAH6pJHR8epQc++XaI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=icFZqkuvGpRpNFvTA1NLwCHzT7IRuOa1QrLegRIskN3U306qd2Styv3LIFdVcYTHLxwKlPtUHMNBq+t2T2Wrool0cUG6VZ3BawzNipI+pwIZa0lPovs7hLYU+fBCWVEJIgIkGXSFND/7jQCUKrZGyaa/JrrA9GzqirJnjFYwLQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=r0WkNnOU; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="DiHQcjrL";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="+mPykfoK";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="DiHQcjrL";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="+mPykfoK"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id AE9F02119E;
-	Tue, 13 Feb 2024 14:56:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1707836174; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b1g8t9w8mOs8leh8n6Zjz85Vov4skANTzgCxAT47VW0=;
-	b=DiHQcjrLMK4mx/z9/bYB1uFVaOrPXM8EddspOekZxMPHk2kaJdCL0HK/Qe2XZO9QP5ljq9
-	TereFf2D89nesaacLczgf9TuVDR/GHgWiovoUgePENsL7y7MzrPMBCo88dKA2HKN/VlEKU
-	nuPn0/kwSaeBL2EGdiFrN1FEI6FQhYg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1707836174;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b1g8t9w8mOs8leh8n6Zjz85Vov4skANTzgCxAT47VW0=;
-	b=+mPykfoKC8L5Bcg7+bmgSCgnijof1TmVnYhh55toN4x7bECyoMYK31BfGyVW85Zi4k25SW
-	B7AShECFZo0afEBw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1707836174; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b1g8t9w8mOs8leh8n6Zjz85Vov4skANTzgCxAT47VW0=;
-	b=DiHQcjrLMK4mx/z9/bYB1uFVaOrPXM8EddspOekZxMPHk2kaJdCL0HK/Qe2XZO9QP5ljq9
-	TereFf2D89nesaacLczgf9TuVDR/GHgWiovoUgePENsL7y7MzrPMBCo88dKA2HKN/VlEKU
-	nuPn0/kwSaeBL2EGdiFrN1FEI6FQhYg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1707836174;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b1g8t9w8mOs8leh8n6Zjz85Vov4skANTzgCxAT47VW0=;
-	b=+mPykfoKC8L5Bcg7+bmgSCgnijof1TmVnYhh55toN4x7bECyoMYK31BfGyVW85Zi4k25SW
-	B7AShECFZo0afEBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9C9C513404;
-	Tue, 13 Feb 2024 14:56:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 2JnqJQ6Dy2WSMgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 13 Feb 2024 14:56:14 +0000
-Message-ID: <25f8fa78-53e1-4b53-a70b-6b758d671452@suse.cz>
-Date: Tue, 13 Feb 2024 15:56:14 +0100
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="r0WkNnOU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1707836178; x=1739372178;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=4GHGNBpN50CmynGXCsPvcgdJAlAH6pJHR8epQc++XaI=;
+  b=r0WkNnOUBGlA6meObJ2sD8B1ta//7OuwCVXG5NXFcUW2wrGcKRr4A7in
+   KV17GEiWsAj61qWuaUifkfSLsygk3ESTHevRk+k1PSQvNlBzP/m5WBlBN
+   0v3VAy4TKDySQplvmo6xoYIilRTaF/bYIkCIutlrvBfCoYdBRkkdtMEmt
+   pJSUB72DWly/GiGs2MGz7zCYhyE6kJNAXKNKHQ2e0ClZZMReLOv0J5jbk
+   jfz7fxF08yKRIgcUAVg3hjMrBS5kJTDjzxhNIgSIj1eOqQdC1y1Gre1oR
+   8GI/U06mqms0UfcL2RZQyniYvqUcGx4TEg+qvwOw12UddnYOMSToMKgSW
+   Q==;
+X-CSE-ConnectionGUID: 1b1+m5inQImh9toRpU0rhA==
+X-CSE-MsgGUID: ePTa0T8jSBa+f3Q8oIUgGQ==
+X-IronPort-AV: E=Sophos;i="6.06,157,1705388400"; 
+   d="scan'208";a="16174935"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 13 Feb 2024 07:56:16 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 13 Feb 2024 07:56:05 -0700
+Received: from virtualbox.microchip.com (10.10.85.11) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Tue, 13 Feb 2024 07:56:02 -0700
+From: Mihai Sain <mihai.sain@microchip.com>
+To: <claudiu.beznea@tuxon.dev>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <cristian.birsan@microchip.com>, Mihai Sain <mihai.sain@microchip.com>
+Subject: [PATCH v4 5/8] ARM: dts: microchip: sama5d27_wlsom1_ek: Add power-supply property for sdmmc0 node
+Date: Tue, 13 Feb 2024 16:55:39 +0200
+Message-ID: <20240213145542.23207-6-mihai.sain@microchip.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240213145542.23207-1-mihai.sain@microchip.com>
+References: <20240213145542.23207-1-mihai.sain@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 4/5] mm,page_owner: Filter out stacks by a threshold
-Content-Language: en-US
-To: Oscar Salvador <osalvador@suse.de>, Marco Elver <elver@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>,
- Andrey Konovalov <andreyknvl@gmail.com>,
- Alexander Potapenko <glider@google.com>
-References: <20240212223029.30769-1-osalvador@suse.de>
- <20240212223029.30769-5-osalvador@suse.de>
- <CANpmjNNWv1eDL5MQXtdXnsV=sCp_8MC11xBAgsNt_1K-V30H8Q@mail.gmail.com>
- <Zcs0ruHxL9YOsKN_@localhost.localdomain>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <Zcs0ruHxL9YOsKN_@localhost.localdomain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -6.85
-X-Spamd-Result: default: False [-6.85 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 XM_UA_NO_VERSION(0.01)[];
-	 TO_DN_SOME(0.00)[];
-	 REPLY(-4.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_SEVEN(0.00)[8];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 BAYES_HAM(-1.56)[92.14%];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FREEMAIL_CC(0.00)[linux-foundation.org,vger.kernel.org,kvack.org,suse.com,gmail.com,google.com];
-	 RCVD_TLS_ALL(0.00)[]
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On 2/13/24 10:21, Oscar Salvador wrote:
-> On Tue, Feb 13, 2024 at 09:44:47AM +0100, Marco Elver wrote:
->> On Mon, 12 Feb 2024 at 23:29, Oscar Salvador <osalvador@suse.de>
->> wrote:
->>> +       debugfs_create_file("set_threshold", 0600, dir, NULL, +
->>> &proc_page_owner_threshold);
->> 
->> Can't you also read from "set_threshold", so the name "set_threshold" 
->> is misleading. Why not just "threshold"?
-> 
-> Yes, it can also be read. I guess I was too focused on the set part.
+In order to avoid the issues from the tuning procedure required by
+the UHS cards, keep the vqmmc at 3V3 to use the sd high-speed mode.
+Add vmmc-supply and vqmmc-supply properties to sdmmc0 node.
 
-Maybe name it "count_threshold" so it's more clear of whate exactly it's the
-threshold of?
+Signed-off-by: Mihai Sain <mihai.sain@microchip.com>
+---
+ arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1_ek.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> I will rename that one, plus add the {READ,WRITE}_ONCE.
-> 
-> Thanks!
-> 
+diff --git a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1_ek.dts b/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1_ek.dts
+index 15239834d886..7b36e1970bb7 100644
+--- a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1_ek.dts
++++ b/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1_ek.dts
+@@ -199,6 +199,8 @@ &sdmmc0 {
+ 	bus-width = <4>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_sdmmc0_default>;
++	vmmc-supply = <&vdd_3v3>;
++	vqmmc-supply = <&vdd_3v3>;
+ 	status = "okay";
+ };
+ 
+-- 
+2.43.0
 
