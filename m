@@ -1,103 +1,61 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971685FF03
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 19:41:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F071E58122;
+	Tue, 13 Feb 2024 19:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.228.1.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707853295; cv=none; b=I7J/VMY0Sv7EiuvINHHIe4YciE7NvbfnHUIm/SgFtcsqcxIURxA3lkm+gizDJSR6pYEDLMsk+KX/5TUUb3GQxiWmY/QnT8/SydNkxZIkUSRykaM7nNzIUchQHGB+nx9pH0vQeSiGoBW3nKZv7fOI37BIg0Oy8IDeA5VuoRp0T6A=
+	t=1707853373; cv=none; b=Lq1vwSrfXcoq4EGznIKnfTvSUIz2xSQ+WRf31C0mctCny3/y4v867V5Uc9v7sfH5+gQuRQdZr+TWsSO6R82Y5UnvvDvIpQHuSPVqwpiuD842opbD4PoHoMh8NfFrQTgCLu2/ZPHDicKCnxCKkFuJBIQB74cMSD32GXsgygXOhRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707853295; c=relaxed/simple;
-	bh=XIUKV2HP89ebTBkSQ2l8KhiXukJ6i4bGZqfxFPpfty4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=eO1wwMoLK2Db23qa8mGHdiy3eH8/HczuKPLBpa3QNvpLZwgR9smkzXxm/zdgnGBJe4OQzZvmLJyAXlZ1o90qKst8mgLHWMqXNyBFf13LCeDGHzsMQVTFc/nYalaOQr9CLjgcewiNbZc0RMz2UfhO9bPR0Bpjrzi4WrpdhRJXcRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Le3J8HU3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yiBOEDRf; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Le3J8HU3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yiBOEDRf"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1707853291;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j71MqH+xvg5K1VUefTPtDEr7dN3DjkMWha2MAQfzw/I=;
-	b=Le3J8HU3y667A+uu1HYQhAwW6JCF4SIOdKhAjesA1vZoq6kDNa4fGnqijTOgxenX+qIxf+
-	omfHJ8yffkLGqBigsqjTmf9WF44Sl76tylX+mcCROpBDpZKQ8s+X4a9lKmxYRCzCMJW21h
-	ffJqEk7QFSx3NP63gmuxkme/68AfxDTKIIJzzK+0DZXHsGXXHhe8IBvll0MlEPff7RV22S
-	gMIlOJmXpg/FVn33vd3fNrV6ttg9IhWERM/Zd3TgEAdnTcHZLmDQmXhiD969r1j9UMFAUU
-	S+P2MNttjyXb10dvCdJuv9vtYU2AFI3ekiIIJClAUCB6pBfLmP12bU/3jdgMtw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1707853291;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j71MqH+xvg5K1VUefTPtDEr7dN3DjkMWha2MAQfzw/I=;
-	b=yiBOEDRfa9+z8CkraC0tS6kgC8SQxgH1HNzlPU7N6x4Yp3pOlEFjn5Zq2jgqwe86Z9DaWA
-	LIr8DZ3TCT5I0VCg==
-To: Costa Shulyupin <costa.shul@redhat.com>, linux-kernel@vger.kernel.org
-Cc: Costa Shulyupin <costa.shul@redhat.com>, Waiman Long
- <longman@redhat.com>, Frederic Weisbecker <frederic@kernel.org>
-Subject: Re: [PATCH v2] hrtimer: select housekeeping CPU during migration
-In-Reply-To: <20240213164650.2935909-3-costa.shul@redhat.com>
-References: <20240211135213.2518068-1-costa.shul@redhat.com>
- <20240213164650.2935909-3-costa.shul@redhat.com>
-Date: Tue, 13 Feb 2024 20:41:30 +0100
-Message-ID: <877cj8gnit.ffs@tglx>
+	s=arc-20240116; t=1707853373; c=relaxed/simple;
+	bh=mvl3b+U7XdsMslEuAEGtOkRcbNX+zT482nAV1C+9Aho=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bxYeDcZ5MaMyxUFucVf6p/zTW4vlbTmjc1qzpCfunt1hkfgQhdrOFdYXnJXjbW7UwkOGOZebQseTQmnwIAQ2UDl+SVP0PzsKS+feeOEAmm7ePhGIj/FvD4nLh3BIkLcGJLmxsmNeZ1aeCxaZmlMfZt7NE1nUrU6OwG+TSKmFORk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org; spf=pass smtp.mailfrom=kernel.crashing.org; arc=none smtp.client-ip=63.228.1.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 41DJCu2k018865;
+	Tue, 13 Feb 2024 13:12:56 -0600
+Received: (from segher@localhost)
+	by gate.crashing.org (8.14.1/8.14.1/Submit) id 41DJCtmj018864;
+	Tue, 13 Feb 2024 13:12:55 -0600
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date: Tue, 13 Feb 2024 13:12:54 -0600
+From: Segher Boessenkool <segher@kernel.crashing.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        llvm@lists.linux.dev, Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
+        Bill Wendling <morbo@google.com>, linux-serial@vger.kernel.org,
+        Justin Stitt <justinstitt@google.com>, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] tty: hvc-iucv: fix function pointer casts
+Message-ID: <20240213191254.GA19790@gate.crashing.org>
+References: <20240213101756.461701-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240213101756.461701-1-arnd@kernel.org>
+User-Agent: Mutt/1.4.2.3i
 
-On Tue, Feb 13 2024 at 18:46, Costa Shulyupin wrote:
+On Tue, Feb 13, 2024 at 11:17:49AM +0100, Arnd Bergmann wrote:
+> clang warns about explicitly casting between incompatible function
+> pointers:
+> 
+> drivers/tty/hvc/hvc_iucv.c:1100:23: error: cast from 'void (*)(const void *)' to 'void (*)(struct device *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+>  1100 |         priv->dev->release = (void (*)(struct device *)) kfree;
+>       |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Way better now. Two nitpicks though:
+Such a cast of course is explicitly allowed by 6.3.2.3/8, only calling a
+function using a non-compatible type is UB.  This warning message is
+quite misleading.  Doubly so because of the -Werror, as always.
 
-> During CPU-down hotplug, hrtimers may migrate to isolated CPUs,
-> compromising CPU isolation. This commit addresses this issue by
-> masking valid CPUs for hrtimers using housekeeping_cpumask(HK_TYPE_TIMER).
+Your proposed new code of course is nice and simple (albeit a bit bigger
+than it was before, both source and binary).  Such is life ;-)
 
-'This commit' is pointless.
 
- # git grep 'This patch' Documentation/process/
-
-gives you an hint.
-
-> Suggested-by: Waiman Long <longman@redhat.com>
-> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
-> Reviewed-by: Waiman Long <longman@redhat.com>
-> Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-> ---
->
-> Changes in v2:
-> - [v1] https://lore.kernel.org/all/20240211135213.2518068-1-costa.shul@redhat.com/
-> - reworded and rebased on linux-next
-> ---
->  kernel/time/hrtimer.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-> index edb0f821dcea..947bd6cf7105 100644
-> --- a/kernel/time/hrtimer.c
-> +++ b/kernel/time/hrtimer.c
-> @@ -2224,7 +2224,7 @@ static void migrate_hrtimer_list(struct hrtimer_clock_base *old_base,
->  int hrtimers_cpu_dying(unsigned int dying_cpu)
->  {
->  	struct hrtimer_cpu_base *old_base, *new_base;
-> -	int i, ncpu = cpumask_first(cpu_active_mask);
-> +	int i, ncpu = cpumask_any_and(cpu_active_mask, housekeeping(HK_TYPE_TIMER));
-
-The tip tree managed code has rules for variable declarations (and more):
-
-  https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#variable-declarations
-
-No need to send a v3, I fix it up this time.
-
-Thanks,
-
-        tglx
+Segher
