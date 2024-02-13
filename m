@@ -1,102 +1,146 @@
-Received: from wfhigh6-smtp.messagingengine.com (wfhigh6-smtp.messagingengine.com [64.147.123.157])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0EA918021
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 08:26:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F57822319;
+	Tue, 13 Feb 2024 08:27:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707812810; cv=none; b=S8u8wiDoVKr+FgbCBjgoaUoTU24NaYqeWzKwltwQDiDCq7IR7uwCWISEpfHJVaKGRgSX3WYaMD/mo+oevuuLni51WQprpmiQUOZ08j40HAOIru2kRkG8Ujsh1Y7PvYgwmVKMrDOMVD5pfYyTlb/EsZMzbVNmK25mCzNZ3Jt5eQM=
+	t=1707812828; cv=none; b=LEJ9G+6tDODOrBhGjuDRB2yorw/ipmdiLkmyRjiFWdmMPjESOZyfm/wt07efpV0giFA7quEAiQ5vcuZOBCv2GlKqBMqeTdEpIVfcibWO1Eohl8y36YepBYWlWsNq5MVhojOFA9KyYQjw3VwWzSxNIFrBL6/uS0UTnbbogS6Xa6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707812810; c=relaxed/simple;
-	bh=0Zdnug2OdbGP1tbcQWKLArv2EpaIXtZ0vKUzVYNwEcg=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=Uk+JdaEkMy/DUEiRjrXNj2o6ih36fxF6M4LoUTS1Ta3DJIDOsG2VJhcTdu2dvomzKCBcZnw62Uacclvyyv4VWdPpaAeIPV7o01CookDU2+3LHmHt6MSaBht/4l8veDv969kIMQnJHEirzqVhE3oQc0QwJ9pzXwhDtjxe01XaTp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=gjAfXrtP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XHSTsDEw; arc=none smtp.client-ip=64.147.123.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1707812828; c=relaxed/simple;
+	bh=uQ3pvkYlbb9sP+1HniO8vjtexme1WQGKUWPzjjcS9jU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qJlklJ8uSpP9RmqECUYC9ITcoIkZiYEtIWT1YQWouA5MLbV3D3HizcxABRSbH3NT4LSF4iRZtUnivWJ+lS0YBBDFNkUDfhHXLaEoKw2xsn+P7RyoraWzeKd3cOEbIMDKiVS4w2NPiTm/4W3sBle2f3o6SSfRV/vYNC/HMEmfPx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=JEOBt5OX; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="gjAfXrtP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XHSTsDEw"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.west.internal (Postfix) with ESMTP id EEB021800089;
-	Tue, 13 Feb 2024 03:26:46 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 13 Feb 2024 03:26:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1707812806; x=1707899206; bh=0Zdnug2Odb
-	GP1tbcQWKLArv2EpaIXtZ0vKUzVYNwEcg=; b=gjAfXrtPBps6HEbUN6VSbD/lyp
-	IOK+/zQhE1/cUz+/w2YjAfPxxLzdhA1WeBsQK0NRN8Tn17KxnXCzDKYY7R48Ahjh
-	Zcaidzp2JfPlF5XUU0vBTTnV+iEegFumR1+uv/vN3D4hGG0RrgGHHM2gADAkK0A0
-	zoNCL/Bhh6SMMWvjBBj7vml+TNBuFa1vnxehdZDd5mMk5SjN+btEbZtQbT1HLPs4
-	iEirkFtwqwdS6OEyDHgNzxJU1Kr1wuTKdTcia4nIUWjR65y0wuRCSfHz6ycHz26t
-	gDK3YfQK9p/+mre9FwS8e2u/s0ZsAhvNxGB5CZdq8M0YQbzDOpHSNfQBEbuw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1707812806; x=1707899206; bh=0Zdnug2OdbGP1tbcQWKLArv2EpaI
-	XtZ0vKUzVYNwEcg=; b=XHSTsDEweTmJB9N/bXla1LU8VkKlmj2wZjMKNPESVch6
-	UY+bn+HiRf7g53HyqgnjDN/vR1zZgr/jdrAWZYsp434i7M4DBWP+GE47RYhzTM0b
-	+VBYniy5A65dN783blRBxfbxQXaXMSBnbVKk/qaDy7kyViGU5ShGcSceLBkkip8j
-	iMIFSqrfBHxlEyt6/fix8g6+Qnh0kMDtxTcxZ+6YWvReGh2ngu4pRuyMsL9WSHQB
-	2zVVxYgDIV65xarXJJe5ZaWoGzU8EkOB0PH2jQRp4DucboDxLAWE3ViFK8cJvNQZ
-	GFHPndxnqA5p/e7BuYlYHAwWfFWlWMw52ThxsfJfQw==
-X-ME-Sender: <xms:xSfLZYdPKNHaJAbEPFTxzh-PqDR8RIOHpRfFv1vad1ImGSPj_d5-4g>
-    <xme:xSfLZaNCB_DDOG9zV2ZNDCsH_HtiPjHwfyLbYDBOvx4UYfvYc8z1vSGtIiKJ4zsPd
-    LtlBEVpZZVGCzx5rvk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudeggdduvdduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:xSfLZZgpmng1wkYIPYImGEILc8rRa1qTQ68CchKswb7k1wOKN61s8Q>
-    <xmx:xSfLZd-xBUijdetbvXsEF2sOVCvvQ6y7nGHdyV5fNgcBdu1qVbKf4A>
-    <xmx:xSfLZUvaEmBj5hSGFvAp46ZTE9TrwNpliiLEAsHEt255dHe8kYhT0Q>
-    <xmx:xifLZZ-7okTwJ7x1OiOgo4T8yyUOq5RyR_8q1rpbLjDTo67-gbQG7iny2nQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 9250EB6008D; Tue, 13 Feb 2024 03:26:45 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-144-ge5821d614e-fm-20240125.002-ge5821d61
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JEOBt5OX"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41D8Qr3E049651;
+	Tue, 13 Feb 2024 02:26:53 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1707812813;
+	bh=efVT6VYP6+c1CNm4+amsfIbNPIkqQ++4RigN9/iTUGI=;
+	h=From:To:CC:Subject:Date;
+	b=JEOBt5OXFXIq0UCpmKVle7JORkfKWb+EKI8MpCpJO2mmXPaROubeP6qSnjOtL4Ynp
+	 KymtsCniLld8mUfa2k00racz+VCxvElKUh2YyKjNlLojP/0sQm6V1gB7TOGv6bWcM7
+	 eXhVXr3O8u7+2U5zsJY1SfMEFcT3McYePOhJ07HU=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41D8QrB1010740
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 13 Feb 2024 02:26:53 -0600
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 13
+ Feb 2024 02:26:52 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 13 Feb 2024 02:26:52 -0600
+Received: from udit-HP-Z2-Tower-G9-Workstation-Desktop-PC.dhcp.ti.com (udit-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [172.24.227.18])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41D8Qm5k102902;
+	Tue, 13 Feb 2024 02:26:49 -0600
+From: Udit Kumar <u-kumar1@ti.com>
+To: <nm@ti.com>, <kristo@kernel.org>, <ssantosh@kernel.org>, <chandru@ti.com>,
+        <rishabh@ti.com>, <kamlesh@ti.com>, <francesco@dolcini.it>
+CC: <vigneshr@ti.com>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, Udit Kumar <u-kumar1@ti.com>
+Subject: [PATCH v4] clk: keystone: sci-clk: Adding support for non contiguous clocks
+Date: Tue, 13 Feb 2024 13:56:40 +0530
+Message-ID: <20240213082640.457316-1-u-kumar1@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <56d3622f-4188-47e9-86ec-6870aa93a9d9@app.fastmail.com>
-In-Reply-To: <20240213060028.9744-1-rdunlap@infradead.org>
-References: <20240213060028.9744-1-rdunlap@infradead.org>
-Date: Tue, 13 Feb 2024 09:26:24 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Randy Dunlap" <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
-Cc: "MyungJoo Ham" <myungjoo.ham@samsung.com>,
- "Chanwoo Choi" <cw00.choi@samsung.com>, "Marc Zyngier" <maz@kernel.org>,
- "Philipp Zabel" <p.zabel@pengutronix.de>, "Peter Rosin" <peda@axentia.se>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2] extcon: max8997: select IRQ_DOMAIN instead of depending on it
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Tue, Feb 13, 2024, at 07:00, Randy Dunlap wrote:
-> IRQ_DOMAIN is a hidden (not user visible) symbol. Users cannot set
-> it directly thru "make *config", so drivers should select it instead
-> of depending on it if they need it.
-> Relying on it being set for a dependency is risky.
->
-> Consistently using "select" or "depends on" can also help reduce
-> Kconfig circular dependency issues.
->
-> Therefore, change EXTCON_MAX8997's use of "depends on" for
-> IRQ_DOMAIN to "select".
->
-> Fixes: dca1a71e4108 ("extcon: Add support irq domain for MAX8997 muic")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
+Most of clocks and their parents are defined in contiguous range,
+But in few cases, there is gap in clock numbers[0].
+Driver assumes clocks to be in contiguous range, and add their clock
+ids incrementally.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+New firmware started returning error while calling get_freq and is_on
+API for non-available clock ids.
+
+In this fix, driver checks and adds only valid clock ids.
+
+[0] https://software-dl.ti.com/tisci/esd/latest/5_soc_doc/j7200/clocks.html
+Section Clocks for NAVSS0_CPTS_0 Device, clock id 12-15 not present.
+
+Fixes: 3c13933c6033 ("clk: keystone: sci-clk: add support for dynamically probing clocks")
+Signed-off-by: Udit Kumar <u-kumar1@ti.com>
+---
+Changelog
+Changes in v4
+- Added only incremental chanegs as per v3 discussion
+- Updated commit message
+- v3 was Reviewed-by, Dropping Reviewed-by as logic is changed
+Link to v3
+https://lore.kernel.org/all/20240207091100.4001428-1-u-kumar1@ti.com/ 
+
+Changes in v3
+- instead of get_freq, is_auto API is used to check validilty of clock
+- Address comments of v2, to have preindex increment
+Link to v2 https://lore.kernel.org/all/20240206104357.3803517-1-u-kumar1@ti.com/
+
+Changes in v2
+- Updated commit message
+- Simplified logic for valid clock id
+link to v1 https://lore.kernel.org/all/20240205044557.3340848-1-u-kumar1@ti.com/
+
+
+P.S
+Firmawre returns total num_parents count including non available ids.
+For above device id NAVSS0_CPTS_0, number of parents clocks are 16
+i.e from id 2 to 17. But out of these ids few are not valid.
+So driver adds only valid clock ids out ot total.
+
+Original logs
+https://gist.github.com/uditkumarti/de4b36b21247fb36725ad909ce4812f6#file-original-logs
+Line 2630 for error
+
+Logs with fix v4
+https://gist.github.com/uditkumarti/f25482a5e18e918010b790cffb39f572
+Line 2640
+
+
+ drivers/clk/keystone/sci-clk.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/clk/keystone/sci-clk.c b/drivers/clk/keystone/sci-clk.c
+index 35fe197dd303..eb2ef44869b2 100644
+--- a/drivers/clk/keystone/sci-clk.c
++++ b/drivers/clk/keystone/sci-clk.c
+@@ -516,6 +516,7 @@ static int ti_sci_scan_clocks_from_dt(struct sci_clk_provider *provider)
+ 	struct sci_clk *sci_clk, *prev;
+ 	int num_clks = 0;
+ 	int num_parents;
++	bool state;
+ 	int clk_id;
+ 	const char * const clk_names[] = {
+ 		"clocks", "assigned-clocks", "assigned-clock-parents", NULL
+@@ -586,6 +587,15 @@ static int ti_sci_scan_clocks_from_dt(struct sci_clk_provider *provider)
+ 				clk_id = args.args[1] + 1;
+ 
+ 				while (num_parents--) {
++					/* Check if this clock id is valid */
++					ret = provider->ops->is_auto(provider->sci,
++						sci_clk->dev_id, clk_id, &state);
++
++					if (ret) {
++						clk_id++;
++						continue;
++					}
++
+ 					sci_clk = devm_kzalloc(dev,
+ 							       sizeof(*sci_clk),
+ 							       GFP_KERNEL);
+-- 
+2.34.1
+
