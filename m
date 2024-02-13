@@ -1,104 +1,154 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD865FDD7
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 17:24:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A43D5FDDF;
+	Tue, 13 Feb 2024 17:25:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707845068; cv=none; b=ef6NrFd226Ikpl6lvLHI9f46kGG0QD/cDAs+nuOb3euLukjYEIrz4eBof2ushdmwQjDJdGnd4s7FApDkkVUFmkFPtM6H/EqRdcnLK+e6OinRyj5GXrH9kDvVCmKGnj/HosZhpA23EttdqNpkzTFEX3cGXvnHKOwGuElT8/zkP4o=
+	t=1707845159; cv=none; b=ETjdQiaCHmhdBWNckQRbJRRPSBBmzqRgRcFNVYlD+4EpfashTfLVp8mUo2SAjZzpbzeLGDIsQ8DiUvB7gPjK1ayqzdNyDGwRH5PAo9vP2Bff1ivcU3g8WHWqO572yx9tUqoqJuXHnUdxHREQv719VvNK3rE1NTiwO7UaA3fIlOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707845068; c=relaxed/simple;
-	bh=dAcS//bN5EUl0rmpd6MTRSeVq9WzyY8e6NY4x+P70zw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nzmCoHnX1qoWSfyL8H9hlmOfkU7OtIEHzuIk+q9pxx2H64Hug9yHzsRFsRxCx7ZOHC5laFNt3HCSP/ShRZyAGNkaPdwNnTM2qumaY+nrNBSE6JQgWfJr5ZVrkQ750VVb2JIUUTm1PnSKSuzzSqblm1KMYoPDsi2ek4fEKzSWqHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jSyTHznY; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jSyTHznY"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e104196e6eso404608b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 09:24:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707845066; x=1708449866; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8XLUuSB3OMz4OtDEw/wq9wIqlJoGF0PKwvDRzd4XmEc=;
-        b=jSyTHznYTizsJJLkDBNnEn1tFnEEfimEe8x37UwmjW5wso19x10HZZY61wY78EdTrW
-         9DyOEA5wzzD5R34w2VihyXRZklBwkrVUFT593Rfr1S3C2wxXn9aiFM5ujSdmB6503qjx
-         q59YdCMVaSulr24jKgyFXy9WDopCwJdtmwL04=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707845066; x=1708449866;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8XLUuSB3OMz4OtDEw/wq9wIqlJoGF0PKwvDRzd4XmEc=;
-        b=miPKVJz0Uf7YEDAq7unrmU+tHCmxQ6vgZ6a/Z3obOl2i+SE5jI6eiHhZfq4Llue9tE
-         yZ5Yuum0zMB+qpacxExSvNE/6uFVFhL5afomWXIFRUAHtPeIVznJxHsfTGGU+9Uev0K/
-         GWwCyI7HwoC0YTRHye0OFEPrfeNLQRt6tjso/+LiICLRBOLZcuBBVKRqgOpWczmVr3nZ
-         u6m9mytOu+X/Gtk4gX+zxziTKl+8+DpiR/jgcIL/+dqKIuFzO/mpCq01oHpMFFoDe1Lx
-         djWC5D23UtmTRznNNheizTBcW4/NmI2BYUMEaFgm96NWq1IHDXnn4XbNukxnp1zPWsF7
-         Uumw==
-X-Forwarded-Encrypted: i=1; AJvYcCUxCseYQYvlJ7eeEyi3g0E/HOOG4TWJGg1u0WgWhUR5++STIhlW1QE3e6vZYfLb95Yr5/jgmxoTUoTsDPW0wwSOeuOSaCpMha5ifb8d
-X-Gm-Message-State: AOJu0YxklRulNAtZ73/WL8zNt8nyLBHYphiJfxZPsNdXyYSapHswyiuc
-	4Ttki6vIE2snm1eYTWzmTuopjaGGLCNB5ZgPzSlre4edTNzk8YDcPGXZQDJhtg==
-X-Google-Smtp-Source: AGHT+IFdmIO9hfCRggCQg8+KevN9Tmla+FFn050mODC8Y8KpOKXoFLl2B6fcd42BXxVy7VjHKSh6ww==
-X-Received: by 2002:a05:6a21:3115:b0:19e:a270:e766 with SMTP id yz21-20020a056a21311500b0019ea270e766mr335577pzb.5.1707845066416;
-        Tue, 13 Feb 2024 09:24:26 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV3gdAZrMiwHKmpifH8I6waLmgmEwpS3trwB7VFLzXrxjOa5uNlGnMgRca14Hzd+QYpdvWYn5n9Liwb5rPRx6lgYUkHDUn2+cbT1jg1pJ5Q0cr3NA51wno716+wCz+1Ky7mnxQeNPx+XU919MMCJJL8nnt5gANYBIT/TVmz9WT2lovM+AK+ftEDGREWJSau0qCrGqe62uHuDdpTb6Nd+c96QUpwVeMd
-Received: from localhost (253.78.80.34.bc.googleusercontent.com. [34.80.78.253])
-        by smtp.gmail.com with UTF8SMTPSA id o21-20020a637e55000000b005c2420fb198sm2672177pgn.37.2024.02.13.09.24.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Feb 2024 09:24:26 -0800 (PST)
-From: Hsin-chen Chuang <chharry@chromium.org>
-To: linux-bluetooth@vger.kernel.org
-Cc: chromeos-bluetooth-upstreaming@chromium.org,
-	Hsin-chen Chuang <chharry@chromium.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	linux-kernel@vger.kernel.org
-Subject: [BlueZ PATCH] Bluetooth: hci_core: Skip hci_cmd_work if hci_request is pending
-Date: Wed, 14 Feb 2024 01:23:29 +0800
-Message-ID: <20240214012328.BlueZ.1.I10eda6f375bc8dfedf4eef3a8cf6572c65803afc@changeid>
-X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
+	s=arc-20240116; t=1707845159; c=relaxed/simple;
+	bh=tuwFW0aeQd+W4iChfvmqXXIKXMdz2pY5OHL+K4tGxQ0=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NbXP3LD+marVPFU9sqGM9oMVsXHD6aLm7hhu8lA0EhCnTBUzt3ce6p9MpeWTkxArfwladk03/QuhySBL0fKp6h9IqbVUJENyojucfzOLy9HZp72FB7UJu5FuCeZdZ2Kf/DZKNEYxSRg6fw+Czso6xAt07CAxSFwLC7V5vrJyl7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TZ7Rn3QwWz6K5pj;
+	Wed, 14 Feb 2024 01:22:13 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id E6EB01400D9;
+	Wed, 14 Feb 2024 01:25:51 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 13 Feb
+ 2024 17:25:51 +0000
+Date: Tue, 13 Feb 2024 17:25:50 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: David Lechner <dlechner@baylibre.com>
+CC: Mark Brown <broonie@kernel.org>, Martin Sperl <kernel@martin.sperl.org>,
+	David Jander <david@protonic.nl>, Jonathan Cameron <jic23@kernel.org>,
+	Michael Hennerich <michael.hennerich@analog.com>, Nuno =?ISO-8859-1?Q?S?=
+ =?ISO-8859-1?Q?=E1?= <nuno.sa@analog.com>, Alain Volmat
+	<alain.volmat@foss.st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, <linux-spi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH 1/5] spi: add spi_optimize_message() APIs
+Message-ID: <20240213172550.000023a7@Huawei.com>
+In-Reply-To: <20240212-mainline-spi-precook-message-v1-1-a2373cd72d36@baylibre.com>
+References: <20240212-mainline-spi-precook-message-v1-0-a2373cd72d36@baylibre.com>
+	<20240212-mainline-spi-precook-message-v1-1-a2373cd72d36@baylibre.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-hci_cmd_work overwrites the hdev->sent_cmd which contains the required
-info for a hci_request to work. In the real world, it's observed that
-a request from hci_le_ext_create_conn_sync could be interrupted by
-the authentication (hci_conn_auth) caused by rfcomm_sock_connect. When
-it happends, hci_le_ext_create_conn_sync hangs until timeout; If the
-LE connection is triggered by MGMT, it freezes the whole MGMT interface.
+On Mon, 12 Feb 2024 17:26:41 -0600
+David Lechner <dlechner@baylibre.com> wrote:
 
-Signed-off-by: Hsin-chen Chuang <chharry@chromium.org>
----
+> This adds a new spi_optimize_message() function that can be used to
+> optimize SPI messages that are used more than once. Peripheral drivers
+> that use the same message multiple times can use this API to perform SPI
+> message validation and controller-specific optimizations once and then
+> reuse the message while avoiding the overhead of revalidating the
+> message on each spi_(a)sync() call.
+> 
+> Internally, the SPI core will also call this function for each message
+> if the peripheral driver did not explicitly call it. This is done to so
+> that controller drivers don't have to have multiple code paths for
+> optimized and non-optimized messages.
+> 
+> A hook is provided for controller drivers to perform controller-specific
+> optimizations.
+> 
+> Suggested-by: Martin Sperl <kernel@martin.sperl.org>
+> Link: https://lore.kernel.org/linux-spi/39DEC004-10A1-47EF-9D77-276188D2580C@martin.sperl.org/
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
 
- net/bluetooth/hci_core.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+A few trivial things inline but looks good to me in general.
 
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index 34c8dca2069f..e3706889976d 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -4213,8 +4213,11 @@ static void hci_cmd_work(struct work_struct *work)
- 	BT_DBG("%s cmd_cnt %d cmd queued %d", hdev->name,
- 	       atomic_read(&hdev->cmd_cnt), skb_queue_len(&hdev->cmd_q));
- 
--	/* Send queued commands */
--	if (atomic_read(&hdev->cmd_cnt)) {
-+	/* Send queued commands. Don't send the command when there is a pending
-+	 * hci_request because the request callbacks would be overwritten.
-+	 */
-+	if (atomic_read(&hdev->cmd_cnt) &&
-+	    !hci_dev_test_flag(hdev, HCI_CMD_PENDING)) {
- 		skb = skb_dequeue(&hdev->cmd_q);
- 		if (!skb)
- 			return;
--- 
-2.43.0.687.g38aa6559b0-goog
+I thought about suggesting splitting this into an initial patch that just does
+the bits without the controller callbacks. Maybe it would work better that way
+with that introduced after the validate and splitting of transfers (so most
+of patches 1 and 2) as a patch 3 prior to the stm32 additions?
+
+> ---
+>  drivers/spi/spi.c       | 145 ++++++++++++++++++++++++++++++++++++++++++++++--
+>  include/linux/spi/spi.h |  19 +++++++
+>  2 files changed, 160 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> index c2b10e2c75f0..5bac215d7009 100644
+> --- a/drivers/spi/spi.c
+> +++ b/drivers/spi/spi.c
+> @@ -2106,6 +2106,41 @@ struct spi_message *spi_get_next_queued_message(struct spi_controller *ctlr)
+>  }
+>  EXPORT_SYMBOL_GPL(spi_get_next_queued_message);
+>  
+> +/**
+> + * __spi_unoptimize_message - shared implementation of spi_unoptimize_message()
+> + *                            and spi_maybe_unoptimize_message()
+> + * @msg: the message to unoptimize
+> + *
+> + * Periperhal drivers should use spi_unoptimize_message() and callers inside
+> + * core should use spi_maybe_unoptimize_message() rather than calling this
+> + * function directly.
+> + *
+> + * It is not valid to call this on a message that is not currently optimized.
+> + */
+> +static void __spi_unoptimize_message(struct spi_message *msg)
+> +{
+> +	struct spi_controller *ctlr = msg->spi->controller;
+> +
+> +	if (ctlr->unoptimize_message)
+> +		ctlr->unoptimize_message(msg);
+> +
+> +	msg->optimized = false;
+> +	msg->opt_state = NULL;
+> +}
+
+Seems misbalanced that this doesn't take a pre_optimized flag in but
+__spi_optimize does. I'd move handling that to outside the call in both cases.
+
+
+>  	spin_lock_irqsave(&ctlr->bus_lock_spinlock, flags);
+> @@ -4271,6 +4401,8 @@ int spi_async(struct spi_device *spi, struct spi_message *message)
+>  
+>  	spin_unlock_irqrestore(&ctlr->bus_lock_spinlock, flags);
+>  
+> +	spi_maybe_unoptimize_message(message);
+> +
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(spi_async);
+> @@ -4331,10 +4463,15 @@ static int __spi_sync(struct spi_device *spi, struct spi_message *message)
+>  		return -ESHUTDOWN;
+>  	}
+>  
+> -	status = __spi_validate(spi, message);
+> -	if (status != 0)
+> +	status = spi_maybe_optimize_message(spi, message);
+> +	if (status)
+>  		return status;
+>  
+> +	/*
+> +	 * NB: all return paths after this point must ensure that
+> +	 * spi_finalize_current_message() is called to avoid leaking resources.
+
+I'm not sure a catch all like that makes sense. Not sufficient to call
+the finer grained spi_maybe_unoptimize_message()  ?
+> +	 */
+> +
+>  	SPI_STATISTICS_INCREMENT_FIELD(ctlr->pcpu_statistics, spi_sync);
+>  	SPI_STATISTICS_INCREMENT_FIELD(spi->pcpu_statistics, spi_sync);
 
