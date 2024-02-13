@@ -1,214 +1,157 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4838F5D914;
-	Tue, 13 Feb 2024 16:07:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04FE65F;
+	Tue, 13 Feb 2024 16:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707840470; cv=none; b=XJVP0tphw9I/CRwZaMwe/D1OR+gNexPsDDeh3rEeZaGjrNax7xVMX5axmWmuQzqeH+iP5dJmTjUnUIWbt7paot+y6F9vP01xfP2eyUGoPqDlZwI6tsgK7B1m+1fUogirpYQko3CXu99QFUk8la8LM/Gum8eeyBBZLYYXLOvNYP0=
+	t=1707840561; cv=none; b=a8cOy6d/0JGeU0y/xJaUF8zCYAHbBNHWPFoCIJi+hLwKAoTywrEgUzL44zKelZLSRbSXLgr+MTMEcHaPFlxtgy1YQ9q5qrF5F3MFiZDwHBcdKIIvVeWw9aBcwuQcuWMxLdEB/aBl0LNk34b7TNVryNWDQjMClXbLQmds2dtpX4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707840470; c=relaxed/simple;
-	bh=Nq5NLWM8fquBBRNIIZ/z4DwyXucV/4AOy2bTNrl4gfM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FHN0i51MB+ke4/a71oJ1Te4Z1bknVCx7qWFtLv3oOe3Mo8JtxgesU7FGy+oOo5e8m1bbla/NssmTN9mKbNjf+uJGLA5304CugEI1ktCw/RyRBMichjFd9axyRNB3eynI17qmW/6U2Cfk2whwIiyueIQPrPJ6/GtL/eUeLLSA5Ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Bnx3owWj; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1707840561; c=relaxed/simple;
+	bh=S/GRXv9DFjc7yF8QJeC4bdwYNBcaL3z76O2ybsYr6ZQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=StYU+ZIkfce1fNWXIpFqzXBOv7usutD3d0+JY+NTBy2kI5b3ByXvcj3ePQPRknnmISLsn2vti94ScEjRj+mPF3yCft9M5/arnaMPCEjlAREJI2pCaKzbVbQMOaofh/WZ0/1HZ3y40au83KSEfwAwrrvwgLh5Ar3I03BFqfV8Jp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NrQsyi7e; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=oTK1LIk8; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NrQsyi7e; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=oTK1LIk8; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Bnx3owWj"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 93E41C000B;
-	Tue, 13 Feb 2024 16:07:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1707840464;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NrQsyi7e";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="oTK1LIk8";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NrQsyi7e";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="oTK1LIk8"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0BCF221C42;
+	Tue, 13 Feb 2024 16:09:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707840558; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gVnzc7OAdrtUJbFDyTTibW0hk3NfWNlLDbaHw8ta+S8=;
-	b=Bnx3owWjNw2cJ0Jza4wUrQauMZ+sFCg4yoKBcAIBj/yJBtyZtWax7yKqIPwQRn12E6tuTa
-	tH9TbpLp08NNV0UZsDFx+XXBO5ROXyCuY31lNQ05P4vvnCwOvTzlp2nSiLGDDtjUdGusLD
-	0FY0RAGiwSQAqeGMfkpGHZRc7z9IRqb7uVt/pDGYx+ZlQFBILq3pS2unj+ofv6RnskuWnU
-	ROlzfe+uAx3ERoGD6S61ZsgbdKHWNKVoa5UBD4EtEGqTcSOi2Ue/mWaobcr5lgao6nV7h7
-	kDn67fD1vkhGVsK+yS5EMGgnHmOXUV5qX6k/VF5fFMEYeIlPu0Lk0nqvAgkcYg==
-Date: Tue, 13 Feb 2024 17:07:41 +0100
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, davem@davemloft.net, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Richard Cochran <richardcochran@gmail.com>,
- UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- thomas.petazzoni@bootlin.com, =?UTF-8?B?S8O2cnk=?= Maincent
- <kory.maincent@bootlin.com>
-Subject: Re: [PATCH net-next 1/3] net: phy: Add support for inband
- extensions
-Message-ID: <20240213170741.3ffa20e8@device-28.home>
-In-Reply-To: <27644300-ff4f-4603-9338-bad4aa0e5610@lunn.ch>
-References: <20240212173307.1124120-1-maxime.chevallier@bootlin.com>
-	<20240212173307.1124120-2-maxime.chevallier@bootlin.com>
-	<27644300-ff4f-4603-9338-bad4aa0e5610@lunn.ch>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	bh=zubravQy7jVbUoW/ZL/MweR2V9SuJRaNpDAgWH+si7c=;
+	b=NrQsyi7eL0Z8MNW3teN7s7NjS59N9Cv5z81m8t+3jwF++XZK/cJAMx9lQsQ8eXjKHKtPhE
+	WLIYfwWxxH6j/MgaeVK0xr43Gin/lx7FIAo9zUXS2+cIdLf8nDBSAS5i5Oawrzei5zA7wC
+	Z3ajU2KtGeGno1pzikYmBgnvjgaYeSY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707840558;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zubravQy7jVbUoW/ZL/MweR2V9SuJRaNpDAgWH+si7c=;
+	b=oTK1LIk883C4Bl1hG5vCRjrkMxD6cI6iRlY7IzZeyJHztiGOfgHWgulmR8O0JFT/0/m6BM
+	NoIt2VnzNXQ+tJCQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707840558; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zubravQy7jVbUoW/ZL/MweR2V9SuJRaNpDAgWH+si7c=;
+	b=NrQsyi7eL0Z8MNW3teN7s7NjS59N9Cv5z81m8t+3jwF++XZK/cJAMx9lQsQ8eXjKHKtPhE
+	WLIYfwWxxH6j/MgaeVK0xr43Gin/lx7FIAo9zUXS2+cIdLf8nDBSAS5i5Oawrzei5zA7wC
+	Z3ajU2KtGeGno1pzikYmBgnvjgaYeSY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707840558;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zubravQy7jVbUoW/ZL/MweR2V9SuJRaNpDAgWH+si7c=;
+	b=oTK1LIk883C4Bl1hG5vCRjrkMxD6cI6iRlY7IzZeyJHztiGOfgHWgulmR8O0JFT/0/m6BM
+	NoIt2VnzNXQ+tJCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BC40D1370C;
+	Tue, 13 Feb 2024 16:09:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ArjcJy2Uy2VkSwAAD6G6ig
+	(envelope-from <krisman@suse.de>); Tue, 13 Feb 2024 16:09:17 +0000
+From: Gabriel Krisman Bertazi <krisman@suse.de>
+To: Eugen Hristev <eugen.hristev@collabora.com>
+Cc: tytso@mit.edu,  adilger.kernel@dilger.ca,  jaegeuk@kernel.org,
+  chao@kernel.org,  viro@zeniv.linux.org.uk,  brauner@kernel.org,
+  linux-ext4@vger.kernel.org,  linux-f2fs-devel@lists.sourceforge.net,
+  jack@suse.cz,  linux-kernel@vger.kernel.org,
+  linux-fsdevel@vger.kernel.org,  kernel@collabora.com,  Gabriel Krisman
+ Bertazi <krisman@collabora.com>,  Eric Biggers <ebiggers@google.com>
+Subject: Re: [RESEND PATCH v9 1/3] libfs: Introduce case-insensitive string
+ comparison helper
+In-Reply-To: <1b7d51df-4995-4a4a-8ec4-f1ea4975e44c@collabora.com> (Eugen
+	Hristev's message of "Tue, 13 Feb 2024 06:44:16 +0200")
+Organization: SUSE
+References: <20240208064334.268216-1-eugen.hristev@collabora.com>
+	<20240208064334.268216-2-eugen.hristev@collabora.com>
+	<87ttmivm1i.fsf@mailhost.krisman.be>
+	<ff492e0f-3760-430e-968a-8b2adab13f3f@collabora.com>
+	<87plx5u2do.fsf@mailhost.krisman.be>
+	<1b7d51df-4995-4a4a-8ec4-f1ea4975e44c@collabora.com>
+Date: Tue, 13 Feb 2024 11:09:16 -0500
+Message-ID: <875xyse47n.fsf@mailhost.krisman.be>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Content-Type: text/plain
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=NrQsyi7e;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=oTK1LIk8
+X-Spamd-Result: default: False [-1.66 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 HAS_ORG_HEADER(0.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_TWELVE(0.00)[15];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-1.35)[90.50%]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 0BCF221C42
+X-Spam-Level: 
+X-Spam-Score: -1.66
+X-Spam-Flag: NO
 
-Hello Andrew,
+Eugen Hristev <eugen.hristev@collabora.com> writes:
 
-On Tue, 13 Feb 2024 15:03:01 +0100
-Andrew Lunn <andrew@lunn.ch> wrote:
+> On 2/9/24 16:40, Gabriel Krisman Bertazi wrote:
+>> Eugen Hristev <eugen.hristev@collabora.com> writes:
+> With the changes you suggested, I get these errors now :
+>
+> [  107.409410] EXT4-fs error (device sda1): ext4_lookup:1816: inode #521217: comm
+> ls: 'CUC' linked to parent dir
+> ls: cannot access '/media/CI_dir/CUC': Structure needs cleaning
+> total 8
+> drwxr-xr-x 2 root root 4096 Feb 12 11:51 .
+> drwxr-xr-x 4 root root 4096 Feb 12 11:47 ..
+> -????????? ? ?    ?       ?            ? CUC
+>
+> Do you have any idea about what is wrong ?
 
-> > +Inband Extensions
-> > +=================
-> > +
-> > +The USGMII Standard allows the possibility to re-use the full-length 7-bytes
-> > +frame preamble to convey meaningful data. This is already partly used by modes
-> > +like QSGMII, which passes the port number in the preamble.
-> > +
-> > +In USGMII, we have a standardized approach to allow the MAC and PHY to pass
-> > +such data in the preamble, which looks like this :
-> > +
-> > +|  0   |  1   |  2  |  3  |  4  |  5  |  6  |  7  |  Frame data
-> > +| SoP  |      |      Extension              | CRC |
-> > +|     /        \_______________             |     |
-> > +|    /                         \            |     |
-> > +|   | type | subport | ext type |           |     |
-> > +
-> > +The preamble in that case uses the Packet Control Header (PCH) format, where
-> > +the byte 1 is used as a control field with :
-> > +
-> > +type - 2 bits :
-> > +        - 00 : Packet with PCH
-> > +        - 01 : Packet without PCH
-> > +        - 10 : Idle Packet, without data
-> > +        - 11 : Reserved
-> > +
-> > +subport - 4 bits : The subport identifier. For QUSGMII, this field ranges from
-> > +                   0 to 3, and for OUSGMII, it ranges from 0 to 7.
-> > +
-> > +ext type - 2 bits : Indicated the type of data conveyed in the extension
-> > +        - 00 : Ignore extension
-> > +        - 01 : 8 bits reserved + 32 timestamp
-> > +        - 10 : Reserved
-> > +        - 11 : Reserved  
-> 
-> Somewhat crystal ball...
-> 
-> Those two reserved values could be used in the future to indicate
-> other extensions. So we could have three in operation at once, but
-> only one selected per frame.
-> 
-> > +A PHY driver can register available modes with::
-> > +
-> > +  int phy_inband_ext_set_available(struct phy_device *phydev, enum phy_inband_ext ext);
-> > +  int phy_inband_ext_set_unavailable(struct phy_device *phydev, enum phy_inband_ext ext);  
-> 
-> enum phy_inband_ext is just an well defined, but arbitrary number? 0
-> is this time stamp value mode, 1 could be used MACSEC, 2 could be a
-> QoS indicator when doing rate adaptation? 3 could be ....
-> 
-> > +It's then up to the MAC driver to enable/disable the extension in the PHY as
-> > +needed. This was designed to fit the timestamping configuration model, as it
-> > +is the only mode supported so far.
-> > +
-> > +Enabling/Disabling an extension is done from the MAC driver through::
-> > +
-> > +  int phy_inband_ext_enable(struct phy_device *phydev, enum phy_inband_ext ext);  
-> 
-> So maybe this should return the 2 bit ext type value? The MAC can
-> request QoS marking, and the PHY replies it expects the bits to be 3 ?
-> 
-> I'm just trying to ensure we have an API which is extensible in the
-> future to make use of those two reserved values.
+Hm, there's a bug somewhere. The lookup got broken and ls got an error.
+Did you debug it a bit?  can you share the code and a reproducer?
 
-You are right, that's a much better idea !
+From a quick look at the example I suggested, utf8_strncasecmp* return 0
+on match, but ext4_match should return true when matched. So remember to
+negate the output:
 
-> 
-> > diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-> > index 3b9531143be1..4b6cf94f51d5 100644
-> > --- a/drivers/net/phy/phy.c
-> > +++ b/drivers/net/phy/phy.c
-> > @@ -1760,3 +1760,89 @@ int phy_ethtool_nway_reset(struct net_device *ndev)
-> >  	return ret;
-> >  }
-> >  EXPORT_SYMBOL(phy_ethtool_nway_reset);
-> > +
-> > +/**
-> > + * PHY modes in the USXGMII family can have extensions, with data transmitted
-> > + * in the frame preamble.
-> > + * For now, only QUSGMII is supported, but other variants like USGMII and
-> > + * OUSGMII can be added in the future.
-> > + */
-> > +static inline bool phy_interface_has_inband_ext(phy_interface_t interface)  
-> 
-> No inline functions in .c file please. Let the compiler decide.
+...
+res = !utf8_strncasecmp(um, name, &dirent);
+...
 
-My bad this one slept through the cracks...
-
-> 
-> > +bool phy_inband_ext_available(struct phy_device *phydev, enum phy_inband_ext ext)
-> > +{
-> > +	return !!(phydev->inband_ext.available & ext);  
-> 
-> should this be BIT(ext) ?
-
-Correct indeed
-
-> 
-> > +}
-> > +EXPORT_SYMBOL(phy_inband_ext_available);  
-> 
-> If you don't mind, i would prefer EXPORT_SYMBOL_GPL().
-
-I don't mind, I'll fix that
-
-> 
-> > +static int phy_set_inband_ext(struct phy_device *phydev,
-> > +			      enum phy_inband_ext ext,
-> > +			      bool enable)
-> > +{
-> > +	int ret;
-> > +
-> > +	if (!phy_interface_has_inband_ext(phydev->interface))
-> > +		return -EOPNOTSUPP;
-> > +
-> > +	if (!phydev->drv->set_inband_ext)
-> > +		return -EOPNOTSUPP;  
-> 
-> That is a driver bug. It should not set phydev->inband_ext.available
-> and then not have drv->set_inband_ext. So we should probably test this
-> earlier. Maybe define that phydev->inband_ext.available has to be set
-> during probe, and the core can validate this after probe and reject
-> the device if it is inconsistent?
-
-Good point, I'll add that !
-
-> 
-> > +
-> > +	mutex_lock(&phydev->lock);
-> > +	ret = phydev->drv->set_inband_ext(phydev, ext, enable);
-> > +	mutex_unlock(&phydev->lock);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	if (enable)
-> > +		phydev->inband_ext.enabled |= BIT(ext);
-> > +	else
-> > +		phydev->inband_ext.enabled &= ~BIT(ext);  
-> 
-> Should these be also protected by the mutex?
-
-I think you are right, it would be better making sure we serialize
-accesses to these indeed.
-
-Thanks for the review,
-
-Maxime
+-- 
+Gabriel Krisman Bertazi
