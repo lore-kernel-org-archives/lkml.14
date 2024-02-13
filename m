@@ -1,143 +1,134 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A2EB286B3;
-	Tue, 13 Feb 2024 08:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EECA1B7F5
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 08:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707812287; cv=none; b=QQQV+5ttONGZ8/WsppBX/TXd6nbU3sluHGxaN5QMwAQ66q93AT0ArhZ98bfpME+PHPpmOyClbUbH0s2LJO+VRiSRLnDp/zWFOVdNZEVF289oos7PX1YwrC1Bx900J9PmWGW1MCrUGqGeXrD5fWK11hlk8hJbWrCb00r0Y9QuDug=
+	t=1707812374; cv=none; b=qufGkjscIdC0/UvXOOTCXCHv71/RmLYP9Q52JTpu9a0WzDJj76CKc6uCzfAGp/JXp8aLb+h1GwluccleQ3mj7AW/KlIH+7J9+o/uiPZLt6vcGAjYSzUL+fO3xy4+a8WANW8IEVAIv0DoXKNUdTbVwrp/K7uWpbzkXeetKtWk5Kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707812287; c=relaxed/simple;
-	bh=H5tk7A4bfY+JAigsJktni+BUbROwql+zPc9UW2KH6dQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=uMT9ooFzJylerW1CYwPN4D6pQo82Jxcpre+iz+eDN5J5139e458puT1wz7A1uqO9c13bJ4SC9J9zP7M+17qzrMof1Iak8BE8ROT/AVgTzAF/m75oE7mOK8dfvcFP+bXWinqIy1/J9R/o9QXe9iNzi5YYnm9s30fVmMNgyKd6Mls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=D5/aIync; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1707812374; c=relaxed/simple;
+	bh=a9KpPEigrsX1iLMABeTlXtvEaBlx5SwQTXXvUiczMB0=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=eDh3Kv1Zl9bVu+U5XJxq2fY5MJIfYBb2KfpRy7cuTl7Cjz+UFVr4zanShdEi/LNaWl97Rau41M1hKhpuNuES965wOdEopagSYEXHVtqAal3kJKF9JNFWbCnzohwLym5kYy7lif3RGeKmAm+4wNHDfpEDzAiBKJbMtoad5HIVlTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=n45jA2m5; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="D5/aIync"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41D7WfDP022653;
-	Tue, 13 Feb 2024 08:17:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=iZUS6Avy7ObEdkigZ/4tAp8qc2aWyi1mNik6pmtJqH8=; b=D5
-	/aIyncPlaqJKZXq/uL2ufkYxJcY1TvAvYsK39nmNi1fLEw7PmS35adTYoCLySb8F
-	cwwShfCBWuqw6TBsMU2tlGhmXanMnGsIVrrEx8LXhwkIxa8zlkLYV10fR728wbaC
-	gZu/dMLDafwj/26oR2GExSiAbUAAOYqN0mlpVH9NHgEqT/KlE3Rv+fghpXiTr7st
-	xVIJHsciCwKtNmzPoex7TyPAVTrKSFGM4U4R8czcjl4e4QqKujmRfKxHmfqTWAdk
-	lFffQ+G5bcLHbu24jhNqy1mtb3QdbRiu8gJ9DErKKPhQV411fRXuBeN3MoZcNc2o
-	7iJlaEUyoaKDxIqCq2/w==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w8448r2b9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 08:17:52 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41D8Hpas007157
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 08:17:51 GMT
-Received: from [10.214.25.202] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 13 Feb
- 2024 00:17:43 -0800
-Message-ID: <ccb6b2a2-040b-46cc-9b72-2e4bd4c75565@quicinc.com>
-Date: Tue, 13 Feb 2024 13:47:39 +0530
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="n45jA2m5"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240213081929epoutp03803462219adebfbab61ce9eb270af6c1~zXk023W991794017940epoutp03o
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 08:19:29 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240213081929epoutp03803462219adebfbab61ce9eb270af6c1~zXk023W991794017940epoutp03o
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1707812369;
+	bh=H1tmDljItywEqFTrCeVCWWEvSW1ptNZPOJ2e9OZtBDU=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=n45jA2m5Khgp+gF6RFYFySgSlZT9CDOxAOUd4ycn9dYHvn7FygcCV9OEL4NqevpOH
+	 JsOGGtvhe6DUebUjL5GEhy4TTaQCfnsHLWnHsBMQHtJIUaZAt8PGh8Nvdxzkcr9yLm
+	 0lFnNhsHM6MF5Na8YatpJi20iO09915MH0DHvyT4=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20240213081928epcas5p335b1317d210ea234c717440690a8224d~zXk0Zpb9U1947019470epcas5p3-;
+	Tue, 13 Feb 2024 08:19:28 +0000 (GMT)
+Received: from epsmges5p2new.samsung.com (unknown [182.195.38.175]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4TYvPW1Rzyz4x9Pw; Tue, 13 Feb
+	2024 08:19:27 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	8B.49.10009.F062BC56; Tue, 13 Feb 2024 17:19:27 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20240213045739epcas5p49f28920efda3cb80351b1fcae580b21e~zU0mg__Ak3076530765epcas5p4j;
+	Tue, 13 Feb 2024 04:57:39 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240213045739epsmtrp195d85b4c2bfb9a6608a56432f75f2021~zU0mf7ZVQ2138221382epsmtrp1U;
+	Tue, 13 Feb 2024 04:57:39 +0000 (GMT)
+X-AuditID: b6c32a4a-261fd70000002719-78-65cb260f034a
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	4D.0C.07368.3C6FAC56; Tue, 13 Feb 2024 13:57:39 +0900 (KST)
+Received: from cheetah.sa.corp.samsungelectronics.net (unknown
+	[107.109.115.53]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240213045736epsmtip1f0d0b60a43c700a19890074823abd3b6~zU0kNhaz_0854708547epsmtip1E;
+	Tue, 13 Feb 2024 04:57:36 +0000 (GMT)
+From: Aakarsh Jain <aakarsh.jain@samsung.com>
+To: linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: m.szyprowski@samsung.com, andrzej.hajda@intel.com, mchehab@kernel.org,
+	hverkuil-cisco@xs4all.nl, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	linux-samsung-soc@vger.kernel.org, andi@etezian.org, gost.dev@samsung.com,
+	alim.akhtar@samsung.com, pankaj.dubey@samsung.com, aakarsh.jain@samsung.com
+Subject: [Patch v2] dt-bindings: media: s5p-mfc: Remove s5p-mfc.txt binding
+Date: Tue, 13 Feb 2024 10:27:33 +0530
+Message-Id: <20240213045733.63876-1-aakarsh.jain@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprEJsWRmVeSWpSXmKPExsWy7bCmui6/2ulUg7aDHBZPd8xktXgwbxub
+	xeIfz5ks7i/+zGKxZu85Jov5R86xWtw8sJPJ4uLMuywWfS8eMltsenyN1eLyrjlsFj0btrJa
+	zDi/j8li7ZG77BbLNv1hsli09Qu7ReveI+wOgh7Xl3xi9li85yWTx6ZVnWwed67tYfPYvKTe
+	o2/LKkaPz5vkPE59/cwewBGVbZORmpiSWqSQmpecn5KZl26r5B0c7xxvamZgqGtoaWGupJCX
+	mJtqq+TiE6DrlpkD9IaSQlliTilQKCCxuFhJ386mKL+0JFUhI7+4xFYptSAlp8CkQK84Mbe4
+	NC9dLy+1xMrQwMDIFKgwITtj4Y60gn2sFfPerGdrYHzK0sXIySEhYCJx9csU1i5GLg4hgd2M
+	Esc33IRyPjFKXL+5jQXC+cYo0fhzJSNMy6OpF5kgEnsZJTbdPcoO4bQySZyc8J65i5GDg01A
+	V+Ls9hyQBhGBRkaJxx0lIDazwHkmiQudKSC2sIC3xLX1D9lBbBYBVYldzw4zg9i8ArYS06Zf
+	YodYJi+xesMBZpD5EgK9HBLX2s5DHe4iMXvfMWYIW1ji1fEtUA1SEi/726DsZInHi15C1eRI
+	rN8zBarXXuLAlTksIHcyC2hKrN+lDxGWlZh6ah0TxJ18Er2/nzBBxHkldsyDsdUk5tz5wQph
+	y0gcXr0UGigeEi3vH4KtEhKIldh/9S7bBEbZWQgbFjAyrmKUTC0ozk1PLTYtMMpLLYfHU3J+
+	7iZGcOLU8trB+PDBB71DjEwcjIcYJTiYlUR4L804kSrEm5JYWZValB9fVJqTWnyI0RQYZhOZ
+	pUST84GpO68k3tDE0sDEzMzMxNLYzFBJnPd169wUIYH0xJLU7NTUgtQimD4mDk6pBqZtsjzT
+	OzgvM76/aWrY7LSFsckhPJKxwP2nS4fP+nzGTzf8lhw0v3Rst96SuY35sfYKS/gmLCzyP8c2
+	U3zve+0/n/T0Gdjv3eza9ajReYvETOdfz7c6fvlYz1tx4n9e/IH29nshJ3b6GioGqaVM2rtg
+	qbhSVfzHhTNM3v+QuRX8UF//9j1/b0Xvuv3NSnc/n3RbyK5Uv9zA7O3h0zyRnZf9K3gPH+0w
+	Efr990ue5eWury+3my4PvVQrzl3Kkr/nyjGOFZdFz+ioei1k7DAyXrJG76GFjdSarbPP2ymu
+	qQtymL9sxQP+/6b6k06n3rrxf9Kmay2y2f/uVe7d7sD24+WtXZnyNktqsv53yZR3Gv9WYinO
+	SDTUYi4qTgQAlmfW9iUEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPLMWRmVeSWpSXmKPExsWy7bCSnO7hb6dSDS7ME7R4umMmq8WDedvY
+	LBb/eM5kcX/xZxaLNXvPMVnMP3KO1eLmgZ1MFhdn3mWx6HvxkNli0+NrrBaXd81hs+jZsJXV
+	Ysb5fUwWa4/cZbdYtukPk8WirV/YLVr3HmF3EPS4vuQTs8fiPS+ZPDat6mTzuHNtD5vH5iX1
+	Hn1bVjF6fN4k53Hq62f2AI4oLpuU1JzMstQifbsEroyFO9IK9rFWzHuznq2B8SlLFyMnh4SA
+	icSjqReZuhi5OIQEdjNKdL7bBpWQkfjfdowdwhaWWPnvOTtEUTOTxMab+4E6ODjYBHQlzm7P
+	AYmLCLQySlxf2Qk2iVngPpPElYm3WUG6hQW8Ja6tfwg2iUVAVWLXs8PMIDavgK3EtOmXoDbI
+	S6zecIB5AiPPAkaGVYySqQXFuem5yYYFhnmp5XrFibnFpXnpesn5uZsYwWGspbGD8d78f3qH
+	GJk4GA8xSnAwK4nwXppxIlWINyWxsiq1KD++qDQntfgQozQHi5I4r+GM2SlCAumJJanZqakF
+	qUUwWSYOTqkGJuUJE7kuvcjiX8GapGAVZWNzl+eHYOujiOIjBdOfKpSVvjaQ//86htf52M6d
+	RbxnLJ9GrUirTUqYwVb8pT1vxYvYhv7Nwga9iWfe6TvJR71zUTCp3a3FP0H0dz1n8JGaLqfP
+	LNnGKZE7BC6f0ma6mj2nfs+UpE+60hv+LvZcueLwl9dKsd86lS0WVBZaVad0lmQcer52UsLC
+	zsdLTRtvuvrVCbLbqSn0b4vVWPB489LerGnvzuc7avMder51jf/XYsvJUn/V7LsvyWs58GUr
+	mDzpn33JtLjd/sZX/9zZr+ITfk9plr05J+kkB/vFHQ6//77L+seyumvRmxtnmB9NmtS1Wzg0
+	vzj2a8KxM85KSizFGYmGWsxFxYkAY8iUUNICAAA=
+X-CMS-MailID: 20240213045739epcas5p49f28920efda3cb80351b1fcae580b21e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240213045739epcas5p49f28920efda3cb80351b1fcae580b21e
+References: <CGME20240213045739epcas5p49f28920efda3cb80351b1fcae580b21e@epcas5p4.samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] iommu/arm-smmu-qcom: Fix use-after-free issue in
- qcom_smmu_create()
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: <quic_c_gdjako@quicinc.com>, <andersson@kernel.org>, <conor+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <djakov@kernel.org>,
-        <iommu@lists.linux.dev>, <joro@8bytes.org>, <konrad.dybcio@linaro.org>,
-        <krzysztof.kozlowski+dt@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_cgoldswo@quicinc.com>, <quic_pdaly@quicinc.com>,
-        <quic_sudaraja@quicinc.com>, <quic_sukadev@quicinc.com>,
-        <robdclark@gmail.com>, <robh+dt@kernel.org>, <robin.murphy@arm.com>,
-        <will@kernel.org>
-References: <20240201210529.7728-4-quic_c_gdjako@quicinc.com>
- <20240213062608.13018-1-quic_pbrahma@quicinc.com>
- <CAA8EJpoh-m_fzt9WcUXOkTxVZRQMDf-WrgqqoM0C_-qzjgDm1w@mail.gmail.com>
-Content-Language: en-US
-From: Pratyush Brahma <quic_pbrahma@quicinc.com>
-In-Reply-To: <CAA8EJpoh-m_fzt9WcUXOkTxVZRQMDf-WrgqqoM0C_-qzjgDm1w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: E8HABBGpe90ZckuLynaPQmD2JWHJUBNe
-X-Proofpoint-GUID: E8HABBGpe90ZckuLynaPQmD2JWHJUBNe
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-13_04,2024-02-12_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- phishscore=0 adultscore=0 malwarescore=0 lowpriorityscore=0 clxscore=1011
- spamscore=0 suspectscore=0 priorityscore=1501 impostorscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2401310000
- definitions=main-2402130064
 
+commit "538af6e5856b" which convert s5p-mfc bindings to
+json-schema is already merged. Remove "s5p-mfc.txt" file.
 
-On 2/13/2024 1:36 PM, Dmitry Baryshkov wrote:
-> On Tue, 13 Feb 2024 at 08:27, Pratyush Brahma <quic_pbrahma@quicinc.com> wrote:
->> Currently, during arm smmu probe, struct arm_smmu_device pointer
->> is allocated. The pointer is reallocated to a new struct qcom_smmu in
->> qcom_smmu_create() with devm_krealloc() which frees the smmu device
->> after copying the data into the new pointer.
->>
->> The freed pointer is then passed again in devm_of_platform_populate()
->> inside qcom_smmu_create() which causes a use-after-free issue.
->>
->> Fix the use-after-free issue by reassigning the old pointer to
->> the new pointer where the struct was copied by devm_krealloc().
->>
->> Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
-> Missing Fixes tag.
-Haven't added as the patchset in-reply-to hasn't been merged to 
-linux-next. Please refer my next reply.
->
->> ---
->>   drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
->> index ed5ed5da7740..49eaeed6a91c 100644
->> --- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
->> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
->> @@ -710,6 +710,7 @@ static struct arm_smmu_device *qcom_smmu_create(struct arm_smmu_device *smmu,
->>          qsmmu = devm_krealloc(smmu->dev, smmu, sizeof(*qsmmu), GFP_KERNEL);
->>          if (!qsmmu)
->>                  return ERR_PTR(-ENOMEM);
->> +       smmu = &qsmmu->smmu;
->>
->>          qsmmu->smmu.impl = impl;
->>          qsmmu->data = data;
->> @@ -719,7 +720,7 @@ static struct arm_smmu_device *qcom_smmu_create(struct arm_smmu_device *smmu,
->>          if (ret)
->>                  return ERR_PTR(ret);
-> What is the tree that you have been developing this against? I don't
-> see this part of the code in the linux-next.
-This is in reply to the patchset at: 
-https://lore.kernel.org/all/20240201210529.7728-4-quic_c_gdjako@quicinc.com
-The aforementioned patchset introduces this bug. This is a suggested fix 
-to the bug.
->> -       return &qsmmu->smmu;
->> +       return smmu;
->>   }
->>
->>   /* Implementation Defined Register Space 0 register offsets */
->> --
->> 2.17.1
->>
->>
-Thanks,
-Pratyush
+Fixes: 538af6e5856b ("dt-bindings: media: s5p-mfc: convert
+bindings to json-schema")
+Signed-off-by: Aakarsh Jain <aakarsh.jain@samsung.com>
+---
+changelog:
+v1->v2
+Add Fixes tag suggested by Krzysztof
+ Documentation/devicetree/bindings/media/s5p-mfc.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/media/s5p-mfc.txt
+
+diff --git a/Documentation/devicetree/bindings/media/s5p-mfc.txt b/Documentation/devicetree/bindings/media/s5p-mfc.txt
+deleted file mode 100644
+index e69de29bb2d1..000000000000
+-- 
+2.17.1
+
