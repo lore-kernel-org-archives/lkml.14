@@ -1,194 +1,324 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C16634E2
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 22:05:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4433163CAE;
+	Tue, 13 Feb 2024 22:05:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707861907; cv=none; b=ZJHJETlSc4tx6qu2vqQM0Yyrrx+RNijEXKUMaNocFn5uKCVsET5LguNz9P36D+K7Uq4h0TWd8frgVbyxOwZK4QV2eHXoJGawesm+BoVBatAesxr/4XZoxvfr1X8FfrWwhISsLe+tcTzP+VLYY1/K0qE2cOL2OgnzdkL5fGNmlL8=
+	t=1707861913; cv=none; b=A+JD9rRxdmsl6y7Hmq4QnuMGKfFUalPSTDiDLjK/K5bF4u29xDUXyQMbhEjGcl+IbtNQxbA9Htid3f1dKaZ3LZ0u3pA9mDedhrM0EvFkMPJgPUkIYdk52B03kUDfU2CC5y0KlkXFFFtXQ6nAiYWOODzk9VRC6H4/OIBbX6gZnkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707861907; c=relaxed/simple;
-	bh=X3mmjMMPWZvO7ys0UnUVgOwYbLsh+szBz/q2uTvLWY8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iNTSdGURX9V2f9KcgUHcUIJ1e7p5iCjkm/bqi38VSogpMYUthcFbDff9g0IbMs1LaS/l09s03hESMMeL9kqbXrCZXolapuK2onal/2xNM7Y/FAC6l6syQiV+KrZndrZeB0otBkO4yK1CfobzTN9GpZCYzG1GOLcDYqVQY5rSLPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dg9iVx++; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707861913; c=relaxed/simple;
+	bh=yEjRlTeHU1w+2Rf1F1hrkdWRrgjpz55T4ZpfkZoGlaQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=jbMtCzeizoNoojH5KcKm7QNCH+oYWWwW5mTV9G8iUpGV5cUkbfAweaHVKPYgMKJv3GLG6JwX+iH3bCi4Sgz9PRVvlojhXVeCSyaIJkA+oeiCtZyBFLeF+oQL6jsuB7zNtz9vPpo3Z+2DVT1G0IXTkaonlCsqhcUAvgL5lHpZ1Ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gxdjuzuT; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dg9iVx++"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707861904;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=RgZc24jjJQqeC7+KfoYWO0hi8grRBBzECQH5kw6TD04=;
-	b=dg9iVx++2wsDprYX0b4N7846Fz8IlHmCDHDwtTTWHfgYr/+GPbFgdye5F0V1im3W4nkkn0
-	4kZyqFflosIN0hvkW4CrITaH0cbV/b1pg99wPP6yhuM/sxNtej0LxUo7XXCZSg2fhERmjN
-	JCegUtL+9CAamBrjw3paFpKf0YFfA2E=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-642-G9c-OFT_OuaS_WBWzcJCRw-1; Tue, 13 Feb 2024 17:05:03 -0500
-X-MC-Unique: G9c-OFT_OuaS_WBWzcJCRw-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-411ce6e770dso3504825e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 14:05:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707861902; x=1708466702;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :references:cc:to:content-language:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gxdjuzuT"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a38271c0bd5so614416566b.0;
+        Tue, 13 Feb 2024 14:05:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707861909; x=1708466709; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RgZc24jjJQqeC7+KfoYWO0hi8grRBBzECQH5kw6TD04=;
-        b=rPFOB6e4yPm+FOulOcXcQmfXtLOVaJidL17njTSVbHoVC/YLN8uawB6Q8p+OjeXmEL
-         y+EAkIvhzcnisN1twW6U/NwOzvq5QygYFJBawcDHhYcbNeSyTnt+LCsj8z4ikF24ZZke
-         LqZO3tvY5wjftTgRps84i2nS06AdkZ0Lfa82Iab0bKgWjn/Zo0t1F82nyDS8CRgOn319
-         EpBGGwGRXbh7kipAEPQd3Xnz9PYQFxXG1d4S1FlNy2Taz/V0jE2yYB4lvJtnVcERUpBv
-         5wbCHEt1pyyhKzzs4gdKw9a4tBRNmRo9y/e9YWbkvhP1wjMQIx0DHaBlXzn+5uXZrrVE
-         XSig==
-X-Forwarded-Encrypted: i=1; AJvYcCWdDysA5xvOaysQ0nSMQYVkCMvvFuwxvXumdknrpi8schgASvkXfpeXJff5ksTuMCsNTcGd6VYqzPgm0XOgQAdELTZn73HltVWL5HjD
-X-Gm-Message-State: AOJu0YyOhMhhzj9F1F3MV6UKlr2i86Dugn6dTU2nDY+JrnqhOpx5tx7p
-	pgNzf4ueYzdR76m8EiIxnWE3yfQDFNDdu6myVQsFWdhtafoSsSQ5SKt4NW1I6wkV8Q+Nw9OxgUJ
-	uOX0dPSSisIk96lz3S5FS36AzxpZfMJmtEJ2RHPj3L8s+VHNT5bYOSdWzW2Fs2w==
-X-Received: by 2002:a05:600c:45ca:b0:40e:bfbf:f368 with SMTP id s10-20020a05600c45ca00b0040ebfbff368mr650504wmo.2.1707861902198;
-        Tue, 13 Feb 2024 14:05:02 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHfwGiUw2bYR/LmfQNZuejQn9gXk2z/vWjFO1USlAAPfnN13va/Im5LfF+3hG3wHwAuSolHpw==
-X-Received: by 2002:a05:600c:45ca:b0:40e:bfbf:f368 with SMTP id s10-20020a05600c45ca00b0040ebfbff368mr650468wmo.2.1707861901793;
-        Tue, 13 Feb 2024 14:05:01 -0800 (PST)
-X-Forwarded-Encrypted: i=1; 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
-Received: from ?IPV6:2003:d8:2f3c:3f00:7177:eb0c:d3d2:4b0e? (p200300d82f3c3f007177eb0cd3d24b0e.dip0.t-ipconnect.de. [2003:d8:2f3c:3f00:7177:eb0c:d3d2:4b0e])
-        by smtp.gmail.com with ESMTPSA id jh2-20020a05600ca08200b00410e6a6403esm17251wmb.34.2024.02.13.14.04.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Feb 2024 14:05:01 -0800 (PST)
-Message-ID: <9e14adec-2842-458d-8a58-af6a2d18d823@redhat.com>
-Date: Tue, 13 Feb 2024 23:04:58 +0100
+        bh=t+zX7GM3eAspifd077YFCj/xmWH5BRFUvp0tC1IJz9E=;
+        b=gxdjuzuTEGGixzOeeP4oM05vDcISJb2G73eBoChC5ZmR+KT9KtKW4itpjTLKdkQvzX
+         Cr+sgX1WMOKHhxWSS8IvqRsV0VffGSeBQBId9rgZj39ucKn8SZmpKAsE/aJTZe3PFKnP
+         9G/TfLUDahWPbP/x6SBGF6Gei82Epx4zCUcxJaNq/YHbHD8bk9U5AXRu627Lzvw1blvo
+         hbhr6wFLK4QAPYmqE4PtDcOU5vI5zHxIaRjm1EEzuyyOeVDAfBP1G/+0XxpLuQQlerJ1
+         qdEwGW/mhsPXnZaLJ9txaBWoy1YTI45q1pt3hbAdQN8lu9FB43P0BgMoDWkfwlZ7lYFs
+         YKBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707861909; x=1708466709;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t+zX7GM3eAspifd077YFCj/xmWH5BRFUvp0tC1IJz9E=;
+        b=iA4qcc4/iktyPOlyJZFE/XpSFD9Sk5YbTQ/Mml8u5f6HvSmwB7JprVZEHzLEYQakHV
+         nXGMGU7EbdbFCslvenXW/ntX9t+xvUP4EZ6UFYeijuVwR6K37z8c1ER53+J0irigh9Cs
+         FljV9MbRxEW/Tzo6k4HNiBtEISl355XtmHhjKetUUTManK6uNBq7Nm2pRp3fcpPV5QzH
+         2atAmb6ySL+zSs4HaPVfTf2OOgfqS29ydguHa338eRalMwvwqmjibhns5DpTKokHH+k4
+         3N25ggFS44VBFxhBtB6FbN+T7DSeoSg3mLybxXw/FV5fpK8h2TT7VwtJwXojpU+K3x9y
+         0wIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUUCkceUVTWiRJEg/EFIVbNEB+fWMPmDg/iYIIycYwKTXfEZe0fPPSyEml0JfvNoEZMDjH78hqb9VILxrELu/xuzjyVsvJHHZgM1458
+X-Gm-Message-State: AOJu0YwCneYLFqlXhrCih29Er8uHoC7nD/WIXZ1Kp7wmeAAm8f9mOJxP
+	HuLsIcN7FLUzzw07GZ18pioKfONPDjTkaDOGco68tDPF9J3Oa1dbBPXM1ohe5vo=
+X-Google-Smtp-Source: AGHT+IF8YZI7u5V7pI003no9Snlwiu4mThhLeZNuC2zokJMUrHCwDJzYnA8U3Ah369MoRte/SX5eLQ==
+X-Received: by 2002:a17:906:b48:b0:a3c:2a66:3fdd with SMTP id v8-20020a1709060b4800b00a3c2a663fddmr468714ejg.17.1707861909047;
+        Tue, 13 Feb 2024 14:05:09 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVxab9q2Y7PMVWEI1uQzcxkyJ4b96TTuLVgetSUhnge+w5ZEiDsgQoHfSmgLj2EYKWIDOJIAvEMajitC16MMTuQV380mMKdQwx3Bkag3T/awAGelohkmko7dQ6FOVkQMr9RttqFcZceB9ahxnmBYXn4cPd47pGfhqX5kESV4ro1UjFkURP5ichApsexC2qbQHU6LuPViJf9Bpf9jRR4HMopG7PAwp1QrF4CemBWrWSwxOjahKAizXYaFMXZFvhkbHdP0JbRHdbSvQhNW5OB/Dve+NcMAPfUgRcTLHgsC4Hcq82ed0WNHeVcklY7HolPWri8Gl9Y46TgC08tumGuZ35CL86/yoJZxtIuSKuVJAPUC+0fi/wvCz4R3uaLK+XKSIOEcL4e6oKd8tBDHWep1HqAnHyqFFu2pqh5Qjd1wgm4gFgXtJgUMKD7TxVnY98HTRCsYUdELm+RxA==
+Received: from WBEC325.dom.lan ([185.188.71.122])
+        by smtp.gmail.com with ESMTPSA id p12-20020a170906b20c00b00a3bdf8ae86asm1706800ejz.10.2024.02.13.14.05.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 14:05:08 -0800 (PST)
+From: Pawel Dembicki <paweldembicki@gmail.com>
+To: netdev@vger.kernel.org
+Cc: linus.walleij@linaro.org,
+	Pawel Dembicki <paweldembicki@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	UNGLinuxDriver@microchip.com,
+	Russell King <linux@armlinux.org.uk>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v4 02/15] net: dsa: vsc73xx: convert to PHYLINK
+Date: Tue, 13 Feb 2024 23:03:15 +0100
+Message-Id: <20240213220331.239031-3-paweldembicki@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240213220331.239031-1-paweldembicki@gmail.com>
+References: <20240213220331.239031-1-paweldembicki@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/35] Memory allocation profiling
-Content-Language: en-US
-To: Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>
-Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, vbabka@suse.cz,
- hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de,
- dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com,
- corbet@lwn.net, void@manifault.com, peterz@infradead.org,
- juri.lelli@redhat.com, catalin.marinas@arm.com, will@kernel.org,
- arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com,
- dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com,
- axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, nathan@kernel.org,
- dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev, rppt@kernel.org,
- paulmck@kernel.org, pasha.tatashin@soleen.com, yosryahmed@google.com,
- yuzhao@google.com, dhowells@redhat.com, hughd@google.com,
- andreyknvl@gmail.com, keescook@chromium.org, ndesaulniers@google.com,
- vvvvvv@google.com, gregkh@linuxfoundation.org, ebiggers@google.com,
- ytcoode@gmail.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
- rostedt@goodmis.org, bsegall@google.com, bristot@redhat.com,
- vschneid@redhat.com, cl@linux.com, penberg@kernel.org,
- iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com,
- elver@google.com, dvyukov@google.com, shakeelb@google.com,
- songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com,
- minchan@google.com, kaleshsingh@google.com, kernel-team@android.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- iommu@lists.linux.dev, linux-arch@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-modules@vger.kernel.org, kasan-dev@googlegroups.com,
- cgroups@vger.kernel.org
-References: <20240212213922.783301-1-surenb@google.com>
- <Zctfa2DvmlTYSfe8@tiehlicka>
- <CAJuCfpEsWfZnpL1vUB2C=cxRi_WxhxyvgGhUg7WdAxLEqy6oSw@mail.gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <CAJuCfpEsWfZnpL1vUB2C=cxRi_WxhxyvgGhUg7WdAxLEqy6oSw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 13.02.24 22:58, Suren Baghdasaryan wrote:
-> On Tue, Feb 13, 2024 at 4:24 AM Michal Hocko <mhocko@suse.com> wrote:
->>
->> On Mon 12-02-24 13:38:46, Suren Baghdasaryan wrote:
->> [...]
->>> We're aiming to get this in the next merge window, for 6.9. The feedback
->>> we've gotten has been that even out of tree this patchset has already
->>> been useful, and there's a significant amount of other work gated on the
->>> code tagging functionality included in this patchset [2].
->>
->> I suspect it will not come as a surprise that I really dislike the
->> implementation proposed here. I will not repeat my arguments, I have
->> done so on several occasions already.
->>
->> Anyway, I didn't go as far as to nak it even though I _strongly_ believe
->> this debugging feature will add a maintenance overhead for a very long
->> time. I can live with all the downsides of the proposed implementation
->> _as long as_ there is a wider agreement from the MM community as this is
->> where the maintenance cost will be payed. So far I have not seen (m)any
->> acks by MM developers so aiming into the next merge window is more than
->> little rushed.
-> 
-> We tried other previously proposed approaches and all have their
-> downsides without making maintenance much easier. Your position is
-> understandable and I think it's fair. Let's see if others see more
-> benefit than cost here.
+This patch replaces the adjust_link api with the phylink apis that provide
+equivalent functionality.
 
-Would it make sense to discuss that at LSF/MM once again, especially 
-covering why proposed alternatives did not work out? LSF/MM is not "too 
-far" away (May).
+The remaining functionality from the adjust_link is now covered in the
+phylink_mac_link_* and phylink_mac_config.
 
-I recall that the last LSF/MM session on this topic was a bit 
-unfortunate (IMHO not as productive as it could have been). Maybe we can 
-finally reach a consensus on this.
+Removes:
+.adjust_link
+Adds:
+.phylink_mac_config
+.phylink_mac_link_up
+.phylink_mac_link_down
 
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+---
+v4:
+  - update commit descripion
+  - remove phylink_get_caps after rebase to current net-next/main
+v3:
+  - remove legacy_pre_march2020 after rebase
+v2:
+  - replace switch to if and get rid of macros in
+    vsc73xx_phylink_mac_link_up function
+
+ drivers/net/dsa/vitesse-vsc73xx-core.c | 166 +++++++++++--------------
+ 1 file changed, 72 insertions(+), 94 deletions(-)
+
+diff --git a/drivers/net/dsa/vitesse-vsc73xx-core.c b/drivers/net/dsa/vitesse-vsc73xx-core.c
+index 8b2219404601..70dd3f96dafb 100644
+--- a/drivers/net/dsa/vitesse-vsc73xx-core.c
++++ b/drivers/net/dsa/vitesse-vsc73xx-core.c
+@@ -714,8 +714,7 @@ static void vsc73xx_init_port(struct vsc73xx *vsc, int port)
+ }
+ 
+ static void vsc73xx_adjust_enable_port(struct vsc73xx *vsc,
+-				       int port, struct phy_device *phydev,
+-				       u32 initval)
++				       int port, u32 initval)
+ {
+ 	u32 val = initval;
+ 	u8 seed;
+@@ -753,12 +752,11 @@ static void vsc73xx_adjust_enable_port(struct vsc73xx *vsc,
+ 			    VSC73XX_MAC_CFG_TX_EN | VSC73XX_MAC_CFG_RX_EN);
+ }
+ 
+-static void vsc73xx_adjust_link(struct dsa_switch *ds, int port,
+-				struct phy_device *phydev)
++static void vsc73xx_phylink_mac_config(struct dsa_switch *ds, int port,
++				       unsigned int mode,
++				       const struct phylink_link_state *state)
+ {
+ 	struct vsc73xx *vsc = ds->priv;
+-	u32 val;
+-
+ 	/* Special handling of the CPU-facing port */
+ 	if (port == CPU_PORT) {
+ 		/* Other ports are already initialized but not this one */
+@@ -774,101 +772,79 @@ static void vsc73xx_adjust_link(struct dsa_switch *ds, int port,
+ 			      VSC73XX_ADVPORTM_ENA_GTX |
+ 			      VSC73XX_ADVPORTM_DDR_MODE);
+ 	}
++}
+ 
+-	/* This is the MAC confiuration that always need to happen
+-	 * after a PHY or the CPU port comes up or down.
+-	 */
+-	if (!phydev->link) {
+-		int ret, err;
+-
+-		dev_dbg(vsc->dev, "port %d: went down\n",
+-			port);
+-
+-		/* Disable RX on this port */
+-		vsc73xx_update_bits(vsc, VSC73XX_BLOCK_MAC, port,
+-				    VSC73XX_MAC_CFG,
+-				    VSC73XX_MAC_CFG_RX_EN, 0);
+-
+-		/* Discard packets */
+-		vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ARBITER, 0,
+-				    VSC73XX_ARBDISC, BIT(port), BIT(port));
+-
+-		/* Wait until queue is empty */
+-		ret = read_poll_timeout(vsc73xx_read, err,
+-					err < 0 || (val & BIT(port)),
+-					1000, 10000, false,
+-					vsc, VSC73XX_BLOCK_ARBITER, 0,
+-					VSC73XX_ARBEMPTY, &val);
+-		if (ret)
+-			dev_err(vsc->dev,
+-				"timeout waiting for block arbiter\n");
+-		else if (err < 0)
+-			dev_err(vsc->dev, "error reading arbiter\n");
+-
+-		/* Put this port into reset */
+-		vsc73xx_write(vsc, VSC73XX_BLOCK_MAC, port, VSC73XX_MAC_CFG,
+-			      VSC73XX_MAC_CFG_RESET);
+-
+-		/* Accept packets again */
+-		vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ARBITER, 0,
+-				    VSC73XX_ARBDISC, BIT(port), 0);
+-
+-		/* Allow backward dropping of frames from this port */
+-		vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ARBITER, 0,
+-				    VSC73XX_SBACKWDROP, BIT(port), BIT(port));
+-
+-		/* Receive mask (disable forwarding) */
+-		vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
+-				    VSC73XX_RECVMASK, BIT(port), 0);
++static void vsc73xx_phylink_mac_link_down(struct dsa_switch *ds, int port,
++					  unsigned int mode,
++					  phy_interface_t interface)
++{
++	struct vsc73xx *vsc = ds->priv;
++	int ret, err;
++	u32 val;
+ 
+-		return;
+-	}
++	/* Disable RX on this port */
++	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_MAC, port,
++			    VSC73XX_MAC_CFG,
++			    VSC73XX_MAC_CFG_RX_EN, 0);
+ 
+-	/* Figure out what speed was negotiated */
+-	if (phydev->speed == SPEED_1000) {
+-		dev_dbg(vsc->dev, "port %d: 1000 Mbit mode full duplex\n",
+-			port);
+-
+-		/* Set up default for internal port or external RGMII */
+-		if (phydev->interface == PHY_INTERFACE_MODE_RGMII)
+-			val = VSC73XX_MAC_CFG_1000M_F_RGMII;
+-		else
+-			val = VSC73XX_MAC_CFG_1000M_F_PHY;
+-		vsc73xx_adjust_enable_port(vsc, port, phydev, val);
+-	} else if (phydev->speed == SPEED_100) {
+-		if (phydev->duplex == DUPLEX_FULL) {
+-			val = VSC73XX_MAC_CFG_100_10M_F_PHY;
+-			dev_dbg(vsc->dev,
+-				"port %d: 100 Mbit full duplex mode\n",
+-				port);
+-		} else {
+-			val = VSC73XX_MAC_CFG_100_10M_H_PHY;
+-			dev_dbg(vsc->dev,
+-				"port %d: 100 Mbit half duplex mode\n",
+-				port);
+-		}
+-		vsc73xx_adjust_enable_port(vsc, port, phydev, val);
+-	} else if (phydev->speed == SPEED_10) {
+-		if (phydev->duplex == DUPLEX_FULL) {
+-			val = VSC73XX_MAC_CFG_100_10M_F_PHY;
+-			dev_dbg(vsc->dev,
+-				"port %d: 10 Mbit full duplex mode\n",
+-				port);
+-		} else {
+-			val = VSC73XX_MAC_CFG_100_10M_H_PHY;
+-			dev_dbg(vsc->dev,
+-				"port %d: 10 Mbit half duplex mode\n",
+-				port);
+-		}
+-		vsc73xx_adjust_enable_port(vsc, port, phydev, val);
+-	} else {
++	/* Discard packets */
++	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ARBITER, 0,
++			    VSC73XX_ARBDISC, BIT(port), BIT(port));
++
++	/* Wait until queue is empty */
++	ret = read_poll_timeout(vsc73xx_read, err, err < 0 || (val & BIT(port)),
++				1000, 10000, false, vsc, VSC73XX_BLOCK_ARBITER,
++				0, VSC73XX_ARBEMPTY, &val);
++	if (ret)
+ 		dev_err(vsc->dev,
+-			"could not adjust link: unknown speed\n");
+-	}
++			"timeout waiting for block arbiter\n");
++	else if (err < 0)
++		dev_err(vsc->dev, "error reading arbiter\n");
++
++	/* Put this port into reset */
++	vsc73xx_write(vsc, VSC73XX_BLOCK_MAC, port, VSC73XX_MAC_CFG,
++		      VSC73XX_MAC_CFG_RESET);
++
++	/* Accept packets again */
++	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ARBITER, 0,
++			    VSC73XX_ARBDISC, BIT(port), 0);
++
++	/* Allow backward dropping of frames from this port */
++	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ARBITER, 0,
++			    VSC73XX_SBACKWDROP, BIT(port), BIT(port));
++
++	/* Receive mask (disable forwarding) */
++	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
++			    VSC73XX_RECVMASK, BIT(port), 0);
++}
++
++static void vsc73xx_phylink_mac_link_up(struct dsa_switch *ds, int port,
++					unsigned int mode,
++					phy_interface_t interface,
++					struct phy_device *phydev,
++					int speed, int duplex,
++					bool tx_pause, bool rx_pause)
++{
++	struct vsc73xx *vsc = ds->priv;
++	u32 val;
++
++	if (speed == SPEED_1000)
++		val = VSC73XX_MAC_CFG_GIGA_MODE | VSC73XX_MAC_CFG_TX_IPG_1000M;
++	else
++		val = VSC73XX_MAC_CFG_TX_IPG_100_10M;
++
++	if (interface == PHY_INTERFACE_MODE_RGMII)
++		val |= VSC73XX_MAC_CFG_CLK_SEL_1000M;
++	else
++		val |= VSC73XX_MAC_CFG_CLK_SEL_EXT;
++
++	if (duplex == DUPLEX_FULL)
++		val |= VSC73XX_MAC_CFG_FDX;
+ 
+ 	/* Enable port (forwarding) in the receieve mask */
+ 	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
+ 			    VSC73XX_RECVMASK, BIT(port), BIT(port));
++	vsc73xx_adjust_enable_port(vsc, port, val);
+ }
+ 
+ static int vsc73xx_port_enable(struct dsa_switch *ds, int port,
+@@ -1055,7 +1031,9 @@ static const struct dsa_switch_ops vsc73xx_ds_ops = {
+ 	.setup = vsc73xx_setup,
+ 	.phy_read = vsc73xx_phy_read,
+ 	.phy_write = vsc73xx_phy_write,
+-	.adjust_link = vsc73xx_adjust_link,
++	.phylink_mac_config = vsc73xx_phylink_mac_config,
++	.phylink_mac_link_down = vsc73xx_phylink_mac_link_down,
++	.phylink_mac_link_up = vsc73xx_phylink_mac_link_up,
+ 	.get_strings = vsc73xx_get_strings,
+ 	.get_ethtool_stats = vsc73xx_get_ethtool_stats,
+ 	.get_sset_count = vsc73xx_get_sset_count,
 -- 
-Cheers,
-
-David / dhildenb
+2.34.1
 
