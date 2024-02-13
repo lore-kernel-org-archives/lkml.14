@@ -1,178 +1,188 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C38B1B592;
-	Tue, 13 Feb 2024 08:27:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3742522324;
+	Tue, 13 Feb 2024 08:27:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707812849; cv=none; b=Y5/hEaECGh/Km9j16a8IHkxWZp8z40apHVFNt6DWLdL/ltro7MYB3vWJr+/5tS+F+7VWwo+3dNbyexpa2hFMNyL19LxNtcRosUiESBoOto+3K6qtnY4gMyewAZCqF+iK/mVH6dL1htmhcB5HACVbwMWOHgepdqFvQkIxSSv6kvw=
+	t=1707812868; cv=none; b=uCw3IX1+B2hEFJ0iQeSfQ1ebqBP4IA677+1fM4/rdTOShodac0GmmP5d5dy6TRTqgh98/Ypbh5c45M3R2s0JBd7E8KObjxyPqGvn78Nb2wCtDek3ftVV7+9FBRdHSM8oDqNRzAOyJfQKZYMiAYHnUNHGeipshfwJ9VGTZYGLFiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707812849; c=relaxed/simple;
-	bh=uafGeBbQdA3tymCA3tWJBrlrcdnQCGekk71oGHgR4d0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fEgSa+xb7NseCfuw93YE3yXnGYiIOSuGcGk8icdWxgL0h2GFSx4aXFsE/fdxct4+NIzsbzt8FCnR9oqQ4iBvq32/77nA+cyPKM7b6DqfRCPb/YUioIpwRK06QsOgwLLrCQFl5HPIA+etwo7/1SbXWYPrEnmhwbewgl65DCTn0+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Oe1lbD0s; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707812868; c=relaxed/simple;
+	bh=xAYKHqlHEthQAN+4S4NMMj+DMvc0iEget2l+WujxX2A=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EmHDR28J/415S+x/SKvItO2JkRn4g4sFh54uAk2UPFZ/D4b3bZ7f/Lz4o43GJG28zqnVdz9nTTW6Rqj7ZEXQsFVcaR8xTVxGeqd8vZbUUUgHH+hN99sUEg1aQSZDYT+I2lOEwTVi1qjOOQkVLP3gvJ2qf42QTIY9OFub7dMCQ3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nJ4ixXEq; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oe1lbD0s"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a3832ef7726so469289166b.0;
-        Tue, 13 Feb 2024 00:27:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707812845; x=1708417645; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iNGA8ZHGAdrm/kUeu0sTwlf3VcWW6Pp9gwsOjSJOS+s=;
-        b=Oe1lbD0sQSnEAzziF8TTz8fVz5XARWLd5y4xcYE8Xvycsf5EZPRTUpx/3qsKEitfXe
-         x3yKNpHeAZN3Gssw58XVHxM1VHK8pNqW6huyK2XvPX+Ry+9CVmkdJ7ZHC2OfNB2XybFA
-         17xqPjLqsgENJ5HzBSP7O9M+b0GmvFBylsPtjeh02o2MqraH/0WuQ17ce6dHl603qDCI
-         KjSZBg8RhrXSr1hQGuR90a8M1ps7hZn0FDQSi9vGKdIWLX3OexXUvjdjIEaWUhlkR2ko
-         Awtz8x+RHKoOgSlfSEmngWFCNKv2IsTkt4dShBJAPGEf5W4YVADo8/1ePS6yk35IzbQa
-         fa4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707812845; x=1708417645;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iNGA8ZHGAdrm/kUeu0sTwlf3VcWW6Pp9gwsOjSJOS+s=;
-        b=jtqHJEranLT1GzDFLuWn8d505Y+pmX1UWEPTRgvpY8xdiJA+yE/AA68ZsIq9Df604X
-         XvsjmEm/lWwvYHqpbCOCsq7gi7T5zLwdFuxr0DZKBA5xhubji9KqWpvHEaC/LN3lh2NU
-         qRsKN3hQ3Ce96SOkGsPlp8LRSgs9tfRAUT1tUjztcrnAeicAuX3B9MvW1qUrqHt2KZYO
-         ZjIjFaUSMOb3nulROQn1qFsWxbvMN/WFVB8/htjYuATnrjx2TvPTX7uMURdyAM6gw7tE
-         Gjg9C4ndudtzJg/OsgQXJchKOb3ynKoSDtnPFlOYK1TBKNhGXyqnJNlCrPAARBzlMuua
-         ThCA==
-X-Forwarded-Encrypted: i=1; AJvYcCVrh2/ngeAji7dpL+z2DAjEoXj22MZRchb+NMjojeiXH/MaXBLAWI1hSwK3AE+nl6fT6UXTKzDg6TSDiJNrkrASOuIjN8i6C3OVVb/fEl8DrapGu7iAitRWQr5mP1tdu0CN1ZekpUPRk1qQ50RJLVuGgt3OnL/3ki1zs00c+NUUkpIM8zpSxAQcRaIlPCwTiRo6Vp7HAmqGH5GMgSRME3eQj+C1ce+xcLgZybL/jJk/vkcMve02MXjlpH4VR8j/1ayiUqUI5ZQiA6aUlu/scxxjaitjOD7V2CWqsg==
-X-Gm-Message-State: AOJu0YxJiMxKvyNyVyrbFX/absRDOGyfXHoufqJyR1vC3c6WUY5ftsrh
-	1ZgJNvN93RNz1RQ6QRIeIe6ZZa42FfolVjOKOHnRG8gUiUGRv36c8SAZzZ9UlyJv73bb0KGLzYk
-	d8JI87+u/5qI23hrqh5ofDXxJjTg=
-X-Google-Smtp-Source: AGHT+IHiWMLrwo5bn92RcxNVJHJJozT1VynVrAKPo4QX0LJ4mwZF+SLpK21LEEy+wgmtP5RFPridAor3NfrCIEw3scE=
-X-Received: by 2002:a17:906:ceca:b0:a38:3db5:a846 with SMTP id
- si10-20020a170906ceca00b00a383db5a846mr5777021ejb.67.1707812845309; Tue, 13
- Feb 2024 00:27:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nJ4ixXEq"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41D7o2la011939;
+	Tue, 13 Feb 2024 08:27:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	qcppdkim1; bh=Q1uvwE06BQI1HQ/N/wQtkdLnTP7ndnAwOmAar30LvIY=; b=nJ
+	4ixXEqI5ETaDC/78yvu9jVBnvdVPWC4L1Eh61tIGHPMCA79bmEIWvS61HpWF2aHu
+	FS0wcPyH8K4sbajlbQxSmb8ASFqCUbzy3WiFp9VFhtsMH6jb7lYwXw3HyAgu1psl
+	dgzRosbgmbKeqHvsZ/3+0w99pELhUvfasZAxJnT8R7DqZLxe3PfeJIs54SLAuXHR
+	0y20f2M//I1aRRvtLzkuIXOciUcmg088iDEaMi9cO8o900a0FIRgyKSxRskM0x7L
+	/E5Y7gHqoYlmVtUci2kXbSwrDPTSXqedSgWdaVQFCAuz0Hp0qDGLZAdXpvqNJm+T
+	JXkBQ2d3DS0+xwMguJiA==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w7nk91syy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Feb 2024 08:27:42 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41D8RfmC017394
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Feb 2024 08:27:41 GMT
+Received: from hu-kriskura-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 13 Feb 2024 00:27:38 -0800
+From: Krishna Kurapati <quic_kriskura@quicinc.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring
+	<robh+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_ppratap@quicinc.com>,
+        <quic_jackp@quicinc.com>, Krishna Kurapati <quic_kriskura@quicinc.com>
+Subject: [PATCH v2 1/2] arm64: dts: qcom: sc8280xp: Add multiport controller node for SC8280
+Date: Tue, 13 Feb 2024 13:57:23 +0530
+Message-ID: <20240213082724.1789096-2-quic_kriskura@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240213082724.1789096-1-quic_kriskura@quicinc.com>
+References: <20240213082724.1789096-1-quic_kriskura@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240212213922.783301-1-surenb@google.com> <20240212213922.783301-2-surenb@google.com>
-In-Reply-To: <20240212213922.783301-2-surenb@google.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 13 Feb 2024 10:26:48 +0200
-Message-ID: <CAHp75Vek3DEYLHnpUDBo_bYSd-ksN_66=LQ5s0Z+EhnNvhybpw@mail.gmail.com>
-Subject: Re: [PATCH v3 01/35] lib/string_helpers: Add flags param to string_get_size()
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, mhocko@suse.com, 
-	vbabka@suse.cz, hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, 
-	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, 
-	corbet@lwn.net, void@manifault.com, peterz@infradead.org, 
-	juri.lelli@redhat.com, catalin.marinas@arm.com, will@kernel.org, 
-	arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com, 
-	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
-	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
-	nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev, 
-	rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com, 
-	yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com, 
-	hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org, 
-	ndesaulniers@google.com, vvvvvv@google.com, gregkh@linuxfoundation.org, 
-	ebiggers@google.com, ytcoode@gmail.com, vincent.guittot@linaro.org, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	bristot@redhat.com, vschneid@redhat.com, cl@linux.com, penberg@kernel.org, 
-	iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com, 
-	elver@google.com, dvyukov@google.com, shakeelb@google.com, 
-	songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com, 
-	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-arch@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
-	cgroups@vger.kernel.org, Andy Shevchenko <andy@kernel.org>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, 
-	Paul Mackerras <paulus@samba.org>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	=?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: R1wJEUdSpv3wDmJzB7Nof6qW1499Qv-X
+X-Proofpoint-ORIG-GUID: R1wJEUdSpv3wDmJzB7Nof6qW1499Qv-X
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-13_04,2024-02-12_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 adultscore=0 spamscore=0 malwarescore=0 mlxscore=0
+ bulkscore=0 priorityscore=1501 mlxlogscore=997 impostorscore=0
+ clxscore=1015 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2401310000 definitions=main-2402130065
 
-On Mon, Feb 12, 2024 at 11:39=E2=80=AFPM Suren Baghdasaryan <surenb@google.=
-com> wrote:
->
-> From: Kent Overstreet <kent.overstreet@linux.dev>
->
-> The new flags parameter allows controlling
->  - Whether or not the units suffix is separated by a space, for
->    compatibility with sort -h
->  - Whether or not to append a B suffix - we're not always printing
->    bytes.
->
-> Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+Add USB and DWC3 node for tertiary port of SC8280 along with multiport
+IRQ's and phy's. This will be used as a base for SA8295P and SA8295-Ride
+platforms.
 
-It seems most of my points from the previous review were refused...
+Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
+---
+ arch/arm64/boot/dts/qcom/sc8280xp.dtsi | 82 ++++++++++++++++++++++++++
+ 1 file changed, 82 insertions(+)
 
-...
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
+index febf28356ff8..29dbf2a9cdba 100644
+--- a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
+@@ -3331,6 +3331,88 @@ system-cache-controller@9200000 {
+ 			interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
++		usb_2: usb@a4f8800 {
++			compatible = "qcom,sc8280xp-dwc3-mp", "qcom,dwc3";
++			reg = <0 0x0a4f8800 0 0x400>;
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++
++			clocks = <&gcc GCC_CFG_NOC_USB3_MP_AXI_CLK>,
++				 <&gcc GCC_USB30_MP_MASTER_CLK>,
++				 <&gcc GCC_AGGRE_USB3_MP_AXI_CLK>,
++				 <&gcc GCC_USB30_MP_SLEEP_CLK>,
++				 <&gcc GCC_USB30_MP_MOCK_UTMI_CLK>,
++				 <&gcc GCC_AGGRE_USB_NOC_AXI_CLK>,
++				 <&gcc GCC_AGGRE_USB_NOC_NORTH_AXI_CLK>,
++				 <&gcc GCC_AGGRE_USB_NOC_SOUTH_AXI_CLK>,
++				 <&gcc GCC_SYS_NOC_USB_AXI_CLK>;
++			clock-names = "cfg_noc", "core", "iface", "sleep", "mock_utmi",
++				      "noc_aggr", "noc_aggr_north", "noc_aggr_south", "noc_sys";
++
++			assigned-clocks = <&gcc GCC_USB30_MP_MOCK_UTMI_CLK>,
++					  <&gcc GCC_USB30_MP_MASTER_CLK>;
++			assigned-clock-rates = <19200000>, <200000000>;
++
++			interrupts-extended = <&intc GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>,
++					      <&intc GIC_SPI 135 IRQ_TYPE_LEVEL_HIGH>,
++					      <&intc GIC_SPI 857 IRQ_TYPE_LEVEL_HIGH>,
++					      <&intc GIC_SPI 856 IRQ_TYPE_LEVEL_HIGH>,
++					      <&intc GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
++					      <&intc GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>,
++					      <&intc GIC_SPI 860 IRQ_TYPE_LEVEL_HIGH>,
++					      <&intc GIC_SPI 859 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 127 IRQ_TYPE_EDGE_RISING>,
++					      <&pdc 126 IRQ_TYPE_EDGE_RISING>,
++					      <&pdc 129 IRQ_TYPE_EDGE_RISING>,
++					      <&pdc 128 IRQ_TYPE_EDGE_RISING>,
++					      <&pdc 131 IRQ_TYPE_EDGE_RISING>,
++					      <&pdc 130 IRQ_TYPE_EDGE_RISING>,
++					      <&pdc 133 IRQ_TYPE_EDGE_RISING>,
++					      <&pdc 132 IRQ_TYPE_EDGE_RISING>,
++					      <&pdc 16 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 17 IRQ_TYPE_LEVEL_HIGH>;
++
++			interrupt-names = "pwr_event_1", "pwr_event_2",
++					  "pwr_event_3", "pwr_event_4",
++					  "hs_phy_1",	 "hs_phy_2",
++					  "hs_phy_3",	 "hs_phy_4",
++					  "dp_hs_phy_1", "dm_hs_phy_1",
++					  "dp_hs_phy_2", "dm_hs_phy_2",
++					  "dp_hs_phy_3", "dm_hs_phy_3",
++					  "dp_hs_phy_4", "dm_hs_phy_4",
++					  "ss_phy_1",	 "ss_phy_2";
++
++			power-domains = <&gcc USB30_MP_GDSC>;
++			required-opps = <&rpmhpd_opp_nom>;
++
++			resets = <&gcc GCC_USB30_MP_BCR>;
++
++			interconnects = <&aggre1_noc MASTER_USB3_MP 0 &mc_virt SLAVE_EBI1 0>,
++					<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_USB3_MP 0>;
++			interconnect-names = "usb-ddr", "apps-usb";
++
++			wakeup-source;
++
++			status = "disabled";
++
++			usb_2_dwc3: usb@a400000 {
++				compatible = "snps,dwc3";
++				reg = <0 0x0a400000 0 0xcd00>;
++				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
++				iommus = <&apps_smmu 0x800 0x0>;
++				phys = <&usb_2_hsphy0>, <&usb_2_qmpphy0>,
++				       <&usb_2_hsphy1>, <&usb_2_qmpphy1>,
++				       <&usb_2_hsphy2>,
++				       <&usb_2_hsphy3>;
++				phy-names = "usb2-0", "usb3-0",
++					    "usb2-1", "usb3-1",
++					    "usb2-2",
++					    "usb2-3";
++				dr_mode = "host";
++			};
++		};
++
+ 		usb_0: usb@a6f8800 {
+ 			compatible = "qcom,sc8280xp-dwc3", "qcom,dwc3";
+ 			reg = <0 0x0a6f8800 0 0x400>;
+-- 
+2.34.1
 
-You can move the below under --- cutter, so it won't pollute the git histor=
-y.
-
-> Cc: Andy Shevchenko <andy@kernel.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: "Michael S. Tsirkin" <mst@redhat.com>
-> Cc: Jason Wang <jasowang@redhat.com>
-> Cc: "Noralf Tr=C3=B8nnes" <noralf@tronnes.org>
-> Cc: Jens Axboe <axboe@kernel.dk>
-> ---
-
-...
-
-> --- a/include/linux/string_helpers.h
-> +++ b/include/linux/string_helpers.h
-> @@ -17,14 +17,13 @@ static inline bool string_is_terminated(const char *s=
-, int len)
-
-...
-
-> -/* Descriptions of the types of units to
-> - * print in */
-> -enum string_size_units {
-> -       STRING_UNITS_10,        /* use powers of 10^3 (standard SI) */
-> -       STRING_UNITS_2,         /* use binary powers of 2^10 */
-> +enum string_size_flags {
-> +       STRING_SIZE_BASE2       =3D (1 << 0),
-> +       STRING_SIZE_NOSPACE     =3D (1 << 1),
-> +       STRING_SIZE_NOBYTES     =3D (1 << 2),
->  };
-
-Do not kill documentation, I already said that. Or i.o.w. document this.
-Also the _SIZE is ambigous (if you don't want UNITS, use SIZE_FORMAT.
-
-Also why did you kill BASE10 here? (see below as well)
-
-...
-
-> --- a/lib/string_helpers.c
-> +++ b/lib/string_helpers.c
-> @@ -19,11 +19,17 @@
->  #include <linux/string.h>
->  #include <linux/string_helpers.h>
->
-> +enum string_size_units {
-> +       STRING_UNITS_10,        /* use powers of 10^3 (standard SI) */
-> +       STRING_UNITS_2,         /* use binary powers of 2^10 */
-> +};
-
-Why do we need this duplication?
-
-...
-
-> +       enum string_size_units units =3D flags & flags & STRING_SIZE_BASE=
-2
-> +               ? STRING_UNITS_2 : STRING_UNITS_10;
-
-Double flags check is redundant.
-
---=20
-With Best Regards,
-Andy Shevchenko
