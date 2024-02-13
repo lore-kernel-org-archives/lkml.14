@@ -1,276 +1,176 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814BE4CB22;
-	Tue, 13 Feb 2024 13:07:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2694F21C;
+	Tue, 13 Feb 2024 13:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707829642; cv=none; b=GKGAdaE5ApMVsKN/lIFNSGCWXxhRUBPqS4TSc9Z7Qz8G+EqiaPNVOXBbMfNP8e7vAsDtfxZrjacEhfCINahDbtFOqC+JfQzSP4aafqIPz9anYy5bMCnFWxuYc5kwbFdBuktqifEnQu172DsWj6TTOAiKB1HQ0w3SiUmSd9bjkFQ=
+	t=1707829643; cv=none; b=NPqHoj2fkeF/GyQlpzLUeZvSb1tjHl3csaWNPUki57RpZMgwCuwC3pJ9RuLWgM209mAWvoQgMyu4yM0Ev5imXY7BRwoV1OJwnjgNxDshbNk5iNuTSKFEmbb8oJ0VWZkQzuNvRsWE+9qbDfuxUR/6jUdA4jyd9pQGodGFzSVYdew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707829642; c=relaxed/simple;
-	bh=bS6YCU50qdUP7pOA+IgMKFXC6b2zvRoa/NpZXX8x3fY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=MRPKaR+IXHrSfKonMNmId+XFpBfHmN7O2DBlR7JTUfg/NLw8uxRMBWUfPfVm3ptk0pEZqDBeBUbU1yq6CDbiTI1NJBgvv9VjxGCo4uLbjqL7N4KpmLpopzjjYr24cz3MZMO3s/ZwIn8QjRNQJy6B1aYQ6q2INPEDr0cvWGKsX4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=D/Fmq+vK; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1707829643; c=relaxed/simple;
+	bh=xfLzTtWr0zy4eVlJ9PAOvXwQ0pAQaXBAK+VvjTyHsJA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZYXLUjq3vtZyVigGSNl1rZexDCGRSuCbnkXOMKyrarU6+4HZdbLzuX5EvyMTIW+xIdT0BTROmKtW1Sac1pNEih9IiFP4JURkwQKE8UvWpDYGSRrLy9wCYoWQRn9Pdu8/C3FDpVOGafXJ2bUcQq5eY1RBXjVDzzGB62hm/fyBnk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XWMtBOKN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=JpVtSt3g; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ULMXA+zd; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=0LMl4fxq; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="D/Fmq+vK"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41D8Em4L026735;
-	Tue, 13 Feb 2024 13:07:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=+kAkGk7nkaOH9/Fv65lof5Q3RmI7KRKfx/dcixunyJk=; b=D/
-	Fmq+vK3PyNAUWUOaiUVcJVT2Tu7apumgEJyOOaHwa2LvCLyASelZQhoUmdLSy7L9
-	/IBdUpchVSYYwyarDXuEI9Od8b7aO7F+FQDSueHMAz/BaKMA+SIZ33eeUYYKtRxe
-	S/4F7vzcUWtSpQCrF2wCzW3dloY7Fz9rh2GoUuUCQwdMuFvynbxWT2gufxrMHz0Y
-	nbFXZGE08ZXd68KlFHTmQdxs5ilgX7AEcG9tQJUF+2PidvUlmlUz4KRXAveN2uR5
-	U1sNoehYB8erckBL7CkEUm3+js6eqOYYp2wwo09H1I/8P/IjKABcQS71OmfF1MlO
-	5odo3D+weEBdVO/rltcg==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w7ww5s5m5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 13:07:05 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41DD731Z018122
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 13:07:03 GMT
-Received: from [10.218.5.19] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 13 Feb
- 2024 05:06:56 -0800
-Message-ID: <18ac6a8d-09f8-4195-b55e-353d3e80555e@quicinc.com>
-Date: Tue, 13 Feb 2024 18:36:53 +0530
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XWMtBOKN";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="JpVtSt3g";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ULMXA+zd";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="0LMl4fxq"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 154C821E35;
+	Tue, 13 Feb 2024 13:07:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1707829640; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q5FJCSnLqnNyazb+BdbAUm/bf4ECqcxsT2qE0k5mX/c=;
+	b=XWMtBOKNIeNJMb2mgTxA4UoWNskoWJiTfREaiC95jKCr/cb3EIzfhUvNAm/Uo16tvEsIde
+	4Gs48tOX77u0gyTtHpvWaOBFScI7O6pgYaeQvP76SWg0x/lyHwjSKrI0gQ+wlxWOFaXPDL
+	wj9kSGuLKWcdapctg+1uK6DAx2jmt60=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1707829640;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q5FJCSnLqnNyazb+BdbAUm/bf4ECqcxsT2qE0k5mX/c=;
+	b=JpVtSt3gbscUGCnQqvcUcRC5D37KNyCtUoZLMczltRHtw4DRPIQxefOOo8kgqgqdQMigLW
+	097Uf/NP2iJNCECw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1707829638; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q5FJCSnLqnNyazb+BdbAUm/bf4ECqcxsT2qE0k5mX/c=;
+	b=ULMXA+zdkocVYYu1UI2zhOep75kcTa2IWlj//PfYF2Gjn8XtDFZsB03KOQEETuGHNkGXas
+	dkI0Cf284yNQzN5lggJt9Z5/tkJmJqLi9+1X8nhfJipZQPBMDCMLDcWJ+9iWbA32HmGLTb
+	4f2SZIDVwStFOtDa7gtuaBvEqZQ7L4g=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1707829638;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q5FJCSnLqnNyazb+BdbAUm/bf4ECqcxsT2qE0k5mX/c=;
+	b=0LMl4fxqR8Qt/QcZ8GwQUEanxEY6zIgY20z3Z1CqU71N/t1bzNTuqlVX0Ws440/WgkVPtx
+	tmbfr/F3C9Za4yAw==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 0546E13A0E;
+	Tue, 13 Feb 2024 13:07:18 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id SPX0AIZpy2UoWwAAn2gu4w
+	(envelope-from <jack@suse.cz>); Tue, 13 Feb 2024 13:07:18 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 930DBA0809; Tue, 13 Feb 2024 14:07:13 +0100 (CET)
+Date: Tue, 13 Feb 2024 14:07:13 +0100
+From: Jan Kara <jack@suse.cz>
+To: Christoph Hellwig <hch@lst.de>
+Cc: linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>,
+	Jan Kara <jack@suse.com>, David Howells <dhowells@redhat.com>,
+	Brian Foster <bfoster@redhat.com>,
+	Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/14] writeback: don't call mapping_set_error in
+ writepage_cb
+Message-ID: <20240213130713.ysuxaqcwizqwjke2@quack3>
+References: <20240212071348.1369918-1-hch@lst.de>
+ <20240212071348.1369918-2-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/5] venus: pm_helpers: Use dev_pm_genpd_set_hwmode to
- switch GDSC mode
-Content-Language: en-US
-To: Bjorn Andersson <andersson@kernel.org>, Abel Vesa <abel.vesa@linaro.org>
-CC: "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kevin Hilman
-	<khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>, Pavel Machek
-	<pavel@ucw.cz>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Stanimir Varbanov
-	<stanimir.k.varbanov@gmail.com>,
-        Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-media@vger.kernel.org>
-References: <20240122-gdsc-hwctrl-v4-0-9061e8a7aa07@linaro.org>
- <20240122-gdsc-hwctrl-v4-5-9061e8a7aa07@linaro.org>
- <kxovcqes5pfo2lsdmdi4msaqjjavvnwxbjp3haymeqpsbhnm3i@43nwohjzocj3>
-From: Jagadeesh Kona <quic_jkona@quicinc.com>
-In-Reply-To: <kxovcqes5pfo2lsdmdi4msaqjjavvnwxbjp3haymeqpsbhnm3i@43nwohjzocj3>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 59IgBWBqwjKEcKTjqlasn98vlkl6cgpp
-X-Proofpoint-ORIG-GUID: 59IgBWBqwjKEcKTjqlasn98vlkl6cgpp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-13_06,2024-02-12_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 mlxscore=0 phishscore=0 mlxlogscore=999 bulkscore=0
- spamscore=0 adultscore=0 clxscore=1015 lowpriorityscore=0 malwarescore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402130104
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240212071348.1369918-2-hch@lst.de>
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=ULMXA+zd;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=0LMl4fxq
+X-Spamd-Result: default: False [-1.31 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_DKIM_ARC_DNSWL_HI(-1.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[9];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[lst.de:email,suse.com:email,suse.cz:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_IN_DNSWL_HI(-0.50)[2a07:de40:b281:104:10:150:64:98:from];
+	 RCVD_TLS_ALL(0.00)[]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 154C821E35
+X-Spam-Level: 
+X-Spam-Score: -1.31
+X-Spam-Flag: NO
 
+On Mon 12-02-24 08:13:35, Christoph Hellwig wrote:
+> writepage_cb is the iterator callback for write_cache_pages, which
+> already tracks all errors and returns them to the caller.  There is
+> no need to additionally cal mapping_set_error which is intended
+                          ^^^ call
 
-
-On 1/31/2024 6:35 AM, Bjorn Andersson wrote:
-> On Mon, Jan 22, 2024 at 10:47:05AM +0200, Abel Vesa wrote:
->> From: Jagadeesh Kona <quic_jkona@quicinc.com>
->>
->> Use dev_pm_genpd_set_hwmode API to switch the vcodec gdsc to SW/HW
->> modes at runtime based on requirement for venus V6 variants.
->>
->> Before the GDSC HWCTL was available to the consumer, the venus driver
->> needed to somehow keep the power from collapsing while under the driver
->> control. The only way to do that was to clear the CORE_PWR_DISABLE bit
->> (in wrapper POWER_CONTROL register) and, respectively, set it back after
->> the driver control was completed. Now, that there is a way to switch the
->> GDSC HW/SW control back and forth, the CORE_PWR_DISABLE toggling in
->> vcodec_control_v4() can be dropped for V6 variants.
->>
+> for contexts where the error can't be directly returned (e.g. the
+> I/O completion handlers).
 > 
-> The purpose of this commit is to warrant the need of this new mechanism,
-> but I don't find that it actually describes a problem to be solved.
+> Remove the mapping_set_error call in writepage_cb which is not only
+> superfluous but also buggy as it can be called with the error argument
+> set to AOP_WRITEPAGE_ACTIVATE, which is not actually an error but a
+> magic return value asking the caller to unlock the page.
 > 
->> With newer implementation, the mode of vcodec gdsc gets switched only in
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+Our error handling in writeback has always been ... spotty. E.g.
+block_write_full_page() and iomap_writepage_map() call mapping_set_error()
+as well so this seems to be a common way to do things, OTOH ext4 calls
+mapping_set_error() only on IO completion. I guess the question is how
+an error in ->writepages from background writeback should propagate to
+eventual fsync(2) caller? Because currently such error propagates all the
+way up to writeback_sb_inodes() where it is silently dropped...
+
+								Honza
+
+> ---
+>  mm/page-writeback.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 > 
-> Does "With newer implementation" mean "after these patches are applied"?
+> diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+> index 3f255534986a2f..62901fa905f01e 100644
+> --- a/mm/page-writeback.c
+> +++ b/mm/page-writeback.c
+> @@ -2534,9 +2534,8 @@ static int writepage_cb(struct folio *folio, struct writeback_control *wbc,
+>  		void *data)
+>  {
+>  	struct address_space *mapping = data;
+> -	int ret = mapping->a_ops->writepage(&folio->page, wbc);
+> -	mapping_set_error(mapping, ret);
+> -	return ret;
+> +
+> +	return mapping->a_ops->writepage(&folio->page, wbc);
+>  }
+>  
+>  int do_writepages(struct address_space *mapping, struct writeback_control *wbc)
+> -- 
+> 2.39.2
 > 
-
-Thanks Bjorn for your review!
-
-Yes, after all these patches are applied, will update the commit text to 
-be bit more precise.
-
->> set_hwmode API and the GDSC should not be switched to HW control mode
->> before turning off the GDSC, else subsequent GDSC enable may fail, hence
->> add check to avoid switching the GDSC to HW mode before powering off the
->> GDSC on V6 variants.
->>
-> 
-> Is this saying that "if we return the GDSC to HW control after turning
-> off the clocks, it might not be possible to turn it on again"?
-> 
-
-Yes, if the GDSC is left in HW control mode before GDSC disable, the 
-subsequent GDSC enable callback may fail while polling for GDSC status, 
-since HW can keep the GDSC in disabled state.
-
-
-> How come? Today this GDSC is operating in HW control mode, before,
-> during and after the clock operation.
-> 
-
-Currently once GDSC is moved to HW control mode, Venus driver is using 
-it's POWER_CONTROL register to keep the GDSC ON before the clock 
-operations and reset it back after clock operations to handover control 
-back to HW.
-
-And these venus POWER_CONTROL register addresses are not constant and 
-vary from one venus variant to other. With this new API Venus driver can 
-avoid these register writes and use this standard API everywhere to 
-switch the GDSC mode as required.
-
->> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
->> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
->> ---
->>   drivers/media/platform/qcom/venus/pm_helpers.c | 23 +++++++++++++----------
->>   1 file changed, 13 insertions(+), 10 deletions(-)
->>
->> diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
->> index a1b127caa90a..55e8ec3f4ee9 100644
->> --- a/drivers/media/platform/qcom/venus/pm_helpers.c
->> +++ b/drivers/media/platform/qcom/venus/pm_helpers.c
->> @@ -412,10 +412,9 @@ static int vcodec_control_v4(struct venus_core *core, u32 coreid, bool enable)
->>   	u32 val;
->>   	int ret;
->>   
->> -	if (IS_V6(core)) {
->> -		ctrl = core->wrapper_base + WRAPPER_CORE_POWER_CONTROL_V6;
->> -		stat = core->wrapper_base + WRAPPER_CORE_POWER_STATUS_V6;
->> -	} else if (coreid == VIDC_CORE_ID_1) {
->> +	if (IS_V6(core))
->> +		return dev_pm_genpd_set_hwmode(core->pmdomains[coreid], !enable);
->> +	else if (coreid == VIDC_CORE_ID_1) {
->>   		ctrl = core->wrapper_base + WRAPPER_VCODEC0_MMCC_POWER_CONTROL;
->>   		stat = core->wrapper_base + WRAPPER_VCODEC0_MMCC_POWER_STATUS;
->>   	} else {
->> @@ -451,9 +450,11 @@ static int poweroff_coreid(struct venus_core *core, unsigned int coreid_mask)
->>   
->>   		vcodec_clks_disable(core, core->vcodec0_clks);
->>   
->> -		ret = vcodec_control_v4(core, VIDC_CORE_ID_1, false);
->> -		if (ret)
->> -			return ret;
->> +		if (!IS_V6(core)) {
->> +			ret = vcodec_control_v4(core, VIDC_CORE_ID_1, false);
-> 
-> First I had this expectation that the GDSC will always be in SW control
-> when the GDSC turns on - like the downstream implementation.
-> 
-> In this case I felt we should have a similar condition in
-> poweron_coreid() - as there's no point in switching to SW mode when we
-> know we're in SW mode already.
-> 
-> 
-> But as I finally realized that this is not the case, I now see that by
-> skipping the transition to HW mode here, dev_pm_genpd_set_hwmode() will
-> find the domain in SW mode, and through
-> 
->    if (dev_gpd_data(dev)->hw_mode == enable)
-> 
-> Will turn the vcodec_control_v4(, true) into a nop.
-> 
-> So, my first first instinct of feeling that this should be symmetric
-> between poweron/poweroff was reasonable...I think...
-> 
-
-Yes, we can add similar check in poweron_coreid() also to be symmetric 
-but since it will be nop haven't added it. Shall I add similar check in 
-poweron_coreid() as well?
-
-> 
-> I find that this interface does not match the expectations that people
-> will bring from downstream and this example isn't helpful in explaining
-> how to use the new interface.
-> 
-
-There are 3 consumers that currently use this HW control mode for 
-GDSC's:- display, camera and display.
-
-Display driver is able to operate with GDSC always in HW mode. Camera 
-drivers don't have power saving features enabled on upstream yet and 
-hence not using the HW control mode of GDSC's currently, but will need 
-this API support to enable camera power saving features on upstream.
-
-Currently on upstream, only venus driver requires GDSC HW and SW modes 
-switching, and hence added support in this driver to use the new interface.
-
-
-> PS. I trust there's no case whre legacy_binding = true, or that that
-> code path does not need similar workaround?
-> 
-This change is applicable only to sc7280 and sm8250 targets for which 
-legacy_binding will be false.
-
-Thanks,
-Jagadeesh
-
-> Regards,
-> Bjorn
-> 
->> +			if (ret)
->> +				return ret;
->> +		}
->>   
->>   		ret = pm_runtime_put_sync(core->pmdomains[1]);
->>   		if (ret < 0)
->> @@ -467,9 +468,11 @@ static int poweroff_coreid(struct venus_core *core, unsigned int coreid_mask)
->>   
->>   		vcodec_clks_disable(core, core->vcodec1_clks);
->>   
->> -		ret = vcodec_control_v4(core, VIDC_CORE_ID_2, false);
->> -		if (ret)
->> -			return ret;
->> +		if (!IS_V6(core)) {
->> +			ret = vcodec_control_v4(core, VIDC_CORE_ID_2, false);
->> +			if (ret)
->> +				return ret;
->> +		}
->>   
->>   		ret = pm_runtime_put_sync(core->pmdomains[2]);
->>   		if (ret < 0)
->>
->> -- 
->> 2.34.1
->>
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
