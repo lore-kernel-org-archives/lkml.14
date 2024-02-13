@@ -1,149 +1,184 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA535FDD5
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 15:06:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359C35FEEC;
+	Tue, 13 Feb 2024 15:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707836766; cv=none; b=trIgYlIy6OCaZn9DMb8PMs1KxiECTkrZasUfab46DTC1yEPBjVLMQFp1Q+zAinzgjdiipECUsgKtgxnDpUa4d+IAfytMgnd5rccSmD0of6h02aDWq25GvMApbvy0E9BB1IinF9RZRVXoZFLQ43ixQej23bKJq76lf6juLBgXkI8=
+	t=1707836784; cv=none; b=SAfsTxWRhqRu2ksxCU3vRM72nUrkEIsBDY4XROFE8FtmmnjK3IATfFQJlBgCurwBHiYLcuBIE01l0pf7QfhfmWX9fxmif+AP5nyrF2WeBOebv457D5YC/FU30lIwqNZKeAy/Fv1lY9hauMpnoD5unixX5pWmJErtVrubyfsHZ4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707836766; c=relaxed/simple;
-	bh=fbF1PvlbWN3zD8U5fpR4FOV0dObiDAn6q6ytupi4qzE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U2J7bd87VV3ZBaRyTm+oEJNiO77ZYBibCzBJXjCi4Xr3GCaPmq8LN9XIHwBr1Bg+ipWE8lyY1HP4HDRqgYSZ+Ocwl6S978SMUkSDNghBrWf+Ya8l1VVnQQwdEjA8AhrV+lmY+IiU+F3Mw8W1lvNpV6ut+6sytdXs2fpSlJojmaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wqDTEDyU; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1707836784; c=relaxed/simple;
+	bh=HfTxaV85bQ5N+4rl97kNfU4pEDd/6TmuuAa8Xv99rbU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i1wPP04WyJtTOZGDP1IbLdT905uFaCnSuVAUNpXk7lzgJmfO2WLDeAXoK+pwaNMRl4Fih5vYVvHt+jz8lo60/A8GhPXrM4VKCWEtyOIUZPkaTma/l5m2LT9DCLjKRSm+oMA/LAW3EX0Sv4hGzj+0+vP17sJZmHqdosCVA447EsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=aYxE9kiT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pYzu1Bfj; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=aYxE9kiT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pYzu1Bfj; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wqDTEDyU"
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6e2dfa17547so1320954a34.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 07:06:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707836763; x=1708441563; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2ApEu/3sIgnPz+WuXL0PiSYq9FhzP3cQXV7R+bXp+jI=;
-        b=wqDTEDyUE8oCDpS6e5+TBDLrtgBN7jsZ9kFRfNkHAzBtH7xqiHe5PaenGn2rbyCU/b
-         //v0HkoAESaUHEEv6a2dODbdHquEkm5CPwQSuF0qS6agB+SNMtfhcV1rsyEthHnD0gTW
-         14+KoeG7zuEXpkwQCkrnuEolK5qaIYgFX1LRjSbIesVs+gTvbBDKWkizZb/qaD0ZT96z
-         XjK6/roKG7/kQnnWzbrB/jSbBACBSzJ8m0iya7FL08fSSk0kdLXC7/tTPpGZeYTey2d9
-         es5LAesrwWZ4cHe9znrD5Iw8XTnXIeLanGSsQ2ET1ySNPsJp63Wj6YqgCDDE9Z4VfObV
-         SY/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707836763; x=1708441563;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2ApEu/3sIgnPz+WuXL0PiSYq9FhzP3cQXV7R+bXp+jI=;
-        b=fatDvLTEhd5E8gQSQKjRjl6HkBCOykzsAOtpObgl4jXuh2BUnID9w4GkmTS8LX+TrS
-         yP1HZr3cFGZABkLDKKwhRcoy2mEYcIHcmqqLmNbxKIHJeopsobPp/o5EoO3xskuLXZ7x
-         ON8iaeLzup+ueZCPILal0JJbN99SpNBCPEi1JOFGdBl8HsQZZDItxH4I52elReigg4J0
-         RollA9xtI12owGcyV1gZwvsOXaEZ59iyQnuC3SRwIaSduFfFI5mztuagpzOZ6bJHupRz
-         rsLr4kDChLWsruy7pKh7jmDXpAU1B2zebBz0u/G0fl8l1Q3p4fH/Wemlux+BHIrXwXDz
-         31vQ==
-X-Gm-Message-State: AOJu0YxxIDVrez2oPlpOU9MMCwuT+vorMgbTOTevFPzZnrIidikfdkft
-	8CRDaPfbdSm3zW6n7AaYY4SA1U5af8UoraDFMyBsj+AL7T4+OExWGXja6lw3UfCaoV3pN4Dztt2
-	HlngRSWRd27bMf47cqFCCP9lGqCZqiY+443lO4w==
-X-Google-Smtp-Source: AGHT+IH++eu0yEteTnpJEBWZLuftuwuAi2WUJWHv6bizQcozGEbb7E3tLosD5iBoAdkxx8BtnXc5qmaF7ZVKdEk+5DA=
-X-Received: by 2002:a05:6871:80f:b0:218:55c9:bb20 with SMTP id
- q15-20020a056871080f00b0021855c9bb20mr11649920oap.21.1707836762423; Tue, 13
- Feb 2024 07:06:02 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="aYxE9kiT";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pYzu1Bfj";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="aYxE9kiT";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pYzu1Bfj"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 34DA521E54;
+	Tue, 13 Feb 2024 15:06:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707836781; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/ZnYq6o4Mhw4uq6WMCCvbGU2WzT/Rvdq9e8cUAYa9Uw=;
+	b=aYxE9kiT88dxR4vB+BaIfviwAnd+J+wYdL/f6EEr/PsjH+UqEc41JWaBF70qbhptVKOo/D
+	aik1zMTYO/aUvrFQthhlrI0u6JH9MQ6YiumJONaJI8gRZDgyUIz3xrcmmxJ1LauHDTSktB
+	PD0/QKN2eUhzSXAB1GYOwVEMlKvdQlg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707836781;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/ZnYq6o4Mhw4uq6WMCCvbGU2WzT/Rvdq9e8cUAYa9Uw=;
+	b=pYzu1BfjgGhSDqWc8CQVpN24wtzBYd+0d+QfOZ/Yishgpcf3FumI1y1kPPI9upMquS2d7s
+	ITpsdZCyQjK2bZAQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707836781; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/ZnYq6o4Mhw4uq6WMCCvbGU2WzT/Rvdq9e8cUAYa9Uw=;
+	b=aYxE9kiT88dxR4vB+BaIfviwAnd+J+wYdL/f6EEr/PsjH+UqEc41JWaBF70qbhptVKOo/D
+	aik1zMTYO/aUvrFQthhlrI0u6JH9MQ6YiumJONaJI8gRZDgyUIz3xrcmmxJ1LauHDTSktB
+	PD0/QKN2eUhzSXAB1GYOwVEMlKvdQlg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707836781;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/ZnYq6o4Mhw4uq6WMCCvbGU2WzT/Rvdq9e8cUAYa9Uw=;
+	b=pYzu1BfjgGhSDqWc8CQVpN24wtzBYd+0d+QfOZ/Yishgpcf3FumI1y1kPPI9upMquS2d7s
+	ITpsdZCyQjK2bZAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DBCDD13404;
+	Tue, 13 Feb 2024 15:06:20 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id AJb9NGyFy2UHNwAAD6G6ig
+	(envelope-from <hare@suse.de>); Tue, 13 Feb 2024 15:06:20 +0000
+Message-ID: <0e44e137-eea0-4249-aab9-86acfca58ac7@suse.de>
+Date: Tue, 13 Feb 2024 16:06:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240212213920.49796-1-brgl@bgdev.pl> <Zct_7YcJk5-sg2pT@smile.fi.intel.com>
-In-Reply-To: <Zct_7YcJk5-sg2pT@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 13 Feb 2024 16:05:51 +0100
-Message-ID: <CAMRc=Md40TPhTq7jwWQz8HmCJEZc4ixmjqhVjbcNzo1e6zwHNg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: initialize descriptor SRCU structure before adding
- OF-based chips
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
-	Alex Elder <elder@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	"Paul E . McKenney" <paulmck@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 10/14] iomap: fix iomap_dio_zero() for fs bs > system
+ page size
+Content-Language: en-US
+To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
+ linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc: mcgrof@kernel.org, gost.dev@samsung.com, akpm@linux-foundation.org,
+ kbusch@kernel.org, djwong@kernel.org, chandan.babu@oracle.com,
+ p.raghav@samsung.com, linux-kernel@vger.kernel.org, willy@infradead.org,
+ linux-mm@kvack.org, david@fromorbit.com
+References: <20240213093713.1753368-1-kernel@pankajraghav.com>
+ <20240213093713.1753368-11-kernel@pankajraghav.com>
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20240213093713.1753368-11-kernel@pankajraghav.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=aYxE9kiT;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=pYzu1Bfj
+X-Spamd-Result: default: False [-0.34 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BAYES_HAM(-0.04)[57.78%];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_TWELVE(0.00)[14];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[samsung.com:email,suse.de:dkim,suse.de:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -0.34
+X-Rspamd-Queue-Id: 34DA521E54
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Bar: /
 
-On Tue, Feb 13, 2024 at 3:43=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Mon, Feb 12, 2024 at 10:39:20PM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > In certain situations we may end up taking the GPIO descriptor SRCU rea=
-d
-> > lock in of_gpiochip_add() before the SRCU struct is initialized. Move
-> > the initialization before the call to of_gpiochip_add().
->
-> ...
->
-> This is a bit unclear why you moved to that place and how it had been tes=
-ted.
->
+On 2/13/24 10:37, Pankaj Raghav (Samsung) wrote:
+> From: Pankaj Raghav <p.raghav@samsung.com>
+> 
+> iomap_dio_zero() will pad a fs block with zeroes if the direct IO size
+> < fs block size. iomap_dio_zero() has an implicit assumption that fs block
+> size < page_size. This is true for most filesystems at the moment.
+> 
+> If the block size > page size, this will send the contents of the page
+> next to zero page(as len > PAGE_SIZE) to the underlying block device,
+> causing FS corruption.
+> 
+> iomap is a generic infrastructure and it should not make any assumptions
+> about the fs block size and the page size of the system.
+> 
+> Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
+> ---
+>   fs/iomap/direct-io.c | 13 +++++++++++--
+>   1 file changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+> index bcd3f8cf5ea4..04f6c5548136 100644
+> --- a/fs/iomap/direct-io.c
+> +++ b/fs/iomap/direct-io.c
+> @@ -239,14 +239,23 @@ static void iomap_dio_zero(const struct iomap_iter *iter, struct iomap_dio *dio,
+>   	struct page *page = ZERO_PAGE(0);
+>   	struct bio *bio;
+>   
+> -	bio = iomap_dio_alloc_bio(iter, dio, 1, REQ_OP_WRITE | REQ_SYNC | REQ_IDLE);
+> +	WARN_ON_ONCE(len > (BIO_MAX_VECS * PAGE_SIZE));
+> +
+> +	bio = iomap_dio_alloc_bio(iter, dio, BIO_MAX_VECS,
+> +				  REQ_OP_WRITE | REQ_SYNC | REQ_IDLE);
+>   	fscrypt_set_bio_crypt_ctx(bio, inode, pos >> inode->i_blkbits,
+>   				  GFP_KERNEL);
+> +
+>   	bio->bi_iter.bi_sector = iomap_sector(&iter->iomap, pos);
+>   	bio->bi_private = dio;
+>   	bio->bi_end_io = iomap_dio_bio_end_io;
+>   
+> -	__bio_add_page(bio, page, len, 0);
+> +	while (len) {
+> +		unsigned int io_len = min_t(unsigned int, len, PAGE_SIZE);
+> +
+> +		__bio_add_page(bio, page, io_len, 0);
+> +		len -= io_len;
+> +	}
+>   	iomap_dio_submit_bio(iter, dio, bio, pos);
+>   }
+>   
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-I didn't move it, I just added SRCU before it. It can be triggered by
-a simple hog from DT. The link leads to a crash report.
+Cheers,
 
-> > @@ -991,10 +991,6 @@ int gpiochip_add_data_with_key(struct gpio_chip *g=
-c, void *data,
-> >       if (ret)
-> >               goto err_cleanup_gdev_srcu;
-> >
-> > -     ret =3D of_gpiochip_add(gc);
-> > -     if (ret)
-> > -             goto err_free_gpiochip_mask;
-> > -
-> >       for (i =3D 0; i < gc->ngpio; i++) {
-> >               struct gpio_desc *desc =3D &gdev->descs[i];
-> >
->
-> >               if (ret) {
-> >                       for (j =3D 0; j < i; j++)
-> >                               cleanup_srcu_struct(&gdev->descs[j].srcu)=
-;
-> > -                     goto err_remove_of_chip;
-> > +                     goto err_free_gpiochip_mask;
-> >               }
-> >
-> >               if (gc->get_direction && gpiochip_line_is_valid(gc, i)) {
->
-> >               }
-> >       }
-> >
-> > -     ret =3D gpiochip_add_pin_ranges(gc);
-> > +     ret =3D of_gpiochip_add(gc);
-> >       if (ret)
-> >               goto err_cleanup_desc_srcu;
-> >
-> > +     ret =3D gpiochip_add_pin_ranges(gc);
-> > +     if (ret)
-> > +             goto err_remove_of_chip;
-> > +
-> >       acpi_gpiochip_add(gc);
->
-> My logic tells me that if you need to call gpiochip_add_pin_ranges() befo=
-re
-> calling of_gpiochip_add(). It won't collide right now, but allows to clea=
-nup
-> further (with the gpio-ranges parser be generalized for fwnodes and be mo=
-ved
-> to gpiolib.c from gpiolib-of.c).
->
+Hannes
 
-But it was already called before gpiochip_add_pin_ranges() so it's
-material for another patch.
-
-Bart
-
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
