@@ -1,43 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F247E604DC;
-	Tue, 13 Feb 2024 18:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0F6605BA
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 18:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707847543; cv=none; b=KnlmYKlYkgEoLO3sCHknN5PZoLBM6T95aDXiD/lr/BBUl5bBC4mAY37Ocnb9J5J4uowz9xwmAmiqFDpMhrgonFH/fSevYIlVqu82uPrjsx3/t9YONv5ZmU1nMfViofUIJTmVkxVCEUZa3ME2wJ+5RXdz83NaqH93p6mZpAxTrg0=
+	t=1707847672; cv=none; b=BOr/UiR8squ+TPox64Q4VIygsYaB+yjg6aWr9uN0o+g3NHmV2ASNqsTHCT/MphmyGx+XUY5HYVLHZPM4rb5qi9oZ+j0O6lr7pir1FKf6iEVVjcGhkuhWESifpG0baa5OMhWUgHnnEjQEHufu6wqMjZpgAx9F2gR5IsVHX8iVInw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707847543; c=relaxed/simple;
-	bh=HecSXPlQazpI+9KpIYoNGJ1ZcXO0NHDiFgEImC6uQ2M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TYSq6wPvYFsq8csxIU4a8qcsEeo5SbW3lX5tPCNNuaUyFP3QIqfTL1XxnrZmp+QzmvIQNVX2fUpgqqQnP8bYH+N/JyZosRwfhFMuGSqPsWcenGprULdO4naoTZUfWtDautA/dPk7POL6+I9nwQ9YuFGvcddPuV/EiKoRShSyi7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KAFheBoj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707847672; c=relaxed/simple;
+	bh=GCgeemHEMjZObr29TItNfoPRYs3mnZZ8ua3W5kWq4mY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=RM7XH2azJeJaXWiVSKYj812hgvwL2l8cUaaK9YY5hd6VPI69zYGMvGvG4yYl+JxStYie5Y+1hCLPrVb/gsh9SgqXjKoCGr0vXUL50w64cxuZ2c0RUciCjAjT8vVZ1iZUqF5Wj9yMu+UxedfUENUMCO9LW2jCoGRa2Z+e+FS/aas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PBMCa0sX; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KAFheBoj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CE02C433C7;
-	Tue, 13 Feb 2024 18:05:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707847542;
-	bh=HecSXPlQazpI+9KpIYoNGJ1ZcXO0NHDiFgEImC6uQ2M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KAFheBoj/bKBHs+d5nKtlNnbX/F+Igl4YMdrKR8fk3GLrIwe/Gep4mdlOLQUz5ElE
-	 BJGSBW7He4mRVX5nKqjh+IFiWFde5QGSSReElAQuLLH67ge3eZ1c3aJVn1Wwdm6fxA
-	 HIrfqCcOpG+i8iQJETlO2aGFr7KLJISHDBOWTPmkylUx71GR0BwUN9Q1OImHR+JOk5
-	 lklOMu8Jrm8mAOnpXB6jcjmJOA3AmguWMUnWlgno6MpmqXHfNo4EJ2xggReAblqbSK
-	 ATLJO5iyLtpv+j+caroAUgitrVfYoy6ZE8gBjazY1JdPtw2+DcDiUuHxCXKQx6S4en
-	 1cYCYg+EA4QkQ==
-Date: Tue, 13 Feb 2024 19:05:35 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Andrey Melnikov <temnota.am@gmail.com>
-Cc: Sergei Shtylyov <sergei.shtylyov@gmail.com>, linux-ide@vger.kernel.org,
-	linux-kernel@vger.kernel.org, dlemoal@kernel.org,
-	hdegoede@redhat.com
-Subject: Re: [PATCH] ahci: asm1064: correct count of reported ports
-Message-ID: <Zcuvbzoo7/7c/F1q@x1-carbon>
-References: <vbpzr7uqpfemb3qa6xy2fxioct44l5vugg2wkywyolfpzqcmau@jgrrhmk2scaj>
- <7559d940-f191-4fe0-e147-17ffa6c1dfc4@gmail.com>
- <CA+PODjpOE=LGPi1G1ebvEwGeXAfpuZ+s_k4uMUwu3i6st9y--g@mail.gmail.com>
- <Zcukjucb4VEbKK9x@x1-carbon>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PBMCa0sX"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-55a5e7fa471so6117919a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 10:07:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707847669; x=1708452469; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7nvXkv/btphQ8MW54HksmzNQa+3jvkr/X94Oa7LChw8=;
+        b=PBMCa0sX68glYuVtRESYoGSy5EYLyelv1inhXuWb2nqhHbhRa6+qB6CzCozLvEguq1
+         kDxy3kLIyfvmCvKbE4ZTkKlm7A3XbkbTRSxR4NOMOxEiRJ2GyaOgejcVKvj3gDV3BvFb
+         SECW2+G4I35sfl0vP5OjHcp060Q/QLOXFZhj99I78jcQEHXz3njEOpwGVFvo1Jy+BsxH
+         aft7GnkCspwYbV40KJIpgkdQIC5E6yQjcX3sqSHZ27Pe15Kh6ftWbldAREA5YWvPHV3r
+         mK6gz6yhLYf5aDHXkzXGuZFsGPPfshCPds2+hcRcXsumua8jmkcW5s+tRIn0x50s01gE
+         +C+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707847669; x=1708452469;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7nvXkv/btphQ8MW54HksmzNQa+3jvkr/X94Oa7LChw8=;
+        b=BNEV52/mlspph1rHSJQQedgHzVYAZVRk9h5tEWAsEXbt5RnzJkmrSruzEP2HNfyzdb
+         31B+XUDMVXe/cygeNzAgwG3OPta3LMoCIFAPddwmI1dmQeHXB9HI2nNnVW/pnm9AlY5E
+         D9aqEjYJqaBT4cZs1xTYG6NiD0/nGf6VtXPDOe1R3RhNOzlOQIt2Nsh92gc8CDeUDEKi
+         bxn35Tkp0ua1HqbnUT6ID17cMavsE6Pw5b8tj9PTE7bBHpRwsjks62rVhi5aZ9r6aYzJ
+         XGmQ5fsuW2RPjsTJLIl2mCvJMG15jZXhQgQHa0Wad1m8mGNZAwA35KP045q3UOKfRVZ3
+         BkHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWbYwunLJa4LyCRdzf/aSPwqAMu8rL/A8K5eUr8RQlJhz90WG7VrgydMAUGYFj/KEOcf5/w0JsJDDXiUI9i9xLGPbKli+X7yC6zlQaz
+X-Gm-Message-State: AOJu0Yx6jQyeg9HSuf+2RAIhfXFc01eaLNqhHWy9I5lNGxEVkzeYL8bD
+	vOtL8d6v9SDtct4EGrQ91aeqXkS8vKbuP0YAvJN3iJpBebopg1AF94+XcYaWMJs=
+X-Google-Smtp-Source: AGHT+IGK8/ZBrBuhIG/7OAVoNU04LTnr1+ZqxDgeVB3c6G4zRJq+Lh+jgIpN6PATnoCEqrkuPR72MA==
+X-Received: by 2002:aa7:d752:0:b0:562:1083:b7d7 with SMTP id a18-20020aa7d752000000b005621083b7d7mr311615eds.3.1707847668986;
+        Tue, 13 Feb 2024 10:07:48 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWrsKCNbf/H0BamORPHywycyrYJdRpP/MwEAylAwHFCf+pPW5AVS441po4B7fqyI8k9/YOXHdY3yHcze2IpAwPjUOYk7MRBB6D9Fxz9CMUHR8WPiocNWVasnjrrivezy6GFP8RMbcBCR1aRJNgi11vYB7EsWJTmMCro51Cq4t/HpNAE7aXCG4ys7jrY7/TeKL1iX76vc5SwjnwOCL4tp6gnko4=
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id fk7-20020a056402398700b00561a443a393sm2498874edb.92.2024.02.13.10.07.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 10:07:48 -0800 (PST)
+Date: Tue, 13 Feb 2024 21:07:45 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Thangaraj Samynathan <thangaraj.s@microchip.com>
+Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] spi: mchp-pci1xxxx: release resources on error in probe()
+Message-ID: <efc92197-4023-4bfe-bc63-452e7ed112e8@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,105 +66,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zcukjucb4VEbKK9x@x1-carbon>
+X-Mailer: git-send-email haha only kidding
 
-On Tue, Feb 13, 2024 at 06:19:10PM +0100, Niklas Cassel wrote:
-> On Thu, Feb 08, 2024 at 10:27:11AM +0300, Andrey Melnikov wrote:
-> > > On 2/7/24 12:58 PM, Andrey Jr. Melnikov wrote:
-> > >
-> > > > The ASM1064 SATA host controller always reports wrongly,
-> > > > that it has 24 ports. But in reality, it only has four ports.
-> > > >
-> > > > before:
-> > > > ahci 0000:04:00.0: SSS flag set, parallel bus scan disabled
-> > > > ahci 0000:04:00.0: AHCI 0001.0301 32 slots 24 ports 6 Gbps 0xffff0f impl SATA mode
-> > > > ahci 0000:04:00.0: flags: 64bit ncq sntf stag pm led only pio sxs deso sadm sds apst
-> > > >
-> > > > after:
-> > > > ahci 0000:04:00.0: ASM1064 has only four ports
-> > > > ahci 0000:04:00.0: forcing port_map 0xffff0f -> 0xf
-> > > > ahci 0000:04:00.0: SSS flag set, parallel bus scan disabled
-> > > > ahci 0000:04:00.0: AHCI 0001.0301 32 slots 24 ports 6 Gbps 0xf impl SATA mode
-> > > > ahci 0000:04:00.0: flags: 64bit ncq sntf stag pm led only pio sxs deso sadm sds apst
-> > > >
-> > > >
-> > > > Signed-off-by: Andrey Jr. Melnikov <temnota.am@gmail.com>
-> > > >
-> > > > diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
-> > > > index da2e74fce2d9..ec30d8330d16 100644
-> > > > --- a/drivers/ata/ahci.c
-> > > > +++ b/drivers/ata/ahci.c
-> > > > @@ -671,9 +671,14 @@ MODULE_PARM_DESC(mobile_lpm_policy, "Default LPM policy for mobile chipsets");
-> > > >  static void ahci_pci_save_initial_config(struct pci_dev *pdev,
-> > > >                                        struct ahci_host_priv *hpriv)
-> > > >  {
-> > > > -     if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA && pdev->device == 0x1166) {
-> > > > -             dev_info(&pdev->dev, "ASM1166 has only six ports\n");
-> > > > -             hpriv->saved_port_map = 0x3f;
-> > > > +     if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA) {
-> > > > +             if (pdev->device == 0x1166) {
-> > >
-> > >    Maybe *switch* instead?
-> > 
-> > Ok.
-> 
-> Hello Andrey,
-> 
-> do you intend to send out a v2 that uses a switch instead?
-> 
-> And perhaps take Damien's patch as patch 1/2
-> (with Suggested-by: Damien ... of course),
-> so that the before/after print in your commit message shows
-> the override value.
+Call pci_release_regions(pdev) before returning on this error path.
 
-On second thought, just go ahead and respin your patch using a switch,
-as I don't think Damien's patch is fully correct.
+Fixes: 3e7cfd6ad29a ("spi: mchp-pci1xxxx: Add support for DMA in SPI")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+From static analysis.  Not tested.
 
-He suggested to use hpriv->saved_port_map.
+ drivers/spi/spi-pci1xxxx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-However, that will show the wrong result for platforms using
-hpriv->mask_port_map.
+diff --git a/drivers/spi/spi-pci1xxxx.c b/drivers/spi/spi-pci1xxxx.c
+index a99db6163aec..969965d7bc98 100644
+--- a/drivers/spi/spi-pci1xxxx.c
++++ b/drivers/spi/spi-pci1xxxx.c
+@@ -776,7 +776,7 @@ static int pci1xxxx_spi_probe(struct pci_dev *pdev, const struct pci_device_id *
+ 
+ 			ret = pci1xxxx_spi_dma_init(spi_bus, spi_sub_ptr->irq);
+ 			if (ret && ret != -EOPNOTSUPP)
+-				return ret;
++				goto error;
+ 
+ 			/* This register is only applicable for 1st instance */
+ 			regval = readl(spi_bus->reg_base + SPI_PCI_CTRL_REG_OFFSET(0));
+-- 
+2.43.0
 
-As when hpriv->mask_port_map is used, saved_port_map is not set:
-https://github.com/torvalds/linux/blob/v6.8-rc4/drivers/ata/libahci.c#L536-L548
-
-However, the local variable "port_map" is updated for both
-saved_port_map and mask_port_map cases.
-
-And then at the end:
-hpriv->port_map = port_map;
-https://github.com/torvalds/linux/blob/v6.8-rc4/drivers/ata/libahci.c#L597
-
-So I think we should print hpriv->port_map,
-and not hpriv->saved_port_map.
-
-
-
-However.. hpriv->port_map is already printed:
-https://github.com/torvalds/linux/blob/v6.8-rc4/drivers/ata/libahci.c#L2617
-in the "0x%x impl" print.
-
-So
-> before:
-> ahci 0000:04:00.0: AHCI 0001.0301 32 slots 24 ports 6 Gbps 0xffff0f impl SATA mode
-
-> after:
-> ahci 0000:04:00.0: AHCI 0001.0301 32 slots 24 ports 6 Gbps 0xf impl SATA mode
-
-Actually prints the number of *implemented* ports.
-
-
-I have to admit that this is a bit confusing.
-
-Personally I would have preferred if we simply printed
-"%u ports", hpriv->port_map,
-
-and simply dropped the "0x%x impl" part of the print,
-but I'm a bit worried that someone parses this print from user space,
-but I guess we must be allowed to improve prints if they are confusing.
-
-Damien, what do you think?
-
-
-Kind regards,
-Niklas
