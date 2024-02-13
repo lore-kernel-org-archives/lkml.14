@@ -1,247 +1,124 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0DF5F54F;
-	Tue, 13 Feb 2024 15:57:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A79145F476
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 15:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707839847; cv=none; b=gOEqrOyrMUgF5IqMPbj2yWM2irr8hpcAn0Xt8q8HOUozxbnKgdr+WSmKHmKH4vUi9oKwu65XTwXgEXm9mB5DzNgcBEr7IJMwLWMscBr6JT+cN7YhvYXKCftULOPkl5LZpkme7HxSV6zcb9juawQ3zg6Rky/7IF+yONz9/jP/9RY=
+	t=1707839893; cv=none; b=D9XYDD9v8SsUE8XGRF89wsaIned83gN5dbXwN57J0VCF26bT/CpTo7iu+X8x7Oy/M9foXy/dRTU90t4XJVvKY/zm23bhgnCTZ59nwW/iDlj9puI0moBIYFTSAGdYqF7Z6obt3IVCsnFRZnMHii9dV2SNTk632rNIXVjqiPTFFwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707839847; c=relaxed/simple;
-	bh=L5HFUuCbgdypUHaFrX7NoMN/dywBS26HbXH/mWMDEAE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ovkInI81FjbDeNd5RJ6igGDJDDb5rZKBYSYxccUjzT20BuqT/vYh66FJDvtBo1ERM0P8wFdz/qMv89DRNt84o3RgqxfjpGkkIvMo1KM6cL85r0cqwVGqeBJqQHiTIOI/ft3KIC8WWYP42ojpeg1+r+pruqGlCr6e0jdr5PFFdrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=SsIPWU6J; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1707839893; c=relaxed/simple;
+	bh=kLvA9F8Q8hMJy8VB32vgxuqt0GnA5jwxo56+WSiABbA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m1D8iyiSRjSLml8Pub7zdCHAWDA/cePsCEFdCtQK1jhs1KsLWJErNko4yfIem0RlOmuEateEzLZUE+rGiRpIrmEVzm5puWUBnNryrjTpimDK6IWf81jS37qY/oPxMyadJEEJUXDURbPHsZXlE0pHgsAgXJglxPmQ5lVSe/YyOnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Y9lcql66; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="SsIPWU6J"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 840E2E000F;
-	Tue, 13 Feb 2024 15:57:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1707839836;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xLKrcUWgSnxDEmML8cy4ZQrlK1+oKtedl7yJAvMVDT8=;
-	b=SsIPWU6Jqssq5dl7/9GfrkUzaqLNd6eF8iA+CPIlTZScJjDBNxoIrN7AI9CwOm9WNbmkNv
-	NqkPZbN7Ch1SsE29IVokl/WydXoJC1DmUcN5yKwJZyT/GQtH5xDQZiWFX7lH3NgBCnO+BM
-	1oj5LuzMHiTrzHlvWnzLnU2l+Uz8Q1TgLx53qTxmOkNtgCeQggPu1xmYIACmUVVNansOM9
-	Bmq4ffcmc0z/v3xRCkOqx/zmqA1LKiZ8AqfNLj1dshh5OJLZuQZ6ttLScMHPScZWP6kny2
-	d6xT8s7ApSVVPxb2SS4jJo/L9khL/YSpjF+/VBYHGLGhxwQ1CR6wBq/Rp45K2A==
-Date: Tue, 13 Feb 2024 16:57:12 +0100
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
- Russell King <linux@armlinux.org.uk>, <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Richard Cochran
- <richardcochran@gmail.com>, <UNGLinuxDriver@microchip.com>,
- <netdev@vger.kernel.org>, <linux-doc@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <thomas.petazzoni@bootlin.com>,
- =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
-Subject: Re: [PATCH net-next 2/3] net: lan966x: Allow using PCH extension
- for PTP
-Message-ID: <20240213165712.27e0443a@device-28.home>
-In-Reply-To: <20240213103156.rl4kzwpmxn3haz7y@DEN-DL-M31836.microchip.com>
-References: <20240212173307.1124120-1-maxime.chevallier@bootlin.com>
-	<20240212173307.1124120-3-maxime.chevallier@bootlin.com>
-	<20240213103156.rl4kzwpmxn3haz7y@DEN-DL-M31836.microchip.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y9lcql66"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dc742543119so3801194276.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 07:58:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707839890; x=1708444690; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZbboQjtqJl0kRKVmT9324agg2n3TuIJm0CfegMAaP2Q=;
+        b=Y9lcql661sbMjDGa1J4VNDPMHa3OqwV0NJ0l4RT+Fug1giYT5C39RgXKjSM7nBmV26
+         lFA8NJAQ+5TQrnRYhV/FgZlY9lrrEiRO7EbduznIxV7N5q82uqkYbrckg8yGset1EXJL
+         ug/PkKjvyHoTQRijxxwdLJVPeYVEWVd5S9afU4hlqerhK3pzLqSs8qIQLfEuaps4OMlD
+         rBtreWa9urLgmQK6Xz4JmyTKKH230MKCBJs9k3UWr32P8byL9b25vMBKiCiZ0WoDI6Lv
+         q+qm/Fiqzq71S8vPomx2weRZ4OfZrdUii7aU/8gztK3e+Hf3Ss6wc5xr/dHhbv71fEah
+         XUQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707839890; x=1708444690;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZbboQjtqJl0kRKVmT9324agg2n3TuIJm0CfegMAaP2Q=;
+        b=GQs/T1mrFqSarAwLbdUPpsnr4ag97Wvt83/iyjEAApOqItCPqgMtqe36il+G5WeQxz
+         5eGgroDtOfMSAiQY2jleG1SFut/HXbG+7suci34QAAPIRLDlhvXbpG3jnips/1sd5PXi
+         dPLHjG7ii0eCM4HOvsiB690YQmnmS6jcn8L7hTUeOzLQZmYjuMC+4tU4uv0d/tHSyyAC
+         imRsT5FXyPX0O6xfIKz+qz2T3SXgJZPA2ohGtM4Xm00Myb0IvqqWLrNtgz3mbmadkH5Y
+         uyEkeccfkHslSWxyUjQQ4srKRkwGJPSVr2KhMR5NnEO9iSmV5b6W3jxGe/xT5zXq013O
+         44vg==
+X-Forwarded-Encrypted: i=1; AJvYcCVxGHt3QNPgBE8HoWYfxkagieEGZKHa9caVLOt+/wo1vIwIl8D1UD9vI3lXQBC+Gy3wu7wvrvIb+Z4s1jyBfKrpauXkVKApNIN/bPpR
+X-Gm-Message-State: AOJu0YyteKUGaaU6JohW0ThTK0QqT2Vog7bhrrC0N/N5Sf6WIgYSh9JY
+	nSSoZaRFFd7+UQPILHv4k4MBLxfm7dEaxc/2/KCpWGTyBVGOmPUcvfrFLCsL1Wfz9sZBHDRx/LF
+	SmscDSNmwZaI0vKmikP55B89cVguBJq7ZZP0GrmOX5OzOOjLkLbo=
+X-Google-Smtp-Source: AGHT+IFmnTkXNu4JoaaOCNlItjkMQBcNvs9jrCwoCXuPdjvF/qGzXg3CtaGd1xcEuKgEnfJ2PjsPUbYu9BbM9Oi6unI=
+X-Received: by 2002:a5b:c4a:0:b0:dc6:e75d:d828 with SMTP id
+ d10-20020a5b0c4a000000b00dc6e75dd828mr6861944ybr.18.1707839890663; Tue, 13
+ Feb 2024 07:58:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: maxime.chevallier@bootlin.com
+References: <20240212215534.190682-1-robdclark@gmail.com> <CAA8EJpofXjwFG3NhwSJQadoe6eR0vkX2Y4knC55b7qGn46UA_g@mail.gmail.com>
+In-Reply-To: <CAA8EJpofXjwFG3NhwSJQadoe6eR0vkX2Y4knC55b7qGn46UA_g@mail.gmail.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Tue, 13 Feb 2024 17:57:59 +0200
+Message-ID: <CAA8EJppJhfbctBE_mdsPikpsLQ-6o2oXGO7bFpUXD8q3YxSSeg@mail.gmail.com>
+Subject: Re: [PATCH] drm/crtc: fix uninitialized variable use even harder
+To: Rob Clark <robdclark@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, Rob Clark <robdclark@chromium.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Jani Nikula <jani.nikula@intel.com>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hello Horatiu,
+On Tue, 13 Feb 2024 at 15:50, Dmitry Baryshkov
+<dmitry.baryshkov@linaro.org> wrote:
+>
+> On Mon, 12 Feb 2024 at 23:55, Rob Clark <robdclark@gmail.com> wrote:
+> >
+> > From: Rob Clark <robdclark@chromium.org>
+> >
+> > DRM_MODESET_LOCK_ALL_BEGIN() has a hidden trap-door (aka retry loop),
+> > which means we can't rely too much on variable initializers.
+> >
+> > Fixes: 6e455f5dcdd1 ("drm/crtc: fix uninitialized variable use")
+> > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > ---
+> > I have mixed feelings about DRM_MODESET_LOCK_ALL_BEGIN() (and friends)
+> > magic.  On one hand it simplifies the deadlock/back dance.  OTOH it
+> > conceals a nasty sharp edge.  Maybe it is better to have the complicated
+> > restart path a bit more explicit, like it was originally.
+> >
+> >  drivers/gpu/drm/drm_crtc.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/gpu/drm/drm_crtc.c b/drivers/gpu/drm/drm_crtc.c
+> > index cb90e70d85e8..65f9f66933bb 100644
+> > --- a/drivers/gpu/drm/drm_crtc.c
+> > +++ b/drivers/gpu/drm/drm_crtc.c
+> > @@ -904,6 +904,7 @@ int drm_mode_setcrtc(struct drm_device *dev, void *data,
+> >         connector_set = NULL;
+> >         fb = NULL;
+> >         mode = NULL;
+> > +       num_connectors = 0;
+>
+> Nit: I think we should move all this next to the
+> DRM_MODESET_LOCK_ALL_BEGIN() and drop initialisation from the prologue
+> of the function, but it's definitely a separate and more intrusive
+> story.
+>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-On Tue, 13 Feb 2024 11:31:56 +0100
-Horatiu Vultur <horatiu.vultur@microchip.com> wrote:
+After running this through CI:
 
-> The 02/12/2024 18:33, Maxime Chevallier wrote:
-> > [Some people who received this message don't often get email from maxime.chevallier@bootlin.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]  
-> 
-> Hi Maxime,
-> 
-> I have tried your patches on pcb8291, which is a lan966x without PHYs
-> that support timestamping. And on this platform this patch breaks up the
-> things. Because it should just do the timestamping the MAC in that case,
-> but with this patch it doesn't get any time.
-> The same issue can be reproduced on pcb8280 and then disable PHY
-> timestamping, or change the lan8814 not to support HW timestamping.
-> 
-> Please see bellow the reason why.
+Tested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org> #sc7180, sdm845
 
-You are entirely correct and I apparently messed-up my series as these
-changes were implemented locally and somehow lost in the rebase. Indeed
-this codes doesn't work at all... I'll resend that, thanks a lot for
-the test and sorry !
-
-> 
-> > 
-> > +/* Enable or disable PCH timestamp transmission. This uses the USGMII PCH
-> > + * extensions to transmit the timestamps in the frame preamble.
-> > + */
-> > +static void lan966x_ptp_pch_configure(struct lan966x_port *port, bool *enable)
-> > +{
-> > +       struct phy_device *phydev = port->dev->phydev;
-> > +       int ret;
-> > +
-> > +       if (!phydev)
-> > +               *enable = false;
-> > +
-> > +       if (*enable) {
-> > +               /* If we cannot enable inband PCH mode, we fallback to classic
-> > +                * timestamping
-> > +                */
-> > +               if (phy_inband_ext_available(phydev, PHY_INBAND_EXT_PCH_TIMESTAMP)) {
-> > +                       ret = phy_inband_ext_enable(phydev, PHY_INBAND_EXT_PCH_TIMESTAMP);
-> > +                       if (ret)
-> > +                               *enable = false;
-> > +               } else {
-> > +                       *enable = false;
-> > +               }
-> > +       } else {
-> > +               phy_inband_ext_disable(phydev, PHY_INBAND_EXT_PCH_TIMESTAMP);
-> > +       }
-> > +
-> > +       lan_rmw(SYS_PCH_CFG_PCH_SUB_PORT_ID_SET(port->chip_port % 4) |
-> > +               SYS_PCH_CFG_PCH_TX_MODE_SET(*enable) |
-> > +               SYS_PCH_CFG_PCH_RX_MODE_SET(*enable),
-> > +               SYS_PCH_CFG_PCH_SUB_PORT_ID |
-> > +               SYS_PCH_CFG_PCH_TX_MODE |
-> > +               SYS_PCH_CFG_PCH_RX_MODE,
-> > +               port->lan966x, SYS_PCH_CFG(port->chip_port));
-> > +}
-> > +
-> >  int lan966x_ptp_hwtstamp_set(struct lan966x_port *port,
-> >                              struct kernel_hwtstamp_config *cfg,
-> >                              struct netlink_ext_ack *extack)
-> >  {
-> >         struct lan966x *lan966x = port->lan966x;
-> > +       bool timestamp_in_pch = false;
-> >         struct lan966x_phc *phc;
-> > 
-> >         switch (cfg->tx_type) {
-> > @@ -303,10 +339,18 @@ int lan966x_ptp_hwtstamp_set(struct lan966x_port *port,
-> >                 return -ERANGE;
-> >         }
-> > 
-> > +       if (cfg->source == HWTSTAMP_SOURCE_PHYLIB &&
-> > +           cfg->tx_type == HWTSTAMP_TX_ON &&
-> > +           port->config.portmode == PHY_INTERFACE_MODE_QUSGMII)
-> > +               timestamp_in_pch = true;
-> > +
-> > +       lan966x_ptp_pch_configure(port, &timestamp_in_pch);
-> > +
-> >         /* Commit back the result & save it */
-> >         mutex_lock(&lan966x->ptp_lock);
-> >         phc = &lan966x->phc[LAN966X_PHC_PORT];
-> >         phc->hwtstamp_config = *cfg;
-> > +       phc->pch = timestamp_in_pch;  
-> 
-> Here we figure out if pch is enabled or not. If the cfg->source is not
-> PHYLIB or the interface is not QUSGMII then timestamp_in_pch will stay
-> false.
-> 
-> >         mutex_unlock(&lan966x->ptp_lock);
-> > 
-> >         return 0;
-> > @@ -397,6 +441,7 @@ int lan966x_ptp_txtstamp_request(struct lan966x_port *port,
-> >         LAN966X_SKB_CB(skb)->jiffies = jiffies;
-> > 
-> >         lan966x->ptp_skbs++;
-> > +  
-> 
-> I think this is just a small style change. So maybe it shouldn't be in
-> here.
-> 
-> >         port->ts_id++;
-> >         if (port->ts_id == LAN966X_MAX_PTP_ID)
-> >                 port->ts_id = 0;
-> > @@ -500,6 +545,27 @@ irqreturn_t lan966x_ptp_irq_handler(int irq, void *args)
-> >                 /* Read RX timestamping to get the ID */
-> >                 id = lan_rd(lan966x, PTP_TWOSTEP_STAMP);
-> > 
-> > +               /* If PCH is enabled, there is a "feature" that also the MAC
-> > +                * will generate an interrupt for transmitted frames. This
-> > +                * interrupt should be ignored, so clear the allocated resources
-> > +                * and try to get the next timestamp. Maybe should clean the
-> > +                * resources on the TX side?
-> > +                */
-> > +               if (phy_inband_ext_enabled(port->dev->phydev,
-> > +                                          PHY_INBAND_EXT_PCH_TIMESTAMP)) {
-> > +                       spin_lock(&lan966x->ptp_ts_id_lock);
-> > +                       lan966x->ptp_skbs--;
-> > +                       spin_unlock(&lan966x->ptp_ts_id_lock);
-> > +
-> > +                       dev_kfree_skb_any(skb_match);
-> > +
-> > +                       lan_rmw(PTP_TWOSTEP_CTRL_NXT_SET(1),
-> > +                               PTP_TWOSTEP_CTRL_NXT,
-> > +                               lan966x, PTP_TWOSTEP_CTRL);
-> > +
-> > +                       continue;
-> > +               }
-> > +
-> >                 spin_lock_irqsave(&port->tx_skbs.lock, flags);
-> >                 skb_queue_walk_safe(&port->tx_skbs, skb, skb_tmp) {
-> >                         if (LAN966X_SKB_CB(skb)->ts_id != id)
-> > @@ -1088,19 +1154,27 @@ void lan966x_ptp_rxtstamp(struct lan966x *lan966x, struct sk_buff *skb,
-> >         struct timespec64 ts;
-> >         u64 full_ts_in_ns;
-> > 
-> > +       phc = &lan966x->phc[LAN966X_PHC_PORT];
-> > +
-> >         if (!lan966x->ptp ||
-> > -           !lan966x->ports[src_port]->ptp_rx_cmd)
-> > +           !lan966x->ports[src_port]->ptp_rx_cmd ||
-> > +           !phc->pch)  
-> 
-> And here because phc->pch is false, it would just return.
-> Meaning that it would never be able to get the time.
-> I presume that this check should not be modified.
-
-Dammit you are right and I had these modifications locally, but
-apparently I messed my rebase and lost that... 
-
-> 
-> >                 return;
-> > 
-> > -       phc = &lan966x->phc[LAN966X_PHC_PORT];
-> > -       lan966x_ptp_gettime64(&phc->info, &ts);
-> > -
-> > -       /* Drop the sub-ns precision */
-> > -       timestamp = timestamp >> 2;
-> > -       if (ts.tv_nsec < timestamp)
-> > -               ts.tv_sec--;
-> > -       ts.tv_nsec = timestamp;
-> > -       full_ts_in_ns = ktime_set(ts.tv_sec, ts.tv_nsec);
-> > +       if (phc->pch) {
-> > +               /* Drop the sub-ns precision */
-> > +               timestamp = timestamp >> 2;
-> > +               full_ts_in_ns = lower_32_bits(timestamp);
-> > +       } else {
-> > +               lan966x_ptp_gettime64(&phc->info, &ts);
-> > +
-> > +               /* Drop the sub-ns precision */
-> > +               timestamp = timestamp >> 2;
-> > +               if (ts.tv_nsec < timestamp)
-> > +                       ts.tv_sec--;
-> > +               ts.tv_nsec = timestamp;
-> > +               full_ts_in_ns = ktime_set(ts.tv_sec, ts.tv_nsec);
-> > +       }  
->  
-> 
+> >         DRM_MODESET_LOCK_ALL_END(dev, ctx, ret);
+>
+>
+> --
+> With best wishes
+> Dmitry
 
 
-Thanks for the review and analysis Horatiu, and sorry for this hiccup !
 
-Maxime
+-- 
+With best wishes
+Dmitry
