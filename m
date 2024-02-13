@@ -1,121 +1,85 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16FD3364C1
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 11:43:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68602381A1;
+	Tue, 13 Feb 2024 11:43:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707824614; cv=none; b=jPe5GSt0TXiDaqBPxGVexAW9Io2y8+TXBDamOyiFgrotIdcJqcB+begOIQmQ3EsxQXMmb1GQE66ofj8NyzLotmjbUksObJTEDgGXOdJtPbI5h8iQwIHpOkfMRtIGjW/0sM9RXdB+ByOKAJbkTge5B7QeYth2fdex4KpBguj4qbk=
+	t=1707824618; cv=none; b=qTdzLk5eTm3Mlq1hcCeC1ddg9YJwikZN8bG9Ojkt+DeayvqDwDSVfV4oBxhXNDoLyAFnFFHaIttMroMbBrDlMuhcRfLDCP1J2Y1h20r43FI0VkR4Ghs0VaTO6m+zwhov5TeW6e2Ttnfppy2A0+Zfo1B/JX1F8PU7R1p2R6L4aMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707824614; c=relaxed/simple;
-	bh=j0EcmW86LVwxDZD8jjvR3IIBsMo9Vd5fN53o5Q4wNco=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=ZqVRiGLElzwS1o7TPcXHSJGEfw4TA/9oDAy5T5gRSB/hYWSz5d0NRsuDzwd1x1QTkWkquS8Yg2BTqSB9Nh9d64bsVOQG2phVhY4Ojaogq+3TNZ7pcYTxREzAXsDnvXa5sMPP2eotLRs3gY3k2bDD7SEEj39/cjWompGEShAekLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=MvhAkUC9; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1707824618; c=relaxed/simple;
+	bh=QppPBZutxxvxsO7CZI8udsyp6dnLPQwivwjRU1FdxFA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fzkvms5lUhbcwR7C++E2vJ3t21G+mNZCqUCIZROrcbPmZjOICkDZiTomKAsK+aohK8v9lp4atF/m8EhZT0p9P0k1lR1jDICtoIXfC1PEkpteYmcRKyDN+mFtevr9dC0SbcqB88uvxJ+wL0lknNdXW5yUClHufovuahWtWaH6QLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=sI3SJIhg; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="MvhAkUC9"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-33b2960ff60so3002900f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 03:43:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1707824610; x=1708429410; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=E9Sow8wf4cLhsoNjPkxy+Vy7mK54b8EsDuIPycqqMjY=;
-        b=MvhAkUC9tng24+xCuIdEMwNnVoqKqTUqsjzOwfRCIUcBsenLYgP3AnbEHrYA+o85u4
-         tqFGfknQAezY3HaXNJL+W2xiWpXr1vsT814jBr5jVxCZnDBubbJJhsiXGGciPAxM2A1b
-         BL131n7PmYd4ypfP0BZKhryTh/1j5RizR9BS1lRllGOwBaDum1LOJE1VLiVMD20edl2H
-         URiNK1t9b3nNGfBpvu1hIqH1O1O6BjzkUeiBHvcsOahvX+mpgRtYL8XowyIPB+4Yy4gR
-         muptTIiHU3464FcEeY3OxWuTCdFV4IccwREG/StJ2tVKMJUxqtk3PZ+rRchb1Ntua7XJ
-         Wc6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707824610; x=1708429410;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E9Sow8wf4cLhsoNjPkxy+Vy7mK54b8EsDuIPycqqMjY=;
-        b=qdLU95zfRwyEGYmrGi26iKouguF8uJ60HB+QC3apdojiscuIPNliZ5e/PTok0YVilg
-         MLJkacTe9veKEKFHX3u6OmStYouW2aT9H6mZ36rFVOpyXpiGiqSa8KB+8FALCBjVtxMV
-         g2F62pEAZF16dsf+g4DYHl0YHjk59ywBjF4JTjaSqfhdraQbhJveRHDStjmKbUtM41OH
-         xt7IwjVrOjbZSZY7SZ/s3huTyi/hHKvPFR1QlfVXgYSIDWW5H/4eIDrqJLxXUeE5rydo
-         rniUoHKSw2cwLy65KllMZDQ8XWN5vte18cl9qkOGcRfhQHc2DkxeKBbvvPQ059I5EXjl
-         2ZfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxde7d/XYlweHBT/m2x48PQbNgyZWQxyvYl0izm//hyQqgI7gwn8ytG1RSLSginCM+njvKZOOQu5OvQ8pzlfiEaag9qB9Xg3DoFH3h
-X-Gm-Message-State: AOJu0Yzn7PtT1w65hGj7i9AXnkCkkWfsObvvbXY1zR2s/h6DrfNBZtew
-	dTmDNHcCO3IFUFMkZn5ECMu7GECRylhoBU9XFeL+4QQDZHNFoXRvZsoFYcLHoag=
-X-Google-Smtp-Source: AGHT+IG5/46zhd1eOGmh0ra4YTAm6cqkOsrOZ3nHpxyZmRoQkb4L9iG9KRCKL7XD6RvIzjKFdLIpsQ==
-X-Received: by 2002:adf:e501:0:b0:33c:ddf1:4e70 with SMTP id j1-20020adfe501000000b0033cddf14e70mr954874wrm.32.1707824610355;
-        Tue, 13 Feb 2024 03:43:30 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV7XrcP98bixIaJaWBm55q3RGYgSAE7tBhAYxKCoTsFS3k+4Ze4N9ov5S7jgh/2kJS+irBO7hxgVQEv5sDqQLLxPDbHWC/Gs9TNJlYjDEdufmt8KqWgoLUap5P3RpuWSetm000MWsh8TG+RUnCiXYaeMS5P0KNR3vebzw4AK/Q7JSo2GChThL92QnUXlhhiqm3T+6Rm3bvBKFEBzRlNWsZ+oOtKvz4oZ5nrlk648f3KJ2YpB/AX8hYJ587hDFDHo7r1dZijD51CXUPKlm5Vvhyal5Vcu8pdKF6uRZUApCiCyWoYNna6+r1jeyiDnM+GrXyNfiI2jbQ39aZMPjTPS8Zd3pV6gPE6Q7iU5e+r5dq5ve8rVNhCu75nGRzfJSoMnFhhSRik6L03/9iH7StxCOiMjhlgvJXp0QLxcfnI7mQfyKBVWxmvK2n71BqvpzozyhkCuO8AO5J3tR81TAvxXYjA7ctciW/JxNy+0RD/Pu/DIgB3TrohH6Ieb4EtEjvFx//s0BbxRWmV5YdUNG0mEtgvFkabj7dgVuJmSkIyba37uRJ9Nj4vceMwV61cZXHq4Bloh/1m9MdaDSFr4L6+ysW0lgb2UhEH255fGSjDzoKUuGFhCI24w+H3rJL0zLOVpS/KYYbMSbqL1GxJsA+mmbtlzt0e6TZAQ/d1Iwa3
-Received: from localhost ([2a01:e0a:3c5:5fb1:509b:4241:48a3:e3e0])
-        by smtp.gmail.com with ESMTPSA id m18-20020a5d56d2000000b0033b60bad2fcsm9261852wrw.113.2024.02.13.03.43.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 03:43:29 -0800 (PST)
-References: <20240213101220.459641-1-arnd@kernel.org>
- <1jbk8kk5pk.fsf@starbuckisacylon.baylibre.com>
- <c61d7daf-1b13-4ff8-aeae-7dcd8dd02131@app.fastmail.com>
-User-agent: mu4e 1.10.8; emacs 29.1
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Arnd Bergmann <arnd@kernel.org>,
- Stephen Boyd <sboyd@kernel.org>, Mark Brown <broonie@kernel.org>, Liam
- Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi
- Iwai <tiwai@suse.com>, Neil Armstrong <neil.armstrong@linaro.org>, Kevin
- Hilman <khilman@baylibre.com>, Martin Blumenstingl
- <martin.blumenstingl@googlemail.com>, Nathan Chancellor
- <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, Bill
- Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH] ASoC: meson: add helpers for clk_disable_unprepare
-Date: Tue, 13 Feb 2024 12:09:52 +0100
-In-reply-to: <c61d7daf-1b13-4ff8-aeae-7dcd8dd02131@app.fastmail.com>
-Message-ID: <1j7cj8k2se.fsf@starbuckisacylon.baylibre.com>
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="sI3SJIhg"
+Received: from francesco-nb (unknown [5.170.16.17])
+	by mail11.truemail.it (Postfix) with ESMTPA id 7B8B220A65;
+	Tue, 13 Feb 2024 12:43:32 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1707824613;
+	bh=Bp7pG2CUWQYmkgoE1nLhEi74JHI4RrXDPmnEHpNrJ3k=; h=From:To:Subject;
+	b=sI3SJIhgbHDwl3u5ptprAx4mv/QomLlV1UL3bGxsM+Uc+ijsQqz6A5hASQcWFCKAS
+	 FLHprtLXCKKEJKEKWRqKUFLJFEh//GWc6yXBgJ25pb9QdevosIZCUgTCFp2cQKvwwo
+	 m/YwfJzpg4wTj6MPSNmxUDajdFuJk4mcTwSgFi8d0jB4VK9Oc5NtWMOykHEh5SvYLD
+	 yPMhJRWrTw7vXQxm2KtkUtuTTc34KJvg6C/uw6tsyYQvzXPxLIFDUPe0Iv4FIvUDjx
+	 bdxV3F33fYc+d8Xf7+KHCMcaM5N6jEQ7IdnFdV33sYBuu1gst+uW3HNJMeOkv2LYRz
+	 CoKaCcwa6Gb9Q==
+Date: Tue, 13 Feb 2024 12:43:28 +0100
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Andrejs Cainikovs <andrejs.cainikovs@gmail.com>
+Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Aswath Govindraju <a-govindraju@ti.com>,
+	Sjoerd Simons <sjoerd@collabora.com>,
+	Andrejs Cainikovs <andrejs.cainikovs@toradex.com>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] arm64: dts: ti: k3-am62-main: disable usb lpm
+Message-ID: <20240213114328.GA6727@francesco-nb>
+References: <20240209130213.38908-1-andrejs.cainikovs@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240209130213.38908-1-andrejs.cainikovs@gmail.com>
 
+On Fri, Feb 09, 2024 at 02:02:12PM +0100, Andrejs Cainikovs wrote:
+> From: Andrejs Cainikovs <andrejs.cainikovs@toradex.com>
+> 
+> AM62 USB works with some devices, while failing to operate with others.
+> 
+> [  560.189822] xhci-hcd xhci-hcd.4.auto: xHCI Host Controller
+> [  560.195631] xhci-hcd xhci-hcd.4.auto: new USB bus registered, assigned bus number 2
+> [  574.388509] xhci-hcd xhci-hcd.4.auto: can't setup: -110
+> [  574.393814] xhci-hcd xhci-hcd.4.auto: USB bus 2 deregistered
+> [  574.399544] xhci-hcd: probe of xhci-hcd.4.auto failed with error -110
+> 
+> This seems to be related to LPM (Link Power Management), and disabling it
+> turns USB into reliable working state.
+> 
+> As per AM62 reference manual:
+> 
+> > 4.8.2.1 USB2SS Unsupported Features
+> >
+> > The following features are not supported on this family of devices:
+> > ...
+> > - USB 2.0 ECN: Link Power Management (LPM)
+> > ...
+> 
+> Fixes: 2240f96cf3cd ("arm64: dts: ti: k3-am62-main: Add support for USB")
+> Signed-off-by: Andrejs Cainikovs <andrejs.cainikovs@toradex.com>
 
-On Tue 13 Feb 2024 at 11:52, "Arnd Bergmann" <arnd@arndb.de> wrote:
+Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
 
-> On Tue, Feb 13, 2024, at 11:36, Jerome Brunet wrote:
->> On Tue 13 Feb 2024 at 11:11, Arnd Bergmann <arnd@kernel.org> wrote:
->
->> This probably pre-dates the introduction of devm_clk_get_enabled()
->> It would probably be better to use that instead of duplicating helper
->> functions which do the same thing.
->
-> Ah, I had not thought of that interface either, so you are probably
-> right that this is the best way to do it.
-> Can you send a replacement patch then and add my Reported-by?
+Francesco
 
-Sure.
-
-How may I reproduce the problem ?
-Just tried with 'Debian clang version 16.0.6 (19)', no warning.
-
-I suppose I need to add something ?
-
->
-> I also sent the same patch for drivers/nvmem/meson-efuse.c, which
-> I guess will also need the same treatment. I also checked and saw
-> that all three files already had this code in linux-6.0 when
-> devm_clk_get_enabled() got added.
->
->> If for any reason it is not possible, a common helper in clk.h would
->> preferable I think.
->
-> I can't think of anything that prevents us from using
-> devm_clk_get_enabled() here.
->
->     Arnd
-
-
--- 
-Jerome
