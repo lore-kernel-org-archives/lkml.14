@@ -1,111 +1,82 @@
-Received: from wfhigh7-smtp.messagingengine.com (wfhigh7-smtp.messagingengine.com [64.147.123.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0074222626
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 10:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5475D17567;
+	Tue, 13 Feb 2024 10:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707820041; cv=none; b=XtUMMuEsn1x61k7lHOR4laPnrcQW+SvlJ4u0yA43yQa/IiCA069qcjtMWx7tmfoeJVTiK0REyM5yuTgXGWWpSPxrYTtS5qFvSD28lxJf4GE7oNK0kHrJbVGnclBbN9LRxYR+jfjSrs1fqx9VcWuPBTSmJozXfpnqWd07E990BKM=
+	t=1707820137; cv=none; b=j7ZKdHrGyNzMVGxsn3aMLrqF5w9PyJeHHRxF7uW4XB4v99UfJ7kjms70OUMBdyPAWo9pGas6rqEdcWOBJCVTIEzMtpLnu7k5hkyb+cs79r1zc29s7jTmx4xpGe4SCnFDwjpBDoXUPw+gOEKK4YDG2VQiLPGIIMPiu7wxnJkeP/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707820041; c=relaxed/simple;
-	bh=A+IPxMsDDumipnPJZLNtkthokaGfLGk97Mz9Ox7uIiA=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=SEvHVoMkCoBSBtcqhmxdTEiuaWBiz/kWjmqnGuT2T/w6zFj3VVOXqV3KN45g0vwxOSYgkRMe8GW6DcgFD713gSMEUyu7Zi01F4KuTkKWjcciXOebhdDCIciysoTCN/YWjJo+ncVexsUtm5weyCXgXJYJXI5kGsrZRuzHg0/BxW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=YIcJJkru; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Q44GQUQD; arc=none smtp.client-ip=64.147.123.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1707820137; c=relaxed/simple;
+	bh=KELckhVrrPAn8QJQdC/3ladRTgf3KCcEhqMhtdeu0sY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=OmZyKsEO4Se5HtivWeWQWN35c6GpTQ3vOaQ5q59/pcbdnh5AZL1qVXwEm7+aMNWL5Te+sIYpGkociMtbp4aT8rwDDS+IcadBMRrLn3xLPcLplpYFRwioF9wgGn9BEgmxbaE1+wyANHGdmQYw0uTpjzjE9LsKhYFNH9m8BguG+90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q7rrdx+4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="YIcJJkru";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Q44GQUQD"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.west.internal (Postfix) with ESMTP id C25E91800087;
-	Tue, 13 Feb 2024 05:27:18 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 13 Feb 2024 05:27:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1707820038; x=1707906438; bh=mA+uWCPKsW
-	Nzn6w+caTmw+9idey2YfNF4ai4GleOvOo=; b=YIcJJkruoWMHvFQqtEX01hfHeO
-	Tzf07A2oG+/+fhDhXLSl3/9xV1uSKNxtOFSBDkDCDKId/ZbibmB24EqT3fuhXaXA
-	3UfG7ZwiRXOylW7nPJz0qo+KcIbGesZ0GWWTQtGB8/5Fhst0s4ng++RJC9OuUTwj
-	rGoJIJBz05R7oxhOXNugfFFwf0SjeIYUIN3lGgmjb8bQTC4l18CfZStz5Z8F6qCX
-	gPEOhY4izP6MNO8EJDproFdcpqKOAvLl6Dky96HT0LEXjTp6uYgAZjKjuF+NExxx
-	yeQpD/CssdxAJ+7PUGFcUHWWDagEkekQm7N5zFxQYbpv3m+L4yQyreZh8Mrw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1707820038; x=1707906438; bh=mA+uWCPKsWNzn6w+caTmw+9idey2
-	YfNF4ai4GleOvOo=; b=Q44GQUQDZMBIGLjd/2iqMgQLa9EPm8FvUOEOf24eE0q7
-	BczOnXPoT3WqD0N02W1KcyJXsiJbXZI3oZiZuktBaWyym1jYeOtl7VlREwLdM/8Z
-	FPX1vZFee97Tu84eF5wrG90IwKSSCPy1RbEnYvXyTMnXvluPvNDKOol3Tvi9Z7eL
-	IFH3TgDmiZk/TfBL1fPvnUUs3g3RUsfobiiCdU8orxjoAMRKPCFrd8gjCI5RcnB6
-	AeODb+9WgbdfiJ1n/yr0AprjTE8YZkIqvIYPyuUS6Nfwz0LY6t1VGAAvvUkzkmu6
-	7eVBQYZiHrwH3laJWCDyr4yV2sT3AQywCD9kL7Ii+w==
-X-ME-Sender: <xms:BkTLZR-kmqzY5ZOIzgr_6jVw4-mvbx-2bqVbqUgSZ_c2UwdiLgTF5g>
-    <xme:BkTLZVvX1eNOGmuCh737VAvU3VVOQMVd7x0ILNo7eSzbb2nAm7ZOkWN7pSUaL_JKS
-    4f8Ce7uyerUGjKLzcc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudehgddugecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhepofgfggfkjghffffhvfevufgtsehttd
-    ertderredtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegr
-    rhhnuggsrdguvgeqnecuggftrfgrthhtvghrnhepffehueegteeihfegtefhjefgtdeugf
-    egjeelheejueethfefgeeghfektdekteffnecuvehluhhsthgvrhfuihiivgeptdenucfr
-    rghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:BkTLZfDLzIrTd0erV5Kjoim08XyWGniRlZxIQdOJqfIxprsXHezYgA>
-    <xmx:BkTLZVfhj34ni1fiGLdgSjb694_AEndGk9aP4cqCvaB0TiHdwuV1SQ>
-    <xmx:BkTLZWPgLpKBJw0UZul2XBkM-9vW-pZ37_8IYtUsQMGNaux0CfB_sg>
-    <xmx:BkTLZTq0NFWtNRX7wCrcMrQRsf4B3xWmUz7sWQk4dcFjY5DZHg93K9Z3daA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id E8FFEB6008D; Tue, 13 Feb 2024 05:27:17 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-144-ge5821d614e-fm-20240125.002-ge5821d61
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q7rrdx+4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D7F6C433C7;
+	Tue, 13 Feb 2024 10:28:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707820136;
+	bh=KELckhVrrPAn8QJQdC/3ladRTgf3KCcEhqMhtdeu0sY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=q7rrdx+4nriD2crmR29XX7qnukNSdg0kYiRaCTcUYiqAzfKz+YEonRLqVawcgvPJW
+	 uuK0goTyBZJySTmVHHZVVs2jb8oBUPMUO2tUI7LX0Bg9EntgMb/lo5uZH0AU/xrl4Y
+	 ZSVZ9LbNSS8Mj3QSQmEHVna74EHd9csAocY7JYSTawE32saeqYly8OuT2D3isw6vSR
+	 uZ4WN0AedrMBSb86vfKQcklrUQN8W/n+92s0BeB5p638yWXDZD48ZY6C4C3lnHERYI
+	 nzDRzK0SGEwnjCaE1LLUnGo/+Dw3iaN/BvwtwYK47oHjV461a6FpATrmhN/IZRCN7r
+	 XQhXqW5TjT6EA==
+Date: Tue, 13 Feb 2024 11:28:57 +0100 (CET)
+From: Jiri Kosina <jikos@kernel.org>
+To: Manuel Fombuena <fombuena@outlook.com>
+cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
+    linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] HID: multitouch: Add required quirk for Synaptics 0xcddc
+ device
+In-Reply-To: <CWLP123MB547355BA62AD835719F60865C5492@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
+Message-ID: <nycvar.YFH.7.76.2402131128490.21798@cbobk.fhfr.pm>
+References: <CWLP123MB547355BA62AD835719F60865C5492@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <3c76ba23-e4d7-49b0-b53c-b60772a25891@app.fastmail.com>
-In-Reply-To: <20240213102139.gnfh5sq24rwu7wnp@quack3>
-References: <20240213101733.461544-1-arnd@kernel.org>
- <20240213102139.gnfh5sq24rwu7wnp@quack3>
-Date: Tue, 13 Feb 2024 11:26:57 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Jan Kara" <jack@suse.cz>, "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Jan Kara" <jack@suse.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] quota: avoid printing an uninitialized blk number
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, Feb 13, 2024, at 11:21, Jan Kara wrote:
-> On Tue 13-02-24 11:17:28, Arnd Bergmann wrote:
->> From: Arnd Bergmann <arnd@arndb.de>
->> 
->> The error path of find_tree_dqentry() now prints a variable that is
->> never initialized:
->> 
->> fs/quota/quota_tree.c:674:8: error: variable 'blk' is uninitialized when used here [-Werror,-Wuninitialized]
->>                             blk);
->>                             ^~~
->> include/linux/quotaops.h:34:41: note: expanded from macro 'quota_error'
->>         __quota_error((sb), __func__, fmt , ## args)
->>                                                ^~~~
->> 
->> Move the calculation of the block number slightly up to make it
->> show a sensible number.
->> 
->> Fixes: 223bfb57631b ("quota: Detect loops in quota tree")
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> Arnd, this should be fixed in my tree as of yesterday and I can see that
-> you've even based your patch on a fixed kernel :)
+On Sun, 11 Feb 2024, Manuel Fombuena wrote:
 
-Right, sorry about that. I did a lot of fixes yesterday and
-sent them out after making sure they did not cause any new
-failures in an overnight test build, but did not check carefully
-during rebasing.
+> Add support for the pointing stick (Accupoint) and 2 mouse buttons.
+> 
+> Present on some Toshiba/dynabook Portege X30 and X40 laptops.
+> 
+> It should close https://bugzilla.kernel.org/show_bug.cgi?id=205817
+> 
+> Signed-off-by: Manuel Fombuena <fombuena@outlook.com>
+> ---
+>  drivers/hid/hid-multitouch.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+> index fd5b0637dad6..3e91e4d6ba6f 100644
+> --- a/drivers/hid/hid-multitouch.c
+> +++ b/drivers/hid/hid-multitouch.c
+> @@ -2151,6 +2151,10 @@ static const struct hid_device_id mt_devices[] = {
+>  		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
+>  			USB_VENDOR_ID_SYNAPTICS, 0xcd7e) },
+>  
+> +	{ .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
+> +		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
+> +			USB_VENDOR_ID_SYNAPTICS, 0xcddc) },
+> +
+>  	{ .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
+>  		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
+>  			USB_VENDOR_ID_SYNAPTICS, 0xce08) },
 
-     Arnd
+Applied, thanks.
+
+-- 
+Jiri Kosina
+SUSE Labs
+
