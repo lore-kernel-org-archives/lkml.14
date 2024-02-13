@@ -1,111 +1,168 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0A84C73
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 14:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BDE56767;
+	Tue, 13 Feb 2024 14:07:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707833227; cv=none; b=Z1HywvavX6438GCR8uIArAJz9UlF1MKIkW9wGkKfAswroxkhVieHC9tKpAqhQjzqF5MJjcMWZvzU1Iykb3n3AsqiTJwyeJ8ViLov1bbQSXkL325vj2pg1cZT5dHhrATE+1Xba0tQUp8rvmJfqVE4boYsi3Yho/ILhqIjPV5Fe/w=
+	t=1707833236; cv=none; b=A7wwfHVxL38fDT81wuEB6lM4RCRKnQssm8kK17eQKJlg2tKf4XzIw/EQ/Ia1JpG1bLutJ7juEuK47rlO+Fyp2L4u4y8NHADqY6M2ziGj6J2rmnMtaELF4q1OwkqO/B9Eqt/9TuIViCh/g7d/V0EIJ6MrizTUdu1qMh2jOumQ+6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707833227; c=relaxed/simple;
-	bh=+s/OfGNMXB58P7TxwiDwAEhQ+GBlUKjDVwC55toeJVc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fDIe8ugngclywUlsgicRKGJAUX4oQ8/pidOFYhGN52F2hvPX5u/jONJH6PzyzjAxJ9hobRInRxoySAihzFs1hEVmgA7W3nbtLz9to40xVRGTGmIsdLWs+NHshdKSpISPSkmDoaNBQ3nCd9ZGCyHuLKYMTgOcu8QE01QMDfNt9gE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=YvFTgYPY; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="YvFTgYPY"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-410db155e57so14596595e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 06:07:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1707833224; x=1708438024; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OznreBbGn8I8qErYNCh7MV7tKWfbq+5twYL5yapVuHA=;
-        b=YvFTgYPYeSpNbdCxOjklcltk58yg2oZROYr/l5C+nIz2X8Hgu4B9aRRlvh6JTvQVqN
-         hiYGFHSWtsqFITWZ0B0oUy43NTU6PZgoY6aO/DQdkjch48NbKDtUHqb0R90CI6N4uD8O
-         Du/Ji6c0IoELV/VN/aRI4zWwvoiEvzoIfIixGgLDeo1+pqK+bLCN5KtOv7qGvdxuSQB8
-         Hg54V1Fzi/TFWW+9Uwa53OIAu1TGmsui8Fe8xRMykXCrZUTtUWglBoDInWYmcDFL5vhi
-         90eUObiU3HFzUciPhj3y2wuGTEJY50zVOypf0Eg0d6vJy9thB90VTDXJ+Hx3j7Ia6ZkS
-         afOg==
+	s=arc-20240116; t=1707833236; c=relaxed/simple;
+	bh=hCy8XKbHlR7uQt0hNNtGeqc9sm+P7YSZ8tDErY2v34Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sCbF/aSIVZXfeujnxOzt5LReJd316ZpxSQC4f737kyaX1sA0/+7vEaVHcoSqVfNmIp+KIh/uviRV3YQB6fPEFPXwMBAAv7eaE915G4qMUZqtbYEyZRIMWPnDy6blun47Ylia1I4GKLVNdWUrMLjngm+nsqoz3duaeDGNBw4lhAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3c03fb1d806so141655b6e.0;
+        Tue, 13 Feb 2024 06:07:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707833224; x=1708438024;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OznreBbGn8I8qErYNCh7MV7tKWfbq+5twYL5yapVuHA=;
-        b=aQDq7WmkM4v0/bkg/yewSu+xzWuJ7Vqs8Er84330uCG0cIzYrlssF0PE92mlB23h4N
-         N735RC4LxTdgW+N4aoVRSDMIQUqbv5bdaU2v7JIHYXljSEgEdLaWZ3ycXCJ5E9TsnTuK
-         G9xvPSjHKtv6poO5pycpxgQqLelYUMGPBkwaWhci3FpORtfp7rBhfe6joZn5YrBpyugv
-         tlZ6vaGV2RguWjlJMB027AHcb8G3/MYIJSSrrs9i+JTAO7iaU+o/4AOmM1FNtURs0lPW
-         XaEtLVekA73jfGMVRoIF//3S4OYR5cQ8J3fEFztIw650DMud7fu0xZAMu9lbrEtroD3M
-         ccOg==
-X-Forwarded-Encrypted: i=1; AJvYcCUATQqNmr3vYbc8VNtiHndOJWTzEbYhvDtGsFJcG8nT95qbXd8p/iMHzjDAYaJCuPu8X2M4k/dBmdlXYJQGToMlEgjIrdliAXQQC2KZ
-X-Gm-Message-State: AOJu0YzCgz4lMZaJJQyy1a60M6LXK2ax4b7onwfv5v7wc+wYQQu85Epe
-	MeStyCQSfo2GrUHD8WosO60ARTu2F7+qpMWkV3GNA/GgVFf7jYGHnLjxjWu7DiKb6p6TyyB/2gh
-	Mgg/T+w==
-X-Google-Smtp-Source: AGHT+IHgaCsw+bI3YnMtmRZRxOhZhIBpjtyhecfn4YghOjw9O5dxyxlKSEdfcJ9dLFmj9HUOdbCPFA==
-X-Received: by 2002:a05:600c:1c98:b0:410:1587:7c0 with SMTP id k24-20020a05600c1c9800b00410158707c0mr8585573wms.31.1707833224356;
-        Tue, 13 Feb 2024 06:07:04 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXPlTlgcRhS132bjJpvP127vmj2lPugovqokaqg0rSgIYimGTm7LoF/kfRoriLQM2mmmzfw93YScwoshSD8YO0n/srrSuAnufpdYFdq55rAiqi2z8k4zctqQ++Z/VQxn8wANY36BXIaAxJlBh9Hzw3jtYQdFCD4k7D4KfmNY0M8czaEcVuZO8MT0H9F0AXQgR1sJTpc74Sxq5ZJhwOVvlm+
-Received: from fedora.fritz.box (aftr-82-135-80-242.dynamic.mnet-online.de. [82.135.80.242])
-        by smtp.gmail.com with ESMTPSA id f13-20020a05600c154d00b0040fb783ad93sm11744683wmg.48.2024.02.13.06.07.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 06:07:02 -0800 (PST)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: Nas Chung <nas.chung@chipsnmedia.com>,
-	Jackson Lee <jackson.lee@chipsnmedia.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] drivers: wave5: Remove unnecessary semicolons
-Date: Tue, 13 Feb 2024 15:04:41 +0100
-Message-ID: <20240213140441.8640-1-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1707833234; x=1708438034;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lzEZhYWKOOpUs1fPYieciYVVHUhs9BpFyMBaC1l2dEU=;
+        b=gwAezByA9barWyTtDjUCufYzPODzpppKiTp2Xk27Hb/XUeBfnR2dvUmucGatJsM5c2
+         fp7PX1gIcFrRTPiLnZ+/Y+wfN00bMAxz31oWHPVhoB+pF0K+bFwJ+JmXa52sqRHmChoh
+         sfzrtBy1VGIw8YlIwl7xoJAo0BT4a9oLm7L7NN0JQRnggvvm8nJzw4HasNdEsbArHKqe
+         9aLV+J2bz4T/+yhuYxY6zhCOXNfpT3zlAi8CR7xgvj2ynyIu46sEqqcGqE5rg67lTyvs
+         7/tfqeOaIa4En9hP8UU7OQNrL14aVjAO3DRp64wNCi90mogbvFuJO/4mLHer3PRlaobJ
+         C33w==
+X-Gm-Message-State: AOJu0Yzo9eHh1u8rFCHJzNl93meaM6AkV1hBZl/5EAZUWKUPknpe0XwA
+	8bmP3hV+kWzzW07k1uZyGAXWFXcO43jsWYKD/HPgekRAtiVuu6AwmO/PRxFvwBa2mCXEcsvdVgN
+	M599ojxL11h/qgBCEooOnsD2kp7AA5Uy9
+X-Google-Smtp-Source: AGHT+IFU9zV/V2+8Z/Xgega9DZ8eVpFDVnakZiWISyrS/fAq4AnPSgcwcz+5TJGmeh9nReRKH596xl5InZWQT6+R8VY=
+X-Received: by 2002:a4a:a6cd:0:b0:59c:d8cd:ecee with SMTP id
+ i13-20020a4aa6cd000000b0059cd8cdeceemr8771273oom.1.1707833233837; Tue, 13 Feb
+ 2024 06:07:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240210175922.137704-1-clamor95@gmail.com> <20240210175922.137704-2-clamor95@gmail.com>
+In-Reply-To: <20240210175922.137704-2-clamor95@gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 13 Feb 2024 15:07:02 +0100
+Message-ID: <CAJZ5v0j3f9xKpE0XBNrv33u68zo5fasEP5yQU_K5qU2oz7RwgA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] thermal: thermal-generic-adc: add temperature
+ sensor function
+To: Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Remove unnecessary semicolons reported by Coccinelle/coccicheck and the
-semantic patch at scripts/coccinelle/misc/semicolon.cocci.
+On Sat, Feb 10, 2024 at 6:59=E2=80=AFPM Svyatoslav Ryhel <clamor95@gmail.co=
+m> wrote:
+>
+> Existing thermal-generic-adc states to be an adc-based thermal
+> sensor, which is not entirely true. It provides a thermal sensor
+> cell, but it does not provide an IIO sensor cell, which would
+> benefit devices that use adc sensors to detect temperature and
+> need a custom calibration table.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- drivers/media/platform/chips-media/wave5/wave5-hw.c      | 2 +-
- drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+After reading this changelog and the subject I have to
+reverse-engineer the patch to actually find out what's going on.
 
-diff --git a/drivers/media/platform/chips-media/wave5/wave5-hw.c b/drivers/media/platform/chips-media/wave5/wave5-hw.c
-index f1e022fb148e..2d82791f575e 100644
---- a/drivers/media/platform/chips-media/wave5/wave5-hw.c
-+++ b/drivers/media/platform/chips-media/wave5/wave5-hw.c
-@@ -2315,7 +2315,7 @@ static bool wave5_vpu_enc_check_common_param_valid(struct vpu_instance *inst,
- 				param->intra_refresh_mode);
- 			return false;
- 		}
--	};
-+	}
- 	return true;
- 
- invalid_refresh_argument:
-diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c b/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
-index f29cfa3af94a..8bbf9d10b467 100644
---- a/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
-+++ b/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
-@@ -92,7 +92,7 @@ static int switch_state(struct vpu_instance *inst, enum vpu_instance_state state
- 		break;
- 	case VPU_INST_STATE_STOP:
- 		break;
--	};
-+	}
- 
- 	dev_dbg(inst->dev->dev, "Switch state from %s to %s.\n",
- 		state_to_str(inst->state), state_to_str(state));
--- 
-2.43.0
+In particular, are there any user-visible changes of this and if so,
+what are they?
 
+> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+> ---
+>  drivers/thermal/thermal-generic-adc.c | 57 ++++++++++++++++++++++++++-
+>  1 file changed, 56 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/thermal/thermal-generic-adc.c b/drivers/thermal/ther=
+mal-generic-adc.c
+> index 1717e4a19dcb..7e87d928512c 100644
+> --- a/drivers/thermal/thermal-generic-adc.c
+> +++ b/drivers/thermal/thermal-generic-adc.c
+> @@ -7,6 +7,7 @@
+>   * Author: Laxman Dewangan <ldewangan@nvidia.com>
+>   */
+>  #include <linux/iio/consumer.h>
+> +#include <linux/iio/iio.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+> @@ -73,6 +74,60 @@ static const struct thermal_zone_device_ops gadc_therm=
+al_ops =3D {
+>         .get_temp =3D gadc_thermal_get_temp,
+>  };
+>
+> +static const struct iio_chan_spec gadc_thermal_iio_channel[] =3D {
+> +       {
+> +               .datasheet_name =3D "temp",
+> +               .type =3D IIO_TEMP,
+> +               .info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW),
+> +               .indexed =3D 1,
+> +               .channel =3D 0,
+> +       }
+> +};
+> +
+> +static int gadc_thermal_read_raw(struct iio_dev *indio_dev,
+> +                                struct iio_chan_spec const *chan,
+> +                                int *temp, int *val2, long mask)
+> +{
+> +       struct gadc_thermal_info *gtinfo =3D iio_priv(indio_dev);
+> +       int ret;
+> +
+> +       if (mask !=3D IIO_CHAN_INFO_RAW)
+> +               return -EINVAL;
+> +
+> +       ret =3D gadc_thermal_get_temp(gtinfo->tz_dev, temp);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       *temp /=3D 1000;
+> +
+> +       return IIO_VAL_INT;
+> +}
+> +
+> +static const struct iio_info gadc_thermal_iio_info =3D {
+> +       .read_raw =3D gadc_thermal_read_raw,
+> +};
+> +
+> +static int gadc_iio_register(struct device *dev, struct gadc_thermal_inf=
+o *gti)
+> +{
+> +       struct gadc_thermal_info *gtinfo;
+> +       struct iio_dev *indio_dev;
+> +
+> +       indio_dev =3D devm_iio_device_alloc(dev, sizeof(struct gadc_therm=
+al_info));
+> +       if (!indio_dev)
+> +               return -ENOMEM;
+> +
+> +       gtinfo =3D iio_priv(indio_dev);
+> +       memcpy(gtinfo, gti, sizeof(struct gadc_thermal_info));
+> +
+> +       indio_dev->name =3D dev_name(dev);
+> +       indio_dev->info =3D &gadc_thermal_iio_info;
+> +       indio_dev->modes =3D INDIO_DIRECT_MODE;
+> +       indio_dev->channels =3D gadc_thermal_iio_channel;
+> +       indio_dev->num_channels =3D ARRAY_SIZE(gadc_thermal_iio_channel);
+> +
+> +       return devm_iio_device_register(dev, indio_dev);
+> +}
+> +
+>  static int gadc_thermal_read_linear_lookup_table(struct device *dev,
+>                                                  struct gadc_thermal_info=
+ *gti)
+>  {
+> @@ -156,7 +211,7 @@ static int gadc_thermal_probe(struct platform_device =
+*pdev)
+>
+>         devm_thermal_add_hwmon_sysfs(&pdev->dev, gti->tz_dev);
+>
+> -       return 0;
+> +       return gadc_iio_register(&pdev->dev, gti);
+>  }
+>
+>  static const struct of_device_id of_adc_thermal_match[] =3D {
+> --
+> 2.40.1
+>
