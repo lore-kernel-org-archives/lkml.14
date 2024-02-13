@@ -1,161 +1,84 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD505EE62;
-	Tue, 13 Feb 2024 14:57:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AEC15EE7E
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 14:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707836280; cv=none; b=HOxMmZ4dHAHa8MqUiX42FhBrDFu87ahuHgEM2OD7nhbZCKWiN7UJTSjKIvOT+fcS348p5eJZLVEppmDNxBoj6BGtEjwRJJ2e6JLHCeWOu6wcMcBQpCDaAp/DUhsE7AVH2o+C0USFHdpSWCz0HL6dkgudX27xNqBEcb2d0LriE3c=
+	t=1707836284; cv=none; b=HSJdwOvanl735xAkcUTWXv6dCpDGZa8zyYjJk9KK2WINttHBBfobSFY9g2Lk4EyJkeHKR56XNq5v1yUa7hxUSMrvBaLdTpFSX2lHcprYtSx1Cu/6le6LDdY8c97uEJifGqSnLPD72cpkrdmvHKKdeEr2zYJVUJ3ovuJeoOXHT7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707836280; c=relaxed/simple;
-	bh=Beylajy+OD5xwTFO0kWRd7nCaF7rx/fnxJEH3rZBbAE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aMF0TIYOUdgb2w3hd/k2Bcizi+TE6SXK3oS/ScmoKfNSZQ7L0XVyNBXYBlpwOnvbfR0fb48UGbmULfjuY9entyanndIz4CR6T2R6O6KAwKZkBHWMXJ/8m3m+4Daa46rgwFJ+2qm2rkTviXhBJvf3ngsVn3SKk5nI+swer5mc+zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=axsbd6Ky; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707836284; c=relaxed/simple;
+	bh=SI1JYaUoHkOLmojjYZ95VrhJvrphCqBsyJ0cAy/Is3o=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=BhHyVrhxdGei+5x4ecd7OwaA5hGQ8u1ARFxzAX+sRvk007G7lhAmrTzzrgR1UPOAjnlj5UPskgs14eOp0e6UWFGMLue+IOhkaugJSqWBa/slkM7LKYcWh4D8x8rpno2kTFqe5re4K5SVNq7yeLzXwLn+2BZdicBpCZDLAOtpOgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ericchancf.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rTcI9H8v; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ericchancf.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="axsbd6Ky"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-562131bb958so201105a12.2;
-        Tue, 13 Feb 2024 06:57:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rTcI9H8v"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6047a047f58so80459797b3.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 06:58:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707836277; x=1708441077; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Hx/0sTmo97XnxiVkWjsDz4DVqW2/rhqvFLAhp3VXV20=;
-        b=axsbd6KyEK/QxePkWDzeP82DJgLqa9oz6YxBcF/hao+ZgoTUncU4PSSH4VVyf9Sp0A
-         Mi1zLHXXPJgAsU3Hwlc0L7dISSuLmrtEN3M0rNTcT6vct4LLmnsR310+ognqxChEbEyM
-         8gbnA3amZLEYmuTUC0IUeF5IMtK4IV/ueL7abKG6QI/WOnWkrXL8sTFct5Y2lc0ZBrNy
-         3I+Jptk8WhKlE4I+BgnI8qiUEDJ9zhQhy0JV4/Xb4ckcpnu92MEMNOoV4sdBLSreifIu
-         ymzhA1pGASzbbCvvDJTPWojU/4kUjMkPj+L2arWL9r4NoWAt3UEH276muDeFkUbyzaSS
-         khtw==
+        d=google.com; s=20230601; t=1707836281; x=1708441081; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qJbzO1t7Di7Fc9yeiU0bRlmcKokfI8GJJTKI/qQrGOk=;
+        b=rTcI9H8vybwqA5czMbxCEXIrcVxlyhZXu6gLSdSwojLJzIhmLGE//3jM+xDi4w6tRD
+         wxS5B2EGDmQdWQoUHuXdTcc2E8WTgeJmGrDwpdb0eirs1XjJ1kC/yX6igGxY7RwvFpN2
+         iypG13uXZl+l0yQI7iGiHBXCDuSSSJu8JRYRu7kFoAvxHjZJt6zx4mx6W+zf3LJW1pba
+         s22H8g1VcSAxAeL4gcJPAMIguqmmMvufJFab6hhKWWvs6zV3vLJeHvA7HBuTgNGMTlAY
+         aXjcOe1FqW7cuMVh1s1GH5SmS5bopNwFdkIo0s/rb+CPOZKSvKJMBfPCfcpp7QFKTcQv
+         SeIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707836277; x=1708441077;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Hx/0sTmo97XnxiVkWjsDz4DVqW2/rhqvFLAhp3VXV20=;
-        b=d4JH23ugE9zOq9dsCSOcA3jcT8afhZKwkp3FioF4b45Yg2Jp1XG0pyKCwH3CpJO4wc
-         1IeGCgsYvwM4mU9bgU3tViVpYggFPcQZSTd6cy4Rk1NRAR/pEmwmHFD7PtFMihO1Nzik
-         HYEYrcq36acCD8bgh+Sxx91GRmwx5hrlGjOwBWJ9kgycrP+6SIEn1/9Ydi622zphWpzq
-         wqg1vA8uas2TlPqdU43JW5azXdGEZY89oQCIWLUun1JxsQlTYB9rZrmXbx+0EWq6wUDV
-         iv/VANq7EQmdb2pYaf4vUlPMcf3Z3UpUDPsao/BNBvreM4qpomgO7QMJXLyOwQJq+nBQ
-         jdNg==
-X-Forwarded-Encrypted: i=1; AJvYcCVygQ+j/Qu3D6noTJbEG6+bgwle3gODbImLMi4va4qSRAUkgWneBDhm5O1fR3zfI3h2df5AUa/qzKniZTRSUhj9nHm1q31laC6yP5SYemAeigFVeEK9iu5FdF6uZ968gLFeYRn5Sfjx2M2PVrNFb+OJLy/pMOW4Ae15KboOYvVIUgU8+rI=
-X-Gm-Message-State: AOJu0Yw+BJklzn3RemBTKtzapxdfpDH4hZ5ll6Mnf6J4sy6RnffyU5Lh
-	60xMrXOncfSvHd/LGLSX/ZcjQoHRUo5T0q167OEI3L4JQ9m0w1vJfG3D759OX94IUo76
-X-Google-Smtp-Source: AGHT+IFQ/tL3dvPNh3W0cUOuqyBlE6gW5LNl+XlyXHBhQJpI07z8Sq1dDKE9jE5kNBCmlfhbs0VpHw==
-X-Received: by 2002:a05:6402:1812:b0:55e:b942:aaab with SMTP id g18-20020a056402181200b0055eb942aaabmr7519608edy.23.1707836276969;
-        Tue, 13 Feb 2024 06:57:56 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWypHjMnO1tuyvO0Jc8gaeeWc89Zuvx2zLZzWB9TDSem3tXpVAThl8CHhQYulq2/2yQCS0Nt8wmITLnzGh4+rkW0TcuFFTipUkXZSYYtlWUBOAe4ThIDtifOrhsakG9Gf4Cku2+3TeIkDN8rVe+UPQgFcmziApfKPiZu2mDmA5dxEv1gwU7AXNaW6dO1PJnEvgusgDxxoN5s7Nb6OrvalNhi6Wu5W+ciCH9JLxI8rJPSgQc63dU0vKBFWH+60OyCFMS/IxHwo2+sZEnjGY6ECzb58cIn9XBTRFWEZS4DWJNiwlymS8GwG7MG6IsHv8+ylVbeEHshOOerpTk8xvbwJ66Yd+BFyQqsEiEMiCcOa6ZWrcVVPRpLL9t8Tg4SWv0tgXgl68xosRYeV39r6thwo8P49L8YYJq/nUtXUWsYarb9wuSydGbtM3vUXIoFC1IeMBCjH8pJkiPcJyjMyd9gGD/+ibYAIWjnUPQ
-Received: from ?IPv6:2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47? (p200300f6ef1b2000944ccbc71e1c2c47.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47])
-        by smtp.gmail.com with ESMTPSA id cb18-20020a0564020b7200b0055f50417843sm3755120edb.22.2024.02.13.06.57.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 06:57:56 -0800 (PST)
-Message-ID: <48a86fa6908a2a7a38a45dc6dbb5574c4a9d7400.camel@gmail.com>
-Subject: Re: [PATCH v2 2/2] of: dynamic: flush devlinks workqueue before
- destroying the changeset
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>
-Cc: Nuno Sa <nuno.sa@analog.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Frank Rowand <frowand.list@gmail.com>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, 
- linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-Date: Tue, 13 Feb 2024 16:01:15 +0100
-In-Reply-To: <20240213145131.GA1180152-robh@kernel.org>
-References: 
-	<20240205-fix-device-links-overlays-v2-0-5344f8c79d57@analog.com>
-	 <20240205-fix-device-links-overlays-v2-2-5344f8c79d57@analog.com>
-	 <aed988a09cb4347ec7ac1b682c4ee53b7d2a840b.camel@gmail.com>
-	 <20240213145131.GA1180152-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+        d=1e100.net; s=20230601; t=1707836281; x=1708441081;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qJbzO1t7Di7Fc9yeiU0bRlmcKokfI8GJJTKI/qQrGOk=;
+        b=eTEbabmZiyzLNXxkmX633KbnI1h95pMjj11XK/zZn6Oh8YvwQ6e4SK810DKr3snCse
+         XDnA1EVU535S4q2aHFfsa68v94/PLEGuH+XwnLMPsZonb7CD3aNOXh43L5YkJfmbvagJ
+         V9W3aydCMjqsODWiq8o4wJlMY24IZyT6IXfn4SxGp5Ol0G4EPzmNpK2Raq6xcKMwsEsL
+         8TSKFQV5aFFll/9KhgQ4oB3N9OQyhztAIZ12GMaczPs8AwVbOb2b8NfAbF+lOmFaJONe
+         taVjLPBecGgXgOmxOejBE2J4+j/XwucMalQXZj2slSGMptaBDil9zI33RU6k3eSdMOpV
+         HD7g==
+X-Forwarded-Encrypted: i=1; AJvYcCWgP0z7aOZT6PbfmHHewfKLOD2KdLW4wpk3ARIp2c7fPQ50E3MSEGfdQ2xygLzPBovxO07MZxSGkCP3vLNK2ncBpV+XgpYddiRvy6Dc
+X-Gm-Message-State: AOJu0YyFuDRSfRvOG1HSgG6zOSDK0VNAy4zQQLy1tWM0dGpkLzSNjiq8
+	DTpOKUa3ce5fjCf7xGoLY5vheBEk9jNNzy2nVeAGqvZdsCdjuAEfeVDTVxa9ha3RyTYXDQJtr5Y
+	ngZdxw8QpZgvd54M9vA==
+X-Google-Smtp-Source: AGHT+IESdS8iWPEKgDoh6+53rMi+VNaoK022Qj/k/mqXr7o3EiEDCIxvbGXXPRaKlmahvRCe3k+zmaFHs50bMdLf
+X-Received: from ericchancf.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:4139])
+ (user=ericchancf job=sendgmr) by 2002:a05:6902:1505:b0:dc7:48ce:d17f with
+ SMTP id q5-20020a056902150500b00dc748ced17fmr2564940ybu.10.1707836281481;
+ Tue, 13 Feb 2024 06:58:01 -0800 (PST)
+Date: Tue, 13 Feb 2024 14:57:53 +0000
+In-Reply-To: <ZctGwaTnEfkum50a@andrea>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <ZctGwaTnEfkum50a@andrea>
+X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
+Message-ID: <20240213145753.2423739-1-ericchancf@google.com>
+Subject: Re: [PATCH v2] riscv/fence: Consolidate fence definitions and define __{mb,rmb,wmb}
+From: Eric Chan <ericchancf@google.com>
+To: parri.andrea@gmail.com
+Cc: aou@eecs.berkeley.edu, conor.dooley@microchip.com, ericchancf@google.com, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	palmer@dabbelt.com, paul.walmsley@sifive.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 2024-02-13 at 08:51 -0600, Rob Herring wrote:
-> On Mon, Feb 12, 2024 at 01:10:27PM +0100, Nuno S=C3=A1 wrote:
-> > On Mon, 2024-02-05 at 13:09 +0100, Nuno Sa wrote:
-> > > Device links will drop their supplier + consumer refcounts
-> > > asynchronously. That means that the refcount of the of_node attached =
-to
-> > > these devices will also be dropped asynchronously and so we cannot
-> > > guarantee the DT overlay assumption that the of_node refcount must be=
- 1 in
-> > > __of_changeset_entry_destroy().
-> > >=20
-> > > Given the above, call the new fwnode_links_flush_queue() helper to fl=
-ush
-> > > the devlink workqueue so we can be sure that all links are dropped be=
-fore
-> > > doing the proper checks.
-> > >=20
-> > > Signed-off-by: Nuno Sa <nuno.sa@analog.com>
-> > > ---
-> > > =C2=A0drivers/of/dynamic.c | 8 ++++++++
-> > > =C2=A01 file changed, 8 insertions(+)
-> > >=20
-> > > diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-> > > index 3bf27052832f..b7153c72c9c9 100644
-> > > --- a/drivers/of/dynamic.c
-> > > +++ b/drivers/of/dynamic.c
-> > > @@ -14,6 +14,7 @@
-> > > =C2=A0#include <linux/slab.h>
-> > > =C2=A0#include <linux/string.h>
-> > > =C2=A0#include <linux/proc_fs.h>
-> > > +#include <linux/fwnode.h>
-> > > =C2=A0
-> > > =C2=A0#include "of_private.h"
-> > > =C2=A0
-> > > @@ -518,6 +519,13 @@ EXPORT_SYMBOL(of_changeset_create_node);
-> > > =C2=A0
-> > > =C2=A0static void __of_changeset_entry_destroy(struct of_changeset_en=
-try *ce)
-> > > =C2=A0{
-> > > +	/*
-> > > +	 * device links drop their device references (and hence their
-> > > of_node
-> > > +	 * references) asynchronously on a dedicated workqueue. Hence we
-> > > need
-> > > +	 * to flush it to make sure everything is done before doing the
-> > > below
-> > > +	 * checks.
-> > > +	 */
-> > > +	fwnode_links_flush_queue();
-> > > =C2=A0	if (ce->action =3D=3D OF_RECONFIG_ATTACH_NODE &&
-> > > =C2=A0	=C2=A0=C2=A0=C2=A0 of_node_check_flag(ce->np, OF_OVERLAY)) {
-> > > =C2=A0		if (kref_read(&ce->np->kobj.kref) > 1) {
-> > >=20
-> >=20
-> > Hi Rob and Frank,
-> >=20
-> > Any way you could take a look at this and see if you're ok with the cha=
-nge
-> > in the
-> > overlay code?=20
-> >=20
-> > On the devlink side , we already got the ok from Rafael.
->=20
-> Didn't Saravana say he was going to look at this? As of yesterday, he's=
-=20
-> also a DT maintainer so deferring to him.
->=20
+Hi Andrea,
 
-Yeah, I did asked him but I guess he never had the time for it... Saravana,
-could you please give some feedback on this? I think the most sensible part=
- is
-on the devlink side but I assume this is not going to be merged without an =
-ack
-from a DT maintainer...
+  Thank you for reviewing my patch! I appreciate the feedback.
+  Referring to your suggestions, the final result is as follows:
+    1/4 - riscv/barrier: Define __{mb,rmb,wmb}
+    2/4 - riscv/barrier: Define RISCV_FULL_BARRIER
+    3/4 - riscv/barrier: Consolidate fence definitions
+    4/4 - riscv/barrier: Resolve checkpath.pl error
 
-- Nuno S=C3=A1
+  I've updated patch v3[https://marc.info/?l=linux-kernel&m=170783431129245]
+  Please let me know if you have any further questions or suggestions.
+
+Sincerely,
+  Eric Chan
