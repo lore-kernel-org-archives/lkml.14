@@ -1,148 +1,97 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95ED05DF1F
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 15:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568C05DF22;
+	Tue, 13 Feb 2024 15:28:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707838103; cv=none; b=WlzmSOxbeB2bF4AZ8rGghhG13opwYrMug2amgeeFTLTCkl0X2Kjo+Fwa5zSXNfSWljjl6zZiycrpyTN9nwYS8YDBHTc256uZbnpxVWsFLe3WCyLFTrO5rm3/yBtXKqSVdRwO73PTsrE4BQpeoTWnbHU4QE55K3Ki74sa2iBn2bw=
+	t=1707838117; cv=none; b=XiCpCy8r+6gMmY56UDW1lediErcK19EKJX5IPTqPcdXzK2hhwLJSsagP8Ho32nKYaNOLpNAXIEKoVxzfAgq0wAgy92dz5ZKohNPmxNbXWEQF+2uhaijsHns7/XOuKOKtT7ufDm6roOk30xcGni7DTGB0lfx2VTM28ldKJDYGvxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707838103; c=relaxed/simple;
-	bh=Rr2j/IFiXol9Mw+JdHIp1YqM70+RP6dRKHr/Kkpocsk=;
+	s=arc-20240116; t=1707838117; c=relaxed/simple;
+	bh=fXFCmah43C9aMIn+5teU6Cd/edZQCfiYfF89jrIEcqg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N8vUxzhF6Z+N7rjmSPWhEjDXI1+DN6ayD0qThWbibIQJaQ8XbFPTp59WR2/xQsJ8w+NRNflBMb+rfYexWeJeCmKwhoKQ/c6xamLeB9fn5lGit2Nn/u3tgqDdXzXLVF5mI27KERa+68u955asG9nsCQhGepmnSvaqz9v+D/L6Das=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=s9snqPdm; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3G41LElH; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=s9snqPdm; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3G41LElH; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=GxRcHIkuX23Lg9FmFn4VWIop22Zb7xaApY4saXnSgZ+1/zmmIugwxc5Epf5cYP3voWK6xoi6Y6vb9qEp3tCDnM8E3UEj5V35GEEdABhYOiVwt6vJR31SlqrtKMatr1SyYquksRTKvkajkq1hGs6BpsShVYZ6hXJM+Gl6cgbnqVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E8Dmtv81; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="s9snqPdm";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3G41LElH";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="s9snqPdm";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3G41LElH"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id BC0C121F56;
-	Tue, 13 Feb 2024 15:28:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707838099; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UOqyyr9J8HQa/t+lFwrZoSXmef4Harx/aN0fYbsHfuw=;
-	b=s9snqPdmjc0zE/IWEh7KNMpJIvChwViTVyraSTzNTLOzzr/0Onf6O/x11sPa27GJ5kiIcs
-	b3xrhw3zQOaSF8yUwuC2jzIPRRfSCJOuqhhY5an0VrmBP7BSW8J0rQ4+FTM8+m+dmLfnms
-	Iq73rl3G2QCAZhVOgNzASXinHvaiyGQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707838099;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UOqyyr9J8HQa/t+lFwrZoSXmef4Harx/aN0fYbsHfuw=;
-	b=3G41LElH0mWmFp3mfaiiLSZLKdMgQ/TyT4p978X73j3rv+uO5b5gweuImbQbibhiMBr+O8
-	ZQtb4hH1E45S5ICg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707838099; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UOqyyr9J8HQa/t+lFwrZoSXmef4Harx/aN0fYbsHfuw=;
-	b=s9snqPdmjc0zE/IWEh7KNMpJIvChwViTVyraSTzNTLOzzr/0Onf6O/x11sPa27GJ5kiIcs
-	b3xrhw3zQOaSF8yUwuC2jzIPRRfSCJOuqhhY5an0VrmBP7BSW8J0rQ4+FTM8+m+dmLfnms
-	Iq73rl3G2QCAZhVOgNzASXinHvaiyGQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707838099;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UOqyyr9J8HQa/t+lFwrZoSXmef4Harx/aN0fYbsHfuw=;
-	b=3G41LElH0mWmFp3mfaiiLSZLKdMgQ/TyT4p978X73j3rv+uO5b5gweuImbQbibhiMBr+O8
-	ZQtb4hH1E45S5ICg==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 4220513A0E;
-	Tue, 13 Feb 2024 15:28:19 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id kxJfC5OKy2ULfAAAn2gu4w
-	(envelope-from <osalvador@suse.de>); Tue, 13 Feb 2024 15:28:19 +0000
-Date: Tue, 13 Feb 2024 16:29:28 +0100
-From: Oscar Salvador <osalvador@suse.de>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>,
-	Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Alexander Potapenko <glider@google.com>
-Subject: Re: [PATCH v8 2/5] mm,page_owner: Implement the tracking of the
- stacks count
-Message-ID: <ZcuK2I6ZwFwFX-G5@localhost.localdomain>
-References: <20240212223029.30769-1-osalvador@suse.de>
- <20240212223029.30769-3-osalvador@suse.de>
- <8ff46f99-d167-448f-9aae-a634b8aae4d0@suse.cz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E8Dmtv81"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED22EC433C7;
+	Tue, 13 Feb 2024 15:28:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707838116;
+	bh=fXFCmah43C9aMIn+5teU6Cd/edZQCfiYfF89jrIEcqg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=E8Dmtv81ZcP76/zSKrbRvU33+SY/N/PJY4WzV8EW5uVFBNPqsgkJOgPd9bTm96C64
+	 qPaAueqNdetNygWN4sruZd9Z8lbXrIVCSK+wNzfaX0Z+ngt2bGEtAPGbreSHdSm804
+	 xTXtCB/1xKGcbw44vNsmR0VYXQOYZ2unnqxZiEakTev2dgKjjssnP3TvVNisiut/xM
+	 dLBcLI5FqYhtlOX/BiC1wrNuKyYakSfRTkFuQJBj6ZkeRULfI+5JXoab5kRDamm8X8
+	 WwSKGh1vh7owfMC9O3Wq+DAGPr1vuaJAeMaBGtmhn+ew3l1b05CZNuleQ6ykCqWchS
+	 CD4Y5yvrAu8OQ==
+Date: Tue, 13 Feb 2024 15:28:31 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: =?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
+	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Dhruva Gole <d-gole@ti.com>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+Subject: Re: [PATCH] spi: spi-mem: add statistics support to ->exec_op() calls
+Message-ID: <69f023bb-2844-496f-9f3f-4e2e80129d33@sirena.org.uk>
+References: <20240209-spi-mem-stats-v1-1-dd1a422fc015@bootlin.com>
+ <b0844e5a-ee4b-4608-99a1-877660e01d57@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="MMftTTIZEnYjxm6P"
 Content-Disposition: inline
-In-Reply-To: <8ff46f99-d167-448f-9aae-a634b8aae4d0@suse.cz>
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spamd-Result: default: False [-5.44 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 REPLY(-4.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCPT_COUNT_SEVEN(0.00)[8];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[linux-foundation.org,vger.kernel.org,kvack.org,suse.com,google.com,gmail.com];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-1.34)[90.43%]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -5.44
+In-Reply-To: <b0844e5a-ee4b-4608-99a1-877660e01d57@linaro.org>
+X-Cookie: Does not include installation.
 
-On Tue, Feb 13, 2024 at 02:42:25PM +0100, Vlastimil Babka wrote:
-> On 2/12/24 23:30, Oscar Salvador wrote:
-> >  	__set_page_owner_handle(page_ext, handle, order, gfp_mask);
-> >  	page_ext_put(page_ext);
-> > +	inc_stack_record_count(handle);
-> 
-> What if this is dummy handle, which means we have recursed in page owner,
-> and we'll by trying to kmalloc() its struct stack and link it to the
-> stack_list because it was returned for the first time? Also failure_handle.
-> Could you pre-create static (not kmalloc) struct stack for these handles
-> with refcount of 0 and insert them to stack_list, all during
-> init_page_owner()? Bonus: no longer treating stack_list == NULL in a special
-> way in add_stack_record_to_list() (although you don't need to handle it
-> extra even now, AFAICS).
 
-Good catch. I did not think about this scenario, but this could
-definitely happen.
-Yeah, maybe creating an array of 2 structs for {dummy,failure}_handle
-and link them into stack_list.
+--MMftTTIZEnYjxm6P
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I thought about giving them a refcount of 1, because we only print
-stacks which refcount > 1 anyways, but setting it to 0 has comes with
-the advantage of catching spurious increments, should someone call
-refcount_inc on those (which should not really happen).
+On Tue, Feb 13, 2024 at 12:39:02PM +0000, Tudor Ambarus wrote:
+> On 2/9/24 13:51, Th=E9o Lebrun wrote:
 
-I will try to implement it.
+> > +		if (!ret || ret !=3D -ENOTSUPP || ret !=3D -EOPNOTSUPP) {
+> > +			spi_mem_add_op_stats(ctlr->pcpu_statistics, op, ret);
+> > +			spi_mem_add_op_stats(mem->spi->pcpu_statistics, op, ret);
+> > +
 
-Thanks
+> Would be good to be able to opt out the statistics if one wants it.
 
--- 
-Oscar Salvador
-SUSE Labs
+> SPI NORs can write with a single write op maximum page_size bytes, which
+> is typically 256 bytes. And since there are SPI NORs that can run at 400
+> MHz, I guess some performance penalty shouldn't be excluded.
+
+If we can cope with this sort of statistics collection in the networking
+fast path we can probably cope with it for SPI too, the immediate
+recording is all per CPU so I'd like to see some numbers showing that
+it's a problem before worrying about it too much.  Even the people doing
+things like saturating CAN buses haven't been raising it as a concern
+for the regular SPI data path.  We could add a Kconfig if it's an issue.
+
+--MMftTTIZEnYjxm6P
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXLip8ACgkQJNaLcl1U
+h9CTjQf/axznzzZjRR5HlbP310cOtEp7gWYv/5Py4bHDmJOsfZSb/gXBo/joMaRC
++HlD1aUoSw6g6DTwj6u5pD+8hNqmVOeUoM7Wy8b/xbDMAjZAfxM7W+AbtX+WiO0C
+UyVGLSvUe4tTDiUJg6xhWQEFG6E8cZl7Sd3/LCcfl7Dy8XM+fQglFdhpnAka5Zqb
+N6yB5zHdXBsEbAvUEUdwplckFjqecpAKTXSMyy5PlT7sdcgh8SfNszR0w58d6h2d
+HkgYUQxmn0Q9tEZw569UhoR7i/9y/i+nUVTk51A0Byhh6pB58oQXTLwhm5Q2XABQ
+vwKjnlRwwfk1sWk5jOz0eG0OiWnhog==
+=kMnE
+-----END PGP SIGNATURE-----
+
+--MMftTTIZEnYjxm6P--
