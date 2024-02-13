@@ -1,105 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29BA955C03;
-	Tue, 13 Feb 2024 13:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5688555C27
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 13:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707830026; cv=none; b=ty2bBEj7p3n5qwIG4NRCde6HGV/EvLmeEouJWPbw1w0GjnfXLrdeLPpr8UIVHKr4dZLvBhRrZFqS+i49/VDzS7ZIuX/KoEHNFPTXq3VvH5hphAdz/l3xeKWB9CJpwLrCgqJEx0XahCRch4ex+9UV9ZGy/a93UN8gITClV4XWkeA=
+	t=1707830040; cv=none; b=HBT+G1HHRafzaTVpe74+w4OIiovU0+fIi1QtMyxCsdZrPYuxlxqSLzOCbFjB1fNeU61rwLvYI6i1+mM4YGi8dRQjlKHVTqP6pg/RC/wGs7VtK478O9UI+y9hD6EYMqn2NuCLyW6Bl7EuJUP0mP6pnKZetKAPMpkLkMNg3k4XlXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707830026; c=relaxed/simple;
-	bh=z+9VSgqO5bthw9m2XPCSK750+TzphWPWfMm9vhOdbVg=;
+	s=arc-20240116; t=1707830040; c=relaxed/simple;
+	bh=7FBpWBbWzBXHIKgl2tq+O44Trivzk8mNpb/YfWXNbx8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U5UB/tXUfX76X19Vn5CkEVyStd6ydHm4pgaNMDxwK9dAD41rxcP/fge7sohiGSFL0N7aKbvulSdveGieK/9n3O72o7+N7vTkr9ClijnjrceAXsSyN1pAYDBleuBXa19YBNBUkMHhly/nQ0Qs8nXntd2q35HcUj/xuQKd9wRRvDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ak3yK6jg; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=JGUeQ5givSAOu/VLMnFo18sEYFMposOhythDaQ0ml57/EEqgR2c3xwX+DlY6qD7PCoy6Si/znluMDxaNXQw8+f6OYW3ivoab/94ZZf6gNE8AxqyI9O21RRP2A6uYHeWpf+/eefVhu+vnXG9V1ihCA1LUxSigWqSp5m0Ni4nnnss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MGoC43Vn; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ak3yK6jg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06392C433F1;
-	Tue, 13 Feb 2024 13:13:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707830025;
-	bh=z+9VSgqO5bthw9m2XPCSK750+TzphWPWfMm9vhOdbVg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ak3yK6jg5ez+EnZN1BYr8fbMDwG+r1nhj8JYieuyIXy0OtGNubN2/EutkqCv7+6dz
-	 /OacWbN+f3qKkzQ2lkZ4ZPoy/WoZ+JwGHY8qEjwUJ+WrX0Q5Zi1ouackNHWAv47/O8
-	 TcOhPc6ATO+nq+aZfAplPZrsNvDCYgsq6jY8x/WmCOo38ymKjNguIqnh+9I2lzpLlu
-	 qILRKspMGdEZuHbhWVhzLSCaCR/vb8A/5Kmi34uIpsROXXWSjTwGuS59X1UyaagixO
-	 +llSf+vRCCzvnb9Tw4JgQluuT+y7shRrsh8wd3dK6dO65U7OmaUucJRiNRJEUnuT4c
-	 o3DNJirvEYsLQ==
-Date: Tue, 13 Feb 2024 13:13:41 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Badhri Jagan Sridharan <badhri@google.com>
-Cc: Guenter Roeck <linux@roeck-us.net>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	=?iso-8859-1?Q?G=E1bor?= Stefanik <netrolller.3d@gmail.com>,
-	rdbabiera@google.com, amitsd@google.com, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: typec: tpcm: Fix issues with power being removed
- during reset
-Message-ID: <3a09ea3b-3a42-4fce-85f8-f8408a4a2206@sirena.org.uk>
-References: <20240212-usb-fix-renegade-v1-1-22c43c88d635@kernel.org>
- <CAPTae5LOresaK3Epd4R_ifpx2kw21tubQDENg4OMrhJWsar-oA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MGoC43Vn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707830038;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lrJK7/vivRjYFBV9aMR7eUFZf9Hk2Ry4XzHvi+/bIaM=;
+	b=MGoC43VnXajuSiNfCDesYkcANzKh4y+KELJknVw+rOmzwQUAZ975Oa8kFBljhN1JQNEtqa
+	WiFp4VOrgBcRLlRwmZ9cPbU03F6pcqUDnrEDZn4KFZfZzKMKg0CnGE7Zpt9mkl7Em1ktl8
+	HU1TVs2EXERrwEkd7wbeIm0KF7vADt0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-586-Rve8DbtKO0WXuzTho1yCQQ-1; Tue, 13 Feb 2024 08:13:53 -0500
+X-MC-Unique: Rve8DbtKO0WXuzTho1yCQQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 88428101A52A;
+	Tue, 13 Feb 2024 13:13:52 +0000 (UTC)
+Received: from bfoster (unknown [10.22.16.56])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2308F2022AAC;
+	Tue, 13 Feb 2024 13:13:52 +0000 (UTC)
+Date: Tue, 13 Feb 2024 08:15:29 -0500
+From: Brian Foster <bfoster@redhat.com>
+To: Jan Kara <jack@suse.cz>
+Cc: Christoph Hellwig <hch@lst.de>, linux-mm@kvack.org,
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.com>,
+	David Howells <dhowells@redhat.com>,
+	Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/14] writeback: don't call mapping_set_error in
+ writepage_cb
+Message-ID: <ZctrcZSvO8rjRwrp@bfoster>
+References: <20240212071348.1369918-1-hch@lst.de>
+ <20240212071348.1369918-2-hch@lst.de>
+ <20240213130713.ysuxaqcwizqwjke2@quack3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wNzrdL2IZ5232/Er"
-Content-Disposition: inline
-In-Reply-To: <CAPTae5LOresaK3Epd4R_ifpx2kw21tubQDENg4OMrhJWsar-oA@mail.gmail.com>
-X-Cookie: Does not include installation.
-
-
---wNzrdL2IZ5232/Er
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240213130713.ysuxaqcwizqwjke2@quack3>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-On Tue, Feb 13, 2024 at 02:09:16AM -0800, Badhri Jagan Sridharan wrote:
-> Hi Mark,
+On Tue, Feb 13, 2024 at 02:07:13PM +0100, Jan Kara wrote:
+> On Mon 12-02-24 08:13:35, Christoph Hellwig wrote:
+> > writepage_cb is the iterator callback for write_cache_pages, which
+> > already tracks all errors and returns them to the caller.  There is
+> > no need to additionally cal mapping_set_error which is intended
+>                           ^^^ call
+> 
+> > for contexts where the error can't be directly returned (e.g. the
+> > I/O completion handlers).
+> > 
+> > Remove the mapping_set_error call in writepage_cb which is not only
+> > superfluous but also buggy as it can be called with the error argument
+> > set to AOP_WRITEPAGE_ACTIVATE, which is not actually an error but a
+> > magic return value asking the caller to unlock the page.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> 
+> Our error handling in writeback has always been ... spotty. E.g.
+> block_write_full_page() and iomap_writepage_map() call mapping_set_error()
+> as well so this seems to be a common way to do things, OTOH ext4 calls
+> mapping_set_error() only on IO completion. I guess the question is how
+> an error in ->writepages from background writeback should propagate to
+> eventual fsync(2) caller? Because currently such error propagates all the
+> way up to writeback_sb_inodes() where it is silently dropped...
+> 
 
-Please don't top post, reply in line with needed context.  This allows
-readers to readily follow the flow of conversation and understand what
-you are talking about and also helps ensure that everything in the
-discussion is being addressed.
+A couple related notes from skimming around:
 
-> While HI-Zing CC pins disrupts power for batteryless devices, not
-> Hi-Zing CC pins would prevent clean error recovery for self powered
-> devices which is why "usb: typec: tcpm: fix cc role at port reset" was re=
-verted.
-> Please note that the breakage in error recovery behavior is a
-> regression as well.
-> Hi-Zing CC pins would make the port partner recognize it as disconnect
-> and will result in bringup the connection back cleanly.
->=20
-> How about leveraging "self-powered" device tree property and Hi-Zing
-> CC pins only when using "self-powered" ?
-> This should help devices which don't have batteries while NOT regressing
-> the error recovery behavior for the self powered devices.
+- Things like iomap might make this call in I/O completion paths, but
+  then invoke bio completion paths on submission side errors (i.e.
+  iomap_submit_ioend() -> bio_endio()).
+- __writeback_single_inode() calls filemap_fdatawait() shortly after
+  do_writepages(), which basically looks like it relies on mapping error
+  state to propagate error within the writeback path.
 
-I don't super care so long as the boards I care about continue to
-function, I submitted this patch because the only response to my report
-about the rk3399-roc-pc having been broken in mainline was a
-confirmation that the failure was expected.  As I noted in the commit
-log checking if there is an alternative power source does seem like a
-viable option here, I am not particularly familiar with this code.
+The call removed by this path only seems to apply to contexts that don't
+define their own .writepages, so it's not clear to me how much this
+really matters. It just seems like it's a little hard to quantify
+whether this is an undesireable change in behavior or not.
 
---wNzrdL2IZ5232/Er
-Content-Type: application/pgp-signature; name="signature.asc"
+Brian
 
------BEGIN PGP SIGNATURE-----
+> 								Honza
+> 
+> > ---
+> >  mm/page-writeback.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+> > index 3f255534986a2f..62901fa905f01e 100644
+> > --- a/mm/page-writeback.c
+> > +++ b/mm/page-writeback.c
+> > @@ -2534,9 +2534,8 @@ static int writepage_cb(struct folio *folio, struct writeback_control *wbc,
+> >  		void *data)
+> >  {
+> >  	struct address_space *mapping = data;
+> > -	int ret = mapping->a_ops->writepage(&folio->page, wbc);
+> > -	mapping_set_error(mapping, ret);
+> > -	return ret;
+> > +
+> > +	return mapping->a_ops->writepage(&folio->page, wbc);
+> >  }
+> >  
+> >  int do_writepages(struct address_space *mapping, struct writeback_control *wbc)
+> > -- 
+> > 2.39.2
+> > 
+> -- 
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
+> 
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXLawQACgkQJNaLcl1U
-h9DeBgf9HO4xYfg24xt/Jvbh1Le5gyPcZnCGlzA0xrtgv4g1unnklA5uQ/EfFen6
-hbGufKQ5/sRQ3gCxUve350Vaq/ynTH5EM6gkTLCmiYNp2KFBejcFq88+Zb8ekOMy
-Tnzd4GVwHFVxQczjK8kKnjvXwiqnJBg08Dcq3i8dp3GrvxYir+Q79gRV6nHbzZvb
-Toa3WxY51eRZE+1iKGK31Zeb0lmwnqHZ9LY9jmUEpZO+gzoX/FGKdyoo31ZkiIlP
-NFkkQmYKc+iMN8trojxI6rguRMu8zvZpZbrm8Gx69+9rPmIEAunXbDVbV0pcj9uf
-cR4Zl/H4+6Gud2N5FIi2O3Z2oZwZeQ==
-=oW47
------END PGP SIGNATURE-----
-
---wNzrdL2IZ5232/Er--
