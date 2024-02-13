@@ -1,90 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062DA5810A;
-	Tue, 13 Feb 2024 14:22:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2A058203
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 14:22:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707834153; cv=none; b=FlkZ4HFO+I9L61ZI3Qn4bMmu1L0y9Vb19ZkW8ommb1Ybk24KlzM345H4jnHcuhRoCyPp+XueaM49W9xXdypXvzmayHd8JY2QETdU+Zm7Ef2DXqGN7rr194GcDQs6vLwb+ccLyWr2iSHYEjDsrwnyGtUxI+gm+h+InoDVdylmvto=
+	t=1707834156; cv=none; b=KGNJy6RnZCeoRlqVrqlQ3XOiE4mgY0QGkebs2qQg0y0Eh3Qyiu+qjq19AqVM9nWlIsnCyUcLF7dmj6T/qEgTOC8tyuy5RMG8CiwKh5xaxk0oNuZ5nQqAt+ovlJxoEGx9YUCuJ1YTRyfjZ9VD6scGbnUT59XUiZAaEz+YCzrvO6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707834153; c=relaxed/simple;
-	bh=MLO0eNfubsVaZ3+NJ0NwxvzUo8z9vzkOQ/E+hy/RX9w=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=hcIoxddFmYzmUkO8BFcG0nOIOBuHh6WH8Z0G0+/yJkNH1qCUO//XesdrThXylL5UJH5F1ResqNF6Wu5oL2b85z6QKO+DgrrzV6E+nxz8pDaSXicaUJiethmMdVGxfOlDHRUGFclX850EhEAiurElD6EeGfMZKj/4vpUHWd3ofuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tDoOvZka; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707834156; c=relaxed/simple;
+	bh=ZVoWPkWDGGWjLhBURKBmzMi+6xun3d9llfJxTCKJHGg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lO2i+/Y3yAX4f6kZHSHwuGAPT+Ye+ay1pxaK/wrg4j+dtgHVA9nYjsyaPLDxBN2Z+a3INQoVRj2756kHTltIJN/JrpMW+XRTr0hVKjZEWhERXMhZlvsZpRrdmJuC/Sh5Cdg4uve+UMc5hw3bdzrkl/467j/dgrcBTyiYt6RwEeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=IfMLbuos; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tDoOvZka"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46611C43394;
-	Tue, 13 Feb 2024 14:22:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707834152;
-	bh=MLO0eNfubsVaZ3+NJ0NwxvzUo8z9vzkOQ/E+hy/RX9w=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=tDoOvZkavXJ2LFx03CzHfgMW3Swnt/rBeFpIem9eB9Wjdx7m6xxbT3fANKkR+s29z
-	 AgKNEYnIeSYsr0s5FO4i8NZ3soCnTCJpi6hhnbFQdTdx3mDr1yl6qsnbJAwBpDNP0M
-	 CLmDu+EHr4kaKnyIa2Qou3RcGN0AZgyLffQFOH7jmmp3L5ikOQRadHHRStZ/WKQ3QN
-	 x32j1JePN9+bi31ZgnbhtBDixZ2E9UXSDgxo12PZl2i/qD88mgcYi4fh+2xm5n8CPQ
-	 GX8GzZgXnVkRiC887oe2EJqjb7jEURzlbgnVdymRwlBhIG8w9edDnSRHmb0UGMvk9/
-	 dQMHnV0uJDW3w==
-From: Mark Brown <broonie@kernel.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
- Banajit Goswami <bgoswami@quicinc.com>, Liam Girdwood <lgirdwood@gmail.com>, 
- Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
- alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20240212183800.243017-1-krzysztof.kozlowski@linaro.org>
-References: <20240212183800.243017-1-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH] ASoC: dt-bindings: qcom,sm8250: Allow up to 8 codec
- DAIs
-Message-Id: <170783415002.38232.15876437530916950935.b4-ty@kernel.org>
-Date: Tue, 13 Feb 2024 14:22:30 +0000
+	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="IfMLbuos"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a3d002bc6f7so75843366b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 06:22:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=9elements.com; s=google; t=1707834153; x=1708438953; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pe27R5El4Dv++yOPITXX9+jKm5cvh9lf2r0jCzdmu/0=;
+        b=IfMLbuosVUu9hLdyXKGteoM6WQFCQjI1NY2y1X7gf/TrEDibHaLN/fthxu8J1zjnAI
+         KqKh3Cbju9joKL01o8UrrC+L2QoNPtTnkPF2JhIu50XHQ/scpDU8Y+WX9ef2kEWZcTsK
+         Q1NcIwCujzDhY+Bpfeovg8cbgYz5Mlm5i9g0GQD2yQTfVbSnN9SVCtXb0fMoIQ17U9st
+         ZIc1c8BnW75MdTqn0UbahHvKJsyhKmZXG1iPQ8wjsKHS4zYMSfl7k+Vn88emSBCxaONJ
+         jjkpydH53NEOfLBLdzVY/uGmZR6iNxQG4ETi4IRR6o1xxhdd5aEZ2zjIv9AX0KN1PN5H
+         NpLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707834153; x=1708438953;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Pe27R5El4Dv++yOPITXX9+jKm5cvh9lf2r0jCzdmu/0=;
+        b=J5VuMgtIccGgP6UqWJa9DbPDFcz+rxO/7p8Ob62GRdJKE3Tgp6euy5KM4RUfP+rB+/
+         +m9ApeRm4mzz8wixaWG1jHhqq3rrR4ifh93O8hu1Etdv9bNy1SIIDwOcVlVsMkWCsbL/
+         fmQjWGHFLAQpPvZ0RroybZomC5oGa6lzdhx2nU0BcwAkbg1FliT1Tes+TGUQ6Y1T4Woo
+         ZacFeCJrra2vZpnet2pBoSO5HiiQGy/cTtj62aevV7HTY8D73hKAGrp0XxFhyJpEhaN2
+         BYZSOyyI1Qljln/+vUYsZQ2BjQ03GNL94qSBUCi4X3qRrKwoDwkuNg1J4KG8I41z02jH
+         sraw==
+X-Gm-Message-State: AOJu0YxchQkwB6uopDIBj2ma5pgtuRIkhqXdiI+K3JjbGEkl16XtWRa2
+	XuMsg0mSV32Jc8zykQD4mEvCemkODacEwku/iR13BgIEqeqzTUO3G+edzTxIMi0=
+X-Google-Smtp-Source: AGHT+IEjdJlI+v2B9qEuDNoYryH+pfyZufoSFK6R/DxHy1D5Wnu9OAm2rP/1KTC+/s9cofb5iWWA9g==
+X-Received: by 2002:a17:906:a419:b0:a3d:fb7:84a3 with SMTP id l25-20020a170906a41900b00a3d0fb784a3mr864127ejz.77.1707834152688;
+        Tue, 13 Feb 2024 06:22:32 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXImBO3mmi4JY0TRPPzH+4244VODD/T2hLnxKqUoEVlKwe0g7ic8MIyyAPFjyIGcgh4iWydYEZvYuNSWCg1t2ZMB3LcqXeSPn8B+CrmOaJTTqf/ghzMTQ0DTic2JE3rUNGRPxfQhHU2yWKJIG6eDRySV4mP5csLxky1SKuAAjPoiAVZNIH1jf2NaM8RKe2jrhzryIPQmMKE9ip43fQvQFbySLzCdma6gFXZqpMM/4ZOrtPVWN4EdOldaQSQRA30VGeYFcddDRUyEV92wrOY/rWxQcq0d690exWGMb8XZjI+KQjKQ61iap2Y88tEUgdjPoIGI9n2L47tLdk9pAVEP3AsuzRKY7xZn4sOuEr9hZZWOSHNlQCFn5zwf+T/nHxQTZwP/h+0sq3ebW74WzPqAqiuDsbEiJMebIkTQvwN/4zsvGpkTG6Pp3hdMs8YB2iKONeo5oQ/Fg0c
+Received: from stroh80.sec.9e.network (ip-078-094-000-051.um19.pools.vodafone-ip.de. [78.94.0.51])
+        by smtp.gmail.com with ESMTPSA id lu1-20020a170906fac100b00a3c97e49bc9sm1322671ejb.218.2024.02.13.06.22.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 06:22:32 -0800 (PST)
+From: Naresh Solanki <naresh.solanki@9elements.com>
+To: Peter Rosin <peda@axentia.se>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: mazziesaccount@gmail.com,
+	Patrick Rudolph <patrick.rudolph@9elements.com>,
+	Naresh Solanki <naresh.solanki@9elements.com>,
+	Rob Herring <robh@kernel.org>,
+	linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 1/2] dt-bindings: i2c: pca954x: Add custom properties for MAX7357
+Date: Tue, 13 Feb 2024 19:52:26 +0530
+Message-ID: <20240213142228.2146218-1-naresh.solanki@9elements.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-a684c
+Content-Transfer-Encoding: 8bit
 
-On Mon, 12 Feb 2024 19:38:00 +0100, Krzysztof Kozlowski wrote:
-> Sound card on Qualcomm X1E80100 CRD board has eight DAIs in one DAI
-> link (for WSA speakers).  Boards with older SoCs could technically have
-> similar setup, even if it was not observed on mainlined devices.
-> 
-> 
+From: Patrick Rudolph <patrick.rudolph@9elements.com>
 
-Applied to
+Maxim Max7357 has a configuration register to enable additional
+features. These features aren't enabled by default & its up to
+board designer to enable the same as it may have unexpected side effects.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+These should be validated for proper functioning & detection of devices
+in secondary bus as sometimes it can cause secondary bus being disabled.
 
-Thanks!
+Add booleans for:
+ - maxim,isolate-stuck-channel
+ - maxim,send-flush-out-sequence
+ - maxim,preconnection-wiggle-test-enable
 
-[1/1] ASoC: dt-bindings: qcom,sm8250: Allow up to 8 codec DAIs
-      commit: d4a00d16f8367e09e8b8fb03028f22333fc368a5
+Signed-off-by: Patrick Rudolph <patrick.rudolph@9elements.com>
+Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes in V5:
+- Append Reviewer-by
+Changes in V4:
+- Drop max7358.
+Changes in V3:
+- Update commit message
+Changes in V2:
+- Update properties.
+---
+ .../bindings/i2c/i2c-mux-pca954x.yaml         | 30 +++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.yaml b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.yaml
+index 2d7bb998b0e9..9aa0585200c9 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.yaml
++++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.yaml
+@@ -71,6 +71,23 @@ properties:
+     description: A voltage regulator supplying power to the chip. On PCA9846
+       the regulator supplies power to VDD2 (core logic) and optionally to VDD1.
+ 
++  maxim,isolate-stuck-channel:
++    type: boolean
++    description: Allows to use non faulty channels while a stuck channel is
++      isolated from the upstream bus. If not set all channels are isolated from
++      the upstream bus until the fault is cleared.
++
++  maxim,send-flush-out-sequence:
++    type: boolean
++    description: Send a flush-out sequence to stuck auxiliary buses
++      automatically after a stuck channel is being detected.
++
++  maxim,preconnection-wiggle-test-enable:
++    type: boolean
++    description: Send a STOP condition to the auxiliary buses when the switch
++      register activates a channel to detect a stuck high fault. On fault the
++      channel is isolated from the upstream bus.
++
+ required:
+   - compatible
+   - reg
+@@ -95,6 +112,19 @@ allOf:
+         "#interrupt-cells": false
+         interrupt-controller: false
+ 
++  - if:
++      not:
++        properties:
++          compatible:
++            contains:
++              enum:
++                - maxim,max7357
++    then:
++      properties:
++        maxim,isolate-stuck-channel: false
++        maxim,send-flush-out-sequence: false
++        maxim,preconnection-wiggle-test-enable: false
++
+ unevaluatedProperties: false
+ 
+ examples:
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+base-commit: 957bd221ac7b2b56cbdf56739e3a94d4f479209e
+-- 
+2.42.0
 
