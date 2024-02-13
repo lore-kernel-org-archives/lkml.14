@@ -1,46 +1,43 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10221DFFC
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 17:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A23D1DFFC;
+	Tue, 13 Feb 2024 17:49:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707846547; cv=none; b=rz26RhvLC063EiI8fpzbEdzX7qFqBrnVa5x6QBHwC/GNcCYZWR4do+wjGjnXMT7edHlfmJhkov4I9tyB9DJU5aJNGwgqmqDJ4mMfhpFWnLQmi9qv0Tl32yr68+OjxHCNoBauf0mQp52XRd915hnU535szXS/t178ZrakiGCaqW4=
+	t=1707846551; cv=none; b=DZoEIMUGnD8f5if+dNhmvcPGaGG8CCpPiMyjzVIC4EJVhvWy9OBTI5r9kh9vIWbmdXJIULzbQedDLMND/KL4bVLSUomDQmFFySNNEXakIOgwvjZd/IPIbjpCO9Jxq3xCUYfcLQapYgDKBW7/GXEf1fUrlaFq3Up5ikNB22Qllgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707846547; c=relaxed/simple;
-	bh=QWIuBAJ3e+TCWmBbhbpgT4PWb2RX18XR04uHZ6yIclw=;
+	s=arc-20240116; t=1707846551; c=relaxed/simple;
+	bh=UyyYmXNGhgU5jq0ULTCXSP50tpfUZFTMO5XauI2c7pA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fIPXGNJi1eETQBcogL0Hs8fE0kFWWbblk/szS2LXYLbMI3lOrWfrQADAuUZ5skbJKmBphyFEAlOASe6zz93O7ahgVfzw+43/jeFnRzcp5g+uGLuJiNlgWGXrCxVZUEhjE9SF6KGl2ydfk/Hv9SdCPIk6sDKwKxBO4l9oMpe+vA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rZwtm-0007eB-T1; Tue, 13 Feb 2024 18:48:50 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rZwtk-000Wtk-TI; Tue, 13 Feb 2024 18:48:48 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rZwtk-0046pb-2d;
-	Tue, 13 Feb 2024 18:48:48 +0100
-Date: Tue, 13 Feb 2024 18:48:48 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-Subject: Re: [PATCH 1/2] dt-bindings: pwm: mediatek,mt2712: add compatible
- for MT7988
-Message-ID: <onnokyq7ciza7i7jzc74cun2khpst5iocuccks2cm433ux3za3@dou4oacrvuxj>
-References: <20240213164633.25447-1-zajec5@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=mYPXyXE64f0LoyIbso/Zb8Syb/qjjSEC6yJxr96Bp5HxdF7prRCN39QTavAFZD+HnR6eIP9ecDBSJai5LgtKyH8GjVsxfy5pu9awvLAgeTmxITJSa7hfBoD0M8EJfKVX3s+Ir8pKOjSqFmuouEu21aF852RfjoCgG++h4r0++Vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SCEjD3eb; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SCEjD3eb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51CAEC43399;
+	Tue, 13 Feb 2024 17:49:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707846551;
+	bh=UyyYmXNGhgU5jq0ULTCXSP50tpfUZFTMO5XauI2c7pA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SCEjD3ebELcuXUlpUJX/e6dC4zRcvMRVfKqiO71AL6tuNQ08jvnJ9AuNl6ShdHQqP
+	 gPqiDlREvpNtixGRo6SSmvod/eJtqFl9Zc7oNkDtkBFJz6skHbCwOOFw/s7gPHU84X
+	 7uN7AR2IXUPp6wikm2cLCnzQiHjLJu8UW7je6TcRP0x9iMfbOYDte4nVdnxQNErbQR
+	 76rW9CxYjz0QTR1oeGB3831oKVpVF0UN1SYA+WEeiCtOgT5p6EnMaQmE/Z6UB9PlTb
+	 d1p1LIHt1HcqjBOqNRsxsFgqgboEj5lOF/7wi7Pp687F5RoaMdHa3gDf1oY/WiJkgk
+	 /xd4lg+ApnrUA==
+Date: Tue, 13 Feb 2024 17:49:06 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Harald Mommer <Harald.Mommer@opensynergy.com>
+Cc: virtio-dev@lists.oasis-open.org, Haixu Cui <quic_haixcui@quicinc.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>, linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, quic_ztu@quicinc.com,
+	Matti Moell <Matti.Moell@opensynergy.com>,
+	Mikhail Golubev <Mikhail.Golubev@opensynergy.com>
+Subject: Re: [RFC PATCH v3 3/3] SPI: Add virtio SPI driver.
+Message-ID: <3b8e947c-51fb-461e-bb9e-7bc1bb547471@sirena.org.uk>
+References: <20240213135350.5878-1-Harald.Mommer@opensynergy.com>
+ <20240213135350.5878-4-Harald.Mommer@opensynergy.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,60 +45,97 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jhwaxkndpklwhxal"
+	protocol="application/pgp-signature"; boundary="6avdtmeem8xIAq8b"
 Content-Disposition: inline
-In-Reply-To: <20240213164633.25447-1-zajec5@gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20240213135350.5878-4-Harald.Mommer@opensynergy.com>
+X-Cookie: Does not include installation.
 
 
---jhwaxkndpklwhxal
-Content-Type: text/plain; charset=utf-8
+--6avdtmeem8xIAq8b
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hello Rafa=C5=82,
+On Tue, Feb 13, 2024 at 02:53:50PM +0100, Harald Mommer wrote:
 
-On Tue, Feb 13, 2024 at 05:46:32PM +0100, Rafa=C5=82 Mi=C5=82ecki wrote:
-> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
->=20
-> MT7988 has on-SoC controller that can control up to 8 PWMs.
->=20
-> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+> +/*
+> + * See also
+> + * https://lore.kernel.org/all/6171c1c3-55ba-4f74-ae60-764820cf1caf@quicinc.com
+> + */
+> +static int virtio_spi_set_delays(struct spi_transfer_head *th,
+> +				 struct spi_device *spi,
+> +				 struct spi_transfer *xfer)
 
-please make sure that the email address used for sending the patch
-matches the Signed-off-by line.
+Please write actual comments that can be read standalone, the reader has
+absolutely no idea why they'd want to follow the link and there's
+nothing being referenced by that "also".
 
-(It depends on the pickyness of the relevant maintainer if that is a
-stopper or not.)
+> +static int virtio_spi_one_transfer(struct virtio_spi_req *spi_req,
+> +				   struct spi_controller *ctrl,
+> +				   struct spi_message *msg,
+> +				   struct spi_transfer *xfer)
 
-Assuming this patch will go in via a mediatek tree:
+> +	/*
+> +	 * Got comment: "The virtio spec for cs_change is *not* what the Linux
+> +	 * cs_change field does, this will not do the right thing."
+> +	 * TODO: Understand/discuss this, still unclear what may be wrong here
+> +	 */
+> +	th->cs_change = xfer->cs_change;
 
-Acked-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> +static int virtio_spi_transfer_one_message(struct spi_controller *ctrl,
+> +					   struct spi_message *msg)
+> +{
+> +	struct virtio_spi_priv *priv = spi_controller_get_devdata(ctrl);
+> +	struct virtio_spi_req *spi_req;
+> +	struct spi_transfer *xfer;
+> +	int ret = 0;
+> +
+> +	spi_req = kzalloc(sizeof(*spi_req), GFP_KERNEL);
+> +	if (!spi_req) {
+> +		ret = -ENOMEM;
+> +		goto no_mem;
+> +	}
 
-Thanks
-Uwe
+Why not just allocate this once, it's not like it's possible to send
+more than one message simultaneously?
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+> +	/*
+> +	 * Simple implementation: Process message by message and wait for each
+> +	 * message to be completed by the device side.
+> +	 */
+> +	list_for_each_entry(xfer, &msg->transfers, transfer_list) {
 
---jhwaxkndpklwhxal
+This is processing transfers within a message rather than messages.
+
+> +		ret = virtio_spi_one_transfer(spi_req, ctrl, msg, xfer);
+> +		if (ret)
+> +			goto msg_done;
+> +
+> +		virtqueue_kick(priv->vq);
+> +
+> +		wait_for_completion(&spi_req->completion);
+> +
+> +		/* Read result from message */
+> +		ret = (int)spi_req->result.result;
+> +		if (ret)
+> +			goto msg_done;
+
+It's not clear why this isn't within _spi_transfer_one() and then we
+don't just use a transfer_one() callback and factor everything out to
+the core?
+
+--6avdtmeem8xIAq8b
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXLq38ACgkQj4D7WH0S
-/k5Yxgf+MGDk4UWSSThMXzK6DjwTQdURT3za9jTq2ls/OQIHoQfyaw902waKPjVr
-mPIVGTESq0AvIpQNcZQQH8WUjNfI7at0cWPaTA/iZD07h9nMOEztTp4wP3rYwBp5
-yicKjx5McHb1nR5poDAXFudd+7v/gOgXBLPxABfx4FiOLWqnNuDJF2xwmge8mKHp
-NKlYSZk+kiCbBwsZk3LBwLqKv45TnPI2yuayws+r1jYLnmXMyRUkVQqCpX2/CUGq
-wESqm70l9ty5FmyiE86YbJkgx+b5o9Z/nJt223FluL3Ftnxfc0sABjdCI9IxmFCg
-sWhDm4LJVkrMbtBmn8VK5huxt/BXmw==
-=o3gj
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXLq5EACgkQJNaLcl1U
+h9ASPwf/RGY6PViAydc8xVzV3a0Uva7DfKFC+w7Hn7i7ewnVuOGKWevhp4xmn6eu
+EDdgXSW3LoCRVjGp+1IGdRLqZFNhV5kjEbEs9ktRc70IYPej8WuQk7GjUE1hN1Da
+VxJy+YwhwbUoOW/eq808588WPuvFiHXSGz0FRjgERb4pM/YmjnCPD5EbSknvp0YY
+VCDQsDfdCS0X90aG0vSrPbSQlglhfhzc5/2RNrXXRnPy0NUekwy//dhyvipEr3Mf
+J278CnLlVKKKtzpQz/YA1p5d7fHMg6Ov1zf14bP5lW/0vZ94VwSa4y1S8X9JDQwA
+N60fHrUA/bhzulYkeK4a7zftYYIihw==
+=qnB3
 -----END PGP SIGNATURE-----
 
---jhwaxkndpklwhxal--
+--6avdtmeem8xIAq8b--
