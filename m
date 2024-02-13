@@ -1,192 +1,173 @@
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from refb01.tmes.trendmicro.eu (refb01.tmes.trendmicro.eu [18.185.115.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76533224C6
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 09:21:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707816114; cv=none; b=RKgDfTsIGxldChFJCbGaCZLpxf91NdsTD4qEyFSSX002R2fGOMes/4aLQHv9UfGjOlrakGh7NfS7PGP47tz2oJGzADgETTKV1WR9+oAahRCBp+w3mLJq4RYGK0DrdDB+29KQU5/maGaNI3EObPje0laLe7uTIkuU9XU2srqheiM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707816114; c=relaxed/simple;
-	bh=jN5ASTlliFLWUbLhxuX4S44/mDVAL2oYKUSjLSrsi8w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J0lih+BAm4WgLZxWGpGTMTIZ/9lb6XXHYkCmSOImcKUyqVuUfcvW/3w+PGscjyNOVvU3/83inc/nEOmV166c0M/c3pEiOUbMJmORLm+eM/ok618kMAqztgzVKl3iFCnj/Q1L2XdYptLjxoqWxMNTetAvG4vE07v5Iu8i8JFHwqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Biyh9VrN; arc=none smtp.client-ip=209.85.222.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F05225A4
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 09:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=18.185.115.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707816198; cv=fail; b=DKLQRPXCs8FC2QPi6QWCimN4qYY2SGRRdgvvj8ZiULNem1FHiOWkTMC0AEKIrPyyc/CvkOff8vRljWMsFWulCTddnytmKcsRscVEByOLEIHosSzWncr7ocBFG3mIgn2W1nNjLCJj0xc67Y3kqxwnNqAweE4I0pVsI5XmWqH3QI8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707816198; c=relaxed/simple;
+	bh=pJNBMZwflHJz4uji9HQGOcdfnUICX80CQcTMG+DJXzc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=AZiBYoW+NCtnb5F/PikKJyns4+7XlR0cjz/5GBfro9+xMiJbPQx+ZBKaLt0mMhPWIBeyoKA/SuOaTErsyjRKHFzVBdkkLhwl300i3XJyKV1+TLTrCR5oUZKA3hq6hPBer8juSAtws9j3v3maqQwJCMx8zUfKLqNIGBIptyR0r2A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensynergy.com; spf=pass smtp.mailfrom=opensynergy.com; dkim=pass (2048-bit key) header.d=opensynergy.com header.i=@opensynergy.com header.b=aAXdbRkE; arc=fail smtp.client-ip=18.185.115.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensynergy.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensynergy.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Biyh9VrN"
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-7d2e007751eso2004304241.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 01:21:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707816111; x=1708420911; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BljRftqO+MfcFjCEAz03kydOwq7rbFyh2ciaeRJBXcY=;
-        b=Biyh9VrNgm4JF09E8kPXdqa9sNQZePzLRcLK2TRya2Oe28V62on/l8pFZgxnN8gj+M
-         oKgkQMzYnBjWtmyhIx3EvV5SoYSMXdlJJX3KKPl7qJByoUud0Bxx0eovQD+3JvuCS2WY
-         O46ZFVf3bI/WFp/9/Qz2uR5HrOklIYtZr/bCBMzfGwM5bq1ZHkO63ewU6xgzSstSft5J
-         VVnPDv58eAGDUc51DGjOsON4wAFzMdA6LtiLd1rS3QMJIihA7MdhXZlrcUiCA6HxWtMZ
-         G+VVBDtgJPD3Z4JZRGbfm8jhC0y+MqguxEieh28cuDR4F7DWD1nNZxQLv1BsZ8AmNt9X
-         VYjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707816111; x=1708420911;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BljRftqO+MfcFjCEAz03kydOwq7rbFyh2ciaeRJBXcY=;
-        b=pUMxnK3X7/MQ6Qzcd6X70sheAUjRb20x1pskkYkT3x8kltJklvxOyyVPXKlLlgWEo8
-         SWPvzB1PviCHO5jCUaydA1CEgeyuNf6fJzywqgpuywlc036Oc10gLuyE38l3Vn6zHiHG
-         5hm2hZ7VdLh6H/7kyKL48tqU5UeII7Z0O9JvPAIx/ORmQVGe1MKhLjXozJ5VCe29Z9qz
-         GUcq4rJqYHx25EKBEuTG6DiiK7fdwhAlue40P5xLtaKIToWArhQsKBH+tMHOIzzmhZvq
-         gm6jgrDyp8LRczsgOAmgTMPBtZI5PWalK6G6i4PMU62WGW2nwtZL4zjWJHSKFM+GUjD6
-         t3rg==
-X-Gm-Message-State: AOJu0YxsZmnB4txDX7FpT1XfTxzYD4cryfIJWnhhT9qF5s5TEGmi9KC0
-	6j42iT5MuxfKFEU06BU2vhk3f4cGm/T+OxLWnpVI6TDtNIDD+NnQJU6MFOILVxlMK3qlnri7k3i
-	OJhsT+4n/S1sdSPwgRH0tEGLJt8yqeCefHm1L
-X-Google-Smtp-Source: AGHT+IED0rD2PlqDCn3KWB8HVjF3tQRSmZ/ILb/KSKI4IGZUcO0P4QZ5jXV0sM4w0SM9dimXmpC9iD9DB0dXWqsyFec=
-X-Received: by 2002:a1f:df42:0:b0:4c0:3000:8b26 with SMTP id
- w63-20020a1fdf42000000b004c030008b26mr5619300vkg.4.1707816111112; Tue, 13 Feb
- 2024 01:21:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=opensynergy.com header.i=@opensynergy.com header.b="aAXdbRkE"
+Received: from 104.47.7.169_.trendmicro.com (unknown [172.21.10.233])
+	by refb01.tmes.trendmicro.eu (Postfix) with ESMTPS id 47847100111F1
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 08:52:56 +0000 (UTC)
+Received: from 104.47.7.169_.trendmicro.com (unknown [172.21.165.80])
+	by repost01.tmes.trendmicro.eu (Postfix) with SMTP id 4672110000D8D;
+	Tue, 13 Feb 2024 08:52:49 +0000 (UTC)
+X-TM-MAIL-RECEIVED-TIME: 1707814333.470000
+X-TM-MAIL-UUID: dab96c05-9bce-4c16-b88f-f6f2c60f4576
+Received: from DEU01-BE0-obe.outbound.protection.outlook.com (unknown [104.47.7.169])
+	by repre01.tmes.trendmicro.eu (Trend Micro Email Security) with ESMTPS id 72DCD10002B8E;
+	Tue, 13 Feb 2024 08:52:13 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kKLbLLrNA0ZxpEReIHBEbCsZ8tC4bjR6u2QWQy/H5IG/di4GHd1b/fs63lyjEQgHuoFRvjrA7O3jHf4dUiOIBg+qxXlKs+ZEINF3H87saYBdIpjzIEQJwZgyT/o3qx/GoE4rzFIFgCN5Cikn2Y59/3+ADIY3Cy8nmt8zEq4fX13nuS6AHYm719R/Aur32yqwNwU4RUM2TBqdlXIy0vAlxwn3CN9djeLXoAWO3vWr/i5pbOtz6Xw/eJa2SFgqk6Jl5/yRkJpOAJWNK4H6fXQE2OJ93VFg/CDu3oR8k3LgYDH0Z7pQ5FscIw3BdnWCGIPPLk7u7sxQ0SzVArbzYrpBog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UVtfM+mUa37QXjaTkP+Fax9BcUjbx3upuIqIJIIthXM=;
+ b=aARAzf0UNpi2StKkR9FLRXqRt4s5G+oJM8jGxMJ+mKQiulv0QThHr3PnZCB3moNqcEIscoB1jgPPzpQw4inACTj31s12Vr7r/MCqDy5QmJRYcLuq39Rv4yPhdNbTCKgVdfj0WKtNZvxaf3qZcpQ9y48yyKmE1IPnf9iOx5fdPTP6pWlSjRgtK8cw7iCoPJz8BZxq5M/ZqDn1KXLHKIO0YOJFKsNNSqngprO2povdfE6fjzKGTMpGDBm6OBcz2Gd7LSbg3MKiw9maumj2HTwueT1ihhFQ2fTXecchKL0c4JmkNuM7C6Ef/YUw+9iI90Rjnh/VeIrk5usi8KC6YPNcXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 217.66.60.4) smtp.rcpttodomain=alsa-project.org
+ smtp.mailfrom=opensynergy.com; dmarc=pass (p=reject sp=reject pct=100)
+ action=none header.from=opensynergy.com; dkim=none (message not signed);
+ arc=none (0)
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 217.66.60.4)
+ smtp.mailfrom=opensynergy.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=opensynergy.com;
+Received-SPF: Pass (protection.outlook.com: domain of opensynergy.com
+ designates 217.66.60.4 as permitted sender) receiver=protection.outlook.com;
+ client-ip=217.66.60.4; helo=SR-MAIL-03.open-synergy.com; pr=C
+From: Aiswarya Cyriac <aiswarya.cyriac@opensynergy.com>
+To: mst@redhat.com,
+	jasowang@redhat.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	linux-kernel@vger.kernel.org,
+	alsa-devel@alsa-project.org,
+	virtualization@lists.linux-foundation.org,
+	virtio-dev@lists.oasis-open.org
+Cc: Aiswarya Cyriac <aiswarya.cyriac@opensynergy.com>,
+	Anton Yakovlev <anton.yakovlev@opensynergy.com>,
+	coverity-bot <keescook+coverity-bot@chromium.org>
+Subject: [PATCH] ALSA: virtio: Fix "Coverity: virtsnd_kctl_tlv_op(): Uninitialized variables" warning.
+Date: Tue, 13 Feb 2024 09:51:30 +0100
+Message-Id: <20240213085131.503569-1-aiswarya.cyriac@opensynergy.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240212223029.30769-1-osalvador@suse.de> <20240212223029.30769-3-osalvador@suse.de>
- <fc4f498b-fc35-4ba8-abf0-7664d6f1decb@suse.cz>
-In-Reply-To: <fc4f498b-fc35-4ba8-abf0-7664d6f1decb@suse.cz>
-From: Marco Elver <elver@google.com>
-Date: Tue, 13 Feb 2024 10:21:14 +0100
-Message-ID: <CANpmjNO8CHC6gSFVEOSzYsTAP-j5YvfbfzZMUwnGqSAC1Y4A8g@mail.gmail.com>
-Subject: Re: [PATCH v8 2/5] mm,page_owner: Implement the tracking of the
- stacks count
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Oscar Salvador <osalvador@suse.de>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	Michal Hocko <mhocko@suse.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
-	Alexander Potapenko <glider@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM2PEPF0001C70B:EE_|FR2P281MB2315:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9e943ce6-e529-439d-65f3-08dc2c711186
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	2YAxed70RTOtBFmp/P9aiwwkQdGmXsv/qkBxkHLlSDIiP3e/B/GnmIlKkj9kWo4IqgFWTO69xfPYeGvGMPAc8IHGMhaju9AuNotHP8Ns9xpkCB//s5xIzSQo9jRQdclxmcx2uAk6+ZFufXmxRIRkF46pxVrtP2T5NUZFFlbd+OacRXO9ignXA5KpeimBb8qpooLQY5wb4/VINKCPnweFymDcy8JXB6fMUjrrhtvf6eZXdMVmd8msQgCsODUIqGNJ84l/j9rXF8brdBhzOp4ndxtxjKaEZdQmmxGKs6OC7+yG4GZ6psR/KXMLBfCNBi4VPdSnlfEi4AHN/axUsl7PRDCXvdBCmHfnc9HQiH7tDRFuXfPR6t4PhhoAMjuf5FpwmitvGeuMS3b69o99qoKYEeJn+SibWiINNLR1yNLznsKLC4UXo+jkUg1WQJEmCfG+qmSVv1YV4AMnti9gsgNWkzLEyjq+IqtBroBnFEzs806h8JWch7BNAOrTvvCJ+WTAXKHUcEDff7O9spF+4Vp/iLLY+cZIBz5xFRJsG7jcL0+Mgg+WGPZuaQPbNmIExEhLh7VfDMF5xIFcfzsL8AV+RNG5BQ8Wr3v6oMzv33Ok6aw=
+X-Forefront-Antispam-Report:
+	CIP:217.66.60.4;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SR-MAIL-03.open-synergy.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376002)(136003)(39830400003)(346002)(396003)(230273577357003)(230922051799003)(64100799003)(1800799012)(186009)(451199024)(82310400011)(46966006)(36840700001)(44832011)(70206006)(70586007)(4326008)(8936002)(8676002)(54906003)(2906002)(5660300002)(83380400001)(1076003)(26005)(336012)(81166007)(36756003)(86362001)(42186006)(316002)(41300700001)(2616005)(478600001);DIR:OUT;SFP:1102;
+X-OriginatorOrg: opensynergy.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2024 08:52:11.5933
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e943ce6-e529-439d-65f3-08dc2c711186
+X-MS-Exchange-CrossTenant-Id: 800fae25-9b1b-4edc-993d-c939c4e84a64
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=800fae25-9b1b-4edc-993d-c939c4e84a64;Ip=[217.66.60.4];Helo=[SR-MAIL-03.open-synergy.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AM2PEPF0001C70B.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: FR2P281MB2315
+X-TM-AS-ERS: 104.47.7.169-0.0.0.0
+X-TMASE-Version: StarCloud-1.3-9.1.1015-28188.006
+X-TMASE-Result: 10-0.284100-4.000000
+X-TMASE-MatchedRID: xt1fvVgCaAwxbzLOgy4/xv0hW+Pi7Cos33BNXDnVnRkTWADzICCSxR2U
+	kupZbUME3jBO0ohdxYKsoTBqZmmQckwRRkZSjMxDBA/ZR5qnp8Puc70WAkC6Fb2L79/20sYbi8+
+	IGr+Jb3Uyk/Hw4XN9jdxtn8NMQCb4g9lOaESqwrR81fikUYgyLXJ8bM38R9gpe8ED0L/V6IVIlq
+	ldglC+k9h5c4TN8zbZqsgm1VRq1bBfrtMrqkRKbt2tdLwFGjEKBJetwkYd1rZxg7svMtapLuGtu
+	J1W9CjFXZhtNOpHxd2wLw1yoK50Yl8BHB5PWxmaGlU8z8uyv6I=
+X-TMASE-XGENCLOUD: 62ba0d4e-00ee-46ea-ba60-df3068f360b9-0-0-200-0
+X-TM-Deliver-Signature: B607B23BDF002E2A03AC907A5CBF26E9
+X-TM-Addin-Auth: /0ntcSQQ6+WXql+2/8jp2LAjSTh+UI1MznRkQ79u+n3qEikt3guF8VqQWZe
+	SgOz1PvUrddwjiSRKkpqomri96mXremsQIAGZ26QyxuLcJTgI8Uyfb9a+Xx5SuUXLRtjXNU1uNc
+	05jP6rAgqRMEgvj2dVbX7PZc73KAtiK2yD7tomVTf4KJzcoPfkbNOEKSph00vZ6S6WfbOvKArPY
+	dJwddsfhKv9lTgzecynlEeXHcITMbquRAsqUbwU195Bmu8prjuFkGJpJHEsLIZIGWW9vdx72ZDu
+	Rs32KW5zQ/BngnNsXJb3psyLat4IzhKTzSUc.DfpMVXUCSx7THZPsgIwVjR1xBusZK2vr9c1qiI
+	PKeuViq7xiZCXEvJYP1vopeUS0AIH4J0h/I+ePZtc8nT44kDNZzq4Ij2M0zruSprFT1kDrDf/Sd
+	PZYwM+n8ECAPdIQ6JDTicyrFUCSO5//IQL6VwaVquYXy3mbiWbOh0Np+IONrOefhnDhbfV3C9Vy
+	KjC+X/8s0LLunjke8KUX17OTCCvL+I1c46qVzFkB4Q50h19HKyHJyxku+e7bl/yyAxxJymqPEQb
+	6RVID9SUshrElo3URr1DrOf8gttmXKYUr9e0pJ2XCReEp2o9Ra0nBR6JiFUUMH4QTbBOVjiI0Jt
+	A1pw==
+X-TM-Addin-ProductCode: EMS
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=opensynergy.com;
+	s=TM-DKIM-20210503141657; t=1707814369;
+	bh=pJNBMZwflHJz4uji9HQGOcdfnUICX80CQcTMG+DJXzc=; l=1408;
+	h=From:To:Date;
+	b=aAXdbRkEx7vT4dUzQiIYecLqHWXxzUOXrdY1ycHk9YmvWLHXC7tzFQArglB87KB0z
+	 iTv/koki5+YN1iiirRaRQtESQ/NC7NecG0BvFKghMCXZFKO2IICSefZFK97g8Aib3V
+	 e/PKf5YJEIdSkl1AR1MXgGDrNQj1ImoV6Y0Zc54fxULq8tP1ApDTcQnATtph+e1OrN
+	 Mpzq7lZWSdlszpBZO/NqMD6gIgJTDE/z873rcErs4BgKgYRlDBU3LwAraxZOaCBfhm
+	 9pczfHYs9GnUEQ/HrbJmw1OMqwUlf8PkXObNNv6U9sLNMJK4/1FzioaBEjgm24AHm+
+	 DrzP47PasF9wg==
 
-On Tue, 13 Feb 2024 at 10:16, Vlastimil Babka <vbabka@suse.cz> wrote:
->
-> On 2/12/24 23:30, Oscar Salvador wrote:
-> > page_owner needs to increment a stack_record refcount when a new allocation
-> > occurs, and decrement it on a free operation.
-> > In order to do that, we need to have a way to get a stack_record from a
-> > handle.
-> > Implement __stack_depot_get_stack_record() which just does that, and make
-> > it public so page_owner can use it.
-> >
-> > Also implement {inc,dec}_stack_record_count() which increments
-> > or decrements on respective allocation and free operations, via
-> > __reset_page_owner() (free operation) and __set_page_owner() (alloc
-> > operation).
-> >
-> > Traversing all stackdepot buckets comes with its own complexity,
-> > plus we would have to implement a way to mark only those stack_records
-> > that were originated from page_owner, as those are the ones we are
-> > interested in.
-> > For that reason, page_owner maintains its own list of stack_records,
-> > because traversing that list is faster than traversing all buckets
-> > while keeping at the same time a low complexity.
-> > inc_stack_record_count() is responsible of adding new stack_records
-> > into the list stack_list.
-> >
-> > Modifications on the list are protected via a spinlock with irqs
-> > disabled, since this code can also be reached from IRQ context.
-> >
-> > Signed-off-by: Oscar Salvador <osalvador@suse.de>
-> > ---
-> >  include/linux/stackdepot.h |  9 +++++
-> >  lib/stackdepot.c           |  8 +++++
-> >  mm/page_owner.c            | 73 ++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 90 insertions(+)
->
-> ...
->
->
-> > --- a/mm/page_owner.c
-> > +++ b/mm/page_owner.c
-> > @@ -36,6 +36,14 @@ struct page_owner {
-> >       pid_t free_tgid;
-> >  };
-> >
-> > +struct stack {
-> > +     struct stack_record *stack_record;
-> > +     struct stack *next;
-> > +};
-> > +
-> > +static struct stack *stack_list;
-> > +static DEFINE_SPINLOCK(stack_list_lock);
-> > +
-> >  static bool page_owner_enabled __initdata;
-> >  DEFINE_STATIC_KEY_FALSE(page_owner_inited);
-> >
-> > @@ -61,6 +69,57 @@ static __init bool need_page_owner(void)
-> >       return page_owner_enabled;
-> >  }
-> >
-> > +static void add_stack_record_to_list(struct stack_record *stack_record)
-> > +{
-> > +     unsigned long flags;
-> > +     struct stack *stack;
-> > +
-> > +     stack = kmalloc(sizeof(*stack), GFP_KERNEL);
->
-> I doubt you can use GFP_KERNEL unconditionally? Think you need to pass down
-> the gfp flags from __set_page_owner() here?
-> And what about the alloc failure case, this will just leave the stack record
-> unlinked forever? Can we somehow know which ones we failed to link, and try
-> next time? Probably easier by not recording the stack for the page at all in
-> that case, so the next attempt with the same stack looks like the very first
-> again and attemps the add to list.
-> Still not happy that these extra tracking objects are needed, but I guess
-> the per-users stack depot instances I suggested would be a major change.
->
-> > +     if (stack) {
-> > +             stack->stack_record = stack_record;
-> > +             stack->next = NULL;
-> > +
-> > +             spin_lock_irqsave(&stack_list_lock, flags);
-> > +             if (!stack_list) {
-> > +                     stack_list = stack;
-> > +             } else {
-> > +                     stack->next = stack_list;
-> > +                     stack_list = stack;
-> > +             }
-> > +             spin_unlock_irqrestore(&stack_list_lock, flags);
-> > +     }
-> > +}
-> > +
-> > +static void inc_stack_record_count(depot_stack_handle_t handle)
-> > +{
-> > +     struct stack_record *stack_record = __stack_depot_get_stack_record(handle);
-> > +
-> > +     if (stack_record) {
-> > +             /*
-> > +              * New stack_record's that do not use STACK_DEPOT_FLAG_GET start
-> > +              * with REFCOUNT_SATURATED to catch spurious increments of their
-> > +              * refcount.
-> > +              * Since we do not use STACK_DEPOT_FLAG_{GET,PUT} API, let us
-> > +              * set a refcount of 1 ourselves.
-> > +              */
-> > +             if (refcount_read(&stack_record->count) == REFCOUNT_SATURATED) {
-> > +                     refcount_set(&stack_record->count, 1);
->
-> Isn't this racy? Shouldn't we use some atomic cmpxchg operation to change
-> from REFCOUNT_SATURATED to 1?
+Fix the following warning when building virtio_snd driver.
 
-If 2 threads race here, both will want to add it to the list as well
-and take the lock. So this could just be solved with double-checked
-locking:
+"
+*** CID 1583619:  Uninitialized variables  (UNINIT)
+sound/virtio/virtio_kctl.c:294 in virtsnd_kctl_tlv_op()
+288
+289         break;
+290       }
+291
+292       kfree(tlv);
+293
+vvv     CID 1583619:  Uninitialized variables  (UNINIT)
+vvv     Using uninitialized value "rc".
+294       return rc;
+295     }
+296
+297     /**
+298      * virtsnd_kctl_get_enum_items() - Query items for the ENUMERATED element type.
+299      * @snd: VirtIO sound device.
+"
 
-if (count == REFCOUNT_SATURATED) {
-  spin_lock(...);
-  if (count == REFCOUNT_SATURATED) {
-    refcount_set(.., 1);
-    .. add to list ...
-  }
-  spin_unlock(..);
-}
+Signed-off-by: Anton Yakovlev <anton.yakovlev@opensynergy.com>
+Signed-off-by: Aiswarya Cyriac <aiswarya.cyriac@opensynergy.com>
+Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+Addresses-Coverity-ID: 1583619 ("Uninitialized variables")
+Fixes: d6568e3de42d ("ALSA: virtio: add support for audio controls")
+---
+ sound/virtio/virtio_kctl.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/sound/virtio/virtio_kctl.c b/sound/virtio/virtio_kctl.c
+index 0c6ac74aca1e..d7a160c5db03 100644
+--- a/sound/virtio/virtio_kctl.c
++++ b/sound/virtio/virtio_kctl.c
+@@ -286,6 +286,11 @@ static int virtsnd_kctl_tlv_op(struct snd_kcontrol *kcontrol, int op_flag,
+ 		else
+ 			rc = virtsnd_ctl_msg_send(snd, msg, &sg, NULL, false);
+ 
++		break;
++	default:
++		virtsnd_ctl_msg_unref(msg);
++		rc = -EINVAL;
++
+ 		break;
+ 	}
+ 
+-- 
+2.43.0
+
