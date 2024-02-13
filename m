@@ -1,63 +1,85 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1E8225A4;
-	Tue, 13 Feb 2024 09:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F361C6AD
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 09:18:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707815853; cv=none; b=foaX+5QSc80adFER9JPO+pjo9wxNllr0qPGdo4ZWrCmZCswjSDhhKX5UgWGtR3W/zsfNnGVcrnfCQjl/gdjQMhb+pbj+FQjjfKJSX8L8u+mill/YJKiznovtoMkpgPLaQa9c+PKrVGqTgGcdhlPPqoe/yOAgdQDpQgX6slwA+Hc=
+	t=1707815919; cv=none; b=brXK1Iwh8yjZD6Pastk+0FNjiRDvxov69+EweTZS1ytDSdpllt5FNdAeohsErGAfbW0uArfRJCjkXGb/Aql0+DtlY/0cTzXsOK5kxhUwsfcLIlsY6/0vrh3n/DIInrysfSVRK/DouRELqruLD28+YIqNu6U1/rrjgWXWjAfUxhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707815853; c=relaxed/simple;
-	bh=ZfYUeVMl6AYblsdyIrX3nVKH+xT9BNV6zy6NmrP+hoo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=doSlJa2yEESvBqnfMIoQsCJKWxEjBCBa4Fc8m0F4VKWuAI9xTC9c8Ur+gKf2Qf/Awamb9tgV/yITE8yg3L6diOIINipVOb1StdvoIJGp7M7H1T80ts6mY/JCa4859laUlClUfoqL0KmE0C/9BWDxzQ3EwwdtZPrX+u1ikNnwvCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TFdjmP4T; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707815919; c=relaxed/simple;
+	bh=QHpTrfbD6Cxc5A4xZJUViFMjJoNOL0P5llt+klEf9CY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lpgjoh8tAd1Nqr4A9HtLIHHb1pFQiEvReB7/uslSqThjKfMXquxnzLXT8IioINeJyk2lN81rwTViMBrM0HSfzk8BCFFYfzjzx6dcV/dRUQGUZi19l4rGnT8PeXujGhcJiqOoUXiR6uKSBZwDvuGas0ja9V3O4Vz+Ije04ShEZz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0RefKy/B; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lKYqmnyW; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0RefKy/B; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lKYqmnyW; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TFdjmP4T"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-42a9c21f9ecso22848101cf.0;
-        Tue, 13 Feb 2024 01:17:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707815851; x=1708420651; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=t8l8YBrC4jhYQEFBTPrrabrCLybr3DvkI5ByH89g4rc=;
-        b=TFdjmP4TP2SznhhCc3RzlKuSDhwXo53ItMRFQAAFW/jhZ3W6QcNfKa9gTdg13CI0Uf
-         FohaelAOf2Vl6qBwV/V0PsSIOlqdoAmGI7Yn3XvSu0Kgm016vdrXU05cCZwdndUW4SA2
-         aWhhMKpl5ktRbErJtcrHKIOLIC6fKKQyL7jR4HiN38qwLWf7qRJd8Q1I8VeM/u2MIg5E
-         p+5/G58myTulIlNl5w8iI9kgNHSLW56OFM/SS4gWsZkz1rHkIjH5TFnrnKKsGgzjEDWg
-         9g4CEm8cm6qivOg32xhXYHNSsBveA3FcJH6vKzONSH/bNJ/6kuq2wy20EBT4CYqqA7Y9
-         DtNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707815851; x=1708420651;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=t8l8YBrC4jhYQEFBTPrrabrCLybr3DvkI5ByH89g4rc=;
-        b=PeHHfMzsYOysxVuDneT2teIeKtV9W62zmofCrCsSp3VeWqVh38FdSJbgg7ifgQ2Q+Z
-         wO6lXO7uSa/tAbai83QzfR5Typys7aS7IQkH+/cO40dLVe5REZezj8uUgZbpUbWhamGo
-         Q+VV9eLCEgaOmRwDsNb8sarYhdltdoVj9amgo5Nzqi8ItU4qVZ4ybg+6DSo9npcYAgka
-         UyxE9I2GMp3R/Kr9FY+THHPdQJq9KjyeLG461QlmEDCdEan6YOqdT3pKdRgTGBBPM4B5
-         V4x6KnpnQQVPPvBQslhoU6FSv56rPK9cm1imrM4IB+SlFf1JMOYUw+ZUqIoB6XIyRI5H
-         JqmA==
-X-Gm-Message-State: AOJu0YwUNlXc+dVkNl60mOKfhmBb7EgoyOejJThkbDR8LOU9i7fSemkp
-	q0ZCkvo3oHD1/24GTLCgNIpyQf+ezYVH5K8Vky8utqdPTl2tHDboLp4K1tHN2A==
-X-Google-Smtp-Source: AGHT+IEr6JjDsOTC5+jgquFmev1o/xNjgQ72kQIXg07hiJvXnWbnKoP7UbRqufY0oe1W1Nodgvctxw==
-X-Received: by 2002:a05:622a:44b:b0:42b:fda6:dbf9 with SMTP id o11-20020a05622a044b00b0042bfda6dbf9mr13589667qtx.60.1707815850629;
-        Tue, 13 Feb 2024 01:17:30 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXr7WfCVPQHipV6ZVVxCf6WWqNgWUWFQXPGtE++2Aa/OqMmr2Skc++a/B6EKs4gNGX/BYWJ0M3bhYONWrjM0/cI3w/dtZcKpJ+StNSsSwjUXm8IV0v1VDa3UCvMTNm0D1ybCJ3j/BqlrnUArL7omtuqhxJYlXqJ1yEOeG0S6m8i8z5dx3A=
-Received: from localhost ([207.181.197.26])
-        by smtp.gmail.com with ESMTPSA id r13-20020ac85c8d000000b0042dabcf07eesm596424qta.6.2024.02.13.01.17.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 01:17:29 -0800 (PST)
-Date: Tue, 13 Feb 2024 03:17:28 -0600
-From: Lenko Donchev <lenko.donchev@gmail.com>
-To: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: ntfs3@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] fs/ntfs3: use kcalloc() instead of kzalloc()
-Message-ID: <ZcszqPoW8RMaOvTN@nixos>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0RefKy/B";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lKYqmnyW";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0RefKy/B";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lKYqmnyW"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4AAE321C24;
+	Tue, 13 Feb 2024 09:18:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707815916; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ebQ/QBmagH33BuOSYaJpuDXGz/X0XyWgvNd0wEUstmk=;
+	b=0RefKy/BFhW6IL4S8ZED0cHTokViyCdUZdXFqd8QDtpPHktN1KHvGTvv3VM2xkCUyXNuFe
+	e16OA0s/AlSETxp2TXJjv/GKqaOvoNidqEYXScRdx4FedhAYfner85CnTqGTHzKPTP173q
+	wq0kG9DCndIAIrrvIWVulYGLMt/jewc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707815916;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ebQ/QBmagH33BuOSYaJpuDXGz/X0XyWgvNd0wEUstmk=;
+	b=lKYqmnyWD/dpwkkLrpGerzGn0YJfZ0bOQhltIjMTlsFCPHmtV4EcU4rnOm8zMVqEcZbEUk
+	Uxpxi7tEy9ygw9DQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707815916; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ebQ/QBmagH33BuOSYaJpuDXGz/X0XyWgvNd0wEUstmk=;
+	b=0RefKy/BFhW6IL4S8ZED0cHTokViyCdUZdXFqd8QDtpPHktN1KHvGTvv3VM2xkCUyXNuFe
+	e16OA0s/AlSETxp2TXJjv/GKqaOvoNidqEYXScRdx4FedhAYfner85CnTqGTHzKPTP173q
+	wq0kG9DCndIAIrrvIWVulYGLMt/jewc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707815916;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ebQ/QBmagH33BuOSYaJpuDXGz/X0XyWgvNd0wEUstmk=;
+	b=lKYqmnyWD/dpwkkLrpGerzGn0YJfZ0bOQhltIjMTlsFCPHmtV4EcU4rnOm8zMVqEcZbEUk
+	Uxpxi7tEy9ygw9DQ==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id C8A7F13A0E;
+	Tue, 13 Feb 2024 09:18:35 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id 7qDHLeszy2VGIAAAn2gu4w
+	(envelope-from <osalvador@suse.de>); Tue, 13 Feb 2024 09:18:35 +0000
+Date: Tue, 13 Feb 2024 10:19:45 +0100
+From: Oscar Salvador <osalvador@suse.de>
+To: Marco Elver <elver@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Alexander Potapenko <glider@google.com>
+Subject: Re: [PATCH v8 3/5] mm,page_owner: Display all stacks and their count
+Message-ID: <Zcs0MdpWwRTv_Uzy@localhost.localdomain>
+References: <20240212223029.30769-1-osalvador@suse.de>
+ <20240212223029.30769-4-osalvador@suse.de>
+ <CANpmjNM8pWMvEYW1YffTjy5xRgyeTOP0sGJoV31pbKU1dH5b9w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,36 +88,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CANpmjNM8pWMvEYW1YffTjy5xRgyeTOP0sGJoV31pbKU1dH5b9w@mail.gmail.com>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -4.18
+X-Spamd-Result: default: False [-4.18 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 NEURAL_HAM_SHORT(-0.20)[-0.995];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 BAYES_HAM(-2.88)[99.48%];
+	 ARC_NA(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FREEMAIL_CC(0.00)[linux-foundation.org,vger.kernel.org,kvack.org,suse.com,suse.cz,gmail.com,google.com];
+	 RCVD_TLS_ALL(0.00)[]
+X-Spam-Flag: NO
 
-We are trying to get rid of all multiplications from allocation
-functions to prevent integer overflows[1]. Here the multiplication is
-obviously safe, but using kcalloc() is more appropriate and improves
-readability. This patch has no effect on runtime behavior.
+On Tue, Feb 13, 2024 at 09:38:43AM +0100, Marco Elver wrote:
+> On Mon, 12 Feb 2024 at 23:29, Oscar Salvador <osalvador@suse.de> wrote:
+> > Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> 
+> Acked-by: Marco Elver <elver@google.com>
 
-Link: https://github.com/KSPP/linux/issues/162 [1]
-Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
+Thanks!
 
-Signed-off-by: Lenko Donchev <lenko.donchev@gmail.com>
----
-Changes in v2:
-  - Use sizeof on actual pointer.
----
- fs/ntfs3/frecord.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/ntfs3/frecord.c b/fs/ntfs3/frecord.c
-index d435446537ca..725aa84dbd22 100644
---- a/fs/ntfs3/frecord.c
-+++ b/fs/ntfs3/frecord.c
-@@ -2636,7 +2636,7 @@ int ni_read_frame(struct ntfs_inode *ni, u64 frame_vbo, struct page **pages,
- 		goto out1;
- 	}
  
--	pages_disk = kzalloc(npages_disk, sizeof(struct page *), GFP_NOFS);
-+	pages_disk = kcalloc(npages_disk, sizeof(*pages_disk), GFP_NOFS);
- 	if (!pages_disk) {
- 		err = -ENOMEM;
- 		goto out2;
--- 
-2.43.0
+> > +                       /* This pairs with smp_load_acquire() from function
+> 
+> Comment should be
+> 
+> /*
+>  *
+> ...
+>  */
 
+Yap, fat fingers here.
+
+> > +       if (!*ppos) {
+> > +               /*
+> > +                * This pairs with smp_store_release() from function
+> > +                * add_stack_record_to_list(), so we get a consistent
+> > +                * value of stack_list.
+> > +                */
+> > +               stack = smp_load_acquire(&stack_list);
+> 
+> I'm not sure if it'd make your code simpler or not: there is
+> <linux/llist.h> for singly-linked linked lists, although the code to
+> manage the list is simple enough I'm indifferent here. Only consider
+> it if it helps you make the code simpler.
+
+I will check if it eases the code somehow.
+
+
+> > +static void stack_stop(struct seq_file *m, void *v)
+> > +{
+> > +}
+> 
+> Is this function even needed if it's empty? I recall there were some
+> boilerplate "nop" functions that could be used.
+
+I will check if seq already provides a dummy function for these cases.
+
+-- 
+Oscar Salvador
+SUSE Labs
