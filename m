@@ -1,109 +1,96 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E283A8FE;
-	Tue, 13 Feb 2024 12:30:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D613BB3A;
+	Tue, 13 Feb 2024 12:31:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707827461; cv=none; b=X0aGS2teaF7OQmIQ8Alar4p/XNFmIgyd9fLthUKQLOBt9NDXTZcNLhyQIromsC9UwnHQe3fe7bczAgYRAmOIp98XueM5Xgm/5UNykddERkDRw7cwrb8tSvlWfZuan2uwUee1bfj0+0wEHLFg/D+sl4eoa/bCy8PRCXcMydNuExQ=
+	t=1707827466; cv=none; b=t3WlcQshQG9R3QAqW4DwQOEGUAhjFWmV38n59ba1I4EaqEeoE2ViDY2T/wzACkR7xhHiVNN4rkRKiXJUtR4Pm6x0NUbOZurOEGWQCmPFrNJlzDmONS9qVJK3gk9y5FNFAmFojH9Fakm9WPz7G9NPZyHULVuzxdClUonQEGINZIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707827461; c=relaxed/simple;
-	bh=lD1PS/JX+bbCuKijEg/mbIfGVLbRgFl+UYCqNJpCNvQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bleOGq/QtBy5Jq79bI8jzF9x0hOTBq5mPlh4v3/XlQIhAA8GUwdCvuwTodydhclVMuc+QWE2fMflr/Sdte5PZaSq2z9q8GKy+uYU1IFMLgjmRm5gP5qd+x5gdLezpAAr6jtRWX69GADbPpN6apiNm4M3/KTyBuc/eVe25xKyTTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=t/DSLgBP; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1707827466; c=relaxed/simple;
+	bh=HFtJQftRt81qsj3WKtpyVLXu2ijNvznvMiSPy4K+l70=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=owY+KZWUUZbk3bLZxpoaO3ZP7zB12XaEULV8EOPT7J7CjNM8lCHNkp/aG5SSinJaKEBiHtpk7g+sDWFJ+ldDigywxZKOUVwwKgBHcvGeQbs73BZ+9dtJLq02jNMCUfLPvDbWkBKyRQBDinuXnrhMiDkIg8HyBRF1ryn3JogAlZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=CSuaviJj; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="t/DSLgBP"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41D7d0cd002349;
-	Tue, 13 Feb 2024 13:30:37 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=kHU+w4G8rI34Tv3Gohyrk/JVIGnrPjuaVTS+MdoFwXk=; b=t/
-	DSLgBPM5IwMdlpBqfKAukMqNYXOPKwWIutP9G5ZbBlV36IoNpQK7fHQ2ckWL/3kO
-	bzRp9HRF3XMXQrfs5HeF6ETaRGmp+xQn930VdL0uVwnFWBcZCoCPf7klmyXdZoBn
-	uFJ2h4DhhLsUgoblkaPx3W7MT4nzMZcSQojx8qfsSZPYDybWivvJoSlpi3KeD5XG
-	4A0CkC8yH5Aml8m4n0XBhyA1yk/me/hIs+kRoIra7Em39z6xB4XXO0AzclHI8SD+
-	/i+8Mcd9n81L1jzlxHKbIYtQC3uvmRBxtR+woghddxK4OUk8Ohx9FIhN6fp7nkQt
-	7aHnZ58DqqEDvUJ+jtZA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3w62shtndr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 13:30:37 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A4D004002D;
-	Tue, 13 Feb 2024 13:30:32 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B971F23C6AC;
-	Tue, 13 Feb 2024 13:29:48 +0100 (CET)
-Received: from [10.201.22.200] (10.201.22.200) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 13 Feb
- 2024 13:29:48 +0100
-Message-ID: <f8525765-4c91-43ab-a57c-d236889cf122@foss.st.com>
-Date: Tue, 13 Feb 2024 13:29:47 +0100
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="CSuaviJj"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4TZ0zh3xD5z9sn6;
+	Tue, 13 Feb 2024 13:30:56 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1707827456;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DIg66RdJU9OwFIwtt981TU+bUHnJVsypvaGrWF5aizw=;
+	b=CSuaviJj+ifluOeWtUWWsQGTD3QjgppzGm9qLW8AykSBIRq6Dfao2ZGDO5Yl37FzE74c+v
+	FDz19HU4mjMDeXcn7Musbnf7H/WZC7q3Zsf26mYStBJoz8Ae90lLr25c0SuMrQaxCgEe2r
+	w3efZBlHdAUamsHtzqeCYkmg/Vf+QJdj1gSBuo4m5XN1XlPkb3nAhHpMCmWAOXKvi4+AgF
+	jXJIO9pnnrA/VeIwuYGSOARj/YFsGs6ODUwqy1TseNW3BhAORIQWILJUfZ8CpcZCTm2tK6
+	2o4pCdpqfbdbWtE/aVDtWC97iPMIjXayFEyu5bq8aqQtX6jh50neal+phvb/fg==
+Date: Tue, 13 Feb 2024 13:30:51 +0100
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: Zi Yan <ziy@nvidia.com>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Yang Shi <shy828301@gmail.com>, Yu Zhao <yuzhao@google.com>, linux-mm@kvack.org, 
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, Ryan Roberts <ryan.roberts@arm.com>, 
+	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Zach O'Keefe <zokeefe@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, mcgrof@kernel.org, gost.dev@samsung.com
+Subject: Re: [PATCH v3 0/7] Split a folio to any lower order folios
+Message-ID: <qzbcjn4gcyxla4gwuj6smlnwknz2wvo5wrjctin6eengjfqjei@lzkxv3iy6bol>
+References: <20230403201839.4097845-1-zi.yan@sent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 04/12] memory: stm32-fmc2-ebi: add MP25 support
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>
-CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>
-References: <20240212174822.77734-1-christophe.kerello@foss.st.com>
- <20240212174822.77734-5-christophe.kerello@foss.st.com>
- <afb4bd72-aa22-4d74-aeb8-d3875c6d07ca@linaro.org>
-From: Christophe Kerello <christophe.kerello@foss.st.com>
-In-Reply-To: <afb4bd72-aa22-4d74-aeb8-d3875c6d07ca@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-13_06,2024-02-12_03,2023-05-22_02
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230403201839.4097845-1-zi.yan@sent.com>
 
+Hi Zi yan,
 
-
-On 2/13/24 08:36, Krzysztof Kozlowski wrote:
-> On 12/02/2024 18:48, Christophe Kerello wrote:
->> Add MP25 SOC support. RNB and NWAIT signals are differentiated.
->
-
-Hi Krzysztof,
-
-> s/SOC/SoC/
-> everywhere
-
-Ok.
-
+> From: Zi Yan <ziy@nvidia.com>
 > 
->>
+> Hi all,
 > 
-> The way you split patches is a bit odd. Shall we understand that this
-> patch is the complete MP25 SoC support?
+> File folio supports any order and people would like to support flexible orders
+> for anonymous folio[1] too. Currently, split_huge_page() only splits a huge
+> page to order-0 pages, but splitting to orders higher than 0 is also useful.
+> This patchset adds support for splitting a huge page to any lower order pages
+> and uses it during file folio truncate operations.
 > 
 
-No, it is not the full support but the way the FMC2 IP has been
-integrated in this SoC. As patch 5 has to be written, I am going to
-merge this patch and patch 5 in one patch. I am going to follow your
-recommendation and use the platform data to distinguish between each
-variant.
+I recently posted patches to enable block size > page size(Large Block
+Sizes) in XFS[1].
+The main idea of LBS is to have a notion of minimum order in the 
+page cache that corresponds to the filesystem block size.
 
-Regards,
-Christophe Kerello.
+Ability to split a folio based on a given order is something that would
+definitely optimize the LBS implementation.
 
-> Best regards,
-> Krzysztof
-> 
+The current implementation refuses to split a large folio if it has a
+minimum order set in the page cache [2]. What we would like to have instead
+is to split it based on the minimum order. The main use is of course being
+able to free some folios during partial truncate operation.
+
+Your patch was also suggested by willy during our LPC talk[3].
+
+I tried rebasing your patch and there were a lot of non-trivial conflicts.
+Is there any plans on sending a new version?
+
+
+[1] https://lore.kernel.org/linux-xfs/20240213093713.1753368-1-kernel@pankajraghav.com/
+[2] https://lore.kernel.org/linux-xfs/20240213093713.1753368-9-kernel@pankajraghav.com/
+[3] https://youtu.be/ar72r5Xf7x4?si=XDb-g7SSIgS-5TkP&t=1457
+
+--
+Pankaj
