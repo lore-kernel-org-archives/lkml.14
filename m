@@ -1,187 +1,88 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7114515B7
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 02:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552BA8BE8;
+	Tue, 13 Feb 2024 02:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707792387; cv=none; b=F1Ykj9Ve8b2uZp16QZZL6/KKvJ6UKf8pX61ZB6rSBxGggfFrff6YKcWl64oD+WleEWXXlwespUXVAtSgnxFiJFYFiJwjKATxZLk1eO7fm/JQDHZ4Zo0SeDsDXCFEDH47iMXSa3JXalDg6sihx6IhaLBEpnA7Jl31UiWFRC7B2KQ=
+	t=1707792785; cv=none; b=KgACR2dC4lfybvSMY1/PTcsXYCc8DrFoUKNuOuCH9m+ax4TBnA4qY4JCyoI5eJWJTlgbKZfjgCuOeL+jID4BohDJvn2oN8ePlWwxzMbzyErX5M3MoNuIuuXl1dhGDA2UTGZR2k3OiwlaoMsVTktSUTi5nSDkvp7+nrFCQAbDNQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707792387; c=relaxed/simple;
-	bh=bi//PTUtY+EwVoi0mPqaJExzueAl50/QOcxwdbDfkec=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=rxSRmzzR6Iho8BAGKFdqKvo2hhnAv4TRQQoFPG2NCtJVNpiHWkEvRjhQ7kW4ymqLcyaspMKBc7JxAdf6o/obpJnBm4dArRn+p9UxQICDzyP5OmfENa9TtGWDGePp655ofNVT5Tb1NWn93rofSlrGY5lvlyVaLFN+siwuema8UzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=k12m35I4; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1707792785; c=relaxed/simple;
+	bh=CAs0UMp0BUjGybDRGjh0Nyg6O4tl4J6ISVjwah+57MI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KRKjnzAQ0uDvYmhqbuYNgn3NULNhYiDn+GzHYGmGTKFx5kqBwJX8GPFyALiQDwix5rF46Y1lmV7JY/wiS6I0T4MFKIJFRiGIFmTo8mD5LaqyniC2NvcZ4QPh4F4WtDPHjXKjkZ7nsOeOG51Lu5YjV20NqeUzZwH0iawlJAdfj58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LGk7uUHg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k12m35I4"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60492d6bfc0so51520017b3.2
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 18:46:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707792384; x=1708397184; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fa6JPy2ikfqnkDj89yS4RCnJk+0NDmtRigU+S/WJCr8=;
-        b=k12m35I4wgJvNv2P/brlbjo8hlFADt7YWUvI5tpnrye8jukTPbfsFJ5iYKrHNxRYAq
-         RKjhAIyrFdkwggD+aAOULmCvaxoCNr3XD968p11kQ5zEAgcMC6EGyufEX7zSetAJcFE8
-         jgzEH8djQnI8Qe0OPrwTbLQU3jO6L3D3h+fVPhGTacI3gVmTPn2MKX2PIXnd6On+mIt+
-         rbl/AMBeqUs/HhInBbHP00NVpoinuzmitr1xmCkMZWjmggShuHdMlECDKhXSIZNjL1Oi
-         6UUmMM0+4lHBDkvb60dw/NE2FsEpjDvUWw7FWvXTwj2r1Lt9TKFlDWCqlossYuE69WyF
-         VA9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707792384; x=1708397184;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=fa6JPy2ikfqnkDj89yS4RCnJk+0NDmtRigU+S/WJCr8=;
-        b=B4yr4tuwa+GqFuLhYQlUkVDw084ZSFW+GyqgjFfNiiiPUG2gkJecZomFNJR1cUeUvK
-         zqwy6r2OzcfEWXw0EpV+wdmzNPrrBLVlL8DQzQn6A3yri0bDVUtAHSOyquyDC52lhYKT
-         0nctBR/oP6/hN8sZq5e1QYPLStaa73vgLj+hNDmDU0DbflplWtqdbfId9aO8jUJOkFo2
-         MfgFZEVoMp0AJ0UoQWvdhUU3bohqNuHo6PIffomDUmNJEC5LYQqkhQQCeVxIMMHENar7
-         jzhN0K90OZWymCZtcyMShDz4ntZVd8MJWVi6gWlL5Y7USZl2dgFePVBnhUBcr1lcBvYX
-         LCPg==
-X-Gm-Message-State: AOJu0YyiB0nuujX80dLP8j9RjlgPdP8Ix7l2NPiJjob1GDg8RcNNqIWw
-	99zSwDduKBMi4RanCVIm3vGew2KaKHbe2s+3fyxgZqf1bWsYPfJFGufyOunzJBT25d9QOSPaXIj
-	4gQ==
-X-Google-Smtp-Source: AGHT+IG/ZSnLAURqx4lnOTAhY5bAE9qh5urnqzGu6F6ugq7mMYh8QI//JZSqfEiPz4iWnQgtIf0dTS0PHII=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a0d:d603:0:b0:607:7901:425b with SMTP id
- y3-20020a0dd603000000b006077901425bmr340812ywd.0.1707792384492; Mon, 12 Feb
- 2024 18:46:24 -0800 (PST)
-Date: Mon, 12 Feb 2024 18:46:23 -0800
-In-Reply-To: <CABgObfaum2=MpXE2kJsETe31RqWnXJQWBQ2iCMvFUoJXJkhF+w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LGk7uUHg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D93EC433F1;
+	Tue, 13 Feb 2024 02:53:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707792784;
+	bh=CAs0UMp0BUjGybDRGjh0Nyg6O4tl4J6ISVjwah+57MI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LGk7uUHg0aWZlEP6w6wzMkOo2Y/yS76VDz8euCfjoGqlyjyhcFLmUzNyBNikw6qns
+	 dePhwicnPM86j2thaGSc/CcCJR0qb+nSF/LPctPfx9Q1TlPgiTvufrTB7DTq/06Fv1
+	 m+weN/Jv2U8HA8SLYcWsLHtzH7qsGrR3HT+7v7R4O0ZfOpeulAviP0l0t58GplIJ8X
+	 yZdw96zDmJDJWk/ZfHikVo0Sl6vmwkZhPMRl3EXs+PaUZ2glPhiOLnJgkuZZzA8QRu
+	 xYRTOHF30pKLqf+gIQyCrULaxg2S3+mATIRZpnUCtw8Mew+CMj1NNZg8lai0beP7Bl
+	 84Y9hfwpyhqUw==
+Date: Mon, 12 Feb 2024 19:53:03 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: llvm@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: Prebuilt LLVM 18.1.0-rc2 uploaded
+Message-ID: <20240213025303.GA4006766@dev-arch.thelio-3990X>
+References: <20240208002841.GA2601476@dev-arch.thelio-3990X>
+ <CANiq72=G--5LW-9sg2PscTL863mFVNdnX7LUQX2Xj02qZs4crA@mail.gmail.com>
+ <20240212234850.GB3221859@dev-arch.thelio-3990X>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240209183743.22030-1-pbonzini@redhat.com> <ZcZ_m5By49jsKNXn@google.com>
- <CABgObfaum2=MpXE2kJsETe31RqWnXJQWBQ2iCMvFUoJXJkhF+w@mail.gmail.com>
-Message-ID: <ZcrX_4vbXNxiQYtM@google.com>
-Subject: Re: [PATCH 00/10] KVM: SEV: allow customizing VMSA features
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, michael.roth@amd.com, 
-	aik@amd.com, isaku.yamahata@intel.com
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240212234850.GB3221859@dev-arch.thelio-3990X>
 
-On Fri, Feb 09, 2024, Paolo Bonzini wrote:
-> On Fri, Feb 9, 2024 at 8:40=E2=80=AFPM Sean Christopherson <seanjc@google=
-.com> wrote:
-> > On Fri, Feb 09, 2024, Paolo Bonzini wrote:
-> > > The idea that no parameter would ever be necessary when enabling SEV =
-or
-> > > SEV-ES for a VM was decidedly optimistic.
-> >
-> > That implies there was a conscious decision regarding the uAPI.  AFAICT=
-, all of
-> > the SEV uAPIs are direct reflections of the PSP invocations.  Which is =
-why I'm
-> > being so draconian about the SNP uAPIs; this time around, we need to ac=
-tually
-> > design something.
->=20
-> You liked that word, heh? :) The part that I am less sure about, is
-> that it's actually _possible_ to design something.
->=20
-> If you end up with a KVM_CREATE_VM2 whose arguments are
->=20
->    uint32_t flags;
->    uint32_t vm_type;
->    uint64_t arch_mishmash_0; /* Intel only */
->    uint64_t arch_mishmash_1; /* AMD only */
->    uint64_t arch_mishmash_2; /* Intel only */
->    uint64_t arch_mishmash_3; /* AMD only */
->=20
-> and half of the flags are Intel only, the other half are AMD only...
-> do you actually gain anything over a vendor-specific ioctl?
+On Mon, Feb 12, 2024 at 04:48:52PM -0700, Nathan Chancellor wrote:
+> Hi Miguel,
+> 
+> On Sat, Feb 10, 2024 at 05:36:01PM +0100, Miguel Ojeda wrote:
+> > On Thu, Feb 8, 2024 at 1:28 AM Nathan Chancellor <nathan@kernel.org> wrote:
+> > >
+> > > I have built and uploaded a prebuilt version of LLVM 18.1.0-rc2 to
+> > > https://mirrors.edge.kernel.org/pub/tools/llvm/.
+> > >
+> > > As with Linux -rc releases, this is not the final version that will
+> > > ship. If you run across any issues, especially ones that were not
+> > > present in earlier LLVM releases, please consider reporting them to us
+> > > so that we have a chance to investigate and fix them before the final
+> > > release.
+> > 
+> > I took a look at the LLVM 18 prerelease to see if these would work
+> > with Rust for e.g. CI and other users (instead of using the
+> > LLVM-provided apt ones, for instance), and noticed it does not bundle
+> > `libclang.so`.
+> > 
+> > Would it be possible to include it so that we can use `bindgen` and
+> > thus enable Rust with them?
+> > 
+> > I understand they are intended to be minimal toolchains, but if you
+> > think it would not be an unreasonable overhead, then it would be great
+> > to have it.
+> 
+> Absolutely, I am more than happy to include libclang.so and anything
+> else that would be useful for the kernel. Everything gets built but I
+> only install what has felt needed for the kernel, so there is no real
+> overhead aside from package size, which obviously should not increase
+> much with this change. I've added the targets to my build scripts and
+> kicked off a set of builds. If they finish successfully, I will upload
+> them so that you can test them out and make sure they will work.
 
-Sane, generic names.  I agree the code gains are likely negligible, but for=
- me
-at least, having KVM-friendly names for the commands would be immensely hel=
-pful.
-E.g. for KVM_CREATE_VM2, I was thinking more like:
+Alright, I reuploaded 18.1.0-rc2 with libclang.so included, please let
+me know if this will work for you going forward.
 
-  __u32 flags;
-  __u32 vm_type;
-  union {
-	struct tdx;
-	struct sev;
-	struct sev_es;
-	struct sev_snp;
-	__u8 pad[<big size>]
-  };
-
-Rinse and repeat for APIs that have a common purpose, but different payload=
-s.
-
-Similar to KVM_{SET,GET}_NESTED_STATE, where the data is wildly different, =
-and
-there's very little overlap between {svm,vmx}_set_nested_state(), I find it=
- quite
-valuable to have a single set of APIs.  E.g. I don't have to translate betw=
-een
-VMX and SVM terminology when thinking about the APIs, when discussing them,=
- etc.
-
-That's especially true for all this CoCo goo, where the names are ridiculou=
-sly
-divergent, and often not exactly intuitive.  E.g. LAUNCH_MEASURE reads like
-"measure the launch", but surprise, it's "get the measurement".
-
-> Case in point being that the SEV VMSA features would be one of the
-> fields above, and they would obviously not be available for TDX.
->=20
-> kvm_run is a different story because it's the result of mmap, and not
-> a ioctl. But in this case we have:
->=20
-> - pretty generic APIs like UPDATE_DATA and MEASURE that should just be
-> renamed to remove SEV references. Even DBG_DECRYPT and DBG_ENCRYPT
-> fall in this category
->=20
-> - APIs that seem okay but may depend on specific initialization flows,
-> for example LAUNCH_UPDATE_VMSA. One example of the problems with
-> initialization flows is LAUNCH_FINISH, which seems pretty tame but is
-> different between SEV{,-ES} and SNP. Another example could be CPUID
-> which is slightly different between vendors.
->=20
-> - APIs that are currently vendor-specific, but where a second version
-> has a chance of being cross-vendor, for example LAUNCH_SECRET or
-> GET_ATTESTATION_REPORT. Or maybe not.
-
-AFAICT, LAUNCH_SECRET (a.k.a. LAUNCH_UPDATE_SECRET) and GET_ATTESTATION_REP=
-ORT
-shouldn't even be a KVM APIs.  Ditto for LAUNCH_MEASURE, and probably other=
- PSP
-commands.  IIUC, userspace has the VM's firmware handle, I don't see why KV=
-M
-needs to be a middle-man.
-
-> - others that have no hope, because they include so many pieces of
-> vendor-specific data that there's hardly anything to share. INIT is
-> one of them. I guess you could fit the Intel CPUID square hole into
-> AMD's CPUID round peg or vice versa, but there's really little in
-> common between the two.
->=20
-> I think we should try to go for the first three, but realistically
-> will have to stop at the first one in most cases. Honestly, this
-> unified API effort should have started years ago if we wanted to go
-> there. I see where you're coming from, but the benefits are marginal
-> (like the amount of userspace code that could be reused) and the
-> effort huge in comparison.
-
-The effort doesn't seem huge, so long as we don't try to make the parameter=
-s
-common across vendor code.  The list of APIs doesn't seem insurmountable (n=
-ote,
-I'm not entirely sure these are correct mappings):
-
-  create
-  init VM   (LAUNCH_START / TDH.MNG.INIT)
-  update    (LAUNCH_UPDATE_DATA / TDH.MEM.PAGE.ADD+TDH.MR.EXTEND)
-  init vCPU (LAUNCH_UPDATE_VMSA / TDH.VP.INIT)
-  finalize  (LAUNCH_FINISH / TDH.MR.FINALIZE)
+Cheers,
+Nathan
