@@ -1,127 +1,204 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 409841428F
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 06:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E06134DE
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 06:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707804920; cv=none; b=IXWJTnUDAEkdfFKt8OnLOZHoChbd3Ql4+3VInxOuCCajiB6hTpUxpm7YwUTKTBXKsoKys8UZEsNWIAXsWfBpk7GSpzxXH17wl8KTQvu6cquiMMkUh5ANYLT9XZRa4W+ipMOav4d2SP0dBhcaz5U2zxd3CqEkLWhJxTIjqU7EmHE=
+	t=1707805023; cv=none; b=eaJPjKnxBd6K/p8CTHoA3NEleiKBRJonANhebfQFSkP+sRhP3miQ8QFFxosY3rVkz5rpVDa+bWe0+DwcaLGBaC9u6blcwm0xpP9caPaR08ZtDZvFXMEu8J/UgN+v4IwvBHEaC2nUNK4t970uc0pazYSJnf5BB6dFX5tTT0Cm4Fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707804920; c=relaxed/simple;
-	bh=u8yZi7AQT/813a+tj4axejVbUv5iQUwpTR2TYQK9hnY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LDh1Y+ta9ajVoUYhFVB99qQ7OlpXjnC7voZIlGUZE8pSlz3iMrDRDUPAfU2PmavTskhldKEFXJTsUTUOYT2BsNv5eD4X7LV1cIHa77+432cHALXJVP4BHtyt58JnvFa+tWk+0ZWbaWMBO8oHEJOP+iK+t9VuIL9SpXI6lgivku0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lNm2UMVz; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707805023; c=relaxed/simple;
+	bh=+BdDiZtulZrbvLpADjlE62DUPuOp3KejqJWNkuE2SMM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=su5RvpiM7/KkoMHMvThPeuKj5u4xmj8r2qlzS1kq/UGCyc5uSG15AfIAgUZLELCWJ6J58/DbmKR6MKw/+ZX4nlLk2ELvNkVNCJNd3qcg74RIzP42IaOuZQ8f1AhanMyhGI39DezCvk2y9ooWqO8aNMJzi8qhIkuxeAxGES/tDcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=dZcIsh7s; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lNm2UMVz"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d74045c463so31315935ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 22:15:19 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="dZcIsh7s"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6e0a4823881so1397279b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 22:17:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707804918; x=1708409718; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=GJ45qOxQygjER8m1e9kp6gKBtLTSJcN85GoQ73Py9I0=;
-        b=lNm2UMVzy2U12VM1LGrysZqJgpzn9fsEdwf9aysEfiqZiKB8z4MDiTy8M1sAFnIOBU
-         GF29VhYl50DwVFiCkUuXULsVZ/T3bR+r3jIMJm8u6BYEMdCyOgGUujCgFPv+NrdZ2ok/
-         uxyg/ntdozAhfrvm36Ut6wWrgVJ0boWc/U2hG8iRtMv37zRKq8cxrPwnoWtuFZmwRl9A
-         NGkN1uB/TkpJ5TcFwX3oxRfYt3p8UA6xJo0fHfcq5g1aeXil8g2JbbeXVJxrHGUQnGAw
-         LYBVUSiHgnP6uD+O3i3zlzqY/lUX1LngL5sSZSzWpurRh5QJtHJWBmoQysRpdat0b1QU
-         2quQ==
+        d=fastly.com; s=google; t=1707805021; x=1708409821; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TWK7Tcl4v78WKhBmDih4hp4aKoxAkEp5jIDo2VrMgEA=;
+        b=dZcIsh7sDKQJ8LRc01yzKn89AtehuAqcEwEA7cApStZTVvKuDvLarwxXCqdhW+DKT8
+         YLp4Q4Aay2K4aQwkFeTqnllQm0f3qLq9ajXahrohZlc5vAFUhyMo1XCZhVn3FLiJHcp0
+         NTTaFSvxWtlgMwV7Ap5IGyzgbVBd3cAQfzs/Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707804918; x=1708409718;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GJ45qOxQygjER8m1e9kp6gKBtLTSJcN85GoQ73Py9I0=;
-        b=hr1MxuIOqzdF+3iqwAzgQzSVnNt9EKaPsHz07G7FJGZ5QaEZcc5pFqE2F4iT/ert8h
-         HOBwUo3v5r+FOMJbw1lJkw8xqMl1n/8a4CRrDR+xFe7fU2otky6DtxA1D5kHUALOj3lx
-         sSBs83VHX9gfIbQHfvKCQFaGZ6/qRCCKnF6sfGZ2eYp3vUbAGSTiDk7XzbM3LEGyvdWv
-         3brZEYyYLkG8x9crPu7FlLIlLZSdpbZxiBUqipXXn9/rI3o53LwpO/ArAFzpetZYdpy/
-         N6g3ZxYOrlAojKjotpDbfqqfPGSN7GcjzJYiHm3Pdl64i3Sli2rqI4MUq7QkAx9DLv9Y
-         sFQw==
-X-Forwarded-Encrypted: i=1; AJvYcCWjeQg4AZK01BOHBDI+x8pswHLFFA5NeUzOlZgBxpHzuLb0SglkM4I5nTCVHgfnIF4pTaQWHfUpL+I1YPn8YItzU4JgW/JnBMJX6j02
-X-Gm-Message-State: AOJu0YyWZLjONEM5IOcKgtksidyp2BwjBS9jB4LXoqV4+o8Q5SBboE+Q
-	wX/tlJkJnE5rzdNFxq2YZzvQKUj0aDXy8zN+5H/bfadS/gxQ10M7XY+5W3Ip6zo=
-X-Google-Smtp-Source: AGHT+IGUi3DzFtU5GCBI3jPrDosrmH0laHEfMHGNSX3/jONnrMeRzSaScuSFaMYurZ9SbwCiek8r+w==
-X-Received: by 2002:a17:903:442:b0:1da:2c11:54af with SMTP id iw2-20020a170903044200b001da2c1154afmr4125403plb.63.1707804918640;
-        Mon, 12 Feb 2024 22:15:18 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU6p0I8t3iGuopuoBs6axX29J/x4aeFiOGMbt+F2tIsk5b7fad2JT8DgSpKvC0GKCuZaUqRzJOZ05Rdn7G9wy3AXz7OtJ5QpF7fdp09Ikx5EO4EzWLiTdm85xRhNJ5Sr/NgmyrivZmVvzG4i7h1pw2A3PVwh+XDuZORnVC+b9JFmAZn8JyAqjcv8ImGBFkdGN8wK7gEk1vpjJWOFZXZnR+FdWBJDb2PhzwvhjkXhpqIwT1Fi008FFS0253FdcI53uvsGrwP0gHPryoX3JEZtD1d0WMnljvwRaZyMeJKJaodWeisbRgCWe5R7phEZpsuYs0i5m32OS7jnH3p8iC+YrQ7IxpVqojA2WCKUe0/1bwN7WaC0eRGKMi5HuDsnPsbDFTeqP5p/lSRBHiKGQ0J2N4evDuhAeqUzzlRve8uXkm+8CYWqjv2Zwlkb1DfrqhizMhactkAICRceS0+IA==
-Received: from localhost ([122.172.83.95])
-        by smtp.gmail.com with ESMTPSA id jv13-20020a170903058d00b001da0ce93890sm1302529plb.152.2024.02.12.22.15.17
+        d=1e100.net; s=20230601; t=1707805021; x=1708409821;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TWK7Tcl4v78WKhBmDih4hp4aKoxAkEp5jIDo2VrMgEA=;
+        b=O5V1XZqPxbIsu+TW+3CwSr952N51ffWNx2i9aSm6HUgrAtsEohwnIPNfMtsLkMXEj5
+         9+tgzKvVhb+Us6hwFI+tzDzv/I+HShlAOFiW+C31l32nE2aIIixo3Ii4Yewa2YkuMVNL
+         XoK8EaL0bjB2PcbXZ8N/LGYNDvPDstwFeu8KN8jB0ljFXmIMtlPmJrvkaFgM9Ee3OrPq
+         xvsCBw/2DsE5rMsvHD0DgwO1J57OmcRSg1gWPLhr3D/ePumPzYcUWBS5Qhx7OhlSFLby
+         CdY0dFXU6VmGEE6dqIHI1KKmbFLEttu1zi0MF44qQr2CMUCYF2ch7aPBOjNnO9Vn1zrf
+         HTFA==
+X-Gm-Message-State: AOJu0YzUNq2EAZJ/tzgr+hsUGQEgy7lUuT1hNB/u2mMc6jOfrDx5sa0p
+	vpfZW6Mxz6caVrR7RJZCxdmJ2ncYcRtyt9FEYZ1K0Trtprp8SSSE1653lN2bNlSowUocrPEUhxR
+	80IqzyVPpSXqTD9OmgkSwopTejY3woq46/2RmJLsh0vc3ki9JVNa22V/6qnpK5I+zIoGBQopRKp
+	FaQGY260fibiy1Go5/3HKQnMxjZkinOuWG32RImQzxhT0=
+X-Google-Smtp-Source: AGHT+IFA7EAAn3meKC9yNTCZGB0U0AKSVSGB9K2EIMouJRX02mBckAKZdErIH3xk401Zifh9l4gNXg==
+X-Received: by 2002:a05:6a00:bc6:b0:6e0:99d6:490 with SMTP id x6-20020a056a000bc600b006e099d60490mr7327725pfu.21.1707805020617;
+        Mon, 12 Feb 2024 22:17:00 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXmL7Vz3PAAYJ2YuBcOicTcHD7G3MPIBgpPVxgOqWx57ckQb0LQsp+zo+1xBYVJvVxX1xnFMSlslqEurFjhd8BN1Ask2EQZc6mdjdKDIMOrD2H0lpbgk0puZwOgN13OsNWKlrdGSpZQkn99PMb/TF7Oj1g/IwqZQq5GO+n3XY6NDDlRAtv12zlRd0iJIDQMrq7FkJSptx6nz6yJAAagghDmHZIA9mwS4SqtRXSu3uJqtwLYyikPd5fzSj0z4vZx78G9/mykhCZyiEGpwlQkKn63Jis6NDCbIJxOJsjVE0w5tj5tfF91tqmc3P213LPGsFXADlJRzdIJB//0Ulx206ft3k7pQWfiWaGLP5U4RECb/+vlQxJkkviTJuDmWX7O1JcYb4w5gdEt7RG4FG9CSrJ3JD7sSFtfiPLmpmKlPamtwsXW6cFbL/F06xzeuX0PLxAxn1O16eKif/KlZfe/lU/gZQfwRBIMdKexiAyTmgInf0DAvzL142wZqKm6vdLgmm4VbYXpnlpgP8utTiAXPZAKZzb2dnMUxVKYLzCP62FKYAYD0md7sF9dz4n2FLx1qDWBzGhXgJhHpdvg65qvOan1XyFJTk5wI0x9FBMjuUvRwkjUb2YMyMNjTcY9t34=
+Received: from localhost.localdomain ([2620:11a:c018:0:ea8:be91:8d1:f59b])
+        by smtp.gmail.com with ESMTPSA id n19-20020a638f13000000b005dc87f5dfcfsm342936pgd.78.2024.02.12.22.16.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 22:15:18 -0800 (PST)
-Date: Tue, 13 Feb 2024 11:45:16 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Sunil V L <sunilvl@ventanamicro.com>, linux-riscv@lists.infradead.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Len Brown <lenb@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Atish Kumar Patra <atishp@rivosinc.com>,
-	Anup Patel <apatel@ventanamicro.com>
-Subject: Re: [PATCH v1 -next 0/3] RISC-V: ACPI: Enable CPPC based cpufreq
- support
-Message-ID: <20240213061516.kbvwdyabw2p6egwr@vireshk-i7>
-References: <20240208034414.22579-1-sunilvl@ventanamicro.com>
- <CAJZ5v0iwV4mG40hbhomrTgiUoUpn_ocNH_5K84yseSpsZtviVg@mail.gmail.com>
+        Mon, 12 Feb 2024 22:17:00 -0800 (PST)
+From: Joe Damato <jdamato@fastly.com>
+To: linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: chuck.lever@oracle.com,
+	jlayton@kernel.org,
+	linux-api@vger.kernel.org,
+	brauner@kernel.org,
+	edumazet@google.com,
+	davem@davemloft.net,
+	alexander.duyck@gmail.com,
+	sridhar.samudrala@intel.com,
+	kuba@kernel.org,
+	willemdebruijn.kernel@gmail.com,
+	weiwan@google.com,
+	David.Laight@ACULAB.COM,
+	arnd@arndb.de,
+	sdf@google.com,
+	amritha.nambiar@intel.com,
+	Joe Damato <jdamato@fastly.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org (open list:FILESYSTEMS (VFS and infrastructure))
+Subject: [PATCH net-next v8 1/4] eventpoll: support busy poll per epoll instance
+Date: Tue, 13 Feb 2024 06:16:42 +0000
+Message-Id: <20240213061652.6342-2-jdamato@fastly.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240213061652.6342-1-jdamato@fastly.com>
+References: <20240213061652.6342-1-jdamato@fastly.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0iwV4mG40hbhomrTgiUoUpn_ocNH_5K84yseSpsZtviVg@mail.gmail.com>
 
-On 12-02-24, 16:24, Rafael J. Wysocki wrote:
-> On Thu, Feb 8, 2024 at 4:44 AM Sunil V L <sunilvl@ventanamicro.com> wrote:
-> >
-> > This series enables the support for "Collaborative Processor Performance
-> > Control (CPPC) on ACPI based RISC-V platforms. It depends on the
-> > encoding of CPPC registers as defined in RISC-V FFH spec [2].
-> >
-> > CPPC is described in the ACPI spec [1]. RISC-V FFH spec required to
-> > enable this, is available at [2].
-> >
-> > [1] - https://uefi.org/specs/ACPI/6.5/08_Processor_Configuration_and_Control.html#collaborative-processor-performance-control
-> > [2] - https://github.com/riscv-non-isa/riscv-acpi-ffh/releases/download/v1.0.0/riscv-ffh.pdf
-> >
-> > The series is based on the LPI support series.
-> > Based-on: 20240118062930.245937-1-sunilvl@ventanamicro.com
-> > (https://lore.kernel.org/lkml/20240118062930.245937-1-sunilvl@ventanamicro.com/)
-> >
-> > Sunil V L (3):
-> >   ACPI: RISC-V: Add CPPC driver
-> >   cpufreq: Move CPPC configs to common Kconfig and add RISC-V
-> >   RISC-V: defconfig: Enable CONFIG_ACPI_CPPC_CPUFREQ
-> >
-> >  arch/riscv/configs/defconfig |   1 +
-> >  drivers/acpi/riscv/Makefile  |   1 +
-> >  drivers/acpi/riscv/cppc.c    | 157 +++++++++++++++++++++++++++++++++++
-> >  drivers/cpufreq/Kconfig      |  29 +++++++
-> >  drivers/cpufreq/Kconfig.arm  |  26 ------
-> >  5 files changed, 188 insertions(+), 26 deletions(-)
-> >  create mode 100644 drivers/acpi/riscv/cppc.c
-> >
-> > --
-> 
-> This is fine with me, so
-> 
-> Acked-by: Rafael J. Wysocki <rafael@kernel.org>
-> 
-> and it would be good to ask Viresh (who maintains the CPPC cpufreq
-> driver) for an ACK.
+Allow busy polling on a per-epoll context basis. The per-epoll context
+usec timeout value is preferred, but the pre-existing system wide sysctl
+value is still supported if it specified.
 
-I have provided my Ack over the cpufreq patch. Thanks.
+busy_poll_usecs is a u32, but in a follow up patch the ioctl provided to
+the user only allows setting a value from 0 to S32_MAX.
 
+Signed-off-by: Joe Damato <jdamato@fastly.com>
+Acked-by: Stanislav Fomichev <sdf@google.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+---
+ fs/eventpoll.c | 44 +++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 39 insertions(+), 5 deletions(-)
+
+diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+index 3534d36a1474..401f865eced9 100644
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -227,6 +227,8 @@ struct eventpoll {
+ #ifdef CONFIG_NET_RX_BUSY_POLL
+ 	/* used to track busy poll napi_id */
+ 	unsigned int napi_id;
++	/* busy poll timeout */
++	u32 busy_poll_usecs;
+ #endif
+ 
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+@@ -387,11 +389,41 @@ static inline int ep_events_available(struct eventpoll *ep)
+ }
+ 
+ #ifdef CONFIG_NET_RX_BUSY_POLL
++/**
++ * busy_loop_ep_timeout - check if busy poll has timed out. The timeout value
++ * from the epoll instance ep is preferred, but if it is not set fallback to
++ * the system-wide global via busy_loop_timeout.
++ *
++ * @start_time: The start time used to compute the remaining time until timeout.
++ * @ep: Pointer to the eventpoll context.
++ *
++ * Return: true if the timeout has expired, false otherwise.
++ */
++static bool busy_loop_ep_timeout(unsigned long start_time,
++				 struct eventpoll *ep)
++{
++	unsigned long bp_usec = READ_ONCE(ep->busy_poll_usecs);
++
++	if (bp_usec) {
++		unsigned long end_time = start_time + bp_usec;
++		unsigned long now = busy_loop_current_time();
++
++		return time_after(now, end_time);
++	} else {
++		return busy_loop_timeout(start_time);
++	}
++}
++
++static bool ep_busy_loop_on(struct eventpoll *ep)
++{
++	return !!ep->busy_poll_usecs || net_busy_loop_on();
++}
++
+ static bool ep_busy_loop_end(void *p, unsigned long start_time)
+ {
+ 	struct eventpoll *ep = p;
+ 
+-	return ep_events_available(ep) || busy_loop_timeout(start_time);
++	return ep_events_available(ep) || busy_loop_ep_timeout(start_time, ep);
+ }
+ 
+ /*
+@@ -404,7 +436,7 @@ static bool ep_busy_loop(struct eventpoll *ep, int nonblock)
+ {
+ 	unsigned int napi_id = READ_ONCE(ep->napi_id);
+ 
+-	if ((napi_id >= MIN_NAPI_ID) && net_busy_loop_on()) {
++	if (napi_id >= MIN_NAPI_ID && ep_busy_loop_on(ep)) {
+ 		napi_busy_loop(napi_id, nonblock ? NULL : ep_busy_loop_end, ep, false,
+ 			       BUSY_POLL_BUDGET);
+ 		if (ep_events_available(ep))
+@@ -425,12 +457,12 @@ static bool ep_busy_loop(struct eventpoll *ep, int nonblock)
+  */
+ static inline void ep_set_busy_poll_napi_id(struct epitem *epi)
+ {
+-	struct eventpoll *ep;
++	struct eventpoll *ep = epi->ep;
+ 	unsigned int napi_id;
+ 	struct socket *sock;
+ 	struct sock *sk;
+ 
+-	if (!net_busy_loop_on())
++	if (!ep_busy_loop_on(ep))
+ 		return;
+ 
+ 	sock = sock_from_file(epi->ffd.file);
+@@ -442,7 +474,6 @@ static inline void ep_set_busy_poll_napi_id(struct epitem *epi)
+ 		return;
+ 
+ 	napi_id = READ_ONCE(sk->sk_napi_id);
+-	ep = epi->ep;
+ 
+ 	/* Non-NAPI IDs can be rejected
+ 	 *	or
+@@ -2058,6 +2089,9 @@ static int do_epoll_create(int flags)
+ 		error = PTR_ERR(file);
+ 		goto out_free_fd;
+ 	}
++#ifdef CONFIG_NET_RX_BUSY_POLL
++	ep->busy_poll_usecs = 0;
++#endif
+ 	ep->file = file;
+ 	fd_install(fd, file);
+ 	return fd;
 -- 
-viresh
+2.25.1
+
