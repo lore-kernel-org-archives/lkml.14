@@ -1,48 +1,48 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1085F470;
-	Tue, 13 Feb 2024 14:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385085F569;
+	Tue, 13 Feb 2024 14:56:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707836181; cv=none; b=Za8BJIpdYz2BJ+Czpogw1UFUDBXx7s7ylnYe0n/SxIXx/PKrt3rfKWIbpFGeE4g/whPBuKjxeYKAWobMFwDKCgLwINk6IpX1rll7KTvbHm3yxuLNFcmxSqju0NdOH+NssHxdpLqMr1AcjY///SRv6QotIe+z985Jbido+szB/ec=
+	t=1707836182; cv=none; b=LxcjpfrbHZhWmbIIaWuGhSlLLKkIB38V9cRhMa0WBq/SyZC6DDa0hPgDs7HKEFi4vVI4iZofi9yDFdpU+9LXdU8yJOFB4OEicdexhU9Uhjl1gzN1CxRLt5++BkJbYqtzgBiGAx7ta+hCB7cp+9RYUQrJGmW9z/sfCJOIEO03Cjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707836181; c=relaxed/simple;
-	bh=/Wv43IiatSBhgQeyU96qzaAXk4T1DS9aljrYWfQxzn0=;
+	s=arc-20240116; t=1707836182; c=relaxed/simple;
+	bh=XSrEmtCTEoZ1BvUgmXS0alF89dCeproQKiVNavB3G9M=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C9bMdbKMfb6N0n5MgqeKEMglbpwkewJBpTIbwwqRxfc8a4kVkGk64VU0WNXdBDcNc92D7Gue2ljysSMl+US/cfUAx3nTvp8xyuPrB0dL/5mwBKv2L0jAH0ywfRtifAVrEtpuBpCG7okEzDPMaQm8l3vJPqe3CIv1Oq9U0pfSJTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=nfJhwCAO; arc=none smtp.client-ip=68.232.154.123
+	 MIME-Version:Content-Type; b=uMd42pBiUTh8fTwzNZOihQqXk8sSw/1vvprjDS2L1lc0RAqU17UetcBJEdorBhktTTPCQbMcfO0dEB4po26uAS/288MAnD5gPek+aKJ0ToWNwuU7Ix5QyAtobPISVBigAocAWwOYk2wD1TOPRqCAU96Cm655ryNQ2i+0Lw2vH5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=YEXy5jrx; arc=none smtp.client-ip=68.232.153.233
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="nfJhwCAO"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="YEXy5jrx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1707836179; x=1739372179;
+  t=1707836180; x=1739372180;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=/Wv43IiatSBhgQeyU96qzaAXk4T1DS9aljrYWfQxzn0=;
-  b=nfJhwCAOVT5Pr+KmqRPh5XbJhC9cUYIFwvnIn/t+9UGDPr0o1GHNabJ1
-   4qM19p76bBJZSfUIv7m9J0NF8iLiAiKnYE7b2jaPL1CAwq7rbAXqyfOxk
-   8TsKBJkNDfAlAUhw5XjDWpuIXBDHwEJtBjMR3Vm8YGKIE6kXHUdulGOCf
-   3DAEfaidmbSwM0GBxZPFoo1bwsUwvLm8sOgJHAF8+oSvYuJ+Q2rb+JpnR
-   7mjHRoQpWCJiCdcMI5mIy5+C5uAKcaQfKON9aZ05+O65FRT3hiS4iswOA
-   qKk/AgYTb+l4ExYHCWAS0sDsSXMoSpz53AU1RlON4TUjAzurNsfARqfJD
-   g==;
-X-CSE-ConnectionGUID: 1b1+m5inQImh9toRpU0rhA==
-X-CSE-MsgGUID: Jn5SHDitSUyOh98e+vyU4w==
+  bh=XSrEmtCTEoZ1BvUgmXS0alF89dCeproQKiVNavB3G9M=;
+  b=YEXy5jrxhL28HsOD8XO9WAE4fp4zuigDif42X82PFFLBwV+La5cKytKl
+   zzgKZKlgqgu/ayRCz5egJtzzt4+fRAgsk04yGjaCJP292vg4qNO4QALCl
+   dBz81Os5yGayz6zxhtC8VtHqX86s/B6FH1wEEVyK09OXeFIyuuOjVKovn
+   5hrsBjUWYwfsKZEYp2ecLJzm5a5pgKiORjTc0l5kGQu5GnWBOYavdXB3E
+   q3PuIoEXvvLyLo6g/Sosa6TeJAwGNy6RBTaqvOF6ecNGDEmhyU2wHDCv4
+   o3DFxG4nKR19+AD0Mz8TPOFoci8aIpZPj4hNRcPez9G4Kf/+Uf2KCPyiq
+   A==;
+X-CSE-ConnectionGUID: notrBuGtRbuSS13mA3DSPA==
+X-CSE-MsgGUID: onnDf4NKQra/EO/e8SYCPw==
 X-IronPort-AV: E=Sophos;i="6.06,157,1705388400"; 
-   d="scan'208";a="16174937"
+   d="scan'208";a="17608938"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 13 Feb 2024 07:56:17 -0700
+  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 13 Feb 2024 07:56:12 -0700
 Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 13 Feb 2024 07:56:08 -0700
+ 15.1.2507.35; Tue, 13 Feb 2024 07:55:56 -0700
 Received: from virtualbox.microchip.com (10.10.85.11) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Tue, 13 Feb 2024 07:56:05 -0700
+ 15.1.2507.35 via Frontend Transport; Tue, 13 Feb 2024 07:55:54 -0700
 From: Mihai Sain <mihai.sain@microchip.com>
 To: <claudiu.beznea@tuxon.dev>, <robh+dt@kernel.org>,
 	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
@@ -50,9 +50,9 @@ To: <claudiu.beznea@tuxon.dev>, <robh+dt@kernel.org>,
 	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-kernel@vger.kernel.org>
 CC: <cristian.birsan@microchip.com>, Mihai Sain <mihai.sain@microchip.com>
-Subject: [PATCH v4 6/8] ARM: dts: microchip: sama5d29_curiosity: Add power-supply properties for sdmmc nodes
-Date: Tue, 13 Feb 2024 16:55:40 +0200
-Message-ID: <20240213145542.23207-7-mihai.sain@microchip.com>
+Subject: [PATCH v4 2/8] ARM: dts: microchip: sam9x60ek: Add power-supply properties for sdmmc nodes
+Date: Tue, 13 Feb 2024 16:55:36 +0200
+Message-ID: <20240213145542.23207-3-mihai.sain@microchip.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240213145542.23207-1-mihai.sain@microchip.com>
 References: <20240213145542.23207-1-mihai.sain@microchip.com>
@@ -65,35 +65,34 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-In order to avoid the issues from the tuning procedure required by
-the UHS cards, keep the vqmmc at 3V3 to use the sd high-speed mode.
+In order to use the sd high-speed mode, keep vqmmc at 3V3.
 Add vmmc-supply and vqmmc-supply properties to sdmmc nodes.
 
 Signed-off-by: Mihai Sain <mihai.sain@microchip.com>
 ---
- arch/arm/boot/dts/microchip/at91-sama5d29_curiosity.dts | 4 ++++
+ arch/arm/boot/dts/microchip/at91-sam9x60ek.dts | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/microchip/at91-sama5d29_curiosity.dts b/arch/arm/boot/dts/microchip/at91-sama5d29_curiosity.dts
-index 6b02b7bcfd49..4a86597d089a 100644
---- a/arch/arm/boot/dts/microchip/at91-sama5d29_curiosity.dts
-+++ b/arch/arm/boot/dts/microchip/at91-sama5d29_curiosity.dts
-@@ -504,6 +504,8 @@ &sdmmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_sdmmc0_default>;
- 	disable-wp;
-+	vmmc-supply = <&vdd_3v3>;
-+	vqmmc-supply = <&vdd_3v3>;
+diff --git a/arch/arm/boot/dts/microchip/at91-sam9x60ek.dts b/arch/arm/boot/dts/microchip/at91-sam9x60ek.dts
+index f3cbb675cea4..b19a0956dc97 100644
+--- a/arch/arm/boot/dts/microchip/at91-sam9x60ek.dts
++++ b/arch/arm/boot/dts/microchip/at91-sam9x60ek.dts
+@@ -560,6 +560,8 @@ &sdmmc0 {
  	status = "okay";
+ 	cd-gpios = <&pioA 23 GPIO_ACTIVE_LOW>;
+ 	disable-wp;
++	vmmc-supply = <&vdd1_3v3>;
++	vqmmc-supply = <&vdd1_3v3>;
  };
  
-@@ -512,6 +514,8 @@ &sdmmc1 {
- 	pinctrl-names = "default";
+ &sdmmc1 {
+@@ -568,6 +570,8 @@ &sdmmc1 {
  	pinctrl-0 = <&pinctrl_sdmmc1_default>;
- 	disable-wp;
-+	vmmc-supply = <&vdd_3v3>;
-+	vqmmc-supply = <&vdd_3v3>;
- 	status = "okay";
+ 	no-1-8-v;
+ 	non-removable;
++	vmmc-supply = <&vdd1_3v3>;
++	vqmmc-supply = <&vdd1_3v3>;
+ 	status = "disabled"; /* Conflict with flx4. */
  };
  
 -- 
