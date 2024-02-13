@@ -1,152 +1,141 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11BA1381
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 00:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1804A637
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 00:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707783294; cv=none; b=jam0YYaPb7jkTyDpJYRPze4J26psh/bdHApxXuUFiTdKbU8VLML0bJE4vTlOgMyPJzh5bh4p1xYeuAwaakl5ovp01gPF28Kn30oL8i6ijlBnc+EtbpHwXjOUX9ctaTy6b91TQ4RsYkPGuniXOlWkh3m3eYllWsOXfhBc2BrwqQM=
+	t=1707783300; cv=none; b=QAcNtjuQMfURNFIqn/BhHJKrYCyeS7/7Mc3YJVUxexyFKP/sV7QrYeh9qIZFOx+6n6NtBDYrge6kH5m5JStG82scyL+lvH1Hzhi0CanD0y0BPlVz2hJ+2WTUH0kx5dtfVifWJCUvEFbXAqH1q9fFJoD5S0hrmbN/0zWtpwpHTTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707783294; c=relaxed/simple;
-	bh=KrKxLGJZv/JSKNalvT30uESSN5GQ+TUIC4xqxAE4z7Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dMDg08SkpLaW6dhbNA9Gl5B2vHg3cS9vAY+bxVmUF7auC2pE0D9rbVvK9Xd9owW+iQoBsUySHTaqcYXKr1XGrgZRe/AFqUi9eaCm0wRVUPNXTOGySQbR8WNiSRnYipYdIPliX6qsQVXgNrqL54R9gvzfqZOEVSfVlil0jNXKO5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mj5pG9ov; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707783300; c=relaxed/simple;
+	bh=p+IVeRU3f9COk3wBMTH0iIf+8fVqKG0n9hzN9kdq2Xc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YB5DXj90Qked2+wfjhHp69Mddw1eCHR0Lq83hZKDb3wuxmbzLny2cdfFdQQNV7BOCCO5gqVeWaqXJRu+dQkSUEKgNtjHCJVsAr9aZn6+NjUL+2vF7RNDppTuJe5dtek6Cz8ztJWsHHrS16SN3Rb5J5imMVwBE2xhHkI2VeRGlvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=soleen.com; spf=none smtp.mailfrom=soleen.com; dkim=fail (0-bit key) header.d=soleen.com header.i=@soleen.com header.b=hRFx8OzL reason="key not found in DNS"; arc=none smtp.client-ip=209.85.210.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mj5pG9ov"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5d8b70b39efso3178635a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 16:14:52 -0800 (PST)
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=soleen.com header.i=@soleen.com header.b="hRFx8OzL"
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6e2e096e2ccso927151a34.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 16:14:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707783292; x=1708388092; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=izym72fHPr9dmStOL5yOrChdfFqOfldT01rg+6ek71k=;
-        b=mj5pG9ovm3VwGn3qDNHmE7ki2TAgwzMMMWlF71/FDUYghllBykrX1cVVbLOUh1px5b
-         GIFJtvX6uVn0+dwT9wEV5VhEqO6AY80v8O8Nry+IvepqMv12DNcTprobOTDlTjU8wkGC
-         ETn/zcaV6LttJS3L/8pk0j1pfy2dgbx49WRfxQvOYTUILSguD+TqTe7nUje0zLrUUaSW
-         UoUrEKL9/4p7TyKnmt/u3+zpIdOyep3wXzM4tLQ05RHOQqjKX5u59iRLS4+rDA9TFGlY
-         WAGoq8xz9EhPhHu7DEP+bjqD9cUZJoUSVsufsi8KK3psB0+D7kRE5efqKJj5O4PwbVk+
-         MQvw==
+        d=soleen.com; s=google; t=1707783298; x=1708388098; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Zpkbch4s+SL6zR3ce+cP/IOGuaScUrbATNvaMsX6gQU=;
+        b=hRFx8OzLpzZfkX2KYjLz4MEK93nwhIERYV36+ueQxJxoEiHKMQL/1nEjdZ+7VSdbnf
+         siT39azOSxjFsh9kTAOIuasSKEjL0EFsOsuZ1OEiypY/Q3hVEUMNHWJWjqyTUj/IyQFT
+         tLV1wc7OS5h52ntKwWemX0veu7L2EfUlY9A7hdSorOd5CLoGWAIZ7u6C3IDp4GDa1eqD
+         epkpLwBxzRsy+dYvA+NpDHfSpCTF+zyOMqrG10Sb+ySK6Cm1hzKZ5DHceUiz02THdlF9
+         aF33k3ujEKG2VjS0Cn7Yf/4/qpOuWXFxZJbKA+6dw8lTQE4hLZDefHslyXT+60uZCqLy
+         eXnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707783292; x=1708388092;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=izym72fHPr9dmStOL5yOrChdfFqOfldT01rg+6ek71k=;
-        b=Dg3hX+zV1d2gtBF00pbWJy4mklAHuCSMwbEleyGVCy3kSGuyRHUDD8/5hsJAMhAD44
-         u7WHZLX078GyflORLsXyawMsSLCDmfaYg9IoznUYzldUseO79spz9L3hhStdVVeQ2qn/
-         sM4o0fHDnbNf03qRqpCF7HHxKYbmV+TDFlrgdIn+Qfy7p6ErE4wsz/SapOWo43T2T1s9
-         01Qh8BpGvTlvfw+hp2HCB0Fq2D7eIdK+wQ2Vx0SNeLklIpcJscRRIm+qtaXewqwmcJ5L
-         orP4GoT//83HtCtQ/FNOB1D5AVVaFuFffLnwDFE9wwoNXnU8CX2hKXpeMSquEckdIwbW
-         AvSg==
-X-Gm-Message-State: AOJu0Yy0RmIJKPORJkF/s1BWw0AISHtklJshOp8rbshYBDcqGAgEkpL7
-	P6gYG1OJ31MtFMnHlcqS1FPZpHkPR/0Fu5QdYXvxiGOAOShQF/gV
-X-Google-Smtp-Source: AGHT+IGtZQVn/3s3rQ7XSxTWxDoJzOQ3OmnoSXsWJAAdfyS+KaZJvT2Eji+CPP5JJE/FjDAcesqz+g==
-X-Received: by 2002:a05:6a20:49a7:b0:19e:5517:c345 with SMTP id fs39-20020a056a2049a700b0019e5517c345mr4613109pzb.44.1707783291866;
-        Mon, 12 Feb 2024 16:14:51 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUv7sVyKm0dpd0ZRYMebrxlBu5e7Lpa4YpZwFg8uxqcySDLS/EDctk2ZKETzMCIEn5urwhjcSuo0OFiRx4kOzQyv4wFKJZUQEK7qqjkxJhhuLGa5cWD5wkP3Iw8QRNU38z2DiPiqk7HPF23X9+ADI0jG75FkRTihoGo1nT0Fqvu7Daf6YkjPyMU97OX4wWY1w==
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 6-20020a170902c10600b001d8cde39e8bsm884575pli.194.2024.02.12.16.14.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Feb 2024 16:14:51 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <dc352315-0b7b-407a-8704-e424934a922d@roeck-us.net>
-Date: Mon, 12 Feb 2024 16:14:49 -0800
+        d=1e100.net; s=20230601; t=1707783298; x=1708388098;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Zpkbch4s+SL6zR3ce+cP/IOGuaScUrbATNvaMsX6gQU=;
+        b=Zs82PSnaO2y65qZzNNwgdIExbYHjjh05y9Q9WionjcHKqCCIOTIpNkPzMhKA6jtUpp
+         MEaYOIN8QRfe1W3aiH/8mh215ojrZbUGcIbSmNXoexegUPEccPY1GP0w6icEh9zXIMhH
+         hE2h5HH3yxguJNw/LlMQd3MwHIhW7l02tXzVcDKHWkgAsF4ITAEbIFHAhq6PBRHZFg8X
+         61AVulmgifF5009gEnirzdxkTF6KwjDQ5a0G/JlW75ygnUFx24blGcXrBoO8bzf95ByU
+         vuj8JBg1zI/uQiv0x2hgYeSeOzliorSAPkE6Sj9W7U8P3i5kGnZdLUTyBqqGaMdRvVCc
+         G5Vg==
+X-Forwarded-Encrypted: i=1; AJvYcCX8ay8BhWe4/5S6JGEG1JrRCjTd43GnMpxrzPvju5Aqbv9XuXPatt6jvkyH1j3zMko9tgLaBHcLZzs3xzx6MgosNLxyI5PuEKS2FD6G
+X-Gm-Message-State: AOJu0Ywdnsgk1jAEKdDiL/BvB68Pz50g9qu6gCAq3afs8tI5Z799gZAo
+	VC/0Drr/Xc0tIsguxGjq23p9Sw1jZJbcorOv1uTIEWXyW0/U/9WO8sYBiOlOPizInZxWUAuqPvX
+	IytAwM9nfaJ+qQXLm2zfZjogCt/N3HMrxwRZTFA==
+X-Google-Smtp-Source: AGHT+IENA2I2vQZTmviXZDRj9zPa9m0qm240EbRNcQEFbOk5GS9Qd9oHISJT+KIV/8e+A1RHV9ji5tIu3nuHQqetP/o=
+X-Received: by 2002:a05:6830:12c2:b0:6e2:e953:6fee with SMTP id
+ a2-20020a05683012c200b006e2e9536feemr3152110otq.24.1707783298148; Mon, 12 Feb
+ 2024 16:14:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 2/2] lib: checksum: Use aligned accesses for
- ip_fast_csum and csum_ipv6_magic tests
-Content-Language: en-US
-To: Charlie Jenkins <charlie@rivosinc.com>,
- David Laight <David.Laight@aculab.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Andrew Morton <akpm@linux-foundation.org>, Al Viro <viro@zeniv.linux.org.uk>
-Cc: linux-kernel@vger.kernel.org
-References: <20240212-fix_sparse_errors_checksum_tests-v7-0-bbd3b8f64746@rivosinc.com>
- <20240212-fix_sparse_errors_checksum_tests-v7-2-bbd3b8f64746@rivosinc.com>
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20240212-fix_sparse_errors_checksum_tests-v7-2-bbd3b8f64746@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240212213922.783301-1-surenb@google.com>
+In-Reply-To: <20240212213922.783301-1-surenb@google.com>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Mon, 12 Feb 2024 19:14:20 -0500
+Message-ID: <CA+CK2bBLD-mZ4ne56Awxbiy0EGpJq69k5qUKZwcXVB1Rt581TQ@mail.gmail.com>
+Subject: Re: [PATCH v3 00/35] Memory allocation profiling
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, mhocko@suse.com, 
+	vbabka@suse.cz, hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, 
+	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, 
+	corbet@lwn.net, void@manifault.com, peterz@infradead.org, 
+	juri.lelli@redhat.com, catalin.marinas@arm.com, will@kernel.org, 
+	arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com, 
+	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
+	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
+	nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev, 
+	rppt@kernel.org, paulmck@kernel.org, yosryahmed@google.com, yuzhao@google.com, 
+	dhowells@redhat.com, hughd@google.com, andreyknvl@gmail.com, 
+	keescook@chromium.org, ndesaulniers@google.com, vvvvvv@google.com, 
+	gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com, 
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
+	bsegall@google.com, bristot@redhat.com, vschneid@redhat.com, cl@linux.com, 
+	penberg@kernel.org, iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, 
+	glider@google.com, elver@google.com, dvyukov@google.com, shakeelb@google.com, 
+	songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com, 
+	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	iommu@lists.linux.dev, linux-arch@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
+	cgroups@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/12/24 12:33, Charlie Jenkins wrote:
-> The test cases for ip_fast_csum and csum_ipv6_magic were failing on a
-> variety of architectures that are big endian or do not support
-> misalgined accesses. Both of these test cases are changed to support big
-> and little endian architectures.
-> 
-> The test for ip_fast_csum is changed to align the data along (14 +
-> NET_IP_ALIGN) bytes which is the alignment of an IP header. The test for
-> csum_ipv6_magic aligns the data using a struct. An extra padding field
-> is added to the struct to ensure that the size of the struct is the same
-> on all architectures (44 bytes).
-> 
-> Fixes: 6f4c45cbcb00 ("kunit: Add tests for csum_ipv6_magic and ip_fast_csum")
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+On Mon, Feb 12, 2024 at 4:39=E2=80=AFPM Suren Baghdasaryan <surenb@google.c=
+om> wrote:
+>
+> Memory allocation, v3 and final:
+>
+> Overview:
+> Low overhead [1] per-callsite memory allocation profiling. Not just for d=
+ebug
+> kernels, overhead low enough to be deployed in production.
+>
+> We're aiming to get this in the next merge window, for 6.9. The feedback
+> we've gotten has been that even out of tree this patchset has already
+> been useful, and there's a significant amount of other work gated on the
+> code tagging functionality included in this patchset [2].
+>
+> Example output:
+>   root@moria-kvm:~# sort -h /proc/allocinfo|tail
+>    3.11MiB     2850 fs/ext4/super.c:1408 module:ext4 func:ext4_alloc_inod=
+e
+>    3.52MiB      225 kernel/fork.c:356 module:fork func:alloc_thread_stack=
+_node
+>    3.75MiB      960 mm/page_ext.c:270 module:page_ext func:alloc_page_ext
+>    4.00MiB        2 mm/khugepaged.c:893 module:khugepaged func:hpage_coll=
+apse_alloc_folio
+>    10.5MiB      168 block/blk-mq.c:3421 module:blk_mq func:blk_mq_alloc_r=
+qs
+>    14.0MiB     3594 include/linux/gfp.h:295 module:filemap func:folio_all=
+oc_noprof
+>    26.8MiB     6856 include/linux/gfp.h:295 module:memory func:folio_allo=
+c_noprof
+>    64.5MiB    98315 fs/xfs/xfs_rmap_item.c:147 module:xfs func:xfs_rui_in=
+it
+>    98.7MiB    25264 include/linux/gfp.h:295 module:readahead func:folio_a=
+lloc_noprof
+>     125MiB     7357 mm/slub.c:2201 module:slub func:alloc_slab_page
 
-This thing really wants to annoy me. Now I get:
+This kind of memory profiling would be an incredible asset in cloud
+environments.
 
-      # test_csum_ipv6_magic: ASSERTION FAILED at lib/checksum_kunit.c:494
-      Expected ( u64)csum_result == ( u64)expected, but
-          ( u64)csum_result == 46543 (0xb5cf)
-          ( u64)expected == 46544 (0xb5d0)
-      not ok 5 test_csum_ipv6_magic
+Over the past year, we've encountered several kernel memory overhead
+issues. Two particularly severe cases involved excessively large IOMMU
+page tables (20GB per machine) and IOVA magazines (up to 8GB).
+Considering thousands of machines were affected, the cumulative memory
+waste was huge.
 
-with the parisc64 tests. All other architectures / platforms work fine
-after applying the various pending fixes. It looks like a carry gets
-lost somewhere, but I have not been able to figure out where exactly
-that happens. This only happens with the 64-bit hppa assembler code.
-
-Guenter
-
+While we eventually resolved these issues with custom kernel profiling
+hacks (some based on this series) and kdump analysis, comprehensive
+memory profiling would have significantly accelerated the diagnostic
+process, pinpointing the precise source of the allocations.
