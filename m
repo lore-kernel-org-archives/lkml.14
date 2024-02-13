@@ -1,142 +1,358 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43F464A92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B6264A96
 	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 21:04:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707858267; cv=none; b=sn/ZiWTVEq+B4mA+Mt3HIUrrhOOxkNmP6UjcnxAVzc4ms5u5ZhpAjb5lYKUwu5CRFCKgJTov3X+BuSsKlIWsPrWcJxxlW0wPWbxCVsy6JGQs+REmXEkz/YzxxoZExtBHJ36IdM/Mu0+dY7oxAeCg9bNznx+wdUj5Um47ZznhRxs=
+	t=1707858267; cv=none; b=VxLymSADddPoXtUGx4wMSbBo2mdvD7mWpKt1X1WOf9X9gCxNbO6z/sJOet65zD1prDb+gVOxHhu9TixLnzxo7nxvWu9wXHqgQ/clp9WfFmN5DeYXAYkCslCNmuOSsJpUVQI/lTtKqnzktU4WsWoMBMsA7HiDRhJ/lgg5G8uLSco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707858267; c=relaxed/simple;
-	bh=unxZOrs9XDbzoXsCj96S95ndlfevfpGn8crX2VsMceo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PAROmvPjhso8TZK+8qyEu7sUwvuDL/xsMiqkoQtuNjKHJ9hH7QjotYh9r69ITZYJWfEi6AqDvDlrHdCmY0OOD0Wvb/D6Nysuwb4TG1nkhWRQH0UWLxjBwlT8APl6omLcfbvEkuZK/ubrAwVk6qGanwbB6PRYYxBHCw+1bZRkSxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=JMB6NJ4T; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	bh=Mb6Icmb13BJR6R3sNA9JUFdIqMHHVuRv0J49cFFyMJ8=;
+	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Date; b=CZidZPpRMrUIYgbjvlEUSR8gD4GplTCB9w/6RQriSndcqPaQOqaq+GhDwbPNLtWVET+vpu2Y2GL6h9VUGMvRt1+YbJgNWbyeT7c6Q1bjjJhsj4Ik5jJ1DKXa3fcX3EAfAkQ7Y2+ydjA/1yplBHOkQyc6h3NNjuAgHnFVi5iI9a0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=y4IAtTh2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t7m1eeo2; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="JMB6NJ4T"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dccb1421bdeso1065023276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 13:04:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1707858264; x=1708463064; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6WpcrNvlFPgLJQNuLJ6h+eMksOi6n36MRReQFJjkwlI=;
-        b=JMB6NJ4TwDe4C2jjPbeLOlRDA8BUi20jfZw72JnfXG1tGxGSw+Mpv6VYsqejKzy8c1
-         cFTvAE4INDnReg68hGisEKVkURPi5SjvuJM4B40D3W2PXVjmWhR8tsRiP1JmMNxllYOI
-         zF5xmBY9l6W3a4HZU9VE2xvhHm40qB3HHv5IHSgRi+/0wCPDxa66hRaXVLT1SJQ1gqir
-         mwg5SzvGOjGDd6qNoO64EqO7JAhMI+yQxLsVsOuLcG57WXoOn3YQZxCxSfnM7nrP7urv
-         mexT+gZut7zNLt3Ji9NK1e1y4X2Z54Cij2U8XkdxE22KYUKXIvA0GbQQ0MgZSFoPS5Dj
-         /TVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707858264; x=1708463064;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6WpcrNvlFPgLJQNuLJ6h+eMksOi6n36MRReQFJjkwlI=;
-        b=sHAdZotuZnFhA+k82BjLH6L1ThYA9S27flq0UtEMXhzX95MWHoPg0R4l3rQPI/uj2c
-         3YMzKZHK30zbtD9TpKbZFk2uQWH4sDLGBTmsJthh+SerR3cOirV5WBfjCdoNEYVqXQt1
-         OEFllkadyC0DI5vAcuJqfBmY3z2/INTk8gYQdarxLFbCqSwl0hfpn+Dw3txlqMpfMVei
-         MwrGxsAlc6d1O+AkwlvKQ/cqoV/5sdzCw6MIDkP/0cANYaHxYPMiB8eCOTSHcT+wN9w6
-         oPpuJIjo9BxpfrE4qHqZFwUuX29FnBv2mqTkz+43VAO1CzP1+a7pHN+luUHmnvN45Mew
-         7veg==
-X-Forwarded-Encrypted: i=1; AJvYcCVOy8PpvJ5g4L/I9ToGiNBGQZym4b9QHY/GWF5pyTmG9dqIgWJv5XPAxa6uGjsEz60Q4o+kGhHzGk9Gbnh6LSUPfVp5c+rs4gXkqhgg
-X-Gm-Message-State: AOJu0Yx+qGH0GhEhV2/gIykbr9bZfnFFyyOuNusHj6MsZbor8QeP97Nb
-	63AQStroUoWTmFkBIyKbUWw9szUYn7cW3npveBjVOj+uaRE0+P2AHPRj7ZhFpW0=
-X-Google-Smtp-Source: AGHT+IGuhB7i7Can7GRRRP7ZoLvLMIK+FNyBhgPsmOzQYSQiDEPs9JYTpO+KUBpE+u8T7iLWINCm6Q==
-X-Received: by 2002:a81:838b:0:b0:604:69ee:5b4c with SMTP id t133-20020a81838b000000b0060469ee5b4cmr674166ywf.18.1707858262387;
-        Tue, 13 Feb 2024 13:04:22 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXmvajECjHBVC7eK1T3+mN2RBiopPph9GnxGfJw2yyyl11dZUu5JKrWODyKI0eKUdKqynzV/pJZKL83VThrGokefoaqgeZs8bYX4XDEBme3v8GaoFszV2jwuwn0P3ithjtKKsP6uLb1YIAR3UalNS6rO4TUwNIlKFxbIRGlzvBqetmEgFq2ZoONoGI6woxU/UKbWo3pU7c6Wk87alI/E60DJpVAHHh7
-Received: from ghost ([50.146.0.2])
-        by smtp.gmail.com with ESMTPSA id v137-20020a81488f000000b0060792690431sm299939ywa.105.2024.02.13.13.04.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 13:04:21 -0800 (PST)
-Date: Tue, 13 Feb 2024 16:04:20 -0500
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Helge Deller <deller@gmx.de>,
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
-	linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Palmer Dabbelt <palmer@rivosinc.com>
-Subject: Re: [PATCH] parisc: Fix ip_fast_csum
-Message-ID: <ZcvZVGCNd0qMkMbY@ghost>
-References: <20240210175526.3710522-1-linux@roeck-us.net>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="y4IAtTh2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t7m1eeo2"
+Message-ID: <20240212153625.516536121@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1707858263;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 references:references; bh=WUYdOM2ZKy0HZbTMX2xS9Z1NZRlH3bbxNVg7Q9ckK7I=;
+	b=y4IAtTh2YO4thJe3/P1S2DbWC20VHjpW1zsKAu2k2xIzd7h85g3rVL6qdHkUWwNR3vKoIF
+	cRX5ScIkFZl81zReKj55IID+Zlxa4b4yEOmniBFYG6D0e2eHkOUQzulvzvnrYkKeGaTl6R
+	RsrobQOJcLFR/AA/dh67PtmbRJJ4k/SbCXWZnH/A6YCktke9bNPAlh4mczN8T/DFM4uoqL
+	M/YEnu8oSoZu7XCR8ZpfqzuZ9GTkNyZ0hqm/s4kVMsvkRlr3wpe63s/lPES6hjjeaMYihm
+	d4AcSsqXHZ+70me5NtDHeD2PBD1O0gmgcPnWs6fUenAONNBLu4ySfr+8h+iRyA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1707858263;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 references:references; bh=WUYdOM2ZKy0HZbTMX2xS9Z1NZRlH3bbxNVg7Q9ckK7I=;
+	b=t7m1eeo2bhrmYoIq5GbwgY0r9tGDt1HxeVJVIFXvipB5HLssnOjcevi4XleO1RNh/aPOrP
+	13+cXQbje6wEsjCQ==
+From: Thomas Gleixner <tglx@linutronix.de>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: x86@kernel.org,
+ Tom Lendacky <thomas.lendacky@amd.com>,
+ Andrew Cooper <andrew.cooper3@citrix.com>,
+ Arjan van de Ven <arjan@linux.intel.com>,
+ Huang Rui <ray.huang@amd.com>,
+ Juergen Gross <jgross@suse.com>,
+ Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+ Sohil Mehta <sohil.mehta@intel.com>,
+ K Prateek Nayak <kprateek.nayak@amd.com>,
+ Kan Liang <kan.liang@linux.intel.com>,
+ Zhang Rui <rui.zhang@intel.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ Feng Tang <feng.tang@intel.com>,
+ Andy Shevchenko <andy@infradead.org>,
+ Michael Kelley <mhklinux@outlook.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Wang Wendy <wendy.wang@intel.com>
+Subject: [patch V6 17/19] x86/apic: Remove unused phys_pkg_id() callback
+References: <20240212153109.330805450@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240210175526.3710522-1-linux@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 13 Feb 2024 22:04:22 +0100 (CET)
 
-On Sat, Feb 10, 2024 at 09:55:26AM -0800, Guenter Roeck wrote:
-> IP checksum unit tests report the following error when run on hppa/hppa64.
-> 
->     # test_ip_fast_csum: ASSERTION FAILED at lib/checksum_kunit.c:463
->     Expected ( u64)csum_result == ( u64)expected, but
->         ( u64)csum_result == 33754 (0x83da)
->         ( u64)expected == 10946 (0x2ac2)
->     not ok 4 test_ip_fast_csum
-> 
-> 0x83da is the expected result if the IP header length is 20 bytes. 0x2ac2
-> is the expected result if the IP header length is 24 bytes. The test fails
-> with an IP header length of 24 bytes. It appears that ip_fast_csum()
-> always returns the checksum for a 20-byte header, no matter how long
-> the header actually is.
-> 
-> Code analysis shows a suspicious assembler sequence in ip_fast_csum().
-> 
->  "      addc            %0, %3, %0\n"
->  "1:    ldws,ma         4(%1), %3\n"
->  "      addib,<         0, %2, 1b\n"	<---
-> 
-> While my understanding of HPPA assembler is limited, it does not seem
-> to make much sense to subtract 0 from a register and to expect the result
-> to ever be negative. Subtracting 1 from the length parameter makes more
-> sense. On top of that, the operation should be repeated if and only if
-> the result is still > 0, so change the suspicious instruction to
->  "      addib,>         -1, %2, 1b\n"
-> 
-> The IP checksum unit test passes after this change.
-> 
-> Cc: Charlie Jenkins <charlie@rivosinc.com>
-> Cc: Palmer Dabbelt <palmer@rivosinc.com>
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
-> Prerequisite for this patch is
-> https://lore.kernel.org/lkml/20240207-fix_sparse_errors_checksum_tests-v6-0-4caa9629705b@rivosinc.com/
-> 
-> No idea how that was not detected before. Maybe I am missing something.
-> 
-> Note that test_csum_ipv6_magic still fails on 32-bit parisc systems
-> after this patch has been applied. That is a different problem.
-> 
->  arch/parisc/include/asm/checksum.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/parisc/include/asm/checksum.h b/arch/parisc/include/asm/checksum.h
-> index 3c43baca7b39..f705e5dd1074 100644
-> --- a/arch/parisc/include/asm/checksum.h
-> +++ b/arch/parisc/include/asm/checksum.h
-> @@ -40,7 +40,7 @@ static inline __sum16 ip_fast_csum(const void *iph, unsigned int ihl)
->  "	addc		%0, %5, %0\n"
->  "	addc		%0, %3, %0\n"
->  "1:	ldws,ma		4(%1), %3\n"
-> -"	addib,<		0, %2, 1b\n"
-> +"	addib,>		-1, %2, 1b\n"
->  "	addc		%0, %3, %0\n"
->  "\n"
->  "	extru		%0, 31, 16, %4\n"
-> -- 
-> 2.39.2
-> 
+From: Thomas Gleixner <tglx@linutronix.de>
 
-I got my parisc setup working and this does indeed fix the issue.
+Now that the core code does not use this monstrosity anymore, it's time to
+put it to rest.
 
-Tested-by: Charlie Jenkins <charlie@rivosinc.com>
-Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+The only real purpose was to read the APIC ID on UV and VSMP systems for
+the actual evaluation. That's what the core code does now.
+
+For doing the actual shift operation there is truly no APIC callback
+required.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Juergen Gross <jgross@suse.com>
+Tested-by: Sohil Mehta <sohil.mehta@intel.com>
+Tested-by: Michael Kelley <mhklinux@outlook.com>
+Tested-by: Zhang Rui <rui.zhang@intel.com>
+Tested-by: Wang Wendy <wendy.wang@intel.com>
+
+
+
+---
+ arch/x86/include/asm/apic.h           |    1 -
+ arch/x86/kernel/apic/apic_flat_64.c   |    7 -------
+ arch/x86/kernel/apic/apic_noop.c      |    3 ---
+ arch/x86/kernel/apic/apic_numachip.c  |    7 -------
+ arch/x86/kernel/apic/bigsmp_32.c      |    6 ------
+ arch/x86/kernel/apic/local.h          |    1 -
+ arch/x86/kernel/apic/probe_32.c       |    6 ------
+ arch/x86/kernel/apic/x2apic_cluster.c |    1 -
+ arch/x86/kernel/apic/x2apic_phys.c    |    6 ------
+ arch/x86/kernel/apic/x2apic_uv_x.c    |   11 -----------
+ arch/x86/kernel/vsmp_64.c             |   13 -------------
+ arch/x86/xen/apic.c                   |    6 ------
+ 12 files changed, 68 deletions(-)
+---
+
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -295,7 +295,6 @@ struct apic {
+ 	void	(*init_apic_ldr)(void);
+ 	void	(*ioapic_phys_id_map)(physid_mask_t *phys_map, physid_mask_t *retmap);
+ 	u32	(*cpu_present_to_apicid)(int mps_cpu);
+-	u32	(*phys_pkg_id)(u32 cpuid_apic, int index_msb);
+ 
+ 	u32	(*get_apic_id)(u32 id);
+ 	u32	(*set_apic_id)(u32 apicid);
+--- a/arch/x86/kernel/apic/apic_flat_64.c
++++ b/arch/x86/kernel/apic/apic_flat_64.c
+@@ -66,11 +66,6 @@ static u32 set_apic_id(u32 id)
+ 	return (id & 0xFF) << 24;
+ }
+ 
+-static u32 flat_phys_pkg_id(u32 initial_apic_id, int index_msb)
+-{
+-	return initial_apic_id >> index_msb;
+-}
+-
+ static int flat_probe(void)
+ {
+ 	return 1;
+@@ -88,7 +83,6 @@ static struct apic apic_flat __ro_after_
+ 
+ 	.init_apic_ldr			= default_init_apic_ldr,
+ 	.cpu_present_to_apicid		= default_cpu_present_to_apicid,
+-	.phys_pkg_id			= flat_phys_pkg_id,
+ 
+ 	.max_apic_id			= 0xFE,
+ 	.get_apic_id			= flat_get_apic_id,
+@@ -158,7 +152,6 @@ static struct apic apic_physflat __ro_af
+ 	.disable_esr			= 0,
+ 
+ 	.cpu_present_to_apicid		= default_cpu_present_to_apicid,
+-	.phys_pkg_id			= flat_phys_pkg_id,
+ 
+ 	.max_apic_id			= 0xFE,
+ 	.get_apic_id			= flat_get_apic_id,
+--- a/arch/x86/kernel/apic/apic_noop.c
++++ b/arch/x86/kernel/apic/apic_noop.c
+@@ -29,7 +29,6 @@ static void noop_send_IPI_self(int vecto
+ static void noop_apic_icr_write(u32 low, u32 id) { }
+ static int noop_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip) { return -1; }
+ static u64 noop_apic_icr_read(void) { return 0; }
+-static u32 noop_phys_pkg_id(u32 cpuid_apic, int index_msb) { return 0; }
+ static u32 noop_get_apic_id(u32 apicid) { return 0; }
+ static void noop_apic_eoi(void) { }
+ 
+@@ -55,8 +54,6 @@ struct apic apic_noop __ro_after_init =
+ 	.ioapic_phys_id_map		= default_ioapic_phys_id_map,
+ 	.cpu_present_to_apicid		= default_cpu_present_to_apicid,
+ 
+-	.phys_pkg_id			= noop_phys_pkg_id,
+-
+ 	.max_apic_id			= 0xFE,
+ 	.get_apic_id			= noop_get_apic_id,
+ 
+--- a/arch/x86/kernel/apic/apic_numachip.c
++++ b/arch/x86/kernel/apic/apic_numachip.c
+@@ -56,11 +56,6 @@ static u32 numachip2_set_apic_id(u32 id)
+ 	return id << 24;
+ }
+ 
+-static u32 numachip_phys_pkg_id(u32 initial_apic_id, int index_msb)
+-{
+-	return initial_apic_id >> index_msb;
+-}
+-
+ static void numachip1_apic_icr_write(int apicid, unsigned int val)
+ {
+ 	write_lcsr(CSR_G3_EXT_IRQ_GEN, (apicid << 16) | val);
+@@ -227,7 +222,6 @@ static const struct apic apic_numachip1
+ 	.disable_esr			= 0,
+ 
+ 	.cpu_present_to_apicid		= default_cpu_present_to_apicid,
+-	.phys_pkg_id			= numachip_phys_pkg_id,
+ 
+ 	.max_apic_id			= UINT_MAX,
+ 	.get_apic_id			= numachip1_get_apic_id,
+@@ -263,7 +257,6 @@ static const struct apic apic_numachip2
+ 	.disable_esr			= 0,
+ 
+ 	.cpu_present_to_apicid		= default_cpu_present_to_apicid,
+-	.phys_pkg_id			= numachip_phys_pkg_id,
+ 
+ 	.max_apic_id			= UINT_MAX,
+ 	.get_apic_id			= numachip2_get_apic_id,
+--- a/arch/x86/kernel/apic/bigsmp_32.c
++++ b/arch/x86/kernel/apic/bigsmp_32.c
+@@ -29,11 +29,6 @@ static void bigsmp_ioapic_phys_id_map(ph
+ 	physids_promote(0xFFL, retmap);
+ }
+ 
+-static u32 bigsmp_phys_pkg_id(u32 cpuid_apic, int index_msb)
+-{
+-	return cpuid_apic >> index_msb;
+-}
+-
+ static void bigsmp_send_IPI_allbutself(int vector)
+ {
+ 	default_send_IPI_mask_allbutself_phys(cpu_online_mask, vector);
+@@ -87,7 +82,6 @@ static struct apic apic_bigsmp __ro_afte
+ 	.check_apicid_used		= bigsmp_check_apicid_used,
+ 	.ioapic_phys_id_map		= bigsmp_ioapic_phys_id_map,
+ 	.cpu_present_to_apicid		= default_cpu_present_to_apicid,
+-	.phys_pkg_id			= bigsmp_phys_pkg_id,
+ 
+ 	.max_apic_id			= 0xFE,
+ 	.get_apic_id			= bigsmp_get_apic_id,
+--- a/arch/x86/kernel/apic/local.h
++++ b/arch/x86/kernel/apic/local.h
+@@ -17,7 +17,6 @@
+ void __x2apic_send_IPI_dest(unsigned int apicid, int vector, unsigned int dest);
+ u32 x2apic_get_apic_id(u32 id);
+ u32 x2apic_set_apic_id(u32 id);
+-u32 x2apic_phys_pkg_id(u32 initial_apicid, int index_msb);
+ 
+ void x2apic_send_IPI_all(int vector);
+ void x2apic_send_IPI_allbutself(int vector);
+--- a/arch/x86/kernel/apic/probe_32.c
++++ b/arch/x86/kernel/apic/probe_32.c
+@@ -18,11 +18,6 @@
+ 
+ #include "local.h"
+ 
+-static u32 default_phys_pkg_id(u32 cpuid_apic, int index_msb)
+-{
+-	return cpuid_apic >> index_msb;
+-}
+-
+ static u32 default_get_apic_id(u32 x)
+ {
+ 	unsigned int ver = GET_APIC_VERSION(apic_read(APIC_LVR));
+@@ -53,7 +48,6 @@ static struct apic apic_default __ro_aft
+ 	.init_apic_ldr			= default_init_apic_ldr,
+ 	.ioapic_phys_id_map		= default_ioapic_phys_id_map,
+ 	.cpu_present_to_apicid		= default_cpu_present_to_apicid,
+-	.phys_pkg_id			= default_phys_pkg_id,
+ 
+ 	.max_apic_id			= 0xFE,
+ 	.get_apic_id			= default_get_apic_id,
+--- a/arch/x86/kernel/apic/x2apic_cluster.c
++++ b/arch/x86/kernel/apic/x2apic_cluster.c
+@@ -235,7 +235,6 @@ static struct apic apic_x2apic_cluster _
+ 	.init_apic_ldr			= init_x2apic_ldr,
+ 	.ioapic_phys_id_map		= NULL,
+ 	.cpu_present_to_apicid		= default_cpu_present_to_apicid,
+-	.phys_pkg_id			= x2apic_phys_pkg_id,
+ 
+ 	.max_apic_id			= UINT_MAX,
+ 	.x2apic_set_max_apicid		= true,
+--- a/arch/x86/kernel/apic/x2apic_phys.c
++++ b/arch/x86/kernel/apic/x2apic_phys.c
+@@ -134,11 +134,6 @@ u32 x2apic_set_apic_id(u32 id)
+ 	return id;
+ }
+ 
+-u32 x2apic_phys_pkg_id(u32 initial_apicid, int index_msb)
+-{
+-	return initial_apicid >> index_msb;
+-}
+-
+ static struct apic apic_x2apic_phys __ro_after_init = {
+ 
+ 	.name				= "physical x2apic",
+@@ -150,7 +145,6 @@ static struct apic apic_x2apic_phys __ro
+ 	.disable_esr			= 0,
+ 
+ 	.cpu_present_to_apicid		= default_cpu_present_to_apicid,
+-	.phys_pkg_id			= x2apic_phys_pkg_id,
+ 
+ 	.max_apic_id			= UINT_MAX,
+ 	.x2apic_set_max_apicid		= true,
+--- a/arch/x86/kernel/apic/x2apic_uv_x.c
++++ b/arch/x86/kernel/apic/x2apic_uv_x.c
+@@ -784,16 +784,6 @@ static u32 set_apic_id(u32 id)
+ 	return id;
+ }
+ 
+-static unsigned int uv_read_apic_id(void)
+-{
+-	return x2apic_get_apic_id(apic_read(APIC_ID));
+-}
+-
+-static u32 uv_phys_pkg_id(u32 initial_apicid, int index_msb)
+-{
+-	return uv_read_apic_id() >> index_msb;
+-}
+-
+ static int uv_probe(void)
+ {
+ 	return apic == &apic_x2apic_uv_x;
+@@ -810,7 +800,6 @@ static struct apic apic_x2apic_uv_x __ro
+ 	.disable_esr			= 0,
+ 
+ 	.cpu_present_to_apicid		= default_cpu_present_to_apicid,
+-	.phys_pkg_id			= uv_phys_pkg_id,
+ 
+ 	.max_apic_id			= UINT_MAX,
+ 	.get_apic_id			= x2apic_get_apic_id,
+--- a/arch/x86/kernel/vsmp_64.c
++++ b/arch/x86/kernel/vsmp_64.c
+@@ -127,25 +127,12 @@ static void __init vsmp_cap_cpus(void)
+ #endif
+ }
+ 
+-static u32 apicid_phys_pkg_id(u32 initial_apic_id, int index_msb)
+-{
+-	return read_apic_id() >> index_msb;
+-}
+-
+-static void vsmp_apic_post_init(void)
+-{
+-	/* need to update phys_pkg_id */
+-	apic->phys_pkg_id = apicid_phys_pkg_id;
+-}
+-
+ void __init vsmp_init(void)
+ {
+ 	detect_vsmp_box();
+ 	if (!is_vsmp_box())
+ 		return;
+ 
+-	x86_platform.apic_post_init = vsmp_apic_post_init;
+-
+ 	vsmp_cap_cpus();
+ 
+ 	set_vsmp_ctl();
+--- a/arch/x86/xen/apic.c
++++ b/arch/x86/xen/apic.c
+@@ -110,11 +110,6 @@ static int xen_madt_oem_check(char *oem_
+ 	return xen_pv_domain();
+ }
+ 
+-static u32 xen_phys_pkg_id(u32 initial_apic_id, int index_msb)
+-{
+-	return initial_apic_id >> index_msb;
+-}
+-
+ static u32 xen_cpu_present_to_apicid(int cpu)
+ {
+ 	if (cpu_present(cpu))
+@@ -133,7 +128,6 @@ static struct apic xen_pv_apic __ro_afte
+ 	.disable_esr			= 0,
+ 
+ 	.cpu_present_to_apicid		= xen_cpu_present_to_apicid,
+-	.phys_pkg_id			= xen_phys_pkg_id, /* detect_ht */
+ 
+ 	.max_apic_id			= UINT_MAX,
+ 	.get_apic_id			= xen_get_apic_id,
+
+
 
