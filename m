@@ -1,126 +1,73 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA5424215;
-	Tue, 13 Feb 2024 09:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC63364B6;
+	Tue, 13 Feb 2024 09:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707817712; cv=none; b=M0PyuvCoALedSxJbbPdvDqEfOltcNa/X620RtJVDYFk7AXqtoxiLQ4Naw5gkDTMUN8u82n6CB6DHnB3v275nIyzBp97J9xE3VTqqHc5ZqShbtvbnSXwfm01HTKH/gtfrM+WaN4KfjQlSq8LXCfCzsoIN9g9Rw9idYZOBQP4htuc=
+	t=1707817767; cv=none; b=rQOq/ev0ynoij+3xu7mD9YfwAXVYaVHEe76bwwOcsvG+zbF6M3KUfCx9eWbyoJE5cg4GiRP/pwp1TQa0am+7Kjo62TmT6gLHkZPo6JQakKpz4bkiREyf2GDRJwPQH4ti+sRLA48hmpEGjEWu1bNAl6HLnL3G0pJvmUSiPbEiHSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707817712; c=relaxed/simple;
-	bh=+jlu/AYL7Pn+riEIViebhkB7TWBJwXJgw9NTINuKLcs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qh/6u+BlGZFRS1MQwOQsZByVsvnX/UmGn/dx7kXCpfqF82FM6EyW4N8Lj0gp6O/OWmiS6Rem6l0gUeRTXA/vrsBRdfXExPf6Nm4HXzEtX5fVyX/kPr7mmEkLfkHzbGGT5hNGsZzBwENxZ3VWHNxprqqvCEkVFQjrMRvCPKpqLLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tbmsOADy; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1707817767; c=relaxed/simple;
+	bh=mfaHbcvnNJcXr43nudKodXIwxm8SgK0GLMoUzSXL0L8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=A/VDkuL3IjYVdKDhL2obvcH9cVZbIO7EAa1j1Md2QXoe4Uhu05IbNy7n2RNim6PG/4F4NnZYX/fFBomn9ashMxZiPoIpvY5MEDHB3XJAWaSGPGGj/Tj1kj5oB5WXchXGxAFodrw/BWqGafiy4cUC49vVgiiz7h0ngK56Ib0w8CQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0Nz8nFGK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cgXmH3Pk; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tbmsOADy"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41D9bvfX002328;
-	Tue, 13 Feb 2024 09:48:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=dT3athFFB1S90PGKQU187mvJ77v2TNl0tjUJCAHu78Q=;
- b=tbmsOADyQroCb2P3YSOtaq9OGEEPInlOGFMIr4tf8vayEG0/u5BV3S896OqzcacZCt6N
- nzuikdevQyfoWuU88iPHvKPL/ZMP0xGi96xJywauO0x0jh86pmFNhSku5cALaxQpmutN
- kBBvVRJAWZP95F5Oasi2XrWSPnDOQrmz9VJMpAJHxo18S7lnaxXozq8DJ247ug3DEVhI
- 7uKQ1k5XxY1Gqfj/Kw0wLb6KtnOEIdKXNlUqld70iARDf0RoHk0sNlSxkDPCnQgjvGCn
- MAcHKqj7PB0EtG1rG5/CYKgSbW5rVq1gcyI4Qp4qKmrrsN7j+zMFfEyhXftAYSVdX+i6 Mw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w85y4gbr6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 09:48:11 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41D9eKse010951;
-	Tue, 13 Feb 2024 09:48:11 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w85y4gbqm-3
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 09:48:10 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41D8bokT016184;
-	Tue, 13 Feb 2024 09:36:30 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w6mymecq5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 09:36:30 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41D9aPsl13501118
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 13 Feb 2024 09:36:27 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9E59A2004B;
-	Tue, 13 Feb 2024 09:36:25 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8A6AA2004E;
-	Tue, 13 Feb 2024 09:36:20 +0000 (GMT)
-Received: from li-c9696b4c-3419-11b2-a85c-f9edc3bf8a84.in.ibm.com (unknown [9.109.198.187])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 13 Feb 2024 09:36:20 +0000 (GMT)
-From: Nilay Shroff <nilay@linux.ibm.com>
-To: john.g.garry@oracle.com
-Cc: axboe@kernel.dk, brauner@kernel.org, bvanassche@acm.org,
-        dchinner@redhat.com, djwong@kernel.org, hch@lst.de, jack@suse.cz,
-        jbongio@google.com, jejb@linux.ibm.com, kbusch@kernel.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-scsi@vger.kernel.org, linux-xfs@vger.kernel.org,
-        martin.petersen@oracle.com, ming.lei@redhat.com, ojaswin@linux.ibm.com,
-        sagi@grimberg.me, tytso@mit.edu, viro@zeniv.linux.org.uk
-Subject: Re:[PATCH v3 10/15] block: Add fops atomic write support
-Date: Tue, 13 Feb 2024 15:06:19 +0530
-Message-ID: <20240213093619.106770-1-nilay@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240124113841.31824-11-john.g.garry@oracle.com>
-References: <20240124113841.31824-11-john.g.garry@oracle.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0Nz8nFGK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cgXmH3Pk"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1707817763;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mfaHbcvnNJcXr43nudKodXIwxm8SgK0GLMoUzSXL0L8=;
+	b=0Nz8nFGKEfobSe0raaN2CaulvkaWmnnba1RyMNH0Kum2TULqRyMIwk8hnwifPY1KMu/CEs
+	UkYyh52pSf2ToVWFAw8ufV01Z+rmK6uEQ3noPh5y9jlvr0GrzN9TOWjrFT5QWxCEysV31g
+	xk5O5nA0Qfib3Kj7nkGKPZNPJ1z8qm4PqN49YjJgHK5S+fHrfOwqb4r/wVrJwNJhyVfcR+
+	HM4crbbg7ysmW5sboIOIeD0a/YPHtjQYT/IOhN7w1clIiq+KSHg58p6h8ZtiGaW9sCLw0c
+	an2SDP9QY1wu2TI1jOK/xPrFOUwJPxoPEGso/iVsGc7z7CJjXdVPU/ULnBEDpA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1707817763;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mfaHbcvnNJcXr43nudKodXIwxm8SgK0GLMoUzSXL0L8=;
+	b=cgXmH3PkuHEaJhfEjT1zsn++EIYQ1vzaKNKcu56EY8U1y/t/yg4Kmy8RVJOJ3FR1ZOfNRt
+	A1q8P0aVDxs+9DBg==
+To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, Sergey
+ Shtylyov <s.shtylyov@omp.ru>, lvjianmin@loongson.cn
+Subject: Re: [PATCH v5 3/3] irqchip/loongson-eiointc: Refine irq affinity
+ setting during resume
+In-Reply-To: <20240130082722.2912576-4-maobibo@loongson.cn>
+References: <20240130082722.2912576-1-maobibo@loongson.cn>
+ <20240130082722.2912576-4-maobibo@loongson.cn>
+Date: Tue, 13 Feb 2024 10:49:23 +0100
+Message-ID: <87a5o4iti4.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 9Y3xpgl7YZgmt7bLwj052NiHim_kCSSt
-X-Proofpoint-ORIG-GUID: wcW_-f-Ig0-0IoXex2Lkk7VjzuJEeuiu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-13_04,2024-02-12_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- clxscore=1015 priorityscore=1501 spamscore=0 suspectscore=0 malwarescore=0
- mlxlogscore=998 bulkscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2402130076
+Content-Type: text/plain
 
->+static bool blkdev_atomic_write_valid(struct block_device *bdev, loff_t p=
-os,=0D
->+				      struct iov_iter *iter)=0D
->+{=0D
->+	struct request_queue *q =3D bdev_get_queue(bdev);=0D
->+	unsigned int min_bytes =3D queue_atomic_write_unit_min_bytes(q);=0D
->+	unsigned int max_bytes =3D queue_atomic_write_unit_max_bytes(q);=0D
->+=0D
->+	if (!iter_is_ubuf(iter))=0D
->+		return false;=0D
->+	if (iov_iter_count(iter) & (min_bytes - 1))=0D
->+		return false;=0D
->+	if (!is_power_of_2(iov_iter_count(iter)))=0D
->+		return false;=0D
->+	if (pos & (iov_iter_count(iter) - 1))=0D
->+		return false;=0D
->+	if (iov_iter_count(iter) > max_bytes)=0D
->+		return false;=0D
->+	return true;=0D
->+}=0D
-=0D
-Here do we need to also validate whether the IO doesn't straddle =0D
-the atmic bondary limit (if it's non-zero)? We do check that IO =0D
-doesn't straddle the atomic boundary limit but that happens very =0D
-late in the IO code path either during blk-merge or in NVMe driver =0D
-code.=0D
-=0D
-Thanks,=0D
---Nilay=0D
-=0D
+On Tue, Jan 30 2024 at 16:27, Bibo Mao wrote:
+> During suspend and resume, CPUs except CPU0 can be hot-unpluged and IRQs
+> will be migrated to CPU0. So it is not necessary to restore irq affinity
+> for eiointc irq controller when system resumes.
+
+That's not the reason. The point is that eiointc_router_init() which is
+invoked in the resume path affines all interrupts to CPU0, so the
+restore operation is redundant, no?
+
+> This patch removes this piece of code about irq affinity restoring in
+> function eiointc_resume().
+
+Again. 'This patch' is pointless because we already know that this is a
+patch, no?
+
