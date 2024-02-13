@@ -1,87 +1,89 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA0CA62A08
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 23:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB2AD6281F
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 23:07:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707865639; cv=none; b=jFn13APSTGtRW0IdWluTnMwidbGZq4b7sqBMUEYiKExaY79zdask/mI3uiTk13IYCzoBxfWwec9zeLuhP9xgQVmAOiXB8QpASnJ9+8Eq4nv0U34ni0CXQ1dHZ9wxhTsT2aY9YSDhpeXei1GOf3BlvsiPkhP6K+Y+HSf8VtwesJg=
+	t=1707865670; cv=none; b=MhULNXLel4nyVWPfsDYITpwTlStk8+27PH+8zABulncuavJLEqSrtX0Ib8nrd2IQuyszqTWJk1DazfoFDHvUmnmClVP0MYwi4bQdSNvqwCFCiF1hnhcYjGsTLkgArQBYhlY4nv/F/N7nQOEcbNUFN4MaxpXuk1HxjZ2NGMs9G5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707865639; c=relaxed/simple;
-	bh=IlOcdAFyrGcBZwjqGuF72RmOCiW8ydDgssaTemzVqmM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iAP0U0Quen4KZfEeYX+QVfLVkuJiAgGFSPJAj1w8EAQgHsOXHgQeP+YQ67puym17B5q+8RHJ+nvvMhyzZo+FGUN6eEX/alWd1eiR1n1rcgtPxZhp8DX2N/+3n0vUiL1qnu02lQb4scSzcUeKwLViNTnwgiGz3JeOv4DHgXQhK7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=JowB9Xcc; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1707865670; c=relaxed/simple;
+	bh=5r8mGWxqCI6vEgqZTBMkzo4gQvTRqNCArj72zBif0wU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X7J3tjBPhDBxJj2TbjK/yAgmv3BRqQAfWcNLALSor91IY2mG9AkgDG5bq4regCLA/AVbb2m5WY1GCXW5e2JH6Dlb9yn1xmOzA2CXYpdsErnxhi0ud0NWEsOLbRktzhkfzK2puCWHCHEqOXvTw1Uv/YIYhTcb7etlPDs83T/SrJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AuTXopDN; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="JowB9Xcc"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id B3FFC240105
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 00:07:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1707865627; bh=IlOcdAFyrGcBZwjqGuF72RmOCiW8ydDgssaTemzVqmM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:
-	 Content-Transfer-Encoding:From;
-	b=JowB9Xcc5U4uBk9P8LK8XnTzPTBPoqKdwuOCs5M50eCXs32ntNmtYBuOowMZyLAV6
-	 xGKZrJynU16V3g5XfaZqsac9zOXeVbm01DnYG6QuvPQap+B1l4d5RPHoetLor6/Cge
-	 8TPE+Xi2y5EFJAqvHa5bnRBEIpGzYcTiu5xoqdM8LoeYriBlyaSdqvfw7AJAXvC+kY
-	 8S0DK/LJbAXh16SzQk1YjVdgKUjD1nnWIU73rEmBUzaTFzUbLvfYg08/Y/bfmww6yG
-	 /5KtXbBVef6wyHrqG9bmiERrS9ejBVpK0WaJwwA8I5JSRbQqJ8QyVuBkpI6yv0MOLU
-	 R0VZB80gH0rfw==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4TZH5j1FN4z9rxG;
-	Wed, 14 Feb 2024 00:07:04 +0100 (CET)
-From: Gianmarco Lusvardi <glusvardi@posteo.net>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Gianmarco Lusvardi <glusvardi@posteo.net>
-Subject: [PATCH] Corrected GPL license name
-Date: Tue, 13 Feb 2024 23:05:46 +0000
-Message-ID: <20240213230544.930018-3-glusvardi@posteo.net>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AuTXopDN"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dbed179f0faso196777276.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 15:07:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707865667; x=1708470467; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5r8mGWxqCI6vEgqZTBMkzo4gQvTRqNCArj72zBif0wU=;
+        b=AuTXopDNGeir0vPOFVniMlL+Q3IgzlP4aI3edBaceQW/nNs/uf1Aphs3mW8BNRSa5e
+         0uq1pD1eOU04WZ8xeXHqw/XOWrifg5f02yzAvI7mqne0zlJLOxKfXCZUa/JR39MRpaaz
+         mYhhzylAU4FQgYgYRjlYbMDQeQ8yiqffqa12BKHQKaJlP3vgDq0tSg16vClgS4IK0MYD
+         p20ZVeD+cQQqALkg+CfO/Z0YKynf8YsJs4zuYrbcebPKEMmV8II2e28czbloIfGu/9Si
+         uyqDY6jmwA4wLqMkGByrKnCXtfeRYCJj8YCm63JdU+hqUmq/0EbUNLe7CnAKFPzDa5+X
+         F6Bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707865667; x=1708470467;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5r8mGWxqCI6vEgqZTBMkzo4gQvTRqNCArj72zBif0wU=;
+        b=UudfSsnj9MoB/K7kfzxG/pLzvZOL/OJKzcsCALHEyq8nGvYZDSedEpLLssxu0Nm2WO
+         FKK/sVSFeDi1e4gWtaazg+dWZxVWbMcGONkWohTloF1mcsJKNm622a6l6ed7fWgnsZ2V
+         +RRVo0dwjrgU3sjsxQpaj8AQHTeLBbph77p2yrWFeawP6FuX8Iys78OdjetIrEcfziTF
+         Qxbzly+fFLWURhir1PFJaFybNzPnlJMcWr2p9Zgd2zJBs91RjyVzFyol0+/qkHYdykjL
+         Rhjswua8k4m0ZzFy6dqHgSdYEIhD9hPpDf4yZJvR+mQMUKhL4hmhkV6/tK976NzbPw0l
+         3A3w==
+X-Forwarded-Encrypted: i=1; AJvYcCW7DC5OvJrGofxM+ZcsK137pajHbqf5p6a1s6RfBNKJuhJNIoq5y/j8ysz5G3QY0bc0VRoBGTp25Krj1PoyWBCzeQpPwLXfV5Cdt1Eu
+X-Gm-Message-State: AOJu0Yyr3/gFWfh8Z31CfkkQGLPk46LrQYb2lZWPEX6t9KvXaO9qRBxG
+	Oivh//CslqMblN5pkSfge2IU6VDTCS//kr/gCnJb5FzM5cSlz9t8GGuZ7uuvkROTiGWkAb/H7Zw
+	H8TQsBc+GmYz1VDkwCMl27n896NYVuK8nUdZR6w==
+X-Google-Smtp-Source: AGHT+IED3UnYNv3qZy3wS1gN4YzhWWLxmuPdKWXeZ+oYphZhStOOlt00/JsSZJX3g5VssxQqQbR1ikxzXAYLLUPneCU=
+X-Received: by 2002:a25:be54:0:b0:dc2:2d55:4179 with SMTP id
+ d20-20020a25be54000000b00dc22d554179mr265190ybm.17.1707865667723; Tue, 13 Feb
+ 2024 15:07:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240213220331.239031-1-paweldembicki@gmail.com> <20240213220331.239031-4-paweldembicki@gmail.com>
+In-Reply-To: <20240213220331.239031-4-paweldembicki@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 14 Feb 2024 00:07:36 +0100
+Message-ID: <CACRpkdYxf-4PGyAcA3146_V==u3q9QYwiN25cRCt-wZrh9xocA@mail.gmail.com>
+Subject: Re: [PATCH net-next v4 03/15] net: dsa: vsc73xx: use macros for rgmii recognition
+To: Pawel Dembicki <paweldembicki@gmail.com>
+Cc: netdev@vger.kernel.org, Russell King <linux@armlinux.org.uk>, 
+	Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, 
+	Vladimir Oltean <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Claudiu Manoil <claudiu.manoil@nxp.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	UNGLinuxDriver@microchip.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The bpf_doc script refers to the GPL as the "GNU Privacy License".
-I strongly suspect that the author wanted to refer to the GNU General
-Public License, under which the Linux kernel is released, as, to the
-best of my knowledge, there is no license named "GNU Privacy License".
+On Tue, Feb 13, 2024 at 11:05=E2=80=AFPM Pawel Dembicki <paweldembicki@gmai=
+l.com> wrote:
 
-This patch corrects the license name in the script accordingly.
+> It's preparation for future use. At this moment, the RGMII port is used
+> only for a connection to the MAC interface, but in the future, someone
+> could connect a PHY to it. Using the "phy_interface_mode_is_rgmii" macro
+> allows for the proper recognition of all RGMII modes.
+>
+> Suggested-by: Russell King <linux@armlinux.org.uk>
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
 
-Signed-off-by: Gianmarco Lusvardi <glusvardi@posteo.net>
----
- scripts/bpf_doc.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/scripts/bpf_doc.py b/scripts/bpf_doc.py
-index 61b7dddedc46..0669bac5e900 100755
---- a/scripts/bpf_doc.py
-+++ b/scripts/bpf_doc.py
-@@ -513,7 +513,7 @@ eBPF programs can have an associated license, passed along with the bytecode
- instructions to the kernel when the programs are loaded. The format for that
- string is identical to the one in use for kernel modules (Dual licenses, such
- as "Dual BSD/GPL", may be used). Some helper functions are only accessible to
--programs that are compatible with the GNU Privacy License (GPL).
-+programs that are compatible with the GNU General Public License (GNU GPL).
- 
- In order to use such helpers, the eBPF program must be loaded with the correct
- license string passed (via **attr**) to the **bpf**\\ () system call, and this
--- 
-2.43.0
-
+Yours,
+Linus Walleij
