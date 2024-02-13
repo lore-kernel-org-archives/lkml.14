@@ -1,138 +1,185 @@
-Received: from GBR01-CWX-obe.outbound.protection.outlook.com (mail-cwxgbr01olkn2085.outbound.protection.outlook.com [40.92.112.85])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10B0374FC;
-	Tue, 13 Feb 2024 10:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.112.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707820746; cv=fail; b=jHuogw1OU5ax7lsdeW+iAd4gqWyNHVcFay2/rZGbcZ7fC4txwiVOH+G8VJX8dsogN6ze3of3OJJxrk0Z7trgwFIkcXKe/Q/V1MG0l2Zk9RpkiT85a7+Kn0lEAUd6LLSuIW0eS/fY1U4AswHqS4B6y59/bcVKxiEHr0esXi3kusY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707820746; c=relaxed/simple;
-	bh=HEx74xVct1K22BU5pZVsWC9q+zcD60XCunleYocDPPU=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=l6EPtsP46BDI/0ZmavDR7qmfds5nMkRgixiXGTZ1ILDRI/LEhRY/FW4PmbE5x7ceZ8F/qV5Avth4cDyTOIcCkkByxDEgFHrepZjWxYPjn2dfyjCKfIk/Tkt0r+IKw2Z81BLVg/yH8ZdyQ7uksj/wV6rI9+/lVSu9mbsn21w8uVw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=HZKEmmCg; arc=fail smtp.client-ip=40.92.112.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8DC922636
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 10:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707820829; cv=none; b=mbO0xRsaujRzUZShWGtBWsLmVLRU5ziXHCUHVpALvrJldK3mIPr7yujkQFL7H0dJFl1uF0nr0AvpjeQL+fJkdznThs17B1I0FfI+4kdQ8iFq5UuiL/8k0izmblmJMjLZBMoIllTWs85AluDXI7q5emF+psRod223i7Sb0k0srgc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707820829; c=relaxed/simple;
+	bh=krsCH14lzt/9Maep29rwlQil5zrN1KmqSS4gA+WXvOk=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=WCkGyWTBYYn+uI3L7yNhLClmV80iQT8IN9nQ4cRDslLJSy0Sx/+SoQjQDa0ugpfU4kxlVL8/WJ/ynyNGRDYwHd0TQcye558MVSXKgB2IPlu6x7AaOqMKsgWbP60MoYUgWESY4dsAjevc8cRY4kp1LhsMVGrBoAdceNdeJSonOxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=dRekwuaE; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="HZKEmmCg"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EqKuUXbu5NRxZARB5iBNSJVZvtLBHRLwzfR0hegs6vBtcY0IDUpgdQjlLSiJKCpOUkqBDIZH+owUImzkvBYt4DL2jf0Iu+OlRZjz95a8QiA+6xUOkljQUg0trLITuQCReOZKyEYP00wj9uOXHVSwNQZFIckV+ZMS7biOwHKQ3hXYttw4YcyE6tiqdnljKwANmtViVOr+a3gTEcUBSd9ts6go9QN8k69zg5s+i2mrzzs0gGYfDknl9syuG+6mwbzbYfojR56RDl61Ze12lt70u4vH2glMXE5TzaQPa0nek/2plReWlpx1sBuDbLmfGFCIxKvnceYj/Z53aie6+GcGjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2ee7ZkrqbDzwdJ//4yxSOmy37wLqqQbz5f4eoNDDkl0=;
- b=iHTMebxoG3oyKAH8lZ/F0I3McsU3C/raaw9mZCzpxaIvbS638GX2rF/o2s6uJhsHfXJn1sNwz0KjfVMJJd9RzufxhzzTN6HTBRtrRdCIY8mCPcqHAMg3V1LSNLEuF+Rjtb531HIY6HezXsPgHARqWRgdXATRhhX/sP9TlbRB+kR3PkQpWYA6Qjwkj1qGJQQ0CNmosTmLfzQLZmpnpQkkdEVKtgijvnPtdJvrvJk/1XcpXmN586JE8xSVFt4WmDu0PwWtDqfLGOH46bCWTLMm2/QRv+NAAKIaUAsqksJdXNfs3TY/gUT60a6pYYyhhsPIaA+SvFvTw0jZBoFOnsDbwQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2ee7ZkrqbDzwdJ//4yxSOmy37wLqqQbz5f4eoNDDkl0=;
- b=HZKEmmCg00ikCqPCdIv3UvOpJZcN11DnAkVbYmtRNk7r7UOTpaFQctdKG7KI8g11mjKvroJ7g1gMLg4YSKmEWeT4gT2XJaxemRKCv/IDc5Uxkh1xR+PEzvsQyfwSOMu7WF2U6GK/yiNp1R/jhCtlIauxR9ypmFlAZ1dFudiArYnMBITStz5F98Lyo1dtVVLa/ZOud5/93S+emAKBT1YtlMUJKIa7OjwJB7GIZRIGxdwN9ZcWmx6GLGZ1lOarXRCArg8O8qhHb+6BEI0WpbRteSTMZ5+kmqLqgkEobP/6bT85Yoh8iR5ZAvIVNQLNtKYCddwWjJYPhu9mBBeEVaBkhA==
-Received: from CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:160::13)
- by LO6P123MB7301.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:33c::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.39; Tue, 13 Feb
- 2024 10:39:02 +0000
-Received: from CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM
- ([fe80::8b25:d0be:5a33:99e9]) by CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM
- ([fe80::8b25:d0be:5a33:99e9%4]) with mapi id 15.20.7270.036; Tue, 13 Feb 2024
- 10:39:02 +0000
-From: Manuel Fombuena <fombuena@outlook.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Raul Rangel <rrangel@chromium.org>,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Manuel Fombuena <fombuena@outlook.com>
-Subject: [PATCH] Input: synaptics - enable InterTouch for TOS0213
-Date: Tue, 13 Feb 2024 10:27:11 +0000
-Message-ID:
- <CWLP123MB5473E0C4823DAD90E9F3F8F1C54F2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.43.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [3tA+OPqdlPD030W8jJwBPvSlq5e/1WdLF1S5Ebr6Q49clpxoR9nkC5GyvpooFJdw]
-X-ClientProxiedBy: LO4P123CA0571.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:276::10) To CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:400:160::13)
-X-Microsoft-Original-Message-ID:
- <20240213102710.399833-2-fombuena@outlook.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="dRekwuaE"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-410ee8ed659so11433225e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 02:40:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1707820825; x=1708425625; darn=vger.kernel.org;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=73nQOWwOG85LqUQijwY3y2kTDnNiZFOlELYxkV2QtZQ=;
+        b=dRekwuaEN/PJB6ElhQrBAPT8MKPsf+sVFNnTx4uq9lqFRkgl9j76at1fMwg5H0A1rQ
+         Knwr5M0Pjcg4LAQX0TDb3EOCLezIwwRSoueWqX0m/5iBzf9RWh+cWvC32zVL6dl1KZCl
+         /W5rASlMgMLr9RGIdKq4tdjTMpa9NncimRb7yA3TfV2jP4R0+adCPHpExFSKYTiYiem5
+         nJQHjBhjEUtE9l4ec0Zp6SXImWnGNPAfjYyI9v+ydBFB5uROmDqCnTH2Bfbxt4pPyvyW
+         E2Pkmu1Su/0Vo/lzSVwMKyXUGJ3upZ28Ny5TvQSUNuPMzL9ZiwSYd07QCpB5Ncy4rfjH
+         jtgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707820825; x=1708425625;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=73nQOWwOG85LqUQijwY3y2kTDnNiZFOlELYxkV2QtZQ=;
+        b=JU/wleLxzGxPoABcrCPiwr1RiyPSGqqCUtgOL9I7M3qRGEKu5aYeyZ7cOJt2dMCulV
+         hh7WYJOSNeJPFn7O+6voMlHvtW9Rh3Xx6VfDxtwAsdeImJnPVws7s5voaYAx/q11lzB2
+         PkkY5EEiO0kwwvYrulh2ljxsFyS1JQoSrQabuiiM4mN7qSQfMKCzFAzuSeEowCiz0v9/
+         PjjIeDuI5cV9KOy9HMDAmSuzrQKwgAs/xZUnrTnNIR0Vd8Or0dzt0sUmRsYL5z5+ncCp
+         zRovkIBUUEjFz+vP3x8i9XXi5llGlvl/7PXh6mq/u2k4BCvmuXK7wYfox21/3APe9KYf
+         8wNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWRAZaI+SKTjwcYeBN8b4U02CFPijzj9AGiPa6/yh6cJmau2rd4gqUOJm1TRcgtQEXeU5U6CfzAP4qEP6IjtdKWw/j8IirG8KkqSm3s
+X-Gm-Message-State: AOJu0Ywyz2HgrUyro2nCRztdNHEgtjmJrDtbyhQa0vwIwgPXn4K8wdk5
+	WgCua3jguJz9eDzJU7UhMBKa378XtxHqm6EzMGSh2LeuPS+3bOOPsaNqAqSzuRs=
+X-Google-Smtp-Source: AGHT+IFE2dDl+7H9jhreEKYF+PUjtVPBRcNJ1aERTrrwwC5G4DL6A6zOSd3wAcqga8EO4wTyXt03Pg==
+X-Received: by 2002:a05:600c:35d6:b0:410:bb99:af83 with SMTP id r22-20020a05600c35d600b00410bb99af83mr5171034wmq.23.1707820824810;
+        Tue, 13 Feb 2024 02:40:24 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUmcpbchwPyNzBfnbLcEYhaLnxRQSdBvMKjGg0MfaCh7YWyITG3KZKFcRYjfwe4AlHSq1gIXWIjsiVyv1IInLv1tZVd8zmquscCy1pDKYwdz6ynaEkFHraLMWSkLqh5TRj+L/JjihgJpQCVLPbPVfylHTV3batPXQXXindEdpdMqE0SUk5RUOICCx9f4Eb8h5DTJ8vDSxJbXIeNoJfFhXRq8lNOY7jMZ0c+xcyncspd16YHa0IkYhvVU1WUQqEArUfvTF+SOUM4Dt6OU0uFU2i45yO6k7zltzOl+BYRYI7XlCDdoZkIcl6ELjYAmedeiuco7vlSNcPnTNVtdkYiXPyrZF4K/En7BMlacB3N5g8zIxanpUjM7LvvquL2djRo3o6JaZB2FQXw7cwz+qwougFRtQ5bk+HRzQ8Ra85TnWjlTyaRM3YUC2vSlcte05ZhhsU6FN+8sVvI8CBvm84Yfr43mveqKKKtpCM3lfNAJocWu3ZsxvGPwGF945dM0y7mcsU7DT3vSkHlfGIfh+vu1JdHCc99fhNPmRDiBz88JQwxFhk5TEvCYmvJFBeL6rPDrBlBgM2F5Ni3KdJGf3GhrGtWo9/OtDGksh6UCEtuWoWIVDh1P6usyEPmTFpYFe0IEzH8GUOB4to5Jo8wRg+cp9MHbcK38SJVltJ8NNXA
+Received: from localhost ([2a01:e0a:3c5:5fb1:509b:4241:48a3:e3e0])
+        by smtp.gmail.com with ESMTPSA id m20-20020a7bce14000000b00410e0fd6179sm4811973wmc.34.2024.02.13.02.40.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 02:40:24 -0800 (PST)
+References: <20240213101220.459641-1-arnd@kernel.org>
+User-agent: mu4e 1.10.8; emacs 29.1
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Arnd Bergmann <arnd@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Jerome
+ Brunet <jbrunet@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Neil
+ Armstrong <neil.armstrong@linaro.org>, Kevin Hilman
+ <khilman@baylibre.com>, Martin Blumenstingl
+ <martin.blumenstingl@googlemail.com>, Nathan Chancellor
+ <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, Bill
+ Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH] ASoC: meson: add helpers for clk_disable_unprepare
+Date: Tue, 13 Feb 2024 11:36:28 +0100
+In-reply-to: <20240213101220.459641-1-arnd@kernel.org>
+Message-ID: <1jbk8kk5pk.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB5473:EE_|LO6P123MB7301:EE_
-X-MS-Office365-Filtering-Correlation-Id: 29d7295d-906a-4150-b9c6-08dc2c7ffe76
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	0Sd8gmeCF0Pw/+dSUfqeU5KGTdMpzV7AtDAey2EoOKPtHYS6fhrr5wHSYnxPM8JU0110F1y3VJvPu1U+xo6DME3TGYEo145Sz4ObzqJCvfDOXoHmbrpTG/7i83SviUAsDUUXgRCVAJ7Acm26AGBUVh6OyYrxvGGtAaaBWJZRYQzneVlSi/h9BUYilk8BBtRkvSXqK+CiY+5wUbSfHMHpAfX6clUqK/mZTevSP5e+JyPoazSawHJdjzeoSNjK24O8/3zq/KGTKzrDMD880U9hbQwqBwTh3mv1hAVuciIlzg7ewyYZN6cEaP8b0L/KQDFvLjLKSuRbDr89T/FMF5umjy1XDPBYVWadZsa5AyUFqeGJRJhksg4nfFVdUG8pFtHmaiuZcv+rVCBIE8Jw1ARMcxNpex2Pnj6UvDQTkLd/u7aX4fthmiZYwtttIQSEMCtVZ59unDD21V2VBUa7HdM+wH0yxtBFWbljxxRhfPz10LsCwcZD7LTXR89sgIO9ZEqXlCkHfPJUJK6sTDeGF+KnjKyNFdGWtO3CDJzugWN0ybpRn/0771VZyqsVDwV92+k/Bu8jooWrTZEoS6MFmRz02dciA1oJNvIsDdvv+k3otFy5YKCJGsj2n/WZHIqOPHhn
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?e9RJuaelhUYUCs5GZewdKwWziU+TSChd00bb+AtKAnwtK/4UY9/mSx/Ua3B7?=
- =?us-ascii?Q?sBDe9oLmCJDGO20camC2uBtYTJ51jSi+SOmKK3SJQplTeqX2fwXEE560lovo?=
- =?us-ascii?Q?Zbs3IOtiCp35iHJT6tt6LbyWhMlJhpWpbCMPjP/5ecWq+BjpO1YrMxFX6EL/?=
- =?us-ascii?Q?B96d4jxkG5yvXzC7eDRClTsasg9PrEOY+nxAJJ2ms0qrnBhmZ6bPZHNU017k?=
- =?us-ascii?Q?zJaGGyCshBbV+1kPvelNYM6QNFAKOpW4Ixx1qsgSitUoeJvR5SJZk1FmoX8u?=
- =?us-ascii?Q?3DkXUOHJr/qPAScrVKIjHQle0c6TjHiIoUCvQCO6noe3wTMYJp6ackua+SdM?=
- =?us-ascii?Q?StuD9L7IVwIdSsU6990yzMRQdypWdLx249Q19tSJ9F+CCgk78dTZll2463Pu?=
- =?us-ascii?Q?7TyMdcLq0pygGPBA6Sgo4LmdrzRxOZNk3TyhVjCGX0VGHjaCX6Ncusqpw0je?=
- =?us-ascii?Q?tjmwRei6nulQQjN+bxUe/ZN6ZusOxLXUAIUSH9UOHCg0oEHuRe45623piRtr?=
- =?us-ascii?Q?x5TO9/7DxcuGe5ZmeLuIEXDKoupsRVxvp7fM1Uf5BdKFpmlpam0YoXN+hiqr?=
- =?us-ascii?Q?ut664yh2y9VddRnSrwrzjrsnYwidtp/X+bPFGehIgM/8WJquRIKAnloaesQV?=
- =?us-ascii?Q?NH6RCCDJ4U5CTptZ3PpJjwq/C3jdNxEAterV5S5TgLIOJoYaz3G4+UTiV228?=
- =?us-ascii?Q?3cZb2PkzZQYZ33N+SPrR7GMfHUpFxd57p0J0Z6GkmIy+h3CUzoPq/oSmjA8b?=
- =?us-ascii?Q?u/htS4ePWa8YJCIxmXNvvzxPNLjAy69E59qg6efC6iemEME0ngUekvPsuHwe?=
- =?us-ascii?Q?7JywZZrGlipWWZzQlL72cqcn61ogJHtbQDdNi2rQ0QScYHMHPHpyfjQsImhO?=
- =?us-ascii?Q?dkhj/kldpMr1CoBAEZtLGp5D+ipCUA/VPaisBlT9wjKMMH2dIeHIz4ey46BD?=
- =?us-ascii?Q?EDCGqWm+qS8skXVhV7GfSg5hNqLh+/Q8fbJxbjUqZdwyO9JhyJx9dc1WF95z?=
- =?us-ascii?Q?OtxyXw9ItH+iOw4Jii2B6YtUjIxqfQx0cmg3nUppN3kV3PKggF1NIqnhX07a?=
- =?us-ascii?Q?u6Gov0aPV7TZwvvlFWh4mPHGNDhk1oqpGC47F+A6hJ6ihtiXg9RBNf0p/LME?=
- =?us-ascii?Q?mzFIFXIk8Hez7j8bjQzyPdYsQJ+xL+KUBf9RZyEyAo+sVD/+n+mWJlnEoTYZ?=
- =?us-ascii?Q?gySF4GP0LxUeWdBQQEBl0saDXDrotaE3h1KiQKiI0OoYBqkEwimbFfZWaX30?=
- =?us-ascii?Q?T9bEo2ttx6XMbFuwRAYULacror+aqac3/5GcUOXLCtXZrVNZQMIPPyy1NuED?=
- =?us-ascii?Q?+6Y=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 29d7295d-906a-4150-b9c6-08dc2c7ffe76
-X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2024 10:39:02.5276
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO6P123MB7301
+Content-Type: text/plain
 
-[    5.989588] psmouse serio1: synaptics: Your touchpad (PNP: TOS0213 PNP0f03) says it can support a different bus. If i2c-hid and hid-rmi are not used, you might want to try setting psmouse.synaptics_intertouch to 1 and report this to linux-input@vger.kernel.org.
-[    6.039923] psmouse serio1: synaptics: Touchpad model: 1, fw: 9.32, id: 0x1e2a1, caps: 0xf00223/0x840300/0x12e800/0x52d884, board id: 3322, fw id: 2658004
 
-The board is labelled TM3322.
+On Tue 13 Feb 2024 at 11:11, Arnd Bergmann <arnd@kernel.org> wrote:
 
-Present on the Toshiba / Dynabook Portege X30-D and possibly others.
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> Casting between incompatible function types causes a warning with clang-16
+> because it breaks control flow integrity (KCFI) rules:
+>
+> sound/soc/meson/aiu.c:243:12: error: cast from 'void (*)(struct clk *)' to
+> 'void (*)(void *)' converts to incompatible function type
+> [-Werror,-Wcast-function-type-strict]
+>   243 |                                        (void(*)(void *))clk_disable_unprepare,
+>       |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> include/linux/device.h:406:34: note: expanded from macro 'devm_add_action_or_reset'
+>   406 |         __devm_add_action_or_reset(dev, action, data, #action)
+>       |                                         ^~~~~~
+> sound/soc/meson/t9015.c:274:4: error: cast from 'void (*)(struct clk *)' to
+> 'void (*)(void *)' converts to incompatible function type
+> [-Werror,-Wcast-function-type-strict]
+>   274 |                         (void(*)(void *))clk_disable_unprepare,
+>       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> include/linux/device.h:406:34: note: expanded from macro 'devm_add_action_or_reset'
+>   406 |         __devm_add_action_or_reset(dev, action, data, #action)
+>       |                                         ^~~~~~
+>
+> These two meson drivers cast clk_disable_unprepare() into a different type
+> in order to have it automatically called from the driver relase. Add
+> trivial helpers to do the same using correct types.
+>
+> Fixes: 33901f5b9b16 ("ASoC: meson: add t9015 internal DAC driver")
+> Fixes: 6ae9ca9ce986 ("ASoC: meson: aiu: add i2s and spdif support")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  sound/soc/meson/aiu.c   | 9 ++++++---
+>  sound/soc/meson/t9015.c | 9 ++++++---
+>  2 files changed, 12 insertions(+), 6 deletions(-)
+>
+> diff --git a/sound/soc/meson/aiu.c b/sound/soc/meson/aiu.c
+> index 7109b81cc3d0..211f360df284 100644
+> --- a/sound/soc/meson/aiu.c
+> +++ b/sound/soc/meson/aiu.c
+> @@ -209,6 +209,11 @@ static const char * const aiu_spdif_ids[] = {
+>  	[MCLK]	= "spdif_mclk_sel"
+>  };
+>  
+> +static void aiu_clk_disable(void *clk)
+> +{
+> +	clk_disable_unprepare(clk);
+> +}
+> +
+>  static int aiu_clk_get(struct device *dev)
+>  {
+>  	struct aiu *aiu = dev_get_drvdata(dev);
+> @@ -239,9 +244,7 @@ static int aiu_clk_get(struct device *dev)
+>  		return ret;
+>  	}
+>  
+> -	ret = devm_add_action_or_reset(dev,
+> -				       (void(*)(void *))clk_disable_unprepare,
+> -				       aiu->pclk);
+> +	ret = devm_add_action_or_reset(dev, aiu_clk_disable, aiu->pclk);
 
-Confirmed working well with psmouse.synaptics_intertouch=1 and local build.
+Hi Arnd,
 
-Signed-off-by: Manuel Fombuena <fombuena@outlook.com>
----
- drivers/input/mouse/synaptics.c | 1 +
- 1 file changed, 1 insertion(+)
+This probably pre-dates the introduction of devm_clk_get_enabled()
+It would probably be better to use that instead of duplicating helper
+functions which do the same thing.
 
-diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
-index ada299ec5bba..a6601e007082 100644
---- a/drivers/input/mouse/synaptics.c
-+++ b/drivers/input/mouse/synaptics.c
-@@ -192,6 +192,7 @@ static const char * const smbus_pnp_ids[] = {
- 	"SYN3221", /* HP 15-ay000 */
- 	"SYN323d", /* HP Spectre X360 13-w013dx */
- 	"SYN3257", /* HP Envy 13-ad105ng */
-+	"TOS0213", /* Dynabook Portege X30-D */
- 	NULL
- };
- 
+If for any reason it is not possible, a common helper in clk.h would
+preferable I think.
+
+>  	if (ret)
+>  		dev_err(dev, "failed to add reset action on pclk");
+>  
+> diff --git a/sound/soc/meson/t9015.c b/sound/soc/meson/t9015.c
+> index 9c6b4dac6893..e0f9a603a5e9 100644
+> --- a/sound/soc/meson/t9015.c
+> +++ b/sound/soc/meson/t9015.c
+> @@ -243,6 +243,11 @@ static const struct regmap_config t9015_regmap_config = {
+>  	.max_register		= POWER_CFG,
+>  };
+>  
+> +static void t9015_clk_disable(void *clk)
+> +{
+> +	clk_disable_unprepare(clk);
+> +}
+> +
+>  static int t9015_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -270,9 +275,7 @@ static int t9015_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	ret = devm_add_action_or_reset(dev,
+> -			(void(*)(void *))clk_disable_unprepare,
+> -			priv->pclk);
+> +	ret = devm_add_action_or_reset(dev, t9015_clk_disable, priv->pclk);
+>  	if (ret)
+>  		return ret;
+
+
 -- 
-2.43.0
-
+Jerome
