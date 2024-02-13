@@ -1,152 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00EAD2BB03;
-	Tue, 13 Feb 2024 09:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 052842C696;
+	Tue, 13 Feb 2024 09:57:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707818198; cv=none; b=NkvBj1BrSCpbRlMfHcd4mXtv9JtPYXGmY7T9tbMmaubbDPPX292w1W5CMW5FNyMS+aTJ++D1mzjBvbkhLFkoLRdq7VY0Lp5011YvXl7PRBKRqxNbQxYCBZ4DFwlO7oXtNsAzalIyXBPTeypD61B2PxFU1jm2BXjS59Dr6kxMuUU=
+	t=1707818222; cv=none; b=si6w3S7GohnobJLpZgmSgTqUHnEY+JWWJKrdxOlqytjyrighDQNfCwUsPC53nWXZOaVgCMbPnuP54oSi2kzh4HQ7v3AwdImtG8CqphteiJdi84qYzKt/ZIdsKPkAqSznhzwKhlxTGYFhtYPxZKUGz0pSyRZaSI/z/q9ZzdvuNWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707818198; c=relaxed/simple;
-	bh=vb+KBTnTSXAaZj4rUNtfS8bhDG7fD2FUJ5wHxmolX/E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fmgzXFa51Ne0/9oRsGdNgC0btrCLDyBdEoq/cFdGCMtAHiChlIs1XghMfLZt1sEpfbDI5GiO5OXfjt8nNsKygG7w+xJR4M5g8f6rjKoQPXUtZIARVbjZn+Vqlqjth8T2yaLCfucua95slO8wNXWUusNNIR0IF22QxQdVCzqxtpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJt5Is3z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707818222; c=relaxed/simple;
+	bh=vgkj6KV2Y4r+474+FZqCSyvxmZHXesxk5ZhG4T/ProQ=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=B+EhD20fPMeu3FU1Jod/1rQjl6PBy6rWebioz+MSQaZKoJ57hZ7rhCHzFeANXWpFlvCMNxs24mpaGv89rxlcAwE6lUJDOOsTYpSE2jC+LJycl1mm9S0MZiGlFuyh446RaNBZfgWUdJzt7VNo/Ip2B8pEwL2jeoQfjMKfIzHQ3tY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QeaZpDFb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ikVticnI; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VJt5Is3z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B311C433F1;
-	Tue, 13 Feb 2024 09:56:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707818197;
-	bh=vb+KBTnTSXAaZj4rUNtfS8bhDG7fD2FUJ5wHxmolX/E=;
-	h=From:To:Cc:Subject:Date:From;
-	b=VJt5Is3zeq/Zjfhdhjq8lEVPdZGh9L98WDNDPu7YIB/pra9bf1JMk+PkxRtLD72Gp
-	 mteiCp8/9APkYVFjHL3prsi4G+T3O/kR4aasJs7NxYovDHmx5aHQOP+3qDUjD92tOB
-	 Vjgw2uq3LJ77tCCvbEEOdYkY3ObnM0ABaKvIS3cAZSF1CrJwiUI79HYWUI5QUXY3kD
-	 cdf37TIDn/ZXNojU9QUqRlEFdMWp9Grs0c2n/GdVTHH1mu6AFk9B6VuAQP7EWsJPxh
-	 v6AXbU/kPsJj5dpXWOtVEuvYE4uZUwJ5Ve10QMBCCrpfX3SW1MGoxsNVITLP2LvVbM
-	 BWv8cg4PPfTqg==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Bill Metzenthen <billm@melbpc.org.au>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH] x86: math-emu: fix function cast warnings
-Date: Tue, 13 Feb 2024 10:56:18 +0100
-Message-Id: <20240213095631.454543-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QeaZpDFb";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ikVticnI"
+Date: Tue, 13 Feb 2024 09:56:58 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1707818219;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w+jwA3oXvpSN85iZlJby7bd/JQsFHKO7U5l3GD72xEA=;
+	b=QeaZpDFbvD7hY2JNpL0RK/U1jcrVzyj/Cy4wr5+pu6NOG7Zi/guCOEDJQEf60Ql0RNvkXv
+	yaor60uAy7pCchjzaAqjfY4KjjPR1adJAkTLn1+OG+NkTYu/lh6oUhql/pZYI7rPeu9ppR
+	ZtNxD2DZx3iOwl8F42jyr3NpGs6uE1awMTzfFuLA/UkcS2MPEo/V3I8462i7rozn9sYIeg
+	o//LZBWeaD6KAX7dolm/isFjuV9tuxTAbti9Hiko13eD6G+QbxEHzvIL7j6L8Wv9Nz1xhs
+	sp4rwRr/cpHraNrsxWNyE/uUr9yDAgvP9DUA/pU7xgHwUibU1EJ2iHnpseuOVA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1707818219;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w+jwA3oXvpSN85iZlJby7bd/JQsFHKO7U5l3GD72xEA=;
+	b=ikVticnI/9bDKQgHv2Rs8yhZm15HGvkAqwswfR6FVTJStD1onn/gSPAjGnB1b2RwdDzGLD
+	vdEbfUMdUo63l+Bw==
+From: "tip-bot2 for Erick Archer" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/core] irqchip/irq-bcm7038-l1: Prefer struct_size over open
+ coded arithmetic
+Cc: Erick Archer <erick.archer@gmx.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Florian Fainelli <florian.fainelli@broadcom.com>,
+ Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, maz@kernel.org
+In-Reply-To: <20240209183128.10273-1-erick.archer@gmx.com>
+References: <20240209183128.10273-1-erick.archer@gmx.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <170781821801.398.2076672398162570672.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+The following commit has been merged into the irq/core branch of tip:
 
-clang-16 warns about casting function pointers with incompatible
-prototypes. The x86 math-emu code does this in a number of places
-to call some trivial functions that need no arguments:
+Commit-ID:     e955a71f83598a347eb45af5576e7eb6cb5bf285
+Gitweb:        https://git.kernel.org/tip/e955a71f83598a347eb45af5576e7eb6cb5bf285
+Author:        Erick Archer <erick.archer@gmx.com>
+AuthorDate:    Fri, 09 Feb 2024 19:31:28 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 13 Feb 2024 10:53:15 +01:00
 
-arch/x86/math-emu/fpu_etc.c:124:14: error: cast from 'void (*)(void)' to 'FUNC_ST0' (aka 'void (*)(struct fpu__reg *, unsigned char)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-  124 |         fchs, fabs, (FUNC_ST0) FPU_illegal, (FUNC_ST0) FPU_illegal,
-      |                     ^~~~~~~~~~~~~~~~~~~~~~
-arch/x86/math-emu/fpu_trig.c:1634:19: error: cast from 'void (*)(void)' to 'FUNC_ST0' (aka 'void (*)(struct fpu__reg *, unsigned char)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
- 1634 |         fxtract, fprem1, (FUNC_ST0) fdecstp, (FUNC_ST0) fincstp
-      |                          ^~~~~~~~~~~~~~~~~~
-arch/x86/math-emu/reg_constant.c:112:53: error: cast from 'void (*)(void)' to 'FUNC_RC' (aka 'void (*)(int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-  112 |         fld1, fldl2t, fldl2e, fldpi, fldlg2, fldln2, fldz, (FUNC_RC) FPU_illegal
+irqchip/irq-bcm7038-l1: Prefer struct_size over open coded arithmetic
 
-Change the fdecstp() and fincstp() functions to actually have the correct
-prototypes based on the caller, and add wrappers around FPU_illegal()
-for adapting those.
+This is an effort to get rid of all multiplications from allocation
+functions in order to prevent integer overflows.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+The cpu variable is a pointer to "struct bcm7038_l1_cpu" and this structure
+ends in a flexible array:
+
+struct bcm7038_l1_cpu {
+	void __iomem	*map_base;
+	u32		mask_cache[];
+};
+
+The preferred way in the kernel is to use the struct_size() helper to
+do the arithmetic instead of the argument "size + count * size" in the
+kzalloc() function.
+
+This way, the code is more readable and more safer.
+
+Signed-off-by: Erick Archer <erick.archer@gmx.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Link: https://lore.kernel.org/r/20240209183128.10273-1-erick.archer@gmx.com
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+Link: https://github.com/KSPP/linux/issues/162 [2]
 ---
- arch/x86/math-emu/fpu_etc.c      | 9 +++++++--
- arch/x86/math-emu/fpu_trig.c     | 6 +++---
- arch/x86/math-emu/reg_constant.c | 7 ++++++-
- 3 files changed, 16 insertions(+), 6 deletions(-)
+ drivers/irqchip/irq-bcm7038-l1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/math-emu/fpu_etc.c b/arch/x86/math-emu/fpu_etc.c
-index 1b118fd93140..39423ec409e1 100644
---- a/arch/x86/math-emu/fpu_etc.c
-+++ b/arch/x86/math-emu/fpu_etc.c
-@@ -120,9 +120,14 @@ static void fxam(FPU_REG *st0_ptr, u_char st0tag)
- 	setcc(c);
- }
+diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
+index 24ca1d6..36e71af 100644
+--- a/drivers/irqchip/irq-bcm7038-l1.c
++++ b/drivers/irqchip/irq-bcm7038-l1.c
+@@ -249,7 +249,7 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
+ 		return -EINVAL;
+ 	}
  
-+static void FPU_ST0_illegal(FPU_REG *st0_ptr, u_char st0_tag)
-+{
-+	FPU_illegal();
-+}
-+
- static FUNC_ST0 const fp_etc_table[] = {
--	fchs, fabs, (FUNC_ST0) FPU_illegal, (FUNC_ST0) FPU_illegal,
--	ftst_, fxam, (FUNC_ST0) FPU_illegal, (FUNC_ST0) FPU_illegal
-+	fchs, fabs, FPU_ST0_illegal, FPU_ST0_illegal,
-+	ftst_, fxam, FPU_ST0_illegal, FPU_ST0_illegal,
- };
- 
- void FPU_etc(void)
-diff --git a/arch/x86/math-emu/fpu_trig.c b/arch/x86/math-emu/fpu_trig.c
-index 990d847ae902..85daf98c81c3 100644
---- a/arch/x86/math-emu/fpu_trig.c
-+++ b/arch/x86/math-emu/fpu_trig.c
-@@ -433,13 +433,13 @@ static void fxtract(FPU_REG *st0_ptr, u_char st0_tag)
- #endif /* PARANOID */
- }
- 
--static void fdecstp(void)
-+static void fdecstp(FPU_REG *st0_ptr, u_char st0_tag)
- {
- 	clear_C1();
- 	top--;
- }
- 
--static void fincstp(void)
-+static void fincstp(FPU_REG *st0_ptr, u_char st0_tag)
- {
- 	clear_C1();
- 	top++;
-@@ -1631,7 +1631,7 @@ static void fscale(FPU_REG *st0_ptr, u_char st0_tag)
- 
- static FUNC_ST0 const trig_table_a[] = {
- 	f2xm1, fyl2x, fptan, fpatan,
--	fxtract, fprem1, (FUNC_ST0) fdecstp, (FUNC_ST0) fincstp
-+	fxtract, fprem1, fdecstp, fincstp,
- };
- 
- void FPU_triga(void)
-diff --git a/arch/x86/math-emu/reg_constant.c b/arch/x86/math-emu/reg_constant.c
-index 742619e94bdf..003a0b2753e6 100644
---- a/arch/x86/math-emu/reg_constant.c
-+++ b/arch/x86/math-emu/reg_constant.c
-@@ -108,8 +108,13 @@ static void fldz(int rc)
- 
- typedef void (*FUNC_RC) (int);
- 
-+static void FPU_RC_illegal(int unused)
-+{
-+	FPU_illegal();
-+}
-+
- static FUNC_RC constants_table[] = {
--	fld1, fldl2t, fldl2e, fldpi, fldlg2, fldln2, fldz, (FUNC_RC) FPU_illegal
-+	fld1, fldl2t, fldl2e, fldpi, fldlg2, fldln2, fldz, FPU_RC_illegal
- };
- 
- void fconst(void)
--- 
-2.39.2
-
+-	cpu = intc->cpus[idx] = kzalloc(sizeof(*cpu) + n_words * sizeof(u32),
++	cpu = intc->cpus[idx] = kzalloc(struct_size(cpu, mask_cache, n_words),
+ 					GFP_KERNEL);
+ 	if (!cpu)
+ 		return -ENOMEM;
