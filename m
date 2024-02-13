@@ -1,181 +1,101 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431A8210E4
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 09:16:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1E8225A4;
+	Tue, 13 Feb 2024 09:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707815768; cv=none; b=FUFJ/3dxornS7KMUeAILQxNKn1KzsXgtOcHYZHG/J0RLdBe8nzXte6vBU9mHxp0zblRN6olstaQZ3UJghXLI4vde1UE3pUp+X7R9B24YOgQujQp08UW2u1aR/KNeF/oaWcRJJ93L6Vv+f1M9eMRNcrLuzKTUoLYfIMPcA6jewNM=
+	t=1707815853; cv=none; b=foaX+5QSc80adFER9JPO+pjo9wxNllr0qPGdo4ZWrCmZCswjSDhhKX5UgWGtR3W/zsfNnGVcrnfCQjl/gdjQMhb+pbj+FQjjfKJSX8L8u+mill/YJKiznovtoMkpgPLaQa9c+PKrVGqTgGcdhlPPqoe/yOAgdQDpQgX6slwA+Hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707815768; c=relaxed/simple;
-	bh=E2ZxuFKsqx1gBtxyAyUoLK7tkKjEHNUQbaU168bL5D8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nqjFfhvv251gG0coY8K9lK2iqSNMHCKrkVtzPXH4zogrYFqLD3rfik43Dtrhz+asmAraPyJnxW02OJzOBh0Lf1W6cw86xnfYwHcU1DjIrYkgSyueIvw96/zjSOMpMmYn1CQFOkQSBvu9y/la2ODuM5u7vrLbIhWAZCjMBAEk5tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 8A7D42116D;
-	Tue, 13 Feb 2024 09:16:04 +0000 (UTC)
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 74ED713404;
-	Tue, 13 Feb 2024 09:16:04 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id /8kgHFQzy2USVgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 13 Feb 2024 09:16:04 +0000
-Message-ID: <fc4f498b-fc35-4ba8-abf0-7664d6f1decb@suse.cz>
-Date: Tue, 13 Feb 2024 10:16:04 +0100
+	s=arc-20240116; t=1707815853; c=relaxed/simple;
+	bh=ZfYUeVMl6AYblsdyIrX3nVKH+xT9BNV6zy6NmrP+hoo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=doSlJa2yEESvBqnfMIoQsCJKWxEjBCBa4Fc8m0F4VKWuAI9xTC9c8Ur+gKf2Qf/Awamb9tgV/yITE8yg3L6diOIINipVOb1StdvoIJGp7M7H1T80ts6mY/JCa4859laUlClUfoqL0KmE0C/9BWDxzQ3EwwdtZPrX+u1ikNnwvCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TFdjmP4T; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TFdjmP4T"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-42a9c21f9ecso22848101cf.0;
+        Tue, 13 Feb 2024 01:17:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707815851; x=1708420651; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=t8l8YBrC4jhYQEFBTPrrabrCLybr3DvkI5ByH89g4rc=;
+        b=TFdjmP4TP2SznhhCc3RzlKuSDhwXo53ItMRFQAAFW/jhZ3W6QcNfKa9gTdg13CI0Uf
+         FohaelAOf2Vl6qBwV/V0PsSIOlqdoAmGI7Yn3XvSu0Kgm016vdrXU05cCZwdndUW4SA2
+         aWhhMKpl5ktRbErJtcrHKIOLIC6fKKQyL7jR4HiN38qwLWf7qRJd8Q1I8VeM/u2MIg5E
+         p+5/G58myTulIlNl5w8iI9kgNHSLW56OFM/SS4gWsZkz1rHkIjH5TFnrnKKsGgzjEDWg
+         9g4CEm8cm6qivOg32xhXYHNSsBveA3FcJH6vKzONSH/bNJ/6kuq2wy20EBT4CYqqA7Y9
+         DtNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707815851; x=1708420651;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=t8l8YBrC4jhYQEFBTPrrabrCLybr3DvkI5ByH89g4rc=;
+        b=PeHHfMzsYOysxVuDneT2teIeKtV9W62zmofCrCsSp3VeWqVh38FdSJbgg7ifgQ2Q+Z
+         wO6lXO7uSa/tAbai83QzfR5Typys7aS7IQkH+/cO40dLVe5REZezj8uUgZbpUbWhamGo
+         Q+VV9eLCEgaOmRwDsNb8sarYhdltdoVj9amgo5Nzqi8ItU4qVZ4ybg+6DSo9npcYAgka
+         UyxE9I2GMp3R/Kr9FY+THHPdQJq9KjyeLG461QlmEDCdEan6YOqdT3pKdRgTGBBPM4B5
+         V4x6KnpnQQVPPvBQslhoU6FSv56rPK9cm1imrM4IB+SlFf1JMOYUw+ZUqIoB6XIyRI5H
+         JqmA==
+X-Gm-Message-State: AOJu0YwUNlXc+dVkNl60mOKfhmBb7EgoyOejJThkbDR8LOU9i7fSemkp
+	q0ZCkvo3oHD1/24GTLCgNIpyQf+ezYVH5K8Vky8utqdPTl2tHDboLp4K1tHN2A==
+X-Google-Smtp-Source: AGHT+IEr6JjDsOTC5+jgquFmev1o/xNjgQ72kQIXg07hiJvXnWbnKoP7UbRqufY0oe1W1Nodgvctxw==
+X-Received: by 2002:a05:622a:44b:b0:42b:fda6:dbf9 with SMTP id o11-20020a05622a044b00b0042bfda6dbf9mr13589667qtx.60.1707815850629;
+        Tue, 13 Feb 2024 01:17:30 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXr7WfCVPQHipV6ZVVxCf6WWqNgWUWFQXPGtE++2Aa/OqMmr2Skc++a/B6EKs4gNGX/BYWJ0M3bhYONWrjM0/cI3w/dtZcKpJ+StNSsSwjUXm8IV0v1VDa3UCvMTNm0D1ybCJ3j/BqlrnUArL7omtuqhxJYlXqJ1yEOeG0S6m8i8z5dx3A=
+Received: from localhost ([207.181.197.26])
+        by smtp.gmail.com with ESMTPSA id r13-20020ac85c8d000000b0042dabcf07eesm596424qta.6.2024.02.13.01.17.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 01:17:29 -0800 (PST)
+Date: Tue, 13 Feb 2024 03:17:28 -0600
+From: Lenko Donchev <lenko.donchev@gmail.com>
+To: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: ntfs3@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] fs/ntfs3: use kcalloc() instead of kzalloc()
+Message-ID: <ZcszqPoW8RMaOvTN@nixos>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 2/5] mm,page_owner: Implement the tracking of the
- stacks count
-To: Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- Michal Hocko <mhocko@suse.com>, Marco Elver <elver@google.com>,
- Andrey Konovalov <andreyknvl@gmail.com>,
- Alexander Potapenko <glider@google.com>
-References: <20240212223029.30769-1-osalvador@suse.de>
- <20240212223029.30769-3-osalvador@suse.de>
-Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20240212223029.30769-3-osalvador@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	 REPLY(-4.00)[]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 8A7D42116D
-X-Spam-Level: 
-X-Spam-Score: -4.00
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 2/12/24 23:30, Oscar Salvador wrote:
-> page_owner needs to increment a stack_record refcount when a new allocation
-> occurs, and decrement it on a free operation.
-> In order to do that, we need to have a way to get a stack_record from a
-> handle.
-> Implement __stack_depot_get_stack_record() which just does that, and make
-> it public so page_owner can use it.
-> 
-> Also implement {inc,dec}_stack_record_count() which increments
-> or decrements on respective allocation and free operations, via
-> __reset_page_owner() (free operation) and __set_page_owner() (alloc
-> operation).
-> 
-> Traversing all stackdepot buckets comes with its own complexity,
-> plus we would have to implement a way to mark only those stack_records
-> that were originated from page_owner, as those are the ones we are
-> interested in.
-> For that reason, page_owner maintains its own list of stack_records,
-> because traversing that list is faster than traversing all buckets
-> while keeping at the same time a low complexity.
-> inc_stack_record_count() is responsible of adding new stack_records
-> into the list stack_list.
-> 
-> Modifications on the list are protected via a spinlock with irqs
-> disabled, since this code can also be reached from IRQ context.
-> 
-> Signed-off-by: Oscar Salvador <osalvador@suse.de>
-> ---
->  include/linux/stackdepot.h |  9 +++++
->  lib/stackdepot.c           |  8 +++++
->  mm/page_owner.c            | 73 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 90 insertions(+)
+We are trying to get rid of all multiplications from allocation
+functions to prevent integer overflows[1]. Here the multiplication is
+obviously safe, but using kcalloc() is more appropriate and improves
+readability. This patch has no effect on runtime behavior.
 
-...
+Link: https://github.com/KSPP/linux/issues/162 [1]
+Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
 
+Signed-off-by: Lenko Donchev <lenko.donchev@gmail.com>
+---
+Changes in v2:
+  - Use sizeof on actual pointer.
+---
+ fs/ntfs3/frecord.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> --- a/mm/page_owner.c
-> +++ b/mm/page_owner.c
-> @@ -36,6 +36,14 @@ struct page_owner {
->  	pid_t free_tgid;
->  };
->  
-> +struct stack {
-> +	struct stack_record *stack_record;
-> +	struct stack *next;
-> +};
-> +
-> +static struct stack *stack_list;
-> +static DEFINE_SPINLOCK(stack_list_lock);
-> +
->  static bool page_owner_enabled __initdata;
->  DEFINE_STATIC_KEY_FALSE(page_owner_inited);
->  
-> @@ -61,6 +69,57 @@ static __init bool need_page_owner(void)
->  	return page_owner_enabled;
->  }
->  
-> +static void add_stack_record_to_list(struct stack_record *stack_record)
-> +{
-> +	unsigned long flags;
-> +	struct stack *stack;
-> +
-> +	stack = kmalloc(sizeof(*stack), GFP_KERNEL);
-
-I doubt you can use GFP_KERNEL unconditionally? Think you need to pass down
-the gfp flags from __set_page_owner() here?
-And what about the alloc failure case, this will just leave the stack record
-unlinked forever? Can we somehow know which ones we failed to link, and try
-next time? Probably easier by not recording the stack for the page at all in
-that case, so the next attempt with the same stack looks like the very first
-again and attemps the add to list.
-Still not happy that these extra tracking objects are needed, but I guess
-the per-users stack depot instances I suggested would be a major change.
-
-> +	if (stack) {
-> +		stack->stack_record = stack_record;
-> +		stack->next = NULL;
-> +
-> +		spin_lock_irqsave(&stack_list_lock, flags);
-> +		if (!stack_list) {
-> +			stack_list = stack;
-> +		} else {
-> +			stack->next = stack_list;
-> +			stack_list = stack;
-> +		}
-> +		spin_unlock_irqrestore(&stack_list_lock, flags);
-> +	}
-> +}
-> +
-> +static void inc_stack_record_count(depot_stack_handle_t handle)
-> +{
-> +	struct stack_record *stack_record = __stack_depot_get_stack_record(handle);
-> +
-> +	if (stack_record) {
-> +		/*
-> +		 * New stack_record's that do not use STACK_DEPOT_FLAG_GET start
-> +		 * with REFCOUNT_SATURATED to catch spurious increments of their
-> +		 * refcount.
-> +		 * Since we do not use STACK_DEPOT_FLAG_{GET,PUT} API, let us
-> +		 * set a refcount of 1 ourselves.
-> +		 */
-> +		if (refcount_read(&stack_record->count) == REFCOUNT_SATURATED) {
-> +			refcount_set(&stack_record->count, 1);
-
-Isn't this racy? Shouldn't we use some atomic cmpxchg operation to change
-from REFCOUNT_SATURATED to 1?
-
-> +			/* Add the new stack_record to our list */
-> +			add_stack_record_to_list(stack_record);
-> +		}
-> +		refcount_inc(&stack_record->count);
-> +	}
-> +}
-> +
+diff --git a/fs/ntfs3/frecord.c b/fs/ntfs3/frecord.c
+index d435446537ca..725aa84dbd22 100644
+--- a/fs/ntfs3/frecord.c
++++ b/fs/ntfs3/frecord.c
+@@ -2636,7 +2636,7 @@ int ni_read_frame(struct ntfs_inode *ni, u64 frame_vbo, struct page **pages,
+ 		goto out1;
+ 	}
+ 
+-	pages_disk = kzalloc(npages_disk, sizeof(struct page *), GFP_NOFS);
++	pages_disk = kcalloc(npages_disk, sizeof(*pages_disk), GFP_NOFS);
+ 	if (!pages_disk) {
+ 		err = -ENOMEM;
+ 		goto out2;
+-- 
+2.43.0
 
