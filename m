@@ -1,67 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743DC224FD;
-	Tue, 13 Feb 2024 10:31:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B7DB28E3C;
+	Tue, 13 Feb 2024 10:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707820306; cv=none; b=BaUrEz0DZgh2UXZFKh2hau1t+EGEWQOVkUbNZ+21UEdNveZKhAS8Zi7f44Ni5eiTuSYM9ZMVz+jFmEpDbGin7f1+N3J6R4vBDDcNZ3767Jjcv45TVWZoMgj8dOeNAPgUJ4+LfHd6gP6DKntaQ8kyLwIFAuOdOQ4hZmz3utahksQ=
+	t=1707820328; cv=none; b=skavwo3GiT4L3d61nSOSMHjk2lCQqLdi3I4X3RHH5EEM5FtbSUK3NK/gMAqwflGIU9nLJ1US3/ffjcwC2ZtQEGHyQ9G9YrnrvLsSMZ5Jv2hcEk/bcZjcIErx6Kwr9xoL2LCBhqYfb9oVgn+IJeALvbb/OdxCzyNm64JUKy9x4vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707820306; c=relaxed/simple;
-	bh=JDNHbbKp8STLxl2eJjaYZi1jIUAoP4cihuNPOeU+wfk=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=tNB1aRc8D8J2S2PgFFqqoiXt9txZFQyETFX2fro531drkw5fksbI2wHJD+GXAk6PWSn22sYhN/r2H99Rnd1oW+1NTbryWqmoiQiVbUrNX75NpjhnGXRJ3VC/Dc5n1hbwrv20r2piqQjwN97r5bd/dw6r/wK+/rt9CBHNN6F/DJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ko+lawr9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ko+lawr9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78EE5C433C7;
-	Tue, 13 Feb 2024 10:31:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707820305;
-	bh=JDNHbbKp8STLxl2eJjaYZi1jIUAoP4cihuNPOeU+wfk=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=Ko+lawr9LKclRY33881h2C5+c+BCuJQONIjOypLerZY9awYs5Y08LQ/+9/BM38vGK
-	 tCN9Ilctc5pnfGTC6xDv3ImChBAmYBCm3Xfba45i/Zmdyx8t+zl/7+Pj8lxpos6gDP
-	 m7uwlFOVlh9O8qPDAPJzi4B8WET7HbzAR+c43AuPdlJ7NKuoG73dSN6QPZxOOOQsGn
-	 7MWCt7cmVRl/e8nnEIVa2yV9k35PnBalVoXrOXijVQViNdYBtzooex7rhMrg3mKeE/
-	 K+HSVbTwOZA0gLhAhhD+YIo86ZzEiV9jo5vZFkku1J34virneND8gTU0C/BoBdlip0
-	 gfa7WgRdd0Wdg==
-Date: Tue, 13 Feb 2024 11:31:46 +0100 (CET)
-From: Jiri Kosina <jikos@kernel.org>
-To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-cc: Even Xu <even.xu@intel.com>, benjamin.tissoires@redhat.com, 
-    linux-input@vger.kernel.org, 
-    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] HID: Intel-ish-hid: Ishtp: Fix sensor reads after ACPI
- S3 suspend
-In-Reply-To: <64ee580b9969335d60966e23e9bd859e8f075953.camel@linux.intel.com>
-Message-ID: <nycvar.YFH.7.76.2402131131250.21798@cbobk.fhfr.pm>
-References: <20240209065232.15486-1-even.xu@intel.com> <64ee580b9969335d60966e23e9bd859e8f075953.camel@linux.intel.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+	s=arc-20240116; t=1707820328; c=relaxed/simple;
+	bh=cR8wz3zzvoCe1ztWtuPDRbzYlQX9EO4ihc+W26Xu7jI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=psYkR2PK1j8AO2sdz0rF4NssyFCv4j/wqAT0psiXYNy9B7meJC7aJV7Rl2e9wVMqnPk/W6NwpXQiAZlB9JWHzGK7oRiYBWZJ8cZwGgHf5sCXB/4L/czSrdThzAEs8HD6vBOTC+ydPNZ8xSKVOa+xCSH6tbHK2L4gR0YigeUR2WI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFBAADA7;
+	Tue, 13 Feb 2024 02:32:46 -0800 (PST)
+Received: from [10.57.50.4] (unknown [10.57.50.4])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 111193F5A1;
+	Tue, 13 Feb 2024 02:32:03 -0800 (PST)
+Message-ID: <39c01eae-049b-4f5b-b86e-4af22c8246c1@arm.com>
+Date: Tue, 13 Feb 2024 10:32:02 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 03/11] coresight: tmc: Extract device properties from
+ AMBA pid based table lookup
+Content-Language: en-GB
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ linux-arm-kernel@lists.infradead.org
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Sudeep Holla <sudeep.holla@arm.com>, Mike Leach <mike.leach@linaro.org>,
+ James Clark <james.clark@arm.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+ linux-stm32@st-md-mailman.stormreply.com
+References: <20240123054608.1790189-1-anshuman.khandual@arm.com>
+ <20240123054608.1790189-4-anshuman.khandual@arm.com>
+ <44597c9a-79bd-40f8-87a7-b53582132583@arm.com>
+ <0c65f3b0-a879-444c-b0a4-4af485e72166@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <0c65f3b0-a879-444c-b0a4-4af485e72166@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, 9 Feb 2024, srinivas pandruvada wrote:
-
-> > Fixes: f645a90e8ff7 ("HID: intel-ish-hid: ishtp-hid-client: use
-> > helper functions for connection")
-> > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218442
-> > Signed-off-by: Even Xu <even.xu@intel.com>
-> Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+On 13/02/2024 03:13, Anshuman Khandual wrote:
 > 
-> Hi Jiri,
 > 
-> This regression is introduced with 6.8-rc1, so need a pull request for
-> this rc cycle.
+> On 2/12/24 17:43, Suzuki K Poulose wrote:
+>> On 23/01/2024 05:46, Anshuman Khandual wrote:
+>>> This extracts device properties from AMBA pid based table lookup. This also
+>>> defers tmc_etr_setup_caps() after the coresight device has been initialized
+>>> so that PID value can be read.
+>>>
+>>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>>> Cc: Mike Leach <mike.leach@linaro.org>
+>>> Cc: James Clark <james.clark@arm.com>
+>>> Cc: coresight@lists.linaro.org
+>>> Cc: linux-arm-kernel@lists.infradead.org
+>>> Cc: linux-kernel@vger.kernel.org
+>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>>> ---
+>>>    .../hwtracing/coresight/coresight-tmc-core.c  | 19 +++++++++++++------
+>>>    1 file changed, 13 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/drivers/hwtracing/coresight/coresight-tmc-core.c b/drivers/hwtracing/coresight/coresight-tmc-core.c
+>>> index 7ec5365e2b64..e71db3099a29 100644
+>>> --- a/drivers/hwtracing/coresight/coresight-tmc-core.c
+>>> +++ b/drivers/hwtracing/coresight/coresight-tmc-core.c
+>>> @@ -370,16 +370,24 @@ static inline bool tmc_etr_has_non_secure_access(struct tmc_drvdata *drvdata)
+>>>        return (auth & TMC_AUTH_NSID_MASK) == 0x3;
+>>>    }
+>>>    +#define TMC_AMBA_MASK 0xfffff
+>>> +
+>>> +static const struct amba_id tmc_ids[];
+>>> +
+>>>    /* Detect and initialise the capabilities of a TMC ETR */
+>>> -static int tmc_etr_setup_caps(struct device *parent, u32 devid, void *dev_caps)
+>>> +static int tmc_etr_setup_caps(struct device *parent, u32 devid)
+>>>    {
+>>>        int rc;
+>>> -    u32 dma_mask = 0;
+>>> +    u32 tmc_pid, dma_mask = 0;
+>>>        struct tmc_drvdata *drvdata = dev_get_drvdata(parent);
+>>> +    void *dev_caps;
+>>>          if (!tmc_etr_has_non_secure_access(drvdata))
+>>>            return -EACCES;
+>>>    +    tmc_pid = coresight_get_pid(&drvdata->csdev->access) & TMC_AMBA_MASK;
+>>> +    dev_caps = coresight_get_uci_data_from_amba(tmc_ids, tmc_pid);
+>>> +
+>>>        /* Set the unadvertised capabilities */
+>>>        tmc_etr_init_caps(drvdata, (u32)(unsigned long)dev_caps);
+>>>    @@ -497,10 +505,6 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
+>>>            desc.type = CORESIGHT_DEV_TYPE_SINK;
+>>>            desc.subtype.sink_subtype = CORESIGHT_DEV_SUBTYPE_SINK_SYSMEM;
+>>>            desc.ops = &tmc_etr_cs_ops;
+>>> -        ret = tmc_etr_setup_caps(dev, devid,
+>>> -                     coresight_get_uci_data(id));
+>>> -        if (ret)
+>>> -            goto out;
+>>>            idr_init(&drvdata->idr);
+>>>            mutex_init(&drvdata->idr_mutex);
+>>>            dev_list = &etr_devs;
+>>> @@ -539,6 +543,9 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
+>>>            goto out;
+>>>        }
+>>>    +    if (drvdata->config_type == TMC_CONFIG_TYPE_ETR)
+>>> +        ret = tmc_etr_setup_caps(dev, devid);
+>>> +
+>>
+>> With this change, we silently accept an ETR that may only have "SECURE" access only and crash later while we try to enable tracing. You could
+>> pass in the "access" (which is already in 'desc.access' in the original
+>> call site and deal with it ?
+> 
+> Just wondering, if something like the following will help ? A failed tmc_etr_setup_caps()
+> because of failed tmc_etr_has_non_secure_access(), will unregister the coresight device
+> before returning.
+> 
+> --- a/drivers/hwtracing/coresight/coresight-tmc-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc-core.c
+> @@ -538,8 +538,13 @@ static int __tmc_probe(struct device *dev, struct resource *res)
+>                  goto out;
+>          }
+>   
+> -       if (drvdata->config_type == TMC_CONFIG_TYPE_ETR)
+> +       if (drvdata->config_type == TMC_CONFIG_TYPE_ETR) {
+>                  ret = tmc_etr_setup_caps(dev, devid);
+> +               if (ret) {
+> +                       coresight_unregister(drvdata->csdev);
+> +                       goto out;
+> +               }
+> +       }
 
-Right; now queued in hid.git#for-6.8/upstream-fixes. Thanks,
+Why do we move the tmc_etr_setup_caps() in the first place ? We could 
+retain where that was and pass "desc.access" parameter rather than 
+registering the csdev and then relying csdev->access ?
 
--- 
-Jiri Kosina
-SUSE Labs
+Suzuki
+
+>   
+>          drvdata->miscdev.name = desc.name;
+>          drvdata->miscdev.minor = MISC_DYNAMIC_MINOR;
 
