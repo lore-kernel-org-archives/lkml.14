@@ -1,98 +1,88 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDAC1CD14;
-	Tue, 13 Feb 2024 21:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB63612F9
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 21:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707860210; cv=none; b=fhOgUhPtwkmba8M0Ecnoz439QbQCxY7sYDBm5BVGgAa4PhrwEvOou2NwWBBIq0VlZWmYwgdptnZV3nQ4h3kS49Z+TB/iw1ohLYhHap8sUVUAklt6dBBENUbqPVJ1MqE232FtMyF+F6BpS5iGAcP1fkt8yLyK1vHE7PntmbqZD24=
+	t=1707860232; cv=none; b=cGeHFLSs+FbBCEWoO4ohnezZ1ZT+vkfHKbjR3s8qPlXFCJOmVuZg7EAvaRDO7ewcSvRPY+NtEUvZZCJpgkhcoI0wzQqSu1urWny7P1Cek4uoJYBUzedPpXQ5ZENgy6S80SGPb4izrk8jej/hPT/PItGt1OhpTjVz3ttQHVdmmvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707860210; c=relaxed/simple;
-	bh=nd+n2IqooMYwTtK4GSBRxqQK8ljwF4sk8hd9duAXu7U=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LcYj4aScnB0L0gsS21r3SQPzxbUke3TZmEUIvU1WoDL7jSE5o5pLFXh1Ej0dok+KpqbHDrYXZtefJGdHe7dnVJu0vQHq/4k1G5TiGhwPm/tg1mBAgR++kqQDxs955pMzTG9jtrHtfFPCs7HHAXX+RKvw5ZtlE0cUWejOZbBwfbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lhyj7iMu; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707860232; c=relaxed/simple;
+	bh=hPKvVthMBWAzdAWbIPUJR/Iy8plEfEcAcGfAR1gE6mA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WXcuoTEPPDswCHhAhmaXt2749KGcBmHw4yh2ds50O8nFvtJss1K1n18qghZqqmgfUTUBafZH26Io1nMI4nfllsv78NnUopIzeWHbtveeAp6NmjG6rm07HFqL8J0/QGNB/zJB9Nt5EA/9969f04zkoV77zFRQ4P1i+bFKyKL91kA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mPLvwzG+; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lhyj7iMu"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d0aabed735so62847431fa.0;
-        Tue, 13 Feb 2024 13:36:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mPLvwzG+"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dcbef31a9dbso1322202276.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 13:37:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707860207; x=1708465007; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=rLAWCOLrAAkedLsR0u9g4LdIF/1rQKFqHb/tWlWW+zc=;
-        b=Lhyj7iMucEoZWUsE7xUpcMjlFt5J2flxyMZuTIOjeT4W8TVQwVr6h2M+Yg3Oq1TCPa
-         JwXi2Gc4P9/VfFbWcrBUYLFzofcXt0aqDHq1Qf2jG1a2VqnOnK/WlbQCqPB8H7tyxulM
-         YABz5cMvuOrNlZgvs1DOEi0Vmw/tFlabPsZnrYfU3bmqw0wrlm3LgaiKt3u0Uf8lmggE
-         dUOz0Ko/daY0wUoJXdfv83FV/RXeBAGhli9lKNBMFi4RZxjAVYlnFfIyrbkJmW6RcdOS
-         rGCkNVAUHzYJg6A9+GcvyBNigTZ8CpDMEJxUjPUp9hg9KGdbbDHpRN9ARbdy5ar1oUd5
-         hM2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707860207; x=1708465007;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1707860230; x=1708465030; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rLAWCOLrAAkedLsR0u9g4LdIF/1rQKFqHb/tWlWW+zc=;
-        b=LDPxbxn3nZCDBCrbOukZJNXgjPsEBmMejIyu32mmJgxdwXs+I1ZZ4foaSAsup+r4AY
-         8R4U13gwuYoduCAUpqgfxO/moJEjCJ0wVK2ZRffhEjRnrgzXn6GC4L1c8cL7lL2+BTNL
-         w428Gr8mJANyIrggT8vNdkgwrr3+gUcKqDPVKvenfXadabt6/fIGoaRA0X5zapRGTSOn
-         RBGz0hPZV0E5mrwAkgMYjJaDFIIuuZAUvB0U7H3bN1ty5oIE8h0xJVqQ72ZyO4O28kPE
-         hffeyY6VMP2fNcSDo9nz49Z7CagGqgWNIBAeysZEAquxNawttmx8k7c7bzxx1ErP3NsD
-         5tEA==
-X-Forwarded-Encrypted: i=1; AJvYcCUPa3ocEYvSbbM2Qznxm9Oc3qAEx3iJt1IKiD8C7dsHR4X9bqzxbD2z97Upi6dKMm6lj4G2N93vnVvGq2mrcaXyoMhaKo/LWn8s6aRl3MhNxg4Ow3GvFMej7fURQu5pup+3T+4bW6IAuroOJA==
-X-Gm-Message-State: AOJu0YzqCBAFlaSNs7qV7IIyyFtU7xdEJlM7P67jS25X0VNx7g6pIrQf
-	7BXVD8hODSdW2pZGYWELL9OeKqtuMTxlWjIZZCHlf4H4rsY3K/L/qof1Og6dZu0=
-X-Google-Smtp-Source: AGHT+IEgQ0npxYq3Kv3ApOMUZUzsmL5bSmkug7M/j1UTJ1zlXCWYEUOVW4v8W/ST1UvZQ84ws0v2Rg==
-X-Received: by 2002:ac2:4902:0:b0:511:7c0c:f94a with SMTP id n2-20020ac24902000000b005117c0cf94amr525617lfi.16.1707860206602;
-        Tue, 13 Feb 2024 13:36:46 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVdaLTGOhggHrGm3PYeN+gRZdZ6PMuXywnXIcjFcYBZoQVJ97k+s7Kgz9wD3FptIVOBsNwFz2VKmTipTK1OcQrE+VGh0vvGccL6qR7dc363h68vtaixcuoWyP0RzLEZY5zSA0xCbqy++yQ8pHCKjMruQkSzbAh3s/5vu8Zsioqo
-Received: from akanner-r14. ([77.222.24.68])
-        by smtp.gmail.com with ESMTPSA id b5-20020a056512024500b00511776d214fsm1420338lfo.269.2024.02.13.13.36.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 13:36:46 -0800 (PST)
-Message-ID: <65cbe0ee.050a0220.1c11e.d156@mx.google.com>
-X-Google-Original-Message-ID: <ZctONUUasbIeWED2@akanner-r14.>
-Date: Tue, 13 Feb 2024 14:10:45 +0300
-From: Andrew Kanner <andrew.kanner@gmail.com>
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, linux-modules@vger.kernel.org,
-	linux-kernel@vger.kernel.org, mchehab@kernel.org
-Subject: Re: [PATCH v1] module.h: define __symbol_get_gpl() as a regular
- __symbol_get()
-References: <20240131190251.4668-1-andrew.kanner@gmail.com>
- <20240201052958.GA14943@lst.de>
- <65bb648c.190a0220.d431d.4f63@mx.google.com>
- <ZbvfYqIKKWkTWLf9@bombadil.infradead.org>
+        bh=hPKvVthMBWAzdAWbIPUJR/Iy8plEfEcAcGfAR1gE6mA=;
+        b=mPLvwzG+dAg/ZrBSskb2yaAqP1pj/EP61lY1fsx/EM7lL4aK4EbFHBRiFliToUaK1h
+         QhVPYIXILxhPmDWiibFPnqRczQrNzyZbUfpYpIhnQnBiEPqHk7UAbNh+JEY1I8CCAYe0
+         sbs5fMT29hx1ng9/0rstitr6Xi451W7KSWg8gc2ac4MlSdINbROvsKZKHh0YAOgmn3i4
+         hqIlb9EpBkFgP34FOF17rRMhpYHDKyYl276TledgapAs/3KuZkhnxMdOPkxLWx8oHqB0
+         ib1dWPIFRVrRxnpcIY7rWH+/O8CvgCKU6Dbz9mPTDxf/XDvax6y/OJ7gNfDwWHszZRrJ
+         HKpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707860230; x=1708465030;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hPKvVthMBWAzdAWbIPUJR/Iy8plEfEcAcGfAR1gE6mA=;
+        b=YyZ6iSahJaf7WNxJ/risoQ6DOHgv7wq3JC6Ag0cI3ilSHDpLbo1pIW+L5uCuCiQPh4
+         rHGpitnaeAkjl6Jio1kuqm1WzddSjo3dGlOEfqW+9Glk9445/bJM1Y4GSTdP191mdil+
+         ZkEgfhKkQLH7d3bxadcwI0FMYV/Z1aSUMVfxCgvmbWVs8vNP0olnzYwe+b36UxvOl7pK
+         DegHs7fEem5j0FZNnDL00KpDf5cxP6KQDrbkYGS1aP8HEagpxPJeYJGeDc6yrNwQr5HE
+         3ZPJBpJMxX7F9vYqkclfLm9gbNV7piVAvq1JurabsnmXX6cyfALwQlLqzBUKn863DF+1
+         vdaA==
+X-Gm-Message-State: AOJu0Yx+AzT7JuAVNbkiefN/dKBsEp5+mp7LCmUG+O5LxeS8z3ZRbkXV
+	16SXZSrxtRxaoUAnk1DxBjUdDwFV5frIP86K59h9vDWQQu/bz3c+4EZIrik5qrCc0+24b3AAOBv
+	v3l1RGm5nHR85tSeVcSu3wfSOd/aJegbWvoQzrw==
+X-Google-Smtp-Source: AGHT+IGvYycVOdI6CpAMfmqVx3TyTpHq47iLCCyvfSu+9n4B1EJovMa/1p5n1RWt0xmytAfy456aC9UfVc+QwLV2GdY=
+X-Received: by 2002:a25:210:0:b0:dcd:65fa:ea06 with SMTP id
+ 16-20020a250210000000b00dcd65faea06mr383635ybc.24.1707860229766; Tue, 13 Feb
+ 2024 13:37:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZbvfYqIKKWkTWLf9@bombadil.infradead.org>
+References: <20240211101421.166779-1-warthog618@gmail.com>
+In-Reply-To: <20240211101421.166779-1-warthog618@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 13 Feb 2024 22:36:58 +0100
+Message-ID: <CACRpkdYYyBTmiYF16NF3+nFDsqyqXcXBU=AvrxDy+h32eB-0hg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: uapi: clarify default_values being logical
+To: Kent Gibson <warthog618@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl, 
+	andy@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 01, 2024 at 10:13:54AM -0800, Luis Chamberlain wrote:
-> 
-> While you're at it, if you want to try it, you could see if you can
-> improve the situation more by looking at symbol_get() users that remain
-> and seeing if you can instead fix it with proper Kconfig dependency and
-> at build time. Then we can just remove it as well.
-> 
->   Luis
+On Sun, Feb 11, 2024 at 11:14=E2=80=AFAM Kent Gibson <warthog618@gmail.com>=
+ wrote:
 
-Sorry for the late reply.
+> The documentation for default_values mentions high/low which can be
+> confusing, particularly when the ACTIVE_LOW flag is set.
+>
+> Replace high/low with active/inactive to clarify that the values are
+> logical not physical.
+>
+> Similarly, clarify the interpretation of values in struct gpiohandle_data=
+.
+>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
 
-Luis, can you give more details of your idea? I re-read it once, then
-came back and still don't understand.
+After the fixes pointed out by others:
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-I see that there are ~10 users for symbol_get() currently. Do you want
-to stringify symbol names at build time to completely remove
-symbol_get() from module.h? Correct me if I'm wrong since using of a
-fuction which is not declared anywhere sounds confusing.
-
--- 
-Andrew Kanner
+Yours,
+Linus Walleij
