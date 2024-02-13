@@ -1,204 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD3E660B9D;
-	Tue, 13 Feb 2024 23:11:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3657D629FE;
+	Tue, 13 Feb 2024 23:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707865876; cv=none; b=KMSK4z1QXFUMuTBF6AZapCKZgNxG8z2W5hKkp7Dr874YIsiAMRI9Ml1n3e2x8e04DVvxzYaVIZ25Iqmg9ZboqwNSo6ZfHh/vh1WPHCpuHOfoaLPtJKKVMiJ+9rj/P3R63isyFJ/XQTR82P1bwuHL933bwdtHu5wsdiAbOHWumNM=
+	t=1707865973; cv=none; b=au2di7VOqpgjzhTt8p0w0iJzDfSeVx63pabnWo05OHRe95T1TIERUOCfNuB1vu+8dwG9lmqwmzcJiNRZJkxIjZsJW8Wf7XZRb3VLnIEQUQGs4FHRRZJwA5OdIO1hHh5/ekxLipWlAPRL0At8f2kZBkWW8TnDwEWCLriVJyHqKcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707865876; c=relaxed/simple;
-	bh=X0Q8mOE644bC3imQHDGeArc5j0LokHzXwsSyh29i+Jk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L9mtBOGJXp0Wh5homJri2uQDHcwHXOGY953vVc+XL8aPQlxh/DNgqyd5Mdlb8RYz6/j02OE4Evkctq3CRByV2Cpxu0F50pA3v0Dc8uw8iQ/noZvYwn5J/jA2o++kx1bqlVQF1Pn1Zd3+CYKvarS9Ce4/J85u+uJ/67tBkYC2bGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ToFeO/6+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707865973; c=relaxed/simple;
+	bh=8rQNC90YLJ6mPkMgHfah2RqbvBJTFoAIxs1E3rKcUyA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UV7IRizKUgXdjyzZG4WKccZ5DImtOf1ByymQeHpMD3recPgIbTI0VauWrFUcUqXweiLVNzmNMjVSb70rUETpLG8QRFEh/4n75187xuhth6OQ+BxkKP/lw8Glyw8oBp2dKYM9vS8eXXv/EtM6qiqkQx5Rt12eJV4Pu8OVZfHL8vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EnmwXUdx; arc=none smtp.client-ip=209.85.210.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ToFeO/6+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AB84C433F1;
-	Tue, 13 Feb 2024 23:11:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707865876;
-	bh=X0Q8mOE644bC3imQHDGeArc5j0LokHzXwsSyh29i+Jk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ToFeO/6+jy8tN6WMw9eFY02Tw10FVIJj0TtOdmp+JiL4zpeqrdgCde6EZ9ll9CJAy
-	 1OK+abif+8+H7bsFIEpfrDm3YAN7M41xO4D/YqIqkoZGZlAqWX60w5gr3JcNSRcl36
-	 0bIhf6109/T2xuy7HkFNOx0Aa+HR0zeUBKIDWagBaBAMIn2PFWaOAhOjjP23mN1cd4
-	 ESybK6zKoW53LGpZ45YA1BMc65JF+Z4VwR3mU2yPMWH3e4aVOb+JyFVg/AZTrzGuUh
-	 Ds4fMjUtaf6jp5gi0pHpMnV+658btAAZsWrfSkpePPAubncrnlIge4q0Ub/1BSK7ii
-	 Er2ObuVloTNNw==
-Date: Tue, 13 Feb 2024 15:11:15 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: David Hildenbrand <david@redhat.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, akpm@linux-foundation.org,
-	vbabka@suse.cz, hannes@cmpxchg.org, roman.gushchin@linux.dev,
-	mgorman@suse.de, dave@stgolabs.net, willy@infradead.org,
-	liam.howlett@oracle.com, corbet@lwn.net, void@manifault.com,
-	peterz@infradead.org, juri.lelli@redhat.com,
-	catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, peterx@redhat.com, axboe@kernel.dk,
-	mcgrof@kernel.org, masahiroy@kernel.org, nathan@kernel.org,
-	dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev,
-	rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com,
-	yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com,
-	hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org,
-	ndesaulniers@google.com, vvvvvv@google.com,
-	gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, bristot@redhat.com,
-	vschneid@redhat.com, cl@linux.com, penberg@kernel.org,
-	iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com,
-	elver@google.com, dvyukov@google.com, shakeelb@google.com,
-	songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com,
-	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev, linux-arch@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com,
-	cgroups@vger.kernel.org
-Subject: Re: [PATCH v3 00/35] Memory allocation profiling
-Message-ID: <20240213231115.GF6184@frogsfrogsfrogs>
-References: <20240212213922.783301-1-surenb@google.com>
- <Zctfa2DvmlTYSfe8@tiehlicka>
- <CAJuCfpEsWfZnpL1vUB2C=cxRi_WxhxyvgGhUg7WdAxLEqy6oSw@mail.gmail.com>
- <9e14adec-2842-458d-8a58-af6a2d18d823@redhat.com>
- <2hphuyx2dnqsj3hnzyifp5yqn2hpgfjuhfu635dzgofr5mst27@4a5dixtcuxyi>
- <6a0f5d8b-9c67-43f6-b25e-2240171265be@redhat.com>
- <huysjw5jiyd7m7ouf6g5n2yptg7slxk3am457x2x4ecz277k4o@gjfy2lu7ntos>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EnmwXUdx"
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6e2dbf54b2eso2138665a34.0;
+        Tue, 13 Feb 2024 15:12:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707865971; x=1708470771; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bHG9YyBPcsLtS0YcHjWtqLib139ZwP3Viw+PP4q1yP8=;
+        b=EnmwXUdxGeE/w7Die4WUbS+0dG3lfBPh3Enk4cFCLFH9t8LQjxO3QLgFRt4WZlCPzI
+         3pqePdByyyA20xlCNMrex5ZQ0Z/qJs+6Z1//nZW14VYWtjg1MGHMZfa8ydI3FjDLU30Z
+         3VUKluMRv/Cp5RYzIPcnc/WkVefRDW4uH3moBqpgisLX4FtGmd9xVewvxJG5watwSA0J
+         ISeVFnHXChG4wlOlCNPnkYh3kWtVeMvrqkwn/rsd1Y2281zGcTeJkNrV6Zdhqh/kYs8k
+         Xu1lKqwl4J3DlqJhz3csZBgT+mW4BfwvuxyGst6hw5reSkn0v3DLAbEvHcqyZkBkQEhp
+         2jlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707865971; x=1708470771;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bHG9YyBPcsLtS0YcHjWtqLib139ZwP3Viw+PP4q1yP8=;
+        b=lWiSzcYpVz1/TZ3VYPZAnmK6LxS7n4uTnGAoAy7plm5DEuI3wk+/6TzOKU4yBOGjG5
+         ufuAR8mzWv/fC+hMwn6oVYMeBpcSNywYczOA8hLoK54hIrTNz094DUSiPHEkl+TZGD0N
+         b6ivxGNjc41OUonjI/9rTMWHx2rmOCxQNmPfEZ2lKuCt/LBV/AMSA/xHvUZfGc66upeF
+         EqV9yKzaibQckVu5XtQ46cUVZcR/IvLMslSRg/ywbvp6how874PXZpyN43LBl/28Ju40
+         +KTBxhSGLYDUfUUua/KjP3dYpEhFTA3twjOWPu+EbcLVHVsYK/Zzq6eVBXYEF+ocDpvB
+         u5hg==
+X-Forwarded-Encrypted: i=1; AJvYcCUOfnXX2FP7l2MkGRc/1qAOrGLBITiNfLks5dOmaDJUFjOzw74ktw6/X+GH8Gtdw+u1r3O7gQUxbDAEta/I/JAqVX3xsFKeVA1lflbzqzSyC6+qHHzYcRmAapm4egu6Ym+O2r6B
+X-Gm-Message-State: AOJu0YxqXnH4iIag+mgSHcm8fGqwNAlDzewfaQEgkfWl/UzsVHGWZEwY
+	YylfrGshPN1qtDuWbN1LJW2fGRlIW541QkLXsppOHBC16d2kYM4T
+X-Google-Smtp-Source: AGHT+IHnDm1Jo6c8Bq2LivfbPgff1GLSFA757Ll9Z/ptOLiHiNiH4h3uemeCCBSnF4RPvMWlr8E71Q==
+X-Received: by 2002:a05:6830:c7:b0:6e2:e324:ebe2 with SMTP id x7-20020a05683000c700b006e2e324ebe2mr1077446oto.25.1707865971015;
+        Tue, 13 Feb 2024 15:12:51 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWamcADRTVc2kJG6BUoiRo0EOP074D4iFnbO+Z0oaGw0cnCrJOwq+UPRVO+vJtevV6RVrMladCpy0LBK6WtAlThfzM6XSeI3xtsuhFK8ykbl5zSUMkPo/XrmxAiNE71FgRn4fJ/eEQvqrz0YUuLupCIT+dWuJOva4IxvLf6vXNEQqbNJ5noJNB2Bpw5s+Ybwd6+cTEkhS1fDa6k7n5bI5gEkQ4MvbEGb0Fi3/GBGYitbt7aRI/Plb5QeQ2Oq1voovITSb/riZIE7Q3LNkM7hBXwcqXMXze0mS87FBQBk6PZQ1jvDyeurPCkn7lQ2f+I4LpE/BnMmVvqMyWnx3651XcQViscrL18qt8tOrJPWkslp13qOgP64bwbq3pTsMF/umALgGlsdCQ2x68Bf0mvxqqASHfA7bAfXtxVeYru0WH8QdI=
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id a19-20020ac85b93000000b0042c792f3255sm1506491qta.15.2024.02.13.15.12.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Feb 2024 15:12:50 -0800 (PST)
+Message-ID: <025914ff-723f-4a4f-bf51-93e881a58dd4@gmail.com>
+Date: Tue, 13 Feb 2024 15:12:47 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <huysjw5jiyd7m7ouf6g5n2yptg7slxk3am457x2x4ecz277k4o@gjfy2lu7ntos>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v4 03/15] net: dsa: vsc73xx: use macros for rgmii
+ recognition
+Content-Language: en-US
+To: Pawel Dembicki <paweldembicki@gmail.com>, netdev@vger.kernel.org
+Cc: linus.walleij@linaro.org, Russell King <linux@armlinux.org.uk>,
+ Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Claudiu Manoil <claudiu.manoil@nxp.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ UNGLinuxDriver@microchip.com, linux-kernel@vger.kernel.org
+References: <20240213220331.239031-1-paweldembicki@gmail.com>
+ <20240213220331.239031-4-paweldembicki@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <20240213220331.239031-4-paweldembicki@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 13, 2024 at 05:29:03PM -0500, Kent Overstreet wrote:
-> On Tue, Feb 13, 2024 at 11:17:32PM +0100, David Hildenbrand wrote:
-> > On 13.02.24 23:09, Kent Overstreet wrote:
-> > > On Tue, Feb 13, 2024 at 11:04:58PM +0100, David Hildenbrand wrote:
-> > > > On 13.02.24 22:58, Suren Baghdasaryan wrote:
-> > > > > On Tue, Feb 13, 2024 at 4:24 AM Michal Hocko <mhocko@suse.com> wrote:
-> > > > > > 
-> > > > > > On Mon 12-02-24 13:38:46, Suren Baghdasaryan wrote:
-> > > > > > [...]
-> > > > > > > We're aiming to get this in the next merge window, for 6.9. The feedback
-> > > > > > > we've gotten has been that even out of tree this patchset has already
-> > > > > > > been useful, and there's a significant amount of other work gated on the
-> > > > > > > code tagging functionality included in this patchset [2].
-> > > > > > 
-> > > > > > I suspect it will not come as a surprise that I really dislike the
-> > > > > > implementation proposed here. I will not repeat my arguments, I have
-> > > > > > done so on several occasions already.
-> > > > > > 
-> > > > > > Anyway, I didn't go as far as to nak it even though I _strongly_ believe
-> > > > > > this debugging feature will add a maintenance overhead for a very long
-> > > > > > time. I can live with all the downsides of the proposed implementation
-> > > > > > _as long as_ there is a wider agreement from the MM community as this is
-> > > > > > where the maintenance cost will be payed. So far I have not seen (m)any
-> > > > > > acks by MM developers so aiming into the next merge window is more than
-> > > > > > little rushed.
-> > > > >
-> > > > > We tried other previously proposed approaches and all have their
-> > > > > downsides without making maintenance much easier. Your position is
-> > > > > understandable and I think it's fair. Let's see if others see more
-> > > > > benefit than cost here.
-> > > > 
-> > > > Would it make sense to discuss that at LSF/MM once again, especially
-> > > > covering why proposed alternatives did not work out? LSF/MM is not "too far"
-> > > > away (May).
-
-You want to stall this effort for *three months* to schedule a meeting?
-
-I would love to have better profiling of memory allocations inside XFS
-so that we can answer questions like "What's going on with these
-allocation stalls?" or "What memory is getting used, and where?" more
-quickly than we can now.
-
-Right now I get to stare at tracepoints and printk crap until my eyes
-bleed, and maybe dchinner comes to my rescue and figures out what's
-going on sooner than I do.  More often we just never figure it out
-because only the customer can reproduce the problem, the reams of data
-produced by ftrace is unmanageable, and BPF isn't always available.
-
-I'm not thrilled by the large increase in macro crap in the allocation
-paths, but I don't know of a better way to instrument things.  Our
-attempts to use _RET_IP in XFS to instrument its code paths have never
-worked quite right w.r.t. inlined functions and whatnot.
-
-> > > > I recall that the last LSF/MM session on this topic was a bit unfortunate
-> > > > (IMHO not as productive as it could have been). Maybe we can finally reach a
-> > > > consensus on this.
-
-From my outsider's perspective, nine months have gone by since the last
-LSF.  Who has come up with a cleaner/better/faster way to do what Suren
-and Kent have done?  Were those code changes integrated into this
-patchset?  Or why not?
-
-Most of what I saw in 2023 involved compiler changes (great; now I have
-to wait until RHEL 11/Debian 14 to use it) and/or still utilize fugly
-macros.
-
-Recalling all the way back to suggestions made in 2022, who wrote the
-prototype for doing this via ftrace?  Or BPF?  How well did that go for
-counting allocation events and the like?  I saw Tejun saying something
-about how they use BPF aggressively inside Meta, but that was about it.
-
-Were any of those solutions significantly better than what's in front of
-us here?
-
-I get it, a giant patch forcing everyone to know the difference between
-alloc_foo and alloc_foo_noperf offends my (yours?) stylistic
-sensibilities.  On the other side, making analysis easier during
-customer escalations means we kernel people get data, answers, and
-solutions sooner instead of watching all our time get eaten up on L4
-support and backporting hell.
-
-> > > I'd rather not delay for more bikeshedding. Before agreeing to LSF I'd
-> > > need to see a serious proposl - what we had at the last LSF was people
-> > > jumping in with half baked alternative proposals that very much hadn't
-> > > been thought through, and I see no need to repeat that.
-> > > 
-> > > Like I mentioned, there's other work gated on this patchset; if people
-> > > want to hold this up for more discussion they better be putting forth
-> > > something to discuss.
-> > 
-> > I'm thinking of ways on how to achieve Michal's request: "as long as there
-> > is a wider agreement from the MM community". If we can achieve that without
-> > LSF, great! (a bi-weekly MM meeting might also be an option)
+On 2/13/24 14:03, Pawel Dembicki wrote:
+> It's preparation for future use. At this moment, the RGMII port is used
+> only for a connection to the MAC interface, but in the future, someone
+> could connect a PHY to it. Using the "phy_interface_mode_is_rgmii" macro
+> allows for the proper recognition of all RGMII modes.
 > 
-> A meeting wouldn't be out of the question, _if_ there is an agenda, but:
-> 
-> What's that coffeee mug say? I just survived another meeting that
-> could've been an email?
+> Suggested-by: Russell King <linux@armlinux.org.uk>
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
 
-I congratulate you on your memory of my kitchen mug.  Yes, that's what
-it says.
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
 
-> What exactly is the outcome we're looking for?
-> 
-> Is there info that people are looking for? I think we summed things up
-> pretty well in the cover letter; if there are specifics that people
-> want to discuss, that's why we emailed the series out.
-> 
-> There's people in this thread who've used this patchset in production
-> and diagnosed real issues (gigabytes of memory gone missing, I heard the
-> other day); I'm personally looking for them to chime in on this thread
-> (Johannes, Pasha).
-> 
-> If it's just grumbling about "maintenance overhead" we need to get past
-> - well, people are going to have to accept that we can't deliver
-> features without writing code, and I'm confident that the hooking in
-> particular is about as clean as it's going to get, _regardless_ of
-> toolchain support; and moreover it addresses what's been historically a
-> pretty gaping hole in our ability to profile and understand the code we
-> write.
-
-Are you and Suren willing to pay whatever maintenance overhead there is?
-
---D
