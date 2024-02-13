@@ -1,172 +1,137 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 469612C69A;
-	Tue, 13 Feb 2024 11:09:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8374322081
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 11:10:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707822555; cv=none; b=Jo99At/ZHF47pTbi7vonm1c513bolscBEYH3li0vERJ6Qx4q59QHgarsILvxrM7YONn8msMyvyEoeHYjfzOsCTQJJQmxL9m3W1exGEVClo406dYtRuYmFii56pwn1a1qCEvWS4yqmGlU4/UnzQJwViLMD710woOnlXIvGmV0azQ=
+	t=1707822604; cv=none; b=BbpiIy4Z6MFiMLSSO1HkXC6T/0nMnxQ54zT5U3U0ZMhJtyhm71J4Yo1kCBm7PikrKjHkgnIJMR9cPexEJOArNhiMr/5BhzQxLnS7soRXFexAWXkLaKRU3kdt3lZSyZ4Mft5EET0oZc24JtxR9CQMS0U8yLbQ+95CTSCUkjKOlcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707822555; c=relaxed/simple;
-	bh=BxkpbCWHI5A/EVO4cHovB3iWEf/1RW3L/ybUBeIgCjw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fy8nCbhHtocSstHuiCF2Fur8/gW8SgAHOxCdGIwnZ/aBkMWvYSNFXc7ij/lpBPntZHnBzO0I+W6WZEQehc0Ec06G6rH/EW9gwPeKCZ+oDaVFPPxKKIB3jkBu37yOeRuoVJzI55TweVS8luC5YgAvrQijKTkDX+bZ5yotT9hKlj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=BG9E8ZDA; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BG9E8ZDA"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41DB6NSF008529;
-	Tue, 13 Feb 2024 11:08:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=y6gcA0FwwLcQ+USrtr82gM+J0plPqQJrcFFJlFssEvQ=;
- b=BG9E8ZDACdcTX9tYoHQKTk06X9gRTLYsD3U+Q3JMytOmcf8MGvxAqEJeMt22/cCm60xe
- Te02bOTOLk8DvLdvtDuIDofoMjRovuyozvc3L6yHM00ptHBOpOGVx2QawAsst5/0pxuh
- vkmhGEDCzB5VLy9wsNR/lQ6srBqfYkXrs27yu5jmpJG5vHDgW7Lc/O4d6ahINuI0joOz
- eE3nOAsUfXIac88qF82J29MbM0hgrRWZ9InuuQZpHXpgCPUC2q55xLIZ/c4xIZIgriV8
- anMhj1xBPR4costNDfUrIXsvZNY2JEp/SoeVFnlazf7ZGS24nhE7fKo8XJPvXfH4gONL 6w== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w86s0gp6a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 11:08:45 +0000
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41DB8iMC020351;
-	Tue, 13 Feb 2024 11:08:45 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w86s0gp5g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 11:08:44 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41DB6tfs024888;
-	Tue, 13 Feb 2024 11:08:42 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w6mfp6wr5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 11:08:42 +0000
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41DB8d4A13500960
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 13 Feb 2024 11:08:41 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8ADF9582C0;
-	Tue, 13 Feb 2024 11:08:39 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 77120582B1;
-	Tue, 13 Feb 2024 11:08:32 +0000 (GMT)
-Received: from [9.109.198.187] (unknown [9.109.198.187])
-	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 13 Feb 2024 11:08:32 +0000 (GMT)
-Message-ID: <e99cf4ef-40ec-4e66-956f-c9e2aebb4621@linux.ibm.com>
-Date: Tue, 13 Feb 2024 16:38:31 +0530
+	s=arc-20240116; t=1707822604; c=relaxed/simple;
+	bh=PVpICH1OGEAbLtHOkYgs9JYlUhXZwCt8fGNRxFC6vVQ=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Zt1UazTlB5TLtt6P6gA6FI9TSu7IcSkZyK+qktEG+lMe0cc1SoS7SqZRkPrTZCQ5XaAa7A2AqUKaqzbcv91I2xxm42bbLOaqPFh1KJ/Oy+/WEG4Tl7gA8cFHsLAd4yu3zxk057UdU9FOQLczm881Dwu6ffzhsGQtv6lTELex+A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-36422f71c3fso286755ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 03:10:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707822601; x=1708427401;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TrozcmJJNtbX7/O0bh/ijnxJn3U9TBFsshfUqi+A9g4=;
+        b=Owpmr/j6Xr60+JUtt/FLVvSmBCyC0OJ1oj2PG9Ev0mR+KF4skDWmjGcNBKt6wi1N9B
+         t8uPN5t3QIupfsvYVXPK1E0zxj5xl0GTic4Qo++f/LSl7DT91LUlfjI9/wUD+aogAyww
+         ZhxL3JG+RY4do9f0iwAO74vjUjC2//TY904QUacwCQ/5GCebGnYqiglyCWSuilo/qMj9
+         WtufwqH5cGqt/XWlsGN2sHOSVpcerXmKostVrv64bdUmU7W5A6M+dK3ZyJI6fHFS42NC
+         vR4Ccb8VpATWkffqrlEwq7R1bDr/Kohoi+qegwfFjYU6I47N31V+AKZ4nPMOcCRXGVEL
+         xGDA==
+X-Gm-Message-State: AOJu0YziqvJIOH/+hlJFaV0HFP9SVtxRV8bvUmFZgO+So5hQGQqhIV31
+	umOJ4fXrQSh5Dz/e2ao0DOE1EwudWQ6mYedEMljrh2h3HKT2vpa6VSYVaB86hx/25POGtaOZ4oV
+	PbF+f/P4eiSuLMRKOWgnYgcsRXFaAPS6v7q61ss6J6Bpl2uEx0WxYmsM=
+X-Google-Smtp-Source: AGHT+IEJXXO/JVLihqwxaCbZmyvMBiTQJyMn/y+SsGz6pRMagyEhdJ9ogYsAIBjpCxOZpcazakrGEh49OBtI8678MUK7daGNMg7i
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 10/15] block: Add fops atomic write support
-Content-Language: en-US
-To: John Garry <john.g.garry@oracle.com>
-Cc: axboe@kernel.dk, brauner@kernel.org, bvanassche@acm.org,
-        dchinner@redhat.com, djwong@kernel.org, hch@lst.de, jack@suse.cz,
-        jbongio@google.com, jejb@linux.ibm.com, kbusch@kernel.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-scsi@vger.kernel.org, linux-xfs@vger.kernel.org,
-        martin.petersen@oracle.com, ming.lei@redhat.com, ojaswin@linux.ibm.com,
-        sagi@grimberg.me, tytso@mit.edu, viro@zeniv.linux.org.uk
-References: <20240124113841.31824-11-john.g.garry@oracle.com>
- <20240213093619.106770-1-nilay@linux.ibm.com>
- <9ffc3102-2936-4f83-b69d-bbf64793b9ca@oracle.com>
-From: Nilay Shroff <nilay@linux.ibm.com>
-In-Reply-To: <9ffc3102-2936-4f83-b69d-bbf64793b9ca@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: wgYyCpTyGo1nKNUZEvPPGbkeV49XjQVm
-X-Proofpoint-GUID: x8JhR4pjGebwkn0QUFWqvWDNH0parMX8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-13_06,2024-02-12_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 adultscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 bulkscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402130087
+X-Received: by 2002:a05:6e02:20ee:b0:363:a059:670b with SMTP id
+ q14-20020a056e0220ee00b00363a059670bmr756671ilv.4.1707822601673; Tue, 13 Feb
+ 2024 03:10:01 -0800 (PST)
+Date: Tue, 13 Feb 2024 03:10:01 -0800
+In-Reply-To: <tencent_E2FE25978DA612195DF45DCD191D4FAF8D07@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008325b70611416f20@google.com>
+Subject: Re: [syzbot] [ntfs3?] possible deadlock in ntfs_set_state (2)
+From: syzbot <syzbot+c2ada45c23d98d646118@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+possible deadlock in ntfs_set_state
+
+loop0: detected capacity change from 0 to 4096
+ntfs3: loop0: Different NTFS sector size (4096) and media sector size (512).
+ntfs3: loop0: ino=5, "/" ntfs_iget5
+============================================
+WARNING: possible recursive locking detected
+6.8.0-rc4-syzkaller-00005-gc664e16bb1ba-dirty #0 Not tainted
+--------------------------------------------
+syz-executor.0/5514 is trying to acquire lock:
+ffff888068bf8100 (&ni->ni_lock#3){+.+.}-{3:3}, at: ntfs_set_state+0x1ff/0x6c0 fs/ntfs3/fsntfs.c:947
+
+but task is already holding lock:
+ffff888068bf9e80 (&ni->ni_lock#3){+.+.}-{3:3}, at: ni_trylock fs/ntfs3/ntfs_fs.h:1141 [inline]
+ffff888068bf9e80 (&ni->ni_lock#3){+.+.}-{3:3}, at: ni_write_inode+0x1bc/0x1010 fs/ntfs3/frecord.c:3264
+
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock(&ni->ni_lock#3);
+  lock(&ni->ni_lock#3);
+
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+3 locks held by syz-executor.0/5514:
+ #0: ffff88802ec00420 (sb_writers#13){.+.+}-{0:0}, at: do_sys_ftruncate+0x25c/0x390 fs/open.c:191
+ #1: ffff888068bfa120 (&sb->s_type->i_mutex_key#21){+.+.}-{3:3}, at: inode_lock include/linux/fs.h:802 [inline]
+ #1: ffff888068bfa120 (&sb->s_type->i_mutex_key#21){+.+.}-{3:3}, at: do_truncate+0x20c/0x310 fs/open.c:64
+ #2: ffff888068bf9e80 (&ni->ni_lock#3){+.+.}-{3:3}, at: ni_trylock fs/ntfs3/ntfs_fs.h:1141 [inline]
+ #2: ffff888068bf9e80 (&ni->ni_lock#3){+.+.}-{3:3}, at: ni_write_inode+0x1bc/0x1010 fs/ntfs3/frecord.c:3264
+
+stack backtrace:
+CPU: 0 PID: 5514 Comm: syz-executor.0 Not tainted 6.8.0-rc4-syzkaller-00005-gc664e16bb1ba-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
+ check_deadlock kernel/locking/lockdep.c:3062 [inline]
+ validate_chain+0x15c0/0x58e0 kernel/locking/lockdep.c:3856
+ __lock_acquire+0x1345/0x1fd0 kernel/locking/lockdep.c:5137
+ lock_acquire+0x1e3/0x530 kernel/locking/lockdep.c:5754
+ __mutex_lock_common kernel/locking/mutex.c:608 [inline]
+ __mutex_lock+0x136/0xd70 kernel/locking/mutex.c:752
+ ntfs_set_state+0x1ff/0x6c0 fs/ntfs3/fsntfs.c:947
+ ntfs_iget5+0x3f0/0x3b70 fs/ntfs3/inode.c:535
+ ni_update_parent+0x934/0xdc0 fs/ntfs3/frecord.c:3217
+ ni_write_inode+0xde9/0x1010 fs/ntfs3/frecord.c:3323
+ ntfs_truncate fs/ntfs3/file.c:410 [inline]
+ ntfs3_setattr+0x950/0xb40 fs/ntfs3/file.c:703
+ notify_change+0xb9f/0xe70 fs/attr.c:499
+ do_truncate+0x220/0x310 fs/open.c:66
+ do_sys_ftruncate+0x2f7/0x390 fs/open.c:194
+ do_syscall_64+0xfb/0x240
+ entry_SYSCALL_64_after_hwframe+0x6f/0x77
+RIP: 0033:0x7f8b46a7dda9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f8b478530c8 EFLAGS: 00000246 ORIG_RAX: 000000000000004d
+RAX: ffffffffffffffda RBX: 00007f8b46babf80 RCX: 00007f8b46a7dda9
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000004
+RBP: 00007f8b46aca47a R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000000b R14: 00007f8b46babf80 R15: 00007ffcddaf9d18
+ </TASK>
+ntfs3: loop0: Mark volume as dirty due to NTFS errors
 
 
+Tested on:
 
-On 2/13/24 15:28, John Garry wrote:
-> On 13/02/2024 09:36, Nilay Shroff wrote:
->>> +static bool blkdev_atomic_write_valid(struct block_device *bdev, loff_t pos,
->>
->>> +                      struct iov_iter *iter)
->>
->>> +{
->>
->>> +    struct request_queue *q = bdev_get_queue(bdev);
->>
->>> +    unsigned int min_bytes = queue_atomic_write_unit_min_bytes(q);
->>
->>> +    unsigned int max_bytes = queue_atomic_write_unit_max_bytes(q);
->>
->>> +
->>
->>> +    if (!iter_is_ubuf(iter))
->>
->>> +        return false;
->>
->>> +    if (iov_iter_count(iter) & (min_bytes - 1))
->>
->>> +        return false;
->>
->>> +    if (!is_power_of_2(iov_iter_count(iter)))
->>
->>> +        return false;
->>
->>> +    if (pos & (iov_iter_count(iter) - 1))
->>
->>> +        return false;
->>
->>> +    if (iov_iter_count(iter) > max_bytes)
->>
->>> +        return false;
->>
->>> +    return true;
->>
->>> +}
->>
->>
->>
->> Here do we need to also validate whether the IO doesn't straddle
->>
->> the atmic bondary limit (if it's non-zero)? We do check that IO
->>
->> doesn't straddle the atomic boundary limit but that happens very
->>
->> late in the IO code path either during blk-merge or in NVMe driver
->>
->> code.
-> 
-> It's relied that atomic_write_unit_max is <= atomic_write_boundary and both are a power-of-2. Please see the NVMe patch, which this is checked. Indeed, it would not make sense if atomic_write_unit_max > atomic_write_boundary (when non-zero).
-> 
-> So if the write is naturally aligned and its size is <= atomic_write_unit_max, then it cannot be straddling a boundary.
-
-Ok fine but in case the device doesn't support namespace atomic boundary size (i.e. NABSPF is zero) then still do we need 
-to restrict IO which crosses the atomic boundary? 
-
-I am quoting this from NVMe spec (Command Set Specification, revision 1.0a, Section 2.1.4.3) : 
-"To ensure backwards compatibility, the values reported for AWUN, AWUPF, and ACWU shall be set such that 
-they  are  supported  even  if  a  write  crosses  an  atomic  boundary.  If  a  controller  does  not  
-guarantee atomicity across atomic boundaries, the controller shall set AWUN, AWUPF, and ACWU to 0h (1 LBA)." 
-
-Thanks,
---Nilay
-
-
-  
+commit:         c664e16b Merge tag 'docs-6.8-fixes2' of git://git.lwn...
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=152c5114180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1d7c92dd8d5c7a1e
+dashboard link: https://syzkaller.appspot.com/bug?extid=c2ada45c23d98d646118
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=15ff6de0180000
 
