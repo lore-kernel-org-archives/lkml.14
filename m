@@ -1,120 +1,125 @@
-Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64C75D902;
-	Tue, 13 Feb 2024 15:24:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25045D902;
+	Tue, 13 Feb 2024 15:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707837873; cv=none; b=jN1XVInVt+IDSuoqDkojjr4l8WqktzTV8rSdNCYPXhch5iZJWNB9uTHpS9rEYMEliHk4J7MFTXtK999EjSvb8l4Gsa96oFKQwALlXUVZs2QHeYvE8mOSZeFxFQNoUB7KY6EnD/xOsnSKrKU5t29QOXZdY/rD4gfdjYyE8IHQwZg=
+	t=1707837888; cv=none; b=f4TYqgQfFRuHcwvoFnEssnJ6jzpOmCQBj9M5qGovxCowOdgI3i8I5HlNlaF0BrddMd5bFzXySqFJRnR7os8Ox9WuDE53DTU8+FH6TYNG2bHyTYYEs5OH6ulrR3CVc2Z1zK6qGIYTV3/e2ouANOW8kLW+2r5FKc4s66egxPuQSA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707837873; c=relaxed/simple;
-	bh=CwNvQx4cKxm4wTveQJa2fF9BF88LSILbE5saxxP+eqw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=F/iKuI7y2Tx+QDSFsr35EzvXa2uBbqET3fJGxfLlw26ZRPGh9ScS9JYaG6X++0e7BeerQmKcObFJa8O6ae4zwwXjEKERg8ULvVffvXLha3ddMxjiPWPT8rL0Vo/wyOQhyrlhLayGINkKUo5aDMjUEQMu5p1Ii1i9mU4In9298bU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
-Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
- (195.54.195.169) with Microsoft SMTP Server (TLS) id 14.3.498.0; Tue, 13 Feb
- 2024 18:24:20 +0300
-Received: from localhost (10.0.253.138) by Ex16-01.fintech.ru (10.0.10.18)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Tue, 13 Feb
- 2024 18:24:20 +0300
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-To: Alexander Aring <alex.aring@gmail.com>
-CC: Nikita Zhandarovich <n.zhandarovich@fintech.ru>, Stefan Schmidt
-	<stefan@datenfreihafen.org>, Miquel Raynal <miquel.raynal@bootlin.com>,
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	<linux-wpan@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>,
-	<syzbot+60a66d44892b66b56545@syzkaller.appspotmail.com>
-Subject: [PATCH wpan] mac802154: fix uninit-value issue in ieee802154_header_create()
-Date: Tue, 13 Feb 2024 07:24:14 -0800
-Message-ID: <20240213152414.3703-1-n.zhandarovich@fintech.ru>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1707837888; c=relaxed/simple;
+	bh=ZRse6JczO8c8briiSuR06UnfYpScvqAmNKuKcNSxv4E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=s+huxKBTuACenrk7I5H9LRQkclTGti4Kn72BePFoJ9jX92c4IINTp1hOO0S4RADMbnh72S7UaRidWAcqQkOU2mQH8bIq32ThdIGe5KwrZYWK3/pMm9WGJtqidqs83jF0di/rKtnpHg6VufadyI9+2aI6kP4y7nLy7qZJsJT7jxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kfaq/68N; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kfaq/68N"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C49012000B;
+	Tue, 13 Feb 2024 15:24:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1707837877;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=52cY2LUgFu15OCe72LM2FQu+S39du9WmCDQ8io2kZ8M=;
+	b=kfaq/68NzMwiXUkSTseCvfYIiL4b4bIu5M5IexBkVGXzeSEmz1ghDU6VPuKXiseIpxTfgm
+	OX6X86yQEKg3JgHyYBq5oDJ4OzDJM21V6yGD4BUOdbgbqSUHilpQAr/kgPe/uQzcXkmfMW
+	TWllHo+DBBJjAIskfwiu6GvrKkigwvYgeiBvPIsEijh2zu9NsyvORI/AAzZT/XG/iA6PVE
+	vXmzpmaPhgYjsUm7g7bqNz2syNx0S9Go4hlOJP6I+qL+iRR8NzQiNF1+grwWirAvm0+rxj
+	L/4iU5xiIcVO73t9ELMpD6XOGyZTzaH9pRnWZyUrGIkckJNM5+Bva5gD/vqg7g==
+From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+Date: Tue, 13 Feb 2024 16:22:44 +0100
+Subject: [PATCH RFC] wifi: wilc1000: fix reset line assert/deassert
+ polarity
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
- (10.0.10.18)
+Message-Id: <20240213-wilc_1000_reset_line-v1-1-e01da2b23fed@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAEOJy2UC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDQ0NL3fLMnOR4QwMDg/ii1OLUkviczLxUXWNLYyNzg7RkE3OTVCWg1oK
+ i1LTMCrCx0UpBbs5KsbW1AK54SQtrAAAA
+To: linux-wireless@vger.kernel.org
+Cc: Ajay Singh <ajay.kathat@microchip.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, Kalle Valo <kvalo@kernel.org>, 
+ David Mosberger-Tang <davidm@egauge.net>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+X-Mailer: b4 0.12.4
+X-GND-Sasl: alexis.lothore@bootlin.com
 
-Syzkaller with KMSAN reported [1] a problem with uninitialized value
-access in ieee802154_header_create().
+When using a wilc1000 chip over a spi bus, users can optionally define a
+reset gpio and a chip enable gpio. The reset line of wilc1000 is active
+low, so to hold the chip in reset, a low (physical) value must be applied.
 
-The issue arises from a weird combination of cb->secen == 1 and
-cb->secen_override == 0, while other required security parameters
-are not found enabled in mac802154_set_header_security().
+The corresponding device tree binding documentation was introduced by
+commit f31ee3c0a555 ("wilc1000: Document enable-gpios and reset-gpios
+properties") and correctly indicates that the reset line is an active-low
+signal. However, the corresponding driver part, brought by commit
+ec031ac4792c ("wilc1000: Add reset/enable GPIO support to SPI driver"), is
+misusing the gpiod APIs and apply an inverted logic when powering up/down
+the chip (for example, setting the reset line to a logic "1" during power
+up, which in fact asserts the reset line when device tree describes the
+reset line as GPIO_ACTIVE_LOW). As a consequence, any platform currently
+using the driver in SPI mode must use a faulty reset line description in
+device tree, or else chip will be maintained in reset and will not even
+allow to bring up the chip.
 
-Ideally such case is expected to be caught by starting check at the
-beginning of mac802154_set_header_security():
+Fix reset line usage by inverting back the gpiod APIs usage, setting the
+reset line to the logic value "0" when powering the chip, and the logic
+value "1" when powering off the chip.
 
-	if (!params.enabled && cb->secen_override && cb->secen)
-		return -EINVAL;
-
-However, since secen_override is zero, the function in question
-passes this check and returns with success early, without having
-set values to ieee802154_sechdr fields such as key_id_mode. This in
-turn leads to uninitialized access of such values in
-ieee802154_hdr_push_sechdr() and other places.
-
-Fix this problem by only checking for secen value and presence of
-security parameters (and ignoring secen_override). Exit early with
-error if necessary requirements are not met.
-
-[1]
-BUG: KMSAN: uninit-value in ieee802154_hdr_push_sechdr net/ieee802154/header_ops.c:54 [inline]
-BUG: KMSAN: uninit-value in ieee802154_hdr_push+0x971/0xb90 net/ieee802154/header_ops.c:108
- ieee802154_hdr_push_sechdr net/ieee802154/header_ops.c:54 [inline]
- ieee802154_hdr_push+0x971/0xb90 net/ieee802154/header_ops.c:108
- ieee802154_header_create+0x9c0/0xc00 net/mac802154/iface.c:396
- wpan_dev_hard_header include/net/cfg802154.h:494 [inline]
- dgram_sendmsg+0xd1d/0x1500 net/ieee802154/socket.c:677
- ieee802154_sock_sendmsg+0x91/0xc0 net/ieee802154/socket.c:96
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg net/socket.c:745 [inline]
- ____sys_sendmsg+0x9c2/0xd60 net/socket.c:2584
- ___sys_sendmsg+0x28d/0x3c0 net/socket.c:2638
- __sys_sendmsg net/socket.c:2667 [inline]
- __do_sys_sendmsg net/socket.c:2676 [inline]
- __se_sys_sendmsg net/socket.c:2674 [inline]
- __x64_sys_sendmsg+0x307/0x490 net/socket.c:2674
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0x44/0x110 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
-
-Local variable hdr created at:
- ieee802154_header_create+0x4e/0xc00 net/mac802154/iface.c:360
- wpan_dev_hard_header include/net/cfg802154.h:494 [inline]
- dgram_sendmsg+0xd1d/0x1500 net/ieee802154/socket.c:677
-
-Fixes: f30be4d53cad ("mac802154: integrate llsec with wpan devices")
-Reported-and-tested-by: syzbot+60a66d44892b66b56545@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=60a66d44892b66b56545
-Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Fixes: ec031ac4792c ("wilc1000: Add reset/enable GPIO support to SPI driver")
+Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
 ---
-P.S. Link to previous similar discussion:
-https://lore.kernel.org/all/tencent_1C04CA8D66ADC45608D89687B4020B2A8706@qq.com/
-P.P.S. This issue may affect stable versions, at least up to 6.1.
+This issue was detected because I struggled a bit to setup a WILC-over-SPI
+setup, and eventually realized that it was due to chip being hold in reset.
 
- net/mac802154/iface.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch, if accepted, will force any WILC-over-SPI user to update its
+device tree description: any platform currently working correctly in this
+setup likely have a wrong GPIO_ACTIVE_HIGH used on the reset line device
+tree description, contrary to what the documentation says. I am not sure
+whether this is tolerable ? If not, what would be the proper way to fix
+this ? Make the driver manually parse this flag and somehow make it able
+to deal with both versions (so basically: ignoring the setting) ? Just live
+with it, and possibly document the issue somewhere ?
+---
+ drivers/net/wireless/microchip/wilc1000/spi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/mac802154/iface.c b/net/mac802154/iface.c
-index c0e2da5072be..ad799d349625 100644
---- a/net/mac802154/iface.c
-+++ b/net/mac802154/iface.c
-@@ -328,7 +328,7 @@ static int mac802154_set_header_security(struct ieee802154_sub_if_data *sdata,
- 
- 	mac802154_llsec_get_params(&sdata->sec, &params);
- 
--	if (!params.enabled && cb->secen_override && cb->secen)
-+	if (!params.enabled && cb->secen)
- 		return -EINVAL;
- 	if (!params.enabled ||
- 	    (cb->secen_override && !cb->secen) ||
+diff --git a/drivers/net/wireless/microchip/wilc1000/spi.c b/drivers/net/wireless/microchip/wilc1000/spi.c
+index c92ee4b73a74..30eed2ea523d 100644
+--- a/drivers/net/wireless/microchip/wilc1000/spi.c
++++ b/drivers/net/wireless/microchip/wilc1000/spi.c
+@@ -192,11 +192,11 @@ static void wilc_wlan_power(struct wilc *wilc, bool on)
+ 		/* assert ENABLE: */
+ 		gpiod_set_value(gpios->enable, 1);
+ 		mdelay(5);
+-		/* assert RESET: */
+-		gpiod_set_value(gpios->reset, 1);
+-	} else {
+ 		/* deassert RESET: */
+ 		gpiod_set_value(gpios->reset, 0);
++	} else {
++		/* assert RESET: */
++		gpiod_set_value(gpios->reset, 1);
+ 		/* deassert ENABLE: */
+ 		gpiod_set_value(gpios->enable, 0);
+ 	}
+
+---
+base-commit: 246a8c611ace197f43ecc6ea4936c6ca363b8aaa
+change-id: 20240119-wilc_1000_reset_line-393270fc474e
+
+Best regards,
+-- 
+Alexis Lothoré, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
