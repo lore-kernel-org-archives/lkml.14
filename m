@@ -1,78 +1,87 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4B338DDF;
-	Tue, 13 Feb 2024 11:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1675338F;
+	Tue, 13 Feb 2024 11:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707823316; cv=none; b=bzwASqMXMj7bB+iBiL8F2/Di+FHz+RtwcAvEbgklpl/npX4asFSgWouA1yc0Cmtto6B3JcNOfVzIc6QCCGj+2VgR8UPVQbxFfJ52ToA23LPrjo3HFHT51eavJa+lSXZFzuWPZzdLijIXFjIdkJqbQK1o+lccRDhvYLWbYqm6UaQ=
+	t=1707823318; cv=none; b=NHRrMY3Wxu/36HKr7iozGwqW4pgxNcdQw0M6EkG4BK0io5Qy4gFrFBWIxmb32C7WbEMFbybBDU/VE1ECd0JTUaHM0sUo8ZEeMtKptrI7BfUSnAyAMPn79d3Z7l0vtgiK16ckMx+kxbU3Ktn/FPxlw4P6TaphsxbF6QilWlAjwag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707823316; c=relaxed/simple;
-	bh=ePi7b1L8+8ZVCVaSbDzz3it0zkxtnGBp2AkmJlONslA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=j3ONPnwgXeRLMvJjgbQgeYX/gEPlsUuAZnzthM3UPP1214TGKL+6pQScgbdv/WZM3+nHh/vf0BqYg+7wRtRhlnPV4sHjBevNSRCUPOJXBULVjeedDxHFA0iz4L3SCycghOmF2A2d4U0Gxgl9ZMrzhggoTYdDpOXPYmzH0Vcan9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=VzqN+8Yr; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="VzqN+8Yr"
-Received: from francesco-nb (unknown [5.170.16.17])
-	by mail11.truemail.it (Postfix) with ESMTPA id 1BAE620FCD;
-	Tue, 13 Feb 2024 12:21:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1707823311;
-	bh=ePi7b1L8+8ZVCVaSbDzz3it0zkxtnGBp2AkmJlONslA=; h=From:To:Subject;
-	b=VzqN+8YrhaAH5gFOKOiKHNv5ot8N4b+dQmpn+TsRdwQGqy6O1k5ZUsoSKz3UMjTHd
-	 QqqIJfLJEuzkYWXjuz2n9Z66RzE/7dfkbD6ceGdl9rOkTAJ6NtevIfzQDgzvpbacrE
-	 PrwZ0DY+V2cezvwDxhUyYfFD3XToC7llcOYXQZFOBcMWA2wYRezDTHBAl08Dv1mVGQ
-	 Ym0xDPQdScBccV/LX/96IftYdMGlfeyWOuq/OWSfbEkJ1CMnUszGZRA6SZUA137h0t
-	 b9XEFTeofAMWBAKsbpYeYrhDyvG1DtUnVqJSNlSkjP/Ntp0H3kXLha9yvNfPhNvk+Y
-	 633QCgKlW2Ziw==
-Date: Tue, 13 Feb 2024 12:21:46 +0100
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Shawn Guo <shawnguo@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, regressions@lists.linux.dev,
-	Max Krummenacher <max.krummenacher@toradex.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Regression, i.MX7 boot failure, Linux v6.1.77
-Message-ID: <20240213112146.GA5874@francesco-nb>
+	s=arc-20240116; t=1707823318; c=relaxed/simple;
+	bh=j3qKprD+fMsQhXp7tEeiTdybA6mXfyPsjc+jB0nL/M8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kO4qJIT17sakWutguvo4WTabwyoAKNvsFtlxa/dfHPBj4IZoeaacp+oblxKpYSsUX/yvWMFiYht0OHM7QhDR87sEfVEkhkVKd/PYgkYCWRuftxF7avA6Yus5GMHEbMUcnEqu7mMq+qjvDunQ+rPmS5hq0ocx41EDsXjBLRe+/8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-55ad2a47b7aso1163829a12.3;
+        Tue, 13 Feb 2024 03:21:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707823315; x=1708428115;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Yhx/bVRufzZxSAFHgLOiIo43Fsj0F9aHAkrryCfBPhk=;
+        b=UJzKSVov75XwvDMMKgkO+9M0hkVY0e5u1+395N/GPrfVAnFq/pL3MpYUvjV0Qpt/Vx
+         JyBlIxq3q9o+ieknxXQe81tRM3A7AFPXRHXMXsHP8urE4u2AJEh1p87VrHeLChlLffwg
+         EHxvNaxPYgyQTlaTE1d5N3FcmL9pHGqib8DqWj/rxRzV4kv3A8XHzgJWNpUgRqulFU0s
+         EoT8X6wdnO6KhWNII6ArL1l7AMDvD032SvKptsTlV8S+CanZGbXafXrVtz2oSAdrpUvB
+         p1F1ATAVaCeu29ruqFeBIECYrcmqe5kIHFl3og+wYj0XH/WvblAqyuFBfkMqWXAn8ukd
+         fabQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVlgZMOJGW7s2h4frh7aKcUtobVoidhIhYlobnqC8l6FMWEzHywWQUllthNTCOpKooRWHk2S8x9I22tc7++r2AZLwhWVe9iAue1VNrN
+X-Gm-Message-State: AOJu0YxLgbUuzte8gSDzAtdIltXt2QIZLT/wZz79wV5Apjuo3QRuLlyB
+	9CfBc7PBcHRoZ1jwWHAdUt7IWEO8ffDcMP5hBUixqU5mW6KzwnZv
+X-Google-Smtp-Source: AGHT+IFyUrAvg4MoDBC4vcKMopdUBwINIvx8BKpiwRLyiww9G2xWN0p5Iwx52RZDvke46SOf4bSzGQ==
+X-Received: by 2002:a17:906:d144:b0:a3c:ffbb:b47c with SMTP id br4-20020a170906d14400b00a3cffbbb47cmr1027385ejb.72.1707823315623;
+        Tue, 13 Feb 2024 03:21:55 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUdGlNzat68BukqqwTNj9Ugva7hGZR0R7AYxNyraA/87qVSVeeLRoR0Kr64QHvNE8uLePDgsel1hioQjeTboSMHMJK3c5utyh8PxdT47hAdLYD8UvvEvf+Sbm123ZzT920vhypL4kjgLNSEHbUCSsYu1XqU4OIbbZbhspztIDWdNHUUmlXVBv9iHdl7TyuAK+NpRekU7qDCB4G/thW6pK7B2Lyii6dIZv25AyQEX24Qk91QGA4DjiDsJlkiMjZ74U93NpDZDyudtuIIceKGNIkmZ25wOq5UEBo=
+Received: from localhost (fwdproxy-lla-006.fbsv.net. [2a03:2880:30ff:6::face:b00c])
+        by smtp.gmail.com with ESMTPSA id ps7-20020a170906bf4700b00a3c7fb8cc74sm1176585ejb.154.2024.02.13.03.21.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 03:21:55 -0800 (PST)
+From: Breno Leitao <leitao@debian.org>
+To: kuba@kernel.org,
+	davem@davemloft.net,
+	pabeni@redhat.com,
+	edumazet@google.com,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	horms@kernel.org
+Subject: [PATCH net 6/7] net: fill in MODULE_DESCRIPTION()s for mdio_devres
+Date: Tue, 13 Feb 2024 03:21:21 -0800
+Message-Id: <20240213112122.404045-7-leitao@debian.org>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240213112122.404045-1-leitao@debian.org>
+References: <20240213112122.404045-1-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Hello Sasha,
-kernel v6.1.77 introduces a regression, with a boot failure, on i.MX7,
-with commit db30f469ae8b ("ARM: dts: imx7s: Fix nand-controller #size-cells").
+W=1 builds now warn if module is built without a MODULE_DESCRIPTION().
+Add descriptions to the PHY MDIO helpers.
 
-The issue is known [1][2], changing `#size-cells = <0>` is formally
-correct, but do not play well with the firmware that are deployed on
-those embedded devices, leading to a boot failure.
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ drivers/net/phy/mdio_devres.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-A mitigation was implemented in the Linux kernel,
-commit 84549c816dc3 ("mtd: parsers: ofpart: add workaround for #size-cells 0")
-that was merged into v6.3, the firmware was also fixed, however existing
-device using old firmware will not boot anymore if updating to a newer
-kernel.
-
-I would ask you to drop such a patch from any stable patches queue and
-not backport it to any older kernel.
-
-To fix v6.1.y I see two options:
- - backport 84549c816dc3
- - revert db30f469ae8b
-
-What do you prefer? Should I send myself a patch?
-
-[1] https://lore.kernel.org/all/Y4dgBTGNWpM6SQXI@francesco-nb.int.toradex.com/
-[2] https://lore.kernel.org/all/20221202071900.1143950-1-francesco@dolcini.it/
-
-Francesco
+diff --git a/drivers/net/phy/mdio_devres.c b/drivers/net/phy/mdio_devres.c
+index 69b829e6ab35..8921fa22bdbd 100644
+--- a/drivers/net/phy/mdio_devres.c
++++ b/drivers/net/phy/mdio_devres.c
+@@ -131,4 +131,5 @@ int __devm_of_mdiobus_register(struct device *dev, struct mii_bus *mdio,
+ EXPORT_SYMBOL(__devm_of_mdiobus_register);
+ #endif /* CONFIG_OF_MDIO */
+ 
++MODULE_DESCRIPTION("Network PHY MDIO devres helpers");
+ MODULE_LICENSE("GPL");
+-- 
+2.39.3
 
