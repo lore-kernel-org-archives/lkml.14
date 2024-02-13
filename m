@@ -1,82 +1,117 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F9F60263;
-	Tue, 13 Feb 2024 19:38:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AF685812E
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 19:38:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707853088; cv=none; b=nc3vlukIFcVBNJd0DlKjLm0c+9RA/CAEemnICWrvOZulURCapOv4CU+10+4xXr3rRd6cz37LQyn+HT155C+d1WvSGvWS+zKvgPgGDwRPDYrDFrHFjfPsLLC+DKnS4y/fU6asQrvNCjQx5KtWmu0kw8dIdZh+vPTudzcP7R7PcCY=
+	t=1707853096; cv=none; b=dUJzIqLCpUG1wIYrJKoek2LuENaLP50yCN7KaGsIdcsO/UZLZj2sOJ+2VKCGvPeC77DftYFggc2MYAApImXSGvfemqA26c4ufx4OB5RAlBpL3aB+G+QvItyONPtCTtMIJC4ZG6ga0l5p28sUnW0GG8X1AQBENEtDcrQEQzIyg6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707853088; c=relaxed/simple;
-	bh=JkmSYhTnmZJuD999KjySt31TPwjCHTcMbGt10eY9U6w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JwluGUsa+txvl6y+JJObO7Z8C1pHayEBxrPSkcCrMQfB0QTo/+XQF9+0WUl5KJRp4dPx7Q1VEJcoDU8lKuAA1ZFUcEaQNhH5UB94XqBUrbbJ9bP42kbV4pBBp91K3soIsmlb4tJLYyYYtVZjmhwxj2483KrxcxDmnlUSHr4EGGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from [194.95.143.137] (helo=phil.dip.tu-dresden.de)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1rZybL-0008Re-Bt; Tue, 13 Feb 2024 20:37:55 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: robh+dt@kernel.org,
-	Johan Jonker <jbx6244@gmail.com>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	hjc@rock-chips.com,
-	tzimmermann@suse.de,
-	conor+dt@kernel.org,
-	mripard@kernel.org,
-	dri-devel@lists.freedesktop.org,
-	maarten.lankhorst@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	airlied@gmail.com,
-	krzysztof.kozlowski+dt@linaro.org,
-	linux-rockchip@lists.infradead.org,
-	andy.yan@rock-chips.com,
-	devicetree@vger.kernel.org,
-	markyao0591@gmail.com,
-	linux-arm-kernel@lists.infradead.org,
-	daniel@ffwll.ch
-Subject: Re: (subset) [PATCH v2 1/6] dt-bindings: display: rockchip: rockchip,dw-hdmi: remove port property
-Date: Tue, 13 Feb 2024 20:37:51 +0100
-Message-Id: <170785305473.3362031.5919338158795795118.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <a493c65e-7cf9-455f-95d5-8c98cad35710@gmail.com>
-References: <a493c65e-7cf9-455f-95d5-8c98cad35710@gmail.com>
+	s=arc-20240116; t=1707853096; c=relaxed/simple;
+	bh=GjF/mMss2cis45pk3j/3jxQhna+tzPSvd6xll7mM5yc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YzboEt1oOw83oYodWdjmAdZs/YRiC9A4KFN7W8mtWa7efekwCW/mKjAC3tn/prW5NbC1yTcQLxo5Lzs3sa4SJoybOqCmbdsm+Dsbm0vUdF8sEFAXjFbI+DuAKffJ1Fgc3G9H583dQVDqbpm634jrb5OkX3NhO22TOzux+37zbwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Cv/dTmya; arc=none smtp.client-ip=209.85.217.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cv/dTmya"
+Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-46d29d26716so642165137.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 11:38:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707853093; x=1708457893; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=7bxKZocdEiqoyhxdegqmhQihLPSri0Uq3BtRPxUJnFo=;
+        b=Cv/dTmyaNFb8jSif9QpyVSEq4Qd1DKIYAVvfLGvWIQZpPf0sWicXdL8baS3sJsyyqK
+         5tw3E78okRlaQkqt7vUjFGC+J8tHgFggZgrHU6oMZoPm5ro/x02Q92K0x36MhCWPf6Iq
+         VJWQRZKyOXGQBOALn+0NXSpTrvvJvcIO1rStdcWuamE8vhXfOIc0fIEy3uupN3azUNvv
+         MNtakWkpHy53RHwVMjOSpKMtdJPahpU8l89Ry/u6dhtvZuxGTK4GwXw9g8qshou48Otn
+         BJjRJzsJVy8HfCrKzEzB2PoMR64mGZjhY6Xj5mGS5TV54P6zMZD/Ppamgg1miFsjjYuw
+         rucA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707853093; x=1708457893;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7bxKZocdEiqoyhxdegqmhQihLPSri0Uq3BtRPxUJnFo=;
+        b=ku0aXwvv/d8RB5g2opC5c082W15dYT49WnNASpYSvI8rd2ukv5+n8Iw4YWXzk73uOV
+         no7itW4Gqf8mXGjLeiHWJPB91Ivsd9KknEVsiyYOZnKNj5pIKAR6kBt68K73HSEegAo6
+         W84TDK1gVXhpAWlU4+gwqKFYLwzSCPfrlMbg7pko+wnx8pmEd2h5YdjO7ucBBL1KtuOE
+         HCUP+F3K7XF1tVugyCNec8E4IX9fMCobeF5zA46SSZyWSX7MDZAJTAKGGGcSTnOBUWNq
+         //5aXrczNG87YkYugvwguHDm6iA7wJJtD7ReSgiedx3TnKxGUjjReZ9geQ5pqFqHEqaR
+         AaMg==
+X-Forwarded-Encrypted: i=1; AJvYcCVq0HmMYQbiHlEfFeKiYT0ORuefz9qRw7+CzMhK0duLbvw1HKxhbxYaLBhpcR3LQaqAub3pjEeBpPuKeLHnpefJicWg9Fijj8AuoxXx
+X-Gm-Message-State: AOJu0Yw0QMH7x0T2HEfj7fiqwyoDDXc9AyVapED6KXTQf+CxpwC/7co5
+	2l7ZMEULoiLQIATsvJgAOeAMbzpuP8ju38UZWxD5Yef9w7dXUD1LLYQanMEtCIMhueg2SQDLMo/
+	D6zcb5SsZOjMdw6BMMymEJ8/40pri6jZpL8UHVw==
+X-Google-Smtp-Source: AGHT+IEdlfV6LUGLmxeJdIsOn87Xgz2StdXTzYIr3pkT+5iQVS9dR3Oaf/T6ltRAqvQ6qbHi8ala38CuM7GKA3GMx+U=
+X-Received: by 2002:a05:6102:12da:b0:46e:c42c:e24a with SMTP id
+ jd26-20020a05610212da00b0046ec42ce24amr465112vsb.14.1707853093237; Tue, 13
+ Feb 2024 11:38:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <CA+G9fYuVJ3DfmOR2GxbVmLqh_d=3y_wTXX-vQOUgp86uX-3oGg@mail.gmail.com>
+ <87il2sw4tj.wl-maz@kernel.org>
+In-Reply-To: <87il2sw4tj.wl-maz@kernel.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 14 Feb 2024 01:08:01 +0530
+Message-ID: <CA+G9fYu-2x48SC6jYzuLVDsYt=FF8-9x9e0Nt0X2gb5G1PvdaA@mail.gmail.com>
+Subject: Re: WARNING: arch/arm64/kernel/cpufeature.c:3369 this_cpu_has_cap
+To: Marc Zyngier <maz@kernel.org>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 31 Jan 2024 22:14:29 +0100, Johan Jonker wrote:
-> The hdmi-connector nodes are now functional and the new way to model
-> hdmi ports nodes with both in and output port subnodes. Unfortunately
-> with the conversion to YAML the old method with only an input port node
-> was used. Later the new method was also added to the binding.
-> A binding must be unambiguously, so remove the old port property
-> entirely and make port@0 and port@1 a requirement as all
-> upstream dts files are updated as well and because checking
-> deprecated stuff is a bit pointless.
-> Update the example to avoid use of the removed property.
-> 
-> [...]
+On Wed, 14 Feb 2024 at 00:48, Marc Zyngier <maz@kernel.org> wrote:
+>
+> On Tue, 13 Feb 2024 18:21:23 +0000,
+> Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> >
+> > Following kernel warning notices on all arm64 devices on today's Linux
+> > next-20240213 tag.
+> >
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> What is the sense of this tag, and even of this email, for an issue
+> that has already been reported, as outlined below?
 
-Applied, thanks!
+LKFT building and testing Linux next tree and found this warning on
+today's Linux next-20240213. However it is been reported by someone
+else.
 
-[3/6] ARM: dts: rockchip: fix rk3288 hdmi ports node
-      commit: 585e4dc07100a6465b3da8d24e46188064c1c925
-[4/6] ARM: dts: rockchip: fix rk322x hdmi ports node
-      commit: 15a5ed03000cf61daf87d14628085cb1bc8ae72c
-[5/6] arm64: dts: rockchip: fix rk3328 hdmi ports node
-      commit: 1d00ba4700d1e0f88ae70d028d2e17e39078fa1c
-[6/6] arm64: dts: rockchip: fix rk3399 hdmi ports node
-      commit: f051b6ace7ffcc48d6d1017191f167c0a85799f6
+You may ignore the tag.
 
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+>
+> >
+> > [    0.038524] SMP: Total of 6 processors activated.
+> > [    0.038539] CPU: All CPU(s) started at EL2
+> > [    0.038588] CPU features: detected: 32-bit EL0 Support
+> > [    0.038602] CPU features: detected: 32-bit EL1 Support
+> > [    0.038620] CPU features: detected: CRC32 instructions
+> > [    0.038650] ------------[ cut here ]------------
+> > [    0.038656] WARNING: CPU: 0 PID: 1 at
+> > arch/arm64/kernel/cpufeature.c:3369 this_cpu_has_cap+0x1c/0x70
+...
+> >
+> > This issue has been addressed in the relevant email thread,
+> > https://lore.kernel.org/all/0593516b-2419-49b7-83aa-fe189ffad0c2@arm.com/
+
+> Correct link:
+>
+> https://lore.kernel.org/all/86bk8k5ts3.wl-maz@kernel.org/
+
+Thank you.
+
+>
+> > I will test the corresponding fix patch and get back to you.
+
+I have tested your patch and the reported issue has been fixed.
+
+- Naresh
