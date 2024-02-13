@@ -1,160 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3C555C0B;
-	Tue, 13 Feb 2024 00:19:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA9655799
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 00:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707783585; cv=none; b=SYAut1giHxUq6VBEtrflTd0fzrfJRB3IFQIS+xzGqWxVsEp2q6SrYGt5gJ0NKAnLECGCU62rhojmy+SJ1j6RQ6Mc08XCB5n37bClYntnHYdgxofyx0bOKRdC3dfCFbjCIbC3HCG/ZZgCqdxpoYvEI3SikWwQrT50y9THghZGkNw=
+	t=1707783586; cv=none; b=p596j6TIXuuZQugYqAu7PYks7Trst2FFWD2ul6zvDS6RQEAxRA+DJq2+0A7CPUrmGjkGa+WRBya1fLSU1hWHLpvXx0rA7gkuB7AqtEDwERoXJdMAzeTC7XUZC/E0edob1x9AUmjhFcW49JouxCYfzgb0QylCHOOt1AeEPtFgk10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707783585; c=relaxed/simple;
-	bh=DWkePK0Xam2qaULRVXpWh2OPl3w9W9RNKkmK0YBdDqY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Vz/4QYkG1+I2pwyfQeCeWHdY3WDfB/x36eJ217YHqYPFkZjiiHUM8VxmNw0MNYScolU7+3RvjqygFjCOG6pXlBy44XqHhg61cFvRgK+d/w6pamy88sUvLg3TGRRAABxYzgMFVbNu2rfqWhNpvLQWUaPr/szr7kNOBEbKnVTfbgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fovhIj7p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707783586; c=relaxed/simple;
+	bh=vIwOtGsDzqC6GvHsB1Ywa4a3VYOkSPAQAcBcMttGK5E=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=tNrlB7B0rP6O0RalUg1SQ+XAQr2qKkNDHjtsIK44V1ty38qPAw+eNmPOgJZOAktTFFaEuQS0NaM/wWANcUHDJuOQiTwZPqBMDHwwUYbKMOoM0C3jjr5QgbbJQnXg8Al3eOiXUq1pirl4Dua2h8jnxcXhMdBGHdvVT+/PKU6VLXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--lokeshgidra.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wQRjbjOy; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--lokeshgidra.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fovhIj7p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 090D9C433C7;
-	Tue, 13 Feb 2024 00:19:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707783585;
-	bh=DWkePK0Xam2qaULRVXpWh2OPl3w9W9RNKkmK0YBdDqY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fovhIj7phL0Jm1ZCcflf76rSU9qUHO+/CeRVhonhjGwT+RGZghoUxwG2cPz76mtd6
-	 89Ro0WYW6dzP0dzYcMXii+iP/JdvWrUdyuLsO3JAH18ValDGu9RKg6By9Wwbve/Jqd
-	 62jE/hgkNfwqWowY/CnZj64xPWqld/gBWyeNxfckoVO1ph+HCqJl5uU0k/XaACykvt
-	 B8BrUXa3a96e8fcUElawbzDIhIrRbAPAiPGqXP7IXN5RnbXw3yPua8aZ/JlC1aLS5m
-	 m/+2ihhZf0hT/z3kcS8JlU6i/N8AdllGurRmoIJu27y/fgu8TEEZkdHMDzELceqdKL
-	 +miuBFAjJr8Bg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Huacai Chen <chenhuacai@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Sasha Levin <sashal@kernel.org>,
-	chenhuacai@kernel.org,
-	wangliupu@loongson.cn,
-	zhuyinbo@loongson.cn,
-	git@xen0n.name,
-	loongarch@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.7 41/58] LoongArch: Change acpi_core_pic[NR_CPUS] to acpi_core_pic[MAX_CORE_PIC]
-Date: Mon, 12 Feb 2024 19:17:47 -0500
-Message-ID: <20240213001837.668862-41-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240213001837.668862-1-sashal@kernel.org>
-References: <20240213001837.668862-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wQRjbjOy"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60784cf4109so2064557b3.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 16:19:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707783583; x=1708388383; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wYp0cW/LgWI9ONT8F6R5Ej86mgi7Qlg0RXGsGKtpVus=;
+        b=wQRjbjOyJfTEUsqjAXLbp1F3qm8rGErGNXUpRjjc9JLWYgwjx7dfqxMIzEpzAXJera
+         wKUV3jipe4utWjwAg3ZGXPkRCnKjne39/B89hOUzLZw5EZsiAMcZVLs5D/8jdN7TdngO
+         rM7RLQJpXLtRO3EjEIZP/YKb3dFVEiohyXPqVdkOvFg0wpWxPnM+WH6vTmEPbYacS8CV
+         wYPhBjTmIBhQxKOx5rX7NYzsnM4prxsL0R5i0GXO3hqQqePbO4xFtGPkNxjgA+Fg1+0l
+         1vMJbnyU8KgqElowPmYrB/4XvA00ocTVw+bWXbNc1M7/HJykq64FEyp3zp+DhfpytXqh
+         fvDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707783583; x=1708388383;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wYp0cW/LgWI9ONT8F6R5Ej86mgi7Qlg0RXGsGKtpVus=;
+        b=bCiOjgbkyezBgDuU4mBcRzbks9qOtWT3qc1gjOyMzmVsUvPhqalbIbOAl9xIouqjcM
+         qOGatdsc8OTYon68YHsBXd1BLIhtNJHr44PwpTh5ZndAbILpF9Zl/NMSA9OydsehYEgB
+         a9PPZ4Z6a0bD7Pwz5mp1ty7nG/MmaZm8iWpCByk+xf1JZtJXT9mgb7Hvqo+GR34Z33CQ
+         r/jGMbhK6q0o1WL1/rhXav+A48/MsdD3kLX+Il93DB49N6FMHGlJh8Mgrjt/T/I7irvn
+         xAXUA8YY0B7kUwuS/IRnd2wpdTt57R5hoD2QUrpLphklkKqIPv5vCofmT7BvZ6Acjgeb
+         cALA==
+X-Forwarded-Encrypted: i=1; AJvYcCUwVDbvrwxZsvrD8dix2O/GzOAdZWFAgAjcaYIj0nBwpJ0/rRI0auq+y4N6aA/dFhfy3Igsn2TdnqMxAduLZuYEA+uR4RQx6SYH13ms
+X-Gm-Message-State: AOJu0YzDcRlpm4CtpGp0VTjM282dQ4ecvgqrUqYVs49jRRnTvbJaFNk9
+	jKBZ1HLEfvjvLlJmlcRLocCht4aRDVgaEEbI6wHV9oso8hfyhDVWOInO9SIqnA7kuGE59wO7jo8
+	KwL7EL1IyF5+eCyElAzA3vg==
+X-Google-Smtp-Source: AGHT+IETpVKlK4W4ES+O6uH9bAYT9eFgcT5Mcr7AWYf1RXBnBN+OIklD/nT02bdob/BzELYAfud81u94YEZ4Zw50uQ==
+X-Received: from lg.mtv.corp.google.com ([2620:15c:211:202:fd80:ef0f:6359:fc4c])
+ (user=lokeshgidra job=sendgmr) by 2002:a81:a107:0:b0:604:228:7e with SMTP id
+ y7-20020a81a107000000b006040228007emr2397004ywg.8.1707783583386; Mon, 12 Feb
+ 2024 16:19:43 -0800 (PST)
+Date: Mon, 12 Feb 2024 16:19:17 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.7.4
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
+Message-ID: <20240213001920.3551772-1-lokeshgidra@google.com>
+Subject: [PATCH v5 0/3] per-vma locks in userfaultfd
+From: Lokesh Gidra <lokeshgidra@google.com>
+To: akpm@linux-foundation.org
+Cc: lokeshgidra@google.com, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, selinux@vger.kernel.org, surenb@google.com, 
+	kernel-team@android.com, aarcange@redhat.com, peterx@redhat.com, 
+	david@redhat.com, axelrasmussen@google.com, bgeffon@google.com, 
+	willy@infradead.org, jannh@google.com, kaleshsingh@google.com, 
+	ngeoffray@google.com, timmurray@google.com, rppt@kernel.org, 
+	Liam.Howlett@oracle.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Huacai Chen <chenhuacai@loongson.cn>
+Performing userfaultfd operations (like copy/move etc.) in critical
+section of mmap_lock (read-mode) causes significant contention on the
+lock when operations requiring the lock in write-mode are taking place
+concurrently. We can use per-vma locks instead to significantly reduce
+the contention issue.
 
-[ Upstream commit 4551b30525cf3d2f026b92401ffe241eb04dfebe ]
+Android runtime's Garbage Collector uses userfaultfd for concurrent
+compaction. mmap-lock contention during compaction potentially causes
+jittery experience for the user. During one such reproducible scenario,
+we observed the following improvements with this patch-set:
 
-With default config, the value of NR_CPUS is 64. When HW platform has
-more then 64 cpus, system will crash on these platforms. MAX_CORE_PIC
-is the maximum cpu number in MADT table (max physical number) which can
-exceed the supported maximum cpu number (NR_CPUS, max logical number),
-but kernel should not crash. Kernel should boot cpus with NR_CPUS, let
-the remainder cpus stay in BIOS.
+- Wall clock time of compaction phase came down from ~3s to <500ms
+- Uninterruptible sleep time (across all threads in the process) was
+  ~10ms (none in mmap_lock) during compaction, instead of >20s
 
-The potential crash reason is that the array acpi_core_pic[NR_CPUS] can
-be overflowed when parsing MADT table, and it is obvious that CORE_PIC
-should be corresponding to physical core rather than logical core, so it
-is better to define the array as acpi_core_pic[MAX_CORE_PIC].
+Changes since v4 [4]:
+- Fix possible deadlock in find_and_lock_vmas() which may arise if
+  lock_vma() is used for both src and dst vmas.
+- Ensure we lock vma only once if src and dst vmas are same.
+- Fix error handling in move_pages() after successfully locking vmas.
+- Introduce helper function for finding dst vma and preparing its
+  anon_vma when done in mmap_lock critical section, per Liam Howlett.
+- Introduce helper function for finding dst and src vmas when done in
+  mmap_lock critical section.
 
-With the patch, system can boot up 64 vcpus with qemu parameter -smp 128,
-otherwise system will crash with the following message.
+Changes since v3 [3]:
+- Rename function names to clearly reflect which lock is being taken,
+  per Liam Howlett.
+- Have separate functions and abstractions in mm/userfaultfd.c to avoid
+  confusion around which lock is being acquired/released, per Liam Howlett.
+- Prepare anon_vma for all private vmas, anonymous or file-backed,
+  per Jann Horn.
 
-[    0.000000] CPU 0 Unable to handle kernel paging request at virtual address 0000420000004259, era == 90000000037a5f0c, ra == 90000000037a46ec
-[    0.000000] Oops[#1]:
-[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 6.8.0-rc2+ #192
-[    0.000000] Hardware name: QEMU QEMU Virtual Machine, BIOS unknown 2/2/2022
-[    0.000000] pc 90000000037a5f0c ra 90000000037a46ec tp 9000000003c90000 sp 9000000003c93d60
-[    0.000000] a0 0000000000000019 a1 9000000003d93bc0 a2 0000000000000000 a3 9000000003c93bd8
-[    0.000000] a4 9000000003c93a74 a5 9000000083c93a67 a6 9000000003c938f0 a7 0000000000000005
-[    0.000000] t0 0000420000004201 t1 0000000000000000 t2 0000000000000001 t3 0000000000000001
-[    0.000000] t4 0000000000000003 t5 0000000000000000 t6 0000000000000030 t7 0000000000000063
-[    0.000000] t8 0000000000000014 u0 ffffffffffffffff s9 0000000000000000 s0 9000000003caee98
-[    0.000000] s1 90000000041b0480 s2 9000000003c93da0 s3 9000000003c93d98 s4 9000000003c93d90
-[    0.000000] s5 9000000003caa000 s6 000000000a7fd000 s7 000000000f556b60 s8 000000000e0a4330
-[    0.000000]    ra: 90000000037a46ec platform_init+0x214/0x250
-[    0.000000]   ERA: 90000000037a5f0c efi_runtime_init+0x30/0x94
-[    0.000000]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)
-[    0.000000]  PRMD: 00000000 (PPLV0 -PIE -PWE)
-[    0.000000]  EUEN: 00000000 (-FPE -SXE -ASXE -BTE)
-[    0.000000]  ECFG: 00070800 (LIE=11 VS=7)
-[    0.000000] ESTAT: 00010000 [PIL] (IS= ECode=1 EsubCode=0)
-[    0.000000]  BADV: 0000420000004259
-[    0.000000]  PRID: 0014c010 (Loongson-64bit, Loongson-3A5000)
-[    0.000000] Modules linked in:
-[    0.000000] Process swapper (pid: 0, threadinfo=(____ptrval____), task=(____ptrval____))
-[    0.000000] Stack : 9000000003c93a14 9000000003800898 90000000041844f8 90000000037a46ec
-[    0.000000]         000000000a7fd000 0000000008290000 0000000000000000 0000000000000000
-[    0.000000]         0000000000000000 0000000000000000 00000000019d8000 000000000f556b60
-[    0.000000]         000000000a7fd000 000000000f556b08 9000000003ca7700 9000000003800000
-[    0.000000]         9000000003c93e50 9000000003800898 9000000003800108 90000000037a484c
-[    0.000000]         000000000e0a4330 000000000f556b60 000000000a7fd000 000000000f556b08
-[    0.000000]         9000000003ca7700 9000000004184000 0000000000200000 000000000e02b018
-[    0.000000]         000000000a7fd000 90000000037a0790 9000000003800108 0000000000000000
-[    0.000000]         0000000000000000 000000000e0a4330 000000000f556b60 000000000a7fd000
-[    0.000000]         000000000f556b08 000000000eaae298 000000000eaa5040 0000000000200000
-[    0.000000]         ...
-[    0.000000] Call Trace:
-[    0.000000] [<90000000037a5f0c>] efi_runtime_init+0x30/0x94
-[    0.000000] [<90000000037a46ec>] platform_init+0x214/0x250
-[    0.000000] [<90000000037a484c>] setup_arch+0x124/0x45c
-[    0.000000] [<90000000037a0790>] start_kernel+0x90/0x670
-[    0.000000] [<900000000378b0d8>] kernel_entry+0xd8/0xdc
+Changes since v2 [2]:
+- Implement and use lock_vma() which uses mmap_lock critical section
+  to lock the VMA using per-vma lock if lock_vma_under_rcu() fails,
+  per Liam R. Howlett. This helps simplify the code and also avoids
+  performing the entire userfaultfd operation under mmap_lock.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/loongarch/include/asm/acpi.h | 4 +++-
- arch/loongarch/kernel/acpi.c      | 4 +---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+Changes since v1 [1]:
+- rebase patches on 'mm-unstable' branch
 
-diff --git a/arch/loongarch/include/asm/acpi.h b/arch/loongarch/include/asm/acpi.h
-index 8de6c4b83a61..49e29b29996f 100644
---- a/arch/loongarch/include/asm/acpi.h
-+++ b/arch/loongarch/include/asm/acpi.h
-@@ -32,8 +32,10 @@ static inline bool acpi_has_cpu_in_madt(void)
- 	return true;
- }
- 
-+#define MAX_CORE_PIC 256
-+
- extern struct list_head acpi_wakeup_device_list;
--extern struct acpi_madt_core_pic acpi_core_pic[NR_CPUS];
-+extern struct acpi_madt_core_pic acpi_core_pic[MAX_CORE_PIC];
- 
- extern int __init parse_acpi_topology(void);
- 
-diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
-index 8e00a754e548..55d6a48c76a8 100644
---- a/arch/loongarch/kernel/acpi.c
-+++ b/arch/loongarch/kernel/acpi.c
-@@ -29,11 +29,9 @@ int disabled_cpus;
- 
- u64 acpi_saved_sp;
- 
--#define MAX_CORE_PIC 256
--
- #define PREFIX			"ACPI: "
- 
--struct acpi_madt_core_pic acpi_core_pic[NR_CPUS];
-+struct acpi_madt_core_pic acpi_core_pic[MAX_CORE_PIC];
- 
- void __init __iomem * __acpi_map_table(unsigned long phys, unsigned long size)
- {
+[1] https://lore.kernel.org/all/20240126182647.2748949-1-lokeshgidra@google.com/
+[2] https://lore.kernel.org/all/20240129193512.123145-1-lokeshgidra@google.com/
+[3] https://lore.kernel.org/all/20240206010919.1109005-1-lokeshgidra@google.com/
+[4] https://lore.kernel.org/all/20240208212204.2043140-1-lokeshgidra@google.com/
+
+Lokesh Gidra (3):
+  userfaultfd: move userfaultfd_ctx struct to header file
+  userfaultfd: protect mmap_changing with rw_sem in userfaulfd_ctx
+  userfaultfd: use per-vma locks in userfaultfd operations
+
+ fs/userfaultfd.c              |  86 ++-----
+ include/linux/userfaultfd_k.h |  75 ++++--
+ mm/userfaultfd.c              | 450 ++++++++++++++++++++++++++--------
+ 3 files changed, 421 insertions(+), 190 deletions(-)
+
 -- 
-2.43.0
+2.43.0.687.g38aa6559b0-goog
 
