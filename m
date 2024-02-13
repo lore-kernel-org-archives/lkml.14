@@ -1,169 +1,139 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F065FF0A;
-	Tue, 13 Feb 2024 18:00:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E73A60BA8
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 18:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707847240; cv=none; b=XTkSiZ1sHlMH8X7a1rWCLMY5LC2/MrhwtY87nDQi/rISYaHgLvwIvcKbieysibXtgqqj3rdC8Y4ZoUDHZj/1C41bdQr6OoGHdgzP9ztUdjzeqIsCnDpz8isUBj9FmrvKfVWvyaLBlOF1P/Tnf7Nw0/f/CZpkSyGSEnd0mrksslI=
+	t=1707847245; cv=none; b=M1GJCzRSkN9UXdmSwXZH2oM8gSgEfvjxipR8zUHkpKNmznB/MG8rlGvwLoIpYp5EAdMYcJWL5LDh3Ym+C/Rc8GfoJpU+ogg1oGwh6IBhnutYCyUGdLFEKmaj2ImIM+WJA2YpaW8xbpQ9X176UeZklcWMPynKgYxs6MCP7UfBEu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707847240; c=relaxed/simple;
-	bh=rkUZTdLpAhXFhh41eEds83V0BfyHReOoNOl3qPszZvA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=dUBO/WjgQaSWSbdvwnFJIlMINYuk9Rsd/pw5s5Wb/NpYeM+RhixQ0L0zmDyr+MS0QR47uitdtNOOW8jznH0yYIQ7V1PxBmo2pgiNP7ST0YlfgqW7yYqWAsCQwAW0YXrU3IVNPs2accjnCnuNK7RamU0WV5wKbd7mbCM3dtlQdGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GZWk6ttF; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1707847245; c=relaxed/simple;
+	bh=Xyy8adepsdz9TsKE+m7XXPgnl+mY/oayNk2u6dSCKIE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aMmBaLINz1FOEASpjEDHm4SJnWJTf4p1NHc2qxjqVwPHNOSVCdeCFHaZz9qA+V5OWI/O0T0k2LzTPABJ20Z29YmbIEfn56URsBQ4EtXFY07461cE5RWE7Lx1zQT3GU5cuGjn9qkP+Kt2kOwvQUH7nh7l9dHzVRPPhqYFlfHkMLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=ZAhYeeK3; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GZWk6ttF"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41DDAvjj029424;
-	Tue, 13 Feb 2024 18:00:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=uHSjEZZv5LhPxGfb2xIn9VtOM3pAfHSS36rJfvlkgS8=; b=GZ
-	Wk6ttFRJOi+4P/1ZuZpUj3dwKvYyFk/DQTvsbaNGAgpPaokcw//qqYysedh4jDtj
-	9vT1WZ/CQhFzIhAyhZ2I6QBQLq8fVG1Wy7gMdVZ4PxASbjhjZwPxyxqq2xb3f/mc
-	mHe/9MX1uEv02GBt93Ie2F7rWWhN1EqY+ZneAolpIRiwBohmag/JPLQYOzeArBkP
-	1JGqVI4+BDY0NUQRwlUPPeZ9XgtLTV7LlNayDqneoFZOT4mmk5bV4V9IJcm3yfLQ
-	OuvA07H8NtT+hZFH6rBR/Zt0Hdi7TVsTeE9yylUZF7pwU2xgaDcgpja6Ef4HJsuh
-	bA6DChb6Bhpwk5IT+2dA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w7q2y2q65-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 18:00:16 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41DI0FWC015189
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 18:00:15 GMT
-Received: from [10.110.23.109] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 13 Feb
- 2024 10:00:14 -0800
-Message-ID: <343710b1-f0f4-5c05-70e6-3c221cdc9580@quicinc.com>
-Date: Tue, 13 Feb 2024 10:00:13 -0800
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ZAhYeeK3"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7872614af89so58885a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 10:00:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1707847242; x=1708452042; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=atTRAR3WiDZllnXca94/PS9XVGRFpcFq4mQfGVPnvIs=;
+        b=ZAhYeeK3XrZF+sA9UtyQ/Ekm/aegt88AdTQrfunNXJYHP9QI+SSgBy8nrdHOS0kgY7
+         dolxuKhoBKkjWI4CzWuQCt2Liik1PvNHMVBAkqqgs7pGEHKBhNT7NT0E5JRuE5EZ9vw4
+         OrDJUKIXAJ8Xx/zqeEbFxsxViyQ761DmuH0K/yRhvN5PHc2YlYxwrR4PhXCkyiLkr6D7
+         NsZEGxnFSq9cOvox4CMYp9JTzc2zA5Kq6MM7+RjltvtysyC/dFTkcsdqA/KHKcNUUdlx
+         oasOyEQKgsyRI1uyEWBxcinTu4sByB5BHxTG5jhdR1ZgI6+joxXwog0aianaKqKCRaH8
+         XJow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707847242; x=1708452042;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=atTRAR3WiDZllnXca94/PS9XVGRFpcFq4mQfGVPnvIs=;
+        b=ahfy6L7kgjq0+3SEQkJeAzbCmUumlG3y/Yq1+Ba5SMvcQPpOTkw6wV+9/lxnEjG3bt
+         rLbyHvMVfyZb7v3o4WDHU4Nzx1m16mnPdZP0PVOKgvFiPYSDFFziDPgGuEHav+rTEtVm
+         4SFk/kDm2qO8/fTSGupztaYlCQhpCEokzUPVEqtqkX4DnugAtbHYk8SAyrmq21eFFvqJ
+         wY1KmMv2pfSPkC2LPJ+Oa2my1WCxyXICl/vIjh6QK6drUEniZkqGtJLdYCpUwrY1j9uo
+         Y24rJE9fpbFBaGoLvKfgO9NNSAgHTlEEEUMBm1Mr+f+Ek6Kp/l7EfMo75oNeWV6tfvl+
+         MvCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUSr6TxZmmvi2YX5Vz0qEZQNUsIQdtpnYoRuqLjYjaKU72sV+weN5/Mu4wMeXyHnHgyb7xU37hiDz/vdf4002KJiwkXARssh5/11HV6
+X-Gm-Message-State: AOJu0YwqC44MTWFhKtbOmNATwlMUv1F+7DQ7CAXv4wAcl0XFxXmRCoLG
+	WEOwtuOaOd6Ew/MbtBy7EMezhZoL/jaV8yRBAaERpTSpbsCv7lTUrLzC3nMWujw=
+X-Google-Smtp-Source: AGHT+IHjIJggQmfLYLCqtNotwhVFUSiFfAKVRQBvVL0CG8VCtYKuGX9E+ARrXv1Nsqcp//YqFjIviw==
+X-Received: by 2002:a0c:db03:0:b0:68c:cd9c:2fa7 with SMTP id d3-20020a0cdb03000000b0068ccd9c2fa7mr348845qvk.5.1707847241984;
+        Tue, 13 Feb 2024 10:00:41 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXzlOhDjdNmp8wxOO2+Q3DAFt//V4xe71Ne7/dMq+bpaQ7ScJLfKHdkqMgFAk/3eERY23JJEw69hAB1gKl1E+WjY2hUfuXSCw11T/cgS+wkgqaeVkPhvVHacLlstElhHq22gOgPaMujSHbJ2r/EeBoLOJ9C3M+zZczBw1zf+VrlTP7xoziwsYfSC+P8s566p7oCw4nD/0OD0w==
+Received: from [100.64.0.1] ([170.85.8.192])
+        by smtp.gmail.com with ESMTPSA id mv5-20020a056214338500b0068e540c8ae9sm1214457qvb.59.2024.02.13.10.00.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Feb 2024 10:00:40 -0800 (PST)
+Message-ID: <ac30412c-9eab-4014-b4f1-0844bdfeefc6@sifive.com>
+Date: Tue, 13 Feb 2024 12:00:39 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: drm/msm: DisplayPort regressions in 6.8-rc1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -fixes v2 2/4] dt-bindings: riscv: Add ratified privileged
+ ISA versions
 Content-Language: en-US
-To: Johan Hovold <johan@kernel.org>, Rob Clark <robdclark@gmail.com>,
-        "Dmitry
- Baryshkov" <dmitry.baryshkov@linaro.org>,
-        Kuogee Hsieh
-	<quic_khsieh@quicinc.com>
-CC: Sean Paul <sean@poorly.run>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, "Daniel
- Vetter" <daniel@ffwll.ch>,
-        Bjorn Andersson <quic_bjorande@quicinc.com>,
-        <quic_jesszhan@quicinc.com>, <quic_sbillaka@quicinc.com>,
-        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
-        <linux-arm-msm@vger.kernel.org>, <regressions@lists.linux.dev>,
-        <linux-kernel@vger.kernel.org>
-References: <ZctVmLK4zTwcpW3A@hovoldconsulting.com>
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <ZctVmLK4zTwcpW3A@hovoldconsulting.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To: Stefan O'Rear <sorear@fastmail.com>, Conor Dooley <conor@kernel.org>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>,
+ Andrew Jones <ajones@ventanamicro.com>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20240213033744.4069020-1-samuel.holland@sifive.com>
+ <20240213033744.4069020-3-samuel.holland@sifive.com>
+ <20240213-limping-ether-adbdc205ebc6@spud>
+ <31024f04-e3e0-4bf9-beca-ebcd4f6fe51b@app.fastmail.com>
+From: Samuel Holland <samuel.holland@sifive.com>
+In-Reply-To: <31024f04-e3e0-4bf9-beca-ebcd4f6fe51b@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: IDbmomjLwl_cvJs5QxFrpwNYt3hwSqIG
-X-Proofpoint-ORIG-GUID: IDbmomjLwl_cvJs5QxFrpwNYt3hwSqIG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-13_10,2024-02-12_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 clxscore=1011
- adultscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402130141
 
-Hi Johan
+On 2024-02-13 11:42 AM, Stefan O'Rear wrote:
+> On Tue, Feb 13, 2024, at 12:03 PM, Conor Dooley wrote:
+>> On Mon, Feb 12, 2024 at 07:37:33PM -0800, Samuel Holland wrote:
+>>> The baseline for the RISC-V privileged ISA is version 1.10. Using
+>>> features from newer versions of the privileged ISA requires the
+>>> supported version to be reported by platform firmware, either in the ISA
+>>> string (where the binding already accepts version numbers) or in the
+>>> riscv,isa-extensions property. So far two newer versions are ratified.
+>>>
+>>> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+>>> ---
+>>>
+>>> Changes in v2:
+>>>  - New patch for v2
+>>>
+>>>  .../devicetree/bindings/riscv/extensions.yaml | 20 +++++++++++++++++++
+>>>  1 file changed, 20 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
+>>> index 63d81dc895e5..7faf22df01af 100644
+>>> --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
+>>> +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
+>>> @@ -121,6 +121,16 @@ properties:
+>>>              version of the privileged ISA specification.
+>>>  
+>>>          # multi-letter extensions, sorted alphanumerically
+>>
+>>> +        - const: sm1p11
+>>
+>> Why are we beholden to this "1p11" format of RVI's? We have free choice
+>> of characters here, what's stopping us using "machine-v1.11", for
+>> example?
+> 
+> I'd prefer to use names that are at least somewhat recognizable, e.g. in
+> the profiles spec, rather than making up something from whole cloth.
 
-Thanks for the report.
+Right, exactly. My two immediate reasons for choosing this are:
+1) this is the exact name used in the profiles[1][2], and
+2) the same list of extensions is used for the riscv,isa-extensions property and
+the ISA string, and this is the expected format for the ISA string.
 
-I do agree that pm runtime eDP driver got merged that time but I think 
-the issue is either a combination of that along with DRM aux bridge 
-https://patchwork.freedesktop.org/series/122584/ OR just the latter as 
-even that went in around the same time.
+If we want invent something brand new for the DT binding (which I'm not sure we
+do), then I would recommend adding a property like riscv,privileged-isa-version,
+because that removes the duplication between the Sm and Ss extensions (since
+almost all implementations would have both).
 
-Thats why perhaps this issue was not seen with the chromebooks we tested 
-on as they do not use pmic_glink (aux bridge).
+On the other hand, there will likely be other extensions in the future that need
+version numbers in riscv,isa-extensions. Adding a special case for the
+privileged ISA doesn't help with this, whereas deciding on a syntax for version
+numbers in the extension name does.
 
-So we will need to debug this on sc8280xp specifically or an equivalent 
-device which uses aux bridge.
+Regards,
+Samuel
 
-Thanks
+[1]:
+https://github.com/riscv/riscv-profiles/blob/main/profiles.adoc#rva20s64-mandatory-extensions
+[2]:
+https://github.com/riscv/riscv-profiles/blob/main/profiles.adoc#rva22s64-mandatory-extensions
 
-Abhinav
-
-On 2/13/2024 3:42 AM, Johan Hovold wrote:
-> Hi,
-> 
-> Since 6.8-rc1 the internal eDP display on the Lenovo ThinkPad X13s does
-> not always show up on boot.
-> 
-> The logs indicate problems with the runtime PM and eDP rework that went
-> into 6.8-rc1:
-> 
-> 	[    6.006236] Console: switching to colour dummy device 80x25
-> 	[    6.007542] [drm:dpu_kms_hw_init:1048] dpu hardware revision:0x80000000
-> 	[    6.007872] [drm:drm_bridge_attach [drm]] *ERROR* failed to attach bridge /soc@0/phy@88eb000 to encoder TMDS-31: -16
-> 	[    6.007934] [drm:dp_bridge_init [msm]] *ERROR* failed to attach panel bridge: -16
-> 	[    6.007983] msm_dpu ae01000.display-controller: [drm:msm_dp_modeset_init [msm]] *ERROR* failed to create dp bridge: -16
-> 	[    6.008030] [drm:_dpu_kms_initialize_displayport:588] [dpu error]modeset_init failed for DP, rc = -16
-> 	[    6.008050] [drm:_dpu_kms_setup_displays:681] [dpu error]initialize_DP failed, rc = -16
-> 	[    6.008068] [drm:dpu_kms_hw_init:1153] [dpu error]modeset init failed: -16
-> 	[    6.008388] msm_dpu ae01000.display-controller: [drm:msm_drm_kms_init [msm]] *ERROR* kms hw init failed: -16
-> 	
-> and this can also manifest itself as a NULL-pointer dereference:
-> 
-> 	[    7.339447] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-> 	
-> 	[    7.643705] pc : drm_bridge_attach+0x70/0x1a8 [drm]
-> 	[    7.686415] lr : drm_aux_bridge_attach+0x24/0x38 [aux_bridge]
-> 	
-> 	[    7.769039] Call trace:
-> 	[    7.771564]  drm_bridge_attach+0x70/0x1a8 [drm]
-> 	[    7.776234]  drm_aux_bridge_attach+0x24/0x38 [aux_bridge]
-> 	[    7.781782]  drm_bridge_attach+0x80/0x1a8 [drm]
-> 	[    7.786454]  dp_bridge_init+0xa8/0x15c [msm]
-> 	[    7.790856]  msm_dp_modeset_init+0x28/0xc4 [msm]
-> 	[    7.795617]  _dpu_kms_drm_obj_init+0x19c/0x680 [msm]
-> 	[    7.800731]  dpu_kms_hw_init+0x348/0x4c4 [msm]
-> 	[    7.805306]  msm_drm_kms_init+0x84/0x324 [msm]
-> 	[    7.809891]  msm_drm_bind+0x1d8/0x3a8 [msm]
-> 	[    7.814196]  try_to_bring_up_aggregate_device+0x1f0/0x2f8
-> 	[    7.819747]  __component_add+0xa4/0x18c
-> 	[    7.823703]  component_add+0x14/0x20
-> 	[    7.827389]  dp_display_probe+0x47c/0x568 [msm]
-> 	[    7.832052]  platform_probe+0x68/0xd8
-> 
-> Users have also reported random crashes at boot since 6.8-rc1, and I've
-> been able to trigger hard crashes twice when testing an external display
-> (USB-C/DP), which may also be related to the DP regressions.
-> 
-> I've opened an issue here:
-> 
-> 	https://gitlab.freedesktop.org/drm/msm/-/issues/51
-> 
-> but I also want Thorsten's help to track this so that it gets fixed
-> before 6.8 is released.
-> 
-> #regzbot introduced: v6.7..v6.8-rc1
-> 
-> The following series is likely the culprit:
-> 
-> 	https://lore.kernel.org/all/1701472789-25951-1-git-send-email-quic_khsieh@quicinc.com/
-> 
-> Johan
