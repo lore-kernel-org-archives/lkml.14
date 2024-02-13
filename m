@@ -1,262 +1,108 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F9A537EA;
-	Tue, 13 Feb 2024 13:10:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 591F253813;
+	Tue, 13 Feb 2024 13:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707829824; cv=none; b=P0xs0aUTNcNs/MW6g8v+rlAgwP5sMZRrOlhyrJGs79ZpGfEceT05bv2/SwUO6szJaNBKU3+YNQMtw0Jg9bNI4naP4k53S1xtlwvHPqtgvBAEli8JObdhpg4S7fg6YgUtrlWrq8GD9q90vaUAIUXvCYirHHv8rm8sZ/o3aOO4438=
+	t=1707829843; cv=none; b=UkS2jeXmTPxIuNmMUHx4ViU0cCrWS6i+GmOFtiAEtmzL1QbNrSbUzKKl/opGfdT+gW2E5Ln9rb7rglMKOG7EMaJgFLay7P6jpDrYgz8/tNHwd9NgJEe3eNZLd2s/rvNyxcApGrgvp07EjryHbl0jim3stgihSbFuhbHkfrJcYXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707829824; c=relaxed/simple;
-	bh=DR14cMVeZlNNNiE6vPfYyzqWf6W2FdEaVW+XB5vYdqw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=lqiCCdWvBtAlLA2ECY+DE+C+MGy0oRcoK6qJbwVN4T0dFXDozDb3k1Njd+qudUbEBxvVvNLW8+yve305AM/FU6YCKvbXnFrT2eLMiNxUY1njMpUoKbkbSIlmW8u6UHPjs8n8m+BrjmHQxOpvcp4umxypgVPDDRrMERhEll46hZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RjdMiMLD; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1707829843; c=relaxed/simple;
+	bh=ErfgDXhiipWo6UTfivgIO33Glx/+fm68/fY8BAz0NFQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OGtZAAIALb0WWagDCitn0PIhHaQRRcm7QtlYaEq1VLDSVG3QKAyPXPh8UX5b/SJbYGCtouUBVdOLu5z+Ra4yxVRemjtBtIJinoH/zjjI1JySuvrUdnhMblaQ9Rhe/p7RYzbS1LKVmri91rGwOD2uN2i8olJ81jeid2UJYb0oRVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=uKlKkjZm; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RjdMiMLD"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41DCX7EP008081;
-	Tue, 13 Feb 2024 13:10:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=2V9i1J+1jVraKN1yhEZ5q4+HSSJA2paBI28wkJjhPCU=; b=Rj
-	dMiMLDcdsC/k2+mWjCbMVUO/43gfsY5Kj8fZO2V99Abkbh4WGb2HXNUFZS6vP7SA
-	xkXm4mj+kmBrIITDedu3G66omsl/QQ8pRMTxoBOGyMRszO/BgyjLX9uaB1XhQn9/
-	Ad66pQCEaan3kbxX2WXoiFEtwjhEdeKnaqvZy/jTqPoN0xyJfIm0IxV/bwMl5fq0
-	LcIFZW1A7i0oTreJksqC2CYtTjvnx5CEn0rtWuyOhAi4Q4nbeEUsAUVmtnWFGMVv
-	ou/Mhwin76vyk/2lDByhzgDVmCfeEPAve69LpV8ALq4PGFbvTxDSHzlnoc3c77ek
-	rZ6tLYDmkVQDitQRDj9g==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w88gq02dm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 13:10:13 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41DDAC7C006472
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 13:10:12 GMT
-Received: from [10.218.5.19] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 13 Feb
- 2024 05:10:05 -0800
-Message-ID: <87b7967f-d8c4-426e-92ed-5a418c702481@quicinc.com>
-Date: Tue, 13 Feb 2024 18:40:05 +0530
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uKlKkjZm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=3ig8/hoTtbhy80ogS8uSOp9SFFQKfTzlGTZZfEqeCAg=; b=uK
+	lKkjZmcr48PGWo0prm69OS16580SSdihn5yY4dqMcSNq2Ce1aSuVQ0N57nQ+wI+0MqYsDqqZPE22W
+	+vCLS+cssvlk3cEJoJYb/NXQqDJFZcIbWyk3uzq05eiKvBL90iWuzilfpWHD8uZvMjEgSOdMIvSnv
+	u9X4i2Dr5aIclHw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rZsYc-007g8X-7T; Tue, 13 Feb 2024 14:10:42 +0100
+Date: Tue, 13 Feb 2024 14:10:42 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Jonathan McDowell <noodles@earth.li>
+Subject: Re: [PATCH 1/2] ARM: dts: imx6dl-yapp4: Fix the QCA switch register
+ address
+Message-ID: <e00ed8cb-f73d-48a6-9999-f5acd5a202a0@lunn.ch>
+References: <1707751422-31517-1-git-send-email-michal.vokac@ysoft.com>
+ <c5dad8e7-c486-4dd9-bfb5-bdfa2ddc18b3@lunn.ch>
+ <db282aa5-2db3-49b9-a7dd-86e94226aa7b@ysoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/5] PM: domains: Allow devices attached to genpd to be
- managed by HW
-Content-Language: en-US
-To: Ulf Hansson <ulf.hansson@linaro.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Abel Vesa <abel.vesa@linaro.org>
-CC: "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kevin Hilman
-	<khilman@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Len Brown
-	<len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Andy
- Gross" <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        "Michael Turquette" <mturquette@baylibre.com>,
-        Stephen Boyd
-	<sboyd@kernel.org>,
-        Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
-        Vikash
- Garodia <quic_vgarodia@quicinc.com>,
-        Bryan O'Donoghue
-	<bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-media@vger.kernel.org>
-References: <20240122-gdsc-hwctrl-v4-0-9061e8a7aa07@linaro.org>
- <20240122-gdsc-hwctrl-v4-1-9061e8a7aa07@linaro.org>
- <tax3c6o5qjegy6tv3zbgrd5rencfvypr3zg7twxfrmdngscp74@n44ei3q63g64>
- <CAPDyKFpdtrWbzNksLoY++aOY7Ltyt1HhtLZo8bj8sQ05-4Sq0g@mail.gmail.com>
- <l7icfezpajren25545n4cjtqehhividt5b2dxnxgetdsshc3k3@tdws423qdblk>
- <CAPDyKFp1vg2+-pHJ_idkdhb_zZUMpq7W17DnCCGj0eTwd4jFbQ@mail.gmail.com>
-From: Jagadeesh Kona <quic_jkona@quicinc.com>
-In-Reply-To: <CAPDyKFp1vg2+-pHJ_idkdhb_zZUMpq7W17DnCCGj0eTwd4jFbQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: _8AYuTAM0-bPYxF4NoadvYK_7XRGkJYm
-X-Proofpoint-ORIG-GUID: _8AYuTAM0-bPYxF4NoadvYK_7XRGkJYm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-13_06,2024-02-12_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- suspectscore=0 impostorscore=0 clxscore=1015 bulkscore=0 phishscore=0
- priorityscore=1501 mlxscore=0 lowpriorityscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402130104
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <db282aa5-2db3-49b9-a7dd-86e94226aa7b@ysoft.com>
 
+On Tue, Feb 13, 2024 at 01:20:44PM +0100, Michal Vokáč wrote:
+> On 12. 02. 24 17:08, Andrew Lunn wrote:
+> > On Mon, Feb 12, 2024 at 04:23:41PM +0100, Michal Vokáč wrote:
+> > > The switch address in the node name is in hex while the address in the reg
+> > > property is decimal which is wrong. Fix that and write the reg address
+> > > as a hexadecimal number.
+> > 
+> > This feels the wrong way around. The reg value is used by the kernel,
+> > where as the node name is not. If the reg value was wrong, the switch
+> > would not be found. If this file was tested, why did somebody not
+> > notice the switch was missing?
+> > 
+> > Do you have the hardware? Can you confirm is really does not work
+> > without this patch? Was 15b43e497ffd never actually tested?
+> Yes, I have bunch of these boards all around my desk - we manufacture
+> them. I am pretty sure I tested all the patches I have ever sent to
+> the mailing list regarding these boards.
+> 
+> The fact is that the switch actually works regardless of the reg value.
+> It worked prior to the 15b43e497ffd commit with address 0, it worked
+> later on with the reg value 10 and it works now with reg value 0x10.
 
+Ah, so that is the missing piece of information from the commit
+message. That the reg value does not actually matter. Hence it is safe
+to change it.
 
-On 2/2/2024 5:59 PM, Ulf Hansson wrote:
-> On Fri, 2 Feb 2024 at 00:51, Bjorn Andersson <andersson@kernel.org> wrote:
->>
->> On Wed, Jan 31, 2024 at 01:12:00PM +0100, Ulf Hansson wrote:
->>> On Wed, 31 Jan 2024 at 02:09, Bjorn Andersson <andersson@kernel.org> wrote:
->>>>
->>>> On Mon, Jan 22, 2024 at 10:47:01AM +0200, Abel Vesa wrote:
->>>>> From: Ulf Hansson <ulf.hansson@linaro.org>
->>>>>
->>>>> Some power-domains may be capable of relying on the HW to control the power
->>>>> for a device that's hooked up to it. Typically, for these kinds of
->>>>> configurations the consumer driver should be able to change the behavior of
->>>>> power domain at runtime, control the power domain in SW mode for certain
->>>>> configurations and handover the control to HW mode for other usecases.
->>>>>
->>>>> To allow a consumer driver to change the behaviour of the PM domain for its
->>>>> device, let's provide a new function, dev_pm_genpd_set_hwmode(). Moreover,
->>>>> let's add a corresponding optional genpd callback, ->set_hwmode_dev(),
->>>>> which the genpd provider should implement if it can support switching
->>>>> between HW controlled mode and SW controlled mode. Similarly, add the
->>>>> dev_pm_genpd_get_hwmode() to allow consumers to read the current mode and
->>>>> its corresponding optional genpd callback, ->get_hwmode_dev(), which the
->>>>> genpd provider can also implement for reading back the mode from the
->>>>> hardware.
->>>>>
->>>>> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
->>>>> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
->>>>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->>>>> ---
->>>>>   drivers/pmdomain/core.c   | 69 +++++++++++++++++++++++++++++++++++++++++++++++
->>>>>   include/linux/pm_domain.h | 17 ++++++++++++
->>>>>   2 files changed, 86 insertions(+)
->>>>>
->>>>> diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
->>>>> index a1f6cba3ae6c..41b6411d0ef5 100644
->>>>> --- a/drivers/pmdomain/core.c
->>>>> +++ b/drivers/pmdomain/core.c
->>>>> @@ -548,6 +548,75 @@ void dev_pm_genpd_synced_poweroff(struct device *dev)
->>>>>   }
->>>>>   EXPORT_SYMBOL_GPL(dev_pm_genpd_synced_poweroff);
->>>>>
->>>>> +/**
->>>>> + * dev_pm_genpd_set_hwmode - Set the HW mode for the device and its PM domain.
->>>>
->>>> This isn't proper kernel-doc
->>>
->>> Sorry, I didn't quite get that. What is wrong?
->>>
->>
->> https://docs.kernel.org/doc-guide/kernel-doc.html#function-documentation
->> says that there should be () after the function name, and below there
->> should be a Return:
-> 
-> Thanks for the pointers!
-> 
->>
->>>>
->>>>> + *
->>>>> + * @dev: Device for which the HW-mode should be changed.
->>>>> + * @enable: Value to set or unset the HW-mode.
->>>>> + *
->>>>> + * Some PM domains can rely on HW signals to control the power for a device. To
->>>>> + * allow a consumer driver to switch the behaviour for its device in runtime,
->>>>> + * which may be beneficial from a latency or energy point of view, this function
->>>>> + * may be called.
->>>>> + *
->>>>> + * It is assumed that the users guarantee that the genpd wouldn't be detached
->>>>> + * while this routine is getting called.
->>>>> + *
->>>>> + * Returns 0 on success and negative error values on failures.
->>>>> + */
->>>>> +int dev_pm_genpd_set_hwmode(struct device *dev, bool enable)
->>>>> +{
->>>>> +     struct generic_pm_domain *genpd;
->>>>> +     int ret = 0;
->>>>> +
->>>>> +     genpd = dev_to_genpd_safe(dev);
->>>>> +     if (!genpd)
->>>>> +             return -ENODEV;
->>>>> +
->>>>> +     if (!genpd->set_hwmode_dev)
->>>>> +             return -EOPNOTSUPP;
->>>>> +
->>>>> +     genpd_lock(genpd);
->>>>> +
->>>>> +     if (dev_gpd_data(dev)->hw_mode == enable)
->>>>
->>>> Between this and the gdsc patch, the hw_mode state might not match the
->>>> hardware state at boot.
->>>>
->>>> With hw_mode defaulting to false, your first dev_pm_genpd_set_hwmode(,
->>>> false) will not bring control to SW - which might be fatal.
->>>
->>> Right, good point.
->>>
->>> I think we have two ways to deal with this:
->>> 1) If the provider is supporting ->get_hwmode_dev(), we can let
->>> genpd_add_device() invoke it to synchronize the state.
->>
->> I'd suggest that we skip the optimization for now and just let the
->> update hit the driver on each call.
-> 
-> Okay.
-> 
->>
->>> 2) If the provider doesn't support ->get_hwmode_dev() we need to call
->>> ->set_hwmode_dev() to allow an initial state to be set.
->>>
->>> The question is then, if we need to allow ->get_hwmode_dev() to be
->>> optional, if the ->set_hwmode_dev() is supported - or if we can
->>> require it. What's your thoughts around this?
->>>
->>
->> Iiuc this resource can be shared between multiple clients, and we're
->> in either case returning the shared state. That would mean a client
->> acting upon the returned value, is subject to races.
-> 
-> Not sure I understand this, but I also don't have in-depth knowledge
-> of how the HW works.
-> 
-> Isn't the HW mode set on a per device basis?
-> 
->>
->> I'm therefore inclined to say that we shouldn't have a getter, other
->> than for debugging purposes, in which case reading the HW-state or
->> failing would be reasonable outcomes.
-> 
-> If you only want this for debug purposes, it seems better to keep it
-> closer to the rpmh code, rather than adding generic callbacks to the
-> genpd interface.
-> 
-> So to conclude, you think having a ->set_hwmode_dev() callback should
-> be sufficient and no caching of the current state?
-> 
-> Abel, what's your thoughts around this?
-> 
+Please reword the commit message.
 
-We believe it is good to have get_hwmode_dev() callback supported from 
-GenPD, since if multiple devices share a GenPD, and if one device moves 
-the GenPD to HW mode, the other device won't be aware of it and second 
-device's dev_gpd_data(dev)->hw_mode will still be false.
+> I admit that my understanding of the MDIO bus and addressing of
+> the connected external/internal devices is pretty limited. I have no
+> answer to why it works like that but as you brought up your questions
+> I would actually like to know as well.
 
-If we have this dev_pm_genpd_get_hwmode() API supported and if we assign 
-dev_gpd_data(dev)->hw_mode after getting the mode from get_hwmode_dev() 
-callback, consumer drivers can use this API to sync the actual HW mode 
-of the GenPD.
+My guess is, the switch assumes it has full access to all the
+addresses on the bus. It probably uses a subset, but that subset is
+hard coded. But the MDIO DT binding requires a valid reg value, so
+something has to be used.
 
-Thanks,
-Jagadeesh
+There are some devices which use a single address on the bus. The
+mv88e6xxx can be strapped into such a mode, so you can have multiple
+switches on the bus. The reg value is then used. But you can also
+strap it so it takes over the whole bus, and uses #num_ports + 3
+addresses on the bus, and those addresses are hard coded in the
+silicon, so the reg value is ignored.
 
-> Kind regards
-> Uffe
+    Andrew
+
+---
+pw-bot: cr
