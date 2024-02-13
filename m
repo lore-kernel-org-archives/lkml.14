@@ -1,284 +1,100 @@
-Received: from mx0b-00823401.pphosted.com (mx0b-00823401.pphosted.com [148.163.152.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99008629EB
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 21:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D4A634FB
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 21:19:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707859163; cv=none; b=Vk67vOiDezriZdn7ABV0NYJ7JZ0M6lcu4u2RLej4wRhm73kJkHeSSr8U/J3ZvK6okMpIaxOexBzNymjmesKs5FaZWwkjiR4qBNFTZc3nJW4n3InbrMHGB4I+H+CFt20+hELgyNQ9IpHDHVoenZJO74NEBqEaDRA/NmeJ6tJ3UpA=
+	t=1707859169; cv=none; b=gEt1I0l290S85FIvCODf4Ufqo4SdQKdGnHk3kEr33IAWrWPHZlHeQrxbNArT7Fx6F2MC1qYP2Ciq4rNijf29lIAJG7KCvbkqFjOfkEf9AVvZfULzHnPSSPxwd+HvlRvi8fLHp1WTaYP2GnVBa4JrnUtekEbsTlDukthbjfPYKC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707859163; c=relaxed/simple;
-	bh=5Nd1k/lI6t5KsdtReJT+oMYTJ+uRP6DM5fZF427GcXU=;
-	h=From:Date:Subject:To:Cc:In-Reply-To:Message-Id; b=R5XU36jnxXqMZ9hNYbo9QZliBVMq3TZ7QhoBCTgBWfGlW1pqbZTpQaMxzuDwcw41/JcFec6PuyXXKn6p6UUHMuHG0XKVZ5FRv+Jg2lzILGFKcyVZO5ZnWztQqa7kF08EXURREp2fQuveQFMwA03xDerX4vfmM/kyhMq5NfWEdSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=debian.lenovo.com; spf=pass smtp.mailfrom=motorola.com; arc=none smtp.client-ip=148.163.152.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=debian.lenovo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motorola.com
-Received: from pps.filterd (m0355090.ppops.net [127.0.0.1])
-	by m0355090.ppops.net (8.17.1.24/8.17.1.24) with ESMTP id 41DIquMJ018802;
-	Tue, 13 Feb 2024 21:18:27 GMT
-Received: from va32lpfpp03.lenovo.com ([104.232.228.23])
-	by m0355090.ppops.net (PPS) with ESMTPS id 3w88298ydq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 21:18:27 +0000 (GMT)
-Received: from ilclmmrp02.lenovo.com (ilclmmrp02.mot.com [100.65.83.26])
-	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by va32lpfpp03.lenovo.com (Postfix) with ESMTPS id 4TZDhL6Pr5z51Q8g;
-	Tue, 13 Feb 2024 21:18:26 +0000 (UTC)
-Received: from ilclbld243.mot.com (ilclbld243.mot.com [100.64.22.29])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: mbland)
-	by ilclmmrp02.lenovo.com (Postfix) with ESMTPSA id 4TZDhL5C5Hz3p8NW;
-	Tue, 13 Feb 2024 21:18:26 +0000 (UTC)
-X-Mailbox-Line: From 4f16ba94cfe7625362d1df20642fee9b9ecec226 Mon Sep 17 00:00:00 2001
-From: Maxwell Bland <mbland@debian.lenovo.com>
-Date: Tue, 13 Feb 2024 14:18:15 -0600
-Subject: Re: [PATCH] arm64: allow post-init vmalloc PXNTable
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "linux-arm-kernel@lists.infradead.org"
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "dennis@kernel.org" <dennis@kernel.org>,
-        "tj@kernel.org" <tj@kernel.org>, "cl@linux.com" <cl@linux.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "shikemeng@huaweicloud.com" <shikemeng@huaweicloud.com>,
-        "david@redhat.com" <david@redhat.com>,
-        "rppt@kernel.org" <rppt@kernel.org>,
-        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "ryan.roberts@arm.com" <ryan.roberts@arm.com>,
-        "rick.p.edgecombe@intel.com" <rick.p.edgecombe@intel.com>,
-        "pcc@google.com" <pcc@google.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "rmk+kernel@armlinux.org.uk" <rmk+kernel@armlinux.org.uk>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "gshan@redhat.com" <gshan@redhat.com>,
-        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        Andrew Wheeler <awheeler@motorola.com>
-In-Reply-To: <2024021321-scooter-citrus-233c@gregkh>
-Message-Id: <4TZDhL5C5Hz3p8NW@ilclmmrp02.lenovo.com>
-X-Proofpoint-ORIG-GUID: fM-dRVtHmGGBuWF6Pm8rfHSnF0drw95I
-X-Proofpoint-GUID: fM-dRVtHmGGBuWF6Pm8rfHSnF0drw95I
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-13_13,2024-02-12_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
- mlxlogscore=999 malwarescore=0 lowpriorityscore=0 suspectscore=0
- spamscore=0 clxscore=1034 priorityscore=1501 impostorscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402130167
+	s=arc-20240116; t=1707859169; c=relaxed/simple;
+	bh=u+37GdGC/RFOsezdEzqNgPOn7MJSkWmd3LKNGiI80J0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BhaN88LwyLb1y5WEyHP3z3s4QY5wz29Ll5ZaDL++hqKwR2lcQ1Y17E11BIfvAMZPQ1qQuXnvchbJTNuO6RltK1EL+vobzfXN/6Jq5fyTerDcLsO8nIywTgQbAIVxFyHwEkReM1A8oPVPKhWM3EWuO0aGIaaqwddDrqNQJ5IrATc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=muUHpyeB; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="muUHpyeB"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d95d67ff45so35794805ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 13:19:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1707859166; x=1708463966; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gewUBLZJkZ832bNkMemwPNuP6AjEYnwmsKdeIxmXvlI=;
+        b=muUHpyeBf1KIuKy4jG193Pg6QL2rXVjfMpLAi11TuNtxp/i+odCs4Bk+pTRQ4rTg8g
+         ZpklTrmKbPMZglwk9ylLhWFypJSWszxfohmsFJBqFtWo5ybO+tjVQ3d5hSyJgl14C55O
+         wvvTf3EZJG2OS/gQjFfGZZU7fZoHkLHwvFdsQKS4cok0IBeWFYWU7X4Or2i8uS3NTd+r
+         Y8Q1RCy3aP4IjYhWyI/JeBxF16hBbJpVqCbevQrOHnGJBnZXMKOSS5HITHSI+6KinZ/M
+         pvfNhHTnkTZ50s2WaQs/os0ab3TpObwgSZ8mkbkLg4XXagTE1W4NnfwPkVVcEYNIii6Q
+         gsOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707859166; x=1708463966;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gewUBLZJkZ832bNkMemwPNuP6AjEYnwmsKdeIxmXvlI=;
+        b=ZVLobe+IdN07VxO8WLAWuyLaWoVBT3zcRK7Gxhz43XlzRytEjZoLvr0nBHE2XSdqr2
+         enQWmS4vXJUs48RRIid07UXtpAjLs0ucW0+puYBaRsMLPV3vKt1CEj0ZUXA9B3CPnHEi
+         gkDAKX5EH15qKfl4bfRKWRauYxDjnkP6YlTLVVGIvha9sTkPg15XmVrWUnGMFNdSHqt9
+         Zofz+Ra/o8F/qsY2OF2nQzQ2WY5nOUpocLp/rR3/lit9yTWBXfMx/k7IBzN0UMT0MdUM
+         3SMNuJ5kppFYu0GDQg4JaTFIL3jrn/aE2wZtNTDD+nB7OReGd/YQEQteVPaeb5ilkdui
+         mq7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWXXhZMlG8VofVi06btP2/l8g5t5WPB59x+QF3aK6j9UTTGCGeOqZlkE9mAOTTiTL2q8ciZLd7yj66IsmkWzNN9SxQir0zbZaFHkr0Z
+X-Gm-Message-State: AOJu0Yw/Ysxu98JuC2QkgNXO6mgvI/iX7ARs/D5m5GRjlfNNKO2JRYV3
+	o2vP/PPDAmIPO8WY4KUg6SDUYNuDzvt/8O13jNydSM0S4ymEGCgsYK1bw2p5SC4=
+X-Google-Smtp-Source: AGHT+IGLUSZXB3ylBDOhdlT0T3KZyXplzyMRS717PUcEqeBADrUjMdBE30QvnJ3A0SsgCKfJuXzdRA==
+X-Received: by 2002:a17:902:7c90:b0:1d8:e4b8:95e5 with SMTP id y16-20020a1709027c9000b001d8e4b895e5mr735185pll.32.1707859166637;
+        Tue, 13 Feb 2024 13:19:26 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWO0TbDjhh/ndSsZJYVcwjhjhY0VK36KvnOtetues9rvO72mKN9S6yrohbe5HpmsHReSYH//kgA3cLVZxJSMxKOBS/2qAwhj/Ve3rjcJb72MNFOXoUbYL/1CHTiHPkUj3x8m/33hM3Sh4vq1BII/6HK8bXM3Mc+Yi72mVEPrASerHOqghSCpuXChXE6/J76YAtOSgKQzIE87VSXT8enpMMaMSj+ozTtytuBa4adQH6IY58agY4JRs+hnLXJzLmsg0ygeU0Hb0UpvuBuGvaPYhTsC2dXedD1qO8CynIO3MzKF6GndNboo1QM78YmrQ8do/9qEnP5vdEp/v481jEju4juRSj8dnYazah1MlNqE9Axz1VtwYEiLPIwFr1EaSFkyDujAUTN2jw/42pr6bDcyywOqMSEwl6dTczNiRo=
+Received: from dread.disaster.area (pa49-181-38-249.pa.nsw.optusnet.com.au. [49.181.38.249])
+        by smtp.gmail.com with ESMTPSA id e21-20020a170902d39500b001d8e5a3be8asm2466833pld.259.2024.02.13.13.19.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 13:19:26 -0800 (PST)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1ra0BX-0066dX-0Y;
+	Wed, 14 Feb 2024 08:19:23 +1100
+Date: Wed, 14 Feb 2024 08:19:23 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	mcgrof@kernel.org, gost.dev@samsung.com, akpm@linux-foundation.org,
+	kbusch@kernel.org, djwong@kernel.org, chandan.babu@oracle.com,
+	p.raghav@samsung.com, linux-kernel@vger.kernel.org, hare@suse.de,
+	willy@infradead.org, linux-mm@kvack.org
+Subject: Re: [RFC v2 13/14] xfs: add an experimental CONFIG_XFS_LBS option
+Message-ID: <Zcvc20gqm6U6xaD0@dread.disaster.area>
+References: <20240213093713.1753368-1-kernel@pankajraghav.com>
+ <20240213093713.1753368-14-kernel@pankajraghav.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240213093713.1753368-14-kernel@pankajraghav.com>
 
-Ensures that PXNTable can be set on all table descriptors allocated
-through vmalloc. Normally, PXNTable is set only during initial memory
-mapping and does not apply thereafter, making it possible for attackers
-to target post-init allocated writable PTEs as a staging region for
-injection of their code into the kernel. Presently it is not possible to
-efficiently prevent these attacks as VMALLOC_END overlaps with _text,
-e.g.:
+On Tue, Feb 13, 2024 at 10:37:12AM +0100, Pankaj Raghav (Samsung) wrote:
+> From: Pankaj Raghav <p.raghav@samsung.com>
+> 
+> Add an experimental CONFIG_XFS_LBS option to enable LBS support in XFS.
+> Retain the ASSERT for PAGE_SHIFT if CONFIG_XFS_LBS is not enabled.
+> 
+> Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
 
-VMALLOC_START ffff800080000000 VMALLOC_END fffffbfff0000000
-_text         ffffb6c0c1400000 _end        ffffb6c0c3e40000
+NAK.
 
-Setting VMALLOC_END to _text in init would resolve this issue with the
-caveat of a sizeable reduction in the size of available vmalloc memory
-(~70,000 GB) due to requirements on aslr randomness. However, we need to
-support the enforcement of PXNTable dynamically for our static
-assignment of this flag during mm initialization to be effective.
+There it no reason for this existing - the same code is run
+regardless of the state of this config variable just with a
+difference in min folio order. All it does is increase the test
+matrix arbitrarily - now we have two kernel configs we have to test
+and there's no good reason for doing that.
 
-Because the address of _text is aslr-sensitive and this patch associates
-this value with VMALLOC_END, we remove the use of VMALLOC_END in a print
-statement in mm/percpu.c. However, only the format string is updated in
-crash_core.c, since we are dead at that point regardless. VMALLOC_END is
-updated in kernel/setup.c to associate the feature closely with aslr and
-region allocation code.
-
-bpf_jit_comp.c must also be remediated to ensure that the module_alloc
-rather than vmalloc interface is used, so that regions used for BPF
-allocations are appropriately located into the _text region.
-
-Signed-off-by: Maxwell Bland <mbland@motorola.com>
----
-
-This is an attempt to get Moto's SMTP server to send the patch without ruining
-the formatting. Based on Mark R.'s comments, though, it sounds like:
-
-1) I need to figure out a way to reduce the reduction in virtual memory.
-2) I need to actually enforce PXNTable dynamically, to make it clear this is a
-real upstream issue.
-3) I need some testing and quantification to make sure this does not ruin BPF
-and module allocations.
-
-https://lore.kernel.org/all/ZcurbvkUR-BoGTxu@FVFF77S0Q05N.cambridge.arm.com/
-
-Regardless, here's the original patch on the current Github linux main.
-
- arch/arm64/Kconfig                   | 13 +++++++++++++
- arch/arm64/include/asm/pgtable.h     |  6 ++++++
- arch/arm64/include/asm/vmalloc-pxn.h |  9 +++++++++
- arch/arm64/kernel/crash_core.c       |  2 +-
- arch/arm64/kernel/setup.c            |  9 +++++++++
- arch/arm64/net/bpf_jit_comp.c        |  5 +++--
- mm/percpu.c                          |  4 ++--
- 7 files changed, 43 insertions(+), 5 deletions(-)
- create mode 100644 arch/arm64/include/asm/vmalloc-pxn.h
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index aa7c1d435139..5f1e75d70e14 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -2165,6 +2165,19 @@ config ARM64_DEBUG_PRIORITY_MASKING
-          If unsure, say N
- endif # ARM64_PSEUDO_NMI
-
-+config ARM64_VMALLOC_PXN
-+       bool "Ensures table descriptors pointing to kernel data are PXNTable"
-+       help
-+         Reduces the range of the kernel data vmalloc region to remove any
-+         overlap with kernel code, making it possible to enable the PXNTable
-+         bit on table descriptors allocated after the kernel's initial memory
-+         mapping.
-+
-+         This increases the performance of security monitors which protect
-+         against malicious updates to page table entries.
-+
-+         If unsure, say N.
-+
- config RELOCATABLE
-        bool "Build a relocatable kernel image" if EXPERT
-        select ARCH_HAS_RELR
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 79ce70fbb751..49f64ea77c81 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -22,7 +22,9 @@
-  *     and fixed mappings
-  */
- #define VMALLOC_START          (MODULES_END)
-+#ifndef CONFIG_ARM64_VMALLOC_PXN
- #define VMALLOC_END            (VMEMMAP_START - SZ_256M)
-+#endif
-
- #define vmemmap                        ((struct page *)VMEMMAP_START - (memstart_addr >> PAGE_SHIFT))
-
-@@ -35,6 +37,10 @@
- #include <linux/sched.h>
- #include <linux/page_table_check.h>
-
-+#ifdef CONFIG_ARM64_VMALLOC_PXN
-+#include <asm/vmalloc-pxn.h>
-+#endif
-+
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
- #define __HAVE_ARCH_FLUSH_PMD_TLB_RANGE
-
-diff --git a/arch/arm64/include/asm/vmalloc-pxn.h b/arch/arm64/include/asm/vmalloc-pxn.h
-new file mode 100644
-index 000000000000..d054427e2804
---- /dev/null
-+++ b/arch/arm64/include/asm/vmalloc-pxn.h
-@@ -0,0 +1,9 @@
-+#ifndef _ASM_ARM64_VMALLOC_PXN_H
-+#define _ASM_ARM64_VMALLOC_PXN_H
-+
-+#ifdef CONFIG_ARM64_VMALLOC_PXN
-+extern u64 __vmalloc_end __ro_after_init;
-+#define VMALLOC_END (__vmalloc_end)
-+#endif /* CONFIG_ARM64_VMALLOC_PXN */
-+
-+#endif /* _ASM_ARM64_VMALLOC_PXN_H */
-diff --git a/arch/arm64/kernel/crash_core.c b/arch/arm64/kernel/crash_core.c
-index 66cde752cd74..39dccae11a40 100644
---- a/arch/arm64/kernel/crash_core.c
-+++ b/arch/arm64/kernel/crash_core.c
-@@ -24,7 +24,7 @@ void arch_crash_save_vmcoreinfo(void)
-        vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=0x%lx\n", MODULES_VADDR);
-        vmcoreinfo_append_str("NUMBER(MODULES_END)=0x%lx\n", MODULES_END);
-        vmcoreinfo_append_str("NUMBER(VMALLOC_START)=0x%lx\n", VMALLOC_START);
--       vmcoreinfo_append_str("NUMBER(VMALLOC_END)=0x%lx\n", VMALLOC_END);
-+       vmcoreinfo_append_str("NUMBER(VMALLOC_END)=0x%llx\n", VMALLOC_END);
-        vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=0x%lx\n", VMEMMAP_START);
-        vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=0x%lx\n", VMEMMAP_END);
-        vmcoreinfo_append_str("NUMBER(kimage_voffset)=0x%llx\n",
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 42c690bb2d60..b7ccee672743 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -54,6 +54,11 @@
- #include <asm/xen/hypervisor.h>
- #include <asm/mmu_context.h>
-
-+#ifdef CONFIG_ARM64_VMALLOC_PXN
-+u64 __vmalloc_end __ro_after_init = VMEMMAP_START - SZ_256M;
-+EXPORT_SYMBOL(__vmalloc_end);
-+#endif /* CONFIG_ARM64_VMALLOC_PXN */
-+
- static int num_standard_resources;
- static struct resource *standard_resources;
-
-@@ -298,6 +303,10 @@ void __init __no_sanitize_address setup_arch(char **cmdline_p)
-
-        kaslr_init();
-
-+#ifdef CONFIG_ARM64_VMALLOC_PXN
-+       __vmalloc_end = ALIGN_DOWN((u64) _text, PMD_SIZE);
-+#endif
-+
-        /*
-         * If know now we are going to need KPTI then use non-global
-         * mappings from the start, avoiding the cost of rewriting
-diff --git a/arch/arm64/net/bpf_jit_comp.c b/arch/arm64/net/bpf_jit_comp.c
-index 8955da5c47cf..1fe0d637792c 100644
---- a/arch/arm64/net/bpf_jit_comp.c
-+++ b/arch/arm64/net/bpf_jit_comp.c
-@@ -11,6 +11,7 @@
- #include <linux/bpf.h>
- #include <linux/filter.h>
- #include <linux/memory.h>
-+#include <linux/moduleloader.h>
- #include <linux/printk.h>
- #include <linux/slab.h>
-
-@@ -1690,12 +1691,12 @@ u64 bpf_jit_alloc_exec_limit(void)
- void *bpf_jit_alloc_exec(unsigned long size)
- {
-        /* Memory is intended to be executable, reset the pointer tag. */
--       return kasan_reset_tag(vmalloc(size));
-+       return kasan_reset_tag(module_alloc(size));
- }
-
- void bpf_jit_free_exec(void *addr)
- {
--       return vfree(addr);
-+       return module_memfree(addr);
- }
-
- /* Indicate the JIT backend supports mixing bpf2bpf and tailcalls. */
-diff --git a/mm/percpu.c b/mm/percpu.c
-index 4e11fc1e6def..a902500ebfa0 100644
---- a/mm/percpu.c
-+++ b/mm/percpu.c
-@@ -3128,8 +3128,8 @@ int __init pcpu_embed_first_chunk(size_t reserved_size, size_t dyn_size,
-
-        /* warn if maximum distance is further than 75% of vmalloc space */
-        if (max_distance > VMALLOC_TOTAL * 3 / 4) {
--               pr_warn("max_distance=0x%lx too large for vmalloc space 0x%lx\n",
--                               max_distance, VMALLOC_TOTAL);
-+               pr_warn("max_distance=0x%lx too large for vmalloc space\n",
-+                               max_distance);
- #ifdef CONFIG_NEED_PER_CPU_PAGE_FIRST_CHUNK
-                /* and fail if we have fallback */
-                rc = -EINVAL;
---
-2.39.2
-
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
