@@ -1,108 +1,97 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81781FAB
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 00:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4CA4C64;
+	Tue, 13 Feb 2024 00:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707783015; cv=none; b=bF7zFMu+kryNUw1E3hKLWML+1TMoskG7cAiZg2Tuk+SbXMGsfkqeG/ncmwEb6fpJf9/iUHgJJZaQ6Ks9lAXCFAF3t2Qd56GbYJaDsTy5cnzQUyCD/mn4jYHS1c2zsY48gIIpJ4qRaPTN444OeuSvOXyCJzDIxru2YWB14AdipKM=
+	t=1707783174; cv=none; b=PWU21QAeUOo1w0GhTXlVC8SPn42jdG3qraUfeE7N+NwERPQI05HuvVWHSxAQDG3yAz+lIMfL0bx6lTzJF4JHEoy4HHB+cpbbZoGD0Rl9TAfBSoRggWAbBFgKezDcMNmT4t3nJV5b8wDP8uo41zCKeK7QhBaBjh/UvZak8EqZeOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707783015; c=relaxed/simple;
-	bh=J7FejEFnbMm74uZsExP5QWA3ZxhT4NbGZP6EJnx295g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ItwcSKhq5+XFaD0CTFC30MSrlVkrtW9zxg301CBiaqO20fJ1c5FuId+4Hp29FWIu5MlJ52hb1bCAGY1qGjgHVIWkTsybWzHkWXxTexgnqqtsNhjEFuiN3H4CAzP2yZRmBP/61ctWJlmMmhhjAr+YWsSuObm3XVU3opnYzt1Xg8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=T25wJcfY; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="T25wJcfY"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41CNNWC9002327;
-	Tue, 13 Feb 2024 00:09:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=SKTZ/3gDrjTrmPt81XU/FfX33drgx94XxgkNqX5kp7Y=; b=T2
-	5wJcfYBq8HUo5ZGxsokAPOP8K9BC2QvE3Iz8ZTy/DCE2WQ1eRui+5C/9cXtsAghE
-	QSNETroOGAfpQ6aPqx3GfXel40SyCKBP9FzmHNJELPk5o1xuJJgmUFTxZF5pFDf/
-	3TaeuDikn35hJ1BnViB4fQ5buOj5uiFjQfXBJnywCEW0q0izkeSPTsOj5WIwuntQ
-	Ox1b3z8sgTJBtWSDhuCfRpZttQ6sIOgS+IhfAwuKHBUv29kL5iD64Tb29GfEiQJR
-	0ctWmM4Nnchg6jcYpqc68DAxLNU9OZC08uqHy5IY4+UfQ8Otb6EVgo4el2ORsc0h
-	kXui0XdyyNup2vXQYylw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w7gvjhsv4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 00:09:53 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41D09qgn001486
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 00:09:52 GMT
-Received: from [10.71.109.81] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 12 Feb
- 2024 16:09:51 -0800
-Message-ID: <e5dd6d92-0d9d-fcfe-2aac-8302b421c0a0@quicinc.com>
-Date: Mon, 12 Feb 2024 16:09:50 -0800
+	s=arc-20240116; t=1707783174; c=relaxed/simple;
+	bh=snpDxC/p4DzWPM0PkZK4dv4AVgd2kVSFn1TwirwJ8sI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=prao1NMHHAIUNhTWXpB7ZkCcoeXfcrRvCmZSjfa68reM8yDbqb4bmN0LGt2y3UO8ZYRuWYuDZ0XqPDO4ryv1tRzHyM/J5pVaNK86zIyOHerdKA1q6qhDX5/mpBrsddjEivJ9zVTaH16/TFCRCnBbEC1rG+61nOE2KHLwe6kSBPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 389C3C433C7;
+	Tue, 13 Feb 2024 00:12:53 +0000 (UTC)
+Date: Mon, 12 Feb 2024 19:13:36 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Mark Rutland <mark.rutland@arm.com>, Vincent Donnefort
+ <vdonnefort@google.com>, Sven Schnelle <svens@linux.ibm.com>, Mete Durlu
+ <meted@linux.ibm.com>
+Subject: Re: [PATCH] tracing: Have saved_cmdlines arrays all in one
+ allocation
+Message-ID: <20240212191336.5c502f78@gandalf.local.home>
+In-Reply-To: <ef94259e139e4579ee27db99975dc4cf397e2a06.camel@linux.intel.com>
+References: <20240212180941.379c419b@gandalf.local.home>
+	<ef94259e139e4579ee27db99975dc4cf397e2a06.camel@linux.intel.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] drm/crtc: fix uninitialized variable use even harder
-Content-Language: en-US
-To: Rob Clark <robdclark@gmail.com>, <dri-devel@lists.freedesktop.org>
-CC: Rob Clark <robdclark@chromium.org>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Jani Nikula <jani.nikula@intel.com>,
-        open
- list <linux-kernel@vger.kernel.org>
-References: <20240212215534.190682-1-robdclark@gmail.com>
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <20240212215534.190682-1-robdclark@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Z6k0dI9SZ8x1JhC7HruQaOgew-bmVxBU
-X-Proofpoint-ORIG-GUID: Z6k0dI9SZ8x1JhC7HruQaOgew-bmVxBU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-12_19,2024-02-12_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- suspectscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- priorityscore=1501 impostorscore=0 mlxlogscore=881 adultscore=0
- bulkscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402120186
 
+On Mon, 12 Feb 2024 15:39:03 -0800
+Tim Chen <tim.c.chen@linux.intel.com> wrote:
 
-
-On 2/12/2024 1:55 PM, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
+> > diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched_switch.c
+> > index e4fbcc3bede5..210c74dcd016 100644
+> > --- a/kernel/trace/trace_sched_switch.c
+> > +++ b/kernel/trace/trace_sched_switch.c
+> > @@ -201,7 +201,7 @@ static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
+> >  	int order;
+> >  
+> >  	/* Figure out how much is needed to hold the given number of cmdlines */
+> > -	orig_size = sizeof(*s) + val * TASK_COMM_LEN;
+> > +	orig_size = sizeof(*s) + val * (TASK_COMM_LEN + sizeof(int));  
 > 
-> DRM_MODESET_LOCK_ALL_BEGIN() has a hidden trap-door (aka retry loop),
-> which means we can't rely too much on variable initializers.
-> 
-> Fixes: 6e455f5dcdd1 ("drm/crtc: fix uninitialized variable use")
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
-> I have mixed feelings about DRM_MODESET_LOCK_ALL_BEGIN() (and friends)
-> magic.  On one hand it simplifies the deadlock/back dance.  OTOH it
-> conceals a nasty sharp edge.  Maybe it is better to have the complicated
-> restart path a bit more explicit, like it was originally.
-> 
->   drivers/gpu/drm/drm_crtc.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
+> Strictly speaking, *map_cmdline_to_pid is unsigned int so it is more consistent
+> to use sizeof(unsigned) in line above.  But I'm nitpicking and I'm fine to
+> leave it as is.
 
-Nice catch !!
+I was thinking about making that into a macro as it is used in two places.
 
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+/* Holds the size of a cmdline and pid element */
+#define SAVED_CMDLINE_MAP_ELEMENT_SIZE(s)		\
+	(TASK_COMM_LEN + sizeof((s)->map_cmdline_to_pid[0]))
+
+	orig_size = sizeof(*s) + val * SAVED_CMDLINE_MAP_ELEMENT_SIZE(s);
+
+> 
+> >  	order = get_order(orig_size);
+> >  	size = 1 << (order + PAGE_SHIFT);
+> >  	page = alloc_pages(GFP_KERNEL, order);
+> > @@ -212,16 +212,11 @@ static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
+> >  	memset(s, 0, sizeof(*s));
+> >  
+> >  	/* Round up to actual allocation */
+> > -	val = (size - sizeof(*s)) / TASK_COMM_LEN;
+> > +	val = (size - sizeof(*s)) / (TASK_COMM_LEN + sizeof(int));
+
+	val = (size - sizeof(*s)) / SAVED_CMDLINE_MAP_ELEMENT_SIZE(s);
+
+-- Steve
+
+> >  	s->cmdline_num = val;
+> >  
+> > -	s->map_cmdline_to_pid = kmalloc_array(val,
+> > -					      sizeof(*s->map_cmdline_to_pid),
+> > -					      GFP_KERNEL);
+> > -	if (!s->map_cmdline_to_pid) {
+> > -		free_saved_cmdlines_buffer(s);
+> > -		return NULL;
+> > -	}
+> > +	/* Place map_cmdline_to_pid array right after saved_cmdlines */
+> > +	s->map_cmdline_to_pid = (unsigned *)&s->saved_cmdlines[val * TASK_COMM_LEN];
+> >  
+> >  	s->cmdline_idx = 0;
+> >  	memset(&s->map_pid_to_cmdline, NO_CMDLINE_MAP,  
+
