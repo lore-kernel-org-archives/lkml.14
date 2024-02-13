@@ -1,106 +1,194 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9483455E72;
-	Tue, 13 Feb 2024 14:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C28B58119
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 14:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707834316; cv=none; b=CRF+KxjqsigY2GpDjaFWEDjv5xJg2BHAPkP6zcsGfmXEtdaCP4/08i1s2BvnNKk/vJlttgLZhlbkixzV44WFM/gsc8c1dmxlvvqGbvJ5lXBnR7VAMI70YMUToIxrE04SelExefqJ1R+70+LsxXZSJ0SCG1LTZEC1i25fdd9q+QM=
+	t=1707834330; cv=none; b=pFfrSnXvxPntzU9swZJ9aYM0MuBTdb++Mt3qKoLi5Ph3+LRhnXUBrRc4WCJxKrKbqNpv93kHtIgGPRq8qY3DB9Cc/c7dx2Mpgff5O7vnXOYxOyQ/nCPYFX7wakNwAyJxGNwpNLPLfrbe/9yoIvbJP2fP0VVPH6Jxzdms4J4eGpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707834316; c=relaxed/simple;
-	bh=4zLwbR8CE9DZm1xiQNmD+onU4gj41iix4Ynt998Ac4k=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BiozRD3ri+jbsryb57BRD2cWdlOP4RO3qNGDqDZKHnKVXkuaKtGL1/K+0eF1eIh3Mu+2GR4Ze7hUnFb7rwwxWyGfWkn6uBgbdwviCZclZEM6x3tkGEisa1sh35EwlGxzExnd9GEsfL/OJDpdq3f1F9ClWipcumYsDf+N5f0mpl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from r.smirnovsmtp.omp.ru (10.189.215.22) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Tue, 13 Feb
- 2024 17:10:05 +0300
-From: Roman Smirnov <r.smirnov@omp.ru>
-To: <stable@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Roman Smirnov <r.smirnov@omp.ru>, "Matthew Wilcox (Oracle)"
-	<willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, Alexey
- Khoroshilov <khoroshilov@ispras.ru>, Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Karina Yankevich <k.yankevich@omp.ru>, <lvc-project@linuxtesting.org>,
-	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>
-Subject: [PATCH 5.10/5.15 v2 0/1 RESEND] mm/truncate: fix WARNING in ext4_set_page_dirty()
-Date: Tue, 13 Feb 2024 14:09:32 +0000
-Message-ID: <20240213140933.632481-1-r.smirnov@omp.ru>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1707834330; c=relaxed/simple;
+	bh=47GLH3r8Ecss8GdXJNiRzcux3kAUlP7QKTP2wmpdSxw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i7Amqpfjh7V6qWP9h4Hog3ysgsl5ZDjzMxSQZHQ6cZTaMv6juUsbef111626wK+g1kEF7Gt9nFxyF2QKhQo2x3Ui5Qd8aV+wQOQ3PQR+A4I/O+oHj67yIH0sqprFqS+radPQ5OcUAuexClC6RMTuzHaL88C+UFDt8IEfmuJ5H4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=peaY5gJu; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3ve7YYNp; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=peaY5gJu; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3ve7YYNp; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="peaY5gJu";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3ve7YYNp";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="peaY5gJu";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3ve7YYNp"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B95B01FCDB;
+	Tue, 13 Feb 2024 14:25:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1707834326; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pkBvOLVHi2de+ERnUxon6wSh8Yr7kE+kebwjXh01sD0=;
+	b=peaY5gJuPxc4TrCtINsGhmTcHGex6SOS5vhB9gGhZEWPhfKGFlg/JxrgvNZMx4b6iDhd4V
+	TzlToyjyxXV5H4WHxg/xpMa7greVATkwSezqoYuqoTdyzWUyvvRmYddWN3cV6W3O0ZBGfA
+	wT1una36u+FGKfZZAMB8qQrsvqm6dkA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1707834326;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pkBvOLVHi2de+ERnUxon6wSh8Yr7kE+kebwjXh01sD0=;
+	b=3ve7YYNpOHvJkXrspWvQI4ZuMd781BYzdNLdn7LDHxk/4kk5fnEkAS9wdbVZMKQy1fSwn2
+	fR/cdqqcOZ5L/rDg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1707834326; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pkBvOLVHi2de+ERnUxon6wSh8Yr7kE+kebwjXh01sD0=;
+	b=peaY5gJuPxc4TrCtINsGhmTcHGex6SOS5vhB9gGhZEWPhfKGFlg/JxrgvNZMx4b6iDhd4V
+	TzlToyjyxXV5H4WHxg/xpMa7greVATkwSezqoYuqoTdyzWUyvvRmYddWN3cV6W3O0ZBGfA
+	wT1una36u+FGKfZZAMB8qQrsvqm6dkA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1707834326;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pkBvOLVHi2de+ERnUxon6wSh8Yr7kE+kebwjXh01sD0=;
+	b=3ve7YYNpOHvJkXrspWvQI4ZuMd781BYzdNLdn7LDHxk/4kk5fnEkAS9wdbVZMKQy1fSwn2
+	fR/cdqqcOZ5L/rDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A498F1370C;
+	Tue, 13 Feb 2024 14:25:26 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 8FDaJ9Z7y2UsKQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 13 Feb 2024 14:25:26 +0000
+Message-ID: <b706176a-c60a-4960-ba4a-2755c612d9c8@suse.cz>
+Date: Tue, 13 Feb 2024 15:25:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 02/13/2024 13:46:14
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 0
-X-KSE-AntiSpam-Info: Lua profiles 183406 [Feb 13 2024]
-X-KSE-AntiSpam-Info: Version: 6.1.0.3
-X-KSE-AntiSpam-Info: Envelope from: r.smirnov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a
-X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info:
-	elixir.bootlin.com:7.1.1;lore.kernel.org:7.1.1;127.0.0.199:7.1.2;syzkaller.appspot.com:5.0.1,7.1.1;omp.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;r.smirnovsmtp.omp.ru:7.1.1
-X-KSE-AntiSpam-Info: FromAlignment: s
-X-KSE-AntiSpam-Info: Rate: 0
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 02/13/2024 13:52:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 2/13/2024 1:06:00 PM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 3/5] mm,page_owner: Display all stacks and their count
+Content-Language: en-US
+To: Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ Michal Hocko <mhocko@suse.com>, Marco Elver <elver@google.com>,
+ Andrey Konovalov <andreyknvl@gmail.com>,
+ Alexander Potapenko <glider@google.com>
+References: <20240212223029.30769-1-osalvador@suse.de>
+ <20240212223029.30769-4-osalvador@suse.de>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20240212223029.30769-4-osalvador@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -7.83
+X-Spamd-Result: default: False [-7.83 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 XM_UA_NO_VERSION(0.01)[];
+	 TO_DN_SOME(0.00)[];
+	 REPLY(-4.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 NEURAL_HAM_SHORT(-0.20)[-0.986];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 BAYES_HAM(-2.55)[97.96%];
+	 ARC_NA(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FREEMAIL_CC(0.00)[vger.kernel.org,kvack.org,suse.com,google.com,gmail.com];
+	 RCVD_TLS_ALL(0.00)[]
+X-Spam-Flag: NO
 
-Syzkaller reports warning in ext4_set_page_dirty() in 5.10 and 5.15
-stable releases. It happens because invalidate_inode_page() frees pages
-that are needed for the system. To fix this we need to add additional
-checks to the function. page_mapped() checks if a page exists in the 
-page tables, but this is not enough. The page can be used in other places:
-https://elixir.bootlin.com/linux/v6.8-rc1/source/include/linux/page_ref.h#L71
+On 2/12/24 23:30, Oscar Salvador wrote:
+> This patch adds a new directory called 'page_owner_stacks' under
+> /sys/kernel/debug/, with a file called 'show_stacks' in it.
+> Reading from that file will show all stacks that were added by page_owner
+> followed by their counting, giving us a clear overview of stack <-> count
+> relationship.
+> 
+> E.g:
+> 
+>   prep_new_page+0xa9/0x120
+>   get_page_from_freelist+0x801/0x2210
+>   __alloc_pages+0x18b/0x350
+>   alloc_pages_mpol+0x91/0x1f0
+>   folio_alloc+0x14/0x50
+>   filemap_alloc_folio+0xb2/0x100
+>   __filemap_get_folio+0x14a/0x490
+>   ext4_write_begin+0xbd/0x4b0 [ext4]
+>   generic_perform_write+0xc1/0x1e0
+>   ext4_buffered_write_iter+0x68/0xe0 [ext4]
+>   ext4_file_write_iter+0x70/0x740 [ext4]
+>   vfs_write+0x33d/0x420
+>   ksys_write+0xa5/0xe0
+>   do_syscall_64+0x80/0x160
+>   entry_SYSCALL_64_after_hwframe+0x6e/0x76
+>  stack_count: 4578
+> 
+> The seq stack_{start,next} functions will iterate through the list
+> stack_list in order to print all stacks.
+> 
+> Signed-off-by: Oscar Salvador <osalvador@suse.de>
 
-Kernel outputs an error line related to direct I/O:
-https://syzkaller.appspot.com/text?tag=CrashLog&x=14ab52dac80000
+...
 
-The problem can be fixed in 5.10 and 5.15 stable releases by the 
-following patch.
+> +static int stack_print(struct seq_file *m, void *v)
+> +{
+> +	char *buf;
+> +	int ret = 0;
+> +	struct stack *stack = v;
+> +	struct stack_record *stack_record = stack->stack_record;
+> +
+> +	if (!stack_record->size || stack_record->size < 0 ||
+> +	    refcount_read(&stack_record->count) < 2)
+> +		return 0;
+> +
+> +	buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
+> +
+> +	ret += stack_trace_snprint(buf, PAGE_SIZE, stack_record->entries,
+> +				   stack_record->size, 0);
+> +	if (!ret)
+> +		goto out;
+> +
+> +	scnprintf(buf + ret, PAGE_SIZE - ret, "stack_count: %d\n\n",
+> +		  refcount_read(&stack_record->count));
+> +
+> +	seq_printf(m, buf);
+> +	seq_puts(m, "\n\n");
+> +out:
+> +	kfree(buf);
 
-The patch replaces page_mapped() call with check that finds additional
-references to the page excluding page cache and filesystem private data.
-If additional references exist, the page cannot be freed.
+Seems rather wasteful to do kzalloc/kfree so you can print into that buffer
+first and then print/copy it again using seq_printf. If you give up on using
+stack_trace_snprintf() it's not much harder to print the stack directly with
+a loop of seq_printf. See e.g. slab_debugfs_show().
 
-This version does not include the first patch from the first version.
-The problem can be fixed without it. 
-
-Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
-
-Link: https://syzkaller.appspot.com/bug?extid=02f21431b65c214aa1d6
-
-Previous discussion:
-https://lore.kernel.org/all/20240125130947.600632-1-r.smirnov@omp.ru/T/
-
-Matthew Wilcox (Oracle) (1):
-  mm/truncate: Replace page_mapped() call in invalidate_inode_page()
-
- mm/truncate.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
--- 
-2.34.1
+> +
+> +	return 0;
+> +}
+> +
 
