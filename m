@@ -1,40 +1,40 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A535FDC4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6BE5FEEF;
 	Tue, 13 Feb 2024 16:36:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707842178; cv=none; b=unPVn+Wq1XVQbVvA0ok2iIBMpcftnI4KT5GkT/zETkSxh/ekkOz3Lu5N8GD7h85cBCZqSJZYFG/8eiZcJ/lEHbm6rjLr1dHqnrRQ8xYOQRixCl+2zj95W4xeRK36Hc1QoNnEpn0MkBmWAU5bUF/GlMGGoSWEmbOVjE0vnmPnuNI=
+	t=1707842179; cv=none; b=EO38PgWMf98si/CUD6STYJ5ytJk3DDTeFv02grUPQ6Pil8oFbxPmE/EJh74yqD9MtbdvOoIzFYnd72mH1d96OUNqzTnSXsgM8w4wiLesSG7OV6dtJPH0I837NTP6I9p/kGEZWmcCLGo8/5FJ2qE8zXb/d3/hUb2uLI5JNQiNJok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707842178; c=relaxed/simple;
-	bh=9GIaZfb5MxaHk0HlZKmjPL8R5F9ty2wgWUAueDtNB0c=;
+	s=arc-20240116; t=1707842179; c=relaxed/simple;
+	bh=+bnYk1BYj3u3N4iOBFsXjnHlC1pJe00wOp5nI388mvs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SZ1UbQWJD1o7I6mxMorOk/S02omke82ZPaF2Gmxz2iSKBaVS1rPWnENA7Y55GqSB/ybeCMF5ZeGZ+ZEPSCiA4GLhNQhaWXuGoKkAwvSJafURbxmxWS8/hiImxNP0RxqoqnaIkUMBuG/+Z35+1zNph75T/E7tkUj0SzM8nbxzfvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=S2xfl0ep; arc=none smtp.client-ip=46.235.227.194
+	 MIME-Version; b=Aa7iL1dA2onFznFYTGDIabH8QV6ygDh9f+nJbZbvhtp4Es1x38r3Pn0mSsOxxY7eFfEbOPMCsAepq1SI/bnxKMllhQhFFf6VINiaiOHV5TabAJYpMN37RUY9rDTiI6yyYPQhm/OnkHEbCX+YA1mfVwNLBO24E5bkwpfEPnU9x3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=aN2LvDSc; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="S2xfl0ep"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="aN2LvDSc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
 	s=mail; t=1707842172;
-	bh=9GIaZfb5MxaHk0HlZKmjPL8R5F9ty2wgWUAueDtNB0c=;
+	bh=+bnYk1BYj3u3N4iOBFsXjnHlC1pJe00wOp5nI388mvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=S2xfl0epJDEPlTbi959f6Xv3staoTFgeBv6kT8j3sHzqLxbsplruB8kuRmGBcDojL
-	 lTQqHsVOLmzAsMvRbMt9wetlcNj5xFMJONYM+Anjc7PH9np+umH73xqzzYv9FzWYtS
-	 KyXbxjx6DwgR2HEPtNVyy+hmfJRcbDgrYX3HATHtQLq4tJNuxM6ZxgsvRHDRyNHud9
-	 L1BB5pe7UaAmU2mVZWYec817cuRjzIYZZG4ktaWKqG+0Cd5BsMKGeLUW3A07HzhJIQ
-	 Sif161eI4f3Fk0eLVOY+tbqRjbmfwMVonb8DnIOOKhwLgmtrIJwiUv74faorUqYYzZ
-	 IO9kdeLwY12qA==
+	b=aN2LvDSc8S1MpsocnRPVWF07y5h0vIvW/cm4uXntq+vw8ZxXNHcUDJgzKdX5GPj1K
+	 Ae6tbqidJYcy0w0/Qqitdw11MBc2Scc2bqgu501UM9cVg5iLxUJJMC/KkAZQrO1Cgl
+	 dLc4yhnEP6jbknV7U742uyH4SSjnKBWo1BYnELrmnQXZrt50aYXPohySpSmShjHe6u
+	 pxsUvWrNnw/uTA8GpPdrzgm8X4rlKmUFIW4Kyy11pKwrxh94VTQz65XNcoRWDfJi5w
+	 nPIFX7Q/io3eAxqMuyT6wzRDeJJl+pqUCuQhDqATg84AJ0Nbr+iTiIzWUg+GwS8Gpp
+	 1R5+W+qVgqsmg==
 Received: from jupiter.universe (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(No client certificate requested)
 	(Authenticated sender: sre)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 04E2A3782080;
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 152533782083;
 	Tue, 13 Feb 2024 16:36:12 +0000 (UTC)
 Received: by jupiter.universe (Postfix, from userid 1000)
-	id 08CDD4800D6; Tue, 13 Feb 2024 17:36:11 +0100 (CET)
+	id 0C2924800DD; Tue, 13 Feb 2024 17:36:11 +0100 (CET)
 From: Sebastian Reichel <sebastian.reichel@collabora.com>
 To: Heiko Stuebner <heiko@sntech.de>,
 	Vinod Koul <vkoul@kernel.org>,
@@ -50,9 +50,9 @@ Cc: Rob Herring <robh+dt@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	Sebastian Reichel <sebastian.reichel@collabora.com>,
 	kernel@collabora.com
-Subject: [PATCH v2 08/12] arm64: dts: rockchip: add USBDP phys on rk3588
-Date: Tue, 13 Feb 2024 17:32:42 +0100
-Message-ID: <20240213163609.44930-9-sebastian.reichel@collabora.com>
+Subject: [PATCH v2 10/12] arm64: dts: rockchip: add USB3 to rk3588-evb1
+Date: Tue, 13 Feb 2024 17:32:44 +0100
+Message-ID: <20240213163609.44930-11-sebastian.reichel@collabora.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240213163609.44930-1-sebastian.reichel@collabora.com>
 References: <20240213163609.44930-1-sebastian.reichel@collabora.com>
@@ -64,195 +64,208 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add both USB3-DisplayPort PHYs to RK3588 SoC DT.
+Add support for the board's USB3 connectors. It has 1x USB Type-A
+and 1x USB Type-C.
 
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3588.dtsi  | 61 +++++++++++++++++++
- arch/arm64/boot/dts/rockchip/rk3588s.dtsi | 72 +++++++++++++++++++++++
- 2 files changed, 133 insertions(+)
+ .../boot/dts/rockchip/rk3588-evb1-v10.dts     | 151 ++++++++++++++++++
+ 1 file changed, 151 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588.dtsi b/arch/arm64/boot/dts/rockchip/rk3588.dtsi
-index 5519c1430cb7..cec4dab097ae 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588.dtsi
-@@ -17,6 +17,36 @@ pipe_phy1_grf: syscon@fd5c0000 {
- 		reg = <0x0 0xfd5c0000 0x0 0x100>;
- 	};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts b/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts
+index ac7c677b0fb9..6b7d54455ca1 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts
+@@ -9,6 +9,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/pinctrl/rockchip.h>
++#include <dt-bindings/usb/pd.h>
+ #include "rk3588.dtsi"
  
-+	usbdpphy1_grf: syscon@fd5cc000 {
-+		compatible = "rockchip,rk3588-usbdpphy-grf", "syscon";
-+		reg = <0x0 0xfd5cc000 0x0 0x4000>;
+ / {
+@@ -224,6 +225,18 @@ vcc5v0_usb: vcc5v0-usb-regulator {
+ 		regulator-max-microvolt = <5000000>;
+ 		vin-supply = <&vcc5v0_usbdcin>;
+ 	};
++
++	vbus5v0_typec: vbus5v0-typec {
++		compatible = "regulator-fixed";
++		regulator-name = "vbus5v0_typec";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		enable-active-high;
++		gpio = <&gpio4 RK_PD0 GPIO_ACTIVE_HIGH>;
++		vin-supply = <&vcc5v0_usb>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&typec5v_pwren>;
 +	};
+ };
+ 
+ &combphy0_ps {
+@@ -284,6 +297,56 @@ &gmac0_rgmii_clk
+ &i2c2 {
+ 	status = "okay";
+ 
++	usbc0: usb-typec@22 {
++		compatible = "fcs,fusb302";
++		reg = <0x22>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <RK_PB4 IRQ_TYPE_LEVEL_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usbc0_int>;
++		vbus-supply = <&vbus5v0_typec>;
++		status = "okay";
 +
-+	usb2phy1_grf: syscon@fd5d4000 {
-+		compatible = "rockchip,rk3588-usb2phy-grf", "syscon", "simple-mfd";
-+		reg = <0x0 0xfd5d4000 0x0 0x4000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
++		usb_con: connector {
++			compatible = "usb-c-connector";
++			label = "USB-C";
++			data-role = "dual";
++			power-role = "dual";
++			try-power-role = "source";
++			op-sink-microwatt = <1000000>;
++			sink-pdos =
++				<PDO_FIXED(5000, 1000, PDO_FIXED_USB_COMM)>;
++			source-pdos =
++				<PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
 +
-+		u2phy1: usb2phy@4000 {
-+			compatible = "rockchip,rk3588-usb2phy";
-+			reg = <0x4000 0x10>;
-+			#clock-cells = <0>;
-+			clocks = <&cru CLK_USB2PHY_HDPTXRXPHY_REF>;
-+			clock-names = "phyclk";
-+			clock-output-names = "usb480m_phy1";
-+			interrupts = <GIC_SPI 394 IRQ_TYPE_LEVEL_HIGH 0>;
-+			resets = <&cru SRST_OTGPHY_U3_1>, <&cru SRST_P_USB2PHY_U3_1_GRF0>;
-+			reset-names = "phy", "apb";
-+			status = "disabled";
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
 +
-+			u2phy1_otg: otg-port {
-+				#phy-cells = <0>;
-+				status = "disabled";
++				port@0 {
++					reg = <0>;
++					usbc0_orien_sw: endpoint {
++						remote-endpoint = <&usbdp_phy0_orientation_switch>;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++					usbc0_role_sw: endpoint {
++						remote-endpoint = <&dwc3_0_role_switch>;
++					};
++				};
++
++				port@2 {
++					reg = <2>;
++					dp_altmode_mux: endpoint {
++						remote-endpoint = <&usbdp_phy0_dp_altmode_mux>;
++					};
++				};
 +			};
 +		};
 +	};
 +
- 	i2s8_8ch: i2s@fddc8000 {
- 		compatible = "rockchip,rk3588-i2s-tdm";
- 		reg = <0x0 0xfddc8000 0x0 0x1000>;
-@@ -310,6 +340,37 @@ sata-port@0 {
+ 	hym8563: rtc@51 {
+ 		compatible = "haoyu,hym8563";
+ 		reg = <0x51>;
+@@ -410,6 +473,16 @@ vcc5v0_host_en: vcc5v0-host-en {
+ 			rockchip,pins = <4 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
  		};
  	};
- 
-+	usbdp_phy1: phy@fed90000 {
-+		compatible = "rockchip,rk3588-usbdp-phy";
-+		reg = <0x0 0xfed90000 0x0 0x10000>;
-+		clocks = <&cru CLK_USBDPPHY_MIPIDCPPHY_REF>,
-+			 <&cru CLK_USBDP_PHY1_IMMORTAL>,
-+			 <&cru PCLK_USBDPPHY1>,
-+			 <&u2phy1>;
-+		clock-names = "refclk", "immortal", "pclk", "utmi";
-+		resets = <&cru SRST_USBDP_COMBO_PHY1_INIT>,
-+			 <&cru SRST_USBDP_COMBO_PHY1_CMN>,
-+			 <&cru SRST_USBDP_COMBO_PHY1_LANE>,
-+			 <&cru SRST_USBDP_COMBO_PHY1_PCS>,
-+			 <&cru SRST_P_USBDPPHY1>;
-+		reset-names = "init", "cmn", "lane", "pcs_apb", "pma_apb";
-+		rockchip,u2phy-grf = <&usb2phy1_grf>;
-+		rockchip,usb-grf = <&usb_grf>;
-+		rockchip,usbdpphy-grf = <&usbdpphy1_grf>;
-+		rockchip,vo-grf = <&vo0_grf>;
-+		status = "disabled";
 +
-+		usbdp_phy1_dp: dp-port {
-+			#phy-cells = <0>;
-+			status = "disabled";
++	usb-typec {
++		usbc0_int: usbc0-int {
++			rockchip,pins = <3 RK_PB4 RK_FUNC_GPIO &pcfg_pull_up>;
 +		};
 +
-+		usbdp_phy1_u3: usb3-port {
-+			#phy-cells = <0>;
-+			status = "disabled";
++		typec5v_pwren: typec5v-pwren {
++			rockchip,pins = <4 RK_PD0 RK_FUNC_GPIO &pcfg_pull_none>;
 +		};
 +	};
-+
- 	combphy1_ps: phy@fee10000 {
- 		compatible = "rockchip,rk3588-naneng-combphy";
- 		reg = <0x0 0xfee10000 0x0 0x100>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-index 8708436dd545..d384450d08b7 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-@@ -516,11 +516,22 @@ vop_grf: syscon@fd5a4000 {
- 		reg = <0x0 0xfd5a4000 0x0 0x2000>;
- 	};
+ };
  
-+	vo0_grf: syscon@fd5a6000 {
-+		compatible = "rockchip,rk3588-vo-grf", "syscon";
-+		reg = <0x0 0xfd5a6000 0x0 0x2000>;
-+		clocks = <&cru PCLK_VO0GRF>;
-+	};
-+
- 	vo1_grf: syscon@fd5a8000 {
- 		compatible = "rockchip,rk3588-vo-grf", "syscon";
- 		reg = <0x0 0xfd5a8000 0x0 0x100>;
- 	};
+ &pwm2 {
+@@ -1040,6 +1113,22 @@ &sata0 {
+ 	status = "okay";
+ };
  
-+	usb_grf: syscon@fd5ac000 {
-+		compatible = "rockchip,rk3588-usb-grf", "syscon";
-+		reg = <0x0 0xfd5ac000 0x0 0x4000>;
-+	};
++&u2phy0 {
++	status = "okay";
++};
 +
- 	php_grf: syscon@fd5b0000 {
- 		compatible = "rockchip,rk3588-php-grf", "syscon";
- 		reg = <0x0 0xfd5b0000 0x0 0x1000>;
-@@ -536,6 +547,36 @@ pipe_phy2_grf: syscon@fd5c4000 {
- 		reg = <0x0 0xfd5c4000 0x0 0x100>;
- 	};
- 
-+	usbdpphy0_grf: syscon@fd5c8000 {
-+		compatible = "rockchip,rk3588-usbdpphy-grf", "syscon";
-+		reg = <0x0 0xfd5c8000 0x0 0x4000>;
-+	};
++&u2phy0_otg {
++	status = "okay";
++};
 +
-+	usb2phy0_grf: syscon@fd5d0000 {
-+		compatible = "rockchip,rk3588-usb2phy-grf", "syscon", "simple-mfd";
-+		reg = <0x0 0xfd5d0000 0x0 0x4000>;
++&u2phy1 {
++	status = "okay";
++};
++
++&u2phy1_otg {
++	status = "okay";
++};
++
+ &u2phy2 {
+ 	status = "okay";
+ };
+@@ -1078,3 +1167,65 @@ &usb_host1_ehci {
+ &usb_host1_ohci {
+ 	status = "okay";
+ };
++
++&usbdp_phy0 {
++	orientation-switch;
++	mode-switch;
++	sbu1-dc-gpios = <&gpio4 RK_PA6 GPIO_ACTIVE_HIGH>;
++	sbu2-dc-gpios = <&gpio4 RK_PA7 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++
++	port {
 +		#address-cells = <1>;
-+		#size-cells = <1>;
++		#size-cells = <0>;
 +
-+		u2phy0: usb2phy@0 {
-+			compatible = "rockchip,rk3588-usb2phy";
-+			reg = <0x0 0x10>;
-+			#clock-cells = <0>;
-+			clocks = <&cru CLK_USB2PHY_HDPTXRXPHY_REF>;
-+			clock-names = "phyclk";
-+			clock-output-names = "usb480m_phy0";
-+			interrupts = <GIC_SPI 393 IRQ_TYPE_LEVEL_HIGH 0>;
-+			resets = <&cru SRST_OTGPHY_U3_0>, <&cru SRST_P_USB2PHY_U3_0_GRF0>;
-+			reset-names = "phy", "apb";
-+			status = "disabled";
++		usbdp_phy0_orientation_switch: endpoint@0 {
++			reg = <0>;
++			remote-endpoint = <&usbc0_orien_sw>;
++		};
 +
-+			u2phy0_otg: otg-port {
-+				#phy-cells = <0>;
-+				status = "disabled";
-+			};
++		usbdp_phy0_dp_altmode_mux: endpoint@1 {
++			reg = <1>;
++			remote-endpoint = <&dp_altmode_mux>;
 +		};
 +	};
++};
 +
- 	usb2phy2_grf: syscon@fd5d8000 {
- 		compatible = "rockchip,rk3588-usb2phy-grf", "syscon", "simple-mfd";
- 		reg = <0x0 0xfd5d8000 0x0 0x4000>;
-@@ -2360,6 +2401,37 @@ dmac2: dma-controller@fed10000 {
- 		#dma-cells = <1>;
- 	};
- 
-+	usbdp_phy0: phy@fed80000 {
-+		compatible = "rockchip,rk3588-usbdp-phy";
-+		reg = <0x0 0xfed80000 0x0 0x10000>;
-+		clocks = <&cru CLK_USBDPPHY_MIPIDCPPHY_REF>,
-+			 <&cru CLK_USBDP_PHY0_IMMORTAL>,
-+			 <&cru PCLK_USBDPPHY0>,
-+			 <&u2phy0>;
-+		clock-names = "refclk", "immortal", "pclk", "utmi";
-+		resets = <&cru SRST_USBDP_COMBO_PHY0_INIT>,
-+			 <&cru SRST_USBDP_COMBO_PHY0_CMN>,
-+			 <&cru SRST_USBDP_COMBO_PHY0_LANE>,
-+			 <&cru SRST_USBDP_COMBO_PHY0_PCS>,
-+			 <&cru SRST_P_USBDPPHY0>;
-+		reset-names = "init", "cmn", "lane", "pcs_apb", "pma_apb";
-+		rockchip,u2phy-grf = <&usb2phy0_grf>;
-+		rockchip,usb-grf = <&usb_grf>;
-+		rockchip,usbdpphy-grf = <&usbdpphy0_grf>;
-+		rockchip,vo-grf = <&vo0_grf>;
-+		status = "disabled";
++&usbdp_phy0_u3 {
++	status = "okay";
++};
 +
-+		usbdp_phy0_dp: dp-port {
-+			#phy-cells = <0>;
-+			status = "disabled";
-+		};
++&usbdp_phy1 {
++	/*
++	 * USBDP PHY1 is wired to a female USB3 Type-A connector. Additionally
++	 * the differential pairs 2+3 and the aux channel are wired to a RTD2166,
++	 * which converts the DP signal into VGA. This is exposed on the
++	 * board via a female VGA connector.
++	 */
++	rockchip,dp-lane-mux = <2 3>;
++	status = "okay";
++};
 +
-+		usbdp_phy0_u3: usb3-port {
-+			#phy-cells = <0>;
-+			status = "disabled";
++&usbdp_phy1_u3 {
++	status = "okay";
++};
++
++&usb_host0_xhci {
++	dr_mode = "otg";
++	usb-role-switch;
++	status = "okay";
++
++	port {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		dwc3_0_role_switch: endpoint@0 {
++			reg = <0>;
++			remote-endpoint = <&usbc0_role_sw>;
 +		};
 +	};
++};
 +
- 	combphy0_ps: phy@fee00000 {
- 		compatible = "rockchip,rk3588-naneng-combphy";
- 		reg = <0x0 0xfee00000 0x0 0x100>;
++&usb_host1_xhci {
++	dr_mode = "host";
++	status = "okay";
++};
 -- 
 2.43.0
 
