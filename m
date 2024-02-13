@@ -1,229 +1,156 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wfhigh6-smtp.messagingengine.com (wfhigh6-smtp.messagingengine.com [64.147.123.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2B82EB11;
-	Tue, 13 Feb 2024 09:50:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EB1381BF;
+	Tue, 13 Feb 2024 09:50:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707817841; cv=none; b=E3mgd41z5XOEBji8rh5BdoCJTsPfbLvEXncp/QJkJc7Qy0AnB2crKL0uo5NFSds0WRce7Q2bcILkGLM9b/HdfWbFKYhZh/dtzQTlk7iaSO8bg85V1BzNcIgjVKE9hUKz5s9hawMWsxKs17rhj7d/H18jSJJ4bt2PZdbuRfpiu1A=
+	t=1707817862; cv=none; b=f3/FXloa1OMlncWJqcPoHnP0bIVFWG6qJ7P8wHX/pdX+Pf1fwSXXidTPLWIsLkca0gUdkDj0J1w5W8VQvIAq066AThesPZjKuj8rkHnUq7nbdq69rDq359yO5cehv4TXlM0ZwSiGy4jrKeopW8nzH840L/aavFD2mQdCnSuomOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707817841; c=relaxed/simple;
-	bh=6BJAwxlKOz9qRg+AQZWq8lwpMqt/xl2ew65Cb1aNdSY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XYbqva2BbEt8pMUbhPTDg+m8l0VRrSSVQo6yXo8aPQTsolkXj+KAj17Ld0usI5iFJR1FnhK/GLyGjVOt6ROKQe0LXZcJdaLwwdJp/ER6N3W9Zt5Uh4qFSpJKtXLbFjTbngnmvA9PuaRuzx4nOHRwyEepwdgFJkAvsICkePd/33c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fNTT1rqc; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707817862; c=relaxed/simple;
+	bh=du5IWnetsbefdXGP7RTt9oa3EydqVOtEqT7mUA/DKPM=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=pLjZDJJc+DrAzTaGiAYrRdKL8+yVBAcvz/licZYCh2Fkyd6lBioAnRGm8dx5GDoCzd/LLQa8TAG5aiwtSdX5o96WvJMryCI8G2z6ILEBdXCqqGKsKS8IpYb/am0w3RYGBdQOlmUNoM446VB2OXEWyBEucNQHSpxz8aMo0lAXNYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=CQiIePV5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ImQV3ToI; arc=none smtp.client-ip=64.147.123.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fNTT1rqc"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-560e9c7a094so5379250a12.0;
-        Tue, 13 Feb 2024 01:50:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707817837; x=1708422637; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=02Q7abfACIj5GpFrjTtMBvmCgtw5jU81SC8//k9tfeI=;
-        b=fNTT1rqcX201wiDYSPXUcYLwolzPC5KsRMMrqbf/auaeAfXsBtVK240okZCVu/KMgW
-         CijPyPA8YlH8LJTyRusc8RBrp0+XzEe9G3LfzaoVZ7kGICRI5X9+uc7fDIuVtv/vSWwY
-         rYW7VSiIev1ZbtYWRsSF0hRJ+5wNo5NjWxwQzKfh8Bn3y9I5sVbZMcwxnrBPg88VfyAB
-         GFgCGgO8Q806gZj3pukuAbI3+St8v4UNVmTO6Vlo9NQBPHocv+YK+8h0QVQB33O9sFvu
-         mqBySqOpQeM5g/Xbg4sRiAohtF7C9M6D2ieHp5TktHwgrIkxHXPSE+f8mu+B3Bomw0z7
-         N4VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707817837; x=1708422637;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=02Q7abfACIj5GpFrjTtMBvmCgtw5jU81SC8//k9tfeI=;
-        b=CmPeGCfThrVmGHMOlyVItmP7iN/nQg6jjKs/J4vTwHkOqdK4G8P7aFRwGYUqr4H1Vn
-         LRd4KBRtG8ktpPHdBLT68G63fFYmNUw0N55PXWq4qLERLH9GCsJu6rDFOQUl7S7rW/1x
-         ZkIsJSw3V7DP2jm5hBEXpMDRGiIRpewolXTZ9yu5FXW6fwhhYHzf0k1UJEn94ZpIhOqM
-         gEn8gcVm/cuYZ9kMEwYB+mdLOfc3ZrGMdkqByyrT1EqtyTYhHQubzBDBQ7N+zecZyAag
-         X4uYbJhMoDaA026fBAoTTz77JG65SUY2dPNdMrjgcEsOT5iw5y9BKXa0XJKVWj1h2YR5
-         tXiA==
-X-Forwarded-Encrypted: i=1; AJvYcCWeKhPwiFwhu4aoQTz1qgr2M3xqPPwyZcwfGinj7nrhSuQBi/LXIY2nSpZGcN+i7jyod378OfUAuJMfhyKEtKd7XIogcqUJY7K5G89d8D1Hj/RB+tzgd6soL9taopDJRsj1OM9XaXhptAEupNnO118tEiSgt3VB5nVeI8T1kt3EEbhW
-X-Gm-Message-State: AOJu0Yyk8wv+roD5sQfmNcaZnnZFzGEQAOXjkAgD30DZsM+Mq1WAXQrq
-	i8+XHx5ybKI7PThbPHxb3X7CxJi74Rzv5eQUbMqueE1ShYPZjICo
-X-Google-Smtp-Source: AGHT+IGRIRAGN7HlQ2YL3Deo9ao65iE39g1lBXZFiJyiu8wwOB+r4smCrSfid72KhonwYf2dnDlcBQ==
-X-Received: by 2002:a17:906:f2cb:b0:a3b:e975:c530 with SMTP id gz11-20020a170906f2cb00b00a3be975c530mr6234324ejb.51.1707817837303;
-        Tue, 13 Feb 2024 01:50:37 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXqB80o9R/NU62N2vMlE6LfVBR8z/D//hqbBM7lCJFqCG2bTdNYkG9NmP+M92CJeJjQZURrPST8hlFOXdxAixqTPKbFBmI6TnVpKJgm1exDOHK3I5E7v3qs/VYuOAYGtrs3pYdnQjBugujLlZfC4l7ZIvhAqmDacUWXeE4I5uEMBAJj7EEHge00eI7fdejaFYk5tmRO09wLscNs3cACWyffNPM1dZNaEQXW4wgs+BojO2hfVEZbK0c3ey6Yy+Q+hIdsznSCxXt3xeJEJFeAIRibUu081FHPHMPN0ldAM52jmd5qWYg403gEda1Z6AXm4itWlo2Vo/XyjkEpGfBasR+v5O37F96Xek7B9IuRS/VvUvrNOk2gXOxu8TmJf1hDncDhVvGvXFj/MnHWshhaMS+QX7NrMJytKGvDjoI5CIlddiTziQsTLeInP3/uouSmjkvkg1Vy+C4jJd/KbQKwci4Ydxlw4Ls3WU41di2wIgrakCCIaSEsZ+F8RiuClNHk/z9A/GoKuAU1gN27YNYziUa7
-Received: from ?IPv6:2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47? (p200300f6ef1b2000944ccbc71e1c2c47.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47])
-        by smtp.gmail.com with ESMTPSA id b17-20020a1709062b5100b00a3cd41b3c19sm1112913ejg.199.2024.02.13.01.50.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 01:50:37 -0800 (PST)
-Message-ID: <92e7e0acf6d8746a07729924982acbfea777c468.camel@gmail.com>
-Subject: Re: [PATCH 1/5] spi: add spi_optimize_message() APIs
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, Mark Brown <broonie@kernel.org>
-Cc: Martin Sperl <kernel@martin.sperl.org>, David Jander
- <david@protonic.nl>,  Jonathan Cameron <jic23@kernel.org>, Michael
- Hennerich <michael.hennerich@analog.com>, Nuno =?ISO-8859-1?Q?S=E1?=
- <nuno.sa@analog.com>, Alain Volmat <alain.volmat@foss.st.com>, Maxime
- Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>,  linux-spi@vger.kernel.org,
- linux-kernel@vger.kernel.org,  linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org,  linux-iio@vger.kernel.org
-Date: Tue, 13 Feb 2024 10:53:56 +0100
-In-Reply-To: <20240212-mainline-spi-precook-message-v1-1-a2373cd72d36@baylibre.com>
-References: 
-	<20240212-mainline-spi-precook-message-v1-0-a2373cd72d36@baylibre.com>
-	 <20240212-mainline-spi-precook-message-v1-1-a2373cd72d36@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="CQiIePV5";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ImQV3ToI"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.west.internal (Postfix) with ESMTP id CD29E1800092;
+	Tue, 13 Feb 2024 04:50:56 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Tue, 13 Feb 2024 04:50:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1707817856; x=1707904256; bh=lHYsTK1bfv
+	xaz8ZLnxtMiOszwDEbZ3X5lHEYDDbn/s4=; b=CQiIePV5jYKolbhb+hZq6ezei6
+	Wtv+RrejZ+2KBZJy8yq2wk1h/pKErRHX/0afATPyG8zEIuqVvH9xMzssrPftbTri
+	4P/cU32EASZA4yUv/4HOUQXkxfl5tjyJH2SzluKJ/RHCgzIt4JTOLYO4L0UdXjft
+	V0ztrpdwdQXyGvGArBPS71XPPYRcHMoE3V+jpzpixBVZA+3qN+aGasQrhW4eeD5p
+	oqOIvFyKpDC+kBOd45QmnOnqZw2oRpsZbAtX1QA1QOujVs/TJKhy57itdo1r2EwR
+	knQXmQ0CV+PlVcgUPzySY5pIL1mwUqWff6ioVUP0+/d4JEdOtnx79ci35EGg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1707817856; x=1707904256; bh=lHYsTK1bfvxaz8ZLnxtMiOszwDEb
+	Z3X5lHEYDDbn/s4=; b=ImQV3ToIG2iFqj7LvNzhWlLy0JJpcQkwHH8CPhHvPF5M
+	fcGH6tgJDeM7mdornTeX3N/rp2b5+IiQrDku4RKRz4eibn98+wIbH95xgHOYhUhP
+	KRFXplMeo6lmUMEhxttLPiKIw38XzeOvdhDup6drNVtf597M1NzwUA5gKRUlDCkr
+	qNVPENfarayqRCd7xfPZFs0ZDHKsyHxEGWZllgpSGqgcloLNb0WexWxnkSzNNnSu
+	CR6Sjo5tjhX4KM9YlzTJRRBICQWPh76iOok3n6w51prR+0qx8iDZp/VS2PWmzaZR
+	BMG8EfBslDyJB7EPKvHhRbq3Z8bwZeGDgHobwJWF1A==
+X-ME-Sender: <xms:gDvLZfHHHEVOk9EVqJDdwZqjypKSMXu9MV_5mkY0WkB9kufUQ705YQ>
+    <xme:gDvLZcXDBeElJo3nFjgPksrliMVjZBMpXeJLcJuqKAWcu7nRNkZV8VJNTd7nTolTe
+    pLUeSVR2_KW5de04J4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudehgddtjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
+    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
+    hnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:gDvLZRKxU0SaVK-LVEq_Aihz8OxEqONY9ITHaoAiKT5BTqsPiY4wtQ>
+    <xmx:gDvLZdH8M2Z93jqDfmKi8QDO-FyZk_FbrJWJw8op6zgsZzF2Py4LXw>
+    <xmx:gDvLZVUvNsTvd9l76WHdGPV-aKNFdj4BTkqcK_9Uqm0wnjIxdzLH_w>
+    <xmx:gDvLZafzJYs9f85v-Xjcw_OAiHiVON9oOLpKGDs687AFRn7oe_C44YxTmoQ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id F075FB6008D; Tue, 13 Feb 2024 04:50:55 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-144-ge5821d614e-fm-20240125.002-ge5821d61
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Message-Id: <7723c9f1-fda7-4dc9-bb5a-e12d4908becf@app.fastmail.com>
+In-Reply-To: <1707024641-22460-9-git-send-email-quic_taozha@quicinc.com>
+References: <1707024641-22460-1-git-send-email-quic_taozha@quicinc.com>
+ <1707024641-22460-9-git-send-email-quic_taozha@quicinc.com>
+Date: Tue, 13 Feb 2024 10:50:35 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Tao Zhang" <quic_taozha@quicinc.com>,
+ "Mathieu Poirier" <mathieu.poirier@linaro.org>,
+ "Suzuki K Poulose" <suzuki.poulose@arm.com>,
+ "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+ "Konrad Dybcio" <konradybcio@gmail.com>,
+ "Mike Leach" <mike.leach@linaro.org>, "Rob Herring" <robh+dt@kernel.org>,
+ "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+ regressions@lists.linux.dev
+Cc: "Mao Jinlong" <quic_jinlmao@quicinc.com>, "Leo Yan" <leo.yan@linaro.org>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ "Tingwei Zhang" <quic_tingweiz@quicinc.com>,
+ "Yuanfang Zhang" <quic_yuanfang@quicinc.com>,
+ "Trilok Soni" <quic_tsoni@quicinc.com>,
+ "Song Chai" <quic_songchai@quicinc.com>, linux-arm-msm@vger.kernel.org,
+ "Bjorn Andersson" <andersson@kernel.org>
+Subject: Re: [PATCH v7 08/10] coresight-tpdm: Add timestamp control register support
+ for the CMB
+Content-Type: text/plain
 
-On Mon, 2024-02-12 at 17:26 -0600, David Lechner wrote:
-> This adds a new spi_optimize_message() function that can be used to
-> optimize SPI messages that are used more than once. Peripheral drivers
-> that use the same message multiple times can use this API to perform SPI
-> message validation and controller-specific optimizations once and then
-> reuse the message while avoiding the overhead of revalidating the
-> message on each spi_(a)sync() call.
->=20
-> Internally, the SPI core will also call this function for each message
-> if the peripheral driver did not explicitly call it. This is done to so
-> that controller drivers don't have to have multiple code paths for
-> optimized and non-optimized messages.
->=20
-> A hook is provided for controller drivers to perform controller-specific
-> optimizations.
->=20
-> Suggested-by: Martin Sperl <kernel@martin.sperl.org>
-> Link:
-> https://lore.kernel.org/linux-spi/39DEC004-10A1-47EF-9D77-276188D2580C@ma=
-rtin.sperl.org/
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
-> =C2=A0drivers/spi/spi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 145 +++++++=
-+++++++++++++++++++++++++++++++++++++++-
-> -
-> =C2=A0include/linux/spi/spi.h |=C2=A0 19 +++++++
-> =C2=A02 files changed, 160 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-> index c2b10e2c75f0..5bac215d7009 100644
-> --- a/drivers/spi/spi.c
-> +++ b/drivers/spi/spi.c
-> @@ -2106,6 +2106,41 @@ struct spi_message *spi_get_next_queued_message(st=
-ruct
-> spi_controller *ctlr)
-> =C2=A0}
-> =C2=A0EXPORT_SYMBOL_GPL(spi_get_next_queued_message);
-> =C2=A0
-> +/**
-> + * __spi_unoptimize_message - shared implementation of
-> spi_unoptimize_message()
-> + *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 and spi_maybe_unoptimize_message()
-> + * @msg: the message to unoptimize
-> + *
-> + * Periperhal drivers should use spi_unoptimize_message() and callers in=
-side
-> + * core should use spi_maybe_unoptimize_message() rather than calling th=
-is
-> + * function directly.
-> + *
-> + * It is not valid to call this on a message that is not currently optim=
-ized.
-> + */
-> +static void __spi_unoptimize_message(struct spi_message *msg)
-> +{
-> +	struct spi_controller *ctlr =3D msg->spi->controller;
-> +
-> +	if (ctlr->unoptimize_message)
-> +		ctlr->unoptimize_message(msg);
-> +
-> +	msg->optimized =3D false;
-> +	msg->opt_state =3D NULL;
-> +}
-> +
-> +/**
-> + * spi_maybe_unoptimize_message - unoptimize msg not managed by a periph=
-eral
-> + * @msg: the message to unoptimize
-> + *
-> + * This function is used to unoptimize a message if and only if it was
-> + * optimized by the core (via spi_maybe_optimize_message()).
-> + */
-> +static void spi_maybe_unoptimize_message(struct spi_message *msg)
-> +{
-> +	if (!msg->pre_optimized && msg->optimized)
-> +		__spi_unoptimize_message(msg);
-> +}
-> +
-> =C2=A0/**
-> =C2=A0 * spi_finalize_current_message() - the current message is complete
-> =C2=A0 * @ctlr: the controller to return the message to
-> @@ -2153,6 +2188,8 @@ void spi_finalize_current_message(struct spi_contro=
-ller
-> *ctlr)
-> =C2=A0
-> =C2=A0	mesg->prepared =3D false;
-> =C2=A0
-> +	spi_maybe_unoptimize_message(mesg);
-> +
-> =C2=A0	WRITE_ONCE(ctlr->cur_msg_incomplete, false);
-> =C2=A0	smp_mb(); /* See __spi_pump_transfer_message()... */
-> =C2=A0	if (READ_ONCE(ctlr->cur_msg_need_completion))
-> @@ -4194,6 +4231,99 @@ static int __spi_validate(struct spi_device *spi,
-> struct spi_message *message)
-> =C2=A0	return 0;
-> =C2=A0}
-> =C2=A0
-> +/**
-> + * __spi_optimize_message - shared implementation for spi_optimize_messa=
-ge()
-> + *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 and spi_maybe_optimize_message()
-> + * @spi: the device that will be used for the message
-> + * @msg: the message to optimize
-> + * @pre_optimized: whether the message is considered pre-optimized or no=
-t
-> + *
-> + * Peripheral drivers will call spi_optimize_message() and the spi core =
-will
-> + * call spi_maybe_optimize_message() instead of calling this directly.
-> + *
-> + * It is not valid to call this on a message that has already been optim=
-ized.
-> + *
-> + * Return: zero on success, else a negative error code
-> + */
-> +static int __spi_optimize_message(struct spi_device *spi,
-> +				=C2=A0 struct spi_message *msg,
-> +				=C2=A0 bool pre_optimized)
-> +{
-> +	struct spi_controller *ctlr =3D spi->controller;
-> +	int ret;
-> +
-> +	ret =3D __spi_validate(spi, msg);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (ctlr->optimize_message) {
-> +		ret =3D ctlr->optimize_message(msg);
-> +		if (ret)
-> +			return ret;
-> +	}
+On Sun, Feb 4, 2024, at 06:30, Tao Zhang wrote:
 
-Not really sure what are the spi core guarantees or what controllers should=
- be
-expecting but I'll still ask :). Do we need to care about locking in here?
-Mainly on the controller callback? For spi device related data I guess it's=
- up
-to the peripheral driver not to do anything weird or to properly protect th=
-e spi
-message?
+> @@ -910,7 +1014,7 @@ static struct attribute *tpdm_dsb_patt_attrs[] = {
+>  	DSB_PATT_MASK_ATTR(5),
+>  	DSB_PATT_MASK_ATTR(6),
+>  	DSB_PATT_MASK_ATTR(7),
+> -	&dev_attr_enable_ts.attr,
+> +	DSB_PATT_ENABLE_TS,
+>  	&dev_attr_set_type.attr,
+>  	NULL,
+>  };
+> @@ -964,6 +1068,7 @@ static struct attribute *tpdm_cmb_patt_attrs[] = {
+>  	CMB_PATT_ATTR(1),
+>  	CMB_PATT_MASK_ATTR(0),
+>  	CMB_PATT_MASK_ATTR(1),
+> +	CMB_PATT_ENABLE_TS,
+>  	NULL,
+>  };
+> 
+> @@ -158,6 +175,10 @@
+>  		tpdm_simple_dataset_rw(tpmr##nr,		\
+>  		DSB_PATT_MASK, nr)
+> 
+> +#define DSB_PATT_ENABLE_TS					\
+> +		tpdm_patt_enable_ts(enable_ts,			\
+> +		DSB_PATT)
+> +
+>  #define DSB_MSR_ATTR(nr)					\
+>  		tpdm_simple_dataset_rw(msr##nr,			\
+>  		DSB_MSR, nr)
 
-- Nuno S=C3=A1
+This is causing build failures in linux-next now:
 
+drivers/hwtracing/coresight/coresight-tpdm.c:1055:2: error: missing field 'idx' initializer [-Werror,-Wmissing-field-initializers]
+ 1055 |         DSB_PATT_ENABLE_TS,
+      |         ^
+drivers/hwtracing/coresight/coresight-tpdm.h:184:3: note: expanded from macro 'DSB_PATT_ENABLE_TS'
+  184 |                 tpdm_patt_enable_ts(enable_ts,                  \
+      |                 ^
+drivers/hwtracing/coresight/coresight-tpdm.h:156:5: note: expanded from macro 'tpdm_patt_enable_ts'
+  156 |            }                                                    \
+      |            ^
+drivers/hwtracing/coresight/coresight-tpdm.c:1109:2: error: missing field 'idx' initializer [-Werror,-Wmissing-field-initializers]
+ 1109 |         CMB_PATT_ENABLE_TS,
+      |         ^
+drivers/hwtracing/coresight/coresight-tpdm.h:208:3: note: expanded from macro 'CMB_PATT_ENABLE_TS'
+  208 |                 tpdm_patt_enable_ts(enable_ts,                  \
+      |                 ^
+drivers/hwtracing/coresight/coresight-tpdm.h:156:5: note: expanded from macro 'tpdm_patt_enable_ts'
+  156 |            }                                                    \
+      |            ^
+
+Not sure what is going on, so I reverted your patch locally
+for my test setup.
+Can you send a fix to make it build again?
+
+      Arnd
