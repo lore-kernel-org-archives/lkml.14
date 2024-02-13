@@ -1,132 +1,89 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E003655C1D;
-	Tue, 13 Feb 2024 13:25:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B0B55794;
+	Tue, 13 Feb 2024 13:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707830751; cv=none; b=XZenOsOTEpJRdIwvVClwT9HtmwSNwJUcDUm/Zvc7PKfVLdtNTNrgi6bPbZkuljbn9n7rA6BqUOdIAjoXVewH2Uh+5h76tR984hus1So+r2p92WuO5Z1AqFRPgNW1DpLLohP+TRunogXTXQdHk/76jD6M92oIJGigywb298jTGag=
+	t=1707830774; cv=none; b=UL47pi05/OTwDEAneaaFi0wIgQZ/YJfNzbZStYa8+9o/Wa8atZ/RxufIEexhyzLF0SrSvhrCDaA/I1jje+g8snEBD5paAJst0yuFGpDx4ZrcUQd17giZwIkz9b5iQxHqnxHqK88FD8XIWOZ79hL3TRQ6I60LjSMKJoOkCCaVdxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707830751; c=relaxed/simple;
-	bh=ibVHfFsPFcvSEZ7/yr/9ehuQbI8jeSYbWCxBJlh89tY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RsLXo1ObxOLtaIlGvtfyg7vhetpm8NTmeUNothPkKWCi7vUM9VvB6pXSEb90PMSB8/cztlz3oqdRqe89yt38Wq2NfPpCzWxlXxxTF7Vs/AhNJWRAYLU5s1iP2lzUOwmD2nk37Q/r9CZmpc1kA4jqrnw82JKS5VlagZGD/d6k8pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=a6eoaBIp; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=OEHAVu57; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="a6eoaBIp";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="OEHAVu57"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id EE10721F9A;
-	Tue, 13 Feb 2024 13:25:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1707830748; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=UD49cq/Gzb+y6/AtUpmsq4G9cGtvq1kVLdo8fHtz7EE=;
-	b=a6eoaBIpcKAjo+ieKqHcPph35KLF6tQEL8BzTVtiBtN++TrodQa5xpkFKaOKQGEpjkkm9s
-	d+TKbZacIZbDYo+dcht7j2UYu99jHANsbHiXZ6I0S8BzlaRQAXu+hDrj6gDMeZxSJSTrHi
-	bc7WJZseuG3Vb6ClIjPWQsfC5GusLao=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1707830747; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=UD49cq/Gzb+y6/AtUpmsq4G9cGtvq1kVLdo8fHtz7EE=;
-	b=OEHAVu57ZvMBEUh7xTEdmdYpQDqlNb8nP+saeshxetOx4KdA4bgUHUZfrO1jwymwkZPVyJ
-	fx1fLG8h5+HfWQ6k7+/vPyMbkxgi2ByFIqGpuS8c6o+cBuR/I6OgYM7Gii3SxjLOujSajG
-	UWPRkQc3OD6zdkyH011FLisX2krvGx0=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DFB031370C;
-	Tue, 13 Feb 2024 13:25:47 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id H51pNttty2VFGAAAD6G6ig
-	(envelope-from <petr.pavlu@suse.com>); Tue, 13 Feb 2024 13:25:47 +0000
-From: Petr Pavlu <petr.pavlu@suse.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com,
-	jolsa@kernel.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Petr Pavlu <petr.pavlu@suse.com>
-Subject: [PATCH] tracing: Fix HAVE_DYNAMIC_FTRACE_WITH_REGS ifdef
-Date: Tue, 13 Feb 2024 14:24:34 +0100
-Message-Id: <20240213132434.22537-1-petr.pavlu@suse.com>
-X-Mailer: git-send-email 2.35.3
+	s=arc-20240116; t=1707830774; c=relaxed/simple;
+	bh=IMVwaUMIKgLbPZtYISG0lVDxsC9q5IHxqt3EbgePkN8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GEesNIl5ii0biBkC3QQ4UonYq99LXvdQrnxMN+EyCRzyCXnJ2npRzzQ6bcyEsfG7Xw8vhBxxZ6sdOC88cFqUG7exe9tcbg+jFsE8qgqs9mLepsr4KME1F34XakTeZ0ADIYkVqr2taD561zQcgLtX7545nq/Ifolg4PDfSaWqxyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a2d7e2e7fe0so753929866b.1;
+        Tue, 13 Feb 2024 05:26:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707830770; x=1708435570;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aSWwrZ/GJcDdaONc7v+8jDSkrPt6bx1El6Fj3mB8kz8=;
+        b=dCf6WT1+T0tayAURl6c6H7uBetpxIw1iZb6RBjwHqyI44SpuZ8ac6dTQ943E8EBdKu
+         jpJDga5kJ5tYly/fujhbaGNeWXafa8MBlhXD+wM+9GrQgyqDdi9qV7KJPASZMH9CxirI
+         H/C4r7BwG2uQt5NzVsKfAmMyaKowpfrQ0kiZLM0GDViJtgrD/DkK6gdcwlO9yPUVqaFy
+         0wx8Ht6EZIycS0IygMUo5SA70v+v+YGh16xvaSXw0uBX3xrHMkNeTT3uIL+5BSnMZeWb
+         2Cgs4lNC6/UCLy/OCDB0JzNZ+yqK6d38286eGyQ6GJ80ZUFCgkpmRXvQx20DJCsCznmU
+         RZbg==
+X-Forwarded-Encrypted: i=1; AJvYcCUCcqngJq83T25Ekta9lj7z8avlRmRRewl1i8BoZrQbU2/94Vf3kYQLrNzY168jtSFlYRG4dtT2LzmbISxk5Np/d87cVZ/ezdIWzu0dDhuWweadqFKDjE0mc4wNeVSDynrYdUax
+X-Gm-Message-State: AOJu0Yxe7mhhkr3nrV1X4LLJxyF/GohQhzoJKfGwgnFGftBwG8YdJohj
+	3l5BW3q2us0m4qWBqo1305d/q/NYW6KfTOk8w9gHcik+/+gWEV8U
+X-Google-Smtp-Source: AGHT+IEhaCD72Kvg5eKMGqZBOIOG+pGQD2NizQ654e+yDwFTNOXFnygIBSBb/SwLw0XzCPTOBWRTjg==
+X-Received: by 2002:a17:906:f0d3:b0:a3c:8de7:3add with SMTP id dk19-20020a170906f0d300b00a3c8de73addmr1942016ejb.7.1707830770221;
+        Tue, 13 Feb 2024 05:26:10 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX/pXam7dF5FDnLt+I4eAlfZhyMxRQWXbe24qBP1rAwnGBKFNkvO+UnstcqyFg9rVAmV8MEHuOI+4NBuR/EjFn+oX5L2gT0ceoBynKCKPsbpb4sKwWz7G7DQxW5AoNj7OS7fZpy5VZJE0LrJpfnaGlGOc86f65sfZ+QQxNpreMWDvuh+b15JLUXDmMiaIMXUL48ci1/obTwiyS6erqgqfdoEt1mCrMSC6oM8kecU3fchVlWXAzOIE3lkXmV3KNox2WAlaAR7e/La5Guvoo46zaV1T/SeACueUgT1TFf/bMbEw==
+Received: from gmail.com (fwdproxy-lla-119.fbsv.net. [2a03:2880:30ff:77::face:b00c])
+        by smtp.gmail.com with ESMTPSA id tb20-20020a1709078b9400b00a3cf436af4fsm824277ejc.3.2024.02.13.05.26.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 05:26:09 -0800 (PST)
+Date: Tue, 13 Feb 2024 05:26:07 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: kuba@kernel.org, davem@davemloft.net, pabeni@redhat.com,
+	edumazet@google.com, Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, horms@kernel.org
+Subject: Re: [PATCH net 6/7] net: fill in MODULE_DESCRIPTION()s for
+ mdio_devres
+Message-ID: <Zctt74KR4lZ8CeV0@gmail.com>
+References: <20240213112122.404045-1-leitao@debian.org>
+ <20240213112122.404045-7-leitao@debian.org>
+ <045f7cdb-7f99-4182-8c75-097be8a5a7d0@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=OEHAVu57
-X-Spamd-Result: default: False [4.69 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 R_MISSING_CHARSET(2.50)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 BROKEN_CONTENT_TYPE(1.50)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 DKIM_TRACE(0.00)[suse.com:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_SEVEN(0.00)[8];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.00)[41.15%]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: 4.69
-X-Rspamd-Queue-Id: EE10721F9A
-X-Spam-Level: ****
-X-Spam-Flag: NO
-X-Spamd-Bar: ++++
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <045f7cdb-7f99-4182-8c75-097be8a5a7d0@lunn.ch>
 
-Commit a8b9cf62ade1 ("ftrace: Fix DIRECT_CALLS to use SAVE_REGS by
-default") attempted to fix an issue with direct trampolines on x86, see
-its description for details. However, it wrongly referenced the
-HAVE_DYNAMIC_FTRACE_WITH_REGS config option and the problem is still
-present.
+On Tue, Feb 13, 2024 at 02:19:39PM +0100, Andrew Lunn wrote:
+> On Tue, Feb 13, 2024 at 03:21:21AM -0800, Breno Leitao wrote:
+> > W=1 builds now warn if module is built without a MODULE_DESCRIPTION().
+> > Add descriptions to the PHY MDIO helpers.
+> > 
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > ---
+> >  drivers/net/phy/mdio_devres.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/net/phy/mdio_devres.c b/drivers/net/phy/mdio_devres.c
+> > index 69b829e6ab35..8921fa22bdbd 100644
+> > --- a/drivers/net/phy/mdio_devres.c
+> > +++ b/drivers/net/phy/mdio_devres.c
+> > @@ -131,4 +131,5 @@ int __devm_of_mdiobus_register(struct device *dev, struct mii_bus *mdio,
+> >  EXPORT_SYMBOL(__devm_of_mdiobus_register);
+> >  #endif /* CONFIG_OF_MDIO */
+> >  
+> > +MODULE_DESCRIPTION("Network PHY MDIO devres helpers");
+> 
+> "Network MDIO bus devres helpers"
+> 
+> There is nothing PHY related in here, its all mdio bus.
 
-Add the missing "CONFIG_" prefix for the logic to work as intended.
-
-Fixes: a8b9cf62ade1 ("ftrace: Fix DIRECT_CALLS to use SAVE_REGS by default")
-Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
----
- kernel/trace/ftrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index c060d5b47910..83ba342aef31 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5331,7 +5331,7 @@ static int register_ftrace_function_nolock(struct ftrace_ops *ops);
-  * not support ftrace_regs_caller but direct_call, use SAVE_ARGS so that it
-  * jumps from ftrace_caller for multiple ftrace_ops.
-  */
--#ifndef HAVE_DYNAMIC_FTRACE_WITH_REGS
-+#ifndef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_REGS
- #define MULTI_FLAGS (FTRACE_OPS_FL_DIRECT | FTRACE_OPS_FL_SAVE_ARGS)
- #else
- #define MULTI_FLAGS (FTRACE_OPS_FL_DIRECT | FTRACE_OPS_FL_SAVE_REGS)
-
-base-commit: 841c35169323cd833294798e58b9bf63fa4fa1de
--- 
-2.35.3
-
+Thanks. I will update!
