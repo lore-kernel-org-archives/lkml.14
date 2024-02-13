@@ -1,40 +1,40 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E76F63503
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 21:04:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9023E61670
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 21:04:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707858265; cv=none; b=irff4kWAn9iTLf6lNcDdIJqc8bB8db3izggwyLe/rPPcA9ixOleaTpYKjKPU9jB6/QIKx02TbH9cJ/5Sf8bHIE8Fq1N4rJRcGWJL7iclUVFh1gFEEIR+LDQ2Ddv7W8bKIEHrVBxRIDQDNXLsz4+wGUwB42muvLLHrERkaovqMco=
+	t=1707858268; cv=none; b=BFoS4fLtyC6DVQmYQqFt7qI/8D/5UL0fKA9DCVnNlDgo0okI2qvvHy2LyoVYkaOXsMTQGAOuL/Hd/B5gQBjyOmENF0SD9JG1GAutI6T2pU742xICfMiA47gWtIlysVEoUtDZWCwXBSKVndkiZuFW9Pyt7MtesC5JlXWZvyyWbGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707858265; c=relaxed/simple;
-	bh=KeVaRxrd+1VnlrIKPqjQTf5GNEbOYdlOBK+vVw3i4oM=;
+	s=arc-20240116; t=1707858268; c=relaxed/simple;
+	bh=MHLos4OO38TSQH8/H8GP70yEERl2ShArQvc3qykWjEA=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=IS3QTSKwKv267zOaF1wO2garSou9qsgOSI8bjBbRyPsQcE0FSHAQ7YW3C+l9iRCCoy485iVFFglkHMSDH6X9Oy3+G3Pmw5rt3/cP+YLZF3SnwgnszhC4DaEbhtRiMK3EGlUt0FZ8p+PBy2y7fE4cDtXjoQHkegMn2RpKZrF0+z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4mQghn4F; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+pFd1e9u; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=O6u0xMN9RncxI4RTwHwu7rVJz38QNgE/i9VVhoewqa0aTkru3MYKPXnjS8gYUCafUpb7ynbdLu0FrO8++PFBFdGk85t3dBJzah+3YXi4bUQmlhlX1z5Y1PimWl+bHqyk8qJos4b/nDDQyoaSj9g5r+ibTCqn7JzAz+lFUSvkJoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t58RiYNC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DoF4S/jW; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4mQghn4F";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+pFd1e9u"
-Message-ID: <20240212153625.455839743@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t58RiYNC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DoF4S/jW"
+Message-ID: <20240212153625.576579177@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1707858262;
+	s=2020; t=1707858264;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=gjIik2cmSvIgUfGoJ8nG4wzMs+KedY4PscV07KbyxDs=;
-	b=4mQghn4FLpTS6UiY6UD4mggsm5EumrF6tL0XgmzumsL55RL5BmHGVgTRQa2savYJ5PDkUs
-	l40NWJqqjnn+5IzuzEVN0FqkF/TrFnOVf3QfxdYstG1INU14PL7ey65Cp22Dyl3TzQRO9L
-	3W86j9FwN/qvKTGpojI6ml3NqKRwR3sgSz//dEpTWfl6Ky7SFZxmkePipk7/Q8xvgxCHa5
-	LwkGNJLOY4gy4E3kqRv7EW3k42PosesU0c5LoZ4izegZDm23swUAKOBPqDV66KMg4gSQyJ
-	skN6KfoTU1+2cq2HtKp5m071Na0UeBfODdtxJ72ZyUuE2Y+tynMU0iwt847Wmw==
+	 references:references; bh=FbuD1O+gIHkW4aafTltcw6F2nn7P77ab8V2DhyeRBhw=;
+	b=t58RiYNCtr79SM5idTWisW0tlivueEu2dGa40kVyJkZNm1sMMQxmii1a1Feb1tf62n5hVW
+	dDfG9g+NEbc+yhN6Uf4uoDtR7E6dCtseeFEjeNODLpwHLryvwBWINN3CwqBh+J3gx9cRUF
+	DVSK/SzWiheQqb0W13ei28cWDQBPIMlpiNvrAR5tANsI78wSXa0XOAgjzZKi01VPmbs8PV
+	k7YvW+du8lyIegPZwgLoZEBagSyp+yTZKJKwwygjdUMMEIcwh4MU0wPXkgCVo6kD5z1a1P
+	XeMQm4VMg2CQAXj4IbbCQs755Sp00aUTEmB+HZgQwGkJkJ7gdfxi2LY35B6Y1A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1707858262;
+	s=2020e; t=1707858264;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=gjIik2cmSvIgUfGoJ8nG4wzMs+KedY4PscV07KbyxDs=;
-	b=+pFd1e9u40ja63l9U730C6vSm3t2KWyZg8P9lA627fv7hCIeiC2uZIiERY/hhBGkyWYCfF
-	E2gZzgt+xUmbs1DQ==
+	 references:references; bh=FbuD1O+gIHkW4aafTltcw6F2nn7P77ab8V2DhyeRBhw=;
+	b=DoF4S/jW5iwZpkJntMYAQvjj3okcQ4bl5EQ+92ACtXamNVd6hFTrMy27+RqlQUhcHTA7uz
+	iWGY9XZmDvnWH5Dg==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: x86@kernel.org,
@@ -54,7 +54,7 @@ Cc: x86@kernel.org,
  Michael Kelley <mhklinux@outlook.com>,
  "Peter Zijlstra (Intel)" <peterz@infradead.org>,
  Wang Wendy <wendy.wang@intel.com>
-Subject: [patch V6 16/19] x86/cpu: Remove x86_coreid_bits
+Subject: [patch V6 18/19] x86/xen/smp_pv: Remove cpudata fiddling
 References: <20240212153109.330805450@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -63,11 +63,12 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 13 Feb 2024 22:04:21 +0100 (CET)
+Date: Tue, 13 Feb 2024 22:04:24 +0100 (CET)
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-No more users.
+The new topology CPUID parser installs already fake topology for XEN/PV,
+which ends up with cpuinfo::max_cores = 1.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Tested-by: Juergen Gross <jgross@suse.com>
@@ -79,32 +80,29 @@ Tested-by: Wang Wendy <wendy.wang@intel.com>
 
 
 ---
- arch/x86/include/asm/processor.h |    2 --
- arch/x86/kernel/cpu/common.c     |    1 -
- 2 files changed, 3 deletions(-)
+ arch/x86/xen/smp_pv.c |    3 ---
+ 1 file changed, 3 deletions(-)
 ---
 
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -122,8 +122,6 @@ struct cpuinfo_x86 {
- #endif
- 	__u8			x86_virt_bits;
- 	__u8			x86_phys_bits;
--	/* CPUID returned core id bits: */
--	__u8			x86_coreid_bits;
- 	/* Max extended CPUID function supported: */
- 	__u32			extended_cpuid_level;
- 	/* Maximum supported CPUID level, -1=no CPUID: */
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1752,7 +1752,6 @@ static void identify_cpu(struct cpuinfo_
- 	c->x86_vendor_id[0] = '\0'; /* Unset */
- 	c->x86_model_id[0] = '\0';  /* Unset */
- 	c->x86_max_cores = 1;
--	c->x86_coreid_bits = 0;
- #ifdef CONFIG_X86_64
- 	c->x86_clflush_size = 64;
- 	c->x86_phys_bits = 36;
+--- a/arch/x86/xen/smp_pv.c
++++ b/arch/x86/xen/smp_pv.c
+@@ -73,7 +73,6 @@ static void cpu_bringup(void)
+ 	}
+ 	cpu = smp_processor_id();
+ 	smp_store_cpu_info(cpu);
+-	cpu_data(cpu).x86_max_cores = 1;
+ 	set_cpu_sibling_map(cpu);
+ 
+ 	speculative_store_bypass_ht_init();
+@@ -224,8 +223,6 @@ static void __init xen_pv_smp_prepare_cp
+ 
+ 	smp_prepare_cpus_common();
+ 
+-	cpu_data(0).x86_max_cores = 1;
+-
+ 	speculative_store_bypass_ht_init();
+ 
+ 	xen_pmu_init(0);
 
 
 
