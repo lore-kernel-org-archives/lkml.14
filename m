@@ -1,128 +1,126 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C6AA21100;
-	Tue, 13 Feb 2024 08:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CAFE20DF8
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 08:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707814192; cv=none; b=mK+7/rwWbdC8RM/HsHVot2SFdXVhq5u2+C0g80FPjfitSJM1YD1uODMQbJrxikfz8E7cNimb4dyl56RiBrYYb+7ySbHHwu3XMYOoGU+eWFksXsAqp8zubtuovCV2oE9OgP0dIdvHwhkv7cVbpJg4F3nvWjDy3h8Lczw5GBQ/sN0=
+	t=1707814200; cv=none; b=tocfaWKA48JIVLa4pKbeB1pDlBR+8mnKRLeeD2XP3/wd5xl1hLQvK4mWpyNftJlSVFBEr9hZvF807Stwyxc9pwaKOaGP6KBngAj15/k6hJwuvOk6zoeXq7cGbamiQ+MiBuRWiHtCyhWSKRFXrzUtw16JEvijSreAkwq9pMlYz9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707814192; c=relaxed/simple;
-	bh=tTbz1v8fkqJ0/mdCR+W3RMbnx2wr06DJUcVEFdBv1ps=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=a+AYEI/7dtP5YPt+j6UdPv/4bERy2+oTPcObsIgVCxWpTTQdsENwd1UuClk0qJxsrmrJpf96r/LKgAvZ9UIuXxzR2atIOncMJjcyQAHWakX6FFzLlFWV0fhYCZ+iCIHX0zdovGNMtx+fSZIFlnHB2tBSyuzKYFZS9k9tYBalc5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=J4PRARsI; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="J4PRARsI"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41D8cnAc008573;
-	Tue, 13 Feb 2024 08:49:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version:content-type; s=
-	qcppdkim1; bh=kCqPcNo+Xt7o8GNLYwi+lrAM4HO++yNt6oCLnibGDyU=; b=J4
-	PRARsIiBU0uSwPXNo9MzzZTLdpMFUc80Quj0xAZWuHpmA2xWf8PQ611M6s5y1AET
-	8vtI2NmwbVSmmyPVcmaizRIt7JB3Qn7b7D4GEcGsn3PyxghmD7BGXYSzCzKKJb0Q
-	GxG4FSdIUyGBcq+lqKzLb03y0FqWFFDf8AXkwS20qcvQqS2XvAol9dvVa7DnFyVI
-	awHrfnT5EVbhA+iQiWmVU0fEUXy9p0eS6uR9xugX2op34+KzpqUjwq3luh6VS18W
-	hbeuFaJGVVD3e/WhsuhpMkQKHgQ8olofO01OcRU2z3OwXXJAON3Bi0vVgxEZ3gDm
-	ARyciOG6jigP0TDjOFxw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w7s3919c2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 08:49:35 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41D8nY1Z026901
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 08:49:34 GMT
-Received: from hu-charante-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 13 Feb 2024 00:49:30 -0800
-From: Charan Teja Kalla <quic_charante@quicinc.com>
-To: <gregkh@linuxfoundation.org>, <akpm@linux-foundation.org>,
-        <willy@infradead.org>, <vbabka@suse.cz>, <dhowells@redhat.com>,
-        <david@redhat.com>, <surenb@google.com>
-CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        Charan Teja Kalla
-	<quic_charante@quicinc.com>,
-        # see patch description <stable@vger.kernel.org>
-Subject: [PATCH] mm/huge_memory: fix swap entry values of tail pages of THP
-Date: Tue, 13 Feb 2024 14:18:10 +0530
-Message-ID: <1707814102-22682-1-git-send-email-quic_charante@quicinc.com>
-X-Mailer: git-send-email 2.7.4
+	s=arc-20240116; t=1707814200; c=relaxed/simple;
+	bh=sadaPCdmwkHHMrHeq/JKhLMCFklg7Qow7J7JVWooHss=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QoZUzNA4gHCpoRGO5E/9ZkJsHaxhx8+HNsDRwWNUgETeRAZ3y95etp0290Z1seHgrHLOOCl053eYB1rK59ddA5SflP14OfQXpDm0df+hD7d545RvISjkKnK1bckzXSV9KXFEx+LnGiQMfJdNpo/frf/WzTRnK21TMzI5uALz8NM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68DFEDA7;
+	Tue, 13 Feb 2024 00:50:36 -0800 (PST)
+Received: from pluto (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 943EA3F5A1;
+	Tue, 13 Feb 2024 00:49:53 -0800 (PST)
+Date: Tue, 13 Feb 2024 08:49:51 +0000
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: kernel test robot <lkp@intel.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	sudeep.holla@arm.com, vincent.guittot@linaro.org,
+	peng.fan@oss.nxp.com, michal.simek@amd.com, quic_sibis@quicinc.com,
+	quic_nkela@quicinc.com, souvik.chakravarty@arm.com
+Subject: Re: [PATCH 06/11] firmware: arm_scmi: Implement Clock
+ .is_notify_supported callback
+Message-ID: <ZcstL8tRVKIUFoBr@pluto>
+References: <20240212123233.1230090-7-cristian.marussi@arm.com>
+ <202402131047.2NVZWHma-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: ExtM5oF4G8N0zHAvaPk-MHkzrH5KQYU0
-X-Proofpoint-GUID: ExtM5oF4G8N0zHAvaPk-MHkzrH5KQYU0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-13_04,2024-02-12_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 mlxscore=0 suspectscore=0 spamscore=0 bulkscore=0
- phishscore=0 clxscore=1011 impostorscore=0 priorityscore=1501
- malwarescore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2401310000 definitions=main-2402130068
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202402131047.2NVZWHma-lkp@intel.com>
 
-An anon THP page is first added to swap cache before reclaiming it.
-Initially, each tail page contains the proper swap entry value(stored in
-->private field) which is filled from add_to_swap_cache(). After
-migrating the THP page sitting on the swap cache, only the swap entry of
-the head page is filled(see folio_migrate_mapping()).
+On Tue, Feb 13, 2024 at 10:58:23AM +0800, kernel test robot wrote:
+> Hi Cristian,
+> 
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on soc/for-next]
+> [also build test ERROR on linus/master v6.8-rc4 next-20240212]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
 
-Now when this page is tried to split(one case is when this page is again
-migrated, see migrate_pages()->try_split_thp()), the tail pages
-->private is not stored with proper swap entry values.  When this tail
-page is now try to be freed, as part of it delete_from_swap_cache() is
-called which operates on the wrong swap cache index and eventually
-replaces the wrong swap cache index with shadow/NULL value, frees the
-page.
+Hi,
 
-This leads to the state with a swap cache containing the freed page.
-This issue can manifest in many forms and the most common thing observed
-is the rcu stall during the swapin (see mapping_get_entry()).
+this series, as stated in the cover-letter, is based off the current tip of
 
-On the recent kernels, this issues is indirectly getting fixed with the
-series[1], to be specific[2].
+	sudeep/for-next/scmi/updates
 
-When tried to back port this series, it is observed many merge
-conflicts and also seems dependent on many other changes. As backporting
-to LTS branches is not a trivial one, the similar change from [2] is
-picked as a fix.
+and particularly needs commit:
 
-[1] https://lore.kernel.org/all/20230821160849.531668-1-david@redhat.com/
-[2] https://lore.kernel.org/all/20230821160849.531668-5-david@redhat.com/
+	9c5bc650031e firmware: arm_scmi: Rework clock domain info lookups
 
-Closes: https://lore.kernel.org/linux-mm/69cb784f-578d-ded1-cd9f-c6db04696336@quicinc.com/
-Fixes: 3417013e0d18 ("mm/migrate: Add folio_migrate_mapping()")
-Cc: <stable@vger.kernel.org> # see patch description, applicable to <=6.1
-Signed-off-by: Charan Teja Kalla <quic_charante@quicinc.com>
----
- mm/huge_memory.c | 2 ++
- 1 file changed, 2 insertions(+)
+from there, since it contains the missing scmi_clock_domain_lookup().
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 5957794..cc5273f 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2477,6 +2477,8 @@ static void __split_huge_page_tail(struct page *head, int tail,
- 	if (!folio_test_swapcache(page_folio(head))) {
- 		VM_WARN_ON_ONCE_PAGE(page_tail->private != 0, page_tail);
- 		page_tail->private = 0;
-+	} else {
-+		set_page_private(page_tail, (unsigned long)head->private + tail);
- 	}
- 
- 	/* Page flags must be visible before we make the page non-compound. */
--- 
-2.7.4
+Not_sure/dont_known if there is any way to convey this "based-on-branch"
+info to your/any CI at the moment.
 
+Thanks,
+Cristian
+
+> url:    https://github.com/intel-lab-lkp/linux/commits/Cristian-Marussi/firmware-arm_scmi-Check-for-notification-support/20240212-203727
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git for-next
+> patch link:    https://lore.kernel.org/r/20240212123233.1230090-7-cristian.marussi%40arm.com
+> patch subject: [PATCH 06/11] firmware: arm_scmi: Implement Clock .is_notify_supported callback
+> config: hexagon-allmodconfig (https://download.01.org/0day-ci/archive/20240213/202402131047.2NVZWHma-lkp@intel.com/config)
+> compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project c08b90c50bcac9f3f563c79491c8dbcbe7c3b574)
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240213/202402131047.2NVZWHma-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202402131047.2NVZWHma-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+> >> drivers/firmware/arm_scmi/clock.c:853:8: error: call to undeclared function 'scmi_clock_domain_lookup'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+>      853 |         clk = scmi_clock_domain_lookup(ci, src_id);
+>          |               ^
+> >> drivers/firmware/arm_scmi/clock.c:853:6: error: incompatible integer to pointer conversion assigning to 'struct scmi_clock_info *' from 'int' [-Wint-conversion]
+>      853 |         clk = scmi_clock_domain_lookup(ci, src_id);
+>          |             ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>    2 errors generated.
+> 
+> 
+> vim +/scmi_clock_domain_lookup +853 drivers/firmware/arm_scmi/clock.c
+> 
+>    842	
+>    843	static bool scmi_clk_notify_supported(const struct scmi_protocol_handle *ph,
+>    844					      u8 evt_id, u32 src_id)
+>    845	{
+>    846		bool supported;
+>    847		struct scmi_clock_info *clk;
+>    848		struct clock_info *ci = ph->get_priv(ph);
+>    849	
+>    850		if (evt_id >= ARRAY_SIZE(evt_2_cmd))
+>    851			return false;
+>    852	
+>  > 853		clk = scmi_clock_domain_lookup(ci, src_id);
+>    854		if (IS_ERR(clk))
+>    855			return false;
+>    856	
+>    857		if (evt_id == SCMI_EVENT_CLOCK_RATE_CHANGED)
+>    858			supported = clk->rate_changed_notifications;
+>    859		else
+>    860			supported = clk->rate_change_requested_notifications;
+>    861	
+>    862		return supported;
+>    863	}
+>    864	
+> 
+> -- 
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
