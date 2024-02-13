@@ -1,154 +1,118 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E4151C21;
-	Tue, 13 Feb 2024 13:02:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEFC0482DA
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 13:03:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707829369; cv=none; b=PG5JpUVpfELSftoqeJ1V7zFD9lHkmy8Y69bs+jP2EvpAKSAihXAxqRoaZlXKSd4BUd7n2I33aMOkRpQY8vOihkAOdz2vJZN9ko6YAn+vSBVFzs+S0b72Y0ipDr9sHOxVH3YuUDfC3ELocxeoU/7Xm2aCTemF7kyoMELT9ITOlZQ=
+	t=1707829424; cv=none; b=EGWP8Ok4ZyVVWMyRQcZmzPs6nxF+sI+Yy9g4owmZXpPStsYla0OBDHjaXFiB3kBRAO8l6Pd6kIcvA5/NW6EX+mJBtWZnGEHD9rVsCB66Bm/PESI1a/hFrQvFGhgi1nb/FnXVnrK08F6EykAi7PT4O+5uoQxGXKsGcdsGJ/A36Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707829369; c=relaxed/simple;
-	bh=28DdTYEVF+5wxUwB+sr99no14Iop58sGq02oHT+28+I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tMIVsNO7LS4mP/eefOrSIQCmy0Rg2NtVm+E/dPQtLyyIp/B0v/9M8qqqCZOzbBGjB/Kujk2LX2ppaKzcGB8rTgKQ/mnb1okeGzZkweM0A9YPcymNcsl8Iu9dazM1ckx4yTKoYOIMDV8tGwWZViVUvcYlBbZ+oLd7eJdrc6Ueq2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YcW+hVLs; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707829424; c=relaxed/simple;
+	bh=6/8cJXoSjzIifXMl8cdj9SqNamhz3R4iwV033H5CW7A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AxO7V4zV4GW8qmXe38df8nk6MXiVrf9MBVcO6oWv9pdLxwT7JT4PqJSEHf4AYuk5INf6+66RA/dDh7lz86xQu4qV1FBRYlEsBlZBvLicZaR5uQ3TNMG6iH1IR9rgpp7ZOGMAX7YVpXwegOGJcqaZJpdDsh4oQpEZm7bWPtGsYGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KFt+kmr9; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YcW+hVLs"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5610cc8cc1aso4762187a12.1;
-        Tue, 13 Feb 2024 05:02:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KFt+kmr9"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-411d2836b20so613595e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 05:03:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707829366; x=1708434166; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9Cq+iI48CDe+5VO7sSMk/e7qj86AX8EMGUWgbiDs5Ns=;
-        b=YcW+hVLsjGCOpGmrlia+QuAiTdsNOHUKbQskDh2z3F2jgxasPMgylT5v7SpnxDn1nS
-         gTegyldYwRKf336Gkc/cFTSi9NWMZdGr6eBwkrLjdZxzk4Mhg6R8c7+YVDT8fsNXK1Dn
-         W9f/EowMLVKtjl0fzRVIAjCa4DMtUWcpCsdN8aHwZ/DOlT6XJaPaAl2PqbbvyzkIbj2U
-         2AVLDtpBgasRv/M3L2TeOVQLyTB9GeabdqyC1AqE3Lc92wRI5Kb2+6LTpyVvieT3CbqM
-         J8fmR7X4iuFNRlA0vbQowMZwYX3vfyr2Uz1tflIBNvPfIhbPoW18CH2ksyWt48Et2gyN
-         6Kew==
+        d=linaro.org; s=google; t=1707829421; x=1708434221; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=C5NrW5FTTwB3Xw2yt6Nvx3f3s8HF+s3K3TJHJX5IeCg=;
+        b=KFt+kmr9/hABtqx72UHB+4CnzcdDUudvj3QPMqKq6sRBzJtEmlIPmS64kUPbl3GVyT
+         MYl+VFVBH8FuLP+Nm3I31ZKoFDO+FK9st0aj3rjZTVklcRMafgGFoX1LbFRgosK8fQqa
+         Lqj+AHSi7XRtj+2Bh7DzuM6AunaQfL2Ms0wwGLmKEh4M3WDoRTOjZSw9BVkYY3aVs/rX
+         sTpmUk9dyNxzlAhrm5s3L5jzJA4Sb5+67brzjkDaTh1eI606As2+50wTVKaJfOVwUj19
+         e1yLVg8rZJ68LJ3JzC9cdhKs69ZbwfRmj/kg1DO9lKhpBryZozsB7Dty/t399ZPmBYY2
+         VL2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707829366; x=1708434166;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9Cq+iI48CDe+5VO7sSMk/e7qj86AX8EMGUWgbiDs5Ns=;
-        b=CQoN+z5XE7+wwFmfhgsj/IBGdYmfcuWXXa4majYig0d58WgJdNTpiR6gTTS6llT9OE
-         udV102iPNwMhl8a8+g/K5eLXLc6fF7KECzuHfBzdCdGGhOSZ720FHFwkPR+3+Sss0XCh
-         Tt1mmD7KYFG/gCGuXs9ubaQ5OpDUP/Ot36Fqemdr/ys4o1a2+Wx0f2fICRzI3d7/sEnd
-         Wjm7bjO+dn+tq+BrxnsOMQg5cwwh8yEdqYZDoAPfCRXr5X5btwA290PPpMFeVOXVh4Iz
-         oMmBa+k5ZbB+fHuirYP3bb6lwBD0Ycyp1gsr/z59fzKfpywvT08uBKK67fUBRsFvNwxT
-         pHRw==
-X-Forwarded-Encrypted: i=1; AJvYcCUYS0Y5ZIldHC4bEtnVpz8+luD1eY/EjTEy74vH+buPUqMSritsWdWgM8we33drA8Nt3x0hqmUdXUKHzlMhdl8EWB5PS7PFn0rmyvyS99SwJgUn4dxMM3GsSf1a5VPuUaLJwBaLBvIUeCsqLDV3viHt6FlfyIbPEFdmYOQa6a05uE0/RA==
-X-Gm-Message-State: AOJu0Yw9yLI5/wyivlO+q8BecidIXyVrzekoS7nHbupYVQF08oVP9Dos
-	K79cfGQRmjd/kAMMhnJ88hOvsd4QuZ0TisaVUlXp9xqkv7bCakqX
-X-Google-Smtp-Source: AGHT+IGwFZ/B7NIFFcOnp2yFup95b+UeJUZ6E+6zkb73wGvSwm0cn063bkqvcUbgz2zWlqx3KDTONA==
-X-Received: by 2002:a17:906:f88c:b0:a3c:8770:3795 with SMTP id lg12-20020a170906f88c00b00a3c87703795mr4365644ejb.15.1707829365845;
-        Tue, 13 Feb 2024 05:02:45 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUQd7FhW+1Uji0/Kw8nyU5iosaUylTYW21ZHKoUoT9ZyjzXWSFkwAIhE6Op8Ai/8id8BMsPSYCUjv/0QPqvImddI3pTh5U3rNX76vbsxis4r65rvE9S4ka4TixwJvOdwq94CbIxE7qh+NgiRyva159qE7FTL0xCmmLMleU7R1sknZS/ZZatTKaJGqqo+iI6b657bbo6hBx/G/cAGOzfGRxZcGNxoXZ2t0i2uxmQ7TpiLASQJxbBX9BJ599Ksk2UCqJZrbtQDsuIlDmw943oOQDrMfaRxHTGsJAgC8dAN3c7bLNZwIfp5udFq1Qmc4PGKcO7RbRvzRbUy5DaRcujhAcakboeIaiUrBnCcE9Is7TEn2KGwALWXK1Ao7e98mNC3rH6mbNiyequTN/yiFmfDmE5KbLBgjO44/c1JDuGj2YuLx3wlwbOSSeLDEC4WwjutfpiTecOlOZKeCAA2hWGinRelblNGFcmaFlTLfRaUpH0ifPBICKQgcAm87xGbrGjhILR+66YG2HkRzR20wBYbFwmRI2pATXlTDvdBISYEnxyBQ==
-Received: from localhost.lan (031011218106.poznan.vectranet.pl. [31.11.218.106])
-        by smtp.gmail.com with ESMTPSA id cw15-20020a170907160f00b00a3d004237ebsm633078ejd.212.2024.02.13.05.02.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 05:02:45 -0800 (PST)
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-To: Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Daniel Golle <daniel@makrotopia.org>,
-	linux-usb@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: [PATCH 2/2] arm64: dts: mediatek: mt7988: add XHCI controllers
-Date: Tue, 13 Feb 2024 14:00:44 +0100
-Message-Id: <20240213130044.1976-2-zajec5@gmail.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20240213130044.1976-1-zajec5@gmail.com>
-References: <20240213130044.1976-1-zajec5@gmail.com>
+        d=1e100.net; s=20230601; t=1707829421; x=1708434221;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=C5NrW5FTTwB3Xw2yt6Nvx3f3s8HF+s3K3TJHJX5IeCg=;
+        b=oLUwucOqlEUwchUWbWiWzY4Yq8YDOSBnU88u61Et8vD8dqhJa/eiKQVkv8coQbfw+r
+         HdU/YRR3hkQnIKKmUswTBFWRxDfX+agjlazZK42qFEUbn+xLSYc87TDnh4rNzUYS4qN0
+         Xw9NCq1tVjXgOzna0CaBmE0XVq8ziAMX6duBWxoED7uMXb7bM/cJAGTHq48BZNmFDG5L
+         VrLgUTl0Or1rTQZnDT/5r9r0Q+CCgjBo7YjsHdFuX+LRaRLmkQVQLxMB6vWth4r+CiwA
+         pOkQCFFXJOVRFuOSHad3476MeFB6WajnYXXeWf47X1rmkWKpiS2fIE7bT1mCvhPrfNbN
+         V37g==
+X-Forwarded-Encrypted: i=1; AJvYcCWyytYF/z8O5Qwn3/BYRx9ZpIBg15Nl4CcMwDP3QVcX7DDpLy+UrtXpvazgbtixCqeIGCDH3L+GvGxgVeuqSJgJIwFwfxi8js+rrvo5
+X-Gm-Message-State: AOJu0Yyb17JtW0DkAn3IKQb2JSdw7V+RRySmoNXSY8uFppvu/B1jOmoY
+	j9IGNbgTBpn11nT9pP+TKRnKyF5mcufLrJ3ovMe0Ueg7FHUkkBesm7XH3A52/L8=
+X-Google-Smtp-Source: AGHT+IGff4Ny4f1WeJGCs+3nuZxbToyUFx8GempT/EH0khCzbnM4pZaGfiEmTfd7EjnRLIAX3EhG9A==
+X-Received: by 2002:a05:600c:3b86:b0:40f:fe1a:6baf with SMTP id n6-20020a05600c3b8600b0040ffe1a6bafmr6994110wms.1.1707829421015;
+        Tue, 13 Feb 2024 05:03:41 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW7CtLuect2QEqcymxQGaUVmVCPIyY1NdHNUpoLLZHXRt9+n/gP+2I6mH9ctZZlAnwNCbloiXyQRv9bQh+MF5UWYu1yRjChSKHqVrHw8wnHuac0mRrY1Gj7p9X/s2YJDdaZ5mSMdtRpTNTm6GaISrpY1EQpQ+b6t1VrU+0xsYEm8bwBlZmUtkBNxcN5vVx20fwpOp6xICEzXAypqtVuaZoL/C7RzpDGn+aRrdZJieEGE/btmHIpyWNcL8dPDbdkE8zLdibnJa5m/CcTl5lC/oHHy7v52s8tA4V/zcBwIUUbmI6eks6zokE63AeiPVHcU/UGEAIWk/7/kuIk0ephB0BuEVIm1+vtMFWk90ZljITNTf6YVyg8QHCbvqwL32VOUlerYK0QGoRBeACZD4ijWSgdiWGABW9JkLNzK2MF7xv8iD1PQ7UAJbJm7BmmVaQNK2/vhxQEhb2tnJPR3PkbKensFAb7wKFZMGtBXV+dO9zdpn45vC/xXjXkxs3ARiFVNyjydEOvQ/kTHjVgNzVLqhb+6wlM10wrJpW05sV9e6HW7jIbKVqZEhMyh2DAWiDqr1yk/Vz2S1lDfjL7K1XkIc4+OPQqqWfxcskmUJmbbFBkWgqVQP/AGwqU50T0L4psZXPemJdpkXwoyOU=
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id v1-20020a05600c214100b00410395dc7d1sm11615850wml.7.2024.02.13.05.03.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Feb 2024 05:03:40 -0800 (PST)
+Message-ID: <6092ee3a-4a28-488b-97fe-538e619f8983@linaro.org>
+Date: Tue, 13 Feb 2024 14:03:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: timer: renesas: ostm: Document RZ/Five SoC
+Content-Language: en-US
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: Chris Brandt <chris.brandt@renesas.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Magnus Damm <magnus.damm@gmail.com>,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ Biju Das <biju.das.jz@bp.renesas.com>,
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20231115212908.33131-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CA+V-a8tN-qn8zuimte=-riahJBWGgGi8i5botNfWqdWwJ7w-4g@mail.gmail.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <CA+V-a8tN-qn8zuimte=-riahJBWGgGi8i5botNfWqdWwJ7w-4g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Rafał Miłecki <rafal@milecki.pl>
+On 13/02/2024 11:22, Lad, Prabhakar wrote:
+> Hi Daniel,
+> 
+> On Wed, Nov 15, 2023 at 9:29 PM Prabhakar <prabhakar.csengg@gmail.com> wrote:
+>>
+>> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>>
+>> The OSTM block on the RZ/Five SoC is identical to one found on the RZ/G2UL
+>> SoC. "renesas,r9a07g043-ostm" compatible string will be used on the RZ/Five
+>> SoC so to make this clear and to keep this file consistent, update the
+>> comment to include RZ/Five SoC.
+>>
+>> No driver changes are required as generic compatible string "renesas,ostm"
+>> will be used as a fallback on RZ/Five SoC.
+>>
+>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>> ---
+>>   Documentation/devicetree/bindings/timer/renesas,ostm.yaml | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+> Gentle ping!
 
-Add bindings of two on-SoC XHCI controllers.
+Applied, thanks for the head up
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
- arch/arm64/boot/dts/mediatek/mt7988a.dtsi | 32 ++++++++++++++++++++++-
- 1 file changed, 31 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-index bba97de4fb44..3eb5396dea22 100644
---- a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-@@ -1,6 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0-only OR MIT
- 
-+#include <dt-bindings/clock/mediatek,mt7988-clk.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/phy/phy.h>
- 
- / {
- 	compatible = "mediatek,mt7988a";
-@@ -78,7 +80,7 @@ gic: interrupt-controller@c000000 {
- 			#interrupt-cells = <3>;
- 		};
- 
--		clock-controller@10001000 {
-+		infracfg: clock-controller@10001000 {
- 			compatible = "mediatek,mt7988-infracfg", "syscon";
- 			reg = <0 0x10001000 0 0x1000>;
- 			#clock-cells = <1>;
-@@ -103,6 +105,34 @@ clock-controller@1001e000 {
- 			#clock-cells = <1>;
- 		};
- 
-+		usb@11190000 {
-+			compatible = "mediatek,mt7988-xhci", "mediatek,mtk-xhci";
-+			reg = <0 0x11190000 0 0x2e00>,
-+			      <0 0x11193e00 0 0x0100>;
-+			reg-names = "mac", "ippc";
-+			interrupts = <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&infracfg CLK_INFRA_USB_SYS>,
-+				 <&infracfg CLK_INFRA_USB_REF>,
-+				 <&infracfg CLK_INFRA_66M_USB_HCK>,
-+				 <&infracfg CLK_INFRA_133M_USB_HCK>,
-+				 <&infracfg CLK_INFRA_USB_XHCI>;
-+			clock-names = "sys_ck", "ref_ck", "mcu_ck", "dma_ck", "xhci_ck";
-+		};
-+
-+		usb@11200000 {
-+			compatible = "mediatek,mt7988-xhci", "mediatek,mtk-xhci";
-+			reg = <0 0x11200000 0 0x2e00>,
-+			      <0 0x11203e00 0 0x0100>;
-+			reg-names = "mac", "ippc";
-+			interrupts = <GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&infracfg CLK_INFRA_USB_SYS_CK_P1>,
-+				 <&infracfg CLK_INFRA_USB_CK_P1>,
-+				 <&infracfg CLK_INFRA_66M_USB_HCK_CK_P1>,
-+				 <&infracfg CLK_INFRA_133M_USB_HCK_CK_P1>,
-+				 <&infracfg CLK_INFRA_USB_XHCI_CK_P1>;
-+			clock-names = "sys_ck", "ref_ck", "mcu_ck", "dma_ck", "xhci_ck";
-+		};
-+
- 		clock-controller@11f40000 {
- 			compatible = "mediatek,mt7988-xfi-pll";
- 			reg = <0 0x11f40000 0 0x1000>;
 -- 
-2.35.3
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
