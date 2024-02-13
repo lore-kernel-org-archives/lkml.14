@@ -1,78 +1,68 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 630E25FB9F;
-	Tue, 13 Feb 2024 15:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CCD55F846;
+	Tue, 13 Feb 2024 15:56:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707839773; cv=none; b=AIc39+BfXPiiaLKsE04r41WSd6cmC1+PLOMbiJKFaqPc8S4eN+x9DSXBYdlzWq53mzppVC+kdj55N3KKNklO9VsK6B5HmC7fFRjsK6DGSN1gEDPDXLOsLBTqVi+Tqiph0sMM1SZ/1Pd+aFftfV0FhUGjHjIKdNOnd7XKTb9LUuE=
+	t=1707839797; cv=none; b=AwUaCVzOyrzvc+PEbXnVFbB/5cGhRBYy845Z8HzviCB7yc8O5bYfwzPgtSjZOrax7FtIFkKuuNypebW/fs+TTy8TxKRWSKnxdIuZJkrTfrlRj+JZ4bDkoUk4pJ4F/UVSUB6we2vH6umEjAkvsfNNhJYNTunI35lfVfXWQMyhxCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707839773; c=relaxed/simple;
-	bh=uL1C1DrPiTp18kKPAC/wiagnbgzzO+VcDLIioE0B69M=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gWO6E00eIxwbbYIk5r3U1xBdwGcRlMDdvI46jPJ41+lfZR81+aUWyutO3rPbWK56wsMXGjCL/JHFzXCB8g/D34wFCbAKc3UsQ69bNRgFHrSteQm+anOE6NSo7FwLKZJzcsAQf6tNDqfWCe/aqQB+t1EwikcfhBWEzHMckhrJf18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A7Yp4wZg; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707839797; c=relaxed/simple;
+	bh=PCShbNrnThKDCz7+yfYhrs+Gynx1qEZaMiqkRzVyOxA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DZyFfNJ0oH9GNQpojQDGhKpN8KYePuQgcMhW/8p+diIIqtceMyRhEHFXjr0KhtRp6xfPfoSMf5qH6Zjt088H8m0LFmFJQqMqXNplwv3jttN73lNUJofy6CjQQdqqAAMKe7cds8ZXh/Q8lguzl9WiYe6HIEn2egYt0aDchsnkJQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XaizkOgR; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A7Yp4wZg"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d107900457so12025381fa.1;
-        Tue, 13 Feb 2024 07:56:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707839769; x=1708444569; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ts7g4FdQ8KFT7BBMWJWC8kqPZD0iQK0XaVo73DXEYZk=;
-        b=A7Yp4wZgc9sKddneg7gC2wDEvbRWHZAbnbQhHzF92aBL3u1QwXTq8o1THkiSOOwtap
-         uyUM0IeLixk2T6jrMmcTqd53m/RNid05CDgZL2lBFYEggBAAikkHDX00GqCW23wJ7lrp
-         Iv7G6KGOy/ZCAXw+rO52FjCNjIE95gt39xbnTcjR/Kb3TfFe1QPMgOrKX3u9PxvwwxPC
-         y7BGHfBeniVCJq5GFP8AJJd6yaMCeoVIJkdpVMGFvposeE+ygn+a+zqLe0q+Ebzduluy
-         q3ONnBTjfS9KsqsjUW0kncGMMKQeaQnoYoliXLzjJEoRyfatEX2nGAUVEG6NKmxPSgFy
-         DE6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707839769; x=1708444569;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ts7g4FdQ8KFT7BBMWJWC8kqPZD0iQK0XaVo73DXEYZk=;
-        b=Qng9gbe8gi6FkomP44YAZlFCQNKJgUsR2BdIe2T3hhxkyOiS1zwdFeEpbRZvckSZpt
-         CpRl7kLAHesPIYmtzS4IOFyTxKBiHFCCcKRdUKcWrq6IqQk4NtDQiU+Rwh+o72/vLt3a
-         2JS87+OqC/VORfgo84SnyGVwzD+i3uEhmd30c7dMzUudg1f2mXq+XPhoLEQMsmLWXF3V
-         l+FWYed3R/ZZ8yZeXdSn+IVQDjq1sWdI6tjRthu8fwqI6azk4w091oREuYa/1tHvS9we
-         GJDEdxSBafU3sHyvXMwYkTvJBU+iZiBrHiM6y7/zkVn9B3osq2pC9Z3a/6FQWsWCXXM5
-         SZyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUwyU71VhIICk0N/U/ZMmNoz+Fa7Oc9c0hNt4qGB134nub+oVtJCgB5zcbRFy8LNoUXMvi0NuiUmeA9DycH/0rC342eaQ6MJCyCVdgBuRDOTEGBwoM7nMohA9g36d3JZN7Mz3Qn
-X-Gm-Message-State: AOJu0YxxszIRU7lmHMj7eQEPVKtE9r81nz5CiZltWO9P+pBSMkXlelB7
-	wTIVdUnQICiIdWIiRtCbaPrfU3tdCpvi4XGtN4pxaB/q7Hj4wKAF
-X-Google-Smtp-Source: AGHT+IGJ9s6tMtOjh+oGmHPpVkNbrMW3NsMxeKrk/tUAmXPMIAoLJ4l0wWELtTXsMNQWdvuSG7aFSw==
-X-Received: by 2002:a2e:b750:0:b0:2d0:bc40:2aa1 with SMTP id k16-20020a2eb750000000b002d0bc402aa1mr60517ljo.10.1707839769045;
-        Tue, 13 Feb 2024 07:56:09 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX19csgBjvK5yA4KjZ1xdHBJYK+zmGRpQ3Zjp2A+W5c1CxRVZ1VugkJvkYm63GFoAAnrDx0jF8Sva0+Yf9/v/B3CWmTjivV1SyXqnU5RsaNKYxVq/bn4OVSFD2ezTjG7Bp8AIb19erKd7gxBu20C4LYdaNS4Wn3CTJ96D7FmhVZ0QM+8u9u38CRQ1xDo//Q0yoqwUTtP1F++SUGgaUwJIGM7G8dJZk+YYHp+uAqfMmQx+qdYbS7I+TfZmP5SXzo3Ogu43OhH3epFwH0pWqOY7ojKPNeoNXICNVpYgfq+nMr+kRc/Bo0R7Ea9mSXOdqMbNJan1HnBxuR/jCC
-Received: from Ansuel-XPS. (93-34-89-13.ip49.fastwebnet.it. [93.34.89.13])
-        by smtp.gmail.com with ESMTPSA id l13-20020a056000022d00b0033b1b1da2adsm9910836wrz.99.2024.02.13.07.56.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 07:56:08 -0800 (PST)
-Message-ID: <65cb9118.050a0220.8421f.c47a@mx.google.com>
-X-Google-Original-Message-ID: <ZcuRFG5I-tsgbUJU@Ansuel-XPS.>
-Date: Tue, 13 Feb 2024 16:56:04 +0100
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Robert Marko <robimarko@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [net-next PATCH] net: phy: aquantia: add AQR111 and AQR111B0 PHY
- ID
-References: <20240213133558.1836-1-ansuelsmth@gmail.com>
- <233cd45b-28d5-477d-a193-8273684953aa@lunn.ch>
- <65cb7a25.5d0a0220.de7b7.a1f3@mx.google.com>
- <a10c3b55-c6c3-4982-b294-d6e5b9383e31@lunn.ch>
- <65cb87a3.5d0a0220.69795.6a1d@mx.google.com>
- <12f27e82-6981-4a13-bdc0-77054bf964e9@lunn.ch>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XaizkOgR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707839796; x=1739375796;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=PCShbNrnThKDCz7+yfYhrs+Gynx1qEZaMiqkRzVyOxA=;
+  b=XaizkOgRcoIjTZq4+oXM2D8iGzARsfj9sufl5j5pPVqInEE+3BJNUfsy
+   WDUTWpJgTUlcROMCnkn3bh6ub/WuhiGJ/ow0ftVSPTLNVuzaGqqCY6ijn
+   a+k0aPvp1z4R8+aV2Vg6XcmWUpCpHdSHIfYVJInZd77heZUujhxJ5aF2u
+   RPi7y4dOMBDELvREXeh1RsZA3dMZ54X2hPdxjkqqOqaTXUEH9GC2NTheo
+   umqwuORTaUJCQThEumDpBqCbBxVjUVoVhhTi40fkVVJ0I0c3Le8FmaWT/
+   kvGkKH0B6UqOJ66ql7o/0cRezNAgQ213NDmwY8vyIyzeuXzeeB1aiCdUy
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="1757705"
+X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
+   d="scan'208";a="1757705"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 07:56:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="911816020"
+X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
+   d="scan'208";a="911816020"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 07:56:31 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rZv92-00000004G5o-1wON;
+	Tue, 13 Feb 2024 17:56:28 +0200
+Date: Tue, 13 Feb 2024 17:56:28 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Dhruva Gole <d-gole@ti.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Johan Hovold <johan@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Subject: Re: [PATCH v6 5/6] serial: core: Handle serial console options
+Message-ID: <ZcuRLBcXr7QQh3in@smile.fi.intel.com>
+References: <20240213084545.40617-1-tony@atomide.com>
+ <20240213084545.40617-6-tony@atomide.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,39 +71,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <12f27e82-6981-4a13-bdc0-77054bf964e9@lunn.ch>
+In-Reply-To: <20240213084545.40617-6-tony@atomide.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Feb 13, 2024 at 04:46:47PM +0100, Andrew Lunn wrote:
-> > With the amount of things we are noticing on these PHY it can be
-> > anything from Marvell itself, from OEM messing up with the Provision to
-> > a buf in the FW itself...
+On Tue, Feb 13, 2024 at 10:45:12AM +0200, Tony Lindgren wrote:
+> In order to start moving the serial console quirks out of console_setup(),
+> let's add parsing for the quirks to the serial core layer. We can use
+> serial_base_add_one_prefcon() to handle the quirks.
 > 
-> Ideally, we want to get Marvell to release one universal firmware for
-> each PHY. Get the OEM out of the picture. This is something i said to
-> then Aquantia years ago, that provisioning is going to make driver
-> support a real problem. Seems like i predicted it correctly :-(
->
+> Note that eventually we may want to set up driver specific console quirk
+> handling for the serial port device drivers to use. But we need to figure
+> out which driver(s) need to call the quirk. So for now, we just handle the
+> sparc quirk directly.
 
-I can totally see them answer to this request with:
-OEM should just attach a SPI to the PHY if major modification are
-needed, making us (Marvell) releasing an universal firmware irrelevant
-since it should be handled internally by the Aquantia PHY.
+...
 
-Reality is that on Router or more Consumer devices where OEM try to cut
-cost everywhere, FW are getting placed on NAND partition or even part of
-the OEM FW and then userspace tools are used to setup and load the
-Aquantia PHY FW.
+> +static int serial_base_add_sparc_console(const char *dev_name, int idx)
+> +{
+> +	const char *name = NULL;
 
-This cause the side effect of OEM building one Aquantia PHY FW and then
-fixing the Provision data at runtime making all the idea of Marvell to
-include these configuration values in the FW broken. (example OEM build
-one Aquantia PHY FW for all kind of PHY ID and then apply specific
-fixup to setup 10base-r or uxsgmii based on what is actually present on
-the board on the MAC side) (yes the PHY can support both and there is a
-way to tweak this... this is actually required on AQR112 and other
-version that we currently don't support, ideally it should be handled by
-the FW internally but reality is that we have case where the FW
-provision one mode and the other is actually present in the system)
+Seems like redundant assignment.
+
+> +	switch (idx) {
+> +	case 0:
+> +		name = "ttya";
+> +		break;
+> +	case 1:
+> +		name = "ttyb";
+> +		break;
+> +	default:
+> +		return 0;
+> +	}
+> +
+> +	return serial_base_add_one_prefcon(name, dev_name, idx);
+> +}
+
+...
+
+> +	/* Handle ttyS specific options */
+> +	if (str_has_prefix(name, "ttyS")) {
+
+Recently I have learnt that we have strstarts() which returns boolean and suits
+in cases like this. If you send a new version, you could switch to it.
+
+> +	}
 
 -- 
-	Ansuel
+With Best Regards,
+Andy Shevchenko
+
+
