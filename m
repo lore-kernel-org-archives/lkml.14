@@ -1,88 +1,87 @@
-Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C39B249E6;
-	Tue, 13 Feb 2024 08:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280CE20B27
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 08:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707814063; cv=none; b=D9IjhWmSSrgEDxLtwVil5OThuZAFIz1BnwjKIU0hIcel3iR02ZuWdcZZ6Go3uFF7jqYXA30Dx/PmlzEJMSey/Rk+b6IujuvJVflzUd8rxLRD/+8th0fmL7RzfYj4HI7kGKhzCdG5THJdUntjzXEsCao3+VqL+1TkL9LNZCoDTjs=
+	t=1707814087; cv=none; b=RrGnv30t6Q2HCVMSwfVn/gM0WCnQIOgnWOkHdwfi9+3eBZkp2tzTIqipWojqi+Lcn3mfN9favCkqRQf7HSCEmatXsL5oiaZeIpnxhehJg3VcFIF9vmP2/F9/nvdrc/hrAIWF8Po0FHZTx9eHvqqLeayo2V75vKq4ZR/XGxHi/SY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707814063; c=relaxed/simple;
-	bh=5SV44SWLeGqXq0dV3Uad6OtCcRq0auYBygwlmprvpbM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Yd2C8xlTCcglBktpI1wQ1q/u/QRorqMcCFS8n65nsb7+L221PvjUN/vP3pc6T6KF2zJDG/SMFaod5+87YDB0mpbMONPCNhBtEsx8MTIumWBqpLVSi7XajPCYBLlE2QAjNyIBZDZKhykqZKDDT93C+O6lAKTqE9RsBy50xUnZ9lQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=o9xA/RzP; arc=none smtp.client-ip=74.50.62.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
+	s=arc-20240116; t=1707814087; c=relaxed/simple;
+	bh=UmKMhMjwgubZRTDFjXUtlGss/VVLnfAGIvJRLtEAGAk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qhFJmaLiY8xmwk8Hmoiaost00ESZaM8T7FvD8Iv0rsixO85KoRq2WaAgQTOP84fOE0wfefdLaCGnszzPLINDVJPeeXv/s7Op8yDlsoaOj67bYo55+xwFHTPwqpG8bTQIJbnu/uRLJUhDrtnUQOyCeXCQIgvJweVAVJ0QuBGp7Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HMiImORu; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="o9xA/RzP"
-Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
-	by mail5.25mail.st (Postfix) with ESMTPSA id 5411E60505;
-	Tue, 13 Feb 2024 08:47:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
-	s=25mailst; t=1707814061;
-	bh=5SV44SWLeGqXq0dV3Uad6OtCcRq0auYBygwlmprvpbM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=o9xA/RzPs1l774vhxgA5A4E+pBjEEBZICMQZhaGgCDoT4JJPjuhAMoJ/gemVaJpzj
-	 AmO2NhG7WtllQl1n0bxkoLC4+04sLAAfxotqbVSR00hHGt7L/I87P5GsAtOuHpVKeG
-	 2ORyWvG2j1WYAR7AjxStdpQPpkpTyQJxWqGW9bjAxQEiZ9+2R1yJdi/Y7IzpU9YWzR
-	 oHYkGvXna+Ufnrf95zY3kZai10noSAQZOI4a1d8vNWryocMupp2zmsvZgTGA+QOMX7
-	 4g9mqUApsCbTK/TzALK6ZOiRQssPLkFVb836zZAqidHw9Q3SNXF09g2cvFvfq3o9to
-	 RlSQFHLOAqb6g==
-From: Tony Lindgren <tony@atomide.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: "David S . Miller" <davem@davemloft.net>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Dhruva Gole <d-gole@ti.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Johan Hovold <johan@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: [PATCH v6 2/6] printk: Don't try to parse DEVNAME:0.0 console options
-Date: Tue, 13 Feb 2024 10:45:09 +0200
-Message-ID: <20240213084545.40617-3-tony@atomide.com>
-X-Mailer: git-send-email 2.43.1
-In-Reply-To: <20240213084545.40617-1-tony@atomide.com>
-References: <20240213084545.40617-1-tony@atomide.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HMiImORu"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6078ad593easo2495487b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 00:48:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707814085; x=1708418885; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UmKMhMjwgubZRTDFjXUtlGss/VVLnfAGIvJRLtEAGAk=;
+        b=HMiImORuxUty3jECuwMmqvPkhI3Jmxs1SXsQuNWiazCvM1oGIi1tknz06LKVZoZ5RN
+         CIztjQjlYdN4g3bdPhLLeQwjTybxJXiKDQLfU6W9sGcMMyfCQuZDDZQjchXEEaXA93CJ
+         COabWTsv6A9es2iS8o/Oa9J9rxkDi8iiwvtjHbBhMAjRfx3wPlCQ5Z+LG+U6WqpYTknl
+         E7PXoEupf2ZdhfOtYWSTyDmimZnygbc8PnILkNc/e/VUghcENY9I9BG1gUkdT1BO8OQy
+         kvmr19JvGTESH0fWGYOQMFH9BgzQcWAHJMMjBxOEENrZl4/XGpkwWnW80xxNW14ABOKs
+         5L4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707814085; x=1708418885;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UmKMhMjwgubZRTDFjXUtlGss/VVLnfAGIvJRLtEAGAk=;
+        b=V0MnVp9m3WLYvOmkcX56VGjgZX13Ae61+l4HrLjz4RDHMA+D2lsF2N0aVNkGCJzEUA
+         EckRFoZyrlHzj6M1+DsRPbfUTfdje9pAcLtrsVRyuTdXwncBmJWKckDdhGef43Qj72SO
+         Uu/UyJO1pHvlxeM0tPipAZ29Z/3ckdTIpdiJKy0CqQ2W5OE5aU5KXOAa/sudeNPQK97A
+         8rW8K/MVmrWi4A+jgnHLuikvItxPL5PvI+X5ODKD2Q65/rDHM5PjyjGHxUlu4eg34Geb
+         QW1zLbK6CCrVz/yEOkMvUTmU6dTtCptI7fJ2ny7opYa7+YWJutV5QwPQASVUYA9uT9jP
+         +Mdg==
+X-Forwarded-Encrypted: i=1; AJvYcCXjzmtmYlodlvtT8o1TAtYFD9JAC/7EP1IAI8AaFiHo8ACgaR+qxzkyFt/G2SYvEQnj32EX2lcgMisKE3wc67xsWLKZWgERm9DIbC6H
+X-Gm-Message-State: AOJu0Yx1afrCjIibJ/+fqJSPpBXnlBiktoKcL6KS8gUZC7xqLpJ1SBnL
+	VFsThEIL1f0Bcigdw7XKfMMZz0KtDPBCH/6XEAICH66lLyWErQKEeyu7Lim875laA9oIsN8zu4Y
+	WFtnzLmHoG7suFQ7GXbliVJEO8LhuqRJWFFJhUQ==
+X-Google-Smtp-Source: AGHT+IExCdzrpd7++ek/q7qzwdeeM9WLXTrpFYVurkWI4Pg86K7HisMcu72lsW4reyouOzIX+im9ts0aFWyNApvxetE=
+X-Received: by 2002:a25:c70e:0:b0:dc6:db64:67a8 with SMTP id
+ w14-20020a25c70e000000b00dc6db6467a8mr7128883ybe.43.1707814084929; Tue, 13
+ Feb 2024 00:48:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240213010347.1075251-1-sre@kernel.org> <20240213010347.1075251-10-sre@kernel.org>
+In-Reply-To: <20240213010347.1075251-10-sre@kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 13 Feb 2024 09:47:54 +0100
+Message-ID: <CACRpkdZqmfiY5B6y0kSSanF6cw1_jU-BZ5dC8YEp0Oz+78yqQw@mail.gmail.com>
+Subject: Re: [PATCH v2 09/17] ARM: dts: imx6ull: fix pinctrl node name
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	NXP Linux Team <linux-imx@nxp.com>, Dong Aisheng <aisheng.dong@nxp.com>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Prepare to parse the console for a console=DEVNAME:0.0 style consoles.
-Currently console_setup() tries to make a console index out of any digits
-passed in the kernel command line for console. In the DEVNAME:0.0 case,
-the name can contain a device IO address, so bail out on console names
-with a ':'.
+On Tue, Feb 13, 2024 at 2:03=E2=80=AFAM Sebastian Reichel <sre@kernel.org> =
+wrote:
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- kernel/printk/printk.c | 4 ++++
- 1 file changed, 4 insertions(+)
+> pinctrl node name must be either pinctrl or pinmux.
+>
+> Signed-off-by: Sebastian Reichel <sre@kernel.org>
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -2459,6 +2459,10 @@ static int __init console_setup(char *str)
- 	if (console_opt_save(str, brl_options))
- 		return 1;
- 
-+	/* Don't attempt to parse a DEVNAME:0.0 style console */
-+	if (strchr(str, ':'))
-+		return 1;
-+
- 	/*
- 	 * Decode str into name, index, options.
- 	 */
--- 
-2.43.1
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
