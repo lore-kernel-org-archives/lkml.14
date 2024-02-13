@@ -1,61 +1,70 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9C41E51E
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 14:36:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2BD58121
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 14:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707834987; cv=none; b=s0EHpgiLOIcFcuTS5PoGigY2NCulMzFwiriRdZKjVBxQgAPbesA7kBd0ySMUyrCIdaO81StVFIIEN2cjWlm4f8NtcoeTNteLL/vb+qfevwFoZqGGWKN51Iy9yxqdgi2OWH8K0Ig+dzgcGvdIQkfbhuEGyxPGeUqxMFNQpuIdkao=
+	t=1707834991; cv=none; b=FS5jxw/V8Vlx30l9xkBaTx5o0tt4tJFtW01nbUBVrM6QEX2zAR8FdXp42IdElyXWF87sbVRBmIPQ8aDHTvqWAU/ybKfX+yi91SixNDYyv/cUp+cxXCk15206OZLbrBSZtMpAfilpJeM9GUYTGA6XBP6OHcdKjQtXWmMqLjX8IRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707834987; c=relaxed/simple;
-	bh=x/FWpmXs+siXuzRbLc5xCsGrjSZxXzgMpFp8jCEzOjs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=peoQ8IrNYVBSQZsTEpmpd0oU4StrYa3yz8eKEe8lQbjtcwxs/D6C2+Wyn3TeZaTBJwnyHwmbjecQpiWo8Vr0X1rpsg+wi6un8JwTT40faT/M7+7H8D912BbNQpGskJ0/DoIBVTl62Sp696S6YrozzYl5liYt20KjT3Gw1SHCsQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=aajLScVO; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707834991; c=relaxed/simple;
+	bh=G3u3Fj+XVuIDMGnnwZ/Mf59zPbT/jm0NzHnpO7uiiEk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=f0qCYKjNbUu+I2PevTet9lEP58cl0SspJVLE5ETEFZQ89xKHMz3fePLbF+0nrRTKvk8iOqkXFZIuvWt5YRMcqlBsylyKUnW2OHVGidWIr4uxOxjAlAbk9j2TQwWJwJ6bnIks2MWoaTNkKt5OXmwnYnfJLCKwIgD9bokn6o9fmZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=X4+MRCjR; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="aajLScVO"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e0ac91e1e9so1831171b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 06:36:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707834984; x=1708439784;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X4+MRCjR"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-55a90a0a1a1so6152811a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 06:36:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707834988; x=1708439788; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YkAxiX5r+VqIkIVkIJIct9tXU0xaPqHrJhoy5Wg6JmQ=;
-        b=LUtKHbwrtDaUTksGVgPRSiTwF+R0Sw2X6u9hZfFVMKCfYRAhDvJ2RKeCgg+HNcdpGD
-         k7B6n44YO2krYQ3VixbrjYvdmEqZYO9DzO99jojmWMRuUfgcTkT6diBCpoxw5S1Gfswz
-         0u26Tt6AYal4WU/b7oYjQPFyndaILcopN0LU2fIXLnOwb0sLA7ea4866LzN+jWMGdIUQ
-         1/RBmsTR1dxWVesBSuZAi7PeLW6DaT77lXXF6b0M7p/36AI0jd0iy6C2rhiZkoWwNEj9
-         DFTkAi/Ids9dHpLuNvnnm8v70hfR4O5n+j29FHQZFiB1CnTUR+Lh/zNk1IceLkbS0+WA
-         JuMA==
-X-Forwarded-Encrypted: i=1; AJvYcCUC3jxMTbKq6XQj7fxCLJO4zxebY7Lx3CA5LWSXLPAs41K0X14PXQmbLLBVUUzU//UK+4S964SCBlsKiXHWb/j7Ocie4IIp/Pvg/zD7
-X-Gm-Message-State: AOJu0YzI4/+roinzGhe2rFFN0H0OsjJFSccb69sAyT1IJYgZwHc/NkDe
-	w0qKylNBCjlhmbGVV3bzOHATwB8h4EYX0Lop6kHCj/+krtcUD1Uu
-X-Google-Smtp-Source: AGHT+IFWNiOxtnLB/vhItTI5nJ+dnjka+iTBPwAaQ8p7fl/ouHrR/zhf2dsNYXwdM2v2Cf8fkWVKiQ==
-X-Received: by 2002:a05:6a21:6315:b0:19c:8a1a:d9a8 with SMTP id wu21-20020a056a21631500b0019c8a1ad9a8mr7732353pzb.42.1707834984275;
-        Tue, 13 Feb 2024 06:36:24 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVYoBI2HC6Ero9ydjm4RWT08l5qQp3ZaPPt2KWGygKLK3JnPpJ+7TgoqRdJEB+iSgJdTeW5gQFoJyh1QfeQUA8gcCXBucSx0y7ylWHj59empEYaCjeu2dayc9NM+lgOO9E5jQRpJABkG5k9nzeYu5IiGOASKwDuAFiC04z+huvEW2t2xo2EkPziNbFhq+CrXRoQ5h6ByHKq6erHpWs6v+2+PMymNAiu/bWk7nGGqiX8Bu8Lbisn1piX7vrlif86gvN1+HWD6yvzPw==
-Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id fm25-20020a056a002f9900b006de050cf904sm7506820pfb.22.2024.02.13.06.36.23
+        bh=AwSTu8c9+qn7K/wj1Yj/0NOW4PVVyZ52gG9hFp6sXb4=;
+        b=X4+MRCjRuIfq4DYi+Pq6T9R8u1OZydSz2DehCsqC7pt89JJgPSRzNd0MTa4XLV5C3X
+         s+gKb82vAUL36ZpAfw12m/Vpg6v8nCjPvUvGdqOEpD+99pLH+7951YXfwCr54/hKZU+1
+         9XUD4Ndk/doohG3O5PWNKxXDuEVPXg68waxQEGmrVdky9FP+dmoLtTQM5RTY23IRiZHJ
+         1/UYpjlNcBUWw0CNENJhScJEZv5+XeL2qC59/K0ShSJLwrcMkqEiGHk+xCxzRKBCB0pV
+         kD3U8Gn1GWYMFMYqeG8JQSKAwGiw0dqWeHPoyr637koDo9RhDwF+RNZjpY9SuTt2p4ug
+         2HXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707834988; x=1708439788;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AwSTu8c9+qn7K/wj1Yj/0NOW4PVVyZ52gG9hFp6sXb4=;
+        b=DgpQJzu0VB+TO+EJOdWd50xDQb/q0dMXSn4mCtGTkDZXdX2rkmZ5kLieoQ6RTMWi3j
+         U4MlVXu+KlgfDwDCKOrS/P+r0Iog8yxrc1sw8ehLq67pz4ArYYScg+oJny9awVi5xkj8
+         g173lYZbeBfqeh3VqajlQEqfQNRptCBw9HqtHHBNxc+faReK/2MQh53eS8n+vOgNlvcT
+         M7B/1myb5MAN/Jl3aAESZKFBMM0kM+k/84b8aInlkqe8nr3MSGVUktm0ogKHgXp81eMO
+         hkKFIfr8cBC9codFt1L8XgEib25tDQvNQCTPM1wZzO1nbTii73jAPbFwy9Qn4fjwbvo6
+         Yt0g==
+X-Gm-Message-State: AOJu0Yxig1D9yRqRY/Y+oXZEGUcYs8gfHHUTMiCaWYOfNM/lscsKW3uh
+	oVtbrgxDym7OUxOTTgEKyCc6l2NPwcR9m4QF6UXZ8oRUg9XNb3qk5fljKu6EnAI=
+X-Google-Smtp-Source: AGHT+IHyHB8+V0ex2KGnCGWHx2WLq8vEbnal2ITlQNjq3J21S86EHHwC/7phG+WC3CHeAwZNB/t1aA==
+X-Received: by 2002:a05:6402:31a1:b0:561:8918:9f5d with SMTP id dj1-20020a05640231a100b0056189189f5dmr5613758edb.20.1707834987982;
+        Tue, 13 Feb 2024 06:36:27 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVXg13xPEGFVWMYvqH44/VdTQLrKxPXlhHGHNZ5XQjfSYTplx8peZ1KfqNcaIA5Iwl8OsJ/l9ZncWjcPbpkWKsah6sqzAuX6hGPFEZxc78H+3sC/5WmbtPvCVwAZVz3X0Nfp3GCWIgmX88Y6trfce5Wwi8eOKgEy7rCii2wR027nVxlV5IWyPI1Ta2jmk1NNsEUfurXc1nK4Acv+RiCtwU650PxrQV0Ea/WQmwBWYvs8Vknx2AQo6uo73K20BNUmkz3qftZxOKWAm+0xhZoblSGFlo=
+Received: from srini-hackbase.lan ([5.133.47.210])
+        by smtp.gmail.com with ESMTPSA id j1-20020a50ed01000000b00560ecb22d49sm3688362eds.84.2024.02.13.06.36.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 06:36:23 -0800 (PST)
-From: "Ricardo B. Marliere" <ricardo@marliere.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2024; t=1707834982;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=YkAxiX5r+VqIkIVkIJIct9tXU0xaPqHrJhoy5Wg6JmQ=;
-	b=aajLScVOulKlWmcSRQr3Nsc+qGxRAacWpO1TvOEjcogAyXCLWEvo5Fegu5Z3FSyMc2uWQ7
-	fQB8cfPh8NjuY3zYvmMqs6GYN2nvgEEfG5sMAAg+MqM4r72UdAscbRMdgYOpjxqyuRKCkl
-	RH5Bf+MhqdeLAMgYzvyHB+hAZ47n5FgTSZPuRpIDZccH1+JoD4kJAvQPQKX0SUXHNTFZBq
-	Tu4sOSd78YMfvOPAcXKk3qa21u18I87Q4CNpuNw/GCwrWCaALOl7dDRCowtfzRVt/NAoOy
-	KdgkS5U/Ht1Qj/PEm0MTEhln0zrdvh0coZIGQECZgD/QdqjiuMHDzVLKZlIn4Q==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-Date: Tue, 13 Feb 2024 11:36:56 -0300
-Subject: [PATCH] soundwire: bus_type: make sdw_bus_type const
+        Tue, 13 Feb 2024 06:36:27 -0800 (PST)
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Chen-Yu Tsai <wenst@chromium.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, 
+ William-tw Lin <william-tw.lin@mediatek.com>
+In-Reply-To: <20240130095656.3712469-1-wenst@chromium.org>
+References: <20240130095656.3712469-1-wenst@chromium.org>
+Subject: Re: (subset) [PATCH 0/3] soc: mediatek: mtk-socinfo: Fixes and
+ cleanup
+Message-Id: <170783498706.33763.10510416022837379654.b4-ty@linaro.org>
+Date: Tue, 13 Feb 2024 14:36:27 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,80 +73,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240213-bus_cleanup-soundwire-v1-1-3878b00f6f57@marliere.net>
-X-B4-Tracking: v=1; b=H4sIAId+y2UC/x3MQQqAIBBA0avErBPSSqKrRITpWANh4WAF0d2Tl
- m/x/wOMkZChLx6IeBLTHjJkWYBdTVhQkMsGVammUrIWc+LJbmhCOgTvKbiLIopubrXVnVboJeT
- 2iOjp/r/D+L4fPwmJqmcAAAA=
-To: Vinod Koul <vkoul@kernel.org>, 
- Bard Liao <yung-chuan.liao@linux.intel.com>, 
- Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, 
- Sanyog Kale <sanyog.r.kale@intel.com>
-Cc: alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Ricardo B. Marliere" <ricardo@marliere.net>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1698; i=ricardo@marliere.net;
- h=from:subject:message-id; bh=x/FWpmXs+siXuzRbLc5xCsGrjSZxXzgMpFp8jCEzOjs=;
- b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBly36KrVxI+PQGmAsH0w2t1jeZA2FxQ6MOj2qEK
- 2oGW2jj4EqJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZct+igAKCRDJC4p8Y4ZY
- pltbEACoPQZ26lL/izzlySfi4VuAnNfVsedcSulBaj0v6Ea02cKw2/Ov5fkJ33ocppgQWB3YSMo
- LG5XLMoN7+vlkXfTKM3sWCG77bgACP0O01pqgNj+16zL7iOnh9JQoIfyyAYCivsUyBF1P9Ly4sK
- KtUvSBRogxPm3he5aQuwA6JKHP6ijTyi9qihAO5k9wtmtP2E5ig1d5EbsS/flA3zYB9y+PuHiTK
- sfjiTmNi0UybAqayGTt+MhsjDOZ9/UnPiNJI0in5FRF3//sAYz1WJPtV8ibPc7k/NOkq9W1QIzX
- jglIarP6/kfsaMEYeJCB6X/8pEqQGPiV++FFBbdI8YS3OViEZLeRY+OvyYCfOeendzje3qd+aVZ
- z+SX7WnlWHMfIQK0faD9Li20vtWkqiGl6wgIgMozotUFlp0QjbbGUI8h4RXZ8IrvYw8iiUvYzak
- IADSS/YUKuFyu2qEUy+BVG5yKihzv0DPVda9va038hdaTmGnSmBtbFUwxttX3PmjiLT5iVIV2sd
- im8BgqYBGkvTzF5qv48SvOm9RuOkOqc5T2R5pXUoJFYTTIdBbCecV6OTjnRvKXP9UqJTeFHXTaJ
- 41liBO+jg3frKWvUm/q2rc0E6lB7lJI3D4JP9Emz1XcWok/sDlaS8ZFt57lJG/w3Qppt2uBuzB5
- O/kZXaxuWCUG1/Q==
-X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
- fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
+X-Mailer: b4 0.12.2
 
-Since commit d492cc2573a0 ("driver core: device.h: make struct
-bus_type a const *"), the driver core can properly handle constant
-struct bus_type, move the sdw_bus_type variable to be a constant
-structure as well, placing it into read-only memory which can not be
-modified at runtime.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
----
- drivers/soundwire/bus_type.c       | 2 +-
- include/linux/soundwire/sdw_type.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+On Tue, 30 Jan 2024 17:56:50 +0800, Chen-Yu Tsai wrote:
+> The new mtk-socinfo driver has a double put of the nvmem device used to
+> read the socinfo data. While fixing it, I rewrote the read function to
+> make better use of the device node and device relationship.
+> 
+> Patch 1 rewrites the cell read function in the mtk-socinfo so that no
+> resource leaks happen, and device lookup is more efficient.
+> 
+> [...]
 
-diff --git a/drivers/soundwire/bus_type.c b/drivers/soundwire/bus_type.c
-index 9fa93bb923d7..fd65b2360fc1 100644
---- a/drivers/soundwire/bus_type.c
-+++ b/drivers/soundwire/bus_type.c
-@@ -72,7 +72,7 @@ int sdw_slave_uevent(const struct device *dev, struct kobj_uevent_env *env)
- 	return 0;
- }
- 
--struct bus_type sdw_bus_type = {
-+const struct bus_type sdw_bus_type = {
- 	.name = "soundwire",
- 	.match = sdw_bus_match,
- };
-diff --git a/include/linux/soundwire/sdw_type.h b/include/linux/soundwire/sdw_type.h
-index d8c27f1e5559..b445f7200f06 100644
---- a/include/linux/soundwire/sdw_type.h
-+++ b/include/linux/soundwire/sdw_type.h
-@@ -4,7 +4,7 @@
- #ifndef __SOUNDWIRE_TYPES_H
- #define __SOUNDWIRE_TYPES_H
- 
--extern struct bus_type sdw_bus_type;
-+extern const struct bus_type sdw_bus_type;
- extern struct device_type sdw_slave_type;
- extern struct device_type sdw_master_type;
- 
+Applied, thanks!
 
----
-base-commit: 9282cfa2eb080e3bbb95f488af35618b614cdf76
-change-id: 20240213-bus_cleanup-soundwire-8b56c6862ef1
+[3/3] nvmem: mtk-efuse: Drop NVMEM device name
+      commit: eadaa6f9aaf682b1840bf08a8320907de4e32d50
 
 Best regards,
 -- 
-Ricardo B. Marliere <ricardo@marliere.net>
+Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
