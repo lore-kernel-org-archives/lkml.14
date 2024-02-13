@@ -1,77 +1,221 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBAF624B23;
-	Tue, 13 Feb 2024 01:02:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F06024B54;
+	Tue, 13 Feb 2024 01:03:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707786174; cv=none; b=QVUyapG7sSV7DGBGa4rwszvBBRHHTnKUbCKCcS7tCmuU4ktvC5OcgQYGYrhbmt9tVHTDqBAYV7aZssGz7OkRy+P8+c6CCAVvJUmJ66PmlYe7I1ddANC7UXMToergzlHIpm7qy+XRKR3po4JYIKLekzR1fvKmabQnOoDUJOPSarU=
+	t=1707786233; cv=none; b=e7a4T83+U5JUWDVqgUexsFWfsxmfnBLncRFna4cCYJTy4irgrj4fenxTlxZ2Zusfh6L1ZmrmoPkqcBJ/RT/GHP7zaFAZLuU25InL2+3hsFchBMIYwXUOKk20s133rLRRxbYxHGLlVpvTJPCHt0CZ/I616aGGKuDOu7qMjKUukEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707786174; c=relaxed/simple;
-	bh=iDPXLQ+QAA4sNBOgwos8SKpEyCmdUavp1j7CpWHBJAg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=da0u/rYRvvkFzJzaY3u7c79sOnczXMKvjYMt5kfFkw6OdnOluGT6jnH+zcoS6GRGvEDkPrqvvAIDMBlnOQccQhT95Q1A+z3Lu50zCaKK6SnZDOZR9gTeoJBrbvutmFcOdgejtixn/Sa2NIaeKXq/KBxiOV1a6Pdv6dh6wG2pVpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c4hVa7CJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707786233; c=relaxed/simple;
+	bh=XcLlCMMMy31s8hZU2c3Wsa/Zd1+X2ic3Z4KoTJlm/bY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=V8CPR2kjzhNCWWEYBgfI++p/dVODe8yUX1O9+Cy73gvPwqJbWj0ev3sr2sJditbXJrZ+Lesk3nObd/SSZEoYsKzFfSRD3bfo0xuH7AvscnAQJfKk2Ln00JelLdfRgavAN4lQbsq1KGBC5H0T0rdwt6vuy24+PCoHjrmX7XbtiFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kKbTeDf2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c4hVa7CJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01FBEC433C7;
-	Tue, 13 Feb 2024 01:02:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kKbTeDf2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C8F0C43394;
+	Tue, 13 Feb 2024 01:03:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707786174;
-	bh=iDPXLQ+QAA4sNBOgwos8SKpEyCmdUavp1j7CpWHBJAg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=c4hVa7CJ+LbCRONT+XU52v7lq5ZiUUVnU0/tjEu9078af4as2HXZp4YgtQAqOcmn/
-	 bYu833ywt2XR8TxQD18OBOKGDFwm6F8xfRaMoR2T1ZB7ll53ELmWhSNVCCXGsn2xLN
-	 46johqmQaNNFls/GrfG37aY/3OLukS661jTumVBhgtl2tP1o7sjXlRtCRsc7Vyh4wT
-	 wCV7DB4I8MIkvsVgXSIr07IdVTUjKnpLeXTT3tZC7JdGt5qcTVmUi7LYfL3g0tKj/z
-	 vCf/fym09Q2pYoVArrsXpfYgM+BPiP6rUtrze/y8kKUAZoKCJEZm+J281iGdA6OYg4
-	 Qnm0F1Vcma2zA==
-Date: Mon, 12 Feb 2024 17:02:53 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
- linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Qian Cai
- <quic_qiancai@quicinc.com>, mptcp@lists.linux.dev, netdev@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] configs/debug: add NET debug config
-Message-ID: <20240212170253.77a7be7c@kernel.org>
-In-Reply-To: <202402121039.E14DF37@keescook>
-References: <20240212-kconfig-debug-enable-net-v1-1-fb026de8174c@kernel.org>
-	<202402121039.E14DF37@keescook>
+	s=k20201202; t=1707786232;
+	bh=XcLlCMMMy31s8hZU2c3Wsa/Zd1+X2ic3Z4KoTJlm/bY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=kKbTeDf2icr27gcnSax5obuKQF4oaD3FEg+5uIfYJmyzz6l3tK7Tf27HrV2xrNg5c
+	 kyEEEHe+4xOTfSCC/nHLn1/IQrwrMmkAymhi7wByvuqHvalskNXMG0hFyAGRlpQ5Go
+	 cI3W+13nz194Tpw8JFh0xCAm3uSwxZU0JcuXW9I3BeP1Zft2tac83r4UqffE4v48A9
+	 1iupes2lG3Kyq9c6o8B0HlcO1Qls1VGUhFoEVsaJtz9oaTPYJnfSRDG2RIz7LF9l85
+	 o3TbihPuttAStEGFH5C+Oa3YJnFE5q4De9vsblMvDC29vhLuyRtmmYcT4j2pkaIuDH
+	 9B5wUQRfj8Ngw==
+Received: by mercury (Postfix, from userid 1000)
+	id 33DD4106A4BC; Tue, 13 Feb 2024 02:03:49 +0100 (CET)
+From: Sebastian Reichel <sre@kernel.org>
+To: Sebastian Reichel <sre@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	NXP Linux Team <linux-imx@nxp.com>
+Cc: Dong Aisheng <aisheng.dong@nxp.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 04/17] dt-bindings: input: touchscreen: fsl,imx6ul-tsc convert to YAML
+Date: Tue, 13 Feb 2024 02:00:53 +0100
+Message-ID: <20240213010347.1075251-5-sre@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240213010347.1075251-1-sre@kernel.org>
+References: <20240213010347.1075251-1-sre@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Mon, 12 Feb 2024 10:39:55 -0800 Kees Cook wrote:
-> > Notes:
-> >   - It looks like this debug.config doesn't have a specific maintainer.
-> >     If this patch is not rejected, I don't know if this modification can
-> >     go through the net tree, or if it should be handled by Andrew.
-> >     Probably the latter? I didn't add [net-next] in the subject for this
-> >     reason.  
-> 
-> Adding these seem reasonable. I touched debug.config last, so I can take
-> it via the kernel hardening tree if netdev doesn't want to take it.
+Convert the i.MX6UL touchscreen DT binding to YAML.
 
-I'd prefer to have it in net-next sooner rather than later, because
-when our CI hits an issue we can tell people:
+Signed-off-by: Sebastian Reichel <sre@kernel.org>
+---
+ .../input/touchscreen/fsl,imx6ul-tsc.yaml     | 97 +++++++++++++++++++
+ .../bindings/input/touchscreen/imx6ul_tsc.txt | 38 --------
+ 2 files changed, 97 insertions(+), 38 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/fsl,imx6ul-tsc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
 
-	make defconfig debug.config
-	make
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/fsl,imx6ul-tsc.yaml b/Documentation/devicetree/bindings/input/touchscreen/fsl,imx6ul-tsc.yaml
+new file mode 100644
+index 000000000000..678756ad0f92
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/touchscreen/fsl,imx6ul-tsc.yaml
+@@ -0,0 +1,97 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/input/touchscreen/fsl,imx6ul-tsc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale i.MX6UL Touch Controller
++
++maintainers:
++  - Haibo Chen <haibo.chen@nxp.com>
++  - Shawn Guo <shawnguo@kernel.org>
++  - Sascha Hauer <s.hauer@pengutronix.de>
++
++properties:
++  compatible:
++    const: fsl,imx6ul-tsc
++
++  reg:
++    items:
++      - description: touch controller address
++      - description: ADC2 address
++
++  interrupts:
++    items:
++      - description: touch controller address
++      - description: ADC2 address
++
++  clocks:
++    maxItems: 2
++
++  clock-names:
++    items:
++      - const: tsc
++      - const: adc
++
++  xnur-gpios:
++    maxItems: 1
++    description:
++      The X- gpio this controller connect to. This xnur-gpio returns to
++      low once the finger leave the touch screen (The last touch event
++      the touch controller capture).
++
++  measure-delay-time:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      The value of measure delay time. Before X-axis or Y-axis measurement,
++      the screen need some time before even potential distribution ready.
++    default: 0xffff
++    minimum: 0
++    maximum: 0xffffff
++
++  pre-charge-time:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      The touch screen need some time to precharge.
++    default: 0xfff
++    minimum: 0
++    maximum: 0xffffffff
++
++  touchscreen-average-samples:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Number of data samples which are averaged for each read.
++    enum: [ 1, 4, 8, 16, 32 ]
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - xnur-gpios
++
++allOf:
++  - $ref: touchscreen.yaml#
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/imx6ul-clock.h>
++    #include <dt-bindings/gpio/gpio.h>
++    touchscreen@2040000 {
++        compatible = "fsl,imx6ul-tsc";
++        reg = <0x02040000 0x4000>, <0x0219c000 0x4000>;
++        interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clks IMX6UL_CLK_IPG>,
++                 <&clks IMX6UL_CLK_ADC2>;
++        clock-names = "tsc", "adc";
++        pinctrl-names = "default";
++        pinctrl-0 = <&pinctrl_tsc>;
++        xnur-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
++        measure-delay-time = <0xfff>;
++        pre-charge-time = <0xffff>;
++        touchscreen-average-samples = <32>;
++    };
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt b/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
+deleted file mode 100644
+index 164915004424..000000000000
+--- a/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
++++ /dev/null
+@@ -1,38 +0,0 @@
+-* Freescale i.MX6UL Touch Controller
+-
+-Required properties:
+-- compatible: must be "fsl,imx6ul-tsc".
+-- reg: this touch controller address and the ADC2 address.
+-- interrupts: the interrupt of this touch controller and ADC2.
+-- clocks: the root clock of touch controller and ADC2.
+-- clock-names; must be "tsc" and "adc".
+-- xnur-gpio: the X- gpio this controller connect to.
+-  This xnur-gpio returns to low once the finger leave the touch screen (The
+-  last touch event the touch controller capture).
+-
+-Optional properties:
+-- measure-delay-time: the value of measure delay time.
+-  Before X-axis or Y-axis measurement, the screen need some time before
+-  even potential distribution ready.
+-  This value depends on the touch screen.
+-- pre-charge-time: the touch screen need some time to precharge.
+-  This value depends on the touch screen.
+-- touchscreen-average-samples: Number of data samples which are averaged for
+-  each read. Valid values are 1, 4, 8, 16 and 32.
+-
+-Example:
+-	tsc: tsc@2040000 {
+-		compatible = "fsl,imx6ul-tsc";
+-		reg = <0x02040000 0x4000>, <0x0219c000 0x4000>;
+-		interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&clks IMX6UL_CLK_IPG>,
+-			 <&clks IMX6UL_CLK_ADC2>;
+-		clock-names = "tsc", "adc";
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_tsc>;
+-		xnur-gpio = <&gpio1 3 GPIO_ACTIVE_LOW>;
+-		measure-delay-time = <0xfff>;
+-		pre-charge-time = <0xffff>;
+-		touchscreen-average-samples = <32>;
+-	};
+-- 
+2.43.0
 
-otherwise I have to explain what options to twiddle with. And the
-refcount options do catch bugs, I had to do this exact the explaining
-last Friday :(
-
-So I'd offer these three options:
- - we put it on a shared branch and both pull in
- - you send to Linus within a week and we'll get it soon that way
- - we take it to net-next directly
-
-What's your preference?
