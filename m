@@ -1,56 +1,56 @@
 Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D268626D5;
-	Tue, 13 Feb 2024 21:55:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E3462A1C;
+	Tue, 13 Feb 2024 21:55:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707861353; cv=none; b=DNwaTxYaUsicxjXAOakZhlybrhlZg2b018ETyBk/VZ0IASycSuakCTAaMokXHjmlCsx/tnjg1LEBEjB6YyltamRKuoB6CEDaoOTVwdbDpiLHla4qZJpT+3vunOmT3ouxNh7I2TZHHCDg9+08dfOFIp6I2qIao2e1MUzDW4ZVxwM=
+	t=1707861354; cv=none; b=ug7aSTNkCSZhsdrM5R1OC2lsd8BIMRQSa3iBIDZBfNQQsWGcIhPolL2Y9ugeJKKLnGRtvIk8NqawxqfCw4Ym0zqxYF3+QDiZ5+LMdMmDxSpz+TDKPE3fWvMnc/FEhqODs4a9Z88W+Howsc1rngKQUg541sgS4S0m4BWLcxXf2KQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707861353; c=relaxed/simple;
-	bh=VGiJshFlzfJTNo+URBKg1KnL/Ou65I9YBkQp0I3HlGw=;
+	s=arc-20240116; t=1707861354; c=relaxed/simple;
+	bh=OvAIGuwlGYeYczWW+K0KagfhK17treRqEU1nj29vKyk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ttDoqXW3MXfYHBt7HBrJ8Lh89VHag67JgwUO8BMmNzTfjlKCLkZh8FEpI7HAYNvoE+SLxNPAglZYMB+oD/o7BmukjccKlsxRqo9E367ANnhZpIxrMLUf1XQskfU+kGSlOtZAZBdfP+GNkzusj9c/Fcef1lyNir+yjFqInYOTjyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=yYAQgjcj; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bMCcmwqi; arc=none smtp.client-ip=66.111.4.29
+	 MIME-Version:Content-Type; b=LhRI4XBX0SBYLpXHkIIWuC6bPHBVbi4SFa1mAR9BcpkdHP2dzPXoDCfq+s9dq685hPCJlSJ9bAZ2krr0nNtnOnlmerLAmV7Q4xNdZzDS2TeC97dun6KoP0whU5UyK1rgYrqkJfaR7KtKBUyhJBDc380OTkNYjkfWb40j6t8j2jY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=WvLMGzG8; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=sd8v5LS0; arc=none smtp.client-ip=66.111.4.29
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="yYAQgjcj";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bMCcmwqi"
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailout.nyi.internal (Postfix) with ESMTP id 2BFDE5C0114;
-	Tue, 13 Feb 2024 16:55:50 -0500 (EST)
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="WvLMGzG8";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="sd8v5LS0"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.nyi.internal (Postfix) with ESMTP id 7B87D5C0117;
+	Tue, 13 Feb 2024 16:55:51 -0500 (EST)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Tue, 13 Feb 2024 16:55:50 -0500
+  by compute6.internal (MEProxy); Tue, 13 Feb 2024 16:55:51 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
-	1707861350; x=1707947750; bh=DFD67uQnb+ulb8US39wkV47wjWKTPIuVZ3E
-	M1gZxQmo=; b=yYAQgjcjAjFkviiP5bDanth4ua6xtOef0fKzglSx07B9qGYi4dU
-	mPqMNB+SAAhrcBNQAN/KKoYP2UPpagFwfqCyVHPlnH7gmgbi6z9CLg/dYiJ8JF0g
-	j3iZGL7breFfiA0Q+JqtaRwazEhflTjXY9a7tfB+iefqXsUMySJOOwzZS1i0ThPY
-	lL/XoDxyTlaXoCDtZXMNEoef0LMMKkKzPvFg6MBITMX182wUCADfrwVnru1eFfb5
-	B2NZ20NtFl3uKbAZqI2BC+GkMjhPc6z9bcHqG4bPHQseCdZfwmJAMnINX2Ay48C5
-	Lie+IbPo4PaG+33kaocLN+5h7sZUeVPONdw==
+	1707861351; x=1707947751; bh=oTNlS8iSN/pL1arvPd/5QTJjaetwy6e9fk4
+	UTiJDrr4=; b=WvLMGzG8wXGQ5WLFCyib254XrZQHLxadtOA5IFge31vgtZsUNbw
+	FPxOtPftSxp73UoR9iEg0kRZSjAt3xVySIfSZPJZ+naXMvtREPI0U3qhxpCwOnqu
+	wwMAdeHW4ZkZaro6be6Dqd0SALeZhxUxx/qjy5Bkw/ko2pogmrCh5Gh0XPG4e4kd
+	dya0nrayzU3kjfIG4G00T9cPLYiLhzzsAz8mnQFVCyxAZ65g7Af73FntZ1IvA56I
+	//RKnQY3tLcyiUYnnv4PzxhGicKR/FW8SnezFUktwatcPARjUIMdMF/G92989M6F
+	oegvKTtsKcbbpLMFmwuQ52mp0uNLaz0pbZA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
 	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1707861350; x=1707947750; bh=DFD67uQnb+ulb8US39wkV47wjWKTPIuVZ3E
-	M1gZxQmo=; b=bMCcmwqij0ogO6M9GovWN06DDA9lmOzsRXUQ61nkq8KevW/A5rH
-	VRaHwVra8JutQ9WL90i+sPClYOXvFHmA6KPK+C0nfApz8y3ISz/oBcygKF+/s0Mm
-	akx1a2AGUdLT8mJDekRmk+DIOY2njm64l4iIb6i4KvOL2OVtYCGDqXZYsHCgO9yd
-	2ZzR5BcYQrI1iLNVzysnwfR10n+8hePLkZT17+ReRFaIDVxiABMDAM+ie7qreYqn
-	tU21tFmNAV6R93PrejHiUOQBkR1cUTnd8p1r6/RITbkIHOQT7gsLlzaGOPu/ffTe
-	KLm2OrTFVnzTGguYUazByunjCCRKq6/KZnw==
-X-ME-Sender: <xms:ZeXLZQx8Zrz-yNo1DbksiFNli8URUfZAXNPTfI-cAYu75ogXjaA-AQ>
-    <xme:ZeXLZUS1G1ZEImJZEknPU8EvwDitzUKcNfwRxhMQOQaofDtEJ2p_3C2boJr5hVWnL
-    4DLqTIQPGg_k6S_1Q>
-X-ME-Received: <xmr:ZeXLZSWet5hahhEFP4JKtbOPTxLheATVJMj5kB-942oLHnyYwSwwd0kCguWkFDnXaKxJpY09V1aBohRSQnGHrVaddJiKMEMmXRZBZWe5KBZDACUzc9GGOpKk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudehgdduheefucetufdoteggodetrfdotf
+	1707861351; x=1707947751; bh=oTNlS8iSN/pL1arvPd/5QTJjaetwy6e9fk4
+	UTiJDrr4=; b=sd8v5LS0k1pzxQL6VcVTcdNqUwTwF6t38tK/aSkdRt9DNR69YYW
+	mgl3uyGhZ30NsrbitOLENl0DJQ2ZFqLAjEwrfl0soH7FXk90jzE7qFP38FVcL+M+
+	4yjcb/L5toUeqbQW+1OeFqUN6+cxQNa2h5iKXgU8ITyuqdZn0m2lhUNtp8sscJkH
+	71gt5FNseF2R33sHskNxGOqZdSrEzuzUczAlVcw9KlQK7KCTx82uL61DXBoBG7/1
+	zb/Uxl+sqfZiUBXkoNgvExH/QammNJtjDbQg7c4N8sO7Y75+AIB7dzCV+RsHbai/
+	tkYuP3C6jL93ogiwew+KhZFSV9a/jRcl/AQ==
+X-ME-Sender: <xms:Z-XLZWq4XE2e0urUeIyf-wTwWkElUlqH2TySlIH-t2iD3pkUzJuaSw>
+    <xme:Z-XLZUrd13OVRmIJbB8KxOxxSYKMmPt8R6JRV4jIbW4DlIoW-zLGi6hRK5rt7iICZ
+    BtZMQzKDd4JB-0dsg>
+X-ME-Received: <xmr:Z-XLZbMMUmd-XFF_BbX8Wb2fYcjNUES3n3AT3IHIGulju2mfSEspAYriDk_4QGa70ZPGVjzm8U9xscytsmEQuy4TXEskkwU4ws35muqCdPK4nkhDPi08g5BC>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudehgdduheegucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvvefufffkofgjfhhrgggtgfesthekredtredtjeenucfhrhhomhepkghi
@@ -58,13 +58,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudehgdduheefucetufdoteggod
     ekteekffelleekudfftdefvddtjeejuedtuedtteegjefgvedtfedujeekieevnecuvehl
     uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepiihirdihrghnse
     hsvghnthdrtghomh
-X-ME-Proxy: <xmx:ZuXLZej_QiNwohp9PD7Wn7x1ikRn4XaFK5b-lX0fyplD7ls-f3lC0A>
-    <xmx:ZuXLZSAqlYvOr0MGaki9prTXsg4h0xJT8VMLN68iiU0WWz3OrUPU9Q>
-    <xmx:ZuXLZfJLwoi4HBaPEPi0utO7KnKRxXonkZLxbceWSSdearnIcqVFdQ>
-    <xmx:ZuXLZa3Qvgn5H6hLAbZLuMGRxc5_H2Fqi9uw1FaXq-xqEhk-tFDSgg>
+X-ME-Proxy: <xmx:Z-XLZV6mP-kw5YxZIQeNAmqqRsZQlyFQO0h8BZyOZ4ZvgPsac-ew6Q>
+    <xmx:Z-XLZV4Ofp4ssLUpNFmmDkPecJ8B-hQtSwvdolgC7GDRIuS8rn1Qlw>
+    <xmx:Z-XLZVguIwAToTyO9Hg_y7LUPViLXPWDuK9lOtBATRs3NupBGxDjPQ>
+    <xmx:Z-XLZWPJZz5L4EPOo9fveqThkaDWWK480aUfFhGmfbib-A5aaeTKrA>
 Feedback-ID: iccd040f4:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 13 Feb 2024 16:55:49 -0500 (EST)
+ 13 Feb 2024 16:55:50 -0500 (EST)
 From: Zi Yan <zi.yan@sent.com>
 To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
 	linux-mm@kvack.org
@@ -85,9 +85,9 @@ Cc: Zi Yan <ziy@nvidia.com>,
 	cgroups@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH v4 4/7] mm: page_owner: add support for splitting to any order in split page_owner.
-Date: Tue, 13 Feb 2024 16:55:17 -0500
-Message-ID: <20240213215520.1048625-5-zi.yan@sent.com>
+Subject: [PATCH v4 6/7] mm: truncate: split huge page cache page to a non-zero order if possible.
+Date: Tue, 13 Feb 2024 16:55:19 -0500
+Message-ID: <20240213215520.1048625-7-zi.yan@sent.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240213215520.1048625-1-zi.yan@sent.com>
 References: <20240213215520.1048625-1-zi.yan@sent.com>
@@ -103,122 +103,76 @@ Content-Transfer-Encoding: 8bit
 
 From: Zi Yan <ziy@nvidia.com>
 
-It adds a new_order parameter to set new page order in page owner.
-It prepares for upcoming changes to support split huge page to any
-lower order.
+To minimize the number of pages after a huge page truncation, we do not
+need to split it all the way down to order-0. The huge page has at most
+three parts, the part before offset, the part to be truncated, the part
+remaining at the end. Find the greatest common divisor of them to
+calculate the new page order from it, so we can split the huge
+page to this order and keep the remaining pages as large and as few as
+possible.
 
 Signed-off-by: Zi Yan <ziy@nvidia.com>
 ---
- include/linux/page_owner.h | 10 +++++-----
- mm/huge_memory.c           |  2 +-
- mm/page_alloc.c            |  4 ++--
- mm/page_owner.c            |  9 +++++----
- 4 files changed, 13 insertions(+), 12 deletions(-)
+ mm/truncate.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/page_owner.h b/include/linux/page_owner.h
-index d7878523adfc..a784ba69f67f 100644
---- a/include/linux/page_owner.h
-+++ b/include/linux/page_owner.h
-@@ -11,7 +11,7 @@ extern struct page_ext_operations page_owner_ops;
- extern void __reset_page_owner(struct page *page, unsigned short order);
- extern void __set_page_owner(struct page *page,
- 			unsigned short order, gfp_t gfp_mask);
--extern void __split_page_owner(struct page *page, int order);
-+extern void __split_page_owner(struct page *page, int old_order, int new_order);
- extern void __folio_copy_owner(struct folio *newfolio, struct folio *old);
- extern void __set_page_owner_migrate_reason(struct page *page, int reason);
- extern void __dump_page_owner(const struct page *page);
-@@ -31,10 +31,10 @@ static inline void set_page_owner(struct page *page,
- 		__set_page_owner(page, order, gfp_mask);
- }
+diff --git a/mm/truncate.c b/mm/truncate.c
+index 725b150e47ac..49ddbbf7a617 100644
+--- a/mm/truncate.c
++++ b/mm/truncate.c
+@@ -21,6 +21,7 @@
+ #include <linux/task_io_accounting_ops.h>
+ #include <linux/shmem_fs.h>
+ #include <linux/rmap.h>
++#include <linux/gcd.h>
+ #include "internal.h"
  
--static inline void split_page_owner(struct page *page, int order)
-+static inline void split_page_owner(struct page *page, int old_order, int new_order)
+ /*
+@@ -210,7 +211,8 @@ int truncate_inode_folio(struct address_space *mapping, struct folio *folio)
+ bool truncate_inode_partial_folio(struct folio *folio, loff_t start, loff_t end)
  {
- 	if (static_branch_unlikely(&page_owner_inited))
--		__split_page_owner(page, order);
-+		__split_page_owner(page, old_order, new_order);
- }
- static inline void folio_copy_owner(struct folio *newfolio, struct folio *old)
- {
-@@ -56,11 +56,11 @@ static inline void reset_page_owner(struct page *page, unsigned short order)
- {
- }
- static inline void set_page_owner(struct page *page,
--			unsigned int order, gfp_t gfp_mask)
-+			unsigned short order, gfp_t gfp_mask)
- {
- }
- static inline void split_page_owner(struct page *page,
--			int order)
-+			int old_order, int new_order)
- {
- }
- static inline void folio_copy_owner(struct folio *newfolio, struct folio *folio)
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 3d30eccd3a7f..ad7133c97428 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2919,7 +2919,7 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 	unlock_page_lruvec(lruvec);
- 	/* Caller disabled irqs, so they are still disabled here */
+ 	loff_t pos = folio_pos(folio);
+-	unsigned int offset, length;
++	unsigned int offset, length, remaining;
++	unsigned int new_order = folio_order(folio);
  
--	split_page_owner(head, order);
-+	split_page_owner(head, order, 0);
+ 	if (pos < start)
+ 		offset = start - pos;
+@@ -221,6 +223,7 @@ bool truncate_inode_partial_folio(struct folio *folio, loff_t start, loff_t end)
+ 		length = length - offset;
+ 	else
+ 		length = end + 1 - pos - offset;
++	remaining = folio_size(folio) - offset - length;
  
- 	/* See comment in __split_huge_page_tail() */
- 	if (PageAnon(head)) {
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 9d4dd41d0647..e0f107b21c98 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -2652,7 +2652,7 @@ void split_page(struct page *page, unsigned int order)
+ 	folio_wait_writeback(folio);
+ 	if (length == folio_size(folio)) {
+@@ -235,11 +238,25 @@ bool truncate_inode_partial_folio(struct folio *folio, loff_t start, loff_t end)
+ 	 */
+ 	folio_zero_range(folio, offset, length);
  
- 	for (i = 1; i < (1 << order); i++)
- 		set_page_refcounted(page + i);
--	split_page_owner(page, order);
-+	split_page_owner(page, order, 0);
- 	split_page_memcg(page, order, 0);
- }
- EXPORT_SYMBOL_GPL(split_page);
-@@ -4837,7 +4837,7 @@ static void *make_alloc_exact(unsigned long addr, unsigned int order,
- 		struct page *page = virt_to_page((void *)addr);
- 		struct page *last = page + nr;
- 
--		split_page_owner(page, order);
-+		split_page_owner(page, order, 0);
- 		split_page_memcg(page, order, 0);
- 		while (page < --last)
- 			set_page_refcounted(last);
-diff --git a/mm/page_owner.c b/mm/page_owner.c
-index 1319e402c2cf..ebbffa0501db 100644
---- a/mm/page_owner.c
-+++ b/mm/page_owner.c
-@@ -292,19 +292,20 @@ void __set_page_owner_migrate_reason(struct page *page, int reason)
- 	page_ext_put(page_ext);
- }
- 
--void __split_page_owner(struct page *page, int order)
-+void __split_page_owner(struct page *page, int old_order, int new_order)
- {
- 	int i;
- 	struct page_ext *page_ext = page_ext_get(page);
- 	struct page_owner *page_owner;
--	unsigned int nr = 1 << order;
-+	unsigned int old_nr = 1 << old_order;
-+	unsigned int new_nr = 1 << new_order;
- 
- 	if (unlikely(!page_ext))
- 		return;
- 
--	for (i = 0; i < nr; i++) {
-+	for (i = 0; i < old_nr; i += new_nr) {
- 		page_owner = get_page_owner(page_ext);
--		page_owner->order = 0;
-+		page_owner->order = new_order;
- 		page_ext = page_ext_next(page_ext);
- 	}
- 	page_ext_put(page_ext);
++	/*
++	 * Use the greatest common divisor of offset, length, and remaining
++	 * as the smallest page size and compute the new order from it. So we
++	 * can truncate a subpage as large as possible. Round up gcd to
++	 * PAGE_SIZE, otherwise ilog2 can give -1 when gcd/PAGE_SIZE is 0.
++	 */
++	new_order = ilog2(round_up(gcd(gcd(offset, length), remaining),
++				   PAGE_SIZE) / PAGE_SIZE);
++
++	/* order-1 THP not supported, downgrade to order-0 */
++	if (new_order == 1)
++		new_order = 0;
++
++
+ 	if (folio_has_private(folio))
+ 		folio_invalidate(folio, offset, length);
+ 	if (!folio_test_large(folio))
+ 		return true;
+-	if (split_folio(folio) == 0)
++	if (split_huge_page_to_list_to_order(&folio->page, NULL, new_order) == 0)
+ 		return true;
+ 	if (folio_test_dirty(folio))
+ 		return false;
 -- 
 2.43.0
 
