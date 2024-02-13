@@ -1,46 +1,46 @@
 Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4786912F5A0;
-	Tue, 13 Feb 2024 00:24:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D8B12F5AB;
+	Tue, 13 Feb 2024 00:24:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707783871; cv=none; b=DVAm5oGZM9/SrVtIcwbfWttF29Y6FQ5DAGozVjSOy+/bsxjOB2jSyRmkronikyqYC80PgsoYjGus2wkVTp7frZoFHdX49Y9qXK+97QgnFA5pOr5rgL8ggd7+wX5KAGXPNo9Te8UMJMMVldSoCp0LaHtn+dgZUemaI2mww0qOjM4=
+	t=1707783872; cv=none; b=T0SuoTqi+pjBMCaqDMK3Owj21ccTzIrxjI/mAyjxmBHhJfABAKdLrn/xUvl084NpSOJ78+ZqhjoA/ABGGPpJZqmbxnay3HLd8qb8q7EeuE7iQ3AISMUkDmbw61geCx0MOmasooNCrjC0ZnU1qysX96ch257lt+NLDzVhkzBuIIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707783871; c=relaxed/simple;
-	bh=ZMqDia8JotT9F5PIZSI1O5xI4+hHoPXjcu+VB7BmxSQ=;
+	s=arc-20240116; t=1707783872; c=relaxed/simple;
+	bh=FS269dnoFfYz648OsmBzN0dYStuIf4GWkyTn6qcidso=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h6mYMO9wSJGbTiuuwY7NWFnVXRhR3uQupd9MVU9a34FWTbap+FLeGFjICoZKpRHILN/gY22xG+bAdI2aZr/TTSAZnZYHD/1/5PKgZUCdqegAAnti42XeOD4gIlQghug03AtgJIDieGtflGOpcjEvWEm4cf8YxkJR8nn4ayKaHOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZHz8xFRu; arc=none smtp.client-ip=198.47.19.142
+	 MIME-Version:Content-Type; b=MxV6AFVY5hBGipQCXo9yfbvtKR0VyRmstZJacnc2x+v8EI+X6G6xIAr/F0oNTfjZSzVmPzoHi2mgPAeKmsxnnGWUg6n6axKeQ/yK8MrMG4e/EqrccytX6fFv8MzCwrnT7OqRiAyRmQla3Vwn0kzPbKjDYjy8O8KJqo9eTnYHa14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=XKBlwvpc; arc=none smtp.client-ip=198.47.19.142
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZHz8xFRu"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41D0OHow088693;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XKBlwvpc"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41D0OHWm088677;
 	Mon, 12 Feb 2024 18:24:17 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
 	s=ti-com-17Q1; t=1707783857;
-	bh=ISgCWvi6W/npNIsqMNqSDgvefllVUiLe735Dq+yayF8=;
+	bh=hUydIEOTuqHDfvM49AYx6tel8EOPS7VljbOdHOCBU1Q=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=ZHz8xFRumRgWUk+ZefA0byUgrnaRDsi71MYOXB2WwwvmPQsOji83f3vv/Qo5OId3l
-	 kiDk/JboijsZXB9CE05DdNEa/gGwf/7zJt4eCyGbBFZ11MLfe9nj45FPJKpM3h50rg
-	 KcXesyCX7k6+zmEq83f9y8Q21/3AY0ns+OzX/L40=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41D0OHle022920
+	b=XKBlwvpcgoASKl2ado+T5QpkDduYTwRgM09ZPRmYvZCt2nnxS33iFuvMpJMEwBkPN
+	 QMiCIcej9LWIRp1g4qO7aGNip+TMoYa4So3hz1qKCTnCMjwGs6VxlFGQiIGE31yskb
+	 A43Z6SU3vlAyUMplgwzSOxRbXCXLY5NAtPc97eOQ=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41D0OHl4015138
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
 	Mon, 12 Feb 2024 18:24:17 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 12
- Feb 2024 18:24:17 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2024 18:24:16 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
  Frontend Transport; Mon, 12 Feb 2024 18:24:16 -0600
 Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41D0OGXn119810;
-	Mon, 12 Feb 2024 18:24:17 -0600
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41D0OGXi119810;
+	Mon, 12 Feb 2024 18:24:16 -0600
 From: Judith Mendez <jm@ti.com>
 To: Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski
@@ -53,9 +53,9 @@ CC: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
         <linux-kernel@vger.kernel.org>, Wadim Egorov
 	<w.egorov@phytec.de>,
         Francesco Dolcini <francesco.dolcini@toradex.com>
-Subject: [PATCH v2 9/9] arm64: dts: ti: k3-am6*: Add bootph-all property in MMC node
-Date: Mon, 12 Feb 2024 18:24:16 -0600
-Message-ID: <20240213002416.1560357-10-jm@ti.com>
+Subject: [PATCH v2 4/9] arm64: dts: ti: k3-am64-main: Fix ITAP/OTAP values for MMC
+Date: Mon, 12 Feb 2024 18:24:11 -0600
+Message-ID: <20240213002416.1560357-5-jm@ti.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240213002416.1560357-1-jm@ti.com>
 References: <20240213002416.1560357-1-jm@ti.com>
@@ -69,39 +69,49 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Add missing bootph-all property for AM62p MMC0 and AM64x
-MMC0 nodes.
+Update MMC0/MMC1 OTAP/ITAP values according to the datasheet
+[0], refer to Table 7-68 for MMC0 and Table 7-77 for MMC1.
 
+[0] https://www.ti.com/lit/ds/symlink/am6442.pdf
+
+Fixes: 8abae9389bdb ("arm64: dts: ti: Add support for AM642 SoC")
 Signed-off-by: Judith Mendez <jm@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-am62p5-sk.dts | 1 +
- arch/arm64/boot/dts/ti/k3-am642-evm.dts | 1 +
- 2 files changed, 2 insertions(+)
+ arch/arm64/boot/dts/ti/k3-am64-main.dtsi | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-index 5c9b73726ebd..e86f34e835c1 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-@@ -413,6 +413,7 @@ &sdhci0 {
- 	status = "okay";
- 	ti,driver-strength-ohm = <50>;
- 	disable-wp;
-+	bootph-all;
- };
+diff --git a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
+index ddd382a0d735..9bfa0a969bfc 100644
+--- a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
+@@ -633,6 +633,9 @@ sdhci0: mmc@fa10000 {
+ 		ti,otap-del-sel-mmc-hs = <0x0>;
+ 		ti,otap-del-sel-ddr52 = <0x6>;
+ 		ti,otap-del-sel-hs200 = <0x7>;
++		ti,itap-del-sel-legacy = <0x10>;
++		ti,itap-del-sel-mmc-hs = <0xa>;
++		ti,itap-del-sel-ddr52 = <0x3>;
+ 		status = "disabled";
+ 	};
  
- &sdhci1 {
-diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm.dts b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
-index 83f2b00726b5..fcadfb7a353c 100644
---- a/arch/arm64/boot/dts/ti/k3-am642-evm.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
-@@ -497,6 +497,7 @@ &sdhci0 {
- 	non-removable;
- 	ti,driver-strength-ohm = <50>;
- 	disable-wp;
-+	bootph-all;
- };
- 
- /* SD/MMC */
+@@ -645,12 +648,16 @@ sdhci1: mmc@fa00000 {
+ 		clock-names = "clk_ahb", "clk_xin";
+ 		ti,trm-icp = <0x2>;
+ 		ti,otap-del-sel-legacy = <0x0>;
+-		ti,otap-del-sel-sd-hs = <0xf>;
++		ti,otap-del-sel-sd-hs = <0x0>;
+ 		ti,otap-del-sel-sdr12 = <0xf>;
+ 		ti,otap-del-sel-sdr25 = <0xf>;
+ 		ti,otap-del-sel-sdr50 = <0xc>;
+ 		ti,otap-del-sel-sdr104 = <0x6>;
+ 		ti,otap-del-sel-ddr50 = <0x9>;
++		ti,itap-del-sel-legacy = <0x0>;
++		ti,itap-del-sel-sd-hs = <0x0>;
++		ti,itap-del-sel-sdr12 = <0x0>;
++		ti,itap-del-sel-sdr25 = <0x0>;
+ 		ti,clkbuf-sel = <0x7>;
+ 		status = "disabled";
+ 	};
 -- 
 2.43.0
 
