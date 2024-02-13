@@ -1,165 +1,140 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930765DF1B;
-	Tue, 13 Feb 2024 14:36:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0775EE84
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 14:36:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707834996; cv=none; b=W3C3ZGBsoKkDRb81h3bLaotakYlTISJ+ufCH+G68N6Rx5rm+DXFDpYuM/Pziq33NfJQ/7ws9ynXCcyxJzVHm+n4ldR+tV+7x6leVHS3h893IG5aD1s/fg+IwihYMBy81nv3LNRPoQIq3NmeLs8WZV1/7MA+bn+QRiXRGF9tHR7A=
+	t=1707835015; cv=none; b=Br5hX7T03QzCGFcGWZa1a+9CkiRUdzXcpcRV/48y/ij+Hxoy6yTTVVA6ifaYsNWs5a4GlYlnmfRsLqVypLsIrODBpGX3a3ME/baJnQs7arSDu8jEHi3zn10Ak2hCikUxvppM1Ss3aCT9MzxZYOxho6YfLCPGyd0FaqYJhO17xPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707834996; c=relaxed/simple;
-	bh=6fpnG25L709YQc6CBpdSPx52p5geiuVd+undxGv3F8k=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GvuYV8c3Z0KkebOmAf4fOXTBhrssZmLe2Qq+J/BMzK229W3fIBgCh4g1KJ/MKoealkDjrczoo0OGer+Y+3elsyDdEj8y4/Qcx8PCDl86/+cKiwPPmm9k1/p8yhMHpXwrkBs7OBEHYIveIrTNBWBLM0NAktzK6QnIMkUABibmVcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=a2wTltk7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=EYBBwyP0; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=a2wTltk7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=EYBBwyP0; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1707835015; c=relaxed/simple;
+	bh=qnLjOeE5EE3Lqs84+4tWRYfNsexjdBi5vWoPyHGPIkA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=neOWdEfK3jD14dIK3CugswZ6tVOBUnVYvIL4IdS+j44wdc/9qqq7BLWlaRl+cUnZbFrQND9I89U5R/JfWAkqFuPuXjtNLMpWOlopAbxWn9r9Y/H/pyuoa8Nrfd8w0ZkYrtUUiJ7qTGdek4TnHXZw+ugbgI6eOx0Lnyg5T+pTsA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=bhA7Te6Z; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="a2wTltk7";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="EYBBwyP0";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="a2wTltk7";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="EYBBwyP0"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C2D831FCDC;
-	Tue, 13 Feb 2024 14:36:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707834992; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f83NHGJ9TQS4FzV/QQJ2HUXh870K+Fj6gcduNb1X2b0=;
-	b=a2wTltk77dc1GNkco0+iHEqL2R24CaueF7MYCXelTBfT45WAKP9l4WQp5K7h8sS0IJP6+9
-	Vsy8l6nn3HufVmoueQk1AjJVOfabMjwY2PCVdkQBjOgwQSDTPYwhKbF+P+6In4hsusLL94
-	oFk/YF0540ZNTQk7fUzKRALj50ZfGvU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707834992;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f83NHGJ9TQS4FzV/QQJ2HUXh870K+Fj6gcduNb1X2b0=;
-	b=EYBBwyP0PstETSJO4BTDkLn2L9WpUfVzkz9GLAh5adxKlzIuI+Jk/Y+/dvTXz0br/hNOWr
-	E4ViVlZo1T/j/MDA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707834992; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f83NHGJ9TQS4FzV/QQJ2HUXh870K+Fj6gcduNb1X2b0=;
-	b=a2wTltk77dc1GNkco0+iHEqL2R24CaueF7MYCXelTBfT45WAKP9l4WQp5K7h8sS0IJP6+9
-	Vsy8l6nn3HufVmoueQk1AjJVOfabMjwY2PCVdkQBjOgwQSDTPYwhKbF+P+6In4hsusLL94
-	oFk/YF0540ZNTQk7fUzKRALj50ZfGvU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707834992;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f83NHGJ9TQS4FzV/QQJ2HUXh870K+Fj6gcduNb1X2b0=;
-	b=EYBBwyP0PstETSJO4BTDkLn2L9WpUfVzkz9GLAh5adxKlzIuI+Jk/Y+/dvTXz0br/hNOWr
-	E4ViVlZo1T/j/MDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8EB4913404;
-	Tue, 13 Feb 2024 14:36:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 2hz3IXB+y2VULAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 13 Feb 2024 14:36:32 +0000
-Date: Tue, 13 Feb 2024 15:36:32 +0100
-Message-ID: <87y1bowhvz.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: ramzes <ramzes005@gmail.com>
-Cc: sbinding@opensource.cirrus.com,
-	alsa-devel@alsa-project.org,
-	andy.chi@canonical.com,
-	david.rhodes@cirrus.com,
-	james.schulman@cirrus.com,
-	kailang@realtek.com,
-	linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	luke@ljones.dev,
-	patches@opensource.cirrus.com,
-	perex@perex.cz,
-	rf@opensource.cirrus.com,
-	ruinairas1992@gmail.com,
-	shenghao-ding@ti.com,
-	tiwai@suse.com,
-	vitalyr@opensource.cirrus.com
-Subject: Re: [PATCH v3] Add Lenovo Legion 7i gen7 sound quirk
-In-Reply-To: <CAPtLpdGH6aptJq_Co5=1NL+Sb55vtax8KrUbyMQj2ThvS2YtHg@mail.gmail.com>
-References: <000101da5e63$6a2565e0$3e7031a0$@opensource.cirrus.com>
-	<20240213115614.10420-1-ramzes005@gmail.com>
-	<87jzn8y1u7.wl-tiwai@suse.de>
-	<CAPtLpdGH6aptJq_Co5=1NL+Sb55vtax8KrUbyMQj2ThvS2YtHg@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="bhA7Te6Z"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6da202aa138so2939241b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 06:36:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707835013; x=1708439813;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l0wnZ9JRYyJ2vvbs1vhTSiq4Aq4+1sUBV6iHNV7yNP8=;
+        b=Y+FBDp/gTtR5DzDyX1giGNcMIqHj7WIBpZOZgts5DvDJ0HKtjWEIsjPlPOYalrLHa1
+         +ldaRt5QPKjX0d3EdhIis4AjkDiTB6ruHmc96aB3WiyrIkLDoMz6VAwg76/WdsXzCgl2
+         BhV1UlIAOmDC3N6bNi/X6IVH9q/2/5XRoybrVP4S036xXu/UkrJdtdw9GiBWovHCp/3Z
+         qfWwqYndMhGnFSevGDJYP3S2QU3VAZj3KapjjFEejGJ3XUaFtyC0NNuxBrZrigkDv9RR
+         i0lpS3hEUc4/ccq4a4X1IwX68Ke6AJkwOp97qPhnq+xGUMSqplUN757Ae3YTTAPiEDTf
+         x3ig==
+X-Forwarded-Encrypted: i=1; AJvYcCWdcTOrJltHUKiUFy/WeG6tKQkazRqG1HQmy4FEfmCC3W0smI5vzlFoIGQnXvq/d0otyDU092BAhqgijfxfjMD80Vs1JLXtKNpus+xC
+X-Gm-Message-State: AOJu0YxrlEuvmz0a5bjSlhEBqkIIxM9DXx3UdeNzuk5ev60pIUr/B8LQ
+	isgvQU1XIn144js1Riv3p40DYNDUSDpCaXuLJhPwFSDVPceIMTUU
+X-Google-Smtp-Source: AGHT+IEIAiPMz+QXKPIvwneVLCpGXIEShPSKQb+GU+qdsUYAQJmScKs20T+5qMlf1aFBjHrnkCO8iw==
+X-Received: by 2002:a05:6a00:3020:b0:6e0:e235:e2c1 with SMTP id ay32-20020a056a00302000b006e0e235e2c1mr7458029pfb.9.1707835013104;
+        Tue, 13 Feb 2024 06:36:53 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUsRv1NVAfXp6dXcm0Z7JFKzD36zhj1aaSZGgPkNjH9XPzxuhL17kH+uM1XQI6Mfn+EUvCd0e85IN2tYb6ooVMJgyV7HdWu5AtEGawZ0fZ4//oUlc70TzoPyjfLkGEFF0b/PHXcPJC9FQ==
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id h28-20020a056a00001c00b006e07eb192cfsm7533162pfk.59.2024.02.13.06.36.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 06:36:52 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2024; t=1707835011;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=l0wnZ9JRYyJ2vvbs1vhTSiq4Aq4+1sUBV6iHNV7yNP8=;
+	b=bhA7Te6ZycbAnm8sfVIGe6pf0rq9sRN+PYoMSjfwfkbpbSd5ugcJtqr+qEUbjKV6Q17/2B
+	rs8u7oMF8XhYb6MHVm1ewYov77aiRckLg9W9f8iFCkhbfXN6fRO3OBDguIwFZTfu3p1HnH
+	WGKxMLyLpLFcnGJMNp0KALboNcKFow3aSymhPuj4LY8cMlpBFcQd2X4NKx9zsOMGgHXVbz
+	WUdZNqBGu7xgVtnOenprOufwmUW51DJIbbvTZV9MawzdDLK2v0YKhU9C0bGWu4Z1wKapBC
+	OX6J+JXMxtRCIsHaVWdA371V7J5zhTgoe/Q545yZTmHBI54D2qG0LFY87+F+RA==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Date: Tue, 13 Feb 2024 11:37:31 -0300
+Subject: [PATCH] i3c: Make i3c_bus_type const
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=ISO-8859-2
-Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spamd-Result: default: False [-0.08 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCPT_COUNT_TWELVE(0.00)[17];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
-	 FREEMAIL_TO(0.00)[gmail.com];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[opensource.cirrus.com,alsa-project.org,canonical.com,cirrus.com,realtek.com,vger.kernel.org,ljones.dev,perex.cz,gmail.com,ti.com,suse.com];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.98)[86.94%]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -0.08
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240213-bus_cleanup-i3c-v1-1-403aea18f05a@marliere.net>
+X-B4-Tracking: v=1; b=H4sIAKp+y2UC/x3MQQqAIBBA0avErBN0rBZdJSImG2sgLJQiCO+et
+ HyL/19IHIUT9NULkW9JcoQCU1fgNgorK1mKATU2Go1V85UmtzOF61RinfKmpY6Q2WqCUp2RvTz
+ /cRhz/gB/30sAYQAAAA==
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1605; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=qnLjOeE5EE3Lqs84+4tWRYfNsexjdBi5vWoPyHGPIkA=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBly36rVzr28ScrwvTN7Qgo3Ys2KcnZHjq5gY6Vq
+ C2lYuw3lZaJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZct+qwAKCRDJC4p8Y4ZY
+ pkeLD/9kOBrumHvtXooKwiRt36JtznjD7rUTdTDHMbPTMPL8fjWxBNkmYGrNYeWJJh3+cTo8i00
+ malNFpdJj1/EXXmUUTG/rOC2o+WwHzlkxegov9nMTEbXjsf3lMkvrd9k4K2Qr9dy9ZTgsB/Wsr/
+ m60fgPmjJcp2Lc6nLii9I+EZpvxTIKBk1Kwhvyccma2OMS1owrX1BZZQITHJAUXqkDBz0Frc36Z
+ nAfwCE6keFFAl/z6lddXRHm+OKahTSgbePBXfpFFCqahqSPkFEM8kCEbyt51lHGHVe7SDgBj3zs
+ HgR0D39qxiucQqIsx+hYz14eqNXnIIe4eiwLI1pHqNBy2Awd27nnljCqsspCaV6KyTtfoSKpsMc
+ orGXJRhSzdEfWrTOwGbUSj54vaAHIvnPSwXz858h2/t3l58G90lAmqvvVn0u3sbMh3i6Xu7r0k+
+ itoftJ6uG3UMj8MFqu/hovDRCsk6OrfJDeg5LwIO/on8E6qO8p+UFQjhFFSH6Tp8WZ5HGK/ynMR
+ 6CZpbjsJSPGd1frFykN5DGv4jp8hn8STquj2AR8tTmfPDbXXFmLVbLlc5Jqu/VoAqSvyzdQocNO
+ D4PbkTRjFymgKFOOAPqcJ2vQjTnCvpIgzhUI32RtgBqCVfsZ5i20ceLJf9uzslQymJ2LfhlQ7OJ
+ mVaTLstzRbFcbAw==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
-On Tue, 13 Feb 2024 14:16:43 +0100,
-ramzes wrote:
-> 
-> 
-> Yes, I've compiled kernel with latest patch version, 
-> with Stephan's configuration, and sound works well on my laptop.
+Since commit d492cc2573a0 ("driver core: device.h: make struct
+bus_type a const *"), the driver core can properly handle constant
+struct bus_type, move the i3c_bus_type variable to be a constant
+structure as well, placing it into read-only memory which can not be
+modified at runtime.
 
-OK, now I applied the patch.  Thanks.
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+---
+ drivers/i3c/internals.h | 2 +-
+ drivers/i3c/master.c    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/i3c/internals.h b/drivers/i3c/internals.h
+index 908a807badaf..4d99a3524171 100644
+--- a/drivers/i3c/internals.h
++++ b/drivers/i3c/internals.h
+@@ -10,7 +10,7 @@
+ 
+ #include <linux/i3c/master.h>
+ 
+-extern struct bus_type i3c_bus_type;
++extern const struct bus_type i3c_bus_type;
+ 
+ void i3c_bus_normaluse_lock(struct i3c_bus *bus);
+ void i3c_bus_normaluse_unlock(struct i3c_bus *bus);
+diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+index 3afa530c5e32..f32c591ae325 100644
+--- a/drivers/i3c/master.c
++++ b/drivers/i3c/master.c
+@@ -335,7 +335,7 @@ static void i3c_device_remove(struct device *dev)
+ 	i3c_device_free_ibi(i3cdev);
+ }
+ 
+-struct bus_type i3c_bus_type = {
++const struct bus_type i3c_bus_type = {
+ 	.name = "i3c",
+ 	.match = i3c_device_match,
+ 	.probe = i3c_device_probe,
 
-Takashi
+---
+base-commit: 4fa0888f6f3e6a67cac5afafb23e33f8222cfdd0
+change-id: 20240213-bus_cleanup-i3c-f15a6a2ee30a
 
-> 
-> Tomasz
-> 
-> wt., 13 lut 2024 o 13:40 Takashi Iwai <tiwai@suse.de> napisa³(a):
-> 
->     On Tue, 13 Feb 2024 12:56:14 +0100,
->     Tomasz Kudela wrote:
->     >
->     > From: "Tomasz Kudela" <ramzes005@gmail.com>
->     >
->     > Add sound support for the Legion 7i gen7 laptop (16IAX7).
->     >
->     > Signed-off-by: Tomasz Kudela <ramzes005@gmail.com>
->    
->     You tested with this new patch and confirmed it's still working,
->     right?  Just to be sure.
-> 
->     Takashi
-> 
+Best regards,
+-- 
+Ricardo B. Marliere <ricardo@marliere.net>
+
