@@ -1,120 +1,172 @@
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B691B592
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 08:46:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3352137E;
+	Tue, 13 Feb 2024 08:46:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707813969; cv=none; b=mC35a7apiQxzk6Hu+MDD/t1BYfWqGn+9pnqrFk50gput/6eyjtWMLJYkOwPnN/PgmVL1BjrMslI7kX6ICfpo/pax3QpEBcqMCtNIQUV2MIpQK20OPoWztlGGAEofODasr2DphgPSaIzHp5VjOzHMeHOLYmnlGlzotGsAlokSbgE=
+	t=1707813989; cv=none; b=TwF7wnMTU8xPYM4+VuaQljp2UMbW172ohfvZIEKZgMMhEmCcODR/D4rxv6giQvinxm78ltSdIteg3lJz+VK7zDm5h6bW4XhPscniygCVKUTgITl/xTczaW+g5+X//ysNNvKp5nRzOgAtqQV/XDpin0j3yM6igvz/fJTOsLYTYu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707813969; c=relaxed/simple;
-	bh=SFj1O+gIc6/mjCX6EwhFyiNF8sE1xceTeC5fREpN68M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YIMlt6aNVZ4toUagtokaOLUuwdoU43pKJu3BxY9Rcg8YqDrpuqV9CJMLt3SYBvqgKCm59J+sNbzxaD0LN0mHjnlPt93nnB71fahwFcN7ehSKaZEn3viSXyexQqbb6PQdbNNBogm+L/uASfnG3FS4YYu7dQIN6smfK4xAZ5sia7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eTANGQE2; arc=none smtp.client-ip=209.85.217.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707813989; c=relaxed/simple;
+	bh=I8Dk1CjqScKBtQApLfXJ53Ss9d0W5sdwa22iNPoG3vY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NcvKE8BnhIAKfKNWemNqyKZtRFyAOODcGfC2c9J5vto7erP6LFC5H+YKHJa19ueN5CO2l1OHuWBdPvZGkes5Gi0xVl7FyjSasN3OMNLEnsBlKAMITf7HNbxBKAfdVtZ0OFVjEJ7Wcjj1iOGblLr5GCO2jfbq4Gdp6/ePh/NbjD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=rsbHN13g; arc=none smtp.client-ip=74.50.62.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eTANGQE2"
-Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-46d5f87548fso2258257137.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 00:46:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707813967; x=1708418767; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fzcuV2n4iA/l5qKMVwHfprJqu/PSyuIZf0nPPISMLpI=;
-        b=eTANGQE2vWF+DzuhgAdt8a7rN/oP0oIeXUYQx6E3pZdFW4jHt1dEeXvRY9TbRtKuxx
-         Efj4UAUQgvj/1pkcIy+LahX6cif2yRD0o+8kDNGKLHjSDc/xiOeE32eCJs2kfa1vNPSC
-         xDAwmQYVuxr1fhO1/xvVVvqmyTKYixQldnVWbVrRjNI3SvBoIaRhNL8RrFifQc+J0aQY
-         rLFdZQT6TiR4iI8m6vt3jTY73JeKlTeL+jDbyi+35RP2s+D7JmGo0yMqP0asorqfneZK
-         wMCWvnk3feqPYxQeVIFCLW78H7HTnffkg+L2f3dTed4/jwsZAcNP/NtWmmNJgxCh9eOL
-         ttFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707813967; x=1708418767;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fzcuV2n4iA/l5qKMVwHfprJqu/PSyuIZf0nPPISMLpI=;
-        b=Kw/5Pc9Dl44BTRT9oT6E1FBBd3UAFi3ponbj2RKKWZgc5SQGZZOIB9Dbl7WG6qBAu4
-         S+6Q3VUQbBJ8SmnX7Z/FxXAtVuNeIKkrgJhBO8+cIMrpT/RnNHAgaLecYMf5H6L63Eud
-         +7D+xZht/kBfnjOeATMX8yuHNlWoqcQULVUBdzJsffbJMw70eEi2iWEtzuApH097VpPl
-         F8zu/8vcp3b83r4+AZac6mjDw1lLbL74EX3X45PnQJfKusxBpFiKFWzPpABXAVEvalro
-         faEYj2iQbP7nyXA6ki/Sxb+ePT14CDlvHkmxaoJ0DcgscXVRj/zl/rqhPZ+TiKrCrF/j
-         lgBQ==
-X-Gm-Message-State: AOJu0Yz1vSqrC4sXnUfMZKuOBZEtgZXeVIehPhdWs+ME53/n0ytVZpkV
-	yKBC+8AaPD9aj8VrBUGwrMnUd9q3M5ENDnNPF2sV4W2TglN6+Kbu976eVILhknqHQJiO1Q0DkY/
-	1yqLidWC1yaDHriIynpOWpQisVnfYFfihQm9B
-X-Google-Smtp-Source: AGHT+IGET/tysWO1JG0UEp1toY1w2DREDm4WQBRq/SnNElHOPrJ87+Rie6YKbFWNpo6ahQ+5Rtjv8x9B+YM05gjb0YA=
-X-Received: by 2002:a67:f649:0:b0:46e:c5df:2b15 with SMTP id
- u9-20020a67f649000000b0046ec5df2b15mr1375250vso.15.1707813966660; Tue, 13 Feb
- 2024 00:46:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="rsbHN13g"
+Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
+	by mail5.25mail.st (Postfix) with ESMTPSA id F19C660505;
+	Tue, 13 Feb 2024 08:45:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
+	s=25mailst; t=1707813986;
+	bh=I8Dk1CjqScKBtQApLfXJ53Ss9d0W5sdwa22iNPoG3vY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rsbHN13gdMiK4m9PKkNyMA1M8Q5mkR0/0IQLimo4d40yCOjKmDidzP7oq1srnvx4e
+	 XJQQZRaDQqmIJFECD56kppnBRsANTSkCOAfdVgfCvGG3X598eCNbl8XWrIrNyG8xxB
+	 p5fgc5JFCo0HCqh0N6Axky9kOHyOSnV8wjhY/8egBRP7LMxZMCpcOtvc3pQjI+0V0e
+	 oqAlNLqGaBea57x3shI1Y2TYYgnU7dExn6lKDbNJ+gcg4QYmzi2GhF2KhQQSc00xlA
+	 fPNR4g3/jBpXYsDiPPm7noT1MpoyPTn3t3/FKG+KxU7TPk7M34wT1XBrJlMy/rVE8Z
+	 O8cUomo+8Km2g==
+From: Tony Lindgren <tony@atomide.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: "David S . Miller" <davem@davemloft.net>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Dhruva Gole <d-gole@ti.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Johan Hovold <johan@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Subject: [PATCH v6 0/6] Add support for DEVNAME:0.0 style hardware based addressing
+Date: Tue, 13 Feb 2024 10:45:07 +0200
+Message-ID: <20240213084545.40617-1-tony@atomide.com>
+X-Mailer: git-send-email 2.43.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240212223029.30769-1-osalvador@suse.de> <20240212223029.30769-6-osalvador@suse.de>
-In-Reply-To: <20240212223029.30769-6-osalvador@suse.de>
-From: Marco Elver <elver@google.com>
-Date: Tue, 13 Feb 2024 09:45:28 +0100
-Message-ID: <CANpmjNMaUHMNmA7CxZkGUsJ7LCmz+PGqYAzTKxq=u_Osu8Y4sA@mail.gmail.com>
-Subject: Re: [PATCH v8 5/5] mm,page_owner: Update Documentation regarding page_owner_stacks
-To: Oscar Salvador <osalvador@suse.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Alexander Potapenko <glider@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, 12 Feb 2024 at 23:29, Oscar Salvador <osalvador@suse.de> wrote:
->
-> Update page_owner documentation including the new page_owner_stacks
-> feature to show how it can be used.
->
-> Signed-off-by: Oscar Salvador <osalvador@suse.de>
-> ---
->  Documentation/mm/page_owner.rst | 44 +++++++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->
-> diff --git a/Documentation/mm/page_owner.rst b/Documentation/mm/page_owner.rst
-> index 62e3f7ab23cc..bcde81bf0902 100644
-> --- a/Documentation/mm/page_owner.rst
-> +++ b/Documentation/mm/page_owner.rst
-> @@ -24,6 +24,11 @@ fragmentation statistics can be obtained through gfp flag information of
->  each page. It is already implemented and activated if page owner is
->  enabled. Other usages are more than welcome.
->
-> +It can also be used to show all the stacks and their outstanding
-> +allocations, which gives us a quick overview of where the memory is going
-> +without the need to screen through all the pages and match the allocation
-> +and free operation.
-> +
->  page owner is disabled by default. So, if you'd like to use it, you need
->  to add "page_owner=on" to your boot cmdline. If the kernel is built
->  with page owner and page owner is disabled in runtime due to not enabling
-> @@ -68,6 +73,45 @@ Usage
->
->  4) Analyze information from page owner::
->
-> +       cat /sys/kernel/debug/page_owner_stacks/show_stacks > stacks.txt
-> +       cat stacks.txt
-> +        prep_new_page+0xa9/0x120
-> +        get_page_from_freelist+0x7e6/0x2140
-> +        __alloc_pages+0x18a/0x370
-> +        new_slab+0xc8/0x580
-> +        ___slab_alloc+0x1f2/0xaf0
-> +        __slab_alloc.isra.86+0x22/0x40
-> +        kmem_cache_alloc+0x31b/0x350
-> +        __khugepaged_enter+0x39/0x100
-> +        dup_mmap+0x1c7/0x5ce
-> +        copy_process+0x1afe/0x1c90
-> +        kernel_clone+0x9a/0x3c0
-> +        __do_sys_clone+0x66/0x90
-> +        do_syscall_64+0x7f/0x160
-> +        entry_SYSCALL_64_after_hwframe+0x6c/0x74
-> +       stack_count: 234
-> +       ...
-> +       ...
-> +       echo 7000 > /sys/kernel/debug/page_owner_stacks/set_threshold > stacks_7000.txt
+Hi all,
 
-I think this example command is wrong.
+With the recent serial core changes, we can now add DEVNAME:0.0 style
+addressing for the serial ports. When using DEVNAME:0.0 naming, we don't
+need to care which ttyS instance number is allocated depending on HSUART
+settings or if the devicetree has added aliases for all the ports.
+
+We also prepare the serial core to handle the ttyS related quirks done
+in console_setup() to prepare things for eventually dropping the parsing
+from console_setup().
+
+These patches are against tty-next, but apply with fuzz also against Linux
+next with the recent printk changes.
+
+Regards,
+
+Tony
+
+Changes since v5:
+- Include types.h as noted by Andy
+
+- Update patch description to use serial_base_add_one_prefcon() as noded
+  by Andy
+
+Changes since v4:
+- Fix passing empty brl_opt to add_preferred_console() instead of NULL
+
+- Fix console_setup() trying to parse a console index out of a DEVNAME:0.0
+  option that can be an IO address instead of an index
+
+- Fix issue with default console getting enabled before DEVNAME:0.0
+  handling device driver calls add_preferred_console()
+
+- Fix error check for kasprintf(), use serial_base_add_one_prefcon() and
+  coding suggestions by Andy
+
+- Fixed compile errors if console is not enabled in .config as noted
+  by kernel test robot
+
+Changes since v3:
+- Fix handling of brl_options by saving them too in console_opt_save()
+
+- Drop changes to remove console_setup() parsing, further changes to
+  register_console() are still needed before can leave out the early
+  parsing
+
+- Added a patch for serial8250_isa_init_preferred_console(), otherwise
+  the console gets initialized later for x86 when the console_setup()
+  parsing is dropped as pointed out by Petr
+
+- Initialize __free() variables to NULL as noted by Dan
+
+- Return handled in console_setup() if saving console options fails
+
+- Simplify serial_base_add_preferred_console() and add a helper for
+  serial_base_add_one_prefcon() as suggested by Andy
+
+- Header include changes to kernel/printk/conopt.c as suggested by Andy
+
+Changes since v2:
+
+- Console name got constified and already applied as suggested by Ilpo
+  and Andy
+
+- Add printk/conopt.c to save console command line options
+
+- Add a patch to drop old console_setup() character device name parsing
+
+- Use cleanup.h to simplify freeing as suggested by Andy
+
+- Use types.h instead of kernel.h as suggested by Andy
+
+- Use strcspn() as suggested by Andy
+
+- Various coding improvments suggested by Andy
+
+Changes since v1:
+
+- Constify printk add_preferred_console() as suggested by Jiri
+
+- Use proper kernel command line helpers for parsing console as
+  suggested by Jiri
+
+- Update description for HSUART based on Andy's comments
+
+- Standardize on DEVNAME:0.0 style naming as suggested by Andy
+
+- Added missing put_device() calls paired with device_find_child()
+
+Tony Lindgren (6):
+  printk: Save console options for add_preferred_console_match()
+  printk: Don't try to parse DEVNAME:0.0 console options
+  printk: Flag register_console() if console is set on command line
+  serial: core: Add support for DEVNAME:0.0 style naming for kernel
+    console
+  serial: core: Handle serial console options
+  serial: 8250: Add preferred console in serial8250_isa_init_ports()
+
+ drivers/tty/serial/8250/8250_core.c  |   5 +
+ drivers/tty/serial/serial_base.h     |  24 +++++
+ drivers/tty/serial/serial_base_bus.c | 136 +++++++++++++++++++++++++
+ drivers/tty/serial/serial_core.c     |   4 +
+ include/linux/printk.h               |   3 +
+ kernel/printk/Makefile               |   2 +-
+ kernel/printk/conopt.c               | 143 +++++++++++++++++++++++++++
+ kernel/printk/console_cmdline.h      |   6 ++
+ kernel/printk/printk.c               |  23 ++++-
+ 9 files changed, 341 insertions(+), 5 deletions(-)
+ create mode 100644 kernel/printk/conopt.c
+
+
+base-commit: 6cc3028f797a549f256d593867a769ab6a8265f2
+-- 
+2.43.1
