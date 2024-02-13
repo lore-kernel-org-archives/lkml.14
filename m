@@ -1,101 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from wfhigh8-smtp.messagingengine.com (wfhigh8-smtp.messagingengine.com [64.147.123.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8CC442078
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 12:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C189D4DA01;
+	Tue, 13 Feb 2024 12:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707828245; cv=none; b=gi+C2PhPfbrXvamObU1v+TE85UcG2z0GOKavCnvYfDtAKGTeFJDX8GUYGk1H7zRfTvt9wyQXSZH34/7ryTjv9GRqWD05taiA3tl5nzlWWAcPmE8N/6vnnyXojn1+9mM4L7weY7V6rUq8WznMubKsxNujbsLiFd59wpc8WygiyJQ=
+	t=1707828345; cv=none; b=fZvxk1WWpoqzuNExbNRDwuIrS6c5TUbG51iFNFsI+19amPDGpLIp9NGqY5MzUS8Dl6xLI35JthFdoOa7/TARoe8dELSCBZEiWzjwAa0q68ma5fJ0KwI/hWtKkqD8p+TSEUfZQqg+yJNPVLWrBzVZAh66B3SsOVr3inq5TdpyYys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707828245; c=relaxed/simple;
-	bh=WV7AenzBHwCuHxdRZfJJV1Su4NK7r2UNcztOBHaZti4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nSmxVhhMXJ/kYIezU4uaaS9+T6XNgmHRY+bFD6PLBKyTdTX7UGtt8vRyGxXAKBilvQkduWAeXZCnev1FFrOfqd8gZzoIyWrI77gLcK86q3hTtwh7816qnMhO/qXE2wlj9AhT0kFLvrKi4lpH/btWzOo45KgZxzOdKtocMcSINl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TKISP3I7; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707828345; c=relaxed/simple;
+	bh=Wlfk7dY0wWDXuDYy0panziIsiJR/AG6s30SqLg65+G0=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=tpu2KVngm5wmnUgT5a89lYpIU6d7nmGA/S85FN3bcGfWc43t5bi3nerQdswISg2+zt67xOXbG+HvpaWSXig8byZMX5jU3nAK4smhuqnq6nntiG+0c2Gl4iZnzlpI5ycGqR/zFzoC57Kyb8YJe4/kG+q5+xPCX34ydIpNQPHEhf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=MVKdScji; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TBER6n7G; arc=none smtp.client-ip=64.147.123.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TKISP3I7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707828242;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WV7AenzBHwCuHxdRZfJJV1Su4NK7r2UNcztOBHaZti4=;
-	b=TKISP3I7MUK3HuDX3U2EDaLqqsN2c4y5S12GEjrqzPQf0WO+tbgpbueQjwscmxY5+bY/YY
-	5tVOgFres71cR9dLBB6c9pM9BzEjpsu62u2Fu8fztADrTTNqcTIFD+4F1bF07MrgLoWK3+
-	bqBxnLB4XY5JhgfCFG/BIuwPuO0iVk4=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-548-3NXjC1NMOg2oYWlzBU9twQ-1; Tue, 13 Feb 2024 07:44:01 -0500
-X-MC-Unique: 3NXjC1NMOg2oYWlzBU9twQ-1
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-78356ddf3cfso265668485a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 04:44:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707828241; x=1708433041;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WV7AenzBHwCuHxdRZfJJV1Su4NK7r2UNcztOBHaZti4=;
-        b=AjdwXFP6fv+uf7gVWODkJWs/+oITF/F19uML/EsA7OzN2SnvGI5bP7lsc11FBvYbSd
-         2OzQdShpv6S9/6A3xZ3zQA1zQxnXeQ4jGvJs6z2YiKh3Q8s1c+7kpmU/IbWkjQp+P68z
-         lRjgu5Yksi5ALPXbxFNTiZ28p8MSIM3OoyJRBAd7SakXOedsFxiZH3iJONZnZBrC6EvH
-         +y3H27qgbq8rSke6freHynpzimH8WTGyCKdOx68CADtN200xunJYZChDUjV/JjaynVvH
-         MEHZkTkabZ6EcEiesNiFouuAWfshtZonKjFUQzhVXhVNxQkqvDkSnINiXob6uJu8RTV0
-         sLKA==
-X-Forwarded-Encrypted: i=1; AJvYcCXOtyRa1UDsvx4kZ4l28iAy733tNTUg5SkWyAzMjLVu1AAE0msseeZD1bx8KGl2Rrw0wIftj6brswz1J7iaNmGGeFu5RO2QJDOCLR3u
-X-Gm-Message-State: AOJu0Yy6CnCtdKJus5GZCn+fKW6tUsQrOEEeDTHJyiLwQCQgW4ycAko4
-	ns7RM84Co5tnyBUINTwLDkySxIg8FKCu9MuFGo3hBeJJyRZeCVT9FHlz+1cN/59Hoa7tTQ4WLlA
-	4+6LPEHLppLgtiJjRmNLi+MknFF3RYcZSqRE4+MYxHmR/j409QQ6d/ZH3jIl7zQ==
-X-Received: by 2002:a05:620a:6845:b0:787:2405:cb36 with SMTP id ru5-20020a05620a684500b007872405cb36mr469527qkn.0.1707828240990;
-        Tue, 13 Feb 2024 04:44:00 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHY8En9uvrMO7VPW6XxTnCs4He7ajvEA/No4uUFAjtgQfXLlH+j26/mV9Rjv9vwYBYKLnNr0A==
-X-Received: by 2002:a05:620a:6845:b0:787:2405:cb36 with SMTP id ru5-20020a05620a684500b007872405cb36mr469504qkn.0.1707828240663;
-        Tue, 13 Feb 2024 04:44:00 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVFuieTSL2coOJKkA1OZuMzEQbiRNM1dhaDF2cbOSUm6S27jDJmwJ4T0WJYb97xL08ONSfKyphmXz6rSIAwwXEIA6MrLQDY7lIGCtO8u7NTtnENy3e+2keE3msT0sPnxrZAh/qZx4SXtutGfWP2e2KGlHaToA/DAcKiXjfjKGOnnxKW9KQc1XsGPuOW3wqWGUY6M3qvjCq+jby2aIPHjATQq9sm90869rELCSIE1H54ZVmVsEUiToCbJzZPOXyx6+QStL01Q5Lga9MU6KLGeX9Uabfyi5E=
-Received: from gerbillo.redhat.com (146-241-230-54.dyn.eolo.it. [146.241.230.54])
-        by smtp.gmail.com with ESMTPSA id xr18-20020a05620a5cd200b00783f8693df1sm2918757qkn.37.2024.02.13.04.43.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 04:44:00 -0800 (PST)
-Message-ID: <cae5b4d55770da3a1dc9678ffa55c9afb9c81723.camel@redhat.com>
-Subject: Re: [PATCH] net: sfp: remove redundant NULL check
-From: Paolo Abeni <pabeni@redhat.com>
-To: Daniil Dulov <d.dulov@aladdin.ru>, Russell King <linux@armlinux.org.uk>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- netdev@vger.kernel.org,  linux-kernel@vger.kernel.org,
- lvc-project@linuxtesting.org
-Date: Tue, 13 Feb 2024 13:43:57 +0100
-In-Reply-To: <20240211150824.3947-1-d.dulov@aladdin.ru>
-References: <20240211150824.3947-1-d.dulov@aladdin.ru>
-Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="MVKdScji";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TBER6n7G"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.west.internal (Postfix) with ESMTP id 5A0A818000B3;
+	Tue, 13 Feb 2024 07:45:41 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Tue, 13 Feb 2024 07:45:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1707828340; x=1707914740; bh=USQ9m9LRrK
+	EPc6jBigxNFqy6LATxlEiA3y2icE1wmKU=; b=MVKdScjiFTQgmJvjhZ/2M90i23
+	l/fpMktEDMfJppqKTT+/khsgDio7EHjaZpT3+9qAwiIYyrPwVot9zpcK61giOCak
+	sIqQPDL6MwOZ6UxG6xt+gOngE22lnvjTE+cWfkiUp7+CkBaS5PTqPtRevSihjC6N
+	jF0VG3bXfrlI0qoJWP96QJj4OMcsLGphzGOjK+mwZ7keX6moZ6CeTN2y6SGv4IS6
+	/BeeBELwCArYgSZ9aULHv5tu1QPUHusDXOUBQ4g2ShQKjZvqPfwVjN/C1Ydg1vf1
+	UFu7ZAzc1PCrIOeNKl2RtjXW69ZzJKCKIlJ4kMGU9r4KrDldt6RBwtYqWGvw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1707828340; x=1707914740; bh=USQ9m9LRrKEPc6jBigxNFqy6LATx
+	lEiA3y2icE1wmKU=; b=TBER6n7G5KS+2jvixiyf2/8+env6bDAeIKdQkwLvkZ9l
+	iUVf4w89ofi1RB6FWoUfCYdKZiz5bWGUzvEDR48HK3qdMp7M14hcOV008HKa0515
+	tqsN1Ufogx5x+o5dO4kXPewWYmEdLZLXzJZWZ5Q8VvZL4MfHCAT7Jhd+qJgPpzS+
+	yh36/WcKtzvE8Ip/rLHsrsTxjQRPmQDYjOmpbLOA/BfSnD7fvMICgzixFkHsZssE
+	SP8E3pOsFhc4YE0j+D0x9gbNQei92jFDfdqICSWsno6APWJv8kZG217EJAY4y/5y
+	EkFSwgwgQmrjStWhlA+6K0Ysk0CooMERyftl1YjZYw==
+X-ME-Sender: <xms:dGTLZeOFthVxaGlMlICy2zGBpA0Z9TCq6WI-dId3lOjYJ7lkzg5UuA>
+    <xme:dGTLZc8PO8q9wAStqrNZzGENQ0Xgjydxie-zGhbHrV87qBUbjrsjyr0kyMGwdcFLX
+    3liXcS8Kvt18b56rQM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudehgdegfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
+    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
+    hnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:dGTLZVQNjjdd2aSfuCueS9pgZNw49IrY36p83cr-ASUb7aFulkrusA>
+    <xmx:dGTLZeuQyK3SCb7oueqV76z-aoKjGHEm4s-SqW7YEoJYfnCDg1HMFg>
+    <xmx:dGTLZWeagM_-E5iIblPxOi26bQkryjltXKLm3wz-gheyUySQle4jYA>
+    <xmx:dGTLZTCmdRiDL29BNyTl9Wf2np2S9JNbm_VBLoSQq3WyfxCaVWOMriXxAjc>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 6D8F2B6008D; Tue, 13 Feb 2024 07:45:40 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-144-ge5821d614e-fm-20240125.002-ge5821d61
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Message-Id: <bcd477f9-8619-4121-83ce-fa8ba05a36aa@app.fastmail.com>
+In-Reply-To: <1j7cj8k2se.fsf@starbuckisacylon.baylibre.com>
+References: <20240213101220.459641-1-arnd@kernel.org>
+ <1jbk8kk5pk.fsf@starbuckisacylon.baylibre.com>
+ <c61d7daf-1b13-4ff8-aeae-7dcd8dd02131@app.fastmail.com>
+ <1j7cj8k2se.fsf@starbuckisacylon.baylibre.com>
+Date: Tue, 13 Feb 2024 13:45:19 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Jerome Brunet" <jbrunet@baylibre.com>
+Cc: "Arnd Bergmann" <arnd@kernel.org>, "Stephen Boyd" <sboyd@kernel.org>,
+ "Mark Brown" <broonie@kernel.org>, "Liam Girdwood" <lgirdwood@gmail.com>,
+ "Jaroslav Kysela" <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>,
+ "Neil Armstrong" <neil.armstrong@linaro.org>,
+ "Kevin Hilman" <khilman@baylibre.com>,
+ "Martin Blumenstingl" <martin.blumenstingl@googlemail.com>,
+ "Nathan Chancellor" <nathan@kernel.org>,
+ "Nick Desaulniers" <ndesaulniers@google.com>,
+ "Bill Wendling" <morbo@google.com>, "Justin Stitt" <justinstitt@google.com>,
+ alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH] ASoC: meson: add helpers for clk_disable_unprepare
+Content-Type: text/plain
 
-On Sun, 2024-02-11 at 07:08 -0800, Daniil Dulov wrote:
-> bus->upstream_ops in sfp_register_bus() cannot be NULL. So remove
-> redundant NULL check.
+On Tue, Feb 13, 2024, at 12:09, Jerome Brunet wrote:
+> On Tue 13 Feb 2024 at 11:52, "Arnd Bergmann" <arnd@arndb.de> wrote:
+>
+>> On Tue, Feb 13, 2024, at 11:36, Jerome Brunet wrote:
+>>> On Tue 13 Feb 2024 at 11:11, Arnd Bergmann <arnd@kernel.org> wrote:
+>>
+>>> This probably pre-dates the introduction of devm_clk_get_enabled()
+>>> It would probably be better to use that instead of duplicating helper
+>>> functions which do the same thing.
+>>
+>> Ah, I had not thought of that interface either, so you are probably
+>> right that this is the best way to do it.
+>> Can you send a replacement patch then and add my Reported-by?
+>
+> Sure.
+>
+> How may I reproduce the problem ?
+> Just tried with 'Debian clang version 16.0.6 (19)', no warning.
+>
+> I suppose I need to add something ?
 
-I'm unsure about that?!? in theory drivers could call
-sfp_bus_add_upstream()/phy_sfp_probe() with NULL ops, even it that very
-likely doesn't make any sense.
+The warning is currently only enabled at W=1 level until
+we have fixed all the existing diagnostic output. I have
+sent the other ones today, but for now, please test with
+'make W=1'.
 
-@Russel, @Andrew: WDYT?
-
-Thanks,
-
-Paolo
-
-
+     Arnd
