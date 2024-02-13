@@ -1,106 +1,195 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7FB60B87;
-	Tue, 13 Feb 2024 17:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A105FF0A;
+	Tue, 13 Feb 2024 18:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707847195; cv=none; b=speFlRrP9liTcTuAMy34Ug8kLx5YYY0hGS3qSY5OpJm+x7YEfm3XnsXd6lCL4D2YhNG0VKlgTPnvtF/KZHMPaiqVe4gSOcx7/N7jRh658p/lTx99hCm9uFW/8HEmy1THqn5u1VvnuaHVk8BYc1SNSdqziKW8qLqjoX1XbIshKhw=
+	t=1707847233; cv=none; b=eguagYaFZ5M30cUOZCJAp3O8JsBOx2p354Gty9bx9l/VBJKCyctCrvTkT3ZC4ItDNrJSh4X8ZTyDwg3OObgvqQPNEXPbXPv+sEW9RrsZj0N8VkgUfCdc0iSox1Ug4D0cT6DkEwmaTz/pogCxWX1FmNvfrGI6wi04vXtLbMTxGDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707847195; c=relaxed/simple;
-	bh=EKKuv0v0Xfvbf7sIA0UUwvtI1/vskOEIWUwplXbuuls=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DJxGxa87xWt0XEqYylGDWglgP3sy0P2IyDIynwal+rKj3SPSu29GOBjvALPqE4GS0uY8f3JyosS0+E5MW55lAo+BBags+K7BHbLvA99koqcXhEaF2gFpAAeDYbDuQkIJdB2wbyVBx4Rrpv0eJ/K0Ui++SRtSx2HPJ8VnpMw3si4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Blf4h/D8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707847233; c=relaxed/simple;
+	bh=asjNO/+3OqJpmSX/1gpnpaggYMXnQkSRk9ngzopq/8k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o7oSqdZb3KC1Oie3Pg2QDsNB6AL9NyNydumuAaKTHvsbKFbgPQOTKP4R1f/4PGlnclv0C3FEiQlJ/lCZz9E/UB34xh2d0cW4rR09wDCS5y9GfxRuQAAwFpbjYRgkFT+QE547NEvF8+FpidWsDsyJmYxhRHJvtTOiPjzny0Jstaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n/JZMrtl; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Blf4h/D8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E79BEC433C7;
-	Tue, 13 Feb 2024 17:59:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707847195;
-	bh=EKKuv0v0Xfvbf7sIA0UUwvtI1/vskOEIWUwplXbuuls=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Blf4h/D8mCLYwDGS7d0MLXEril8zI2cFOoaK0yZ9HN9yLjeBcofbz3FRwzNKabKg2
-	 UrpsrdprTTu7GMLAfQ7IcAfe1Wqpw+SV8wgHnEtIRKIwfWjHCqOzI4Y6OShsCWdES7
-	 zADh/vToZ6k1U9eUxNxnnScFaid+20oJB3ij1V5QloliizV7Tjg6nvRsGS1Yb+58U5
-	 hhU9VP/eNOwQ3EOZgnOZU6JJKMqWhtf108uJwvwb/LfJjANbjeE9tujU5+bZbIEnu9
-	 YGFhtl4JyYtf55Y5mmiSk9z7mvaPbQLly1V3LDAcYHply5x49h/Q51A5iOJ8P2wVy6
-	 aAerR+svFdyzw==
-Date: Tue, 13 Feb 2024 09:59:54 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: John Garry <john.g.garry@oracle.com>
-Cc: hch@lst.de, viro@zeniv.linux.org.uk, brauner@kernel.org,
-	dchinner@redhat.com, jack@suse.cz, chandan.babu@oracle.com,
-	martin.petersen@oracle.com, linux-kernel@vger.kernel.org,
-	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	tytso@mit.edu, jbongio@google.com, ojaswin@linux.ibm.com
-Subject: Re: [PATCH 6/6] fs: xfs: Set FMODE_CAN_ATOMIC_WRITE for
- FS_XFLAG_ATOMICWRITES set
-Message-ID: <20240213175954.GV616564@frogsfrogsfrogs>
-References: <20240124142645.9334-1-john.g.garry@oracle.com>
- <20240124142645.9334-7-john.g.garry@oracle.com>
- <20240202180619.GK6184@frogsfrogsfrogs>
- <7e3b9556-f083-4c14-a48f-46242d1c744b@oracle.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n/JZMrtl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707847232; x=1739383232;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=asjNO/+3OqJpmSX/1gpnpaggYMXnQkSRk9ngzopq/8k=;
+  b=n/JZMrtl9vcAmet6WwPcJKCELN2mJM5r9JU33bFlAs1DittkyeEWTCBD
+   LhUcdyXmmAkchzfrJhMKlJYGxIx+fUB8JNbwIcjz8gc8Yf11NrSSNMfIj
+   7mBsa2snY/YlIp1JhHhrbx6/7tNqmHKsCQHcqaGlvazf6wEErJbUPY+QP
+   8bLmcI6izb7QTuOT+C+dlVPfTjeHJEakKx/r3XtKXUrEKrSWqSCyGq5Na
+   XYHPPtEMT2qgWrg0MYiIfDGtNqno7zPzFT882iJbAxbQ/UbL8sQvfuNA4
+   AxVCocBVjrchmh+mhiEzVNORYmbTUzygoV+RtpMZYR7Gf7rQtnw08lsgb
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="12959098"
+X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
+   d="scan'208";a="12959098"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 10:00:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
+   d="scan'208";a="7601829"
+Received: from maleekmc-mobl.amr.corp.intel.com (HELO [10.209.16.85]) ([10.209.16.85])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 10:00:30 -0800
+Message-ID: <af43e9bd-8772-4495-87cc-285b38411bcb@linux.intel.com>
+Date: Tue, 13 Feb 2024 10:00:29 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7e3b9556-f083-4c14-a48f-46242d1c744b@oracle.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] PCI/IOV: Revert "PCI/IOV: Serialize sysfs
+ sriov_numvfs reads vs writes"
+Content-Language: en-US
+To: Leon Romanovsky <leonro@nvidia.com>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: Jim Harris <jim.harris@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Jason Gunthorpe <jgg@nvidia.com>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ =?UTF-8?Q?Pierre_Cr=C3=A9gut?= <pierre.cregut@orange.com>
+References: <20240213073450.GA52640@unreal>
+ <20240213155954.GA1210633@bhelgaas> <20240213174602.GD52640@unreal>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240213174602.GD52640@unreal>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 05, 2024 at 10:26:43AM +0000, John Garry wrote:
-> On 02/02/2024 18:06, Darrick J. Wong wrote:
-> > On Wed, Jan 24, 2024 at 02:26:45PM +0000, John Garry wrote:
-> > > For when an inode is enabled for atomic writes, set FMODE_CAN_ATOMIC_WRITE
-> > > flag.
-> > > 
-> > > Signed-off-by: John Garry <john.g.garry@oracle.com>
-> > > ---
-> > >   fs/xfs/xfs_file.c | 2 ++
-> > >   1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> > > index e33e5e13b95f..1375d0089806 100644
-> > > --- a/fs/xfs/xfs_file.c
-> > > +++ b/fs/xfs/xfs_file.c
-> > > @@ -1232,6 +1232,8 @@ xfs_file_open(
-> > >   		return -EIO;
-> > >   	file->f_mode |= FMODE_NOWAIT | FMODE_BUF_RASYNC | FMODE_BUF_WASYNC |
-> > >   			FMODE_DIO_PARALLEL_WRITE | FMODE_CAN_ODIRECT;
-> > > +	if (xfs_inode_atomicwrites(XFS_I(inode)))
-> 
-> Note to self: This should also check if O_DIRECT is set
-> 
-> > 
-> > Shouldn't we check that the device supports AWU at all before turning on
-> > the FMODE flag?
-> 
-> Can we easily get this sort of bdev info here?
-> 
-> Currently if we do try to issue an atomic write and AWU for the bdev is
-> zero, then XFS iomap code will reject it.
 
-Hmm.  Well, if we move towards pushing all the hardware checks out of
-xfs/iomap and into whatever goes on underneath submit_bio then I guess
-we don't need to check device support here at all.
+On 2/13/24 9:46 AM, Leon Romanovsky wrote:
+> On Tue, Feb 13, 2024 at 09:59:54AM -0600, Bjorn Helgaas wrote:
+>> On Tue, Feb 13, 2024 at 09:34:50AM +0200, Leon Romanovsky wrote:
+>>> On Mon, Feb 12, 2024 at 02:27:14PM -0600, Bjorn Helgaas wrote:
+>>>> On Sun, Feb 11, 2024 at 10:48:44AM +0200, Leon Romanovsky wrote:
+>>>>> On Fri, Feb 09, 2024 at 07:20:28PM -0800, Kuppuswamy Sathyanarayanan wrote:
+>>>>>> On 2/9/24 3:52 PM, Jim Harris wrote:
+>>>>>>> If an SR-IOV enabled device is held by vfio, and the device
+>>>>>>> is removed, vfio will hold device lock and notify userspace
+>>>>>>> of the removal. If userspace reads the sriov_numvfs sysfs
+>>>>>>> entry, that thread will be blocked since sriov_numvfs_show()
+>>>>>>> also tries to acquire the device lock. If that same thread
+>>>>>>> is responsible for releasing the device to vfio, it results
+>>>>>>> in a deadlock.
+>>>>>>>
+>>>>>>> The proper way to detect a change to the num_VFs value is to
+>>>>>>> listen for a sysfs event, not to add a device_lock() on the
+>>>>>>> attribute _show() in the kernel.
+>>>> The lock was not about detecting a change; Pierre did this:
+>>>>
+>>>>   ip monitor dev ${DEVICE} | grep --line-buffered "^${id}:" | while read line; do \
+>>>>     cat ${path}/device/sriov_numvfs; \
+>>>>
+>>>> which I assume works by listening for sysfs events.  
+>>> It is not, "ip monitor ..." listens to netlink events emitted by
+>>> netdev core and not sysfs events. Sysfs events are not involved in
+>>> this case.
+>> Thanks for correcting my hasty assumption!
+>>
+>>>> The problem was that after the event occurred, the sriov_numvfs
+>>>> read got a stale value (see https://bugzilla.kernel.org/show_bug.cgi?id=202991).
+>>> Yes, and it is outcome of such cross-subsytem involvement, which
+>>> is racy by definition. Someone can come with even simpler example of why
+>>> locking sysfs read and write is not a good idea. 
+>>>
+>>> For example, let's consider the following scenario with two CPUs and
+>>> locks on sysfs read and write:
+>>>
+>>>  CPU1					CPU2
+>>>  echo 1 > ${path}/device/sriov_numvfs
+>>> 		 context_switch ->
+>>>  					cat ${path}/device/sriov_numvfs
+>>> 					lock
+>>> 					return 0
+>>> 					unlock
+>>> 		context_switch <-
+>>>  lock
+>>>  set 1
+>>>  unlock
+>>>
+>>>  CPU1					CPU2
+>>>  echo 1 > ${path}/device/sriov_numvfs
+>>>  lock
+>>>  set 1
+>>>  unlock
+>>> 		 context_switch ->
+>>>  					cat ${path}/device/sriov_numvfs
+>>> 					lock
+>>> 					return 1
+>>> 					unlock
+>>>
+>>> So same scenario will return different values if user doesn't protect
+>>> such case with external to the kernel lock.
+>>>
+>>> But if we return back to Pierre report and if you want to provide
+>>> completely bullet proof solution to solve cross-subsystem interaction,
+>>> you will need to prohibit device probe till sriov_numvfs update is completed.
+>>> However, it is overkill for something that is not a real issue.
+>> Pierre wanted to detect the configuration change and learn the new
+>> num_vfs, which seems like a reasonable thing to do.  Is there a way to
+>> do both via netlink or some other mechanism?
+> Please pay attention that Pierre listened to specific netdevice and not
+> to something general. After patch #2 in Jim's series, he will be able to
+> rely on "udevadm monitor" instead of "ip monitor".
+>
+>>>> So I would drop this sentence because I don't think it accurately
+>>>> reflects the reason for 35ff867b7657.
+>>>>
+>>>>>> Since you are reverting a commit that synchronizes SysFS read
+>>>>>> /write, please add some comments about why it is not an
+>>>>>> issue anymore.
+>>>>> It was never an issue, the idea that sysfs read and write should be
+>>>>> serialized by kernel is not correct by definition. 
+>>>> I think it *was* an issue.  The behavior Pierre observed at was
+>>>> clearly wrong, 
+>>> I disagree with this sentence. 
+>>>
+>>>> and we added 35ff867b7657 ("PCI/IOV: Serialize sysfs
+>>>> sriov_numvfs reads vs writes") to resolve it.
+>>>>
+>>>> We should try to avoid reintroducing the problem, so I think we should
+>>>> probably squash these two patches and describe it as a deadlock fix
+>>>> instead of dismissing 35ff867b7657 as being based on false premises.
+>>>>
+>>>> It would be awesome if you had time to verify that these patches also
+>>>> resolve the problem you saw, Pierre.
+>>> They won't resolve his problem, because he is not listening to sysfs
+>>> events, but rely on something from netdev side.
+>> I guess that means that if we apply this revert, the problem Pierre
+>> reported will return.  Obviously the deadlock is more important than
+>> the inconsistency Pierre observed, but from the user's point of view
+>> this will look like a regression.
+>>
+>> Maybe listening to netlink and then looking at sysfs isn't the
+>> "correct" way to do this, but I don't want to just casually break
+>> existing user code.  If we do contemplate doing the revert, at the
+>> very least we should include specific details about what the user code
+>> *should* do instead, at the level of the actual commands to use
+>> instead of "ip monitor dev; cat ${path}/device/sriov_numvfs".
+> udevadm monitor will do the trick.
+>
+> Another possible solution is to refactor the code to make sure that
+> .probe on VFs happens only after sriov_numvfs is updated.
+>
+> Thanks
 
---D
 
-> Thanks,
-> John
-> 
-> > 
-> > --D
-> > 
-> > > +		file->f_mode |= FMODE_CAN_ATOMIC_WRITE;
-> > >   	return generic_file_open(inode, file);
-> > >   }
-> > > -- 
-> > > 2.31.1
-> > > 
-> > > 
-> 
-> 
+IMO,  we can update the sriov_numvfs documentation to let users
+aware of the possible race condition between read/write, and also
+suggestion about using uevents for device changes.
+
+
+>> Bjorn
+>>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
