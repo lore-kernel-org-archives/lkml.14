@@ -1,154 +1,98 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D855EE69
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 14:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9277D22066
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 14:51:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707835837; cv=none; b=UMvgz2oYagMY6yw3pl8VdObLcqybaWcegCBULoGJhpj9N3W6YH8nZ8LDaI4ktnQa+orYh8RiB27rWiWRW86cXBAenZNce03SoBGUiukkwc7TasUBT/XUlBsqIRBq4MfB5mq3alypglwNxz8n9nzG3S0rC7YwfKpCJHeVV8t1FR4=
+	t=1707835866; cv=none; b=iGUFNkqPdS1nY6xiJEULCwLQTvy0DND+eaU6W/9N3OkNuE9rSh2XMJ6Ujv2bZJXhaJMcbFITYldZfL5RzmXbIoregBci70jgTHRis9BCVGXJDLYqtiVDKdnfqnsdLkoW9Y8amjPjL65EjRBWYDe8h+zoiqwNkQo62F4PIxrTQUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707835837; c=relaxed/simple;
-	bh=CZoN3i7XJzre4jd4qikn3fslxobuEEEJDNql/BAQ0/Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aAbeqZNGsPBi36Qy7aKl6rSsmhFjJENw9sZBDU3XG/qOH/QcmqGtj2AQ39V47/rttLE4HQizVtzgdvk3dZxtndoI5etOhDuA0Wf6Tlpi8oLm8zUmK4JLRAN5Tpig4fiflniynp6qyvWa+SZsEoAv9lxctJFup+gupuTZfQVx21E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mwa.re; spf=pass smtp.mailfrom=mwa.re; dkim=pass (2048-bit key) header.d=mwa.re header.i=@mwa.re header.b=XltMvdij; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mwa.re
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mwa.re
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mwa.re header.i=@mwa.re header.b="XltMvdij"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5114c05806eso7103102e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 06:50:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mwa.re; s=google; t=1707835833; x=1708440633; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DIriFNrO5RwDl0i8OFgd8O5e6yhYA4cnaSts661zHg4=;
-        b=XltMvdijGPwlIJbJKI9asq1MbMVkCeNT6bgaLoL9drYtnRSDorpL62fRPTcdXFMK1y
-         ZcGbuaEjW/qqnhxKkWYmU6agO9KzyE14mcAYP8tXhaXytqzeHg1r/YTRAmP4zFd9w1Zf
-         CD9gpTpQ2f72nqCWfoKpO7tQ7j4ly7KQDixtgCkPIdavEpTlaRKCJaYpS8dRs4J+o97B
-         eFXpFVE9SBB7H1L7dp6peC6RpT/CIdfZUDJPu9fRpJqj54V7nPObg2COnUx/w4lbozs1
-         OU2s9Pl2s+iMeVUA5uLIJE9iNqy0Gc2If3aERiSIyJ0biLuVQ72Ir/AODdmb47T29hJI
-         vRHg==
+	s=arc-20240116; t=1707835866; c=relaxed/simple;
+	bh=Uck0XutKhGVw27em880EaR5i30Ve1Tad9T6qzaKbHpU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Jo0gGo5uG05km698PU1StGNFI9cR1TMRXDrsluDHkAZclkUkbs0pkIDEIre2XdbF7KEck1NDuV9rYCAUSAqNxTW3RpUf9Nj2xWWYqXu4bhMsyEMs2RGo/nAjJA5v89JcuVa4TfDC4OrDHwlfh4rjDxysoEIL8aJYi7RXAZreOqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-363b6ee24d3so34256165ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 06:51:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707835833; x=1708440633;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DIriFNrO5RwDl0i8OFgd8O5e6yhYA4cnaSts661zHg4=;
-        b=pDrok7hi0dLvQpUwTDHSTE5Phv7O2826kojYlAl9f8jOsHOJkcuvAKAxto6S05Vcli
-         7WztGPyCuxOogDQmBxA3EPK+y+FgslcntH5qVXkjdbtbMyf7lB1Y3/x3gnL2dhT93JLG
-         txYe5muhQyeUjpNgYbvpza7NlVMP2XXdifBbugcmC2N5pUiZYYOc7OYPEJOD6Pw3/dXs
-         4rejvtbNw+FGu5PTaN2LB1PrzHxcE7mcuU5EwvTcdgIlnAtbQp4bnuTQRdAaxFWn+IGd
-         WmELZxwtSxyd+shSDyd1ULtKNaKtdpvM9sk+/4uVbXhwwF1yS4EfM+hesREJECT2mKCK
-         +qvg==
-X-Forwarded-Encrypted: i=1; AJvYcCVHBjIvBGKdCKudRGzSgYG5a2DO4pzoTkvzFWkXJE+TSdzirJftIDnaJ5mVURWmFq6B2oM+7mt4riEnhGNWBoE8N9g0kWDWnDX+QM/4
-X-Gm-Message-State: AOJu0Yx5py3xSVSfvIDnfeVLa916azCCGEEnlWrCac+okxnPDgiL2HfC
-	FPL4IItab6CMwLbImUohFELr67AeS+JmcM7NRn7vqSHZGyk5t9PT8gWpuLLDUrnE+vmMPhsy32u
-	3bdTuqDVQ4UDAcql6t7nqsgofhHzAH/TbkDiiPw==
-X-Google-Smtp-Source: AGHT+IHxYSwVhZhFR6FRJarX3HSiuN0jewWaPBZ+hlua2hMm5m6FSUCCwcoPApsKWpjN0PEEMuG0WfXqcLCGiOPO4pg=
-X-Received: by 2002:ac2:41ca:0:b0:511:1ed7:61b8 with SMTP id
- d10-20020ac241ca000000b005111ed761b8mr6948902lfi.30.1707835833350; Tue, 13
- Feb 2024 06:50:33 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707835863; x=1708440663;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GYlnebGOtSb69zKalPEo1O2aZMfj/sfohaXKKNt7vKY=;
+        b=mVDU+A9mBI819xTdVo/l3VfLmpNkqX64Xl1qmbcWvA0v/JoXo5i4mdeAWCAHN9ZIPO
+         cPJ54H1Zd2AUuy0prz1Gry9/KR3bx6jDZFP3PVaFehlK3UgSvRPEK/xHkcSDsKWj8iNn
+         Y45MVIPKaeVYu64WcwAW6W0ry/aaElkYcmUPDpfrlqAJ8LtlXz/Fe61yJQfOzS6CE+K+
+         RfSfT4KAJlLdye0wzSOaM/lp05d+zSvlCVqERiSdjJLkjS4HcVecyOh79NiZPdbaIYza
+         Gj1rv+QaKnp25O/Vs21nD+GGkY5RKlHBT0wjmf/brxESU1u4U/C7PazsVuwk5c6yb9mt
+         JFLA==
+X-Gm-Message-State: AOJu0Yx3WPFZrCyLRm+X9B11dfyXZ8L4KRrkawSSm7GtWOje1KY/rly8
+	C60az4WFZWwqDPEPGBP4tcvzyUAniKG8JlepJrQ6joeJAEMgsj2OgxzUU5czOHDupEWRbXR+DkM
+	tdZtFNg71YVBUoxP104jw4zfBsssFIU/+bnzIGbnbLY9gXmpXvMwsKVumYA==
+X-Google-Smtp-Source: AGHT+IHiNTJ3hOU9Wr2fGxFbspU42u8/CqTxIfi4t0iIXwAgAYa3G0SJJ0y+HCZEeBbLeyAmOzONWnhCznplGZiKDb7NbeEXbTTe
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CANi1PHh4W7KPagKkvZW6cNAQqgAeG3zxaaTJKkg3KiTbsFRMdg@mail.gmail.com>
- <1b2558f7-94ea-123e-dd3f-b43ecd85c2ef@linux.intel.com>
-In-Reply-To: <1b2558f7-94ea-123e-dd3f-b43ecd85c2ef@linux.intel.com>
-From: Jan Henrik Weinstock <jan@mwa.re>
-Date: Tue, 13 Feb 2024 15:50:22 +0100
-Message-ID: <CANi1PHhY67HZxivA9mCoNXfM4YUOjm=tCZsnhrrcu4E6dqDYUQ@mail.gmail.com>
-Subject: Re: XHCI without USB2 ports
-To: Mathias Nyman <mathias.nyman@linux.intel.com>, mathias.nyman@intel.com, 
-	gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?Q?Lukas_J=C3=BCnger?= <lukas@mwa.re>
+X-Received: by 2002:a92:cda6:0:b0:363:c002:719f with SMTP id
+ g6-20020a92cda6000000b00363c002719fmr743040ild.6.1707835863778; Tue, 13 Feb
+ 2024 06:51:03 -0800 (PST)
+Date: Tue, 13 Feb 2024 06:51:03 -0800
+In-Reply-To: <20240213141308.3138-1-n.zhandarovich@fintech.ru>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000fed2a7061144854c@google.com>
+Subject: Re: [syzbot] [wpan?] KMSAN: uninit-value in ieee802154_hdr_push (2)
+From: syzbot <syzbot+60a66d44892b66b56545@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, n.zhandarovich@fintech.ru, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Am Di., 13. Feb. 2024 um 10:58 Uhr schrieb Mathias Nyman
-<mathias.nyman@linux.intel.com>:
->
-> On 12.2.2024 20.39, Jan Henrik Weinstock wrote:
-> > Hi all,
-> >
-> > I am currently working on an XHCI platform device simulation model. I
-> > noticed that the Linux driver (Linux 6.5.6 xhci-hcd) stops working
-> > when I configure the model without any USB2 ports. During an interrupt
-> > (TRB_PORT_STATUS), I only get "xhci-hcd 12100000.usb: ignore port
-> > event for removed USB3 hcd."
-> >
-> > During xhci_irq, in handle_port_status, xhci->shared_hcd is NULL [1],
-> > so the interrupt gets ignored. However, shared_hcd would only ever be
-> > allocated during xhci_plat_probe [2], if the device has both USB2 and
-> > USB3 ports, i.e. xhci_has_one_roothub returns false [3].
-> >
-> > Without any USB2 ports, a shared_hcd will never be allocated in the
-> > first place, and handle_port_status will always exit early.
->
-> This is true.
-> That port handling code is from a time before xhci driver supported singl=
-e
-> roothub setups.
->
-> I think all single roothub cases so far have been xHC hosts with only USB=
-2
-> ports. This is probably the first one with only USB3 ports.
->
-> I have a vague memory that USB3 specification would require USB3 ports to
-> be backwards compatible, and support USB2.
->
-> But xhci driver could still support it, does this change help:
->
-> diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-> index f0d8a607ff21..6ef081f5ef05 100644
-> --- a/drivers/usb/host/xhci-ring.c
-> +++ b/drivers/usb/host/xhci-ring.c
-> @@ -1893,7 +1893,8 @@ static void handle_port_status(struct xhci_hcd *xhc=
-i,
->          }
->
->          /* We might get interrupts after shared_hcd is removed */
-> -       if (port->rhub =3D=3D &xhci->usb3_rhub && xhci->shared_hcd =3D=3D=
- NULL) {
-> +       if (!xhci_has_one_roothub(xhci) && xhci->shared_hcd =3D=3D NULL &=
-&
-> +           port->rhub =3D=3D &xhci->usb3_rhub) {
->                  xhci_dbg(xhci, "ignore port event for removed USB3 hcd\n=
-");
->                  bogus_port_status =3D true;
->                  goto cleanup;
->
-> Thanks
-> Mathias
->
+Hello,
 
-Yes, this patch fixes the problem for me. Thanks!
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+KMSAN: uninit-value in ieee802154_hdr_push
 
-Is it so unusual to have an XHCI that has only USB3 ports?
+=====================================================
+BUG: KMSAN: uninit-value in ieee802154_hdr_push_sechdr net/ieee802154/header_ops.c:54 [inline]
+BUG: KMSAN: uninit-value in ieee802154_hdr_push+0x971/0xb90 net/ieee802154/header_ops.c:108
+ ieee802154_hdr_push_sechdr net/ieee802154/header_ops.c:54 [inline]
+ ieee802154_hdr_push+0x971/0xb90 net/ieee802154/header_ops.c:108
+ ieee802154_header_create+0x9c0/0xc00 net/mac802154/iface.c:396
+ wpan_dev_hard_header include/net/cfg802154.h:524 [inline]
+ dgram_sendmsg+0xd1e/0x1500 net/ieee802154/socket.c:677
+ ieee802154_sock_sendmsg+0x96/0xd0 net/ieee802154/socket.c:96
+ sock_sendmsg_nosec net/socket.c:730 [inline]
+ __sock_sendmsg+0x30e/0x380 net/socket.c:745
+ ____sys_sendmsg+0x877/0xb60 net/socket.c:2584
+ ___sys_sendmsg+0x28d/0x3c0 net/socket.c:2638
+ __sys_sendmsg net/socket.c:2667 [inline]
+ __do_sys_sendmsg net/socket.c:2676 [inline]
+ __se_sys_sendmsg net/socket.c:2674 [inline]
+ __x64_sys_sendmsg+0x307/0x4a0 net/socket.c:2674
+ do_syscall_64+0x76/0x150
+ entry_SYSCALL_64_after_hwframe+0x6c/0x74
 
-My understanding was that a port can either be USB3 or USB2 (assigned
-via the Supported Protocol Capability).
+Local variable hdr created at:
+ ieee802154_header_create+0x4e/0xc00 net/mac802154/iface.c:360
+ wpan_dev_hard_header include/net/cfg802154.h:524 [inline]
+ dgram_sendmsg+0xd1e/0x1500 net/ieee802154/socket.c:677
 
-This would mean that in order to work correctly with Linux, all XHCIs
-right now would have to support at least one USB2 port in addition to
-their USB3 ports.
+CPU: 0 PID: 5449 Comm: syz-executor.0 Not tainted 6.8.0-rc4-next-20240213-syzkaller-g46d4e2eb58e1 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
+=====================================================
 
-Best regards
-Jan
 
---=20
-Dr.-Ing. Jan Henrik Weinstock
-Managing Director
+Tested on:
 
-MachineWare GmbH | www.machineware.de
-H=C3=BChnermarkt 19, 52062 Aachen, Germany
-Amtsgericht Aachen HRB25734
+commit:         46d4e2eb Add linux-next specific files for 20240213
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=1553bdec180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e558550134480d4a
+dashboard link: https://syzkaller.appspot.com/bug?extid=60a66d44892b66b56545
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-Gesch=C3=A4ftsf=C3=BChrung
-Lukas J=C3=BCnger
-Dr.-Ing. Jan Henrik Weinstock
+Note: no patches were applied.
