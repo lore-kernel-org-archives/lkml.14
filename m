@@ -1,82 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5131428DB7;
-	Tue, 13 Feb 2024 01:07:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFB123BB;
+	Tue, 13 Feb 2024 01:10:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707786424; cv=none; b=BLVxx/QzblCrBIU3iv3sw0cMdxmCj4wlpXF0oMjb9li8wgqOaBkT1AnOI/DI1MiFuxQfO0cL1QAGhg+w7ipwHNkU7kjJfzw6LNN+OMSTuV8tflxemeB+0NzDnn8EP2h5zrz44oCk5G0u9fHhtKKAtO8VpzgIusVRZztG3bTYa2g=
+	t=1707786626; cv=none; b=QXEt1grjWEQuHDIJ9M9TwwKI/QgQcil5BQV6TAaHAI+JmXiGQlnT5O3hqocG+lVi3KuFcPuYvIfFSgiCxB2PrIkE1f0hRzWjyPiyeTbtNVHsJF9b9o3NZou3jHCYNFUplDy0WlUUhmwMxwjs9G6Wpx4BE0XOTRtBYf/hZPj8ypI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707786424; c=relaxed/simple;
-	bh=peoO574K4wfwc8JzNW3ZPwHb5yzWC0yTYMUNPjNzFMk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tu2zv0L6VDaPjZ9wsjb5WmAhzknAskgyCUxuxjpw5cNkjBpgWAJOzFt2pfja/rHVHQ58VVg+CX3FW6gjb6XXgtWvJ3n4Rz9xOVSv6v+YH+LFKfdBm2433+ps9pWBN8R5mB2f8YAvrBsKUnmLiaQ47UKY9kx+3zwBvvZ/5WI1SbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jk61vhMv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707786626; c=relaxed/simple;
+	bh=l2ZGGv/18ZoTqeFXJtdQeBC6J2Sob8IHyJGeCIkvq10=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=nUatxaHqGeUkc+aOkGhSB3TwTBj5UVmp2TQRjyGKVqIu+x4srVCj/1+YIPgalRZikrY/2+h3r1FddbDaib40xQtsg1/XeB8eyWBbM+ru08ns7l5Sv6S1t634dZf5M4ro7eYr9OTw6T66R7MCV96q0NYJWCb+qXyEdQxRaFH4a90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pAXRztj5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jk61vhMv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6431C43390;
-	Tue, 13 Feb 2024 01:07:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pAXRztj5"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B6D99C43399;
+	Tue, 13 Feb 2024 01:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707786423;
-	bh=peoO574K4wfwc8JzNW3ZPwHb5yzWC0yTYMUNPjNzFMk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=jk61vhMv0DpQERHjsyFWEND7ONl8w1aGspJ5NqBje076fszXvrnzoPAuiqTnAcEai
-	 YzmqtNKBXKGGUFX03135Pb5OjN0AU+IuiZs5ZMLvwm62PnkFBipnYXhfu2416GlpW4
-	 qh6sNYFvrDfXNAR28Ec4uIY1Z+P0/KI1Zr9zb3ls6arDTJlxcSqeaOGIVNfpqnnXsP
-	 KA+4BvC3a1S8ZRDFa5gvikE1rd1N03O4iR1kKVbqD8IprCnFhtVuEfljDKWFNqMBUA
-	 iwQAuf/S6WxTOLFyEEA+NNYOVSZbMYMZFDfdtMBTi0yMpZmZ3Ubu/emiFFDD8PB110
-	 2qsCEvfDnoE4g==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 575BCCE0C4C; Mon, 12 Feb 2024 17:07:03 -0800 (PST)
-Date: Mon, 12 Feb 2024 17:07:03 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: "Luck, Tony" <tony.luck@intel.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	"Naik, Avadhut" <avadnaik@amd.com>,
-	"Mehta, Sohil" <sohil.mehta@intel.com>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Avadhut Naik <avadhut.naik@amd.com>
-Subject: Re: [PATCH 2/2] x86/MCE: Add command line option to extend MCE
- Records pool
-Message-ID: <c72b9c44-1908-4934-a890-3a3e9a39ef9d@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240211111455.GAZcisL09LeFPWa2EI@fat_crate.local>
- <b5904910-ed58-405f-9425-566383b48068@amd.com>
- <SJ1PR11MB6083CF3400AD2F2047D65E17FC482@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <34b19db5-bd72-457c-9b6a-c2089f6be83c@amd.com>
- <SJ1PR11MB6083E7E11F6C7BCC8C6C7F21FC482@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <20240212201038.GNZcp7PuIqIJndpDM9@fat_crate.local>
- <47901422-ac07-47db-bf44-3f4353e92b1d@paulmck-laptop>
- <20240212212741.GPZcqNTXfU2OX7uRtx@fat_crate.local>
- <2d8b17f2-c22f-478f-b407-9d2dfd2064f7@paulmck-laptop>
- <20240212231009.GAZcqlUVY8U2hzOaF4@fat_crate.local>
+	s=k20201202; t=1707786625;
+	bh=l2ZGGv/18ZoTqeFXJtdQeBC6J2Sob8IHyJGeCIkvq10=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=pAXRztj58dBFe4cZLYjifdmkayS9xynM3JtWJG0voC0AD4O67VB1gS1BgiQXWZ09U
+	 LiS7szWL3RlDeTGAD1YJqS1cEcXz/nSQCt6u8jC/eufbZb2QrjcIMzyxmWL5PgtBai
+	 drYhN5SszBaK40hJ4q2y0xho55uSgWno5pidAT4Ix6i6xE7wnA6/F66C0IZR6u0/NO
+	 PnIljJGxzQEh0PDKRnWiKsa2w8J2Wtf4VUtvS2LA3jWD+MGHG4SZBu5Y6de71jzUJO
+	 JMBe6N84ZvunzaJkbrMxlYFKEyUq1Pj32wGPHD4Zv43gLfOTFDrjHHsOQNil7itiN+
+	 mbocsIMXNPhaA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9F39DC4166E;
+	Tue, 13 Feb 2024 01:10:25 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240212231009.GAZcqlUVY8U2hzOaF4@fat_crate.local>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] selftests: net: ip_local_port_range: define IPPROTO_MPTCP
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170778662564.1111.991367114536257318.git-patchwork-notify@kernel.org>
+Date: Tue, 13 Feb 2024 01:10:25 +0000
+References: <20240209132512.254520-1-max@internet.ru>
+In-Reply-To: <20240209132512.254520-1-max@internet.ru>
+To: Maxim Galaganov <max@internet.ru>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, shuah@kernel.org, martineau@kernel.org,
+ matttbe@kernel.org, lkft@linaro.org, netdev@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Tue, Feb 13, 2024 at 12:10:09AM +0100, Borislav Petkov wrote:
-> On Mon, Feb 12, 2024 at 02:46:57PM -0800, Paul E. McKenney wrote:
-> > The usual reason is to exclude other CPUs also doing list_add_rcu()
-> > on the same list. 
-> 
-> Doh, it even says so in the comment above list_add_rcu().
-> 
-> And the traversal which is happening in NMI-like context is fine.
-> 
-> So phew, I think we should be fine here. Thanks!
-> 
-> And as it turns out, we're not going to need any of that after all as
-> it looks like we can allocate the proper size from the very beginning...
+Hello:
 
-Sounds even better!  ;-)
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-							Thanx, Paul
+On Fri,  9 Feb 2024 16:25:11 +0300 you wrote:
+> Older glibc's netinet/in.h may leave IPPROTO_MPTCP undefined when
+> building ip_local_port_range.c, that leads to "error: use of undeclared
+> identifier 'IPPROTO_MPTCP'".
+> 
+> Define IPPROTO_MPTCP in such cases, just like in other MPTCP selftests.
+> 
+> Fixes: 122db5e3634b ("selftests/net: add MPTCP coverage for IP_LOCAL_PORT_RANGE")
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Closes: https://lore.kernel.org/netdev/CA+G9fYvGO5q4o_Td_kyQgYieXWKw6ktMa-Q0sBu6S-0y3w2aEQ@mail.gmail.com/
+> Signed-off-by: Maxim Galaganov <max@internet.ru>
+> 
+> [...]
+
+Here is the summary with links:
+  - [net] selftests: net: ip_local_port_range: define IPPROTO_MPTCP
+    https://git.kernel.org/netdev/net/c/c2b3ec36b422
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
