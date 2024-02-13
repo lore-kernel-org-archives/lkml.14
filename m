@@ -1,117 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54EF60BBA;
-	Tue, 13 Feb 2024 19:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39B360B95;
+	Tue, 13 Feb 2024 19:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707853115; cv=none; b=fyq32k/41N3b0shE9tBrIInV7n3jYs8HK5wAq3gMwSy28qR0gy1snnQ5FlcBq04RLWWmuW+kk0JNUkJ7D16dNTKJmTGo7MKkxLPFgcbogUeCglekUc3B6iybAk1DYX+H8dta3xZb6nQdE96DJ6UtvNN95vE88LCvT4BLbCQdafY=
+	t=1707853173; cv=none; b=MsxtiJb2kjFi+QpdaKXwGXklAqwvug5gnKpH342EsYFk4oQPhs+rEvNzSxn7Mg+g7QqH+wnJrorDXNJMav1OGjWf0Q+XV0Or58gUYhlFJUKEtm4gO4Jg5ws2dqGPdL5LRLqVZmt1z1/xqk4FOqj7PGQH4R1UmMwz6TEMx9iOxmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707853115; c=relaxed/simple;
-	bh=o7LkJqrD2vVgnZLqnrQyG9cxpNtR87PcZfpLb0iubAs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HB5dvi3Lir0FLgfyzgqKky7BnUD266BGdim0/N80lFx368ar5q3PQ/DEfB/I+f1YDt72WJFUhS60t54R32Er7f+ZHPbGLuWqEySn0cAz8XqYLUZp32Bgh6x5owbQhmQbuqi9mJ8YiTNJw1MnDYby0SVR/yXxHAEha6K9iqR7pug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c64hZ0Z6; arc=none smtp.client-ip=198.175.65.9
+	s=arc-20240116; t=1707853173; c=relaxed/simple;
+	bh=0WYqFpS6lVIKr0IPitF5mhy3240hE8VfeutslmE3sd4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QFQZ7H4CjAW+/G20Jx9Aqs9z9dQZ8an1kjC+tnNwBL0PKFWnE0rvfA4wUjfV0n2JXdpeeT4OPEmk5K9yazI+bAiwTFNGauTIOA6WgpzyUAuope2IqS7sMWYXryVDigRENS4+8fG23eBf1KCYyI0xH73bcoSYewWpj8yAhKvKGgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eucP4j5R; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c64hZ0Z6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eucP4j5R"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707853114; x=1739389114;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=o7LkJqrD2vVgnZLqnrQyG9cxpNtR87PcZfpLb0iubAs=;
-  b=c64hZ0Z6KDWtbLqDK1EWddXRn9CYFp2NsAwfGuvCe2wMmKJgkJIpwWo4
-   0bfFhnAc95ZYD62J1VXi0X7uTKBeHX5E68W3+JJ2cFYprr2JlVM+5oxqx
-   VTkqbpBs6Latf7Wy/hKcAflouzzzaxZYr0e0kylZv9Au8HFk/k5jb2ztH
-   HNS9yhhtohNGFaxgvsPnYbHWzE0fUSzxwl2y7KCa2eqSM/n0MrfjmTwP6
-   xDlI923AZOWYndZ1SW0j0hXhEUZgxq/f4AgEHXPdsr3zAqPOPaHDp5i4G
-   ya8NmTpJq2YcKt6YYqEjDmdHuxBSv+iB8flV7JLIir1aEqke0WC4yrh/e
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="24351138"
+  t=1707853172; x=1739389172;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=0WYqFpS6lVIKr0IPitF5mhy3240hE8VfeutslmE3sd4=;
+  b=eucP4j5RnGCEyxDPXZaR/8iJLZ0+dxZqtt/8weGZfA8duZyMcegAbeRt
+   Fr56FuKU0FCgZoSIYtSPJqKiyiLQhNiS2Tzmq0fuwGsb2Q0idSD0y5p0J
+   6WVOCM/gly3MuBYL62IgBiNQ7REaxEvVZ1cebo8c9H7D6O+kTAfx0iYEA
+   1fzsTYUNKK02JJY6AHmH/EAvGPAifTFqCIAxPQPV4k88SwyHYoHeqatUV
+   qF/ev2H6P4jDMck/V5aLqHTvlsHU9bkRGSHCRKQSZ2/nNYc7UGT44AtHq
+   Vxcf5irGzU5Zn6sB0E5lalfzNj2RD3aXkP+qzEpM3bTxFqGu8opGWbuIr
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="1784956"
 X-IronPort-AV: E=Sophos;i="6.06,158,1705392000"; 
-   d="scan'208";a="24351138"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 11:38:33 -0800
+   d="scan'208";a="1784956"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 11:39:31 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="935435642"
 X-IronPort-AV: E=Sophos;i="6.06,158,1705392000"; 
-   d="scan'208";a="935435642"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 13 Feb 2024 11:38:30 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 9006C184; Tue, 13 Feb 2024 21:38:29 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Rengarajan S <rengarajan.s@microchip.com>,
-	linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>,
-	Tharun Kumar P <tharunkumar.pasumarthi@microchip.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] serial: 8250_pci1xxxx: Don't use "proxy" headers
-Date: Tue, 13 Feb 2024 21:38:27 +0200
-Message-ID: <20240213193827.3207353-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+   d="scan'208";a="26149137"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 11:39:29 -0800
+Date: Tue, 13 Feb 2024 11:44:57 -0800
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: LKML <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, iommu@lists.linux.dev, Thomas Gleixner
+ <tglx@linutronix.de>, "Lu Baolu" <baolu.lu@linux.intel.com>,
+ kvm@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, Joerg Roedel
+ <joro@8bytes.org>, "H. Peter Anvin" <hpa@zytor.com>, "Borislav Petkov"
+ <bp@alien8.de>, "Ingo Molnar" <mingo@redhat.com>
+Cc: Paul Luse <paul.e.luse@intel.com>, Dan Williams
+ <dan.j.williams@intel.com>, Jens Axboe <axboe@kernel.dk>, Raj Ashok
+ <ashok.raj@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+ maz@kernel.org, seanjc@google.com, "Robin Murphy" <robin.murphy@arm.com>,
+ jacob.jun.pan@linux.intel.com, oliver.sang@intel.com
+Subject: Re: [PATCH 06/15] x86/irq: Set up per host CPU posted interrupt
+ descriptors
+Message-ID: <20240213114457.64a056a8@jacob-builder>
+In-Reply-To: <20240126234237.547278-7-jacob.jun.pan@linux.intel.com>
+References: <20240126234237.547278-1-jacob.jun.pan@linux.intel.com>
+	<20240126234237.547278-7-jacob.jun.pan@linux.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Update header inclusions to follow IWYU (Include What You Use)
-principle.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/tty/serial/8250/8250_pci1xxxx.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+On Fri, 26 Jan 2024 15:42:28 -0800, Jacob Pan
+<jacob.jun.pan@linux.intel.com> wrote:
+I have made a couple of mistakes here, caught by LKP testing.
+Reported by Oliver Sang.
 
-diff --git a/drivers/tty/serial/8250/8250_pci1xxxx.c b/drivers/tty/serial/8250/8250_pci1xxxx.c
-index 356972734b29..55eada1dba56 100644
---- a/drivers/tty/serial/8250/8250_pci1xxxx.c
-+++ b/drivers/tty/serial/8250/8250_pci1xxxx.c
-@@ -7,23 +7,31 @@
-  *  Copyright (C) 2022 Microchip Technology Inc., All Rights Reserved.
-  */
- 
-+#include <linux/array_size.h>
- #include <linux/bitfield.h>
--#include <linux/bitops.h>
--#include <linux/delay.h>
-+#include <linux/bits.h>
-+#include <linux/circ_buf.h>
-+#include <linux/device.h>
-+#include <linux/errno.h>
-+#include <linux/gfp_types.h>
- #include <linux/io.h>
- #include <linux/iopoll.h>
--#include <linux/kernel.h>
-+#include <linux/minmax.h>
- #include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/overflow.h>
- #include <linux/pci.h>
-+#include <linux/pm.h>
- #include <linux/serial_core.h>
- #include <linux/serial_reg.h>
- #include <linux/serial_8250.h>
--#include <linux/slab.h>
-+#include <linux/spinlock.h>
- #include <linux/string.h>
--#include <linux/units.h>
-+#include <linux/time.h>
- #include <linux/tty.h>
- #include <linux/tty_flip.h>
--#include <linux/8250_pci.h>
-+#include <linux/types.h>
-+#include <linux/units.h>
- 
- #include <asm/byteorder.h>
- 
--- 
-2.43.0.rc1.1.gbec44491f096
+>  
+> +#ifdef CONFIG_X86_POSTED_MSI
+> +
+> +/* Posted Interrupt Descriptors for coalesced MSIs to be posted */
+> +DEFINE_PER_CPU_ALIGNED(struct pi_desc, posted_interrupt_desc);
+> +
+> +void intel_posted_msi_init(void)
+> +{
+> +	struct pi_desc *pid = this_cpu_ptr(&posted_interrupt_desc);
+> +
+> +	pid->nv = POSTED_MSI_NOTIFICATION_VECTOR;
+> +	pid->ndst = this_cpu_read(x86_cpu_to_apicid);
+Based on VT-d specification 9.11, middle portion of the 32 bit field
+are used in xAPIC mode instead of the lowest 8 bit. Not sure why it was
+designed this way, making sure people ready the spec carefully :)
 
+xAPIC Mode (Physical): 
+ 319:304 - Reserved (0)
+ 303:296 - APIC DestinationID[7:0]
+ 295:288 - Reserved (0)
+x2APIC Mode (Physical):
+ 319:288 - APIC DestinationID[31:0]
+
+So it should be something like:
+	pid->ndst = x2apic_enabled() ? apic_id : apic_id << 8;
+
+> +}
+> +}
+partitioning mistake, will fix.
+
+> +#endif /* X86_POSTED_MSI */
+
+Thanks,
+
+Jacob
