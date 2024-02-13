@@ -1,102 +1,147 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD0756740
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 13:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F288057303
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 13:59:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707832684; cv=none; b=jL6VxaysnUEQH/iMa2JkOCVX9isZp8TazzJgBmR73bseCQyS+DB1sD6St5lv3+0j52//ZNMdz8Pwe01cGeAdOXN1FeTrQ6sUaY7NlDX2TvmyjQvz8NG4+nmxBe5kyBkg7qHDt1+6blbJe5kk4WHsna9pAodkulearwlQo1wDQvQ=
+	t=1707832785; cv=none; b=GQal5lyLoNNPMbxqzWJ9sTefyLss/KTET59amfDvZ96Gg+w5ynuSxBocDZftebmBlKikB32pmGVu7QRaAxigsg/+n8rivG+eotDRIJVdt6kO1aBHj77VnEPT2rZpzfLOER/oxFejTX/areUUhCfSnBohvzYuOVtLBol/ReHGxDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707832684; c=relaxed/simple;
-	bh=PG0fnIj5fzPwDy7NKqOopv4gHng+od9OkxEHBqOwPyI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lkwYTALkAU31Wua9uoV7aVHwDe1Qaaricy3U+cspn5yNrSjWFCuPKCO/qe6INxc5VMoXMwROxf6XhKCFGVcd/r2aOp+JTufeiPazCAWUhQvZrUgyG1PCs7RNVnmKhahP0TIyhF/aLv2u2kvTgG3mD894agMfMfS3/SiZvdBeWOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D4+npAXG; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707832785; c=relaxed/simple;
+	bh=Gqe8/L6NiHs3Rw9Awbp7gjuDOiSqOn4agyfE1DfIHBQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NFhDnEWoFIF3XBvPFEnZEXtNkj1aeGE9pA8i78oYnoZyKdmCynXbBvp5CohlM+LTcR/i0v5xXyETfgXUOrlr5WU9vaYzdVUY1zVnHX2nvkbIzPzLncpuiMcjjaz9MqF4AdoJMZaeBOmsE3xApVU4G9TjgRNiaPkJpJn5bA7LRBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=VroHhq1E; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D4+npAXG"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-561f0f116ecso9211a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 05:58:02 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="VroHhq1E"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d0cc05abd3so19169641fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 05:59:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707832681; x=1708437481; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pbE5lBYMsBbNOMJCkljKpvO5qoGNkQekNJoA2aNf4aY=;
-        b=D4+npAXG9fobh5Fw5uc+fz6WEtBM0rQM8CeL+RRR+5mgqTvfAnOyMjXp5tZ1FHvx5k
-         bWVQdrl9P4XU4U79BRYu4c9NB9YC9YAE4GUw+VW+XLv/FDtMUHc05ssfhjgA4iMKVh9t
-         TMoQk/x4fcY96MGb5WUTd7dTFNl6nuYndBYbe9TF+8GlIi2sdHNemuKuOgnP6j8/+67T
-         m2Oc+0pQBPDlBvXnbbBGjNfjkoh2xyHNNw4P20/UN7OrQch0AXLtZYfPKbeqjJibSUT8
-         otH1yjEKEphuPaxpHbyHLeHnVxunZLmDvs2et/fDp19fm/R/QAfoVuj43Tw0fizjjm+9
-         bFLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707832681; x=1708437481;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=ffwll.ch; s=google; t=1707832780; x=1708437580; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pbE5lBYMsBbNOMJCkljKpvO5qoGNkQekNJoA2aNf4aY=;
-        b=AAvAgVil8Y4RGpznN3pK1wx4VWjs2ge0alhyI7UPOej54d3gb57sMlmkFfPsYmdN8k
-         rzv8hUcbsrfN3XexkD2dUuJ1dbqvo733qVhsGQdkS++EEmZVUZ+WZuR8VrMZSEPRQzf3
-         mpvnEZ1jtBBrkX27ShFDuQcq+337di+sO+MfQ/TLlp6NKUgQybryiMHHrYZILlXfYzF4
-         Z0GT4Mu3P7jZtCsmpRLfVfCoJmirymFnx97X3Y8ZVfuXVtFPiR9ZEDs1Nv3xK1PeQY9i
-         E4Sqb3q+NfwUeJwHLzufWuXmDaqxBFNWsE9BZCUCIQDQDre0p+IBqBDs983ez1ZAsnQh
-         +27A==
-X-Forwarded-Encrypted: i=1; AJvYcCXHzusG6zM5IXdfXfMMrJO6Zcc1yA/sa259km8hC30rb4O26DzkLCkskx5iHxkReQ8lF1NzNhYoYGN9ZHG7ShfGnAWkfr5xmpF65cP0
-X-Gm-Message-State: AOJu0Yx/k072mH4bk9HuV6qiCw+TvBkpJx+pXLo3ZrqNmafb49d55h2Z
-	wNLFO130k9J4TJfGARNuEeZST7fXdEdMiyRUIMd7y4ZdxvbvIsAtJ6c5vUSyr8l55LI6WTJrMbq
-	XqpDiOZU/YzgUppfMBaqOFv8psdh2UGwsQhov
-X-Google-Smtp-Source: AGHT+IGfb6Z8v6hajoJG9DaoOpHtyuo/KUVPZbwc7KekimKgbqmQ3fGjlKpw8V/ld9ImDFucTk16eL40tenMPfDdd+Q=
-X-Received: by 2002:a50:9b5e:0:b0:55f:8851:d03b with SMTP id
- a30-20020a509b5e000000b0055f8851d03bmr120225edj.5.1707832681004; Tue, 13 Feb
- 2024 05:58:01 -0800 (PST)
+        bh=zVqR/5/foYJq4j/fGiXL03ER0xcO4xMj29CysqUTjro=;
+        b=VroHhq1EHia4dUSCoU4YHLqejGE/3yxlCZxKs+WMW91diXhR/GJrprCqAELnSGZ/eY
+         UCQiDoI7LNvL8c/NVYYypVp4oxwoP7pScvVLe9jKg2Cnu43mt/lGTgQK2BnxwDCYB/C1
+         sCcrW9UP2rmt0TdjdVAM1gAeeMRjfUCCrRR8E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707832780; x=1708437580;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zVqR/5/foYJq4j/fGiXL03ER0xcO4xMj29CysqUTjro=;
+        b=nVyTUAUrVu0uFTtp6gbnhGb3cS+5+vD8FgVmWNVaqJXaIINXRfZEXln+29n4Tr4O7F
+         mQrqZevm+jZBY9SzYxYx18nsDZaWRzWRNgj7duTVKOHQiOOYRc+SOG36UgzVYb0/4i6e
+         O4Y4GUf98JuRGhEh3+g5iC2u5nAnDulnJMxFhYTmG5RrVjFpV/myOKTBDfpx6w0ve0p+
+         3G9+Q36c2XGwiP7F7xZYPYuzZwWylqotyEyAInh0c6SoqdiRdUU6tV+B4lpF2RmzuU88
+         ydK4jpTKkbJC0SJWZGtZstgzHvYVkorZ+eJUJY+N4w4c2BExktEDLjCM6iidBrAlIKUD
+         dHjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVAg2lcYYW5AllD2LDLywxZk+x1/eM1YzgfPShJ0v+rXXBAuldQGt9bVF/fjxKnXtCOak8YKmJ3DM+S+tpr2hjXJIfrsYLI+855DM4l
+X-Gm-Message-State: AOJu0Yz6tI0YI8TaaghQISPB2o0G8bJXiXuCFlTvTRk8w+2sKdp3QexQ
+	/AYUsBd00FzC08VIjkKssV3iIf3YSxVW+2HmTYKLc6352PO7x5gfdIzlWwzaujB5Tgf7x5qwUu4
+	o
+X-Google-Smtp-Source: AGHT+IFBNlzI0zvxG9mlgnTlAxhRn4tLAGuP7Ap4W/XBn3P/DGtvKa+sXaGMuhhfkdP4tuEJJp8X7g==
+X-Received: by 2002:a2e:9857:0:b0:2d0:e09c:ceeb with SMTP id e23-20020a2e9857000000b002d0e09cceebmr5434388ljj.1.1707832780393;
+        Tue, 13 Feb 2024 05:59:40 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUD/SnKrHxBKm2H7JmahlZvlDCwCIMIDzmiLIhrzzP9DfXJujL0RXWR3Fa7qqgk+Ow1O5nDoCqkvj2eAwhtnx4ksUw4qqBdH6F+UXUivRoC7roxl6NWugZ+pQPzSG9coQDpLC3t3jNnj0iz1JjcPBapR6aMoVhv9THGJLryZgVWGS8DLKpb1tWVTXq7Pp+JKnS9mc3nbDCqXOPoPKnk2r1eHrwL5iettL2/gujR4emCeaPUdV68PJN4dI3YFzHhL/CPgAiYNJIWDHt/qlnlFrMe9WultOXZ3GgehbYWtxmuGTe9ztE7NNxzJ1vT
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id b2-20020a5d5502000000b0033b278cf5fesm9570780wrv.102.2024.02.13.05.59.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 05:59:39 -0800 (PST)
+Date: Tue, 13 Feb 2024 14:59:37 +0100
+From: Daniel Vetter <daniel@ffwll.ch>
+To: Rob Clark <robdclark@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, Rob Clark <robdclark@chromium.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Jani Nikula <jani.nikula@intel.com>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/crtc: fix uninitialized variable use even harder
+Message-ID: <Zct1yYCi7fKf6uDu@phenom.ffwll.local>
+Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
+	dri-devel@lists.freedesktop.org, Rob Clark <robdclark@chromium.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Jani Nikula <jani.nikula@intel.com>,
+	open list <linux-kernel@vger.kernel.org>
+References: <20240212215534.190682-1-robdclark@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240202165315.2506384-1-leitao@debian.org>
-In-Reply-To: <20240202165315.2506384-1-leitao@debian.org>
-From: Eric Dumazet <edumazet@google.com>
-Date: Tue, 13 Feb 2024 14:57:49 +0100
-Message-ID: <CANn89iLWWDjp71R7zttfTcEvZEdmcA1qo47oXkAX5DuciYvOtQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v3] net: dqs: add NIC stall detector based on BQL
-To: Breno Leitao <leitao@debian.org>
-Cc: kuba@kernel.org, davem@davemloft.net, pabeni@redhat.com, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	weiwan@google.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	horms@kernel.org, Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Johannes Berg <johannes.berg@intel.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	"open list:TRACING" <linux-trace-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240212215534.190682-1-robdclark@gmail.com>
+X-Operating-System: Linux phenom 6.6.11-amd64 
 
-On Fri, Feb 2, 2024 at 5:55=E2=80=AFPM Breno Leitao <leitao@debian.org> wro=
-te:
->
-> From: Jakub Kicinski <kuba@kernel.org>
->
-> softnet_data->time_squeeze is sometimes used as a proxy for
-> host overload or indication of scheduling problems. In practice
-> this statistic is very noisy and has hard to grasp units -
-> e.g. is 10 squeezes a second to be expected, or high?
->
-> Delaying network (NAPI) processing leads to drops on NIC queues
-> but also RTT bloat, impacting pacing and CA decisions.
-> Stalls are a little hard to detect on the Rx side, because
-> there may simply have not been any packets received in given
-> period of time. Packet timestamps help a little bit, but
-> again we don't know if packets are stale because we're
-> not keeping up or because someone (*cough* cgroups)
-> disabled IRQs for a long time.
+On Mon, Feb 12, 2024 at 01:55:34PM -0800, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
+> 
+> DRM_MODESET_LOCK_ALL_BEGIN() has a hidden trap-door (aka retry loop),
+> which means we can't rely too much on variable initializers.
+> 
+> Fixes: 6e455f5dcdd1 ("drm/crtc: fix uninitialized variable use")
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
 
-Please note that adding other sysfs entries is expensive for workloads
-creating/deleting netdev and netns often.
+Cc: stable@vger.kernel.org
 
-I _think_ we should find a way for not creating
-/sys/class/net/<interface>/queues/tx-{Q}/byte_queue_limits  directory
-and files
-for non BQL enabled devices (like loopback !)
+I guess at least ...
+
+> ---
+> I have mixed feelings about DRM_MODESET_LOCK_ALL_BEGIN() (and friends)
+> magic.  On one hand it simplifies the deadlock/back dance.  OTOH it
+> conceals a nasty sharp edge.  Maybe it is better to have the complicated
+> restart path a bit more explicit, like it was originally.
+
+Alternative would be a very magic for {} macro, but those tend to get
+easily defeated with goto/break and friends. Maybe it works now that
+linux/cleanup.h has landed, but I'm not sure it's actually better and not
+just trading one set of sharp edges for another. Worth a shot in a
+prototype at least, if someone's bored.
+
+
+
+
+> 
+>  drivers/gpu/drm/drm_crtc.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_crtc.c b/drivers/gpu/drm/drm_crtc.c
+> index cb90e70d85e8..65f9f66933bb 100644
+> --- a/drivers/gpu/drm/drm_crtc.c
+> +++ b/drivers/gpu/drm/drm_crtc.c
+> @@ -904,6 +904,7 @@ int drm_mode_setcrtc(struct drm_device *dev, void *data,
+>  	connector_set = NULL;
+>  	fb = NULL;
+>  	mode = NULL;
+> +	num_connectors = 0;
+
+I think it'd be neater to have all these right below the
+DRM_MODESET_LOCK_A_BEGIN instead of duplicated here and at the beginning
+of the function. But it's a bit a bikeshed and in some cases (when you use
+it later on) gcc might get pissed too. So either way:
+
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+
+Cheers, Sima
+
+>  
+>  	DRM_MODESET_LOCK_ALL_END(dev, ctx, ret);
+>  
+> -- 
+> 2.43.0
+> 
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
