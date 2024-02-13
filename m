@@ -1,134 +1,133 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D82B662
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 19:20:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1A15812E;
+	Tue, 13 Feb 2024 19:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707852047; cv=none; b=Pg62GQhYgCg2CBA/Mjms0pxq9iThx+rHskONoEXUpswJTxJOXIe2VbtRh+twQaut1EO4ev8YLuUAHw+1a8CB8+6h3c9sQxXmhtVv+VCNEIC1jsCFkPHpsiEDicfZ4eFjHfnE91OO7NH+/RY4aqTQ2MYI7eU6ZQMEpZ4BByV4Nms=
+	t=1707852054; cv=none; b=W/fa5R1yVK7pungNQgaFhX6pvvuVv/qF7iAQ31ifm1QWW0Dwlr2l+MYNw+DowaboZJqJP57R/vVZ9c/Ucv30O/AAsoMvejlcPnVRJ8lBoZ0zWfjmrb3pc1HGvM4iK3/VzjIEXokc15+yqfTGOh917qKBGPU62hkBI4tQpcIlHwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707852047; c=relaxed/simple;
-	bh=2eD27nSBYSIdc72inz6nPdpC5osZuxe5XbzWj/cYJrs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WZ+gUCntGZKULf7ZBSS1eQ543GxDSRd9E2Hz8VcQHtodVBl1+IMI9tIVzAIDD1bnBK7jrpCAOlUAaHN4seRawRMSGxii5HtPWrlf+4rMqlBw4XbJI6zxGGZgmymB9btuMYySSsYpUJkyN2Ymf6bieO3/15dqJaxXEkUAlFSjE0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=E7LtdTZt; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1707852054; c=relaxed/simple;
+	bh=62+TMzhu0tgv3ZB2azIQJRCmQ4u6vlGyJMQahNrc4uk=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=ofCL8ariIGf07bjbu+6hORcn6HuaQKileR8574bdXxQS6zVIsgT3IlGL3RiUCKlFwlvbyfjJsLNdmF1GsOtmJONphhdV+iYNV4iBx0d9ra36puOKMu/arY3Xr5ofdUWvvkIT12wfW1H7cYjRv4Qbkj8WSPw2b62CrYYmTq+EO9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sbd0fqH+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="E7LtdTZt"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2d1094b549cso12493981fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 11:20:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1707852042; x=1708456842; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yjNs+EOtyNCTC3EqdQw06Whi85umzjdG+7lc6Okj5+w=;
-        b=E7LtdTZtQ39VvbB8HURnsKURnP/mXh9yCmxrp/9/3vF8ldlE3M4EY7LSj7rmbmDm13
-         jh3d9Et7ACajroXjjvxytRL9nwXlGlPg8Wqn2O3mYOKv5dl+H30pRUX7O2Ct5jzrmDTw
-         OCl3AL8Vy+d9uAI8sc+CJg+Br4lpvYMesivRAv3J/Knry+cK/PB6wtFh9yk2WEzvgUY9
-         BA14H0EHbKsNWZ5X/p1jrGjbeBUkDFdYWk4wQbCqwS8+RM5JBTQWrXIWFJXu2V22XUc6
-         yeRofAECpiQZCb/KG/LEYDFqFCnfc6LJVHiphpq/5eJFiWzUpZa2yCAo7V8UL4NQJpBC
-         vZMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707852042; x=1708456842;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yjNs+EOtyNCTC3EqdQw06Whi85umzjdG+7lc6Okj5+w=;
-        b=FjgryznbD0ZAn4v7+9/tyWi1PXEx9YNI298auW/zXOUPVBimHZO8apO8aY0+X6m7c4
-         3XvFC+6Q7qxxxf9lWFOAdxIxMy8Rst/0bDz50kbS9jt1MsF060DvC4dRh8ft/2BKdKB6
-         w6RIQgyi9NclwjusWz6wn9YUSjAvEudaiW/JyvENGxNvuAZUM4PW8+asYJhSJabgnfBW
-         VfuYVjtrOCPXBN1DMU/yiDK+PgI72WI7nfbF0Wz2Z87vuJC4xGmnqfsuSRIAPpoFJI0D
-         Um4tmy8npISKiJp8nfzV2/TPza2xGI08Jd/6r5+TKN/bSAqHr6ixaPR5euPB9MhZ9DO9
-         DYJg==
-X-Forwarded-Encrypted: i=1; AJvYcCXlTnisShZTlFyxQlOQwSUp/9VQBi3d7kuLCTkBw+85itr74izgBZhFNWBBdmkzaX8VweRXdHlMys6+Y9CsqJTNcxJAWzCTGvzagr3Z
-X-Gm-Message-State: AOJu0Yww2ujeVn2gZrlHfI7doKWcYFQJAw50jI2Y+qh2AEJJxtIY4brF
-	CYKFLCZwejhls3P821bIHwppdZGRCHTZSRDXvefTVuFxYL9HTJfhqkEiO+pTlXLdLdz54AAqAGC
-	ID+fc8uEpEENUtiUeqIx1I6lhlqMXrPfZNke2HA==
-X-Google-Smtp-Source: AGHT+IEZWLAHkTfr2RYxYmAawpXrqecxeSqmy9qOLy++NxWLqa4pCUBQKqoVAoJ/789qdHNcn5J1Tp0YXnefirN3NVc=
-X-Received: by 2002:a2e:a724:0:b0:2d0:fe56:2057 with SMTP id
- s36-20020a2ea724000000b002d0fe562057mr376125lje.4.1707852042535; Tue, 13 Feb
- 2024 11:20:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sbd0fqH+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA009C43390;
+	Tue, 13 Feb 2024 19:20:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707852054;
+	bh=62+TMzhu0tgv3ZB2azIQJRCmQ4u6vlGyJMQahNrc4uk=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=sbd0fqH+8fvVZaS1HuE3/gKHgknB/hO//wWuduGJaEFz/hazFvc04ACkBmNqNtx8n
+	 H7mDZmu6KSOn/t5P4Msus8XXa3SnUz6qf55F1iS7YTgf1Zyrm3TPA+gr8bQjxrF7Pa
+	 E42YrmQ6GXCnMHkxl3xqCXtD9+mq+dOKgZvN8HsLGiBTtTDcUTyOZF/JBOnXi2i7Np
+	 hfKv02rU9a4xvwksbgoxZUExV3ZCoLIi9dg09ID5eb2L9nZMsOdPWCKx1LRTldneai
+	 OA0oYU1Hz6GbJiT7vCCbaG9dNXpQ92iO82K4wIHVTHRzL3Vm0oePYTO3CwsG0dcKlp
+	 6YbKhq522Lj6w==
+Date: Tue, 13 Feb 2024 13:20:52 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240212-mainline-spi-precook-message-v1-0-a2373cd72d36@baylibre.com>
- <20240212-mainline-spi-precook-message-v1-1-a2373cd72d36@baylibre.com> <20240213172550.000023a7@Huawei.com>
-In-Reply-To: <20240213172550.000023a7@Huawei.com>
-From: David Lechner <dlechner@baylibre.com>
-Date: Tue, 13 Feb 2024 13:20:31 -0600
-Message-ID: <CAMknhBHc5LnaOOYoeCvtDvUcSXzPnHUtkheYMt73Uv5512dJVg@mail.gmail.com>
-Subject: Re: [PATCH 1/5] spi: add spi_optimize_message() APIs
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Mark Brown <broonie@kernel.org>, Martin Sperl <kernel@martin.sperl.org>, 
-	David Jander <david@protonic.nl>, Jonathan Cameron <jic23@kernel.org>, 
-	Michael Hennerich <michael.hennerich@analog.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Alain Volmat <alain.volmat@foss.st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-spi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Feb 13, 2024 at 11:25=E2=80=AFAM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
->
-> I thought about suggesting splitting this into an initial patch that just=
- does
-> the bits without the controller callbacks. Maybe it would work better tha=
-t way
-> with that introduced after the validate and splitting of transfers (so mo=
-st
-> of patches 1 and 2) as a patch 3 prior to the stm32 additions?
-
-Unless anyone else feels the same way, I'm inclined to avoid the extra
-work of splitting it up.
+From: Rob Herring <robh@kernel.org>
+To: Tanmay Shah <tanmay.shah@amd.com>
+Cc: andersson@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, 
+ krzysztof.kozlowski+dt@linaro.org, linux-remoteproc@vger.kernel.org, 
+ michal.simek@amd.com, Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>, 
+ ben.levinsky@amd.com, linux-kernel@vger.kernel.org, 
+ mathieu.poirier@linaro.org, conor+dt@kernel.org, 
+ linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20240213175450.3097308-3-tanmay.shah@amd.com>
+References: <20240213175450.3097308-1-tanmay.shah@amd.com>
+ <20240213175450.3097308-3-tanmay.shah@amd.com>
+Message-Id: <170785205177.2155555.1311787541370066483.robh@kernel.org>
+Subject: Re: [PATCH v10 2/4] dt-bindings: remoteproc: add Tightly Coupled
+ Memory (TCM) bindings
 
 
-> > +static void __spi_unoptimize_message(struct spi_message *msg)
-> > +{
-> > +     struct spi_controller *ctlr =3D msg->spi->controller;
-> > +
-> > +     if (ctlr->unoptimize_message)
-> > +             ctlr->unoptimize_message(msg);
-> > +
-> > +     msg->optimized =3D false;
-> > +     msg->opt_state =3D NULL;
-> > +}
->
-> Seems misbalanced that this doesn't take a pre_optimized flag in but
-> __spi_optimize does. I'd move handling that to outside the call in both c=
-ases.
->
->
+On Tue, 13 Feb 2024 09:54:48 -0800, Tanmay Shah wrote:
+> From: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+> 
+> Introduce bindings for TCM memory address space on AMD-xilinx Zynq
+> UltraScale+ platform. It will help in defining TCM in device-tree
+> and make it's access platform agnostic and data-driven.
+> 
+> Tightly-coupled memories(TCMs) are low-latency memory that provides
+> predictable instruction execution and predictable data load/store
+> timing. Each Cortex-R5F processor contains two 64-bit wide 64 KB memory
+> banks on the ATCM and BTCM ports, for a total of 128 KB of memory.
+> 
+> The TCM resources(reg, reg-names and power-domain) are documented for
+> each TCM in the R5 node. The reg and reg-names are made as required
+> properties as we don't want to hardcode TCM addresses for future
+> platforms and for zu+ legacy implementation will ensure that the
+> old dts w/o reg/reg-names works and stable ABI is maintained.
+> 
+> It also extends the examples for TCM split and lockstep modes.
+> 
+> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+> Signed-off-by: Tanmay Shah <tanmay.shah@amd.com>
+> ---
+> 
+> Changes in v10:
+>   - modify number of "reg", "reg-names" and "power-domains" entries
+>     based on cluster mode
+>   - Add extra optional atcm and btcm in "reg" property for lockstep mode
+>   - Add "reg-names" for extra optional atcm and btcm for lockstep mode
+>   - Drop previous Ack as bindings has new change
+> 
+> Changes in v9:
+>   - None
+> Changes in v8:
+>   - None
+> Changes in v7:
+>   - None
+> Changes in v6:
+>   - None
+> Changes in v5:
+>   - None
+> 
+> Changes in v4:
+>   - Use address-cells and size-cells value 2
+>   - Modify ranges property as per new value of address-cells
+>     and size-cells
+>   - Modify child node "reg" property accordingly
+>   - Remove previous ack for further review
+> 
+> v4 link: https://lore.kernel.org/all/20230829181900.2561194-2-tanmay.shah@amd.com/
+> 
+>  .../remoteproc/xlnx,zynqmp-r5fss.yaml         | 192 ++++++++++++++++--
+>  1 file changed, 170 insertions(+), 22 deletions(-)
+> 
 
-Agreed.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5fss.yaml:118:13: [warning] wrong indentation: expected 10 but found 12 (indentation)
 
-> > @@ -4331,10 +4463,15 @@ static int __spi_sync(struct spi_device *spi, s=
-truct spi_message *message)
-> >               return -ESHUTDOWN;
-> >       }
-> >
-> > -     status =3D __spi_validate(spi, message);
-> > -     if (status !=3D 0)
-> > +     status =3D spi_maybe_optimize_message(spi, message);
-> > +     if (status)
-> >               return status;
-> >
-> > +     /*
-> > +      * NB: all return paths after this point must ensure that
-> > +      * spi_finalize_current_message() is called to avoid leaking reso=
-urces.
->
-> I'm not sure a catch all like that makes sense. Not sufficient to call
-> the finer grained spi_maybe_unoptimize_message()  ?
+dtschema/dtc warnings/errors:
 
-Hmm... this is my bias from a previous fix showing through. Maybe this
-comment doesn't belong in this patch. The short answer to your
-question is "it's complicated".
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240213175450.3097308-3-tanmay.shah@amd.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
