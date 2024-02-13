@@ -1,148 +1,89 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-210.mail.qq.com (out203-205-221-210.mail.qq.com [203.205.221.210])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6E55731C;
-	Tue, 13 Feb 2024 13:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD8955C1B;
+	Tue, 13 Feb 2024 13:25:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707830707; cv=none; b=DfHbXDLXDoR32weizi/8la0BCpfQuokAL4gj8kdTEbHkh13gCNb+kCwGIiKSIA+Y89l/pEwTDAyBmYSG6N7A6l9fM7hXnEQTWKOHeiKdV+RR9jbln4Go0qwJHUa/ZOefu6znQR8+F/lIPGBPiTojP1rIK08lQhzk5fRTP5YeoEQ=
+	t=1707830751; cv=none; b=jF+ulyGFLMFI3LCGxRzC55TM3WRK0prjb2TM55lhV9D54moxvoCZwSvvB9X8/VVrj/URtJ11shOweVCFC5hP3V/9CKEooe/lt9KvHcZPUyZcZLW21GoEuoHL56jhmNDsJLNyETL5XGYv1qp2Z+nVC3u6p76Bsbt+FIkQqSbmYao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707830707; c=relaxed/simple;
-	bh=dxV7yHCJnIxpEzKaYuqJa05MJzzLK6w5HSkoqNeVti0=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u+xJCMslnkC51J3LAGV4vkklTy1qXUdE05cFN8gRiZ2fzYEQzaMm04T5TgdNk1LJ46d2rggBxiNjQ3vVDVpglZBv8V6XrJ5gyoGQ2B4PUScOCAgrfeO2gutv6XxVXGRne4p3vsiPH/6OCx5xaHJTZEWQswu17hwJCuYern+vIEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=h0USkYV6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Ao4sOlJT; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=h0USkYV6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Ao4sOlJT; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1707830751; c=relaxed/simple;
+	bh=o4q4idFOXlWoDV6VuRp7cNsxTYa7LjVZ6+fjE1ReYlo=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=ao626MKyqKd/bdFuXGCEtbhhP0Grk3A05j+gWjWMq9gpgyFZ1Sj3Z/+Za1LZ8tFQ7xub6qhO42OZ1t8vfm2UHKQ+3c/mGFVCSYSLLvqXEJL17Qaw3O6D1O+ZEMf2d2r4M0ZsARiUShktBpr1PC6Z26NrOCV+GFjdU3T2UDySbSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=VvjfIvXG; arc=none smtp.client-ip=203.205.221.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="h0USkYV6";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Ao4sOlJT";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="h0USkYV6";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Ao4sOlJT"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 5B3A61FCDC;
-	Tue, 13 Feb 2024 13:25:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707830704; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JEb4Pp5ybhqZlBe29kJk+TL0hsuA4yQuqt0dPmfwv2w=;
-	b=h0USkYV6jS8NTxaKCmrgXueBzsy0r2NJNtekWIiwqy+Kn8fnc0EPwj/mBwflutQOdYX6pm
-	JJARrq9nonTl0UJVYfEEOV6mX3fd/YTi88blqeL3s9jshk3ZcLj3wkyUcPLeWUyiS0qDTN
-	b4k+m9T9J8hbs3lTbeUitHVY7bpsNpI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707830704;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JEb4Pp5ybhqZlBe29kJk+TL0hsuA4yQuqt0dPmfwv2w=;
-	b=Ao4sOlJTipA5MewrKL1mm1xCT2xiOuzTbe1wkY1MMFOKzpoAHV+ykGdvSxHhFr6JgYF/HI
-	ByCHgkR2OeLzxeAA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707830704; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JEb4Pp5ybhqZlBe29kJk+TL0hsuA4yQuqt0dPmfwv2w=;
-	b=h0USkYV6jS8NTxaKCmrgXueBzsy0r2NJNtekWIiwqy+Kn8fnc0EPwj/mBwflutQOdYX6pm
-	JJARrq9nonTl0UJVYfEEOV6mX3fd/YTi88blqeL3s9jshk3ZcLj3wkyUcPLeWUyiS0qDTN
-	b4k+m9T9J8hbs3lTbeUitHVY7bpsNpI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707830704;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JEb4Pp5ybhqZlBe29kJk+TL0hsuA4yQuqt0dPmfwv2w=;
-	b=Ao4sOlJTipA5MewrKL1mm1xCT2xiOuzTbe1wkY1MMFOKzpoAHV+ykGdvSxHhFr6JgYF/HI
-	ByCHgkR2OeLzxeAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 319571370C;
-	Tue, 13 Feb 2024 13:25:04 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ZK+TC7Bty2UYGAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 13 Feb 2024 13:25:04 +0000
-Date: Tue, 13 Feb 2024 14:25:03 +0100
-Message-ID: <87cyt0xzrk.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Cedric Bregardis <cedric.bregardis@free.fr>,
-	Jean-Christian Hassler <jhassler@free.fr>,
-	linux-sound@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="VvjfIvXG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1707830740; bh=MgUZi6LLrZeC+JPb5EJtPgxLkCCIcv7DZEbn4x65e+Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=VvjfIvXG89COCRomNIkpBIN7CP5zxx0C7aL6vggQXke8zS6iB43tnGQLQMxPAGW4g
+	 2FkOysXh7AsICIpZRcgKAL6v2ndBbrqkww+u5H1UJLtdXIaxhwYT094/TClbLwmjl6
+	 zzcifi/g08RGNmktr5eo+TOKlUkTdSxpBMBEagRo=
+Received: from pek-lxu-l1.wrs.com ([36.129.58.158])
+	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
+	id 344892C4; Tue, 13 Feb 2024 21:13:04 +0800
+X-QQ-mid: xmsmtpt1707829984t7r71a128
+Message-ID: <tencent_F11E964436F04BE4744377FD66903C7F3609@qq.com>
+X-QQ-XMAILINFO: NMGzQWUSIfvT29HpA7oOavs3KYUqRQrL4l3ZYkfpOOWNr69vyyOb+VXfbAUqKO
+	 rtw1lIPHA96UA0W/zA5GYWQX8bySal4FU/u8hcW+sUUwtljwfLPjV4P8eFhiZWHYHGgHN6SApzjF
+	 XJFYRgE5BaxCvkHF4xvtco6kTjmqlqSI6MKOUAWoml4QqrG/dc96oV1nrl37skT4qmEuMvRR7WGk
+	 yfhd/gweogb7JM8AXfVRmUBZ6M6pSJQNUU26qZlFwSXMtHNbAL+FXA2YaFlnc03YtqWZyanEfS0N
+	 04VsnOX80Uc9CWtL08CdhmlwQWUpvuEraji8NY9W1nMvPRrj/LULuW2SFYFqT+7iS6UIndVEaKz3
+	 ls+4bNy5c8uWGd+HzwHEfKdASQp3J32pV4tdMRIfyQ1qfLIfhKopBYuT9xV+xkXMnOl90w76zpXZ
+	 JlytCwI87m6ME8df/M75PRMwhq3bEMuDt1sotktzsV9Zn4no5ee3sjUkGS6u9dsc7Pd8vyClk4pq
+	 t+WdwvJXRQJaDT64Sv3kgdtRNawLGI2/2sRAq6Uu/vGt28PO6EP7V+XBflyZ0tyhhzZTZUCQhVtr
+	 W43WXo9dlqT43aP6/sc56MHS8flU8TUKUCA2fPim9e1x7fwLjP/xAb9efqCUw9s6DsRq2X31/tob
+	 MD/0DRN/j7OlIVC20TLntk6FtQ+LA8bmjUu/p4lQ5S0j/FB4lB+fs6kwAWt1xL95z9fwnIDUga9X
+	 PSN+rfWxDQMZF20GBEMPUAIt5iYlNeciR77S3JHHM366ZgV0BovIghJsjQgT4bai+fnpBM7Vccuz
+	 sHn0a4ZRhZHyvPBOEAbmZ2NeTRtx9TDMMOv51ZL65xs5W3NRvJYtmU9VEILyNwxlL3fqa9b/cIar
+	 /lzmQtDGzL8ZvDZKKuTc4NE1aPXN/Uy+67ggB9k30UKRK1nNbT7ZF9Bz9TY7zpUumgaYKC8y767w
+	 1bpy5aE9kfBZ12yOObmq6pJLsmCXH4eo3qF7yQEVw=
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+From: Edward Adam Davis <eadavis@qq.com>
+To: gregkh@linuxfoundation.org
+Cc: eadavis@qq.com,
+	linux-input@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH] ALSA: aw2: avoid casting function pointers
-In-Reply-To: <20240213101327.460191-1-arnd@kernel.org>
-References: <20240213101327.460191-1-arnd@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	linux-usb@vger.kernel.org,
+	rafael@kernel.org,
+	syzbot+8e41bb0c055b209ebbf4@syzkaller.appspotmail.com,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH riscv64] kobject: fix WARNING in input_register_device
+Date: Tue, 13 Feb 2024 21:13:05 +0800
+X-OQ-MSGID: <20240213131304.1141134-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <2024021356-unveiling-falcon-54db@gregkh>
+References: <2024021356-unveiling-falcon-54db@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spamd-Result: default: False [-1.49 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[free.fr];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCPT_COUNT_TWELVE(0.00)[13];
-	 MID_CONTAINS_FROM(1.00)[];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[perex.cz,suse.com,arndb.de,kernel.org,google.com,free.fr,vger.kernel.org,lists.linux.dev];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-2.39)[97.21%]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -1.49
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 13 Feb 2024 11:13:19 +0100,
-Arnd Bergmann wrote:
+On Tue, 13 Feb 2024 08:21:18 +0100, Greg KH wrote:
+> On Tue, Feb 13, 2024 at 08:50:01AM +0800, Edward Adam Davis wrote:
+> > On Thu, 8 Feb 2024 12:25:35 +0000, Greg KH wrote:
+> > > On Thu, Feb 08, 2024 at 07:37:56PM +0800, Edward Adam Davis wrote:
+> > > > On Thu, 8 Feb 2024 10:56:00, Greg KH wrote:
+> > > > > > The input_add_uevent_modalias_var()->input_print_modalias() will add 1684 bytes
+> > > > > > of data to env, which will result in insufficient memory allocated to the buf
+> > > > > > members of env.
+> > > > >
+> > > > > What is "env"?  And can you wrap your lines at 72 columns please?
+> > > > env is an instance of struct kobj_uevent_env.
+> > >
+> > > Also, why is "risc64" in the subject line?
+> > Because when syzbot reported this issue, it wrote "userspace arch: riscv64".
+> > However, I actually tested it on the master branch of upstream.
 > 
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> clang-16 started warning about incompatible function pointers here:
-> 
-> sound/pci/aw2/aw2-alsa.c:363:11: error: cast from 'void (*)(struct snd_pcm_substream *)' to 'snd_aw2_saa7146_it_cb' (aka 'void (*)(void *)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
->   363 |                                                     (snd_aw2_saa7146_it_cb)
->       |                                                     ^~~~~~~~~~~~~~~~~~~~~~~
->   364 |                                                     snd_pcm_period_elapsed,
->       |                                                     ~~~~~~~~~~~~~~~~~~~~~~
-> sound/pci/aw2/aw2-alsa.c:392:10: error: cast from 'void (*)(struct snd_pcm_substream *)' to 'snd_aw2_saa7146_it_cb' (aka 'void (*)(void *)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
->   392 |                                                    (snd_aw2_saa7146_it_cb)
->       |                                                    ^~~~~~~~~~~~~~~~~~~~~~~
->   393 |                                                    snd_pcm_period_elapsed,
->       |                                                    ~~~~~~~~~~~~~~~~~~~~~~
-> 
-> Add a forward declaration for struct snd_pcm_substrea to allow it to just
-> use the correct prototype.
-> 
-> Fixes: 98f2a97f207a ("[ALSA] Emagic Audiowerk 2 ALSA driver.")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Then of course, this was not correct in the subject line.
+Got it.
 
-Thanks, applied.
+thanks,
+edward.
 
-
-Takashi
