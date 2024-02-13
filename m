@@ -1,120 +1,81 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA805EE60
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 15:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B70855765
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 15:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707838436; cv=none; b=O4bKhYoVdXaDSO9eBTXW1zdRFOSvnZvAedd6CqLTzKTzgptmjvWha4eBOq1ymBXxMOjQYxNAUqeYTTa1+91KKbDSCfpuISGF7nX0r/AbmkU//NiGbtWkq1xrepnngnGXrCxViJDjWcePT+/eJgVf6USXXI2ExsDzJZjxh75mvIY=
+	t=1707838551; cv=none; b=BnkQuW/SaMYfpkn9KNKv+Ec2zGYPF0ACWp9yy2c1+iAJk+yBWgOJR8Ds8lL5X4+Fe3KLgJ35+m6L0j9Oj61WGX6mtdofzajU1ZIilmM3IIQJojlEDhh9oY0kfS+maB7bwfiQCBUZ/TQS69/Mtuwyv0WMoJ/wwvol9V+Xk+SuBYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707838436; c=relaxed/simple;
-	bh=1wgOC11E4WsIHJN8sQAbPNgNjm1Tj7LN4SZFvsn5QAw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gQjpSXhkmxl2mxliE1efeO8vtAxoTP/Eug8F0Sp+/BiF8TPUdvbIIcDWnbKX9FkVolnEHAOzaSzMwErO9OGYfM1jRVOLVb0tdT7qJa4Li5H2Wle3vriPPu6rEvNcwa0Uaoe1Gofcpt1VP4nVkhpYW34j9Ex70LF27p9XrLrHESU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=FaJ+SJ2r; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1707838551; c=relaxed/simple;
+	bh=lOi0nYWrCp4OfefqkEB1D1NwaxZ4jMMmQHpyLE+05MQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=j8t7WmQU57sf8K92SS3YLgNJB7CmbJYEHBXzYd7sceeRSPnF90Rrj/DP6d7K4cayENdwmpBPHq3Neva0zS4wZrU5jYVcT3Rzr9TLKEe4uGJ86LFRKL7q+yJCIyKT0Nbk5BqKnCubkAhh+VuOmvrda1KFRSHP64mvnxKHTYN0PyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MfPPjjCX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="FaJ+SJ2r"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dcc80d6004bso793150276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 07:33:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1707838434; x=1708443234; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WqydKoyTOasPxiPJoWDY9vsZCIGGHm243lsYdLUdgFs=;
-        b=FaJ+SJ2rWv9CKMitnT5LLuR41tbjkrm+BMWVk5oD+ec/erdSd9QVZ2je05QqdnMRWk
-         Im9W0wj5gHWVvnF2/3Oma13A1S5T+br7kgBW/UFFPMaSUFiGbNlBIxfTdJlmxdh52UUf
-         /hruPYfY4OxF4TPP7Huzhtzpuxl4e9co9fH1yQajmkbDGsktPzyqUXWSQG7yj+xzUOXR
-         voiLBL6f/Vkb5iHgvEQ86RFnJNBzxZ6hNVQWFUZGuVN94AHcc/dueNO1wElhkCRbEHLA
-         0GmF5ZbfUFqLBPr1WQ5pEI+kFOBsp/k3RBLKJjlSVHcE8WVQtkGPF+1j2LqDeLfvBj0q
-         +DSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707838434; x=1708443234;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WqydKoyTOasPxiPJoWDY9vsZCIGGHm243lsYdLUdgFs=;
-        b=qbX6XQjJmsfzhwTNObYKSKGnZfqGlODyHb5pfGMROp7Bn/iGJzGEmkbszzdbaAeFxs
-         cneStZzGea70apKbRzHYNA8yWhdkaFeCasyPTj6g8s/kZwomMel31Y0Xym5LZkflcy8z
-         827pbVhSn43BLWJcuKQtptZZGXcG/nRjL/jBGfYhQ+GQwHEFFwqeT2gUtXxta2flwfVI
-         aZEeyJzlT46gy6byVIg3MhdnWotX7mQV0PhJ5hYW6W6EDu2KnfSc1iFmcD0RFd+nMvRz
-         WwM3pmdDpN1NGGjp7lcy6wWHryhpUlkoljcBhOJMm6lyTgYDMaokCSJdVjPUprhKGxqp
-         nrng==
-X-Gm-Message-State: AOJu0YySIW2Ssdc7id024s+guUQQ8hErCCezQAnDkPxBYg/rx+sK3q6E
-	LEYTGSce7zUrMbtam/+f07/XA4sHKWfYcV69RNqWJU0bBfu9p+R9vj3TS0LJJsVSA/UJzERo18r
-	AdRb4UojfBRe0QkfhJsBY7weUPJcoDtpL5pJb
-X-Google-Smtp-Source: AGHT+IHnyTIkOdFHIvfDQnb3DdpYo/kENKzsoxJTQjNhdWhD9FR1CMXLFwKe75ZdrflWgWwKWc2sbhF4w4SE8MNPLwk=
-X-Received: by 2002:a05:6902:569:b0:dc6:bbeb:d889 with SMTP id
- a9-20020a056902056900b00dc6bbebd889mr7861710ybt.52.1707838433767; Tue, 13 Feb
- 2024 07:33:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MfPPjjCX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEF64C43390;
+	Tue, 13 Feb 2024 15:35:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707838551;
+	bh=lOi0nYWrCp4OfefqkEB1D1NwaxZ4jMMmQHpyLE+05MQ=;
+	h=From:Subject:Date:To:Cc:From;
+	b=MfPPjjCX9SrrR8K7K/HfWHaUcVX/sRqvql+DGvyz7L0zjceUULbMIc0HGvhKrgAp5
+	 T1arEiNZbik14+uzwDzJ/Co1bb4ENQaH9Cdk7sbKy6MKznnZFXDyMygWU35u0ujniT
+	 9MJFM1rXfmVqfRR0UJLLH7tsk7w706w88nSZ4pqOiUFfV/3FG2mEVfQv/QTQ3Hl02B
+	 IV3BDEcQdvMQOYWBxVT+l585hcyEvjAS09ezDCEIEgC4vFPw0+y1uG3HYHYHK3kZoK
+	 7R+rS5x1peNZAqxVBNIdmzXEtdudEjP/PAasvxa9DNyqwUuMDSrUTq7YrZamjG7C/f
+	 DWCu54M9jkIWw==
+From: Mark Brown <broonie@kernel.org>
+Subject: [PATCH 0/2] arm64/fp: Initialise all bits in vector control
+ registers to known values
+Date: Tue, 13 Feb 2024 15:32:44 +0000
+Message-Id: <20240213-arm64-fp-init-vec-cr-v1-0-7e7c2d584f26@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240115181809.885385-1-roberto.sassu@huaweicloud.com>
- <20240115181809.885385-13-roberto.sassu@huaweicloud.com> <305cd1291a73d788c497fe8f78b574d771b8ba41.camel@linux.ibm.com>
- <CAHC9VhQ7DgPJtNTRCYneu_XnpRmuwfPCW+FqVuS=k6U5-F6pJw@mail.gmail.com> <05ad625b0f5a0e6c095abee5507801da255b36cd.camel@huaweicloud.com>
-In-Reply-To: <05ad625b0f5a0e6c095abee5507801da255b36cd.camel@huaweicloud.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Tue, 13 Feb 2024 10:33:42 -0500
-Message-ID: <CAHC9VhR2M_MWHs34kn-WH3Wr0sgT09WKveecy7onkFhUb1-gEg@mail.gmail.com>
-Subject: Re: [PATCH v9 12/25] security: Introduce file_post_open hook
-To: Roberto Sassu <roberto.sassu@huaweicloud.com>
-Cc: Mimi Zohar <zohar@linux.ibm.com>, viro@zeniv.linux.org.uk, brauner@kernel.org, 
-	chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de, kolga@netapp.com, 
-	Dai.Ngo@oracle.com, tom@talpey.com, jmorris@namei.org, serge@hallyn.com, 
-	dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com, dhowells@redhat.com, 
-	jarkko@kernel.org, stephen.smalley.work@gmail.com, eparis@parisplace.org, 
-	casey@schaufler-ca.com, shuah@kernel.org, mic@digikod.net, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org, 
-	selinux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Roberto Sassu <roberto.sassu@huawei.com>, Stefan Berger <stefanb@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJyLy2UC/x3MQQqEMAxA0atI1hNIY9VxriIupEbNYqqkIoJ4d
+ 4vLt/j/giSmkuBXXGByaNI1ZrhPAWEZ4iyoYzYwsSd2jIP9a4/Thhp1x0MCBkNyX+/bkpuKCHK
+ 6mUx6vtuuv+8HI4Ca+WYAAAA=
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>
+Cc: Dave Martin <Dave.Martin@arm.com>, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.13-dev-a684c
+X-Developer-Signature: v=1; a=openpgp-sha256; l=709; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=lOi0nYWrCp4OfefqkEB1D1NwaxZ4jMMmQHpyLE+05MQ=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBly4xTIZFC58++1TXzR5Klyk0/kcm5lwqk/TqXo2uL
+ msKs0VuJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZcuMUwAKCRAk1otyXVSH0BjuCA
+ CDbCM/Iuvqvrsj60fYPrnoyu/HSR76EnPZnYotrVSFn+0RRWw+1DHT7DGX5ybDNrm0w+QT/LGZJPYL
+ PKIUOYTglOaJFGxe5ZUXyD+VvfbmNr2/cH55fgUiHC3knApuHtWL15olvxESonvrKjvnXTmuQJ0kfe
+ s4GSABb0DQnADb+TL4wJsSJgRckDRV+5//wyTnzMSyBIqqvdNEeJkmSsYahX2iy9xKiVPzCJ8qCrB1
+ LNQ5M+DaxxFr73y0ycbIOc6jBvJB5keiEMOY9VguDxcIAibIdiTbx9JJdtAQ8kxB4J86MA1VCQa2uN
+ HvF7VNG0a0nDul3curqeDQH/uD0Wpv
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On Tue, Feb 13, 2024 at 7:59=E2=80=AFAM Roberto Sassu
-<roberto.sassu@huaweicloud.com> wrote:
-> On Mon, 2024-02-12 at 16:16 -0500, Paul Moore wrote:
-> > On Mon, Feb 12, 2024 at 4:06=E2=80=AFPM Mimi Zohar <zohar@linux.ibm.com=
-> wrote:
-> > >
-> > > Hi Roberto,
-> > >
-> > >
-> > > > diff --git a/security/security.c b/security/security.c
-> > > > index d9d2636104db..f3d92bffd02f 100644
-> > > > --- a/security/security.c
-> > > > +++ b/security/security.c
-> > > > @@ -2972,6 +2972,23 @@ int security_file_open(struct file *file)
-> > > >       return fsnotify_perm(file, MAY_OPEN);  <=3D=3D=3D  Conflict
-> > >
-> > > Replace with "return fsnotify_open_perm(file);"
-> > >
-> > > >  }
-> > > >
-> > >
-> > > The patch set doesn't apply cleaning to 6.8-rcX without this change. =
- Unless
-> > > there are other issues, I can make the change.
-> >
-> > I take it this means you want to pull this via the IMA/EVM tree?
->
-> Not sure about that, but I have enough changes to do to make a v10.
+We currently do read/modify/write sequences whenever we update fields in
+ZCR_EL1 and SMCR_EL1 so fields we are not explicitly handling will not
+be initialised to known values, fix this.  The EL2 registers are already
+fully configured.
 
-Sorry, I should have been more clear, the point I was trying to
-resolve was who was going to take this patchset (eventually).  There
-are other patches destined for the LSM tree that touch the LSM hooks
-in a way which will cause conflicts with this patchset, and if
-you/Mimi are going to take this via the IMA/EVM tree - which is fine
-with me - I need to take that into account when merging things in the
-LSM tree during this cycle.  It's not a big deal either way, it would
-just be nice to get an answer on that within the next week.
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+Mark Brown (2):
+      arm64/sve: Ensure that all fields in ZCR_EL1 are set to known values
+      arm64/sme: Ensure that all fields in SMCR_EL1 are set to known values
 
---=20
-paul-moore.com
+ arch/arm64/kernel/fpsimd.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+---
+base-commit: 54be6c6c5ae8e0d93a6c4641cb7528eb0b6ba478
+change-id: 20240212-arm64-fp-init-vec-cr-018449327500
+
+Best regards,
+-- 
+Mark Brown <broonie@kernel.org>
+
