@@ -1,107 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE1077F38;
-	Tue, 13 Feb 2024 00:22:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D5A78689;
+	Tue, 13 Feb 2024 00:22:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707783766; cv=none; b=X+RUlsmW2S8oXrx6NHM6VJIDeQN1aGCaldZ1GXDNKHqoCU+rsMOP8skZ3H0Z6/RUyc/SvDniP2G4zFUDieRvSyYHbNfl1hU7KN025b6pESKdEty8Z6vg5Eu82BLLY/lFyX5SpT1BD6eHvVvmrPgroJ+2a3IYj0tCISNxU3ahkLk=
+	t=1707783767; cv=none; b=Qh2jMoVXJb4GjS+S/syCXwl5CdsRddPO9MA/Mj+s1+RfhO0r1xF4ggYSc+/j8UYAFIvAxcQdwDihLhuNeALSOfdXvOS+1z2mKBX6QeuxInYlFI3rFhPuUslvcuC30cmIt8wIHw1M1USwcxwafbJIUIKLJgXtKD5+AJH5Gl+UM8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707783766; c=relaxed/simple;
-	bh=TuTEr8omUxfqM1O8DocELWTt9yAKpzvpGXNjHsPxxuc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Wu0MeY3X5d6ibsGSJpJMtV4f1Fn4dd+uailb5fFM4vCZ3BnkKLp+tBpd12SSiIPnUy7jXDwRXkh81QX+axhsJ8fl1YI6/aXM/0lq2RhslqS5VsxyOIM/eH6tz79Qy8uf6ibE2PBkqz8hEU3bKHAmK5pQ6M1JPa0F+SbDYmwW56k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O5jKDBM0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707783767; c=relaxed/simple;
+	bh=jUbgoeI+TxGjL9aC8xmsuzU6yIW6wihjfX50gCoBepA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Yn4EMm5CKBQmmSrMRdJonqD8URV5A20GzqVZWnVr6QIt3P7x+xOVZyUMUyGIdwArq3ib8xsTT+34Wh6O4YRfws2HwQCxCdQk7mEFxwH2p6lQIsWMZ9v1J/ggq2PcpvDAgYE6HfYWv9ZGM7zNG/PHPvKl/LnIh1pdid+0a7DzHJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bVajYzjd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O5jKDBM0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF312C43399;
-	Tue, 13 Feb 2024 00:22:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bVajYzjd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D82AC433F1;
+	Tue, 13 Feb 2024 00:22:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707783765;
-	bh=TuTEr8omUxfqM1O8DocELWTt9yAKpzvpGXNjHsPxxuc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=O5jKDBM0g7YIMdQomXfz1EQQYXPp37dpkB4EONhCwaIyb0zjxJCTGjHrZ/5TroElx
-	 Bzp0e5kFbTmwK6t28wyoWt/fBp7Fixsbd6mWPSWid2Ore7tNbIwlNE7YT57QPQPzXM
-	 PZadVo5wKMlLuZTowenZP9hVkjfSqkcgCaESHfYXE7OlUXW66va3IUrGWFZd5cyM7T
-	 TIhWZx1SwFIgqa7Zo8rVTtomiFD7xJcdpfFm9ZXlH8pa9VIqtVWY7YWKYbOBUAECyR
-	 F8yL2UCW4RJ+hOggfVngUXf+prjvJuhXRGRQ0i6e1IkrNFRxAxeq6az9LQtZ+sawD8
-	 fMSgyCqhGKuEw==
-Date: Mon, 12 Feb 2024 16:22:44 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Elad Yifee <eladwf@gmail.com>
-Cc: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>, Mark
- Lee <Mark-MC.Lee@mediatek.com>, Lorenzo Bianconi <lorenzo@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Matthias Brugger
- <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, Russell King
- <linux@armlinux.org.uk>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net-next v3] net: ethernet: mtk_eth_soc: ppe: add
- support for multiple PPEs
-Message-ID: <20240212162244.3c011072@kernel.org>
-In-Reply-To: <20240210135620.28368-1-eladwf@gmail.com>
-References: <Zcdtb-eyvxzX9yPe@makrotopia.org>
-	<20240210135620.28368-1-eladwf@gmail.com>
+	s=k20201202; t=1707783767;
+	bh=jUbgoeI+TxGjL9aC8xmsuzU6yIW6wihjfX50gCoBepA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=bVajYzjdCYxGTJvIx5w0bq+8MSTWev9JTAO/cyAyo1vLiTk+AfRtttkodAlKCmgTr
+	 Hh3t95cmVgrGb3Lktx4UANs30BrtYM+fswQQgv29lmbqZhkNn9WbtLw0afwVMm8jLA
+	 mJFrpkh5XOqdnY5tHfssKr+I4yiZh+6c55M84IoY0XW6H83MXCgeq+LNNQ3i2yMeZc
+	 zqHC0gftFgPC3vXDevTaLx/rWUk2IEltIj6pNAgEkDF/msT2QUdHE5ngpQH2mHLdGD
+	 ZE9JV+0GylA2qyiE9LUDlb/YjpqbHUCeaDdp6xqsTWEcLPkhlgEXjSnvoKLFbBVgwR
+	 s8FrX4dJfv+FA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Sasha Levin <sashal@kernel.org>,
+	ntfs3@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.1 09/28] fs/ntfs3: Prevent generic message "attempt to access beyond end of device"
+Date: Mon, 12 Feb 2024 19:22:07 -0500
+Message-ID: <20240213002235.671934-9-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240213002235.671934-1-sashal@kernel.org>
+References: <20240213002235.671934-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.1.77
+Content-Transfer-Encoding: 8bit
 
-On Sat, 10 Feb 2024 15:56:07 +0200 Elad Yifee wrote:
-> Add the missing pieces to allow multiple PPEs units, one for each GMAC.
-> mtk_gdm_config has been modified to work on targted mac ID,
-> the inner loop moved outside of the function to allow unrelated
-> operations like setting the MAC's PPE index.
+From: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
 
-> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> index a6e91573f8da..5d5cf73a5d5a 100644
-> --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> @@ -2010,6 +2010,7 @@ static int mtk_poll_rx(struct napi_struct *napi, int budget,
->  	struct mtk_rx_dma_v2 *rxd, trxd;
->  	int done = 0, bytes = 0;
->  	dma_addr_t dma_addr = DMA_MAPPING_ERROR;
-> +	u8 ppe_index = 0;
+[ Upstream commit 5ca87d01eba7bdfe9536a157ca33c1455bb8d16c ]
 
-Please don't use u8 for basic on-stack variables unless it matches some
-HW field which is 8b.
+It used in test environment.
 
-> @@ -3358,6 +3350,8 @@ static int mtk_open(struct net_device *dev)
->  	struct mtk_mac *mac = netdev_priv(dev);
->  	struct mtk_eth *eth = mac->hw;
->  	int i, err;
-> +	struct mtk_mac *target_mac;
-> +	const u8 ppe_num = mtk_get_ppe_num(eth);
+Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/ntfs3/fsntfs.c  | 24 ++++++++++++++++++++++++
+ fs/ntfs3/ntfs_fs.h | 14 +-------------
+ 2 files changed, 25 insertions(+), 13 deletions(-)
 
-nit: Please order variable decl lines longest to shortest.
-If the order breaks init, you should move the init to the body.
-
-It's a bit unclear what the difference between ppe_num, num_ppe and
-ppe_index, id and ppe_idx are. It'd be good to increase the naming
-consistency.
-
-> @@ -1311,6 +1313,7 @@ struct mtk_eth {
->  struct mtk_mac {
->  	int				id;
->  	phy_interface_t			interface;
-> +	u8			ppe_idx;
-
-this looks misaligned
-
->  	int				speed;
->  	struct device_node		*of_node;
->  	struct phylink			*phylink;
-
-When you repost please do not reply in the same thread.
-Start a new one. 
-
-https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#resending-after-review
-
+diff --git a/fs/ntfs3/fsntfs.c b/fs/ntfs3/fsntfs.c
+index 873b1434a998..34813429e2ab 100644
+--- a/fs/ntfs3/fsntfs.c
++++ b/fs/ntfs3/fsntfs.c
+@@ -976,6 +976,30 @@ static inline __le32 security_hash(const void *sd, size_t bytes)
+ 	return cpu_to_le32(hash);
+ }
+ 
++/*
++ * simple wrapper for sb_bread_unmovable.
++ */
++struct buffer_head *ntfs_bread(struct super_block *sb, sector_t block)
++{
++	struct ntfs_sb_info *sbi = sb->s_fs_info;
++	struct buffer_head *bh;
++
++	if (unlikely(block >= sbi->volume.blocks)) {
++		/* prevent generic message "attempt to access beyond end of device" */
++		ntfs_err(sb, "try to read out of volume at offset 0x%llx",
++			 (u64)block << sb->s_blocksize_bits);
++		return NULL;
++	}
++
++	bh = sb_bread_unmovable(sb, block);
++	if (bh)
++		return bh;
++
++	ntfs_err(sb, "failed to read volume at offset 0x%llx",
++		 (u64)block << sb->s_blocksize_bits);
++	return NULL;
++}
++
+ int ntfs_sb_read(struct super_block *sb, u64 lbo, size_t bytes, void *buffer)
+ {
+ 	struct block_device *bdev = sb->s_bdev;
+diff --git a/fs/ntfs3/ntfs_fs.h b/fs/ntfs3/ntfs_fs.h
+index 977e1422f904..cbeda94d7161 100644
+--- a/fs/ntfs3/ntfs_fs.h
++++ b/fs/ntfs3/ntfs_fs.h
+@@ -580,6 +580,7 @@ bool check_index_header(const struct INDEX_HDR *hdr, size_t bytes);
+ int log_replay(struct ntfs_inode *ni, bool *initialized);
+ 
+ /* Globals from fsntfs.c */
++struct buffer_head *ntfs_bread(struct super_block *sb, sector_t block);
+ bool ntfs_fix_pre_write(struct NTFS_RECORD_HEADER *rhdr, size_t bytes);
+ int ntfs_fix_post_read(struct NTFS_RECORD_HEADER *rhdr, size_t bytes,
+ 		       bool simple);
+@@ -1012,19 +1013,6 @@ static inline u64 bytes_to_block(const struct super_block *sb, u64 size)
+ 	return (size + sb->s_blocksize - 1) >> sb->s_blocksize_bits;
+ }
+ 
+-static inline struct buffer_head *ntfs_bread(struct super_block *sb,
+-					     sector_t block)
+-{
+-	struct buffer_head *bh = sb_bread_unmovable(sb, block);
+-
+-	if (bh)
+-		return bh;
+-
+-	ntfs_err(sb, "failed to read volume at offset 0x%llx",
+-		 (u64)block << sb->s_blocksize_bits);
+-	return NULL;
+-}
+-
+ static inline struct ntfs_inode *ntfs_i(struct inode *inode)
+ {
+ 	return container_of(inode, struct ntfs_inode, vfs_inode);
 -- 
-pw-bot: cr
+2.43.0
+
