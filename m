@@ -1,185 +1,110 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8DC922636
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 10:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6802249F1
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 10:41:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707820829; cv=none; b=mbO0xRsaujRzUZShWGtBWsLmVLRU5ziXHCUHVpALvrJldK3mIPr7yujkQFL7H0dJFl1uF0nr0AvpjeQL+fJkdznThs17B1I0FfI+4kdQ8iFq5UuiL/8k0izmblmJMjLZBMoIllTWs85AluDXI7q5emF+psRod223i7Sb0k0srgc=
+	t=1707820919; cv=none; b=GzFCsUQwlYG2U4nHfErNrOYjChCYYvIA0SMSE5QHytTmLbunpkaxUEqLGYOMBrX4P7pc/bxb/2AKJU9s79RwTWvn8c89VzZGKroWMiuFrC6Jk81xvE09GMR9ur82sOn5rcE6VvtDmtsRShblbjRgPT+aDQx1KveYlrZEf2ojL2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707820829; c=relaxed/simple;
-	bh=krsCH14lzt/9Maep29rwlQil5zrN1KmqSS4gA+WXvOk=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=WCkGyWTBYYn+uI3L7yNhLClmV80iQT8IN9nQ4cRDslLJSy0Sx/+SoQjQDa0ugpfU4kxlVL8/WJ/ynyNGRDYwHd0TQcye558MVSXKgB2IPlu6x7AaOqMKsgWbP60MoYUgWESY4dsAjevc8cRY4kp1LhsMVGrBoAdceNdeJSonOxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=dRekwuaE; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1707820919; c=relaxed/simple;
+	bh=Q93G79Tao3pLIvEj6a4nLHaQ5klHJL2n89mFn5i/fzs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kM5FntIGKcWksJ2xIJrF3zvBKo89Px/zZNoIOF+mRLq+KiVBa1IrnFOZGGDfTeWAQLJPxQMbGvaBFBYwOpNWH+TVkVRmjb1lvZuvVvC4fVD7anpylPDXX7m3Mhn6KEPjltFu6R+caW/Wn+MdcIr6TwYyxGkCjNj7viWzXLp4cUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QU3TuR4g; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="dRekwuaE"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-410ee8ed659so11433225e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 02:40:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1707820825; x=1708425625; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=73nQOWwOG85LqUQijwY3y2kTDnNiZFOlELYxkV2QtZQ=;
-        b=dRekwuaEN/PJB6ElhQrBAPT8MKPsf+sVFNnTx4uq9lqFRkgl9j76at1fMwg5H0A1rQ
-         Knwr5M0Pjcg4LAQX0TDb3EOCLezIwwRSoueWqX0m/5iBzf9RWh+cWvC32zVL6dl1KZCl
-         /W5rASlMgMLr9RGIdKq4tdjTMpa9NncimRb7yA3TfV2jP4R0+adCPHpExFSKYTiYiem5
-         nJQHjBhjEUtE9l4ec0Zp6SXImWnGNPAfjYyI9v+ydBFB5uROmDqCnTH2Bfbxt4pPyvyW
-         E2Pkmu1Su/0Vo/lzSVwMKyXUGJ3upZ28Ny5TvQSUNuPMzL9ZiwSYd07QCpB5Ncy4rfjH
-         jtgw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QU3TuR4g"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707820916;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QsoNRIF3L7kvrCoMqs1E08h8SDLvR/qCRkFJ0CP0gQI=;
+	b=QU3TuR4gEo6Tq7VFCsPQig8ma2ANDgwnf0dXdrwSguteKc3FAP2ubkaRiFkb7HuKLKnfCx
+	+dJcWqXxPJgkvsBV8RzHepmFy5lMw3COYX8i2d9x16sURxTm1Ay4RitwOPrJCK3cRlTQBF
+	CbTJYpFx5l0bJGpmSG3+hNNHbznXiTM=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-621-LywSgzdPOWGtGvVu5_08Ig-1; Tue, 13 Feb 2024 05:41:55 -0500
+X-MC-Unique: LywSgzdPOWGtGvVu5_08Ig-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a3cfc0287faso24044866b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 02:41:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707820825; x=1708425625;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1707820914; x=1708425714;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=73nQOWwOG85LqUQijwY3y2kTDnNiZFOlELYxkV2QtZQ=;
-        b=JU/wleLxzGxPoABcrCPiwr1RiyPSGqqCUtgOL9I7M3qRGEKu5aYeyZ7cOJt2dMCulV
-         hh7WYJOSNeJPFn7O+6voMlHvtW9Rh3Xx6VfDxtwAsdeImJnPVws7s5voaYAx/q11lzB2
-         PkkY5EEiO0kwwvYrulh2ljxsFyS1JQoSrQabuiiM4mN7qSQfMKCzFAzuSeEowCiz0v9/
-         PjjIeDuI5cV9KOy9HMDAmSuzrQKwgAs/xZUnrTnNIR0Vd8Or0dzt0sUmRsYL5z5+ncCp
-         zRovkIBUUEjFz+vP3x8i9XXi5llGlvl/7PXh6mq/u2k4BCvmuXK7wYfox21/3APe9KYf
-         8wNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWRAZaI+SKTjwcYeBN8b4U02CFPijzj9AGiPa6/yh6cJmau2rd4gqUOJm1TRcgtQEXeU5U6CfzAP4qEP6IjtdKWw/j8IirG8KkqSm3s
-X-Gm-Message-State: AOJu0Ywyz2HgrUyro2nCRztdNHEgtjmJrDtbyhQa0vwIwgPXn4K8wdk5
-	WgCua3jguJz9eDzJU7UhMBKa378XtxHqm6EzMGSh2LeuPS+3bOOPsaNqAqSzuRs=
-X-Google-Smtp-Source: AGHT+IFE2dDl+7H9jhreEKYF+PUjtVPBRcNJ1aERTrrwwC5G4DL6A6zOSd3wAcqga8EO4wTyXt03Pg==
-X-Received: by 2002:a05:600c:35d6:b0:410:bb99:af83 with SMTP id r22-20020a05600c35d600b00410bb99af83mr5171034wmq.23.1707820824810;
-        Tue, 13 Feb 2024 02:40:24 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUmcpbchwPyNzBfnbLcEYhaLnxRQSdBvMKjGg0MfaCh7YWyITG3KZKFcRYjfwe4AlHSq1gIXWIjsiVyv1IInLv1tZVd8zmquscCy1pDKYwdz6ynaEkFHraLMWSkLqh5TRj+L/JjihgJpQCVLPbPVfylHTV3batPXQXXindEdpdMqE0SUk5RUOICCx9f4Eb8h5DTJ8vDSxJbXIeNoJfFhXRq8lNOY7jMZ0c+xcyncspd16YHa0IkYhvVU1WUQqEArUfvTF+SOUM4Dt6OU0uFU2i45yO6k7zltzOl+BYRYI7XlCDdoZkIcl6ELjYAmedeiuco7vlSNcPnTNVtdkYiXPyrZF4K/En7BMlacB3N5g8zIxanpUjM7LvvquL2djRo3o6JaZB2FQXw7cwz+qwougFRtQ5bk+HRzQ8Ra85TnWjlTyaRM3YUC2vSlcte05ZhhsU6FN+8sVvI8CBvm84Yfr43mveqKKKtpCM3lfNAJocWu3ZsxvGPwGF945dM0y7mcsU7DT3vSkHlfGIfh+vu1JdHCc99fhNPmRDiBz88JQwxFhk5TEvCYmvJFBeL6rPDrBlBgM2F5Ni3KdJGf3GhrGtWo9/OtDGksh6UCEtuWoWIVDh1P6usyEPmTFpYFe0IEzH8GUOB4to5Jo8wRg+cp9MHbcK38SJVltJ8NNXA
-Received: from localhost ([2a01:e0a:3c5:5fb1:509b:4241:48a3:e3e0])
-        by smtp.gmail.com with ESMTPSA id m20-20020a7bce14000000b00410e0fd6179sm4811973wmc.34.2024.02.13.02.40.24
+        bh=QsoNRIF3L7kvrCoMqs1E08h8SDLvR/qCRkFJ0CP0gQI=;
+        b=EMiEo1pq9cJTdaHpprJegRysDhyUXQcGQ/psAdTafF2YQClKpb5cjD3oHw9ivLwtNM
+         EvB5JVw4smB7nAERS+9Ex0WeHKMIYMY0WytDTlWBXFK5WUCDEe2+dPDXVVcYHR5JIodF
+         V8oQs3nXzXCIZtc6oOYqUIn/qOdgqh6aDM/Hpm60A29ay594+GzBIEF0pkBpckF/vERX
+         rSptYnDyKvo7Ee0hZYOERk0hRPauy1QmSrPAbmGy56ki4F91jrcsyGTJ7sGp2ehaS4TU
+         h4CgGu/m7IPDyAQbDyhMgwsBi7ChSaZ3rI0ySVofOr1WphpnjDWSUHzIwfF1Rfpme0SK
+         N2hw==
+X-Forwarded-Encrypted: i=1; AJvYcCUOLeKBpCKfegwoob67YIhBY9yADPvDspHXN0QhqsRRrvxDGk7mDgdwl+hbtMMqFMBGt+sKR33cHG0A8YcOVD2sV7BC+KNP9RQjCahc
+X-Gm-Message-State: AOJu0YyerMWNOQfBu67JV5ZTcFsfshZ93RiE0lvCE5M/Y7yNqbn0ATsp
+	CnpjL3OEXVOfSFIs57cQNnS7XVfTpVY7neaUNQDiTbq9WexZkDDUFSFgdJ21vmW7TFLxmyHHUCR
+	p4DcA2JqmJ8ZKEYQ+QoRK5K5q+bvx+g+Hpr/vlPvwRbCJAYo/68TqN+iKcQJBxQ==
+X-Received: by 2002:a17:906:4113:b0:a3d:1fb:7880 with SMTP id j19-20020a170906411300b00a3d01fb7880mr752605ejk.77.1707820914037;
+        Tue, 13 Feb 2024 02:41:54 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHD2Zj5imivfoqN2m9u3C8juOSCP3Eec5blZ8cs0/lr3cIZCQH5iHFiu4+VZiaU9oKVtA9gzw==
+X-Received: by 2002:a17:906:4113:b0:a3d:1fb:7880 with SMTP id j19-20020a170906411300b00a3d01fb7880mr752592ejk.77.1707820913706;
+        Tue, 13 Feb 2024 02:41:53 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVmwfx8d90GwfR4fuw4MPJJ9UViLlbZP20pI3k5k5qN0BthJrltGNKHdcQAh65x859WkjxkGMcyYquvB7c76kQT50pobnsxjciLx9ATokNodvjrUg4JbVQNCL8GzJTLrq79bYUzu8o+BPBoIecYdZPaihATa3dhDsDOcicrKba2AEGuQ/jC2hGTsQUAxeHb
+Received: from redhat.com ([2.52.146.238])
+        by smtp.gmail.com with ESMTPSA id vb1-20020a170907d04100b00a3cfe376116sm541362ejc.57.2024.02.13.02.41.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 02:40:24 -0800 (PST)
-References: <20240213101220.459641-1-arnd@kernel.org>
-User-agent: mu4e 1.10.8; emacs 29.1
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Arnd Bergmann <arnd@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Jerome
- Brunet <jbrunet@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Neil
- Armstrong <neil.armstrong@linaro.org>, Kevin Hilman
- <khilman@baylibre.com>, Martin Blumenstingl
- <martin.blumenstingl@googlemail.com>, Nathan Chancellor
- <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, Bill
- Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH] ASoC: meson: add helpers for clk_disable_unprepare
-Date: Tue, 13 Feb 2024 11:36:28 +0100
-In-reply-to: <20240213101220.459641-1-arnd@kernel.org>
-Message-ID: <1jbk8kk5pk.fsf@starbuckisacylon.baylibre.com>
+        Tue, 13 Feb 2024 02:41:52 -0800 (PST)
+Date: Tue, 13 Feb 2024 05:41:48 -0500
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+	Zhangjin Wu <falcon@tinylab.org>, Willy Tarreau <w@1wt.eu>,
+	Yuan Tan <tanyuan@tinylab.org>
+Subject: Re: [PATCH RFC] misc/pvpanic: add support for normal shutdowns
+Message-ID: <20240213053953-mutt-send-email-mst@kernel.org>
+References: <20231104-pvpanic-shutdown-v1-1-5ee7c9b3e301@weissschuh.net>
+ <2023110407-unselect-uptight-b96d@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2023110407-unselect-uptight-b96d@gregkh>
 
+On Sat, Nov 04, 2023 at 02:05:02PM +0100, Greg Kroah-Hartman wrote:
+> > diff --git a/include/uapi/misc/pvpanic.h b/include/uapi/misc/pvpanic.h
+> > index 54b7485390d3..82fc618bfbcf 100644
+> > --- a/include/uapi/misc/pvpanic.h
+> > +++ b/include/uapi/misc/pvpanic.h
+> > @@ -5,5 +5,6 @@
+> >  
+> >  #define PVPANIC_PANICKED	(1 << 0)
+> >  #define PVPANIC_CRASH_LOADED	(1 << 1)
+> > +#define PVPANIC_SHUTDOWN	(1 << 2)
+> 
+> Why are these in a uapi file?
+> 
+> And if they need to be here, why not use the proper BIT() macro for it?
+> 
+> thanks,
+> 
+> greg k-h
 
-On Tue 13 Feb 2024 at 11:11, Arnd Bergmann <arnd@kernel.org> wrote:
+This is interface with hypervisor not userspace, but for PV historically
+we do this since the compatibility implications are about the same,
+hypervisors (e.g. QEMU) are mostly userspace and so it is convenient for
+them to reuse the same machinery to export the headers.
 
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> Casting between incompatible function types causes a warning with clang-16
-> because it breaks control flow integrity (KCFI) rules:
->
-> sound/soc/meson/aiu.c:243:12: error: cast from 'void (*)(struct clk *)' to
-> 'void (*)(void *)' converts to incompatible function type
-> [-Werror,-Wcast-function-type-strict]
->   243 |                                        (void(*)(void *))clk_disable_unprepare,
->       |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> include/linux/device.h:406:34: note: expanded from macro 'devm_add_action_or_reset'
->   406 |         __devm_add_action_or_reset(dev, action, data, #action)
->       |                                         ^~~~~~
-> sound/soc/meson/t9015.c:274:4: error: cast from 'void (*)(struct clk *)' to
-> 'void (*)(void *)' converts to incompatible function type
-> [-Werror,-Wcast-function-type-strict]
->   274 |                         (void(*)(void *))clk_disable_unprepare,
->       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> include/linux/device.h:406:34: note: expanded from macro 'devm_add_action_or_reset'
->   406 |         __devm_add_action_or_reset(dev, action, data, #action)
->       |                                         ^~~~~~
->
-> These two meson drivers cast clk_disable_unprepare() into a different type
-> in order to have it automatically called from the driver relase. Add
-> trivial helpers to do the same using correct types.
->
-> Fixes: 33901f5b9b16 ("ASoC: meson: add t9015 internal DAC driver")
-> Fixes: 6ae9ca9ce986 ("ASoC: meson: aiu: add i2s and spdif support")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  sound/soc/meson/aiu.c   | 9 ++++++---
->  sound/soc/meson/t9015.c | 9 ++++++---
->  2 files changed, 12 insertions(+), 6 deletions(-)
->
-> diff --git a/sound/soc/meson/aiu.c b/sound/soc/meson/aiu.c
-> index 7109b81cc3d0..211f360df284 100644
-> --- a/sound/soc/meson/aiu.c
-> +++ b/sound/soc/meson/aiu.c
-> @@ -209,6 +209,11 @@ static const char * const aiu_spdif_ids[] = {
->  	[MCLK]	= "spdif_mclk_sel"
->  };
->  
-> +static void aiu_clk_disable(void *clk)
-> +{
-> +	clk_disable_unprepare(clk);
-> +}
-> +
->  static int aiu_clk_get(struct device *dev)
->  {
->  	struct aiu *aiu = dev_get_drvdata(dev);
-> @@ -239,9 +244,7 @@ static int aiu_clk_get(struct device *dev)
->  		return ret;
->  	}
->  
-> -	ret = devm_add_action_or_reset(dev,
-> -				       (void(*)(void *))clk_disable_unprepare,
-> -				       aiu->pclk);
-> +	ret = devm_add_action_or_reset(dev, aiu_clk_disable, aiu->pclk);
-
-Hi Arnd,
-
-This probably pre-dates the introduction of devm_clk_get_enabled()
-It would probably be better to use that instead of duplicating helper
-functions which do the same thing.
-
-If for any reason it is not possible, a common helper in clk.h would
-preferable I think.
-
->  	if (ret)
->  		dev_err(dev, "failed to add reset action on pclk");
->  
-> diff --git a/sound/soc/meson/t9015.c b/sound/soc/meson/t9015.c
-> index 9c6b4dac6893..e0f9a603a5e9 100644
-> --- a/sound/soc/meson/t9015.c
-> +++ b/sound/soc/meson/t9015.c
-> @@ -243,6 +243,11 @@ static const struct regmap_config t9015_regmap_config = {
->  	.max_register		= POWER_CFG,
->  };
->  
-> +static void t9015_clk_disable(void *clk)
-> +{
-> +	clk_disable_unprepare(clk);
-> +}
-> +
->  static int t9015_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -270,9 +275,7 @@ static int t9015_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> -	ret = devm_add_action_or_reset(dev,
-> -			(void(*)(void *))clk_disable_unprepare,
-> -			priv->pclk);
-> +	ret = devm_add_action_or_reset(dev, t9015_clk_disable, priv->pclk);
->  	if (ret)
->  		return ret;
-
+Let's stick to that, cleaner than duplicating everything I think.
 
 -- 
-Jerome
+MST
+
