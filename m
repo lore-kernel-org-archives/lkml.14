@@ -1,78 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3DF6340F
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 23:13:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFAE5629E5
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 23:14:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707865990; cv=none; b=UY0tbgUNxWDzuXvRn1Gq5rwQeSrt6PfgseqeV3czCol5SiK36ul4vx+AIdVgYsdgD2lHVWibTAU/FnU3bUmnLkF+JS586fXWbxMolDANSwFvxVrsElf7hFRhw3mF/HOj/VH3eO+1n3Ldoa2Mtq8rSgacpyK2b7eh9yw5MkkVDAk=
+	t=1707866061; cv=none; b=t9CbixATeDDkjPYoxz9UmHWjD856Bv6ER9hkE+stFOTATt+LLILLhleZSY+0xqOfcvW7aFmX/Tx7L1b4u6IifTG7B2hDmJmyqIMpxBrBip80rwfpyZz63ZvKNGZ4nqLv3Fb+/eYykY+g6dUHSTEBNpPcByPI/Ulc2JmfU6YSSv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707865990; c=relaxed/simple;
-	bh=nLoRFPBJnfn59rTSLi0Dv6V2IC37p4t5fbYO1zZOBXk=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=fFuqMULlFQA5AonNP1Hw+YP9MWg/c/6cUfPB9haOyZecNsnq5Sh51q+tK0HgGJlopFKOC0jtoUxJGlr1IcpFKthzV6G5NO7/c4baNIVDj2LkKiJd15+ibYATl6WX27sqYC9z9wgMntmjykyVC9W/scrtuYApK8V+RmMfNuMKW8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88251C433A6;
-	Tue, 13 Feb 2024 23:13:09 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1ra1z5-000000009Er-3nbe;
-	Tue, 13 Feb 2024 18:14:39 -0500
-Message-ID: <20240213231439.765101665@goodmis.org>
-User-Agent: quilt/0.67
-Date: Tue, 13 Feb 2024 18:14:15 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Mete Durlu <meted@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>
-Subject: [for-linus][PATCH 2/2] tracing: Use ring_buffer_record_is_set_on() in tracer_tracing_is_on()
-References: <20240213231413.726507543@goodmis.org>
+	s=arc-20240116; t=1707866061; c=relaxed/simple;
+	bh=eB7RMcMJLJ9Je1NladOcXjy0j4kCuKfh5pdZmU9QjdM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Qq744i5DELuB9PTZSievVxmhbkt/ZfRFCnlAI6d13E8V98EG6B7buGXIgvoSCQ+s4/Ng8VBJApx/F1Jz3Z+cQwwEpZCshTELOWxAdpTx+MdMyJXlfw34pFCByKCaZ0nLSx8gz1mUOyB7b7qxGAH0gv6yjNwT9/LEkBwNlHOukoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MCepNLjE; arc=none smtp.client-ip=209.85.219.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MCepNLjE"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dc6e080c1f0so4246796276.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 15:14:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707866058; x=1708470858; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eB7RMcMJLJ9Je1NladOcXjy0j4kCuKfh5pdZmU9QjdM=;
+        b=MCepNLjEB3K8Y3i32lhQSc24CzhtemcYLshw3iGhlKoFMJ2fqaWlKH9/+meepFKaRI
+         C7mU3/3dYHAaGR3PN8YpPnVT/P7FxmaGZg4umxE6pYs8MWosl/tSvU01nhCU8fniNqeg
+         XOCQ7GfqqEPlaFddIGNpe3hiTYP1HbOU3kTQDnH3107gYHtdF9DzLwAfpjTd+FFrbYNo
+         GNwTXPpRUF/N5fMwlgE8rY94fPGbaZL2c8vK3OMMYAHMVervJ0aPnZKM1yMhTZy884Np
+         Th281kGGMgnFKlWC3tqCHC0XwfXriG6M/JiDAg9y/n05W/zrw10UM5htEogiYj51ghpy
+         eC2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707866058; x=1708470858;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eB7RMcMJLJ9Je1NladOcXjy0j4kCuKfh5pdZmU9QjdM=;
+        b=oeWEbc2mVUaGmo5ky/Ecqc4uPjQIgGuIXyHwZ2jfP71/RwURbNO8o19Vp+nBDCiNYP
+         CaJ+Lr8NNg3Heen9aR34t9BbZaX5Mgmse1cR97Knpg9S6fzWCl2/aM6g5M1j+QOsHmIY
+         dPWbIVydu66FN0ER3iZuQVZkztw8Qv3lMcfiNQ5AxhgP/fYcN5YlEt0gxoY5xK8/4kgK
+         ZlkWRSCSaHEFkyDosuD7gzDL3+dxEcBdnuWzM1dtpz7zaohQouG1Eb39i8sQmv9ZTDAc
+         875oD+Zsbwlb/mTQzVAU6phPE9IoG1+H7SAfSDPi5nE3DWgAK1q4bM87sGLMqNSs4QjS
+         tIeg==
+X-Forwarded-Encrypted: i=1; AJvYcCVG/1ITmrWookjmD/hcPSqDyMzIn6Dljbfd2ovNSQsevbwuET3UmQWyPiaGFQQjKZndvhKy8Y59CNZ/mizqxl+0wEDKjDoe0pPD8ByK
+X-Gm-Message-State: AOJu0YzbKrcJZtnnifjG7i1Citrd8K5teTyVqBS97NjgQQQfio2snDTf
+	n0J1A1ijxc0k8fpSlTSXYBTBQRjO9WT0GpLQPkKKVL/XrPVy73gGkhSl4vslTj3dgfrl1PueScR
+	PaooR/dEwWLF0sGSCIM57mBgUdvseQi0kA2b67Q==
+X-Google-Smtp-Source: AGHT+IF6qQQEQ0WI9EZCWpwSV/Ap9bumw9mqqt3CzdCQT0n0VTNRwQJwa04YBBGHzfyiPpWo7DP1eP08Q81LZwWXqrM=
+X-Received: by 2002:a25:ae47:0:b0:dcd:49d0:eece with SMTP id
+ g7-20020a25ae47000000b00dcd49d0eecemr623009ybe.60.1707866058733; Tue, 13 Feb
+ 2024 15:14:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20240213220331.239031-1-paweldembicki@gmail.com> <20240213220331.239031-8-paweldembicki@gmail.com>
+In-Reply-To: <20240213220331.239031-8-paweldembicki@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 14 Feb 2024 00:14:07 +0100
+Message-ID: <CACRpkdY4d=KaGDo+bmvxZVL0hBWJbMp4E2kNzOq=YqQktRiY4Q@mail.gmail.com>
+Subject: Re: [PATCH net-next v4 07/15] net: dsa: vsc73xx: Add vlan filtering
+To: Pawel Dembicki <paweldembicki@gmail.com>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, 
+	Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean <olteanv@gmail.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Claudiu Manoil <claudiu.manoil@nxp.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	UNGLinuxDriver@microchip.com, Russell King <linux@armlinux.org.uk>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Sven Schnelle <svens@linux.ibm.com>
+On Tue, Feb 13, 2024 at 11:05=E2=80=AFPM Pawel Dembicki <paweldembicki@gmai=
+l.com> wrote:
 
-tracer_tracing_is_on() checks whether record_disabled is not zero. This
-checks both the record_disabled counter and the RB_BUFFER_OFF flag.
-Reading the source it looks like this function should only check for
-the RB_BUFFER_OFF flag. Therefore use ring_buffer_record_is_set_on().
-This fixes spurious fails in the 'test for function traceon/off triggers'
-test from the ftrace testsuite when the system is under load.
+> This patch implements VLAN filtering for the vsc73xx driver.
+>
+> After starting VLAN filtering, the switch is reconfigured from QinQ to
+> a simple VLAN aware mode. This is required because VSC73XX chips do not
+> support inner VLAN tag filtering.
+>
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
 
-Link: https://lore.kernel.org/linux-trace-kernel/20240205065340.2848065-1-svens@linux.ibm.com
+As far as I can tell it does the right thing! Good work.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Tested-By: Mete Durlu <meted@linux.ibm.com>
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 9ff8a439d674..aa54810e8b56 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -1532,7 +1532,7 @@ void disable_trace_on_warning(void)
- bool tracer_tracing_is_on(struct trace_array *tr)
- {
- 	if (tr->array_buffer.buffer)
--		return ring_buffer_record_is_on(tr->array_buffer.buffer);
-+		return ring_buffer_record_is_set_on(tr->array_buffer.buffer);
- 	return !tr->buffer_disabled;
- }
- 
--- 
-2.43.0
-
-
+Yours,
+Linus Walleij
