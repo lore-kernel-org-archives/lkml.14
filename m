@@ -1,100 +1,204 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F783FE2E;
-	Tue, 13 Feb 2024 12:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E232B38DD5
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 12:11:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707826267; cv=none; b=ZZspwPLCqVAcV/04KtY+7mSrSFYxHhkcFupE/IUZ0dlvbNcsA6CMkz70SYeNOffBBO9yz/JrstpVxM7a4cq+s25l7IzlSGGn4GnPBnzeLvtxxQvvoT+vQOWcyAYOI/KSzssNx4kxPwoW/+ODdsHLDzDLwfYX85dCHRwLshqI250=
+	t=1707826311; cv=none; b=c5d1rI8wCwfvHmDgCcLDbd+GG0FrUr8NCtRTFKMD+0f2QzhJzN8h4maSDTAn4ynmG87gjy2i6PkU2bxjMEs/eMeagHdic9sRG7VsMmJEayeZhVlnxOYw1Eca2v95NeiA1kXdMgA6pnzB796BIDe2OZ4vwKqMMB4kSGqRbIONoVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707826267; c=relaxed/simple;
-	bh=+N6oWphlV7CU8man21/8n4+EzJmAqK7AheWgjqy0khU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=jblZsztlVwdw6RTC2Nbm5DUWRAV+qSjEHq6rsLogp1IqzrdlU8KVLYY9L+du8mVwtTLb/3+tF3b06rAuCyctw1TXLzy5mXnHCjLnhX42kBWkMh6fq/og3kdH4H9Kvehi4+hCxYI7ofUbNJ2AJg5N11HCx82iF/IldfuHmGHOZeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=XPTm/XEJ; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1707826311; c=relaxed/simple;
+	bh=mqfYVEOtzPRSOjdOlyf2gs5Ptx2vF6ZpkfNR6nPVv9E=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=PGDkIABRcr5wkPyEK/vUsGANIksIlVFxJC7CdJ10+haqTsXch9E0ioijWw44OXxqf0jAELn50b2Mp4iBM0S5Th55q28iiBah0PgY/xBv8ec28AsrvA/W02OMO87Glk7U1gwQDhJrzuwUSezqV9CZoTBt0H145bxfz6YH6nT7OQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IIm9LBJW; arc=none smtp.client-ip=134.134.136.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="XPTm/XEJ"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41D9saVg015351;
-	Tue, 13 Feb 2024 13:10:46 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=ChetLBdDsyZCoOZVq/CcmKPawKKxLlNm8k9kly42dxc=; b=XP
-	Tm/XEJXAj0h03nwlwl/5vxOFM6OZLESY21fyNEWi0nQ/8/y0YIVcbyeNNmqfeN0D
-	SwLoUTSRgO78vD9fJTSxJL+uRY3CWqcjZ76WQ1Czj5Mu7RSy34gpSsZVZtDr5y7i
-	NWYZaPwXWhfMPlIINoPXFCOEmu7hwz5ARJrTbn9RURFPVCC7pjh4Jm+pU6+GxG1s
-	7oqMgPSWe8VOaR9JwFI/2UuS/YrUysTHG+AMFcJ6PWRuO+l5BCpHNF1OYSu/5eeI
-	psFdzYGXlZrW4ioscXxhwNj0n4ayVmD+XYGCZZu7kPxfVlW7/7YY9sV5xC/hIC4s
-	U9R0H2GHa1Sgk3zdYYAg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3w62jsatc8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 13:10:46 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 472C04002D;
-	Tue, 13 Feb 2024 13:10:41 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8C219236951;
-	Tue, 13 Feb 2024 13:09:56 +0100 (CET)
-Received: from [10.201.22.200] (10.201.22.200) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 13 Feb
- 2024 13:09:55 +0100
-Message-ID: <9f20563b-bef1-41d0-a1ba-fefeabed2e09@foss.st.com>
-Date: Tue, 13 Feb 2024 13:09:55 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IIm9LBJW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707826309; x=1739362309;
+  h=date:from:to:cc:subject:message-id;
+  bh=mqfYVEOtzPRSOjdOlyf2gs5Ptx2vF6ZpkfNR6nPVv9E=;
+  b=IIm9LBJWzNMt8Cf6EVMo/JiQZbsE9+R+YPv54KMXgKmM2JXJin0FpgvD
+   Zp9eXe5XpMKl5yhdxcm6OkvXQxyClFemU36nRQ9gzLVQj8UObqC1SjsPN
+   zyoyVQXh0YlyxhOmsfH6V1ZlgTRUdQpacuBpc6ql5N25N/N5CreVdwead
+   PHyfAo/RzQ9EFEXBioxwPR1aaS5Zbs455efNPhejhq2pLuM4C6+H04Xb6
+   +8Yx5+V+ATDgouEvXeXfH3URYmLYQ4kbbZjKiRlPj7RrWvjZUMD4T/3XR
+   Kv6yqr0RTArF8/rj2FJNXnyCUdyfB4DlzTTsECSbaw7QnQ5iiM2c14r2Q
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="396263008"
+X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
+   d="scan'208";a="396263008"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 04:11:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
+   d="scan'208";a="2794582"
+Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 13 Feb 2024 04:11:48 -0800
+Received: from kbuild by 01f0647817ea with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rZrda-0007i4-0D;
+	Tue, 13 Feb 2024 12:11:46 +0000
+Date: Tue, 13 Feb 2024 20:10:52 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/urgent] BUILD SUCCESS
+ d794734c9bbfe22f86686dc2909c25f5ffe1a572
+Message-ID: <202402132050.oPIh5Z6Y-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/12] Add MP25 FMC2 support
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>
-CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>
-References: <20240212174822.77734-1-christophe.kerello@foss.st.com>
- <fbaad3c7-13b7-41a2-a8f6-7036ec1ca2fe@linaro.org>
-From: Christophe Kerello <christophe.kerello@foss.st.com>
-In-Reply-To: <fbaad3c7-13b7-41a2-a8f6-7036ec1ca2fe@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-13_06,2024-02-12_03,2023-05-22_02
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/urgent
+branch HEAD: d794734c9bbfe22f86686dc2909c25f5ffe1a572  x86/mm/ident_map: Use gbpages only where full GB page should be mapped.
 
+elapsed time: 770m
 
-On 2/13/24 08:34, Krzysztof Kozlowski wrote:
-> On 12/02/2024 18:48, Christophe Kerello wrote:
->> Add MP25 SOC support in stm32_fmc2 drivers:
->>   - Update stm32-fmc2-ebi driver to support FMC2 revision 2 and MP25 SOC.
->>   - Update stm32_fmc2_nand driver to support FMC2 revision 2 and MP25 SOC
-> 
-> Why do you combine memory controller driver and NAND in one patchset if
-> there is no dependency? On any further submissions, please split
-> independent works.
+configs tested: 131
+configs skipped: 148
 
-Hi Krzysztof,
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-NAND driver patch 11 refers to the compatible described for the memory
-controller (so there is a dependency), but anyway, I am going to split
-this patchet.
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240213   gcc  
+arc                   randconfig-002-20240213   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                   randconfig-001-20240213   gcc  
+arm                   randconfig-002-20240213   gcc  
+arm                   randconfig-003-20240213   gcc  
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240213   gcc  
+arm64                 randconfig-002-20240213   gcc  
+arm64                 randconfig-003-20240213   gcc  
+arm64                 randconfig-004-20240213   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240213   gcc  
+csky                  randconfig-002-20240213   gcc  
+hexagon                          allmodconfig   clang
+hexagon                          allyesconfig   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240213   clang
+i386         buildonly-randconfig-002-20240213   gcc  
+i386         buildonly-randconfig-003-20240213   gcc  
+i386         buildonly-randconfig-004-20240213   clang
+i386         buildonly-randconfig-005-20240213   gcc  
+i386         buildonly-randconfig-006-20240213   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240213   clang
+i386                  randconfig-002-20240213   gcc  
+i386                  randconfig-003-20240213   gcc  
+i386                  randconfig-004-20240213   clang
+i386                  randconfig-005-20240213   gcc  
+i386                  randconfig-006-20240213   gcc  
+i386                  randconfig-011-20240213   clang
+i386                  randconfig-012-20240213   gcc  
+i386                  randconfig-013-20240213   gcc  
+i386                  randconfig-014-20240213   gcc  
+i386                  randconfig-015-20240213   gcc  
+i386                  randconfig-016-20240213   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240213   gcc  
+loongarch             randconfig-002-20240213   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240213   gcc  
+nios2                 randconfig-002-20240213   gcc  
+openrisc                         allmodconfig   gcc  
+parisc                randconfig-001-20240213   gcc  
+parisc                randconfig-002-20240213   gcc  
+powerpc                          allyesconfig   clang
+powerpc               randconfig-002-20240213   gcc  
+powerpc               randconfig-003-20240213   gcc  
+powerpc64             randconfig-001-20240213   gcc  
+powerpc64             randconfig-002-20240213   gcc  
+riscv                            allmodconfig   clang
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240213   gcc  
+riscv                 randconfig-002-20240213   gcc  
+s390                              allnoconfig   clang
+s390                                defconfig   clang
+s390                  randconfig-001-20240213   gcc  
+sh                    randconfig-001-20240213   gcc  
+sh                    randconfig-002-20240213   gcc  
+sparc                            allyesconfig   gcc  
+sparc64               randconfig-001-20240213   gcc  
+sparc64               randconfig-002-20240213   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                                  defconfig   clang
+um                    randconfig-002-20240213   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240213   clang
+x86_64       buildonly-randconfig-002-20240213   gcc  
+x86_64       buildonly-randconfig-003-20240213   clang
+x86_64       buildonly-randconfig-004-20240213   gcc  
+x86_64       buildonly-randconfig-005-20240213   gcc  
+x86_64       buildonly-randconfig-006-20240213   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240213   gcc  
+x86_64                randconfig-002-20240213   clang
+x86_64                randconfig-003-20240213   clang
+x86_64                randconfig-004-20240213   gcc  
+x86_64                randconfig-005-20240213   clang
+x86_64                randconfig-006-20240213   clang
+x86_64                randconfig-011-20240213   clang
+x86_64                randconfig-012-20240213   clang
+x86_64                randconfig-013-20240213   clang
+x86_64                randconfig-014-20240213   gcc  
+x86_64                randconfig-015-20240213   clang
+x86_64                randconfig-016-20240213   clang
+x86_64                randconfig-071-20240213   gcc  
+x86_64                randconfig-072-20240213   gcc  
+x86_64                randconfig-073-20240213   clang
+x86_64                randconfig-074-20240213   gcc  
+x86_64                randconfig-075-20240213   gcc  
+x86_64                randconfig-076-20240213   gcc  
+x86_64                          rhel-8.3-func   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                randconfig-001-20240213   gcc  
+xtensa                randconfig-002-20240213   gcc  
 
-Regards,
-Christophe Kerello.
-
-> 
-> Best regards,
-> Krzysztof
-> 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
