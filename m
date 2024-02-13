@@ -1,205 +1,462 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F36E5646B
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 13:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3836556444;
+	Tue, 13 Feb 2024 13:44:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707831752; cv=none; b=TGQ1nO3pfsLP2Kd82Qrh45zB0KaA7qmvQFa5bxHGObDqXSUBNtsBptvaRG5QceAklNeSn5HrYIp2CSA2iVEjeWFZwaL+7i/yF2fIt3gDOMWnEk6qQP+EADzhZUEiqJv0S+xVdvL58F4iUT7rUFFx5KLbDHlwRWW6Z5LYfPMuC/E=
+	t=1707831859; cv=none; b=JqwhRaNfSh6s8+wRu+1pGO8M1Oyggpzl4XewrJBJJGTXSSmqD7RZEmGFTEH2QoaFTMlFXV7iJzVHZN1WDEq0KycdHYGtDvDsiBRdXSVvwaxPQdCRIxmXOhiwJsvE3qvG8RnMJKERVlSBEJNPCMalp08Pzrh8CjqEJZaAu8dq1jI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707831752; c=relaxed/simple;
-	bh=sqU8CWBYCpCtT0WVh42NGFNjFfhjI1FgaTgBLkB7j4c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MPhDDV53Itq0KK1/sf0S22v43JeeG2/FMjvxOesKprNcDA8eJfUazH2tUGrn7kXm1sVrqxnYzyUxsMRydcb7ETdSwLMRx0HkB0GbIktit8ncczHxljMNrX4kP7D6YsdioAp5ZriCGd1+Ai140e3y0EPoENmJXSVcRKZY9uketIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=AR/DDjkn; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="AR/DDjkn"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-5d8b70b39efso3596331a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 05:42:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1707831749; x=1708436549; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wqk9RnAdmzkTU6vK/TdAMH/5ZEvIKD4DovGTx4NMMSE=;
-        b=AR/DDjknVajtlN8kWc4aBj9EnxnpFAeLFSN1eEoyd3R2CKFuPkiTdDTjwVb9plqok5
-         GhoflYKN5j8sPXMLiQEDmErlych/fbN13FcODpcrDC052ZMxULIFC3JIPKaSPWss8YAY
-         Xoij1bntO7QL61pXADBeKgg5peIyBEUae2YZhSPsyEF/lmiDdpAwAogxrHA3QPCCRMlf
-         kzb05OftOJjlDf8pbdgYXG6Eg8hLnMix30K9TP92EEyUjL3DwQL93JJ3dzO3nZx0WBbq
-         28+8g95100L4N38bJ0qrnDpykXuLiOeVIHcEyydWhlB97jEOPsPwi85HyNSQM1DLxc1Q
-         btXA==
+	s=arc-20240116; t=1707831859; c=relaxed/simple;
+	bh=Al+OIDSwr1PRilbCX04+e3dBAlrgqKv7y2SaHw6pOeo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HFWy0X9JtnB75GzJqDFDAGAN44NOwH36cMKLv8LyBv17r0+NUvbmEpq4y19c/t7MlZpuIs1DifjnOhoC/IM53QxMURlqYt7fIdP8lT4ouAct4QnF0KvDW5DgoEGLoFZfYbA05iNMKkVbI4uzOFcTsEtE4Y2kBba03TXqZYhv7F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a3832ef7726so510628266b.0;
+        Tue, 13 Feb 2024 05:44:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707831749; x=1708436549;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Wqk9RnAdmzkTU6vK/TdAMH/5ZEvIKD4DovGTx4NMMSE=;
-        b=tZG+kZpHC9PrrITKeOBVPWzUJ3Jv5pFlrs1qTSVRxpe8hNWXNNHnR6J6IM7jmLC+ni
-         Sd9HkV6W2fKl07U5GXKJ2c73p/xbCEmhKTE6FbLuWg7ASfjeahnWnHPJFVk/YVAA+Ble
-         S7Ytfy33Oeo776yZ7Ltr6LpYHr2Kp7mnq2RFKZgWK7PTcN3f/q7zjGFA02265qKFDmPC
-         LkpeQHCmz8IKofBgrrYtdSE7u9pEmoHNPVceIZNBzfOQ/FIOC46X+pKEBU2pzCXxPi6H
-         fWpJ8Bmwbo6zt2NxqCmRau4OM1I5e6YWnXAXW0oLIRvrixtAlGsufZCqyhQTfxcKqfKc
-         xadA==
-X-Forwarded-Encrypted: i=1; AJvYcCUNw21w4IrBgqcJoaZUlJY/wKF9wnfQOkj9dbAgjo3OHH9XDkt9daH6p7hdVUOdUTFFQF60HwVS7xOAzx0ptJFAvAYJSIEW4WXdaSl/
-X-Gm-Message-State: AOJu0YwDkHAByNO/w8zFCC9TD80+bZrM2n2cyseSJ8YverxiwaO6fekH
-	PEUm/x+aw+pKd5zdiEYFaBYROANKn9DaCyxbvK0IuGft5Q6iuOy/4JuTcmHTvbvlvRQfkm1NPSR
-	RQ5jUmKrfoSoNzNmhc7o7gCFkdLr9SNh68PmBkg==
-X-Google-Smtp-Source: AGHT+IHfkgz90jq0P0pE2m4FPBNOBJy5rQ3Pwm/G10giSDI+WYnSqSkh78viB+HIrt0/DzkXiltUDZW4SKoQlUss6NM=
-X-Received: by 2002:a17:90a:db93:b0:297:fb7:fe1 with SMTP id
- h19-20020a17090adb9300b002970fb70fe1mr5854891pjv.46.1707831749457; Tue, 13
- Feb 2024 05:42:29 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707831855; x=1708436655;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=m5DeZbkSxboHr0pPFTvXpwxDIQjK3BTjbERvjTy55B4=;
+        b=dNu1Jnz5I/ihEUpWiKeiv8AeVnlqrkSc7vrdQL8pF53zb6x1Tjcr6Ez47iX6KzEinH
+         HeKHm/EiWTyU/N5bCigM7NogqiiBl9FpFZiNzhDmim0rgz6ANq94Q3bsC2ekxug8Cd0C
+         AjLKHdW+vklbFI82QKeW9PD7zgyTjqHK/NHwYKIfyTfy1fdbGTJCpyOy+ZGa0pgmHMrL
+         Lq1JwpiBw2Sin/LLXPOTW+ohB1KI69bp7hS9FPVI81gRToiq/FwHzItEPUl+yjWzXg6w
+         K7x2KRnh77geQaLPLiO21JQJhfaX6A+ECYD9XpZAV/h96C6e7Mxnrp8hJj+ENkRRf5Fg
+         G1Wg==
+X-Forwarded-Encrypted: i=1; AJvYcCXPzDoGATLVxdX++HL0ZSJ3MvtGsDjzcCfh9hWVFq3njIPVT9Peu+lm8mc00s1SE8czWzBUjRx2B7K/YlJwK2wrU97oafOtlmZr6bMEuIHxE/EmADUDy3S2J4OT19wni94yGWJZUubyGtQ6yQQ13ZVBQHPisYMr4MoEx3aoUzeA2bzt1RTtgE/9
+X-Gm-Message-State: AOJu0YwR4WpRQAD1NqT8l7k6tauTPEOZdf6Pew9yQ6aUXUPXG7I2o9k4
+	5F+rl2cTFJlvSuqViWbOqKOnlm+XQyu/nb4R8x+ko5xEF6CgpVok
+X-Google-Smtp-Source: AGHT+IGhRZ61SWtdZeHx3ArbCxE2WR8Ny5X4gZF3rPbcSnW/6AZhuYTHDw7z2mgem0HeiZNreS/j4A==
+X-Received: by 2002:a17:906:5002:b0:a38:45fc:1f01 with SMTP id s2-20020a170906500200b00a3845fc1f01mr6545985ejj.45.1707831855252;
+        Tue, 13 Feb 2024 05:44:15 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVAITtL5myEYzIFRohG+uZUnKEBDGOqkFIdmDb8mx2JyWxEiM4777BteOsIwJmVCxBliB3obNq434+d8Vv9rWZTcsUxiJ0c4d0Sn3sJ9nGGyRlXXYqPaS4HzGVMBuUggunBYMxq9p9GGkFWJdQyVVT/2YCDh7B2ACsFlnFMO7YkdkPGJLp1j4B+TRdIyt5U819953D6GYT0Bb7v91BCs83laDJpWk4Dwx7hHszw6aVf+rTINFuGOKRNiCWEdpXMAwruxtgsdOuNMz1MYpIR1E2OISLuZN/O2dsjR24O2kSraWsCE9eE/G/sLUUdAVCsAYnkdN6l5/8W03ijMTFictNvhq7DZZ3hgFS80YWDbIW0wnNvV+fOgY5Rx3F5SdNlrKZEGH3sErnqQcbeZbR1AyInOQuYHiOhTL6fOTkTgGjK6K9ddUG0k1cBsJW2qbQpeE4NacQCZ2C0QO9n/OKh/Hz7V+CgA+TlMoZSrsbwXBp9RcPvjx0lsAyna2Ty9ufaEkRuk3BOa4Hli3DVh+KDFLWAKOxRLBBf0enUTYEiUolCqrXon/A84k4=
+Received: from gmail.com (fwdproxy-lla-004.fbsv.net. [2a03:2880:30ff:4::face:b00c])
+        by smtp.gmail.com with ESMTPSA id n26-20020a170906689a00b00a38620c3b3dsm1296854ejr.198.2024.02.13.05.44.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 05:44:14 -0800 (PST)
+Date: Tue, 13 Feb 2024 05:44:11 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: kuba@kernel.org, davem@davemloft.net, edumazet@google.com,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>, weiwan@google.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	horms@kernel.org, Jonathan Corbet <corbet@lwn.net>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	"open list:TRACING" <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v3] net: dqs: add NIC stall detector based on BQL
+Message-ID: <ZctyK+qpXV/pquei@gmail.com>
+References: <20240202165315.2506384-1-leitao@debian.org>
+ <dc049b1e556ef7b398fb78c01b6e2e693c185273.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130175140.3834889-1-naresh.solanki@9elements.com> <cd84b051-1608-48c0-8335-b038cd236f61@roeck-us.net>
-In-Reply-To: <cd84b051-1608-48c0-8335-b038cd236f61@roeck-us.net>
-From: Naresh Solanki <naresh.solanki@9elements.com>
-Date: Tue, 13 Feb 2024 19:12:19 +0530
-Message-ID: <CABqG17jbOgAHWUemV5=VFKwufuGX_xyheTDETfJtvoOO9UWjvg@mail.gmail.com>
-Subject: Re: [PATCH] hwmon: (pmbus/mp2975) Fix IRQ masking
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Jean Delvare <jdelvare@suse.com>, mazziesaccount@gmail.com, 
-	Patrick Rudolph <patrick.rudolph@9elements.com>, linux-hwmon@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <dc049b1e556ef7b398fb78c01b6e2e693c185273.camel@redhat.com>
 
-Hi Guenter,
-
-
-On Wed, 31 Jan 2024 at 03:30, Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On Tue, Jan 30, 2024 at 11:21:39PM +0530, Naresh Solanki wrote:
-> > From: Patrick Rudolph <patrick.rudolph@9elements.com>
-> >
-> > The MP2971/MP2973 use a custom 16bit register format for
-> > SMBALERT_MASK which doesn't follow the PMBUS specification.
-> >
-> > Map the PMBUS defined bits used by the common code onto the custom
-> > format used by MPS and since the SMBALERT_MASK is currently never read
-> > by common code only implement the mapping for write transactions.
-> >
-> > Signed-off-by: Patrick Rudolph <patrick.rudolph@9elements.com>
-> > Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
+On Tue, Feb 06, 2024 at 12:40:13PM +0100, Paolo Abeni wrote:
+> On Fri, 2024-02-02 at 08:53 -0800, Breno Leitao wrote:
+> > From: Jakub Kicinski <kuba@kernel.org>
+> > 
+> > softnet_data->time_squeeze is sometimes used as a proxy for
+> > host overload or indication of scheduling problems. In practice
+> > this statistic is very noisy and has hard to grasp units -
+> > e.g. is 10 squeezes a second to be expected, or high?
+> > 
+> > Delaying network (NAPI) processing leads to drops on NIC queues
+> > but also RTT bloat, impacting pacing and CA decisions.
+> > Stalls are a little hard to detect on the Rx side, because
+> > there may simply have not been any packets received in given
+> > period of time. Packet timestamps help a little bit, but
+> > again we don't know if packets are stale because we're
+> > not keeping up or because someone (*cough* cgroups)
+> > disabled IRQs for a long time.
+> > 
+> > We can, however, use Tx as a proxy for Rx stalls. Most drivers
+> > use combined Rx+Tx NAPIs so if Tx gets starved so will Rx.
+> > On the Tx side we know exactly when packets get queued,
+> > and completed, so there is no uncertainty.
+> > 
+> > This patch adds stall checks to BQL. Why BQL? Because
+> > it's a convenient place to add such checks, already
+> > called by most drivers, and it has copious free space
+> > in its structures (this patch adds no extra cache
+> > references or dirtying to the fast path).
+> > 
+> > The algorithm takes one parameter - max delay AKA stall
+> > threshold and increments a counter whenever NAPI got delayed
+> > for at least that amount of time. It also records the length
+> > of the longest stall.
+> > 
+> > To be precise every time NAPI has not polled for at least
+> > stall thrs we check if there were any Tx packets queued
+> > between last NAPI run and now - stall_thrs/2.
+> > 
+> > Unlike the classic Tx watchdog this mechanism does not
+> > ignore stalls caused by Tx being disabled, or loss of link.
+> > I don't think the check is worth the complexity, and
+> > stall is a stall, whether due to host overload, flow
+> > control, link down... doesn't matter much to the application.
+> > 
+> > We have been running this detector in production at Meta
+> > for 2 years, with the threshold of 8ms. It's the lowest
+> > value where false positives become rare. There's still
+> > a constant stream of reported stalls (especially without
+> > the ksoftirqd deferral patches reverted), those who like
+> > their stall metrics to be 0 may prefer higher value.
+> > 
+> > Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
 > > ---
-> >  drivers/hwmon/pmbus/mp2975.c | 57 ++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 57 insertions(+)
-> >
-> >
-> > base-commit: 909d8d33f8b4664c9b6c7fd585114921af77fc2b
-> >
-> > diff --git a/drivers/hwmon/pmbus/mp2975.c b/drivers/hwmon/pmbus/mp2975.c
-> > index b9bb469e2d8f..788ec2c5a45f 100644
-> > --- a/drivers/hwmon/pmbus/mp2975.c
-> > +++ b/drivers/hwmon/pmbus/mp2975.c
-> > @@ -377,6 +377,62 @@ static int mp2973_read_word_data(struct i2c_client *client, int page,
-> >       return ret;
+> > Changelog:
+> > 
+> > v1:
+> >   * https://lore.kernel.org/netdev/202306172057.jx7YhLiu-lkp@intel.com/T/
+> > 
+> > v2:
+> >   * Fix the documentation file in patch 0001, since patch 0002 will
+> >     touch it later.
+> >   * Fix the kernel test robot issues, marking functions as statics.
+> >   * Use #include <linux/bitops.h> instead of <asm/bitops.h>.
+> >   * Added some new comments around, mainly around barriers.
+> >   * Format struct `netdev_queue_attribute` assignments to make
+> >     checkpatch happy.
+> >   * Updated and fixed the path in sysfs-class-net-queues
+> >     documentation.
+> > 
+> > v3:
+> >   * Sending patch 0002 against net-next.
+> > 	- The first patch was accepted against 'net'
+> > 
+> > ---
+> >  .../ABI/testing/sysfs-class-net-queues        | 23 +++++++
+> >  include/linux/dynamic_queue_limits.h          | 35 +++++++++++
+> >  include/trace/events/napi.h                   | 33 ++++++++++
+> >  lib/dynamic_queue_limits.c                    | 58 +++++++++++++++++
+> >  net/core/net-sysfs.c                          | 62 +++++++++++++++++++
+> >  5 files changed, 211 insertions(+)
+> > 
+> > diff --git a/Documentation/ABI/testing/sysfs-class-net-queues b/Documentation/ABI/testing/sysfs-class-net-queues
+> > index 5bff64d256c2..45bab9b6e3ae 100644
+> > --- a/Documentation/ABI/testing/sysfs-class-net-queues
+> > +++ b/Documentation/ABI/testing/sysfs-class-net-queues
+> > @@ -96,3 +96,26 @@ Description:
+> >  		Indicates the absolute minimum limit of bytes allowed to be
+> >  		queued on this network device transmit queue. Default value is
+> >  		0.
+> > +
+> > +What:		/sys/class/net/<iface>/queues/tx-<queue>/byte_queue_limits/stall_thrs
+> > +Date:		Jan 2024
+> > +KernelVersion:	6.9
+> > +Contact:	netdev@vger.kernel.org
+> > +Description:
+> > +		Tx completion stall detection threshold. 
+> 
+> Possibly worth mentioning it's in milliseconds
+> 
+> > Kernel will guarantee
+> > +		to detect all stalls longer than this threshold but may also
+> > +		detect stalls longer than half of the threshold.
+> > +
+> > +What:		/sys/class/net/<iface>/queues/tx-<queue>/byte_queue_limits/stall_cnt
+> > +Date:		Jan 2024
+> > +KernelVersion:	6.9
+> > +Contact:	netdev@vger.kernel.org
+> > +Description:
+> > +		Number of detected Tx completion stalls.
+> > +
+> > +What:		/sys/class/net/<iface>/queues/tx-<queue>/byte_queue_limits/stall_max
+> > +Date:		Jan 2024
+> > +KernelVersion:	6.9
+> > +Contact:	netdev@vger.kernel.org
+> > +Description:
+> > +		Longest detected Tx completion stall. Write 0 to clear.
+> > diff --git a/include/linux/dynamic_queue_limits.h b/include/linux/dynamic_queue_limits.h
+> > index 407c2f281b64..288e98fe85f0 100644
+> > --- a/include/linux/dynamic_queue_limits.h
+> > +++ b/include/linux/dynamic_queue_limits.h
+> > @@ -38,14 +38,21 @@
+> >  
+> >  #ifdef __KERNEL__
+> >  
+> > +#include <linux/bitops.h>
+> >  #include <asm/bug.h>
+> >  
+> > +#define DQL_HIST_LEN		4
+> > +#define DQL_HIST_ENT(dql, idx)	((dql)->history[(idx) % DQL_HIST_LEN])
+> > +
+> >  struct dql {
+> >  	/* Fields accessed in enqueue path (dql_queued) */
+> >  	unsigned int	num_queued;		/* Total ever queued */
+> >  	unsigned int	adj_limit;		/* limit + num_completed */
+> >  	unsigned int	last_obj_cnt;		/* Count at last queuing */
+> >  
+> > +	unsigned long	history_head;
+> > +	unsigned long	history[DQL_HIST_LEN];
+> > +
+> >  	/* Fields accessed only by completion path (dql_completed) */
+> >  
+> >  	unsigned int	limit ____cacheline_aligned_in_smp; /* Current limit */
+> > @@ -62,6 +69,11 @@ struct dql {
+> >  	unsigned int	max_limit;		/* Max limit */
+> >  	unsigned int	min_limit;		/* Minimum limit */
+> >  	unsigned int	slack_hold_time;	/* Time to measure slack */
+> > +
+> > +	unsigned char	stall_thrs;
+> > +	unsigned char	stall_max;
+> 
+> Why don't 'unsigned short'? 
+
+Yes, it seems fine for me.
+
+> 
+> 
+> > +	unsigned long	last_reap;
+> > +	unsigned long	stall_cnt;
+> >  };
+> >  
+> >  /* Set some static maximums */
+> > @@ -74,6 +86,8 @@ struct dql {
+> >   */
+> >  static inline void dql_queued(struct dql *dql, unsigned int count)
+> >  {
+> > +	unsigned long map, now, now_hi, i;
+> > +
+> >  	BUG_ON(count > DQL_MAX_OBJECT);
+> >  
+> >  	dql->last_obj_cnt = count;
+> > @@ -86,6 +100,27 @@ static inline void dql_queued(struct dql *dql, unsigned int count)
+> >  	barrier();
+> >  
+> >  	dql->num_queued += count;
+> > +
+> > +	now = jiffies;
+> > +	now_hi = now / BITS_PER_LONG;
+> > +	if (unlikely(now_hi != dql->history_head)) {
+> > +		/* About to reuse slots, clear them */
+> > +		for (i = 0; i < DQL_HIST_LEN; i++) {
+> > +			/* Multiplication masks high bits */
+> > +			if (now_hi * BITS_PER_LONG ==
+> > +			    (dql->history_head + i) * BITS_PER_LONG)
+> > +				break;
+> > +			DQL_HIST_ENT(dql, dql->history_head + i + 1) = 0;
+> > +		}
+> > +		/* pairs with smp_rmb() in dql_check_stall() */
+> > +		smp_wmb();
+> > +		WRITE_ONCE(dql->history_head, now_hi);
+> > +	}
+> > +
+> > +	/* __set_bit() does not guarantee WRITE_ONCE() semantics */
+> > +	map = DQL_HIST_ENT(dql, now_hi);
+> > +	if (!(map & BIT_MASK(now)))
+> > +		WRITE_ONCE(DQL_HIST_ENT(dql, now_hi), map | BIT_MASK(now));
+> 
+> Do you have measure of performance impact, if any? e.g. for udp
+> flood/pktgen/xdp tput tests with extreme pkt rate?
+
+I've looked at our Meta Internal profiler, if that helps. Currently Meta has this feature
+enabled in every machine.
+
+In the profiler, the only function that shows up in the profiler is dql_completed(),
+which consumes 0.00204% of all kernel cycles. Does it help?
+
+
+> What about making all the above conditional to a non zero stall_thrs,
+> alike the check part?
+
+Makes sense, I will update.
+
 > >  }
-> >
-> > +static int mp2973_write_word_data(struct i2c_client *client, int page,
-> > +                               int reg, u16 word)
+> >  
+> >  /* Returns how many objects can be queued, < 0 indicates over limit. */
+> > diff --git a/include/trace/events/napi.h b/include/trace/events/napi.h
+> > index 6678cf8b235b..272112ddaaa8 100644
+> > --- a/include/trace/events/napi.h
+> > +++ b/include/trace/events/napi.h
+> > @@ -36,6 +36,39 @@ TRACE_EVENT(napi_poll,
+> >  		  __entry->work, __entry->budget)
+> >  );
+> >  
+> > +TRACE_EVENT(dql_stall_detected,
+> > +
+> > +	TP_PROTO(unsigned int thrs, unsigned int len,
+> > +		 unsigned long last_reap, unsigned long hist_head,
+> > +		 unsigned long now, unsigned long *hist),
+> > +
+> > +	TP_ARGS(thrs, len, last_reap, hist_head, now, hist),
+> > +
+> > +	TP_STRUCT__entry(
+> > +		__field(	unsigned int,		thrs)
+> > +		__field(	unsigned int,		len)
+> > +		__field(	unsigned long,		last_reap)
+> > +		__field(	unsigned long,		hist_head)
+> > +		__field(	unsigned long,		now)
+> > +		__array(	unsigned long,		hist, 4)
+> > +	),
+> > +
+> > +	TP_fast_assign(
+> > +		__entry->thrs = thrs;
+> > +		__entry->len = len;
+> > +		__entry->last_reap = last_reap;
+> > +		__entry->hist_head = hist_head * BITS_PER_LONG;
+> > +		__entry->now = now;
+> > +		memcpy(__entry->hist, hist, sizeof(entry->hist));
+> > +	),
+> > +
+> > +	TP_printk("thrs %u  len %u  last_reap %lu  hist_head %lu  now %lu  hist %016lx %016lx %016lx %016lx",
+> > +		  __entry->thrs, __entry->len,
+> > +		  __entry->last_reap, __entry->hist_head, __entry->now,
+> > +		  __entry->hist[0], __entry->hist[1],
+> > +		  __entry->hist[2], __entry->hist[3])
+> > +);
+> > +
+> >  #undef NO_DEV
+> >  
+> >  #endif /* _TRACE_NAPI_H */
+> > diff --git a/lib/dynamic_queue_limits.c b/lib/dynamic_queue_limits.c
+> > index fde0aa244148..162d30ae542c 100644
+> > --- a/lib/dynamic_queue_limits.c
+> > +++ b/lib/dynamic_queue_limits.c
+> > @@ -10,10 +10,61 @@
+> >  #include <linux/dynamic_queue_limits.h>
+> >  #include <linux/compiler.h>
+> >  #include <linux/export.h>
+> > +#include <trace/events/napi.h>
+> >  
+> >  #define POSDIFF(A, B) ((int)((A) - (B)) > 0 ? (A) - (B) : 0)
+> >  #define AFTER_EQ(A, B) ((int)((A) - (B)) >= 0)
+> >  
+> > +static void dql_check_stall(struct dql *dql)
 > > +{
-> > +     u8 target, mask;
-> > +     int ret;
+> > +	unsigned long stall_thrs, now;
 > > +
-> > +     if (reg != PMBUS_SMBALERT_MASK)
-> > +             return -ENODATA;
+> > +	/* If we detect a stall see if anything was queued */
+> > +	stall_thrs = READ_ONCE(dql->stall_thrs);
+> > +	if (!stall_thrs)
+> > +		return;
 > > +
-> > +     /*
-> > +      * Vendor-specific SMBALERT_MASK register with 16 maskable bits.
-> > +      */
-> > +     ret = pmbus_read_word_data(client, 0, 0, PMBUS_SMBALERT_MASK);
-> > +     if (ret < 0)
-> > +             return ret;
+> > +	now = jiffies;
+> > +	if (time_after_eq(now, dql->last_reap + stall_thrs)) {
+> > +		unsigned long hist_head, t, start, end;
 > > +
-> > +     target = word & 0xff;
-> > +     mask = word >> 8;
+> > +		/* We are trying to detect a period of at least @stall_thrs
+> > +		 * jiffies without any Tx completions, but during first half
+> > +		 * of which some Tx was posted.
+> > +		 */
+> > +dqs_again:
+> > +		hist_head = READ_ONCE(dql->history_head);
+> > +		/* pairs with smp_wmb() in dql_queued() */
+> > +		smp_rmb();
+> > +		/* oldest sample since last reap */
+> > +		start = (hist_head - DQL_HIST_LEN + 1) * BITS_PER_LONG;
+> > +		if (time_before(start, dql->last_reap + 1))
+> > +			start = dql->last_reap + 1;
+> > +		/* newest sample we should have already seen a completion for */
+> > +		end = hist_head * BITS_PER_LONG + (BITS_PER_LONG - 1);
+> > +		if (time_before(now, end + stall_thrs / 2))
+> > +			end = now - stall_thrs / 2;
 > > +
-> > +#define SWAP(cond, bit) (ret = (cond) ? (ret & ~BIT(bit)) : (ret | BIT(bit)))
->
-> This isn't really a "SWAP", but setting or clearing of bits in "ret"
-> depending on a bit set in "cond". I don't have a good idea for a
-> better name, but either case I think a comment describing what it
-> does would be useful.
-Yes. will add below comment
-/*
- * Set/Clear 'bit' in 'ret' based on condition
- */
->
-> "ret" use is implied, but "mask" is always provided as parameter.
-> Please either provide both as arguments, or make both implied.
-Sure. Will update as:
-#define SWAP(cond, bit) ret = (mask & cond) ? (ret & ~BIT(bit)) : (ret
-| BIT(bit))
+> > +		for (t = start; time_before_eq(t, end); t++)
+> > +			if (test_bit(t % (DQL_HIST_LEN * BITS_PER_LONG),
+> > +				     dql->history))
+> > +				break;
+> > +		if (!time_before_eq(t, end))
+> > +			goto no_stall;
+> > +		if (hist_head != READ_ONCE(dql->history_head))
+> > +			goto dqs_again;
+> > +
+> > +		dql->stall_cnt++;
+> > +		dql->stall_max = max_t(unsigned int, dql->stall_max, now - t);
+> > +
+> > +		trace_dql_stall_detected(dql->stall_thrs, now - t,
+> > +					 dql->last_reap, dql->history_head,
+> > +					 now, dql->history);
+> > +	}
+> > +no_stall:
+> > +	dql->last_reap = now;
+> > +}
+> > +
+> >  /* Records completed count and recalculates the queue limit */
+> >  void dql_completed(struct dql *dql, unsigned int count)
+> >  {
+> > @@ -110,6 +161,8 @@ void dql_completed(struct dql *dql, unsigned int count)
+> >  	dql->prev_last_obj_cnt = dql->last_obj_cnt;
+> >  	dql->num_completed = completed;
+> >  	dql->prev_num_queued = num_queued;
+> > +
+> > +	dql_check_stall(dql);
+> >  }
+> >  EXPORT_SYMBOL(dql_completed);
+> >  
+> > @@ -125,6 +178,10 @@ void dql_reset(struct dql *dql)
+> >  	dql->prev_ovlimit = 0;
+> >  	dql->lowest_slack = UINT_MAX;
+> >  	dql->slack_start_time = jiffies;
+> > +
+> > +	dql->last_reap = jiffies;
+> > +	dql->history_head = jiffies / BITS_PER_LONG;
+> > +	memset(dql->history, 0, sizeof(dql->history));
+> >  }
+> >  EXPORT_SYMBOL(dql_reset);
+> >  
+> > @@ -133,6 +190,7 @@ void dql_init(struct dql *dql, unsigned int hold_time)
+> >  	dql->max_limit = DQL_MAX_LIMIT;
+> >  	dql->min_limit = 0;
+> >  	dql->slack_hold_time = hold_time;
+> > +	dql->stall_thrs = 0;
+> >  	dql_reset(dql);
+> >  }
+> >  EXPORT_SYMBOL(dql_init);
+> > diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+> > index a09d507c5b03..94a622b0bb55 100644
+> > --- a/net/core/net-sysfs.c
+> > +++ b/net/core/net-sysfs.c
+> > @@ -1409,6 +1409,65 @@ static struct netdev_queue_attribute bql_hold_time_attribute __ro_after_init
+> >  	= __ATTR(hold_time, 0644,
+> >  		 bql_show_hold_time, bql_set_hold_time);
+> >  
+> > +static ssize_t bql_show_stall_thrs(struct netdev_queue *queue, char *buf)
+> > +{
+> > +	struct dql *dql = &queue->dql;
+> > +
+> > +	return sprintf(buf, "%u\n", jiffies_to_msecs(dql->stall_thrs));
+> > +}
+> > +
+> > +static ssize_t bql_set_stall_thrs(struct netdev_queue *queue,
+> > +				  const char *buf, size_t len)
+> > +{
+> > +	struct dql *dql = &queue->dql;
+> > +	unsigned int value;
+> > +	int err;
+> > +
+> > +	err = kstrtouint(buf, 10, &value);
+> > +	if (err < 0)
+> > +		return err;
+> > +
+> > +	value = msecs_to_jiffies(value);
+> > +	if (value && (value < 4 || value > 4 / 2 * BITS_PER_LONG))
+> 
+> I admit I'm more than a bit lost with constant usage.. why 4/2 here?
 
->
-> Also, the first parameter is a bit mask, while the second parameter
-> is a bit position. Please used defines for the second parameter
-> and make it a mask as well.
-Sure will be adding defines for second parameter as well.
-#define MP2973_INVALID_DATA     8
-#define MP2973_INVALID_COMMAND  9
-#define MP2973_OTHER_COMM       5
-#define MP2973_PACKET_ERROR     7
-#define MP2973_VOLTAGE_UV       13
-#define MP2973_VOLTAGE_OV       14
-#define MP2973_IOUT_OC          11
-#define MP2973_IOUT_OC_LV       10
-#define MP2973_TEMP_OT          0
+4 in this case is DQL_HIST_LEN, so, it needs to be updated.
 
->
-> > +     switch (target) {
-> > +     case PMBUS_STATUS_CML:
-> > +             SWAP(mask & PB_CML_FAULT_INVALID_DATA, 8);
-> > +             SWAP(mask & PB_CML_FAULT_INVALID_COMMAND,  9);
-> > +             SWAP(mask & PB_CML_FAULT_OTHER_COMM, 5);
-> > +             SWAP(mask & PB_CML_FAULT_PACKET_ERROR, 7);
-> > +             break;
-> > +     case PMBUS_STATUS_VOUT:
-> > +             SWAP(mask & PB_VOLTAGE_UV_FAULT, 13);
-> > +             SWAP(mask & PB_VOLTAGE_OV_FAULT, 14);
-> > +             break;
-> > +     case PMBUS_STATUS_IOUT:
-> > +             SWAP(mask & PB_IOUT_OC_FAULT, 11);
-> > +             SWAP(mask & PB_IOUT_OC_LV_FAULT, 10);
-> > +             break;
-> > +     case PMBUS_STATUS_TEMPERATURE:
-> > +             SWAP(mask & PB_TEMP_OT_FAULT, 0);
-> > +             break;
-> > +     /*
-> > +      * Map remaining bits to MFR specific to let the PMBUS core mask
-> > +      * those bits by default.
-> > +      */
-> > +     case PMBUS_STATUS_MFR_SPECIFIC:
-> > +             SWAP(mask & BIT(1), 1);
-> > +             SWAP(mask & BIT(3), 3);
-> > +             SWAP(mask & BIT(4), 4);
-> > +             SWAP(mask & BIT(6), 6);
-> > +             break;
->
-> Coming back to using defines for the second parameter: The
-> above bit positions appear to be purely random. Having defines for
-> those bits will at least explain what is being masked (and hopefully
-> explain why bit 2, 12, and 15 are not covered at all).
-> For example, at least one other chip from the same vendor defines
-> bit 6 as CRC_ERROR, and the matching status register bit is bit
-> 4 (memory fault detected) in STATUS_CML. Also, it is unclear why
-> the chip would not issue any alerts when warning limits are exceeded.
-> Without knowing what the bits in SMBALERT_MASK mean it is impossible
-> to validate if the above is correct and/or complete.
-Agree. Bit 2 & 15 are reserved & will add a comment to mention that.
-For others, I will add #define as below..
-#define MP2973_VIN_UVLO         1
-#define MP2973_VIN_OVP          3
-#define MP2973_MTP_FAULT        4
-#define MP2973_MTP_BLK_TRIG     6
-#define MP2973_VOUT_MAX_MIN_WARNING 12
+> Perhaps some more comments describing the implement logic would be
+> helpful.
 
-Regards,
-Naresh
->
-> Thanks,
-> Guenter
+Agree, Let me work on it.
+
