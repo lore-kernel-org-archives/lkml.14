@@ -1,177 +1,170 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C55458222
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 14:22:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9704A5787C
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 14:22:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707834157; cv=none; b=KZ5WLwYc4uSd4G7WDTlVR/7db+q5cnMWXV+tKc6R8Jp4Bc8Pu0ThWNTILgJSSoK5V9AtphN4EiyrBJgcrmJJHu5AHhZuH/N0AZhA0Yf4Ejf7tGVX5Oq0DSedpweUmPXfxDYyWJN/9sBmlRrzTUDYlVCWFRSR22VPZdhnZjZfSbw=
+	t=1707834169; cv=none; b=n6DM14ROpMEy4SUw4WueKeRDtIDjxj3Zjcl8EEZ6ofW+N8H2YeCK4RwJK8udAraBd6d8ARH+djo1sppCK4aMliqgmCFRBu41/wfJ8V4XnzqT75So0UiynawK40L2VDggkD3jQQYQ7RV69hhZ1Syj1PlfpttOfKszfDGjxInTEMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707834157; c=relaxed/simple;
-	bh=cGDhgb9JjmXcz1B7VT0bk/gyC+uEs/PtygXq4+otMW8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Mx9tB5TKypsDWfHEJxWY8QRnXgr0qNYLIu4p3S9JSOjRdg6ZRI+jF1oBm85r/7dbjynNlEzvN1MVZZAK/cczkRj8bRqOfHwy2mv135PA2gNQCso5jhdF6lF2vaA4YxTJC2SSoagU4LaSGioQNXYeNIvOcu02GbojQYu9KmJAMbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=TP/yR7VR; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
+	s=arc-20240116; t=1707834169; c=relaxed/simple;
+	bh=J43zOcElWg4UxeJmgC3Ghm7RwJqXsIj/fnaTglFh3OM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uKHEjr+QzMc/3XeZoSZdPEcJpajGIVnWayJHzlKHu5c3ug9fq3eUB0gX8TX9zA8oQuidFnFZ72Zoo3Vi4thIsX0uxFuhQRj6A9DoJL/N8Dlc9IxBc89ebIdN0f8IOVi9aES+8gQ/znenhjOX/0LkNPpOHKEmL0PZU7vBC5u8pPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=A50BY/KL; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="TP/yR7VR"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a28a6cef709so596957366b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 06:22:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="A50BY/KL"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6e06c06c0f6so3104732b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 06:22:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1707834154; x=1708438954; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FCYSTKoBxU4qe92Ir9ZfO3GMV6uHY4MYfHL/wqf2edA=;
-        b=TP/yR7VRXLPX0OG5HSbNrYzroOXb7VcjRpJDaRdrn9WIW/OUGhkdvYsI95ApApjX8l
-         tUlKoi4/YCSAmMW+qe86UQTyY9TynLLj923Qzl0JL5QiznNdlv8YEv3sauq3EgPeJhlE
-         MCMwwOP7eFLKFg8HKYD34hvDoA1SfOdn8fa8l0rEjSRBu0hZ2ZOQTuyofct24v81YNXC
-         N1qYxTmqte1Vw6lJSucgipRSFi6am6F98gxUEA5fdT3EIvkDdks1iLo6/L7HKnqO7LIP
-         tewCHKb01eiYaP1Ir3UnC0mHlxzhCRHyEq0BcZov3b+qFFXpiJ01agQQqWSHzfCqARJb
-         gWTQ==
+        d=bytedance.com; s=google; t=1707834166; x=1708438966; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yoOD+hWlWE/17i8/Lqi/FjvHCDIa9+g3UCcdDeLmuOw=;
+        b=A50BY/KL4b6dh4Mz4G1R+ofttwZRGYdSaENw5ZUW6Gc+/C0d2VV/9cxDQqwgsP7gPG
+         g8CY+6UMenxzcUKLQXwzsjBZhkFPgNDOMtZ5BdMN7Lu08ARKnyQDX0mkU5FnduT72FT8
+         2wDGDVFOTfaWNDaP7EF4HZkTaUeT4Ru1j1GF7Z0jxPeh+xnVmC7kQwigUrFoHxB3nNty
+         CZSgfe8krYlptz+6mZHUYCqqQpJA14yowmauggkWwtB+qNidZTTDpr+XlyXkuK1i+MLU
+         iww1gs2d2Kahwz2AqINJhcqGWKbYli6ziLG7onLibWIoaervDpu+UFOInIM28Y5JsoEM
+         k4UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707834154; x=1708438954;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FCYSTKoBxU4qe92Ir9ZfO3GMV6uHY4MYfHL/wqf2edA=;
-        b=vDqi3wK3ZqNiHQuKzYMwWUKY5xvDg43WMxGlkhYPMFrx8mzDz2yRmIFVt2xHEF9lI8
-         e5A1NnfWqjOEyGM6NGCw6n4tY7pNWrSR/C5Nr5zm+XuNWJjuUMen9zCrTD6bNpacQ3AL
-         8jIcr1+wqE3hBYu5YKCHSkCJpV0UEngs4XxsuiUCUJX7cBIfodTVQrJSE7SfrA36JAAX
-         eoduzZK8Hjd5rc+/uTL0TQ6PWuwAX5Pr01oZtU1kOBV/mkDuD2igSD84RH7yF8DKcm5l
-         4ADqZDuRYjh2bmhm5oGU7tCI1++ZfHwD2xXqbGWnswjovkNpHOKeN4YHRAKpwy1jezBY
-         1Vgg==
-X-Forwarded-Encrypted: i=1; AJvYcCUgf1BF8K0PmO/a+0vX2sBXPoxnBKmmmG0cX4HLo/THP5EQ8jGHMkaufsK3DaYgniCQoFipYkxHVHxUXioNMdAOMfiWHfzbGT0xkudZ
-X-Gm-Message-State: AOJu0YzCCqz4mjWU1SZ+9YKK9SZDjaS2GoHJsMXCGwWuxfk5phQ+52h1
-	f70SGJ2dA76Zbiz/QXMMrbzup2nF1JZxybCVWrlHwwWhQ9CsUYykpvZXaZj1x0f/b5bzd/JmjQE
-	M
-X-Google-Smtp-Source: AGHT+IHAm5yBpKrrKAQM0NVFE3L0ONc7OAUE4TZQLYXUEswIWkYHS4muNrhIi6ltgFhBibdGbdKPkg==
-X-Received: by 2002:a17:906:8417:b0:a38:7541:36f6 with SMTP id n23-20020a170906841700b00a38754136f6mr7924946ejx.21.1707834154387;
-        Tue, 13 Feb 2024 06:22:34 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW+2fap3g67K+xlSpRgqPTfNeRFPdzmmy/1Sx9FWajc48LBob+MvxXHOnI+Ei/e5oZegJo4x8nh8raGGIC4NyDVAx/TYdDm0DRRf/MIBxmzzQinnbYgCdihQfg11itAXNObnDMKWMSuRULKdzFPimF/I4XLscPtOntuY5iyXPD/3VYuNrAhtJgFBfUD7FNQj68SO6a8UkPfoyzmqyVewj1cCfsgkh+Ows8ZsjYy2jsw6TiVd6Yixmb9ZLRB
-Received: from stroh80.sec.9e.network (ip-078-094-000-051.um19.pools.vodafone-ip.de. [78.94.0.51])
-        by smtp.gmail.com with ESMTPSA id lu1-20020a170906fac100b00a3c97e49bc9sm1322671ejb.218.2024.02.13.06.22.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 06:22:33 -0800 (PST)
-From: Naresh Solanki <naresh.solanki@9elements.com>
-To: Peter Rosin <peda@axentia.se>
-Cc: mazziesaccount@gmail.com,
-	Patrick Rudolph <patrick.rudolph@9elements.com>,
-	Naresh Solanki <naresh.solanki@9elements.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 2/2] i2c: muxes: pca954x: Enable features on MAX7357
-Date: Tue, 13 Feb 2024 19:52:27 +0530
-Message-ID: <20240213142228.2146218-2-naresh.solanki@9elements.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240213142228.2146218-1-naresh.solanki@9elements.com>
-References: <20240213142228.2146218-1-naresh.solanki@9elements.com>
+        d=1e100.net; s=20230601; t=1707834166; x=1708438966;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yoOD+hWlWE/17i8/Lqi/FjvHCDIa9+g3UCcdDeLmuOw=;
+        b=O0MDDlIenxcRHWYNFHlzVinOiIuTZlkFt5xs9sLycwpRQXeZ5pwvCAayMODksPUTLD
+         Ib+8vqziLvN5JwRwy+ydq9PltjA2DUqs7uqZUFdEvc5loL0AHRkutUMF89ofU7XRuRyc
+         5HxCKzzFN+BkWoZZoXFv12IPZb7OtpTJ9ri7QD3GxR2+8gvZI9mgY/8FfN2yP3SFEXfZ
+         +jCLPucREo6GsFoSvQyVSiAu7dDIelMdDECqNjKE+PLBvuGMVx80XoX8DVqFxYtRg0ux
+         SJnOny8qjWKZIu00ZX/qRMNOqz204M67VX6jXzp1kgzh8fvGxD1o3JAZpyCVJ2d38b4V
+         GL5w==
+X-Forwarded-Encrypted: i=1; AJvYcCWzDDSAYYwjAoU3pT+ls5cEg7C7egrbAaBOb0chiJItRhBoUDV8mcRPpnF9hvWaZGj/Y1tNKr1eaIzT3qCvHenM5SMgF0LUuB5U1ihI
+X-Gm-Message-State: AOJu0Yy/rQ1nT9cgRCOopEej6NGwoUzwtECo4gJZJY8+dz7b+/zZ9AKo
+	V6MyK3Jh2/yFXQ+XZKK44/hRtcquqEs5ZIeWCdxrLPeXBXlBwHmZFHrl54vr/p8=
+X-Google-Smtp-Source: AGHT+IHFb+hFkNqYKVSW8GLr5IBYjAxPORH03FsRoQfyMkPGmpev9pa2Jb48PJVDq1OtWR9Q55jyUg==
+X-Received: by 2002:a05:6a21:998a:b0:19e:c985:f9f3 with SMTP id ve10-20020a056a21998a00b0019ec985f9f3mr3105250pzb.12.1707834166638;
+        Tue, 13 Feb 2024 06:22:46 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUmez5g8ORnZeCquaDa/pZEmHRpwGrwjXKMqaErxTDvZ007StaGvM1GQU14+e8TOcPHNYo8vnAQxxwDsyhXkEMqPooTRUEWiHvamrONe/ICFwtA5koW1vrBLKNFMFgEWPsCCODQp5o9DiKVbZddgoFbhlflFzPlz/jchblMgiunfp2N+C5zPMSOcT8u
+Received: from [10.254.125.113] ([139.177.225.244])
+        by smtp.gmail.com with ESMTPSA id ca29-20020a056a02069d00b005cf5cbac29asm2142042pgb.53.2024.02.13.06.22.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Feb 2024 06:22:46 -0800 (PST)
+Message-ID: <e4f3acd9-88a4-428a-8f66-1486037c35f9@bytedance.com>
+Date: Tue, 13 Feb 2024 22:22:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] mm/zswap: change zswap_pool kref to percpu_ref
+Content-Language: en-US
+To: Nhat Pham <nphamcs@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Yosry Ahmed <yosryahmed@google.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240210-zswap-global-lru-v1-0-853473d7b0da@bytedance.com>
+ <20240210-zswap-global-lru-v1-2-853473d7b0da@bytedance.com>
+ <CAKEwX=MCkhH2Qa2+dGErpo2e_27=HyyVeEDWVO=+O6D-7mRQ1Q@mail.gmail.com>
+ <900cd5da-da96-4107-b5f0-c7d975a8ba97@bytedance.com>
+ <CAKEwX=PtOWJ3=dur30sPBmhrAemPcoEQqJkOXCo8=XQLqO1Fvw@mail.gmail.com>
+From: Chengming Zhou <zhouchengming@bytedance.com>
+In-Reply-To: <CAKEwX=PtOWJ3=dur30sPBmhrAemPcoEQqJkOXCo8=XQLqO1Fvw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Patrick Rudolph <patrick.rudolph@9elements.com>
+On 2024/2/13 02:53, Nhat Pham wrote:
+> On Mon, Feb 12, 2024 at 5:29 AM Chengming Zhou
+> <zhouchengming@bytedance.com> wrote:
+>>
+>> On 2024/2/12 05:21, Nhat Pham wrote:
+>>> On Sun, Feb 11, 2024 at 5:58 AM Chengming Zhou
+>>> <zhouchengming@bytedance.com> wrote:
+>>>>
+>>>> All zswap entries will take a reference of zswap_pool when
+>>>> zswap_store(), and drop it when free. Change it to use the
+>>>> percpu_ref is better for scalability performance.
+>>>>
+>>>> Testing kernel build in tmpfs with memory.max=2GB
+>>>> (zswap shrinker and writeback enabled with one 50GB swapfile).
+>>>>
+>>>>         mm-unstable  zswap-global-lru
+>>>> real    63.20        63.12
+>>>> user    1061.75      1062.95
+>>>> sys     268.74       264.44
+>>>>
+>>>> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+>>>> ---
+>>>>  mm/zswap.c | 30 +++++++++++++++++++++---------
+>>>>  1 file changed, 21 insertions(+), 9 deletions(-)
+>>>>
+>>>> diff --git a/mm/zswap.c b/mm/zswap.c
+>>>> index 7668db8c10e3..afb31904fb08 100644
+>>>> --- a/mm/zswap.c
+>>>> +++ b/mm/zswap.c
+>>>> @@ -173,7 +173,7 @@ struct crypto_acomp_ctx {
+>>>>  struct zswap_pool {
+>>>>         struct zpool *zpools[ZSWAP_NR_ZPOOLS];
+>>>>         struct crypto_acomp_ctx __percpu *acomp_ctx;
+>>>> -       struct kref kref;
+>>>> +       struct percpu_ref ref;
+>>>>         struct list_head list;
+>>>>         struct work_struct release_work;
+>>>>         struct hlist_node node;
+>>>> @@ -303,6 +303,7 @@ static void zswap_update_total_size(void)
+>>>>  /*********************************
+>>>>  * pool functions
+>>>>  **********************************/
+>>>> +static void __zswap_pool_empty(struct percpu_ref *ref);
+>>>>
+>>>>  static struct zswap_pool *zswap_pool_create(char *type, char *compressor)
+>>>>  {
+>>>> @@ -356,13 +357,18 @@ static struct zswap_pool *zswap_pool_create(char *type, char *compressor)
+>>>>         /* being the current pool takes 1 ref; this func expects the
+>>>>          * caller to always add the new pool as the current pool
+>>>>          */
+>>>> -       kref_init(&pool->kref);
+>>>> +       ret = percpu_ref_init(&pool->ref, __zswap_pool_empty,
+>>>> +                             PERCPU_REF_ALLOW_REINIT, GFP_KERNEL);
+>>>> +       if (ret)
+>>>> +               goto ref_fail;
+>>>>         INIT_LIST_HEAD(&pool->list);
+>>>>
+>>>>         zswap_pool_debug("created", pool);
+>>>>
+>>>>         return pool;
+>>>>
+>>>> +ref_fail:
+>>>> +       cpuhp_state_remove_instance(CPUHP_MM_ZSWP_POOL_PREPARE, &pool->node);
+>>>>  error:
+>>>>         if (pool->acomp_ctx)
+>>>>                 free_percpu(pool->acomp_ctx);
+>>>> @@ -435,8 +441,8 @@ static void __zswap_pool_release(struct work_struct *work)
+>>>>
+>>>>         synchronize_rcu();
+>>>>
+>>>> -       /* nobody should have been able to get a kref... */
+>>>> -       WARN_ON(kref_get_unless_zero(&pool->kref));
+>>>
+>>> Do we no longer care about this WARN? IIUC, this is to catch someone
+>>> still holding a reference to the pool at release time, which sounds
+>>> like a bug. I think we can simulate the similar behavior with:
+>>
+>> Ok, I thought it has already been put to 0 when we're here, so any tryget
+>> will fail. But keeping this WARN_ON() is also fine to me, will keep it.
+> 
+> Yup - it should fail, if the code is not buggy. But that's a pretty big if :)
+> 
+> Jokes aside, we can remove it if folks think the benefit is not worth
+> the cost/overhead. However, I'm a bit hesitant to remove checks in
+> zswap, especially given how buggy it has been (some of which are
+> refcnt bugs as well, IIRC).
 
-Enable additional features based on DT settings and unconditionally
-release the shared interrupt pin after 1.6 seconds and allow to use
-it as reset.
+Yes, agree. It looks clearer to keep it, which should be no cost at all.
 
-These features aren't enabled by default and it's up to board designer
-to validate for proper functioning and detection of devices in secondary
-bus as sometimes it can cause secondary bus being disabled.
-
-Signed-off-by: Patrick Rudolph <patrick.rudolph@9elements.com>
-Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
-Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
-
----
-Changes in V5:
-- Fix typos
-- Update comment
-- Add newline in dev_warn
-Changes in V4:
-- Drop max7358
-- Update #define
-- Move conf variable
-- Print warning when I2C_FUNC_SMBUS_WRITE_BYTE_DATA isn't supported
-Changes in V3:
-- Delete unused #define
-- Update pca954x_init
-- Update commit message
-Changes in V2:
-- Update comments
-- Update check for DT properties
----
- drivers/i2c/muxes/i2c-mux-pca954x.c | 43 ++++++++++++++++++++++++++++-
- 1 file changed, 42 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
-index 2219062104fb..f5dfc33b97c0 100644
---- a/drivers/i2c/muxes/i2c-mux-pca954x.c
-+++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
-@@ -57,6 +57,20 @@
- 
- #define PCA954X_IRQ_OFFSET 4
- 
-+/*
-+ * MAX7357's configuration register is writeable after POR, but
-+ * can be locked by setting the basic mode bit. MAX7358 configuration
-+ * register is locked by default and needs to be unlocked first.
-+ * The configuration register holds the following settings:
-+ */
-+#define MAX7357_CONF_INT_ENABLE			BIT(0)
-+#define MAX7357_CONF_FLUSH_OUT			BIT(1)
-+#define MAX7357_CONF_RELEASE_INT		BIT(2)
-+#define MAX7357_CONF_DISCON_SINGLE_CHAN		BIT(4)
-+#define MAX7357_CONF_PRECONNECT_TEST		BIT(7)
-+
-+#define MAX7357_POR_DEFAULT_CONF		MAX7357_CONF_INT_ENABLE
-+
- enum pca_type {
- 	max_7356,
- 	max_7357,
-@@ -470,7 +484,34 @@ static int pca954x_init(struct i2c_client *client, struct pca954x *data)
- 	else
- 		data->last_chan = 0; /* Disconnect multiplexer */
- 
--	ret = i2c_smbus_write_byte(client, data->last_chan);
-+	if (device_is_compatible(&client->dev, "maxim,max7357")) {
-+		if (i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_WRITE_BYTE_DATA)) {
-+			u8 conf = MAX7357_POR_DEFAULT_CONF;
-+			/*
-+			 * The interrupt signal is shared with the reset pin. Release the
-+			 * interrupt after 1.6 seconds to allow using the pin as reset.
-+			 */
-+			conf |= MAX7357_CONF_RELEASE_INT;
-+
-+			if (device_property_read_bool(&client->dev, "maxim,isolate-stuck-channel"))
-+				conf |= MAX7357_CONF_DISCON_SINGLE_CHAN;
-+			if (device_property_read_bool(&client->dev,
-+						      "maxim,send-flush-out-sequence"))
-+				conf |= MAX7357_CONF_FLUSH_OUT;
-+			if (device_property_read_bool(&client->dev,
-+						      "maxim,preconnection-wiggle-test-enable"))
-+				conf |= MAX7357_CONF_PRECONNECT_TEST;
-+
-+			ret = i2c_smbus_write_byte_data(client, data->last_chan, conf);
-+		} else {
-+			dev_warn(&client->dev, "Write byte data not supported."
-+				 "Cannot enable enhanced mode features\n");
-+			ret = i2c_smbus_write_byte(client, data->last_chan);
-+		}
-+	} else {
-+		ret = i2c_smbus_write_byte(client, data->last_chan);
-+	}
-+
- 	if (ret < 0)
- 		data->last_chan = 0;
- 
--- 
-2.42.0
-
+Thanks!
