@@ -1,113 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6C12C695;
-	Tue, 13 Feb 2024 16:51:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAA05FB90;
+	Tue, 13 Feb 2024 16:51:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707843098; cv=none; b=b4C//dTxDHo42zidM1zTummb8NA+hqp4CLmpRRHoDNISHY6K/W9P9V7GekawgkJj8r/QB1KoWlkr+91hknIB0VOoW928E5thmjXDwBwYFT8j+xgISMy+D3i3F8ixKi7jnHwTrDGoerbZECqAa5D0YDt7YPKZr6pWk5MmGv1bqys=
+	t=1707843115; cv=none; b=fYH2UMgqGlLEJxwMGyCHz2yqTIv4nMkDlmgoyuCvJ8VIy4UWtCv+Loy3IPR+KxDMoyBcJVqbpJCQTKXmj6dwOiC7JaAOBRGbGli0y1KQLrRpur16lZSUeasBdQie1egyi8dSK+07x8YTM4z+gMGFzqqN2x8oIaEnXIk2PW1Zmsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707843098; c=relaxed/simple;
-	bh=tBEYrGBRg+vR+MDQKtSUQPYjgrpcutOltmgfsPRJ5vY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C7YG4q5MEWwSmKvi2l0Bv0+ZsoQXwpdj4Auvaly/znuGFD59e4kF58h0W//x2YZKCEPvPneyP41D8P4biawcJtC6+ec6icvR5F5Tey/+x06HB/8t7Vrg9v2opLGskTJ0qvvZ3YAnC3UTIBSZcZ5xgv2KU5q9Hz+y3bpJgwXvTdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b9q4BvpJ; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b9q4BvpJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707843097; x=1739379097;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=tBEYrGBRg+vR+MDQKtSUQPYjgrpcutOltmgfsPRJ5vY=;
-  b=b9q4BvpJ9perEqsqlM4f01ABbl4TZF8Y/kcKsGXnMxHfztq+WjzxHFvN
-   ZtmViSVrvI6C9ZZULmjpf6G2YyEUKT1daaxu3vURWeOzVhjcDdZACk5tE
-   eO5eLwJDJk5lI2/eynikYAOgF8q0Z/+EznkfITgKTIXXRr2lTHww4vNR8
-   YVJ1D0ry9c234w1unHTUxT5jCprsc9t0MZn3zod+KUVF19SkgflSV4Yr5
-   8e55eXtvebse3Q48UTo6+ZlhcQP7utAkmfNsIHIpm3xOqiSmPOCCX6z6F
-   mDB++6do21HakIzKzqdx4KXlIm78Ur2StWeGg/wvfF27t9kqhOkUat25l
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="2216553"
-X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
-   d="scan'208";a="2216553"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 08:51:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
-   d="scan'208";a="7579600"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.213.3.93])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 08:51:29 -0800
-From: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
- Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org
-Cc: linux-cxl@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
- Dave Jiang <dave.jiang@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH 1/2 v4] cleanup: Add cond_guard() to conditional guards
-Date: Tue, 13 Feb 2024 17:51:26 +0100
-Message-ID: <3917370.kQq0lBPeGt@fdefranc-mobl3>
-Organization: intel
-In-Reply-To: <20240208130424.59568-2-fabio.maria.de.francesco@linux.intel.com>
-References:
- <20240208130424.59568-1-fabio.maria.de.francesco@linux.intel.com>
- <20240208130424.59568-2-fabio.maria.de.francesco@linux.intel.com>
+	s=arc-20240116; t=1707843115; c=relaxed/simple;
+	bh=pDNrTzFYVWPEbMC4V/M9gXVJh6i7WKDwFhKiB2AoIz0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=iY+3DlZ8ipU1TY56c92vOQe5VlMmSvatVAtFINe7g1RNo9AMhudyMWUNNQGGLFaXRLJTh8izLLNiL9L42DzFd3LQNzQZ4b730wwWOBnAwiTyUpy2sCZny2JHLQbRloy6pwKPwcmFyJSZXZrbAMBj+cxe2MRTTfTB6uKDB1O8Woo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE644C433C7;
+	Tue, 13 Feb 2024 16:51:49 +0000 (UTC)
+Date: Tue, 13 Feb 2024 11:52:32 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>, Tim
+  Chen <tim.c.chen@linux.intel.com>, Vincent Donnefort 
+ <vdonnefort@google.com>, Sven Schnelle  <svens@linux.ibm.com>, Mete Durlu 
+ <meted@linux.ibm.com>
+Subject: [PATCH v2] tracing: Have saved_cmdlines arrays all in one
+ allocation
+Message-ID: <20240213115232.5fd9e611@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thursday, 8 February 2024 14:04:23 CET Fabio M. De Francesco wrote:
-> Add cond_guard() macro to conditional guards.
-> 
-> cond_guard() is a guard to be used with the conditional variants of locks,
-> like down_read_trylock() or mutex_lock_interruptible().
-> 
-> It takes a statement (or statement-expression) that is passed as its
-> second argument. That statement (or statement-expression) is executed if
-> waiting for a lock is interrupted or if a _trylock() fails in case of
-> contention.
-> 
-> Usage example:
-> 
-> 	cond_guard(mutex_intr, return -EINTR, &mutex);
-> 
-> Consistent with other usage of _guard(), locks are unlocked at the exit of
-> the scope where cond_guard() is called.
-> 
-[snip]
-> 
-> +#define cond_guard(_name, _fail, args...) \
-> +	CLASS(_name, scope)(args); \
-> +	if (!__guard_ptr(_name)(&scope)) _fail; \
-> +	else { }
-> +
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-I have converted and tested several functions in drivers/cxl and found that 
-there are cases where this macro needs to be called twice in the same scope.
+The saved_cmdlines have three arrays for mapping PIDs to COMMs:
 
-The current implementation fails to compile because any subsequent call to 
-cond_guard() redefines "scope".
+ - map_pid_to_cmdline[]
+ - map_cmdline_to_pid[]
+ - saved_cmdlines
 
-I have a solution for this, which is to instantiate a differently named 
-variable each time cond_guard() is used:
+The map_pid_to_cmdline[] is PID_MAX_DEFAULT in size and holds the index
+into the other arrays. The map_cmdline_to_pid[] is a mapping back to the
+full pid as it can be larger than PID_MAX_DEFAULT. And the
+saved_cmdlines[] just holds the COMMs associated to the pids.
 
-#define __UNIQUE_LINE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __LINE__)
-#define cond_guard(_name, _fail, args...) \
-        CLASS(_name, __UNIQUE_LINE_ID(scope))(args); \
-        if (!__guard_ptr(_name)(&__UNIQUE_LINE_ID(scope))) _fail; \
-        else { }
+Currently the map_pid_to_cmdline[] and saved_cmdlines[] are allocated
+together (in reality the saved_cmdlines is just in the memory of the
+rounding of the allocation of the structure as it is always allocated in
+powers of two). The map_cmdline_to_pid[] array is allocated separately.
 
-But, before sending v5, I think it's best to wait for comments from those with 
-more experience than me.
+Since the rounding to a power of two is rather large (it allows for 8000
+elements in saved_cmdlines), also include the map_cmdline_to_pid[] array.
+(This drops it to 6000 by default, which is still plenty for most use
+cases). This saves even more memory as the map_cmdline_to_pid[] array
+doesn't need to be allocated.
 
-Fabio
+Link: https://lore.kernel.org/linux-trace-kernel/20240212174011.068211d9@gandalf.local.home/
 
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v1: https://lore.kernel.org/linux-trace-kernel/20240212180941.379c419b@gandalf.local.home/
 
+-- Added SAVED_CMDLINE_MAP_ELEMENT_SIZE helper macro.
+
+ kernel/trace/trace_sched_switch.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
+
+diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched_switch.c
+index e4fbcc3bede5..5f3e9bc87079 100644
+--- a/kernel/trace/trace_sched_switch.c
++++ b/kernel/trace/trace_sched_switch.c
+@@ -175,6 +175,10 @@ struct saved_cmdlines_buffer {
+ };
+ static struct saved_cmdlines_buffer *savedcmd;
+ 
++/* Holds the size of a cmdline and pid element */
++#define SAVED_CMDLINE_MAP_ELEMENT_SIZE(s)			\
++	(TASK_COMM_LEN + sizeof((s)->map_cmdline_to_pid[0]))
++
+ static inline char *get_saved_cmdlines(int idx)
+ {
+ 	return &savedcmd->saved_cmdlines[idx * TASK_COMM_LEN];
+@@ -201,7 +205,7 @@ static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
+ 	int order;
+ 
+ 	/* Figure out how much is needed to hold the given number of cmdlines */
+-	orig_size = sizeof(*s) + val * TASK_COMM_LEN;
++	orig_size = sizeof(*s) + val * SAVED_CMDLINE_MAP_ELEMENT_SIZE(s);
+ 	order = get_order(orig_size);
+ 	size = 1 << (order + PAGE_SHIFT);
+ 	page = alloc_pages(GFP_KERNEL, order);
+@@ -212,16 +216,11 @@ static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
+ 	memset(s, 0, sizeof(*s));
+ 
+ 	/* Round up to actual allocation */
+-	val = (size - sizeof(*s)) / TASK_COMM_LEN;
++	val = (size - sizeof(*s)) / SAVED_CMDLINE_MAP_ELEMENT_SIZE(s);
+ 	s->cmdline_num = val;
+ 
+-	s->map_cmdline_to_pid = kmalloc_array(val,
+-					      sizeof(*s->map_cmdline_to_pid),
+-					      GFP_KERNEL);
+-	if (!s->map_cmdline_to_pid) {
+-		free_saved_cmdlines_buffer(s);
+-		return NULL;
+-	}
++	/* Place map_cmdline_to_pid array right after saved_cmdlines */
++	s->map_cmdline_to_pid = (unsigned *)&s->saved_cmdlines[val * TASK_COMM_LEN];
+ 
+ 	s->cmdline_idx = 0;
+ 	memset(&s->map_pid_to_cmdline, NO_CMDLINE_MAP,
+-- 
+2.43.0
 
