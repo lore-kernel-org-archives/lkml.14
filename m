@@ -1,100 +1,95 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826D862A12
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 23:14:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFDFE629FE;
+	Tue, 13 Feb 2024 23:15:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707866090; cv=none; b=TfJ0on8lbhCW/F2jInr62BLz/P9eQyIDne+N1kYf6sZbJsQQ2xb8INF62ksqTnp71R/v2xf7UXwrWCxoseWYEROkb7ZC5/6RP9VsOBPbEKSCzF5uigsnO81rJsSzXtG9yTWQm5ityQfSuvxnTXgTHNaz0qQGRpGVrjhFuL5YWDs=
+	t=1707866127; cv=none; b=sL/bTReMG/R2yITrk0yrZrG+e2cMISnm+olgmQ78VA1MgNmP0qRRUktdIwgis/LV//f2tNt9BDKSPH1+UmV5oFSb0lrvaY+gh4tx06J+zNkRRgkOFMZ+cvQIO0WH9iDcbE2VTu1CtfNtprCttqgG+S6D/fBNh4YWvuGFuWK/fqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707866090; c=relaxed/simple;
-	bh=tm9bh5WYq9qFOSmpNFY5tnSe6fXVetze1S53nUYpGLQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lj/0njfmUcPAVHhAVQOg4cT1t22accH6IAfOiel/t/iAwfwItc0ywZIDHDLOyR3mk4bIh4lj9FoaXEM5Z/9k/RA4aLocCyHN6ozUsWOCr23gKzu00f2HFvYl7sAfq5s3oIYMc8hOKt5EEqmJT3kcV1ZmRIANC7Wu4MOplkZNpQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=RuXQ03U6; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+	s=arc-20240116; t=1707866127; c=relaxed/simple;
+	bh=PY3J4S6EauW8fj+XZZM1388/2+rRzvgMyh+ZjtX7LIo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a1Lmia/WNzcwCVuUoDhbMAcsNTpl4Oobcrnzs6t26bYHvGzT/Ne41SAI0Q7yNN/Bx8WMSr9d3JsduiIJPRu49yuLxEeso7mdSvC3Da9yr1gDHICVxzSAoIxerWLhrqr3CHXhaehYb1QXL6qIHPD7ApHSJ8UU7LKRueAy7KytbPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UW3K4hOY; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="RuXQ03U6"
-Received: from cwcc.thunk.org (pool-173-48-116-68.bstnma.fios.verizon.net [173.48.116.68])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 41DNDfdn018753
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Feb 2024 18:13:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1707866026; bh=wwrGC1FNnOW190/1wKhOVWxjmtFKCbQRLRYMM3aJ8JY=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=RuXQ03U6F0BbF3jEXwi+edV15YcD1YUV4rf+CpvWMs17CNDbwPTXIWAB5k4mfJh7Y
-	 L3p31VGYjVY2XGFmfUVz3AWGue7leXoBkmzqrkt0PpIV20cXUXFabcuz6fO47gXmNn
-	 AeHegxXbvNIyGUxlKKusqTYeU5xNrOZ/TQ3dMY+FzFFRgCMdPjHmjYsqcLH8yf1Dhc
-	 sDl9/s2f+LTURc8xxgi8H3YG/C81J5g9TOJ72+FvvZfB1ydAUsDYhbCZ0PUZerbvnD
-	 wvK0JtHhX4ljNcR+rKk1ya+HqIjciNDej+OLG2liLiy2a1gs5H8D6Oc7LFuLyjll2s
-	 LTPMdfQET8J1g==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id 824A915C0336; Tue, 13 Feb 2024 18:13:41 -0500 (EST)
-Date: Tue, 13 Feb 2024 18:13:41 -0500
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: "Reshetova, Elena" <elena.reshetova@intel.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
-        Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "Nakajima, Jun" <jun.nakajima@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Kalra, Ashish" <ashish.kalra@amd.com>,
-        Sean Christopherson <seanjc@google.com>,
-        "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] x86/random: Retry on RDSEED failure
-Message-ID: <20240213231341.GB394352@mit.edu>
-References: <CAHmME9q-eUXnXnpaDu0VOQemOYysst7SaJ-=b8-vCFP9h50Szg@mail.gmail.com>
- <20240201045710.GD2356784@mit.edu>
- <CAHmME9oqM2a766dBK22-yKr8=2-icg=UkQzmBOF8G5Zh_Y9E9w@mail.gmail.com>
- <DM8PR11MB57505F657A8F08E15DC34673E7422@DM8PR11MB5750.namprd11.prod.outlook.com>
- <20240202153927.GA119530@mit.edu>
- <Zb4RlTzq_LV7AzsH@zx2c4.com>
- <CAHmME9owdbHzfb66xisoWmvWeT_-hkxCu7tR2=Rbye_ik1JgQQ@mail.gmail.com>
- <DM8PR11MB5750C1A848A9F1EF6BE66241E7482@DM8PR11MB5750.namprd11.prod.outlook.com>
- <20240212163236.GA444708@mit.edu>
- <65cb1a1fe2dda_29b1294e@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UW3K4hOY"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-42a029c8e62so30226891cf.1;
+        Tue, 13 Feb 2024 15:15:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707866125; x=1708470925; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=V/1120jGKl7lOqTVBnO0qLaVIMGkbPiaJJif82Yqxng=;
+        b=UW3K4hOYgbSutrFFlRK0Y2K0jihCy3vaQWDOC8DikeM7W14tnLXMZw0gpHOpKE+B/q
+         yg2ZIO2ZNb3/oQ+71wmqZeWkGxRtQ63zL2h7/2hhBSrPDKm5iL22FuTy7dul4nF0ECPX
+         Vuz8ZL+ueq2KibzZB8T7CAPKKUUO07/vTjKn5gyuDKqe3nGPAkQODf4I7UHneGGLPIDN
+         umZnn8hsRABXxAG8Zq6+bTZs2SiaDEkykKoZokIYh/DLWwC0ZKr9Co7ElIASeFghYQGi
+         X7zpcsPzT1ZmbNDdL0MbDowmrZiab+PDRkD7Ek34g9lKIR21cqbDVRC/1+SyK3rW31uR
+         24Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707866125; x=1708470925;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=V/1120jGKl7lOqTVBnO0qLaVIMGkbPiaJJif82Yqxng=;
+        b=CJ7bvK5pj+0y+u9JcamD6q+P/yHJ3LtiGNoJHzmd0fC/y1Lk3zfa/OyDjlKGHLYuDP
+         Risbla+69lNvTFPPE14/wbdFxc564B/v+0Azw8LtYW/HS7b4NFJzsaI0y+7YIeHlPesN
+         CRJ8a8etpipKRJirIyFggtOWsMRmyAVKbM2bjazYk3ksF82Ie5V6d0ep+iHS1ujUWTv6
+         Z9zUG6VRrw72D2B6qWggZZXb/dgM9YC6r8K/M00PWXP+Ws1LUKCNCr+jRchALuIsKs+Q
+         m6y06KrFXET74l0XxQKalUW4REuyK6G0WKx6Hlvahyc4Nnm/hYcC1EBMT9s9X2Z3UEkg
+         uBWw==
+X-Forwarded-Encrypted: i=1; AJvYcCUB+JbImeyc0r/g4//l2eY5YylpI3c+bCGpBWdXCsuF6prT49jaCcS0W+31Puf627iG6vWz06rgtfA3G/fEobWYlMIekN+/Zz5pmP7jj3lKC4zyv5MFQBGOaATW245PcR3ljaqZ
+X-Gm-Message-State: AOJu0YyTHyGq3bfdzAtBrgoHuey33lv1B/9YnvHv6ApQS2f9MLoYRC3q
+	N30s3XsV7wbN2t9c6YGwO/MFgsmGEzcE4wXi7h9yjUQGnKf/nFbh
+X-Google-Smtp-Source: AGHT+IHTF5ytKfeTfWY/11zLegTWRXj/8zn7/xDF9rCiBm0rUi48SNifYniBXTiYie+T97TbF+lDew==
+X-Received: by 2002:a05:6214:242f:b0:68c:92ef:e5a9 with SMTP id gy15-20020a056214242f00b0068c92efe5a9mr1215888qvb.10.1707866124802;
+        Tue, 13 Feb 2024 15:15:24 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVpBLEv9C0l6zJIu8rdrfRO9jegJacMd+SCtFgPVMWhoSGH7PLKfZkhxa+SQK7EeZlinLu8+Rl1ikqcp5Wa0yP0AnzEZRUaI4MXDJNaOm13dsQMW30+t+E83QYKIC4IFbxNeonLJH/97F1Byy8cHCFp3Y2p/Uqt6fNjBtB3z3R9/UkHqPPZSDJiWQncnLknXrG3wmGyKnvvF7mIH2xsC4oIY7xckONGWrJszqNH01ZczUrGdAlibkmB/JW8Eo0514UMIcNPDeyyJ6l6vPSg0KxUYII2779Bf0uk2rq8RzAxM+NQVOqNVH2LeDhT8e+qAGbMhCEuLw9u7YSRO0DY14QeeXwEpY7f+oFkvkY7XFXQ21DYwokq1DuLMVxIzmxViygLRDPYQkTN6EM6rtdS/AF1G6KWX9vtpBJckVuejmt8bYU=
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id lx15-20020a0562145f0f00b0068ee9aeacefsm919213qvb.146.2024.02.13.15.15.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Feb 2024 15:15:24 -0800 (PST)
+Message-ID: <1e1bb7c0-0b83-49dd-a8fb-e5ba172e35c7@gmail.com>
+Date: Tue, 13 Feb 2024 15:15:21 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <65cb1a1fe2dda_29b1294e@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v4 14/15] net: dsa: Define max num of bridges in
+ tag8021q implementation
+Content-Language: en-US
+To: Pawel Dembicki <paweldembicki@gmail.com>, netdev@vger.kernel.org
+Cc: linus.walleij@linaro.org, Vladimir Oltean <olteanv@gmail.com>,
+ Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Claudiu Manoil <claudiu.manoil@nxp.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ UNGLinuxDriver@microchip.com, Russell King <linux@armlinux.org.uk>,
+ linux-kernel@vger.kernel.org
+References: <20240213220331.239031-1-paweldembicki@gmail.com>
+ <20240213220331.239031-15-paweldembicki@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <20240213220331.239031-15-paweldembicki@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 12, 2024 at 11:28:31PM -0800, Dan Williams wrote:
-> Sure there is, that is what, for example, PCI TDISP (TEE Device
-> Interface Security Protocol) is about. Set aside the difficulty of doing
-> the PCI TDISP flow early in boot, and validating the device certficate
-> and measurements based on golden values without talking to a remote
-> verifier etc..., but if such a device has been accepted and its driver
-> calls hwrng_register() it should be added as an entropy source.
+On 2/13/24 14:03, Pawel Dembicki wrote:
+> Max number of bridges in tag8021q implementation is strictly limited
+> by VBID size: 3 bits. But zero is reserved and only 7 values can be used.
+> 
+> This patch adds define which describe maximum possible value.
+> 
+> Suggested-by: Vladimir Oltean <olteanv@gmail.com>
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
 
-How real is TDISP?  What hardware exists today and how much of this
-support is ready to land in the kernel?  Looking at the news articles,
-it appears to me like bleeding edge technology, and what an unkind
-person might call "vaporware"?  Is that an unfair characterization?
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
 
-There have plenty of things that have squirted out of standards
-bodies, like for example, "objected base storage", which has turned
-out to be a complete commercial failure and was never actually
-deployed in any real numbers, other than sample hardare being provided
-to academic researchers.  How can we be sure that PCI TDISP won't end
-up going down that route?
-
-In any case, if we are going to go down this path, we will need to
-have some kind of policy engine hwrng_register() reject
-non-authenticated hardware if Confidential Compute is enabled (and
-possibly in other cases).
-
-				- Ted
