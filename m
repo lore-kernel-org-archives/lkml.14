@@ -1,82 +1,139 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C557F2231C;
-	Tue, 13 Feb 2024 09:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C60120B2C
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 09:12:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707815498; cv=none; b=HS5T19dMDMu4H1xNJg0KQ4hWZW7VbE8pvxV1KQstqaHUhxW0J8JYD0ZlELkt1WVimeZzu0whH++LiFgkWguhR6PGDhfZw9Zwtj+CcMGaIvxCk2xmQUhYna8Y35uVjAIMQqylPWQF6EaZhoZBvi51NZeTmeIicAo1g9JvwTp1ryg=
+	t=1707815538; cv=none; b=BMx+HzcGFn5EURBLJ5dARFCZrgAloq9pdI6ZVCDBrYxEchi1mGqB9qSdKSIcsP/eAZzw3c88LJayZ56cdIgWVh7gwiPxn3xviwG+rxnGkebAVO12xmEqUj7D54o4pvBLTrlk/+5AeIhXVsc6ZnfOkNR83khsMm0a4Jqqjr1+ffs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707815498; c=relaxed/simple;
-	bh=ndqYmeV6A7b8wwtcMLEgfQaIjNxznoUbQ2OiauorsUQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HTfimoOjbAo1CPXYHQT/21kiTVozhjoBULWn5jUtpVQC/OGuQj/uKAZ5503LhHHZ2ga1KH32SLm0okyMZyfa7+l/1KsscCmKcO509azCQLEp5gkdmXhTiyhgq9q09dYuWdcYBV0QrVbDQ5ioSe+RFdb389Zoj5o+NjRS/CCsmVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=VFNbAmdX; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1707815538; c=relaxed/simple;
+	bh=bTT0nEqE90gk/UOsEv/o/JeejEXpt86lXeRQukbkvYM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NTUL2PBUXT0x79S9l3F01Jopz/7Vy4hNGVgZECpDrAeflHN8lv4rL8yxFBJ0jKc1R0WzVrmRNAnvJTyyUE39ARJxg1TBZHc8KIGEnohH2cJ1na0mp7vv4E99azKW2JCG6Pd/RF0LLaRz66uR8zHzcFcqqI9lth7iMIt3SDqJTds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=eiuc/nb0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/y+iuUfH; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=eiuc/nb0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/y+iuUfH; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="VFNbAmdX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1707815495;
-	bh=ndqYmeV6A7b8wwtcMLEgfQaIjNxznoUbQ2OiauorsUQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VFNbAmdXYnSU7RJeTXfc2p0xK2QlMFrboEiAnzkmNckehmgpiOI3z6XEJrbzSHktf
-	 xpBl4hGBbpCayUB1XmPI4g2AKGvIWv/Y4QvNk+7Pc3LP25YlTWTZU7QGLmqNTVE7GQ
-	 HNSvsqD13ZZ+6Dl/dxXH/2a5YF9spIMEER4Bkn2AcaUbNFUlXEh8qjdSs40tECYw3U
-	 MGtzyyvZmz8NMeIAWUqI0pyEbA1bxEMWruGoaR3JwNrPt5R9iGQ6pwgDkI9myk8wF5
-	 pugekqlBqMovfS34ISfgoHxi7/uch1T98U98xgqi3hOyeoQVHUtpxF1EeyHeMQckSB
-	 PXuaDqUkrHkBg==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="eiuc/nb0";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/y+iuUfH";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="eiuc/nb0";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/y+iuUfH"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 1170C3782073;
-	Tue, 13 Feb 2024 09:11:34 +0000 (UTC)
-Message-ID: <af0bda0a-2c8c-49ea-8e62-b6674b671a2f@collabora.com>
-Date: Tue, 13 Feb 2024 10:11:33 +0100
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4DD701FD4C;
+	Tue, 13 Feb 2024 09:12:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707815535; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SFpY1WT2w4jzHB4md+mYrF8QPTEiyTGLXAVoRLLg3Pc=;
+	b=eiuc/nb0dj9EBSsDdiKLq6HYKGxQxjr7CBaAn7J+8GVHsX8Q3SMCCpsL1tx19W4bRs/f3Q
+	JP4k1lNDu8O76iEb19k5aMpFqbkNbqHVt5A3g1oU6cLOa0M2X/NKh3sjI1tXIFWM/D2zVn
+	SC/LBmHD8DrzM7SM9AD6Kkj+64CQonc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707815535;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SFpY1WT2w4jzHB4md+mYrF8QPTEiyTGLXAVoRLLg3Pc=;
+	b=/y+iuUfH+2B1kDCh1JpynYqhJ1cNy/xlaMI6NbgfdnR5Y191rfblVWJz+kCh9RsR+vLUyt
+	neHLxYdtdvPmi9Bg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707815535; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SFpY1WT2w4jzHB4md+mYrF8QPTEiyTGLXAVoRLLg3Pc=;
+	b=eiuc/nb0dj9EBSsDdiKLq6HYKGxQxjr7CBaAn7J+8GVHsX8Q3SMCCpsL1tx19W4bRs/f3Q
+	JP4k1lNDu8O76iEb19k5aMpFqbkNbqHVt5A3g1oU6cLOa0M2X/NKh3sjI1tXIFWM/D2zVn
+	SC/LBmHD8DrzM7SM9AD6Kkj+64CQonc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707815535;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SFpY1WT2w4jzHB4md+mYrF8QPTEiyTGLXAVoRLLg3Pc=;
+	b=/y+iuUfH+2B1kDCh1JpynYqhJ1cNy/xlaMI6NbgfdnR5Y191rfblVWJz+kCh9RsR+vLUyt
+	neHLxYdtdvPmi9Bg==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id BE13513A0E;
+	Tue, 13 Feb 2024 09:12:14 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id Mi6vK24yy2WnHgAAn2gu4w
+	(envelope-from <osalvador@suse.de>); Tue, 13 Feb 2024 09:12:14 +0000
+Date: Tue, 13 Feb 2024 10:13:24 +0100
+From: Oscar Salvador <osalvador@suse.de>
+To: Marco Elver <elver@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Alexander Potapenko <glider@google.com>
+Subject: Re: [PATCH v8 5/5] mm,page_owner: Update Documentation regarding
+ page_owner_stacks
+Message-ID: <ZcsytJ0nL1ZIlycy@localhost.localdomain>
+References: <20240212223029.30769-1-osalvador@suse.de>
+ <20240212223029.30769-6-osalvador@suse.de>
+ <CANpmjNMaUHMNmA7CxZkGUsJ7LCmz+PGqYAzTKxq=u_Osu8Y4sA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] arm64: dts: mediatek: mt7986: drop invalid properties
- from ethsys
-Content-Language: en-US
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
- Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: Sam Shih <sam.shih@mediatek.com>, Lorenzo Bianconi <lorenzo@kernel.org>,
- "David S . Miller" <davem@davemloft.net>,
- Daniel Golle <daniel@makrotopia.org>,
- Frank Wunderlich <frank-w@public-files.de>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
- <rafal@milecki.pl>
-References: <20240213053739.14387-1-zajec5@gmail.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240213053739.14387-1-zajec5@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNMaUHMNmA7CxZkGUsJ7LCmz+PGqYAzTKxq=u_Osu8Y4sA@mail.gmail.com>
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="eiuc/nb0";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="/y+iuUfH"
+X-Spamd-Result: default: False [-5.78 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_DKIM_ARC_DNSWL_HI(-1.00)[];
+	 DWL_DNSWL_LOW(-1.00)[suse.de:dkim];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[linux-foundation.org,vger.kernel.org,kvack.org,suse.com,suse.cz,gmail.com,google.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-2.97)[99.88%];
+	 RCVD_IN_DNSWL_HI(-0.50)[2a07:de40:b281:104:10:150:64:98:from]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 4DD701FD4C
+X-Spam-Level: 
+X-Spam-Score: -5.78
+X-Spam-Flag: NO
 
-Il 13/02/24 06:37, Rafał Miłecki ha scritto:
-> From: Rafał Miłecki <rafal@milecki.pl>
+On Tue, Feb 13, 2024 at 09:45:28AM +0100, Marco Elver wrote:
+> On Mon, 12 Feb 2024 at 23:29, Oscar Salvador <osalvador@suse.de> wrote:
+> > +       echo 7000 > /sys/kernel/debug/page_owner_stacks/set_threshold > stacks_7000.txt
 > 
-> Mediatek ethsys controller / syscon binding doesn't allow any subnodes
-> so "#address-cells" and "#size-cells" are redundant (actually:
-> disallowed).
-> 
-> This fixes:
-> arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dtb: syscon@15000000: '#address-cells', '#size-cells' do not match any of the regexes: 'pinctrl-[0-9]+'
->          from schema $id: http://devicetree.org/schemas/clock/mediatek,ethsys.yaml#
-> 
-> Fixes: 1f9986b258c2 ("arm64: dts: mediatek: add clock support for mt7986a")
-> Cc: Sam Shih <sam.shih@mediatek.com>
-> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+> I think this example command is wrong.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Yes, it is, I will correct that in the next spin.
 
+thanks!
 
+-- 
+Oscar Salvador
+SUSE Labs
