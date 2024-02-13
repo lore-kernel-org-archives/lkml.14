@@ -1,101 +1,68 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A7C5F560
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 15:45:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D16A5DF26;
+	Tue, 13 Feb 2024 15:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707839134; cv=none; b=rdX0tjum0Zhg66hi8h+lhLtjmJN0V6scyoSeBqmcgN97FbkkOK4cOqMe+lq3VI4lxIllciRfoTRHP92hv1ORbJxaiYYmMhF7Z6ZpQ9wE/WZ3qfH4F0/P+kQtjEGqFZx2B/VBM+m6xZe+ojjTBl1D5rgkxQ6RsJdni9Y3DiHzS7Y=
+	t=1707839209; cv=none; b=LJxzqztlSaPfL2FI+RE8PfVTRzR5595SR/lXcqt7GciuMLYDki1FHFJpqOj1mIV15WdtLMH8i1GF3Bj7pncUsxGmgSJy2QT9y0swtauS327HVqmlngY+XW+pVD8hkJtxhQTTijBCubJK12QxaqIKl7emfPt0xwG04aMxgGBiy/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707839134; c=relaxed/simple;
-	bh=Mb7cfkVoTPe9SpFqQPiRQCgZRgp43WdceLq+nhIl53M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RPOjNssdY1qHYq7v/AHJYwiEgALpkrVLQxMPKwKHw+YCK42oTfeHCKG+gBiZSJx2gcx9rd8A46Y1nVJMNdVCymuMR9j76C+vN/onQZUMWs/YBBKj7o9GoQXABlRvLDgQOCX9AaRhxT3ghc5FVcTjZMyChFS8wsbIb1M1uJ9zAfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=soleen.com; spf=none smtp.mailfrom=soleen.com; dkim=fail (0-bit key) header.d=soleen.com header.i=@soleen.com header.b=Vmj1mmLQ reason="key not found in DNS"; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1707839209; c=relaxed/simple;
+	bh=nDHY4NSawgocEYFVaXaHXV+0vNm1+xE93FNovNj87EI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d0TVq7xxt5PSHpltACTC3Qk54ulOqTi3pene6hiqj9vUt1RwuOcpB5A1p29x8zCc9dG0gSaFYBC/VmXr5Vkljy2ZVJwFRVvCQ1W+/dPEsjMlJBAYT00RKWRZ+LVSTaypag2ESRx5i7NY4agyNv7oInB16+C9ymDNVlwak3OYfA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=MFkYfYJT; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=soleen.com header.i=@soleen.com header.b="Vmj1mmLQ"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-785d5705681so188477285a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 07:45:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1707839131; x=1708443931; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=r+5lFm1GOYo46btsIaJvA6S/B+CQsp17IG3lccG/v6g=;
-        b=Vmj1mmLQ4yhugjb/lPfx3+kxHd1E/h0Kv5YjC6n1verDh8bforL8WJmTrmhqdYgyPX
-         56y9RZo1Mc5U/mF8FPCurWhd+rExv7UZueNkedhf/F3UMF4+TPDSL5z8wNhEeajGsva1
-         RCpTP8BbUJksyQEqy8waWFK14wWRVqePBgqfNsbDvyEJP5lN8zOpVxyRtyXGGxCqS9c+
-         eqSxQH/KlzMgGlgL+X73aBsTzO3bzsCM6zp8Bgti1AKInfQCsdy01WaodSCDPOx/76N3
-         k9pq74Hhw6oeQhYWQr/K8cMbwAzbnEL8K3HilA2scUgyGNxbQVBZCq4/4ORbpCYcCO5L
-         CfOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707839131; x=1708443931;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r+5lFm1GOYo46btsIaJvA6S/B+CQsp17IG3lccG/v6g=;
-        b=DhwlPr2lQAZNTAuwn8ZvAZ0nuxXy7smue9V5jjsxh6VwGtSRb1im3oz8n170b/zkEY
-         fkQZmuOdwGpi8RPdwo9/HXY7bjGY8cSGsJEQdLpEYOwo+SqReZE0pOTAORS1m5gREyU8
-         0Jo1RBTYkOYed8CGNKAqm06RVirSeCmMDjE8zjkPAZ8LzlpQyWKyK8PeVrdRpQ5TGrrY
-         rrSAw+8a/5BIphv09L9f4STXtSd8189JtCfElDneTGn4mFEdcp+96uP1Ajn156C5Pg4A
-         QUoTg7coyWuKFwH7LJ6eZFV8UrGechgpOrkgabuhenK/LFDfxkrB6V8SzstlBAC8odDO
-         bbtA==
-X-Gm-Message-State: AOJu0YzCtPrTLSesbIFVgCL+kFTgTh8V66bhhdiXRAygEDKeMg8Xd46f
-	H3AVAe0xq6+641whZ3QwqhYEoy2ZyOPSSvqzfp74Nyk6XY+MmGF4L/g4WlpXDT3d27n2uXThxaa
-	j0A3F3xFa+EUjBmmfZhe6y5kEX/t/bD64sYTeWw==
-X-Google-Smtp-Source: AGHT+IFqChznTFjr/EeidSN571ZA0nQfVJvF+Fp0E+Y2flaP6eNCXc4z1s3ADkdtr1CrUfrPgpTF+9pex3Z052b1w5U=
-X-Received: by 2002:a05:620a:618b:b0:787:1db5:f0de with SMTP id
- or11-20020a05620a618b00b007871db5f0demr2991955qkn.26.1707839131046; Tue, 13
- Feb 2024 07:45:31 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="MFkYfYJT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=RiCbBVOdVROX5fgEuIJF+tD5IRbN1+CQ/2UfcdpGtUA=; b=MFkYfYJTusz/farDJErKREeISO
+	soAloWysLKJVABloCwlSHMekpeFn/BmsQCJAnU9/x1IGeW5Nof2lRoqyvpP0/R4OwGvkf575hXj8L
+	PHr/kR3eyx2FxtxpMRDVLQRjKsF8zMys0rBbYuq+QJjUF+TftMBJv8mQpMao7DBdM7P0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rZuzf-007hH1-Ca; Tue, 13 Feb 2024 16:46:47 +0100
+Date: Tue, 13 Feb 2024 16:46:47 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Robert Marko <robimarko@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [net-next PATCH] net: phy: aquantia: add AQR111 and AQR111B0 PHY
+ ID
+Message-ID: <12f27e82-6981-4a13-bdc0-77054bf964e9@lunn.ch>
+References: <20240213133558.1836-1-ansuelsmth@gmail.com>
+ <233cd45b-28d5-477d-a193-8273684953aa@lunn.ch>
+ <65cb7a25.5d0a0220.de7b7.a1f3@mx.google.com>
+ <a10c3b55-c6c3-4982-b294-d6e5b9383e31@lunn.ch>
+ <65cb87a3.5d0a0220.69795.6a1d@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231226200205.562565-1-pasha.tatashin@soleen.com>
- <20231226200205.562565-11-pasha.tatashin@soleen.com> <20240213131210.GA28926@willie-the-truck>
-In-Reply-To: <20240213131210.GA28926@willie-the-truck>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Tue, 13 Feb 2024 10:44:53 -0500
-Message-ID: <CA+CK2bB4Z+z8tocO79AdsAy+gmN_4aVHgFUsm_gYLUJ2zV1A6A@mail.gmail.com>
-Subject: Re: [PATCH v3 10/10] iommu: account IOMMU allocated memory
-To: Will Deacon <will@kernel.org>
-Cc: akpm@linux-foundation.org, alim.akhtar@samsung.com, alyssa@rosenzweig.io, 
-	asahi@lists.linux.dev, baolu.lu@linux.intel.com, bhelgaas@google.com, 
-	cgroups@vger.kernel.org, corbet@lwn.net, david@redhat.com, 
-	dwmw2@infradead.org, hannes@cmpxchg.org, heiko@sntech.de, 
-	iommu@lists.linux.dev, jernej.skrabec@gmail.com, jonathanh@nvidia.com, 
-	joro@8bytes.org, krzysztof.kozlowski@linaro.org, linux-doc@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-rockchip@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, linux-sunxi@lists.linux.dev, 
-	linux-tegra@vger.kernel.org, lizefan.x@bytedance.com, marcan@marcan.st, 
-	mhiramat@kernel.org, m.szyprowski@samsung.com, paulmck@kernel.org, 
-	rdunlap@infradead.org, robin.murphy@arm.com, samuel@sholland.org, 
-	suravee.suthikulpanit@amd.com, sven@svenpeter.dev, thierry.reding@gmail.com, 
-	tj@kernel.org, tomas.mudrunka@gmail.com, vdumpa@nvidia.com, wens@csie.org, 
-	yu-cheng.yu@intel.com, rientjes@google.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65cb87a3.5d0a0220.69795.6a1d@mx.google.com>
 
-> >  SecPageTables
-> > -              Memory consumed by secondary page tables, this currently
-> > -              currently includes KVM mmu allocations on x86 and arm64.
-> > +              Memory consumed by secondary page tables, this currently includes
-> > +              KVM mmu and IOMMU allocations on x86 and arm64.
+> With the amount of things we are noticing on these PHY it can be
+> anything from Marvell itself, from OEM messing up with the Provision to
+> a buf in the FW itself...
 
-Hi Will,
+Ideally, we want to get Marvell to release one universal firmware for
+each PHY. Get the OEM out of the picture. This is something i said to
+then Aquantia years ago, that provisioning is going to make driver
+support a real problem. Seems like i predicted it correctly :-(
 
-> While I can see the value in this for IOMMU mappings managed by VFIO,
-> doesn't this end up conflating that with the normal case of DMA domains?
-> For systems that e.g. rely on an IOMMU for functional host DMA, it seems
-> wrong to subject that to accounting constraints.
-
-The accounting constraints are only applicable when GFP_KERNEL_ACCOUNT
-is passed to the iommu mapping functions. We do that from the vfio,
-iommufd, and vhost. Without this flag, the memory useage is reported
-in /proc/meminfo as part of  SecPageTables field, but not constrained
-in cgroup.
-
-Pasha
+	Andrew
