@@ -1,78 +1,122 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C845512BEAF
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 00:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA5512BF1E;
+	Tue, 13 Feb 2024 00:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707783846; cv=none; b=npQxVNVpwVGxnE3aAqTcX+GbX1fHUDfvhFOWIjFyw4RAEui+0HF1J/5YPxyzgH+FxBNZ9s2WjJMaLkGd0ZPwEGTNEPX8eawZg7Z0FZeynjf9+LW9fY2foo73CGvQq0NI5yHxFqJiuYsUAUSqLSjsfZ6bBJRtDxV3+d1E0DXyIpQ=
+	t=1707783847; cv=none; b=JNPZyz9yqM+60/MU8Rk9fF5mWVLau27bGvIXmUT6rZ4dGeyZPN91ssk8yGnkcrVbQReUAFfS5xEd1X5OjX6mOS7x0Osn14XH6Pz6/PsxVRI/Ikp9wRMLjhs10t+cPeeU7EIHA0GlxHFZGfUx2HKspSHgGRWAvG19TQHVx/tGNg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707783846; c=relaxed/simple;
-	bh=dqTQI63+ZqDNKjpAbbZCxeV49nIfSpoeFvQR60x/Qw4=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=IEISpU858jztWHTvMVqNMHqNHMvoFlPk5EP/PqYRTaEO5n63DlegzK05h5POR0B/Jt+XNoMtt6Zg7NsXYMtwzLiY9Gd/DwjPF4gxtTDR958AbjzWEn6gzh9g6wKFzW0GWwjQpyGmdFMreA9vjmOF/vhuCo5x9zBifSgHu2sd01E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-36414a7850aso5624095ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 16:24:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707783844; x=1708388644;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qiXaK9TFzZAPYPnTyw0VSmUtJHPDIyF9ZuwGBaLUHN4=;
-        b=WLy8KnSvk8STsYkM1xuG+PwAWb23xftVHmfAk08qYeWnGoq6ZaUviFNitSIiKuUVug
-         STriwo9ijwriX5LruMLmthEHiIPgJ9TT4PSTEOXV+x0ePkqo+/0xWNnLGXO+LW7a+nl3
-         HK+19QIQeg0qUu4W94SE/y536c3rI3GcLnpofuUMXZh6vN9H1uYWMN2Op12qjA+6d2+T
-         DlwPMu4kCS+RvfMTaGSjiskF0Vf9zpfdaRPo30T5tfHWNbrGs69eZjDvi8Qc1r4MOMC1
-         //TdpIrvVAPgKygxj1Kcl9r6122lW0zaI/XKzhPkYiMHbyV0GOPmFg6lz5sBA4oohinV
-         p59g==
-X-Forwarded-Encrypted: i=1; AJvYcCXBMkcTva7RpHa8BFMaaiOPcwFlYPWUg+AO9IbMdko6tKGN562OtEH7VwZ6xCGMMmSmdYGuy5slbB2SDeF2ec2P0F2PBAKmVJ6vVOWf
-X-Gm-Message-State: AOJu0Yx2G79XSH75Jx4qdzldO+vgAtSkIvNaNYL/YInH+JjRwzFkhI+z
-	x548x/Et2Z+BqRP//g9vG1iAGEkcZNBO8X+MEi+L4gHqVwTx2cXLo45DB6+L8sOfOCkoTNW8v1P
-	X12av57fFLctNp12asILa2yDYwzB2q9nA32MTS2wD4iiPIKYvlQELA5M=
-X-Google-Smtp-Source: AGHT+IF6MxRdyVnerz3TZh0IMvFhTsYoobPC91qocz9bxduYTKyDy5vR6SC+Hzhdc924TduO/JMxFxAP1kD/Km0bsBVcWg9yuwkk
+	s=arc-20240116; t=1707783847; c=relaxed/simple;
+	bh=IkhcJ+3ckPAvRvz208utdkKUoD7lpA1NnbbWdhsjv2I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=l5ZvB3QH3Elii/SzkimefyGmL9T9VmF5IpvzAFOwYPSfHDWwzEna0s/GKXz/KiGmdFgYBVQ2C4Ug9FBiaePSLANGtuCxXs51vVVtz0SlPAXj2EaFkETmqKP1wjQDuYpMkbPjdX9xJGlvXtQipNXhL1YLTj9JqGDtRHxjUhl8KY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lTKny/bd; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lTKny/bd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B92ACC433F1;
+	Tue, 13 Feb 2024 00:24:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707783846;
+	bh=IkhcJ+3ckPAvRvz208utdkKUoD7lpA1NnbbWdhsjv2I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lTKny/bduGojLGA+paWmHw1xkIfTnADCMdfkPGpiiEnZIyMJ8gJvqVLdz1XWh99HZ
+	 d+IiEObI5C1t+kNbYtm7uZtp3rRSqY6WNe2LBxhEidlR5q7yP1E6Tee6LZW4DMg6So
+	 ymoEDJ0aORlDHND2E6SR6W6Y2+ESgpUdMjzQfTRpxp4RcKmahDSqpbnw1bXGoPrB+y
+	 H5zyBz8Mp9OzchbvIGKUpryiWUM2XZpmSOYxYTVHavApZXVdeBSC18H/sFEjBNYhOl
+	 H6nJN2yyQOrcCUIyPX4GmOvCt1twAZdLt0Q3Y+yC1b9fm8Yq9bhnP4drJN2/F4OMUC
+	 zgNclxa9DbK1A==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Prike Liang <Prike.Liang@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Sasha Levin <sashal@kernel.org>,
+	christian.koenig@amd.com,
+	Xinhui.Pan@amd.com,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	Hawking.Zhang@amd.com,
+	lijo.lazar@amd.com,
+	le.ma@amd.com,
+	James.Zhu@amd.com,
+	shane.xiao@amd.com,
+	sonny.jiang@amd.com,
+	Likun.Gao@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.15 21/22] drm/amdgpu: reset gpu for s3 suspend abort case
+Date: Mon, 12 Feb 2024 19:23:23 -0500
+Message-ID: <20240213002331.672583-21-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240213002331.672583-1-sashal@kernel.org>
+References: <20240213002331.672583-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1789:b0:363:8b04:6df7 with SMTP id
- y9-20020a056e02178900b003638b046df7mr80908ilu.0.1707783844004; Mon, 12 Feb
- 2024 16:24:04 -0800 (PST)
-Date: Mon, 12 Feb 2024 16:24:03 -0800
-In-Reply-To: <0000000000001f0b970605c39a7e@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000600b5d06113869f0@google.com>
-Subject: Re: [syzbot] [ext4?] general protection fault in utf8nlookup
-From: syzbot <syzbot+9cf75dc581fb4307d6dd@syzkaller.appspotmail.com>
-To: adilger.kernel@dilger.ca, axboe@kernel.dk, brauner@kernel.org, 
-	ebiggers@google.com, ebiggers@kernel.org, jack@suse.cz, krisman@collabora.com, 
-	linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	twuufnxlz@gmail.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.15.148
+Content-Transfer-Encoding: 8bit
 
-syzbot suspects this issue was fixed by commit:
+From: Prike Liang <Prike.Liang@amd.com>
 
-commit 6f861765464f43a71462d52026fbddfc858239a5
-Author: Jan Kara <jack@suse.cz>
-Date:   Wed Nov 1 17:43:10 2023 +0000
+[ Upstream commit 6ef82ac664bb9568ca3956e0d9c9c478e25077ff ]
 
-    fs: Block writes to mounted block devices
+In the s3 suspend abort case some type of gfx9 power
+rail not turn off from FCH side and this will put the
+GPU in an unknown power status, so let's reset the gpu
+to a known good power state before reinitialize gpu
+device.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17547fd4180000
-start commit:   e42bebf6db29 Merge tag 'efi-fixes-for-v6.6-1' of git://git..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=df91a3034fe3f122
-dashboard link: https://syzkaller.appspot.com/bug?extid=9cf75dc581fb4307d6dd
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1374a174680000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12b12928680000
+Signed-off-by: Prike Liang <Prike.Liang@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/amd/amdgpu/soc15.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-If the result looks correct, please mark the issue as fixed by replying with:
+diff --git a/drivers/gpu/drm/amd/amdgpu/soc15.c b/drivers/gpu/drm/amd/amdgpu/soc15.c
+index e8c0e77e1b01..6a3486f52d69 100644
+--- a/drivers/gpu/drm/amd/amdgpu/soc15.c
++++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
+@@ -1490,10 +1490,32 @@ static int soc15_common_suspend(void *handle)
+ 	return soc15_common_hw_fini(adev);
+ }
+ 
++static bool soc15_need_reset_on_resume(struct amdgpu_device *adev)
++{
++	u32 sol_reg;
++
++	sol_reg = RREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_81);
++
++	/* Will reset for the following suspend abort cases.
++	 * 1) Only reset limit on APU side, dGPU hasn't checked yet.
++	 * 2) S3 suspend abort and TOS already launched.
++	 */
++	if (adev->flags & AMD_IS_APU && adev->in_s3 &&
++			!adev->suspend_complete &&
++			sol_reg)
++		return true;
++
++	return false;
++}
++
+ static int soc15_common_resume(void *handle)
+ {
+ 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+ 
++	if (soc15_need_reset_on_resume(adev)) {
++		dev_info(adev->dev, "S3 suspend abort case, let's reset ASIC.\n");
++		soc15_asic_reset(adev);
++	}
+ 	return soc15_common_hw_init(adev);
+ }
+ 
+-- 
+2.43.0
 
-#syz fix: fs: Block writes to mounted block devices
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
