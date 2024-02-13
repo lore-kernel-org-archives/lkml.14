@@ -1,200 +1,170 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15CE32C695
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 16:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100732C695;
+	Tue, 13 Feb 2024 16:52:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707843123; cv=none; b=X8V7wxpOAA3bmiCFuHeLVRu586gHGpkl9/636WFTQa6M9pKGaSlxHZpXjw9QimPF/ESxe/O+53YO4+S66TYNJkJmcqn4fYzCo6WrSNYbcSaWDqTaDdapooEgdfa5wgLt8iOYGclVzAId55q67Nld5QFy/qRyc3dX0cInOSLf/9M=
+	t=1707843160; cv=none; b=BXlEHwcEwvaQ3YTIoMQLJ9ryMDVsnSp+YlX2mIUuHg9yJPT+fb1mtfSM0MWVe3PIDbam575eMRwDo/Pbnl6eUpQE7AhYELFo4rOGCEX3ZMpeEy5cL+snQ+1kHr5FPSVV9u6V8keiqiH/TfpLyOlRBWdGK/DBjDo2isS59nAIUOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707843123; c=relaxed/simple;
-	bh=BtZDDUgyXKOvkfYTc+1OipN0Z1hTF7MpB8Bw2BocVkQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ukHw+xvyRtczpyWFYfPd+xMU+5OkKPr8ztVYuRaZr57ieAEATADbqWUaNz6QodwcnDcR4VuDwj3if3JOaEs/nAXeI8za8yongwmR1WUks9BIklbiTszBWVcBQS8ora8kIYiPLbTqsMx+LT2H92ofa9SAkyQIYfXlxgzknQZoExA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kTpN3ypD; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707843160; c=relaxed/simple;
+	bh=PXdxy1hTes8PVKE+xBuDu7zQhe1++IbzR9FzZbvGKBM=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DfUL9bWNsmLqYJw2uhY0EGcG/+RchILD+l307cVMbDo2co987uUQpfBNQ5sBE1C2P3x+/46l4ycpLGElQEHWI7k+p5a+E6b6ng2QSVu+7Nq64IfnvdMP9WZgjkmrQr8u/gkRP1f0MYbv8iHzyJwY4nxqvvZggrijUz/BSd5tUec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gNz4eBY5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kTpN3ypD"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-42a8900bb93so33533811cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 08:52:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707843121; x=1708447921; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=mRn5606vOVX5+HtkYIAFTEtGh672feJdsnbMQPVIbYo=;
-        b=kTpN3ypDHu1dlz2IE3/QGX6Z7QL3QTCaeRbBs/MSDmmdlq8mYPUTMhb+Fv/ldFIzYv
-         1pRCn/Vr+iFemmtgvT26kmHJbJczrQGrsmy+O4P5RLs2XsG96map+bZJZbUbzkT6dNK7
-         opaDJlAN0CIFV9z2raP4rmJiQxJJp/RBYmUNyudJ0GxArh3MdraBZTbb6U5AbGcjCP8I
-         63dg+yQlqQg/Kwf/Q7Syjv8nG4IWj2LtqHhYN12BgIbmm5Hn5W3TK30h4VUrvKMvkDh5
-         yVBPSh/SslDV9MNJyeo4WrAm1T5Zs0Y8ZNkqgXs07+vvemhyPni5g3iNi2pGYlsdYRFY
-         k7Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707843121; x=1708447921;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mRn5606vOVX5+HtkYIAFTEtGh672feJdsnbMQPVIbYo=;
-        b=KHqTdafGYbZlmQHjfkCQRFPbxvKJBcX2nLUeSA4gDgOY1HqZiQkgFN4v8ZBmem9hl/
-         uAmFxHXgjie75670zAzf4oSAg9XZwfHQPiWfYWlkOF7sbZNdeWEjcqDbzl1dgMgoEMBs
-         AAvYSwTQRKbqAxUmzBLef0n6xZVvmLgX30k5uRU3IbcrajHnwQyhDq9w5dVAGmKNf+N5
-         A48SwSIlp5siXm5aWDEMQb16kre0K1XiKLba1cjB7rdGu3q3y+7QOkAG5t/GVoWaR6/H
-         x/FLaeK1iU1SiqX319GaYR0bBoaoGgLtJt6uWf9dPPxm4beSBiaawOkTKoAwX7J1wpNR
-         TJlg==
-X-Forwarded-Encrypted: i=1; AJvYcCXSiuDKMxgaCzfQ1YbiUzcaejvSpeV3mMmMMhBzcWYXFf1vP6yOnHE8LqzKv9eylRUkO+ZRyzCnxi4+vPoIgefY/yz9XPQn6NTlJ3Ee
-X-Gm-Message-State: AOJu0Yz/va5GjKpZNeZFIG6YxKwofP7kZPYoI2cG3WcdO5Iq5oLVrktD
-	cM5C0UsE6filcga0sqUPS63L5GgIkobM4S251HBKnfZKBkrMR102HgsCvzv/pRIz4M28hiH5WRX
-	OvRjgP/E78jEsuFfBTtmdF3dGozBYRYIqc1nahA==
-X-Google-Smtp-Source: AGHT+IGL3s5MvEgET6k00OXUwPAuzQ1wyEhMt8naqCYl3j/bT6K5MvvERCKCB5I8RdgTPi/c8cdcDVP28CFoAAjFM94=
-X-Received: by 2002:ac8:5e0a:0:b0:42d:b559:17e4 with SMTP id
- h10-20020ac85e0a000000b0042db55917e4mr717576qtx.0.1707843120936; Tue, 13 Feb
- 2024 08:52:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gNz4eBY5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AB14C433C7;
+	Tue, 13 Feb 2024 16:52:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707843159;
+	bh=PXdxy1hTes8PVKE+xBuDu7zQhe1++IbzR9FzZbvGKBM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gNz4eBY5MfB0YkD0cIH7GgA3W+ofJnbeHVoUVVcXGT/4pS7rlMgsmAdgB2d/Jhi5h
+	 S4XjzDARZYlbxdazPlM/+VwxBlsAClBDBb0rg4qlL6gTUfn6vzY4//TCOLCnvI/e1B
+	 w4IUtm++lBt3NU6Rne5u2YGHGVI8eig+ypPIqR6RJigi8BhW79sJIz/ioy23UrvnSY
+	 5HDL5za63UCDg0uTV17WHlpamrJrhkrYK6qm39Bd8kQiZcDeGegVmGIqTbhN0QaVr6
+	 tfDZkadMbA0KasM9Q/KGy1nOLs6+nf5kjnntG8R7JbwJ4s2N88C0wGcJzrBlJId5g8
+	 oUxkk4RwpZb+A==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rZw1N-002qby-2U;
+	Tue, 13 Feb 2024 16:52:37 +0000
+Date: Tue, 13 Feb 2024 16:52:36 +0000
+Message-ID: <868r3o5msr.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: Will Deacon <will@kernel.org>,
+	kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Ricardo Koller <ricarkol@google.com>
+Subject: Re: [RFC PATCH] KVM: arm64: Fix double-free following kvm_pgtable_stage2_free_unlinked()
+In-Reply-To: <ZcuY9rdvGaJ66edx@linux.dev>
+References: <20240212193052.27765-1-will@kernel.org>
+	<Zcp8LcvsZiZVkNKe@linux.dev>
+	<86cyt062jh.wl-maz@kernel.org>
+	<ZcuY9rdvGaJ66edx@linux.dev>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240210113924.1130448-1-alexs@kernel.org> <20240210113924.1130448-3-alexs@kernel.org>
-In-Reply-To: <20240210113924.1130448-3-alexs@kernel.org>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Tue, 13 Feb 2024 17:51:49 +0100
-Message-ID: <CAKfTPtDtf0WhtWV-eO2hMUpP2rDgTgUBPbHZYWMuytYJ9ifU5w@mail.gmail.com>
-Subject: Re: [PATCH v5 3/5] sched/fair: Rework sched_use_asym_prio() and sched_asym_prefer()
-To: alexs@kernel.org
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>, 
-	"open list:SCHEDULER" <linux-kernel@vger.kernel.org>, 
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: oliver.upton@linux.dev, will@kernel.org, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, ricarkol@google.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Sat, 10 Feb 2024 at 12:36, <alexs@kernel.org> wrote:
->
-> From: Alex Shi <alexs@kernel.org>
->
-> sched_use_asym_prio() and sched_asym_prefer() are used together in various
-> places. Consolidate them into a single function sched_asym().
->
-> The existing sched_group_asym() is only used when collecting statistics
+On Tue, 13 Feb 2024 16:29:42 +0000,
+Oliver Upton <oliver.upton@linux.dev> wrote:
+> 
+> On Tue, Feb 13, 2024 at 11:12:34AM +0000, Marc Zyngier wrote:
+> > On Mon, 12 Feb 2024 20:14:37 +0000,
+> > Oliver Upton <oliver.upton@linux.dev> wrote:
+> > > 
+> > > On Mon, Feb 12, 2024 at 07:30:52PM +0000, Will Deacon wrote:
+> > > > kvm_pgtable_stage2_free_unlinked() does the final put_page() on the
+> > > > root page of the sub-tree before returning, so remove the additional
+> > > > put_page() invocations in the callers.
+> > > > 
+> > > > Cc: Marc Zyngier <maz@kernel.org>
+> > > > Cc: Oliver Upton <oliver.upton@linux.dev>
+> > > > Cc: Ricardo Koller <ricarkol@google.com>
+> > > > Signed-off-by: Will Deacon <will@kernel.org>
+> > > > ---
+> > > > 
+> > > > Hi folks,
+> > > > 
+> > > > Sending this as an RFC as I only spotted it from code inspection and I'm
+> > > > surprised others aren't seeing fireworks if it's a genuine bug. I also
+> > > > couldn't come up with a sensible Fixes tag, as all of:
+> > > > 
+> > > >  e7c05540c694b ("KVM: arm64: Add helper for creating unlinked stage2 subtrees")
+> > > >  8f5a3eb7513fc ("KVM: arm64: Add kvm_pgtable_stage2_split()")
+> > > >  f6a27d6dc51b2 ("KVM: arm64: Drop last page ref in kvm_pgtable_stage2_free_removed()")
+> > 
+> > I'd blame it on the last commit, as we really ought to have it if we
+> > have the others.
+> > 
+> > > >
+> > > > are actually ok in isolation. Hrm. Please tell me I'm wrong?
+> > > > 
+> > > >  arch/arm64/kvm/hyp/pgtable.c | 2 --
+> > > >  1 file changed, 2 deletions(-)
+> > > > 
+> > > > diff --git a/arch/arm64/kvm/hyp/pgtable.c b/arch/arm64/kvm/hyp/pgtable.c
+> > > > index c651df904fe3..ab9d05fcf98b 100644
+> > > > --- a/arch/arm64/kvm/hyp/pgtable.c
+> > > > +++ b/arch/arm64/kvm/hyp/pgtable.c
+> > > > @@ -1419,7 +1419,6 @@ kvm_pte_t *kvm_pgtable_stage2_create_unlinked(struct kvm_pgtable *pgt,
+> > > >  				 level + 1);
+> > > >  	if (ret) {
+> > > >  		kvm_pgtable_stage2_free_unlinked(mm_ops, pgtable, level);
+> > > > -		mm_ops->put_page(pgtable);
+> > > >  		return ERR_PTR(ret);
+> > > >  	}
+> > > 
+> > > AFAICT, this entire branch is effectively dead code, unless there's a
+> > > KVM bug lurking behind the page table walk. The sub-tree isn't visible
+> > > to other software or hardware walkers yet, so none of the PTE races
+> > > could cause this to pop.
+> > > 
+> > > So while this is very obviously a bug, it might be pure luck that folks
+> > > haven't seen smoke here. Perhaps while fixing the bug we should take the
+> > > opportunity to promote the condition to WARN_ON_ONCE().
+> > 
+> > Can't you construct a case where an allocation fails during the walk
+> > (memcache empty), and we end up on this exact path?
+> 
+> Possibly, but AFAICT that can only happen if there was a bug in KVM. We
+> don't start the walk at all if userspace set the split chunk size to 0,
+> and otherwise we expect it to be at least PMD_SIZE, which will top up
+> the cache to 1 every pass. stage2_split_walker() will 'do the right
+> thing' if there aren't enough preallocated pages to get down to level 3.
+> 
+> It really doesn't matter either way, I'm just trying to convince myself
+> of the reasons why we haven't seen this explode yet :)
 
-nit: The existing sched_asym()
+Yeah, that's probably very unlikely to hit given the current
+conditions.
 
-> of a scheduling group. Rename it as sched_group_asym(), and remove the
-> obsolete function description.
->
-> This makes the code easier to read. No functional changes.
->
-> Tested-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> Signed-off-by: Alex Shi <alexs@kernel.org>
-> Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> Cc: Valentin Schneider <vschneid@redhat.com>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Reviewed-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> 
+> > > 
+> > > > @@ -1502,7 +1501,6 @@ static int stage2_split_walker(const struct kvm_pgtable_visit_ctx *ctx,
+> > > >  
+> > > >  	if (!stage2_try_break_pte(ctx, mmu)) {
+> > > >  		kvm_pgtable_stage2_free_unlinked(mm_ops, childp, level);
+> > > > -		mm_ops->put_page(childp);
+> > > >  		return -EAGAIN;
+> > > >  	}
+> > > 
+> > > This, on the other hand, seems possible. There exists a race where an
+> > > old block PTE could have the AF set on it and the underlying cmpxchg()
+> > > could fail. There shouldn't be a race with any software walkers, as we
+> > > hold the MMU lock for write here.
+> > 
+> > AF update is indeed a likely candidate.
+> > 
+> > In any case, this patch looks good to me as it is, and we can always
+> > have a separate tweak to adjust the severity of the first case as
+> > required. Unless anyone objects, I'd like to queue it shortly.
+> 
+> Agreed, happy with the way this looks and should've added:
+> 
+> Reviewed-by: Oliver Upton <oliver.upton@linux.dev>
+> 
+> the first time around.
 
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Thanks for that. I'll queue that shortly and send (another) PR.
 
-> ---
->  kernel/sched/fair.c | 45 ++++++++++++++++++++-------------------------
->  1 file changed, 20 insertions(+), 25 deletions(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 607dc310b355..426eda9eda57 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -9746,8 +9746,18 @@ static bool sched_use_asym_prio(struct sched_domain *sd, int cpu)
->         return sd->flags & SD_SHARE_CPUCAPACITY || is_core_idle(cpu);
->  }
->
-> +static inline bool sched_asym(struct sched_domain *sd, int dst_cpu, int src_cpu)
-> +{
-> +       /*
-> +        * First check if @dst_cpu can do asym_packing load balance. Only do it
-> +        * if it has higher priority than @src_cpu.
-> +        */
-> +       return sched_use_asym_prio(sd, dst_cpu) &&
-> +               sched_asym_prefer(dst_cpu, src_cpu);
-> +}
-> +
->  /**
-> - * sched_asym - Check if the destination CPU can do asym_packing load balance
-> + * sched_group_asym - Check if the destination CPU can do asym_packing balance
->   * @env:       The load balancing environment
->   * @sgs:       Load-balancing statistics of the candidate busiest group
->   * @group:     The candidate busiest group
-> @@ -9755,34 +9765,21 @@ static bool sched_use_asym_prio(struct sched_domain *sd, int cpu)
->   * @env::dst_cpu can do asym_packing if it has higher priority than the
->   * preferred CPU of @group.
->   *
-> - * SMT is a special case. If we are balancing load between cores, @env::dst_cpu
-> - * can do asym_packing balance only if all its SMT siblings are idle. Also, it
-> - * can only do it if @group is an SMT group and has exactly on busy CPU. Larger
-> - * imbalances in the number of CPUS are dealt with in find_busiest_group().
-> - *
-> - * If we are balancing load within an SMT core, or at PKG domain level, always
-> - * proceed.
-> - *
->   * Return: true if @env::dst_cpu can do with asym_packing load balance. False
->   * otherwise.
->   */
->  static inline bool
-> -sched_asym(struct lb_env *env, struct sg_lb_stats *sgs, struct sched_group *group)
-> +sched_group_asym(struct lb_env *env, struct sg_lb_stats *sgs, struct sched_group *group)
->  {
-> -       /* Ensure that the whole local core is idle, if applicable. */
-> -       if (!sched_use_asym_prio(env->sd, env->dst_cpu))
-> -               return false;
-> -
->         /*
-> -        * CPU priorities does not make sense for SMT cores with more than one
-> +        * CPU priorities do not make sense for SMT cores with more than one
->          * busy sibling.
->          */
-> -       if (group->flags & SD_SHARE_CPUCAPACITY) {
-> -               if (sgs->group_weight - sgs->idle_cpus != 1)
-> -                       return false;
-> -       }
-> +       if ((group->flags & SD_SHARE_CPUCAPACITY) &&
-> +           (sgs->group_weight - sgs->idle_cpus != 1))
-> +               return false;
->
-> -       return sched_asym_prefer(env->dst_cpu, group->asym_prefer_cpu);
-> +       return sched_asym(env->sd, env->dst_cpu, group->asym_prefer_cpu);
->  }
->
->  /* One group has more than one SMT CPU while the other group does not */
-> @@ -9938,7 +9935,7 @@ static inline void update_sg_lb_stats(struct lb_env *env,
->         /* Check if dst CPU is idle and preferred to this group */
->         if (!local_group && env->sd->flags & SD_ASYM_PACKING &&
->             env->idle != CPU_NOT_IDLE && sgs->sum_h_nr_running &&
-> -           sched_asym(env, sgs, group)) {
-> +           sched_group_asym(env, sgs, group)) {
->                 sgs->group_asym_packing = 1;
->         }
->
-> @@ -11037,8 +11034,7 @@ static struct rq *find_busiest_queue(struct lb_env *env,
->                  * SMT cores with more than one busy sibling.
->                  */
->                 if ((env->sd->flags & SD_ASYM_PACKING) &&
-> -                   sched_use_asym_prio(env->sd, i) &&
-> -                   sched_asym_prefer(i, env->dst_cpu) &&
-> +                   sched_asym(env->sd, i, env->dst_cpu) &&
->                     nr_running == 1)
->                         continue;
->
-> @@ -11908,8 +11904,7 @@ static void nohz_balancer_kick(struct rq *rq)
->                  * preferred CPU must be idle.
->                  */
->                 for_each_cpu_and(i, sched_domain_span(sd), nohz.idle_cpus_mask) {
-> -                       if (sched_use_asym_prio(sd, i) &&
-> -                           sched_asym_prefer(i, cpu)) {
-> +                       if (sched_asym(sd, i, cpu)) {
->                                 flags = NOHZ_STATS_KICK | NOHZ_BALANCE_KICK;
->                                 goto unlock;
->                         }
-> --
-> 2.43.0
->
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
