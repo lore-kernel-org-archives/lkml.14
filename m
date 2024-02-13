@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687996FD1;
-	Tue, 13 Feb 2024 00:18:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3D88F65;
+	Tue, 13 Feb 2024 00:18:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707783525; cv=none; b=f4NWjzr/edoNT1GwbDEiC26sUloBJKqYffsY2YnmHRmNemYjpUjiWO7Y1/AUVi7V5eXUdHPgveT5pkvsxHIMTxrtjJZqg3ENna9pvHcqYXoA5INbjnKxg7fXPjCjVcFu176J0YgVOnNHQNBAv/J8IJnbt/IDoDyvyOeEwSedcjA=
+	t=1707783527; cv=none; b=CYDHiiFHFiY7Msok62tqPPlbSqXJIFZLJwslWjCxtzKsBo9XCzLhU8V6zznVGUxQAL6erS2DCu+GLj7OTU7voW6QLkkXAgcaV1YPOICUFSBO+006JEOV2gSfg53oI+pbZE4AeYSztBPyfby7RmUtf/N9xXGfHmBet/eQeYB4T1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707783525; c=relaxed/simple;
-	bh=uoSj6YHfddaZ734tvM57JwlsidH/pdKa4xw/pYK8Ky4=;
+	s=arc-20240116; t=1707783527; c=relaxed/simple;
+	bh=mEZhJ+CMAS0d+aoCaCr5xPrw3Uxvg+w87QQyeITvjjM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mRm3/WNsl6pSjt7vGAJX0WTqe66GHHF2Y+/WgYuQ4zf6n2YRxlbFrWCAX68x9lgNfL7AxkSC8FBfBSf67pIfq6xifSN37eY9yk2Ghq1P3eNG7GpvB01STOe+FkXbQo7Gs0ZBTvTWpQDa73h1Z9pOa7CJAnwPE345jl3A/nhPi30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JX1JRwIg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=TuEBz/7WHOwf3XSdyI2Bm8UBw0AteyuBh8wkbWOW59kJzFVvsRUTj2iVd6dwNSaJSZ++XzmnPYh4ENg45DutSOv157dv6GQ0V2Gk2mtLYXpcyCEww3XvbkbWwszlbOpTwIz35eaSUpyD/g0NkSLjZPJa3Sc4aIQrm3M8fjH65eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dwgaAupy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JX1JRwIg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B480C433F1;
-	Tue, 13 Feb 2024 00:18:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dwgaAupy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82DD0C43390;
+	Tue, 13 Feb 2024 00:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707783524;
-	bh=uoSj6YHfddaZ734tvM57JwlsidH/pdKa4xw/pYK8Ky4=;
+	s=k20201202; t=1707783527;
+	bh=mEZhJ+CMAS0d+aoCaCr5xPrw3Uxvg+w87QQyeITvjjM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JX1JRwIg4KCBaVvhcRd4i0OhHIwoPG5ZGslcBHZWVgMjXs0dMQ6Be8UpN1V/seFGV
-	 PuZgIMzCTvGfyhRSEyJ4hnbRIkm1/fzlRW+XabieATwT8r3eSMMReGlU9zwNGUu/vY
-	 c3gNxkJkI8rCrCasxse/30jtoV8NVzZ6khJo28L/zU/khiQjYzu4Vttp6T7oxe/0Ta
-	 gOfcH59jwxCbjzORHC3XSPrEl4KwxE4aO/TQRDJ+tcuIT4yWl8h+SS2Uum+EP2xUGK
-	 CrFdCaSu5QsGio4z5Hj8xKi6XODBL+PniDlPetNm0XbLg7iaTkBdsPlyxHvnzYNu7+
-	 fP8r1xOh36crQ==
+	b=dwgaAupyh/myJC8OgSr0Oa1SsAMLop3M/hXVmGH8feTX7MEY3v5Cd7ICjqYICOj8M
+	 kNUPJ5MdDs8mnGgfBDbKV3z2TE533tdX3TKoZUIDl2kaWGJaQ+9egzWOuQHK6ETQ9u
+	 dqb6h0NVrh2JK1js8evPOfbfbZ/XD5jRbpbj+BgUhJpTo3/IOD52WDz8fZ0m+0vCyi
+	 fSr/XzB3lMyne1ZTMGEbmQ7GqXql9u3mSrgghZH4Ghc46BdSgpZQjUPREAg+jjFcCw
+	 FOVz8IBB/gDX205wDjZPcsihw18mS+xh3Gw70jGyE0BqWpvYrVZ2NOpk9yJHmlRAqc
+	 TFLaUOoKZzmsQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
 	Sasha Levin <sashal@kernel.org>,
 	ntfs3@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.7 05/58] fs/ntfs3: Print warning while fixing hard links count
-Date: Mon, 12 Feb 2024 19:17:11 -0500
-Message-ID: <20240213001837.668862-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.7 07/58] fs/ntfs3: Fix multithreaded stress test
+Date: Mon, 12 Feb 2024 19:17:13 -0500
+Message-ID: <20240213001837.668862-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240213001837.668862-1-sashal@kernel.org>
 References: <20240213001837.668862-1-sashal@kernel.org>
@@ -51,34 +51,60 @@ Content-Transfer-Encoding: 8bit
 
 From: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
 
-[ Upstream commit 85ba2a75faee759809a7e43b4c103ac59bac1026 ]
+[ Upstream commit a8b0c9fc3a2dba07f697ef7825e04363ff12f071 ]
 
 Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ntfs3/inode.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ntfs3/attrib.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/fs/ntfs3/inode.c b/fs/ntfs3/inode.c
-index 5e3d71374918..fa6c7965473c 100644
---- a/fs/ntfs3/inode.c
-+++ b/fs/ntfs3/inode.c
-@@ -412,7 +412,6 @@ static struct inode *ntfs_read_mft(struct inode *inode,
- 		goto out;
+diff --git a/fs/ntfs3/attrib.c b/fs/ntfs3/attrib.c
+index 63f70259edc0..4b78b669a3bd 100644
+--- a/fs/ntfs3/attrib.c
++++ b/fs/ntfs3/attrib.c
+@@ -886,7 +886,7 @@ int attr_data_get_block(struct ntfs_inode *ni, CLST vcn, CLST clen, CLST *lcn,
+ 	struct runs_tree *run = &ni->file.run;
+ 	struct ntfs_sb_info *sbi;
+ 	u8 cluster_bits;
+-	struct ATTRIB *attr = NULL, *attr_b;
++	struct ATTRIB *attr, *attr_b;
+ 	struct ATTR_LIST_ENTRY *le, *le_b;
+ 	struct mft_inode *mi, *mi_b;
+ 	CLST hint, svcn, to_alloc, evcn1, next_svcn, asize, end, vcn0, alen;
+@@ -904,12 +904,8 @@ int attr_data_get_block(struct ntfs_inode *ni, CLST vcn, CLST clen, CLST *lcn,
+ 		*len = 0;
+ 	up_read(&ni->file.run_lock);
  
- 	if (!is_match && name) {
--		/* Reuse rec as buffer for ascii name. */
- 		err = -ENOENT;
- 		goto out;
- 	}
-@@ -427,6 +426,7 @@ static struct inode *ntfs_read_mft(struct inode *inode,
+-	if (*len) {
+-		if (*lcn != SPARSE_LCN || !new)
+-			return 0; /* Fast normal way without allocation. */
+-		else if (clen > *len)
+-			clen = *len;
+-	}
++	if (*len && (*lcn != SPARSE_LCN || !new))
++		return 0; /* Fast normal way without allocation. */
  
- 	if (names != le16_to_cpu(rec->hard_links)) {
- 		/* Correct minor error on the fly. Do not mark inode as dirty. */
-+		ntfs_inode_warn(inode, "Correct links count -> %u.", names);
- 		rec->hard_links = cpu_to_le16(names);
- 		ni->mi.dirty = true;
- 	}
+ 	/* No cluster in cache or we need to allocate cluster in hole. */
+ 	sbi = ni->mi.sbi;
+@@ -918,6 +914,17 @@ int attr_data_get_block(struct ntfs_inode *ni, CLST vcn, CLST clen, CLST *lcn,
+ 	ni_lock(ni);
+ 	down_write(&ni->file.run_lock);
+ 
++	/* Repeat the code above (under write lock). */
++	if (!run_lookup_entry(run, vcn, lcn, len, NULL))
++		*len = 0;
++
++	if (*len) {
++		if (*lcn != SPARSE_LCN || !new)
++			goto out; /* normal way without allocation. */
++		if (clen > *len)
++			clen = *len;
++	}
++
+ 	le_b = NULL;
+ 	attr_b = ni_find_attr(ni, NULL, &le_b, ATTR_DATA, NULL, 0, NULL, &mi_b);
+ 	if (!attr_b) {
 -- 
 2.43.0
 
