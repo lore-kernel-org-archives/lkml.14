@@ -1,78 +1,77 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C66C110A3A;
-	Tue, 13 Feb 2024 19:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2F51CD33;
+	Tue, 13 Feb 2024 19:20:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707852007; cv=none; b=pfbTCCWW7j6Ak8lq1gSbA4XhoEVvIfzUzjJGozjaiD9/ZfWofb/OImoT2r3mDxu1ryvspr2FdrE2sTZFPoYSobSNICbRdgpKiGJe56yhU/ibMdzeHqUrlVcYA5tJJuUAE5XusMRdk0+/D/5LrJDBqart5LJ0kmwnvWixoBtAXzA=
+	t=1707852034; cv=none; b=Nh/gAfFyB/jKNq854+OfDdviDsJOwyjlViKeq+VVWlm7UUf/itmpTTRVir532CFOusnvB1MoVdp3cx7ugIoXODlnFQH5DsU2CKwt3hkiaF3TZBEm2ISnMxEeh1npXeL+JVC3GtWQdNpsHStTKQNbJOCmMkGiQsJuHvclVEJbxfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707852007; c=relaxed/simple;
-	bh=L6CFmHzcsf+jEGi+d8zlHyKMcEu6Clt494lEjZjuXkw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Zphjq+hoR3T0ZXY5fbKdPaGC6WXtIDT9KssgPmxWxR8/w/of9j22OzZNk552xBZlijutx6Nlv2482mNiu9qI+aLGUZRYPKcbRGTwKsBUxoJ6qbTPJOm1FreVmdVO2MPdaZsxPj/r9+gdBQ+rapefkVKzDkuLsnD/SrjaD5SxzkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from [194.95.143.137] (helo=phil.dip.tu-dresden.de)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1rZyK2-0008K1-KX; Tue, 13 Feb 2024 20:20:02 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: robh+dt@kernel.org,
-	Johan Jonker <jbx6244@gmail.com>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	linux-arm-kernel@lists.infradead.org,
-	daniel@ffwll.ch,
-	linux-kernel@vger.kernel.org,
-	markyao0591@gmail.com,
-	devicetree@vger.kernel.org,
-	maarten.lankhorst@linux.intel.com,
-	dri-devel@lists.freedesktop.org,
-	conor+dt@kernel.org,
-	hjc@rock-chips.com,
-	linux-rockchip@lists.infradead.org,
-	airlied@gmail.com,
-	andy.yan@rock-chips.com,
-	mripard@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	tzimmermann@suse.de
-Subject: Re: (subset) [PATCH v2 1/6] dt-bindings: display: rockchip: rockchip,dw-hdmi: remove port property
-Date: Tue, 13 Feb 2024 20:20:01 +0100
-Message-Id: <170785199080.3350387.14199175297568955666.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <a493c65e-7cf9-455f-95d5-8c98cad35710@gmail.com>
-References: <a493c65e-7cf9-455f-95d5-8c98cad35710@gmail.com>
+	s=arc-20240116; t=1707852034; c=relaxed/simple;
+	bh=bCBD7mPLAylg/6M3bBUD0Tc0oDZ4U8rgdh620O4x+0U=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=mT96NrmPmiZf0hWJU+wkP5xaopFVlqipmYb+cvZ/qw/p6K6tH7GA11lp/PpIDzC6C3McjP9kfzokVpnthj0h9r5J0zZiu+Hpb3+O7lZMmzMgFwRkZdk4gc4Sme0Zj/9Q0KaAHTtZuNGC8BgWBO+rduF1YNJ6jX5uJAnRLF+B/Qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=UXy3zfYe; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="UXy3zfYe"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net A34CF45ACA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1707852031; bh=TJPwRgqvklzt+2lG0mVqS0xnQODHATZ076Sy/XkZG1U=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=UXy3zfYetLJkznjxjfelUZOqJPk1DuPI/IDFFGrdQaJLAi3kg+vRGeEIiRYoaWUgs
+	 pJFVHSRGsyuGEBlwjlq7am0t9sMQHJ5KgKY3dhe0XUVX1KIBRS1SO1JOeCyO7KyT/M
+	 a3n5wcV2xZ7ybc4qmnH0wJ4YEIN7ctLl65IyymWF+KrKkcjI09eJXK0HcYujKw3nrs
+	 5UEtvxzfs9f6/3BzHWg7VSZWTQmwUsKN6Uax3jGNi/ciw047cF+NRJPEpu09jAge11
+	 Vpu0b6BQ0+4WHlqxzdjKCKQeSSfWyzgnZvOfCIHu6Gl9jUU4oNaWYMA8LjjF3DeWTb
+	 R028Ober9z4Hg==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625:67c:16ff:fe81:5f9b])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id A34CF45ACA;
+	Tue, 13 Feb 2024 19:20:31 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: workflows@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, security@kernel.org, Sasha Levin
+ <sashal@kernel.org>, Lee Jones <lee@kernel.org>
+Subject: Re: [PATCH] Documentation: Document the Linux Kernel CVE process
+In-Reply-To: <2024021322-pumice-corny-eabc@gregkh>
+References: <2024021314-unwelcome-shrill-690e@gregkh>
+ <2024021322-pumice-corny-eabc@gregkh>
+Date: Tue, 13 Feb 2024 12:20:30 -0700
+Message-ID: <87sf1w41dt.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Wed, 31 Jan 2024 22:14:29 +0100, Johan Jonker wrote:
-> The hdmi-connector nodes are now functional and the new way to model
-> hdmi ports nodes with both in and output port subnodes. Unfortunately
-> with the conversion to YAML the old method with only an input port node
-> was used. Later the new method was also added to the binding.
-> A binding must be unambiguously, so remove the old port property
-> entirely and make port@0 and port@1 a requirement as all
-> upstream dts files are updated as well and because checking
-> deprecated stuff is a bit pointless.
-> Update the example to avoid use of the removed property.
-> 
-> [...]
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
 
-Applied, thanks!
+> On Tue, Feb 13, 2024 at 07:48:12PM +0100, Greg Kroah-Hartman wrote:
+>> The Linux kernel project now has the ability to assign CVEs to fixed
+>> issues, so document the process and how individual developers can get a
+>> CVE if one is not automatically assigned for their fixes.
+>> 
+>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> Signed-off-by: Lee Jones <lee@kernel.org>
+>> ---
+>
+> Jon, if you don't have any objections, I can just take this in my tree
+> for the next -rc pull request I have for Linus with other driver-core
+> type stuff.
 
-[1/6] dt-bindings: display: rockchip: rockchip,dw-hdmi: remove port property
-      commit: 0d192c4c72ce00ab07a6b27f068607e21f754a46
-[2/6] dt-bindings: display: rockchip,dw-hdmi: add power-domains property
-      commit: 6b1f93ea345947c94bf3a7a6e668a2acfd310918
+Up to you - I probably have another 6.8 pull to do as well.  Happy
+either way, if you want to push it:
 
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+Acked-by: Jonathan Corbet <corbet@lwn.net>
+
+Thanks,
+
+jon
