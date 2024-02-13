@@ -1,296 +1,151 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94758250FE
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 10:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB8C249E8;
+	Tue, 13 Feb 2024 10:38:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707820625; cv=none; b=BYE5+Ibn6sSx/QVkU2EyJCKk33/L7QgfmokKWkoomgFPjxKIHgHSCw3hSCKB1NeafcVKlbDRYlN6oF2eM3YgGd01HKchaNEhfvYmf8P54itTjHoirectXX/wb9XhXDqSKIwHhNY6CRJEaH71V96zSm5fyGYpBOhaA4KOVGlT5c0=
+	t=1707820726; cv=none; b=U5P9aRTAS/k6tJMbW32NFz8qx1nMC0IkeDlTPh/F5D4LmxycfCrP3rmZPWgM1BKpU8NhyqAHRq4tRvglTv8SqVYcSFEj169pX+4jXm66LCoZJqRKS4L72ToLaEGB91OuXOr9cTkMpRvWWZHCe81H3US9J9ZghR+CMWtf4+QAW+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707820625; c=relaxed/simple;
-	bh=OQNLkfn2weLX6cBIlGQmnnt7DIK8DFhuXLHeqDbcFy4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cNmQiiWwsgM/o4HGn+COXevG4eVR2viE9DBvZkdHDgRZSeCrcBOuz5cNBXRuJnmwPMcSgajz6jayKAgT4YbOkkR32btKCFMxrbdzLt3T7L41m4tUsVOHvB62L+B22JOaLFjfaRsioUsQKkRNoPOt3iu2+Ar5LTznPTV9c9zlBS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1rZq9s-0003K0-MI
-	for linux-kernel@vger.kernel.org; Tue, 13 Feb 2024 11:37:00 +0100
-Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1rZq9s-000SqH-5n
-	for linux-kernel@vger.kernel.org; Tue, 13 Feb 2024 11:37:00 +0100
-Received: from dspam.blackshift.org (localhost [127.0.0.1])
-	by bjornoya.blackshift.org (Postfix) with SMTP id D490D28D560
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 10:36:59 +0000 (UTC)
-Received: from hardanger.blackshift.org (unknown [172.20.34.65])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by bjornoya.blackshift.org (Postfix) with ESMTPS id E41E928D522;
-	Tue, 13 Feb 2024 10:36:55 +0000 (UTC)
-Received: from [172.20.34.65] (localhost [::1])
-	by hardanger.blackshift.org (OpenSMTPD) with ESMTP id b8acd59c;
-	Tue, 13 Feb 2024 10:36:54 +0000 (UTC)
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Date: Tue, 13 Feb 2024 11:36:44 +0100
-Subject: [PATCH v8 2/3] can: xilinx_can: Add ECC support
+	s=arc-20240116; t=1707820726; c=relaxed/simple;
+	bh=w1V92yhJ7znW5mCLg9cJb/2PDW8YuAua0bO8eBGqGoE=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=aUDiFVK50WiOzFapZPjwbarxqxuByJHtauj3zWnJr3gkqsrdGVrqcTa1jAbnBQuDArKevaFSdnR2xCl6u+esHR52RWO3mE9D3foUzqaur0L52Ybz6c0fYNvn3Hr4Rgdrqi/tHuaktaXzjOAOUYUAus0XC2UculZwhkSpkDi3HAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4TqKEk3C; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JrIAE2bT; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4TqKEk3C";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JrIAE2bT"
+Date: Tue, 13 Feb 2024 10:38:42 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1707820723;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=i0Y8LXuXM+2quXl6GjfVoen1w/ZUhO5D8VOBXlYzfXc=;
+	b=4TqKEk3CzHdi5cGbHGNfpMgWHKs0/J7t8ttDMHNvHJAh2Dk6oqmDJVMlR6z/uvB5n9Z+Jx
+	+ZytB+2ZCcq0kNyZOMf6V8zSPfmlZh+YE8nzLz40G2wCVj1oKxtJlCCPDQbQo8tNHtqde0
+	ilT6zwu0AS8JbpnnUZmITruYtukdPnyPbsDvHiJtmu1aMqfBZrwol4Eku0LfSwZITZCAnl
+	vcijPP4N4f2XIr5lz9yFDFPwYhhEf+P2GeNFfPEh6I1CL7oz4yQpi01UUV74JWL2bZnkJ+
+	EAtIpB0QQYjnqHjjEwduU3ttKfOPyKDPrDN+oJs/TcMLThiJBterTHgbFsxcmw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1707820723;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=i0Y8LXuXM+2quXl6GjfVoen1w/ZUhO5D8VOBXlYzfXc=;
+	b=JrIAE2bTwKYGzr9MGVPvm4L9co2hzupV5jlLbTy1D6Q3VT1kv407Rvs6NTmvh1XSFtV8Sa
+	vtjZc8Nn2HxjlVBA==
+From: "tip-bot2 for Marc Zyngier" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/urgent] irqchip/gic-v3-its: Fix GICv4.1 VPE affinity update
+Cc: Kunkun Jiang <jiangkunkun@huawei.com>, Marc Zyngier <maz@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240213101206.2137483-4-maz@kernel.org>
+References: <20240213101206.2137483-4-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Message-ID: <170782072242.398.18224261385789305537.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240213-xilinx_ecc-v8-2-8d75f8b80771@pengutronix.de>
-References: <20240213-xilinx_ecc-v8-0-8d75f8b80771@pengutronix.de>
-In-Reply-To: <20240213-xilinx_ecc-v8-0-8d75f8b80771@pengutronix.de>
-To: Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>, 
- Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>, 
- Wolfgang Grandegger <wg@grandegger.com>, 
- Marc Kleine-Budde <mkl@pengutronix.de>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Michal Simek <michal.simek@amd.com>
-Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Srinivas Goud <srinivas.goud@amd.com>
-X-Mailer: b4 0.13-dev-f0463
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8338; i=mkl@pengutronix.de;
- h=from:subject:message-id; bh=gS9ttAxKlaZVOdUEMKLhADsphMzyBL6B+1TmW/EIUeM=;
- b=owEBbQGS/pANAwAKASg4oj56LbxvAcsmYgBly0ZCLx3YJnmzr0QrOOE4bbY0rryv24n6HQUJH
- WB0FwgqbKiJATMEAAEKAB0WIQRQQLqG4LYE3Sm8Pl8oOKI+ei28bwUCZctGQgAKCRAoOKI+ei28
- bwDZCACNnZX5KR7bYK2I8TE9VceuF4Vx+FTn81CBamjsxoRnJr0qq6kTvefjJa7kq7N393diyX1
- FftLCK4Imn7WqRGXwjgVRgsA9BvnhXA3zBSksy7txHymRlKNjMFucRjtBDuQ9yq8Vgfo066w2jN
- k5wrII9iU7XMIgTboadPAcz1XGT2L/h/sVnAhRcRC1g6l6PNkPYWusIsHqiIT+xzRy0qhWnVDbH
- T8FckT2VbrLC3WAM4IX8hrkIMWz5Hq0Hij8dH7fxUYrPjF7F2/8Ha9MxYCEdd6H2Vz0GWDvGE0p
- /KmWqPzqGAqKH3265KCFivki49xp6nlUMdrABNOnzbAFqT5K
-X-Developer-Key: i=mkl@pengutronix.de; a=openpgp;
- fpr=C1400BA0B3989E6FBC7D5B5C2B5EE211C58AEA54
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-From: Srinivas Goud <srinivas.goud@amd.com>
+The following commit has been merged into the irq/urgent branch of tip:
 
-Add ECC support for Xilinx CAN Controller, so this driver reports
-1bit/2bit ECC errors for FIFO's based on ECC error interrupt. ECC
-feature for Xilinx CAN Controller selected through 'xlnx,has-ecc' DT
-property
+Commit-ID:     af9acbfc2c4b72c378d0b9a2ee023ed01055d3e2
+Gitweb:        https://git.kernel.org/tip/af9acbfc2c4b72c378d0b9a2ee023ed01055d3e2
+Author:        Marc Zyngier <maz@kernel.org>
+AuthorDate:    Tue, 13 Feb 2024 10:12:06 
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 13 Feb 2024 11:29:52 +01:00
 
-Signed-off-by: Srinivas Goud <srinivas.goud@amd.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+irqchip/gic-v3-its: Fix GICv4.1 VPE affinity update
+
+When updating the affinity of a VPE, the VMOVP command is currently skipped
+if the two CPUs are part of the same VPE affinity.
+
+But this is wrong, as the doorbell corresponding to this VPE is still
+delivered on the 'old' CPU, which screws up the balancing.  Furthermore,
+offlining that 'old' CPU results in doorbell interrupts generated for this
+VPE being discarded.
+
+The harsh reality is that VMOVP cannot be elided when a set_affinity()
+request occurs. It needs to be obeyed, and if an optimisation is to be
+made, it is at the point where the affinity change request is made (such as
+in KVM).
+
+Drop the VMOVP elision altogether, and only use the vpe_table_mask
+to try and stay within the same ITS affinity group if at all possible.
+
+Fixes: dd3f050a216e (irqchip/gic-v4.1: Implement the v4.1 flavour of VMOVP)
+Reported-by: Kunkun Jiang <jiangkunkun@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20240213101206.2137483-4-maz@kernel.org
+
 ---
- drivers/net/can/xilinx_can.c | 105 +++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 101 insertions(+), 4 deletions(-)
+ drivers/irqchip/irq-gic-v3-its.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_can.c
-index 3722eaa84234..af2af4eade3c 100644
---- a/drivers/net/can/xilinx_can.c
-+++ b/drivers/net/can/xilinx_can.c
-@@ -31,6 +31,7 @@
- #include <linux/phy/phy.h>
- #include <linux/pm_runtime.h>
- #include <linux/reset.h>
-+#include <linux/u64_stats_sync.h>
- 
- #define DRIVER_NAME	"xilinx_can"
- 
-@@ -58,6 +59,13 @@ enum xcan_reg {
- 					  */
- 	XCAN_F_BTR_OFFSET	= 0x08C, /* Data Phase Bit Timing */
- 	XCAN_TRR_OFFSET		= 0x0090, /* TX Buffer Ready Request */
-+
-+	/* only on AXI CAN cores */
-+	XCAN_ECC_CFG_OFFSET	= 0xC8, /* ECC Configuration */
-+	XCAN_TXTLFIFO_ECC_OFFSET	= 0xCC, /* TXTL FIFO ECC error counter */
-+	XCAN_TXOLFIFO_ECC_OFFSET	= 0xD0, /* TXOL FIFO ECC error counter */
-+	XCAN_RXFIFO_ECC_OFFSET	= 0xD4, /* RX FIFO ECC error counter */
-+
- 	XCAN_AFR_EXT_OFFSET	= 0x00E0, /* Acceptance Filter */
- 	XCAN_FSR_OFFSET		= 0x00E8, /* RX FIFO Status */
- 	XCAN_TXMSG_BASE_OFFSET	= 0x0100, /* TX Message Space */
-@@ -124,6 +132,18 @@ enum xcan_reg {
- #define XCAN_IXR_TXFLL_MASK		0x00000004 /* Tx FIFO Full intr */
- #define XCAN_IXR_TXOK_MASK		0x00000002 /* TX successful intr */
- #define XCAN_IXR_ARBLST_MASK		0x00000001 /* Arbitration lost intr */
-+#define XCAN_IXR_E2BERX_MASK		BIT(23) /* RX FIFO two bit ECC error */
-+#define XCAN_IXR_E1BERX_MASK		BIT(22) /* RX FIFO one bit ECC error */
-+#define XCAN_IXR_E2BETXOL_MASK		BIT(21) /* TXOL FIFO two bit ECC error */
-+#define XCAN_IXR_E1BETXOL_MASK		BIT(20) /* TXOL FIFO One bit ECC error */
-+#define XCAN_IXR_E2BETXTL_MASK		BIT(19) /* TXTL FIFO Two bit ECC error */
-+#define XCAN_IXR_E1BETXTL_MASK		BIT(18) /* TXTL FIFO One bit ECC error */
-+#define XCAN_IXR_ECC_MASK		(XCAN_IXR_E2BERX_MASK | \
-+					XCAN_IXR_E1BERX_MASK | \
-+					XCAN_IXR_E2BETXOL_MASK | \
-+					XCAN_IXR_E1BETXOL_MASK | \
-+					XCAN_IXR_E2BETXTL_MASK | \
-+					XCAN_IXR_E1BETXTL_MASK)
- #define XCAN_IDR_ID1_MASK		0xFFE00000 /* Standard msg identifier */
- #define XCAN_IDR_SRR_MASK		0x00100000 /* Substitute remote TXreq */
- #define XCAN_IDR_IDE_MASK		0x00080000 /* Identifier extension */
-@@ -137,6 +157,11 @@ enum xcan_reg {
- #define XCAN_2_FSR_RI_MASK		0x0000003F /* RX Read Index */
- #define XCAN_DLCR_EDL_MASK		0x08000000 /* EDL Mask in DLC */
- #define XCAN_DLCR_BRS_MASK		0x04000000 /* BRS Mask in DLC */
-+#define XCAN_ECC_CFG_REECRX_MASK	BIT(2) /* Reset RX FIFO ECC error counters */
-+#define XCAN_ECC_CFG_REECTXOL_MASK	BIT(1) /* Reset TXOL FIFO ECC error counters */
-+#define XCAN_ECC_CFG_REECTXTL_MASK	BIT(0) /* Reset TXTL FIFO ECC error counters */
-+#define XCAN_ECC_1BIT_CNT_MASK		GENMASK(15, 0) /* FIFO ECC 1bit count mask */
-+#define XCAN_ECC_2BIT_CNT_MASK		GENMASK(31, 16) /* FIFO ECC 2bit count mask */
- 
- /* CAN register bit shift - XCAN_<REG>_<BIT>_SHIFT */
- #define XCAN_BRPR_TDC_ENABLE		BIT(16) /* Transmitter Delay Compensation (TDC) Enable */
-@@ -202,6 +227,13 @@ struct xcan_devtype_data {
-  * @devtype:			Device type specific constants
-  * @transceiver:		Optional pointer to associated CAN transceiver
-  * @rstc:			Pointer to reset control
-+ * @ecc_enable:			ECC enable flag
-+ * @ecc_rx_2_bit_errors:	RXFIFO 2bit ECC count
-+ * @ecc_rx_1_bit_errors:	RXFIFO 1bit ECC count
-+ * @ecc_txol_2_bit_errors:	TXOLFIFO 2bit ECC count
-+ * @ecc_txol_1_bit_errors:	TXOLFIFO 1bit ECC count
-+ * @ecc_txtl_2_bit_errors:	TXTLFIFO 2bit ECC count
-+ * @ecc_txtl_1_bit_errors:	TXTLFIFO 1bit ECC count
-  */
- struct xcan_priv {
- 	struct can_priv can;
-@@ -221,6 +253,13 @@ struct xcan_priv {
- 	struct xcan_devtype_data devtype;
- 	struct phy *transceiver;
- 	struct reset_control *rstc;
-+	bool ecc_enable;
-+	u64_stats_t ecc_rx_2_bit_errors;
-+	u64_stats_t ecc_rx_1_bit_errors;
-+	u64_stats_t ecc_txol_2_bit_errors;
-+	u64_stats_t ecc_txol_1_bit_errors;
-+	u64_stats_t ecc_txtl_2_bit_errors;
-+	u64_stats_t ecc_txtl_1_bit_errors;
- };
- 
- /* CAN Bittiming constants as per Xilinx CAN specs */
-@@ -523,6 +562,9 @@ static int xcan_chip_start(struct net_device *ndev)
- 		XCAN_IXR_ERROR_MASK | XCAN_IXR_RXOFLW_MASK |
- 		XCAN_IXR_ARBLST_MASK | xcan_rx_int_mask(priv);
- 
-+	if (priv->ecc_enable)
-+		ier |= XCAN_IXR_ECC_MASK;
-+
- 	if (priv->devtype.flags & XCAN_FLAG_RXMNF)
- 		ier |= XCAN_IXR_RXMNF_MASK;
- 
-@@ -1127,6 +1169,50 @@ static void xcan_err_interrupt(struct net_device *ndev, u32 isr)
- 		priv->can.can_stats.bus_error++;
- 	}
- 
-+	if (priv->ecc_enable && isr & XCAN_IXR_ECC_MASK) {
-+		u32 reg_rx_ecc, reg_txol_ecc, reg_txtl_ecc;
-+
-+		reg_rx_ecc = priv->read_reg(priv, XCAN_RXFIFO_ECC_OFFSET);
-+		reg_txol_ecc = priv->read_reg(priv, XCAN_TXOLFIFO_ECC_OFFSET);
-+		reg_txtl_ecc = priv->read_reg(priv, XCAN_TXTLFIFO_ECC_OFFSET);
-+
-+		/* The counter reaches its maximum at 0xffff and does not overflow.
-+		 * Accept the small race window between reading and resetting ECC counters.
-+		 */
-+		priv->write_reg(priv, XCAN_ECC_CFG_OFFSET, XCAN_ECC_CFG_REECRX_MASK |
-+				XCAN_ECC_CFG_REECTXOL_MASK | XCAN_ECC_CFG_REECTXTL_MASK);
-+
-+		if (isr & XCAN_IXR_E2BERX_MASK) {
-+			u64_stats_add(&priv->ecc_rx_2_bit_errors,
-+				      FIELD_GET(XCAN_ECC_2BIT_CNT_MASK, reg_rx_ecc));
-+		}
-+
-+		if (isr & XCAN_IXR_E1BERX_MASK) {
-+			u64_stats_add(&priv->ecc_rx_1_bit_errors,
-+				      FIELD_GET(XCAN_ECC_1BIT_CNT_MASK, reg_rx_ecc));
-+		}
-+
-+		if (isr & XCAN_IXR_E2BETXOL_MASK) {
-+			u64_stats_add(&priv->ecc_txol_2_bit_errors,
-+				      FIELD_GET(XCAN_ECC_2BIT_CNT_MASK, reg_txol_ecc));
-+		}
-+
-+		if (isr & XCAN_IXR_E1BETXOL_MASK) {
-+			u64_stats_add(&priv->ecc_txol_1_bit_errors,
-+				      FIELD_GET(XCAN_ECC_1BIT_CNT_MASK, reg_txol_ecc));
-+		}
-+
-+		if (isr & XCAN_IXR_E2BETXTL_MASK) {
-+			u64_stats_add(&priv->ecc_txtl_2_bit_errors,
-+				      FIELD_GET(XCAN_ECC_2BIT_CNT_MASK, reg_txtl_ecc));
-+		}
-+
-+		if (isr & XCAN_IXR_E1BETXTL_MASK) {
-+			u64_stats_add(&priv->ecc_txtl_1_bit_errors,
-+				      FIELD_GET(XCAN_ECC_1BIT_CNT_MASK, reg_txtl_ecc));
-+		}
-+	}
-+
- 	if (cf.can_id) {
- 		struct can_frame *skb_cf;
- 		struct sk_buff *skb = alloc_can_err_skb(ndev, &skb_cf);
-@@ -1354,8 +1440,8 @@ static irqreturn_t xcan_interrupt(int irq, void *dev_id)
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 250b456..53abd47 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -3826,8 +3826,9 @@ static int its_vpe_set_affinity(struct irq_data *d,
+ 				bool force)
  {
- 	struct net_device *ndev = (struct net_device *)dev_id;
- 	struct xcan_priv *priv = netdev_priv(ndev);
-+	u32 isr_errors, mask;
- 	u32 isr, ier;
--	u32 isr_errors;
- 	u32 rx_int_mask = xcan_rx_int_mask(priv);
+ 	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
+-	int from, cpu = cpumask_first(mask_val);
++	struct cpumask common, *table_mask;
+ 	unsigned long flags;
++	int from, cpu;
  
- 	/* Get the interrupt status from Xilinx CAN */
-@@ -1374,10 +1460,15 @@ static irqreturn_t xcan_interrupt(int irq, void *dev_id)
- 	if (isr & XCAN_IXR_TXOK_MASK)
- 		xcan_tx_interrupt(ndev, isr);
+ 	/*
+ 	 * Changing affinity is mega expensive, so let's be as lazy as
+@@ -3843,19 +3844,22 @@ static int its_vpe_set_affinity(struct irq_data *d,
+ 	 * taken on any vLPI handling path that evaluates vpe->col_idx.
+ 	 */
+ 	from = vpe_to_cpuid_lock(vpe, &flags);
+-	if (from == cpu)
+-		goto out;
+-
+-	vpe->col_idx = cpu;
++	table_mask = gic_data_rdist_cpu(from)->vpe_table_mask;
  
-+	mask = XCAN_IXR_ERROR_MASK | XCAN_IXR_RXOFLW_MASK |
-+		XCAN_IXR_BSOFF_MASK | XCAN_IXR_ARBLST_MASK |
-+		XCAN_IXR_RXMNF_MASK;
+ 	/*
+-	 * GICv4.1 allows us to skip VMOVP if moving to a cpu whose RD
+-	 * is sharing its VPE table with the current one.
++	 * If we are offered another CPU in the same GICv4.1 ITS
++	 * affinity, pick this one. Otherwise, any CPU will do.
+ 	 */
+-	if (gic_data_rdist_cpu(cpu)->vpe_table_mask &&
+-	    cpumask_test_cpu(from, gic_data_rdist_cpu(cpu)->vpe_table_mask))
++	if (table_mask && cpumask_and(&common, mask_val, table_mask))
++		cpu = cpumask_test_cpu(from, &common) ? from : cpumask_first(&common);
++	else
++		cpu = cpumask_first(mask_val);
 +
-+	if (priv->ecc_enable)
-+		mask |= XCAN_IXR_ECC_MASK;
++	if (from == cpu)
+ 		goto out;
+ 
++	vpe->col_idx = cpu;
 +
- 	/* Check for the type of error interrupt and Processing it */
--	isr_errors = isr & (XCAN_IXR_ERROR_MASK | XCAN_IXR_RXOFLW_MASK |
--			    XCAN_IXR_BSOFF_MASK | XCAN_IXR_ARBLST_MASK |
--			    XCAN_IXR_RXMNF_MASK);
-+	isr_errors = isr & mask;
- 	if (isr_errors) {
- 		priv->write_reg(priv, XCAN_ICR_OFFSET, isr_errors);
- 		xcan_err_interrupt(ndev, isr);
-@@ -1793,6 +1884,7 @@ static int xcan_probe(struct platform_device *pdev)
- 		return -ENOMEM;
+ 	its_send_vmovp(vpe);
+ 	its_vpe_db_proxy_move(vpe, from, cpu);
  
- 	priv = netdev_priv(ndev);
-+	priv->ecc_enable = of_property_read_bool(pdev->dev.of_node, "xlnx,has-ecc");
- 	priv->dev = &pdev->dev;
- 	priv->can.bittiming_const = devtype->bittiming_const;
- 	priv->can.do_set_mode = xcan_do_set_mode;
-@@ -1909,6 +2001,11 @@ static int xcan_probe(struct platform_device *pdev)
- 		   priv->reg_base, ndev->irq, priv->can.clock.freq,
- 		   hw_tx_max, priv->tx_max);
- 
-+	if (priv->ecc_enable) {
-+		/* Reset FIFO ECC counters */
-+		priv->write_reg(priv, XCAN_ECC_CFG_OFFSET, XCAN_ECC_CFG_REECRX_MASK |
-+			XCAN_ECC_CFG_REECTXOL_MASK | XCAN_ECC_CFG_REECTXTL_MASK);
-+	}
- 	return 0;
- 
- err_disableclks:
-
--- 
-2.43.0
-
-
