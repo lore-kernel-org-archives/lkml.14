@@ -1,219 +1,175 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2090.outbound.protection.outlook.com [40.107.223.90])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C308BE3;
-	Tue, 13 Feb 2024 00:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.90
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707785586; cv=fail; b=e2bsLWOHJ9Pa/qwf2icAoPbpSTGYT0KAFiL9zpRixWeC/VVO/SPg3tMc44dYFVNNKTUnkj/Li+44Ku4kBXq0d9MmI450Kx72FxYtmJqFUtWsmgCey1ldOVquuuahDa5G0UWFq7lpNdYDitv30/QYDag8DKIWnGiWzhrVsttq28s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707785586; c=relaxed/simple;
-	bh=GFE8vj4/TIefGU5yuDDBr9Q21hamCF2WCswoWB/cT+c=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Hrh8nWxFlhVPA6hBAXz3jr4scmiY+QZ4rWUFLdr6J+h5BLQcobJ54ZFv4F00t5mHc+tq0Ckx4EC92VBhP407PjJdkEJQXSnRDPliAotswCPZbl0vhUme9Aq4hCidbG7z4TIu+zSqqjvs84PvpxR7iUyxXAgTvYsaW2uj9+sT9P4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.com; spf=pass smtp.mailfrom=phytec.com; dkim=pass (1024-bit key) header.d=phytec.com header.i=@phytec.com header.b=SQJHBn+V; arc=fail smtp.client-ip=40.107.223.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730D0631;
+	Tue, 13 Feb 2024 00:54:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707785696; cv=none; b=sAq5TgbNkTvcO+5tJEKp5ANVF2b6IUjZFDmqKcBUPC1V3/vFztW/KUGvr37TTs4ulGWHD/kBA/E5b13NRkG9/yhuGGn0w2dYG3GL5Ez58zPC75MvXExU+jxk2wWS7Ij92F8ewAN4euBJbFJEBEtme9+GJ8v+XsiYKmdp7iepP98=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707785696; c=relaxed/simple;
+	bh=9xhUO2oBg3VGby3vuFrh+xyofs8aRXlLZClt/1/wQLY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EYil5c7OmrqnjpemOF3ykc5LHlLU/UVntlzCtD68sIRSqwH7his7cAAWKFNL9s4mixVXD4IKOjl8Cm5AcZlKd9ccq1wfB3vNRLBzk4S1HKwr9jG9aoAx7HcGGtgLAwhMXFIYaR5RqR6URzOsBFwa4B1DW0g/q5Dutc49OFk0TkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aBrqkdTZ; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=phytec.com header.i=@phytec.com header.b="SQJHBn+V"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Um78Ieeg4IpThnvo1ltGZZviRUBdHvhl8M56zjuC1/UgCXnbGHhuOoS+mvESC188vm4F6w+0fmntFHj3E1fCjQmQUxIiij6LkOtF0xbuGCMg7SmFmkJG3CXnezJfF4JX4bdNS2sjxq4rF9arkBqFT6HPuYXkkbjzjCx5Xc45xp/wrxdIaxTy0r6uRlCeUO+6H3Lqjhesx0Sfz/qr7sRcRQbCDWhahbFf3jzG0qzOhgPYOplvYXs4bNJ1H6NQtcuEjuQx58GWLC/9fDQ70NQBLhHGfctkU4rH5c/m7c2m8pKMqzi+Urq4nEh4hm1P5u0VhvHi8p0m7WM1PIXeLwzYtA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qOoMI4jBEfOTxj/K6M0amllauXxJhG+uYIbIGmmtrYs=;
- b=Onoxc6XkBXj5sM7VCwBOJiBg5z8dYralgSi8WxsL5vf2Fi+TeXDJ8isO60ak5gb08tbbE6yG+T3gv4zdj1SWTO9qxT2Tcu4YSXjNGTTwdE+eRladOR3MJmlYrmnNsiFjCEOswryULD4VbBgh7zEK6Xj/P9OlFj9s3Ow97LXQni/k320MnI9ttFvT9BgeyCchiP70lNRq5Q/TaJmN+PSaKGDUSSuf6YIJT4D+rj7dJ6gqrvEapcLTUS39pOsSQkm1Rn0a2Pv2ZJtJh/srSfxw3bVOC9y1KcOK6374YzZ4lqZ6Obx+Ai57Z/IJa5mi7SRzKECP8zEsYMFb2PEYWqiW9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=phytec.com; dmarc=pass action=none header.from=phytec.com;
- dkim=pass header.d=phytec.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=phytec.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qOoMI4jBEfOTxj/K6M0amllauXxJhG+uYIbIGmmtrYs=;
- b=SQJHBn+VplWnaG0WZFOKaRo+fwN0EY/yu9ryeqnrS3tgr+kCr2Mh3y7dL0fzXuxLOgPn/BhmGczacQwZh7wMqDCc+HV8ecU1Rk+thW4ds1e2gAuTlxWA2Lvx6JTCMfrB1Ipd7JrDMc7Lz390NE81Vlr8lZV92Q4IkAKHhOpia0A=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=phytec.com;
-Received: from SA1PR22MB5636.namprd22.prod.outlook.com (2603:10b6:806:3e2::15)
- by PH7PR22MB5397.namprd22.prod.outlook.com (2603:10b6:510:322::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.39; Tue, 13 Feb
- 2024 00:52:59 +0000
-Received: from SA1PR22MB5636.namprd22.prod.outlook.com
- ([fe80::e2ac:f990:32c6:334b]) by SA1PR22MB5636.namprd22.prod.outlook.com
- ([fe80::e2ac:f990:32c6:334b%6]) with mapi id 15.20.7270.033; Tue, 13 Feb 2024
- 00:52:59 +0000
-From: Nathan Morrisson <nmorrisson@phytec.com>
-To: nm@ti.com,
-	vigneshr@ti.com,
-	kristo@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org
-Cc: devicetree@vger.kernel.org,
-	upstream@lists.phytec.de,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	w.egorov@phytec.de
-Subject: [PATCH v3] arm64: dts: ti: am62-phyboard-lyra: Add overlay to enable a GPIO fan
-Date: Mon, 12 Feb 2024 16:52:48 -0800
-Message-Id: <20240213005248.1027842-1-nmorrisson@phytec.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: CH2PR18CA0016.namprd18.prod.outlook.com
- (2603:10b6:610:4f::26) To SA1PR22MB5636.namprd22.prod.outlook.com
- (2603:10b6:806:3e2::15)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aBrqkdTZ"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41D09Ysj016771;
+	Tue, 13 Feb 2024 00:54:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-type; s=qcppdkim1; bh=e3ZP4UGfMJHN9tb9hE1a
+	TUT7cHSD1ZLTE7FnRsZFK6Q=; b=aBrqkdTZ61OWT36+l02qdAEAkAsimqWgdDmw
+	nHMayodPCCY6qLVgFbN9ZnKe2gHxCF0Os1moVwEx9AcZsZ2TQ+rE9fQPUOoaIlYO
+	kpRZBCi1+lptgzCkzLtNMziCh8yHdxmYdFIGmTxckTxD0Lmq0dkjU4dhw6d48Xko
+	ZZKPlrltq3InzhICLF7kulH4KRQTbUrrCC+BzwX0wOtfWIyX6oULu8suJfAni/Ad
+	ciaUmFx/DuGl2zHLhWFnPkTVvLO8FNsHOFwyrbVpNaaRYWk4sJNgQ9R7G8zORO6v
+	Hud64NxIeuc3aQJns8pc64Yb5ic9MzME4xqVGHgJaJjR0ZB6vg==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w62kt4ty8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Feb 2024 00:54:35 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41D0sYjR026763
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Feb 2024 00:54:34 GMT
+Received: from hu-wcheng-lv.qualcomm.com (10.49.16.6) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 12 Feb 2024 16:54:34 -0800
+From: Wesley Cheng <quic_wcheng@quicinc.com>
+To: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
+        <perex@perex.cz>, <conor+dt@kernel.org>, <corbet@lwn.net>,
+        <lgirdwood@gmail.com>, <andersson@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <gregkh@linuxfoundation.org>,
+        <Thinh.Nguyen@synopsys.com>, <broonie@kernel.org>,
+        <bgoswami@quicinc.com>, <tiwai@suse.com>, <robh+dt@kernel.org>,
+        <konrad.dybcio@linaro.org>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-sound@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Wesley Cheng <quic_wcheng@quicinc.com>
+Subject: [PATCH v15 05/50] xhci: update event ring dequeue pointer position to controller correctly
+Date: Mon, 12 Feb 2024 16:53:37 -0800
+Message-ID: <20240213005422.3121-6-quic_wcheng@quicinc.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240213005422.3121-1-quic_wcheng@quicinc.com>
+References: <20240213005422.3121-1-quic_wcheng@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR22MB5636:EE_|PH7PR22MB5397:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3d1a2dcf-8d19-448c-6ca5-08dc2c2e1fc8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	IbI8C/G6y/dtyq8rDoxew8q0DjlI265GfcHdPju1zVnIZHl/axjJ65hIw23N5L3L4fGhWRhyyZMfDbFke22Yw1Z3hke+6vEg+EDLpK64GqpvQapFgzltHjlhVnNIbI7p6FOOK1xZcwgYdeFiuyinK+moznjZtsoQz56ueWGLp14YVSqFh9rSBra/ksGWvm4gcmoHVo6k5w+84GcPQ3YDraRRZqiy4qtm/WvGXEICKTTK4eD7LumKMZ4lV4eXZ7hCqH27/WS6DDddUoyD+HAGHOUFWZ34u98rUykbO6/V3AAaelzDLziFmYWPNDkFGkXoy9UPqftrV34bJfhA0QTFo12LPYO4Dkr1Yv6n5yNP8wJGiok8y6323DGlIBQ8BEs7PMU4o7vZ8uYdML0h/ayDA+Hq44v8WG2XMFlmj2Oklc/xRDiDLJN7/l37ZUw1IHGTT4mecH45zLxNKohAc/UteuLnEyC9SxX5qbILtsT5pnx1zZdLNVTBQln2pb4LQNIpop1+Xj4MB1KIcc9UsvmE4V6LNSV/Nxbi/LMCenV7Aec/iQXimCi8XdvK1jcFvVBAUvSnVQoUyQq2FZYE28Szp0eXVsX2G6D5EdzKFCpj8MRUedtWYPTtFeOxq/lwtlMs
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR22MB5636.namprd22.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(39840400004)(136003)(366004)(376002)(346002)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(86362001)(36756003)(38100700002)(52116002)(6506007)(6512007)(316002)(478600001)(6486002)(6666004)(26005)(83380400001)(2616005)(41300700001)(1076003)(38350700005)(4326008)(2906002)(7416002)(8936002)(8676002)(66946007)(66476007)(66556008)(5660300002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?pJ3eEvKFvvEw67YOJ6yvPOl+B6PEkHXltPhxmhjWAEwv4i+p5igWpK55yCeA?=
- =?us-ascii?Q?XIPfbRlRUM7poRoDWG6OiWhOniAxFFph4rIHmMkCN/JSdM5hyKBimOAJ5Plq?=
- =?us-ascii?Q?lyEn7o+jwqW96y0G1qNG/LI/T8lqsFNwlahkYlZ8vFsJVqfn1ATK54k7lll6?=
- =?us-ascii?Q?ZAfJb06ebrAs/+OCvMtK00NOGK/K4GwTetYK0Lli3rzmf9h+givhlfmX0F92?=
- =?us-ascii?Q?/DLEGiSSzDctRiQGIezBKo5swhvgRpL6qbZT+XPSLifZa/fe44JoBB0/xmGG?=
- =?us-ascii?Q?oxj2HLUyAGn4G2pyeWiuv5Yj0wk0Okc/yysFYJGCefB8AUOxpzh1Jh6n3AOw?=
- =?us-ascii?Q?dccutbGjnPq86A6p5gCfuZdDsCuJ3BGxbxEzbJw3WdLxO02mrjoUKivb+aAn?=
- =?us-ascii?Q?L5Jwz5Rnd+6cySxi0LxOtqEMTPYfqE9POSAHCbsPH/ashBRYR8GwsS0BYnhB?=
- =?us-ascii?Q?ieXSbqDMOdtdrjD0Y+TX0+Aq3l1oLTtX9hFpTdpyLkd2H8gsGl71GFUh2kh3?=
- =?us-ascii?Q?4jQthvsg2QVUIhV9UoBUNuCS5nm6mGkDB9XpOpR8mN5nCwO3W945DDSxWaRL?=
- =?us-ascii?Q?GGtR5TQgglNp6+65ppr/MaNpRUWHlZc7okjJRBoLZoiddy8rmacaDZMApXNw?=
- =?us-ascii?Q?oAPBUAIPMd/aPDriJbKNrw4XuDUCijtrw8vgYychA6mUCZPUA9krdA/1i0Ph?=
- =?us-ascii?Q?rgsFk5so+sFj+jgTF4VVXPyGSZGIzZWNJOA5Uxfv6oWZ7RK5Pzu22+B7euMT?=
- =?us-ascii?Q?fBZTbn/xPzvjCkfk7XS0GuaSGifRL0KkT5cg+IxdQtmw0kg4UfXT/cXL+zpq?=
- =?us-ascii?Q?896B4Mjnej1MB5d82WXQxJa10oTeWdZsSKyjKS0h9TsJ+xIapicBCQpMq7Ko?=
- =?us-ascii?Q?bLx0CmFI8IOhzZuL59VvqoEX0IVPIJW2PFiWnc5co/UrJkgxr+ykNsRJMowC?=
- =?us-ascii?Q?8RY3KcYn/TD9ekV2EoZZ33ChNLU5Z9bpjPaH2WPo8GO9Der+zF4xZ3ckVCTc?=
- =?us-ascii?Q?pH9g0bxLLS9r0GS4/qhgZO13zIxSikXifDF9GKXDqcbyR7qistSnQJCELkKX?=
- =?us-ascii?Q?RUEHCEteiUlBDNGI0C2Z/ZpENh9iag8sqrjME4yfwaDsmq7uiGjipf8ewH1F?=
- =?us-ascii?Q?shQPiq0B9GQIlqwvfP6XoBjADvBIk+eKg953vkXbb/bMmWB9QExgKZ7CqhZX?=
- =?us-ascii?Q?WV1k+luU/aAauidjFgRXsOkbJjKfKn2kqc6ie47l/y4DpRgQo7qPk6OZJ6wP?=
- =?us-ascii?Q?fQZJ/hC8aXoWHzxB1Py2EAxaQwNW8GUJNm5udi90OmqABqBleX1W/kqs/MW+?=
- =?us-ascii?Q?e25RQcdmc5Pv6Nos9DXp90AcHjHrwcXXpsaAITxMgq/+v9jlTAFN/mP/6UBw?=
- =?us-ascii?Q?jX98ySrWR2CjZqOvGr4yMP6r+IyOk5gDdHnVa5waXVeOOA+UQV6xUk4sJ89G?=
- =?us-ascii?Q?/nYsWDQKpXyVH2dAnlyG7HVqQe3B+s9Mi35DO/f9NYFDTceGAGq7kKxYZWyV?=
- =?us-ascii?Q?jnub6JNYuG1iy2V8M+bwzsE57I5Crt+LGkthJwWXiCgtOZqRddejThkjd4PB?=
- =?us-ascii?Q?5fvYQi/UhpAYV9LieJNn5UnQerypqSsEsHnTC9Dz?=
-X-OriginatorOrg: phytec.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d1a2dcf-8d19-448c-6ca5-08dc2c2e1fc8
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR22MB5636.namprd22.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2024 00:52:59.4319
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 67bcab1a-5db0-4ee8-86f4-1533d0b4b5c7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: M0FEdp7mOJ9K+xx5weKRGwm3ecdWRLxDWVECqlI7UCSdjEkgxFm7adLSJHb0TCz38E+X+oMzfEb/Llq05+nqYw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR22MB5397
+Content-Type: text/plain
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: U3voO1VJLncFRE04Fk3igBRQ06DGSlg8
+X-Proofpoint-ORIG-GUID: U3voO1VJLncFRE04Fk3igBRQ06DGSlg8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-12_20,2024-02-12_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ impostorscore=0 bulkscore=0 suspectscore=0 phishscore=0 priorityscore=1501
+ mlxscore=0 mlxlogscore=999 spamscore=0 malwarescore=0 adultscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402130005
 
-The phyBOARD-Lyra has a GPIO fan header. This overlay enables the fan
-header and sets the fan to turn on at 65C.
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-Signed-off-by: Nathan Morrisson <nmorrisson@phytec.com>
-Reviewed-by: Wadim Egorov <w.egorov@phytec.de>
+The event ring dequeue pointer field (ERDP) in xHC hardware is used to
+inform controller how far the driver has processed events on the event
+ring.
+
+In the case all events are handled and event ring is empty then the
+address of the TRB after the last processed one should be written.
+This TRB is both the enqueue and dequeue pointer.
+
+But in case we are writing the ERDP in the middle of processing
+several events then ERDP field should be written with the "up to and
+including" address of the last handled event TRB.
+
+Currenly each ERDP write by driver is done as if all events are handled
+and ring is empty.
+
+Fix this by adjusting the order when software dequeue "inc_deq()"
+is called and hardware dequeue "xhci_update_erst_dequeue()" is updated.
+
+Details in xhci 1.2 specification section 4.9.4:
+
+"System software shall write the Event Ring Dequeue Pointer (ERDP)
+ register to inform the xHC that it has completed the processing of Event
+ TRBs up to and including the Event TRB referenced by the ERDP.
+
+ The detection of a Cycle bit mismatch in an Event TRB processed by
+ software indicates the location of the xHC Event Ring Enqueue Pointer
+ and that the Event Ring is empty. Software shall write the ERDP with
+ the address of this TRB to indicate that it has processed all Events
+ in the ring"
+
+This change depends on fixes made to relocate inc_deq() calls captured
+in the below commits:
+
+  commit 3321f84bfae0 ("xhci: simplify event ring dequeue tracking for
+  transfer events")
+
+  commit d1830364e963 ("xhci: Simplify event ring dequeue pointer update
+  for port change events")
+
+Fixes: dc0ffbea5729 ("usb: host: xhci: update event ring dequeue pointer on purpose")
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
 ---
-v3:
-- Remove fan status okay
+ drivers/usb/host/xhci-ring.c | 23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
 
-v2:
-- Change overlay name from k3-am62-... to k3-am62x-...
-- Add compile time test
-
- arch/arm64/boot/dts/ti/Makefile               |  3 ++
- .../ti/k3-am62x-phyboard-lyra-gpio-fan.dtso   | 50 +++++++++++++++++++
- 2 files changed, 53 insertions(+)
- create mode 100644 arch/arm64/boot/dts/ti/k3-am62x-phyboard-lyra-gpio-fan.dtso
-
-diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-index 52c1dc910308..bfeb496d5039 100644
---- a/arch/arm64/boot/dts/ti/Makefile
-+++ b/arch/arm64/boot/dts/ti/Makefile
-@@ -22,6 +22,7 @@ dtb-$(CONFIG_ARCH_K3) += k3-am625-verdin-wifi-dahlia.dtb
- dtb-$(CONFIG_ARCH_K3) += k3-am625-verdin-wifi-dev.dtb
- dtb-$(CONFIG_ARCH_K3) += k3-am625-verdin-wifi-mallow.dtb
- dtb-$(CONFIG_ARCH_K3) += k3-am625-verdin-wifi-yavia.dtb
-+dtb-$(CONFIG_ARCH_K3) += k3-am62x-phyboard-lyra-gpio-fan.dtbo
- dtb-$(CONFIG_ARCH_K3) += k3-am62-lp-sk.dtb
+diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+index a9d2e876d62b..0289d77839cf 100644
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -2966,9 +2966,6 @@ static int xhci_handle_event(struct xhci_hcd *xhci, struct xhci_interrupter *ir)
+ 		return 0;
+ 	}
  
- # Boards with AM62Ax SoC
-@@ -87,6 +88,8 @@ k3-am625-beagleplay-csi2-ov5640-dtbs := k3-am625-beagleplay.dtb \
- 	k3-am625-beagleplay-csi2-ov5640.dtbo
- k3-am625-beagleplay-csi2-tevi-ov5640-dtbs := k3-am625-beagleplay.dtb \
- 	k3-am625-beagleplay-csi2-tevi-ov5640.dtbo
-+k3-am625-phyboard-lyra-gpio-fan-dtbs := k3-am625-phyboard-lyra-rdk.dtb \
-+	k3-am62x-phyboard-lyra-gpio-fan.dtbo
- k3-am625-sk-csi2-imx219-dtbs := k3-am625-sk.dtb \
- 	k3-am62x-sk-csi2-imx219.dtbo
- k3-am625-sk-csi2-ov5640-dtbs := k3-am625-sk.dtb \
-diff --git a/arch/arm64/boot/dts/ti/k3-am62x-phyboard-lyra-gpio-fan.dtso b/arch/arm64/boot/dts/ti/k3-am62x-phyboard-lyra-gpio-fan.dtso
-new file mode 100644
-index 000000000000..f0b2fd4165a7
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-am62x-phyboard-lyra-gpio-fan.dtso
-@@ -0,0 +1,50 @@
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
-+/*
-+ * Copyright (C) 2024 PHYTEC America LLC
-+ * Author: Garrett Giordano <ggiordano@phytec.com>
-+ */
+-	/* Update SW event ring dequeue pointer */
+-	inc_deq(xhci, ir->event_ring);
+-
+ 	/* Are there more items on the event ring?  Caller will call us again to
+ 	 * check.
+ 	 */
+@@ -3091,15 +3088,21 @@ irqreturn_t xhci_irq(struct usb_hcd *hcd)
+ 	 * that clears the EHB.
+ 	 */
+ 	while (xhci_handle_event(xhci, ir) > 0) {
+-		if (event_loop++ < TRBS_PER_SEGMENT / 2)
+-			continue;
+-		xhci_update_erst_dequeue(xhci, ir, false);
++		/*
++		 * If half a segment of events have been handled in one go then
++		 * update ERDP, and force isoc trbs to interrupt more often
++		 */
++		if (event_loop++ > TRBS_PER_SEGMENT / 2) {
++			xhci_update_erst_dequeue(xhci, ir, false);
 +
-+/dts-v1/;
-+/plugin/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/thermal/thermal.h>
-+#include "k3-pinctrl.h"
-+
-+&{/} {
-+	fan: gpio-fan {
-+		compatible = "gpio-fan";
-+		gpio-fan,speed-map = <0 0 8600 1>;
-+		gpios = <&main_gpio0 40 GPIO_ACTIVE_LOW>;
-+		#cooling-cells = <2>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gpio_fan_pins_default>;
-+	};
-+};
-+
-+&main_pmx0 {
-+	gpio_fan_pins_default: gpio-fan-default-pins {
-+		pinctrl-single,pins = <
-+			AM62X_IOPAD(0x0a4, PIN_OUTPUT, 7) /* (M22) GPMC0_DIR.GPIO0_40 */
-+		>;
-+	};
-+};
-+
-+&thermal_zones {
-+	main0_thermal: main0-thermal {
-+		trips {
-+			main0_thermal_trip0: main0-thermal-trip {
-+				temperature = <65000>;  /* millicelsius */
-+				hysteresis = <2000>;    /* millicelsius */
-+				type = "active";
-+			};
-+		};
-+
-+		cooling-maps {
-+			map0 {
-+				trip = <&main0_thermal_trip0>;
-+				cooling-device = <&fan THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+			};
-+		};
-+	};
-+};
--- 
-2.25.1
-
++			if (ir->isoc_bei_interval > AVOID_BEI_INTERVAL_MIN)
++				ir->isoc_bei_interval = ir->isoc_bei_interval / 2;
+ 
+-		/* ring is half-full, force isoc trbs to interrupt more often */
+-		if (ir->isoc_bei_interval > AVOID_BEI_INTERVAL_MIN)
+-			ir->isoc_bei_interval = ir->isoc_bei_interval / 2;
++			event_loop = 0;
++		}
+ 
+-		event_loop = 0;
++		/* Update SW event ring dequeue pointer */
++		inc_deq(xhci, ir->event_ring);
+ 	}
+ 
+ 	xhci_update_erst_dequeue(xhci, ir, true);
