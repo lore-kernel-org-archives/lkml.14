@@ -1,31 +1,30 @@
-Received: from smtpfb1-g21.free.fr (smtpfb1-g21.free.fr [212.27.42.9])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 426556312D;
-	Tue, 13 Feb 2024 23:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.9
+Received: from smtp4-g21.free.fr (smtp4-g21.free.fr [212.27.42.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067F762810;
+	Tue, 13 Feb 2024 23:51:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707868273; cv=none; b=I/qiLdxlgbbUu3z+wKXREyqpkWFOk0ooUQoGPkKZRZqW+GiKtm5hq0kQNBwLMAzxR3BMBoNDUmZWNjZIijoLg87AlZsmdpayfks32R+D4mEq8B+kEI/wBwaa6+qHs1v5VQ1dPSzwMR2QgET/j7G05JC9jIRl1aNI8ZmZRHc2OuI=
+	t=1707868275; cv=none; b=lAMjwslv/JJ9/kGf9VEBilCiqkk/nhWUBBClQvzaG/fMHaVoXKJ9PiPcvl4POabh5VPfbiq2owEooOqcz9ntV+ZbDzj/f7C71XJ1/hV5TdVJ56ubBOkTf+WqthKNouwbMiKqLy+XIrS0DNdElX47w7O/YGfuFZM1NYlKgwuIZ20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707868273; c=relaxed/simple;
+	s=arc-20240116; t=1707868275; c=relaxed/simple;
 	bh=cLpnxpYC4wwNyrZga77ocn0n0Iy1TqrtB5RbWeVXp4I=;
 	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=jXERRWL56w7RYQscXgaLnIKMg6RCYCRs2l3h8mSZCcBLHtoMIEGsP7oroWpfxouDlrBCi09+hB07Wnzsck55SRyb/7i0SfW70xiCYefD4csaDiXk15Zy+2S86koWI43SuRv8p7eGNXhm+Lu5Dg5CzZU4MssLXWHi5s8ZffTxI0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; arc=none smtp.client-ip=212.27.42.9
+	 MIME-Version:Content-Type; b=My2wWtZ6AJtiewgavMD3ESb/zujNqIdoAFZs2TvYR9gK/WY7Cijd4IikZoJqnAkznW55DQo+qjG/8YwDy8evwY7x0w8g1p9233k7z/rVNZRkOulHCOIC6kRV/az1sUL9eBmLsIstZGqWeAqhbfgu4RLyVj5/hebtAO23ke4LEUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; arc=none smtp.client-ip=212.27.42.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
-Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
-	by smtpfb1-g21.free.fr (Postfix) with ESMTP id 7C632DF87F0;
-	Wed, 14 Feb 2024 00:42:20 +0100 (CET)
 Received: from zimbra-e1-03.priv.proxad.net (unknown [172.20.243.151])
-	by smtp2-g21.free.fr (Postfix) with ESMTP id DAC002003CA;
-	Wed, 14 Feb 2024 00:42:12 +0100 (CET)
-Date: Wed, 14 Feb 2024 00:42:12 +0100 (CET)
+	by smtp4-g21.free.fr (Postfix) with ESMTP id 860F419F57E;
+	Wed, 14 Feb 2024 00:51:11 +0100 (CET)
+Date: Wed, 14 Feb 2024 00:51:11 +0100 (CET)
 From: =?utf-8?Q?Jean-Lo=C3=AFc?= Charroud <lagiraudiere+linux@free.fr>
 To: Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, 
 	Stefan Binding <sbinding@opensource.cirrus.com>
 Cc: linux-sound <linux-sound@vger.kernel.org>, 
 	linux-kernel <linux-kernel@vger.kernel.org>, 
 	patches <patches@opensource.cirrus.com>
-Message-ID: <1656546983.650349575.1707867732866.JavaMail.zimbra@free.fr>
+Message-ID: <51410325.650388044.1707868271514.JavaMail.zimbra@free.fr>
 In-Reply-To: <644212740.650323792.1707867443153.JavaMail.zimbra@free.fr>
 References: <644212740.650323792.1707867443153.JavaMail.zimbra@free.fr>
 Subject: [PATCH v3 2/3] ALSA: hda/realtek: cs35l41: Fix device ID / model
@@ -40,7 +39,7 @@ Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 X-Mailer: Zimbra 9.0.0_GA_1337 (ZimbraWebClient - FF122 (Linux)/9.0.0_GA_1337)
 Thread-Topic: ALSA: hda/realtek: cs35l41: Fix device ID / model name
-Thread-Index: b1DHXbQj7eN1w6/I0T0Clij1GRQ0gGm3MHNu
+Thread-Index: b1DHXbQj7eN1w6/I0T0Clij1GRQ0gEsJ3wZX
 
 The patch 51d976079976c800ef19ed1b542602fcf63f0edb ("ALSA: hda/realtek:
 Add quirks for ASUS Zenbook 2022 Models") modified the entry 1043:1e2e
