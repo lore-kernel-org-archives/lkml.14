@@ -1,98 +1,140 @@
-Received: from forward502b.mail.yandex.net (forward502b.mail.yandex.net [178.154.239.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF66524AC
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 09:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08F622EF2
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 09:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707816842; cv=none; b=ZTdbZ6ogi7ROptb5200g+NEtoik+ElE0uNN5FdI2950CvqaOMuC/LhsgcFdHsGeE8L6L7ZIoQVYUjhNqRN902vzfAjoD2w4olX3Xt60HDu7J6sKxjYrwtovCDbydNl0JjPvahgONsGsW0lcAovToC+HQ76CJ87BZVvr57qHvf/w=
+	t=1707816964; cv=none; b=FKV6C74kOhj1oOfFOJGuSZRFE5J9zZAQejyMEXHte7YQAKjrXDcvv4hqwcoAd0dgaCfMYN8vV06CcfJfcL7YySOTWKw+MSE8bfyU4syByin5hhXNJSOGSlt/AWgt+Fr1cgtAxzpvQ7Tu7EkVYnZ2ZXN35DmwT2T6liUrt4GArxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707816842; c=relaxed/simple;
-	bh=B+c8KVXvNvRuWZmvPipE8IoHwkyQbC+AExwlSKHBmjM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jMCVZh7q1JXQZopbzVvq84487AUK69fs2LZOW8HLAHcj/WZuoDImX1QaV6eWeQTHl1xaWXQZ4/epqbu+RqObiuY6Nz/JWe+YCm4b9JxD/Y9bQx35utgmJuHJU1U7eniGgn6uInANqd9FdiPFOzxXc0iNtwqbhva7m8+cBytHrX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me; spf=pass smtp.mailfrom=maquefel.me; dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b=I8mZAieM; arc=none smtp.client-ip=178.154.239.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maquefel.me
+	s=arc-20240116; t=1707816964; c=relaxed/simple;
+	bh=B6PIRF1YW9xcHfchIY+ftgkmT8yekQiVqKxqKwejxNo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EMj9F5rNunJVZFXKhG+OQ+r6XE5XYl78aXQOe8NZnARRiUjkZ45tMTFpa4tSpyEk07UGVXgwpKlD+O5qQ7O+Qn1DMARP6M442evj+ayqZLLzhLYXMkbUODkYy1cR1UKPLltL8zZdhZuFMrOs2nvXlB+h4v5GGMWSrS5I4wfhHE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=pJ73C4Oi; arc=none smtp.client-ip=209.85.160.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="I8mZAieM"
-Received: from mail-nwsmtp-smtp-production-main-63.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-63.sas.yp-c.yandex.net [IPv6:2a02:6b8:c14:6e01:0:640:627f:0])
-	by forward502b.mail.yandex.net (Yandex) with ESMTPS id 5635A5EEFD;
-	Tue, 13 Feb 2024 12:33:47 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-63.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id hXjareDRha60-V0PYmfUK;
-	Tue, 13 Feb 2024 12:33:46 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail;
-	t=1707816826; bh=B+c8KVXvNvRuWZmvPipE8IoHwkyQbC+AExwlSKHBmjM=;
-	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
-	b=I8mZAieMvchcH6xGOwzxI2nRWjy2ewahNmEGqPhnXAX6geaReX3g2fYehad1UJ1NN
-	 6annbtVU6lpOxmDF/HpiS70zX23eIZqngCoAWMHysrL2tC7eRqztXUnQmQldpA5SvM
-	 MAOvP0hY8FzZdPAZ18wOi5w4SBXTYOkZDoQtzKjs=
-Authentication-Results: mail-nwsmtp-smtp-production-main-63.sas.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
-Message-ID: <99042a0e72b3d29bc4b582a42a70d667033e6331.camel@maquefel.me>
-Subject: Re: [PATCH v7 08/39] soc: Add SoC driver for Cirrus ep93xx
-From: Nikita Shubin <nikita.shubin@maquefel.me>
-To: andy.shevchenko@gmail.com
-Cc: Conor Dooley <conor.dooley@microchip.com>, Ulf Hansson
- <ulf.hansson@linaro.org>, Joel Stanley <joel@jms.id.au>, Linus Walleij
- <linus.walleij@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Huisong Li
- <lihuisong@huawei.com>, Walker Chen <walker.chen@starfivetech.com>,
- Jonathan =?ISO-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>, Arnd
- Bergmann <arnd@arndb.de>, Alexander Sverdlin
- <alexander.sverdlin@gmail.com>, linux-kernel@vger.kernel.org
-Date: Tue, 13 Feb 2024 12:33:44 +0300
-In-Reply-To: <Zb_A5H5kkxw1oiQv@surfacebook.localdomain>
-References: <20240118-ep93xx-v7-0-d953846ae771@maquefel.me>
-	 <20240118-ep93xx-v7-8-d953846ae771@maquefel.me>
-	 <Zb_A5H5kkxw1oiQv@surfacebook.localdomain>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.48.4 
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="pJ73C4Oi"
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-21432e87455so2635629fac.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 01:36:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707816962; x=1708421762;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from
+         :dkim-signature:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yV0A0nmKsy8PYCSYjFf9mPfVvhSNUYlYMjymmNOi59E=;
+        b=KQFkPh/6E8licvd2q1x39PJCPGaCbHRcxkH71ik3To6czBLpUoy91SJLbL1XqKnMAr
+         BlGsxswAi7I2lyrg8HMU6oBVORHZIFm78tOc/4MaFdNPwUc0rvJm1Cdo+MWNdPTN0u3e
+         g4h+J6C856m5RaGRFFyyMeR88bQBftos2eafWE7NKIiv8M2WD/f6KO8AbHvJNY7JyMqj
+         OM5zfgJkDtIIiU31OBwlx2yr4ziV0rybTx/Y8K3Gl0vOHxx3+Y2afVRwphS+LOq46sMd
+         wbunfXztpFfpWgYjaOAo8ECR6Imn2ajSIwRKQjDyURUvp3d6CpFidyWsdFHBgodG3nIf
+         pNPw==
+X-Forwarded-Encrypted: i=1; AJvYcCX8kbQLzV8JKlQpbDgbwJ1RNNln9vwImveYF5aLcMf0GGfuLucJGgS1bbCaP8grIuAUOhnuka6LINqhKdto1s9eYi3OB3mzdSjQTE2V
+X-Gm-Message-State: AOJu0Yx7He5ryBVcfr1wP/I2u0vDfpDwA+snOrEGmlasCXhbZaRdqdU5
+	1BMG01uDpCo2caQwFOPQEGReom0t2VGAdxRGLXQcLhK0uaJDNdIE
+X-Google-Smtp-Source: AGHT+IEV0juLyM72w0UTnpWw30aYu6RizsUl1I3jQAYodBCs15ZM0PcZkyrB9zcbfuSWzeJAe2rFKA==
+X-Received: by 2002:a05:6870:f151:b0:214:dc31:a7b7 with SMTP id l17-20020a056870f15100b00214dc31a7b7mr9928943oac.53.1707816961694;
+        Tue, 13 Feb 2024 01:36:01 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU0i4xtDncFjiaK7ebXWKtgp4ly9pKcF9fdePIPWgOogcoPEm2clZQ0NtfYqe4a8vffssieCSQ8RvoDAONhD6sSlwTxuKxAU8ldG4JrYR95dwjogEOz+b2C3EADwJW3y+kRVcPvxltcouBB5yV+/u4xWt9UVwSAVR7Rew0Ai9hcL1+YD1yIdG9AkZDT7mVB6MZ/sDs1VNxi/7HtJfMHRAIpKqvhW2c9GtRA9QD683CDPjcdFB4mk3N9jVMSucsE/88/1ZKnsxd1nXOZmoVYgpU=
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id 75-20020a63004e000000b005cd835182c5sm1900121pga.79.2024.02.13.01.36.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 01:36:01 -0800 (PST)
+Date: Tue, 13 Feb 2024 06:36:32 -0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2024; t=1707816959;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yV0A0nmKsy8PYCSYjFf9mPfVvhSNUYlYMjymmNOi59E=;
+	b=pJ73C4OixTpldSUovTEuAHoBhghosBc1RxXObdohFcUEXsZzdeug1EOAqXziyMfbmqfK3k
+	5PZxFCWzoIphrEHAe0vFzIB2aVyaBtWYBgHAiRXRxMdirgLSdJxN9oLRVGTmhCYTolPHxj
+	HxkfzdQ3x0v2ve+pDbt4/ounJ48m76fv+X5drcqoVgh4YenV585mcYLPIV+W8WMS4UIy1p
+	m+B4mZIHGhNk/MKo4kPnN/1KZjwH2yRkBf6i7XrUk+sAIE0AhpmTREGlg4sdR7ZcNK5wzf
+	m3tu0bq1uzX7DUIsHQdD+wONmsWHm81pBj0LYpOuZ9VA1xaDQbqm0siKHvhCxA==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 0/5] powerpc: struct bus_type cleanup
+Message-ID: <h5f4bo5awkidvp75yusn4fkjybdrxdaz3d366zhd4xsu45cska@nxm362wm33g3>
+References: <20240212-bus_cleanup-powerpc2-v2-0-8441b3f77827@marliere.net>
+ <417a6531-b298-4d5c-aa4d-755bcef2f414@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <417a6531-b298-4d5c-aa4d-755bcef2f414@csgroup.eu>
 
-SGVsbG8gQW5keSEKCk9uIFN1biwgMjAyNC0wMi0wNCBhdCAxODo1MiArMDIwMCwgYW5keS5zaGV2
-Y2hlbmtvQGdtYWlsLmNvbSB3cm90ZToKPiBUaHUsIEphbiAxOCwgMjAyNCBhdCAxMToyMDo1MUFN
-ICswMzAwLCBOaWtpdGEgU2h1YmluIGtpcmpvaXR0aToKPiA+IEFkZCBhbiBTb0MgZHJpdmVyIGZv
-ciB0aGUgZXA5M3h4LiBDdXJyZW50bHkgdGhlcmUgaXMgb25seSBvbmUgdGhpbmcKPiA+IG5vdCBm
-aXR0aW5nIGludG8gYW55IG90aGVyIGZyYW1ld29yaywgYW5kIHRoYXQgaXMgdGhlIHN3bG9jawo+
-ID4gc2V0dGluZy4KPiA+IAo+ID4gVXNlZCBmb3IgY2xvY2sgc2V0dGluZ3MsIHBpbmN0cmwgYW5k
-IHJlc3RhcnQuCj4gCj4gLi4uCj4gCj4gPiArc3RhdGljIHN0cnVjdCBhdXhpbGlhcnlfZGV2aWNl
-ICplcDkzeHhfYWRldl9hbGxvYyhzdHJ1Y3QgZGV2aWNlCj4gPiAqcGFyZW50LCBjb25zdCBjaGFy
-ICpuYW1lLAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzdHJ1
-Y3QKPiA+IGVwOTN4eF9tYXBfaW5mbyAqaW5mbykKPiA+ICt7Cj4gPiArwqDCoMKgwqDCoMKgwqBz
-dHJ1Y3QgZXA5M3h4X3JlZ21hcF9hZGV2ICpyZGV2Owo+ID4gK8KgwqDCoMKgwqDCoMKgc3RydWN0
-IGF1eGlsaWFyeV9kZXZpY2UgKmFkZXY7Cj4gPiArwqDCoMKgwqDCoMKgwqBpbnQgcmV0Owo+ID4g
-Kwo+ID4gK8KgwqDCoMKgwqDCoMKgcmRldiA9IGt6YWxsb2Moc2l6ZW9mKCpyZGV2KSwgR0ZQX0tF
-Uk5FTCk7Cj4gPiArwqDCoMKgwqDCoMKgwqBpZiAoIXJkZXYpCj4gPiArwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgcmV0dXJuIEVSUl9QVFIoLUVOT01FTSk7Cj4gCj4gVXNlIF9fZnJlZSgp
-ID8KPiAoWW91IGFscmVhZHkgaW5jbHVkZWQgY2xlYW51cC5oIGZvciBvdGhlciBjYXNlcywgd2h5
-IG5vdCB1c2luZyBpdAo+IGhlcmU/KQoKV2h5IHNob3VsZCBpIHdhbnQgdGhpcyA/IEkgZG9uJ3Qg
-d2FudCByZGV2IGJlZWluZyBmcmVlZCBvbiBvdXQgb2Ygc2NvcGUKLSByZGV2IGlzIGZyZWVkIGlu
-IGVwOTN4eF9hZGV2X3JlbGVhc2UoKS4KCkJ1dCB0aGFuayB5b3UsIGkndmUgbm90aWNlZCBhIGJ1
-ZyAtIGkgc2hvdWxkIGZyZWUgcmRldiBhbmQgbm90IGFkZXYKYm90aCBpbiBlcDkzeHhfYWRldl9h
-bGxvYygpIGFuZCBlcDkzeHhfYWRldl9yZWxlYXNlKCkuCgo+IAo+ID4gK8KgwqDCoMKgwqDCoMKg
-cmRldi0+bWFwID0gaW5mby0+bWFwOwo+ID4gK8KgwqDCoMKgwqDCoMKgcmRldi0+YmFzZSA9IGlu
-Zm8tPmJhc2U7Cj4gPiArwqDCoMKgwqDCoMKgwqByZGV2LT5sb2NrID0gJmluZm8tPmxvY2s7Cj4g
-PiArwqDCoMKgwqDCoMKgwqByZGV2LT53cml0ZSA9IGVwOTN4eF9yZWdtYXBfd3JpdGU7Cj4gPiAr
-wqDCoMKgwqDCoMKgwqByZGV2LT51cGRhdGVfYml0cyA9IGVwOTN4eF9yZWdtYXBfdXBkYXRlX2Jp
-dHM7Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgwqBhZGV2ID0gJnJkZXYtPmFkZXY7Cj4gPiArwqDC
-oMKgwqDCoMKgwqBhZGV2LT5uYW1lID0gbmFtZTsKPiA+ICvCoMKgwqDCoMKgwqDCoGFkZXYtPmRl
-di5wYXJlbnQgPSBwYXJlbnQ7Cj4gPiArwqDCoMKgwqDCoMKgwqBhZGV2LT5kZXYucmVsZWFzZSA9
-IGVwOTN4eF9hZGV2X3JlbGVhc2U7Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgwqByZXQgPSBhdXhp
-bGlhcnlfZGV2aWNlX2luaXQoYWRldik7Cj4gPiArwqDCoMKgwqDCoMKgwqBpZiAocmV0KSB7Cj4g
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKga2ZyZWUoYWRldik7Cj4gPiArwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIEVSUl9QVFIocmV0KTsKPiA+ICvCoMKgwqDC
-oMKgwqDCoH0KPiA+ICsKPiA+ICvCoMKgwqDCoMKgwqDCoHJldHVybiBhZGV2Owo+ID4gK30KPiAK
-PiAuLi4KPiAKPiA+ICvCoMKgwqDCoMKgwqDCoG1vZGVsID0gKGVudW0KPiA+IGVwOTN4eF9zb2Nf
-bW9kZWwpKHVpbnRwdHJfdClvZl9kZXZpY2VfZ2V0X21hdGNoX2RhdGEoZGV2KTsKPiAKPiBJIGJl
-bGlldmUgUm9iIHdhbnRzIHRvIGdldCByaWQgb2Ygb2ZfZGV2aWNlLmggb3IgYXQgbGVhc3Qgb2Yg
-dGhpcwo+IGNhbGwgKHNlZSBoaXMKPiBwYXRjaGVzIHRvIGNvbnZlcnQgdGhpcyBBUEkgdG8gdXNl
-IGRldmljZV9nZXRfbWF0Y2hfZGF0YSgpIGluc3RlYWQpLgo+IAoKTm90ZWQgLSB0aGFua3MgIQoK
+Hi Christophe,
+
+On 13 Feb 08:05, Christophe Leroy wrote:
+> Hi
+> 
+> Le 12/02/2024 à 21:04, Ricardo B. Marliere a écrit :
+> > This series is part of an effort to cleanup the users of the driver
+> > core, as can be seen in many recent patches authored by Greg across the
+> > tree (e.g. [1]). Patch 1/5 is a prerequisite to 2/5, but the others have
+> > no dependency. They were built using bootlin's without warnings using
+> > powerpc64le-power8--glibc--stable-2023.11-1 toolchain.
+> > 
+> > ---
+> > [1]: https://lore.kernel.org/lkml/?q=f%3Agregkh%40linuxfoundation.org+s%3A%22make%22+and+s%3A%22const%22
+> > 
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+> > 
+> > ---
+> > Changes in v2:
+> > - Added a new patch to make macio_bus_type const.
+> > - Improved changelogs to remove the word "Now".
+> > - Fixed a build error: https://lore.kernel.org/oe-kbuild-all/202402102142.uphiKeqw-lkp@intel.com/
+> > - Link to v1: https://lore.kernel.org/r/20240209-bus_cleanup-powerpc2-v1-0-79a56dcaebb1@marliere.net
+> 
+> I see another series with the same name, does this v2 also superseeds it 
+> ? https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=393570
+
+Yes, please disregard the other one!
+
+Thank you,
+-	Ricardo.
 
 
+> 
+> Christophe
+> 
+> > 
+> > ---
+> > Ricardo B. Marliere (5):
+> >        powerpc: vio: move device attributes into a new ifdef
+> >        powerpc: vio: make vio_bus_type const
+> >        powerpc: mpic: make mpic_subsys const
+> >        powerpc: pmac: make macio_bus_type const
+> >        powerpc: ibmebus: make ibmebus_bus_type const
+> > 
+> >   arch/powerpc/include/asm/ibmebus.h       |  2 +-
+> >   arch/powerpc/include/asm/macio.h         |  2 +-
+> >   arch/powerpc/include/asm/mpic.h          |  2 +-
+> >   arch/powerpc/include/asm/vio.h           |  2 +-
+> >   arch/powerpc/platforms/pseries/ibmebus.c |  4 +--
+> >   arch/powerpc/platforms/pseries/vio.c     | 61 ++++++++++++++++++--------------
+> >   arch/powerpc/sysdev/mpic.c               |  2 +-
+> >   drivers/macintosh/macio_asic.c           |  2 +-
+> >   8 files changed, 43 insertions(+), 34 deletions(-)
+> > ---
+> > base-commit: 41bccc98fb7931d63d03f326a746ac4d429c1dd3
+> > change-id: 20240209-bus_cleanup-powerpc2-498426fccb98
+> > 
+> > Best regards,
