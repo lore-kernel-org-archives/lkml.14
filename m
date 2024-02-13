@@ -1,124 +1,74 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D374D51039;
-	Tue, 13 Feb 2024 13:00:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B410D4F1EF;
+	Tue, 13 Feb 2024 13:02:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707829233; cv=none; b=KQiO76iCGJ88gmybRzYfl94r2RDOen6xJgP4FA3xO6sz1bMASvvnKmN4y06BIky9DNxBtena8qVOjyDVmeUWW+ledzxvbwHVhDPSXG1oThBLirc77nvtaz9F34kDZyjt2thVACZ10SfmnJtFmjc38Icoua9M6J+Siroo0Ly0sXk=
+	t=1707829352; cv=none; b=KunrzKl6bVfdwiR9c3kPQqwwcfXCY9EeCOZzM/F4xypFC1uRZyoqFxHgnTsl92agcM51uCGagh/hBwguQM5mdCmE1OmJmgndF5p5vg1DfQFYciuD220NVLjfvSbTPQHjk61OulhUCoq99mzlzpj7NJRcwfSi1NwbzuAlB+PAbMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707829233; c=relaxed/simple;
-	bh=FPXgBnSmS+6sKYbXhTyHNlC+korVLPzZkGCgDSeKV5I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=U1vbQa0nz8ePesFnxlrgoWdhQV18PA25FzbbxeDZN24HPWcXD7WUo+p6sWeWQxRW0u9GvRghYzNxv2uOm/ivzQFRiHFISr5dPCxw6BUkvbBt0okvKsI0YiiTWQjWfmd6zxVoO9ShRtAK7rKrfELRSaF1ncMq49ARXIE5PTNgqgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=loBi76Bu; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707829352; c=relaxed/simple;
+	bh=dlM175U+C8aayNuvUs0Vo/+s/Ov3qYpSkK3PAw6G+Dk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qv+j5Ygg6Uc85U3FNnCBGtTtF480Hifo1uDJb/kCHvMGkQSXczUaGpmGprX5pXlCFTAvxIGPLuulMCZ4SpqAsmWXkIMIYBcaq8Tzrjv1pIvLsCjUcdFzcNgv2o7VrttyWoV8MSzElgOnbqtogAqI5Lo03jjLbvTd0RIunxLlues=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=tE8B0o6o; arc=none smtp.client-ip=74.50.62.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="loBi76Bu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707829232; x=1739365232;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=FPXgBnSmS+6sKYbXhTyHNlC+korVLPzZkGCgDSeKV5I=;
-  b=loBi76BuShhYeDmHFGG/8Iramm+LjE8Vau7YaP2GUObELxoqJcfqgURq
-   s9Dn+4Vp61VJEa6zRgxazhMK616QqUE+kuQuxoZSqJwyL60bxTgOXFq9k
-   K39fHnzWYFjFqwY+sM2UUNcmhGFNaZR1LrjTVd20dtrkpG8HPyD7eiL+m
-   27Emin+V+lIRdh7Xh2RHOE9oxFPEe4HvDIKPZytmUFOscf2OP0moWGK4A
-   GbBrlKN9VU6zXiqavOZMdyZZy3xu4LEC0Qd2DkZomtztmdvRMvXdfIzfw
-   voWEBvTeWMDUS6jSzWs5JFO3WI87p0fd5RCcEm5qc2E0LQIZDB0paIXPK
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="1708904"
-X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
-   d="scan'208";a="1708904"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 05:00:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="935348383"
-X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
-   d="scan'208";a="935348383"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 13 Feb 2024 05:00:27 -0800
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Prashant Malani <pmalani@chromium.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	Emilie Roberts <hadrosaur@google.com>,
-	"Nyman, Mathias" <mathias.nyman@intel.com>,
-	"Regupathy, Rajaram" <rajaram.regupathy@intel.com>,
-	"Radjacoumar, Shyam Sundar" <ssradjacoumar@google.com>,
-	Samuel Jacob <samjaco@google.com>,
-	Uday Bhat <uday.m.bhat@intel.com>,
-	linux-usb@vger.kernel.org,
-	chrome-platform@lists.linux.dev,
+	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="tE8B0o6o"
+Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
+	by mail5.25mail.st (Postfix) with ESMTPSA id D1C636033F;
+	Tue, 13 Feb 2024 13:02:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
+	s=25mailst; t=1707829349;
+	bh=dlM175U+C8aayNuvUs0Vo/+s/Ov3qYpSkK3PAw6G+Dk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tE8B0o6o5jHRphzAzKu8FMc0/MbVtbhFI8+pdHsrMCON3bbMzKlg1Fpp4yxQ7exFG
+	 09NUYOa7d+9EcirZ+2WtO/yCpbKtSTXnVCx0n6NjHHI0wdK5e2rhdXdu+983nrwqcx
+	 KDMYSS9wOjCCJHrP5HwQQBUfb2LSoQ9unp0xGsTzFgAqcRCdsKUqSQ8baK4kyqgvNE
+	 ZpENHNmThNIjFVE+6o165hRFhJV919ZZ/DY79mYrO6pq2plO5oK0zBDT8CbV3Rd0kk
+	 3eQD/5EsHQUxTtrCmoT7uVhciKQ3PydeQ5gACFw7HX2jPal8HrWAZxtuoayJK0JXjp
+	 Nd9sC7eoVTVfw==
+Date: Tue, 13 Feb 2024 15:02:08 +0200
+From: Tony Lindgren <tony@atomide.com>
+To: Adam Ford <aford173@gmail.com>
+Cc: linux-omap@vger.kernel.org, aford@beaconembedded.com,
+	=?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] platform/chrome: cros_ec_typec: Make sure the USB role switch has PLD
-Date: Tue, 13 Feb 2024 15:00:18 +0200
-Message-ID: <20240213130018.3029991-3-heikki.krogerus@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240213130018.3029991-1-heikki.krogerus@linux.intel.com>
-References: <20240213130018.3029991-1-heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH] arm: dts: omap3:  Migrate hsmmc driver to sdhci driver
+Message-ID: <20240213130208.GI52537@atomide.com>
+References: <20240213124146.202391-1-aford173@gmail.com>
+ <20240213125618.GG52537@atomide.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240213125618.GG52537@atomide.com>
 
-The USB role switch does not always have the _PLD (Physical
-Location of Device) in ACPI tables. If it's missing,
-assigning the PLD hash of the port to the switch. That
-should guarantee that the USB Type-C port mapping code is
-always able to find the connection between the two (the port
-and the switch).
+* Tony Lindgren <tony@atomide.com> [240213 12:56]:
+> * Adam Ford <aford173@gmail.com> [240213 12:41]:
+> > The sdhci driver has been around for several years, and it supports
+> > the OMAP3 family.  Instead of using the older driver, let's finally
+> > migrate to the newer one.
+> 
+> I think we also should do these to avoid incomplete conversion:
+> 
+> - ti,dual-volt property can be dropped
+> 
+> - ti,non-removable should become non-removable
+> 
+> - ti,omap3-pre-es3-hsmmc probably should not be needed with sdhci
 
-Tested-by: Uday Bhat <uday.m.bhat@intel.com>
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
- drivers/platform/chrome/cros_ec_typec.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Hmm actually we may need to set SDHCI_QUIRK_NO_MULTIBLOCK for
+compatible ti,omap3-pre-es3-hsmmc.
 
-diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-index 2b2f14a1b711..4d305876ec08 100644
---- a/drivers/platform/chrome/cros_ec_typec.c
-+++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -24,6 +24,23 @@
- #define DP_PORT_VDO	(DP_CONF_SET_PIN_ASSIGN(BIT(DP_PIN_ASSIGN_C) | BIT(DP_PIN_ASSIGN_D)) | \
- 				DP_CAP_DFP_D | DP_CAP_RECEPTACLE)
- 
-+static void cros_typec_role_switch_quirk(struct fwnode_handle *fwnode)
-+{
-+#ifdef CONFIG_ACPI
-+	struct fwnode_handle *switch_fwnode;
-+
-+	/* Supply the USB role switch with the correct pld_crc if it's missing. */
-+	switch_fwnode = fwnode_find_reference(fwnode, "usb-role-switch", 0);
-+	if (!IS_ERR_OR_NULL(switch_fwnode)) {
-+		struct acpi_device *adev = to_acpi_device_node(switch_fwnode);
-+
-+		if (adev && !adev->pld_crc)
-+			adev->pld_crc = to_acpi_device_node(fwnode)->pld_crc;
-+		fwnode_handle_put(switch_fwnode);
-+	}
-+#endif
-+}
-+
- static int cros_typec_parse_port_props(struct typec_capability *cap,
- 				       struct fwnode_handle *fwnode,
- 				       struct device *dev)
-@@ -66,6 +83,8 @@ static int cros_typec_parse_port_props(struct typec_capability *cap,
- 		cap->prefer_role = ret;
- 	}
- 
-+	cros_typec_role_switch_quirk(fwnode);
-+
- 	cap->fwnode = fwnode;
- 
- 	return 0;
--- 
-2.43.0
+Regards,
 
+Tony
