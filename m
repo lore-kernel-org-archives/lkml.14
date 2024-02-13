@@ -1,45 +1,53 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6322C7491;
-	Tue, 13 Feb 2024 16:30:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD4902919
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 16:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707841858; cv=none; b=lQnVjDlIra8FbE179ryOzYEM2xttIaxX6nB03kH/wp9ikdSULUvjF3uG+uxvbN4/j8WEqqUQNrGMymgF7Qx6jOsGHgujXS/f6CHkVPyIo7HvN5BsWDubdx/VwzEiH3932oPznWr+g65838FTGF+QbHdGPihBZ6wa57ThgqcQZmM=
+	t=1707841910; cv=none; b=ry4Ai4pJz3WYkanYqnUxF1nS9jDT9LB/yrpCKBRAW50pLs0KZLvyDakIPE7R2bleY1tzDp7M8zdJlLL16P+GdQqZlOv6N7S/HtdVyHH+imRDN7TPH7oz89nT2/wc98cvDnx3ea5V8Lt+B9WVn2BIkDvLdenGj1QdPCQr7Y51ezo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707841858; c=relaxed/simple;
-	bh=M+iSkQzlFvKqKVdIDb0KbYwtekmltOd8aXuh0uIB/co=;
+	s=arc-20240116; t=1707841910; c=relaxed/simple;
+	bh=/kkLoYdzhCdq3WELOZKd9MgucjRXD6NUBDgH9zSLoyw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JrokOPcb5qwK1NKpGo1kVmKa6mSEQoBxMIOqSgR9wh9hgAs38D4bGIjQLNH5QgrYwW8fH8J7hBxGks6Rfy/HpDhpQMT5Joj/nWQi5cdY/dOvhs9nzsttEVHiaXx5Uxub9Cc+LuEYL1XHxBClTmjsBpn/osOtn7XNwnHhePiShmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qGbC2s9/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qGbC2s9/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7628C433C7;
-	Tue, 13 Feb 2024 16:30:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707841857;
-	bh=M+iSkQzlFvKqKVdIDb0KbYwtekmltOd8aXuh0uIB/co=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qGbC2s9/34KrvzdF2opEnNBqHmFpoCBeeJ5TpzKvEu4eOYaq9VObtJAqzXpUvh8gd
-	 /EXxH3lec5MXI9BLsBE9PA8ynrhhV9r54uZ+2Eeb27sQxEdaFceGZY3FyyZBvdZn7e
-	 S28ni/aizs8SKJC4ec+q35QiW2LvEpoVMdBpUIyjEIUqlxR6chrFOcXR1i5/6G01qC
-	 Dt9Z964Rn51vqFAJ0/i0EE0retrWpnb1Du0cEk68RiRo0WqPp5yTL/ALGvd8+2p2mR
-	 AmbJRk01uxBA9COfFdpY3MhgBRkfd2QdFxt7rxkPLSNo26iTqcxSJXFB7OjFu2iSfe
-	 m/uisfECjRnDw==
-Date: Tue, 13 Feb 2024 10:30:55 -0600
-From: Rob Herring <robh@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Conor Dooley <conor+dt@kernel.org>, linux-scsi@vger.kernel.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Avri Altman <avri.altman@wdc.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>, linux-kernel@vger.kernel.org,
-	Bart Van Assche <bvanassche@acm.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: ufs: samsung,exynos-ufs: Add size
- constraints on "samsung,sysreg"
-Message-ID: <170784184808.1480991.12030700618297062106.robh@kernel.org>
-References: <20240124190733.1554314-1-robh@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=XvPqi4wb4yN9pFUsofoV+1VsUgJ16ybMJsAprc0L/CxfTF2QYW2WH93bvhxNsDaPj/N1N3t9CtdK5QdGlaA92zrvrSGCm5kEH8+cM91LweQ7c03vxoUWy+Fzwccb6yh9S4GEiVg1hJEgHSIYe72740RxNdFlvF4AzhUCLUxujfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09511DA7;
+	Tue, 13 Feb 2024 08:32:27 -0800 (PST)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.36.130])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1051A3F5A1;
+	Tue, 13 Feb 2024 08:31:41 -0800 (PST)
+Date: Tue, 13 Feb 2024 16:31:36 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	David Hildenbrand <david@redhat.com>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	John Hubbard <jhubbard@nvidia.com>, Zi Yan <ziy@nvidia.com>,
+	Barry Song <21cnbao@gmail.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Yang Shi <shy828301@gmail.com>, Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 20/25] arm64/mm: Implement new wrprotect_ptes() batch
+ API
+Message-ID: <ZcuZaO8pars3aFtu@FVFF77S0Q05N.cambridge.arm.com>
+References: <20240202080756.1453939-1-ryan.roberts@arm.com>
+ <20240202080756.1453939-21-ryan.roberts@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,20 +56,228 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240124190733.1554314-1-robh@kernel.org>
+In-Reply-To: <20240202080756.1453939-21-ryan.roberts@arm.com>
 
-
-On Wed, 24 Jan 2024 13:07:33 -0600, Rob Herring wrote:
-> The 'phandle-array' type is a bit ambiguous. It can be either just an
-> array of phandles or an array of phandles plus args. "samsung,sysreg" is
-> the latter and needs to be constrained to a single entry with a phandle and
-> offset.
+On Fri, Feb 02, 2024 at 08:07:51AM +0000, Ryan Roberts wrote:
+> Optimize the contpte implementation to fix some of the fork performance
+> regression introduced by the initial contpte commit. Subsequent patches
+> will solve it entirely.
 > 
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> During fork(), any private memory in the parent must be write-protected.
+> Previously this was done 1 PTE at a time. But the core-mm supports
+> batched wrprotect via the new wrprotect_ptes() API. So let's implement
+> that API and for fully covered contpte mappings, we no longer need to
+> unfold the contpte. This has 2 benefits:
+> 
+>   - reduced unfolding, reduces the number of tlbis that must be issued.
+>   - The memory remains contpte-mapped ("folded") in the parent, so it
+>     continues to benefit from the more efficient use of the TLB after
+>     the fork.
+> 
+> The optimization to wrprotect a whole contpte block without unfolding is
+> possible thanks to the tightening of the Arm ARM in respect to the
+> definition and behaviour when 'Misprogramming the Contiguous bit'. See
+> section D21194 at https://developer.arm.com/documentation/102105/latest/
+
+Minor nit, but it'd be better to refer to a specific revision of the document,
+e.g.
+
+  https://developer.arm.com/documentation/102105/ja-07/
+
+That way people can see the specific version of the text you were referring to
+even if that changes later, and it means the link is still useful when D21194
+gets merged into the ARM ARM and dropped from the known issues doc.
+
+> 
+> Tested-by: John Hubbard <jhubbard@nvidia.com>
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
 > ---
->  .../devicetree/bindings/ufs/samsung,exynos-ufs.yaml      | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+>  arch/arm64/include/asm/pgtable.h | 61 ++++++++++++++++++++++++++------
+>  arch/arm64/mm/contpte.c          | 35 ++++++++++++++++++
+>  2 files changed, 86 insertions(+), 10 deletions(-)
 > 
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index 34892a95403d..c07f0d563733 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -978,16 +978,12 @@ static inline pmd_t pmdp_huge_get_and_clear(struct mm_struct *mm,
+>  }
+>  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+>  
+> -/*
+> - * __ptep_set_wrprotect - mark read-only while trasferring potential hardware
+> - * dirty status (PTE_DBM && !PTE_RDONLY) to the software PTE_DIRTY bit.
+> - */
+> -static inline void __ptep_set_wrprotect(struct mm_struct *mm,
+> -					unsigned long address, pte_t *ptep)
+> +static inline void ___ptep_set_wrprotect(struct mm_struct *mm,
+> +					unsigned long address, pte_t *ptep,
+> +					pte_t pte)
+>  {
+> -	pte_t old_pte, pte;
+> +	pte_t old_pte;
+>  
+> -	pte = __ptep_get(ptep);
+>  	do {
+>  		old_pte = pte;
+>  		pte = pte_wrprotect(pte);
+> @@ -996,6 +992,25 @@ static inline void __ptep_set_wrprotect(struct mm_struct *mm,
+>  	} while (pte_val(pte) != pte_val(old_pte));
+>  }
+>  
+> +/*
+> + * __ptep_set_wrprotect - mark read-only while trasferring potential hardware
+> + * dirty status (PTE_DBM && !PTE_RDONLY) to the software PTE_DIRTY bit.
+> + */
+> +static inline void __ptep_set_wrprotect(struct mm_struct *mm,
+> +					unsigned long address, pte_t *ptep)
+> +{
+> +	___ptep_set_wrprotect(mm, address, ptep, __ptep_get(ptep));
+> +}
+> +
+> +static inline void __wrprotect_ptes(struct mm_struct *mm, unsigned long address,
+> +				pte_t *ptep, unsigned int nr)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < nr; i++, address += PAGE_SIZE, ptep++)
+> +		__ptep_set_wrprotect(mm, address, ptep);
+> +}
+> +
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>  #define __HAVE_ARCH_PMDP_SET_WRPROTECT
+>  static inline void pmdp_set_wrprotect(struct mm_struct *mm,
+> @@ -1156,6 +1171,8 @@ extern int contpte_ptep_test_and_clear_young(struct vm_area_struct *vma,
+>  				unsigned long addr, pte_t *ptep);
+>  extern int contpte_ptep_clear_flush_young(struct vm_area_struct *vma,
+>  				unsigned long addr, pte_t *ptep);
+> +extern void contpte_wrprotect_ptes(struct mm_struct *mm, unsigned long addr,
+> +				pte_t *ptep, unsigned int nr);
+>  extern int contpte_ptep_set_access_flags(struct vm_area_struct *vma,
+>  				unsigned long addr, pte_t *ptep,
+>  				pte_t entry, int dirty);
+> @@ -1269,12 +1286,35 @@ static inline int ptep_clear_flush_young(struct vm_area_struct *vma,
+>  	return contpte_ptep_clear_flush_young(vma, addr, ptep);
+>  }
+>  
+> +#define wrprotect_ptes wrprotect_ptes
+> +static inline void wrprotect_ptes(struct mm_struct *mm, unsigned long addr,
+> +				pte_t *ptep, unsigned int nr)
+> +{
+> +	if (likely(nr == 1)) {
+> +		/*
+> +		 * Optimization: wrprotect_ptes() can only be called for present
+> +		 * ptes so we only need to check contig bit as condition for
+> +		 * unfold, and we can remove the contig bit from the pte we read
+> +		 * to avoid re-reading. This speeds up fork() which is sensitive
+> +		 * for order-0 folios. Equivalent to contpte_try_unfold().
+> +		 */
+> +		pte_t orig_pte = __ptep_get(ptep);
+> +
+> +		if (unlikely(pte_cont(orig_pte))) {
+> +			__contpte_try_unfold(mm, addr, ptep, orig_pte);
+> +			orig_pte = pte_mknoncont(orig_pte);
+> +		}
+> +		___ptep_set_wrprotect(mm, addr, ptep, orig_pte);
+> +	} else {
+> +		contpte_wrprotect_ptes(mm, addr, ptep, nr);
+> +	}
+> +}
+> +
+>  #define __HAVE_ARCH_PTEP_SET_WRPROTECT
+>  static inline void ptep_set_wrprotect(struct mm_struct *mm,
+>  				unsigned long addr, pte_t *ptep)
+>  {
+> -	contpte_try_unfold(mm, addr, ptep, __ptep_get(ptep));
+> -	__ptep_set_wrprotect(mm, addr, ptep);
+> +	wrprotect_ptes(mm, addr, ptep, 1);
+>  }
+>  
+>  #define __HAVE_ARCH_PTEP_SET_ACCESS_FLAGS
+> @@ -1306,6 +1346,7 @@ static inline int ptep_set_access_flags(struct vm_area_struct *vma,
+>  #define ptep_clear_flush_young			__ptep_clear_flush_young
+>  #define __HAVE_ARCH_PTEP_SET_WRPROTECT
+>  #define ptep_set_wrprotect			__ptep_set_wrprotect
+> +#define wrprotect_ptes				__wrprotect_ptes
+>  #define __HAVE_ARCH_PTEP_SET_ACCESS_FLAGS
+>  #define ptep_set_access_flags			__ptep_set_access_flags
+>  
+> diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
+> index bfb50e6b44c7..c85e64baf03b 100644
+> --- a/arch/arm64/mm/contpte.c
+> +++ b/arch/arm64/mm/contpte.c
+> @@ -23,6 +23,23 @@ static inline pte_t *contpte_align_down(pte_t *ptep)
+>  	return (pte_t *)(ALIGN_DOWN((unsigned long)ptep >> 3, CONT_PTES) << 3);
+>  }
+>  
+> +static void contpte_try_unfold_partial(struct mm_struct *mm, unsigned long addr,
+> +					pte_t *ptep, unsigned int nr)
+> +{
+> +	/*
+> +	 * Unfold any partially covered contpte block at the beginning and end
+> +	 * of the range.
+> +	 */
+> +
+> +	if (ptep != contpte_align_down(ptep) || nr < CONT_PTES)
+> +		contpte_try_unfold(mm, addr, ptep, __ptep_get(ptep));
+> +
+> +	if (ptep + nr != contpte_align_down(ptep + nr))
+> +		contpte_try_unfold(mm, addr + PAGE_SIZE * (nr - 1),
+> +				ptep + nr - 1,
+> +				__ptep_get(ptep + nr - 1));
 
-Applied, thanks!
+Nit: we should use braces for this 'if' block since it covers multiple lines
+(even though the function call is a single statement).
 
+It *might* be worth using temporaries for the last ptep and addr, e.g.
+
+	if (ptep + nr != contpte_align_down(ptep + nr)) {
+		unsigned long last_addr = addr + PAGE_SIZE * (nr - 1);
+		pte_t *last_ptep = ptep + nr - 1;
+		contpte_try_unfold(mm, last_addr, last_ptep,
+				   __ptep_get(last_ptep));
+	}
+
+... but I'm happy without the temporaries so long as we have braces.
+
+> +}
+> +
+>  static void contpte_convert(struct mm_struct *mm, unsigned long addr,
+>  			    pte_t *ptep, pte_t pte)
+>  {
+> @@ -236,6 +253,24 @@ int contpte_ptep_clear_flush_young(struct vm_area_struct *vma,
+>  }
+>  EXPORT_SYMBOL(contpte_ptep_clear_flush_young);
+>  
+> +void contpte_wrprotect_ptes(struct mm_struct *mm, unsigned long addr,
+> +					pte_t *ptep, unsigned int nr)
+> +{
+> +	/*
+> +	 * If wrprotecting an entire contig range, we can avoid unfolding. Just
+> +	 * set wrprotect and wait for the later mmu_gather flush to invalidate
+> +	 * the tlb. Until the flush, the page may or may not be wrprotected.
+> +	 * After the flush, it is guarranteed wrprotected. If its a partial
+
+Typo: s/guarranteed/guaranteed/
+Typo: s/its/it's/ (or s/its/it is/)
+
+Other than the above this looks good to me.
+
+Mark.
+
+> +	 * range though, we must unfold, because we can't have a case where
+> +	 * CONT_PTE is set but wrprotect applies to a subset of the PTEs; this
+> +	 * would cause it to continue to be unpredictable after the flush.
+> +	 */
+> +
+> +	contpte_try_unfold_partial(mm, addr, ptep, nr);
+> +	__wrprotect_ptes(mm, addr, ptep, nr);
+> +}
+> +EXPORT_SYMBOL(contpte_wrprotect_ptes);
+> +
+>  int contpte_ptep_set_access_flags(struct vm_area_struct *vma,
+>  					unsigned long addr, pte_t *ptep,
+>  					pte_t entry, int dirty)
+> -- 
+> 2.25.1
+> 
