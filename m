@@ -1,197 +1,168 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0014B225DC
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 10:00:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B53F241E0;
+	Tue, 13 Feb 2024 10:00:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707818404; cv=none; b=Z7tjs9gSLSINK86XnVslhzu2ellxhHw00BhwyVSRICYb8W6I2CviTdLn7ASBNiN8rtmy2Vr0fjTNLbbH4MkwmUIh0ZyXCJnA0Zjruq8LCqYvOuOy9hZjU2lj28ktsyNlejeMhcCBefG2VT23360St5UjXTsaBCCFOgz/56ID/vU=
+	t=1707818436; cv=none; b=kDRQRXfO7QkXKl+0WBwZ5SJNi/rXk81w3pz2PQxxFmSik/LgkbvIhUCwYF5UzulLcudPij2Kzo1yn1UeUupOQz7CEiK14dSNuyVrE1FKI7+xJ2BFnPjExP8pwNLQK27OJ8bVc9mv+sQE0d7jRrlgkz6C+A+bsvud045LFrle4cA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707818404; c=relaxed/simple;
-	bh=ACSk1jf/AZFiby2B/e9ooFgYbhyONiPoItuRKcyxhT8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=loegWpL+ue0mdYe3Bpd+B8D82HPWg3hmXodATK5N/Jv+SDT+lhk9oTmuldauTGabPFFqa/AyIfoJqXgYiaQjFX9jsnJiY7Cb2HAv9U60uEDgDKFUVQ3UEQtQM424d1gVl9aar01/ufZKOLvktmmEvcAh31yaVM0Swb7IBEF6BVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigma-star.at; spf=pass smtp.mailfrom=sigma-star.at; dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b=t3Nh5fOM; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigma-star.at
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sigma-star.at
+	s=arc-20240116; t=1707818436; c=relaxed/simple;
+	bh=cVV/IHvHgosEFZwF8TVZgUPovyuJO6ZLbQNTlYmYIms=;
+	h=From:To:CC:References:In-Reply-To:Subject:Date:Message-ID:
+	 MIME-Version:Content-Type; b=U4gBiVMqD1tU5cbN8ajJ8z4irWhPxcMaADVQU1pL6lPrRD5tl5+aloDA5XIYUq9HHhNivsXVHVqx/Qr6M5Fllt/GVhxx+Uz3sTmi+qmI/aM62HDuN+8XYjsRe2kSogxy0ghCMDKAS2fv+9zdy5Evp3dhUomLcTjutzpLqePCSmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=DJ6FBow3; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b="t3Nh5fOM"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a3cb228b90bso180476766b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 02:00:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sigma-star.at; s=google; t=1707818399; x=1708423199; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kyeDtepLgx0McOY1pO4WdkIJtQMiPkAy0vk69/uR3rI=;
-        b=t3Nh5fOMdbo5hs3AYuhV7+iRzgscPMB5IgBZynixUnDsGoYpfPt/5eYSV+PeQJQDq5
-         V8P8pWAaj8oG7kxiSh1YI5vDnYp1y2rbIFESWUtuOnHSg71ZTW5aAqjWq8VZ8GbvmeDR
-         hSvG5D//CTaEPNL7Pe+aUr8DmUd3eG9xAqzLqOhIF30OW1f5kDpahMLFca4jp9TZgurc
-         Uym+reZWagKZ31l5azkjmIgjR4JxNZtbi46yZFSYKj+4iiItYwOfkJizK4zlq1W05cpn
-         rjF8eXFU9L3mPUbmnQKxzyQH9mlPduVqSTZC0kWzciWrVxoN5jpqxJlhwrW257g8O4gB
-         UQHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707818399; x=1708423199;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kyeDtepLgx0McOY1pO4WdkIJtQMiPkAy0vk69/uR3rI=;
-        b=PBY/4uzxtqaQG7rVX+dxSBbpBulkra0JHatTyZnVBlVE+1n6M44/jvAOKMpiF5XhF3
-         0kepcuhXByTDlhtmcDHhQ7St7sYgzdTxF0mOTlki1+hA1nv69Q3z/7fre+CZIi1LoQ6F
-         2r28wJstrdMYEguCbMmwQgO5hfhzhlXlZ5LtnLlzJG3wqG3SAUJ8MoOVc1qLqx1nJV/Y
-         C1Psnt2XeFJdwl4GiORsbaO/0AJAOcLcr8Q2UQZtNB5rG0qqbUg8vJedTNkyAFx3U4vg
-         UIuhN7ELJrLvu2r/h4g/4DY0cT2pt8B5kP3sHARZl38TIcd24uU2n/+heRyGUr8iwQ4a
-         vUjg==
-X-Forwarded-Encrypted: i=1; AJvYcCVF0d+mOgGcviQVC3jI9r7KqSjyx/SKXjt/1gb1GVGW04iIMVBUkLMQv5nvkuGbYHJejMdSx4v6xttiysdvNfnVhsbmWLZyafrVpxAJ
-X-Gm-Message-State: AOJu0Yy2OnCJojDF0nVpFYPo9eAPJTUFCqKc7IMRfzttT6qs0Izz0cKk
-	SpepZoO76VKXWd2UqWqXfSeVSaYaUbvK9RAjeVVKoWC+InaX7hxbdZs3PN9wbcU=
-X-Google-Smtp-Source: AGHT+IHEjTCzJQiMRtlAWhiS4vBU8FucNsWEQmzIuMGcPfQWtxNPG6A/AHgXHP88FZXuf9FpsLb1RA==
-X-Received: by 2002:a17:906:da03:b0:a3c:8772:97bc with SMTP id fi3-20020a170906da0300b00a3c877297bcmr4593945ejb.70.1707818399072;
-        Tue, 13 Feb 2024 01:59:59 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU9Lvd0gIyxW7fyt4/vBOTtTFhw8BwSuz+lp9azwGwU/sEacO3hp4UP5b9jT4ZdzTXdpxRrNw3yWTkRA2mZc0ViUYvJI1T1Wil0XREjFxK6TG0gNqfdSgjrNF3pi9+7ljipOLTqFxTmPut2EvJvoC8REQLk9w3hNJDOA5mnxH5VIGqWmQD6wpqUTTkgCCec3TIQHVlmxYJ+RIbhuiDhlBe61VOjQ6ixhteHpfb50d+9J3rO+r26f2iEIQN04Loa/NxVD9DoebEX0YjEI/E0wU7EuKGFQhUzHfBc7zRzkZICZaXj2PpNdGdV7ULDQtMx1e2tHpcuaNgXcZxx53a3PrQpPSWkPLUGh9PLTugf22ZPoLA79U+WpqCLjlqJ+wMIuGy4aRX2astyccDTpqopsnoZwr+Le8XQl44nQ6XGse4g+ZsL5HSIoGYaTdcc8put9I/V4NLPaVXKQeFqCJgyDybNC8Laewb91SL/TQRVdzTVLx9+dhvfWHwYXfHQeMNJCe72RkbkPzT6l/CPkYElYVrWj8wfEITjz6UKfDibWZB9i9ao8mCJ6B/0uiw9X6zcxuJUKi9qESLTeVDKBnfWtk8P58ZkCAu03Y+qtfwccvG07ICfkjzsKxpE5Pt861yDtMR6V1bK7JZVoQ72CkFkr4h1JAMpgffeNn5a8693YQG0btUA22KCxYl748oIeBuUaU5weN0OgylotSAWDn3J+w9D8+iAVNcYDDDm6vrBuVEVe/nkWh3eCqeE3h4+ixmPB1guSaScYDm3pSJsYggz3f3662OrPJO66ThrXIAoTwKOuD3gEuyFt9um4e5fU1zMso7lcn9Y4JkbAlXk5eM5zUfdLJX36PrPI/Cm6fIT2meQUyuGG0ZG0cYTECFnY1/RtGANkJEWV5Z1TL7Y/e+1gt9IS9+hus0u+UJ6M37+PAiCR0b1Lib4J7X75weyMTYmwhW0AK
- mqmjwh2l9tVFgBdCifZBmXLaCEPzP813Cy13sEjfE6Aw/xPVQ1s23IRXd3yquvCIyW2lH73g1yk3Yd1QO9sJHXm84uLvW1g9PraVncRy64krUOqC22xsO9nxpucuoBjrbq
-Received: from blindfold.localnet ([82.150.214.1])
-        by smtp.gmail.com with ESMTPSA id vg9-20020a170907d30900b00a3cf4e8fdf5sm657479ejc.150.2024.02.13.01.59.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 01:59:58 -0800 (PST)
-From: Richard Weinberger <richard@sigma-star.at>
-To: Mimi Zohar <zohar@linux.ibm.com>, James Bottomley <jejb@linux.ibm.com>, Jarkko Sakkinen <jarkko@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, upstream@sigma-star.at
-Cc: Shawn Guo <shawnguo@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
-	Ahmad Fatoum <a.fatoum@pengutronix.de>, 
-	sigma star Kernel Team <upstream+dcp@sigma-star.at>, David Howells <dhowells@redhat.com>, 
-	Li Yang <leoyang.li@nxp.com>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
-	Tejun Heo <tj@kernel.org>, "Steven Rostedt (Google)" <rostedt@goodmis.org>, linux-doc@vger.kernel.org, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>, 
-	"keyrings@vger.kernel.org" <keyrings@vger.kernel.org>, 
-	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, 
-	linuxppc-dev@lists.ozlabs.org, 
-	"linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, David Gstir <david@sigma-star.at>
-Subject: Re: [PATCH v5 0/6] DCP as trusted keys backend
-Date: Tue, 13 Feb 2024 10:59:56 +0100
-Message-ID: <47439997.XUcTiDjVJD@somecomputer>
-In-Reply-To: <7AED262F-9387-446D-B11A-C549C02542F9@sigma-star.at>
-References: <20231215110639.45522-1-david@sigma-star.at> <7AED262F-9387-446D-B11A-C549C02542F9@sigma-star.at>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="DJ6FBow3"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41D6usn6030912;
+	Tue, 13 Feb 2024 04:00:07 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	from:to:cc:references:in-reply-to:subject:date:message-id
+	:mime-version:content-type:content-transfer-encoding; s=
+	PODMain02222019; bh=RLSQFPTXCZBB55mewGC3/S3cyEfZxcsMBJJpNhdcNt4=; b=
+	DJ6FBow3hk9Y64sQGT+Sibpc0GPRWb1aMIf1T6YR2E1g1b2Q0xZPjwBGyWdVhJ8P
+	v0lXstwqh/pcFmenTwfnvKWhHH5c19bCHOc4MN5Lm7esb3bp7yPWCNN6OhgbJXll
+	tt+uxHBrwD+WiVv/wwoJmtS/2b58IP7VT1i/IVByczEwSdKw07Wsv58RkGwZ1SvR
+	qbHLZdctdqnMBL8Am/Xstlc7D8e1V3Vn9T/8qZuKb7iXdbMAshc8KEBU2vSGPPlY
+	pjNwr/0dhVm6ZmpXs7qnbMA/jqYG6B0iYd9nK/G3KGOPKk757e9oOXJ8rgtJ90rd
+	EpEjVGU451Np8bWgVBijpw==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3w67e22y13-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Feb 2024 04:00:07 -0600 (CST)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 13 Feb
+ 2024 10:00:03 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40 via Frontend Transport; Tue, 13 Feb 2024 10:00:03 +0000
+Received: from LONN2DGDQ73 (LONN2DGDQ73.ad.cirrus.com [198.61.64.235])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 53A2F820243;
+	Tue, 13 Feb 2024 10:00:03 +0000 (UTC)
+From: Stefan Binding <sbinding@opensource.cirrus.com>
+To: 'Tomasz Kudela' <ramzes005@gmail.com>
+CC: <alsa-devel@alsa-project.org>, <andy.chi@canonical.com>,
+        <david.rhodes@cirrus.com>, <james.schulman@cirrus.com>,
+        <kailang@realtek.com>, <linux-kernel@vger.kernel.org>,
+        <linux-sound@vger.kernel.org>, <luke@ljones.dev>,
+        <patches@opensource.cirrus.com>, <perex@perex.cz>,
+        <rf@opensource.cirrus.com>, <ruinairas1992@gmail.com>,
+        <shenghao-ding@ti.com>, <tiwai@suse.com>,
+        <vitalyr@opensource.cirrus.com>
+References: <20240212193327.59507-1-ramzes005@gmail.com> <20240213082116.15049-1-ramzes005@gmail.com>
+In-Reply-To: <20240213082116.15049-1-ramzes005@gmail.com>
+Subject: RE: [PATCH v2] Add Lenovo Legion 7i gen7 sound quirk
+Date: Tue, 13 Feb 2024 10:00:03 +0000
+Message-ID: <000101da5e63$6a2565e0$3e7031a0$@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: en-gb
+Thread-Index: AQL5cxh77Ymk4rKL11VQD0BqvrFTygGP9Uvorr1f3IA=
+X-Proofpoint-ORIG-GUID: 4w35IuzkN3UfhFYAz8bRE5jDqIfh_Shl
+X-Proofpoint-GUID: 4w35IuzkN3UfhFYAz8bRE5jDqIfh_Shl
+X-Proofpoint-Spam-Reason: safe
 
-Am Montag, 5. Februar 2024, 09:39:07 CET schrieb David Gstir:
-> Hi,
->=20
-> > On 15.12.2023, at 12:06, David Gstir <david@sigma-star.at> wrote:
-> >=20
-> > This is a revival of the previous patch set submitted by Richard Weinbe=
-rger:
-> > https://lore.kernel.org/linux-integrity/20210614201620.30451-1-richard@=
-nod.at/
-> >=20
-> > v4 is here:
-> > https://lore.kernel.org/keyrings/20231024162024.51260-1-david@sigma-sta=
-r.at/
-> >=20
-> > v4 -> v5:
-> > - Make Kconfig for trust source check scalable as suggested by Jarkko S=
-akkinen
-> > - Add Acked-By from Herbert Xu to patch #1 - thanks!
-> > v3 -> v4:
-> > - Split changes on MAINTAINERS and documentation into dedicated patches
-> > - Use more concise wording in commit messages as suggested by Jarkko Sa=
-kkinen
-> > v2 -> v3:
-> > - Addressed review comments from Jarkko Sakkinen
-> > v1 -> v2:
-> > - Revive and rebase to latest version
-> > - Include review comments from Ahmad Fatoum
-> >=20
-> > The Data CoProcessor (DCP) is an IP core built into many NXP SoCs such
-> > as i.mx6ull.
-> >=20
-> > Similar to the CAAM engine used in more powerful SoCs, DCP can AES-
-> > encrypt/decrypt user data using a unique, never-disclosed,
-> > device-specific key. Unlike CAAM though, it cannot directly wrap and
-> > unwrap blobs in hardware. As DCP offers only the bare minimum feature
-> > set and a blob mechanism needs aid from software. A blob in this case
-> > is a piece of sensitive data (e.g. a key) that is encrypted and
-> > authenticated using the device-specific key so that unwrapping can only
-> > be done on the hardware where the blob was wrapped.
-> >=20
-> > This patch series adds a DCP based, trusted-key backend and is similar
-> > in spirit to the one by Ahmad Fatoum [0] that does the same for CAAM.
-> > It is of interest for similar use cases as the CAAM patch set, but for
-> > lower end devices, where CAAM is not available.
-> >=20
-> > Because constructing and parsing the blob has to happen in software,
-> > we needed to decide on a blob format and chose the following:
-> >=20
-> > struct dcp_blob_fmt {
-> > __u8 fmt_version;
-> > __u8 blob_key[AES_KEYSIZE_128];
-> > __u8 nonce[AES_KEYSIZE_128];
-> > __le32 payload_len;
-> > __u8 payload[];
-> > } __packed;
-> >=20
-> > The `fmt_version` is currently 1.
-> >=20
-> > The encrypted key is stored in the payload area. It is AES-128-GCM
-> > encrypted using `blob_key` and `nonce`, GCM auth tag is attached at
-> > the end of the payload (`payload_len` does not include the size of
-> > the auth tag).
-> >=20
-> > The `blob_key` itself is encrypted in AES-128-ECB mode by DCP using
-> > the OTP or UNIQUE device key. A new `blob_key` and `nonce` are generated
-> > randomly, when sealing/exporting the DCP blob.
-> >=20
-> > This patchset was tested with dm-crypt on an i.MX6ULL board.
-> >=20
-> > [0] https://lore.kernel.org/keyrings/20220513145705.2080323-1-a.fatoum@=
-pengutronix.de/
-> >=20
-> > David Gstir (6):
-> >  crypto: mxs-dcp: Add support for hardware-bound keys
-> >  KEYS: trusted: improve scalability of trust source config
-> >  KEYS: trusted: Introduce NXP DCP-backed trusted keys
-> >  MAINTAINERS: add entry for DCP-based trusted keys
-> >  docs: document DCP-backed trusted keys kernel params
-> >  docs: trusted-encrypted: add DCP as new trust source
-> >=20
-> > .../admin-guide/kernel-parameters.txt         |  13 +
-> > .../security/keys/trusted-encrypted.rst       |  85 +++++
-> > MAINTAINERS                                   |   9 +
-> > drivers/crypto/mxs-dcp.c                      | 104 +++++-
-> > include/keys/trusted_dcp.h                    |  11 +
-> > include/soc/fsl/dcp.h                         |  17 +
-> > security/keys/trusted-keys/Kconfig            |  18 +-
-> > security/keys/trusted-keys/Makefile           |   2 +
-> > security/keys/trusted-keys/trusted_core.c     |   6 +-
-> > security/keys/trusted-keys/trusted_dcp.c      | 311 ++++++++++++++++++
-> > 10 files changed, 562 insertions(+), 14 deletions(-)
-> > create mode 100644 include/keys/trusted_dcp.h
-> > create mode 100644 include/soc/fsl/dcp.h
-> > create mode 100644 security/keys/trusted-keys/trusted_dcp.c
->=20
-> Jarkko, Mimi, David do you need anything from my side for these patches t=
-o get them merged?
+Hi,
 
-=46riendly ping also from my side. :-)
+> -----Original Message-----
+> From: Tomasz Kudela <ramzes005@gmail.com>
+> Sent: Tuesday, February 13, 2024 8:21 AM
+> To: ramzes005@gmail.com
+> Cc: alsa-devel@alsa-project.org; andy.chi@canonical.com;
+> david.rhodes@cirrus.com; james.schulman@cirrus.com;
+> kailang@realtek.com; linux-kernel@vger.kernel.org; linux-
+> sound@vger.kernel.org; luke@ljones.dev;
+> patches@opensource.cirrus.com; perex@perex.cz;
+> rf@opensource.cirrus.com; ruinairas1992@gmail.com;
+> sbinding@opensource.cirrus.com; shenghao-ding@ti.com;
+> tiwai@suse.com; vitalyr@opensource.cirrus.com
+> Subject: [PATCH v2] Add Lenovo Legion 7i gen7 sound quirk
+> 
+> From: "T. Kudela" <ramzes005@gmail.com>
+> 
+> Add sound support for the Legion 7i gen7 laptop (16IAX7).
+> 
+> Signed-off-by: Tomasz Kudela <ramzes005@gmail.com>
+> ---
+>  sound/pci/hda/cs35l41_hda_property.c | 2 ++
+>  sound/pci/hda/patch_realtek.c        | 1 +
+>  2 files changed, 3 insertions(+)
+> 
+> diff --git a/sound/pci/hda/cs35l41_hda_property.c
+> b/sound/pci/hda/cs35l41_hda_property.c
+> index d74cf11eef1e..8a6b484b2184 100644
+> --- a/sound/pci/hda/cs35l41_hda_property.c
+> +++ b/sound/pci/hda/cs35l41_hda_property.c
+> @@ -95,6 +95,7 @@ static const struct cs35l41_config
+> cs35l41_config_table[] = {
+>  	{ "10431F12", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0
+> }, 0, 1, -1, 1000, 4500, 24 },
+>  	{ "10431F1F", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0
+> }, 1, -1, 0, 0, 0, 0 },
+>  	{ "10431F62", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0
+> }, 1, 2, 0, 0, 0, 0 },
+> +	{ "17AA386F", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0
+> }, 0, 1, -1, 0, 0, 0 },
+
+I don't believe this laptop has a Speaker ID, so this configuration
+should be:
+
+{ "17AA386F", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0,
+-1, -1, 0, 0, 0 },
 
 Thanks,
-//richard
+Stefan
 
-=2D-=20
-=E2=80=8B=E2=80=8B=E2=80=8B=E2=80=8B=E2=80=8Bsigma star gmbh | Eduard-Bodem=
-=2DGasse 6, 6020 Innsbruck, AUT
-UID/VAT Nr: ATU 66964118 | FN: 374287y
+>  	{ "17AA38B4", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0
+> }, 0, 1, -1, 0, 0, 0 },
+>  	{ "17AA38B5", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0
+> }, 0, 1, -1, 0, 0, 0 },
+>  	{ "17AA38B6", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0
+> }, 0, 1, -1, 0, 0, 0 },
+> @@ -431,6 +432,7 @@ static const struct cs35l41_prop_model
+> cs35l41_prop_model_table[] = {
+>  	{ "CSC3551", "10431F12", generic_dsd_config },
+>  	{ "CSC3551", "10431F1F", generic_dsd_config },
+>  	{ "CSC3551", "10431F62", generic_dsd_config },
+> +	{ "CSC3551", "17AA386F", generic_dsd_config },
+>  	{ "CSC3551", "17AA38B4", generic_dsd_config },
+>  	{ "CSC3551", "17AA38B5", generic_dsd_config },
+>  	{ "CSC3551", "17AA38B6", generic_dsd_config },
+> diff --git a/sound/pci/hda/patch_realtek.c
+> b/sound/pci/hda/patch_realtek.c
+> index 6994c4c5073c..0029f61d4693 100644
+> --- a/sound/pci/hda/patch_realtek.c
+> +++ b/sound/pci/hda/patch_realtek.c
+> @@ -10260,6 +10260,7 @@ static const struct snd_pci_quirk
+> alc269_fixup_tbl[] = {
+>  	SND_PCI_QUIRK(0x17aa, 0x3853, "Lenovo Yoga 7 15ITL5",
+> ALC287_FIXUP_YOGA7_14ITL_SPEAKERS),
+>  	SND_PCI_QUIRK(0x17aa, 0x3855, "Legion 7 16ITHG6",
+> ALC287_FIXUP_LEGION_16ITHG6),
+>  	SND_PCI_QUIRK(0x17aa, 0x3869, "Lenovo Yoga7 14IAL7",
+> ALC287_FIXUP_YOGA9_14IAP7_BASS_SPK_PIN),
+> +	SND_PCI_QUIRK(0x17aa, 0x386f, "Legion 7i 16IAX7",
+> ALC287_FIXUP_CS35L41_I2C_2),
+>  	SND_PCI_QUIRK(0x17aa, 0x3870, "Lenovo Yoga 7 14ARB7",
+> ALC287_FIXUP_YOGA7_14ARB7_I2C),
+>  	SND_PCI_QUIRK(0x17aa, 0x387d, "Yoga S780-16 pro Quad AAC",
+> ALC287_FIXUP_TAS2781_I2C),
+>  	SND_PCI_QUIRK(0x17aa, 0x387e, "Yoga S780-16 pro Quad YC",
+> ALC287_FIXUP_TAS2781_I2C),
+> --
+> 2.34.1
+> 
 
 
