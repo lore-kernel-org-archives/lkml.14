@@ -1,108 +1,78 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from out203-205-221-231.mail.qq.com (out203-205-221-231.mail.qq.com [203.205.221.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E36A24B28
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 10:43:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707821039; cv=none; b=qpEJd5uM5gexod75Va8Bw4pruhIaDrFYWnII95T9PI9jkJT3+F0dhViutp3Rq3jzkawoAbsvMRo5p5QMuWDZRHMTiCMabYJRmWHKnALEmQda7nHCMwJzO3YuGJarHyUOclJKgtYEZsZDFn7FGocAtJ/gWiqkV5ueVd4F539bCEI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707821039; c=relaxed/simple;
-	bh=uPlvIFVTH5FLj43h+COsvaOy0/XUpFnl9YLEoOGxarw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=IWcKWNV0giykiv5Pa/fcofKBimNaaFVnKcVAytUiinVJnLjmOY6g2Owrm6lnjnM9FaSOuKesqVCKrGC823JPjGRcOXTcTHhvyInEyUBGkwWv2ikmsNAVVzojeWkzNEetTYqNF/vEUzeuh31oyfRHFQ0+rvjdYuQ1hBUgJopuX0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1rZqGa-0004EU-0X
-	for linux-kernel@vger.kernel.org; Tue, 13 Feb 2024 11:43:56 +0100
-Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1rZqGZ-000SsX-Ju
-	for linux-kernel@vger.kernel.org; Tue, 13 Feb 2024 11:43:55 +0100
-Received: from dspam.blackshift.org (localhost [127.0.0.1])
-	by bjornoya.blackshift.org (Postfix) with SMTP id 4A89828D59E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205A424B23
 	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 10:43:55 +0000 (UTC)
-Received: from hardanger.blackshift.org (unknown [172.20.34.65])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by bjornoya.blackshift.org (Postfix) with ESMTPS id A373828D59B;
-	Tue, 13 Feb 2024 10:43:54 +0000 (UTC)
-Received: from [172.20.34.65] (localhost [::1])
-	by hardanger.blackshift.org (OpenSMTPD) with ESMTP id f05ffb33;
-	Tue, 13 Feb 2024 10:43:54 +0000 (UTC)
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Date: Tue, 13 Feb 2024 11:43:51 +0100
-Subject: [PATCH] MAINTAINERS: can: xilinx_can: remove Naga Sureshkumar
- Relli
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.231
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707821038; cv=none; b=DfiMU/2wOeOVafHtdq9qF6dPlHpP5KJMxK4NSedH4FmODsD3GYKeCTrScOVkCKq4mLayyUhODjohDDQPNOuI9+33uOU22JhQSNOGTzn6dM50vU2KXsDYmZKY9oizqc4yCTuMwaml+NU1Fs/us1MT0AJGZl6kaJmbfHMzWsjUiMY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707821038; c=relaxed/simple;
+	bh=h3vHrYD7hhov7txanSMDe7pCpaatJhH7Xwj2ojnf8Rg=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=BXuM/AlzXJ768B5qXSHRjUWYr7YREZX7RhyQVLjkXggZhpOeswouIcaglgwvaZsVoZ6YvmdB3MjJ7Rt6KYFBltRBSeCBMvab7LEfKFtxQ4RKtrzL5Cp7uKoVrs4G8Ynd7hbQGQbI4n0HvZLTPoOoi0E1Sr2vOYSCaDM6/6jL5gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=X59T67pM; arc=none smtp.client-ip=203.205.221.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="X59T67pM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1707821027; bh=sEZ6YMGniVm+AtqGa4bZU5AbsOVmzpZP7amUT7bfhUo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=X59T67pMbYsdeIQ2s35KjiKzNz96km9WTfhgnl5Bz4b5n8iR04Y4vQY1Olg1EvJpZ
+	 fzHf9FT9sf0HRkEyRjkDHg7jwCD256Pgr2/8//uYdQXyJtMs0Jq3akXFCrEbjWylis
+	 mSdOgvcNOFGeHVSYATvm2imKQ4LHnMJVufvSZrGM=
+Received: from pek-lxu-l1.wrs.com ([36.129.58.158])
+	by newxmesmtplogicsvrszc5-2.qq.com (NewEsmtp) with SMTP
+	id 961908ED; Tue, 13 Feb 2024 18:37:33 +0800
+X-QQ-mid: xmsmtpt1707820653tv66kw34l
+Message-ID: <tencent_E2FE25978DA612195DF45DCD191D4FAF8D07@qq.com>
+X-QQ-XMAILINFO: NyTsQ4JOu2J2lMdCi18gEdOs0z7aETiwKrih2512wr3PfbM2scpmQRortbAmgR
+	 RAH/flE3RMECRy4iV0ookU809CcnopizHysyNuPqhNZ1birOD/82ycS2khAhqNoFsuFPiIgGU07f
+	 SZ4b+RaygMakxnHsfeUSRxuWGvp5O6fj3bjU98TWzuFAahFGyh/gngb2oilRB8/Ml8qXKCCYOW/a
+	 mKfxE4ZXPCaqzhk0ZhrpQ1DdhqECtyQhb9izj+2Wg4s9Zy10Cq+qLBm1NEBzqUZnJNOoiuylGLI6
+	 +CtUVTcV/AWfEphp9fs0JiVOXO0VKL2B7G+bgekbIn+DUVhd5cJfXsN325ubSTwhBcOC5nYojgH0
+	 Wssb59LhM+08nwOms2FHVQ1Z4iKl9/b1s1WZ8p5KPryDUuqLDK9XTG8WMzYzl8iR6p7HZly/2jE5
+	 7EgJLCYC5W4A06FFpLA5elwv9ApBn3qwHZmIKFKU7zP2r/yrTLfIFbsUjvEl6o9OlTOn2aWl1F3a
+	 jAQGHZdF6w3OeX/KCqU+2Hp7oJbqRep82Km5UZYyev3RyU4wqD5GZSq1xOc4UuywQKabmrXVXWhE
+	 hElCrD1PGf1E+KHS70c/1HQzZxZgnRWB24/WK1A3L23x2GXYMkdpy4OAZ9vnlUcnYoKDU9zHD3pV
+	 NBvUKNWEX0cVQO5pCv2h+UAXu/+jfaI7vZwRq1IP7L0vhJUTdwHzeRgkkc1bQsm+QL4b8+/WESVy
+	 RKJGklchCTkGL/6SacOp+nFNEIop8eo7dkWXxVyUKQDg54RFIGidaTPmb0tkqS2Kt1/3X+vuiYxD
+	 SbTx/RipNaG8Cxbd2IeUWq4Vf7b1eJrHZuF1/ORmrjmX2y+IQniQFdEvD7JAQNEfiwZMZdB+nCQ8
+	 bYYoZ9C5Xd7StO6L74h8XlT3chC6s8wyO1aL2s6VBFbI9M4cputIFicP+VuuXuUQ==
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+c2ada45c23d98d646118@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [ntfs3?] possible deadlock in ntfs_set_state (2)
+Date: Tue, 13 Feb 2024 18:37:34 +0800
+X-OQ-MSGID: <20240213103733.997747-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <000000000000998cff06113e1d91@google.com>
+References: <000000000000998cff06113e1d91@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240213-xilinx_can-v1-1-79820de803ea@pengutronix.de>
-X-B4-Tracking: v=1; b=H4sIAOdHy2UC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDIKFbkZmTmVcRn5yYp5uUkpxoaZpokGJknKQE1FBQlJqWWQE2LDq2thY
- AhBraHVwAAAA=
-To: Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
-Cc: linux-kernel@vger.kernel.org, linux-can@vger.kernel.org, 
- Marc Kleine-Budde <mkl@pengutronix.de>
-X-Mailer: b4 0.13-dev-f0463
-X-Developer-Signature: v=1; a=openpgp-sha256; l=991; i=mkl@pengutronix.de;
- h=from:subject:message-id; bh=uPlvIFVTH5FLj43h+COsvaOy0/XUpFnl9YLEoOGxarw=;
- b=owEBbQGS/pANAwAKASg4oj56LbxvAcsmYgBly0foJIKpCN1FnDUSl2+GbEAv/oqDCwsUbQTqZ
- AqqZNJUgEKJATMEAAEKAB0WIQRQQLqG4LYE3Sm8Pl8oOKI+ei28bwUCZctH6AAKCRAoOKI+ei28
- b3QwB/9G6ItdZOFAHRN4rAEH2IdEiDFF4HXrPoL2t3gzSkeyjiqifpEOtZsT3Ot71SDyYeq5gqt
- BMigh8M8OSvlR0/F/jQBEZBilCW63+znsfvIIXGOO3OLwAK3vvckxJNOZQ2boU3ajp347Ib2t4b
- 0J4zPpT0LwvG+ZJirXCTMdBVKisQINd8/G1wsDUk+HVgSNoqtlgN7oZLNEzJ1c3jv55d0cfrGIV
- IVdwZrwhpeRKnvOYvJPlzSxARdDCH+ojKm7NwXxV+ddSWrSDdtBNm+4984GfPjTdsTCAK9hl3OK
- rnwA6Y8w4v07ponGhX/qAavUB2Vk5wPjPOLMMmrVsveQzgxk
-X-Developer-Key: i=mkl@pengutronix.de; a=openpgp;
- fpr=C1400BA0B3989E6FBC7D5B5C2B5EE211C58AEA54
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 
-Mails to naga.sureshkumar.relli@xilinx.com are bouncing due to a mail
-loop. Seems Naga Sureshkumar Relli has left the company.
+please test deadlock in ntfs_set_state 
 
-Remove Naga Sureshkumar Relli from the xilinx_can driver.
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
 
-Cc: Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
----
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 000ef0e46c70..3e03092593f3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -24142,7 +24142,6 @@ F:	drivers/net/ethernet/xilinx/xilinx_axienet*
+diff --git a/fs/ntfs3/frecord.c b/fs/ntfs3/frecord.c
+index 3b42938a9d3b..1dfc933b58ad 100644
+--- a/fs/ntfs3/frecord.c
++++ b/fs/ntfs3/frecord.c
+@@ -3210,7 +3210,6 @@ static bool ni_update_parent(struct ntfs_inode *ni, struct NTFS_DUP_INFO *dup,
  
- XILINX CAN DRIVER
- M:	Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
--R:	Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
- L:	linux-can@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/net/can/xilinx,can.yaml
-
----
-base-commit: a3522a2edb3faf8cb98d38c2a99f5967beef24e2
-change-id: 20240202-xilinx_can-bdca95a0d23b
-
-Best regards,
--- 
-Marc Kleine-Budde <mkl@pengutronix.de>
-
+ 		/* Check simple case when parent inode equals current inode. */
+ 		if (ino_get(&fname->home) == ni->vfs_inode.i_ino) {
+-			ntfs_set_state(sbi, NTFS_DIRTY_ERROR);
+ 			continue;
+ 		}
+ 
 
