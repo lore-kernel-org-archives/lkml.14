@@ -1,117 +1,224 @@
-Received: from wfout6-smtp.messagingengine.com (wfout6-smtp.messagingengine.com [64.147.123.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CFC422636;
-	Tue, 13 Feb 2024 10:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3EE02BD01
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 10:54:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707821598; cv=none; b=WL6K0LxBcFkZ8GedHKnzeEqBAGTGOpXLR3ev93/9N0XIe0zqRTTkbzul7T3WKP6B7vGLWPZXOD7OHak8I+5g65yV5+Yd/E4YAVf0i1q8TaYguOA9WzR7p3L2sy9rxjeSTfBcQKdMCRbohCBjYBGurbP6+FUOQ7NZl1zybycXpvE=
+	t=1707821649; cv=none; b=oc+mIQNDkAjGPGWCIIkd1WotM/HPabY9B8MjVdWdVGQVZwQNQXbT+r6wvR9O/QaB1TPD58dFJ7twFnxn/7cKVGbLqrV89Pw3H0Q3p2zUgeSuc+i1Fa1OJ20MUSveDU+cbqqNXLSChpDZXu/I3d9guQ/TEkINnrVwYGrk5V3/Nw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707821598; c=relaxed/simple;
-	bh=+JnBgDGOZAp2YbrH6cwJtYEtXr9eH6MJ20r1BkDzDXE=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=BcLAnGt3JZVKZyCsvc7CUKY/bbqDfKIfarhIcZthGOI46CjrlNHk8CbDJ4Nga71rV9pjyG2+Gkhpt5d6zGyUkFxdIWfef2r9h3Wgbmv0fOT91Cha/QufJMlUrMMAbumzghtc5SeGtA1RiveV6YTPCVqNCJyboiA7YpO6lm16TO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=hdWJrUS8; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=G02pROHA; arc=none smtp.client-ip=64.147.123.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1707821649; c=relaxed/simple;
+	bh=zIILUVITRYsRVIoakXIdWqn4esADPrLTftPfvi8YhQY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eT5+D+0t2RwY3GnApzS1dcz7S9tZssaAkN+qvCbVSDY8LFY8Q4/R9uNNo+cceUjpBtkLyaRk4fuQ8sNuCsRA+8xsyiLieiRqP5NJUmYq+8Io2oY3pdAdPkOoehRV6lGzi061wzZOX4B4cRRN+CmL+ybGsoNoQfassYKdnOdX59c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wwVM7OX1; arc=none smtp.client-ip=209.85.219.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="hdWJrUS8";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="G02pROHA"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.west.internal (Postfix) with ESMTP id DE8C01C00087;
-	Tue, 13 Feb 2024 05:53:13 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 13 Feb 2024 05:53:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1707821593; x=1707907993; bh=6dv3XkVpsh
-	WAdzS8Nc4Xo0CoQTmrm60p1TUc7YC2Dao=; b=hdWJrUS8Cd51e7g6sHyMhMiCxv
-	IDWxmxNLFPEiqY+2GMkGyjR8B8XSgya46SGAtMuyBQ/eW2An26StdfkpA6wC8S6g
-	LuJTGDhGXLsntq83AcJAOtuW98rfnCbKxncDN3QVgRbDxMvaPmCq57xQwVgR2I7H
-	+UlLZ7ltgGP14MFBIcNnSK/dS7wb4+Fi72zXXwTBbOxaVaot+dbzoa4ScEVZGF3w
-	gSxd5R5MMAG38ir1USb5rRVnvmlzFvdPU6idyu6sNe9GkY2HAl2MNhEmDSwnux4Q
-	VmGCD7B9Ruxsgy8d4UdVCKlPPG6k0z3ndm78tVLasKcstligOWQlDT3eEbbg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1707821593; x=1707907993; bh=6dv3XkVpshWAdzS8Nc4Xo0CoQTmr
-	m60p1TUc7YC2Dao=; b=G02pROHA+7jjMd7tHb5W9Mk1RHyKHtv+aGTn41ZLW0fH
-	TeDGVYBX5dqUePSIxI0FC/zSx8psmAhZsU2w2xqEZpYNMKtCAqUppnDdcxNKd/Gq
-	t7v7HDGf+wTfHKW1oIRp6dTsyFDFkIRBYLeHpQbB1dDWdAtwyFaa3Od+5wWJq/y4
-	YHhUPnHwW4mbW4LM/+uL4x21bUnKQya075BRbFDcNy3bqfseqZn4J+EZ8HMwvQqe
-	PUeKkR8Ve8iedu7wfp4NfaMD9/aiHMqWwUB8UdvLekkwgqMFJbu6IAnZOAIWOjYW
-	Vw7e7GDFqI6KFb/+a/V/Ofa27HmNYxUzVwGh1D7xYA==
-X-ME-Sender: <xms:F0rLZb_1q4NKRMH-XXweuv45E4i6FkWcds3C1qZ80Ws1TMhlCedt-w>
-    <xme:F0rLZXtYCwVkCjihBn9E_icVc9UEUFEBcYTprGOvxx8x770weQ-EuImCYvFjUiE70
-    vTv3049MW5pipRXSvQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudehgddulecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:F0rLZZCGF4p3x0Tli4MvIOHCz3GP44OMlMiAIBqdkgchzB1cmvLNvQ>
-    <xmx:F0rLZXcXjSCXz4H84WVOn0iFRqU4fNWpZD2PIwaO0L4RzJF_UJ1o4g>
-    <xmx:F0rLZQOsH68J5cLPZ8MzFdW_2JYHAoCTzJJ6bmTQV3gsg88zA7cFDA>
-    <xmx:GUrLZRxiq9tjm-VczEMhcII7VaYv9BO8Xu8yf6vQZFSyb0aOzroxWDV57V4>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 6BDE7B6008D; Tue, 13 Feb 2024 05:53:11 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-144-ge5821d614e-fm-20240125.002-ge5821d61
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wwVM7OX1"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dc238cb1b17so4003888276.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 02:54:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707821647; x=1708426447; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=62wygMyBdeSVpMuQ3wI8n4MfTzhln2PY4S7FohPAHFs=;
+        b=wwVM7OX1662vOFflvsrw3L4B+DkQNAK5H9GBP75piM9/sXk1mNG2AGKjikG6KWlWyR
+         daFXPXVPJrsb0MjCiFSfGBQ+TM+0LhctMxzjbjCPuBt2yCoSMDFfB7lFXHgmJOJWQEMZ
+         0MQq4quYJIVjc3MPdmx0tjufLfXQtSRtOtTclgyMpXaqAwVXpo5k9/zDgfG2yg4Y9mE7
+         RIL0WrrIh/PleJEmRRWKXWvCtBN0JmSHmeGnMud5mrinTGHJ8FSNWBEkUBl1BJbvQTj7
+         5ILypmOecVL7bByks26QOIaJ3uWWVDX6RiG8fCGCChsycutOAZDkUXKLPyuYviQO+u7k
+         GvZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707821647; x=1708426447;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=62wygMyBdeSVpMuQ3wI8n4MfTzhln2PY4S7FohPAHFs=;
+        b=gOWgkdC8wVQzeLllU8+Ygya+++2M6A92+bdiD6OXiXR+rcbSAqJVwmnb03hmwIxuIq
+         kxv/Xw+So3A2TaOz40d4LBO7IF7LAy9Ze/ewu8rhYJ9oi3x5h9QIoClip5b9ESM2CXxT
+         7qlWgS9PSRRMpsxCeYlQH0CZFb8qNA3N75jOnT13+YqJ6OMu3lBeUJEi2itHZa5QyvAf
+         ubUAjraCtAd9AfTJJ/YicIvDTikneQWs+3AeTnO5VAK+dmaE8fyA/qgw0perGSKvjszg
+         +wCHVKpxRm8RcpTaScDvdnMYevwqgNbXf3yTzbG3Whe2Vqiaks7oKyxTaF7VFGD8655q
+         egrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUmeEU3z8Kq6tANTvV61LE3211wy+P1PX7Nte3wN5jnW/MbZv0BuWFL64uMD9x5VaIztsZPvuZOgtGkRvWdmkgoOKwKNgjYqxfXuGsm
+X-Gm-Message-State: AOJu0YyLFCPiaxSYc16uYLwC61kmecphSrFkZfMU/WF4veiblOPBGNHB
+	CivmcoD+1ALSmY9ZsrpfdNKchrZ7iltaVhk98WqJxTvzSSzaEjAUC2Xe6y0Bp/upZ/lxT1fgWj7
+	DwiwkAVDA5iz2vptVY8VytcBFfR2mSENpRFxZwQ==
+X-Google-Smtp-Source: AGHT+IGLUVGIHY81Tcp0bv2vTSWijZVfrPPjlMaVyZ75RYgEoRCw78YWDpdzbiB2KYKdDN525kZxCQzSFmKzTrLQJyw=
+X-Received: by 2002:a05:6902:542:b0:dc6:6307:d188 with SMTP id
+ z2-20020a056902054200b00dc66307d188mr7487929ybs.25.1707821646726; Tue, 13 Feb
+ 2024 02:54:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <c61d7daf-1b13-4ff8-aeae-7dcd8dd02131@app.fastmail.com>
-In-Reply-To: <1jbk8kk5pk.fsf@starbuckisacylon.baylibre.com>
-References: <20240213101220.459641-1-arnd@kernel.org>
- <1jbk8kk5pk.fsf@starbuckisacylon.baylibre.com>
-Date: Tue, 13 Feb 2024 11:52:50 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Jerome Brunet" <jbrunet@baylibre.com>, "Arnd Bergmann" <arnd@kernel.org>,
- "Stephen Boyd" <sboyd@kernel.org>
-Cc: "Mark Brown" <broonie@kernel.org>, "Liam Girdwood" <lgirdwood@gmail.com>,
- "Jaroslav Kysela" <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>,
- "Neil Armstrong" <neil.armstrong@linaro.org>,
- "Kevin Hilman" <khilman@baylibre.com>,
- "Martin Blumenstingl" <martin.blumenstingl@googlemail.com>,
- "Nathan Chancellor" <nathan@kernel.org>,
- "Nick Desaulniers" <ndesaulniers@google.com>,
- "Bill Wendling" <morbo@google.com>, "Justin Stitt" <justinstitt@google.com>,
- alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH] ASoC: meson: add helpers for clk_disable_unprepare
-Content-Type: text/plain
+References: <20240213104754.8195-1-quic_riteshk@quicinc.com> <20240213104754.8195-3-quic_riteshk@quicinc.com>
+In-Reply-To: <20240213104754.8195-3-quic_riteshk@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Tue, 13 Feb 2024 12:53:55 +0200
+Message-ID: <CAA8EJprztE0Cwc=+vxxXk=wKmyMU_TCtLPcY29RHO4-+nWFQEw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: qcm6490-idp: add display and panel
+To: Ritesh Kumar <quic_riteshk@quicinc.com>
+Cc: andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	catalin.marinas@arm.com, will@kernel.org, quic_bjorande@quicinc.com, 
+	geert+renesas@glider.be, arnd@arndb.de, neil.armstrong@linaro.org, 
+	nfraprado@collabora.com, m.szyprowski@samsung.com, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	quic_abhinavk@quicinc.com, quic_rajeevny@quicinc.com, 
+	quic_vproddut@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Feb 13, 2024, at 11:36, Jerome Brunet wrote:
-> On Tue 13 Feb 2024 at 11:11, Arnd Bergmann <arnd@kernel.org> wrote:
+On Tue, 13 Feb 2024 at 12:48, Ritesh Kumar <quic_riteshk@quicinc.com> wrote:
+>
+> Enable Display Subsystem with Novatek NT36672E Panel
+> on qcm6490 idp platform.
+>
+> Signed-off-by: Ritesh Kumar <quic_riteshk@quicinc.com>
+>
+> ---
+> v2: Fixed review comments from Dmitry and Konrad
+>       - moved pinctrl-names after pinctrl-0 property.
+>       - removed gpu disablement change after validating gpu.
+>     Rebased the patch
+>       - rebased the patch to resolve conflicts.
+> ---
+>  arch/arm64/boot/dts/qcom/qcm6490-idp.dts | 92 ++++++++++++++++++++++++
+>  1 file changed, 92 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
+> index 502a5a383bde..0054b2a8d6c7 100644
+> --- a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
+> @@ -10,6 +10,7 @@
+>  #define PM7250B_SID1 9
+>
+>  #include <dt-bindings/leds/common.h>
+> +#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+>  #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+>  #include "sc7280.dtsi"
+>  #include "pm7250b.dtsi"
+> @@ -39,6 +40,25 @@
+>                 stdout-path = "serial0:115200n8";
+>         };
+>
+> +       lcd_disp_bias: lcd-disp-bias-regulator {
 
-> This probably pre-dates the introduction of devm_clk_get_enabled()
-> It would probably be better to use that instead of duplicating helper
-> functions which do the same thing.
+regualtor-lcd-disp-bias, please. This will allow grouping regulators together.
 
-Ah, I had not thought of that interface either, so you are probably
-right that this is the best way to do it.
-Can you send a replacement patch then and add my Reported-by?
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "lcd_disp_bias";
+> +               regulator-min-microvolt = <5500000>;
+> +               regulator-max-microvolt = <5500000>;
+> +               gpio = <&pm7250b_gpios 2 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +               pinctrl-0 = <&lcd_disp_bias_en>;
+> +               pinctrl-names = "default";
+> +       };
+> +
+> +       pm8350c_pwm_backlight: backlight {
 
-I also sent the same patch for drivers/nvmem/meson-efuse.c, which
-I guess will also need the same treatment. I also checked and saw
-that all three files already had this code in linux-6.0 when
-devm_clk_get_enabled() got added.
+This node isn't in the sort order.
 
-> If for any reason it is not possible, a common helper in clk.h would
-> preferable I think.
+> +               compatible = "pwm-backlight";
+> +               pwms = <&pm8350c_pwm 3 65535>;
+> +               enable-gpios = <&pm8350c_gpios 7 GPIO_ACTIVE_HIGH>;
+> +               pinctrl-0 = <&pmic_lcd_bl_en>;
+> +               pinctrl-names = "default";
+> +       };
+> +
+>         reserved-memory {
+>                 xbl_mem: xbl@80700000 {
+>                         reg = <0x0 0x80700000 0x0 0x100000>;
+> @@ -421,7 +441,79 @@
+>         };
+>  };
+>
+> +&mdss {
+> +       status = "okay";
+> +};
+> +
+> +&mdss_dsi {
+> +       vdda-supply = <&vreg_l6b_1p2>;
+> +       status = "okay";
+> +
+> +       panel@0 {
+> +               compatible = "novatek,nt36672e";
+> +               reg = <0>;
+> +
+> +               reset-gpios = <&tlmm 44 GPIO_ACTIVE_HIGH>;
+> +
+> +               vddi-supply = <&vreg_l8c_1p62>;
+> +               avdd-supply = <&lcd_disp_bias>;
+> +               avee-supply = <&lcd_disp_bias>;
+> +
+> +               backlight = <&pm8350c_pwm_backlight>;
+> +
+> +               port {
+> +                       panel0_in: endpoint {
+> +                               remote-endpoint = <&mdss_dsi0_out>;
+> +                       };
+> +               };
+> +       };
+> +};
+> +
+> +&mdss_dsi0_out {
+> +       remote-endpoint = <&panel0_in>;
+> +       data-lanes = <0 1 2 3>;
+> +};
+> +
+> +&mdss_dsi_phy {
+> +       vdds-supply = <&vreg_l10c_0p88>;
+> +       status = "okay";
+> +};
+> +
+> +&pm7250b_gpios {
+> +       lcd_disp_bias_en: lcd-disp-bias-en-state {
+> +               pins = "gpio2";
+> +               function = "func1";
+> +               bias-disable;
+> +               qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
+> +               input-disable;
+> +               output-enable;
+> +               power-source = <0>;
+> +       };
+> +};
+> +
+> +&pm8350c_gpios {
+> +       pmic_lcd_bl_en: pmic-lcd-bl-en-state {
+> +               pins = "gpio7";
+> +               function = "normal";
+> +               bias-disable;
+> +               qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
+> +               output-low;
+> +               power-source = <0>;
+> +       };
+> +
+> +       pmic_lcd_bl_pwm: pmic-lcd-bl-pwm-state {
+> +               pins = "gpio8";
+> +               function = "func1";
+> +               bias-disable;
+> +               qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
+> +               output-low;
+> +               power-source = <0>;
+> +       };
+> +};
+> +
+>  &pm8350c_pwm {
+> +       pinctrl-0 = <&pmic_lcd_bl_pwm>;
+> +       pinctrl-names = "default";
+>         status = "okay";
+>
+>         multi-led {
+> --
+> 2.17.1
+>
 
-I can't think of anything that prevents us from using
-devm_clk_get_enabled() here.
 
-    Arnd
+-- 
+With best wishes
+Dmitry
