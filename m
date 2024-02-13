@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE7D5FDC8;
-	Tue, 13 Feb 2024 00:21:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF6860249;
+	Tue, 13 Feb 2024 00:21:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707783664; cv=none; b=J4ZswaAhujVG/MOu1IxQURNx1Rtb4jIdH9YWIDYN1i3SuiIT31b3R+Gg+BG7YMM8xtN+xQg73FF830/YpFEPkDiTfEKRrRse1BBunWHN+NzgTXZkSU8x40Br2v1/DlQAIGNxGII0wT8+5pSZ1KZo6jfaBUrn542+Z9gsbZVmXOY=
+	t=1707783667; cv=none; b=tTUGpDQNlCWPFD35zgYhTShx+FaQBx7iS9UK0NjO6g4fYfVWOGrEWJV+x3C2xtOFJ4oqFHwRR1d5/nCnS4yK35dZA6HciJ1xI7CzYy71HwM9/9Ut6y1BiOXrzhoBMxFs52bhUPFzNyQcPZ6d5sRJnxgTU5DKroUX5W2gyBOBzOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707783664; c=relaxed/simple;
-	bh=mA0Fci1lxH5SIxnVuwWftnKr6FvNQtbKmvcVp0Ka064=;
+	s=arc-20240116; t=1707783667; c=relaxed/simple;
+	bh=5VO5ByHXA+KglQtXhuGq+fTGFxTkBcbxJ2WD86RT6oM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dZKKT5S09ur7J7j/QkQDRMoBAFFiCLRyiAv4OoD7Nxe6ld+/Mq5eEFRJcmSIQMZh+99Lz4hEhqvgCqC8ew3EmcyII7eV7pf5fZYcAD09iDAKsL78ZixqE3ReT6KEIDJwHiPWkeQCbS8UCVGaLRNXWQavXEqrU/MulrGWipF0Hcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TIMAXOSA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=DxoP/mde+K6zH2Jd/fOnO6UAUS736Idul2frryAMpaIteNecjQ64UHs6EyH9hlD2+rLLk9EVw8v+RGMkSRoh4zD6AZR2EIIObEWi4II0LAZ9lu+p2VWx6gcX70YLK2S9wP103b/9dL7rstzdlHT0ysyHADtqFpQMYuuFxMu/b9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YP7HXQZy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TIMAXOSA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4DEEC433F1;
-	Tue, 13 Feb 2024 00:21:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YP7HXQZy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3991FC43390;
+	Tue, 13 Feb 2024 00:21:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707783664;
-	bh=mA0Fci1lxH5SIxnVuwWftnKr6FvNQtbKmvcVp0Ka064=;
+	s=k20201202; t=1707783666;
+	bh=5VO5ByHXA+KglQtXhuGq+fTGFxTkBcbxJ2WD86RT6oM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TIMAXOSAZqDebOnWdnEVdFZi6/9oRl3yZZG9iOmemBUHUGBORSBtkTBeSSrZDFENl
-	 P1/xGObXVW102lWgJjtTnpxW3X3ynLuCofvFr2b52uZtyNS+Y94WnoQVMPdTuh7Gye
-	 THEaY2XQdiYfm44a/r+oQkOj/JImusTF/xcTR6v11mUs6od5mdM6bNMaTGaINKo6ep
-	 UVyo787yH32WOFz4xSQkGsuv4DQ+4Q3UPBD6M3g4shj48IILZu8vaShte1bpdp7EYh
-	 hgXz4kdqm0A4ZDYnuedPhOeL6wjuzcktEYCehPHx/oEbQ/lOcbBpJLxia51k1yorQM
-	 DRe4N6gzdFwfw==
+	b=YP7HXQZyoISYaRTE7Db2tSfMq/cOtv9ENcBUiAvqCyeutbH6z9Hvk/XqetPqyJXz6
+	 hnSLUg/ozuW1pU9Zrp+nEwvpF8xxGS7RUVSzNEoNBNLW06GQo/JAmXTAUqdZihHzzL
+	 ngTm0KM0ZPKMCnJnUh4xMb60ZtOezKI7Yf/Dh53I/easb/6aRlyytuOrppvzUSUjpf
+	 2ZMEsGmd8DnyjE3miJerAg2fGXAWqOQYntsstjuOoZisX7NgPzPfrTz9RofCIU6CBt
+	 j0caSuf6WoTwORhJL87ivYNWMnGjwhWpNoLK/bO65kiq7RG8TiLUKMFNVTEMEWkTAi
+	 Z3svvYdvlGt/Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
 	Sasha Levin <sashal@kernel.org>,
 	ntfs3@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.6 10/51] fs/ntfs3: Drop suid and sgid bits as a part of fpunch
-Date: Mon, 12 Feb 2024 19:19:47 -0500
-Message-ID: <20240213002052.670571-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 12/51] fs/ntfs3: ntfs3_forced_shutdown use int instead of bool
+Date: Mon, 12 Feb 2024 19:19:49 -0500
+Message-ID: <20240213002052.670571-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240213002052.670571-1-sashal@kernel.org>
 References: <20240213002052.670571-1-sashal@kernel.org>
@@ -51,59 +51,68 @@ Content-Transfer-Encoding: 8bit
 
 From: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
 
-[ Upstream commit e50f9560b8168a625703a3e7fe1fde9fa53f0837 ]
+[ Upstream commit 97ec56d390a3a0077b36cb38627f671c72dddce6 ]
 
 Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ntfs3/file.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ fs/ntfs3/fsntfs.c  | 3 ++-
+ fs/ntfs3/ntfs_fs.h | 6 +++---
+ fs/ntfs3/super.c   | 2 +-
+ 3 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/fs/ntfs3/file.c b/fs/ntfs3/file.c
-index 6e1c456c9ae7..5530b4cf1ee5 100644
---- a/fs/ntfs3/file.c
-+++ b/fs/ntfs3/file.c
-@@ -498,10 +498,14 @@ static long ntfs_fallocate(struct file *file, int mode, loff_t vbo, loff_t len)
- 		ni_lock(ni);
- 		err = attr_punch_hole(ni, vbo, len, &frame_size);
- 		ni_unlock(ni);
-+		if (!err)
-+			goto ok;
-+
- 		if (err != E_NTFS_NOTALIGNED)
- 			goto out;
+diff --git a/fs/ntfs3/fsntfs.c b/fs/ntfs3/fsntfs.c
+index fbfe21dbb425..350461d8cece 100644
+--- a/fs/ntfs3/fsntfs.c
++++ b/fs/ntfs3/fsntfs.c
+@@ -853,7 +853,8 @@ void ntfs_update_mftmirr(struct ntfs_sb_info *sbi, int wait)
+ 	/*
+ 	 * sb can be NULL here. In this case sbi->flags should be 0 too.
+ 	 */
+-	if (!sb || !(sbi->flags & NTFS_FLAGS_MFTMIRR))
++	if (!sb || !(sbi->flags & NTFS_FLAGS_MFTMIRR) ||
++	    unlikely(ntfs3_forced_shutdown(sb)))
+ 		return;
  
- 		/* Process not aligned punch. */
-+		err = 0;
- 		mask = frame_size - 1;
- 		vbo_a = (vbo + mask) & ~mask;
- 		end_a = end & ~mask;
-@@ -524,6 +528,8 @@ static long ntfs_fallocate(struct file *file, int mode, loff_t vbo, loff_t len)
- 			ni_lock(ni);
- 			err = attr_punch_hole(ni, vbo_a, end_a - vbo_a, NULL);
- 			ni_unlock(ni);
-+			if (err)
-+				goto out;
- 		}
- 	} else if (mode & FALLOC_FL_COLLAPSE_RANGE) {
- 		/*
-@@ -563,6 +569,8 @@ static long ntfs_fallocate(struct file *file, int mode, loff_t vbo, loff_t len)
- 		ni_lock(ni);
- 		err = attr_insert_range(ni, vbo, len);
- 		ni_unlock(ni);
-+		if (err)
-+			goto out;
- 	} else {
- 		/* Check new size. */
- 		u8 cluster_bits = sbi->cluster_bits;
-@@ -639,6 +647,7 @@ static long ntfs_fallocate(struct file *file, int mode, loff_t vbo, loff_t len)
- 		}
- 	}
+ 	blocksize = sb->s_blocksize;
+diff --git a/fs/ntfs3/ntfs_fs.h b/fs/ntfs3/ntfs_fs.h
+index 414913232eae..67ce2eedc9bd 100644
+--- a/fs/ntfs3/ntfs_fs.h
++++ b/fs/ntfs3/ntfs_fs.h
+@@ -62,7 +62,7 @@ enum utf16_endian;
+ /* sbi->flags */
+ #define NTFS_FLAGS_NODISCARD		0x00000001
+ /* ntfs in shutdown state. */
+-#define NTFS_FLAGS_SHUTDOWN		0x00000002
++#define NTFS_FLAGS_SHUTDOWN_BIT		0x00000002  /* == 4*/
+ /* Set when LogFile is replaying. */
+ #define NTFS_FLAGS_LOG_REPLAYING	0x00000008
+ /* Set when we changed first MFT's which copy must be updated in $MftMirr. */
+@@ -1001,9 +1001,9 @@ static inline struct ntfs_sb_info *ntfs_sb(struct super_block *sb)
+ 	return sb->s_fs_info;
+ }
  
-+ok:
- 	err = file_modified(file);
- 	if (err)
- 		goto out;
+-static inline bool ntfs3_forced_shutdown(struct super_block *sb)
++static inline int ntfs3_forced_shutdown(struct super_block *sb)
+ {
+-	return test_bit(NTFS_FLAGS_SHUTDOWN, &ntfs_sb(sb)->flags);
++	return test_bit(NTFS_FLAGS_SHUTDOWN_BIT, &ntfs_sb(sb)->flags);
+ }
+ 
+ /*
+diff --git a/fs/ntfs3/super.c b/fs/ntfs3/super.c
+index a313b4ddee16..378e261e23b0 100644
+--- a/fs/ntfs3/super.c
++++ b/fs/ntfs3/super.c
+@@ -719,7 +719,7 @@ static int ntfs_show_options(struct seq_file *m, struct dentry *root)
+  */
+ static void ntfs_shutdown(struct super_block *sb)
+ {
+-	set_bit(NTFS_FLAGS_SHUTDOWN, &ntfs_sb(sb)->flags);
++	set_bit(NTFS_FLAGS_SHUTDOWN_BIT, &ntfs_sb(sb)->flags);
+ }
+ 
+ /*
 -- 
 2.43.0
 
