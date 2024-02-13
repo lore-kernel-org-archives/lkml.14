@@ -1,327 +1,118 @@
-Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8284422615;
-	Tue, 13 Feb 2024 08:47:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F211B7E6
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 08:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707814026; cv=none; b=YQJEy5Snqe02ywa99uNpE9jmQHxcbkgq4SNz4iJXEajGqpWM/QceNtr/WxSBZbIP0qUBBEnTjmBR8c+Dbo8z11qxJw+1cZS6mkyF6aArhW9keiNC10WngCO0nLJpLDYkWX+Bchm9sIwN6GUTvAEvcD7k1LM6NKHur43CBrTrB04=
+	t=1707814027; cv=none; b=FeTfwXGc24aeOkVSClZiwd0cbJWBLhD6/Ki/b0JXqiIykR84MjuuxJRarP5pNYwvZcckF9xnRTbFDDiC4iigLi9M35XImITuZ/7fG0osoxZ10eoE1hUfRNR9sUjRPBJH9XZJP0ublPQHP/qCcDKvoIBrh4B4rWinwE5zUe2QHFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707814026; c=relaxed/simple;
-	bh=tKIrbz6p1FZo9G/GJlcOpas8Bg+sXgcNbcUoxa4D4rY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u0UXNEM7hjd/7LqfBTxb141dZToub972raD926inxoBF5gwK3+3hDtKcnRcV3t9h7ZnIBBxU29ea1KQqQO9C2X4NK4jdYk176kUpOJKDlmZ6JiuhKbFoUveHt8dYRASh1r84ZFhNjZyDArrEmox3t71dBNkVqUG0mejSgEOEVCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=gLb8uhaK; arc=none smtp.client-ip=74.50.62.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
+	s=arc-20240116; t=1707814027; c=relaxed/simple;
+	bh=tvHravNgd3jxxlYpmzxgNbxwIapeUR8I82B4ydoZbJU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=JeEz7JFkqEtXzLHyfCGf8iuDAxTWNL9/V/LmHTwI39YZsboqjTfdewGfmkvkJPDvONO2r469D/t79dLaEkeJe/bpe1+0++j1gZHbitXHCTG/GLEezJ2datTcNT5geanWMaXIAAfTyXdMQe6w1gryt9FdvcETA8fOF5Y55TApJeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kHTbhMp/; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="gLb8uhaK"
-Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
-	by mail5.25mail.st (Postfix) with ESMTPSA id 5D77C6058D;
-	Tue, 13 Feb 2024 08:46:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
-	s=25mailst; t=1707814023;
-	bh=tKIrbz6p1FZo9G/GJlcOpas8Bg+sXgcNbcUoxa4D4rY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gLb8uhaK/YuCzv38odkHUYshbpGnQeryoDuOqdqla6kGxNH+Y5SsH4tetnCILqHvw
-	 fRO1DWNvBU1k3g6Cyv2di4mL3CZLeJh+leMuTD3qscWiqQNNfJKRgPkv1N284JQIZi
-	 TvxF7FyrCQuALay3DPK0goD1AB6rvllRqBheSL96gD5YiddK/2CcMaj8rsE0p3+9Fa
-	 2rvmWPCsJbxA9Y7VbeNixOoVzVHea0a6scAhPEZfNgRkhMWx3fQKYOeHfimvHXzs88
-	 WPh4ODZFugUefeE3dJF3kAJULC0/Db05saZAGjvqBOmOiddZO3XsCYeoAGi8Ch99hs
-	 dLhNi0xpGd3UA==
-From: Tony Lindgren <tony@atomide.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: "David S . Miller" <davem@davemloft.net>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Dhruva Gole <d-gole@ti.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Johan Hovold <johan@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: [PATCH v6 1/6] printk: Save console options for add_preferred_console_match()
-Date: Tue, 13 Feb 2024 10:45:08 +0200
-Message-ID: <20240213084545.40617-2-tony@atomide.com>
-X-Mailer: git-send-email 2.43.1
-In-Reply-To: <20240213084545.40617-1-tony@atomide.com>
-References: <20240213084545.40617-1-tony@atomide.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kHTbhMp/"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3394ca0c874so2791406f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 00:47:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707814024; x=1708418824; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=75EEaodnUavPyXiDW/zXiMugNJn4rgT6eT/hJD3ce5o=;
+        b=kHTbhMp/k1ere/hLIDtH7BZ/wk7txj5m5MX1FpBaV0GvgLFmu8CYLihn1rt629UBsJ
+         FkZaK1bymo1PFF3ppK/GFzBYMlvc2LJA/ecc46FvR4Dbd8AZJmMF1jZMJfGLCTS8+opx
+         WdmS3z8DFn2eAAkAfhxCu5uAM9O0e7Ukf7KgHtQd+BBx7Qk5JLJ5Zvqtg8MtI7zsUa4G
+         9Y4pk2kEhI1WclSRFZUdp+wVWyuODhRVYR1jlzuHG8H6ipGUPv2EPaQYeThd/HBeyygw
+         O/R/5SLNJLIlAWXWK1oNixEoh3Jom6xWnnN5uksXie9WiUifL/i73Kx3pjmv9AhQnSBJ
+         yncA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707814024; x=1708418824;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=75EEaodnUavPyXiDW/zXiMugNJn4rgT6eT/hJD3ce5o=;
+        b=qbztfupNqrL28NXliTpKrU0GAgztdODnbcPBE+W6AwMqwicNWHYeytVTm0aSOmUvPe
+         OTqapUtmluzE6KPz+NtTOiPQ03geEx9SYWV4OrUPOvmRc3c0eVX/wyjgthm6jBgbMQCU
+         oRTflRMma7rR5XdDnS/i7wM+OwAt9UU9OJ9sIlzbHyKzv6Z0wbSz3Xi5am7vI7Q/w64y
+         G39FGaOIEMvXNmZv6JCEkO2boTuCHe2fDjvh0ffefkWJA3uQD6wvFcGRBPcGOU4EQWA6
+         3csTow65B2uNjdPjVmckzmFN2zrS0He8Wtqo2stuZCpeE0TY5sxPhbCo+/q7qLiyAXPl
+         F8vQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVHbALnwMAyzlxjhgOLDJNPYHnsXKIj5Zx9AmiQcIHMM3JLVh6o9uAuckFadcs92yiTrNfJzCZ3xNpjDTCbh4P4UtZH40GknUFKxL+r
+X-Gm-Message-State: AOJu0Yx96DmKWdLz5DEGZV1uHxJKKwdGWysKWXf5uCO6gB0eTL3UEAZf
+	3/7FnW3SZUO8Emf+RHic6bD31Shy2oFgOWfDhm4E+GnoFsnYSVb1pAcDEPhMF8s=
+X-Google-Smtp-Source: AGHT+IGTdnZvyHeh7eWYeSJDhc86QdOUzEKnpJMoqWenO+UTYHFk+lx6eFsx1MZkCcVxpEVcl/39mw==
+X-Received: by 2002:adf:f24e:0:b0:33b:304d:36b7 with SMTP id b14-20020adff24e000000b0033b304d36b7mr7221572wrp.56.1707814024476;
+        Tue, 13 Feb 2024 00:47:04 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUeTf7UecjwlGIodtLfDFk7swIZwWcjKycfmtkhdv94Npda/6KaT4lh+JHM9lkBjhtJIkLDZArH8INQQn4CcNWQKUASNUwySyYIZZRK2kgnM6MtKGZ25uzNIthThiIdltkY+mDvStB1dRji9LNKZPmz4fy3isYJeQKdAM+3hV5vpiqawGk8ufN3PytbE8QBLW0cdDUfKjG1sm9/OoxODLVQES4S3lzr94SXWTsC1WTgtY+RRZHCJb/xMOGjSCjJ8bGuwldGnh8tx0dwqZYe0OZWA1i6CdfFtSyqvyxZs7sQyifHVcm/pcezmSf+6cICv3GP8N1gkcpA6ZPMYIcju8MUcDJC5IXZ4HTyHkTJVGTk+Yxz4l+zjNyHcpno83O7LQ/+COWkP38qXks8P7SCs7/HdCIa5/Pr0fmXBKRysE+eyGAUibPVLRbN9B2Ca1JHnv+VXYqspWrBxK63iUf3FoQYff1C45Ym3g4J1w==
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id y8-20020a5d4708000000b0033b507b0abdsm8888707wrq.32.2024.02.13.00.47.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 00:47:04 -0800 (PST)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+ conor+dt@kernel.org, khilman@baylibre.com, jbrunet@baylibre.com, 
+ martin.blumenstingl@googlemail.com, 
+ Alexey Romanov <avromanov@salutedevices.com>
+Cc: linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ kernel@salutedevices.com, Dmitry Rokosov <ddrokosov@salutedevices.com>
+In-Reply-To: <20240124130623.3471236-1-avromanov@salutedevices.com>
+References: <20240124130623.3471236-1-avromanov@salutedevices.com>
+Subject: Re: [PATCH v1] arch: arm64: dts: meson: a1: add assigned-clocks
+ for usb node
+Message-Id: <170781402367.1503948.783057553743938971.b4-ty@linaro.org>
+Date: Tue, 13 Feb 2024 09:47:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.4
 
-Driver subsystems may need to translate the preferred console name to the
-character device name used. We already do some of this in console_setup()
-with a few hardcoded names, but that does not scale well.
+Hi,
 
-The console options are parsed early in console_setup(), and the consoles
-are added with __add_preferred_console(). At this point we don't know much
-about the character device names and device drivers getting probed.
+On Wed, 24 Jan 2024 16:06:23 +0300, Alexey Romanov wrote:
+> To ensure proper functionality of USB, it is necessary to use
+> the rate of 64000000 for CLKID_USB_BUS. For instance, adb may
+> not function correctly without this setting. This information
+> has been derived from the vendor SDK.
+> 
+> 
 
-To allow driver subsystems to set up a preferred console, let's save the
-kernel command line console options. To add a preferred console from a
-driver subsystem with optional character device name translation, let's
-add a new function add_preferred_console_match().
+Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.9/arm64-dt)
 
-This allows the serial core layer to support console=DEVNAME:0.0 style
-hardware based addressing in addition to the current console=ttyS0 style
-naming. And we can start moving console_setup() character device parsing
-to the driver subsystem specific code.
+[1/1] arch: arm64: dts: meson: a1: add assigned-clocks for usb node
+      https://git.kernel.org/amlogic/c/d1159418fbd5880d3285f4797d3f11eeaf6d0d42
 
-We use a separate array from the console_cmdline array as the character
-device name and index may be unknown at the console_setup() time. And
-eventually there's no need to call __add_preferred_console() until the
-subsystem is ready to handle the console.
+These changes has been applied on the intermediate git tree [1].
 
-Adding the console name in addition to the character device name, and a
-flag for an added console, could be added to the struct console_cmdline.
-And the console_cmdline array handling could be modified accordingly. But
-that complicates things compared saving the console options, and then
-adding the consoles when the subsystems handling the consoles are ready.
+The v6.9/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+for inclusion in their intermediate git branches in order to be sent to Linus during
+the next merge window, or sooner if it's a set of fixes.
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- include/linux/printk.h          |   3 +
- kernel/printk/Makefile          |   2 +-
- kernel/printk/conopt.c          | 143 ++++++++++++++++++++++++++++++++
- kernel/printk/console_cmdline.h |   6 ++
- kernel/printk/printk.c          |  14 +++-
- 5 files changed, 164 insertions(+), 4 deletions(-)
- create mode 100644 kernel/printk/conopt.c
+In the cases of fixes, those will be merged in the current release candidate
+kernel and as soon they appear on the Linux master branch they will be
+backported to the previous Stable and Long-Stable kernels [2].
 
-diff --git a/include/linux/printk.h b/include/linux/printk.h
---- a/include/linux/printk.h
-+++ b/include/linux/printk.h
-@@ -60,6 +60,9 @@ static inline const char *printk_skip_headers(const char *buffer)
- #define CONSOLE_LOGLEVEL_DEFAULT CONFIG_CONSOLE_LOGLEVEL_DEFAULT
- #define CONSOLE_LOGLEVEL_QUIET	 CONFIG_CONSOLE_LOGLEVEL_QUIET
- 
-+int add_preferred_console_match(const char *match, const char *name,
-+				const short idx);
-+
- extern int console_printk[];
- 
- #define console_loglevel (console_printk[0])
-diff --git a/kernel/printk/Makefile b/kernel/printk/Makefile
---- a/kernel/printk/Makefile
-+++ b/kernel/printk/Makefile
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
--obj-y	= printk.o
-+obj-y	= printk.o conopt.o
- obj-$(CONFIG_PRINTK)	+= printk_safe.o nbcon.o
- obj-$(CONFIG_A11Y_BRAILLE_CONSOLE)	+= braille.o
- obj-$(CONFIG_PRINTK_INDEX)	+= index.o
-diff --git a/kernel/printk/conopt.c b/kernel/printk/conopt.c
-new file mode 100644
---- /dev/null
-+++ b/kernel/printk/conopt.c
-@@ -0,0 +1,143 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Kernel command line console options for hardware based addressing
-+ *
-+ * Copyright (C) 2023 Texas Instruments Incorporated - https://www.ti.com/
-+ * Author: Tony Lindgren <tony@atomide.com>
-+ */
-+
-+#include <linux/console.h>
-+#include <linux/init.h>
-+#include <linux/string.h>
-+#include <linux/types.h>
-+
-+#include <asm/errno.h>
-+
-+#include "console_cmdline.h"
-+
-+/*
-+ * Allow longer DEVNAME:0.0 style console naming such as abcd0000.serial:0.0
-+ * in addition to the legacy ttyS0 style naming.
-+ */
-+#define CONSOLE_NAME_MAX	32
-+
-+#define CONSOLE_OPT_MAX		16
-+#define CONSOLE_BRL_OPT_MAX	16
-+
-+struct console_option {
-+	char name[CONSOLE_NAME_MAX];
-+	char opt[CONSOLE_OPT_MAX];
-+	char brl_opt[CONSOLE_BRL_OPT_MAX];
-+	u8 has_brl_opt:1;
-+};
-+
-+/* Updated only at console_setup() time, no locking needed */
-+static struct console_option conopt[MAX_CMDLINECONSOLES];
-+
-+/**
-+ * console_opt_save - Saves kernel command line console option for driver use
-+ * @str: Kernel command line console name and option
-+ * @brl_opt: Braille console options
-+ *
-+ * Saves a kernel command line console option for driver subsystems to use for
-+ * adding a preferred console during init. Called from console_setup() only.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+int __init console_opt_save(const char *str, const char *brl_opt)
-+{
-+	struct console_option *con;
-+	const char *opt = NULL;
-+	size_t namelen, optlen;
-+	int i;
-+
-+	namelen = strcspn(str, ",");
-+	if (!namelen)
-+		return -EINVAL;
-+
-+	optlen = strlen(str) - namelen;
-+	if (optlen > 1)
-+		opt = str + namelen + 1;
-+
-+	if (namelen >= CONSOLE_NAME_MAX || optlen >= CONSOLE_OPT_MAX)
-+		return -EINVAL;
-+
-+	for (i = 0; i < MAX_CMDLINECONSOLES; i++) {
-+		con = &conopt[i];
-+
-+		if (con->name[0]) {
-+			if (!strncmp(str, con->name, namelen))
-+				return 0;
-+			continue;
-+		}
-+
-+		strscpy(con->name, str, namelen + 1);
-+		if (opt)
-+			strscpy(con->opt, opt, optlen + 1);
-+
-+		/* See _braille_console_setup(), both empty and NULL are valid */
-+		if (brl_opt) {
-+			strscpy(con->brl_opt, brl_opt, CONSOLE_BRL_OPT_MAX);
-+			con->has_brl_opt = 1;
-+		}
-+
-+		return 0;
-+	}
-+
-+	return -ENOMEM;
-+}
-+
-+static struct console_option *console_opt_find(const char *name)
-+{
-+	struct console_option *con;
-+	int i;
-+
-+	for (i = 0; i < MAX_CMDLINECONSOLES; i++) {
-+		con = &conopt[i];
-+		if (!strcmp(name, con->name))
-+			return con;
-+	}
-+
-+	return NULL;
-+}
-+
-+/**
-+ * add_preferred_console_match - Adds a preferred console if a match is found
-+ * @match: Expected console on kernel command line, such as console=DEVNAME:0.0
-+ * @name: Name of the console character device to add such as ttyS
-+ * @idx: Index for the console
-+ *
-+ * Allows driver subsystems to add a console after translating the command
-+ * line name to the character device name used for the console. Options are
-+ * added automatically based on the kernel command line. Duplicate preferred
-+ * consoles are ignored by __add_preferred_console().
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+int add_preferred_console_match(const char *match, const char *name,
-+				const short idx)
-+{
-+	struct console_option *con;
-+	char *brl_opt = NULL;
-+
-+	if (!match || !strlen(match) || !name || !strlen(name) ||
-+	    idx < 0)
-+		return -EINVAL;
-+
-+	con = console_opt_find(match);
-+	if (!con)
-+		return -ENOENT;
-+
-+	/*
-+	 * See __add_preferred_console(). It checks for NULL brl_options to set
-+	 * the preferred_console flag. Empty brl_opt instead of NULL leads into
-+	 * the preferred_console flag not set, and CON_CONSDEV not being set,
-+	 * and the boot console won't get disabled at the end of console_setup().
-+	 */
-+	if (con->has_brl_opt)
-+		brl_opt = con->brl_opt;
-+
-+	console_opt_add_preferred_console(name, idx, con->opt, brl_opt);
-+
-+	return 0;
-+}
-diff --git a/kernel/printk/console_cmdline.h b/kernel/printk/console_cmdline.h
---- a/kernel/printk/console_cmdline.h
-+++ b/kernel/printk/console_cmdline.h
-@@ -2,6 +2,12 @@
- #ifndef _CONSOLE_CMDLINE_H
- #define _CONSOLE_CMDLINE_H
- 
-+#define MAX_CMDLINECONSOLES 8
-+
-+int console_opt_save(const char *str, const char *brl_opt);
-+int console_opt_add_preferred_console(const char *name, const short idx,
-+				      char *options, char *brl_options);
-+
- struct console_cmdline
- {
- 	char	name[16];			/* Name of the driver	    */
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -360,9 +360,6 @@ static int console_locked;
- /*
-  *	Array of consoles built from command line options (console=)
-  */
--
--#define MAX_CMDLINECONSOLES 8
--
- static struct console_cmdline console_cmdline[MAX_CMDLINECONSOLES];
- 
- static int preferred_console = -1;
-@@ -2458,6 +2455,10 @@ static int __init console_setup(char *str)
- 	if (_braille_console_setup(&str, &brl_options))
- 		return 1;
- 
-+	/* Save the console for driver subsystem use */
-+	if (console_opt_save(str, brl_options))
-+		return 1;
-+
- 	/*
- 	 * Decode str into name, index, options.
- 	 */
-@@ -2488,6 +2489,13 @@ static int __init console_setup(char *str)
- }
- __setup("console=", console_setup);
- 
-+/* Only called from add_preferred_console_match() */
-+int console_opt_add_preferred_console(const char *name, const short idx,
-+				      char *options, char *brl_options)
-+{
-+	return __add_preferred_console(name, idx, options, brl_options, true);
-+}
-+
- /**
-  * add_preferred_console - add a device to the list of preferred consoles.
-  * @name: device name
+The intermediate git branches are merged daily in the linux-next tree [3],
+people are encouraged testing these pre-release kernels and report issues on the
+relevant mailing-lists.
+
+If problems are discovered on those changes, please submit a signed-off-by revert
+patch followed by a corrective changeset.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+
 -- 
-2.43.1
+Neil
+
