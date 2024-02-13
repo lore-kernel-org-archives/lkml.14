@@ -1,37 +1,40 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8940261665
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 21:04:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385F76167E
+	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 21:04:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707858243; cv=none; b=QC+h7USnT4VAw05Py6bxj3S3K24NIZeHWczW+FJnKC+s4QPSsuylKCMqWFJTroxA/Ti8thTiGFiUBQbqD0h5Fs5pv/Ewo4dD8jGHT4Zyl5hXrzFku4Jok6vDBelSzlsllFQpBOFtKYjiZ7fHUDEnDt1IE7VKBfYzQ5EpOiLu/MA=
+	t=1707858247; cv=none; b=k0Xyr1o+Hj1FgDFCNRltSMXZ+Q8EUWZbTrL7hVNvH008RWOnqb5k8SAMlv09ucLy2z6woto16fK4868nenXb/30pOO3zXf/MWeQmN1oxZCkzqcdx8FjS9FzhG3ytgrDHCRFCG1JimMYDqjBWtRDWb0h+N3+TldCG0QZAMX89vXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707858243; c=relaxed/simple;
-	bh=LEGLmeGR7BceG3CySIyrD3+0iP6HzJS90b7Iybly928=;
-	h=Message-ID:From:To:Cc:Subject:Date; b=IiC7Z1ZE9Wx6T7219VhxYc/0KXoS8mKyck0pQsuVXrr0YddUI3GgAVj0uAdAqnI3KzDMQxUQtZA9sry+ChVMbWEDsuAfZFZ1yfmEVcDTraWmVjkRF5xXPRWLs2MY3jXjoltQNdsHp5r+37DjW9YqzggMKqxyVj8N9v0A+hRxoaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L/Oqi+El; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ul8JJTHa; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1707858247; c=relaxed/simple;
+	bh=rzJRDd07DQzyOI3vFvLyo30rvQuYP+fyKgjiQvWo65A=;
+	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Date; b=tGSpDa9Qe8m5I7uskMCNVvRXs+TyEcUm8K1uC95pUN/m+BbnNds4xYvhCfjKZQGUnNLMkMzFdo7ixrKslbtY89PaYkqv2c1RnuIc+mFOZ+COzOAmip301xnUTSz5o0OumcMoc7IxqmpoU4PIadw1yGyKDVYz4Cb6MYU/VYMBaeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jK3XKW8T; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=a0DvwaJw; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L/Oqi+El";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ul8JJTHa"
-Message-ID: <20240212153109.330805450@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jK3XKW8T";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="a0DvwaJw"
+Message-ID: <20240212153624.644448852@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1707858239;
+	s=2020; t=1707858243;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc; bh=7YW/utTa8zFtLwTXGKG/1HXOz7BHo3EGslRnmCR1PGE=;
-	b=L/Oqi+ElwLgHE8OgVkIyIG1Qyr4HjcRkFd3pYeRkFYD8RnNPK7S/t8xuqMzZ0SPZiKfopk
-	pdQCTndbbjI+asSs8ZrkpCrrnx2g+9KjqJtfwN1Et5rfb40RfDdtRzVfVWeRFkSxXOdZuv
-	FSERjzplSOXftZTkjDirIu/mH9ysEknlIGsGwhUxCjXgpA6n+jSv5vz5hirwho8TohO6gy
-	wOWF6Uz5z5NQ4nIadgT6lrh6C0Nfz+i6LhnDiWMpGmjAXdUKTrTSg6XNixX7Mvg92wJrWK
-	I1CABWHGWCMrsX1tY7570Dgc4OxSNDVs0Y1YVVc6IoJ08qea62F2twcdmeeqvg==
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 references:references; bh=boqcIU/ZFA+rm7+t4NycyG5KGsKb0/dLPE34Do9xfZg=;
+	b=jK3XKW8TH25srFoYj/y65xYLR8Ipwzik8HHdyV4FvFFnpDuU27buTTzxYapxo2mlR0fO7L
+	QA01tnBnlJnzauZZBgM4MjBk3G81W0NJiQY2jmdTXMTmwPkq5krFaEpCQPGVlSrHsoQ5Cj
+	TiijkAifIkpJCZsKi/HEdYk/E01DEINB+cf+Eq/uz753X8o+5qdJ88Nec6rZ1i9f0trZf1
+	G5sTTayOlvbAQdlg7ePxFKG8nwJyxMwvaqv4NKXBJBKl7HEH+th41V5wYqMN17nUK1YxOV
+	kW1efMnb4ztRytnGwtXaFRLzdIWpFSRX9Moov2oAyrfrhF1p0+Ssn30F72yy4g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1707858239;
+	s=2020e; t=1707858243;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc; bh=7YW/utTa8zFtLwTXGKG/1HXOz7BHo3EGslRnmCR1PGE=;
-	b=Ul8JJTHaDK1Zu0nBVzkmQXpatlAV2ISQ79kDkShNqcRrcFunBZBCtx2wN+81HNhFNtSOkp
-	UwGo8PWKcB+BXBCg==
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 references:references; bh=boqcIU/ZFA+rm7+t4NycyG5KGsKb0/dLPE34Do9xfZg=;
+	b=a0DvwaJwbINSMnYLNG6pS9SuY/Oa/v1OZEKzYPuFUex6iuggsbMIZGrN4bjIfg6FMe2DlG
+	yU28GkI16MYr64AA==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: x86@kernel.org,
@@ -49,236 +52,138 @@ Cc: x86@kernel.org,
  Feng Tang <feng.tang@intel.com>,
  Andy Shevchenko <andy@infradead.org>,
  Michael Kelley <mhklinux@outlook.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V6 00/19] x86/cpu: Rework topology evaluation
-Date: Tue, 13 Feb 2024 22:03:58 +0100 (CET)
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Wang Wendy <wendy.wang@intel.com>
+Subject: [patch V6 03/19] x86/cpu: Add legacy topology parser
+References: <20240212153109.330805450@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 13 Feb 2024 22:04:03 +0100 (CET)
 
-This is a follow up on V5 of this work:
+From: Thomas Gleixner <tglx@linutronix.de>
 
-  https://lore.kernel.org/all/20240117115752.863482697@linutronix.de
+The legacy topology detection via CPUID leaf 4, which provides the number
+of cores in the package and CPUID leaf 1 which provides the number of
+logical CPUs in case that FEATURE_HT is enabled and the CMP_LEGACY feature
+is not set, is shared for Intel, Centaur and Zhaoxin CPUs.
 
-and contains only the not yet applied part which reworks the CPUID
-parsing. This is also preparatory work for the general overhaul of APIC ID
-enumeration and management.
+Lift the code from common.c without the early detection hack and provide it
+as common fallback mechanism.
 
-Changes vs. V5:
+Will be utilized in later changes.
 
-  - Fix the AMD leaf 0x8000008 parsing
-  - Update to generated CPUID leaf structures
-  - Address review comments (coding style, comments, changelogs, boot_cpu_has())
-
-This applies on Linus tree and is available from git:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git topo-cpuid-v6
-
-Delta patch to V5 appended.
-
-Thanks,
-
-	tglx
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Juergen Gross <jgross@suse.com>
+Tested-by: Sohil Mehta <sohil.mehta@intel.com>
+Tested-by: Michael Kelley <mhklinux@outlook.com>
+Tested-by: Zhang Rui <rui.zhang@intel.com>
+Tested-by: Wang Wendy <wendy.wang@intel.com>
 ---
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index a45346ad552b..de1648ee2b9e 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -705,12 +705,10 @@ static inline u32 per_cpu_l2c_id(unsigned int cpu)
- }
+V6: Rename parse_num_cores() to parse_num_cores_legacy() - Arjan
+    Change comment style - Borislav
+---
+ arch/x86/kernel/cpu/common.c          |    3 ++
+ arch/x86/kernel/cpu/topology.h        |    3 ++
+ arch/x86/kernel/cpu/topology_common.c |   46 +++++++++++++++++++++++++++++++++-
+ 3 files changed, 51 insertions(+), 1 deletion(-)
+---
+
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -892,6 +892,9 @@ void detect_ht(struct cpuinfo_x86 *c)
+ #ifdef CONFIG_SMP
+ 	int index_msb, core_bits;
  
- #ifdef CONFIG_CPU_SUP_AMD
--extern u32 amd_get_nodes_per_socket(void);
- extern u32 amd_get_highest_perf(void);
- extern void amd_clear_divider(void);
- extern void amd_check_microcode(void);
- #else
--static inline u32 amd_get_nodes_per_socket(void)	{ return 0; }
- static inline u32 amd_get_highest_perf(void)		{ return 0; }
- static inline void amd_clear_divider(void)		{ }
- static inline void amd_check_microcode(void)		{ }
-diff --git a/arch/x86/kernel/cpu/topology.h b/arch/x86/kernel/cpu/topology.h
-index 0d1ebb3a56e7..2a3c838b6044 100644
++	if (topo_is_converted(c))
++		return;
++
+ 	if (detect_ht_early(c) < 0)
+ 		return;
+ 
 --- a/arch/x86/kernel/cpu/topology.h
 +++ b/arch/x86/kernel/cpu/topology.h
-@@ -7,10 +7,10 @@ struct topo_scan {
+@@ -6,6 +6,9 @@ struct topo_scan {
+ 	struct cpuinfo_x86	*c;
  	unsigned int		dom_shifts[TOPO_MAX_DOMAIN];
  	unsigned int		dom_ncpus[TOPO_MAX_DOMAIN];
- 
--	// Legacy CPUID[1]:EBX[23:16] number of logical processors
++
 +	/* Legacy CPUID[1]:EBX[23:16] number of logical processors */
- 	unsigned int		ebx1_nproc_shift;
- 
--	// AMD specific node ID which cannot be mapped into APIC space.
-+	/* AMD specific node ID which cannot be mapped into APIC space. */
- 	u16			amd_nodes_per_pkg;
- 	u16			amd_node_id;
++	unsigned int		ebx1_nproc_shift;
  };
-diff --git a/arch/x86/kernel/cpu/topology_amd.c b/arch/x86/kernel/cpu/topology_amd.c
-index 9e149673ea82..1a8b3ad493af 100644
---- a/arch/x86/kernel/cpu/topology_amd.c
-+++ b/arch/x86/kernel/cpu/topology_amd.c
-@@ -10,11 +10,12 @@
- static bool parse_8000_0008(struct topo_scan *tscan)
- {
- 	struct {
--		u32	ncores		:  8,
--			__rsvd0		:  4,
--			apicidsize	:  4,
--			perftscsize	:  2,
--			__rsvd1		: 14;
-+		// ecx
-+		u32	cpu_nthreads		:  8, // Number of physical threads - 1
-+						:  4, // Reserved
-+			apicid_coreid_len	:  4, // Number of thread core ID bits (shift) in APIC ID
-+			perf_tsc_len		:  2, // Performance time-stamp counter size
-+						: 14; // Reserved
- 	} ecx;
- 	unsigned int sft;
  
-@@ -23,12 +24,12 @@ static bool parse_8000_0008(struct topo_scan *tscan)
- 
- 	cpuid_leaf_reg(0x80000008, CPUID_ECX, &ecx);
- 
--	/* If the APIC ID size is 0, then get the shift value from ecx.ncores */
--	sft = ecx.apicidsize;
-+	/* If the thread bits are 0, then get the shift value from ecx.cpu_nthreads */
-+	sft = ecx.apicid_coreid_len;
- 	if (!sft)
--		sft = get_count_order(ecx.ncores + 1);
-+		sft = get_count_order(ecx.cpu_nthreads + 1);
- 
--	topology_set_dom(tscan, TOPO_CORE_DOMAIN, sft, ecx.ncores + 1);
-+	topology_set_dom(tscan, TOPO_SMT_DOMAIN, sft, ecx.cpu_nthreads + 1);
- 	return true;
- }
- 
-@@ -51,17 +52,17 @@ static bool parse_8000_001e(struct topo_scan *tscan, bool has_0xb)
- {
- 	struct {
- 		// eax
--		u32	x2apic_id	: 32;
-+		u32	ext_apic_id		: 32; // Extended APIC ID
- 		// ebx
--		u32	cuid		:  8,
--			threads_per_cu	:  8,
--			__rsvd0		: 16;
-+		u32	core_id			:  8, // Unique per-socket logical core unit ID
-+			core_nthreads		:  8, // #Threads per core (zero-based)
-+						: 16; // Reserved
- 		// ecx
--		u32	nodeid		:  8,
--			nodes_per_pkg	:  3,
--			__rsvd1		: 21;
-+		u32	node_id			:  8, // Node (die) ID of invoking logical CPU
-+			nnodes_per_socket	:  3, // #nodes in invoking logical CPU's package/socket
-+						: 21; // Reserved
- 		// edx
--		u32	__rsvd2		: 32;
-+		u32				: 32; // Reserved
- 	} leaf;
- 
- 	if (!boot_cpu_has(X86_FEATURE_TOPOEXT))
-@@ -69,27 +70,27 @@ static bool parse_8000_001e(struct topo_scan *tscan, bool has_0xb)
- 
- 	cpuid_leaf(0x8000001e, &leaf);
- 
--	tscan->c->topo.initial_apicid = leaf.x2apic_id;
-+	tscan->c->topo.initial_apicid = leaf.ext_apic_id;
- 
- 	/*
- 	 * If leaf 0xb is available, then SMT shift is set already. If not
--	 * take it from ecx.threads_per_cu and use topo_update_dom() -
-+	 * take it from ecx.threads_per_core and use topo_update_dom() -
- 	 * topology_set_dom() would propagate and overwrite the already
- 	 * propagated CORE level.
- 	 */
- 	if (!has_0xb) {
--		unsigned int nthreads = leaf.threads_per_cu + 1;
-+		unsigned int nthreads = leaf.core_nthreads + 1;
- 
- 		topology_update_dom(tscan, TOPO_SMT_DOMAIN, get_count_order(nthreads), nthreads);
- 	}
- 
--	store_node(tscan, leaf.nodes_per_pkg + 1, leaf.nodeid);
-+	store_node(tscan, leaf.nnodes_per_socket + 1, leaf.node_id);
- 
- 	if (tscan->c->x86_vendor == X86_VENDOR_AMD) {
- 		if (tscan->c->x86 == 0x15)
--			tscan->c->topo.cu_id = leaf.cuid;
-+			tscan->c->topo.cu_id = leaf.core_id;
- 
--		cacheinfo_amd_init_llc_id(tscan->c, leaf.nodeid);
-+		cacheinfo_amd_init_llc_id(tscan->c, leaf.node_id);
- 	} else {
- 		/*
- 		 * Package ID is ApicId[6..] on certain Hygon CPUs. See
-@@ -143,7 +144,7 @@ static void parse_topology_amd(struct topo_scan *tscan)
- 	 * try to get SMT and CORE shift from leaf 0xb first, then
- 	 * try to get the CORE shift from leaf 0x8000_0008.
- 	 */
--	if (boot_cpu_has(X86_FEATURE_TOPOEXT))
-+	if (cpu_feature_enabled(X86_FEATURE_TOPOEXT))
- 		has_0xb = cpu_parse_topology_ext(tscan);
- 
- 	if (!has_0xb && !parse_8000_0008(tscan))
-diff --git a/arch/x86/kernel/cpu/topology_common.c b/arch/x86/kernel/cpu/topology_common.c
-index 5ff862db5a3a..afea34d59598 100644
+ bool topo_is_converted(struct cpuinfo_x86 *c);
 --- a/arch/x86/kernel/cpu/topology_common.c
 +++ b/arch/x86/kernel/cpu/topology_common.c
-@@ -26,7 +26,7 @@ void topology_set_dom(struct topo_scan *tscan, enum x86_topology_domains dom,
+@@ -24,6 +24,48 @@ void topology_set_dom(struct topo_scan *
  	}
  }
  
--static unsigned int parse_num_cores(struct cpuinfo_x86 *c)
 +static unsigned int __maybe_unused parse_num_cores_legacy(struct cpuinfo_x86 *c)
- {
- 	struct {
- 		u32	cache_type	:  5,
-@@ -49,7 +49,7 @@ static void parse_legacy(struct topo_scan *tscan)
- 	unsigned int cores, core_shift, smt_shift = 0;
- 	struct cpuinfo_x86 *c = tscan->c;
- 
--	cores = parse_num_cores(c);
++{
++	struct {
++		u32	cache_type	:  5,
++			unused		: 21,
++			ncores		:  6;
++	} eax;
++
++	if (c->cpuid_level < 4)
++		return 1;
++
++	cpuid_subleaf_reg(4, 0, CPUID_EAX, &eax);
++	if (!eax.cache_type)
++		return 1;
++
++	return eax.ncores + 1;
++}
++
++static void __maybe_unused parse_legacy(struct topo_scan *tscan)
++{
++	unsigned int cores, core_shift, smt_shift = 0;
++	struct cpuinfo_x86 *c = tscan->c;
++
 +	cores = parse_num_cores_legacy(c);
- 	core_shift = get_count_order(cores);
++	core_shift = get_count_order(cores);
++
++	if (cpu_has(c, X86_FEATURE_HT)) {
++		if (!WARN_ON_ONCE(tscan->ebx1_nproc_shift < core_shift))
++			smt_shift = tscan->ebx1_nproc_shift - core_shift;
++		/*
++		 * The parser expects leaf 0xb/0x1f format, which means
++		 * the number of logical processors at core level is
++		 * counting threads.
++		 */
++		core_shift += smt_shift;
++		cores <<= smt_shift;
++	}
++
++	topology_set_dom(tscan, TOPO_SMT_DOMAIN, smt_shift, 1U << smt_shift);
++	topology_set_dom(tscan, TOPO_CORE_DOMAIN, core_shift, cores);
++}
++
+ bool topo_is_converted(struct cpuinfo_x86 *c)
+ {
+ 	/* Temporary until everything is converted over. */
+@@ -47,7 +89,7 @@ static bool fake_topology(struct topo_sc
+ 	 * which has useless CPUID information.
+ 	 */
+ 	topology_set_dom(tscan, TOPO_SMT_DOMAIN, 0, 1);
+-	topology_set_dom(tscan, TOPO_CORE_DOMAIN, 1, 1);
++	topology_set_dom(tscan, TOPO_CORE_DOMAIN, 0, 1);
  
- 	if (cpu_has(c, X86_FEATURE_HT)) {
-@@ -97,7 +97,7 @@ static void parse_topology(struct topo_scan *tscan, bool early)
- 	c->topo = topo_defaults;
+ 	return tscan->c->cpuid_level < 1 || xen_pv_domain();
+ }
+@@ -88,6 +130,8 @@ static void parse_topology(struct topo_s
+ 	/* The above is sufficient for UP */
+ 	if (!IS_ENABLED(CONFIG_SMP))
+ 		return;
++
++	tscan->ebx1_nproc_shift = get_count_order(ebx.nproc);
+ }
  
- 	if (fake_topology(tscan))
--	    return;
-+		return;
- 
- 	/* Preset Initial APIC ID from CPUID leaf 1 */
- 	cpuid_leaf_reg(1, CPUID_EBX, &ebx);
-diff --git a/arch/x86/kernel/cpu/topology_ext.c b/arch/x86/kernel/cpu/topology_ext.c
-index b9b37296d9cd..e477228cd5b2 100644
---- a/arch/x86/kernel/cpu/topology_ext.c
-+++ b/arch/x86/kernel/cpu/topology_ext.c
-@@ -110,7 +110,7 @@ static bool parse_topology_leaf(struct topo_scan *tscan, u32 leaf)
- 	if (!tscan->dom_shifts[TOPO_SMT_DOMAIN] && tscan->dom_ncpus[TOPO_SMT_DOMAIN] > 1) {
- 		unsigned int sft = get_count_order(tscan->dom_ncpus[TOPO_SMT_DOMAIN]);
- 
--		pr_warn_once(FW_BUG "CPUID leaf 0x%x subleaf 0 has shift level 0 but %u CPUs\n",
-+		pr_warn_once(FW_BUG "CPUID leaf 0x%x subleaf 0 has shift level 0 but %u CPUs. Fixing it up.\n",
- 			     leaf, tscan->dom_ncpus[TOPO_SMT_DOMAIN]);
- 		topology_update_dom(tscan, TOPO_SMT_DOMAIN, sft, tscan->dom_ncpus[TOPO_SMT_DOMAIN]);
- 	}
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index 2634f8f82867..9cdb056c37b5 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -513,7 +513,7 @@ static bool match_die(struct cpuinfo_x86 *c, struct cpuinfo_x86 *o)
- 	if (c->topo.pkg_id != o->topo.pkg_id || c->topo.die_id != o->topo.die_id)
- 		return false;
- 
--	if (boot_cpu_has(X86_FEATURE_TOPOEXT) && topology_amd_nodes_per_pkg() > 1)
-+	if (cpu_feature_enabled(X86_FEATURE_TOPOEXT) && topology_amd_nodes_per_pkg() > 1)
- 		return c->topo.amd_node_id == o->topo.amd_node_id;
- 
- 	return true;
+ static void topo_set_ids(struct topo_scan *tscan)
 
