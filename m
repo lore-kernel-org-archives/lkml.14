@@ -1,117 +1,109 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C552BD1C
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 11:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707822042; cv=none; b=ZnYGyarAsOunudCZxsTqVPwaM7ycy03gKzwxKsZ2Nsr3UvuYJQvIMMH9e2Vgnr0LD6W5l8skKnl+EFg+Zh6JNLvrl5x1iP+yayCPM96mfHL9wHQsSd2NNyLVz8UUlpkLsqh9vhtwrrHjzOwUcFHZcvx8zc69sviK7srWxiH03+Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707822042; c=relaxed/simple;
-	bh=+RNmFerRabSoDvfbT+rohW1J8Y7o+4ePKtvKyk/5nio=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PIi+BnKJL/mwGdi1YH2MflkknsFqIbMTxU0SPXvNjD79FO7pKjoIBEv98aLmU1KGn3Xk7zUZjq3J92Rti+HaTI24BKdBp+XJK58HN1v5hZpNhVWzGK+cmbU5aKJ/Q3Jl+h267VZ6i7L5noYDOSsX7iAzODFVsqvj/YFi3BYWwik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1rZqWY-00066h-Hf; Tue, 13 Feb 2024 12:00:26 +0100
-Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1rZqWX-000Sxb-EA; Tue, 13 Feb 2024 12:00:25 +0100
-Received: from pengutronix.de (unknown [172.20.34.65])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 03AAF28D5D3;
-	Tue, 13 Feb 2024 11:00:25 +0000 (UTC)
-Date: Tue, 13 Feb 2024 12:00:24 +0100
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Srinivas Goud <srinivas.goud@amd.com>
-Cc: wg@grandegger.com, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, p.zabel@pengutronix.de, git@amd.com, 
-	michal.simek@xilinx.com, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v7 0/3] can: xilinx_can: Add ECC feature support
-Message-ID: <20240213-reactor-vertebrae-af419800fcdc-mkl@pengutronix.de>
-References: <1705059453-29099-1-git-send-email-srinivas.goud@amd.com>
- <20240213-evasion-crevice-3faa375c1666-mkl@pengutronix.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E511C687;
+	Tue, 13 Feb 2024 11:01:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707822120; cv=pass; b=sT0RmKD64JNRRxLOulXpo2eg8dfLrxhNapwDJJ1MIBaUpPQewzkqGApeo/29VJa4sYkbyT1j5dVT9PlotVDSkUnI06P9HwBpLQ/aKziAaFQ2PcXUS/ndsm4oYunN5XYLfmo44JBfqbXjVlJIclJBH0CPZWd+NV8nAPg4H7D4VNw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707822120; c=relaxed/simple;
+	bh=f4AEw6JtPd+YXQjqhXGB59pRO286WMZxRukNCFc/v/s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WGXKUeb6QbdZArKL1PPhABwfEYFP/cLpcc0dEvWBcfLbEQS51i5321xc7852rny3e+OObM6wqXeglGcFv44bvY+/x42vh6lZj/eTvFzLYX487ou8A7Ib5rtlhwpzHPNRGGXvCftpIl7IbVJbpHFKbwq8XbP6wQPS++54QsqJ/S4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b=EAtzSn9r; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b="EAtzSn9r"
+ARC-Seal: i=1; a=rsa-sha256; t=1707822112; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=FXyuTRe9yCy7BfKVVddph7eJknXcyEe9JaKzXrQVWU91Y2oJMzi+fnqPLyzpbiGcZRPlMCXhMMA7V+GanidJnSJ1iDddXsDhawfYrVG3Pik8HcePXs8dgTFE7HNgk+rgWhmP27Nd1Mihct8M9hfc+hkjbHX8qIvDpQIZjyCCVHs=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1707822112; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=tKORHJW9ZJ+RKaYm7ZjJh+PgSp3vc2jvm+w5YVR/ZuA=; 
+	b=FpNmfhJs8XXADoEOcluyGgHqOVB1jlV58S+TPErbrT1oBE4prTjiIu5kkNPoWDshXUq+loIMIQFn6HOEbHvpDgXlknVwOU7qqWjDPpY5HBWA1CS4eVCwg0vgWit2xr1Odxw5i7IO+7l8qKjP3cXXOc8dLc7koiQahcbD1YaYehk=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1707822112;
+	s=zmail; d=rong.moe; i=i@rong.moe;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=tKORHJW9ZJ+RKaYm7ZjJh+PgSp3vc2jvm+w5YVR/ZuA=;
+	b=EAtzSn9rhpqmCUvJXJ9p/v9/S0L1J+vOTK4avcAmroHqZqRXNLpfTEcgP5Z0hinF
+	eTx5J9kLuPeQM4nG/6MSnT5I+6GNItFqtXNVRcD4SyrULuNNkfvyxSEoNhTboatkzGF
+	5EHPUS6+1MuJlc/CCSqKybu2mr88EgB0dpapn1qY=
+Received: from localhost.localdomain (163.142.242.182 [163.142.242.182]) by mx.zohomail.com
+	with SMTPS id 1707822111321938.4238314459632; Tue, 13 Feb 2024 03:01:51 -0800 (PST)
+From: Rong Zhang <i@rong.moe>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Rong Zhang <i@rong.moe>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Icenowy Zheng <uwu@icenowy.me>
+Subject: [PATCH v3 0/4] ARM: dts: qcom: msm8974: Add Samsung Galaxy S5 China support
+Date: Tue, 13 Feb 2024 18:58:35 +0800
+Message-ID: <20240213110137.122737-1-i@rong.moe>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pcfdyjxuszkxzmew"
-Content-Disposition: inline
-In-Reply-To: <20240213-evasion-crevice-3faa375c1666-mkl@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
+
+Samsung Galaxy S5 has many variants. Currently, the only supported one
+is klte. Samsung Galaxy S5 China (kltechn) is the China edition of
+klte, and it can mostly work with the klte DTB, with only LEDs and WiFi
+missing.
+
+This patchset splits out the common part of klte DTS into klte-common
+DTSI, and adds DTS for kltechn by fixing up the GPIO pins for the LEDs
+and GPIO expander connected by the WiFi module. A "brcm,board-type"
+property is added into the wifi@1 node of the common DTSI to allow all
+klte* variants to load the same NVRAM file.
+
+Signed-off-by: Rong Zhang <i@rong.moe>
+---
+Changes in v3:
+- Regenerate the patchset with code move detection (-B -M -C).
+- Fix "changes in v2" below to state why a tag was not added.
+- Link to v2: https://lore.kernel.org/r/20240127172155.63624-1-i@rong.moe/
+
+Changes in v2:
+- Split out the common part of klte DTS into klte-common DTSI.
+- Fix dt-binding to make it consistent with the compatible chain in
+kltechn DTS. In other words, make kltechn a subvariant of klte.
+  - [PATCH 3/4] in v1 had received "Acked-by: Krzysztof Kozlowski
+  <krzysztof.kozlowski@linaro.org>" but this was not added in the v2
+  patch due to the change.
+- Link to v1: https://lore.kernel.org/r/20240121154010.168440-1-i@rong.moe/
+
+Rong Zhang (4):
+  ARM: dts: qcom: msm8974: Split out common part of samsung-klte
+  ARM: dts: qcom: msm8974-klte-common: Pin WiFi board type
+  dt-bindings: arm: qcom: Add Samsung Galaxy S5 China (kltechn)
+  ARM: dts: qcom: msm8974: Add DTS for Samsung Galaxy S5 China (kltechn)
+
+ .../devicetree/bindings/arm/qcom.yaml         |   7 +
+ arch/arm/boot/dts/qcom/Makefile               |   1 +
+ ... qcom-msm8974pro-samsung-klte-common.dtsi} |  13 +-
+ .../dts/qcom/qcom-msm8974pro-samsung-klte.dts | 833 +-----------------
+ .../qcom/qcom-msm8974pro-samsung-kltechn.dts  |  16 +
+ 5 files changed, 47 insertions(+), 823 deletions(-)
+ copy arch/arm/boot/dts/qcom/{qcom-msm8974pro-samsung-klte.dts => qcom-msm8974pro-samsung-klte-common.dtsi} (98%)
+ rewrite arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte.dts (99%)
+ create mode 100644 arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-kltechn.dts
 
 
---pcfdyjxuszkxzmew
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+base-commit: c664e16bb1ba1c8cf1d7ecf3df5fd83bbb8ac15a
+-- 
+2.43.0
 
-On 13.02.2024 11:22:49, Marc Kleine-Budde wrote:
-> On 12.01.2024 17:07:30, Srinivas Goud wrote:
-> > Add ECC feature support to Tx and Rx FIFOs for Xilinx CAN Controller.
-> > ECC is an IP configuration option where counter registers are added in
-> > IP for 1bit/2bit ECC errors count and reset.
-> > Also driver reports 1bit/2bit ECC errors for FIFOs based on ECC error
-> > interrupts.
-> >=20
-> > Add xlnx,has-ecc optional property for Xilinx AXI CAN controller
-> > to support ECC if the ECC block is enabled in the HW.
-> >=20
-> > Add ethtool stats interface for getting all the ECC errors information.
-> >=20
-> > There is no public documentation for it available.
->=20
-> Lately I was using ethtool based stats, too and figured out, there's no
-> need for a spinlock, you can use a struct u64_stats_sync,
-> u64_stats_update_begin(), u64_stats_update_end(), and
-> u64_stats_fetch_retry() instead. These are no-ops on 64 bit systems and
-> sequential locks on 32 bit systems.
->=20
-> I'll send a v8.
-
-https://lore.kernel.org/all/20240213-xilinx_ecc-v8-0-8d75f8b80771@pengutron=
-ix.de/
-
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---pcfdyjxuszkxzmew
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmXLS8QACgkQKDiiPnot
-vG8czQf/aG7oFJxKdh1Q53rxG1f7aBqGyD1mOGPP8tUpbBujLHlZ8bTAF8KE9qTw
-4w2mFpYKOGhsRgTf1FD4mIWemqWnlaTESbQDu3r3n8x7iP46Chj6YH6hyrWJWpAW
-/wAc5jaMCjbkEBQmHRGJxDvZ1cedH/A2St+RpO8GeLvQCkq3qsNkNqI6JwEqc9ek
-bbSViga7DX6sokcg0zmhonSrgeKDBv7gf/ZBkWTeNjlFlsjpUXN8bAbRqlt/EqRw
-M3ckdj63rdRGTwrOCqHPVYtn/VwhdNvR3vafM8iFZI/9lG9EPeJ1A5Zu+jGIr7IO
-Z8UkkTzODpkD/G411piaTJ4I+h47ow==
-=DPr0
------END PGP SIGNATURE-----
-
---pcfdyjxuszkxzmew--
