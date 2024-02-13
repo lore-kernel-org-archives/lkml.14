@@ -1,163 +1,281 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4B76088C
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 18:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B668F605BF;
+	Tue, 13 Feb 2024 18:24:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707848684; cv=none; b=cWWPxT201/W52RPtEaX/b1UfkAP1aP2WYeVU/1H02HE2+Eyc4kD7Sfpt13SPtgPvn9NfZj0C3Xx4oldqnc/XP3eNoV5ILVjr6aMSGERHVg5dNgLcbMPPYWRvXN+apI/X0DIncs0CvovjiiAT95gMwhGpFECKuDgeFvn8yyKBj5A=
+	t=1707848683; cv=none; b=FK3WZ2idIAVDQjtU/UYdN9i+S/DzFMDQ1zOcUmCgLPC4IWsr78wID1MggacrBR50lcrFzgmxc3Cmj6GEEaz8ly8M17erUVOJHg2mklfYJ8Y30hqwStz6ox7PqKTNdY9R+UEC/rwDYMB2t4NocQJfshIB7QSzTeWdua5mGTNMm6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707848684; c=relaxed/simple;
-	bh=I5zIgI+QjhRatSLfoEbbhZ6aVR0T34jHoAcGOwHYwms=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Z9Gxm8TWblX8cNnmL8PEnCbL9T6lRw0HxvyOq4cSn+Jo5KACX0hPRtrj726psAK4cFCl40vgZuP55aVwlIktP3x8Zckxyeu9y+EV7fNKUKsl4mfKwy/3oBccTFk2dpMHOn0+Ew0gmc9zWHmSDTFBa57ZzCeP6VcmXAAVLeKc+qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HC9BhcIQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707848683; c=relaxed/simple;
+	bh=z7yc8ubB/vZV64kloK8lXbtup7nKhGNU94YCpHImetg=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ieRb6eNbmsrdwwJLV69mPDrjJssw4VFuLNSmfvCNGH925Wa4R7fm1TzHX6AfeBI+5vD8rWyg0BlzePwJxU80E0mAMShdczQ+gZp7LW6+SCsV8kbegUXB7CI8PMCOoXUTR4Rzm2l9AKnWgSKG9k/M/ftza0iGauF8lfSJnu1F5Ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iVCpOeOJ; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HC9BhcIQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 448DFC43390;
-	Tue, 13 Feb 2024 18:24:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707848684;
-	bh=I5zIgI+QjhRatSLfoEbbhZ6aVR0T34jHoAcGOwHYwms=;
-	h=From:Date:Subject:To:Cc:From;
-	b=HC9BhcIQ+NObwtf5QsVwZyOrTCF+0RQYLbPCWl0k9nK7j7t1qrSVZFxsRE8C2f6OS
-	 V3f/Zg84eOx4aCvJov0C5MVIfkY7puH4t/vHlN0LMwuWhNjiLfa7cD/6VG87rHz9sA
-	 Qf3PS0At/k2vVwP1bQQE/1T0JstsiU8bQuFaDj9sj3GnB/LAmPm5tN+cFRLX/MrEyv
-	 xiOwTazzt73c0aYEctze2VCyEoSDoXEs6Sp17QUpMFMf9kWa/JZ26bIYFfIDPc32rt
-	 FlunKZo+2u6/xnHFHQU/m3NDxU41KfZOzyVLqPaPKd06h6iE1tBPVtUKgMSLDdVpYW
-	 h1EGSyDiiAU1Q==
-From: Mark Brown <broonie@kernel.org>
-Date: Tue, 13 Feb 2024 18:24:38 +0000
-Subject: [PATCH v2] arm64/sve: Lower the maximum allocation for the SVE
- ptrace regset
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iVCpOeOJ"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-33cd57b7eabso585120f8f.2;
+        Tue, 13 Feb 2024 10:24:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707848680; x=1708453480; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jGnOlkHlcmiaaGm8mpXRkLoxVLEhp4gbuwkrUsWlruk=;
+        b=iVCpOeOJYnI/p7IFPzQsd5G3fJL4DyyAGTAamclqW1LinrpW3cSzjlpArQzni5vzS2
+         h4mqGalVGk1LoDvN64e4FzxWJkzutjZCRzqMN34vJDqvIGYCqTqtx7Gr3O8DYpaHLiq6
+         G/WOKsuVitfmzW7tGfnivMtlRh1p288hn1pyW6YurRe26pIiB49aB7m+Zv6jREOYrF3Z
+         0IkiW5mG+EqOBu1yDizgu0QrtCgVk6qpT29/84Lw2AYEmBMf3vu73O8JB3fL9xhg4X1X
+         2Zum84kn9G7eZC01BzeTOrtxZWyi4rM7j0MbxQrKs9RNHyW+LrSadPl1EL0J5yRlhCyb
+         V4nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707848680; x=1708453480;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jGnOlkHlcmiaaGm8mpXRkLoxVLEhp4gbuwkrUsWlruk=;
+        b=J8gAUG4sdrJsGZsSPNCTDzxf8piOnwV3LL/A/2hLNGEnCrkE8IB6lObt3LG53pu9Q5
+         +LvN0qgm0SSup+OQsiOJtAegiIWV+Cxndt3/Xw20tfd7ViHOPdwlqgR9i7SUI1zI0IHY
+         KYF9jIW4cz1VoH2BCX4mqkBdmAMUKM1BQ0kIeP/gSkBniAiMh97iaLhql6z1ex1ACIp1
+         uUu836R+tmDnpEpyBOLHCkJzY92I3vZcFcGmknHJMu3NoYTETUMNp4xzHSdoPINEglRm
+         VCReH7oYsAnU02H/t9XG76xPYK0XElmRZd5YkC4+/GB2y8rGT3XzXVlwPezVOJO4xJ2n
+         GRjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV5e3PujxcMtsGBd/2fKzNUEYvUMuXCmASbpzgl/TOs+/hLFjsi++GNZdDpbP2fJZccxQNJR0aJ4jwQpIBgq0hV1j9n4ARgwRh2NwUo0Q4dudlozM6vl4uJ+57f306jVpmHqWDj
+X-Gm-Message-State: AOJu0Yxx/KmofxNKEKNSHfiFVRPvZCfZSke1wo/CBrG3X2W1b4fP8Fzy
+	0/nmXxAD+OTKPs4nf45fdQddNnVKPZqWndnA8hBULGO97rEO2tsl
+X-Google-Smtp-Source: AGHT+IH0Wfb4NYMHF6Me4X8gZ7PFvnccsjKF/h3zuG3Fp/BzuBCLcOIg0HlSVAS/Lf9WXyhlhvDOzA==
+X-Received: by 2002:adf:f243:0:b0:33b:87a0:3af with SMTP id b3-20020adff243000000b0033b87a003afmr62711wrp.67.1707848679726;
+        Tue, 13 Feb 2024 10:24:39 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU1xAdmbdWA6FIvaSei+6mwuYoMW2I5RHChPSEh5spao2QLXHAwer/qSSf0IIyzsAK9ySzRRrn33fogZLcxb6sULs1EVTvyvEd9YIvX4tvZh8gzTLx8KFccICeCLD4F37fz5+9UdGn1uEjjXUcCZWze13SbZGeYrCdlGKR6s3VXvi9w5hg/deNeYucSD7v7zUQ9+lgCDKa9HePMmpZUh/PveJgqPdrCb+Pookzq++VtsjeSFyOyO0Fmo1OAfoKLZDQUNWvvG2uVRnDIx2cPBHQSRFKrjwBeP84/GeU2fKgQ8O3e33xssNea4/Iwdg0S6TjLToolOaPf7NI05mHTyeJ9LQmlrgQTTjSYq5fE7mGAi5mG29WaqqAxfNEtCMS4XhhtEZydGn0=
+Received: from localhost.localdomain (93-34-89-13.ip49.fastwebnet.it. [93.34.89.13])
+        by smtp.googlemail.com with ESMTPSA id bs25-20020a056000071900b0033b45bdb2a1sm10347974wrb.4.2024.02.13.10.24.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 10:24:39 -0800 (PST)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	Robert Marko <robimarko@gmail.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [net-next RFC PATCH 1/2] net: phy: aquantia: setup interface protocols for AQR112
+Date: Tue, 13 Feb 2024 19:24:11 +0100
+Message-ID: <20240213182415.17223-2-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240213182415.17223-1-ansuelsmth@gmail.com>
+References: <20240213182415.17223-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240213-arm64-sve-ptrace-regset-size-v2-1-c7600ca74b9b@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAOWzy2UC/33NQQ6CMBCF4auQWTuGFkKoK+9hWBR8QqMCmSGNS
- ri71cStm0n+WXxvJYUEKB2ylQQxaJjGFHaXUTf4sQeHc2qyuS3zdNjLvSpZI3hexHdgQa9YWMM
- LbE2bO1u7ysFQImbBJTy+/KlJPQRdJnl+16L5fH9w8R+Ohg3brmi9KeqqdTheISNu+0l6arZte
- wOGU3DsyQAAAA==
-To: Will Deacon <will@kernel.org>, 
- Catalin Marinas <catalin.marinas@arm.com>
-Cc: Dave Martin <Dave.Martin@arm.com>, Oleg Nesterov <oleg@redhat.com>, 
- Al Viro <viro@zeniv.linux.org.uk>, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.13-dev-a684c
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4370; i=broonie@kernel.org;
- h=from:subject:message-id; bh=I5zIgI+QjhRatSLfoEbbhZ6aVR0T34jHoAcGOwHYwms=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBly7PpI4cciiXeYNP+EEVt3Y4INFoiOrI/rWmsp/ke
- 3UYsdwKJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZcuz6QAKCRAk1otyXVSH0ELxB/
- 4/7F5im0GANZp1+aO+MD+khEacxi3g7TQuULUlLOSRa1Bojd1b3COou7f4YXUN0PfA2Nms6UDEGtse
- z0+0djdKCZS0xxNiE66INGT3SPlZh1evAmLNIvEgTT6FR02VAoUNj1XP8q2tF3x/eBqtUvtCt4oQjd
- 95JbNESua5OhDTwmbZ070bPLFi8LMylPmQLDy8xPyl0EVM6M+KykV4jnFDfXUJdycE43Ej6sEJy2J0
- OmLwCoRvrSzdNxk5M5/NNRpx9XjC77PdNpBbFLP6WfmN7Ik+5ZhX0F+Xjftj/wmm3MVNIAR02LAAOL
- KGimltgZ7MekxKVaCrCD6dd2SL+ZQF
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+Content-Transfer-Encoding: 8bit
 
-Doug Anderson observed that ChromeOS crashes are being reported which
-include failing allocations of order 7 during core dumps due to ptrace
-allocating storage for regsets:
+Aquantia Gen3 PHYs require additional regs to be set to correctly work
+and communicate with the MAC.
 
-  chrome: page allocation failure: order:7,
-          mode:0x40dc0(GFP_KERNEL|__GFP_COMP|__GFP_ZERO),
-          nodemask=(null),cpuset=urgent,mems_allowed=0
-   ...
-  regset_get_alloc+0x1c/0x28
-  elf_core_dump+0x3d8/0xd8c
-  do_coredump+0xeb8/0x1378
+For each rate, the startup rate needs to be set and the required global
+cfg needs to be set.
 
-with further investigation showing that this is:
+The global cfg are per Rate and require different configuration based on
+the requested interface mode.
 
-   [   66.957385] DOUG: Allocating 279584 bytes
+Some FW might apply the correct values by default but some OEM might
+provide generic FW that require additional fixup at runtime as the FW
+doesn't correctly provison the PHY for the attached MAC interface mode.
 
-which is the maximum size of the SVE regset. As Doug observes it is not
-entirely surprising that such a large allocation of contiguous memory might
-fail on a long running system.
+The default values are taken from various source and SDK and all use the
+same values for SGMII, 2500BASEX, 10GBASER and USXGMII.
 
-The SVE regset is currently sized to hold SVE registers with a VQ of
-SVE_VQ_MAX which is 512, substantially more than the architectural maximum
-of 16 which we might see even in a system emulating the limits of the
-architecture. Since we don't expose the size we tell the regset core
-externally let's define ARCH_SVE_VQ_MAX with the actual architectural
-maximum and use that for the regset, we'll still overallocate most of the
-time but much less so which will be helpful even if the core is fixed to
-not require contiguous allocations.
+One common problem that this handle is case where the FW provision for
+10BASER but USXGMII is actually requested, hance runtime fixup is
+required.
 
-Specify ARCH_SVE_VQ_MAX in terms of the maximum value that can be written
-into ZCR_ELx.LEN (where this is set in the hardware). For consistency
-update the maximum SME vector length to be specified in the same style
-while we are at it.
-
-We could also teach the ptrace core about runtime discoverable regset sizes
-but that would be a more invasive change and this is being observed in
-practical systems.
-
-Reported-by: Doug Anderson <dianders@chromium.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 ---
-We should probably also use the actual architectural limit for the
-bitmasks we use in the VL enumeration code, though that's both a little
-bit more involved and less immediately a problem.
----
-Changes in v2:
-- Specify the value using the size of the bitfield it goes into.
-- Link to v1: https://lore.kernel.org/r/20240203-arm64-sve-ptrace-regset-size-v1-1-2c3ba1386b9e@kernel.org
----
- arch/arm64/include/asm/fpsimd.h | 12 ++++++------
- arch/arm64/kernel/ptrace.c      |  3 ++-
- 2 files changed, 8 insertions(+), 7 deletions(-)
+ drivers/net/phy/aquantia/aquantia.h      |  17 ++++
+ drivers/net/phy/aquantia/aquantia_main.c | 110 +++++++++++++++++++++++
+ 2 files changed, 127 insertions(+)
 
-diff --git a/arch/arm64/include/asm/fpsimd.h b/arch/arm64/include/asm/fpsimd.h
-index 50e5f25d3024..481d94416d69 100644
---- a/arch/arm64/include/asm/fpsimd.h
-+++ b/arch/arm64/include/asm/fpsimd.h
-@@ -62,13 +62,13 @@ static inline void cpacr_restore(unsigned long cpacr)
-  * When we defined the maximum SVE vector length we defined the ABI so
-  * that the maximum vector length included all the reserved for future
-  * expansion bits in ZCR rather than those just currently defined by
-- * the architecture. While SME follows a similar pattern the fact that
-- * it includes a square matrix means that any allocations that attempt
-- * to cover the maximum potential vector length (such as happen with
-- * the regset used for ptrace) end up being extremely large. Define
-- * the much lower actual limit for use in such situations.
-+ * the architecture.  Using this length to allocate worst size buffers
-+ * results in excessively large allocations, and this effect is even
-+ * more pronounced for SME due to ZA.  Define more suitable VLs for
-+ * these situations.
-  */
--#define SME_VQ_MAX	16
-+#define ARCH_SVE_VQ_MAX ((ZCR_ELx_LEN_MASK >> ZCR_ELx_LEN_SHIFT) + 1)
-+#define SME_VQ_MAX	((SMCR_ELx_LEN_MASK >> SMCR_ELx_LEN_SHIFT) + 1)
+diff --git a/drivers/net/phy/aquantia/aquantia.h b/drivers/net/phy/aquantia/aquantia.h
+index 1c19ae74ad2b..019528c536c7 100644
+--- a/drivers/net/phy/aquantia/aquantia.h
++++ b/drivers/net/phy/aquantia/aquantia.h
+@@ -39,6 +39,15 @@
+ #define VEND1_GLOBAL_MAILBOX_INTERFACE6_LSW_DATA_MASK	GENMASK(15, 0)
+ #define VEND1_GLOBAL_MAILBOX_INTERFACE6_LSW_DATA(x)	FIELD_PREP(VEND1_GLOBAL_MAILBOX_INTERFACE6_LSW_DATA_MASK, (u16)(x))
  
- struct task_struct;
++#define VEND1_GLOBAL_STARTUP_RATE		0x031a
++#define   VEND1_GLOBAL_STARTUP_RATE_MASK	GENMASK(3, 0)
++#define   VEND1_GLOBAL_STARTUP_RATE_LOW_POWER	0
++#define   VEND1_GLOBAL_STARTUP_RATE_100M	1
++#define   VEND1_GLOBAL_STARTUP_RATE_1G		2
++#define   VEND1_GLOBAL_STARTUP_RATE_10G		3
++#define   VEND1_GLOBAL_STARTUP_RATE_2_5G	4
++#define   VEND1_GLOBAL_STARTUP_RATE_5G		5
++
+ /* The following registers all have similar layouts; first the registers... */
+ #define VEND1_GLOBAL_CFG_10M			0x0310
+ #define VEND1_GLOBAL_CFG_100M			0x031b
+@@ -52,6 +61,14 @@
+ #define VEND1_GLOBAL_CFG_SERDES_MODE_SGMII	3
+ #define VEND1_GLOBAL_CFG_SERDES_MODE_OCSGMII	4
+ #define VEND1_GLOBAL_CFG_SERDES_MODE_XFI5G	6
++/* Enable System Interface Autonegotiation */
++#define VEND1_GLOBAL_CFG_AUTONEG_EN		BIT(3)
++/* Enable System Interface Training */
++#define VEND1_GLOBAL_CFG_TRAINING_EN		BIT(4)
++/* Reset System Interface For Every Transition */
++#define VEND1_GLOBAL_CFG_RESET_ON_TRANSITION_EN	BIT(5)
++/* Keep SERDES Silent During Transition */
++#define VEND1_GLOBAL_CFG_SERDES_SILENCE_EN	BIT(6)
+ #define VEND1_GLOBAL_CFG_RATE_ADAPT		GENMASK(8, 7)
+ #define VEND1_GLOBAL_CFG_RATE_ADAPT_NONE	0
+ #define VEND1_GLOBAL_CFG_RATE_ADAPT_USX		1
+diff --git a/drivers/net/phy/aquantia/aquantia_main.c b/drivers/net/phy/aquantia/aquantia_main.c
+index 97a2fafa15ca..6ee1a134bc60 100644
+--- a/drivers/net/phy/aquantia/aquantia_main.c
++++ b/drivers/net/phy/aquantia/aquantia_main.c
+@@ -746,6 +746,114 @@ static int aqr107_probe(struct phy_device *phydev)
+ 	return aqr_hwmon_probe(phydev);
+ }
  
-diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-index dc6cf0e37194..e3bef38fc2e2 100644
---- a/arch/arm64/kernel/ptrace.c
-+++ b/arch/arm64/kernel/ptrace.c
-@@ -1500,7 +1500,8 @@ static const struct user_regset aarch64_regsets[] = {
- #ifdef CONFIG_ARM64_SVE
- 	[REGSET_SVE] = { /* Scalable Vector Extension */
- 		.core_note_type = NT_ARM_SVE,
--		.n = DIV_ROUND_UP(SVE_PT_SIZE(SVE_VQ_MAX, SVE_PT_REGS_SVE),
-+		.n = DIV_ROUND_UP(SVE_PT_SIZE(ARCH_SVE_VQ_MAX,
-+					      SVE_PT_REGS_SVE),
- 				  SVE_VQ_BYTES),
- 		.size = SVE_VQ_BYTES,
- 		.align = SVE_VQ_BYTES,
-
----
-base-commit: 41bccc98fb7931d63d03f326a746ac4d429c1dd3
-change-id: 20240202-arm64-sve-ptrace-regset-size-21b0928969e1
-
-Best regards,
++static int aqr112_setup_interface_protocols(struct phy_device *phydev)
++{
++	phy_interface_t iface = phydev->interface;
++	u16 startup_rate, global_cfg_val;
++	int i, ret;
++
++	/* Default global cfg are taken from Aquantia UBoot Source and various
++	 * source and all makes use of the following reference values.
++	 */
++	switch (iface) {
++	case PHY_INTERFACE_MODE_SGMII:
++		startup_rate = VEND1_GLOBAL_STARTUP_RATE_1G;
++		global_cfg_val = FIELD_PREP(VEND1_GLOBAL_CFG_SERDES_MODE,
++					    VEND1_GLOBAL_CFG_SERDES_MODE_SGMII) |
++				 VEND1_GLOBAL_CFG_AUTONEG_EN |
++				 VEND1_GLOBAL_CFG_SERDES_SILENCE_EN;
++		break;
++	case PHY_INTERFACE_MODE_2500BASEX:
++		startup_rate = VEND1_GLOBAL_STARTUP_RATE_2_5G;
++		global_cfg_val = FIELD_PREP(VEND1_GLOBAL_CFG_SERDES_MODE,
++					    VEND1_GLOBAL_CFG_SERDES_MODE_OCSGMII) |
++				 VEND1_GLOBAL_CFG_SERDES_SILENCE_EN |
++				 FIELD_PREP(VEND1_GLOBAL_CFG_RATE_ADAPT,
++					    VEND1_GLOBAL_CFG_RATE_ADAPT_PAUSE);
++		break;
++	case PHY_INTERFACE_MODE_5GBASER:
++		startup_rate = VEND1_GLOBAL_STARTUP_RATE_5G;
++		global_cfg_val = FIELD_PREP(VEND1_GLOBAL_CFG_SERDES_MODE,
++					    VEND1_GLOBAL_CFG_SERDES_MODE_XFI5G) |
++				 FIELD_PREP(VEND1_GLOBAL_CFG_RATE_ADAPT,
++					    VEND1_GLOBAL_CFG_RATE_ADAPT_PAUSE);
++		break;
++	case PHY_INTERFACE_MODE_10GBASER:
++	case PHY_INTERFACE_MODE_USXGMII:
++		startup_rate = VEND1_GLOBAL_STARTUP_RATE_10G;
++		global_cfg_val = FIELD_PREP(VEND1_GLOBAL_CFG_SERDES_MODE,
++					    VEND1_GLOBAL_CFG_SERDES_MODE_XFI);
++		if (iface == PHY_INTERFACE_MODE_USXGMII)
++			global_cfg_val |= FIELD_PREP(VEND1_GLOBAL_CFG_RATE_ADAPT,
++						    VEND1_GLOBAL_CFG_RATE_ADAPT_USX);
++		else
++			global_cfg_val |= FIELD_PREP(VEND1_GLOBAL_CFG_RATE_ADAPT,
++						    VEND1_GLOBAL_CFG_RATE_ADAPT_PAUSE);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	/* set PHY in low power mode so we can configure protocols */
++	ret = phy_set_bits_mmd(phydev, MDIO_MMD_VEND1, VEND1_GLOBAL_SC,
++			       VEND1_GLOBAL_SC_LOW_POWER);
++	if (ret)
++		return ret;
++
++	/* Some dalay is needed to put the chip in low-power */
++	mdelay(10);
++
++	/* Setup the SERDES interface link startup rate */
++	ret = phy_write_mmd(phydev, MDIO_MMD_VEND1, VEND1_GLOBAL_STARTUP_RATE,
++			    FIELD_PREP(VEND1_GLOBAL_STARTUP_RATE_MASK, startup_rate));
++	if (ret)
++		return ret;
++
++	/* Walk the media-speed configuration registers to setup host-side
++	 * serdes modes that may be used by the PHY depending on the
++	 * negotiated media speed.
++	 */
++	for (i = 0; i < ARRAY_SIZE(aqr_global_cfg_regs); i++) {
++		u16 reg = aqr_global_cfg_regs[i];
++		int val;
++
++		val = phy_read_mmd(phydev, MDIO_MMD_VEND1, reg);
++		if (val < 0)
++			return val;
++
++		/* If global_cfg is 0, rate is not supported by FW */
++		if (!val)
++			continue;
++
++		ret = phy_write_mmd(phydev, MDIO_MMD_VEND1, reg,
++				    global_cfg_val);
++		if (ret)
++			return ret;
++	}
++
++	/* set PHY out of low power mode */
++	ret = phy_clear_bits_mmd(phydev, MDIO_MMD_VEND1, VEND1_GLOBAL_SC,
++				 VEND1_GLOBAL_SC_LOW_POWER);
++	if (ret)
++		return ret;
++
++	/* Some dalay is needed to put the chip out of low-power */
++	mdelay(10);
++
++	return 0;
++}
++
++static int aqr112_config_init(struct phy_device *phydev)
++{
++	int ret;
++
++	ret = aqr112_setup_interface_protocols(phydev);
++	if (ret)
++		return ret;
++
++	return aqr107_fill_interface_modes(phydev);
++}
++
+ static struct phy_driver aqr_driver[] = {
+ {
+ 	PHY_ID_MATCH_MODEL(PHY_ID_AQ1202),
+@@ -831,6 +939,7 @@ static struct phy_driver aqr_driver[] = {
+ 	PHY_ID_MATCH_MODEL(PHY_ID_AQR112),
+ 	.name		= "Aquantia AQR112",
+ 	.probe		= aqr107_probe,
++	.config_init	= aqr112_config_init,
+ 	.config_aneg    = aqr_config_aneg,
+ 	.config_intr	= aqr_config_intr,
+ 	.handle_interrupt = aqr_handle_interrupt,
+@@ -849,6 +958,7 @@ static struct phy_driver aqr_driver[] = {
+ 	PHY_ID_MATCH_MODEL(PHY_ID_AQR412),
+ 	.name		= "Aquantia AQR412",
+ 	.probe		= aqr107_probe,
++	.config_init	= aqr112_config_init,
+ 	.config_aneg    = aqr_config_aneg,
+ 	.config_intr	= aqr_config_intr,
+ 	.handle_interrupt = aqr_handle_interrupt,
 -- 
-Mark Brown <broonie@kernel.org>
+2.43.0
 
