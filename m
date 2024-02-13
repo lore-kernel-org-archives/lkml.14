@@ -1,488 +1,176 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30F6579DF
-	for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 00:19:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46DD15810C;
+	Tue, 13 Feb 2024 00:19:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707783590; cv=none; b=KY5CdxEnjArray58aqIppKhsAP9puyQ+IWxNiE0mNdNhz4jqsrHXIAlSNFtL9jjWh3/OPKfSIevykBsy5s5+WhVW/ojoeFdhq4qvXekCGsIPOUMuee1NvVRzgP2d7G2gtYo/2D09jvomASG19jD/qRicL1Qkgw2ol+xH/kOltWI=
+	t=1707783594; cv=none; b=TX/lsevl8ABKeRBsAociH4zWQUpIXvjesk7zPP6xlixfA0Xt6Fz1FIZM+ybt8oBa+kzG0MjnTk2v7HiIrdVdP4MOjTgzGFB9inblzF+1PBaQlIbc1Mfo6wtI9Rszu+/ywwWl/0RW5oKY98govik0EpzZXwCLGTHyrvmpScwMHlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707783590; c=relaxed/simple;
-	bh=In1FF0ynBqRiNE2uJuhiKoePMO53Q9NUdpdbPZmXlAM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Pg14rm5BbJChpKs4V+MAG8aqxF01Xp05nMo9NEbHX7rx8i7VACCfJpFucsQIsbtq+p2xCka7NWm/4mRbtitpC4uL5wmjprDFG5H2IC2Y4jLfACbVao2YaIOREvVu5aJzCsCcwZrl/fYvAk1438SK8y4/Ab9Nj0pdAjV5gGS0MJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--lokeshgidra.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Bg6+5qHL; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--lokeshgidra.bounces.google.com
+	s=arc-20240116; t=1707783594; c=relaxed/simple;
+	bh=bj702VN0XmTEu8yDDq5cohwrnty4yLLvXhphQ+HAfi4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=E4LNeDLcEFUeYU/1/YJdFjn8S6UlEV/oqsSrtM13+TAask7+M38qyFNWESjBXJcHgqarR+Vjl7oFIs9UvzPxcHbJHon7zcYVM+xxAPrtcUSOxwi0AUFZShSG8JdNzHIeg+gjDKbNtxE8WonWzREDunodK8oAHC+DQ2zM9Pb8SYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pqF7iaev; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bg6+5qHL"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcc73148612so296752276.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 Feb 2024 16:19:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707783587; x=1708388387; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lSLmVkRgWUoN7XoRPV1r5JJdZzlBEVE8ndv4C2H5Jh8=;
-        b=Bg6+5qHLCmq7tEftSDSbY67j7mnOS0DtpOFHeW9Fc7BXZlEovYxqiMmli0lvJ/s2X2
-         49yrGCB78KInP7XaHfIwFS2L8S0bLSpoTbGt8SnK2b+FM9JmjUcQhUGCQ+DVpn3Ytdbf
-         qYAECxTym0SnvsmXURPvDZWGy04MLBywJK2fqjSh6IP/DpTha2m3YrNbjpoaFBdNVhaj
-         MCsbeuB7affwfWJeWLI8U/iBl5qd33fviuTXMeZRR9dWXAuUrgEuR2UlcUJbxPC+ZNrG
-         gICzpwN0nBpBK3zgOkbzsWrnrnfHB6PmZpC+NiifiFwQNDzgBWsSPhpkA+UeUyEfmTgG
-         KmVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707783587; x=1708388387;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lSLmVkRgWUoN7XoRPV1r5JJdZzlBEVE8ndv4C2H5Jh8=;
-        b=cSx3nq+8eX+0GFNf8aKR4kFMyS9bnQlFwQlkDBulP1J71fEuiEA7Qep93vdcjW55NH
-         VWR8l0eUWb5WnHQvmRt6lvvKRh8qHtvNhpxBBD69EmXDKDEQl0cJpSfSCFiFpHdcFBD6
-         tcjWZy0O7ZA50cumKvZxU2y45E0UJoRpoEH1NDfTcQkGqAtH5RuNSh6v1uji0WOFKC8w
-         EtlV2Lzafi63YoQeEUoYo6x48za/RR4BV7mI7bxRA/9lDZ9vfIqB7E++7IoZREr31oAD
-         SFZG+WHJLeqgndqNSydMdGIXMND7Q2CUlgRIeABJWIPgGjGsg7FIM+s0q722/taRHCJM
-         LB9A==
-X-Gm-Message-State: AOJu0YxHRjGl+1SJa2zSMhHp6QoPvz90ctawFlUyhvp3T6wOzmTLcbOw
-	vGzyhz3C2VlITRFzmCrp63tCbZuHPQDMNSIVoF+W3kTzD0jkUZmwmua8G753nEWszRob0ApZ3nB
-	bLXLyj3W7MCOfX5Qyoje2VA==
-X-Google-Smtp-Source: AGHT+IHUDuEjzMbEdCkojri1moJYf3kxPzNfFLGXk8eAuGj57GMIrZzgUI2jyxqII0cDDxjVoJCdhqMTIGxFJTHhlA==
-X-Received: from lg.mtv.corp.google.com ([2620:15c:211:202:fd80:ef0f:6359:fc4c])
- (user=lokeshgidra job=sendgmr) by 2002:a05:6902:1207:b0:dc6:dd76:34cc with
- SMTP id s7-20020a056902120700b00dc6dd7634ccmr375064ybu.1.1707783587100; Mon,
- 12 Feb 2024 16:19:47 -0800 (PST)
-Date: Mon, 12 Feb 2024 16:19:19 -0800
-In-Reply-To: <20240213001920.3551772-1-lokeshgidra@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pqF7iaev"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5509EC433B1;
+	Tue, 13 Feb 2024 00:19:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707783594;
+	bh=bj702VN0XmTEu8yDDq5cohwrnty4yLLvXhphQ+HAfi4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=pqF7iaeveEMCaNee6VCB8Lprh/mwWbc3YdrhXTFfWMJFxQdyi5cWb9DtjzKPMd5IB
+	 dzzDivOUHnygIu8giFITnXbKQl7udnr/6vvycywiSd1rbxO396M3tuit7TSOLfk8LT
+	 +V2HZ4woZ5ytbE/BGpgHMUdlQHB8cGuCkGd73117hNRfR9LvITERMkBzuhryplYcEW
+	 qCNREAnGO9tOjFAERwPshMRBscNIDbeA45UUY73ap81Asi5FslAujyA9aAJi58kw1h
+	 iCcfWOKb7zxHJ4r0xekIYbSXpP49JYoNcEGamP/9f8sPa1eREwQUexkP/yfRr1GmPq
+	 mwC2bvQw8gbsg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+	Adam Goldman <adamg@pobox.com>,
+	Sasha Levin <sashal@kernel.org>,
+	linux1394-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 6.7 46/58] firewire: core: send bus reset promptly on gap count error
+Date: Mon, 12 Feb 2024 19:17:52 -0500
+Message-ID: <20240213001837.668862-46-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240213001837.668862-1-sashal@kernel.org>
+References: <20240213001837.668862-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240213001920.3551772-1-lokeshgidra@google.com>
-X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
-Message-ID: <20240213001920.3551772-3-lokeshgidra@google.com>
-Subject: [PATCH v5 2/3] userfaultfd: protect mmap_changing with rw_sem in userfaulfd_ctx
-From: Lokesh Gidra <lokeshgidra@google.com>
-To: akpm@linux-foundation.org
-Cc: lokeshgidra@google.com, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, selinux@vger.kernel.org, surenb@google.com, 
-	kernel-team@android.com, aarcange@redhat.com, peterx@redhat.com, 
-	david@redhat.com, axelrasmussen@google.com, bgeffon@google.com, 
-	willy@infradead.org, jannh@google.com, kaleshsingh@google.com, 
-	ngeoffray@google.com, timmurray@google.com, rppt@kernel.org, 
-	Liam.Howlett@oracle.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.7.4
+Content-Transfer-Encoding: 8bit
 
-Increments and loads to mmap_changing are always in mmap_lock
-critical section. This ensures that if userspace requests event
-notification for non-cooperative operations (e.g. mremap), userfaultfd
-operations don't occur concurrently.
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-This can be achieved by using a separate read-write semaphore in
-userfaultfd_ctx such that increments are done in write-mode and loads
-in read-mode, thereby eliminating the dependency on mmap_lock for this
-purpose.
+[ Upstream commit 7ed4380009e96d9e9c605e12822e987b35b05648 ]
 
-This is a preparatory step before we replace mmap_lock usage with
-per-vma locks in fill/move ioctls.
+If we are bus manager and the bus has inconsistent gap counts, send a
+bus reset immediately instead of trying to read the root node's config
+ROM first. Otherwise, we could spend a lot of time trying to read the
+config ROM but never succeeding.
 
-Signed-off-by: Lokesh Gidra <lokeshgidra@google.com>
-Reviewed-by: Mike Rapoport (IBM) <rppt@kernel.org>
+This eliminates a 50+ second delay before the FireWire bus is usable after
+a newly connected device is powered on in certain circumstances.
+
+The delay occurs if a gap count inconsistency occurs, we are not the root
+node, and we become bus manager. One scenario that causes this is with a TI
+XIO2213B OHCI, the first time a Sony DSR-25 is powered on after being
+connected to the FireWire cable. In this configuration, the Linux box will
+not receive the initial PHY configuration packet sent by the DSR-25 as IRM,
+resulting in the DSR-25 having a gap count of 44 while the Linux box has a
+gap count of 63.
+
+FireWire devices have a gap count parameter, which is set to 63 on power-up
+and can be changed with a PHY configuration packet. This determines the
+duration of the subaction and arbitration gaps. For reliable communication,
+all nodes on a FireWire bus must have the same gap count.
+
+A node may have zero or more of the following roles: root node, bus manager
+(BM), isochronous resource manager (IRM), and cycle master. Unless a root
+node was forced with a PHY configuration packet, any node might become root
+node after a bus reset. Only the root node can become cycle master. If the
+root node is not cycle master capable, the BM or IRM should force a change
+of root node.
+
+After a bus reset, each node sends a self-ID packet, which contains its
+current gap count. A single bus reset does not change the gap count, but
+two bus resets in a row will set the gap count to 63. Because a consistent
+gap count is required for reliable communication, IEEE 1394a-2000 requires
+that the bus manager generate a bus reset if it detects that the gap count
+is inconsistent.
+
+When the gap count is inconsistent, build_tree() will notice this after the
+self identification process. It will set card->gap_count to the invalid
+value 0. If we become bus master, this will force bm_work() to send a bus
+reset when it performs gap count optimization.
+
+After a bus reset, there is no bus manager. We will almost always try to
+become bus manager. Once we become bus manager, we will first determine
+whether the root node is cycle master capable. Then, we will determine if
+the gap count should be changed. If either the root node or the gap count
+should be changed, we will generate a bus reset.
+
+To determine if the root node is cycle master capable, we read its
+configuration ROM. bm_work() will wait until we have finished trying to
+read the configuration ROM.
+
+However, an inconsistent gap count can make this take a long time.
+read_config_rom() will read the first few quadlets from the config ROM. Due
+to the gap count inconsistency, eventually one of the reads will time out.
+When read_config_rom() fails, fw_device_init() calls it again until
+MAX_RETRIES is reached. This takes 50+ seconds.
+
+Once we give up trying to read the configuration ROM, bm_work() will wake
+up, assume that the root node is not cycle master capable, and do a bus
+reset. Hopefully, this will resolve the gap count inconsistency.
+
+This change makes bm_work() check for an inconsistent gap count before
+waiting for the root node's configuration ROM. If the gap count is
+inconsistent, bm_work() will immediately do a bus reset. This eliminates
+the 50+ second delay and rapidly brings the bus to a working state.
+
+I considered that if the gap count is inconsistent, a PHY configuration
+packet might not be successful, so it could be desirable to skip the PHY
+configuration packet before the bus reset in this case. However, IEEE
+1394a-2000 and IEEE 1394-2008 say that the bus manager may transmit a PHY
+configuration packet before a bus reset when correcting a gap count error.
+Since the standard endorses this, I decided it's safe to retain the PHY
+configuration packet transmission.
+
+Normally, after a topology change, we will reset the bus a maximum of 5
+times to change the root node and perform gap count optimization. However,
+if there is a gap count inconsistency, we must always generate a bus reset.
+Otherwise the gap count inconsistency will persist and communication will
+be unreliable. For that reason, if there is a gap count inconstency, we
+generate a bus reset even if we already reached the 5 reset limit.
+
+Signed-off-by: Adam Goldman <adamg@pobox.com>
+Reference: https://sourceforge.net/p/linux1394/mailman/message/58727806/
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/userfaultfd.c              | 40 ++++++++++++----------
- include/linux/userfaultfd_k.h | 31 ++++++++++--------
- mm/userfaultfd.c              | 62 ++++++++++++++++++++---------------
- 3 files changed, 75 insertions(+), 58 deletions(-)
+ drivers/firewire/core-card.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index 58331b83d648..c00a021bcce4 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -685,12 +685,15 @@ int dup_userfaultfd(struct vm_area_struct *vma, struct list_head *fcs)
- 		ctx->flags = octx->flags;
- 		ctx->features = octx->features;
- 		ctx->released = false;
-+		init_rwsem(&ctx->map_changing_lock);
- 		atomic_set(&ctx->mmap_changing, 0);
- 		ctx->mm = vma->vm_mm;
- 		mmgrab(ctx->mm);
- 
- 		userfaultfd_ctx_get(octx);
-+		down_write(&octx->map_changing_lock);
- 		atomic_inc(&octx->mmap_changing);
-+		up_write(&octx->map_changing_lock);
- 		fctx->orig = octx;
- 		fctx->new = ctx;
- 		list_add_tail(&fctx->list, fcs);
-@@ -737,7 +740,9 @@ void mremap_userfaultfd_prep(struct vm_area_struct *vma,
- 	if (ctx->features & UFFD_FEATURE_EVENT_REMAP) {
- 		vm_ctx->ctx = ctx;
- 		userfaultfd_ctx_get(ctx);
-+		down_write(&ctx->map_changing_lock);
- 		atomic_inc(&ctx->mmap_changing);
-+		up_write(&ctx->map_changing_lock);
- 	} else {
- 		/* Drop uffd context if remap feature not enabled */
- 		vma_start_write(vma);
-@@ -783,7 +788,9 @@ bool userfaultfd_remove(struct vm_area_struct *vma,
- 		return true;
- 
- 	userfaultfd_ctx_get(ctx);
-+	down_write(&ctx->map_changing_lock);
- 	atomic_inc(&ctx->mmap_changing);
-+	up_write(&ctx->map_changing_lock);
- 	mmap_read_unlock(mm);
- 
- 	msg_init(&ewq.msg);
-@@ -825,7 +832,9 @@ int userfaultfd_unmap_prep(struct vm_area_struct *vma, unsigned long start,
- 		return -ENOMEM;
- 
- 	userfaultfd_ctx_get(ctx);
-+	down_write(&ctx->map_changing_lock);
- 	atomic_inc(&ctx->mmap_changing);
-+	up_write(&ctx->map_changing_lock);
- 	unmap_ctx->ctx = ctx;
- 	unmap_ctx->start = start;
- 	unmap_ctx->end = end;
-@@ -1709,9 +1718,8 @@ static int userfaultfd_copy(struct userfaultfd_ctx *ctx,
- 	if (uffdio_copy.mode & UFFDIO_COPY_MODE_WP)
- 		flags |= MFILL_ATOMIC_WP;
- 	if (mmget_not_zero(ctx->mm)) {
--		ret = mfill_atomic_copy(ctx->mm, uffdio_copy.dst, uffdio_copy.src,
--					uffdio_copy.len, &ctx->mmap_changing,
--					flags);
-+		ret = mfill_atomic_copy(ctx, uffdio_copy.dst, uffdio_copy.src,
-+					uffdio_copy.len, flags);
- 		mmput(ctx->mm);
- 	} else {
- 		return -ESRCH;
-@@ -1761,9 +1769,8 @@ static int userfaultfd_zeropage(struct userfaultfd_ctx *ctx,
- 		goto out;
- 
- 	if (mmget_not_zero(ctx->mm)) {
--		ret = mfill_atomic_zeropage(ctx->mm, uffdio_zeropage.range.start,
--					   uffdio_zeropage.range.len,
--					   &ctx->mmap_changing);
-+		ret = mfill_atomic_zeropage(ctx, uffdio_zeropage.range.start,
-+					   uffdio_zeropage.range.len);
- 		mmput(ctx->mm);
- 	} else {
- 		return -ESRCH;
-@@ -1818,9 +1825,8 @@ static int userfaultfd_writeprotect(struct userfaultfd_ctx *ctx,
- 		return -EINVAL;
- 
- 	if (mmget_not_zero(ctx->mm)) {
--		ret = mwriteprotect_range(ctx->mm, uffdio_wp.range.start,
--					  uffdio_wp.range.len, mode_wp,
--					  &ctx->mmap_changing);
-+		ret = mwriteprotect_range(ctx, uffdio_wp.range.start,
-+					  uffdio_wp.range.len, mode_wp);
- 		mmput(ctx->mm);
- 	} else {
- 		return -ESRCH;
-@@ -1870,9 +1876,8 @@ static int userfaultfd_continue(struct userfaultfd_ctx *ctx, unsigned long arg)
- 		flags |= MFILL_ATOMIC_WP;
- 
- 	if (mmget_not_zero(ctx->mm)) {
--		ret = mfill_atomic_continue(ctx->mm, uffdio_continue.range.start,
--					    uffdio_continue.range.len,
--					    &ctx->mmap_changing, flags);
-+		ret = mfill_atomic_continue(ctx, uffdio_continue.range.start,
-+					    uffdio_continue.range.len, flags);
- 		mmput(ctx->mm);
- 	} else {
- 		return -ESRCH;
-@@ -1925,9 +1930,8 @@ static inline int userfaultfd_poison(struct userfaultfd_ctx *ctx, unsigned long
- 		goto out;
- 
- 	if (mmget_not_zero(ctx->mm)) {
--		ret = mfill_atomic_poison(ctx->mm, uffdio_poison.range.start,
--					  uffdio_poison.range.len,
--					  &ctx->mmap_changing, 0);
-+		ret = mfill_atomic_poison(ctx, uffdio_poison.range.start,
-+					  uffdio_poison.range.len, 0);
- 		mmput(ctx->mm);
- 	} else {
- 		return -ESRCH;
-@@ -2003,13 +2007,14 @@ static int userfaultfd_move(struct userfaultfd_ctx *ctx,
- 	if (mmget_not_zero(mm)) {
- 		mmap_read_lock(mm);
- 
--		/* Re-check after taking mmap_lock */
-+		/* Re-check after taking map_changing_lock */
-+		down_read(&ctx->map_changing_lock);
- 		if (likely(!atomic_read(&ctx->mmap_changing)))
- 			ret = move_pages(ctx, mm, uffdio_move.dst, uffdio_move.src,
- 					 uffdio_move.len, uffdio_move.mode);
- 		else
- 			ret = -EAGAIN;
--
-+		up_read(&ctx->map_changing_lock);
- 		mmap_read_unlock(mm);
- 		mmput(mm);
- 	} else {
-@@ -2216,6 +2221,7 @@ static int new_userfaultfd(int flags)
- 	ctx->flags = flags;
- 	ctx->features = 0;
- 	ctx->released = false;
-+	init_rwsem(&ctx->map_changing_lock);
- 	atomic_set(&ctx->mmap_changing, 0);
- 	ctx->mm = current->mm;
- 	/* prevent the mm struct to be freed */
-diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_k.h
-index 691d928ee864..3210c3552976 100644
---- a/include/linux/userfaultfd_k.h
-+++ b/include/linux/userfaultfd_k.h
-@@ -69,6 +69,13 @@ struct userfaultfd_ctx {
- 	unsigned int features;
- 	/* released */
- 	bool released;
-+	/*
-+	 * Prevents userfaultfd operations (fill/move/wp) from happening while
-+	 * some non-cooperative event(s) is taking place. Increments are done
-+	 * in write-mode. Whereas, userfaultfd operations, which includes
-+	 * reading mmap_changing, is done under read-mode.
-+	 */
-+	struct rw_semaphore map_changing_lock;
- 	/* memory mappings are changing because of non-cooperative event */
- 	atomic_t mmap_changing;
- 	/* mm with one ore more vmas attached to this userfaultfd_ctx */
-@@ -113,22 +120,18 @@ extern int mfill_atomic_install_pte(pmd_t *dst_pmd,
- 				    unsigned long dst_addr, struct page *page,
- 				    bool newly_allocated, uffd_flags_t flags);
- 
--extern ssize_t mfill_atomic_copy(struct mm_struct *dst_mm, unsigned long dst_start,
-+extern ssize_t mfill_atomic_copy(struct userfaultfd_ctx *ctx, unsigned long dst_start,
- 				 unsigned long src_start, unsigned long len,
--				 atomic_t *mmap_changing, uffd_flags_t flags);
--extern ssize_t mfill_atomic_zeropage(struct mm_struct *dst_mm,
-+				 uffd_flags_t flags);
-+extern ssize_t mfill_atomic_zeropage(struct userfaultfd_ctx *ctx,
- 				     unsigned long dst_start,
--				     unsigned long len,
--				     atomic_t *mmap_changing);
--extern ssize_t mfill_atomic_continue(struct mm_struct *dst_mm, unsigned long dst_start,
--				     unsigned long len, atomic_t *mmap_changing,
--				     uffd_flags_t flags);
--extern ssize_t mfill_atomic_poison(struct mm_struct *dst_mm, unsigned long start,
--				   unsigned long len, atomic_t *mmap_changing,
--				   uffd_flags_t flags);
--extern int mwriteprotect_range(struct mm_struct *dst_mm,
--			       unsigned long start, unsigned long len,
--			       bool enable_wp, atomic_t *mmap_changing);
-+				     unsigned long len);
-+extern ssize_t mfill_atomic_continue(struct userfaultfd_ctx *ctx, unsigned long dst_start,
-+				     unsigned long len, uffd_flags_t flags);
-+extern ssize_t mfill_atomic_poison(struct userfaultfd_ctx *ctx, unsigned long start,
-+				   unsigned long len, uffd_flags_t flags);
-+extern int mwriteprotect_range(struct userfaultfd_ctx *ctx, unsigned long start,
-+			       unsigned long len, bool enable_wp);
- extern long uffd_wp_range(struct vm_area_struct *vma,
- 			  unsigned long start, unsigned long len, bool enable_wp);
- 
-diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index 9cc93cc1330b..74aad0831e40 100644
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -353,11 +353,11 @@ static pmd_t *mm_alloc_pmd(struct mm_struct *mm, unsigned long address)
-  * called with mmap_lock held, it will release mmap_lock before returning.
-  */
- static __always_inline ssize_t mfill_atomic_hugetlb(
-+					      struct userfaultfd_ctx *ctx,
- 					      struct vm_area_struct *dst_vma,
- 					      unsigned long dst_start,
- 					      unsigned long src_start,
- 					      unsigned long len,
--					      atomic_t *mmap_changing,
- 					      uffd_flags_t flags)
- {
- 	struct mm_struct *dst_mm = dst_vma->vm_mm;
-@@ -379,6 +379,7 @@ static __always_inline ssize_t mfill_atomic_hugetlb(
- 	 * feature is not supported.
+diff --git a/drivers/firewire/core-card.c b/drivers/firewire/core-card.c
+index 6ac5ff20a2fe..8aaa7fcb2630 100644
+--- a/drivers/firewire/core-card.c
++++ b/drivers/firewire/core-card.c
+@@ -429,7 +429,23 @@ static void bm_work(struct work_struct *work)
  	 */
- 	if (uffd_flags_mode_is(flags, MFILL_ATOMIC_ZEROPAGE)) {
-+		up_read(&ctx->map_changing_lock);
- 		mmap_read_unlock(dst_mm);
- 		return -EINVAL;
- 	}
-@@ -463,6 +464,7 @@ static __always_inline ssize_t mfill_atomic_hugetlb(
- 		cond_resched();
+ 	card->bm_generation = generation;
  
- 		if (unlikely(err == -ENOENT)) {
-+			up_read(&ctx->map_changing_lock);
- 			mmap_read_unlock(dst_mm);
- 			BUG_ON(!folio);
- 
-@@ -473,12 +475,13 @@ static __always_inline ssize_t mfill_atomic_hugetlb(
- 				goto out;
- 			}
- 			mmap_read_lock(dst_mm);
-+			down_read(&ctx->map_changing_lock);
- 			/*
- 			 * If memory mappings are changing because of non-cooperative
- 			 * operation (e.g. mremap) running in parallel, bail out and
- 			 * request the user to retry later
- 			 */
--			if (mmap_changing && atomic_read(mmap_changing)) {
-+			if (atomic_read(&ctx->mmap_changing)) {
- 				err = -EAGAIN;
- 				break;
- 			}
-@@ -501,6 +504,7 @@ static __always_inline ssize_t mfill_atomic_hugetlb(
- 	}
- 
- out_unlock:
-+	up_read(&ctx->map_changing_lock);
- 	mmap_read_unlock(dst_mm);
- out:
- 	if (folio)
-@@ -512,11 +516,11 @@ static __always_inline ssize_t mfill_atomic_hugetlb(
- }
- #else /* !CONFIG_HUGETLB_PAGE */
- /* fail at build time if gcc attempts to use this */
--extern ssize_t mfill_atomic_hugetlb(struct vm_area_struct *dst_vma,
-+extern ssize_t mfill_atomic_hugetlb(struct userfaultfd_ctx *ctx,
-+				    struct vm_area_struct *dst_vma,
- 				    unsigned long dst_start,
- 				    unsigned long src_start,
- 				    unsigned long len,
--				    atomic_t *mmap_changing,
- 				    uffd_flags_t flags);
- #endif /* CONFIG_HUGETLB_PAGE */
- 
-@@ -564,13 +568,13 @@ static __always_inline ssize_t mfill_atomic_pte(pmd_t *dst_pmd,
- 	return err;
- }
- 
--static __always_inline ssize_t mfill_atomic(struct mm_struct *dst_mm,
-+static __always_inline ssize_t mfill_atomic(struct userfaultfd_ctx *ctx,
- 					    unsigned long dst_start,
- 					    unsigned long src_start,
- 					    unsigned long len,
--					    atomic_t *mmap_changing,
- 					    uffd_flags_t flags)
- {
-+	struct mm_struct *dst_mm = ctx->mm;
- 	struct vm_area_struct *dst_vma;
- 	ssize_t err;
- 	pmd_t *dst_pmd;
-@@ -600,8 +604,9 @@ static __always_inline ssize_t mfill_atomic(struct mm_struct *dst_mm,
- 	 * operation (e.g. mremap) running in parallel, bail out and
- 	 * request the user to retry later
- 	 */
-+	down_read(&ctx->map_changing_lock);
- 	err = -EAGAIN;
--	if (mmap_changing && atomic_read(mmap_changing))
-+	if (atomic_read(&ctx->mmap_changing))
- 		goto out_unlock;
- 
- 	/*
-@@ -633,8 +638,8 @@ static __always_inline ssize_t mfill_atomic(struct mm_struct *dst_mm,
- 	 * If this is a HUGETLB vma, pass off to appropriate routine
- 	 */
- 	if (is_vm_hugetlb_page(dst_vma))
--		return  mfill_atomic_hugetlb(dst_vma, dst_start, src_start,
--					     len, mmap_changing, flags);
-+		return  mfill_atomic_hugetlb(ctx, dst_vma, dst_start,
-+					     src_start, len, flags);
- 
- 	if (!vma_is_anonymous(dst_vma) && !vma_is_shmem(dst_vma))
- 		goto out_unlock;
-@@ -693,6 +698,7 @@ static __always_inline ssize_t mfill_atomic(struct mm_struct *dst_mm,
- 		if (unlikely(err == -ENOENT)) {
- 			void *kaddr;
- 
-+			up_read(&ctx->map_changing_lock);
- 			mmap_read_unlock(dst_mm);
- 			BUG_ON(!folio);
- 
-@@ -723,6 +729,7 @@ static __always_inline ssize_t mfill_atomic(struct mm_struct *dst_mm,
- 	}
- 
- out_unlock:
-+	up_read(&ctx->map_changing_lock);
- 	mmap_read_unlock(dst_mm);
- out:
- 	if (folio)
-@@ -733,34 +740,33 @@ static __always_inline ssize_t mfill_atomic(struct mm_struct *dst_mm,
- 	return copied ? copied : err;
- }
- 
--ssize_t mfill_atomic_copy(struct mm_struct *dst_mm, unsigned long dst_start,
-+ssize_t mfill_atomic_copy(struct userfaultfd_ctx *ctx, unsigned long dst_start,
- 			  unsigned long src_start, unsigned long len,
--			  atomic_t *mmap_changing, uffd_flags_t flags)
-+			  uffd_flags_t flags)
- {
--	return mfill_atomic(dst_mm, dst_start, src_start, len, mmap_changing,
-+	return mfill_atomic(ctx, dst_start, src_start, len,
- 			    uffd_flags_set_mode(flags, MFILL_ATOMIC_COPY));
- }
- 
--ssize_t mfill_atomic_zeropage(struct mm_struct *dst_mm, unsigned long start,
--			      unsigned long len, atomic_t *mmap_changing)
-+ssize_t mfill_atomic_zeropage(struct userfaultfd_ctx *ctx,
-+			      unsigned long start,
-+			      unsigned long len)
- {
--	return mfill_atomic(dst_mm, start, 0, len, mmap_changing,
-+	return mfill_atomic(ctx, start, 0, len,
- 			    uffd_flags_set_mode(0, MFILL_ATOMIC_ZEROPAGE));
- }
- 
--ssize_t mfill_atomic_continue(struct mm_struct *dst_mm, unsigned long start,
--			      unsigned long len, atomic_t *mmap_changing,
--			      uffd_flags_t flags)
-+ssize_t mfill_atomic_continue(struct userfaultfd_ctx *ctx, unsigned long start,
-+			      unsigned long len, uffd_flags_t flags)
- {
--	return mfill_atomic(dst_mm, start, 0, len, mmap_changing,
-+	return mfill_atomic(ctx, start, 0, len,
- 			    uffd_flags_set_mode(flags, MFILL_ATOMIC_CONTINUE));
- }
- 
--ssize_t mfill_atomic_poison(struct mm_struct *dst_mm, unsigned long start,
--			    unsigned long len, atomic_t *mmap_changing,
--			    uffd_flags_t flags)
-+ssize_t mfill_atomic_poison(struct userfaultfd_ctx *ctx, unsigned long start,
-+			    unsigned long len, uffd_flags_t flags)
- {
--	return mfill_atomic(dst_mm, start, 0, len, mmap_changing,
-+	return mfill_atomic(ctx, start, 0, len,
- 			    uffd_flags_set_mode(flags, MFILL_ATOMIC_POISON));
- }
- 
-@@ -793,10 +799,10 @@ long uffd_wp_range(struct vm_area_struct *dst_vma,
- 	return ret;
- }
- 
--int mwriteprotect_range(struct mm_struct *dst_mm, unsigned long start,
--			unsigned long len, bool enable_wp,
--			atomic_t *mmap_changing)
-+int mwriteprotect_range(struct userfaultfd_ctx *ctx, unsigned long start,
-+			unsigned long len, bool enable_wp)
- {
-+	struct mm_struct *dst_mm = ctx->mm;
- 	unsigned long end = start + len;
- 	unsigned long _start, _end;
- 	struct vm_area_struct *dst_vma;
-@@ -820,8 +826,9 @@ int mwriteprotect_range(struct mm_struct *dst_mm, unsigned long start,
- 	 * operation (e.g. mremap) running in parallel, bail out and
- 	 * request the user to retry later
- 	 */
-+	down_read(&ctx->map_changing_lock);
- 	err = -EAGAIN;
--	if (mmap_changing && atomic_read(mmap_changing))
-+	if (atomic_read(&ctx->mmap_changing))
- 		goto out_unlock;
- 
- 	err = -ENOENT;
-@@ -850,6 +857,7 @@ int mwriteprotect_range(struct mm_struct *dst_mm, unsigned long start,
- 		err = 0;
- 	}
- out_unlock:
-+	up_read(&ctx->map_changing_lock);
- 	mmap_read_unlock(dst_mm);
- 	return err;
- }
+-	if (root_device == NULL) {
++	if (card->gap_count == 0) {
++		/*
++		 * If self IDs have inconsistent gap counts, do a
++		 * bus reset ASAP. The config rom read might never
++		 * complete, so don't wait for it. However, still
++		 * send a PHY configuration packet prior to the
++		 * bus reset. The PHY configuration packet might
++		 * fail, but 1394-2008 8.4.5.2 explicitly permits
++		 * it in this case, so it should be safe to try.
++		 */
++		new_root_id = local_id;
++		/*
++		 * We must always send a bus reset if the gap count
++		 * is inconsistent, so bypass the 5-reset limit.
++		 */
++		card->bm_retries = 0;
++	} else if (root_device == NULL) {
+ 		/*
+ 		 * Either link_on is false, or we failed to read the
+ 		 * config rom.  In either case, pick another root.
 -- 
-2.43.0.687.g38aa6559b0-goog
+2.43.0
 
