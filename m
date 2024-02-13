@@ -1,129 +1,152 @@
-Received: from forward500b.mail.yandex.net (forward500b.mail.yandex.net [178.154.239.144])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD0924B23;
-	Tue, 13 Feb 2024 09:56:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00EAD2BB03;
+	Tue, 13 Feb 2024 09:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707818186; cv=none; b=QI7nBdzTdNc4W0bA9jmM5hHsnvmhg/HKtoT/6Mk+y/tZUirFBIeCclB//pfVQ611ADmfF7v6xH9FzT8c58o77YDIlvvwYWCrkLXTnt6FAZ74wFdfDMe8h/q/aE3diqXcuKWLcwh26l9aMUT/sBRi8udWRZEXGW67LNluUaYk9tM=
+	t=1707818198; cv=none; b=NkvBj1BrSCpbRlMfHcd4mXtv9JtPYXGmY7T9tbMmaubbDPPX292w1W5CMW5FNyMS+aTJ++D1mzjBvbkhLFkoLRdq7VY0Lp5011YvXl7PRBKRqxNbQxYCBZ4DFwlO7oXtNsAzalIyXBPTeypD61B2PxFU1jm2BXjS59Dr6kxMuUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707818186; c=relaxed/simple;
-	bh=BNSX9WQo4fdZixPgrChnndimSE1LeUip7SbHQG3EiRk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lnVHOfnO/tsUVI4Dqx9fzVPhFcYxDlxJLDe7xuZgHe1Ld7yh54uLGNwD6EeINwBugvtkNZw1W36Tt2BL9uErg9apphFAj82+QqqWfQ50RFTi9oTJYxTD/7iT7t31xoNP/L1/fI9zk6scWUsKoD/hRAkc1QDXr2UYPgfZ6FdX6Yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me; spf=pass smtp.mailfrom=maquefel.me; dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b=tHSpq6lL; arc=none smtp.client-ip=178.154.239.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maquefel.me
+	s=arc-20240116; t=1707818198; c=relaxed/simple;
+	bh=vb+KBTnTSXAaZj4rUNtfS8bhDG7fD2FUJ5wHxmolX/E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fmgzXFa51Ne0/9oRsGdNgC0btrCLDyBdEoq/cFdGCMtAHiChlIs1XghMfLZt1sEpfbDI5GiO5OXfjt8nNsKygG7w+xJR4M5g8f6rjKoQPXUtZIARVbjZn+Vqlqjth8T2yaLCfucua95slO8wNXWUusNNIR0IF22QxQdVCzqxtpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJt5Is3z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="tHSpq6lL"
-Received: from mail-nwsmtp-smtp-production-main-91.myt.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-91.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:3019:0:640:a0d4:0])
-	by forward500b.mail.yandex.net (Yandex) with ESMTPS id 9CCD561154;
-	Tue, 13 Feb 2024 12:48:16 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-91.myt.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id Amja449YvOs0-Ohe7AJJt;
-	Tue, 13 Feb 2024 12:48:14 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail;
-	t=1707817694; bh=BNSX9WQo4fdZixPgrChnndimSE1LeUip7SbHQG3EiRk=;
-	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
-	b=tHSpq6lLbJRzMUl5S+AQdH+yFWqgLs5dAvYesqMe255xcZfmaDSgVPRqcA1r0bzrw
-	 TkfIPDSLR62NkdUlPI+s/lCQcEhokM08txNkwukmx6USimZGbDh66EHaLNxEHxEu27
-	 3BeQU0snEq2nQPzdmEknsfQ0A1hkYVGjcAylct3Y=
-Authentication-Results: mail-nwsmtp-smtp-production-main-91.myt.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
-Message-ID: <84444657b86c7a25ea2e6031ea85978917f33342.camel@maquefel.me>
-Subject: Re: [PATCH v7 00/39] ep93xx device tree conversion
-From: Nikita Shubin <nikita.shubin@maquefel.me>
-To: andy.shevchenko@gmail.com, Vinod Koul <vkoul@kernel.org>, Stephen Boyd
-	 <sboyd@kernel.org>
-Cc: Hartley Sweeten <hsweeten@visionengravers.com>, Alexander Sverdlin
- <alexander.sverdlin@gmail.com>, Russell King <linux@armlinux.org.uk>,
- Lukasz Majewski <lukma@denx.de>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring
- <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
- Vinod Koul <vkoul@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>,
- Guenter Roeck <linux@roeck-us.net>, Thierry Reding
- <thierry.reding@gmail.com>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
- <u.kleine-koenig@pengutronix.de>, Mark Brown <broonie@kernel.org>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>, Miquel Raynal
- <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, Vignesh
- Raghavendra <vigneshr@ti.com>, Damien Le Moal <dlemoal@kernel.org>, Sergey
- Shtylyov <s.shtylyov@omp.ru>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Ralf Baechle <ralf@linux-mips.org>,  "Wu,
- Aaron" <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>, Olof Johansson
- <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-pm@vger.kernel.org,  devicetree@vger.kernel.org,
- dmaengine@vger.kernel.org,  linux-watchdog@vger.kernel.org,
- linux-pwm@vger.kernel.org,  linux-spi@vger.kernel.org,
- netdev@vger.kernel.org, linux-mtd@lists.infradead.org, 
- linux-ide@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-sound@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Andy Shevchenko
- <andriy.shevchenko@intel.com>, Bartosz Golaszewski
- <bartosz.golaszewski@linaro.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski@linaro.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>
-Date: Tue, 13 Feb 2024 12:48:11 +0300
-In-Reply-To: <Zb_DfISgoNyTKWMp@surfacebook.localdomain>
-References: <20240118-ep93xx-v7-0-d953846ae771@maquefel.me>
-	 <Zb_DfISgoNyTKWMp@surfacebook.localdomain>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VJt5Is3z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B311C433F1;
+	Tue, 13 Feb 2024 09:56:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707818197;
+	bh=vb+KBTnTSXAaZj4rUNtfS8bhDG7fD2FUJ5wHxmolX/E=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VJt5Is3zeq/Zjfhdhjq8lEVPdZGh9L98WDNDPu7YIB/pra9bf1JMk+PkxRtLD72Gp
+	 mteiCp8/9APkYVFjHL3prsi4G+T3O/kR4aasJs7NxYovDHmx5aHQOP+3qDUjD92tOB
+	 Vjgw2uq3LJ77tCCvbEEOdYkY3ObnM0ABaKvIS3cAZSF1CrJwiUI79HYWUI5QUXY3kD
+	 cdf37TIDn/ZXNojU9QUqRlEFdMWp9Grs0c2n/GdVTHH1mu6AFk9B6VuAQP7EWsJPxh
+	 v6AXbU/kPsJj5dpXWOtVEuvYE4uZUwJ5Ve10QMBCCrpfX3SW1MGoxsNVITLP2LvVbM
+	 BWv8cg4PPfTqg==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Bill Metzenthen <billm@melbpc.org.au>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH] x86: math-emu: fix function cast warnings
+Date: Tue, 13 Feb 2024 10:56:18 +0100
+Message-Id: <20240213095631.454543-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Sun, 2024-02-04 at 19:03 +0200, andy.shevchenko@gmail.com wrote:
-> Thu, Jan 18, 2024 at 11:20:43AM +0300, Nikita Shubin kirjoitti:
-> > The goal is to recieve ACKs for all patches in series to merge it
-> > via Arnd branch.
-> >=20
-> > No major changes since last version (v6) all changes are cometic.
-> >=20
-> > Following patches require attention from Stephen Boyd, as they were
-> > converted to aux_dev as suggested:
-> >=20
-> > - ARM: ep93xx: add regmap aux_dev
-> > - clk: ep93xx: add DT support for Cirrus EP93xx
-> >=20
-> > Following patches require attention from Vinod Koul:
-> >=20
-> > - dma: cirrus: Convert to DT for Cirrus EP93xx
-> > - dma: cirrus: remove platform code
-> >=20
-> > Following patches are dropped:
-> > - dt-bindings: wdt: Add ts72xx (pulled requested by Wim Van
-> > Sebroeck)
-> >=20
-> > Big Thanks to Andy Shevchenko once again.
->=20
-> You're welcome!
->=20
+From: Arnd Bergmann <arnd@arndb.de>
 
-Thank you Andy!
+clang-16 warns about casting function pointers with incompatible
+prototypes. The x86 math-emu code does this in a number of places
+to call some trivial functions that need no arguments:
 
-> I have a few minor comments, I believe if you send a new version it
-> will be
-> final (at least from my p.o.v.).
->=20
+arch/x86/math-emu/fpu_etc.c:124:14: error: cast from 'void (*)(void)' to 'FUNC_ST0' (aka 'void (*)(struct fpu__reg *, unsigned char)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+  124 |         fchs, fabs, (FUNC_ST0) FPU_illegal, (FUNC_ST0) FPU_illegal,
+      |                     ^~~~~~~~~~~~~~~~~~~~~~
+arch/x86/math-emu/fpu_trig.c:1634:19: error: cast from 'void (*)(void)' to 'FUNC_ST0' (aka 'void (*)(struct fpu__reg *, unsigned char)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+ 1634 |         fxtract, fprem1, (FUNC_ST0) fdecstp, (FUNC_ST0) fincstp
+      |                          ^~~~~~~~~~~~~~~~~~
+arch/x86/math-emu/reg_constant.c:112:53: error: cast from 'void (*)(void)' to 'FUNC_RC' (aka 'void (*)(int)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+  112 |         fld1, fldl2t, fldl2e, fldpi, fldlg2, fldln2, fldz, (FUNC_RC) FPU_illegal
 
-Still waiting for some comment from Stephen Boyd and Vinod Koul on:
+Change the fdecstp() and fincstp() functions to actually have the correct
+prototypes based on the caller, and add wrappers around FPU_illegal()
+for adapting those.
 
-- ARM: ep93xx: add regmap aux_dev
-- clk: ep93xx: add DT support for Cirrus EP93xx
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/x86/math-emu/fpu_etc.c      | 9 +++++++--
+ arch/x86/math-emu/fpu_trig.c     | 6 +++---
+ arch/x86/math-emu/reg_constant.c | 7 ++++++-
+ 3 files changed, 16 insertions(+), 6 deletions(-)
 
-- dma: cirrus: Convert to DT for Cirrus EP93xx
-- dma: cirrus: remove platform code
-
-
-
-
+diff --git a/arch/x86/math-emu/fpu_etc.c b/arch/x86/math-emu/fpu_etc.c
+index 1b118fd93140..39423ec409e1 100644
+--- a/arch/x86/math-emu/fpu_etc.c
++++ b/arch/x86/math-emu/fpu_etc.c
+@@ -120,9 +120,14 @@ static void fxam(FPU_REG *st0_ptr, u_char st0tag)
+ 	setcc(c);
+ }
+ 
++static void FPU_ST0_illegal(FPU_REG *st0_ptr, u_char st0_tag)
++{
++	FPU_illegal();
++}
++
+ static FUNC_ST0 const fp_etc_table[] = {
+-	fchs, fabs, (FUNC_ST0) FPU_illegal, (FUNC_ST0) FPU_illegal,
+-	ftst_, fxam, (FUNC_ST0) FPU_illegal, (FUNC_ST0) FPU_illegal
++	fchs, fabs, FPU_ST0_illegal, FPU_ST0_illegal,
++	ftst_, fxam, FPU_ST0_illegal, FPU_ST0_illegal,
+ };
+ 
+ void FPU_etc(void)
+diff --git a/arch/x86/math-emu/fpu_trig.c b/arch/x86/math-emu/fpu_trig.c
+index 990d847ae902..85daf98c81c3 100644
+--- a/arch/x86/math-emu/fpu_trig.c
++++ b/arch/x86/math-emu/fpu_trig.c
+@@ -433,13 +433,13 @@ static void fxtract(FPU_REG *st0_ptr, u_char st0_tag)
+ #endif /* PARANOID */
+ }
+ 
+-static void fdecstp(void)
++static void fdecstp(FPU_REG *st0_ptr, u_char st0_tag)
+ {
+ 	clear_C1();
+ 	top--;
+ }
+ 
+-static void fincstp(void)
++static void fincstp(FPU_REG *st0_ptr, u_char st0_tag)
+ {
+ 	clear_C1();
+ 	top++;
+@@ -1631,7 +1631,7 @@ static void fscale(FPU_REG *st0_ptr, u_char st0_tag)
+ 
+ static FUNC_ST0 const trig_table_a[] = {
+ 	f2xm1, fyl2x, fptan, fpatan,
+-	fxtract, fprem1, (FUNC_ST0) fdecstp, (FUNC_ST0) fincstp
++	fxtract, fprem1, fdecstp, fincstp,
+ };
+ 
+ void FPU_triga(void)
+diff --git a/arch/x86/math-emu/reg_constant.c b/arch/x86/math-emu/reg_constant.c
+index 742619e94bdf..003a0b2753e6 100644
+--- a/arch/x86/math-emu/reg_constant.c
++++ b/arch/x86/math-emu/reg_constant.c
+@@ -108,8 +108,13 @@ static void fldz(int rc)
+ 
+ typedef void (*FUNC_RC) (int);
+ 
++static void FPU_RC_illegal(int unused)
++{
++	FPU_illegal();
++}
++
+ static FUNC_RC constants_table[] = {
+-	fld1, fldl2t, fldl2e, fldpi, fldlg2, fldln2, fldz, (FUNC_RC) FPU_illegal
++	fld1, fldl2t, fldl2e, fldpi, fldlg2, fldln2, fldz, FPU_RC_illegal
+ };
+ 
+ void fconst(void)
+-- 
+2.39.2
 
