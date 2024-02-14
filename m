@@ -1,113 +1,107 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 438F28527F
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 18:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2368527F;
+	Wed, 14 Feb 2024 18:12:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707934329; cv=none; b=bNE+sTfJ9sqgmiltbU9nnNBoMwoJrLHT3ELbBEiHErByn5y5+zzKBy+KhiGu2KNfSRtwgVBKOt1EYCCakUWXJMGuH5rRrUWbmvmI/00pPUja90dFPPMxfUKfW4hdJK20qPsL1O3pnMAnYxG639fuasBAax6HjvYka74MnZYPrhk=
+	t=1707934345; cv=none; b=a8nAHkS0C/RtklU7JapLvyuKtazpM+fS8DeyDbr7sNoFyvl12ug3NUBx/1uNie/3g2ZFIEEe6v/n+6uXd/iUuaCeEmmfhDiw+1k93/o6vt0kxOMvGaOvf6dG228Q9FYTII3laiomOefVDFer/WeSb0sH56jzL+SAq8GvnNoEv9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707934329; c=relaxed/simple;
-	bh=OE9ONYhRtt1RT9UxYhOGWQZAzy9csxc4vRQdMTFcZmE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sV/3uyMoIuNU6pDVgPcVOJgduuQMXAUYaxlzvDTKVdF+MgiQbms5/owF59OSS5uuQDiJp0wiTyn5PB1hWWUgjpuhTRECvJESRRQDC+vYJ6n6HX0XMxP2D4ZOPegrvuB2oxL4SXKenOr9GarhE0x/kI+4hN7EXHy2rBvqfMZq/PM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PSU0UOPZ; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1707934345; c=relaxed/simple;
+	bh=CDlqvcoUaaFjZ++J28H0zcJUMfv3V3DXrfQN3Lt2XuM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZibZ6OsMahw/W1jKdRiS4stn2APEQzz38KplYUvxv6eyxVUR8WbI0cmfylEaHUYmKHFPRst2Zch8StI+J8Bbd2GaL+GgOrbC350EDR1h6pUWOf/u1LSEDmOOPBChWBxLB8xE3edSB2+frdlwzHwh7HL9SXtN2q1ddtiaVUWd2mE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FhmO2/GB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PSU0UOPZ"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-68c431c6c91so506176d6.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 10:12:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707934325; x=1708539125; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OE9ONYhRtt1RT9UxYhOGWQZAzy9csxc4vRQdMTFcZmE=;
-        b=PSU0UOPZ9NlWZVaWaV04SwNGPWr91c8VwQpPIbQYsFzhvQSd0XngDiCSSn54Ab1LU2
-         36U06+osPCMF799tHgtOPeHi9Jus2qgofT2kNlGvWu5i0iFGT8o0Yk8p/pmBhRD0dahw
-         vEmPwKcgBj5fHXRxX9KCnCMdnukJKllrnemoU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707934325; x=1708539125;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OE9ONYhRtt1RT9UxYhOGWQZAzy9csxc4vRQdMTFcZmE=;
-        b=TQrk1rLeE0RzaMikVFlopS6CjvV3blz+HxVbcgtzJ6Oa4jwiSHciNzCQdxI9/vhWCb
-         dbKhSxwKOygy9pPpjEHBayeAfL/ABFKiu4awgs54Ve4ihJ7dtEphjaWmFxC1CSIBdM8f
-         uyAsIY43qRToQuLoza63mVGnjIrz5+wY5kO1v5cU2aIAkiGVQyLFE3BWw/w3tp/0pZc3
-         37WnO3lxQ6whhcIukeyhk2ca+c1FfVbgu0Nc1pY0t0BYguU4ERULsucN8C9wjFbRmu0n
-         38cikOpLnejFdOnhCgurehLBt1vCbCkrfrJONbV5fX29TTOStHKAAONcpXcn8464hDEr
-         Yabw==
-X-Forwarded-Encrypted: i=1; AJvYcCV3gIV2J4XUa4WZQVlYJcpX751IjRGgWVvQqFtwJP8g1eIJeYu2iT51btd/OLTRK4Vv2XwYXjtros2OGSj7UwBrOtz7L/5NrevuozIQ
-X-Gm-Message-State: AOJu0Yz+vOWaLIFFFDOBRD3JIStUiUISXtuoW7DVoMmIGEzUcHFIW6vx
-	ewVrMkJUwRDJMO9SKkTCh0E8oDePIzrm5NWE7Y/uqWwf6fdGXhfYhr9+u96nPUagB+W+3ru2abT
-	bqknrXwlyoHg1Rtn19A8rXfHY6yZGqWFGTHpK
-X-Google-Smtp-Source: AGHT+IEgrWvxXcraQzc1baiUPwiEzauqEskx3AucYV5QX8er4b9bpYzTMRyz2B2QxRzh4QRdmPCoEcLyLXCe6Vd4YFM=
-X-Received: by 2002:a05:6214:e82:b0:68c:da0a:10ef with SMTP id
- hf2-20020a0562140e8200b0068cda0a10efmr4022290qvb.57.1707934325206; Wed, 14
- Feb 2024 10:12:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FhmO2/GB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87DA1C433C7;
+	Wed, 14 Feb 2024 18:12:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707934344;
+	bh=CDlqvcoUaaFjZ++J28H0zcJUMfv3V3DXrfQN3Lt2XuM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FhmO2/GBR4pf1wnPFAUrJMYYOsp1eWlMvm9qhAcjmfPzxb0H7Nd8STbTB38vJc8BW
+	 /jPYSgEYnYxBmeAtTgMQHh/EJVBMmJryXTm/DbLiOBzTqPuXupLG6sWjwkE4Gb41m8
+	 zEvigiSmLlhOLmOl3uYM8r3m5Stb0rMs1hR+kDEAGkHVKtXklHpObmo7526vO4AfnA
+	 Y6GsRdd/T7IiO6BkyVSi/f7RBBwjyAKqKmb6vMxniPQXMHoxsOC2AwP8JFp1q89NXX
+	 XiPsT42i1Oy3jmB0xfSz0An6xDCKX6YGPaSSU+cjBMfdbZxFVjlTfjEAUgvNbSMPcq
+	 X6ARDw/uAme0w==
+Date: Wed, 14 Feb 2024 18:12:19 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Tim Lunn <tim@feathertop.org>
+Cc: Dragan Simic <dsimic@manjaro.org>, linux-rockchip@lists.infradead.org,
+	Andy Yan <andyshrk@163.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	David Heidelberg <david@ixit.cz>, Heiko Stuebner <heiko@sntech.de>,
+	Jagan Teki <jagan@edgeble.ai>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Ondrej Jirman <megi@xff.cz>, Rob Herring <robh+dt@kernel.org>,
+	Tianling Shen <cnsztl@gmail.com>, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] Fix vendor strings on Rockchip boards
+Message-ID: <20240214-moocher-womanless-21201b67b76d@spud>
+References: <20240214040731.3069111-1-tim@feathertop.org>
+ <c03220db663279c9e83bab81f3d829e7@manjaro.org>
+ <e952d127-b12d-4b5a-838b-807a876db707@feathertop.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240213130018.3029991-1-heikki.krogerus@linux.intel.com>
- <20240213130018.3029991-3-heikki.krogerus@linux.intel.com>
- <CACeCKadLKg89c8s68QD6VsqiKBMms6765O7mFFihqtET30pUyQ@mail.gmail.com>
- <ZcyUblecufzeso17@kuha.fi.intel.com> <CAAuZZi9h=d2_CM4tU4-H9wJfhLZbw99X2dGSddiCeDFDdb+kjw@mail.gmail.com>
- <ZcyrCosNDXxGZh9O@kuha.fi.intel.com>
-In-Reply-To: <ZcyrCosNDXxGZh9O@kuha.fi.intel.com>
-From: Prashant Malani <pmalani@chromium.org>
-Date: Wed, 14 Feb 2024 10:11:53 -0800
-Message-ID: <CACeCKacOFLKGCBTuFTVj+=W9C+rC++7DfzkG=M23i0Qh4qTOxA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] platform/chrome: cros_ec_typec: Make sure the USB
- role switch has PLD
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Emilie Roberts <hadrosaur@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
-	Guenter Roeck <groeck@chromium.org>, "Nyman, Mathias" <mathias.nyman@intel.com>, 
-	"Regupathy, Rajaram" <rajaram.regupathy@intel.com>, 
-	"Radjacoumar, Shyam Sundar" <ssradjacoumar@google.com>, Samuel Jacob <samjaco@google.com>, 
-	Uday Bhat <uday.m.bhat@intel.com>, linux-usb@vger.kernel.org, 
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="xM0QSn4CMXaJ9cxt"
+Content-Disposition: inline
+In-Reply-To: <e952d127-b12d-4b5a-838b-807a876db707@feathertop.org>
+
+
+--xM0QSn4CMXaJ9cxt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Heikki,
+On Wed, Feb 14, 2024 at 03:27:08PM +1100, Tim Lunn wrote:
+> Hi Dragan,
+>=20
+> On 2/14/24 15:14, Dragan Simic wrote:
+> > Hello Tim,
+> >=20
+> > On 2024-02-14 05:07, Tim Lunn wrote:
+> > > A couple of rockchip boards incorrectly list their vendor as Rockchip
+> > > when they are in fact not manufactured by Rockchip.
+> > >=20
+> > > Fix the vendor strings to correctly list the manufacturer
+> >=20
+> > Just checking, have you verified that the old, incorrect "compatible"
+> > strings from the board dts files aren't used anywhere in the kernel cod=
+e,
+> > such as in some drivers?
+> >=20
+> Yes I checked that, there are no remaining references to the old/incorrect
+> compatible strings in kernel code
 
-On Wed, Feb 14, 2024 at 3:59=E2=80=AFAM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
->
-> Hi Emilie,
->
-> On Wed, Feb 14, 2024 at 12:04:22PM +0100, Emilie Roberts wrote:
-> > My understanding is that this is related to the wiring spec and not
-> > ChromeOS specific. It seems possible that OEMs making non-ChromeOS devi=
-ces
-> > may have this same issue. Or are we certain that only Chromebooks will =
-ever
-> > see this?
->
-> Non-ChromeOS platforms do not have this issue.
->
-> The issue is with the ACPI tables - the USB role switch ACPI device
-> nodes don't have the _PLD object on these systems. Ideally this could
-> be fixed there by simply adding the _PLD to those ACPI device objects,
-> but I understood that that is not an option.
->
-> But maybe I misunderstood... Can the ACPI tables on these platforms
-> still be updated?
+What about other code? Like a BSD or a bootloader? If nothing is using
+them
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-Since it's just a _PLD update to, it should be possible to do a "light" fir=
-mware
-update on the relevant boards. Shyam/Emilie/Won, how practical is this?
+Fixes tags I think wouldn't go amiss, but I'm not expecting a resend
+with them.
 
-I'd much prefer this to be fixed properly in the ACPI table than relying
-on this quirk.
+Cheers,
+Conor.
 
-IAC, if we absolutely *have* to use this quirk:
-Acked-by: Prashant Malani <pmalani@chromium.org>
+--xM0QSn4CMXaJ9cxt
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZc0CgwAKCRB4tDGHoIJi
+0rnIAP4266uBVs8L2WyYwA8DkZLeNbpLCOsYZojqX3g8t5zn2QEAmlVsc/c21nrD
+IOXryV8IFMuPO4v9U4rwGrS6mo9QQQ4=
+=kr05
+-----END PGP SIGNATURE-----
+
+--xM0QSn4CMXaJ9cxt--
