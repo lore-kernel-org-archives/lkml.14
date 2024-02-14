@@ -1,88 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3413C1B813;
-	Wed, 14 Feb 2024 12:25:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6761B1B95C
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 12:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707913502; cv=none; b=db58AvSrT7m0YecBxKdl9LklxN5EGht3L7dd57fRSEyoO12eOVv7yFnaZKVhT7j1kg9imzlLnMivihZCoMKuf+HXv3+sEYSvKOyAi2rKcQnJU8bgvntsbxnDXi/h0lRI5YuLdjKx31P9sAysW21Sy0zQ9pQ/MNdKCJAVshIaNNo=
+	t=1707913566; cv=none; b=ZwqqPVEXXGSIl0xkFPDTeH7vPyebWNO4WjF63cZlV9anKPddYAU+oqDz5+a7CvFejEdmR1b1pqP28oIR2x+IPZNdygpA4PA7UEigtlKHlpirqTZDgYjX7VgqUloZ7+7EGwH4c6sEaCy4GyK+Oc1Q4erRU3EaiCgZkTCdAMH/z10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707913502; c=relaxed/simple;
-	bh=om12AIRXbhoBkX5ErV9iC57tbcp9qmnO+XHs8NR0XaA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pst2ZP/FPvYwsprb52cDBfog4IkNVroBsvoWQ+tHZOyg/vcWcfsGrMVFKkLO48yfF+vcSbnfwlodr2XL2bYyiwzf6O60SvyHVfxif/kyKwTOEs1+Hyk8nSg4wpQs6Ac8s8K/4MotID3cu0HDLrejUMAW1RYBAimDoDY0MpaB1po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sY+W//+o; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sY+W//+o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E18DDC433F1;
-	Wed, 14 Feb 2024 12:24:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707913501;
-	bh=om12AIRXbhoBkX5ErV9iC57tbcp9qmnO+XHs8NR0XaA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sY+W//+oR5pT+WqLTp1mUjOaDEV57w6AM2zyTU5R+puNv38dmMoH3d477WwuHMWCc
-	 Byzg4+kFesYaTSSssDgxb+3kjerABcZ2lY6PXSEIQE8Ag7sRhypfakz6Q8fTRn6Yok
-	 fzK4Cw9GnU+bUQrxxMnq9eJ9B2URNGFJbpEOC8xCHLyzw/1SsYyVAXsnK24PMJUsae
-	 rN9i3eNBbqJ1OePuJ7qeOah1liQQE6RbNN0+0uYBxP1iF8ow0YivnQZ9ZT5+kHFZnc
-	 juE1ksU1dgDn4v9IXyAHJ8M/sicz3YNjb+9nW1koJPEhZMeEmeYcy4VOdmLNsUvCno
-	 ZwlOG9l8DAwjA==
-Date: Wed, 14 Feb 2024 12:24:56 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Balakrishnan Sambath <balakrishnan.s@microchip.com>
-Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: sound:atmel-at91sam9g20ek: convert bindings
- to json-schema
-Message-ID: <aa707af2-b0ef-46de-83ae-584756d5569d@sirena.org.uk>
-References: <20240214-at91sam9g20ek-wm8731-yaml-v1-1-33333e17383b@microchip.com>
+	s=arc-20240116; t=1707913566; c=relaxed/simple;
+	bh=tkVUwxVXfVNVj/4bgUygoYgJAr6t6T2rJxt68o2zTmA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=rSl+GjbFwHvl1wbqGI5ykKhrVvNh3Ogba+dZ+UuXbh8L1yRnlVcO8df3A0gkEk1d/b3qtrGawDGmLfTqg950VspF6o1UD+6S9CUpX9MetgGEzXiWwsUhmFwq1SK2CoGM6qYlORh0J/uhjIn/EFJzf42FyrHMeDVsSmxkWM/7o9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-363dfc1a546so53624465ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 04:26:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707913564; x=1708518364;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kuRuKWD6XthRWvA/f/KGCLnGbWDHfKrqFO7OLr32afM=;
+        b=IgNfLBQGALJo0Ljzg4BvCA/Yteln0UFp/Uic+cwcUaA8y9fM+DcVz8rql/BbbP7gFT
+         8jr8lcK3OAOfG9K4vbzPbjW5tgKmv0L2ztm6Dhc0UK75Cxx2EddlT/9GYmIBRcfBKUcc
+         QjUQE4AW4+biPUeIWDG2n031190wiVDKlEYhArLrSYmIqaVp28ji8K/AH/vqWQ3Gtzth
+         ULY/XUQltKrwV0GP5ZZEF1X8hGOK8Rf1/hHt1rtCSmdEtlplg6exuWqmwigUo0cjmVqo
+         q13I4YYvyLHgXkr089bxpznYwesMdQK8kVh+fSm627UBW5UyNn5BQ3l73iwPiNTZCv3g
+         FV2g==
+X-Forwarded-Encrypted: i=1; AJvYcCVbVlV013j3uIQ9aWtAsyp82Rv/XMVjRLD+CxZXFUcTdugkuR07QhAiLtsKn7NY1Xd3TCG1/na5mt/Y3sWZLvvGf+cGa28QnsuRyZaU
+X-Gm-Message-State: AOJu0YyInd028mqO1qy0ekdK2C7Z1DAVroduE27+yA9rNR2LhDgpn7yC
+	nSLYXzWU7d7uA0f1tsM9dlVGVnrCBcI3yNja+8xi5ck20JTSF1PwYWx1mIx5opFnvccXyxjoVxX
+	r3paZetI/O9CcgBB5XkOvd1TY3q1IDUjAR6kw0/gOMhZf0OhnRgSXdtw=
+X-Google-Smtp-Source: AGHT+IGNe82YxvJ2ohDsPDZDFeLM7AS3nrLOqV1J8Ne04s93LixBM022c0i1KGzF3kzg2M1r1qRmGZChCEXe3+8U39zgn4g0ozNl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="s7rTl/oWJRMeE7uX"
-Content-Disposition: inline
-In-Reply-To: <20240214-at91sam9g20ek-wm8731-yaml-v1-1-33333e17383b@microchip.com>
-X-Cookie: Available while quantities last.
+X-Received: by 2002:a05:6e02:1ba8:b0:363:9d58:8052 with SMTP id
+ n8-20020a056e021ba800b003639d588052mr176077ili.2.1707913562636; Wed, 14 Feb
+ 2024 04:26:02 -0800 (PST)
+Date: Wed, 14 Feb 2024 04:26:02 -0800
+In-Reply-To: <20240214112230.185-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003557320611569d45@google.com>
+Subject: Re: [syzbot] [bluetooth?] WARNING in ida_free (2)
+From: syzbot <syzbot+dfab1425afcdae5ac970@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+Hello,
 
---s7rTl/oWJRMeE7uX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-On Wed, Feb 14, 2024 at 12:10:06PM +0530, Balakrishnan Sambath wrote:
-> Convert atmel-at91sam9g20ek-wm8731-audio DT binding to yaml
-> based json-schema.Change file name to match json-scheme naming.
+Reported-and-tested-by: syzbot+dfab1425afcdae5ac970@syzkaller.appspotmail.com
 
-Please submit patches using subject lines reflecting the style for the
-subsystem, this makes it easier for people to identify relevant patches.
-Look at what existing commits in the area you're changing are doing and
-make sure your subject lines visually resemble what they're doing.
-There's no need to resubmit to fix this alone.
+Tested on:
 
---s7rTl/oWJRMeE7uX
-Content-Type: application/pgp-signature; name="signature.asc"
+commit:         7e90b5c2 Merge tag 'trace-tools-v6.8-rc4' of git://git..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=175a2c52180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=df82262440d95bc4
+dashboard link: https://syzkaller.appspot.com/bug?extid=dfab1425afcdae5ac970
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=10d404a4180000
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXMsRcACgkQJNaLcl1U
-h9AUYQf+IoYLzVMnh8iw5Nit64An1Vh3KQ/uSzayMzfztETr+85K7EGJw6RuAuEF
-X9XXAgq5jPkq4VvN57Urd4ieIR4gajNsEoOk09cM3w7hYF0UNk8BcnX1LF/c4/JZ
-+ItbXiyPZUNXGjHwi4IEoMK1g0Og6Y0B7lSwTb+bYV0NYTu1LIZytwpYQEBeXRGY
-g5dm+0Hh0dzJ5yAT8zT7PyoxMaHmNB7lHU9v0RYtSVbj7lg836C3uI1TM8TllMMZ
-afjmEjNPP7I8eCI+X8NzorvWLi+e0CwHvI3SZnZoflcGhuxQGlGNPPtdeT2hmFq5
-hrT3azEJn0Olq8RI61G+QCJK9J8ziw==
-=dEZg
------END PGP SIGNATURE-----
-
---s7rTl/oWJRMeE7uX--
+Note: testing is done by a robot and is best-effort only.
