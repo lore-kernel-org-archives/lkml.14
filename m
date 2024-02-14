@@ -1,118 +1,414 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 567B55C5F6;
-	Wed, 14 Feb 2024 14:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B6185B020;
+	Wed, 14 Feb 2024 14:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707921399; cv=none; b=Ag2TdIJHmZ4uc+RQks39rJjzDXyeoK72pSD5sYI1dGGG3LheOiwWB8kfSFfiEhBsh1Lq4rd84g6d3Q/kQmDr++7O7aw5H6g92Amt0qvXogzZIGMoEZ3+DRntmY1HzFu1Cr+icstBXF6TSy4O604FHCD0e2XPfd42yq3CJD/SrKE=
+	t=1707921413; cv=none; b=ZK3tMULg9+PiVBXfZGgT54z0V26aRdfzzsFPnB7rrzJzQUzZG/0o/w83Vx+FrO7TRrhR6rtUyJS7HprM3UKHs7bR9qA5Cny2dM8PpSIdP/hZ7p3dVWxw1Y0bIr/8BmQBRUHE3sIpEgq0NvtPBGDmg+V6NzoJWocb0smuaqG1/KY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707921399; c=relaxed/simple;
-	bh=9s+3bWSnic4DE8OGfUz8obCTSG7tBE8fyRjkpHHqq/o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gF6T1MBVrpw26dByp2xKFUNFCcbaJLJZ9vtz7zVACB93llAASyWKYhG0Lewi0+iaBLeUO8PoHqBctR1oUWAhQm69QFPQMCvk1ZtH1c8W94iYF34k0wyTTqtRg2MdvTVO5w6PzBfrRLhA+hXgR7B1IoBtmY9wxPkNcDeSGFColdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6e1126f57f1so253272b3a.2;
-        Wed, 14 Feb 2024 06:36:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707921396; x=1708526196;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ieRFgVX+l5qNLg5VWXa9Hrv9zNfV92pS7+FucPfjsp8=;
-        b=TIn6iGB8ztOQMIJCtg7bls9/hfdwhL5nKJ4mTSgnahoN4DPkAYtB9Ny44lN1c30Lnz
-         MhRdswMstMSVBIPpS8IXy1b52kAVTvYkBymq5VBk26OUoG+BB+NzPOERQryO3cN5+6i6
-         tYrZnFS4fkb3awHJvp6EVK9CnOkgkWoZq+egJrsJIaOqEWEI4U90aQpg+SPuPEgur59w
-         fM1s5etn763y0c6vq8Q683xC0cnFLCjKwWjIQNqSclnu///tHgsPNliPkey0pA34KzU3
-         DqdoZ5QfxHxAai1Lw91z6cH0STnWuRllBJa5xAIOjkR1F4WtMukwYcfx3HXWKtRsutAx
-         y7AQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXU5wQ7h4awE2K4u3EdoXwVfN0iTriYIsOL4yqfwdvzD1/o5Y0ITyGvMaBo61uy9pr+EW3GtS/1GaRe+RivheVbai5uW2t3kqN/2x65ubIsLMc+xBDTZt4XtQOxrio1ShPXc8nGNUZvZ2vy51nN1hdYXpluySBMETdKPNkNyfg4QuBBqH+GUcqkiXhoOITnvcJjrW+3A+p09unzwk1QWIfKy0lMUymGmMn582CvXzEB+HM4+ROXr6YbyiEMUfLJN4hkUTpQ21cqBfvzhgLXgJB6eaVPS3WHyP2l0R8EL+K5EfCHIa0D6KqP09ojpUmdIBZRAGP3Ps6WbVABkU4s4cfTbQ==
-X-Gm-Message-State: AOJu0YznFu3p6BnZPrBY6N+HSQPzlRAt9wG11h1KZ47bpK168Y/ydT9P
-	vKe9Xr5U4nSTbu4T6weYMPoA+QZjCdOu4r5uILFHMFU6aURBwx3WPEQT0BcwnEE=
-X-Google-Smtp-Source: AGHT+IFFthSxEtonVcXe87bmhUo29Pvsbr76NaU5tedM998ASq+hhSiMEVbXD23MUhFikYczz43kMg==
-X-Received: by 2002:a62:cfc1:0:b0:6e0:9e95:b3f8 with SMTP id b184-20020a62cfc1000000b006e09e95b3f8mr2324722pfg.9.1707921395714;
-        Wed, 14 Feb 2024 06:36:35 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXiXj8laBX/0QpFfAU4AHfZrChi3AZvxbSiqzlknIyB0GjNrpDnP9OJpYeVZqli80RsNWDywVErwazZ9oH9+sK90qpRtHOpXS89vzIIsoBnAHvA90ftvO8uFHPfYiFPO5Ss0Om+6wBItmwQC/rGykolO4ytM0OqiFb4sXYTFkfc1N1YkmnkVSkpH7V2Q+F/0soF0Hjg+udc4goR9kb6nK3ZdkF2Jka71ipF4Ju6CiVFtSKqbXW8btVafOxRbiMzS71/z4Ev5/H3Q3xyP7mjD2H63r43A6hwdfFzN0YPh50fRitSP9wfFlZzWpMNcDWRMJMHZgcGXxjm3oYo5L7cdlgl8A==
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com. [209.85.214.169])
-        by smtp.gmail.com with ESMTPSA id a16-20020aa780d0000000b006e0825acbc3sm9321977pfn.77.2024.02.14.06.36.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Feb 2024 06:36:35 -0800 (PST)
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1db51e55023so6923745ad.1;
-        Wed, 14 Feb 2024 06:36:35 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWtmGx2z2ck1NE7BFwLs8WgYpa13xWvvwC1Yuyo9C6gcWyrXqUUk4tGlw5D675zE6oGRA9mIcz/HhoNGNsSS2QOYeKmvCorzzpsD7mkQ5mJikfjkk/dx5cy+7o5W39ecsRG8Md9UXejzkS4ikb4pJPphIuBVUddh5zvQZ/y/ScYi8A3+TjzEZbavf/9k4d2XBnyaDR+TJCy2eW2fXu2nXOgibu+C2xLs6APZ1h/ORaMxOUiw4VYIAscAtVjJJIlPC/2X8P8P+vqlHY5DefKyX2FfN05o4GPddY62Hj6+q4G11cbfyUyFucz/lG+R1RTZ28ACxG/JcrSmNd8dzgqOXmE8A==
-X-Received: by 2002:a25:8686:0:b0:dc7:4546:d107 with SMTP id
- z6-20020a258686000000b00dc74546d107mr2758581ybk.23.1707921374648; Wed, 14 Feb
- 2024 06:36:14 -0800 (PST)
+	s=arc-20240116; t=1707921413; c=relaxed/simple;
+	bh=F6yhBMq0IzV/A77mbJzu+P9ii37a1qqOqIehKOoSoKE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=BD6SLg1xJtTRykfeXlAxUmVSIp5kimKHjyZEZDaV8CsH2JW9WgUwLl42on2P91fmLvcrEg5ynsuNj8X0R53y1mPxNopGJetci/l3sswTNVhu/MTXnZzl0IdCBfThozCw4h7XUJ3iCAvJuWUSwAzSf891BuHk79I/h++6v4gJe7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.51])
+	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4TZgNq2pvGz9xvv5;
+	Wed, 14 Feb 2024 22:21:31 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id 9822F14086B;
+	Wed, 14 Feb 2024 22:36:41 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.204.63.22])
+	by APP1 (Coremail) with SMTP id LxC2BwDXgRrHz8xlZ55_Ag--.52204S5;
+	Wed, 14 Feb 2024 15:36:41 +0100 (CET)
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: corbet@lwn.net,
+	zohar@linux.ibm.com,
+	dmitry.kasatkin@gmail.com,
+	eric.snowberg@oracle.com,
+	paul@paul-moore.com,
+	jmorris@namei.org,
+	serge@hallyn.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-integrity@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	wufan@linux.microsoft.com,
+	pbrobinson@gmail.com,
+	zbyszek@in.waw.pl,
+	hch@lst.de,
+	mjg59@srcf.ucam.org,
+	pmatilai@redhat.com,
+	jannh@google.com,
+	dhowells@redhat.com,
+	jikos@kernel.org,
+	mkoutny@suse.com,
+	ppavlu@suse.com,
+	petr.vorel@gmail.com,
+	petrtesarik@huaweicloud.com,
+	mzerqung@0pointer.de,
+	kgold@linux.ibm.com,
+	Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [RFC][PATCH 3/8] ima: Add digest_cache policy keyword
+Date: Wed, 14 Feb 2024 15:35:19 +0100
+Message-Id: <20240214143525.2205481-4-roberto.sassu@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240214143525.2205481-1-roberto.sassu@huaweicloud.com>
+References: <20240214143525.2205481-1-roberto.sassu@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240213-arm-dt-cleanups-v1-0-f2dee1292525@kernel.org> <20240213-arm-dt-cleanups-v1-3-f2dee1292525@kernel.org>
-In-Reply-To: <20240213-arm-dt-cleanups-v1-3-f2dee1292525@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 14 Feb 2024 15:36:03 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXjJcsFiusnBQmJg1p-oy-NPmr+qyt0znOk0n+wL8TrnA@mail.gmail.com>
-Message-ID: <CAMuHMdXjJcsFiusnBQmJg1p-oy-NPmr+qyt0znOk0n+wL8TrnA@mail.gmail.com>
-Subject: Re: [PATCH 3/6] arm64: dts: Fix dtc interrupt_provider warnings
-To: Rob Herring <robh@kernel.org>
-Cc: soc@kernel.org, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Tsahee Zidenberg <tsahee@annapurnalabs.com>, Antoine Tenart <atenart@kernel.org>, 
-	Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@codeconstruct.com.au>, 
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Gregory Clement <gregory.clement@bootlin.com>, 
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
-	=?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Stefan Agner <stefan@agner.ch>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, 
-	Tony Lindgren <tony@atomide.com>, Chanho Min <chanho.min@lge.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	Linus Walleij <linusw@kernel.org>, Imre Kaloz <kaloz@openwrt.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, linux-arm-kernel@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, 
-	linux-tegra@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-omap@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:LxC2BwDXgRrHz8xlZ55_Ag--.52204S5
+X-Coremail-Antispam: 1UD129KBjvAXoW3ZFWxCF4xCFW5AryrZFyfXrb_yoW8Jw13Xo
+	Z3K39rGF48GFy3uayUCFnIyFW8W3yrGw1xJFnYqr98A3Z2vryUGasrWr1UZFy3ZF48XFZI
+	k3WxX3y8JFWkJas3n29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+	AaLaJ3UjIYCTnIWjp_UUUOI7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20EY4v20xva
+	j40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7IE14v26r1rM28IrcIa0x
+	kI8VCY1x0267AKxVW5JVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84AC
+	jcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr
+	1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxd
+	M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjx
+	v20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l
+	F7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2
+	IY04v7MxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
+	CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF
+	0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
+	CI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsG
+	vfC2KfnxnUUI43ZEXa7VUUbAw7UUUUU==
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQANBF1jj5pZHgAAsk
 
-On Tue, Feb 13, 2024 at 8:35=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
-:
-> The dtc interrupt_provider warning is off by default. Fix all the warning=
-s
-> so it can be enabled.
->
-> Signed-off-by: Rob Herring <robh@kernel.org>
+From: Roberto Sassu <roberto.sassu@huawei.com>
 
->  arch/arm64/boot/dts/renesas/ulcb-kf.dtsi            | 4 ++++
+Add the 'digest_cache=' policy keyword, to enable the usage of digest
+caches for specific IMA actions and purposes.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+At the moment, it accepts only 'content' as value, as digest caches can be
+only used only for measurement and appraisal of file content. In the
+future, it might be possible to use them for file metadata too.
 
-Gr{oetje,eeting}s,
+The 'digest_cache=' keyword can be specified for the subset of IMA hooks
+listed in ima_digest_cache_func_allowed().
 
-                        Geert
+POLICY_CHECK has been excluded for measurement, because policy changes must
+be visible in the IMA measurement list. For appraisal, instead, it might be
+useful to load custom policies in the initial ram disk (no security.ima
+xattr).
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Add the digest_cache_mask member to the ima_rule_entry structure, and set
+the flag IMA_DIGEST_CACHE_MEASURE_CONTENT if 'digest_cache=content' was
+specified for a measure rule, IMA_DIGEST_CACHE_APPRAISE_CONTENT for an
+appraise rule.
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Propagate the mask down to ima_match_policy() and ima_get_action(), so that
+process_measurement() can make the final decision on whether or not digest
+caches should be used to measure/appraise the file being evaluated.
+
+Since using digest caches changes the meaning of the IMA measurement list,
+which will include only digest lists and unknown files, enforce specifying
+'pcr=' with a non-standard value, when 'digest_cache=content' is specified
+in a measure rule.
+
+This removes the ambiguity on the meaning of the IMA measurement list.
+
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+---
+ Documentation/ABI/testing/ima_policy  |  5 +-
+ security/integrity/ima/ima.h          | 10 +++-
+ security/integrity/ima/ima_api.c      |  6 ++-
+ security/integrity/ima/ima_appraise.c |  2 +-
+ security/integrity/ima/ima_main.c     |  8 +--
+ security/integrity/ima/ima_policy.c   | 70 ++++++++++++++++++++++++++-
+ 6 files changed, 89 insertions(+), 12 deletions(-)
+
+diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
+index 22237fec5532..be045fb60530 100644
+--- a/Documentation/ABI/testing/ima_policy
++++ b/Documentation/ABI/testing/ima_policy
+@@ -29,7 +29,7 @@ Description:
+ 				 [obj_user=] [obj_role=] [obj_type=]]
+ 			option:	[digest_type=] [template=] [permit_directio]
+ 				[appraise_type=] [appraise_flag=]
+-				[appraise_algos=] [keyrings=]
++				[appraise_algos=] [keyrings=] [digest_cache=]
+ 		  base:
+ 			func:= [BPRM_CHECK][MMAP_CHECK][CREDS_CHECK][FILE_CHECK][MODULE_CHECK]
+ 				[FIRMWARE_CHECK]
+@@ -77,6 +77,9 @@ Description:
+ 			For example, "sha256,sha512" to only accept to appraise
+ 			files where the security.ima xattr was hashed with one
+ 			of these two algorithms.
++			digest_cache:= [content]
++			"content" means that the digest cache is used only
++			for file content measurement and/or appraisal.
+ 
+ 		  default policy:
+ 			# PROC_SUPER_MAGIC
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index c9140a57b591..deee56d99d6f 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -43,6 +43,10 @@ enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8, TPM_PCR10 = 10 };
+ 
+ #define NR_BANKS(chip) ((chip != NULL) ? chip->nr_allocated_banks : 0)
+ 
++/* Digest cache usage flags. */
++#define IMA_DIGEST_CACHE_MEASURE_CONTENT	0x0000000000000001
++#define IMA_DIGEST_CACHE_APPRAISE_CONTENT	0x0000000000000002
++
+ /* current content of the policy */
+ extern int ima_policy_flag;
+ 
+@@ -367,7 +371,8 @@ int ima_get_action(struct mnt_idmap *idmap, struct inode *inode,
+ 		   const struct cred *cred, u32 secid, int mask,
+ 		   enum ima_hooks func, int *pcr,
+ 		   struct ima_template_desc **template_desc,
+-		   const char *func_data, unsigned int *allowed_algos);
++		   const char *func_data, unsigned int *allowed_algos,
++		   u64 *digest_cache_mask);
+ int ima_must_measure(struct inode *inode, int mask, enum ima_hooks func);
+ int ima_collect_measurement(struct ima_iint_cache *iint, struct file *file,
+ 			    void *buf, loff_t size, enum hash_algo algo,
+@@ -398,7 +403,8 @@ int ima_match_policy(struct mnt_idmap *idmap, struct inode *inode,
+ 		     const struct cred *cred, u32 secid, enum ima_hooks func,
+ 		     int mask, int flags, int *pcr,
+ 		     struct ima_template_desc **template_desc,
+-		     const char *func_data, unsigned int *allowed_algos);
++		     const char *func_data, unsigned int *allowed_algos,
++		     u64 *digest_cache_mask);
+ void ima_init_policy(void);
+ void ima_update_policy(void);
+ void ima_update_policy_flags(void);
+diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
+index b37d043d5748..87e286ace43c 100644
+--- a/security/integrity/ima/ima_api.c
++++ b/security/integrity/ima/ima_api.c
+@@ -173,6 +173,7 @@ void ima_add_violation(struct file *file, const unsigned char *filename,
+  * @template_desc: pointer filled in if matched measure policy sets template=
+  * @func_data: func specific data, may be NULL
+  * @allowed_algos: allowlist of hash algorithms for the IMA xattr
++ * @digest_cache_mask: Actions and purposes for which digest cache is allowed
+  *
+  * The policy is defined in terms of keypairs:
+  *		subj=, obj=, type=, func=, mask=, fsmagic=
+@@ -190,7 +191,8 @@ int ima_get_action(struct mnt_idmap *idmap, struct inode *inode,
+ 		   const struct cred *cred, u32 secid, int mask,
+ 		   enum ima_hooks func, int *pcr,
+ 		   struct ima_template_desc **template_desc,
+-		   const char *func_data, unsigned int *allowed_algos)
++		   const char *func_data, unsigned int *allowed_algos,
++		   u64 *digest_cache_mask)
+ {
+ 	int flags = IMA_MEASURE | IMA_AUDIT | IMA_APPRAISE | IMA_HASH;
+ 
+@@ -198,7 +200,7 @@ int ima_get_action(struct mnt_idmap *idmap, struct inode *inode,
+ 
+ 	return ima_match_policy(idmap, inode, cred, secid, func, mask,
+ 				flags, pcr, template_desc, func_data,
+-				allowed_algos);
++				allowed_algos, digest_cache_mask);
+ }
+ 
+ static bool ima_get_verity_digest(struct ima_iint_cache *iint,
+diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
+index 3497741caea9..27ccc9a2c09f 100644
+--- a/security/integrity/ima/ima_appraise.c
++++ b/security/integrity/ima/ima_appraise.c
+@@ -81,7 +81,7 @@ int ima_must_appraise(struct mnt_idmap *idmap, struct inode *inode,
+ 	security_current_getsecid_subj(&secid);
+ 	return ima_match_policy(idmap, inode, current_cred(), secid,
+ 				func, mask, IMA_APPRAISE | IMA_HASH, NULL,
+-				NULL, NULL, NULL);
++				NULL, NULL, NULL, NULL);
+ }
+ 
+ static int ima_fix_xattr(struct dentry *dentry, struct ima_iint_cache *iint)
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index 18285fc8ac07..e3ca80098c4c 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -232,7 +232,7 @@ static int process_measurement(struct file *file, const struct cred *cred,
+ 	 */
+ 	action = ima_get_action(file_mnt_idmap(file), inode, cred, secid,
+ 				mask, func, &pcr, &template_desc, NULL,
+-				&allowed_algos);
++				&allowed_algos, NULL);
+ 	violation_check = ((func == FILE_CHECK || func == MMAP_CHECK ||
+ 			    func == MMAP_CHECK_REQPROT) &&
+ 			   (ima_policy_flag & IMA_MEASURE));
+@@ -489,11 +489,11 @@ static int ima_file_mprotect(struct vm_area_struct *vma, unsigned long reqprot,
+ 	inode = file_inode(vma->vm_file);
+ 	action = ima_get_action(file_mnt_idmap(vma->vm_file), inode,
+ 				current_cred(), secid, MAY_EXEC, MMAP_CHECK,
+-				&pcr, &template, NULL, NULL);
++				&pcr, &template, NULL, NULL, NULL);
+ 	action |= ima_get_action(file_mnt_idmap(vma->vm_file), inode,
+ 				 current_cred(), secid, MAY_EXEC,
+ 				 MMAP_CHECK_REQPROT, &pcr, &template, NULL,
+-				 NULL);
++				 NULL, NULL);
+ 
+ 	/* Is the mmap'ed file in policy? */
+ 	if (!(action & (IMA_MEASURE | IMA_APPRAISE_SUBMASK)))
+@@ -972,7 +972,7 @@ int process_buffer_measurement(struct mnt_idmap *idmap,
+ 		security_current_getsecid_subj(&secid);
+ 		action = ima_get_action(idmap, inode, current_cred(),
+ 					secid, 0, func, &pcr, &template,
+-					func_data, NULL);
++					func_data, NULL, NULL);
+ 		if (!(action & IMA_MEASURE) && !digest)
+ 			return -ENOENT;
+ 	}
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index 7cfd1860791f..4ac83df8d255 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -122,6 +122,7 @@ struct ima_rule_entry {
+ 	struct ima_rule_opt_list *keyrings; /* Measure keys added to these keyrings */
+ 	struct ima_rule_opt_list *label; /* Measure data grouped under this label */
+ 	struct ima_template_desc *template;
++	u64 digest_cache_mask;	/* Actions and purposes for which digest cache is allowed */
+ };
+ 
+ /*
+@@ -726,6 +727,7 @@ static int get_subaction(struct ima_rule_entry *rule, enum ima_hooks func)
+  * @template_desc: the template that should be used for this rule
+  * @func_data: func specific data, may be NULL
+  * @allowed_algos: allowlist of hash algorithms for the IMA xattr
++ * @digest_cache_mask: Actions and purposes for which digest cache is allowed
+  *
+  * Measure decision based on func/mask/fsmagic and LSM(subj/obj/type)
+  * conditions.
+@@ -738,7 +740,8 @@ int ima_match_policy(struct mnt_idmap *idmap, struct inode *inode,
+ 		     const struct cred *cred, u32 secid, enum ima_hooks func,
+ 		     int mask, int flags, int *pcr,
+ 		     struct ima_template_desc **template_desc,
+-		     const char *func_data, unsigned int *allowed_algos)
++		     const char *func_data, unsigned int *allowed_algos,
++		     u64 *digest_cache_mask)
+ {
+ 	struct ima_rule_entry *entry;
+ 	int action = 0, actmask = flags | (flags << 1);
+@@ -783,6 +786,9 @@ int ima_match_policy(struct mnt_idmap *idmap, struct inode *inode,
+ 		if (template_desc && entry->template)
+ 			*template_desc = entry->template;
+ 
++		if (digest_cache_mask)
++			*digest_cache_mask |= entry->digest_cache_mask;
++
+ 		if (!actmask)
+ 			break;
+ 	}
+@@ -859,6 +865,30 @@ static int ima_appraise_flag(enum ima_hooks func)
+ 	return 0;
+ }
+ 
++static bool ima_digest_cache_func_allowed(struct ima_rule_entry *entry)
++{
++	switch (entry->func) {
++	case NONE:
++	case FILE_CHECK:
++	case MMAP_CHECK:
++	case MMAP_CHECK_REQPROT:
++	case BPRM_CHECK:
++	case CREDS_CHECK:
++	case FIRMWARE_CHECK:
++	case POLICY_CHECK:
++	case MODULE_CHECK:
++	case KEXEC_KERNEL_CHECK:
++	case KEXEC_INITRAMFS_CHECK:
++		/* Exception: always add policy updates to measurement list! */
++		if (entry->action == MEASURE && entry->func == POLICY_CHECK)
++			return false;
++
++		return true;
++	default:
++		return false;
++	}
++}
++
+ static void add_rules(struct ima_rule_entry *entries, int count,
+ 		      enum policy_rule_list policy_rule)
+ {
+@@ -1073,7 +1103,7 @@ enum policy_opt {
+ 	Opt_digest_type,
+ 	Opt_appraise_type, Opt_appraise_flag, Opt_appraise_algos,
+ 	Opt_permit_directio, Opt_pcr, Opt_template, Opt_keyrings,
+-	Opt_label, Opt_err
++	Opt_label, Opt_digest_cache, Opt_err
+ };
+ 
+ static const match_table_t policy_tokens = {
+@@ -1122,6 +1152,7 @@ static const match_table_t policy_tokens = {
+ 	{Opt_template, "template=%s"},
+ 	{Opt_keyrings, "keyrings=%s"},
+ 	{Opt_label, "label=%s"},
++	{Opt_digest_cache, "digest_cache=%s"},
+ 	{Opt_err, NULL}
+ };
+ 
+@@ -1245,6 +1276,18 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
+ 	if (entry->action != MEASURE && entry->flags & IMA_PCR)
+ 		return false;
+ 
++	/* New-style measurements with digest cache cannot be on default PCR. */
++	if (entry->action == MEASURE &&
++	    (entry->digest_cache_mask & IMA_DIGEST_CACHE_MEASURE_CONTENT)) {
++		if (!(entry->flags & IMA_PCR) ||
++		    entry->pcr == CONFIG_IMA_MEASURE_PCR_IDX)
++			return false;
++	}
++
++	/* Digest caches can be used only for a subset of the IMA hooks. */
++	if (entry->digest_cache_mask && !ima_digest_cache_func_allowed(entry))
++		return false;
++
+ 	if (entry->action != APPRAISE &&
+ 	    entry->flags & (IMA_DIGSIG_REQUIRED | IMA_MODSIG_ALLOWED |
+ 			    IMA_CHECK_BLACKLIST | IMA_VALIDATE_ALGOS))
+@@ -1881,6 +1924,26 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+ 						 &(template_desc->num_fields));
+ 			entry->template = template_desc;
+ 			break;
++		case Opt_digest_cache:
++			ima_log_string(ab, "digest_cache", args[0].from);
++
++			result = -EINVAL;
++
++			if (!strcmp(args[0].from, "content")) {
++				switch (entry->action) {
++				case MEASURE:
++					entry->digest_cache_mask |= IMA_DIGEST_CACHE_MEASURE_CONTENT;
++					result = 0;
++					break;
++				case APPRAISE:
++					entry->digest_cache_mask |= IMA_DIGEST_CACHE_APPRAISE_CONTENT;
++					result = 0;
++					break;
++				default:
++					break;
++				}
++			}
++			break;
+ 		case Opt_err:
+ 			ima_log_string(ab, "UNKNOWN", p);
+ 			result = -EINVAL;
+@@ -2271,6 +2334,9 @@ int ima_policy_show(struct seq_file *m, void *v)
+ 		seq_puts(m, "digest_type=verity ");
+ 	if (entry->flags & IMA_PERMIT_DIRECTIO)
+ 		seq_puts(m, "permit_directio ");
++	if ((entry->digest_cache_mask & IMA_DIGEST_CACHE_MEASURE_CONTENT) ||
++	    (entry->digest_cache_mask & IMA_DIGEST_CACHE_APPRAISE_CONTENT))
++		seq_puts(m, "digest_cache=content ");
+ 	rcu_read_unlock();
+ 	seq_puts(m, "\n");
+ 	return 0;
+-- 
+2.34.1
+
