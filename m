@@ -1,89 +1,72 @@
-Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE66C1A731;
-	Wed, 14 Feb 2024 11:53:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F6018C38
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 11:55:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707911641; cv=none; b=ZbcBBlhGV6mPrwaS4CjTdt0Pz1X3f7za34uWclSnIkV2t/8rcQl76SBHIUuV+zDidrUzVh2vD1tpHNLYJDG0jTKPDSq8hAKylyfkWAQ3AVLhY9FWcRcWSNY2W94q73zsVDXB/DJ6SCVp+MnrMJx6zpUFcsDdawnAuvMfvejqYck=
+	t=1707911706; cv=none; b=C7qvFNLqoCiGOuAikagy0CCUTg0jwZpYt5NFO2lzbvUpA8cEFAaG5xvdeNJ15kfzNG35cc0UqwvQ6p9Gi4JjtcsUHzO+Z1adedzByE5f0f43KbDCA5T5SPjZv1Be3lXWgkJjl8RdHmShMUN5pOWn5FBhzFCkomK+X2bU5n5d/VA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707911641; c=relaxed/simple;
-	bh=LFUX736l+7oaDPiQ2/cv39/GG0ZlZG8uOJDxPrD37K8=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=H0+pn9yA6DCaiUFKOEAObD4jDzlvQ6Z8qaAl6JDtEGOwKqH8BeSAdYTBXn3ieVsmm1tv+CRUrRjrubY9f3g7Fw95sD7sySY+bRthbCCMTVu7eFogjT4TvbpKlnKHjfL5SDjeeONz3Y14jW/qjVqc59Kp+/kEV2NvsNYHSfMfi/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=aVkV5/HB; arc=none smtp.client-ip=162.62.58.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="aVkV5/HB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1707911333;
-	bh=IqPj++hQCse/aDWWpJcJlHZJY5uyB9Px2Kbm49ONQoc=;
-	h=From:To:Cc:Subject:Date;
-	b=aVkV5/HBAWwPs9tLeMOOXoiVqmbnSLFx34FxinJHKYCkw2zFIxZKyi8XaKycazmS7
-	 Igqs9uCw1NKzKtISrZ1x5KSkX2mjnoSMTj/2YBr8mNuXQ0YF9W4uJyILyI9oaLmMQY
-	 TvI5m0zW59O2I13PY5+goWCpDhB2PUW/U8yxkYKc=
-Received: from localhost.localdomain ([139.211.127.19])
-	by newxmesmtplogicsvrszc5-1.qq.com (NewEsmtp) with SMTP
-	id A1B82E12; Wed, 14 Feb 2024 19:40:27 +0800
-X-QQ-mid: xmsmtpt1707910827tfu4md7a0
-Message-ID: <tencent_3EA07E65C43816C2A8402DC655CF98916B06@qq.com>
-X-QQ-XMAILINFO: NS/uTgoT3J9SWA7aNgfb6rApnx0CFnZCTxhlJ+RAzui6Tkkknh7/AianrenGJo
-	 pJTQpGG0VgzGGnZt2ulNWNg+4B0uGmWFJJ+BrVgcqFbcotaAZlMSfnlLuP+Rpz5mG9HV08yXBRZ7
-	 WSKuQZBCccGxHQO15Pew40RSvRdnJpn2CO+gNs+euVHbNv5lCuhGkCE38bH+GBHjKbuCUgXm+fzi
-	 6qxLOGsVBXhapJsUwKQ2PsF7ZvFMjKyZEA2o+eG2bH63X94McYIgh+ctIFgR+YgwCl1+atRONHYh
-	 x8cK9R7S9mMUS7G5KfsRyP5SoJn2hkFN+mvqby1CwO3mrZNHsFOU9ITJYCJI6ydbKEn+7Y8CHny7
-	 8EbkeelsWuwKXJ4J5tImuQMmKvAWtNMxzcpfWy0pN2EbswNxm9w+TQd+ZTjzKnkASG0Kk6uW6/S5
-	 TH/4I1mlR2qjPZmaIZZIEesIMH+rIox1x1XcWt6tUkD2mS+vBrEV6QDv17Q16a0+b4Y3W7Mf3vQl
-	 tFmyQ4k6IWGUhi6KSY0LkqsF++KpfnFmG3MLFv8/hgtUhEgSFWA0YLX1cySev5xsMJ6vNizPgZoY
-	 3oD7hEPbOhUq+A0aDln4/Q5cee7o3lgMU4FpMVeGIXrXF5eyAiebDmgFf65HNrJc6ATShjcj/WJ/
-	 PTx00LXWnSw+/LGJg86+vEdjbfDZzNdmSApFTrtQJn2RxqLM1YkVcTlk1CQGbCAv6z2253PeP9bY
-	 o47qZw86lhQFTaj3SxSZCAijq6G5ZYbe0TCnlw2LAWqKb+YaxUUatchCUD59bUDQnODGzphDPVVH
-	 EGjnNDQuDGCroefTpvQV6GdR0KErdD2GO0g3x5mPiM3ANfuZCJbEHVtXFWq8AxdvqZG2InrVaUJ+
-	 Fya/kTUQXYO1bpM24lAFyY+uLs1hZ0m7zEUyiXlzmQwI5vKVUZHeGTxlSLPWR8k3uH5DzlgDfZKw
-	 q6ZlkGgTyp32BoYfJqf+eIoxXRN+axXO69N1qOKIyISGBSuqzbjfM0o6GINluD
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-From: "Ran.Park" <ranpark@foxmail.com>
-To: akinobu.mita@gmail.com,
-	corbet@lwn.net,
-	skhan@linuxfoundation.org
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linuxfoundation.org,
-	"Ran.Park" <ranpark@foxmail.com>
-Subject: [PATCH] Fixed case issue with 'fault-injection' in documentation
-Date: Wed, 14 Feb 2024 19:40:08 +0800
-X-OQ-MSGID: <20240214114008.17986-1-ranpark@foxmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1707911706; c=relaxed/simple;
+	bh=tcUbq9dyZkkpaVKaFLPcmPgwJDGN2R6PI8sl+6Wbj8A=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=UsoLnNlm4JnY3rX8ttmXE8Hhrjl5NCw74sL5CCUdp5qGFkTLaLujFX4OF9N67KjS4BjeRLrn8mGWxOyzfEpXm85EpOwyHL3Db0ekRo7igbh1rPVbU6lNDvsxBjv+zwDKrT5EamtCS9FFTzBqdJRa7U0AgY20dlH8mhd+kueQiaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-364278061caso10968155ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 03:55:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707911704; x=1708516504;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=s+t3HPEqElybihqqYbhKiluFg2SoyKB29KV1I8eSe+k=;
+        b=i1qT/aEjrcsZ7Yk/8UPxB3gPmUxulWjcbLLZYTcNLduwrxpiftMCavNkZzTSMMhy9H
+         hZXSt5MYzQAjh3twGNQ37FfY1mBJJu0OZZgM85NZcBdzRrBECTnmQF2asCI7yzbCDyFH
+         Bu8MmRc8T1uZP68LRxPWL5lW+PoZdkGaEsTt3G7w9eWgddTuS9LsDwR28AIiokwRut9H
+         jWscYa3CsBTTvz6k12Pp72/Pe73yrBYFubbd95GXyGz3BZvv4CZh/yVI4cSRBaTUFsdW
+         0qgyrJS5y3ILlMFREqtBp45qujfPu0D6t0rkPeM+khs0XC9Shk7UFaALckVJmQqMVsat
+         jOjg==
+X-Forwarded-Encrypted: i=1; AJvYcCVi8PAsn2g+hBELGTRmjGYFws3quOvwnb6F1u8G1xOUdu9pt5ZR6bKStcgrbm4NCcVbUdhq7qHvHXr82v0MJOR9Qtyy8rfVs4fbrnpX
+X-Gm-Message-State: AOJu0YyY3CyzYcYEKfNhkcSTomOcAjtKFxslEtNKx5SqrGlMDr6uUR9s
+	lpGmAGSv9qgpuTskUiqa3KZ8NFai2dvguuTPa/HBy/eEhLIOzYHfX2c/7qRgY6BC1Y1h6bXmi4e
+	UG9xnz1ytB/q0eJuMIjS2Jn8re/Z+ePmj4cRZ0+CRfumQxD3+wRLAovI=
+X-Google-Smtp-Source: AGHT+IHrrmRCThSQvCIs9/0bi7IBCR2XvLDAtEOyqvrqcBzhpwhxDz/cYJqulQlLyovyFGxdpYQseqL0pB88M80bp4KTLV2m4JRR
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1aa7:b0:363:bc70:f1b1 with SMTP id
+ l7-20020a056e021aa700b00363bc70f1b1mr190967ilv.2.1707911704572; Wed, 14 Feb
+ 2024 03:55:04 -0800 (PST)
+Date: Wed, 14 Feb 2024 03:55:04 -0800
+In-Reply-To: <20240214111856.168-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000757b5e0611562e3f@google.com>
+Subject: Re: [syzbot] [dri?] KASAN: slab-use-after-free Read in
+ drm_atomic_helper_wait_for_vblanks (2)
+From: syzbot <syzbot+0f999d26a4fd79c3a23b@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-In the 'fault-injection' subdirectory, the first letter F
-is capitalized, whereas in index.rst f is lowercase, but in
-index.rst all other elements in the same column are capitalized.
+Hello,
 
-Signed-off-by: Ran.Park <ranpark@foxmail.com>
----
- Documentation/fault-injection/index.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-diff --git a/Documentation/fault-injection/index.rst b/Documentation/fault-injection/index.rst
-index 8408a8a91b34..a6ea1d190222 100644
---- a/Documentation/fault-injection/index.rst
-+++ b/Documentation/fault-injection/index.rst
-@@ -1,7 +1,7 @@
- .. SPDX-License-Identifier: GPL-2.0
- 
- ===============
--fault-injection
-+Fault-injection
- ===============
- 
- .. toctree::
--- 
-2.34.1
+Reported-and-tested-by: syzbot+0f999d26a4fd79c3a23b@syzkaller.appspotmail.com
 
+Tested on:
+
+commit:         7e90b5c2 Merge tag 'trace-tools-v6.8-rc4' of git://git..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=1790f698180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=df82262440d95bc4
+dashboard link: https://syzkaller.appspot.com/bug?extid=0f999d26a4fd79c3a23b
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=12fa241c180000
+
+Note: testing is done by a robot and is best-effort only.
