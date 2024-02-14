@@ -1,107 +1,287 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C574171A6;
-	Wed, 14 Feb 2024 10:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4158E17C61;
+	Wed, 14 Feb 2024 10:14:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707905623; cv=none; b=BqDovX10X5svJk+3lz03aoGQB+Ehep4aMPlq+sy69mJVhPCmFiE5A7Fz6OErCpa++8XQtdCTqOQaDZ7hLwz0oczT78PEwX8+hGun1SyQGocWynIFos0qbefTzAikcfvQiUjadPjoFWrZgvAcoH0n+1sJUazkc4GW9ZEtb2BX03M=
+	t=1707905654; cv=none; b=COelZoisXrT10aLDYdlNL/qNibyiTG/y1d81DyUh4fc07VJ74xmD4Lhw+KD6scf6zhapVQn1MSWkDs+PO5+c3wih37F114ihFznzv9U7qGWjaqzajYq7WAimjnAma0LbPskZD5ZlD3h0ciVpKpQtGQCj4TUqrcQ1mREvqklirjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707905623; c=relaxed/simple;
-	bh=zrB91wqBVkDC4s3OV3Y4T12bjoCXJSwWKQnWpDHyY1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HpmSzEWpIlkB1VVBIrZRs3SS2JMFay+tw5RW4WMjDYlDm0tiUe5fW1WUFEnJ5zfttVO5DkwZ52EJEB+K4rTcyXCiYLFGdJzmTM3QLoPw97uhZ2M3jiZk/eVqsdVmyhPWOAFpUxyVPnHDmVMaksf1LArAVPv/dkl6pw4581A5Lrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=dfPOhhPg; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1707905654; c=relaxed/simple;
+	bh=AkK8H6K5JsX3fPqhL9edm6tVElqq/qDa1tKSAyvAosE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=A6OAutU9YeZpMivsqy7Ry0XdtEMN2HY2h+m96K4Z50sbhMm9Go1cmKn8YrdJN3cva2ePalL/TKawPffziDmsJ9GMRH99UBPUz52N8GBWkUzsa0NyAMpZbYCikCJy41zsDuhNg/SBAn8eCDbwA4R9ytnGnVG6LPTecISo2McG5N8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bzgcSofK; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="dfPOhhPg"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4TZYtn2Pyrz9t7V;
-	Wed, 14 Feb 2024 11:13:37 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1707905617;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tukJiiXHxlnAZSRWrSKvYIrOKtvtQgT2kcRjC7iKjgc=;
-	b=dfPOhhPgpRh5rz/wIjBRF7DEF9ooEVW/TGmRGGvvJ4bRRbD9VBVGgWZsqHQyL2FAeBmbXr
-	5kbQJlEP3G/FafnxH5LXfzU27cCWvRQFUhqCoBvFjv82vo9jted1y5DLLtdMLy7a2uD+z3
-	1jYQfuGoLgxe5uVOZYbI0bpXYXls+9eNl/QUhBYcSyYp+6niCpZ9wxx0XPbW7vwaa7K5Q5
-	9jPcNdvmGXtVYZftGaVdO3XyKKJ2Lu7hM8lC8/PA3CZpyUm97CwfMUJOBI+O5lXl+1OADF
-	rnMpXX0+1KTzd851/9R0okrIHkxPOvxcbgEcr+oGS1AVeyAkn7cOpTKoFm8lxg==
-Date: Wed, 14 Feb 2024 11:13:31 +0100
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: Dave Chinner <david@fromorbit.com>
-Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	mcgrof@kernel.org, gost.dev@samsung.com, akpm@linux-foundation.org, 
-	kbusch@kernel.org, djwong@kernel.org, chandan.babu@oracle.com, p.raghav@samsung.com, 
-	linux-kernel@vger.kernel.org, hare@suse.de, willy@infradead.org, linux-mm@kvack.org
-Subject: Re: [RFC v2 03/14] filemap: use mapping_min_order while allocating
- folios
-Message-ID: <n7v4b4q6kyhwvbm66x4xvg7r6ttdqegikc7thf4o35vcff6mew@kjjh5db7tnc4>
-References: <20240213093713.1753368-1-kernel@pankajraghav.com>
- <20240213093713.1753368-4-kernel@pankajraghav.com>
- <ZcvnlfyaBRhWaIzD@dread.disaster.area>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bzgcSofK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707905653; x=1739441653;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=AkK8H6K5JsX3fPqhL9edm6tVElqq/qDa1tKSAyvAosE=;
+  b=bzgcSofKfFXTLNKt4qPj6jmTSejwwcYNt4tdGCPpNYQBgLeOgGPzdveY
+   I1VQP61T7u0MzBIpM+3MDhA8zGQXySNOKj28u27L57VOXuDpZOlppaEHw
+   TEPUfJqCFHMa3iletJQZ24Ctuqtgypjp8to3WeCk1nhelzBN035fYSwKk
+   cYdeXHP8HsoDpD+1ICpma0foBrWMplcT9urMt8Ndj6lhOXU4FYhk81Zi5
+   M/G/MPDSy7EQnZdkdGUupvFo3Zm4wJlXl3VTbo7Ad+qRX05HFuVEFZ8B7
+   wCsrpvewYN//9ZYFADgCLusw/JEUmr7QW52LHwdO5ERckSvlbcm66E5+z
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="13335602"
+X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
+   d="scan'208";a="13335602"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 02:14:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
+   d="scan'208";a="3432586"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.33.229])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 02:14:09 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 14 Feb 2024 11:52:24 +0200 (EET)
+To: Vishnu Sankar <vishnuocv@gmail.com>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, vsankar@lenovo.com
+Subject: Re: [PATCH 1/2] platform/x86: thinkpad_acpi: Simplify thermal mode
+ checking
+In-Reply-To: <20240214052959.8550-1-vishnuocv@gmail.com>
+Message-ID: <c49e4415-7cd5-e1ba-e6c6-5086730b9866@linux.intel.com>
+References: <20240214052959.8550-1-vishnuocv@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZcvnlfyaBRhWaIzD@dread.disaster.area>
-X-Rspamd-Queue-Id: 4TZYtn2Pyrz9t7V
+Content-Type: multipart/mixed; boundary="8323328-900362618-1707904344=:1008"
 
-> > +++ b/mm/filemap.c
-> > @@ -127,6 +127,7 @@
-> >  static void page_cache_delete(struct address_space *mapping,
-> >  				   struct folio *folio, void *shadow)
-> >  {
-> > +	unsigned int min_order = mapping_min_folio_order(mapping);
-> >  	XA_STATE(xas, &mapping->i_pages, folio->index);
-> >  	long nr = 1;
-> >  
-> > @@ -135,6 +136,7 @@ static void page_cache_delete(struct address_space *mapping,
-> >  	xas_set_order(&xas, folio->index, folio_order(folio));
-> >  	nr = folio_nr_pages(folio);
-> >  
-> > +	VM_BUG_ON_FOLIO(folio_order(folio) < min_order, folio);
-> >  	VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
-> 
-> If you are only using min_order in the VM_BUG_ON_FOLIO() macro, then
-> please just do:
-> 
-> 	VM_BUG_ON_FOLIO(folio_order(folio) < mapping_min_folio_order(mapping),
-> 			folio);
-> 
-> There is no need to clutter up the function with variables that are
-> only used in one debug-only check.
-> 
-Got it. I will fold it in.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> > @@ -1847,6 +1853,10 @@ struct folio *__filemap_get_folio(struct address_space *mapping, pgoff_t index,
-> >  		fgf_t fgp_flags, gfp_t gfp)
-> >  {
-> >  	struct folio *folio;
-> > +	unsigned int min_order = mapping_min_folio_order(mapping);
-> > +	unsigned int min_nrpages = mapping_min_folio_nrpages(mapping);
-> > +
-> > +	index = round_down(index, min_nrpages);
-> 
-> 	index = mapping_align_start_index(mapping, index);
+--8323328-900362618-1707904344=:1008
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-I will add this helper. Makes the intent more clear. Thanks.
+On Wed, 14 Feb 2024, Vishnu Sankar wrote:
 
-> 
-> The rest of the function only cares about min_order, not
-> min_nrpages....
-> 
-> -Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+Thanks for doing this, it's major improvement to readability already as=20
+is, and even more of after the second patch!!
+
+> Add a thermal_read_mode_check helper function to make the code
+
+thermal_read_mode_check()
+
+remove "function" as it's obvious.
+
+> simpler during init.
+> This helps particularly when the new TPEC_12 mode is added in
+> the next patch.
+
+Flow the paragraph normally without the premature line break.
+=20
+> Suggested-by: Ilpo Jarvinen <ilpo.jarvinen@intel.com>
+
+This is not my email address, please use
+
+Suggested-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+> Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 136 +++++++++++++--------------
+>  1 file changed, 66 insertions(+), 70 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/=
+thinkpad_acpi.c
+> index c4895e9bc714..2428c8bd0fa2 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -6147,6 +6147,71 @@ struct ibm_thermal_sensors_struct {
+>  static enum thermal_access_mode thermal_read_mode;
+>  static bool thermal_use_labels;
+> =20
+> +/* Function to check thermal read mode */
+> +static enum thermal_access_mode thermal_read_mode_check(void)
+> +{
+> +=09u8 t, ta1, ta2, ver =3D 0;
+> +=09int i;
+> +
+> +=09if (thinkpad_id.ec_model) {
+> +=09=09/*
+> +=09=09 * Direct EC access mode: sensors at registers
+> +=09=09 * 0x78-0x7F, 0xC0-0xC7.  Registers return 0x00 for
+
+Remove the double space, one is enough in kernel comments.
+
+> +=09=09 * non-implemented, thermal sensors return 0x80 when
+> +=09=09 * not available
+
+Add the missing . please.
+
+Perhaps add a empty line here to make this two paragraphs.
+
+> +=09=09 * The above rule is unfortunately flawed. This has been seen with
+> +=09=09 * 0xC2 (power supply ID) causing thermal control problems.
+> +=09=09 * The EC version can be determined by offset 0xEF and at least fo=
+r
+> +=09=09 * version 3 the Lenovo firmware team confirmed that registers 0xC=
+0-0xC7
+> +=09=09 * are not thermal registers.
+> +=09=09 */
+
+While the patch touches this, this entire comment should be reflowed=20
+properly for 80 columns.
+
+> +=09=09if (!acpi_ec_read(TP_EC_FUNCREV, &ver))
+> +=09=09=09pr_warn("Thinkpad ACPI EC unable to access EC version\n");
+> +
+> +=09=09ta1 =3D ta2 =3D 0;
+> +=09=09for (i =3D 0; i < 8; i++) {
+> +=09=09=09if (acpi_ec_read(TP_EC_THERMAL_TMP0 + i, &t)) {
+> +=09=09=09=09ta1 |=3D t;
+> +=09=09=09} else {
+> +=09=09=09=09ta1 =3D 0;
+> +=09=09=09=09break;
+> +=09=09=09}
+> +=09=09=09if (ver < 3) {
+> +=09=09=09=09if (acpi_ec_read(TP_EC_THERMAL_TMP8 + i, &t)) {
+> +=09=09=09=09=09ta2 |=3D t;
+> +=09=09=09=09} else {
+> +=09=09=09=09=09ta1 =3D 0;
+> +=09=09=09=09=09break;
+> +=09=09=09=09}
+> +=09=09=09}
+> +=09=09}
+> +
+> +=09=09if (ta1 =3D=3D 0) {
+> +=09=09=09pr_err("ThinkPad ACPI EC access misbehaving, disabling thermal =
+sensors access\n");
+> +=09=09=09return TPACPI_THERMAL_NONE;
+> +=09=09}
+> +
+> +=09=09if (ver >=3D 3) {
+> +=09=09=09thermal_use_labels =3D true;
+> +=09=09=09return TPACPI_THERMAL_TPEC_8;
+> +=09=09}
+> +
+> +=09=09return (ta2 !=3D 0) ? TPACPI_THERMAL_TPEC_16 : TPACPI_THERMAL_TPEC=
+_8;
+> +=09}
+> +
+> +=09if (acpi_evalf(ec_handle, NULL, "TMP7", "qv")) {
+> +=09=09if (tpacpi_is_ibm() &&
+> +=09=09    acpi_evalf(ec_handle, NULL, "UPDT", "qv"))
+
+Single line and keep the braces please (I know it will go >80 chars but no=
+=20
+important info is lost).
+
+> +=09=09=09/* 600e/x, 770e, 770x */
+> +=09=09=09return TPACPI_THERMAL_ACPI_UPDT;
+> +=09=09/* IBM/LENOVO DSDT EC.TMPx access, max 8 sensors */
+> +=09=09return TPACPI_THERMAL_ACPI_TMP07;
+> +=09}
+> +
+> +=09/* temperatures not supported on 570, G4x, R30, R31, R32 */
+> +=09return TPACPI_THERMAL_NONE;
+> +}
+> +
+>  /* idx is zero-based */
+>  static int thermal_get_sensor(int idx, s32 *value)
+>  {
+> @@ -6375,78 +6440,9 @@ static const struct attribute_group temp_label_att=
+r_group =3D {
+> =20
+>  static int __init thermal_init(struct ibm_init_struct *iibm)
+>  {
+> -=09u8 t, ta1, ta2, ver =3D 0;
+> -=09int i;
+> -=09int acpi_tmp7;
+> -
+>  =09vdbg_printk(TPACPI_DBG_INIT, "initializing thermal subdriver\n");
+> =20
+> -=09acpi_tmp7 =3D acpi_evalf(ec_handle, NULL, "TMP7", "qv");
+> -
+> -=09if (thinkpad_id.ec_model) {
+> -=09=09/*
+> -=09=09 * Direct EC access mode: sensors at registers
+> -=09=09 * 0x78-0x7F, 0xC0-0xC7.  Registers return 0x00 for
+> -=09=09 * non-implemented, thermal sensors return 0x80 when
+> -=09=09 * not available
+> -=09=09 * The above rule is unfortunately flawed. This has been seen with
+> -=09=09 * 0xC2 (power supply ID) causing thermal control problems.
+> -=09=09 * The EC version can be determined by offset 0xEF and at least fo=
+r
+> -=09=09 * version 3 the Lenovo firmware team confirmed that registers 0xC=
+0-0xC7
+> -=09=09 * are not thermal registers.
+> -=09=09 */
+> -=09=09if (!acpi_ec_read(TP_EC_FUNCREV, &ver))
+> -=09=09=09pr_warn("Thinkpad ACPI EC unable to access EC version\n");
+> -
+> -=09=09ta1 =3D ta2 =3D 0;
+> -=09=09for (i =3D 0; i < 8; i++) {
+> -=09=09=09if (acpi_ec_read(TP_EC_THERMAL_TMP0 + i, &t)) {
+> -=09=09=09=09ta1 |=3D t;
+> -=09=09=09} else {
+> -=09=09=09=09ta1 =3D 0;
+> -=09=09=09=09break;
+> -=09=09=09}
+> -=09=09=09if (ver < 3) {
+> -=09=09=09=09if (acpi_ec_read(TP_EC_THERMAL_TMP8 + i, &t)) {
+> -=09=09=09=09=09ta2 |=3D t;
+> -=09=09=09=09} else {
+> -=09=09=09=09=09ta1 =3D 0;
+> -=09=09=09=09=09break;
+> -=09=09=09=09}
+> -=09=09=09}
+> -=09=09}
+> -=09=09if (ta1 =3D=3D 0) {
+> -=09=09=09/* This is sheer paranoia, but we handle it anyway */
+> -=09=09=09if (acpi_tmp7) {
+> -=09=09=09=09pr_err("ThinkPad ACPI EC access misbehaving, falling back to=
+ ACPI TMPx access mode\n");
+> -=09=09=09=09thermal_read_mode =3D TPACPI_THERMAL_ACPI_TMP07;
+
+Eh, where did this go in the new helper?
+
+--=20
+ i.
+
+> -=09=09=09} else {
+> -=09=09=09=09pr_err("ThinkPad ACPI EC access misbehaving, disabling therm=
+al sensors access\n");
+> -=09=09=09=09thermal_read_mode =3D TPACPI_THERMAL_NONE;
+> -=09=09=09}
+> -=09=09} else {
+> -=09=09=09if (ver >=3D 3) {
+> -=09=09=09=09thermal_read_mode =3D TPACPI_THERMAL_TPEC_8;
+> -=09=09=09=09thermal_use_labels =3D true;
+> -=09=09=09} else {
+> -=09=09=09=09thermal_read_mode =3D
+> -=09=09=09=09=09(ta2 !=3D 0) ?
+> -=09=09=09=09=09TPACPI_THERMAL_TPEC_16 : TPACPI_THERMAL_TPEC_8;
+> -=09=09=09}
+> -=09=09}
+> -=09} else if (acpi_tmp7) {
+> -=09=09if (tpacpi_is_ibm() &&
+> -=09=09    acpi_evalf(ec_handle, NULL, "UPDT", "qv")) {
+> -=09=09=09/* 600e/x, 770e, 770x */
+> -=09=09=09thermal_read_mode =3D TPACPI_THERMAL_ACPI_UPDT;
+> -=09=09} else {
+> -=09=09=09/* IBM/LENOVO DSDT EC.TMPx access, max 8 sensors */
+> -=09=09=09thermal_read_mode =3D TPACPI_THERMAL_ACPI_TMP07;
+> -=09=09}
+> -=09} else {
+> -=09=09/* temperatures not supported on 570, G4x, R30, R31, R32 */
+> -=09=09thermal_read_mode =3D TPACPI_THERMAL_NONE;
+> -=09}
+> +=09thermal_read_mode =3D thermal_read_mode_check();
+> =20
+>  =09vdbg_printk(TPACPI_DBG_INIT, "thermal is %s, mode %d\n",
+>  =09=09str_supported(thermal_read_mode !=3D TPACPI_THERMAL_NONE),
+>=20
+
+--8323328-900362618-1707904344=:1008--
