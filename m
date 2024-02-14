@@ -1,95 +1,93 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7340E60864;
-	Wed, 14 Feb 2024 16:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3783660BBE;
+	Wed, 14 Feb 2024 16:44:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707929061; cv=none; b=uNsikm8bq5OZK3U9Gy8lTanLGioGxEl0v0mDQTvwsAOoNkBr7iByQKw98LDbyp0Fs+4s5RMGbrZEC2a2wjozB+qFW2IIYUoA05nYTCHQbfUyLydrUNTzkDeEyqotO/6RYFRbWjGsqRBvBDkXju9By9ZGlULQ+Jqoi0dP3fieLt8=
+	t=1707929069; cv=none; b=kgB5pzjF12Q+KJn35HScASsNMZoeeoFxikojqFSpANoi+NVaTR39FYE6ocr0lZbalwcnJDjBIk5U5xbUFQORUbdg52/zaj+XQHmmVGh3gWqZpEsqeRjgCMAVf58so+Po7W/q53yUnrYFY5b9ICgVfZXuSEBx0JjxjjEvU2T+2e8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707929061; c=relaxed/simple;
-	bh=sfJuXclO1Ov9A69m5w+ZOgsfMXgKljyna2t9SiCtuw8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mHWbaT/WoRXUQcArzu7MMjOBqcoV+wImBK2n1kcWyMMqNFBGoNAwF4Iwtl+5fMezNP5I4pbffTUiBp+3rXwDjBnPJA2B1rPFnSHvqze1BDe1HU2j9fjbqk9aFbLAh4PObqltdu+YI1pKg1qyJtTCNd2fRX5X5whzwo0WP0Gt3s4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EDQ4KWpZ; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1707929069; c=relaxed/simple;
+	bh=oGw9fVB7x4DqTTJd1RZp9jcHpF1ROTXB3RtCnAkqmII=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NSOqjL+TNn/Ap0FdJMCKn6J28I1eG3rmIoKci2kvvoLUbo28B6P5mF+ktnuUu4YcPBNOJ/fX5Ga0u73qmXhbbvd5bKxJ4W/HTrR/kgLaBB3cxaCDGSiO7ej5FXqiqZ2I7OuM0aK3SQEfSLEs65hKGmIJzcdwa4BC30QNhfBD/rI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=svenjoac@gmx.de header.b=YuvTpkTt; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EDQ4KWpZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=hftmzppcjHlorwgYJRp+lM988Qc6AOkd1AYuK4Aj3w0=; b=EDQ4KWpZCjyQrQSpbU0qS+hfgt
-	U4P5K0QWOTlNO/Gy8Ld5ua4ISXBQE4e2dzeLr7QZiWq5AccxD+wDdQKRMrq6mg9JUIKSTXqNfmS7w
-	6cKSKmJNrDBI9JIt8AlH2G8yNuwDnTmwMBbhnOqs+U7mVYByFqFrtNmnpaNs47cSWotVHv99u/m+m
-	P5h/bPloUGfsWPo9+SIPBrLJWDvXf+ViYExv7xpbpli68n8XxtIaRcjMbDIPznKFXmqZ/mPHD28f6
-	ukZssGWyaVq91PablLgmHy6YRoqm4GIyw4g0tVH/8IcaFt4Y5RvY0UDDTmdr5FhLzqQuMs+FoXtfs
-	kXvpKg+A==;
-Received: from [50.53.50.0] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1raIMr-0000000Da5u-48Th;
-	Wed, 14 Feb 2024 16:44:18 +0000
-Message-ID: <768355d0-df1e-48dd-b7fd-9ed34f7a4b7c@infradead.org>
-Date: Wed, 14 Feb 2024 08:44:17 -0800
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=svenjoac@gmx.de header.b="YuvTpkTt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1707929042; x=1708533842; i=svenjoac@gmx.de;
+	bh=oGw9fVB7x4DqTTJd1RZp9jcHpF1ROTXB3RtCnAkqmII=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:In-Reply-To:References:
+	 Date;
+	b=YuvTpkTtxxPUIsgtfJ8tfRSeipuQq9MtNIizxhdgQlIrtuD3m7xaKZKcSYBYMOGs
+	 6R6gMpXSQLLkT1s7Im1Qdre3uvrODgkj28uVcFS9sXctud0MibqNftnilSgh9LJyD
+	 pMyYt9AfpyyRMcxtLVfawf4nb9CQ+9biIbv54QeEvwDEYZ8lkd/vecHv13G44S+9w
+	 2rsFG+fbtr1Qlz9u1TZSKK+z6gcrignSx3gdvYczvN0e5/8nVWVjNbNlBtWU5HdtY
+	 3LI69WPqo1PibdeP4jgA0GMr3ySe8hTVWGGA5QrA1V+cUB9lfRHNxA8ih37b9UK5d
+	 CgqgD4EEmMiiKEEK6Q==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost.localdomain ([79.203.86.131]) by mail.gmx.net
+ (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1M3lYB-1rb7Zp1mHj-000vwn; Wed, 14 Feb 2024 17:44:02 +0100
+Received: by localhost.localdomain (Postfix, from userid 1000)
+	id 5CB7880095; Wed, 14 Feb 2024 17:44:00 +0100 (CET)
+From: Sven Joachim <svenjoac@gmx.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org,  patches@lists.linux.dev,
+  linux-kernel@vger.kernel.org,  torvalds@linux-foundation.org,
+  akpm@linux-foundation.org,  linux@roeck-us.net,  shuah@kernel.org,
+  patches@kernelci.org,  lkft-triage@lists.linaro.org,  pavel@denx.de,
+  jonathanh@nvidia.com,  f.fainelli@gmail.com,  sudipm.mukherjee@gmail.com,
+  srw@sladewatkins.net,  rwarsow@gmx.de,  conor@kernel.org,
+  allen.lkml@gmail.com
+Subject: Re: [PATCH 6.1 00/64] 6.1.78-rc1 review
+In-Reply-To: <20240213171844.702064831@linuxfoundation.org> (Greg
+	Kroah-Hartman's message of "Tue, 13 Feb 2024 18:20:46 +0100")
+References: <20240213171844.702064831@linuxfoundation.org>
+Date: Wed, 14 Feb 2024 17:44:00 +0100
+Message-ID: <871q9f3sj3.fsf@turtle.gmx.de>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Documentation: Document the Linux Kernel CVE process
-Content-Language: en-US
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: corbet@lwn.net, workflows@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, security@kernel.org,
- Sasha Levin <sashal@kernel.org>, Lee Jones <lee@kernel.org>
-References: <2024021314-unwelcome-shrill-690e@gregkh>
- <60d67476-5c56-4fa4-93cf-1eb8f5aa5953@infradead.org>
- <2024021450-giddy-garland-e499@gregkh>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <2024021450-giddy-garland-e499@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Provags-ID: V03:K1:K+HOG/GQYW5pwarb/ntOh32vSaVyV1m9avODePCAc8oUG6iv0KR
+ Gy6ajZl3yVsYiFhL392ecAAHAAQW/FUL7zGa6sC4YRthNDMqNma6cPci4kLTKNAxVY3KjtF
+ unh2aUt2aFJUPpZ/5Kj6/0cOyWj+Kcwx1gFZPY5pzc7a1lFxtE4WNpmYx5CQi76q3B69aQw
+ JNsMYFJ0jQhZKvSaRi0PQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:qNJA9s8d16w=;MREgZfBOcuYvsbAw3nmPjZh63RO
+ STE5gDCZje4oqY7UJ8xIR2xaLqfKsLN05ag0kyX9i2IrXebmwxOqDlJged+a84k+9w6GTpXea
+ gulf5wyrMuWmdngoTxpBBBt9XepA8cF4Ybz9w6nrADfVkAdGMWBkO+ALhekmKyQbaUPR3MTJz
+ 5v07nSOachnKf1ctnZ8Ajodos21bSpVxxbs0C1rW3InSp2U/JA3IVpvrUAQNPsk08lJmhO9DX
+ yx3EhSVbXoTiqIltf93MZNXWNPAgeP5Jqvlkw8W+wMG8blEKyfiBYlyyeoSs2NSv60wgYb//Y
+ 0tgxXo7CHD9KScyK56EgogvT7RszOX6XbnWONi2CG8ZokJYdYIJw6FRRbajrdZp8FFQ7746wA
+ WWbm2bBee3nVGIYO/6pMT6oNObtX/BPStu3xgnZO+0Z0XPvjLuBrsdrzmxELzDfaRlsEdQFlu
+ 1xgEi0/WXz+hRINMQBcc9u7gM9Hpa9C3kIQBsc0lXhDMxdf1uOUq8+wsq9Sdk5v0wCdHhq9qW
+ 21ANEpwxjIpNuykUbA19aQQ25eF7alNjgPpbECt9BRXniySyaGjdOz0nGMsrbt98QL5LFpKfL
+ PqFu3a6SDpVJf+M8C7euEep2qs9BHZz/PPjFzmWfpMHdwUzwZAJeEdB+6p4bpBG9Fdk+TP7w3
+ yttKlYYCa8EpOsppwrsDZy3GuYxe+/XDvDj6wuIh6zFa6llpMpXyLytJAP91YMhr9ZcX99FVX
+ UQta/ngggqwfAHNmKS7fLarVnpi5/xeTI/jNAf8DLoosVOWiIZlmVn1ingMcMWn9408LNPMnX
+ 1OJVG2Tujcxg5VF8mY2g53HTp8gXlay3FjVAAkHmInH9g=
 
+On 2024-02-13 18:20 +0100, Greg Kroah-Hartman wrote:
 
+> This is the start of the stable review cycle for the 6.1.78 release.
+> There are 64 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 15 Feb 2024 17:18:29 +0000.
+> Anything received after that time might be too late.
 
-On 2/13/24 23:15, Greg Kroah-Hartman wrote:
-> On Tue, Feb 13, 2024 at 11:56:42AM -0800, Randy Dunlap wrote:
->>> +As part of the normal stable release process, kernel changes that are
->>> +potentially security issues are identified by the developers responsible
->>> +for CVE number assignments and have CVE numbers automatically assigned
->>> +to them.  These assignments are published on the linux-cve mailing list
->>
->>                                                     linux-cve-announce mailing list
-> 
-> Ah, good catch, you can see the "old" name for the list here, this is
-> due to this document being an older version, a symptom of "write it on
-> my workstation, sync to laptop, travel with laptop for 3+ weeks and make
-> changes based on meetings with CVE and others and then forget to sync
-> from laptop when arriving home".
-> 
-> Ugh :(
-> 
-> Thanks so much for the grammer fixes, they are much appreciated.  I'll
-> apply them and send out the latest version in a bit.
-> 
->>> +No CVEs will be assigned for unfixed security issues in the Linux
->>> +kernel, assignment will only happen after a fix is available as it can
->>
->>    kernel;
->>
->>> +be properly tracked that way by the git commit id of the original fix.
-> 
-> One of my goals in life is to never use a ';' in a sentence, and after
-> writing 2 books without them, I thought I achieve that pretty well as I
-> never seem to remember when they are to be used or not.  But I'll trust
-> you on this and use it here.
+Works fine for me on x86_64.
 
-For some reason kernel documentation has a plethora of run-on sentences. :(
+Tested-by: Sven Joachim <svenjoac@gmx.de>
 
-Guess we need doclint.
-
--- 
-#Randy
+Cheers,
+       Sven
