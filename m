@@ -1,148 +1,145 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961B5145B0B;
-	Wed, 14 Feb 2024 22:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23D68182DF
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 22:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707950210; cv=none; b=ZFFRwwgosNg1O0WfpBAX3Gewa6riicHpnAJRC5r+5h17YLspZXsNkJqYslwdo3zN4ugDla89hB2gyDyen+inBtiHoZvHYr7nbyfYRQ7qgZuHpa+SMDq6OEXEaWB2TUE23ikN13ONDEu94cC9drEPSHns8IotMTVh3VgwZGJ2sBI=
+	t=1707950421; cv=none; b=RyTYbyZIjuG9vDO7gl+H07TNF2GcOmnInptGjzsw0dhb5BjVBRhVdi0JDn83dAEwtrMlUQgagFf1Ank2lkbL6GlB5tHb/4h/bGfBxZaa7RTVQFi3FoczwNDgaEV4CL31bXyrbgR1IHuz7ao5Wlc3cfrlKwrzWw1Bm8rTU+pbcr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707950210; c=relaxed/simple;
-	bh=MNl7hgcOP5vxEvVNCEzBNGyFwxzXBCb8aF9uo9XJndM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ClxwTzw9jUFHIv5FmTWCUz79nwgtpI6jBMRx5xUAfKcc+j3Rpx3fGmlL4aAP3vmMd6zweuk1/F1rw0O1VLtm5vZ9ui+Ebt0Rqwv5c1XlU2fURFQcxKoOYj/Ma3W1u29KGjkjZGyAM9L5fsBzbz0gRAmxY2Q6vrGI1HtfIT96k+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=CSM/NBTh; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1707950421; c=relaxed/simple;
+	bh=cANzLdZ69BXZUyjsl7ZwBQxdKLwR8JzDdiDwyOSPWKM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r18MLaQyWHIBDyC4NNuu0l+940B5sLORm/iLIVE9NzmiFNWlkKv9y/j2J86AtnCrqRHqOnl347grwlx18fD9cWmzvFqGhtHX0PWXbNZQZUQkGmRuO7tg0OMBLUfX3KUM06+zzOjw8KzXx1qaxWzS8Oz1tCcW9RmLNMRyppi69Jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KOPzOypk; arc=none smtp.client-ip=209.85.161.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CSM/NBTh"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41ELiWL1022704;
-	Wed, 14 Feb 2024 22:31:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2023-11-20;
- bh=beF73PhQOvafRvxMrE9SGfQcxB3UIdpTP6nEGkw+3vc=;
- b=CSM/NBTh3VceRVKHqcI17YhS46VV9GwoWB+I6DTJIkkGTxP+cjuP84HeG0F10IwfYrUY
- 9xF1eBonh+nhFmrcYvMVHwWgXZkONcLPc32kXIFd/NOpxhXB9KFlzF3P7+dFatZYdAai
- gF8ro+Y7ZvhXs2V/APYGFRSDQrmdADRuicJJ8yp3d+hjOEE7WE17wDOMpVnoHI+kbM9B
- IzZwgdrdkylbRK/+efZWyYG4QeSckHFg6RceBEJqwjW55ZAFI67RQ0H291zBHsEVx+zq
- b8EIrorETHx8I8XybbwRrps6hHNmLylR5yxf2FIlkWWCPxHhjUhLcfUpHUidG4JCgp/J nQ== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3w92ppghka-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 14 Feb 2024 22:31:46 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41EM9iB8000639;
-	Wed, 14 Feb 2024 22:31:45 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3w5yk9n7ft-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Wed, 14 Feb 2024 22:31:45 +0000
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41EMVTVK004281;
-	Wed, 14 Feb 2024 22:31:44 GMT
-Received: from bur-virt-x6-2-100.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3w5yk9n72r-14
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Wed, 14 Feb 2024 22:31:44 +0000
-From: Ross Philipson <ross.philipson@oracle.com>
-To: linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
-        linux-efi@vger.kernel.org
-Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, ardb@kernel.org, mjg59@srcf.ucam.org,
-        James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
-        jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
-        nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
-        davem@davemloft.net, kanth.ghatraju@oracle.com,
-        trenchboot-devel@googlegroups.com
-Subject: [PATCH v8 13/15] tpm: Add sysfs interface to allow setting and querying the preferred locality
-Date: Wed, 14 Feb 2024 14:18:45 -0800
-Message-Id: <20240214221847.2066632-14-ross.philipson@oracle.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240214221847.2066632-1-ross.philipson@oracle.com>
-References: <20240214221847.2066632-1-ross.philipson@oracle.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KOPzOypk"
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-59d7cbf1279so152061eaf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 14:40:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1707950419; x=1708555219; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=BKV6eQTwSUgCbVKAYzQ+RCk2l6zXw4xuEU/9A1u4Sz4=;
+        b=KOPzOypkUwv12r2mSM0+cVZZg5KFgzatJqHJVVJGLm0h/XEQJ8t1+tRY+PqnzX0Sjg
+         vM2nOfhFYiWgI05s22ScgFdT16VQDEHflhYaKiOIh/mVsVWTRIZ7n9zmEguQkKW34XEC
+         aR3QbVd9D/m06gCRUGwUyeJmVtx3oZ9Fe588Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707950419; x=1708555219;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BKV6eQTwSUgCbVKAYzQ+RCk2l6zXw4xuEU/9A1u4Sz4=;
+        b=CaUE/PcYm1EAGJ3CC+nXuQclYhQkBUDBTKq/E8pRiF3lx0QuKXGVgM/YoAbLfn20YU
+         S3qJGvDVwWE9DCBP8WRZrpujA24k5wCkZvpmIqYm6BelYERh6riBWuGaZ49zPHj76Ui3
+         UMpr/rRMsj1fyxa0tEGl6j22gUdQlzgG3Ifx2XDgLJnryyQweMe6zeytKOPir7WeL5TZ
+         rbvrDeicQTl5DgnGwSAI/Jtnaj9E1/IvZ10F5tknEQsP3Ja6efojIaHH0YwgzNGmuMYt
+         skwH0atTu1hSFlPeuToPG6MQ7IFZM0a/0m1dw1DCouDxOCkw2FB1PwwETLbMIqECzgCw
+         cEyA==
+X-Forwarded-Encrypted: i=1; AJvYcCXMy3PXsWvcc5Q5NDvNQApraas/r/80ZO3DI+2oFpha3QjVZUCQBxsIxGT0GL87XznSsz+jUY5paiWTpunVSTzq+5AWtQW9zHjpbiJY
+X-Gm-Message-State: AOJu0YxVrOCD9VZwvkBnl2WlxHZFjPsQ1WFjOE5lgWT7Ahv0n8ZSkEbZ
+	d0Ro+8wpk/tw4BnuvWWVK2SyUFL6Svxcq2BiKpOFAMQYUk46AINzr/3G4zHjX/MkuQB1SDCy/EY
+	=
+X-Google-Smtp-Source: AGHT+IGcdrio1ldk5+vxaJFwF0luoiodDJsqYEknT7Yw0yQZLAaWvxePby1AUdnoF7c7Z1tLFhxtqA==
+X-Received: by 2002:a05:6358:3a15:b0:178:b7c0:323f with SMTP id g21-20020a0563583a1500b00178b7c0323fmr3714184rwe.19.1707950419171;
+        Wed, 14 Feb 2024 14:40:19 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXrvjO9kRybzFmkrE+j6y1WylSG4Yl9Nxy/NnfqTM85wBBNGCxsWlx4otJemAN01Dnozo2f8CEFdwODsT2t1t+a40dKRJwtBYywqwilIL40XNIKoaxVpuX7Nj+Ag/0x67uPLXeCkdGUmWYuZTIwtGOOPm13TJST93bBZKp4By+OxB5JFePRpMOXVeW09l1ZUa/gDvVrYWN4r+MDgPyBeaaiQRU2ODWk
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id v11-20020a056a00148b00b006e0334e3dd9sm9710190pfu.76.2024.02.14.14.40.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Feb 2024 14:40:18 -0800 (PST)
+Date: Wed, 14 Feb 2024 14:40:18 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Fangrui Song <maskray@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	Nathan Chancellor <nathan@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>
+Subject: Re: [PATCH] x86/build: Simplify patterns for unwanted section
+Message-ID: <202402141433.AC69F2A3@keescook>
+References: <20240214212929.3753766-1-maskray@google.com>
+ <202402141405.0755DD4E5E@keescook>
+ <CAFP8O3LWBHkbLwFJdmy7iSGD0cMSy1jczETo=N6oVapCgPY=sA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-14_14,2024-02-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0 mlxscore=0
- bulkscore=0 spamscore=0 malwarescore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2402140170
-X-Proofpoint-ORIG-GUID: tT6BUrEPGTkbAvCJEEglQruin3qInev6
-X-Proofpoint-GUID: tT6BUrEPGTkbAvCJEEglQruin3qInev6
+In-Reply-To: <CAFP8O3LWBHkbLwFJdmy7iSGD0cMSy1jczETo=N6oVapCgPY=sA@mail.gmail.com>
 
-Expose a sysfs interface to allow user mode to set and query the preferred
-locality for the TPM chip.
+On Wed, Feb 14, 2024 at 02:13:01PM -0800, Fangrui Song wrote:
+> On Wed, Feb 14, 2024 at 2:07 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > On Wed, Feb 14, 2024 at 01:29:29PM -0800, Fangrui Song wrote:
+> > > A s390 patch modeling its --orphan-handling= after x86 [1] sparked my
+> > > motivation to simplify patterns. Commit 5354e84598f2 ("x86/build: Add
+> > > asserts for unwanted sections") added asserts that certain input
+> > > sections must be absent or empty. The patterns can be simplified.
+> > >
+> > > For dynamic relocations,
+> > >
+> > > *(.rela.*) is sufficient to match all dynamic relocations synthesized by
+> > > GNU ld and LLD. .rela_* is unnecessary. --emit-relocs may create .rela_*
+> > > sections for section names prefixed with _, but they are not matched by
+> > > linker scripts.
+> > >
+> > > .plt instead of .plt.* is sufficient to match synthesized PLT entries.
+> >
+> > Do you mean ".plt.foo" matches ".plt" ?
+> 
+> I mean we just need .plt : { *(.plt) } , not .plt : { *(.plt) *(.plt.*) }.
 
-Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
----
- drivers/char/tpm/tpm-sysfs.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+But then, for example, if it gets generated, .plt.got ends up being
+reported as an orphan...
 
-diff --git a/drivers/char/tpm/tpm-sysfs.c b/drivers/char/tpm/tpm-sysfs.c
-index 54c71473aa29..c43630d0996e 100644
---- a/drivers/char/tpm/tpm-sysfs.c
-+++ b/drivers/char/tpm/tpm-sysfs.c
-@@ -309,6 +309,34 @@ static ssize_t tpm_version_major_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(tpm_version_major);
- 
-+static ssize_t preferred_locality_show(struct device *dev,
-+				       struct device_attribute *attr, char *buf)
-+{
-+	struct tpm_chip *chip = to_tpm_chip(dev);
-+
-+	return sprintf(buf, "%d\n", chip->pref_locality);
-+}
-+
-+static ssize_t preferred_locality_store(struct device *dev, struct device_attribute *attr,
-+					const char *buf, size_t count)
-+{
-+	struct tpm_chip *chip = to_tpm_chip(dev);
-+	unsigned int locality;
-+
-+	if (kstrtouint(buf, 0, &locality))
-+		return -ERANGE;
-+
-+	if (locality >= TPM_MAX_LOCALITY)
-+		return -ERANGE;
-+
-+	if (tpm_chip_preferred_locality(chip, (int)locality))
-+		return count;
-+	else
-+		return 0;
-+}
-+
-+static DEVICE_ATTR_RW(preferred_locality);
-+
- static struct attribute *tpm1_dev_attrs[] = {
- 	&dev_attr_pubek.attr,
- 	&dev_attr_pcrs.attr,
-@@ -321,11 +349,13 @@ static struct attribute *tpm1_dev_attrs[] = {
- 	&dev_attr_durations.attr,
- 	&dev_attr_timeouts.attr,
- 	&dev_attr_tpm_version_major.attr,
-+	&dev_attr_preferred_locality.attr,
- 	NULL,
- };
- 
- static struct attribute *tpm2_dev_attrs[] = {
- 	&dev_attr_tpm_version_major.attr,
-+	&dev_attr_preferred_locality.attr,
- 	NULL
- };
- 
+> 
+> The linker synthesized section for PLT entries is .plt, not suffixed.
+> 
+> > > .igot and .igot.plt are for non-preemptible STT_GNU_IFUNC in GNU ld (LLD
+> > > just uses .got), which the kernel does not use. In addition, if .igot or
+
+Right, the issue has been getting totally weird sections emitted by the
+linker. If you're saying you'd rather those get reported as orphan
+sections instead of being validated for being zero sized, and that works
+for all the architectures, then okay.
+
+> > > .igot.plt is ever non-empty, there will be .rela.* dynamic relocations
+> > > leading to an assert failure anyway.
+> >
+> > I think at the time I was dealing with avoid multiple warnings out of
+> > the linker, as I was getting orphan warnings in addition to the
+> > non-empty warnings.
+> >
+> > >
+> > > [1]: https://lore.kernel.org/all/20240207-s390-lld-and-orphan-warn-v1-6-8a665b3346ab@kernel.org/
+> > >
+> > > Signed-off-by: Fangrui Song <maskray@google.com>
+> >
+> > Is anything harmed by leaving all of this as-is?
+> >
+> > -Kees
+> 
+> No harm. But ports adopting --orphan-handling= (like s390) may copy
+> the unneeded .rela_* .
+> When people read .rela_*, they might think whether the kernel does
+> anything special that
+> .rela_* needs to be matched.
+
+I added these because the were being generated. See commit d1c0272bc1c0
+("x86/boot/compressed: Remove, discard, or assert for unwanted sections")
+
+I don't want to suddenly start generating warnings for older/broken
+linkers. (i.e. a change like this needs really careful testing, and that
+needs to be detailed in the commit log.)
+
+-Kees
+
 -- 
-2.39.3
-
+Kees Cook
