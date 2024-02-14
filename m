@@ -1,19 +1,23 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E10879C0
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 08:54:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8959BA33
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 08:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707900891; cv=none; b=KJVuksEDk9255n+s1y9fsjgJV+zeCxfxk9eHxhM6Dznew5c5qLgwGdHc5p6dS/XKP/8EvPvJm+RifBno1JmDyF5Vl44CSBcJLXN3qmr+qt3+mLtjaNX0gFl/VJavpuK9/SE0n+aw5NZwl6pTnECg8X/Cze+Xm8EWMqdkNPQNhJc=
+	t=1707900893; cv=none; b=PbT+bP6LC784exmbovg+WRB4/IdZWYQZ/WtlKRC3B45vqQo/cPmC6j8sZHGjmzZPPJxvtt2Z1Q8P1BF2yRgbgHz0+RhSFgTcxCY+JWcluxYBW1gQGvHK8oB/4xRFyNuq/fHQ+fReGJ+OmsXMxiV8tOzpsvgkLRgvzc3WxI3W3qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707900891; c=relaxed/simple;
-	bh=wl+vlR0haJswwYPNHJQRSnp3rCianEqOgPnnEcPTFNQ=;
-	h=Subject:MIME-Version:Content-Type:From:Date:Message-Id:To:Cc; b=oPBmZT1K9ZyuzHW6Hgce9CfptHrf4z6Z6CtAmv61CLyLNXDv6Z330z+2Z/r+tXG8FlBg+ucAE7OXgEXB4b96YxW1YeSrL2hl6diAIAA2Ux2abWwBbAqV00qhk+WoWZuBYNwsuIaMbVaWmLB+SVaNpDmUKz3cZQpjW5Ni3dCtQ7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=linux.dev; arc=none smtp.client-ip=95.215.58.186
+	s=arc-20240116; t=1707900893; c=relaxed/simple;
+	bh=PR0N3thqXKq1e2jCnYh9FdSFO4iCOQYoAEQ9nreBSmM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=eDVM/VFfgrKBaVuRSGMeBNN35x0bZPjbWXBxkDx2ETdMXmiAXL3vkU83WSxzwIbiU/7fZ82hGfJm/3Lz63gENuTzzTvc9mxR2fJBRJYhIN16CSfqgOWCRACaoxFvdhJ+NKFY9cSCysM/5CimByjO0boklyNCRWYncGXCThaDpTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=linux.dev; arc=none smtp.client-ip=95.215.58.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Subject: [PATCH v2 0/2] mm/zswap: optimize for dynamic zswap_pools
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <zhouchengming@bytedance.com>
+Date: Wed, 14 Feb 2024 08:54:38 +0000
+Subject: [PATCH v2 2/2] mm/zswap: change zswap_pool kref to percpu_ref
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -22,49 +26,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-b4-tracking: H4sIAMx/zGUC/32NQQ6CMBBFr0Jm7Zi2VAFX3sO4aOkEmtSWtIBBwt2deABXP+8n7/8dCmVPBW7VDp
- lWX3yKDOpUQT+aOBB6xwxKKC2UFPgpbzPhEJI1AUNesNNOd7W8yqa1wJo1hdBmE/uRxbiEwOXoy5zy
- 9rtZJcfjz+IqUWB7qXVTu8YKZ+52m8nxIp379ILncRxfvcFj+bkAAAA=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <zhouchengming@bytedance.com>
-Date: Wed, 14 Feb 2024 08:54:36 +0000
-Message-Id: <20240210-zswap-global-lru-v2-0-fbee3b11a62e@bytedance.com>
+Message-Id: <20240210-zswap-global-lru-v2-2-fbee3b11a62e@bytedance.com>
+References: <20240210-zswap-global-lru-v2-0-fbee3b11a62e@bytedance.com>
+In-Reply-To: <20240210-zswap-global-lru-v2-0-fbee3b11a62e@bytedance.com>
 To: Yosry Ahmed <yosryahmed@google.com>, Johannes Weiner <hannes@cmpxchg.org>, Andrew Morton <akpm@linux-foundation.org>,
  Nhat Pham <nphamcs@gmail.com>
 Cc: linux-mm@kvack.org, Chengming Zhou <zhouchengming@bytedance.com>, linux-kernel@vger.kernel.org
 X-Migadu-Flow: FLOW_OUT
 
+All zswap entries will take a reference of zswap_pool when
+zswap_store(), and drop it when free. Change it to use the
+percpu_ref is better for scalability performance.
 
-
----
-Changes in v2:
-- fix build error when !CONFIG_MEMCG_KMEM.
-- make zswap struct static and fix some error paths, per Yosry.
-- add another shrink_lock to protect zswap.next_shrink, per Yosry.
-- keep "WARN_ON(percpu_ref_tryget(&pool->ref))" in pool release path
-  for debug, per Nhat.
-- improve the commit messages.
-- Link to v1: https://lore.kernel.org/r/20240210-zswap-global-lru-v1-0-853473d7b0da@bytedance.com
-
-Dynamic pool creation has been supported for a long time, which maybe
-not used so much in practice. But with the per-memcg lru merged, the
-current structure of zswap_pool's lru and shrinker become less optimal.
-
-In the current structure, each zswap_pool has its own lru, shrinker and
-shrink_work, but only the latest zswap_pool will be the current used.
-
-1. When memory has pressure, all shrinkers of zswap_pools will try to
-   shrink its lru list, there is no order between them.
-
-2. When zswap limit hit, only the last zswap_pool's shrink_work will
-   try to shrink its own lru, which is inefficient.
-
-A more natural way is to have a global zswap lru shared between all
-zswap_pools, and so is the shrinker. The code becomes much simpler too.
-
-Another optimization is changing zswap_pool kref to percpu_ref, which
-will be taken reference by every zswap entry. So the scalability is
-better.
+Although percpu_ref use a bit more memory which should be ok
+for our use case, since we almost have only one zswap_pool to
+be using. The performance gain is for zswap_store/load hotpath.
 
 Testing kernel build (32 threads) in tmpfs with memory.max=2GB.
 (zswap shrinker and writeback enabled with one 50GB swapfile,
@@ -75,25 +51,115 @@ real    63.20        63.12
 user    1061.75      1062.95
 sys     268.74       264.44
 
-To: Andrew Morton <akpm@linux-foundation.org>
-To: Johannes Weiner <hannes@cmpxchg.org>
-To: Yosry Ahmed <yosryahmed@google.com>
-To: Nhat Pham <nphamcs@gmail.com>
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
-
 ---
-Chengming Zhou (2):
-      mm/zswap: global lru and shrinker shared by all zswap_pools
-      mm/zswap: change zswap_pool kref to percpu_ref
+ mm/zswap.c | 31 ++++++++++++++++++++++---------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
 
- mm/zswap.c | 201 ++++++++++++++++++++++++++-----------------------------------
- 1 file changed, 87 insertions(+), 114 deletions(-)
----
-base-commit: 191d97734e41a5c9f90a2f6636fdd335ae1d435d
-change-id: 20240210-zswap-global-lru-94d49316178b
+diff --git a/mm/zswap.c b/mm/zswap.c
+index dbff67d7e1c7..f6470d30d337 100644
+--- a/mm/zswap.c
++++ b/mm/zswap.c
+@@ -173,7 +173,7 @@ struct crypto_acomp_ctx {
+ struct zswap_pool {
+ 	struct zpool *zpools[ZSWAP_NR_ZPOOLS];
+ 	struct crypto_acomp_ctx __percpu *acomp_ctx;
+-	struct kref kref;
++	struct percpu_ref ref;
+ 	struct list_head list;
+ 	struct work_struct release_work;
+ 	struct hlist_node node;
+@@ -304,6 +304,7 @@ static void zswap_update_total_size(void)
+ /*********************************
+ * pool functions
+ **********************************/
++static void __zswap_pool_empty(struct percpu_ref *ref);
+ 
+ static struct zswap_pool *zswap_pool_create(char *type, char *compressor)
+ {
+@@ -357,13 +358,18 @@ static struct zswap_pool *zswap_pool_create(char *type, char *compressor)
+ 	/* being the current pool takes 1 ref; this func expects the
+ 	 * caller to always add the new pool as the current pool
+ 	 */
+-	kref_init(&pool->kref);
++	ret = percpu_ref_init(&pool->ref, __zswap_pool_empty,
++			      PERCPU_REF_ALLOW_REINIT, GFP_KERNEL);
++	if (ret)
++		goto ref_fail;
+ 	INIT_LIST_HEAD(&pool->list);
+ 
+ 	zswap_pool_debug("created", pool);
+ 
+ 	return pool;
+ 
++ref_fail:
++	cpuhp_state_remove_instance(CPUHP_MM_ZSWP_POOL_PREPARE, &pool->node);
+ error:
+ 	if (pool->acomp_ctx)
+ 		free_percpu(pool->acomp_ctx);
+@@ -436,8 +442,9 @@ static void __zswap_pool_release(struct work_struct *work)
+ 
+ 	synchronize_rcu();
+ 
+-	/* nobody should have been able to get a kref... */
+-	WARN_ON(kref_get_unless_zero(&pool->kref));
++	/* nobody should have been able to get a ref... */
++	WARN_ON(percpu_ref_tryget(&pool->ref));
++	percpu_ref_exit(&pool->ref);
+ 
+ 	/* pool is now off zswap_pools list and has no references. */
+ 	zswap_pool_destroy(pool);
+@@ -445,11 +452,11 @@ static void __zswap_pool_release(struct work_struct *work)
+ 
+ static struct zswap_pool *zswap_pool_current(void);
+ 
+-static void __zswap_pool_empty(struct kref *kref)
++static void __zswap_pool_empty(struct percpu_ref *ref)
+ {
+ 	struct zswap_pool *pool;
+ 
+-	pool = container_of(kref, typeof(*pool), kref);
++	pool = container_of(ref, typeof(*pool), ref);
+ 
+ 	spin_lock(&zswap_pools_lock);
+ 
+@@ -468,12 +475,12 @@ static int __must_check zswap_pool_get(struct zswap_pool *pool)
+ 	if (!pool)
+ 		return 0;
+ 
+-	return kref_get_unless_zero(&pool->kref);
++	return percpu_ref_tryget(&pool->ref);
+ }
+ 
+ static void zswap_pool_put(struct zswap_pool *pool)
+ {
+-	kref_put(&pool->kref, __zswap_pool_empty);
++	percpu_ref_put(&pool->ref);
+ }
+ 
+ static struct zswap_pool *__zswap_pool_current(void)
+@@ -603,6 +610,12 @@ static int __zswap_param_set(const char *val, const struct kernel_param *kp,
+ 
+ 	if (!pool)
+ 		pool = zswap_pool_create(type, compressor);
++	else {
++		/* Resurrect percpu_ref to percpu mode. */
++		percpu_ref_resurrect(&pool->ref);
++		/* Drop the ref from zswap_pool_find_get(). */
++		zswap_pool_put(pool);
++	}
+ 
+ 	if (pool)
+ 		ret = param_set_charp(s, kp);
+@@ -641,7 +654,7 @@ static int __zswap_param_set(const char *val, const struct kernel_param *kp,
+ 	 * or the new pool we failed to add
+ 	 */
+ 	if (put_pool)
+-		zswap_pool_put(put_pool);
++		percpu_ref_kill(&put_pool->ref);
+ 
+ 	return ret;
+ }
 
-Best regards,
 -- 
-Chengming Zhou <zhouchengming@bytedance.com>
+b4 0.10.1
