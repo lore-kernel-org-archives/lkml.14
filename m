@@ -1,269 +1,229 @@
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F6A6127
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 02:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD7F33EA;
+	Wed, 14 Feb 2024 02:21:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707877198; cv=none; b=jz04SbnYucZHARAuhkcXxrSlV4w3SGpeVBubDfouQFz7rRD3WgdPR1+SWgi1VNFcTRKUAFSCPVAWhrGv+qtHwUEOAN1twSig4DahBDOuuzOpbOLICrwX3tbAmZ5WOwWADb5/BrBfv2phweKnxHtp+lFxWyCP9HSn/ChJGaL0MXM=
+	t=1707877283; cv=none; b=tIMSjbwvkf1k6hUt9MXPvuiUe6E/0ZvjdIpjIOrOBV+Y7LopXGzTbfseE1lHZX2KHW3CKWpAR/qkSHQbMdMSEdNUka9tZ8mq8OzKg4pIohu3iWZlrY7aWa6T7SNvBzXQfIITBUVjqlWbLqiZYaThNnTYR7N4jCNR2DRNnSPYjGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707877198; c=relaxed/simple;
-	bh=YyGVL3DTq1NGBUlNTsaZWPygzXSkQqFhl2iQhk+tfEY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oXaX2MROKDA6es/C9+I4vkiOZi2/zyV52j1Ow7xTlCcEBFY+B07MauAyCACSiMVvP2Y69zq8kXdv4Xbtf4d1SkaCKnRNvSIIaKBYtycSHgLU6cIRNAWBJwDLvhoH/sicskdbUF4KFNc32NnOIxzXl4sY8LCamUed18E8SA/lnEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ZXhQZUBz; arc=none smtp.client-ip=115.124.30.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1707877283; c=relaxed/simple;
+	bh=EM7gY7lbYFWjEngchkf8XYyaFxMEiGXNPgtMn46EIms=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Av8unWLLZhX+ZelcnOsnv9jAAio+hxZ7Q+MEJzD0DiHwWb//0OwrExOEbf7M9y2FAOQB/Pi4TAN6ejgmriBwHMPeNrrgENtp9ZVQAX2Ra/C0sbncTRYiz8E89/Tp2SNbze2Fjn18neG+O8gipJLqlfvUz7Az0JQfEBPjY3Ppjy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g9fMtQVo; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ZXhQZUBz"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1707877193; h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type;
-	bh=nB7HiCRDXz45RwbXKMqlhFZOk/rJjNAZ2WqhNw3OoCA=;
-	b=ZXhQZUBzazO+hITzY49+zCe65x+v1lIO/7bnKHnfzAmIHiT8PB8y6dr9nkwoTWVRFuAOhAAuXK1HSrX/8BBuOSIq6PkfeLRJuDuFDjSUP8P/mDXJFI02AKLQYUQCpeJ7vMz63JNYcs9X5ce+V0/GC7mLNfOCLfPgM8W3kjRTU30=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=yaoma@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W0b-9Ff_1707876875;
-Received: from localhost.localdomain(mailfrom:yaoma@linux.alibaba.com fp:SMTPD_---0W0b-9Ff_1707876875)
-          by smtp.aliyun-inc.com;
-          Wed, 14 Feb 2024 10:14:36 +0800
-From: Bitao Hu <yaoma@linux.alibaba.com>
-To: dianders@chromium.org,
-	akpm@linux-foundation.org,
-	pmladek@suse.com,
-	kernelfans@gmail.com,
-	liusong@linux.alibaba.com
-Cc: yaoma@linux.alibaba.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCHv7 1/2] watchdog/softlockup: low-overhead detection of interrupt
-Date: Wed, 14 Feb 2024 10:14:29 +0800
-Message-Id: <20240214021430.87471-2-yaoma@linux.alibaba.com>
-X-Mailer: git-send-email 2.37.1 (Apple Git-137.1)
-In-Reply-To: <20240214021430.87471-1-yaoma@linux.alibaba.com>
-References: <20240214021430.87471-1-yaoma@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g9fMtQVo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707877282; x=1739413282;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=EM7gY7lbYFWjEngchkf8XYyaFxMEiGXNPgtMn46EIms=;
+  b=g9fMtQVojLdTPfuMSbWRuOA27vQ2LgrNsanroraXMEYu9XXzex/OW8vY
+   xTxRFqcHEJ03mDC2px4pD8MnQdt3X0J/ElL8VCBxBhGHdCN6XEI0qvJxX
+   pBk0456nDHjuetkesQ/S4YlvkCtv4g1rPeewLICAh3AE5h5jROKT2dnqJ
+   +EGIQ2JvWtdMgn3BtA55tZpoLU5matUCsvLupD9lwHNJc+sT8dDTItNye
+   bPmn5hZy8miLTxgoPaCJ/s/9tSXXaIk1R53tQ/nG25zhUnAi5ZvwtvINb
+   /DhprUvRSL8fEGUnXsOEG+Rh2wa/zMqH4EkG2Jqp5ZuKur62J8KmueLyM
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="2053126"
+X-IronPort-AV: E=Sophos;i="6.06,158,1705392000"; 
+   d="scan'208";a="2053126"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 18:21:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,158,1705392000"; 
+   d="scan'208";a="3231036"
+Received: from diegoavi-mobl.amr.corp.intel.com (HELO desk) ([10.255.230.185])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 18:21:19 -0800
+Date: Tue, 13 Feb 2024 18:21:18 -0800
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>, tony.luck@intel.com,
+	ak@linux.intel.com, tim.c.chen@linux.intel.com,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Nikolay Borisov <nik.borisov@suse.com>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	kvm@vger.kernel.org,
+	Alyssa Milburn <alyssa.milburn@linux.intel.com>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	antonio.gomez.iglesias@linux.intel.com
+Subject: [PATCH v8 0/6] Delay VERW
+Message-ID: <20240213-delay-verw-v8-0-a6216d83edb7@linux.intel.com>
+X-B4-Tracking: v=1; b=H4sIADUhzGUC/23QTWrDMBAF4KsErasgzejPXfUepQtZGjcC1w5yq
+ iYE372KS6lNvXwP5oN5dzZRTjSx58OdZSppSuNQg3s6sHDywzvxFGtmIAClkJJH6v2NF8pfPAp
+ lVeNMCwFZPThn6tJ1wV4Ze6vNKU2XMd8Wvcil/4FArKEiueCh67QSjUEw8aVPw+f1mIYL9ccwf
+ ixYgTWgNgBUoJPOSVQiOGH3AVwDegNgBTQYg8ZaItT7gP4FVJ1is0XRFfDYAqoGkbzZB8wKANw
+ A5gE4EKb1wduI+4D9A0BsN7CPF5qWIFqhQgv/gXmevwFkYUa28QEAAA==
+X-Mailer: b4 0.12.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The following softlockup is caused by interrupt storm, but it cannot be
-identified from the call tree. Because the call tree is just a snapshot
-and doesn't fully capture the behavior of the CPU during the soft lockup.
-  watchdog: BUG: soft lockup - CPU#28 stuck for 23s! [fio:83921]
-  ...
-  Call trace:
-    __do_softirq+0xa0/0x37c
-    __irq_exit_rcu+0x108/0x140
-    irq_exit+0x14/0x20
-    __handle_domain_irq+0x84/0xe0
-    gic_handle_irq+0x80/0x108
-    el0_irq_naked+0x50/0x58
+v8:
+- Inline EXEC_VERW in CLEAR_CPU_BUFFERS. (Borislav)
+- Fix comments in patch 1. (Borislav)
+- Rebased to tip/master to resolve a conflict with tip tree.
 
-Therefore，I think it is necessary to report CPU utilization during the
-softlockup_thresh period (report once every sample_period, for a total
-of 5 reportings), like this:
-  watchdog: BUG: soft lockup - CPU#28 stuck for 23s! [fio:83921]
-  CPU#28 Utilization every 4s during lockup:
-    #1: 0% system, 0% softirq, 100% hardirq, 0% idle
-    #2: 0% system, 0% softirq, 100% hardirq, 0% idle
-    #3: 0% system, 0% softirq, 100% hardirq, 0% idle
-    #4: 0% system, 0% softirq, 100% hardirq, 0% idle
-    #5: 0% system, 0% softirq, 100% hardirq, 0% idle
-  ...
+v7: https://lore.kernel.org/r/20240204-delay-verw-v7-0-59be2d704cb2@linux.intel.com
+- Rebase to v6.8-rc3.
+- Resolved merge conflict for X86_FEATURE_CLEAR_CPU_BUF definition, bit position
+  was already taken.
+- Resolved merge conflict with 1e4d3001f59f ("x86/entry: Harden
+  return-to-user") and c516213726fb ("x86/entry: Optimize common_interrupt_return()").
 
-This would be helpful in determining whether an interrupt storm has
-occurred or in identifying the cause of the softlockup. The criteria for
-determination are as follows:
-  a. If the hardirq utilization is high, then interrupt storm should be
-  considered and the root cause cannot be determined from the call tree.
-  b. If the softirq utilization is high, then we could analyze the call
-  tree but it may cannot reflect the root cause.
-  c. If the system utilization is high, then we could analyze the root
-  cause from the call tree.
+v6: https://lore.kernel.org/r/20240123-delay-verw-v6-0-a8206baca7d3@linux.intel.com
+- Simplify FB_CLEAR checks in vmx_update_fb_clear_dis() and the comment. (Sean)
 
-The mechanism requires a considerable amount of global storage space
-when configured for the maximum number of CPUs. Therefore, adding a
-SOFTLOCKUP_DETECTOR_INTR_STORM Kconfig knob that defaults to "yes"
-if the max number of CPUs is <= 128.
+v5: https://lore.kernel.org/r/20240111-delay-verw-v5-0-a3b234933ea6@linux.intel.com
+- Added comment to SYM_CODE_START_NOALIGN(mds_verw_sel) explaining VERW
+  operand is in code segment so that VERW at works with KPTI. (Josh/Borislav).
+- Fixed changelog for patch 1/6. (Borislav)
+- Clarify CLEAR_CPU_BUFFERS macro documentation. (Josh)
+- KVM: Move the check to skip FB_CLEAR_CTRL optimization for guests when
+  X86_FEATURE_CLEAR_CPU_BUF is set. (Josh)
+- Rebased to v6.7
 
-Signed-off-by: Bitao Hu <yaoma@linux.alibaba.com>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Liu Song <liusong@linux.alibaba.com>
+v4: https://lore.kernel.org/all/20231027-delay-verw-v4-0-9a3622d4bcf7@linux.intel.com/
+- Fill unused part of mds_verw_sel cacheline with int3. (Andrew)
+- Fix the formatting in documentation (0-day).
+- s/inspite/in spite/ (Sean).
+- Explicitly skip FB_CLEAR optimization when MDS affected (Sean).
+
+v3: https://lore.kernel.org/r/20231025-delay-verw-v3-0-52663677ee35@linux.intel.com
+- Use .entry.text section for VERW memory operand. (Andrew/PeterZ)
+- Fix the duplicate header inclusion. (Chao)
+
+v2: https://lore.kernel.org/r/20231024-delay-verw-v2-0-f1881340c807@linux.intel.com
+- Removed the extra EXEC_VERW macro layers. (Sean)
+- Move NOPL before VERW. (Sean)
+- s/USER_CLEAR_CPU_BUFFERS/CLEAR_CPU_BUFFERS/. (Josh/Dave)
+- Removed the comments before CLEAR_CPU_BUFFERS. (Josh)
+- Remove CLEAR_CPU_BUFFERS from NMI returning to kernel and document the
+  reason. (Josh/Dave)
+- Reformat comment in md_clear_update_mitigation(). (Josh)
+- Squash "x86/bugs: Cleanup mds_user_clear" patch. (Nikolay)
+- s/GUEST_CLEAR_CPU_BUFFERS/CLEAR_CPU_BUFFERS/. (Josh)
+- Added a patch from Sean to use CFLAGS.CF for VMLAUNCH/VMRESUME
+  selection. This facilitates a single CLEAR_CPU_BUFFERS location for both
+  VMLAUNCH and VMRESUME. (Sean)
+
+v1: https://lore.kernel.org/r/20231020-delay-verw-v1-0-cff54096326d@linux.intel.com
+
+Hi,
+
+Legacy instruction VERW was overloaded by some processors to clear
+micro-architectural CPU buffers as a mitigation of CPU bugs. This series
+moves VERW execution to a later point in exit-to-user path. This is
+needed because in some cases it may be possible for kernel data to be
+accessed after VERW in arch_exit_to_user_mode(). Such accesses may put
+data into MDS affected CPU buffers, for example:
+
+  1. Kernel data accessed by an NMI between VERW and return-to-user can
+     remain in CPU buffers (since NMI returning to kernel does not
+     execute VERW to clear CPU buffers).
+  2. Alyssa reported that after VERW is executed,
+     CONFIG_GCC_PLUGIN_STACKLEAK=y scrubs the stack used by a system
+     call. Memory accesses during stack scrubbing can move kernel stack
+     contents into CPU buffers.
+  3. When caller saved registers are restored after a return from
+     function executing VERW, the kernel stack accesses can remain in
+     CPU buffers(since they occur after VERW).
+
+Although these cases are less practical to exploit, moving VERW closer
+to ring transition reduces the attack surface.
+
+Overview of the series:
+
+Patch 1: Prepares VERW macros for use in asm.
+Patch 2: Adds macros to 64-bit entry/exit points.
+Patch 3: Adds macros to 32-bit entry/exit points.
+Patch 4: Enables the new macros.
+Patch 5: Uses CFLAGS.CF for VMLAUNCH/VMRESUME selection.
+Patch 6: Adds macro to VMenter.
+
+Below is some performance data collected on a Skylake client
+compared with previous implementation:
+
+Baseline: v6.6-rc5
+
+| Test               | Configuration          | v1   | v3   |
+| ------------------ | ---------------------- | ---- | ---- |
+| build-linux-kernel | defconfig              | 1.00 | 1.00 |
+| hackbench          | 32 - Process           | 1.02 | 1.06 |
+| nginx              | Short Connection - 500 | 1.01 | 1.04 |
+
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: kvm@vger.kernel.org
+Cc: Alyssa Milburn <alyssa.milburn@linux.intel.com>
+Cc: Daniel Sneddon <daniel.sneddon@linux.intel.com>
+Cc: antonio.gomez.iglesias@linux.intel.com
+To: Thomas Gleixner <tglx@linutronix.de>
+To: Ingo Molnar <mingo@redhat.com>
+To: Borislav Petkov <bp@alien8.de>
+To: Dave Hansen <dave.hansen@linux.intel.com>
+To: x86@kernel.org
+To: "H. Peter Anvin" <hpa@zytor.com>
+To: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Andy Lutomirski <luto@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+To: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+To: tony.luck@intel.com
+To: ak@linux.intel.com
+To: tim.c.chen@linux.intel.com
+To: Andrew Cooper <andrew.cooper3@citrix.com>
+To: Nikolay Borisov <nik.borisov@suse.com>
+
+Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 ---
- kernel/watchdog.c | 98 ++++++++++++++++++++++++++++++++++++++++++++++-
- lib/Kconfig.debug | 13 +++++++
- 2 files changed, 110 insertions(+), 1 deletion(-)
+Pawan Gupta (5):
+      x86/bugs: Add asm helpers for executing VERW
+      x86/entry_64: Add VERW just before userspace transition
+      x86/entry_32: Add VERW just before userspace transition
+      x86/bugs: Use ALTERNATIVE() instead of mds_user_clear static key
+      KVM: VMX: Move VERW closer to VMentry for MDS mitigation
 
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index 81a8862295d6..69e72d7e461d 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -16,6 +16,8 @@
- #include <linux/cpu.h>
- #include <linux/nmi.h>
- #include <linux/init.h>
-+#include <linux/kernel_stat.h>
-+#include <linux/math64.h>
- #include <linux/module.h>
- #include <linux/sysctl.h>
- #include <linux/tick.h>
-@@ -35,6 +37,8 @@ static DEFINE_MUTEX(watchdog_mutex);
- # define WATCHDOG_HARDLOCKUP_DEFAULT	0
- #endif
- 
-+#define NUM_SAMPLE_PERIODS	5
-+
- unsigned long __read_mostly watchdog_enabled;
- int __read_mostly watchdog_user_enabled = 1;
- static int __read_mostly watchdog_hardlockup_user_enabled = WATCHDOG_HARDLOCKUP_DEFAULT;
-@@ -333,6 +337,95 @@ __setup("watchdog_thresh=", watchdog_thresh_setup);
- 
- static void __lockup_detector_cleanup(void);
- 
-+#ifdef CONFIG_SOFTLOCKUP_DETECTOR_INTR_STORM
-+enum stats_per_group {
-+	STATS_SYSTEM,
-+	STATS_SOFTIRQ,
-+	STATS_HARDIRQ,
-+	STATS_IDLE,
-+	NUM_STATS_PER_GROUP,
-+};
-+
-+static const enum cpu_usage_stat tracked_stats[NUM_STATS_PER_GROUP] = {
-+	CPUTIME_SYSTEM,
-+	CPUTIME_SOFTIRQ,
-+	CPUTIME_IRQ,
-+	CPUTIME_IDLE,
-+};
-+
-+static DEFINE_PER_CPU(u16, cpustat_old[NUM_STATS_PER_GROUP]);
-+static DEFINE_PER_CPU(u8, cpustat_util[NUM_SAMPLE_PERIODS][NUM_STATS_PER_GROUP]);
-+static DEFINE_PER_CPU(u8, cpustat_tail);
-+
-+/*
-+ * We don't need nanosecond resolution. A granularity of 16ms is
-+ * sufficient for our precision, allowing us to use u16 to store
-+ * cpustats, which will roll over roughly every ~1000 seconds.
-+ * 2^24 ~= 16 * 10^6
-+ */
-+static u16 get_16bit_precision(u64 data_ns)
-+{
-+	return data_ns >> 24LL; /* 2^24ns ~= 16.8ms */
-+}
-+
-+static void update_cpustat(void)
-+{
-+	int i;
-+	u8 util;
-+	u16 old_stat, new_stat;
-+	struct kernel_cpustat kcpustat;
-+	u64 *cpustat = kcpustat.cpustat;
-+	u8 tail = __this_cpu_read(cpustat_tail);
-+	u16 sample_period_16 = get_16bit_precision(sample_period);
-+
-+	kcpustat_cpu_fetch(&kcpustat, smp_processor_id());
-+
-+	for (i = 0; i < NUM_STATS_PER_GROUP; i++) {
-+		old_stat = __this_cpu_read(cpustat_old[i]);
-+		new_stat = get_16bit_precision(cpustat[tracked_stats[i]]);
-+		util = DIV_ROUND_UP(100 * (new_stat - old_stat), sample_period_16);
-+		__this_cpu_write(cpustat_util[tail][i], util);
-+		__this_cpu_write(cpustat_old[i], new_stat);
-+	}
-+
-+	__this_cpu_write(cpustat_tail, (tail + 1) % NUM_SAMPLE_PERIODS);
-+}
-+
-+static void print_cpustat(void)
-+{
-+	int i, group;
-+	u8 tail = __this_cpu_read(cpustat_tail);
-+	u64 sample_period_second = sample_period;
-+
-+	do_div(sample_period_second, NSEC_PER_SEC);
-+
-+	/*
-+	 * We do not want the "watchdog: " prefix on every line,
-+	 * hence we use "printk" instead of "pr_crit".
-+	 */
-+	printk(KERN_CRIT "CPU#%d Utilization every %llus during lockup:\n",
-+	       smp_processor_id(), sample_period_second);
-+
-+	for (i = 0; i < NUM_SAMPLE_PERIODS; i++) {
-+		group = (tail + i) % NUM_SAMPLE_PERIODS;
-+		printk(KERN_CRIT "\t#%d: %3u%% system,\t%3u%% softirq,\t"
-+			"%3u%% hardirq,\t%3u%% idle\n", i + 1,
-+			__this_cpu_read(cpustat_util[group][STATS_SYSTEM]),
-+			__this_cpu_read(cpustat_util[group][STATS_SOFTIRQ]),
-+			__this_cpu_read(cpustat_util[group][STATS_HARDIRQ]),
-+			__this_cpu_read(cpustat_util[group][STATS_IDLE]));
-+	}
-+}
-+
-+static void report_cpu_status(void)
-+{
-+	print_cpustat();
-+}
-+#else
-+static inline void update_cpustat(void) { }
-+static inline void report_cpu_status(void) { }
-+#endif
-+
- /*
-  * Hard-lockup warnings should be triggered after just a few seconds. Soft-
-  * lockups can have false positives under extreme conditions. So we generally
-@@ -364,7 +457,7 @@ static void set_sample_period(void)
- 	 * and hard thresholds) to increment before the
- 	 * hardlockup detector generates a warning
- 	 */
--	sample_period = get_softlockup_thresh() * ((u64)NSEC_PER_SEC / 5);
-+	sample_period = get_softlockup_thresh() * ((u64)NSEC_PER_SEC / NUM_SAMPLE_PERIODS);
- 	watchdog_update_hrtimer_threshold(sample_period);
- }
- 
-@@ -504,6 +597,8 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
- 	 */
- 	period_ts = READ_ONCE(*this_cpu_ptr(&watchdog_report_ts));
- 
-+	update_cpustat();
-+
- 	/* Reset the interval when touched by known problematic code. */
- 	if (period_ts == SOFTLOCKUP_DELAY_REPORT) {
- 		if (unlikely(__this_cpu_read(softlockup_touch_sync))) {
-@@ -539,6 +634,7 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
- 		pr_emerg("BUG: soft lockup - CPU#%d stuck for %us! [%s:%d]\n",
- 			smp_processor_id(), duration,
- 			current->comm, task_pid_nr(current));
-+		report_cpu_status();
- 		print_modules();
- 		print_irqtrace_events(current);
- 		if (regs)
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 975a07f9f1cc..49f652674bd8 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1029,6 +1029,19 @@ config SOFTLOCKUP_DETECTOR
- 	  chance to run.  The current stack trace is displayed upon
- 	  detection and the system will stay locked up.
- 
-+config SOFTLOCKUP_DETECTOR_INTR_STORM
-+	bool "Detect Interrupt Storm in Soft Lockups"
-+	depends on SOFTLOCKUP_DETECTOR && IRQ_TIME_ACCOUNTING
-+	default y if NR_CPUS <= 128
-+	help
-+	  Say Y here to enable the kernel to detect interrupt storm
-+	  during "soft lockups".
-+
-+	  "soft lockups" can be caused by a variety of reasons. If one is
-+	  caused by an interrupt storm, then the storming interrupts will not
-+	  be on the callstack. To detect this case, it is necessary to report
-+	  the CPU stats and the interrupt counts during the "soft lockups".
-+
- config BOOTPARAM_SOFTLOCKUP_PANIC
- 	bool "Panic (Reboot) On Soft Lockups"
- 	depends on SOFTLOCKUP_DETECTOR
+Sean Christopherson (1):
+      KVM: VMX: Use BT+JNC, i.e. EFLAGS.CF to select VMRESUME vs. VMLAUNCH
+
+ Documentation/arch/x86/mds.rst       | 38 +++++++++++++++++++++++++-----------
+ arch/x86/entry/entry.S               | 22 +++++++++++++++++++++
+ arch/x86/entry/entry_32.S            |  3 +++
+ arch/x86/entry/entry_64.S            | 11 +++++++++++
+ arch/x86/entry/entry_64_compat.S     |  1 +
+ arch/x86/include/asm/cpufeatures.h   |  2 +-
+ arch/x86/include/asm/entry-common.h  |  1 -
+ arch/x86/include/asm/nospec-branch.h | 25 ++++++++++++------------
+ arch/x86/kernel/cpu/bugs.c           | 15 ++++++--------
+ arch/x86/kernel/nmi.c                |  3 ---
+ arch/x86/kvm/vmx/run_flags.h         |  7 +++++--
+ arch/x86/kvm/vmx/vmenter.S           |  9 ++++++---
+ arch/x86/kvm/vmx/vmx.c               | 20 +++++++++++++++----
+ 13 files changed, 111 insertions(+), 46 deletions(-)
+---
+base-commit: 917706297d9c668f37b991a8bb980be6fd9147b1
+change-id: 20231011-delay-verw-d0474986b2c3
+
+Best regards,
 -- 
-2.37.1 (Apple Git-137.1)
+Thanks,
+Pawan
+
 
