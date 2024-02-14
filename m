@@ -1,42 +1,41 @@
 Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D876025C;
-	Wed, 14 Feb 2024 16:27:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A67604BC;
+	Wed, 14 Feb 2024 16:28:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707928080; cv=none; b=ER3J8cRAUnxC2qBLDyRFEdIaqrAMGhhDIDg553Mu2nWJzsn5AOxQ5lJx2mMEiCb+eI89uifNWe4X+0dgV52Z12w+dsXpwP+iiTTEVlOrrY8Q5usvYC/81oiCf8Y3oJzOEpO+KZU4JgaERob0GuWq5nerbwdxUMioAFN2O3TeF7w=
+	t=1707928083; cv=none; b=a5Oyhje3XtehOx1p/p37rCyX4HvdG2CiUOB24l1ifbDJWgbVPVzwzTbX7CD0mBL4/pfj/y/k6s199FUfO/gjmBm3BqYrDBU0grD9H0N1io3Bbr+7jCD1aFL61kUYTG8UikTPgQ3wsR8dQJo4MJkGlriinDmZox2qyvnUnpN6QZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707928080; c=relaxed/simple;
-	bh=c/Rgi6OZdN5UF/IjNS97V3p/dpLK4o5ujnnGuwoRnN4=;
+	s=arc-20240116; t=1707928083; c=relaxed/simple;
+	bh=ir+eoc0jbuEuWJ3O29+dK3BjLCTAqr8YcnzADMODJcA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pyhORioHVq1beIFxfiIrSp64Su3YnS2FGU8ZZrvzqWCCxsvBieeFT6imB3DKKT0bN2WG1cA+P/MTCdTjCitdhoWn0LtVjv8lJRj/hsu5EBAGG6V0jKE/fd1ZY9GSpEryJRHIJT9yfYwxIiJhAYtbH7it7CovrZhR+ndrnNEvHXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IeJl9k0B; arc=none smtp.client-ip=217.70.178.240
+	 In-Reply-To:To:Cc; b=EWkLjJoFbphSdOEBrYh5e3y1MZcYtI4JI6ouzIY9MReewE1kUFyW4NbuEtnlsBEizI9yeOtdvBs+7OKz+FO0KFBIunCNol5S05Iq6TJ5bmqgKMs7F5dYurFrjJMtdl3XpA2WD5m9NQW5mAxKl4CVQRKBfxLzg/Pdc+88U45XJD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KI7iE/Sk; arc=none smtp.client-ip=217.70.178.240
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IeJl9k0B"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KI7iE/Sk"
 Received: from relay3-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::223])
-	by mslow1.mail.gandi.net (Postfix) with ESMTP id CF2E2C36E0;
-	Wed, 14 Feb 2024 16:24:53 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 712CC60011;
-	Wed, 14 Feb 2024 16:24:45 +0000 (UTC)
+	by mslow1.mail.gandi.net (Postfix) with ESMTP id 05D03C38FD;
+	Wed, 14 Feb 2024 16:24:57 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E04EB60014;
+	Wed, 14 Feb 2024 16:24:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1707927886;
+	t=1707927890;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=v8Jcap2Chj1MHbo2CpOWyieR81O/+3SAG9cXjwd6SZI=;
-	b=IeJl9k0Baf99CIXWtvGdgtOLUQhdIEchFjR83qZtjXkrtyfqZMhVABudt0VVg6CuCplatA
-	KxJJvg+rVogBnoIkLhVkNfOUEIAYwhSiMwNqfA/3z88EjyVGtYQpHZ/5+rvI6eBUH+/vLD
-	YLA2n0nD8TRO5+DEGCtPAJhJzmTSQb4gmcxIjJPw/m9aaNkjREvJ+KqTlcS/rUVhwKsH6u
-	RXYuSq9pDQ72z02XfAAqDXnsLZvyGfogiE+UUUoIiKmwJxIbcwIqh9CpLYhHYAQnUntrqD
-	UpZr8n42uiPWZW0Uf5yYUcOPXNphqg4Wmu+XLGDQ+hcev5N5a++B1qQJfJ0qeg==
+	bh=q45CdQpZMMWLXlGQtbNYrLylgczhG+3dk48jcixC08c=;
+	b=KI7iE/Sk/bqMYxn7EUN0qk4cL6VwJwblLS67NPBoGIakEjVJ7vSxtt89veU3xpb51CVvgx
+	Mc/5+mlubAE/dIO7zpP+U2FEVliOJEfpkvfX0UH0arPM2L+rfwAq5vOHC0fzPjlXgfE8Ot
+	hr2PZxFrFL5o3UKW/3eHsPoLzJDqYgIRebkN8QIJTlXXbkEAKtjWOMh63Ga5FBde2uvvo2
+	zDHwsseJlPUKigljUTRWsrr5+ojpJ667REagGlQQ1o0g3JX2ZP/+RDVZHr/CHSS5z/9VnV
+	Wq7fr7NNZU7VYEPVMlKxMzLm8FJot6HPRdxi9uCziucClnjLV+mZyutTVCbb4Q==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Wed, 14 Feb 2024 17:23:55 +0100
-Subject: [PATCH 02/23] dt-bindings: gpio: nomadik: add optional ngpios
- property
+Date: Wed, 14 Feb 2024 17:24:01 +0100
+Subject: [PATCH 08/23] pinctrl: nomadik: minimise indentation in probe
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,7 +44,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240214-mbly-gpio-v1-2-f88c0ccf372b@bootlin.com>
+Message-Id: <20240214-mbly-gpio-v1-8-f88c0ccf372b@bootlin.com>
 References: <20240214-mbly-gpio-v1-0-f88c0ccf372b@bootlin.com>
 In-Reply-To: <20240214-mbly-gpio-v1-0-f88c0ccf372b@bootlin.com>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -63,29 +62,66 @@ Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
 X-Mailer: b4 0.12.4
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-This GPIO controller can support a lesser number of GPIOs than 32.
-Express that in devicetree using an optional, generic property.
+nmk_pinctrl_probe() iterates over each GPIO block. Use an early
+conditional continue to skip to the next iteration rather than indent
+all the loop code block.
+
+Do not change code logic. The block is changed from:
+
+	for (i = 0; i < NMK_MAX_BANKS; i++) {
+		x = of_parse_phandle(...);
+		if (x) {
+			... do work ...
+		}
+	}
+
+To:
+
+	for (i = 0; i < NMK_MAX_BANKS; i++) {
+		x = of_parse_phandle(...);
+		if (!x)
+			continue;
+
+		... do work ...
+	}
 
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
- Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pinctrl/nomadik/pinctrl-nomadik.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml b/Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml
-index a999908173d2..bbd23daed229 100644
---- a/Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml
-@@ -50,6 +50,10 @@ properties:
-   gpio-ranges:
-     maxItems: 1
+diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik.c b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
+index 60443de439fd..c1cb3a363692 100644
+--- a/drivers/pinctrl/nomadik/pinctrl-nomadik.c
++++ b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
+@@ -1201,17 +1201,16 @@ static int nmk_pinctrl_probe(struct platform_device *pdev)
+ 		struct nmk_gpio_chip *nmk_chip;
  
-+  ngpios:
-+    minimum: 0
-+    maximum: 32
+ 		gpio_np = of_parse_phandle(np, "nomadik-gpio-chips", i);
+-		if (gpio_np) {
+-			dev_info(&pdev->dev,
+-				 "populate NMK GPIO %d \"%pOFn\"\n",
+-				 i, gpio_np);
+-			nmk_chip = nmk_gpio_populate_chip(gpio_np, pdev);
+-			if (IS_ERR(nmk_chip))
+-				dev_err(&pdev->dev,
+-					"could not populate nmk chip struct "
+-					"- continue anyway\n");
+-			of_node_put(gpio_np);
+-		}
++		if (!gpio_np)
++			continue;
 +
- required:
-   - compatible
-   - reg
++		dev_info(&pdev->dev, "populate NMK GPIO %d \"%pOFn\"\n",
++			 i, gpio_np);
++		nmk_chip = nmk_gpio_populate_chip(gpio_np, pdev);
++		if (IS_ERR(nmk_chip))
++			dev_err(&pdev->dev,
++				"could not populate nmk chip struct - continue anyway\n");
++		of_node_put(gpio_np);
+ 	}
+ 
+ 	prcm_np = of_parse_phandle(np, "prcm", 0);
 
 -- 
 2.43.1
