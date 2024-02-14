@@ -1,204 +1,104 @@
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2C0312E6C;
-	Wed, 14 Feb 2024 09:29:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764E0171AC
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 09:30:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707902998; cv=none; b=Is54wVIsyM4sJE1gDU1OPhp7vmItZYKk/AA6Rk6Nvm4iah5hdYSpNfMcgTXvVXwkbcqxuZCxIGp/E/1aheYqWy5YkKd3+8IkP9hmFw4tICk7tTFFxjUxZNxub54LB02AcTXCOjPA6kiEwuBeVd0l77U/TeOUhQHaYEcbey8Y2/c=
+	t=1707903015; cv=none; b=jGRtXUL//I+wpKXsK3nJNq109QQYR8OfDsX+CfYfuFPD6/UywY0ASuswQawzZWIJZzOl9Da0agbdHbsw/ar2MRQqVwV2j1ZWsxIVKt9yTfpPlXDbq4Gnq3S2F0ILDWBJTgfHUx02GXAH8YwNMBlVZWwtHaeckqe8VS11eZAMnIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707902998; c=relaxed/simple;
-	bh=lONzxbEoYUVLxbe6desgi2wkPPm1kZXvIZCsfrCdL50=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s9TOVxT7RnDlbCIM1cr4o69XkaOYc/juQTqnwDPl+zSz5UgHhSTFenV1ac1RLIQ0E1flg5XhL0bwRX4qoMLMxoG7LDHBvqHTgkIr3RVnACV7CLFXy6sLu7gEGT0MLBYJmw61zylXZwpokFYWZ5DV4eKa2Mab+SN0KDTEL8dxM2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-IronPort-AV: E=Sophos;i="6.06,159,1705330800"; 
-   d="asc'?scan'208";a="197820337"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 14 Feb 2024 18:29:54 +0900
-Received: from [10.226.93.95] (unknown [10.226.93.95])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 5294241E74F2;
-	Wed, 14 Feb 2024 18:29:51 +0900 (JST)
-Message-ID: <d685bee8-c760-463b-ba72-6c6dda2cd96c@bp.renesas.com>
-Date: Wed, 14 Feb 2024 09:29:49 +0000
+	s=arc-20240116; t=1707903015; c=relaxed/simple;
+	bh=MZXc/+oEg/fprLTqq3So8SjUVzpTcPO4Doree43jGjc=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=KHcaOgO9SZ7FOBjzh7Csoql/+SnfEZXff0XeENiZDrsN7leQQkB71qPPm2SuHEl59fEfw0vHYZ8AkvcrojuSMKKTm8/bxl8kdbu6TuqHOCtkTJB7F5Usz8uI5rX5U5CyK/gBnn50RLRW1WSV2Kfjd55RI0ssb6PjT7qmkJDWJvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--pranavpp.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VhV9QM6Z; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--pranavpp.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VhV9QM6Z"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-296f78bdb40so5374348a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 01:30:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707903014; x=1708507814; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=mma7wfUNF3QcF2/p2Wj8oZ4dYl748XCEjPWFOwBXlAc=;
+        b=VhV9QM6ZO8Ts8KYK1gtL1nLchEU2B5loY/O0XscC8dJmHCjANqOx61cHuDyWGggptv
+         Ozgc3Q8juYncUaokDuBtiQgWw1M4s3Tp32eod4vcYlfrXtHwCSVImEyqAK2zLFeDWyf5
+         0eDkAkgLUr8p+XCaycGFN16KqUVrzGIoT0GyO4qTotUn17A43qEp4NjNo6+Oo55weFNT
+         t85s5mPaeniGNGpTJ1GOljUs+DhXj+01XrRL6GZs3b6buptLMRuCmvJFFPIR0owPy8qz
+         Xn9qQZNJBmhs8y5Ol20NrGRRPE3zXiFGGON+IR6Kwks/9iVtdyWA8qJffO3mAW1vBySy
+         Hv9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707903014; x=1708507814;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mma7wfUNF3QcF2/p2Wj8oZ4dYl748XCEjPWFOwBXlAc=;
+        b=lICZcZE6/gC/mx1Il+TadNjnAh+t40wP9AUmKriiox+zDVEyMkbPBncbk2d4/a0TAR
+         iv/sXW1stvX+lGICnuEyGPUxRQivNptnpB+cD9ameQLlRWYza1c5rF1T44U90b2yxla1
+         wiVJCvjxcbZKsLjPKmVRBHuw8wi7tdImy/z2EQ6NfhJB/fa1itAGuaog2V3oH7WPrYab
+         wXKr6FUXn9YmG39n55mivGe020MzWWtXW4h68TcazrYPcCX2T+97byeXpckUDuRLMKJG
+         ZrIciA/puNFS+ZbxfV//Nm2+kZAH1qLU3e2hsFIsydOYT7oIIJ+U5Oz7KK771PQAVdGe
+         d1yQ==
+X-Gm-Message-State: AOJu0YxtglrYrzRZH89NIXM4aPuj9awb17ZITDhfTElDDY3gcpd4r9wV
+	ITaOSA4psg6wNeJQzXNao+M5ETzNCNg/hk7chKLjOQJDetJbTfxG4DSwwYNSaOSUqNngfgf388k
+	cxAF/UlMq3w==
+X-Google-Smtp-Source: AGHT+IGRKESMA0B0TRhzFdh10tIyCqIc3D8jr37bx5O6YOpfxPPYiE9sIs7cfsFqXftIWqHEZSuF35lDARhwuw==
+X-Received: from pranav-first.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:390b])
+ (user=pranavpp job=sendgmr) by 2002:a17:90b:5288:b0:295:efdc:6abc with SMTP
+ id si8-20020a17090b528800b00295efdc6abcmr23368pjb.5.1707903013898; Wed, 14
+ Feb 2024 01:30:13 -0800 (PST)
+Date: Wed, 14 Feb 2024 09:29:00 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH net-next v2 6/7] net: ravb: Enable SW IRQ Coalescing
- for GbEth
-Content-Language: en-GB
-To: Sergey Shtylyov <s.shtylyov@omp.ru>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>, netdev@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240206091909.3191-1-paul.barker.ct@bp.renesas.com>
- <20240206091909.3191-7-paul.barker.ct@bp.renesas.com>
- <2251fe66-11b7-2f30-c905-7bc1b9a57dab@omp.ru>
- <895bdec7-05d6-4435-8be1-fe8ca716cbcb@bp.renesas.com>
- <7c28bbea-0b3f-ee62-05c8-e6f1bc738b0b@omp.ru>
-From: Paul Barker <paul.barker.ct@bp.renesas.com>
-Organization: Renesas Electronics Corporation
-In-Reply-To: <7c28bbea-0b3f-ee62-05c8-e6f1bc738b0b@omp.ru>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------8Vgu0R0Il0ku5RlX1OWVVOg2"
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
+Message-ID: <20240214092902.1908443-1-pranavpp@google.com>
+Subject: [PATCH v3 0/2] alarmtimer: Rework the suspend flow in alarmtimer
+From: Pranav Prasad <pranavpp@google.com>
+To: tglx@linutronix.de, jstultz@google.com, sboyd@kernel.org
+Cc: linux-kernel@vger.kernel.org, krossmo@google.com, 
+	Pranav Prasad <pranavpp@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------8Vgu0R0Il0ku5RlX1OWVVOg2
-Content-Type: multipart/mixed; boundary="------------CCriltInN1UKWAx358KKJ1C5";
- protected-headers="v1"
-From: Paul Barker <paul.barker.ct@bp.renesas.com>
-To: Sergey Shtylyov <s.shtylyov@omp.ru>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>, netdev@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <d685bee8-c760-463b-ba72-6c6dda2cd96c@bp.renesas.com>
-Subject: Re: [RFC PATCH net-next v2 6/7] net: ravb: Enable SW IRQ Coalescing
- for GbEth
-References: <20240206091909.3191-1-paul.barker.ct@bp.renesas.com>
- <20240206091909.3191-7-paul.barker.ct@bp.renesas.com>
- <2251fe66-11b7-2f30-c905-7bc1b9a57dab@omp.ru>
- <895bdec7-05d6-4435-8be1-fe8ca716cbcb@bp.renesas.com>
- <7c28bbea-0b3f-ee62-05c8-e6f1bc738b0b@omp.ru>
-In-Reply-To: <7c28bbea-0b3f-ee62-05c8-e6f1bc738b0b@omp.ru>
+Hi!
 
---------------CCriltInN1UKWAx358KKJ1C5
-Content-Type: multipart/mixed; boundary="------------hivdtR059EkCALa1CPzu50SE"
+During the driver suspend phase of kernel suspend, alarmtimer's suspend
+callback is invoked and it identifies the earliest next wakeup alarm and
+programs that into the HW real time clock (RTC). However, there is an
+exception to this process. If the next alarm is within the next 2 seconds,
+the alarmtimer driver fails to suspend. In this case, a non-trivial amount
+of power is spent to freeze and unfreeze all userspace processes and to
+suspend and resume a number of devices. In the vast majority of cases, the
+imminent alarm that caused the failure was likely already scheduled before
+suspend even started. This provides an opportunity to reduce power
+consumption if the suspend failure decision is made earlier in the suspend
+flow, before the unnecessary extra work is done.
 
---------------hivdtR059EkCALa1CPzu50SE
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+This patch series aims to achieve a kernel suspend flow in which the check
+for an imminent alarm is performed early during the suspend prepare phase.
 
-On 12/02/2024 20:40, Sergey Shtylyov wrote:
-> On 2/12/24 2:45 PM, Paul Barker wrote:
-> [...]
->>>> diff --git a/drivers/net/ethernet/renesas/ravb.h b/drivers/net/ether=
-net/renesas/ravb.h
->>>> index 55a7a08aabef..ca7a66759e35 100644
->>>> --- a/drivers/net/ethernet/renesas/ravb.h
->>>> +++ b/drivers/net/ethernet/renesas/ravb.h
->>>> @@ -1078,6 +1078,7 @@ struct ravb_hw_info {
->>>>  	unsigned nc_queues:1;		/* AVB-DMAC has RX and TX NC queues */
->>>>  	unsigned magic_pkt:1;		/* E-MAC supports magic packet detection */=
+Changes in v3 from v2:
 
->>>>  	unsigned half_duplex:1;		/* E-MAC supports half duplex mode */
->>>> +	unsigned needs_irq_coalesce:1;	/* Requires SW IRQ Coalescing to ac=
-hieve best performance */
->>>
->>>    Is this really a hardware feature?
->>
->> It's more like a requirement to get the best out of this hardware and =
-the Linux networking stack.
->>
->> I considered checking the compatible string in the probe function but =
-I decided that storing a configuration bit in the HW info struct was clea=
-ner.
->=20
->    Yes, but you added the new bit under the "hardware features" commet.=
- :-)
->=20
->>>    Also, s/Requires SW/Needs software/ and s/to achieve best performa=
-nce//,
->>> please...
->>
->> Will do.
->=20
->    The comment is too long, I think. :-)
+- Reversed the order of patches
+- Formatted variable declarations
+- Moved the RTC device check out of alarmtimer_get_soonest()
+- Reinstated the check for pending alarm in alarmtimer_suspend()
 
-I'll fix both in the next revision.
+Changes in v2 from v1:
 
---=20
-Paul Barker
+- Moved the pm_wakeup_event call to the PM notifier
+- Added a check for RTC device in the PM notifier
 
---------------hivdtR059EkCALa1CPzu50SE
-Content-Type: application/pgp-keys; name="OpenPGP_0x27F4B3459F002257.asc"
-Content-Disposition: attachment; filename="OpenPGP_0x27F4B3459F002257.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+Pranav Prasad (2):
+  alarmtimer: Add PM notifier to check early for imminent alarm
+  alarmtimer: Create sysfs to make alarm check window configurable
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+ kernel/time/alarmtimer.c | 164 +++++++++++++++++++++++++++++++++------
+ 1 file changed, 140 insertions(+), 24 deletions(-)
 
-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3D
-=3DsIIN
------END PGP PUBLIC KEY BLOCK-----
+-- 
+2.43.0.687.g38aa6559b0-goog
 
---------------hivdtR059EkCALa1CPzu50SE--
-
---------------CCriltInN1UKWAx358KKJ1C5--
-
---------------8Vgu0R0Il0ku5RlX1OWVVOg2
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wnsEABYIACMWIQSiu8gv1Xr0fIw/aoLbaV4Vf/JGvQUCZcyIDQUDAAAAAAAKCRDbaV4Vf/JGvT9f
-AQD3ZTM9h1T4x/eU2txm+Izc1frvr56+GX9Q6xisxc+P2AD9H8tOwaO4TZA1pSueDx9ZVEJFrcg+
-dPyCmfIir8aLbQ0=
-=4ZQM
------END PGP SIGNATURE-----
-
---------------8Vgu0R0Il0ku5RlX1OWVVOg2--
