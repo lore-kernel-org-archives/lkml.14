@@ -1,112 +1,87 @@
-Received: from postout2.mail.lrz.de (postout2.mail.lrz.de [129.187.255.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0BD22626;
-	Wed, 14 Feb 2024 12:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.187.255.138
+Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D21E5524C9;
+	Wed, 14 Feb 2024 12:42:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.228.1.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707914515; cv=none; b=EB4fT8dWtBcFCQq0rE2IpwulrcBlCAVZQib9JhRCVORlbycp6MsYFznlApvvVLSyAkiVRRxbmyUcu9kMiLT02gj7YH40koTRrKX7V3SFQzQGRIeprdxjJ31Sne08VOKMK5nVbOUhqAG/Mhyf03Jx/Vjt3CLRat7i/0gHuYUowf4=
+	t=1707914571; cv=none; b=ZJw1ZqyIbbbvS39MaFSaDfPODp0HLwuCZjkAZMdN+aP44IXI42wFJUIPqtxTqOzGxkK7R5w176qBLpHxVywku5lSG9jX44qy3b+nBFyXGlgV9BaZjYdrmNwTRLDJ8F305JrRKB/+904WZKMuGr5bR/agBxx12sRIeR4FAHjwYOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707914515; c=relaxed/simple;
-	bh=+EUUACJwNj0bXAgQ+8GQThIgivD8jBsEM0i2kqiLRwY=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type; b=l+qDiNajiaMVY37ftQj5F5MrRJmIsK+IraIF36ruIKKRaBdCygNs9bb0bsHOuiEiTjz4nmTB39Y3BufMj66ItJmhE+ivrjjQ45cCjs9/R5LGvanm3wUbNAH4Q2no4qNSqGM460gc4yTlabW19OzEUoE//qWEy//h7sz/UtR0Etk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tum.de; spf=pass smtp.mailfrom=tum.de; dkim=pass (2048-bit key) header.d=tum.de header.i=@tum.de header.b=jCkm6hBA; arc=none smtp.client-ip=129.187.255.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tum.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tum.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tum.de header.i=@tum.de header.b="jCkm6hBA"
-Received: from lxmhs52.srv.lrz.de (localhost [127.0.0.1])
-	by postout2.mail.lrz.de (Postfix) with ESMTP id 4TZd9b6ncSzyQl;
-	Wed, 14 Feb 2024 13:41:39 +0100 (CET)
-Authentication-Results: postout.lrz.de (amavisd-new); dkim=pass (2048-bit key)
-	reason="pass (just generated, assumed good)" header.d=tum.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tum.de; h=
-	content-transfer-encoding:content-type:content-type:mime-version
-	:x-mailer:message-id:date:date:subject:subject:from:from
-	:received:received; s=tu-postout21; t=1707914499; bh=+EUUACJwNj0
-	bXAgQ+8GQThIgivD8jBsEM0i2kqiLRwY=; b=jCkm6hBAGikTb7WTBbUgWqzy6+n
-	MsU6lh8LMf1BCN9aH1xVbcH/sFPSBiQop0SsmjtM5kaa2KtqVuTdQzaH7+UKcBti
-	UYgXAEs4yn6t7PtVqE2DyL3Hgeb95O9WASOIqeH2sCluXDjHGV8cZcFS0OtaYEfR
-	1QuI+8UfinrKRCbac2fhqtE98tV5zC7cfRETITUmcBNzMAybCcT5jpH+I7Ayh1y9
-	igQsXtpwQh8aZtD2t8f+HkIyROc7yn9VCgnG+2pxhSxBJ76t4Kj15khxwPxVcS5q
-	fzBll2eylnTAsjnBgn/r5Hy0qk1jkQARZ0Ngh0PqocArdBiY0+/v+KRAVjA==
-X-Virus-Scanned: by amavisd-new at lrz.de in lxmhs52.srv.lrz.de
-X-Spam-Flag: NO
-X-Spam-Score: -2.885
-X-Spam-Level:
-Received: from postout2.mail.lrz.de ([127.0.0.1])
-	by lxmhs52.srv.lrz.de (lxmhs52.srv.lrz.de [127.0.0.1]) (amavisd-new, port 20024)
-	with LMTP id RoFk6-aGmlmz; Wed, 14 Feb 2024 13:41:39 +0100 (CET)
-Received: from sienna.fritz.box (ppp-93-104-85-184.dynamic.mnet-online.de [93.104.85.184])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by postout2.mail.lrz.de (Postfix) with ESMTPSA id 4TZd9Z5vmmzyRs;
-	Wed, 14 Feb 2024 13:41:38 +0100 (CET)
-From: =?UTF-8?q?Paul=20Heidekr=C3=BCger?= <paul.heidekrueger@tum.de>
-To: Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>,
-	Mark Brown <broonie@kernel.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	=?UTF-8?q?Paul=20Heidekr=C3=BCger?= <paul.heidekrueger@tum.de>,
-	linux-kselftest@vger.kernel.org (open list:KERNEL UNIT TESTING FRAMEWORK (KUnit)),
-	kunit-dev@googlegroups.com (open list:KERNEL UNIT TESTING FRAMEWORK (KUnit)),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH RFC] kunit: tool: add 'mte=on' qemu arg on arm64
-Date: Wed, 14 Feb 2024 12:41:30 +0000
-Message-Id: <20240214124131.990872-1-paul.heidekrueger@tum.de>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1707914571; c=relaxed/simple;
+	bh=r6TYTqFwQotruhi73e9osnG5YZSVtIWyB3/MDHVNG88=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tDX0xyjNebrNZ5Byv3m+pcju9zRiJmRjwQ+5yy/+oLRIuxurtNi2G2lyDKRu/2+6bJrtGq4KHYms0j9/9U7n1zmb1vcs5l/IooBHpATmwTO3twqpOBj1inzmFtOC2HPobFBARRaLPLKuAcM/QHeX3I6ZYhWDJKcxhZWOEuz0P5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org; spf=pass smtp.mailfrom=kernel.crashing.org; arc=none smtp.client-ip=63.228.1.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 41ECaQmn030022;
+	Wed, 14 Feb 2024 06:36:26 -0600
+Received: (from segher@localhost)
+	by gate.crashing.org (8.14.1/8.14.1/Submit) id 41ECaO1V030021;
+	Wed, 14 Feb 2024 06:36:24 -0600
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date: Wed, 14 Feb 2024 06:36:24 -0600
+From: Segher Boessenkool <segher@kernel.crashing.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: David Laight <David.Laight@aculab.com>, Arnd Bergmann <arnd@kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "llvm@lists.linux.dev" <llvm@lists.linux.dev>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Bill Wendling <morbo@google.com>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        Justin Stitt <justinstitt@google.com>,
+        Jiri Slaby <jirislaby@kernel.org>
+Subject: Re: [PATCH] tty: hvc-iucv: fix function pointer casts
+Message-ID: <20240214123624.GB19790@gate.crashing.org>
+References: <20240213101756.461701-1-arnd@kernel.org> <20240213191254.GA19790@gate.crashing.org> <57d72e2ccc8245fe99982613a11c461c@AcuMS.aculab.com> <2024021426-unleveled-unhearing-8021@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024021426-unleveled-unhearing-8021@gregkh>
+User-Agent: Mutt/1.4.2.3i
 
-Hi!
+On Wed, Feb 14, 2024 at 11:37:21AM +0100, Greg Kroah-Hartman wrote:
+> On Wed, Feb 14, 2024 at 09:46:33AM +0000, David Laight wrote:
+> > From: Segher Boessenkool
+> > > Sent: 13 February 2024 19:13
+> > > 
+> > > On Tue, Feb 13, 2024 at 11:17:49AM +0100, Arnd Bergmann wrote:
+> > > > clang warns about explicitly casting between incompatible function
+> > > > pointers:
+> > > >
+> > > > drivers/tty/hvc/hvc_iucv.c:1100:23: error: cast from 'void (*)(const void *)' to 'void (*)(struct
+> > > device *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+> > > >  1100 |         priv->dev->release = (void (*)(struct device *)) kfree;
+> > > >       |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > > 
+> > > Such a cast of course is explicitly allowed by 6.3.2.3/8, only calling a
+> > > function using a non-compatible type is UB.  This warning message is
+> > > quite misleading.  Doubly so because of the -Werror, as always.
+> > 
+> > But it will get called using the wrong type.
+> > And (is it) fine-ibt will reject the incorrect call.
+> 
+> And rightfully so, this type of casting abuse is just that, abuse.
+> 
+> Almost no one should be just calling kfree() on a device pointer, I'll
+> look at the surrounding code as odds are something odd is going on.  But
+> for now, this patch is correct.
 
-I was running some KASan tests with kunit.py recently and noticed that
-when KASan is run in hw tags mode, we manually have to add the required
-`mte=on` option to kunit_tool's qemu invocation, as the tests will
-otherwise crash.
+Yes, and I said so.  My point is that the warning message pretends the
+cast is bad or dangerous.  It is not, similar casts are the only way in
+C to do certain things (yes, you can always avoid it completely, by
+writing completely different code, like the patch does, and that
+sometimes is a better idea even).
 
-To make life easier, I was looking into ways for kunit.py to recognise
-when MTE support was required and set the option automatically.
+But the warning message is misleading and does more damage than it helps
+avoid.
 
-All solutions I could come up with for having kunit_tool conditionally
-pass `mte=on` to qemu, either entailed duplicate code or required
-parsing of kernel's config file again. I was working under the
-assumption that only after configuring the kernel we would know whether
-the 'mte=on' option was necessary, as CONFIG_ARM64_MTE is not visible
-before.
 
-Only afterwads did I realise that the qemu arm64 config that kunit_tool
-falls back on, uses the `virt` machine, which supports MTE in any case.
-So, could it be as easy as just adding the `mte=on` option to
-kunit_tool's arm64 config? Would this be a welcome addition? 
-
-What do you think? 
-
-Many thanks,
-Paul
-
-Signed-off-by: Paul Heidekrüger <paul.heidekrueger@tum.de>
----
- tools/testing/kunit/qemu_configs/arm64.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/kunit/qemu_configs/arm64.py b/tools/testing/kunit/qemu_configs/arm64.py
-index d3ff27024755..a525f7e1093b 100644
---- a/tools/testing/kunit/qemu_configs/arm64.py
-+++ b/tools/testing/kunit/qemu_configs/arm64.py
-@@ -9,4 +9,4 @@ CONFIG_SERIAL_AMBA_PL011_CONSOLE=y''',
- 			   qemu_arch='aarch64',
- 			   kernel_path='arch/arm64/boot/Image.gz',
- 			   kernel_command_line='console=ttyAMA0',
--			   extra_qemu_params=['-machine', 'virt', '-cpu', 'max,pauth-impdef=on'])
-+			   extra_qemu_params=['-machine', 'virt,mte=on', '-cpu', 'max,pauth-impdef=on'])
--- 
-2.40.1
-
+Segher
