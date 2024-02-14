@@ -1,292 +1,146 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from wfout1-smtp.messagingengine.com (wfout1-smtp.messagingengine.com [64.147.123.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CCD684FA0;
-	Wed, 14 Feb 2024 17:23:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F84127B7E;
+	Wed, 14 Feb 2024 17:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707931405; cv=none; b=rhv2G2+a9nmMSMHkFmnuVJCBuMuzoPQ6tEl+FX6pPnT3U2joWYf+oJO/EYSLOPq3qQ92xcHirgxNrR63OQWcgkcwypTyqjYAoGUr46/i2D2YnR9FNaq7Gub7Lxa8TDqujjPLKQ6BQex+jvUmV2IFkNQhO8u4sORqC4CP1FXNPrE=
+	t=1707931410; cv=none; b=UcBW+L9N3mpETJ0rCJzOR/K/ySzO2xFzeGRBMIxFaPeAO9rquNu7EFi3zd0qjaFc351LMmTMNFT3WjI3mFTNpopHurARR0g1uNvwDA0noq47MAchtxGVQU5UYtQv+w4Z91/7fb9DqQoJhiU+T48Qk6NBzdizHhGfsiNRDP3eUMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707931405; c=relaxed/simple;
-	bh=83FYFITJxZ0ToyIf4Cort5eRKEEZpBch36s5bpwbgko=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NQYvgHA4n8YeUPD/lAP0m2HHUAwf3Nxy3fB+NQBhWeyOFo2vzbler312ssHGDh0HuZJZzMGAUryWcw/EN1yUECXr/ypmuk/jZA4m/vKM6RMtb9PF7a5slMRRoilSPy1jIhFSP30OM76+jSMRqwsBhs/JeIiv9VYM8g3rHxW8ijU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=E1YIRe4g; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1707931410; c=relaxed/simple;
+	bh=gqEfZ2kRHvUVNQMPzyx6hDHwmUUqj5fHtD/Rz18BEQA=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=esSj04JcgiWd5ujaMa3u8IOLVcIbbqf8FNNgMbRvjd4WWm+LUfrolBqq/nil0pDqBbdGHSYL1gZ/r63DVFZY9WqfP2bj3t+FpO8ZhIPG4Yu6dyrBzDcQAUYr0HXpWxq1ILYbCfbx2bgjPJcVzKZdZXKpwSdJPj8SrMPDg+tL3sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=bFxtjj5V; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=dUQQDeNV; arc=none smtp.client-ip=64.147.123.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="E1YIRe4g"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41EHEGZl026396;
-	Wed, 14 Feb 2024 18:23:11 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=c2yeVpc3MZbl0q16caO2boLot7TbDyFbU6polZTQNW0=; b=E1
-	YIRe4geOgTlnVbLobG5AGMxz1beN9c2eAI21IzPJHM+jnLA2KW4RQm2nIQoxZR3V
-	QaJ8/yT9vjGCN58BuypGE3Zv2TP/V/3qIG83Ejb3l0FK97dhoY2AUsSpGklK0u/G
-	4ZTSDxfWEwdtw3BgcK3NpreepMqDnRpnlELYXrFkjq8C1FxyPXtQhi2XhhA5//n4
-	x6085imLiYi4qt3lnxHl59KK6rKb2rbkgKiCdApY0cf2fCeV8Sy4ENZGz/oRPloE
-	Xdjny4hY9ngyegILyOWrFW1hc0EHszGcJTkPCr8pGdHJSeUmacmnzA69vuvlAE/0
-	Tw4IWsAwtZPll6txZuEQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3w6kk4wwef-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 Feb 2024 18:23:11 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 841CB4002D;
-	Wed, 14 Feb 2024 18:23:05 +0100 (CET)
-Received: from Webmail-eu.st.com (eqndag1node6.st.com [10.75.129.135])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 129D42CA550;
-	Wed, 14 Feb 2024 18:21:37 +0100 (CET)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE6.st.com
- (10.75.129.135) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 14 Feb
- 2024 18:21:36 +0100
-Received: from localhost (10.201.20.75) by SAFDAG1NODE1.st.com (10.75.90.17)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 14 Feb
- 2024 18:21:36 +0100
-From: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier
-	<mathieu.poirier@linaro.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <op-tee@lists.trustedfirmware.org>, <devicetree@vger.kernel.org>,
-        Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
-Subject: [PATCH v3 7/7] remoteproc: stm32: Add support of an OP-TEE TA to load the firmware
-Date: Wed, 14 Feb 2024 18:21:27 +0100
-Message-ID: <20240214172127.1022199-8-arnaud.pouliquen@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240214172127.1022199-1-arnaud.pouliquen@foss.st.com>
-References: <20240214172127.1022199-1-arnaud.pouliquen@foss.st.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="bFxtjj5V";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dUQQDeNV"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.west.internal (Postfix) with ESMTP id 82B9F1C00080;
+	Wed, 14 Feb 2024 12:23:26 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Wed, 14 Feb 2024 12:23:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1707931406; x=1708017806; bh=y+Eh983YcJ
+	xk/dsxkD7Ix5UZbVz6STVGhdNqxRo7eIQ=; b=bFxtjj5V8SLfNb5SOG3mEwBNIg
+	huUAMTfBUWmS+RH0DxnO5Sl8y8n49N4auwlAiC2H+UQNoj2z0v7Tvx1X+2GPja94
+	S0Vq9SgAincNDRgTQXKTpW1WdLwOP/94PXVnxA9p3lJ60NmRu/BDQVmsWzIWlMBD
+	WsLr6521qelYqIEk8OST89dNnl6sKKaC+F4+q3rxrUG8GDP5TQ+5r7/HXRPkTI+9
+	9QrYVNAPKFPo8Y5gGESTOEWefMK6rMkHRTQwimqeat0ccu65T5p2/9VKvdgv7d8R
+	5PLukkvfZ0yi/IsD0I11ZcLZ57RIDb4sDhqvDrWrL/FIxC4lo7rT0++RwqWQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1707931406; x=1708017806; bh=y+Eh983YcJxk/dsxkD7Ix5UZbVz6
+	STVGhdNqxRo7eIQ=; b=dUQQDeNVUjm/GXz7mWysde/xhg7E995GTiVH6hMf+5mq
+	oHlw23juOB52LvdrLEuMBcFglFiPoZfCr7bM7jU1D4l8lEeA1/Ydc9CueT5YrTHx
+	I+zkNxD5emIHQ1hDKQ9FIiDjl65mwWnIXbK2u+OXKNMIsqA9aKuOTmopkGj3x3fA
+	04PtvchYkMmpJ4ag434tHI+DULvkl6ELnltH53lCXmS0s9B3EiEV9hONF60vBPLk
+	/9B32MDWPAAzX3KFNi8mx+MXv41+DWLRPL8YWeykMwHWyua6Bi+T35v1gHY/gUpz
+	TjiYIJNv2NtF7a38wxYDqkNL1Np3cgOPJURhk6zuPw==
+X-ME-Sender: <xms:DffMZYtQPWQJfcRC1E8ded2J768DNWvDeK_-ah5oBJlIaYq3X51Hjg>
+    <xme:DffMZVdJktaPxHkh9vTmVyKz7XfW2aYPHSlq2xWbtlnEsLGD84pPU1jnLUpMX2Sin
+    zy-FBtaSIJT3IkdziA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudejgddutdduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:DffMZTy8wc9ElqdfJvHVmUrRPQYxfiFzfaYwK8AsrXzkw0Lb2gdYtw>
+    <xmx:DffMZbN5zlial-ID2wAyfZdzi5LpmSRLXQUcIcaa9Pc7amZ_GPyBlA>
+    <xmx:DffMZY9niPhsoIsQxE-EiPCTCW3iL_mrIPM_ptFKYk5rje0KRqWuRA>
+    <xmx:DvfMZVPXjG3WRzWJicu-jlrNuW9pfrH8JGCiityRjbfHiA_StKNP3q1xohs>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 5FA83B60092; Wed, 14 Feb 2024 12:23:25 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-144-ge5821d614e-fm-20240125.002-ge5821d61
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-Id: <886629be-a492-4c8c-aa79-d13847cb228a@app.fastmail.com>
+In-Reply-To: <8634tv57i2.wl-maz@kernel.org>
+References: <20240213225619.11726-1-rdunlap@infradead.org>
+ <867cj75q52.wl-maz@kernel.org>
+ <c6e55baf-4f0c-4342-971a-713ed55f5a51@app.fastmail.com>
+ <8634tv57i2.wl-maz@kernel.org>
+Date: Wed, 14 Feb 2024 18:22:53 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Marc Zyngier" <maz@kernel.org>
+Cc: "Randy Dunlap" <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
+ "Geert Uytterhoeven" <geert@linux-m68k.org>, "Rob Herring" <robh@kernel.org>,
+ "Philipp Zabel" <p.zabel@pengutronix.de>, "Peter Rosin" <peda@axentia.se>,
+ devicetree@vger.kernel.org
+Subject: Re: [PATCH v2] of: OF_IRQ: select IRQ_DOMAIN instead of depending on it
 Content-Type: text/plain
-X-ClientProxiedBy: SAFCAS1NODE2.st.com (10.75.90.13) To SAFDAG1NODE1.st.com
- (10.75.90.17)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-14_10,2024-02-14_01,2023-05-22_02
 
-The new TEE remoteproc device is used to manage remote firmware in a
-secure, trusted context. The 'st,stm32mp1-m4-tee' compatibility is
-introduced to delegate the loading of the firmware to the trusted
-execution context. In such cases, the firmware should be signed and
-adhere to the image format defined by the TEE.
+On Wed, Feb 14, 2024, at 17:35, Marc Zyngier wrote:
+> On Wed, 14 Feb 2024 16:06:06 +0000,
+> "Arnd Bergmann" <arnd@arndb.de> wrote:
+>> 
+>> On Wed, Feb 14, 2024, at 10:52, Marc Zyngier wrote:
+>> > On Tue, 13 Feb 2024 22:56:19 +0000, Randy Dunlap <rdunlap@infradead.org> wrote:
+>> >>
+>> >> diff -- a/drivers/of/Kconfig b/drivers/of/Kconfig
+>> >> --- a/drivers/of/Kconfig
+>> >> +++ b/drivers/of/Kconfig
+>> >> @@ -80,7 +80,8 @@ config OF_ADDRESS
+>> >>  
+>> >>  config OF_IRQ
+>> >>  	def_bool y
+>> >> -	depends on !SPARC && IRQ_DOMAIN
+>> >> +	depends on !SPARC
+>> >> +	select IRQ_DOMAIN
+>> > 
+>> >
+>> > This seems to be moving is the right direction.
+>> 
+>> Can we move the 'select IRQ_DOMAIN' under CONFIG_IRQCHIP
+>> then and remove the individual selects from the irqchip
+>> drivers? It looks like CONFIG_OF (other than sparc) now
+>> unconditionally enables OF_IRQ and IRQCHIP anyway.
+>
+> As long as it also works ACPI, it should be OK.
 
-A new "to_attach" field is introduced to differentiate the use cases
-"firmware loaded by the boot stage" and "firmware loaded by the TEE".
+Out of the four architectures that have ACPI support (x86,
+arm64, loongarch, rv64), only x86 doesn't always select
+IRQ_DOMAIN already, and x86 selects it for almost all
+configs:
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
----
-V2 to V3 update:
-- remove stm32_rproc_tee_elf_sanity_check(), stm32_rproc_tee_elf_load()
-  stm32_rproc_tee_elf_find_loaded_rsc_table() and  stm32_rproc_tee_start() that are bnow unused
-- use new rproc::alt_boot field to sepcify that the alternate fboot method is used
-- use stm32_rproc::to_attach field to differenciate attch mode from remoteproc tee boot mode.
-- remove the used of stm32_rproc::fw_loaded
----
- drivers/remoteproc/stm32_rproc.c | 85 +++++++++++++++++++++++++++++---
- 1 file changed, 79 insertions(+), 6 deletions(-)
+config X86_UP_APIC
+        bool "Local APIC support on uniprocessors" if !PCI_MSI
+        default PCI_MSI
+        depends on X86_32 && !SMP && !X86_32_NON_STANDARD
 
-diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
-index fcc0001e2657..9cfcf66462e0 100644
---- a/drivers/remoteproc/stm32_rproc.c
-+++ b/drivers/remoteproc/stm32_rproc.c
-@@ -20,6 +20,7 @@
- #include <linux/remoteproc.h>
- #include <linux/reset.h>
- #include <linux/slab.h>
-+#include <linux/tee_remoteproc.h>
- #include <linux/workqueue.h>
- 
- #include "remoteproc_internal.h"
-@@ -49,6 +50,9 @@
- #define M4_STATE_STANDBY	4
- #define M4_STATE_CRASH		5
- 
-+/* Remote processor unique identifier aligned with the Trusted Execution Environment definitions */
-+#define STM32_MP1_M4_PROC_ID    0
-+
- struct stm32_syscon {
- 	struct regmap *map;
- 	u32 reg;
-@@ -90,6 +94,8 @@ struct stm32_rproc {
- 	struct stm32_mbox mb[MBOX_NB_MBX];
- 	struct workqueue_struct *workqueue;
- 	bool hold_boot_smc;
-+	bool to_attach;
-+	struct tee_rproc *trproc;
- 	void __iomem *rsc_va;
- };
- 
-@@ -253,10 +259,30 @@ static int stm32_rproc_release(struct rproc *rproc)
- 			return err;
- 		}
- 	}
-+	ddata->to_attach = false;
- 
- 	return err;
- }
- 
-+static int stm32_rproc_tee_attach(struct rproc *rproc)
-+{
-+	/* Nothing to do, remote proc already started by the secured context. */
-+	return 0;
-+}
-+
-+static int stm32_rproc_tee_stop(struct rproc *rproc)
-+{
-+	int err;
-+
-+	stm32_rproc_request_shutdown(rproc);
-+
-+	err = tee_rproc_stop(rproc);
-+	if (err)
-+		return err;
-+
-+	return stm32_rproc_release(rproc);
-+}
-+
- static int stm32_rproc_prepare(struct rproc *rproc)
- {
- 	struct device *dev = rproc->dev.parent;
-@@ -637,10 +663,14 @@ stm32_rproc_get_loaded_rsc_table(struct rproc *rproc, size_t *table_sz)
- {
- 	struct stm32_rproc *ddata = rproc->priv;
- 	struct device *dev = rproc->dev.parent;
-+	struct tee_rproc *trproc = ddata->trproc;
- 	phys_addr_t rsc_pa;
- 	u32 rsc_da;
- 	int err;
- 
-+	if (trproc && !ddata->to_attach)
-+		return tee_rproc_get_loaded_rsc_table(rproc, table_sz);
-+
- 	/* The resource table has already been mapped, nothing to do */
- 	if (ddata->rsc_va)
- 		goto done;
-@@ -693,8 +723,20 @@ static const struct rproc_ops st_rproc_ops = {
- 	.get_boot_addr	= rproc_elf_get_boot_addr,
- };
- 
-+static const struct rproc_ops st_rproc_tee_ops = {
-+	.prepare	= stm32_rproc_prepare,
-+	.start		= tee_rproc_start,
-+	.stop		= stm32_rproc_tee_stop,
-+	.attach		= stm32_rproc_tee_attach,
-+	.kick		= stm32_rproc_kick,
-+	.get_loaded_rsc_table = stm32_rproc_get_loaded_rsc_table,
-+	.find_loaded_rsc_table = tee_rproc_find_loaded_rsc_table,
-+	.load		= tee_rproc_load_fw,
-+};
-+
- static const struct of_device_id stm32_rproc_match[] = {
--	{ .compatible = "st,stm32mp1-m4" },
-+	{.compatible = "st,stm32mp1-m4",},
-+	{.compatible = "st,stm32mp1-m4-tee",},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, stm32_rproc_match);
-@@ -853,6 +895,7 @@ static int stm32_rproc_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct stm32_rproc *ddata;
- 	struct device_node *np = dev->of_node;
-+	struct tee_rproc *trproc = NULL;
- 	struct rproc *rproc;
- 	unsigned int state;
- 	int ret;
-@@ -861,12 +904,33 @@ static int stm32_rproc_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	rproc = rproc_alloc(dev, np->name, &st_rproc_ops, NULL, sizeof(*ddata));
--	if (!rproc)
--		return -ENOMEM;
-+	if (of_device_is_compatible(np, "st,stm32mp1-m4-tee")) {
-+		/*
-+		 * Delegate the firmware management to the secure context.
-+		 * The firmware loaded has to be signed.
-+		 */
-+		trproc = tee_rproc_register(dev, STM32_MP1_M4_PROC_ID);
-+		if (IS_ERR(trproc)) {
-+			dev_err_probe(dev, PTR_ERR(trproc),
-+				      "signed firmware not supported by TEE\n");
-+			return PTR_ERR(trproc);
-+		}
-+	}
- 
--	ddata = rproc->priv;
-+	rproc = rproc_alloc(dev, np->name,
-+			    trproc ? &st_rproc_tee_ops : &st_rproc_ops,
-+			    NULL, sizeof(*ddata));
-+	if (!rproc) {
-+		ret = -ENOMEM;
-+		goto free_tee;
-+	}
- 
-+	ddata = rproc->priv;
-+	ddata->trproc = trproc;
-+	if (trproc) {
-+		rproc->alt_boot = true;
-+		trproc->rproc = rproc;
-+	}
- 	rproc_coredump_set_elf_info(rproc, ELFCLASS32, EM_NONE);
- 
- 	ret = stm32_rproc_parse_dt(pdev, ddata, &rproc->auto_boot);
-@@ -881,8 +945,10 @@ static int stm32_rproc_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto free_rproc;
- 
--	if (state == M4_STATE_CRUN)
-+	if (state == M4_STATE_CRUN) {
- 		rproc->state = RPROC_DETACHED;
-+		ddata->to_attach = true;
-+	}
- 
- 	rproc->has_iommu = false;
- 	ddata->workqueue = create_workqueue(dev_name(dev));
-@@ -916,6 +982,10 @@ static int stm32_rproc_probe(struct platform_device *pdev)
- 		device_init_wakeup(dev, false);
- 	}
- 	rproc_free(rproc);
-+free_tee:
-+	if (trproc)
-+		tee_rproc_unregister(trproc);
-+
- 	return ret;
- }
- 
-@@ -923,6 +993,7 @@ static void stm32_rproc_remove(struct platform_device *pdev)
- {
- 	struct rproc *rproc = platform_get_drvdata(pdev);
- 	struct stm32_rproc *ddata = rproc->priv;
-+	struct tee_rproc *trproc = ddata->trproc;
- 	struct device *dev = &pdev->dev;
- 
- 	if (atomic_read(&rproc->power) > 0)
-@@ -937,6 +1008,8 @@ static void stm32_rproc_remove(struct platform_device *pdev)
- 		device_init_wakeup(dev, false);
- 	}
- 	rproc_free(rproc);
-+	if (trproc)
-+		tee_rproc_unregister(trproc);
- }
- 
- static int stm32_rproc_suspend(struct device *dev)
--- 
-2.25.1
+config X86_LOCAL_APIC
+        def_bool y
+        depends on X86_64 || SMP || X86_32_NON_STANDARD || X86_UP_APIC || PCI_MSI
+        select IRQ_DOMAIN_HIERARCHY
 
+so it's only disabled here with
+
+CONFIG_64BIT=n
+CONFIG_SMP=n
+CONFIG_X86_32_NON_STANDARD=n
+CONFIG_ACPI=y
+CONFIG_PCI=y (implied by ACPI)
+CONFIG_PCI_MSI=n
+
+As far as I can tell, this specific configuration is
+currently able to save a little bit of kernel size
+by avoiding IRQ_DOMAIN, but we are probably better off
+enabling it here as well for consistency
+
+     Arnd
