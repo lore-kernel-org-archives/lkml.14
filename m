@@ -1,107 +1,112 @@
-Received: from wfout5-smtp.messagingengine.com (wfout5-smtp.messagingengine.com [64.147.123.148])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D3118EA5;
-	Wed, 14 Feb 2024 10:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DBDA18638
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 10:51:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707907896; cv=none; b=J4USBJyHlVbWJ23QtFKRbm2rN/gb9aZ3X23iZkynqNnK3l8g5TyIw8ySQxWQpBpQEdv/jHqk+cg97gMUMPRMoY54yifk8l6CCnKszseVU1XUnrwIjgpu/b7xk3xoRmNVBNdT5Yy0pl5xMPcGlhaVetKTTe0V8E89msXD/HA+EUA=
+	t=1707907911; cv=none; b=s5PNLH2VGBG/1/CRj2AjxynYwHJGJB6pLwZh/v4+kzBfgNS3kvRty8YA/PYqOpTlzqCGp+37RCszZL41VUaTVmmf8ppizUGYsdqcGui97L7N29heYlTcYi4DrjzAA2q/d0MA5rdhoepOIaDOUoNrNzgQ9+AwJx6cq2BRKDBXyQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707907896; c=relaxed/simple;
-	bh=IKPjU6JepByQUbY4d+KvU9UgItGzStQnpzqm2BCTHvQ=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=ued2m7SFCLnmEcrHAOZCxFzeQobAQAFUC44dTlQVkof+9P4zSm0jSnv4uuK3VwVgWNXY8k0CgODgF4CujOU4N0pHBeA+G1sk+lAKP7iSRm8yl1ZQnqTVYVc/uNLx69oEsxcOQRXtk6j9OchlrsxhoJ2MpVSJKrnDCg4CnQxjmlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=1COWNVYH; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=nsQklX3H; arc=none smtp.client-ip=64.147.123.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1707907911; c=relaxed/simple;
+	bh=FngIp4KBxf0vqziz3+ArzSp7oe/urJZKigfldVYi13c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XC2WgpAyKmkf3//s7C+tqxR/utSwEotQXbdfCZ6hOyPdVtHpi9hn7TYadOG9HIPE8aGI1xR+nMP5JgArtnD+cCeot00fGxaS570+r6RLRbaZ5YqjETiqi/a9nPO3m7BoRWrOrRJqSRILMTeSVD7wzBY9GRRLv/e0Dt2RbtqFmpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zrXgyHlF; arc=none smtp.client-ip=209.85.222.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="1COWNVYH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nsQklX3H"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.west.internal (Postfix) with ESMTP id 9F5901C0007B;
-	Wed, 14 Feb 2024 05:51:33 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 14 Feb 2024 05:51:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1707907893; x=1707994293; bh=79/Qzm2vJk
-	0BAzjRMVt7ecM1kUIJeCMDLpwDD4uxJWo=; b=1COWNVYH87gWNKMltpLJTnWw29
-	E25ubIUcUwoHblWcT8XhX6017jq8mggn+2LzFzRLZizNfrUHM5fMdHu8tdqOUtbR
-	Rut6m5DVGdTIAhwrtJtiuEGiWiyL/Sn8YqBDXndFO1YVxtyVzwtduSf3+6Fmo8Pl
-	o5lCb5tnI5yfyyJMTUBjW4EJvcW9hwZeXVMifZy40bJDlrJxz5UGkSedmePUqTDD
-	/E8PDeBP6vWghx6RKjgf2T9ZIDD0lVy8SQIjlVI3Qfol8hDi8E21vfT450NPVdkV
-	q6qwj/uYa4tfVjt15cWHWMSFlXTaCdyjGXAwrYdUwq2sQCI9yHq46EHdHGJQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1707907893; x=1707994293; bh=79/Qzm2vJk0BAzjRMVt7ecM1kUIJ
-	eCMDLpwDD4uxJWo=; b=nsQklX3H59Y1ufjMGSGzYWPK6jQicRXM1irJ7KW5dOEn
-	yrQqdBhVESERXan/LkmJC7udmsuLmsLbGKrWRj5lsghVKDce2g+jq6LpYSb83DTu
-	XvrY5b9vyAPAZxbNJZoadCu5OBx0RIyJth9xjpAwXPkzTHhK7IgopNm55Tw+Gd5l
-	JzLxf5kFU5aY1KLLVBAlwzz4myfew2tSsHFCgmi3nBri7c/bYSYlT8SzhmeWfO+w
-	+FqaPnAMbvODLnUyKD9LY3U+uT9xs4Qjc443xRytGv7ZwFLLZrsvTKdiVsFqZYYK
-	0hmutfFuGrnr43rBfyihzXpYE+WEzR5M4Tie+msl2A==
-X-ME-Sender: <xms:NJvMZYfsglnlEUxKurnhugeyEfdV54TEHGsGZkqh_shNIhg2nSGxLw>
-    <xme:NJvMZaMbqiNeRXCSSbQieaooADEKvUtW1QoASI6QwH5mkTFGzqA2_ExsCiZPnUdU2
-    96TSMRWpb2mcIZDezg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudejgddvtdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:NZvMZZiO5s_YjRzHQwE-h9yArVo-ZuFoSiP1JR6yGT4YOFzkCsaqqQ>
-    <xmx:NZvMZd-ySjK4kgFCrJNikAQ7HJXyrUmYA1-h4n6hTkBM-BKSn2RC5g>
-    <xmx:NZvMZUtHWgpkqZYz4Un54ZvXVuK4Ca_5VcICfU9iaGS2hJiHELoa6Q>
-    <xmx:NZvMZVlC3VMgFqiA2sblIvjIjZ66Lo2oqeswXAyrJvNbcXvRorc6nj8D8YA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id D6FFBB6008D; Wed, 14 Feb 2024 05:51:32 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-144-ge5821d614e-fm-20240125.002-ge5821d61
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zrXgyHlF"
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-7d5bfdd2366so1945810241.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 02:51:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707907908; x=1708512708; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2g1mQizjkEn3VxHNfnwCGd5SJVNpMNtdqZQAgI51wCU=;
+        b=zrXgyHlFKZAdxlGFAEhVc9G81FYr3RYeNYuShQ4yP8E8rC3aopZPA22zrXy5aZs3en
+         nUYJUIBjDB0Tcr9doCutUstpxGclzvX4hZItLoP4gP4oCl3pQcHC8oGr/2xsVpeelTN/
+         U3HFwWh3k2v7Dd4bcbmGubl9Dtq84ZF7ipGEj1ZJ+gIgB1/gsNVcg+IlbV0n/gWVZRKh
+         wV3FqGfEELI4OtgBCKAbk1D8b//XX4v4xK7h0nUnYJtvUyvdmHdWZSZH4CyOJB0D7DCl
+         rcEGCecR94nZCDr6lzS8WkdIT0Auh4eO8VNEBo760wtu/P1Y4HM0UEe4qqGfqOWIw0JR
+         F9Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707907908; x=1708512708;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2g1mQizjkEn3VxHNfnwCGd5SJVNpMNtdqZQAgI51wCU=;
+        b=I/lZeKr8YfGuNq7OgA0ncKfKHb7Ac/ZBkibndLjHtPK7ZQwDCc9dZ6eFyRALyKxmLL
+         zSiE74fGWGZLOSbfiqYoYz9WBC0KmR3OZwVclcepi3BQMG5htAaHxdrduUZ1MQuFzZ9v
+         y7Sznt9MJ5PXSZHN9bYtBIQOgzjt1P5iXlPZVJRe3fMGXP10Re8BVeR6K18KY81oFJrK
+         qGKOnEHN0M2gzU8qhGOiInuktIRRkyqXlzWXz9BLe5/tHdhyB2jguBD/PPO1YGo4gbvS
+         MiedMzr/qAOouUgoUDiNUkYZZLB/wyh65h6oYGB1kyOjedrfeyh4pt5Ss92wvySnA4AP
+         if5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX6DbWSdBKlEpVJxLPZ6sy7hbOKLbAqvGkgh0HKlKuEdAbaoQ1kQ0Vd0oCfVIBBt/OmEDKSOsfnvjJFjhhDEymjOv/jk6N9pqij9z7u
+X-Gm-Message-State: AOJu0YzwTJv0WH52XIQeAQs43R9+BKVEF56WY6kE10sUwSKTKqsf87t1
+	5M0HduFIajharYpnssl6VpOaPJps2F8hEGE+Ue2iWlGY3L/u6zOAj8XegYq7N0y7hIjTymxdHfC
+	1Qa8iSpvcxzDtvrLJZC6ITne3OF765n6XXMUn
+X-Google-Smtp-Source: AGHT+IExci4zElcZtqMQOuT6NK38iGJAdkqnfcCqnUfNn0vIoBFYe9CwwBiX3ybhUh7K3qqNBm1b+K7r0Iz04LypLPw=
+X-Received: by 2002:a1f:e084:0:b0:4c0:2a9f:d3ec with SMTP id
+ x126-20020a1fe084000000b004c02a9fd3ecmr2466287vkg.6.1707907908067; Wed, 14
+ Feb 2024 02:51:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <d9a7ad2f-c9a7-4886-8bbc-7a77771c0aec@app.fastmail.com>
-In-Reply-To: <87plwze34l.fsf@kernel.org>
-References: <20240213100912.459018-1-arnd@kernel.org>
- <170790025305.3179441.138152315558305278.kvalo@kernel.org>
- <08ac32ef-610d-479d-a3fd-a3c3b8c4c697@app.fastmail.com>
- <87plwze34l.fsf@kernel.org>
-Date: Wed, 14 Feb 2024 11:51:02 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Kalle Valo" <kvalo@kernel.org>
-Cc: "Arnd Bergmann" <arnd@kernel.org>,
- "Jeff Johnson" <quic_jjohnson@quicinc.com>,
- "Karthikeyan Periyasamy" <quic_periyasa@quicinc.com>,
- "Aloka Dixit" <quic_alokad@quicinc.com>, "Wen Gong" <quic_wgong@quicinc.com>,
- "Muna Sinada" <quic_msinada@quicinc.com>,
- "Aditya Kumar Singh" <quic_adisi@quicinc.com>, ath12k@lists.infradead.org,
- linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] wifi: ath12k: sanitize ath12k_mac_allocate() return code
-Content-Type: text/plain
+References: <20240208-alice-mm-v2-0-d821250204a6@google.com>
+ <20240208-alice-mm-v2-2-d821250204a6@google.com> <202402091606.A181673F0A@keescook>
+In-Reply-To: <202402091606.A181673F0A@keescook>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Wed, 14 Feb 2024 11:51:36 +0100
+Message-ID: <CAH5fLggZc_Fxi1gjx9jxGDgyYOj1NLz5MYxzRxEja6vV0WffGg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] uaccess: always export _copy_[from|to]_user with CONFIG_RUST
+To: Kees Cook <keescook@chromium.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
+	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	Christian Brauner <brauner@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 14, 2024, at 11:44, Kalle Valo wrote:
-> "Arnd Bergmann" <arnd@arndb.de> writes:
->> On Wed, Feb 14, 2024, at 09:44, Kalle Valo wrote:
->>> Arnd Bergmann <arnd@kernel.org> wrote:
+On Sat, Feb 10, 2024 at 1:15=E2=80=AFAM Kees Cook <keescook@chromium.org> w=
+rote:
 >
->> but I see it's not in linux-next yet as of today.
+> On Thu, Feb 08, 2024 at 03:47:52PM +0000, Alice Ryhl wrote:
+> >       unsigned long res =3D n;
+> >       might_fault();
+> >       if (!should_fail_usercopy() && likely(access_ok(from, n))) {
+> > +             /*
+> > +              * Ensure that bad access_ok() speculation will not
+> > +              * lead to nasty side effects *after* the copy is
+> > +              * finished:
+> > +              */
+> > +             barrier_nospec();
 >
-> Yeah, it's a problem that ath.git is not included linux-next builds. The
-> commits will be in linux-next only after ath-next is pulled to
-> wireless-next :/
+> This means all callers just gained this barrier. That's a behavioral
+> change -- is it intentional here? I don't see it mentioned in the commit
+> log.
+>
+> Also did this get tested with the CONFIG_TEST_USER_COPY tests? I would
+> expect it to be fine, but better to check and mention it in the commit
+> log.
 
-Not sure if that is intentional, but if you'd like to change
-that, you can just email Stephen Rothwell asking him to include
-ath-next into linux-next as well.
+I just ran this with CONFIG_TEST_USER_COPY on x86 using the Android
+cuttlefish emulator and it passed there. I also verified that it fails
+if I remove the access_ok check. However, the tests succeed even if
+the barrier_nospec() call is removed.
 
-      Arnd 
+That said, it seems like it fails to compile on some other platforms.
+It seems like we need to add #include <linux/nospec.h> to uaccess.h to
+fix it.
+
+Alice
