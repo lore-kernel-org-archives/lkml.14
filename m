@@ -1,272 +1,125 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from fout8-smtp.messagingengine.com (fout8-smtp.messagingengine.com [103.168.172.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D292574B
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 23:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5342574B;
+	Wed, 14 Feb 2024 23:37:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707953799; cv=none; b=YeXBqn9xkxq/vND02Nr2r4RSe5J5rj8sS5DFRaK+FBju3r8m/5K2odbij22ACMAW1oyPLDfiZmc7BgcWCiXlP0EgP/Olxg6F9MSH4Ac/lDMfj+H2MsNWjnArj3TvL0WRa/TsDxIsl/Wk3wKl7vzxXUF8I3HOO6Jf/Vuh3GHuHj8=
+	t=1707953863; cv=none; b=Tt3WtxYywUAIKvMjpl605CjrUirlppO3JxQoildWmnV4AG7YuR2DZgr5a84QjWT96D3/5KwioQBhDjgJvD/XBRoCHb+xyIL2KbAbINTXeAbDC9qtU6ApFrqWI9ezg/EpPRDudxpl1HSuGXkQha8wfoYZSVy6iVU9g7fchqhUzsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707953799; c=relaxed/simple;
-	bh=zd6L+JirXYb9RJJTMyqMFnBDXyLuZEtp3hoaLf51cYM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=SSv1NlrRal+0XjCeVYiIUvr2eHfKuX3D/6vAfwr+AO+bgYfrLGglEZdFIvXx4xlede8w+hSBhycZnyigNokLuh4mKIODxbnaQ2xy6e0mBYnu/gIdR2R/Rf3uyifJXiQ3ImUTepNl+xsrIqN75lSngvE4ePM96rDbRS5a9544lX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Lfqk1F6e; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3f1nx5PQ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1707953863; c=relaxed/simple;
+	bh=wHhSkCAQ4jCsmCUPi1doFLRLF21eREZxoFe7qX9fcqI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FYZihEjZpNYCsFl7T7bAu76bCuPbMi7mkUhx+4Yp+jTOxr6fsKvw066xyeHY2UU9WyxBPDneWnE0SqglIwfxXxYdMXdnIpE6KDEzOXgLTLQnEsEdT8qvfJYryfIKn9VwnCpD+s+XqWLBU/H7BYrm7urljHSkQw3M/cgdIUIYNFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=feathertop.org; spf=pass smtp.mailfrom=feathertop.org; dkim=pass (2048-bit key) header.d=feathertop.org header.i=@feathertop.org header.b=Dc2PqHBS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=r2Cs+7W6; arc=none smtp.client-ip=103.168.172.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=feathertop.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=feathertop.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Lfqk1F6e";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3f1nx5PQ"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1707953795;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xnraHAYZS5nKpdZRhg4CnvYWWLS8hA9ptlRZifrVoJ8=;
-	b=Lfqk1F6eDyuQFYbVSibifuM3J2rFv2z+qtsr1jyhAdlErdrmr4b9jBHwxynnADP8XXTbjb
-	hFWsVgJ4aWNO7be7kXEGr66fJeb2zb1hsn+5BlQXfE/3G2FicI3dEytnZrvyLYNcCb30zC
-	We0cSL38XjGmKSJYdCsiXFAbO7o3c8q7oBpHypKhSE7V6UIpLPfzSF63Sy73+zsLq3wawH
-	6p01trfUmNyU3uNz2IQ22mUC8wXopk3y7AD23O2OAupuhEERMiZpqmjacq2lAAg3cLHeeG
-	coExPmunZ9wfdlLRhMF+n4YmWIPibke5NzZGKQrcDnYK17P0SAnvquK/A99dPA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1707953795;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xnraHAYZS5nKpdZRhg4CnvYWWLS8hA9ptlRZifrVoJ8=;
-	b=3f1nx5PQq7WMeZ+/Wd0NAtORdx7zOeWjX9Jz+/AXwCVmyab4gfN1fX19++yXFvC38zWxlL
-	2LbegzGv4yzCnKCQ==
-To: Bitao Hu <yaoma@linux.alibaba.com>, dianders@chromium.org,
- akpm@linux-foundation.org, pmladek@suse.com, maz@kernel.org,
- liusong@linux.alibaba.com
-Cc: linux-kernel@vger.kernel.org, Bitao Hu <yaoma@linux.alibaba.com>
-Subject: Re: [PATCH 2/3] watchdog/softlockup: report the most time-consuming
- hardirq
-In-Reply-To: <20240123121223.22318-3-yaoma@linux.alibaba.com>
-References: <20240123121223.22318-1-yaoma@linux.alibaba.com>
- <20240123121223.22318-3-yaoma@linux.alibaba.com>
-Date: Thu, 15 Feb 2024 00:36:34 +0100
-Message-ID: <8734tufwjh.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=feathertop.org header.i=@feathertop.org header.b="Dc2PqHBS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="r2Cs+7W6"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailfout.nyi.internal (Postfix) with ESMTP id BE97E13800B9;
+	Wed, 14 Feb 2024 18:37:39 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Wed, 14 Feb 2024 18:37:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=feathertop.org;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:subject:subject:to:to; s=fm2;
+	 t=1707953859; x=1708040259; bh=/UFfJYIm/yavIcO2nw7qw6EXLoX+Pvhw
+	S6K9sGJKtnc=; b=Dc2PqHBSIA54bk5jx/HL8ncEcCJ8dx4USPT3/hYMTx0vlquB
+	oEON0McF4x+kOjdaxH8znnE2nqIeMux5Orp2THmoILtHCw5MVblXmqsNt8AFQinj
+	B8X6BnzIP3IFIoeQhWbQx94ID9qVuzJznUnqZhcHQZ6fs2UY043viHUhRbJP0w4i
+	USfbWjxRln9dwTXnpxuDU3o7S3QlxyXG2yU4XDyHrAaEiMlRcb/MTHOLIlhUcMXg
+	WvYODEaWDNxecKVYJTali5eXynUnegmTDeCBqGgjoyu3HkjnSN3CM6IRvwt5JdkP
+	CRBx77gCtMUOU1voaqUePtkC85YSQyNNWspLlg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1707953859; x=
+	1708040259; bh=/UFfJYIm/yavIcO2nw7qw6EXLoX+PvhwS6K9sGJKtnc=; b=r
+	2Cs+7W6j6xo+o5B64T5cFuFbU0DuNU8+nsfVlNd1YFTKTghPwzW15gtDbboqkrPC
+	qErQ3BcgF+1zCrsSTNamGusdaHppwtLHg5wulhXZTZEyHcWLHRytRIoqIgVWGiaw
+	x84tlfu/lTu0IYTX8x5sNCfVb5Gk3jIzFJ+IKVn97SY+5v5NX3hlqYct0ahNBFr5
+	ya5Am954aurv2GookVao1zo+9ptrlt6BbgtptYEnnDHY5SrMj6BjlTBOlevvAH3G
+	ogMrF4yAbnn38pVDfz8SRg2WZU0PoDhCmmXyt3h8bR/Y3pml5wTy7Jet9gIJnxD2
+	LmBl+lfczu19cU6tLDDNQ==
+X-ME-Sender: <xms:wk7NZfFW_PXbkXwdsRTWvhCnftN7JgkYwlL1XudcKEupsYOBML3pqg>
+    <xme:wk7NZcWmr95cnPYvR489vGUanqTHKE3aCMymkz3G7LbOQIi0V41r_ndTlHXv2dsQZ
+    VCxElnKIg>
+X-ME-Received: <xmr:wk7NZRJYmyslXFlWUIJqc2pvEarVclulWUuv4DjCuzjIxXFySlkwm78WFwP8DBDpWlSrVQ8jbh8DRrV5bOGI5a216OpyribhCHKYrg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudekgdduudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomhepvfhimhcu
+    nfhunhhnuceothhimhesfhgvrghthhgvrhhtohhprdhorhhgqeenucggtffrrghtthgvrh
+    hnpeehhefglefhffegfeekgfejleekudelfeevhffgkefgteeftedvieegkeejvdffheen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehtihhmse
+    hfvggrthhhvghrthhophdrohhrgh
+X-ME-Proxy: <xmx:wk7NZdEXwDPUolblje4cQKguYlvdYcg5BYRPYL1ULQwZ51xC2gt9XA>
+    <xmx:wk7NZVWuHw3pi7b1V7va6ZbODXZMCQ-tHpGLhDv3f8oxEGY9armslw>
+    <xmx:wk7NZYM0YPrzTZdX4UqDekGMajBCbyfbyQMSpJIsXAeIsbtwWxxgrA>
+    <xmx:w07NZaUdsm12Ula9ZJj0ghgmSaEwUrx4m92tipuODtEOH4M0WODwrA>
+Feedback-ID: i1f8241ce:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 14 Feb 2024 18:37:34 -0500 (EST)
+Message-ID: <3f1c1f14-9a6e-4d07-8311-59d7b55e1c9d@feathertop.org>
+Date: Thu, 15 Feb 2024 10:37:30 +1100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] dt-bindings: arm: rockchip: Correct vendor for Banana
+ Pi R2 Pro
+Content-Language: en-US
+To: linux-rockchip@lists.infradead.org
+Cc: Andy Yan <andyshrk@163.com>, Chris Morgan <macromorgan@hotmail.com>,
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Jagan Teki <jagan@edgeble.ai>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Ondrej Jirman <megi@xff.cz>, Rob Herring <robh+dt@kernel.org>,
+ Tianling Shen <cnsztl@gmail.com>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240214040731.3069111-1-tim@feathertop.org>
+ <20240214040731.3069111-3-tim@feathertop.org>
+From: Tim Lunn <tim@feathertop.org>
+In-Reply-To: <20240214040731.3069111-3-tim@feathertop.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 23 2024 at 20:12, Bitao Hu wrote:
-> +/*
-> + * If the proportion of time spent handling irq exceeds 50% during a sampling period,
-> + * then it is necessary to tally the handling time of each irq.
-> + */
-> +static inline bool need_trace_irqtime(int type)
-> +{
-> +	int tail = this_cpu_read(cpustat_tail);
-> +
-> +	if (--tail == -1)
-> +		tail = 4;
-> +	return this_cpu_read(cpustat_diff[tail][type]) > sample_period/2;
-> +}
-> +
-> +static void irq_handler_entry_callback(void *data, int irq, struct irqaction *action)
-> +{
-> +	this_cpu_ptr(irq_to_desc(irq)->irq_time)->start_time = local_clock();
-> +}
-> +
-> +static void irq_handler_exit_callback(void *data, int irq, struct irqaction *action, int ret)
-> +{
-> +	u64 delta;
-> +	struct per_irqtime *irq_time;
-> +
-> +	if (test_bit(SOFTLOCKUP_HARDIRQ, this_cpu_ptr(&softlockup_flags))) {
-> +		irq_time = this_cpu_ptr(irq_to_desc(irq)->irq_time);
-> +		delta = local_clock() - irq_time->start_time;
-> +		irq_time->delta += delta;
-> +	}
-> +}
 
-I can understand what you are trying to achieve, but you inflict the
-overhead of two tracepoints to every interrupt unconditionally.
-
-For the vast majority of usage scenarios that's just pointless overhead
-for no value. That's not acceptable at all.
-
-Instrumentation and debugging has to find the least intrusive solution
-and not just go for the perfect picture. Remember: perfect is the enemy
-of good.
-
-You really have to think hard about what you really need to achieve for
-a particular problem case.
-
-In this case it's completely sufficient to know the number of interrupts
-which happened since softlockup detection took a snapshot and the actual
-analysis.
-
-That's especially true when interrupt time accounting is active because
-then the only interesting information is which interrupts fired during
-the observation period.
-
-Even if that's not available it is a reasonable assumption that the
-number of interrupts during the observation period gives a pretty
-conclusive hint about the potential cause of the problem.
-
-This is not meant to find the oddball issue of an interrupt handler
-which consumes a lot of time per invocation. This is about storm
-detection where the handler runs briefly and actually returns
-IRQ_HANDLED so that the spurious detection does not catch it.
-
-This can be implemented with exactly zero overhead for the good case,
-keeping it self contained to the interrupt core code and providing
-sensible interfaces for the watchdog code.
-
-See the uncompiled patch for illustration below.
-
-As a side note: While C does not allow proper encapsulation it's a non
-starter to fiddle with the interrupt descriptor internals in random code
-just because the compiler allows you to do so. While not enforced there
-are clear boundaries and we went a long way to encapsulate this.
-
-Thanks,
-
-        tglx
----
- include/linux/irqdesc.h |    9 +++++++--
- kernel/irq/internals.h  |    2 +-
- kernel/irq/irqdesc.c    |   32 ++++++++++++++++++++++++++------
- kernel/irq/proc.c       |    9 +++------
- 4 files changed, 37 insertions(+), 15 deletions(-)
-
---- a/include/linux/irqdesc.h
-+++ b/include/linux/irqdesc.h
-@@ -17,6 +17,11 @@ struct irq_desc;
- struct irq_domain;
- struct pt_regs;
- 
-+struct irqstat {
-+	unsigned int	cnt;
-+	unsigned int	ref;
-+};
-+
- /**
-  * struct irq_desc - interrupt descriptor
-  * @irq_common_data:	per irq and chip data passed down to chip functions
-@@ -55,7 +60,7 @@ struct pt_regs;
- struct irq_desc {
- 	struct irq_common_data	irq_common_data;
- 	struct irq_data		irq_data;
--	unsigned int __percpu	*kstat_irqs;
-+	struct irqstat __percpu	*kstat_irqs;
- 	irq_flow_handler_t	handle_irq;
- 	struct irqaction	*action;	/* IRQ action list */
- 	unsigned int		status_use_accessors;
-@@ -119,7 +124,7 @@ extern struct irq_desc irq_desc[NR_IRQS]
- static inline unsigned int irq_desc_kstat_cpu(struct irq_desc *desc,
- 					      unsigned int cpu)
- {
--	return desc->kstat_irqs ? *per_cpu_ptr(desc->kstat_irqs, cpu) : 0;
-+	return desc->kstat_irqs ? per_cpu(desc->kstat_irqs->cnt, cpu) : 0;
- }
- 
- static inline struct irq_desc *irq_data_to_desc(struct irq_data *data)
---- a/kernel/irq/internals.h
-+++ b/kernel/irq/internals.h
-@@ -258,7 +258,7 @@ static inline void irq_state_set_masked(
- 
- static inline void __kstat_incr_irqs_this_cpu(struct irq_desc *desc)
- {
--	__this_cpu_inc(*desc->kstat_irqs);
-+	__this_cpu_inc(desc->kstat_irqs->cnt);
- 	__this_cpu_inc(kstat.irqs_sum);
- }
- 
---- a/kernel/irq/irqdesc.c
-+++ b/kernel/irq/irqdesc.c
-@@ -122,7 +122,7 @@ static void desc_set_defaults(unsigned i
- 	desc->name = NULL;
- 	desc->owner = owner;
- 	for_each_possible_cpu(cpu)
--		*per_cpu_ptr(desc->kstat_irqs, cpu) = 0;
-+		*per_cpu_ptr(desc->kstat_irqs, cpu) = (struct irqstat) { };
- 	desc_smp_init(desc, node, affinity);
- }
- 
-@@ -418,8 +418,8 @@ static struct irq_desc *alloc_desc(int i
- 	desc = kzalloc_node(sizeof(*desc), GFP_KERNEL, node);
- 	if (!desc)
- 		return NULL;
--	/* allocate based on nr_cpu_ids */
--	desc->kstat_irqs = alloc_percpu(unsigned int);
-+
-+	desc->kstat_irqs = alloc_percpu(struct irqstat);
- 	if (!desc->kstat_irqs)
- 		goto err_desc;
- 
-@@ -952,8 +952,7 @@ unsigned int kstat_irqs_cpu(unsigned int
- {
- 	struct irq_desc *desc = irq_to_desc(irq);
- 
--	return desc && desc->kstat_irqs ?
--			*per_cpu_ptr(desc->kstat_irqs, cpu) : 0;
-+	return desc && desc->kstat_irqs ? per_cpu(desc->kstat_irqs->cnt, cpu) : 0;
- }
- 
- static bool irq_is_nmi(struct irq_desc *desc)
-@@ -975,10 +974,31 @@ static unsigned int kstat_irqs(unsigned
- 		return data_race(desc->tot_count);
- 
- 	for_each_possible_cpu(cpu)
--		sum += data_race(*per_cpu_ptr(desc->kstat_irqs, cpu));
-+		sum += data_race(per_cpu(desc->kstat_irqs->cnt, cpu));
- 	return sum;
- }
- 
-+void kstat_snapshot_irqs(void)
-+{
-+	struct irq_desc *desc;
-+	unsigned int irq;
-+
-+	for_each_irq_desc(irq, desc) {
-+		if (!desc->kstat_irqs)
-+			continue;
-+		this_cpu_write(desc->kstat_irqs->ref, this_cpu_read(desc->kstat_irqs->cnt));
-+	}
-+}
-+
-+unsigned int kstat_get_irq_since_snapshot(unsigned int irq)
-+{
-+	struct irq_desc *desc = irq_to_desc(irq);
-+
-+	if (!desc || !desc->kstat_irqs)
-+		return 0;
-+	return this_cpu_read(desc->kstat_irqs->cnt) - this_cpu_read(desc->kstat_irqs->ref);
-+}
-+
- /**
-  * kstat_irqs_usr - Get the statistics for an interrupt from thread context
-  * @irq:	The interrupt number
---- a/kernel/irq/proc.c
-+++ b/kernel/irq/proc.c
-@@ -488,18 +488,15 @@ int show_interrupts(struct seq_file *p,
- 	if (!desc || irq_settings_is_hidden(desc))
- 		goto outsparse;
- 
--	if (desc->kstat_irqs) {
--		for_each_online_cpu(j)
--			any_count |= data_race(*per_cpu_ptr(desc->kstat_irqs, j));
--	}
-+	if (desc->kstat_irqs)
-+		any_count = data_race(desc->tot_count);
- 
- 	if ((!desc->action || irq_desc_is_chained(desc)) && !any_count)
- 		goto outsparse;
- 
- 	seq_printf(p, "%*d: ", prec, i);
- 	for_each_online_cpu(j)
--		seq_printf(p, "%10u ", desc->kstat_irqs ?
--					*per_cpu_ptr(desc->kstat_irqs, j) : 0);
-+		seq_printf(p, "%10u ", desc->kstat_irqs ? per_cpu(desc->kstat_irqs->cnt, j) : 0);
- 
- 	raw_spin_lock_irqsave(&desc->lock, flags);
- 	if (desc->irq_data.chip) {
+On 2/14/24 15:07, Tim Lunn wrote:
+> The vendor for this board was incorrectly listed as Rockchip. Fix this
+> now while they are not used anywhere, in the future they may be used by
+> bootloader to select dts.
+>
+> Update the vendor to Sinovoip.
+>
+> Signed-off-by: Tim Lunn <tim@feathertop.org>
+Fixes: 8ad885126daa ("dt-bindings: rockchip: Add BananaPi R2 Pro Board")
+> ---
+>
+>   Documentation/devicetree/bindings/arm/rockchip.yaml | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> index 29f922f3ca4e..89261b9601ce 100644
+> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
+> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> @@ -940,9 +940,9 @@ properties:
+>             - const: rockchip,rk3568-evb1-v10
+>             - const: rockchip,rk3568
+>   
+> -      - description: Rockchip RK3568 Banana Pi R2 Pro
+> +      - description: Sinovoip RK3568 Banana Pi R2 Pro
+>           items:
+> -          - const: rockchip,rk3568-bpi-r2pro
+> +          - const: sinovoip,rk3568-bpi-r2pro
+>             - const: rockchip,rk3568
+>   
+>         - description: Sonoff iHost Smart Home Hub
