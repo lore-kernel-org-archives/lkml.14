@@ -1,132 +1,102 @@
-Received: from wfout3-smtp.messagingengine.com (wfout3-smtp.messagingengine.com [64.147.123.146])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E36555E45;
-	Wed, 14 Feb 2024 20:47:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99CDE13DBBF
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 20:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707943639; cv=none; b=A+acYoweg9QSeQkmxzZsSTO29MGcyGVIVlFYOqdbEZ5HqbC5aGBtz6mSplFlutWqebDGXY+ebMhGdcZQzuMwSrGUUzBOUUIrbdnVzhY88O3w0u+cXsqDTWzrwplpXkVou92/g8lSmx7pdLOjsCXBGBvwHaA8bRTRugmZ/2TdSio=
+	t=1707944124; cv=none; b=hCP2lKZUL5sj7F7GRn91rw4oXO07/ZKDwEhrCKuC/ZIOfN51cXwb8sYJRtfAn+zsToLKM9WJgLExAaKArK1jrcNalboNn9iXK0jg6EXyXYBwe+1SGZvNclUllX7gLuJMi9G7WBFYWxMsfmZuRKXJAPhK/vF1IfD3oiGmNrSWEhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707943639; c=relaxed/simple;
-	bh=lj2iRtunSsbwOF8jHR1368A0TRHv5QANP0TYDzdnr/4=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=FmEuO6SQvbrCrQUSEb8CXrY8uFYnT1go0hr2o7jm8g55Aj5zZmQNmRjpXhHSPAUUMtShBic8MEbb9LldV+sEXHZPthqseU2MOZIazxFlKf+x3dXjE3gfmBdW/AbCMayDdHsuwdib3WhveBs8efXIA5Xv2llDTKBaY0kDezY853M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Cezpfzgh; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=WkWegzM6; arc=none smtp.client-ip=64.147.123.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1707944124; c=relaxed/simple;
+	bh=3iFXhBXrEO5fMGfS3YlOFuiqKJb2jToIVEM1adjf3KE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fXyWIUv3oxnSFCrUApeDIoKiGw9zlJiVCGd2VZF0mNRmr9uUTJNAl8ADE7WeGB5s6c+k3eJyyu7UzLxtjzjkLEdyC9BT3zCiZJrzWzJf3Ror41Awr4iK/oRXAhhtT2fdVFl6TMXGEHgY1yUpc2+H/KiNGE5tSScafaWz3TkaYXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Pk1ICBHh; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Cezpfzgh";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WkWegzM6"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.west.internal (Postfix) with ESMTP id D0DBE1C00086;
-	Wed, 14 Feb 2024 15:47:15 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 14 Feb 2024 15:47:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1707943635;
-	 x=1708030035; bh=qKVLPFtRqeaV8XnwIHp+8ptgdRas93oDLyQ07hmKIXo=; b=
-	Cezpfzghblb7kaiIlV18CM8xqUf4M7ffBqTj3ggiz49IECztWZpyvouD0oe4Ohlc
-	JeXPaUGk758WMgZCgRfJUisEkBtgvaYmpXk2qtkEsMYkpRY7WCai3JpwETGb5/b7
-	1QDysbp4Py98T5qtqwZkFztabgYREmV8/zZgMOBY+ENxWITsWz2q08MJIev6vPEn
-	R2UWr6ym5z/uGCozKwJP5WwdaPTfgivE5ywKNXa3LZqB9qNIyo5/A+3C/rnqw/8Z
-	2/nGxE0+uwLpmXHD6t/fG9IibBHUy3NTcmmJQK2xd3m68qc16jGBz0FJWG5Ss0O5
-	5TBTPLJ91KYO7ta4pt7Ulg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1707943635; x=
-	1708030035; bh=qKVLPFtRqeaV8XnwIHp+8ptgdRas93oDLyQ07hmKIXo=; b=W
-	kWegzM6xFh7udjj+ONU7e4ZTf4ZwGYIHGp5WFopX4DuLCTXWssLwGNlen+YVORby
-	klOB/tJhpp5fi3dC1strjpD1Ghyxfxpqx6IaZG7SCQ47jOkyico2W4jWBmN3hX8X
-	8agze6sHg5UvIgG4fioABjT6wkVBouGWuOcyUC52ZftICnKW7URXeOcmqlDFG+pd
-	fDnZ/I8ldLZ64gxtunUDHGl2bb6IwMxwwqFcS8sTlAFO4e3GiplDKWVe73AsLjoC
-	wLc1IW6e/wKo5z+2Rw9DvHYkuqSgfCbikvngdvEVMTCgm9PwVFB49Gn8N9MfUrhf
-	2pxAJeIa2qnRvRJDh4m3A==
-X-ME-Sender: <xms:0ibNZUnyrWMEcaKX4-2IyZldpFrw8riqoXCBuiJAfdo4eAKUz3C2cw>
-    <xme:0ibNZT3b_6keWWJJM35wJMK3iVu8PlYDc7J9P7fXVdtxcFiX5dyae8D3Q_E4vIm7H
-    XlgntBscMK9txMR3Ck>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudejgddugedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeegfeejhedvledvffeijeeijeeivddvhfeliedvleevheejleetgedukedt
-    gfejveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:0ibNZSp_hTq68M36gWLFnqnXkAy3fGJRLr7PWrrtuGOzG7-cN-8eRg>
-    <xmx:0ibNZQlNssZigmjDVU1GGZt4QBaG9jc73Rf5gVbCW-T1MrSihgILEA>
-    <xmx:0ibNZS2nsNnR1VIWQTtrbiylITmS3lC9HbacAL0YQfYeAOE9zXewcA>
-    <xmx:0ybNZbmuulMYaXdKo7NTJNXFFPaYkxYELRtaQMfb_mA-KQLb3hcRm1PUIyU>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id B67CEB6008D; Wed, 14 Feb 2024 15:47:14 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-144-ge5821d614e-fm-20240125.002-ge5821d61
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Pk1ICBHh"
+Date: Wed, 14 Feb 2024 12:55:11 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1707944119;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xo8269aewKOfShv/31KAAKnpB/F7S+Kl3+Lk1/FPD3g=;
+	b=Pk1ICBHhIE2T5qz5LlX4RF1DHCijddx53Q7QHWurpgjANNIC33z13Uq6ipi2CzOcOeqdhg
+	w/lP6rjgfoYdEZWWP+xT9pzh+YW4UGPBq4xUkainwHB4dsNoMuCAhDvTmTjjN/6DiCOZ6p
+	/k8iGjl1Iy8+O/twNjnbNz7WKb+nXKs=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Marc Zyngier <maz@kernel.org>
+Cc: kvmarm@lists.linux.dev, kvm@vger.kernel.org,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 19/23] KVM: selftests: Add a minimal library for
+ interacting with an ITS
+Message-ID: <Zc0orzU-CeKEyx3j@linux.dev>
+References: <20240213093250.3960069-1-oliver.upton@linux.dev>
+ <20240213094114.3961683-1-oliver.upton@linux.dev>
+ <86zfw33qae.wl-maz@kernel.org>
+ <Zc0NsFm40nIqTmRf@linux.dev>
+ <86v86q4xkf.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <23b58d3c-82eb-450f-a246-f8a91b8e8075@app.fastmail.com>
-In-Reply-To: 
- <CAK7LNASQUhJGSdQiyEpc5Rpuk_hJwSCu=W=4JkL-Et_giFNvPg@mail.gmail.com>
-References: <20240214181942.3562473-1-arnd@kernel.org>
- <CAK7LNASQUhJGSdQiyEpc5Rpuk_hJwSCu=W=4JkL-Et_giFNvPg@mail.gmail.com>
-Date: Wed, 14 Feb 2024 21:45:43 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Masahiro Yamada" <masahiroy@kernel.org>,
- "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Nathan Chancellor" <nathan@kernel.org>,
- "Nicolas Schier" <nicolas@fjasle.eu>,
- =?UTF-8?Q?Pierre-Cl=C3=A9ment_Tosi?= <ptosi@google.com>,
- "Ard Biesheuvel" <ardb@kernel.org>, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kallsyms: ignore ARMv4 thunks along with others
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <86v86q4xkf.wl-maz@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Feb 14, 2024, at 21:34, Masahiro Yamada wrote:
-> On Thu, Feb 15, 2024 at 3:19=E2=80=AFAM Arnd Bergmann <arnd@kernel.org=
-> wrote:
-> If this is a recurring problem,
-> maybe is it better to use a regular expression?
->
->
-> Remove these lines:
->
-> # arm64 lld
-> / __AArch64ADRPThunk_/d
->
-> # arm lld
-> / __ARMV5PILongThunk_/d
-> / __ARMV7PILongThunk_/d
-> / __ThumbV7PILongThunk_/d
->
-> # mips lld
-> / __LA25Thunk_/d
-> / __microLA25Thunk_/d
->
->
->
->
->
-> Add this:
->
-> # lld
-> / __[^[:space:]]*Thunk_/d
->
-> This pattern is only used in tooling,
-> but never in the kernel space.
+On Wed, Feb 14, 2024 at 08:09:52PM +0000, Marc Zyngier wrote:
+> > If the order of restore from userspace is CBASER, CWRITER, CREADR then
+> > we **wind up replaying the entire command queue**. While insane, I'm
+> > pretty sure it is legal for the guest to write garbage after the read
+> > pointer has moved past a particular command index.
+> > 
+> > Fsck!!!
+> 
+> This is documented Documentation/virt/kvm/devices/arm-vgic-its.rst to
+> some extent, and it is allowed for the guest to crap itself on behalf
+> of userspace if the ordering isn't respected.
 
-Right, makes sense. There is always a risk of removing
-intential kernel symbols and this is slightly higher
-with the regex but still not that bad.
+Ah, fair, I missed the documentation here. If we require userspace to
+write CTLR last then we _should_ be fine, but damn is this a tricky set
+of expectations.
 
-I'll give this a spin and send a v2 tomorrow then.
+> > So, how about we do this:
+> > 
+> >  - Provide a uaccess hook for CWRITER that changes the write-pointer
+> >    without processing any commands
+> > 
+> >  - Assert an invariant that at any time CWRITER or CREADR are read from
+> >    userspace that CREADR == CWRITER. Fail the ioctl and scream if that
+> >    isn't the case, so that way we never need to worry about processing
+> >    'in-flight' commands at the destination.
+> 
+> Are we guaranteed that we cannot ever see CWRITER != CREADR at VM
+> dumping time? I'm not convinced that we cannot preempt the vcpu thread
+> at the right spot, specially given that you can have an arbitrary
+> large batch of commands to execute.
+> 
+> Just add a page-fault to the mix, and a signal pending. Pronto, you
+> see a guest exit and you should be able to start dumping things
+> without the ITS having processed much. I haven't tried, but that
+> doesn't seem totally unlikely.
 
-    Arnd
+Well, we would need to run all userspace reads and writes through the
+cmd_lock in this case, which is what we already do for the CREADR
+uaccess hook. To me the 'racy' queue accessors only make sense for guest
+accesses, since the driver is expecting to poll for completion in that
+case.
+
+Otherwise we decide the existing rules for restoring the ITS are fine
+and I get to keep my funky driver :)
+
+-- 
+Thanks,
+Oliver
