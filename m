@@ -1,105 +1,106 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 712561643A;
-	Wed, 14 Feb 2024 09:47:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B874479C0;
+	Wed, 14 Feb 2024 09:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707904025; cv=none; b=oV+JIefp7DMn3Pt69MstY8/dWpZhbAJ+uvzdE5noalIG4gtCgeAteic/iWvVZHfMzX1zdZONp+aOWtSxCeDsDJre6JMs5t4Y/LhsKA398fR8ANCZ/9U2RiQRx66H1jc2JLf++E242HeiCGDamMnGBI9C3eESrTy/h2W7qdNSmpE=
+	t=1707904106; cv=none; b=NehbTpOkxPHRW2diR9rVfB7+LyvhJhlQPT3JjjWm90HzHSFHR59+BR0bnr0pzbxTYyve8+lmPss1YYFXkbrZXySkjKhB+JUaSxCVAcpfpdiCEBGz9vUsillyUqfM9MO9a2+Y7WPWDMLr0P55LN9apHJEVir4YZGMDDQLF50jpLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707904025; c=relaxed/simple;
-	bh=rP+ebuEaMc5tg61JLVvAUmEdrvUxyfm3wABBQbxoYIY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=QHFgiylbUqdzKCCeELTg9yIg5ag88nTHIVHTLS0RhHcE2JrtODRCeaNRydhJG8aHtDtLWngpHLcbCCvOFYmI49VxCtjEHjgFKKvmVMAXBrJvzfCKwWxb5mNVPLkoEDfL1wwHmRdCYn0MNO9x/r4l6Mu9EB6jJItcztnkEw2kWWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=JL+omqEX; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1707904106; c=relaxed/simple;
+	bh=/xTaGjBQPaCyfEB76FY9ozcyH+U4sK2JxoGVc4RldH0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HE/TcB90HSwXTBfkP7dnrMRp6HUHaM06fEfRSzVfZrSbmiY0tD6i50/73Acld+WaWtyDsMmVPPadZqdbO+BWrQDq0i5UMW/pL16CqREkawFdboqFlLDe/2IPtBvJ4q0Fs1GXMUjwZ6ydODG16ERHAAkZ6VEtmoLW5o1KPje1DVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=poqQgFMH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JL+omqEX"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41E9XM0V125985;
-	Wed, 14 Feb 2024 03:33:22 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707903202;
-	bh=Csk1oDtsAK1M0LasBQmN6aKIfpkSnc/BDiK3CDXsk2I=;
-	h=Date:Subject:To:References:From:In-Reply-To;
-	b=JL+omqEX+Tb6dI1G7b/HdymagiVC39okOKd8iguaaw5tw3CaBS1034o0WxZ5V5xmd
-	 /HzJX+ASVbz8gLgnmLlAsjQGPBz97py8trFnTgP1vnCChyokLVyjxKfj8JZr7/dUZy
-	 LA5QSRXcsqQAuvfbiwHivaqloV/edU7zDuJhxiqU=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41E9XM4C028558
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 14 Feb 2024 03:33:22 -0600
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 14
- Feb 2024 03:33:22 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 14 Feb 2024 03:33:22 -0600
-Received: from [172.24.227.36] (a0497641-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [172.24.227.36])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41E9XI5x090954;
-	Wed, 14 Feb 2024 03:33:19 -0600
-Message-ID: <75241296-c698-4983-9dcd-9f59c31cb286@ti.com>
-Date: Wed, 14 Feb 2024 15:03:18 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="poqQgFMH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 064C9C433C7;
+	Wed, 14 Feb 2024 09:48:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707904106;
+	bh=/xTaGjBQPaCyfEB76FY9ozcyH+U4sK2JxoGVc4RldH0=;
+	h=From:Subject:Date:To:Cc:From;
+	b=poqQgFMHxdq5tDAna0YN9HeabITO9bu2TQVUZbp8ahgxsZP6Yd45DONhupKDKnSj6
+	 pasnPIvE8q2sL1Iiu9MrpOz4gdtasEntSDNQIG/ANywwQ1HiPmXHkBIqV6CoJtc6EF
+	 C1gIx20SOTaGlGsfeijRVMtTxmF7YkGNKT78yjd8e/RgNBntFdFKBat7KoMLB0sVuY
+	 yIftBpI3rRPyPx/5qhYIHie5mgEc+faqGbHhbGe/asI274BknHK3yB6+MdPqXFT4Hw
+	 agMZRK4M1Hq4ihnQDXQYKQ8w2cF36EnyvMRxn7mCTyA544Q1ahiIe3GH08ipMPDS0x
+	 iINWvfsKd0Ezg==
+From: Roger Quadros <rogerq@kernel.org>
+Subject: [PATCH v3 0/5] usb: dwc3-am62: module removal and errata fixes
+Date: Wed, 14 Feb 2024 11:46:44 +0200
+Message-Id: <20240214-for-v6-9-am62-usb-errata-3-0-v3-0-147ec5eae18c@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] arm64: dts: ti: k3-am69-sk: fix PMIC interrupt
- number
-Content-Language: en-US
-To: Romain Naour <romain.naour@smile.fr>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <conor+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <robh+dt@kernel.org>, <kristo@kernel.org>, <vigneshr@ti.com>,
-        <nm@ti.com>
-References: <20240209171146.307465-1-romain.naour@smile.fr>
-From: Neha Malcom Francis <n-francis@ti.com>
-In-Reply-To: <20240209171146.307465-1-romain.naour@smile.fr>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-B4-Tracking: v=1; b=H4sIAAWMzGUC/x3MQQqDQAxG4atI1v4wZMpQexXpItZos6hKpoog3
+ t3B5QePd1BWN830qg5y3SzbPBXEuqLPV6ZRYX0xceBH4JAwzI4toYH8EmPNHdRd/oKIAI6xdCp
+ PbXoqi8V1sP3et+/zvAALdWm1bgAAAA==
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: nm@ti.com, r-gunasekaran@ti.com, afd@ti.com, b-liu@ti.com, srk@ti.com, 
+ francesco@dolcini.it, linux-usb@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Roger Quadros <rogerq@kernel.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1291; i=rogerq@kernel.org;
+ h=from:subject:message-id; bh=/xTaGjBQPaCyfEB76FY9ozcyH+U4sK2JxoGVc4RldH0=;
+ b=owEBbQKS/ZANAwAIAdJaa9O+djCTAcsmYgBlzIxmmv2WqK272ksCvRfa5TzwwHAkG2z3CqXyw
+ ZPtc6/jOjOJAjMEAAEIAB0WIQRBIWXUTJ9SeA+rEFjSWmvTvnYwkwUCZcyMZgAKCRDSWmvTvnYw
+ k+rFEADKqAAkmkkSTNDWarxJR7LeLLcA0vlONIi7J4KBIJ4u3LV6/iA7XIAMISZQDGH0JDHxRwc
+ 6iOPXiWHZyOnZB/+PNvbPoD54b9QERKQEdawubNQbKRPlXzgXuugGwnE6KkY1DBSAbdNSXDszy/
+ w4XUad2ShN1Zy96FVRuycrAuATIIMKJvTGkQgFq+d0ddqlXC+PThwbtW/5sSMbiPniZ+n5wDTUw
+ ZZa/BltulnfnrOL1LF4WCDBEGpfDC2WTW4BtyMxEIA46G8a+9nt+9GgKAftCaw/tCaXTw7syIII
+ KlbNhCe8hG+HjrLG/Y73+Ev9ZV5a5xNRrnX+Txrrek6C3GCBoe3Gyo2EEKrvCVVbR+4d3yLr9in
+ G0B+f2XwKkNSdCBPVtUZKZTrApPCdX4ls8nt3822ts06AlHFwAjlyQ6C49TRu4wuz103RQHlwwW
+ KtmIQ0bybQXf4Rnuh5IE4y0n3YovaYvm9xcwmBiTXzlE5IqOg5Lf0kz9bCB54TpkeOadgDqpq0Q
+ CEh5forzBK51rMYmmzUyrMDUoYC26XaZX+d0AHqvO3be1ExqoCvMr9jiERHxM9v4WguQvAj3DRn
+ JY8Sw3LEIxyzuQDjuxHsCpEPikPO7YQw/hjDrAELoIfds9AXIYhpnmN4wPFHI/b0KvyxV3Kv4l4
+ 80AvGtyui2WGRLQ==
+X-Developer-Key: i=rogerq@kernel.org; a=openpgp;
+ fpr=412165D44C9F52780FAB1058D25A6BD3BE763093
 
-Hi Romain
+Hi,
 
-On 09/02/24 22:41, Romain Naour wrote:
-> The tps659413 node set WKUP_GPIO0_83 (AA37) pin as input to be used as
-> PMIC interrupt but uses 39 (WKUP_GPIO0_39) as "interrupts" property.
-> 
-> Replace 39 by 83 after checking in the board schematic [1].
-> 
-> [1] https://www.ti.com/tool/SK-AM69
-> 
-> Fixes: 865a1593bf99 ("arm64: dts: ti: k3-am69-sk: Add support for TPS6594 PMIC")
-> Cc: Neha Malcom Francis <n-francis@ti.com>
-> Signed-off-by: Romain Naour <romain.naour@smile.fr>
-> ---
->   arch/arm64/boot/dts/ti/k3-am69-sk.dts | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am69-sk.dts b/arch/arm64/boot/dts/ti/k3-am69-sk.dts
-> index 8da591579868..95c9d3da59d3 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am69-sk.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-am69-sk.dts
-> @@ -646,7 +646,7 @@ tps659413: pmic@48 {
->   		pinctrl-names = "default";
->   		pinctrl-0 = <&pmic_irq_pins_default>;
->   		interrupt-parent = <&wkup_gpio0>;
-> -		interrupts = <39 IRQ_TYPE_EDGE_FALLING>;
-> +		interrupts = <83 IRQ_TYPE_EDGE_FALLING>;
->   		gpio-controller;
->   		#gpio-cells = <2>;
->   		ti,primary-pmic;
+This series fixes errors during module removal. It also
+implements PHY core voltage selection as per TI recommendation
+and workaround for Errata i2409 [1].
 
-Thanks for catching this!
+The workaround needs PHY2 region to be present in device node.
+The device tree patch will be sent later after the DT binding doc
+is merged.
 
-Reviewed-by: Neha Malcom Francis <n-francis@ti.com>
+[1] - https://www.ti.com/lit/er/sprz487d/sprz487d.pdf
 
+Changelog in each file
+
+v2: https://lore.kernel.org/all/20240205141221.56076-1-rogerq@kernel.org/
+v1: https://lore.kernel.org/all/20240201121220.5523-1-rogerq@kernel.org/
+
+Signed-off-by: Roger Quadros <rogerq@kernel.org>
+---
+Roger Quadros (5):
+      usb: dwc3-am62: call of_platform_depopulate in .remove()
+      usb: dwc3-am62: fix error on module removal
+      usb: dwc3-am62: Fix PHY core voltage selection
+      dt-bindings: usb/ti,am62-usb.yaml: Add PHY2 register space
+      usb: dwc3-am62: add workaround for Errata i2409
+
+ .../devicetree/bindings/usb/ti,am62-usb.yaml       |  8 +++-
+ drivers/usb/dwc3/dwc3-am62.c                       | 45 ++++++++++++++++------
+ 2 files changed, 39 insertions(+), 14 deletions(-)
+---
+base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+change-id: 20240206-for-v6-9-am62-usb-errata-3-0-233024ea8e9d
+
+Best regards,
 -- 
-Thanking You
-Neha Malcom Francis
+Roger Quadros <rogerq@kernel.org>
+
