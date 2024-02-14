@@ -1,100 +1,108 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C14313F009
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 22:09:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3C91DDF1
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 22:09:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707948544; cv=none; b=M/lH9PSgonBqtPH5cD6wEN0XMerbqTd7nfqP8clJnOhjFn2QxBjvDD2xgzt3eAHcd98sfCnEZpwE3ZJABhzDyI1zFMFS46Q/1UBlX5jCpQlakjDUsyyEUT3/b74Cx8J3aw72efiUzyOSFPbPRQD7gjThWkBqJU5hGyklxY4HvJk=
+	t=1707948577; cv=none; b=QqPOGQG+THYTZ2kkNfvdJqre6cHq2JIIvkVdWk45WlJoS4lYesKMvKjN5RUcNIeKLoFNU5Gid1qh8slGTPXIdROCVlyTm7ZQ/q+0qNbwjJcZAAGCLTR1ptidapl9tJejgIEtkt0MN13E1VubnnTJ1pr8ObWWSz4g4+IT6o73kD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707948544; c=relaxed/simple;
-	bh=/ZEw3nT9BRApIhNWO23YhMJtkmTMIFXh3nph9Rnl9wo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=E+urGxfGbogoJip71PbWSQrzNhWYPS5V5ym9aMTeanfKdzPTJIehLKJsKOA6dumELfzDMuSdT8weqDEaMm3nANCU36YN7NuoPNPObEFsJtv8C0pt7KlsSWwLvmwO/gz9Jeghr17thasfOjz9XFCr6n9kqp9hDwdxz3/wTmo/V6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=bgN0ehq7; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1707948577; c=relaxed/simple;
+	bh=VTAmMg+BgFLnXnjh2RFbOxx2A7QCbkF4jCDwOsg/fb8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jIZt+8BHj/mZrKtqFYKGr1tx0QamFbDX+nW38Eqpht4kzTDbngx2CIJ/cYcHyCSJVWeX64xThHKSI4MjFBc8XEOYjtj43TZUsHVv2cUgiWLxmt2xBTYsVOCPlSUg5EbjzRkQ1zcCoRZVdbcHelHsc7c1ztQtCnk7XhztTFnnBO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VWWp+3yv; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="bgN0ehq7"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-337d05b8942so101042f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 14:09:02 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VWWp+3yv"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-298fe09f851so29816a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 14:09:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1707948540; x=1708553340; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rvOh55NDnukoUmm76Hh+HuEqWYW2cORpSho5SBfrrxU=;
-        b=bgN0ehq7JoTSv1yYLzYkPMAKBGaTAvqFYZY5+E9+vnAwdowf4lzPjb7PDVIAlhJusU
-         ixHWkeXjZVEpH/a3of/+AVWDPjY5rUGz5R5WkFvVI5OrME+fPGaot65sxWp/RgNwNGZr
-         2JoipNw0doaPUqOxVzjBXbL9vS6i0m54Hp/W7ja/A+jFIiAyK/tfFt6uLL7ji1hmoljJ
-         OvYYlXiGDRCuusmVqCGrp3HK+ax0RWJ1tLKJziZR5sRXjlqCklqR/U6vO/9+3CefV/ZO
-         ID5RTqeHDOWUtBBbmz3EI3ftB+B94E8UT8Gy5EBdwJY5iAPRaBgQvkhkztPtMtNuLL6c
-         pnaA==
+        d=chromium.org; s=google; t=1707948575; x=1708553375; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UKC90cK1z5oF1gcZg9hwRMmNU2RFG8t/vNnGjpX63Tw=;
+        b=VWWp+3yv7CVu4Ichuui2QgsbyitfZhwzs4yUF31iOb6W9cV+Zf5P83zejS5AzEhHsX
+         cDf+hgBQSi5BkgRRgsu3523uDnm0vY1PcoqYPBUcI3X36/BmdeUsrJRWQPwOcG2+fFhq
+         GQ6qsGltSotZho7dChjqnPcBLS0VJ6h+K2zQw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707948540; x=1708553340;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rvOh55NDnukoUmm76Hh+HuEqWYW2cORpSho5SBfrrxU=;
-        b=NCAOk6NUvraCVgkte5scAouFydEknJBlumFjRqYg4ZdWlwpqjrNXYaTweZAeIzotiY
-         YS+uORLvi738Ut/Ospyx/i/mq33H5DFmECNB0hcTf97+wNXoSB9gNDKy4CKOSBsDNfAG
-         NWGGx1Vxg0AuBInuIRRiYV/OcpvLBQI43eBSFsu9ma538D0bX4V3XHR5rIOLqfSln6sG
-         oP08k7rndzGqBHxjaTaRpnQKNfclbCItT9urXy+qLbrpxLX68o1WaeNrSDXyyjg/HkEm
-         hGnGnnJriBUzft8DvVAHtP13v7K25UJZyYq3Oi9nOpqLWMWrrkYDeX4ANdKze1dsc6ry
-         4wcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXB5xDEgUp9ufyxwZEewDfTADJCYGypj7pey8dF3TT5SA3EC2TYL0AWOZ+AOL+R5hfVDI0tnHhIiaC7NPwNLwQyhiQacslJxWe9NqzW
-X-Gm-Message-State: AOJu0Yx8L/WzjlB6TbSI5YwiPOfpmb1wm/wSRpUt4jJFynhydiWdQzAk
-	NjfDRODWQrbwIy2BUawc29UE0LtXRyT9zRGYR+UQ/8CYiMuEeaNTutUYSBuveQf4qyoH0G+NMYZ
-	T+jrDRQ==
-X-Google-Smtp-Source: AGHT+IFBCkJjgKAte43OlvsT2p+edcXWf4TZt62EkxtkPmvLum/pNRCYcatU+QYBB+Bht0KOnjEiwg==
-X-Received: by 2002:a5d:50d1:0:b0:33b:433d:e1d7 with SMTP id f17-20020a5d50d1000000b0033b433de1d7mr2763880wrt.1.1707948540572;
-        Wed, 14 Feb 2024 14:09:00 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVC7/90BQ67mnQ5Q3GKq/x5TXhESOtq3i18WD7DLjPm9sgke4J2YcHHiXquH904v5OmDR/AGUOq2L/D7RxyTlAraU+WMJNt/ut66x8xRv5LnRg5uG8T+8t+6qYNH1MVXnGnc+Xx5FW0akLa7kd1ks1x0c6FRca/jOdtybWQ9ytFSPfB+Bbivvf2LpRhOUffBM/Eh5s23duXO6cvi0PWTgU=
-Received: from debian.fritz.box (aftr-82-135-80-242.dynamic.mnet-online.de. [82.135.80.242])
-        by smtp.gmail.com with ESMTPSA id e30-20020adf9bde000000b0033cf5769ab2sm1002122wrc.101.2024.02.14.14.08.59
+        d=1e100.net; s=20230601; t=1707948575; x=1708553375;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UKC90cK1z5oF1gcZg9hwRMmNU2RFG8t/vNnGjpX63Tw=;
+        b=YZ0cBD3ocqSCTDtlcqwDYQJEZ68pna5+eA7CCryhzlZgjSaprxbs71nnqNI50ZVwyr
+         hHU36qmZk6gfL9DBDTnu7s29lj+adYAU8v3jJ68vMiWRfyMw08PK3kYumRB22ddk2noL
+         9RM6cwuB1jAsiiDLTjFR5bc2J/sEFezOjXp54CM2bS1j/Wy4N5+3I5J+qdNZXfdyXpb8
+         OgkCn0zPQdN/fZ4+E1VZNK+2c+sqx/4RDLS2gpGrIai+V0BtKGx2nJ8GKa6u//HNJejn
+         XuS9tDUg8k86dLpv2QWy70lHODxb3/vHv4GWU43wZceNUXnMhK53Gl9FQNgRJlihwdiM
+         o37Q==
+X-Gm-Message-State: AOJu0Yx9yCL/eq4wyA7wl4Fyj3sYY4eZNZLGaCgcbB8ddu58wASZtrrl
+	JkoAv/yA0WwT9CQBBCUWoyQ8uHMW5YIwxEUnnaNVHMF916R3qgOxWesHJ7YO+A==
+X-Google-Smtp-Source: AGHT+IGTjHOYA94BG0K7UshyYHyh3FY0JkwVS/a2AcWoZcNN56CXDoJOkccas+6uzaul20xonyumwg==
+X-Received: by 2002:a17:90a:ce08:b0:295:ff5d:cb1d with SMTP id f8-20020a17090ace0800b00295ff5dcb1dmr47666pju.4.1707948575070;
+        Wed, 14 Feb 2024 14:09:35 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id e4-20020a17090a728400b00297022db05dsm1872088pjg.40.2024.02.14.14.09.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Feb 2024 14:09:00 -0800 (PST)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] synthetic tracing: Fix trace_string() return value
-Date: Wed, 14 Feb 2024 23:05:56 +0100
-Message-Id: <20240214220555.711598-1-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.39.2
+        Wed, 14 Feb 2024 14:09:34 -0800 (PST)
+Date: Wed, 14 Feb 2024 14:09:34 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Michal Wajdeczko <michal.wajdeczko@intel.com>
+Cc: linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Alexey Dobriyan <adobriyan@gmail.com>,
+	Jani Nikula <jani.nikula@intel.com>
+Subject: Re: [PATCH 1/2] wordpart.h: Helpers for making u16/u32/u64 values
+Message-ID: <202402141408.0E78D47@keescook>
+References: <20240214214654.1700-1-michal.wajdeczko@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240214214654.1700-1-michal.wajdeczko@intel.com>
 
-Fix trace_string() by assigning the string length to the return variable
-which got lost in commit ddeea494a16f ("tracing/synthetic: Use union
-instead of casts") and caused trace_string() to always return 0.
+On Wed, Feb 14, 2024 at 10:46:53PM +0100, Michal Wajdeczko wrote:
+> It is quite common practice to make u16, u32 or u64 values from
+> smaller words.  Add simple helpers for that.
+> 
+> Signed-off-by: Michal Wajdeczko <michal.wajdeczko@intel.com>
+> ---
+> v2: new macro names due to conflict with crypto/aria.h
+>     explicit cast and truncation everywhere (Alexey)
+>     moved to wordpart.h (Andy)
+> ---
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Alexey Dobriyan <adobriyan@gmail.com>
+> Cc: Jani Nikula <jani.nikula@intel.com>
+> ---
+>  include/linux/wordpart.h | 32 ++++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+> 
+> diff --git a/include/linux/wordpart.h b/include/linux/wordpart.h
+> index f6f8f83b15b0..8c75a5355112 100644
+> --- a/include/linux/wordpart.h
+> +++ b/include/linux/wordpart.h
+> @@ -31,6 +31,38 @@
+>   */
+>  #define lower_16_bits(n) ((u16)((n) & 0xffff))
+>  
+> +/**
+> + * make_u16_from_u8 - make u16 value from two u8 values
+> + * @hi: value representing upper 8 bits
+> + * @lo: value representing lower 8 bits
+> + */
+> +#define make_u16_from_u8(hi, lo) ((u16)((u16)(u8)(hi) << 8 | (u8)(lo)))
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- kernel/trace/trace_events_synth.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Do we want to actually do type validation here? Right now it's just
+cast/truncating, which based on the version log is by design. Is silent
+truncation the right thing to do?
 
-diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-index e7af286af4f1..c82b401a294d 100644
---- a/kernel/trace/trace_events_synth.c
-+++ b/kernel/trace/trace_events_synth.c
-@@ -441,8 +441,9 @@ static unsigned int trace_string(struct synth_trace_event *entry,
- 	if (is_dynamic) {
- 		union trace_synth_field *data = &entry->fields[*n_u64];
- 
-+		len = fetch_store_strlen((unsigned long)str_val);
- 		data->as_dynamic.offset = struct_size(entry, fields, event->n_u64) + data_size;
--		data->as_dynamic.len = fetch_store_strlen((unsigned long)str_val);
-+		data->as_dynamic.len = len;
- 
- 		ret = fetch_store_string((unsigned long)str_val, &entry->fields[*n_u64], entry);
- 
 -- 
-2.39.2
-
+Kees Cook
