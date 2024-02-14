@@ -1,285 +1,279 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882B060884;
-	Wed, 14 Feb 2024 16:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A32E60B97;
+	Wed, 14 Feb 2024 16:22:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707927772; cv=none; b=Lpnrv5vtMqWP1wlBAjYC0BQ5HF1GVoaHjdvnqCSmJYUivPpcOvUs0osld7dKTfvHNse2jM8UdsXZmvDFkNkTLa86j21c3pfdC0ybTE2D/I9De6+yzR27aQ070l+d7fONzyVGE7Ss0cW+ROaEoWMbsCEbBjoQxMkvNvjGayKMQww=
+	t=1707927774; cv=none; b=WyntgX+auHcZYBMx0jItzkcyzM0QuUpvi0bp71WRR4VAMIh2dlctc1bLbnYwYdTLSL6YJZ5B8KRDT24AjvBNguecdqBmINC7K/pQ3rc1iqHWdaOwxkTiYTasU1W7k5Fz6zYk6HQURiEw9HsyxOEmPwZwCnJX3jWjDRGcgv1DjIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707927772; c=relaxed/simple;
-	bh=hcetF/PnslkcN3jX68+J8IOB6E8XYwzSEUS+T5IkqzM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=djwIgagdBoSEy4SahK/eNZ9d+P3H2Aby2umHrYLnCh9RmaS+O7jyEdjNo7GuJnqsAT6WSecapjrEEEZTEKKsmkmPvgYJEvzFkMcvxnBziBMKCCnDOqm6CDIMPP89pzYlBbINzTClkYAU+85WK6LzHK4y2ORftxoTXWSXYcCdfXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gr21UQ3Q; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gr21UQ3Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707927770; x=1739463770;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=hcetF/PnslkcN3jX68+J8IOB6E8XYwzSEUS+T5IkqzM=;
-  b=gr21UQ3QREOJ6BZSuoENygQp3FGqEXUPwpNipsLaKXUsDTUN2MYrAHA7
-   q2a2DuEqabi0yxdQ2H2uMuR3GZ+AP2pmopRcRiRlrB3lSzY0zY+I+eaMh
-   tSIYwXJ4gBbKKbrscC1PC8l3kg0Ux3G7MHXxbeX1sca5WlqlJwm9TOMsy
-   4fDtowc8YqnUjCsId3pegQAivsvaLTj598/kuAh9SDXW7pk7XsEKfpR/L
-   EP0HkFyHhC5N1EX5FYChjQHqXILaIALMjiPH48p4gBSfJ/0fQ2/PRaKwa
-   zMesdr0DEWX9xjT87mKCRSwJAGbTkXfnKgQOjPbZCYuoHXYrUN6He4Tah
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="5755550"
-X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="5755550"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 08:22:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="26399979"
-Received: from newjersey.igk.intel.com ([10.102.20.203])
-  by fmviesa002.fm.intel.com with ESMTP; 14 Feb 2024 08:22:46 -0800
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Magnus Karlsson <magnus.karlsson@intel.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Alexander Duyck <alexanderduyck@fb.com>,
-	bpf@vger.kernel.org,
-	netdev@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v3 2/7] dma: avoid redundant calls for sync operations
-Date: Wed, 14 Feb 2024 17:21:56 +0100
-Message-ID: <20240214162201.4168778-3-aleksander.lobakin@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240214162201.4168778-1-aleksander.lobakin@intel.com>
-References: <20240214162201.4168778-1-aleksander.lobakin@intel.com>
+	s=arc-20240116; t=1707927774; c=relaxed/simple;
+	bh=tPeIGdk9ABSJ2vtL7S2gwGOmRk4EEkM+iWIHuT7Lkzs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PS962roqco3C//5W7sgHSFzpMt6QFc2M2ish3+DQoyvZ0V3lHwes+zHov4gZI1WT3+emNPdXypsVublt87nXslAMpJY5d3ILULujTVu8t2vhaOLELf4rvB8qiMnkn1WLHRn9LXsRGEUFBrva/k+M54/HNzt7FwvdGN4rMa//r2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC6721FB;
+	Wed, 14 Feb 2024 08:23:31 -0800 (PST)
+Received: from [10.57.64.120] (unknown [10.57.64.120])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 32A5B3F762;
+	Wed, 14 Feb 2024 08:22:48 -0800 (PST)
+Message-ID: <6c986b83-e00d-46fe-8c88-374f8e6bd0fa@arm.com>
+Date: Wed, 14 Feb 2024 16:22:46 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/7] mm: thp: split huge page to any lower order pages
+ (except order-1).
+Content-Language: en-GB
+To: Zi Yan <ziy@nvidia.com>
+Cc: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>, linux-mm@kvack.org,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ David Hildenbrand <david@redhat.com>, Yang Shi <shy828301@gmail.com>,
+ Yu Zhao <yuzhao@google.com>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>, Zach O'Keefe
+ <zokeefe@google.com>, Hugh Dickins <hughd@google.com>,
+ Mcgrof Chamberlain <mcgrof@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ cgroups@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20240213215520.1048625-1-zi.yan@sent.com>
+ <20240213215520.1048625-6-zi.yan@sent.com>
+ <de66b9fb-ee84-473f-a69a-2ac8554f6000@arm.com>
+ <6859C8DA-5B7F-458E-895C-763BA782F4B9@nvidia.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <6859C8DA-5B7F-458E-895C-763BA782F4B9@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Quite often, devices do not need dma_sync operations on x86_64 at least.
-Indeed, when dev_is_dma_coherent(dev) is true and
-dev_use_swiotlb(dev) is false, iommu_dma_sync_single_for_cpu()
-and friends do nothing.
+On 14/02/2024 16:11, Zi Yan wrote:
+> On 14 Feb 2024, at 5:38, Ryan Roberts wrote:
+> 
+>> On 13/02/2024 21:55, Zi Yan wrote:
+>>> From: Zi Yan <ziy@nvidia.com>
+>>>
+>>> To split a THP to any lower order (except order-1) pages, we need to
+>>> reform THPs on subpages at given order and add page refcount based on the
+>>> new page order. Also we need to reinitialize page_deferred_list after
+>>> removing the page from the split_queue, otherwise a subsequent split will
+>>> see list corruption when checking the page_deferred_list again.
+>>>
+>>> It has many uses, like minimizing the number of pages after
+>>> truncating a huge pagecache page. For anonymous THPs, we can only split
+>>> them to order-0 like before until we add support for any size anonymous
+>>> THPs.
+>>
+>> multi-size THP is now upstream. Not sure if this comment still makes sense.
+> Will change it to reflect the fact that multi-size THP is already upstream.
+> 
+>> Still its not completely clear to me how you would integrate this new machinery
+>> and decide what non-zero order to split anon THP to?
+> 
+> Originally, it was developed along with my 1GB THP support. So it was intended
+> to split order-18 to order-9. But for now, like you and David said in the cover
+> letter email thread, we might not want to use it for anonymous large folios
+> until we find a necessary use case.
+> 
+>>>
+>>> Order-1 folio is not supported because _deferred_list, which is used by
+>>> partially mapped folios, is stored in subpage 2 and an order-1 folio only
+>>> has subpage 0 and 1.
+>>>
+>>> Signed-off-by: Zi Yan <ziy@nvidia.com>
+>>> ---
+>>>  include/linux/huge_mm.h |  21 +++++---
+>>>  mm/huge_memory.c        | 114 +++++++++++++++++++++++++++++++---------
+>>>  2 files changed, 101 insertions(+), 34 deletions(-)
+>>>
+>>> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+>>> index 5adb86af35fc..de0c89105076 100644
+>>> --- a/include/linux/huge_mm.h
+>>> +++ b/include/linux/huge_mm.h
+>>> @@ -265,10 +265,11 @@ unsigned long thp_get_unmapped_area(struct file *filp, unsigned long addr,
+>>>
+>>>  void folio_prep_large_rmappable(struct folio *folio);
+>>>  bool can_split_folio(struct folio *folio, int *pextra_pins);
+>>> -int split_huge_page_to_list(struct page *page, struct list_head *list);
+>>> +int split_huge_page_to_list_to_order(struct page *page, struct list_head *list,
+>>> +		unsigned int new_order);
+>>>  static inline int split_huge_page(struct page *page)
+>>>  {
+>>> -	return split_huge_page_to_list(page, NULL);
+>>> +	return split_huge_page_to_list_to_order(page, NULL, 0);
+>>>  }
+>>>  void deferred_split_folio(struct folio *folio);
+>>>
+>>> @@ -422,7 +423,8 @@ can_split_folio(struct folio *folio, int *pextra_pins)
+>>>  	return false;
+>>>  }
+>>>  static inline int
+>>> -split_huge_page_to_list(struct page *page, struct list_head *list)
+>>> +split_huge_page_to_list_to_order(struct page *page, struct list_head *list,
+>>> +		unsigned int new_order)
+>>>  {
+>>>  	return 0;
+>>>  }
+>>> @@ -519,17 +521,20 @@ static inline bool thp_migration_supported(void)
+>>>  }
+>>>  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+>>>
+>>> -static inline int split_folio_to_list(struct folio *folio,
+>>> -		struct list_head *list)
+>>> +static inline int split_folio_to_list_to_order(struct folio *folio,
+>>> +		struct list_head *list, int new_order)
+>>>  {
+>>> -	return split_huge_page_to_list(&folio->page, list);
+>>> +	return split_huge_page_to_list_to_order(&folio->page, list, new_order);
+>>>  }
+>>>
+>>> -static inline int split_folio(struct folio *folio)
+>>> +static inline int split_folio_to_order(struct folio *folio, int new_order)
+>>>  {
+>>> -	return split_folio_to_list(folio, NULL);
+>>> +	return split_folio_to_list_to_order(folio, NULL, new_order);
+>>>  }
+>>>
+>>> +#define split_folio_to_list(f, l) split_folio_to_list_to_order(f, l, 0)
+>>> +#define split_folio(f) split_folio_to_order(f, 0)
+>>> +
+>>>  /*
+>>>   * archs that select ARCH_WANTS_THP_SWAP but don't support THP_SWP due to
+>>>   * limitations in the implementation like arm64 MTE can override this to
+>>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>>> index ad7133c97428..d0e555a8ea98 100644
+>>> --- a/mm/huge_memory.c
+>>> +++ b/mm/huge_memory.c
+>>> @@ -2718,11 +2718,14 @@ void vma_adjust_trans_huge(struct vm_area_struct *vma,
+>>>
+>>>  static void unmap_folio(struct folio *folio)
+>>>  {
+>>> -	enum ttu_flags ttu_flags = TTU_RMAP_LOCKED | TTU_SPLIT_HUGE_PMD |
+>>> -		TTU_SYNC | TTU_BATCH_FLUSH;
+>>> +	enum ttu_flags ttu_flags = TTU_RMAP_LOCKED | TTU_SYNC |
+>>> +		TTU_BATCH_FLUSH;
+>>>
+>>>  	VM_BUG_ON_FOLIO(!folio_test_large(folio), folio);
+>>>
+>>> +	if (folio_test_pmd_mappable(folio))
+>>> +		ttu_flags |= TTU_SPLIT_HUGE_PMD;
+>>
+>> Should we split this change out? I think it makes sense independent of this series?
+>>
+> 
+> Sure. Since multi-size THP is upstream, this avoid unnecessary code path if
+> the THP is not PMD-mapped.
+> 
+>>> +
+>>>  	/*
+>>>  	 * Anon pages need migration entries to preserve them, but file
+>>>  	 * pages can simply be left unmapped, then faulted back on demand.
+>>> @@ -2756,7 +2759,6 @@ static void lru_add_page_tail(struct page *head, struct page *tail,
+>>>  		struct lruvec *lruvec, struct list_head *list)
+>>>  {
+>>>  	VM_BUG_ON_PAGE(!PageHead(head), head);
+>>> -	VM_BUG_ON_PAGE(PageCompound(tail), head);
+>>>  	VM_BUG_ON_PAGE(PageLRU(tail), head);
+>>>  	lockdep_assert_held(&lruvec->lru_lock);
+>>>
+>>> @@ -2777,7 +2779,8 @@ static void lru_add_page_tail(struct page *head, struct page *tail,
+>>>  }
+>>>
+>>>  static void __split_huge_page_tail(struct folio *folio, int tail,
+>>> -		struct lruvec *lruvec, struct list_head *list)
+>>> +		struct lruvec *lruvec, struct list_head *list,
+>>> +		unsigned int new_order)
+>>>  {
+>>>  	struct page *head = &folio->page;
+>>>  	struct page *page_tail = head + tail;
+>>> @@ -2847,10 +2850,15 @@ static void __split_huge_page_tail(struct folio *folio, int tail,
+>>>  	 * which needs correct compound_head().
+>>>  	 */
+>>>  	clear_compound_head(page_tail);
+>>> +	if (new_order) {
+>>> +		prep_compound_page(page_tail, new_order);
+>>> +		folio_prep_large_rmappable(page_folio(page_tail));
+>>> +	}
+>>>
+>>>  	/* Finally unfreeze refcount. Additional reference from page cache. */
+>>> -	page_ref_unfreeze(page_tail, 1 + (!folio_test_anon(folio) ||
+>>> -					  folio_test_swapcache(folio)));
+>>> +	page_ref_unfreeze(page_tail,
+>>> +		1 + ((!folio_test_anon(folio) || folio_test_swapcache(folio)) ?
+>>> +			     folio_nr_pages(page_folio(page_tail)) : 0));
+>>>
+>>>  	if (folio_test_young(folio))
+>>>  		folio_set_young(new_folio);
+>>> @@ -2868,7 +2876,7 @@ static void __split_huge_page_tail(struct folio *folio, int tail,
+>>>  }
+>>>
+>>>  static void __split_huge_page(struct page *page, struct list_head *list,
+>>> -		pgoff_t end)
+>>> +		pgoff_t end, unsigned int new_order)
+>>>  {
+>>>  	struct folio *folio = page_folio(page);
+>>>  	struct page *head = &folio->page;
+>>> @@ -2877,10 +2885,11 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+>>>  	unsigned long offset = 0;
+>>>  	unsigned int nr = thp_nr_pages(head);
+>>>  	int i, nr_dropped = 0;
+>>> +	unsigned int new_nr = 1 << new_order;
+>>>  	int order = folio_order(folio);
+>>>
+>>>  	/* complete memcg works before add pages to LRU */
+>>> -	split_page_memcg(head, order, 0);
+>>> +	split_page_memcg(head, order, new_order);
+>>>
+>>>  	if (folio_test_anon(folio) && folio_test_swapcache(folio)) {
+>>>  		offset = swp_offset(folio->swap);
+>>> @@ -2893,8 +2902,8 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+>>>
+>>>  	ClearPageHasHWPoisoned(head);
+>>>
+>>> -	for (i = nr - 1; i >= 1; i--) {
+>>> -		__split_huge_page_tail(folio, i, lruvec, list);
+>>> +	for (i = nr - new_nr; i >= new_nr; i -= new_nr) {
+>>> +		__split_huge_page_tail(folio, i, lruvec, list, new_order);
+>>>  		/* Some pages can be beyond EOF: drop them from page cache */
+>>>  		if (head[i].index >= end) {
+>>>  			struct folio *tail = page_folio(head + i);
+>>> @@ -2910,29 +2919,41 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+>>>  			__xa_store(&head->mapping->i_pages, head[i].index,
+>>>  					head + i, 0);
+>>>  		} else if (swap_cache) {
+>>> +			/*
+>>> +			 * split anonymous THPs (including swapped out ones) to
+>>> +			 * non-zero order not supported
+>>> +			 */
+>>> +			VM_WARN_ONCE(new_order,
+>>> +				"Split swap-cached anon folio to non-0 order not supported");
+>>
+>> Why isn't it supported? Even if it's not supported, is this level the right
+>> place to enforce these kinds of policy decisions? I wonder if we should be
+>> leaving that to the higher level to decide?
+> 
+> Is the swap-out small-size THP without splitting merged? This needs that patchset.
 
-However, indirectly calling them when CONFIG_RETPOLINE=y consumes about
-10% of cycles on a cpu receiving packets from softirq at ~100Gbit rate.
-Even if/when CONFIG_RETPOLINE is not set, there is a cost of about 3%.
+No not yet. I have to respin it. Its on my todo list.
 
-Add dev->skip_dma_sync boolean which is set during the device
-initialization depending on the setup: dev_is_dma_coherent() for the
-direct DMA, !(sync_single_for_device || sync_single_for_cpu) or the new
-dma_map_ops flag, %DMA_F_CAN_SKIP_SYNC, advertised for non-NULL DMA ops.
-Then later, if/when swiotlb is used for the first time, the flag
-is turned off, from swiotlb_tbl_map_single().
+I'm not sure I understand the dependency though?
 
-On iavf, the UDP trafficgen with XDP_DROP in skb mode test shows
-+3-5% increase for direct DMA.
-
-Suggested-by: Christoph Hellwig <hch@lst.de> # direct DMA shortcut
-Co-developed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
----
- include/linux/device.h      |  5 +++++
- include/linux/dma-map-ops.h | 21 ++++++++++++++++++++
- include/linux/dma-mapping.h |  6 +++++-
- drivers/base/dd.c           |  2 ++
- kernel/dma/mapping.c        | 39 ++++++++++++++++++++++++++++++++++++-
- kernel/dma/swiotlb.c        |  8 ++++++++
- 6 files changed, 79 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 97c4b046c09d..f23e6a32bea0 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -686,6 +686,8 @@ struct device_physical_location {
-  *		other devices probe successfully.
-  * @dma_coherent: this particular device is dma coherent, even if the
-  *		architecture supports non-coherent devices.
-+ * @dma_skip_sync: DMA sync operations can be skipped for coherent non-SWIOTLB
-+ *		buffers.
-  * @dma_ops_bypass: If set to %true then the dma_ops are bypassed for the
-  *		streaming DMA operations (->map_* / ->unmap_* / ->sync_*),
-  *		and optionall (if the coherent mask is large enough) also
-@@ -800,6 +802,9 @@ struct device {
-     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
- 	bool			dma_coherent:1;
- #endif
-+#ifdef CONFIG_DMA_NEED_SYNC
-+	bool			dma_skip_sync:1;
-+#endif
- #ifdef CONFIG_DMA_OPS_BYPASS
- 	bool			dma_ops_bypass : 1;
- #endif
-diff --git a/include/linux/dma-map-ops.h b/include/linux/dma-map-ops.h
-index 4abc60f04209..327b73f653ad 100644
---- a/include/linux/dma-map-ops.h
-+++ b/include/linux/dma-map-ops.h
-@@ -18,8 +18,11 @@ struct iommu_ops;
-  *
-  * DMA_F_PCI_P2PDMA_SUPPORTED: Indicates the dma_map_ops implementation can
-  * handle PCI P2PDMA pages in the map_sg/unmap_sg operation.
-+ * DMA_F_CAN_SKIP_SYNC: DMA sync operations can be skipped if the device is
-+ * coherent and it's not an SWIOTLB buffer.
-  */
- #define DMA_F_PCI_P2PDMA_SUPPORTED     (1 << 0)
-+#define DMA_F_CAN_SKIP_SYNC		BIT(1)
- 
- struct dma_map_ops {
- 	unsigned int flags;
-@@ -111,6 +114,24 @@ static inline void set_dma_ops(struct device *dev,
- }
- #endif /* CONFIG_DMA_OPS */
- 
-+#ifdef CONFIG_DMA_NEED_SYNC
-+void dma_setup_skip_sync(struct device *dev);
-+
-+static inline void dma_clear_skip_sync(struct device *dev)
-+{
-+	/* Clear it only once so that the function can be called on hotpath */
-+	if (unlikely(dev->dma_skip_sync))
-+		dev->dma_skip_sync = false;
-+}
-+#else /* !CONFIG_DMA_NEED_SYNC */
-+static inline void dma_setup_skip_sync(struct device *dev)
-+{
-+}
-+static inline void dma_clear_skip_sync(struct device *dev)
-+{
-+}
-+#endif /* !CONFIG_DMA_NEED_SYNC */
-+
- #ifdef CONFIG_DMA_CMA
- extern struct cma *dma_contiguous_default_area;
- 
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index 6c7640441214..d85ae541c267 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -364,7 +364,11 @@ static inline void __dma_sync_single_range_for_device(struct device *dev,
- 
- static inline bool dma_skip_sync(const struct device *dev)
- {
--	return !IS_ENABLED(CONFIG_DMA_NEED_SYNC);
-+#ifdef CONFIG_DMA_NEED_SYNC
-+	return dev->dma_skip_sync;
-+#else
-+	return true;
-+#endif
- }
- 
- static inline bool dma_need_sync(struct device *dev, dma_addr_t dma_addr)
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index 85152537dbf1..67ad3e1d51f6 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -642,6 +642,8 @@ static int really_probe(struct device *dev, struct device_driver *drv)
- 			goto pinctrl_bind_failed;
- 	}
- 
-+	dma_setup_skip_sync(dev);
-+
- 	ret = driver_sysfs_add(dev);
- 	if (ret) {
- 		pr_err("%s: driver_sysfs_add(%s) failed\n",
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index 85feaa0e008c..5f588e31ea89 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -846,8 +846,14 @@ bool __dma_need_sync(struct device *dev, dma_addr_t dma_addr)
- 	const struct dma_map_ops *ops = get_dma_ops(dev);
- 
- 	if (dma_map_direct(dev, ops))
-+		/*
-+		 * dma_skip_sync could've been set to false on first SWIOTLB
-+		 * buffer mapping, but @dma_addr is not necessary an SWIOTLB
-+		 * buffer. In this case, fall back to more granular check.
-+		 */
- 		return dma_direct_need_sync(dev, dma_addr);
--	return ops->sync_single_for_cpu || ops->sync_single_for_device;
-+
-+	return true;
- }
- EXPORT_SYMBOL_GPL(__dma_need_sync);
- 
-@@ -861,3 +867,34 @@ unsigned long dma_get_merge_boundary(struct device *dev)
- 	return ops->get_merge_boundary(dev);
- }
- EXPORT_SYMBOL_GPL(dma_get_merge_boundary);
-+
-+#ifdef CONFIG_DMA_NEED_SYNC
-+void dma_setup_skip_sync(struct device *dev)
-+{
-+	const struct dma_map_ops *ops = get_dma_ops(dev);
-+
-+	if (dma_map_direct(dev, ops))
-+		/*
-+		 * dma_skip_sync will be set to false on first SWIOTLB buffer
-+		 * mapping, if any. During the device initialization, it's
-+		 * enough to check only for DMA coherence.
-+		 */
-+		dev->dma_skip_sync = dev_is_dma_coherent(dev);
-+	else if (!ops->sync_single_for_device && !ops->sync_single_for_cpu)
-+		/*
-+		 * Synchronization is not possible when none of DMA sync ops
-+		 * is set. This check precedes the below one as it disables
-+		 * the synchronization unconditionally.
-+		 */
-+		dev->dma_skip_sync = true;
-+	else if (ops->flags & DMA_F_CAN_SKIP_SYNC)
-+		/*
-+		 * Assume that when ``DMA_F_CAN_SKIP_SYNC`` is advertised,
-+		 * the conditions for synchronizing are the same as with
-+		 * the direct DMA.
-+		 */
-+		dev->dma_skip_sync = dev_is_dma_coherent(dev);
-+	else
-+		dev->dma_skip_sync = false;
-+}
-+#endif /* CONFIG_DMA_NEED_SYNC */
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index b079a9a8e087..0b737eab4d48 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -1323,6 +1323,12 @@ phys_addr_t swiotlb_tbl_map_single(struct device *dev, phys_addr_t orig_addr,
- 		return (phys_addr_t)DMA_MAPPING_ERROR;
- 	}
- 
-+	/*
-+	 * If dma_skip_sync was set, reset it to false on first SWIOTLB buffer
-+	 * mapping to always sync SWIOTLB buffers.
-+	 */
-+	dma_clear_skip_sync(dev);
-+
- 	/*
- 	 * Save away the mapping from the original address to the DMA address.
- 	 * This is needed when we sync the memory.  Then we sync the buffer if
-@@ -1640,6 +1646,8 @@ struct page *swiotlb_alloc(struct device *dev, size_t size)
- 	if (index == -1)
- 		return NULL;
- 
-+	dma_clear_skip_sync(dev);
-+
- 	tlb_addr = slot_addr(pool->start, index);
- 
- 	return pfn_to_page(PFN_DOWN(tlb_addr));
--- 
-2.43.0
+> You are right that a warning here is not appropriate. I will fail the splitting
+> if the folio is swapcached and going to be split into >0 order.
+> 
+>>>  			__xa_store(&swap_cache->i_pages, offset + i,
+>>>  					head + i, 0);
+>>>  		}
+>>>  	}
+>>>
+> 
+> 
+> --
+> Best Regards,
+> Yan, Zi
 
