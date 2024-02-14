@@ -1,194 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99AA25C8FC;
-	Wed, 14 Feb 2024 16:16:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16435FDD6
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 16:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707927362; cv=none; b=TJnoWdWK8IulI8tn292FEPARPhabNy6r3X6vsKjyxQX8FjmFSnOkgY92DCtfX6HsHCTZKyOpQ4zO4HK8kKP6B9Qmtj+gyzFX8hgZx5T8Nd41ksWNzAZDFaERr8PPvcccofp+ZZPfL06rKraD2z19Ebq4acEMxmgRtTP6mNOEBfU=
+	t=1707927399; cv=none; b=ceEJG29NAO1Db/jUT7OCQVrMsE4qbwUB6QJqEUrrZtDSCgW6GZhAcovPULwIUm+jJ1NZ2VRoQ6SRVQxQbfiJTdwEjOwjTZfhp5IFFtKGHUfID2x+cFJFr6Sm/EICExYWDpFZ37fxtCNALPcKqZCucjhfWYlojdEqEfTDz/0kP5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707927362; c=relaxed/simple;
-	bh=1LEv6Ova+Z8khqle7qgHTwMJAqi9FazSaL1UQ9aqt4o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ash99T1gHATD+TvZeVwFuYojc9Ph08ZGStn5lxqklUcX8e289Sy+/p48PIUp3u1aEquBht8qBr824j0KnNpMB/VJIv9JoQXMFrwTuvCrtNrdCdQXZ7FTDqfWspcbPnTShorbVc+ibrKrahF7z5xCOf0Y3sCzXlti+6XI71XlWQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IF/oiU2m; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707927399; c=relaxed/simple;
+	bh=NynwJ0AFNEyMAfXdjjgwyAof/FM1H7Av8eStEA2GWQ8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=AZv6aEmovxq6VXx/zfXz5ZCRcP6z5AzoFgfQiQ1edAGoxtf6ypgALEsoWBo/e2id4Fb/De1PlHgMEglhrg+CpycOSz749j0Hni9HLxhKdAMn0uU9PZXQ5fRwFpSGi6kccqznvQhunhtQNelj5Ng4kPibI/26mkcv1SGiBfna9+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Kc+gpjxi; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IF/oiU2m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707927360; x=1739463360;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=1LEv6Ova+Z8khqle7qgHTwMJAqi9FazSaL1UQ9aqt4o=;
-  b=IF/oiU2mPc6LFmtgy6syJW3B8L7Bn7fn5hL/o/MMz7R4qUJzMHz74IYA
-   SAwsed8droajK8RNDLrtmbTEbK8QxJpGSCJfljdxAFPsZC1K1ShuS25pU
-   XdtxXn+dTVSnGmtea8rZNXXLrYJEsqASem0RKCxNNGCJe+mlo5BHD1SBl
-   WZ9I+N4+IwbBrlmd4zJklzgBARg51P3qXqBaczgO8C+Nckl2rjIOxTk/9
-   DBfqKQgEDwPRrXgtHmcTOipvbHIs0AX37AB3aGjBkY3Axl5DUGZV95/a3
-   q8SRmL0fHXYowCa6/gJD8RhufkCd+Ypd0iRkHU75wUzXbn5UllGNECsmB
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="27427899"
-X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="27427899"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 08:15:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="935617078"
-X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="935617078"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 14 Feb 2024 08:15:57 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id C3928204; Wed, 14 Feb 2024 18:15:56 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Cc: Jiri Slaby <jirislaby@kernel.org>
-Subject: [PATCH v1 1/1] serial: 8250_of: Drop quirk fot NPCM from 8250_port
-Date: Wed, 14 Feb 2024 18:14:23 +0200
-Message-ID: <20240214161423.3452705-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kc+gpjxi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707927396;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NynwJ0AFNEyMAfXdjjgwyAof/FM1H7Av8eStEA2GWQ8=;
+	b=Kc+gpjxiOKrD/RnlXipQQ/cxt6fzBMlxX+3zLAbaZDg57gqlAGq3u2wUlOCKzL+OPomk1W
+	3UM7Uj++KTSqNZqXY8bm42957RgGokbohGWIKk9B4cciYQLLuvEy48U3JuwMfVer5s8weo
+	c10aMUM6e1hxMtByDChBrDDbJhmwKD4=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-542-66mnAALEPgmUI4-D32-EHg-1; Wed, 14 Feb 2024 11:16:34 -0500
+X-MC-Unique: 66mnAALEPgmUI4-D32-EHg-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a27eddc1c27so131515966b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 08:16:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707927393; x=1708532193;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NynwJ0AFNEyMAfXdjjgwyAof/FM1H7Av8eStEA2GWQ8=;
+        b=oj+830+wN19hOL1bDhFjd2BxRNYdQgmfYTZh7hT1RwwRXZbLonRJklMVlp+GrnPx+h
+         5MJGsm8alHoCfAqp7B45g8aGIyhR3txDf3ENTOACVoVuJDdfmt17jkpVoVt3xA5V2+IM
+         1dlknOY5JzwWiO13u1iO5GpwahuoNi3dKT0lkO/PAwjXD46eoe4wwn86qBOumNhhel0x
+         /djjaFdeGk72n01xjgpz98uyRq7lAa0t7jKg6uaG//P0BMHILiYuqfr+8dJRfaCOkTs5
+         pZtAio9AiJExzaZXe0VX98+ljGAtHXD7Ib1lw9K1iOog/vG+aY7azo8Zdh5nhAgXo6mF
+         OzDA==
+X-Forwarded-Encrypted: i=1; AJvYcCUJZrPhYvlspQmziDYK3RHydWImMpw+XaNxR8GkXBXBnAn7t9UtyOZupq1vIMA/NmlTRvLZLrKxc0B2KAyfn/J4ej6IxlSvSAcBEKaH
+X-Gm-Message-State: AOJu0Ywbrwf+Uh7YoQUhepgJHfxLtfwuw+bk7XRjmakZpLTFwq2f+4yU
+	pz+pRwPsFdeYtEvh4d7CKvJHKHhIBxrGUHdo/j/W7eLf35w405ayURkR8cVXparZ9wu8EV66nAh
+	E5c+h3JvpgmsmYEeKe8PTNm4Aq/y7kaVBJk+f7PvTNUPWc4g42IZxJDW0LS6Qeg==
+X-Received: by 2002:a17:906:b295:b0:a3d:7559:6ed1 with SMTP id q21-20020a170906b29500b00a3d75596ed1mr180336ejz.4.1707927393604;
+        Wed, 14 Feb 2024 08:16:33 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEBF50fj2t1VrO4nlcJxfDzb3+UgO6SrtoiH8S6oP0zsV+naqCZz8OsshNnXDp0xJ5kbRGiJA==
+X-Received: by 2002:a17:906:b295:b0:a3d:7559:6ed1 with SMTP id q21-20020a170906b29500b00a3d75596ed1mr180311ejz.4.1707927393183;
+        Wed, 14 Feb 2024 08:16:33 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUvWSzW/sHbHaDDzeSp1uL8SKv5n9VHwyIwWL7PGYq0Ek7HvpPw616TcD402iBl0wutzUvWVCAVEQ29muGToMScmOgRaJ1PMCgmnGQCAbVp6qvs/t0Pl2OeofCKEBrj5e1zQCkSs5GlDvLUIkMRlCY+d6+jH3c4aCcDacPCCdVQ0vIXMATTuIO6E9b2ZhNJhtUIWRhrLp/1YNd9amOmlTfUUtKibKRlmp2prRkrJFuu1KLpvU8yBSjKFsTeplDxqRydRYtBlGOoJG+qMybE+Oy+b9mj8mxubSjhmQs7IorCsGXhahWgAJ9AcB/MPNDoAkgflCXMGbgH
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id cw5-20020a170907160500b00a3ce60b003asm2260365ejd.176.2024.02.14.08.16.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Feb 2024 08:16:32 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+	id 4A91510F57EE; Wed, 14 Feb 2024 17:16:32 +0100 (CET)
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>, Alexei Starovoitov
+ <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
+ <andrii@kernel.org>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Jakub Kicinski <kuba@kernel.org>, Maciej
+ Fijalkowski <maciej.fijalkowski@intel.com>, bpf@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next] bpf/test_run: increase Page Pool's ptr_ring
+ size in live frames mode
+In-Reply-To: <20240214153838.4159970-1-aleksander.lobakin@intel.com>
+References: <20240214153838.4159970-1-aleksander.lobakin@intel.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date: Wed, 14 Feb 2024 17:16:32 +0100
+Message-ID: <87cyszdnrz.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-We are not supposed to spread quirks in 8250_port module especially
-when we have a separate driver for the hardware in question.
+Alexander Lobakin <aleksander.lobakin@intel.com> writes:
 
-Move quirk from generic module to the driver that uses it.
+> Currently, when running xdp-trafficgen, test_run creates page_pools with
+> the ptr_ring size of %NAPI_POLL_WEIGHT (64).
+> This might work fine if XDP Tx queues are polled with the budget
+> limitation. However, we often clear them with no limitation to ensure
+> maximum free space when sending.
+> For example, in ice and idpf (upcoming), we use "lazy" cleaning, i.e. we
+> clean XDP Tx queue only when the free space there is less than 1/4 of
+> the queue size. Let's take the ring size of 512 just as an example. 3/4
+> of the ring is 384 and often times, when we're entering the cleaning
+> function, we have this whole amount ready (or 256 or 192, doesn't
+> matter).
+> Then we're calling xdp_return_frame_bulk() and after 64th frame,
+> page_pool_put_page_bulk() starts returning pages to the page allocator
+> due to that the ptr_ring is already full. put_page(), alloc_page() et at
+> starts consuming a ton of CPU time and leading the board of the perf top
+> output.
+>
+> Let's not limit ptr_ring to 64 for no real reason and allow more pages
+> to be recycled. Just don't put anything to page_pool_params::size and
+> let the Page Pool core pick the default of 1024 entries (I don't believe
+> there are real use cases to clean more than that amount of descriptors).
+> After the change, the MM layer disappears from the perf top output and
+> all pages get recycled to the PP. On my test setup on idpf with the
+> default ring size (512), this gives +80% of Tx performance with no
+> visible memory consumption increase.
+>
+> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/tty/serial/8250/8250_of.c   | 38 +++++++++++++++++++++++++++++
- drivers/tty/serial/8250/8250_port.c | 24 ------------------
- 2 files changed, 38 insertions(+), 24 deletions(-)
+Hmm, so my original idea with keeping this low was to avoid having a lot
+of large rings lying around if it is used by multiple processes at once.
+But we need to move away from the per-syscall allocation anyway, and
+with Lorenzo's patches introducing a global system page pool we have an
+avenue for that. So in the meantime, I have no objection to this...
 
-diff --git a/drivers/tty/serial/8250/8250_of.c b/drivers/tty/serial/8250/8250_of.c
-index 34f17a9785e7..dc9792f919db 100644
---- a/drivers/tty/serial/8250/8250_of.c
-+++ b/drivers/tty/serial/8250/8250_of.c
-@@ -5,6 +5,7 @@
-  *    Copyright (C) 2006 Arnd Bergmann <arnd@arndb.de>, IBM Corp.
-  */
- #include <linux/console.h>
-+#include <linux/math.h>
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/serial_core.h>
-@@ -25,6 +26,36 @@ struct of_serial_info {
- 	int line;
- };
- 
-+/* Nuvoton NPCM timeout register */
-+#define UART_NPCM_TOR          7
-+#define UART_NPCM_TOIE         BIT(7)  /* Timeout Interrupt Enable */
-+
-+static int npcm_startup(struct uart_port *port)
-+{
-+	/*
-+	 * Nuvoton calls the scratch register 'UART_TOR' (timeout
-+	 * register). Enable it, and set TIOC (timeout interrupt
-+	 * comparator) to be 0x20 for correct operation.
-+	 */
-+	serial_port_out(port, UART_NPCM_TOR, UART_NPCM_TOIE | 0x20);
-+
-+	return serial8250_do_startup(port);
-+}
-+
-+/* Nuvoton NPCM UARTs have a custom divisor calculation */
-+static unsigned int npcm_get_divisor(struct uart_port *port, unsigned int baud,
-+				     unsigned int *frac)
-+{
-+	return DIV_ROUND_CLOSEST(port->uartclk, 16 * baud + 2) - 2;
-+}
-+
-+static int npcm_setup(struct uart_port *port)
-+{
-+	port->get_divisor = npcm_get_divisor;
-+	port->startup = npcm_startup;
-+	return 0;
-+}
-+
- /*
-  * Fill a struct uart_port for a given device node
-  */
-@@ -167,6 +198,13 @@ static int of_platform_serial_setup(struct platform_device *ofdev,
- 		if (ret)
- 			goto err_pmruntime;
- 		break;
-+	case PORT_NPCM:
-+		ret = npcm_setup(port);
-+		if (ret)
-+			goto err_pmruntime;
-+		break;
-+	default:
-+		break;
- 	}
- 
- 	if (IS_REACHABLE(CONFIG_SERIAL_8250_FSL) &&
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index d59dc219c899..1942e57089dd 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -38,10 +38,6 @@
- 
- #include "8250.h"
- 
--/* Nuvoton NPCM timeout register */
--#define UART_NPCM_TOR          7
--#define UART_NPCM_TOIE         BIT(7)  /* Timeout Interrupt Enable */
--
- /*
-  * Debugging.
-  */
-@@ -2235,15 +2231,6 @@ int serial8250_do_startup(struct uart_port *port)
- 				UART_DA830_PWREMU_MGMT_FREE);
- 	}
- 
--	if (port->type == PORT_NPCM) {
--		/*
--		 * Nuvoton calls the scratch register 'UART_TOR' (timeout
--		 * register). Enable it, and set TIOC (timeout interrupt
--		 * comparator) to be 0x20 for correct operation.
--		 */
--		serial_port_out(port, UART_NPCM_TOR, UART_NPCM_TOIE | 0x20);
--	}
--
- #ifdef CONFIG_SERIAL_8250_RSA
- 	/*
- 	 * If this is an RSA port, see if we can kick it up to the
-@@ -2545,15 +2532,6 @@ static void serial8250_shutdown(struct uart_port *port)
- 		serial8250_do_shutdown(port);
- }
- 
--/* Nuvoton NPCM UARTs have a custom divisor calculation */
--static unsigned int npcm_get_divisor(struct uart_8250_port *up,
--		unsigned int baud)
--{
--	struct uart_port *port = &up->port;
--
--	return DIV_ROUND_CLOSEST(port->uartclk, 16 * baud + 2) - 2;
--}
--
- static unsigned int serial8250_do_get_divisor(struct uart_port *port,
- 					      unsigned int baud,
- 					      unsigned int *frac)
-@@ -2598,8 +2576,6 @@ static unsigned int serial8250_do_get_divisor(struct uart_port *port,
- 		quot = 0x8001;
- 	else if (magic_multiplier && baud >= port->uartclk / 12)
- 		quot = 0x8002;
--	else if (up->port.type == PORT_NPCM)
--		quot = npcm_get_divisor(up, baud);
- 	else
- 		quot = uart_get_divisor(port, baud);
- 
--- 
-2.43.0.rc1.1.gbec44491f096
+Reviewed-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
 
