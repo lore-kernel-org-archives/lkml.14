@@ -1,61 +1,61 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D1E13EFEF
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 21:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406BC13F01B
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 21:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707945893; cv=none; b=qX7mXo/9QlNYHbWasOSOOkim/T6d5nyIO0ZfA9MYZ5V/5yyknQ6fqLDmgx7fPn8HVeEra74EZstOs5Y2zbQb8t7kjg+jPZSSTb7GlR/ayHexZNjLAlwVSr8VWjy0SPqM7ezg9Mj5nuAYFw2spo1sCyRGNOs1JOMW9fSZo4DHGjg=
+	t=1707945896; cv=none; b=OVvkJ+PLdX9KHwplDmEV7yj29w73Z0dpSG+2BUjAvbZVKBE3Ke3GTgQ+TCPQFZ6NOXdtkvESXfkc899kOaE6+vHX/hbsywXYzCcF4Nh/fMPa0A/eLP2QxKgbCxsQsE6+rB3fnQx9WEQc3CNFE/xnY9hY/bX2FSCrL9AfCPPyaVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707945893; c=relaxed/simple;
-	bh=trzMRuYmSH6OFe2YghfrCBvROS8FZbNBmhJApiP3SIA=;
+	s=arc-20240116; t=1707945896; c=relaxed/simple;
+	bh=5Tw/b7l1kr/h2F2qgYnDLNZGPYKGg44QwawYWk2mUog=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dKFnsxp7PG5IT/KKCBzi9vQmYvFurPEnQrlS9hr79VEwhaVNll/qzl8NM9DfgFOEN4qtoOCrbMXnKQ5T9eHm5H7ffcoPJB88aCShxZJVWLhMDVSVtnESEuhVr7LLkQ8pfiGbAhdiNAFAE0TaSaP1kDOsQLkyZGICLje+IviJpLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mwJl2pOa; arc=none smtp.client-ip=209.85.167.52
+	 In-Reply-To:To:Cc; b=P2YbDhF4XjrkDJpotBMQngpLOTmd0f1+AkP5AQc2hdGyxOhAfIpYb4648nS4cvhWym/x7M6XGumu/QZNKZxc+IBK5ou8EnzoucN3/MRbZsckpiqhJV97q41Q/d3IPa31H/a7qhjxmsIcSZAx7KQechxvZQeYnVViZt0tR68cjcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GgSKhGjw; arc=none smtp.client-ip=209.85.208.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mwJl2pOa"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5116b540163so300560e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 13:24:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GgSKhGjw"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5638c4a8c92so275167a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 13:24:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707945889; x=1708550689; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1707945892; x=1708550692; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=CPi8ivh2mN2y9Vi73CkpxPTlBJdM04NlyerCxruRnno=;
-        b=mwJl2pOaRognMEpMJOQwZTfFM63mau3tfX2iOvrAbJuTw6c7cOngCk7ptrSRS5vanH
-         zufN+adluSu0pi15SGkRHW8zb4pvOlL9zu3nL8qr83GoZDejJ70pKg9SOza/m4rnSi32
-         hdkKvIyQ2pv2VmfMpiXgULIQkF6CXoss/gAbWWOeKC7sSf6aTP6JYeJyyb35WWuVHeec
-         oiow4rWEU8hPBFFnnpuU2UXDbnZku+BaVoiSP/8BhqDCysJAfLbgqxFbbqjn9eIZ+jIa
-         SxrUv6s1HIFVhLZbTtA0OQ0UJeEShvxBoZi2xSgkdux6sLMmm7ZRUT/iVvb9rqizi+ZT
-         MNaA==
+        bh=G2FDzftpfovRyT/jIxjwVtoriiUTru9KGRsKJHoPXfo=;
+        b=GgSKhGjw59xKFuW6a723PFduuqWP/Y6Ml1eSqiE4WN0ZTSbBWP8inndsq3ZJhpspt1
+         08YVAHbNTOK4zFWE/jkwN7VWfJviCGQQ0J0ZqSVcCVuUaxk386T7so59j8ocmiJJI8Dt
+         UXjpOJ6hqlTUaTsNcAyP/p+zGCU3e8g2o2DwVoJO8VT+OAdYxUYdWsoqeIb1FixPcQ5l
+         KDqms7P2lAuOlJ1lsdXOri9rnG/6W290iHRgpQTrthcQrYAPzKcXSr1j0SgFjqJTV/6Y
+         kuV7bedbFhiLaNoMs9YfEJ7A3bS935JhwXoOp99xgpcbnYOQsi2S9Uk3mSpj+IUT+eCR
+         UmMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707945889; x=1708550689;
+        d=1e100.net; s=20230601; t=1707945892; x=1708550692;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CPi8ivh2mN2y9Vi73CkpxPTlBJdM04NlyerCxruRnno=;
-        b=sqZCey+a//MghldfX7Er9i3i0/Ptt+1A/FayMgN1kP+n1Ws7n1ygMEiITLg1YQe5mm
-         vgqRSdqgnI/iSrXmnwQkq4i/4xJ3H611OJMOzJB6FQRbY9b9pcsbZjciM5CbSphZR70S
-         fG+PjG7NyWtFbYPf3NMXImc8ja3EToR/LDBEj0LoObUMDvgT8rmMsmCjZVz22cHZLF9B
-         7Uot1sDYdxvtP/JHyZq2q2Mwb59UJbOS8QsRwGdxXoDzXUBtc6e2SjydrDlRWAoDaFZP
-         OL0PYYcSW1gg9H+mSAcR7P8LmLlVIDwPD7G6vu1PuNZzITvmWHtkJGkVRliwuoCUHYQV
-         Urwg==
-X-Forwarded-Encrypted: i=1; AJvYcCWtEkPrUEDO3Ur8wvWc17uQGBKJtS1Y1LMcWJN/C9wr6bOTrLclgevNZO9skmf3OXtrBj2bTYzrpRhoQUW+bnKBXQ7Ej9+rupocRrVF
-X-Gm-Message-State: AOJu0Yxhn9r49PFiggVlUUFTRNs1HTpGbDhT0Xef9ynIkULYudWn1BhR
-	3e82hme24a8ZTFaY8GRhSOTLbMzVf4yClRRPcYkquxG8vx8FEk0GQOZwCJ11fpY=
-X-Google-Smtp-Source: AGHT+IG8KujhAEcU3OWwmtH7y6vZdBy/4trbNuu0hjW4OzZLVm7aDW6ZzkIeQdlkslTipuhXMdA/MQ==
-X-Received: by 2002:ac2:490e:0:b0:511:ad7f:e284 with SMTP id n14-20020ac2490e000000b00511ad7fe284mr9417lfi.31.1707945889401;
-        Wed, 14 Feb 2024 13:24:49 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVmAft90PfwwJ+F4UGl7VBzcUm7bicbsvS4Gq1g55cT9xqSqreUkJOp7KNX3C2Py9BYM8UMhvxfFP5Jqz3Q8RkTT7oJ7nZCTOFpwiQuXag6L5epTZJ3v8SH9DpguWxsBXtt6n4pjJSkpQ9uYLS741W6f0t9BE617HIF7nRYLa5PEGIsOUokW0MyrwmFwxYSK2hRoWrAaCPOuC3N0RsA1uO0miF4AQbzjDRguBeNxafN1IBlm0oYBJACMJJ2t/VBdPRCGP4RhVdNWq4gdmVW8ZfYummm9qefhQuB1380RAaCSdOQzi7cQYddl0YsLTGrrMYXWjl/35PlN4Ynbnpu0i1nXoMDffqTYE5jzUdCzH+D/4Qb87MHMDDFcBVq+LiD2gM60o2mt0YtYqfR837gj+xA5afOJqzPfR8F7BXcoczxchpKJIgXkbsoy6TKGSPvxjy2we/fl+m1TFs7gP8EpM5TOcFul7l/Y76r/T4cRVljqGAhRMxajQuMlCN3+vgCrqD1KKkoZLhqcbwCombkjwfU3sTclPVd+Nxt7pwU9WCC3i1kwDf0CUeTV4Ky6xcrlHFacpCvOhPUJR3dwzSaDHax9sSyhRCJ7DaOdpB5air+w0sAh0zhJOC9z/Y96V4oArYUJHYx2979TMXdIVL6mw+prAil0IoqLbV3/foXEd81ob6iL9jma3/PAoiFWoAC7fwVgKSyQ0qwWjCrhAP/IecXz8hnSnDg9yTzY06VNoY2Yg==
+        bh=G2FDzftpfovRyT/jIxjwVtoriiUTru9KGRsKJHoPXfo=;
+        b=PpW3kBbFPcVs139AAo/2ToDcBeQT7MoKwBuu4Pd0TPv19FUWPyaP+M3BZchSo0BAUk
+         YMpgGFiuvtfMV5YncSao2y2u6QuSbDx1wzTEsN/nm7r40YIJ326d8sfsRwpqsYHOxf2w
+         KjqATFd72CS76d/chs7EuXtTg4QDg0CUSa7ZzEEs79mKvbqjalcbwE0kzPvfUxchKK6v
+         SZapgZxigNDgEujtUdsoAL+kJb6Q75E87siH7GmSToyACR4MjP5wVsgQ4F5ZAQG/ufQq
+         IbxU0FUO010Vu0086fm/rCw0lVEoXz7lGrNXZn88VlpAxmIxKFyqec8PIdTjYfxBtidI
+         9Ylw==
+X-Forwarded-Encrypted: i=1; AJvYcCWBhXPuUgwExrMWI/hldKHtHHVuQhCXo2i850+49pLUNySdrzNIi/88UuqKfttCUIt7Pph6IpZ6hBSzWpXoEsvluycx6gnS6S8sMXmd
+X-Gm-Message-State: AOJu0Yyf5NLnsZFnGzfbJCo9dxg7bQ009FiHHlkyyH3vYE+x8H75Oo8S
+	qwFDGmlvhiEJnJd+YIJBQWG1C2UJ919jRYJbMCDXRMC0kQACxHKM5dbgfwLKVlI=
+X-Google-Smtp-Source: AGHT+IGSxDbsMBb/2TufiH3/BR9JZl1eEzV76QUjgMEqN/2cIyreLuFWCYgbIagxvjV/jJLRdN07LQ==
+X-Received: by 2002:aa7:d8d0:0:b0:55f:a309:172f with SMTP id k16-20020aa7d8d0000000b0055fa309172fmr3100285eds.15.1707945892573;
+        Wed, 14 Feb 2024 13:24:52 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW2YtKtbACFjloqX4om5U8iP8FOi2NnTR4luh4zbxQLSkWxIHddQD44G0t5rFS0F1HQdArR4ybQunM5Kw/WZXpYluEAQ2hVvGBY4QQRJXya3LS4USW/U3mkIpxnZWrmXm8IpWDrbovHlJ8gZniKnY2LdiFzTsGSjt7f8ttGbWehAYX8OEoRfZie0K+DNuwek+jKjzASW07m7As7pQfaLUmybboiUO1woq5FVLfWXpvErpqHCocBIvzpiSHHzy6NwvVf7A3m+Ar+RDoVivayCbnNkgjS5acCPOxJAz/207TWDrvCUaJCFcBWIexboCzJtiktS9bGvcusJG94hhoyZQxQFMKM/KXlwx30e8M02X78AZX3mb0sb1c/UlNbUrLQLPKLN41BPhi4gbD3ZquzVxmIdlMZHNeMSF0h8QcCARe8Y0lKLqPaRgXxsQtsIOeFohH2zXeD1lpQWi92EAnUUQ0Of1KcajcHcjaHOvBFKicfXGRkhpP7tcDyFQoDPbQyRBgYo8+BvyEBqqBp92wRvEaFrd7HfIM9dmzE0Gk84fSdLYUYcLn4Jty/nBb28sZRIFgHI6GGkQ//vGmfcCBYk9R/9kW/+V40vAnzNXJDZd+gOiBWG16WJ+7VlHbTXxJ3v7c7FxUxGweDCafwpQEegUP6GiQySmkjzrs8WbVxlX59bavDNS8uYOtgyOyP3hcr0NM=
 Received: from [127.0.1.1] ([188.24.162.93])
-        by smtp.gmail.com with ESMTPSA id r16-20020aa7c150000000b0056399fa69absm257298edp.26.2024.02.14.13.24.47
+        by smtp.gmail.com with ESMTPSA id r16-20020aa7c150000000b0056399fa69absm257298edp.26.2024.02.14.13.24.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Feb 2024 13:24:48 -0800 (PST)
+        Wed, 14 Feb 2024 13:24:52 -0800 (PST)
 From: Abel Vesa <abel.vesa@linaro.org>
-Date: Wed, 14 Feb 2024 23:24:30 +0200
-Subject: [PATCH v2 1/4] dt-bindings: display/msm: document MDSS on X1E80100
+Date: Wed, 14 Feb 2024 23:24:32 +0200
+Subject: [PATCH v2 3/4] drm/msm: mdss: Add X1E80100 support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240214-x1e80100-display-v2-1-cf05ba887453@linaro.org>
+Message-Id: <20240214-x1e80100-display-v2-3-cf05ba887453@linaro.org>
 References: <20240214-x1e80100-display-v2-0-cf05ba887453@linaro.org>
 In-Reply-To: <20240214-x1e80100-display-v2-0-cf05ba887453@linaro.org>
 To: Rob Clark <robdclark@gmail.com>, 
@@ -80,292 +80,63 @@ To: Rob Clark <robdclark@gmail.com>,
  Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh@kernel.org>
 Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
  freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8316; i=abel.vesa@linaro.org;
- h=from:subject:message-id; bh=trzMRuYmSH6OFe2YghfrCBvROS8FZbNBmhJApiP3SIA=;
- b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBlzS+XBSJtLaHwyVF7YAoVPVRNDnkK9zJbqYzO4
- vykL+7gdTOJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZc0vlwAKCRAbX0TJAJUV
- Vm/RD/95CWuJMvQI3Jm5AIrS7WryIcLUciwq241Yzf7GWiCAXP6GQb35RgKBY1KrW1ojgLEspId
- fmUK3VK8qy/qXH4rZdIOPBoZABFuzmxMpvFi6nly65mYdIyIlK0ScQ9P4AGfOaPHGDD8CdfGPpc
- gyXI1nETFuhBWTLe+ENJ5Ms7hioloZ6q0UoD4kNdVzraUFg017hciOQhW74TrmdOYOO7oXCZtAg
- ZUUPOT5WnNgXxE/QZvY5Q+8QUlD5hH2hMEtmRn7suDvCrbFqHbJIg4kMNFbSaQkYXFh9NfPQd7J
- zsOlvheV6eyymyM6mBdVyhBmtrlX58eFBCFSaTtqsn3gEg9H21YwsQUvVZGqm9aY6Xth0DbUMPS
- 7BjdeSQUJXn7pgZarSQLX1oq/YjfpkcfXOcSaiSFjMVynLOQ3TWMbChnf6U9V7KbVUOZPVE4WUB
- jpoUPwtFkXCHXU6+LJrHJa3kmT39o2v1hH5BSL2VSXE9tyX9Qr8Bh7oshYCf+LJwsu6Z5mXJI5t
- H61lW8PM1JLjSmIu1EB69mymk0Ge71LRiN1la3WjnfbgPOrYd0yShvgHNKy/OAblQLGjcEGWeC7
- GO9VpOOsV9bO3KTqvArz2C0T51PcESvaegik4Ix3LPq5rIWIuBqFz5wBhwu+ukUV4EbyIodcld/
- g+zihpt1KtcnEmQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1368; i=abel.vesa@linaro.org;
+ h=from:subject:message-id; bh=5Tw/b7l1kr/h2F2qgYnDLNZGPYKGg44QwawYWk2mUog=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBlzS+ZCmdeuBZDpWVaiCNfS33naLTmirh+tLr24
+ B2ihy4+f3SJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZc0vmQAKCRAbX0TJAJUV
+ VhTpD/9vc2CqCEUoA1wxAZdxp0iA1hDgKrHj8jXq/5y65u7f0uZto7QaHe0F8VmZO6CaOyQgnj4
+ EkYgILsAw27YHcSzb6kkuO8Swra+qUJDguRgiDDbiFOdCfsdunFEPF/hZQxquIVwFWERvN2TZ7a
+ qinRYWdU3snlcIG/vKKf3nsF79VrbzZk/hg/ZdHcrKBcIQcCyEf6q3QvegvGMQ4IKwQFdu5qwz4
+ CThjuN+hnDF3GaL4U6Q+iAOqhrLTKUhBlVd64tPc7p6vJFGhP1hHIiS78zjMdHUApNQIIKraLoO
+ 8o/As0fYAOM67JOyrjvW+wcvPzhLQxGYiYc3agQEd+iCrCOky81ITUOlXKOLzK+K8oNCofmQTjp
+ Um0E1fLavqO03XkCx9mBCMSplmJJdw3VdawxkFI8hmvfBz/Qdm5PQ67mxBpY+HxaQPggY4CVtFv
+ 88dtILuRki+FU/BqXDuz2pj0KylldU5Nf4PZ7jnerOBchNYS/Jx6V8ImDCXjDjrgfvatkwSVvS9
+ Nwac0QvhzlHuGPc6+TVM/38MG3FO70ttjkEbjn7DPzCycv28e6cxu+6niw432h4FJUIDyWYlrQf
+ q9YW2AugjDpm65eHA9SS19oxnyQz0R/98bUyjo/PCFZoVHW+25g0ebOxAhsCCOHdMo/j9P7i4XH
+ BzjPp/PbvnDEwIg==
 X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
  fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
-Document the MDSS hardware found on the Qualcomm X1E80100 platform.
+Add support for MDSS on X1E80100.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 ---
- .../bindings/display/msm/qcom,x1e80100-mdss.yaml   | 252 +++++++++++++++++++++
- 1 file changed, 252 insertions(+)
+ drivers/gpu/drm/msm/msm_mdss.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/msm/qcom,x1e80100-mdss.yaml b/Documentation/devicetree/bindings/display/msm/qcom,x1e80100-mdss.yaml
-new file mode 100644
-index 000000000000..c3e38afab76e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/msm/qcom,x1e80100-mdss.yaml
-@@ -0,0 +1,252 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/msm/qcom,x1e80100-mdss.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/gpu/drm/msm/msm_mdss.c b/drivers/gpu/drm/msm/msm_mdss.c
+index 35423d10aafa..6eda501e2a1a 100644
+--- a/drivers/gpu/drm/msm/msm_mdss.c
++++ b/drivers/gpu/drm/msm/msm_mdss.c
+@@ -636,6 +636,18 @@ static const struct msm_mdss_data sm8550_data = {
+ 	.macrotile_mode = 1,
+ 	.reg_bus_bw = 57000,
+ };
 +
-+title: Qualcomm X1E80100 Display MDSS
++static const struct msm_mdss_data x1e80100_data = {
++	.ubwc_enc_version = UBWC_4_0,
++	.ubwc_dec_version = UBWC_4_3,
++	.ubwc_swizzle = 6,
++	.ubwc_static = 1,
++	/* TODO: highest_bank_bit = 2 for LP_DDR4 */
++	.highest_bank_bit = 3,
++	.macrotile_mode = 1,
++	/* TODO: Add reg_bus_bw with real value */
++};
 +
-+maintainers:
-+  - Abel Vesa <abel.vesa@linaro.org>
-+
-+description:
-+  X1E80100 MSM Mobile Display Subsystem(MDSS), which encapsulates sub-blocks like
-+  DPU display controller, DP interfaces, etc.
-+
-+$ref: /schemas/display/msm/mdss-common.yaml#
-+
-+properties:
-+  compatible:
-+    const: qcom,x1e80100-mdss
-+
-+  clocks:
-+    items:
-+      - description: Display AHB
-+      - description: Display hf AXI
-+      - description: Display core
-+
-+  iommus:
-+    maxItems: 1
-+
-+  interconnects:
-+    maxItems: 3
-+
-+  interconnect-names:
-+    maxItems: 3
-+
-+patternProperties:
-+  "^display-controller@[0-9a-f]+$":
-+    type: object
-+    properties:
-+      compatible:
-+        const: qcom,x1e80100-dpu
-+
-+  "^displayport-controller@[0-9a-f]+$":
-+    type: object
-+    properties:
-+      compatible:
-+        const: qcom,x1e80100-dp
-+
-+  "^phy@[0-9a-f]+$":
-+    type: object
-+    properties:
-+      compatible:
-+        const: qcom,x1e80100-dp-phy
-+
-+required:
-+  - compatible
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,x1e80100-dispcc.h>
-+    #include <dt-bindings/clock/qcom,x1e80100-gcc.h>
-+    #include <dt-bindings/clock/qcom,rpmh.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interconnect/qcom,x1e80100-rpmh.h>
-+    #include <dt-bindings/phy/phy-qcom-qmp.h>
-+    #include <dt-bindings/power/qcom,rpmhpd.h>
-+
-+    display-subsystem@ae00000 {
-+        compatible = "qcom,x1e80100-mdss";
-+        reg = <0x0ae00000 0x1000>;
-+        reg-names = "mdss";
-+
-+        interconnects = <&mmss_noc MASTER_MDP 0 &gem_noc SLAVE_LLCC 0>,
-+                        <&mc_virt MASTER_LLCC 0 &mc_virt SLAVE_EBI1 0>,
-+                        <&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_DISPLAY_CFG 0>;
-+        interconnect-names = "mdp0-mem", "mdp1-mem", "cpu-cfg";
-+
-+        resets = <&dispcc_core_bcr>;
-+
-+        power-domains = <&dispcc_gdsc>;
-+
-+        clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
-+                 <&gcc GCC_DISP_HF_AXI_CLK>,
-+                 <&dispcc DISP_CC_MDSS_MDP_CLK>;
-+        clock-names = "bus", "nrt_bus", "core";
-+
-+        interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-controller;
-+        #interrupt-cells = <1>;
-+
-+        iommus = <&apps_smmu 0x1c00 0x2>;
-+
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        ranges;
-+
-+        display-controller@ae01000 {
-+            compatible = "qcom,x1e80100-dpu";
-+            reg = <0x0ae01000 0x8f000>,
-+                  <0x0aeb0000 0x2008>;
-+            reg-names = "mdp", "vbif";
-+
-+            clocks = <&gcc_axi_clk>,
-+                     <&dispcc_ahb_clk>,
-+                     <&dispcc_mdp_lut_clk>,
-+                     <&dispcc_mdp_clk>,
-+                     <&dispcc_mdp_vsync_clk>;
-+            clock-names = "nrt_bus",
-+                          "iface",
-+                          "lut",
-+                          "core",
-+                          "vsync";
-+
-+            assigned-clocks = <&dispcc_mdp_vsync_clk>;
-+            assigned-clock-rates = <19200000>;
-+
-+            operating-points-v2 = <&mdp_opp_table>;
-+            power-domains = <&rpmhpd RPMHPD_MMCX>;
-+
-+            interrupt-parent = <&mdss>;
-+            interrupts = <0>;
-+
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                port@0 {
-+                    reg = <0>;
-+                    dpu_intf1_out: endpoint {
-+                        remote-endpoint = <&dsi0_in>;
-+                    };
-+                };
-+
-+                port@1 {
-+                    reg = <1>;
-+                    dpu_intf2_out: endpoint {
-+                        remote-endpoint = <&dsi1_in>;
-+                    };
-+                };
-+            };
-+
-+            mdp_opp_table: opp-table {
-+                compatible = "operating-points-v2";
-+
-+                opp-200000000 {
-+                    opp-hz = /bits/ 64 <200000000>;
-+                    required-opps = <&rpmhpd_opp_low_svs>;
-+                };
-+
-+                opp-325000000 {
-+                    opp-hz = /bits/ 64 <325000000>;
-+                    required-opps = <&rpmhpd_opp_svs>;
-+                };
-+
-+                opp-375000000 {
-+                    opp-hz = /bits/ 64 <375000000>;
-+                    required-opps = <&rpmhpd_opp_svs_l1>;
-+                };
-+
-+                opp-514000000 {
-+                    opp-hz = /bits/ 64 <514000000>;
-+                    required-opps = <&rpmhpd_opp_nom>;
-+                };
-+            };
-+        };
-+
-+        displayport-controller@ae90000 {
-+            compatible = "qcom,x1e80100-dp";
-+            reg = <0 0xae90000 0 0x200>,
-+                  <0 0xae90200 0 0x200>,
-+                  <0 0xae90400 0 0x600>,
-+                  <0 0xae91000 0 0x400>,
-+                  <0 0xae91400 0 0x400>;
-+
-+            interrupt-parent = <&mdss>;
-+            interrupts = <12>;
-+
-+            clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
-+               <&dispcc DISP_CC_MDSS_DPTX0_AUX_CLK>,
-+               <&dispcc DISP_CC_MDSS_DPTX0_LINK_CLK>,
-+               <&dispcc DISP_CC_MDSS_DPTX0_LINK_INTF_CLK>,
-+               <&dispcc DISP_CC_MDSS_DPTX0_PIXEL0_CLK>;
-+            clock-names = "core_iface", "core_aux",
-+                    "ctrl_link",
-+                    "ctrl_link_iface",
-+                    "stream_pixel";
-+
-+            assigned-clocks = <&dispcc DISP_CC_MDSS_DPTX0_LINK_CLK_SRC>,
-+                  <&dispcc DISP_CC_MDSS_DPTX0_PIXEL0_CLK_SRC>;
-+            assigned-clock-parents = <&usb_1_ss0_qmpphy QMP_USB43DP_DP_LINK_CLK>,
-+                  <&usb_1_ss0_qmpphy QMP_USB43DP_DP_VCO_DIV_CLK>;
-+
-+            operating-points-v2 = <&mdss_dp0_opp_table>;
-+
-+            power-domains = <&rpmhpd RPMHPD_MMCX>;
-+
-+            phys = <&usb_1_ss0_qmpphy QMP_USB43DP_DP_PHY>;
-+            phy-names = "dp";
-+
-+            #sound-dai-cells = <0>;
-+
-+            status = "disabled";
-+
-+            ports {
-+              #address-cells = <1>;
-+              #size-cells = <0>;
-+
-+              port@0 {
-+                  reg = <0>;
-+
-+                  mdss_dp0_in: endpoint {
-+                    remote-endpoint = <&mdss_intf0_out>;
-+                  };
-+              };
-+
-+              port@1 {
-+                  reg = <1>;
-+
-+                  mdss_dp0_out: endpoint {
-+                  };
-+              };
-+            };
-+
-+            mdss_dp0_opp_table: opp-table {
-+              compatible = "operating-points-v2";
-+
-+              opp-160000000 {
-+                 opp-hz = /bits/ 64 <160000000>;
-+                 required-opps = <&rpmhpd_opp_low_svs>;
-+              };
-+
-+              opp-270000000 {
-+                 opp-hz = /bits/ 64 <270000000>;
-+                 required-opps = <&rpmhpd_opp_svs>;
-+              };
-+
-+              opp-540000000 {
-+                 opp-hz = /bits/ 64 <540000000>;
-+                 required-opps = <&rpmhpd_opp_svs_l1>;
-+              };
-+
-+              opp-810000000 {
-+                 opp-hz = /bits/ 64 <810000000>;
-+                 required-opps = <&rpmhpd_opp_nom>;
-+              };
-+            };
-+        };
-+    };
-+...
+ static const struct of_device_id mdss_dt_match[] = {
+ 	{ .compatible = "qcom,mdss" },
+ 	{ .compatible = "qcom,msm8998-mdss", .data = &msm8998_data },
+@@ -656,6 +668,7 @@ static const struct of_device_id mdss_dt_match[] = {
+ 	{ .compatible = "qcom,sm8450-mdss", .data = &sm8350_data },
+ 	{ .compatible = "qcom,sm8550-mdss", .data = &sm8550_data },
+ 	{ .compatible = "qcom,sm8650-mdss", .data = &sm8550_data},
++	{ .compatible = "qcom,x1e80100-mdss", .data = &x1e80100_data},
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, mdss_dt_match);
 
 -- 
 2.34.1
