@@ -1,128 +1,152 @@
-Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049E7168BC
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 10:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC085171AE;
+	Wed, 14 Feb 2024 10:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707905211; cv=none; b=GMsu248nRpA2YWosUPiqbuRGjUN3fNs+lLN5hcpheAdgMd3rtTcr/CpMkC6rN+PqpE4OMhG4wmmZea3Nr8hok1orO4DUyom+zDZF6cGtdatvKzeEVT3v9R6kPUCSDtPCrzbLJ6DHGjSJfRD9F4szbUrWj6y0wZHZcCcI1Y3GD68=
+	t=1707905210; cv=none; b=lmiJs/RJlM2E1XyxhY4xuOf9dXwiEqQXFcsrBpM4iydM7R29I4HkOEcOWKYVETd4uo0oZJH0HfnUSVJuRRhxj2wmnfpfYNuhoim6P1hwSzkPOn70EkQWBaIQK6PuZ5peXgptf07DmsEsIxgZ1zREVHfAX2vTDsYypdp9iMuTw8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707905211; c=relaxed/simple;
-	bh=goS8bAK1n5A466dFSGmajAHPoVZCtr8W5Tvk/HsQ9nQ=;
+	s=arc-20240116; t=1707905210; c=relaxed/simple;
+	bh=xnJOc4z//DOjfKlx8+OsKAL8Ga16tYDqx+CAITnN62Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OQXGqaFYowZjg8ho67O0Kvu9q+BguRIeuXEVRi5AP3ODMn+zwOc5SSUJBKBzaRbyYh3jRmufB0kzqcgQcNON6xxloFsbDnAAcweiwD99NrHl2O65JN3QrUJFjtPIqmZQBxxYzRMLsfpNZrGlgk7K6YNVvSGL4tunK1GklWOzQ/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=52.59.177.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp82t1707905147tm9huc1i
-X-QQ-Originating-IP: WyFKD7/z1B/HiNMRMcyq0Fhg/dFCBjdoKWsB3R+UnvA=
-Received: from localhost ( [112.22.30.30])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 14 Feb 2024 18:05:46 +0800 (CST)
-X-QQ-SSF: 01400000002000504000B00A0000000
-X-QQ-FEAT: 3M0okmaRx3gZjUgebYN+4CRUMvLOmeYVy5GpH82cW2ucc4e+ZgyvUOcpzh82T
-	+50h0gTlQ0B9fBNYefdu95HMx2RHMz1BZKNRkUPx83gH63Zl/SERnL7+UstY7yOhx3+faMV
-	t2LnCfMKFwBMUG9cQE4roBpuOg9rvrpwXEO92Ye8g15M1mVB4ysDwgORQ0idLIQZFtaxrXp
-	AoVzcDDru5Gygtd5RX465YcvguBDLz3l7AR439ObKsppJoCysLWGlGak+lrmHJ9JGncHK5+
-	nbdw3ReGlRxbmtYw8i0T25glxbwXPwDrUUqH41Jk+SUL+8snLvktdbRYdNHEkKVN3kwqYAO
-	SVZINvazJs8Q3DGqlKtPTMKiBM1jmUW7GrEBpzo3yaN+Uy+7gPeZL6vsMBLvu2G4Hmaa2iT
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 8966854215807188254
-Date: Wed, 14 Feb 2024 18:05:46 +0800
-From: Dawei Li <dawei.li@shingroup.cn>
-To: arnd@arndb.de, gregkh@linuxfoundation.org
-Cc: fancer.lancer@gmail.com, lkp@intel.com, linux-kernel@vger.kernel.org,
-	set_pte_at@outlook.com
-Subject: Re: [PATCH v2] misc: eeprom/idt_89hpesx: Convert data structures to
- LE explicitly
-Message-ID: <C0067E9E28DB5E80+ZcyQegaiH2DvYACQ@centos8>
-References: <20240131033028.3099156-1-dawei.li@shingroup.cn>
+	 Content-Type:Content-Disposition:In-Reply-To; b=K8aZo8Mgex5kVFWVQ/ltApnh3m4F27CtZpPm1Q4Vapu3Ony9lH3k3nN3hsC7DYkLA9uXwz4SwVq1NNMgAi+uh421fCgLrXgfd9NsdH5zx/14/fLgTfIC19smMfFuGk5ujNckFmCgflCwbepo1qFwz6bn1kh0sNj3KjueJWEc2QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NEIeFAEa; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NEIeFAEa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A67D9C433F1;
+	Wed, 14 Feb 2024 10:06:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707905209;
+	bh=xnJOc4z//DOjfKlx8+OsKAL8Ga16tYDqx+CAITnN62Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NEIeFAEabfVaJlHVQUx7gy7CMJqfiDCHXwmKI2Q3EtXXl9CIlPPmPNdGwOMm4GlXw
+	 pVqe8n/wjChC71Gw2lWLq6cMk7djaFqNGOikZZORFb4CTlg4tNp7KkrHy4pLrFMqvl
+	 do8Sherb+C43R2vc80w14BFe457qgOs7vXRiUrPLeJPQ7spwnj0f4pStnCX245WD2f
+	 7s6yiZY3uz5/7EeHiit/dcsoudDQBOfL5yZfib9JkAUA/oVO/LJc65zjEkzoTBKVmI
+	 QC4/wvHjEJn0eVGbiz9bhn9UBM48Yjht46O51IoP8o1dcthzymMThf6tyl2FbxWL+/
+	 sARjWgrYJXTkw==
+Date: Wed, 14 Feb 2024 10:06:44 +0000
+From: Conor Dooley <conor@kernel.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: mediatek,mt2712: add compatible
+ for MT7988
+Message-ID: <20240214-reversion-arguably-37bbee9caf78@spud>
+References: <20240213164633.25447-1-zajec5@gmail.com>
+ <20240213-resource-evaluator-0754cfd5882d@spud>
+ <d4391868-ddcd-4f66-b539-28d245fa83df@gmail.com>
+ <e957b044-fe84-4b72-bdf1-cbc40c722019@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="mPF6YbHq+X8lxM7g"
 Content-Disposition: inline
-In-Reply-To: <20240131033028.3099156-1-dawei.li@shingroup.cn>
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
+In-Reply-To: <e957b044-fe84-4b72-bdf1-cbc40c722019@collabora.com>
 
-Hi Greg,
 
-Sorry for bothering.
+--mPF6YbHq+X8lxM7g
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 31, 2024 at 11:30:28AM +0800, Dawei Li wrote:
-> Kernel test robot reports following sparse warnings:
-> >> drivers/misc/eeprom/idt_89hpesx.c:599:31: sparse: sparse:
->    incorrect type in assignment (different base types) @@
->    expected unsigned short [addressable] [assigned] [usertype]
->    memaddr @@     got restricted __le16 [usertype] @@
-> 
->    drivers/misc/eeprom/idt_89hpesx.c:599:31: sparse:
->    expected unsigned short [addressable] [assigned] [usertype]
->    memaddr
-> 
->    drivers/misc/eeprom/idt_89hpesx.c:599:31: sparse:
->    restricted __le16 [usertype]
-> 
->    .....
-> 
-> For data structures needs cpu_to_le* conversion, their prototype need
-> to be declared with __le* explicitly.
-> 
-> Declare data structures to __le* explicitly to address the issue:
-> - struct idt_eeprom_seq::memaddr
-> - struct idt_csr_seq::csraddr
-> - struct idt_csr_seq::data
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202401261250.b07Yt30Z-lkp@intel.com/
-> Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
-> Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-> ---
-> v1 -> v2:
-> - Add sparse warning info from Kernel test robot.
-> - Remove Fixes & cc stable tag.
-> - Add Reviewed-by from Serge.
-> 
-> v1: https://lore.kernel.org/all/20240130040632.3039911-1-dawei.li@shingroup.cn/
-> 
+On Wed, Feb 14, 2024 at 10:27:54AM +0100, AngeloGioacchino Del Regno wrote:
+> Il 14/02/24 07:34, Rafa=C5=82 Mi=C5=82ecki ha scritto:
+> > On 13.02.2024 19:18, Conor Dooley wrote:
+> > > On Tue, Feb 13, 2024 at 05:46:32PM +0100, Rafa=C5=82 Mi=C5=82ecki wro=
+te:
+> > > > From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+> > > >=20
+> > > > MT7988 has on-SoC controller that can control up to 8 PWMs.
+> > >=20
+> > > I see a binding and a dts patch, but no driver patch, how come?
+> >=20
+> > I believe that to avoid cross-trees patchsets (which are sometimes
+> > tricky for maintainers) there are two ways of submiting such changes:
+> > 1. dt-binding + driver; then (separately) DTS
+> > 2. dt-binding + DTS; then (separately) driver
+> >=20
+> > I chose later in this case as my personal priority right now is to deal
+> > with all MediaTek DTS files.
+> >=20
+> > Is that wrong or unacceptable?
+> >=20
+>=20
+> It's not wrong but it's partially unacceptable, at least on my side.
 
-Any comments on this?
+> I want to put emphasis on sending the binding with the driver, as this al=
+lows
+> for a better review on everyone's side because we do see the full picture=
+ and
+> we can give better advices: in this case, I'm not sure whether adding a n=
+ew
+> compatible for MT7988 in an enum is a good idea, as the compatible string=
+ may
+> be shared with one of the *eleven* SoCs that are supported in the PWM dri=
+ver,
+> meaning that (hardware speaking!) the PWM controller in 7988 might be the=
+ same
+> as the one in mt1234.
 
-Thanks,
+Re-ordering to make my reply make more sense...
 
-    Dawei
+> In my opinion (and I believe many do agree with me), sending the binding =
+along
+> with the driver is the right choice, and if you also want to include the =
+dts
+> that is also appreciated: series can go through multiple maintainers appl=
+ying
+> subsets - it's ok to do.
 
->  drivers/misc/eeprom/idt_89hpesx.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/misc/eeprom/idt_89hpesx.c b/drivers/misc/eeprom/idt_89hpesx.c
-> index d807d08e2614..327afb866b21 100644
-> --- a/drivers/misc/eeprom/idt_89hpesx.c
-> +++ b/drivers/misc/eeprom/idt_89hpesx.c
-> @@ -129,7 +129,7 @@ struct idt_smb_seq {
->  struct idt_eeprom_seq {
->  	u8 cmd;
->  	u8 eeaddr;
-> -	u16 memaddr;
-> +	__le16 memaddr;
->  	u8 data;
->  } __packed;
->  
-> @@ -141,8 +141,8 @@ struct idt_eeprom_seq {
->   */
->  struct idt_csr_seq {
->  	u8 cmd;
-> -	u16 csraddr;
-> -	u32 data;
-> +	__le16 csraddr;
-> +	__le32 data;
->  } __packed;
->  
->  /*
-> -- 
-> 2.27.0
-> 
+Ye, either of those two makes my life a lot easier. I can then at least
+go and check the driver patch to see if things match up. In this case, I
+would want to check that the driver requires changes to support this
+device, given the commit message mentions nothing about the difference
+between this device and others. I'd still probably request that the
+commit message be improved to explain the lack of a fallback, but at
+least I would be clear about what I want and could provide a conditional
+Ack.
+
+If you're not sending the bindings patch with the driver, there's an
+extra onus on you to explain exactly what makes this device incompatible
+with the other devices in the enum, although in an ideal world it'd make
+no difference and every bindings patch would contain that information.
+
+> >=20
+> > > Also, what makes this incompatibly different with the other devices in
+> > > the binding, like the 8183?
+> >=20
+> > It can control 8 PWMs unlike any other SoC block except for MT2712.
+> > It uses different registers than MT2712 thought.
+
+Put this information in your commit message next time :)
+
+Cheers,
+Conor.
+
+--mPF6YbHq+X8lxM7g
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZcyQtAAKCRB4tDGHoIJi
+0ueXAQDCS+trr+ex9ySxR5bxD0kVm8SrRFLeLixgJlLEsQasHAEAiqnEQG8s/IH4
+xMOno6DMMEiw9aCzIyGoQTTN4Ied7wg=
+=QoHf
+-----END PGP SIGNATURE-----
+
+--mPF6YbHq+X8lxM7g--
