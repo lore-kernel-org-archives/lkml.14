@@ -1,127 +1,95 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7B15B21C;
-	Wed, 14 Feb 2024 15:01:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2E25CDDC
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 15:01:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707922885; cv=none; b=lCAFSoH0DlpPuQ+ZevTKFWx7hm6t2xjFXExIWw01dxGjbCE28ktMrGfbWXg94/Tt84aHSwo9EsLpISRDssR0GQdDYUjS3m2S1c306/IWfvc8t35XsCEOFe+Im33cZkanrsBcoDmJ1VIuw++ihXbb9x0CfonlSC0HfXXmD9aezdY=
+	t=1707922890; cv=none; b=bXzrU33lKbe5DIYLkPAk+1EVglV+qDvTEBFWX6SHOf6FcLAI1eSYIxnKXxzXrpDmbcShobj/pSBdX0z8bKQ1R4P/oU5XeGH8RdcxMKdVNprDK0vWVA86vZaV2t8McSvJOMttz51ELeDHu1d9mHFsSGMzy7W+m8LmNQU1Wsl3jlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707922885; c=relaxed/simple;
-	bh=wRhBbftaNujCFlZk6BVtFbm/sKIU58sYu+5kiELSP7E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W7IhcU5tDQBv+K1g2l2p9EHqY0lNgIbKRGhjD8vp5a5tlWc/RkBSwp2klwjxn7Oxb9Q8mpJtZtPp4NPtpuDs44uem1+sQzK6d+58hma2ltKKgCHrbYdASDhjJhpvgAPLSTjrtGMIEDdRHHztqbz2QgP0yPoKCqyXHt4KvFx80yA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7853a9eb5daso188543485a.2;
-        Wed, 14 Feb 2024 07:01:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707922881; x=1708527681;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h6upARWbXs1k8V4Vnc/YI44n6rxziwjW/OPtXVVY76s=;
-        b=juBjOjG6RNr9evWHSZ/09nizJEVK9dodFGbt3nbqZ+snJ773VLz59DEOWPkZlXnwbw
-         yuHzl7P8+TRd8AgxoyVf6ojP2QaO3xQCfkYUUorymqXYF7QjCF3VJ7LSkvCbHALufMjk
-         NiSHIl7608gCwXlIsnqkjlu/7hqxN/iqaZemKtaTgbEnJj6ukeKJzjRl0NaqoSbgQM/D
-         z456IvvGr5tCDQkXQqouVkcKE7jaYO32plUQyAWYVupe8eldzkIkJQjKYbG6AeJz0un0
-         VjS8D21vOdzlkf2G1qnRFc25k1R3DPcR/OiqXhlIAp0cbtv1LD1knY+KMS8e9WAg8djl
-         eORg==
-X-Forwarded-Encrypted: i=1; AJvYcCXD/D9CkimvEmtbtC85uzY4/T7w1dx+VzNbz9VwXZWMTjdQkD/cY1oVZZ6ygsj8EM04OuMAaX1MDfzbmRwMg52z4tZGWl72sGL1KbzNDLQxckD1A/OaTslRWF5AjqPsAMK4pgikvEPjLMzV5YdplJIp3+9B9IUAKA97xjoLL6YzYTYNHvNqup5ZQPnfmFt0vLWiuN1kPDE09012/lPqHNL2gzG7MuS8hfTQFYimJMMwC3WWbJc/XL8TPwza2kmakj5PHkdmPbTsPdakD9oD7eW11V25okqv/E/L01G4bqsn3kiBICVXf1sKoulY9uVV1VscV/UbkK1I1TfF+LVW7Qxfig==
-X-Gm-Message-State: AOJu0Yz3FfBHSphQEdAQfflo8c1EqfzX3Zk8R1G00qmBsXFU0jjWDNcG
-	1oUXcV+RpDreqVczgHu2wmod/j38huHWeur5DsfDlLREYcb47IMb4kZHO8J794c=
-X-Google-Smtp-Source: AGHT+IHFn6eY5rp1w7jUMyO4UeaIh9i34RYopBCHwdFZAa5Auq13KfwzuOv5oquw8sHm7FbvjKfJzQ==
-X-Received: by 2002:a05:620a:438b:b0:785:d6a9:734f with SMTP id a11-20020a05620a438b00b00785d6a9734fmr3530707qkp.46.1707922878529;
-        Wed, 14 Feb 2024 07:01:18 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUOpVWYB2+ehgyPQ2AelOzgxuW1SKU3bWkZZghJaolLB+H/bhnUH8p99cnRxJ/HuF1q37yQpv9bmDmijuI4cEf9NvjJtRTHMPowe6JfC45pAka1LI/BfpOz0dgohCFqjKCUSNns+oicXrIQTePS+bjFTHskwKh3BB4STphbREOBFbNcJzijpOIcCyrQJ32bFUrQAA0QnmeAXosAD9lhK6yq/FNMNnkvIckGQ/OAE1zbehJfAkeinVpBV7Y2FABfpfR3m4XnhzPwFFOLDNW3aoJT/THy5huzTXsSnMfa/I7TKJa7lkqgHsyD/VC2YM+WohFITnWaQ6S3XuwpGc9YiESIiw==
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com. [209.85.160.178])
-        by smtp.gmail.com with ESMTPSA id r11-20020a05620a03cb00b00785d7f634bcsm2481639qkm.8.2024.02.14.07.01.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Feb 2024 07:01:18 -0800 (PST)
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-42a8a3973c5so28297761cf.2;
-        Wed, 14 Feb 2024 07:01:17 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVkiCmkrcPoyS+NdSQfqmW3UfmIjV75JLSBFBZbycI6ZQxzWlm2P8tQCYMLXleNE71aKauBXoVvSo+LozJwSRo8/hmgMCEn22dqLyl1Z8OqftAI5j51MnTPNJt+PmpoBVBBFQkdT4b8tLFAWfsb/aymtYHx1BZxOsUvzQ0ntqFSgSG0E2Z1D7iFFlYs/rCvi6uyg/qw8hZQPbiFqwD2r01i2I0JrQXRovTG3hn87qvlcftLpQbbNX6o5xajhBxy/aic1FqGWwZn8+eBm7au5zqRm8q05rtoh/5Q6YMuIyb6HdqkJcLep/RZLGhJ1LN4I1hyHzzy7Lqzteel5zldnWXkBw==
-X-Received: by 2002:a25:84c9:0:b0:dc2:3fbd:82fe with SMTP id
- x9-20020a2584c9000000b00dc23fbd82femr2322270ybm.46.1707922857034; Wed, 14 Feb
- 2024 07:00:57 -0800 (PST)
+	s=arc-20240116; t=1707922890; c=relaxed/simple;
+	bh=NtSv8J+99riBcAJlhZXyLjUBO+73SEMOIxIgW1tEnlw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iZOJK9EZ95Xv/PwAph+yDWX67UWJ/4/oRaBDZD+6dPpWnKfIQyChwUnUy581BvpM6Y2aBMX7ZSci+tzxlz7GC5Lpi0+60Cj4HXm7tyRc52CD/MGwTvnxm3HpxbuiR25GV1+Wk6IhEktQCvCpMYciZtx8oZz87ikSNxakOOYx40g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ntCXoZ0V; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ntCXoZ0V"
+Date: Wed, 14 Feb 2024 10:01:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1707922886;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t/AETcYHznmpv4/j2syV358dOWN8/yUI1GROKTci8BI=;
+	b=ntCXoZ0VMMCAIYtsPiibjtpORudbEFoAtU1qYcguvGF7mSfGX7qoRUBfyl4bB4idy/W63v
+	fvLCK5XGJcO/TsFo6VG2fL+RXP2HusW2uO949y7vUaBPjM7wvWHNvrysfaEyXdkkF/pz8M
+	wHqh5GWyZyyGIKiP8Dc8AerWtRI9mCY=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Michal Hocko <mhocko@suse.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, 
+	Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org, vbabka@suse.cz, 
+	roman.gushchin@linux.dev, mgorman@suse.de, dave@stgolabs.net, willy@infradead.org, 
+	liam.howlett@oracle.com, corbet@lwn.net, void@manifault.com, peterz@infradead.org, 
+	juri.lelli@redhat.com, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, 
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org, 
+	peterx@redhat.com, david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, 
+	masahiroy@kernel.org, nathan@kernel.org, dennis@kernel.org, tj@kernel.org, 
+	muchun.song@linux.dev, rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com, 
+	yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com, hughd@google.com, 
+	andreyknvl@gmail.com, keescook@chromium.org, ndesaulniers@google.com, 
+	vvvvvv@google.com, gregkh@linuxfoundation.org, ebiggers@google.com, 
+	ytcoode@gmail.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com, 
+	rostedt@goodmis.org, bsegall@google.com, bristot@redhat.com, vschneid@redhat.com, 
+	cl@linux.com, penberg@kernel.org, iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, 
+	glider@google.com, elver@google.com, dvyukov@google.com, shakeelb@google.com, 
+	songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com, minchan@google.com, 
+	kaleshsingh@google.com, kernel-team@android.com, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, iommu@lists.linux.dev, linux-arch@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-modules@vger.kernel.org, 
+	kasan-dev@googlegroups.com, cgroups@vger.kernel.org
+Subject: Re: [PATCH v3 00/35] Memory allocation profiling
+Message-ID: <ifz44lao4dbvvpzt7zha3ho7xnddcdxgp4fkeacqleu5lo43bn@f3dbrmcuticz>
+References: <20240212213922.783301-1-surenb@google.com>
+ <20240214062020.GA989328@cmpxchg.org>
+ <ZczSSZOWMlqfvDg8@tiehlicka>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240213-arm-dt-cleanups-v1-0-f2dee1292525@kernel.org>
-In-Reply-To: <20240213-arm-dt-cleanups-v1-0-f2dee1292525@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 14 Feb 2024 16:00:45 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWgvD9szXksK+jzyvwLQ8ufWWf1TPQ7s-5z4JWgrvXmkg@mail.gmail.com>
-Message-ID: <CAMuHMdWgvD9szXksK+jzyvwLQ8ufWWf1TPQ7s-5z4JWgrvXmkg@mail.gmail.com>
-Subject: Re: [PATCH 0/6] dts: Fix dtc interrupt warnings
-To: Rob Herring <robh@kernel.org>
-Cc: soc@kernel.org, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Tsahee Zidenberg <tsahee@annapurnalabs.com>, Antoine Tenart <atenart@kernel.org>, 
-	Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@codeconstruct.com.au>, 
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Gregory Clement <gregory.clement@bootlin.com>, 
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
-	=?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Stefan Agner <stefan@agner.ch>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, 
-	Tony Lindgren <tony@atomide.com>, Chanho Min <chanho.min@lge.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Magnus Damm <magnus.damm@gmail.com>, Linus Walleij <linusw@kernel.org>, 
-	Imre Kaloz <kaloz@openwrt.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, 
-	openbmc@lists.ozlabs.org, linux-tegra@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, linux-omap@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZczSSZOWMlqfvDg8@tiehlicka>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Rob,
+On Wed, Feb 14, 2024 at 03:46:33PM +0100, Michal Hocko wrote:
+> On Wed 14-02-24 01:20:20, Johannes Weiner wrote:
+> [...]
+> > I agree we should discuss how the annotations are implemented on a
+> > technical basis, but my take is that we need something like this.
+> 
+> I do not think there is any disagreement on usefulness of a better
+> memory allocation tracking. At least for me the primary problem is the
+> implementation. At LFSMM last year we have heard that existing tracing
+> infrastructure hasn't really been explored much. Cover letter doesn't
+> really talk much about those alternatives so it is really hard to
+> evaluate whether the proposed solution is indeed our best way to
+> approach this.
 
-On Tue, Feb 13, 2024 at 8:35=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
-:
-> I had a branch with most of these changes sitting in my tree for some
-> time. Geert's asking about some errors not getting found prompted me to
-> clean it up and send it out. This series fixes all* interrupt related
-> warnings and enables the check by default.
+Michal, we covered this before.
 
-> *There's a few Renesas warnings still Geert said he would fix.
+To do this with tracing you'd have to build up data structures
+separately, in userspace, that would mirror the allocator's data
+structures; you would have to track every single allocation so that you
+could match up the free event to the place it was allocated.
 
-Thanks, fix sent
-https://lore.kernel.org/r/a351e503ea97fb1af68395843f513925ff1bdf26.17079224=
-60.git.geert+renesas@glider.be
+Even if it could be built, which I doubt, it'd be completely non viable
+because the performance would be terrible.
 
->       dtc: Enable dtc interrupt_provider check
-
->  scripts/Makefile.lib                                  |  3 +--
-
-Just wondering, can the remaining disabler be removed, too?
-
-Documentation/devicetree/bindings/Makefile:     -Wno-interrupt_provider \
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Like I said, we covered all this before; if you're going to spend so
+much time on these threads you really should be making a better attempt
+at keeping up with what's been talked about.
