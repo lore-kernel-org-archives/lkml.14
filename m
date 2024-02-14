@@ -1,52 +1,53 @@
 Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1BF60DC4;
-	Wed, 14 Feb 2024 16:42:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401A761695;
+	Wed, 14 Feb 2024 16:42:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.154.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707928943; cv=none; b=J7rETqQN4RVmIdQn6JYycW/CisxrQTu7upZsgSIRUu8MPXakz1Ww4U6W498kUPFvy1TWWdjEKOCAN17MPXwuWv19nviHHTBStFNwWVTxDwXN6Xky1KoVG8Xg5LpO6j7VsjVrS8TVjZPOfbF+ry1kwpwPgta9bVyfspzDHrc04eQ=
+	t=1707928947; cv=none; b=uZl5QRCvb852R/GPCacDcDhwHFPXlthGbVcfH0iLcR3bONJU/2+f5QFYp5N6bbrXf7V8VIcEhBPFgLLST9/yRBiWKfPIiYoMyO75kNf7k85YA5TNviD9oWambqPd/2LCIMvJzqSeBTXKVThigOvbT+c9jT2WEg0a7hw2d7Isddo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707928943; c=relaxed/simple;
-	bh=x+9XsgsJofMkp/phXpfhTtoOFnnITRJ8Y+D2z+U3vrI=;
+	s=arc-20240116; t=1707928947; c=relaxed/simple;
+	bh=n/Ct+FOCPnbG6TCxKfw5AO3FWijGxGRtmVbb789OJTM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ha9GObcN3dZkAMqmhqKUUz366vrGoxBM40aoY9FrwK4DWySzSf5fYcAET+tUnteqwPY8lYwpwbHMtU2PinDWEMXAIOTYAs8Iz6ZcVWDuLcJiRXUoptMWCctyzw9BlR7UXpP0cbkL1ngL8ne5+ajQ2dGHpiIfpKR9he9iK6A9H5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=e8giFPlK; arc=none smtp.client-ip=216.71.154.45
+	 In-Reply-To:To:Cc; b=ILtSj1VWUASBZGvy/KXiwnqdu7GORtmE1twnAR5NFSErthNGku1yPjdEtI1w1FdgkbLo0nmvuVYmUOOxtXcJDNwLCo4QgtxrYKx/lHxA9b9+GqvHeeRxxNauNtiCUIqabA3k9K3Z+DJv+YtWkSmDGdVEACXXYo5Y8+HXUdzxyk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=BqTZuWEZ; arc=none smtp.client-ip=216.71.154.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="e8giFPlK"
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="BqTZuWEZ"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1707928941; x=1739464941;
+  t=1707928945; x=1739464945;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=x+9XsgsJofMkp/phXpfhTtoOFnnITRJ8Y+D2z+U3vrI=;
-  b=e8giFPlKAyYFeuj9BXHpasdhA6aTK9PVDhueudCFBc9C8pyykB5ejcwa
-   LL5JpzG3ouBhFdlunhQcMR0OrRdIt7Tzn9sgRSX3J55nT0h9Hj0/5SKqa
-   JMdkKTewDVCTIL/hdb1LXTgG+EG5tj3TGlz9KkMe38I9LPvxO/HX5BGAS
-   ElUrSaVxsJx8iF0BCjzt4TePyFoR1WNZT+/CSs5zsifdtqTWGZrgmxqdD
-   HGLp+9u10xU6fsWrVrsd5a3kc6glvgymtViv2LNcY30OBUGy0lbp9MQaU
-   AEkSRChUeLY+XKmM3MZBgaB/T+1VKIQ0w+XcCJfo0v9w35R7DNDRUO7Iy
+  bh=n/Ct+FOCPnbG6TCxKfw5AO3FWijGxGRtmVbb789OJTM=;
+  b=BqTZuWEZE8YUEPxhjGR4fbzg1nQbl4ttkg14Bs3PCw5WOX0bh+X1UHZy
+   kX216bsZwX6lcZwjhu68P/HtyH8DYx0OcJbojGT+XiKhiAvaRbZYG/kdE
+   iRgvLvRLA3fHCxggF+kM2SfxGBnd0Sy/FNOAjLT7VG9G/zyD0uh9jbxnl
+   /XM7weEPIy5g0DS771TjTq9tBavolPHGu6b0hVvmclv2hyxfw+OVlws6A
+   72nWsI5FK00mLti2H7/xD7lxYYHqN+eA+Q+o5mPQg4p1NPb/E+TK7sC5a
+   SBmV1Uz4v7GHPbjN2UHZ3khkOCnQmG3FhssqauFoCiepqRrCjyVgMO4Yq
    A==;
-X-CSE-ConnectionGUID: 6xxSmU/ORtSOGRLm4HW5nw==
-X-CSE-MsgGUID: w0+miKYWQCuvoZ7o/OvvBg==
+X-CSE-ConnectionGUID: 3PqAXj1mRHCgh1akvRC+cw==
+X-CSE-MsgGUID: qvE74kfMRh+XStqcluh2OA==
 X-IronPort-AV: E=Sophos;i="6.06,159,1705334400"; 
-   d="scan'208";a="9294741"
+   d="scan'208";a="9294747"
 Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 15 Feb 2024 00:42:20 +0800
-IronPort-SDR: 8TCrt7yX0Q48V8HjcqzQEwKMlalzZRSlOa3kRgFQBfGmlg1Im2R1bmF7wNuHCcXlRGPOCP61+a
- RdtngOX2GeBQ==
+  by ob1.hgst.iphmx.com with ESMTP; 15 Feb 2024 00:42:24 +0800
+IronPort-SDR: F6k1MLOE5/8J8qKOpxUSURReH5Yusmwr/nIa58Ltsl2GXDjoysUKZnXpdmsY27sfc0rQGqJpsI
+ Da6NvglNaSQg==
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Feb 2024 07:51:55 -0800
-IronPort-SDR: iuSycV2C7J0cH1F3CsA6m8xOWSjY3EWg//M6hxtOqxSaWP2SjXECa+d46LefzsFRyg0ezdBZCN
- BD6Qy+KqWBqg==
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Feb 2024 07:51:59 -0800
+IronPort-SDR: gqvyFZhGSaw04+Ud78YXDxHFnxQddOfK8ygif5khsnA6k0J5jME4Cy2ASv3MXe0GseQVdGmh5s
+ aDi1iUDBXXGg==
 WDCIronportException: Internal
 Received: from unknown (HELO redsun91.ssa.fujisawa.hgst.com) ([10.149.66.6])
-  by uls-op-cesaip02.wdc.com with ESMTP; 14 Feb 2024 08:42:18 -0800
+  by uls-op-cesaip02.wdc.com with ESMTP; 14 Feb 2024 08:42:22 -0800
 From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Date: Wed, 14 Feb 2024 08:42:14 -0800
-Subject: [PATCH 3/5] btrfs: split btrfs_fs_devices.opened
+Date: Wed, 14 Feb 2024 08:42:16 -0800
+Subject: [PATCH 5/5] btrfs: use the super_block as holder when mounting
+ file systems
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,7 +56,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240214-hch-device-open-v1-3-b153428b4f72@wdc.com>
+Message-Id: <20240214-hch-device-open-v1-5-b153428b4f72@wdc.com>
 References: <20240214-hch-device-open-v1-0-b153428b4f72@wdc.com>
 In-Reply-To: <20240214-hch-device-open-v1-0-b153428b4f72@wdc.com>
 To: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
@@ -63,214 +64,50 @@ To: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
 Cc: Johannes Thumshirn <johannes.thumshirn@wdc.com>, 
  linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1707928933; l=7104;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1707928933; l=1407;
  i=johannes.thumshirn@wdc.com; s=20230613; h=from:subject:message-id;
- bh=7OH2aIo02sm6W0LG0E/ZUUuGzuFnEGpt1qc6hy3w+JE=;
- b=FkYNdzB4EGUPbJR4wd55k6sFzciP0YyBfUAzNUq1ey9V5wEM/iIDoRfoMUh/Vw8IxzfKp+2VQ
- t40Z+ink6bQCOPfiFPCC+9oIcuwtwtNXlxrWawYpnyLqFQKjxkLU/EV
+ bh=5rfa6IXupj7Jvp1HyDQOjFATBDPTi0LqbzcMFjmSCro=;
+ b=YI3WD5e/SUmGdIE0DfNpjyBwSXRjmr39hdskYzorTvIHh9L6oUFmy4XE+lzd7sgCkziaYG8x2
+ iNlLie//3u3DKi7tZZpXW/p1nuhTq0YEolIZFV0utmEplJ4NRDB7IDR
 X-Developer-Key: i=johannes.thumshirn@wdc.com; a=ed25519;
  pk=TGmHKs78FdPi+QhrViEvjKIGwReUGCfa+3LEnGoR2KM=
 
 From: Christoph Hellwig <hch@lst.de>
 
-The btrfs_fs_devices.opened member mixes an in use counter for the
-fs_devices structure that prevents it from being garbage collected with
-a flag if the underlying devices were actually opened.  This not only
-makes the code hard to follow, but also prevents btrfs from switching
-to opening the block device only after super block creation.  Split it
-into an in_use counter and an is_open boolean flag instead.
+The file system type is not a very useful holder as it doesn't allow us
+to go back to the actual file system instance.  Pass the super_block
+instead which is useful when passed back to the file system driver.
+
+This matches what is done for all other block device based file systems.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 ---
- fs/btrfs/volumes.c | 51 +++++++++++++++++++++++++++++----------------------
- fs/btrfs/volumes.h |  6 ++++--
- 2 files changed, 33 insertions(+), 24 deletions(-)
+ fs/btrfs/super.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-index 44caf1a48d33..f27af155abf0 100644
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -412,7 +412,8 @@ static void free_fs_devices(struct btrfs_fs_devices *fs_devices)
- {
- 	struct btrfs_device *device;
+diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
+index 1fa7d83d02c1..0c7956e8f21e 100644
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -1843,7 +1843,7 @@ static int btrfs_get_tree_super(struct fs_context *fc)
+ 		struct btrfs_fs_devices *fs_devices = fs_info->fs_devices;
  
--	WARN_ON(fs_devices->opened);
-+	WARN_ON_ONCE(fs_devices->in_use);
-+	WARN_ON_ONCE(fs_devices->is_open);
- 	while (!list_empty(&fs_devices->devices)) {
- 		device = list_entry(fs_devices->devices.next,
- 				    struct btrfs_device, dev_list);
-@@ -535,7 +536,7 @@ static int btrfs_free_stale_devices(dev_t devt, struct btrfs_device *skip_device
- 				continue;
- 			if (devt && devt != device->devt)
- 				continue;
--			if (fs_devices->opened) {
-+			if (fs_devices->in_use) {
- 				if (devt)
- 					ret = -EBUSY;
- 				break;
-@@ -607,7 +608,7 @@ static struct btrfs_fs_devices *find_fsid_by_device(
- 	if (found_by_devt) {
- 		/* Existing device. */
- 		if (fsid_fs_devices == NULL) {
--			if (devt_fs_devices->opened == 0) {
-+			if (devt_fs_devices->in_use == 0) {
- 				/* Stale device. */
- 				return NULL;
- 			} else {
-@@ -795,7 +796,7 @@ static noinline struct btrfs_device *device_list_add(const char *path,
- 	if (!device) {
- 		unsigned int nofs_flag;
- 
--		if (fs_devices->opened) {
-+		if (fs_devices->in_use) {
- 			btrfs_err(NULL,
- "device %s belongs to fsid %pU, and the fs is already mounted, scanned by %s (%d)",
- 				  path, fs_devices->fsid, current->comm,
-@@ -860,7 +861,7 @@ static noinline struct btrfs_device *device_list_add(const char *path,
- 		 * tracking a problem where systems fail mount by subvolume id
- 		 * when we reject replacement on a mounted FS.
- 		 */
--		if (!fs_devices->opened && found_transid < device->generation) {
-+		if (!fs_devices->in_use && found_transid < device->generation) {
- 			/*
- 			 * That is if the FS is _not_ mounted and if you
- 			 * are here, that means there is more than one
-@@ -921,7 +922,7 @@ static noinline struct btrfs_device *device_list_add(const char *path,
- 	 * it back. We need it to pick the disk with largest generation
- 	 * (as above).
- 	 */
--	if (!fs_devices->opened) {
-+	if (!fs_devices->in_use) {
- 		device->generation = found_transid;
- 		fs_devices->latest_generation = max_t(u64, found_transid,
- 						fs_devices->latest_generation);
-@@ -1120,15 +1121,19 @@ static void close_fs_devices(struct btrfs_fs_devices *fs_devices)
- 
- 	lockdep_assert_held(&uuid_mutex);
- 
--	if (--fs_devices->opened > 0)
-+	if (--fs_devices->in_use > 0)
- 		return;
- 
-+	if (!fs_devices->is_open)
-+		goto done;
-+
- 	list_for_each_entry_safe(device, tmp, &fs_devices->devices, dev_list)
- 		btrfs_close_one_device(device);
- 
- 	WARN_ON(fs_devices->open_devices);
- 	WARN_ON(fs_devices->rw_devices);
--	fs_devices->opened = 0;
-+	fs_devices->is_open = false;
-+done:
- 	fs_devices->seeding = false;
- 	fs_devices->fs_info = NULL;
- }
-@@ -1140,7 +1145,7 @@ void btrfs_close_devices(struct btrfs_fs_devices *fs_devices)
- 
- 	mutex_lock(&uuid_mutex);
- 	close_fs_devices(fs_devices);
--	if (!fs_devices->opened) {
-+	if (!fs_devices->in_use) {
- 		list_splice_init(&fs_devices->seed_list, &list);
- 
- 		/*
-@@ -1188,7 +1193,7 @@ static int open_fs_devices(struct btrfs_fs_devices *fs_devices,
- 	if (fs_devices->open_devices == 0)
- 		return -EINVAL;
- 
--	fs_devices->opened = 1;
-+	fs_devices->is_open = true;
- 	fs_devices->latest_dev = latest_dev;
- 	fs_devices->total_rw_bytes = 0;
- 	fs_devices->chunk_alloc_policy = BTRFS_CHUNK_ALLOC_REGULAR;
-@@ -1225,16 +1230,14 @@ int btrfs_open_devices(struct btrfs_fs_devices *fs_devices,
- 	 * We also don't need the lock here as this is called during mount and
- 	 * exclusion is provided by uuid_mutex
- 	 */
--
--	if (fs_devices->opened) {
--		fs_devices->opened++;
--		ret = 0;
--	} else {
-+	if (!fs_devices->is_open) {
- 		list_sort(NULL, &fs_devices->devices, devid_cmp);
- 		ret = open_fs_devices(fs_devices, flags, holder);
-+		if (ret)
-+			return ret;
- 	}
--
--	return ret;
-+	fs_devices->in_use++;
-+	return 0;
- }
- 
- void btrfs_release_disk_super(struct btrfs_super_block *super)
-@@ -2201,13 +2204,14 @@ int btrfs_rm_device(struct btrfs_fs_info *fs_info,
- 	 * This can happen if cur_devices is the private seed devices list.  We
- 	 * cannot call close_fs_devices() here because it expects the uuid_mutex
- 	 * to be held, but in fact we don't need that for the private
--	 * seed_devices, we can simply decrement cur_devices->opened and then
-+	 * seed_devices, we can simply decrement cur_devices->in_use and then
- 	 * remove it from our list and free the fs_devices.
- 	 */
- 	if (cur_devices->num_devices == 0) {
- 		list_del_init(&cur_devices->seed_list);
--		ASSERT(cur_devices->opened == 1);
--		cur_devices->opened--;
-+		ASSERT(cur_devices->in_use == 1);
-+		cur_devices->in_use--;
-+		cur_devices->is_open = false;
- 		free_fs_devices(cur_devices);
- 	}
- 
-@@ -2437,7 +2441,8 @@ static struct btrfs_fs_devices *btrfs_init_sprout(struct btrfs_fs_info *fs_info)
- 	list_add(&old_devices->fs_list, &fs_uuids);
- 
- 	memcpy(seed_devices, fs_devices, sizeof(*seed_devices));
--	seed_devices->opened = 1;
-+	seed_devices->in_use = 1;
-+	seed_devices->is_open = true;
- 	INIT_LIST_HEAD(&seed_devices->devices);
- 	INIT_LIST_HEAD(&seed_devices->alloc_list);
- 	mutex_init(&seed_devices->device_list_mutex);
-@@ -7115,7 +7120,8 @@ static struct btrfs_fs_devices *open_seed_devices(struct btrfs_fs_info *fs_info,
- 			return fs_devices;
- 
- 		fs_devices->seeding = true;
--		fs_devices->opened = 1;
-+		fs_devices->in_use = 1;
-+		fs_devices->is_open = true;
- 		return fs_devices;
- 	}
- 
-@@ -7132,6 +7138,7 @@ static struct btrfs_fs_devices *open_seed_devices(struct btrfs_fs_info *fs_info,
- 		free_fs_devices(fs_devices);
- 		return ERR_PTR(ret);
- 	}
-+	fs_devices->in_use = 1;
- 
- 	if (!fs_devices->seeding) {
- 		close_fs_devices(fs_devices);
-diff --git a/fs/btrfs/volumes.h b/fs/btrfs/volumes.h
-index 97c7284e7565..d6dc41c62998 100644
---- a/fs/btrfs/volumes.h
-+++ b/fs/btrfs/volumes.h
-@@ -372,8 +372,10 @@ struct btrfs_fs_devices {
- 
- 	struct list_head seed_list;
- 
--	/* Count fs-devices opened. */
--	int opened;
-+	/* Count if fs_device is in used. */
-+	unsigned int in_use;
-+	/* True if the devices were opened. */
-+	bool is_open;
- 
- 	/* Set when we find or add a device that doesn't have the nonrot flag set. */
- 	bool rotating;
+ 		mutex_lock(&uuid_mutex);
+-		ret = btrfs_open_devices(fs_devices, mode, &btrfs_fs_type);
++		ret = btrfs_open_devices(fs_devices, mode, sb);
+ 		mutex_unlock(&uuid_mutex);
+ 		if (ret)
+ 			goto error_deactivate;
+@@ -1856,7 +1856,7 @@ static int btrfs_get_tree_super(struct fs_context *fc)
+ 		snprintf(sb->s_id, sizeof(sb->s_id), "%pg",
+ 			 fs_devices->latest_dev->bdev);
+ 		shrinker_debugfs_rename(sb->s_shrink, "sb-btrfs:%s", sb->s_id);
+-		btrfs_sb(sb)->bdev_holder = &btrfs_fs_type;
++		btrfs_sb(sb)->bdev_holder = sb;
+ 		ret = btrfs_fill_super(sb, fs_devices, NULL);
+ 		if (ret)
+ 			goto error_deactivate;
 
 -- 
 2.43.0
