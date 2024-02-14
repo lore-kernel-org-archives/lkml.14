@@ -1,306 +1,226 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E3018633
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 10:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071D318EA5;
+	Wed, 14 Feb 2024 10:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707907864; cv=none; b=qQ5aFxJqjERTUsu1wVqYxBoP8Njr+FDGu58cf9C3VW/jkWw2/yNd6P5+OYq7DMJjHUgu3sfdLAI8i4KONphOL6+rLRecR5ODCGZO79cPWTMzdwSIeAdxR9PWzHSXVRAOsXyBBpnW+WEEymRR7ddhdXilu7cJ5c27sq64nEswv7M=
+	t=1707907887; cv=none; b=mP4KiYMGyJ3W6UnSkq3I5820nxC2/JIRuYyLawTJlqETrHvySh+16yFkYZVG/6EVESOAUO76bB4iNFyd5ya0Jy8dkhOEr1IwgifbdrykUMSSmCfX952q+it/bIuILtYn+EfsTbMwTasmlWe3xA4/TU2t7jUUq0cotUnwlgRG0og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707907864; c=relaxed/simple;
-	bh=Oi7K5rYcGGsepVAtt/jz07oK+Saja2lj1N8ZZPhTw0o=;
+	s=arc-20240116; t=1707907887; c=relaxed/simple;
+	bh=VBOjT9PbPH/2fllTgNRpjqHT9x/jVLbcfon0jVzyn5o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gNNo3PUgiHJhjeAsWot2Xg4N/KYfQOrozvhevuSnEHe3nzrHNYlNCUcFWXs4Q2Giq0tzKwtu6epkTdGIffL6s6yPueGqR3ge53J+sFUGwcNliA9xO5oPZCDuM02RNNkqhN3irgUcxHjyvO8xQPdxouYy5srlVgUP+xsgL2jqU/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=B5lHOIV+; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=m76rAcJvDAy+HfRAspduSEymT0/oFjpOdhBsuv75u9TLH3SnaVOAR0aI2r1EfV3UiujMfhjAaJrT3Dzb2tBw1sTL+kj3QV+C3I85uEaCUYsVe9jujml0IQvPL3rV6cVUO0qeShpD8/eTOjCyQvPm+8rxR6s/n+1y5CBAzCWAtGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=bBrhAc9I; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="B5lHOIV+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24B94C433C7;
-	Wed, 14 Feb 2024 10:51:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1707907863;
-	bh=Oi7K5rYcGGsepVAtt/jz07oK+Saja2lj1N8ZZPhTw0o=;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="bBrhAc9I"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0DCD840E0192;
+	Wed, 14 Feb 2024 10:51:23 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id t_5Xw0DbR89L; Wed, 14 Feb 2024 10:51:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1707907880; bh=rxGQY0MUeKmQh+xTDLGcVVfLxOjh73vp550f/1FpQj4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B5lHOIV+kZ1/r2LPiEOZkFaiP5A1xT4G7ar8km78XA0y+Eza51AlsyXnz2wTyD4x/
-	 kp+F9vFr6TB9vVudnbLDaVUfRYQlA+lL7W9lTaMYpAOWOvKIldZW3gna/9y6FroVbj
-	 HaJ+8d0jLkeFQ+naihupg/z4BGqyFzES+SB4j0zU=
-Date: Wed, 14 Feb 2024 11:50:57 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Vamsi Attunuru <vattunuru@marvell.com>
-Cc: arnd@arndb.de, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] misc: mrvl-dpi: add octeontx3 dpi driver
-Message-ID: <2024021435-stray-cried-9737@gregkh>
-References: <20240214035524.1245615-1-vattunuru@marvell.com>
+	b=bBrhAc9IpVb+UNBjskRb3a+KXVM9RyRBKoCmOiwtEL1TAGvJ2baymYXc7o5/mH7ok
+	 L3atJ4kl8HZdRaJn/rSS9Dp1/rZ/5FdIgYamUtGdfFGo4MqTDWsAVsOZWaVUT9Asdf
+	 IV9cQNq6VmMyDcB1Jrzz4xqNfibUJ3tJEtlA2BVH/x85hi6EQLJIjsCnmTINxxL9kW
+	 QwIwAwHegeUsoxFleqZ4gw9n9eH7H/pbaJtGwt6cYiAhrgbYLGfXiDOnGkHDw+MXnF
+	 5HmOgGe7tapt2O2Rjhbxk4uadcxvvkCkNyBIwQTZA51Fm93on0CWz27TAVsb4VP7p0
+	 EV1FRRHmlddjG9Rk3w85JgtJEkkx2yOmeLIy8MwRQ0HT3Rrg6iIOBPJqhSNJNN1oC0
+	 fdnVr+oTcc+ksjdNu4F5Fl4qgkClv+FBnCjRbS3YwoV+dO/zOrzTHomYZR96CEMqh/
+	 S3vTM1x1R7rUkJU7uZeqgzCdTWpYOrhnXAnLokU3xdNMyrI7aidpXJCybOp/dnIwQz
+	 MSr6EDBAgJC+UIKwz04+vVXSGFvpeM7uJxOn11vNu+K29miM1FObydOin2UuqRsMHS
+	 5+MMoniZq4z2Ka9fe5F/I1zLNwfHIrlh19Iaz3kJEEosONwFhLgw7hlojDOZ/3YlLh
+	 Zq/6EmLUMisV++u7ws26raVs=
+Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C29F340E00B2;
+	Wed, 14 Feb 2024 10:51:11 +0000 (UTC)
+Date: Wed, 14 Feb 2024 11:51:06 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: tony.luck@intel.com, linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org, avadhut.naik@amd.com,
+	john.allen@amd.com, muralidhara.mk@amd.com,
+	naveenkrishna.chatradhi@amd.com, sathyapriya.k@amd.com
+Subject: Re: [PATCH 2/2] RAS: Introduce the FRU Memory Poison Manager
+Message-ID: <20240214105106.GEZcybGu7TkvKzutol@fat_crate.local>
+References: <20240214033516.1344948-1-yazen.ghannam@amd.com>
+ <20240214033516.1344948-3-yazen.ghannam@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240214035524.1245615-1-vattunuru@marvell.com>
+In-Reply-To: <20240214033516.1344948-3-yazen.ghannam@amd.com>
 
-On Tue, Feb 13, 2024 at 07:55:24PM -0800, Vamsi Attunuru wrote:
-> Adds PCIe PF driver for OcteonTx3 DPI PF device which initializes DPI
-
-What is a "PF"?
-
-WHat is "DPI"?
-
-> DMA hardware's global configuration and enables PF-VF mbox channels
-
-What is "PF-VF"?
-
-> which can be used by it's VF devices. This DPI PF driver handles only
-
-What is "VF"?
-
-> the resource configuration requests from VFs and it does not have any
-> data movement functionality.
-
-What do you mean by "data movement functionality"?
-
-Please provide a bit more dummed down description please, for those of
-us who don't understand any of this.
-
-And if this is a pci driver, why is it in misc?
-
-> 
-> Signed-off-by: Vamsi Attunuru <vattunuru@marvell.com>
-> ---
->  MAINTAINERS                    |   5 +
->  drivers/misc/Kconfig           |  10 +
->  drivers/misc/Makefile          |   1 +
->  drivers/misc/mrvl-dpi/Makefile |   9 +
->  drivers/misc/mrvl-dpi/dpi.c    | 559 +++++++++++++++++++++++++++++++++
->  drivers/misc/mrvl-dpi/dpi.h    | 232 ++++++++++++++
->  6 files changed, 816 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 960512bec428..73029199716d 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13104,6 +13104,11 @@ S:	Supported
->  F:	Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.yaml
->  F:	drivers/mmc/host/sdhci-xenon*
->  
-> +MARVELL OCTEONTX3 DPI DRIVER
-> +M:	Vamsi Attunuru <vattunuru@marvell.com>
-> +S:	Maintained
-> +F:	drivers/misc/mrvl-dpi
-> +
->  MATROX FRAMEBUFFER DRIVER
->  L:	linux-fbdev@vger.kernel.org
->  S:	Orphan
-> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-> index 4fb291f0bf7c..3142fdb1b4c0 100644
-> --- a/drivers/misc/Kconfig
-> +++ b/drivers/misc/Kconfig
-> @@ -574,6 +574,16 @@ config NSM
->  	  To compile this driver as a module, choose M here.
->  	  The module will be called nsm.
->  
-> +config MARVELL_OCTEONTX3_DPI
-> +	tristate "OcteonTX3 DPI driver"
-> +	depends on ARM64 && PCI
-> +	default m
-
-Don't set a default unless you can not boot the box without it.
-
-> +	help
-> +	  Enables OCTEONTX3 DPI driver which intializes DPI PF device's global configuration
-> +	  and it's VFs resource configuration to enable DMA transfers. DPI PF device
-> +	  does not have any data movement functionality, it only serves VF's resource
-> +	  configuration requests.
-
-module name?
-
-
-> +
->  source "drivers/misc/c2port/Kconfig"
->  source "drivers/misc/eeprom/Kconfig"
->  source "drivers/misc/cb710/Kconfig"
-> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-> index ea6ea5bbbc9c..86229072166c 100644
-> --- a/drivers/misc/Makefile
-> +++ b/drivers/misc/Makefile
-> @@ -68,3 +68,4 @@ obj-$(CONFIG_TMR_INJECT)	+= xilinx_tmr_inject.o
->  obj-$(CONFIG_TPS6594_ESM)	+= tps6594-esm.o
->  obj-$(CONFIG_TPS6594_PFSM)	+= tps6594-pfsm.o
->  obj-$(CONFIG_NSM)		+= nsm.o
-> +obj-$(CONFIG_MARVELL_OCTEONTX3_DPI)	+= mrvl-dpi/
-> diff --git a/drivers/misc/mrvl-dpi/Makefile b/drivers/misc/mrvl-dpi/Makefile
-> new file mode 100644
-> index 000000000000..c938ea459483
-> --- /dev/null
-> +++ b/drivers/misc/mrvl-dpi/Makefile
-> @@ -0,0 +1,9 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# Makefile for Marvell's OcteonTX3 DPI driver
-> +#
-> +
-> +obj-$(CONFIG_MARVELL_OCTEONTX3_DPI) += octeontx3_dpi.o
-> +
-> +octeontx3_dpi-y := dpi.o
-
-Why the two steps?  Why not just name the file the module name?
-
-And because of that, why do you need a subdirectory?
-
-And if you do have a subdirectory, why not move the Kconfig entry into
-it?  You can't have it both ways here, sorry.
-
-
-> +
-> diff --git a/drivers/misc/mrvl-dpi/dpi.c b/drivers/misc/mrvl-dpi/dpi.c
-> new file mode 100644
-> index 000000000000..fe0b3ee469c8
-> --- /dev/null
-> +++ b/drivers/misc/mrvl-dpi/dpi.c
-> @@ -0,0 +1,559 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Marvell OcteonTx3 DPI driver
-> + *
-> + * Copyright (C) 2024 Marvell International Ltd.
-> + *
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/irq.h>
-> +#include <linux/interrupt.h>
-> +
-> +#include "dpi.h"
-
-Why do you need a .h file for a single .c file?
-
-> +
-> +#define DPI_DRV_NAME	"OcteonTx3-dpi"
-> +#define DPI_DRV_STRING  "Marvell OcteonTx3 DPI Driver"
-> +#define DPI_DRV_VERSION	"1.0"
-
-Driver versions do not make sense once they are in the kernel tree,
-please remove.
-
-> +static int mps = 128;
-> +module_param(mps, int, 0644);
-> +MODULE_PARM_DESC(mps, "Maximum payload size, Supported sizes are 128, 256, 512 and 1024 bytes");
-> +
-> +static int mrrs = 128;
-> +module_param(mrrs, int, 0644);
-> +MODULE_PARM_DESC(mrrs, "Maximum read request size, Supported sizes are 128, 256, 512 and 1024 bytes");
-> +
-> +static unsigned long eng_fifo_buf = 0x101008080808;
-> +module_param(eng_fifo_buf, ulong, 0644);
-> +MODULE_PARM_DESC(eng_fifo_buf, "Per engine buffer size. Each byte corresponds to engine number");
-
-This is not the 1990's, no module parameters should be needed, and they
-don't work at all when you have multiple devices.  Please make this
-"just work" and if you have to tune it, make them proper dynamic options
-at runtime.
-
-> +	while (cnt) {
-> +		reg = dpi_reg_read(dpi, DPI_DMAX_QRST(queue));
-> +		--cnt;
-> +		if (!(reg & 0x1))
-> +			break;
-> +	}
-
-That's a long busy-wait loop, one that will take a variable amount of
-time given different processor speeds.  Shouldn't you be using a real
-timeout instead?
-
-> +
-> +	if (reg & 0x1)
-> +		dev_err(&dpi->pdev->dev, "Queue reset failed\n");
-
-What can userspace do with this message?  And why not return an error if
-an error happened?  Why are you ignoring it here?
-
-> +
-> +	dpi_reg_write(dpi, DPI_DMAX_IDS2(queue), 0ULL);
-> +	dpi_reg_write(dpi, DPI_DMAX_IDS(queue), 0ULL);
-> +
-> +	reg = DPI_DMA_IBUFF_CSIZE_CSIZE(csize) | DPI_DMA_IBUFF_CSIZE_NPA_FREE;
-> +	dpi_reg_write(dpi, DPI_DMAX_IBUFF_CSIZE(queue), reg);
-> +
-> +	reg = dpi_reg_read(dpi, DPI_DMAX_IDS2(queue));
-> +	reg |= DPI_DMA_IDS2_INST_AURA(aura);
-> +	dpi_reg_write(dpi, DPI_DMAX_IDS2(queue), reg);
-> +
-> +	reg = dpi_reg_read(dpi, DPI_DMAX_IDS(queue));
-> +	reg |= DPI_DMA_IDS_DMA_NPA_PF_FUNC(npa_pf_func);
-> +	reg |= DPI_DMA_IDS_DMA_SSO_PF_FUNC(sso_pf_func);
-> +	reg |= DPI_DMA_IDS_DMA_STRM(vf + 1);
-> +	reg |= DPI_DMA_IDS_INST_STRM(vf + 1);
-> +	dpi_reg_write(dpi, DPI_DMAX_IDS(queue), reg);
-> +
-> +	spin_unlock(&dpi->vf_lock);
-> +
-> +	return 0;
-
-Shouldn't you have returned an error if one happened?
-
-> +static int queue_config(struct dpipf *dpi, struct dpipf_vf *dpivf, union dpi_mbox_message_t *msg)
+On Tue, Feb 13, 2024 at 09:35:16PM -0600, Yazen Ghannam wrote:
+> +static inline struct cper_sec_fru_mem_poison *get_fmp(struct fru_rec *rec)
 > +{
-> +	switch (msg->s.cmd) {
-> +	case DPI_QUEUE_OPEN:
-> +		dpivf->vf_config.aura = msg->s.aura;
-> +		dpivf->vf_config.csize = msg->s.csize / 8;
-> +		dpivf->vf_config.sso_pf_func = msg->s.sso_pf_func;
-> +		dpivf->vf_config.npa_pf_func = msg->s.npa_pf_func;
-> +		dpi_queue_init(dpi, dpivf, msg->s.vfid);
-> +		if (msg->s.wqecs)
-> +			dpi_wqe_cs_offset(dpi, msg->s.wqecsoff);
-> +		dpivf->setup_done = true;
-> +		break;
-> +	case DPI_QUEUE_OPEN_V2:
-> +		dpivf->vf_config.aura = msg->s.aura;
-> +		dpivf->vf_config.csize = msg->s.csize;
-> +		dpivf->vf_config.sso_pf_func = msg->s.sso_pf_func;
-> +		dpivf->vf_config.npa_pf_func = msg->s.npa_pf_func;
-> +		dpi_queue_init(dpi, dpivf, msg->s.vfid);
-> +		if (msg->s.wqecs)
-> +			dpi_wqe_cs_offset(dpi, msg->s.wqecsoff);
-> +		dpivf->setup_done = true;
-> +		break;
-> +	case DPI_QUEUE_CLOSE:
-> +		dpivf->vf_config.aura = 0;
-> +		dpivf->vf_config.csize = 0;
-> +		dpivf->vf_config.sso_pf_func = 0;
-> +		dpivf->vf_config.npa_pf_func = 0;
-> +		dpi_queue_fini(dpi, dpivf, msg->s.vfid);
-> +		dpivf->setup_done = false;
-> +		break;
-> +	default:
-> +		return -1;
-
-That is not a valid error number :(
-
-
-> +static int __init dpi_init_module(void)
-> +{
-> +	pr_info("%s: %s\n", DPI_DRV_NAME, DPI_DRV_STRING);
-
-When drivers work properly, they are quiet.  No need for this.
-
-
-> +
-> +	return pci_register_driver(&dpi_driver);
+> +	return &rec->fmp;
 > +}
-> +
-> +static void __exit dpi_cleanup_module(void)
-> +{
-> +	pci_unregister_driver(&dpi_driver);
-> +}
-> +
-> +module_init(dpi_init_module);
-> +module_exit(dpi_cleanup_module);
 
-module_pci_driver() instead?  That will automatically get rid of the
-pr_info() spam above :)
+Let's get rid of those silly helpers, diff for this one below.
 
-thanks,
+The logic is, you pass around struct fru_rec *rec and inside the
+functions you deref what you need.
 
-greg k-h
+Thx.
+
+diff --git a/drivers/ras/amd/fmpm.c b/drivers/ras/amd/fmpm.c
+index 0246b13b5ba1..9eaf892e35b9 100644
+--- a/drivers/ras/amd/fmpm.c
++++ b/drivers/ras/amd/fmpm.c
+@@ -153,11 +153,6 @@ static DEFINE_MUTEX(fmpm_update_mutex);
+ #define for_each_fru(i, rec) \
+ 	for (i = 0; rec = fru_records[i], i < max_nr_fru; i++)
+ 
+-static inline struct cper_sec_fru_mem_poison *get_fmp(struct fru_rec *rec)
+-{
+-	return &rec->fmp;
+-}
+-
+ static inline struct cper_fru_poison_desc *get_fpd(struct fru_rec *rec, u32 entry)
+ {
+ 	return &rec->entries[entry];
+@@ -174,7 +169,7 @@ static struct fru_rec *get_fru_record(u64 fru_id)
+ 	unsigned int i;
+ 
+ 	for_each_fru(i, rec) {
+-		if (get_fmp(rec)->fru_id == fru_id)
++		if (rec->fmp.fru_id == fru_id)
+ 			return rec;
+ 	}
+ 
+@@ -203,16 +198,15 @@ static u32 do_fmp_checksum(struct cper_sec_fru_mem_poison *fmp, u32 len)
+ /* Calculate a new checksum. */
+ static u32 get_fmp_checksum(struct fru_rec *rec)
+ {
+-	struct cper_sec_fru_mem_poison *fmp = get_fmp(rec);
+ 	u32 len, checksum;
+ 
+ 	len = get_fmp_len(rec);
+ 
+ 	/* Get the current total. */
+-	checksum = do_fmp_checksum(fmp, len);
++	checksum = do_fmp_checksum(&rec->fmp, len);
+ 
+ 	/* Subtract the current checksum from total. */
+-	checksum -= fmp->checksum;
++	checksum -= rec->fmp.checksum;
+ 
+ 	/* Return the compliment value. */
+ 	return 0 - checksum;
+@@ -244,12 +238,12 @@ static void init_fpd(struct cper_fru_poison_desc *fpd,  struct mce *m)
+ 	fpd->addr	= m->addr;
+ }
+ 
+-static bool has_valid_entries(u64 valid_bits)
++static bool has_valid_entries(struct fru_rec *rec)
+ {
+-	if (!(valid_bits & FMP_VALID_LIST_ENTRIES))
++	if (!(rec->fmp.validation_bits & FMP_VALID_LIST_ENTRIES))
+ 		return false;
+ 
+-	if (!(valid_bits & FMP_VALID_LIST))
++	if (!(rec->fmp.validation_bits & FMP_VALID_LIST))
+ 		return false;
+ 
+ 	return true;
+@@ -282,7 +276,7 @@ static bool is_dup_fpd(struct fru_rec *rec, struct cper_fru_poison_desc *new)
+ {
+ 	unsigned int i;
+ 
+-	for (i = 0; i < get_fmp(rec)->nr_entries; i++) {
++	for (i = 0; i < rec->fmp.nr_entries; i++) {
+ 		if (same_fpd(get_fpd(rec, i), new)) {
+ 			pr_debug("Found duplicate record");
+ 			return true;
+@@ -294,7 +288,7 @@ static bool is_dup_fpd(struct fru_rec *rec, struct cper_fru_poison_desc *new)
+ 
+ static void update_fru_record(struct fru_rec *rec, struct mce *m)
+ {
+-	struct cper_sec_fru_mem_poison *fmp = get_fmp(rec);
++	struct cper_sec_fru_mem_poison *fmp = &rec->fmp;
+ 	struct cper_fru_poison_desc fpd;
+ 	u32 entry = 0;
+ 
+@@ -303,15 +297,15 @@ static void update_fru_record(struct fru_rec *rec, struct mce *m)
+ 	init_fpd(&fpd, m);
+ 
+ 	/* This is the first entry, so just save it. */
+-	if (!has_valid_entries(fmp->validation_bits))
++	if (!has_valid_entries(rec))
+ 		goto save_fpd;
+ 
+ 	/* Ignore already recorded errors. */
+ 	if (is_dup_fpd(rec, &fpd))
+ 		goto out_unlock;
+ 
+-	if (fmp->nr_entries >= max_nr_entries) {
+-		pr_warn("Exceeded number of entries for FRU 0x%016llx", fmp->fru_id);
++	if (rec->fmp.nr_entries >= max_nr_entries) {
++		pr_warn("Exceeded number of entries for FRU 0x%016llx", rec->fmp.fru_id);
+ 		goto out_unlock;
+ 	}
+ 
+@@ -412,9 +406,9 @@ static void retire_mem_records(void)
+ 	u32 cpu;
+ 
+ 	for_each_fru(i, rec) {
+-		fmp = get_fmp(rec);
++		fmp = &rec->fmp;
+ 
+-		if (!has_valid_entries(fmp->validation_bits))
++		if (!has_valid_entries(rec))
+ 			continue;
+ 
+ 		cpu = get_cpu_from_fru_id(fmp->fru_id);
+@@ -481,7 +475,7 @@ static int save_new_records(void)
+ 
+ static bool is_valid_fmp(struct fru_rec *rec)
+ {
+-	struct cper_sec_fru_mem_poison *fmp = get_fmp(rec);
++	struct cper_sec_fru_mem_poison *fmp = &rec->fmp;
+ 	u32 len = get_fmp_len(rec);
+ 
+ 	if (!fmp)
+@@ -602,8 +596,10 @@ static int get_saved_records(void)
+ 	return ret;
+ }
+ 
+-static void set_fmp_fields(struct cper_sec_fru_mem_poison *fmp, unsigned int cpu)
++static void set_fmp_fields(struct fru_rec *rec, unsigned int cpu)
+ {
++	struct cper_sec_fru_mem_poison *fmp = &rec->fmp;
++
+ 	fmp->fru_arch_type    = FMP_ARCH_TYPE_X86_CPUID_1_EAX;
+ 	fmp->validation_bits |= FMP_VALID_ARCH_TYPE;
+ 
+@@ -638,7 +634,7 @@ static void init_fmps(void)
+ 
+ 	for_each_fru(i, rec) {
+ 		cpu = get_cpu_for_fru_num(i);
+-		set_fmp_fields(get_fmp(rec), cpu);
++		set_fmp_fields(rec, cpu);
+ 	}
+ }
+ 
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
