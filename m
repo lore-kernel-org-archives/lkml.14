@@ -1,179 +1,126 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB2C13A875
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 19:24:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D070134738;
+	Wed, 14 Feb 2024 19:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707938678; cv=none; b=leUTMiDi3Dh6cRnU1a12kGIpW03lLSk4W3m8eCeICPlwooaVWShpb0ckTt6pwGaBGKDMezwEMAtNifGcxoIQ1j5FdOyilA+R1Xj1rxrVakW0jY0/ip6+i1LLZwS7knGIxCWJghnWfZFDS5PctZabileA2kfyi122ab0PifOGIaE=
+	t=1707938878; cv=none; b=U+FzfC9SGWy2ZN8SbbcxZa3gRn4dEzFGpqvUup/ae1SOlDEU3SKQp942SZGaFTZNzaPO5cAz5/rJ7svFKcq6x+RQMffOuI00YTclCs/YX38Rg2VDP7PIkbS+8pXfWkDoRu/fXCLrWnCtGmHZkUfSzgQixbix+WZ0WD4JcHFBY4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707938678; c=relaxed/simple;
-	bh=S0A1kfhRzOuiQ1TlmH8X2A+T0pY8dnMRCMj0SI+jFYY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RDyjYoM4gWr4LCA6ljvzLamjCiqth1l6hFef2qsNnMZLbFC0sM3Or2BYPk9jNBAPEC4FmJbtMzMQjzOPrNbDckpOGyQpanv2xWsWmBO0Pcck7JxTdEhCfKPHKeB3rJ1JZD1bV6M/H0Jm+sgEE8XZtypDSN/zRvkZq2aP3RjLANk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UwsuHlGc; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707938878; c=relaxed/simple;
+	bh=X6od+QN5zi3KBcLvJ2WmLsxhFSgPUZijlXB3ig3ROOk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=EtxEp+xTxWDtzIPkTvK8UxFdeq7D0AtVV6/JRVKMJSCb3/YgMeBs6ekL6y7Uk6RPiy6UmnwK03lUmsM3afX3UOvo9gclRIilmziOAssMrFKGBWkNHvxySxQcWeVk71PfVx5QC3nR0ukZUoET0YTNUPVrJpaHQODFAwQ9Sha01c8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=maPFus1q; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UwsuHlGc"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dcbf82cdf05so9032276.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 11:24:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707938675; x=1708543475; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QCBYE/AD/BvL6op5scnwP5wjSjqsrmapht1Ra223I1c=;
-        b=UwsuHlGcrhXjhdyz7FsaHAoTBX0zVMz5qXtPM2OUj55wrNZvLqHXFw+eWmQICcNqD2
-         mkRIzvQEt/wyfA87b6KzFPbtednd9Wmn4PYhx1ZSYaIQ3a9tTgY/ASdL/7qnbOlWxf+c
-         DeW0BYZFVxVxzLKtQqgf5JqXwApgR9aXf6eXe00HuM3qIUBz3mMid3IyuF5oqOk9dxEA
-         aWxa6nX0QA3VPyIIH1G820sazWtnbnvG3QIr2VkjFBstjRyavNejipQ18gjPiU6Xq8YY
-         Ow4V+/UvoV9CFC+8Ocfs3i8DP341meEB5WlQU0bq6ogkSqOXE3P/pDdaXHBawmv36DDf
-         zcZQ==
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="maPFus1q"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5d8b70b39efso114927a12.0;
+        Wed, 14 Feb 2024 11:27:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707938675; x=1708543475;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QCBYE/AD/BvL6op5scnwP5wjSjqsrmapht1Ra223I1c=;
-        b=gDvnN9qhlwXo0L11sOczYeDlYE+5c+DfC1vOvNtsijJbXUqStq4QMdzTOxnIozOawa
-         Rx0UBKeDEq77enO9iyC6WLqsU3HloX0rnjA/QmQkZYbq0rQb5gInRWJ8p+utZffV38dw
-         MMlHP75GV8bflWnrkBNl/QoSczBjqpIs7RUnSpNI1xWIJCKpQEVjViIZo/D5ETU41ayg
-         9Av/NPTYMy7vLxECYiY2RBl0kTwHWR3P5wXjU2nlqG3V3/1Ih6GYYjz5kGKArwidNYva
-         fxUY7ECw0XaVHj0svCPuWq4kcjDd9XOWLzjtoZI/olDuhTp5CONZCTg4R1rJBbfnEy1u
-         4A0A==
-X-Forwarded-Encrypted: i=1; AJvYcCUZX/y6qmpYPlk+q7084rgogEguVXXPyHO5ky8jWx/huv1fy1gCXYs4j6Ewdn5YDioEJJVYN2waI0SJRud2nOdHyiKXMbBGxin50vw1
-X-Gm-Message-State: AOJu0Yxfm2CyUy3cMnATsrd+hFuoUqoRQKP6xCfu/w8F/UdFzcBFSIvD
-	B/POBGsoTSBVrJqA1Refodph6S4r1MGm+KRGo6Pzj4cTXMKAAlTc83fhukdy6vbO2NMYKWj3RDX
-	+rsd9HnTXyXbJJkGqKEpNqr8kjCqrbzjgUtQr
-X-Google-Smtp-Source: AGHT+IEHeftxzGg3B5Z0Zkp/sdZtFFtkyDYYBmhmOt9OEJce/O9D422LSeKSHbRCNIcYUksKiHgnsjkqT91cBPG3844=
-X-Received: by 2002:a05:6902:143:b0:dcb:cdce:3902 with SMTP id
- p3-20020a056902014300b00dcbcdce3902mr3406955ybh.55.1707938674882; Wed, 14 Feb
- 2024 11:24:34 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707938876; x=1708543676;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:dkim-signature:from:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=KnjRLwW6qeAAWQgWTvjpbNM3OaTV5ZKjGAIc59AkD9c=;
+        b=cDBLg11p3+V06d0mLwDtO647sZxB8W2F5drP1q0nIGC2kF414iCNMkhQPgBx4zzsjA
+         dcsa0sncFqecGKFOIkQcqedjnwqA6t423gh/QuKKnuo/h0h1KYR+c8XVM+HA1pn7R2bg
+         soUUdnAvRPH3mj9oe1xKEMPvEpmeIxHL78T0cJc0gZ1TvbUoVaSS8WQ7Qe0+Db2XioJr
+         DFYp0bG36+mVOGDISkUzI8zVp9vr/b/PgyvfmreeEZz9Beww9xYGpVikY619tBYKw1/6
+         O5evc/RP4BUlEeQvQrj2kp6+8C+dWBhzuEvW0XxzhA43OcMxQvmhHSnDyEXy0hbAAF5Q
+         a/SA==
+X-Forwarded-Encrypted: i=1; AJvYcCVGc3BtdcfInlYpAfRPZeKW3/R1RjHAXtni4JTmtq47mRXmpDvI9riptFgXSeRIY3r7jBwO7bqGHm2nRlU8FHOz0MGNPNUbUPDdHNnxvFSa3hxqQPoW67QQn9D5FlTOHdOtRrVoG4iJTz8=
+X-Gm-Message-State: AOJu0YwW5rzii2arxXzy7HffWlyeZWif0K2S71d0B/6b1ucomu0k6gyI
+	mP135CXnv5CVd7njWb7XcRFiUOqv2MHTs7bybXLa4PpVVYqg+Yt/n+SJ5+BcVD9Gpw==
+X-Google-Smtp-Source: AGHT+IHegGu1Lc6JHujte9HWk+U849QrRHwoSPJSqWXl8c+HXhJmNQ+qoZKZb3gAFc+W2fsg/d5Lhw==
+X-Received: by 2002:a05:6a20:93aa:b0:19a:fa19:23e7 with SMTP id x42-20020a056a2093aa00b0019afa1923e7mr4662887pzh.55.1707938875745;
+        Wed, 14 Feb 2024 11:27:55 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUa34KWh09rSYQyE9nF7fJS3F2IPd03THcCf9aU6FQa3IAiDx1LsWllRCgEoniJtv6tsGHfNIO0J5zRs4HHxiXtfuO9TRPplBhygbzpf3W1S417xhgXdaxak/bluiAQCC+BEUqkffVilz9bdq2CvrThtjeRQvhINJOjZOQVpnZ8ycw8ED62RTnUoUNr8R9Fx/74p4zsKsu+ZRRbF6LfSZFgEsj8SrOFgBOVuY1GkZ6eM1U43plxZeDsTM59OBmUJBVFwQ==
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id ei52-20020a056a0080f400b006e0e4b9b7e6sm5566104pfb.212.2024.02.14.11.27.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Feb 2024 11:27:55 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2024; t=1707938873;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=KnjRLwW6qeAAWQgWTvjpbNM3OaTV5ZKjGAIc59AkD9c=;
+	b=maPFus1qp9Xv5h9LhLO+NfqqYYnwQda7r95wUFaLGv+wjMlY//L1rO5mAM6+NuhKi900w+
+	Lf5zn4iwdVvNADXICzlFQiYMjZttHE3P20l+6DMp6IPvf/VhZEh7A7NiTtGPASS2aAkMGe
+	TrAERZ6ibNQcJkNcxOeT1N5ZNTVPay7LVnGz2rffqx04lf3yZ5I/8H1I8Ueq4EVbM4hqP1
+	TToN3I7P0vSlPM7R9mdo/8bHDD/BljTvAywkAYlKB0zy8cGEHEQDreR9SXYfAH6Zp8roGy
+	iYj+fS6ZmfupGcZmd1seEa+P4SjvDtvoL1WYG8GdzG3n3qYiGwK+OSDy0ongtA==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Subject: [PATCH 0/2] ALSA: struct bus_type cleanup
+Date: Wed, 14 Feb 2024 16:28:27 -0300
+Message-Id: <20240214-bus_cleanup-alsa-v1-0-8fedbb4afa94@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Zctfa2DvmlTYSfe8@tiehlicka> <CAJuCfpEsWfZnpL1vUB2C=cxRi_WxhxyvgGhUg7WdAxLEqy6oSw@mail.gmail.com>
- <9e14adec-2842-458d-8a58-af6a2d18d823@redhat.com> <2hphuyx2dnqsj3hnzyifp5yqn2hpgfjuhfu635dzgofr5mst27@4a5dixtcuxyi>
- <6a0f5d8b-9c67-43f6-b25e-2240171265be@redhat.com> <CAJuCfpEtOhzL65eMDk2W5SchcquN9hMCcbfD50a-FgtPgxh4Fw@mail.gmail.com>
- <adbb77ee-1662-4d24-bcbf-d74c29bc5083@redhat.com> <r6cmbcmalryodbnlkmuj2fjnausbcysmolikjguqvdwkngeztq@45lbvxjavwb3>
- <CAJuCfpF4g1jeEwHVHjQWwi5kqS-3UqjMt7GnG0Kdz5VJGyhK3Q@mail.gmail.com>
- <20240214085548.d3608627739269459480d86e@linux-foundation.org> <7c3walgmzmcygchqaylcz2un5dandlnzdqcohyooryurx6utxr@66adcw7f26c3>
-In-Reply-To: <7c3walgmzmcygchqaylcz2un5dandlnzdqcohyooryurx6utxr@66adcw7f26c3>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 14 Feb 2024 11:24:23 -0800
-Message-ID: <CAJuCfpGi6g3rG8aVmXveSxKvXnfm+5gLKS=Q4ouQBDaTxSuhww@mail.gmail.com>
-Subject: Re: [PATCH v3 00/35] Memory allocation profiling
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
-	Michal Hocko <mhocko@suse.com>, vbabka@suse.cz, hannes@cmpxchg.org, 
-	roman.gushchin@linux.dev, mgorman@suse.de, dave@stgolabs.net, 
-	willy@infradead.org, liam.howlett@oracle.com, corbet@lwn.net, 
-	void@manifault.com, peterz@infradead.org, juri.lelli@redhat.com, 
-	catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, tglx@linutronix.de, 
-	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org, 
-	peterx@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
-	nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev, 
-	rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com, 
-	yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com, 
-	hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org, 
-	ndesaulniers@google.com, vvvvvv@google.com, gregkh@linuxfoundation.org, 
-	ebiggers@google.com, ytcoode@gmail.com, vincent.guittot@linaro.org, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	bristot@redhat.com, vschneid@redhat.com, cl@linux.com, penberg@kernel.org, 
-	iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com, 
-	elver@google.com, dvyukov@google.com, shakeelb@google.com, 
-	songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com, 
-	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-arch@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
-	cgroups@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFwUzWUC/x3MQQqAIBBA0avErBNUsqCrRITZWANi4VAE4t2Tl
+ m/xfwbGRMgwNhkSPsR0xgrVNuAOG3cUtFWDlrqTWnVivXlxAW28L2EDW6E2abx3vZHDCjW7Enp
+ 6/+U0l/IBlrASWWIAAAA=
+To: Johannes Berg <johannes@sipsolutions.net>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, 
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1080; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=X6od+QN5zi3KBcLvJ2WmLsxhFSgPUZijlXB3ig3ROOk=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlzRRgqD50Kjh/z7zUDRvFGQ5rgpOi5V2O2AYGX
+ hIUhjfS3WCJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZc0UYAAKCRDJC4p8Y4ZY
+ pmcbEACD0T5RsUDq6fWHxNRzwotB+m1utHfTeWp77RvfXLKoZZIAHgmzUfz9dS3PErdHFheGoL0
+ xKFWgt7H4f0/0/Yo3BJjY8Tw76AwIM7o2bGowLqAeFhJWdY12hSKPUPwI2IWTA4lVuXhm9nlSxP
+ VQ5d8P6ISLYq71oVht5jOQmryblOVTmJ+IUoV81ELF/lFFIaQHM8nUsMtlKhls5m3U0nqpdA9Qn
+ B1yvd6yIInkH2xrlR8LXpIwUaCnkmycURdEiwVNTxEKu0vNcnk0RXGB6361bsP7WYiZkAIP6EsP
+ iBDMvJA4w8B+m39Rtvr0N837wC51+FmezpSNFXcd45iyIes4y4UMt0Cn258Xqlwkk8fZJlGFfqI
+ BpTtlvAV5H4SnFovK3tpFGB9kaUQtlmiWriE82PYlrgppFS608qDCc8VTFUefNpLl+63MlTf7bU
+ eUtVvA1eSMoS1TjO1D78+AX+0rwTr1SyO8cWnf5NFWjmr2wfEUWIC96OGYMBwmPC2FkKTAf85+z
+ Hl/TbRFhpy+tW4dImZ1e7nO9rSN3ytLFR8cgUuTgD79cMBmV/08exealAOZHHV3tGm982wreRXJ
+ mlTdedLshYOHDS3IEnMt3cNEcgznRJkKX1fcUXs2MbvZT/tkAgD5Sz4Q4kd4FP4AAQvc6EEC56/
+ oVLkY93fN75xWWg==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
-On Wed, Feb 14, 2024 at 9:52=E2=80=AFAM Kent Overstreet
-<kent.overstreet@linux.dev> wrote:
->
-> On Wed, Feb 14, 2024 at 08:55:48AM -0800, Andrew Morton wrote:
-> > On Tue, 13 Feb 2024 14:59:11 -0800 Suren Baghdasaryan <surenb@google.co=
-m> wrote:
-> >
-> > > > > If you think you can easily achieve what Michal requested without=
- all that,
-> > > > > good.
-> > > >
-> > > > He requested something?
-> > >
-> > > Yes, a cleaner instrumentation. Unfortunately the cleanest one is not
-> > > possible until the compiler feature is developed and deployed. And it
-> > > still would require changes to the headers, so don't think it's worth
-> > > delaying the feature for years.
-> >
-> > Can we please be told much more about this compiler feature?
-> > Description of what it is, what it does, how it will affect this kernel
-> > feature, etc.
-> >
-> > Who is developing it and when can we expect it to become available?
-> >
-> > Will we be able to migrate to it without back-compatibility concerns?
-> > (I think "you need quite recent gcc for memory profiling" is
-> > reasonable).
-> >
-> >
-> >
-> > Because: if the maintainability issues which Michel describes will be
-> > significantly addressed with the gcc support then we're kinda reviewing
-> > the wrong patchset.  Yes, it may be a maintenance burden initially, but
-> > at some (yet to be revealed) time in the future, this will be addressed
-> > with the gcc support?
->
-> Even if we had compiler magic, after considering it more I don't think
-> the patchset would be improved by it - I would still prefer to stick
-> with the macro approach.
->
-> There's also a lot of unresolved questions about whether the compiler
-> approach would even end being what we need; we need macro expansion to
-> happen in the caller of the allocation function
+This series is part of an effort to cleanup the users of the driver
+core, as can be seen in many recent patches authored by Greg across the
+tree (e.g. [1]).
 
-For the record, that's what this attribute will be doing. So it should
-cover our usecase.
+---
+[1]: https://lore.kernel.org/lkml/?q=f%3Agregkh%40linuxfoundation.org+s%3A%22make%22+and+s%3A%22const%22
 
-> , and that's another
-> level of hooking that I don't think the compiler people are even
-> considering yet, since cpp runs before the main part of the compiler; if
-> C macros worked and were implemented more like Rust macros I'm sure it
-> could be done - in fact, I think this could all be done in Rust
-> _without_ any new compiler support - but in C, this is a lot to ask.
->
-> Let's look at the instrumentation again. There's two steps:
->
-> - Renaming the original function to _noprof
-> - Adding a hooked version of the original function.
->
-> We need to do the renaming regardless of what approach we take in order
-> to correctly handle allocations that happen inside the context of an
-> existing alloc tag hook but should not be accounted to the outer
-> context; we do that by selecting the alloc_foo() or alloc_foo_noprof()
-> version as appropriate.
->
-> It's important to get this right; consider slab object extension
-> vectors or the slab allocator allocating pages from the page allocator.
->
-> Second step, adding a hooked version of the original function. We do
-> that with
->
-> #define alloc_foo(...) alloc_hooks(alloc_foo_noprof(__VA_ARGS__))
->
-> That's pretty clean, if you ask me. The only way to make it more succint
-> be if it were possible for a C macro to define a new macro, then it
-> could be just
->
-> alloc_fn(alloc_foo);
->
-> But honestly, the former is probably preferable anyways from a ctags/csco=
-pe POV.
+To: Johannes Berg <johannes@sipsolutions.net>
+To: Jaroslav Kysela <perex@perex.cz>
+To: Takashi Iwai <tiwai@suse.com>
+Cc:  <linuxppc-dev@lists.ozlabs.org>
+Cc:  <alsa-devel@alsa-project.org>
+Cc:  <linux-sound@vger.kernel.org>
+Cc:  <linux-kernel@vger.kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+
+---
+Ricardo B. Marliere (2):
+      ALSA: aoa: make soundbus_bus_type const
+      ALSA: seq: make snd_seq_bus_type const
+
+ sound/aoa/soundbus/core.c | 2 +-
+ sound/core/seq_device.c   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+---
+base-commit: d7bf73809849463f76de42aad62c850305dd6c5d
+change-id: 20240214-bus_cleanup-alsa-1d05ffc6507b
+
+Best regards,
+-- 
+Ricardo B. Marliere <ricardo@marliere.net>
+
