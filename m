@@ -1,144 +1,167 @@
-Received: from uho.ysoft.cz (uho.ysoft.cz [81.19.3.130])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B351679D2;
-	Wed, 14 Feb 2024 09:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.19.3.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E411D13FEF
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 09:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707901473; cv=none; b=tMf5lBoLNUC8l/MIcxkqHrtGFnrQ9IahtvPQHUXo5uGvRzwz2AO+ZmZLIk4GbcYBI0FYAWpbMIFumgaqa0w1n7BL5bOTyLMAQK4HeBX0eIn4EiC2e33mXqRPPTBSVLOw8sxxjl00QXrlGeGYx2J9VQnGXtaMm2DTmRT9L+g8Whg=
+	t=1707901507; cv=none; b=dpL2pjuFoj7VZt7MRnopT3e7zBzyi5g2x+mFM091qQB6wXvJgw9j+rJCgWO0Kv6Z7mDGIcPSRdLTte32fVSNC0KoR4cUaxbyx3Kcwr4f9VX3k60B8/uQ1JKYA+lOqgQ66mknrRdKmF3xycUO3QJfrIG1WNF49QS1hN3CynRIP1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707901473; c=relaxed/simple;
-	bh=NabSFMAj7QEe5/xa7bW5tvQsHBXSCoMhb1gIoOGlJ8w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kAv9f+B7HLy3eMfs4hLXSz/WmSj8gB49OMM5t73LoDB4hdy7margtWOSalORdR2Goju29NOFDPqtPfc88R6KHR0R8AOMhnJr3g+wCc5Tj+fA4ieZBEHT4rpsfsIFeHd2OxcNkeDfDC8mQGsPlPGFbVPPaDxUJXtpfUwVQsTwCxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ysoft.com; spf=pass smtp.mailfrom=ysoft.com; dkim=pass (1024-bit key) header.d=ysoft.com header.i=@ysoft.com header.b=L7PteXqc; arc=none smtp.client-ip=81.19.3.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ysoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ysoft.com
+	s=arc-20240116; t=1707901507; c=relaxed/simple;
+	bh=U1ZDBd7fTKy88hgKtIZUFJ1jWPAT0hPVgBoYs7PcoQo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NSvsknD9S4F6F2KILLiZpZxXAoZd+8g9Ae0cVe6mFGxuiDrkYVSEBdGK8adQL7lO2pCh6sq2aeUWKe+23uhz/qEKfYBkPVQFsqs2bU4SywNuuId+phH3MSr5sAmLbcnodpTguSejzVX7Ajiyv0fiThlUt5OI2KbG0oYnBvci6jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZrgCXMeM; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ysoft.com header.i=@ysoft.com header.b="L7PteXqc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
-	s=20160406-ysoft-com; t=1707901463;
-	bh=De7gtKQUI6kPNqgDef3IVCXJrTn70XyIKQzykcjjq/E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=L7PteXqcQIxxQVD0d9+WyBdF7XK0uUHG7ot4YTRj0L1DTzu6M8zK8NQFogNsVsrX7
-	 9sfuhUaGjSyRsBy2B/IuzKh2IfHWyQibTUo8RTGBqZANgw7xCcS/7JoUo1rmB9jtjX
-	 UURSFCo5hYzbKYk6GMwA3frj5zr5JVmry8dm3MnM=
-Received: from iota-build.ysoft.local (unknown [10.1.5.151])
-	by uho.ysoft.cz (Postfix) with ESMTP id 6D6E3A0336;
-	Wed, 14 Feb 2024 10:04:23 +0100 (CET)
-From: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
-To: Shawn Guo <shawnguo@kernel.org>,
-	Fabio Estevam <festevam@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Cc: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZrgCXMeM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707901504;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8I13Yy1ZnXR0MIiHLrduxDxiApb0ZcnLJeAvn/Kr8OY=;
+	b=ZrgCXMeMYy27+Ahc18BlZwMSyEozy4mG6f2Cd4psmDB+evaqqIgpiICsPcbP7WNHjm8NFK
+	AGsdAedXGxbpnJDsGYweJZ/TZMy44asqu5FyYuOE1BuNYsFUpKa0ipOV1PEqQGNh7eHYK8
+	YqhrpJDz+uNZec0rzLUYcYoVMNpkDlk=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-102-UJ9Vona5M6m-jafFVF2hvQ-1; Wed,
+ 14 Feb 2024 04:04:57 -0500
+X-MC-Unique: UJ9Vona5M6m-jafFVF2hvQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9B7063CBDF64;
+	Wed, 14 Feb 2024 09:04:56 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.0])
+	by smtp.corp.redhat.com (Postfix) with SMTP id C8DC1C185C0;
+	Wed, 14 Feb 2024 09:04:51 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 14 Feb 2024 10:03:39 +0100 (CET)
+Date: Wed, 14 Feb 2024 10:03:33 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Tycho Andersen <tycho@tycho.pizza>
+Cc: coverity-bot <keescook@chromium.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Peng Zhang <zhangpeng.00@bytedance.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Tycho Andersen <tandersen@netflix.com>,
+	Mike Christie <michael.christie@oracle.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
 	linux-kernel@vger.kernel.org,
-	Jonathan McDowell <noodles@earth.li>,
-	=?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
-Subject: [PATCH v2 2/2] ARM: dts: imx6dl-yapp4: Move the internal switch PHYs under the switch node
-Date: Wed, 14 Feb 2024 10:03:28 +0100
-Message-Id: <1707901408-17084-2-git-send-email-michal.vokac@ysoft.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <1707901408-17084-1-git-send-email-michal.vokac@ysoft.com>
-References: <1707901408-17084-1-git-send-email-michal.vokac@ysoft.com>
+	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: Coverity: __do_sys_pidfd_send_signal(): UNINIT
+Message-ID: <20240214090332.GA14017@redhat.com>
+References: <202402131559.B76A34B@keescook>
+ <ZcwGua3a9Z8nJXVq@tycho.pizza>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZcwGua3a9Z8nJXVq@tycho.pizza>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-We identified that the PHYs actually do not work since commit 7da7b84fee58
-("ARM: dts: imx6dl-yapp4: Move phy reset into switch node") as
-a coincidence of several circumstances.
+On 02/13, Tycho Andersen wrote:
+>
+> I think this is a false positive, we have:
 
-The reset signal is kept asserted by a pull-down resistor on the board
-unless it is deasserted by GPIO from the SoC. This is to keep the switch
-dead until it is configured properly by the kernel and user space.
+Agreed,
 
-Prior to the referenced commit the switch was reset by the FEC driver
-and the reset GPIO was actively deasserted. The mdio-bus was scanned
-and the attached switch and its PHYs were found and configured.
+> That said, a default case wouldn't hurt, and we should fix the first
+> comment anyways, since now we have extensions.
+>
+> I'm happy to send a patch or maybe it's better for Christian to fix it
+> in-tree.
 
-With the referenced commit the switch is reset by the qca8k driver.
-Because of another bug in the qca8k driver, functionality of the reset
-pin depends on its pre-kernel configuration. See commit c44fc98f0a8f
-("net: dsa: qca8k: fix illegal usage of GPIO")
+I leave this to you and Christian, whatever you prefer. But perhaps we
+can simplify these checks? Something like below.
 
-The problem did not appear until we removed support for the switch
-and configuration of its reset pin from the bootloader.
+Oleg.
 
-To fix that, properly describe the internal mdio-bus configuration of
-the qca8334 switch. The PHYs are internal to the switch and sit on its
-internal mdio-bus.
-
-Fixes: 7da7b84fee58 ("ARM: dts: imx6dl-yapp4: Move phy reset into switch node")
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
----
-changes in v2:
-- none
-
- arch/arm/boot/dts/nxp/imx/imx6dl-yapp4-common.dtsi | 23 ++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/nxp/imx/imx6dl-yapp4-common.dtsi
-index 5763f8253d51..eec1f9092572 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6dl-yapp4-common.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6dl-yapp4-common.dtsi
-@@ -133,14 +133,6 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -3876,10 +3876,6 @@ static struct pid *pidfd_to_pid(const struct file *file)
+ 	return tgid_pidfd_to_pid(file);
+ }
  
--		phy_port2: phy@1 {
--			reg = <1>;
--		};
+-#define PIDFD_SEND_SIGNAL_FLAGS                            \
+-	(PIDFD_SIGNAL_THREAD | PIDFD_SIGNAL_THREAD_GROUP | \
+-	 PIDFD_SIGNAL_PROCESS_GROUP)
 -
--		phy_port3: phy@2 {
--			reg = <2>;
--		};
--
- 		switch@10 {
- 			compatible = "qca,qca8334";
- 			reg = <0x10>;
-@@ -165,15 +157,30 @@
- 				eth2: port@2 {
- 					reg = <2>;
- 					label = "eth2";
-+					phy-mode = "internal";
- 					phy-handle = <&phy_port2>;
- 				};
+ /**
+  * sys_pidfd_send_signal - Signal a process through a pidfd
+  * @pidfd:  file descriptor of the process
+@@ -3903,13 +3899,21 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
+ 	kernel_siginfo_t kinfo;
+ 	enum pid_type type;
  
- 				eth1: port@3 {
- 					reg = <3>;
- 					label = "eth1";
-+					phy-mode = "internal";
- 					phy-handle = <&phy_port3>;
- 				};
- 			};
-+
-+			mdio {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				phy_port2: ethernet-phy@1 {
-+					reg = <1>;
-+				};
-+
-+				phy_port3: ethernet-phy@2 {
-+					reg = <2>;
-+				};
-+			};
- 		};
- 	};
- };
--- 
-2.1.4
+-	/* Enforce flags be set to 0 until we add an extension. */
+-	if (flags & ~PIDFD_SEND_SIGNAL_FLAGS)
+-		return -EINVAL;
+-
+-	/* Ensure that only a single signal scope determining flag is set. */
+-	if (hweight32(flags & PIDFD_SEND_SIGNAL_FLAGS) > 1)
+-		return -EINVAL;
++	switch (flags) {
++	case 0:
++		/* but see the PIDFD_THREAD check below */
++		type = PIDTYPE_TGID;
++		break;
++	case PIDFD_SIGNAL_THREAD:
++		type = PIDTYPE_PID;
++		break;
++	case PIDFD_SIGNAL_THREAD_GROUP:
++		type = PIDTYPE_TGID;
++		break;
++	case PIDFD_SIGNAL_PROCESS_GROUP:
++		type = PIDTYPE_PGID;
++		break;
++	}
+ 
+ 	f = fdget(pidfd);
+ 	if (!f.file)
+@@ -3926,24 +3930,8 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
+ 	if (!access_pidfd_pidns(pid))
+ 		goto err;
+ 
+-	switch (flags) {
+-	case 0:
+-		/* Infer scope from the type of pidfd. */
+-		if (f.file->f_flags & PIDFD_THREAD)
+-			type = PIDTYPE_PID;
+-		else
+-			type = PIDTYPE_TGID;
+-		break;
+-	case PIDFD_SIGNAL_THREAD:
++	if (!flags && (f.file->f_flags & PIDFD_THREAD))
+ 		type = PIDTYPE_PID;
+-		break;
+-	case PIDFD_SIGNAL_THREAD_GROUP:
+-		type = PIDTYPE_TGID;
+-		break;
+-	case PIDFD_SIGNAL_PROCESS_GROUP:
+-		type = PIDTYPE_PGID;
+-		break;
+-	}
+ 
+ 	if (info) {
+ 		ret = copy_siginfo_from_user_any(&kinfo, info);
 
