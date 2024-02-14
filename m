@@ -1,101 +1,142 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C5D18E06
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 10:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8492618E29;
+	Wed, 14 Feb 2024 10:43:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707907428; cv=none; b=sCEsXjrdXVnTMIgjb4BwAwSi+yrEctGmfGhUEWYAvA7LLuMxocECX4Sd/lAFgAxhWWqm/0Gt8TjElINRT5L4NpDFXHFRA8Rq7lOgrOSv8XOQFsAJYaJ6l3iMSb4wJi8qcNxBkEXsJmpuvLCHzbkLe2P9w8v+gscUftHvsPJEUNM=
+	t=1707907429; cv=none; b=DUMqhJDJ//r1NSBJrVkAKaUrJ756yw+rPMri2T4e6C1HMIG8pHmzMRaXxD2aZ1aGGnS29ZRAvV8D6Jy17JBfa38Z3jOxPe2UABe+k5VhJEEFd2XcAx8jENQ0fiHrMbn3fVQgPg3rKbEUQK9avMFpjz7TgcjPrB+yEqw2Pe2h4Ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707907428; c=relaxed/simple;
-	bh=AcGZCOvlb45VIQnaaZpzTD3vsn7OICGc6903iqrS5uE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aineaVcPSRlcSpW6FgmlHhJNcQWVQj6GXGbaZIocktKP2XbkQBsvidsXEkW443RypTcumdR1VbE80Ry2zBgKAAKY19MUF+XBz5CuoF3awaj72wbDkmkBwW7wtFCpDw/JwuVZRIBt0wPybJ4lmeIj/5ogP8YOceLWSlMW5heENvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OsQBFktF; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OsQBFktF"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-410cf70a057so120015e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 02:43:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707907425; x=1708512225; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AGa8s8kshOzGZJdfRc65h29p+oNNQfUfKoLhkZBXFbk=;
-        b=OsQBFktFZnClpgO8h076E+MshKXcXxOUSzS/Fcj3qO4dPJ5zxGaQCDZ/nRtL1PtBRO
-         Tp5ewagqlNT7rEgVmCMxTRzM5KFV0fZcndNFebN7YTtVSROy8g/7UK0k0vU2OB8IBylc
-         mMN549NRXgCZkRV2YLpx8Q+whPOOyt6ya1ec1Y9Rs81Wzb73SSoNnAHJzGu3g3DDeaUE
-         30aYdymC3zbTM4i0aapq3WsICGEF4Ebt+q1WVDCFU1FYNyt3V6RultMaAZmXJddpBwNG
-         FrFro2gNnR/uXkyCcX0yz/qd0R6J7AizZywJujcVWOt2VLfytRgBFFE1zwwjWAe63s97
-         hE/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707907425; x=1708512225;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AGa8s8kshOzGZJdfRc65h29p+oNNQfUfKoLhkZBXFbk=;
-        b=jnsCvCM6iQmHLlsbJQn5il4iWdAaLYBB7Hz8T24izicasOS7h0BJZGDV5bLVfK26xt
-         jwOKvxbMcF0JkYBorSi9hwcdD2fH7381wF/Rd0s8cU5LPcUSNRwuQMnpO5kBAizzr63t
-         2/FbNHZUZuYX6RnhKon30Ao20XrOFTW80Plcps+85GYmtxP9rKsjUoK8Oe/ZB9zf+P+u
-         E+vn8bkAVz2zKoSBNm4O2HZTDV+0f0IZ/PUY+rm8SJGKxK/uY30kvs5+qFscovA0Uxba
-         8wp6C45v28xaXX0/E70IfUcDXwhoUrvAydSFYxdGeuYT+hRFxhv+OJeFqbBOzCBpT3Wp
-         KOfg==
-X-Forwarded-Encrypted: i=1; AJvYcCU6mDZiRm0kJSDis8688fmAUaO/U3yeyUozSN+lcflTUYcU3EOLss4R7SWOGOneWJkOBSzW+KdbTlttzyD11Ud0psCv93Ngxe56g/9F
-X-Gm-Message-State: AOJu0YyQV2MRHSdmalMKd9pRFCRc4xY5rKCofovU+4hshTzEJ5rQJJrN
-	2Zj9WmuXldSy70N6B4x/Dzogg4D7pvO4IENZjRwQdogbmBnhCvRgkkwNLctFNDLYDivrQm28ItS
-	EP3a4uUzpk8tu+aEEJO6eCqw+2M7YozdlTbkZ
-X-Google-Smtp-Source: AGHT+IHnEj6DTgEs8k9eQkmDziRn7CpQe2dx+LWYoVgCYnC31F0gHuyhclq5nHYTEctCkY0/UA6ff7ygWAcf/IwqnHw=
-X-Received: by 2002:a05:600c:b92:b0:411:f8a5:f55e with SMTP id
- fl18-20020a05600c0b9200b00411f8a5f55emr19683wmb.6.1707907424629; Wed, 14 Feb
- 2024 02:43:44 -0800 (PST)
+	s=arc-20240116; t=1707907429; c=relaxed/simple;
+	bh=/d1FtVUVxRZ+e78TMHZblQDSf8Xsk0E7UCHt6C8VlCE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Afrmj1JdWyqVpCkU43GRy89EgeTVQjbUE77EvaPZCSc8+QeMqhQtM91tQDGRLn80Z6zIV+SEgWU9QIMH7PDQDVT0aonLDMYUI33srlxu89HCIF2yPxttWmWADJatda8f9LF1LYeRllkOFcGYTd0OfwM7buFmonRaTew9cXBXhAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84CA5DA7;
+	Wed, 14 Feb 2024 02:44:27 -0800 (PST)
+Received: from [10.57.64.120] (unknown [10.57.64.120])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE4A83F766;
+	Wed, 14 Feb 2024 02:43:43 -0800 (PST)
+Message-ID: <cbb1d6a0-66dd-47d0-8733-f836fe050374@arm.com>
+Date: Wed, 14 Feb 2024 10:43:42 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214084829.684541-1-edumazet@google.com> <2024021444-getaway-partly-e055@gregkh>
-In-Reply-To: <2024021444-getaway-partly-e055@gregkh>
-From: Eric Dumazet <edumazet@google.com>
-Date: Wed, 14 Feb 2024 11:43:30 +0100
-Message-ID: <CANn89iLaXntR3Qtsg_b_FH1CeQ9TDDFQO19OiDDB_sxWfDiSLg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] kobject: reduce uevent_sock_mutex contention
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Christian Brauner <brauner@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, netdev@vger.kernel.org, 
-	"David S . Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Eric Dumazet <eric.dumazet@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 6/7] mm: truncate: split huge page cache page to a
+ non-zero order if possible.
+Content-Language: en-GB
+To: Zi Yan <ziy@nvidia.com>, "Pankaj Raghav (Samsung)"
+ <kernel@pankajraghav.com>, linux-mm@kvack.org
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ David Hildenbrand <david@redhat.com>, Yang Shi <shy828301@gmail.com>,
+ Yu Zhao <yuzhao@google.com>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>, Zach O'Keefe
+ <zokeefe@google.com>, Hugh Dickins <hughd@google.com>,
+ Mcgrof Chamberlain <mcgrof@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ cgroups@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20240213215520.1048625-1-zi.yan@sent.com>
+ <20240213215520.1048625-7-zi.yan@sent.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20240213215520.1048625-7-zi.yan@sent.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 14, 2024 at 11:34=E2=80=AFAM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Wed, Feb 14, 2024 at 08:48:27AM +0000, Eric Dumazet wrote:
-> > This series reduces the (small ?) contention over uevent_sock_mutex,
-> > noticed when creating/deleting many network namespaces/devices.
-> >
-> > 1) uevent_seqnum becomes an atomic64_t
-> >
-> > 2) Only acquire uevent_sock_mutex whenever using uevent_sock_list
->
-> Cool, any boot-time measured speedups from this?  Or is this just tiny
-> optimizations that you noticed doing reviews?
+On 13/02/2024 21:55, Zi Yan wrote:
+> From: Zi Yan <ziy@nvidia.com>
+> 
+> To minimize the number of pages after a huge page truncation, we do not
+> need to split it all the way down to order-0. The huge page has at most
+> three parts, the part before offset, the part to be truncated, the part
+> remaining at the end. Find the greatest common divisor of them to
+> calculate the new page order from it, so we can split the huge
+> page to this order and keep the remaining pages as large and as few as
+> possible.
+> 
+> Signed-off-by: Zi Yan <ziy@nvidia.com>
+> ---
+>  mm/truncate.c | 21 +++++++++++++++++++--
+>  1 file changed, 19 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/truncate.c b/mm/truncate.c
+> index 725b150e47ac..49ddbbf7a617 100644
+> --- a/mm/truncate.c
+> +++ b/mm/truncate.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/task_io_accounting_ops.h>
+>  #include <linux/shmem_fs.h>
+>  #include <linux/rmap.h>
+> +#include <linux/gcd.h>
+>  #include "internal.h"
+>  
+>  /*
+> @@ -210,7 +211,8 @@ int truncate_inode_folio(struct address_space *mapping, struct folio *folio)
+>  bool truncate_inode_partial_folio(struct folio *folio, loff_t start, loff_t end)
+>  {
+>  	loff_t pos = folio_pos(folio);
+> -	unsigned int offset, length;
+> +	unsigned int offset, length, remaining;
+> +	unsigned int new_order = folio_order(folio);
+>  
+>  	if (pos < start)
+>  		offset = start - pos;
+> @@ -221,6 +223,7 @@ bool truncate_inode_partial_folio(struct folio *folio, loff_t start, loff_t end)
+>  		length = length - offset;
+>  	else
+>  		length = end + 1 - pos - offset;
+> +	remaining = folio_size(folio) - offset - length;
+>  
+>  	folio_wait_writeback(folio);
+>  	if (length == folio_size(folio)) {
+> @@ -235,11 +238,25 @@ bool truncate_inode_partial_folio(struct folio *folio, loff_t start, loff_t end)
+>  	 */
+>  	folio_zero_range(folio, offset, length);
+>  
+> +	/*
+> +	 * Use the greatest common divisor of offset, length, and remaining
+> +	 * as the smallest page size and compute the new order from it. So we
+> +	 * can truncate a subpage as large as possible. Round up gcd to
+> +	 * PAGE_SIZE, otherwise ilog2 can give -1 when gcd/PAGE_SIZE is 0.
+> +	 */
+> +	new_order = ilog2(round_up(gcd(gcd(offset, length), remaining),
+> +				   PAGE_SIZE) / PAGE_SIZE);
 
-No impressive nice numbers yet, the main bottleneck is still rtnl,
-which I am working on net-next tree.
+Given you have up to 2 regions remaining, isn't it possible that you want a
+different order for both those regions (or even multiple orders within the same
+region)? I guess you just choose gcd for simplicity?
 
-Other candidates are : rdma_nets_rwsem, proc_subdir_lock, pcpu_alloc_mutex,=
- ...
+> +
+> +	/* order-1 THP not supported, downgrade to order-0 */
+> +	if (new_order == 1)
+> +		new_order = 0;
 
-Christian made the much needed changes [1], since the last time I took
-a look at kobject (this was in 2017 !)
+I guess this would need to change if supporting order-1 file folios?
 
-[1]
-commit a3498436b3a0f8ec289e6847e1de40b4123e1639
-Author: Christian Brauner <brauner@kernel.org>
-Date:   Sun Apr 29 12:44:12 2018 +0200
+> +
+> +
+>  	if (folio_has_private(folio))
+>  		folio_invalidate(folio, offset, length);
+>  	if (!folio_test_large(folio))
+>  		return true;
+> -	if (split_folio(folio) == 0)
+> +	if (split_huge_page_to_list_to_order(&folio->page, NULL, new_order) == 0)
 
-    netns: restrict uevents
+I know you are discussing removing this patch, but since you created
+split_folio_to_order() wouldn't that be better here?
+
+Thanks,
+Ryan
+
+
+>  		return true;
+>  	if (folio_test_dirty(folio))
+>  		return false;
+
