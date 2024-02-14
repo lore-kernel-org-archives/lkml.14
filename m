@@ -1,374 +1,189 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CE0612BE95;
-	Wed, 14 Feb 2024 18:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1F3126F32;
+	Wed, 14 Feb 2024 18:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707933605; cv=none; b=gpCbnpjWCSw1qRoIz/41O7h6Y/mCnIW7aNJrGEgEGZWXEJdfK7ybfWhw/bVIoTZOvq90YuacYotJ60fpAzp+XtcpbevhzsOHG6QQNCA7TsB44R+G5KcWMzPgMTDgOrwyL6loL2ALa/VNQ/f+ozRsksylyIex8AI0XStra8bOiuE=
+	t=1707933760; cv=none; b=jTZjPzO6WibUNW/vedvMur3p9v11KrVPqX2anYS+wluoIckU+MypWAgLaUnMYYFbzyOsaXbrndSY5BGo1badyD09VNlw6sY13aTCIyCKuOAM7FuIM3E/bfUCwWUStEoNxhn+xFZQXRpQ1v995LNF3j2s48Hcm9ioOKNs+QsQbfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707933605; c=relaxed/simple;
-	bh=8o1OMKcaZWOUsbyykAfyHVNqcdPrR8vjw8GOz8EVjaI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=YcajP84aaMJXDwIORvSAb5M1ZwKRFXEbCGfy9jPS6a921ffAohNyYNlqUIpPs9cnifNVm0YhETPW4QX6Rb+DmMkgoHP3C9Karj6KUM3a16KH0vSCM1mpXbpoIkByYeaiQ88abQLKPPqFgP1Zr9xPec259Gj79KwyzdnDQGTgcSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E0031FB;
-	Wed, 14 Feb 2024 10:00:44 -0800 (PST)
-Received: from [10.57.64.120] (unknown [10.57.64.120])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F36F3F766;
-	Wed, 14 Feb 2024 10:00:02 -0800 (PST)
-Message-ID: <032098e3-38f7-4127-b420-b579a97ce47e@arm.com>
-Date: Wed, 14 Feb 2024 18:00:00 +0000
+	s=arc-20240116; t=1707933760; c=relaxed/simple;
+	bh=mi9PPom/j9dEgEqpLeXjgQGLWutzp/v4ktOkOCYFZx0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hs/Hm3IvXhFVJtEjJpHAwNyUQU5Td6Ej2ja69z1sKsRTqCMTIkbP1oubro2aNkuVflTCq1gCvwh37evGlG5J8EMHq97FX9OBPdcSqPtxIFoQ+5bgVCqn9aVLvNkoiQ7WVlD4ZLZ19lVB+OOnbeZwhYr6UmSypKzkL9EbhRYvJLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 245FFC433C7;
+	Wed, 14 Feb 2024 18:02:38 +0000 (UTC)
+Date: Wed, 14 Feb 2024 13:04:09 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
+ <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+ bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, Alexei
+ Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
+ <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v7 14/36] function_graph: Use a simple LRU for
+ fgraph_array index number
+Message-ID: <20240214130409.463ae408@gandalf.local.home>
+In-Reply-To: <170723220474.502590.7646977373091779892.stgit@devnote2>
+References: <170723204881.502590.11906735097521170661.stgit@devnote2>
+	<170723220474.502590.7646977373091779892.stgit@devnote2>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 09/12] selftests/mm: thp_settings: conform to TAP
- format output
-Content-Language: en-GB
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
-Cc: kernel@collabora.com, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- Aishwarya TCV <Aishwarya.TCV@arm.com>
-References: <20240202113119.2047740-1-usama.anjum@collabora.com>
- <20240202113119.2047740-10-usama.anjum@collabora.com>
- <0c3182ae-885c-4156-980b-e35d825fe72e@arm.com>
-In-Reply-To: <0c3182ae-885c-4156-980b-e35d825fe72e@arm.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 14/02/2024 17:19, Ryan Roberts wrote:
-> On 02/02/2024 11:31, Muhammad Usama Anjum wrote:
->> Conform the layout, informational and status messages to TAP. No
->> functional change is intended other than the layout of output messages.
->>
->> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
->> ---
->>  tools/testing/selftests/mm/khugepaged.c   |   3 +-
->>  tools/testing/selftests/mm/thp_settings.c | 123 ++++++++--------------
->>  tools/testing/selftests/mm/thp_settings.h |   4 +-
->>  3 files changed, 47 insertions(+), 83 deletions(-)
->>
->> diff --git a/tools/testing/selftests/mm/khugepaged.c b/tools/testing/selftests/mm/khugepaged.c
->> index d51fdaee7dc6a..3f202da0867c5 100644
->> --- a/tools/testing/selftests/mm/khugepaged.c
->> +++ b/tools/testing/selftests/mm/khugepaged.c
->> @@ -152,8 +152,7 @@ static void get_finfo(const char *dir)
->>  		     major(path_stat.st_dev), minor(path_stat.st_dev)) >= sizeof(path))
->>  		ksft_exit_fail_msg("%s: Pathname is too long\n", __func__);
->>  
->> -	if (read_file(path, buf, sizeof(buf)) < 0)
->> -		ksft_exit_fail_msg("read_file(read_num): %s\n", strerror(errno));
->> +	read_file(path, buf, sizeof(buf));
->>  
->>  	if (strstr(buf, "DEVTYPE=disk")) {
->>  		/* Found it */
->> diff --git a/tools/testing/selftests/mm/thp_settings.c b/tools/testing/selftests/mm/thp_settings.c
->> index a4163438108ec..273a95d025285 100644
->> --- a/tools/testing/selftests/mm/thp_settings.c
->> +++ b/tools/testing/selftests/mm/thp_settings.c
->> @@ -5,7 +5,9 @@
->>  #include <stdlib.h>
->>  #include <string.h>
->>  #include <unistd.h>
->> +#include <errno.h>
->>  
->> +#include "../kselftest.h"
->>  #include "thp_settings.h"
->>  
->>  #define THP_SYSFS "/sys/kernel/mm/transparent_hugepage/"
->> @@ -42,58 +44,45 @@ static const char * const shmem_enabled_strings[] = {
->>  	NULL
->>  };
->>  
->> -int read_file(const char *path, char *buf, size_t buflen)
->> +void read_file(const char *path, char *buf, size_t buflen)
->>  {
->>  	int fd;
->>  	ssize_t numread;
->>  
->>  	fd = open(path, O_RDONLY);
->>  	if (fd == -1)
->> -		return 0;
->> +		ksft_exit_fail_msg("%s open failed: %s\n", path, strerror(errno));
-> 
-> Hi,
-> 
-> This change has broken back compat. It's no longer possible to run cow and
-> khugepaged tests against older kernels.
-> 
-> This function, as well as others in this file are intended to return 0 to
-> indicate the file could not be accessed (e.g. doesn't exist or don't have
-> permission, etc). Then higher level code can decide how to handle that. For
-> example, thp_supported_orders() determines which THP orders are supported by the
-> system based on the existence of certain files in sysfs. Then cow decides which
-> test variants to run based on the supported orders. With your change, it all
-> goes bang on the first probe and the whole test suite gets failed without
-> running any tests.
-> 
-> I've no problem with improving the TAP output from tests, but this must only be
-> done at the test level, where it makes sense to do so. You can just call
-> ksft_exit_fail_msg() from deep within a utility function.
-> 
-> Please can we remove this from mm-unstable.
+On Wed,  7 Feb 2024 00:10:04 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-Actually it is even worse than I first thought. With this change, the tests fail
-even when running against a matched kernel.
+> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+> index ae42de909845..323a74623543 100644
+> --- a/kernel/trace/fgraph.c
+> +++ b/kernel/trace/fgraph.c
+> @@ -99,10 +99,44 @@ enum {
+>  DEFINE_STATIC_KEY_FALSE(kill_ftrace_graph);
+>  int ftrace_graph_active;
+>  
+> -static int fgraph_array_cnt;
+> -
+>  static struct fgraph_ops *fgraph_array[FGRAPH_ARRAY_SIZE];
+>  
+> +/* LRU index table for fgraph_array */
+> +static int fgraph_lru_table[FGRAPH_ARRAY_SIZE];
+> +static int fgraph_lru_next;
+> +static int fgraph_lru_last;
+> +
+> +static void fgraph_lru_init(void)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < FGRAPH_ARRAY_SIZE; i++)
+> +		fgraph_lru_table[i] = i;
+> +}
+> +
+> +static int fgraph_lru_release_index(int idx)
+> +{
+> +	if (idx < 0 || idx >= FGRAPH_ARRAY_SIZE ||
+> +	    fgraph_lru_table[fgraph_lru_last] != -1)
 
-thp_supported_orders() tries to probe every possible order and relies on the
-probe succeeding or failing to determine which orders are actually supported.
-The first order it tries is 0 (4K). That is not THP, so there is no
-hugepages-4K/enabled file for it. So it blows up immediately.
+Can fgraph_lru_table[fgraph_lru_last] != -1 ever happen? If not, we should
+probably add a:
 
-So I don't think you even ran the tests locally after making the change?
+	    WARN_ON_ONCE(fgraph_lru_table[fgraph_lru_last] != -1))
+
+As the size of fgraph_lru_table is the same size as the available indexes,
+if we hit this I would think we had a fgraph_lru_relaese_index() without a
+fgraph_lru_alloc_index() associated with it.
+
+> +		return -1;
+> +
+> +	fgraph_lru_table[fgraph_lru_last] = idx;
+> +	fgraph_lru_last = (fgraph_lru_last + 1) % FGRAPH_ARRAY_SIZE;
+> +	return 0;
+> +}
+> +
+> +static int fgraph_lru_alloc_index(void)
+> +{
+> +	int idx = fgraph_lru_table[fgraph_lru_next];
+> +
+> +	if (idx == -1)
+> +		return -1;
+> +
+> +	fgraph_lru_table[fgraph_lru_next] = -1;
+> +	fgraph_lru_next = (fgraph_lru_next + 1) % FGRAPH_ARRAY_SIZE;
+> +	return idx;
+> +}
+> +
+>  static inline int get_ret_stack_index(struct task_struct *t, int offset)
+>  {
+>  	return t->ret_stack[offset] & FGRAPH_RET_INDEX_MASK;
+> @@ -367,7 +401,7 @@ int function_graph_enter(unsigned long ret, unsigned long func,
+>  	if (index < 0)
+>  		goto out;
+>  
+> -	for (i = 0; i < fgraph_array_cnt; i++) {
+> +	for (i = 0; i < FGRAPH_ARRAY_SIZE; i++) {
+>  		struct fgraph_ops *gops = fgraph_array[i];
+>  
+>  		if (gops == &fgraph_stub)
+> @@ -935,21 +969,17 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+>  		/* The array must always have real data on it */
+>  		for (i = 0; i < FGRAPH_ARRAY_SIZE; i++)
+>  			fgraph_array[i] = &fgraph_stub;
+> +		fgraph_lru_init();
+>  	}
+>  
+> -	/* Look for an available spot */
+> -	for (i = 0; i < FGRAPH_ARRAY_SIZE; i++) {
+> -		if (fgraph_array[i] == &fgraph_stub)
+> -			break;
+> -	}
+> -	if (i >= FGRAPH_ARRAY_SIZE) {
+> +	i = fgraph_lru_alloc_index();
+> +	if (i < 0 ||
+> +	    WARN_ON_ONCE(fgraph_array[i] != &fgraph_stub)) {
+
+The above can nicely fit on one column. No need to break it up:
+
+	if (i < 0 || WARN_ON_ONCE(fgraph_array[i] != &fgraph_stub)) {
 
 
-> 
-> Thanks,
-> Ryan
-> 
-> 
->>  
->>  	numread = read(fd, buf, buflen - 1);
->>  	if (numread < 1) {
->>  		close(fd);
->> -		return 0;
->> +		ksft_exit_fail_msg("No data read\n");
->>  	}
->>  
->>  	buf[numread] = '\0';
->>  	close(fd);
->> -
->> -	return (unsigned int) numread;
->>  }
->>  
->> -int write_file(const char *path, const char *buf, size_t buflen)
->> +void write_file(const char *path, const char *buf, size_t buflen)
->>  {
->>  	int fd;
->>  	ssize_t numwritten;
->>  
->>  	fd = open(path, O_WRONLY);
->> -	if (fd == -1) {
->> -		printf("open(%s)\n", path);
->> -		exit(EXIT_FAILURE);
->> -		return 0;
->> -	}
->> +	if (fd == -1)
->> +		ksft_exit_fail_msg("%s open failed\n", path);
->>  
->>  	numwritten = write(fd, buf, buflen - 1);
->>  	close(fd);
->> -	if (numwritten < 1) {
->> -		printf("write(%s)\n", buf);
->> -		exit(EXIT_FAILURE);
->> -		return 0;
->> -	}
->> -
->> -	return (unsigned int) numwritten;
->> +	if (numwritten < 1)
->> +		ksft_exit_fail_msg("write failed (%s)\n", buf);
->>  }
->>  
->>  const unsigned long read_num(const char *path)
->>  {
->>  	char buf[21];
->>  
->> -	if (read_file(path, buf, sizeof(buf)) < 0) {
->> -		perror("read_file()");
->> -		exit(EXIT_FAILURE);
->> -	}
->> +	read_file(path, buf, sizeof(buf));
->>  
->>  	return strtoul(buf, NULL, 10);
->>  }
->> @@ -103,10 +92,7 @@ void write_num(const char *path, unsigned long num)
->>  	char buf[21];
->>  
->>  	sprintf(buf, "%ld", num);
->> -	if (!write_file(path, buf, strlen(buf) + 1)) {
->> -		perror(path);
->> -		exit(EXIT_FAILURE);
->> -	}
->> +	write_file(path, buf, strlen(buf) + 1);
->>  }
->>  
->>  int thp_read_string(const char *name, const char * const strings[])
->> @@ -117,30 +103,22 @@ int thp_read_string(const char *name, const char * const strings[])
->>  	int ret;
->>  
->>  	ret = snprintf(path, PATH_MAX, THP_SYSFS "%s", name);
->> -	if (ret >= PATH_MAX) {
->> -		printf("%s: Pathname is too long\n", __func__);
->> -		exit(EXIT_FAILURE);
->> -	}
->> +	if (ret >= PATH_MAX)
->> +		ksft_exit_fail_msg("%s: Pathname is too long\n", __func__);
->>  
->> -	if (!read_file(path, buf, sizeof(buf))) {
->> -		perror(path);
->> -		exit(EXIT_FAILURE);
->> -	}
->> +	read_file(path, buf, sizeof(buf));
->>  
->>  	c = strchr(buf, '[');
->> -	if (!c) {
->> -		printf("%s: Parse failure\n", __func__);
->> -		exit(EXIT_FAILURE);
->> -	}
->> +	if (!c)
->> +		ksft_exit_fail_msg("%s: Parse failure\n", __func__);
->>  
->>  	c++;
->>  	memmove(buf, c, sizeof(buf) - (c - buf));
->>  
->>  	c = strchr(buf, ']');
->> -	if (!c) {
->> -		printf("%s: Parse failure\n", __func__);
->> -		exit(EXIT_FAILURE);
->> -	}
->> +	if (!c)
->> +		ksft_exit_fail_msg("%s: Parse failure\n", __func__);
->> +
->>  	*c = '\0';
->>  
->>  	ret = 0;
->> @@ -150,8 +128,8 @@ int thp_read_string(const char *name, const char * const strings[])
->>  		ret++;
->>  	}
->>  
->> -	printf("Failed to parse %s\n", name);
->> -	exit(EXIT_FAILURE);
->> +	ksft_exit_fail_msg("Failed to parse %s\n", name);
->> +	return -1;
->>  }
->>  
->>  void thp_write_string(const char *name, const char *val)
->> @@ -160,15 +138,10 @@ void thp_write_string(const char *name, const char *val)
->>  	int ret;
->>  
->>  	ret = snprintf(path, PATH_MAX, THP_SYSFS "%s", name);
->> -	if (ret >= PATH_MAX) {
->> -		printf("%s: Pathname is too long\n", __func__);
->> -		exit(EXIT_FAILURE);
->> -	}
->> +	if (ret >= PATH_MAX)
->> +		ksft_exit_fail_msg("%s: Pathname is too long\n", __func__);
->>  
->> -	if (!write_file(path, val, strlen(val) + 1)) {
->> -		perror(path);
->> -		exit(EXIT_FAILURE);
->> -	}
->> +	write_file(path, val, strlen(val) + 1);
->>  }
->>  
->>  const unsigned long thp_read_num(const char *name)
->> @@ -177,10 +150,9 @@ const unsigned long thp_read_num(const char *name)
->>  	int ret;
->>  
->>  	ret = snprintf(path, PATH_MAX, THP_SYSFS "%s", name);
->> -	if (ret >= PATH_MAX) {
->> -		printf("%s: Pathname is too long\n", __func__);
->> -		exit(EXIT_FAILURE);
->> -	}
->> +	if (ret >= PATH_MAX)
->> +		ksft_exit_fail_msg("%s: Pathname is too long\n", __func__);
->> +
->>  	return read_num(path);
->>  }
->>  
->> @@ -190,10 +162,9 @@ void thp_write_num(const char *name, unsigned long num)
->>  	int ret;
->>  
->>  	ret = snprintf(path, PATH_MAX, THP_SYSFS "%s", name);
->> -	if (ret >= PATH_MAX) {
->> -		printf("%s: Pathname is too long\n", __func__);
->> -		exit(EXIT_FAILURE);
->> -	}
->> +	if (ret >= PATH_MAX)
->> +		ksft_exit_fail_msg("%s: Pathname is too long\n", __func__);
->> +
->>  	write_num(path, num);
->>  }
->>  
->> @@ -275,29 +246,26 @@ void thp_write_settings(struct thp_settings *settings)
->>  
->>  struct thp_settings *thp_current_settings(void)
->>  {
->> -	if (!settings_index) {
->> -		printf("Fail: No settings set");
->> -		exit(EXIT_FAILURE);
->> -	}
->> +	if (!settings_index)
->> +		ksft_exit_fail_msg("Fail: No settings set\n");
->> +
->>  	return settings_stack + settings_index - 1;
->>  }
->>  
->>  void thp_push_settings(struct thp_settings *settings)
->>  {
->> -	if (settings_index >= MAX_SETTINGS_DEPTH) {
->> -		printf("Fail: Settings stack exceeded");
->> -		exit(EXIT_FAILURE);
->> -	}
->> +	if (settings_index >= MAX_SETTINGS_DEPTH)
->> +		ksft_exit_fail_msg("Fail: Settings stack exceeded\n");
->> +
->>  	settings_stack[settings_index++] = *settings;
->>  	thp_write_settings(thp_current_settings());
->>  }
->>  
->>  void thp_pop_settings(void)
->>  {
->> -	if (settings_index <= 0) {
->> -		printf("Fail: Settings stack empty");
->> -		exit(EXIT_FAILURE);
->> -	}
->> +	if (settings_index <= 0)
->> +		ksft_exit_fail_msg("Fail: Settings stack empty\n");
->> +
->>  	--settings_index;
->>  	thp_write_settings(thp_current_settings());
->>  }
->> @@ -335,14 +303,11 @@ unsigned long thp_supported_orders(void)
->>  	for (i = 0; i < NR_ORDERS; i++) {
->>  		ret = snprintf(path, PATH_MAX, THP_SYSFS "hugepages-%ukB/enabled",
->>  			(getpagesize() >> 10) << i);
->> -		if (ret >= PATH_MAX) {
->> -			printf("%s: Pathname is too long\n", __func__);
->> -			exit(EXIT_FAILURE);
->> -		}
->> +		if (ret >= PATH_MAX)
->> +			ksft_exit_fail_msg("%s: Pathname is too long\n", __func__);
->>  
->> -		ret = read_file(path, buf, sizeof(buf));
->> -		if (ret)
->> -			orders |= 1UL << i;
->> +		read_file(path, buf, sizeof(buf));
->> +		orders |= 1UL << i;
->>  	}
->>  
->>  	return orders;
->> diff --git a/tools/testing/selftests/mm/thp_settings.h b/tools/testing/selftests/mm/thp_settings.h
->> index 71cbff05f4c7f..04a6a7bbd08f8 100644
->> --- a/tools/testing/selftests/mm/thp_settings.h
->> +++ b/tools/testing/selftests/mm/thp_settings.h
->> @@ -56,8 +56,8 @@ struct thp_settings {
->>  	struct hugepages_settings hugepages[NR_ORDERS];
->>  };
->>  
->> -int read_file(const char *path, char *buf, size_t buflen);
->> -int write_file(const char *path, const char *buf, size_t buflen);
->> +void read_file(const char *path, char *buf, size_t buflen);
->> +void write_file(const char *path, const char *buf, size_t buflen);
->>  const unsigned long read_num(const char *path);
->>  void write_num(const char *path, unsigned long num);
->>  
-> 
+>  		ret = -EBUSY;
+>  		goto out;
+>  	}
+>  
+>  	fgraph_array[i] = gops;
+> -	if (i + 1 > fgraph_array_cnt)
+> -		fgraph_array_cnt = i + 1;
+>  	gops->idx = i;
+>  
+>  	ftrace_graph_active++;
+> @@ -979,25 +1009,22 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+>  void unregister_ftrace_graph(struct fgraph_ops *gops)
+>  {
+>  	int command = 0;
+> -	int i;
+>  
+>  	mutex_lock(&ftrace_lock);
+>  
+>  	if (unlikely(!ftrace_graph_active))
+>  		goto out;
+>  
+> -	if (unlikely(gops->idx < 0 || gops->idx >= fgraph_array_cnt))
+> +	if (unlikely(gops->idx < 0 || gops->idx >= FGRAPH_ARRAY_SIZE))
+> +		goto out;
+> +
+> +	if (WARN_ON_ONCE(fgraph_array[gops->idx] != gops))
+>  		goto out;
+>  
+> -	WARN_ON_ONCE(fgraph_array[gops->idx] != gops);
+> +	if (fgraph_lru_release_index(gops->idx) < 0)
+> +		goto out;
+
+Removing the above WARN_ON_ONCE() is more reason to add it to the release
+function.
+
+-- Steve
+
+
+>  
+>  	fgraph_array[gops->idx] = &fgraph_stub;
+> -	if (gops->idx + 1 == fgraph_array_cnt) {
+> -		i = gops->idx;
+> -		while (i >= 0 && fgraph_array[i] == &fgraph_stub)
+> -			i--;
+> -		fgraph_array_cnt = i + 1;
+> -	}
+>  
+>  	ftrace_graph_active--;
+>  
 
