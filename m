@@ -1,161 +1,120 @@
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE06E12F5A2
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 18:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E76133438
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 18:57:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707937035; cv=none; b=panNDcu7gQCKhpQbsHoHHYUPig5SYlZth2uAySxa/bUG6DKyMU5sBkspkiqKXUSyONJI/RKjTCVq2KnCrk6GlOSEIty2AiVxfma8krUIwM0MM2so9aRYA5Qdodik+PXrhufgn9vTNK4jAa3Kz8reHBaaafw3xXJCm3fIIuZ7kc4=
+	t=1707937036; cv=none; b=V1Pc6FAx+4zegarzzyuPchLRP+Smj41c+q4n68AppUyM9jOhzNJpcGZ6eUNB5r4gOlnXTfV9PbVMOmcNUq6FdL2lry4SJCWc0hympgmeHJztFmefsqCBlQsSUojycZjkLNM7sXF2e3VqG7t5NQEcXa/qpjhZMQPBYrXfK1l2eds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707937035; c=relaxed/simple;
-	bh=zukc9bEvpbmmQV/8hwzHujSES/Vg8/5OkOypsxKLytY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uSbFoVjS8vywAtjWU/zYjXT+xrVYBF/Jgx5YV2oC5mEp7A2ZfJsWantVexdOAYWulJbaN3LFlorqpLTqNYijrhF4r10fERTR4uOm4B2PDk5voEc9vgOs92j4TRzm0cFJ6mwVU7Fk8H7Ih6KdOTxKH8fMw8ksEuIZnbpxJIyoZ28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mRgkOYUv; arc=none smtp.client-ip=209.85.166.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707937036; c=relaxed/simple;
+	bh=pW32P6LpHOLEugg6QuLJO9UuoF6gfVeJgjMbxEuiqts=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dejo9vvqjTs+AnedxozYXUZHEF7VxeW2QHALKUWW8M1yz6ERPLxGJQlUB36RMbwE+BYtcoA8b3/rF/FWD31JDrottJroNFitWSRLnvptAF6tWK08ch3zmCihaAXvOc3mJJJboT/cI8+iuFCRrJTuf1yPGvprByoy6m8p6VRsuzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VpJbWs8j; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mRgkOYUv"
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7bed9fb159fso580539f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 10:57:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707937033; x=1708541833; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fJnslB2CZfmXgMrNU6HSYcCTfahoTQjHsVs8f3xtvS4=;
-        b=mRgkOYUvWsTk1iHyQvetF+rXJ6lLqP+e9Fm+AD/hh3sRTTo6ol5H2MJA4SfM0Hsy4y
-         YFHMfzmPEkpMMXLm7cAMMOqWjS1DMjz3KFpwhKCCJw8Tyy2j90pl9aGE9H/Bp0dahY+1
-         Fr39k/Xpm/o1A1k9AFWVBKB0cHp3AMlDXCgfLLT5ep4HY9MQXlutp6eAujpAB7CJjjOA
-         SbubLSkc3rbMb9iBdJsZx6Qn22H/nAkERhrit0t+Kj4gmOxktJHPdOJCZ4tyTyftTKWy
-         OTpy4UWmLqT9idUp/dS9XEWsop4T1MT/h9SY7DiuTPJXpUk73VE5TpiO5R+mds54HmHs
-         6YsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707937033; x=1708541833;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fJnslB2CZfmXgMrNU6HSYcCTfahoTQjHsVs8f3xtvS4=;
-        b=X8tRuNIiaI/+gvN1HH+VwI3iK8k+kClqLN6Vbxe7ez/nKCBOV9AmQIUcX/dtZ2M+US
-         ttkCTDr7D9/pvfvzp1U5OEe33WDbSdNXYWvnedl76bw9AbwcQwFmGS6imwcSFyzWDsJB
-         y/P3ADyNqR5p/qZw9/3QZNpMVKLH3nPMVGzx3Qf4dbxPkoAI8Jcbkf2/InqJGKv0/O4d
-         1bS6TjFvWdy5HlBXaSMnNke90haYn2qkQw3bfV3XG1iJ08JiX250eslxaQZF+Qz047fx
-         8uWQpaUDXN4bBKmAqaP4YWiG7s1zb3N28Kr44ostOp7NijSuQ0AvaWGfaXaqHAVE/0Ui
-         fjDA==
-X-Forwarded-Encrypted: i=1; AJvYcCVP4Vb5rWzDkouH2Yu4S0q6TqG5nLRNttcwkUDWfvXuGpewa5exC0fM3U4iqqUOiroHpan7VFikaEyfv4JmrQZp264kfBwuck2TVzal
-X-Gm-Message-State: AOJu0YwUMvJ9OGPfH2Us6XsPjRmx5SzgRMYwQmShd3641g9KwYcNYIA7
-	+7ySGl8aUn7ZJKXka+V+XwbOYM5I7/snTS5P3zeJmGn2fCQD1cq/FU0XHkuHzw1FxOKakPOV58E
-	eCXQd2wkXpKWkqDN+sViqTH/sb8tmnYMeY0Ts6w6RAemlO5PAOA==
-X-Google-Smtp-Source: AGHT+IGN23MqhUjWhsi32LcFDx18GhHccM/X1qvWfrLXMU/NaxS8kqfHK1uiej1XjiYz0XqHeqhCrv/NMAZaKWRuWJg=
-X-Received: by 2002:a92:d182:0:b0:363:b362:a2bb with SMTP id
- z2-20020a92d182000000b00363b362a2bbmr3721495ilz.32.1707937032775; Wed, 14 Feb
- 2024 10:57:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VpJbWs8j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707937035; x=1739473035;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=pW32P6LpHOLEugg6QuLJO9UuoF6gfVeJgjMbxEuiqts=;
+  b=VpJbWs8j4sP+x4N+3VOMzN2X9K6NgpThRG5UixZFlkWqqSWlBUM2xRX6
+   TCfzBZo7W1WpcyntKCOkRiN9z7yiWd8SG8iqTR2QMo37SAWIr2eQYUipS
+   xtTET3rwZAuc+Kx5V2QI26Nel/rh9IwLa74OR/It99JmFBKNgGJA5XKL9
+   XKBdpI6VpkpwTpIx+4+cOy5v+FuzYDqugKmJB0x8FPyGwHzlvkV9rEVRa
+   O4pxLpBd1h7amAhAsRkQnHLrqxs+tG3iB2gWBcDqlHoA8n7sn8xUhkKaO
+   pkjksE6sAJwnJDxIhs9BQxHNSbg1MzjPUY+tbkeCz5AxUxa8r2vDGFkrF
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="1870300"
+X-IronPort-AV: E=Sophos;i="6.06,160,1705392000"; 
+   d="scan'208";a="1870300"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 10:57:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="912094308"
+X-IronPort-AV: E=Sophos;i="6.06,160,1705392000"; 
+   d="scan'208";a="912094308"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 10:57:12 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1raKRS-00000004a0L-1ihD;
+	Wed, 14 Feb 2024 20:57:10 +0200
+Date: Wed, 14 Feb 2024 20:57:10 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	linux-kernel@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>
+Subject: Re: [PATCH v2 2/3] auxdisplay: Move cfag12864b.h to the subsystem
+ folder
+Message-ID: <Zc0NBo2HDCsAQjn8@smile.fi.intel.com>
+References: <20240212132515.2660837-2-andriy.shevchenko@linux.intel.com>
+ <20240212132515.2660837-4-andriy.shevchenko@linux.intel.com>
+ <Zcoe9axtLXxB7Jeo@smile.fi.intel.com>
+ <CAMuHMdUJ4gSGo4A0BVGkieWvNyqa9Dv_rQVMFj9N8GWYoKCZVg@mail.gmail.com>
+ <CANiq72muoZHzX+qNKabYWnH738okKqrfAruUOpY-4WUJBLP=Yw@mail.gmail.com>
+ <Zcz7Cfc5XSM2MtKV@smile.fi.intel.com>
+ <CANiq72ntYrPyybUDavPuT+anrwfjPb27P8VbL+toMvyp8K293w@mail.gmail.com>
+ <Zcz9WNXpRzv8THKW@smile.fi.intel.com>
+ <CANiq72mYMztZG5Y5v6m+h2xroDFyyf0Kn7aZ2D7p6p4k_YtTcw@mail.gmail.com>
+ <Zc0MShdvTsjrGGjl@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240213-async-free-v3-1-b89c3cc48384@kernel.org> <c4ae18fb13ab1c63cdd34da9fe7b1e0f1a91c909.camel@linux.intel.com>
-In-Reply-To: <c4ae18fb13ab1c63cdd34da9fe7b1e0f1a91c909.camel@linux.intel.com>
-From: Chris Li <chriscli@google.com>
-Date: Wed, 14 Feb 2024 10:56:59 -0800
-Message-ID: <CAF8kJuMXjp1A1kdS_x-S_dyst8MLHwjuAEt-SfGERKVYZNmRww@mail.gmail.com>
-Subject: Re: [PATCH v3] mm: swap: async free swap slot cache entries
-To: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, Wei Xu <weixugc@google.com>, Yu Zhao <yuzhao@google.com>, 
-	Greg Thelen <gthelen@google.com>, Chun-Tse Shao <ctshao@google.com>, 
-	Yosry Ahmed <yosryahmed@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Mel Gorman <mgorman@techsingularity.net>, Huang Ying <ying.huang@intel.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Kairui Song <kasong@tencent.com>, 
-	Barry Song <v-songbaohua@oppo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zc0MShdvTsjrGGjl@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Feb 13, 2024 at 4:08=E2=80=AFPM Tim Chen <tim.c.chen@linux.intel.co=
-m> wrote:
->
-> On Tue, 2024-02-13 at 15:20 -0800, Chris Li wrote:
-> > We discovered that 1% swap page fault is 100us+ while 50% of
-> > the swap fault is under 20us.
-> >
-> > Further investigation show that a large portion of the time
-> > spent in the free_swap_slots() function for the long tail case.
-> >
-> > The percpu cache of swap slots is freed in a batch of 64 entries
-> > inside free_swap_slots(). These cache entries are accumulated
-> > from previous page faults, which may not be related to the current
-> > process.
-> >
-> > Doing the batch free in the page fault handler causes longer
-> > tail latencies and penalizes the current process.
-> >
-> > Add /sys/kernel/mm/swap/swap_slot_async_free to control the
-> > async free behavior. When enabled, using work queue to async
-> > free the swap slot when the swap slot cache is full.
-> >
-> > Testing:
-> >
-> > Chun-Tse did some benchmark in chromebook, showing that
-> > zram_wait_metrics improve about 15% with 80% and 95% confidence.
-> >
-> > I recently ran some experiments on about 1000 Google production
-> > machines. It shows swapin latency drops in the long tail
-> > 100us - 500us bucket dramatically.
-> >
-> > platform      (100-500us)             (0-100us)
-> > A             1.12% -> 0.36%          98.47% -> 99.22%
-> > B             0.65% -> 0.15%          98.96% -> 99.46%
-> > C             0.61% -> 0.23%          98.96% -> 99.38%
-> >
-> > Signed-off-by: Chris Li <chrisl@kernel.org>
-> > ---
-> > Changes in v3:
-> > - Address feedback from Tim Chen, direct free path will free all swap s=
-lots.
-> > - Add /sys/kernel/mm/swap/swap_slot_async_fee to enable async free. Def=
-ault is off.
-> > - Link to v2: https://lore.kernel.org/r/20240131-async-free-v2-1-525f03=
-e07184@kernel.org
-> >
-> > Changes in v2:
-> > - Add description of the impact of time changing suggest by Ying.
-> > - Remove create_workqueue() and use schedule_work()
-> > - Link to v1: https://lore.kernel.org/r/20231221-async-free-v1-1-94b277=
-992cb0@kernel.org
-> > ---
-> >  include/linux/swap_slots.h |  2 ++
-> >  mm/swap_slots.c            | 20 ++++++++++++++++++++
-> >  mm/swap_state.c            | 23 +++++++++++++++++++++++
-> >  3 files changed, 45 insertions(+)
-> >
-> > diff --git a/include/linux/swap_slots.h b/include/linux/swap_slots.h
-> > index 15adfb8c813a..bb9a401d7cae 100644
-> > --- a/include/linux/swap_slots.h
-> > +++ b/include/linux/swap_slots.h
-> > @@ -19,6 +19,7 @@ struct swap_slots_cache {
-> >       spinlock_t      free_lock;  /* protects slots_ret, n_ret */
-> >       swp_entry_t     *slots_ret;
-> >       int             n_ret;
-> > +     struct work_struct async_free;
-> >  };
-> >
-> >  void disable_swap_slots_cache_lock(void);
-> > @@ -27,5 +28,6 @@ void enable_swap_slots_cache(void);
-> >  void free_swap_slot(swp_entry_t entry);
-> >
-> >  extern bool swap_slot_cache_enabled;
-> > +extern uint8_t slot_cache_async_free __read_mostly;
->
-> Why wouldn't you enable the async_free always?
-> Otherwise the patch looks fine to me.
+On Wed, Feb 14, 2024 at 08:54:02PM +0200, Andy Shevchenko wrote:
+> On Wed, Feb 14, 2024 at 07:48:31PM +0100, Miguel Ojeda wrote:
+> > On Wed, Feb 14, 2024 at 6:50 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > It's a standard practice in the Linux kernel development.
+> > > If it's not a so critical issue, why should we rebase?
+> > >
+> > > rebasing will break SHA sums and it's not appreciated especially at the late
+> > > rcX weeks. Linus can even refuse to accept a PR based on this fact.
+> > 
+> > I am well aware of what rebasing does and the rules for PRs to Linus, thank you.
+> > 
+> > First of all, you should have not applied the patch this quickly.
+> > Nobody gave a tag for it and you yourself are the author. Even if
+> > someone gave you a tag, 2 days is way too little time for something
+> > like auxdisplay. 2 weeks would be a more reasonable time frame.
+> > 
+> > The point is: you seem to be rejecting feedback on the basis that you
+> > already applied a patch that you yourself authored 2 days ago. Not
+> > good.
+> > 
+> > Now, for branches in linux-next, what you should avoid is rebasing
+> > wildly, but you can still do so if needed. If you are uncomfortable
+> > with that, then you should avoid rushing patches to begin with so that
+> > you don't have to do that.
+> > 
+> > Regarding PRs to Linus, we are still in -rc4. There is plenty of time
+> > to bake things in `linux-next`. Unless you meant to sent this to a -rc
+> > release. But in that case: 1) there is no rush, 2) please see the
+> > first point again.
+> 
+> Okay, I dropped that patch from the queue.
 
-Thanks for the feedback.
+To be clear why:
+- I don't see how to use pattern that won't collide with the other record
+- reducing churn in case you want to move this to staging
 
-Just in case someone doesn't care about this optimization and wants to
-opt out this behavior?
-Anyway, I am happy to update the patch without the sysfs control file as we=
-ll.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Chris
+
