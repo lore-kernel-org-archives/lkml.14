@@ -1,138 +1,83 @@
-Received: from wind.enjellic.com (wind.enjellic.com [76.10.64.91])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66DA411CA9
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 09:35:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.10.64.91
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB16BE5B
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 09:35:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707903327; cv=none; b=CeNhuoOn6FRYu0yoXtyAU+liWe/UAQ88T21OnMDqSGEyVA/qB56xzFcWV3OPZKJqyl/zdbCveRpco+p2ownH0JtEMUJL9E7ZYzjP4BMV4AFIwTFE0Y7ZYfp3xmBPWIllU4HUj0QdZGq2bWQ78yQ1U92sF3naNisZJuKfFpG5yjM=
+	t=1707903351; cv=none; b=gbcxH2ZU5SEMzQgJp4zE/HXbB4FWXgxtpHhtvTs2YzH53Bo8CK9OQKHy0I0NGZelCqqD8+O50U0fxVzJxDcK+1xCCRxUUGuTusZ69VSBAkyJuNoxRdgXM3/K3WYRthw01/5RbL5F5fjhCFRGDXyFGFxUv9F4/f3y7bv0Vs3Zry8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707903327; c=relaxed/simple;
-	bh=BhPisRloYBOp5JHEYXaJkZ4QaiijqmCKzndK4WLH23A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s3stkZEVtbUwHtta6RX9MgeVIGTDj4rpzEei3VYhPI147Y4s4/5KPhZIqrNG3L9BabvNr1AFVLb5Xz9A1AJmULErEzrd0FMCj9SmWxAL06/3fncDwxJOV9f0D0eS1IWu8s7oNo1LsqBb40Y+5hxBGoDpucygMVvbPbq8Kdq5w3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com; spf=pass smtp.mailfrom=wind.enjellic.com; arc=none smtp.client-ip=76.10.64.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wind.enjellic.com
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-	by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 41E9YACA010558;
-	Wed, 14 Feb 2024 03:34:10 -0600
-Received: (from greg@localhost)
-	by wind.enjellic.com (8.15.2/8.15.2/Submit) id 41E9Y9d2010555;
-	Wed, 14 Feb 2024 03:34:09 -0600
-Date: Wed, 14 Feb 2024 03:34:09 -0600
-From: "Dr. Greg" <greg@enjellic.com>
-To: Nikolay Borisov <nik.borisov@suse.com>
-Cc: "Theodore Ts'o" <tytso@mit.edu>, Dan Williams <dan.j.williams@intel.com>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
-        Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "Nakajima, Jun" <jun.nakajima@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Kalra, Ashish" <ashish.kalra@amd.com>,
-        Sean Christopherson <seanjc@google.com>,
-        "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] x86/random: Retry on RDSEED failure
-Message-ID: <20240214093409.GA10124@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20240202153927.GA119530@mit.edu> <Zb4RlTzq_LV7AzsH@zx2c4.com> <CAHmME9owdbHzfb66xisoWmvWeT_-hkxCu7tR2=Rbye_ik1JgQQ@mail.gmail.com> <DM8PR11MB5750C1A848A9F1EF6BE66241E7482@DM8PR11MB5750.namprd11.prod.outlook.com> <20240212163236.GA444708@mit.edu> <65cb1a1fe2dda_29b1294e@dwillia2-mobl3.amr.corp.intel.com.notmuch> <20240213231341.GB394352@mit.edu> <65cc0ef2c7be_29b12948d@dwillia2-mobl3.amr.corp.intel.com.notmuch> <20240214043245.GC394352@mit.edu> <b786185e-fc57-4d4a-b0aa-741b92de0c5c@suse.com>
+	s=arc-20240116; t=1707903351; c=relaxed/simple;
+	bh=FxGJAH83UTrQJFawuwOkZhQNDaql6s20rG59BXEIoT0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fNh+BBf3PypHo+6hf4XA5deCUi7qaxRl5DcgqCZv1QN9ahltNYtD4IBt2pFyPd2+sxx3+i2kuKfehgOlGxedUp3fdGOxyAYlE3Qgjwcq2cxAYl9yNksgprJjF+b9wZW6TzfLPHlUt2SgiOxwGyJnK5fNn6LfVpWv1BSYREHeCMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=k9eS6af2; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="k9eS6af2"
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-7d5bddb0f4cso591319241.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 01:35:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707903349; x=1708508149; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FxGJAH83UTrQJFawuwOkZhQNDaql6s20rG59BXEIoT0=;
+        b=k9eS6af2Le1UDrnWN4cY+JAmQ33DtPRzd55GR+pIeNMrDCv8z7vHyfwaqnTqbIc0Xf
+         wO6pDEbGuortCX1plRHEb/tnavCZlIa2wCtfa1zkS731DYHWpSnC/fkcQbsq3vrQoWYI
+         zCnh16Nsf7idk0olqb1AVOJ9iTv0imxvD3+no9uByAT7aYqdkMlvfaaCOvOuVLJhSc4x
+         YTqhJ0jCz24Ry5SBC0N/LPxtgx4ZrSv/WrSmu48up0CO34tsqavzN7YQPQrbQmlP3If+
+         j4QynBK4lm2GY0qXYou6WH/VW0qkUoep9rZXQMOgcQ2jFGz7BkXIiayiTj16wqAnfOyW
+         +nsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707903349; x=1708508149;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FxGJAH83UTrQJFawuwOkZhQNDaql6s20rG59BXEIoT0=;
+        b=wK8asQrd9AO5rc9xqzQDEPWaKV5kBU/4rihdLsz0XWc8G5DCAUJvtBwQmcE7lomn3R
+         p/dQ2kOa/ipVGLE8up4RN733KNwWpwsWRWsGDbqt1AiZBJOEqUp8vND25cVq1WWdQ9Q8
+         Le0evxB98qGsv9XR7GJTFo1llZOwn67D0lqHIvqC617eUggEZO7psSGrWaAKD7OnjI5K
+         QkEpA8hcGaV1IK9OmDD4gMA1B0dUnewpgnNuODZxy0TKPsqv91c7Z6K36ZprRGkYQpzM
+         oyT2sYckqY3C+Mid06yIikW8puLdY5ePqlMg2mbfScH+vldSoDmkQRn0qIkVRX1yP4bW
+         Hjxg==
+X-Gm-Message-State: AOJu0Yyi2LxyTHdeisRXiRZs6Rtqva2nuJi3iIaR67ViAuUprmWgiHCm
+	85IDbKAiwlQgAdYQ0UKwzUNdL4lQhesEXQIii/OxhZVpz2OCeiqcV6J/ZLtrknfKmkHztJvKXOr
+	r3jnI7PfJHk7lnqxEp80iHcHlAO//OMWovxMpCQAWOteqpZNoCec=
+X-Google-Smtp-Source: AGHT+IEOxg1ObHX8j5ADuwz4SaSKeY0U/wXSXneGYVCIWIk2eqRKhLL0UkhWDS2Bv0MsNKDNNk02uHpLn4FhpW05EPE=
+X-Received: by 2002:a05:6102:2746:b0:46e:d0cd:428d with SMTP id
+ p6-20020a056102274600b0046ed0cd428dmr1931571vsu.33.1707903349246; Wed, 14 Feb
+ 2024 01:35:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b786185e-fc57-4d4a-b0aa-741b92de0c5c@suse.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Wed, 14 Feb 2024 03:34:10 -0600 (CST)
+MIME-Version: 1.0
+References: <20240213141222.382457-1-warthog618@gmail.com>
+In-Reply-To: <20240213141222.382457-1-warthog618@gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 14 Feb 2024 10:35:38 +0100
+Message-ID: <CAMRc=MdmfHLyy0UrfC21UMxFa8CTySOx8LCEg0Nt+Z9tb8mRSQ@mail.gmail.com>
+Subject: Re: [PATCH] Documentation: gpio: consistent use of logical line value terminology
+To: Kent Gibson <warthog618@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linus.walleij@linaro.org, andy@kernel.org, 
+	corbet@lwn.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 14, 2024 at 10:34:48AM +0200, Nikolay Borisov wrote:
+On Tue, Feb 13, 2024 at 3:12=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
+wrote:
+>
+> Consistently use active/inactive to describe logical line values, rather
+> than high/low, which is used for physical values, or asserted/de-asserted
+> which is awkward.
+>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> ---
 
-Hi, I hope the week is going well for everyone.
+Applied, thanks!
 
-> On 14.02.24 ??. 6:32 ??., Theodore Ts'o wrote:
-> >On Tue, Feb 13, 2024 at 04:53:06PM -0800, Dan Williams wrote:
-> >>
-> >>Indeed it is. Typically when you have x86, riscv, arm, and s390 folks
-> >>all show up at a Linux Plumbers session [1] to talk about their approach
-> >>to handling a new platform paradigm, that is a decent indication that
-> >>the technology is more real than not. Point taken that it is not here
-> >>today, but it is also not multiple hardware generations away as the
-> >>Plumbers participation indicated.
-> >
-> >My big concerns with TDISP which make me believe it may not be a
-> >silver bullet is that (a) it's hyper-complex (although to be fair
-> >Confidential Compute isn't exactly simple, and (b) it's one thing to
-> >digitally sign software so you know that it comes from a trusted
-> >source; but it's a **lot** harder to prove that hardware hasn't been
-> >tampered with --- a digital siganture can't tell you much about
-> >whether or not the hardware is in an as-built state coming from the
-> >factory --- this requires things like wrapping the device with
-> >resistive wire in multiple directions with a whetstone bridge to
-> >detect if the wire has gotten cut or shorted, then dunking the whole
-> >thing in epoxy, so that any attempt to tamper with the hardware will
-> >result it self-destructing (via a thermite charge or equivalent :-)
-
-> This really reminds me of the engineering that goes into the
-> omnipresent POS terminals ate every store, since they store
-> certificates from the card (Visa/Master) operators. So I wonder if
-> at somepoint we'll have a pos-like device (by merit of its
-> engineering) in every server....
-
-It already exists.  CoCo, at least the Intel implementation, is
-dependent on what amounts to this concept.
-
-> >Remember, the whole conceit of Confidential Compute is that you don't
-> >trust the cloud provider --- but if that entity controls the PCI cards
-> >installed in their servers, and and that entity has the ability to
-> >*modify* the PCI cards in the server, all of the digital signatures
-> >and fancy-schmancy TDISP complexity isn't necessarily going to save
-> >you.
-
-> Can't the same argument go for the CPU, though it's a lot more
-> "integrated" into the silicong substrate, yet we somehow believe
-> CoCo ascertains that a vm is running on trusted hardware? But
-> ultimately the CPU is still a part that comes from the untrusted
-> CSP.
-
-The attestation model for TDX is largely built on top of SGX.
-
-The Intel predicate with respect to SGX/TDX is that you have to trust
-the CPU silicon implementation, if you can't entertain that level of
-trust, it is game over for security.
-
-To support that security model, Intel provides infrastructure that
-proves that the software is running on a 'Genuine Intel' CPU.
-
-Roughly, a root key is burned into the silicon that is used as the
-basis for additional derived keys.  The key access and derivation
-processes can only occur when the process is running software with a
-known signature in a protected region of memory (enclave).
-
-The model is to fill a structure with data that defines the
-hardware/software state.  A keyed checksum is run over the structure
-that allows a relying party to verify that the data structure contents
-could have only been generated on a valid Intel CPU.
-
-This process verifies that the CPU is from a known vendor, which is of
-course only the initial starting point for verifying that something
-like a VM is running in a known and trusted state.  But, if you can't
-start with that predicate you have nothing to build on.
-
-The actual implementation nowadays is a bit more complex, given that
-all of this has to happen on multi-socket systems which involve more
-than one CPU, but the concept is the same.
-
-Have a good day.
-
-As always,
-Dr. Greg
-
-The Quixote Project - Flailing at the Travails of Cybersecurity
-              https://github.com/Quixote-Project
+Bart
