@@ -1,47 +1,43 @@
-Received: from out-185.mta1.migadu.com (out-185.mta1.migadu.com [95.215.58.185])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 398D855E44
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 21:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E187941C71;
+	Wed, 14 Feb 2024 21:12:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707944783; cv=none; b=Jh1dYm2YU6JeosZgJUKnUDSx3o+gsObKQrPCZe5OeB+xPEZ1r7Xi7dZFOKwTye1HukbkVGWQCHqOZMv+jCxAOuUwgSPoM1Z6tvUPDTXPaadH6VL7TKJRNdoYXW7T6TItK7kCv8CrOnJVciDDmvutRS/SCmltFZsB2LnRpaqulC0=
+	t=1707945168; cv=none; b=k62J2/aKUTn0PmizdQI1x1JZW5SOPt8A0mgZE0ofaN/6LlAux5BDcvWHnQPnixQVZW78TrXHjt7aPLdvJf+d1w09QpLa0mAspjZUsBPJ3u65v1bOpm0v9ekW799qTa3IVfgGg3r0zXZUU0w48QGlr9SWDD5qtXQtJx8w6fmzQ2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707944783; c=relaxed/simple;
-	bh=c+0UADNx4KkHHaeDm/qEDcDyoYmLg07y339g5RmUM14=;
+	s=arc-20240116; t=1707945168; c=relaxed/simple;
+	bh=QHlUn7j+whCcTjU2YSEiwH0wkOJ1VRvYJdLbQbKERwE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JmLOqPdwp0JzfqQDvwCZl5h6Wv2VQLVFvdJ+XAtCeyOO0DdHNyylB/gFYvZ3o1cwgsxSF02HAZSN6jnIidDElFQiNdBQaioLPvk73zJmVQ9RrB29VRm8XVcAuVlV/TT3apE8E51zEXJd6fV3kkIkXMCim7yt185Re4wtO6dn0tU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Qfvu4z1g; arc=none smtp.client-ip=95.215.58.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=b1kDqZ/Ezdq9/GGxlYBYfcdlbhgeZuLqwXyRmiavTrVqDw49xqSGu4FTHdZ30J271omu5FaU3katR58w/Jdl1XAYDLXTO2/iokSlm8FvqZJ+z6YqfX0HjtQtdIyLGnWAANW1cG8uuZrQcYZ5gh6ryHLidr72+hUU7hug773sc9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cy0cA1dm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Qfvu4z1g"
-Date: Wed, 14 Feb 2024 13:06:12 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1707944780;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uO6O9l/7u1FoWCDVNDPi12vidxMFWsbJFIEI+vbkcWI=;
-	b=Qfvu4z1ghH0eYQfo4WtcCs4NQnZnhnvCd/kiESIbOVEsb4Pk2KCeGoA7CpjxaUK3cNiCp/
-	N2IyDNCKrNA+pQoYJQOq+41kBXGMbfNasmhZgR/nS1tiefS9VwosW55GVWHiB7mKM1HoQQ
-	xT6DRaSpb0uF7ELaP9CtEQsQKIUfdHc=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Marc Zyngier <maz@kernel.org>
-Cc: kvmarm@lists.linux.dev, kvm@vger.kernel.org,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 19/23] KVM: selftests: Add a minimal library for
- interacting with an ITS
-Message-ID: <Zc0rRFLRhLfLshpm@linux.dev>
-References: <20240213093250.3960069-1-oliver.upton@linux.dev>
- <20240213094114.3961683-1-oliver.upton@linux.dev>
- <86zfw33qae.wl-maz@kernel.org>
- <Zc0NsFm40nIqTmRf@linux.dev>
- <86v86q4xkf.wl-maz@kernel.org>
- <Zc0orzU-CeKEyx3j@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cy0cA1dm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A97A6C433F1;
+	Wed, 14 Feb 2024 21:12:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707945167;
+	bh=QHlUn7j+whCcTjU2YSEiwH0wkOJ1VRvYJdLbQbKERwE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Cy0cA1dm/w3fJYblgoSIz2DUc/m8dwso+8pd3s9Bsyt8i1CGableenwz5zBIaU567
+	 OsBXw1kjmiKS6fGS9Y337KXaQBCEkwyFLq4lxkRe26zsYBILb5/nSjBvTvTkNVktMU
+	 VhIjjxIUTEIGnrzx1FvfOvuUGsV+/hVIUdgQXG9fFLEidhj46vGHNT4zM8NKnA0sDa
+	 CL1fAkzvruDp/rmSCNtMAB3vIjWJOMid9Eso32W/cQllEUGDx2YlfJ34SWT6a40Cby
+	 zTSEooISGX4glir10A0h79MEOzqbuAnER2YPv5MLpiisEsM1aBot8ATtAAJxJwwChz
+	 G3VfujpmZYtBA==
+Date: Wed, 14 Feb 2024 22:12:43 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Naresh Solanki <naresh.solanki@9elements.com>
+Cc: Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, mazziesaccount@gmail.com, 
+	Patrick Rudolph <patrick.rudolph@9elements.com>, Rob Herring <robh@kernel.org>, linux-i2c@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] dt-bindings: i2c: pca954x: Add custom properties
+ for MAX7357
+Message-ID: <6wpmx3ivbp5wihdm6nbul6sjxvbkh4oe3sdthdikm4ikofgsiq@vnviyphamouu>
+References: <20240213142228.2146218-1-naresh.solanki@9elements.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,59 +46,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zc0orzU-CeKEyx3j@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20240213142228.2146218-1-naresh.solanki@9elements.com>
 
-On Wed, Feb 14, 2024 at 12:55:11PM -0800, Oliver Upton wrote:
-> On Wed, Feb 14, 2024 at 08:09:52PM +0000, Marc Zyngier wrote:
-> > > If the order of restore from userspace is CBASER, CWRITER, CREADR then
-> > > we **wind up replaying the entire command queue**. While insane, I'm
-> > > pretty sure it is legal for the guest to write garbage after the read
-> > > pointer has moved past a particular command index.
-> > > 
-> > > Fsck!!!
-> > 
-> > This is documented Documentation/virt/kvm/devices/arm-vgic-its.rst to
-> > some extent, and it is allowed for the guest to crap itself on behalf
-> > of userspace if the ordering isn't respected.
-> 
-> Ah, fair, I missed the documentation here. If we require userspace to
-> write CTLR last then we _should_ be fine, but damn is this a tricky set
-> of expectations.
-> 
-> > > So, how about we do this:
-> > > 
-> > >  - Provide a uaccess hook for CWRITER that changes the write-pointer
-> > >    without processing any commands
-> > > 
-> > >  - Assert an invariant that at any time CWRITER or CREADR are read from
-> > >    userspace that CREADR == CWRITER. Fail the ioctl and scream if that
-> > >    isn't the case, so that way we never need to worry about processing
-> > >    'in-flight' commands at the destination.
-> > 
-> > Are we guaranteed that we cannot ever see CWRITER != CREADR at VM
-> > dumping time? I'm not convinced that we cannot preempt the vcpu thread
-> > at the right spot, specially given that you can have an arbitrary
-> > large batch of commands to execute.
-> > 
-> > Just add a page-fault to the mix, and a signal pending. Pronto, you
-> > see a guest exit and you should be able to start dumping things
-> > without the ITS having processed much. I haven't tried, but that
-> > doesn't seem totally unlikely.
-> 
-> Well, we would need to run all userspace reads and writes through the
-> cmd_lock in this case, which is what we already do for the CREADR
-> uaccess hook. To me the 'racy' queue accessors only make sense for guest
-> accesses, since the driver is expecting to poll for completion in that
-> case.
+Hi Naresh,
 
-My proposed invariant cannot be maintained, of course, since userspace
-can do whatever it pleases on the cmdq pointers.
+On Tue, Feb 13, 2024 at 07:52:26PM +0530, Naresh Solanki wrote:
+> From: Patrick Rudolph <patrick.rudolph@9elements.com>
+> 
+> Maxim Max7357 has a configuration register to enable additional
+> features. These features aren't enabled by default & its up to
+> board designer to enable the same as it may have unexpected side effects.
+> 
+> These should be validated for proper functioning & detection of devices
+> in secondary bus as sometimes it can cause secondary bus being disabled.
+> 
+> Add booleans for:
+>  - maxim,isolate-stuck-channel
+>  - maxim,send-flush-out-sequence
+>  - maxim,preconnection-wiggle-test-enable
+> 
+> Signed-off-by: Patrick Rudolph <patrick.rudolph@9elements.com>
+> Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-> Otherwise we decide the existing rules for restoring the ITS are fine
-> and I get to keep my funky driver :)
-> 
-> -- 
-> Thanks,
-> Oliver
-> 
+this series was already applied and I sent the notification.
+Didn't you receive it?
+
+You can check here[*] (branch i2c/i2c-host).
+
+Thanks,
+Andi
+
+[*] https://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git/log/?h=i2c/i2c-host
