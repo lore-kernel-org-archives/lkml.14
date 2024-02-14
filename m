@@ -1,241 +1,82 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD161097D;
-	Wed, 14 Feb 2024 07:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.237.72.81])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A7F611706;
+	Wed, 14 Feb 2024 07:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.237.72.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707896426; cv=none; b=EL2F0aWGebCdl0QkJEZQyrL1HmfFdtzQnjJZqAZq3+uV8dYbDppRJPu0HwfFW2+QpF8xyXwxzS0wA0WsweMm0ik2pKmGvC61ZP+gJS40grjZ8EWHD1gzfPfE7G1XKg5v0Yf+tcTkTzFso7+ai3QvLW70HXv+VjQIybSDM6/e2Wc=
+	t=1707896561; cv=none; b=jpYPRtihctQxwlR2zyhdzX7CZLoPLEJJ+rLcop8s+OPNoJFqP9KtYtwuCXc1pKBmBCyP0i4PWI4NXkWOAAXvyYHDKRG//ZvK5M9VU3cJwywVt4jR1rYh5HsFdCGd2mqtY94n54IjnMNXAoWfDboTih7q+lIUwscqeUHXzD8LnG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707896426; c=relaxed/simple;
-	bh=KzHiASEVyPnG6jzWZ/r28DGP8rBbllHelFjSvDOXyoo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PgmZcyfjR65OSOw9gMd1CFqpiKswlWL6sLzL42v7siD4+6w6S5GYvp07XF/4CY/nhm/kukKFrHnrFjhAyFG5tHr0fVqekMMfPlL9vo+LK7IvVNk2CI0QdPH+Tcca0BvFbzbenoO9ISDACVBzUbXGOoXuBsTwn+RE7bxJGnepAGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dcYux+04; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dcYux+04"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41E6skOd019513;
-	Wed, 14 Feb 2024 07:40:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version:content-type; s=
-	qcppdkim1; bh=aY7yYKqx+GMyo+VIjJd5KjU/z5idd8ln+YeLlsF79QA=; b=dc
-	Yux+04LlE1GydeENNZ4WFes1s/m/Zcs8ZCbracxjs3PA8XA2pZPUs4f6ukUJHbZq
-	VrSiwI6zdf46KjW13aKocSjCQSCc5txqf9iuPzokSomCmZ1R+A7aw7Pt7WqDdOFP
-	IMC4bkUZ7G3kFRmLdLegeK5RZEXGUs9NoNFibNZPMpkJKEhGjomK+gONbWIqm+SW
-	PuzNo+qTwmBJHObYZYkvBxPYazLnCoxaXbvKq5u26AfYA/s5pu6R2EIP5rQzgZR0
-	15lyiyxaQaGxAIUVw60tjj7sdD52aoDZId61gJ10GqeyR9OnQfJgIC4BDfGrwAB1
-	fiUFc88trz+9SWU7edjQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w8j65rmr2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 Feb 2024 07:40:04 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41E7e3lJ031438
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 Feb 2024 07:40:03 GMT
-Received: from hu-nprakash-blr.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 13 Feb 2024 23:39:57 -0800
-From: Nikhil V <quic_nprakash@quicinc.com>
-To: Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        "Jonathan
- Corbet" <corbet@lwn.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-CC: Nikhil V <quic_nprakash@quicinc.com>,
-        "Paul E. McKenney"
-	<paulmck@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Yan-Jie Wang
-	<yanjiewtw@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Peter Zijlstra
-	<peterz@infradead.org>,
-        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
-        Catalin Marinas <catalin.marinas@arm.com>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <quic_pkondeti@quicinc.com>, <quic_kprasan@quicinc.com>,
-        <quic_mpilaniy@quicinc.com>, <quic_shrekk@quicinc.com>,
-        <mpleshivenkov@google.com>, <ericyin@google.com>
-Subject: [PATCH v2] PM: hibernate: Support to select compression algorithm
-Date: Wed, 14 Feb 2024 13:09:32 +0530
-Message-ID: <db6616c90d0e7de7658708b52ddca729679573bf.1707895925.git.quic_nprakash@quicinc.com>
+	s=arc-20240116; t=1707896561; c=relaxed/simple;
+	bh=KsUQZovNZ1Mq26qTNCJ02kvNZqNLKyNEdqfRIzw9Mxw=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=MMcDNKo+vJ/jTMvr7CcyovoRXvhksncB3TkeB98J6sNtn2vim1M7IrRxvz9OD1uwJ6zwxFSStv6jqeD1ePxL6XYeqLnXYLMkcuZ0dRPPqS3iAr0QZdXZFHIh2U9X6JMGnQTWvAiVjNBeiyIrBqTw2CG2Ps2BoOUUON6A1YhU0iM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=52.237.72.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from ubuntu.localdomain (unknown [218.12.18.71])
+	by mail-app4 (Coremail) with SMTP id cS_KCgAXEH6_bMxl4x1EAQ--.55591S2;
+	Wed, 14 Feb 2024 15:33:31 +0800 (CST)
+From: Duoming Zhou <duoming@zju.edu.cn>
+To: linux-kernel@vger.kernel.org
+Cc: mturquette@baylibre.com,
+	sboyd@kernel.org,
+	michal.simek@amd.com,
+	linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Duoming Zhou <duoming@zju.edu.cn>
+Subject: [PATCH] clk: zynq: Prevent null pointer dereference caused by kmalloc failure
+Date: Wed, 14 Feb 2024 15:33:18 +0800
+Message-Id: <20240214073318.82573-1-duoming@zju.edu.cn>
 X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID:cS_KCgAXEH6_bMxl4x1EAQ--.55591S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrtw1fAw17KFykXF1Utr48Crg_yoWDCwb_Gw
+	48X3srC34rA3s5A3Z7AF4xuFZIvF1Fvr1vvFnaq343A34UZr1rWryI9ws3Ar4fJrWFkryD
+	Cr1kKrZYyr10vjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbcAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+	Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r12
+	6r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUYCJmUUUUU
+X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAwMLAWXLulEB4QAnsI
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: V6pO_5SNNUqTnG7XYwyU3jmtg_7VRJYd
-X-Proofpoint-ORIG-GUID: V6pO_5SNNUqTnG7XYwyU3jmtg_7VRJYd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-14_01,2024-02-12_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- priorityscore=1501 bulkscore=0 mlxlogscore=999 malwarescore=0
- clxscore=1015 impostorscore=0 phishscore=0 lowpriorityscore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402140058
 
-Currently the default compression algorithm is selected based on
-compile time options. Introduce a module parameter "hibernate.compressor"
-to override this behaviour.
+The kmalloc in zynq_clk_setup will return null if the
+physical memory has run out. As a result, if we use
+snprintf to write data to the null address, the null
+pointer dereference bug will happen.
 
-Different compression algorithms have different characteristics and
-hibernation may benefit when it uses any of these algorithms, especially
-when a secondary algorithm(LZ4) offers better decompression speeds over a
-default algorithm(LZO), which in turn reduces hibernation image restore
-time.
+The required memory is only 11 bytes, so this patch
+adds a "__GFP_NOFAIL" flag in kmalloc in order that
+the kmalloc will never return with failure.
 
-Users can override the default algorithm in two ways:
- 1) Passing "hibernate.compressor" as kernel command line parameter.
-    Usage:
-    	LZO: hibernate.compressor=lzo
-    	LZ4: hibernate.compressor=lz4
-
- 2) Specifying the algorithm at runtime.
-    Usage:
-	LZO: echo lzo > /sys/module/hibernate/parameters/compressor
-	LZ4: echo lz4 > /sys/module/hibernate/parameters/compressor
-
-Currently LZO and LZ4 are the supported algorithms. LZO is the default
-compression algorithm used with hibernation.
-
-Signed-off-by: Nikhil V <quic_nprakash@quicinc.com>
+Fixes: 0ee52b157b8e ("clk: zynq: Add clock controller driver")
+Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
 ---
-This patch is dependent on the patch series, [1] (patches 1/4 to 3/4).
-This is picked in linux-next, [2].
- [1] https://lore.kernel.org/all/cover.1705927916.git.quic_nprakash@quicinc.com/
- [2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/kernel/power?h=next-20240212
+ drivers/clk/zynq/clkc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes in v2:
- Changes to incorporate suggestions from Randy Dunlap:
-  - Update documentation to specify the default compression algorithm.
- Link to v1:
-  https://lore.kernel.org/all/3776355f920c1af44490e076072f93bafdf128cc.1707740870.git.quic_nprakash@quicinc.com/
-
- .../admin-guide/kernel-parameters.txt         | 11 ++++
- kernel/power/hibernate.c                      | 57 ++++++++++++++++++-
- 2 files changed, 65 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 31b3a25680d0..8f7fb911b2cc 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1748,6 +1748,17 @@
- 				(that will set all pages holding image data
- 				during restoration read-only).
+diff --git a/drivers/clk/zynq/clkc.c b/drivers/clk/zynq/clkc.c
+index 7bdeaff2bfd..7621c2f0046 100644
+--- a/drivers/clk/zynq/clkc.c
++++ b/drivers/clk/zynq/clkc.c
+@@ -427,7 +427,7 @@ static void __init zynq_clk_setup(struct device_node *np)
+ 			SLCR_GEM1_CLK_CTRL, 0, 0, &gem1clk_lock);
  
-+	hibernate.compressor= 	[HIBERNATION] Compression algorithm to be
-+				used with hibernation.
-+				Format: { lzo | lz4 }
-+				Default: lzo
-+
-+				lzo: Select LZO compression algorithm to
-+				compress/decompress hibernation image.
-+
-+				lz4: Select LZ4 compression algorithm to
-+				compress/decompress hibernation image.
-+
- 	highmem=nn[KMG]	[KNL,BOOT] forces the highmem zone to have an exact
- 			size of <nn>. This works even on boxes that have no
- 			highmem otherwise. This also works to reduce highmem
-diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
-index 219191d6d0e8..43b1a82e800c 100644
---- a/kernel/power/hibernate.c
-+++ b/kernel/power/hibernate.c
-@@ -47,7 +47,7 @@ dev_t swsusp_resume_device;
- sector_t swsusp_resume_block;
- __visible int in_suspend __nosavedata;
+ 	tmp = strlen("mio_clk_00x");
+-	clk_name = kmalloc(tmp, GFP_KERNEL);
++	clk_name = kmalloc(tmp, GFP_KERNEL | __GFP_NOFAIL);
+ 	for (i = 0; i < NUM_MIO_PINS; i++) {
+ 		int idx;
  
--static const char *default_compressor = CONFIG_HIBERNATION_DEF_COMP;
-+static char hibernate_compressor[CRYPTO_MAX_ALG_NAME] = CONFIG_HIBERNATION_DEF_COMP;
- 
- /*
-  * Compression/decompression algorithm to be used while saving/loading
-@@ -748,7 +748,7 @@ int hibernate(void)
- 	 * Query for the compression algorithm support if compression is enabled.
- 	 */
- 	if (!nocompress) {
--		strscpy(hib_comp_algo, default_compressor, sizeof(hib_comp_algo));
-+		strscpy(hib_comp_algo, hibernate_compressor, sizeof(hib_comp_algo));
- 		if (crypto_has_comp(hib_comp_algo, 0, 0) != 1) {
- 			pr_err("%s compression is not available\n", hib_comp_algo);
- 			return -EOPNOTSUPP;
-@@ -999,7 +999,7 @@ static int software_resume(void)
- 		if (swsusp_header_flags & SF_COMPRESSION_ALG_LZ4)
- 			strscpy(hib_comp_algo, COMPRESSION_ALGO_LZ4, sizeof(hib_comp_algo));
- 		else
--			strscpy(hib_comp_algo, default_compressor, sizeof(hib_comp_algo));
-+			strscpy(hib_comp_algo, COMPRESSION_ALGO_LZO, sizeof(hib_comp_algo));
- 		if (crypto_has_comp(hib_comp_algo, 0, 0) != 1) {
- 			pr_err("%s compression is not available\n", hib_comp_algo);
- 			error = -EOPNOTSUPP;
-@@ -1422,6 +1422,57 @@ static int __init nohibernate_setup(char *str)
- 	return 1;
- }
- 
-+static const char * const comp_alg_enabled[] = {
-+#if IS_ENABLED(CONFIG_CRYPTO_LZO)
-+	COMPRESSION_ALGO_LZO,
-+#endif
-+#if IS_ENABLED(CONFIG_CRYPTO_LZ4)
-+	COMPRESSION_ALGO_LZ4,
-+#endif
-+};
-+
-+static int hibernate_compressor_param_set(const char *compressor,
-+		const struct kernel_param *kp)
-+{
-+	unsigned int sleep_flags;
-+	int index, ret;
-+
-+	sleep_flags = lock_system_sleep();
-+
-+	index = sysfs_match_string(comp_alg_enabled, compressor);
-+	if (index >= 0) {
-+		ret = param_set_copystring(comp_alg_enabled[index], kp);
-+		if (!ret)
-+			strscpy(hib_comp_algo, comp_alg_enabled[index],
-+				sizeof(hib_comp_algo));
-+	} else {
-+		ret = index;
-+	}
-+
-+	unlock_system_sleep(sleep_flags);
-+
-+	if (ret)
-+		pr_debug("Cannot set specified compressor %s\n",
-+			 compressor);
-+
-+	return ret;
-+}
-+
-+static const struct kernel_param_ops hibernate_compressor_param_ops = {
-+	.set    = hibernate_compressor_param_set,
-+	.get    = param_get_string,
-+};
-+
-+static struct kparam_string hibernate_compressor_param_string = {
-+	.maxlen = sizeof(hibernate_compressor),
-+	.string = hibernate_compressor,
-+};
-+
-+module_param_cb(compressor, &hibernate_compressor_param_ops,
-+		&hibernate_compressor_param_string, 0644);
-+MODULE_PARM_DESC(compressor,
-+		 "Compression algorithm to be used with hibernation");
-+
- __setup("noresume", noresume_setup);
- __setup("resume_offset=", resume_offset_setup);
- __setup("resume=", resume_setup);
 -- 
 2.17.1
 
