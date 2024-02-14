@@ -1,60 +1,41 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50B41B962
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 11:46:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D60A218EB9;
+	Wed, 14 Feb 2024 11:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707911177; cv=none; b=KIMaA8bl8rTSWKjecFup07Fr2ZdSy9FMz8Y+oTmY/xu/3CmfQnfo+j6zSc6X4NMX5FDAmKBR/hdFQ/PNy0e2FM7u6E26XTlFZUXFllHxsdKdIQoGET0zN4DnlvIP8PKCDBHx4RjadCKyRz/SEBuS6UKVMS7md32z6mFGBw3XUbM=
+	t=1707911201; cv=none; b=sVvVOdqYqJ3CXK4E1nSVCbxLpEIR57zvXJ7lO2bcLRCqAtArisd1ul44JVcqwK+9PLpZFkmwyP4MzrcOzs3xN1DkKB5IfraBCr/u0nsMXKI4VWuhwjbfWf9mbBPrSpg8hkJgq+h+ekhw25p3vFIPi2L3Cm/l0AHSz70umv2FyIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707911177; c=relaxed/simple;
-	bh=iaFhux7+ftCQreqL4+9rxGj5oghyh3WmJyVki73C+Bc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Z19KWh8/Ra28qFubH/YiaekMzjB581wkOr1g+9lLcaaAdnaFEyi+Qffuu7RZu0qH/sotElYId/NJ9IUB5vLUKYNCtU2OF/JsbatnfC1iHN42DEy3pgWkZ1fKD3+MsUkm6bGAJtY6604CPfUGCuryHuy9VUH8Z2QUem1co0QrqQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Mgi9IlDT; arc=none smtp.client-ip=209.85.210.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707911201; c=relaxed/simple;
+	bh=jvl3Y+wH/gfbOOMoVy7joBUO4CawoZUoJ7kw1HD0z/U=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=MNwOpVzrFYaXM+bfhLsrCY1wMZit4b/lAELclDX7cTvGt81t7TtAPs/8uyZE6wisqvuKJqL4tmdUVB6gcyHcbQWE8yhq2Eh/AenlYUf9qS9SUBRU/rC+pFK931U1spV4PzcriFTA0mBfXrvnCziTPjyRNXsjPjjDAaxQJF9n2fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=YA70RvpR; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mgi9IlDT"
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6e2ddc5f31eso1895026a34.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 03:46:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707911175; x=1708515975; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=stU+R4KG+NyQbt4ql0bZhshhmz0bDBsi5UUfG+CKyak=;
-        b=Mgi9IlDThPJqe5w4Qu/TPIQC9vhvcSB0iPqI1PeOCHDncgzMm+uoXA8YgU8fX5fCTA
-         9l1IBhnL2VxVPR97Ea/vW+0C+/zRdKWBk7WOFACsdGmLzVXh5gmVjALxJrJz6zRsmHWP
-         GQW3l8j3FOVdixcvlhTZvXMQ96sV7D7qno3CcXMzqSm2asfEMS4OhY3y1/EajTnmOiM1
-         G7qvQp9L3ZLPSoYLTmeGJucVk5FN7Nj5yWriW/wOcjeiVVOjBrVkj7xEBvrpeo90lb26
-         buIHoJRGknozEYAeySNURmGUInZ6US0IeTYwMBYzMucFvGPH/p41+boRkXY8BkVjaMQP
-         hCxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707911175; x=1708515975;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=stU+R4KG+NyQbt4ql0bZhshhmz0bDBsi5UUfG+CKyak=;
-        b=sWPJiN5YA9EM5UUrK4RPU4WOT+L20g70mxLr5J+60PcIuxss4PCTC2A6RqMiTbFOJl
-         CPuUX94zytM5Y71iMC7tY/wKJ45wPK5OCcsD9OtmhSNfEaT4gCj6iT9ouXcOr56LIJty
-         8ReIAV7QTsHwoGyoBhHPejTKsHBcUm8vFG1X+VSx8G/ZhbiIb6SHFEowWvWXUU6EzgSF
-         5EfIJMXk8jbaSp386iuOg1JWFKjXip1HAP5V1TDpn5qzZ8p1qLG0SE4Gar4hLMTBQ3G/
-         VvqEmQvgyG33mrgmrX1r7smtngjSweajDw8rMqfTWorApAoDXXYPDpxbEjyDINEITmTf
-         1SSw==
-X-Forwarded-Encrypted: i=1; AJvYcCUmJt5FJ7myXj9ShnhLadcmO5f9Fg/jZ9ko97LStY14SWHyy2/x0iC0t26dISoN/24aWfHIxpTpWtvQmTISNo36aNwvFqhc5UDhhMKc
-X-Gm-Message-State: AOJu0YyJq7MwakIi6vYJJH08wvHKaanfzHQPT2vd1Va718I6KfCcxI5j
-	l//CcmvfhmMQ7Fwd99laM33eq48paMrq8t7URN0/K5XDoclVzzJjvUGblUFX0g==
-X-Google-Smtp-Source: AGHT+IExOXztcpJuZehy39qkAgIJjMeLNBIE1g7Y0XjwPk1GFEOHTHyOZ8MtrSFaaWBsuecca5y8PQ==
-X-Received: by 2002:a05:6358:b00d:b0:176:40d5:2bd5 with SMTP id l13-20020a056358b00d00b0017640d52bd5mr2310044rwn.6.1707911174688;
-        Wed, 14 Feb 2024 03:46:14 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXT9B6A1cp+QOKPZkvk+EwZp++YLu3rcZe5XHi3LJPDwegVbg5YoQNUr/IRQzOR4W/UNqypDIlwKgEsy1WfzcUeEUUDoNmPd6wFJNhdGMVJ7vDtUmaogh1BNAj+ebpQ8Uz6qxK4NBfQLVKH1AC3ef/HMZDk5yj43xW9zn+yJ7d37oM1EZPpmNDamtf33G8ZhlQEJVgFvbKLmMe5MY7ZGD8XSFXYmPV93t8Q8kQJH/8Lgkf89yLGVqEMFpZQvLjvBAubk84IpYZPqNvH5WMoHre1Pn0kDY+PTdYAz/LLFwynQKg9QZ4FdmfB3HBbFWIK1LQrHqv19JjObAfB3JKFnzrc+Mzzsrwf4mTr1FJsrRI+ZjUgLnDxeZNlbfe/GRFNhy49k57ljD0YhGwLvgsNDY51wmEBi8AraTrrT4h7JSMb2LKFLQDO43LIhw==
-Received: from [127.0.1.1] ([103.28.246.124])
-        by smtp.gmail.com with ESMTPSA id y189-20020a62cec6000000b006e0d1e6036bsm6674283pfg.129.2024.02.14.03.46.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Feb 2024 03:46:14 -0800 (PST)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Date: Wed, 14 Feb 2024 17:16:09 +0530
-Subject: [PATCH v3] PCI: Add D3 support for PCI bridges in DT based
- platforms
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="YA70RvpR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1707911198;
+	bh=jvl3Y+wH/gfbOOMoVy7joBUO4CawoZUoJ7kw1HD0z/U=;
+	h=From:Subject:Date:To:Cc:From;
+	b=YA70RvpRZSuQsZE/wvgVmxVw45f0rXLs1tzxXs8bLKLUP9AAeBHDmszfK4g7Z9rzM
+	 pH6rRBh3vkUoWFAlaD6C0kde9ObclosTzemb+pih8zB2DTRmYucPsoABSUiZZRb+k2
+	 7fMkq/pk01jgSz2yyrwPzaxAbvFbAYGutm4b5VpNCaDYqygBOMrhPCyGuw2nifwT9s
+	 ymoZZi+WYj0afGQzgYIQfgcauusscL0U6I9Sw3UDsXy4nDj1nby0dZ63kmeVLOx5kX
+	 wXd/yjUWOlJILX0Loah1ucl3ufmj5z5TFF6CC5z+clt+x7LLH2YzsANmoVgnvhT7kJ
+	 SXoYHO42DCx8g==
+Received: from localhost (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id BF758378045F;
+	Wed, 14 Feb 2024 11:46:37 +0000 (UTC)
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Subject: [PATCH v4 0/2] Add support for RK3588 HDMI/eDP Combo PHY
+Date: Wed, 14 Feb 2024 13:45:35 +0200
+Message-Id: <20240214-phy-hdptx-v4-0-e7974f46c1a7@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,141 +44,77 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240214-pcie-qcom-bridge-v3-1-3a713bbc1fd7@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAACozGUC/3WOQQ6CMBBFr2K6tqbTIi2uvIdh0dICkyjF1hAN4
- e4WdIEJLv+fvPdnJNEFdJGcdiMJbsCIvktB7HekanXXOIo2ZcIZzxgIoH2Fjt4rf6MmoE13kyv
- GdSEl04IkrA+uxueivJQptxgfPryWhQHm9iPjbEM2AGW0dk4W0tTmyOT5ip0O/uBDM8u/JP9DZ
- rmVUhVK5BVbk/MfA19tQ7Zh4BRoYW1ujQGj4Ge7nKbpDWmfCRotAQAA
-To: Bjorn Helgaas <bhelgaas@google.com>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>
-Cc: Lukas Wunner <lukas@wunner.de>, 
- Mika Westerberg <mika.westerberg@linux.intel.com>, quic_krichai@quicinc.com, 
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3809;
- i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=iaFhux7+ftCQreqL4+9rxGj5oghyh3WmJyVki73C+Bc=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBlzKgCyomV+XS6Wz5pwRsl7Pq4qvnDSmu3D+FVx
- gggOTH/97qJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZcyoAgAKCRBVnxHm/pHO
- 9R9nB/9dmzL8gNylVCHcQQfkMcfyzrnKwuvQ6ASSQ3DXHhdDWw08KgwxD3Cfm2G0GLZo08Mj+me
- hoIqviztRLCA/stpX3XDSqhoOlbECFUuWumoXrdjWd6JskL5rhljSyu7ol51qEkD/9NpmfolqIJ
- S+Al6CQJP6OluE7WZI1vtTCMHLJ+cF/bicicceBSerjNdIh6/ziBvs9yhytrODKmS3bvBvN5bwV
- ogNqJLvo5Qxb2MDslQNdwKQZhF5/JlONMqQbmB+5RTY/ltCESJ7kIYq/u9xwBBm3OucAMZGPYZJ
- VGflmQpHGohZagBRbBwV2grEKa5LnPHdZ831PQWQD0vzUcf/
-X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
+X-B4-Tracking: v=1; b=H4sIAN+nzGUC/6WPQY7CMAxFr4KyxpWdhpKy4h5oFiYxJFJpqrSqQ
+ Kh3n5TNVKPZzfLL/z3bbzVKjjKq0+6tssxxjKkvwex3ygXu7wLRl6w0aoOkLQzhBcEP0xMst5a
+ vDXqyokp/yHKLz4/r8lXyLacHTCELbwzUUltbbCrCGjUZIHA5jlPkvnIxOe4m4bNLXcfXlLly6
+ bG6Q6mk/PqcOdO64R++9bhZ/0g0HjZvzRoQ+EgHtGQcmuNfdL2hSW/putDaeWksOl/mv+llWb4
+ Bo3cFUXUBAAA=
+To: Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Johan Jonker <jbx6244@gmail.com>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, Andy Yan <andy.yan@rock-chips.com>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Algea Cao <algea.cao@rock-chips.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-phy@lists.infradead.org, kernel@collabora.com, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.13-dev-a684c
 
-Currently, PCI core will enable D3 support for PCI bridges only when the
-following conditions are met:
+Add driver and bindings to add initial support the Rockchip HDMI/eDP TX
+Combo PHY found on RK3588 SoC.
 
-1. Platform is ACPI based
-2. Thunderbolt controller is used
-3. pcie_port_pm=force passed in cmdline
+The PHY is based on a Samsung IP block and supports HDMI 2.1 TMDS, FRL
+and eDP links.
 
-While options 1 and 2 do not apply to most of the DT based platforms,
-option 3 will make the life harder for distro maintainers. Due to this,
-runtime PM is also not getting enabled for the bridges.
+Please note that currently only the TMDS related functionality has been
+implemented.  This has been tested on Radxa ROCK 5B and Rockchip EVB1
+boards.
 
-To fix this, let's make use of the "supports-d3" property [1] in the bridge
-DT nodes to enable D3 support for the capable bridges. This will also allow
-the capable bridges to support runtime PM, thereby conserving power.
-
-Ideally, D3 support should be enabled by default for the more recent PCI
-bridges, but we do not have a sane way to detect them.
-
-[1] https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/pci/pci-pci-bridge.yaml#L31
-
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
-This patch is tested on Qcom SM8450 based development board with an out-of-tree
-DT patch.
-
-NOTE: I will submit the DT patches adding this property for applicable bridges
-in Qcom SoCs separately.
+Changes in v4:
+- Used consistent naming by replacing hdptx_*/rockchip_* with rk_hdptx_*
+  (Johan)
+- Link to v3:
+  https://lore.kernel.org/r/20240212-phy-hdptx-v3-0-2cde680cd024@collabora.com
 
 Changes in v3:
-- Fixed kdoc, used of_property_present() and dev_of_node() (Lukas)
-- Link to v2: https://lore.kernel.org/r/20240214-pcie-qcom-bridge-v2-1-9dd6dbb1b817@linaro.org
+- Collected R-b & T-b tags from Heiko
+- Converted all *_REG() args to lowercase (Vinod)
+- Dropped unnecessary register read/write wrappers (Vinod)
+- Added rate overflow check in hdptx_phy_clk_pll_calc() (Luis)
+- Link to v2:
+  https://lore.kernel.org/r/20240205-phy-hdptx-v2-0-a7150814c047@collabora.com
 
 Changes in v2:
-- Switched to DT based approach as suggested by Lukas.
-- Link to v1: https://lore.kernel.org/r/20240202-pcie-qcom-bridge-v1-0-46d7789836c0@linaro.org
----
- drivers/pci/of.c  | 12 ++++++++++++
- drivers/pci/pci.c |  3 +++
- drivers/pci/pci.h |  6 ++++++
- 3 files changed, 21 insertions(+)
-
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index 51e3dd0ea5ab..24b0107802af 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -786,3 +786,15 @@ u32 of_pci_get_slot_power_limit(struct device_node *node,
- 	return slot_power_limit_mw;
- }
- EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
-+
-+/**
-+ * of_pci_bridge_d3 - Check if the bridge is supporting D3 states or not
-+ *
-+ * @node: device tree node of the bridge
-+ *
-+ * Return: %true if the bridge is supporting D3 states, %false otherwise.
-+ */
-+bool of_pci_bridge_d3(struct device_node *node)
-+{
-+	return of_property_present(node, "supports-d3");
-+}
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index d8f11a078924..8678fba092bb 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1142,6 +1142,9 @@ static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
- 	if (pci_use_mid_pm())
- 		return false;
- 
-+	if (dev_of_node(&dev->dev))
-+		return of_pci_bridge_d3(dev->dev.of_node);
-+
- 	return acpi_pci_bridge_d3(dev);
- }
- 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 2336a8d1edab..10387461b1fe 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -635,6 +635,7 @@ int of_pci_get_max_link_speed(struct device_node *node);
- u32 of_pci_get_slot_power_limit(struct device_node *node,
- 				u8 *slot_power_limit_value,
- 				u8 *slot_power_limit_scale);
-+bool of_pci_bridge_d3(struct device_node *node);
- int pci_set_of_node(struct pci_dev *dev);
- void pci_release_of_node(struct pci_dev *dev);
- void pci_set_bus_of_node(struct pci_bus *bus);
-@@ -673,6 +674,11 @@ of_pci_get_slot_power_limit(struct device_node *node,
- 	return 0;
- }
- 
-+static inline bool of_pci_bridge_d3(struct device_node *node)
-+{
-+	return false;
-+}
-+
- static inline int pci_set_of_node(struct pci_dev *dev) { return 0; }
- static inline void pci_release_of_node(struct pci_dev *dev) { }
- static inline void pci_set_bus_of_node(struct pci_bus *bus) { }
+- Rebased series onto next-20240129
+- Removed patch 'dt-bindings: soc: rockchip: Add rk3588 hdptxphy syscon'
+  already applied by Heiko
+- For consistency with SoC TRM, replaced all references to DP with eDP
+- Updated PHY schema per Krzysztof's review; also collected his R-b tag
+- Dropped FRL, EARC and 10-bit color depth functionality until the HDMI
+  configuration options become available in PHY API
+- Squashed lots of regmap_write operations via regmap_multi_reg_write
+  (Sebastian)
+- Introduced parametrized {CMN|SB|LNTOP|LANE}_REG() macros to replace
+  the long list of register defines
+- Optimized handling of the config arrays by using ARRAY_SIZE() (Sascha)
+- Link to v1:
+  https://lore.kernel.org/r/20240119193806.1030214-1-cristian.ciocaltea@collabora.com
 
 ---
-base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
-change-id: 20240131-pcie-qcom-bridge-b6802a9770a3
+Cristian Ciocaltea (2):
+      dt-bindings: phy: Add Rockchip HDMI/eDP Combo PHY schema
+      phy: rockchip: Add Samsung HDMI/eDP Combo PHY driver
 
-Best regards,
--- 
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+ .../bindings/phy/rockchip,rk3588-hdptx-phy.yaml    |   91 ++
+ drivers/phy/rockchip/Kconfig                       |    8 +
+ drivers/phy/rockchip/Makefile                      |    1 +
+ drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c  | 1028 ++++++++++++++++++++
+ 4 files changed, 1128 insertions(+)
+---
+base-commit: 596764183be8ebb13352b281a442a1f1151c9b06
+change-id: 20240128-phy-hdptx-8a98ab60d18e
 
