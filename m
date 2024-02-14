@@ -1,160 +1,91 @@
-Received: from gepdcl09.sg.gdce.sony.com.sg (unknown [121.100.38.198])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D70171A3;
-	Wed, 14 Feb 2024 11:29:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.100.38.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94CF1199BA
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 11:29:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707910182; cv=none; b=N9KURrlt9xo+kDgJditJbIeBtE8qKV3EtEVDDlfIpw4h5c3U5dTkOYxIVzan4lb63opmaOXCCwePCY04XErp63Q8067BuxlPwc0phEXptYfL6kGlsnawIntXLCb0+G8N3l182fWqTjxR2XTmbjCtKcH+8NIN9RQCaDuFhejOW0w=
+	t=1707910183; cv=none; b=QTWpzm+pZbKGrgDZHlvOWdQ/KYChbJFWlneKJb73+5tfww7S8UNfFSg/b/16xYKiONTljG7sCw68T2rB4uvo3GEOKdYxei1HCXmMHU+26EdAc5CTWC09Xr3D46XAAHdAMfu7dOx+aSRcexW7czq/T2Rnxagm+G7NhTio3ahJt2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707910182; c=relaxed/simple;
-	bh=3t2GII+GFBiCVO0yfeqLOOLESh/DgusqChhhZZZl7tk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R3lq81YZeNR2jWn28OxDcXUBoftpmrZzRYP9Iq483kclCtqp84c2/Qz4cKURMTdsSm/1KeXrKT5QZEqSIkMC+xPYxyoHgONmbRVAa7UDBZEgTjsNf+kTjcx0jl3UbXZ/GNaKbRVPQgiMBoPvh5/qtYh2TFBh2EiNnR9CbnKk3T8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sony.com; spf=fail smtp.mailfrom=sony.com; arc=none smtp.client-ip=121.100.38.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=sony.com
-Received: from gepdcl04.s.gdce.sony.com.sg (SGGDCSE1NS08.sony.com.sg [146.215.123.198])
-	by gepdcl09.sg.gdce.sony.com.sg (8.14.7/8.14.4) with ESMTP id 41EAgcpk007668;
-	Wed, 14 Feb 2024 18:44:09 +0800
-Received: from mail.sony.com ([43.88.80.246])
-	by gepdcl04.s.gdce.sony.com.sg (8.14.7/8.14.4) with ESMTP id 41EAg5SS002885;
-	Wed, 14 Feb 2024 18:42:05 +0800
-Received: by mail.sony.com (Postfix, from userid 1000)
-	id 367FD20C089D; Wed, 14 Feb 2024 16:10:39 +0530 (IST)
-Date: Wed, 14 Feb 2024 16:10:39 +0530
-From: Sreenath Vijayan <sreenath.vijayan@sony.com>
-To: Petr Mladek <pmladek@suse.com>
-Cc: john.ogness@linutronix.de, corbet@lwn.net, gregkh@linuxfoundation.org,
-        jirislaby@kernel.org, rdunlap@infradead.org, rostedt@goodmis.org,
-        senozhatsky@chromium.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-        taichi.shimoyashiki@sony.com, daniel.palmer@sony.com,
-        anandakumar.balasubramaniam@sony.com
-Subject: Re: [PATCH v4 2/2] tty/sysrq: Dump printk ring buffer messages via
- sysrq
-Message-ID: <ZcyYp4eZsrrrunFj@sony.com>
-References: <cover.1706772349.git.sreenath.vijayan@sony.com>
- <ca8dd18e434f309612c907d90e9f77c09e045b37.1706772349.git.sreenath.vijayan@sony.com>
- <ZcOdLrOPiPJmCec5@alley>
+	s=arc-20240116; t=1707910183; c=relaxed/simple;
+	bh=f8ggq14jVYuQQrAMubcEH8iyKz3Jg3aj+r85czftW7g=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=WmfaKqoBWpvE3sMbltKBiTx9yHgK+Uh/9mtwGFp6sw7xSJqEpRyjlGxvf2e+/XHdCAn+4XsyD1dqE3LdbpdPYp0dC74YSM1c0HwYEkY22gy1oHjklK31GkSQ2m46158NJKokvwwmuQl5RkGTZ1BjPA8nSoelsBNIPcPjVgB/IpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Lk5MkD+w; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=weoa5/wF; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Lk5MkD+w";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="weoa5/wF"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1707910179;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8s6CHToFBHYnZYfXO7kp5Ap94jmYkYkIJg/kOerPzD8=;
+	b=Lk5MkD+wMhus0vMIdV/IQG0l3Qi8Qnq97uWx04fNdmYngnbVD+m+QRNxd7875uccAzy9b4
+	3FxttNGVb+Vqt9Zlmj+elYpkUi/VMiSazXZB1tg/lRYeQm+nHK/4e5fcpWhQBrFxY644l1
+	AmELuNJ6StMD4l4Nx65ofOm5Vwj3zPyRYPPNzXvWQXtD0fCCfsJ+VRjsNBQyH7+mkDlnLg
+	+UjYFdWSbWr+g8OKR6n+bX+vPeilYV6amd1fnQFqVDvC73vHsTFb+UVz4dsWf5KneP7aXy
+	gwMQqVhJTK7AlpsmrNx3OjH0nZjXAXfHbFfW5/g6icMdXLaGXiNbxUhyUbHwLA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1707910179;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8s6CHToFBHYnZYfXO7kp5Ap94jmYkYkIJg/kOerPzD8=;
+	b=weoa5/wF//9GIHPNbQ+v8nr+cMA2CCtYPaOMDPMvnMXZS91vz+Ue5M4yah/yObX34ACgmA
+	ZHgd84BWYNRo0+Bg==
+To: Pranav Prasad <pranavpp@google.com>, jstultz@google.com, sboyd@kernel.org
+Cc: linux-kernel@vger.kernel.org, krossmo@google.com, Pranav Prasad
+ <pranavpp@google.com>
+Subject: Re: [PATCH v3 1/2] alarmtimer: Add PM notifier to check early for
+ imminent alarm
+In-Reply-To: <20240214092902.1908443-2-pranavpp@google.com>
+References: <20240214092902.1908443-1-pranavpp@google.com>
+ <20240214092902.1908443-2-pranavpp@google.com>
+Date: Wed, 14 Feb 2024 12:29:38 +0100
+Message-ID: <87mss3ffml.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZcOdLrOPiPJmCec5@alley>
+Content-Type: text/plain
 
-On Wed, Feb 07, 2024 at 04:09:34PM +0100, Petr Mladek wrote:
-> On Thu 2024-02-01 13:12:41, Sreenath Vijayan wrote:
-> > When terminal is unresponsive, one cannot use dmesg to view printk
-> > ring buffer messages. Also, syslog services may be disabled,
-> > to check the messages after a reboot, especially on embedded systems.
-> > In this scenario, dump the printk ring buffer messages via sysrq
-> > by pressing sysrq+D.
-> 
-> I would use sysrq-R and say that it replays the kernel log on
-> consoles.
-> 
-> The word "dump" is ambiguous. People might thing that it calls
-> dmesg dumpers.
->
+On Wed, Feb 14 2024 at 09:29, Pranav Prasad wrote:
+> +static int alarmtimer_pm_callback(struct notifier_block *nb,
+> +				  unsigned long mode, void *_unused)
+> +{
+> +	struct rtc_device *rtc;
+> +	ktime_t min, expires;
+> +	int type;
+> +
+> +	switch (mode) {
+> +	case PM_SUSPEND_PREPARE:
+> +		rtc = alarmtimer_get_rtcdev();
+> +		/* If we have no rtcdev, just return */
+> +		if (!rtc)
+> +			return NOTIFY_DONE;
+> +
+> +		/* Find the soonest timer to expire */
+> +		if (!alarmtimer_get_soonest(&min, &expires, &type))
+> +			return NOTIFY_DONE;
 
-Ok noted. We proposed sysrq-D as it is an alternative to dmesg
-command and might be easier to remember.
- 
-> Also the messages would be shown on the terminal only when
-> console_loglevel is set to show all messages. This is done
-> in __handle_sysrq(). But it is not done in the workqueue
-> context.
-> 
+Brilliant. Instead of a NULL pointer dereference you decided to add
+undefined behaviour this time.
 
-Yes, the initial implementation was using write() of consoles
-so the messages would be shown irrespective of the console log
-level. The current implementation depends on the console log
-level but many other sysrq keys dump the messages at KERN_INFO
-level. In my understanding, __handle_sysrq() dumps only the
-sysrq header at the manipulated loglevel. It restores original
-loglevel before calling callback function for the key.
-If console_loglevel is set to show KERN_INFO messages, it would
-dump most of the important printk messages in our case. Also the
-loglevel can be modified using sysrq itself now.
+As it survived your "testing" it is obviously correct, right?
 
-> Finally, the commit message should explain why workqueues are used
-> and what are the limitations. Something like:
-> 
-> <add>
-> The log is replayed using workqueues. The reason is that it has to
-> be done a safe way (in compare with panic context).
-> 
-> This also means that the sysrq won't have the desired effect
-> when the system is in so bad state that workqueues do not
-> make any progress.
-> </add>
-> 
-> Another reason might be that we do not want to do it in
-> an interrupt context. But this reason is questionable.
-> Many other sysrq commands do a complicate work and
-> print many messages as well.
->
+I'm tired of your approach to throw stuff at the wall in a hurry and see
+what sticks.
 
-Noted. Will add this if we proceed with workqueue implementation.
- 
-> Another reason is that the function need to use console_lock()
-> which can't be called in IRQ context. Maybe, we should use
-> console_trylock() instead.
-> 
-> The function would replay the messages only when console_trylock()
-> succeeds. Users could repeat the sysrq when it fails.
-> 
-> Idea:
-> 
-> Using console_trylock() actually might be more reliable than
-> workqueues. console_trylock() might fail repeatably when:
-> 
->     + the console_lock() owner is stuck. But workqueues would fail
->       in this case as well.
-> 
->     + there is a flood of messages. In this case, replaying
->       the log would not help much.
-> 
-> Another advantage is that the consoles would be flushed
-> in sysrq context with the manipulated console_loglevel.
-> 
-> Best Regards,
-> Petr
+Stop this frenzy. Sit down, take your time and do proper engineering
+before coming back with this to me.
 
-Yes, this seems to work well from interrupt context when the
-console lock owner is not stuck. We can also manipulate
-the console_loglevel. Something like this:
+Thanks,
 
-//in printk.c
-void console_replay_all(void)
-{
-       if (console_trylock()) {
-               __console_rewind_all();
-               console_unlock();
-       }
-}
+        tglx
 
-//in sysrq.c
-static void sysrq_handle_dmesg_dump(u8 key)
-{
-       int orig_log_level = console_loglevel;
-       console_loglevel = CONSOLE_LOGLEVEL_DEFAULT;
-       console_replay_all();
-       console_loglevel = orig_log_level;
-}
-
-
-The downside I see is that the user may have to hit the
-key multiple times or give up trying if the console lock
-owner is busy at the time of key press. This information
-should probably be updated in the documentation.
-
-Please let me know your opinion.
-
-Regards,
-Sreenath
