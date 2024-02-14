@@ -1,216 +1,118 @@
-Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFEB5C5F5;
-	Wed, 14 Feb 2024 14:36:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 567B55C5F6;
+	Wed, 14 Feb 2024 14:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707921395; cv=none; b=Tq5QDAfFUc5G8AqaM4kJgFiwkQ6cnyOFfX9WKFnhUpodsxTfYSAHlxBqzCg2B79HtJnwiUYgBYGP8pjbDBJB2JUEfQec57TKxZhSLqZlTAW/k9XkNXmeYJ34dbFPuXw9XU1KuGdcyCckMjFExMO3HDVIBbziceI3Z6LHA/yiMeg=
+	t=1707921399; cv=none; b=Ag2TdIJHmZ4uc+RQks39rJjzDXyeoK72pSD5sYI1dGGG3LheOiwWB8kfSFfiEhBsh1Lq4rd84g6d3Q/kQmDr++7O7aw5H6g92Amt0qvXogzZIGMoEZ3+DRntmY1HzFu1Cr+icstBXF6TSy4O604FHCD0e2XPfd42yq3CJD/SrKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707921395; c=relaxed/simple;
-	bh=oLZ9wOA6NVpig03PzhNNbgTCZou0ABsvYJpJlIUh/2Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=t5jwHJZgBry4K1B0pu9sXVJOfYOLXovy7UFH3QqNz0PLVsWIrR9pfHc+MCS2uHg3jMMdcOspbBN1Ppr7Aca0MHdK1pgk+OlUsq8qXDwTZ7xbs4BBhB8LnWFMz2RIozgjMlieVKL7NuKM67mymjyffH84XDhYoeCKh4L9ZbI8/N0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.29])
-	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4TZgJ347QZz9xvNG;
-	Wed, 14 Feb 2024 22:17:23 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id 8AF20140DDD;
-	Wed, 14 Feb 2024 22:36:29 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.204.63.22])
-	by APP1 (Coremail) with SMTP id LxC2BwDXgRrHz8xlZ55_Ag--.52204S4;
-	Wed, 14 Feb 2024 15:36:28 +0100 (CET)
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: corbet@lwn.net,
-	zohar@linux.ibm.com,
-	dmitry.kasatkin@gmail.com,
-	eric.snowberg@oracle.com,
-	paul@paul-moore.com,
-	jmorris@namei.org,
-	serge@hallyn.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-integrity@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	wufan@linux.microsoft.com,
-	pbrobinson@gmail.com,
-	zbyszek@in.waw.pl,
-	hch@lst.de,
-	mjg59@srcf.ucam.org,
-	pmatilai@redhat.com,
-	jannh@google.com,
-	dhowells@redhat.com,
-	jikos@kernel.org,
-	mkoutny@suse.com,
-	ppavlu@suse.com,
-	petr.vorel@gmail.com,
-	petrtesarik@huaweicloud.com,
-	mzerqung@0pointer.de,
-	kgold@linux.ibm.com,
-	Roberto Sassu <roberto.sassu@huawei.com>
-Subject: [RFC][PATCH 2/8] ima: Nest iint mutex for DIGEST_LIST_CHECK hook
-Date: Wed, 14 Feb 2024 15:35:18 +0100
-Message-Id: <20240214143525.2205481-3-roberto.sassu@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240214143525.2205481-1-roberto.sassu@huaweicloud.com>
-References: <20240214143525.2205481-1-roberto.sassu@huaweicloud.com>
+	s=arc-20240116; t=1707921399; c=relaxed/simple;
+	bh=9s+3bWSnic4DE8OGfUz8obCTSG7tBE8fyRjkpHHqq/o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gF6T1MBVrpw26dByp2xKFUNFCcbaJLJZ9vtz7zVACB93llAASyWKYhG0Lewi0+iaBLeUO8PoHqBctR1oUWAhQm69QFPQMCvk1ZtH1c8W94iYF34k0wyTTqtRg2MdvTVO5w6PzBfrRLhA+hXgR7B1IoBtmY9wxPkNcDeSGFColdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6e1126f57f1so253272b3a.2;
+        Wed, 14 Feb 2024 06:36:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707921396; x=1708526196;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ieRFgVX+l5qNLg5VWXa9Hrv9zNfV92pS7+FucPfjsp8=;
+        b=TIn6iGB8ztOQMIJCtg7bls9/hfdwhL5nKJ4mTSgnahoN4DPkAYtB9Ny44lN1c30Lnz
+         MhRdswMstMSVBIPpS8IXy1b52kAVTvYkBymq5VBk26OUoG+BB+NzPOERQryO3cN5+6i6
+         tYrZnFS4fkb3awHJvp6EVK9CnOkgkWoZq+egJrsJIaOqEWEI4U90aQpg+SPuPEgur59w
+         fM1s5etn763y0c6vq8Q683xC0cnFLCjKwWjIQNqSclnu///tHgsPNliPkey0pA34KzU3
+         DqdoZ5QfxHxAai1Lw91z6cH0STnWuRllBJa5xAIOjkR1F4WtMukwYcfx3HXWKtRsutAx
+         y7AQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXU5wQ7h4awE2K4u3EdoXwVfN0iTriYIsOL4yqfwdvzD1/o5Y0ITyGvMaBo61uy9pr+EW3GtS/1GaRe+RivheVbai5uW2t3kqN/2x65ubIsLMc+xBDTZt4XtQOxrio1ShPXc8nGNUZvZ2vy51nN1hdYXpluySBMETdKPNkNyfg4QuBBqH+GUcqkiXhoOITnvcJjrW+3A+p09unzwk1QWIfKy0lMUymGmMn582CvXzEB+HM4+ROXr6YbyiEMUfLJN4hkUTpQ21cqBfvzhgLXgJB6eaVPS3WHyP2l0R8EL+K5EfCHIa0D6KqP09ojpUmdIBZRAGP3Ps6WbVABkU4s4cfTbQ==
+X-Gm-Message-State: AOJu0YznFu3p6BnZPrBY6N+HSQPzlRAt9wG11h1KZ47bpK168Y/ydT9P
+	vKe9Xr5U4nSTbu4T6weYMPoA+QZjCdOu4r5uILFHMFU6aURBwx3WPEQT0BcwnEE=
+X-Google-Smtp-Source: AGHT+IFFthSxEtonVcXe87bmhUo29Pvsbr76NaU5tedM998ASq+hhSiMEVbXD23MUhFikYczz43kMg==
+X-Received: by 2002:a62:cfc1:0:b0:6e0:9e95:b3f8 with SMTP id b184-20020a62cfc1000000b006e09e95b3f8mr2324722pfg.9.1707921395714;
+        Wed, 14 Feb 2024 06:36:35 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXiXj8laBX/0QpFfAU4AHfZrChi3AZvxbSiqzlknIyB0GjNrpDnP9OJpYeVZqli80RsNWDywVErwazZ9oH9+sK90qpRtHOpXS89vzIIsoBnAHvA90ftvO8uFHPfYiFPO5Ss0Om+6wBItmwQC/rGykolO4ytM0OqiFb4sXYTFkfc1N1YkmnkVSkpH7V2Q+F/0soF0Hjg+udc4goR9kb6nK3ZdkF2Jka71ipF4Ju6CiVFtSKqbXW8btVafOxRbiMzS71/z4Ev5/H3Q3xyP7mjD2H63r43A6hwdfFzN0YPh50fRitSP9wfFlZzWpMNcDWRMJMHZgcGXxjm3oYo5L7cdlgl8A==
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com. [209.85.214.169])
+        by smtp.gmail.com with ESMTPSA id a16-20020aa780d0000000b006e0825acbc3sm9321977pfn.77.2024.02.14.06.36.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Feb 2024 06:36:35 -0800 (PST)
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1db51e55023so6923745ad.1;
+        Wed, 14 Feb 2024 06:36:35 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWtmGx2z2ck1NE7BFwLs8WgYpa13xWvvwC1Yuyo9C6gcWyrXqUUk4tGlw5D675zE6oGRA9mIcz/HhoNGNsSS2QOYeKmvCorzzpsD7mkQ5mJikfjkk/dx5cy+7o5W39ecsRG8Md9UXejzkS4ikb4pJPphIuBVUddh5zvQZ/y/ScYi8A3+TjzEZbavf/9k4d2XBnyaDR+TJCy2eW2fXu2nXOgibu+C2xLs6APZ1h/ORaMxOUiw4VYIAscAtVjJJIlPC/2X8P8P+vqlHY5DefKyX2FfN05o4GPddY62Hj6+q4G11cbfyUyFucz/lG+R1RTZ28ACxG/JcrSmNd8dzgqOXmE8A==
+X-Received: by 2002:a25:8686:0:b0:dc7:4546:d107 with SMTP id
+ z6-20020a258686000000b00dc74546d107mr2758581ybk.23.1707921374648; Wed, 14 Feb
+ 2024 06:36:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:LxC2BwDXgRrHz8xlZ55_Ag--.52204S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxCFy8AF1fuF4rXF1xZry7Wrg_yoW7JFy7pF
-	ZFqa4DJ3s8XFZ7ur4rta9rZryfKFykWFW8Gw45Cw1vyFn8Jr1FqF18try29Fy3CrWFy3WI
-	vr4qgw4DZ3Wjyr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWl
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI
-	8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwAC
-	jcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0x
-	kIwI1lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
-	AY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAI
-	cVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
-	IF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnI
-	WIevJa73UjIFyTuYvjTRRCJPDUUUU
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQANBF1jj5pZHAAAsm
+References: <20240213-arm-dt-cleanups-v1-0-f2dee1292525@kernel.org> <20240213-arm-dt-cleanups-v1-3-f2dee1292525@kernel.org>
+In-Reply-To: <20240213-arm-dt-cleanups-v1-3-f2dee1292525@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 14 Feb 2024 15:36:03 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXjJcsFiusnBQmJg1p-oy-NPmr+qyt0znOk0n+wL8TrnA@mail.gmail.com>
+Message-ID: <CAMuHMdXjJcsFiusnBQmJg1p-oy-NPmr+qyt0znOk0n+wL8TrnA@mail.gmail.com>
+Subject: Re: [PATCH 3/6] arm64: dts: Fix dtc interrupt_provider warnings
+To: Rob Herring <robh@kernel.org>
+Cc: soc@kernel.org, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Tsahee Zidenberg <tsahee@annapurnalabs.com>, Antoine Tenart <atenart@kernel.org>, 
+	Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@codeconstruct.com.au>, 
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Gregory Clement <gregory.clement@bootlin.com>, 
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
+	=?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Stefan Agner <stefan@agner.ch>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, 
+	Tony Lindgren <tony@atomide.com>, Chanho Min <chanho.min@lge.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Linus Walleij <linusw@kernel.org>, Imre Kaloz <kaloz@openwrt.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, linux-arm-kernel@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, 
+	linux-tegra@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-omap@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Roberto Sassu <roberto.sassu@huawei.com>
+On Tue, Feb 13, 2024 at 8:35=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
+:
+> The dtc interrupt_provider warning is off by default. Fix all the warning=
+s
+> so it can be enabled.
+>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Invoking digest_cache_get() inside the iint->mutex critical region can
-cause deadlocks due to the fact that IMA can be recursively invoked for
-reading the digest list. The deadlock would occur if the digest_cache LSM
-attempts to read the same inode that is already locked by IMA.
+>  arch/arm64/boot/dts/renesas/ulcb-kf.dtsi            | 4 ++++
 
-However, since the digest_cache LSM makes sure that the above situation
-never happens, as it checks the inodes, it is safe to call
-digest_cache_get() inside the critical region and nest the iint->mutex
-when the DIGEST_LIST_CHECK hook is executed.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Add a lockdep subclass to the iint->mutex, that is 0 if the IMA hook
-executed is not DIGEST_LIST_CHECK, and 1 when it is. Since lockdep allows
-nesting with higher classes and subclasses, that effectively eliminates the
-warning about the unsafe lock.
+Gr{oetje,eeting}s,
 
-Pass the new lockdep subclass (nested variable) from ima_inode_get() to
-ima_iint_init_always() and ima_iint_lockdep_annotate().
+                        Geert
 
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
----
- security/integrity/ima/ima.h      |  2 +-
- security/integrity/ima/ima_iint.c | 11 ++++++-----
- security/integrity/ima/ima_main.c |  6 +++---
- 3 files changed, 10 insertions(+), 9 deletions(-)
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index cea4517e73ab..c9140a57b591 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -216,7 +216,7 @@ static inline void ima_inode_set_iint(const struct inode *inode,
- }
- 
- struct ima_iint_cache *ima_iint_find(struct inode *inode);
--struct ima_iint_cache *ima_inode_get(struct inode *inode);
-+struct ima_iint_cache *ima_inode_get(struct inode *inode, bool nested);
- void ima_inode_free(struct inode *inode);
- void __init ima_iintcache_init(void);
- 
-diff --git a/security/integrity/ima/ima_iint.c b/security/integrity/ima/ima_iint.c
-index e7c9c216c1c6..b4f476fae437 100644
---- a/security/integrity/ima/ima_iint.c
-+++ b/security/integrity/ima/ima_iint.c
-@@ -41,7 +41,7 @@ struct ima_iint_cache *ima_iint_find(struct inode *inode)
-  * See ovl_lockdep_annotate_inode_mutex_key() for more details.
-  */
- static inline void ima_iint_lockdep_annotate(struct ima_iint_cache *iint,
--					     struct inode *inode)
-+					     struct inode *inode, bool nested)
- {
- #ifdef CONFIG_LOCKDEP
- 	static struct lock_class_key ima_iint_mutex_key[IMA_MAX_NESTING];
-@@ -56,7 +56,7 @@ static inline void ima_iint_lockdep_annotate(struct ima_iint_cache *iint,
- }
- 
- static void ima_iint_init_always(struct ima_iint_cache *iint,
--				 struct inode *inode)
-+				 struct inode *inode, bool nested)
- {
- 	iint->ima_hash = NULL;
- 	iint->version = 0;
-@@ -69,7 +69,7 @@ static void ima_iint_init_always(struct ima_iint_cache *iint,
- 	iint->ima_creds_status = INTEGRITY_UNKNOWN;
- 	iint->measured_pcrs = 0;
- 	mutex_init(&iint->mutex);
--	ima_iint_lockdep_annotate(iint, inode);
-+	ima_iint_lockdep_annotate(iint, inode, nested);
- }
- 
- static void ima_iint_free(struct ima_iint_cache *iint)
-@@ -82,13 +82,14 @@ static void ima_iint_free(struct ima_iint_cache *iint)
- /**
-  * ima_inode_get - Find or allocate an iint associated with an inode
-  * @inode: Pointer to the inode
-+ * @nested: Whether or not the iint->mutex lock can be nested
-  *
-  * Find an iint associated with an inode, and allocate a new one if not found.
-  * Caller must lock i_mutex.
-  *
-  * Return: An iint on success, NULL on error.
-  */
--struct ima_iint_cache *ima_inode_get(struct inode *inode)
-+struct ima_iint_cache *ima_inode_get(struct inode *inode, bool nested)
- {
- 	struct ima_iint_cache *iint;
- 
-@@ -100,7 +101,7 @@ struct ima_iint_cache *ima_inode_get(struct inode *inode)
- 	if (!iint)
- 		return NULL;
- 
--	ima_iint_init_always(iint, inode);
-+	ima_iint_init_always(iint, inode, nested);
- 
- 	inode->i_flags |= S_IMA;
- 	ima_inode_set_iint(inode, iint);
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index 780627b0cde7..18285fc8ac07 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -248,7 +248,7 @@ static int process_measurement(struct file *file, const struct cred *cred,
- 	inode_lock(inode);
- 
- 	if (action) {
--		iint = ima_inode_get(inode);
-+		iint = ima_inode_get(inode, func == DIGEST_LIST_CHECK);
- 		if (!iint)
- 			rc = -ENOMEM;
- 	}
-@@ -699,7 +699,7 @@ static void ima_post_create_tmpfile(struct mnt_idmap *idmap,
- 		return;
- 
- 	/* Nothing to do if we can't allocate memory */
--	iint = ima_inode_get(inode);
-+	iint = ima_inode_get(inode, false);
- 	if (!iint)
- 		return;
- 
-@@ -731,7 +731,7 @@ static void ima_post_path_mknod(struct mnt_idmap *idmap, struct dentry *dentry)
- 		return;
- 
- 	/* Nothing to do if we can't allocate memory */
--	iint = ima_inode_get(inode);
-+	iint = ima_inode_get(inode, false);
- 	if (!iint)
- 		return;
- 
--- 
-2.34.1
-
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
