@@ -1,42 +1,42 @@
 Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D5360254;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D0060269;
 	Wed, 14 Feb 2024 16:27:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707928079; cv=none; b=hSBHw7FI5SikyvRsPuVVf5/yz1j1/cD5IOmUFL5HvGjEK98TILHxDJbcpcMud1yWw2KVLsk4UY9RzLofC9kqFTTatnrNXn6EG4IYAz2MLhBnrvS8YFsnVx6YKMrSXgzZHSdDOkDZsdUxWC59slg/Tpj2r966vJSWFIJ+5yc7dYg=
+	t=1707928079; cv=none; b=YalD04PVjr4L9NnczCE9iEmGlleWD35gvgYrttcjM1HKdHrMNzSwoG+/vQcutUxkWq2iVhEdky3D3QoraTwvpj5QALerz8WVvWHDhNCvU/QFHfQoxq9Yb8luHftRFeEQHRrkQck+fko1L9oHfG5ta1EPY3AnkgVA6LF2cRAr5lE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707928079; c=relaxed/simple;
-	bh=gkzIDPBhbpsxlhS4z5fA9N1ChaypZSZnRYF85URpX9k=;
+	bh=tOmbsgpawIXduW2TWwieuZdQlagYgoHrmvJPU8bK318=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mwNmPDigjzrs1CRkwxL+aXDWAcI3MoTrlxj2uAFcqLiHVHVQraiHO6YcF+8bkVeNNXgas4HH71K3fCp/p/TDPjXSo3fgQVmybmafQXQWrdlZoM0MkopAoUGWYvwXTdxbNSdCu1IEjrSRctjm8PRHUZzB+AsUgmhrjPlenIuEspU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fZT6oWVC; arc=none smtp.client-ip=217.70.178.240
+	 In-Reply-To:To:Cc; b=pB+AX95gg2YT0oSjt0yx1hqKN9IIOfwKAj8FtiRl9OkYSJaObsdK7vAP84wNI1b3kDLaZAypW29eisGqOJDibLWI6D9bNYniKLKWbtCRzwQGvuJQQnvdTaftFGL9zb8/deXx5ld4Ot4f3oa4NxlcgAVcYu5evRE7kl576RZXJpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QQW1lvnc; arc=none smtp.client-ip=217.70.178.240
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fZT6oWVC"
-Received: from relay3-d.mail.gandi.net (unknown [217.70.183.195])
-	by mslow1.mail.gandi.net (Postfix) with ESMTP id 1BE49C38A6;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QQW1lvnc"
+Received: from relay3-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::223])
+	by mslow1.mail.gandi.net (Postfix) with ESMTP id 14C8AC386D;
 	Wed, 14 Feb 2024 16:24:55 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E90CF6000C;
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 327E16000A;
 	Wed, 14 Feb 2024 16:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1707927887;
+	t=1707927886;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=uEGVQIPYrR9p4tX/tbtVIC0DOlSZ7UXY1VMCWpcAW7w=;
-	b=fZT6oWVCx/rcP7GQqHgs39SJICb/r+M7nYb6geBYtNZi56fzkf123YVJ/3td9bkwglQrXh
-	IPGssRSe3xsLloiVNvlItB5ng6o3mnNudCRXBR0qDAlTcW9mLHdfdVDBYliBt7IX5j2Dc7
-	QO+Z4FvttrtMhSiCLSXHd6WCvT3cuRdrEyqI+WUfn79VoTqAVSK7rganJiKOIcu5ow4Crr
-	xrddk+6vH5v5vgpWgZrAWj64ECbLCaxhPUAKa8YnwSwz4SuBJb/bPtupiveoL0gjpYmiMY
-	fnsKUv/IY9O60Zl/B9VGw7GmsEACEOD1n7cSYm3IgFw9iMkipdevffzVJUxDmA==
+	bh=2CFEvn1JhSX3ZuVhzX02CCphHBNtzeocyxguNU6h7H4=;
+	b=QQW1lvnc2VCJEDYpAwqitK++pYm9ED0eRCTv7HnbOjP/XQ2QcqHBSnCBuItW9b8/QAs70F
+	xsmNgRDq2rtisOKO1VOYqBbY1BCAXFBTwCrVpr91NctL/Csp+rgHS1iica5Yu3r3un3fxw
+	ia8s/7NVImO1CBTbZVicI/PMGn4fySFdaxbzp6qAV0YzcS6PdfWFKDisZ+T0BS1AFhnZ/8
+	QDG6ob+aEP+nGt4nJcm6ciZV7gQpd8uxiUSfwHK0HSwkYLESGCgi7Z2yH2/O4e929PcDFr
+	7XZjPz4j47ScAVmsBij6ORJJ0iGlzQGmLSw4YR4zQIiRZ3Wr5UIbMU/dYk4kgw==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Wed, 14 Feb 2024 17:23:57 +0100
-Subject: [PATCH 04/23] dt-bindings: gpio: nomadik: add optional reset
- property
+Date: Wed, 14 Feb 2024 17:23:56 +0100
+Subject: [PATCH 03/23] dt-bindings: gpio: nomadik: add mobileye,eyeq5-gpio
+ compatible
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,7 +45,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240214-mbly-gpio-v1-4-f88c0ccf372b@bootlin.com>
+Message-Id: <20240214-mbly-gpio-v1-3-f88c0ccf372b@bootlin.com>
 References: <20240214-mbly-gpio-v1-0-f88c0ccf372b@bootlin.com>
 In-Reply-To: <20240214-mbly-gpio-v1-0-f88c0ccf372b@bootlin.com>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -63,27 +63,49 @@ Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
 X-Mailer: b4 0.12.4
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-Add optional reset device-tree property to the Nomadik GPIO controller.
+This GPIO controller is used on the Mobileye EyeQ5 SoC. Add its
+compatible to the dt-bindings. One difference is that the block as
+integrated on EyeQ5 does not support sleep-mode.
 
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
- Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+ .../devicetree/bindings/gpio/st,nomadik-gpio.yaml        | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml b/Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml
-index e44cf292bc6d..d104662ec445 100644
+index bbd23daed229..e44cf292bc6d 100644
 --- a/Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml
 +++ b/Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml
-@@ -56,6 +56,9 @@ properties:
-     minimum: 0
-     maximum: 32
+@@ -19,7 +19,9 @@ properties:
+     pattern: "^gpio@[0-9a-f]+$"
  
-+  resets:
-+    maxItems: 1
+   compatible:
+-    const: st,nomadik-gpio
++    enum:
++      - st,nomadik-gpio
++      - mobileye,eyeq5-gpio
+ 
+   reg:
+     maxItems: 1
+@@ -65,6 +67,18 @@ required:
+ 
+ unevaluatedProperties: false
+ 
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: st,nomadik-gpio
++    then:
++      properties:
++        st,supports-sleepmode:
++          description: Whether the controller can sleep or not.
++          $ref: /schemas/types.yaml#/definitions/flag
 +
- required:
-   - compatible
-   - reg
+ examples:
+   - |
+     gpio1: gpio@8012e080 {
 
 -- 
 2.43.1
