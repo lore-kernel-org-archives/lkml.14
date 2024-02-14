@@ -1,146 +1,173 @@
-Received: from wfout1-smtp.messagingengine.com (wfout1-smtp.messagingengine.com [64.147.123.144])
+Received: from pb-smtp21.pobox.com (pb-smtp21.pobox.com [173.228.157.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F84127B7E;
-	Wed, 14 Feb 2024 17:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B259C7C0B9;
+	Wed, 14 Feb 2024 17:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.228.157.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707931410; cv=none; b=UcBW+L9N3mpETJ0rCJzOR/K/ySzO2xFzeGRBMIxFaPeAO9rquNu7EFi3zd0qjaFc351LMmTMNFT3WjI3mFTNpopHurARR0g1uNvwDA0noq47MAchtxGVQU5UYtQv+w4Z91/7fb9DqQoJhiU+T48Qk6NBzdizHhGfsiNRDP3eUMw=
+	t=1707931459; cv=none; b=YR8IFQ2aiYs6StIRKN6III/LAXrqMjxZyqIapgGW/Wu5jPq/Kxg9kS8+JCnUU90awkUqQY2NRawvBKpwoRSj6htXTnWQdBdNQa/XvtSTJvnrEsPhxIYrWE2i0znQxrd6hwGHTZhZYdvoHSMktdH8bHKVFcC6x6Eu9FelTGiHN90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707931410; c=relaxed/simple;
-	bh=gqEfZ2kRHvUVNQMPzyx6hDHwmUUqj5fHtD/Rz18BEQA=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=esSj04JcgiWd5ujaMa3u8IOLVcIbbqf8FNNgMbRvjd4WWm+LUfrolBqq/nil0pDqBbdGHSYL1gZ/r63DVFZY9WqfP2bj3t+FpO8ZhIPG4Yu6dyrBzDcQAUYr0HXpWxq1ILYbCfbx2bgjPJcVzKZdZXKpwSdJPj8SrMPDg+tL3sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=bFxtjj5V; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=dUQQDeNV; arc=none smtp.client-ip=64.147.123.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1707931459; c=relaxed/simple;
+	bh=rtNqnQMrhTZoVIcurqvh/n552z2fKUMA1DuDPbo13Yk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ID/+0feRvKDmwZBMtjoA7DGAgvx5JuCWC44xTo3VHtkcbUK7GFijPfduT9VpVQKXKOQl8f4jfnZeylChvymiN1RiIsn0+Kdz53bWHJK+9tvCIzsDuM14weWXRU06pV94tNmDE6GscSSClbkFjTOY0uiCynx3yFciHOg7u1dAW2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pobox.com; spf=pass smtp.mailfrom=pobox.com; dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b=qJJVeZI7; arc=none smtp.client-ip=173.228.157.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pobox.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pobox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="bFxtjj5V";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dUQQDeNV"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.west.internal (Postfix) with ESMTP id 82B9F1C00080;
-	Wed, 14 Feb 2024 12:23:26 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 14 Feb 2024 12:23:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1707931406; x=1708017806; bh=y+Eh983YcJ
-	xk/dsxkD7Ix5UZbVz6STVGhdNqxRo7eIQ=; b=bFxtjj5V8SLfNb5SOG3mEwBNIg
-	huUAMTfBUWmS+RH0DxnO5Sl8y8n49N4auwlAiC2H+UQNoj2z0v7Tvx1X+2GPja94
-	S0Vq9SgAincNDRgTQXKTpW1WdLwOP/94PXVnxA9p3lJ60NmRu/BDQVmsWzIWlMBD
-	WsLr6521qelYqIEk8OST89dNnl6sKKaC+F4+q3rxrUG8GDP5TQ+5r7/HXRPkTI+9
-	9QrYVNAPKFPo8Y5gGESTOEWefMK6rMkHRTQwimqeat0ccu65T5p2/9VKvdgv7d8R
-	5PLukkvfZ0yi/IsD0I11ZcLZ57RIDb4sDhqvDrWrL/FIxC4lo7rT0++RwqWQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1707931406; x=1708017806; bh=y+Eh983YcJxk/dsxkD7Ix5UZbVz6
-	STVGhdNqxRo7eIQ=; b=dUQQDeNVUjm/GXz7mWysde/xhg7E995GTiVH6hMf+5mq
-	oHlw23juOB52LvdrLEuMBcFglFiPoZfCr7bM7jU1D4l8lEeA1/Ydc9CueT5YrTHx
-	I+zkNxD5emIHQ1hDKQ9FIiDjl65mwWnIXbK2u+OXKNMIsqA9aKuOTmopkGj3x3fA
-	04PtvchYkMmpJ4ag434tHI+DULvkl6ELnltH53lCXmS0s9B3EiEV9hONF60vBPLk
-	/9B32MDWPAAzX3KFNi8mx+MXv41+DWLRPL8YWeykMwHWyua6Bi+T35v1gHY/gUpz
-	TjiYIJNv2NtF7a38wxYDqkNL1Np3cgOPJURhk6zuPw==
-X-ME-Sender: <xms:DffMZYtQPWQJfcRC1E8ded2J768DNWvDeK_-ah5oBJlIaYq3X51Hjg>
-    <xme:DffMZVdJktaPxHkh9vTmVyKz7XfW2aYPHSlq2xWbtlnEsLGD84pPU1jnLUpMX2Sin
-    zy-FBtaSIJT3IkdziA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudejgddutdduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:DffMZTy8wc9ElqdfJvHVmUrRPQYxfiFzfaYwK8AsrXzkw0Lb2gdYtw>
-    <xmx:DffMZbN5zlial-ID2wAyfZdzi5LpmSRLXQUcIcaa9Pc7amZ_GPyBlA>
-    <xmx:DffMZY9niPhsoIsQxE-EiPCTCW3iL_mrIPM_ptFKYk5rje0KRqWuRA>
-    <xmx:DvfMZVPXjG3WRzWJicu-jlrNuW9pfrH8JGCiityRjbfHiA_StKNP3q1xohs>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 5FA83B60092; Wed, 14 Feb 2024 12:23:25 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-144-ge5821d614e-fm-20240125.002-ge5821d61
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="qJJVeZI7"
+Received: from pb-smtp21.pobox.com (unknown [127.0.0.1])
+	by pb-smtp21.pobox.com (Postfix) with ESMTP id 01A491EBBE;
+	Wed, 14 Feb 2024 12:24:11 -0500 (EST)
+	(envelope-from junio@pobox.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=pobox.com; h=from:to:cc
+	:subject:date:message-id:mime-version:content-type
+	:content-transfer-encoding; s=sasl; bh=rtNqnQMrhTZoVIcurqvh/n552
+	z2fKUMA1DuDPbo13Yk=; b=qJJVeZI7zdARELbX7ZSzQBykYxSDSVc1V15EysdW4
+	vX0JQUey2W1HODPMO2gNRQkJ/0NTSyNCiJ7nz13bCFX5n4vAIGbsRYA8xMHsPVCT
+	rSs/TikOC78rjfGpmEjyAXYucwazrCOcNULnxiDwSfV9McsYo38RxLlLXnXTeEDd
+	MU=
+Received: from pb-smtp21.sea.icgroup.com (unknown [127.0.0.1])
+	by pb-smtp21.pobox.com (Postfix) with ESMTP id EDC981EBBD;
+	Wed, 14 Feb 2024 12:24:10 -0500 (EST)
+	(envelope-from junio@pobox.com)
+Received: from pobox.com (unknown [34.125.165.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by pb-smtp21.pobox.com (Postfix) with ESMTPSA id 9BEB91EBBC;
+	Wed, 14 Feb 2024 12:24:07 -0500 (EST)
+	(envelope-from junio@pobox.com)
+From: Junio C Hamano <gitster@pobox.com>
+To: git@vger.kernel.org
+Cc: Linux Kernel <linux-kernel@vger.kernel.org>,
+    git-packagers@googlegroups.com
+Subject: [ANNOUNCE] Git v2.43.2
+Date: Wed, 14 Feb 2024 09:24:06 -0800
+Message-ID: <xmqqil2rvu15.fsf@gitster.g>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <886629be-a492-4c8c-aa79-d13847cb228a@app.fastmail.com>
-In-Reply-To: <8634tv57i2.wl-maz@kernel.org>
-References: <20240213225619.11726-1-rdunlap@infradead.org>
- <867cj75q52.wl-maz@kernel.org>
- <c6e55baf-4f0c-4342-971a-713ed55f5a51@app.fastmail.com>
- <8634tv57i2.wl-maz@kernel.org>
-Date: Wed, 14 Feb 2024 18:22:53 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Marc Zyngier" <maz@kernel.org>
-Cc: "Randy Dunlap" <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
- "Geert Uytterhoeven" <geert@linux-m68k.org>, "Rob Herring" <robh@kernel.org>,
- "Philipp Zabel" <p.zabel@pengutronix.de>, "Peter Rosin" <peda@axentia.se>,
- devicetree@vger.kernel.org
-Subject: Re: [PATCH v2] of: OF_IRQ: select IRQ_DOMAIN instead of depending on it
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+X-Pobox-Relay-ID:
+ DBE34D3E-CB5D-11EE-9783-A19503B9AAD1-77302942!pb-smtp21.pobox.com
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 14, 2024, at 17:35, Marc Zyngier wrote:
-> On Wed, 14 Feb 2024 16:06:06 +0000,
-> "Arnd Bergmann" <arnd@arndb.de> wrote:
->> 
->> On Wed, Feb 14, 2024, at 10:52, Marc Zyngier wrote:
->> > On Tue, 13 Feb 2024 22:56:19 +0000, Randy Dunlap <rdunlap@infradead.org> wrote:
->> >>
->> >> diff -- a/drivers/of/Kconfig b/drivers/of/Kconfig
->> >> --- a/drivers/of/Kconfig
->> >> +++ b/drivers/of/Kconfig
->> >> @@ -80,7 +80,8 @@ config OF_ADDRESS
->> >>  
->> >>  config OF_IRQ
->> >>  	def_bool y
->> >> -	depends on !SPARC && IRQ_DOMAIN
->> >> +	depends on !SPARC
->> >> +	select IRQ_DOMAIN
->> > 
->> >
->> > This seems to be moving is the right direction.
->> 
->> Can we move the 'select IRQ_DOMAIN' under CONFIG_IRQCHIP
->> then and remove the individual selects from the irqchip
->> drivers? It looks like CONFIG_OF (other than sparc) now
->> unconditionally enables OF_IRQ and IRQCHIP anyway.
->
-> As long as it also works ACPI, it should be OK.
+The latest maintenance release Git v2.43.2 is now available at
+the usual places.
 
-Out of the four architectures that have ACPI support (x86,
-arm64, loongarch, rv64), only x86 doesn't always select
-IRQ_DOMAIN already, and x86 selects it for almost all
-configs:
+The tarballs are found at:
 
-config X86_UP_APIC
-        bool "Local APIC support on uniprocessors" if !PCI_MSI
-        default PCI_MSI
-        depends on X86_32 && !SMP && !X86_32_NON_STANDARD
+    https://www.kernel.org/pub/software/scm/git/
 
-config X86_LOCAL_APIC
-        def_bool y
-        depends on X86_64 || SMP || X86_32_NON_STANDARD || X86_UP_APIC || PCI_MSI
-        select IRQ_DOMAIN_HIERARCHY
+The following public repositories all have a copy of the 'v2.43.2'
+tag and the 'maint' branch that the tag points at:
 
-so it's only disabled here with
+  url =3D https://git.kernel.org/pub/scm/git/git
+  url =3D https://kernel.googlesource.com/pub/scm/git/git
+  url =3D git://repo.or.cz/alt-git.git
+  url =3D https://github.com/gitster/git
 
-CONFIG_64BIT=n
-CONFIG_SMP=n
-CONFIG_X86_32_NON_STANDARD=n
-CONFIG_ACPI=y
-CONFIG_PCI=y (implied by ACPI)
-CONFIG_PCI_MSI=n
+----------------------------------------------------------------
 
-As far as I can tell, this specific configuration is
-currently able to save a little bit of kernel size
-by avoiding IRQ_DOMAIN, but we are probably better off
-enabling it here as well for consistency
+Git 2.43.2 Release Notes
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
-     Arnd
+Relative to Git 2.43.1, this release has two important fixes to allow
+"git imap-send" to be built with NO_CURL defined, and to restore the
+forced flushing behaviour when GIT_FLUSH=3D1 is set.  It also contains
+other, unexciting, fixes that have already been merged to the 'master'
+branch of the development towards the next major release.
+
+Fixes since Git 2.43.1
+----------------------
+
+ * Update to a new feature recently added, "git show-ref --exists".
+
+ * Rename detection logic ignored the final line of a file if it is an
+   incomplete line.
+
+ * "git diff --no-rename A B" did not disable rename detection but did
+   not trigger an error from the command line parser.
+
+ * "git diff --no-index file1 file2" segfaulted while invoking the
+   external diff driver, which has been corrected.
+
+ * Rewrite //-comments to /* comments */ in files whose comments
+   prevalently use the latter.
+
+ * A failed "git tag -s" did not necessarily result in an error
+   depending on the crypto backend, which has been corrected.
+
+ * "git stash" sometimes was silent even when it failed due to
+   unwritable index file, which has been corrected.
+
+ * Recent conversion to allow more than 0/1 in GIT_FLUSH broke the
+   mechanism by flipping what yes/no means by mistake, which has been
+   corrected.
+
+Also contains documentation updates, code clean-ups and minor fixups.
+
+----------------------------------------------------------------
+
+Changes since v2.43.1 are as follows:
+
+Elijah Newren (1):
+      diffcore-delta: avoid ignoring final 'line' of file
+
+James Touton (1):
+      git-p4: use raw string literals for regular expressions
+
+Jeff King (1):
+      diff: handle NULL meta-info when spawning external diff
+
+Johannes Schindelin (1):
+      win32: special-case `ENOSPC` when writing to a pipe
+
+Junio C Hamano (11):
+      Docs: majordomo@vger.kernel.org has been decomissioned
+      CoC: whitespace fix
+      builtin/worktree: comment style fixes
+      merge-ort.c: comment style fix
+      reftable/pq_test: comment style fix
+      tag: fix sign_buffer() call to create a signed tag
+      bisect: document "terms" subcommand more fully
+      bisect: document command line arguments for "bisect start"
+      ssh signing: signal an error with a negative return value
+      write-or-die: fix the polarity of GIT_FLUSH environment variable
+      Git 2.43.2
+
+Linus Arver (1):
+      strvec: use correct member name in comments
+
+Nikolay Borisov (1):
+      rebase: fix documentation about used shell in -x
+
+Nikolay Edigaryev (1):
+      rev-list-options: fix off-by-one in '--filter=3Dblob:limit=3D<n>' e=
+xplainer
+
+Patrick Steinhardt (1):
+      builtin/stash: report failure to write to index
+
+Philippe Blain (2):
+      imap-send: add missing "strbuf.h" include under NO_CURL
+      .github/PULL_REQUEST_TEMPLATE.md: add a note about single-commit PR=
+s
+
+Ren=C3=A9 Scharfe (2):
+      parse-options: fully disable option abbreviation with PARSE_OPT_KEE=
+P_UNKNOWN
+      parse-options: simplify positivation handling
+
+Sam Delmerico (1):
+      push: region_leave trace for negotiate_using_fetch
+
+Taylor Blau (1):
+      pack-bitmap: drop unused `reuse_objects`
+
+Toon Claes (1):
+      builtin/show-ref: treat directory as non-existing in --exists
+
