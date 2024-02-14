@@ -1,106 +1,62 @@
-Received: from wfhigh6-smtp.messagingengine.com (wfhigh6-smtp.messagingengine.com [64.147.123.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE61EEAA;
-	Wed, 14 Feb 2024 10:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F085F17543;
+	Wed, 14 Feb 2024 10:34:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707906823; cv=none; b=A/apolx+Jrt6JJvc1xhOLBvc59FfhHWh+PGsbPP7ld1AgrhjCPaHibF6+mhx+iYppf0pw+AMM9rYkYTHqlk8pWfCoovKfxQ9XN1Ed0UrOhHg16pjTMPKbvOgor7ypIRcSEYnumJDc1W+ATmPvmkjqPjP6p3IUbdQ2K55dXdG2Ww=
+	t=1707906863; cv=none; b=exKmn+GqxQmuNYgWcCja2icCx1X+VisJBjwj1/NllKrqAlGyCAx5m8TH5BzqBRuFzRpQASLMkVPJDaK+uPkyXRtPh8htuh6Z7fW7TiBSWDWXit9HadqJGyhQN2ygCdC7oscDxBW4VsAEJpt1KfOuXG0Kg6On5I6oKuK3md1Ywas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707906823; c=relaxed/simple;
-	bh=Wz3O9sY5Lb1tlJN6kKFsdarwvOyGVeowPGJkp2m04YQ=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=tsX8V4zPSYNqYKgzeFbw2r0aG61AxY/xtIvMFJ9rhSgiAdS6snNgS/wtHN2i1w7yu14pHtlBhvcguXW6isPKGfh3yHYiM7TO1URlHvn+2+4JopwdoJgPYCvh/2czf4UbzKIJPJUNhCpyM05LpIgNkxpAfSV3SXEtHTB4CuPnbwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=RIpH9zGc; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Av9KElcQ; arc=none smtp.client-ip=64.147.123.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1707906863; c=relaxed/simple;
+	bh=DkS4pHSLevwnDUiaBlD8B/uLDOdKpNV1qvB47nYEqPw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PUd36Zh0bj7bFA0MPZIV2vC3etC2hcuh/KeaGYvES3fbiwVk8fHPFKsiec4auM9uU0X9gBp6sf5hZl9MCbQiIesyUC8umbKazBx+7ldqA1odtqugjquYOA06kRb0SM+zQpRWOmIsSznXvgHhLPFJxv22lOK4tphvnBFaxGvAx8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=lDQx2/0g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="RIpH9zGc";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Av9KElcQ"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 08B241800073;
-	Wed, 14 Feb 2024 05:33:40 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 14 Feb 2024 05:33:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1707906820; x=1707993220; bh=yVnERG6CD6
-	OiUW+apDplUEb99Gqo14cVVGATiFwcNwo=; b=RIpH9zGcsVILCuAQGWXyxiScxo
-	8cKd1tJi1zSHzJwPmGxcCvZIvO/u8HQMt/4qbbsyI9zu3zRSjOhXOGEIClnWVaY6
-	zZqOGUvxrRUwpLFX1eura8piijcNb8Yo4bpvUcN2fdVlXNqRY2Nr1WMyMAHTxZSM
-	DyVqBpJvN0VHVSt8wQnmlFwXo0zSsMw4avQyYOBqzap9rYzWS12Bmk9wVYjiCq0m
-	ju5JOeohxo98GFU8XvUfmEbVzaMrzo4BS2YdVYIk1e4ighnOZUAwzuI663nFl4v0
-	DfrAmmIrlDS909Q5th+aT5+6+zNjcYZS9BkrhDUsL5LC4r7r8pW3ro68H3fQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1707906820; x=1707993220; bh=yVnERG6CD6OiUW+apDplUEb99Gqo
-	14cVVGATiFwcNwo=; b=Av9KElcQJZuy7b3CEZ5iA3c4wLLTz+scibfE7vgFX+uA
-	RL2/rSNYtA5nYv908RnRVROG7PfUsc8CLp/vwaKMdKWGvcixvmHcWFNgS3wWPAKz
-	cavJYYOGFIevXCwGnGY83Cc1rJ6PYQLP5ynyYHpbDWXG3rjhOH8NOGTyHLqJXv28
-	DmhFUv1VwksCHRDBpSvznL806rIwUvnBgfKhQ7ZTGA0eRRZreVdDEeVnNiTv75Lh
-	k0ysmnOWfUjL6JwmHcWxkR/q+Ny6HhMgUVzojvDXMhblgbTY/uNI3AQ5JBfY9wfR
-	kCcBcTSaZBD2zho80BtujoS8OT0wQ0cR52JMbwrqIg==
-X-ME-Sender: <xms:BJfMZWagc5TfNMixZJ8ld2hvLUYOEf-Ryoi0z255aiyDQxKtAqnbGw>
-    <xme:BJfMZZYLVbGUxlwvXppk8FfBPQaUoAHukwkhbjKs-PNngxq_yycoz8oSelTflelIw
-    kvIghsYNaedEoHdFG0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudejgdduiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeegteeihfejvdfhfeffhfdvvddvfffgtedvteeigfehhfehudffleejueduvdel
-    gfenucffohhmrghinhepphgrshhtvggsihhnrdgtohhmnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:BJfMZQ8LR6OkvrdfHMUacfpaHXwuy-3IR1em-FnA3vTl6-v70brBfw>
-    <xmx:BJfMZYqb5tEqN7XtQyQ5WwuCQMcHS5kEDnxTTh2yqkJ8bqJVBRJiqw>
-    <xmx:BJfMZRr6adqIyNHGFA3X_aSaFAY9LZ8lTFLOabmR7LpxhJ97kU3eOg>
-    <xmx:BJfMZaBWS7sInllRT7VElbQmtvwG2Tv6-FO8c2btfa2sw7kS-BlF8GpE6OU>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 3AFD7B6008D; Wed, 14 Feb 2024 05:33:40 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-144-ge5821d614e-fm-20240125.002-ge5821d61
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="lDQx2/0g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9952C433F1;
+	Wed, 14 Feb 2024 10:34:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1707906862;
+	bh=DkS4pHSLevwnDUiaBlD8B/uLDOdKpNV1qvB47nYEqPw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lDQx2/0giln9bSgIWKwhm0lRPICkGgbmBs5pbsKMA3UOZqGxJHwOO/VlVAXHWqpcY
+	 1Euqnq7GXzADgKEYPs9Pgz8ZbyLvBpEoLFLZJdWPpIYhru9Pi2aQwb9u0NApbuhNmi
+	 a+X4ZZVFf9OAxcpZKVSsiM94KPmwTTiLYdD3E5C8=
+Date: Wed, 14 Feb 2024 11:27:20 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Eric Dumazet <edumazet@google.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>, netdev@vger.kernel.org,
+	"David S . Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Eric Dumazet <eric.dumazet@gmail.com>
+Subject: Re: [PATCH 0/2] kobject: reduce uevent_sock_mutex contention
+Message-ID: <2024021444-getaway-partly-e055@gregkh>
+References: <20240214084829.684541-1-edumazet@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <eadeadd2-0913-4c46-8e90-8000eb45b7f8@app.fastmail.com>
-In-Reply-To: <24cbf7b2-a091-440e-92cc-5c9828d52260@xs4all.nl>
-References: <20240213095555.454392-1-arnd@kernel.org>
- <24cbf7b2-a091-440e-92cc-5c9828d52260@xs4all.nl>
-Date: Wed, 14 Feb 2024 11:33:19 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Hans Verkuil" <hverkuil-cisco@xs4all.nl>,
- "Arnd Bergmann" <arnd@kernel.org>,
- "Sakari Ailus" <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Mauro Carvalho Chehab" <mchehab@kernel.org>
-Subject: Re: [PATCH] media: v4l: marvell: select CONFIG_V4L2_ASYNC where needed
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240214084829.684541-1-edumazet@google.com>
 
-On Wed, Feb 14, 2024, at 11:24, Hans Verkuil wrote:
-> Arnd, Sakari,
->
-> Is this something that needs to go to v6.8? Or just v6.9?
->
-> Do we need a Fixes tag?
->
+On Wed, Feb 14, 2024 at 08:48:27AM +0000, Eric Dumazet wrote:
+> This series reduces the (small ?) contention over uevent_sock_mutex,
+> noticed when creating/deleting many network namespaces/devices.
+> 
+> 1) uevent_seqnum becomes an atomic64_t
+> 
+> 2) Only acquire uevent_sock_mutex whenever using uevent_sock_list
 
-I'm not sure, I tried to find out what commit caused it
-but could not figure it out short of doing a bisection.
+Cool, any boot-time measured speedups from this?  Or is this just tiny
+optimizations that you noticed doing reviews?
 
-I noticed the problem for the first time on linux-next
-this week, but it is likely to have been hiding for a
-long time. If anyone wants to bisect it, I've uploaded
-my .config to [1], otherwise I'd suggest fixing it for
-v6.8 without a backport or further analysis.
+thanks,
 
-     Arnd
-
-[1] https://pastebin.com/fcSLRBL8
+greg k-h
