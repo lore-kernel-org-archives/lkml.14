@@ -1,84 +1,85 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C9684FC9
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 17:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561F386623;
+	Wed, 14 Feb 2024 17:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707932590; cv=none; b=R1UZw2Src7vS7v26z/71Qhr+1e1zd7XpSWlSpvumuJNrMKxAPt6QiigwKX0QqWsITG4P/Z+yx8VhsefINl6JNu5F9pJF6RZ9G/KT2vzWYt+g/qNTxMP2SIzHKoojh8lXNfkRdEu435FQWE7/pg9i2ob0J7G4KlklvMRTo/hhmas=
+	t=1707932597; cv=none; b=XNzt1QIYB6U1n5IxR84PpkU9ME1ccHyd8Fo1JwrkIoUa6d0ljTJwhAu2R5bgf3qTnKLKMqnADZv1j/8bBBZajbL2GDbvS59J4BPM9w9ETbJLJTuGxkfNf5TKH1MOPc1iok6PztYnB+whyLvVPi/Xh/bl2k+TJOJy4v2Z8iVMu3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707932590; c=relaxed/simple;
-	bh=ox4KLy3IPuK35mXYc9E/pewt0RGezSJgULityeM994g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j0B+ykXkYBfDjXcfj3iDKFx19Nbevdi76accxhPcByuHKl5Ge3dg6LMSrOzyT7edpbMChs/4hnqHxjwxJ56M5FxrCopgZfcTg19BhnF09J5AFM4cc0oc1sEWitZFjzVu/atpJmr0aGXMAr1xilb1bcIk2s/c16Lfa/yAM6kuQ+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U8Hil2HR; arc=none smtp.client-ip=209.85.219.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707932597; c=relaxed/simple;
+	bh=CnAXnu5VnB9LwAFNLBVLg4a6KL+KuWUqjUuHxsXMCHQ=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cFo/kmvxBzEUUeFvQmo+lfMqwjD8Ui5NBQKL1F0VhyLGaIpm1kyVDARkLVcfa6EcREMHB2jNvdVLnBmWX6qtNZimwa5rri4fNHLGGRUXSj35H3N2W8W5bFeta8GdkeerYlJMwsBfM5kpY7vaGKMwjob59zhUTzW3PH2JMPJCybI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UfJaA1FA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U8Hil2HR"
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dcbd1d4904dso3006738276.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 09:43:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707932588; x=1708537388; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ox4KLy3IPuK35mXYc9E/pewt0RGezSJgULityeM994g=;
-        b=U8Hil2HRrI+HkkCheCaMtpdczCK7IPeS1LMeDlxqIPp2xHO9bX6QWZbRK55srhqtUF
-         i1JDYJHN8IKQD3ih473dtxeIq6i6u7CEb8NZUYamWOaU2KgegdH5whyY9ukfXRnN0bRi
-         vAdDMhr6s6B3HVtdooM0wv6T7efbPyq3RWprcV6PWhCnGWR7JnHrM8sJtW/voZ1CtWBH
-         2rIK4xVMxJXs20wJSLf7YfaeJ4373SRBQLt1oB0e7IS/3t2uVsiFD8MjTbdtUkAAoxQ9
-         DmyGIiOMMMlAqtMuisnMXT51EkEAAF77iWPU1M3aI0eDRfppSd3JXU466f/vbTJ3Pkwa
-         y+mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707932588; x=1708537388;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ox4KLy3IPuK35mXYc9E/pewt0RGezSJgULityeM994g=;
-        b=SYdViLd/FOVYvi501Fc2irL0P/KbVBCQIp0wWkw3+aEC0Fv8hb7bEgPECHV+0CRJ4f
-         SpHk/7HilPDMwnJkD3RXw2YeRFl5bS2TEfMliGyceUWSS+OD/VfSAY/CSKH7hd1H2k35
-         suqah07pJ+ZgbYoSByyMgZwSxvJvai3T6DO06FJgladdi3dV3ycwamzsFlWOh4cZOScf
-         Wj+5cJEPBvh5UKpR+5sgJkGKcVpcD3CGnOZnr75h/48tTr4LY9ak7IcDrJMTtVbjbwfm
-         UjL1feZkYhfLms6piCWZDt1Skc9LefI9oJEX+ldYA45x3Uk9PV9AonYeSZXYsnmVh1H8
-         ALHw==
-X-Forwarded-Encrypted: i=1; AJvYcCVuE9nMwr+01NFIHWBzHqUV7nKIopTbtwxSj72feq0F9VOeWonTZUhXhew/TJjwIxNjMtJVZyfAA94yH40tM0G8AypCl335SzkL20A5
-X-Gm-Message-State: AOJu0YxaNhCWCxvHLic8k9KN+EmNAo3YpK7AWNqHkmdV0+VDZj2zzfF3
-	TQ0nFp3pYLsrWUgUtWyZJjJ7Z/2EuJwQcsV1Jlal9kMWdP0sas5eEvl1b7H9xmaaUF7EQLy1CNR
-	iTSRPs8AsiJMb3YyNj/KXfgd1U/w=
-X-Google-Smtp-Source: AGHT+IEALHFIQSOcyIS7mBLLhRFSe/OmDG6ZSCDquoFMnGZlKz1oyzdV08hCaQOpxi1xHxrHj8F6kJP4raEGhW6J5Dg=
-X-Received: by 2002:a25:8051:0:b0:dcc:44d7:5c7f with SMTP id
- a17-20020a258051000000b00dcc44d75c7fmr2492401ybn.62.1707932587988; Wed, 14
- Feb 2024 09:43:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UfJaA1FA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE3EBC433F1;
+	Wed, 14 Feb 2024 17:43:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707932597;
+	bh=CnAXnu5VnB9LwAFNLBVLg4a6KL+KuWUqjUuHxsXMCHQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=UfJaA1FAWYOlMmKksb8/MhNnJFe4WRfjn3KZPgjPy7vdGOTIjsdRv6BDGspS6piCa
+	 wMjJpjUDSvHBtG/QBW737oXink0k7GaUuRuzdlz33Q2kFjKsOkPF4BteQHlyyDJrYN
+	 X4cMIMMqVqHdgjjpcPiZeLyz1gNh0pmkcvpeTauVuaEDf5mtsjI/9J5e9H/O3+vM8i
+	 wEEKRHrjCQQXT5k7XZvidpfBXvKh2RrVjVX3/cc0QyFJYCrd1DeMXMhsoJwzOVcwhF
+	 b80BY9sM2N55B112xOTpuz0VHDVp51/tlEpmpziR1xXEMJX53pRY9nv+hh7yIxgZ9F
+	 jmPh6fkNslKZA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1raJHu-003Dy5-Lj;
+	Wed, 14 Feb 2024 17:43:14 +0000
+Date: Wed, 14 Feb 2024 17:43:13 +0000
+Message-ID: <86y1bn3pse.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: kvmarm@lists.linux.dev,
+	kvm@vger.kernel.org,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/23] KVM: arm64: Improvements to LPI injection
+In-Reply-To: <20240213093250.3960069-1-oliver.upton@linux.dev>
+References: <20240213093250.3960069-1-oliver.upton@linux.dev>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240212132515.2660837-2-andriy.shevchenko@linux.intel.com>
- <20240212132515.2660837-4-andriy.shevchenko@linux.intel.com>
- <Zcoe9axtLXxB7Jeo@smile.fi.intel.com> <CAMuHMdUJ4gSGo4A0BVGkieWvNyqa9Dv_rQVMFj9N8GWYoKCZVg@mail.gmail.com>
- <CANiq72muoZHzX+qNKabYWnH738okKqrfAruUOpY-4WUJBLP=Yw@mail.gmail.com> <Zcz7Cfc5XSM2MtKV@smile.fi.intel.com>
-In-Reply-To: <Zcz7Cfc5XSM2MtKV@smile.fi.intel.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 14 Feb 2024 18:42:56 +0100
-Message-ID: <CANiq72ntYrPyybUDavPuT+anrwfjPb27P8VbL+toMvyp8K293w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] auxdisplay: Move cfag12864b.h to the subsystem folder
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	linux-kernel@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: oliver.upton@linux.dev, kvmarm@lists.linux.dev, kvm@vger.kernel.org, james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, Feb 14, 2024 at 6:40=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> I don't want to rebase, esp. taking into account the proposal below.
+On Tue, 13 Feb 2024 09:32:37 +0000,
+Oliver Upton <oliver.upton@linux.dev> wrote:
+> 
+> For full details on the what/why, please see the cover letter in v1.
+> 
+> Apologies for the delay on v2, I wanted to spend some time to get a
+> microbenchmark in place to slam the ITS code pretty hard, and based on
+> the results I'm glad I did.
 
-Why do you not want to rebase?
+[...]
 
-The proposal is orthogonal in any case.
+Buglets and potential improvements aside, I like the smell of this. At
+least the first handful of patches could easily be taken as a separate
+improvement series.
 
-Cheers,
-Miguel
+Let me know how you'd like to play this.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
