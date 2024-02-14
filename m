@@ -1,287 +1,183 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4158E17C61;
-	Wed, 14 Feb 2024 10:14:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E6F1643A
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 10:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707905654; cv=none; b=COelZoisXrT10aLDYdlNL/qNibyiTG/y1d81DyUh4fc07VJ74xmD4Lhw+KD6scf6zhapVQn1MSWkDs+PO5+c3wih37F114ihFznzv9U7qGWjaqzajYq7WAimjnAma0LbPskZD5ZlD3h0ciVpKpQtGQCj4TUqrcQ1mREvqklirjk=
+	t=1707905673; cv=none; b=PPisSZM8Y7OYqApl1ZNGhyAOE+NPPi5UFKHDD/6bbeCmVAhu3Mm5KKraOa0oiYfSVPwNDmTuKV3cGG/1dGwMA4eSgZZxbBXabvq+IezX3W4qLKBeS2HyX4+EuTrkMKSb8pDDIs6Lv5pJ0DEXddjO6iHfdkETaEbJPQv7aiJxZeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707905654; c=relaxed/simple;
-	bh=AkK8H6K5JsX3fPqhL9edm6tVElqq/qDa1tKSAyvAosE=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=A6OAutU9YeZpMivsqy7Ry0XdtEMN2HY2h+m96K4Z50sbhMm9Go1cmKn8YrdJN3cva2ePalL/TKawPffziDmsJ9GMRH99UBPUz52N8GBWkUzsa0NyAMpZbYCikCJy41zsDuhNg/SBAn8eCDbwA4R9ytnGnVG6LPTecISo2McG5N8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bzgcSofK; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707905673; c=relaxed/simple;
+	bh=wH6ZUUDxzWcvM9A5J/M26EhQbNj8CDbgdD8EHHWlvfE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZKfHzZpBX2AfsOkNr4D++smERBUu6qS/eRQCLTSvikOotOiEc7sYHGLFUUSgO+nJCEr5CoWQXSsvar7Ak1bfoyWEjonk0hkV/6qj6am7co8yNZcfYFo2Kp9V8OlaobUuOz04eiuUa/IIdhi6siLme0xGhLezKijD7rjH+Qp9nXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Bfq05XKp; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bzgcSofK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707905653; x=1739441653;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=AkK8H6K5JsX3fPqhL9edm6tVElqq/qDa1tKSAyvAosE=;
-  b=bzgcSofKfFXTLNKt4qPj6jmTSejwwcYNt4tdGCPpNYQBgLeOgGPzdveY
-   I1VQP61T7u0MzBIpM+3MDhA8zGQXySNOKj28u27L57VOXuDpZOlppaEHw
-   TEPUfJqCFHMa3iletJQZ24Ctuqtgypjp8to3WeCk1nhelzBN035fYSwKk
-   cYdeXHP8HsoDpD+1ICpma0foBrWMplcT9urMt8Ndj6lhOXU4FYhk81Zi5
-   M/G/MPDSy7EQnZdkdGUupvFo3Zm4wJlXl3VTbo7Ad+qRX05HFuVEFZ8B7
-   wCsrpvewYN//9ZYFADgCLusw/JEUmr7QW52LHwdO5ERckSvlbcm66E5+z
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="13335602"
-X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="13335602"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 02:14:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="3432586"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.33.229])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 02:14:09 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 14 Feb 2024 11:52:24 +0200 (EET)
-To: Vishnu Sankar <vishnuocv@gmail.com>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, vsankar@lenovo.com
-Subject: Re: [PATCH 1/2] platform/x86: thinkpad_acpi: Simplify thermal mode
- checking
-In-Reply-To: <20240214052959.8550-1-vishnuocv@gmail.com>
-Message-ID: <c49e4415-7cd5-e1ba-e6c6-5086730b9866@linux.intel.com>
-References: <20240214052959.8550-1-vishnuocv@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Bfq05XKp"
+Date: Wed, 14 Feb 2024 18:14:20 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1707905669;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Sq2ZgsBArKU+/0ptSnLdA9Td8CjugpWxYMkYPjmxX1A=;
+	b=Bfq05XKp+zIQtFUrDOsAp5gfblgGsPGVIhQuL7AsMzfWvqCzE7E7SBWMXoVUa+8taAJaWV
+	UACiCI8iKWwXqHb3AXKU5gpyvIE1rqnFKkoiJVPdrooLT2TN4tnZE+1HNCPTxnzp055tv5
+	JtWgQkUDVvmgHGNoTem+qlMG4Cn9+VQ=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Leo Yan <leo.yan@linux.dev>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	John Garry <john.g.garry@oracle.com>,
+	Mike Leach <mike.leach@linaro.org>
+Subject: Re: [PATCH] perf tools: Fixup module symbol end address properly
+Message-ID: <20240214101420.GF81405@debian-dev>
+References: <20240212233322.1855161-1-namhyung@kernel.org>
+ <20240213033954.GB81405@debian-dev>
+ <CAM9d7ciTwYAgry-nW9z+_VMj+BJ7ZNZnkKH_t_AHvV5joNuWQQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-900362618-1707904344=:1008"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM9d7ciTwYAgry-nW9z+_VMj+BJ7ZNZnkKH_t_AHvV5joNuWQQ@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, Feb 13, 2024 at 10:48:53AM -0800, Namhyung Kim wrote:
+> Hi Leo,
+> 
+> Thanks for your review!
+> 
+> On Mon, Feb 12, 2024 at 7:40???PM Leo Yan <leo.yan@linux.dev> wrote:
+> >
+> > On Mon, Feb 12, 2024 at 03:33:22PM -0800, Namhyung Kim wrote:
+> > > I got a strange error on ARM to fail on processing FINISHED_ROUND
+> > > record.  It turned out that it was failing in symbol__alloc_hist()
+> > > because the symbol size is too big.
+> > >
+> > > When a sample is captured on a specific BPF program, it failed.  I've
+> > > added a debug code and found the end address of the symbol is from
+> > > the next module which is placed far way.
+> > >
+> > >   ffff800008795778-ffff80000879d6d8: bpf_prog_1bac53b8aac4bc58_netcg_sock    [bpf]
+> > >   ffff80000879d6d8-ffff80000ad656b4: bpf_prog_76867454b5944e15_netcg_getsockopt      [bpf]
+> > >   ffff80000ad656b4-ffffd69b7af74048: bpf_prog_1d50286d2eb1be85_hn_egress     [bpf]   <---------- here
+> > >   ffffd69b7af74048-ffffd69b7af74048: $x.5    [sha3_generic]
+> > >   ffffd69b7af74048-ffffd69b7af740b8: crypto_sha3_init        [sha3_generic]
+> > >   ffffd69b7af740b8-ffffd69b7af741e0: crypto_sha3_update      [sha3_generic]
+> > >
+> > > The logic in symbols__fixup_end() just uses curr->start to update the
+> > > prev->end.  But in this case, it won't work as it's too different.
+> > >
+> > > I think ARM has a different kernel memory layout for modules and BPF
+> > > than on x86.  Actually there's a logic to handle kernel and module
+> > > boundary.  Let's do the same for symbols between different modules.
+> >
+> > Even Arm32 and Arm64 kernel have different memory layout for modules
+> > and kernel image.
+> >
+> > eBPF program (JITed) should be allocated from the vmalloc region, for
+> > Arm64, see bpf_jit_alloc_exec() in arch/arm64/net/bpf_jit_comp.c.
+> 
+> Ok, so chances are they can fall out far away right?
 
---8323328-900362618-1707904344=:1008
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Yes, this is my understanding.
 
-On Wed, 14 Feb 2024, Vishnu Sankar wrote:
+> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > > ---
+> > >  tools/perf/util/symbol.c | 21 +++++++++++++++++++--
+> > >  1 file changed, 19 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> > > index 35975189999b..9ebdb8e13c0b 100644
+> > > --- a/tools/perf/util/symbol.c
+> > > +++ b/tools/perf/util/symbol.c
+> > > @@ -248,14 +248,31 @@ void symbols__fixup_end(struct rb_root_cached *symbols, bool is_kallsyms)
+> > >                * segment is very big.  Therefore do not fill this gap and do
+> > >                * not assign it to the kernel dso map (kallsyms).
+> > >                *
+> > > +              * Also BPF code can be allocated separately from text segments
+> > > +              * and modules.  So the last entry in a module should not fill
+> > > +              * the gap too.
+> > > +              *
+> > >                * In kallsyms, it determines module symbols using '[' character
+> > >                * like in:
+> > >                *   ffffffffc1937000 T hdmi_driver_init  [snd_hda_codec_hdmi]
+> > >                */
+> > >               if (prev->end == prev->start) {
+> > > +                     const char *prev_mod;
+> > > +                     const char *curr_mod;
+> > > +
+> > > +                     if (!is_kallsyms) {
+> > > +                             prev->end = curr->start;
+> > > +                             continue;
+> > > +                     }
+> > > +
+> > > +                     prev_mod = strchr(prev->name, '[');
+> > > +                     curr_mod = strchr(curr->name, '[');
+> > > +
+> > >                       /* Last kernel/module symbol mapped to end of page */
+> > > -                     if (is_kallsyms && (!strchr(prev->name, '[') !=
+> > > -                                         !strchr(curr->name, '[')))
+> > > +                     if (!prev_mod != !curr_mod)
+> > > +                             prev->end = roundup(prev->end + 4096, 4096);
+> > > +                     /* Last symbol in the previous module */
+> > > +                     else if (prev_mod && strcmp(prev_mod, curr_mod))
+> >
+> > Should two consecutive moudles fall into this case? I think we need to assign
+> > 'prev->end = curr->start' for two two consecutive moudles.
+> 
+> Yeah I thought about that case but I believe they would be on
+> separate pages (hopefully there's a page gap between them).
+> So I think it should not overlap.  But if you really care we can
+> check it explicitly like this:
+> 
+>     prev->end = min(roundup(...), curr->start);
 
-Thanks for doing this, it's major improvement to readability already as=20
-is, and even more of after the second patch!!
+I am not concerned that to assign a bigger end value for the 'prev'
+symbol. With an exaggerate end region, it will not cause any
+difficulty for parsing symbols. On the other hand, I am a bit concern
+for a big function (e.g. its code size > 4KiB), we might fail to find
+symbols in this case with the change above.
 
-> Add a thermal_read_mode_check helper function to make the code
+> > If so, we should use a specific checking for eBPF program, e.g.:
+> >
+> >                         else if (prev_mod && strcmp(prev_mod, curr_mod) &&
+> >                                  (!strcmp(prev->name, "bpf") ||
+> >                                   !strcmp(curr->name, "bpf")))
+> 
+> I suspect it can happen on any module boundary so better
+> to handle it in a more general way.
 
-thermal_read_mode_check()
+I don't want to introduce over complexity at here. We can apply
+current patch as it is.
 
-remove "function" as it's obvious.
+A side topic, when I saw the code is hard coded for 4096 as the page
+size, this is not always true on Arm64 (the page size can be 4KiB,
+16KiB or 64KiB). We need to consider to extend the environment for
+recording the system's page size.
 
-> simpler during init.
-> This helps particularly when the new TPEC_12 mode is added in
-> the next patch.
+Thanks,
+Leo
 
-Flow the paragraph normally without the premature line break.
-=20
-> Suggested-by: Ilpo Jarvinen <ilpo.jarvinen@intel.com>
-
-This is not my email address, please use
-
-Suggested-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
-> Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 136 +++++++++++++--------------
->  1 file changed, 66 insertions(+), 70 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/=
-thinkpad_acpi.c
-> index c4895e9bc714..2428c8bd0fa2 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -6147,6 +6147,71 @@ struct ibm_thermal_sensors_struct {
->  static enum thermal_access_mode thermal_read_mode;
->  static bool thermal_use_labels;
-> =20
-> +/* Function to check thermal read mode */
-> +static enum thermal_access_mode thermal_read_mode_check(void)
-> +{
-> +=09u8 t, ta1, ta2, ver =3D 0;
-> +=09int i;
-> +
-> +=09if (thinkpad_id.ec_model) {
-> +=09=09/*
-> +=09=09 * Direct EC access mode: sensors at registers
-> +=09=09 * 0x78-0x7F, 0xC0-0xC7.  Registers return 0x00 for
-
-Remove the double space, one is enough in kernel comments.
-
-> +=09=09 * non-implemented, thermal sensors return 0x80 when
-> +=09=09 * not available
-
-Add the missing . please.
-
-Perhaps add a empty line here to make this two paragraphs.
-
-> +=09=09 * The above rule is unfortunately flawed. This has been seen with
-> +=09=09 * 0xC2 (power supply ID) causing thermal control problems.
-> +=09=09 * The EC version can be determined by offset 0xEF and at least fo=
-r
-> +=09=09 * version 3 the Lenovo firmware team confirmed that registers 0xC=
-0-0xC7
-> +=09=09 * are not thermal registers.
-> +=09=09 */
-
-While the patch touches this, this entire comment should be reflowed=20
-properly for 80 columns.
-
-> +=09=09if (!acpi_ec_read(TP_EC_FUNCREV, &ver))
-> +=09=09=09pr_warn("Thinkpad ACPI EC unable to access EC version\n");
-> +
-> +=09=09ta1 =3D ta2 =3D 0;
-> +=09=09for (i =3D 0; i < 8; i++) {
-> +=09=09=09if (acpi_ec_read(TP_EC_THERMAL_TMP0 + i, &t)) {
-> +=09=09=09=09ta1 |=3D t;
-> +=09=09=09} else {
-> +=09=09=09=09ta1 =3D 0;
-> +=09=09=09=09break;
-> +=09=09=09}
-> +=09=09=09if (ver < 3) {
-> +=09=09=09=09if (acpi_ec_read(TP_EC_THERMAL_TMP8 + i, &t)) {
-> +=09=09=09=09=09ta2 |=3D t;
-> +=09=09=09=09} else {
-> +=09=09=09=09=09ta1 =3D 0;
-> +=09=09=09=09=09break;
-> +=09=09=09=09}
-> +=09=09=09}
-> +=09=09}
-> +
-> +=09=09if (ta1 =3D=3D 0) {
-> +=09=09=09pr_err("ThinkPad ACPI EC access misbehaving, disabling thermal =
-sensors access\n");
-> +=09=09=09return TPACPI_THERMAL_NONE;
-> +=09=09}
-> +
-> +=09=09if (ver >=3D 3) {
-> +=09=09=09thermal_use_labels =3D true;
-> +=09=09=09return TPACPI_THERMAL_TPEC_8;
-> +=09=09}
-> +
-> +=09=09return (ta2 !=3D 0) ? TPACPI_THERMAL_TPEC_16 : TPACPI_THERMAL_TPEC=
-_8;
-> +=09}
-> +
-> +=09if (acpi_evalf(ec_handle, NULL, "TMP7", "qv")) {
-> +=09=09if (tpacpi_is_ibm() &&
-> +=09=09    acpi_evalf(ec_handle, NULL, "UPDT", "qv"))
-
-Single line and keep the braces please (I know it will go >80 chars but no=
-=20
-important info is lost).
-
-> +=09=09=09/* 600e/x, 770e, 770x */
-> +=09=09=09return TPACPI_THERMAL_ACPI_UPDT;
-> +=09=09/* IBM/LENOVO DSDT EC.TMPx access, max 8 sensors */
-> +=09=09return TPACPI_THERMAL_ACPI_TMP07;
-> +=09}
-> +
-> +=09/* temperatures not supported on 570, G4x, R30, R31, R32 */
-> +=09return TPACPI_THERMAL_NONE;
-> +}
-> +
->  /* idx is zero-based */
->  static int thermal_get_sensor(int idx, s32 *value)
->  {
-> @@ -6375,78 +6440,9 @@ static const struct attribute_group temp_label_att=
-r_group =3D {
-> =20
->  static int __init thermal_init(struct ibm_init_struct *iibm)
->  {
-> -=09u8 t, ta1, ta2, ver =3D 0;
-> -=09int i;
-> -=09int acpi_tmp7;
-> -
->  =09vdbg_printk(TPACPI_DBG_INIT, "initializing thermal subdriver\n");
-> =20
-> -=09acpi_tmp7 =3D acpi_evalf(ec_handle, NULL, "TMP7", "qv");
-> -
-> -=09if (thinkpad_id.ec_model) {
-> -=09=09/*
-> -=09=09 * Direct EC access mode: sensors at registers
-> -=09=09 * 0x78-0x7F, 0xC0-0xC7.  Registers return 0x00 for
-> -=09=09 * non-implemented, thermal sensors return 0x80 when
-> -=09=09 * not available
-> -=09=09 * The above rule is unfortunately flawed. This has been seen with
-> -=09=09 * 0xC2 (power supply ID) causing thermal control problems.
-> -=09=09 * The EC version can be determined by offset 0xEF and at least fo=
-r
-> -=09=09 * version 3 the Lenovo firmware team confirmed that registers 0xC=
-0-0xC7
-> -=09=09 * are not thermal registers.
-> -=09=09 */
-> -=09=09if (!acpi_ec_read(TP_EC_FUNCREV, &ver))
-> -=09=09=09pr_warn("Thinkpad ACPI EC unable to access EC version\n");
-> -
-> -=09=09ta1 =3D ta2 =3D 0;
-> -=09=09for (i =3D 0; i < 8; i++) {
-> -=09=09=09if (acpi_ec_read(TP_EC_THERMAL_TMP0 + i, &t)) {
-> -=09=09=09=09ta1 |=3D t;
-> -=09=09=09} else {
-> -=09=09=09=09ta1 =3D 0;
-> -=09=09=09=09break;
-> -=09=09=09}
-> -=09=09=09if (ver < 3) {
-> -=09=09=09=09if (acpi_ec_read(TP_EC_THERMAL_TMP8 + i, &t)) {
-> -=09=09=09=09=09ta2 |=3D t;
-> -=09=09=09=09} else {
-> -=09=09=09=09=09ta1 =3D 0;
-> -=09=09=09=09=09break;
-> -=09=09=09=09}
-> -=09=09=09}
-> -=09=09}
-> -=09=09if (ta1 =3D=3D 0) {
-> -=09=09=09/* This is sheer paranoia, but we handle it anyway */
-> -=09=09=09if (acpi_tmp7) {
-> -=09=09=09=09pr_err("ThinkPad ACPI EC access misbehaving, falling back to=
- ACPI TMPx access mode\n");
-> -=09=09=09=09thermal_read_mode =3D TPACPI_THERMAL_ACPI_TMP07;
-
-Eh, where did this go in the new helper?
-
---=20
- i.
-
-> -=09=09=09} else {
-> -=09=09=09=09pr_err("ThinkPad ACPI EC access misbehaving, disabling therm=
-al sensors access\n");
-> -=09=09=09=09thermal_read_mode =3D TPACPI_THERMAL_NONE;
-> -=09=09=09}
-> -=09=09} else {
-> -=09=09=09if (ver >=3D 3) {
-> -=09=09=09=09thermal_read_mode =3D TPACPI_THERMAL_TPEC_8;
-> -=09=09=09=09thermal_use_labels =3D true;
-> -=09=09=09} else {
-> -=09=09=09=09thermal_read_mode =3D
-> -=09=09=09=09=09(ta2 !=3D 0) ?
-> -=09=09=09=09=09TPACPI_THERMAL_TPEC_16 : TPACPI_THERMAL_TPEC_8;
-> -=09=09=09}
-> -=09=09}
-> -=09} else if (acpi_tmp7) {
-> -=09=09if (tpacpi_is_ibm() &&
-> -=09=09    acpi_evalf(ec_handle, NULL, "UPDT", "qv")) {
-> -=09=09=09/* 600e/x, 770e, 770x */
-> -=09=09=09thermal_read_mode =3D TPACPI_THERMAL_ACPI_UPDT;
-> -=09=09} else {
-> -=09=09=09/* IBM/LENOVO DSDT EC.TMPx access, max 8 sensors */
-> -=09=09=09thermal_read_mode =3D TPACPI_THERMAL_ACPI_TMP07;
-> -=09=09}
-> -=09} else {
-> -=09=09/* temperatures not supported on 570, G4x, R30, R31, R32 */
-> -=09=09thermal_read_mode =3D TPACPI_THERMAL_NONE;
-> -=09}
-> +=09thermal_read_mode =3D thermal_read_mode_check();
-> =20
->  =09vdbg_printk(TPACPI_DBG_INIT, "thermal is %s, mode %d\n",
->  =09=09str_supported(thermal_read_mode !=3D TPACPI_THERMAL_NONE),
->=20
-
---8323328-900362618-1707904344=:1008--
+> Thanks,
+> Namhyung
+> 
+> >
+> > >                               prev->end = roundup(prev->end + 4096, 4096);
+> > >                       else
+> > >                               prev->end = curr->start;
+> > > --
+> > > 2.43.0.687.g38aa6559b0-goog
+> > >
