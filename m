@@ -1,28 +1,28 @@
 Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA105337E;
-	Wed, 14 Feb 2024 12:50:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2EAF52F75;
+	Wed, 14 Feb 2024 12:50:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707915008; cv=none; b=f/CTy2rNuzNrYJMH3JNVask6Fhs32U8mQcXLgrbg9yUG0Os6ogfbPClNmGKLIx73voJUnLJU3JHksWRM39by+yYoL24fixxxS7TcmCYMAZc2z5ou2GidTnldV0+LN96r/OKB+KomhwAs8nOh+DKSCor710r8ma/eLGHAyZixisc=
+	t=1707915007; cv=none; b=TC1WJ84n2PqO9cfybVbxF4Jpw6bxqHr0JUU949+fp6jIVSrCp2aR6I8ENvQ4IW/FzTUyyt2ckPbucZbzjQ4n3+m2E1fDzESUzhFTk63lNWcvqS0h7LkMaIVJWbnzI1CARkK5ya06+d79HFgMjKqIVDRK0Jswrj8+4dzA3GDG69k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707915008; c=relaxed/simple;
-	bh=qxJhbOKvEv1aOswKgO4WuniZESROcDNZKcfH2VkqaSQ=;
+	s=arc-20240116; t=1707915007; c=relaxed/simple;
+	bh=lUNv/tfay4+UPX4NQWW8UfT46uIeCjBkeJxKoJms+qc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=na/7HGvLSsIw19P2s97yz3KdSn8K6WToMqfPvxpGXG5WQvzk2327oD34heAD5PWlFRxuGETESZdN0G0SWTXwx/lxehQHnbCgsJCEHKS/Q+OnChnolyXmfz6wq5w8pe8z/qSrkZ0x42tEnbt4euDGwakitp1SrxG5JnOb8Go0Zmk=
+	 MIME-Version:Content-Type; b=tJPJzsxNf/8GB2TkwyuNFKAHY/cf4Ilw1doQ/f4Ri+kzhoO1+Dprkafw3eSGLqFLFqcL7omH2IJ7acEDLwe+leBFFiMPQ/BoJ+shWIvUPItVeaSai9dxUYkSOW/Vy1SYIPoN0GfTOlS6akfLy4e2SDCNg53Nu+/ZlyZ5ZnwB6B4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; arc=none smtp.client-ip=79.96.170.134
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
  by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.4.0)
- id d5b3f5452e748b4f; Wed, 14 Feb 2024 13:49:58 +0100
+ id 048c35c836d11194; Wed, 14 Feb 2024 13:49:56 +0100
 Received: from kreacher.localnet (unknown [195.136.19.94])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id D3880669DB7;
-	Wed, 14 Feb 2024 13:49:57 +0100 (CET)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 22C38669DCC;
+	Wed, 14 Feb 2024 13:49:56 +0100 (CET)
 From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To: Linux PM <linux-pm@vger.kernel.org>
 Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
@@ -35,10 +35,9 @@ Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
  Pengutronix Kernel Team <kernel@pengutronix.de>,
  Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>
 Subject:
- [PATCH v2 1/6] thermal: core: Store zone trips table in struct
- thermal_zone_device
-Date: Wed, 14 Feb 2024 13:28:57 +0100
-Message-ID: <1883976.tdWV9SEqCh@kreacher>
+ [PATCH v2 3/6] thermal: intel: Discard trip tables after zone registration
+Date: Wed, 14 Feb 2024 13:42:16 +0100
+Message-ID: <3287354.44csPzL39Z@kreacher>
 In-Reply-To: <4551531.LvFx2qVVIh@kreacher>
 References: <4551531.LvFx2qVVIh@kreacher>
 Precedence: bulk
@@ -52,183 +51,399 @@ Content-Type: text/plain; charset="UTF-8"
 X-CLIENT-IP: 195.136.19.94
 X-CLIENT-HOSTNAME: 195.136.19.94
 X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrudejgdeggecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpedvffeuiedtgfdvtddugeeujedtffetteegfeekffdvfedttddtuefhgeefvdejhfenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopedugedprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhukhgrshiirdhluhgsrgesrghrmhdrtghomhdprhgtphhtthhopehruhhirdiihhgrnhhgsehinhhtvghlrdgtohhm
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrudejgdeghecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpedvffeuiedtgfdvtddugeeujedtffetteegfeekffdvfedttddtuefhgeefvdejhfenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopedugedprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhukhgrshiirdhluhgsrgesrghrmhdrtghomhdprhgtphhtthhopehruhhirdiihhgrnhhgsehinhhtvghlrdgtohhm
 X-DCC--Metrics: v370.home.net.pl 1024; Body=14 Fuz1=14 Fuz2=14
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-The current code expects thermal zone creators to pass a pointer to a
-writable trips table to thermal_zone_device_register_with_trips() and
-that trips table is then used by the thermal core going forward.
+Because the thermal core creates and uses its own copy of the trips
+table passed to thermal_zone_device_register_with_trips(), it is not
+necessary to hold on to a local copy of it any more after the given
+thermal zone has been registered.
 
-Consequently, the callers of thermal_zone_device_register_with_trips()
-are required to hold on to the trips table passed to it until the given
-thermal zone is unregistered, at which point the trips table can be
-freed, but at the same time they are not expected to access that table
-directly.  This is both error prone and confusing.
+Accordingly, modify Intel thermal drivers to discard the trips tables
+passed to thermal_zone_device_register_with_trips() after thermal zone
+registration, for example by storing them in local variables which are
+automatically discarded when the zone registration is complete.
 
-To address it, turn the trips table pointer in struct thermal_zone_device
-into a flex array (counted by its num_trips field), allocate it during
-thermal zone device allocation and copy the contents of the trips table
-supplied by the zone creator (which can be const now) into it, which
-will allow the callers of thermal_zone_device_register_with_trips() to
-drop their trip tables right after the zone registration.
-
-This requires the imx thermal driver to be adjusted to store the new
-temperature in its internal trips table in imx_set_trip_temp(), because
-it will be separate from the core's trips table now and it has to be
-explicitly kept in sync with the latter.
+Also make some additional code simplifications unlocked by the above
+changes.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
 ---
 
-v1 -> v2:
-   * Rebase.
-   * Drop all of the redundant trips[] checks against NULL.
-   * Add imx change to still allow it to use its local trips table.
-   * Add R-by from Stanislaw (which is still applicable IMV).
+v1 -> v2: Rebase.
 
 ---
- drivers/thermal/imx_thermal.c  |    1 +
- drivers/thermal/thermal_core.c |   17 ++++++++---------
- drivers/thermal/thermal_trip.c |    2 +-
- include/linux/thermal.h        |   10 +++++-----
- 4 files changed, 15 insertions(+), 15 deletions(-)
+ drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c         |    6 -
+ drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.h         |    1 
+ drivers/thermal/intel/int340x_thermal/processor_thermal_device_pci.c |    9 +-
+ drivers/thermal/intel/intel_pch_thermal.c                            |   24 +++---
+ drivers/thermal/intel/intel_quark_dts_thermal.c                      |    4 -
+ drivers/thermal/intel/intel_soc_dts_iosf.c                           |   14 ++--
+ drivers/thermal/intel/intel_soc_dts_iosf.h                           |    1 
+ drivers/thermal/intel/x86_pkg_temp_thermal.c                         |   35 +++-------
+ 8 files changed, 40 insertions(+), 54 deletions(-)
 
-Index: linux-pm/include/linux/thermal.h
+Index: linux-pm/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c
 ===================================================================
---- linux-pm.orig/include/linux/thermal.h
-+++ linux-pm/include/linux/thermal.h
-@@ -137,7 +137,6 @@ struct thermal_cooling_device {
-  * @trip_hyst_attrs:	attributes for trip points for sysfs: trip hysteresis
-  * @mode:		current mode of this thermal zone
-  * @devdata:	private pointer for device private data
-- * @trips:	an array of struct thermal_trip
-  * @num_trips:	number of trip points the thermal zone supports
-  * @passive_delay_jiffies: number of jiffies to wait between polls when
-  *			performing passive cooling.
-@@ -167,6 +166,7 @@ struct thermal_cooling_device {
-  * @poll_queue:	delayed work for polling
-  * @notify_event: Last notification event
-  * @suspended: thermal zone suspend indicator
-+ * @trips:	array of struct thermal_trip objects
-  */
- struct thermal_zone_device {
- 	int id;
-@@ -179,7 +179,6 @@ struct thermal_zone_device {
- 	struct thermal_attr *trip_hyst_attrs;
- 	enum thermal_device_mode mode;
- 	void *devdata;
+--- linux-pm.orig/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c
++++ linux-pm/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c
+@@ -177,8 +177,6 @@ struct int34x_thermal_zone *int340x_ther
+ 	for (i = 0; i < trip_cnt; ++i)
+ 		zone_trips[i].hysteresis = hyst;
+ 
+-	int34x_zone->trips = zone_trips;
+-
+ 	int34x_zone->lpat_table = acpi_lpat_get_conversion_table(adev->handle);
+ 
+ 	int34x_zone->zone = thermal_zone_device_register_with_trips(
+@@ -188,6 +186,8 @@ struct int34x_thermal_zone *int340x_ther
+ 							int34x_zone->ops,
+ 							&int340x_thermal_params,
+ 							0, 0);
++	kfree(zone_trips);
++
+ 	if (IS_ERR(int34x_zone->zone)) {
+ 		ret = PTR_ERR(int34x_zone->zone);
+ 		goto err_thermal_zone;
+@@ -201,7 +201,6 @@ struct int34x_thermal_zone *int340x_ther
+ err_enable:
+ 	thermal_zone_device_unregister(int34x_zone->zone);
+ err_thermal_zone:
+-	kfree(int34x_zone->trips);
+ 	acpi_lpat_free_conversion_table(int34x_zone->lpat_table);
+ err_trips_alloc:
+ 	kfree(int34x_zone->ops);
+@@ -215,7 +214,6 @@ void int340x_thermal_zone_remove(struct
+ {
+ 	thermal_zone_device_unregister(int34x_zone->zone);
+ 	acpi_lpat_free_conversion_table(int34x_zone->lpat_table);
+-	kfree(int34x_zone->trips);
+ 	kfree(int34x_zone->ops);
+ 	kfree(int34x_zone);
+ }
+Index: linux-pm/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.h
+===================================================================
+--- linux-pm.orig/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.h
++++ linux-pm/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.h
+@@ -20,7 +20,6 @@ struct active_trip {
+ 
+ struct int34x_thermal_zone {
+ 	struct acpi_device *adev;
 -	struct thermal_trip *trips;
- 	int num_trips;
- 	unsigned long passive_delay_jiffies;
- 	unsigned long polling_delay_jiffies;
-@@ -200,10 +199,11 @@ struct thermal_zone_device {
- 	struct list_head node;
- 	struct delayed_work poll_queue;
- 	enum thermal_notify_event notify_event;
-+	bool suspended;
- #ifdef CONFIG_THERMAL_DEBUGFS
- 	struct thermal_debugfs *debugfs;
- #endif
--	bool suspended;
-+	struct thermal_trip trips[] __counted_by(num_trips);
+ 	int aux_trip_nr;
+ 	struct thermal_zone_device *zone;
+ 	struct thermal_zone_device_ops *ops;
+Index: linux-pm/drivers/thermal/intel/int340x_thermal/processor_thermal_device_pci.c
+===================================================================
+--- linux-pm.orig/drivers/thermal/intel/int340x_thermal/processor_thermal_device_pci.c
++++ linux-pm/drivers/thermal/intel/int340x_thermal/processor_thermal_device_pci.c
+@@ -233,11 +233,6 @@ static int get_trip_temp(struct proc_the
+ 	return temp;
+ }
+ 
+-static struct thermal_trip psv_trip = {
+-	.type = THERMAL_TRIP_PASSIVE,
+-	.flags = THERMAL_TRIP_FLAG_RW_TEMP,
+-};
+-
+ static struct thermal_zone_device_ops tzone_ops = {
+ 	.get_temp = sys_get_curr_temp,
+ 	.set_trip_temp	= sys_set_trip_temp,
+@@ -252,6 +247,10 @@ static int proc_thermal_pci_probe(struct
+ {
+ 	struct proc_thermal_device *proc_priv;
+ 	struct proc_thermal_pci *pci_info;
++	struct thermal_trip psv_trip = {
++		.type = THERMAL_TRIP_PASSIVE,
++		.flags = THERMAL_TRIP_FLAG_RW_TEMP,
++	};
+ 	int irq_flag = 0, irq, ret;
+ 	bool msi_irq = false;
+ 
+Index: linux-pm/drivers/thermal/intel/intel_pch_thermal.c
+===================================================================
+--- linux-pm.orig/drivers/thermal/intel/intel_pch_thermal.c
++++ linux-pm/drivers/thermal/intel/intel_pch_thermal.c
+@@ -84,7 +84,6 @@ struct pch_thermal_device {
+ 	void __iomem *hw_base;
+ 	struct pci_dev *pdev;
+ 	struct thermal_zone_device *tzd;
+-	struct thermal_trip trips[PCH_MAX_TRIPS];
+ 	bool bios_enabled;
  };
  
- /**
-@@ -322,7 +322,7 @@ int thermal_zone_get_crit_temp(struct th
- #ifdef CONFIG_THERMAL
- struct thermal_zone_device *thermal_zone_device_register_with_trips(
- 					const char *type,
--					struct thermal_trip *trips,
-+					const struct thermal_trip *trips,
- 					int num_trips, void *devdata,
- 					struct thermal_zone_device_ops *ops,
- 					const struct thermal_zone_params *tzp,
-@@ -381,7 +381,7 @@ void thermal_zone_device_critical(struct
- #else
- static inline struct thermal_zone_device *thermal_zone_device_register_with_trips(
- 					const char *type,
--					struct thermal_trip *trips,
-+					const struct thermal_trip *trips,
- 					int num_trips, void *devdata,
- 					struct thermal_zone_device_ops *ops,
- 					const struct thermal_zone_params *tzp,
-Index: linux-pm/drivers/thermal/thermal_core.c
-===================================================================
---- linux-pm.orig/drivers/thermal/thermal_core.c
-+++ linux-pm/drivers/thermal/thermal_core.c
-@@ -1227,9 +1227,6 @@ int thermal_zone_get_crit_temp(struct th
- 	if (tz->ops->get_crit_temp)
- 		return tz->ops->get_crit_temp(tz, temp);
- 
--	if (!tz->trips)
--		return -EINVAL;
--
- 	mutex_lock(&tz->lock);
- 
- 	for (i = 0; i < tz->num_trips; i++) {
-@@ -1271,10 +1268,12 @@ EXPORT_SYMBOL_GPL(thermal_zone_get_crit_
-  * IS_ERR*() helpers.
+@@ -94,7 +93,8 @@ struct pch_thermal_device {
+  * passive trip temperature using _PSV method. There is no specific
+  * passive temperature setting in MMIO interface of this PCI device.
   */
- struct thermal_zone_device *
--thermal_zone_device_register_with_trips(const char *type, struct thermal_trip *trips, int num_trips,
--					void *devdata, struct thermal_zone_device_ops *ops,
--					const struct thermal_zone_params *tzp, int passive_delay,
--					int polling_delay)
-+thermal_zone_device_register_with_trips(const char *type,
-+					const struct thermal_trip *trips,
-+					int num_trips, void *devdata,
-+					struct thermal_zone_device_ops *ops,
-+					const struct thermal_zone_params *tzp,
-+					int passive_delay, int polling_delay)
+-static int pch_wpt_add_acpi_psv_trip(struct pch_thermal_device *ptd, int trip)
++static int pch_wpt_add_acpi_psv_trip(struct pch_thermal_device *ptd,
++				     struct thermal_trip *trip)
  {
- 	struct thermal_zone_device *tz;
- 	int id;
-@@ -1308,7 +1307,7 @@ thermal_zone_device_register_with_trips(
- 	if (!thermal_class)
- 		return ERR_PTR(-ENODEV);
+ 	struct acpi_device *adev;
+ 	int temp;
+@@ -106,12 +106,13 @@ static int pch_wpt_add_acpi_psv_trip(str
+ 	if (thermal_acpi_passive_trip_temp(adev, &temp) || temp <= 0)
+ 		return 0;
  
--	tz = kzalloc(sizeof(*tz), GFP_KERNEL);
-+	tz = kzalloc(struct_size(tz, trips, num_trips), GFP_KERNEL);
- 	if (!tz)
+-	ptd->trips[trip].type = THERMAL_TRIP_PASSIVE;
+-	ptd->trips[trip].temperature = temp;
++	trip->type = THERMAL_TRIP_PASSIVE;
++	trip->temperature = temp;
+ 	return 1;
+ }
+ #else
+-static int pch_wpt_add_acpi_psv_trip(struct pch_thermal_device *ptd, int trip)
++static int pch_wpt_add_acpi_psv_trip(struct pch_thermal_device *ptd,
++				     struct thermal_trip *trip)
+ {
+ 	return 0;
+ }
+@@ -159,6 +160,7 @@ static const char *board_names[] = {
+ static int intel_pch_thermal_probe(struct pci_dev *pdev,
+ 				   const struct pci_device_id *id)
+ {
++	struct thermal_trip ptd_trips[PCH_MAX_TRIPS] = { 0 };
+ 	enum pch_board_ids board_id = id->driver_data;
+ 	struct pch_thermal_device *ptd;
+ 	int nr_trips = 0;
+@@ -220,21 +222,21 @@ read_trips:
+ 	trip_temp = readw(ptd->hw_base + WPT_CTT);
+ 	trip_temp &= 0x1FF;
+ 	if (trip_temp) {
+-		ptd->trips[nr_trips].temperature = GET_WPT_TEMP(trip_temp);
+-		ptd->trips[nr_trips++].type = THERMAL_TRIP_CRITICAL;
++		ptd_trips[nr_trips].temperature = GET_WPT_TEMP(trip_temp);
++		ptd_trips[nr_trips++].type = THERMAL_TRIP_CRITICAL;
+ 	}
+ 
+ 	trip_temp = readw(ptd->hw_base + WPT_PHL);
+ 	trip_temp &= 0x1FF;
+ 	if (trip_temp) {
+-		ptd->trips[nr_trips].temperature = GET_WPT_TEMP(trip_temp);
+-		ptd->trips[nr_trips++].type = THERMAL_TRIP_HOT;
++		ptd_trips[nr_trips].temperature = GET_WPT_TEMP(trip_temp);
++		ptd_trips[nr_trips++].type = THERMAL_TRIP_HOT;
+ 	}
+ 
+-	nr_trips += pch_wpt_add_acpi_psv_trip(ptd, nr_trips);
++	nr_trips += pch_wpt_add_acpi_psv_trip(ptd, &ptd_trips[nr_trips]);
+ 
+ 	ptd->tzd = thermal_zone_device_register_with_trips(board_names[board_id],
+-							   ptd->trips, nr_trips,
++							   ptd_trips, nr_trips,
+ 							   ptd, &tzd_ops,
+ 							   NULL, 0, 0);
+ 	if (IS_ERR(ptd->tzd)) {
+Index: linux-pm/drivers/thermal/intel/intel_quark_dts_thermal.c
+===================================================================
+--- linux-pm.orig/drivers/thermal/intel/intel_quark_dts_thermal.c
++++ linux-pm/drivers/thermal/intel/intel_quark_dts_thermal.c
+@@ -101,7 +101,6 @@ struct soc_sensor_entry {
+ 	u32 store_ptps;
+ 	u32 store_dts_enable;
+ 	struct thermal_zone_device *tzone;
+-	struct thermal_trip trips[QRK_MAX_DTS_TRIPS];
+ };
+ 
+ static struct soc_sensor_entry *soc_dts;
+@@ -316,8 +315,8 @@ static void free_soc_dts(struct soc_sens
+ 
+ static struct soc_sensor_entry *alloc_soc_dts(void)
+ {
++	struct thermal_trip trips[QRK_MAX_DTS_TRIPS];
+ 	struct soc_sensor_entry *aux_entry;
+-	struct thermal_trip *trips;
+ 	int err;
+ 	u32 out;
+ 
+@@ -326,7 +325,6 @@ static struct soc_sensor_entry *alloc_so
+ 		err = -ENOMEM;
  		return ERR_PTR(-ENOMEM);
+ 	}
+-	trips = aux_entry->trips;
  
-@@ -1340,7 +1339,7 @@ thermal_zone_device_register_with_trips(
- 	tz->ops = ops;
- 	tz->device.class = thermal_class;
- 	tz->devdata = devdata;
--	tz->trips = trips;
-+	memcpy(tz->trips, trips, num_trips * sizeof(*trips));
- 	tz->num_trips = num_trips;
- 
- 	thermal_set_delay_jiffies(&tz->passive_delay_jiffies, passive_delay);
-Index: linux-pm/drivers/thermal/imx_thermal.c
+ 	/* Check if DTS register is locked */
+ 	err = iosf_mbi_read(QRK_MBI_UNIT_RMU, MBI_REG_READ,
+Index: linux-pm/drivers/thermal/intel/intel_soc_dts_iosf.c
 ===================================================================
---- linux-pm.orig/drivers/thermal/imx_thermal.c
-+++ linux-pm/drivers/thermal/imx_thermal.c
-@@ -355,6 +355,7 @@ static int imx_set_trip_temp(struct ther
- 		return -EINVAL;
+--- linux-pm.orig/drivers/thermal/intel/intel_soc_dts_iosf.c
++++ linux-pm/drivers/thermal/intel/intel_soc_dts_iosf.c
+@@ -201,7 +201,8 @@ static void remove_dts_thermal_zone(stru
+ 	thermal_zone_device_unregister(dts->tzone);
+ }
  
- 	imx_set_alarm_temp(data, temp);
-+	trips[IMX_TRIP_PASSIVE].temperature = temp;
- 
- 	pm_runtime_put(data->dev);
- 
-Index: linux-pm/drivers/thermal/thermal_trip.c
-===================================================================
---- linux-pm.orig/drivers/thermal/thermal_trip.c
-+++ linux-pm/drivers/thermal/thermal_trip.c
-@@ -122,7 +122,7 @@ void __thermal_zone_set_trips(struct the
- int __thermal_zone_get_trip(struct thermal_zone_device *tz, int trip_id,
- 			    struct thermal_trip *trip)
+-static int add_dts_thermal_zone(int id, struct intel_soc_dts_sensor_entry *dts)
++static int add_dts_thermal_zone(int id, struct intel_soc_dts_sensor_entry *dts,
++				struct thermal_trip *trips)
  {
--	if (!tz || !tz->trips || trip_id < 0 || trip_id >= tz->num_trips || !trip)
-+	if (!tz || trip_id < 0 || trip_id >= tz->num_trips || !trip)
- 		return -EINVAL;
+ 	char name[10];
+ 	u32 store_ptps;
+@@ -223,11 +224,11 @@ static int add_dts_thermal_zone(int id,
  
- 	*trip = tz->trips[trip_id];
+ 		for (i = 0; i <= 1; i++) {
+ 			if (store_ptps & (0xFFU << i * 8))
+-				dts->trips[i].flags &= ~THERMAL_TRIP_FLAG_RW_TEMP;
++				trips[i].flags &= ~THERMAL_TRIP_FLAG_RW_TEMP;
+ 		}
+ 	}
+ 	snprintf(name, sizeof(name), "soc_dts%d", id);
+-	dts->tzone = thermal_zone_device_register_with_trips(name, dts->trips,
++	dts->tzone = thermal_zone_device_register_with_trips(name, trips,
+ 							     SOC_MAX_DTS_TRIPS,
+ 							     dts, &tzone_ops,
+ 							     NULL, 0, 0);
+@@ -303,6 +304,7 @@ struct intel_soc_dts_sensors *
+ intel_soc_dts_iosf_init(enum intel_soc_dts_interrupt_type intr_type,
+ 			bool critical_trip, int crit_offset)
+ {
++	struct thermal_trip trips[SOC_MAX_DTS_SENSORS][SOC_MAX_DTS_TRIPS] = { 0 };
+ 	struct intel_soc_dts_sensors *sensors;
+ 	int tj_max;
+ 	int ret;
+@@ -335,7 +337,7 @@ intel_soc_dts_iosf_init(enum intel_soc_d
+ 		if (ret)
+ 			goto err_reset_trips;
+ 
+-		set_trip(&sensors->soc_dts[i].trips[0], THERMAL_TRIP_PASSIVE,
++		set_trip(&trips[i][0], THERMAL_TRIP_PASSIVE,
+ 			 THERMAL_TRIP_FLAG_RW_TEMP, 0);
+ 
+ 		if (critical_trip) {
+@@ -351,11 +353,11 @@ intel_soc_dts_iosf_init(enum intel_soc_d
+ 		if (ret)
+ 			goto err_reset_trips;
+ 
+-		set_trip(&sensors->soc_dts[i].trips[1], trip_type, trip_flags, temp);
++		set_trip(&trips[i][1], trip_type, trip_flags, temp);
+ 	}
+ 
+ 	for (i = 0; i < SOC_MAX_DTS_SENSORS; ++i) {
+-		ret = add_dts_thermal_zone(i, &sensors->soc_dts[i]);
++		ret = add_dts_thermal_zone(i, &sensors->soc_dts[i], trips[i]);
+ 		if (ret)
+ 			goto err_remove_zone;
+ 	}
+Index: linux-pm/drivers/thermal/intel/intel_soc_dts_iosf.h
+===================================================================
+--- linux-pm.orig/drivers/thermal/intel/intel_soc_dts_iosf.h
++++ linux-pm/drivers/thermal/intel/intel_soc_dts_iosf.h
+@@ -28,7 +28,6 @@ struct intel_soc_dts_sensors;
+ struct intel_soc_dts_sensor_entry {
+ 	int id;
+ 	u32 store_status;
+-	struct thermal_trip trips[SOC_MAX_DTS_TRIPS];
+ 	struct thermal_zone_device *tzone;
+ 	struct intel_soc_dts_sensors *sensors;
+ };
+Index: linux-pm/drivers/thermal/intel/x86_pkg_temp_thermal.c
+===================================================================
+--- linux-pm.orig/drivers/thermal/intel/x86_pkg_temp_thermal.c
++++ linux-pm/drivers/thermal/intel/x86_pkg_temp_thermal.c
+@@ -53,7 +53,6 @@ struct zone_device {
+ 	u32				msr_pkg_therm_high;
+ 	struct delayed_work		work;
+ 	struct thermal_zone_device	*tzone;
+-	struct thermal_trip		*trips;
+ 	struct cpumask			cpumask;
+ };
+ 
+@@ -268,17 +267,13 @@ static int pkg_thermal_notify(u64 msr_va
+ 	return 0;
+ }
+ 
+-static struct thermal_trip *pkg_temp_thermal_trips_init(int cpu, int tj_max, int num_trips)
++static int pkg_temp_thermal_trips_init(int cpu, int tj_max,
++				       struct thermal_trip *trips, int num_trips)
+ {
+-	struct thermal_trip *trips;
+ 	unsigned long thres_reg_value;
+ 	u32 mask, shift, eax, edx;
+ 	int ret, i;
+ 
+-	trips = kzalloc(sizeof(*trips) * num_trips, GFP_KERNEL);
+-	if (!trips)
+-		return ERR_PTR(-ENOMEM);
+-
+ 	for (i = 0; i < num_trips; i++) {
+ 
+ 		if (i) {
+@@ -291,10 +286,8 @@ static struct thermal_trip *pkg_temp_the
+ 
+ 		ret = rdmsr_on_cpu(cpu, MSR_IA32_PACKAGE_THERM_INTERRUPT,
+ 				   &eax, &edx);
+-		if (ret < 0) {
+-			kfree(trips);
+-			return ERR_PTR(ret);
+-		}
++		if (ret < 0)
++			return ret;
+ 
+ 		thres_reg_value = (eax & mask) >> shift;
+ 
+@@ -308,11 +301,12 @@ static struct thermal_trip *pkg_temp_the
+ 			 __func__, cpu, i, trips[i].temperature);
+ 	}
+ 
+-	return trips;
++	return 0;
+ }
+ 
+ static int pkg_temp_thermal_device_add(unsigned int cpu)
+ {
++	struct thermal_trip trips[MAX_NUMBER_OF_TRIPS] = { 0 };
+ 	int id = topology_logical_die_id(cpu);
+ 	u32 eax, ebx, ecx, edx;
+ 	struct zone_device *zonedev;
+@@ -337,20 +331,18 @@ static int pkg_temp_thermal_device_add(u
+ 	if (!zonedev)
+ 		return -ENOMEM;
+ 
+-	zonedev->trips = pkg_temp_thermal_trips_init(cpu, tj_max, thres_count);
+-	if (IS_ERR(zonedev->trips)) {
+-		err = PTR_ERR(zonedev->trips);
++	err = pkg_temp_thermal_trips_init(cpu, tj_max, trips, thres_count);
++	if (err)
+ 		goto out_kfree_zonedev;
+-	}
+ 
+ 	INIT_DELAYED_WORK(&zonedev->work, pkg_temp_thermal_threshold_work_fn);
+ 	zonedev->cpu = cpu;
+ 	zonedev->tzone = thermal_zone_device_register_with_trips("x86_pkg_temp",
+-			zonedev->trips, thres_count,
++			trips, thres_count,
+ 			zonedev, &tzone_ops, &pkg_temp_tz_params, 0, 0);
+ 	if (IS_ERR(zonedev->tzone)) {
+ 		err = PTR_ERR(zonedev->tzone);
+-		goto out_kfree_trips;
++		goto out_kfree_zonedev;
+ 	}
+ 	err = thermal_zone_device_enable(zonedev->tzone);
+ 	if (err)
+@@ -369,8 +361,6 @@ static int pkg_temp_thermal_device_add(u
+ 
+ out_unregister_tz:
+ 	thermal_zone_device_unregister(zonedev->tzone);
+-out_kfree_trips:
+-	kfree(zonedev->trips);
+ out_kfree_zonedev:
+ 	kfree(zonedev);
+ 	return err;
+@@ -457,10 +447,9 @@ static int pkg_thermal_cpu_offline(unsig
+ 	raw_spin_unlock_irq(&pkg_temp_lock);
+ 
+ 	/* Final cleanup if this is the last cpu */
+-	if (lastcpu) {
+-		kfree(zonedev->trips);
++	if (lastcpu)
+ 		kfree(zonedev);
+-	}
++
+ 	return 0;
+ }
+ 
 
 
 
