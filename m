@@ -1,21 +1,48 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B5317552;
-	Wed, 14 Feb 2024 10:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A9D17552;
+	Wed, 14 Feb 2024 10:27:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707906284; cv=none; b=X0p13Q0O50BRsA4NnkbumW3H38mrD36ADVV0yB2SnHf3BokNndb7CettSoMaTrLzMagL1mAi62iIVo54MUrFbkTbEGNlH1Pw9ZiWw2IpFgtT9qzTc5G06C7Xl7N0UEUtYrCKyeZ/sG96YDs9+urUgy0i919wgqF1kgOWkZvZDGk=
+	t=1707906424; cv=none; b=Ams0B8oBmPgO2rnvolk8waIu15R1WFWDYZSiZ9qaWO/8sZYKmy70AiI5n7d2JPW2gE2yoTsLmllAivivWLK2k1z8Aq1RNybOZTBrfHSFe6OoF69C0xu+4qKkfhB/AQiIGyyJE0oW58ZGdJ+BNT9UNFAeflSRbSZPFnY9dvuyDLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707906284; c=relaxed/simple;
-	bh=L/qyyXzgC6hYYYA38GAe52ZNx6yR11HINzKT0BfZ7dc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hrVD9XHSD6oB5s3auWuv4fEQcjST6He3HxW3k5lw1Vz506JBfJEunUFe16lo3iO9uZb6S1wtnl4W44sMHlK1lUG2y5HFtzi9iUBBLbEkhk2uyrU6rMTsHkopsiI3oHFBDZxZlYiX1uhvbVxRDokLUhvylXN/zPsxK2NJR2YXWQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E62E3C433F1;
-	Wed, 14 Feb 2024 10:24:42 +0000 (UTC)
-Message-ID: <24cbf7b2-a091-440e-92cc-5c9828d52260@xs4all.nl>
-Date: Wed, 14 Feb 2024 11:24:41 +0100
+	s=arc-20240116; t=1707906424; c=relaxed/simple;
+	bh=teavYKWn7MDa4qq3Bv2CSJ8svQxWFPEc08FKfKtL2t4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=jyHL93BO+AiKVnZL7XBEa5UxUIzfpfQmdU4bg5GI/UG8/+88LJ4tugaf+UxXUtupYlzWjXUwwURLFU48OWFCtU17z99aqTCljtTFhyqvBt2FuD42T5Seig+uMZ6t1ttrMkGib3JwazyWFX+LZBZ1VgMqXOpcC9qgRdtguRjro+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=xYbt46DM; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xYbt46DM"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41EADKCM016860;
+	Wed, 14 Feb 2024 04:13:20 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1707905600;
+	bh=bjdfTlC774uUXe81o8dxQeT0S9fWJO5KRJ77upIQLhw=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=xYbt46DMd6hV74O0FIblr0PzoNOwGjn7b02vohYGYnOBU1mhYG2GGZbuaEBBpHG/u
+	 wiqWqKxINFFO09tnbKYECGksGXeECOctfnIXqJ6uT5cCUYxBsuUvyTaBeH+Lx6inHd
+	 nzWU4l62KFwqxE2hh42ZsJqh462dZRbF7faY9API=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41EADJbK075785
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 14 Feb 2024 04:13:19 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 14
+ Feb 2024 04:13:19 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 14 Feb 2024 04:13:19 -0600
+Received: from [172.24.227.94] (uda0132425.dhcp.ti.com [172.24.227.94])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41EADFtd012758;
+	Wed, 14 Feb 2024 04:13:16 -0600
+Message-ID: <4f122f5d-e430-4299-b6c5-bbe778aad736@ti.com>
+Date: Wed, 14 Feb 2024 15:43:15 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -23,67 +50,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: v4l: marvell: select CONFIG_V4L2_ASYNC where
- needed
-Content-Language: en-US, nl
-To: Arnd Bergmann <arnd@kernel.org>,
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>
-References: <20240213095555.454392-1-arnd@kernel.org>
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-In-Reply-To: <20240213095555.454392-1-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v3 3/7] arm64: dts: ti: iot2050: Factor out arduino
+ connector bits
+Content-Language: en-US
+To: Jan Kiszka <jan.kiszka@siemens.com>, Nishanth Menon <nm@ti.com>,
+        Tero
+ Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Bao Cheng Su <baocheng.su@siemens.com>
+References: <cover.1707463401.git.jan.kiszka@siemens.com>
+ <3366367dc9f190c9e21027b9a810886791e99245.1707463401.git.jan.kiszka@siemens.com>
+From: Vignesh Raghavendra <vigneshr@ti.com>
+In-Reply-To: <3366367dc9f190c9e21027b9a810886791e99245.1707463401.git.jan.kiszka@siemens.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Arnd, Sakari,
 
-Is this something that needs to go to v6.8? Or just v6.9?
 
-Do we need a Fixes tag?
-
-Regards,
-
-	Hans
-
-On 13/02/2024 10:55, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On 09/02/24 12:53, Jan Kiszka wrote:
+> From: Jan Kiszka <jan.kiszka@siemens.com>
 > 
-> Drivers that call v4l2_async_nf_init() need to select the corresponding
-> Kconfig symbol:
+> A new variant is to be added which will not have a arduino connector
+> like the existing ones. Factor out all bits that are specific to this
+> connector.
 > 
-> ERROR: modpost: "v4l2_async_nf_init" [drivers/media/platform/marvell/cafe_ccic.ko] undefined!
-> ERROR: modpost: "__v4l2_async_nf_add_i2c" [drivers/media/platform/marvell/cafe_ccic.ko] undefined!
-> ERROR: modpost: "v4l2_async_nf_unregister" [drivers/media/platform/marvell/mcam-core.ko] undefined!
-> ERROR: modpost: "v4l2_async_nf_init" [drivers/media/platform/marvell/mmp_camera.ko] undefined!
-> ERROR: modpost: "__v4l2_async_nf_add_fwnode_remote" [drivers/media/platform/marvell/mmp_camera.ko] undefined!
+> The split is not perfect because wkup_gpio0 is defined based on what is
+> common to all variants having the connector, thus containing also
+> connector-unrelated information. But this is still cleaner than
+> replicating this node into all 4 variants.
 > 
-> I checked all v4l2 drivers to see if anything else has the same
-> bug, but these two appear to be the only ones.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
 > ---
->  drivers/media/platform/marvell/Kconfig | 2 ++
->  1 file changed, 2 insertions(+)
+>  .../ti/k3-am65-iot2050-arduino-connector.dtsi | 768 ++++++++++++++++++
+>  .../boot/dts/ti/k3-am65-iot2050-common.dtsi   | 753 -----------------
+>  .../ti/k3-am6528-iot2050-basic-common.dtsi    |   1 +
+>  .../dts/ti/k3-am6548-iot2050-advanced-m2.dts  |   1 +
+>  .../dts/ti/k3-am6548-iot2050-advanced-pg2.dts |   1 +
+>  .../dts/ti/k3-am6548-iot2050-advanced.dts     |   1 +
+>  6 files changed, 772 insertions(+), 753 deletions(-)
+>  create mode 100644 
+> arch/arm64/boot/dts/ti/k3-am65-iot2050-arduino-connector.dtsi
 > 
-> diff --git a/drivers/media/platform/marvell/Kconfig b/drivers/media/platform/marvell/Kconfig
-> index d6499ffe30e8..d31f4730f2a3 100644
-> --- a/drivers/media/platform/marvell/Kconfig
-> +++ b/drivers/media/platform/marvell/Kconfig
-> @@ -7,6 +7,7 @@ config VIDEO_CAFE_CCIC
->  	depends on V4L_PLATFORM_DRIVERS
->  	depends on PCI && I2C && VIDEO_DEV
->  	depends on COMMON_CLK
-> +	select V4L2_ASYNC
->  	select VIDEO_OV7670 if MEDIA_SUBDRV_AUTOSELECT && VIDEO_CAMERA_SENSOR
->  	select VIDEOBUF2_VMALLOC
->  	select VIDEOBUF2_DMA_CONTIG
-> @@ -24,6 +25,7 @@ config VIDEO_MMP_CAMERA
->  	depends on COMMON_CLK
->  	select VIDEO_OV7670 if MEDIA_SUBDRV_AUTOSELECT && VIDEO_CAMERA_SENSOR
->  	select I2C_GPIO
-> +	select V4L2_ASYNC
->  	select VIDEOBUF2_VMALLOC
->  	select VIDEOBUF2_DMA_CONTIG
->  	select VIDEOBUF2_DMA_SG
+> diff --git 
+> a/arch/arm64/boot/dts/ti/k3-am65-iot2050-arduino-connector.dtsi 
+> b/arch/arm64/boot/dts/ti/k3-am65-iot2050-arduino-connector.dtsi
+> new file mode 100644
+> index 000000000000..cd86f412b837
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/ti/k3-am65-iot2050-arduino-connector.dtsi
+> @@ -0,0 +1,768 @@
+> +// SPDX-License-Identifier: GPL-2.0
 
+This and elsewhere in the series should be
+
+// SPDX-License-Identifier: GPL-2.0-only
+
+as fixed up by Nishanth in [0]. I can fix that locally, let me know.
+
+[0] https://lore.kernel.org/r/20240122145539.194512-16-nm@ti.com
+
+-- 
+Regards
+Vignesh
