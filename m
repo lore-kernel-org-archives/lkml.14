@@ -1,158 +1,125 @@
-Received: from mickerik.phytec.de (mickerik.phytec.de [91.26.50.163])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A552217543
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 10:42:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.26.50.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD823C2C6;
+	Wed, 14 Feb 2024 10:43:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707907344; cv=none; b=ouWRcPBorISuXJPDdIH3gH2jOPn9KqvedaK7RS505CEhNIr71pAPblkVG3tL+K+NNV4JkdZJNMb1Cy9yPLuVuGiV6dmnrpbhdSI340IxB5FWqys4ETqNQzSdScXiJ1DmAoowxrEwNnTMgmtdT0xjmbECUabJ9H+kmSL1Bt+3W/o=
+	t=1707907424; cv=none; b=l1rYz/ZSudG9QmX7UiGmFilCOVkzrBZ6pm/k0r/1R8EEUwRL839v/Sc+E18+oay2eV6yG+mGYwjGf4og346RuBZUqyxUig+lNlR9gbthPDskS3VI2MdP7OmpY6m+xgQpHeACtdAGpjeFi9xadIFVKivmNzfNZQHurbFhIGsS6fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707907344; c=relaxed/simple;
-	bh=6ZsuriBMCohN5uvava8Z+HPI6zdzB9t2C5NoARUcrA0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=dkR+d/dPqYJYdVd/deZSFW0HGapO3PHSlG/uZr6ies7t3I+5rVfG+e+rJnmMPzQPPQ1UIYS6z1266VcFLFiKwYmsXVftegmAfBMoUYESUMASbdZYyRtm/Sym51Q7Zw+n2rR08f6/O7T2yAWVGg3SIAV2sv88TuqKrBEdOBQ2E1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b=EKClzF++; arc=none smtp.client-ip=91.26.50.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
+	s=arc-20240116; t=1707907424; c=relaxed/simple;
+	bh=jsUtVeXk9SEIvKEq3azTe0X1RfROgbYT2UhZC0H8aAw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YmnWemI/D97uyQRHNaT7D52iO8yD7sYdHB6+h9E7zOB3mqlMJWZWOEzx9YWMBOsRqv5/KIdxa8r+Kp2nWtFaZfgKv/beH7P+awXorAZbJxewaknKOu7+DqgKDnbVg6yt3xq4lG+Hc38B0ejS2l1Xd+hOude5fP5uVQGO/RsTvKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wgk+GVca; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b="EKClzF++"
-DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a4; c=relaxed/simple;
-	q=dns/txt; i=@phytec.de; t=1707906416; x=1710498416;
-	h=From:Sender:Reply-To:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=6ZsuriBMCohN5uvava8Z+HPI6zdzB9t2C5NoARUcrA0=;
-	b=EKClzF++kzDneUpOxjj1LNg3J7VxxTXQ1o2BclCJuH+nZuex6qvYbqRLUhHQURHE
-	fHbhCbzIt9u5NVU8Aq6dJNxUdppaCcyGYiwYhaXKUMJrc8h0EX55Hhat7JA/Nm70
-	ZMiAtmvOfIVosah5kf6esFDJuGIvP+3nQkxu/SmCz6s=;
-X-AuditID: ac14000a-fbefe7000000290d-ac-65cc9570d89d
-Received: from berlix.phytec.de (Unknown_Domain [172.25.0.12])
-	(using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(Client did not present a certificate)
-	by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id 1F.75.10509.0759CC56; Wed, 14 Feb 2024 11:26:56 +0100 (CET)
-Received: from [172.25.39.28] (172.25.0.11) by Berlix.phytec.de (172.25.0.12)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.6; Wed, 14 Feb
- 2024 11:26:53 +0100
-Message-ID: <6c8feafd-a34c-4c7b-b6cd-4cd73b086259@phytec.de>
-Date: Wed, 14 Feb 2024 11:26:49 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wgk+GVca"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707907423; x=1739443423;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jsUtVeXk9SEIvKEq3azTe0X1RfROgbYT2UhZC0H8aAw=;
+  b=Wgk+GVcaXJSsVWqyUFwMTzP6a2knQBVbZmNwXRKx1033yg9UBshVKzvx
+   hhTyeN/gkEbLbGRMW/w0rD6ok/PAMlWZwlbp0fTREwbz3ekx5T+CfaLnn
+   w8KwYUjFMHEcnZvO8uDoxq5ZLgpaUcKg7FNlzEgHoRVqYMo7/ja6QhDDQ
+   BlhnKnbN4UTVzTaVs7fW3gSMG5WRn7wJW5GSb6MhqkZsuLVgNL6px4dID
+   aJgYhSZ4zuX70YBupYqClI++mNMWzTx3P1LV/TJX5E7UsXdffYBq5BRre
+   S9mnIaA2OtWJnlBRxDPexVNPRTt2zZxsKMvaCgUoGFyfR2aBweCRvuDLa
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="19358809"
+X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
+   d="scan'208";a="19358809"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 02:43:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="935615683"
+X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
+   d="scan'208";a="935615683"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 02:43:38 -0800
+Date: Wed, 14 Feb 2024 12:43:35 +0200
+From: Raag Jadav <raag.jadav@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, jarkko.nikula@linux.intel.com,
+	mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
+	stanislaw.gruszka@linux.intel.com, lukas@wunner.de,
+	rafael@kernel.org, ilpo.jarvinen@linux.intel.com,
+	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+	sashal@kernel.org
+Subject: Re: [PATCH v1] PCI / PM: Really allow runtime PM without callback
+ functions
+Message-ID: <ZcyZV2q1_QoK43vz@black.fi.intel.com>
+References: <20240212063233.5599-1-raag.jadav@intel.com>
+ <20240213200648.GA1219964@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/9] Fix MMC properties on Sitara K3 devices
-Content-Language: en-US
-To: Judith Mendez <jm@ti.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor+dt@kernel.org>
-CC: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>, Tero
- Kristo <kristo@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Francesco
- Dolcini <francesco.dolcini@toradex.com>
-References: <20240213235701.2438513-1-jm@ti.com>
-From: Wadim Egorov <w.egorov@phytec.de>
-In-Reply-To: <20240213235701.2438513-1-jm@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: Florix.phytec.de (172.25.0.13) To Berlix.phytec.de
- (172.25.0.12)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprEIsWRmVeSWpSXmKPExsWyRpKBR7dg6plUg6VrDC3W7D3HZDH/yDlW
-	i7tLfzJafPqQabH882x2i74XD5ktNj2+xmpxedccNos3P84yWbTuPcJu8f/sB3YHbo9NqzrZ
-	PO5c28PmsXlJvcfxG9uZPDa98vD4vEkugC2KyyYlNSezLLVI3y6BK2Piu+ksBU+lK9rmHGBq
-	YDwm1sXIySEhYCLxY/lk5i5GLg4hgcVMEj9777NAOHcZJY7OOMLWxcjBwStgI/Hppz9IA4uA
-	qsStbQeYQGxeAUGJkzOfsIDYogLyEvdvzWAHsYUFnCXubm0CizMLiEvcejKfCWSmiMACRolD
-	h3eBOcwCrUwSDxpegnUICRhIXFjeBmazCahL3NnwjRXE5hQwlDjQ8YoZYpKFxOI3B9khbHmJ
-	7W/nMEP0yku8uLScBeIdeYlp514zQ9ihEkc2rWaawCg8C8mxs5AcNQvJ2FlIxi5gZFnFKJSb
-	mZydWpSZrVeQUVmSmqyXkrqJERRvIgxcOxj75ngcYmTiYDzEKMHBrCTCO6n3TKoQb0piZVVq
-	UX58UWlOavEhRmkOFiVx3tUdwalCAumJJanZqakFqUUwWSYOTqkGxqm8zgXHL4tPYOsLX1S3
-	u+HMP82oI+fnvb1acU04xvphn8SNlf4egQ82Z2r96LJoFvtSv8Xp0eOGo5vdPZvUbQJLSj5m
-	cjM4fJt1b3Z8zvnL+zfq2jJL/Iiwy3Z1iwmYeDn5um3RkTdf7gvkJG7gtb6c6Pa5LqeVO8hH
-	z39//PN31+TfnT/drMRSnJFoqMVcVJwIAEHTlw2lAgAA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240213200648.GA1219964@bhelgaas>
 
+On Tue, Feb 13, 2024 at 02:06:48PM -0600, Bjorn Helgaas wrote:
+> On Mon, Feb 12, 2024 at 12:02:33PM +0530, Raag Jadav wrote:
+> > Commit c5eb1190074c ("PCI / PM: Allow runtime PM without callback
+> > functions") tried to eliminate the need for runtime PM callbacks
+> > by modifying pci_pm_runtime_suspend() and pci_pm_runtime_resume(),
+> > but didn't modify pci_pm_runtime_idle() with relevant changes, which
+> > still returns -ENOSYS if the driver supplies no runtime PM callbacks.
+> > 
+> > Fix this by modifying pci_pm_runtime_idle() such that it allows PCI
+> > device power state transitions without runtime PM callbacks.
+> > 
+> >  0)               |  pm_runtime_work() {
+> >  0)               |    rpm_idle() {
+> >  0)               |      rpm_check_suspend_allowed() {
+> >  0)   1.500 us    |        __dev_pm_qos_resume_latency(); /* = 0x7fffffff */
+> >  0)   4.840 us    |      } /* rpm_check_suspend_allowed = 0x0 */
+> >  0)   1.550 us    |      __rpm_get_callback(); /* = 0xffffffffb4bc84f0 */
+> >  0)   1.800 us    |      pci_pm_runtime_idle(); /* = -38 */
+> >  0) + 17.070 us   |    } /* rpm_idle = -38 */
+> >  0) + 22.450 us   |  } /* pm_runtime_work = -38 */
+> 
+> What is this timing information telling me?
 
-Am 14.02.24 um 00:56 schrieb Judith Mendez:
-> This patch series aims to fix and update MMC nodes for TI
-> Sitara K3 devices with the following changes.
->
-> The series introduces sdhci0 and sdhci2 nodes and enables
-> eMMC for AM62ax platform.
->
-> Also introduce fixes for MMC ITAP/OTAP values for AM64x
-> platform according to device datasheet [0], and add ITAP/
-> OTAP values for AM62p to enable the highest timing possible
-> for MMC0 and MMC1, according to device datasheet [1].
->
-> The DLL properties ti,trm-icp and ti,driver-strength-ohm
-> should be removed for soft PHYs since drive strength cannot
-> be changed, so remove these properties when not applicable.
-> Since this fix touches non-TI boards and therefore cannot be
-> tested, all tested-by's are welcome.
->
-> Also include a few fixes for ti,clkbuf-sel, bus-width,
-> and bootph-all device tree properties in MMC nodes.
->
-> This series was tested on:
-> - AM62a SK
-> - AM62x SK
-> - AM62p SK
-> - AM64x GP EVM
-> - AM64x SK EVM
-> - Beagleplay
+It's a raw ftrace dump.
 
-Adding my Tested-by for the phyBOARD-Electra-AM642 board.
+> > Debugged-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> 
+> Sounds like this resolves a problem report?  Is there a URL we can
+> cite?  If not, at least a mention of what the user-visible problem is?
+> 
+> From the c5eb1190074c commit log, it sounds like maybe this allows
+> devices to be autosuspended when they previously could not be?
+> 
+> Possibly this should have "Fixes: c5eb1190074c ("PCI / PM: Allow
+> runtime PM without callback functions")" since it sounds like it goes
+> with it?
 
-Tested-by: Wadim Egorov <w.egorov@phytec.de>
+As pointed out by Jarkko, it's not a regression. The implementation
+in original commit is incomplete. We discovered it while cleaning
+up another PCI based driver.
 
+> > Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+> > Tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Reviewed-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+> > ---
+> > 
+> > This is not marked for linux-stable for the need of extensive testing
+> > and can be backported after a few releases if no issues are reported.
+> 
+> If you think this should not get backported to stable, you'll have to
+> watch the backports to prevent it.  Lots of stuff gets auto-backported
+> even though not explicitly marked for stable.  This comment won't
+> prevent it (and won't even appear in the commit log).
 
->
-> [0] https://www.ti.com/lit/ds/symlink/am6442.pdf
-> [1] https://www.ti.com/lit/ds/symlink/am62p.pdf
->
-> Fixes since V2:
-> - Remove ti,driver-strength-ohm property in sdhci1 node for
->   k3-am642-tqma64xxl-mbax4xxl and k3-am642-phyboard-electra-rdk board files.
-> - Add Francesco's Acked-by
->
-> V2: https://lore.kernel.org/linux-devicetree/20240213002416.1560357-1-jm@ti.com/
-> V1: https://lore.kernel.org/linux-devicetree/22af7436-8833-4049-bdbb-f79bb3314ee8@ti.com/
-> RFC: https://lore.kernel.org/linux-devicetree/c94b7399-31c0-4e7d-a616-8f29c86a27ba@ti.com/
->
-> Judith Mendez (7):
->    arm64: dts: ti: k3-am62a-main: Add sdhci2 instance
->    arm64: dts: ti: k3-am64-main: Fix ITAP/OTAP values for MMC
->    arm64: dts: ti: k3-am62p: Add ITAP/OTAP values for MMC
->    arm64: dts: ti: k3-am6*: Remove DLL properties for soft PHYs
->    arm64: dts: ti: k3-am6*: Fix ti,clkbuf-sel property in MMC nodes
->    arm64: dts: ti: k3-am6*: Fix bus-width property in MMC nodes
->    arm64: dts: ti: k3-am6*: Add bootph-all property in MMC node
->
-> Nitin Yadav (2):
->    arm64: dts: ti: k3-am62a-main: Add sdhci0 instance
->    arm64: dts: ti: k3-am62a7-sk: Enable eMMC support
->
->   arch/arm64/boot/dts/ti/k3-am62-main.dtsi      | 12 +++--
->   .../boot/dts/ti/k3-am62-phycore-som.dtsi      |  1 -
->   .../boot/dts/ti/k3-am62-verdin-dahlia.dtsi    |  1 -
->   .../arm64/boot/dts/ti/k3-am62-verdin-dev.dtsi |  1 -
->   .../boot/dts/ti/k3-am62-verdin-wifi.dtsi      |  1 -
->   arch/arm64/boot/dts/ti/k3-am62-verdin.dtsi    |  2 -
->   .../arm64/boot/dts/ti/k3-am625-beagleplay.dts |  4 --
->   .../dts/ti/k3-am625-phyboard-lyra-rdk.dts     |  1 -
->   arch/arm64/boot/dts/ti/k3-am62a-main.dtsi     | 45 ++++++++++++++++++-
->   arch/arm64/boot/dts/ti/k3-am62a7-sk.dts       | 27 ++++++++++-
->   arch/arm64/boot/dts/ti/k3-am62p-main.dtsi     | 44 ++++++++++++++++--
->   arch/arm64/boot/dts/ti/k3-am62p5-sk.dts       |  3 +-
->   .../arm64/boot/dts/ti/k3-am62x-sk-common.dtsi |  2 -
->   arch/arm64/boot/dts/ti/k3-am64-main.dtsi      | 15 +++++--
->   arch/arm64/boot/dts/ti/k3-am642-evm.dts       |  4 +-
->   .../dts/ti/k3-am642-phyboard-electra-rdk.dts  |  1 -
->   arch/arm64/boot/dts/ti/k3-am642-sk.dts        |  2 -
->   .../dts/ti/k3-am642-tqma64xxl-mbax4xxl.dts    |  1 -
->   18 files changed, 129 insertions(+), 38 deletions(-)
->
->
-> base-commit: 1e6bbc5185bcd113c8d2f7aa0a02f588a6bdbe5d
+This is why I've added Greg and Sasha here.
+
+Raag
