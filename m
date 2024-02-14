@@ -1,176 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E1126A002;
-	Wed, 14 Feb 2024 17:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA4A7F7E0;
+	Wed, 14 Feb 2024 17:19:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707931140; cv=none; b=csKW+ARMcoAXc+oCedrNqXyhvQ7Ca2iy6jWHXGExPHG1s7o+qeZVe2NmepQ2c/fpJv0O5pxbfwpKWVLHmaxi7nKgsEDfcbCvkKO6cYtQxUPJ6li729CU05cUhuGhrP86P9S/C9mgrFFWXwsOiS+uSCsg5O3KEz7l+bsDnlc2RuA=
+	t=1707931143; cv=none; b=DcP4o+yc7Zrys9WChikFsjtbe8XguIjwYCSaEeooHp35FmI0nzYn5EkfLm8QCo5dNx+e/HwUJHDUkQr/cX0nNRvNRg4WOm9egGA7eBAGZuvfnY6/A/hiC82egsDoJt+UR/BGLq1sf09orz29epYcMt/6GN5HMYKSpwlWsgHP3w4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707931140; c=relaxed/simple;
-	bh=l4jPudJnwEihlvPPrQPrGvmbzUPliLgvg6nSOC6YQe0=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jROi+tTVeAd1zRaWhbBEJBxYv/btedw4zs9Z+z184UhiKxj5MxM1a9r+uKq3UxHbvGYAMMhj+qyA5BAEr+uY7bJHCD7LNLmFAw7nu1LpF2sYZ9r0XA979eNoKLDVVkyM6dSNmj69mexwp7Huk4Rl4kaH5NYNtHOUYHTdY5EeKvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hx0HSkx1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707931143; c=relaxed/simple;
+	bh=FzmanoFfNktS2f2G7iWqRptc+GWThwORnp08ceRIa4k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dIP7xbNGG65ZScvawCoTBYbs5Xu6JiyLEnkxV7yop6ZNQUwAAQOEfztQ3LBETep2sNAKJtMJogiDUWINLMjbi9kbmsKh0hdSB6Obg3iDXuaNF8ZAoTDO2fTHyqu6/ebKnEOnv8LnTK8Ujjvat1vSBdded1uTdrKyOtgJIPcKjrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=35fvl8bj; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hx0HSkx1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19A79C433F1;
-	Wed, 14 Feb 2024 17:18:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707931140;
-	bh=l4jPudJnwEihlvPPrQPrGvmbzUPliLgvg6nSOC6YQe0=;
-	h=From:Subject:Date:To:Cc:From;
-	b=hx0HSkx1O1vfzja/tcyeZbnl6f8DBH6HsvtBo3ONzOetV9It+308217dhB44DWKtj
-	 185FjCFdmK4w50Q/Fodsi68L4Fzq2BbLu8VCWU/WBn5Wj62Qw9ytHq53Xa8s3BZS0I
-	 +NVewubwnkk+oH7tKIog+zZDjKF2k0lSfburOYaN4ClYy9K0umRFBp7WjCkbze9CXU
-	 L76vSRCcAVrO1RjrasfJd3lJdqtd+iIL/36BM4xsNB6KbYTqezPlesT6IV6YZpUN8z
-	 KJAeRmL6EN9ZeCFbkeIGFW86Jundzi80P3xleNLsmhR4lCaWaLrcODAwze5HYhzffX
-	 KhqgKoNs1do4w==
-From: Benjamin Tissoires <bentiss@kernel.org>
-Subject: [PATCH RFC bpf-next v2 00/10] allow HID-BPF to do device IOs
-Date: Wed, 14 Feb 2024 18:18:29 +0100
-Message-Id: <20240214-hid-bpf-sleepable-v2-0-5756b054724d@kernel.org>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="35fvl8bj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=rqjuTCEFxSun0myagncIypgOBLIS1dt11iBFupB/8I0=; b=35fvl8bjUNypOVFnnp7BYsLaCU
+	htuVcTLOpxRx5y6RRlA9/WqKclOgTV47qY8c6NfL7YGMbIBx+MIRCEjT2nY2lJTVLPBbVaWW8KXYt
+	ch1niwMWsbH4e9GxFF89AOQhp44UDWWLlkYFlT9CDZL6kQgrJSk/0dEEpH6Qpipl3X+g=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1raIuR-007oA8-FZ; Wed, 14 Feb 2024 18:18:59 +0100
+Date: Wed, 14 Feb 2024 18:18:59 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Mark Brown <broonie@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
+	Dent Project <dentproject@linuxfoundation.org>
+Subject: Re: [PATCH net-next v3 05/17] net: pse-pd: Introduce PSE types
+ enumeration
+Message-ID: <d2f974e4-6b31-49c0-88ac-7741a980739c@lunn.ch>
+References: <20240208-feature_poe-v3-0-531d2674469e@bootlin.com>
+ <20240208-feature_poe-v3-5-531d2674469e@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAOX1zGUC/22NzQqDMBCEX0X23C1J0FJ7Kgh9gF6Lh/ysulSiJ
- CIW8d0bpccev2HmmxUiBaYIt2yFQDNHHnwCdcrAdtq3hOwSgxIqF0oU2LFDMzYYe6JRm57QCqk
- uonGltDmk3Rio4eVwvuD5qPZsX3haJqgTdBynIXyOz1ketZ++/KOfJQrMrb2WhSm0M+7+puCpP
- w+hhXrbti9T1WMxxAAAAA==
-To: Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, 
- John Fastabend <john.fastabend@gmail.com>, 
- Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
- Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-input@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1707931135; l=4831;
- i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
- bh=l4jPudJnwEihlvPPrQPrGvmbzUPliLgvg6nSOC6YQe0=;
- b=hDh4ILe9/u3jIkDCjyvSuvoJvM06QQCqlwjQWjY8/CM4pM6y+4TuGu4kVCvcawjJhIlrsZ1Ea
- vihnZbrsM5AAHQJuhsj1rOE9w9lWKerP8iZ7fltXljCYW50rWrsGdZ8
-X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
- pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240208-feature_poe-v3-5-531d2674469e@bootlin.com>
 
-[Still a RFC: there are a lot of FIXMEs in the code, and
-calling the sleepable timer cb actually crashes.]
-[Also using bpf-next as the base tree as there will be conflicting
-changes otherwise]
+On Thu, Feb 08, 2024 at 02:08:42PM +0100, Kory Maincent wrote:
+> Introduce an enumeration to define PSE types (C33 or PoDL),
+> utilizing a bitfield for potential future support of both types.
+> Include 'pse_get_types' helper for external access to PSE type info.
+> 
+> Sponsored-by: Dent Project <dentproject@linuxfoundation.org>
+> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 
-This is crashing, and I have a few questions in the code (look for all
-of the FIXMEs), so sending this now before I become insane :)
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-For reference, the use cases I have in mind:
-
----
-
-Basically, I need to be able to defer a HID-BPF program for the
-following reasons (from the aforementioned patch):
-1. defer an event:
-   Sometimes we receive an out of proximity event, but the device can not
-   be trusted enough, and we need to ensure that we won't receive another
-   one in the following n milliseconds. So we need to wait those n
-   milliseconds, and eventually re-inject that event in the stack.
-
-2. inject new events in reaction to one given event:
-   We might want to transform one given event into several. This is the
-   case for macro keys where a single key press is supposed to send
-   a sequence of key presses. But this could also be used to patch a
-   faulty behavior, if a device forgets to send a release event.
-
-3. communicate with the device in reaction to one event:
-   We might want to communicate back to the device after a given event.
-   For example a device might send us an event saying that it came back
-   from sleeping state and needs to be re-initialized.
-
-Currently we can achieve that by keeping a userspace program around,
-raise a bpf event, and let that userspace program inject the events and
-commands.
-However, we are just keeping that program alive as a daemon for just
-scheduling commands. There is no logic in it, so it doesn't really justify
-an actual userspace wakeup. So a kernel workqueue seems simpler to handle.
-
-The other part I'm not sure is whether we can say that BPF maps of type
-queue/stack can be used in sleepable context.
-I don't see any warning when running the test programs, but that's probably
-not a guarantee I'm doing the things properly :)
-
-Cheers,
-Benjamin
-
-To: Alexei Starovoitov <ast@kernel.org>
-To: Daniel Borkmann <daniel@iogearbox.net>
-To: John Fastabend <john.fastabend@gmail.com>
-To: Andrii Nakryiko <andrii@kernel.org>
-To: Martin KaFai Lau <martin.lau@linux.dev>
-To: Eduard Zingerman <eddyz87@gmail.com>
-To: Song Liu <song@kernel.org>
-To: Yonghong Song <yonghong.song@linux.dev>
-To: KP Singh <kpsingh@kernel.org>
-To: Stanislav Fomichev <sdf@google.com>
-To: Hao Luo <haoluo@google.com>
-To: Jiri Olsa <jolsa@kernel.org>
-To: Jiri Kosina <jikos@kernel.org>
-To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-To: Jonathan Corbet <corbet@lwn.net>
-To: Shuah Khan <shuah@kernel.org>
-Cc:  <bpf@vger.kernel.org>
-Cc:  <linux-kernel@vger.kernel.org>
-Cc:  <linux-input@vger.kernel.org>
-Cc:  <linux-doc@vger.kernel.org>
-Cc:  <linux-kselftest@vger.kernel.org>
-Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
-
----
-Changes in v2:
-- make use of bpf_timer (and dropped the custom HID handling)
-- implemented bpf_timer_set_sleepable_cb as a kfunc
-- still not implemented global subprogs
-- no sleepable bpf_timer selftests yet
-- Link to v1: https://lore.kernel.org/r/20240209-hid-bpf-sleepable-v1-0-4cc895b5adbd@kernel.org
-
----
-Benjamin Tissoires (10):
-      bpf/verifier: introduce in_sleepable() helper
-      bpf/helpers: introduce sleepable timers
-      bpf/verifier: allow more maps in sleepable bpf programs
-      HID: bpf/dispatch: regroup kfuncs definitions
-      HID: bpf: export hid_hw_output_report as a BPF kfunc
-      selftests/hid: Add test for hid_bpf_hw_output_report
-      HID: bpf: allow to inject HID event from BPF
-      selftests/hid: add tests for hid_bpf_input_report
-      HID: bpf: allow to use bpf_timer_set_sleepable_cb() in tracing callbacks.
-      selftests/hid: add test for bpf_timer
-
- Documentation/hid/hid-bpf.rst                      |   2 +-
- drivers/hid/bpf/hid_bpf_dispatch.c                 | 232 ++++++++++++++-------
- drivers/hid/hid-core.c                             |   2 +
- include/linux/bpf_verifier.h                       |   2 +
- include/linux/hid_bpf.h                            |   3 +
- include/uapi/linux/bpf.h                           |  12 ++
- kernel/bpf/helpers.c                               | 105 +++++++++-
- kernel/bpf/verifier.c                              |  91 +++++++-
- tools/testing/selftests/hid/hid_bpf.c              | 195 ++++++++++++++++-
- tools/testing/selftests/hid/progs/hid.c            | 198 ++++++++++++++++++
- .../testing/selftests/hid/progs/hid_bpf_helpers.h  |   8 +
- 11 files changed, 756 insertions(+), 94 deletions(-)
----
-base-commit: 4f7a05917237b006ceae760507b3d15305769ade
-change-id: 20240205-hid-bpf-sleepable-c01260fd91c4
-
-Best regards,
--- 
-Benjamin Tissoires <bentiss@kernel.org>
-
+    Andrew
