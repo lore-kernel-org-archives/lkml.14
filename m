@@ -1,239 +1,142 @@
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2048.outbound.protection.outlook.com [40.107.105.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60DA6604BC;
-	Wed, 14 Feb 2024 16:58:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.48
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707929900; cv=fail; b=rdjig3wZkaMXi1HscMROaXZitYvcQ27ieW7Ddb+QOOCfaDNkjYv5Nx1EdTWvfpSCSVaLVhHIJzyBir104erVep5B4Fq7hTGtn1NvSTRyzKNB5fOt5sV/Bh/Vm8V04V45jRC4jJJDm+9VeeGP7Dz4B2HS1pnSx7h5lO6jz2vGXGs=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707929900; c=relaxed/simple;
-	bh=EYio4zPl+9EMLWpRGG8xN/sPn6bJBYFN8ZiMmHL0DQ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uk7v61cCwC1ax4WTVNQT8sKS43ChDWXtKW08ru8P0A+J5Jc2Y5XKQQeHiSnpYoH9ZFT3Ln6GadkHIWTyFWFFvcFpsRSKmN9FgIqou7CqMC657O8GT+n20CxoqbU+qvtCkB6i+jsanM6PasOO0cj10kAn2UoyGq+qkkxWOSJlclw=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b=DpxtBb+E; dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b=DpxtBb+E; arc=fail smtp.client-ip=40.107.105.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07FD604DC
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 16:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707929934; cv=none; b=BTXXKHCoj9T6GLcDuBJFg0a03yfBW5g57DeAp+H/YC5R8rmDACxYZmVboJiqqFf91WPXwOzpvumi2SJ6B1K5xXR3JxG8cDM2EKPi9nu0JIX6tinYu3eQBnHV+N7YfkZ1/ic3JL/QMffBxvHuLAYctkDpJj77riIYtCSsfAqbs4A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707929934; c=relaxed/simple;
+	bh=OSsaNG2FvzVU0LHsrYNC/eZp5qr5JVJ6bAlNSP1GGaI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=edj/MusEAzk7y2lV6rzIUvL8EHfTh5bRG5AUzOO6QxVLImD3m1jBCjYNkn/WfRX/JmdrkLh074FbX/x55iLig2eucFusK0Oxldd+eClWJ3WViBNQX0DtJhxt8bKviirpAzzyvhnVbHlGoykLECT1S5G4y9N0nF1/jpaypW+IFTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZF3d/G5z; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="DpxtBb+E";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="DpxtBb+E"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=pass;
- b=EU9SXfOk43MzjepQT5j1XSDhX7dJ8r6F5XteOVmn2LkexNZL5KR3BxzxKo8n/PqWCDszL1M67XBk0p7jxM9qBLbFQ6V/9xU5pmIcINH7gaYwlBrH+0IrhMMAYpVHamf8QMjW3kuNuSdix/wsxW16AWjf91tKJdm2zOtlZGU11lsQzF4O4XGcVuuK09GVbJCOCLr73CrPiSyShLaKlkCbNiwFM2PoZmxK+lLbj8LVNbbp/MbmH61I658b0LigzNogr8lfiAF2fc+5KTUYGIzL+C/WfUxBj0F5GRl0VhjDd9WDk2dnRTELewo4+20OCiJeYAcfTUsZOahFWqtO4SSM3A==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TlT8qBa3eyDHPDB8wRdMAvti5i+ryETTRcSj43ILdaY=;
- b=O2BttGJmsn9EK+E82GEjC4OoNOlIoq8tZi0jxJlGSJfnRX3ReyHdO/kBY2D8KvJ0r/meiRUNVmjTbq3h4EHbbuO/Wfxo8h2Dp9PaCqLzRdMUYa4J+YC7oBerecN+HqMqIEf5jwiftLjKYC68zTrXNyvDCf37Yp6T7TVLcdAKusAgVB/Qhwqo7QVC8i4L9pJP2qmN8VosLIv8a5zPyryjYejELF3jMyU7s27lkDUv8dChJ/p221xIsqrqLby0rrBC4pQvVlbdvmhtRgs+q83ogWYfMS60P50d2ZqvFhpHBWjJJLCbDs1WYbgMOSZ01AnuMHbVcWqquteKeitx1r3maA==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 63.35.35.123) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=arm.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
- dkim=pass (signature was verified) header.d=armh.onmicrosoft.com; arc=pass (0
- oda=1 ltdi=1 spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TlT8qBa3eyDHPDB8wRdMAvti5i+ryETTRcSj43ILdaY=;
- b=DpxtBb+E/a+6XeVUyc4h4QcXuvbO45JgQB/29a2FIvIZhux3LkQH03hPevc9UA2lnQjpIJHCZ6YzCQgE3RwLZexnwoNWHt8hFnClxjY5LVXvixet/VyH0j/kTQGcxyu7oVaRN/OZb4LCQNvhgJ5JSxdeqIk5uKRVareA5NBWdh4=
-Received: from DU2PR04CA0335.eurprd04.prod.outlook.com (2603:10a6:10:2b4::11)
- by GV1PR08MB10598.eurprd08.prod.outlook.com (2603:10a6:150:165::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.26; Wed, 14 Feb
- 2024 16:58:06 +0000
-Received: from DB5PEPF00014B9D.eurprd02.prod.outlook.com
- (2603:10a6:10:2b4:cafe::6c) by DU2PR04CA0335.outlook.office365.com
- (2603:10a6:10:2b4::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.39 via Frontend
- Transport; Wed, 14 Feb 2024 16:58:06 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
- pr=C
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5PEPF00014B9D.mail.protection.outlook.com (10.167.8.164) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7292.25 via Frontend Transport; Wed, 14 Feb 2024 16:58:06 +0000
-Received: ("Tessian outbound 982a51ae93a5:v228"); Wed, 14 Feb 2024 16:58:06 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 050fa6b98e681624
-X-CR-MTA-TID: 64aa7808
-Received: from 4508d37cf19a.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id C8B156EC-5E49-4856-BAFC-C498180C4A80.1;
-	Wed, 14 Feb 2024 16:56:45 +0000
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 4508d37cf19a.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Wed, 14 Feb 2024 16:56:45 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PIMmbMR6io0VX6F3vqBVE6Cjm/2pS4ZBS11Nn8fJxts5shlzSvS1bCtnqtRynxLqJshrP5+EkJF70jO8KARuDb8jFDdK3aPDoq82G0ZcbXxyQcsND6wcl5TCM3jeqty1slQklMYNyHYl5eLt7h1ig8nkCtzCWQ5DELqYbU6Lmv8RszO3lO4IwAVRq7mmnmNRP3hoeochlvx1uJgq0H95fs+JLruBe/2WIAS9/stzIs/ovosGe7jB0L+++edkDVrvphaenuYdlTTIDa/b38e6Cn8kYIIn+WeQZmgVgdZLUbrFi0qL8lRgsqLsX1pIEUwZFHHFC/EDc3lxA7jIIpFG9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TlT8qBa3eyDHPDB8wRdMAvti5i+ryETTRcSj43ILdaY=;
- b=HZyZRj8mEzBvD3OFVKg2VjDNUI+Zaw5eN14y3PBUMVnQ59ER5lhUi3qlSg5IXIIyZr3oG8GhCs2+xwAKXcqmMfIGkVvzGo+rFChHkNxjs5+YNWZ0l24zuOfwGpnhTQSRU6YV2BHsAohpcExZoB9+7xXyWeZP5dw+2C9PHNigOjmu1KP/Ki/8/RZxR/n/FLpHe4Kn8zwil3QzB8sf1mIElB/VlH43OJ3j7t40emf/WtwCYwzkWcNFKQ3VbGIKnw/LgncwmRpqHcONwe9us12SsDWBjMZ3hZhNTyq5u8nigsIRFXIrXYW10TpJ/P9QhYRG0N1EZCx6MOe44v6ZEIfh0w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TlT8qBa3eyDHPDB8wRdMAvti5i+ryETTRcSj43ILdaY=;
- b=DpxtBb+E/a+6XeVUyc4h4QcXuvbO45JgQB/29a2FIvIZhux3LkQH03hPevc9UA2lnQjpIJHCZ6YzCQgE3RwLZexnwoNWHt8hFnClxjY5LVXvixet/VyH0j/kTQGcxyu7oVaRN/OZb4LCQNvhgJ5JSxdeqIk5uKRVareA5NBWdh4=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from PA4PR08MB6093.eurprd08.prod.outlook.com (2603:10a6:102:e8::7)
- by DB9PR08MB8626.eurprd08.prod.outlook.com (2603:10a6:10:3d2::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.38; Wed, 14 Feb
- 2024 16:56:44 +0000
-Received: from PA4PR08MB6093.eurprd08.prod.outlook.com
- ([fe80::89b9:e2af:de7b:d8b9]) by PA4PR08MB6093.eurprd08.prod.outlook.com
- ([fe80::89b9:e2af:de7b:d8b9%2]) with mapi id 15.20.7270.036; Wed, 14 Feb 2024
- 16:56:44 +0000
-From: Balint Dobszay <balint.dobszay@arm.com>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: op-tee@lists.trustedfirmware.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- jens.wiklander@linaro.org, sumit.garg@linaro.org, corbet@lwn.net,
- sudeep.holla@arm.com, gyorgy.szing@arm.com
-Subject: Re: [PATCH 3/3] Documentation: tee: Add TS-TEE driver
-Date: Wed, 14 Feb 2024 17:56:41 +0100
-X-Mailer: MailMate (1.14r5937)
-Message-ID: <40BCD479-90FC-4B32-AA97-A7B39CA8A3FC@arm.com>
-In-Reply-To: <bbb40718-9bfa-4431-a3b0-c09d068fd6cc@infradead.org>
-References: <20240213145239.379875-1-balint.dobszay@arm.com>
- <20240213145239.379875-4-balint.dobszay@arm.com>
- <bbb40718-9bfa-4431-a3b0-c09d068fd6cc@infradead.org>
-Content-Type: text/plain
-X-ClientProxiedBy: FR4P281CA0318.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:eb::18) To PA4PR08MB6093.eurprd08.prod.outlook.com
- (2603:10a6:102:e8::7)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZF3d/G5z"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5639175bf70so5667a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 08:58:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707929931; x=1708534731; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QyOK3EJeEyKJEt81jU19f6sSTlRmH4ZoITaYsVw9nEo=;
+        b=ZF3d/G5zDd+JCzwBb6Z0JSjev/gYAck3SRMrFgzDy7jip8jjj3ifVxsuS61A1IF1Ne
+         KrKN6PccBPXHoOtMNHLt+UaFzqAwHmgY085ezuWAddlXL20wMu59SwCVa6zygN3eUq7c
+         Su14HW9NP0bsm/CWe0hW8AM8biONOmKFOKR6Sawd+oa7CKf8oAn4gpPsWZqph7jrzZeh
+         7MHnxWGJ7mogYpXA+latifu9NVqnEriZxBckvy5LPr8ec+9ncAUh7TVHoztwb1DVyfKX
+         dc6mNQNge954Yl8/obotKSo4koZbU8dFmVXnp0VSbVwDOuUFmZ1PgjM6007KtVxyYh6Y
+         xQUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707929931; x=1708534731;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QyOK3EJeEyKJEt81jU19f6sSTlRmH4ZoITaYsVw9nEo=;
+        b=RH10WA/MuAttXsOU3bSrQRnzNC6Z0nTfFft9aZfC3NCtSI0chrZz+YBJgFmv1okgdq
+         mjisxkM0TBdPSFPUM2aqYwzwF5blvAHNIwBNmxcDnR6ofir6/THkQsINXz36e/y68WdD
+         mvgDW8IUjX6xj/HBFU9RIIPRW2GVC6iwa3F3znroOMaYNC1l2jkcd8j8P9Tb4HAtr0NC
+         ffz8pWeeyTg0ZqfOvE2UHNYbl/p/X5FCGDhXWldo7GnnqZvj44eVbRzO4AsRAOs+GX4m
+         Jphe0ZOX/AsZickjf1aeeE9BgTsfLLZ1VNi6iq+GT7YOYf9ltPLDXW7bF+DpZq/4uEn/
+         et2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV5JLx7OZOzTo12/zm9Ib7q9J6G4TcWRSEQ8/yFK1O8eBE9VYkrOuwbr+gyNXU+L8YwYi5XlrraaDXn9IcBbyYpvh1c/dXLQaLGYBmZ
+X-Gm-Message-State: AOJu0YxXu5BZrGc9oVlTli32KOm8bE7Xe85Qgz0hylQajVa7LIvnd/hn
+	+UR9f1wYOgWzVHE8H5SK+s35E5s2StpLn60PJF/w2pYlmzKAi1EgUyCXU6tPaBh7EeiZlWPqcAZ
+	VjldJS0GuQdS4VeJ1qCBkFv2yP0RQlkoVk+KE
+X-Google-Smtp-Source: AGHT+IE4tG1X1dYxzIYp2Bzh7QoWLOwjRxwWH/t/jCIoU3Yg+wA31sQ+QEU+t1UUq0hSu9m5cPhcEd5LSb+oOd0di18=
+X-Received: by 2002:a50:8d13:0:b0:560:1a1:eb8d with SMTP id
+ s19-20020a508d13000000b0056001a1eb8dmr205884eds.7.1707929930734; Wed, 14 Feb
+ 2024 08:58:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	PA4PR08MB6093:EE_|DB9PR08MB8626:EE_|DB5PEPF00014B9D:EE_|GV1PR08MB10598:EE_
-X-MS-Office365-Filtering-Correlation-Id: c30a2162-5619-4ce5-1ea5-08dc2d7e1d63
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original:
- TYWtitNlEbaFOtR/Fk2LCIQNdTfH5O/iU5yvUaQp8oA7C2SU2NCVgp2ZhsGj5pWmpKHkIeDfdpthkZ+1jGC8MSCreEHpEsnLq8qS0nF2/gct5ma2tZIpUv7FM0F0K/QND2WxogMtmWXm4RCUeQ5l/wxM6bZ7ppBliAdMFf8DntjoBeIUAT7KUg25dpHEoWOCgnN2VB28aSV7tCimaGHIodU5V2h4Mto8hh1kunnu+o5C4XPk63gaXvXg1Kzg7VdvLm1CCKzrDk91WRZoUZ66Yt2jRgwgQ0rTuFAkPgPxIwXwwSoRk3BfShqCfqqTMRYJFeLt0Wi79PXkMSBNn03ojTqH3lSOL5PfjfmJm1pJpGyYc24bsD65VKtycpc8jN3RteRDIoU2hh7kdcDQgA+9ei1RMBpNCF/qketIbiXyPiKpao3Osr0oHxt24Kds9suUXYSr9uH7a6yN+LZnZqjtNsfRAer+/j/ed9SWualb6alhNxmnTREgF7HZjb0kt8Du2NH8m0QZk4pRnl0zJTA7xEox/FeBv1OtCsWjzDU8tsXgHT+o395/bCubNuKWgTrQ
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR08MB6093.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(376002)(346002)(396003)(366004)(230922051799003)(64100799003)(1800799012)(186009)(451199024)(2906002)(44832011)(478600001)(53546011)(6916009)(66476007)(6486002)(6512007)(4326008)(26005)(66556008)(6506007)(8936002)(5660300002)(66946007)(8676002)(33656002)(36756003)(2616005)(83380400001)(41300700001)(6666004)(316002)(38100700002)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR08MB8626
-Original-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DB5PEPF00014B9D.eurprd02.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	ae395060-0e67-440e-278e-08dc2d7dec95
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	58uVhAiHnHV4Xe9/vEPnT8FZ+yz4On7WnHEbIVMeS75hWCF2SVkwugMtMpr5QqxTPdEDEaFz8gRn5ehoeNYa3wkLgHdVWGULmGRNqxrlZRyQhRz6hAI1txL7Pj2YnRWUcbnGQG8vk+lgvEQ5XchA9R7sN3oX/CvUcBPJRe1vXzOD0EJC7ERejlqvfKZrrN1gS5aP/TCQuW6B3Bl6SITJC5LJVZKHrZrD0rnosy/789gMv/f9g6tBAWzZUOo+p2pHeGvpQ5DlhWf5R4LU+IvhWIgak6lS+ChlOCVgNHzt8BtC2FGt8DMMPwTCrCE1rs1cpzpTVLIXmyB9k+In5qtuIntOnbU2yTc8fQ0EAh4XPKefqaqBWdgVIfa+diqAKAdPUq3M6P20cUX0yZ3IhkKHIV2GPUC/wCE3H6HjdFAbCT1XRrXHdvAuPA+pOo2rqUXS3IKJs39Zu7exumMdnJ0Y6lDbeSUkQoH9oDIBo3KxYlobcVz08lLDyvwICa79fqoaBLvLch2Rxghv8WLnwEEZBD51VQQy8IwYSbinymgNFgO3nQUYnJd3jCnpmerCrJ7jChmOfjg04qGymYsZDEpjvtnfaCBQuPgWtGJHveKyRYI=
-X-Forefront-Antispam-Report:
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(13230031)(4636009)(346002)(136003)(39860400002)(396003)(376002)(230922051799003)(1800799012)(186009)(64100799003)(451199024)(82310400011)(40470700004)(46966006)(36840700001)(316002)(70206006)(70586007)(41300700001)(2906002)(5660300002)(8676002)(6512007)(450100002)(4326008)(86362001)(33656002)(6862004)(8936002)(44832011)(478600001)(6486002)(6666004)(53546011)(6506007)(26005)(2616005)(36756003)(82740400003)(83380400001)(336012)(81166007)(356005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2024 16:58:06.1932
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c30a2162-5619-4ce5-1ea5-08dc2d7e1d63
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB5PEPF00014B9D.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR08MB10598
+References: <20240202165315.2506384-1-leitao@debian.org> <CANn89iLWWDjp71R7zttfTcEvZEdmcA1qo47oXkAX5DuciYvOtQ@mail.gmail.com>
+ <20240213100457.6648a8e0@kernel.org> <ZczSEBFtq6E6APUJ@gmail.com>
+ <CANn89iJH5jpvBCw8csGux9U10HwM+ewnL1A7udBi6uwAX6VBYA@mail.gmail.com> <ZczvGJ90L7689F6J@gmail.com>
+In-Reply-To: <ZczvGJ90L7689F6J@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Wed, 14 Feb 2024 17:58:37 +0100
+Message-ID: <CANn89i+zF3k4OyhJsK3sg5zNsFzKAQ5G_ANYEaxOfc41B7S18w@mail.gmail.com>
+Subject: Re: [PATCH net-next v3] net: dqs: add NIC stall detector based on BQL
+To: Breno Leitao <leitao@debian.org>
+Cc: Jakub Kicinski <kuba@kernel.org>, davem@davemloft.net, pabeni@redhat.com, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	weiwan@google.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	horms@kernel.org, Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Johannes Berg <johannes.berg@intel.com>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	"open list:TRACING" <linux-trace-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Randy,
+On Wed, Feb 14, 2024 at 5:49=E2=80=AFPM Breno Leitao <leitao@debian.org> wr=
+ote:
+>
+> On Wed, Feb 14, 2024 at 04:41:36PM +0100, Eric Dumazet wrote:
+> > On Wed, Feb 14, 2024 at 3:45=E2=80=AFPM Breno Leitao <leitao@debian.org=
+> wrote:
+> > >
+> > > On Tue, Feb 13, 2024 at 10:04:57AM -0800, Jakub Kicinski wrote:
+> > > > On Tue, 13 Feb 2024 14:57:49 +0100 Eric Dumazet wrote:
+> > > > > Please note that adding other sysfs entries is expensive for work=
+loads
+> > > > > creating/deleting netdev and netns often.
+> > > > >
+> > > > > I _think_ we should find a way for not creating
+> > > > > /sys/class/net/<interface>/queues/tx-{Q}/byte_queue_limits  direc=
+tory
+> > > > > and files
+> > > > > for non BQL enabled devices (like loopback !)
+> > > >
+> > > > We should try, see if anyone screams. We could use IFF_NO_QUEUE, an=
+d
+> > > > NETIF_F_LLTX as a proxy for "device doesn't have a real queue so BQ=
+L
+> > > > would be pointless"? Obviously better to annotate the drivers which
+> > > > do have BQL support, but there's >50 of them on a quick count..
+> > >
+> > > Let me make sure I understand the suggestion above. We want to disabl=
+e
+> > > BQL completely for devices that has dev->features & NETIF_F_LLTX or
+> > > dev->priv_flags & IFF_NO_QUEUE, right?
+> > >
+> > > Maybe we can add a ->enabled field in struct dql, and set it accordin=
+g
+> > > to the features above. Then we can created the sysfs and process the =
+dql
+> > > operations based on that field. This should avoid some unnecessary ca=
+lls
+> > > also, if we are not display sysfs.
+> > >
+> > > Here is a very simple PoC to represent what I had in mind. Am I in th=
+e
+> > > right direction?
+> >
+> > No, this was really about sysfs entries (aka dql_group)
+> >
+> > Partial patch would be:
+>
+> That is simpler than what I imagined. Thanks!
+>
 
-On 13 Feb 2024, at 22:44, Randy Dunlap wrote:
+>
+> for netdev_uses_bql(), would it be similar to what I proposed in the
+> previous message? Let me copy it here.
+>
+>         static bool netdev_uses_bql(struct net_device *dev)
+>         {
+>                if (dev->features & NETIF_F_LLTX ||
+>                    dev->priv_flags & IFF_NO_QUEUE)
+>                        return false;
+>
+>                return true;
+>         }
 
-> Hi--
->
-> On 2/13/24 06:52, Balint Dobszay wrote:
->> Add documentation for the Trusted Services TEE driver.
->>
->> Signed-off-by: Balint Dobszay <balint.dobszay@arm.com>
->> ---
->>  Documentation/tee/index.rst  |  1 +
->>  Documentation/tee/ts-tee.rst | 70 ++++++++++++++++++++++++++++++++++++
->>  2 files changed, 71 insertions(+)
->>  create mode 100644 Documentation/tee/ts-tee.rst
->>
->
->> diff --git a/Documentation/tee/ts-tee.rst b/Documentation/tee/ts-tee.rst
->> new file mode 100644
->> index 000000000000..e121ebbbfab7
->> --- /dev/null
->> +++ b/Documentation/tee/ts-tee.rst
->> @@ -0,0 +1,70 @@
->> +.. SPDX-License-Identifier: GPL-2.0
->> +
->> +=================================
->> +TS-TEE (Trusted Services project)
->> +=================================
->> +
->> +This driver provides access to secure services implemented by Trusted Services.
->> +
->> +Trusted Services [1] is a TrustedFirmware.org project that provides a framework
->> +for developing and deploying device Root of Trust services in FF-A [2] S-EL0
->> +Secure Partitions. The project hosts the reference implementation of the Arm
->> +Platform Security Architecture [3] for Arm A-profile devices.
->> +
->> +The FF-A Secure Partitions (SP) are accessible through the FF-A driver [4] which
->> +provides the low level communication for this driver. On top of that the Trusted
->> +Services RPC protocol is used [5]. To use the driver from user space a reference
->> +implementation is provided at [6], which is part of the Trusted Services client
->> +library called libts [7].
->> +
->
-> Fix run-on sentences:
->
->> +All Trusted Services (TS) SPs have the same FF-A UUID, it identifies the TS RPC
->
->                                                     UUID. It
-> or
->                                                     UUIT; it
->
->> +protocol. A TS SP can host one or more services (e.g. PSA Crypto, PSA ITS, etc).
->> +A service is identified by its service UUID, the same type of service cannot be
->
->                                           UUID;
->
->> +present twice in the same SP. During SP boot each service in the SP is assigned
->> +an "interface ID", this is just a short ID to simplify message addressing.
->
->       "interface ID." This
->
->> +
->> +The generic TEE design is to share memory at once with the TEE implementation,
->> +which can then be reused to communicate with multiple TAs. However, in case of
->
-> "TA" is not defined.
->
->> +FF-A, memory sharing works on an endpoint level, i.e. memory is shared with a
->> +specific SP. User space has to be able to separately share memory with each SP
->> +based on its endpoint ID, therefore a separate TEE device is registered for each
->
->                          ID; therefore
->
->> +discovered TS SP. Opening the SP corresponds to opening the TEE device and
->> +creating a TEE context. A TS SP hosts one or more services, opening a service
->
->                                                      services. Opening
-
-Thanks for the comments, I'll address them in the next version.
-
-Regards,
-Balint
+I think this should be fine, yes.
