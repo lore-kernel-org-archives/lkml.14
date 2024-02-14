@@ -1,112 +1,117 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cyan.elm.relay.mailchannels.net (cyan.elm.relay.mailchannels.net [23.83.212.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC1055E76
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 21:15:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707945343; cv=none; b=dzrhOnpA9XTRm7tLosgjLDVIQLEqj+Z1dp7lSmjrwRItZRUgcX5V6idA+fL+wnkfECyTkArNxYR/gyk64pPxpwRQ2TxAzsD0+xfeCYiiB+FVC266xcIAg7Lf6DfrC7lFmU/8AoII+BLrhRC2SDAJPjqcUilUCnhVnlm4SmUsJJk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707945343; c=relaxed/simple;
-	bh=F9oKYLh44bvwDgUu2A/DAornn6Az7M/1rM8//1GfUsY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jskDsx04utVyYNqvpLp7dH0Y3x7wvMa+9CFo9JnXFgM5yrORXyCOAiJwUYhcZWa3P255tuT4agfQOd6FLODEXcfflBhMgFbAkTyfDsqFy6VoZl9XLn4ZLBOgwnAk+DHLYCgV9VsjyiNCLaf65JAtoh5/OFBXo3lzu5unCJglLQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bfWC7NN+; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025D913DBBC;
+	Wed, 14 Feb 2024 21:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.212.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707945368; cv=pass; b=BYqH4MQU4w7iAbVTVnfgeg2I+QhJME2wsNUXc5izXfkcECgaAjYVfFom6DpW3T3Fk+uXgShfGGoXD2CC7a8AAYBFoRQ83Lt9qjmsTIYV4wWR8EyGM6sfsNiG+MYRFKQNRFo8Kb4/VRz7Ph93Zi3oswZ936Jl8xoLVmOQcqqbwCc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707945368; c=relaxed/simple;
+	bh=32ZT+v+5JzF5aL7sf+dzxCe3Q4deHg+ix3PfzWTz9OE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s3Xj+Hp6CpBKcndjcsJfdLheynrrnFaEqwjBbtFku7HbgGCa2HD3/ICc3+ZFM/j4x5JsCcf22DvQ3WzXxmhEVfpslaQhq13J5RHL7TmGYiyWf9f6aDlqYxrMtEqh7gKtiMkXQfnOfZ1tvzOoAC3ey16yCfGZ3Cy2Lzdjs26y3ec=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=XNbIPGHb; arc=pass smtp.client-ip=23.83.212.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bfWC7NN+"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-42dc7306ca1so8741cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 13:15:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707945341; x=1708550141; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rtPYS+AuuZocKBV8MQsQ9n8ruvZkdc3y9Vt/v5r10Go=;
-        b=bfWC7NN+E64DVyDhqXIBAFqshBjmiiXEfnsjOpJGgY8cD3ewiUtMOdVSNjCMuqW14T
-         q/OvfVbpdLQW9VdwtkDUVlIKn8+04TlyPL8BuR2qslAJajSF2CU2j88oCbGjMyukeS8x
-         AOAthsstPPUXOQEYDOXIXIW5U0nPddGJvhWQJswl/8zvaHCeIWfyO1/P8H8Dui81byYz
-         vlAUP4hmSbkbPJk53netgDL3RuuOQALSsvi+hDqgMsmiYHQK0ocVZbHDQy2vwipSGTrI
-         NWkxstYgj686YNcd2Q6c4l9841Tmh6HoBStqdiscHsGij92OIFoepr5uPtFHczdQwuL8
-         Xq+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707945341; x=1708550141;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rtPYS+AuuZocKBV8MQsQ9n8ruvZkdc3y9Vt/v5r10Go=;
-        b=oUTgmBP/MqhcFNWVbqGJxi0m0El9AobaC4BfHt0c4COAv7qmD7wls4ADSRtOp0eZqX
-         H35CB8R5fFYkEKsbJIWgVU2RfjlJDwGxK/fL5b8zwYUV2Xz9HZeyAW+V5U2gu/bJyxC9
-         2yyborpoVdChTS0yAPNtlEpL58BwpOHK/sdLqkgJ4+/3GAomG7vGW8Eu+vxBofDb4EcE
-         bpty6P/nMpmF6F6CqK1yiFtJAYY0tw2YlysRv2niGEKwrJRC5B+U3/z6LLRrSoh69kvC
-         ZhWl3dGS/qEW2iagy0MGkTGs/YNzTIkm7UXap16kyQbwNtFAWcCOfXAETdO82jzX2UJn
-         1GEw==
-X-Forwarded-Encrypted: i=1; AJvYcCVOUo0Fe2Ea9ZM6zYKA/UOJSjfCw63P2Q5fC32IVrpqFLN5FN1NNVhnj+nvGbxn5dPL6JjnRSkZQEz3ejX98uAfoSkSSYJVz/gYea6G
-X-Gm-Message-State: AOJu0Ywykrw65VijK176SHiB3iRGWqYXoDPpwc7ur6pMdKPYhF5g5I6L
-	6LIbxBLDwAmmEzLHSOoIOgq8sSL6LHYzsxiDbDHgM6k/mKC+K2Mc+e5KdOM+9TMqkIzjN02VXsE
-	eEaqSV+RVAOYcK8aPiygX3cfU2/R5UYX6Bohc
-X-Google-Smtp-Source: AGHT+IEipjTakTkH6uUdqHEGoQ/AQsh79Py+LRmsAxPdIx46RUJnI91c573VL4Jo7dlUQ0Sjjg38UhtVioJEXHjoSuw=
-X-Received: by 2002:a05:622a:1882:b0:42c:501c:ed12 with SMTP id
- v2-20020a05622a188200b0042c501ced12mr495153qtc.4.1707945340646; Wed, 14 Feb
- 2024 13:15:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="XNbIPGHb"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 8D0BCC3875;
+	Wed, 14 Feb 2024 21:08:35 +0000 (UTC)
+Received: from pdx1-sub0-mail-a275.dreamhost.com (unknown [127.0.0.6])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 07003C38E5;
+	Wed, 14 Feb 2024 21:08:35 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1707944915; a=rsa-sha256;
+	cv=none;
+	b=qW9q/dyfJcvz1Dzzm828vunpkgVoSSDgdgfU13G9Mn/EYyJq++eAChtrcWWXUbkHsNzE/T
+	uq9t9J8YRSphbfTrL/fAoShJdZAyeUntCRPR17qXkdnqQg3igw+8uWvaYjs55eZZzMnh/p
+	ALMJGD+7evhDIkwfOFm2SIA5VlNUkyO3DlWZPpU5AA74o3yKg36mF0j6/gF2Bk8aeVIGVE
+	xodNr3kYwxVESTxXPBPuP/9sGWEi4s9LPWYytWapaaOxXL2/zY4Vc7EiQ2Z2aeE0R1Dmg7
+	fxOctX4AvVBAJfzggK3Butr3gJBd2r/rfju1a9OktFUCLwt1aQhFBCAs+Is2uA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1707944915;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=32ZT+v+5JzF5aL7sf+dzxCe3Q4deHg+ix3PfzWTz9OE=;
+	b=uVUz94c7ILK/FHJXkUSfxKuuZOkTvTg0V9UHXfoZgQ9yyC8BpVpfrz6yPgC6kD03eLmN7V
+	zREhYP88Aa2r7ZnzOpsXHYcXmuUeXfOhcrMnemFQ0m3jDCgOFX1KDcuKkBmIVLdae3sapW
+	2wwxt7YnO4qRsi11h3RermMwgCNxdqUKFd0dyuXiFjWgn/pqs+uFTnb72sQ5KilCGB8CW9
+	xMSfAsop4lVu7sH8CN1sn8KE567bzXuOLci66LAkOLyqTI5rynDrLVUw08pB17xDgZSutR
+	UbS779ITPxr7h+42xHszfgTX2MLV0nJ5Ed3FJuDAPdcA4nG2akNzQBUUWXjQjg==
+ARC-Authentication-Results: i=1;
+	rspamd-55b4bfd7cb-drw6l;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Print-Quick: 6b103d901e01a3c4_1707944915346_3956582227
+X-MC-Loop-Signature: 1707944915346:1267690406
+X-MC-Ingress-Time: 1707944915346
+Received: from pdx1-sub0-mail-a275.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.100.244.10 (trex/6.9.2);
+	Wed, 14 Feb 2024 21:08:35 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a275.dreamhost.com (Postfix) with ESMTPSA id 4TZrQV296mz6x;
+	Wed, 14 Feb 2024 13:08:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1707944914;
+	bh=32ZT+v+5JzF5aL7sf+dzxCe3Q4deHg+ix3PfzWTz9OE=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=XNbIPGHbbg9Cr61Sb16Rbn0gyAMav+UymMelNSIV36MOITM/fp9aKFtXnaDek5LJO
+	 oxvkIQ3D9AU606gK+EJvxjJ/HkW1D4btZn2EIxLCfC6+CLEU2osi4frVkH1XTQCM7L
+	 NsOnehRrihNI/GqSeIsNA8XSe9bXLN3fxvN1r9nQ+z14bj6+/1N8ttWGV8frQC9KsT
+	 ++XEg4vpubZvrl+EsbvX6nQph4YIjOyGOG7FKa/D4qvPD0JOSPTt1Bim3Xcn20jnEC
+	 xPsMnLRCzgWpYjmYwToKXXw0zhqa2vxE2osc14AMVfCnw8vBtG0n8S+Nq4DeT7M59o
+	 MH2n+0HDSzfVg==
+Date: Wed, 14 Feb 2024 13:08:31 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Mark Brown <broonie@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Darren Hart <dvhart@infradead.org>,
+	=?utf-8?B?QW5kcsOvwr/CvQ==?= Almeida <andrealmeid@igalia.com>,
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] selftests: fuxex: Report a unique test name per run of
+ futex_requeue_pi
+Message-ID: <20240214210831.kzhrhqabot55llcd@offworld>
+References: <20240213-kselftest-futex-requeue-pi-unique-v1-1-fa160a4a7ade@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214063708.972376-1-irogers@google.com> <20240214063708.972376-3-irogers@google.com>
- <Zcz3iSt5k3_74O4J@x1> <CAP-5=fV9Gd1Teak+EOcUSxe13KqSyfZyPNagK97GbLiOQRgGaw@mail.gmail.com>
-In-Reply-To: <CAP-5=fV9Gd1Teak+EOcUSxe13KqSyfZyPNagK97GbLiOQRgGaw@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 14 Feb 2024 13:15:27 -0800
-Message-ID: <CAP-5=fXb95JmfGygEKNhjqBMDAQdkQPcTE-gR0MNaDvHw=c-qQ@mail.gmail.com>
-Subject: Re: [PATCH v1 2/6] perf trace: Ignore thread hashing in summary
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Yang Jihong <yangjihong1@huawei.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20240213-kselftest-futex-requeue-pi-unique-v1-1-fa160a4a7ade@kernel.org>
+User-Agent: NeoMutt/20220429
 
-On Wed, Feb 14, 2024 at 10:27=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
-ote:
+On Tue, 13 Feb 2024, Mark Brown wrote:
+
+>The futex_requeue_pi test program is run a number of times with different
+>options to provide multiple test cases. Currently every time it runs it
+>reports the result with a consistent string, meaning that automated systems
+>parsing the TAP output from a test run have difficulty in distinguishing
+>which test is which.
 >
-> On Wed, Feb 14, 2024 at 9:25=E2=80=AFAM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > On Tue, Feb 13, 2024 at 10:37:04PM -0800, Ian Rogers wrote:
-> > > Commit 91e467bc568f ("perf machine: Use hashtable for machine
-> > > threads") made the iteration of thread tids unordered. The perf trace
-> > > --summary output sorts and prints each hash bucket, rather than all
-> > > threads globally. Change this behavior by turn all threads into a
-> > > list, sort the list by number of trace events then by tids, finally
-> > > print the list. This also allows the rbtree in threads to be not
-> > > accessed outside of machine.
-> >
-> > Can you please provide a refresh of the output that is changed by your =
-patch?
+>The parameters used for the test are already logged as part of the test
+>output, let's use the same format to roll them into the test name that we
+>use with KTAP so that automated systems can follow the results of the
+>individual cases that get run.
 >
-> Hmm.. looks like perf trace record has broken and doesn't produce
-> output in newer perfs. It works on 6.5 and so a bisect is necessary.
+>Signed-off-by: Mark Brown <broonie@kernel.org>
 
-Bisect result:
-```
-9925495d96efc14d885ba66c5696f664fe0e663c is the first bad commit
-commit 9925495d96efc14d885ba66c5696f664fe0e663c
-Author: Ian Rogers <irogers@google.com>
-Date:   Thu Sep 14 14:19:45 2023 -0700
-
-   perf build: Default BUILD_BPF_SKEL, warn/disable for missing deps
-...
-https://lore.kernel.org/r/20230914211948.814999-3-irogers@google.com
-```
-
-Now to do the bisect with BUILD_BPF_SKEL=3D1 on each make.
-
-Thanks,
-Ian
+Acked-by: Davidlohr Bueso <dave@stgolabs.net>
