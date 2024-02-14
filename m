@@ -1,211 +1,288 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688781757A;
-	Wed, 14 Feb 2024 10:20:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB428171C1;
+	Wed, 14 Feb 2024 10:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707906036; cv=none; b=L14ozIf+XSinNjn4U9I6d70eZNHJ+MUIoLYY9ROA6owPrtLtvntRbh0lwGBeA25nbzpDvu988v7ups9jNIWl83tSAWhrQguzicE/TSYHCsndF9Mqt25aKqPp/y0YzAbWiI+YCgWsXqgUhVctHha/WDXoYxHucLbtDlOOPQR9DXQ=
+	t=1707906115; cv=none; b=XPgacamYKolUR5CtA0brTeE+WJWrvhALBYxFWPlWb0LgmEWUvspYFLGMHJxbZlfOND8fIjrBo5jTF3See1Ky0XVxMYIETiuzxyGHxJha3SmoJ0kcAFDmA0lrG4U9ebC9KRr9XGtm4KilTev2KmUxSTGWjFYeAULM8j8DL4bon18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707906036; c=relaxed/simple;
-	bh=20sRNx8iOq0dxtbjIRX48x/rKE5QlAzFN67tIlBtgIA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QYaClOI7qoHA195u3hu1jEGH31E/gm6Zw6kepovDgvyeeLr6oF8kys7cr7QtvkRI/D3WpSf6zxN0jnco3qIQpC3pbVygO1g6f/0XDMOsMmjnzVuWhqdTafDHaNJ9JaiS3LcbAf87d74Ec4sCTrXW71PIekRKRmCJkGuihgqj4LI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=DNRgpeGh; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=nX6r6YD0; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=DNRgpeGh; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=nX6r6YD0; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1707906115; c=relaxed/simple;
+	bh=U0LCMLBdsb/HGPUgFB6ys8ddfeTbC73CP7gQKzf0Y3w=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=PJHpyyz8TnNIjN696vrNZG3Jng2bMDqDVUhQc4lKAZ9AKWyAreGceDzhVcxGx+bb0q+s5LvJEIushYggK/941DPBKFJnoYt3DDTt1/b5XBjeOLelnrdlHIJTKLRquaGF8oDY+kPuknycRTvTZP5Kh7GET4ZH2iJKCbrwcKlid80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U7Jd4Qxk; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="DNRgpeGh";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="nX6r6YD0";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="DNRgpeGh";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="nX6r6YD0"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 110351FD18;
-	Wed, 14 Feb 2024 10:20:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1707906027; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FGladMXENrd0YjrbTrjIK8mVP0LFAbru1yEEbY+cSOQ=;
-	b=DNRgpeGhsDI+oSKTmcp+slsJEYfRS5HYFj3TT/mD1w+ZV1MzliTWcl4XEU6bVt3xTX9gBa
-	6c93XMG6n7uYcTsRNReflnsHj10orptTi2Vyl2Ll8/BiPXGvllIFrZYcU8UY4ckjh5/mYE
-	ecPjl2bd/Jyci9DykfeSrzt1k/0aaCY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1707906027;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FGladMXENrd0YjrbTrjIK8mVP0LFAbru1yEEbY+cSOQ=;
-	b=nX6r6YD0jPrpVOJ83kIFxVBq3vl0couSpQ2UrxdMnSPIbg4NKpFIEC32DvhFQkJALEvR40
-	eek/vbRuZR1rV0DQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1707906027; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FGladMXENrd0YjrbTrjIK8mVP0LFAbru1yEEbY+cSOQ=;
-	b=DNRgpeGhsDI+oSKTmcp+slsJEYfRS5HYFj3TT/mD1w+ZV1MzliTWcl4XEU6bVt3xTX9gBa
-	6c93XMG6n7uYcTsRNReflnsHj10orptTi2Vyl2Ll8/BiPXGvllIFrZYcU8UY4ckjh5/mYE
-	ecPjl2bd/Jyci9DykfeSrzt1k/0aaCY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1707906027;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FGladMXENrd0YjrbTrjIK8mVP0LFAbru1yEEbY+cSOQ=;
-	b=nX6r6YD0jPrpVOJ83kIFxVBq3vl0couSpQ2UrxdMnSPIbg4NKpFIEC32DvhFQkJALEvR40
-	eek/vbRuZR1rV0DQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7241913A72;
-	Wed, 14 Feb 2024 10:20:26 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id wRKNG+qTzGW7RwAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 14 Feb 2024 10:20:26 +0000
-Message-ID: <4bb7b1e4-d107-4708-bb65-ac44d4af9959@suse.cz>
-Date: Wed, 14 Feb 2024 11:20:26 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U7Jd4Qxk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707906113; x=1739442113;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=U0LCMLBdsb/HGPUgFB6ys8ddfeTbC73CP7gQKzf0Y3w=;
+  b=U7Jd4QxkD2O5NGYvMZpYbPO6n+EW8xn8/XLX0fJSbPS1NBa/CXgXd6uo
+   wFjNpVPyOunuKlHF9sdzLpsXWAlrvoF8kV0BJcy0wtVOk2Tp7V5BcywxJ
+   27FPHGq/sEYZCl2BAtFOXZfH6UcV2qxvqkXT30LEbxnmYMvGJwF0h2tlB
+   vOQrf+Hsc2VH9DEinp7zQaZtQsF8BfMJeSI7YmAakVRi3l/F8PfWV9Jf/
+   ug+qb+/ZqZ1FwmiKNNp/b6EaK79cYdsQnJ6eibzJ3rJhish/1IufyVHr/
+   xNJDlEoCjGMH+p/mbNVDG+zwdN+g9WIg/OiruuweBogxs6DW+LCHvi4tc
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="5719373"
+X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
+   d="scan'208";a="5719373"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 02:21:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
+   d="scan'208";a="7808923"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.33.229])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 02:21:50 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 14 Feb 2024 12:16:02 +0200 (EET)
+To: Vishnu Sankar <vishnuocv@gmail.com>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, vsankar@lenovo.com
+Subject: Re: [PATCH 1/2] platform/x86: thinkpad_acpi: Simplify thermal mode
+ checking
+In-Reply-To: <20240214052959.8550-1-vishnuocv@gmail.com>
+Message-ID: <05276532-52eb-3b7d-4578-c596bc1d79c4@linux.intel.com>
+References: <20240214052959.8550-1-vishnuocv@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/35] Memory allocation profiling
-Content-Language: en-US
-To: Kent Overstreet <kent.overstreet@linux.dev>,
- Suren Baghdasaryan <surenb@google.com>
-Cc: David Hildenbrand <david@redhat.com>, Michal Hocko <mhocko@suse.com>,
- akpm@linux-foundation.org, hannes@cmpxchg.org, roman.gushchin@linux.dev,
- mgorman@suse.de, dave@stgolabs.net, willy@infradead.org,
- liam.howlett@oracle.com, corbet@lwn.net, void@manifault.com,
- peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com,
- will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com,
- dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com,
- axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, nathan@kernel.org,
- dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev, rppt@kernel.org,
- paulmck@kernel.org, pasha.tatashin@soleen.com, yosryahmed@google.com,
- yuzhao@google.com, dhowells@redhat.com, hughd@google.com,
- andreyknvl@gmail.com, keescook@chromium.org, ndesaulniers@google.com,
- vvvvvv@google.com, gregkh@linuxfoundation.org, ebiggers@google.com,
- ytcoode@gmail.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
- rostedt@goodmis.org, bsegall@google.com, bristot@redhat.com,
- vschneid@redhat.com, cl@linux.com, penberg@kernel.org,
- iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com,
- elver@google.com, dvyukov@google.com, shakeelb@google.com,
- songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com,
- minchan@google.com, kaleshsingh@google.com, kernel-team@android.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- iommu@lists.linux.dev, linux-arch@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-modules@vger.kernel.org, kasan-dev@googlegroups.com,
- cgroups@vger.kernel.org
-References: <20240212213922.783301-1-surenb@google.com>
- <Zctfa2DvmlTYSfe8@tiehlicka>
- <CAJuCfpEsWfZnpL1vUB2C=cxRi_WxhxyvgGhUg7WdAxLEqy6oSw@mail.gmail.com>
- <9e14adec-2842-458d-8a58-af6a2d18d823@redhat.com>
- <2hphuyx2dnqsj3hnzyifp5yqn2hpgfjuhfu635dzgofr5mst27@4a5dixtcuxyi>
- <6a0f5d8b-9c67-43f6-b25e-2240171265be@redhat.com>
- <CAJuCfpEtOhzL65eMDk2W5SchcquN9hMCcbfD50a-FgtPgxh4Fw@mail.gmail.com>
- <adbb77ee-1662-4d24-bcbf-d74c29bc5083@redhat.com>
- <r6cmbcmalryodbnlkmuj2fjnausbcysmolikjguqvdwkngeztq@45lbvxjavwb3>
- <CAJuCfpF4g1jeEwHVHjQWwi5kqS-3UqjMt7GnG0Kdz5VJGyhK3Q@mail.gmail.com>
- <ea5vqiv5rt5cdbrlrdep5flej2pysqbfvxau4cjjbho64652um@7rz23kesqdup>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <ea5vqiv5rt5cdbrlrdep5flej2pysqbfvxau4cjjbho64652um@7rz23kesqdup>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=DNRgpeGh;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=nX6r6YD0
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.00 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 XM_UA_NO_VERSION(0.01)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 BAYES_HAM(-3.00)[100.00%];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 TO_MATCH_ENVRCPT_SOME(0.00)[];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_GT_50(0.00)[73];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,suse.cz:dkim];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 FREEMAIL_CC(0.00)[redhat.com,suse.com,linux-foundation.org,cmpxchg.org,linux.dev,suse.de,stgolabs.net,infradead.org,oracle.com,lwn.net,manifault.com,arm.com,kernel.org,arndb.de,linutronix.de,linux.intel.com,kernel.dk,soleen.com,google.com,gmail.com,chromium.org,linuxfoundation.org,linaro.org,goodmis.org,linux.com,lge.com,bytedance.com,akamai.com,android.com,vger.kernel.org,lists.linux.dev,kvack.org,googlegroups.com];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Spam-Score: -3.00
-X-Rspamd-Queue-Id: 110351FD18
-X-Spam-Flag: NO
+Content-Type: multipart/mixed; BOUNDARY="8323328-1973336468-1707905081=:7959"
+Content-ID: <6fa90c8f-3c00-25e4-8f33-2768e20495e7@linux.intel.com>
 
-On 2/14/24 00:08, Kent Overstreet wrote:
-> On Tue, Feb 13, 2024 at 02:59:11PM -0800, Suren Baghdasaryan wrote:
->> On Tue, Feb 13, 2024 at 2:50 PM Kent Overstreet
->> <kent.overstreet@linux.dev> wrote:
->> >
->> > On Tue, Feb 13, 2024 at 11:48:41PM +0100, David Hildenbrand wrote:
->> > > On 13.02.24 23:30, Suren Baghdasaryan wrote:
->> > > > On Tue, Feb 13, 2024 at 2:17 PM David Hildenbrand <david@redhat.com> wrote:
->> > > If you think you can easily achieve what Michal requested without all that,
->> > > good.
->> >
->> > He requested something?
->> 
->> Yes, a cleaner instrumentation. Unfortunately the cleanest one is not
->> possible until the compiler feature is developed and deployed. And it
->> still would require changes to the headers, so don't think it's worth
->> delaying the feature for years.
-> 
-> Hang on, let's look at the actual code.
-> 
-> This is what instrumenting an allocation function looks like:
-> 
-> #define krealloc_array(...)                     alloc_hooks(krealloc_array_noprof(__VA_ARGS__))
-> 
-> IOW, we have to:
->  - rename krealloc_array to krealloc_array_noprof
->  - replace krealloc_array with a one wrapper macro call
-> 
-> Is this really all we're getting worked up over?
-> 
-> The renaming we need regardless, because the thing that makes this
-> approach efficient enough to run in production is that we account at
-> _one_ point in the callstack, we don't save entire backtraces.
-> 
-> And thus we need to explicitly annotate which one that is; which means
-> we need _noprof() versions of functions for when the accounting is done
-> by an outer wraper (e.g. mempool).
-> 
-> And, as I keep saying: that alloc_hooks() macro will also get us _per
-> callsite fault injection points_, and we really need that because - if
-> you guys have been paying attention to other threads - whenever moving
-> more stuff to PF_MEMALLOC_* flags comes up (including adding
-> PF_MEMALLOC_NORECLAIM), the issue of small allocations not failing and
-> not being testable keeps coming up.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-How exactly do you envision the fault injection to help here? The proposals
-are about scoping via a process flag, and the process may then call just
-about anything under that scope. So if our tool is per callsite fault
-injection points, how do we know which callsites to enable to focus the
-fault injection on the particular scope?
+--8323328-1973336468-1707905081=:7959
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <802be201-439b-532b-2b2b-6a298600f2f6@linux.intel.com>
+
+On Wed, 14 Feb 2024, Vishnu Sankar wrote:
+
+Thanks for doing this, it's major improvement to readability already as
+is, and even more of after the second patch!!
+
+> Add a thermal_read_mode_check helper function to make the code
+
+thermal_read_mode_check()
+
+remove "function" as it's obvious.
+
+> simpler during init.
+> This helps particularly when the new TPEC_12 mode is added in
+> the next patch.
+
+Flow the paragraph normally without the premature line break.
+
+> Suggested-by: Ilpo Jarvinen <ilpo.jarvinen@intel.com>
+
+This is not my email address, please use
+
+Suggested-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+> Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 136 +++++++++++++--------------
+>  1 file changed, 66 insertions(+), 70 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/=
+thinkpad_acpi.c
+> index c4895e9bc714..2428c8bd0fa2 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -6147,6 +6147,71 @@ struct ibm_thermal_sensors_struct {
+>  static enum thermal_access_mode thermal_read_mode;
+>  static bool thermal_use_labels;
+> =20
+> +/* Function to check thermal read mode */
+> +static enum thermal_access_mode thermal_read_mode_check(void)
+> +{
+> +=09u8 t, ta1, ta2, ver =3D 0;
+> +=09int i;
+> +
+> +=09if (thinkpad_id.ec_model) {
+> +=09=09/*
+> +=09=09 * Direct EC access mode: sensors at registers
+> +=09=09 * 0x78-0x7F, 0xC0-0xC7.  Registers return 0x00 for
+
+While this comment is touches, lets make minor improvements to it.
+
+Remove the double space, they are not needed in kernel comments.
+
+> +=09=09 * non-implemented, thermal sensors return 0x80 when
+> +=09=09 * not available
+
+Please add the missing .
+
+Perhaps add an empty line here to break the comment into two paragraphs?
+
+> +=09=09 * The above rule is unfortunately flawed. This has been seen with
+> +=09=09 * 0xC2 (power supply ID) causing thermal control problems.
+> +=09=09 * The EC version can be determined by offset 0xEF and at least fo=
+r
+> +=09=09 * version 3 the Lenovo firmware team confirmed that registers 0xC=
+0-0xC7
+> +=09=09 * are not thermal registers.
+
+Please reflow the entire comment to 80 chars.
+
+> +=09=09 */
+> +=09=09if (!acpi_ec_read(TP_EC_FUNCREV, &ver))
+> +=09=09=09pr_warn("Thinkpad ACPI EC unable to access EC version\n");
+> +
+> +=09=09ta1 =3D ta2 =3D 0;
+> +=09=09for (i =3D 0; i < 8; i++) {
+> +=09=09=09if (acpi_ec_read(TP_EC_THERMAL_TMP0 + i, &t)) {
+> +=09=09=09=09ta1 |=3D t;
+> +=09=09=09} else {
+> +=09=09=09=09ta1 =3D 0;
+> +=09=09=09=09break;
+> +=09=09=09}
+> +=09=09=09if (ver < 3) {
+> +=09=09=09=09if (acpi_ec_read(TP_EC_THERMAL_TMP8 + i, &t)) {
+> +=09=09=09=09=09ta2 |=3D t;
+> +=09=09=09=09} else {
+> +=09=09=09=09=09ta1 =3D 0;
+> +=09=09=09=09=09break;
+> +=09=09=09=09}
+> +=09=09=09}
+> +=09=09}
+> +
+> +=09=09if (ta1 =3D=3D 0) {
+> +=09=09=09pr_err("ThinkPad ACPI EC access misbehaving, disabling thermal =
+sensors access\n");
+> +=09=09=09return TPACPI_THERMAL_NONE;
+> +=09=09}
+> +
+> +=09=09if (ver >=3D 3) {
+> +=09=09=09thermal_use_labels =3D true;
+> +=09=09=09return TPACPI_THERMAL_TPEC_8;
+> +=09=09}
+> +
+> +=09=09return (ta2 !=3D 0) ? TPACPI_THERMAL_TPEC_16 : TPACPI_THERMAL_TPEC=
+_8;
+> +=09}
+> +
+> +=09if (acpi_evalf(ec_handle, NULL, "TMP7", "qv")) {
+> +=09=09if (tpacpi_is_ibm() &&
+> +=09=09    acpi_evalf(ec_handle, NULL, "UPDT", "qv"))
+
+Put this to single line and retain the braces please (I know it will be=20
+>80 char but nothing important is lost).
+
+> +=09=09=09/* 600e/x, 770e, 770x */
+> +=09=09=09return TPACPI_THERMAL_ACPI_UPDT;
+> +=09=09/* IBM/LENOVO DSDT EC.TMPx access, max 8 sensors */
+> +=09=09return TPACPI_THERMAL_ACPI_TMP07;
+> +=09}
+> +
+> +=09/* temperatures not supported on 570, G4x, R30, R31, R32 */
+> +=09return TPACPI_THERMAL_NONE;
+> +}
+> +
+>  /* idx is zero-based */
+>  static int thermal_get_sensor(int idx, s32 *value)
+>  {
+> @@ -6375,78 +6440,9 @@ static const struct attribute_group temp_label_att=
+r_group =3D {
+> =20
+>  static int __init thermal_init(struct ibm_init_struct *iibm)
+>  {
+> -=09u8 t, ta1, ta2, ver =3D 0;
+> -=09int i;
+> -=09int acpi_tmp7;
+> -
+>  =09vdbg_printk(TPACPI_DBG_INIT, "initializing thermal subdriver\n");
+> =20
+> -=09acpi_tmp7 =3D acpi_evalf(ec_handle, NULL, "TMP7", "qv");
+> -
+> -=09if (thinkpad_id.ec_model) {
+> -=09=09/*
+> -=09=09 * Direct EC access mode: sensors at registers
+> -=09=09 * 0x78-0x7F, 0xC0-0xC7.  Registers return 0x00 for
+> -=09=09 * non-implemented, thermal sensors return 0x80 when
+> -=09=09 * not available
+> -=09=09 * The above rule is unfortunately flawed. This has been seen with
+> -=09=09 * 0xC2 (power supply ID) causing thermal control problems.
+> -=09=09 * The EC version can be determined by offset 0xEF and at least fo=
+r
+> -=09=09 * version 3 the Lenovo firmware team confirmed that registers 0xC=
+0-0xC7
+> -=09=09 * are not thermal registers.
+> -=09=09 */
+> -=09=09if (!acpi_ec_read(TP_EC_FUNCREV, &ver))
+> -=09=09=09pr_warn("Thinkpad ACPI EC unable to access EC version\n");
+> -
+> -=09=09ta1 =3D ta2 =3D 0;
+> -=09=09for (i =3D 0; i < 8; i++) {
+> -=09=09=09if (acpi_ec_read(TP_EC_THERMAL_TMP0 + i, &t)) {
+> -=09=09=09=09ta1 |=3D t;
+> -=09=09=09} else {
+> -=09=09=09=09ta1 =3D 0;
+> -=09=09=09=09break;
+> -=09=09=09}
+> -=09=09=09if (ver < 3) {
+> -=09=09=09=09if (acpi_ec_read(TP_EC_THERMAL_TMP8 + i, &t)) {
+> -=09=09=09=09=09ta2 |=3D t;
+> -=09=09=09=09} else {
+> -=09=09=09=09=09ta1 =3D 0;
+> -=09=09=09=09=09break;
+> -=09=09=09=09}
+> -=09=09=09}
+> -=09=09}
+> -=09=09if (ta1 =3D=3D 0) {
+> -=09=09=09/* This is sheer paranoia, but we handle it anyway */
+> -=09=09=09if (acpi_tmp7) {
+> -=09=09=09=09pr_err("ThinkPad ACPI EC access misbehaving, falling back to=
+ ACPI TMPx access mode\n");
+> -=09=09=09=09thermal_read_mode =3D TPACPI_THERMAL_ACPI_TMP07;
+
+Eh, where did this go in the new helper?
+
+--=20
+ i.
+
+> -=09=09=09} else {
+> -=09=09=09=09pr_err("ThinkPad ACPI EC access misbehaving, disabling therm=
+al sensors access\n");
+> -=09=09=09=09thermal_read_mode =3D TPACPI_THERMAL_NONE;
+> -=09=09=09}
+> -=09=09} else {
+> -=09=09=09if (ver >=3D 3) {
+> -=09=09=09=09thermal_read_mode =3D TPACPI_THERMAL_TPEC_8;
+> -=09=09=09=09thermal_use_labels =3D true;
+> -=09=09=09} else {
+> -=09=09=09=09thermal_read_mode =3D
+> -=09=09=09=09=09(ta2 !=3D 0) ?
+> -=09=09=09=09=09TPACPI_THERMAL_TPEC_16 : TPACPI_THERMAL_TPEC_8;
+> -=09=09=09}
+> -=09=09}
+> -=09} else if (acpi_tmp7) {
+> -=09=09if (tpacpi_is_ibm() &&
+> -=09=09    acpi_evalf(ec_handle, NULL, "UPDT", "qv")) {
+> -=09=09=09/* 600e/x, 770e, 770x */
+> -=09=09=09thermal_read_mode =3D TPACPI_THERMAL_ACPI_UPDT;
+> -=09=09} else {
+> -=09=09=09/* IBM/LENOVO DSDT EC.TMPx access, max 8 sensors */
+> -=09=09=09thermal_read_mode =3D TPACPI_THERMAL_ACPI_TMP07;
+> -=09=09}
+> -=09} else {
+> -=09=09/* temperatures not supported on 570, G4x, R30, R31, R32 */
+> -=09=09thermal_read_mode =3D TPACPI_THERMAL_NONE;
+> -=09}
+> +=09thermal_read_mode =3D thermal_read_mode_check();
+> =20
+>  =09vdbg_printk(TPACPI_DBG_INIT, "thermal is %s, mode %d\n",
+>  =09=09str_supported(thermal_read_mode !=3D TPACPI_THERMAL_NONE),
+>=20
+--8323328-1973336468-1707905081=:7959--
