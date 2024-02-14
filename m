@@ -1,97 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D411272C4
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 17:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DB1B1272CA;
+	Wed, 14 Feb 2024 17:50:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707933023; cv=none; b=YxmrzBggc1fePfGWUw/G7kbymXEetyxoVQtloeqRLbvgL6YMDRdz7hGrw+1gLWABZyLRTyhOsjlN6v2ysHkw0mWfe3HZy0wOE4njgcypvNaVZV8WHLx7+/FJ6/OeON8NMsTMgsT6CDnCY2k3NLv4Q7gOoXTeNEMxyBWg5PV8POM=
+	t=1707933057; cv=none; b=qHId5a4KNys/IA5klwIReaFmWyQhQNhASA4377oNyBLXBhHVUw7mnjmZ6Bmijq1ekKxoouq15LDHlvesUKEx1apfZXfA1qsUgEkDbFnMlwzxVyyohcbYmCQgwtrx3jFyTFG6yqxZGPCBDFrJc8of31I1eCqZ/4rgs/RKGb2kQ0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707933023; c=relaxed/simple;
-	bh=pwZc27YRL5gt3u/z/Ayw6UyQwtWSrydt57fbBJbZ6BA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iv1rb+J5ptxzi5IK0tGzyzMKcaGqc3T0Ro/jFZNxW6JECp4X7sacD/yy1L1NHEh49am+pRC0m4vz7cnJ0rQDTeqKgg1n8lGj32LmPjbOpU2dE2M2CI2uNUK1SdG/i5ZsVSOqZ+XvA1Er+Zt4EMsCVlY317C0KAEj7MSnYGQkUgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Te0DoadY; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707933057; c=relaxed/simple;
+	bh=gc+Gxrzla75qYYMzmeZpvevV5GttfaKqnemhWl3VmSk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=I7qentEIT6udfamVPpGEJsTnbWaNMUSIBaiL9Cebh/tbVty1U31iuHbEiPPZcKBs757FnT/1qiGuF1nRaNLrfG4znJpvvER16/c60lasAYwZchzuoPFYCtsEW1PbzBhS0RIDy0cByC98P+H9Atk9g00Cz/MXfhmtNJK7JWU7wM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bjBo/BwR; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Te0DoadY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707933022; x=1739469022;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=pwZc27YRL5gt3u/z/Ayw6UyQwtWSrydt57fbBJbZ6BA=;
-  b=Te0DoadY1hbm9Ey35aC3l99AaxPUZoJ3VhaEHLoJXl4iBxfFv81uo59O
-   aT+BlqH2BjZZd6M8ygYLQmb2TBByfJ7NrEkJACFzR/2PVALPp2SNPKtuh
-   /kjE/w02rkRpXJMaz4U6/64o90M/hQHw2Fs2igoDfoGwKviGpi5kKo3n1
-   cGcM4BNCmjkXk7vxoJeeEkPrwnVDTb3TrN5dJ1k3lYFMOCiAdmNyxJWVc
-   4YvRgv24pv1anMnOe8Z16+Dr08W5k78AXBBeFWhnz94+HlVp6NW4Fa4Yq
-   1juU5s3qCXoQaQ7yjWGWTtKYgA5QS4ZyZJMKezc3DEx9hkkBSMOfkvoAA
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="13381040"
-X-IronPort-AV: E=Sophos;i="6.06,160,1705392000"; 
-   d="scan'208";a="13381040"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 09:50:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="912092700"
-X-IronPort-AV: E=Sophos;i="6.06,160,1705392000"; 
-   d="scan'208";a="912092700"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 09:50:18 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1raJOi-00000004Yi2-2F58;
-	Wed, 14 Feb 2024 19:50:16 +0200
-Date: Wed, 14 Feb 2024 19:50:16 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	linux-kernel@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>
-Subject: Re: [PATCH v2 2/3] auxdisplay: Move cfag12864b.h to the subsystem
- folder
-Message-ID: <Zcz9WNXpRzv8THKW@smile.fi.intel.com>
-References: <20240212132515.2660837-2-andriy.shevchenko@linux.intel.com>
- <20240212132515.2660837-4-andriy.shevchenko@linux.intel.com>
- <Zcoe9axtLXxB7Jeo@smile.fi.intel.com>
- <CAMuHMdUJ4gSGo4A0BVGkieWvNyqa9Dv_rQVMFj9N8GWYoKCZVg@mail.gmail.com>
- <CANiq72muoZHzX+qNKabYWnH738okKqrfAruUOpY-4WUJBLP=Yw@mail.gmail.com>
- <Zcz7Cfc5XSM2MtKV@smile.fi.intel.com>
- <CANiq72ntYrPyybUDavPuT+anrwfjPb27P8VbL+toMvyp8K293w@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bjBo/BwR"
+Received: from localhost.localdomain (unknown [4.155.48.117])
+	by linux.microsoft.com (Postfix) with ESMTPSA id E7D2A20B2000;
+	Wed, 14 Feb 2024 09:50:55 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E7D2A20B2000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1707933055;
+	bh=nq9BxTnzpOoHODwwuZ79GxuZeFuq3gk7aChtfQdKv1w=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bjBo/BwRtw8GnkWHnq4uTs1l87Rg75ClG2RpjDZwCbST23Frz8KrYVDrMGtal/9fO
+	 duB/IJyPVXidJ6aAKZANmdOqcNUaR0Ey8XeSP12JqmE0fZqTtlVKLXY47Ck72Vgrjh
+	 FPOR/du4VmghRLC6PFUjR6z8ktWdDcbC3VjoHfQw=
+From: Beau Belgrave <beaub@linux.microsoft.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com
+Subject: [PATCH v3 0/4] tracing/user_events: Introduce multi-format events
+Date: Wed, 14 Feb 2024 17:50:42 +0000
+Message-Id: <20240214175046.240-1-beaub@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72ntYrPyybUDavPuT+anrwfjPb27P8VbL+toMvyp8K293w@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Feb 14, 2024 at 06:42:56PM +0100, Miguel Ojeda wrote:
-> On Wed, Feb 14, 2024 at 6:40 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > I don't want to rebase, esp. taking into account the proposal below.
-> 
-> Why do you not want to rebase?
+Currently user_events supports 1 event with the same name and must have
+the exact same format when referenced by multiple programs. This opens
+an opportunity for malicous or poorly thought through programs to
+create events that others use with different formats. Another scenario
+is user programs wishing to use the same event name but add more fields
+later when the software updates. Various versions of a program may be
+running side-by-side, which is prevented by the current single format
+requirement.
 
-It's a standard practice in the Linux kernel development.
-If it's not a so critical issue, why should we rebase?
+Add a new register flag (USER_EVENT_REG_MULTI_FORMAT) which indicates
+the user program wishes to use the same user_event name, but may have
+several different formats of the event in the future. When this flag is
+used, create the underlying tracepoint backing the user_event with a
+unique name per-version of the format. It's important that existing ABI
+users do not get this logic automatically, even if one of the multi
+format events matches the format. This ensures existing programs that
+create events and assume the tracepoint name will match exactly continue
+to work as expected. Add logic to only check multi-format events with
+other multi-format events and single-format events to only check
+single-format events during find.
 
-rebasing will break SHA sums and it's not appreciated especially at the late
-rcX weeks. Linus can even refuse to accept a PR based on this fact.
+Change system name of the multi-format event tracepoint to ensure that
+multi-format events are isolated completely from single-format events.
+This prevents single-format names from conflicting with multi-format
+events if they end with the same suffix as the multi-format events.
 
-> The proposal is orthogonal in any case.
+Add a register_name (reg_name) to the user_event struct which allows for
+split naming of events. We now have the name that was used to register
+within user_events as well as the unique name for the tracepoint. Upon
+registering events ensure matches based on first the reg_name, followed
+by the fields and format of the event. This allows for multiple events
+with the same registered name to have different formats. The underlying
+tracepoint will have a unique name in the format of {reg_name}.{unique_id}.
 
-True.
+For example, if both "test u32 value" and "test u64 value" are used with
+the USER_EVENT_REG_MULTI_FORMAT the system would have 2 unique
+tracepoints. The dynamic_events file would then show the following:
+  u:test u64 count
+  u:test u32 count
 
+The actual tracepoint names look like this:
+  test.0
+  test.1
+
+Both would be under the new user_events_multi system name to prevent the
+older ABI from being used to squat on multi-formatted events and block
+their use.
+
+Deleting events via "!u:test u64 count" would only delete the first
+tracepoint that matched that format. When the delete ABI is used all
+events with the same name will be attempted to be deleted. If
+per-version deletion is required, user programs should either not use
+persistent events or delete them via dynamic_events.
+
+Changes in v3:
+  Use hash_for_each_possible_safe() in destroy_user_event() to prevent
+  use after free (caught by kernel test robot <oliver.sang@intel.com>).
+
+Changes in v2:
+  Tracepoint names changed from "name:[id]" to "name.id". Feedback
+  was the : could conflict with system name formats. []'s are also
+  special characters for bash.
+
+  Updated self-test and docs to reflect the new suffix format.
+
+  Updated docs to include a regex example to help guide recording
+  programs find the correct event in ambiguous cases.
+
+Beau Belgrave (4):
+  tracing/user_events: Prepare find/delete for same name events
+  tracing/user_events: Introduce multi-format events
+  selftests/user_events: Test multi-format events
+  tracing/user_events: Document multi-format flag
+
+ Documentation/trace/user_events.rst           |  27 ++-
+ include/uapi/linux/user_events.h              |   6 +-
+ kernel/trace/trace_events_user.c              | 225 +++++++++++++-----
+ .../testing/selftests/user_events/abi_test.c  | 134 +++++++++++
+ 4 files changed, 330 insertions(+), 62 deletions(-)
+
+
+base-commit: 610a9b8f49fbcf1100716370d3b5f6f884a2835a
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
