@@ -1,99 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF98112B6F
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 09:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B90812E45;
+	Wed, 14 Feb 2024 09:19:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707902354; cv=none; b=l9yEHIHhyL4ouVxB4HUnIeA4nejR6axAZZbPukQ0JKecIdVUjWGT8N2sZhbAykHPMm6kXAK8ye5dL81HrhiCYl4VIY2ip4Dyh8nl1S2AZct8e8PzDhDUWBG/AtK3ZT6qOszSNvyBbWQeDZaAjloyWm4gRcux5IwZqSRo34uyTjw=
+	t=1707902360; cv=none; b=UVdeY0WgzIhF3w0mhtUFIhrzXkz71yyQQ5vutZ6+BzONYjt/dJY5r7TBFJlzrZU7xQ5o2syYg8SpquoC6AmZGyCmg25VDzcQhSgcILOS/uXYr7f4b94/F9Sh+BhNlnrv74IrehSfa+Dj8BBebzWYcCvijIHVqPKHUxorjQ3FuiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707902354; c=relaxed/simple;
-	bh=YCSAwDQum/HxDd2CoT/zfQABImWt9YwxCQNEzNNOs6o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GTJUqJTnXwB94vcb8KU7OeMT4P+y4BYOKzz2eSJYyU+ov5Dii2PsS9N7JcUQBmwnVu7FBzSiDxm5GoCflfdrNl6o2ViZjIybsudV6rPjJqrh2RR06QlzAd5UrFbnVtHQkBfsse+hiJZ6qC4v3eByA+kImi2torjtin4MeouPB88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OGX+vX+j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707902360; c=relaxed/simple;
+	bh=eopsYwS3LqpqJFXQ6Zuagfea0xeoUuIZuhfwfg1L0A0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b1NUWCCWA4dR0ayTzEn6dCZMxE90w3LHRE6kJin5M+nyoFRbmHxUZjpyIYfUOz0ccqS3NPZAZHhZdI0WQoVJ5c8dXk5v9NAcmjQfbxGANH1pJG+SqL2KcaAeZW9Jnfhpx6dM/ye16lrRgWUJ1ktJgyw9uqoasSu+ubGBo9Tvi6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=bsPs3WFb; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OGX+vX+j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8D38C433C7;
-	Wed, 14 Feb 2024 09:19:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707902353;
-	bh=YCSAwDQum/HxDd2CoT/zfQABImWt9YwxCQNEzNNOs6o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OGX+vX+jqWd4FMHHYyQs7KvfeIWQXq1ET9WH4GMh4nM/EhaJ/n2zF99u0VXsLZgrj
-	 3T16McQ+pNGc7vqJFEp2tPHoMRjrzaKwHisxxuPoZ5k2lFmj+W3A9ldEh7OXjlSdBS
-	 N6f41/3AKiOQdCkLbbpUb+8oVxFYRI0G+KxGSnIkwPWFSAEuj7B24mL2r7plqCs4Od
-	 z9ofPvVPtrQA/S4DWaWAfADk6auEhY2MHTXLNf72xShUkWCBBwmRsT5/rAKQkxVuGk
-	 o64HlApoifdeC5kjuP/ahD/6L/E2o19Fq8owNeYIFs7d4svhK5Esdl64v0nsk04Qdl
-	 na15RMV3D7Q9A==
-Date: Wed, 14 Feb 2024 09:19:09 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Andreas Schwab <schwab@suse.de>
-Cc: linux-riscv@lists.infradead.org, Palmer Dabbelt <palmer@dabbelt.com>,
-	Yunhui Cui <cuiyunhui@bytedance.com>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: use KERN_INFO in do_trap
-Message-ID: <20240214-exclusion-pluck-fcb6352a8393@spud>
-References: <mvmh6ic1y75.fsf@suse.de>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="bsPs3WFb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1707902357;
+	bh=eopsYwS3LqpqJFXQ6Zuagfea0xeoUuIZuhfwfg1L0A0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=bsPs3WFbo+AGEVfYLhDzM4a+lV/fZYEyUxr5cFSD07EM0L6ljKbgKTKKScSo8R870
+	 dI8iri9GayobJEa2LMELQzotfdkSy9k8r0/eSKQTVKwG1ygwMuL9G0+7cfORryI2mN
+	 ukVrJJ83+KnV/Y+ptTtAZFYBDTPsSSi4RstfCnjDiFhgdLItMirFyQozVriRq5Yw4z
+	 HRZub6h+Jge5dYlU6S2Vva5Y92KR9QZGsKkDT/ZTO2BwofIhTIGGyW6rIr/nJwDI/v
+	 jziw246t2InYjfXQ5vLJX6ODBgP4Fp1ARPfowjklkKczp07lmgiSOu+kCVAmtNI3TX
+	 voWsOgXWMyxzA==
+Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C04B33781FEF;
+	Wed, 14 Feb 2024 09:19:16 +0000 (UTC)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Subject: Re: [PATCH] arm64: dts: mediatek: replace underscores in node names
+Date: Wed, 14 Feb 2024 10:19:12 +0100
+Message-ID: <170790234013.477427.13548425234687450683.b4-ty@collabora.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240213144626.341463-1-krzysztof.kozlowski@linaro.org>
+References: <20240213144626.341463-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="7nijc44WcYvCtDli"
-Content-Disposition: inline
-In-Reply-To: <mvmh6ic1y75.fsf@suse.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
+On Tue, 13 Feb 2024 15:46:26 +0100, Krzysztof Kozlowski wrote:
+> Underscores should not be used in node names (dtc with W=2 warns about
+> them), so replace them with hyphens.
+> 
+> 
 
---7nijc44WcYvCtDli
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to v6.8-next/dts64, thanks!
 
-On Tue, Feb 13, 2024 at 10:59:58AM +0100, Andreas Schwab wrote:
-> Print the instruction dump with info instead of emergency level like the
-> rest of the output when printing the information for an unhandled signal.
-
-I'm not entirely sure that this is true, __show_regs() prints with
-KERN_DEFAULT, but this certainly is more consistent than it was before.
-Dumping at EMERG doesn't make sense to me though, so
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+[1/1] arm64: dts: mediatek: replace underscores in node names
+      https://git.kernel.org/mediatek/c/e630c7b0
 
 Cheers,
-Conor.
+Angelo
 
-> ---
->  arch/riscv/kernel/traps.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-> index a1b9be3c4332..142f5f5168fb 100644
-> --- a/arch/riscv/kernel/traps.c
-> +++ b/arch/riscv/kernel/traps.c
-> @@ -121,7 +121,7 @@ void do_trap(struct pt_regs *regs, int signo, int cod=
-e, unsigned long addr)
->  		print_vma_addr(KERN_CONT " in ", instruction_pointer(regs));
->  		pr_cont("\n");
->  		__show_regs(regs);
-> -		dump_instr(KERN_EMERG, regs);
-> +		dump_instr(KERN_INFO, regs);
->  	}
-> =20
->  	force_sig_fault(signo, code, (void __user *)addr);
-
-
---7nijc44WcYvCtDli
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZcyFjQAKCRB4tDGHoIJi
-0ocxAQDIDrzXGnsjXbqIAyAI1TJRyReiKYUuA7v74VxwywCPJgD8DRsTyGfmrBJF
-zc+tsX0xyLCpEcYQjJd9jXUpZ91/xgc=
-=uk/t
------END PGP SIGNATURE-----
-
---7nijc44WcYvCtDli--
