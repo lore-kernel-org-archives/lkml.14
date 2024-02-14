@@ -1,297 +1,162 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40AA658AA7
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 13:58:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0011D5C8FE;
+	Wed, 14 Feb 2024 13:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707919135; cv=none; b=MP4KLBRtcNSK9wMJhVd/x3OMprPmHTWBGtW0K3FYvDmEmLOSC1PnfMBJ+8svzouEUqZMWTP+qMIGhmm2xPMcUy58uxHfE21RKRRPyrc979EmvmFPwxQVcM+0R52zD0EpmSOPX4gsCBkAX/0GZ6lXFq9S9eBkfK1PI5GhKbQgIis=
+	t=1707919154; cv=none; b=dNitJRw7i4/1AuTlv25dktPnOAn9KFNMQ28sd+zo8s7hneX2evl2LMTv9dKc3gxfoyCpBLeZPOHLOIrJRfQwG1C6LT+6EHLujzVzQDwz4P+/yX/HIvLZkGJfB15Y+UihSc2R0DY78EH/22Y0cVDz7u/1a7jEGyEFIPw0+R0IViU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707919135; c=relaxed/simple;
-	bh=DCOkytDLppS2bYn3RErvOIjLsPi/YOCWIUBoGo2hi0s=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VpmmSNJbQmkcqzcK2dsq3qKPjsyDf4WZfWvmI7jLSNw2LvB5lr4xnZD0j8EQFFft7pyjCxTq9nSrrKoNREtqEgVuyusrm1sSUT1EiPk4EzG8Ol++DdknzBExNgxzlo5z5A1N9XWSt60eIgpwA+/cI0G6DBdYBa06eAwMDIex+zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=PqwY+T3B; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1707919154; c=relaxed/simple;
+	bh=gvJJZ/u+oFmJe9o1bdHtO/O/5u2N3evyh8Zop5iY370=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=XjFBcmmXx8L/Xp5ybq9KjVWh7XmwuCo/xhGtLhmMH/jdBNL9j6LuDt0Tgwf4Uq2K+K59apnRFNvlNvkFlSAIOk/G82vFF2tFknogr6GP/30CAtYl+ro81VsZ1ygHOY+oeTfozKFVQ+Uryib5G/OhKnQuN11ggyDFewUhPEuumLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ljkXjH4C; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="PqwY+T3B"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-339289fead2so3587512f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 05:58:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1707919131; x=1708523931; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/zjiXPc38mpvdFc3Koad2qjD+UloWUSOxb8tDBr5OK4=;
-        b=PqwY+T3BgK+ZRZjW/x3inefq7peSvBzf6BHmjvV/vXexaKPWYFPlpNQINna855jr7F
-         2ZWBLsEvwyLL4d+Z9eICXk9oONtXZ2Xd4sMaA5FfdhU0DRIunsVLunMXpV4iOq1qbWAu
-         aBCwkFHPmtWyzJSBPhCESvDCGKwz6E22H6koq0kbRQn5iZYnHkAWdhst9a08guI5Dnj4
-         MwO45kG2mGu2IfsWIvptSZQCzefZd8+P0SVayv9Oe540zdqiRVdXxnNcR7bSJ+66zxay
-         q74Yc5R5XXWL+FcdSVLNlcz0KNBmbax1XXtK8hBg0YbArXGAYWydufCjyMmIdPWZokGJ
-         5+Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707919131; x=1708523931;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/zjiXPc38mpvdFc3Koad2qjD+UloWUSOxb8tDBr5OK4=;
-        b=vCynr7Rkwbov0dqiDPMk1DdKbCn1wt6qS/E4XXq5oH3urwak0MYYZ3Sdw3+NnMHd2C
-         SzmMigTht0pfkAhdHtwFa1aXs+K7f5nmzLp3oKyhSjQWwaPdxKCudh6u2SSicjC2wS3o
-         K41sFmMcExPenwu26CT0L5nqCBuOlWciaudOz2d9eOYqJElPneK16ReLC84sMnXQqmT/
-         qORRgJM1c6AWwv5CiHqWZk+qbBAixXoEbVLd9x0XxdBwIjPhKHo9LAlj6FYNrbstcDtl
-         MRA26hQEU1lEzk+wpcxIFv9r2VIS4kelUGsXi5o7qYhy7G2PhrItEJrK/qqsOSxRyWfM
-         ViIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUAHU2hjFCXsR5SsNuYNQv0UM/cxXN5fkXWLza8hK8lGBr1ZAC3neAMHVyFPVcQkxRUAWz+RZLY44e7CucQzFzeVzWvb5YA09v3cLVs
-X-Gm-Message-State: AOJu0Yx6DWHQBsuiRMSxlmx6BxDlNSbwIpUR200IzvFjPk0JilG41HDp
-	2OlH50AB+eexzmOgP7b5lNkk/l+S1Up2dft7GmH2chsMS7s5jkk/IuC0etBFuw4=
-X-Google-Smtp-Source: AGHT+IEbIprofj1cnMyJXEX5AiYlHF4Wk00M8lDTzMe7s0Qz1nMc7jBS1yKOy5LpTVcQlPPFlfCriw==
-X-Received: by 2002:adf:f18e:0:b0:33b:5087:c913 with SMTP id h14-20020adff18e000000b0033b5087c913mr2242505wro.54.1707919131582;
-        Wed, 14 Feb 2024 05:58:51 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVLwJ2RO2UWMIdJhAp4ZOX+nEM6u7OawSEXibKwgIZurbbgG6FeY89PAkWMrsvonE3leWhdvP3H0IHro4PglhJH2in/eFz4JvexoF6IActYBupfvxjZ/e9P+FrlcoosPha8/GdCgPYMa45MTqxnDwnaWvyZsClbLpfa4AgBy5qjkW/L12UmoVQhRiG5LG9pUx15X4i29vZbRW5EqzbdY6ieGCKpFV6vQMJgEV5hR6fzwVesRp5/C1JyCnxhbLLvOCs6SPrJZh1QtgfHmCWwEXDE47V3+wDG6JhWTr7kpcWcpOAG3k4BrCyp5nTXl69QrpdnetW+0CGRQdiykSjD4Ak3rKJz8P7O7V+YiMzw0q1B3+HncYr+
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.20])
-        by smtp.gmail.com with ESMTPSA id f15-20020adff58f000000b0033cdbebfda7sm4282140wro.14.2024.02.14.05.58.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Feb 2024 05:58:51 -0800 (PST)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: s.shtylyov@omp.ru,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	biju.das.jz@bp.renesas.com
-Cc: netdev@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	claudiu.beznea@tuxon.dev,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH net-next v4 6/6] net: ravb: Add runtime PM support
-Date: Wed, 14 Feb 2024 15:58:00 +0200
-Message-Id: <20240214135800.2674435-7-claudiu.beznea.uj@bp.renesas.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240214135800.2674435-1-claudiu.beznea.uj@bp.renesas.com>
-References: <20240214135800.2674435-1-claudiu.beznea.uj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ljkXjH4C"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41EAxMXw001851;
+	Wed, 14 Feb 2024 13:58:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=UsRN04YgdttuRzXuuaPeRfbR90rptVxiln+xXdu7HOM=; b=lj
+	kXjH4CFDMWOxTHHPA+dFro8BHptRBBZHD55vn6e728Un0kpyEwCNNbi3yTPzcfvc
+	Z9frQZ9CfyqnIIhH74EPauBaZ3rDqjUJNFld/Id7QQWQdhQ5wecheYYbd7YbuSDR
+	Mnv2ufEeexLbxdSdavuVptXyzF4txem6Lqui8MwrHw+62A41sesLPlxJFrj2VcPh
+	s0vHwftM3XG+yMIREDFZdXnwGNyuKgGdsBPa+80rkGsDn1Mn+7g3fRmHjY08+67d
+	6JaehgHgm/7Iw/eTsppRD/aYr30qLAWPAjzEPc5R80O6HArRaAlRRfJxViAekSKX
+	MEmdMrhl5CLvunNSykKQ==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w8jn9hb6j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 Feb 2024 13:58:47 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41EDwjva016998
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 Feb 2024 13:58:45 GMT
+Received: from [10.216.19.164] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 14 Feb
+ 2024 05:58:31 -0800
+Message-ID: <e5a5b32c-bc9d-42b7-b1a8-90e22b957915@quicinc.com>
+Date: Wed, 14 Feb 2024 19:28:26 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] iio: adc: Add support for QCOM PMIC5 Gen3 ADC
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: <jic23@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <lee@kernel.org>,
+        <andriy.shevchenko@linux.intel.com>, <daniel.lezcano@linaro.org>,
+        <lars@metafoo.de>, <luca@z3ntu.xyz>, <marijn.suijten@somainline.org>,
+        <agross@kernel.org>, <sboyd@kernel.org>, <rafael@kernel.org>,
+        <rui.zhang@intel.com>, <lukasz.luba@arm.com>,
+        <linus.walleij@linaro.org>, <quic_subbaram@quicinc.com>,
+        <quic_collinsd@quicinc.com>, <quic_amelende@quicinc.com>,
+        <quic_kamalw@quicinc.com>, <kernel@quicinc.com>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-arm-msm-owner@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <cros-qcom-dts-watchers@chromium.org>
+References: <20231231171237.3322376-1-quic_jprakash@quicinc.com>
+ <20231231171237.3322376-4-quic_jprakash@quicinc.com>
+ <CAA8EJpr4q7pFF44oUjJSWGYKgiUCB_23zVHw6J3a3mwn7cKgyg@mail.gmail.com>
+Content-Language: en-US
+From: Jishnu Prakash <quic_jprakash@quicinc.com>
+In-Reply-To: <CAA8EJpr4q7pFF44oUjJSWGYKgiUCB_23zVHw6J3a3mwn7cKgyg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: jDzhMT2m9_qcniAuUC2Ibd9s1FWU_QVo
+X-Proofpoint-ORIG-GUID: jDzhMT2m9_qcniAuUC2Ibd9s1FWU_QVo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-14_06,2024-02-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 mlxlogscore=999 bulkscore=0 priorityscore=1501 clxscore=1011
+ phishscore=0 suspectscore=0 malwarescore=0 spamscore=0 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402140108
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Hi Dmitry,
 
-Add runtime PM support for the ravb driver. As the driver is used by
-different IP variants, with different behaviors, to be able to have the
-runtime PM support available for all devices, the preparatory commits
-moved all the resources parsing and allocations in the driver's probe
-function and kept the settings for ravb_open(). This is due to the fact
-that on some IP variants-platforms tuples disabling/enabling the clocks
-will switch the IP to the reset operation mode where register contents is
-lost and reconfiguration needs to be done. For this the rabv_open()
-function enables the clocks, switches the IP to configuration mode, applies
-all the register settings and switches the IP to the operational mode. At
-the end of ravb_open() IP is ready to send/receive data.
+On 12/31/2023 11:16 PM, Dmitry Baryshkov wrote:
+> On Sun, 31 Dec 2023 at 19:13, Jishnu Prakash <quic_jprakash@quicinc.com> wrote:
+>> The ADC architecture on PMIC5 Gen3 is similar to that on PMIC5 Gen2,
+>> with all SW communication to ADC going through PMK8550 which
+>> communicates with other PMICs through PBS.
 
-In ravb_close() necessary reverts are done (compared with ravb_open()), the
-IP is switched to reset mode and clocks are disabled.
+>> +static int adc_tm_register_tzd(struct adc5_chip *adc)
+>> +{
+>> +       unsigned int i, channel;
+>> +       struct thermal_zone_device *tzd;
+>> +
+>> +       for (i = 0; i < adc->nchannels; i++) {
+>> +               channel = V_CHAN(adc->chan_props[i]);
+>> +
+>> +               if (!adc->chan_props[i].adc_tm)
+>> +                       continue;
+>> +               tzd = devm_thermal_of_zone_register(adc->dev, channel,
+>> +                       &adc->chan_props[i], &adc_tm_ops);
+> It is _very_ useful to register a hwmon too by calling
+> devm_thermal_add_hwmon_sysfs(). However this becomes tricky, as this
+> function is not defined in one of the global headers.
+>
+> This actually points out an issue. You have the ADC driver fused
+> together with the thermal driver. Can I suggest using the aux device
+> to split the thermal functionality to the separate driver?
+>
+> This way it would be possible to use the ADC without any thermal
+> monitoring in place.
 
-The ethtool APIs or IOCTLs that might execute while the interface is down
-are either cached (and applied in ravb_open()) or rejected (as at that time
-the IP is in reset mode). Keeping the IP in the reset mode also increases
-the power saved (according to the hardware manual).
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
----
+There are a couple of issues which may make it harder to split the 
+thermal functionality from this driver into an auxiliary driver as you 
+mentioned.
 
-Changes in v4:
-- none
+For one, we use the same set of registers (offsets 0x4f-0x55) for both 
+VADC function(requesting an immediate channel reading) and ADC_TM 
+function (setting upper/lower thermal thresholds on a channel). To avoid 
+any race conditions, we would need to share a mutex between the 
+top-level ADC driver and the auxiliary ADC_TM thermal driver to avoid 
+concurrently accessing these or any other shared registers.
 
-Changes in v3:
-- fixed typo in patch description
+In addition, the device has only one interrupt with one interrupt 
+handler, and it gets triggered for both VADC and ADC_TM  events (end of 
+conversion and threshold violation, respectively). The handler checks 
+for both types of event and handles it as required.
 
-Changes in v2:
-- none
+For the shared interrupt, we may be able to keep the interrupt handler 
+in the top-level driver and just notify the auxiliary TM driver if a 
+threshold violation is detected. For the shared mutex, I think the 
+auxiliary driver may be able to access the parent driver's mutex, but 
+I'll need to check more for the implementation in both of these cases.
 
-Changes since [2]:
-- none
-- didn't returned directly the ret code of pm_runtime_put_autosuspend()
-  as, in theory, it might return 1 in case device is suspended through
-  this calltrace:
-  pm_runtime_put_autosuspend() ->
-    __pm_runtime_suspend() ->
-      rpm_suspend() ->
-        rpm_check_suspend_allowed()
+Please let me know if you see any problems with this kind of 
+implementation or if you have any additional comments.
 
-Changes in v3 of [2]:
-- this was patch 21/21 in v2
-- collected tags
-- fixed typos in patch description
+Thanks,
 
-Changes in v2 of [2]:
-- keep RPM support for all platforms
+Jishnu
 
-[2] https://lore.kernel.org/all/20240105082339.1468817-1-claudiu.beznea.uj@bp.renesas.com/
-
- drivers/net/ethernet/renesas/ravb_main.c | 54 ++++++++++++++++++++++--
- 1 file changed, 50 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index 6f0677d1adee..289d6482cd72 100644
---- a/drivers/net/ethernet/renesas/ravb_main.c
-+++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -1939,16 +1939,21 @@ static int ravb_open(struct net_device *ndev)
- {
- 	struct ravb_private *priv = netdev_priv(ndev);
- 	const struct ravb_hw_info *info = priv->info;
-+	struct device *dev = &priv->pdev->dev;
- 	int error;
- 
- 	napi_enable(&priv->napi[RAVB_BE]);
- 	if (info->nc_queues)
- 		napi_enable(&priv->napi[RAVB_NC]);
- 
-+	error = pm_runtime_resume_and_get(dev);
-+	if (error < 0)
-+		goto out_napi_off;
-+
- 	/* Set AVB config mode */
- 	error = ravb_set_config_mode(ndev);
- 	if (error)
--		goto out_napi_off;
-+		goto out_rpm_put;
- 
- 	ravb_set_delay_mode(ndev);
- 	ravb_write(ndev, priv->desc_bat_dma, DBAT);
-@@ -1982,6 +1987,9 @@ static int ravb_open(struct net_device *ndev)
- 	ravb_stop_dma(ndev);
- out_set_reset:
- 	ravb_set_opmode(ndev, CCC_OPC_RESET);
-+out_rpm_put:
-+	pm_runtime_mark_last_busy(dev);
-+	pm_runtime_put_autosuspend(dev);
- out_napi_off:
- 	if (info->nc_queues)
- 		napi_disable(&priv->napi[RAVB_NC]);
-@@ -2322,6 +2330,8 @@ static int ravb_close(struct net_device *ndev)
- 	struct ravb_private *priv = netdev_priv(ndev);
- 	const struct ravb_hw_info *info = priv->info;
- 	struct ravb_tstamp_skb *ts_skb, *ts_skb2;
-+	struct device *dev = &priv->pdev->dev;
-+	int error;
- 
- 	netif_tx_stop_all_queues(ndev);
- 
-@@ -2371,7 +2381,14 @@ static int ravb_close(struct net_device *ndev)
- 	ravb_get_stats(ndev);
- 
- 	/* Set reset mode. */
--	return ravb_set_opmode(ndev, CCC_OPC_RESET);
-+	error = ravb_set_opmode(ndev, CCC_OPC_RESET);
-+	if (error)
-+		return error;
-+
-+	pm_runtime_mark_last_busy(dev);
-+	pm_runtime_put_autosuspend(dev);
-+
-+	return 0;
- }
- 
- static int ravb_hwtstamp_get(struct net_device *ndev, struct ifreq *req)
-@@ -2926,6 +2943,8 @@ static int ravb_probe(struct platform_device *pdev)
- 	clk_prepare(priv->refclk);
- 
- 	platform_set_drvdata(pdev, ndev);
-+	pm_runtime_set_autosuspend_delay(&pdev->dev, 100);
-+	pm_runtime_use_autosuspend(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
- 	error = pm_runtime_resume_and_get(&pdev->dev);
- 	if (error < 0)
-@@ -3031,6 +3050,9 @@ static int ravb_probe(struct platform_device *pdev)
- 	netdev_info(ndev, "Base address at %#x, %pM, IRQ %d.\n",
- 		    (u32)ndev->base_addr, ndev->dev_addr, ndev->irq);
- 
-+	pm_runtime_mark_last_busy(&pdev->dev);
-+	pm_runtime_put_autosuspend(&pdev->dev);
-+
- 	return 0;
- 
- out_napi_del:
-@@ -3048,6 +3070,7 @@ static int ravb_probe(struct platform_device *pdev)
- 	pm_runtime_put(&pdev->dev);
- out_rpm_disable:
- 	pm_runtime_disable(&pdev->dev);
-+	pm_runtime_dont_use_autosuspend(&pdev->dev);
- 	clk_unprepare(priv->refclk);
- out_reset_assert:
- 	reset_control_assert(rstc);
-@@ -3061,6 +3084,12 @@ static void ravb_remove(struct platform_device *pdev)
- 	struct net_device *ndev = platform_get_drvdata(pdev);
- 	struct ravb_private *priv = netdev_priv(ndev);
- 	const struct ravb_hw_info *info = priv->info;
-+	struct device *dev = &priv->pdev->dev;
-+	int error;
-+
-+	error = pm_runtime_resume_and_get(dev);
-+	if (error < 0)
-+		return;
- 
- 	unregister_netdev(ndev);
- 	if (info->nc_queues)
-@@ -3072,8 +3101,9 @@ static void ravb_remove(struct platform_device *pdev)
- 	dma_free_coherent(ndev->dev.parent, priv->desc_bat_size, priv->desc_bat,
- 			  priv->desc_bat_dma);
- 
--	pm_runtime_put_sync(&pdev->dev);
-+	pm_runtime_put_sync_suspend(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
-+	pm_runtime_dont_use_autosuspend(dev);
- 	clk_unprepare(priv->refclk);
- 	reset_control_assert(priv->rstc);
- 	free_netdev(ndev);
-@@ -3155,6 +3185,10 @@ static int ravb_suspend(struct device *dev)
- 	if (ret)
- 		return ret;
- 
-+	ret = pm_runtime_force_suspend(&priv->pdev->dev);
-+	if (ret)
-+		return ret;
-+
- reset_assert:
- 	return reset_control_assert(priv->rstc);
- }
-@@ -3177,16 +3211,28 @@ static int ravb_resume(struct device *dev)
- 		ret = ravb_wol_restore(ndev);
- 		if (ret)
- 			return ret;
-+	} else {
-+		ret = pm_runtime_force_resume(dev);
-+		if (ret)
-+			return ret;
- 	}
- 
- 	/* Reopening the interface will restore the device to the working state. */
- 	ret = ravb_open(ndev);
- 	if (ret < 0)
--		return ret;
-+		goto out_rpm_put;
- 
- 	ravb_set_rx_mode(ndev);
- 	netif_device_attach(ndev);
- 
-+	return 0;
-+
-+out_rpm_put:
-+	if (!priv->wol_enabled) {
-+		pm_runtime_mark_last_busy(dev);
-+		pm_runtime_put_autosuspend(dev);
-+	}
-+
- 	return ret;
- }
- 
--- 
-2.39.2
-
+>> +
+>> +               if (IS_ERR(tzd)) {
+>> +                       if (PTR_ERR(tzd) == -ENODEV) {
+>> +                               dev_warn(adc->dev, "thermal sensor on channel %d is not used\n",
+>> +                                        channel);
+>> +                               continue;
+>> +                       }
+>> +
+>>
+>
