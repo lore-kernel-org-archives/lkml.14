@@ -1,82 +1,105 @@
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.237.72.81])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A7F611706;
-	Wed, 14 Feb 2024 07:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.237.72.81
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73438125A3
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 07:43:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707896561; cv=none; b=jpYPRtihctQxwlR2zyhdzX7CZLoPLEJJ+rLcop8s+OPNoJFqP9KtYtwuCXc1pKBmBCyP0i4PWI4NXkWOAAXvyYHDKRG//ZvK5M9VU3cJwywVt4jR1rYh5HsFdCGd2mqtY94n54IjnMNXAoWfDboTih7q+lIUwscqeUHXzD8LnG4=
+	t=1707896586; cv=none; b=EaAGH4E5SPX33PvdI+lV1/59pK97yn8pc6bVXFbyDlmX+dXkflVBn/Tgwqj/YjoT75W1a/RJMmkv0qwjAhqe9/LkxBQLzHB5Ns3vrA+59LrmDhRmOxMPAN58qixUv6sevnO1NTjc+a33JVvcjrZPIEeBIohyMAvpoelUrhhGnGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707896561; c=relaxed/simple;
-	bh=KsUQZovNZ1Mq26qTNCJ02kvNZqNLKyNEdqfRIzw9Mxw=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=MMcDNKo+vJ/jTMvr7CcyovoRXvhksncB3TkeB98J6sNtn2vim1M7IrRxvz9OD1uwJ6zwxFSStv6jqeD1ePxL6XYeqLnXYLMkcuZ0dRPPqS3iAr0QZdXZFHIh2U9X6JMGnQTWvAiVjNBeiyIrBqTw2CG2Ps2BoOUUON6A1YhU0iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=52.237.72.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from ubuntu.localdomain (unknown [218.12.18.71])
-	by mail-app4 (Coremail) with SMTP id cS_KCgAXEH6_bMxl4x1EAQ--.55591S2;
-	Wed, 14 Feb 2024 15:33:31 +0800 (CST)
-From: Duoming Zhou <duoming@zju.edu.cn>
-To: linux-kernel@vger.kernel.org
-Cc: mturquette@baylibre.com,
-	sboyd@kernel.org,
-	michal.simek@amd.com,
-	linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Duoming Zhou <duoming@zju.edu.cn>
-Subject: [PATCH] clk: zynq: Prevent null pointer dereference caused by kmalloc failure
-Date: Wed, 14 Feb 2024 15:33:18 +0800
-Message-Id: <20240214073318.82573-1-duoming@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:cS_KCgAXEH6_bMxl4x1EAQ--.55591S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrtw1fAw17KFykXF1Utr48Crg_yoWDCwb_Gw
-	48X3srC34rA3s5A3Z7AF4xuFZIvF1Fvr1vvFnaq343A34UZr1rWryI9ws3Ar4fJrWFkryD
-	Cr1kKrZYyr10vjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbcAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r12
-	6r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
-	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
-	IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUYCJmUUUUU
-X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAwMLAWXLulEB4QAnsI
+	s=arc-20240116; t=1707896586; c=relaxed/simple;
+	bh=VWEOVPjzwG5LyVakYdf3057OxZUScV4IOC88KiJYLM0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MRgTp2XJLoAwNpZWGwD/fVoY/tnChkSXkbStrhRJ8x/cs3DOSmRJqyhe+tTVBOPr5QePt8Lh1wYDCy7FDqYYGWHV4DV45tdsG2Jdff9BESCZ7pM0QoAfUUFg+8t8zGETvqOHiPAjA8duh3ZfJmABavTJ75F4bImDaRKt2APykek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i0+dNpg4; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i0+dNpg4"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d11d180652so1648811fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 23:43:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707896582; x=1708501382; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Qm35U4zALwNw8pnZRUH8OtgtOhB7/DRacCD6hYwcr6s=;
+        b=i0+dNpg4+lo1JHLpmJDwvRh6w8H5ra71CjQy3kIEHaRhKePq1hCYhxuZ3hK+5cBFxo
+         BRbi55RLs0LwK/3t4DYeKMf5qJeuyvM5vQGoIcAzVbjIAJNLE9FqOizQzYeSOVBS6DYP
+         KKL7l61ZgzngMfJEAbciAUVBzjykfRuxbSJKkC13R8ScHD/dvjjIxltAl5O1PUTgL5SN
+         IX8NziLLYbEYDYWBGPl0Ymn/3XsKLY0cwRS0uZzu/SfkvTK/BxwQFyREMnQFA45Lwu2F
+         yCiT0hx4kqsxgfDXkjlzOggoUvexfX4pElxwEx2V3Tcj37llgDFU0whPRUVZLb5nSYK8
+         1HkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707896582; x=1708501382;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qm35U4zALwNw8pnZRUH8OtgtOhB7/DRacCD6hYwcr6s=;
+        b=HPR+eIEqNYAOcu0yLhbKswv33YJmToONSPqQ8+uAd1QnKZCuiQVy1dhna0gqly9M80
+         +VPXw1vffnIGAD8iVLjuISorDkol8X3CS8oFsz98zFmG+XjnviCHRvfgWlrLYSbwvIOk
+         EGV4qrn2KDqpWQodG3EhyxkbdZOM4h/3/NTZus34nIA8VXdiKNYcFpXAjopgpeYgAP0w
+         ytEZh05Zfsh+bWo5qQPXsAhGCg8lxIBElj2Ji8MIQEdNXhqCXk9VxO+79DNMyrogjee7
+         WaxKa+ffq/AN4p6nttA1M71K1DWbm6it69/OyDgEp1okmwxnaEI6XkqDTl1NRtndjgyp
+         YKwA==
+X-Forwarded-Encrypted: i=1; AJvYcCWxaE5oBw0XE5Oe26HEC9TZU53mPoatJW8MF3Oa2CmGXYRjn1kOV4mHasLPRboLvyI/CisL+7NX8oxYeDuxBkFvDJ7RwvdiyluZ3HX9
+X-Gm-Message-State: AOJu0YyFmXsCBDGhD8yCYgRioVA9np+mpRehOBR/eysvD1gkzJeoJTgB
+	qrkS7XzjXjcI4Z5S28OaT6kz5Sxv9zLbaTjmpMrwt0RH5Sn3hUnBjm9U6fb/B1g=
+X-Google-Smtp-Source: AGHT+IFgCBpIBi9Yw7Zbk0svMSXIz5z2ckU3mgemyBuFKJc7Ohs0vatZR0iczHy/Ul9qTbzaqUc4yg==
+X-Received: by 2002:a2e:82c3:0:b0:2d0:ac7f:eef9 with SMTP id n3-20020a2e82c3000000b002d0ac7feef9mr1312036ljh.34.1707896582368;
+        Tue, 13 Feb 2024 23:43:02 -0800 (PST)
+Received: from [192.168.2.107] ([79.115.63.202])
+        by smtp.gmail.com with ESMTPSA id x17-20020a05600c21d100b00410b98a5c77sm1059749wmj.32.2024.02.13.23.43.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Feb 2024 23:43:01 -0800 (PST)
+Message-ID: <d5d71068-eff7-4a1d-ad2f-948bf0313b9c@linaro.org>
+Date: Wed, 14 Feb 2024 07:42:57 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] spi: spi-mem: add statistics support to ->exec_op() calls
+Content-Language: en-US
+To: Mark Brown <broonie@kernel.org>
+Cc: =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
+ linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Dhruva Gole <d-gole@ti.com>, Gregory CLEMENT <gregory.clement@bootlin.com>,
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+References: <20240209-spi-mem-stats-v1-1-dd1a422fc015@bootlin.com>
+ <b0844e5a-ee4b-4608-99a1-877660e01d57@linaro.org>
+ <69f023bb-2844-496f-9f3f-4e2e80129d33@sirena.org.uk>
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <69f023bb-2844-496f-9f3f-4e2e80129d33@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-The kmalloc in zynq_clk_setup will return null if the
-physical memory has run out. As a result, if we use
-snprintf to write data to the null address, the null
-pointer dereference bug will happen.
 
-The required memory is only 11 bytes, so this patch
-adds a "__GFP_NOFAIL" flag in kmalloc in order that
-the kmalloc will never return with failure.
 
-Fixes: 0ee52b157b8e ("clk: zynq: Add clock controller driver")
-Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
----
- drivers/clk/zynq/clkc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 2/13/24 15:28, Mark Brown wrote:
+> On Tue, Feb 13, 2024 at 12:39:02PM +0000, Tudor Ambarus wrote:
+>> On 2/9/24 13:51, Théo Lebrun wrote:
+> 
+>>> +		if (!ret || ret != -ENOTSUPP || ret != -EOPNOTSUPP) {
+>>> +			spi_mem_add_op_stats(ctlr->pcpu_statistics, op, ret);
+>>> +			spi_mem_add_op_stats(mem->spi->pcpu_statistics, op, ret);
+>>> +
+> 
+>> Would be good to be able to opt out the statistics if one wants it.
+> 
+>> SPI NORs can write with a single write op maximum page_size bytes, which
+>> is typically 256 bytes. And since there are SPI NORs that can run at 400
+>> MHz, I guess some performance penalty shouldn't be excluded.
+> 
+> If we can cope with this sort of statistics collection in the networking
+> fast path we can probably cope with it for SPI too, the immediate
+> recording is all per CPU so I'd like to see some numbers showing that
+> it's a problem before worrying about it too much.  Even the people doing
+> things like saturating CAN buses haven't been raising it as a concern
+> for the regular SPI data path.  We could add a Kconfig if it's an issue.
 
-diff --git a/drivers/clk/zynq/clkc.c b/drivers/clk/zynq/clkc.c
-index 7bdeaff2bfd..7621c2f0046 100644
---- a/drivers/clk/zynq/clkc.c
-+++ b/drivers/clk/zynq/clkc.c
-@@ -427,7 +427,7 @@ static void __init zynq_clk_setup(struct device_node *np)
- 			SLCR_GEM1_CLK_CTRL, 0, 0, &gem1clk_lock);
- 
- 	tmp = strlen("mio_clk_00x");
--	clk_name = kmalloc(tmp, GFP_KERNEL);
-+	clk_name = kmalloc(tmp, GFP_KERNEL | __GFP_NOFAIL);
- 	for (i = 0; i < NUM_MIO_PINS; i++) {
- 		int idx;
- 
--- 
-2.17.1
-
+Ok, we can deal with it afterwards if it'll become an issue.
