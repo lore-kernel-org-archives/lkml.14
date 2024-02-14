@@ -1,54 +1,57 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B2D19473;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E079D19475;
 	Wed, 14 Feb 2024 10:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707908336; cv=none; b=Jlf3x4hxeoe7JI3+G/kPB7If4y1gKCh0AXleD02IRXHUPgIIVKYqCe6so5DdcsEKIE5cwHFZRqcjeDZNKaKyEG7AtxmLt4GPEI8hZm5L+xWozaJMEHMQ1XN/bh8iSMbkUfSAzgIHow3TFsf/pcl3D6gZVruNC+wNdSjoaS9Ni9M=
+	t=1707908337; cv=none; b=dxh9/tVqAIpRiV2R+4vR60POct+5alVhTdoZpgxhobfn4zheNI8jCV6nMEcQivE87+dFGqtZVTQ2p46j7adLFk6/A3UQSGN+mg25Kz1tYdI6DUE91kp4SjSPum1sFdoXmqgMAf1Q8HnTfv44W7pTkvlC3lkKdtdoMxtaCQ/1cCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707908336; c=relaxed/simple;
-	bh=qxEx1is+rHLu8sXjAQxdC0cDa5bG4byiwMMFn1yF/Do=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QE+QH5Tg3zOACMMlMLxKCxENMlUB1f+ysefYgNuBc1Qa98Xhzpjd9R4s4LXMMHk6Eyl2Tf/4dLoUrv70PTg4oOxdMlH2Ik4BjYnjGQqjVUrbMY+muAGSgGd+EiaHaUe7byn8POW9tmnnO0rajMdk6nkX8bng+cL6rtcSpgCaxyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=k1bT8Ze6; arc=none smtp.client-ip=198.47.23.248
+	s=arc-20240116; t=1707908337; c=relaxed/simple;
+	bh=8YT+UmPlNooHEb2SyxZHHkyWJQEtU1aFI9hno7k3Kv4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O47idGzWKjnYqncjV4R3I9mpJaZU1yZDEePj1Fk8dcTBH+GSf1mWZiM7qZVSYx6eA9EDturpl/yqIYfLPdbS+iNh8TF7ca0stFqTvE/U9yVqLYKO0aKlDAKLUVk+vX20L1m54FErdj/OnARTlbO9emYmaksInaDOVyc7jU8pOlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ktSsKJBG; arc=none smtp.client-ip=198.47.19.142
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="k1bT8Ze6"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41EAwlDe030229;
-	Wed, 14 Feb 2024 04:58:47 -0600
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ktSsKJBG"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41EAwoNs027677;
+	Wed, 14 Feb 2024 04:58:50 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707908327;
-	bh=1ZaRMwxoLh/RwYheULKH0st1GQ8R7ktaclahghQmrc8=;
-	h=From:To:CC:Subject:Date;
-	b=k1bT8Ze6sybteJ+7BWD14hefdAtyN+TElWOzWmmGYT9U0IZuHcJExSuWvPjkuMKw1
-	 HtxNR0aATfp0X6TE+xqBr0BdLzmpVKOP0DRWpmMVoe9l8gClP5jnhroms4MI1CKd6v
-	 NnBo0UaL7bnkKuAZaShaYC+ivH3mjAu9gwc8TpZE=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41EAwlo1121623
+	s=ti-com-17Q1; t=1707908330;
+	bh=WX1PzMzhnTAOgfRLSeG5Jh0SL0/h0/LD2+yShP8fMLs=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=ktSsKJBGAv39mV1CXECUkQ0FBrc3YH9ex/NWpDu8gS4t/YQu/gHHU8mfmCLeqaFI4
+	 teism1/wD6+hwAp23YpDVqxSASGcFkMAidlgzDBI7xo9fkUVVkzfed5Nxm0EOtBhkA
+	 UmwnpPs10jGpcjYAvzmAkeQe1w3U3ENb4GArNoyk=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41EAwoXv122145
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 14 Feb 2024 04:58:47 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+	Wed, 14 Feb 2024 04:58:50 -0600
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 14
- Feb 2024 04:58:47 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2024 04:58:50 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 14 Feb 2024 04:58:47 -0600
+ Frontend Transport; Wed, 14 Feb 2024 04:58:50 -0600
 Received: from localhost (a0498981-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.68.216])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41EAwkCu070774;
-	Wed, 14 Feb 2024 04:58:47 -0600
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41EAwnAq070805;
+	Wed, 14 Feb 2024 04:58:50 -0600
 From: Bhavya Kapoor <b-kapoor@ti.com>
 To: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh+dt@kernel.org>,
         <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <b-kapoor@ti.com>
-Subject: [PATCH v3 0/4] arm64: dts: ti: Modify pinmux for wkup_uart0 and mcu_uart0
-Date: Wed, 14 Feb 2024 16:28:42 +0530
-Message-ID: <20240214105846.1096733-1-b-kapoor@ti.com>
+Subject: [PATCH v3 2/4] arm64: dts: ti: k3-j7200-common-proc-board: Remove clock-frequency from mcu_uart0
+Date: Wed, 14 Feb 2024 16:28:44 +0530
+Message-ID: <20240214105846.1096733-3-b-kapoor@ti.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240214105846.1096733-1-b-kapoor@ti.com>
+References: <20240214105846.1096733-1-b-kapoor@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,42 +62,28 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-WKUP_PADCONFIG registers for wkup_uart0 and mcu_uart0 lies under
-wkup_pmx2 for J7200. Thus, modify pinmux for both of them. Also,
-remove the redundant clock-frequency property from mcu_uart0 node.
+Clock-frequency property is already present in mcu_uart0 node of the
+k3-j7200-mcu-wakeup.dtsi file. Thus, remove redundant clock-frequency
+property from mcu_uart0 node.
 
-Only Tx and Rx Signal lines for wkup_uart0 are brought out on
-J721S2 Common Proc Board and J784S4 EVM, but CTS and RTS signal lines
-are not brought out. Thus, remove pinmux for CTS and RTS signal lines
-for wkup_uart0 in J721S2 and J784S4.
+Fixes: 3709ea7f960e ("arm64: dts: ti: k3-j7200-common-proc-board: Add uart pinmux")
+Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
-v1 Link : https://lore.kernel.org/all/20240208110602.931573-1-b-kapoor@ti.com/
-v2 Link : https://lore.kernel.org/all/20240212104417.1058993-1-b-kapoor@ti.com/
-
-Changelog v1->v2:
- - Divided Pinmux and clock frequency patch(1/3) for J7200 into 2 patches
- - Change commit message to include wkup_uart0 for referring to the instance
-
-Changelog v1->v2:
- - Added Fixes tag in Commit message
-
-Rebased to 20240214
-
-Bhavya Kapoor (4):
-  arm64: dts: ti: k3-j7200-common-proc-board: Modify Pinmux for
-    wkup_uart0 and mcu_uart0
-  arm64: dts: ti: k3-j7200-common-proc-board: Remove clock-frequency
-    from mcu_uart0
-  arm64: dts: ti: k3-j721s2-common-proc-board: Remove Pinmux for CTS and
-    RTS in wkup_uart0
-  arm64: dts: ti: k3-j784s4-evm: Remove Pinmux for CTS and RTS in
-    wkup_uart0
-
- .../boot/dts/ti/k3-j7200-common-proc-board.dts | 18 +++++++++---------
- .../dts/ti/k3-j721s2-common-proc-board.dts     |  2 --
- arch/arm64/boot/dts/ti/k3-j784s4-evm.dts       |  2 --
- 3 files changed, 9 insertions(+), 13 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
+index 160580a0584a..6593c5da82c0 100644
+--- a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
+@@ -273,7 +273,6 @@ &mcu_uart0 {
+ 	status = "okay";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mcu_uart0_pins_default>;
+-	clock-frequency = <96000000>;
+ };
+ 
+ &main_uart0 {
 -- 
 2.34.1
 
