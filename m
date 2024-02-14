@@ -1,80 +1,91 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336DA5A7AB;
-	Wed, 14 Feb 2024 15:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D0A5BACE;
+	Wed, 14 Feb 2024 15:11:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707923451; cv=none; b=b06W402VNDbqUgUwCh10GXQ3dV0M47T3pnJgUmVTsAETKdIbX3jMZhYmFUuxXKn8tdJKW+D1rMJAKnXOk1xNWeKzHIp+ScfNp7LDU7J+oyt6XNhUu81CzKH/9IaNuE3ELSYtkaGU5jkyLWAx/93/DVNDUBKjmndxhb45lPRAYSQ=
+	t=1707923469; cv=none; b=Gq+oBNRdRtdP9bPfwddBR/1sayCbGwmpbf+kUuoGLBRpRZSG0kKmwfxGeW2XsL1uzWZOxwA/778CxfTBmVJvab7kMAqqxMy9DfMsuIMxdTIzAukZpHGxXCR85IYvFpp6E+TAWQK0r7m0AbADvPHA3wCu6uCbqe2/va090ODobT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707923451; c=relaxed/simple;
-	bh=3A1tr6ddj4x++YoCIZGrOZCWzZE1imB7GaGMVd+favc=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=GqJwMJyJsM0KurWKBPuldeSi5GvjQVIj6tkksl/LBGc7Fy2ElfU5nIiQoQbxT6+HXjSXBXZh4Y/09Ym6gue38vpHc4vz1UIHLfuTQI3qGe/TUCSTNGmcteP3Pe5OY4K39F6x2NQONyJuLDq/6HdE4EmV5S6aGvJt6bMEmqMbVr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.53] (ip5f5aea4b.dynamic.kabel-deutschland.de [95.90.234.75])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 7B4B461E5FE01;
-	Wed, 14 Feb 2024 16:10:34 +0100 (CET)
-Message-ID: <0eba23c7-f62a-4a85-a383-60dec9d198f9@molgen.mpg.de>
-Date: Wed, 14 Feb 2024 16:10:33 +0100
+	s=arc-20240116; t=1707923469; c=relaxed/simple;
+	bh=EoqxqOaIxvyEBwBR81VbvGez2zheFFJm9DMrW6MBOP8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gbZcWPsuUSmGGjOvfhnWK/N6G7BcwFTAbuDwinnGdQnSkXtsVFlqlf+duILXXrtx8QpfTM7Vk6y9v0zH+UvvrqE8MCLA6TTZJZQiWwal2WKcfM86Qq5adQSwcFZdWUcZ5gN4H/MPXrn5yzqXs4AtubfLesgL5Vu16UHxZN+MEc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=F0gv+vf+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="F0gv+vf+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37331C433C7;
+	Wed, 14 Feb 2024 15:11:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1707923468;
+	bh=EoqxqOaIxvyEBwBR81VbvGez2zheFFJm9DMrW6MBOP8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=F0gv+vf+yuTKor+O5zCL0phtPuc3uSwPqlQQSKD2678x0iwPPbr0qWF7aHywRzLnx
+	 uhYAnCu3sFXJlkr37ygj3CFE4Rvbb50jyh1vCg7VppSEq6OeyHSuHoG1Lu4JS9IKGq
+	 wbu2nDvvVWcZppsF7MreAOHbi3FdbGXR67bGIEpI=
+Date: Wed, 14 Feb 2024 16:11:05 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Petr =?utf-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Petr Tesarik <petrtesarik@huaweicloud.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	David Kaplan <david.kaplan@amd.com>,
+	Larry Dewey <larry.dewey@amd.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Carlos Bilbao <carlos.bilbao@amd.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Petr Mladek <pmladek@suse.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Eric DeVolder <eric.devolder@oracle.com>,
+	Marc =?iso-8859-1?Q?Aur=E8le?= La France <tsi@tuyoix.net>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nhat Pham <nphamcs@gmail.com>,
+	"Christian Brauner (Microsoft)" <brauner@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	Mike Christie <michael.christie@oracle.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Maninder Singh <maninder1.s@samsung.com>,
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Roberto Sassu <roberto.sassu@huaweicloud.com>,
+	Petr Tesarik <petr.tesarik1@huawei-partners.com>
+Subject: Re: [PATCH v1 5/5] sbm: SandBox Mode documentation
+Message-ID: <2024021415-jokester-cackle-2923@gregkh>
+References: <20240214113035.2117-1-petrtesarik@huaweicloud.com>
+ <20240214113035.2117-6-petrtesarik@huaweicloud.com>
+ <20240214053053.982b48d993ae99dad1d59020@linux-foundation.org>
+ <2024021425-audition-expand-2901@gregkh>
+ <20240214155524.719ffb15@meshulam.tesarici.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>
-Cc: linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: =?UTF-8?Q?init=5Ftis=28=29_takes_50_ms_on_Dell_XPS_13_9360_?=
- =?UTF-8?Q?=E2=80=93_almost_10_=25_of_whole_time_until_initrd?=
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240214155524.719ffb15@meshulam.tesarici.cz>
 
-Dear Linux folks,
+On Wed, Feb 14, 2024 at 03:55:24PM +0100, Petr Tesařík wrote:
+> OK, so why didn't I send the whole thing?
+> 
+> Decomposition of the kernel requires many more changes, e.g. in linker
+> scripts. Some of them depend on this patch series. Before I go and
+> clean up my code into something that can be submitted, I want to get
+> feedback from guys like you, to know if the whole idea would be even
+> considered, aka "Fail Fast".
 
+We can't honestly consider this portion without seeing how it would
+work, as we don't even see a working implementation that uses it to
+verify it at all.
 
-Trying to optimize the boot time of Linux on the Dell XPS 13 9360, 
-probing of MSFT0101:00 takes 52 ms, making `init_tis()` taking almost 10 
-% alone until starting the initrd:
+The joy of adding new frameworks is that you need a user before anyone
+can spend the time to review it, sorry.
 
-     [    0.000000] Linux version 6.8.0-rc4 
-(build@bohemianrhapsody.molgen.mpg.de) (gcc (Debian 13.2.0-13) 13.2.0, 
-GNU ld (GNU Binutils for Debian) 2.42) #20 SMP PREEMPT_DYNAMIC Mon Feb 
-12 09:40:49 CET 2024
-     […]
-     [    0.000000] DMI: Dell Inc. XPS 13 9360/0596KF, BIOS 2.21.0 
-06/02/2022
-     […]
-     [    0.320057] calling  init_tis+0x0/0x100 @ 1
-     [    0.332190] tpm_tis MSFT0101:00: 2.0 TPM (device-id 0xFE, rev-id 4)
-     [    0.372164] probe of MSFT0101:00 returned 0 after 52101 usecs
-     [    0.372186] initcall init_tis+0x0/0x100 returned 0 after 52127 usecs
-     […]
-     [    0.588643] Freeing unused decrypted memory: 2036K
-     [    0.589068] Freeing unused kernel image (initmem) memory: 3976K
-     [    0.606115] Write protecting the kernel read-only data: 22528k
-     [    0.606527] Freeing unused kernel image (rodata/data gap) 
-memory: 276K
-     [    0.652327] x86/mm: Checked W+X mappings: passed, no W+X pages 
-found.
-     [    0.652329] x86/mm: Checking user space page tables
-     [    0.695968] x86/mm: Checked W+X mappings: passed, no W+X pages 
-found.
-     [    0.696104] Run /init as init process
-     […]
+thanks,
 
-For users, where boot time is most important, can this be moved out of 
-the hot path somehow?
-
-
-Kind regards,
-
-Paul
+greg k-h
