@@ -1,93 +1,81 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952375D8E7
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 15:44:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62945DF1A
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 15:44:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707925478; cv=none; b=fDpOeP31JcGtkBgE6RNMF8UsVduksYgUiD+vRxxQXV4naAJXDK4ZsaHJ42/uAPvl9IVD/ldSkjZcpiN9osJOCR8dlyMFh5oOfaBZk08XS6pjhStcJ9aZrGU1XMnNxPgknUhwzpbRmtBxqcYY/VuLXc1/JqL7RTJkAZBmRbXyL8I=
+	t=1707925500; cv=none; b=OoN2e7+7iNa/5j2LCDeZGxvI6cpMPo5dGgv7X9CQnUnUwzyWXI9+3dTKrXuhIwr8JLu9hhaYB9fnLNUEZnAIsh2iRIqTQflrL9Sym/5KYetoPLH6mb0Bf6/EgiI+Xy+vuFCi81AhRpE2xHxPqVl0RidyF3ij5EaTSWDzaFz9S9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707925478; c=relaxed/simple;
-	bh=fKoiCadkZo1au3t1rE9BOBoK9f42Dey8D80vTpAGoKA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=RSJM+IcmOgdVgKSKtbULAbvhmgbqwsLPCZB3zPOAJus6FFclRkvPHXfqcz7At48YjlHQTDkq3OHuS3JKGpYPbF8SPK4tmdSpahNWsVZ4D2V3JJKWu56sncmvCEQTipVR0QISTd6kv5XnepAnZAXQKkkRdARsPGIBlQjaUk3KVmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=M3p3yJ55; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="M3p3yJ55"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7bfe5aa702fso214051139f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 07:44:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1707925475; x=1708530275; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8H+tRUVl6VTTJ+I26hI6HADTZ0Un+fCkMERAMbKsgaY=;
-        b=M3p3yJ55stQA8f9zc1eTSHcJ4QjhoZNUbYdIseibVUIYaSBmTS91+4e5+iwQdH+1vb
-         XlQCeJJkbMG23+ipWdqY8yAP06aNZarDw83HvvYT7kH9eVH0yWmTdKaK+w1lJuZg40RL
-         zXWwduGsE9rU7QwvqV24qc2N1OiZaobd32DPbwpocKv5zPc/imnUeNqIgio98sHXazs0
-         6WnSflEQBW1rcorWadlj1ipHpxYx8K0rokvXeZdCZR7pzQ3CUyj7sYXCYm9yYRPge9rS
-         z0IOMooHA3aRPP3K3A2wkKfrfltBE0ZmjF+HIxAs9Wxg9XarL3QMwyidDyIit2VF3Fdv
-         SPtw==
+	s=arc-20240116; t=1707925500; c=relaxed/simple;
+	bh=vHkfigtEZavspuOcCNskDMPyHZpvQCjJCBHTOfW+AZc=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=IOK7JZBP+kQl2wZ47z8RBohgZ3ud+HNi9gAYlzTPW4KXlv4r+Lk/XUXKuS3z2fZ75ooWZqjCFka1qRaCUPuBpWo9qdbeQx/l0fgrvw7hhkA3+gSxY/MaF+OROqPrGIZE188fAEMHa7jWDZrMh5deoXl9vMex73wkffJmduSIDDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-363da08fc19so50848665ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 07:44:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707925475; x=1708530275;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8H+tRUVl6VTTJ+I26hI6HADTZ0Un+fCkMERAMbKsgaY=;
-        b=k23XJi41nb9SQLvldymzUhRvELWW3ZN6e4XnTgpIctxiWkrWTYKXLah4lkT8B/2RcU
-         6VuYE6fjIZLGcX2fUeMTbASBF3CjzSOcOWXtXesfJP15ZoSV122Js46WhBZRs7Xc26Qy
-         2UQanr6VLdkNEPxtg1lzZuuVz7V9VzbX2V5Y9upZjfJFdNQOtpExyhm1d9Ff7Zs7oz/Z
-         D26d77CGpPFIPccRn4YXxaWB8W6PKG8d6YkQexBa+sL10ui/hrj994Vm1N1iSSuUCJht
-         8vlzKS3v4Au4Gt8xKjgv6KzyHi/SY9TeKBqEocGuIhpkRF8c0oH+Jk5YCfwl/9vgqFhz
-         1N9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW6ZlTHTv6iR9cGnNTrm29SVwOhJ6G6AD7Y1mOXsDwufslT9hTrhpq2YrLFSzoUxG6pFSPuRUQH/RMsw2Lo+vlrnmkd3Hf2guSq+66E
-X-Gm-Message-State: AOJu0YxytGePGScAGuaHzwxzj/s5W7FxYsOao2vkDwzkDafr86p8D2IN
-	+wQ1xRmNbWdhGY8ZyvYKwxX+V/nnIL9pmVncPtAOlKJFLZZO2zebbr4boGSVXKc=
-X-Google-Smtp-Source: AGHT+IFSYvJVra1vjtWRcKFPj8EVyDWmX9NPiOhHx5QSIIUGMlUmsQm/kaGm5mHv2EhcHDI6PNBp7Q==
-X-Received: by 2002:a05:6602:5c2:b0:7c4:6b0f:ee7 with SMTP id w2-20020a05660205c200b007c46b0f0ee7mr3689037iox.7.1707925475720;
-        Wed, 14 Feb 2024 07:44:35 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVppKyfQx+1K0Z9etHaCtXFjcZ0ltuX51rMZRw8r7Hn3rqRCqUQHSe34BMQK/vibc3EGnEXzCUDXX4aJ4y12fqw+eikFKbJZP5ND+IEH7dP2qbcptphPDaBqWt6hz5g9bUIJV9GCWSVWJQfbnnJCnu+LWiS+SRarXPQRnWJTg09a0MPqcpWI1tHAeJJhPB9tsBX2LLa5o0Ei26c6kfq9Z/xqc6LTR/9BVl/cNEVsrCWD6pzUEwyt1h8UvE1LbIBZ3ZLy4AoX8qKzUhS5qD94rXCEkllJmhGAkmWyzjq/AkRUe6mlU60S889xjiUSdlaavBP8ScOM07xOKaOA9kzG7a5an3KUfuaOFIjoK/zPTvrWtL54g==
-Received: from localhost (c-98-32-39-159.hsd1.nm.comcast.net. [98.32.39.159])
-        by smtp.gmail.com with ESMTPSA id a26-20020a02ac1a000000b0047133a05f33sm2484253jao.49.2024.02.14.07.44.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Feb 2024 07:44:35 -0800 (PST)
-Date: Wed, 14 Feb 2024 07:44:33 -0800 (PST)
-From: Paul Walmsley <paul.walmsley@sifive.com>
-To: Palmer Dabbelt <palmer@rivosinc.com>
-cc: linux-riscv@lists.infradead.org, Greg KH <gregkh@linuxfoundation.org>, 
-    jirislaby@kernel.org, Atish Patra <atishp@rivosinc.com>, 
-    ajones@ventanamicro.com, apatel@ventanamicro.com, 
-    linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
-    linux-serial@vger.kernel.org, Emil Renner Berthing <kernel@esmil.dk>
-Subject: Re: [PATCH] tty: hvc: Don't enable the RISC-V SBI console by
- default
-In-Reply-To: <20240214153429.16484-2-palmer@rivosinc.com>
-Message-ID: <0e41108b-2a64-2144-34f1-e7c0f1ec952f@sifive.com>
-References: <20240214153429.16484-2-palmer@rivosinc.com>
+        d=1e100.net; s=20230601; t=1707925498; x=1708530298;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tEI0SxmdYZ2iPlDp6P5GYelkJ+oJQochxbvuWq4qiQU=;
+        b=oHLTiZNgy8/qkds7X0+tkDdS92nkATBjh9IwQWI8pI0dU6ClPpu6DzMr2Zr09PobN9
+         CeL0pfmM4qEEr3ZEWexVGg7W6NOEODr79oZ517hvPPBLJIaE1NyCoxQpQnUfAHng91nv
+         qFYndDmtW6q1G/rYVrOiuOsiN3dQ2+PJf5alBfaLBocK4lQgASORNEEbnooQzr30BzRf
+         iPpWvP3jQXT3bEeHHkMWg621yyetV1q9rD3WreWwKEvjA7v6CxS/XiEelkrm4y3Dx5Mh
+         q6EWKiTGH7vtU3nYVRmVRC5EE8BL0PUH65AQEyWyX+V+KjF41XQblsnHhrBydBdW3wyj
+         72OA==
+X-Gm-Message-State: AOJu0YyNdYPJMHLU5yzDAxDYKV3QxnL1fZUFHsYo3aVO+LUiZA/HdSgU
+	OI1ppD9a9PDli+NzoJniilvOgcZBc9t+PZI/FPsydsQPU1jfzm076Pw/Qlli9u/Aq8AXyhdbObV
+	QBGipQEkOaNV/iVWw4s7oCRoY7p9f502ODd64iomJIBWyTY6V9hB8UsZiSA==
+X-Google-Smtp-Source: AGHT+IGxlMYWdNQAarObVV1SZ502fpC6TiroOxysYsET5kRszuYBv/VUVYXf2UPdHx3fbYy95aADoqB8AR5nvNghvdmEy8BSLOQa
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-Received: by 2002:a05:6e02:16cd:b0:363:ca65:7d12 with SMTP id
+ 13-20020a056e0216cd00b00363ca657d12mr225444ilx.6.1707925497874; Wed, 14 Feb
+ 2024 07:44:57 -0800 (PST)
+Date: Wed, 14 Feb 2024 07:44:57 -0800
+In-Reply-To: <000000000000b8f8610609479fa3@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009a97cf06115964d8@google.com>
+Subject: Re: [syzbot] Test for fd7b34375c1c8ce29c93
+From: syzbot <syzbot+fd7b34375c1c8ce29c93@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 14 Feb 2024, Palmer Dabbelt wrote:
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-> From: Palmer Dabbelt <palmer@rivosinc.com>
-> 
-> The new SBI console has the same problem as the old one: there's only
-> one shared backing hardware and no synchronization, so the two drivers
-> end up stepping on each other.  This was the same issue the old SBI-0.1
-> console drivers had, but that was disabled by default when SBI-0.1 was.
-> 
-> So just mark the new driver as nonportable.
-> 
-> Reported-by: Emil Renner Berthing <kernel@esmil.dk>
-> Fixes: 88ead68e764c ("tty: Add SBI debug console support to HVC SBI driver")
-> Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
+***
 
-Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Test for fd7b34375c1c8ce29c93
+Author: syoshida@redhat.com
 
+#syz test
 
-- Paul
+diff --git a/net/core/skmsg.c b/net/core/skmsg.c
+index 93ecfceac1bc..4d75ef9d24bf 100644
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -1226,8 +1226,11 @@ static void sk_psock_verdict_data_ready(struct sock *sk)
+ 
+ 		rcu_read_lock();
+ 		psock = sk_psock(sk);
+-		if (psock)
+-			psock->saved_data_ready(sk);
++		if (psock) {
++			read_lock_bh(&sk->sk_callback_lock);
++			sk_psock_data_ready(sk, psock);
++			read_unlock_bh(&sk->sk_callback_lock);
++		}
+ 		rcu_read_unlock();
+ 	}
+ }
+
