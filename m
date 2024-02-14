@@ -1,156 +1,130 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD7F13A86D
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 18:51:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F091E4B7
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 18:53:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707936698; cv=none; b=UsJux80ODJr4ruoJzAO+7919dLjZHodgGW3rwR2X8TF9J53VQCDUEMmRzB+oJhCRVDdb7cYPBVf/YyP1vPEObc0+o4zOnM0ksBvO1TQsGCv0Jo53I5R+H78d0hSdZRubXoNHsQdKNj1R3ZTlsXFvQHo7Xkv0VFI+/bNfS7aWH5E=
+	t=1707936797; cv=none; b=Tth5GZRkZubIaySzcIb1bQLml+DX/DMkGBtQzlHt8+heQ1/oenPEG+6W2Bm+6Y41Esg3zYy6OeatYs8sKyv7v8p8N1c8CRnm8hKSGS8Kyu1JncsKte2KUc+sRoEUHmBhgzITM31MR8CkPcry7jYbk0/5qkk6T+vaBcmLLkd3Wns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707936698; c=relaxed/simple;
-	bh=yztsz14R6ZSORaywQr2UjnCMcZQ4jnAvDwH12DaFtns=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g5nQG3OG1JPmB7txz/2bgOTiEh2wmGTC0xty1ovO1RM8VjPkhl08u/pIuK2+6mT1xVwD6m75JnoUiY8GBdthf4SG5jFiw4fSzLYoufiHQt1qLQbeCIFJua0dUIz5qutjg+opEr0dMx/2pBT5mfVqnPcffxRu73UPZ9i1iWD7CKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=c2fcRsn8; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1707936797; c=relaxed/simple;
+	bh=YB0WSEf01Y/V+3sTwuD+fxIA+EUO/mOnBcLiacfmF6I=;
+	h=Date:Message-ID:MIME-Version:Content-Type:Content-Disposition:
+	 From:To:Cc:Subject:References:In-Reply-To; b=BeXpuNaDx3k8bCLrqNNPRegyLmiY1kmahGMVHVWuQGgqI7h1ksbyyLIwuVijy8aP5Kg1+XnvZs9rpXkR9O8l8UiqkBERVa56kJrRLDwAWP/31y6SnQ3G0UXnmyxeKCFecm8+qQex6swXaft4WGhoZtxERTmCTfmFigN+abY5G1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=GmqFbF+1; arc=none smtp.client-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c2fcRsn8"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5d3912c9a83so67860a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 10:51:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="GmqFbF+1"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-4c015883a13so22374e0c.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 10:53:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707936696; x=1708541496; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7TmoFUzL21SenV8bAqzJot2A9aef5mtokwK00igGrc8=;
-        b=c2fcRsn8yA2SUecXStGGxqd3dD3SgzAjMBhF1Y45YGJMoafIRU5Hao01HZXspoG3ml
-         Id/zm6Y6cnNwOspX6+0+eIg6fKK80JG8m6Sre16HKcqw8oaWYIjaF14MOjMVSO4wPi1s
-         /AZTZBVAtEBdJPwzKc0PPICbEqyzspD3/osRE=
+        d=paul-moore.com; s=google; t=1707936794; x=1708541594; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
+         :content-disposition:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=U7EX0BUU8eYmhs0ZPEmIoQh2Kp64rH+uh/MBL1tuL4s=;
+        b=GmqFbF+1eCKxVFuR+Kyrsu977sb38LnrWY4AeZ4YUMCQVyxLwakk4NQ1ZpNhFHr3Uk
+         PGSE5UOMKHj8qLZjPmanF93VmKGWjkiAvWTnhjY3P88Y4+6xb14uPjS8qC/oGWBMCTIC
+         5Cdx6H6vOOhUBJS1BM6dti1loA91Agdp+8fjQVuPCVS5BCyjSl5od08u59k2Se46xi27
+         RU7+P7+NmK/bK0Ffdz1iYP9NGzRzo3bY1+3l5KOKl9Z0TvVMcNM3S6WH3ve2jDPWt2/u
+         2juXNx9h1j5Y7aJfBPEiWMq+wFuZXc4JAdUgk3MlhlndBVNqFbqNKW51pv211e5ia5w0
+         Swmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707936696; x=1708541496;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7TmoFUzL21SenV8bAqzJot2A9aef5mtokwK00igGrc8=;
-        b=FDuJ8lSDIJdjX1mhOykwcxqP3NTXPdwe3vsaGHJST+gij4vsZxk0z68izPSM3hzWeE
-         DBCZ91rBHQQg1fXGwcpCO+TkmEFQa8QgZm3LnH9Eq6Hw7H8qM+R+vD0DKBl1UuRhEePD
-         NKaGLUas4P55O8lc1igQ9DUOeH8B6RzjiKZS0/p1vFS1SY+THSfwdRXLdf1v5d1/Ag7i
-         iSHRmCk2g7I0WamLKcjDhczDTO7r2pbAWXLqfJfjAfMhsJ8vtxVoiVPgsBMK+DAXs6Es
-         JAcDA/lsz8hgXxHzg8iv6ep7dILyen/0+i+6TNaAFmQxgegPL36uMUUsso9cP7uWXNj9
-         rw9w==
-X-Forwarded-Encrypted: i=1; AJvYcCU6C9S8feo8x3aNegppLMzHVxCEvitBprlFnJLOfOz3F63B73T4drwnHwG+INrWE+DfjWLXPNRgU05ABK08/lshgHNlLkk1dVf66Bv+
-X-Gm-Message-State: AOJu0YwOlDw8LKDuCYZzNTIP8ZLYVbA2jCNO8/+7iUG9B4B17ZFXcYUv
-	xKAHsBievMyZbOcaEQ1xFrlZkkRsRdVnL+Yx4F4qmuEhQKFY/Pw8/i2gjEzajA==
-X-Google-Smtp-Source: AGHT+IGMpMrMHQqDLWS4X0fNZ1uf51AX6I2f2KM7gQnV3J2wt5MDkwtly9Gz02VAXaAX6BuS/gwYZA==
-X-Received: by 2002:a05:6a21:1743:b0:19e:ca05:226e with SMTP id nw3-20020a056a21174300b0019eca05226emr2888826pzb.9.1707936695883;
-        Wed, 14 Feb 2024 10:51:35 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXMLAk/FbgcU1pBdYFgTgNXr61uUiSeqOEh1Wg9xSjxtdXffq6iZih3qbwHWByg1fS+qrveEXORwYyzlGZhfHem1fPLxPktdGzZzHn3Uz2ttZZZ4Pflw9CqkAuc5wxBKsobGO3LHxBteyPP1cbZUs/54Go+hyMkhSVbmGe2VCq/l3GBhfX25dgP2+tb1aGYvhm+pI/ZRhY/Rx7FUWb8ohn3Vd9Fm3NCSPzkBoL6IQm/rx0tUVArjiPM6ajIThMZn9BoB2GXHwDnqFY/paFNZD3UUPpdleqPaeJRVfMpQlVAR62qCsqXwQRtvoltYTG9RPe3swJGF3u3dn8V9C0s6rHGbZX4fFzLNfWO9TuH7Rg+uhNGmqLtcha8fbOTvjJOh6CqEaB0ZD+VZJulbrVRXxcb2USoDQcxB6RibEW29oUaPxnIuSri59kyChL/+tZDxYPCGBTDKB9tLGJ3yKG9SNwMQ9yprKvV8eGtJdQByee9SotUYOLC2SEkM8RboIR+IWSA3zKjItwDh6VgCtkrvIbhf9GIHaNN/Q82jzky0mucQ2Lr4fbFBgJFRnegj9TDUxKGVhfyvki+T3wAHOi7ROUSkMjb963wO9JJp5Z1627YeYOD4uJDSukHo6z0tmJxUVS8Iyk=
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id y20-20020a056a00181400b006e06af90ff4sm9567294pfa.204.2024.02.14.10.51.35
+        d=1e100.net; s=20230601; t=1707936794; x=1708541594;
+        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
+         :content-disposition:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=U7EX0BUU8eYmhs0ZPEmIoQh2Kp64rH+uh/MBL1tuL4s=;
+        b=sH66l7kMoMgOrqBE/s+r7pFqFiipvSLJTjfX8YAcl90zoiURSXFHuVZvjFizCaUH2O
+         bLbqFXe1B2SiJ95qaKoI5rOoCYF0dJ8WvoMuyvjfMxpZQzwm+1n2MuV9NWrdQrJSlI3X
+         yt+p3NwsrFsUjph/u/LCtyIgnRUUPz4zAQvU1OtQ5dc2aolVYGM44biLg60n7McD7UQe
+         XeWSDzcTNACHZVrtzUeeN/qPlpxymvWidcI60aMjf9mb4sxQCMxCVJaxZzJJDGJp62t1
+         liUy74RRUJ4O3Rrqm5nkBzo/Omlpvm5jF/0WocUXg6hmebGZAYyfNE3ZDtUCNGB/cHM+
+         EHKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWguw88+pjddLeXIDRuRBRQ6GDcdvcx+Ppby2+svMyZbMrW4eeBJqQgouwgaEZa/9qyWE0BQXbqMkIr2fnadCDj2FkKz5XYgT2gOwTB
+X-Gm-Message-State: AOJu0Yz1Z0bSa6VBHfSVf0wW6gFphXB6un8S+sJLjer0iFgpIP0Fd+8l
+	Arfz0CPQJPusU05gLxsnapYenN/WAV4AtucolCSITLbkHxopIv9UGNAYy+SAzg==
+X-Google-Smtp-Source: AGHT+IFE3dcYT/V2vseHwfI/QKGAhtoiv7lpaXvutbo6pW5L51Jt87o/Rt6W4ld0LKTeyp5DB9cqIQ==
+X-Received: by 2002:a1f:d986:0:b0:4bd:3433:aac with SMTP id q128-20020a1fd986000000b004bd34330aacmr3156328vkg.15.1707936794508;
+        Wed, 14 Feb 2024 10:53:14 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVXIWXDO78A/kdG+CESi3cvOFauyQKoDlFtG4hFccN+h9utfaGjVgINu6NGQywVXm1XZTduZQuRt4VMbk2TJqUWQRgiusXQJQyNFSgYfyR3xT0nLnJnF4IEv8tRuCMd531L2GhbHjeECt89qI4vouDAXu0V6lQ+gt1DSUpfs6IYE6P66sTfa4pzzrNCKl4DYeKthIeK1RbmNbgcK22Pz+lUyFM6uzKnjHctyUD9C+ZRxNGFufQxHUmre6QrRPOVjE3Df8yVvHrlrIKSEPU=
+Received: from localhost ([70.22.175.108])
+        by smtp.gmail.com with ESMTPSA id od9-20020a0562142f0900b0068c9d0561d1sm2523643qvb.83.2024.02.14.10.53.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Feb 2024 10:51:35 -0800 (PST)
-Date: Wed, 14 Feb 2024 10:51:34 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Tycho Andersen <tycho@tycho.pizza>
-Cc: Oleg Nesterov <oleg@redhat.com>, Christian Brauner <brauner@kernel.org>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Peng Zhang <zhangpeng.00@bytedance.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Tycho Andersen <tandersen@netflix.com>,
-	Mike Christie <michael.christie@oracle.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: Coverity: __do_sys_pidfd_send_signal(): UNINIT
-Message-ID: <202402141051.5B17519F0@keescook>
-References: <202402131559.B76A34B@keescook>
- <ZcwGua3a9Z8nJXVq@tycho.pizza>
+        Wed, 14 Feb 2024 10:53:14 -0800 (PST)
+Date: Wed, 14 Feb 2024 13:53:13 -0500
+Message-ID: <1e24f1ef83614516c995e1cceccba6ff@paul-moore.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZcwGua3a9Z8nJXVq@tycho.pizza>
+MIME-Version: 1.0 
+Content-Type: text/plain; charset=utf-8 
+Content-Disposition: inline 
+Content-Transfer-Encoding: 8bit
+From: Paul Moore <paul@paul-moore.com>
+To: Jann Horn <jannh@google.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>
+Cc: Casey Schaufler <casey@schaufler-ca.com>, Kees Cook <keescook@chromium.org>, John Johansen <john.johansen@canonical.com>, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, Jann Horn <jannh@google.com>
+Subject: Re: [PATCH] security: fix integer overflow in lsm_set_self_attr()  syscall
+References: <20240214160538.1086089-1-jannh@google.com>
+In-Reply-To: <20240214160538.1086089-1-jannh@google.com>
 
-On Tue, Feb 13, 2024 at 05:18:01PM -0700, Tycho Andersen wrote:
-> On Tue, Feb 13, 2024 at 03:59:37PM -0800, coverity-bot wrote:
-> > Hello!
-> > 
-> > This is an experimental semi-automated report about issues detected by
-> > Coverity from a scan of next-20240213 as part of the linux-next scan project:
-> > https://scan.coverity.com/projects/linux-next-weekly-scan
-> > 
-> > You're getting this email because you were associated with the identified
-> > lines of code (noted below) that were touched by commits:
-> > 
-> >   Sat Feb 10 22:37:25 2024 +0100
-> >     3f643cd23510 ("pidfd: allow to override signal scope in pidfd_send_signal()")
-> >   Sat Feb 10 22:37:23 2024 +0100
-> >     81b9d8ac0640 ("pidfd: change pidfd_send_signal() to respect PIDFD_THREAD")
-> > 
-> > Coverity reported the following:
-> > 
-> > *** CID 1583637:    (UNINIT)
-> > kernel/signal.c:3963 in __do_sys_pidfd_send_signal()
-> > 3957     		/* Only allow sending arbitrary signals to yourself. */
-> > 3958     		ret = -EPERM;
-> > 3959     		if ((task_pid(current) != pid) &&
-> > 3960     		    (kinfo.si_code >= 0 || kinfo.si_code == SI_TKILL))
-> > 3961     			goto err;
-> > 3962     	} else {
-> > vvv     CID 1583637:    (UNINIT)
-> > vvv     Using uninitialized value "type" when calling "prepare_kill_siginfo".
-> > 3963     		prepare_kill_siginfo(sig, &kinfo, type);
-> > 3964     	}
-> > 3965
-> > 3966     	if (type == PIDTYPE_PGID)
-> > 3967     		ret = kill_pgrp_info(sig, &kinfo, pid);
-> > 3968     	else
-> > kernel/signal.c:3966 in __do_sys_pidfd_send_signal()
-> > 3960     		    (kinfo.si_code >= 0 || kinfo.si_code == SI_TKILL))
-> > 3961     			goto err;
-> > 3962     	} else {
-> > 3963     		prepare_kill_siginfo(sig, &kinfo, type);
-> > 3964     	}
-> > 3965
-> > vvv     CID 1583637:    (UNINIT)
-> > vvv     Using uninitialized value "type".
-> > 3966     	if (type == PIDTYPE_PGID)
-> > 3967     		ret = kill_pgrp_info(sig, &kinfo, pid);
-> > 3968     	else
-> > 3969     		ret = kill_pid_info_type(sig, &kinfo, pid, type);
-> > 3970     err:
-> > 3971     	fdput(f);
-> > 
-> > If this is a false positive, please let us know so we can mark it as
-> > such, or teach the Coverity rules to be smarter. If not, please make
-> > sure fixes get into linux-next. :) For patches fixing this, please
-> > include these lines (but double-check the "Fixes" first):
+On Feb 14, 2024 Jann Horn <jannh@google.com> wrote:
 > 
-> I think this is a false positive, we have:
+> security_setselfattr() has an integer overflow bug that leads to
+> out-of-bounds access when userspace provides bogus input:
+> `lctx->ctx_len + sizeof(*lctx)` is checked against `lctx->len` (and,
+> redundantly, also against `size`), but there are no checks on
+> `lctx->ctx_len`.
+> Therefore, userspace can provide an `lsm_ctx` with `->ctx_len` set to a
+> value between `-sizeof(struct lsm_ctx)` and -1, and this bogus `->ctx_len`
+> will then be passed to an LSM module as a buffer length, causing LSM
+> modules to perform out-of-bounds accesses.
 > 
->         /* Enforce flags be set to 0 until we add an extension. */
->         if (flags & ~PIDFD_SEND_SIGNAL_FLAGS)
->                 return -EINVAL;
+> The following reproducer will demonstrate this under ASAN (if AppArmor is
+> loaded as an LSM):
+> ```
+> #define _GNU_SOURCE
+> #include <unistd.h>
+> #include <stdint.h>
+> #include <stdlib.h>
+> #include <sys/syscall.h>
 > 
->         /* Ensure that only a single signal scope determining flag is set. */
->         if (hweight32(flags & PIDFD_SEND_SIGNAL_FLAGS) > 1)
->                 return -EINVAL;
+> struct lsm_ctx {
+>   uint64_t id;
+>   uint64_t flags;
+>   uint64_t len;
+>   uint64_t ctx_len;
+>   char ctx[];
+> };
+> 
+> int main(void) {
+>   size_t size = sizeof(struct lsm_ctx);
+>   struct lsm_ctx *ctx = malloc(size);
+>   ctx->id = 104/*LSM_ID_APPARMOR*/;
+>   ctx->flags = 0;
+>   ctx->len = size;
+>   ctx->ctx_len = -sizeof(struct lsm_ctx);
+>   syscall(
+>     460/*__NR_lsm_set_self_attr*/,
+>     /*attr=*/  100/*LSM_ATTR_CURRENT*/,
+>     /*ctx=*/   ctx,
+>     /*size=*/  size,
+>     /*flags=*/ 0
+>   );
+> }
+> ```
+> 
+> (I'm including an ASAN splat in the patch notes sent to the list.)
+> 
+> Fixes: a04a1198088a ("LSM: syscalls for current process attributes")
+> Signed-off-by: Jann Horn <jannh@google.com>
+> Acked-by: Casey Schaufler <casey@schaufler-ca.com>
 
-Ah yeah, coverity can't see through the hweight32 test. Sorry for the
-noise!
+Looks good to me, thanks Jann.  I'm going to merge this into
+lsm/stable-6.8 and send this up to Linus soon (likely tomorrow).
 
--- 
-Kees Cook
+--
+paul-moore.com
