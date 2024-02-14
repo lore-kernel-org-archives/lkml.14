@@ -1,160 +1,88 @@
-Received: from gepdcl09.sg.gdce.sony.com.sg (unknown [121.100.38.198])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE94618E2F;
-	Wed, 14 Feb 2024 11:14:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.100.38.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F8B19472;
+	Wed, 14 Feb 2024 11:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707909286; cv=none; b=VbFS34wa9CKuM1Gkn/dum9kSxzK3TtLPZAYpPFI49WwWDEQVr9/jqocbXlObkVWegpN77VTYbvbeqU6o/oRlYhhc7Vf6p056Umt5dRR169bU445zP+gAyC4MgEhPvt7aSbgViivrchYuewQ4bNFTiQNnnUNbYgDFEHuBg0ftOOM=
+	t=1707909285; cv=none; b=ier8M2fDwVtCf31wza/DBCPieW9HIxQK29clU3l0HGhmxSiKN3mnsRg4wCxtS2mrfjrSuBDDOK+WwvynpX9i6dX/Ps2LT/qAtEg2b5GazKblZ4v0pii/SgB3xce3fkwp35PIA3WkmuxFP+B8kDkhFsty757MISQCgWWxbLBgyjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707909286; c=relaxed/simple;
-	bh=l+i0yIxLpwQsUo4QfGAzTGFABUordW6G5AbZmrrcfq4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hcgqxpawrug8kr1AdCwrUKFOZ2tVHoGLRopOwcOGHPNI/9D2wKD8+kPRKS0UAkYORTkBSWjxuu9q+o1UE/2CFbS39bnxPu0JLCxevwKhL5n4Nn52VdyDNuivIPHaL+bkHfPlqx4L+gstNcoRiEeOQV12YQb6AcyHQBjMVhbZ/ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sony.com; spf=fail smtp.mailfrom=sony.com; arc=none smtp.client-ip=121.100.38.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=sony.com
-Received: from gepdcl02.s.gdce.sony.com.sg (SGGDCSE1NS07.sony.com.sg [146.215.123.196])
-	by gepdcl09.sg.gdce.sony.com.sg (8.14.7/8.14.4) with ESMTP id 41EBE4g3027632;
-	Wed, 14 Feb 2024 19:14:16 +0800
-Received: from mail.sony.com ([43.88.80.246])
-	by gepdcl02.s.gdce.sony.com.sg (8.14.7/8.14.4) with ESMTP id 41EBE2jV014297;
-	Wed, 14 Feb 2024 19:14:02 +0800
-Received: by mail.sony.com (Postfix, from userid 1000)
-	id 6BA9420C089E; Wed, 14 Feb 2024 16:42:36 +0530 (IST)
-Date: Wed, 14 Feb 2024 16:42:36 +0530
-From: Sreenath Vijayan <sreenath.vijayan@sony.com>
-To: Petr Mladek <pmladek@suse.com>
-Cc: john.ogness@linutronix.de, corbet@lwn.net, gregkh@linuxfoundation.org,
-        jirislaby@kernel.org, rdunlap@infradead.org, rostedt@goodmis.org,
-        senozhatsky@chromium.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-        taichi.shimoyashiki@sony.com, daniel.palmer@sony.com,
-        anandakumar.balasubramaniam@sony.com, sreenath.vijayan@sony.com
-Subject: Re: [PATCH v4 2/2] tty/sysrq: Dump printk ring buffer messages via
- sysrq
-Message-ID: <ZcygJOj9TaHZUKd-@sony.com>
-References: <cover.1706772349.git.sreenath.vijayan@sony.com>
- <ca8dd18e434f309612c907d90e9f77c09e045b37.1706772349.git.sreenath.vijayan@sony.com>
- <ZcOdLrOPiPJmCec5@alley>
+	s=arc-20240116; t=1707909285; c=relaxed/simple;
+	bh=Gd+CyunHvxbNvpxVptSLPcR33LuEQ3hVkYeWqA0Wbfg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YoyqkDgnJkw5IPUcD8TqGZaPlRTM4OJwU2z96Ljg7xv/Lfvi87W7J1WgY8aG/pwaDhYd1wsztwcBEFJdknwK6cpFfnW/+b20xXuM/1EMS9Y5gv0HEgOd5CQd4Sx0Oc/0cyYWeZoTZSVJ0GMn1Qa2ROxOHWF9oXJoLJhNnTlI6Ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=AbEKSgj7; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="AbEKSgj7"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A01D91BF206;
+	Wed, 14 Feb 2024 11:14:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1707909281;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SFE52PNY0PA+F+7I+xnGT+orJnrsDWlnFLaYnniFSWk=;
+	b=AbEKSgj7YizzA9FSXFNoFGNM2c+Dd77VOoKF3E2vxFCl/IGSUYHAJIKtCmT3qktxNJm03X
+	uG9ZaNxs+6988esaoIRk7bVW3BSO0Bg0b0+6Apw7eNG8xbfGGqywxGMhA3MnmY35eTXskR
+	CR4pS6cxtdRPpT6JB8kMUVjHQYQzCTwSAh0fg1fGFg2BDuZLA8c2yLjq/ES2ZlUDx/XdtR
+	dvVppER5XIOGw8hE+kcJmpa9jqQozeM8D+QfIqNgxXUcXJ1w5I1l7ZsVsdpXBsEdh3ck0k
+	QOUoNqgrFv07yTRpd/0jo72K5XlBwjDAxWKqkxdJk51j8+iAXpx/n9L1Ia574Q==
+Date: Wed, 14 Feb 2024 12:14:38 +0100
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Adam Ford <aford173@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, marex@denx.de,
+ aford@beaconembedded.com, Lucas Stach <l.stach@pengutronix.de>, Krzysztof
+ Kozlowski <krzysztof.kozlowski@linaro.org>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4 1/6] dt-bindings: phy: add binding for the i.MX8MP
+ HDMI PHY
+Message-ID: <20240214121438.331a9f20@booty>
+In-Reply-To: <20240210204606.11944-2-aford173@gmail.com>
+References: <20240210204606.11944-1-aford173@gmail.com>
+	<20240210204606.11944-2-aford173@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZcOdLrOPiPJmCec5@alley>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Wed, Feb 07, 2024 at 04:09:34PM +0100, Petr Mladek wrote:
-> On Thu 2024-02-01 13:12:41, Sreenath Vijayan wrote:
-> > When terminal is unresponsive, one cannot use dmesg to view printk
-> > ring buffer messages. Also, syslog services may be disabled,
-> > to check the messages after a reboot, especially on embedded systems.
-> > In this scenario, dump the printk ring buffer messages via sysrq
-> > by pressing sysrq+D.
-> 
-> I would use sysrq-R and say that it replays the kernel log on
-> consoles.
-> 
-> The word "dump" is ambiguous. People might thing that it calls
-> dmesg dumpers.
->
+Hi Adam,
 
-Ok noted. We proposed sysrq-D as it is an alternative to dmesg
-command and might be easier to remember.
- 
-> Also the messages would be shown on the terminal only when
-> console_loglevel is set to show all messages. This is done
-> in __handle_sysrq(). But it is not done in the workqueue
-> context.
->
+On Sat, 10 Feb 2024 14:45:57 -0600
+Adam Ford <aford173@gmail.com> wrote:
 
-Yes, the initial implementation was using write() of consoles
-so the messages would be shown irrespective of the console log
-level. The current implementation depends on the console log
-level but many other sysrq keys dump the messages at KERN_INFO
-level. In my understanding, __handle_sysrq() dumps only the
-sysrq header at the manipulated loglevel. It restores original
-loglevel before calling callback function for the key.
-If console_loglevel is set to show KERN_INFO messages, it would
-dump most of the important printk messages in our case. Also the
-loglevel can be modified using sysrq itself now.
- 
-> Finally, the commit message should explain why workqueues are used
-> and what are the limitations. Something like:
+> From: Lucas Stach <l.stach@pengutronix.de>
 > 
-> <add>
-> The log is replayed using workqueues. The reason is that it has to
-> be done a safe way (in compare with panic context).
+> Add a DT binding for the HDMI PHY found on the i.MX8MP SoC.
 > 
-> This also means that the sysrq won't have the desired effect
-> when the system is in so bad state that workqueues do not
-> make any progress.
-> </add>
-> 
-> Another reason might be that we do not want to do it in
-> an interrupt context. But this reason is questionable.
-> Many other sysrq commands do a complicate work and
-> print many messages as well.
->
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Noted. Will add this if we proceed with workqueue implementation.
- 
-> Another reason is that the function need to use console_lock()
-> which can't be called in IRQ context. Maybe, we should use
-> console_trylock() instead.
-> 
-> The function would replay the messages only when console_trylock()
-> succeeds. Users could repeat the sysrq when it fails.
-> 
-> Idea:
-> 
-> Using console_trylock() actually might be more reliable than
-> workqueues. console_trylock() might fail repeatably when:
-> 
->     + the console_lock() owner is stuck. But workqueues would fail
->       in this case as well.
-> 
->     + there is a flood of messages. In this case, replaying
->       the log would not help much.
-> 
-> Another advantage is that the consoles would be flushed
-> in sysrq context with the manipulated console_loglevel.
-> 
-> Best Regards,
-> Petr
+I was a bit puzzled by this v4 series as it comes after v8... however
+thanks for keeping up!
 
-Yes, this seems to work well from interrupt context when the
-console lock owner is not stuck. We can also manipulate
-the console_loglevel. Something like this:
+This patch is identical to the v8 I already reviewed, so:
 
-//in printk.c
-void console_replay_all(void)
-{
-       if (console_trylock()) {
-               __console_rewind_all();
-               console_unlock();
-       }
-}
+Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
-//in sysrq.c
-static void sysrq_handle_dmesg_dump(u8 key)
-{
-       int orig_log_level = console_loglevel;
-       console_loglevel = CONSOLE_LOGLEVEL_DEFAULT;
-       console_replay_all();
-       console_loglevel = orig_log_level;
-}
-
-
-The downside I see is that the user may have to hit the
-key multiple times or give up trying if the console lock
-owner is busy at the time of key press. This information
-should probably be updated in the documentation.
-
-Please let me know your opinion.
-
-Regards,
-Sreenath
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
