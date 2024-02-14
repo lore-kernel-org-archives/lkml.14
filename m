@@ -1,125 +1,194 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7B6171AC;
-	Wed, 14 Feb 2024 10:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 048AE171C7;
+	Wed, 14 Feb 2024 10:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707905776; cv=none; b=FIODYYogxAa11CEkW/fGtmx/kKMzXlz0nmGQ8wqsgrc04OO0eAjNW8TR3DwRdcbMj9u245URdGWhzCYHnJ6uE3gwgM/AmA3R2jjdni6RG2MzLgZVDEA1GtI35FqUVL3l6F/Ll1MmoZizonbGOAJ94gn1bET+Ml/YuQe7nIpppIo=
+	t=1707905823; cv=none; b=duumN1ivP8Gpcetn/o06Dcy85G3jjiI1apb7eUh24N/d2Y5L3ob/7pMJXmltlR3EO+rqy8t38BCLtdy8XDgoWMfJkGXUzmIAfYRUaoojKKylEjc/pj8hxIg+hRTalOAwBybis8gBy3I9FzzkbESyiZCyZnKd0lIeHzQHJJcIz8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707905776; c=relaxed/simple;
-	bh=eTiNyXEgBPCIo0Ta8sYgjRV8p1Xz0hDcVMygIqs3U3E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B5mwd8xgekWIEmHy+vF+v+ucle1Ufa2ZiCOtLm86cDh0gNHTttCFWe9V6N8fd82yIsaJo9lcyFREDdIqaio30wMzkjTrm9xQhirtYjEwxr5sJRAEUBCqP8s55BKeWuMj3q9yBH3mO5cBTfkDewuYUkki7LAIPGZsCeDGPm2PXYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=GlwHXq5K; arc=none smtp.client-ip=115.28.160.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="GlwHXq5K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1707905769; bh=eTiNyXEgBPCIo0Ta8sYgjRV8p1Xz0hDcVMygIqs3U3E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GlwHXq5KtlJN3WjzDugZTkyJEy5LHE+ExYx073zzj48EYrqsL7zgxjG0jH/CXdUWu
-	 lHC5BxTxuznnRWa29bxkSyDY9QBTn3MlyULKk31DvSXmHgOaImFsYVGo+Dmwyixr+h
-	 HhHqPrIQO+kYbav4MpoP9qcNYRLyGihzdZ4frvdI=
-Received: from ld50.lan (unknown [IPv6:240e:388:8d00:6500:5531:eef6:1274:cebe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 9843160562;
-	Wed, 14 Feb 2024 18:16:09 +0800 (CST)
-From: WANG Xuerui <kernel@xen0n.name>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH for-6.8 5/5] KVM: LoongArch: Clean up comments of _kvm_get_cpucfg_mask and kvm_check_cpucfg
-Date: Wed, 14 Feb 2024 18:15:57 +0800
-Message-ID: <20240214101557.2900512-6-kernel@xen0n.name>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240214101557.2900512-1-kernel@xen0n.name>
-References: <20240214101557.2900512-1-kernel@xen0n.name>
+	s=arc-20240116; t=1707905823; c=relaxed/simple;
+	bh=mF6lO2sdQD9YAA/NozjMiNCvZQnvV+ufcNUv6TC82aM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rRWPttobllyZJsU0taQcxKMEzK44x23iVILoughyMlSbteKaPbKDVg5JBJjB8F6iI/lsK3ffbcarCjpkNB9bCFzB3hevatdl3Z0eiIup2Y6x4+7zLn+uc8w2Y5BU5nhSHjqjTSA3jHK9gHmF/SRUGj3rN20yl+ZeVl2/n+P4D+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D9DF1FB;
+	Wed, 14 Feb 2024 02:17:41 -0800 (PST)
+Received: from [10.57.48.111] (unknown [10.57.48.111])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF0F13F766;
+	Wed, 14 Feb 2024 02:16:57 -0800 (PST)
+Message-ID: <653d8ae0-4eed-4fa4-b7ac-0668af93c030@arm.com>
+Date: Wed, 14 Feb 2024 10:16:56 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 03/11] coresight: tmc: Extract device properties from
+ AMBA pid based table lookup
+Content-Language: en-GB
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ linux-arm-kernel@lists.infradead.org
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Sudeep Holla <sudeep.holla@arm.com>, Mike Leach <mike.leach@linaro.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+ linux-stm32@st-md-mailman.stormreply.com
+References: <20240123054608.1790189-1-anshuman.khandual@arm.com>
+ <20240123054608.1790189-4-anshuman.khandual@arm.com>
+ <44597c9a-79bd-40f8-87a7-b53582132583@arm.com>
+ <0c65f3b0-a879-444c-b0a4-4af485e72166@arm.com>
+ <39c01eae-049b-4f5b-b86e-4af22c8246c1@arm.com>
+ <14d4c862-0880-408c-bc4e-5047c7eace87@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <14d4c862-0880-408c-bc4e-5047c7eace87@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: WANG Xuerui <git@xen0n.name>
+On 14/02/2024 03:35, Anshuman Khandual wrote:
+> 
+> 
+> On 2/13/24 16:02, Suzuki K Poulose wrote:
+>> On 13/02/2024 03:13, Anshuman Khandual wrote:
+>>>
+>>>
+>>> On 2/12/24 17:43, Suzuki K Poulose wrote:
+>>>> On 23/01/2024 05:46, Anshuman Khandual wrote:
+>>>>> This extracts device properties from AMBA pid based table lookup. This also
+>>>>> defers tmc_etr_setup_caps() after the coresight device has been initialized
+>>>>> so that PID value can be read.
+>>>>>
+>>>>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>>>>> Cc: Mike Leach <mike.leach@linaro.org>
+>>>>> Cc: James Clark <james.clark@arm.com>
+>>>>> Cc: coresight@lists.linaro.org
+>>>>> Cc: linux-arm-kernel@lists.infradead.org
+>>>>> Cc: linux-kernel@vger.kernel.org
+>>>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>>>>> ---
+>>>>>     .../hwtracing/coresight/coresight-tmc-core.c  | 19 +++++++++++++------
+>>>>>     1 file changed, 13 insertions(+), 6 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/hwtracing/coresight/coresight-tmc-core.c b/drivers/hwtracing/coresight/coresight-tmc-core.c
+>>>>> index 7ec5365e2b64..e71db3099a29 100644
+>>>>> --- a/drivers/hwtracing/coresight/coresight-tmc-core.c
+>>>>> +++ b/drivers/hwtracing/coresight/coresight-tmc-core.c
+>>>>> @@ -370,16 +370,24 @@ static inline bool tmc_etr_has_non_secure_access(struct tmc_drvdata *drvdata)
+>>>>>         return (auth & TMC_AUTH_NSID_MASK) == 0x3;
+>>>>>     }
+>>>>>     +#define TMC_AMBA_MASK 0xfffff
+>>>>> +
+>>>>> +static const struct amba_id tmc_ids[];
+>>>>> +
+>>>>>     /* Detect and initialise the capabilities of a TMC ETR */
+>>>>> -static int tmc_etr_setup_caps(struct device *parent, u32 devid, void *dev_caps)
+>>>>> +static int tmc_etr_setup_caps(struct device *parent, u32 devid)
+>>>>>     {
+>>>>>         int rc;
+>>>>> -    u32 dma_mask = 0;
+>>>>> +    u32 tmc_pid, dma_mask = 0;
+>>>>>         struct tmc_drvdata *drvdata = dev_get_drvdata(parent);
+>>>>> +    void *dev_caps;
+>>>>>           if (!tmc_etr_has_non_secure_access(drvdata))
+>>>>>             return -EACCES;
+>>>>>     +    tmc_pid = coresight_get_pid(&drvdata->csdev->access) & TMC_AMBA_MASK;
+>>>>> +    dev_caps = coresight_get_uci_data_from_amba(tmc_ids, tmc_pid);
+>>>>> +
+>>>>>         /* Set the unadvertised capabilities */
+>>>>>         tmc_etr_init_caps(drvdata, (u32)(unsigned long)dev_caps);
+>>>>>     @@ -497,10 +505,6 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
+>>>>>             desc.type = CORESIGHT_DEV_TYPE_SINK;
+>>>>>             desc.subtype.sink_subtype = CORESIGHT_DEV_SUBTYPE_SINK_SYSMEM;
+>>>>>             desc.ops = &tmc_etr_cs_ops;
+>>>>> -        ret = tmc_etr_setup_caps(dev, devid,
+>>>>> -                     coresight_get_uci_data(id));
+>>>>> -        if (ret)
+>>>>> -            goto out;
+>>>>>             idr_init(&drvdata->idr);
+>>>>>             mutex_init(&drvdata->idr_mutex);
+>>>>>             dev_list = &etr_devs;
+>>>>> @@ -539,6 +543,9 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
+>>>>>             goto out;
+>>>>>         }
+>>>>>     +    if (drvdata->config_type == TMC_CONFIG_TYPE_ETR)
+>>>>> +        ret = tmc_etr_setup_caps(dev, devid);
+>>>>> +
+>>>>
+>>>> With this change, we silently accept an ETR that may only have "SECURE" access only and crash later while we try to enable tracing. You could
+>>>> pass in the "access" (which is already in 'desc.access' in the original
+>>>> call site and deal with it ?
+>>>
+>>> Just wondering, if something like the following will help ? A failed tmc_etr_setup_caps()
+>>> because of failed tmc_etr_has_non_secure_access(), will unregister the coresight device
+>>> before returning.
+>>>
+>>> --- a/drivers/hwtracing/coresight/coresight-tmc-core.c
+>>> +++ b/drivers/hwtracing/coresight/coresight-tmc-core.c
+>>> @@ -538,8 +538,13 @@ static int __tmc_probe(struct device *dev, struct resource *res)
+>>>                   goto out;
+>>>           }
+>>>    -       if (drvdata->config_type == TMC_CONFIG_TYPE_ETR)
+>>> +       if (drvdata->config_type == TMC_CONFIG_TYPE_ETR) {
+>>>                   ret = tmc_etr_setup_caps(dev, devid);
+>>> +               if (ret) {
+>>> +                       coresight_unregister(drvdata->csdev);
+>>> +                       goto out;
+>>> +               }
+>>> +       }
+>>
+>> Why do we move the tmc_etr_setup_caps() in the first place ? We could retain where that was and pass "desc.access" parameter rather than registering the csdev and then relying csdev->access ?
+> 
+> Agreed, and after implementing the changes suggested above, the entire patch
+> will look something like the following. Please do confirm if this looks good
+> enough.
+> 
+> --- a/drivers/hwtracing/coresight/coresight-tmc-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc-core.c
+> @@ -370,16 +370,25 @@ static inline bool tmc_etr_has_non_secure_access(struct tmc_drvdata *drvdata)
+>          return (auth & TMC_AUTH_NSID_MASK) == 0x3;
+>   }
+>   
+> +#define TMC_AMBA_MASK 0xfffff
+> +
+> +static const struct amba_id tmc_ids[];
+> +
+>   /* Detect and initialise the capabilities of a TMC ETR */
+> -static int tmc_etr_setup_caps(struct device *parent, u32 devid, void *dev_caps)
+> +static int tmc_etr_setup_caps(struct device *parent, u32 devid,
+> +                             struct csdev_access *access)
+>   {
+>          int rc;
+> -       u32 dma_mask = 0;
+> +       u32 tmc_pid, dma_mask = 0;
+>          struct tmc_drvdata *drvdata = dev_get_drvdata(parent);
+> +       void *dev_caps;
+>   
+>          if (!tmc_etr_has_non_secure_access(drvdata))
+>                  return -EACCES;
+>   
+> +       tmc_pid = coresight_get_pid(access) & TMC_AMBA_MASK;
+> +       dev_caps = coresight_get_uci_data_from_amba(tmc_ids, tmc_pid);
+> +
+>          /* Set the unadvertised capabilities */
+>          tmc_etr_init_caps(drvdata, (u32)(unsigned long)dev_caps);
+>   
+> @@ -497,8 +506,7 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
+>                  desc.type = CORESIGHT_DEV_TYPE_SINK;
+>                  desc.subtype.sink_subtype = CORESIGHT_DEV_SUBTYPE_SINK_SYSMEM;
+>                  desc.ops = &tmc_etr_cs_ops;
+> -               ret = tmc_etr_setup_caps(dev, devid,
+> -                                        coresight_get_uci_data(id));
+> +               ret = tmc_etr_setup_caps(dev, devid, &desc.access);
+>                  if (ret)
+>                          goto out;
+>                  idr_init(&drvdata->idr);
+> 
 
-Remove comments that are merely restatement of the code nearby, and
-paraphrase the rest so they read more natural for English speakers (that
-lack understanding of Chinese grammar). No functional changes.
+That looks much better. Thanks
 
-Signed-off-by: WANG Xuerui <git@xen0n.name>
----
- arch/loongarch/kvm/vcpu.c | 26 +++++++++++---------------
- 1 file changed, 11 insertions(+), 15 deletions(-)
-
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 9e108ffaba30..ff51d6ba59aa 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -302,20 +302,14 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
- {
- 	switch (id) {
- 	case 2:
--		/* Return CPUCFG2 features which have been supported by KVM */
-+		/* CPUCFG2 features unconditionally supported by KVM */
- 		*v = CPUCFG2_FP     | CPUCFG2_FPSP  | CPUCFG2_FPDP     |
- 		     CPUCFG2_FPVERS | CPUCFG2_LLFTP | CPUCFG2_LLFTPREV |
- 		     CPUCFG2_LAM;
--		/*
--		 * If LSX is supported by CPU, it is also supported by KVM,
--		 * as we implement it.
--		 */
-+		/* If LSX is supported by the host, then it is also supported by KVM */
- 		if (cpu_has_lsx)
- 			*v |= CPUCFG2_LSX;
--		/*
--		 * if LASX is supported by CPU, it is also supported by KVM,
--		 * as we implement it.
--		 */
-+		/* Same with LASX */
- 		if (cpu_has_lasx)
- 			*v |= CPUCFG2_LASX;
- 
-@@ -336,21 +330,23 @@ static int kvm_check_cpucfg(int id, u64 val)
- 
- 	switch (id) {
- 	case 2:
--		/* CPUCFG2 features checking */
- 		if (val & ~mask)
--			/* The unsupported features should not be set */
-+			/* Unsupported features should not be set */
- 			return -EINVAL;
- 		if (!(val & CPUCFG2_LLFTP))
--			/* The LLFTP must be set, as guest must has a constant timer */
-+			/* Guests must have a constant timer */
- 			return -EINVAL;
- 		if ((val & CPUCFG2_FP) && (!(val & CPUCFG2_FPSP) || !(val & CPUCFG2_FPDP)))
--			/* Single and double float point must both be set when enable FP */
-+			/* Single and double float point must both be set when FP is enabled */
- 			return -EINVAL;
- 		if ((val & CPUCFG2_LSX) && !(val & CPUCFG2_FP))
--			/* FP should be set when enable LSX */
-+			/* LSX is architecturally defined to imply FP */
- 			return -EINVAL;
- 		if ((val & CPUCFG2_LASX) && !(val & CPUCFG2_LSX))
--			/* LSX, FP should be set when enable LASX, and FP has been checked before. */
-+			/*
-+			 * LASX is architecturally defined to imply LSX and FP
-+			 * FP is checked just above
-+			 */
- 			return -EINVAL;
- 		return 0;
- 	default:
--- 
-2.43.0
+Suzuki
 
