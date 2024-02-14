@@ -1,149 +1,125 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9EF12B88
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 09:14:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ECA32F2F;
+	Wed, 14 Feb 2024 09:15:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707902062; cv=none; b=ZiX+V10DHZm9JwKVT0KLXtSNBAdzcLZAxguDsBtj8PzgXsEd/kMbxwsFg0rwDP15F8GBUTDDVSahwCFf22JcxIRyfS8agxXe+3nnCtbuQrMsZ82+LNwPNhqOZvMuvkSb29rCR0aCNp9fZO+K7RbUwXPqX08nc597B+RafEI0/I0=
+	t=1707902115; cv=none; b=lh/WZplEUMu/WTwBg1gbJuM/0Fu9zVgeorN9gJUgET8nByOXZM1UIxBnBVFsXf4NBenut6tYn4G9NnkQzK/D1ihk8Zw/a4pIJxkm6p8ooog3ve4h/XNZNQZmYhB7H+Fj4of3vlIS2vOWtZVzo/SPu0dNc4LnK2eACIc9qyVzn2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707902062; c=relaxed/simple;
-	bh=FCqel5Ig8UY5Wl9vfQwDc+Lv9aJAAZMTCLf1omkhISg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=huVBexyEzHmHMr1WVK3refvl9r2memWh9YQskXUjsvuLcJM77QIB3keD0EYAysuaeysSemWepweXHJKmMWCJiPasQ3Y+xUYx6TOqM65HEna9436Fe1OXLNb4JYL/oyKUcR6oJK0fDC0ZB8Zd2CsTlFRZb8kNJUd6IccWpeuoSVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Kb9fd5bo; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Kb9fd5bo"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41E7kSMi028193;
-	Wed, 14 Feb 2024 09:14:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:from:to:cc:references
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=mN6QB+qDuCSV/tY61bkNRVg4z8putKLkJFG2Mvkny5M=; b=Kb
-	9fd5bo2LCELAUvCC2dMtIKu8WOhnVzzOGlCZF2AxK31lD5l4YZgBUHYnph6ILhgo
-	5KLOEcq994bDOXAY76NZ6a3Uq65AQ1Tkfea3KnIzVPcYgFiF0c6OQiPWOFkVtm7k
-	hs9DnMOqglx6HBTrXVy7MJUfGCJ4h0LHNot9k8jJK9mGbNzaVkWS5tLO9FPkhtud
-	2lBSsT7kW/CFQvcY2gF8hY6uGhwElYOISpBMXZQPEkPEI+E6hNZT9cj3k5UKf4tH
-	ODbKiCDpkqko6ph5inxL0MT4HnqlaPW8bp0M9kopNFhcY+McVOVTxnIsPzBDpsiA
-	lNFecHMe22795e7gQV9Q==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w8nt40ftc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 Feb 2024 09:14:06 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41E9E43C018123
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 Feb 2024 09:14:04 GMT
-Received: from [10.214.66.164] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 14 Feb
- 2024 01:14:00 -0800
-Message-ID: <64ed46f4-459c-63b0-a69e-81353e9fcbc9@quicinc.com>
-Date: Wed, 14 Feb 2024 14:43:57 +0530
+	s=arc-20240116; t=1707902115; c=relaxed/simple;
+	bh=jYa1Lr7ZUtJC11+cRFkJLC24Hvdut98Q3M7Of/21KWM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L+O8yA6ke2X6wTNwJy2RiIVDuh9BpWk6Zy/OhqniwBxzXj1YKqy0EdyKCG41gzHX+Op85i+JdTLcFiw7ttOzvJLzHZZ9GE5mcmX37qmhrgvTHHhCCIElA6S9toowRDqpahhdDfop7zAU7R3Ieu2/SjOh+knk0IHFvr3MBmtT3rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a26ed1e05c7so268414966b.2;
+        Wed, 14 Feb 2024 01:15:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707902112; x=1708506912;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sZRp3AjGt/6aArJlVGQphdXg07o3hYKoIqEKPDAJhb8=;
+        b=Kh3ro8QreSUhzLUF0FcxAb8tIeUH1I5WloRxFedh86nLcar61JSA/D/bpeEEdxlxBy
+         0BNhhY3Tvm3knGyIaWXhh3SeLfMIhBAxAIqFZ4WOPOEVNdxJIV+lDV/jGldrfEAZ8Hxj
+         cuqLb2wFM9o8Lk4Gp+78GOtc6ZbOAI8346tmVCg934Ut+mK0GcBcluoK994dtvhETVeN
+         VPo+0FHmP4cn5y9ACpdXQvHpMBz3zl6xMUUMjI7c+7/VRI+C/UVCVBHmo/BC4JhwPVpk
+         6QDyu2xCNvPyhwj9afRV99B2e8nXbVhT2ZMkR0aOSxY9VSaYfHgF62icn2CqrVThLBmD
+         At2A==
+X-Forwarded-Encrypted: i=1; AJvYcCUbRerckN3rX3BWvUGJXZRW/1a1DIR9Ctgq20dZbZS1Gya24R9zoBURA982G3YDl6lJtwMd1xN7Ry87hAEsOWbGafUH04TvlusJQJNWg2y5LHlOXyUtOt1wYt9CfiX4xj2q/m6ZZzWqp5sn
+X-Gm-Message-State: AOJu0Yzt0pr7tO2nyD/pIp4flr8HbqbCyWrHXs3+0g6r05Q2eCK1ilv7
+	dXVLlAGJuPUefX+0wPw5yZdKsSvDwppbrbPNTWd0B8063vBeDdQV
+X-Google-Smtp-Source: AGHT+IEmGiN8n15k8qmTNfQd9MvmpheI845EtDRGzy8SstN1IVgoAgB+d0JXaEwiQPJOL0N2eg0imA==
+X-Received: by 2002:a17:906:fb1b:b0:a38:392a:8c71 with SMTP id lz27-20020a170906fb1b00b00a38392a8c71mr1352488ejb.45.1707902111598;
+        Wed, 14 Feb 2024 01:15:11 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWRQ1qxhvE9R+51NONBVfBWDqJAEIr7y0IjfENjT7aZsD7HaErTsNqAImJJbrZPv3V1oPPjgEQuhe37QYMO1fJm5cH6Nz6VYW0JmPiWHkEAHRVwCGJwxG4DKvRMXzjsFMIsESymrPRdcFI1wVwv86s2hKhUkAb3LcL+5KAgxeRvfHgnLh4F2tBvEvgpaR90lrrHDc+SQGIHJvzkQJTdlLDyUBo1JgDrOSgEMoF+LxRB4EEiDBKDhJRG6eitrn9ewTOJv2d0G08qOw==
+Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:59? ([2a0b:e7c0:0:107::aaaa:59])
+        by smtp.gmail.com with ESMTPSA id ig8-20020a1709072e0800b00a3d35bccdf0sm566236ejc.139.2024.02.14.01.15.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Feb 2024 01:15:11 -0800 (PST)
+Message-ID: <faf36cd9-00c3-4f47-acb7-64881f25d6d9@kernel.org>
+Date: Wed, 14 Feb 2024 10:15:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH V7 2/2] mm: shmem: implement POSIX_FADV_[WILL|DONT]NEED
- for shmem
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] serial: 8250_pci1xxxx: Don't use "proxy" headers
 Content-Language: en-US
-From: Charan Teja Kalla <quic_charante@quicinc.com>
-To: Hugh Dickins <hughd@google.com>
-CC: <akpm@linux-foundation.org>, <willy@infradead.org>,
-        <markhemm@googlemail.com>, <rientjes@google.com>, <surenb@google.com>,
-        <shakeelb@google.com>, <fvdl@google.com>, <quic_pkondeti@quicinc.com>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        Minchan Kim
-	<minchan@kernel.org>
-References: <cover.1676378702.git.quic_charante@quicinc.com>
- <631e42b6dffdcc4b4b24f5be715c37f78bf903db.1676378702.git.quic_charante@quicinc.com>
- <2d56e1dd-68b5-c99e-522f-f8dadf6ad69e@google.com>
- <eeeba374-9247-96fd-c9f5-8cba8761f1b9@quicinc.com>
- <aa4352d8-a549-32e5-874f-1cfee2a5b3e@google.com>
- <e8e85d7d-edf1-7a8b-8cfe-9976dd9cfb0b@quicinc.com>
-In-Reply-To: <e8e85d7d-edf1-7a8b-8cfe-9976dd9cfb0b@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Rengarajan S <rengarajan.s@microchip.com>, linux-serial@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>,
+ Tharun Kumar P <tharunkumar.pasumarthi@microchip.com>
+References: <20240213193827.3207353-1-andriy.shevchenko@linux.intel.com>
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20240213193827.3207353-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: uBZl48d6zItMtwy452DnHye9QeYlVuuc
-X-Proofpoint-ORIG-GUID: uBZl48d6zItMtwy452DnHye9QeYlVuuc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-14_02,2024-02-12_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- lowpriorityscore=0 clxscore=1011 priorityscore=1501 bulkscore=0
- impostorscore=0 adultscore=0 malwarescore=0 phishscore=0 spamscore=0
- mlxlogscore=471 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402140071
 
-Hello Hugh,
-
-Based on offline discussion with some folks in the list, it seems that
-this syscall can be helpful. This patch might have forgotten and I hope
-this ping helps in resurrecting this thread.
-
-On 5/18/2023 6:16 PM, Charan Teja Kalla wrote:
-> On 5/17/2023 5:02 PM, Hugh Dickins wrote:
->>> Sure, will include those range calculations for shmem pages too.
->> Oh, I forgot this issue, you would have liked me to look at V8 by now,
->> to see whether I agree with your resolution there.  Sorry, no, I've
->> not been able to divert my concentration to it yet.
->>
->> And it's quite likely that I shall disagree, because I've a history of
->> disagreeing even with myself on such range widening/narrowing issues -
->> reconciling conflicting precedents is difficult 🙁
->>
-> If you can at least help by commenting which part of the patch you
-> disagree with, I can try hard to convince you there:) .
+On 13. 02. 24, 20:38, Andy Shevchenko wrote:
+> Update header inclusions to follow IWYU (Include What You Use)
+> principle.
 > 
->>> Please let me know if I'm missing something where I should be counting
->>> these as NR_ISOLATED.
->> Please grep for NR_ISOLATED, to see where and how they get manipulated
->> already, and follow the existing examples.  The case that sticks in my
->> mind is in mm/mempolicy.c, where the migrate_pages() syscall can build
->> up a gigantic quantity of transiently isolated pages: your syscall can
->> do the same, so should account for itself in the same way.
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Based on the grep, it seems almost all the call stacks that isolates the
-folios is for migrating the pages where after migration the NR_ISOLATED
-is decremented (in migrate_folio_done()). The call paths are(compaction,
-memory hotplug, mempolicy).
+Looks good, but hard to tell if it is correct :P.
 
-The another call path is reclaim where we isolate 'nr' pages belongs to
-a pgdat, account/unaccount them in NR_ISOLATED across the reclaim.
+I like this qt-creator feature: "this header is not directly used, 
+remove?". Maybe we could extend it to the kernel somehow (as it uses 
+clang to decide, I suppose). As was shown recently, removing the 
+inclusion hell can decrease the build time significantly…
 
-I think it is easy to account for the above call paths as we know "which
-folio corresponds to which pgdat".
+Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
 
-Where as in this patch, we are isolating a set of folios(can corresponds
-to different nodes) and relying on the reclaim_pages() to do the swap
-out. It is straightforward to account NR_ISOLATED while isolating, but
-it requires unaccounting changes in the shrink_folio_list() where folio
-is being freed after swap out.  Doing so requires changes in all the
-code places(eg: shrink_inactive_list()), where it now requires to
-account NR_ISOLATED while isolating and the shrink_folio_list()
-unaccounts it.
+-- 
+js
+suse labs
 
-So, accounting NR_ISOLATED requires changes in other code places where
-this patch has not touched.
-
-If isolating a large amount of pages and not being recorded in
-NR_ISOLATED is really a problem, then may I please know your opinion on
-isolating(with out accounting) and reclaiming in small batches? The
-batch size can be considered as SWAP_CLUSTER_MAX of pages.
-
-> I had a V8 posted without this into accounting. Let me make the changes
-> to account for the NR_ISOLATED too.
-
-Thanks,
-Charan
