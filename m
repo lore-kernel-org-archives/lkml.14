@@ -1,359 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF2C84A37;
-	Wed, 14 Feb 2024 17:19:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A258128368
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 17:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707931184; cv=none; b=uzFCJB6fAKdegnj0pkNjPe+jl5yWfdi7f00nP6iZ4zY7++uDO3SCTkqWwjvvjJT9BwuyFKS92RO0SnzhJC9d6S1eGGX1YwzTL+RFkCfvK7MrehIrMzAoImKa+z/NpcPd6vujKPG6E+BEd2A1+N/GJT1/+6urjKj8F0eGU6KrYl8=
+	t=1707931189; cv=none; b=De3nasGWuAmkE7v8JIOsGAYbbIcpC77Bs22K8rq/YQu6dqfLzyZrgQ/I+L+0DkfeQKqfNmzXctTaEA6cz4zhRQvCkDSW3Pmr1tRwjJJhHobMiZeO6fWy6wbm/D/6izi8dwpty3QQOOas7TyVyxCH0/7qrA/LVKW1VsQXVJ92ffA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707931184; c=relaxed/simple;
-	bh=PU+I3eS6cHBmwm4SgiKJZyWi+Zr3RNPwKsVpYhPf5k4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uCTIRNRPM36j9FqflKzn728hf9MwyzWoquREdhI0SNz1NWMbEUDym7UE13Mp64pbSurma8N15buQNeLyvOGeTfio95GIHMd7f7a+lHoA+uwzXBmLfxNBKydxcPoZlTBkPhrjl6z8c+RNCfswXCLYAJMjAUoOCmmPkRfCBsR0HOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cDd1cxWi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707931189; c=relaxed/simple;
+	bh=Yku4QTzDRgKI/i8hKOFaa1PxharxpUPm5kuh1Z3KMas=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CPDFKrQS5ItEIuYOt9xCXtx/ZG49fNoQ0d+cz5giIZzMFnoBIj/rdkLXx5pmKEPuXc4eT753H0f2F7Ev6FxgX2ai3LQ76cPQbR8IwCh6BqX8daT1o3WC7EC+uvxnzRMb56NLUlS1yleNszbqKg6eTZlDZ3erFotGbgIBVgB+/X8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bz2viO5C; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cDd1cxWi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE346C43390;
-	Wed, 14 Feb 2024 17:19:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707931183;
-	bh=PU+I3eS6cHBmwm4SgiKJZyWi+Zr3RNPwKsVpYhPf5k4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=cDd1cxWiYwELvwUBnoMX0vHoQZR/ez6dv80xmCyueLX0/x2GazDUS9oA/UL3mjeiE
-	 pFyVGBbkheN5coonqeYSCY7u1sO4qXIghbMg0Q2LhSKs+STmpUCu9uxJz4B+ACP27w
-	 rcTxQe6Mmw8sjG1tAj5PSjFm9dctljIESY2yPOIpI7EruAT20W1JG0BznO2MWMWLbD
-	 CjiE+9X5U2VBFc9TgJdf/LMiV6UxRdABdIXedXphD6DVKlV/K64gXzkkljHIU5RRP/
-	 m1wM0EE40cw89CLZ/KloG3HGR/JNf5yqFPiNot7mAkXLb5NQMrOuRdnZWhVUSHXuUj
-	 GG2/vjkUzDo9Q==
-From: Benjamin Tissoires <bentiss@kernel.org>
-Date: Wed, 14 Feb 2024 18:18:39 +0100
-Subject: [PATCH RFC bpf-next v2 10/10] selftests/hid: add test for
- bpf_timer
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bz2viO5C"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d7232dcb3eso42959435ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 09:19:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707931187; x=1708535987; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=kQJxYiPtkKunXHr1tWOWmm3RzE0fHMgYFU5N+FoanzQ=;
+        b=bz2viO5CXR43zHcNBPXSQpr8axEtMcy6ugW9CYGG1Dg3Ei1haWIZcwbHlbyoVQDMQ4
+         0jObCmRQs5ZYIbbHCKY/pVWw3MAdFFG+bU6GBKz5T1CaqR1veJY2i6RMqyA+cmOvBObq
+         UNfXg5sw3jDh1HpblzSn2ZKpUWwXmdbmWE4KtydlQylNrklVKXO2S0jq+0tn+rRZpxbn
+         OlIbro1TGzQwJLqrDh4txKaz52dlkrhX+Oqb50tGky4eJ1EKzIopcBTMKtzsiVUsv+dv
+         HKbLsM0cIzS+gIrtXfMjuhW7rppLJsCZ5fZ0TfTibyLLYvsmTcRNCgGn3eG7YTbUnvnB
+         36+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707931187; x=1708535987;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kQJxYiPtkKunXHr1tWOWmm3RzE0fHMgYFU5N+FoanzQ=;
+        b=sOcEgs2CEbT2OLXmb9TwmlaN7DtDLDuMAatfffJo+G9feWVCJ5YZpth0NW8VQutqA3
+         3fY0M10LWvTOEUfG2bokpHSsFyeV3B59zq4ZkDHdBscXa4ErxA8R6/Po3hOXKy5JKNIW
+         +B4yAsXX1zHhHEcFpy2Fe2j/Wl0vxwgBCmrbOVqE4tGkWp0yL8bsTsYJOZTQ6+5z6nbD
+         E4hRRDBeRHZzYSTmM6PbvyFER1nIea8XTBxXzAGYWk7czBphZLm/grGerAOYzcQFpODV
+         qr+23jKAOheeEndBRmr4H58zYyNzaq/lxY7DTpxclJT3XmK8fL5XQ+PpSL9catqmZj5R
+         xXGA==
+X-Forwarded-Encrypted: i=1; AJvYcCUPmoxiLS9LJfD5DQqMkgPY76pACLhbMKFOTnGn6qZQ3w7I0NiJbdZrlhTDsdC0Qc5hKx+xXeVOx5s0m0rLxmiHnbBusuY3TgOAJqUH
+X-Gm-Message-State: AOJu0YypquPlZjbZ79L+1O4dK4rF0IMvwr/41AUXDS/8LaU58EZeXW2J
+	x8rVODh90qVT9ymEhj3oxFuN2bBnYP24mmMIESplrqSoTkriynyFaitMaKjolhHuH2TQ3GMKnuk
+	1W+AfNHOXzMcxTH1CPPhkCcosEpoABUecU0jKXw==
+X-Google-Smtp-Source: AGHT+IE/4Jb60J8umLNZe6538ribl0j0RPOFasDoPpDRIFX5AjneBXpKfyUvuFsnp7LDN4A0Ix05qgk5V9Wx9geOoCA=
+X-Received: by 2002:a17:90b:351:b0:298:ba30:789b with SMTP id
+ fh17-20020a17090b035100b00298ba30789bmr3088028pjb.32.1707931187327; Wed, 14
+ Feb 2024 09:19:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240214-hid-bpf-sleepable-v2-10-5756b054724d@kernel.org>
-References: <20240214-hid-bpf-sleepable-v2-0-5756b054724d@kernel.org>
-In-Reply-To: <20240214-hid-bpf-sleepable-v2-0-5756b054724d@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, 
- John Fastabend <john.fastabend@gmail.com>, 
- Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
- Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-input@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1707931135; l=8194;
- i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
- bh=PU+I3eS6cHBmwm4SgiKJZyWi+Zr3RNPwKsVpYhPf5k4=;
- b=g91iULn/RIdO4qMTzjZNWDRByiGpz0YQYg4DYiv1FZen6lFdP319S6f1vChI7eDlxK9Rs/gvi
- mBIT7wy7dsNAKNt8g2Xt7D2TTYegHj2BneC8hl9vLSSXIowq/TDi0MX
-X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
- pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
+References: <20240114183600.135316-1-vincent.guittot@linaro.org> <6ec54a8f-a602-4f33-96ce-0204f07046e1@nvidia.com>
+In-Reply-To: <6ec54a8f-a602-4f33-96ce-0204f07046e1@nvidia.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Wed, 14 Feb 2024 18:19:35 +0100
+Message-ID: <CAKfTPtAR-yWG8odEv-b8XoZQa05OiYd3PLn56MA+AqPb4h=NJA@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: Fix frequency selection for non invariant case
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
+	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, wkarny@gmail.com, 
+	torvalds@linux-foundation.org, qyousef@layalina.io, tglx@linutronix.de, 
+	rafael@kernel.org, viresh.kumar@linaro.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, 
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Thierry Reding <treding@nvidia.com>, 
+	Sasha Levin <sashal@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, 
+	Shardar Mohammed <smohammed@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 
-This test checks that we can actually delay a workload in a sleepable
-context through bpf_timer.
+Hi John,
 
-When an event is injected, we push it on a map of type queue and schedule
-a work.
-When that work kicks in, it pulls the event from the queue, and wakes
-up userspace through a ring buffer.
+On Wed, 14 Feb 2024 at 18:12, Jon Hunter <jonathanh@nvidia.com> wrote:
+>
+> Hi Vincent,
+>
+> On 14/01/2024 18:36, Vincent Guittot wrote:
+> > When frequency invariance is not enabled, get_capacity_ref_freq(policy)
+> > returns the current frequency and the performance margin applied by
+> > map_util_perf(), enabled the utilization to go above the maximum compute
+> > capacity and to select a higher frequency than the current one.
+> >
+> > The performance margin is now applied earlier in the path to take into
+> > account some utilization clampings and we can't get an utilization higher
+> > than the maximum compute capacity.
+> >
+> > We must use a frequency above the current frequency to get a chance to
+> > select a higher OPP when the current one becomes fully used. Apply
+> > the same margin and returns a frequency 25% higher than the current one in
+> > order to switch to the next OPP before we fully use the cpu at the current
+> > one.
+> >
+> > Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+> > Closes: https://lore.kernel.org/lkml/CAHk-=wgWcYX2oXKtgvNN2LLDXP7kXkbo-xTfumEjmPbjSer2RQ@mail.gmail.com/
+> > Reported-by: Wyes Karny <wkarny@gmail.com>
+> > Closes: https://lore.kernel.org/lkml/20240114091240.xzdvqk75ifgfj5yx@wyes-pc/
+> > Fixes: 9c0b4bb7f630 ("sched/cpufreq: Rework schedutil governor performance estimation")
+> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> > Tested-by: Wyes Karny <wkarny@gmail.com>
+> > ---
+> >   kernel/sched/cpufreq_schedutil.c | 6 +++++-
+> >   1 file changed, 5 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+> > index 95c3c097083e..d12e95d30e2e 100644
+> > --- a/kernel/sched/cpufreq_schedutil.c
+> > +++ b/kernel/sched/cpufreq_schedutil.c
+> > @@ -133,7 +133,11 @@ unsigned long get_capacity_ref_freq(struct cpufreq_policy *policy)
+> >       if (arch_scale_freq_invariant())
+> >               return policy->cpuinfo.max_freq;
+> >
+> > -     return policy->cur;
+> > +     /*
+> > +      * Apply a 25% margin so that we select a higher frequency than
+> > +      * the current one before the CPU is full busy
+> > +      */
+> > +     return policy->cur + (policy->cur >> 2);
+> >   }
+> >
+> >   /**
+>
+>
+> We have also observed a performance degradation on our Tegra platforms
+> with v6.8-rc1. Unfortunately, the above change does not fix the problem
+> for us and we are still seeing a performance issue with v6.8-rc4. For
+> example, running Dhrystone on Tegra234 I am seeing the following ...
+>
+> Linux v6.7:
+> [ 2216.301949] CPU0: Dhrystones per Second: 31976326 (18199 DMIPS)
+> [ 2220.993877] CPU1: Dhrystones per Second: 49568123 (28211 DMIPS)
+> [ 2225.685280] CPU2: Dhrystones per Second: 49568123 (28211 DMIPS)
+> [ 2230.364423] CPU3: Dhrystones per Second: 49632220 (28248 DMIPS)
+>
+> Linux v6.8-rc4:
+> [   44.661686] CPU0: Dhrystones per Second: 16068483 (9145 DMIPS)
+> [   51.895107] CPU1: Dhrystones per Second: 16077457 (9150 DMIPS)
+> [   59.105410] CPU2: Dhrystones per Second: 16095436 (9160 DMIPS)
+> [   66.333297] CPU3: Dhrystones per Second: 16064000 (9142 DMIPS)
+>
+> If I revert this change and the following ...
+>
+>   b3edde44e5d4 ("cpufreq/schedutil: Use a fixed reference frequency")
+>   f12560779f9d ("sched/cpufreq: Rework iowait boost")
+>   9c0b4bb7f630 ("sched/cpufreq: Rework schedutil governor
+>
+> ... then the perf is similar to where it was ...
+>
+> Linux v6.8-rc4 plus reverts:
+> [   31.768189] CPU0: Dhrystones per Second: 48421678 (27559 DMIPS)
+> [   36.556838] CPU1: Dhrystones per Second: 48401324 (27547 DMIPS)
+> [   41.343343] CPU2: Dhrystones per Second: 48421678 (27559 DMIPS)
+> [   46.163347] CPU3: Dhrystones per Second: 47679814 (27137 DMIPS)
+>
+> All CPUs are running with the schedutil CPUFREQ governor. We have not
+> looked any further but wanted to report this in case you have any more
+> thoughts or suggestions for us to try.
 
-The use of the ring buffer is there to not have sleeps in userspace
-because we have no guarantees of the timing of when those jobs will be
-called.
+Have you tried this :
+https://lore.kernel.org/lkml/20240117190545.596057-1-vincent.guittot@linaro.org/
 
-Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
+It's in driver-core-linus' branch and should be sent to Linus soon
 
----
+Vincent
 
-new in v2
----
- tools/testing/selftests/hid/hid_bpf.c              |  83 +++++++++++
- tools/testing/selftests/hid/progs/hid.c            | 152 +++++++++++++++++++++
- .../testing/selftests/hid/progs/hid_bpf_helpers.h  |   2 +
- 3 files changed, 237 insertions(+)
-
-diff --git a/tools/testing/selftests/hid/hid_bpf.c b/tools/testing/selftests/hid/hid_bpf.c
-index f825623e3edc..c16efb43dd91 100644
---- a/tools/testing/selftests/hid/hid_bpf.c
-+++ b/tools/testing/selftests/hid/hid_bpf.c
-@@ -875,6 +875,89 @@ TEST_F(hid_bpf, test_hid_user_raw_request_call)
- 	ASSERT_EQ(args.data[1], 2);
- }
- 
-+static __u8 workload_data;
-+
-+static int handle_event(void *ctx, void *data, size_t data_sz)
-+{
-+	const __u8 *e = data;
-+
-+	workload_data = *e;
-+
-+	return 0;
-+}
-+
-+TEST_F(hid_bpf, test_hid_schedule_work_defer_events_2)
-+{
-+	struct hid_hw_request_syscall_args args = {
-+		.retval = -1,
-+		.size = 10,
-+	};
-+	DECLARE_LIBBPF_OPTS(bpf_test_run_opts, tattrs,
-+			    .ctx_in = &args,
-+			    .ctx_size_in = sizeof(args),
-+	);
-+	const struct test_program progs[] = {
-+		{ .name = "hid_defer_bpf_timer" },
-+	};
-+	struct ring_buffer *rb = NULL;
-+	__u8 buf[10] = {0};
-+	int prog_fd, err;
-+
-+	LOAD_PROGRAMS(progs);
-+
-+	/* Set up ring buffer polling */
-+	rb = ring_buffer__new(bpf_map__fd(self->skel->maps.rb), handle_event, NULL, NULL);
-+	ASSERT_OK_PTR(rb) TH_LOG("Failed to create ring buffer");
-+	ASSERT_EQ(workload_data, 0);
-+
-+	args.hid = self->hid_id;
-+	prog_fd = bpf_program__fd(self->skel->progs.hid_setup_timer);
-+
-+	err = bpf_prog_test_run_opts(prog_fd, &tattrs);
-+
-+	ASSERT_OK(err) TH_LOG("error while calling bpf_prog_test_run_opts");
-+
-+	/* check that there is no data to read from hidraw */
-+	memset(buf, 0, sizeof(buf));
-+	err = read(self->hidraw_fd, buf, sizeof(buf));
-+	ASSERT_EQ(err, -1) TH_LOG("read_hidraw");
-+
-+	/* inject one event */
-+	buf[0] = 1;
-+	buf[1] = 47;
-+	buf[2] = 50;
-+	uhid_send_event(_metadata, self->uhid_fd, buf, 6);
-+
-+	err = ring_buffer__poll(rb, 100 /* timeout, ms */);
-+	ASSERT_EQ(err, 1) TH_LOG("error while calling ring_buffer__poll");
-+	ASSERT_EQ(workload_data, 3);
-+
-+	/* read the data from hidraw */
-+	memset(buf, 0, sizeof(buf));
-+	err = read(self->hidraw_fd, buf, sizeof(buf));
-+	ASSERT_EQ(err, 6) TH_LOG("read_hidraw");
-+	ASSERT_EQ(buf[0], 2);
-+	ASSERT_EQ(buf[1], 3);
-+	ASSERT_EQ(buf[2], 4) TH_LOG("leftovers_from_previous_test");
-+
-+	err = ring_buffer__poll(rb, 100 /* timeout, ms */);
-+	ASSERT_EQ(err, 1) TH_LOG("error while calling ring_buffer__poll");
-+	ASSERT_EQ(workload_data, 4);
-+
-+	/* read the data from hidraw */
-+	memset(buf, 0, sizeof(buf));
-+	err = read(self->hidraw_fd, buf, sizeof(buf));
-+	ASSERT_EQ(err, 6) TH_LOG("read_hidraw");
-+	ASSERT_EQ(buf[0], 2);
-+	ASSERT_EQ(buf[1], 4);
-+	ASSERT_EQ(buf[2], 6);
-+
-+	/* read the data from hidraw */
-+	memset(buf, 0, sizeof(buf));
-+	err = read(self->hidraw_fd, buf, sizeof(buf));
-+	ASSERT_EQ(err, -1) TH_LOG("read_hidraw");
-+}
-+
- /*
-  * Attach hid_insert{0,1,2} to the given uhid device,
-  * retrieve and open the matching hidraw node,
-diff --git a/tools/testing/selftests/hid/progs/hid.c b/tools/testing/selftests/hid/progs/hid.c
-index f67d35def142..05afa056167e 100644
---- a/tools/testing/selftests/hid/progs/hid.c
-+++ b/tools/testing/selftests/hid/progs/hid.c
-@@ -250,3 +250,155 @@ int BPF_PROG(hid_test_insert3, struct hid_bpf_ctx *hid_ctx)
- 
- 	return 0;
- }
-+
-+struct test_report {
-+	__u8 data[6];
-+};
-+
-+struct {
-+	__uint(type, BPF_MAP_TYPE_QUEUE);
-+	__uint(max_entries, 8);
-+	__type(value, struct test_report);
-+} queue SEC(".maps");
-+
-+struct {
-+	__uint(type, BPF_MAP_TYPE_RINGBUF);
-+	__uint(max_entries, 8);
-+} rb SEC(".maps");
-+
-+struct elem {
-+	struct bpf_timer t;
-+};
-+
-+struct {
-+	__uint(type, BPF_MAP_TYPE_HASH);
-+	__uint(max_entries, 1024);
-+	__type(key, u32);
-+	__type(value, struct elem);
-+} timer_map SEC(".maps");
-+
-+/* callback for timer_map timers */
-+
-+static int timer_cb1(void *map, int *key, struct bpf_timer *timer)
-+{
-+	struct hid_bpf_ctx *hid_ctx;
-+	struct test_report buf;
-+	__u8 *rb_elem;
-+	int err;
-+	int i, ret = 0;
-+
-+	/* do not pop the event, it'll be done in hid_offload_test() when
-+	 * notifying user space, this also allows to retry sending it
-+	 * if hid_bpf_input_report fails
-+	 */
-+	if (bpf_map_peek_elem(&queue, &buf))
-+		return 0;
-+
-+	hid_ctx = hid_bpf_allocate_context(*key);
-+	if (!hid_ctx)
-+		return 0; /* EPERM check */
-+
-+	buf.data[0] = 2;
-+
-+	/* re-inject the modified event into the HID stack */
-+	err = hid_bpf_input_report(hid_ctx, HID_INPUT_REPORT, buf.data, sizeof(buf.data));
-+	if (err == -16 /* -EBUSY */) {
-+		/*
-+		 * This happens when we schedule the work with a 0 delay:
-+		 * the thread immediately starts but the current input
-+		 * processing hasn't finished yet. So the semaphore is
-+		 * already taken, and hid_input_report returns -EBUSY
-+		 */
-+		/* schedule another attempt */
-+		bpf_timer_start(timer, 5 * 1000, 0);
-+
-+		goto out;
-+	}
-+
-+	if (bpf_map_pop_elem(&queue, &buf))
-+		goto out;
-+
-+	rb_elem = bpf_ringbuf_reserve(&rb, sizeof(*rb_elem), 0);
-+	if (!rb_elem)
-+		goto out;
-+
-+	*rb_elem = buf.data[1];
-+
-+	bpf_ringbuf_submit(rb_elem, 0);
-+
-+	/* call ourself once again until there is no more events in the queue */
-+	bpf_timer_start(timer, 10 * 1000 * 1000, 0);
-+
-+ out:
-+	hid_bpf_release_context(hid_ctx);
-+	return 0;
-+}
-+
-+#define CLOCK_MONOTONIC		1
-+
-+SEC("?fmod_ret/hid_bpf_device_event")
-+int BPF_PROG(hid_defer_bpf_timer, struct hid_bpf_ctx *hctx)
-+{
-+	__u8 *data = hid_bpf_get_data(hctx, 0 /* offset */, 4 /* size */);
-+	struct test_report buf = {
-+		.data = {2, 3, 4, 5, 6, 7},
-+	};
-+	struct bpf_timer *timer;
-+	int key = hctx->hid->id;
-+	struct elem init = {};
-+
-+	if (!data)
-+		return 0; /* EPERM check */
-+
-+	/* Only schedule a delayed work when reportID is 1, otherwise
-+	 * simply forward it to hidraw
-+	 */
-+	if (data[0] != 1)
-+		return 0;
-+
-+	bpf_map_push_elem(&queue, &buf, BPF_ANY);
-+	buf.data[0] = 2;
-+	buf.data[1] = 4;
-+	buf.data[2] = 6;
-+	bpf_map_push_elem(&queue, &buf, BPF_ANY);
-+
-+	timer = bpf_map_lookup_elem(&timer_map, &key);
-+	if (!timer)
-+		return 3;
-+
-+	bpf_timer_set_sleepable_cb(timer, timer_cb1);
-+
-+	if (bpf_timer_start(timer, 5 * 1000 * 1000, 0) != 0)
-+		return 2;
-+
-+	return -1; /* discard the event */
-+}
-+
-+SEC("syscall")
-+int hid_setup_timer(struct hid_hw_request_syscall_args *args)
-+{
-+	struct hid_bpf_ctx *ctx;
-+	struct bpf_timer *timer;
-+	struct elem init = {};
-+	int key = args->hid;
-+	int i, ret = 0;
-+
-+	ctx = hid_bpf_allocate_context(args->hid);
-+	if (!ctx)
-+		return -1; /* EPERM check */
-+
-+	bpf_map_update_elem(&timer_map, &key, &init, 0);
-+
-+	timer = bpf_map_lookup_elem(&timer_map, &key);
-+	if (!timer) {
-+		hid_bpf_release_context(ctx);
-+		return 1;
-+	}
-+
-+	bpf_timer_init(timer, &timer_map, CLOCK_MONOTONIC | BPF_F_TIMER_SLEEPABLE);
-+
-+	hid_bpf_release_context(ctx);
-+
-+	return 0;
-+}
-+
-diff --git a/tools/testing/selftests/hid/progs/hid_bpf_helpers.h b/tools/testing/selftests/hid/progs/hid_bpf_helpers.h
-index 9cd56821d0f1..8235a28e7dee 100644
---- a/tools/testing/selftests/hid/progs/hid_bpf_helpers.h
-+++ b/tools/testing/selftests/hid/progs/hid_bpf_helpers.h
-@@ -100,5 +100,7 @@ extern int hid_bpf_input_report(struct hid_bpf_ctx *ctx,
- 				enum hid_report_type type,
- 				__u8 *data,
- 				size_t buf__sz) __ksym;
-+extern int bpf_timer_set_sleepable_cb(struct bpf_timer *timer,
-+		int (callback_fn)(void *map, int *key, struct bpf_timer *timer)) __ksym;
- 
- #endif /* __HID_BPF_HELPERS_H */
-
--- 
-2.43.0
-
+>
+> Thanks
+> Jon
+>
+> --
+> nvpublic
