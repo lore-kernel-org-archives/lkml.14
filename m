@@ -1,181 +1,96 @@
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38507535B4;
-	Wed, 14 Feb 2024 13:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F56453E06;
+	Wed, 14 Feb 2024 13:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707916775; cv=none; b=E3u0yeTu5IO1sa2+UhzHl7UCbAqDFfHpa1FQoYFSKWjbL6oMHywtXNOsohdc0oD1d3xigUSvC7l4W0AaRpFdCO1bp5lVCg3a4OMFbP2xST2vsx656ImSjdfKc80L0KIRYBsBUjIVwQwFl51Q+xJWngcQtvgaz4ynrbs7gUrv2PY=
+	t=1707916844; cv=none; b=mInpg5+akBvWLIso7Tcuj24k04PSyNfILB2rdzf8bu6LxNcHDsWWM/HBxpJAhjO9KS/iG+3Y1buo8oAnqCJ9BLK9vtJi+tSWQTjLq6kjb3j+yUgAAv1XgM1QnMciqKcKzd7hEdbjGzmjVC8tagxx9W4jI2M4+qhkWYF5BwuMYZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707916775; c=relaxed/simple;
-	bh=a0o55pxxDCLHmqaWvxrygvI6niPdHttBqY/E85EhHew=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=pblTYUtifmTS/IfY575inb+wucongsyJjmtppSatK8YQ60AlswnCx8SZ6516uZUi++yK69cRfoBIfTv09aAjRw7np3l0//wCosQpqgXqHpg57rNfGH+5rIIl6Rao7RKU9qilItaGoATw9nq6EomlY4OYt3VpzUnXfNsqY9jY3lY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=MwpGtHQU; arc=none smtp.client-ip=213.133.104.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
+	s=arc-20240116; t=1707916844; c=relaxed/simple;
+	bh=5p9vcV6S7UhZtSa+IUxmeaWyzLVKNJsKQnAivVunf6c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JPAO67Jc5791kowYb4Zhvyxy+l5HJ3ZqqqMsPiW71G/kBdy6vfegev2Oblt0HbRer7CXM5l7eZYRz7by07yhDVwRVpq+5YPpLAtho6zcaaZBgAQJHOqXTrKpUDvdW8zC91IRNWZDTqJmjGBBpZXGouYz9Fq8QsSRfTzQnVeVfqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bcu8K7K8; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="MwpGtHQU"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=EUpvZ7ImcN6iRBfQR5QrQA+ZGjPdmy3aiW0Hd3hcrnQ=; b=MwpGtHQUzHdeNgQIAJKrYkQir0
-	wL3rGSdwthLpVi6rJBVqink5DidYuAH714ElJOQB18JgkPnzLzshB5K6MexPqnWaCceoLwBQSt5NU
-	Obd5t8XnCd90jFPygROaIlqcGcdFbE3Mbvu/awSVtILfJgE8HCc68BYxaKlyUXOvisb2VlJKcpe3y
-	SjKwhh0tbhX+Mzh8RWpVKaG0NxFwqkMfX99jwZFtevDK1yU+y2ux93FizBw04G1QuR/gS5DsbGljX
-	89R7B1iYhmLU1ogaxm3nfe0mawbV8xNQfC2r08dtHxNkCtRQ1masq6dNVYtlENtrfxgx2niHI31jf
-	qdYN+lqQ==;
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1raEvF-000AMv-Dv; Wed, 14 Feb 2024 14:03:33 +0100
-Received: from [85.1.206.226] (helo=linux.home)
-	by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1raEvE-000MWP-Sy; Wed, 14 Feb 2024 14:03:32 +0100
-Subject: LSF/MM/BPF: 2024: Call for Proposals [Final Reminder]
-To: lsf-pc@lists.linuxfoundation.org
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
- linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org
-References: <7970ad75-ca6a-34b9-43ea-c6f67fe6eae6@iogearbox.net>
- <4343d07b-b1b2-d43b-c201-a48e89145e5c@iogearbox.net>
- <c91530f0-2688-647d-2603-a7b1673f8e42@iogearbox.net>
-From: Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <013f8741-4468-b1a4-0569-aee5e1d6b1a8@iogearbox.net>
-Date: Wed, 14 Feb 2024 14:03:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bcu8K7K8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707916843; x=1739452843;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5p9vcV6S7UhZtSa+IUxmeaWyzLVKNJsKQnAivVunf6c=;
+  b=bcu8K7K8dMvELxSlPA9n4g4X8g0rSTyn0n7psP5suA0Y19InAUZAniGQ
+   zBVRWfGTke4xJruETUrIwHyUQELYF5nsBU59+Mzp0wB+hcii+gpH4+HyN
+   e7LqhJWSx1HP5DuH5rnl+XvCXI42IXPXh4bjMgslkjOG2Ut/0e2cjYR4L
+   NNkXOfm09pKJpYApN3+EBDGjpqk9sfP3FN9Nwpips0M5RClcfRs3rI2c8
+   cXPHckHIZ2KS14HuiUaAdIXtXAq5tlblQ/BQ+uoHzYHDkSVpzeYJ9dlag
+   1cXPvK/hAdFarJjvsrOMMZyC4bH8rR4jNvSxxbJJwfVnHmyihTpU9lS3v
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="2098343"
+X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
+   d="scan'208";a="2098343"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 05:20:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="935616536"
+X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
+   d="scan'208";a="935616536"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 05:20:38 -0800
+Date: Wed, 14 Feb 2024 15:20:35 +0200
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com,
+	jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com,
+	stanislaw.gruszka@linux.intel.com, lukas@wunner.de,
+	rafael@kernel.org, ilpo.jarvinen@linux.intel.com,
+	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+	sashal@kernel.org
+Subject: Re: [PATCH v1] PCI / PM: Really allow runtime PM without callback
+ functions
+Message-ID: <Zcy-I9-HcA_RuOyY@black.fi.intel.com>
+References: <20240212063233.5599-1-raag.jadav@intel.com>
+ <20240213200648.GA1219964@bhelgaas>
+ <ZcyZV2q1_QoK43vz@black.fi.intel.com>
+ <Zcy5qZ4rEbpY7ouC@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <c91530f0-2688-647d-2603-a7b1673f8e42@iogearbox.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27185/Wed Feb 14 10:22:57 2024)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zcy5qZ4rEbpY7ouC@smile.fi.intel.com>
 
-The annual Linux Storage, Filesystem, Memory Management, and BPF
-(LSF/MM/BPF) Summit for 2024 will be held from May 13 to May 15
-at the Hilton Salt Lake City Center in Salt Lake City, Utah, USA.
+On Wed, Feb 14, 2024 at 03:01:29PM +0200, Andy Shevchenko wrote:
+> On Wed, Feb 14, 2024 at 12:43:35PM +0200, Raag Jadav wrote:
+> > On Tue, Feb 13, 2024 at 02:06:48PM -0600, Bjorn Helgaas wrote:
+> > > On Mon, Feb 12, 2024 at 12:02:33PM +0530, Raag Jadav wrote:
+> 
+> ...
+> 
+> > > >  0)               |  pm_runtime_work() {
+> > > >  0)               |    rpm_idle() {
+> > > >  0)               |      rpm_check_suspend_allowed() {
+> > > >  0)   1.500 us    |        __dev_pm_qos_resume_latency(); /* = 0x7fffffff */
+> > > >  0)   4.840 us    |      } /* rpm_check_suspend_allowed = 0x0 */
+> > > >  0)   1.550 us    |      __rpm_get_callback(); /* = 0xffffffffb4bc84f0 */
+> > > >  0)   1.800 us    |      pci_pm_runtime_idle(); /* = -38 */
+> > > >  0) + 17.070 us   |    } /* rpm_idle = -38 */
+> > > >  0) + 22.450 us   |  } /* pm_runtime_work = -38 */
+> > > 
+> > > What is this timing information telling me?
+> > 
+> > It's a raw ftrace dump.
+> 
+> (Told ya that people would be surprised with this without seeing how you get
+>  this and what fields mean)
 
-LSF/MM/BPF is an invitation-only technical workshop to map out
-improvements to the Linux storage, filesystem, BPF, and memory
-management subsystems that will make their way into the mainline
-kernel within the coming years.
+I can add stat headers in v2 which I think will be more helpful.
 
-LSF/MM/BPF 2024 will be a three day, stand-alone conference with
-four subsystem-specific tracks, cross-track discussions, as well
-as BoF and hacking sessions:
-
-          https://events.linuxfoundation.org/lsfmmbpf/
-
-On behalf of the committee I am issuing a call for agenda proposals
-that are suitable for cross-track discussion as well as technical
-subjects for the breakout sessions.
-
-If advance notice is required for visa applications then please
-point that out in your proposal or request to attend, and submit
-the topic as soon as possible.
-
-We are asking that you please let us know you want to be invited
-by March 1, 2024. We realize that travel is an ever changing target,
-but it helps us to get an idea of possible attendance numbers.
-Clearly things can and will change, so consider the request to
-attend deadline more about planning and less about concrete plans.
-
-1) Fill out the following Google form to request attendance and
-suggest any topics for discussion:
-
-          https://forms.gle/TGCgBDH1x5pXiWFo7
-
-In previous years we have accidentally missed people's attendance
-requests because they either did not Cc lsf-pc@ or we simply missed
-them in the flurry of emails we get. Our community is large and our
-volunteers are busy, filling this out will help us to make sure we
-do not miss anybody.
-
-2) Proposals for agenda topics should ideally still be sent to the
-following lists to allow for discussion among your peers. This will
-help us figure out which topics are important for the agenda:
-
-          lsf-pc@lists.linux-foundation.org
-
-... and Cc the mailing lists that are relevant for the topic in
-question:
-
-          FS:     linux-fsdevel@vger.kernel.org
-          MM:     linux-mm@kvack.org
-          Block:  linux-block@vger.kernel.org
-          ATA:    linux-ide@vger.kernel.org
-          SCSI:   linux-scsi@vger.kernel.org
-          NVMe:   linux-nvme@lists.infradead.org
-          BPF:    bpf@vger.kernel.org
-
-Please tag your proposal with [LSF/MM/BPF TOPIC] to make it easier
-to track. In addition, please make sure to start a new thread for
-each topic rather than following up to an existing one. Agenda
-topics and attendees will be selected by the program committee,
-but the final agenda will be formed by consensus of the attendees
-on the day.
-
-3) This year we would also like to try and make sure we are
-including new members in the community that the program committee
-may not be familiar with. The Google form has an area for people to
-add required/optional attendees. Please encourage new members of the
-community to submit a request for an invite as well, but additionally
-if maintainers or long term community members could add nominees to
-the form it would help us make sure that new members get the proper
-consideration.
-
-For discussion leaders, slides and visualizations are encouraged to
-outline the subject matter and focus the discussions. Please refrain
-from lengthy presentations and talks in order for sessions to be
-productive; the sessions are supposed to be interactive, inclusive
-discussions.
-
-We are still looking into the virtual component. We will likely run
-something similar to what we did last year, but details on that will
-be forthcoming.
-
-2023: https://lwn.net/Articles/lsfmmbpf2023/
-
-2022: https://lwn.net/Articles/lsfmm2022/
-
-2019: https://lwn.net/Articles/lsfmm2019/
-
-2018: https://lwn.net/Articles/lsfmm2018/
-
-2017: https://lwn.net/Articles/lsfmm2017/
-
-2016: https://lwn.net/Articles/lsfmm2016/
-
-2015: https://lwn.net/Articles/lsfmm2015/
-
-2014: http://lwn.net/Articles/LSFMM2014/
-
-4) If you have feedback on last year's meeting that we can use to
-improve this year's, please also send that to:
-
-          lsf-pc@lists.linux-foundation.org
-
-Thank you on behalf of the program committee:
-
-          Amir Goldstein (Filesystems)
-          Jan Kara (Filesystems)
-          Martin K. Petersen (Storage)
-          Javier González (Storage)
-          Michal Hocko (MM)
-          Dan Williams (MM)
-          Daniel Borkmann (BPF)
-          Martin KaFai Lau (BPF)
-
+Raag
