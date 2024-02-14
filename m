@@ -1,169 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D1A013EFEF;
-	Wed, 14 Feb 2024 20:34:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992091DDC1;
+	Wed, 14 Feb 2024 20:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707942890; cv=none; b=SLEYpp27jwIwiSzPGAVU7HojnwnYXNC0SMdjnaSvXEYjuiBsQm5A/V8nTV+OzOtsCIpuIG6ye3mLLbM6+LF6kfAz5QnSzDtMOmkojut2iI33J/FKebX3kDtt5VlBTVrKXUgdH7qFzVXvg2eUHRNwm6tHbqOKax9CgqAKXYAUte0=
+	t=1707942970; cv=none; b=AziSy2eEKYzHUJEX6JD65qx3VUSu45MkSmX4MbBOeQ8NJUTS0XrPvgMzkf6fJDA8nFvtjGuviFz9uG0PDoID6XEBS0RaFQChV48b/AEtct2h/nJp54wd08OeijuqneevfuJmpjPJ/lPGj8OHYKFhJrkaPC5UlTL56KhYqIro7Y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707942890; c=relaxed/simple;
-	bh=P2kJjSkr/XSrVwwzMl6mGCzNNt+BYcXwxik+kURqUJU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ac5N3dC1QRe44j3XZv+61TPvPGMoyXPPYwsVq3hpzos4tnWYfp56VH/WHdNwXfoeO03bObqZx/0ghAWaPU+p5XinVMBvTOBgtc8HHVzsuixAF6zEMr81I+8yp7FcMxYt/3pCRyocyRbBw6i+Sr/TBXWXTshfVPnWnadtfbrJozE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HtxsjtZw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707942970; c=relaxed/simple;
+	bh=CcbkIwcvJBwIhRRxxzFkxiREhiWyIP/jlHmhrCiow/A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=sbaeF/lVMi2wsTB4uokqoe7KqcVD9f2NDJN6wd29xS6gyg4/HLJWYHsXYkMnUnOQhsKuxFepACP6Rp/3pCBQkR5EwkUyKTsSq6PNr5d9PK6dosC62NRiIeo5BevTUe4l0QHvxKOkEMpFSag6BCJCYwPEdyPf11PXkFFj2g7DxnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=mCk/bBot; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HtxsjtZw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2797BC43399;
-	Wed, 14 Feb 2024 20:34:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707942890;
-	bh=P2kJjSkr/XSrVwwzMl6mGCzNNt+BYcXwxik+kURqUJU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HtxsjtZwVDTUpryvb2ETyAmr8hTrT94vKnK8XGAqonwRGyEQzzOt+Z7YY28oOxeTs
-	 ndW4p3ncVAr07JnhSNi9FZYK6e+gJ8Vrpcg6qlGdRytfvQAFHiBJd+9got8uecWOS3
-	 eLGZ1bDKog6Yj6UDo7KL8JxV9Sg1pCs7muJtFNma60XizjIbhyyaVr1qT9onkdPcWU
-	 K7SrL9/IoRhnDj3tuMY6esVR1//PNU4+LNafDTyqsjz4tw/Anv/GfKSiAbqWHjTX9r
-	 91ExN/BcN3B3nrOlOqNGYSjWwIWZTDjj5NCVBL03AwMWvb0TZ7+GAYa9vBCXilTZ70
-	 Iq2YmNBdOkOmg==
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d0c9967fdcso13752821fa.0;
-        Wed, 14 Feb 2024 12:34:50 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUu/JaWIe060gGvetzUMMowICoI84KkNHGg9MlzaMiHCfXorHAvFnH71Bljd2bMFoqn+19S74z+FfS0hzo2cGMXDiewbfxdEqrhQkJik6X+XshDlpQ7GSUP/DIXewKlTESpVjwO7SA+DMxe
-X-Gm-Message-State: AOJu0Yy/VewsLqfMQRVXRDytWblQDxNyaDEzCbHJ4Mi349GrKbxw0sze
-	jYhd51pMEhm6M/d7MbLIf1G4gfChOI+ZkrWRY+SvlHDvHQ48+t3mmdTAb7uN63WAV7h5vMwM0oS
-	qtcHY9+D5OBM6gUSNbYpknJ9rLZ4=
-X-Google-Smtp-Source: AGHT+IGANuMGyrc8fuWek/gTc/bPksLylBWE+5+N0djMLAKcOlhM9fQDGDr+ZLG5VnSKsYRhnjnnQ8AT3uQOc/+dbKQ=
-X-Received: by 2002:a05:6512:14e:b0:511:8e03:e0ba with SMTP id
- m14-20020a056512014e00b005118e03e0bamr1007802lfo.7.1707942888576; Wed, 14 Feb
- 2024 12:34:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="mCk/bBot"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41EJsvv5017502;
+	Wed, 14 Feb 2024 20:36:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=nsIWBstOsK6ubKtb2lLsZtsb2va6QvCDF7mcm2BfHpo=; b=mC
+	k/bBotH/I/pvfLnGUx/4IR0pJ+7JIhgk4RthraEFV4LqSKiomit6sC5v6mMDJawe
+	kOwY0cuc1SVFRM+VcFM0attfGoyOPSeQUqu04m5qpqX1wSOdblh/PPujzkMZsTe7
+	FNy7joIUI5W8lXwRrQVRXRfuMjLun3wzlRFYviAX7cIV5eUyfsMoQZ0HmxZUHtvi
+	XPtYiOil/Zc55rFcEkl8hy1lmsq5OEMk1xi1eqeKOfveoAT6if+M05QF2W0FCB7p
+	m0lZuYOKZAT5KAHX7aiOm6zUgi0tblJLHCnvPU3wNElaOjx1tXKZdwertK2hWEVy
+	fEFo03Bs3q6qikkEfeDA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w9435r2mc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 Feb 2024 20:36:01 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41EKa0MX015552
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 Feb 2024 20:36:00 GMT
+Received: from [10.71.109.81] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 14 Feb
+ 2024 12:35:59 -0800
+Message-ID: <63bba15b-6d8d-5ba8-d99d-8cd2dd763262@quicinc.com>
+Date: Wed, 14 Feb 2024 12:35:58 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214181942.3562473-1-arnd@kernel.org>
-In-Reply-To: <20240214181942.3562473-1-arnd@kernel.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Thu, 15 Feb 2024 05:34:11 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASQUhJGSdQiyEpc5Rpuk_hJwSCu=W=4JkL-Et_giFNvPg@mail.gmail.com>
-Message-ID: <CAK7LNASQUhJGSdQiyEpc5Rpuk_hJwSCu=W=4JkL-Et_giFNvPg@mail.gmail.com>
-Subject: Re: [PATCH] kallsyms: ignore ARMv4 thunks along with others
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
-	=?UTF-8?Q?Pierre=2DCl=C3=A9ment_Tosi?= <ptosi@google.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Feb 15, 2024 at 3:19=E2=80=AFAM Arnd Bergmann <arnd@kernel.org> wro=
-te:
->
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> lld is now able to build ARMv4 and ARMv4T kernels, which means it can gen=
-erate
-> thunks for those that can interfere with kallsyms table generation since
-> they do not get ignore like the corresponding ARMv5+ ones are:
->
-> Inconsistent kallsyms data
-> Try "make KALLSYMS_EXTRA_PASS=3D1" as a workaround
->
-> Add the missing symbols to the list of ignored symbol prefixes.
->
-> Fixes: 5eb6e280432d ("ARM: 9289/1: Allow pre-ARMv5 builds with ld.lld 16.=
-0.0 and newer")
-> Fixes: efe6e3068067 ("kallsyms: fix nonconverging kallsyms table with lld=
-")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  scripts/mksysmap | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/scripts/mksysmap b/scripts/mksysmap
-> index 9ba1c9da0a40..c809bf592790 100755
-> --- a/scripts/mksysmap
-> +++ b/scripts/mksysmap
-> @@ -52,6 +52,8 @@ ${NM} -n ${1} | sed >${2} -e "
->  / __AArch64ADRPThunk_/d
->
->  # arm lld
-> +/ __ARMv4PILongThunk_/d
-> +/ __ARMv4PILongBXThunk_/d
->  / __ARMV5PILongThunk_/d
->  / __ARMV7PILongThunk_/d
->  / __ThumbV7PILongThunk_/d
-> --
-> 2.39.2
->
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v2] drm/msm/dpu: make "vblank timeout" more useful
+Content-Language: en-US
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Marijn
+ Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20240208-fd-dpu-debug-timeout-v2-1-9f907f1bdd87@linaro.org>
+ <1cb90bff-ce5b-c6d1-a3df-24f6306f833a@quicinc.com>
+ <CAA8EJpotiHKT_NYphDs0-vhpvsybgTW281XDYbteUx8qOX=v4g@mail.gmail.com>
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <CAA8EJpotiHKT_NYphDs0-vhpvsybgTW281XDYbteUx8qOX=v4g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 3b57zRcZ-7YoW2kAKWXOlAFdamm67T9M
+X-Proofpoint-ORIG-GUID: 3b57zRcZ-7YoW2kAKWXOlAFdamm67T9M
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-14_12,2024-02-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 mlxscore=0 suspectscore=0 spamscore=0
+ priorityscore=1501 malwarescore=0 adultscore=0 bulkscore=0 mlxlogscore=875
+ clxscore=1015 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402140159
 
 
 
-If this is a recurring problem,
-maybe is it better to use a regular expression?
+On 2/14/2024 11:20 AM, Dmitry Baryshkov wrote:
+> On Wed, 14 Feb 2024 at 20:02, Abhinav Kumar <quic_abhinavk@quicinc.com> wrote:
+>>
+>>
+>>
+>> On 2/8/2024 6:50 AM, Dmitry Baryshkov wrote:
+>>> We have several reports of vblank timeout messages. However after some
+>>> debugging it was found that there might be different causes to that.
+>>> To allow us to identify the DPU block that gets stuck, include the
+>>> actual CTL_FLUSH value into the timeout message and trigger the devcore
+>>> snapshot capture.
+>>>
+>>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>>> ---
+>>> Changes in v2:
+>>> - Added a call to msm_disp_snapshot_state() to trigger devcore dump
+>>>     (Abhinav)
+>>> - Link to v1: https://lore.kernel.org/r/20240106-fd-dpu-debug-timeout-v1-1-6d9762884641@linaro.org
+>>> ---
+>>>    drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c | 3 ++-
+>>>    1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+>>> index d0f56c5c4cce..a8d6165b3c0a 100644
+>>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+>>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+>>> @@ -489,7 +489,8 @@ static int dpu_encoder_phys_vid_wait_for_commit_done(
+>>>                (hw_ctl->ops.get_flush_register(hw_ctl) == 0),
+>>>                msecs_to_jiffies(50));
+>>>        if (ret <= 0) {
+>>> -             DPU_ERROR("vblank timeout\n");
+>>> +             DPU_ERROR("vblank timeout: %x\n", hw_ctl->ops.get_flush_register(hw_ctl));
+>>> +             msm_disp_snapshot_state(phys_enc->parent->dev);
+>>
+>>
+>> There is no rate limiting in this piece of code unfortunately. So this
+>> will flood the number of snapshots.
+> 
+> Well... Yes and no. The devcoredump will destroy other snapshots if
+> there is a pending one. So only the console will be flooded and only
+> in case when MSM_DISP_SNAPSHOT_DUMP_IN_CONSOLE is enabled.
+> 
 
+Yes, true but at the same time this makes it hard to capture a good dump 
+as potentially every vblank you could timeout so this destroy/create 
+cycle wont end.
 
-Remove these lines:
-
-# arm64 lld
-/ __AArch64ADRPThunk_/d
-
-# arm lld
-/ __ARMV5PILongThunk_/d
-/ __ARMV7PILongThunk_/d
-/ __ThumbV7PILongThunk_/d
-
-# mips lld
-/ __LA25Thunk_/d
-/ __microLA25Thunk_/d
-
-
-
-
-
-Add this:
-
-# lld
-/ __[^[:space:]]*Thunk_/d
-
-
-
-
-
-This pattern is only used in tooling,
-but never in the kernel space.
-
-
-
-$ git grep '__[^[:space:]]*Thunk_'
-scripts/mksysmap:/ __AArch64ADRPThunk_/d
-scripts/mksysmap:/ __ARMV5PILongThunk_/d
-scripts/mksysmap:/ __ARMV7PILongThunk_/d
-scripts/mksysmap:/ __ThumbV7PILongThunk_/d
-scripts/mksysmap:/ __LA25Thunk_/d
-scripts/mksysmap:/ __microLA25Thunk_/d
-tools/perf/tests/vmlinux-kallsyms.c:            "__AArch64ADRPThunk_",
- /* arm64 lld */
-tools/perf/tests/vmlinux-kallsyms.c:            "__ARMV5PILongThunk_",
- /* arm lld */
-tools/perf/tests/vmlinux-kallsyms.c:            "__ARMV7PILongThunk_",
-tools/perf/tests/vmlinux-kallsyms.c:            "__ThumbV7PILongThunk_",
-tools/perf/tests/vmlinux-kallsyms.c:            "__LA25Thunk_",
- /* mips lld */
-tools/perf/tests/vmlinux-kallsyms.c:            "__microLA25Thunk_",
-
-
-
-
-
-
-
-
-
-
-
-
---=20
-Best Regards
-Masahiro Yamada
+>>
+>> Short-term solution is you can go with a vblank_timeout_cnt and reset it
+>> in the enable() like other similar error counters.
+>>
+>> long-term solution is we need to centralize these error locations to one
+>> single dpu_encoder_error_handler() with a single counter and the error
+>> handler will print out the error code along with the snapshot instead of
+>> the snapshot being called from all over the place.
+>>
+>>
+>>
+>>>                return -ETIMEDOUT;
+>>>        }
+>>>
+>>>
+>>> ---
+>>> base-commit: 39676dfe52331dba909c617f213fdb21015c8d10
+>>> change-id: 20240106-fd-dpu-debug-timeout-e917f0bc8063
+>>>
+>>> Best regards,
+> 
+> 
+> 
