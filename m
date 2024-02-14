@@ -1,100 +1,97 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA065FDD9
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 16:16:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA5D5FDD4;
+	Wed, 14 Feb 2024 16:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707927402; cv=none; b=n6T7KeBABzwb3lgb2DFI94Sgk85KY8NH8LNQ3OanXllUNQMvzj308ZImVLTz0NcjQ2iWbeBEuDW6EKh0k79oJFbuoGg+CuOPOiUwq2IffNEsnRpoocesKF/OL3/kqcOhn1Wi+SOSFIy2DhjQpdpchTihSaQlR+kdBFlutu+l+2o=
+	t=1707927423; cv=none; b=e9HoqIOux6FDXi1G+qAFvdls5VVFQDxGkQOoL25nO32k6W4myrPUZ7mdnkX05WCeFF8kCVtftH/CSHw1jmEkWBOY3C3WUmLfeB8u0gm/b2jR695gwpSd1q5UCdmtUJl10Q7erfB3IORhUPdjTeS3yPrPJHSvvOX6saxonCDMeXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707927402; c=relaxed/simple;
-	bh=3Lb+cs6MZyEbSuIsnGR/lDtPPDEXeFotj9ffl8+8h2E=;
+	s=arc-20240116; t=1707927423; c=relaxed/simple;
+	bh=+KwuCyZcD1ytf8ee3jyMUEjAWvDs1bXqvMEmBHJWRI8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eexFkTm4ZyZRRK8UmnvRaiy+T/bk/n6CMfDliuY8LtTHJX64b9hI93CQV9bP4PBOwCC9RIvqdh3EVi9UTCm+AjGzQeseWnsWIa4+Z7ti+WYIkC8tZa/Ad52Pmqc72sxG/nnnn2CDDtuPsjNw21pI0dwjJdxW90rc/GTloI8dGAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jQ+iCbuM; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jQ+iCbuM"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dcd7c526cc0so1293559276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 08:16:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707927400; x=1708532200; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3Lb+cs6MZyEbSuIsnGR/lDtPPDEXeFotj9ffl8+8h2E=;
-        b=jQ+iCbuMrZAiwtm9/t4D470IdQTpks8keGFfflbIGkU9FErMW2vjqmEqL9kLW5jxVF
-         wllvm4+7fk9N5DbKP6cIt0sdiofAjlWZ8cGe0gG1FAOEoXZz43yCP7OtR12UfDr6QWs3
-         K6tGr9uY8F4xpyBmbA8Et1RYuEYHNrcu6w7yZzUQcuqUCm/WcrNMapomB06GfFuceSSk
-         D71aeisgGFSDhLEgQmAIHpz21BMLVKcQ5uKXKnlm33aE47tq5tiMIxDVPTqQAq3FyDpC
-         j1IUBak0n8IzhUHLk4b0xexYl+Z/eSC4InzelJu2/WdA4DcXVPEGJDHv74zb3aoFnr+l
-         nqQQ==
+	 To:Cc:Content-Type; b=EnGRfQv3ifwctkJk/jLuC5rVvH6YDsIHxmaqfbHFPtyP/pwYKGRrYxq1oH5mvJHN+szJcchnxJBbsPV3G3BuHFNat8NQFC0iO6gJl7XvhiAJ1EK5HdLqszUbE/PHOTa73OivRSuF0f44trpQKGb53miaog1uFLevWZgfCcnrElA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-db3a09e96daso4754168276.3;
+        Wed, 14 Feb 2024 08:17:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707927400; x=1708532200;
+        d=1e100.net; s=20230601; t=1707927419; x=1708532219;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3Lb+cs6MZyEbSuIsnGR/lDtPPDEXeFotj9ffl8+8h2E=;
-        b=ZCcNuFSWHZnZCeqJ4TeUu+XOXNWeei/vwG9I+DViOrlKDY4f7fNx5f5A0iHFsGSsNl
-         5pf75qdmp4FFCpgryn+i7shvGGLBN/rcE4Yxl/blr3+I+il8+AJWErb2ChGup9cAsj4P
-         CecR+q2kp0i3I4Gdqo9SFudxaY+9zz7tJVQQCaoQLBy5mPpng4m6C/t/B2WTP+jS93pt
-         aKzSh7kdgY9UvI1ggMUfhXXx0/JxlKFdN8NnT4kIXsl1/F/fFtczjpBJlJzz458TAIA+
-         n8sPLyHO1tgl/h1lT+ycfqI1zgSXJZbBdPv9XLCkKJQlRTRf5F7aNxlIiZqHB+AJSCKG
-         6bNA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+WLLWv3lBwOk061XC0nMi+xgVr7g1K9GnicYXX+ELubmAspcEiiWqUUWLoNGBLpfVeYHUMV5Cn0obEr4b+LCo3QN6wav9L+hBOLK5
-X-Gm-Message-State: AOJu0YwIM8pe7lPsExEv31fscKzn2WR/14MolDG9zsF78sqZvViaevbN
-	LJ4OjByRh5Ml5gmgb9PvJOLEsKS3GA8DWDpGE57MHOo9JoOPLmvqfOivQ+2qDmvGHCfztwlOwyE
-	i4qpocLeks6OHusgzsFNj6qR16yYh76dAyGgsDA==
-X-Google-Smtp-Source: AGHT+IGn8WJgL4pwbaWyNz9ITyW0zrOMdOl935ZSB7EE4cCvDmWqKp+zf3U3pgJx+qr14OZqt1gsE/zbikNXg1FdfO4=
-X-Received: by 2002:a25:9c82:0:b0:dcd:1d44:f6c1 with SMTP id
- y2-20020a259c82000000b00dcd1d44f6c1mr2763883ybo.16.1707927399794; Wed, 14 Feb
- 2024 08:16:39 -0800 (PST)
+        bh=eL9tA3rhy6+CNRIITZCNAmgKdS1I6ZY4AAyMY1xF/sk=;
+        b=pPWUc9ooy6a4E0X2+nnn/CFWp2fTk4v1GdqFn6QKemRX8y8BwHpegbvEfr4LWQLiq7
+         PLUZqJEYEqh0n/ZNbTkhs8K7xskpLix86rzYpj3ICEmOXWuoRT5nHySPNOMEhM5KnGIv
+         phhMeizRv2mQM8WRmF0gi0yM2zo/XKR97o6oCg71trEA33G81JFe3mH/63Y1Tu+POpPX
+         AI23P9UaowooqnRRtw2wShZ5W8u37NhzM+AEAllYZx7Cyk5TeQ14sb92ms6fOunR/Ls4
+         /aisGih/SGDY0ZDe4VKK42Va7pFOYDL+4kfDuy4hH/uzAIHSJv7CMxCzkVw+Na4fGxJH
+         Cysw==
+X-Forwarded-Encrypted: i=1; AJvYcCVRmvnB3E/MpvpkrpFlQE2tjDRwvnb4M6Dcx0CAqjVtmrb/BGt4WObYPjtawbrxIrgRt1j0NKaw6oJDqCZVZ2nfVsio2QhJ/xb466B6DcNhsP63ctwgQS/Ohy6YLiOKvxvk1bCQEbMZx1SjFcgsnww0O+Sl9/evtYuhqgElc/s9Y/M=
+X-Gm-Message-State: AOJu0Yw5m3xRXcyooikco2cZyoV3cjo0X4xtOVQwG4MZVD9uAQuZpOrZ
+	GfObeihFYqPzYvvOJnHitDaeFtLJ7wg1/fUPPYEpk/iz1Yu2KEUV0vZ/X2HWfWI=
+X-Google-Smtp-Source: AGHT+IG35l5QoZ9kxEYz2EfT3Mq6Kk0qe0sG+A/GAqVyEiYCsnWERBk0HHn/sbRwYKS60GzaWO2RTg==
+X-Received: by 2002:a0d:e343:0:b0:604:eb7f:30f4 with SMTP id m64-20020a0de343000000b00604eb7f30f4mr2811767ywe.31.1707927419179;
+        Wed, 14 Feb 2024 08:16:59 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWxFZYsqj7BcYSmrO565+ZwZ+f1/iRf3vk8hIJE7G7xsrniSnZZPDEof0g9oewzSHZwvBG1GyRrcyMGAHm9xr2hpINKmuXfrDwp+J5WNV6O1vjOaoZKiCnT3dn51pdhoGUPpcJpQDwRJbjQ2G8EVObF7mmfnHF3BPpj4ac2KUvHOww=
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com. [209.85.219.178])
+        by smtp.gmail.com with ESMTPSA id t145-20020a818397000000b005ffcb4765c9sm522613ywf.28.2024.02.14.08.16.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Feb 2024 08:16:57 -0800 (PST)
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dc74e33fe1bso5562794276.0;
+        Wed, 14 Feb 2024 08:16:57 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVM4E1Ri204hUXbTALa+Wi7a+lWmIKqP33ih2ZpW9dTHPQouDtzSbsy/XIYf5c9uxqjcTVkdDQBcw9xhkhhxRhoGYuL6BELrOL3FcpjU6HBV3U5BmDpZXbhpnPj6GbRyieW6/+MpJxHkRZL3jqxLKX9mwr6vUg2l7sx2DoPXWpNvnI=
+X-Received: by 2002:a25:8682:0:b0:dc7:776b:5e4a with SMTP id
+ z2-20020a258682000000b00dc7776b5e4amr2417997ybk.56.1707927417345; Wed, 14 Feb
+ 2024 08:16:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214092438.10785-1-brgl@bgdev.pl>
-In-Reply-To: <20240214092438.10785-1-brgl@bgdev.pl>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 14 Feb 2024 17:16:28 +0100
-Message-ID: <CACRpkdbULXPDDtXcBDrme54yYxKOSaAzwZPyT_H+gfyUPNXRMw@mail.gmail.com>
-Subject: Re: [PATCH] serial: st-asc: don't get/put GPIOs in atomic context
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Patrice Chotard <patrice.chotard@foss.st.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20240213220221.2380-8-wsa+renesas@sang-engineering.com> <20240213220221.2380-14-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20240213220221.2380-14-wsa+renesas@sang-engineering.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 14 Feb 2024 17:16:45 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdV6oh4x4LQKu7-UTMU+g1WGnUehyN+vJcGug2EZFuyf7w@mail.gmail.com>
+Message-ID: <CAMuHMdV6oh4x4LQKu7-UTMU+g1WGnUehyN+vJcGug2EZFuyf7w@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] mfd: tmio: Move header to platform_data
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-renesas-soc@vger.kernel.org, Lee Jones <lee@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	Rich Felker <dalias@libc.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-sh@vger.kernel.org, linux-mmc@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 14, 2024 at 10:24=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
+On Tue, Feb 13, 2024 at 11:04=E2=80=AFPM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+> All the MFD components are gone from the header meanwhile. Only the MMC
+> relevant data is left which makes it a platform_data for the MMC
+> controller. Move the header to the now fitting directory.
+>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Acked-by: Lee Jones <lee@kernel.org>
+> Acked-by: Ulf Hansson <ulf.hansson@linaro.org> # For MMC
+> Acked-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Since commit 1f2bcb8c8ccd ("gpio: protect the descriptor label with
-> SRCU") gpiod_set_consumer_name() calls synchronize_srcu() which led to
-> a "sleeping in atomic context" smatch warning.
->
-> This function (along with gpiod_get/put() and all other GPIO APIs apart
-> from gpiod_get/set_value() and gpiod_direction_input/output()) should
-> have never been called with a spinlock taken. We're only fixing this now
-> as GPIOLIB has been rebuilt to use SRCU for access serialization which
-> uncovered this problem.
->
-> Move the calls to gpiod_get/put() outside the spinlock critical section.
->
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Closes: https://lore.kernel.org/linux-gpio/deee1438-efc1-47c4-8d80-0ab2cf=
-01d60a@moroto.mountain/
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Good find!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Gr{oetje,eeting}s,
 
-Yours,
-Linus Walleij
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
