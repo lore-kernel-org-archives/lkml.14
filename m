@@ -1,167 +1,189 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905595D493;
-	Wed, 14 Feb 2024 18:38:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620505D493
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 18:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707935929; cv=none; b=oLf14/96GDo0fMIckTdvqxawOkD/cAkmx6Z7y6FpfaZEiB/fH99vNrch+J5VnIawSJCcS+SQF1jDlGCo+2SjYFAznCLjfO1IXJb6IRGpfJjgZ9aa/QH7eEdS5K8n0clm5ddOTenAE6pt4eq+L32iReMU4hMY/dq9TnIVsYq5Xrk=
+	t=1707935953; cv=none; b=sGMgVS+bT9wBzH+dnO25XrL+PpPcr7GbJ4gquGnqnF/Xf+k1iNAZMp0/cpI+NC7iOyz+3xtwdWMPbMxU6Vq6b1ZEDD61Yyodi8GbmE2uQp0frh7L3QiapmZ18EtLp3RHh0+10mDnbX1yqcO4yczdw+UUTTJ/IBYDTbgknepzejo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707935929; c=relaxed/simple;
-	bh=QVq3liDeH2KL42FCECf1+liwAvFENQw3050DpAJwYG4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wjs5xvBUIUcd8XSviSLP+9QhtLGfw4pU1J+fMLF/4yFepvlhMKzOFnwXbKIvVAXrk+olYjL5qpKhyNgO3s2h4+gdMc+/rb6yVlmXHniAXqMVwGnyZl5Q6tsQMEI73E/IKqGQ+EBW1H77D8dBRJZcjyoL9NoDDtDnvW7IUtCk4pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=hgJnHJfj; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1707935953; c=relaxed/simple;
+	bh=LEvyniLwl41kozCqS40zKgWaQTuWXNnedyiB1qfHcuA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=nTyVz06JP0O5bKzNwXWWq1sJdFgrxV0d5diZNB6z6BC09Dw+hhlWQPHeItD4+ctwkAZzK1pxEzhqiX0evKg7obZF++Z61zegs+27ukYy4yeGmRWyYmqsBcRXbxAuG69+dBSb2vzLe6mah/dCNuvaWGBtSwcyWoHs9QIZcK5JAKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jsk+7Pzl; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="hgJnHJfj"
-Received: from [192.168.7.187] ([71.202.196.111])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 41EIbLoR1382415
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 14 Feb 2024 10:37:22 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 41EIbLoR1382415
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024021201; t=1707935845;
-	bh=Wyscpp4BeSOOqkorWNUGlqTxHcB1H2qViK6BNum7IEA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hgJnHJfjYr57XAd5LwZE5FNAwg9V6OIe22OtpG20MftHzDhneGEzZwogu0MVU++0D
-	 Q9DHMn3y0Dr5RUqUD4dKd+2C70ozwo3Y7MV4ifV71zXwOHh1khFcs5QDYURQhwbZRA
-	 OoZICB64lDGeLnzY28rmxDN2S552mNTc8xE04XwPGqwsikIjBeHo9VzYE2TaoROcxy
-	 B6BuKq86pEPlTRUn1fYLfz72rCtWW9e6gaFMXaD4L9FlRtJdGe8hSdKy4wm6veAJ3M
-	 JLquy9Us+R1SYz8m0vqWjEDCMN6Q+9zggfVmuqfuYzmm8OV2wzKNDIGDmGUk+cT+gi
-	 4sHVN13YitHtA==
-Message-ID: <eec160a4-fc59-4e7e-885f-0384a7ede4cf@zytor.com>
-Date: Wed, 14 Feb 2024 10:37:19 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jsk+7Pzl"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6e10ac45684so66367b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 10:39:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707935952; x=1708540752; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=aNw1b9vcWNzoQZYjOi7QKeEn/eO49qijJX1942ELf28=;
+        b=jsk+7PzlqOmrsjqT2mMXDcfNXq9Qna84j+tGizeju+yxE0GdCMeQrByIm0Ofd2NWYp
+         TosmPDzWCsMvFeYF69OYe1CyH0fR8fKm4rdv1ukzQW/QqlhTmxB6fsC/o7feLc7BJY3R
+         nKPm8wWeFalb2FL9bpaOzO7ZGD4XBLEBh60QH+SREkXE17VrudeyPrdU2NHsL2lb05Qz
+         VsvYyzyIVHUgJM4cJZUggvzeVMlBJy61ZZZqhln10lJ9LafK6q0Hb/Q8G6cDLwMkMNeS
+         ir3df2kUXSLpopR8sMOragY1CxIoSuOPQSxqGFG2kC+r3NWv3yfFUj0TKLxuMfb+Kemx
+         gtwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707935952; x=1708540752;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aNw1b9vcWNzoQZYjOi7QKeEn/eO49qijJX1942ELf28=;
+        b=WAX+/PBn/u/5YF0UzZj4IrmkNWPpQAyiTQeC2FRfKyEGm8Ta7ow+if/lUzugKatU7y
+         LxpQgeYvVLOZI8GIIHR2ak9LgBHKYgsk+pcAydRXE+andSO0ubpcLvkctgQR8yvHxuk2
+         8QJeAMKHPFYLni8lU1Sedb8Xb5qkQF9WQ1UbWqdEtUuiCJ7BUKKmQYsqE8jTLpQ6/+Cr
+         eDBS8+o+AEdDU1a0GsZMxJwfEwtRV6tvrjYfraWSFPcbeTS/VDV/kJkRcD9fXICKG1ew
+         DBuj9hPZPuWKSgzkdBB4U86dK5Xqa57pO+j2CLHzsQxM2HhqJ4X8z6nveeKLA3aG8Ifv
+         OOIw==
+X-Gm-Message-State: AOJu0YzVJbwurQehTr088Z19omHUPu5hm/fKrQkBd7sojIi7CQNOjAWi
+	TTtRpK/ZkNIHUMraGquCUSPxX9LF6DN9zSMZK+bc1co+qcCxOA+i
+X-Google-Smtp-Source: AGHT+IFE788YNQK9o0pTNuUv6eJt6ByDNTXpMDgi5rZjb9umpPuNqObV5rhVtKHHzg2l72P773imBQ==
+X-Received: by 2002:a05:6a20:c706:b0:19e:9885:1077 with SMTP id hi6-20020a056a20c70600b0019e98851077mr3889161pzb.43.1707935951530;
+        Wed, 14 Feb 2024 10:39:11 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVRjMuYJZYwtQjkYj+5qYbhBd+ejYGUCe39lWaltMmeAtxfppIRs7ERis//Wk29MUd36g1IIWLZquBMfoZgMaYEDZ/CIrUzucZU63Y/c1sKPDiSkH6qXl8kVRLeJD91Zg==
+Received: from localhost (dhcp-141-239-158-86.hawaiiantel.net. [141.239.158.86])
+        by smtp.gmail.com with ESMTPSA id a21-20020a056a000c9500b006e04d2be954sm9716495pfv.187.2024.02.14.10.39.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Feb 2024 10:39:11 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Wed, 14 Feb 2024 08:39:09 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Lai Jiangshan <jiangshanlai@gmail.com>
+Cc: linux-kernel@vger.kernel.org, torvalds@linux-foundation.org
+Subject: [PATCH wq/for-6.9] workqueue: Fix queue_work_on() with BH workqueues
+Message-ID: <Zc0IzeM6tAvm1NTl@mtj.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 7/8] sbm: documentation of the x86-64 SandBox Mode
- implementation
-Content-Language: en-US
-To: Petr Tesarik <petrtesarik@huaweicloud.com>,
-        Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-        Xin Li <xin3.li@intel.com>, Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Pengfei Xu <pengfei.xu@intel.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>, Ze Gao <zegao2021@gmail.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Kai Huang <kai.huang@intel.com>, David Woodhouse <dwmw@amazon.co.uk>,
-        Brian Gerst <brgerst@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Joerg Roedel <jroedel@suse.de>,
-        "Mike Rapoport (IBM)" <rppt@kernel.org>,
-        Tina Zhang <tina.zhang@intel.com>,
-        Jacob Pan
- <jacob.jun.pan@linux.intel.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Cc: Roberto Sassu <roberto.sassu@huaweicloud.com>, petr@tesarici.cz,
-        Petr Tesarik <petr.tesarik1@huawei-partners.com>
-References: <20240214113516.2307-1-petrtesarik@huaweicloud.com>
- <20240214113516.2307-8-petrtesarik@huaweicloud.com>
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <20240214113516.2307-8-petrtesarik@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 2/14/2024 3:35 AM, Petr Tesarik wrote:
-> From: Petr Tesarik <petr.tesarik1@huawei-partners.com>
-> 
-> Add a section about the x86-64 implementation.
-> 
-> Signed-off-by: Petr Tesarik <petr.tesarik1@huawei-partners.com>
-> ---
->   Documentation/security/sandbox-mode.rst | 25 +++++++++++++++++++++++++
->   1 file changed, 25 insertions(+)
-> 
-> diff --git a/Documentation/security/sandbox-mode.rst b/Documentation/security/sandbox-mode.rst
-> index 4405b8858c4a..84816b6b68de 100644
-> --- a/Documentation/security/sandbox-mode.rst
-> +++ b/Documentation/security/sandbox-mode.rst
+From 2f34d7337d98f3eae7bd3d1270efaf9d8a17cfc6 Mon Sep 17 00:00:00 2001
+From: Tejun Heo <tj@kernel.org>
+Date: Wed, 14 Feb 2024 08:33:55 -1000
 
-where is this file?
+When queue_work_on() is used to queue a BH work item on a remote CPU, the
+work item is queued on that CPU but kick_pool() raises softirq on the local
+CPU. This leads to stalls as the work item won't be executed until something
+else on the remote CPU schedules a BH work item or tasklet locally.
 
-I assumed it's newly added, but your patch doesn't say so.
+Fix it by bouncing raising softirq to the target CPU using per-cpu irq_work.
 
-> @@ -111,6 +111,31 @@ These hooks must be implemented to select HAVE_ARCH_SBM.
->   		:identifiers: arch_sbm_init arch_sbm_destroy arch_sbm_exec
->   			      arch_sbm_map_readonly arch_sbm_map_writable
->   
-> +X86_64 Implementation
-> +=====================
-> +
-> +The x86_64 implementation provides strong isolation and recovery from CPU
-> +exceptions.
-> +
-> +Sandbox mode runs in protection ring 3 (same as user mode). This means that:
-> +
-> +* sandbox code cannot execute privileged CPU instructions,
-> +* memory accesses are treated as user accesses.
-> +
-> +The thread stack is readable in sandbox mode, because an on-stack data
-> +structure is used by call helpers and thunks to pass target function
-> +arguments. However, it is not writable, and sandbox code runs on its own
-> +stack. The thread stack is not used by interrupt handlers either. Non-IST
-> +interrupt handlers run on a separate sandbox exception stack.
-> +
-> +The interrupt entry path modifies the saved pt_regs to make it appear as
-> +coming from kernel mode. The CR3 register is then switched to kernel mode.
-> +The interrupt exit path is modified to restore actual pt_regs and switch the
-> +CR3 register back to its sandbox mode value, overriding CR3 changes for page
-> +table isolation.
-> +
-> +Support for paravirtualized kernels is not (yet) provided.
-> +
->   Current Limitations
->   ===================
->   
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes: 4cb1ef64609f ("workqueue: Implement BH workqueues to eventually replace tasklets")
+---
+Oops, I just found out that I was raising softirq on the wrong CPU when BH
+work items are queued on remote CPUs. This fixes it. Applied to wq/for-6.9.
 
+Thanks.
 
+ kernel/workqueue.c | 41 ++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 36 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 4950bfc2cdcc..04e35dbe6799 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -54,6 +54,7 @@
+ #include <linux/nmi.h>
+ #include <linux/kvm_para.h>
+ #include <linux/delay.h>
++#include <linux/irq_work.h>
+ 
+ #include "workqueue_internal.h"
+ 
+@@ -457,6 +458,10 @@ static bool wq_debug_force_rr_cpu = false;
+ #endif
+ module_param_named(debug_force_rr_cpu, wq_debug_force_rr_cpu, bool, 0644);
+ 
++/* to raise softirq for the BH worker pools on other CPUs */
++static DEFINE_PER_CPU_SHARED_ALIGNED(struct irq_work [NR_STD_WORKER_POOLS],
++				     bh_pool_irq_works);
++
+ /* the BH worker pools */
+ static DEFINE_PER_CPU_SHARED_ALIGNED(struct worker_pool [NR_STD_WORKER_POOLS],
+ 				     bh_worker_pools);
+@@ -1197,6 +1202,13 @@ static bool assign_work(struct work_struct *work, struct worker *worker,
+ 	return true;
+ }
+ 
++static struct irq_work *bh_pool_irq_work(struct worker_pool *pool)
++{
++	int high = pool->attrs->nice == HIGHPRI_NICE_LEVEL ? 1 : 0;
++
++	return &per_cpu(bh_pool_irq_works, pool->cpu)[high];
++}
++
+ /**
+  * kick_pool - wake up an idle worker if necessary
+  * @pool: pool to kick
+@@ -1215,10 +1227,15 @@ static bool kick_pool(struct worker_pool *pool)
+ 		return false;
+ 
+ 	if (pool->flags & POOL_BH) {
+-		if (pool->attrs->nice == HIGHPRI_NICE_LEVEL)
+-			raise_softirq_irqoff(HI_SOFTIRQ);
+-		else
+-			raise_softirq_irqoff(TASKLET_SOFTIRQ);
++		if (likely(pool->cpu == smp_processor_id())) {
++			if (pool->attrs->nice == HIGHPRI_NICE_LEVEL)
++				raise_softirq_irqoff(HI_SOFTIRQ);
++			else
++				raise_softirq_irqoff(TASKLET_SOFTIRQ);
++		} else {
++			irq_work_queue_on(bh_pool_irq_work(pool), pool->cpu);
++		}
++
+ 		return true;
+ 	}
+ 
+@@ -7367,6 +7384,16 @@ static inline void wq_watchdog_init(void) { }
+ 
+ #endif	/* CONFIG_WQ_WATCHDOG */
+ 
++static void bh_pool_kick_normal(struct irq_work *irq_work)
++{
++	raise_softirq_irqoff(TASKLET_SOFTIRQ);
++}
++
++static void bh_pool_kick_highpri(struct irq_work *irq_work)
++{
++	raise_softirq_irqoff(HI_SOFTIRQ);
++}
++
+ static void __init restrict_unbound_cpumask(const char *name, const struct cpumask *mask)
+ {
+ 	if (!cpumask_intersects(wq_unbound_cpumask, mask)) {
+@@ -7408,6 +7435,8 @@ void __init workqueue_init_early(void)
+ {
+ 	struct wq_pod_type *pt = &wq_pod_types[WQ_AFFN_SYSTEM];
+ 	int std_nice[NR_STD_WORKER_POOLS] = { 0, HIGHPRI_NICE_LEVEL };
++	void (*irq_work_fns[2])(struct irq_work *) = { bh_pool_kick_normal,
++						       bh_pool_kick_highpri };
+ 	int i, cpu;
+ 
+ 	BUILD_BUG_ON(__alignof__(struct pool_workqueue) < __alignof__(long long));
+@@ -7455,8 +7484,10 @@ void __init workqueue_init_early(void)
+ 
+ 		i = 0;
+ 		for_each_bh_worker_pool(pool, cpu) {
+-			init_cpu_worker_pool(pool, cpu, std_nice[i++]);
++			init_cpu_worker_pool(pool, cpu, std_nice[i]);
+ 			pool->flags |= POOL_BH;
++			init_irq_work(bh_pool_irq_work(pool), irq_work_fns[i]);
++			i++;
+ 		}
+ 
+ 		i = 0;
+-- 
+2.43.0
 
