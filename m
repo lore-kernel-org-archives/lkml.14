@@ -1,94 +1,239 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918101CA80;
-	Wed, 14 Feb 2024 12:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A909E524CF
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 12:56:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707915397; cv=none; b=K4LbjIZ3Q6GxDmatb02dB9irkdVaangLz+7u8ajsJXcKEq0IaChX6O7jqc8h+6FFQnyCa+1KHwZuR4oRx5LYsh11ezky2wax3u1gQmJu88W+Y+Ve89ziQa8ErsI8C4Tw8W1ILKtbxvPUTvP7z+59vVan6IksRB5Q64YUGnEfLuk=
+	t=1707915396; cv=none; b=mv+VrDWGZg0BssKbipIgqWrOLEWV19oY7gzNI8rI5cnqlg4FkhnmuEQoLlBpUquyddZAczal1JA8lac9uPMLQ+UAcz9sBtnDefLc4CarVSGph0cWCNVN8kvu3zcacCA3poewMeYtsQfiSCeAzn3aM4+Ve0vNRkERaHFNipuYEpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707915397; c=relaxed/simple;
-	bh=9KP51v8g426C052o40ETxWaaLSpZ29CdN5+5aPmpyu8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RivbYxjE9NZm6JyIZI76F/Imq+g53sJ477iF5O+CtfPWX68BpQ4s0p4P+TpG8xT8avcU0UHcSPkZqfwBy0/JV8lU3yuQyEc3yzoYoAIQfLJ3KzUNpaw799p9yt8CTkPT6eW3eZlfGdUZuWLaSpiyuAfUwSFOiHozq4f/xiEG0nA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.97)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1raEoS-000000029vB-0udY; Wed, 14 Feb 2024 13:56:32 +0100
-Received: from dynamic-077-191-118-037.77.191.pool.telefonica.de ([77.191.118.37] helo=[192.168.178.20])
-          by inpost2.zedat.fu-berlin.de (Exim 4.97)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1raEoS-00000003q0l-01E3; Wed, 14 Feb 2024 13:56:32 +0100
-Message-ID: <e411e5ff09db2eabb2ddd2a6f7bd0db67b76ff7a.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH] sh: hd64461: Make setup_hd64461 static
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Artur Rojek <contact@artur-rojek.eu>, Yoshinori Sato
-	 <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>
-Cc: linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 14 Feb 2024 13:56:31 +0100
-In-Reply-To: <20240211193451.106795-1-contact@artur-rojek.eu>
-References: <20240211193451.106795-1-contact@artur-rojek.eu>
-Autocrypt: addr=glaubitz@physik.fu-berlin.de; prefer-encrypt=mutual;
- keydata=mQINBE3JE9wBEADMrYGNfz3oz6XLw9XcWvuIxIlPWoTyw9BxTicfGAv0d87wngs9U+d52t/REggPePf34gb7/k8FBY1IgyxnZEB5NxUb1WtW0M3GUxpPx6gBZqOm7SK1ZW3oSORw+T7Aezl3Zq4Nr4Nptqx7fnLpXfRDs5iYO/GX8WuL8fkGS/gIXtxKewd0LkTlb6jq9KKq8qn8/BN5YEKqJlM7jsENyA5PIe2npN3MjEg6p+qFrmrzJRuFjjdf5vvGfzskrXCAKGlNjMMA4TgZvugOFmBI/iSyV0IOaj0uKhes0ZNX+lQFrOB4j6I5fTBy7L/T3W/pCWo3wVkknNYa8TDYT73oIZ7Aimv+k7OzRfnxsSOAZT8Re1Yt8mvzr6FHVFjr/VdyTtO5JgQZ6LEmvo4Ro+2ByBmCHORCQ0NJhD1U3avjGfvfslG999W0WEZLTeaGkBAN1yG/1bgGAytQQkD9NsVXqBy7S3LVv9bB844ysW5Aj1nvtgIz14E2WL8rbpfjJMXi7B5ha6Lxf3rFOgxpr6ZoEn+bGG4hmrO+/ReA4SerfMqwSTnjZsZvxMJsx2B9c8DaZE8GsA4I6lsihbJmXhw8i7Cta8Dx418wtEbXhL6m/UEk60O7QD1VBgGqDMnJDFSlvKa9D+tZde/kHSNmQmLLzxtDbNgBgmR0jUlmxirijnm8bwARAQABtEBKb2huIFBhdWwgQWRyaWFuIEdsYXViaXR6IChEZWJpYW4gUHJvamVjdCkgPGdsYXViaXR6QGRlYmlhbi5vcmc+iQI3BBMBCAAhBQJRnmPwAhsDBQsJCAcDBRUKCQgLBRYCAwEAAh4BAheAAAoJEHQmOzf1tfkTF0gQAJgvGiKf5YW6+Qyss1qGwf+KHXb/6gIThY6GpSIro9vL/UxaakRCOloaXXAs3KpgBULOO8+prqU8GIqcd8tE3YvQFvvO3rN+8bhOiiD0lFmQSEHcpCW5ZRpdh
-	J5wy1t9Ddb1K/7XGzen3Uzx9bjKgDyikM3js1VtJHaFr8FGt5gtZIBDgp8QM9IRCv/32mPQxqmsaTczEzSNxTBM6Tc2NwNLus3Yh5OnFdxk1jzk+Ajpnqd/E/M7/CU5QznDgIJyopcMtOArv9Er+xe3gAXHkFvnPqcP+9UpzHB5N0HPYn4k4hsOTiJ41FHUapq8d1AuzrWyqzF9aMUi2kbHJdUmt9V39BbJIgjCysZPyGtFhR42fXHDnPARjxtRRPesEhjOeHei9ioAsZfT6bX+l6kSf/9gaxEKQe3UCXd3wbw68sXcvhzBVBxhXM91+Y7deHhNihMtqPyEmSyGXTHOMODysRU453E+XXTr2HkZPx4NV1dA8Vlid2NcMQ0iItD+85xeVznc8xquY/c1vPBeqneBWaE530Eo5e3YA7OGrxHwHbet3E210ng+xU8zUjQrFXMJm3xNpOe45RwmhCAt5z1gDTk5qNgjNgnU3mDp9DX6IffS3g2UJ02JeTrBY4hMpdVlmGCVOm9xipcPHreVGEBbM4eQnYnwbaqjVBBvy2DyfyN/tFRKb2huIFBhdWwgQWRyaWFuIEdsYXViaXR6IChGcmVpZSBVbml2ZXJzaXRhZXQgQmVybGluKSA8Z2xhdWJpdHpAcGh5c2lrLmZ1LWJlcmxpbi5kZT6JAlEEEwEIADsCGwMFCwkIBwMFFQoJCAsFFgIDAQACHgECF4AWIQRi/4p1hOApVpVGAAZ0Jjs39bX5EwUCWhQoUgIZAQAKCRB0Jjs39bX5Ez/ID/98r9c4WUSgOHVPSMVcOVziMOi+zPWfF1OhOXW+atpTM4LSSp66196xOlDFHOdNNmO6kxckXAX9ptvpBc0mRxa7OrC168fKzqR7P75eTsJnVaOu+uI/vvgsbUIosYdkkekCxDAbYCUwmzNotIspnFbxiSPMNrpw7Ud/yQkS9TDYeXnrZDhBp7p5+naWCD/yMvh7yVCA4Ea8+xDVoX
-	+kjv6EHJrwVupOpMa39cGs2rKYZbWTazcflKH+bXG3FHBrwh9XRjA6A1CTeC/zTVNgGF6wvw/qT2x9tS7WeeZ1jvBCJub2cb07qIfuvxXiGcYGr+W4z9GuLCiWsMmoff/Gmo1aeMZDRYKLAZLGlEr6zkYh1Abtiz0YLqIYVbZAnf8dCjmYhuwPq77IeqSjqUqI2Cb0oOOlwRKVWDlqAeo0Bh8DrvZvBAojJf4HnQZ/pSz0yaRed/0FAmkVfV+1yR6BtRXhkRF6NCmguSITC96IzE26C6n5DBb43MR7Ga/mof4MUufnKADNG4qz57CBwENHyx6ftWJeWZNdRZq10o0NXuCJZf/iulHCWS/hFOM5ygfONq1Vsj2ZDSWvVpSLj+Ufd2QnmsnrCr1ZGcl72OC24AmqFWJY+IyReHWpuABEVZVeVDQooJ0K4yqucmrFR7HyH7oZGgR0CgYHCI+9yhrXHrQpyLQ/Sm9obiBQYXVsIEFkcmlhbiBHbGF1Yml0eiAoU1VTRSBMSU5VWCBHbWJIKSA8Z2xhdWJpdHpAc3VzZS5jb20+iQJOBBMBCAA4FiEEYv+KdYTgKVaVRgAGdCY7N/W1+RMFAloSyhICGwMFCwkIBwMFFQoJCAsFFgIDAQACHgECF4AACgkQdCY7N/W1+ROnkQ//X6LVYXPi1D8/XFsoi0HDCvZhbWSzcGw6MQZKmTk42mNFKm/OrYBJ9d1St4Q3nRwH/ELzGb8liA02d4Ul+DV1Sv3P540LzZ4mmCi9wV+4Ohn6cXfaJNaTmHy1dFvg1NrVjMqGAFZkhTXRAvjRIQItyRvL//gKaciyKB/T0C3CIzbuTLBqtZMIIuP5nIgkwBvdw6H7EQ7kqOAO85S4FDSum/cLwLzdKygyvmPNOOtxvxa9QIryLf6h7HfWg68DvGDqIV9ZBoi8JjYZrZzaBmlPV8Iwm52uYnzsKM/LoyZ0G4v2u/WEtQEl7deLJjKby3kKmZGh9hQ
-	YImvOkrd9z8LQSvu0e8Qm8+JbRCCqUGkAPrRDFIzH8nFCFGCU/V+4LT2j68KMbApLkDQAFEDBcQVJYGnOZf7eU/EtYQIqVmGEjdOP7Qf/yMFzhc9GBXeE5mbe0LwA5LOO74FDH5qjwB5KI6VkTWPoXJoZA5waVC2sUSYOnmwFINkCLyyDoWaL9ubSbU9KTouuNm4F6XIssMHuX4OIKA7b2Kn5qfUFbd0ls8d5mY2gKcXBfEY+eKkhmuwZhd/7kP10awC3DF3QGhgqpaS100JW8z78el7moijZONwqXCS3epUol6q1pJ+zcapcFzO3KqcHTdVOKh6CXQci3Yv5NXuWDs/l2dMH4t2NvZC5Ag0ETckULgEQAKwmloVWzF8PYh5jB9ATf07kpnirVYf/kDk+QuVMPlydwPjh6/awfkqZ3SRHAyIb+9IC66RLpaF4WSPVWGs307+pa5AmTm16vzYA0DJ7vvRPxPzxPYq6p2WTjFqbq0EYeNTIm0YotIkq/gB9iIUS+gjdnoGSA+n/dwnbu1Eud2aiMW16ILqhgdgitdeW3J7LMDFvWIlXoBQOSfXQDLAiPf+jPJYvgkmCAovYKtC3aTg3bFX2sZqOPsWBXV6Azd92/GMs4W4fyOYLVSEaXy/mI35PMQLH8+/MM4n0g3JEgdzRjwF77Oh8SnOdG73/j+rdrS6Zgfyq6aM5WWs6teopLWPe0LpchGPSVgohIA7OhCm+ME8fpVHuMkvXqPeXAVfmJS/gV5CUgDMsYEjst+QXgWnlEiK2Knx6WzZ+v54ncA4YP58cibPJj5Qbx4gi8KLY3tgIbWJ3QxIRkChLRGjEBIQ4vTLAhh3vtNEHoAr9xUb3h8MxqYWNWJUSLS4xeE3Bc9UrB599Hu7i0w3v6VDGVCndcVO91lq9DZVhtYOPSE8mgacHb/3LP0UOZWmGHor52oPNU3Dwg205u814sKOd2i0DmY+Lt4EkLwFIYGE0FLLTHZDjDp9D
-	0iKclQKt86xBRGH+2zUk3HRq4MArggXuA4CN1buCzqAHiONvLdnY9StRABEBAAGJAh8EGAEIAAkFAk3JFC4CGwwACgkQdCY7N/W1+ROvNxAAtYbssC+AZcU4+xU5uxYinefyhB+f6GsS0Ddupp/MkZD/y98cIql8XXdIZ6z8lHvJlDq0oOyizLpfqUkcT4GhwMbdSNYUGd9HCdY/0pAyFdiJkn++WM8+b+9nz4mC6vfh96imcK4KH/cjP7NG37El/xlshWrb6CqKPk4KxNK5rUMPNr7+/3GwwGHHkJtW0QfDa/GoD8hl2HI6IQI+zSXK2uIZ7tcFMN8g9OafwUZ7b+zbz1ldzqOwygliEuEaRHeiOhPrTdxgnj6kTnitZw7/hSVi5Mr8C4oHzWgi66Ov9vdmClTHQSEjWDeLOiBj61xhr6A8KPUVaOpAYZWBH4OvtnmjwsKuNCFXym2DcCywdjEdrLC+Ms5g6Dkd60BQz4/kHA7x+P9IAkPqkaWAEyHoEvM1OcUPJzy/JW2vWDXo2jjM8PEQfNIPtqDzid1s8aDLJsPLWlJnfUyMP2ydlTtR54oiVBlFwqqHoPIaJrwTkND5lgFiMIwup3+giLiDOBILtiOSpYxBfSJkz3GGacOb4Xcj8AXV1tpUo1dxAKpJ1ro0YHLJvOJ8nLiZyJsCabUePNRFprbh+srI+WIUVRm0D33bI1VEH2XUXZBL+AmfdKXbHAYtZ0anKgDbcwvlkBcHpA85NpRqjUQ4OerPqtCrWLHDpEwGUBlaQ//AGix+L9c=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	s=arc-20240116; t=1707915396; c=relaxed/simple;
+	bh=FJp37iTRPYPRDJyHF81G0HZwGNHWM28gXJ/LmpRlD1c=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=t97YMzWbQysl+ffetY/B5lPSthsVwuzDAuY3QvkePZ1XkrlEe1ING1djmiXexGG9dFAzbH7nFpLbhCbCLvjyhHiyYm5lrnjq8LcQaH0g+5KNzI4mr508dkAo0M7K4DM3+SgC29U8ngn7qQQSh7xNX94HpcVpxcUJCQqZgDSrgu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YzMaoC2B; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YzMaoC2B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707915393;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FJp37iTRPYPRDJyHF81G0HZwGNHWM28gXJ/LmpRlD1c=;
+	b=YzMaoC2BsRjV+QxtjJUieTSlQzt0jlhZ35SDci2FTNzFMefvYMst/s+5xTUPEynb1P6Phg
+	3xPXwcsZ4IJX/b4IITU/Vk0igcyYsvbJSDgT/iZSohGd2atUnWDFjHyC1ee0gLh8YpHGda
+	mmxpfjgZo2erCgoJiMwdmtTDqGD6WH0=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-537-SlWRdl4aPsW4hWfSWB_jpQ-1; Wed, 14 Feb 2024 07:56:32 -0500
+X-MC-Unique: SlWRdl4aPsW4hWfSWB_jpQ-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a3d481c7d8cso32941166b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 04:56:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707915391; x=1708520191;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FJp37iTRPYPRDJyHF81G0HZwGNHWM28gXJ/LmpRlD1c=;
+        b=CqGH1RHUjU9m2U5b2FZqtKnaq7Ty1PpcIHKYlQafcZbBZyUKe2hwYJSAz4EmHnQ4Y0
+         SpZopzc0WcO67qbf6f8WEFsVJq0ZPPlXEWwEUidW0JZVSWLqbgu9fFWeN0cJ6hjto+2A
+         RAnmF5zH7a/aulo32p568LRzJ65HUaHjaK4D14gKOx6fjTMjAwXLfXY+sIscCjNo+JrJ
+         rVY8wAEdHA1OU9xxiExSSWMs2sbdrx133g9rJDGhhV41sNnHNcGbX72H8atADvO3cVhV
+         0KomEoxQrBojdLBo0t8tlUnEoOi0mSKGGkIDeeCL0ZokyHeN5KLOItAIVTKqncxk09e1
+         T0lg==
+X-Forwarded-Encrypted: i=1; AJvYcCVLODLbrg+tHr8GH6u7MClv5QxIy0vtssBdSkF3vc4DoRnuOeM9fQnh3a8gjIQjf1lY0qLV/Kd44Zmoe+jBM8OmjOlhO7rwq3RsJ25k
+X-Gm-Message-State: AOJu0Ywb8uoYNFc8DbQdpLCrCbveP9kotny0WH/EjUz4cGGw2GRfKuHx
+	vQy+d/SI4tz+jPSY29bCqoeJwfgf49XmrYDOiuKOs0hBC5zUwb3oy5QPnqr0arPlK+979OOnjJc
+	gIQxWPe2SuBYwPCHJNuJqXF0TDlHN+a6TCArPDZS6a5WfghrTVkXzFKm9TOg7Xw==
+X-Received: by 2002:a17:906:f8cf:b0:a3d:2422:ee73 with SMTP id lh15-20020a170906f8cf00b00a3d2422ee73mr1559811ejb.77.1707915391124;
+        Wed, 14 Feb 2024 04:56:31 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEtC4RmVIKd3BfBmk6nYmZIZiM8phFHfpA/m86d7qk4SVIPJZDEl1BVx7eVsmIDBaNUG11aPw==
+X-Received: by 2002:a17:906:f8cf:b0:a3d:2422:ee73 with SMTP id lh15-20020a170906f8cf00b00a3d2422ee73mr1559778ejb.77.1707915390722;
+        Wed, 14 Feb 2024 04:56:30 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXeVT566eawAqV4mSiYIM54RSXg8KcFzFeTfM3lTaqYUMHBIUCXS/1t/A3OUh7PJjPlqfAuhmCDkluKHV5tDkoxAwbqEWcsb9OHKXszu9xt1+XsHDsqQR/Gt6oMAJQxj44Rtg1OIEF+AcFruNXTnueqhOSsty1y8hMHV/Q0Hy+vXJQpN0xBV3ghNG/4nguQ2hrqJJDM8MZHSY6bIj5ts1xFNA5MQpgsHrvI1Em0gVn7Y2389Jy3RsiAL7THwe00c2TzV7T7EyOWYKihiAu5o+rtxRs8uXtR/8gGy9RDXg28p1fPZJIaYFZR1R9IsZYukb84tHI0pSYWTJNbTvxqu+j6oHcO43pcoCf5hxkqfgFDAJYr0ELb4pmAHgPMPEFoJrJLDNiCLG16PPatmNBKy1MNPwrf/YGrGwcacXGEO19Jn8Suusnc+ODFM+fkSY0zIFsLdG799C9+nD4ryXbDWIt+ojfqV8NyG0IJdWyrRLa3cNG4+hmXhFUq3zif8GB1EA/FMNM7pf8JVk4YNRjHpH32s+cpFXVMNmhubaIYqYaL8uDYxGAF20wM0VY6oYtaO5GfSYOZhvG4Fuyz/XALrhx2z6Z7dsYB2dG2bUYSeLI8tCQ1YzLYVj6dKMcM3F9nDqm3Ur2Xrh8lMjGM0WTj7OwrpTIo9R78b+zsq8Yv9X+UDIL64djWOPfW1itQBIqU6VQ=
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id vb1-20020a170907d04100b00a3cfe376116sm1673172ejc.57.2024.02.14.04.56.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Feb 2024 04:56:30 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+	id CF25D10F578E; Wed, 14 Feb 2024 13:56:29 +0100 (CET)
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Kumar Kartikeya Dwivedi <memxor@gmail.com>, Benjamin Tissoires
+ <bentiss@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, Andrii
+ Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, Yonghong
+ Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, Stanislav
+ Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa
+ <jolsa@kernel.org>, Jiri Kosina <jikos@kernel.org>, Jonathan Corbet
+ <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, bpf
+ <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "open list:HID
+ CORE LAYER" <linux-input@vger.kernel.org>, "open list:DOCUMENTATION"
+ <linux-doc@vger.kernel.org>, "open list:KERNEL SELFTEST FRAMEWORK"
+ <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH RFC bpf-next 0/9] allow HID-BPF to do device IOs
+In-Reply-To: <b2k6rlzu5vgpouedwjbsigoteo43nwfk6qeeb2pc7c3r4ejnm6@nml66ds6wbeo>
+References: <87bk8pve2z.fsf@toke.dk>
+ <CAO-hwJ+UeaBydN9deA8KBbgBiC_UCt6oXX-wGnNuSr8fhUrkXw@mail.gmail.com>
+ <875xyxva9u.fsf@toke.dk>
+ <CAO-hwJLvEGNRXc8G2PR+AQ6kJg+k5YqSt3F7LCSc0zWnmFfe5g@mail.gmail.com>
+ <87r0hhfudh.fsf@toke.dk>
+ <CAO-hwJLxkt=THKBjxDA6KZsC5h52rCXZ-2RNKPCiYMHNjhQJNg@mail.gmail.com>
+ <CAADnVQKt7zu2OY0xHCkTb=KSXO33Xj8H4vVYMqP51ZJ_Kj1sZA@mail.gmail.com>
+ <zybv26nmqtmyghakbebwxanzgzsfm6brvi7qw3ljoh4dijbjki@ub7atnumzuhy>
+ <CAP01T75Giw_5j0RXaaxX0rDzCcXXZgmHrw7QZ_Ayib8rHgunBQ@mail.gmail.com>
+ <877cj8f8ht.fsf@toke.dk>
+ <b2k6rlzu5vgpouedwjbsigoteo43nwfk6qeeb2pc7c3r4ejnm6@nml66ds6wbeo>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date: Wed, 14 Feb 2024 13:56:29 +0100
+Message-ID: <874jebfblu.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 2024-02-11 at 20:34 +0100, Artur Rojek wrote:
-> Enforce internal linkage for setup_hd64461.
->=20
-> This fixes the following error:
-> arch/sh/cchips/hd6446x/hd64461.c:75:12: error: no previous prototype for =
-'setup_hd64461' [-Werror=3Dmissing-prototypes]
->=20
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> ---
->  arch/sh/cchips/hd6446x/hd64461.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/arch/sh/cchips/hd6446x/hd64461.c b/arch/sh/cchips/hd6446x/hd=
-64461.c
-> index f3fba967445a..81764882d87d 100644
-> --- a/arch/sh/cchips/hd6446x/hd64461.c
-> +++ b/arch/sh/cchips/hd6446x/hd64461.c
-> @@ -72,7 +72,7 @@ static void hd64461_irq_demux(struct irq_desc *desc)
->  	}
->  }
-> =20
-> -int __init setup_hd64461(void)
-> +static int __init setup_hd64461(void)
->  {
->  	int irq_base, i;
-> =20
+Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
 
-Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> On Tue, Feb 13, 2024 at 08:51:26PM +0100, Toke H=C3=B8iland-J=C3=B8rgense=
+n wrote:
+>> Kumar Kartikeya Dwivedi <memxor@gmail.com> writes:
+>>=20
+>> > On Tue, 13 Feb 2024 at 18:46, Benjamin Tissoires <bentiss@kernel.org> =
+wrote:
+>> >>
+>> >> On Feb 12 2024, Alexei Starovoitov wrote:
+>> >> > On Mon, Feb 12, 2024 at 10:21=E2=80=AFAM Benjamin Tissoires
+>> >> > <benjamin.tissoires@redhat.com> wrote:
+>> >> > >
+>> >> > > On Mon, Feb 12, 2024 at 6:46=E2=80=AFPM Toke H=C3=B8iland-J=C3=B8=
+rgensen <toke@redhat.com> wrote:
+>> >> > > >
+>> >> > > > Benjamin Tissoires <benjamin.tissoires@redhat.com> writes:
+>> >> > > >
+>> >> [...]
+>> >> > I agree that workqueue delegation fits into the bpf_timer concept a=
+nd
+>> >> > a lot of code can and should be shared.
+>> >>
+>> >> Thanks Alexei for the detailed answer. I've given it an attempt but s=
+till can not
+>> >> figure it out entirely.
+>> >>
+>> >> > All the lessons(bugs) learned with bpf_timer don't need to be re-di=
+scovered :)
+>> >> > Too bad, bpf_timer_set_callback() doesn't have a flag argument,
+>> >> > so we need a new kfunc to set a sleepable callback.
+>> >> > Maybe
+>> >> > bpf_timer_set_sleepable_cb() ?
+>> >>
+>> >> OK. So I guess I should drop Toke's suggestion with the bpf_timer_ini=
+() flag?
+>> >>
+>> >> > The verifier will set is_async_cb =3D true for it (like it does for=
+ regular cb-s).
+>> >> > And since prog->aux->sleepable is kinda "global" we need another
+>> >> > per subprog flag:
+>> >> > bool is_sleepable: 1;
+>> >>
+>> >> done (in push_callback_call())
+>> >>
+>> >> >
+>> >> > We can factor out a check "if (prog->aux->sleepable)" into a helper
+>> >> > that will check that "global" flag and another env->cur_state->in_s=
+leepable
+>> >> > flag that will work similar to active_rcu_lock.
+>> >>
+>> >> done (I think), cf patch 2 below
+>> >>
+>> >> > Once the verifier starts processing subprog->is_sleepable
+>> >> > it will set cur_state->in_sleepable =3D true;
+>> >> > to make all subprogs called from that cb to be recognized as sleepa=
+ble too.
+>> >>
+>> >> That's the point I don't know where to put the new code.
+>> >>
+>> >
+>> > I think that would go in the already existing special case for
+>> > push_async_cb where you get the verifier state of the async callback.
+>> > You can make setting the boolean in that verifier state conditional on
+>> > whether it's your kfunc/helper you're processing taking a sleepable
+>> > callback.
+>> >
+>> >> It seems the best place would be in do_check(), but I am under the im=
+pression
+>> >> that the code of the callback is added at the end of the instruction =
+list, meaning
+>> >> that I do not know where it starts, and which subprog index it corres=
+ponds to.
+>> >>
+>> >> >
+>> >> > A bit of a challenge is what to do with global subprogs,
+>> >> > since they're verified lazily. They can be called from
+>> >> > sleepable and non-sleepable contex. Should be solvable.
+>> >>
+>> >> I must confess this is way over me (and given that I didn't even mana=
+ged to make
+>> >> the "easy" case working, that might explain things a little :-P )
+>> >>
+>> >
+>> > I think it will be solvable but made somewhat difficult by the fact
+>> > that even if we mark subprog_info of some global_func A as
+>> > in_sleepable, so that we explore it as sleepable during its
+>> > verification, we might encounter later another global_func that calls
+>> > a global func, already explored as non-sleepable, in sleepable
+>> > context. In this case I think we need to redo the verification of that
+>> > global func as sleepable once again. It could be that it is called
+>> > from both non-sleepable and sleepable contexts, so both paths
+>> > (in_sleepable =3D true, and in_sleepable =3D false) need to be explore=
+d,
+>> > or we could reject such cases, but it might be a little restrictive.
+>> >
+>> > Some common helper global func unrelated to caller context doing some
+>> > auxiliary work, called from sleepable timer callback and normal main
+>> > subprog might be an example where rejection will be prohibitive.
+>> >
+>> > An approach might be to explore main and global subprogs once as we do
+>> > now, and then keep a list of global subprogs that need to be revisited
+>> > as in_sleepable (due to being called from a sleepable context) and
+>> > trigger do_check_common for them again, this might have to be repeated
+>> > as the list grows on each iteration, but eventually we will have
+>> > explored all of them as in_sleepable if need be, and the loop will
+>> > end. Surely, this trades off logical simplicity of verifier code with
+>> > redoing verification of global subprogs again.
+>> >
+>> > To add items to such a list, for each global subprog we encounter that
+>> > needs to be analyzed as in_sleepable, we will also collect all its
+>> > callee global subprogs by walking its instructions (a bit like
+>> > check_max_stack_depth does).
+>>=20
+>> Sorry if I'm being dense, but why is all this needed if it's already
+>> possible to just define the timer callback from a program type that
+>> allows sleeping, and then set the actual timeout from a different
+>> program that is not sleepable? Isn't the set_sleepable_cb() kfunc just a
+>> convenience then? Or did I misunderstand and it's not actually possible
+>> to mix callback/timer arming from different program types?
+>
+> More than just convience.
+> bpf_set_sleepable_cb() might need to be called from non-sleepable and
+> there could be no way to hack it around with fake sleepable entry.
+> bpf_timer_cancel() clears callback_fn.
+> So if prog wants to bpf_timer_start() and later bpf_timer_cancel()
+> it would need to bpf_set_sleepable_cb() every time before bpf_timer_start=
+().
+> And at that time it might be in non-sleepable ctx.
 
-I will merge this patch for 6.9 tonight.
+Ah, right, makes sense; didn't think about bpf_timer_cancel(). Thanks
+for the explanation :)
 
-Thanks,
-Adrian
+-Toke
 
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
