@@ -1,70 +1,81 @@
-Received: from proxmox-new.maurer-it.com (proxmox-new.maurer-it.com [94.136.29.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F7054745;
-	Wed, 14 Feb 2024 13:24:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.136.29.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F129054F82;
+	Wed, 14 Feb 2024 13:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707917085; cv=none; b=haFfAVNY/+LI2EC/fRVQ9FuA7uMrdUg5eQoNkBVryaewAgCMHTxY3JJx8mWeTYqn77XvitPzzLzMq4hBC9mGbFBZ5/PQV9sT1e+1N5ZFl3sKXeuYH18OBavMbiEAaqIaiUb+MhvF8R22W4Ual/KbDg9HgUDWFgn13Ycj+X33XTo=
+	t=1707917144; cv=none; b=YrLoPmi88KOriWJoH53lgCC1W+yI1q7Z0+IlVraomW1OK8JzOqykmbIIgR/7yZkCnGBR9kaOChQGGa066scWSkv7FwTF/5FnSxrG49lpbZEY6V18HBlTtQkMqZWQF+ocMn8vq6+tQlCned8UXp5PxSRYE3st8wclfsK55vS3AWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707917085; c=relaxed/simple;
-	bh=FsQPWaH/zjqZ0YupICrU4eLUep9haB5a31ExMi0u37U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GdwHFsUNX3N73rEf6REh2HSgDmH2stEeiKZHffX15SxlpwGuA0ezsqTKDsmyWdZjwJH5b/lVXZNCXB/A65Ui+1MKUwBAf9MkdPKjBrkI3oBtKWT9olQeWFBatqoKVnPd/zGMYhARFaYghab2lhmfXoOQm4VcSjHxIf9AYJv3VyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com; spf=pass smtp.mailfrom=proxmox.com; arc=none smtp.client-ip=94.136.29.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proxmox.com
-Received: from proxmox-new.maurer-it.com (localhost.localdomain [127.0.0.1])
-	by proxmox-new.maurer-it.com (Proxmox) with ESMTP id 1DFDB48171;
-	Wed, 14 Feb 2024 14:17:22 +0100 (CET)
-Message-ID: <19ac27b1-1da1-4b31-a0b2-c25574515ac5@proxmox.com>
-Date: Wed, 14 Feb 2024 14:17:19 +0100
+	s=arc-20240116; t=1707917144; c=relaxed/simple;
+	bh=ec+5pA6eqCefVv3bkSMVygeKg7lBf5lDJ6Av8fyMLTg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MEJkP7pzL2UsjEnUrGpCZHfsmbbjasSXhNaPA9tzXxwl8xFWqQrs310E+1NTVDqEHPY2irXT7Lypo4RkbepCJGnjhb71Rx7dwsb7B27qicaRcH+T3/1JS7+Cy2ID+t1Br3MZBx1fWnWX3a/elblsV1IUIUtZALUj+WSuPPCSUyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DP3MvIKC; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DP3MvIKC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F6E2C43390;
+	Wed, 14 Feb 2024 13:25:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707917143;
+	bh=ec+5pA6eqCefVv3bkSMVygeKg7lBf5lDJ6Av8fyMLTg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DP3MvIKCuo1Pr1XASVT1JXs3+SvLI0Psszrd3OtQZiTFZlpRSG8a2JS4Nz8iDyfrT
+	 sXCVdn4DAKtmGawXHrpee6kIUuighT7+OVU5D5rmkJ6+pyvVQuccDFDDCdi1hSw5Ub
+	 6//K4ggZqmdq9itvGeE/r/amV4ZZPaQpGuJQszfyiPm9U0UYXc8oGBWGiR9zqQBEEM
+	 aWyT0Siatl9hHYaai08e4QylaxtLDo2kucJNeSUsuUIIucOCk7IMX4Kaowhxf9oiL9
+	 ng7gr69pKkw5iYgXxTt/Pw8Bwg1wp5KNjWeof16+KzxDGjw9XGFf55XCuCdKGGIeY0
+	 GrDrFhM7FAAmg==
+Date: Wed, 14 Feb 2024 13:25:38 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: bryan.odonoghue@nexus-software.ie, andersson@kernel.org,
+	konrad.dybcio@linaro.org, lgirdwood@gmail.com,
+	quic_fenglinw@quicinc.com, quic_collinsd@quicinc.com,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] regulator: qcom-rpmh: Fix pm8010 pmic5_pldo502ln minimum
+ voltage
+Message-ID: <13baed68-1014-4a48-874a-94027a6dd061@sirena.org.uk>
+References: <20240214121614.2723085-1-bryan.odonoghue@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/4] KVM: x86/mmu: Pre-check for mmu_notifier retry
-To: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Yan Zhao <yan.y.zhao@intel.com>, Kai Huang <kai.huang@intel.com>,
- Yuan Yao <yuan.yao@linux.intel.com>, Xu Yilun <yilun.xu@linux.intel.com>,
- Yu Zhang <yu.c.zhang@linux.intel.com>,
- Chao Peng <chao.p.peng@linux.intel.com>, Fuad Tabba <tabba@google.com>,
- Michael Roth <michael.roth@amd.com>,
- Isaku Yamahata <isaku.yamahata@intel.com>,
- David Matlack <dmatlack@google.com>
-References: <20240209222858.396696-1-seanjc@google.com>
-Content-Language: en-US
-From: Friedrich Weber <f.weber@proxmox.com>
-In-Reply-To: <20240209222858.396696-1-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="r17f06/4YKIVk7Q3"
+Content-Disposition: inline
+In-Reply-To: <20240214121614.2723085-1-bryan.odonoghue@linaro.org>
+X-Cookie: Available while quantities last.
 
-On 09/02/2024 23:28, Sean Christopherson wrote:
-> Retry page faults without acquiring mmu_lock, and potentially even without
-> resolving a pfn, if the gfn is covered by an active invalidation.  This
-> avoids resource and lock contention, which can be especially beneficial
-> for preemptible kernels as KVM can get stuck bouncing mmu_lock between a
-> vCPU and the invalidation task the vCPU is waiting on to finish.
-> 
-> v4: 
->  - Pre-check for retry before resolving the pfn, too. [Yan]
->  - Add a patch to fix a private/shared vs. memslot validity check
->    priority inversion bug.
->  - Refactor kvm_faultin_pfn() to clean up the handling of noslot faults.
 
-Can confirm that v4 also fixes the temporary guest hangs [1] I'm seeing
-in combination with KSM and NUMA balancing:
-* On 60eedcfc, the reproducer [1] triggers temporary hangs
-* With the four patches applied on top of 60eedcfc, the reproducer does
-not trigger hangs
+--r17f06/4YKIVk7Q3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks a lot for looking into this!
+On Wed, Feb 14, 2024 at 12:16:14PM +0000, Bryan O'Donoghue wrote:
 
-[1]
-https://lore.kernel.org/kvm/832697b9-3652-422d-a019-8c0574a188ac@proxmox.com/
+>  	.voltage_ranges = (struct linear_range[]) {
+> -		REGULATOR_LINEAR_RANGE(1800000, 0,  2,  200000),
+> +		REGULATOR_LINEAR_RANGE(1808000, 0,  2,  200000),
 
+This will also offset all other voltages that get set, is that expected
+and desired?
+
+--r17f06/4YKIVk7Q3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXMv1EACgkQJNaLcl1U
+h9AzXgf8CaXLf67yXq6uJFdCGGwbgcmiAVIqD2Erqmp+1IEn4fPWevmkyc3SkMkg
+0rY7VgauEFF1PePaW0out7P5ac2lMZVol33GLXfp9e8infEQzZhZBd4Tpm2foNHu
+qwv/RIpRgFRSB2k5B9EnDFMSAe1gcwwiKlA9EpSK5ir+D4w0vb3s3+vMc0US3HCz
+glXtAvMzoenWyTtfcifytMmmEi3N1DP6+s3uhpAkO2sNRnQdztxysz5+C8mHxjJ5
+c03ntS+0echMzNJ/IgPoT6mdlwqx7iwEjGVJDDhXOljOcP6DxbqMjR8DYrTrd5vn
+terqQg9GgTt1tbobzrKqxJHn52MjSg==
+=PNfk
+-----END PGP SIGNATURE-----
+
+--r17f06/4YKIVk7Q3--
