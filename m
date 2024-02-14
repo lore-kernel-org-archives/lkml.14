@@ -1,59 +1,43 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCAF918027;
-	Wed, 14 Feb 2024 10:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4FFE1759D;
+	Wed, 14 Feb 2024 10:28:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707906471; cv=none; b=eV7EqRxrLyPdhz18PLMu/wXpt3DFa41zztieLMVwvfga1IKJo+HERPCFOJBpC4cDGHbqU+2nWKhhTZqbatcuZNxOuu9mqy97xVH5EgpqMx9/myJFI0z0Qh920ovCFeWXRdK3BZT6bfmt5rHli5yQFHksjy6cfh5ASdQR4UIWGmg=
+	t=1707906529; cv=none; b=VzFRSZNUiwZGMxHLOc/R8uit2giBuIWbEuCrHpJvHz8izihLax/gMNEj7kX0T03INQ5WeiUAYQPBsJoRC+wr0+Ld+GE3axB/Gij54xJxeiae+7U/cTKAYPUbL6jqw1gRFESOJXTavpTwFwxU8c7P++Iyu8E0wz96oljxJoFgAIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707906471; c=relaxed/simple;
-	bh=zbIWzkXTYZWpzUdpSXPx9xSy94j7EPhhAgBf8uj1gg4=;
+	s=arc-20240116; t=1707906529; c=relaxed/simple;
+	bh=8/XhGqCAuGX08PlCEKi60aMtlMVFlwsETgvlqDwir/o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xt2+Kl2h5dcSh8MugdVIDSKu3MGqGHy9Br/uHY8mFwEWKs5+LOYp1ZMKzAIjDJ+EyVkbLTpOcaKXOtrXOBHl27HdBqCwFbUGu6Am5hydqia4BIYRIXsMUzYEUqXRhzUfDgv3U28WnVONlKct2Z/4tsFazesFhGu//DhjtYDiOfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fW119Jbq; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fW119Jbq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707906470; x=1739442470;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zbIWzkXTYZWpzUdpSXPx9xSy94j7EPhhAgBf8uj1gg4=;
-  b=fW119JbqoFOZfmNAG9Ztjl7WbGTgIb84NYTbx94Ufpl+bV7R56PSyCQX
-   4/QMw083gl7zTkP3SdDXi686kq5IQlWrByxNaDFw6bL8McXxNFu8eK7/p
-   u56YH7Db6IhxBAipW8p7ueoFC/TSFtW+BzSZzGlDKIdXepr89FiJTOfxp
-   g7FUmUESxWZPRxCGUVdzaAvh+vpHP8Z/QH6hUnKCpghnoeRfa40w5AcUH
-   JPurVW94n48079SGks34O16sI53ww1s6sJHG5ztsKrf4fxkIWMT6ALdUR
-   bwTTH0BxJJC5ypYz8fWLdKmTvaoEPglA1JnuQldneaO8biim8cxsksObr
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="2066827"
-X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="2066827"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 02:27:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="7754709"
-Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 14 Feb 2024 02:27:47 -0800
-Received: from kbuild by 01f0647817ea with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1raCUS-0008fy-1z;
-	Wed, 14 Feb 2024 10:27:44 +0000
-Date: Wed, 14 Feb 2024 18:26:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Vincent Donnefort <vdonnefort@google.com>, rostedt@goodmis.org,
-	mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, mathieu.desnoyers@efficios.com,
-	kernel-team@android.com, Vincent Donnefort <vdonnefort@google.com>
-Subject: Re: [PATCH v17 2/6] ring-buffer: Introducing ring-buffer mapping
- functions
-Message-ID: <202402141856.fVl4pCHi-lkp@intel.com>
-References: <20240213114945.3528801-3-vdonnefort@google.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=rI9XOEFjn+J+/OGx62nf93frKK5JGw5yto7PnluDBX78TGkY6z0m7ILSlbKozv44Ji4hHnNeMADK7gBfcRi+LyF/8yXgE3y1ep0wwEPiLdnta2/k2b52pDHr5VtgWasKBHfyGLgwwxHFl72jdn68wji3zkr3AqHcI4o+rhxRTwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 0AD2A300000BE;
+	Wed, 14 Feb 2024 11:28:38 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id F36764EE665; Wed, 14 Feb 2024 11:28:37 +0100 (CET)
+Date: Wed, 14 Feb 2024 11:28:37 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczy??ski <kw@linux.com>, Rob Herring <robh@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	quic_krichai@quicinc.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: Add D3 support for PCI bridges in DT based
+ platforms
+Message-ID: <20240214102837.GA30420@wunner.de>
+References: <20240214-pcie-qcom-bridge-v2-1-9dd6dbb1b817@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,65 +46,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240213114945.3528801-3-vdonnefort@google.com>
+In-Reply-To: <20240214-pcie-qcom-bridge-v2-1-9dd6dbb1b817@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hi Vincent,
+On Wed, Feb 14, 2024 at 02:18:31PM +0530, Manivannan Sadhasivam wrote:
+> +/**
+> + * of_pci_bridge_d3 - Check if the bridge is supporting D3 states or not
+> + *
+> + * @node: device tree node of the bridge
+> + *
+> + * Return: True if the bridge is supporting D3 states, False otherwise.
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on ca185770db914869ff9fe773bac5e0e5e4165b83]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Vincent-Donnefort/ring-buffer-Zero-ring-buffer-sub-buffers/20240213-195302
-base:   ca185770db914869ff9fe773bac5e0e5e4165b83
-patch link:    https://lore.kernel.org/r/20240213114945.3528801-3-vdonnefort%40google.com
-patch subject: [PATCH v17 2/6] ring-buffer: Introducing ring-buffer mapping functions
-config: x86_64-randconfig-161-20240214 (https://download.01.org/0day-ci/archive/20240214/202402141856.fVl4pCHi-lkp@intel.com/config)
-compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240214/202402141856.fVl4pCHi-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402141856.fVl4pCHi-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from arch/x86/include/asm/bug.h:87,
-                    from include/linux/bug.h:5,
-                    from include/linux/jump_label.h:256,
-                    from arch/x86/include/asm/string_64.h:6,
-                    from arch/x86/include/asm/string.h:5,
-                    from include/linux/string.h:61,
-                    from include/linux/bitmap.h:12,
-                    from include/linux/cpumask.h:12,
-                    from include/linux/interrupt.h:8,
-                    from include/linux/trace_recursion.h:5,
-                    from kernel/trace/ring_buffer.c:7:
-   kernel/trace/ring_buffer.c: In function '__rb_inc_dec_mapped':
->> include/linux/lockdep.h:234:52: error: invalid type argument of '->' (have 'struct mutex')
-     234 | #define lockdep_is_held(lock)  lock_is_held(&(lock)->dep_map)
-         |                                                    ^~
-   include/asm-generic/bug.h:123:25: note: in definition of macro 'WARN_ON'
-     123 |  int __ret_warn_on = !!(condition);    \
-         |                         ^~~~~~~~~
-   include/linux/lockdep.h:267:2: note: in expansion of macro 'lockdep_assert'
-     267 |  lockdep_assert(lockdep_is_held(l) != LOCK_STATE_NOT_HELD)
-         |  ^~~~~~~~~~~~~~
-   include/linux/lockdep.h:267:17: note: in expansion of macro 'lockdep_is_held'
-     267 |  lockdep_assert(lockdep_is_held(l) != LOCK_STATE_NOT_HELD)
-         |                 ^~~~~~~~~~~~~~~
-   kernel/trace/ring_buffer.c:6185:2: note: in expansion of macro 'lockdep_assert_held'
-    6185 |  lockdep_assert_held(cpu_buffer->mapping_lock);
-         |  ^~~~~~~~~~~~~~~~~~~
+A lot of kernel-doc uses %true and %false.
 
 
-vim +234 include/linux/lockdep.h
+> +bool of_pci_bridge_d3(struct device_node *node)
+> +{
+> +	return of_property_read_bool(node, "supports-d3");
+> +}
 
-f607c668577481 Peter Zijlstra 2009-07-20  233  
-f8319483f57f1c Peter Zijlstra 2016-11-30 @234  #define lockdep_is_held(lock)		lock_is_held(&(lock)->dep_map)
-f8319483f57f1c Peter Zijlstra 2016-11-30  235  #define lockdep_is_held_type(lock, r)	lock_is_held_type(&(lock)->dep_map, (r))
-f607c668577481 Peter Zijlstra 2009-07-20  236  
+What's the difference between of_property_read_bool() and
+of_property_present()?  When should one use which?
+The former has 691 occurrences in the tree, the latter 120.
+The latter would seem more "literary" / readable here,
+but maybe that's just me.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1142,6 +1142,9 @@ static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
+>  	if (pci_use_mid_pm())
+>  		return false;
+>  
+> +	if (dev->dev.of_node)
+> +		return of_pci_bridge_d3(dev->dev.of_node);
+> +
+>  	return acpi_pci_bridge_d3(dev);
+>  }
+
+This will result in an unnecessary test on non-DT platforms (e.g. ACPI)
+whether dev->dev.of_node is set.
+
+Please use dev_of_node() instead of "dev->dev.of_node" so that the
+code added here can be optimized away by the compiler on non-DT
+platforms (due to the IS_ENABLED(CONFIG_OF)).
+
+Thanks,
+
+Lukas
