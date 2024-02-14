@@ -1,110 +1,156 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D73FA5339A;
-	Wed, 14 Feb 2024 13:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED7A53805;
+	Wed, 14 Feb 2024 13:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707916366; cv=none; b=syC+Pglo3daVs/dit7T6apG9tG0rAlQZZeoPJ3Cnx2qg0mzheDs8rbcPN0aAMboHfW2GWLcR8cr4CTX5f3Z1JulrwMro01OpxT0h0xdDRjO3F1MH+uaDT8ylYO43geMGt3bPu8otv2PmEOtMbeZqzlshtKLtuhh49U6RwzauvrI=
+	t=1707916377; cv=none; b=IJ4doUAIkEUBelr7pqx1hLTNYA9pK/c83Af3d34EiUYBg5KRNJv4ekb+hVW97gcORGkzZDfWvOp8jkE8XQT/6MDEPOvpYLBC0RlsF/QrBhTJzMHx/kNDYz5S2ClBfnV+2MTLcTkqWYSF5RbZncim5I3eVYcz2em3Trivz5rvqmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707916366; c=relaxed/simple;
-	bh=3pj6pCwvGHzrnBYVFkPzbVgTiY8sWV+MYBx7Wk7tlPE=;
+	s=arc-20240116; t=1707916377; c=relaxed/simple;
+	bh=ppF6Ky/9HUsd6/RqDwiUAbsV3+Zz3zn7DpSwLi/fI4c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rgoRwkfivvED/oZU34esd000d8ymKleh6/N06Sdw480vmZIyhZvXjn2nA7zv2aPknGxjc+6gF32JI08SueCLwdOk1/4K0BZ9kZueSevwg4vUJhM13hGo79lTJQuJDxZDmL71WewYq6/52Pi1UBrwGhan57wjk9LBas2J4LagfGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=JP0nwrpz; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=IrRydBvh54B44R5cAHsTa3qT/QuyEbQHBQuM0D97BkYqNpA6/Qe4hyflhZyt92K0hB7hLfVBRZai5WfJmm0hMzGZaDARTafUmfiEkHohHSYfkDItS5UnzN9k8V94p28Bva80f5s/hw8/NDT5Vfa3pCFt6HxbYCx/zlMl/suf1pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KAWk6DZA; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="JP0nwrpz"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e0d085cf59so2534777b3a.2;
-        Wed, 14 Feb 2024 05:12:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707916364; x=1708521164;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from
-         :dkim-signature:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1f+TTYz3ZRYn1rS6NQJfMoZIMgC1hO3L4Y8++b56qp0=;
-        b=Z3GYprpyYXvsLRb7hvFiPITXMKe1UIweRaFJ3vu/96NM2HtvzE+DaA/G6Hl8BgCGo4
-         WDF5aI+GHGwyYKVImkwpejq74O+X8xCBVeEH2KlHhvAW3Ol6xcZCSnUCzwUoM9HQV2N4
-         fixoSfRA2baDvV4p5A7d1veqdErciso+czBjy5+Gl+dGSNuuwfhzzQpL3OrQ801vR748
-         PpB5aRIH1BcJVXahgzD36VHR44cSr4RWTwzWAsuNtrgeDlLvOXBCca2z/gJodS6oZkUT
-         6ZxuatVg7vI0pMibj78HhCoAU9bkd5qYFfHIUv5CeMO9IUaoEu6ipaqWKgISlQBk67yC
-         4YsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPHuW6Q82Ehn+oa4VK3W/LGYfVSNvkr7kgnwXYhc+Ex3Qvdq34zrfxAasGVh2DkUslBi748BL+ZdamkgpQLY6mbatRiHwAWsXVz64WLvC86KChVf3TcP59hLt7nDeybKwfxkvWwsS4
-X-Gm-Message-State: AOJu0YzQWQ+j5HLxSg7SuyVMIxsIyPfj1LwFT362m/PGblw4RrcqeT7n
-	N/X2GA+7tIyxw64cOt3ofLEyKAdwvRSQCpO6j3saMWBfnW4gwgsp
-X-Google-Smtp-Source: AGHT+IG7Ea1tTcWbsnNK6seHcuYhMsug3dCkIctRj9d/ftxNCsGdzkD/ijNec/lQ8S4sMyHOSDvLtQ==
-X-Received: by 2002:a05:6a21:3a41:b0:19e:8ad2:c934 with SMTP id zu1-20020a056a213a4100b0019e8ad2c934mr2974931pzb.14.1707916364070;
-        Wed, 14 Feb 2024 05:12:44 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVhzr6dc0r+a806gJe9uzMu7w2QClDdqjCu7TIf4Jr+3OuBb+x4wwM8Kx07Aj7xAy1QngdIYCBWWvOykLb1qStN0OiWZPsnsId5qK95TARRLC+7CUUGPzf0jRdfmVINfXJ1WBzdVP9y+o0Ym/Eva/j8J1keW8mcHAZEQmVF2PeGtZ5Shw61HvDaITYNJNYR5g8XxKLV0ZtybbiJqFFhVeXwA2W9O3L4FkNkqnlKaINikaG8d7EVCcwfC9WUUQJeJ4pY/Q==
-Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id w5-20020a636205000000b005b458aa0541sm4106954pgb.15.2024.02.14.05.12.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Feb 2024 05:12:43 -0800 (PST)
-Date: Wed, 14 Feb 2024 10:13:22 -0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2024; t=1707916362;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1f+TTYz3ZRYn1rS6NQJfMoZIMgC1hO3L4Y8++b56qp0=;
-	b=JP0nwrpzpfWIaqrG/NBK9LTQ5tOzpP61eJNKXlR9Lp+bXY1c77qJHME9urEdC8Pd7TqVaj
-	urDARYLVAuNEeY7EmqApcaFMtAMGq6CfjgTnrx7Pl69NbUzIkixXARBxCeb/0kjYlPkXJh
-	6LEtkZ18BomJzcNk/rNi5SdVtB2YtGIO0kd+k1AGAjr3OUB7gU5yxdZOyy1c/od5zmCVth
-	piLHsW3WYdbQtqHc4rASbkX4c4kJXqtbF7f8sAtg5OPz3zUz7piMx0QrJVzyyToALwEhSn
-	cRCvtKm1jEjaQPHa/iuFh2yOJvdkRer2+lu7IWBzlpJshl5zc1GBMUubJ6itNQ==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-From: "Ricardo B. Marliere" <ricardo@marliere.net>
-To: "Ran.Park" <ranpark@foxmail.com>
-Cc: akinobu.mita@gmail.com, corbet@lwn.net, skhan@linuxfoundation.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] Fixed case issue with 'fault-injection' in documentation
-Message-ID: <piosq44nxwlfeutperrk6d23bx564qlbfirc5xlbouyrunf24r@u6qsgqp47fz6>
-References: <tencent_3EA07E65C43816C2A8402DC655CF98916B06@qq.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KAWk6DZA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707916375; x=1739452375;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ppF6Ky/9HUsd6/RqDwiUAbsV3+Zz3zn7DpSwLi/fI4c=;
+  b=KAWk6DZA/bEJJ43w0wHxYt7dtbOXEdFe4RLrdtABU0eyBu1djpus55qm
+   Rp5FuxvDu6iXkvYiEJC5qCFsnvmaFre7f3SudGfGZZtce6nLn25JGxFUi
+   Xr9jvUDi/Hrj3LGw08bqvXdPnVxagKmvMJEUR7olvQ+MLsNJ+kT2TGSY/
+   wL6WpXHGCHXhKBppHBUcB3YwkLYTnV0Dgv8KDHlEB4hAjLkatwHAUB8MS
+   G/zU0HURpg8N4AzHLJhDOSs6JpcPn6gjT5yzjJ9e90gSMNI/+5+VLR9ZZ
+   7kEvStvQt7rvV6ZoU4XZG+rLguLk47RnG3tq3wKFWKwKhtRxsb1asDT3B
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="5778793"
+X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
+   d="scan'208";a="5778793"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 05:12:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
+   d="scan'208";a="3548587"
+Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 14 Feb 2024 05:12:51 -0800
+Received: from kbuild by 01f0647817ea with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1raF4C-0008mX-2o;
+	Wed, 14 Feb 2024 13:12:48 +0000
+Date: Wed, 14 Feb 2024 21:11:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: Balint Dobszay <balint.dobszay@arm.com>,
+	op-tee@lists.trustedfirmware.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	jens.wiklander@linaro.org, sumit.garg@linaro.org, corbet@lwn.net,
+	balint.dobszay@arm.com, sudeep.holla@arm.com, gyorgy.szing@arm.com
+Subject: Re: [PATCH 1/3] tee: optee: Move pool_op helper functions
+Message-ID: <202402142000.xRg35j1i-lkp@intel.com>
+References: <20240213145239.379875-2-balint.dobszay@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <tencent_3EA07E65C43816C2A8402DC655CF98916B06@qq.com>
+In-Reply-To: <20240213145239.379875-2-balint.dobszay@arm.com>
 
-Hi Ran,
+Hi Balint,
 
-On 14 Feb 19:40, Ran.Park wrote:
-> In the 'fault-injection' subdirectory, the first letter F
-> is capitalized, whereas in index.rst f is lowercase, but in
-> index.rst all other elements in the same column are capitalized.
+kernel test robot noticed the following build errors:
 
-Does this fix any error or build warning? If so, it should be mentioned.
+[auto build test ERROR on lwn/docs-next]
+[also build test ERROR on soc/for-next linus/master v6.8-rc4 next-20240214]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> 
-> Signed-off-by: Ran.Park <ranpark@foxmail.com>
-> ---
->  Documentation/fault-injection/index.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> 
-> ────────────────────────────────────────────────────────────────────────────────
-> modified: Documentation/fault-injection/index.rst
-> ────────────────────────────────────────────────────────────────────────────────
-> @ Documentation/fault-injection/index.rst:4 @
-> .. SPDX-License-Identifier: GPL-2.0
-> 
-> ===============
-> fault-injection
-> Fault-injection
-> ===============
-> 
-> .. toctree::
-> - 
-> 2.34.1
-> 
-> 
+url:    https://github.com/intel-lab-lkp/linux/commits/Balint-Dobszay/tee-optee-Move-pool_op-helper-functions/20240213-225716
+base:   git://git.lwn.net/linux.git docs-next
+patch link:    https://lore.kernel.org/r/20240213145239.379875-2-balint.dobszay%40arm.com
+patch subject: [PATCH 1/3] tee: optee: Move pool_op helper functions
+config: i386-buildonly-randconfig-002-20240214 (https://download.01.org/0day-ci/archive/20240214/202402142000.xRg35j1i-lkp@intel.com/config)
+compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240214/202402142000.xRg35j1i-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202402142000.xRg35j1i-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/tee/tee_shm.c:227:15: error: call to undeclared function 'virt_to_phys'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     227 |         shm->paddr = virt_to_phys(shm->kaddr);
+         |                      ^
+   1 error generated.
+
+
+vim +/virt_to_phys +227 drivers/tee/tee_shm.c
+
+   204	
+   205	int tee_shm_pool_op_alloc_helper(struct tee_shm_pool *pool, struct tee_shm *shm,
+   206					 size_t size, size_t align,
+   207					 int (*shm_register)(struct tee_context *ctx,
+   208							     struct tee_shm *shm,
+   209							     struct page **pages,
+   210							     size_t num_pages,
+   211							     unsigned long start))
+   212	{
+   213		size_t nr_pages = roundup(size, PAGE_SIZE) / PAGE_SIZE;
+   214		struct page **pages;
+   215		unsigned int i;
+   216		int rc = 0;
+   217	
+   218		/*
+   219		 * Ignore alignment since this is already going to be page aligned
+   220		 * and there's no need for any larger alignment.
+   221		 */
+   222		shm->kaddr = alloc_pages_exact(nr_pages * PAGE_SIZE,
+   223					       GFP_KERNEL | __GFP_ZERO);
+   224		if (!shm->kaddr)
+   225			return -ENOMEM;
+   226	
+ > 227		shm->paddr = virt_to_phys(shm->kaddr);
+   228		shm->size = nr_pages * PAGE_SIZE;
+   229	
+   230		pages = kcalloc(nr_pages, sizeof(*pages), GFP_KERNEL);
+   231		if (!pages) {
+   232			rc = -ENOMEM;
+   233			goto err;
+   234		}
+   235	
+   236		for (i = 0; i < nr_pages; i++)
+   237			pages[i] = virt_to_page((u8 *)shm->kaddr + i * PAGE_SIZE);
+   238	
+   239		shm->pages = pages;
+   240		shm->num_pages = nr_pages;
+   241	
+   242		if (shm_register) {
+   243			rc = shm_register(shm->ctx, shm, pages, nr_pages,
+   244					  (unsigned long)shm->kaddr);
+   245			if (rc)
+   246				goto err;
+   247		}
+   248	
+   249		return 0;
+   250	err:
+   251		free_pages_exact(shm->kaddr, shm->size);
+   252		shm->kaddr = NULL;
+   253		return rc;
+   254	}
+   255	EXPORT_SYMBOL_GPL(tee_shm_pool_op_alloc_helper);
+   256	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
