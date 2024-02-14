@@ -1,142 +1,213 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from de-smtp-delivery-113.mimecast.com (de-smtp-delivery-113.mimecast.com [194.104.111.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4567E13ADB;
-	Wed, 14 Feb 2024 09:52:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1C614A93
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 09:53:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.104.111.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707904365; cv=none; b=dv6BTQoBF3ndMqFsEmO5bEDWbIwp76o001A0OrTW1TbACNs/WKTYyz/vyn2y+sx8bva+NUWXGIROcIJuOAyDYNcquWU9ONIL41ry2yKPy1s8l7QY6FT6yiPDuTGjiF1BJaBl0Lh0vlp46RkpeLxn8suIxZv4Yyp+MSs5y+2ckiQ=
+	t=1707904396; cv=none; b=QV/LnJeLW0BrwyDi2AhFx3EK0JXCpUb/Q8kPgPFaKbRmARg0d/sN8pYunZ3ehtQdsMsqzStTstRWE7PUEqEzEf2qoEH9zkc+GLdt5GwmR3YVCQhaQeR55IdoXzWr+zeQWMXyRjiwFKtfzV184ZmcqeMW1o9o3dwjITumySKiOsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707904365; c=relaxed/simple;
-	bh=4ITR0NaF2IXIbe34i/5k34/8TGKN+3qf0hadVySymOY=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TIP9vzIOt6xn2vQRvZc0o31Fbm40t8O5XDnNLMCkVhx+DnkOBB4BkbrDV5xduyQQHNdrtFFlA9wAf4L9FwhvXNwexWpG97HtQk7TlQs8gjb9DEBZkYjD+SysrHKBI62BGrJe+EdIqTLJ18tSuhGfHv2+usbhfltjxaMleWUNHmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pnIYhYCB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707904396; c=relaxed/simple;
+	bh=t3lriJm+URY8fHWjXJj+9+qWOC1dAoV21v0HsBAo0HM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 MIME-Version:Content-Type; b=D6pD9uGEmNE3UetkGxc+KEE0sdlcGynPKlmVhjf0PmNBcFpG65pQqMyt+Yz8p9nOcNS57S9jys+ZP7kLHZXvtt6HWNlhyGXqyovqbKwzhHb6B1W3/pG7wr42AJNe536+J0W3GUUxyd96HhnIsFZJxMdFULCdeFJjSsuSn1aXwYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=toradex.com; spf=pass smtp.mailfrom=toradex.com; dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b=kSReAH1K; arc=none smtp.client-ip=194.104.111.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=toradex.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toradex.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pnIYhYCB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8100C433C7;
-	Wed, 14 Feb 2024 09:52:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707904364;
-	bh=4ITR0NaF2IXIbe34i/5k34/8TGKN+3qf0hadVySymOY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=pnIYhYCBuhpeg3T5OinEnaE7B9fUDvzhXQJ4JOuzEH4eteSInkiU/TwDS0wFFAmL2
-	 UEyceDLnLmI/Ur1O3CMqSnpmqhDhUL1e8onL1nweUuA3vF0JSxx3sgRYvvpheqhZMl
-	 MxRiGrPkPu1gYH2/Xucs7HC7/FSjadpGxumhSJto9FsVA2GnkCTlS4afZUpdMPgW/y
-	 fUYKymtT9IodkCQFtAvw34ZFh0cKNyY0ksvIshmR8nRgeXKh6pmw60MK/hFyDMzLrJ
-	 JK0uiuyKSJlR3lx80SFRD0RvnT6i64IdNb6O9JkjqTKxeUJARGUxiA3edA3+gs/5OO
-	 h8qBnNFOByH5w==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1raBwY-0035aU-0R;
-	Wed, 14 Feb 2024 09:52:42 +0000
-Date: Wed, 14 Feb 2024 09:52:41 +0000
-Message-ID: <867cj75q52.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Rob Herring <robh@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Peter Rosin <peda@axentia.se>,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2] of: OF_IRQ: select IRQ_DOMAIN instead of depending on it
-In-Reply-To: <20240213225619.11726-1-rdunlap@infradead.org>
-References: <20240213225619.11726-1-rdunlap@infradead.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="kSReAH1K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com; s=toradex-com;
+	t=1707904392;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zX9LGuKvWN76JQhjsb1UwhedLGIt/TXJsjFP7Zr+GtQ=;
+	b=kSReAH1KGGTXxcwftfCi+RqOxszu1xuxa1AbxMtskhvTzUN6EaxZi7+puKJ3V0kA1V04xF
+	MAKjbhfvqsLNgfk6WzkLgIQUkJvPdYxGwIiIwV5xIM3C8YoQtgplfurQfxJ0pHkvjWQejH
+	Fp5EIRXncQzq4hq47pYi/g41QJ3/Y6Y=
+Received: from CHE01-ZR0-obe.outbound.protection.outlook.com
+ (mail-zr0che01lp2105.outbound.protection.outlook.com [104.47.22.105]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ de-mta-73-ieKBLegXPKig36j6_xpTUA-1; Wed, 14 Feb 2024 10:46:05 +0100
+X-MC-Unique: ieKBLegXPKig36j6_xpTUA-1
+Received: from ZRAP278MB0254.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:1e::13)
+ by ZR0P278MB1123.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:56::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.39; Wed, 14 Feb
+ 2024 09:46:03 +0000
+Received: from ZRAP278MB0254.CHEP278.PROD.OUTLOOK.COM
+ ([fe80::d357:325d:28a:dba7]) by ZRAP278MB0254.CHEP278.PROD.OUTLOOK.COM
+ ([fe80::d357:325d:28a:dba7%6]) with mapi id 15.20.7292.026; Wed, 14 Feb 2024
+ 09:46:03 +0000
+Message-ID: <b27e4519-a9fc-43bb-be6b-35d69d65755d@toradex.com>
+Date: Wed, 14 Feb 2024 10:46:01 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] arm64: dts: ti: k3-am62-main: disable usb lpm
+To: Roger Quadros <rogerq@kernel.org>,
+ Andrejs Cainikovs <andrejs.cainikovs@gmail.com>, Nishanth Menon <nm@ti.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Aswath Govindraju <a-govindraju@ti.com>,
+ Sjoerd Simons <sjoerd@collabora.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, "Bin Liu [EP]" <b-liu@ti.com>,
+ "Gunasekaran, Ravi" <r-gunasekaran@ti.com>
+References: <20240209130213.38908-1-andrejs.cainikovs@gmail.com>
+ <2629cd30-23aa-4f03-8452-ae13297fd6b6@kernel.org>
+From: Andrejs Cainikovs <andrejs.cainikovs@toradex.com>
+In-Reply-To: <2629cd30-23aa-4f03-8452-ae13297fd6b6@kernel.org>
+X-ClientProxiedBy: ZR0P278CA0074.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:22::7) To ZRAP278MB0254.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:1e::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: rdunlap@infradead.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, robh@kernel.org, arnd@arndb.de, p.zabel@pengutronix.de, peda@axentia.se, devicetree@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: ZRAP278MB0254:EE_|ZR0P278MB1123:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7256265b-02ae-4925-acf8-08dc2d41c1f4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0
+X-Microsoft-Antispam-Message-Info: gXL0XxBVOVamm9JultX05rs7+sN9QUjkAlqkzu+vn4CQCEgX8uYjH8dNAewYwCAyVJukvyACK7Xe5TC5aGi+Td+8st7xm/9kgETeld9NlVk89sBDsUqktU2cFNI7F3mzXanzCQKW6PVoYvq9HV/83cNQc/Pn3aOjiovG7pK+s6vwFgT7TfAO3hEZaD1idJYzy3CjZrY//NL9y/im/koGAAmZwArU5Sm3KGgAth/t6sOaWxp7l47mbqQzCoGD9qfFfVSz3sxK85WI+q5q2fKfPKYxcjxT+1gYfctVsGsgiNNo0AWsWgL+PnVQ8ZWhvPU2IYNBCe/7x9yzUDTDaLLo2ynUm706biK0B8GrKWpiW+HZ78NXIAL022Q4dUGMAimZnoEI9AkcACtczfL8PlQhjsyeJ99uHjPrplPvUDu6qVRRk5WF1JeP58UjnkedeA9dJtgPeBMqiwGgjrrTs1+BNudKEcsWub1ILlCxYxMrpZm6Kp2/KbcMRBmxbWrtRQKvBM9ObiYjtnlHfzDd/q9boJd00z9uCXCAV70KMvi+h86UnudRwzrsck41vc2tu8CTONl0XUnUwfbA2Zy68yMa7w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZRAP278MB0254.CHEP278.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(366004)(39840400004)(346002)(396003)(230922051799003)(186009)(64100799003)(1800799012)(451199024)(8676002)(31686004)(4326008)(8936002)(38100700002)(26005)(921011)(41300700001)(36756003)(31696002)(83380400001)(7416002)(44832011)(5660300002)(2906002)(86362001)(478600001)(2616005)(66556008)(316002)(66476007)(66946007)(54906003)(110136005)(6486002)(966005)(6512007)(6506007)(53546011);DIR:OUT;SFP:1102
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UXZQeCtZNkVrUTduS3BSWmxxVnRuWnFqRVF5R3d1QW9GQTh4bXJ5T1l6c0JN?=
+ =?utf-8?B?MVZBUE01alFWenFqUFppY3o0YWZQaG8wR3RJWUd4U3UwL3FpTFhDYk04V0Q4?=
+ =?utf-8?B?WHZzOU0yZEZiaStPbjFsTmpjRFVaMjdnNms2ZFBidG4yYXFJbnlKUGYwaE5L?=
+ =?utf-8?B?clRDbWljNngwMmg1Nk1TUWVSK29IdWlDV3BkNnNSL2NhdnRGUkd2SWFQeDRi?=
+ =?utf-8?B?T1BObnhBdEppR01hUCtOL05JTFAzU0s1a3lubVhPR29sUlpwOXZIYzJGY2d4?=
+ =?utf-8?B?NEI5MnRBTWdFRVU4Ym5CaWlqQThaWENTZE43QVlzRmxLNGtrRlAvQ3pzZVlM?=
+ =?utf-8?B?VWE2Qk5yd3VXMlN0ZHUzM1NoSlFraS9TMythb0h0YkQrTEtWQWJ5UEtITTFU?=
+ =?utf-8?B?Z2s4V3pYZEEwUDlLeUcvZVhqV2F6R2hXR1dObnAva0wydjYxaWRmWms0Nzlv?=
+ =?utf-8?B?TEFQVytTQmFtTUNENGpvcXMyeit3QnNHeEpod0g3Y2NPTVRnZk9IRmt5Slhs?=
+ =?utf-8?B?ZWVJY0FRSEFZS0x5dHlhTUlLNXNwOGFmMEplMEpxT1lxSnhZUldvN0QySGc1?=
+ =?utf-8?B?OHRPK0JiQndzN0sxMnhFblVCN0ZpOUY0bExVL1UvcVNWZ2JaNlpXVHpZUjVi?=
+ =?utf-8?B?WXM2UjBkZDBHK1JDcTRLelAxcjAvRHpzN09jTmZPOE41NUN1eW5XWnprdms4?=
+ =?utf-8?B?L245SjdiYUxkVWs5WHlSTzVUdDFtV3lrR0cwQWhNYW9XRHlwRUxmeTNqeUYz?=
+ =?utf-8?B?dFgvMVJOZEJEL1NHbzhzUUg5cElPMUVnNzVCVHZ5TU50YlRmalN6Y0gzbjdp?=
+ =?utf-8?B?THZ1SGlpR2VwSngyUTdVZ2c5TGdvU3RDbXUybW93VWNXZUhjdVROVERLMmJj?=
+ =?utf-8?B?cERHdlJKYmZ3UjcyeGszWlZEdGtuTndRaFNnYXBVdTF4UnA2dGtTc0dFcnFF?=
+ =?utf-8?B?aWdwejArSHU5WE9CY1pQQWJHVW5ycUl5aWFYVGlkV0h2V3JzU3lRZGZmcEVQ?=
+ =?utf-8?B?dFliZWlhZlZyZmhvUUc3YXZUNm5jZ1FYclU2TDlYd1pVeHB1VnhMN0FPMDFi?=
+ =?utf-8?B?NzBZL3NHTUtsTmN5OTE0azZtZjVHaFdKcXl4bDI5OUNFcjFweWpidXdDZEQ5?=
+ =?utf-8?B?c2NGc1Y1SENrR09pKzdhQngyYmkrS0plSzUrREQ4NHdzbEw2WGlnN1MwbXE1?=
+ =?utf-8?B?ZVdQSTNjVnhiMEpyU2YwZ1dickhacjNpMkhsajVxdGNnNnJoNEtEQnJBbUhj?=
+ =?utf-8?B?bnZSeE9rTHNudzJUWi9MNUV2T21XYzMwNW9wK0NjOVJCMk4zR2luV0U3TzVG?=
+ =?utf-8?B?d3ZBaEx2L3l4ZHU1cmtRbVJWdk5WRE1oYytuZlAxS0RlaHRsR0lteGRPRzZu?=
+ =?utf-8?B?bzA3bjNNaVFMT1Z3NGQrWlcyNGR4MkpLLzM1aDZueVFlWVJ6NDVycFBGZjNr?=
+ =?utf-8?B?czN3d3FZUTNvNC9LMXR2UVBmU3hTWkxIdDB3MGR4ckhUb2V3djdxTnFzZ0VV?=
+ =?utf-8?B?MFhlSGttL1EzSG94anRYVVJReHRJNktRNmpYbUVlVkx1TlUydXZSck9paGpi?=
+ =?utf-8?B?SUFKdDFldG1VY0xGSWllVGhoN1ZiRzJXT3h6blVwcDlsVTlvYjJGcHZWTmw2?=
+ =?utf-8?B?eHZQQjZPUTdZbXZmQ2tRNHcwWnFYblh4NVFPTTljNUI2aUw5cHN2Ym03UkpL?=
+ =?utf-8?B?SHNRVmJXV094LzdzbmZUWi9wcUNieDhFQWUzek5Ub09aM3V6V1U1ay9sRFFj?=
+ =?utf-8?B?TjhXM1hPaUlvSDVsaGxjeENoaGZqa2lEdGNqUGJwTThDZlI3Mi81L0JHcnRG?=
+ =?utf-8?B?ZThLTUt4bE5uODIvckIxNWZmZ3N3cm5tY3paVENGeWxjTlNnSFE1UFNpOXlB?=
+ =?utf-8?B?cnpoWHBDNFBaSHQybzFyMVJVOVVqbkF0cWFBMGpneVZVenJrMUNhMklOZHNP?=
+ =?utf-8?B?ZVlyYXFRc2hQZDFhbE1SWVNyN1R5VWVTMmRxZmhTckN6S3hJWVRld0JkVkcv?=
+ =?utf-8?B?V1JLeXZLeGRBSXJJS2hjRjRNRUFpeU5IMzBYWTU4NzBRMHJ0V0dsZ1ZDUVZF?=
+ =?utf-8?B?R0VCYldnTG9pTUhFZklMVDNiblhZSlJIYlhUTGNWaXZnQlFxZ29pM1dUa093?=
+ =?utf-8?B?M0tEMnpzYXpRMDllZjZXOWMwdUtvdmVHaGJFK0J3SHhOMTEva3d1RG9uS25H?=
+ =?utf-8?B?dGc9PQ==?=
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7256265b-02ae-4925-acf8-08dc2d41c1f4
+X-MS-Exchange-CrossTenant-AuthSource: ZRAP278MB0254.CHEP278.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2024 09:46:03.1098
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tkJIlU/+K9cbal1zn7Wb9sh6oOmwWeJkDJhe5haNFxuwuJodQupxumwzB6vfv8mFUj5WYow2+oCweBSZuY4NwI06jp7FqzTqHkIxTES41xo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZR0P278MB1123
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: toradex.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 13 Feb 2024 22:56:19 +0000,
-Randy Dunlap <rdunlap@infradead.org> wrote:
-> 
-> IRQ_DOMAIN is a hidden (not user visible) symbol. Users cannot set
-> it directly thru "make *config", so drivers should select it instead
-> of depending on it if they need it.
-> Relying on it being set for a dependency is risky.
-> 
-> Consistently using "select" or "depends on" can also help reduce
-> Kconfig circular dependency issues.
-> 
-> Therefore, change OF_IRQ's use of "depends on" to "select".
-> 
-> This patch reduces one Kconfig circular dependency in
-> drivers/mux/Kconfig when MUX_MMIO attempts to select REGMAP (a failed
-> patch), which that driver needs (but does not completely resolve that
-> issue). [1]
-> 
-> before this patch: (10 lines of detail)
-> drivers/net/ethernet/arc/Kconfig:19:error: recursive dependency detected!
-> drivers/net/ethernet/arc/Kconfig:19:	symbol ARC_EMAC_CORE is selected by ARC_EMAC
-> drivers/net/ethernet/arc/Kconfig:26:	symbol ARC_EMAC depends on OF_IRQ
-> drivers/of/Kconfig:81:	symbol OF_IRQ depends on IRQ_DOMAIN
-> kernel/irq/Kconfig:60:	symbol IRQ_DOMAIN is selected by REGMAP
-> drivers/base/regmap/Kconfig:6:	symbol REGMAP is selected by MUX_MMIO
-> drivers/mux/Kconfig:48:	symbol MUX_MMIO depends on MULTIPLEXER
-> drivers/mux/Kconfig:6:	symbol MULTIPLEXER is selected by MDIO_BUS_MUX_MULTIPLEXER
-> drivers/net/mdio/Kconfig:275:	symbol MDIO_BUS_MUX_MULTIPLEXER depends on MDIO_DEVICE
-> drivers/net/mdio/Kconfig:6:	symbol MDIO_DEVICE is selected by PHYLIB
-> drivers/net/phy/Kconfig:16:	symbol PHYLIB is selected by ARC_EMAC_CORE
-> 
-> after this patch: (5 lines of detail)
-> drivers/mux/Kconfig:6:error: recursive dependency detected!
-> drivers/mux/Kconfig:6:	symbol MULTIPLEXER is selected by MDIO_BUS_MUX_MULTIPLEXER
-> drivers/net/mdio/Kconfig:275:	symbol MDIO_BUS_MUX_MULTIPLEXER depends on MDIO_BUS
-> drivers/net/mdio/Kconfig:13:	symbol MDIO_BUS is selected by REGMAP
-> drivers/base/regmap/Kconfig:6:	symbol REGMAP is selected by MUX_MMIO
-> drivers/mux/Kconfig:48:	symbol MUX_MMIO depends on MULTIPLEXER
-> 
-> [1] https://lore.kernel.org/lkml/20230210115625.GA30942@pengutronix.de/
-> 
-> Fixes: 63c60e3a6dc3 ("of: OF_IRQ should depend on IRQ_DOMAIN")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: Peter Rosin <peda@axentia.se>
-> Cc: devicetree@vger.kernel.org
-> ---
-> v2: update patch description, rebase & resend
-> 
->  drivers/of/Kconfig |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff -- a/drivers/of/Kconfig b/drivers/of/Kconfig
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -80,7 +80,8 @@ config OF_ADDRESS
->  
->  config OF_IRQ
->  	def_bool y
-> -	depends on !SPARC && IRQ_DOMAIN
-> +	depends on !SPARC
-> +	select IRQ_DOMAIN
->  
->  config OF_RESERVED_MEM
->  	def_bool OF_EARLY_FLATTREE
-> 
+On 12/02/2024 13:13, Roger Quadros wrote:
+> Hi Andrejs,
+>=20
+> On 09/02/2024 15:02, Andrejs Cainikovs wrote:
+>> From: Andrejs Cainikovs <andrejs.cainikovs@toradex.com>
+>>
+>> AM62 USB works with some devices, while failing to operate with others.
+>=20
+> Could you please share which devices failed to work for you?
 
-This seems to be moving is the right direction. FWIW,
+Hi Roger,
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+This USB memory stick is the one that is failing most of the time:
+ID 058f:6387 Alcor Micro Corp. Flash Drive (DigiKey 1GB)
 
-	M.
+I used following test to reproduce the issue: boot without any devices
+connected, once booted - connect to PC for gadget mode (RNDIS), and then
+unplug cable and connect USB drive.
 
--- 
-Without deviation from the norm, progress is not possible.
+I did not had any failures with this USB memory stick, btw:
+ID 0951:1643 Kingston Technology DataTraveler G3
+
+/Andrejs
+>>
+>> [  560.189822] xhci-hcd xhci-hcd.4.auto: xHCI Host Controller
+>> [  560.195631] xhci-hcd xhci-hcd.4.auto: new USB bus registered, assigne=
+d bus number 2
+>> [  574.388509] xhci-hcd xhci-hcd.4.auto: can't setup: -110
+>> [  574.393814] xhci-hcd xhci-hcd.4.auto: USB bus 2 deregistered
+>> [  574.399544] xhci-hcd: probe of xhci-hcd.4.auto failed with error -110
+>>
+>> This seems to be related to LPM (Link Power Management), and disabling i=
+t
+>> turns USB into reliable working state.
+>>
+>> As per AM62 reference manual:
+>>
+>>> 4.8.2.1 USB2SS Unsupported Features
+>>>
+>>> The following features are not supported on this family of devices:
+>>> ...
+>>> - USB 2.0 ECN: Link Power Management (LPM)
+>>> ...
+>>
+>> Fixes: 2240f96cf3cd ("arm64: dts: ti: k3-am62-main: Add support for USB"=
+)
+>> Signed-off-by: Andrejs Cainikovs <andrejs.cainikovs@toradex.com>
+>> ---
+>>  arch/arm64/boot/dts/ti/k3-am62-main.dtsi | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi b/arch/arm64/boot/=
+dts/ti/k3-am62-main.dtsi
+>> index 464b7565d085..c49fbce5cb70 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+>> +++ b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+>> @@ -640,6 +640,8 @@ usb0: usb@31000000 {
+>>  =09=09=09interrupt-names =3D "host", "peripheral";
+>>  =09=09=09maximum-speed =3D "high-speed";
+>>  =09=09=09dr_mode =3D "otg";
+>> +=09=09=09snps,usb2-gadget-lpm-disable;
+>> +=09=09=09snps,usb2-lpm-disable;
+>>  =09=09};
+>>  =09};
+>> =20
+>> @@ -663,6 +665,8 @@ usb1: usb@31100000 {
+>>  =09=09=09interrupt-names =3D "host", "peripheral";
+>>  =09=09=09maximum-speed =3D "high-speed";
+>>  =09=09=09dr_mode =3D "otg";
+>> +=09=09=09snps,usb2-gadget-lpm-disable;
+>> +=09=09=09snps,usb2-lpm-disable;
+>>  =09=09};
+>>  =09};
+>> =20
+>=20
+> Instead of this could you please check if this series fixes the issue for=
+ you?
+> https://lore.kernel.org/all/20240205141221.56076-1-rogerq@kernel.org/
+>
+
