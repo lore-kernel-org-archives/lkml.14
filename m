@@ -1,75 +1,228 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.codeweavers.com (mail.codeweavers.com [4.36.192.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6F014198B;
-	Wed, 14 Feb 2024 23:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CF11420B6;
+	Wed, 14 Feb 2024 23:53:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.36.192.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707954757; cv=none; b=gBFdz7X34TvYIn984oNkKQgdchNQTviHKKKZ9eRnPvEtmuQwXdgbAPvUIv8f7lJwYYpzXTyyAe1AOvg5Ttk2RY5lNgGDL/PjQ/GaBjG6e7nDifUj+x4kstPs3GinY5LXYyR0AMC8Pwrzviz6FLSUGObQguhoIPXzK0M88AnO2pY=
+	t=1707954791; cv=none; b=m1wsIJutpk0hhYogRofd0c0XzmRnLotjfMmtE6Hlx8fc6qoJU0lIpWIl+xS9t5ypIVKUQtqEXRSP4Zj04JvwME7E/XQ75esZFnrLPNM2TncK88U0DviDVxW/sfILh5zzfFmKg45rwu88k6hTMwd4yBRN+KvXVfLD4q4WN4zHZDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707954757; c=relaxed/simple;
-	bh=se9iJglQFcY5m50dOQjnyAPWzoyiPZ756eq3L6hkD1U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KnNSw84g8CFHA0cdAWeUmcD33fzAWtu2LPtypmuceXnX8ZYWVWK0FgklrybneGbrqbUfsqU+R2lMNmgEwDgB/EtqjILDDB7hGJfsf2xFycEiFMeOWZAUjt69uYTvcFYq6nSD2cGhUK40AeObHNq8vPXSjyr50MfObtxgv/lkGEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F3A0C433C7;
-	Wed, 14 Feb 2024 23:52:35 +0000 (UTC)
-Date: Wed, 14 Feb 2024 18:54:07 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
- <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
- <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
- bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, Alexei
- Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
- Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
- <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
- Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v7 19/36] function_graph: Implement
- fgraph_reserve_data() and fgraph_retrieve_data()
-Message-ID: <20240214185407.767243b4@gandalf.local.home>
-In-Reply-To: <20240215084552.b72d6d22ce1b93bb8e04b70a@kernel.org>
-References: <170723204881.502590.11906735097521170661.stgit@devnote2>
-	<170723226123.502590.4924916690354403889.stgit@devnote2>
-	<20240214135958.23ed55e1@gandalf.local.home>
-	<20240215084552.b72d6d22ce1b93bb8e04b70a@kernel.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1707954791; c=relaxed/simple;
+	bh=l13BgqVKFJovtJfczy/tTQhCjfR6OdlM4okW+pv3D0Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aIT/R3CrtaztI7eyjI+6H0QQwUVa/3UILPPIVeekBeyXUMQvSGwUz6NX5CmKO2NfcI6csLeCKNy9WW4W47E16IWqALZVZRFExguYp1IEHVDdfogqU6dNDVPqmSIKDdDd8wbY9DrKTQRtCVFDJNAm2omeODoC/TBLL/XloVu8qkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=qI/zQAPn; arc=none smtp.client-ip=4.36.192.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeweavers.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="qI/zQAPn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=codeweavers.com; s=s1; h=Message-ID:Date:Subject:Cc:To:From:Sender;
+	bh=kCe4tmwPVNV+GsMq6QYMed33sYkMNNuhATDpMCBOUxY=; b=qI/zQAPnmOYY5yx1FrZPOmnRni
+	8Qqu8fDDFp8QP0NfLFDkc6fx6KlhwN72bbFqIsT+yy0Ote1xi3K8Ap8IV/yHBwccFyN/ZFQdY/MwR
+	NXLwwRCdiTH/sEW/5iB792wwg1j65xp71nHcVHFy97KyxzQHSDniLD0Olf+jDNd0X7WBDusSMsaH/
+	FHY9ePjuX6tyxoQ+NvBxdpS0yzWwJ0V+iNmFL48TF2pII6vC7/+6z+TTNxMaUzt329w30qIZiLjwI
+	0rGNwSVbpWUItynfnefWGLyZwMEo6RSuEbDSQJ/i1rpDJFXKxAw4cx7Clg1VHeaQL2HO/3NH6N/gd
+	PPTHLoyw==;
+Received: from cw137ip160.mn.codeweavers.com ([10.69.137.160] helo=camazotz.mn.codeweavers.com)
+	by mail.codeweavers.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <zfigura@codeweavers.com>)
+	id 1raOob-00GbiL-2M;
+	Wed, 14 Feb 2024 17:37:22 -0600
+From: Elizabeth Figura <zfigura@codeweavers.com>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	wine-devel@winehq.org,
+	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Arkadiusz Hiler <ahiler@codeweavers.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Elizabeth Figura <zfigura@codeweavers.com>
+Subject: [PATCH 09/31] ntsync: Introduce NTSYNC_IOC_CREATE_EVENT.
+Date: Wed, 14 Feb 2024 17:36:45 -0600
+Message-ID: <20240214233645.9273-10-zfigura@codeweavers.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240214233645.9273-1-zfigura@codeweavers.com>
+References: <20240214233645.9273-1-zfigura@codeweavers.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Thu, 15 Feb 2024 08:45:52 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+This correspond to the NT syscall NtCreateEvent().
 
-> > Hmm, the above is a fast path. I wonder if we should add a patch to make that into:
-> > 
-> > 	if (unlikely(size_bytes & (sizeof(long) - 1)))
-> > 		data_size = DIV_ROUND_UP(size_bytes, sizeof(long));
-> > 	else
-> > 		data_size = size_bytes >> (sizeof(long) == 4 ? 2 : 3);
-> > 
-> > to keep from doing the division.  
-> 
-> OK, I thought DIV_ROUND_UP was not much cost. Since sizeof(long) is
-> fixed 4 or 8, so 
-> 
-> data_size = (size_bytes + sizeof(long) - 1) >> BITS_PER_LONG;
-> 
-> will this work?
+An NT event holds a single bit of state denoting whether it is signaled or
+unsignaled.
 
-No, because BITS_PER_LONG is 32 or 64 ;-)
+There are two types of events: manual-reset and automatic-reset. When an
+automatic-reset event is acquired via a wait function, its state is reset to
+unsignaled. Manual-reset events are not affected by wait functions.
 
-But this should;
+Whether the event is manual-reset, and its initial state, are specified at
+creation time.
 
-	data_size = (size_bytes + sizeof(long) - 1) >> (sizeof(long) == 4 ? 2 : 3);
+Signed-off-by: Elizabeth Figura <zfigura@codeweavers.com>
+---
+ drivers/misc/ntsync.c       | 60 +++++++++++++++++++++++++++++++++++++
+ include/uapi/linux/ntsync.h |  7 +++++
+ 2 files changed, 67 insertions(+)
 
-As sizeof(long) is a constant, that conditional expression will be hard
-coded into either 2 or 3 by the compiler.
+diff --git a/drivers/misc/ntsync.c b/drivers/misc/ntsync.c
+index 8cb951c76aca..2a21e7b0982a 100644
+--- a/drivers/misc/ntsync.c
++++ b/drivers/misc/ntsync.c
+@@ -25,6 +25,7 @@
+ enum ntsync_type {
+ 	NTSYNC_TYPE_SEM,
+ 	NTSYNC_TYPE_MUTEX,
++	NTSYNC_TYPE_EVENT,
+ };
+ 
+ struct ntsync_obj {
+@@ -46,6 +47,10 @@ struct ntsync_obj {
+ 			__u32 owner;
+ 			bool ownerdead;
+ 		} mutex;
++		struct {
++			bool manual;
++			bool signaled;
++		} event;
+ 	} u;
+ 
+ 	/*
+@@ -130,6 +135,8 @@ static bool is_signaled(struct ntsync_obj *obj, __u32 owner)
+ 		if (obj->u.mutex.owner && obj->u.mutex.owner != owner)
+ 			return false;
+ 		return obj->u.mutex.count < UINT_MAX;
++	case NTSYNC_TYPE_EVENT:
++		return obj->u.event.signaled;
+ 	}
+ 
+ 	WARN(1, "bad object type %#x\n", obj->type);
+@@ -179,6 +186,10 @@ static void try_wake_all(struct ntsync_device *dev, struct ntsync_q *q,
+ 				obj->u.mutex.count++;
+ 				obj->u.mutex.owner = q->owner;
+ 				break;
++			case NTSYNC_TYPE_EVENT:
++				if (!obj->u.event.manual)
++					obj->u.event.signaled = false;
++				break;
+ 			}
+ 		}
+ 		wake_up_process(q->task);
+@@ -245,6 +256,26 @@ static void try_wake_any_mutex(struct ntsync_obj *mutex)
+ 	}
+ }
+ 
++static void try_wake_any_event(struct ntsync_obj *event)
++{
++	struct ntsync_q_entry *entry;
++
++	lockdep_assert_held(&event->lock);
++
++	list_for_each_entry(entry, &event->any_waiters, node) {
++		struct ntsync_q *q = entry->q;
++
++		if (!event->u.event.signaled)
++			break;
++
++		if (atomic_cmpxchg(&q->signaled, -1, entry->index) == -1) {
++			if (!event->u.event.manual)
++				event->u.event.signaled = false;
++			wake_up_process(q->task);
++		}
++	}
++}
++
+ /*
+  * Actually change the semaphore state, returning -EOVERFLOW if it is made
+  * invalid.
+@@ -553,6 +584,30 @@ static int ntsync_create_mutex(struct ntsync_device *dev, void __user *argp)
+ 	return put_user(fd, &user_args->mutex);
+ }
+ 
++static int ntsync_create_event(struct ntsync_device *dev, void __user *argp)
++{
++	struct ntsync_event_args __user *user_args = argp;
++	struct ntsync_event_args args;
++	struct ntsync_obj *event;
++	int fd;
++
++	if (copy_from_user(&args, argp, sizeof(args)))
++		return -EFAULT;
++
++	event = ntsync_alloc_obj(dev, NTSYNC_TYPE_EVENT);
++	if (!event)
++		return -ENOMEM;
++	event->u.event.manual = args.manual;
++	event->u.event.signaled = args.signaled;
++	fd = ntsync_obj_get_fd(event);
++	if (fd < 0) {
++		kfree(event);
++		return fd;
++	}
++
++	return put_user(fd, &user_args->event);
++}
++
+ static struct ntsync_obj *get_obj(struct ntsync_device *dev, int fd)
+ {
+ 	struct file *file = fget(fd);
+@@ -676,6 +731,9 @@ static void try_wake_any_obj(struct ntsync_obj *obj)
+ 	case NTSYNC_TYPE_MUTEX:
+ 		try_wake_any_mutex(obj);
+ 		break;
++	case NTSYNC_TYPE_EVENT:
++		try_wake_any_event(obj);
++		break;
+ 	}
+ }
+ 
+@@ -864,6 +922,8 @@ static long ntsync_char_ioctl(struct file *file, unsigned int cmd,
+ 	void __user *argp = (void __user *)parm;
+ 
+ 	switch (cmd) {
++	case NTSYNC_IOC_CREATE_EVENT:
++		return ntsync_create_event(dev, argp);
+ 	case NTSYNC_IOC_CREATE_MUTEX:
+ 		return ntsync_create_mutex(dev, argp);
+ 	case NTSYNC_IOC_CREATE_SEM:
+diff --git a/include/uapi/linux/ntsync.h b/include/uapi/linux/ntsync.h
+index 3861397c6c2f..b8cf503365ef 100644
+--- a/include/uapi/linux/ntsync.h
++++ b/include/uapi/linux/ntsync.h
+@@ -22,6 +22,12 @@ struct ntsync_mutex_args {
+ 	__u32 count;
+ };
+ 
++struct ntsync_event_args {
++	__u32 event;
++	__u32 manual;
++	__u32 signaled;
++};
++
+ struct ntsync_wait_args {
+ 	__u64 timeout;
+ 	__u64 objs;
+@@ -37,6 +43,7 @@ struct ntsync_wait_args {
+ #define NTSYNC_IOC_WAIT_ANY		_IOWR('N', 0x82, struct ntsync_wait_args)
+ #define NTSYNC_IOC_WAIT_ALL		_IOWR('N', 0x83, struct ntsync_wait_args)
+ #define NTSYNC_IOC_CREATE_MUTEX		_IOWR('N', 0x84, struct ntsync_sem_args)
++#define NTSYNC_IOC_CREATE_EVENT		_IOWR('N', 0x87, struct ntsync_event_args)
+ 
+ #define NTSYNC_IOC_SEM_POST		_IOWR('N', 0x81, __u32)
+ #define NTSYNC_IOC_MUTEX_UNLOCK		_IOWR('N', 0x85, struct ntsync_mutex_args)
+-- 
+2.43.0
 
--- Steve
