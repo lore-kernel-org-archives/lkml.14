@@ -1,78 +1,101 @@
-Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC59BE48;
-	Wed, 14 Feb 2024 08:52:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F09BE49
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 08:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707900733; cv=none; b=c6KT6M0loMsYqmYbIpruGocCBQdcw91/Xfk2rWiIdGHWoqQ2RdQ4dbQ174ynpDchNmyuxsB/NUwFxHZaj/fjMwgWR/bWCQNXcvW1bLqHd9HolCMWndBqUtJ3QgMiZOxhqRd+TZK4G3pprtMtLeE2pP1PRzGw79n7sK9+h3yyRL8=
+	t=1707900774; cv=none; b=pE6ob/2BaTB+TAiCoQpIyCBVEaNf2VjHOz4fgoltYmC3haKcZ7iOZUkc2Vzasu6Cm0yhsYA769DftsPJXrN2RFVCImjq9jk9tLukAQ3OP8+EWUSbBeCFH6vVNt41svlzMhmqSaFgxtCRnDt9MymO/eRYSKZ7I5fG8RwPG6MA0t8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707900733; c=relaxed/simple;
-	bh=nEHFJ8FOb7Ym987IDiDvA7rd7Tjxqoe8bFUXqLzY7gk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HRTfJRbZ2uQjFLRJR5qIPmt4kqDqHWgRDMKo4fJkLF1XkOWyR9se5F6igeCQiMfAv5fU9LkYrIcms6/zdfH1FOEf/gpk0DpvG5ihBa2wlHufo5iF/wkTmh1CwxRpE2grIZgBokJuVbz7W0WvV3yfLiqWaOb+xIkNN0mz6AAxVlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=I+0PK/P4; arc=none smtp.client-ip=74.50.62.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
+	s=arc-20240116; t=1707900774; c=relaxed/simple;
+	bh=hQ9upSJtJJopYunhhTAKlKaEeg0GayiBtpkQagMSQJY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bQ5Ag6qpjf/JMu/kvSVhRPm0M/XspDTyfYqt/elC2nISL6vqdYvJ6J2gH8XJyu+ZkeVDcBs8Af3S2Ylo29J/d+VoaUFsDcTvMi0rvf0C3EMUuoy7qCvXyLiF3EMh59Del0Msix2yEngth7f08pARW00yyRtNQdyhkqnNnN6enjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Zeo4ca99; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="I+0PK/P4"
-Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
-	by mail5.25mail.st (Postfix) with ESMTPSA id 32AF060434;
-	Wed, 14 Feb 2024 08:51:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
-	s=25mailst; t=1707900731;
-	bh=nEHFJ8FOb7Ym987IDiDvA7rd7Tjxqoe8bFUXqLzY7gk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=I+0PK/P4QPFHY+jV3JTyXLnyJTtiSxWGr8KHfDeHreN8UDXCZ0ZCl1domDzbcpLqC
-	 UbhHwJ94K0S2GRhH+ovvGpcadwLBeE7ZotcRIgFK9qGjvE4ddtF3ehU6RzFsYMVyvG
-	 JrO3aRBZhkPYDDZ240g50Bd5CyMzAZVkq86yQdUTe1Rpu9thjwrSSm+WW2BAJ3dCB2
-	 HbH93XpXunWk4VCxwperPjszAzv2qZiyexF7uxIqEPU9tPlm5dHq+ayZ2+SLQFNCEJ
-	 mGqlQ2kreN9uNQSpvkUo9QZwoHF2cx0XVbuFcIlpMbwaZD/vJijXwKxN/6/pEuHjGm
-	 yN6CPSA6uio/A==
-Date: Wed, 14 Feb 2024 10:51:38 +0200
-From: Tony Lindgren <tony@atomide.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Dhruva Gole <d-gole@ti.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Johan Hovold <johan@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: Re: [PATCH v6 1/6] printk: Save console options for
- add_preferred_console_match()
-Message-ID: <20240214085138.GQ52537@atomide.com>
-References: <20240213084545.40617-1-tony@atomide.com>
- <20240213084545.40617-2-tony@atomide.com>
- <Zcub1bQrDqHE0Mkt@smile.fi.intel.com>
- <20240214084905.GP52537@atomide.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Zeo4ca99"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-40fd2f7ef55so2815085e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 00:52:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707900771; x=1708505571; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2vGwKYokw3i/oEoJO6fwQAxXGHOptGWFu1l6NeZyDeA=;
+        b=Zeo4ca99HYQetiv7RIFxNnMb/eINkCVdUq3+35KoRJX3i3Orwd/iRTfeLmT7fKKEgF
+         6bvawWgd9bY4PJsz8MTxlbussTOA2Ff8KNEa/zFg+XTGPLnGGADAt1pOqCF0wBuvZkHp
+         5C3h46mBpDub2Vw5pfinyMa6O8KESKSzaP5kRKv8f431p5bCECxsZ+0Oz3SMOAaopDyt
+         4xfKovkd92+Vgggr7EMjrgQ3b8jACdD+J09hBQE7gF8jpdukf5oNM7BbAISACDCSOXcI
+         qZVRURiq2xnyckuqfkBIG0y2vR9Gnq8hUZSPMoy0iJOqIw4uj9Jo13XoF9ZHt27/H76d
+         QJVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707900771; x=1708505571;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2vGwKYokw3i/oEoJO6fwQAxXGHOptGWFu1l6NeZyDeA=;
+        b=bm8nK3nHNIYX8XwX2dSoswqywbtrxtCTCHv8OcJdcmKzK7pt3zSZR+eCDsx/8/6huz
+         e84LwTU2vti3cG0X0J3lv2VQf+ZTJLEfoXvxtNVrPXzasCGm3JZwvnpJzMTpJU/+y1V5
+         PlPWDuGz//BBUp0UPnfmWuey3nydDY8xZ9pkqpo9rhY1vo/2c8jvnM/SbwtiPmtuNgRd
+         DEaUiuYWrU+OLXZNVMm0CoVoM+oN1KlE5fS4Vdx3uaFRelyiktpIcSgyX9HzPJqQsj11
+         AX8s9iRpNHdr7nYqVMOrKnhiLDBK1aPbHRDRtueapK3vcN+YNmKmlzajPGzy5aHy3YS4
+         g51A==
+X-Forwarded-Encrypted: i=1; AJvYcCXO2eZ+AJQH6ES/pLz1BP2WQdjenARgLwVvw4XTGGdWH9tEn2NaXpMO/nWezCZhaAXgpRhB5tDQDGYCm5xqkwzkegFuxZHjoIvUK6l+
+X-Gm-Message-State: AOJu0YyaqxTz/tjtOlwikzzcGfVfa1GJDEcNM6v4krmVDCDtIF+Jfms5
+	pRuC1pqaEwj1idbW16yIJE4CvDyo7DTCdNPzr77C1wnx3BVaq8OpvFqbKIf5qXw=
+X-Google-Smtp-Source: AGHT+IFrFqtfG7itu6rycup1Q87PKnKv6wvTLWd/IQHkcqxYR1jvUiN3YfUXdpoeb7yhU6GzbKNoXQ==
+X-Received: by 2002:a05:600c:3d9b:b0:410:c9cf:73d0 with SMTP id bi27-20020a05600c3d9b00b00410c9cf73d0mr959845wmb.13.1707900771447;
+        Wed, 14 Feb 2024 00:52:51 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU/3CA+LZTtKSYjuqCrIRzIdEf2vyzkF0EpyyyXtxTgbx+MJaJnlFZ8N+awafRT9NMvoi9FztGD1QkP3piz4zMIvw8DA3KpDl1sq2/Tt2tSPwsJTkCXP7ylh4b7Cl9MxveOysL9wMhNtEZePtPqWToCNZK1PV/afePj/R4CWtI6kJysX33ZILDL0HzphGHYDH1uypOJ5Nr5XdNsysnQopl56e7UcyJXvjdVBKk22d0ZDN8D2ONwxHxt
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:cfee:a5b6:1f9b:9c9b])
+        by smtp.gmail.com with ESMTPSA id o19-20020a05600c379300b00411c3c2fc55sm1247672wmr.45.2024.02.14.00.52.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Feb 2024 00:52:51 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] gpio: sysfs: fix inverted pointer logic
+Date: Wed, 14 Feb 2024 09:52:48 +0100
+Message-Id: <20240214085248.6534-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240214084905.GP52537@atomide.com>
+Content-Transfer-Encoding: 8bit
 
-* Tony Lindgren <tony@atomide.com> [240214 10:49]:
-> * Andy Shevchenko <andriy.shevchenko@linux.intel.com> [240213 16:42]:
-> > 		strscpy(con->name, str, namelen);
-> > 		strscpy(con->opt, opt, optlen); // not sure if emptying opt is okay
-> 
-> The strings above now get terminated too sort with the + 1 removed,
-> I suggest we use what we already do for brl_opt:
-> 
-> 		strscpy(con->name, str, CONSOLE_NAME_MAX);
-> 		strscpy(con->opt, opt, CONSOLE_OPT_MAX);
-> 
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Heh but that won't work for str and CONSOLE_NAME_MAX..
+The logic is inverted, we want to return if the chip *IS* NULL.
 
-Tony
+Fixes: d83cee3d2bb1 ("gpio: protect the pointer to gpio_chip in gpio_device with SRCU")
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/linux-gpio/15671341-0b29-40e0-b487-0a4cdc414d8e@moroto.mountain/
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpiolib-sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
+index 6285fa5afbb1..e4a6df2b317d 100644
+--- a/drivers/gpio/gpiolib-sysfs.c
++++ b/drivers/gpio/gpiolib-sysfs.c
+@@ -801,7 +801,7 @@ void gpiochip_sysfs_unregister(struct gpio_device *gdev)
+ 	guard(srcu)(&gdev->srcu);
+ 
+ 	chip = rcu_dereference(gdev->chip);
+-	if (chip)
++	if (!chip)
+ 		return;
+ 
+ 	/* unregister gpiod class devices owned by sysfs */
+-- 
+2.40.1
+
