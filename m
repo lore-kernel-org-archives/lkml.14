@@ -1,105 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD95A524D1;
-	Wed, 14 Feb 2024 13:17:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59FB29437;
+	Wed, 14 Feb 2024 13:18:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707916638; cv=none; b=cfBBJxbQIEQtwa1hLU0ckbJnwA0OEsFvIEq5H2moKivD8uk8y64ItB4kAjsNHSfK5qLTEQedSOzePwO+MrXZ7DreoDcTR/Vu3MfJoRwwbpXwJmchYc256Dk23Lnzdmg3Gn4AVyJ61lPvVhboA2Cdsd48rmV+kfV+PnGwweVqDGU=
+	t=1707916738; cv=none; b=iGdKs3mPZ3UZ+H/TVIr9PWrJsgEyUpheHyO9Qlb5BVqxd6RW/Bnp5SzbYyu1kbXEF+bUH0TKRTAb6Z8leu61rahLLTuQNUD3zOkU4honUdQdg9MvkzQ0GQkHtgwwf5JyxvpLvbDCvVoTnSw1Wu+5Rbl++hycIDi0vihai8PhKwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707916638; c=relaxed/simple;
-	bh=UApSOBR43ZErywnbuS/xYxhg9vy8q5S6orxIgMpHkjw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DW29ziUo1VjvOP6s3LxYUKniupStqGUDndSitPrdQr3dr8avAronbZxDD/lgzcnnAanAnZ9Qbe8+7Lk1o5W84rhTAv2JyrN/NHigFXIiOvlmnQJwUoXNsnsieo4M0uXKwjM42X8zCTh0MEcZ5EcVjCOSMzPf+zWPY4+cJmxy3kI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TY3bpbnN; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TY3bpbnN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2D65C433F1;
-	Wed, 14 Feb 2024 13:17:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707916638;
-	bh=UApSOBR43ZErywnbuS/xYxhg9vy8q5S6orxIgMpHkjw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TY3bpbnNhie8GtyO8aiz0eioHSdBBP/douxMvsSJ09YBRQbmZPZTKLOQRfmtrWoc2
-	 W78REzwGHDKhHj16IKbu/1TNsVztq32er0FxP+/Y87TE273Kavu+W41vZFKnfnFqJ/
-	 adOMbNhOnmp4sKuCSJeUhtf8iAVkKCRUS6w8A9Qt4EkDVoM9059pYqjNIE/IlObdzT
-	 Ch4bnEQ9wcz6hqxpQPU9fBBb9CtuVIyt4gRy8MXREW1dcpk+UJm8sOy29p54URpcH5
-	 iy46+lIoLovquQF/6kUMnwjBLZ4FX7eTffaQTxnBS/IlfbXLrAkdrl7y6p2e5V95kS
-	 Om0g5uXb/YjTg==
-Date: Wed, 14 Feb 2024 13:17:12 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Wolfram Sang <wsa@the-dreams.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 0/4] gpio: fix SRCU bugs
-Message-ID: <4c629a0b-95ff-4ad6-af04-61b25d437f89@sirena.org.uk>
-References: <20240214084419.6194-1-brgl@bgdev.pl>
+	s=arc-20240116; t=1707916738; c=relaxed/simple;
+	bh=/xZMZP2nWweiJcz6P4CrpNKk/2KW9avyIsmP5+gq4V0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TAqGHtFKjee4ZYvbTWjYiIPg1rW4D4j+nQy++Pcqh4aRVuxsWSy+C+uZ8QgvVmEDP9dx43zrsul3uvJu7M9ZYzh5RpKPxwDJCIxbs+9FrSxOB1TVXNINPPcNkFRhmMRj4JnNODTw9VizhAnD0oyvOg+gBgVEZlNVmxhsacoX2RU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1raFA0-0008JP-Ud; Wed, 14 Feb 2024 14:18:49 +0100
+Message-ID: <4737bc92-e4e5-4266-a249-d122f15e7ab9@leemhuis.info>
+Date: Wed, 14 Feb 2024 14:18:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="PHKFQMsyP2YjnSWd"
-Content-Disposition: inline
-In-Reply-To: <20240214084419.6194-1-brgl@bgdev.pl>
-X-Cookie: Available while quantities last.
+User-Agent: Mozilla Thunderbird
+Subject: Re: drm/msm: DisplayPort regressions in 6.8-rc1
+Content-Language: en-US, de-DE
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>, Johan Hovold
+ <johan@kernel.org>, Rob Clark <robdclark@gmail.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Kuogee Hsieh <quic_khsieh@quicinc.com>
+Cc: Sean Paul <sean@poorly.run>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Bjorn Andersson <quic_bjorande@quicinc.com>, quic_jesszhan@quicinc.com,
+ quic_sbillaka@quicinc.com, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+ regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <ZctVmLK4zTwcpW3A@hovoldconsulting.com>
+ <343710b1-f0f4-5c05-70e6-3c221cdc9580@quicinc.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <343710b1-f0f4-5c05-70e6-3c221cdc9580@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707916737;a0e54d9e;
+X-HE-SMSGID: 1raFA0-0008JP-Ud
 
+On 13.02.24 19:00, Abhinav Kumar wrote:
+> 
+> Thanks for the report.
+> 
+> I do agree that pm runtime eDP driver got merged that time but I think
+> the issue is either a combination of that along with DRM aux bridge
+> https://patchwork.freedesktop.org/series/122584/ OR just the latter as
+> even that went in around the same time.
 
---PHKFQMsyP2YjnSWd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In that case allow me a stupid question from the cheap seats:
 
-On Wed, Feb 14, 2024 at 09:44:15AM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->=20
-> Here are four fixes to some bugs in recent SRCU changes. The first one fi=
-xes
-> an actual race condition. The other three just make lockdep happy.
+Is there anything affected users can do to help getting us closer to the
+real problem? Like testing a specific commit or two before or after the
+merge of one of those features for example? That might help to rule out
+a few things.
 
-This doesn't fix the issue I reported yesterday when applied on top of
-today's next:
+Ciao, Thorsten
 
-   https://lava.sirena.org.uk/scheduler/job/585469
-
-[    1.995518] Unable to handle kernel NULL pointer dereference at virtual =
-address 0000000000000078
-
-=2E..
-
-[    2.176162] Call trace:
-[    2.178610]  check_init_srcu_struct+0x1c/0xa0
-[    2.182974]  synchronize_srcu+0x1c/0x100
-[    2.186904]  gpiod_request_commit+0xec/0x1e0
-[    2.191183]  gpiochip_request_own_desc+0x58/0x124
-[    2.195894]  gpiod_hog+0x114/0x1b4
-[    2.199305]  of_gpiochip_add+0x208/0x370
-[    2.203232]  gpiochip_add_data_with_key+0x71c/0xf10
-[    2.208117]  devm_gpiochip_add_data_with_key+0x30/0x7c
-[    2.213261]  mxc_gpio_probe+0x208/0x4b0
-
---PHKFQMsyP2YjnSWd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXMvVgACgkQJNaLcl1U
-h9DroAf/eoRSfe3T0pX2R2UAPt8d7/BSID9HbANJ6umEl9wiMdKWZLXBBle0rNVJ
-/GXxwUVieNoywwrzqFjXXVeYkT889xYplvblstaBjiFl0W2FpM+ab09bhIuF/7Vc
-SyN0fDZ9uxPZZBNboXagkMIL2+lTdGAPWZSfABNM+HUPiQBhLU3XxBbYS1KqB0XC
-RlifSVRr9K0FBN7Wws/u2qNRt0deopzIKXSDyiZLYjCmoYLrUTV3VyGYQK0vOoX7
-oit/bnXUgIo9s4Td0tebiRxke7JtX3avSnlBPG2Urr5+r3/kFRMfaBPWifXtuvay
-CkzYCKvSBl8H9nmicCjCZzyY6CMpdQ==
-=bF5W
------END PGP SIGNATURE-----
-
---PHKFQMsyP2YjnSWd--
+> Thats why perhaps this issue was not seen with the chromebooks we tested
+> on as they do not use pmic_glink (aux bridge).
+> 
+> So we will need to debug this on sc8280xp specifically or an equivalent
+> device which uses aux bridge.
+> 
+> On 2/13/2024 3:42 AM, Johan Hovold wrote:
+>> Hi,
+>>
+>> Since 6.8-rc1 the internal eDP display on the Lenovo ThinkPad X13s does
+>> not always show up on boot.
+>>
+>> The logs indicate problems with the runtime PM and eDP rework that went
+>> into 6.8-rc1:
+>>
+>>     [    6.006236] Console: switching to colour dummy device 80x25
+>>     [    6.007542] [drm:dpu_kms_hw_init:1048] dpu hardware
+>> revision:0x80000000
+>>     [    6.007872] [drm:drm_bridge_attach [drm]] *ERROR* failed to
+>> attach bridge /soc@0/phy@88eb000 to encoder TMDS-31: -16
+>>     [    6.007934] [drm:dp_bridge_init [msm]] *ERROR* failed to attach
+>> panel bridge: -16
+>>     [    6.007983] msm_dpu ae01000.display-controller:
+>> [drm:msm_dp_modeset_init [msm]] *ERROR* failed to create dp bridge: -16
+>>     [    6.008030] [drm:_dpu_kms_initialize_displayport:588] [dpu
+>> error]modeset_init failed for DP, rc = -16
+>>     [    6.008050] [drm:_dpu_kms_setup_displays:681] [dpu
+>> error]initialize_DP failed, rc = -16
+>>     [    6.008068] [drm:dpu_kms_hw_init:1153] [dpu error]modeset init
+>> failed: -16
+>>     [    6.008388] msm_dpu ae01000.display-controller:
+>> [drm:msm_drm_kms_init [msm]] *ERROR* kms hw init failed: -16
+>>     
+>> and this can also manifest itself as a NULL-pointer dereference:
+>>
+>>     [    7.339447] Unable to handle kernel NULL pointer dereference at
+>> virtual address 0000000000000000
+>>     
+>>     [    7.643705] pc : drm_bridge_attach+0x70/0x1a8 [drm]
+>>     [    7.686415] lr : drm_aux_bridge_attach+0x24/0x38 [aux_bridge]
+>>     
+>>     [    7.769039] Call trace:
+>>     [    7.771564]  drm_bridge_attach+0x70/0x1a8 [drm]
+>>     [    7.776234]  drm_aux_bridge_attach+0x24/0x38 [aux_bridge]
+>>     [    7.781782]  drm_bridge_attach+0x80/0x1a8 [drm]
+>>     [    7.786454]  dp_bridge_init+0xa8/0x15c [msm]
+>>     [    7.790856]  msm_dp_modeset_init+0x28/0xc4 [msm]
+>>     [    7.795617]  _dpu_kms_drm_obj_init+0x19c/0x680 [msm]
+>>     [    7.800731]  dpu_kms_hw_init+0x348/0x4c4 [msm]
+>>     [    7.805306]  msm_drm_kms_init+0x84/0x324 [msm]
+>>     [    7.809891]  msm_drm_bind+0x1d8/0x3a8 [msm]
+>>     [    7.814196]  try_to_bring_up_aggregate_device+0x1f0/0x2f8
+>>     [    7.819747]  __component_add+0xa4/0x18c
+>>     [    7.823703]  component_add+0x14/0x20
+>>     [    7.827389]  dp_display_probe+0x47c/0x568 [msm]
+>>     [    7.832052]  platform_probe+0x68/0xd8
+>>
+>> Users have also reported random crashes at boot since 6.8-rc1, and I've
+>> been able to trigger hard crashes twice when testing an external display
+>> (USB-C/DP), which may also be related to the DP regressions.
+>>
+>> I've opened an issue here:
+>>
+>>     https://gitlab.freedesktop.org/drm/msm/-/issues/51
+>>
+>> but I also want Thorsten's help to track this so that it gets fixed
+>> before 6.8 is released.
+>>
+>> #regzbot introduced: v6.7..v6.8-rc1
+>>
+>> The following series is likely the culprit:
+>>
+>>     https://lore.kernel.org/all/1701472789-25951-1-git-send-email-quic_khsieh@quicinc.com/
+>>
+>> Johan
+> 
+> 
