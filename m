@@ -1,129 +1,91 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A23E5D732;
-	Wed, 14 Feb 2024 15:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552C45D49E;
+	Wed, 14 Feb 2024 15:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707925326; cv=none; b=JtoTsTdAumfYRnnMRG69RMbcUpyCGFsR0zZ0ymXEgnRJVyWgSEORUs0mHFyBYOV8d15KlWCJ7sJHHsCXkzweoefZf7c1O5iXd9Cdlf/NfWZmjBDdpYE/NMwmczVBokJp/g3i1ibT7Z23moN6bLZ2AsTsRwRWLV5X69mfrZZRFe8=
+	t=1707925462; cv=none; b=SPe29K+NyPXTbReDFmySuZc+mHHgZYzh6NjXogjqUdtrSxGCiGCfheuvbbnHLMpI3B23UpmGV9efy7KF80LMSDoUJIVZX0XLX3VYUaGW2nHLZ4QJuZIQWz3rUrhF80LXTT6sLSTNCO1Gw5OCLFWW1eywxqQN02PFWeI9zmBishU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707925326; c=relaxed/simple;
-	bh=fNbaUQKnlqEMDtnT9Negz1cAQM5I1BvNB5V3Wy7E/7k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OjNVqDn2lCBKFP6d5nSdGJ8c3S7dkAe3inll4YROP2R70oRgW1/Om9Pn/BRxR/IVwKTYkLuqdG3pRVnzvkgkIa9PvSTdkY7PE+5ISNC1aHEwA5HefGvUjhXoR300+UkbKXZ7Skg9gMJ2Ddw32l3+A6zGbYrpYsmmU8v7FJTiiQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=H+jixvZO; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1707925462; c=relaxed/simple;
+	bh=dMNrclhA7uStPGoba5K2BJ7MHHMLO2MgIpz/A5BhoRY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Z+GBSl2ocHhmCNDn9nW2pcjTA4s3z+bhXjDGaELyJIXnNLQSdHQbXSDGwDi9W08LRrteXvewz3EvlVYMNbXvqOPtHWq92Iy8jEZguyHVkMHEmsFp6NaB3oHl+OeULN7ESYT9+0h6t0nW4A1VisbrhB8N4shUTzWUjCPRoDDrHu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T05Rg1GL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="H+jixvZO"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id F1C5A1BF204;
-	Wed, 14 Feb 2024 15:41:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1707925314;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Na5G4sxiicAdKoJQUQHlrk8NKd8DIbup+Qjfv3MfFOA=;
-	b=H+jixvZObQoWqFarWziwlCexqzc1ILdE2JO0jQ/4k3ZZGF0oB2Nu0xg+QsZi0QTY4FMDAV
-	7cLDqjnpiPOp/U6nJTMgD4YgyNsiOdkeEEgIRN89s7ajuOJKtKzY5hN5zQj5+XBzxJiTe/
-	cTZaaxt2rJbDVQ5ujTtwcAop0eybMTcU6hQg9gjkPHPaotTzZC9QrpNGsX8AjJz+DUZal3
-	WYUi8LAAPdd5jouNPy6+HxD5odAIvuk0Xn2zwgykX7FNlz92HnNEvO117cDGHPwVBMDbQK
-	ZXRx7fEV0TaSw8qrAK3L+MqFM/hWC/EnmuxXzAZPCHe9lg7kMVbwRMno2IlzcA==
-Date: Wed, 14 Feb 2024 16:41:50 +0100
-From: =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
-To: Rob Herring <robh@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Luis Chamberlain
- <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Oleksij Rempel <o.rempel@pengutronix.de>, Mark Brown <broonie@kernel.org>,
- Frank Rowand <frowand.list@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Heiner
- Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- devicetree@vger.kernel.org, Dent Project <dentproject@linuxfoundation.org>
-Subject: Re: [PATCH net-next v3 10/17] dt-bindings: net: pse-pd: Add another
- way of describing several PSE PIs
-Message-ID: <20240214164150.5be591d0@kmaincent-XPS-13-7390>
-In-Reply-To: <20240214141310.119364c4@kmaincent-XPS-13-7390>
-References: <20240208-feature_poe-v3-0-531d2674469e@bootlin.com>
-	<20240208-feature_poe-v3-10-531d2674469e@bootlin.com>
-	<20240209144349.GA3678044-robh@kernel.org>
-	<20240214141310.119364c4@kmaincent-XPS-13-7390>
-Organization: bootlin
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T05Rg1GL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46D6DC433F1;
+	Wed, 14 Feb 2024 15:44:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707925461;
+	bh=dMNrclhA7uStPGoba5K2BJ7MHHMLO2MgIpz/A5BhoRY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=T05Rg1GLSAp+sVabhLsKjdzy1fP1Pl2BFJTZKoDrtwXS3CIpP4rvkaQYtnR6LJoZs
+	 iWB8tOSqjv7kVZr1LcpWqUV1jr5FTYAkzxwPlUAqT8VcGE81a0DlH1h3QFacVYmgoK
+	 OeZv5G4V5y5h+TjztNgUoGGmOMfFgQDvM3jg0nqugDDVn+Qpz5Ofsca8Twk5Lh7W0X
+	 /FSZ6OaorQkmvfY2gLbuyBKqeQQbHyeQAebpUz6e31eL1wo+Vnq/o+9MZBH8ZkBLz3
+	 e31ulQSxelpSjoVK2RtuY/CwqvrhCCM+9d+drFp99lvayYQrkMfIjdc+Mg4209Mr59
+	 H+tSPKTWR1xfw==
+From: Mark Brown <broonie@kernel.org>
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, 
+ Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, 
+ Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
+ Bard Liao <yung-chuan.liao@linux.intel.com>, 
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
+ Daniel Baluta <daniel.baluta@nxp.com>, 
+ Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ sound-open-firmware@alsa-project.org, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+In-Reply-To: <5593d147-058c-4de3-a6f5-540ecb96f6f8@moroto.mountain>
+References: <5593d147-058c-4de3-a6f5-540ecb96f6f8@moroto.mountain>
+Subject: Re: [PATCH] ASoC: SOF: Add some bounds checking to firmware data
+Message-Id: <170792545901.151568.1454091420100022542.b4-ty@kernel.org>
+Date: Wed, 14 Feb 2024 15:44:19 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-a684c
 
-On Wed, 14 Feb 2024 14:13:10 +0100
-K=C3=B6ry Maincent <kory.maincent@bootlin.com> wrote:
+On Fri, 09 Feb 2024 16:02:16 +0300, Dan Carpenter wrote:
+> Smatch complains about "head->full_size - head->header_size" can
+> underflow.  To some extent, we're always going to have to trust the
+> firmware a bit.  However, it's easy enough to add a check for negatives,
+> and let's add a upper bounds check as well.
+> 
+> 
 
-> Hello Rob,
->=20
-> Thanks for your review!
->=20
-> On Fri, 9 Feb 2024 14:43:49 +0000
-> Rob Herring <robh@kernel.org> wrote:
->=20
-> > On Thu, Feb 08, 2024 at 02:08:47PM +0100, Kory Maincent wrote: =20
-> > > Before hand we set "#pse-cell" to 1 to define a PSE controller with  =
- =20
-> >=20
-> > #pse-cells
-> >  =20
-> > > several PIs (Power Interface). The drawback of this was that we could=
- not
-> > > have any information on the PI except its number.   =20
-> >=20
-> > Then increase it to what you need. The whole point of #foo-cells is tha=
-t=20
-> > it is variable depending on what the provider needs.=20
-> >  =20
-> > > Add support for pse_pis and pse_pi node to be able to have more
-> > > information on the PI like the number of pairset used and the pairset
-> > > pinout.   =20
-> >=20
-> > Please explain the problem you are trying to solve, not your solution. =
-I=20
-> > don't understand what the problem is to provide any useful suggestions=
-=20
-> > on the design. =20
->=20
-> Please see Oleksij's reply.
-> Thank you Oleksij, for the documentation!!
->=20
-> > >=20
-> > > Sponsored-by: Dent Project <dentproject@linuxfoundation.org>   =20
-> >=20
-> > Is this a recognized tag? First I've seen it. =20
->=20
-> This is not a standard tag but it has been used several times in the past.
+Applied to
 
-Not so much used indeed:
-$ git log --grep=3D"Sponsored" | grep Sponsored    =20
-    Sponsored by:  The FreeBSD Foundation
-    Sponsored by:  The FreeBSD Foundation
-    Sponsored by:  The FreeBSD Foundation
-    Sponsored by:  The FreeBSD Foundation
-    Sponsored-by: Google Chromium project
-    Sponsored: Google ChromeOS
-    Sponsored: Google ChromeOS
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Is it ok to keep it?
+Thanks!
 
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+[1/1] ASoC: SOF: Add some bounds checking to firmware data
+      commit: 98f681b0f84cfc3a1d83287b77697679e0398306
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
