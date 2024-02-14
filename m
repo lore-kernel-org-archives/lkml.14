@@ -1,115 +1,130 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83044535D7
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 12:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE53537FC
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 12:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707914300; cv=none; b=F51pVaCHIaoK+2Ky3nu1j2hpYqXVvw6hOqzWsovF8RkBhwSypG5xu7SorI3hbM5mvHu0YFi9FzEmWoPnfbLJzIQlb5R5hKe7psc1N0rnG8lrdRnWqS9QlDeQZmAl7SYYL1eK/jMttmKj7DCUoOIHU20UPHlPV0hC0TfqyFj/zEg=
+	t=1707914301; cv=none; b=EFfVDNpNF/t6ANx4PWl4P0PUk5g1uPis5QITymTq/igu9TNUM1LWrjgi0igxzaoXNOXKtteccj7tGJsnlpRUnuNwyPYbSUmp94S5DEBvNtZEiwpyHcajVtJ49alIY3IkXzXa2yuZJ3H/j2U+FkhyAUjnKQg+jZrZN16LMGSN2ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707914300; c=relaxed/simple;
-	bh=5L00shtRx0u3K3qY4nS2i8Dv2Y+Jru41wZEr3M9uzfo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WgI0zJHjm9N4FoeQ1G8/md9hfSZmDoV1q1fQ2FnDJcmfj4EFjjCz2lS81/861o8Bd/3U740FYdvUavizQzW2+lHSbsdRDh54ptyrzDNvDVlwwSUQ3/OZ+38v+lVzm0g1mVb5fKsnVZnZlYWXqSkhmBtuhK+lJvEc8ZPobNb3onk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OUAY5a+7; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707914301; c=relaxed/simple;
+	bh=c2+76faT1dINMScpmeF2F1CzQBtl7c0GReCrzYb31Pc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=oYKEZSZ1PZZglkgkdP4SwYh3g2srXN2dqTaqlIoZKqHouGqgkRIXgI2b35jpIRUdSHGVhphzuDLwua2LNT5vy3zVW3oqiY+VCnkNxKQ9aSgBASYVYn+Zcw7PKEW87rjkEQE+IfS2xp6oT/740yVtqIOveUmDjYK/OJqUKJei2fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=DHowmyyD; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OUAY5a+7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707914297;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oO8fV9kKnERG1FqkS8YQ493S/NllBnU42M5+nmWoL50=;
-	b=OUAY5a+7E1dQjSN4x8iWypboyyzga0Jevqnkin1TOD9mXsqHgjL1JDOsTKBQdES1/iMLFX
-	HB8QsnRgusqICMMXoCvIW5Gz7YVd3qh3BufsMbYsUfTfwcvsN5eiLKMJp161IvS1Yf6Ecp
-	Spo5C8ifciPBo2d6yqibsop4XMhPcEg=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-686-DiAhQK0yORKi6rXiTKTaKQ-1; Wed,
- 14 Feb 2024 07:38:15 -0500
-X-MC-Unique: DiAhQK0yORKi6rXiTKTaKQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6D2702812FE5;
-	Wed, 14 Feb 2024 12:38:15 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.126])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 910572166B36;
-	Wed, 14 Feb 2024 12:38:13 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 14 Feb 2024 13:36:58 +0100 (CET)
-Date: Wed, 14 Feb 2024 13:36:56 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Andy Lutomirski <luto@amacapital.net>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	Tycho Andersen <tycho@tycho.pizza>, linux-api@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] pidfd: change pidfd_send_signal() to respect
- PIDFD_THREAD
-Message-ID: <20240214123655.GB16265@redhat.com>
-References: <20240209-stangen-feuerzeug-17c8662854c9@brauner>
- <20240209154305.GC3282@redhat.com>
- <20240209-radeln-untrennbar-9d4ae05aa4cc@brauner>
- <20240209155644.GD3282@redhat.com>
- <20240210-abfinden-beimessen-2dbfea59b0da@brauner>
- <20240210123033.GA27557@redhat.com>
- <20240210-dackel-getan-619c70fefa62@brauner>
- <20240210131518.GC27557@redhat.com>
- <20240210-chihuahua-hinzog-3945b6abd44a@brauner>
- <20240210165133.GD27557@redhat.com>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="DHowmyyD"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e0a479a6cbso2235277b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 04:38:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1707914299; x=1708519099; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CtRzUtn5YlgGEqGNmE5oViuKGD26HTcJD0Q89ujSctY=;
+        b=DHowmyyDEHkxsIMMpPhLpPVnbetZ7o+DifFSlfGGSj5LKLlA/s2w8hxgCE7yxQMX9j
+         MTUmlWgcQJcQOqwCRKuoTtHCTIc6GdVG4xPbHMrc8gFXOzhdKN3CWR05QMla0JKe2c/m
+         dqe7rWOkBDx4rYGXcWJ6se2coi5DxLRlq1ES8DVn9kcw+DKLfOqgs/1FWzJQaGcv0loQ
+         OlDC55sC0vxuAFOKzo0EMd5yLlHmzcPNREewYpwzxGHO5YIXun2v4lEq1hc1qHT6zWHC
+         LAGeHt9WKEm+B7kzOTVrraygsqNYQ4JAp4B3Jctk+Tyq7nWNJadLhWBHKP87LeOggVYN
+         E0VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707914299; x=1708519099;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CtRzUtn5YlgGEqGNmE5oViuKGD26HTcJD0Q89ujSctY=;
+        b=Uwz2Pmj1UYUq72q4pqrynCl1+xV4GaSXQJV7dVBZT3qDiqaVYwqDxVU98zVrVNjbsO
+         kOXcFjhOcI+mRoHFT562JPGsnHKr3xxudBwLBkpMh5bBT/8ujGlKAISmAiHRMzn9Ir5C
+         FEmK429zAJR5g9AN43xLU5hqIfEnqWzbza5tfxgg5GBUyl++46rwAAkhp+NNmwyoRCAk
+         yXN6PFEjKMWAO1FAS7QNmkdI10W2rXJ3Ehaj/caWtmUJe+awkKpQJ9NqTvC09W36Mz62
+         98uVYQ0hM1Ije/eLHEXi8rAIi1c8/huUHz5+836oRqMgj46Ffj2dm3vRB2rR+L7gFF1l
+         efXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXXq5tfg1xbZ3gZpYwfx0y7jvZ1YFZSv06X3jH8haFcOGD06PoBisqwA8t8lkJ7k3ZYpSqDnjL1xSaYyTu/XmAM0RUdEKcd3eX/KnNQ
+X-Gm-Message-State: AOJu0YxJcDYYfRzDrDd9IcgDNIgQJWKzYRmd3XDcBIIKUKfD0ZUj2Xys
+	AVgwGUoO7B1Yj1m96eemhq+VmO5cTQAKpyTXTDzKFP0n8eHWyDnyvuHrJ1dZqsw=
+X-Google-Smtp-Source: AGHT+IGCWZ5G/G3vbyNMBfek5NVGYdPpcnCAN0KmPun1zKGXih4KLFfWufmz/OYQLaOucpICouOPBA==
+X-Received: by 2002:a05:6a21:1644:b0:19e:cf31:6a04 with SMTP id no4-20020a056a21164400b0019ecf316a04mr2855300pzb.59.1707914299363;
+        Wed, 14 Feb 2024 04:38:19 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXrXT4KToL9IgoHVlEatzhhCjqaY+aDf2dj3WXtREaMV4mVz7xD/BsynLgPAcDs1YDjmE60t4dut/SjiWkhbTvOevleB2YNKNZYIS19SAmNlE2hgyLgJhuLzf4qm1iogqAQxnKViApc+lYzuksXCv1knBeeRikj8YvcIXPoBUqJwAQzDYBhZwDXGkF5pQvyOMUj5qPsY2GGzZ81gTzJ6hteOMyADmeptjvymrVt6NED+ZuDq9a1Ks+rj8snJcamLctx8azbCwuMgKAr3SrDpJAGu1O411FkkvGCSFbB3bsz6Q6CTd8Oxqd4gaX7coarmV/Ix2htiWKpjx3EXVWnO3m+jbPNad0iid8txVbAZu/3P31wCiAi8REn65ISTwSDmI6/XM7mgZ/a3fDMXFQc8buJ4+f0iw4Z+H0YQ3JZ1IWCooM3JsOmzkeOv1Ny6A==
+Received: from anup-ubuntu-vm.localdomain ([171.76.87.178])
+        by smtp.gmail.com with ESMTPSA id o20-20020a170902e29400b001d9b749d281sm3041419plc.53.2024.02.14.04.38.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Feb 2024 04:38:18 -0800 (PST)
+From: Anup Patel <apatel@ventanamicro.com>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Anup Patel <anup@brainfault.org>,
+	kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Anup Patel <apatel@ventanamicro.com>
+Subject: [PATCH 3/5] KVM: riscv: selftests: Add Ztso extension to get-reg-list test
+Date: Wed, 14 Feb 2024 18:07:55 +0530
+Message-Id: <20240214123757.305347-4-apatel@ventanamicro.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240214123757.305347-1-apatel@ventanamicro.com>
+References: <20240214123757.305347-1-apatel@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240210165133.GD27557@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+Content-Transfer-Encoding: 8bit
 
-On 02/10, Oleg Nesterov wrote:
->
-> On 02/10, Christian Brauner wrote:
-> >
-> > +	if (type == PIDFD_SIGNAL_PROCESS_GROUP)
-> > +		ret = kill_pgrp_info(sig, &kinfo, pid);
->
-> I guess you meant
->
-> 	if (type == PIDTYPE_PGID)
->
-> other than that,
->
-> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+The KVM RISC-V allows Ztso extension for Guest/VM so let us
+add this extension to get-reg-list test.
 
-Yes, but there is another thing I hadn't thought of...
+Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+---
+ tools/testing/selftests/kvm/riscv/get-reg-list.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-sys_pidfd_send_signal() does
-
-	/* Only allow sending arbitrary signals to yourself. */
-	ret = -EPERM;
-	if ((task_pid(current) != pid) &&
-	    (kinfo.si_code >= 0 || kinfo.si_code == SI_TKILL))
-		goto err;
-
-and I am not sure that task_pid(current) == pid should allow
-the "arbitrary signals" if PIDFD_SIGNAL_PROCESS_GROUP.
-
-Perhaps
-
-	/* Only allow sending arbitrary signals to yourself. */
-	ret = -EPERM;
-	if ((task_pid(current) != pid || type == PIDTYPE_PGID) &&
-	    (kinfo.si_code >= 0 || kinfo.si_code == SI_TKILL)
-		goto err;
-
-?
-
-Oleg.
+diff --git a/tools/testing/selftests/kvm/riscv/get-reg-list.c b/tools/testing/selftests/kvm/riscv/get-reg-list.c
+index 9d9c50b68207..5429453561d7 100644
+--- a/tools/testing/selftests/kvm/riscv/get-reg-list.c
++++ b/tools/testing/selftests/kvm/riscv/get-reg-list.c
+@@ -73,6 +73,7 @@ bool filter_reg(__u64 reg)
+ 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZKSED:
+ 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZKSH:
+ 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZKT:
++	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZTSO:
+ 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVBB:
+ 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVBC:
+ 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZVFH:
+@@ -436,6 +437,7 @@ static const char *isa_ext_single_id_to_str(__u64 reg_off)
+ 		KVM_ISA_EXT_ARR(ZKSED),
+ 		KVM_ISA_EXT_ARR(ZKSH),
+ 		KVM_ISA_EXT_ARR(ZKT),
++		KVM_ISA_EXT_ARR(ZTSO),
+ 		KVM_ISA_EXT_ARR(ZVBB),
+ 		KVM_ISA_EXT_ARR(ZVBC),
+ 		KVM_ISA_EXT_ARR(ZVFH),
+@@ -957,6 +959,7 @@ KVM_ISA_EXT_SIMPLE_CONFIG(zkr, ZKR);
+ KVM_ISA_EXT_SIMPLE_CONFIG(zksed, ZKSED);
+ KVM_ISA_EXT_SIMPLE_CONFIG(zksh, ZKSH);
+ KVM_ISA_EXT_SIMPLE_CONFIG(zkt, ZKT);
++KVM_ISA_EXT_SIMPLE_CONFIG(ztso, ZTSO);
+ KVM_ISA_EXT_SIMPLE_CONFIG(zvbb, ZVBB);
+ KVM_ISA_EXT_SIMPLE_CONFIG(zvbc, ZVBC);
+ KVM_ISA_EXT_SIMPLE_CONFIG(zvfh, ZVFH);
+@@ -1010,6 +1013,7 @@ struct vcpu_reg_list *vcpu_configs[] = {
+ 	&config_zksed,
+ 	&config_zksh,
+ 	&config_zkt,
++	&config_ztso,
+ 	&config_zvbb,
+ 	&config_zvbc,
+ 	&config_zvfh,
+-- 
+2.34.1
 
