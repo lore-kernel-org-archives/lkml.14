@@ -1,127 +1,115 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B5E5339C
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 12:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83044535D7
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 12:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707914297; cv=none; b=rCX5pSq5UBzHbCqv8EfkGGjmXo6gCWlOSfp2Eckp6bZ/HYfTcOREHMmruUxHevDMf8yOs7o59Upvz2ZF6pUkRkxNTgWssT2tu17rwSP6F/J8jGeKMbXaOWhHFZRaMnWuzK7rm7G/+gPtJecEQ0p61Ek78/q24EMTmw77DhXP4ms=
+	t=1707914300; cv=none; b=F51pVaCHIaoK+2Ky3nu1j2hpYqXVvw6hOqzWsovF8RkBhwSypG5xu7SorI3hbM5mvHu0YFi9FzEmWoPnfbLJzIQlb5R5hKe7psc1N0rnG8lrdRnWqS9QlDeQZmAl7SYYL1eK/jMttmKj7DCUoOIHU20UPHlPV0hC0TfqyFj/zEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707914297; c=relaxed/simple;
-	bh=6QZeD1AO6jaMPVgZLUW3lzdEd9llclpipK765KkoodM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Vk1hNCEKoIMa8E5/XeUwFRv6y0LxZnWQHNDScr1xS3lsb9fawQbqDa0lFZFrson9S4giPNOAOTMdA2vUJKQ69cl4T6NVuCN6Dv9MjSOFV0yHD53n1VMTDblSznQpSjokUz1JSqGx3UtplgkdwRJhNjf5Ml7z2vqJuPUXbDRwK9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Ge47c348; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1707914300; c=relaxed/simple;
+	bh=5L00shtRx0u3K3qY4nS2i8Dv2Y+Jru41wZEr3M9uzfo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WgI0zJHjm9N4FoeQ1G8/md9hfSZmDoV1q1fQ2FnDJcmfj4EFjjCz2lS81/861o8Bd/3U740FYdvUavizQzW2+lHSbsdRDh54ptyrzDNvDVlwwSUQ3/OZ+38v+lVzm0g1mVb5fKsnVZnZlYWXqSkhmBtuhK+lJvEc8ZPobNb3onk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OUAY5a+7; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Ge47c348"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d95d67ff45so40396385ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 04:38:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1707914295; x=1708519095; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=48Kvlzn+su9jY0Vm4vzOkE0bGPI59LwwBJsDVuHcE+Y=;
-        b=Ge47c348Q7koa2fKV8W2zDI3ujFKZRqRl284TAZkPedA/xhXiZUqpjlZrsyYPFyZaz
-         KA/UG2KZRpK/GbcbD/5IDKjdVUL8X+heHv8iLjj7fol2FFOG+XFLBQgcgKdQPTgWBW2O
-         wWlBocPBe7rIQdpmdYrb/vpvy5R1iGf8rhDaZh3B2ZIs0vYVN9eHsNQuXKvYqKqmh5pp
-         IiE9xzOSTzei/JRCisGNpzdP74PKKxm8DdTKlXDhgTjecrb3aUPbZPz6MdDVFkHVoDvj
-         4e+ezJ5Tr0OQaOWr+JNeH4v2/rt0KtLC8D2xUPPVTSWIVbiAOPImuZGGfhpSFcMB7Jdf
-         sqhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707914295; x=1708519095;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=48Kvlzn+su9jY0Vm4vzOkE0bGPI59LwwBJsDVuHcE+Y=;
-        b=TnRk88ya6e5KrPARTfRn1ueKcrGpuAPZbsFT8V2jiCTz4Y7aKwh7hPf2V/RQTAH31+
-         T+JuG+81MU9SIPyWbHAaB+D1ObEm8KcaECkMfP5RFqwzMki3GWjGbnvf4Afk8P1mIVkl
-         nlCLHVQnkMa7T0GZu6m2wgYBMjlfgNWs/HbuZP90eb52AP3ggs3FnLaBd5pE7azDAmQr
-         OwMQqe4XXOMY68DmOjXXUKYWMPQ2e8r2i4ypMtH+UUz+/1tzwcGVwAXMxJga+dSdIvaZ
-         8MsNBtiGKCbdfk1jzWz4Jc+qsl3GkztTWLhqQpjmHmgAFy1h+1ir7X1Vn67uhvNJAiXt
-         b1pQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUki6SRCasTGo0VHzFiWtdyJ0vt5wbdgJsbQUGZNXN7Cwn9/j2BsA1gu3yLLW/IA6OMTkT6Ivn1lh8U0nM2P7wwI3bn31C45KkbRnLv
-X-Gm-Message-State: AOJu0YxFj2enLSqmXtOIeZpQJsZpAJKgb/OKUTHNX8PCsb80vSca8vFE
-	6TfxUFGB68l6GTBwv0f7MEZf8JI5ic7dkQN9YGbJmCx9p0PjDud/WpMfkUr20Ug=
-X-Google-Smtp-Source: AGHT+IHBBqpiWCuJIjRqRSpJp+W5dWbQ/msDnFRpAixpKjNS/H5nLpSvKlq1jB9lqsMLcmMLqvQUCA==
-X-Received: by 2002:a17:902:6945:b0:1da:1d3d:7937 with SMTP id k5-20020a170902694500b001da1d3d7937mr2048287plt.34.1707914294910;
-        Wed, 14 Feb 2024 04:38:14 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVki2Z3WrTpY40NRvm8tEbiYTni2BOP+Vz/m0jnkq1LJ5nIO+BXlYi1+YpL55P6nAAeZ70tS6rcQ9FXBc3LngUk1k5rap6lkZDxjXcts6p25eXLJDfrYH7vS9egyGB4UHfdtL/1enUDxsGQhB+OI80ygbonY7xSQ64wveTP7NsHYgjG5ApUhwmP3Rhzv+qeKdHkfrgeOQHom7tgaE6ui7DbZayXPXniP3TFPS5Uu7E2sjC02J19Jd+MMwctwL9ae1I2h7DIr9BCekEbCMx/1AiUv4xIM/eYG2FTJJPp/HKszsYT8lcYdkaCYxNlCgP7Pq60zX306awYmLYC4LXuI6hvQ/LWXp4r16jEs6NgAfdlLjGPeotzI52MIwUqO5jWp1uTmrPuRVKHejbViJrghAPCZryiembfyb62EeNV7B5Z1eWNyeJDtBjasn0tww==
-Received: from anup-ubuntu-vm.localdomain ([171.76.87.178])
-        by smtp.gmail.com with ESMTPSA id o20-20020a170902e29400b001d9b749d281sm3041419plc.53.2024.02.14.04.38.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Feb 2024 04:38:14 -0800 (PST)
-From: Anup Patel <apatel@ventanamicro.com>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Anup Patel <anup@brainfault.org>,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Anup Patel <apatel@ventanamicro.com>
-Subject: [PATCH 2/5] RISC-V: KVM: Allow Ztso extension for Guest/VM
-Date: Wed, 14 Feb 2024 18:07:54 +0530
-Message-Id: <20240214123757.305347-3-apatel@ventanamicro.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240214123757.305347-1-apatel@ventanamicro.com>
-References: <20240214123757.305347-1-apatel@ventanamicro.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OUAY5a+7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707914297;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oO8fV9kKnERG1FqkS8YQ493S/NllBnU42M5+nmWoL50=;
+	b=OUAY5a+7E1dQjSN4x8iWypboyyzga0Jevqnkin1TOD9mXsqHgjL1JDOsTKBQdES1/iMLFX
+	HB8QsnRgusqICMMXoCvIW5Gz7YVd3qh3BufsMbYsUfTfwcvsN5eiLKMJp161IvS1Yf6Ecp
+	Spo5C8ifciPBo2d6yqibsop4XMhPcEg=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-686-DiAhQK0yORKi6rXiTKTaKQ-1; Wed,
+ 14 Feb 2024 07:38:15 -0500
+X-MC-Unique: DiAhQK0yORKi6rXiTKTaKQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6D2702812FE5;
+	Wed, 14 Feb 2024 12:38:15 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.126])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 910572166B36;
+	Wed, 14 Feb 2024 12:38:13 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 14 Feb 2024 13:36:58 +0100 (CET)
+Date: Wed, 14 Feb 2024 13:36:56 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Andy Lutomirski <luto@amacapital.net>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Tycho Andersen <tycho@tycho.pizza>, linux-api@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] pidfd: change pidfd_send_signal() to respect
+ PIDFD_THREAD
+Message-ID: <20240214123655.GB16265@redhat.com>
+References: <20240209-stangen-feuerzeug-17c8662854c9@brauner>
+ <20240209154305.GC3282@redhat.com>
+ <20240209-radeln-untrennbar-9d4ae05aa4cc@brauner>
+ <20240209155644.GD3282@redhat.com>
+ <20240210-abfinden-beimessen-2dbfea59b0da@brauner>
+ <20240210123033.GA27557@redhat.com>
+ <20240210-dackel-getan-619c70fefa62@brauner>
+ <20240210131518.GC27557@redhat.com>
+ <20240210-chihuahua-hinzog-3945b6abd44a@brauner>
+ <20240210165133.GD27557@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240210165133.GD27557@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-We extend the KVM ISA extension ONE_REG interface to allow KVM
-user space to detect and enable Ztso extension for Guest/VM.
+On 02/10, Oleg Nesterov wrote:
+>
+> On 02/10, Christian Brauner wrote:
+> >
+> > +	if (type == PIDFD_SIGNAL_PROCESS_GROUP)
+> > +		ret = kill_pgrp_info(sig, &kinfo, pid);
+>
+> I guess you meant
+>
+> 	if (type == PIDTYPE_PGID)
+>
+> other than that,
+>
+> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
 
-Signed-off-by: Anup Patel <apatel@ventanamicro.com>
----
- arch/riscv/include/uapi/asm/kvm.h | 1 +
- arch/riscv/kvm/vcpu_onereg.c      | 2 ++
- 2 files changed, 3 insertions(+)
+Yes, but there is another thing I hadn't thought of...
 
-diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uapi/asm/kvm.h
-index 7499e88a947c..f8aa9f2ace95 100644
---- a/arch/riscv/include/uapi/asm/kvm.h
-+++ b/arch/riscv/include/uapi/asm/kvm.h
-@@ -166,6 +166,7 @@ enum KVM_RISCV_ISA_EXT_ID {
- 	KVM_RISCV_ISA_EXT_ZVFH,
- 	KVM_RISCV_ISA_EXT_ZVFHMIN,
- 	KVM_RISCV_ISA_EXT_ZFA,
-+	KVM_RISCV_ISA_EXT_ZTSO,
- 	KVM_RISCV_ISA_EXT_MAX,
- };
- 
-diff --git a/arch/riscv/kvm/vcpu_onereg.c b/arch/riscv/kvm/vcpu_onereg.c
-index 5f7355e96008..38f5cf286087 100644
---- a/arch/riscv/kvm/vcpu_onereg.c
-+++ b/arch/riscv/kvm/vcpu_onereg.c
-@@ -66,6 +66,7 @@ static const unsigned long kvm_isa_ext_arr[] = {
- 	KVM_ISA_EXT_ARR(ZKSED),
- 	KVM_ISA_EXT_ARR(ZKSH),
- 	KVM_ISA_EXT_ARR(ZKT),
-+	KVM_ISA_EXT_ARR(ZTSO),
- 	KVM_ISA_EXT_ARR(ZVBB),
- 	KVM_ISA_EXT_ARR(ZVBC),
- 	KVM_ISA_EXT_ARR(ZVFH),
-@@ -141,6 +142,7 @@ static bool kvm_riscv_vcpu_isa_disable_allowed(unsigned long ext)
- 	case KVM_RISCV_ISA_EXT_ZKSED:
- 	case KVM_RISCV_ISA_EXT_ZKSH:
- 	case KVM_RISCV_ISA_EXT_ZKT:
-+	case KVM_RISCV_ISA_EXT_ZTSO:
- 	case KVM_RISCV_ISA_EXT_ZVBB:
- 	case KVM_RISCV_ISA_EXT_ZVBC:
- 	case KVM_RISCV_ISA_EXT_ZVFH:
--- 
-2.34.1
+sys_pidfd_send_signal() does
+
+	/* Only allow sending arbitrary signals to yourself. */
+	ret = -EPERM;
+	if ((task_pid(current) != pid) &&
+	    (kinfo.si_code >= 0 || kinfo.si_code == SI_TKILL))
+		goto err;
+
+and I am not sure that task_pid(current) == pid should allow
+the "arbitrary signals" if PIDFD_SIGNAL_PROCESS_GROUP.
+
+Perhaps
+
+	/* Only allow sending arbitrary signals to yourself. */
+	ret = -EPERM;
+	if ((task_pid(current) != pid || type == PIDTYPE_PGID) &&
+	    (kinfo.si_code >= 0 || kinfo.si_code == SI_TKILL)
+		goto err;
+
+?
+
+Oleg.
 
