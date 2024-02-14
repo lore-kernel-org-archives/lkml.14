@@ -1,175 +1,325 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC33C13A875
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 23:11:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B7E24B33;
+	Wed, 14 Feb 2024 23:13:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707952263; cv=none; b=haW+jDGanaJHb3o7Ip57J/NgfpD+0Lxx3x2CYPc7NoHSIcoNruynhaD15iKTqI92vX+CCi0l2wCnfd4Twl/WrsXbUITAvY9MtJPWDQMe6A5A1FbA2SrDqwwPc3oeF6NiVCnN/ur7Y6LysUAUMB3JGvgiQyo7wvs0DlDNk+SMYT8=
+	t=1707952411; cv=none; b=NYfJabZ3RdJbAVLSXKC0IPmOUiRauT1ygXXx5uwbtm5ktFrPP4qwflgJifPRQT2faVx03FfhPOY37/lqu1/UMN4jv73ibIt1KVz1QsUO9Cm1P4xZs5BkyEe+4P4mJrdmjj0PLQilwMs8JG7iM4ocIruRXzSBJ3TUvXnapxIkLd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707952263; c=relaxed/simple;
-	bh=UW8RGf9gZBE71QcUMtK+MfmU0jrUtwnNwb7STvh115o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XqLfaLTZzHjQkZ0TchYWyyeBbOvHRKOjtkNGWzLnGwDI2Dy74EjZSlrZOwS0/fT6ktagJL+cy0xkYd2gnp+nuzJEzMiRcBbn5oGtW2ofbTE3B8QwSifCvX42XKOGbYhqQUAcQInSgAjLrK8Cavo2BVQsH5njtgeoBswkofSdva0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DEaA601A; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707952411; c=relaxed/simple;
+	bh=Z1/yl5RJ77QqCCp71GxnprkzPjJyVEnw3bnTqBlUQMY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IhjrkkQSvwiV5VJT8pnI/F3PDXpoPGUjkLBULkeWVuIdsjIBQZXnBBmyjrVQU+fNOwn3GBwbnaf57WdpkSi38TO3hSCmpxuupymtwVm4uWWI8K5OzFi4SLuEc4170eptWuEgYfsnkUz9UCXSWi+FNpF8ofophs1/imkTTlUFwAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hCw1MKmv; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DEaA601A"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4120933b710so11735e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 15:11:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707952260; x=1708557060; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pFdP6RSMwEWacxovIP52kptkXcSgN4Mbf51UhpxEIDc=;
-        b=DEaA601AuHQwnewbVKFA0QzUw+cjNuYf6Ma1elfxikdt33/2EalfbmoYUduRes5TV8
-         P4rHdbxVUSukeDLdqo6bH4orsmz3RNlZXpu8n0CXPy7VhaJ5/KXVVDXJPcMf3MoGT2Sl
-         pjXlxGysWEuCdRVXb6HLM5Dp9xwXIO9L34MkhQ11IxW/bicUxGbl1IN1WaqMnVqGJLCh
-         wH9eS5j0Tb3aoru3lHoERkWLkOys1H/4aRjVVoTUjOivMwLEk6GO8SdC1dq9WPWMch8g
-         pC3Gr21IZQPjglzRjxVSoXeoEk3/QFC6/PXsImnTaU08vcbbg1b2q86wMNI9WXrsVHue
-         ZYtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707952260; x=1708557060;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pFdP6RSMwEWacxovIP52kptkXcSgN4Mbf51UhpxEIDc=;
-        b=nrBvRprnjf9xpzHlevyapdGCoHLemg/kqD06jlDajBSzdem63YqJOi8G3lUHvI/8/Q
-         DhOEaGapbWVRkoHMFzezlrP0ifjdm+hRmcGW6BXrcGL7uhCxiuBjo3Dj7hMw+QaCwV8i
-         BPsMbXsNspOJY8s34kcyWbs7+JphjeQ2nFdayW8SNWYsa+TJf9vaiL7ekFg5TlzuPmmt
-         HIeL7JjfyX86CNTArfAp+Wi8TqPStMh8JXxUr/ESVgr64qjM6ZjXBA9C5fN+ey2LQQcD
-         PmjY27PZvbdqJVSkPIm1HQKEG2BrXVCmxMVBx10NrkUibnrnWlIXwbD/N1tBv7m1VQCT
-         KUSg==
-X-Forwarded-Encrypted: i=1; AJvYcCVNQjnI+F9ng30LWnN+bImrd37ln3C6O+bv58mhzk5sJQcNdMzRAqZxrjcSxnOhUBNv7UKv12ZRTt/jsUH0t+QLU1l33S7boc6mrh8F
-X-Gm-Message-State: AOJu0Yy4fYBt8RIiyCRVY86tU3g5NV8UR5a4xOpnd3WVTFnSWUWHIpLm
-	vRZ6iKvnjD4Bb5UgEVTijjNUy5NvpxxHHSwYQKbvXnOMInDQuJeoKa5r5F/1J9oBu+JxfhAnYj4
-	ZBHj2yf4ksIQDgDd1baBFG7YCv8isNmmTHnS1
-X-Google-Smtp-Source: AGHT+IF/GMoDj0jOjVDt9C1sIgJVOb6+Nx4zE7qML7SwDzztZ+XjdTZSiyVZzroVRAotbePaXYYVUQbDyXUc8oU9ToQ=
-X-Received: by 2002:a05:600c:1d93:b0:411:cdf8:f3d1 with SMTP id
- p19-20020a05600c1d9300b00411cdf8f3d1mr347227wms.0.1707952259858; Wed, 14 Feb
- 2024 15:10:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hCw1MKmv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707952410; x=1739488410;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Z1/yl5RJ77QqCCp71GxnprkzPjJyVEnw3bnTqBlUQMY=;
+  b=hCw1MKmvNqiDO7/1L/9VPDy6alVhEDrY7mK+AXV5JxG95XwyGYLqL7OH
+   l+z2TcQ8uPpgkrVAfwJhJCRt4zsYf6GdUm4qIncp7dGbl8gY6+99hz6mH
+   SvoSkIYlr3LXkPQgWdt9lHaRKq0TEEGnKrGnZ1Ju65oIDtQmclNgCq8Ug
+   iCYzktPoSYuEkLKXIdpTEqDgcT48Bn5nLHdZHAQXszir1t9XakAUkJK12
+   voQQ6jjM2iIOtBU7tNlMkfv4yMmyxdC/i6Zgu84ZcqegOPbbqOuUNjBMR
+   eL4bBtrpJfTHCnlfc/0xFG6WubCVSnuy0oZNaCZC/iRrE15q1oEd8mYfw
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="13422004"
+X-IronPort-AV: E=Sophos;i="6.06,160,1705392000"; 
+   d="scan'208";a="13422004"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 15:13:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="826369893"
+X-IronPort-AV: E=Sophos;i="6.06,160,1705392000"; 
+   d="scan'208";a="826369893"
+Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
+  by orsmga001.jf.intel.com with SMTP; 14 Feb 2024 15:13:23 -0800
+Received: by stinkbox (sSMTP sendmail emulation); Thu, 15 Feb 2024 01:13:22 +0200
+Date: Thu, 15 Feb 2024 01:13:22 +0200
+From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Daniel Vetter <daniel@ffwll.ch>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+	amd-gfx@lists.freedesktop.org,
+	"open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+	linux-fbdev@vger.kernel.org, nouveau@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org,
+	linux-renesas-soc@vger.kernel.org,
+	"open list:ACPI" <linux-acpi@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Melissa Wen <mwen@igalia.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>
+Subject: Re: [PATCH v6 3/5] drm: Add support to get EDID from ACPI
+Message-ID: <Zc1JEg5mC0ww_BeU@intel.com>
+References: <20240214215756.6530-1-mario.limonciello@amd.com>
+ <20240214215756.6530-4-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214212929.3753766-1-maskray@google.com> <202402141405.0755DD4E5E@keescook>
- <CAFP8O3LWBHkbLwFJdmy7iSGD0cMSy1jczETo=N6oVapCgPY=sA@mail.gmail.com> <202402141433.AC69F2A3@keescook>
-In-Reply-To: <202402141433.AC69F2A3@keescook>
-From: Fangrui Song <maskray@google.com>
-Date: Wed, 14 Feb 2024 15:10:46 -0800
-Message-ID: <CAFP8O3JZ9=QeJR0wZwYvLYVgXKo9DYBMsaxoBS9vLJZW-U1uZw@mail.gmail.com>
-Subject: Re: [PATCH] x86/build: Simplify patterns for unwanted section
-To: Kees Cook <keescook@chromium.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	Nathan Chancellor <nathan@kernel.org>, Heiko Carstens <hca@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240214215756.6530-4-mario.limonciello@amd.com>
+X-Patchwork-Hint: comment
 
-On Wed, Feb 14, 2024 at 2:40=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
-rote:
->
-> On Wed, Feb 14, 2024 at 02:13:01PM -0800, Fangrui Song wrote:
-> > On Wed, Feb 14, 2024 at 2:07=E2=80=AFPM Kees Cook <keescook@chromium.or=
-g> wrote:
-> > >
-> > > On Wed, Feb 14, 2024 at 01:29:29PM -0800, Fangrui Song wrote:
-> > > > A s390 patch modeling its --orphan-handling=3D after x86 [1] sparke=
-d my
-> > > > motivation to simplify patterns. Commit 5354e84598f2 ("x86/build: A=
-dd
-> > > > asserts for unwanted sections") added asserts that certain input
-> > > > sections must be absent or empty. The patterns can be simplified.
-> > > >
-> > > > For dynamic relocations,
-> > > >
-> > > > *(.rela.*) is sufficient to match all dynamic relocations synthesiz=
-ed by
-> > > > GNU ld and LLD. .rela_* is unnecessary. --emit-relocs may create .r=
-ela_*
-> > > > sections for section names prefixed with _, but they are not matche=
-d by
-> > > > linker scripts.
-> > > >
-> > > > .plt instead of .plt.* is sufficient to match synthesized PLT entri=
-es.
-> > >
-> > > Do you mean ".plt.foo" matches ".plt" ?
-> >
-> > I mean we just need .plt : { *(.plt) } , not .plt : { *(.plt) *(.plt.*)=
- }.
->
-> But then, for example, if it gets generated, .plt.got ends up being
-> reported as an orphan...
->
-> >
-> > The linker synthesized section for PLT entries is .plt, not suffixed.
-> >
-> > > > .igot and .igot.plt are for non-preemptible STT_GNU_IFUNC in GNU ld=
- (LLD
-> > > > just uses .got), which the kernel does not use. In addition, if .ig=
-ot or
->
-> Right, the issue has been getting totally weird sections emitted by the
-> linker. If you're saying you'd rather those get reported as orphan
-> sections instead of being validated for being zero sized, and that works
-> for all the architectures, then okay.
+On Wed, Feb 14, 2024 at 03:57:54PM -0600, Mario Limonciello wrote:
+> Some manufacturers have intentionally put an EDID that differs from
+> the EDID on the internal panel on laptops.  Drivers that prefer to
+> fetch this EDID can set a bit on the drm_connector to indicate that
+> the DRM EDID helpers should try to fetch it and it is preferred if
+> it's present.
+> 
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/gpu/drm/Kconfig     |   1 +
+>  drivers/gpu/drm/drm_edid.c  | 109 +++++++++++++++++++++++++++++++++---
+>  include/drm/drm_connector.h |   6 ++
+>  include/drm/drm_edid.h      |   1 +
+>  4 files changed, 109 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+> index 872edb47bb53..3db89e6af01d 100644
+> --- a/drivers/gpu/drm/Kconfig
+> +++ b/drivers/gpu/drm/Kconfig
+> @@ -8,6 +8,7 @@
+>  menuconfig DRM
+>  	tristate "Direct Rendering Manager (XFree86 4.1.0 and higher DRI support)"
+>  	depends on (AGP || AGP=n) && !EMULATED_CMPXCHG && HAS_DMA
+> +	depends on (ACPI_VIDEO || ACPI_VIDEO=n)
+>  	select DRM_PANEL_ORIENTATION_QUIRKS
+>  	select DRM_KMS_HELPER if DRM_FBDEV_EMULATION
+>  	select FB_CORE if DRM_FBDEV_EMULATION
+> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+> index 923c4423151c..cdc30c6d05d5 100644
+> --- a/drivers/gpu/drm/drm_edid.c
+> +++ b/drivers/gpu/drm/drm_edid.c
+> @@ -28,6 +28,7 @@
+>   * DEALINGS IN THE SOFTWARE.
+>   */
+>  
+> +#include <acpi/video.h>
+>  #include <linux/bitfield.h>
+>  #include <linux/cec.h>
+>  #include <linux/hdmi.h>
+> @@ -2188,6 +2189,58 @@ drm_do_probe_ddc_edid(void *data, u8 *buf, unsigned int block, size_t len)
+>  	return ret == xfers ? 0 : -1;
+>  }
+>  
+> +/**
+> + * drm_do_probe_acpi_edid() - get EDID information via ACPI _DDC
+> + * @data: struct drm_connector
+> + * @buf: EDID data buffer to be filled
+> + * @block: 128 byte EDID block to start fetching from
+> + * @len: EDID data buffer length to fetch
+> + *
+> + * Try to fetch EDID information by calling acpi_video_get_edid() function.
+> + *
+> + * Return: 0 on success or error code on failure.
+> + */
+> +static int
+> +drm_do_probe_acpi_edid(void *data, u8 *buf, unsigned int block, size_t len)
+> +{
+> +	struct drm_connector *connector = data;
+> +	struct drm_device *ddev = connector->dev;
+> +	struct acpi_device *acpidev = ACPI_COMPANION(ddev->dev);
+> +	unsigned char start = block * EDID_LENGTH;
+> +	void *edid;
+> +	int r;
+> +
+> +	if (!acpidev)
+> +		return -ENODEV;
+> +
+> +	switch (connector->connector_type) {
+> +	case DRM_MODE_CONNECTOR_LVDS:
+> +	case DRM_MODE_CONNECTOR_eDP:
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
 
-Thanks. I trust my judgement here:)
+We could have other types of connectors that want this too.
+I don't see any real benefit in having this check tbh. Drivers
+should simply notset the flag on connectors where it won't work,
+and only the driver can really know that.
 
-> > > > .igot.plt is ever non-empty, there will be .rela.* dynamic relocati=
-ons
-> > > > leading to an assert failure anyway.
-> > >
-> > > I think at the time I was dealing with avoid multiple warnings out of
-> > > the linker, as I was getting orphan warnings in addition to the
-> > > non-empty warnings.
-> > >
-> > > >
-> > > > [1]: https://lore.kernel.org/all/20240207-s390-lld-and-orphan-warn-=
-v1-6-8a665b3346ab@kernel.org/
-> > > >
-> > > > Signed-off-by: Fangrui Song <maskray@google.com>
-> > >
-> > > Is anything harmed by leaving all of this as-is?
-> > >
-> > > -Kees
-> >
-> > No harm. But ports adopting --orphan-handling=3D (like s390) may copy
-> > the unneeded .rela_* .
-> > When people read .rela_*, they might think whether the kernel does
-> > anything special that
-> > .rela_* needs to be matched.
->
-> I added these because the were being generated. See commit d1c0272bc1c0
-> ("x86/boot/compressed: Remove, discard, or assert for unwanted sections")
->
-> I don't want to suddenly start generating warnings for older/broken
-> linkers. (i.e. a change like this needs really careful testing, and that
-> needs to be detailed in the commit log.)
->
-> -Kees
+> +	/* fetch the entire edid from BIOS */
+> +	r = acpi_video_get_edid(acpidev, ACPI_VIDEO_DISPLAY_LCD, -1, &edid);
+> +	if (r < 0) {
+> +		DRM_DEBUG_KMS("Failed to get EDID from ACPI: %d\n", r);
+> +		return r;
+> +	}
+> +	if (len > r || start > r || start + len > r) {
+> +		r = -EINVAL;
+> +		goto cleanup;
+> +	}
+> +
+> +	memcpy(buf, edid + start, len);
+> +	r = 0;
+> +
+> +cleanup:
+> +	kfree(edid);
+> +
+> +	return r;
+> +}
+> +
+>  static void connector_bad_edid(struct drm_connector *connector,
+>  			       const struct edid *edid, int num_blocks)
+>  {
+> @@ -2621,7 +2674,8 @@ EXPORT_SYMBOL(drm_probe_ddc);
+>   * @connector: connector we're probing
+>   * @adapter: I2C adapter to use for DDC
+>   *
+> - * Poke the given I2C channel to grab EDID data if possible.  If found,
+> + * If the connector allows it, try to fetch EDID data using ACPI. If not found
+> + * poke the given I2C channel to grab EDID data if possible.  If found,
+>   * attach it to the connector.
+>   *
+>   * Return: Pointer to valid EDID or NULL if we couldn't find any.
+> @@ -2629,20 +2683,50 @@ EXPORT_SYMBOL(drm_probe_ddc);
+>  struct edid *drm_get_edid(struct drm_connector *connector,
+>  			  struct i2c_adapter *adapter)
+>  {
+> -	struct edid *edid;
+> +	struct edid *edid = NULL;
+>  
+>  	if (connector->force == DRM_FORCE_OFF)
+>  		return NULL;
+>  
+> -	if (connector->force == DRM_FORCE_UNSPECIFIED && !drm_probe_ddc(adapter))
+> -		return NULL;
+> +	if (connector->acpi_edid_allowed)
+> +		edid = _drm_do_get_edid(connector, drm_do_probe_acpi_edid, connector, NULL);
+> +
+> +	if (!edid) {
+> +		if (connector->force == DRM_FORCE_UNSPECIFIED && !drm_probe_ddc(adapter))
+> +			return NULL;
+> +		edid = _drm_do_get_edid(connector, drm_do_probe_ddc_edid, adapter, NULL);
+> +	}
+>  
+> -	edid = _drm_do_get_edid(connector, drm_do_probe_ddc_edid, adapter, NULL);
+>  	drm_connector_update_edid_property(connector, edid);
+>  	return edid;
+>  }
+>  EXPORT_SYMBOL(drm_get_edid);
+>  
+> +/**
+> + * drm_edid_read_acpi - get EDID data, if available
+> + * @connector: connector we're probing
+> + *
+> + * Use the BIOS to attempt to grab EDID data if possible.
+> + *
+> + * The returned pointer must be freed using drm_edid_free().
+> + *
+> + * Return: Pointer to valid EDID or NULL if we couldn't find any.
+> + */
+> +const struct drm_edid *drm_edid_read_acpi(struct drm_connector *connector)
+> +{
+> +	const struct drm_edid *drm_edid;
+> +
+> +	if (connector->force == DRM_FORCE_OFF)
+> +		return NULL;
+> +
+> +	drm_edid = drm_edid_read_custom(connector, drm_do_probe_acpi_edid, connector);
+> +
+> +	/* Note: Do *not* call connector updates here. */
+> +
+> +	return drm_edid;
+> +}
+> +EXPORT_SYMBOL(drm_edid_read_acpi);
+> +
+>  /**
+>   * drm_edid_read_custom - Read EDID data using given EDID block read function
+>   * @connector: Connector to use
+> @@ -2727,10 +2811,11 @@ const struct drm_edid *drm_edid_read_ddc(struct drm_connector *connector,
+>  EXPORT_SYMBOL(drm_edid_read_ddc);
+>  
+>  /**
+> - * drm_edid_read - Read EDID data using connector's I2C adapter
+> + * drm_edid_read - Read EDID data using BIOS or connector's I2C adapter
+>   * @connector: Connector to use
+>   *
+> - * Read EDID using the connector's I2C adapter.
+> + * Read EDID from BIOS if allowed by connector or by using the connector's
+> + * I2C adapter.
+>   *
+>   * The EDID may be overridden using debugfs override_edid or firmware EDID
+>   * (drm_edid_load_firmware() and drm.edid_firmware parameter), in this priority
+> @@ -2742,10 +2827,18 @@ EXPORT_SYMBOL(drm_edid_read_ddc);
+>   */
+>  const struct drm_edid *drm_edid_read(struct drm_connector *connector)
+>  {
+> +	const struct drm_edid *drm_edid = NULL;
+> +
+>  	if (drm_WARN_ON(connector->dev, !connector->ddc))
+>  		return NULL;
+>  
+> -	return drm_edid_read_ddc(connector, connector->ddc);
+> +	if (connector->acpi_edid_allowed)
 
-I saw this commit and still believe .rela_*  is unnecessary for all
-supported binutils versions.
-GNU ld 2.25 does not support --orphan-handling=3Derror (2015-09
-feature), but it manages to link vmlinux without any warning.
+That should probably be called 'prefer_acpi_edid' or something
+since it's the first choice when the flag is set.
 
-/tmp/binutils-2.25/out/release/ld/ld-new -m elf_x86_64 -z noexecstack
---emit-relocs --discard-none -z max-page-size=3D0x200000 --build-id=3Dsha1
---script=3D./arch/x86/kernel/vmlinux.lds -o vmlinux --whole-archive
-vmlinux.o .vmlinux.export.o init/version-timestamp.o
---no-whole-archive --start-group --end-group .tmp_vmlinux.kallsyms2.o
+But I'm not so sure there's any real benefit in having this
+flag at all. You anyway have to modify the driver to use this,
+so why not just have the driver do the call directly instead of
+adding this extra detour via the flag?
 
+> +		drm_edid = drm_edid_read_acpi(connector);
+> +
+> +	if (!drm_edid)
+> +		drm_edid = drm_edid_read_ddc(connector, connector->ddc);
+> +
+> +	return drm_edid;
+>  }
+>  EXPORT_SYMBOL(drm_edid_read);
+>  
+> diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
+> index fe88d7fc6b8f..74ed47f37a69 100644
+> --- a/include/drm/drm_connector.h
+> +++ b/include/drm/drm_connector.h
+> @@ -1886,6 +1886,12 @@ struct drm_connector {
+>  
+>  	/** @hdr_sink_metadata: HDR Metadata Information read from sink */
+>  	struct hdr_sink_metadata hdr_sink_metadata;
+> +
+> +	/**
+> +	 * @acpi_edid_allowed: Get the EDID from the BIOS, if available.
+> +	 * This is only applicable to eDP and LVDS displays.
+> +	 */
+> +	bool acpi_edid_allowed;
 
-> --
-> Kees Cook
+Aren't there other bools/small stuff in there for tighter packing?
 
+>  };
+>  
+>  #define obj_to_connector(x) container_of(x, struct drm_connector, base)
+> diff --git a/include/drm/drm_edid.h b/include/drm/drm_edid.h
+> index 7923bc00dc7a..1c1ee927de9c 100644
+> --- a/include/drm/drm_edid.h
+> +++ b/include/drm/drm_edid.h
+> @@ -459,5 +459,6 @@ bool drm_edid_is_digital(const struct drm_edid *drm_edid);
+>  
+>  const u8 *drm_find_edid_extension(const struct drm_edid *drm_edid,
+>  				  int ext_id, int *ext_index);
+> +const struct drm_edid *drm_edid_read_acpi(struct drm_connector *connector);
+>  
+>  #endif /* __DRM_EDID_H__ */
+> -- 
+> 2.34.1
 
-
---=20
-=E5=AE=8B=E6=96=B9=E7=9D=BF
+-- 
+Ville Syrjälä
+Intel
