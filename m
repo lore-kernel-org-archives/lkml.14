@@ -1,133 +1,74 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB77F134A3
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 09:34:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9081AAB9
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 09:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707903292; cv=none; b=TgT38P0l98SyfinJin6LguS+yBtfCljf9WOFAgFRT2VOgbRpsXYj5umUOdg/0YPcv22r7ZS+mPjjceUVMVAGlkoygPJJISjTB6DuRK3DPdlBXKmlntF/kqVyhn4Fj4zf/9HYdITII0UP3SigIKVO7jsuSamppj21aR9zD+b2FHM=
+	t=1707903304; cv=none; b=A9ChEfnOhQyIjfkeMryMDIJUGVnZDMQ2wIZT+hY//qT+UzPu0dg0KqVcTD/dCWQXcv6ywPXXqmdKLjLieWmwPhOa5Q2Im/q0X0FVMPQmMGR0nn4rrq/8cpU59F5afGExSSQjL2swYX8YQscsUFjxe2wm5QHNkk/d8O1azqVPLzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707903292; c=relaxed/simple;
-	bh=eWkspjNzFtYVtL67xcsvO3+T3IJryy3wrpfEPZSaC6Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=MZJ5diDIu/Vq1/HvZtMgNhm2cFoTIKbugz/l71kTtDQmBi7JLzHzvhBoPmGmmQNl4mchEGdIh9JXHnygdoplTIUVVvHvXGG7vrBZxbIn2NxCjNWHoK/2ZfQHE/H+22gPXoDNV5FsjeRZdt53dQefvbTTT/MpV0YzA5mMTV+SyYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f8FC5ItF; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f8FC5ItF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707903290; x=1739439290;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=eWkspjNzFtYVtL67xcsvO3+T3IJryy3wrpfEPZSaC6Q=;
-  b=f8FC5ItFuk0gb4jwwnaPgyr6P9USjYSOTwhenUlFHfPMvpSlYsF16Twa
-   qOGCUukrW7VRHNJ69g+fBx3juw5d0j+os+DlP9gzhC1xoblHiEYuE/BhS
-   GcAEr5AOrqC6z/86Oo0MVMOXOwFfx27pyNvWT8q/rqCJu2YEKKVevX/fq
-   fNNFFh81w2xx6CBSEDoUz2LQlU5rq4JhvtBw5dYIfy30pvyaMiYf+DK70
-   Bue3pKTsoX0EYuCBhFiGSpkSo62Xis2fOWpBpyWgawIGuHjLYzcLgH799
-   /2Rg41DTT+ckQvAAg/x4Z3PtJuO8dWfcT6vMNN7+45SA0b189q767zLY/
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="1848358"
-X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="1848358"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 01:34:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="3115962"
-Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 14 Feb 2024 01:34:44 -0800
-Received: from kbuild by 01f0647817ea with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1raBf7-0008dU-2i;
-	Wed, 14 Feb 2024 09:34:41 +0000
-Date: Wed, 14 Feb 2024 17:33:56 +0800
-From: kernel test robot <lkp@intel.com>
-To: Costa Shulyupin <costa.shul@redhat.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Waiman Long <longman@redhat.com>,
-	Frederic Weisbecker <frederic@kernel.org>
-Subject: [tip:timers/core 3/3] kernel/time/hrtimer.c:2224:49: error: implicit
- declaration of function 'housekeeping' is invalid in C99
-Message-ID: <202402141742.oYY6J3lC-lkp@intel.com>
+	s=arc-20240116; t=1707903304; c=relaxed/simple;
+	bh=mCK1Um/BXsaU8pNKjy69g6SVqMEaiG3IrWptrWdgIcg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=uoawBmQg2hVVBQB7JtuUI1arc6DfeQ2NPmYPgXz4wIfVbk1QnmrsXfwMrm5HzxIFkj1EG6Rp+GNo3boL9N7XNng3LhsTe4ysdYfnTu96THrJCCshLV+CtUoYIiSQUjlEvEvbW/u9EWP8zr2zvNrIXPCduaYHeFBSjJgM6yKrbZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-363dab8a83aso44779445ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 01:35:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707903302; x=1708508102;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ORnUAaewv/RB2Qy7deClC3JARtWN1YpviAOkafVIcmY=;
+        b=OFv1BwwQnuPm8xXzSioKRfpf6iN+lpSRL/Hz23ZZ+2z+HsnSsF/ISLNVM5T+RGUhEi
+         N0fu1Bw9qok0hBVIJgXOIFp5qXUTGXYFvKNUtHr46vME7vyTSHEBXnJ52mX4eIgfARp8
+         /J1kdf2/yz8sHDc3WPn7Yb7FB2jw9sE16vrCDMDWk0Zk8qfBG55Smzb4ybV7kptnhGSV
+         SBQ2+JxdoePNBhjiAF8iUx9NApN+rfziseaYbYDqQV68IXoTNeao2mm+tWCprd1sOWXJ
+         dlpcJZiJwBI7EnienMoJ/Tkxha4Yfd5WU0xv6DnTSF2CPI9P/Pl2x5zZ205RiiJsrHJU
+         nKww==
+X-Forwarded-Encrypted: i=1; AJvYcCUSMVVZbyEcGX0oD2X5UaVCRgf8YowsQvFj3HUSsCOEhzQriRhZzyfXQa64K0qNBrVBDrVZHzGAIFjsohu7PhVBSCtlFHOPCK518nmI
+X-Gm-Message-State: AOJu0YzAY+LCS6jarhe24iY2PVgyEpDdYhr2Z+NvzwFVWpuhbvVx+nlt
+	zuYkJ5Xm8jxC18tJtF99dGJ7q+CmNtZrsbkkSaKbH/G9uxXMKHELcbVIlMBMcduhFNwYKyjGbhM
+	TF7xUcdFnS5oRteQfe+D6Wc8w3YlawBluq//pF1MH5VwMrBQF6tQZmDQ=
+X-Google-Smtp-Source: AGHT+IGTPrgALnOcbPza/P498AJpJEyxRbba0VvGWrms/leJlROmkz7mhYo156aSOU2ElFeJAZQzPCr8wZyuUtxb2Ywa5mAN6Atf
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-Received: by 2002:a05:6e02:1a2f:b0:363:d88a:4640 with SMTP id
+ g15-20020a056e021a2f00b00363d88a4640mr177226ile.5.1707903302303; Wed, 14 Feb
+ 2024 01:35:02 -0800 (PST)
+Date: Wed, 14 Feb 2024 01:35:02 -0800
+In-Reply-To: <71fab85e-966d-ba46-faec-a75a283bd325@netfilter.org>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a508c00611543978@google.com>
+Subject: Re: [syzbot] [netfilter?] WARNING: ODEBUG bug in ip_set_free
+From: syzbot <syzbot+ebbab3e04c88fa141e6b@syzkaller.appspotmail.com>
+To: kadlec@netfilter.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/core
-head:   86342554e102b0d18d50abec43d40f4fc92f1993
-commit: 86342554e102b0d18d50abec43d40f4fc92f1993 [3/3] hrtimer: Select housekeeping CPU during migration
-config: arm-defconfig (https://download.01.org/0day-ci/archive/20240214/202402141742.oYY6J3lC-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project.git f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240214/202402141742.oYY6J3lC-lkp@intel.com/reproduce)
+Hello,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402141742.oYY6J3lC-lkp@intel.com/
+syzbot tried to test the proposed patch but the build/boot failed:
 
-All errors (new ones prefixed by >>):
-
-   kernel/time/hrtimer.c:1651:7: warning: variable 'expires_in_hardirq' set but not used [-Wunused-but-set-variable]
-           bool expires_in_hardirq;
-                ^
->> kernel/time/hrtimer.c:2224:49: error: implicit declaration of function 'housekeeping' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           int i, ncpu = cpumask_any_and(cpu_active_mask, housekeeping(HK_TYPE_TIMER));
-                                                          ^
->> kernel/time/hrtimer.c:2224:62: error: use of undeclared identifier 'HK_TYPE_TIMER'
-           int i, ncpu = cpumask_any_and(cpu_active_mask, housekeeping(HK_TYPE_TIMER));
-                                                                       ^
-   1 warning and 2 errors generated.
+failed to apply patch:
+checking file net/netfilter/ipset/ip_set_bitmap_gen.h
+patch: **** unexpected end of file in patch
 
 
-vim +/housekeeping +2224 kernel/time/hrtimer.c
 
-  2221	
-  2222	int hrtimers_cpu_dying(unsigned int dying_cpu)
-  2223	{
-> 2224		int i, ncpu = cpumask_any_and(cpu_active_mask, housekeeping(HK_TYPE_TIMER));
-  2225		struct hrtimer_cpu_base *old_base, *new_base;
-  2226	
-  2227		tick_cancel_sched_timer(dying_cpu);
-  2228	
-  2229		old_base = this_cpu_ptr(&hrtimer_bases);
-  2230		new_base = &per_cpu(hrtimer_bases, ncpu);
-  2231	
-  2232		/*
-  2233		 * The caller is globally serialized and nobody else
-  2234		 * takes two locks at once, deadlock is not possible.
-  2235		 */
-  2236		raw_spin_lock(&old_base->lock);
-  2237		raw_spin_lock_nested(&new_base->lock, SINGLE_DEPTH_NESTING);
-  2238	
-  2239		for (i = 0; i < HRTIMER_MAX_CLOCK_BASES; i++) {
-  2240			migrate_hrtimer_list(&old_base->clock_base[i],
-  2241					     &new_base->clock_base[i]);
-  2242		}
-  2243	
-  2244		/*
-  2245		 * The migration might have changed the first expiring softirq
-  2246		 * timer on this CPU. Update it.
-  2247		 */
-  2248		__hrtimer_get_next_event(new_base, HRTIMER_ACTIVE_SOFT);
-  2249		/* Tell the other CPU to retrigger the next event */
-  2250		smp_call_function_single(ncpu, retrigger_next_event, NULL, 0);
-  2251	
-  2252		raw_spin_unlock(&new_base->lock);
-  2253		raw_spin_unlock(&old_base->lock);
-  2254	
-  2255		return 0;
-  2256	}
-  2257	
+Tested on:
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+commit:         f735966e Merge branches 'for-next/reorg-va-space' and ..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d47605a39da2cf06
+dashboard link: https://syzkaller.appspot.com/bug?extid=ebbab3e04c88fa141e6b
+compiler:       
+userspace arch: arm64
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=173bec1c180000
+
