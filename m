@@ -1,104 +1,89 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69EC0171A2;
-	Wed, 14 Feb 2024 10:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B5317552;
+	Wed, 14 Feb 2024 10:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707906252; cv=none; b=SO1olORUl7NxlbJFNsiBRkBXRFI1Jm5yE5hjRiHHukn8dni7iuQjZpC1VWuAerpTdf+VtdQxNCemNFCgrwoqYYCDuGCaPpWVPUhke+Sb5ux2Z1UrkL6iRt71hkv8YwBo8oQLj9fufSSxZ0m9W+e0eyTVlRmcCotbUYWYms2xjvk=
+	t=1707906284; cv=none; b=X0p13Q0O50BRsA4NnkbumW3H38mrD36ADVV0yB2SnHf3BokNndb7CettSoMaTrLzMagL1mAi62iIVo54MUrFbkTbEGNlH1Pw9ZiWw2IpFgtT9qzTc5G06C7Xl7N0UEUtYrCKyeZ/sG96YDs9+urUgy0i919wgqF1kgOWkZvZDGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707906252; c=relaxed/simple;
-	bh=qUTm7/R3ovfw0MXxK4QrZKdILlZUuBNM9kI6bR5Fxzc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XFgxRPbgwNYJ1qRIO8JZshUWBOO2ncGYUuoiuOIAGaE43e9iNIloXoKkHAby5qAaDAWcdOxUYLFaWbVK0gZgcF6iD6IIhh17waVrpSKdMkJZtp89e8UjLFe6EtxpF6DAM8LNhtoUD/RufE62eYkO5gyZD+pafbaFcDKzvnQFvcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=AnHykjQd; arc=none smtp.client-ip=115.28.160.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="AnHykjQd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1707905765; bh=qUTm7/R3ovfw0MXxK4QrZKdILlZUuBNM9kI6bR5Fxzc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AnHykjQdE1CficUI8gdhrgpFjRfWTnDfdo/3pAtd8JVI8QHIsghXTdXwSjL1Fg7sz
-	 jw8WvUNInaOnTLhKJuxzq29eNk0fhq9PYUwGntbZSLVCe/uMu13LjJmVOhkc8wgEPV
-	 VunNPOwdUcIGAqKUPO9cRjUrvDXrZRe/bAfifxGg=
-Received: from ld50.lan (unknown [IPv6:240e:388:8d00:6500:5531:eef6:1274:cebe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 6215D6017D;
-	Wed, 14 Feb 2024 18:16:05 +0800 (CST)
-From: WANG Xuerui <kernel@xen0n.name>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH for-6.8 1/5] KVM: LoongArch: Fix input value checking of _kvm_get_cpucfg
-Date: Wed, 14 Feb 2024 18:15:53 +0800
-Message-ID: <20240214101557.2900512-2-kernel@xen0n.name>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240214101557.2900512-1-kernel@xen0n.name>
-References: <20240214101557.2900512-1-kernel@xen0n.name>
+	s=arc-20240116; t=1707906284; c=relaxed/simple;
+	bh=L/qyyXzgC6hYYYA38GAe52ZNx6yR11HINzKT0BfZ7dc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hrVD9XHSD6oB5s3auWuv4fEQcjST6He3HxW3k5lw1Vz506JBfJEunUFe16lo3iO9uZb6S1wtnl4W44sMHlK1lUG2y5HFtzi9iUBBLbEkhk2uyrU6rMTsHkopsiI3oHFBDZxZlYiX1uhvbVxRDokLUhvylXN/zPsxK2NJR2YXWQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E62E3C433F1;
+	Wed, 14 Feb 2024 10:24:42 +0000 (UTC)
+Message-ID: <24cbf7b2-a091-440e-92cc-5c9828d52260@xs4all.nl>
+Date: Wed, 14 Feb 2024 11:24:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] media: v4l: marvell: select CONFIG_V4L2_ASYNC where
+ needed
+Content-Language: en-US, nl
+To: Arnd Bergmann <arnd@kernel.org>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>
+References: <20240213095555.454392-1-arnd@kernel.org>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+In-Reply-To: <20240213095555.454392-1-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: WANG Xuerui <git@xen0n.name>
+Arnd, Sakari,
 
-The range check for the CPUCFG ID is wrong (should have been a ||
-instead of &&), and pointless, because the default case a few lines
-below already serves to deny all unhandled cases.
+Is this something that needs to go to v6.8? Or just v6.9?
 
-Furthermore, the juggling of the temp return value is unnecessary,
-because it is semantically equivalent and more readable to just
-return at every switch case's end. This is done too to avoid potential
-bugs in the future related to the unwanted complexity.
+Do we need a Fixes tag?
 
-Fixes: db1ecca22edf ("LoongArch: KVM: Add LSX (128bit SIMD) support")
-Signed-off-by: WANG Xuerui <git@xen0n.name>
----
- arch/loongarch/kvm/vcpu.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+Regards,
 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 27701991886d..c4a592623da6 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -300,11 +300,6 @@ static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
- 
- static int _kvm_get_cpucfg(int id, u64 *v)
- {
--	int ret = 0;
--
--	if (id < 0 && id >= KVM_MAX_CPUCFG_REGS)
--		return -EINVAL;
--
- 	switch (id) {
- 	case 2:
- 		/* Return CPUCFG2 features which have been supported by KVM */
-@@ -324,12 +319,10 @@ static int _kvm_get_cpucfg(int id, u64 *v)
- 		if (cpu_has_lasx)
- 			*v |= CPUCFG2_LASX;
- 
--		break;
-+		return 0;
- 	default:
--		ret = -EINVAL;
--		break;
-+		return -EINVAL;
- 	}
--	return ret;
- }
- 
- static int kvm_check_cpucfg(int id, u64 val)
--- 
-2.43.0
+	Hans
+
+On 13/02/2024 10:55, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> Drivers that call v4l2_async_nf_init() need to select the corresponding
+> Kconfig symbol:
+> 
+> ERROR: modpost: "v4l2_async_nf_init" [drivers/media/platform/marvell/cafe_ccic.ko] undefined!
+> ERROR: modpost: "__v4l2_async_nf_add_i2c" [drivers/media/platform/marvell/cafe_ccic.ko] undefined!
+> ERROR: modpost: "v4l2_async_nf_unregister" [drivers/media/platform/marvell/mcam-core.ko] undefined!
+> ERROR: modpost: "v4l2_async_nf_init" [drivers/media/platform/marvell/mmp_camera.ko] undefined!
+> ERROR: modpost: "__v4l2_async_nf_add_fwnode_remote" [drivers/media/platform/marvell/mmp_camera.ko] undefined!
+> 
+> I checked all v4l2 drivers to see if anything else has the same
+> bug, but these two appear to be the only ones.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/media/platform/marvell/Kconfig | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/media/platform/marvell/Kconfig b/drivers/media/platform/marvell/Kconfig
+> index d6499ffe30e8..d31f4730f2a3 100644
+> --- a/drivers/media/platform/marvell/Kconfig
+> +++ b/drivers/media/platform/marvell/Kconfig
+> @@ -7,6 +7,7 @@ config VIDEO_CAFE_CCIC
+>  	depends on V4L_PLATFORM_DRIVERS
+>  	depends on PCI && I2C && VIDEO_DEV
+>  	depends on COMMON_CLK
+> +	select V4L2_ASYNC
+>  	select VIDEO_OV7670 if MEDIA_SUBDRV_AUTOSELECT && VIDEO_CAMERA_SENSOR
+>  	select VIDEOBUF2_VMALLOC
+>  	select VIDEOBUF2_DMA_CONTIG
+> @@ -24,6 +25,7 @@ config VIDEO_MMP_CAMERA
+>  	depends on COMMON_CLK
+>  	select VIDEO_OV7670 if MEDIA_SUBDRV_AUTOSELECT && VIDEO_CAMERA_SENSOR
+>  	select I2C_GPIO
+> +	select V4L2_ASYNC
+>  	select VIDEOBUF2_VMALLOC
+>  	select VIDEOBUF2_DMA_CONTIG
+>  	select VIDEOBUF2_DMA_SG
 
