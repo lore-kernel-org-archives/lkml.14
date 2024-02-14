@@ -1,163 +1,152 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB54B10A34
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 06:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528A810A0F;
+	Wed, 14 Feb 2024 06:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707891630; cv=none; b=uamUQ3Z1m5Q5uiONmgwxF5/Mv/7gwvYcv1fsMlxmI+htCLZgVQl+entbPA0TjoUoe3qn1WbyTeii305pB1DBSD1Im2Sv/R2Sp3hxNr5r9XW7/qEYzZr8+e0+UlZ8EaPxUZvweMnuOb7WRy6ZPpSHAwgmTHGdI6UPL7UIV7JvVRU=
+	t=1707891917; cv=none; b=R9buTf9pn8uv7utW9Y7bIsgJJCdpqlbC57Uu2vB6Aw9hWPsA7d5PtKnMdJyQtVq+2vWnFQb2crH3ivwi+aX8bk8/WG27iNs3OQN4YZ6bBPO+vFt5wLxeL8xuqCD9OaPswoLeeo1I4Y3RWK6yYfOY+bTDg+rgVIc1Nu3cmZ2nQw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707891630; c=relaxed/simple;
-	bh=mPZvfWNgR9UvijIIJJg1XLOXvrF3xKs/y4S11I2T7Mc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E6IaNTei42IjoDBIuzdNUW3CSGW0mjKIOt8+afjtDuNbnrrytyA7k2XUA7O51QB3MdjCd+cc/5jMSvpDI0C+ii+/4zp7JuzL2/opNS3BeshfnnXV7dncWIdo8j6ZTqKZbiNh4BIe5AyihI0fIs0ccuj6X2LT/9jDzrTi9aV3+6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=frEKCXWj; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="frEKCXWj"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-42ce63b1d30so18612521cf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 22:20:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1707891626; x=1708496426; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mPZvfWNgR9UvijIIJJg1XLOXvrF3xKs/y4S11I2T7Mc=;
-        b=frEKCXWjz3d2XuOUYzdId9W6Mvn73jhIIjZV2UtP6WyaWc+D189xwP5w9kl+nSGfMv
-         92wT3Ax40rNcFpOR+78CXna5fylDXfI6Hpiij0UumIVVKLviUy2TBLD/fQ4JiX8hcSKk
-         lDb1xW+VEfETTFCtbvp6CurH0ifNSGWGK9795xsbLYIgyGs6dgO9WOfTiI+Y04tJwTwz
-         U2B8EUisd2LXc0KXZhBK0T+8L+7pSUgqhfIrW+lqZMIXTuHrXKY6BZ+bKZmBwZFp1CkH
-         S+9RnGWorvD7Btw1UXhsTSfLoPpByNUBhDeBmUW9EuyIbEp1u9AceE9ovXck9gVbMmaP
-         b6Zw==
+	s=arc-20240116; t=1707891917; c=relaxed/simple;
+	bh=qRwnr33xb+LQtMbjNmu6bSjYJ/2tQsFjrG/Eg42t9J4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EehYhtQOl88hBgKcuuD39uq6aQ9THPQRscK2mXDyaR0CSNuv7EoAohXIS0tAwd6MlRb213P/G0MFi8rhkipRJUupozV21vWEny8wFNT8b38jLobg36uZ5ZyF/OI6mEILngPxYMbcwPnWc6HzvmXPwsrdd1pzvICnFpgd5Hu3eiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-55fcceb5f34so5953291a12.3;
+        Tue, 13 Feb 2024 22:25:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707891626; x=1708496426;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mPZvfWNgR9UvijIIJJg1XLOXvrF3xKs/y4S11I2T7Mc=;
-        b=lXOmvYbDv3MyowarDbjk7zESzoxSFbuSdrrivfvuHkz4my+hARcjrRQixUliKtZJzc
-         tjKK6g5rX7WHzq9ocU9k7ZRCZL85OltJ4zYcHyAwpdD0BTggLxO+BtOyKGuyXhthI9AO
-         zU+m1ASdb/r+Au3FgMvpveXEpP3dyKSw/9i51g3wAesf8fDuok5M4LMp4XbxcGsiSP8r
-         xlsIm6NZNEWzkbIJoE7Pvb7C1W7RPQXeaQ67C62zNOSfNJ7M8quQ3tXTJFikDDSin7O/
-         ZWFPodzvovV8m35Axbar1D3yTvkpIhSdgP+xJmQWnxSdqYnM0q5YxsAuoEKzREMO82hW
-         49kA==
-X-Forwarded-Encrypted: i=1; AJvYcCXNInwUaP+ZREdCjP8Tnfcf4aUoWcAPiEIcsOMokqqn5vAYe1rE1AZi1ZMG5NXqGwQ15+iEPVwRQgGhC7KDFop31gSQ4H4BYmL/0fz5
-X-Gm-Message-State: AOJu0YzZTMOEBBtlgG8lnNM9jhtqCUJBOsNj2VKrUpPGeptdV8prDDyB
-	iG02yP8OF1CW86SH+JB1p067DRBtrID0Hy05qD+8ge9hEknYOcxf/y+w9QzQQLs=
-X-Google-Smtp-Source: AGHT+IFnioDUv96AzhWE99fGuZ2JnAOUfdgv/2QX4e5KUyJeUPqxV+8qOH1R7pvVEl8yrhK7A4y3Cw==
-X-Received: by 2002:a05:622a:1045:b0:42c:70a8:1b3f with SMTP id f5-20020a05622a104500b0042c70a81b3fmr1875328qte.7.1707891626471;
-        Tue, 13 Feb 2024 22:20:26 -0800 (PST)
-X-Forwarded-Encrypted: i=1; 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
-Received: from localhost ([2620:10d:c091:400::5:6326])
-        by smtp.gmail.com with ESMTPSA id l13-20020ac8078d000000b0042c613a5cf3sm1755053qth.33.2024.02.13.22.20.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 22:20:25 -0800 (PST)
-Date: Wed, 14 Feb 2024 01:20:20 -0500
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, mhocko@suse.com,
-	vbabka@suse.cz, roman.gushchin@linux.dev, mgorman@suse.de,
-	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com,
-	corbet@lwn.net, void@manifault.com, peterz@infradead.org,
-	juri.lelli@redhat.com, catalin.marinas@arm.com, will@kernel.org,
-	arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com,
-	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com,
-	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org,
-	masahiroy@kernel.org, nathan@kernel.org, dennis@kernel.org,
-	tj@kernel.org, muchun.song@linux.dev, rppt@kernel.org,
-	paulmck@kernel.org, pasha.tatashin@soleen.com,
-	yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com,
-	hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org,
-	ndesaulniers@google.com, vvvvvv@google.com,
-	gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, bristot@redhat.com,
-	vschneid@redhat.com, cl@linux.com, penberg@kernel.org,
-	iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com,
-	elver@google.com, dvyukov@google.com, shakeelb@google.com,
-	songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com,
-	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev, linux-arch@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com,
-	cgroups@vger.kernel.org
-Subject: Re: [PATCH v3 00/35] Memory allocation profiling
-Message-ID: <20240214062020.GA989328@cmpxchg.org>
-References: <20240212213922.783301-1-surenb@google.com>
+        d=1e100.net; s=20230601; t=1707891913; x=1708496713;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=R0++smij7fLXWfkbGHyYXuskvQ10t4OERK+LGxTM1+U=;
+        b=vvRI0bbMyUhknnqIYplm8HLhItEtNoSmrCtJWCuTvXD2wuIXqpeKf7Ie3Gx9HnyZWj
+         NS7HczCWUfuiLvLTc+NF30x4jcHCmN+HGH+mmNXVH9j1Ow2GLc8JBkdmm8YXPlbYa5WB
+         nyiTFqLvY5bD7zkzJgJ+9+aJJnxKoCkO60Jysxax9LGOZjf393V0IGgMmVzJeMR0d6M/
+         24WgEvifYrawUgorPnF2swN86quAE6x14msWt9wJjrzFUBFDlBfG+eBfRIUMn3dm4bMv
+         YBBXRaixTCfH93gPn/ootHl5VQjWDuShtHAfD/x45o47MU3kQY8tJzREj2I47ysVDbY3
+         77CA==
+X-Forwarded-Encrypted: i=1; AJvYcCXU1BjKfBWESXpnPKUM5P/mAY03qc1WrhlsbsA8KKzx7HNg8OutEVaAPYKg8BZ0GnKxA9dSrYPfKlOEwnnwLjRPfJ9a1+ngW19XIJVRAp67d9eaS9oZl26muXuiN5kv9fAnmAaFYNHbYXs6
+X-Gm-Message-State: AOJu0YwhA485D8KQDBUrSJGxley4HtAtt1zdJuj7dAMOwIatdzeINhW7
+	vGSumT3oZTGjGp8enAbLcExvFrPkrJ0jISslk2fJnEq/5UFFB/f6sJSWMtru
+X-Google-Smtp-Source: AGHT+IEcu8iPcIlJEhmy2BuFw0/RZ4f/wLAZ9lBUEihrZV7jl66i5n1IixzmKHDCAdWfQuTMtGYY2Q==
+X-Received: by 2002:a17:906:1997:b0:a3c:8a78:af7b with SMTP id g23-20020a170906199700b00a3c8a78af7bmr914349ejd.74.1707891912323;
+        Tue, 13 Feb 2024 22:25:12 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWWjYv9+rzwOO0f16zW8meX4an9BbrmJjRSnvod6iD+4DhogFHKrZZuQqCcU9f08PmZvhO1+dJGaLkPmxox88u9kfgbEA3sHIbp0U/hmHGr94I5pW/sBYxAo/SG41AH6janGJAqGzSp0cfOghg1YKHwZdSdSmA+SyjF2ixGViPNnape5NayLp8lBxgzL5Bjw4Dag2Txw1qCWIxuOOpPnSGLqBs/SaH3ePyKcR7GtueNmo1uox9XOe4Z63GwfCSGUknRnqOY9ui1uklzhyq7WdUS6ALaQpN7JA6gWjwvUz1oLjUeMpgAFF7CBuA8xI9z9lTKmu0Qcp5WVfzojXXM/AOarRNEWP12qL/gXIoyec/hIjA=
+Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:59? ([2a0b:e7c0:0:107::aaaa:59])
+        by smtp.gmail.com with ESMTPSA id i18-20020a170906115200b00a3d310a2684sm526639eja.158.2024.02.13.22.25.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Feb 2024 22:25:11 -0800 (PST)
+Message-ID: <7b9afb8f-6642-4921-a92a-90c9074a48b7@kernel.org>
+Date: Wed, 14 Feb 2024 07:25:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240212213922.783301-1-surenb@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tty: hvc-iucv: fix function pointer casts
+Content-Language: en-US
+To: Arnd Bergmann <arnd@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ linux-serial@vger.kernel.org, llvm@lists.linux.dev
+References: <20240213101756.461701-1-arnd@kernel.org>
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20240213101756.461701-1-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-I'll do a more throrough code review, but before the discussion gets
-too sidetracked, I wanted to add my POV on the overall merit of the
-direction that is being proposed here.
+On 13. 02. 24, 11:17, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> clang warns about explicitly casting between incompatible function
+> pointers:
+> 
+> drivers/tty/hvc/hvc_iucv.c:1100:23: error: cast from 'void (*)(const void *)' to 'void (*)(struct device *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+>   1100 |         priv->dev->release = (void (*)(struct device *)) kfree;
+>        |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Add a separate function to handle this correctly.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-I have backported and used this code for debugging production issues
-before. Logging into a random host with an unfamiliar workload and
-being able to get a reliable, comprehensive list of kernel memory
-consumers is one of the coolest things I have seen in a long
-time. This is a huge improvement to sysadmin quality of life.
+Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
 
-It's also a huge improvement for MM developers. We're the first points
-of contact for memory regressions that can be caused by pretty much
-any driver or subsystem in the kernel.
+> diff --git a/drivers/tty/hvc/hvc_iucv.c b/drivers/tty/hvc/hvc_iucv.c
+> index fdecc0d63731..b1149bc62ca1 100644
+> --- a/drivers/tty/hvc/hvc_iucv.c
+> +++ b/drivers/tty/hvc/hvc_iucv.c
+> @@ -1035,6 +1035,10 @@ static const struct attribute_group *hvc_iucv_dev_attr_groups[] = {
+>   	NULL,
+>   };
+>   
+> +static void hvc_iucv_free(struct device *data)
+> +{
+> +	kfree(data);
+> +}
+>   
+>   /**
+>    * hvc_iucv_alloc() - Allocates a new struct hvc_iucv_private instance
+> @@ -1097,7 +1101,7 @@ static int __init hvc_iucv_alloc(int id, unsigned int is_console)
+>   	priv->dev->bus = &iucv_bus;
+>   	priv->dev->parent = iucv_root;
+>   	priv->dev->groups = hvc_iucv_dev_attr_groups;
+> -	priv->dev->release = (void (*)(struct device *)) kfree;
+> +	priv->dev->release = hvc_iucv_free;
+>   	rc = device_register(priv->dev);
+>   	if (rc) {
+>   		put_device(priv->dev);
 
-I encourage anybody who is undecided on whether this is worth doing to
-build a kernel with these patches applied and run it on their own
-machine. I think you'll be surprised what you'll find - and how myopic
-and uninformative /proc/meminfo feels in comparison to this. Did you
-know there is a lot more to modern filesystems than the VFS objects we
-are currently tracking? :)
+-- 
+js
+suse labs
 
-Then imagine what this looks like on a production host running a
-complex mix of filesystems, enterprise networking, bpf programs, gpus
-and accelerators etc.
-
-Backporting the code to a slightly older production kernel wasn't too
-difficult. The instrumentation layering is explicit, clean, and fairly
-centralized, so resolving minor conflicts around the _noprof renames
-and the wrappers was pretty straight-forward.
-
-When we talk about maintenance cost, a fair shake would be to weigh it
-against the cost and reliability of our current method: evaluating
-consumers in the kernel on a case-by-case basis and annotating the
-alloc/free sites by hand; then quibbling with the MM community about
-whether that consumer is indeed significant enough to warrant an entry
-in /proc/meminfo, and what the catchiest name for the stat would be.
-
-I think we can agree that this is vastly less scalable and more
-burdensome than central annotations around a handful of mostly static
-allocator entry points. Especially considering the rate of change in
-the kernel as a whole, and that not everybody will think of the
-comprehensive MM picture when writing a random driver. And I think
-that's generous - we don't even have the network stack in meminfo.
-
-So I think what we do now isn't working. In the Meta fleet, at any
-given time the p50 for unaccounted kernel memory is several gigabytes
-per host. The p99 is between 15% and 30% of total memory. That's a
-looot of opaque resource usage we have to accept on faith.
-
-For hunting down regressions, all it takes is one untracked consumer
-in the kernel to really throw a wrench into things. It's difficult to
-find in the noise with tracing, and if it's not growing after an
-initial allocation spike, you're pretty much out of luck finding it at
-all. Raise your hand if you've written a drgn script to walk pfns and
-try to guess consumers from the state of struct page :)
-
-I agree we should discuss how the annotations are implemented on a
-technical basis, but my take is that we need something like this.
-
-In a codebase of our size, I don't think the allocator should be
-handing out memory without some basic implied tracking of where it's
-going. It's a liability for production environments, and it can hide
-bad memory management decisions in drivers and other subsystems for a
-very long time.
