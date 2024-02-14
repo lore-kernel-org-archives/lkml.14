@@ -1,98 +1,101 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2FA4524CF
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 13:01:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3183352F6E;
+	Wed, 14 Feb 2024 13:01:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707915686; cv=none; b=hovGfyMrJi+uvovUfpU7HSUYMV4KUvnF8iUIVmPFFj5OZhHeA8/11eAXeWvIXSOocg5z9oaXewKE0vCu/MSz2WMArBqC5JAIFWObOdHiCldTgL3ie+x3c1X+MGTb9LbfaHATThFGYmmQGFL7UyCQE+KXXxNhAd+dEjgoqshxbZE=
+	t=1707915698; cv=none; b=gERNn1oOqm/EiDoVoE6m8PXiHv5VkdTjzsbbXwwp0UrPUiguUx1XXDsmkCbPbmwBxMPYNUSbeCMq616AhOtjTvSCo0O7iIXIE8TwVe80ey3YerNIBQS/EuvwdcXN9HHsNyMirDZpRMyVisZEbNywdUD10V53X08xIE58SKX8pVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707915686; c=relaxed/simple;
-	bh=fLVy1f7K0Kn0pdSgvUnQvwzHJ/wGtz6uPSJtJFm0hlI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yfa/NmoaEHqWB+YfnIXECh9zkBrq9NuJxfK2ihcNe+yhbNmrSkjQyB7Grqn+fJF1VCSd/JBWfvbSGs/MeDbvMGeDrcRu11YqCgHVHl5i73wadpW/zEbn8xLUNJ5ydKJqOKM3Rw4ClVpWxqFyL3pSEkURmPzDZInuOS0MaS5ssxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=k5S3FZMy; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1707915698; c=relaxed/simple;
+	bh=UTA/0dr5RgWO2sHiI40Q/d9Q5m5+NjUgM/xZY5lfqcA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AJJ+X/6AgClrTPVxll1rZobgee2iGzlYhDybnBbl0yJnNt82v+4Goo9QSH8auJxHlf85ldOFSG2jvXnqn5XuyoW02MUhVhNIKtnsYoff04V8qN3f/i+cSy/wZ+EqPYp56PaBmhe5Oe5JjdsnBTGfJddjx1ZJ5GvR+CiiIHYBSWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WgiA1xJc; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="k5S3FZMy"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6818aa08a33so6979936d6.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 05:01:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707915684; x=1708520484; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fLVy1f7K0Kn0pdSgvUnQvwzHJ/wGtz6uPSJtJFm0hlI=;
-        b=k5S3FZMyODaPutCg7kBDw56NG4IHWQrwX0Ic/stdpWuH6msMkSMRv82EhJoyTmQRIe
-         kQAtITTWr0yH8Ib4h3kETB50s6OBqMmrwBTpJ0oTA2GqYo5ub6USpx2m2DQ5kvARNpyu
-         sEjTasqW9FJhBBr9MfsltlIeTjkMGyn4Lf691MHqmEXYcM04gBVUBCr+Z4C1gfkgARlG
-         UViJ+DXZ4RsAZG0yOaAbmaHutDEN58onAIxsmZOcw8MpBrTIfuHSPC0Pgh/f1jXDfV/e
-         PotsuXMOZBSL6PVioVT5ZcjoiyvtrBqwU3WHAZZAODRcT1BVfNrryyOj7HJjbd+RqULQ
-         Zqrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707915684; x=1708520484;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fLVy1f7K0Kn0pdSgvUnQvwzHJ/wGtz6uPSJtJFm0hlI=;
-        b=lSqpp7op67hFLhb9IkugK0lkJzd53m95dAKq8d+kHY2G/VIJ+i4al2aoZU6kSSBTi7
-         Z6pG3rOZ2l3F7/phOdJnyZ4HcwM1ZoY887A2vscU/bI8MF2ur8dYwvE20qP8VMFOBUAp
-         Mj0mpnkUrkGN99l6ZCIv2NwzgSJJLgOeiP6PIN6weUB23Z4Oe4b5zK7yWAEqDpPgmkhE
-         gq/HlAGSFg7mCgLc92hO1sqGt8YEP11uE57Pd136bbJI+wE4doBtjwJ/lKm2VJ7NIgcH
-         y8L9tJ974nhTt0otwU7sE4TkvL72CMM90hUr64G9/VstpIIsNDqBHdEi8M0ayP1p3gig
-         /IqA==
-X-Forwarded-Encrypted: i=1; AJvYcCVlZzkgBLjsKDd6laRmFh4xA7RZX8uyXSc+G8JG5LjTjSpbChUcb2jyikrOB7bg8JMctgnvANOmIkZzYulXHQut0FdInRThhHQAk7eF
-X-Gm-Message-State: AOJu0Yx/EVIVXtVHqi3BTSYMbb5/eEfAjVpvUWJ/rJjJ6Y0EAYlU4LzX
-	DSuDlt7nycP1nsdxzxegN8fJ2qlvhgca4XvV8bnguIDfnCR0ywzHYZi7ukOOtGJXh/5AwH0QQbJ
-	kIxnhy3uZTifgi8le3+z3i1sylzcDc0BfzhOJlQ==
-X-Google-Smtp-Source: AGHT+IGonhKXoPvsozKTZHzXlucbcYX9bg8Gg73rytHzYubU8rxNgnY/C6AFVJ/TQKBRXQr1jGNt+PCgi0Votzl81JM=
-X-Received: by 2002:a05:6214:4186:b0:68c:7cbb:272e with SMTP id
- ld6-20020a056214418600b0068c7cbb272emr2843572qvb.19.1707915682117; Wed, 14
- Feb 2024 05:01:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WgiA1xJc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707915697; x=1739451697;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=UTA/0dr5RgWO2sHiI40Q/d9Q5m5+NjUgM/xZY5lfqcA=;
+  b=WgiA1xJcU1VtS51r8hAt2p84H4fEbCz+8FwtheEKCttQPNXpm3kCXXft
+   UQ2wmcndvZGdHyRB1GjpNtVL8GddFzPTCj6U5W6+GRSODpsxVfmlXEOze
+   sEV9CJU2uinr5zopiK0Zgpo+gRB42XGHZiM38kwRlCw71/gCEqI7YbDFS
+   VcRvvsRwVCEbo0JMf6Y1tTU7Jjql6ct2ll/lvqaqyGXS9pbDDyxoAgCiB
+   /Lngyft+pKmNbdnmuGhIXHmmoJ4bwlYkAw4M/CoebxR/+yPJH4X09VEeX
+   Wd82loC61qEA0fh0YY1hJ33mWrt8kwOCSrjD+e759JCoQB0QAV139N/aK
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="1810745"
+X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
+   d="scan'208";a="1810745"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 05:01:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="912084251"
+X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
+   d="scan'208";a="912084251"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 05:01:32 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1raEtG-00000004Ui2-0nGZ;
+	Wed, 14 Feb 2024 15:01:30 +0200
+Date: Wed, 14 Feb 2024 15:01:29 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com,
+	jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com,
+	stanislaw.gruszka@linux.intel.com, lukas@wunner.de,
+	rafael@kernel.org, ilpo.jarvinen@linux.intel.com,
+	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+	sashal@kernel.org
+Subject: Re: [PATCH v1] PCI / PM: Really allow runtime PM without callback
+ functions
+Message-ID: <Zcy5qZ4rEbpY7ouC@smile.fi.intel.com>
+References: <20240212063233.5599-1-raag.jadav@intel.com>
+ <20240213200648.GA1219964@bhelgaas>
+ <ZcyZV2q1_QoK43vz@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214085248.6534-1-brgl@bgdev.pl> <Zcy3fwAZXwJZpqqu@smile.fi.intel.com>
-In-Reply-To: <Zcy3fwAZXwJZpqqu@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 14 Feb 2024 14:01:11 +0100
-Message-ID: <CAMRc=MeiYe_QZexnYci_uHguChK-=a2+iUC5jtR_OharqwZS=w@mail.gmail.com>
-Subject: Re: [PATCH] gpio: sysfs: fix inverted pointer logic
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZcyZV2q1_QoK43vz@black.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Feb 14, 2024 at 1:52=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Wed, Feb 14, 2024 at 09:52:48AM +0100, Bartosz Golaszewski wrote:
->
-> ...
->
-> > Fixes: d83cee3d2bb1 ("gpio: protect the pointer to gpio_chip in gpio_de=
-vice with SRCU")
->
-> I'm wondering if instead tons of fixes you can just fold the patches and =
-rebase your tree.
->
-> Yes, we still have time to let it soak in Linux Next, so Torvalds won't c=
-omplain.
-> It will be much less burden to anybody who wants to backport this nice wo=
-rk.
->
+On Wed, Feb 14, 2024 at 12:43:35PM +0200, Raag Jadav wrote:
+> On Tue, Feb 13, 2024 at 02:06:48PM -0600, Bjorn Helgaas wrote:
+> > On Mon, Feb 12, 2024 at 12:02:33PM +0530, Raag Jadav wrote:
 
-No, I don't think so. Rebasing is reserved for really special cases
-when nothing else can be done. Fixes like that should be expected for
-a big rework like this. This is honestly a strange idea.
+...
 
-And I don't think anyone should backport this work. It's simply way
-too big and touches too many places.
+> > >  0)               |  pm_runtime_work() {
+> > >  0)               |    rpm_idle() {
+> > >  0)               |      rpm_check_suspend_allowed() {
+> > >  0)   1.500 us    |        __dev_pm_qos_resume_latency(); /* = 0x7fffffff */
+> > >  0)   4.840 us    |      } /* rpm_check_suspend_allowed = 0x0 */
+> > >  0)   1.550 us    |      __rpm_get_callback(); /* = 0xffffffffb4bc84f0 */
+> > >  0)   1.800 us    |      pci_pm_runtime_idle(); /* = -38 */
+> > >  0) + 17.070 us   |    } /* rpm_idle = -38 */
+> > >  0) + 22.450 us   |  } /* pm_runtime_work = -38 */
+> > 
+> > What is this timing information telling me?
+> 
+> It's a raw ftrace dump.
 
-Bart
+(Told ya that people would be surprised with this without seeing how you get
+ this and what fields mean)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
