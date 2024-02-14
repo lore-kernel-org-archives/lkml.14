@@ -1,111 +1,100 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5235513EFFE
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 22:08:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C14313F009
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 22:09:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707948488; cv=none; b=uIwoA6zjUPEopTW3BhzAmMyOTaP/safMiUZQ7cnoENT3VCIxWOET23/fq9RB8kWYfpm+6zuntm9nFXwj9sB0DFekj5ND14JaHmsoBwzKqJkcsOq7m0YzuVqisqhl+52AU6rS3L4MBdEA14TqjnorsNv2ras95YZt5mltjeDXV58=
+	t=1707948544; cv=none; b=M/lH9PSgonBqtPH5cD6wEN0XMerbqTd7nfqP8clJnOhjFn2QxBjvDD2xgzt3eAHcd98sfCnEZpwE3ZJABhzDyI1zFMFS46Q/1UBlX5jCpQlakjDUsyyEUT3/b74Cx8J3aw72efiUzyOSFPbPRQD7gjThWkBqJU5hGyklxY4HvJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707948488; c=relaxed/simple;
-	bh=kk0R2G/YjOd1hA/HNk8g9v7ksPlfTh04eDSOWoYDd4o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n/ZFw9sbB6SlPvwaC68lOl6HSdcMLV9wJlqTKeHihk+wNWiY7qgshOGHYA4WRZ7/7uBuPzBKm/pvAlmNV2NKEGZ3utIPtfrZ7AuxBVUpIyWUKOewhmVaN9S3jXy7M5FUSev3cFLmppuDIKUWzFRJbfVN/Nsg50b+yL7gwDgYrxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=keCfEwEU; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1707948544; c=relaxed/simple;
+	bh=/ZEw3nT9BRApIhNWO23YhMJtkmTMIFXh3nph9Rnl9wo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=E+urGxfGbogoJip71PbWSQrzNhWYPS5V5ym9aMTeanfKdzPTJIehLKJsKOA6dumELfzDMuSdT8weqDEaMm3nANCU36YN7NuoPNPObEFsJtv8C0pt7KlsSWwLvmwO/gz9Jeghr17thasfOjz9XFCr6n9kqp9hDwdxz3/wTmo/V6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=bgN0ehq7; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="keCfEwEU"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 2FA24240027
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 23:08:03 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1707948483; bh=kk0R2G/YjOd1hA/HNk8g9v7ksPlfTh04eDSOWoYDd4o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:Content-Type:
-	 Content-Transfer-Encoding:From;
-	b=keCfEwEUTqi9U1Dca/BJAbvJ1nX7aqfiHGg0EGaORv53DgUimF6H73hNxPpc6zKcq
-	 g9PbWwK9+GJVrZWQ8LxgsBQGQ45xVFXrana687MEL6WkxN9GeAx/Pqxq6yOId5BPpZ
-	 5nI9CFoV+bQhL7ZtQgKZVjKueicY8NPzE20jUvmqPq/T+erdIUjGLZh3cgqFvLU9va
-	 Fmu3E249bcADfo/ueZ+Eay1xDOupsm3Qa5uNSSHD5WYJTWpxMyMOPEHksnGJbsrom8
-	 RQp1YKcaQ8liKkpVo1kZKLsrnR5f7fv8BhWAlyE6bZmCG/8n/ZHB7uUlcICjP8RivL
-	 Y7LsGWc6lRW8A==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4TZsl33Bl6z9rxG;
-	Wed, 14 Feb 2024 23:07:59 +0100 (CET)
-Message-ID: <867da21e-7f30-4caf-9f78-260d426e4186@posteo.net>
-Date: Wed, 14 Feb 2024 22:07:58 +0000
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="bgN0ehq7"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-337d05b8942so101042f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 14:09:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1707948540; x=1708553340; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rvOh55NDnukoUmm76Hh+HuEqWYW2cORpSho5SBfrrxU=;
+        b=bgN0ehq7JoTSv1yYLzYkPMAKBGaTAvqFYZY5+E9+vnAwdowf4lzPjb7PDVIAlhJusU
+         ixHWkeXjZVEpH/a3of/+AVWDPjY5rUGz5R5WkFvVI5OrME+fPGaot65sxWp/RgNwNGZr
+         2JoipNw0doaPUqOxVzjBXbL9vS6i0m54Hp/W7ja/A+jFIiAyK/tfFt6uLL7ji1hmoljJ
+         OvYYlXiGDRCuusmVqCGrp3HK+ax0RWJ1tLKJziZR5sRXjlqCklqR/U6vO/9+3CefV/ZO
+         ID5RTqeHDOWUtBBbmz3EI3ftB+B94E8UT8Gy5EBdwJY5iAPRaBgQvkhkztPtMtNuLL6c
+         pnaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707948540; x=1708553340;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rvOh55NDnukoUmm76Hh+HuEqWYW2cORpSho5SBfrrxU=;
+        b=NCAOk6NUvraCVgkte5scAouFydEknJBlumFjRqYg4ZdWlwpqjrNXYaTweZAeIzotiY
+         YS+uORLvi738Ut/Ospyx/i/mq33H5DFmECNB0hcTf97+wNXoSB9gNDKy4CKOSBsDNfAG
+         NWGGx1Vxg0AuBInuIRRiYV/OcpvLBQI43eBSFsu9ma538D0bX4V3XHR5rIOLqfSln6sG
+         oP08k7rndzGqBHxjaTaRpnQKNfclbCItT9urXy+qLbrpxLX68o1WaeNrSDXyyjg/HkEm
+         hGnGnnJriBUzft8DvVAHtP13v7K25UJZyYq3Oi9nOpqLWMWrrkYDeX4ANdKze1dsc6ry
+         4wcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXB5xDEgUp9ufyxwZEewDfTADJCYGypj7pey8dF3TT5SA3EC2TYL0AWOZ+AOL+R5hfVDI0tnHhIiaC7NPwNLwQyhiQacslJxWe9NqzW
+X-Gm-Message-State: AOJu0Yx8L/WzjlB6TbSI5YwiPOfpmb1wm/wSRpUt4jJFynhydiWdQzAk
+	NjfDRODWQrbwIy2BUawc29UE0LtXRyT9zRGYR+UQ/8CYiMuEeaNTutUYSBuveQf4qyoH0G+NMYZ
+	T+jrDRQ==
+X-Google-Smtp-Source: AGHT+IFBCkJjgKAte43OlvsT2p+edcXWf4TZt62EkxtkPmvLum/pNRCYcatU+QYBB+Bht0KOnjEiwg==
+X-Received: by 2002:a5d:50d1:0:b0:33b:433d:e1d7 with SMTP id f17-20020a5d50d1000000b0033b433de1d7mr2763880wrt.1.1707948540572;
+        Wed, 14 Feb 2024 14:09:00 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVC7/90BQ67mnQ5Q3GKq/x5TXhESOtq3i18WD7DLjPm9sgke4J2YcHHiXquH904v5OmDR/AGUOq2L/D7RxyTlAraU+WMJNt/ut66x8xRv5LnRg5uG8T+8t+6qYNH1MVXnGnc+Xx5FW0akLa7kd1ks1x0c6FRca/jOdtybWQ9ytFSPfB+Bbivvf2LpRhOUffBM/Eh5s23duXO6cvi0PWTgU=
+Received: from debian.fritz.box (aftr-82-135-80-242.dynamic.mnet-online.de. [82.135.80.242])
+        by smtp.gmail.com with ESMTPSA id e30-20020adf9bde000000b0033cf5769ab2sm1002122wrc.101.2024.02.14.14.08.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Feb 2024 14:09:00 -0800 (PST)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] synthetic tracing: Fix trace_string() return value
+Date: Wed, 14 Feb 2024 23:05:56 +0100
+Message-Id: <20240214220555.711598-1-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] net: stmmac: xgmac: fix initializer element is not
- constant error
-To: Jacob Keller <jacob.e.keller@intel.com>, linux-kernel@vger.kernel.org
-Cc: alexandre.torgue@foss.st.com, joabreu@synopsys.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-References: <20240212154319.907447-1-shiftee@posteo.net>
- <44c29a45-86fa-4e41-b4b5-e69187f0712e@intel.com>
-Content-Language: en-US
-From: Mark O'Donovan <shiftee@posteo.net>
-In-Reply-To: <44c29a45-86fa-4e41-b4b5-e69187f0712e@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 14/02/2024 20:31, Jacob Keller wrote:
-> 
-> 
-> On 2/12/2024 7:43 AM, Mark O'Donovan wrote:
->> GCC prior to 8.x gives an "initializer element is not constant"
->> error for the uses of dpp_tx_err in dwxgmac3_dma_dpp_errors.
->> Newer compilers accept either version.
->>
->> More info here:
->> https://lore.kernel.org/all/20240103-fix-bq24190_charger-vbus_desc-non-const-v1-1-115ddf798c70@kernel.org
->>
->> Signed-off-by: Mark O'Donovan <shiftee@posteo.net>
->> ---
-> 
-> I'm not sure whether the Linux kernel project has an explicit cutoff for
-> what versions of GCC (or other compilers) are supported. GCC 8 was first
-> released in 2018.
-> 
-> The fix provided here is fairly straight forward, and while I do think
-> the benefit of using builtin types vs using the macros is nice, I don't
-> see that as a strong enough reason to hold up supporting the older compiler.
-> 
-> Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
-> 
->>   drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
->> index 323c57f03c93..c02c035b81c0 100644
->> --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
->> +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
->> @@ -830,8 +830,8 @@ static const struct dwxgmac3_error_desc dwxgmac3_dma_errors[32]= {
->>   	{ false, "UNKNOWN", "Unknown Error" }, /* 31 */
->>   };
->>   
->> -static const char * const dpp_rx_err = "Read Rx Descriptor Parity checker Error";
->> -static const char * const dpp_tx_err = "Read Tx Descriptor Parity checker Error";
->> +#define dpp_rx_err "Read Rx Descriptor Parity checker Error"
->> +#define dpp_tx_err "Read Tx Descriptor Parity checker Error"
->>   static const struct dwxgmac3_error_desc dwxgmac3_dma_dpp_errors[32] = {
->>   	{ true, "TDPES0", dpp_tx_err },
->>   	{ true, "TDPES1", dpp_tx_err },
->>
->> base-commit: 841c35169323cd833294798e58b9bf63fa4fa1de
+Fix trace_string() by assigning the string length to the return variable
+which got lost in commit ddeea494a16f ("tracing/synthetic: Use union
+instead of casts") and caused trace_string() to always return 0.
 
-Thanks Jacob.
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+ kernel/trace/trace_events_synth.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-The minimum versions for compilers and other tools are documented here:
-https://www.kernel.org/doc/html/latest/process/changes.html
+diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+index e7af286af4f1..c82b401a294d 100644
+--- a/kernel/trace/trace_events_synth.c
++++ b/kernel/trace/trace_events_synth.c
+@@ -441,8 +441,9 @@ static unsigned int trace_string(struct synth_trace_event *entry,
+ 	if (is_dynamic) {
+ 		union trace_synth_field *data = &entry->fields[*n_u64];
+ 
++		len = fetch_store_strlen((unsigned long)str_val);
+ 		data->as_dynamic.offset = struct_size(entry, fields, event->n_u64) + data_size;
+-		data->as_dynamic.len = fetch_store_strlen((unsigned long)str_val);
++		data->as_dynamic.len = len;
+ 
+ 		ret = fetch_store_string((unsigned long)str_val, &entry->fields[*n_u64], entry);
+ 
+-- 
+2.39.2
 
-I am using a SLES 15 server to build, the first version of which came out in 2017.
-
-Mark
