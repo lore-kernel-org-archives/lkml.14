@@ -1,262 +1,146 @@
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04olkn2022.outbound.protection.outlook.com [40.92.46.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5631111B9
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 06:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707891922; cv=none; b=UkmQSatULgy16Md0uexFHp31fc+dS83n5zY4P8yBEFkFrH1sHS2FMqFpKRcJpn9eM9CMVdP0uZonsQYpr0jX1gAXTNP8JpPA2D8CWmfUWArRtwcZQVp9PkNPjgAUL6ZbjXrhKBwu0BSUTPSr5ET2UYq0VC+rgygy6gcC875dgU0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707891922; c=relaxed/simple;
-	bh=Zk9sRCx+9BNoM+6Eq3/gA3Qz9FrB5sZfIr456q3kBGo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DTGuYac0Avg0uVZf7Gi0r86GlibV3N6wN4J57NPDhaVGG/0cnNX30Ht3hi54JnD+obaf8nab2QUGw1RALSU3N2wCZXO1i+qkOEOTYHMnP7dufwQs2bn6tP3gka3LHJnTlWeCQSwhBfsdhoCPxOT97CdYfVmUlleNgCp92wAkrDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=DJ2ziGb9; arc=none smtp.client-ip=209.85.210.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F5C29A2;
+	Wed, 14 Feb 2024 06:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.46.22
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707892351; cv=fail; b=MA69GP9PmEwpqxSoT35K4NGnFxEahQyYgx1hz6uRd97qZbql+lmABvfoWYoqQVDx2Trf8OZjPMu0vk0DoyITcLna+e/tjgYfZTmp0+H7F9hhk25d5Dk1D805IsTizdncoQbc3sUEvbGUNgKCQ4BmeIdW86lF1pksPJtG7cAYinM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707892351; c=relaxed/simple;
+	bh=MZXCi8HkuDSXLbNfZjGcrm/1J+XoJSj8/n3KCxDKVOg=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=aVKjk/GFS5kI9Auxnfo45umKHatPPMR7Txc1cqMaaLGpHSjfteN0KHDhwmPEhRT4u/81uA2HqCk87y+m1KXU5PqtBS39uPV9nvf54KLATG9O7YyE9HR92Rjj7Wwvc2oskVprMUP3oTSaQozg0h1Cz49AGKmADKteMmYe1Om6QeE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=g37vhshL; arc=fail smtp.client-ip=40.92.46.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DJ2ziGb9"
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6e2e58feaefso756822a34.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 22:25:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707891919; x=1708496719; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wf0JaDe/v/whRIZd8Ld92JiQKoN/oDT7LT2E1YHg6KQ=;
-        b=DJ2ziGb9KhvBvUADoBAz0EJ6WoAUneC5lxM6kRlAyUrd2v+3IWm4RBtVam2crmm4tM
-         E+xggxNL9l27r2KuyIUu4mlJntQtks8zxQGwKBvKAeHZbpV+VELRMKopo2N5Y66DZiEc
-         xaD6xFBiITk52P8WDSQTZ0Iedicj40g6FhSlk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707891919; x=1708496719;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wf0JaDe/v/whRIZd8Ld92JiQKoN/oDT7LT2E1YHg6KQ=;
-        b=VTJfg6MpYQVRHI0F4Tah1B2/rzS/GwxpbRH++LWq/EFR8qnk+eiPatMd8dAXFMOy8j
-         K9GsbD6I/Jat/uwJuX8zx8FUm4WwpiNiC8JoXrMfJ76cOzlf/jF4/9Bavl+Y2bqqTJqj
-         q2ICzT9l9U+5pA63KLw9Eva3gnKYnvBLFu/MmuWr2Ov5qs7gK0G1sA6D2aO+IjfXW7GV
-         Dgew7I58P5Aa/ooEFEjb8x+mK0VVr+Q1/wQIBappp6Kdf6ccTrJG+iVFz1fM486kWGZz
-         R47B/APZsNurZwVdQsswPGUk350OrDGvbN4ixkL6NDjnz0N5jtYf8L6rUvlcVSJ2TWS0
-         L0eg==
-X-Forwarded-Encrypted: i=1; AJvYcCXe60vkGVbWCNaBDcNp9m1t95gPM9pxw8+cjH90l67/5hKxc8uAOWJa+/wHZQsAakx8G1qMqtZ8TKIpl2rtGfomWoUgM13L7I7KMU/f
-X-Gm-Message-State: AOJu0Ywplkq0e884FjwLBIBxWRKYbDuFifwp5T4zMaJDCeIPuG5IQsa0
-	zduDeLvPmzFMOBNK4MB2yGfgl9kVlHKn89QOGDWEZG6VcVYov+kYCl3Qo7Lnq1Yy/arRWCxWeWW
-	jH6UY8Q8jv7VOUl/fxuZBpZ2Rclj7Lyix3DFE
-X-Google-Smtp-Source: AGHT+IGrfJM6/ISO76awK+/6mCArsM5o8X+G8rSeUZA5OJd420Db+eZsu2zrZlV2W9LMf9Jywkeuz0wLrkg6nbQllMU=
-X-Received: by 2002:a05:6830:1d87:b0:6e2:dd2e:aa20 with SMTP id
- y7-20020a0568301d8700b006e2dd2eaa20mr1865222oti.13.1707891919693; Tue, 13 Feb
- 2024 22:25:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="g37vhshL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oNr/u6XLH3RPdTBcNO/2cIMzaNIQOrQ7y1vgIH65psxI0G92X5t0/vNU9eTxBhJ4pHYapem8E0RAUTpCRZURTE5nI1HrIReWVG7pdKl0JDUmdyIUeMSSjmSUnc/Y3RYNHwmzgQT+xAmZd0neluwHTsNK/0/HYEArVrThlQ3C5QBkLag1OCHco+jVG04IMgomZUcl4sLKioiCLwJ5ozou1pvhWaybgMqqsLeQ94BRgZaVnvOKKQ6KR03bY8o8h8jEcL/PS/BydbZHFSXl0S3XpwfOlzNUsATEG7IHronnCxiwbU/uI+FxS9QOKTudfq49IdoYSkREsqiyBBeWO0KQRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1nNVde7Rlv1C2AbEyQWe1VgOjhB7kc5jISoOHGVvmN8=;
+ b=QnsRgrilH67E0iSDRZgw6CGGVzFwYUSlD4UO3jCzH0fxP1LMBM/DWG0ROKrpg8jKfEIyHtZdiJ37a64ehQM8hAIdne2/nLKWYDtSR8UDZ8kQJ9TunqFdrXgx/Y2QL0I+HTLFbHkBdUBQDISteFUkdcUe7IzKGWiBUDDDewGxzx93Hl1YVimqTYNvPv3dJj09H1FB2iI7gQdZ6CyhB3yuwqHitNmqra1MLAqtRXirXj+8J9fJgMmGOW9BbEOT9c1O0soYDr+Qd2Q8wbmnrYoHVbYp2EVkOKvmysmHdiELAGi398JBMGChfgxAsqaiTsLNjXxLhEA96/hyDImWNOiW3w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1nNVde7Rlv1C2AbEyQWe1VgOjhB7kc5jISoOHGVvmN8=;
+ b=g37vhshLIG4quB2b+id7Fig1Zf6+nt5opvODiVrD7Og3SqCwl/w/7aIx6rtnEVNxU08/8COVsVqpXbQmzrCgWC9ag8IHeS36fsCKnkvkvoFlJ2reJ+BeRmuFJj64vnJisPwE98IrJop9q7TdRGi/Rewg2nGxs4r/zE48nhYajOqCyUBfsE9Qfs13MaUbbGgBESn3g5pRLV7IF/7AMDZiF3Fhha+Av5kJsQlfb37+8giNxRbTZNKK5WCsape03QbOWFvKmt5u+MMtytzvD+wkGDJU/IN+0UMyRaW+TDfdA7dcnmY+PR/PdfHU379tnIkAiPp2dlxK4rYGrf36+elzfQ==
+Received: from PH7PR20MB4962.namprd20.prod.outlook.com (2603:10b6:510:1fa::6)
+ by DM4PR20MB5063.namprd20.prod.outlook.com (2603:10b6:8:8c::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.39; Wed, 14 Feb
+ 2024 06:32:27 +0000
+Received: from PH7PR20MB4962.namprd20.prod.outlook.com
+ ([fe80::4719:8c68:6f:34ff]) by PH7PR20MB4962.namprd20.prod.outlook.com
+ ([fe80::4719:8c68:6f:34ff%6]) with mapi id 15.20.7270.036; Wed, 14 Feb 2024
+ 06:32:27 +0000
+From: Inochi Amaoto <inochiama@outlook.com>
+To: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Inochi Amaoto <inochiama@outlook.com>
+Cc: Jisheng Zhang <jszhang@kernel.org>,
+	Liu Gui <kenneth.liu@sophgo.com>,
+	Jingbao Qiu <qiujingbao.dlmu@gmail.com>,
+	dlan@gentoo.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH v3 0/2] riscv: sophgo: cv18xx: add top misc system controller
+Date: Wed, 14 Feb 2024 14:32:28 +0800
+Message-ID:
+ <PH7PR20MB4962F822A64CB127911978AABB4E2@PH7PR20MB4962.namprd20.prod.outlook.com>
+X-Mailer: git-send-email 2.43.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [AZZxIpocySHQ/0+OkZE3JvJLF0tEF/KelIANr+ibskPbUAAnahLVTf6GS2vde8zO]
+X-ClientProxiedBy: SI2PR02CA0042.apcprd02.prod.outlook.com
+ (2603:1096:4:196::19) To PH7PR20MB4962.namprd20.prod.outlook.com
+ (2603:10b6:510:1fa::6)
+X-Microsoft-Original-Message-ID:
+ <20240214063231.435079-1-inochiama@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240202141109.1.I24277520ac754ea538c9b14578edc94e1df11b48@changeid>
-In-Reply-To: <20240202141109.1.I24277520ac754ea538c9b14578edc94e1df11b48@changeid>
-From: Hsin-Yi Wang <hsinyi@chromium.org>
-Date: Wed, 14 Feb 2024 14:24:53 +0800
-Message-ID: <CAJMQK-it9YMod4rHKnACq4O-iaGieK2SN4x5vQ018CghsA631A@mail.gmail.com>
-Subject: Re: [PATCH] drm/dp: Don't attempt AUX transfers when eDP panels are
- not powered
-To: Douglas Anderson <dianders@chromium.org>
-Cc: dri-devel@lists.freedesktop.org, eizan@chromium.org, 
-	Ankit Nautiyal <ankit.k.nautiyal@intel.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	David Airlie <airlied@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, 
-	Imre Deak <imre.deak@intel.com>, Jani Nikula <jani.nikula@intel.com>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Sam Ravnborg <sam@ravnborg.org>, 
-	Stanislav Lisovskiy <stanislav.lisovskiy@intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR20MB4962:EE_|DM4PR20MB5063:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0baedb0e-ffe8-4fde-339e-08dc2d26b65e
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	vHEXCP/uVLZsW2If+PqXDrI5XM6Zt3OeL7gS6ZrY3umcCn7XqbAPqppWzGElKj95Q647MfgVG9zhmKx2pG+7TVTAbI44eiGabBkXDr2Faao16E9AYZM0v62Ecr8NkVziO4/1Vhh9AmBc3fp/1FYNoptLhOwBJKLigH2piVVRHrw+KH3iHEigHvP3Rt5IihqpyPweY2bUuvtdzy1XpinwYdjxnV8T6RpEomQMM+XUIO+rHw9x7MoHhjrDil3P0DjQ6H9eEZy9rTjF0dTbDgRraM3XTRnEzI44oRNclORsQQWsWVb/5Ju7zROH4rQl6Z6HrfBhMjm1U3scLXdqP2xc8ESRoGpIaV7N9iz2YgMWY1LQewdQkLvvAGvcjpM7kSAdMO7dM/VH26/5Q0ykq7A9zCw2aIM1s8jTLwU8BU0K/nvrbwJuwv3vR2Y4DZgHw8Kp7n/D1JfAKu356mX6VpzSJZ8Zs046JO+ADI1x07X+kYE4ir629oj2W4u3DhEaLeibcmAg6zSUVQs9RIEWkSbWoFqIM9grUKVKAoLr3Hf0xlMVe96jpYBMBzxvuonbpOS2TfOzz4dMLFv9DogY1Lxic1phwrFEOhm8YFgRiSvM0FkOqAK6F2lMMvagUiwB++2j
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?l5yOCGShiWcWf02z1iWJg/byxexJVUAt+VWw8w8azWS7a0d3Xsh3i0g5rcE2?=
+ =?us-ascii?Q?z6aynzDfziaupzuzMAwKjJzUDKoTra25rBrkdvdA++7bLGvCOuu6W/vDK5S1?=
+ =?us-ascii?Q?jRi8nTssZ8hOt9afsYPxJk4XLlYIYoh0fuObPn9VlRfM3RwBzNYVz52tu/TU?=
+ =?us-ascii?Q?vUEjy3BVAbhFfHmWlbtkZPlnOx9tNdSmC9nC4dYytlZbayXe/qvjHSbJh5Zk?=
+ =?us-ascii?Q?/dmJ4U3lxjgv7rmwfYl7nZpPcG0nM77rH+goGE10TWz5GcdWjZLgt2sH47Ce?=
+ =?us-ascii?Q?7pk9Bz+CvMYmNiU2uYiOTQhX8u0S3MGKzjdZTWI+WO8UV137/vdAgHdOa8U9?=
+ =?us-ascii?Q?9TvdWsblDnr3p7q2PLMdQNVfo1l0J68FtFHxC7kHb0lt3jr+bti+x7evdaNV?=
+ =?us-ascii?Q?1sAsgLWhcQM6OsGYDKw7dLmlQmwyPLhXoaN6eZZGjSR5GjQL4N/VebXXd0j2?=
+ =?us-ascii?Q?5Ke1RJyWh4JmdAbAV/SBOv818o2r/MXiLqIgew5D1d2rPmEPajvbTbrIEyuy?=
+ =?us-ascii?Q?jOO0xkFIpbFUILKb+IlfVJXLoYN1pQ9Q1rB6yZLraJzJtw/9TKu2yciaeQaS?=
+ =?us-ascii?Q?gST2HLdtHUboed2MR9WmZ5mt5xErU+PAvr+G+3FWYeiJ0PznRDLE+YldK40J?=
+ =?us-ascii?Q?139Ngpc9amCDRqBHCd9iVB3AhscrCj4Cr5gs1n4ryxn8qb8w0wHaQbGF0/nP?=
+ =?us-ascii?Q?c2cHzWrufVYxKBrpMc1YqHZjrRm0I4c3ABAZccZwOMQS3nBK9c1zsj1OmisH?=
+ =?us-ascii?Q?qCKr+EOtMsy2+feM1qGwLvcReb8QJhwO+bQxoP3u4lXF9/mSVwoMauTdw1YP?=
+ =?us-ascii?Q?z4j2s44XtayR0id2g7k7hKjXPIC3MAY5aFaPXiW+4iLVJH5+kFBHQi/P6JkN?=
+ =?us-ascii?Q?Wu67zyRENkvZgdjxuSyBddwo6VU146ZWCja73MLPkaQUmbNEIzGVyrwzqWbI?=
+ =?us-ascii?Q?1SskV6sc97jByEICbkkEl+4Hq15jO7pCxzMguyWp8ujqel7OnItjoGKtnEIK?=
+ =?us-ascii?Q?4DsvswHhLiHOmfoSfiRwvPcqkQcjqN4hYMKO0UViQZeO1oSphJgkB9/seZ2B?=
+ =?us-ascii?Q?dFGSZfh7BCRY9a5bpNotdUwq6GSJnvYU6GKC4gsK+1dwgg1JAq5sg9L/0Fnb?=
+ =?us-ascii?Q?8rsu8oL9rumWR/8Z+YsBpzi75C4aUDIDC2FwS7WrrCeFhrkU8vyCxYkLTZcg?=
+ =?us-ascii?Q?fsJM91Qp5Zne+YZdgNZkDyXKIoaIsouTpfgF9NlNrOKAdSiOW+K2xErKUIAr?=
+ =?us-ascii?Q?KUp9vjxcTkgsrCxDDMKWDkhQaRMQFtfHUnTlAMnpqf9YmPW0o24DYyneTnW+?=
+ =?us-ascii?Q?038=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0baedb0e-ffe8-4fde-339e-08dc2d26b65e
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR20MB4962.namprd20.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2024 06:32:27.4570
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR20MB5063
 
-On Wed, Feb 14, 2024 at 2:23=E2=80=AFPM Douglas Anderson <dianders@chromium=
-.org> wrote:
->
-> If an eDP panel is not powered on then any attempts to talk to it over
-> the DP AUX channel will timeout. Unfortunately these attempts may be
-> quite slow. Userspace can initiate these attempts either via a
-> /dev/drm_dp_auxN device or via the created i2c device.
->
-> Making the DP AUX drivers timeout faster is a difficult proposition.
-> In theory we could just poll the panel's HPD line in the AUX transfer
-> function and immediately return an error there. However, this is
-> easier said than done. For one thing, there's no hard requirement to
-> hook the HPD line up for eDP panels and it's OK to just delay a fixed
-> amount. For another thing, the HPD line may not be fast to probe. On
-> parade-ps8640 we need to wait for the bridge chip's firmware to boot
-> before we can get the HPD line and this is a slow process.
->
-> The fact that the transfers are taking so long to timeout is causing
-> real problems. The open source fwupd daemon sometimes scans DP busses
-> looking for devices whose firmware need updating. If it happens to
-> scan while a panel is turned off this scan can take a long time. The
-> fwupd daemon could try to be smarter and only scan when eDP panels are
-> turned on, but we can also improve the behavior in the kernel.
->
-> Let's let eDP panels drivers specify that a panel is turned off and
-> then modify the common AUX transfer code not to attempt a transfer in
-> this case.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
+Add top misc system controller to CV18XX/SG200X series.
 
-Reviewed-by: Hsin-Yi Wang <hsinyi@chromium.org>
+At least for now, this topctrl dt node has no related driver, because
+it only contains register for other devices, or the subdevice for some
+other purposes. The patch is submitted for providing potential common
+dependency for watchdog, sdhci, usb phy and maybe etc.
 
->
->  drivers/gpu/drm/display/drm_dp_helper.c       | 35 +++++++++++++++++++
->  drivers/gpu/drm/panel/panel-edp.c             |  3 ++
->  .../gpu/drm/panel/panel-samsung-atna33xc20.c  |  2 ++
->  include/drm/display/drm_dp_helper.h           |  6 ++++
->  4 files changed, 46 insertions(+)
->
-> diff --git a/drivers/gpu/drm/display/drm_dp_helper.c b/drivers/gpu/drm/di=
-splay/drm_dp_helper.c
-> index b1ca3a1100da..6fa705d82c8f 100644
-> --- a/drivers/gpu/drm/display/drm_dp_helper.c
-> +++ b/drivers/gpu/drm/display/drm_dp_helper.c
-> @@ -532,6 +532,15 @@ static int drm_dp_dpcd_access(struct drm_dp_aux *aux=
-, u8 request,
->
->         mutex_lock(&aux->hw_mutex);
->
-> +       /*
-> +        * If the device attached to the aux bus is powered down then the=
-re's
-> +        * no reason to attempt a transfer. Error out immediately.
-> +        */
-> +       if (aux->powered_down) {
-> +               ret =3D -EBUSY;
-> +               goto unlock;
-> +       }
-> +
->         /*
->          * The specification doesn't give any recommendation on how often=
- to
->          * retry native transactions. We used to retry 7 times like for
-> @@ -599,6 +608,29 @@ int drm_dp_dpcd_probe(struct drm_dp_aux *aux, unsign=
-ed int offset)
->  }
->  EXPORT_SYMBOL(drm_dp_dpcd_probe);
->
-> +/**
-> + * drm_dp_dpcd_set_powered() - Set whether the DP device is powered
-> + * @aux: DisplayPort AUX channel; for convenience it's OK to pass NULL h=
-ere
-> + *       and the function will be a no-op.
-> + * @powered: true if powered; false if not
-> + *
-> + * If the endpoint device on the DP AUX bus is known to be powered down
-> + * then this function can be called to make future transfers fail immedi=
-ately
-> + * instead of needing to time out.
-> + *
-> + * If this function is never called then a device defaults to being powe=
-red.
-> + */
-> +void drm_dp_dpcd_set_powered(struct drm_dp_aux *aux, bool powered)
-> +{
-> +       if (!aux)
-> +               return;
-> +
-> +       mutex_lock(&aux->hw_mutex);
-> +       aux->powered_down =3D !powered;
-> +       mutex_unlock(&aux->hw_mutex);
-> +}
-> +EXPORT_SYMBOL(drm_dp_dpcd_set_powered);
-> +
->  /**
->   * drm_dp_dpcd_read() - read a series of bytes from the DPCD
->   * @aux: DisplayPort AUX channel (SST or MST)
-> @@ -1858,6 +1890,9 @@ static int drm_dp_i2c_xfer(struct i2c_adapter *adap=
-ter, struct i2c_msg *msgs,
->         struct drm_dp_aux_msg msg;
->         int err =3D 0;
->
-> +       if (aux->powered_down)
-> +               return -EBUSY;
-> +
->         dp_aux_i2c_transfer_size =3D clamp(dp_aux_i2c_transfer_size, 1, D=
-P_AUX_MAX_PAYLOAD_BYTES);
->
->         memset(&msg, 0, sizeof(msg));
-> diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/pa=
-nel-edp.c
-> index 7d556b1bfa82..d2a4e514d8fd 100644
-> --- a/drivers/gpu/drm/panel/panel-edp.c
-> +++ b/drivers/gpu/drm/panel/panel-edp.c
-> @@ -413,6 +413,7 @@ static int panel_edp_suspend(struct device *dev)
->  {
->         struct panel_edp *p =3D dev_get_drvdata(dev);
->
-> +       drm_dp_dpcd_set_powered(p->aux, false);
->         gpiod_set_value_cansleep(p->enable_gpio, 0);
->         regulator_disable(p->supply);
->         p->unprepared_time =3D ktime_get_boottime();
-> @@ -469,6 +470,7 @@ static int panel_edp_prepare_once(struct panel_edp *p=
-)
->         }
->
->         gpiod_set_value_cansleep(p->enable_gpio, 1);
-> +       drm_dp_dpcd_set_powered(p->aux, true);
->
->         p->powered_on_time =3D ktime_get_boottime();
->
-> @@ -507,6 +509,7 @@ static int panel_edp_prepare_once(struct panel_edp *p=
-)
->         return 0;
->
->  error:
-> +       drm_dp_dpcd_set_powered(p->aux, false);
->         gpiod_set_value_cansleep(p->enable_gpio, 0);
->         regulator_disable(p->supply);
->         p->unprepared_time =3D ktime_get_boottime();
-> diff --git a/drivers/gpu/drm/panel/panel-samsung-atna33xc20.c b/drivers/g=
-pu/drm/panel/panel-samsung-atna33xc20.c
-> index 5703f4712d96..76c2a8f6718c 100644
-> --- a/drivers/gpu/drm/panel/panel-samsung-atna33xc20.c
-> +++ b/drivers/gpu/drm/panel/panel-samsung-atna33xc20.c
-> @@ -72,6 +72,7 @@ static int atana33xc20_suspend(struct device *dev)
->         if (p->el3_was_on)
->                 atana33xc20_wait(p->el_on3_off_time, 150);
->
-> +       drm_dp_dpcd_set_powered(p->aux, false);
->         ret =3D regulator_disable(p->supply);
->         if (ret)
->                 return ret;
-> @@ -93,6 +94,7 @@ static int atana33xc20_resume(struct device *dev)
->         ret =3D regulator_enable(p->supply);
->         if (ret)
->                 return ret;
-> +       drm_dp_dpcd_set_powered(p->aux, true);
->         p->powered_on_time =3D ktime_get_boottime();
->
->         if (p->no_hpd) {
-> diff --git a/include/drm/display/drm_dp_helper.h b/include/drm/display/dr=
-m_dp_helper.h
-> index 863b2e7add29..472359a9d675 100644
-> --- a/include/drm/display/drm_dp_helper.h
-> +++ b/include/drm/display/drm_dp_helper.h
-> @@ -463,9 +463,15 @@ struct drm_dp_aux {
->          * @is_remote: Is this AUX CH actually using sideband messaging.
->          */
->         bool is_remote;
-> +
-> +       /**
-> +        * @powered_down: If true then the remote endpoint is powered dow=
-n.
-> +        */
-> +       bool powered_down;
->  };
->
->  int drm_dp_dpcd_probe(struct drm_dp_aux *aux, unsigned int offset);
-> +void drm_dp_dpcd_set_powered(struct drm_dp_aux *aux, bool powered);
->  ssize_t drm_dp_dpcd_read(struct drm_dp_aux *aux, unsigned int offset,
->                          void *buffer, size_t size);
->  ssize_t drm_dp_dpcd_write(struct drm_dp_aux *aux, unsigned int offset,
-> --
-> 2.43.0.594.gd9cf4e227d-goog
->
+Changed from v2:
+1. remove the unnecessary "oneOf" in then binding.
+
+Changed from v1:
+1. fix linting issue.
+2. remove #address-cells and #size-cells in the dtb.
+
+Inochi Amaoto (2):
+  dt-bindings: clock: sophgo: Add top misc controller of CV18XX/SG200X
+    series SoC
+  riscv: dts: sophgo: cv18xx: add top misc system controller
+
+ .../soc/sophgo/sophgo,cv1800-top-syscon.yaml  | 40 +++++++++++++++++++
+ arch/riscv/boot/dts/sophgo/cv18xx.dtsi        |  6 +++
+ 2 files changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800-top-syscon.yaml
+
+--
+2.43.1
+
