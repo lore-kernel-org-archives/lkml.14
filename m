@@ -1,58 +1,58 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A2185282
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 17:40:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A528A85628
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 17:41:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707932448; cv=none; b=AHLcb0dfqdk/GMtCkzOBcW6lmE6F3MHD5sxAxrbWU/3q4X3Zko9B7d6yE6j06RMPV5dKDpv371lsnbAMv2k6sjemo7AvSCUUK3sm24sCzR+GzVioaDOU19+ByS3dapCcbrdoVIYRbTgLzavJqdsVUOSvkvUd3ktIBUoNX2d/77I=
+	t=1707932485; cv=none; b=sMuRZ5aHaNCFwFr1oPHbA+wjcjLZNeWMMGRpiIFx67QxIdnUDC8t8cNQPR4MlrqDYNuSjEnRqqxuyrJ28ZdZlddT8xR6A3Xiqie+xfpSh/k4TsEIPrUkSn5qiiVmSOFxVq0hYuk6BbP+k/ydOswQThun5gLTlPc3aGjY0JaO6/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707932448; c=relaxed/simple;
-	bh=zUABpjG2ub173w63GMgMTw18XVCHIXF84Q0edlKhxyE=;
+	s=arc-20240116; t=1707932485; c=relaxed/simple;
+	bh=nomzOqG8qtQlSxsBxKy5X1xMNj4S0dr5Ifd+oiSg+rg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=H95jVdkaYIe4BY+rswM4QF7NzeCKG7kpHI5w9pO0P9eXu8g7Xg4eBL3VjjYfLnbMM3Il17gWfknCANLc2a4rNUpO2k7f3GmHmYizH89nDGbXoxPH4Jbt80WYzcRLiw6IXVcm23HL70q4B9i1tLUNhsJM7SsNhItewE7QpRmJMls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com; spf=pass smtp.mailfrom=kylehuey.com; dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b=IoqOV6s8; arc=none smtp.client-ip=209.85.215.179
+	 MIME-Version; b=T3rGhDKbezfLN6DKu5NhQf0KL7moQZwxPkGXLmE6vboQZCb5S5+ajkhuDfBGtVVd6kkV1m6JuMbrAnt1q5AwtZZHKcdoRrDx8LygBXE/e9fWxnsNoGF7V0fV9cyaXmMxqKgOYXxw1gxoMAt+BgkKzcku+WjkwoiY2cQBAAdtQBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com; spf=pass smtp.mailfrom=kylehuey.com; dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b=R0QCwz5D; arc=none smtp.client-ip=209.85.210.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylehuey.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="IoqOV6s8"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5dc20645871so9225a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 09:40:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="R0QCwz5D"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-6e2e44aad03so2024795a34.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 09:41:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kylehuey.com; s=google; t=1707932445; x=1708537245; darn=vger.kernel.org;
+        d=kylehuey.com; s=google; t=1707932482; x=1708537282; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/ElBvlPVPDuFmuEeY/T4KuG3RaPIc1GsemQ8p6vqiM4=;
-        b=IoqOV6s8Wx059NZmgJ9rmO7ZmLPt71UVBcT0WDfE7hDZ+0pKYLawhwp+c3i2Hsd+lh
-         SKl0qaVvsppcXqJ3kvIDRFrt3a/BjswkNyWZmas+ACVehWrGNw3KA4wvGXN6omMoz/LN
-         AH6DBp9pbZw9vbWMS0OgoEmF5Vz29UTdPwF4JIQMERu+mpTcneTZ3ffZimJMuEvjKmwb
-         S03uoj7ovWVn0atkhg5DfTwYPG88Borp/pCsqGv49udH2dEhhl++lMLoxizRgur0PT8W
-         FJat12JhuKe1wn++KDLETk3uKGMrz77t397fxZZcRtH73R9JXG7AYWtRQoOhLw76Adno
-         NWIA==
+        bh=EjezFELGsG5yYdoO8o3jjgWXUKsZRmSJ3eM36KaKRP0=;
+        b=R0QCwz5DPYqkFzxtiGF6d2r89yTg+iapiIe5ujgDb5S47otsJJ3m8A2FgxcU9anVCp
+         WmPg5fow8UvZ6abaRs5Y8KImqQIvd4/OkhjOhMkq9e79J8OqwRpIa9/6HJ/cYpOWs0VE
+         oqMvCHidQm/tKJpUWumhYUW/c+XOOQ5MIVAbtg/eS8oD7bz+RIy/mBMdq6iGLSwyvnLw
+         jHVwkfxHeEt/pom/tg4LzKf7WwzOhaHiIFkEQ7sd4mI1ylgSlOd5dWKjy2dUrx/DSl67
+         a+8wFXYrgkOCavdO3PZ49HHheRCoLPEcQD+V8hoguxC3PualT4UbTdiH0kYuIXACl5M8
+         N1fA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707932445; x=1708537245;
+        d=1e100.net; s=20230601; t=1707932482; x=1708537282;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/ElBvlPVPDuFmuEeY/T4KuG3RaPIc1GsemQ8p6vqiM4=;
-        b=HJRebqC7VX0E+eQqq18SLeIt9EkKE39f1/ZAYlgouPTIwiJT6rDPJBsCvGuLWnD7bD
-         yxiVjQZQEkU/Jd0NIrQ3dUzJg1/aQycXL9svzFlqTPywVpNPqazL5GhRQxv3tz/ZlDgs
-         XXJM2qOcS7/NvIa5LiCHOMLS9UTZHIrsHPJwdtLDZIDBNFtpDxuhd/qVk4T4DsWVxthF
-         SXykwoeLhU6mR+GeyKPo5PKVCmoQORKj2FQnRRwWxVFbYEKgSSbi8zZdNTjdm09YNFiC
-         dAJyzIvcmtrLEpxZdsmHaIC/ypOlC/jZDORw2t0svy2qVWhdhBobUNLnWs19b30SMhjA
-         jySA==
-X-Forwarded-Encrypted: i=1; AJvYcCVisRqCC2uY6RCzvs5RQXDc7bNsGVtC7TZUZ/wSB3kqBir5LTuMwV4EQJPGk1ww+BIYnI8aZYsB6S9wQMQEkXWhdae+z2TsYTgHlhLQ
-X-Gm-Message-State: AOJu0Yz6NVNX+E6WOdPqNA6UZj5Ix9ir10e+b5Em1XzGVHi2LQ1dHO6r
-	6rnmUTxrMhp0LSLya55ig7PFytNDPeXsqHZ6rHQBzwwFM7qTVIqXPUkkAUw61Q==
-X-Google-Smtp-Source: AGHT+IFKJ2enC+iYjRYfjK0hAaVcw9L2SW4JceOswt+yl/hAiyoNanaf3Sr8OAjgf/m33sn8UysiTQ==
-X-Received: by 2002:a05:6a20:d818:b0:19e:b614:685c with SMTP id iv24-20020a056a20d81800b0019eb614685cmr4223312pzb.22.1707932444999;
-        Wed, 14 Feb 2024 09:40:44 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXBfzyE+xp/BPlirU8BbCNUyN9ay2yh+NMWrAWy4c76qJ1yppJZxe8xiOfc5BMTzaFpkXe3UVkwzuP7xcq8xBBkCBKiNiPp+12RTFq2CYHcu3qAvyC58hc4HuneYLJtyQnigIefY/GIMhc2iwaZk92xQSnhH94zzOGcvwSBsk8u9gIIQlOLDuURAj3u/lA8/45midZ5HMNzKnK0ywKeuuVVOJSslwMwHExU8lt7ybeAip41HXTRwZpYNugEaRiwKrZuAeCW9tdbOzDoGrkbJsgkkpUr/eHW4gyYN/FuussuWMaQFDwnAfhd3hc0TxkspyBnHxAmx0hfxuvMX8LDah+MopPTInvr6p+Z2xQQ0mGNmXEuTagrhCRvxp9QDo8FytDEsDjJUQl+fqldStC140ECBeOZSvpzlnKi9YLnTYZUfcP+5/Oh+wsQnProma40Rw7BHKV+fGL/zq3+ENEAvMKjLTwiN8xFxwztlkOTf53sOyiWszjhURi1aTa58u/6LPOpmGn91/8kLxYDfFV3YEtP346j5Gbck0lF192IeZ+zRKinjW5RQ5yOmPT0F7ohb9ckM4/rR8FJ3Q33v/dciL9JDZwZhLgSDsxHREHi/Bgj4f+EVwmLP3QOFsg5PWEfaeKBcWayXi3q8pqdtX1YML3asSjMw9Ml6ll5f+1kesxySZjAdHSZoF2w
+        bh=EjezFELGsG5yYdoO8o3jjgWXUKsZRmSJ3eM36KaKRP0=;
+        b=BcewFYxwXvoSdqNNAJRBiwcLw2PI6cb5dbHgMVFrRfsjYlLPyA17V3dsjd9I9K+TKx
+         HdTQ1lWFNWxDY1WQVlA08JtUnmUfOiqA3E3Bez/RmxTB4bY2ou7CkajbObzY3RJ7gEfz
+         pTWIrwbN1gMkYaDUS3NRY18BqWRDOexPS4O+8lecd18IZk6227aagjNEFkJkK/0SWmDH
+         iIt8DRfWoKYGz1/dz4hveTdF9acOq64IWZGegaMn1TD30X+QffZ+cT7zAZdKiPa3H6PS
+         TtqHMyEG669MhGd48UB8WKimDCfCVHOdsrFje7Lkbvw8aBs4TvIpssf2YWOIj0l0uev3
+         f4ZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU9pvy7t/1pDfhGFPNHxsT8zpzIlUuzgExGfamqNkErGOasg/hw9QsrpMwz4ZOO4a8+8H6xIW+y1NQ7pgw8q7sUoBTNokXtfbhznIBf
+X-Gm-Message-State: AOJu0YwIPG1yfJRdjxLrr5BqZaY6PPBTiARad+PhsvmkLTlm7XHceFrD
+	GxbOAKE0BXaHDinWKHQ9wrCsBdRzeMnaS+zsPAAxe/3YsxGZ9KdNRBXvuSqGTg==
+X-Google-Smtp-Source: AGHT+IFmSEieag8tCyc8604BELPKwiIo404ZfsK6cYr9yraeW3R4mfErPRQxwNVYXWIs5kv7eyTTpg==
+X-Received: by 2002:a05:6358:2c8e:b0:179:1f8b:445a with SMTP id l14-20020a0563582c8e00b001791f8b445amr3924795rwm.22.1707932482324;
+        Wed, 14 Feb 2024 09:41:22 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVnlM9zlbKauAzR+O8NeswMzBEQYMRe6SdGtLXHn/uwjuvV8h43PMKUBzKLCUE9aRV2+93xF/DSRqB51At0GMA+YYik2LfhT0r9Crq/4gW8JMAfnKoXl4scVMznsiXU0/1wKWBYKMSpApTNbCQl+72tg53WTWtuvDLlNZMnhiixbI9K7nUjBu3NUO2hH5KVu1Ergerb+p6hz5EPrL4glSTALBkq4rD3JxhxEaYiGPGa+XOfpfTBK/F141MywGj5TP4JVWbBK3P7nMBSnRIeX5Zu9OM13Q0OVN1lyQs61JEaqINGJ0TVte78/1GyrKq/ux/4LwN5DK/6dtEHpR+0BFEgu7l37GcqU59IwJr75apKFuxAB7dhyB5P1vif6bwxWDXdchPiaJgz2NAESVqq5kpM4hVsQ/7S6X95tlVe/jdivNR7W/WVGNnFlnNd9chn1Q14NMYpxaJA2zrPDgaUOfYSX+Wtbewj7b/VZQTZXtYOyLgnFZxCF8BrGcYAB2XhyE+zR0+odhLPKdvyGiIR0akRS5XZtT6/SCgqOyYT+7Njy8bOn8gwKxB5xfjyGRB4HxQa7zuoaVB5UmCHGUg9RZsrin0QkZo/exrBSj2p5MDypJetWkFDdPASRG1lzWUXGJY2LCr5kjT5UoWDAIrs+uBhhCIB7BKObl9Yibc=
 Received: from zhadum.home.kylehuey.com (c-76-126-33-191.hsd1.ca.comcast.net. [76.126.33.191])
-        by smtp.gmail.com with ESMTPSA id p5-20020aa78605000000b006e0874cbaefsm9567604pfn.27.2024.02.14.09.40.43
+        by smtp.gmail.com with ESMTPSA id p5-20020aa78605000000b006e0874cbaefsm9567604pfn.27.2024.02.14.09.41.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Feb 2024 09:40:44 -0800 (PST)
+        Wed, 14 Feb 2024 09:41:21 -0800 (PST)
 From: Kyle Huey <me@kylehuey.com>
 X-Google-Original-From: Kyle Huey <khuey@kylehuey.com>
 To: Kyle Huey <khuey@kylehuey.com>,
@@ -66,20 +66,22 @@ To: Kyle Huey <khuey@kylehuey.com>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Robert O'Callahan <robert@ocallahan.org>,
-	Will Deacon <will@kernel.org>,
 	Song Liu <song@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [RESEND PATCH v5 2/4] perf/bpf: Remove unneeded uses_default_overflow_handler.
-Date: Wed, 14 Feb 2024 09:39:33 -0800
-Message-Id: <20240214173950.18570-3-khuey@kylehuey.com>
+	Andrii Nakryiko <andrii@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Shuah Khan <shuah@kernel.org>,
+	bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [RESEND PATCH v5 4/4] selftest/bpf: Test a perf bpf program that suppresses side effects.
+Date: Wed, 14 Feb 2024 09:39:35 -0800
+Message-Id: <20240214173950.18570-5-khuey@kylehuey.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240214173950.18570-1-khuey@kylehuey.com>
 References: <20240214173950.18570-1-khuey@kylehuey.com>
@@ -91,119 +93,186 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Now that struct perf_event's orig_overflow_handler is gone, there's no need
-for the functions and macros to support looking past overflow_handler to
-orig_overflow_handler.
-
-This patch is solely a refactoring and results in no behavior change.
+The test sets a hardware breakpoint and uses a bpf program to suppress the
+side effects of a perf event sample, including I/O availability signals,
+SIGTRAPs, and decrementing the event counter limit, if the ip matches the
+expected value. Then the function with the breakpoint is executed multiple
+times to test that all effects behave as expected.
 
 Signed-off-by: Kyle Huey <khuey@kylehuey.com>
-Acked-by: Will Deacon <will@kernel.org>
 Acked-by: Song Liu <song@kernel.org>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
 ---
- arch/arm/kernel/hw_breakpoint.c   |  8 ++++----
- arch/arm64/kernel/hw_breakpoint.c |  4 ++--
- include/linux/perf_event.h        | 16 ++--------------
- 3 files changed, 8 insertions(+), 20 deletions(-)
+ .../selftests/bpf/prog_tests/perf_skip.c      | 137 ++++++++++++++++++
+ .../selftests/bpf/progs/test_perf_skip.c      |  15 ++
+ 2 files changed, 152 insertions(+)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/perf_skip.c
+ create mode 100644 tools/testing/selftests/bpf/progs/test_perf_skip.c
 
-diff --git a/arch/arm/kernel/hw_breakpoint.c b/arch/arm/kernel/hw_breakpoint.c
-index dc0fb7a81371..054e9199f30d 100644
---- a/arch/arm/kernel/hw_breakpoint.c
-+++ b/arch/arm/kernel/hw_breakpoint.c
-@@ -626,7 +626,7 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
- 	hw->address &= ~alignment_mask;
- 	hw->ctrl.len <<= offset;
- 
--	if (uses_default_overflow_handler(bp)) {
-+	if (is_default_overflow_handler(bp)) {
- 		/*
- 		 * Mismatch breakpoints are required for single-stepping
- 		 * breakpoints.
-@@ -798,7 +798,7 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
- 		 * Otherwise, insert a temporary mismatch breakpoint so that
- 		 * we can single-step over the watchpoint trigger.
- 		 */
--		if (!uses_default_overflow_handler(wp))
-+		if (!is_default_overflow_handler(wp))
- 			continue;
- step:
- 		enable_single_step(wp, instruction_pointer(regs));
-@@ -811,7 +811,7 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
- 		info->trigger = addr;
- 		pr_debug("watchpoint fired: address = 0x%x\n", info->trigger);
- 		perf_bp_event(wp, regs);
--		if (uses_default_overflow_handler(wp))
-+		if (is_default_overflow_handler(wp))
- 			enable_single_step(wp, instruction_pointer(regs));
- 	}
- 
-@@ -886,7 +886,7 @@ static void breakpoint_handler(unsigned long unknown, struct pt_regs *regs)
- 			info->trigger = addr;
- 			pr_debug("breakpoint fired: address = 0x%x\n", addr);
- 			perf_bp_event(bp, regs);
--			if (uses_default_overflow_handler(bp))
-+			if (is_default_overflow_handler(bp))
- 				enable_single_step(bp, addr);
- 			goto unlock;
- 		}
-diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
-index 35225632d70a..db2a1861bb97 100644
---- a/arch/arm64/kernel/hw_breakpoint.c
-+++ b/arch/arm64/kernel/hw_breakpoint.c
-@@ -654,7 +654,7 @@ static int breakpoint_handler(unsigned long unused, unsigned long esr,
- 		perf_bp_event(bp, regs);
- 
- 		/* Do we need to handle the stepping? */
--		if (uses_default_overflow_handler(bp))
-+		if (is_default_overflow_handler(bp))
- 			step = 1;
- unlock:
- 		rcu_read_unlock();
-@@ -733,7 +733,7 @@ static u64 get_distance_from_watchpoint(unsigned long addr, u64 val,
- static int watchpoint_report(struct perf_event *wp, unsigned long addr,
- 			     struct pt_regs *regs)
- {
--	int step = uses_default_overflow_handler(wp);
-+	int step = is_default_overflow_handler(wp);
- 	struct arch_hw_breakpoint *info = counter_arch_bp(wp);
- 
- 	info->trigger = addr;
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index c7f54fd74d89..c8bd5bb6610c 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1341,8 +1341,9 @@ extern int perf_event_output(struct perf_event *event,
- 			     struct pt_regs *regs);
- 
- static inline bool
--__is_default_overflow_handler(perf_overflow_handler_t overflow_handler)
-+is_default_overflow_handler(struct perf_event *event)
- {
-+	perf_overflow_handler_t overflow_handler = event->overflow_handler;
- 	if (likely(overflow_handler == perf_event_output_forward))
- 		return true;
- 	if (unlikely(overflow_handler == perf_event_output_backward))
-@@ -1350,19 +1351,6 @@ __is_default_overflow_handler(perf_overflow_handler_t overflow_handler)
- 	return false;
- }
- 
--#define is_default_overflow_handler(event) \
--	__is_default_overflow_handler((event)->overflow_handler)
--
--#ifdef CONFIG_BPF_SYSCALL
--static inline bool uses_default_overflow_handler(struct perf_event *event)
--{
--	return is_default_overflow_handler(event);
--}
--#else
--#define uses_default_overflow_handler(event) \
--	is_default_overflow_handler(event)
--#endif
--
- extern void
- perf_event_header__init_id(struct perf_event_header *header,
- 			   struct perf_sample_data *data,
+diff --git a/tools/testing/selftests/bpf/prog_tests/perf_skip.c b/tools/testing/selftests/bpf/prog_tests/perf_skip.c
+new file mode 100644
+index 000000000000..37d8618800e4
+--- /dev/null
++++ b/tools/testing/selftests/bpf/prog_tests/perf_skip.c
+@@ -0,0 +1,137 @@
++// SPDX-License-Identifier: GPL-2.0
++#define _GNU_SOURCE
++
++#include <test_progs.h>
++#include "test_perf_skip.skel.h"
++#include <linux/compiler.h>
++#include <linux/hw_breakpoint.h>
++#include <sys/mman.h>
++
++#ifndef TRAP_PERF
++#define TRAP_PERF 6
++#endif
++
++int sigio_count, sigtrap_count;
++
++static void handle_sigio(int sig __always_unused)
++{
++	++sigio_count;
++}
++
++static void handle_sigtrap(int signum __always_unused,
++			   siginfo_t *info,
++			   void *ucontext __always_unused)
++{
++	ASSERT_EQ(info->si_code, TRAP_PERF, "si_code");
++	++sigtrap_count;
++}
++
++static noinline int test_function(void)
++{
++	asm volatile ("");
++	return 0;
++}
++
++void serial_test_perf_skip(void)
++{
++	struct sigaction action = {};
++	struct sigaction previous_sigtrap;
++	sighandler_t previous_sigio = SIG_ERR;
++	struct test_perf_skip *skel = NULL;
++	struct perf_event_attr attr = {};
++	int perf_fd = -1;
++	int err;
++	struct f_owner_ex owner;
++	struct bpf_link *prog_link = NULL;
++
++	action.sa_flags = SA_SIGINFO | SA_NODEFER;
++	action.sa_sigaction = handle_sigtrap;
++	sigemptyset(&action.sa_mask);
++	if (!ASSERT_OK(sigaction(SIGTRAP, &action, &previous_sigtrap), "sigaction"))
++		return;
++
++	previous_sigio = signal(SIGIO, handle_sigio);
++	if (!ASSERT_NEQ(previous_sigio, SIG_ERR, "signal"))
++		goto cleanup;
++
++	skel = test_perf_skip__open_and_load();
++	if (!ASSERT_OK_PTR(skel, "skel_load"))
++		goto cleanup;
++
++	attr.type = PERF_TYPE_BREAKPOINT;
++	attr.size = sizeof(attr);
++	attr.bp_type = HW_BREAKPOINT_X;
++	attr.bp_addr = (uintptr_t)test_function;
++	attr.bp_len = sizeof(long);
++	attr.sample_period = 1;
++	attr.sample_type = PERF_SAMPLE_IP;
++	attr.pinned = 1;
++	attr.exclude_kernel = 1;
++	attr.exclude_hv = 1;
++	attr.precise_ip = 3;
++	attr.sigtrap = 1;
++	attr.remove_on_exec = 1;
++
++	perf_fd = syscall(__NR_perf_event_open, &attr, 0, -1, -1, 0);
++	if (perf_fd < 0 && (errno == ENOENT || errno == EOPNOTSUPP)) {
++		printf("SKIP:no PERF_TYPE_BREAKPOINT/HW_BREAKPOINT_X\n");
++		test__skip();
++		goto cleanup;
++	}
++	if (!ASSERT_OK(perf_fd < 0, "perf_event_open"))
++		goto cleanup;
++
++	/* Configure the perf event to signal on sample. */
++	err = fcntl(perf_fd, F_SETFL, O_ASYNC);
++	if (!ASSERT_OK(err, "fcntl(F_SETFL, O_ASYNC)"))
++		goto cleanup;
++
++	owner.type = F_OWNER_TID;
++	owner.pid = syscall(__NR_gettid);
++	err = fcntl(perf_fd, F_SETOWN_EX, &owner);
++	if (!ASSERT_OK(err, "fcntl(F_SETOWN_EX)"))
++		goto cleanup;
++
++	/* Allow at most one sample. A sample rejected by bpf should
++	 * not count against this.
++	 */
++	err = ioctl(perf_fd, PERF_EVENT_IOC_REFRESH, 1);
++	if (!ASSERT_OK(err, "ioctl(PERF_EVENT_IOC_REFRESH)"))
++		goto cleanup;
++
++	prog_link = bpf_program__attach_perf_event(skel->progs.handler, perf_fd);
++	if (!ASSERT_OK_PTR(prog_link, "bpf_program__attach_perf_event"))
++		goto cleanup;
++
++	/* Configure the bpf program to suppress the sample. */
++	skel->bss->ip = (uintptr_t)test_function;
++	test_function();
++
++	ASSERT_EQ(sigio_count, 0, "sigio_count");
++	ASSERT_EQ(sigtrap_count, 0, "sigtrap_count");
++
++	/* Configure the bpf program to allow the sample. */
++	skel->bss->ip = 0;
++	test_function();
++
++	ASSERT_EQ(sigio_count, 1, "sigio_count");
++	ASSERT_EQ(sigtrap_count, 1, "sigtrap_count");
++
++	/* Test that the sample above is the only one allowed (by perf, not
++	 * by bpf)
++	 */
++	test_function();
++
++	ASSERT_EQ(sigio_count, 1, "sigio_count");
++	ASSERT_EQ(sigtrap_count, 1, "sigtrap_count");
++
++cleanup:
++	bpf_link__destroy(prog_link);
++	if (perf_fd >= 0)
++		close(perf_fd);
++	test_perf_skip__destroy(skel);
++
++	if (previous_sigio != SIG_ERR)
++		signal(SIGIO, previous_sigio);
++	sigaction(SIGTRAP, &previous_sigtrap, NULL);
++}
+diff --git a/tools/testing/selftests/bpf/progs/test_perf_skip.c b/tools/testing/selftests/bpf/progs/test_perf_skip.c
+new file mode 100644
+index 000000000000..7eb8b6de7a57
+--- /dev/null
++++ b/tools/testing/selftests/bpf/progs/test_perf_skip.c
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "vmlinux.h"
++#include <bpf/bpf_helpers.h>
++#include <bpf/bpf_tracing.h>
++
++uintptr_t ip;
++
++SEC("perf_event")
++int handler(struct bpf_perf_event_data *data)
++{
++	/* Skip events that have the correct ip. */
++	return ip != PT_REGS_IP(&data->regs);
++}
++
++char _license[] SEC("license") = "GPL";
 -- 
 2.34.1
 
