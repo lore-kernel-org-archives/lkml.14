@@ -1,140 +1,97 @@
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E07524B2;
-	Wed, 14 Feb 2024 12:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E6D52F7D
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 12:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707915384; cv=none; b=FA51TUZu4B1uYJIXz3f4M5u+OV8ep3shfSt+l2qILFjBeVlpAfjZQCEd2EWIyUHJ/Eh/p9VXI4rx++NxpIfQXT4g9WSLjxMQwb83o8kNi76vBivcJ/wvOmD5KwLK1URwZ5SGF2KPZs/5Z3ezP3DipgfoxUSHDoVLgFCGrkGiAWc=
+	t=1707915395; cv=none; b=j1X/7/NLghjH3phWIa3sMVz/5SnS9sVdb03OEsE0yr6AVkUYeDNRhyn/fm3Ca0giy9FkacU4uG4qT+b374P7L/MAmVbNtlclnwRP0V1GTdDUAUGcVunUC/nI4paRRWraSHJhX637hFUG2lvLLHd2pFhx2DoIMHH+96xl1k+XnVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707915384; c=relaxed/simple;
-	bh=BvZiBFtd1/yR2YlF7wcWOokDKadIUElG7972GToHNVo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R5jDeWJPQW9alww/MUetu5PZll9oo59daNByCvEkvdLjMi57vTF2fCI5N+qaezjLIpvXxvwB1vblFJKDWl8rXNRrqV2J8QEVDRp01I2DrlKkmY7czKbnWJATqJs0XPcuLQsCMPpsR+p8w7+HxiRRPwbVIGcE/YmRynlpTWt3Ca0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HLFZf1YE; arc=none smtp.client-ip=209.85.222.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707915395; c=relaxed/simple;
+	bh=Sa+1BolWChYiZB2NgR3V5OISkN3sIY1zdycmekza9Dw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=doJQVkZcDssdSmH2SGWoMuMAKY9Z5S1SE/+DS+795ONSigfjYYOVWbXzs7EwGli5PKUi4ZaDNsztLq1rPxJEODZouXTzGo/UdVWvZJEzIZy7AjjNcFrZmM96cT0B+ROSOYgXMk4WZHcltiOYAIT9bxDdG3mXKE07PIvqq2WYHgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gGSZ4C4C; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HLFZf1YE"
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-7d2e16b552dso2845702241.1;
-        Wed, 14 Feb 2024 04:56:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gGSZ4C4C"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40efcb37373so42968215e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 04:56:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707915382; x=1708520182; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5XHZsoNoLoEFnlnV78+Lk34bmjhSEU006PIr8jhyp/4=;
-        b=HLFZf1YEhhbQPgrCkVhhXBYj4uPF03NCN8w4Ee9prwU07wsoIHi+MmyInxQbnfeC4i
-         y0NkKPPuR48dj49CM689n0wKuH+RFCwCxOYIxv3Jy9qK5CHpzlmHpO5YMNdhFXCZeizf
-         ZV+9BaP3gFwAk5FdGupIAEy2g2AmLrsOL9OgLFzdT+nf3jJfD9Iwq5aAkgzw2XXHEVx6
-         eGMLCID13kLiH9aP0wojEpGl4tv9+iAgjikkRLFjvYxdnxL6U00pYR6jGy2U6up+V2kq
-         IWAcTimOmKvdy8N6Nipv39s/O6xGkb1fYltWAXJcpPYOK3NRDggF/Tjla249C+RdCI2J
-         K/JQ==
+        d=linaro.org; s=google; t=1707915391; x=1708520191; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0CVEfoeXX7i2NsSM9t4AdPWCDJc7K0DfQ2BA7RsZvK8=;
+        b=gGSZ4C4CvCYLKvf3/DVknXF7hcOz3/YnVpKpnkDV38+eSlJMlWf3Tsv2cuSJ5ZsdvV
+         9mJQXltIyRcDx+JzcBhL86DFf1Oj29R4baDLPtCWUldzCMXy0+KPOmtDE/mnqKHsNZtJ
+         9lRUUDOUyscuPTKqXmGcP+dgLjnGGL/nq8avSTcx35hiJPlCKDoc5Y6v+K4UrOCKTJss
+         jV2SExkCmCR4b+lSdbhkqZZImmCAbPcOl/siSB8JI5+Ho/FS9KmmmyHD83Zyw6iQWRTe
+         ebMfbJsicK4/BOjGrOXB9bndWY07xLKKrCbVxsF0NaQvVqytCdjKXa5hpNasGfdrlTar
+         eUtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707915382; x=1708520182;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5XHZsoNoLoEFnlnV78+Lk34bmjhSEU006PIr8jhyp/4=;
-        b=MEz6s50T0MdkrndBijlhsR7vCZ2fo4BgwKJxMeT0+0FgnIP2lipspHe8aoYMBMrXKJ
-         +vtwVlFXZuyaJhn0+CVANsKOhzENF2yR7BFIuyfLGJTlBlIUsk16D3unqmdPrVpv6DdS
-         hHQEPGGkG2geVrWcO1zElgywiMRAzD//8t8rl3jDKsD1LRxVK5pO//5CrEIda+wrYX9i
-         +Bn8bQJZU3hbXSrYKyT/UvAWTrHoHO4imCr97mFI3EbhbcBIEykyRy5J90AmAjudcZcE
-         y4/yOWxdd9XyDRhrlVNpRCRJ6oJrkrRkh0upEkU7MfAO1Y7ZfRQyUH8NDlqqQILyQQ2U
-         e4Bw==
-X-Forwarded-Encrypted: i=1; AJvYcCX6piNWLm5jbB82HgCnwAGtcCL8lfufJtlQcdGpbcqlCCwvUZcRTXtTp6scuQySX7bedpnNIRISD0QwJ4oZ12lRivyF8invbv9Y+4FV
-X-Gm-Message-State: AOJu0YxlM62V5raFBXKS37pzzrvJ1dUYXmQBEE/4Xw25mA+kik9lqE+t
-	Gn0/luZIW/0F6CMrMn2NXDDZg+fEeKeXf1hJk4PuO4nzlz+gdd5YTvfMgfVtXdEl/4B6Cfji5K3
-	s2ICmQ0v7EgNew2zhoJLJ4HlPJAk=
-X-Google-Smtp-Source: AGHT+IHFduVz+Cu6aMTUgwJZ7KlSTtydgd57+6W1PCptyTCAmb/MDIqrhFLH/CK/s4uBTPBfRUcgdghDDJ60fi08ffA=
-X-Received: by 2002:a05:6102:942:b0:46e:c78e:380c with SMTP id
- a2-20020a056102094200b0046ec78e380cmr3224519vsi.1.1707915381929; Wed, 14 Feb
- 2024 04:56:21 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707915391; x=1708520191;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0CVEfoeXX7i2NsSM9t4AdPWCDJc7K0DfQ2BA7RsZvK8=;
+        b=NCLj5FO34L+Rh0n6WbJwfDbOokavL5xS6UuPXZdyVplvcKajq8kEkQQSk2Q+dRn0Qc
+         F2423uRcWEprVJ2f0wVPGlR3++gHk4/zIiA9vxkiTfryW1T3tcCfzRjqaRAF5JpRG680
+         MV4yY7vrhMlSKH+fgZu7HD1f6Ut7DJI9gcvtFZO7GyI++aNXjvkf4vX9Cfq5KK+kMpc+
+         kWsDjhSW8T3RsqOAqCIfVrJz4cbvO0ltxPc1gpz4hXaHfF8QTShSVwyc+W+p4CLlfoXv
+         +aik0rkTOmivkiTsJN4OMleSSH6DVIQ8ko2eVdOxna76WIV1d7YwyVHBeY4J8BdK1O5W
+         CJWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUcFgPe6HdxazxZo0VOBKxhrck1O6Q8ZcsWePEOLSDAHHDiA0QhXu56k7I9yTJJby//cPzaEHzA2XhpRcu38F5bTABYWGH0vUM+v3ic
+X-Gm-Message-State: AOJu0Yweeyr8c93LJjthf3Hsk06fUIdZzbd9abBnUkaPgcotUtdDMR6z
+	Ryrhsf7+okvWxdQhkutVKrsBV7SPVpfVxae6yb7cBqnmnJhCVPVRZQ9M/iM7Vus=
+X-Google-Smtp-Source: AGHT+IFVfyk3IYiL2cRlnX2EJ3RxS7YdOGPnx5x8KGnLQ4fcHD6UiYs8VGR1b8IpJGlUasIrJb5/lg==
+X-Received: by 2002:a5d:67cf:0:b0:33b:48ee:8a35 with SMTP id n15-20020a5d67cf000000b0033b48ee8a35mr1592835wrw.3.1707915391609;
+        Wed, 14 Feb 2024 04:56:31 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWhaAFj95gzjw6GIy3yd6sgKrJFZvsXJq7O0a9v7Ng5Hl2RD8aD0joMjbQNBx8ikZX+cGAgaDjo3Bmt6Lo+jbiG+yXdsSF/xdztgL9WCvJa/o86Rmq2Me4qGljVQgxUaNbnl9TvC0GruhA3+ZSrMqbXU4fms/WSxBTMmWS95kclBmRfa/HPa/ymqaSc2qRKB0kyq5Vt2S0v2Cs/wxSdpfJvC0ROG08D5G5NKs3+viuKdsWGuQr5OeYv+ZneWFr3FU99ogezmwj3/Z31JIItL4+jguHcc3ThzuyrQFIHoA+VXfyD/RXGhhqez14473Tptk5P+w2xZfZQLosw8jYSIr3BTtJjsTH48H4mJeq/ckXoiFGodholkg7BJCJT2N0bA+oHkMtFenpb2jq/s8l1XQ3qGbVePdUBIRBuKVws0WdYOYzpgsYzYXeilEIlLYUW6QTlUKCXpHqU+/IlxNPeJNtBnkZuOwjtpgkCDRQ=
+Received: from [192.168.0.102] ([176.61.106.68])
+        by smtp.gmail.com with ESMTPSA id bp9-20020a5d5a89000000b0033b4796641asm12557887wrb.22.2024.02.14.04.56.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Feb 2024 04:56:31 -0800 (PST)
+Message-ID: <c12ce98f-d5af-4c54-a453-2416b85b4a5d@linaro.org>
+Date: Wed, 14 Feb 2024 12:56:30 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240213220331.239031-1-paweldembicki@gmail.com>
- <20240213220331.239031-3-paweldembicki@gmail.com> <6db0fd10-556d-47ec-b15a-d03e805b2621@gmail.com>
-In-Reply-To: <6db0fd10-556d-47ec-b15a-d03e805b2621@gmail.com>
-From: =?UTF-8?Q?Pawe=C5=82_Dembicki?= <paweldembicki@gmail.com>
-Date: Wed, 14 Feb 2024 13:56:10 +0100
-Message-ID: <CAJN1Kkz9NPMuoKsm4XdmGS=Y9=SkYM-_EZhqxBojfGZycegtjw@mail.gmail.com>
-Subject: Re: [PATCH net-next v4 02/15] net: dsa: vsc73xx: convert to PHYLINK
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: netdev@vger.kernel.org, linus.walleij@linaro.org, 
-	Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Claudiu Manoil <claudiu.manoil@nxp.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	UNGLinuxDriver@microchip.com, Russell King <linux@armlinux.org.uk>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/20] Venus cleanups
+Content-Language: en-US
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>, Andy Gross <agross@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>,
+ Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+ Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+ linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20230911-topic-mars-v2-0-3dac84b88c4b@linaro.org>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20230911-topic-mars-v2-0-3dac84b88c4b@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-=C5=9Br., 14 lut 2024 o 00:19 Florian Fainelli <f.fainelli@gmail.com> napis=
-a=C5=82(a):
->
-> On 2/13/24 14:03, Pawel Dembicki wrote:
-> > This patch replaces the adjust_link api with the phylink apis that prov=
-ide
-> > equivalent functionality.
-> >
-> > The remaining functionality from the adjust_link is now covered in the
-> > phylink_mac_link_* and phylink_mac_config.
-> >
-> > Removes:
-> > .adjust_link
-> > Adds:
-> > .phylink_mac_config
-> > .phylink_mac_link_up
-> > .phylink_mac_link_down
->
-> The implementation of phylink_mac_link_down() strictly mimics what had
-> been done by adjust_link() in the phydev->link =3D=3D 0 case, but it real=
-ly
-> makes me wonder whether some bits do not logically belong to
-> phylink_mac_link_up(), like "Accept packets again" for instance.
->
-> Are we certain there was not an assumption before that we would get
-> adjust_link() called first with phydev->link =3D 0, and then phydev->link
-> =3D1 and that this specific sequence would program things just the way we
-> want?
+On 09/02/2024 21:09, Konrad Dybcio wrote:
+> Definitely needs testing on:
+> 
+> - SDM845 with old bindings
+> - SDM845 with new bindings or 7180
 
-Yes, it was the simplest conversion possible, without any improvements.
+I can do 8916 for you but, I think we have these boards available 
+remotely on qc.lab.
 
-Some part is implementation of datasheet (description of ARBEMPTY register)=
-:
+Could you test those boards out remotely yourself ?
 
-        /* Discard packets */
-        vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ARBITER, 0,
-                            VSC73XX_ARBDISC, BIT(port), BIT(port));
-
-        /* Wait until queue is empty */
-        ret =3D read_poll_timeout(vsc73xx_read, err, err < 0 || (val & BIT(=
-port)),
-                                1000, 10000, false, vsc, VSC73XX_BLOCK_ARBI=
-TER,
-                                0, VSC73XX_ARBEMPTY, &val);
-        if (ret)
-                dev_err(vsc->dev,
-                        "timeout waiting for block arbiter\n");
-        else if (err < 0)
-                dev_err(vsc->dev, "error reading arbiter\n");
-
-        /* Put this port into reset */
-        vsc73xx_write(vsc, VSC73XX_BLOCK_MAC, port, VSC73XX_MAC_CFG,
-                      VSC73XX_MAC_CFG_RESET);
-
-
-I agree that VSC73XX_ARBDISC should be moved to phylink_mac_link_up.
-Other things could be optimised and it needs more care. (eg. This
-implementation doesn't disable phy when the interface goes down.) I
-plan to tweak it after the driver becomes usable. Please let me know
-if it should be fixed in this patch.
-
---=20
-Best Regards,
-Pawel Dembicki
+---
+bod
