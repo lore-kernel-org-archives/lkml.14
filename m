@@ -1,53 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127295CDC9
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 15:54:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69DD5D910
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 15:54:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707926077; cv=none; b=hOzWuKXN8wcacffbM6cIIl3KJKxBQTPaQhuBEvuV+kOTqrQyPClxYlPKwKlCp5sb21qYxd4e+vJ0QU3v0QGorV9jQU9dztm79d3FDMjDUQ10kd7fzfmbuIArWSqU+b6L3vC7X1Hog6yNutWRedtUzMJqyWuKrx2E03S5WvqA9z0=
+	t=1707926096; cv=none; b=pv7DToOTtLHh2+/EifG3OK+q2wPkK/yv+gdT0HYN5UCYnpwwg9sk8W1nDag0aFp0hcHa29hrnSr6vG9HzDnLo3iojn0nX+6gukz2TCZ7DBZB8jeEfRmGh/AmkfGegVZIIqDJkDoXUvnk+RirxahrhxH/30dY/VjDPIhDNmpCZsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707926077; c=relaxed/simple;
-	bh=VujCBmuxbzMp+KdK6LlDdgxP+TebDwZSMVtNMdB+1dk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Moztk4SuppTvN6yDPi/WvmK77+khyvGlQh+g697MKYhpjGERqZ/wInIc2v3FDRjvFLFQezwZa4TM7800PLsotqpiyjFSC7p8I6a+/ApoAHWAeHiv3ERzKjBSv8ukkmuiZbOFq/DZWOpjCzB5LcjEAZHU08f5JMVXoWnitDFJ73Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ePB/i5iO; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1707926096; c=relaxed/simple;
+	bh=RjcmJ1gtFBwueafmepL5eB2KnvoD8u/S+qST208fcb4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=PG/MP03ljuLuGKS8M4q2tw1pR6GFF6RhQLNT8K2koFjsclVBpNn1y2u/E6PXYNjVBl7wdxOHzfMRxfuMzBju+BNKGLsB6XLnI/kVG8s+Wvlrwy3m6I6d9IE/UaDUU4mZ20F59lZkxnPDQVAF58Ssub2F3wY1+4czsGnHlxAzPh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VoaW9A8K; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ePB/i5iO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707926076; x=1739462076;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=VujCBmuxbzMp+KdK6LlDdgxP+TebDwZSMVtNMdB+1dk=;
-  b=ePB/i5iOgRqR+TKngGnIwkiCkZdXhOx4k4PQNoTEsM4JtRbRasWS4QCc
-   hToqIfHjC7FH5A956rsf4kjKMpK1SbEYWie2dDFxGueuLl4NM9UiIt1WZ
-   VZC3kxyvbs2tQsby3VnUe9CMOoYOkgB3GoGXpy/XeUo/YzJhuv0hjt3sA
-   3MpbQJzuEZFmapGVFytheltGkCBiigdxQvKEERYsSAPSTP+ptQNCkIplE
-   Pa2in3PC6ikIs5W3kZQJUeZqwPhJHs8/DjqviNMsHKDuSIH1s6U5DcEi6
-   c4Hk1DsESa9Yy2MVy6ThIADHHOnjch6LttdI57rFQch1W6EzQOar6gqVO
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="13071861"
-X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="13071861"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 07:54:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="7893650"
-Received: from mwajdecz-mobl.ger.corp.intel.com ([10.249.138.241])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 07:54:34 -0800
-From: Michal Wajdeczko <michal.wajdeczko@intel.com>
-To: linux-kernel@vger.kernel.org
-Cc: Michal Wajdeczko <michal.wajdeczko@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Jani Nikula <jani.nikula@intel.com>
-Subject: [RFC] include/linux/make_type.h: Helpers for making u16/u32/u64 values
-Date: Wed, 14 Feb 2024 16:54:08 +0100
-Message-Id: <20240214155408.1569-1-michal.wajdeczko@intel.com>
-X-Mailer: git-send-email 2.21.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VoaW9A8K"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5620f15c3e5so1952969a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 07:54:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707926093; x=1708530893; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5CNcwNle4UYKgFa0WYPpjXQkq/UHsVG8FTTKT9Pm9pw=;
+        b=VoaW9A8KRuOUCwuqTJ3hpVm8yUf0Y7wr1mTmpyqMbMzRcnY5g4HKN0a7dvpT7n9hhM
+         oAnHoSP3MHh5z8rtujc53IHppzzR86qpyv52tvEoigC6CEIbWNIZzArJC4HVHweYf/2Z
+         9oGC5qaXaI3PD4J91vRxS3Mc+hUMLpT9vBng5u9bvLUEW9xqRGmSQtVdGOQWFiuUjOLH
+         leSrV9s9ngLPXl4zkp7lczAKs6fcvAf79QxHU4YQKaO7c9FIntSMJqRWkOFXyJ08lFVl
+         0lgl77wldIVbwx4tiFSVIY5Y0yhn91/yWVHIYhhi+6Xh/EVJPO9c8agWpE1M0Gzkk2//
+         iR8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707926093; x=1708530893;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5CNcwNle4UYKgFa0WYPpjXQkq/UHsVG8FTTKT9Pm9pw=;
+        b=FAKlxs2bYKR5woEXzUvTWj+2/9vozvFPrLWjuRGjJQ6+DkMs2nVZZDeC0H7Tcdj8q2
+         IXqgs3ihiN9cJ9kSxaoldZjtu7YPFbnlnC5sajTfDxSnFKBq/ErFI26DQtomIxA5Hnpp
+         ecTzpvsoZWJlNMCo2PvvzyIGlgiyfB42O/CWIW6nTKPRCqYk/D/FzUk9Glh6lDIxYRYE
+         2KrzJxZQlQ49LG1RDdQDbdZXNoTVRFacOdlaow2/V05BrZtyH8iM2tVgO2QiVEzT7rna
+         AXysFVzT/hqegC13flkW8exjg89i6LzW0wmisR7Eqe4nLF7hYbVFTMN5IrmBEQeh48yK
+         bPug==
+X-Forwarded-Encrypted: i=1; AJvYcCXNgpnEmsY0m+/iEt8eslQ+YB3XDqO2I7nWLWLmdS2bWb13u+7n+mOwTJBR++DXoh0DjwJ8tqxc7Bimxp44GZpYaBXZm9VMp6MR0hHG
+X-Gm-Message-State: AOJu0Yw6vuIKzNaER9XeBiG/Kvib/vzEgbyYV087LAVm0HG005zOeVEl
+	s04RehON8E6mifqZya+kyVlrEiTauEWJw43/O1d7Lj5FSkKhdNvpDT9EN4m4pEA=
+X-Google-Smtp-Source: AGHT+IGCX7VWtHcvocr9D1LSJYAAIIZpWbFoN8ZtrgKxnkmbTSIbJoUMp2I5qHo0SUqLg4lKWWH0SA==
+X-Received: by 2002:a17:906:f851:b0:a3d:303d:c6c1 with SMTP id ks17-20020a170906f85100b00a3d303dc6c1mr2110897ejb.62.1707926092979;
+        Wed, 14 Feb 2024 07:54:52 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXTLMPJkqU+hvLTZTGoGdsmX+MhjOWm/jj8EcBDIUF8FHE6mDlweGOARuz/QvAFxn4tv6Cln/5v2wI1CkdcPn1/2qrGGLI6MXknF4K6NTGyghLc6DFiUl8VwRG7tSLqN+vIIcGQA++j+U0aM7XxsGBEBgCoRjXKUYrCJOIqYI+o0JFhA/1F8NhxAPo/lxwml2rmIb0Qcbb0rS4nw0mbyzqKhB4DsogUZyS3KO6SACrKijel2CKM3zSrFRVKHqIUJ0CeVbGUdnn8mOAZLRJVubcAHUo9HKcb5Bnvcg6qyhSOBwah5TljpC+khzCYrQWYDxUeEcXGSqOLra8C/8yXA45F73NGzX9OuMBD0AoXXl/2QRI4gU7uJsJKDBOphLsWbBJTwVvvskGRvX4=
+Received: from krzk-bin.. ([78.10.207.130])
+        by smtp.gmail.com with ESMTPSA id tk6-20020a170907c28600b00a38936aa08dsm2431332ejc.32.2024.02.14.07.54.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Feb 2024 07:54:52 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Robin van der Gracht <robin@protonic.nl>,
+	Paul Burton <paulburton@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 2/2] dt-bindings: auxdisplay: hit,hd44780: use defines for GPIO flags
+Date: Wed, 14 Feb 2024 16:54:38 +0100
+Message-Id: <20240214155438.155139-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240214155438.155139-1-krzysztof.kozlowski@linaro.org>
+References: <20240214155438.155139-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,53 +81,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It is quite common practice to make u16, u32 or u64 values from
-smaller words.  Add simple helpers for that.
+Improve example DTS readability by using known defines for GPIO flags.
 
-Signed-off-by: Michal Wajdeczko <michal.wajdeczko@intel.com>
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc: Jani Nikula <jani.nikula@intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- include/linux/make_type.h | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 include/linux/make_type.h
 
-diff --git a/include/linux/make_type.h b/include/linux/make_type.h
-new file mode 100644
-index 000000000000..60e2e091ea3c
---- /dev/null
-+++ b/include/linux/make_type.h
-@@ -0,0 +1,29 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef _LINUX_MAKE_TYPE_H
-+#define _LINUX_MAKE_TYPE_H
-+
-+#include <linux/types.h>
-+
-+/**
-+ * make_u16 - make u16 value from two u8 values
-+ * @hi__: value representing upper 8 bits
-+ * @lo__: value representing lower 8 bits
-+ */
-+#define make_u16(hi__, lo__)  ((u16)(u8)(hi__) << 8 | (u8)(lo__))
-+
-+/**
-+ * make_u32 - make u32 value from two u16 values
-+ * @hi__: value representing upper 16 bits
-+ * @lo__: value representing lower 16 bits
-+ */
-+#define make_u32(hi__, lo__)  ((u32)(u16)(hi__) << 16 | (u16)(lo__))
-+
-+/**
-+ * make_u64 - make u64 value from two u32 values
-+ * @hi__: value representing upper 32 bits
-+ * @lo__: value representing lower 32 bits
-+ */
-+#define make_u64(hi__, lo__)  ((u64)(hi__) << 32 | (u32)(lo__))
-+
-+#endif
+Changes in v2:
+1. None
+---
+ .../bindings/auxdisplay/hit,hd44780.yaml         | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/auxdisplay/hit,hd44780.yaml b/Documentation/devicetree/bindings/auxdisplay/hit,hd44780.yaml
+index e26d61af9011..3ca0e9863d83 100644
+--- a/Documentation/devicetree/bindings/auxdisplay/hit,hd44780.yaml
++++ b/Documentation/devicetree/bindings/auxdisplay/hit,hd44780.yaml
+@@ -116,12 +116,12 @@ examples:
+         compatible = "hit,hd44780";
+         display-height-chars = <2>;
+         display-width-chars = <16>;
+-        data-gpios = <&pcf8574 4 0>,
+-                     <&pcf8574 5 0>,
+-                     <&pcf8574 6 0>,
+-                     <&pcf8574 7 0>;
+-        enable-gpios = <&pcf8574 2 0>;
+-        rs-gpios = <&pcf8574 0 0>;
+-        rw-gpios = <&pcf8574 1 0>;
+-        backlight-gpios = <&pcf8574 3 0>;
++        data-gpios = <&pcf8574 4 GPIO_ACTIVE_HIGH>,
++                     <&pcf8574 5 GPIO_ACTIVE_HIGH>,
++                     <&pcf8574 6 GPIO_ACTIVE_HIGH>,
++                     <&pcf8574 7 GPIO_ACTIVE_HIGH>;
++        enable-gpios = <&pcf8574 2 GPIO_ACTIVE_HIGH>;
++        rs-gpios = <&pcf8574 0 GPIO_ACTIVE_HIGH>;
++        rw-gpios = <&pcf8574 1 GPIO_ACTIVE_HIGH>;
++        backlight-gpios = <&pcf8574 3 GPIO_ACTIVE_HIGH>;
+     };
 -- 
-2.43.0
+2.34.1
 
