@@ -1,128 +1,159 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2046.outbound.protection.outlook.com [40.107.101.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B13913B799
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 20:55:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707944154; cv=none; b=QbyIEVe6BClSCySm2MXhX7kyvHdcoI/CfIsd4miaOmJsNB9YzysetojFekVhv7uPD/4Oqe0nzYPFDdSf+NurMrc+71c2DRURzwHEC5u59pqfUNQJaHTjMjusTfOytXt7u1z9Gdt4RKCjNF7jAtzMIvmX2jmkXYR8mLVWos875DM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707944154; c=relaxed/simple;
-	bh=/Yf1On6PPx/GIt4Nh8Uwcd47eLJMbzpEgqXi7NBje+M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kKIiYPwrh6e8er40/Zbaz2NfMbWgny9cCljDHw9NXVsT6Nai2CMeiq0lYB0OzvxL0QTxrTyzmBUs8ADfPhisljgQq6whwybfVk+janSnvSLe70KyFTDEO0C1FFscmjq6CmWqG+SyoKYar57l++lFmA/zG85ddFOuMj5fI0CiEQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PfJnhvA8; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3833854649
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 20:56:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707944205; cv=fail; b=BZRKOFZ2BqTimon82duHaTQtirYeJV5quVTmS+5ZJynSxmdQSwHX7A9Ild0Et/AxFqCgQ5VkRJ75cNq+y7EdaW9HFlJuXPCEd5jNfrLAIllQV8V3tEqM50VquTPnqBIlOu0bbIrDFP7pmtGRqGCJSiYYHEPqI/ZmLZIpo7zxPY4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707944205; c=relaxed/simple;
+	bh=/ke4L8DjWC4qd6wtM0l4YL9Qz0JO3OclS9gMSy8DriQ=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 Content-Type:MIME-Version; b=kUO4Ryega6VRDvHmznR3Spv07aUx0J4buLUgZSnI/TeZAiED7IHdystdKhqoY4ym/2X7rZ6sYtD8CY9EjT/WEcv6Y+QC5HSCrHdWNtwXcf+umvaaVFsTXAG+bKitb5tB2iHyejMh1l5USkr/6KyI9qsICiF0WVr/5n39fE76LD4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Pz+Du/nR; arc=fail smtp.client-ip=40.107.101.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PfJnhvA8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707944152;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qd2aiPI9hKK8zn318SlhqtdzM62v1ZVBF4dOWFWdohA=;
-	b=PfJnhvA85qrbL6krTc/g3CYlcSJugv0D16nJMM6zmVhegeqzwl4dXQGJmWordkTflWwyoI
-	I652eFqXzvAX6SQQavtdW/HAHiP1LrnfkgQZek3taDzzZLozYFVp/O8/jMw+NR51UEIKXg
-	Eb7goPQaZGrUlJc59KmLRre5pcDV4JI=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-696-INn6TyccOfqSJMkmNjWZmg-1; Wed, 14 Feb 2024 15:55:49 -0500
-X-MC-Unique: INn6TyccOfqSJMkmNjWZmg-1
-Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-51151b8de86so133246e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 12:55:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707944148; x=1708548948;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qd2aiPI9hKK8zn318SlhqtdzM62v1ZVBF4dOWFWdohA=;
-        b=vuQvMdMx101YRDj/BLWrb0u8U1LKn06UIVs8yj47nCm3ZQNfalAGZbujRWr5JsGG2L
-         rWwAtmP6i6mjuw109UAaWM8fEE4DgjjYLb5XFuAN5fC1elXdZcBfLub6HEqWrYPBMAik
-         +X7BbZ6LSomgQG4UQbmrFoWYiQUHm0lI1O+0AuoWIyKHdz6ekDwrnQVWr6u7DARZ1IL0
-         lTtdE6TPC4ti3FnncVSw1kEcVJ2oKP6kZc/1cEvoMuEbL/5TkcSxW7Hx5CV3lSZntYXC
-         tjHGI3TPLVH1mPv97UNH2MzakqzPsLBQ6eZNuhGp8/G9Xlt9/in83g1TkyH5vvWfsiax
-         4kyw==
-X-Gm-Message-State: AOJu0YyX+fQZ1EqJWm/YuEbBhg2LTmhViY5tQJnzrBh8JPKSnzFYzpNJ
-	UMTL9h3qvsH+XGDU7WQM5ZbPvjlTFaX+NaGJodO9vvAAMR5Bas/b8MiqxpLkNihwnraaMeTsy97
-	umCotcATm96DYZ1QVO5zPVm3+g2XxvycDM5G6cNxwnuzIBLeeHKNUG2fuzllzxkHNSngdshMkzb
-	HCra4snr3GX75ig3iNi3OP9ySbEKe8Fb2YPyap
-X-Received: by 2002:a05:6512:1287:b0:511:acd9:c10d with SMTP id u7-20020a056512128700b00511acd9c10dmr1759010lfs.40.1707944148508;
-        Wed, 14 Feb 2024 12:55:48 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGAdIviCY+cOciu/DFH2BuB1fIjxeT6eRhZTrKn5UOsY0w+5r+k1jdM88qSbORRZ0fRDTMriyN0YlhWiPoNZks=
-X-Received: by 2002:a05:6512:1287:b0:511:acd9:c10d with SMTP id
- u7-20020a056512128700b00511acd9c10dmr1759002lfs.40.1707944148226; Wed, 14 Feb
- 2024 12:55:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Pz+Du/nR"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=k6CsN4lWBkkUSCOoUJ7l0h+QUKBenFrV2B3G1Ps7EJ41ZUcFb3adf12bG2Os6PdtD56TycS0gpPEeNH5iK62XCDQoocPSgBw8ZrjBKak6MscPHG3oCC8VPzPMYQRCwVcGTTHJ9zIKHwR8nAxqLre7V4sR9E/McRyVD6KaI9vEVHZdZ6KqHzKBHSwFYs288j+LMRXMww0q72u41fkN69Zc5rZH2/Zp6zw+kFAJ43gZzZNYXpHHAz5Mr/QEB7ne+T5qkjcbq/+NONKQi0hKR7R9X6dQh49MpS9Tl2kZXccFYOIkB86aSMIjKhgTXQ1jWkKhQplOH5H1xKirkoEryN5ZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1maQEiuNSLlkxHXSAx3IxLnHu1GLwhzZrm8AjMqDSBU=;
+ b=TPuvA3vW8U78aPFgWaBiGiSn0bBJLghMeDt2wP2qHxbpk2DK/6qxC3fmrDMBu0rx6PyEHRz+5X5PPWXo77ZHG/4QEJR+VjA57Lg6JMJuynR6yLuhgbEUl+w3K4jgzwsIkotebTSBR55QXkbJK+9tiKinpWLN8JLnRBQmCMPTpSaLdcX8LdNTJXzygWqxw8A1cPi9pnvTy1buAtQFOSuHFCbvUqaW8QV9zoowsKHRfuOa0miVUZnTie3GM9UIcV5WZlBXwwIq5SPqcG+kbNnFXZW5N6UTFVsqA2jx+jU4Y1mbrsjgOYU4Ok5jQFykmaX4ysksrI+rJSuDT9WsmLm6jA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1maQEiuNSLlkxHXSAx3IxLnHu1GLwhzZrm8AjMqDSBU=;
+ b=Pz+Du/nRttgHHCM9o536srXh7QNBSDfjQckWfPmr9mX8+NeC8F5PW+Dt2cZoN0/Hyn+lRZcI/3LbA7QXZQFrGCtLiwC4cPiB9CWY/C/uJZtYrYDpU2b3KFA9oGxpOiqBOd8csi2MMiz9ZXVgOatAwLtc212PytSPVZqvdJy5tg+qIVCB4kkntNYswft79eJ3cqlCVOyqu4BIiBRexV69DYy0Igh7d8VEfRJ4Z2WSYzKQC7A826i4qYGe8AMo/PvQs4z6Td+SPoEqKlKLTBPkKgNsSaIbefbGKANfpyPcoWMnRbD+/w5eX06QZiTy07asml7RwmyFjexVIYjVAYFh4g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BYAPR12MB2743.namprd12.prod.outlook.com (2603:10b6:a03:61::28)
+ by BL3PR12MB6522.namprd12.prod.outlook.com (2603:10b6:208:3be::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.25; Wed, 14 Feb
+ 2024 20:56:40 +0000
+Received: from BYAPR12MB2743.namprd12.prod.outlook.com
+ ([fe80::d726:fa79:bfce:f670]) by BYAPR12MB2743.namprd12.prod.outlook.com
+ ([fe80::d726:fa79:bfce:f670%7]) with mapi id 15.20.7292.022; Wed, 14 Feb 2024
+ 20:56:39 +0000
+References: <20231215124449.317597-1-mpe@ellerman.id.au>
+User-agent: mu4e 1.10.8; emacs 28.2
+From: Rahul Rameshbabu <rrameshbabu@nvidia.com>
+To: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Gal
+ Pressman <gal@nvidia.com>
+Subject: Re: [PATCH] powerpc/64s: Increase default stack size to 32KB
+Date: Wed, 14 Feb 2024 12:47:39 -0800
+In-reply-to: <20231215124449.317597-1-mpe@ellerman.id.au>
+Message-ID: <87ttmau5mg.fsf@nvidia.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR05CA0016.namprd05.prod.outlook.com
+ (2603:10b6:a03:33b::21) To BYAPR12MB2743.namprd12.prod.outlook.com
+ (2603:10b6:a03:61::28)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240207184100.18066-1-djeffery@redhat.com> <20240207184100.18066-2-djeffery@redhat.com>
- <CAGETcx91KahXY6ULXDpek3Xf6k4s646Y6+jn_LtfZPDDOpg7hA@mail.gmail.com>
-In-Reply-To: <CAGETcx91KahXY6ULXDpek3Xf6k4s646Y6+jn_LtfZPDDOpg7hA@mail.gmail.com>
-From: David Jeffery <djeffery@redhat.com>
-Date: Wed, 14 Feb 2024 15:55:36 -0500
-Message-ID: <CA+-xHTG2E3zMmQSKdEJHC=nnf1AX-UQ=tPY0DDHDsozP+-QL_Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/6] minimal async shutdown infrastructure
-To: Saravana Kannan <saravanak@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, 
-	linux-scsi@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Laurence Oberman <loberman@redhat.com>, 
-	Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2743:EE_|BL3PR12MB6522:EE_
+X-MS-Office365-Filtering-Correlation-Id: c37e8175-53c2-414a-cdd9-08dc2d9f70e3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	fmVi7XDqFXWH/1G5SVFd1N+HMgTj3g7O6mLJ4Ag/1Hgg0aGApg0UPYvNARkxxqkKOYXzjl3AEwmN281+szJtnrWFbFD2IgvvEKfuGWysEmvFnGJBlDVb4m+EpZY6Oyttv10h/I+jAhuAfFW2deJWG3aRfHRj5XDnTeFrKhhyM938C6Kof/TM55K90kA1GuA10vjFigQe2KiIwhCgTXxTsfhDrb+7RAEyJH6qYHTHqZuEQ2si5CMWOVA87NMf/VEv8lQn7/hWMUiq9Jz0Q2bXOXkdkVqH3c6dh6vWSiuULuHBJK1QAZ1KxNDWEjmgLldD7kyK4K8rGtm2d3rsKD79vmRLFe98JpnD8GYOmpPxAPwfgyh8V4UEjOIiXE85OyEoNbMJpuAb8KndLKDbtPawuBWhgFjFoigJvuGBlyJQFfubI3VSoWi/2/txlxVq30qHW0GSHxAlCzwU9kb4npLJDU6N3Es5D/oh3aMUg6+Dl85M6hwfuqU+3S7g0Pz2982Yj2VZvNntSldQnuOIELbzA1xoT+RIU9VrAFIVssS9TKFm8GLufSYqywRaaZLz8XcD
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2743.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(366004)(39860400002)(136003)(396003)(230922051799003)(451199024)(186009)(1800799012)(64100799003)(2906002)(66946007)(5660300002)(38100700002)(6506007)(86362001)(107886003)(6512007)(83380400001)(316002)(6916009)(26005)(36756003)(66476007)(4326008)(66556008)(6486002)(8676002)(8936002)(2616005)(478600001)(41300700001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?1T4mhS79BNoBLAzAoKtgfguAxcI0Om9tm2HAI9WZk5mwirlQC1SrX2AT3zcM?=
+ =?us-ascii?Q?ym/aK9Lrb1OlUgeBUTNkdupc8QIu6V1eaaid+wCZYPgCgXsr6kYEvq8hFvEG?=
+ =?us-ascii?Q?4P7+8hUcXqi4PTM70Wdft1gPrMgHezEC0KTk+dxfYitYbQxMZo8tjUHBmrrJ?=
+ =?us-ascii?Q?1xgHSTSPS/MngnsxgRqp3nJCyoQ8iDSVzSXGWXMrDCxDHMvMfC9hIGAs29NS?=
+ =?us-ascii?Q?ws0YU6DgbFiKNJ5EheWFoss7c6fhnS2QNKPlrwkTrUjPffPL2fRX/dZUUfOj?=
+ =?us-ascii?Q?88S4Npp9drjaMSecOcAFZb5mc51eYEBd7WRrkMyBErU33Y/3Jye8CtLnlfMV?=
+ =?us-ascii?Q?xnqo/lhn0f7oaIZsZlci2WvMOOYIBZdm5kyspFKHEoC+aiB9Xr1Uu3fr2c3K?=
+ =?us-ascii?Q?A1nHFDStkxrn0jkeqdVx1eFqyRyym3GVA+2R6Hn0Q5Xl3+GztPPhBYfPIB49?=
+ =?us-ascii?Q?UkOZjqEVfPvR/qSxt7hAU7jEEzYnleNqVOh+61n9WCvFK7qwEDHiVai2d/Li?=
+ =?us-ascii?Q?+JpDa86WXdTd43QCzLkyS13al47OVfFS4hWWPt+KixIPaUC3EaV0V0cumTiE?=
+ =?us-ascii?Q?WdeAo6qOHplDly3bT6xskoNnQGwjZojLlGMZiAgkpBPAEUp27ZEstQc32l1Q?=
+ =?us-ascii?Q?QT+wSF73vWajU5jVHYZ+9KEkgkY7vkvVUhvVz6kB2pP0jFQX38zJF3ZS3f30?=
+ =?us-ascii?Q?ojHmzP+gjNpD7C0TCI5fCwqo6YZQ6vkQSRqqGzJYbeEYFivuZrVCpKQugJ7r?=
+ =?us-ascii?Q?gDfKMdBrYRAw8YyDUgmCCnpwJf+IfGeEMJJBq0XRIEr/Mi6Z6waRXUr8NDHV?=
+ =?us-ascii?Q?g40fcTQIXsY4QVBmZAPTl1xZ+TEKOaMGFHiAJsy7jq8KHRu4GuFzLAeZysr+?=
+ =?us-ascii?Q?os3bgZj5Y8qFhPMQ+5of75g5uVmFTn1WOFncKhvdNQEYzzGriKLZDVwXsGpK?=
+ =?us-ascii?Q?pOIrVuuojX8APcvFMY1+tGETzs6eKDvWi8hicqHKRvd1z+uS4W5B+Vs9xNs7?=
+ =?us-ascii?Q?ocoLia+ufAOb0Nq1FLBGS2B9qwO6PcYNg+cQYR4GNPgMk8mKecbIkx30ALyN?=
+ =?us-ascii?Q?oE2iH9e7s1vfdfLy6DGC+rFFakzm2VxSnudH9HfAFSiSALU7LahY09V5fwkM?=
+ =?us-ascii?Q?TY+6JbotIjWDlJ4Pt/prUQdG3X5s7JDeCuRCifITslZoa+b+oFaK+0hXxZlo?=
+ =?us-ascii?Q?JIhHCmyRZD+4d1ChddwnandqR7newtfexo9/ukwFCGyIGKejHpkfScouiCOf?=
+ =?us-ascii?Q?OKZ/lTNHWsjPG2QieL18H0KZuLeTnHCitvGLdw91xYBO3hMZkg03MvSGkU2Q?=
+ =?us-ascii?Q?UPHrSl9Mv6/pG2OlH7SFzZMI5qQbnPrpj4lJovfLbdzzGtc0iPzXd1z+pFxp?=
+ =?us-ascii?Q?TScMCa8hX1otK4zGROhhii3fZrVtZSsX/yNFD6f9IDUCB9tpmV9YlDfecXHb?=
+ =?us-ascii?Q?t1iGCYzBFgGPi6FH59X3ibpw09LTjHRSzYbKRzOIwGmKowpnSwjidJkTKgRe?=
+ =?us-ascii?Q?ukkVaihe/JQ2g+sAIsN51i8GPSpec3t4zDuTi4p6c00SDoj83N5DeVO0ByXa?=
+ =?us-ascii?Q?I3Hv3cTKBUGuMgWY+zo6j0+Sp2gGmIdNX3/uvowhoapcDNi8CttWP2mtjgjZ?=
+ =?us-ascii?Q?jw=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c37e8175-53c2-414a-cdd9-08dc2d9f70e3
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2743.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2024 20:56:39.7852
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: squ7KroZS/trb7EWjx9ydVrweylK8RmPtATiBi90j9apBCYBW0MWQSjdYXK377DjKEh79ysiRVmW3KAOfo2pmg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6522
 
-On Tue, Feb 13, 2024 at 10:43=E2=80=AFPM Saravana Kannan <saravanak@google.=
-com> wrote:
+On Fri, 15 Dec, 2023 23:44:49 +1100 Michael Ellerman <mpe@ellerman.id.au> wrote:
+> There are reports of kernels crashing due to stack overflow while
+> running OpenShift (Kubernetes). The primary contributor to the stack
+> usage seems to be openvswitch, which is used by OVN-Kubernetes (based on
+> OVN (Open Virtual Network)), but NFS also contributes in some stack
+> traces.
 >
-> On Wed, Feb 7, 2024 at 10:40=E2=80=AFAM David Jeffery <djeffery@redhat.co=
-m> wrote:
-> >
-> > + * Wait for all async shutdown operations currently active to complete
-> > + */
-> > +static void wait_for_active_async_shutdown(void)
-> > +{
-> > +       struct device *dev, *parent;
-> > +
-> > +        while (!list_empty(&async_shutdown_list)) {
-> > +                dev =3D list_entry(async_shutdown_list.next, struct de=
-vice,
-> > +                                kobj.entry);
-> > +
-> > +                parent =3D dev->parent;
+> There may be some opportunities to reduce stack usage in the openvswitch
+> code, but doing so potentially require tradeoffs vs performance, and
+> also requires testing across architectures.
 >
-> I didn't check the code thoroughly, but so there might be other big
-> issues. But you definitely need to take device links into account.
-> Shutdown all your consumers first similar to how you shutdown the
-> children devices first. Look at the async suspend/resume code for some
-> guidance.
+> Looking at stack usage across the kernel (using -fstack-usage), shows
+> that ppc64le stack frames are on average 50-100% larger than the
+> equivalent function built for x86-64. Which is not surprising given the
+> minimum stack frame size is 32 bytes on ppc64le vs 16 bytes on x86-64.
 >
+> So increase the default stack size to 32KB for the modern 64-bit Book3S
+> platforms, ie. pseries (virtualised) and powernv (bare metal). That
+> leaves the older systems like G5s, and the AmigaOne (pasemi) with a 16KB
+> stack which should be sufficient on those machines.
+>
+> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+> ---
 
-Sure, I'll work on adding that into the order rules.
+We noticed this change is causing assembler issues for us when building
+the kernel.
 
-> > @@ -110,6 +115,8 @@ struct device_driver {
-> >         void (*sync_state)(struct device *dev);
-> >         int (*remove) (struct device *dev);
-> >         void (*shutdown) (struct device *dev);
-> > +       void (*async_shutdown_start) (struct device *dev);
-> > +       void (*async_shutdown_end) (struct device *dev);
->
-> Why not use the existing shutdown and call it from an async thread and
-> wait for it to finish? Similar to how async probes are handled. Also,
-> adding separate ops for this feels clunky and a very narrow fix. Just
-> use a flag to indicate the driver can support async shutdown using the
-> existing shutdown() op.
->
-It is rather clunky. It was carried from older patches where I
-mistakenly thought people wanted this separate interface. And adding
-threads seemed like overkill. Others have been working on similar
-patches on linux-nvme that I was unaware of. They add an optional
-shutdown_wait call instead of this interface. I had planned on
-adapting to work with their interface design.
+  make ARCH=powerpc KERNELRELEASE=6.8.0-rc2_for_upstream_debug_2024_02_06_20_01 KBUILD_BUILD_VERSION=1
+  arch/powerpc/kernel/switch.S: Assembler messages:
+  arch/powerpc/kernel/switch.S:249: Error: operand out of range (0x000000000000fe50 is not between 0xffffffffffff8000 and 0x0000000000007fff)
+  make[6]: *** [scripts/Makefile.build:361: arch/powerpc/kernel/switch.o] Error 1
+  make[5]: *** [scripts/Makefile.build:481: arch/powerpc/kernel] Error 2
+  make[5]: *** Waiting for unfinished jobs....
+  make[4]: *** [scripts/Makefile.build:481: arch/powerpc] Error 2
+  make[4]: *** Waiting for unfinished jobs....
+  make[3]: *** [Makefile:1921: .] Error 2
 
-David Jeffery
+The issue lies with the do_switch_64 macro.
 
+--
+Thanks,
+
+Rahul Rameshbabu
