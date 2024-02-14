@@ -1,79 +1,107 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47058171A8;
-	Wed, 14 Feb 2024 09:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7DCA134A0;
+	Wed, 14 Feb 2024 09:38:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707903377; cv=none; b=p/tmF+whNaZ+K6VJ93Gp75eeEI8Fe6xYxthshDfZ0oxmvuxXAYTY04eWs2RWGxw7/Jh7A56wpv210VwjsOnJBEEQr6wYAxSHDKdF8Aqu86mF3xXYlPK3wC6iwwweg18aSPENUrrjYhwS9yxqlhF+H38qLyfkBwWZ6zOqxcf60aw=
+	t=1707903519; cv=none; b=LOrf8FVbRUEno7IvOOxKm/3s1ajVzmlceLvQuWE/mIgqt/emjCp5HrRutz9qnPyOVJv3NViraqGEXFRnrKYHS7LFuouXmrL4/SiTJEN5Ax4Pu9kwvl/N5D2fT9PxQgpRPDHZwE2otN5sJlYZN6MVYJsRVWRcaTVtrd1WDj/Bod8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707903377; c=relaxed/simple;
-	bh=5kLoz2/KdhnPXN8zihUJoO8TpE72NNonn4kqQWWIPzI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MAjeUHOSUYNvYNZuk68RGPih6MijVCg0kZuQSltxQkOyFrO8KKS0pkYAxzmGXi1NLDGOe0z0kcQW4+Z2PsO0IN05wj1rUxO4ocZeVIRNh+RnHeR4xKjksdzDiYx5CUZYRJVd9q14Ha8TXsJByh8KEJF4SUTTaUKXQzoMUauT3ZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B92B31FB;
-	Wed, 14 Feb 2024 01:36:54 -0800 (PST)
-Received: from [192.168.1.100] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A55553F766;
-	Wed, 14 Feb 2024 01:36:11 -0800 (PST)
-Message-ID: <df3162c0-4b29-77a2-20b5-b36637fb11cf@arm.com>
-Date: Wed, 14 Feb 2024 09:36:10 +0000
+	s=arc-20240116; t=1707903519; c=relaxed/simple;
+	bh=dz5V4kR1LuJbVIZ4dAGFdi8A2apYcjn87QSy+rVXNsA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nnBe06B61FHLQPYxgte4q4zNoSzCArWLX713RXFkmeFCyC9hXVT763STn1AGLd9sRh1BcAgenBPVXjWjdzig6j6fKEk5FSbOJjkQS9uchyvBK7ECfxa7ZA+L2mz0ersXD0EpqDWLTckk5HqQw98gYRBCRz1/XnsZrYvL9sbaxRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B7zqyhsq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B7zqyhsq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFFB1C433F1;
+	Wed, 14 Feb 2024 09:38:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707903518;
+	bh=dz5V4kR1LuJbVIZ4dAGFdi8A2apYcjn87QSy+rVXNsA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B7zqyhsqWntTU0ZYqNqy+uJY0/kpfKgSqfIQgafxHQxLHh/aG4BMvKgKKSEyHKvVQ
+	 nN3yua93J85s9bPWXEt48LUbWYNpPCbdHcGSA2ttpnUbsCWllg+dbGTeDKqUxkRhcf
+	 DF0Jeyb3ibQCgsqx+F6hfsN4DB0aF+pr9lRdNtq3xH8pbwzzFZ3IMgD2HGkQsF90wD
+	 FLFwvGjxZ4A8vJY0BBzkkgh8VPmXKb6D4STEqB+VRZvUapu3Xg8V03swFWwtPNRoNz
+	 qS9kkvardxBYPALbHcUkYv/2CGiD42d4SSmPCWAawQCYo2MniV0Ykx2yGVdxHu+Pi0
+	 AjUFtD2gJ3U7w==
+Date: Wed, 14 Feb 2024 09:38:32 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Bhargav Raviprakash <bhargav.r@ltts.com>
+Cc: arnd@arndb.de, broonie@kernel.org, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
+	jpanis@baylibre.com, kristo@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, lee@kernel.org,
+	lgirdwood@gmail.com, linus.walleij@linaro.org,
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, m.nirmaladevi@ltts.com, nm@ti.com,
+	robh+dt@kernel.org, vigneshr@ti.com
+Subject: Re: [RESEND PATCH v1 03/13] dt-bindings: mfd: ti,tps6594: Add TI
+ TPS65224 PMIC
+Message-ID: <20240214-galley-dweller-1e9872229d80@spud>
+References: <20240209-blitz-fidgety-78469aa80d6d@spud>
+ <20240214093106.86483-1-bhargav.r@ltts.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v1 1/2] dt-bindings: arm: qcom,coresight-tpdm: Rename
- qcom,dsb-element-size
-Content-Language: en-US
-To: Jinlong Mao <quic_jinlmao@quicinc.com>, Rob Herring <robh@kernel.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
- Mike Leach <mike.leach@linaro.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Tao Zhang <quic_taozha@quicinc.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240213160521.15925-1-quic_jinlmao@quicinc.com>
- <20240213160521.15925-2-quic_jinlmao@quicinc.com>
- <20240213222957.GA2502642-robh@kernel.org>
- <a062ce8d-638a-4a33-8afa-45ad47efcd72@quicinc.com>
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <a062ce8d-638a-4a33-8afa-45ad47efcd72@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="EFq+e2HVA4/N0Ifh"
+Content-Disposition: inline
+In-Reply-To: <20240214093106.86483-1-bhargav.r@ltts.com>
 
 
+--EFq+e2HVA4/N0Ifh
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 14/02/2024 01:43, Jinlong Mao wrote:
-> 
-> On 2/14/2024 6:29 AM, Rob Herring wrote:
->> On Tue, Feb 13, 2024 at 08:05:17AM -0800, Mao Jinlong wrote:
->>> Change qcom,dsb-element-size to qcom,dsb-element-bits as the unit is
->>> bit.
->> That may be, but this is an ABI and you are stuck with it. Unless, you
->> can justify why that doesn't matter. (IIRC, this is new, so maybe no
->> users yet?)
-> 
-> Hi Rob,
-> 
-> Because for CMB type, it uses qcom,cmb-element-bits. So I change the
-> format to be the same as
-> CMB.
-> 
-> Thanks
-> Jinlong Mao
-> 
+On Wed, Feb 14, 2024 at 03:01:06PM +0530, Bhargav Raviprakash wrote:
+> Hi Conor,
+>=20
+> On Fri 2/9/2024 10:41 PM, Conor Dooley wrote:
+> > On Thu, Feb 08, 2024 at 04:23:33PM +0530, Bhargav Raviprakash wrote:
+> > > TPS65224 is a Power Management IC with 4 Buck regulators and 3 LDO
+> > > regulators, it includes additional features like GPIOs, watchdog, ESMs
+> > > (Error Signal Monitor), and PFSM (Pre-configurable Finite State Machi=
+ne)
+> > > managing the state of the device.
+> >=20
+> > > TPS6594 and TPS65224 have significant functional overlap.
+> >=20
+> > What does "significant functional overlap" mean? Does one implement a
+> > compatible subset of the other? I assume the answer is no, given there
+> > seems to be some core looking registers at different addresses.
+>=20
+> The intention behind =E2=80=9Csignificant functional overlap=E2=80=9D was=
+ meant to
+> indicate a lot of the features between TPS6594 and TPS65224 overlap,
+> while there are some features specific to TPS65224.
+> There is compatibility between the PMIC register maps, I2C, PFSM,
+> and other drivers even though there are some core registers at
+> different addresses.
+>=20
+> Would it be more appropriate to say the 2 devices are compatible and have
+> sufficient feature overlap rather than significant functional overlap?
 
-I think what Rob was trying to say was that in the interest of not
-breaking existing DTs it's best to leave the existing names as they are,
-even if they aren't technically correct. And to only add new parameters
-with the -bits suffix, even if it's inconsistent with what's already there.
+If core registers are at different addresses, then it is unlikely that
+these devices are compatible. In this context, compatible means that
+existing software intended for the 6594 would run without modification
+on the 65224, although maybe only supporting a subset of features.
+If that's not the case, then the devices are not compatible.
 
+--EFq+e2HVA4/N0Ifh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZcyKGAAKCRB4tDGHoIJi
+0kAGAQCCU0bkl+s+BdL+d40Qr/mkOI5Ie4yq/1oBg7aALwQ3RwEAx4O9b5/Q5bbk
+UfmurbkwjbQMV4Ls0UIFvMC7Mi8rxA8=
+=byM7
+-----END PGP SIGNATURE-----
+
+--EFq+e2HVA4/N0Ifh--
