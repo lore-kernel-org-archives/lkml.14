@@ -1,154 +1,189 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1D95C605;
-	Wed, 14 Feb 2024 18:53:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08369133438;
+	Wed, 14 Feb 2024 18:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707936831; cv=none; b=hVlL/1raVYWj4OI322FtyoLmrjNL9RmK18jgesEKo4OZGdhYz8sr4OHVqv0mwJJHHfzcj78jo4p5UmLDgJNGDfuIgtYKI6oUFRm/aJqPI2P3rc+qZVu2y43E6+txqGp3f96/x38VdxjlQeUkc9W9Tvmg0HaAL1GfCcwKpyK6Yv0=
+	t=1707936842; cv=none; b=rU6DSMr8078/516NKGeEu0aYMillys4tht4ROL2sC7bQF3w8z5MvPmLR3z9TBwQ+I9hm3kcOmGEyPI2pVELzUjoPRmLMuhif79VWPnJHtjPM7SbRjlJQih/EeVjbiVYkvI0ZOgXkK+ukmF9+Fnf4emMadSo+EDazHxvNDrT7ZT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707936831; c=relaxed/simple;
-	bh=q6KVf1rb7wRPyYfJTs8Acuti84MIGAmX8UZUXvHjmW4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d33JNbJ703YCpHrzn8Jbz5a5nVAOm+yjdLmInMjsgLZdXZBKtUCAH++y0IdIiolH4JDNAvDn7v2195OJ0YtItXZyH2md1Cjsy6wbRX6lBzKCGYceESPr9MHpZcoAY2B7G2JJ/jcQApU9xrliP5Pj8OnLyv2QOrWXMbs0f/qXSuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=aG0I/ZQR; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1707936842; c=relaxed/simple;
+	bh=UOkF8QOipvPnQfr/zLHdbACDQEqVEeAbGnpVM7OMNJA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=nt6uCLroXMeWKJo5So20wN2WXnFXCoLcnSaamiRkc+baGOfo4TerPjR0by3YIIIphVtRNy4Q7/TgtJXFyU446vBQrdag+7taAwwHSZ+oQSmI9gBh+doFvNBMFLlTBp4yMCC4auVrgLTwf7uByDgdtA+adDZ/1N13PYgpzQ/i53s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ObjzzCqA; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="aG0I/ZQR"
-Received: from [192.168.7.187] ([71.202.196.111])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 41EIqo0G1386660
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 14 Feb 2024 10:52:50 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 41EIqo0G1386660
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024021201; t=1707936775;
-	bh=unkqLgBp2GNddyUvgmq2FNkcavYkXdIC280T9onDTEQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aG0I/ZQRF07AIaagS5nTESheASqN61LGkmnen6yZ40j1Rtb/9+kLEWJDOCgQr05PW
-	 pDYsPeTsGA31nOuxczZpGRGcz2+xhwcB2w/girrVGZdEqUPz7W2a1LP3VBgFboSY0N
-	 i48j35JEqzlmveGJ3nvf27UJmqsW6JJY2kVsj/Hvg5Q5o/Hfv53Fo5TbPM8GDwWa/l
-	 n+sy6OSGQbE21PMp1wqRnvGwxlTX407NgOTd7aA8yXgJf/Ab/+v7N6zt3TaKO8Z9il
-	 uPLknhZaKQEajDl/CJJpndg+qoL8GPEtggic2E/dCT0wLPeQyPlDn63lEOO+bBCTCA
-	 1Zb+zMB0yOArg==
-Message-ID: <c66fa3f4-13f0-4355-9bf4-34fec31182de@zytor.com>
-Date: Wed, 14 Feb 2024 10:52:47 -0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ObjzzCqA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707936840; x=1739472840;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=UOkF8QOipvPnQfr/zLHdbACDQEqVEeAbGnpVM7OMNJA=;
+  b=ObjzzCqAQWHt2/aYlycAVcxicOj7lC6fYfd2buMkgsqj9g7lIYXTg3hg
+   ISVerszMOtLyteSo7W/f0kpX1lT/k74AfJ5V6/Dsup+xvy0JAvY+EoZsk
+   DX7674vuDFhB4M3s8n0fUA+udPDiMIyLDLR5uvPkj4EmHL6Qa7b5/NeuI
+   qqw0+QS/lJDknwx+po08O7enoBHbdUDoXYVyZMa2yDhilTJCxSnPhMen2
+   eVdWI9ad1c1ODW5AG2+RDYuEsOaOtZY5TQuTcyQENMRurV1SRy28cokNg
+   XQcFExOICKTc3A5Gi/anNLhbnKjSFpDX4cU7oYEzE60oYQH6Jt3T7eASM
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="1873606"
+X-IronPort-AV: E=Sophos;i="6.06,160,1705392000"; 
+   d="scan'208";a="1873606"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 10:53:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,160,1705392000"; 
+   d="scan'208";a="7891287"
+Received: from wfaimone-mobl.amr.corp.intel.com (HELO [10.209.29.231]) ([10.209.29.231])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 10:53:54 -0800
+Message-ID: <4f24986587b53be3f9ece187a3105774eb27c12f.camel@linux.intel.com>
+Subject: Re: [PATCH v3 00/35] Memory allocation profiling
+From: Tim Chen <tim.c.chen@linux.intel.com>
+To: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org
+Cc: kent.overstreet@linux.dev, mhocko@suse.com, vbabka@suse.cz, 
+ hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de,
+ dave@stgolabs.net,  willy@infradead.org, liam.howlett@oracle.com,
+ corbet@lwn.net, void@manifault.com,  peterz@infradead.org,
+ juri.lelli@redhat.com, catalin.marinas@arm.com,  will@kernel.org,
+ arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com, 
+ dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com,
+ david@redhat.com,  axboe@kernel.dk, mcgrof@kernel.org,
+ masahiroy@kernel.org, nathan@kernel.org,  dennis@kernel.org, tj@kernel.org,
+ muchun.song@linux.dev, rppt@kernel.org,  paulmck@kernel.org,
+ pasha.tatashin@soleen.com, yosryahmed@google.com,  yuzhao@google.com,
+ dhowells@redhat.com, hughd@google.com, andreyknvl@gmail.com, 
+ keescook@chromium.org, ndesaulniers@google.com, vvvvvv@google.com, 
+ gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com, 
+ vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
+ bsegall@google.com, bristot@redhat.com, vschneid@redhat.com, cl@linux.com, 
+ penberg@kernel.org, iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com,
+ glider@google.com,  elver@google.com, dvyukov@google.com,
+ shakeelb@google.com,  songmuchun@bytedance.com, jbaron@akamai.com,
+ rientjes@google.com,  minchan@google.com, kaleshsingh@google.com,
+ kernel-team@android.com,  linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, iommu@lists.linux.dev, 
+ linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org,  linux-modules@vger.kernel.org,
+ kasan-dev@googlegroups.com,  cgroups@vger.kernel.org
+Date: Wed, 14 Feb 2024 10:53:53 -0800
+In-Reply-To: <20240212213922.783301-1-surenb@google.com>
+References: <20240212213922.783301-1-surenb@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/8] x86_64 SandBox Mode arch hooks
-To: =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?= <petr@tesarici.cz>,
-        Dave Hansen <dave.hansen@intel.com>
-Cc: Petr Tesarik <petrtesarik@huaweicloud.com>,
-        Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-        Xin Li <xin3.li@intel.com>, Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Pengfei Xu <pengfei.xu@intel.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>, Ze Gao <zegao2021@gmail.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Kai Huang <kai.huang@intel.com>, David Woodhouse <dwmw@amazon.co.uk>,
-        Brian Gerst <brgerst@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Joerg Roedel <jroedel@suse.de>,
-        "Mike Rapoport (IBM)" <rppt@kernel.org>,
-        Tina Zhang <tina.zhang@intel.com>,
-        Jacob Pan
- <jacob.jun.pan@linux.intel.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Roberto Sassu <roberto.sassu@huaweicloud.com>,
-        Petr Tesarik <petr.tesarik1@huawei-partners.com>
-References: <20240214113516.2307-1-petrtesarik@huaweicloud.com>
- <c424618c-d6c6-430a-8975-8851a617204e@intel.com>
- <20240214192214.78734652@meshulam.tesarici.cz>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <20240214192214.78734652@meshulam.tesarici.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-On 2/14/2024 10:22 AM, Petr Tesařík wrote:
-> On Wed, 14 Feb 2024 06:52:53 -0800
-> Dave Hansen <dave.hansen@intel.com> wrote:
-> 
->> On 2/14/24 03:35, Petr Tesarik wrote:
->>> This patch series implements x86_64 arch hooks for the generic SandBox
->>> Mode infrastructure.
->>
->> I think I'm missing a bit of context here.  What does one _do_ with
->> SandBox Mode?  Why is it useful?
-> 
-> I see, I split the patch series into the base infrastructure and the
-> x86_64 implementation, but I forgot to merge the two recipient lists.
-> :-(
-> 
-> Anyway, in the long term I would like to work on gradual decomposition
-> of the kernel into a core part and many self-contained components.
-> Sandbox mode is a useful tool to enforce isolation.
-> 
-> In its current form, sandbox mode is too limited for that, but I'm
-> trying to find some balance between "publish early" and reaching a
-> feature level where some concrete examples can be shown. I'd rather
-> fail fast than maintain hundreds of patches in an out-of-tree branch
-> before submitting (and failing anyway).
-> 
-> Petr T
-> 
+On Mon, 2024-02-12 at 13:38 -0800, Suren Baghdasaryan wrote:
+> Memory allocation, v3 and final:
+>=20
+> Overview:
+> Low overhead [1] per-callsite memory allocation profiling. Not just for d=
+ebug
+> kernels, overhead low enough to be deployed in production.
+>=20
+> We're aiming to get this in the next merge window, for 6.9. The feedback
+> we've gotten has been that even out of tree this patchset has already
+> been useful, and there's a significant amount of other work gated on the
+> code tagging functionality included in this patchset [2].
+>=20
+> Example output:
+>   root@moria-kvm:~# sort -h /proc/allocinfo|tail
+>    3.11MiB     2850 fs/ext4/super.c:1408 module:ext4 func:ext4_alloc_inod=
+e
+>    3.52MiB      225 kernel/fork.c:356 module:fork func:alloc_thread_stack=
+_node
+>    3.75MiB      960 mm/page_ext.c:270 module:page_ext func:alloc_page_ext
+>    4.00MiB        2 mm/khugepaged.c:893 module:khugepaged func:hpage_coll=
+apse_alloc_folio
+>    10.5MiB      168 block/blk-mq.c:3421 module:blk_mq func:blk_mq_alloc_r=
+qs
+>    14.0MiB     3594 include/linux/gfp.h:295 module:filemap func:folio_all=
+oc_noprof
+>    26.8MiB     6856 include/linux/gfp.h:295 module:memory func:folio_allo=
+c_noprof
+>    64.5MiB    98315 fs/xfs/xfs_rmap_item.c:147 module:xfs func:xfs_rui_in=
+it
+>    98.7MiB    25264 include/linux/gfp.h:295 module:readahead func:folio_a=
+lloc_noprof
+>     125MiB     7357 mm/slub.c:2201 module:slub func:alloc_slab_page
+>=20
+> Since v2:
+>  - tglx noticed a circular header dependency between sched.h and percpu.h=
+;
+>    a bunch of header cleanups were merged into 6.8 to ameliorate this [3]=
+.
+>=20
+>  - a number of improvements, moving alloc_hooks() annotations to the
+>    correct place for better tracking (mempool), and bugfixes.
+>=20
+>  - looked at alternate hooking methods.
+>    There were suggestions on alternate methods (compiler attribute,
+>    trampolines), but they wouldn't have made the patchset any cleaner
+>    (we still need to have different function versions for accounting vs. =
+no
+>    accounting to control at which point in a call chain the accounting
+>    happens), and they would have added a dependency on toolchain
+>    support.
+>=20
+> Usage:
+> kconfig options:
+>  - CONFIG_MEM_ALLOC_PROFILING
+>  - CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT
+>  - CONFIG_MEM_ALLOC_PROFILING_DEBUG
+>    adds warnings for allocations that weren't accounted because of a
+>    missing annotation
+>=20
+> sysctl:
+>   /proc/sys/vm/mem_profiling
+>=20
+> Runtime info:
+>   /proc/allocinfo
+>=20
+> Notes:
+>=20
+> [1]: Overhead
+> To measure the overhead we are comparing the following configurations:
+> (1) Baseline with CONFIG_MEMCG_KMEM=3Dn
+> (2) Disabled by default (CONFIG_MEM_ALLOC_PROFILING=3Dy &&
+>     CONFIG_MEM_ALLOC_PROFILING_BY_DEFAULT=3Dn)
+> (3) Enabled by default (CONFIG_MEM_ALLOC_PROFILING=3Dy &&
+>     CONFIG_MEM_ALLOC_PROFILING_BY_DEFAULT=3Dy)
+> (4) Enabled at runtime (CONFIG_MEM_ALLOC_PROFILING=3Dy &&
+>     CONFIG_MEM_ALLOC_PROFILING_BY_DEFAULT=3Dn && /proc/sys/vm/mem_profili=
+ng=3D1)
+> (5) Baseline with CONFIG_MEMCG_KMEM=3Dy && allocating with __GFP_ACCOUNT
+>=20
 
-What you're proposing sounds a gigantic thing, which could potentially
-impact all subsystems.  Unless you prove it has big advantages with real
-world usages, I guess nobody even wants to look into the patches.
+Thanks for the work on this patchset and it is quite useful.
+A clarification question on the data:
 
-BTW, this seems another attempt to get the idea of micro-kernel into
-Linux.
+I assume Config (2), (3) and (4) has CONFIG_MEMCG_KMEM=3Dn, right?
+If so do you have similar data for config (2), (3) and (4) but with
+CONFIG_MEMCG_KMEM=3Dy for comparison with (5)?
 
--- 
-Thanks!
-     Xin
+Tim
+
+> Performance overhead:
+> To evaluate performance we implemented an in-kernel test executing
+> multiple get_free_page/free_page and kmalloc/kfree calls with allocation
+> sizes growing from 8 to 240 bytes with CPU frequency set to max and CPU
+> affinity set to a specific CPU to minimize the noise. Below are results
+> from running the test on Ubuntu 22.04.2 LTS with 6.8.0-rc1 kernel on
+> 56 core Intel Xeon:
+>=20
+>                         kmalloc                 pgalloc
+> (1 baseline)            6.764s                  16.902s
+> (2 default disabled)    6.793s (+0.43%)         17.007s (+0.62%)
+> (3 default enabled)     7.197s (+6.40%)         23.666s (+40.02%)
+> (4 runtime enabled)     7.405s (+9.48%)         23.901s (+41.41%)
+> (5 memcg)               13.388s (+97.94%)       48.460s (+186.71%)
+>=20
 
