@@ -1,1857 +1,444 @@
-Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2047.outbound.protection.outlook.com [40.107.93.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD8A160ED3;
-	Wed, 14 Feb 2024 16:28:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.240
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707928085; cv=none; b=jsbCddAVSDKCfE8auGLtn/UHD+pkErnXPLFdjQBeGRbNCqqHD5Dl/dVrTOG/vFRQWzfmHWOrXP/4BzktYiQMrjRW2jJKJAUCqkqyvMGgBgX3mnz0PO9q1Ojo3EBaHIzHaT2ZWyYKe5Zt2nlwVzOW6e2mBFKpv+7VchFjsB3isTw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707928085; c=relaxed/simple;
-	bh=qZq681rTGiMUvfx/lFMJjqf7XJqZLeEb6MXUNW+dozM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GARj4Qp7IWJtPlvhlFq+N6Fs4MhXb66fr7MAwmV/v+LhSD/NmTGN2aTq3+XtuoaGkJaHOQOYnPY5mS3ZVk5oMWmqr1ZXXGpPtT2l3YouKFCz2oeK3iEzgv8D4TL1wsX3JykT0a71icsElbAH640+MmTN/nKjcZEMkv5E2i3IicE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=H0ApjRFE; arc=none smtp.client-ip=217.70.178.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0EAF64A87;
+	Wed, 14 Feb 2024 16:28:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707928096; cv=fail; b=GWpACTs7MKU+qwnRlgKh2SpdT6jmQ9uBoxdM9IsmLsyk8o7JNcT6UmbrkmnsUfZVTx6b4MYbcW65x8FwBKU4RCo46qsGnE9gj6q7bO7dyaWiV6KV6T97usKw5Duisj7huXNvoO2pJ0JtMey3CHz+PCvL/CxagErZXqcSc/r8JH0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707928096; c=relaxed/simple;
+	bh=/QeCv/dTflrH63J9zzvYEkfKOcfnfli1wZj4yBDGDwU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KxAbCE6K4yDHiVktTk/eL6hptzeK244eJO9qihiXD5wwa2xuqpdjNNqkAgPicTNgagI6hh+rXbr7RBJENoMXHgE4TjvZYdeNjdzdScaTLFvoV/A20HeG0sIRTlkncJYCyC/Jyr6nIRsMEnghw3gZdFgoQFV7P6z1fuOm0XScss8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=uhbAE1UL; arc=fail smtp.client-ip=40.107.93.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="H0ApjRFE"
-Received: from relay3-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::223])
-	by mslow1.mail.gandi.net (Postfix) with ESMTP id 0AD95C38D7;
-	Wed, 14 Feb 2024 16:24:56 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id AAB596000E;
-	Wed, 14 Feb 2024 16:24:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1707927888;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mBtmOSlGCdIDg+2o86J2M+mWYox+uzIq9ireptNwsZc=;
-	b=H0ApjRFEroNr4NEcnGvnunSpSq4JQFKtJNkWhfLazR2u7LKVu4GyUXn2A3i0VMAJOhFXvd
-	XPiQjRUVa6lF2cEHTdemu52kK8SNTHbW7a4nAprC0ebtXRKEeeRu1PdWuuAY2HkBF91RJz
-	Xd6VUb8ljDwhyJ6hqwyCRwCFXSr4jPog988oYdeI2vaVcSnDZS1tTOPfZBZUnkQGX8KzFQ
-	9DLK8PT1HRulN4g8zM9Brhn7q+aDmb2Ywq9QidSvzW3SQKbYAhpwPzgcX1ze13t1exeBTP
-	CEUFpwHRpa4iI/EORW9CHbyVsmQK+JqRB4MysL2kBcviL6eoNrKxBVOOD/OpWA==
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Wed, 14 Feb 2024 17:23:58 +0100
-Subject: [PATCH 05/23] gpio: nomadik: extract GPIO platform driver from
- drivers/pinctrl/nomadik/
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="uhbAE1UL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kcTcoaTY4g/Zj3/7tiLpRkqlrqqgN+0e80OZrBazW/FTi22mlmmyE2WijPPMmsb0YUQP8hLVjeB2rFUnZjhpkQ9/YivlG8en/5u6qBGFaEHDkKyemVZgCR4f/L9jlKIURocxzg6ZUQoioI6+M8A+dIyRxzbXWZgVzb1MEPWc+MohZ+UlLV1kpWMs27H15BuXRiwBEE+q9GDg9rEE1lOHfAG/V11GeiDzNcIiWj9H0FM1IqBzm//2+cU001rdZeDbAxqSf7K07wPMMBwIAhDc9pEufrb7zZoVJoqYjoTfgqgOlKDKHAeOSzUvUgGxG5JN+EJPGf+cA/0xsOLkr/6E4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CUKDFiOX2CXHfIpda/J+vTchc0k2z+EtOA1UM9vI+z8=;
+ b=eN4tJM3+gZo90xRhQLwAe3jux3E/qolWLL6PZFe2zvnO248hiYLWSrHw/6KpNg57B4AX7JewFoR5Y1KiK87OG66D2rA8bcYxEvInaJVGZc53ot0Mb+rxR8uayVsHsxfoP64WFbONUBH2t2U4osgblIU06wAGfrW4aKQzE+SECV4m/IgLQk8UOSk4Mm179HMsMiCrqw9ck1LP5JpG0eW78EysKkytPblarL2xertTXX7FTAw/LmmjEHL88CMOSvQ8NO0i+6mQdFdXT6mzC1iVycnrv72x9b4xSMykmm+6Ye+JuwGdDcLuc2Z6WTv5B5lMe5X1itfmMnhlTOwZWj6Uuw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CUKDFiOX2CXHfIpda/J+vTchc0k2z+EtOA1UM9vI+z8=;
+ b=uhbAE1ULb8sDcXjw3aOQ4zKAH5CZXzQ6ne69P6gwIRWvk3GMIMguEmoskQu0k7U4CWhQiywAvdwHYqUtsfMDVc5/X0pzqSwwDHz4lP3Y2lAbV4pEk4BCmpEHeSUE3isZSboSKm9thAs+VoC7kCx2Osy5UQVfe/KCJciVqwzdFsbE87vGm3CrajpiqGpowUGVPL7sk6byLBgptDCtxuxub6BV6As9ABi37XRTvz5Hu3mC1z33WUyCfO2W1a8cL4C1woNczOXANlP5M/Ja0PBWZ/39NtyaBBkghbgKtHuytRRPbR5/gwrKT8X2nbGdxuHgMxZItUfmSc+64paHvVuJwg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB5744.namprd12.prod.outlook.com (2603:10b6:8:73::18) by
+ SN7PR12MB7834.namprd12.prod.outlook.com (2603:10b6:806:34d::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.24; Wed, 14 Feb
+ 2024 16:28:11 +0000
+Received: from DS7PR12MB5744.namprd12.prod.outlook.com
+ ([fe80::db3e:28df:adc1:9c15]) by DS7PR12MB5744.namprd12.prod.outlook.com
+ ([fe80::db3e:28df:adc1:9c15%5]) with mapi id 15.20.7316.012; Wed, 14 Feb 2024
+ 16:28:11 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: "\"Pankaj Raghav (Samsung)\"" <kernel@pankajraghav.com>,
+ linux-mm@kvack.org, "\"Matthew Wilcox (Oracle)\"" <willy@infradead.org>,
+ David Hildenbrand <david@redhat.com>, Yang Shi <shy828301@gmail.com>,
+ Yu Zhao <yuzhao@google.com>,
+ "\"Kirill A . Shutemov\"" <kirill.shutemov@linux.intel.com>,
+ =?utf-8?q?=22Michal_Koutn=C3=BD=22?= <mkoutny@suse.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ "\"Zach O'Keefe\"" <zokeefe@google.com>, Hugh Dickins <hughd@google.com>,
+ Mcgrof Chamberlain <mcgrof@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ cgroups@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v4 5/7] mm: thp: split huge page to any lower order pages
+ (except order-1).
+Date: Wed, 14 Feb 2024 11:28:07 -0500
+X-Mailer: MailMate (1.14r6018)
+Message-ID: <5D3CF5B4-FB16-4CE7-9D8E-CBFFA7A1FA43@nvidia.com>
+In-Reply-To: <6c986b83-e00d-46fe-8c88-374f8e6bd0fa@arm.com>
+References: <20240213215520.1048625-1-zi.yan@sent.com>
+ <20240213215520.1048625-6-zi.yan@sent.com>
+ <de66b9fb-ee84-473f-a69a-2ac8554f6000@arm.com>
+ <6859C8DA-5B7F-458E-895C-763BA782F4B9@nvidia.com>
+ <6c986b83-e00d-46fe-8c88-374f8e6bd0fa@arm.com>
+Content-Type: multipart/signed;
+ boundary="=_MailMate_B8C3C027-FEFE-458C-95A5-CEBF71F01278_=";
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+X-ClientProxiedBy: MN2PR07CA0027.namprd07.prod.outlook.com
+ (2603:10b6:208:1a0::37) To DS7PR12MB5744.namprd12.prod.outlook.com
+ (2603:10b6:8:73::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240214-mbly-gpio-v1-5-f88c0ccf372b@bootlin.com>
-References: <20240214-mbly-gpio-v1-0-f88c0ccf372b@bootlin.com>
-In-Reply-To: <20240214-mbly-gpio-v1-0-f88c0ccf372b@bootlin.com>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mips@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, 
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-X-Mailer: b4 0.12.4
-X-GND-Sasl: theo.lebrun@bootlin.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB5744:EE_|SN7PR12MB7834:EE_
+X-MS-Office365-Filtering-Correlation-Id: 75b0c968-eeb8-4839-16b8-08dc2d79ef44
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	OLSDUckowh+5C1VMMsiKWNvq8bURafx68OeoA4oViszijM3ASEZDEB0s904AlU+s1NQdY9mQjPuCpCktTjNs9j7vqSMAOmNsuj68HYcdF4JRqReW4A360ZPZllEC8h9qoo71MiY5RR5zoHW3q7XcgktazKF987uyUiOrg7NaFtAWnOMHj69yVTZmRg7eYXUaH4LmahfuatS64fJHa7lHRezg+Cn2gSqXxBz8oc+JAQ1XPQr3oE3qluY1osuQhdrWVVfbCJfo1Dlan0xatiB/7BA1OeV8NLwFS/PK7bpKDFvURCaMvuBxKOPCj6M2nWCLp8aHt9yMJdKOBMRAuNN+cKbavNKZQA09oSx1nAu5DR7DCxXDwUTD45C3X4MGYe2ak7KWpZfR5JSjw+KF+AqAgWMnYBaSWeGdZ+8lCYd67zMq8M82gvG+8yWRZwsGAk0rPfqiaV4blVZWnTTue/2Psd49Yn2ZLuWbkqMJGqr/tBN8UbRevx1uYmaS7TDS+04CT43SQmpnXpmfL3wbdrpcVYWzaD+2pplvVsr4Q8NHOj3+Bh/Th3gxRqzemDk5SVEM
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB5744.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(366004)(136003)(39860400002)(396003)(230273577357003)(230922051799003)(451199024)(64100799003)(186009)(1800799012)(2616005)(83380400001)(26005)(38100700002)(478600001)(4326008)(7416002)(66476007)(66556008)(5660300002)(8936002)(41300700001)(6916009)(6512007)(66946007)(2906002)(6486002)(53546011)(6506007)(316002)(6666004)(54906003)(36756003)(235185007)(8676002)(86362001)(33656002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?5TXq5+SxK5E8dEmOJYd5I4Hwz/u2GAxZwvJ53GGivS5IbgvXP4aac07xQDZx?=
+ =?us-ascii?Q?X8ae/ty5XaCYd+gK07Vm017hbBsI4bV2iiEmNdzHs8VVdOu/N2HkB3DE3Z7F?=
+ =?us-ascii?Q?TtcaIdJgcrUWfo3HG3j3hdMqsfVT5Bc8jG0B96WVDJLtKybsFeiQ5jkHpcFe?=
+ =?us-ascii?Q?MP7c4v3WVjJ6VE8JDQRHjBjJHRRCxlFJOlVu0ISr9UL0JUCSRSlV4WuqTpqu?=
+ =?us-ascii?Q?ogWyNINSA906oY1jUgmvKLfc72j5kfvuURJ0TU5xlrEWn8+u87WxKzgR+JuD?=
+ =?us-ascii?Q?HCXUZ4rhwoWZocxceDtmZpg1AJCjNxJjr3yBL64hxWk+1nyA1dHXFrY3iDy2?=
+ =?us-ascii?Q?a1LhplrhuB5u7W8C0l7DZOEi1z5AXmbITRKdAoLpa2jpNOHiudnCX9ViefZJ?=
+ =?us-ascii?Q?o7EKWFzMfwtFXW4ZEjPnZI+Y7g+G0se3640LKgc1fDX+SxFmZheJwFScjLSE?=
+ =?us-ascii?Q?ASw9Sbcmy6cJzvHkSNT+HOhdw986bvRplcyuwvBKzL3/8c/AI7e5mVxnqUqi?=
+ =?us-ascii?Q?2EUmeBCPz1DFEcSbX1I+H3iTICiloYQAlZVFLTRQQVhdEe4vK/4J4YAaCzZr?=
+ =?us-ascii?Q?gjLlwVfJGWALj631DgwcERfSF8+joVjYzhF6kc4jNQkWWeokZoBzZkJCfCQ2?=
+ =?us-ascii?Q?UiHGJBOWlB96hv48yjI/iDFiACJnKeJwpH1HZIeT/qRkU2UVi6Lj2lg8fLfT?=
+ =?us-ascii?Q?Zi3jFegsdRDUY1BQTy3uMg9fDGWTVcCRkuLJ+KzupvWNQ2JFonXuajwUamwG?=
+ =?us-ascii?Q?ybdWG4CYmiZRWuHhVv7c85wiomBCHXO/QRu0dsE+15wNlBrtRkfx01EhOnFd?=
+ =?us-ascii?Q?jCvWgmf+1I6qSpdhzajBzdmS5X7mbayIHKhYKGw+2vJlPHU8XCl0OjwyR9Ze?=
+ =?us-ascii?Q?NUneMB5vGCxMZDqDMK9iP3WA3S3f81MVthBbOxmYC2S3xsnuQwtoBvyiOpUl?=
+ =?us-ascii?Q?v9IvsXMozuRuuijE+RFseFoYlkcD5qqKkpSBDREeK7TKTo6Ds/g3DhOpf3PQ?=
+ =?us-ascii?Q?xI7Zs/OUnTQt3FJa5CPds/Uv4zGEb6GqNzW1yCVNHNboDDggINLoxlpKt9Ol?=
+ =?us-ascii?Q?R9+4o81wlFq3nxrA2ZdS0SqFQn21PKWnAl4Z+3akNCxEl1KOHNPlAUu4/huC?=
+ =?us-ascii?Q?jWFJN28P8cEJnuaBW1HXN9stpzYeVecG5hwD5to+/RsXsgYY434lrbZdzWjU?=
+ =?us-ascii?Q?2QAK+B33ve9Zy5HmvJ/6kMFnCyl8eoUyPAYWc2ix92RjZl8+8+zTNjWV/E98?=
+ =?us-ascii?Q?5Z+rOQWv0F5sK+PYiDP1HIKFc31Bng0uvukBdUSpxzyKSlPs+cKQu0iDOE36?=
+ =?us-ascii?Q?E3htD5ghO/Ws4TKDIcF48ZlKRU+FOZTD9n8BA7B5ic8IdCu8gGV3F6BbKSoP?=
+ =?us-ascii?Q?UrnRgLisZ/f9yGysXG50l4sxs0vnv9LgHbgWVo1IageT/5g0r1LHxCzWolw+?=
+ =?us-ascii?Q?9Qp5lUBQWelIpkihJMLHXW16AOfHnv30MYnCXNTZxhRvhmmoFJnSsjdYN1d5?=
+ =?us-ascii?Q?kkPqxd4VKkIWDfWtzFv/jApIXTJqzlfVQBCm3q4oZbiAkSpr78A4xMkYessr?=
+ =?us-ascii?Q?QKy/l+mHuF3zZBSb3JL7gOfcWB4ViCSb5PzgSv+5?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 75b0c968-eeb8-4839-16b8-08dc2d79ef44
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB5744.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2024 16:28:10.9407
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZpETOXiRc59aTd//horPJSJw7/5kcrUFFBWlFHOEke4W8nJMBLyjESo5HvdVCe45
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7834
 
-Previously, drivers/pinctrl/nomadik/pinctrl-nomadik.c registered two
-platform drivers: pinctrl & GPIO. Move the GPIO aspect to the
-drivers/gpio/ folder, as would be expected.
+--=_MailMate_B8C3C027-FEFE-458C-95A5-CEBF71F01278_=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Both drivers are intertwined for a reason; pinctrl requires access to
-GPIO registers for pinmuxing, pull-disable, disabling interrupts while
-setting the muxing and wakeup control. Information sharing is done
-through a shared array containing GPIO chips and a few helper
-functions. That shared array is not touched from gpio-nomadik when
-CONFIG_PINCTRL_NOMADIK is not defined.
+On 14 Feb 2024, at 11:22, Ryan Roberts wrote:
 
-Make no change to the code that moved into gpio-nomadik; there should be
-no behavior change following. A few functions are shared and header
-comments are added. Checkpatch warnings are addressed. NUM_BANKS is
-renamed to NMK_MAX_BANKS.
+> On 14/02/2024 16:11, Zi Yan wrote:
+>> On 14 Feb 2024, at 5:38, Ryan Roberts wrote:
+>>
+>>> On 13/02/2024 21:55, Zi Yan wrote:
+>>>> From: Zi Yan <ziy@nvidia.com>
+>>>>
+>>>> To split a THP to any lower order (except order-1) pages, we need to=
 
-It is supported to compile gpio-nomadik without pinctrl-nomadik. The
-opposite is not true.
-
-Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+>>>> reform THPs on subpages at given order and add page refcount based o=
+n the
+>>>> new page order. Also we need to reinitialize page_deferred_list afte=
+r
+>>>> removing the page from the split_queue, otherwise a subsequent split=
+ will
+>>>> see list corruption when checking the page_deferred_list again.
+>>>>
+>>>> It has many uses, like minimizing the number of pages after
+>>>> truncating a huge pagecache page. For anonymous THPs, we can only sp=
+lit
+>>>> them to order-0 like before until we add support for any size anonym=
+ous
+>>>> THPs.
+>>>
+>>> multi-size THP is now upstream. Not sure if this comment still makes =
+sense.
+>> Will change it to reflect the fact that multi-size THP is already upst=
+ream.
+>>
+>>> Still its not completely clear to me how you would integrate this new=
+ machinery
+>>> and decide what non-zero order to split anon THP to?
+>>
+>> Originally, it was developed along with my 1GB THP support. So it was =
+intended
+>> to split order-18 to order-9. But for now, like you and David said in =
+the cover
+>> letter email thread, we might not want to use it for anonymous large f=
+olios
+>> until we find a necessary use case.
+>>
+>>>>
+>>>> Order-1 folio is not supported because _deferred_list, which is used=
+ by
+>>>> partially mapped folios, is stored in subpage 2 and an order-1 folio=
+ only
+>>>> has subpage 0 and 1.
+>>>>
+>>>> Signed-off-by: Zi Yan <ziy@nvidia.com>
+>>>> ---
+>>>>  include/linux/huge_mm.h |  21 +++++---
+>>>>  mm/huge_memory.c        | 114 +++++++++++++++++++++++++++++++------=
 ---
- MAINTAINERS                                        |   1 +
- drivers/gpio/Kconfig                               |  12 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-nomadik.c                        | 660 +++++++++++++++++++
- drivers/pinctrl/nomadik/Kconfig                    |   5 +-
- drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c   |   3 +-
- drivers/pinctrl/nomadik/pinctrl-nomadik-stn8815.c  |   3 +-
- drivers/pinctrl/nomadik/pinctrl-nomadik.c          | 722 +--------------------
- .../linux/gpio/gpio-nomadik.h                      | 122 +++-
- 9 files changed, 804 insertions(+), 725 deletions(-)
+>>>>  2 files changed, 101 insertions(+), 34 deletions(-)
+>>>>
+>>>> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+>>>> index 5adb86af35fc..de0c89105076 100644
+>>>> --- a/include/linux/huge_mm.h
+>>>> +++ b/include/linux/huge_mm.h
+>>>> @@ -265,10 +265,11 @@ unsigned long thp_get_unmapped_area(struct fil=
+e *filp, unsigned long addr,
+>>>>
+>>>>  void folio_prep_large_rmappable(struct folio *folio);
+>>>>  bool can_split_folio(struct folio *folio, int *pextra_pins);
+>>>> -int split_huge_page_to_list(struct page *page, struct list_head *li=
+st);
+>>>> +int split_huge_page_to_list_to_order(struct page *page, struct list=
+_head *list,
+>>>> +		unsigned int new_order);
+>>>>  static inline int split_huge_page(struct page *page)
+>>>>  {
+>>>> -	return split_huge_page_to_list(page, NULL);
+>>>> +	return split_huge_page_to_list_to_order(page, NULL, 0);
+>>>>  }
+>>>>  void deferred_split_folio(struct folio *folio);
+>>>>
+>>>> @@ -422,7 +423,8 @@ can_split_folio(struct folio *folio, int *pextra=
+_pins)
+>>>>  	return false;
+>>>>  }
+>>>>  static inline int
+>>>> -split_huge_page_to_list(struct page *page, struct list_head *list)
+>>>> +split_huge_page_to_list_to_order(struct page *page, struct list_hea=
+d *list,
+>>>> +		unsigned int new_order)
+>>>>  {
+>>>>  	return 0;
+>>>>  }
+>>>> @@ -519,17 +521,20 @@ static inline bool thp_migration_supported(voi=
+d)
+>>>>  }
+>>>>  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+>>>>
+>>>> -static inline int split_folio_to_list(struct folio *folio,
+>>>> -		struct list_head *list)
+>>>> +static inline int split_folio_to_list_to_order(struct folio *folio,=
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0cb2c459d1cf..3f864e773267 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2474,6 +2474,7 @@ F:	drivers/clk/clk-nomadik.c
- F:	drivers/clocksource/clksrc-dbx500-prcmu.c
- F:	drivers/dma/ste_dma40*
- F:	drivers/pmdomain/st/ste-ux500-pm-domain.c
-+F:	drivers/gpio/gpio-nomadik.c
- F:	drivers/hwspinlock/u8500_hsem.c
- F:	drivers/i2c/busses/i2c-nomadik.c
- F:	drivers/iio/adc/ab8500-gpadc.c
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 1301cec94f12..ff83371251c1 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -478,6 +478,18 @@ config GPIO_MXS
- 	select GPIO_GENERIC
- 	select GENERIC_IRQ_CHIP
- 
-+config GPIO_NOMADIK
-+	bool "Nomadik GPIO driver"
-+	depends on ARCH_U8500 || ARCH_NOMADIK || COMPILE_TEST
-+	select OF_GPIO
-+	select GPIOLIB_IRQCHIP
-+	help
-+	  Say yes here to support the Nomadik SoC GPIO block.
-+
-+	  It handles up to 32 GPIOs per bank, that can all be interrupt sources.
-+	  It is deeply interconnected with the associated pinctrl driver as GPIO
-+	  registers handle muxing ("alternate functions") as well.
-+
- config GPIO_NPCM_SGPIO
- 	bool "Nuvoton SGPIO support"
- 	depends on ARCH_NPCM || COMPILE_TEST
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 9e40af196aae..9fc2f5931b22 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -116,6 +116,7 @@ obj-$(CONFIG_GPIO_MT7621)		+= gpio-mt7621.o
- obj-$(CONFIG_GPIO_MVEBU)		+= gpio-mvebu.o
- obj-$(CONFIG_GPIO_MXC)			+= gpio-mxc.o
- obj-$(CONFIG_GPIO_MXS)			+= gpio-mxs.o
-+obj-$(CONFIG_GPIO_NOMADIK)		+= gpio-nomadik.o
- obj-$(CONFIG_GPIO_NPCM_SGPIO)		+= gpio-npcm-sgpio.o
- obj-$(CONFIG_GPIO_OCTEON)		+= gpio-octeon.o
- obj-$(CONFIG_GPIO_OMAP)			+= gpio-omap.o
-diff --git a/drivers/gpio/gpio-nomadik.c b/drivers/gpio/gpio-nomadik.c
-new file mode 100644
-index 000000000000..e39477e1a58f
---- /dev/null
-+++ b/drivers/gpio/gpio-nomadik.c
-@@ -0,0 +1,660 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * GPIO driver for the IP block found in the Nomadik SoC; it is an AMBA device,
-+ * managing 32 pins with alternate functions. It can also handle the STA2X11
-+ * block from ST.
-+ *
-+ * The GPIO chips are shared with pinctrl-nomadik if used; it needs access for
-+ * pinmuxing functionality and others.
-+ *
-+ * Copyright (C) 2008,2009 STMicroelectronics
-+ * Copyright (C) 2009 Alessandro Rubini <rubini@unipv.it>
-+ *   Rewritten based on work by Prafulla WADASKAR <prafulla.wadaskar@st.com>
-+ * Copyright (C) 2011-2013 Linus Walleij <linus.walleij@linaro.org>
-+ */
-+#include <linux/cleanup.h>
-+#include <linux/clk.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/of_device.h>
-+#include <linux/of_platform.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset.h>
-+#include <linux/seq_file.h>
-+#include <linux/types.h>
-+
-+#include <linux/gpio/gpio-nomadik.h>
-+
-+#ifndef CONFIG_PINCTRL_NOMADIK
-+static DEFINE_SPINLOCK(nmk_gpio_slpm_lock);
-+#endif
-+
-+void __nmk_gpio_set_slpm(struct nmk_gpio_chip *nmk_chip, unsigned int offset,
-+			 enum nmk_gpio_slpm mode)
-+{
-+	u32 slpm;
-+
-+	slpm = readl(nmk_chip->addr + NMK_GPIO_SLPC);
-+	if (mode == NMK_GPIO_SLPM_NOCHANGE)
-+		slpm |= BIT(offset);
-+	else
-+		slpm &= ~BIT(offset);
-+	writel(slpm, nmk_chip->addr + NMK_GPIO_SLPC);
-+}
-+
-+static void __nmk_gpio_set_output(struct nmk_gpio_chip *nmk_chip,
-+				  unsigned int offset, int val)
-+{
-+	if (val)
-+		writel(BIT(offset), nmk_chip->addr + NMK_GPIO_DATS);
-+	else
-+		writel(BIT(offset), nmk_chip->addr + NMK_GPIO_DATC);
-+}
-+
-+void __nmk_gpio_make_output(struct nmk_gpio_chip *nmk_chip,
-+			    unsigned int offset, int val)
-+{
-+	writel(BIT(offset), nmk_chip->addr + NMK_GPIO_DIRS);
-+	__nmk_gpio_set_output(nmk_chip, offset, val);
-+}
-+
-+/* IRQ functions */
-+
-+static void nmk_gpio_irq_ack(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(gc);
-+
-+	clk_enable(nmk_chip->clk);
-+	writel(BIT(d->hwirq), nmk_chip->addr + NMK_GPIO_IC);
-+	clk_disable(nmk_chip->clk);
-+}
-+
-+enum nmk_gpio_irq_type {
-+	NORMAL,
-+	WAKE,
-+};
-+
-+static void __nmk_gpio_irq_modify(struct nmk_gpio_chip *nmk_chip,
-+				  int offset, enum nmk_gpio_irq_type which,
-+				  bool enable)
-+{
-+	u32 *rimscval;
-+	u32 *fimscval;
-+	u32 rimscreg;
-+	u32 fimscreg;
-+
-+	if (which == NORMAL) {
-+		rimscreg = NMK_GPIO_RIMSC;
-+		fimscreg = NMK_GPIO_FIMSC;
-+		rimscval = &nmk_chip->rimsc;
-+		fimscval = &nmk_chip->fimsc;
-+	} else  {
-+		rimscreg = NMK_GPIO_RWIMSC;
-+		fimscreg = NMK_GPIO_FWIMSC;
-+		rimscval = &nmk_chip->rwimsc;
-+		fimscval = &nmk_chip->fwimsc;
-+	}
-+
-+	/* we must individually set/clear the two edges */
-+	if (nmk_chip->edge_rising & BIT(offset)) {
-+		if (enable)
-+			*rimscval |= BIT(offset);
-+		else
-+			*rimscval &= ~BIT(offset);
-+		writel(*rimscval, nmk_chip->addr + rimscreg);
-+	}
-+	if (nmk_chip->edge_falling & BIT(offset)) {
-+		if (enable)
-+			*fimscval |= BIT(offset);
-+		else
-+			*fimscval &= ~BIT(offset);
-+		writel(*fimscval, nmk_chip->addr + fimscreg);
-+	}
-+}
-+
-+static void __nmk_gpio_set_wake(struct nmk_gpio_chip *nmk_chip,
-+				int offset, bool on)
-+{
-+	/*
-+	 * Ensure WAKEUP_ENABLE is on.  No need to disable it if wakeup is
-+	 * disabled, since setting SLPM to 1 increases power consumption, and
-+	 * wakeup is anyhow controlled by the RIMSC and FIMSC registers.
-+	 */
-+	if (nmk_chip->sleepmode && on) {
-+		__nmk_gpio_set_slpm(nmk_chip, offset,
-+				    NMK_GPIO_SLPM_WAKEUP_ENABLE);
-+	}
-+
-+	__nmk_gpio_irq_modify(nmk_chip, offset, WAKE, on);
-+}
-+
-+static void nmk_gpio_irq_maskunmask(struct nmk_gpio_chip *nmk_chip,
-+				    struct irq_data *d, bool enable)
-+{
-+	unsigned long flags;
-+
-+	clk_enable(nmk_chip->clk);
-+	spin_lock_irqsave(&nmk_gpio_slpm_lock, flags);
-+	spin_lock(&nmk_chip->lock);
-+
-+	__nmk_gpio_irq_modify(nmk_chip, d->hwirq, NORMAL, enable);
-+
-+	if (!(nmk_chip->real_wake & BIT(d->hwirq)))
-+		__nmk_gpio_set_wake(nmk_chip, d->hwirq, enable);
-+
-+	spin_unlock(&nmk_chip->lock);
-+	spin_unlock_irqrestore(&nmk_gpio_slpm_lock, flags);
-+	clk_disable(nmk_chip->clk);
-+}
-+
-+static void nmk_gpio_irq_mask(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(gc);
-+
-+	nmk_gpio_irq_maskunmask(nmk_chip, d, false);
-+	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
-+}
-+
-+static void nmk_gpio_irq_unmask(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(gc);
-+
-+	gpiochip_enable_irq(gc, irqd_to_hwirq(d));
-+	nmk_gpio_irq_maskunmask(nmk_chip, d, true);
-+}
-+
-+static int nmk_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(gc);
-+	unsigned long flags;
-+
-+	clk_enable(nmk_chip->clk);
-+	spin_lock_irqsave(&nmk_gpio_slpm_lock, flags);
-+	spin_lock(&nmk_chip->lock);
-+
-+	if (irqd_irq_disabled(d))
-+		__nmk_gpio_set_wake(nmk_chip, d->hwirq, on);
-+
-+	if (on)
-+		nmk_chip->real_wake |= BIT(d->hwirq);
-+	else
-+		nmk_chip->real_wake &= ~BIT(d->hwirq);
-+
-+	spin_unlock(&nmk_chip->lock);
-+	spin_unlock_irqrestore(&nmk_gpio_slpm_lock, flags);
-+	clk_disable(nmk_chip->clk);
-+
-+	return 0;
-+}
-+
-+static int nmk_gpio_irq_set_type(struct irq_data *d, unsigned int type)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(gc);
-+	bool enabled = !irqd_irq_disabled(d);
-+	bool wake = irqd_is_wakeup_set(d);
-+	unsigned long flags;
-+
-+	if (type & IRQ_TYPE_LEVEL_HIGH)
-+		return -EINVAL;
-+	if (type & IRQ_TYPE_LEVEL_LOW)
-+		return -EINVAL;
-+
-+	clk_enable(nmk_chip->clk);
-+	spin_lock_irqsave(&nmk_chip->lock, flags);
-+
-+	if (enabled)
-+		__nmk_gpio_irq_modify(nmk_chip, d->hwirq, NORMAL, false);
-+
-+	if (enabled || wake)
-+		__nmk_gpio_irq_modify(nmk_chip, d->hwirq, WAKE, false);
-+
-+	nmk_chip->edge_rising &= ~BIT(d->hwirq);
-+	if (type & IRQ_TYPE_EDGE_RISING)
-+		nmk_chip->edge_rising |= BIT(d->hwirq);
-+
-+	nmk_chip->edge_falling &= ~BIT(d->hwirq);
-+	if (type & IRQ_TYPE_EDGE_FALLING)
-+		nmk_chip->edge_falling |= BIT(d->hwirq);
-+
-+	if (enabled)
-+		__nmk_gpio_irq_modify(nmk_chip, d->hwirq, NORMAL, true);
-+
-+	if (enabled || wake)
-+		__nmk_gpio_irq_modify(nmk_chip, d->hwirq, WAKE, true);
-+
-+	spin_unlock_irqrestore(&nmk_chip->lock, flags);
-+	clk_disable(nmk_chip->clk);
-+
-+	return 0;
-+}
-+
-+static unsigned int nmk_gpio_irq_startup(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(gc);
-+
-+	clk_enable(nmk_chip->clk);
-+	nmk_gpio_irq_unmask(d);
-+	return 0;
-+}
-+
-+static void nmk_gpio_irq_shutdown(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(gc);
-+
-+	nmk_gpio_irq_mask(d);
-+	clk_disable(nmk_chip->clk);
-+}
-+
-+static void nmk_gpio_irq_handler(struct irq_desc *desc)
-+{
-+	struct irq_chip *host_chip = irq_desc_get_chip(desc);
-+	struct gpio_chip *chip = irq_desc_get_handler_data(desc);
-+	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(chip);
-+	u32 status;
-+
-+	chained_irq_enter(host_chip, desc);
-+
-+	clk_enable(nmk_chip->clk);
-+	status = readl(nmk_chip->addr + NMK_GPIO_IS);
-+	clk_disable(nmk_chip->clk);
-+
-+	while (status) {
-+		int bit = __ffs(status);
-+
-+		generic_handle_domain_irq(chip->irq.domain, bit);
-+		status &= ~BIT(bit);
-+	}
-+
-+	chained_irq_exit(host_chip, desc);
-+}
-+
-+/* I/O Functions */
-+
-+static int nmk_gpio_get_dir(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(chip);
-+	int dir;
-+
-+	clk_enable(nmk_chip->clk);
-+
-+	dir = readl(nmk_chip->addr + NMK_GPIO_DIR) & BIT(offset);
-+
-+	clk_disable(nmk_chip->clk);
-+
-+	if (dir)
-+		return GPIO_LINE_DIRECTION_OUT;
-+
-+	return GPIO_LINE_DIRECTION_IN;
-+}
-+
-+static int nmk_gpio_make_input(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(chip);
-+
-+	clk_enable(nmk_chip->clk);
-+
-+	writel(BIT(offset), nmk_chip->addr + NMK_GPIO_DIRC);
-+
-+	clk_disable(nmk_chip->clk);
-+
-+	return 0;
-+}
-+
-+static int nmk_gpio_get_input(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(chip);
-+	int value;
-+
-+	clk_enable(nmk_chip->clk);
-+
-+	value = !!(readl(nmk_chip->addr + NMK_GPIO_DAT) & BIT(offset));
-+
-+	clk_disable(nmk_chip->clk);
-+
-+	return value;
-+}
-+
-+static void nmk_gpio_set_output(struct gpio_chip *chip, unsigned int offset,
-+				int val)
-+{
-+	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(chip);
-+
-+	clk_enable(nmk_chip->clk);
-+
-+	__nmk_gpio_set_output(nmk_chip, offset, val);
-+
-+	clk_disable(nmk_chip->clk);
-+}
-+
-+static int nmk_gpio_make_output(struct gpio_chip *chip, unsigned int offset,
-+				int val)
-+{
-+	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(chip);
-+
-+	clk_enable(nmk_chip->clk);
-+
-+	__nmk_gpio_make_output(nmk_chip, offset, val);
-+
-+	clk_disable(nmk_chip->clk);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_DEBUG_FS
-+
-+static int nmk_gpio_get_mode(struct nmk_gpio_chip *nmk_chip, int offset)
-+{
-+	u32 afunc, bfunc;
-+
-+	clk_enable(nmk_chip->clk);
-+
-+	afunc = readl(nmk_chip->addr + NMK_GPIO_AFSLA) & BIT(offset);
-+	bfunc = readl(nmk_chip->addr + NMK_GPIO_AFSLB) & BIT(offset);
-+
-+	clk_disable(nmk_chip->clk);
-+
-+	return (afunc ? NMK_GPIO_ALT_A : 0) | (bfunc ? NMK_GPIO_ALT_B : 0);
-+}
-+
-+void nmk_gpio_dbg_show_one(struct seq_file *s, struct pinctrl_dev *pctldev,
-+			   struct gpio_chip *chip, unsigned int offset,
-+			   unsigned int gpio)
-+{
-+	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(chip);
-+	int mode;
-+	bool is_out;
-+	bool data_out;
-+	bool pull;
-+	static const char * const modes[] = {
-+		[NMK_GPIO_ALT_GPIO]	= "gpio",
-+		[NMK_GPIO_ALT_A]	= "altA",
-+		[NMK_GPIO_ALT_B]	= "altB",
-+		[NMK_GPIO_ALT_C]	= "altC",
-+		[NMK_GPIO_ALT_C + 1]	= "altC1",
-+		[NMK_GPIO_ALT_C + 2]	= "altC2",
-+		[NMK_GPIO_ALT_C + 3]	= "altC3",
-+		[NMK_GPIO_ALT_C + 4]	= "altC4",
-+	};
-+
-+	char *label = gpiochip_dup_line_label(chip, offset);
-+	if (IS_ERR(label))
-+		return;
-+
-+	clk_enable(nmk_chip->clk);
-+	is_out = !!(readl(nmk_chip->addr + NMK_GPIO_DIR) & BIT(offset));
-+	pull = !(readl(nmk_chip->addr + NMK_GPIO_PDIS) & BIT(offset));
-+	data_out = !!(readl(nmk_chip->addr + NMK_GPIO_DAT) & BIT(offset));
-+	mode = nmk_gpio_get_mode(nmk_chip, offset);
-+#ifdef CONFIG_PINCTRL_NOMADIK
-+	if (mode == NMK_GPIO_ALT_C && pctldev)
-+		mode = nmk_prcm_gpiocr_get_mode(pctldev, gpio);
-+#endif
-+
-+	if (is_out) {
-+		seq_printf(s, " gpio-%-3d (%-20.20s) out %s           %s",
-+			   gpio,
-+			   label ?: "(none)",
-+			   data_out ? "hi" : "lo",
-+			   (mode < 0) ? "unknown" : modes[mode]);
-+	} else {
-+		int irq = chip->to_irq(chip, offset);
-+		const int pullidx = pull ? 1 : 0;
-+		int val;
-+		static const char * const pulls[] = {
-+			"none        ",
-+			"pull enabled",
-+		};
-+
-+		seq_printf(s, " gpio-%-3d (%-20.20s) in  %s %s",
-+			   gpio,
-+			   label ?: "(none)",
-+			   pulls[pullidx],
-+			   (mode < 0) ? "unknown" : modes[mode]);
-+
-+		val = nmk_gpio_get_input(chip, offset);
-+		seq_printf(s, " VAL %d", val);
-+
-+		/*
-+		 * This races with request_irq(), set_irq_type(),
-+		 * and set_irq_wake() ... but those are "rare".
-+		 */
-+		if (irq > 0 && irq_has_action(irq)) {
-+			char *trigger;
-+			bool wake;
-+
-+			if (nmk_chip->edge_rising & BIT(offset))
-+				trigger = "edge-rising";
-+			else if (nmk_chip->edge_falling & BIT(offset))
-+				trigger = "edge-falling";
-+			else
-+				trigger = "edge-undefined";
-+
-+			wake = !!(nmk_chip->real_wake & BIT(offset));
-+
-+			seq_printf(s, " irq-%d %s%s",
-+				   irq, trigger, wake ? " wakeup" : "");
-+		}
-+	}
-+	clk_disable(nmk_chip->clk);
-+}
-+
-+static void nmk_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
-+{
-+	unsigned int i, gpio = chip->base;
-+
-+	for (i = 0; i < chip->ngpio; i++, gpio++) {
-+		nmk_gpio_dbg_show_one(s, NULL, chip, i, gpio);
-+		seq_puts(s, "\n");
-+	}
-+}
-+
-+#else
-+
-+static inline void nmk_gpio_dbg_show_one(struct seq_file *s,
-+					 struct pinctrl_dev *pctldev,
-+					 struct gpio_chip *chip,
-+					 unsigned int offset,
-+					 unsigned int gpio)
-+{
-+}
-+
-+#define nmk_gpio_dbg_show	NULL
-+
-+#endif
-+
-+/*
-+ * We will allocate memory for the state container using devm* allocators
-+ * binding to the first device reaching this point, it doesn't matter if
-+ * it is the pin controller or GPIO driver. However we need to use the right
-+ * platform device when looking up resources so pay attention to pdev.
-+ */
-+struct nmk_gpio_chip *nmk_gpio_populate_chip(struct device_node *np,
-+					     struct platform_device *pdev)
-+{
-+	struct nmk_gpio_chip *nmk_chip;
-+	struct platform_device *gpio_pdev;
-+	struct gpio_chip *chip;
-+	struct resource *res;
-+	struct clk *clk;
-+	void __iomem *base;
-+	u32 id;
-+
-+	gpio_pdev = of_find_device_by_node(np);
-+	if (!gpio_pdev) {
-+		pr_err("populate \"%pOFn\": device not found\n", np);
-+		return ERR_PTR(-ENODEV);
-+	}
-+	if (of_property_read_u32(np, "gpio-bank", &id)) {
-+		dev_err(&pdev->dev, "populate: gpio-bank property not found\n");
-+		platform_device_put(gpio_pdev);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+#ifdef CONFIG_PINCTRL_NOMADIK
-+	/* Already populated? */
-+	nmk_chip = nmk_gpio_chips[id];
-+	if (nmk_chip) {
-+		platform_device_put(gpio_pdev);
-+		return nmk_chip;
-+	}
-+#endif
-+
-+	nmk_chip = devm_kzalloc(&pdev->dev, sizeof(*nmk_chip), GFP_KERNEL);
-+	if (!nmk_chip) {
-+		platform_device_put(gpio_pdev);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	nmk_chip->bank = id;
-+	chip = &nmk_chip->chip;
-+	chip->base = id * NMK_GPIO_PER_CHIP;
-+	chip->ngpio = NMK_GPIO_PER_CHIP;
-+	chip->label = dev_name(&gpio_pdev->dev);
-+	chip->parent = &gpio_pdev->dev;
-+
-+	res = platform_get_resource(gpio_pdev, IORESOURCE_MEM, 0);
-+	base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(base)) {
-+		platform_device_put(gpio_pdev);
-+		return ERR_CAST(base);
-+	}
-+	nmk_chip->addr = base;
-+
-+	clk = clk_get(&gpio_pdev->dev, NULL);
-+	if (IS_ERR(clk)) {
-+		platform_device_put(gpio_pdev);
-+		return (void *)clk;
-+	}
-+	clk_prepare(clk);
-+	nmk_chip->clk = clk;
-+
-+#ifdef CONFIG_PINCTRL_NOMADIK
-+	BUG_ON(nmk_chip->bank >= ARRAY_SIZE(nmk_gpio_chips));
-+	nmk_gpio_chips[id] = nmk_chip;
-+#endif
-+	return nmk_chip;
-+}
-+
-+static void nmk_gpio_irq_print_chip(struct irq_data *d, struct seq_file *p)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(gc);
-+
-+	seq_printf(p, "nmk%u-%u-%u", nmk_chip->bank,
-+		   gc->base, gc->base + gc->ngpio - 1);
-+}
-+
-+static const struct irq_chip nmk_irq_chip = {
-+	.irq_ack = nmk_gpio_irq_ack,
-+	.irq_mask = nmk_gpio_irq_mask,
-+	.irq_unmask = nmk_gpio_irq_unmask,
-+	.irq_set_type = nmk_gpio_irq_set_type,
-+	.irq_set_wake = nmk_gpio_irq_set_wake,
-+	.irq_startup = nmk_gpio_irq_startup,
-+	.irq_shutdown = nmk_gpio_irq_shutdown,
-+	.irq_print_chip = nmk_gpio_irq_print_chip,
-+	.flags = IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
-+};
-+
-+static int nmk_gpio_probe(struct platform_device *dev)
-+{
-+	struct device_node *np = dev->dev.of_node;
-+	struct nmk_gpio_chip *nmk_chip;
-+	struct gpio_chip *chip;
-+	struct gpio_irq_chip *girq;
-+	bool supports_sleepmode;
-+	int irq;
-+	int ret;
-+
-+	nmk_chip = nmk_gpio_populate_chip(np, dev);
-+	if (IS_ERR(nmk_chip)) {
-+		dev_err(&dev->dev, "could not populate nmk chip struct\n");
-+		return PTR_ERR(nmk_chip);
-+	}
-+
-+	supports_sleepmode =
-+		of_property_read_bool(np, "st,supports-sleepmode");
-+
-+	/* Correct platform device ID */
-+	dev->id = nmk_chip->bank;
-+
-+	irq = platform_get_irq(dev, 0);
-+	if (irq < 0)
-+		return irq;
-+
-+	/*
-+	 * The virt address in nmk_chip->addr is in the nomadik register space,
-+	 * so we can simply convert the resource address, without remapping
-+	 */
-+	nmk_chip->sleepmode = supports_sleepmode;
-+	spin_lock_init(&nmk_chip->lock);
-+
-+	chip = &nmk_chip->chip;
-+	chip->parent = &dev->dev;
-+	chip->request = gpiochip_generic_request;
-+	chip->free = gpiochip_generic_free;
-+	chip->get_direction = nmk_gpio_get_dir;
-+	chip->direction_input = nmk_gpio_make_input;
-+	chip->get = nmk_gpio_get_input;
-+	chip->direction_output = nmk_gpio_make_output;
-+	chip->set = nmk_gpio_set_output;
-+	chip->dbg_show = nmk_gpio_dbg_show;
-+	chip->can_sleep = false;
-+	chip->owner = THIS_MODULE;
-+
-+	girq = &chip->irq;
-+	gpio_irq_chip_set_chip(girq, &nmk_irq_chip);
-+	girq->parent_handler = nmk_gpio_irq_handler;
-+	girq->num_parents = 1;
-+	girq->parents = devm_kcalloc(&dev->dev, 1,
-+				     sizeof(*girq->parents),
-+				     GFP_KERNEL);
-+	if (!girq->parents)
-+		return -ENOMEM;
-+	girq->parents[0] = irq;
-+	girq->default_type = IRQ_TYPE_NONE;
-+	girq->handler = handle_edge_irq;
-+
-+	clk_enable(nmk_chip->clk);
-+	nmk_chip->lowemi = readl_relaxed(nmk_chip->addr + NMK_GPIO_LOWEMI);
-+	clk_disable(nmk_chip->clk);
-+
-+	ret = gpiochip_add_data(chip, nmk_chip);
-+	if (ret)
-+		return ret;
-+
-+	platform_set_drvdata(dev, nmk_chip);
-+
-+	dev_info(&dev->dev, "chip registered\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id nmk_gpio_match[] = {
-+	{ .compatible = "st,nomadik-gpio", },
-+	{}
-+};
-+
-+static struct platform_driver nmk_gpio_driver = {
-+	.driver = {
-+		.name = "gpio",
-+		.of_match_table = nmk_gpio_match,
-+	},
-+	.probe = nmk_gpio_probe,
-+};
-+
-+static int __init nmk_gpio_init(void)
-+{
-+	return platform_driver_register(&nmk_gpio_driver);
-+}
-+subsys_initcall(nmk_gpio_init);
-diff --git a/drivers/pinctrl/nomadik/Kconfig b/drivers/pinctrl/nomadik/Kconfig
-index 0fea167c283f..f47f0755a835 100644
---- a/drivers/pinctrl/nomadik/Kconfig
-+++ b/drivers/pinctrl/nomadik/Kconfig
-@@ -22,11 +22,10 @@ if (ARCH_U8500 || ARCH_NOMADIK)
- 
- config PINCTRL_NOMADIK
- 	bool "Nomadik pin controller driver"
--	depends on OF && GPIOLIB
-+	depends on OF
- 	select PINMUX
- 	select PINCONF
--	select OF_GPIO
--	select GPIOLIB_IRQCHIP
-+	select GPIO_NOMADIK
- 
- config PINCTRL_STN8815
- 	bool "STN8815 pin controller driver"
-diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c b/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c
-index 490e0959e8be..0b4a3dd9d8c7 100644
---- a/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c
-+++ b/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c
-@@ -3,8 +3,9 @@
- #include <linux/types.h>
- 
- #include <linux/pinctrl/pinctrl.h>
-+#include <linux/gpio/driver.h>
- 
--#include "pinctrl-nomadik.h"
-+#include <linux/gpio/gpio-nomadik.h>
- 
- /* All the pins that can be used for GPIO and some other functions */
- #define _GPIO(offset)		(offset)
-diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik-stn8815.c b/drivers/pinctrl/nomadik/pinctrl-nomadik-stn8815.c
-index 1552222ac68e..c5a52fcaba30 100644
---- a/drivers/pinctrl/nomadik/pinctrl-nomadik-stn8815.c
-+++ b/drivers/pinctrl/nomadik/pinctrl-nomadik-stn8815.c
-@@ -3,8 +3,9 @@
- #include <linux/types.h>
- 
- #include <linux/pinctrl/pinctrl.h>
-+#include <linux/gpio/driver.h>
- 
--#include "pinctrl-nomadik.h"
-+#include <linux/gpio/gpio-nomadik.h>
- 
- /* All the pins that can be used for GPIO and some other functions */
- #define _GPIO(offset)		(offset)
-diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik.c b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-index 7911353ac97d..f3897dbfa2c3 100644
---- a/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-+++ b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-@@ -1,6 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Generic GPIO driver for logic cells found in the Nomadik SoC
-+ * Pinmux & pinconf driver for the IP block found in the Nomadik SoC. This
-+ * depends on gpio-nomadik and some handling is intertwined; see nmk_gpio_chips
-+ * which is used by this driver to access the GPIO banks array.
-  *
-  * Copyright (C) 2008,2009 STMicroelectronics
-  * Copyright (C) 2009 Alessandro Rubini <rubini@unipv.it>
-@@ -25,6 +27,7 @@
- #include <linux/seq_file.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
-+#include <linux/types.h>
- 
- /* Since we request GPIOs from ourself */
- #include <linux/pinctrl/consumer.h>
-@@ -36,15 +39,7 @@
- #include "../core.h"
- #include "../pinctrl-utils.h"
- 
--#include "pinctrl-nomadik.h"
--
--/*
-- * The GPIO module in the Nomadik family of Systems-on-Chip is an
-- * AMBA device, managing 32 pins and alternate functions.  The logic block
-- * is currently used in the Nomadik and ux500.
-- *
-- * Symbols in this file are called "nmk_gpio" for "nomadik gpio"
-- */
-+#include <linux/gpio/gpio-nomadik.h>
- 
- /*
-  * pin configurations are represented by 32-bit integers:
-@@ -200,75 +195,6 @@ typedef unsigned long pin_cfg_t;
- 	(PIN_CFG_DEFAULT |\
- 	 (PIN_NUM(num) | PIN_##alt | PIN_OUTPUT_##val))
- 
--/*
-- * "nmk_gpio" and "NMK_GPIO" stand for "Nomadik GPIO", leaving
-- * the "gpio" namespace for generic and cross-machine functions
-- */
--
--#define GPIO_BLOCK_SHIFT 5
--#define NMK_GPIO_PER_CHIP (1 << GPIO_BLOCK_SHIFT)
--#define NMK_MAX_BANKS DIV_ROUND_UP(512, NMK_GPIO_PER_CHIP)
--
--/* Register in the logic block */
--#define NMK_GPIO_DAT	0x00
--#define NMK_GPIO_DATS	0x04
--#define NMK_GPIO_DATC	0x08
--#define NMK_GPIO_PDIS	0x0c
--#define NMK_GPIO_DIR	0x10
--#define NMK_GPIO_DIRS	0x14
--#define NMK_GPIO_DIRC	0x18
--#define NMK_GPIO_SLPC	0x1c
--#define NMK_GPIO_AFSLA	0x20
--#define NMK_GPIO_AFSLB	0x24
--#define NMK_GPIO_LOWEMI	0x28
--
--#define NMK_GPIO_RIMSC	0x40
--#define NMK_GPIO_FIMSC	0x44
--#define NMK_GPIO_IS	0x48
--#define NMK_GPIO_IC	0x4c
--#define NMK_GPIO_RWIMSC	0x50
--#define NMK_GPIO_FWIMSC	0x54
--#define NMK_GPIO_WKS	0x58
--/* These appear in DB8540 and later ASICs */
--#define NMK_GPIO_EDGELEVEL 0x5C
--#define NMK_GPIO_LEVEL	0x60
--
--
--/* Pull up/down values */
--enum nmk_gpio_pull {
--	NMK_GPIO_PULL_NONE,
--	NMK_GPIO_PULL_UP,
--	NMK_GPIO_PULL_DOWN,
--};
--
--/* Sleep mode */
--enum nmk_gpio_slpm {
--	NMK_GPIO_SLPM_INPUT,
--	NMK_GPIO_SLPM_WAKEUP_ENABLE = NMK_GPIO_SLPM_INPUT,
--	NMK_GPIO_SLPM_NOCHANGE,
--	NMK_GPIO_SLPM_WAKEUP_DISABLE = NMK_GPIO_SLPM_NOCHANGE,
--};
--
--struct nmk_gpio_chip {
--	struct gpio_chip chip;
--	void __iomem *addr;
--	struct clk *clk;
--	unsigned int bank;
--	void (*set_ioforce)(bool enable);
--	spinlock_t lock;
--	bool sleepmode;
--	/* Keep track of configured edges */
--	u32 edge_rising;
--	u32 edge_falling;
--	u32 real_wake;
--	u32 rwimsc;
--	u32 fwimsc;
--	u32 rimsc;
--	u32 fimsc;
--	u32 pull_up;
--	u32 lowemi;
--};
--
- /**
-  * struct nmk_pinctrl - state container for the Nomadik pin controller
-  * @dev: containing device pointer
-@@ -283,11 +209,10 @@ struct nmk_pinctrl {
- 	void __iomem *prcm_base;
- };
- 
--static struct nmk_gpio_chip *nmk_gpio_chips[NMK_MAX_BANKS];
-+/* See nmk_gpio_populate_chip() that fills this array. */
-+struct nmk_gpio_chip *nmk_gpio_chips[NMK_MAX_BANKS];
- 
--static DEFINE_SPINLOCK(nmk_gpio_slpm_lock);
--
--#define NUM_BANKS ARRAY_SIZE(nmk_gpio_chips)
-+DEFINE_SPINLOCK(nmk_gpio_slpm_lock);
- 
- static void __nmk_gpio_set_mode(struct nmk_gpio_chip *nmk_chip,
- 				unsigned offset, int gpio_mode)
-@@ -304,19 +229,6 @@ static void __nmk_gpio_set_mode(struct nmk_gpio_chip *nmk_chip,
- 	writel(bfunc, nmk_chip->addr + NMK_GPIO_AFSLB);
- }
- 
--static void __nmk_gpio_set_slpm(struct nmk_gpio_chip *nmk_chip,
--				unsigned offset, enum nmk_gpio_slpm mode)
--{
--	u32 slpm;
--
--	slpm = readl(nmk_chip->addr + NMK_GPIO_SLPC);
--	if (mode == NMK_GPIO_SLPM_NOCHANGE)
--		slpm |= BIT(offset);
--	else
--		slpm &= ~BIT(offset);
--	writel(slpm, nmk_chip->addr + NMK_GPIO_SLPC);
--}
--
- static void __nmk_gpio_set_pull(struct nmk_gpio_chip *nmk_chip,
- 				unsigned offset, enum nmk_gpio_pull pull)
- {
-@@ -364,22 +276,6 @@ static void __nmk_gpio_make_input(struct nmk_gpio_chip *nmk_chip,
- 	writel(BIT(offset), nmk_chip->addr + NMK_GPIO_DIRC);
- }
- 
--static void __nmk_gpio_set_output(struct nmk_gpio_chip *nmk_chip,
--				  unsigned offset, int val)
--{
--	if (val)
--		writel(BIT(offset), nmk_chip->addr + NMK_GPIO_DATS);
--	else
--		writel(BIT(offset), nmk_chip->addr + NMK_GPIO_DATC);
--}
--
--static void __nmk_gpio_make_output(struct nmk_gpio_chip *nmk_chip,
--				  unsigned offset, int val)
--{
--	writel(BIT(offset), nmk_chip->addr + NMK_GPIO_DIRS);
--	__nmk_gpio_set_output(nmk_chip, offset, val);
--}
--
- static void __nmk_gpio_set_mode_safe(struct nmk_gpio_chip *nmk_chip,
- 				     unsigned offset, int gpio_mode,
- 				     bool glitch)
-@@ -548,7 +444,7 @@ static void nmk_gpio_glitch_slpm_init(unsigned int *slpm)
- {
- 	int i;
- 
--	for (i = 0; i < NUM_BANKS; i++) {
-+	for (i = 0; i < NMK_MAX_BANKS; i++) {
- 		struct nmk_gpio_chip *chip = nmk_gpio_chips[i];
- 		unsigned int temp = slpm[i];
- 
-@@ -566,7 +462,7 @@ static void nmk_gpio_glitch_slpm_restore(unsigned int *slpm)
- {
- 	int i;
- 
--	for (i = 0; i < NUM_BANKS; i++) {
-+	for (i = 0; i < NMK_MAX_BANKS; i++) {
- 		struct nmk_gpio_chip *chip = nmk_gpio_chips[i];
- 
- 		if (!chip)
-@@ -578,7 +474,8 @@ static void nmk_gpio_glitch_slpm_restore(unsigned int *slpm)
- 	}
- }
- 
--static int __maybe_unused nmk_prcm_gpiocr_get_mode(struct pinctrl_dev *pctldev, int gpio)
-+/* Only called by gpio-nomadik but requires knowledge of struct nmk_pinctrl. */
-+int __maybe_unused nmk_prcm_gpiocr_get_mode(struct pinctrl_dev *pctldev, int gpio)
- {
- 	int i;
- 	u16 reg;
-@@ -610,576 +507,6 @@ static int __maybe_unused nmk_prcm_gpiocr_get_mode(struct pinctrl_dev *pctldev,
- 	return NMK_GPIO_ALT_C;
- }
- 
--/* IRQ functions */
--
--static void nmk_gpio_irq_ack(struct irq_data *d)
--{
--	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
--	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(gc);
--
--	clk_enable(nmk_chip->clk);
--	writel(BIT(d->hwirq), nmk_chip->addr + NMK_GPIO_IC);
--	clk_disable(nmk_chip->clk);
--}
--
--enum nmk_gpio_irq_type {
--	NORMAL,
--	WAKE,
--};
--
--static void __nmk_gpio_irq_modify(struct nmk_gpio_chip *nmk_chip,
--				  int offset, enum nmk_gpio_irq_type which,
--				  bool enable)
--{
--	u32 *rimscval;
--	u32 *fimscval;
--	u32 rimscreg;
--	u32 fimscreg;
--
--	if (which == NORMAL) {
--		rimscreg = NMK_GPIO_RIMSC;
--		fimscreg = NMK_GPIO_FIMSC;
--		rimscval = &nmk_chip->rimsc;
--		fimscval = &nmk_chip->fimsc;
--	} else  {
--		rimscreg = NMK_GPIO_RWIMSC;
--		fimscreg = NMK_GPIO_FWIMSC;
--		rimscval = &nmk_chip->rwimsc;
--		fimscval = &nmk_chip->fwimsc;
--	}
--
--	/* we must individually set/clear the two edges */
--	if (nmk_chip->edge_rising & BIT(offset)) {
--		if (enable)
--			*rimscval |= BIT(offset);
--		else
--			*rimscval &= ~BIT(offset);
--		writel(*rimscval, nmk_chip->addr + rimscreg);
--	}
--	if (nmk_chip->edge_falling & BIT(offset)) {
--		if (enable)
--			*fimscval |= BIT(offset);
--		else
--			*fimscval &= ~BIT(offset);
--		writel(*fimscval, nmk_chip->addr + fimscreg);
--	}
--}
--
--static void __nmk_gpio_set_wake(struct nmk_gpio_chip *nmk_chip,
--				int offset, bool on)
--{
--	/*
--	 * Ensure WAKEUP_ENABLE is on.  No need to disable it if wakeup is
--	 * disabled, since setting SLPM to 1 increases power consumption, and
--	 * wakeup is anyhow controlled by the RIMSC and FIMSC registers.
--	 */
--	if (nmk_chip->sleepmode && on) {
--		__nmk_gpio_set_slpm(nmk_chip, offset,
--				    NMK_GPIO_SLPM_WAKEUP_ENABLE);
--	}
--
--	__nmk_gpio_irq_modify(nmk_chip, offset, WAKE, on);
--}
--
--static void nmk_gpio_irq_maskunmask(struct nmk_gpio_chip *nmk_chip,
--				    struct irq_data *d, bool enable)
--{
--	unsigned long flags;
--
--	clk_enable(nmk_chip->clk);
--	spin_lock_irqsave(&nmk_gpio_slpm_lock, flags);
--	spin_lock(&nmk_chip->lock);
--
--	__nmk_gpio_irq_modify(nmk_chip, d->hwirq, NORMAL, enable);
--
--	if (!(nmk_chip->real_wake & BIT(d->hwirq)))
--		__nmk_gpio_set_wake(nmk_chip, d->hwirq, enable);
--
--	spin_unlock(&nmk_chip->lock);
--	spin_unlock_irqrestore(&nmk_gpio_slpm_lock, flags);
--	clk_disable(nmk_chip->clk);
--}
--
--static void nmk_gpio_irq_mask(struct irq_data *d)
--{
--	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
--	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(gc);
--
--	nmk_gpio_irq_maskunmask(nmk_chip, d, false);
--	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
--}
--
--static void nmk_gpio_irq_unmask(struct irq_data *d)
--{
--	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
--	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(gc);
--
--	gpiochip_enable_irq(gc, irqd_to_hwirq(d));
--	nmk_gpio_irq_maskunmask(nmk_chip, d, true);
--}
--
--static int nmk_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
--{
--	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
--	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(gc);
--	unsigned long flags;
--
--	clk_enable(nmk_chip->clk);
--	spin_lock_irqsave(&nmk_gpio_slpm_lock, flags);
--	spin_lock(&nmk_chip->lock);
--
--	if (irqd_irq_disabled(d))
--		__nmk_gpio_set_wake(nmk_chip, d->hwirq, on);
--
--	if (on)
--		nmk_chip->real_wake |= BIT(d->hwirq);
--	else
--		nmk_chip->real_wake &= ~BIT(d->hwirq);
--
--	spin_unlock(&nmk_chip->lock);
--	spin_unlock_irqrestore(&nmk_gpio_slpm_lock, flags);
--	clk_disable(nmk_chip->clk);
--
--	return 0;
--}
--
--static int nmk_gpio_irq_set_type(struct irq_data *d, unsigned int type)
--{
--	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
--	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(gc);
--	bool enabled = !irqd_irq_disabled(d);
--	bool wake = irqd_is_wakeup_set(d);
--	unsigned long flags;
--
--	if (type & IRQ_TYPE_LEVEL_HIGH)
--		return -EINVAL;
--	if (type & IRQ_TYPE_LEVEL_LOW)
--		return -EINVAL;
--
--	clk_enable(nmk_chip->clk);
--	spin_lock_irqsave(&nmk_chip->lock, flags);
--
--	if (enabled)
--		__nmk_gpio_irq_modify(nmk_chip, d->hwirq, NORMAL, false);
--
--	if (enabled || wake)
--		__nmk_gpio_irq_modify(nmk_chip, d->hwirq, WAKE, false);
--
--	nmk_chip->edge_rising &= ~BIT(d->hwirq);
--	if (type & IRQ_TYPE_EDGE_RISING)
--		nmk_chip->edge_rising |= BIT(d->hwirq);
--
--	nmk_chip->edge_falling &= ~BIT(d->hwirq);
--	if (type & IRQ_TYPE_EDGE_FALLING)
--		nmk_chip->edge_falling |= BIT(d->hwirq);
--
--	if (enabled)
--		__nmk_gpio_irq_modify(nmk_chip, d->hwirq, NORMAL, true);
--
--	if (enabled || wake)
--		__nmk_gpio_irq_modify(nmk_chip, d->hwirq, WAKE, true);
--
--	spin_unlock_irqrestore(&nmk_chip->lock, flags);
--	clk_disable(nmk_chip->clk);
--
--	return 0;
--}
--
--static unsigned int nmk_gpio_irq_startup(struct irq_data *d)
--{
--	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
--	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(gc);
--
--	clk_enable(nmk_chip->clk);
--	nmk_gpio_irq_unmask(d);
--	return 0;
--}
--
--static void nmk_gpio_irq_shutdown(struct irq_data *d)
--{
--	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
--	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(gc);
--
--	nmk_gpio_irq_mask(d);
--	clk_disable(nmk_chip->clk);
--}
--
--static void nmk_gpio_irq_handler(struct irq_desc *desc)
--{
--	struct irq_chip *host_chip = irq_desc_get_chip(desc);
--	struct gpio_chip *chip = irq_desc_get_handler_data(desc);
--	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(chip);
--	u32 status;
--
--	chained_irq_enter(host_chip, desc);
--
--	clk_enable(nmk_chip->clk);
--	status = readl(nmk_chip->addr + NMK_GPIO_IS);
--	clk_disable(nmk_chip->clk);
--
--	while (status) {
--		int bit = __ffs(status);
--
--		generic_handle_domain_irq(chip->irq.domain, bit);
--		status &= ~BIT(bit);
--	}
--
--	chained_irq_exit(host_chip, desc);
--}
--
--/* I/O Functions */
--
--static int nmk_gpio_get_dir(struct gpio_chip *chip, unsigned offset)
--{
--	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(chip);
--	int dir;
--
--	clk_enable(nmk_chip->clk);
--
--	dir = readl(nmk_chip->addr + NMK_GPIO_DIR) & BIT(offset);
--
--	clk_disable(nmk_chip->clk);
--
--	if (dir)
--		return GPIO_LINE_DIRECTION_OUT;
--
--	return GPIO_LINE_DIRECTION_IN;
--}
--
--static int nmk_gpio_make_input(struct gpio_chip *chip, unsigned offset)
--{
--	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(chip);
--
--	clk_enable(nmk_chip->clk);
--
--	writel(BIT(offset), nmk_chip->addr + NMK_GPIO_DIRC);
--
--	clk_disable(nmk_chip->clk);
--
--	return 0;
--}
--
--static int nmk_gpio_get_input(struct gpio_chip *chip, unsigned offset)
--{
--	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(chip);
--	int value;
--
--	clk_enable(nmk_chip->clk);
--
--	value = !!(readl(nmk_chip->addr + NMK_GPIO_DAT) & BIT(offset));
--
--	clk_disable(nmk_chip->clk);
--
--	return value;
--}
--
--static void nmk_gpio_set_output(struct gpio_chip *chip, unsigned offset,
--				int val)
--{
--	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(chip);
--
--	clk_enable(nmk_chip->clk);
--
--	__nmk_gpio_set_output(nmk_chip, offset, val);
--
--	clk_disable(nmk_chip->clk);
--}
--
--static int nmk_gpio_make_output(struct gpio_chip *chip, unsigned offset,
--				int val)
--{
--	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(chip);
--
--	clk_enable(nmk_chip->clk);
--
--	__nmk_gpio_make_output(nmk_chip, offset, val);
--
--	clk_disable(nmk_chip->clk);
--
--	return 0;
--}
--
--#ifdef CONFIG_DEBUG_FS
--static int nmk_gpio_get_mode(struct nmk_gpio_chip *nmk_chip, int offset)
--{
--	u32 afunc, bfunc;
--
--	clk_enable(nmk_chip->clk);
--
--	afunc = readl(nmk_chip->addr + NMK_GPIO_AFSLA) & BIT(offset);
--	bfunc = readl(nmk_chip->addr + NMK_GPIO_AFSLB) & BIT(offset);
--
--	clk_disable(nmk_chip->clk);
--
--	return (afunc ? NMK_GPIO_ALT_A : 0) | (bfunc ? NMK_GPIO_ALT_B : 0);
--}
--
--static void nmk_gpio_dbg_show_one(struct seq_file *s,
--	struct pinctrl_dev *pctldev, struct gpio_chip *chip,
--	unsigned offset, unsigned gpio)
--{
--	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(chip);
--	int mode;
--	bool is_out;
--	bool data_out;
--	bool pull;
--	const char *modes[] = {
--		[NMK_GPIO_ALT_GPIO]	= "gpio",
--		[NMK_GPIO_ALT_A]	= "altA",
--		[NMK_GPIO_ALT_B]	= "altB",
--		[NMK_GPIO_ALT_C]	= "altC",
--		[NMK_GPIO_ALT_C+1]	= "altC1",
--		[NMK_GPIO_ALT_C+2]	= "altC2",
--		[NMK_GPIO_ALT_C+3]	= "altC3",
--		[NMK_GPIO_ALT_C+4]	= "altC4",
--	};
--
--	char *label = gpiochip_dup_line_label(chip, offset);
--	if (IS_ERR(label))
--		return;
--
--	clk_enable(nmk_chip->clk);
--	is_out = !!(readl(nmk_chip->addr + NMK_GPIO_DIR) & BIT(offset));
--	pull = !(readl(nmk_chip->addr + NMK_GPIO_PDIS) & BIT(offset));
--	data_out = !!(readl(nmk_chip->addr + NMK_GPIO_DAT) & BIT(offset));
--	mode = nmk_gpio_get_mode(nmk_chip, offset);
--	if ((mode == NMK_GPIO_ALT_C) && pctldev)
--		mode = nmk_prcm_gpiocr_get_mode(pctldev, gpio);
--
--	if (is_out) {
--		seq_printf(s, " gpio-%-3d (%-20.20s) out %s           %s",
--			   gpio,
--			   label ?: "(none)",
--			   data_out ? "hi" : "lo",
--			   (mode < 0) ? "unknown" : modes[mode]);
--	} else {
--		int irq = chip->to_irq(chip, offset);
--		const int pullidx = pull ? 1 : 0;
--		int val;
--		static const char * const pulls[] = {
--			"none        ",
--			"pull enabled",
--		};
--
--		seq_printf(s, " gpio-%-3d (%-20.20s) in  %s %s",
--			   gpio,
--			   label ?: "(none)",
--			   pulls[pullidx],
--			   (mode < 0) ? "unknown" : modes[mode]);
--
--		val = nmk_gpio_get_input(chip, offset);
--		seq_printf(s, " VAL %d", val);
--
--		/*
--		 * This races with request_irq(), set_irq_type(),
--		 * and set_irq_wake() ... but those are "rare".
--		 */
--		if (irq > 0 && irq_has_action(irq)) {
--			char *trigger;
--			bool wake;
--
--			if (nmk_chip->edge_rising & BIT(offset))
--				trigger = "edge-rising";
--			else if (nmk_chip->edge_falling & BIT(offset))
--				trigger = "edge-falling";
--			else
--				trigger = "edge-undefined";
--
--			wake = !!(nmk_chip->real_wake & BIT(offset));
--
--			seq_printf(s, " irq-%d %s%s",
--				   irq, trigger, wake ? " wakeup" : "");
--		}
--	}
--	clk_disable(nmk_chip->clk);
--}
--
--static void nmk_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
--{
--	unsigned		i;
--	unsigned		gpio = chip->base;
--
--	for (i = 0; i < chip->ngpio; i++, gpio++) {
--		nmk_gpio_dbg_show_one(s, NULL, chip, i, gpio);
--		seq_printf(s, "\n");
--	}
--}
--
--#else
--static inline void nmk_gpio_dbg_show_one(struct seq_file *s,
--					 struct pinctrl_dev *pctldev,
--					 struct gpio_chip *chip,
--					 unsigned offset, unsigned gpio)
--{
--}
--#define nmk_gpio_dbg_show	NULL
--#endif
--
--/*
-- * We will allocate memory for the state container using devm* allocators
-- * binding to the first device reaching this point, it doesn't matter if
-- * it is the pin controller or GPIO driver. However we need to use the right
-- * platform device when looking up resources so pay attention to pdev.
-- */
--static struct nmk_gpio_chip *nmk_gpio_populate_chip(struct device_node *np,
--						struct platform_device *pdev)
--{
--	struct nmk_gpio_chip *nmk_chip;
--	struct platform_device *gpio_pdev;
--	struct gpio_chip *chip;
--	struct resource *res;
--	struct clk *clk;
--	void __iomem *base;
--	u32 id;
--
--	gpio_pdev = of_find_device_by_node(np);
--	if (!gpio_pdev) {
--		pr_err("populate \"%pOFn\": device not found\n", np);
--		return ERR_PTR(-ENODEV);
--	}
--	if (of_property_read_u32(np, "gpio-bank", &id)) {
--		dev_err(&pdev->dev, "populate: gpio-bank property not found\n");
--		platform_device_put(gpio_pdev);
--		return ERR_PTR(-EINVAL);
--	}
--
--	/* Already populated? */
--	nmk_chip = nmk_gpio_chips[id];
--	if (nmk_chip) {
--		platform_device_put(gpio_pdev);
--		return nmk_chip;
--	}
--
--	nmk_chip = devm_kzalloc(&pdev->dev, sizeof(*nmk_chip), GFP_KERNEL);
--	if (!nmk_chip) {
--		platform_device_put(gpio_pdev);
--		return ERR_PTR(-ENOMEM);
--	}
--
--	nmk_chip->bank = id;
--	chip = &nmk_chip->chip;
--	chip->base = id * NMK_GPIO_PER_CHIP;
--	chip->ngpio = NMK_GPIO_PER_CHIP;
--	chip->label = dev_name(&gpio_pdev->dev);
--	chip->parent = &gpio_pdev->dev;
--
--	res = platform_get_resource(gpio_pdev, IORESOURCE_MEM, 0);
--	base = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(base)) {
--		platform_device_put(gpio_pdev);
--		return ERR_CAST(base);
--	}
--	nmk_chip->addr = base;
--
--	clk = clk_get(&gpio_pdev->dev, NULL);
--	if (IS_ERR(clk)) {
--		platform_device_put(gpio_pdev);
--		return (void *) clk;
--	}
--	clk_prepare(clk);
--	nmk_chip->clk = clk;
--
--	BUG_ON(nmk_chip->bank >= ARRAY_SIZE(nmk_gpio_chips));
--	nmk_gpio_chips[id] = nmk_chip;
--	return nmk_chip;
--}
--
--static void nmk_gpio_irq_print_chip(struct irq_data *d, struct seq_file *p)
--{
--	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
--	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(gc);
--
--	seq_printf(p, "nmk%u-%u-%u", nmk_chip->bank,
--		   gc->base, gc->base + gc->ngpio - 1);
--}
--
--static const struct irq_chip nmk_irq_chip = {
--	.irq_ack = nmk_gpio_irq_ack,
--	.irq_mask = nmk_gpio_irq_mask,
--	.irq_unmask = nmk_gpio_irq_unmask,
--	.irq_set_type = nmk_gpio_irq_set_type,
--	.irq_set_wake = nmk_gpio_irq_set_wake,
--	.irq_startup = nmk_gpio_irq_startup,
--	.irq_shutdown = nmk_gpio_irq_shutdown,
--	.irq_print_chip = nmk_gpio_irq_print_chip,
--	.flags = IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
--	GPIOCHIP_IRQ_RESOURCE_HELPERS,
--};
--
--static int nmk_gpio_probe(struct platform_device *dev)
--{
--	struct device_node *np = dev->dev.of_node;
--	struct nmk_gpio_chip *nmk_chip;
--	struct gpio_chip *chip;
--	struct gpio_irq_chip *girq;
--	bool supports_sleepmode;
--	int irq;
--	int ret;
--
--	nmk_chip = nmk_gpio_populate_chip(np, dev);
--	if (IS_ERR(nmk_chip)) {
--		dev_err(&dev->dev, "could not populate nmk chip struct\n");
--		return PTR_ERR(nmk_chip);
--	}
--
--	supports_sleepmode =
--		of_property_read_bool(np, "st,supports-sleepmode");
--
--	/* Correct platform device ID */
--	dev->id = nmk_chip->bank;
--
--	irq = platform_get_irq(dev, 0);
--	if (irq < 0)
--		return irq;
--
--	/*
--	 * The virt address in nmk_chip->addr is in the nomadik register space,
--	 * so we can simply convert the resource address, without remapping
--	 */
--	nmk_chip->sleepmode = supports_sleepmode;
--	spin_lock_init(&nmk_chip->lock);
--
--	chip = &nmk_chip->chip;
--	chip->parent = &dev->dev;
--	chip->request = gpiochip_generic_request;
--	chip->free = gpiochip_generic_free;
--	chip->get_direction = nmk_gpio_get_dir;
--	chip->direction_input = nmk_gpio_make_input;
--	chip->get = nmk_gpio_get_input;
--	chip->direction_output = nmk_gpio_make_output;
--	chip->set = nmk_gpio_set_output;
--	chip->dbg_show = nmk_gpio_dbg_show;
--	chip->can_sleep = false;
--	chip->owner = THIS_MODULE;
--
--	girq = &chip->irq;
--	gpio_irq_chip_set_chip(girq, &nmk_irq_chip);
--	girq->parent_handler = nmk_gpio_irq_handler;
--	girq->num_parents = 1;
--	girq->parents = devm_kcalloc(&dev->dev, 1,
--				     sizeof(*girq->parents),
--				     GFP_KERNEL);
--	if (!girq->parents)
--		return -ENOMEM;
--	girq->parents[0] = irq;
--	girq->default_type = IRQ_TYPE_NONE;
--	girq->handler = handle_edge_irq;
--
--	clk_enable(nmk_chip->clk);
--	nmk_chip->lowemi = readl_relaxed(nmk_chip->addr + NMK_GPIO_LOWEMI);
--	clk_disable(nmk_chip->clk);
--
--	ret = gpiochip_add_data(chip, nmk_chip);
--	if (ret)
--		return ret;
--
--	platform_set_drvdata(dev, nmk_chip);
--
--	dev_info(&dev->dev, "chip registered\n");
--
--	return 0;
--}
--
- static int nmk_get_groups_cnt(struct pinctrl_dev *pctldev)
- {
- 	struct nmk_pinctrl *npct = pinctrl_dev_get_drvdata(pctldev);
-@@ -1197,12 +524,12 @@ static const char *nmk_get_group_name(struct pinctrl_dev *pctldev,
- 
- static int nmk_get_group_pins(struct pinctrl_dev *pctldev, unsigned selector,
- 			      const unsigned **pins,
--			      unsigned *npins)
-+			      unsigned int *num_pins)
- {
- 	struct nmk_pinctrl *npct = pinctrl_dev_get_drvdata(pctldev);
- 
- 	*pins = npct->soc->groups[selector].grp.pins;
--	*npins = npct->soc->groups[selector].grp.npins;
-+	*num_pins = npct->soc->groups[selector].grp.npins;
- 	return 0;
- }
- 
-@@ -1533,7 +860,7 @@ static int nmk_pmx_set(struct pinctrl_dev *pctldev, unsigned function,
- {
- 	struct nmk_pinctrl *npct = pinctrl_dev_get_drvdata(pctldev);
- 	const struct nmk_pingroup *g;
--	static unsigned int slpm[NUM_BANKS];
-+	static unsigned int slpm[NMK_MAX_BANKS];
- 	unsigned long flags = 0;
- 	bool glitch;
- 	int ret = -EINVAL;
-@@ -1919,19 +1246,6 @@ static int nmk_pinctrl_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct of_device_id nmk_gpio_match[] = {
--	{ .compatible = "st,nomadik-gpio", },
--	{}
--};
--
--static struct platform_driver nmk_gpio_driver = {
--	.driver = {
--		.name = "gpio",
--		.of_match_table = nmk_gpio_match,
--	},
--	.probe = nmk_gpio_probe,
--};
--
- static SIMPLE_DEV_PM_OPS(nmk_pinctrl_pm_ops,
- 			nmk_pinctrl_suspend,
- 			nmk_pinctrl_resume);
-@@ -1945,12 +1259,6 @@ static struct platform_driver nmk_pinctrl_driver = {
- 	.probe = nmk_pinctrl_probe,
- };
- 
--static int __init nmk_gpio_init(void)
--{
--	return platform_driver_register(&nmk_gpio_driver);
--}
--subsys_initcall(nmk_gpio_init);
--
- static int __init nmk_pinctrl_init(void)
- {
- 	return platform_driver_register(&nmk_pinctrl_driver);
-diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik.h b/include/linux/gpio/gpio-nomadik.h
-similarity index 61%
-rename from drivers/pinctrl/nomadik/pinctrl-nomadik.h
-rename to include/linux/gpio/gpio-nomadik.h
-index 1ef2559bc571..0166ddb71f43 100644
---- a/drivers/pinctrl/nomadik/pinctrl-nomadik.h
-+++ b/include/linux/gpio/gpio-nomadik.h
-@@ -1,16 +1,74 @@
- /* SPDX-License-Identifier: GPL-2.0 */
--#ifndef PINCTRL_PINCTRL_NOMADIK_H
--#define PINCTRL_PINCTRL_NOMADIK_H
--
--#include <linux/kernel.h>
--#include <linux/types.h>
--
--#include <linux/pinctrl/pinctrl.h>
-+#ifndef __LINUX_GPIO_NOMADIK_H
-+#define __LINUX_GPIO_NOMADIK_H
- 
- /* Package definitions */
- #define PINCTRL_NMK_STN8815	0
- #define PINCTRL_NMK_DB8500	1
- 
-+#define GPIO_BLOCK_SHIFT 5
-+#define NMK_GPIO_PER_CHIP BIT(GPIO_BLOCK_SHIFT)
-+#define NMK_MAX_BANKS DIV_ROUND_UP(512, NMK_GPIO_PER_CHIP)
-+
-+/* Register in the logic block */
-+#define NMK_GPIO_DAT	0x00
-+#define NMK_GPIO_DATS	0x04
-+#define NMK_GPIO_DATC	0x08
-+#define NMK_GPIO_PDIS	0x0c
-+#define NMK_GPIO_DIR	0x10
-+#define NMK_GPIO_DIRS	0x14
-+#define NMK_GPIO_DIRC	0x18
-+#define NMK_GPIO_SLPC	0x1c
-+#define NMK_GPIO_AFSLA	0x20
-+#define NMK_GPIO_AFSLB	0x24
-+#define NMK_GPIO_LOWEMI	0x28
-+
-+#define NMK_GPIO_RIMSC	0x40
-+#define NMK_GPIO_FIMSC	0x44
-+#define NMK_GPIO_IS	0x48
-+#define NMK_GPIO_IC	0x4c
-+#define NMK_GPIO_RWIMSC	0x50
-+#define NMK_GPIO_FWIMSC	0x54
-+#define NMK_GPIO_WKS	0x58
-+/* These appear in DB8540 and later ASICs */
-+#define NMK_GPIO_EDGELEVEL 0x5C
-+#define NMK_GPIO_LEVEL	0x60
-+
-+/* Pull up/down values */
-+enum nmk_gpio_pull {
-+	NMK_GPIO_PULL_NONE,
-+	NMK_GPIO_PULL_UP,
-+	NMK_GPIO_PULL_DOWN,
-+};
-+
-+/* Sleep mode */
-+enum nmk_gpio_slpm {
-+	NMK_GPIO_SLPM_INPUT,
-+	NMK_GPIO_SLPM_WAKEUP_ENABLE = NMK_GPIO_SLPM_INPUT,
-+	NMK_GPIO_SLPM_NOCHANGE,
-+	NMK_GPIO_SLPM_WAKEUP_DISABLE = NMK_GPIO_SLPM_NOCHANGE,
-+};
-+
-+struct nmk_gpio_chip {
-+	struct gpio_chip chip;
-+	void __iomem *addr;
-+	struct clk *clk;
-+	unsigned int bank;
-+	void (*set_ioforce)(bool enable);
-+	spinlock_t lock;
-+	bool sleepmode;
-+	/* Keep track of configured edges */
-+	u32 edge_rising;
-+	u32 edge_falling;
-+	u32 real_wake;
-+	u32 rwimsc;
-+	u32 fwimsc;
-+	u32 rimsc;
-+	u32 fimsc;
-+	u32 pull_up;
-+	u32 lowemi;
-+};
-+
- /* Alternate functions: function C is set in hw by setting both A and B */
- #define NMK_GPIO_ALT_GPIO	0
- #define NMK_GPIO_ALT_A	1
-@@ -104,7 +162,7 @@ struct prcm_gpiocr_altcx_pin_desc {
- struct nmk_function {
- 	const char *name;
- 	const char * const *groups;
--	unsigned ngroups;
-+	unsigned int ngroups;
- };
- 
- /**
-@@ -141,13 +199,13 @@ struct nmk_pingroup {
-  */
- struct nmk_pinctrl_soc_data {
- 	const struct pinctrl_pin_desc *pins;
--	unsigned npins;
-+	unsigned int npins;
- 	const struct nmk_function *functions;
--	unsigned nfunctions;
-+	unsigned int nfunctions;
- 	const struct nmk_pingroup *groups;
--	unsigned ngroups;
-+	unsigned int ngroups;
- 	const struct prcm_gpiocr_altcx_pin_desc *altcx_pins;
--	unsigned npins_altcx;
-+	unsigned int npins_altcx;
- 	const u16 *prcm_gpiocr_registers;
- };
- 
-@@ -177,4 +235,42 @@ nmk_pinctrl_db8500_init(const struct nmk_pinctrl_soc_data **soc)
- 
- #endif
- 
--#endif /* PINCTRL_PINCTRL_NOMADIK_H */
-+#ifdef CONFIG_PINCTRL_DB8540
-+
-+void nmk_pinctrl_db8540_init(const struct nmk_pinctrl_soc_data **soc);
-+
-+#else
-+
-+static inline void
-+nmk_pinctrl_db8540_init(const struct nmk_pinctrl_soc_data **soc)
-+{
-+}
-+
-+#endif
-+
-+struct platform_device;
-+
-+/*
-+ * Symbols declared in gpio-nomadik used by pinctrl-nomadik. If pinctrl-nomadik
-+ * is enabled, then gpio-nomadik is enabled as well; the reverse if not always
-+ * true.
-+ */
-+void nmk_gpio_dbg_show_one(struct seq_file *s, struct pinctrl_dev *pctldev,
-+			   struct gpio_chip *chip, unsigned int offset,
-+			   unsigned int gpio);
-+void __nmk_gpio_make_output(struct nmk_gpio_chip *nmk_chip,
-+			    unsigned int offset, int val);
-+void __nmk_gpio_set_slpm(struct nmk_gpio_chip *nmk_chip, unsigned int offset,
-+			 enum nmk_gpio_slpm mode);
-+struct nmk_gpio_chip *nmk_gpio_populate_chip(struct device_node *np,
-+					     struct platform_device *pdev);
-+
-+/* Symbols declared in pinctrl-nomadik used by gpio-nomadik. */
-+#ifdef CONFIG_PINCTRL_NOMADIK
-+extern struct nmk_gpio_chip *nmk_gpio_chips[NMK_MAX_BANKS];
-+extern spinlock_t nmk_gpio_slpm_lock;
-+int __maybe_unused nmk_prcm_gpiocr_get_mode(struct pinctrl_dev *pctldev,
-+					    int gpio);
-+#endif
-+
-+#endif /* __LINUX_GPIO_NOMADIK_H */
+>>>> +		struct list_head *list, int new_order)
+>>>>  {
+>>>> -	return split_huge_page_to_list(&folio->page, list);
+>>>> +	return split_huge_page_to_list_to_order(&folio->page, list, new_or=
+der);
+>>>>  }
+>>>>
+>>>> -static inline int split_folio(struct folio *folio)
+>>>> +static inline int split_folio_to_order(struct folio *folio, int new=
+_order)
+>>>>  {
+>>>> -	return split_folio_to_list(folio, NULL);
+>>>> +	return split_folio_to_list_to_order(folio, NULL, new_order);
+>>>>  }
+>>>>
+>>>> +#define split_folio_to_list(f, l) split_folio_to_list_to_order(f, l=
+, 0)
+>>>> +#define split_folio(f) split_folio_to_order(f, 0)
+>>>> +
+>>>>  /*
+>>>>   * archs that select ARCH_WANTS_THP_SWAP but don't support THP_SWP =
+due to
+>>>>   * limitations in the implementation like arm64 MTE can override th=
+is to
+>>>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>>>> index ad7133c97428..d0e555a8ea98 100644
+>>>> --- a/mm/huge_memory.c
+>>>> +++ b/mm/huge_memory.c
+>>>> @@ -2718,11 +2718,14 @@ void vma_adjust_trans_huge(struct vm_area_st=
+ruct *vma,
+>>>>
+>>>>  static void unmap_folio(struct folio *folio)
+>>>>  {
+>>>> -	enum ttu_flags ttu_flags =3D TTU_RMAP_LOCKED | TTU_SPLIT_HUGE_PMD =
+|
+>>>> -		TTU_SYNC | TTU_BATCH_FLUSH;
+>>>> +	enum ttu_flags ttu_flags =3D TTU_RMAP_LOCKED | TTU_SYNC |
+>>>> +		TTU_BATCH_FLUSH;
+>>>>
+>>>>  	VM_BUG_ON_FOLIO(!folio_test_large(folio), folio);
+>>>>
+>>>> +	if (folio_test_pmd_mappable(folio))
+>>>> +		ttu_flags |=3D TTU_SPLIT_HUGE_PMD;
+>>>
+>>> Should we split this change out? I think it makes sense independent o=
+f this series?
+>>>
+>>
+>> Sure. Since multi-size THP is upstream, this avoid unnecessary code pa=
+th if
+>> the THP is not PMD-mapped.
+>>
+>>>> +
+>>>>  	/*
+>>>>  	 * Anon pages need migration entries to preserve them, but file
+>>>>  	 * pages can simply be left unmapped, then faulted back on demand.=
 
--- 
-2.43.1
+>>>> @@ -2756,7 +2759,6 @@ static void lru_add_page_tail(struct page *hea=
+d, struct page *tail,
+>>>>  		struct lruvec *lruvec, struct list_head *list)
+>>>>  {
+>>>>  	VM_BUG_ON_PAGE(!PageHead(head), head);
+>>>> -	VM_BUG_ON_PAGE(PageCompound(tail), head);
+>>>>  	VM_BUG_ON_PAGE(PageLRU(tail), head);
+>>>>  	lockdep_assert_held(&lruvec->lru_lock);
+>>>>
+>>>> @@ -2777,7 +2779,8 @@ static void lru_add_page_tail(struct page *hea=
+d, struct page *tail,
+>>>>  }
+>>>>
+>>>>  static void __split_huge_page_tail(struct folio *folio, int tail,
+>>>> -		struct lruvec *lruvec, struct list_head *list)
+>>>> +		struct lruvec *lruvec, struct list_head *list,
+>>>> +		unsigned int new_order)
+>>>>  {
+>>>>  	struct page *head =3D &folio->page;
+>>>>  	struct page *page_tail =3D head + tail;
+>>>> @@ -2847,10 +2850,15 @@ static void __split_huge_page_tail(struct fo=
+lio *folio, int tail,
+>>>>  	 * which needs correct compound_head().
+>>>>  	 */
+>>>>  	clear_compound_head(page_tail);
+>>>> +	if (new_order) {
+>>>> +		prep_compound_page(page_tail, new_order);
+>>>> +		folio_prep_large_rmappable(page_folio(page_tail));
+>>>> +	}
+>>>>
+>>>>  	/* Finally unfreeze refcount. Additional reference from page cache=
+=2E */
+>>>> -	page_ref_unfreeze(page_tail, 1 + (!folio_test_anon(folio) ||
+>>>> -					  folio_test_swapcache(folio)));
+>>>> +	page_ref_unfreeze(page_tail,
+>>>> +		1 + ((!folio_test_anon(folio) || folio_test_swapcache(folio)) ?
+>>>> +			     folio_nr_pages(page_folio(page_tail)) : 0));
+>>>>
+>>>>  	if (folio_test_young(folio))
+>>>>  		folio_set_young(new_folio);
+>>>> @@ -2868,7 +2876,7 @@ static void __split_huge_page_tail(struct foli=
+o *folio, int tail,
+>>>>  }
+>>>>
+>>>>  static void __split_huge_page(struct page *page, struct list_head *=
+list,
+>>>> -		pgoff_t end)
+>>>> +		pgoff_t end, unsigned int new_order)
+>>>>  {
+>>>>  	struct folio *folio =3D page_folio(page);
+>>>>  	struct page *head =3D &folio->page;
+>>>> @@ -2877,10 +2885,11 @@ static void __split_huge_page(struct page *p=
+age, struct list_head *list,
+>>>>  	unsigned long offset =3D 0;
+>>>>  	unsigned int nr =3D thp_nr_pages(head);
+>>>>  	int i, nr_dropped =3D 0;
+>>>> +	unsigned int new_nr =3D 1 << new_order;
+>>>>  	int order =3D folio_order(folio);
+>>>>
+>>>>  	/* complete memcg works before add pages to LRU */
+>>>> -	split_page_memcg(head, order, 0);
+>>>> +	split_page_memcg(head, order, new_order);
+>>>>
+>>>>  	if (folio_test_anon(folio) && folio_test_swapcache(folio)) {
+>>>>  		offset =3D swp_offset(folio->swap);
+>>>> @@ -2893,8 +2902,8 @@ static void __split_huge_page(struct page *pag=
+e, struct list_head *list,
+>>>>
+>>>>  	ClearPageHasHWPoisoned(head);
+>>>>
+>>>> -	for (i =3D nr - 1; i >=3D 1; i--) {
+>>>> -		__split_huge_page_tail(folio, i, lruvec, list);
+>>>> +	for (i =3D nr - new_nr; i >=3D new_nr; i -=3D new_nr) {
+>>>> +		__split_huge_page_tail(folio, i, lruvec, list, new_order);
+>>>>  		/* Some pages can be beyond EOF: drop them from page cache */
+>>>>  		if (head[i].index >=3D end) {
+>>>>  			struct folio *tail =3D page_folio(head + i);
+>>>> @@ -2910,29 +2919,41 @@ static void __split_huge_page(struct page *p=
+age, struct list_head *list,
+>>>>  			__xa_store(&head->mapping->i_pages, head[i].index,
+>>>>  					head + i, 0);
+>>>>  		} else if (swap_cache) {
+>>>> +			/*
+>>>> +			 * split anonymous THPs (including swapped out ones) to
+>>>> +			 * non-zero order not supported
+>>>> +			 */
+>>>> +			VM_WARN_ONCE(new_order,
+>>>> +				"Split swap-cached anon folio to non-0 order not supported");
+>>>
+>>> Why isn't it supported? Even if it's not supported, is this level the=
+ right
+>>> place to enforce these kinds of policy decisions? I wonder if we shou=
+ld be
+>>> leaving that to the higher level to decide?
+>>
+>> Is the swap-out small-size THP without splitting merged? This needs th=
+at patchset.
+>
+> No not yet. I have to respin it. Its on my todo list.
+>
+> I'm not sure I understand the dependency though?
 
+IIUC, swap cache only supports one cluster size, HPAGE_PMD_NR, so splitti=
+ng
+a PMD-size swapcached folio will need to split a cluster to smaller ones,=
+ which
+needs your patchset support. Let me know if I get it wrong.
+
+>
+>> You are right that a warning here is not appropriate. I will fail the =
+splitting
+>> if the folio is swapcached and going to be split into >0 order.
+>>
+>>>>  			__xa_store(&swap_cache->i_pages, offset + i,
+>>>>  					head + i, 0);
+>>>>  		}
+>>>>  	}
+>>>>
+>>
+>>
+>> --
+>> Best Regards,
+>> Yan, Zi
+
+
+--
+Best Regards,
+Yan, Zi
+
+--=_MailMate_B8C3C027-FEFE-458C-95A5-CEBF71F01278_=
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename=signature.asc
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJDBAEBCgAtFiEE6rR4j8RuQ2XmaZol4n+egRQHKFQFAmXM6hcPHHppeUBudmlk
+aWEuY29tAAoJEOJ/noEUByhUgiEP/18dlvMYmJSIGwrUYqz5rzrfeiNbQpKJhI7w
+fcSyv0g209J8PdYP9lwO/7r+gMFkuC7bBv9WdH5smmNx5RifMjV8rXwlo+DW1Jmi
+GqVY/yKXb2dJubrj+L7ciPUWM7he1+BCSHk7DATRXRFIHK3nuxvLfXlGb99A3I+H
+uoMCGXEKDf3ApiauMHcTQrgkLd8lZXDdtC+YDcfzOlA3ELbzco7yO8xWkr0Y4dHf
+1rLPD7G9F93GjpHGenEenDXEVpr8wgOsMJHUn3UcRR9K2KuSAUvEa5VdtG+FtdFQ
+ueOh45Y6CdO0LQF3oogNp3Wnfe1uFFll83qcKMsJ70Aen8uhSXIENiuHa9q4MH8z
+Gc2P7BNFCNKlBMdnGxNRHdomU3a3TeUeLHMR9nJhhhhmqj1q06b6BK9PY5+AsVYL
+6R+eMSakbREf8I9YmJZwfUL2L0+i4XHnoJUeCSmw3rLgBNT6y+tWmUoWd7W9XIkK
+oghfNdeNRLvY2tpdr2OnZCSDQFem3w74sgtLPqU8zO1QY+mmWjU71j0AkxMuUSPj
++Si/uZEVgBdkyQepMjnNnxIiSbMNpg421CdVyAWYW3RtAXugC7OGg6qHRpasTaMe
+hUUj6UuTbDyZ8bSwTIiD6lsYhEI4F3f0UPUIyi5j9VrIg0vvXYM9qF1KYmB+PN2j
+V2OZIL5C
+=XGPg
+-----END PGP SIGNATURE-----
+
+--=_MailMate_B8C3C027-FEFE-458C-95A5-CEBF71F01278_=--
