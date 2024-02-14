@@ -1,97 +1,116 @@
-Received: from bee.tesarici.cz (bee.tesarici.cz [77.93.223.253])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12CFC2E3FD;
-	Wed, 14 Feb 2024 16:31:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.223.253
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51BB060254;
+	Wed, 14 Feb 2024 16:32:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707928282; cv=none; b=K0gssFFeSpPzYQ+khkCUeP12WhnFoAhgRDq6xO4yhOWGIRHh0EY49JyMf4ex1mzUeLzRE3yIdJ57Rf5cSvSsN/7+6qMR1/vCV3RBNUlldx292jwnl7xWvGvPupHCl0pCJ3QvjKzEpNd8AVlGSsGDMqTJxkMH53ryU5zycF7zdT8=
+	t=1707928370; cv=none; b=l8UxkHCPaqa5Uau9h6SmEtWeawdKmLeSTk6Q/mZK1KpCLhLyjSJT6yK4DOu4P0Ez8pnGHwTSZECPp70vifHDkQsm87sC10gvv7ektAkOIeUTny0CHET5HcsZI68aRrYqfYeTQOAr3yszjMZQEoRNw0ibH9XMqCALeDzo2uhM7Qg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707928282; c=relaxed/simple;
-	bh=j+BTeatZZlf1h9pl+OsDVOfCSlmG99/+7fK0HV5XrIc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dLFTLGuvq5UOyhJyCSOh3ZFZEeZA30VIi8c7z4a3TTrh1hrrLPYZ3f8NKC7duZnfqsF7/RIhph4lW6NIhySZ90konZQ0/R4go6GVLmq7tTzIRyDzpTaR1c3/B9hZ7CGyfLGfzR30QhXrYvUBwsWewiEGBUZ5oUf2zT2F1FQRaxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=ncSNmTFH; arc=none smtp.client-ip=77.93.223.253
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
+	s=arc-20240116; t=1707928370; c=relaxed/simple;
+	bh=03sJ2hDczb8lu598NQs1X/W4Y9/EjHIxR85MWTfK+Lw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pbLplNxghDh4kyiuYEHhaOZOLkk1tzqAmvM+CzNTOSdwKKebDEVkQs8sz3V7uIuE1Rg9bd3RE1zORc7aSasEmGgxo0mAOFPJl2AfCwCNAINvFQBY/1YarHJPLcNqDmDWpiUqnyWHpN6xL368bfYxcNsz31Z1ajkja/TXXpO6PkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mOnBVfN/; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="ncSNmTFH"
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id D27391A2E9E;
-	Wed, 14 Feb 2024 17:31:13 +0100 (CET)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
-	t=1707928274; bh=j+BTeatZZlf1h9pl+OsDVOfCSlmG99/+7fK0HV5XrIc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ncSNmTFHLJBf2f3Iy6uzxBbQWC3Imeomo/GUJ524Kz418qGLs366OJ7P06cdfu7xh
-	 1A7ifrfNxDqyo1HQ6W/Hw9kpapCU8BocN6elIuysMWLswEisfTxkB24TCvcM2Uez78
-	 nrrN+RGpWtVklfLfu6axfJ89ihttLC6rmZ0yzBGbolVbMZkNMqLIr9FMqh6H6Nmk8e
-	 eBH56GDA++NDthFKVf+RuQGtrkMxLraejRphC7tRqI4vCsDwe43R5mu+oYXEGiR1Ov
-	 G2LGoifR2/X52qlkWryvxEwMfV8ZJqx28SMFxl+SFp15N9EhGb0/xKfj8wn0IiYIR6
-	 esxRE4Z054p2g==
-Date: Wed, 14 Feb 2024 17:31:12 +0100
-From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Petr Tesarik
- <petrtesarik@huaweicloud.com>, Jonathan Corbet <corbet@lwn.net>, David
- Kaplan <david.kaplan@amd.com>, Larry Dewey <larry.dewey@amd.com>, Elena
- Reshetova <elena.reshetova@intel.com>, Carlos Bilbao
- <carlos.bilbao@amd.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Randy Dunlap <rdunlap@infradead.org>, Petr Mladek <pmladek@suse.com>, "Paul
- E. McKenney" <paulmck@kernel.org>, Eric DeVolder
- <eric.devolder@oracle.com>, Marc =?UTF-8?B?QXVyw6hsZQ==?= La France
- <tsi@tuyoix.net>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, Nhat Pham
- <nphamcs@gmail.com>, "Christian Brauner (Microsoft)" <brauner@kernel.org>,
- Douglas Anderson <dianders@chromium.org>, Luis Chamberlain
- <mcgrof@kernel.org>, Guenter Roeck <groeck@chromium.org>, Mike Christie
- <michael.christie@oracle.com>, Kent Overstreet <kent.overstreet@linux.dev>,
- Maninder Singh <maninder1.s@samsung.com>, "open list:DOCUMENTATION"
- <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- Roberto Sassu <roberto.sassu@huaweicloud.com>, Petr Tesarik
- <petr.tesarik1@huawei-partners.com>
-Subject: Re: [PATCH v1 5/5] sbm: SandBox Mode documentation
-Message-ID: <20240214173112.138e0e29@meshulam.tesarici.cz>
-In-Reply-To: <2024021415-jokester-cackle-2923@gregkh>
-References: <20240214113035.2117-1-petrtesarik@huaweicloud.com>
-	<20240214113035.2117-6-petrtesarik@huaweicloud.com>
-	<20240214053053.982b48d993ae99dad1d59020@linux-foundation.org>
-	<2024021425-audition-expand-2901@gregkh>
-	<20240214155524.719ffb15@meshulam.tesarici.cz>
-	<2024021415-jokester-cackle-2923@gregkh>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mOnBVfN/"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41EGRJQv006641;
+	Wed, 14 Feb 2024 16:32:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=WKALQ+lDwn3emaVlHdtwZPAsOGX41pzOtb3nal5YbHw=;
+ b=mOnBVfN/M6FlaiowH1cEnmD2IShhFtEflD+UyjiLFT/VhzGzwfp0FUb+lljv45D8qLy9
+ guO8wARGgCFNUcTed07mgTwsoy2fpC5NbCjrFEi8GWLvDKWwBRMpyJl6qBWbZJp8xAh/
+ OHuLi+Sq0gJuqXjy2ubyZV/2D+Cgt57P+b6FTd8PEF7HrkM/xcpC3rPFBP4TcgzD6MJd
+ 155h7v7nN/vll1SuA9eHOhvxwZg2BmRHhv7kwvwbO+FohnKJLd7a/plcY1iG/P0g+5xA
+ QR0BhSVT2uNaafuAF2i2Spyds5clhFG8RaqGuIXwMUJI0P45en1f20Wndt7LRw1TEaY1 jQ== 
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w912385rk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 Feb 2024 16:32:47 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41EDtcN9016184;
+	Wed, 14 Feb 2024 16:32:46 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w6mympwda-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 Feb 2024 16:32:46 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41EGWe0162914960
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 14 Feb 2024 16:32:42 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 625072004B;
+	Wed, 14 Feb 2024 16:32:40 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 52B1E20043;
+	Wed, 14 Feb 2024 16:32:40 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 14 Feb 2024 16:32:40 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
+	id 145D6E1774; Wed, 14 Feb 2024 17:32:40 +0100 (CET)
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Alexandra Winter <wintera@linux.ibm.com>,
+        Thorsten Winkler <twinkler@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net/iucv: fix the allocation size of iucv_path_table array
+Date: Wed, 14 Feb 2024 17:32:40 +0100
+Message-Id: <20240214163240.2537189-1-agordeev@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: aci-nP1IVeIgb66j2QNZ_uqq5RFYFdm8
+X-Proofpoint-ORIG-GUID: aci-nP1IVeIgb66j2QNZ_uqq5RFYFdm8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-14_09,2024-02-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
+ priorityscore=1501 phishscore=0 suspectscore=0 bulkscore=0
+ lowpriorityscore=0 mlxscore=0 spamscore=0 adultscore=0 malwarescore=0
+ mlxlogscore=900 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311290000 definitions=main-2402140129
 
-On Wed, 14 Feb 2024 16:11:05 +0100
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+iucv_path_table is a dynamically allocated array of pointers to
+struct iucv_path items. Yet, its size is calculated as if it was
+an array of struct iucv_path items.
 
-> On Wed, Feb 14, 2024 at 03:55:24PM +0100, Petr Tesa=C5=99=C3=ADk wrote:
-> > OK, so why didn't I send the whole thing?
-> >=20
-> > Decomposition of the kernel requires many more changes, e.g. in linker
-> > scripts. Some of them depend on this patch series. Before I go and
-> > clean up my code into something that can be submitted, I want to get
-> > feedback from guys like you, to know if the whole idea would be even
-> > considered, aka "Fail Fast". =20
->=20
-> We can't honestly consider this portion without seeing how it would
-> work, as we don't even see a working implementation that uses it to
-> verify it at all.
->=20
-> The joy of adding new frameworks is that you need a user before anyone
-> can spend the time to review it, sorry.
+Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+---
+ net/iucv/iucv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thank your for a quick assessment. Will it be sufficient if I send some
-code for illustration (with some quick&dirty hacks to bridge the gaps),
-or do you need clean and nice kernel code?
+diff --git a/net/iucv/iucv.c b/net/iucv/iucv.c
+index 9e62783e6acb..5b56ae6612dd 100644
+--- a/net/iucv/iucv.c
++++ b/net/iucv/iucv.c
+@@ -156,7 +156,7 @@ static char iucv_error_pathid[16] = "INVALID PATHID";
+ static LIST_HEAD(iucv_handler_list);
+ 
+ /*
+- * iucv_path_table: an array of iucv_path structures.
++ * iucv_path_table: array of pointers to iucv_path structures.
+  */
+ static struct iucv_path **iucv_path_table;
+ static unsigned long iucv_max_pathid;
+@@ -545,7 +545,7 @@ static int iucv_enable(void)
+ 
+ 	cpus_read_lock();
+ 	rc = -ENOMEM;
+-	alloc_size = iucv_max_pathid * sizeof(struct iucv_path);
++	alloc_size = iucv_max_pathid * sizeof(*iucv_path_table);
+ 	iucv_path_table = kzalloc(alloc_size, GFP_KERNEL);
+ 	if (!iucv_path_table)
+ 		goto out;
+-- 
+2.40.1
 
-Petr T
