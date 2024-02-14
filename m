@@ -1,124 +1,180 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C682613DB88;
-	Wed, 14 Feb 2024 19:28:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F6412D76E;
+	Wed, 14 Feb 2024 19:29:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707938884; cv=none; b=J5fPF6p/e6rtkiTKxTi95wlHqZ98Tw2v4JqD56qdDLfT2qBQ0KdiTVjbcqqgVgGzYgjGjTsXSe+AeHGU8fqP5MkVqtG8ojpdokX5BjprCe9JpX+5XoZ2IDff7ssjqKpxKRq8dlN2jTTRENNkdtQv6Gk0MUVFAtkmqposZ5c4lzo=
+	t=1707938978; cv=none; b=bDLOmUZXs/4iL4QZys9CALo5oI6nStJIpNegc17Eoyir216y3ty7nnYsIYmX8yPvCryzeM6hQJzQth1oxKeeZDE1TTtqibZmF0RmI53waIH69c3cWkJzUZwNTwa/wJFjc0BXvxNMDrRspFCS+whP5OUxXt/FNd/0DwLtJ1rBTjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707938884; c=relaxed/simple;
-	bh=krKW6FufyrqnEsJjvhkOclRGG5wwZHLlEbv96z5uKcQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Z6dulQ9bdFwaNHFKK0xpM20/ysheqKp5ga5RBYluvOP4JxCcwkEp7jzbh9inB3I+CGhYqfzAw+3dThpxf0BAKHf3FQIupZYb1DPldrkogCu7fMwoH2bBx21Sg473SoJnixpVUVaCb3d6h2B36fioM+MbfLbsJ4voAHkggT+0dqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=ExxGDG4H; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
+	s=arc-20240116; t=1707938978; c=relaxed/simple;
+	bh=Nu/AiYO0cZHPXxcq7qHdK3J+BhmArbnGSgTitnJB4/w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XmNSJyiQCkQ6X1HVSWqiD/x9/VWWOAJctpzm0UrrZyFEzHZK2mJFaBz5SZaqdOyl8Bb/AMf9Y8tJErayiAq2K9pxGj0Ho2OV7NN7oqOhx+5PwL2AHKBhgdTl6c7Cjh2T+LRcvA39h6rc2tL30r7Hp9q3fdhfKmigMmpaEX1mWyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G3eWZzYN; arc=none smtp.client-ip=209.85.219.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="ExxGDG4H"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d9b2400910so1152285ad.0;
-        Wed, 14 Feb 2024 11:28:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G3eWZzYN"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-68ce2fe86e3so698266d6.3;
+        Wed, 14 Feb 2024 11:29:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707938976; x=1708543776; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bxKxd0YOf3Ety49fAv0PO6SpvuAL0dCmkIegxDtI/W8=;
+        b=G3eWZzYNaS2sIh2QjBPVkSq8KmF4bCMudktCfS7HT5/N1+OcU/cT+I5YLwpEysKmZ+
+         Tf1DVPxGCMCl5j2xcxkejcLK72qBt/VO/07yvk1ntX90GFJ5hUQvRlxt2ZoJu0JIgR4R
+         YtgxQkpmFwPoZHWMU16BAuxdIOK5ykQa7g6mJ/3kfNgd6uSw3L9Y1G6E6kiA7lz8acNl
+         hgzW+r4IwuBMXaMGSsTU+pST0QCCfzZU12AL9QIgEni/byxwDxdvV46+l7oOwf5+Ggau
+         SvBvJM3aIDMGrANthisLFiXNOLtfaR30I70oPR0jya6FcL/4ePugCQE5/hMQgOlykilv
+         NNdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707938882; x=1708543682;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:dkim-signature:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SW2EVXlkBr3rgXstlJZO0zqxkNTOtfGuPtYbWFp/giM=;
-        b=jzId0Czz46pt0AtXWzTekXEQG+3sbmn1DWYr/k3hZalTC4W9iOHJ+A+sMLZlw/jGfZ
-         xzKGnKvj4qF6EpPs+HakMfUMjMS8H+lfLBoREiXnuxp1mdBUBbB/1FgjXzS5924L3gpT
-         F+jIRQPgvxz0o8NjaLyjGHPfPupix+Ab7nxluJ3z8kaNJkX6P9NmGacIqONGcnpNMkD4
-         pHRnlMGSdLhLEY7pr0ob00FSeyoSi5lcs6SwPOT3lfOG+lTIwvcEfs8ze9sLKUlN0O7C
-         nyrHhhJSDB1XrjOg9adIdpjAL97DYJXAlY3nCVMGMZ3lCuS0TpqGZ3XGhN4VL0JAPxiz
-         tUzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWRwrzJVkQRk6bpzcBbg4JqbEQ4QBMMMOHXRlujnd/DnSRh+dp7BfMBU+d4kJIhql1/HwiQiB7dFGjFFnMJu6npOul3bJGZbq993ZtgUs56C7Tm/XQ8DPyopjpVbwfY+3+KTpAXhmmh67A=
-X-Gm-Message-State: AOJu0Yxtfs09o5E11DgWoBG4ZH4iSctzgbO5nf3raTArc6x2CatCUeDn
-	HhBjQ15PXYbBT7xlzgvxa+BmT9k9l3hOvcwMVyBpZB3auTaLfM5h
-X-Google-Smtp-Source: AGHT+IFfGbZuAKSoIipQ/AuSt4XRcAoPLUj2tmOBYt6LOxRikAJhgLvwB5Ih9ElCDzXfq8dY46oA7g==
-X-Received: by 2002:a17:903:32c6:b0:1d9:adc9:2962 with SMTP id i6-20020a17090332c600b001d9adc92962mr4216641plr.20.1707938882014;
-        Wed, 14 Feb 2024 11:28:02 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVNr2uJ9kjnrGCOQC9BNLwWgg0FTNhR81r3mhUOmcxEJOT46yMDQ2YE9PySMXH9JejYyLfBYad23Xt/qtP4pPO7VaCiW5o6cRBaLbImdxN8Ea1NBJL/n/vkMXS+JbXWFt4TGJQbxO8QSVNbOlI0qMyY8fs9rdBzMpEusKyCRENQa2meTvVnw65ziaJRTjSACAWZOqJbCLVARgAiekH+t3uAQ08tn0XAp8sd9nu7H5VACcHMwU9UDTqQnBR4BeAtg5VErA==
-Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id kk11-20020a170903070b00b001d8a93fa5b1sm2269628plb.131.2024.02.14.11.28.01
+        d=1e100.net; s=20230601; t=1707938976; x=1708543776;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bxKxd0YOf3Ety49fAv0PO6SpvuAL0dCmkIegxDtI/W8=;
+        b=WpCc29GUjfJFmspWqUZG2THSqkyJ3AgqTrZH6WJV29Gfflqw1uW2QrKh9CtqwL4/bC
+         ewKM1ScrSTtsAm847OVANcFxvaAnCmkXuJGsUifnMvK0AvIR3Ueb4hdRf1x5NfxkC/bA
+         nRkvMuvHLTMdS8GCLKf6uuXVe4uyYvBc5b3Nw9ut/xpkZmAUqfY7WNmb5gjzJbm5xCVl
+         I0l3RvcgBJYWAAhxP/6rCr9RvqHGvI+TtLUi21AQauBEUPi9QRbd9lyZ0SS6aw9AjRbp
+         DhIQuJvgbrQdUEsDrl/RnRYWPUFTguHKB6l3LURnqOLHikg0LdSZzk5Fwh0/6KzupjWV
+         qHvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVZihp45Slsu+GbVCPpvvFYgCnNesDRAXdwhJUu3u2YQqOn41fx8cGX48MqNz4X0R1+XhcAINt9O1BodsT7rlbheXZgqGuCyk/diY4ZOWJ+6J3MH7TxEJaUspqe0okl22hhbyfZHp0LjBoGTus=
+X-Gm-Message-State: AOJu0YyOf6E8fw3gH4On7U648YuzOrGtbXeElqz8imI2/Ndk4T4aO8OA
+	S+u8/oa2byF4FTLlc0VQ2EBlUdJ817d7Ant15w9euVGYjqT2bmmJ
+X-Google-Smtp-Source: AGHT+IFR+G2jABSWo8VjAzNAPcu10ITYHuaYab0euOGfRiZrRTKb/GJdEjEDdbw0PJ7e/lR17O6mkw==
+X-Received: by 2002:a0c:cb0c:0:b0:68f:10bf:6ec9 with SMTP id o12-20020a0ccb0c000000b0068f10bf6ec9mr863632qvk.13.1707938975741;
+        Wed, 14 Feb 2024 11:29:35 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVo4GFgA+hc09NEfLHstdTrSzSAKE5leRPjHoIEvGVv8+hQwzV6TnbBhi71fBYjns5hCpYrVOJxMvT9z4+L0XXLR+yQZaHk2XXcTU8Bh1gq68SzaKLNvZ27fWc4i7MztR0ZnppI+l5apDBp2HLU5pQ/w0AEFlBwMryQmjrstyHdJiF+p78xdPHQIWVyQ7v8Xb++xVjC+gNc8FKZV/+NkWwAfsBtUSr9IEAK5fheZ7mP839UUbTW1ZoMLigyV03Uube9XrJoIlqbD3+dmTdWQ6RI6rAgiXVQ7KoC+66OJMav5cDxM3jAgEhGDlKV8S0JEolPQ2hgX1uXmBXm1vLvh+o9anZdneF1ck26Vw+wGw/ycihKy6c8M95p/hO+
+Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id d8-20020a0cf6c8000000b0068cbc630dc8sm2555319qvo.49.2024.02.14.11.29.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Feb 2024 11:28:01 -0800 (PST)
-From: "Ricardo B. Marliere" <ricardo@marliere.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2024; t=1707938880;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SW2EVXlkBr3rgXstlJZO0zqxkNTOtfGuPtYbWFp/giM=;
-	b=ExxGDG4HkIj1oisfc/xBYlb83uf+EJVkHyY++SDgkc95zRxC5dMn62sB0ubUZ9MmGZ//Ve
-	lIF/ReQzCklcu8k5GEkXFg8Et4Oyf8JMeuqB3qJDimH9K+Zjzb6y6TWjvbbln2aQLXkSjo
-	9a82NqA3wef3FOOC/DioCZN13IuEG+DQcl1aHqC1Dmh7BSbeVJz39Nk8PBDTUEXX0elzk2
-	BLpIxKjaxPDeaMxBSmX++g6iWbO5mf0bDTZYMrw76JUkqShALd/iWaiRQpGN2KqbN3moMP
-	Z+jYdDVMOGEbXWEo/bmczCW9woQefjvDnjsUueUdWw9Z0HF0Br0IUu23wasUig==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-Date: Wed, 14 Feb 2024 16:28:29 -0300
-Subject: [PATCH 2/2] ALSA: seq: make snd_seq_bus_type const
+        Wed, 14 Feb 2024 11:29:35 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id 8D2441200066;
+	Wed, 14 Feb 2024 14:29:34 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Wed, 14 Feb 2024 14:29:34 -0500
+X-ME-Sender: <xms:nhTNZVxtpzUWzm4CTVRgyfgUuZ16GiEBTgd2LXGzuMROIkarYhwVcQ>
+    <xme:nhTNZVRUUCW0Hc797rQ0EBQJ2ORh6SmRVg5YgQHDdB-HfmQPJUQY_Y3wxyXZ5kA9N
+    zVFwEyLsCdRGrqh7g>
+X-ME-Received: <xmr:nhTNZfW3x5uUh7eVfuHhCQ4NA9ndoA38hXwoze-Z2sp24HeTiOuA-6KRA7UO4g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudejgdduvdeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhu
+    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
+    htthgvrhhnpeejtefftdfgueehgffhkedttddtgeetvdeukeetueeggffhhefffeeuledu
+    ieefveenucffohhmrghinhepiihulhhiphgthhgrthdrtghomhenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgr
+    uhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsoh
+    hquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:nhTNZXjdDhQUwftC2U5qVzOtiUfru18ci223bgIVxAMwRVFC-9jiSg>
+    <xmx:nhTNZXDgMVygXH49bJFVXeY9FPLynR-FUP8OD88nHKAILjsS-GBI8A>
+    <xmx:nhTNZQLMB5m0YngTOTxNybbsn8q7cJ3aVZeSmI27gKaBO5ZY0JAejQ>
+    <xmx:nhTNZULjEFrIzDqIU44CbbAD-NUqnfvSkUgvu2iCPRmEFr31SPyIs1JOYHg>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 14 Feb 2024 14:29:34 -0500 (EST)
+Date: Wed, 14 Feb 2024 11:27:49 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Danilo Krummrich <dakr@redhat.com>
+Cc: ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@samsung.com, aliceryhl@google.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] rust: str: add {make,to}_{upper,lower}case() to
+ CString
+Message-ID: <Zc0UNUGbmmBlzBAv@boqun-archlinux>
+References: <20240214172505.5044-1-dakr@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240214-bus_cleanup-alsa-v1-2-8fedbb4afa94@marliere.net>
-References: <20240214-bus_cleanup-alsa-v1-0-8fedbb4afa94@marliere.net>
-In-Reply-To: <20240214-bus_cleanup-alsa-v1-0-8fedbb4afa94@marliere.net>
-To: Johannes Berg <johannes@sipsolutions.net>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc: linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, 
- linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Ricardo B. Marliere" <ricardo@marliere.net>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1035; i=ricardo@marliere.net;
- h=from:subject:message-id; bh=krKW6FufyrqnEsJjvhkOclRGG5wwZHLlEbv96z5uKcQ=;
- b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlzRRhl5Veu7uhBrVI+1uU+rR4q9IbJhifdb9TU
- N+d17t0QdmJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZc0UYQAKCRDJC4p8Y4ZY
- pua5EACuVYFKzDW/TNKVRiEKvBIwgkmSnbmvzLYBd//6zcN/EAmhfhvISk2n9yBPuubxPSZaaxn
- RqRssHLBSRa1iXhKOvZXLcO6w4JAvMSpsQItJWa1JjBhBbiCyGvFqjzT1nMR7UIJ9ygrJxm5sin
- BpR/KI9reM1gxTPJwDCt3TubQKaaH8CkcX9uMDP2bchSDnQ5209TEhdocOZ3NReMxnm2ry5Szce
- 0x63cr2s6aAKiETtlrjTDMYIIcjFmH7ZSArvFGGcjxijIDBfb2sj3yxF9e2xKBL9RyDBY5xS3rW
- B7JHq6CngM/y0FV8xzlF7Dt7SoW5eEZKVFQBdMwRwQFfjA+5hc1eVSHXCyKVYM02dKvYUtKw1Z9
- xf2JfFQicxO2BJlDyGq0XUj3yNxEo0TXIeWjCKsDLOWD/cLS6LsSlZuUkwPFbyZrxQmfuTrwAWu
- 44agkqrnN0TkX8NggIw2mYTOULjDWAFuRups2m4TfBhd+G/Rf3KqRoJzKfqb8XETovkNlHCt/GP
- nouPP+s1xHBga6enpHkwe1geOAkFmtvCPkLM7ZEnGSLRiE/neQExxHJJ9+ZRK4fclXGpADPv2b/
- +LFqX9LvwU2qa5tcINF5yMW6AEOFCheXlE/15rHjKff8s5MkkAz4ZI8mMsDDFoRTTNPuz18gIn9
- IyMwkxY0ce06jZQ==
-X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
- fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240214172505.5044-1-dakr@redhat.com>
 
-Since commit d492cc2573a0 ("driver core: device.h: make struct
-bus_type a const *"), the driver core can properly handle constant
-struct bus_type, move the snd_seq_bus_type variable to be a constant
-structure as well, placing it into read-only memory which can not be
-modified at runtime.
+On Wed, Feb 14, 2024 at 06:24:10PM +0100, Danilo Krummrich wrote:
+> Add functions to convert a CString to upper- / lowercase, either
+> in-place or by creating a copy of the original CString.
+> 
+> Naming followes the one from the Rust stdlib, where functions starting
+> with 'to' create a copy and functions starting with 'make' perform an
+> in-place conversion.
+> 
+> This is required by the Nova project (GSP only Rust successor of
+> Nouveau) to convert stringified enum values (representing different GPU
+> chipsets) to strings in order to generate the corresponding firmware
+> paths. See also [1].
+> 
+> [1] https://rust-for-linux.zulipchat.com/#narrow/stream/288089-General/topic/String.20manipulation.20in.20kernel.20Rust
+> 
+> Signed-off-by: Danilo Krummrich <dakr@redhat.com>
+> ---
+> Changes in V3:
+>   - add an `impl DerefMut for CString`, such that these functions can be defined
+>     for `CStr` as `&mut self` and still be called on a `CString`
+> Changes in V2:
+>   - expand commit message mentioning the use case
+>   - expand function doc comments to match the ones from Rust's stdlib
+>   - rename to_* to make_* and add the actual to_* implementations
+> ---
+>  rust/kernel/str.rs | 81 +++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 80 insertions(+), 1 deletion(-)
+> 
+> diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
+> index 7d848b83add4..02d6e510b852 100644
+> --- a/rust/kernel/str.rs
+> +++ b/rust/kernel/str.rs
+> @@ -5,7 +5,7 @@
+>  use alloc::alloc::AllocError;
+>  use alloc::vec::Vec;
+>  use core::fmt::{self, Write};
+> -use core::ops::{self, Deref, Index};
+> +use core::ops::{self, Deref, DerefMut, Index};
+>  
+>  use crate::{
+>      bindings,
+> @@ -143,6 +143,19 @@ pub const fn from_bytes_with_nul(bytes: &[u8]) -> Result<&Self, CStrConvertError
+>          unsafe { core::mem::transmute(bytes) }
+>      }
+>  
+> +    /// Creates a mutable [`CStr`] from a `[u8]` without performing any
+> +    /// additional checks.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// `bytes` *must* end with a `NUL` byte, and should only have a single
+> +    /// `NUL` byte (or the string will be truncated).
+> +    #[inline]
+> +    pub const unsafe fn from_bytes_with_nul_unchecked_mut(bytes: &mut [u8]) -> &mut CStr {
+> +        // SAFETY: Properties of `bytes` guaranteed by the safety precondition.
+> +        unsafe { &mut *(bytes as *mut [u8] as *mut CStr) }
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
----
- sound/core/seq_device.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+First `.cast::<[u8]>().cast::<CStr>()` is preferred than `as`. Besides,
+I think the dereference (or reborrow) is only safe if `CStr` is
+`#[repr(transparent)]. I.e.
 
-diff --git a/sound/core/seq_device.c b/sound/core/seq_device.c
-index 7f3fd8eb016f..654d620d0199 100644
---- a/sound/core/seq_device.c
-+++ b/sound/core/seq_device.c
-@@ -49,7 +49,7 @@ static int snd_seq_bus_match(struct device *dev, struct device_driver *drv)
- 		sdrv->argsize == sdev->argsize;
- }
- 
--static struct bus_type snd_seq_bus_type = {
-+static const struct bus_type snd_seq_bus_type = {
- 	.name = "snd_seq",
- 	.match = snd_seq_bus_match,
- };
+	#[repr(transparent)]
+	pub struct CStr([u8]);
 
--- 
-2.43.0
+with that you can implement the function as (you can still use `cast()`
+implementation, but I sometimes find `transmute` is more simple).
 
+    pub const unsafe fn from_bytes_with_nul_unchecked_mut(bytes: &mut [u8]) -> &mut CStr {
+	// SAFETY: `CStr` is transparent to `[u8]`, so the transmute is
+	// safe to do, and per the function safety requirement, `bytes`
+	// is a valid `CStr`.
+	unsafe { core::mem::transmute(bytes) }
+    }
+
+but this is just my thought, better wait for others' feedback as well.
+
+Regards,
+Boqun
