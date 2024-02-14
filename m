@@ -1,104 +1,101 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D9FA932;
-	Wed, 14 Feb 2024 00:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A5A191
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 00:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707869022; cv=none; b=chIoWq0H5AdxNeVo03g5jSa9uDDGyaiDvQs7Sua/hu9AmA+A1Z7gRqHlBFEgapwD3tifz8Z61fyjP3N/cuT6mCxFMQiLiog6kxppZE9DgI9yp2LXlmFrfDI7YeLYpwWiCtoIW904k/D6MpVbcSKLm1xU3A5j2TX/9pmZvuxnv0s=
+	t=1707869073; cv=none; b=rZC3dOsU4DA/s5A3RVNRTMXCKVqDGOSjnk/kGNEWNVkd+9Wg57hoyYK0xBxb5sZNd+/+LBBG7kUCR6RqYQs0ZWhxfWzTd8JHxRcms87tuhC09LIkYDEOCMIP2kOJxjIzbXmUS7+Pb+HyhTNpL3pBoQkTq0cUDfvpMdXl2H0CWjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707869022; c=relaxed/simple;
-	bh=79sVC2xwZcWf9em7+im8l8pxbyWTZViteqZQC3s1w5c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HdKlH4yFmTeih5kNz0df9vqCHQ5lBS7AIcS0AsWnCtnwPAtsCADUmLkRt5nNY+wW2OQvs/6eH6h8iQOXSaX2nFSVGjWPpXWLCdeAPmJQCm+5+OzFdSq8aY+A1aDqiDTp7FuVs3GOQZOSRXiXnClNeowVPv0ZkvtwjgWOsnN2jV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GYiIOZdx; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707869073; c=relaxed/simple;
+	bh=HBo4/ZnPLdUMua0zJU4NpBUBSGdMyA1d1OPVB+TDxms=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JMnCf3tmCflyAwHtqRMLwyRV/6T/VBI11WZfvApcxqQSQZFRV0ICZqVEgEZfd27YrKgn+vz2ZOIig9ccJeYAfiFMi1JtIoRSh+05cCxOx96p1EYQMx+FDoEWetete8fjubIG2D5mEGJ3MqdbUnjJ/UkKm4DnvcBxCIWT9Wa31C0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=k67cy+ui; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GYiIOZdx"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5114c05806eso8068853e87.1;
-        Tue, 13 Feb 2024 16:03:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707869018; x=1708473818; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JPG8iWh4xmglJXdCUV2hXb98YGfDYIZwCuRxjUIHlFc=;
-        b=GYiIOZdxndcm+Y2Q5giWWC6z9LXv0uxph9skjsNnrz8oD+9MStC8JyOCnXwPa2G3DB
-         pYg9ase5E7BDgIrUMLgG0/TjMGWBq8Vt8x6WzgYwUa/h8ANQ3cOHA8GoLffsulLx38sA
-         EkAaX5WkwVVh3wcNe8ljwpdiO9zwEOBfqvfLI+Tculnl4BQmrMHEO/atqD27dC/MIbXZ
-         ujUcVmZ8dBU3v8ULpuz0dNDFAx7RACmzouKi0sfjAOui0OfC/eHQb2h+MdzxGTKJc3nl
-         bhodQM/MrfXY7ZcPbHY5j/bsy8e+9anQWDEt+N453b2YT+Fl4a8IVe4cUm8U00SQvjM6
-         cRkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707869018; x=1708473818;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JPG8iWh4xmglJXdCUV2hXb98YGfDYIZwCuRxjUIHlFc=;
-        b=k5bcTWb2o3TL3Ji+YkpV23DyO3akPU1xqg2I2/q82TKSjYVj/zuzuwNL0DFtByrCe9
-         EFqivdA8xFPS8E9nwW4TsLAn5AFXEa7uEw+MMlq/Advt6ZLsuTxJRjUFif4bvJnzWsqO
-         2NqUPCRFDyBfsM+qf9cjCjf4oCm0NELR5AAaKZpM2qvKpo2JB+QLXdL78t/7uJ3N/hvq
-         AFPFzdmZbAlGFi4vNFXRmqfc/GXIZA3ycFEGLIKDTwwX4APseVXLMhYwvgghP5LEe0Ih
-         COiXyWoZQOnpPBWTLur3SfY+diwicn1sz29JU0NCMxub+8t4p+S9OpadGcV+gzeNnEIF
-         wC+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXijFG+8058RoFLPXWz65tKV90bb3PLQnODg84hKvM1TGf9s4uDpXe4rp3dxIaRp5SxFwsQPZnb51lI8DddSY77VfOc19Ac2I0fuN7PTRvQ
-X-Gm-Message-State: AOJu0Yyl+Dk+oH8uI8qREFjPCPdl8il/MW5cuimK6iin7OSACw6d+lFA
-	HGgnB3PHbe1aOCLvO2OGZplvAnFc92/uWa+45b1dIPkERI7ljQ2TthEotoh0dc1kXQ==
-X-Google-Smtp-Source: AGHT+IET62gNEP1TryO/d84l1nhoAgvco1Q5Vupuj/VHXjdXg4J0vxT36LXpI5G2dRrT7m5fX8uUWA==
-X-Received: by 2002:a05:6512:3da7:b0:511:893f:11af with SMTP id k39-20020a0565123da700b00511893f11afmr899724lfv.38.1707869017963;
-        Tue, 13 Feb 2024 16:03:37 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVz1gJHO0Pro85TeecuMzEBKdPk4bSzrESmyT3oaBHYedzf1V+D7XyP2YR0odvYol2yY0ov64Gs3AHAftwVE2nWj8a9Y9qc9BZ0LXVbSIQl+uaaE6stTTe1vJkLCo56BVqTzgX2qfGQt/kp63HMpEkMShIaSFblPaz6RQU57Sg=
-Received: from [127.0.1.1] (2a02-8389-41cf-e200-68a7-7041-4298-e66b.cable.dynamic.v6.surfer.at. [2a02:8389:41cf:e200:68a7:7041:4298:e66b])
-        by smtp.gmail.com with ESMTPSA id vo10-20020a170907a80a00b00a3cfd838f32sm1160901ejc.178.2024.02.13.16.03.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 16:03:37 -0800 (PST)
-From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Date: Wed, 14 Feb 2024 01:03:33 +0100
-Subject: [PATCH v4 3/3] selftests: thermal: intel: workload_hint: add
- missing gitignore
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="k67cy+ui"
+Date: Tue, 13 Feb 2024 19:04:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1707869068;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lwr8Vkf8N+L/tCuYvXon7N+M0Ve52ARdPVwI9sTaz1k=;
+	b=k67cy+uiY9Mx9j1UIeyoIR1jTVimFbXY0Ah+u9g9EkxXCXSlFErrbk1SmcOpMTNDyAuhJF
+	8yT0rOI4rnYhxMMnMPJPO3qnI0CHdh08Glhfbg3KTriY7en7/N6LEcl8lSKS5p117ormdf
+	8GPC7Twmy0k/brUYCR299XoutwGexNY=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Suren Baghdasaryan <surenb@google.com>, 
+	David Hildenbrand <david@redhat.com>, Michal Hocko <mhocko@suse.com>, akpm@linux-foundation.org, 
+	vbabka@suse.cz, hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, 
+	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, corbet@lwn.net, 
+	void@manifault.com, peterz@infradead.org, juri.lelli@redhat.com, 
+	catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, tglx@linutronix.de, 
+	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
+	axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, nathan@kernel.org, 
+	dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev, rppt@kernel.org, 
+	paulmck@kernel.org, yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com, 
+	hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org, 
+	ndesaulniers@google.com, vvvvvv@google.com, gregkh@linuxfoundation.org, 
+	ebiggers@google.com, ytcoode@gmail.com, vincent.guittot@linaro.org, 
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, bristot@redhat.com, 
+	vschneid@redhat.com, cl@linux.com, penberg@kernel.org, iamjoonsoo.kim@lge.com, 
+	42.hyeyoo@gmail.com, glider@google.com, elver@google.com, dvyukov@google.com, 
+	shakeelb@google.com, songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com, 
+	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, iommu@lists.linux.dev, 
+	linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, cgroups@vger.kernel.org
+Subject: Re: [PATCH v3 00/35] Memory allocation profiling
+Message-ID: <76imoy5prhf2rhtuajlx3whdowfs3swdmufmosqvqrlljj4bye@dofqsd4674ek>
+References: <6a0f5d8b-9c67-43f6-b25e-2240171265be@redhat.com>
+ <CAJuCfpEtOhzL65eMDk2W5SchcquN9hMCcbfD50a-FgtPgxh4Fw@mail.gmail.com>
+ <adbb77ee-1662-4d24-bcbf-d74c29bc5083@redhat.com>
+ <r6cmbcmalryodbnlkmuj2fjnausbcysmolikjguqvdwkngeztq@45lbvxjavwb3>
+ <CAJuCfpF4g1jeEwHVHjQWwi5kqS-3UqjMt7GnG0Kdz5VJGyhK3Q@mail.gmail.com>
+ <a9b0440b-844e-4e45-a546-315d53322aad@redhat.com>
+ <xbehqbtjp5wi4z2ppzrbmlj6vfazd2w5flz3tgjbo37tlisexa@caq633gciggt>
+ <c842347d-5794-4925-9b95-e9966795b7e1@redhat.com>
+ <CAJuCfpFB-WimQoC1s-ZoiAx+t31KRu1Hd9HgH3JTMssnskdvNw@mail.gmail.com>
+ <CA+CK2bCvaoSRUjBZXFbyZi-1mPedNL3sZmUA9fHwcBB00eDygw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240214-selftest_gitignore-v4-3-857b39cef2fa@gmail.com>
-References: <20240214-selftest_gitignore-v4-0-857b39cef2fa@gmail.com>
-In-Reply-To: <20240214-selftest_gitignore-v4-0-857b39cef2fa@gmail.com>
-To: Shuah Khan <shuah@kernel.org>, SeongJae Park <sj@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- Javier Carrasco <javier.carrasco.cruz@gmail.com>
-X-Mailer: b4 0.13-dev-0434a
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1707869012; l=762;
- i=javier.carrasco.cruz@gmail.com; s=20230509; h=from:subject:message-id;
- bh=79sVC2xwZcWf9em7+im8l8pxbyWTZViteqZQC3s1w5c=;
- b=5SsMXg3tFDxHLWhLV1lbLNaBCmtK1ct7Uf1t5HahyCW144hMccM7X5o2Pv24Rsx23vx29bt+V
- Vyq85n9BVOXDEeuSn8INA67lvHvzhbV9uqntY6/Sk3rypPPdM6NeSvQ
-X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
- pk=tIGJV7M+tCizagNijF0eGMBGcOsPD+0cWGfKjl4h6K8=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+CK2bCvaoSRUjBZXFbyZi-1mPedNL3sZmUA9fHwcBB00eDygw@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-The 'workload_hint_test' test generates an object with the same name,
-but there is no .gitignore file in the directory to add the object as
-stated in the selftest documentation.
+On Tue, Feb 13, 2024 at 06:54:09PM -0500, Pasha Tatashin wrote:
+> > > I tried to be helpful, finding ways *not having to* bypass the MM
+> > > community to get MM stuff merged.
+> > >
+> > > The reply I got is mostly negative energy.
+> > >
+> > > So you don't need my help here, understood.
+> > >
+> > > But I will fight against any attempts to bypass the MM community.
+> >
+> > Well, I'm definitely not trying to bypass the MM community, that's why
+> > this patchset is posted. Not sure why people can't voice their opinion
+> > on the benefit/cost balance of the patchset over the email... But if a
+> > meeting would be more productive I'm happy to set it up.
+> 
+> Discussing these concerns during the next available MM Alignment
+> session makes sense. At a minimum, Suren and Kent can present their
+> reasons for believing the current approach is superior to the
+> previously proposed alternatives.
 
-Add the missing .gitignore file and include 'workload_hint_test'.
+Hang on though: I believe we did so adequately within this thread. Both
+in the cover letter, and I further outlined exactly what the hooks
+need to do, and cited the exact code.
 
-Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
----
- tools/testing/selftests/thermal/intel/workload_hint/.gitignore | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/testing/selftests/thermal/intel/workload_hint/.gitignore b/tools/testing/selftests/thermal/intel/workload_hint/.gitignore
-new file mode 100644
-index 000000000000..d697b034a3a8
---- /dev/null
-+++ b/tools/testing/selftests/thermal/intel/workload_hint/.gitignore
-@@ -0,0 +1 @@
-+workload_hint_test
-
--- 
-2.40.1
-
+Nobody seems to be complaining about the specifics, so I'm not sure what
+would be on the agenda?
