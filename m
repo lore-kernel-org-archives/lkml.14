@@ -1,108 +1,125 @@
-Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D6F168C4
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 10:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7B6171AC;
+	Wed, 14 Feb 2024 10:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707905774; cv=none; b=VjAgQBNYTvwAExcGgNkm2w5COIpFJDWrsugC0Rd/OrEvtn+kt60SSYfUnFb3cMWUfVKMzpsD/7vD/sz0GCErSreD1aLVLAT+LFXRCFRuAnYVO1U9IZUCRogAgTec3yL5CRtIozcTQcw7rK/mHzrJgCFoIawfZ7Ee/vE4XWLNgAQ=
+	t=1707905776; cv=none; b=FIODYYogxAa11CEkW/fGtmx/kKMzXlz0nmGQ8wqsgrc04OO0eAjNW8TR3DwRdcbMj9u245URdGWhzCYHnJ6uE3gwgM/AmA3R2jjdni6RG2MzLgZVDEA1GtI35FqUVL3l6F/Ll1MmoZizonbGOAJ94gn1bET+Ml/YuQe7nIpppIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707905774; c=relaxed/simple;
-	bh=zuwCehDqvPwNY2pDhqnDiDPpipznxqF/iKxY8Zmzma0=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=ItsjNHL02VuAyHB5dkML6zHxqt1Y9yPvwO60uvPYmwjX2fM0viu7hl07ykhJqxN7cRVoaWZPPY7J6oJW0wxrRU5xpaw7imQT0PlijzCMyHqPAkFlCoZ2xMle8dOTk7TflQSJaeyZgDnTLZ2EwgoCFhbAJKPTxXFmIeyy9+UMizo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=q7qYGDaS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=xNFThNoj; arc=none smtp.client-ip=64.147.123.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1707905776; c=relaxed/simple;
+	bh=eTiNyXEgBPCIo0Ta8sYgjRV8p1Xz0hDcVMygIqs3U3E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=B5mwd8xgekWIEmHy+vF+v+ucle1Ufa2ZiCOtLm86cDh0gNHTttCFWe9V6N8fd82yIsaJo9lcyFREDdIqaio30wMzkjTrm9xQhirtYjEwxr5sJRAEUBCqP8s55BKeWuMj3q9yBH3mO5cBTfkDewuYUkki7LAIPGZsCeDGPm2PXYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=GlwHXq5K; arc=none smtp.client-ip=115.28.160.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="q7qYGDaS";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xNFThNoj"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.west.internal (Postfix) with ESMTP id 250803200312;
-	Wed, 14 Feb 2024 05:16:11 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 14 Feb 2024 05:16:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1707905770;
-	 x=1707992170; bh=i+j6Jypgho7pg7a8tVM8hLo4QkNUJm6rujup4OU8wt8=; b=
-	q7qYGDaSQIL13G2UWfKe/bnaIKMvPv7sZvyFCa2+HU8q3mTQm5ywQkD75xustvuk
-	vj7mg62gWUK3s3dZSb8Wy/V9T6EzHgIn/CZGFOf98dKl6bkCCF9RxCKyQdrUkFS0
-	bYB7CFU9b566Q+7oJrPrudAmDTjoI9lvK9dRROKKjFF5fEOd/RFjbYFKAPF6PzVA
-	MuhSbLlW4BSTssVju7Rv1fh8OV4EvrBq5yWLAMS9QEw3HEsDxEobGjTT1YdpCswQ
-	ohWp+vp4L4VzdLkX4XPqow1tIkWfCSKOa6JRXaVZHWH5EqKFMC1MKbxAp+1tWfD/
-	DPZZ5Qs0mbANFRR9ZK8YOg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1707905770; x=
-	1707992170; bh=i+j6Jypgho7pg7a8tVM8hLo4QkNUJm6rujup4OU8wt8=; b=x
-	NFThNojJ94AUpEjn1VHcxswHwW6hV/AiIw/M+dxGlsU7yMY8ZA2SsA4pvLpGeNeE
-	OHgYL+UvPCIeBaqD+P++1XYi81I/4XUVIQKyYLur4aZUkevlsnFUlVZHhUPcLqP2
-	j3TaDe6o8+hpqLNN+Z07WVTrXDiS+I4dfUMMVpBEhc8087mJYjjF3Ju4xIUZ7po2
-	2xcH537IcYk9HhGlmBrvsRsKUTILOSiILaVEwOJB+UneEsm4i6hM4IVxHP82OXfC
-	7J3Z+NyERO0VgGpuO3KbBCjLa72pTX9y5xjt2iaUeBLJGdS51O+fz8jsD0CwDw4V
-	l6xYZ9DlxnMhuQw3WmQsg==
-X-ME-Sender: <xms:6pLMZYWNDVpEMfd0S9wsVkKgH2TDKlOgYqEwFWbJWSrlKZPU1DJRKg>
-    <xme:6pLMZcnbfJmUSfXRUU526QU3H1zdwS5QGPVMK1rWiivEh2gpX6p2j0ibwYbtDvo2t
-    jzeRc5zwcQ8GT9a_IQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudejgddufecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepgeefjeehvdelvdffieejieejiedvvdfhleeivdelveehjeelteegudektdfg
-    jeevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:6pLMZcaCTGqkNgNoJTFQK_2yTqt-dBHQjCconBo1SL4oLVosX6O3qw>
-    <xmx:6pLMZXX-fIcWAouiYFYXGvg7VxaCLLRuNHBBmKnBiX8-jgm2RFpfvw>
-    <xmx:6pLMZSk69UKXLbjcfv9U0k5KRm4NauJhiujkWh7AZzUlKONAHI8q3g>
-    <xmx:6pLMZekZXsGTOLO-XTW0N4LQCVsL9s7UMhsJoEks9hgusY-2TB1k5Q>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 49E4FB6008D; Wed, 14 Feb 2024 05:16:10 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-144-ge5821d614e-fm-20240125.002-ge5821d61
+	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="GlwHXq5K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1707905769; bh=eTiNyXEgBPCIo0Ta8sYgjRV8p1Xz0hDcVMygIqs3U3E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=GlwHXq5KtlJN3WjzDugZTkyJEy5LHE+ExYx073zzj48EYrqsL7zgxjG0jH/CXdUWu
+	 lHC5BxTxuznnRWa29bxkSyDY9QBTn3MlyULKk31DvSXmHgOaImFsYVGo+Dmwyixr+h
+	 HhHqPrIQO+kYbav4MpoP9qcNYRLyGihzdZ4frvdI=
+Received: from ld50.lan (unknown [IPv6:240e:388:8d00:6500:5531:eef6:1274:cebe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 9843160562;
+	Wed, 14 Feb 2024 18:16:09 +0800 (CST)
+From: WANG Xuerui <kernel@xen0n.name>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	WANG Xuerui <git@xen0n.name>
+Subject: [PATCH for-6.8 5/5] KVM: LoongArch: Clean up comments of _kvm_get_cpucfg_mask and kvm_check_cpucfg
+Date: Wed, 14 Feb 2024 18:15:57 +0800
+Message-ID: <20240214101557.2900512-6-kernel@xen0n.name>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240214101557.2900512-1-kernel@xen0n.name>
+References: <20240214101557.2900512-1-kernel@xen0n.name>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <42be4820-1e19-4782-b412-0b0269f7a696@app.fastmail.com>
-In-Reply-To: <f0b2b4dda91ef1342fc38540bf3d453366b943e9.camel@linux.intel.com>
-References: <20240213095719.454865-1-arnd@kernel.org>
- <f0b2b4dda91ef1342fc38540bf3d453366b943e9.camel@linux.intel.com>
-Date: Wed, 14 Feb 2024 11:15:50 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
- "Arnd Bergmann" <arnd@kernel.org>,
- "Lucas De Marchi" <lucas.demarchi@intel.com>,
- "Oded Gabbay" <ogabbay@kernel.org>
-Cc: "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
- "Maxime Ripard" <mripard@kernel.org>,
- "Thomas Zimmermann" <tzimmermann@suse.de>, "Dave Airlie" <airlied@gmail.com>,
- "Daniel Vetter" <daniel@ffwll.ch>, "Nathan Chancellor" <nathan@kernel.org>,
- "Nick Desaulniers" <ndesaulniers@google.com>,
- "Bill Wendling" <morbo@google.com>, "Justin Stitt" <justinstitt@google.com>,
- intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH] drm/xe: avoid function cast warnings
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 14, 2024, at 11:10, Thomas Hellstr=C3=B6m wrote:
-> On Tue, 2024-02-13 at 10:56 +0100, Arnd Bergmann wrote:
->> =C2=A0
->> +static void xe_range_fence_free(struct xe_range_fence * rfence)
->
-> There's a checkpatch.pl style error above: s/* rfence/*rfence/. I can
-> fix that up when pushing if it's ok with you.
+From: WANG Xuerui <git@xen0n.name>
 
-Right, I saw the report. Please fix it up then so I don't have
-to resubmit. Thanks,
+Remove comments that are merely restatement of the code nearby, and
+paraphrase the rest so they read more natural for English speakers (that
+lack understanding of Chinese grammar). No functional changes.
 
-    Arnd
+Signed-off-by: WANG Xuerui <git@xen0n.name>
+---
+ arch/loongarch/kvm/vcpu.c | 26 +++++++++++---------------
+ 1 file changed, 11 insertions(+), 15 deletions(-)
+
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 9e108ffaba30..ff51d6ba59aa 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -302,20 +302,14 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
+ {
+ 	switch (id) {
+ 	case 2:
+-		/* Return CPUCFG2 features which have been supported by KVM */
++		/* CPUCFG2 features unconditionally supported by KVM */
+ 		*v = CPUCFG2_FP     | CPUCFG2_FPSP  | CPUCFG2_FPDP     |
+ 		     CPUCFG2_FPVERS | CPUCFG2_LLFTP | CPUCFG2_LLFTPREV |
+ 		     CPUCFG2_LAM;
+-		/*
+-		 * If LSX is supported by CPU, it is also supported by KVM,
+-		 * as we implement it.
+-		 */
++		/* If LSX is supported by the host, then it is also supported by KVM */
+ 		if (cpu_has_lsx)
+ 			*v |= CPUCFG2_LSX;
+-		/*
+-		 * if LASX is supported by CPU, it is also supported by KVM,
+-		 * as we implement it.
+-		 */
++		/* Same with LASX */
+ 		if (cpu_has_lasx)
+ 			*v |= CPUCFG2_LASX;
+ 
+@@ -336,21 +330,23 @@ static int kvm_check_cpucfg(int id, u64 val)
+ 
+ 	switch (id) {
+ 	case 2:
+-		/* CPUCFG2 features checking */
+ 		if (val & ~mask)
+-			/* The unsupported features should not be set */
++			/* Unsupported features should not be set */
+ 			return -EINVAL;
+ 		if (!(val & CPUCFG2_LLFTP))
+-			/* The LLFTP must be set, as guest must has a constant timer */
++			/* Guests must have a constant timer */
+ 			return -EINVAL;
+ 		if ((val & CPUCFG2_FP) && (!(val & CPUCFG2_FPSP) || !(val & CPUCFG2_FPDP)))
+-			/* Single and double float point must both be set when enable FP */
++			/* Single and double float point must both be set when FP is enabled */
+ 			return -EINVAL;
+ 		if ((val & CPUCFG2_LSX) && !(val & CPUCFG2_FP))
+-			/* FP should be set when enable LSX */
++			/* LSX is architecturally defined to imply FP */
+ 			return -EINVAL;
+ 		if ((val & CPUCFG2_LASX) && !(val & CPUCFG2_LSX))
+-			/* LSX, FP should be set when enable LASX, and FP has been checked before. */
++			/*
++			 * LASX is architecturally defined to imply LSX and FP
++			 * FP is checked just above
++			 */
+ 			return -EINVAL;
+ 		return 0;
+ 	default:
+-- 
+2.43.0
+
