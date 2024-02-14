@@ -1,89 +1,299 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD07604AA
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 17:00:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD4E5FDD1
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 17:00:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707930045; cv=none; b=UxCnSLNz9UDOFdhvd5b5WVaJHcoHzLUQrAXDGexnqjLPDSZMxQMdXbrwLSa/9CjNqppFWu3as7pWOEKmAXWGoEPxc4MSdPg2ud5XFD1sIiGJzQGHEoiFRHr1GGeE9/Yub1vnn264Hqtt7oq5XCAD60ZysOVe1Ebupf7XCG4wru4=
+	t=1707930057; cv=none; b=jf6LfjBuH2+z3sMJ9BtcoIeRTSLY5LERo7zEZUmxCJs7WoSW8c4rLankrATu8G1N8ajT/vMM74QaiF6vhk9ctz9T38EC7FnrqjLJ01t8YIUZh/QiTAK/wzmE2gD/BtItUww68x7EIVASwI4rc8AiMzRgG0s8zOjnLArfgPZqc1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707930045; c=relaxed/simple;
-	bh=NOkU71yqzXKejggrb0c8+aBapQXzv06cCw+LUfANygM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cNbTjIhS/yfox98cAOgJGdCB246mXb9QeREzB42ciWF+BTRAF3DzK2X023Y8Hw3Ea+eaXa2YESQ4bYT6MvDhjAghcMMIIh8w4P84Pnpi4bYLgdt24bX5gfQ8rT9W+4EUrF1fCTOY+xyN5io+vo+zZC+XuaZghEwJwQx6+leWs+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6077444cb51so7753087b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 09:00:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707930043; x=1708534843;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DILsFp6O5FPmI48oRSyT/Mf/hZlkZDrEMNrxCJYzTXU=;
-        b=qz6kf/1L2c382DXXFLsbkggRv/+7PO6OwsHB8SSj9KFUuIEUrgp7wQbb1saG0ZfXUR
-         ZcNEF4kMK+5Cd0A6z3FUF8qhxOy+ZciNy6Gh4gpp+CO7/qM9eEHx84k0axyq0vo/lYAH
-         zZklbVT0RDdHLSF0rbFuVmmUF8UhtY6ZkDSV9W8CDi4Zg9zHibk/9qcmf5UljCCmOmUy
-         EuKJ8sfZrhDXykW6QLiwlTt6BHoYNc5DG8Libeqbn/10T9puGiGOCvYHdyeasMjvOGxB
-         FkvqclKFkB98l+gnHKISD8CDQ4fRqgajqSHRFzukwxVo54FlhxivNmKrw9/3DBLExTMm
-         sc+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWUrs8uUFZruQFwtJldnmDZkUlyq90/SPyB4yYIs5VyvCwqrAEBOGo/b6r48uo24dusceB3jGY/UWaAStJJss9qpXQLPbHlFcu4pkJG
-X-Gm-Message-State: AOJu0YzWmqTuXxBMGAKqDYxjXPFK4xHIrWS+JHDQWIj5jVxK0ziiSqyI
-	ewgkBihwtnrRtOy7Qw9JMasi1afYmHXt/At6P35wyc0dgY8KkXTHlovlTe8qTOs=
-X-Google-Smtp-Source: AGHT+IEl818PLQBSnxoTHAAEzD10mgrz99fRsw5z70k3XRsApsY12LIYRY3Klpzlxy7DLB3Ix2pwCw==
-X-Received: by 2002:a0d:ebc3:0:b0:607:7953:8c8f with SMTP id u186-20020a0debc3000000b0060779538c8fmr1896728ywe.6.1707930042878;
-        Wed, 14 Feb 2024 09:00:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW9l3Oqg3tcIq6o88WHJO8rYSHqTZO0tOVJOhzy/L+oXA18zmXZjxOBIN3335f+IRT+lG7YZZGkMwTOetQ0lTWUmRzH9bLpBCLe8iQ5
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com. [209.85.219.173])
-        by smtp.gmail.com with ESMTPSA id f126-20020a0dc384000000b006041f5a308esm2275291ywd.133.2024.02.14.09.00.42
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Feb 2024 09:00:42 -0800 (PST)
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dcc6fc978ddso909574276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 09:00:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXH2RR284FcVL74fh7JgdAlss9/kXgjSm4XxKphh2SoC7MI5JNwU8iWu7vRlnD6z2nAlS6jGAk2zt+SO1YVqBfOEJITLMuX20YTcARQ
-X-Received: by 2002:a25:bfcb:0:b0:dc6:ab85:ba89 with SMTP id
- q11-20020a25bfcb000000b00dc6ab85ba89mr1851619ybm.25.1707930042035; Wed, 14
- Feb 2024 09:00:42 -0800 (PST)
+	s=arc-20240116; t=1707930057; c=relaxed/simple;
+	bh=F4DWD5cxpKuyzbJVjD9tjYUUI6/I2opeMGu4UO+RA1k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l2QXHNlQcfqn+HcygrPXOE2ovGzEPGkPJjIzZaCGN5lpFTH5TdoXIFM3skQs/S6vFM6ReNzrTio3aUV5vHXAWNT6DGipT6jJjwxbjeNspszcKR5oPPGY4q2MJwzBBkrxko3NFpI888I6zbosoA0x7EhW1B1BptigpIQFpg/Ad4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uLlcLA74; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Zl4I14Lo; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uLlcLA74; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Zl4I14Lo; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uLlcLA74";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Zl4I14Lo";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uLlcLA74";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Zl4I14Lo"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 20ED221CF4;
+	Wed, 14 Feb 2024 17:00:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707930053; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=cb3M704v0Zbq80d/SsO/UOlJgPA2mSZPTOIdkKTDhIA=;
+	b=uLlcLA74AM5649NWms70Xy5ZEdeToRmyqlcASEIxxV3IbyjHSwdR7EqfrZmradPQ3ozuxd
+	TRVC9Vay8pZin4g9BXsbTzPn7WCu3T1RZ6GU6fv97grXyT1t8ZA7QtW6/bELcQHdfGo4ML
+	XYpTwr+jIGg00HRqcGHLgTmu6TNelKM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707930053;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=cb3M704v0Zbq80d/SsO/UOlJgPA2mSZPTOIdkKTDhIA=;
+	b=Zl4I14Lo6egjTN4UwXT87JtN1lzIz7KV59YE1+RLeTlbgYVnuCGK+Lueez9ZmcDqIFddP5
+	Yjn3o0PDVW0x6xCA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707930053; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=cb3M704v0Zbq80d/SsO/UOlJgPA2mSZPTOIdkKTDhIA=;
+	b=uLlcLA74AM5649NWms70Xy5ZEdeToRmyqlcASEIxxV3IbyjHSwdR7EqfrZmradPQ3ozuxd
+	TRVC9Vay8pZin4g9BXsbTzPn7WCu3T1RZ6GU6fv97grXyT1t8ZA7QtW6/bELcQHdfGo4ML
+	XYpTwr+jIGg00HRqcGHLgTmu6TNelKM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707930053;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=cb3M704v0Zbq80d/SsO/UOlJgPA2mSZPTOIdkKTDhIA=;
+	b=Zl4I14Lo6egjTN4UwXT87JtN1lzIz7KV59YE1+RLeTlbgYVnuCGK+Lueez9ZmcDqIFddP5
+	Yjn3o0PDVW0x6xCA==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 9358213A0B;
+	Wed, 14 Feb 2024 17:00:52 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id TOM3IcTxzGUfMwAAn2gu4w
+	(envelope-from <osalvador@suse.de>); Wed, 14 Feb 2024 17:00:52 +0000
+From: Oscar Salvador <osalvador@suse.de>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	Michal Hocko <mhocko@suse.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH v9 0/7] page_owner: print stacks and their outstanding allocations
+Date: Wed, 14 Feb 2024 18:01:50 +0100
+Message-ID: <20240214170157.17530-1-osalvador@suse.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240212132515.2660837-2-andriy.shevchenko@linux.intel.com> <20240212132515.2660837-5-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20240212132515.2660837-5-andriy.shevchenko@linux.intel.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 14 Feb 2024 18:00:30 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdViuEhr94SrQyTHG1BzswNzJuZba1zWphX85baFB+LVGA@mail.gmail.com>
-Message-ID: <CAMuHMdViuEhr94SrQyTHG1BzswNzJuZba1zWphX85baFB+LVGA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] auxdisplay: Add 7 and 14 segment mappings to MAINTAINERS
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>, linux-kernel@vger.kernel.org, 
-	Miguel Ojeda <ojeda@kernel.org>, Andy Shevchenko <andy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=uLlcLA74;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Zl4I14Lo
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
+	 TO_DN_SOME(0.00)[];
+	 R_MISSING_CHARSET(2.50)[];
+	 BROKEN_CONTENT_TYPE(1.50)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[9];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 BAYES_HAM(-3.00)[100.00%];
+	 ARC_NA(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DWL_DNSWL_HI(-3.50)[suse.de:dkim];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FREEMAIL_CC(0.00)[vger.kernel.org,kvack.org,suse.com,suse.cz,google.com,gmail.com,suse.de];
+	 RCVD_TLS_ALL(0.00)[]
+X-Spam-Score: -3.01
+X-Rspamd-Queue-Id: 20ED221CF4
+X-Spam-Flag: NO
 
-On Mon, Feb 12, 2024 at 2:27=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> The mapping files are tightly related to auxdisplay subsystem.
-> Add them to the MAINTAINERS database.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Changes v8 -> v9
+     - Fix handle-0 for the very first stack_record entry
+     - Collect Acked-by and Reviewed-by from Marco and Vlastimil
+     - Adressed feedback from Marco and Vlastimil
+     - stack_print() no longer allocates a memory buffer, prints directly
+       using seq_printf: by Vlastimil
+     - Added two static struct stack for dummy_handle and faiure_handle
+     - add_stack_record_to_list() now filters out the gfp_mask the same way
+       stackdepot does, for consistency
+     - Rename set_threshold to count_threshold
 
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Changes v7 -> v8
+     - Rebased on top of -next
+     - page_owner maintains its own stack_records list now
+     - Kill auxiliary stackdepot function to traverse buckets
+     - page_owner_stacks is now a directory with 'show_stacks'
+       and 'set_threshold'
+     - Update Documentation/mm/page_owner.rst
+     - Adressed feedback from Marco
 
-Gr{oetje,eeting}s,
+Changes v6 -> v7:
+     - Rebased on top of Andrey Konovalov's libstackdepot patchset
+     - Reformulated the changelogs
 
-                        Geert
+Changes v5 -> v6:
+     - Rebase on top of v6.7-rc1
+     - Move stack_record struct to the header
+     - Addressed feedback from Vlastimil
+       (some code tweaks and changelogs suggestions)
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Changes v4 -> v5:
+     - Addressed feedback from Alexander Potapenko
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Changes v3 -> v4:
+     - Rebase (long time has passed)
+     - Use boolean instead of enum for action by Alexander Potapenko
+     - (I left some feedback untouched because it's been long and
+        would like to discuss it here now instead of re-vamping
+        and old thread)
+
+Changes v2 -> v3:
+     - Replace interface in favor of seq operations
+       (suggested by Vlastimil)
+     - Use debugfs interface to store/read valued (suggested by Ammar)
+
+
+page_owner is a great debug functionality tool that lets us know
+about all pages that have been allocated/freed and their specific
+stacktrace.
+This comes very handy when debugging memory leaks, since with
+some scripting we can see the outstanding allocations, which might point
+to a memory leak.
+
+In my experience, that is one of the most useful cases, but it can get
+really tedious to screen through all pages and try to reconstruct the
+stack <-> allocated/freed relationship, becoming most of the time a
+daunting and slow process when we have tons of allocation/free operations. 
+
+This patchset aims to ease that by adding a new functionality into
+page_owner.
+This functionality creates a new directory called 'page_owner_stacks'
+under 'sys/kernel//debug' with a read-only file called 'show_stacks',
+which prints out all the stacks followed by their outstanding number
+of allocations (being that the times the stacktrace has allocated
+but not freed yet).
+This gives us a clear and a quick overview of stacks <-> allocated/free.
+
+We take advantage of the new refcount_f field that stack_record struct
+gained, and increment/decrement the stack refcount on every
+__set_page_owner() (alloc operation) and __reset_page_owner (free operation)
+call.
+
+Unfortunately, we cannot use the new stackdepot api
+STACK_DEPOT_FLAG_GET because it does not fulfill page_owner needs,
+meaning we would have to special case things, at which point
+makes more sense for page_owner to do its own {dec,inc}rementing
+of the stacks.
+E.g: Using STACK_DEPOT_FLAG_PUT, once the refcount reaches 0,
+such stack gets evicted, so page_owner would lose information.
+
+This patch also creates a new file called 'set_threshold' within
+'page_owner_stacks' directory, and by writing a value to it, the stacks
+which refcount is below such value will be filtered out.
+
+A PoC can be found below:
+
+ # cat /sys/kernel/debug/page_owner_stacks/show_stacks > page_owner_full_stacks.txt
+ # head -40 page_owner_full_stacks.txt 
+  prep_new_page+0xa9/0x120
+  get_page_from_freelist+0x801/0x2210
+  __alloc_pages+0x18b/0x350
+  alloc_pages_mpol+0x91/0x1f0
+  folio_alloc+0x14/0x50
+  filemap_alloc_folio+0xb2/0x100
+  page_cache_ra_unbounded+0x96/0x180
+  filemap_get_pages+0xfd/0x590
+  filemap_read+0xcc/0x330
+  blkdev_read_iter+0xb8/0x150
+  vfs_read+0x285/0x320
+  ksys_read+0xa5/0xe0
+  do_syscall_64+0x80/0x160
+  entry_SYSCALL_64_after_hwframe+0x6e/0x76
+ stack_count: 521
+
+
+
+  prep_new_page+0xa9/0x120
+  get_page_from_freelist+0x801/0x2210
+  __alloc_pages+0x18b/0x350
+  alloc_pages_mpol+0x91/0x1f0
+  folio_alloc+0x14/0x50
+  filemap_alloc_folio+0xb2/0x100
+  __filemap_get_folio+0x14a/0x490
+  ext4_write_begin+0xbd/0x4b0 [ext4]
+  generic_perform_write+0xc1/0x1e0
+  ext4_buffered_write_iter+0x68/0xe0 [ext4]
+  ext4_file_write_iter+0x70/0x740 [ext4]
+  vfs_write+0x33d/0x420
+  ksys_write+0xa5/0xe0
+  do_syscall_64+0x80/0x160
+  entry_SYSCALL_64_after_hwframe+0x6e/0x76
+ stack_count: 4609
+...
+...
+
+ # echo 5000 > /sys/kernel/debug/page_owner_stacks/set_threshold 
+ # cat /sys/kernel/debug/page_owner_stacks/show_stacks > page_owner_full_stacks_5000.txt
+ # head -40 page_owner_full_stacks_5000.txt 
+  prep_new_page+0xa9/0x120
+  get_page_from_freelist+0x801/0x2210
+  __alloc_pages+0x18b/0x350
+  alloc_pages_mpol+0x91/0x1f0
+  folio_alloc+0x14/0x50
+  filemap_alloc_folio+0xb2/0x100
+  __filemap_get_folio+0x14a/0x490
+  ext4_write_begin+0xbd/0x4b0 [ext4]
+  generic_perform_write+0xc1/0x1e0
+  ext4_buffered_write_iter+0x68/0xe0 [ext4]
+  ext4_file_write_iter+0x70/0x740 [ext4]
+  vfs_write+0x33d/0x420
+  ksys_pwrite64+0x75/0x90
+  do_syscall_64+0x80/0x160
+  entry_SYSCALL_64_after_hwframe+0x6e/0x76
+ stack_count: 6781
+
+
+
+  prep_new_page+0xa9/0x120
+  get_page_from_freelist+0x801/0x2210
+  __alloc_pages+0x18b/0x350
+  pcpu_populate_chunk+0xec/0x350
+  pcpu_balance_workfn+0x2d1/0x4a0
+  process_scheduled_works+0x84/0x380
+  worker_thread+0x12a/0x2a0
+  kthread+0xe3/0x110
+  ret_from_fork+0x30/0x50
+  ret_from_fork_asm+0x1b/0x30
+ stack_count: 8641
+
+Oscar Salvador (7):
+  lib/stackdepot: Fix first entry having a 0-handle
+  lib/stackdepot: Move stack_record struct definition into the header
+  mm,page_owner: Maintain own list of stack_records structs
+  mm,page_owner: Implement the tracking of the stacks count
+  mm,page_owner: Display all stacks and their count
+  mm,page_owner: Filter out stacks by a threshold
+  mm,page_owner: Update Documentation regarding page_owner_stacks
+
+ Documentation/mm/page_owner.rst |  45 +++++++
+ include/linux/stackdepot.h      |  58 +++++++++
+ lib/stackdepot.c                |  65 +++--------
+ mm/page_owner.c                 | 200 +++++++++++++++++++++++++++++++-
+ 4 files changed, 318 insertions(+), 50 deletions(-)
+
+-- 
+2.43.0
+
