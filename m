@@ -1,138 +1,142 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D154113ADB
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 09:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4567E13ADB;
+	Wed, 14 Feb 2024 09:52:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707904325; cv=none; b=pI5MC28dIhyhUpa04n3xxu4qbfGuDywlULic4mRHXQqSYeEeINsUrCPAM9SFPwSObN4Nn13P0rfYuezDBMnW/lchqICeikNTfeCovANsGcNDDwFZnnQvdstQZZt4/96jBCsGppXr2MACw0/4vRbl59MyV3hKSoRpj6gU85Em37c=
+	t=1707904365; cv=none; b=dv6BTQoBF3ndMqFsEmO5bEDWbIwp76o001A0OrTW1TbACNs/WKTYyz/vyn2y+sx8bva+NUWXGIROcIJuOAyDYNcquWU9ONIL41ry2yKPy1s8l7QY6FT6yiPDuTGjiF1BJaBl0Lh0vlp46RkpeLxn8suIxZv4Yyp+MSs5y+2ckiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707904325; c=relaxed/simple;
-	bh=/WZ+0en2hYRrVYORtDQ6E5O368IXClGjaFQPYTU4Th4=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=KIpIq/NiDNtvZOVwBBZHFdjd6Cn09Zi+iE4kT3M2yzanl/eEz8R1e1ChohQo30NJukeuf2fF5Hf4YugTLgh+8INq/UJgUC2vPbX8kCOV2YoC686IdT8DrpA/BDX/5aHThnQ3rsx2A+tRTGgFtTso3wmpXWUox9E3R5MheoMl6Yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-363da08fc19so47457785ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 01:52:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707904323; x=1708509123;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0cpkPdutDChRiHnxGrJ0+2dxav52OhwGkxn+PEdR9JQ=;
-        b=w36cl6BwxKt4ip4rFJ14Zpq/rh7NLsXBDrjSAm0q2SBOo1pBb/LQBNvzcvesXOqIaI
-         zxakUg4syxWG+3GMwXrBi/cR3RgJdnxx8WT2dFBetMOrRqOIPniCiJIVrJ4Ot2xdVTCj
-         6TyIEsmyehBJsoI8GdSYvTJ/DZSCikka55SuZgSfDXFxkvZ/gjAX4+nozIH7lylr0AiW
-         fXQ5jP+XNI02wfnp3KIxPCpz6dDmo/ec3BO0e++8cT1O6AW3box7n8etzDrSQslvaxbf
-         wqo0xmBDse6slEVdUVxwVk6gQLtvg3P+Ae7YY4+XTxjpF3uy1bXALcgcLEbvgGcALk8d
-         OLtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCURErFPjy5xElY5O9hHsLoVQGzQrqOGHMlTMfPSJOB6T+F9YcfCmWrfG2OoGKaeqA9IQZdsp8+1TJ4H6c5w3nXlIdhVZujkbYf0ATwj
-X-Gm-Message-State: AOJu0YxnW6a70qRzu5ng0mmUX3ofnpUR+kYuUm9YlEB6JnwOyGxF7stc
-	ZZyJMFjWQ69FWcV7vmhXCVlKuTq+ZNPKY47mTXJ95CZsijmhNVttCaHLCgl3FLu9o6hlD7LQnRH
-	GRcSI1cnTIb4jNv1Kht2jYZweUtbdb5C05gTZFZcKqWLUpFeRHrmHDRE=
-X-Google-Smtp-Source: AGHT+IGbF+h8vgEmVuLVSqw8VUOCxUDbzHv6vN14kAKpmPXDA83IyVqZlKNwYiijytn9SaZ3iKkFXSVtSOedFG0TcUu89k3pQ/bf
+	s=arc-20240116; t=1707904365; c=relaxed/simple;
+	bh=4ITR0NaF2IXIbe34i/5k34/8TGKN+3qf0hadVySymOY=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TIP9vzIOt6xn2vQRvZc0o31Fbm40t8O5XDnNLMCkVhx+DnkOBB4BkbrDV5xduyQQHNdrtFFlA9wAf4L9FwhvXNwexWpG97HtQk7TlQs8gjb9DEBZkYjD+SysrHKBI62BGrJe+EdIqTLJ18tSuhGfHv2+usbhfltjxaMleWUNHmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pnIYhYCB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pnIYhYCB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8100C433C7;
+	Wed, 14 Feb 2024 09:52:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707904364;
+	bh=4ITR0NaF2IXIbe34i/5k34/8TGKN+3qf0hadVySymOY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=pnIYhYCBuhpeg3T5OinEnaE7B9fUDvzhXQJ4JOuzEH4eteSInkiU/TwDS0wFFAmL2
+	 UEyceDLnLmI/Ur1O3CMqSnpmqhDhUL1e8onL1nweUuA3vF0JSxx3sgRYvvpheqhZMl
+	 MxRiGrPkPu1gYH2/Xucs7HC7/FSjadpGxumhSJto9FsVA2GnkCTlS4afZUpdMPgW/y
+	 fUYKymtT9IodkCQFtAvw34ZFh0cKNyY0ksvIshmR8nRgeXKh6pmw60MK/hFyDMzLrJ
+	 JK0uiuyKSJlR3lx80SFRD0RvnT6i64IdNb6O9JkjqTKxeUJARGUxiA3edA3+gs/5OO
+	 h8qBnNFOByH5w==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1raBwY-0035aU-0R;
+	Wed, 14 Feb 2024 09:52:42 +0000
+Date: Wed, 14 Feb 2024 09:52:41 +0000
+Message-ID: <867cj75q52.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Rob Herring <robh@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Peter Rosin <peda@axentia.se>,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2] of: OF_IRQ: select IRQ_DOMAIN instead of depending on it
+In-Reply-To: <20240213225619.11726-1-rdunlap@infradead.org>
+References: <20240213225619.11726-1-rdunlap@infradead.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:218a:b0:363:c4a0:5d06 with SMTP id
- j10-20020a056e02218a00b00363c4a05d06mr159076ila.1.1707904323060; Wed, 14 Feb
- 2024 01:52:03 -0800 (PST)
-Date: Wed, 14 Feb 2024 01:52:03 -0800
-In-Reply-To: <9cf86b72-286d-f726-6907-ff2c11af6d75@blackhole.kfki.hu>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007c900506115476fc@google.com>
-Subject: Re: [syzbot] [netfilter?] WARNING: ODEBUG bug in ip_set_free
-From: syzbot <syzbot+ebbab3e04c88fa141e6b@syzkaller.appspotmail.com>
-To: kadlec@blackhole.kfki.hu, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: rdunlap@infradead.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, robh@kernel.org, arnd@arndb.de, p.zabel@pengutronix.de, peda@axentia.se, devicetree@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hello,
+On Tue, 13 Feb 2024 22:56:19 +0000,
+Randy Dunlap <rdunlap@infradead.org> wrote:
+> 
+> IRQ_DOMAIN is a hidden (not user visible) symbol. Users cannot set
+> it directly thru "make *config", so drivers should select it instead
+> of depending on it if they need it.
+> Relying on it being set for a dependency is risky.
+> 
+> Consistently using "select" or "depends on" can also help reduce
+> Kconfig circular dependency issues.
+> 
+> Therefore, change OF_IRQ's use of "depends on" to "select".
+> 
+> This patch reduces one Kconfig circular dependency in
+> drivers/mux/Kconfig when MUX_MMIO attempts to select REGMAP (a failed
+> patch), which that driver needs (but does not completely resolve that
+> issue). [1]
+> 
+> before this patch: (10 lines of detail)
+> drivers/net/ethernet/arc/Kconfig:19:error: recursive dependency detected!
+> drivers/net/ethernet/arc/Kconfig:19:	symbol ARC_EMAC_CORE is selected by ARC_EMAC
+> drivers/net/ethernet/arc/Kconfig:26:	symbol ARC_EMAC depends on OF_IRQ
+> drivers/of/Kconfig:81:	symbol OF_IRQ depends on IRQ_DOMAIN
+> kernel/irq/Kconfig:60:	symbol IRQ_DOMAIN is selected by REGMAP
+> drivers/base/regmap/Kconfig:6:	symbol REGMAP is selected by MUX_MMIO
+> drivers/mux/Kconfig:48:	symbol MUX_MMIO depends on MULTIPLEXER
+> drivers/mux/Kconfig:6:	symbol MULTIPLEXER is selected by MDIO_BUS_MUX_MULTIPLEXER
+> drivers/net/mdio/Kconfig:275:	symbol MDIO_BUS_MUX_MULTIPLEXER depends on MDIO_DEVICE
+> drivers/net/mdio/Kconfig:6:	symbol MDIO_DEVICE is selected by PHYLIB
+> drivers/net/phy/Kconfig:16:	symbol PHYLIB is selected by ARC_EMAC_CORE
+> 
+> after this patch: (5 lines of detail)
+> drivers/mux/Kconfig:6:error: recursive dependency detected!
+> drivers/mux/Kconfig:6:	symbol MULTIPLEXER is selected by MDIO_BUS_MUX_MULTIPLEXER
+> drivers/net/mdio/Kconfig:275:	symbol MDIO_BUS_MUX_MULTIPLEXER depends on MDIO_BUS
+> drivers/net/mdio/Kconfig:13:	symbol MDIO_BUS is selected by REGMAP
+> drivers/base/regmap/Kconfig:6:	symbol REGMAP is selected by MUX_MMIO
+> drivers/mux/Kconfig:48:	symbol MUX_MMIO depends on MULTIPLEXER
+> 
+> [1] https://lore.kernel.org/lkml/20230210115625.GA30942@pengutronix.de/
+> 
+> Fixes: 63c60e3a6dc3 ("of: OF_IRQ should depend on IRQ_DOMAIN")
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: Peter Rosin <peda@axentia.se>
+> Cc: devicetree@vger.kernel.org
+> ---
+> v2: update patch description, rebase & resend
+> 
+>  drivers/of/Kconfig |    3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff -- a/drivers/of/Kconfig b/drivers/of/Kconfig
+> --- a/drivers/of/Kconfig
+> +++ b/drivers/of/Kconfig
+> @@ -80,7 +80,8 @@ config OF_ADDRESS
+>  
+>  config OF_IRQ
+>  	def_bool y
+> -	depends on !SPARC && IRQ_DOMAIN
+> +	depends on !SPARC
+> +	select IRQ_DOMAIN
+>  
+>  config OF_RESERVED_MEM
+>  	def_bool OF_EARLY_FLATTREE
+> 
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-WARNING: ODEBUG bug in ip_set_free
+This seems to be moving is the right direction. FWIW,
 
-------------[ cut here ]------------
-ODEBUG: free active (active state 0) object: 0000000062ae9ef3 object type: timer_list hint: bitmap_port_gc+0x0/0x4dc net/netfilter/ipset/ip_set_bitmap_port.c:282
-WARNING: CPU: 0 PID: 6628 at lib/debugobjects.c:517 debug_print_object lib/debugobjects.c:514 [inline]
-WARNING: CPU: 0 PID: 6628 at lib/debugobjects.c:517 __debug_check_no_obj_freed lib/debugobjects.c:989 [inline]
-WARNING: CPU: 0 PID: 6628 at lib/debugobjects.c:517 debug_check_no_obj_freed+0x398/0x47c lib/debugobjects.c:1019
-Modules linked in:
-CPU: 0 PID: 6628 Comm: syz-executor.0 Not tainted 6.8.0-rc3-syzkaller-00010-gf735966ee23c-dirty #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
-pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : debug_print_object lib/debugobjects.c:514 [inline]
-pc : __debug_check_no_obj_freed lib/debugobjects.c:989 [inline]
-pc : debug_check_no_obj_freed+0x398/0x47c lib/debugobjects.c:1019
-lr : debug_print_object lib/debugobjects.c:514 [inline]
-lr : __debug_check_no_obj_freed lib/debugobjects.c:989 [inline]
-lr : debug_check_no_obj_freed+0x398/0x47c lib/debugobjects.c:1019
-sp : ffff8000978c6950
-x29: ffff8000978c6990 x28: 0000000000000000 x27: ffff80008aeec3c0
-x26: ffff0000e345d318 x25: dfff800000000000 x24: 0000000000000000
-x23: ffff80009368be40 x22: ffff0000e345d000 x21: 0000000000000000
-x20: ffff8000894dfe30 x19: ffff0000e345d300 x18: 1fffe000367ff596
-x17: ffff80008ec6d000 x16: ffff80008031fff4 x15: 0000000000000001
-x14: 1fffe00036801de8 x13: 0000000000000000 x12: 0000000000000003
-x11: 0000000000000001 x10: 0000000000000003 x9 : dee47f29bae7c100
-x8 : dee47f29bae7c100 x7 : ffff800080296b68 x6 : 0000000000000000
-x5 : 0000000000000001 x4 : 0000000000000001 x3 : 0000000000000000
-x2 : 0000000000000006 x1 : ffff80008aecd8e0 x0 : ffff800125439000
-Call trace:
- debug_print_object lib/debugobjects.c:514 [inline]
- __debug_check_no_obj_freed lib/debugobjects.c:989 [inline]
- debug_check_no_obj_freed+0x398/0x47c lib/debugobjects.c:1019
- slab_free_hook mm/slub.c:2093 [inline]
- slab_free mm/slub.c:4299 [inline]
- kfree+0x114/0x3cc mm/slub.c:4409
- kvfree+0x40/0x50 mm/util.c:663
- ip_set_free+0x28/0x7c net/netfilter/ipset/ip_set_core.c:264
- bitmap_port_destroy+0xe4/0x324 net/netfilter/ipset/ip_set_bitmap_gen.h:66
- ip_set_create+0x904/0xf48 net/netfilter/ipset/ip_set_core.c:1157
- nfnetlink_rcv_msg+0xa78/0xf80 net/netfilter/nfnetlink.c:302
- netlink_rcv_skb+0x214/0x3c4 net/netlink/af_netlink.c:2543
- nfnetlink_rcv+0x21c/0x1ed0 net/netfilter/nfnetlink.c:659
- netlink_unicast_kernel net/netlink/af_netlink.c:1341 [inline]
- netlink_unicast+0x65c/0x898 net/netlink/af_netlink.c:1367
- netlink_sendmsg+0x83c/0xb20 net/netlink/af_netlink.c:1908
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg net/socket.c:745 [inline]
- ____sys_sendmsg+0x56c/0x840 net/socket.c:2584
- ___sys_sendmsg net/socket.c:2638 [inline]
- __sys_sendmsg+0x26c/0x33c net/socket.c:2667
- __do_sys_sendmsg net/socket.c:2676 [inline]
- __se_sys_sendmsg net/socket.c:2674 [inline]
- __arm64_sys_sendmsg+0x80/0x94 net/socket.c:2674
- __invoke_syscall arch/arm64/kernel/syscall.c:37 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:51
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:136
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:155
- el0_svc+0x54/0x158 arch/arm64/kernel/entry-common.c:678
- el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:696
- el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
-irq event stamp: 294
-hardirqs last  enabled at (293): [<ffff800080296c08>] raw_spin_rq_unlock_irq kernel/sched/sched.h:1397 [inline]
-hardirqs last  enabled at (293): [<ffff800080296c08>] finish_lock_switch+0xbc/0x1e4 kernel/sched/core.c:5154
-hardirqs last disabled at (294): [<ffff80008ad60eac>] el1_dbg+0x24/0x80 arch/arm64/kernel/entry-common.c:436
-softirqs last  enabled at (276): [<ffff80008002189c>] softirq_handle_end kernel/softirq.c:399 [inline]
-softirqs last  enabled at (276): [<ffff80008002189c>] __do_softirq+0xac8/0xce4 kernel/softirq.c:582
-softirqs last disabled at (147): [<ffff80008002ab48>] ____do_softirq+0x14/0x20 arch/arm64/kernel/irq.c:81
----[ end trace 0000000000000000 ]---
+Acked-by: Marc Zyngier <maz@kernel.org>
 
+	M.
 
-Tested on:
-
-commit:         f735966e Merge branches 'for-next/reorg-va-space' and ..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=10afd01c180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d47605a39da2cf06
-dashboard link: https://syzkaller.appspot.com/bug?extid=ebbab3e04c88fa141e6b
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=10de0934180000
-
+-- 
+Without deviation from the norm, progress is not possible.
