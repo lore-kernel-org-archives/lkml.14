@@ -1,87 +1,76 @@
-Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [195.130.137.89])
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1435B67A
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 15:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA2453E34
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 15:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707923028; cv=none; b=XdUOJpfE9LPeLACElXxx0lqlbMkuMhizm8Ti53XaxvOi/Vvep01RwNUmISwvkdHcpQWpSsWxOHKKp4TL5ZY+isBMMbjFhIEKsZsdcgbI+eKjTc46oRxcZnnr2akkJNKrAK0t9KZtolWA5anYXLD+wk8Z2JgbMWS3Oa8/wE9j5Kg=
+	t=1707923063; cv=none; b=shZGHbPlFxIQ2uFxAGMl2bDkRbHAQ5vkI67HZF4uYfccdS+DPuTyVetVBdmYDDI3sjoavxdbY0JZTxsxQlVm/CFBUqPEh1INLwu4g2+jBiM4+Kl6GRzmp0jP06r9y2SqAjpmEZtmNyFZCSNtr7RcOgnM9daX0GSqMSlUQeKXhgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707923028; c=relaxed/simple;
-	bh=3vcGEY2nCwbKZOblmIruG0DS1Vlu/ShsWXJ73KL92qs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kPsHVLE6AEoWEV4Oc1dpxwYFwHiaN/r4hylZ0Ppv8XcbRC/fuutCF2WyxK4oSz5np9S5UXQM+nyTdLmpuSTtBFE70TmiFShV9K7VthA8sDG8CeIDehrrN1RwADK7U1nnOkPC+Y3OPckVC4yHooDNk2SGo6f9gIGJyzZwDAYXKRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:ac52:3a54:2a84:d65a])
-	by laurent.telenet-ops.be with bizsmtp
-	id n33k2B0060LVNSS0133k12; Wed, 14 Feb 2024 16:03:44 +0100
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1raGnR-000dDp-Bj;
-	Wed, 14 Feb 2024 16:03:44 +0100
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1raGnX-00H2FP-VY;
-	Wed, 14 Feb 2024 16:03:43 +0100
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Support Opensource <support.opensource@diasemi.com>,
-	Lee Jones <lee@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Steve Twiss <stwiss.opensource@diasemi.com>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] dt-bindings: mfd: dlg,da9063: Make #interrupt-cells required
-Date: Wed, 14 Feb 2024 16:03:42 +0100
-Message-Id: <2212567f4c17251011e5e0bfa4ea0126d9815d39.1707922672.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1707923063; c=relaxed/simple;
+	bh=09SyK5r/P9n+Beu+pmBHhdk02BIJkQ+zPdGY8S+fkJw=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=jbf6K4IyEPcfBlT3vvIM+D0csXh87LAxBiTCxGVc3rCIl/3g4NtcbFCy7BaK73KGFEhXDctM1O7EN50QCcqQup8BJKTfe8Jggm6BfC1MuerdzHsdkV1d+yAmfSneQ8TiHtLC9dx3vqG/DkCXASw4LJpw8wDfSsOwJbgnYwkhj6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-36422f71c3fso9568265ab.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 07:04:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707923061; x=1708527861;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O3LH6TBYOOzcaF8RvQJ7tLm9fKBFbm0Mfdb4zQWz77g=;
+        b=PhTgm/i8p9OqL2Ef/66ymBAwNqqMQSscMO4AdBQHyxm7Y9g5rK9e6+z4TQ2UCUjkzT
+         pSHDrG6z4OUv8Pix3fPmbL0fUxv83b0i0jPjG8ucIDYDZFUx3/TLW142tToi1D29TVAv
+         PcMGURbAZtSVGMmNP4fKHxah9clQGfMqiVh6qtRBsWpZWKm+uuNVrk7kfbZTzbjRVbNB
+         PZOdnZ4GeaD7rGaTPZS6ZZfUl+IsPU3G3XmlB5jiROU5esNl8FfmjonKhu1JxLm2qONl
+         crrU3NSz99mkIwkVyJ3HJXS16ybrw5+yMsqvnOHYF4wW7QRQ8kM8TnGPQsBeqAJoUp0r
+         fYpw==
+X-Gm-Message-State: AOJu0Yx7Gw4ZZw93HJHNl0SjBkmyJ0ACAMUXhJjtWsYyWN9/D2HZXrW1
+	SE1j3BGxJT9yYc75l2UAR4roJw8OsiVRHVmtAHXOzyNFhaFPgdc4i3hQvPJ5+97F1cM1j0WBb1z
+	VS6EymCsPFh0BKmPiliYEZOn7tK8GuZnXvuMHd28q6ByAHrhflsPjuoEL5A==
+X-Google-Smtp-Source: AGHT+IEzw7z+AvohmDX4e1SLnYoxthXdIQd/0SB5vSxXsMVMPTZMaT/OKhm2ybzsBBTA90Tio0uVBTa5Egfcqdhtktgzh5KH+w5F
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:218a:b0:363:a059:670b with SMTP id
+ j10-20020a056e02218a00b00363a059670bmr182822ila.4.1707923054430; Wed, 14 Feb
+ 2024 07:04:14 -0800 (PST)
+Date: Wed, 14 Feb 2024 07:04:14 -0800
+In-Reply-To: <000000000000b8f8610609479fa3@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f6947d061158d228@google.com>
+Subject: Re: [syzbot] Test for fd7b34375c1c8ce29c93
+From: syzbot <syzbot+fd7b34375c1c8ce29c93@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-'#interrupt-cells' is a required property for interrupt providers, hence
-make it required.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-While at it, move '#interrupt-cells' in the example to match common sort
-order.
+***
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Documentation/devicetree/bindings/mfd/dlg,da9063.yaml | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Subject: Test for fd7b34375c1c8ce29c93
+Author: syoshida@redhat.com
 
-diff --git a/Documentation/devicetree/bindings/mfd/dlg,da9063.yaml b/Documentation/devicetree/bindings/mfd/dlg,da9063.yaml
-index c5a7e10d7d80e8d7..e5ccc2708f0bb0f8 100644
---- a/Documentation/devicetree/bindings/mfd/dlg,da9063.yaml
-+++ b/Documentation/devicetree/bindings/mfd/dlg,da9063.yaml
-@@ -87,6 +87,7 @@ required:
-   - reg
-   - interrupts
-   - interrupt-controller
-+  - '#interrupt-cells'
- 
- additionalProperties: false
- 
-@@ -99,10 +100,10 @@ examples:
-       pmic@58 {
-         compatible = "dlg,da9063";
-         reg = <0x58>;
--        #interrupt-cells = <2>;
-         interrupt-parent = <&gpio6>;
-         interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
-         interrupt-controller;
-+        #interrupt-cells = <2>;
- 
-         rtc {
-           compatible = "dlg,da9063-rtc";
--- 
-2.34.1
+#syz test
+
+diff --git a/net/core/skmsg.c b/net/core/skmsg.c
+index 93ecfceac1bc..fd20aae30be2 100644
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -1227,7 +1227,7 @@ static void sk_psock_verdict_data_ready(struct sock *sk)
+ 		rcu_read_lock();
+ 		psock = sk_psock(sk);
+ 		if (psock)
+-			psock->saved_data_ready(sk);
++			sk_psock_data_ready(sk, psock);
+ 		rcu_read_unlock();
+ 	}
+ }
 
