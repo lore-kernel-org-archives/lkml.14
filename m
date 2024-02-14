@@ -1,107 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 976D21B813;
-	Wed, 14 Feb 2024 13:03:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 770605337F;
+	Wed, 14 Feb 2024 13:06:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707915834; cv=none; b=AbtcI12rcK0k+LFosUNwilX5LDGML94EqQ2QUAqs4qJJySDSWXDwpjVNoCbSmhqyuRzHLTGHKsM0cuu5iswQZZvYJMeV9JGnEB/UubS8LAp/9dwl2JJtvRitcOPvPqzB49/n03J7WlJkhFAov0qlX2jGvgGxguE2H4Gn0HpyWyQ=
+	t=1707915971; cv=none; b=Z97X3ykmEWf3l4EAf37q2gDTulwgJiQW8QE5hsNx6DGJexihYvKU1MY4mGwUNZ2q5mBcS3t4RdyrEBdfgmvosMokrUA1XOH6CUlTXx38fvE1J5MJGFToFMoXLSlmCs1DBaP6wbjL/PB02c4emAG9k05/tivfJmrfL7WJohWEbMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707915834; c=relaxed/simple;
-	bh=Y5cCv6WN3AG3tMIqacma1w2YSEMZ6JaBHyisxC12c9w=;
+	s=arc-20240116; t=1707915971; c=relaxed/simple;
+	bh=o4iopwK/5ULya9a8mXcuJSOlKxKZiTV1D6BHKKdOPGU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UXwdbTZSOrryKwlob7xGvdHrK4UUVzJn84vpVQdAP6stEDNCDdGfHvgLeWIGTD+5iSzKQP4j1qTKWTuON/7bWW9lEeZq5FN31HCjLE3FoXMrYIx8dv13bEhRLBx9CgVmOj6cspIu2LMje01qFLxhDLQ2GR8+/jI0IwGBc7nLgwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AvcT8YJo; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=J6HD0etVZ0to0sBi1rhArbyLjuyUW/Gvdxnz2cXY7Lb7kMUQAsCkvhHc4ReP8SGrlp23NXnPbVtSK0rSpAQHA5Cietd7InYSqWLTjdlTAU9l/CZJbQxB/KSRZzSMS5lBbd8jdjat+SI/aSAXZHD8PRSJ6/gTNcFm0tlilOvPmGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kRR7cFxK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AvcT8YJo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FED8C43143;
-	Wed, 14 Feb 2024 13:03:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kRR7cFxK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2BF8C433C7;
+	Wed, 14 Feb 2024 13:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707915834;
-	bh=Y5cCv6WN3AG3tMIqacma1w2YSEMZ6JaBHyisxC12c9w=;
+	s=k20201202; t=1707915971;
+	bh=o4iopwK/5ULya9a8mXcuJSOlKxKZiTV1D6BHKKdOPGU=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=AvcT8YJoQNZs8sfRDTkmYygA8l0Kza6K8KEPY6U7YF/29oo0kvqwp44UZBHOO9osR
-	 TK4RFyjNq+qR4wlkN6n+/wJeiSFhvBNfCAObgM80sJtGSwoUvEgYM7erDzssa3Fx8B
-	 rxHRY+UhSYZjUxn+MgyDUGzHqPBf7DIS2+9n2BX6DogXsBakeZgX3CVQ6HNVmQJ2H9
-	 yg/6H+xw9ZzE5Sxgpwj4QToZs1eY5dOaaUEd2NWIZNm3z+/fcmPObmj+mQtJQzz4e3
-	 leKlh4ZGTJMSOlFYXtUASBH4/14g80J141xiKM29JjkRFxnMLfX5eKDJcXmKTbLqrx
-	 cYW5Fi/ic4yUA==
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5638aa9a5c2so529040a12.3;
-        Wed, 14 Feb 2024 05:03:54 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWD6j/DH0k7FIsBz9pEDIpD8O8mzLMWlyx9IzfvbXEUGGoOQO/vT2OHGcnqNWdYdXVO/ROcW6ElcmFJLpNFgtkPpuxueGhmfpU/u+ndLuG+SJNzXmAX07OuJjsxmyO1j3A5d6f/7N2LJkPK8dOpwbL5z0LWsfYK94qc911wogbZ3P2N3vMHUfVQ98BddLknqdh24pK9kuwXy+9j1DWu0aY/xXU=
-X-Gm-Message-State: AOJu0YwqZyjH+kx1ouDtvBdKHvfwwQicj386I1Xn5gNDdtZmfdbN2x+q
-	7ZirB/LGfgQSufG3l/iN1qcFXTnisuguHLg0N1VsYjikMFrlGkidyaiIT+tnMoJuJpkPyhmhtLZ
-	6F8rFK+Sj/J/Y0c9lZOQUG1gLZ18=
-X-Google-Smtp-Source: AGHT+IGDqSWASlPOhhqmPfhR917mdVVEr1HDL41oniwRUbx8hEYlWBy0XN5Ku7zm3JoyjDeFMN3Gw5snyzzzzutcjwg=
-X-Received: by 2002:a05:6402:514f:b0:562:9f3:afeb with SMTP id
- n15-20020a056402514f00b0056209f3afebmr1987648edd.20.1707915832828; Wed, 14
- Feb 2024 05:03:52 -0800 (PST)
+	b=kRR7cFxKx3ZKqgOQtG+aHBwQL/5skbrDyaSa6i88BHzJLG/26xZnCJgGbYzX/SAov
+	 N5fQKmJFQuaFmzuOumk5ZHl63iX3G+y1pf6SrJoRe9mWNeJsCS9VzEc5mbM1lW4Fyl
+	 mdfK546qKTcdk6Ulv14LNLlm25sTlJQrmnMUMVk1bFzSWk+JSb2WS9bb+u3GraWDn1
+	 dmuxwrCeVZ1VEjRyEeIRLS2OpIbKllD2jKze/x5I1k73HpVRfjnZShZpQ6F/p7mDV1
+	 nM+97e8nfSGd9PkrutY8MN2oD6+eHRgjMuq8+L7u7q7MuzaulVHNzbWowY/QtLjYgW
+	 Ze7U7N+7ivB8Q==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5638e05e27cso353890a12.0;
+        Wed, 14 Feb 2024 05:06:10 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXoGERACVTb57QM5gxhXEEReuijRok8nqq/a7MY4Bi7QDlAI5RAlLDS1nyvyhfsVORX9fYNO5HFsGwNdnrcoSZwWSYKv9GdtbO1yCqEAWjv1EOD+/4GnF0/GCvl5yeAzhr9
+X-Gm-Message-State: AOJu0YyINb0ypg+fsyeFNiyjWBIMViMgXsjuV9R/ZE0aO/UvvVrt2c3t
+	vJL6Jztg6ns3haMteVitPuxT3AHSwvj/Iu3madg/oRkJkpzgw1Cady0tLZbzntwvoPkm3K5FebT
+	Nmr8feTGTDVWYqZEGBuNwdPKWYi0=
+X-Google-Smtp-Source: AGHT+IGwcchJhHo+k99G60kcy5767+i12fWx+5UMpKZg7T5GiHwpvMNQ+GtxeRKwsOBtkUp3TS8uN2xuvSK8sqT4hWw=
+X-Received: by 2002:aa7:d8cd:0:b0:55f:ccec:ba51 with SMTP id
+ k13-20020aa7d8cd000000b0055fccecba51mr2047998eds.22.1707915969469; Wed, 14
+ Feb 2024 05:06:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1707524971-146908-1-git-send-email-quic_obabatun@quicinc.com> <1707524971-146908-2-git-send-email-quic_obabatun@quicinc.com>
-In-Reply-To: <1707524971-146908-2-git-send-email-quic_obabatun@quicinc.com>
+References: <20240214101557.2900512-1-kernel@xen0n.name> <20240214101557.2900512-5-kernel@xen0n.name>
+In-Reply-To: <20240214101557.2900512-5-kernel@xen0n.name>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 14 Feb 2024 21:03:49 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5f5e-cCaX7Gr20oG8F-aywJcosLn4ajxx2SQWoB8JtSA@mail.gmail.com>
-Message-ID: <CAAhV-H5f5e-cCaX7Gr20oG8F-aywJcosLn4ajxx2SQWoB8JtSA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] loongarch: Call arch_mem_init() before
- platform_init() in the init sequence
-To: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-Cc: jonas@southpole.se, stefan.kristiansson@saunalahti.fi, shorne@gmail.com, 
-	ysato@users.sourceforge.jp, dalias@libc.org, glaubitz@physik.fu-berlin.de, 
-	robh+dt@kernel.org, frowand.list@gmail.com, linux-openrisc@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-sh@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@quicinc.com
+Date: Wed, 14 Feb 2024 21:06:06 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6htTqd3nHymcEpj2DDdeXU00OwtPJfYNpiSA7ac5JV7w@mail.gmail.com>
+Message-ID: <CAAhV-H6htTqd3nHymcEpj2DDdeXU00OwtPJfYNpiSA7ac5JV7w@mail.gmail.com>
+Subject: Re: [PATCH for-6.8 4/5] KVM: LoongArch: Streamline control flow of kvm_check_cpucfg
+To: WANG Xuerui <kernel@xen0n.name>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	Bibo Mao <maobibo@loongson.cn>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, WANG Xuerui <git@xen0n.name>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Oreoluwa,
+Hi, Xuerui,
 
-On Sat, Feb 10, 2024 at 8:29=E2=80=AFAM Oreoluwa Babatunde
-<quic_obabatun@quicinc.com> wrote:
+On Wed, Feb 14, 2024 at 6:16=E2=80=AFPM WANG Xuerui <kernel@xen0n.name> wro=
+te:
 >
-> The platform_init() function which is called during device bootup
-> contains a few calls to memblock_alloc().
-> This is an issue because these allocations are done before reserved
-> memory regions are set aside in arch_mem_init().
-> This means that there is a possibility for memblock to allocate memory
-> from any of the reserved memory regions.
+> From: WANG Xuerui <git@xen0n.name>
 >
-> Hence, move the call to arch_mem_init() to be earlier in the init
-> sequence so that all reserved memory is set aside before any allocations
-> are made with memblock.
+> All the checks currently done in kvm_check_cpucfg can be realized with
+> early returns, so just do that to avoid extra cognitive burden related
+> to the return value handling.
 >
-> Signed-off-by: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
+> The default branch is unreachable because of the earlier validation by
+> _kvm_get_cpucfg_mask, so mark it as such too to make things clearer.
+>
+> Signed-off-by: WANG Xuerui <git@xen0n.name>
 > ---
->  arch/loongarch/kernel/setup.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/loongarch/kvm/vcpu.c | 23 +++++++++++------------
+>  1 file changed, 11 insertions(+), 12 deletions(-)
 >
-> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.=
-c
-> index edf2bba..66c307c 100644
-> --- a/arch/loongarch/kernel/setup.c
-> +++ b/arch/loongarch/kernel/setup.c
-> @@ -597,8 +597,8 @@ void __init setup_arch(char **cmdline_p)
->         parse_early_param();
->         reserve_initrd_mem();
->
-> -       platform_init();
->         arch_mem_init(cmdline_p);
-> +       platform_init();
-Thank you for your patch, but I think we cannot simply exchange their
-order. If I'm right, you try to move all memblock_reserve() as early
-as possible, but both arch_mem_init() and platform_init() call
-memblock_reserve(), we should do a complete refactor for this. And
-since it works with the existing order, we can simply keep it as is
-now.
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index e973500611b4..9e108ffaba30 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -339,24 +339,23 @@ static int kvm_check_cpucfg(int id, u64 val)
+>                 /* CPUCFG2 features checking */
+>                 if (val & ~mask)
+>                         /* The unsupported features should not be set */
+> -                       ret =3D -EINVAL;
+> -               else if (!(val & CPUCFG2_LLFTP))
+> +                       return -EINVAL;
+> +               if (!(val & CPUCFG2_LLFTP))
+>                         /* The LLFTP must be set, as guest must has a con=
+stant timer */
+> -                       ret =3D -EINVAL;
+> -               else if ((val & CPUCFG2_FP) && (!(val & CPUCFG2_FPSP) || =
+!(val & CPUCFG2_FPDP)))
+> +                       return -EINVAL;
+> +               if ((val & CPUCFG2_FP) && (!(val & CPUCFG2_FPSP) || !(val=
+ & CPUCFG2_FPDP)))
+>                         /* Single and double float point must both be set=
+ when enable FP */
+> -                       ret =3D -EINVAL;
+> -               else if ((val & CPUCFG2_LSX) && !(val & CPUCFG2_FP))
+> +                       return -EINVAL;
+> +               if ((val & CPUCFG2_LSX) && !(val & CPUCFG2_FP))
+>                         /* FP should be set when enable LSX */
+> -                       ret =3D -EINVAL;
+> -               else if ((val & CPUCFG2_LASX) && !(val & CPUCFG2_LSX))
+> +                       return -EINVAL;
+> +               if ((val & CPUCFG2_LASX) && !(val & CPUCFG2_LSX))
+>                         /* LSX, FP should be set when enable LASX, and FP=
+ has been checked before. */
+> -                       ret =3D -EINVAL;
+> -               break;
+> +                       return -EINVAL;
+> +               return 0;
+>         default:
+> -               break;
+> +               unreachable();
+Maybe BUG() is better than unreachable()?
 
 Huacai
-
+>         }
+> -       return ret;
+>  }
 >
->         resource_init();
->  #ifdef CONFIG_SMP
+>  static int kvm_get_one_reg(struct kvm_vcpu *vcpu,
 > --
+> 2.43.0
+>
