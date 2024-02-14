@@ -1,338 +1,287 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2087.outbound.protection.outlook.com [40.107.93.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F137945A
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 03:29:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707881358; cv=none; b=o9KHz+i2FlOzW+aFEESN1+/nTUOM8Ags3+VIxVKBAk/moO60lRtXPQehIi7QucjTlSjw3yhq2/Ejnxf82AhV3zjNi0yAiLWsqsXkQzJVYKRRbZlLuhiwSavYGelA5wq90tLR13RSS9EBoFZzUzyewUfxKSYL/Pe8eTEsoCMMedg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707881358; c=relaxed/simple;
-	bh=uQ9lj8YmsGd2m3HSYfn58m69JIvnSWjra9sGbJgUSQ8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Gy6ct8a5V6Xepx7OgExTJSIdX7bBPQGJTT5pLkIEQVUj2SvxTz0Yv0V1nCExCFNWrfJtJguLQEOLh0sM4JaFU0QR8sX9wtPszjAO7yIP0hl9dRvcAj55LWY+HjHU0Me0vnCWQsA2sWBzSAz9sGq8x2oRHLgVauXj3VDW/3ZdAE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fKl2EIOp; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC075945A;
+	Wed, 14 Feb 2024 03:35:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707881734; cv=fail; b=rf3goDawFognFr0ZKOHurfc7OIlJWySpA83OcpZKxgPkGDh7mwDTNFXUF7up+nA6EzSLy6DTXwZ1nwzGLugsjlOW6g0gRYSRCWctwVzwWth+NJaITGbyXfiyr1KQoYwjDYy5YHqGYfe/L+l6D08tMIK2pFH1MC+6f7Ss1CUmPqo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707881734; c=relaxed/simple;
+	bh=Cpi0eCfGDWwKyGH60UTituQHta3MTs2CyE01xy+ceFE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SYx0B4CtkVcDybhmRkJDNZqfTv7IQEYFIfhMd/tBvsiTsYY4b+Wv1xt17PlXtL6aEWy53OGz3pJ0WeKvzS1bkN1R1Z/Ik7YZ9vHh3gTD8vbObmyPX3LL/C08GP0iCYUQHTfMs/BLVw7MGC4PrLJJpX0+SxAVbtv9hVDTFYy4uCA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1qnibZ6Z; arc=fail smtp.client-ip=40.107.93.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fKl2EIOp"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-428405a0205so575551cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 19:29:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707881355; x=1708486155; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sEpPY5pRAKDFBbmEO202dbr7ZJfJqmGAy9ZnyjZq7WI=;
-        b=fKl2EIOpcxtU0n+DatCIzed9OiGyWILYBSa/8hd15uxPJ/ormoeUtTUgKnzZnGXBxS
-         k+8wGMPaAR8OdRqHtaZMc5m9G6J8P4lQkI/BiYRGtKKFC/rZkKNgo7G3lLd1Fdl+LFCD
-         C2C0LVr+C97CBriOB0kayAYzzRFjcv7j5+SLp5C4OQdtvK4jcgPg5CRYLLfnssawCQei
-         o30Z+5RtdLJ10Scrjcut0VD9zcuvflr/t/7Kx6F9kvGmfgrEtzlTJbKeeJ4VWI6Qwkp5
-         7Jqt/01/uQHXuF6d/SEEFxEpW1vsMkU0ceUwDfVgDL6afG9u0gBY376Om7joIitxh/EV
-         2LCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707881355; x=1708486155;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sEpPY5pRAKDFBbmEO202dbr7ZJfJqmGAy9ZnyjZq7WI=;
-        b=vb7qSADzYFV4vBVvxsfQtXGRvEfXOICU1gf8Bvkt3aIZyGGglkh/G2GLJ7hUkEmazk
-         /qo6NsUvrei3w3F4i/V9121XQrCiqCOLuLrQgv0WWB7albWrq34aPKpiWaDY+IeBtSQ9
-         VN1kgMPyz4I3TPvFL6WDxAGuEpEn8jVo+flzbDF0KD3J8/UbuWvc0PH2z4RICBnWytH0
-         DEzK0V0jWDcHSVPBe9wg1Rbj6neyiU6eW0b4+VKKcPLaa5wZoOAeGAN10Fu1q2ELkI+n
-         a5UfeoVhbvdzzrp3GznX5c40zR4hkxGeck7BbeXOtAOqO3mYQrnfj8cogIi3tc8DNcla
-         cn9A==
-X-Forwarded-Encrypted: i=1; AJvYcCXRYn/FCPUb2UXJUxyYdwMkoPnxpij34FH/SjrrvWFeKrZRi+ZGq+T2szzOWa8UC7mK7/ROvhr1aBPJs7FgB/+Pied87ae179+Wk0fM
-X-Gm-Message-State: AOJu0YwDXXIooV3oHLSiBGfpOiApGahUrl+JldzNpufOwSYO5JnYGnPN
-	j88p7WRChGGtpMTRB+arWQqa1VAMWyVi+YlH9aDwVxBela7sHoZrkTnfM5WtY7yDMgJrjSmZP+E
-	BLeb32s71UTuGr/Ochz92mzauk8SPYJsxUhDE
-X-Google-Smtp-Source: AGHT+IEGinB5yJc+8L21uHOW4Lfff3h4LeG46EUoXKaXv9FaBM1ND/dLM4MEtlY6evLI45L9Fg80+59JFqEwzCWojXE=
-X-Received: by 2002:ac8:5dce:0:b0:42d:b492:868f with SMTP id
- e14-20020ac85dce000000b0042db492868fmr196989qtx.24.1707881354884; Tue, 13 Feb
- 2024 19:29:14 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1qnibZ6Z"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lICBWvOECGcUEbIpQRCfdGudCM4s6+ygcu7G8He710+jd/WEPO0ADTSNxOiz6gSZzR1XFhaR0CdPW3uSuUgb0JsplVSUd2Yq6gne2nsmUmFiBoYc0uNLSGE8b9TzgxiTbzXoG7xnSK9ug1XwP0+85F/viJnGVx+AosZU/WkOZIOkFkfHAwGwjfMdVQ0G/uxY+b0HKjzCxvbAleJdOyak/UvKzyTNdZ+GLl0p73Fbj0IjkcHMurBfhctJ8nlYt7c7q0Ubm0edEpn4TPwIouIG3ppIiYkuwd3tm1d9CiUpPzn5jUzlkO0Lm2s4B1CNI+LgPCKcWaydHb64jlmAD136uA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/V9qXthCZLwHnNIJ3EDtMWR1WEfu1QkFnKKujxJ5uYU=;
+ b=lmi+wUl2s/DJDLNvplqX/N6bPtcEl4HWkzh6SEodDfKyvDMK+XGrpktmU42SrkzGEGotwg6t8ow5zaIPEo9Ujz0nOiwYCq9IOmxtfxFM6SfbluzRH/pS43avoZpAIju3pLoQDRGNVsMcD8eG0hRG8Do2hx8oe+M88Ljfblb42hwSr4p9cpTiv9wSLqc+hl0jMZbGLWEHwiRGqB8VdilOYr8LXjtNP1z5dgSdeSGNSDWn0knw366aV19XdSOOtqNrqMP8oDh9AmIxKRwpHOmpNQhIpvhY5VTsIWG4YofWvrOS3DrwS8o0itxSI+DletkT29hNRqcw3zRxUM3DF0h3kA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=alien8.de smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/V9qXthCZLwHnNIJ3EDtMWR1WEfu1QkFnKKujxJ5uYU=;
+ b=1qnibZ6ZoGExHKcb6LjSzPAvTaYA1UWwTUCrFvmT0yT3/aJ+pjlcXrs0w139NrG6vA7a4UE2wm8A7Iq9tTZ9SQixC2v8NiVN7putIjbP5Ni1ZPKxswOW+2Ib24SJQomgjTI+JB+oZnWCH+eoZVwMzaSNkirKgVOF6H8IYflWgjk=
+Received: from BN9PR03CA0594.namprd03.prod.outlook.com (2603:10b6:408:10d::29)
+ by SA3PR12MB9179.namprd12.prod.outlook.com (2603:10b6:806:3a1::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.21; Wed, 14 Feb
+ 2024 03:35:30 +0000
+Received: from BN2PEPF000044A1.namprd02.prod.outlook.com
+ (2603:10b6:408:10d:cafe::20) by BN9PR03CA0594.outlook.office365.com
+ (2603:10b6:408:10d::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.39 via Frontend
+ Transport; Wed, 14 Feb 2024 03:35:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN2PEPF000044A1.mail.protection.outlook.com (10.167.243.152) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7292.25 via Frontend Transport; Wed, 14 Feb 2024 03:35:30 +0000
+Received: from quartz-7b1chost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 13 Feb
+ 2024 21:35:27 -0600
+From: Yazen Ghannam <yazen.ghannam@amd.com>
+To: <bp@alien8.de>, <tony.luck@intel.com>, <linux-edac@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <avadhut.naik@amd.com>,
+	<john.allen@amd.com>, <muralidhara.mk@amd.com>,
+	<naveenkrishna.chatradhi@amd.com>, <sathyapriya.k@amd.com>, Yazen Ghannam
+	<yazen.ghannam@amd.com>
+Subject: [PATCH 1/2] RAS/AMD/ATL, EDAC/amd64: Move MI300 Row Retirement to ATL
+Date: Tue, 13 Feb 2024 21:35:15 -0600
+Message-ID: <20240214033516.1344948-2-yazen.ghannam@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240214033516.1344948-1-yazen.ghannam@amd.com>
+References: <20240214033516.1344948-1-yazen.ghannam@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240123014517.5787-1-mcpratt@pm.me> <CAGETcx_CqcHhKCXrUQOOnrr9Ke=dJRcJGTGxrdbPxnDOG1Xrbw@mail.gmail.com>
-In-Reply-To: <CAGETcx_CqcHhKCXrUQOOnrr9Ke=dJRcJGTGxrdbPxnDOG1Xrbw@mail.gmail.com>
-From: Saravana Kannan <saravanak@google.com>
-Date: Tue, 13 Feb 2024 19:28:35 -0800
-Message-ID: <CAGETcx_kH1Z7YuciybYac+q5qpA3EQb+7q77vx5OV+dk8_uwCQ@mail.gmail.com>
-Subject: Re: [PATCH v1 0/4] fw_devlink: generically handle bad links to child fwnodes
-To: Michael Pratt <mcpratt@pm.me>
-Cc: devicetree@vger.kernel.org, gregkh@linuxfoundation.org, 
-	linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	abel.vesa@linaro.org, alexander.stein@ew.tq-group.com, 
-	andriy.shevchenko@linux.intel.com, bigunclemax@gmail.com, brgl@bgdev.pl, 
-	colin.foster@in-advantage.com, djrscally@gmail.com, 
-	dmitry.baryshkov@linaro.org, festevam@gmail.com, fido_max@inbox.ru, 
-	frowand.list@gmail.com, geert@linux-m68k.org, heikki.krogerus@linux.intel.com, 
-	kernel@pengutronix.de, linus.walleij@linaro.org, linux@roeck-us.net, 
-	luca.weiss@fairphone.com, magnus.damm@gmail.com, martin.kepplinger@puri.sm, 
-	miquel.raynal@bootlin.com, rafal@milecki.pl, ansuelsmth@gmail.com, 
-	richard@nod.at, sakari.ailus@linux.intel.com, sudeep.holla@arm.com, 
-	tglx@linutronix.de, tony@atomide.com, vigneshr@ti.com, dianders@chromium.org, 
-	jpb@kernel.org, rafael@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044A1:EE_|SA3PR12MB9179:EE_
+X-MS-Office365-Filtering-Correlation-Id: e9958659-9740-423f-9d49-08dc2d0dfe18
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	uaqV9xwJ9KoaiCMqAz9wBJEc1dm67y4T+UGvqyxlkqn+WuODTa4jPLFbdglx5ipq7M9pkDRNmsVz90W+roEGlpzKuny3qtiegc8MdABb+xdZpmsRH7k4FyzCBThyxVcSMsdvP9cDwlUDXt7x5KqOD2I6qivpcEyYwjZHaNlFMn6D2jD3yMnuxRwNB74APHAJJEqogRu1yQaaPqHaM9HDDzMPBISZsIOk/bWvKrd5uAcvsO8jB2fdEl37cs3LeKehIj6KgPy/hEnzfifTy04mvJ7eqp3I/+YxA/pjDQGlQffJ0WNXIrCY7X/YEi/vVXdbtJPHRyqlSopWvyifcF21VrF7aV75L29Hpkx1ntwK/TVBwBg3phzR9QcxNRaJI91sN/MypaKlAHwPJxyP0vOcUq+CmaZzzkE1H3rfc8qA2nw6bpYsdL9p4IXUWTZ855hYTOE1DyKaHNAaBHf810NCdB83QSVu1M/2flv3zDOTBQBxi/fBtSnYgo1VN2Hm8xd1owbJTKNU2ANdpTKfdOLb0ZBmc+MxulUUrPNiXyh4ow3qxV5zlxx8mTer1GUGreWod3bmtswuTexr4nnG4q4Q/xEBXGBIeP+q+ExTHoYeEWQ=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(346002)(396003)(39860400002)(136003)(230922051799003)(82310400011)(451199024)(1800799012)(64100799003)(186009)(36840700001)(46966006)(40470700004)(7696005)(36756003)(44832011)(2906002)(70206006)(86362001)(54906003)(81166007)(336012)(8676002)(5660300002)(356005)(426003)(478600001)(82740400003)(70586007)(110136005)(6666004)(316002)(26005)(83380400001)(4326008)(1076003)(41300700001)(8936002)(2616005)(16526019);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2024 03:35:30.0149
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e9958659-9740-423f-9d49-08dc2d0dfe18
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000044A1.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB9179
 
-On Mon, Feb 5, 2024 at 12:06=E2=80=AFPM Saravana Kannan <saravanak@google.c=
-om> wrote:
->
-> On Mon, Jan 22, 2024 at 5:46=E2=80=AFPM Michael Pratt <mcpratt@pm.me> wro=
-te:
-> >
-> > Hi all,
-> >
-> > First off, if you are CC'ed here, it's likely because you were
-> > involved in or CC'ed in a patch series by Saravana Kannan for fw_devlin=
-k,
-> > and for consistency, I'm kindly asking for review from you all as well.
-> > If you think this may not affect your use cases, feel free to ignore th=
-is.
-> > I'm also CC'ing Christian and Rafal from the Openwrt project.
-> >
-> > This series is following up on some excellent work from Saravana [1]
-> > which is another patch series that includes some changes
-> > that helped make it possible for fw_devlink to work with MTD partitions
-> > that are a supplier fwnode by being a NVMEM provider. For an MTD partit=
-ion
-> > to become an NVMEM provider, it must be registered as a platform device
-> > using of_platform_populate() or similar function
-> > which was done in a previous commit [2]
-> > but this also resulted in fw_devlink to apply
-> > to those fwnodes and their child fwnodes.
-> >
-> > That regression caused consumer devices to defer indefinitely
-> > while waiting for probing that will never happen or for device links
-> > to form from fwnode links with fwnodes that are not associated
-> > with any real device or driver that probes
-> > (e.g. describing the location of a MAC address).
-> >
-> > Saravana's patch series helped in two ways:
-> > First, by moving consumers from a child fwnode (in this case,
-> > the "nvmem-cells" compatible node) to an ancestor fwnode
-> > that represents the actual supplier device when that device probes,
-> > which handles the case where
-> > the supplier device has a probe attempt first. [3] [4]
-> > And secondly, by specifically marking "nvmem-cells" compatible nodes
-> > as populated during MTD partition parsing which also occurs during
-> > the supplier device probe, which handles both cases of initial probe or=
-der,
-> > but only for that node type. [5]
-> >
-> > However, there's some drawbacks to the second solution
->
-> Oh, somehow missed this thread entirely until it saw some activity today.
->
-> > from having to manually name which nodes need the workaround
-> > for the corner case with the compatible string.
-> > Most notably, that it's possible for this corner case
-> > to apply to other nodes types, but also the fact that initial probe ord=
-er
-> > deciding whether or not everything probes in the intended order, if at =
-all,
-> > through driver core alone is still an issue with fw_devlink,
-> > despite the fact that controlling probe order in driver core
-> > is one of it's goals. In other words, the real problem is in driver cor=
-e,
-> > but the fix is in the mtd driver.
->
-> It's been a while since I looked at MTD code, but the real problem is
-> not in driver core, but how it's used incorrectly by the MTD/nvmem
-> frameworks. Adding devices to a bus that'll never probe is wrong. I
-> think there's also a case of two devices being created off the same DT
-> node. While not technically wrong, it's weird when one of them never
-> probes.
->
-> I'll take a closer look and respond to this series later. Hopefully
-> this week, but if not, then next week.
->
-> As I said in the other patch, I don't like the series in the current
-> form because it's changing APIs in not so great ways.
->
-> fwnode_link_add() is supposed to be super dumb and simple. It's
-> literally there just to avoid reparsing DT nodes multiple times.
-> Nothing more ever. It just denotes the "pointers" between fwnode or DT
-> nodes.
->
-> The "smarts" should either be where fwnode links are converted into
-> device links (and not have to fix them up) or where nvmem-cells is
-> being parsed and converted to fwnode links.
->
-> As I said in the other patch, let me take a closer look this week or
-> next and get back. These things needs several hours of uninterrupted
-> time for me to debug and unwind.
+DRAM row retirement depends on model-specific information that is best
+done within the AMD Address Translation Library.
 
-As promised, I took a closer look and left some comments in Patch 1
-and 2. Patch 1 is 100% broken/wrong so the series will not be
-accepted.
+Export a generic wrapper function for other modules to use. Add any
+model-specific helpers here.
 
-Just for the sake of understanding, can you send a patch that'll add
-these additional compatible strings similar to how I handled
-nvmem-cells and show my how much worse it is than this series?
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+---
+ drivers/edac/Kconfig        |  1 -
+ drivers/edac/amd64_edac.c   | 48 ----------------------------------
+ drivers/ras/amd/atl/Kconfig |  1 +
+ drivers/ras/amd/atl/umc.c   | 51 +++++++++++++++++++++++++++++++++++++
+ include/linux/ras.h         |  2 ++
+ 5 files changed, 54 insertions(+), 49 deletions(-)
 
->
-> >
-> > Unfortunately, with the Openwrt project
-> > we are experiencing this regression again
-> > by implementing the new NVMEM layout "fixed-layout"
-> > after it was accepted into the kernel. [6]
-> > This causes some subsystems of an SOC, like
-> > ethernet or wireless or both depending on hardware and DTS,
-> > and in some cases a completely different function like USB
-> > to never probe once again, and the temporary fix, like before,
-> > is by disabling fw_devlink. [7]
-> >
-> > Below is a simplified DTS of an Atheros device with the NVMEM layout:
-> >
-> >
-> > &eth0 {
-> >         nvmem-cells =3D <&macaddr_art_0>;
-> >         nvmem-cell-names =3D "mac-address";
-> > };
-> >
-> > &wifi {
-> >         nvmem-cells =3D <&caldata_art_1000>;
-> >         nvmem-cell-names =3D "calibration";
-> > };
-> >
-> > &spi {
-> >         status =3D "okay";
-> >
-> >         flash@0 {
-> >                 compatible =3D "jedec,spi-nor";
-> >
-> >                 partitions {
-> >                         compatible =3D "fixed-partitions";
-> >
-> >                         partition@ff0000 {
-> >                                 label =3D "art";
-> >                                 reg =3D <0xff0000 0x010000>;
-> >                                 read-only;
-> >
-> >                                 nvmem-layout {
-> >                                         compatible =3D "fixed-layout";
-> >
-> >                                         macaddr_art_0: macaddr@0 {
-> >                                                 reg =3D <0x0 0x6>;
-> >                                         };
-> >
-> >                                         caldata_art_1000: caldata@1000 =
-{
-> >                                                 reg =3D <0x1000 0x440>;
-> >                                         };
-> >                                 };
-> >                         };
-> >                 };
-> >         };
-> > };
+diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+index 8b147403c955..16c8de5050e5 100644
+--- a/drivers/edac/Kconfig
++++ b/drivers/edac/Kconfig
+@@ -78,7 +78,6 @@ config EDAC_GHES
+ config EDAC_AMD64
+ 	tristate "AMD64 (Opteron, Athlon64)"
+ 	depends on AMD_NB && EDAC_DECODE_MCE
+-	depends on MEMORY_FAILURE
+ 	imply AMD_ATL
+ 	help
+ 	  Support for error detection and correction of DRAM ECC errors on
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index ee2f3ff15ab7..ca9a8641652d 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -2795,51 +2795,6 @@ static void umc_get_err_info(struct mce *m, struct err_info *err)
+ 	err->csrow = m->synd & 0x7;
+ }
+ 
+-/*
+- * When a DRAM ECC error occurs on MI300 systems, it is recommended to retire
+- * all memory within that DRAM row. This applies to the memory with a DRAM
+- * bank.
+- *
+- * To find the memory addresses, loop through permutations of the DRAM column
+- * bits and find the System Physical address of each. The column bits are used
+- * to calculate the intermediate Normalized address, so all permutations should
+- * be checked.
+- *
+- * See amd_atl::convert_dram_to_norm_addr_mi300() for MI300 address formats.
+- */
+-#define MI300_UMC_MCA_COL	GENMASK(5, 1)
+-#define MI300_NUM_COL		BIT(HWEIGHT(MI300_UMC_MCA_COL))
+-static void retire_row_mi300(struct atl_err *a_err)
+-{
+-	unsigned long addr;
+-	struct page *p;
+-	u8 col;
+-
+-	for (col = 0; col < MI300_NUM_COL; col++) {
+-		a_err->addr &= ~MI300_UMC_MCA_COL;
+-		a_err->addr |= FIELD_PREP(MI300_UMC_MCA_COL, col);
+-
+-		addr = amd_convert_umc_mca_addr_to_sys_addr(a_err);
+-		if (IS_ERR_VALUE(addr))
+-			continue;
+-
+-		addr = PHYS_PFN(addr);
+-
+-		/*
+-		 * Skip invalid or already poisoned pages to avoid unnecessary
+-		 * error messages from memory_failure().
+-		 */
+-		p = pfn_to_online_page(addr);
+-		if (!p)
+-			continue;
+-
+-		if (PageHWPoison(p))
+-			continue;
+-
+-		memory_failure(addr, 0);
+-	}
+-}
+-
+ static void decode_umc_error(int node_id, struct mce *m)
+ {
+ 	u8 ecc_type = (m->status >> 45) & 0x3;
+@@ -2890,9 +2845,6 @@ static void decode_umc_error(int node_id, struct mce *m)
+ 
+ 	error_address_to_page_and_offset(sys_addr, &err);
+ 
+-	if (pvt->fam == 0x19 && pvt->dram_type == MEM_HBM3)
+-		retire_row_mi300(&a_err);
+-
+ log_error:
+ 	__log_ecc_error(mci, &err, ecc_type);
+ }
+diff --git a/drivers/ras/amd/atl/Kconfig b/drivers/ras/amd/atl/Kconfig
+index a43513a700f1..df49c23e7f62 100644
+--- a/drivers/ras/amd/atl/Kconfig
++++ b/drivers/ras/amd/atl/Kconfig
+@@ -10,6 +10,7 @@
+ config AMD_ATL
+ 	tristate "AMD Address Translation Library"
+ 	depends on AMD_NB && X86_64 && RAS
++	depends on MEMORY_FAILURE
+ 	default N
+ 	help
+ 	  This library includes support for implementation-specific
+diff --git a/drivers/ras/amd/atl/umc.c b/drivers/ras/amd/atl/umc.c
+index 7e310d1dfcfc..08c6dbd44c62 100644
+--- a/drivers/ras/amd/atl/umc.c
++++ b/drivers/ras/amd/atl/umc.c
+@@ -239,6 +239,57 @@ static unsigned long convert_dram_to_norm_addr_mi300(unsigned long addr)
+ 	return addr;
+ }
+ 
++/*
++ * When a DRAM ECC error occurs on MI300 systems, it is recommended to retire
++ * all memory within that DRAM row. This applies to the memory with a DRAM
++ * bank.
++ *
++ * To find the memory addresses, loop through permutations of the DRAM column
++ * bits and find the System Physical address of each. The column bits are used
++ * to calculate the intermediate Normalized address, so all permutations should
++ * be checked.
++ *
++ * See amd_atl::convert_dram_to_norm_addr_mi300() for MI300 address formats.
++ */
++#define MI300_NUM_COL		BIT(HWEIGHT(MI300_UMC_MCA_COL))
++static void retire_row_mi300(struct atl_err *a_err)
++{
++	unsigned long addr;
++	struct page *p;
++	u8 col;
++
++	for (col = 0; col < MI300_NUM_COL; col++) {
++		a_err->addr &= ~MI300_UMC_MCA_COL;
++		a_err->addr |= FIELD_PREP(MI300_UMC_MCA_COL, col);
++
++		addr = amd_convert_umc_mca_addr_to_sys_addr(a_err);
++		if (IS_ERR_VALUE(addr))
++			continue;
++
++		addr = PHYS_PFN(addr);
++
++		/*
++		 * Skip invalid or already poisoned pages to avoid unnecessary
++		 * error messages from memory_failure().
++		 */
++		p = pfn_to_online_page(addr);
++		if (!p)
++			continue;
++
++		if (PageHWPoison(p))
++			continue;
++
++		memory_failure(addr, 0);
++	}
++}
++
++void amd_retire_dram_row(struct atl_err *a_err)
++{
++	if (df_cfg.rev == DF4p5 && df_cfg.flags.heterogeneous)
++		return retire_row_mi300(a_err);
++}
++EXPORT_SYMBOL_GPL(amd_retire_dram_row);
++
+ static unsigned long get_addr(unsigned long addr)
+ {
+ 	if (df_cfg.rev == DF4p5 && df_cfg.flags.heterogeneous)
+diff --git a/include/linux/ras.h b/include/linux/ras.h
+index 09c632832bf1..a64182bc72ad 100644
+--- a/include/linux/ras.h
++++ b/include/linux/ras.h
+@@ -45,8 +45,10 @@ struct atl_err {
+ #if IS_ENABLED(CONFIG_AMD_ATL)
+ void amd_atl_register_decoder(unsigned long (*f)(struct atl_err *));
+ void amd_atl_unregister_decoder(void);
++void amd_retire_dram_row(struct atl_err *err);
+ unsigned long amd_convert_umc_mca_addr_to_sys_addr(struct atl_err *err);
+ #else
++static inline void amd_retire_dram_row(struct atl_err *err) { }
+ static inline unsigned long
+ amd_convert_umc_mca_addr_to_sys_addr(struct atl_err *err) { return -EINVAL; }
+ #endif /* CONFIG_AMD_ATL */
+-- 
+2.34.1
 
-In this example, can you walk me through the probe attempts/successes
-of the nvmem supplier and it's consumers and at what point does
-fw_devlink makes the wrong decision? You also said fw_devlink depends
-on the order in which devices probe to work correctly. This is
-definitely not the case/intention. So, if you can show me an example
-of that, I'll fix that too.
-
-I'm fairly certain this example will end up being a case of the nvmem
-framework creating pointless devices or using a "bus" when it needs a
-"class". But I don't want to assume.
-
-I'm asking all these question to understand your case better and maybe
-suggest a better fix that doesn't break fw_devlink or effectively
-disable it.
-
-Thanks,
-Saravana
-
-> >
-> >
-> > When the DTS is written this way, not only is there a different node
-> > involved for NVMEM, but this node is a new node that is yet another
-> > descendant in the tree. In other words, the "partition@ff0000" node
-> > used to be what designated this device as the NVMEM provider
-> > with the "nvmem-cells" compatible, so the node that represents
-> > the actual probing device is now 4 parent nodes up in the tree
-> > in this example instead of 3 parent nodes up in the tree as before.
-> >
-> > For the past year, and even before the "fixed-layout" issue came up,
-> > I had been experimenting with a way to handle these reverse probe order
-> > and linking of distant descendant node issues in a generic way instead =
-of
-> > naming exceptions with the compatible string, and this series is the
-> > culmination of those efforts. It may look strange at first,
-> > but there are a myriad set of cases to handle and other reasons
-> > that led me to develop this approach of using existing bad device links
-> > in order to find the correct fwnode to link to, and then redo
-> > the relevant links for that consumer device altogether.
-> > I'm concerned that doing this another way would be a much more massive
-> > project that would basically rewrite what the fw_devlink feature does.
-> > Or perhaps there would have to be a new, third form of device links
-> > that would be a "placeholder" before it becomes a fwnode link.
-> > Eventually, I came to the conclusion that
-> > there simply is not enough information to form the correct fwnode link
-> > before the real supplier device has a successful probe.
-> >
-> > Some of the changes proposed here are made on the extreme side of cauti=
-on,
-> > for example, checking for null dereference when it might not be necessa=
-ry,
-> > and reducing the activity of some functions in order to reduce
-> > the amount of assumptions taking place in the middle of driver core
-> > in cases where the new functions proposed here handles that just as wel=
-l
-> > and closer to a possible probe defer event
-> > (e.g. not declaring a fwnode as NOT_DEVICE before
-> > a probe attempt is expected to have happened).
-> >
-> > I have tried to make the commit messages as self-explanatory as I can,
-> > but they might have ended up a little too verbose, and therefore confus=
-ing
-> > but I'm ready to explain whatever has not been explained well already.
-> > Lastly, this is my first attempt at sending a larger change to the kern=
-el,
-> > so I appreciate your time and patience very much.
-> >
-> > MCP
-> >
-> >
-> > [1] https://lore.kernel.org/lkml/20230207014207.1678715-1-saravanak@goo=
-gle.com/
-> >
-> > [2] bcdf0315a61a29eb753a607d3a85a4032de72d94
-> >
-> > [3] 3a2dbc510c437ca392516b0105bad8e7970e6614
-> >
-> > [4] 411c0d58ca6faa9bc4b9f5382118a31c7bb92a6f
-> >
-> > [5] fb42378dcc7f247df56f0ecddfdae85487495fbc
-> >
-> > [6] 27f699e578b1a72df89dfa3bc42e093a01dc8d10
-> >
-> > [7] https://github.com/openwrt/openwrt/commit/703d667a0cdf6dfa402c08e72=
-d0c77a257ca5009
-> >
-> >
-> > Michael Pratt (4):
-> >   driver core: fw_devlink: Use driver to determine probe ability
-> >   driver core: fw_devlink: Link to supplier ancestor if no device
-> >   driver core: fw_devlink: Add function device_links_fixup_suppliers()
-> >   mtd: mtdpart: Allow fwnode links to NVMEM compatible fwnodes
-> >
-> >  drivers/base/base.h    |   1 +
-> >  drivers/base/core.c    | 144 ++++++++++++++++++++++++++++++++++++++---
-> >  drivers/base/dd.c      |   2 +
-> >  drivers/mtd/mtdpart.c  |  10 ---
-> >  include/linux/fwnode.h |   4 ++
-> >  5 files changed, 143 insertions(+), 18 deletions(-)
-> >
-> >
-> > base-commit: b0d326da462e20285236e11e4cbc32085de9f363
-> > --
-> > 2.30.2
-> >
-> >
