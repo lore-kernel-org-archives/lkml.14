@@ -1,126 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49FC7134B7;
-	Wed, 14 Feb 2024 09:48:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4E801759E;
+	Wed, 14 Feb 2024 09:48:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707904114; cv=none; b=Sr3NYNxq3w0poUbjr6FoJVEka2ZB9JlzWo+wR0+VO2a2nC6idHOf+KJlwkmqkxsFbmzAB2E2/1upWfSpWCRHGo+KeyMLySN1x5DC9Ey/hnJURWyPEyEF0ulQWIfFUjzQqhxnjf+2R6/33NCcFlsZy0Gd6IELgnffNqiG+Fd2UgQ=
+	t=1707904116; cv=none; b=pdcprA62csBHKJd+mKtTSh+XO4rOMedft7fweRANvrYcYlOnMSpMg+UOz1Z6GJWccH2ihgpTZ5QAvlW1y0BzvaG4NNKyg7C5Xnlx4wjd7DSxR+af7jmGJY72MhXveDgkIXuOl47xyJDr4uxIgQo4ddSrDtXRrX/GhbKAgiONUQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707904114; c=relaxed/simple;
-	bh=X6q1RJmRQMsVDI4YiUe1YyTnSAgbGDQ417oRLZK4lXI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uWNsOqT3ii+ra9H2TymC8JpFjYGWcX39yDUc+o0CIv7sgbG7M6uC/2anaGgJgSUnGeT6XnQRMZnRgQvm0Us1mPEQfNnPY4yJZWtt6rVZ4i0l3nVkJQoYJATrnPSgIs2IRiwqE8TQTyk8c5hZviF0flWOLccL/F/KSLCdlmBSBS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c8c+f7gA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707904116; c=relaxed/simple;
+	bh=JbCOHvTKqSvfaqpNrkORcjjBAgGm6bAlqqeqPrKg1xo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=QNtv4XoUCj63HPy6NQyh++3+m9gTE1Bxn4KSKG7MnodHlgIBYGl+wlm/07Jp8dZboHURS9E6VqqItLxvpwMg0dhCHPN9TC1pl7y24Xn5pJOlhrxqyDXTDHmlL2j4S/qv+OYUJZ2p29ni2MKLHuRTD5Y17uSIm0nKkf7wrbuQ3I0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=DbxQsStQ; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c8c+f7gA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73BBEC433C7;
-	Wed, 14 Feb 2024 09:48:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707904113;
-	bh=X6q1RJmRQMsVDI4YiUe1YyTnSAgbGDQ417oRLZK4lXI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=c8c+f7gAoInFPPuMVB4yAtDaQAsBeQMYAs1JZDObosYWgmk6ShzYpJeNLtasQJkPH
-	 5GZqqFx0ZokEJUKJsNIon6mxzdy8buXVPDmy6gpzo53reFivF1XJMgn3nSYpgZj76L
-	 DkJ/DA3Y5g4Wg3ksoLXBz2f/SWar0SCM62zmJnvm9XBbWCrH1IAj300Gx8dh2qh/Ol
-	 iMLV3SLaZ5JcsaHjUpmOgOPyX+UkgbQSs3/4bjZZYLqSVtx/tjh99t8ZWIo30RgU6t
-	 TaowW00cSEOT9nTSNRjiXati2xRUenFmUqvsXiV0raQYHQjELbxshpOv1WGb/LNN6v
-	 XqS6wQxJMvq8A==
-From: Roger Quadros <rogerq@kernel.org>
-Date: Wed, 14 Feb 2024 11:46:46 +0200
-Subject: [PATCH v3 2/5] usb: dwc3-am62: fix error on module removal
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="DbxQsStQ"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41E4PkVV027555;
+	Wed, 14 Feb 2024 10:47:58 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	selector1; bh=eSy7L3CTERV//puboplNFJezkHQTuY2RwI75nCRMoRo=; b=Db
+	xQsStQFzxDpY2CmGS1SwUk03Z+cjxrIfBBoJB65qUBm7TvK9Rdk0Nau3FMg4EnOZ
+	h9Z0DPPyMCm31cQa0zo7z7ghGFqDb5KrxgVDJUgCmX6SkxLzNga0Yvz3s1fYkWMg
+	/XQ7XVB8HfhSOwfDMU3OVmX8cvNkNPB0NpI8dp3cDwNiLG8SKjThKkfKMM15EULr
+	83a2dCmAaM1fyWJqABHZ/qVVL7msb9zqUq6Q8KWMfoNZGgn/6p4NruJy6+EQKH7d
+	IeIn37Ta+Ligwm10zJggcQP60zIh+t85zidkpV+erYLOPaWMXGsCOn2KWalT1ltC
+	8qwpYHJE/l2ybi6wlEvw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3w6kk4v82b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 Feb 2024 10:47:58 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 830BF4002D;
+	Wed, 14 Feb 2024 10:47:46 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 98CC2235F2C;
+	Wed, 14 Feb 2024 10:46:34 +0100 (CET)
+Received: from [10.201.21.122] (10.201.21.122) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 14 Feb
+ 2024 10:46:33 +0100
+Message-ID: <494b51fa-0f0e-4c1b-add3-73b5fe0b3c29@foss.st.com>
+Date: Wed, 14 Feb 2024 10:46:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [drm-drm-misc:drm-misc-next v2] dt-bindings: nt35510: document
+ 'port' property
+To: Conor Dooley <conor@kernel.org>,
+        Dario Binacchi
+	<dario.binacchi@amarulasolutions.com>,
+        Heiko Stuebner <heiko@sntech.de>
+CC: <linux-kernel@vger.kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+        Daniel
+ Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>,
+        Jessica Zhang
+	<quic_jesszhan@quicinc.com>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Linus Walleij
+	<linus.walleij@linaro.org>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Neil
+ Armstrong <neil.armstrong@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, Sam
+ Ravnborg <sam@ravnborg.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, <devicetree@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>
+References: <20240131092852.643844-1-dario.binacchi@amarulasolutions.com>
+ <20240131-gap-making-59055befaf04@spud>
+Content-Language: en-US
+From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
+In-Reply-To: <20240131-gap-making-59055befaf04@spud>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240214-for-v6-9-am62-usb-errata-3-0-v3-2-147ec5eae18c@kernel.org>
-References: <20240214-for-v6-9-am62-usb-errata-3-0-v3-0-147ec5eae18c@kernel.org>
-In-Reply-To: <20240214-for-v6-9-am62-usb-errata-3-0-v3-0-147ec5eae18c@kernel.org>
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: nm@ti.com, r-gunasekaran@ti.com, afd@ti.com, b-liu@ti.com, srk@ti.com, 
- francesco@dolcini.it, linux-usb@vger.kernel.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- Roger Quadros <rogerq@kernel.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1664; i=rogerq@kernel.org;
- h=from:subject:message-id; bh=X6q1RJmRQMsVDI4YiUe1YyTnSAgbGDQ417oRLZK4lXI=;
- b=owEBbQKS/ZANAwAIAdJaa9O+djCTAcsmYgBlzIxm+plz9xtRjCi0mKOJqe+jko1TMnexVm8D4
- lVjylqMW36JAjMEAAEIAB0WIQRBIWXUTJ9SeA+rEFjSWmvTvnYwkwUCZcyMZgAKCRDSWmvTvnYw
- k7LDD/0aKob4z9hUZeVJF/q1v63kbVkPai6rpB8aVtdKAK7hM2JeVP57ozvkWCIryJJ4I13aV2d
- cQV/C+ivi4BluDvr+zPm9PtddmGfuF390+KyfwM6BRwwZBag3IKQtPRv14Q/HXTfp6iXgZQvAQI
- xYWuRBxojnoQDL4i7X5CzdF1XImo/4PymMnZS/BGaAk7aV6o+vL2lZqlYlqJFv6bMLB3AtCIL6x
- 56Yvxb8lfCrrBaZ455mKCO5kMS9WRw+MoNCJZ6RYGwe97L1rD4foauUK1QzIs9wB6+Tr9NyuHki
- 92quRgRF+axVYAmA6s0L1bj2nuvEnfCFOBbN0kGuxCM1dTTuyR1ZorR/vKxxQweIew0qWbeKwdE
- nOHs8UWZhoiVs9DdTsuBcGzdzTVcVPAPkgwxZ8nAmAATCe7+D4RFH2thsKqDVUgW/3EJzyfXlf7
- 2a6WtfIGgVA897S2A5mvPx0zErxkrYO+E5CEtbYSZe/yIfL626Ajy1ZruMwSJW61dxxHj0v9eD7
- pE3Gee2tInjDs2Ag3HMnSPwFbven8qDKuvop0S0nCaDv138wt19ot7D9Z1O7ssSTwmkTtFEs5Lu
- 0s99/fqcz53OgrH4UOh3crXi9ezqypu3WIYZTAFcnwtzeY6Q/w+ZVQp+aCqdADij0M6VtcQOwRr
- QGrpEfxBdSIn+Cw==
-X-Developer-Key: i=rogerq@kernel.org; a=openpgp;
- fpr=412165D44C9F52780FAB1058D25A6BD3BE763093
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-14_03,2024-02-12_03,2023-05-22_02
 
-As runtime PM is enabled, the module can be runtime
-suspended when .remove() is called.
+Hi Heiko
 
-Do a pm_runtime_get_sync() to make sure module is active
-before doing any register operations.
+On 1/31/24 16:53, Conor Dooley wrote:
+> On Wed, Jan 31, 2024 at 10:28:44AM +0100, Dario Binacchi wrote:
+>> Allow 'port' property (coming from panel-common.yaml) to be used in DTS:
+>>
+>>    st/stm32f769-disco-mb1166-reva09.dtb: panel@0: 'port' does not match any of the regexes: 'pinctrl-[0-9]+'
+>>
+>> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+>> Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
+> 
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> 
+> 
+>>
+>> ---
+>>
+>> Changes in v2:
+>> - Rework the patch to drop errors found by command
+>>    'make DT_CHECKER_FLAGS=-m dt_binding_check'.
+>>
+>>   .../devicetree/bindings/display/panel/novatek,nt35510.yaml       | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/panel/novatek,nt35510.yaml b/Documentation/devicetree/bindings/display/panel/novatek,nt35510.yaml
+>> index a4afaff483b7..91921f4b0e5f 100644
+>> --- a/Documentation/devicetree/bindings/display/panel/novatek,nt35510.yaml
+>> +++ b/Documentation/devicetree/bindings/display/panel/novatek,nt35510.yaml
+>> @@ -31,6 +31,7 @@ properties:
+>>     vddi-supply:
+>>       description: regulator that supplies the vddi voltage
+>>     backlight: true
+>> +  port: true
+>>   
+>>   required:
+>>     - compatible
+>> -- 
+>> 2.43.0
+>>
 
-Doing a pm_runtime_put_sync() should disable the refclk
-so no need to disable it again.
+Do you plan to take this patch in drm-misc next branch ? As I have a 
+dependency with it to merge a DT patch I can take in my tree 
+(stm32-next) if you prefer. Let me know.
 
-Fixes the below warning at module removel.
-
-[   39.705310] ------------[ cut here ]------------
-[   39.710004] clk:162:3 already disabled
-[   39.713941] WARNING: CPU: 0 PID: 921 at drivers/clk/clk.c:1090 clk_core_disable+0xb0/0xb8
-
-Signed-off-by: Roger Quadros <rogerq@kernel.org>
----
-Changelog:
-
-v3: no change
-
-v2: no change
-	https://lore.kernel.org/all/20240205141221.56076-3-rogerq@kernel.org/
-
-v1: https://lore.kernel.org/all/20240201121220.5523-3-rogerq@kernel.org/
----
- drivers/usb/dwc3/dwc3-am62.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/dwc3/dwc3-am62.c b/drivers/usb/dwc3/dwc3-am62.c
-index 1bfc9e67614f..600ba9cfefea 100644
---- a/drivers/usb/dwc3/dwc3-am62.c
-+++ b/drivers/usb/dwc3/dwc3-am62.c
-@@ -273,6 +273,11 @@ static void dwc3_ti_remove(struct platform_device *pdev)
- 	struct dwc3_am62 *am62 = platform_get_drvdata(pdev);
- 	u32 reg;
- 
-+	pm_runtime_get_sync(dev);
-+
-+	device_wakeup_disable(dev);
-+	device_set_wakeup_capable(dev, false);
-+
- 	of_platform_depopulate(dev);
- 
- 	/* Clear mode valid bit */
-@@ -281,7 +286,6 @@ static void dwc3_ti_remove(struct platform_device *pdev)
- 	dwc3_ti_writel(am62, USBSS_MODE_CONTROL, reg);
- 
- 	pm_runtime_put_sync(dev);
--	clk_disable_unprepare(am62->usb2_refclk);
- 	pm_runtime_disable(dev);
- 	pm_runtime_set_suspended(dev);
- }
-
--- 
-2.34.1
-
+Cheers
+Alex
