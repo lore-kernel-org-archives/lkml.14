@@ -1,129 +1,113 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B1E8662D
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 17:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A19884A24;
+	Wed, 14 Feb 2024 17:22:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707931349; cv=none; b=PO/dFswn38Jq4GK/1dmynqE0GWgyBjBGHlOHDzD65/ctpQRmx+VnGUgjS2g4aDN8pA6RrumvrAM/5eT/nLiugIM0RF6Lg+5ibCuDMFqax+bK9bb1e5auJEHiA/Y25poKSKaQ/mAKC3/DBTC0AcbCg7gy9nA2CvXB/l9TDq2Cnqc=
+	t=1707931362; cv=none; b=h/LA78PwkYu2oyTCKmdccMBhC1ipf8HSic78nJNXv6zHeainfR57F/Bywc3wOIyDlRR9AlSkUIbN1pOpQy0YHBdmF/g56ygAYXAahbSmg1MWHbnDGbVUPXJ7GO27WK75+z3gxUFJ+G9ghNd3iFakvjHbMdXAdyEkpjbi3Qa5LLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707931349; c=relaxed/simple;
-	bh=W11xoHjWYpOlIFvCUlTEoYUvCFSB4r1v8f/OHKLMzUk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EvjePkxfap+sMPydgVkmyeMgCRIKqId4gdwMpLSWxV5glDypH4og51MY9xfbGub7SxZoFOAlYw5YO1Vx0pgngc8hI58q4Z4YfLrnmrUIvfoGuO5jF6ZeJjtnOtyt1PPPMOo5j9GNlPNPjXAlJeF8IQgu6RWqS1ZLL0Y9UAlBJqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=t+rcH8Gi; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707931362; c=relaxed/simple;
+	bh=45+ZI0onSdA3aIo1s59eVulQGX8hv5CVs3B4xK1z4Vs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WigSzKzAY1N/EghxiSh6O/rdkW2lVl1j7iMtlD/2GT24diwVx4uqJ6ippcIvw6RoZgICUTcAK9I71lImDDh1rQE2PfU3m8OEqzJW5KPJGEGFAkb37V0O963MPfQJ0IXUiAd8uCNW4rnY55CrEY0njZRH7OwLxIjGZ7vXqUYbZok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=rd8CoPG6; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t+rcH8Gi"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1db51e55023so8611645ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 09:22:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707931348; x=1708536148; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kw0uq0XOL+rqmT2qCSrqkVhQlASOn9CgRE95m/7HlUY=;
-        b=t+rcH8GitgEbZ6DkuAEoLcCnutheaKUbKOJRkCy+r9ZMsGlxEQQ9/kN7P5QoJNb0FC
-         SEJpdlNejLyanQxqK7f4sD6+9JneGDswo4Ddl5ByAgmQK0E6ou6HLAmLMKUSOARzMCcF
-         iIc99HAJI+Y8VqOhpRLNcs0+cKf07JdeL2VN9CA+R0uNCCw+K13OKaITWHHpP2hd++vK
-         FJtZbD2cMDipIS+FKdHZP8JH7iTrgWEtsMq6BcjtufzOKK37EyELwEJLWWBNm/8zg5sS
-         p0fvdSDXUG0WZf4DsDaQcskj0bXQsK34NUcF7RCVUr9Ter6Fpq8psYErYY3U9mPvyIre
-         6hlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707931348; x=1708536148;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kw0uq0XOL+rqmT2qCSrqkVhQlASOn9CgRE95m/7HlUY=;
-        b=V07quEpoKB9ZDGMv6e7YcqUFQ994Bs+KMHzj60DLapPDwUyqzxEiPvmytYR6CysTMx
-         3qCVc2cl0r/Ev3bscUSm7daRnHRds5b1IQq+ENpA1fSRgRpF9iEHXvq97QBWJlYjB7xQ
-         1nkPLNJsPgFY7IC7AgWIDA2y3rDSdSlfyYDVQoUoi3JHlo+vV7BgI886A2CPMAsFOXtp
-         7vroGrOcqpeD46CzRhyhb/2PzAmDOtHWLmaUGvvdRIeaNOlySupgrwUgNA5C17j34cNK
-         SFLBYpKvEYLEYtB1KYzNiWwH3ELuGfnV83SadzbgyQzlcyWI9RAIB0jg1knrcY+8uANW
-         P1Yg==
-X-Forwarded-Encrypted: i=1; AJvYcCUyW0zDnKC+15f8ToLlJ8HJAukb5uKGTa91r23HGO/kRvl3yOuit6JZpfGtG0SRK0HlabMk1mdoj3STDgkA5Vcj/Ceuo6y9d4JWv+n8
-X-Gm-Message-State: AOJu0YyxTmuSrdQJzTB/qN9Mt/tr7fudNKbY9g/dMZrBsVgm3aMMg/rl
-	i4LvGCu1iHgLC+ZvGt4Sfp9Tm1MPTj77fg4rdo1wTv6ar/H01Aol5RRyAqzhrOJjRmBpYifrCNR
-	bpdMnteZbgUzP6vb401y1X9gVQKfqE9O58EIG4Q==
-X-Google-Smtp-Source: AGHT+IGCg02LZzb9GjZUSdHHKMRmPqcl9IPmyeg4O7sO/zxB5ZdEVTGCTrev55XmJj8saaqidomAD1zz+ZftzWufKjc=
-X-Received: by 2002:a17:90a:701:b0:298:b2d7:77b5 with SMTP id
- l1-20020a17090a070100b00298b2d777b5mr3280805pjl.19.1707931347673; Wed, 14 Feb
- 2024 09:22:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="rd8CoPG6"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41EGl1KZ006294;
+	Wed, 14 Feb 2024 18:22:22 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	selector1; bh=/xRSgnYV0eg6fwcJrQsSBoZNZwjEYDji4NLNmw4GryI=; b=rd
+	8CoPG6RIUClGrR9e7aV4n4q/n84iEC/UZuZIIwbAXp4xRLdzQ8Ab8uWGi3wzHXEv
+	ytN1ZesQ1CFLRjfiQmBEt/UgNqQjkGolrjbiH7jCus6Ohkzl2EJDpG0BrdwyHM9c
+	SH/U2mQERrsCeZy2vIhyQZDEp+3lbXk9VZUgAa1VWW3CXrCljo3GbRab98Ilwfkh
+	I5RXZnyvl0y4y0AJF+abk5Ui7uP6/AEsKdP22TjVgfcJBzkZM3fhWH7ShqGUzP5o
+	cgeBkqdAyUS4tq+7On23YhLghmUD7Cpn9wVVgrCkMRNLvYK2dhpx2m9K+wqpIGK0
+	m0H7a+ei+cw0J58wADww==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3w62shywsp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 Feb 2024 18:22:22 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id CD3B040046;
+	Wed, 14 Feb 2024 18:22:18 +0100 (CET)
+Received: from Webmail-eu.st.com (eqndag1node4.st.com [10.75.129.133])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B9DE72CA54C;
+	Wed, 14 Feb 2024 18:21:33 +0100 (CET)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE4.st.com
+ (10.75.129.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 14 Feb
+ 2024 18:21:33 +0100
+Received: from localhost (10.201.20.75) by SAFDAG1NODE1.st.com (10.75.90.17)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 14 Feb
+ 2024 18:21:33 +0100
+From: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier
+	<mathieu.poirier@linaro.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <op-tee@lists.trustedfirmware.org>, <devicetree@vger.kernel.org>,
+        Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+Subject: [PATCH v3 3/7] remoteproc: core: Add check on cached_table pointer
+Date: Wed, 14 Feb 2024 18:21:23 +0100
+Message-ID: <20240214172127.1022199-4-arnaud.pouliquen@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240214172127.1022199-1-arnaud.pouliquen@foss.st.com>
+References: <20240214172127.1022199-1-arnaud.pouliquen@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240114183600.135316-1-vincent.guittot@linaro.org>
- <6ec54a8f-a602-4f33-96ce-0204f07046e1@nvidia.com> <CAHk-=wgjiVanO4ZS1hy2sfAFTN_pYtQqVQb_g+dbrP34M6xTDw@mail.gmail.com>
-In-Reply-To: <CAHk-=wgjiVanO4ZS1hy2sfAFTN_pYtQqVQb_g+dbrP34M6xTDw@mail.gmail.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Wed, 14 Feb 2024 18:22:16 +0100
-Message-ID: <CAKfTPtA8W+SijB9D3GtNbC7o_XHUV-umcL6chJQbMDxWeX7exg@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: Fix frequency selection for non invariant case
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jon Hunter <jonathanh@nvidia.com>, mingo@redhat.com, peterz@infradead.org, 
-	juri.lelli@redhat.com, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
-	bsegall@google.com, mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, 
-	wkarny@gmail.com, qyousef@layalina.io, tglx@linutronix.de, rafael@kernel.org, 
-	viresh.kumar@linaro.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, 
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Thierry Reding <treding@nvidia.com>, 
-	Sasha Levin <sashal@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, 
-	Shardar Mohammed <smohammed@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SAFCAS1NODE2.st.com (10.75.90.13) To SAFDAG1NODE1.st.com
+ (10.75.90.17)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-14_10,2024-02-14_01,2023-05-22_02
 
-On Wed, 14 Feb 2024 at 18:20, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Wed, 14 Feb 2024 at 09:12, Jon Hunter <jonathanh@nvidia.com> wrote:
-> >
-> > We have also observed a performance degradation on our Tegra platforms
-> > with v6.8-rc1. Unfortunately, the above change does not fix the problem
-> > for us and we are still seeing a performance issue with v6.8-rc4. For
-> > example, running Dhrystone on Tegra234 I am seeing the following ...
-> >
-> > Linux v6.7:
-> > [ 2216.301949] CPU0: Dhrystones per Second: 31976326 (18199 DMIPS)
-> > [ 2220.993877] CPU1: Dhrystones per Second: 49568123 (28211 DMIPS)
-> > [ 2225.685280] CPU2: Dhrystones per Second: 49568123 (28211 DMIPS)
-> > [ 2230.364423] CPU3: Dhrystones per Second: 49632220 (28248 DMIPS)
-> >
-> > Linux v6.8-rc4:
-> > [   44.661686] CPU0: Dhrystones per Second: 16068483 (9145 DMIPS)
-> > [   51.895107] CPU1: Dhrystones per Second: 16077457 (9150 DMIPS)
-> > [   59.105410] CPU2: Dhrystones per Second: 16095436 (9160 DMIPS)
-> > [   66.333297] CPU3: Dhrystones per Second: 16064000 (9142 DMIPS)
-> >
-> > If I revert this change and the following ...
-> >
-> >   b3edde44e5d4 ("cpufreq/schedutil: Use a fixed reference frequency")
-> >   f12560779f9d ("sched/cpufreq: Rework iowait boost")
-> >   9c0b4bb7f630 ("sched/cpufreq: Rework schedutil governor
-> >
-> > ... then the perf is similar to where it was ...
->
-> Ok, guys, this whole scheduler / cpufreq rewrite seems to have been
-> completely buggered.
->
-> Please tell me why we shouldn't just revert things as per above?
->
-> Sure, the problem _I_ experienced is fixed, but apparently there are
-> others just lurking, and they are even bigger degradations than the
-> one I saw.
->
-> We're now at rc4, we're not releasing a 6.8 with the above kinds of
-> numbers. So either there's another obvious one-liner fix, or we need
-> to revert this whole thing.
+Add a check on the optional rproc->cached_table to perform the memory
+copy only if it is not null.
 
-This should fix it:
-https://lore.kernel.org/lkml/20240117190545.596057-1-vincent.guittot@linaro.org/
+2 use cases to support:
+- starting on boot, in which case rproc->cached_table can be null,
+- starting on crash recovery, where the cached table is used to save
+  the resource table configuration on stop and re-apply the configuration
+  on the re-start.
 
->
-> Yes, dhrystones is a truly crappy benchmark, but partly _because_ it's
-> such a horribly bad benchmark it's also a very simple case. It's pure
-> CPU load with absolutely nothing interesting going on. Regressing on
-> that by a factor of three is a sign of complete failure.
->
->                   Linus
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+---
+ drivers/remoteproc/remoteproc_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index 283ca071e35c..34b0093689da 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -1278,7 +1278,7 @@ static int rproc_start(struct rproc *rproc, const struct firmware *fw)
+ 	 * that any subsequent changes will be applied to the loaded version.
+ 	 */
+ 	loaded_table = rproc_find_loaded_rsc_table(rproc, fw);
+-	if (loaded_table) {
++	if (loaded_table && rproc->cached_table) {
+ 		memcpy(loaded_table, rproc->cached_table, rproc->table_sz);
+ 		rproc->table_ptr = loaded_table;
+ 	}
+-- 
+2.25.1
+
