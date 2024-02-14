@@ -1,152 +1,244 @@
-Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5E21419B1;
-	Wed, 14 Feb 2024 22:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.189.100.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A96612F4
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 23:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707951593; cv=none; b=bjj6MSPI8tQMYHXecL3F54QmII+uSXRpqlT+Fx7X+goPIuEiGtviOOPgLe588tYJuS2sqiv+JROW8z+XchgMTbbJ4cfii23vkzH34k+xYh+D9/3Hx/Er36sdrQPG5L946TOrW0w0JGUf2Rdl/DnCSEb3WkPt3aCThcl1bWS4TRw=
+	t=1707951641; cv=none; b=oFsFMJ3rYonNgVmcDeP1nGLQVWEu6sDwOinRv0ZkyZ0DN8GP2zjL66fv6qXI3P4O5rWCpklN1lErXYyateify+py5dOziuyxVQzWaaZ0e9TbuJoHlBNMr9JWQjF/MElITbpoQQwmmQ9rpBDQLm4748LVWUNYd2rfEzl1VMA9hiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707951593; c=relaxed/simple;
-	bh=NWHjQPlaGIQ9OtliJHmGY1JMnvToGgMO8MA8ryL6e5g=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:Content-Type:
-	 MIME-Version:References; b=pNeGITCqI5rJPkL/Zfv9SSGJ4rUtqEtjKU4Nv29BSmWP65fsGy3zSYfEIOk0BdEKcR4FQ2Ao3z8wTCIackDWa5J/UW4h9ws4Fn4dzxQpF45+U/TMXoOHoBSPi5qKN5sVsNu5PGDesz+DnFkzw/1eWiDbr2iQtT3cCHN2D0gEnlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=iISglxAa; arc=none smtp.client-ip=211.189.100.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1707951641; c=relaxed/simple;
+	bh=+1UJq/MVe+JVDgds2kTfQBV1kVVS1KJ4V7YVTQwZPLM=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=oBIQARcnnKGhkv6WAo2UjsbiDqgrV8yuFekXHzCTZ0qM/TdVElrbtlD1Cb0svdbWXG0cCedm9bTLRWAHv8yCHKvot+tXdSTzoHAEX2mbOrTZidFy7an0xt099yOMXVmOdycDGEFmXhkdrv5uHfP5VJgVziOyH9X65wDxCGhicnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UINB7v9y; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="iISglxAa"
-Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
-	by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20240214225944usoutp029bb5161cc91390c85bc25f43697aa417~z3OrJ-v6e1082210822usoutp02V;
-	Wed, 14 Feb 2024 22:59:44 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20240214225944usoutp029bb5161cc91390c85bc25f43697aa417~z3OrJ-v6e1082210822usoutp02V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1707951584;
-	bh=NWHjQPlaGIQ9OtliJHmGY1JMnvToGgMO8MA8ryL6e5g=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=iISglxAa5pWGqgz0yG661PwTZzPlrNEUvdZ31H5On9wxXgrN1X2iShK05O9Ks6NAx
-	 4A4+a0CB9WUE8a0AFvmq4yiNI4BR0w08DXVbCm+5khhNoTb7+kt0mqtfnVKn83Ka8y
-	 qQDfOeaA9qQhxMTnp0HZLmDaHq7KPgQHsd7UznT0=
-Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
-	[203.254.195.112]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20240214225944uscas1p26fa9f885a7fd56b6dfe1c7f1b7945330~z3Oqvi9Qb1133111331uscas1p2K;
-	Wed, 14 Feb 2024 22:59:44 +0000 (GMT)
-Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-	ussmges3new.samsung.com (USCPEMTA) with SMTP id 78.B6.09550.0E54DC56; Wed,
-	14 Feb 2024 17:59:44 -0500 (EST)
-Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
-	[203.254.195.91]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20240214225943uscas1p21ffa8b362bac11379168b83e42159160~z3OqcL0Yr3221832218uscas1p2B;
-	Wed, 14 Feb 2024 22:59:43 +0000 (GMT)
-X-AuditID: cbfec370-bbbfe7000000254e-32-65cd45e06f44
-Received: from SSI-EX2.ssi.samsung.com ( [105.128.3.66]) by
-	ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id 11.D5.45319.FD54DC56; Wed,
-	14 Feb 2024 17:59:43 -0500 (EST)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-	SSI-EX2.ssi.samsung.com (105.128.2.227) with Microsoft SMTP Server
-	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-	15.1.2375.24; Wed, 14 Feb 2024 14:59:42 -0800
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-	SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Wed,
-	14 Feb 2024 14:59:42 -0800
-From: Jim Harris <jim.harris@samsung.com>
-To: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Alison
- Schofield" <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Kees Cook <keescook@chromium.org>, "Gustavo A.
- R. Silva" <gustavoars@kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "linux-hardening@vger.kernel.org"
-	<linux-hardening@vger.kernel.org>, Leon Romanovsky <leonro@nvidia.com>,
-	"Jason Gunthorpe" <jgg@nvidia.com>, Alex Williamson
-	<alex.williamson@redhat.com>, "pierre.cregut@orange.com"
-	<pierre.cregut@orange.com>
-Subject: [PATCH v3 1/2] PCI/IOV: Revert
- "PCI/IOV: Serialize sysfs sriov_numvfs reads vs writes"
-Thread-Topic: [PATCH v3 1/2] PCI/IOV: Revert "PCI/IOV: Serialize sysfs
- sriov_numvfs reads vs writes"
-Thread-Index: AQHaX5l/Y5bHR2DvZ0+eeI1J9u0GaA==
-Date: Wed, 14 Feb 2024 22:59:42 +0000
-Message-ID: <170795158249.2393.6069168125066679172.stgit@bgt-140510-bm01.eng.stellus.in>
-In-Reply-To: <170795147587.2393.15577527626926144858.stgit@bgt-140510-bm01.eng.stellus.in>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <84A3C9C8FC63C94C827BCF517FA70757@ssi.samsung.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UINB7v9y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707951640; x=1739487640;
+  h=date:from:to:cc:subject:message-id;
+  bh=+1UJq/MVe+JVDgds2kTfQBV1kVVS1KJ4V7YVTQwZPLM=;
+  b=UINB7v9yfsN6fJWiohPFfd9ava6j4ZOuLnpI2JmW5XXVv1+Lbxk/d+eF
+   HAxzvYDpUoxyBxuiCPGU/SRCN5StRIU2L/0jmGNbXUSVfnq2d2mEUZz1/
+   mmiIT/K6usTVdfmFdpE2sbBeBYBBn25eaEiGDIziKeuECBFoqSDAcIGWP
+   jW6ctoLnKGeDTffB1eD5tJuJrh4Bw7q9lBrKX7z9+ufaAbeFhHxv8Gz9A
+   78WgaX7mbSFf0HH19CLur2g2bsVW/d/62hmnM5UxzQV0cVPyASS0i0ohs
+   Vt0rF9PkETsOsMugsuLwhXZswn89W0Z5+pqyvvXXKLEtoLOrrxXZjKusC
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="1898336"
+X-IronPort-AV: E=Sophos;i="6.06,160,1705392000"; 
+   d="scan'208";a="1898336"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 15:00:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,160,1705392000"; 
+   d="scan'208";a="3269769"
+Received: from lkp-server01.sh.intel.com (HELO 323e10984596) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 14 Feb 2024 15:00:37 -0800
+Received: from kbuild by 323e10984596 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1raOF1-0000HB-2e;
+	Wed, 14 Feb 2024 23:00:35 +0000
+Date: Thu, 15 Feb 2024 06:59:59 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [paulmck-rcu:rcu/next] BUILD SUCCESS
+ 5ce7264a2557e333e8adec6a8c02eb5338417d7d
+Message-ID: <202402150658.9cvftWmj-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJKsWRmVeSWpSXmKPExsWy7djX87oPXM+mGjz+yWnx7X8Pm8XdxxfY
-	LKZPvcBoceJmI5vF6ptrGC1+XZzGarH/6XMWiyv/9jBarFp4jc3iTHeuxaYNT1gszs86xWIx
-	b/1PRovLu+awWaz/+p7N4taEY0wOAh6zGy6yeLQcecvqsXjPSyaPTas62Tx6m9+xebQ8O8nm
-	8X7fVTaPqbPrPT5vkgvgjOKySUnNySxLLdK3S+DKaJqxh6Vgm0DF7cUN7A2MDQJdjJwcEgIm
-	Ev2nd7F0MXJxCAmsZJS4fPAxlNPKJDF/8mQ2mKrNKydAJdYwSix9e58NwvnEKNF67AZUZhmj
-	xN+fbxhBWtgENCV+XVnDBJIQEfjIKtG3Ywo7SEJYIFHi0LdbrCC2iECaxPreHhYIW0/i1/2l
-	YM0sAqoS35r6wGp4BSIkdp76BRbnFIiS+P35BZjNKCAm8f0UyAJODmYBcYlbT+YzQdwqKLFo
-	9h5mCFtM4t+uh1A/KErc//4S6AYOoHpNifW79CFa7SQm3bnABmErSkzpfsgOsVZQ4uTMJywQ
-	rZISB1fcgLJXc0p0H1aBsF0kLs1ayQhhS0v8vbsM6oRsiZXrO5hAVkkIFEg0HAmCCFtLLPyz
-	HupiPom/vx4xTmBUnoXkgVkIx81CctwsJMfNQnLcAkbWVYzipcXFuempxcZ5qeV6xYm5xaV5
-	6XrJ+bmbGIGp8fS/wwU7GG/d+qh3iJGJg/EQowQHs5II76TeM6lCvCmJlVWpRfnxRaU5qcWH
-	GKU5WJTEeQ1tTyYLCaQnlqRmp6YWpBbBZJk4OKUamBp89hreC+ZIWH4y1NzuVtW3oyKBujOj
-	VF69Xskq4vvtWTufmFR6wCrLEE736UeNHm68/Leg79uVv6+atS88FJ7NcU2467wuu+7yp+ud
-	trl+yzmcP5/t+sWdRounzw7OnXfxU6oLT2JjTVfQ9s5fJ40Sru5QqO3MdjvDbRReszg+6Ero
-	4gkBkQten76436/CyMwmsMezY85m76hYLfZ7n3XD/Xtk8+bmHtUXCrxwjeHbrhsrFySu7/9X
-	FvCvNOn5Aq2/S4PeM17ZU9mz4/21iTNuRcyTnq3ufOJjqfSRWfcKsz7+nZb1M3itsN31ozKT
-	xasMLv62PSZaHDHPaNqSxubKu6/UXO3C+t+GzLstsEuJpTgj0VCLuag4EQCTTbim/AMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTYRjG+XbOjsfR8mtafi2QGnQxSLtRH2QShXGC1G6kGVEjT9NypjtO
-	K7rMC0aXxRTndJbLsqglaMssbRVTy0ulRpblNA1nTcIsLcsZmvMU+d/ve5/3ed7nj48mJKOk
-	lI6NT2JV8fI4GSUiYzXE+iVdIS/Ypb8s/nh4/DyFO3taKGzQtwBc/y6VwrfelQDsepkrxI97
-	P5G4dcwKsLnoDYWfn1NiS5mDxM3GRhIXlo4A/KrqIoVLfwxQuF33VLAOMgWalySTUdsvZK5a
-	+wSMxXyGYrTpXygm42MDxQw8ek0x+oJTzJDFb4tnlCgomo2LTWZVgcH7RDFpeVYyoQIesV/V
-	eGiABp4FnjSCK9GdmzryLBDREmgG6N5vi4B/DALkGO/+q1wHKNdm8HBbKOiPXK0lk1s+8JsQ
-	DXXrJwVvKEdaQ63AzT7wACrVnid5DkCurmvAzSScj4bTLgjdLIaRqLLRNTGnJy7sQrq2JPfY
-	E0ah0SHn5DqAs9DPxpLJSAL6onaHScDXhqjY2kzwPBP19YwJeZ6Hun72ebgjiYmepVWBvDUY
-	ZXe0UDzPQznnPnjwDWaghnwHyVtnI9uNt6QO+BqnXDP+TzJOSTJOSTJOSboMhGbgq+Y4peII
-	tzyeTQng5EpOHa8I2H9YaQET/+PZWM3u+8De/i2gGghoUA0QTch8xNna56xEHC0/eoxVHd6r
-	UsexXDWYQ5MyX3Fn9yJWAhXyJPYQyyawqn+qgPaUagSrDaZcvwjTgAomZ9qcm6TNpuCycOvn
-	K9kiadHn9qaYus2XfqH09LvRI6GSjsf5tbO5zDQdQSt2yZ7FnihuXiPcFvJBvGFRXOV0KUgp
-	rG+ojbQ1zNp+Kef019bGrMvKCLF9Ey0ThTrrF/qZThlGVuC8GrV/mD61TWlpWrAjTIiZ+akV
-	q7Tvd/annJ5W931r75or906aiwtW3tl4ZnC3s3AwMfFVLqpQv+6vr5AQYu+UtgVeMtLVUZ7A
-	7omwN4mCJHnbHxRFMsezjFu8uqwvbJu33aZ7l3uVrw46mpisfNP5RD8t1DXXKcl6WLk02Xmx
-	hwzvPvhW4dhnX4tD+tZXyUguRr5sMaHi5H8Ami8tP44DAAA=
-X-CMS-MailID: 20240214225943uscas1p21ffa8b362bac11379168b83e42159160
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20240214225943uscas1p21ffa8b362bac11379168b83e42159160
-References: <170795147587.2393.15577527626926144858.stgit@bgt-140510-bm01.eng.stellus.in>
-	<CGME20240214225943uscas1p21ffa8b362bac11379168b83e42159160@uscas1p2.samsung.com>
 
-SWYgYW4gU1ItSU9WIGVuYWJsZWQgZGV2aWNlIGlzIGhlbGQgYnkgdmZpbywgYW5kIHRoZSBkZXZp
-Y2UgaXMgcmVtb3ZlZCwKdmZpbyB3aWxsIGhvbGQgZGV2aWNlIGxvY2sgYW5kIG5vdGlmeSB1c2Vy
-c3BhY2Ugb2YgdGhlIHJlbW92YWwuIElmCnVzZXJzcGFjZSByZWFkcyB0aGUgc3Jpb3ZfbnVtdmZz
-IHN5c2ZzIGVudHJ5LCB0aGF0IHRocmVhZCB3aWxsIGJlIGJsb2NrZWQKc2luY2Ugc3Jpb3ZfbnVt
-dmZzX3Nob3coKSBhbHNvIHRyaWVzIHRvIGFjcXVpcmUgdGhlIGRldmljZSBsb2NrLiBJZiB0aGF0
-CnNhbWUgdGhyZWFkIGlzIHJlc3BvbnNpYmxlIGZvciByZWxlYXNpbmcgdGhlIGRldmljZSB0byB2
-ZmlvLCBpdCByZXN1bHRzIGluCmEgZGVhZGxvY2suCgpUaGUgcHJvcGVyIHdheSB0byBkZXRlY3Qg
-YSBjaGFuZ2UgdG8gdGhlIG51bV9WRnMgdmFsdWUgaXMgdG8gbGlzdGVuIGZvciBhCnN5c2ZzIGV2
-ZW50LCBub3QgdG8gYWRkIGEgZGV2aWNlX2xvY2soKSBvbiB0aGUgYXR0cmlidXRlIF9zaG93KCkg
-aW4gdGhlCmtlcm5lbC4KClRoaXMgcmV2ZXJ0cyBjb21taXQgMzVmZjg2N2I3NjU3NmUzMmYzNGM2
-OThjY2QxMTM0M2Y3ZDYxNjIwNC4KUmV2ZXJ0IGhhZCBhIHNtYWxsIGNvbmZsaWN0LCB0aGUgc3By
-aW50ZigpIGlzIG5vdyBjaGFuZ2VkIHRvIHN5c2ZzX2VtaXQoKS4KCkxpbms6IGh0dHBzOi8vbG9y
-ZS5rZXJuZWwub3JnL2xpbnV4LXBjaS9aWEpJNStmOGJVZWxWWHF1QHVidW50dS8KU3VnZ2VzdGVk
-LWJ5OiBMZW9uIFJvbWFub3Zza3kgPGxlb25yb0BudmlkaWEuY29tPgpSZXZpZXdlZC1ieTogTGVv
-biBSb21hbm92c2t5IDxsZW9ucm9AbnZpZGlhLmNvbT4KU2lnbmVkLW9mZi1ieTogSmltIEhhcnJp
-cyA8amltLmhhcnJpc0BzYW1zdW5nLmNvbT4KLS0tCiBkcml2ZXJzL3BjaS9pb3YuYyB8ICAgIDgg
-Ky0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgNyBkZWxldGlvbnMoLSkK
-CmRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9pb3YuYyBiL2RyaXZlcnMvcGNpL2lvdi5jCmluZGV4
-IGFhYTMzZThkYzRjOS4uMGNhMjBjZDUxOGQ1IDEwMDY0NAotLS0gYS9kcml2ZXJzL3BjaS9pb3Yu
-YworKysgYi9kcml2ZXJzL3BjaS9pb3YuYwpAQCAtMzk1LDE0ICszOTUsOCBAQCBzdGF0aWMgc3Np
-emVfdCBzcmlvdl9udW12ZnNfc2hvdyhzdHJ1Y3QgZGV2aWNlICpkZXYsCiAJCQkJIGNoYXIgKmJ1
-ZikKIHsKIAlzdHJ1Y3QgcGNpX2RldiAqcGRldiA9IHRvX3BjaV9kZXYoZGV2KTsKLQl1MTYgbnVt
-X3ZmczsKLQotCS8qIFNlcmlhbGl6ZSB2cyBzcmlvdl9udW12ZnNfc3RvcmUoKSBzbyByZWFkZXJz
-IHNlZSB2YWxpZCBudW1fVkZzICovCi0JZGV2aWNlX2xvY2soJnBkZXYtPmRldik7Ci0JbnVtX3Zm
-cyA9IHBkZXYtPnNyaW92LT5udW1fVkZzOwotCWRldmljZV91bmxvY2soJnBkZXYtPmRldik7CiAK
-LQlyZXR1cm4gc3lzZnNfZW1pdChidWYsICIldVxuIiwgbnVtX3Zmcyk7CisJcmV0dXJuIHN5c2Zz
-X2VtaXQoYnVmLCAiJXVcbiIsIHBkZXYtPnNyaW92LT5udW1fVkZzKTsKIH0KIAogLyoKCg==
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git rcu/next
+branch HEAD: 5ce7264a2557e333e8adec6a8c02eb5338417d7d  rcutorture: Disable KPROBES to permit Tasks Rude RCU testing
+
+elapsed time: 1453m
+
+configs tested: 171
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                     nsimosci_hs_defconfig   gcc  
+arc                   randconfig-001-20240214   gcc  
+arc                   randconfig-002-20240214   gcc  
+arc                    vdk_hs38_smp_defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                     am200epdkit_defconfig   gcc  
+arm                                 defconfig   clang
+arm                        keystone_defconfig   gcc  
+arm                   randconfig-001-20240214   clang
+arm                   randconfig-002-20240214   gcc  
+arm                   randconfig-003-20240214   clang
+arm                   randconfig-004-20240214   clang
+arm                           sunxi_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240214   clang
+arm64                 randconfig-002-20240214   clang
+arm64                 randconfig-003-20240214   gcc  
+arm64                 randconfig-004-20240214   clang
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240214   gcc  
+csky                  randconfig-002-20240214   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240214   clang
+hexagon               randconfig-002-20240214   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240214   clang
+i386         buildonly-randconfig-002-20240214   clang
+i386         buildonly-randconfig-003-20240214   clang
+i386         buildonly-randconfig-006-20240214   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240214   clang
+i386                  randconfig-002-20240214   clang
+i386                  randconfig-003-20240214   clang
+i386                  randconfig-005-20240214   clang
+i386                  randconfig-011-20240214   clang
+i386                  randconfig-015-20240214   clang
+i386                  randconfig-016-20240214   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240214   gcc  
+loongarch             randconfig-002-20240214   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                        m5272c3_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                  decstation_64_defconfig   gcc  
+mips                 decstation_r4k_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240214   gcc  
+nios2                 randconfig-002-20240214   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240214   gcc  
+parisc                randconfig-002-20240214   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                        icon_defconfig   gcc  
+powerpc                 mpc8313_rdb_defconfig   gcc  
+powerpc               randconfig-001-20240214   clang
+powerpc               randconfig-002-20240214   clang
+powerpc               randconfig-003-20240214   clang
+powerpc                      walnut_defconfig   gcc  
+powerpc                        warp_defconfig   gcc  
+powerpc                         wii_defconfig   gcc  
+powerpc64             randconfig-001-20240214   clang
+powerpc64             randconfig-002-20240214   clang
+powerpc64             randconfig-003-20240214   clang
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240214   clang
+riscv                 randconfig-002-20240214   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240214   clang
+s390                  randconfig-002-20240214   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                        dreamcast_defconfig   gcc  
+sh                ecovec24-romimage_defconfig   gcc  
+sh                          landisk_defconfig   gcc  
+sh                    randconfig-001-20240214   gcc  
+sh                    randconfig-002-20240214   gcc  
+sh                          rsk7203_defconfig   gcc  
+sh                           se7705_defconfig   gcc  
+sh                           se7724_defconfig   gcc  
+sh                     sh7710voipgw_defconfig   gcc  
+sh                            shmin_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240214   gcc  
+sparc64               randconfig-002-20240214   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                    randconfig-001-20240214   clang
+um                    randconfig-002-20240214   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240214   gcc  
+x86_64       buildonly-randconfig-003-20240214   gcc  
+x86_64       buildonly-randconfig-004-20240214   gcc  
+x86_64       buildonly-randconfig-005-20240214   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-002-20240214   gcc  
+x86_64                randconfig-004-20240214   gcc  
+x86_64                randconfig-013-20240214   gcc  
+x86_64                randconfig-014-20240214   gcc  
+x86_64                randconfig-071-20240214   gcc  
+x86_64                randconfig-073-20240214   gcc  
+x86_64                randconfig-076-20240214   gcc  
+x86_64                           rhel-8.3-bpf   gcc  
+x86_64                          rhel-8.3-func   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                randconfig-001-20240214   gcc  
+xtensa                randconfig-002-20240214   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
