@@ -1,208 +1,141 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F3C6168D0;
-	Wed, 14 Feb 2024 09:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C8714AAE
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 09:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707902941; cv=none; b=M6ZvVPfuBRBEU9CVcQ13Txkp/kQlqXOn7213MKSDtg222KTh5CTujaZKvg69BnhiCkZdz0Y2bA6Lc/Zav6L45hV6IAHSaIZRmgRVvCnXvY2HbZzmRdMmndAwxeiheExIJl2AxmL8n4LXK47eVN3i4eJ+Xg5AX1o8RwC/Kwgmupo=
+	t=1707902957; cv=none; b=hW/g7cX/mbR3ElQ8lU1lcmQN11bqx0An5aM4E6Q5r74r6nJdpHASfTp1jnMeEduLQLZTftU49rpxWVcy1s/8WUlYp+y2gTE+EWQZX5YY9IyzVepjL/FLYpjqlsjxzvoRa6dKn1CdQ0OM7buzaX17STuSL84zujDZdSbpg2T1zhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707902941; c=relaxed/simple;
-	bh=1hpRClKmTPNX2vTFzy0Be6KFiRl2Dy3oFeZC6agd1a8=;
+	s=arc-20240116; t=1707902957; c=relaxed/simple;
+	bh=Upu2SWUrhW/35hgoaD1ciLNHHP2AgZTNscBKJpsggnc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iwJeAFwQMDzB2IcQoZap1bZczWbb47YmaL44ePtaiCCjK4GHbBwEgWzXuC0+zUUINAToINEs2MuQmPp5rABH/2oA5X7DUpEEFG5Z2hfeFULfTIujgTImw2ilb6cnHOebkzYfMBuIYmjMFc+Gf/EAiKMlO1mpKz/r3RWP5CZjGwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=JUYCd74y; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=KhuXpLxC4eqpvhy2LJdJWC6Qo8b8ybrd8BM4hgxJNuyeD+ipUUu2aPS/tA+t5H6xET1qnOFDcvDWgE2ht6e+NYoEZBehX92oiHuIuoj6TnIrJf83VuLPlGjdaemrMsa+rSuIUbUypMNQNslgn1Lkr2wptE58eQ8EM+EY/tI409g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=lUJ+pxNd; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="JUYCd74y"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6473040E01A9;
-	Wed, 14 Feb 2024 09:28:57 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id WP9Zj7QVWper; Wed, 14 Feb 2024 09:28:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1707902934; bh=LD2OQzDMo0zKu6jbPv5GEtHNMYpXCiZT9uYQtfb85b8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JUYCd74younkhk806A/9+fjVO4i5LbNUyM3b2pcysD+bGG5zRTZu2crWvgZ1muVuD
-	 AAwFWHkLH6Gc+79SZwfdIO7e0WTf6oDluFyGG7C+UbWsyyUycxi1cApg4Mbz8fhXjq
-	 k9kGanvl5ckEwJ5fU/GC5FR9uPDD6WLQpSIlZnap8CQvclo4etEBiWuiYf5o+tMNPC
-	 so44o53+V75/3e8bZ62UW8e1AXNwENPt9XUW3iUA89ulBbxRyyLqVlEjI0zWs57Wx+
-	 MFbVo9cKTsg6tDejxAQyxWxDqSMsayfEHMSW6uqJ7X+FPshwXyBhkx2rwR9LaGwy6e
-	 1RfyxRARn39R0mW9cT2PfijnNc9xXzVcWYS8FWOf3xukwCADY5Nez8SVBUTY9DysdH
-	 9XW+6GFcglHPjtXtMg5We4u5LUvumXCxGZAyoEu9P5f7xWGCo7Be2LuZeVUeVm1OaY
-	 ++uLYuHSc7tV1MZg3PSNkG5obCBNm/uucj4N7jhUr/JW3cCYaThk3Vls+GmbkclheO
-	 u+8Uz15u2XGhNFRZNEskKhjd5uy42xR6rl6OWotW6/U5rjw5Nsl+yY0xvSGvO/G6ei
-	 JHTvhrB+1mRWxd9Jo2q5fIV4Qyr3iGuqQh8nRFshqzNTCMzvKC1YvOJwnCc2BibVB1
-	 bufdPWF3P8V/xQw199YS05bA=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8433E40E00B2;
-	Wed, 14 Feb 2024 09:28:45 +0000 (UTC)
-Date: Wed, 14 Feb 2024 10:28:39 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: tony.luck@intel.com, linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org, avadhut.naik@amd.com,
-	john.allen@amd.com, muralidhara.mk@amd.com,
-	naveenkrishna.chatradhi@amd.com, sathyapriya.k@amd.com
-Subject: Re: [PATCH 2/2] RAS: Introduce the FRU Memory Poison Manager
-Message-ID: <20240214092839.GBZcyHxzsaz9NcijyV@fat_crate.local>
-References: <20240214033516.1344948-1-yazen.ghannam@amd.com>
- <20240214033516.1344948-3-yazen.ghannam@amd.com>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="lUJ+pxNd"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-411ea1ccb6fso2609825e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 01:29:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1707902953; x=1708507753; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0IDjaBFrcqK08V4TvukbGfzSrUeUUgCPpW8iYr8qsNw=;
+        b=lUJ+pxNdglpep3gGYwdLtttirwi0LU5NO8sKEJHz2rWcaHRRfTKX8LPlW81TLqaCiU
+         5pSuXOU/O/2eJDgp2gTOj2WDiPfkXt6oSenF51ELuoOb0E0OuhNMr7q2aUPjeg4eQ8Vg
+         Ka0yrTIU7QUiLvi1ij1mTonhj1Kzl2Ddd7Hc/SLg6Az1jqvLxYIiKkDFfys6LAFK1F2w
+         4u6NwTTd6+DiyFHj/kz3BLbBaL438v2umOhAU6HiMjxQXwyC4tj8GF3EDijD1+YBRV/j
+         C1SBHu8MJUxiLmsA+r1VqE269Ui9XH33tA/pFAfXBYeIL/5M5jDZulzT9uBV1xMI3mVI
+         aXuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707902953; x=1708507753;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0IDjaBFrcqK08V4TvukbGfzSrUeUUgCPpW8iYr8qsNw=;
+        b=jTBzDWFPwl94ACPxadlpgmr+lrx7EDIpKWuAas/9WQ4tik6Jh/HdF4z6z5fKrikRNL
+         4GgtCxr0c/1zW/njjNfUcgp+FKOuQW9orbMAb/9VINUPbpz0ib5tD0V/OZXce27KLQiC
+         rh3GaQQbHoYIL5cSD7h7gpBTfkgd7psudDv31zcSzvBTnsNyUM7IDwBr+FkLGkrNCF1L
+         05zn41Xd5aZyhm+fjbtH6uNYQTa6P32gFct/BmBhUY5E7OxRdnTv3s/k4QaHwgsdqJxo
+         KgYoOzytUqrFFa0pQzeg1cxlvf5JPEIjUqd4RPBvggdv1yf4qli2GaBN1K0Dhw13KErn
+         Xynw==
+X-Forwarded-Encrypted: i=1; AJvYcCU9ZYxOVEPPEMECRlVBFd/uuSjmxw3K0PwW913mkQAJNVqKix2K7Thgyu+JV7MJbuEj1T7PqcM3k+oef4PrOI3lRrRIzhcAlUCa1qXp
+X-Gm-Message-State: AOJu0Yx/0tY971o04HC0YazfyXxUQlxC7jaeBYxWzj+wzy+PFIvCpB2K
+	x3TrWW7dhWKGKzSdy0p4Gjzd0TwSWVbKGH6LxRw5Ohk2FJVbs5J6D0WJI1Y56UyIXqZ1kNriWYs
+	0
+X-Google-Smtp-Source: AGHT+IF35kx8fDcqPegx+LX9rbLQtQ9LFkKnwSLkrtYsJzFgxf26jqeRQbcx5k1Pg7huYacEIrcXHQ==
+X-Received: by 2002:a05:600c:a48:b0:410:cc53:a358 with SMTP id c8-20020a05600c0a4800b00410cc53a358mr1975751wmq.16.1707902953626;
+        Wed, 14 Feb 2024 01:29:13 -0800 (PST)
+Received: from localhost (cst-prg-65-8.cust.vodafone.cz. [46.135.65.8])
+        by smtp.gmail.com with ESMTPSA id u3-20020a05600c00c300b00411ec07674esm1012499wmm.31.2024.02.14.01.29.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Feb 2024 01:29:13 -0800 (PST)
+Date: Wed, 14 Feb 2024 10:29:11 +0100
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>, linux-kernel@vger.kernel.org, 
+	Conor Dooley <conor@kernel.org>, linux-riscv@lists.infradead.org, 
+	Stefan O'Rear <sorear@fastmail.com>, stable@vger.kernel.org
+Subject: Re: [PATCH -fixes v3 2/2] riscv: Save/restore envcfg CSR during CPU
+ suspend
+Message-ID: <20240214-cd40380c3969dc9450f05848@orel>
+References: <20240214090206.195754-1-samuel.holland@sifive.com>
+ <20240214090206.195754-3-samuel.holland@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240214033516.1344948-3-yazen.ghannam@amd.com>
+In-Reply-To: <20240214090206.195754-3-samuel.holland@sifive.com>
 
-On Tue, Feb 13, 2024 at 09:35:16PM -0600, Yazen Ghannam wrote:
-> +config RAS_FMPM
-> +	tristate "FRU Memory Poison Manager"
-> +	default m
-> +	depends on X86_MCE
-
-I know this is generic-ish but it needs to be enabled only on AMD for
-now. Whoever wants it somewhere else, then whoever needs to test it
-there first and then enable it there.
-
-> +	imply AMD_ATL
-> +	help
-> +	  Support saving and restoring memory error information across reboot
-> +	  cycles using ACPI ERST as persistent storage. Error information is
-
-s/cycles//
-
-> +	  saved with the UEFI CPER "FRU Memory Poison" section format.
-> +
-> +	  Memory may be retired during boot time and run time depending on
-
-s/may/is/
-
-Please check all your text - too many "may"s for something which is not
-a vendor doc. :)
-
-> +	  platform-specific policies.
-> +
->  endif
-> diff --git a/drivers/ras/Makefile b/drivers/ras/Makefile
-> index 3fac80f58005..11f95d59d397 100644
-> --- a/drivers/ras/Makefile
-> +++ b/drivers/ras/Makefile
-> @@ -3,4 +3,5 @@ obj-$(CONFIG_RAS)	+= ras.o
->  obj-$(CONFIG_DEBUG_FS)	+= debugfs.o
->  obj-$(CONFIG_RAS_CEC)	+= cec.o
+On Wed, Feb 14, 2024 at 01:01:57AM -0800, Samuel Holland wrote:
+> The value of the [ms]envcfg CSR is lost when entering a nonretentive
+> idle state, so the CSR must be rewritten when resuming the CPU.
+> 
+> The [ms]envcfg CSR was added in version 1.12 of the privileged ISA, and
+> is used by extensions other than Zicboz. However, the kernel currenly
+> has no way to determine the privileged ISA version. Since Zicboz is the
+> only in-kernel user of this CSR so far, use it as a proxy for
+> determining if the CSR is implemented.
+> 
+> Cc: <stable@vger.kernel.org> # v6.7+
+> Fixes: 43c16d51a19b ("RISC-V: Enable cbo.zero in usermode")
+> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+> ---
+> 
+> Changes in v3:
+>  - Check for Zicboz instead of the privileged ISA version
+> 
+> Changes in v2:
+>  - Check for privileged ISA v1.12 instead of the specific CSR
+>  - Use riscv_has_extension_likely() instead of new ALTERNATIVE()s
+> 
+>  arch/riscv/include/asm/suspend.h | 1 +
+>  arch/riscv/kernel/suspend.c      | 4 ++++
+>  2 files changed, 5 insertions(+)
+> 
+> diff --git a/arch/riscv/include/asm/suspend.h b/arch/riscv/include/asm/suspend.h
+> index 02f87867389a..491296a335d0 100644
+> --- a/arch/riscv/include/asm/suspend.h
+> +++ b/arch/riscv/include/asm/suspend.h
+> @@ -14,6 +14,7 @@ struct suspend_context {
+>  	struct pt_regs regs;
+>  	/* Saved and restored by high-level functions */
+>  	unsigned long scratch;
+> +	unsigned long envcfg;
+>  	unsigned long tvec;
+>  	unsigned long ie;
+>  #ifdef CONFIG_MMU
+> diff --git a/arch/riscv/kernel/suspend.c b/arch/riscv/kernel/suspend.c
+> index 239509367e42..28166006688e 100644
+> --- a/arch/riscv/kernel/suspend.c
+> +++ b/arch/riscv/kernel/suspend.c
+> @@ -15,6 +15,8 @@
+>  void suspend_save_csrs(struct suspend_context *context)
+>  {
+>  	context->scratch = csr_read(CSR_SCRATCH);
+> +	if (riscv_cpu_has_extension_unlikely(smp_processor_id(), RISCV_ISA_EXT_ZICBOZ))
+> +		context->envcfg = csr_read(CSR_ENVCFG);
+>  	context->tvec = csr_read(CSR_TVEC);
+>  	context->ie = csr_read(CSR_IE);
 >  
-> +obj-$(CONFIG_RAS_FMPM)	+= amd/fmpm.o
->  obj-y			+= amd/atl/
-> diff --git a/drivers/ras/amd/fmpm.c b/drivers/ras/amd/fmpm.c
-> new file mode 100644
-> index 000000000000..077d9f35cc7d
-> --- /dev/null
-> +++ b/drivers/ras/amd/fmpm.c
-> @@ -0,0 +1,776 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * FRU (Field-Replaceable Unit) Memory Poison Manager
-> + *
-> + * Copyright (c) 2024, Advanced Micro Devices, Inc.
-> + * All Rights Reserved.
-> + *
-> + * Authors:
-> + *	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-> + *	Muralidhara M K <muralidhara.mk@amd.com>
-> + *	Yazen Ghannam <Yazen.Ghannam@amd.com>
-> + *
-> + * Implementation notes, assumptions, and limitations:
-> + *
-> + * - FRU Memory Poison Section and Memory Poison Descriptor definitions are not yet
-> + *   included in the UEFI specification. So they are defined here. Afterwards, they
-> + *   may be moved to linux/cper.h, if appropriate.
-> + *
-> + * - Platforms based on AMD MI300 systems will be the first to use these structures.
-> + *   There are a number of assumptions made here that will need to be generalized
-> + *   to support other platforms.
-> + *
-> + *   AMD MI300-based platform(s) assumptions:
-> + *   - Memory errors are reported through x86 MCA.
-> + *   - The entire DRAM row containing a memory error should be retired.
-> + *   - There will be (1) FRU Memory Poison Section per CPER.
-> + *   - The FRU will be the CPU Package (Processor Socket).
-> + *   - The default number of Memory Poison Descriptor entries should be (8).
-> + *   - The Platform will use ACPI ERST for persistent storage.
-> + *   - All FRU records should be saved to persistent storage. Module init will
-> + *     fail if any FRU record is not successfully written.
+> @@ -36,6 +38,8 @@ void suspend_save_csrs(struct suspend_context *context)
+>  void suspend_restore_csrs(struct suspend_context *context)
+>  {
+>  	csr_write(CSR_SCRATCH, context->scratch);
+> +	if (riscv_cpu_has_extension_unlikely(smp_processor_id(), RISCV_ISA_EXT_ZICBOZ))
+> +		csr_write(CSR_ENVCFG, context->envcfg);
+>  	csr_write(CSR_TVEC, context->tvec);
+>  	csr_write(CSR_IE, context->ie);
+>  
+> -- 
+> 2.43.0
+>
 
-Please drop all that capitalized spelling.
 
-> + * - Source code will be under 'drivers/ras/amd/' unless and until there is interest
-> + *   to use this module for other vendors.
-
-This is not needed.
-
-> + * - Boot time memory retirement may occur later than ideal due to dependencies
-> + *   on other libraries and drivers. This leaves a gap where bad memory may be
-> + *   accessed during early boot stages.
-> + *
-> + * - Enough memory should be pre-allocated for each FRU record to be able to hold
-> + *   the expected number of descriptor entries. This, mostly empty, record is
-> + *   written to storage during init time. Subsequent writes to the same record
-> + *   should allow the Platform to update the stored record in-place. Otherwise,
-> + *   if the record is extended, then the Platform may need to perform costly memory
-> + *   management operations on the storage. For example, the Platform may spend time
-> + *   in Firmware copying and invalidating memory on a relatively slow SPI ROM.
-
-That's a good thing to have here.
-
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/cper.h>
-> +#include <linux/ras.h>
-> +
-> +#include <acpi/apei.h>
-> +
-> +#include <asm/cpu_device_id.h>
-> +#include <asm/mce.h>
-> +
-> +#pragma pack(1)
-
-Is that some ugly thing to avoid adding __packed annotation to the
-structure definitions below?
-
-"GCC supports several types of pragmas, primarily in order to compile
-code originally written for other compilers. Note that in general we do
-not recommend the use of pragmas; See Declaring Attributes of Functions,
-for further explanation. "
-
-Oh, that 1 is something else:
-
--fpack-struct[=n]
-
-    Without a value specified, pack all structure members together
-    without holes. When a value is specified (which must be a small
-    power of two), pack structure members according to this value,
-    representing the maximum alignment (that is, objects with default
-    alignment requirements larger than this are output potentially
-    unaligned at the next fitting location.
-
-So do I understand it correctly that struct members should be aligned to
-2^1 bytes?
-
-Grepping the tree, this looks like something BIOS does...
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
