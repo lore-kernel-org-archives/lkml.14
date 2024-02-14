@@ -1,272 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5212171A3
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 09:34:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB77F134A3
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 09:34:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707903259; cv=none; b=B91Pour7l3j2EwwtvTXEA7pOsAPGsb7mZ79luKQtHSbzWHxHvLHaoysuDkma2QO7dd5SsLF9Um1r6dgMtEvQ9ZaKu2BNmZl4N5PlKZIY3KLf+B6mUhLOjXEZo53vv60LVeFQUp6mpu90xfT/TU+/f1JRPkixJ8bl1goitWhgTl4=
+	t=1707903292; cv=none; b=TgT38P0l98SyfinJin6LguS+yBtfCljf9WOFAgFRT2VOgbRpsXYj5umUOdg/0YPcv22r7ZS+mPjjceUVMVAGlkoygPJJISjTB6DuRK3DPdlBXKmlntF/kqVyhn4Fj4zf/9HYdITII0UP3SigIKVO7jsuSamppj21aR9zD+b2FHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707903259; c=relaxed/simple;
-	bh=FxSgUwsnEmLismW7KZS+woIOBL3X3s8QTre4gaV0ORU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hGg7DhKpb8zCh/hU3PV3uz9Em6QYwCw6FRY/FLXdqMw6uPLBjAUuL8rLSM1LVPk7rcSoFY0tDrKAIwXQgcL7FHhOBNNSyKDU2eWUIpgneMl1WJexofeQkkbivhSp744CdzT2JWCiwazssP4C/VkcE+fdK3AFPgmhGwBtPVaXj1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M0DyIO7r; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707903292; c=relaxed/simple;
+	bh=eWkspjNzFtYVtL67xcsvO3+T3IJryy3wrpfEPZSaC6Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=MZJ5diDIu/Vq1/HvZtMgNhm2cFoTIKbugz/l71kTtDQmBi7JLzHzvhBoPmGmmQNl4mchEGdIh9JXHnygdoplTIUVVvHvXGG7vrBZxbIn2NxCjNWHoK/2ZfQHE/H+22gPXoDNV5FsjeRZdt53dQefvbTTT/MpV0YzA5mMTV+SyYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f8FC5ItF; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M0DyIO7r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707903256;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=qgy6GGYXXuaVuritCAHxcL8acV3jG8qW6OTkGDcq1DM=;
-	b=M0DyIO7r/QF5NP7xbpaHT6hEkfiN9C6ZsBmye3RF3lK/xJkfXgkDTmPpJDsosMbhQbvBu6
-	6HXQ5EPdieZFNtwjk4WyV0BOC/Zk/05kx0E8w7+M0QMcA/6BMjEaKIZWqnjJMfVaaHloV2
-	9rcAixnBI/FGqCjqslm0JfXu8AItUYo=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-377-fTWhq_m7NYq_ytjafe4aGg-1; Wed, 14 Feb 2024 04:34:14 -0500
-X-MC-Unique: fTWhq_m7NYq_ytjafe4aGg-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-33b1ad7dfe1so2525445f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 01:34:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707903253; x=1708508053;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :references:cc:to:content-language:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qgy6GGYXXuaVuritCAHxcL8acV3jG8qW6OTkGDcq1DM=;
-        b=ldOgtUa/5w47k5IAcdrYD7J23G0wPZzmsmgEnsxDEtx9KEBT/66+zViSv8l+Laqx69
-         qZBOGi35uGpPTzrxmV6zDHHlO/4bUEqzJx6I7FH0kttbVfhWf+Glx1qTV2scGUX0HmrE
-         GyYL3toL9L8Dw2HaIgdKXuxgv8tp4NEj2TQT7GaAvJgSkNonQ08XPq253k5RABy9xPCk
-         vkr/R/sw/G4g6SaEM5Ql42SvGrYpZ1y7m8Ej9LLphXlQQmEJ6ffZ5KcPh5YG4WwVKeXl
-         bIsdPAvE0er6fvSg8P4RIuUsbBORbS8M+eYL/KVOqCE4b6ZoLvrEnhTEKlxvKqVqDWFd
-         9k2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUHqWg8ttbQXNudKI5rm8myZF+1jJdqFfSSO07QunuWZ7utoPkIIrbWVsY/GUrCdJz0Gr3/EA0vyWPZAlDPWnCIM7KS2veWpBjeFfDN
-X-Gm-Message-State: AOJu0Yz+3oXJZIOopIdJhyHgbZhnSho/KsP0appuyYUMwkJop/qKC3ZF
-	N371GANDwd/r1UANrBYVL7arMkrhAY2Ap0EzMdUODhh3LVhIbtFMXk0D88pbv3u577nrV9ik7R3
-	7uXfJo2J33/1L38RQhcpsjvyFAVJKuzTpTvtlT6LiY9ATiAEX5Jt5/x9DphHDBg==
-X-Received: by 2002:a5d:5001:0:b0:33b:68bc:6e73 with SMTP id e1-20020a5d5001000000b0033b68bc6e73mr1241991wrt.42.1707903253640;
-        Wed, 14 Feb 2024 01:34:13 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHTKmko1G9G/pee2ZiIe9NSxdTOYkWa8OLYM08WwbRBQZV9vdrjk9NQvxiRYAK2xGkX0Z9PEw==
-X-Received: by 2002:a5d:5001:0:b0:33b:68bc:6e73 with SMTP id e1-20020a5d5001000000b0033b68bc6e73mr1241961wrt.42.1707903253189;
-        Wed, 14 Feb 2024 01:34:13 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVOVgPexUBHiz71w0Ncw2wb5WblHGZcjzqljN+RKJvXEV26t3QZyu3Q/2CF52LOfzIlIVzJz9WuCDV9iTj0/AXsUvkibhf190GgJnJqKyUyJQ8HyxoHcv8u0nr/9FggrkpZaTADQ4zuu/P4D0hfOhBJoASA1J3dZkqNQTP3g6YoLm/RQxx4Yd2OCL6K1zX856PT46s1Pr4P0awOpzSDed6PhBTCYbs8hROATCFL5jlXXdsrS0/QWhNgM48wX1SS9TsGGuuUta/5t4X3CWSP4cI6vkA3/KCyZlPp3bSq1dHsw+3eDE7EGgvMoAJbq0TEHL9trc+jpZxe+AK6z+kOixjfRG2KSr/kcaD0wjVKqHFyRvXrnpj5KuvLhIIfafwwBgUUKhWl0LhM4IgAcX0XqUJLXkw5SkA6cNKtTQIX/sJuB0GEh3ETe5fX4jfXnUBwPhYOpczYXJ1BXODwfx8efnnz3FakvU6i9wuXseIea6Mf2BARrbDnsvflq7h7xAA5rnXJtjkFYJG0UYMXLyF8JQsP9yScItNqdrAWx9AY4sQscsz/TyCzKwcvZoweCe8+cy32
-Received: from ?IPV6:2003:d8:2f3c:3f00:7177:eb0c:d3d2:4b0e? (p200300d82f3c3f007177eb0cd3d24b0e.dip0.t-ipconnect.de. [2003:d8:2f3c:3f00:7177:eb0c:d3d2:4b0e])
-        by smtp.gmail.com with ESMTPSA id bj5-20020a0560001e0500b0033b2799815csm12156827wrb.86.2024.02.14.01.34.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Feb 2024 01:34:12 -0800 (PST)
-Message-ID: <48219ffc-62dc-430a-8055-6fb9ab533e7f@redhat.com>
-Date: Wed, 14 Feb 2024 10:34:11 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f8FC5ItF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707903290; x=1739439290;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=eWkspjNzFtYVtL67xcsvO3+T3IJryy3wrpfEPZSaC6Q=;
+  b=f8FC5ItFuk0gb4jwwnaPgyr6P9USjYSOTwhenUlFHfPMvpSlYsF16Twa
+   qOGCUukrW7VRHNJ69g+fBx3juw5d0j+os+DlP9gzhC1xoblHiEYuE/BhS
+   GcAEr5AOrqC6z/86Oo0MVMOXOwFfx27pyNvWT8q/rqCJu2YEKKVevX/fq
+   fNNFFh81w2xx6CBSEDoUz2LQlU5rq4JhvtBw5dYIfy30pvyaMiYf+DK70
+   Bue3pKTsoX0EYuCBhFiGSpkSo62Xis2fOWpBpyWgawIGuHjLYzcLgH799
+   /2Rg41DTT+ckQvAAg/x4Z3PtJuO8dWfcT6vMNN7+45SA0b189q767zLY/
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="1848358"
+X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
+   d="scan'208";a="1848358"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 01:34:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
+   d="scan'208";a="3115962"
+Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 14 Feb 2024 01:34:44 -0800
+Received: from kbuild by 01f0647817ea with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1raBf7-0008dU-2i;
+	Wed, 14 Feb 2024 09:34:41 +0000
+Date: Wed, 14 Feb 2024 17:33:56 +0800
+From: kernel test robot <lkp@intel.com>
+To: Costa Shulyupin <costa.shul@redhat.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Waiman Long <longman@redhat.com>,
+	Frederic Weisbecker <frederic@kernel.org>
+Subject: [tip:timers/core 3/3] kernel/time/hrtimer.c:2224:49: error: implicit
+ declaration of function 'housekeeping' is invalid in C99
+Message-ID: <202402141742.oYY6J3lC-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/7] mm: page_owner: add support for splitting to any
- order in split page_owner.
-Content-Language: en-US
-To: Zi Yan <ziy@nvidia.com>, "Pankaj Raghav (Samsung)"
- <kernel@pankajraghav.com>, linux-mm@kvack.org
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Yang Shi <shy828301@gmail.com>, Yu Zhao <yuzhao@google.com>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- Ryan Roberts <ryan.roberts@arm.com>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
- <mkoutny@suse.com>, Roman Gushchin <roman.gushchin@linux.dev>,
- Zach O'Keefe <zokeefe@google.com>, Hugh Dickins <hughd@google.com>,
- Mcgrof Chamberlain <mcgrof@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- cgroups@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-References: <20240213215520.1048625-1-zi.yan@sent.com>
- <20240213215520.1048625-5-zi.yan@sent.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240213215520.1048625-5-zi.yan@sent.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 13.02.24 22:55, Zi Yan wrote:
-> From: Zi Yan <ziy@nvidia.com>
-> 
-> It adds a new_order parameter to set new page order in page owner.
-> It prepares for upcoming changes to support split huge page to any
-> lower order.
-> 
-> Signed-off-by: Zi Yan <ziy@nvidia.com>
-> ---
->   include/linux/page_owner.h | 10 +++++-----
->   mm/huge_memory.c           |  2 +-
->   mm/page_alloc.c            |  4 ++--
->   mm/page_owner.c            |  9 +++++----
->   4 files changed, 13 insertions(+), 12 deletions(-)
-> 
-> diff --git a/include/linux/page_owner.h b/include/linux/page_owner.h
-> index d7878523adfc..a784ba69f67f 100644
-> --- a/include/linux/page_owner.h
-> +++ b/include/linux/page_owner.h
-> @@ -11,7 +11,7 @@ extern struct page_ext_operations page_owner_ops;
->   extern void __reset_page_owner(struct page *page, unsigned short order);
->   extern void __set_page_owner(struct page *page,
->   			unsigned short order, gfp_t gfp_mask);
-> -extern void __split_page_owner(struct page *page, int order);
-> +extern void __split_page_owner(struct page *page, int old_order, int new_order);
->   extern void __folio_copy_owner(struct folio *newfolio, struct folio *old);
->   extern void __set_page_owner_migrate_reason(struct page *page, int reason);
->   extern void __dump_page_owner(const struct page *page);
-> @@ -31,10 +31,10 @@ static inline void set_page_owner(struct page *page,
->   		__set_page_owner(page, order, gfp_mask);
->   }
->   
-> -static inline void split_page_owner(struct page *page, int order)
-> +static inline void split_page_owner(struct page *page, int old_order, int new_order)
->   {
->   	if (static_branch_unlikely(&page_owner_inited))
-> -		__split_page_owner(page, order);
-> +		__split_page_owner(page, old_order, new_order);
->   }
->   static inline void folio_copy_owner(struct folio *newfolio, struct folio *old)
->   {
-> @@ -56,11 +56,11 @@ static inline void reset_page_owner(struct page *page, unsigned short order)
->   {
->   }
->   static inline void set_page_owner(struct page *page,
-> -			unsigned int order, gfp_t gfp_mask)
-> +			unsigned short order, gfp_t gfp_mask)
->   {
->   }
->   static inline void split_page_owner(struct page *page,
-> -			int order)
-> +			int old_order, int new_order)
->   {
->   }
->   static inline void folio_copy_owner(struct folio *newfolio, struct folio *folio)
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 3d30eccd3a7f..ad7133c97428 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -2919,7 +2919,7 @@ static void __split_huge_page(struct page *page, struct list_head *list,
->   	unlock_page_lruvec(lruvec);
->   	/* Caller disabled irqs, so they are still disabled here */
->   
-> -	split_page_owner(head, order);
-> +	split_page_owner(head, order, 0);
->   
->   	/* See comment in __split_huge_page_tail() */
->   	if (PageAnon(head)) {
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 9d4dd41d0647..e0f107b21c98 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -2652,7 +2652,7 @@ void split_page(struct page *page, unsigned int order)
->   
->   	for (i = 1; i < (1 << order); i++)
->   		set_page_refcounted(page + i);
-> -	split_page_owner(page, order);
-> +	split_page_owner(page, order, 0);
->   	split_page_memcg(page, order, 0);
->   }
->   EXPORT_SYMBOL_GPL(split_page);
-> @@ -4837,7 +4837,7 @@ static void *make_alloc_exact(unsigned long addr, unsigned int order,
->   		struct page *page = virt_to_page((void *)addr);
->   		struct page *last = page + nr;
->   
-> -		split_page_owner(page, order);
-> +		split_page_owner(page, order, 0);
->   		split_page_memcg(page, order, 0);
->   		while (page < --last)
->   			set_page_refcounted(last);
-> diff --git a/mm/page_owner.c b/mm/page_owner.c
-> index 1319e402c2cf..ebbffa0501db 100644
-> --- a/mm/page_owner.c
-> +++ b/mm/page_owner.c
-> @@ -292,19 +292,20 @@ void __set_page_owner_migrate_reason(struct page *page, int reason)
->   	page_ext_put(page_ext);
->   }
->   
-> -void __split_page_owner(struct page *page, int order)
-> +void __split_page_owner(struct page *page, int old_order, int new_order)
->   {
->   	int i;
->   	struct page_ext *page_ext = page_ext_get(page);
->   	struct page_owner *page_owner;
-> -	unsigned int nr = 1 << order;
-> +	unsigned int old_nr = 1 << old_order;
-> +	unsigned int new_nr = 1 << new_order;
->   
->   	if (unlikely(!page_ext))
->   		return;
->   
-> -	for (i = 0; i < nr; i++) {
-> +	for (i = 0; i < old_nr; i += new_nr) {
->   		page_owner = get_page_owner(page_ext);
-> -		page_owner->order = 0;
-> +		page_owner->order = new_order;
->   		page_ext = page_ext_next(page_ext);
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/core
+head:   86342554e102b0d18d50abec43d40f4fc92f1993
+commit: 86342554e102b0d18d50abec43d40f4fc92f1993 [3/3] hrtimer: Select housekeeping CPU during migration
+config: arm-defconfig (https://download.01.org/0day-ci/archive/20240214/202402141742.oYY6J3lC-lkp@intel.com/config)
+compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project.git f28c006a5895fc0e329fe15fead81e37457cb1d1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240214/202402141742.oYY6J3lC-lkp@intel.com/reproduce)
 
-Staring at __set_page_owner_handle(), we do set all 1<<order page_exts 
-(corresponding to 1<<order "struct page"s) to have ->order set.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202402141742.oYY6J3lC-lkp@intel.com/
 
-Wouldn't you have to do the same here?
+All errors (new ones prefixed by >>):
 
-for (i = 0; i < 1 << old_order; i++) {
-	page_owner = get_page_owner(page_ext);
-	page_owner->order = new_order;
-	page_ext = page_ext_next(page_ext);
-}
+   kernel/time/hrtimer.c:1651:7: warning: variable 'expires_in_hardirq' set but not used [-Wunused-but-set-variable]
+           bool expires_in_hardirq;
+                ^
+>> kernel/time/hrtimer.c:2224:49: error: implicit declaration of function 'housekeeping' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
+           int i, ncpu = cpumask_any_and(cpu_active_mask, housekeeping(HK_TYPE_TIMER));
+                                                          ^
+>> kernel/time/hrtimer.c:2224:62: error: use of undeclared identifier 'HK_TYPE_TIMER'
+           int i, ncpu = cpumask_any_and(cpu_active_mask, housekeeping(HK_TYPE_TIMER));
+                                                                       ^
+   1 warning and 2 errors generated.
+
+
+vim +/housekeeping +2224 kernel/time/hrtimer.c
+
+  2221	
+  2222	int hrtimers_cpu_dying(unsigned int dying_cpu)
+  2223	{
+> 2224		int i, ncpu = cpumask_any_and(cpu_active_mask, housekeeping(HK_TYPE_TIMER));
+  2225		struct hrtimer_cpu_base *old_base, *new_base;
+  2226	
+  2227		tick_cancel_sched_timer(dying_cpu);
+  2228	
+  2229		old_base = this_cpu_ptr(&hrtimer_bases);
+  2230		new_base = &per_cpu(hrtimer_bases, ncpu);
+  2231	
+  2232		/*
+  2233		 * The caller is globally serialized and nobody else
+  2234		 * takes two locks at once, deadlock is not possible.
+  2235		 */
+  2236		raw_spin_lock(&old_base->lock);
+  2237		raw_spin_lock_nested(&new_base->lock, SINGLE_DEPTH_NESTING);
+  2238	
+  2239		for (i = 0; i < HRTIMER_MAX_CLOCK_BASES; i++) {
+  2240			migrate_hrtimer_list(&old_base->clock_base[i],
+  2241					     &new_base->clock_base[i]);
+  2242		}
+  2243	
+  2244		/*
+  2245		 * The migration might have changed the first expiring softirq
+  2246		 * timer on this CPU. Update it.
+  2247		 */
+  2248		__hrtimer_get_next_event(new_base, HRTIMER_ACTIVE_SOFT);
+  2249		/* Tell the other CPU to retrigger the next event */
+  2250		smp_call_function_single(ncpu, retrigger_next_event, NULL, 0);
+  2251	
+  2252		raw_spin_unlock(&new_base->lock);
+  2253		raw_spin_unlock(&old_base->lock);
+  2254	
+  2255		return 0;
+  2256	}
+  2257	
 
 -- 
-Cheers,
-
-David / dhildenb
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
