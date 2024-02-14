@@ -1,167 +1,159 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E411D13FEF
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 09:05:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63ED3AD4B
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 09:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707901507; cv=none; b=dpL2pjuFoj7VZt7MRnopT3e7zBzyi5g2x+mFM091qQB6wXvJgw9j+rJCgWO0Kv6Z7mDGIcPSRdLTte32fVSNC0KoR4cUaxbyx3Kcwr4f9VX3k60B8/uQ1JKYA+lOqgQ66mknrRdKmF3xycUO3QJfrIG1WNF49QS1hN3CynRIP1I=
+	t=1707901553; cv=none; b=na1NdO92hRi07/EiT8gpyFzZAD7pxHfrKHNo25KxrWRiwGuE0OfGrlfwDg5P5VXMMh4/n5zdBjG8EhHCww+4KkUkJwYSHd+WYz62QjgaXpD5YOKb2G6IiH/QdNuvGSp6Vy4KCHTX3Nj7gpG+ER5XVLPbY4TItogv/ORtHFpFDOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707901507; c=relaxed/simple;
-	bh=U1ZDBd7fTKy88hgKtIZUFJ1jWPAT0hPVgBoYs7PcoQo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NSvsknD9S4F6F2KILLiZpZxXAoZd+8g9Ae0cVe6mFGxuiDrkYVSEBdGK8adQL7lO2pCh6sq2aeUWKe+23uhz/qEKfYBkPVQFsqs2bU4SywNuuId+phH3MSr5sAmLbcnodpTguSejzVX7Ajiyv0fiThlUt5OI2KbG0oYnBvci6jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZrgCXMeM; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707901553; c=relaxed/simple;
+	bh=I8D/NVeZlWyXUSuy1g8l5l45XPggH39b8RzJqNF+BpM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=boOdmPbJUxeSMFrj0EZqegJFhtb1ttbqGN2C/EJsBI8eTU7j12LIvOKO9IK71581RDv5QoIA+QOS31taZxVCia5FeN5ZfG333Fw82pdmk297JUMtN18D/Yu5YbQe5s8izwdV93UaLS498duH9hT3PwvddD9HKfOaYqUuE9KntCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RJDAQngR; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZrgCXMeM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707901504;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8I13Yy1ZnXR0MIiHLrduxDxiApb0ZcnLJeAvn/Kr8OY=;
-	b=ZrgCXMeMYy27+Ahc18BlZwMSyEozy4mG6f2Cd4psmDB+evaqqIgpiICsPcbP7WNHjm8NFK
-	AGsdAedXGxbpnJDsGYweJZ/TZMy44asqu5FyYuOE1BuNYsFUpKa0ipOV1PEqQGNh7eHYK8
-	YqhrpJDz+uNZec0rzLUYcYoVMNpkDlk=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-102-UJ9Vona5M6m-jafFVF2hvQ-1; Wed,
- 14 Feb 2024 04:04:57 -0500
-X-MC-Unique: UJ9Vona5M6m-jafFVF2hvQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9B7063CBDF64;
-	Wed, 14 Feb 2024 09:04:56 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.0])
-	by smtp.corp.redhat.com (Postfix) with SMTP id C8DC1C185C0;
-	Wed, 14 Feb 2024 09:04:51 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 14 Feb 2024 10:03:39 +0100 (CET)
-Date: Wed, 14 Feb 2024 10:03:33 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Tycho Andersen <tycho@tycho.pizza>
-Cc: coverity-bot <keescook@chromium.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Peng Zhang <zhangpeng.00@bytedance.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Tycho Andersen <tandersen@netflix.com>,
-	Mike Christie <michael.christie@oracle.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: Coverity: __do_sys_pidfd_send_signal(): UNINIT
-Message-ID: <20240214090332.GA14017@redhat.com>
-References: <202402131559.B76A34B@keescook>
- <ZcwGua3a9Z8nJXVq@tycho.pizza>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RJDAQngR"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5620595f743so1708800a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 01:05:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707901549; x=1708506349; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/lqba7VkE2HTVepiVP1TeOFkS6pBAOY08pjklGS4aIc=;
+        b=RJDAQngRn1Qf9EB7+wcTUrfKMmOBlcW1siXsRLbfm5mH5lVO1yXQJ54yIhdXorCn/U
+         j5g1vSahdvgUrknFJ2oF04+8XehXS0FtjZhSTyndd+AMTFtI4s0tONZEtGGsOOrf9exa
+         FdUDI3eE8muc1kIPhs2TQyYf/hVJcn5z0XQn52zTOBXp0PjVNpZ8YB3qT2DWbYh8XrMr
+         NeZxBJbjqjk41IUO9HA/C5mQckuGriD9UBeAyQnHd5xQrnZ82JJ+jh/lhkIQ97YXQsjI
+         b8m0HpaslRNjDeFU1ZSA5hSWFnpE42wcjPg2ZIw4fyvo8D6UGgFVvl+ODM26+W8Y3xRm
+         7VZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707901549; x=1708506349;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/lqba7VkE2HTVepiVP1TeOFkS6pBAOY08pjklGS4aIc=;
+        b=V7lwEPGRCNfts4OUABSOM+5zSa/RUAvOT5vTzcRRtwGYhpy+RS9bxNe7ipbm1U+rIK
+         iZIxcWDOW/C9/qJ8JMtKR1AQXMQ/06FEy7cVUD7vq6hoC5YqacS0MCKvU+vhrU81ixHG
+         8oZkv6I7semGagLzDgHet2tjZcultkDwJTOnxx/XTUK67irRxRefkrqP0yGPE+rpFA/D
+         LW5KwSFFfcCt9DB2xnINt0DXNg1jhhnxcyIH9/XOrp0hpPssT32miUwRI71MRURnxu0g
+         ZHwZSCnPXea2DdOlAcw98M14SKN3lOAScLaNmkbdhOXK0PQA7i1NH0GBCphwBNVjXAmi
+         yKTA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+OLhDRC8CvTpGXn0mDE70E032UUhbG1E0oXijGtHkJXaUFMkF/MM7YeKIJ6flQuxUr4SzfCmE4XhTkgS4TdZRGU9Z8XYRKFbgoOhA
+X-Gm-Message-State: AOJu0YyfSwvwgoG1vJwGHF5LGU8RIZS37tfzbu1Xx/Ia4qvo51QQ/39x
+	mf1sFL7AuTRqP3CS7yaFcswmEEvNF6ohs1ngYM6wnxTzPQnch34Oxy6Hd2SUmOA=
+X-Google-Smtp-Source: AGHT+IHpfzSB3UUkNobzLN8Vi9rrVWDrFR5E2F7N2kju1nQrJg5vax6bdIsqlAz6p3UUZxExtRBB7w==
+X-Received: by 2002:a17:906:5a8a:b0:a3c:e99f:c08f with SMTP id l10-20020a1709065a8a00b00a3ce99fc08fmr1377804ejq.40.1707901549703;
+        Wed, 14 Feb 2024 01:05:49 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWFzIXfw3EKu3QR3Lpmz52Q0qgGCEIZ/NIRWL7eliD7DpXtG+mo+WvSbG4lvj841OWGLwIlI60JnvXuYv9ZTnKrb0wOWFd02g/qJ/p7BKwg1t503KcpT3dPAarBHwShgUjZT2T/w69kxB3ldvrTlzP7pYgE2mdl1pnhaL+UnFrmy8muQweceYPU22idzltPLBpA1TUSyByulXPo0nbuenXzoF7wSujtfDuQMSzZSH15EHb/eUMvklt0SD3NHHMsm/Lr5KdZo1rjXRMOviuyy9ZOWJTSR1KBSZuaPOgMFmpcA4wffn8hVgOYhM0kddkMz3LqPMtNc0CvHyUXuGW9eagbIzI4ftSXl+L61ETGDO6t4TRNWwsG4crwHaSKiUoqK704+swd356+sDYepExune427iTh7+tObD3QduKdAKewsOlGLx7LEJ92VhxUPVypWi3QL/W/xzFFDNZ5GvbxphyZ1nFcmppaKogeUf445vH7QeTH9QPN
+Received: from [192.168.0.22] ([78.10.207.130])
+        by smtp.gmail.com with ESMTPSA id th7-20020a1709078e0700b00a3d07f3ac61sm1363299ejc.101.2024.02.14.01.05.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Feb 2024 01:05:49 -0800 (PST)
+Message-ID: <2dac95be-b23a-4c42-ac67-241100c7a51b@linaro.org>
+Date: Wed, 14 Feb 2024 10:05:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZcwGua3a9Z8nJXVq@tycho.pizza>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: mediatek,mt2712: add compatible for
+ MT7988
+Content-Language: en-US
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, John Crispin <john@phrozen.org>,
+ linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
+ <rafal@milecki.pl>
+References: <20240213164633.25447-1-zajec5@gmail.com>
+ <onnokyq7ciza7i7jzc74cun2khpst5iocuccks2cm433ux3za3@dou4oacrvuxj>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <onnokyq7ciza7i7jzc74cun2khpst5iocuccks2cm433ux3za3@dou4oacrvuxj>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 02/13, Tycho Andersen wrote:
->
-> I think this is a false positive, we have:
+On 13/02/2024 18:48, Uwe Kleine-König wrote:
+> Hello Rafał,
+> 
+> On Tue, Feb 13, 2024 at 05:46:32PM +0100, Rafał Miłecki wrote:
+>> From: Rafał Miłecki <rafal@milecki.pl>
+>>
+>> MT7988 has on-SoC controller that can control up to 8 PWMs.
+>>
+>> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+> 
+> please make sure that the email address used for sending the patch
+> matches the Signed-off-by line.
+> 
+> (It depends on the pickyness of the relevant maintainer if that is a
+> stopper or not.)
 
-Agreed,
+Does not have to... It must match From field which is correct here.
+Syntax like:
 
-> That said, a default case wouldn't hurt, and we should fix the first
-> comment anyways, since now we have extensions.
->
-> I'm happy to send a patch or maybe it's better for Christian to fix it
-> in-tree.
+From: Foo <foo@com>
+Signed-off-by: Foo <foo@com>
+Signed-off-by: Foo <my-other-email-foo@com>
 
-I leave this to you and Christian, whatever you prefer. But perhaps we
-can simplify these checks? Something like below.
+makes sense only if copyrights change (e.g. change of employers) and/or
+one email stop working. How would be the point of having to SoBs for the
+same person in other cases?
 
-Oleg.
-
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -3876,10 +3876,6 @@ static struct pid *pidfd_to_pid(const struct file *file)
- 	return tgid_pidfd_to_pid(file);
- }
- 
--#define PIDFD_SEND_SIGNAL_FLAGS                            \
--	(PIDFD_SIGNAL_THREAD | PIDFD_SIGNAL_THREAD_GROUP | \
--	 PIDFD_SIGNAL_PROCESS_GROUP)
--
- /**
-  * sys_pidfd_send_signal - Signal a process through a pidfd
-  * @pidfd:  file descriptor of the process
-@@ -3903,13 +3899,21 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
- 	kernel_siginfo_t kinfo;
- 	enum pid_type type;
- 
--	/* Enforce flags be set to 0 until we add an extension. */
--	if (flags & ~PIDFD_SEND_SIGNAL_FLAGS)
--		return -EINVAL;
--
--	/* Ensure that only a single signal scope determining flag is set. */
--	if (hweight32(flags & PIDFD_SEND_SIGNAL_FLAGS) > 1)
--		return -EINVAL;
-+	switch (flags) {
-+	case 0:
-+		/* but see the PIDFD_THREAD check below */
-+		type = PIDTYPE_TGID;
-+		break;
-+	case PIDFD_SIGNAL_THREAD:
-+		type = PIDTYPE_PID;
-+		break;
-+	case PIDFD_SIGNAL_THREAD_GROUP:
-+		type = PIDTYPE_TGID;
-+		break;
-+	case PIDFD_SIGNAL_PROCESS_GROUP:
-+		type = PIDTYPE_PGID;
-+		break;
-+	}
- 
- 	f = fdget(pidfd);
- 	if (!f.file)
-@@ -3926,24 +3930,8 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
- 	if (!access_pidfd_pidns(pid))
- 		goto err;
- 
--	switch (flags) {
--	case 0:
--		/* Infer scope from the type of pidfd. */
--		if (f.file->f_flags & PIDFD_THREAD)
--			type = PIDTYPE_PID;
--		else
--			type = PIDTYPE_TGID;
--		break;
--	case PIDFD_SIGNAL_THREAD:
-+	if (!flags && (f.file->f_flags & PIDFD_THREAD))
- 		type = PIDTYPE_PID;
--		break;
--	case PIDFD_SIGNAL_THREAD_GROUP:
--		type = PIDTYPE_TGID;
--		break;
--	case PIDFD_SIGNAL_PROCESS_GROUP:
--		type = PIDTYPE_PGID;
--		break;
--	}
- 
- 	if (info) {
- 		ret = copy_siginfo_from_user_any(&kinfo, info);
+Best regards,
+Krzysztof
 
