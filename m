@@ -1,288 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB428171C1;
-	Wed, 14 Feb 2024 10:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F207318027;
+	Wed, 14 Feb 2024 10:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707906115; cv=none; b=XPgacamYKolUR5CtA0brTeE+WJWrvhALBYxFWPlWb0LgmEWUvspYFLGMHJxbZlfOND8fIjrBo5jTF3See1Ky0XVxMYIETiuzxyGHxJha3SmoJ0kcAFDmA0lrG4U9ebC9KRr9XGtm4KilTev2KmUxSTGWjFYeAULM8j8DL4bon18=
+	t=1707906167; cv=none; b=AmESqnO3qcR+WUvPTjMYAKqY8u0ueG3FaASksDL+jgj4t4PVVigVCKDkAXedir/YrPDdxqhvLQ8lBSnkehBPae/dYmJGTtl0hga2lJG4sBTyyMij8bBR0yBBXJQHsniRlyQwt4sBUZOfytk1fuV26TfZo9Zk1Ex7sLsAZed+E3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707906115; c=relaxed/simple;
-	bh=U0LCMLBdsb/HGPUgFB6ys8ddfeTbC73CP7gQKzf0Y3w=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=PJHpyyz8TnNIjN696vrNZG3Jng2bMDqDVUhQc4lKAZ9AKWyAreGceDzhVcxGx+bb0q+s5LvJEIushYggK/941DPBKFJnoYt3DDTt1/b5XBjeOLelnrdlHIJTKLRquaGF8oDY+kPuknycRTvTZP5Kh7GET4ZH2iJKCbrwcKlid80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U7Jd4Qxk; arc=none smtp.client-ip=192.198.163.12
+	s=arc-20240116; t=1707906167; c=relaxed/simple;
+	bh=DrNq9NIAiSAvKQs02UieUvDi/8KRVxqBmIiu38GkvBA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cp7gqTitrXeYvI8L2hmsfYbmf990jd/Z4ncQv5zuTObpMTHDCLvz6MCkKERmdkxOWun7UJ1cE1W5VksUZ4QH4xgfmv8b5YtFM1reJym8nQU4zA44vvryUMhswB5Si9UmE53kNB1SQmcQGH72SUBDJyg4VIg8aYB6BrON3SdYW5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CrRZycvL; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U7Jd4Qxk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CrRZycvL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707906113; x=1739442113;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=U0LCMLBdsb/HGPUgFB6ys8ddfeTbC73CP7gQKzf0Y3w=;
-  b=U7Jd4QxkD2O5NGYvMZpYbPO6n+EW8xn8/XLX0fJSbPS1NBa/CXgXd6uo
-   wFjNpVPyOunuKlHF9sdzLpsXWAlrvoF8kV0BJcy0wtVOk2Tp7V5BcywxJ
-   27FPHGq/sEYZCl2BAtFOXZfH6UcV2qxvqkXT30LEbxnmYMvGJwF0h2tlB
-   vOQrf+Hsc2VH9DEinp7zQaZtQsF8BfMJeSI7YmAakVRi3l/F8PfWV9Jf/
-   ug+qb+/ZqZ1FwmiKNNp/b6EaK79cYdsQnJ6eibzJ3rJhish/1IufyVHr/
-   xNJDlEoCjGMH+p/mbNVDG+zwdN+g9WIg/OiruuweBogxs6DW+LCHvi4tc
+  t=1707906165; x=1739442165;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=DrNq9NIAiSAvKQs02UieUvDi/8KRVxqBmIiu38GkvBA=;
+  b=CrRZycvLj9Np/AYfv4x4mxm6e02oLuxgM+S6neON0tjDszUC245aY65T
+   ZX6v/R7T4A9I7PGWXqTu0LzeooqY3o5LkAqD/yaEkGENwp4FbNwTiG2iv
+   wJpOGKxKBSBWDwBFu6eaNwvO0wUW1CbdXJWiPfxGDW9vK2Z0hD9rAlwwx
+   lTLXunBmb0DWN7PufsYYkctFI3LBqDW2vtrodaOxOCQ9jChCOnQU6SLpN
+   j8G7oZwUBGLyb2Q6fo4qOQhQb7vRh3KdG00NZKa8J0kxDqFXM9Ja5PhbX
+   El069Yx08286OP0h5Et5NAkOgYPTaUTWzjD/uPrD0tkEClndoD5q/AP1h
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="5719373"
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="1794769"
 X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="5719373"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 02:21:52 -0800
+   d="scan'208";a="1794769"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 02:22:45 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="935614506"
 X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="7808923"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.33.229])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 02:21:50 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 14 Feb 2024 12:16:02 +0200 (EET)
-To: Vishnu Sankar <vishnuocv@gmail.com>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, vsankar@lenovo.com
-Subject: Re: [PATCH 1/2] platform/x86: thinkpad_acpi: Simplify thermal mode
- checking
-In-Reply-To: <20240214052959.8550-1-vishnuocv@gmail.com>
-Message-ID: <05276532-52eb-3b7d-4578-c596bc1d79c4@linux.intel.com>
-References: <20240214052959.8550-1-vishnuocv@gmail.com>
+   d="scan'208";a="935614506"
+Received: from kuha.fi.intel.com ([10.237.72.185])
+  by fmsmga001.fm.intel.com with SMTP; 14 Feb 2024 02:22:39 -0800
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 14 Feb 2024 12:22:38 +0200
+Date: Wed, 14 Feb 2024 12:22:38 +0200
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Prashant Malani <pmalani@chromium.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Benson Leung <bleung@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	Emilie Roberts <hadrosaur@google.com>,
+	"Nyman, Mathias" <mathias.nyman@intel.com>,
+	"Regupathy, Rajaram" <rajaram.regupathy@intel.com>,
+	"Radjacoumar, Shyam Sundar" <ssradjacoumar@google.com>,
+	Samuel Jacob <samjaco@google.com>,
+	Uday Bhat <uday.m.bhat@intel.com>, linux-usb@vger.kernel.org,
+	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] platform/chrome: cros_ec_typec: Make sure the USB
+ role switch has PLD
+Message-ID: <ZcyUblecufzeso17@kuha.fi.intel.com>
+References: <20240213130018.3029991-1-heikki.krogerus@linux.intel.com>
+ <20240213130018.3029991-3-heikki.krogerus@linux.intel.com>
+ <CACeCKadLKg89c8s68QD6VsqiKBMms6765O7mFFihqtET30pUyQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1973336468-1707905081=:7959"
-Content-ID: <6fa90c8f-3c00-25e4-8f33-2768e20495e7@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACeCKadLKg89c8s68QD6VsqiKBMms6765O7mFFihqtET30pUyQ@mail.gmail.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, Feb 13, 2024 at 08:55:20AM -0800, Prashant Malani wrote:
+> Hi Heikki,
+> 
+> On Tue, Feb 13, 2024 at 5:00 AM Heikki Krogerus
+> <heikki.krogerus@linux.intel.com> wrote:
+> >
+> > The USB role switch does not always have the _PLD (Physical
+> > Location of Device) in ACPI tables. If it's missing,
+> > assigning the PLD hash of the port to the switch. That
+> > should guarantee that the USB Type-C port mapping code is
+> > always able to find the connection between the two (the port
+> > and the switch).
+> >
+> > Tested-by: Uday Bhat <uday.m.bhat@intel.com>
+> > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > ---
+> >  drivers/platform/chrome/cros_ec_typec.c | 19 +++++++++++++++++++
+> >  1 file changed, 19 insertions(+)
+> >
+> > diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+> > index 2b2f14a1b711..4d305876ec08 100644
+> > --- a/drivers/platform/chrome/cros_ec_typec.c
+> > +++ b/drivers/platform/chrome/cros_ec_typec.c
+> > @@ -24,6 +24,23 @@
+> >  #define DP_PORT_VDO    (DP_CONF_SET_PIN_ASSIGN(BIT(DP_PIN_ASSIGN_C) | BIT(DP_PIN_ASSIGN_D)) | \
+> >                                 DP_CAP_DFP_D | DP_CAP_RECEPTACLE)
+> >
+> > +static void cros_typec_role_switch_quirk(struct fwnode_handle *fwnode)
+> > +{
+> > +#ifdef CONFIG_ACPI
+> > +       struct fwnode_handle *switch_fwnode;
+> > +
+> > +       /* Supply the USB role switch with the correct pld_crc if it's missing. */
+> > +       switch_fwnode = fwnode_find_reference(fwnode, "usb-role-switch", 0);
+> > +       if (!IS_ERR_OR_NULL(switch_fwnode)) {
+> > +               struct acpi_device *adev = to_acpi_device_node(switch_fwnode);
+> > +
+> > +               if (adev && !adev->pld_crc)
+> > +                       adev->pld_crc = to_acpi_device_node(fwnode)->pld_crc;
+> > +               fwnode_handle_put(switch_fwnode);
+> > +       }
+> > +#endif
+> > +}
+> > +
+> 
+> I'll reiterate my comment[ 1] from v1: can this be in the
+> common Type-C code, i.e typec_register_port() ?
+>
+> I don't see anything in this implementation which is Chrome OS specific.
 
---8323328-1973336468-1707905081=:7959
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <802be201-439b-532b-2b2b-6a298600f2f6@linux.intel.com>
+I'm sorry Prashant, I failed to notice your comment.
 
-On Wed, 14 Feb 2024, Vishnu Sankar wrote:
+This is only needed for Chrome OS. The problem affects only certain
+Chromebooks.
 
-Thanks for doing this, it's major improvement to readability already as
-is, and even more of after the second patch!!
+I do not want to put quirks to the generic subsystem code unless we
+have to. If there are more device drivers that need the same quirk,
+then we can move it there, but not before that.
 
-> Add a thermal_read_mode_check helper function to make the code
+This solution is in any case a hack regardless of where we put it, and
+I don't like it because of that. But I don't have any better ideas
+unfortunately.
 
-thermal_read_mode_check()
+thanks,
 
-remove "function" as it's obvious.
-
-> simpler during init.
-> This helps particularly when the new TPEC_12 mode is added in
-> the next patch.
-
-Flow the paragraph normally without the premature line break.
-
-> Suggested-by: Ilpo Jarvinen <ilpo.jarvinen@intel.com>
-
-This is not my email address, please use
-
-Suggested-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
-> Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 136 +++++++++++++--------------
->  1 file changed, 66 insertions(+), 70 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/=
-thinkpad_acpi.c
-> index c4895e9bc714..2428c8bd0fa2 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -6147,6 +6147,71 @@ struct ibm_thermal_sensors_struct {
->  static enum thermal_access_mode thermal_read_mode;
->  static bool thermal_use_labels;
-> =20
-> +/* Function to check thermal read mode */
-> +static enum thermal_access_mode thermal_read_mode_check(void)
-> +{
-> +=09u8 t, ta1, ta2, ver =3D 0;
-> +=09int i;
-> +
-> +=09if (thinkpad_id.ec_model) {
-> +=09=09/*
-> +=09=09 * Direct EC access mode: sensors at registers
-> +=09=09 * 0x78-0x7F, 0xC0-0xC7.  Registers return 0x00 for
-
-While this comment is touches, lets make minor improvements to it.
-
-Remove the double space, they are not needed in kernel comments.
-
-> +=09=09 * non-implemented, thermal sensors return 0x80 when
-> +=09=09 * not available
-
-Please add the missing .
-
-Perhaps add an empty line here to break the comment into two paragraphs?
-
-> +=09=09 * The above rule is unfortunately flawed. This has been seen with
-> +=09=09 * 0xC2 (power supply ID) causing thermal control problems.
-> +=09=09 * The EC version can be determined by offset 0xEF and at least fo=
-r
-> +=09=09 * version 3 the Lenovo firmware team confirmed that registers 0xC=
-0-0xC7
-> +=09=09 * are not thermal registers.
-
-Please reflow the entire comment to 80 chars.
-
-> +=09=09 */
-> +=09=09if (!acpi_ec_read(TP_EC_FUNCREV, &ver))
-> +=09=09=09pr_warn("Thinkpad ACPI EC unable to access EC version\n");
-> +
-> +=09=09ta1 =3D ta2 =3D 0;
-> +=09=09for (i =3D 0; i < 8; i++) {
-> +=09=09=09if (acpi_ec_read(TP_EC_THERMAL_TMP0 + i, &t)) {
-> +=09=09=09=09ta1 |=3D t;
-> +=09=09=09} else {
-> +=09=09=09=09ta1 =3D 0;
-> +=09=09=09=09break;
-> +=09=09=09}
-> +=09=09=09if (ver < 3) {
-> +=09=09=09=09if (acpi_ec_read(TP_EC_THERMAL_TMP8 + i, &t)) {
-> +=09=09=09=09=09ta2 |=3D t;
-> +=09=09=09=09} else {
-> +=09=09=09=09=09ta1 =3D 0;
-> +=09=09=09=09=09break;
-> +=09=09=09=09}
-> +=09=09=09}
-> +=09=09}
-> +
-> +=09=09if (ta1 =3D=3D 0) {
-> +=09=09=09pr_err("ThinkPad ACPI EC access misbehaving, disabling thermal =
-sensors access\n");
-> +=09=09=09return TPACPI_THERMAL_NONE;
-> +=09=09}
-> +
-> +=09=09if (ver >=3D 3) {
-> +=09=09=09thermal_use_labels =3D true;
-> +=09=09=09return TPACPI_THERMAL_TPEC_8;
-> +=09=09}
-> +
-> +=09=09return (ta2 !=3D 0) ? TPACPI_THERMAL_TPEC_16 : TPACPI_THERMAL_TPEC=
-_8;
-> +=09}
-> +
-> +=09if (acpi_evalf(ec_handle, NULL, "TMP7", "qv")) {
-> +=09=09if (tpacpi_is_ibm() &&
-> +=09=09    acpi_evalf(ec_handle, NULL, "UPDT", "qv"))
-
-Put this to single line and retain the braces please (I know it will be=20
->80 char but nothing important is lost).
-
-> +=09=09=09/* 600e/x, 770e, 770x */
-> +=09=09=09return TPACPI_THERMAL_ACPI_UPDT;
-> +=09=09/* IBM/LENOVO DSDT EC.TMPx access, max 8 sensors */
-> +=09=09return TPACPI_THERMAL_ACPI_TMP07;
-> +=09}
-> +
-> +=09/* temperatures not supported on 570, G4x, R30, R31, R32 */
-> +=09return TPACPI_THERMAL_NONE;
-> +}
-> +
->  /* idx is zero-based */
->  static int thermal_get_sensor(int idx, s32 *value)
->  {
-> @@ -6375,78 +6440,9 @@ static const struct attribute_group temp_label_att=
-r_group =3D {
-> =20
->  static int __init thermal_init(struct ibm_init_struct *iibm)
->  {
-> -=09u8 t, ta1, ta2, ver =3D 0;
-> -=09int i;
-> -=09int acpi_tmp7;
-> -
->  =09vdbg_printk(TPACPI_DBG_INIT, "initializing thermal subdriver\n");
-> =20
-> -=09acpi_tmp7 =3D acpi_evalf(ec_handle, NULL, "TMP7", "qv");
-> -
-> -=09if (thinkpad_id.ec_model) {
-> -=09=09/*
-> -=09=09 * Direct EC access mode: sensors at registers
-> -=09=09 * 0x78-0x7F, 0xC0-0xC7.  Registers return 0x00 for
-> -=09=09 * non-implemented, thermal sensors return 0x80 when
-> -=09=09 * not available
-> -=09=09 * The above rule is unfortunately flawed. This has been seen with
-> -=09=09 * 0xC2 (power supply ID) causing thermal control problems.
-> -=09=09 * The EC version can be determined by offset 0xEF and at least fo=
-r
-> -=09=09 * version 3 the Lenovo firmware team confirmed that registers 0xC=
-0-0xC7
-> -=09=09 * are not thermal registers.
-> -=09=09 */
-> -=09=09if (!acpi_ec_read(TP_EC_FUNCREV, &ver))
-> -=09=09=09pr_warn("Thinkpad ACPI EC unable to access EC version\n");
-> -
-> -=09=09ta1 =3D ta2 =3D 0;
-> -=09=09for (i =3D 0; i < 8; i++) {
-> -=09=09=09if (acpi_ec_read(TP_EC_THERMAL_TMP0 + i, &t)) {
-> -=09=09=09=09ta1 |=3D t;
-> -=09=09=09} else {
-> -=09=09=09=09ta1 =3D 0;
-> -=09=09=09=09break;
-> -=09=09=09}
-> -=09=09=09if (ver < 3) {
-> -=09=09=09=09if (acpi_ec_read(TP_EC_THERMAL_TMP8 + i, &t)) {
-> -=09=09=09=09=09ta2 |=3D t;
-> -=09=09=09=09} else {
-> -=09=09=09=09=09ta1 =3D 0;
-> -=09=09=09=09=09break;
-> -=09=09=09=09}
-> -=09=09=09}
-> -=09=09}
-> -=09=09if (ta1 =3D=3D 0) {
-> -=09=09=09/* This is sheer paranoia, but we handle it anyway */
-> -=09=09=09if (acpi_tmp7) {
-> -=09=09=09=09pr_err("ThinkPad ACPI EC access misbehaving, falling back to=
- ACPI TMPx access mode\n");
-> -=09=09=09=09thermal_read_mode =3D TPACPI_THERMAL_ACPI_TMP07;
-
-Eh, where did this go in the new helper?
-
---=20
- i.
-
-> -=09=09=09} else {
-> -=09=09=09=09pr_err("ThinkPad ACPI EC access misbehaving, disabling therm=
-al sensors access\n");
-> -=09=09=09=09thermal_read_mode =3D TPACPI_THERMAL_NONE;
-> -=09=09=09}
-> -=09=09} else {
-> -=09=09=09if (ver >=3D 3) {
-> -=09=09=09=09thermal_read_mode =3D TPACPI_THERMAL_TPEC_8;
-> -=09=09=09=09thermal_use_labels =3D true;
-> -=09=09=09} else {
-> -=09=09=09=09thermal_read_mode =3D
-> -=09=09=09=09=09(ta2 !=3D 0) ?
-> -=09=09=09=09=09TPACPI_THERMAL_TPEC_16 : TPACPI_THERMAL_TPEC_8;
-> -=09=09=09}
-> -=09=09}
-> -=09} else if (acpi_tmp7) {
-> -=09=09if (tpacpi_is_ibm() &&
-> -=09=09    acpi_evalf(ec_handle, NULL, "UPDT", "qv")) {
-> -=09=09=09/* 600e/x, 770e, 770x */
-> -=09=09=09thermal_read_mode =3D TPACPI_THERMAL_ACPI_UPDT;
-> -=09=09} else {
-> -=09=09=09/* IBM/LENOVO DSDT EC.TMPx access, max 8 sensors */
-> -=09=09=09thermal_read_mode =3D TPACPI_THERMAL_ACPI_TMP07;
-> -=09=09}
-> -=09} else {
-> -=09=09/* temperatures not supported on 570, G4x, R30, R31, R32 */
-> -=09=09thermal_read_mode =3D TPACPI_THERMAL_NONE;
-> -=09}
-> +=09thermal_read_mode =3D thermal_read_mode_check();
-> =20
->  =09vdbg_printk(TPACPI_DBG_INIT, "thermal is %s, mode %d\n",
->  =09=09str_supported(thermal_read_mode !=3D TPACPI_THERMAL_NONE),
->=20
---8323328-1973336468-1707905081=:7959--
+-- 
+heikki
