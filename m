@@ -1,96 +1,146 @@
-Received: from mail.systec-electronic.com (mail.systec-electronic.com [77.220.239.22])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DF0E54673;
-	Wed, 14 Feb 2024 13:34:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.220.239.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F361DFEA;
+	Wed, 14 Feb 2024 13:36:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707917674; cv=none; b=kdzaYAH1NoEuaHLZSXDVXBqpjZea6DL6NjnzGW30cP14ZGOu6fIaxmKsA6Lx82CYpUkSkvvv35BiBs4GkhxZgs1tDlHxJ1BoTQEeJsZGOijGcS8slO3IkiO2lUhYk3t8vtz7M7HipTOAi8sQiV9+YZ+Xmvkl/vF8N2WHRs5KbJ0=
+	t=1707917819; cv=none; b=HW0R+YOn4fADzr9dYcB0cmpc3hBQwtM7q5HjU7zkEy/iiSdbQRYIt/H1sLmjqkl+Q6aozPufbMKqiTBDPujsRfPjrJTA6f02VNhjwW+hqyDmUCZr08wywMyltaYynhjWPRGGGGNl5qE2lyjtYpzi8x5/p+YGW9Edvf7VQHODoMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707917674; c=relaxed/simple;
-	bh=KhJWijdD+8bkUZJ+O/XoQfTsdzvUphRJ1CzBA4p1eBU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PDhkg0K+UKdb2rwJgbH2j8AizYG1zVvt+7m7LU8npwppLDMjTk3iUf5eIxXfCOvCEDfWTt30Ah039TZJmk5aad7RAL3Hz30HuMsRUKhOZb4hSZRbH3D8hsH7nBrCHdS20PwG3vf9br0uU6lfp4Uar8Rf00RBfsVTN8zrDF8JK4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=systec-electronic.com; spf=pass smtp.mailfrom=systec-electronic.com; dkim=pass (2048-bit key) header.d=systec-electronic.com header.i=@systec-electronic.com header.b=R9gRfktJ; arc=none smtp.client-ip=77.220.239.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=systec-electronic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=systec-electronic.com
+	s=arc-20240116; t=1707917819; c=relaxed/simple;
+	bh=U1jCTNVJm15uvKPqEIOl7zNnBDnvU9eJTInfZRnMjpY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SsdQsfUJJwWpPWNg/+vWQ7EsF4pK+uDU4hQTTekSWg9yCRp7D6lTQ/ARYq9CFH94L9+P7T7i1VIsnP0/s6tLZ1MFixk4zJeeERx2W2pyIuRW7/BuTcz28pDoPIcTwcSkkIwcJvRVoXsiw+kYwacHul02CICcjjb5J61QDWmlYl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RpI9oj3p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=systec-electronic.com header.i=@systec-electronic.com header.b="R9gRfktJ"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.systec-electronic.com (Postfix) with ESMTP id 7F34F940010D;
-	Wed, 14 Feb 2024 14:25:32 +0100 (CET)
-Received: from mail.systec-electronic.com ([127.0.0.1])
- by localhost (mail.systec-electronic.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id S3te8OplpbRY; Wed, 14 Feb 2024 14:25:32 +0100 (CET)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.systec-electronic.com (Postfix) with ESMTP id 547AE9400115;
-	Wed, 14 Feb 2024 14:25:32 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.systec-electronic.com 547AE9400115
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=systec-electronic.com; s=B34D3B04-5DC7-11EE-83E3-4D8CAB78E8CD;
-	t=1707917132; bh=SB9gUP4B3cFgEKKjgiQRSSTPQoKGv/D855xgKNgmWR8=;
-	h=From:To:Date:Message-ID:MIME-Version;
-	b=R9gRfktJpIhAcnTjvaKDb8tQTldck+pIgTD5EybwhQzdMWRw2L3n5aJf9NCgE0hj7
-	 m1FC24NyR/zqM4ts2yd4mZkQtn6ONQbIqeWa18aksWAMdH6c/IA4eT/rTRvLavwTnJ
-	 DHQ2wncl8NSN8UHaAaQQu11II5vHremvEUPLYS4aO6ww/RFjgIbtPxDpChI0/hS8jP
-	 bYW+R0B+rmaLYH+LCHEV0mhxhbIJFJR1j+G4mYarPpda46UjwJaYOzq2NoYBd3cTL1
-	 LRoUbg2NREO5jTxqRGNS0NoHjc/WWYiOA+GrAIukVk7CDtr+60fJq2HLFL6sXCUf2f
-	 Arkwx2tuAUDQA==
-X-Virus-Scanned: amavis at systec-electronic.com
-Received: from mail.systec-electronic.com ([127.0.0.1])
- by localhost (mail.systec-electronic.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id NXURZRmmlb0Q; Wed, 14 Feb 2024 14:25:32 +0100 (CET)
-Received: from ws-565760.systec.local (unknown [212.185.67.148])
-	by mail.systec-electronic.com (Postfix) with ESMTPSA id E87DA940010D;
-	Wed, 14 Feb 2024 14:25:31 +0100 (CET)
-From: Andre Werner <andre.werner@systec-electronic.com>
-To: steve.glendinning@shawell.net,
-	UNGLinuxDriver@microchip.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	daniel.krueger@systec-electronic.com,
-	Andre Werner <andre.werner@systec-electronic.com>
-Subject: [PATCH net-next] net: smsc95xx: add support for SYS TEC USB-SPEmodule1
-Date: Wed, 14 Feb 2024 14:25:07 +0100
-Message-ID: <20240214132507.28072-1-andre.werner@systec-electronic.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RpI9oj3p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFCCCC433C7;
+	Wed, 14 Feb 2024 13:36:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707917817;
+	bh=U1jCTNVJm15uvKPqEIOl7zNnBDnvU9eJTInfZRnMjpY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=RpI9oj3pH60wKeJS9L1c/z/GRTOGh21Eo2XP7OkdTLPKd4DqMaUc9zXSHZjihCxws
+	 do6KcZ3q5Q357CFcZke6B8iUdql2diJjM8eqI/Kceph3eOBV0tLvU9U3iaHhtB/mtz
+	 cWISbARZeFxkvND5kwRI3bfBzA4os0nLNbmGnIJSa2Ba3dD9HGMiwKLPfndMaaQ3vy
+	 WxwmSfGRUQ2gLdzEjbKNU2fRHILWK7hkT+8PGRYANV4RXUYl3oCAHXFQCYiFCu4KxD
+	 oLEtmxCE+Up1gsidTkqcs/YexZkM7WTN3sGNCqM1Vj+64nr6ZPkwhQHfkmShtZvy4h
+	 Ln9+3XYsa8/KA==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-511a4a1c497so846166e87.3;
+        Wed, 14 Feb 2024 05:36:57 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWfxzOGZgVJXjy8b31t0HKd1Vh/LM8VpbEXyggKeOp8kQgOPts4MzeeQojKQS+oBEl5QEn02+6fT2uJuF5UHdvI2QjnwA3Xyrlr3PwE
+X-Gm-Message-State: AOJu0YzmRLZAPbUu66+CTZ0FrykXxlPKS+iViqJyyffjPahLMo7wHw2d
+	ViPc2Z/tZEAW0nlM1xMovfBcNtGwF6E4M7iZhIqlwr7FyuTSO4dErMHll+gXwfFFIpbUtNlb0od
+	MrMenIvyMvUoWL7v12CGERRoyGhU=
+X-Google-Smtp-Source: AGHT+IEs7kLG4Up8jbrMGO9ULSn5VrRH09Ci/qay7A4pM/iUfUE8JmFShU2XEQ5jocXRJt2i6BUUDuZgu5QnGPzcbaE=
+X-Received: by 2002:ac2:5631:0:b0:511:52b4:2fed with SMTP id
+ b17-20020ac25631000000b0051152b42fedmr1838176lff.66.1707917816318; Wed, 14
+ Feb 2024 05:36:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <08693d17-f2a1-4b5e-a136-81138ca3a58d@oracle.com>
+In-Reply-To: <08693d17-f2a1-4b5e-a136-81138ca3a58d@oracle.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Wed, 14 Feb 2024 22:36:19 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQjVjiUdXq3Wcuh14rW7q420J76Y8=AXNW8OHhYocCZ4w@mail.gmail.com>
+Message-ID: <CAK7LNAQjVjiUdXq3Wcuh14rW7q420J76Y8=AXNW8OHhYocCZ4w@mail.gmail.com>
+Subject: Re: srcversion hash does not cover all the module's source/dependency files
+To: Radek Krejci <radek.krejci@oracle.com>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-This patch adds support for the SYS TEC USB-SPEmodule1 10Base-T1L
-ethernet device to the existing smsc95xx driver by adding the new
-USB VID/PID pair.
+On Wed, Feb 14, 2024 at 6:43=E2=80=AFPM Radek Krejci <radek.krejci@oracle.c=
+om> wrote:
+>
+> Hi,
+> I've found a bug in modpost - when it gets the list of source files to
+> generate srcversion hash, it skips all the source/dependency files
+> except for the first one.
+>
+> There is patch [1] in v5.8rc1 replacing get_next_line() by get_line() in
+> parse_source_file() function. Besides other things, the difference
+> between those 2 functions is that get_next_line() trims the leading
+> spaces of the line being returned. The issue is, that the source (deps_
+> located at the same directory) file names in the list, being processed
+> in parse_source_file(), are indented. So, when the code gets to
+> "Terminate line at first space, to get rid of final ' \'", it
+> effectively hides the source file name from further processing, since
+> the first space is at the beginning of the line.
+>
+> I checked this behavior with modpost from v5.4 and v5.14 (and confirmed
+> with the current master in git). In my case, my kernel module had just 2
+> source files - mymodule.c and mymodule.h (both located at the same
+> directory). With modpost from v5.4, the code change in any of the files
+> was reflected in srcversion hash. But with modpost from v5.14 (and
+> master) there is no hash change when the code change appears in the
+> header file, which is listed at the end of the deps_ list. I believe
+> this is quite simple to reproduce with any module, but if needed, I can
+> prepare some example code to reproduce the issue.
 
-Signed-off-by: Andre Werner <andre.werner@systec-electronic.com>
----
- drivers/net/usb/smsc95xx.c | 5 +++++
- 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
-index a530f20ee257..bb4e62a93d96 100644
---- a/drivers/net/usb/smsc95xx.c
-+++ b/drivers/net/usb/smsc95xx.c
-@@ -2109,6 +2109,11 @@ static const struct usb_device_id products[] =3D {
- 		USB_DEVICE(0x184F, 0x0051),
- 		.driver_info =3D (unsigned long)&smsc95xx_info,
- 	},
-+	{
-+		/* SYSTEC USB-SPEmodule1 10BASE-T1L Ethernet Device */
-+		USB_DEVICE(0x0878, 0x1400),
-+		.driver_info =3D (unsigned long)&smsc95xx_info,
-+	},
- 	{ },		/* END */
- };
- MODULE_DEVICE_TABLE(usb, products);
---=20
-2.43.0
+Thanks. You are right.
 
+
+> I noticed this [2] email thread in the list. It mentions a similar
+> issue. However, since it happened a half year before the change [1] was
+> introduced and because I was unable to find any further details,
+> including the promised patch, I believe that these 2 things are unrelated=
+.
+
+
+Correct. They are different things.
+
+Parsing the headers located in the same directory seems
+to be a design.
+
+
+
+> The enclosed patch worked for me, but there might be some other
+> consequences that I've missed, so feel free to modify it on your own or
+> let me know.
+>
+> Is there anything else I can do to help fixing this issue?
+
+
+I think the attached patch is correct.
+I will pick it up later.
+
+
+
+One question is, is this feature still used?
+
+I assume the answer is yes because you noticed this bug.
+(but you are the first/only person who noticed it
+in the past 3 years)
+
+
+
+
+
+
+Thanks.
+
+
+
+
+> Regards,
+> Radek Krejci
+>
+>
+> [1] -
+> https://lore.kernel.org/linux-kbuild/20200601055731.3006266-26-masahiroy@=
+kernel.org/
+> [2] -
+> https://lore.kernel.org/linux-kbuild/CAN19L9G-mFN-MTmw0FS3ZX4d1MjeoL2U+s-=
+Fk7Qw9UYWn5Q1YA@mail.gmail.com/
+
+
+
+--
+Best Regards
+Masahiro Yamada
