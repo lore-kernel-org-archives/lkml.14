@@ -1,33 +1,48 @@
-Received: from smtp94.iad3b.emailsrvr.com (smtp94.iad3b.emailsrvr.com [146.20.161.94])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B9A1429C
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 09:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=146.20.161.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 712561643A;
+	Wed, 14 Feb 2024 09:47:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707904023; cv=none; b=isK9z6WrshXUUG0ALLelfAKFKV0UnLWPLm/2dtYCIvhUhNrPk9/00XZuKna3y3Lb/A2RIEoCBu33BVjHyhf7FumHV4xTy2z7wcakpABMRM3jj64caeUZEMBYVQaJ5O01Fn69aM3BgYy0b/THNfwzzYK8Kc1VH5t8fibP1hQpEFY=
+	t=1707904025; cv=none; b=oV+JIefp7DMn3Pt69MstY8/dWpZhbAJ+uvzdE5noalIG4gtCgeAteic/iWvVZHfMzX1zdZONp+aOWtSxCeDsDJre6JMs5t4Y/LhsKA398fR8ANCZ/9U2RiQRx66H1jc2JLf++E242HeiCGDamMnGBI9C3eESrTy/h2W7qdNSmpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707904023; c=relaxed/simple;
-	bh=/ld5vGvXRP2hSvgBY+VJzWtlXK+B5HhsvmC/rXZS9F8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JmWKFVtkWxJkZUnJfkZaKD/59RjVYF2Z2W1/ZdhPMn4ROmKymjjxtRG9D2fK4bft1a/IhgRXjJcSDUofnQhadhLP3hOu3In5WuNsPPU1gVlg53+yQvza3Gqhdb6CcoyR5lVj+tsa6hsu60ETwaUoeShMr4kMZaBmmuLFnHiYlac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=BCLoYihU; arc=none smtp.client-ip=146.20.161.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mev.co.uk
+	s=arc-20240116; t=1707904025; c=relaxed/simple;
+	bh=rP+ebuEaMc5tg61JLVvAUmEdrvUxyfm3wABBQbxoYIY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=QHFgiylbUqdzKCCeELTg9yIg5ag88nTHIVHTLS0RhHcE2JrtODRCeaNRydhJG8aHtDtLWngpHLcbCCvOFYmI49VxCtjEHjgFKKvmVMAXBrJvzfCKwWxb5mNVPLkoEDfL1wwHmRdCYn0MNO9x/r4l6Mu9EB6jJItcztnkEw2kWWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=JL+omqEX; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="BCLoYihU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-	s=20221208-6x11dpa4; t=1707904015;
-	bh=/ld5vGvXRP2hSvgBY+VJzWtlXK+B5HhsvmC/rXZS9F8=;
-	h=Date:Subject:To:From:From;
-	b=BCLoYihUA6MDtJU8A9Cz/n5HDcGpWb7P4OlVDK48Rd0yVD8NKSuNGp+KPDcFb7ruO
-	 NfeGZtZTW5QIYSYjRlKmVs7DJFQ1wP6/JJnyRb88XfF+NHLpyndVWl7UJ23COoFuP/
-	 6icn2jhdcMaQ0HkjEf6TnEEw43T9RF7P0BEAjxTo=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp12.relay.iad3b.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id F3306C00BA;
-	Wed, 14 Feb 2024 04:46:54 -0500 (EST)
-Message-ID: <7b29252e-41dc-4fb5-a8aa-050b9c63f7bb@mev.co.uk>
-Date: Wed, 14 Feb 2024 09:46:54 +0000
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JL+omqEX"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41E9XM0V125985;
+	Wed, 14 Feb 2024 03:33:22 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1707903202;
+	bh=Csk1oDtsAK1M0LasBQmN6aKIfpkSnc/BDiK3CDXsk2I=;
+	h=Date:Subject:To:References:From:In-Reply-To;
+	b=JL+omqEX+Tb6dI1G7b/HdymagiVC39okOKd8iguaaw5tw3CaBS1034o0WxZ5V5xmd
+	 /HzJX+ASVbz8gLgnmLlAsjQGPBz97py8trFnTgP1vnCChyokLVyjxKfj8JZr7/dUZy
+	 LA5QSRXcsqQAuvfbiwHivaqloV/edU7zDuJhxiqU=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41E9XM4C028558
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 14 Feb 2024 03:33:22 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 14
+ Feb 2024 03:33:22 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 14 Feb 2024 03:33:22 -0600
+Received: from [172.24.227.36] (a0497641-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [172.24.227.36])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41E9XI5x090954;
+	Wed, 14 Feb 2024 03:33:19 -0600
+Message-ID: <75241296-c698-4983-9dcd-9f59c31cb286@ti.com>
+Date: Wed, 14 Feb 2024 15:03:18 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,87 +50,56 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] comedi: comedi_test: Prevent timers rescheduling during
- deletion
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- H Hartley Sweeten <hsweeten@visionengravers.com>, stable@vger.kernel.org
-References: <20240213181004.105072-1-abbotti@mev.co.uk>
-Content-Language: en-GB
-From: Ian Abbott <abbotti@mev.co.uk>
-Organization: MEV Ltd.
-In-Reply-To: <20240213181004.105072-1-abbotti@mev.co.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH v2 1/2] arm64: dts: ti: k3-am69-sk: fix PMIC interrupt
+ number
+Content-Language: en-US
+To: Romain Naour <romain.naour@smile.fr>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <conor+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <robh+dt@kernel.org>, <kristo@kernel.org>, <vigneshr@ti.com>,
+        <nm@ti.com>
+References: <20240209171146.307465-1-romain.naour@smile.fr>
+From: Neha Malcom Francis <n-francis@ti.com>
+In-Reply-To: <20240209171146.307465-1-romain.naour@smile.fr>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Classification-ID: 882c513c-da9e-419c-9719-dff49a88041d-1-1
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On 13/02/2024 18:10, Ian Abbott wrote:
-> The comedi_test devices have a couple of timers (ai_timer and ao_timer)
-> that can be started to simulate hardware interrupts.  Their expiry
-> functions normally reschedule the timer.  The driver code calls either
-> del_timer_sync() or del_timer() to delete the timers from the queue, but
-> does not currently prevent the timers from rescheduling themselves so
-> synchronized deletion may be ineffective.
+Hi Romain
+
+On 09/02/24 22:41, Romain Naour wrote:
+> The tps659413 node set WKUP_GPIO0_83 (AA37) pin as input to be used as
+> PMIC interrupt but uses 39 (WKUP_GPIO0_39) as "interrupts" property.
 > 
-> Add a couple of boolean members (one for each timer: ai_timer_enable and
-> ao_timer_enable) to the device private data structure to indicate
-> whether the timers are allowed to reschedule themselves.  Set the member
-> to true when adding the timer to the queue, and to false when deleting
-> the timer from the queue in the waveform_ai_cancel() and
-> waveform_ao_cancel() functions.
+> Replace 39 by 83 after checking in the board schematic [1].
 > 
-> The del_timer_sync() function is also called from the waveform_detach()
-> function, but the timer enable members will already be set to false when
-> that function is called, so no change is needed there.
+> [1] https://www.ti.com/tool/SK-AM69
 > 
-> Fixes: 403fe7f34e33 ("staging: comedi: comedi_test: fix timer race conditions")
-> Cc: <stable@vger.kernel.org> # 4.4+
-> Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+> Fixes: 865a1593bf99 ("arm64: dts: ti: k3-am69-sk: Add support for TPS6594 PMIC")
+> Cc: Neha Malcom Francis <n-francis@ti.com>
+> Signed-off-by: Romain Naour <romain.naour@smile.fr>
 > ---
->   drivers/comedi/drivers/comedi_test.c | 37 +++++++++++++++++++++++++---
->   1 file changed, 33 insertions(+), 4 deletions(-)
+>   arch/arm64/boot/dts/ti/k3-am69-sk.dts | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/comedi/drivers/comedi_test.c b/drivers/comedi/drivers/comedi_test.c
-> index 30ea8b53ebf8..7fefe0de0bcc 100644
-> --- a/drivers/comedi/drivers/comedi_test.c
-> +++ b/drivers/comedi/drivers/comedi_test.c
-> @@ -87,6 +87,8 @@ struct waveform_private {
->   	struct comedi_device *dev;	/* parent comedi device */
->   	u64 ao_last_scan_time;		/* time of previous AO scan in usec */
->   	unsigned int ao_scan_period;	/* AO scan period in usec */
-> +	bool ai_timer_enable:1;		/* should AI timer be running? */
-> +	bool ao_timer_enable:1;		/* should AO timer be running? */
->   	unsigned short ao_loopbacks[N_CHANS];
->   };
->   
-> @@ -232,12 +234,18 @@ static void waveform_ai_timer(struct timer_list *t)
->   	if (cmd->stop_src == TRIG_COUNT && async->scans_done >= cmd->stop_arg) {
->   		async->events |= COMEDI_CB_EOA;
->   	} else {
-> +		unsigned long flags;
-> +
->   		if (devpriv->ai_convert_time > now)
->   			time_increment = devpriv->ai_convert_time - now;
->   		else
->   			time_increment = 1;
-> -		mod_timer(&devpriv->ai_timer,
-> -			  jiffies + usecs_to_jiffies(time_increment));
-> +		spin_lock_irqsave(&dev->spinlock, flags);
-> +		if (devpriv->ai_timer_enable) {
-> +			mod_timer(&devpriv->ai_timer,
-> +				  jiffies + usecs_to_jiffies(time_increment));
-> +		}
-> +		spin_unlock_irqrestore(&dev->spinlock, flags);
+> diff --git a/arch/arm64/boot/dts/ti/k3-am69-sk.dts b/arch/arm64/boot/dts/ti/k3-am69-sk.dts
+> index 8da591579868..95c9d3da59d3 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am69-sk.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am69-sk.dts
+> @@ -646,7 +646,7 @@ tps659413: pmic@48 {
+>   		pinctrl-names = "default";
+>   		pinctrl-0 = <&pmic_irq_pins_default>;
+>   		interrupt-parent = <&wkup_gpio0>;
+> -		interrupts = <39 IRQ_TYPE_EDGE_FALLING>;
+> +		interrupts = <83 IRQ_TYPE_EDGE_FALLING>;
+>   		gpio-controller;
+>   		#gpio-cells = <2>;
+>   		ti,primary-pmic;
 
-Actually, I should have used a plain old spin_lock() in the above (and 
-spin_lock_bh() elsewhere in the code) instead of spin_lock_irqsave(), 
-since there are no hard interrupts involved.
+Thanks for catching this!
 
-I'll send a v2 patch shortly.
+Reviewed-by: Neha Malcom Francis <n-francis@ti.com>
 
 -- 
--=( Ian Abbott <abbotti@mev.co.uk> || MEV Ltd. is a company  )=-
--=( registered in England & Wales.  Regd. number: 02862268.  )=-
--=( Regd. addr.: S11 & 12 Building 67, Europa Business Park, )=-
--=( Bird Hall Lane, STOCKPORT, SK3 0XA, UK. || www.mev.co.uk )=-
-
+Thanking You
+Neha Malcom Francis
