@@ -1,123 +1,127 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730BA111B5;
-	Wed, 14 Feb 2024 07:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570A010A2C
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 07:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707895396; cv=none; b=SUkPGKKXmaqKw86QQbotyab7xkKbwj2/yrGFejdlWILtuIyGyKF2NG2kxlIJEhTQTL6PAhTc46988LU7qV6k4eldLj3dGynvHMQ0JZJIxnoxZ2J3E1I4Offzet5aQT9Ome+b16AG0Z58yiQFB29I9k3kZAkaZ2f27AnrbejWAtk=
+	t=1707895488; cv=none; b=di6e7zzqZsaRMnP5cqVbdvn5HJplq5V8n6i0TX0QNqvxEnzVlyc0LlQOu0dwu3dWH6MUj8rarbtE/3F9k1jw5rDglmplXrAEFX4D/TsqY+FcZRISjg11c5D0+ngd5Sxl4BLKsgnGYIRQnSEiNofzHVFzaXuCC14HoYGo4AR8xTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707895396; c=relaxed/simple;
-	bh=zYB2nxLixfzl3ch2TWuc6MXy/7yfnH7admD1znY/Ky8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=km4r5TzbXr57BJcq0aAMiOCvAXXRePqxaj7GSReyTuNhgINWAgkI4gvV9Isb0L6leikoGyo3c0ooVgQ+B42fAvaCdRAVSABhjLhCOGDsKvCOVt/vy4cAFKJy+HVQR2FrHwb4Frqey5qmczXr1/9n7RMrsVVq+qAEy17FeIe+5IQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.224] (ip5f5aea4b.dynamic.kabel-deutschland.de [95.90.234.75])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 1916E61E5FE05;
-	Wed, 14 Feb 2024 08:22:21 +0100 (CET)
-Message-ID: <926b5031-47d2-42d7-938d-01fc4ebc9dc0@molgen.mpg.de>
-Date: Wed, 14 Feb 2024 08:22:19 +0100
+	s=arc-20240116; t=1707895488; c=relaxed/simple;
+	bh=XMsYQSn4+iYQiua8f57NL1Mz4S82ZkbiMxdXhjqPYio=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Nn9BllDxO94rAhKSYpGAPDK+6g0C88P5K8WBtHTNn6VEUhsj9Ixwi7t2bLr9DVnOPvvGgfGaZQ9LjWu2m0tuo8qfs2omLEUIaDAavnBYIRX123eD7IJXAAeKlJbZ0lrP3DvL4cJtMTpEsMn1jP92bqocjcrUnhD3QKBdBiGVnTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UCWbp50Y; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UCWbp50Y"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6e10e50179bso107083b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 23:24:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1707895486; x=1708500286; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sg/3QYKNiqClt5O0Rsi2fxy3eaHE++NDSM8zl4s0ReY=;
+        b=UCWbp50YFwEzKIK86LI/gXG1qbtiLDN9aMGQUEZX+OWEJEveaz1FJkeFDnucBWbW5d
+         CUnmCNR+LRR1eGQctjTyUQJddI+/n+w/hOH1gmVvYcWmI5PZ5swB76buUIBR5ODls9Fw
+         xnwyy97/WUTT02v+QRZIDJWrYmIi+/kA1Syxw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707895486; x=1708500286;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sg/3QYKNiqClt5O0Rsi2fxy3eaHE++NDSM8zl4s0ReY=;
+        b=lEv8vhf4a1EcjSr8KEcB+So1fizM1uol9B3eHYiN/HdwhOg8yM0xfsvIqZrfxvG91W
+         w8tWbKB9BH660Ypqe7PPSV8g0vr7Rcx/+I0K/jWGGV2cfIYItM4jzFlPTv/GRYeNR8jQ
+         VPKDnjGGPamPRj4ueaTdV7obziUxACzvSEunrdYdMbcw8mvDpJs7QYQByR+FFrE7xV6i
+         GbA3Hz9rCVNDLG/QStTNgbyN6s2WPGeW+DP6RtYGBLDt0cjx6s/Kh+NAxDj3s6A5+BRu
+         tO6wG7KphVUAhy4PjACJeDLtJZsSaewg5xX0Pfw8/nmO250b8KwP9J86mxmqhdjOtrVj
+         2rVA==
+X-Forwarded-Encrypted: i=1; AJvYcCXQDXZ+U5hm5fa6z4wcVOnfsB4iGsWnuURfmsqdbVQ8zMPcXfbTDFcG8EM8zp1FCNMyeZqiyhmeQ4Kn9Ls1JJPGRvfcpBPXfITY4Qa0
+X-Gm-Message-State: AOJu0Yzq24Ojq4m8q+atY+2+DMFOL1FdDv/acbYhA1B37CX4uhxSO7fR
+	ZXKgCWGa/qIrGIWJiyRyeHLxO7PiKVFulzqgqRJwGOGirh59kaNcuRuMwHeung==
+X-Google-Smtp-Source: AGHT+IHWbMtV63iwSm28tHkn/2uPWUswzI/yZYK3Z2XzyqiZ9BVUhRH9TCq/XmElpxGcwmayReWaZg==
+X-Received: by 2002:a05:6a00:80ce:b0:6de:3b41:2845 with SMTP id ei14-20020a056a0080ce00b006de3b412845mr1267315pfb.32.1707895486644;
+        Tue, 13 Feb 2024 23:24:46 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX4/g6RttGYyHt4IsNRLuOZdesxIRm+ez9N3te0y7PNHNxkbAq/gfLjGQNAA8z6y+2HAxio50rLlkidsgRuThahQI8gXckBUsWdA7WZSzQiAcxb9SpIVyMkSsKgMzrtEAlr3TgSM7nIUhWLvxGINc8amjEYn+9pFOzlyVoI4HYAKPM4UERGfxjzs7RVfiojfETdZdXgnKWA3WDuMfCwjahbDVCNano0PFs6wUC99uaefO1NT3sek53MrBW3QXKnSJfKtt1NcCV77IleVY0RoP5BaLqylO0kcdhmOzn8T6x6/F+JSQ8hVsMM6v3fakLTpryWxM6hDn+4NZdHBuQklWp/1ewEIyZWPif76A==
+Received: from hsinyi.sjc.corp.google.com ([2620:15c:9d:2:3a01:e2cd:4e75:f52d])
+        by smtp.gmail.com with ESMTPSA id n8-20020aa78a48000000b006e03bc76711sm8548314pfa.165.2024.02.13.23.24.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 23:24:46 -0800 (PST)
+From: Hsin-Yi Wang <hsinyi@chromium.org>
+To: Douglas Anderson <dianders@chromium.org>,
+	dri-devel@lists.freedesktop.org
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] Revert "drm/panel-edp: Add auo_b116xa3_mode"
+Date: Tue, 13 Feb 2024 23:22:54 -0800
+Message-ID: <20240214072435.1496536-2-hsinyi@chromium.org>
+X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [net-next v3] intel: make module parameters
- readable in sys filesystem
-To: Jon Maxwell <jmaxwell37@gmail.com>, jesse.brandeburg@intel.com
-Cc: intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org,
- edumazet@google.com, anthony.l.nguyen@intel.com, netdev@vger.kernel.org,
- kuba@kernel.org, pabeni@redhat.com, davem@davemloft.net
-References: <20240213222344.195885-1-jmaxwell37@gmail.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240213222344.195885-1-jmaxwell37@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Dear Jon,
+This reverts commit 70e0d5550f5cec301ad116703b840a539fe985dc.
 
+The overridden mode fixes the panel glitching issue on mt8186 chromebook.
+However, it causes the internal display not working on mt8173 chromebook.
+Revert the overridden mode for now to let mt8173 have a functional display.
 
-Thank you very much for your patch.
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+---
+ drivers/gpu/drm/panel/panel-edp.c | 19 ++-----------------
+ 1 file changed, 2 insertions(+), 17 deletions(-)
 
-Am 13.02.24 um 11:23 PM schrieb Jon Maxwell:
-> Linux users sometimes need an easy way to check current values of module
-> parameters. For example the module may be manually reloaded with different
-> parameters. Make these visible and readable in the /sys filesystem to allow
-> that.
-> 
-> Signed-off-by: Jon Maxwell <jmaxwell37@gmail.com>
-> ---
-> V2: Remove the "debug" module parameter as per Andrew Lunns suggestion.
+diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
+index 7d556b1bfa82..bd71d239272a 100644
+--- a/drivers/gpu/drm/panel/panel-edp.c
++++ b/drivers/gpu/drm/panel/panel-edp.c
+@@ -1002,19 +1002,6 @@ static const struct panel_desc auo_b101ean01 = {
+ 	},
+ };
+ 
+-static const struct drm_display_mode auo_b116xa3_mode = {
+-	.clock = 70589,
+-	.hdisplay = 1366,
+-	.hsync_start = 1366 + 40,
+-	.hsync_end = 1366 + 40 + 40,
+-	.htotal = 1366 + 40 + 40 + 32,
+-	.vdisplay = 768,
+-	.vsync_start = 768 + 10,
+-	.vsync_end = 768 + 10 + 12,
+-	.vtotal = 768 + 10 + 12 + 6,
+-	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
+-};
+-
+ static const struct drm_display_mode auo_b116xak01_mode = {
+ 	.clock = 69300,
+ 	.hdisplay = 1366,
+@@ -1963,12 +1950,10 @@ static const struct edp_panel_entry edp_panels[] = {
+ 	EDP_PANEL_ENTRY('A', 'U', 'O', 0x239b, &delay_200_500_e50, "B116XAN06.1"),
+ 	EDP_PANEL_ENTRY('A', 'U', 'O', 0x255c, &delay_200_500_e50, "B116XTN02.5"),
+ 	EDP_PANEL_ENTRY('A', 'U', 'O', 0x403d, &delay_200_500_e50, "B140HAN04.0"),
+-	EDP_PANEL_ENTRY2('A', 'U', 'O', 0x405c, &auo_b116xak01.delay, "B116XAK01.0",
+-			 &auo_b116xa3_mode),
++	EDP_PANEL_ENTRY('A', 'U', 'O', 0x405c, &auo_b116xak01.delay, "B116XAK01.0"),
+ 	EDP_PANEL_ENTRY('A', 'U', 'O', 0x435c, &delay_200_500_e50, "Unknown"),
+ 	EDP_PANEL_ENTRY('A', 'U', 'O', 0x582d, &delay_200_500_e50, "B133UAN01.0"),
+-	EDP_PANEL_ENTRY2('A', 'U', 'O', 0x615c, &delay_200_500_e50, "B116XAN06.1",
+-			 &auo_b116xa3_mode),
++	EDP_PANEL_ENTRY('A', 'U', 'O', 0x615c, &delay_200_500_e50, "B116XAN06.1"),
+ 	EDP_PANEL_ENTRY('A', 'U', 'O', 0x635c, &delay_200_500_e50, "B116XAN06.3"),
+ 	EDP_PANEL_ENTRY('A', 'U', 'O', 0x639c, &delay_200_500_e50, "B140HAK02.7"),
+ 	EDP_PANEL_ENTRY('A', 'U', 'O', 0x723c, &delay_200_500_e50, "B140XTN07.2"),
+-- 
+2.43.0.687.g38aa6559b0-goog
 
-Please mention this in the commit message, why `debug` should not be 
-exposed.
-
-
-Kind regards,
-
-Paul
-
-
-> V3: Correctly format v2.
->   drivers/net/ethernet/intel/e100.c             | 4 ++--
->   drivers/net/ethernet/intel/igb/igb_main.c     | 2 +-
->   drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 4 ++--
->   3 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/e100.c b/drivers/net/ethernet/intel/e100.c
-> index 01f0f12035caeb7ca1657387538fcebf5c608322..3fcb8daaa2437fa3fe7b98ba9f606dbbb1844e58 100644
-> --- a/drivers/net/ethernet/intel/e100.c
-> +++ b/drivers/net/ethernet/intel/e100.c
-> @@ -171,8 +171,8 @@ static int debug = 3;
->   static int eeprom_bad_csum_allow = 0;
->   static int use_io = 0;
->   module_param(debug, int, 0);
-> -module_param(eeprom_bad_csum_allow, int, 0);
-> -module_param(use_io, int, 0);
-> +module_param(eeprom_bad_csum_allow, int, 0444);
-> +module_param(use_io, int, 0444);
->   MODULE_PARM_DESC(debug, "Debug level (0=none,...,16=all)");
->   MODULE_PARM_DESC(eeprom_bad_csum_allow, "Allow bad eeprom checksums");
->   MODULE_PARM_DESC(use_io, "Force use of i/o access mode");
-> diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-> index 4df8d4153aa5f5ce7ac9dd566180d552be9f5b4f..31d0a43a908c0a4eab4fe1147064a5f5677c9f0b 100644
-> --- a/drivers/net/ethernet/intel/igb/igb_main.c
-> +++ b/drivers/net/ethernet/intel/igb/igb_main.c
-> @@ -202,7 +202,7 @@ static struct notifier_block dca_notifier = {
->   #endif
->   #ifdef CONFIG_PCI_IOV
->   static unsigned int max_vfs;
-> -module_param(max_vfs, uint, 0);
-> +module_param(max_vfs, uint, 0444);
->   MODULE_PARM_DESC(max_vfs, "Maximum number of virtual functions to allocate per physical function");
->   #endif /* CONFIG_PCI_IOV */
->   
-> diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-> index bd541527c8c74d6922e8683e2f4493d9b361f67b..9d26ff82a397d4939cf7adea78c217e4071aa166 100644
-> --- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-> @@ -147,13 +147,13 @@ static struct notifier_block dca_notifier = {
->   
->   #ifdef CONFIG_PCI_IOV
->   static unsigned int max_vfs;
-> -module_param(max_vfs, uint, 0);
-> +module_param(max_vfs, uint, 0444);
->   MODULE_PARM_DESC(max_vfs,
->   		 "Maximum number of virtual functions to allocate per physical function - default is zero and maximum value is 63. (Deprecated)");
->   #endif /* CONFIG_PCI_IOV */
->   
->   static bool allow_unsupported_sfp;
-> -module_param(allow_unsupported_sfp, bool, 0);
-> +module_param(allow_unsupported_sfp, bool, 0444);
->   MODULE_PARM_DESC(allow_unsupported_sfp,
->   		 "Allow unsupported and untested SFP+ modules on 82599-based adapters");
->   
