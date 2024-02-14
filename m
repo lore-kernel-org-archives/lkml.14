@@ -1,147 +1,181 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59FB29437;
-	Wed, 14 Feb 2024 13:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38507535B4;
+	Wed, 14 Feb 2024 13:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707916738; cv=none; b=iGdKs3mPZ3UZ+H/TVIr9PWrJsgEyUpheHyO9Qlb5BVqxd6RW/Bnp5SzbYyu1kbXEF+bUH0TKRTAb6Z8leu61rahLLTuQNUD3zOkU4honUdQdg9MvkzQ0GQkHtgwwf5JyxvpLvbDCvVoTnSw1Wu+5Rbl++hycIDi0vihai8PhKwU=
+	t=1707916775; cv=none; b=E3u0yeTu5IO1sa2+UhzHl7UCbAqDFfHpa1FQoYFSKWjbL6oMHywtXNOsohdc0oD1d3xigUSvC7l4W0AaRpFdCO1bp5lVCg3a4OMFbP2xST2vsx656ImSjdfKc80L0KIRYBsBUjIVwQwFl51Q+xJWngcQtvgaz4ynrbs7gUrv2PY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707916738; c=relaxed/simple;
-	bh=/xZMZP2nWweiJcz6P4CrpNKk/2KW9avyIsmP5+gq4V0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TAqGHtFKjee4ZYvbTWjYiIPg1rW4D4j+nQy++Pcqh4aRVuxsWSy+C+uZ8QgvVmEDP9dx43zrsul3uvJu7M9ZYzh5RpKPxwDJCIxbs+9FrSxOB1TVXNINPPcNkFRhmMRj4JnNODTw9VizhAnD0oyvOg+gBgVEZlNVmxhsacoX2RU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1raFA0-0008JP-Ud; Wed, 14 Feb 2024 14:18:49 +0100
-Message-ID: <4737bc92-e4e5-4266-a249-d122f15e7ab9@leemhuis.info>
-Date: Wed, 14 Feb 2024 14:18:48 +0100
+	s=arc-20240116; t=1707916775; c=relaxed/simple;
+	bh=a0o55pxxDCLHmqaWvxrygvI6niPdHttBqY/E85EhHew=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=pblTYUtifmTS/IfY575inb+wucongsyJjmtppSatK8YQ60AlswnCx8SZ6516uZUi++yK69cRfoBIfTv09aAjRw7np3l0//wCosQpqgXqHpg57rNfGH+5rIIl6Rao7RKU9qilItaGoATw9nq6EomlY4OYt3VpzUnXfNsqY9jY3lY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=MwpGtHQU; arc=none smtp.client-ip=213.133.104.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="MwpGtHQU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=EUpvZ7ImcN6iRBfQR5QrQA+ZGjPdmy3aiW0Hd3hcrnQ=; b=MwpGtHQUzHdeNgQIAJKrYkQir0
+	wL3rGSdwthLpVi6rJBVqink5DidYuAH714ElJOQB18JgkPnzLzshB5K6MexPqnWaCceoLwBQSt5NU
+	Obd5t8XnCd90jFPygROaIlqcGcdFbE3Mbvu/awSVtILfJgE8HCc68BYxaKlyUXOvisb2VlJKcpe3y
+	SjKwhh0tbhX+Mzh8RWpVKaG0NxFwqkMfX99jwZFtevDK1yU+y2ux93FizBw04G1QuR/gS5DsbGljX
+	89R7B1iYhmLU1ogaxm3nfe0mawbV8xNQfC2r08dtHxNkCtRQ1masq6dNVYtlENtrfxgx2niHI31jf
+	qdYN+lqQ==;
+Received: from sslproxy03.your-server.de ([88.198.220.132])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1raEvF-000AMv-Dv; Wed, 14 Feb 2024 14:03:33 +0100
+Received: from [85.1.206.226] (helo=linux.home)
+	by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1raEvE-000MWP-Sy; Wed, 14 Feb 2024 14:03:32 +0100
+Subject: LSF/MM/BPF: 2024: Call for Proposals [Final Reminder]
+To: lsf-pc@lists.linuxfoundation.org
+Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+ linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org
+References: <7970ad75-ca6a-34b9-43ea-c6f67fe6eae6@iogearbox.net>
+ <4343d07b-b1b2-d43b-c201-a48e89145e5c@iogearbox.net>
+ <c91530f0-2688-647d-2603-a7b1673f8e42@iogearbox.net>
+From: Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <013f8741-4468-b1a4-0569-aee5e1d6b1a8@iogearbox.net>
+Date: Wed, 14 Feb 2024 14:03:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: drm/msm: DisplayPort regressions in 6.8-rc1
-Content-Language: en-US, de-DE
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>, Johan Hovold
- <johan@kernel.org>, Rob Clark <robdclark@gmail.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Kuogee Hsieh <quic_khsieh@quicinc.com>
-Cc: Sean Paul <sean@poorly.run>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Bjorn Andersson <quic_bjorande@quicinc.com>, quic_jesszhan@quicinc.com,
- quic_sbillaka@quicinc.com, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <ZctVmLK4zTwcpW3A@hovoldconsulting.com>
- <343710b1-f0f4-5c05-70e6-3c221cdc9580@quicinc.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <343710b1-f0f4-5c05-70e6-3c221cdc9580@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <c91530f0-2688-647d-2603-a7b1673f8e42@iogearbox.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707916737;a0e54d9e;
-X-HE-SMSGID: 1raFA0-0008JP-Ud
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27185/Wed Feb 14 10:22:57 2024)
 
-On 13.02.24 19:00, Abhinav Kumar wrote:
-> 
-> Thanks for the report.
-> 
-> I do agree that pm runtime eDP driver got merged that time but I think
-> the issue is either a combination of that along with DRM aux bridge
-> https://patchwork.freedesktop.org/series/122584/ OR just the latter as
-> even that went in around the same time.
+The annual Linux Storage, Filesystem, Memory Management, and BPF
+(LSF/MM/BPF) Summit for 2024 will be held from May 13 to May 15
+at the Hilton Salt Lake City Center in Salt Lake City, Utah, USA.
 
-In that case allow me a stupid question from the cheap seats:
+LSF/MM/BPF is an invitation-only technical workshop to map out
+improvements to the Linux storage, filesystem, BPF, and memory
+management subsystems that will make their way into the mainline
+kernel within the coming years.
 
-Is there anything affected users can do to help getting us closer to the
-real problem? Like testing a specific commit or two before or after the
-merge of one of those features for example? That might help to rule out
-a few things.
+LSF/MM/BPF 2024 will be a three day, stand-alone conference with
+four subsystem-specific tracks, cross-track discussions, as well
+as BoF and hacking sessions:
 
-Ciao, Thorsten
+          https://events.linuxfoundation.org/lsfmmbpf/
 
-> Thats why perhaps this issue was not seen with the chromebooks we tested
-> on as they do not use pmic_glink (aux bridge).
-> 
-> So we will need to debug this on sc8280xp specifically or an equivalent
-> device which uses aux bridge.
-> 
-> On 2/13/2024 3:42 AM, Johan Hovold wrote:
->> Hi,
->>
->> Since 6.8-rc1 the internal eDP display on the Lenovo ThinkPad X13s does
->> not always show up on boot.
->>
->> The logs indicate problems with the runtime PM and eDP rework that went
->> into 6.8-rc1:
->>
->>     [    6.006236] Console: switching to colour dummy device 80x25
->>     [    6.007542] [drm:dpu_kms_hw_init:1048] dpu hardware
->> revision:0x80000000
->>     [    6.007872] [drm:drm_bridge_attach [drm]] *ERROR* failed to
->> attach bridge /soc@0/phy@88eb000 to encoder TMDS-31: -16
->>     [    6.007934] [drm:dp_bridge_init [msm]] *ERROR* failed to attach
->> panel bridge: -16
->>     [    6.007983] msm_dpu ae01000.display-controller:
->> [drm:msm_dp_modeset_init [msm]] *ERROR* failed to create dp bridge: -16
->>     [    6.008030] [drm:_dpu_kms_initialize_displayport:588] [dpu
->> error]modeset_init failed for DP, rc = -16
->>     [    6.008050] [drm:_dpu_kms_setup_displays:681] [dpu
->> error]initialize_DP failed, rc = -16
->>     [    6.008068] [drm:dpu_kms_hw_init:1153] [dpu error]modeset init
->> failed: -16
->>     [    6.008388] msm_dpu ae01000.display-controller:
->> [drm:msm_drm_kms_init [msm]] *ERROR* kms hw init failed: -16
->>     
->> and this can also manifest itself as a NULL-pointer dereference:
->>
->>     [    7.339447] Unable to handle kernel NULL pointer dereference at
->> virtual address 0000000000000000
->>     
->>     [    7.643705] pc : drm_bridge_attach+0x70/0x1a8 [drm]
->>     [    7.686415] lr : drm_aux_bridge_attach+0x24/0x38 [aux_bridge]
->>     
->>     [    7.769039] Call trace:
->>     [    7.771564]  drm_bridge_attach+0x70/0x1a8 [drm]
->>     [    7.776234]  drm_aux_bridge_attach+0x24/0x38 [aux_bridge]
->>     [    7.781782]  drm_bridge_attach+0x80/0x1a8 [drm]
->>     [    7.786454]  dp_bridge_init+0xa8/0x15c [msm]
->>     [    7.790856]  msm_dp_modeset_init+0x28/0xc4 [msm]
->>     [    7.795617]  _dpu_kms_drm_obj_init+0x19c/0x680 [msm]
->>     [    7.800731]  dpu_kms_hw_init+0x348/0x4c4 [msm]
->>     [    7.805306]  msm_drm_kms_init+0x84/0x324 [msm]
->>     [    7.809891]  msm_drm_bind+0x1d8/0x3a8 [msm]
->>     [    7.814196]  try_to_bring_up_aggregate_device+0x1f0/0x2f8
->>     [    7.819747]  __component_add+0xa4/0x18c
->>     [    7.823703]  component_add+0x14/0x20
->>     [    7.827389]  dp_display_probe+0x47c/0x568 [msm]
->>     [    7.832052]  platform_probe+0x68/0xd8
->>
->> Users have also reported random crashes at boot since 6.8-rc1, and I've
->> been able to trigger hard crashes twice when testing an external display
->> (USB-C/DP), which may also be related to the DP regressions.
->>
->> I've opened an issue here:
->>
->>     https://gitlab.freedesktop.org/drm/msm/-/issues/51
->>
->> but I also want Thorsten's help to track this so that it gets fixed
->> before 6.8 is released.
->>
->> #regzbot introduced: v6.7..v6.8-rc1
->>
->> The following series is likely the culprit:
->>
->>     https://lore.kernel.org/all/1701472789-25951-1-git-send-email-quic_khsieh@quicinc.com/
->>
->> Johan
-> 
-> 
+On behalf of the committee I am issuing a call for agenda proposals
+that are suitable for cross-track discussion as well as technical
+subjects for the breakout sessions.
+
+If advance notice is required for visa applications then please
+point that out in your proposal or request to attend, and submit
+the topic as soon as possible.
+
+We are asking that you please let us know you want to be invited
+by March 1, 2024. We realize that travel is an ever changing target,
+but it helps us to get an idea of possible attendance numbers.
+Clearly things can and will change, so consider the request to
+attend deadline more about planning and less about concrete plans.
+
+1) Fill out the following Google form to request attendance and
+suggest any topics for discussion:
+
+          https://forms.gle/TGCgBDH1x5pXiWFo7
+
+In previous years we have accidentally missed people's attendance
+requests because they either did not Cc lsf-pc@ or we simply missed
+them in the flurry of emails we get. Our community is large and our
+volunteers are busy, filling this out will help us to make sure we
+do not miss anybody.
+
+2) Proposals for agenda topics should ideally still be sent to the
+following lists to allow for discussion among your peers. This will
+help us figure out which topics are important for the agenda:
+
+          lsf-pc@lists.linux-foundation.org
+
+... and Cc the mailing lists that are relevant for the topic in
+question:
+
+          FS:     linux-fsdevel@vger.kernel.org
+          MM:     linux-mm@kvack.org
+          Block:  linux-block@vger.kernel.org
+          ATA:    linux-ide@vger.kernel.org
+          SCSI:   linux-scsi@vger.kernel.org
+          NVMe:   linux-nvme@lists.infradead.org
+          BPF:    bpf@vger.kernel.org
+
+Please tag your proposal with [LSF/MM/BPF TOPIC] to make it easier
+to track. In addition, please make sure to start a new thread for
+each topic rather than following up to an existing one. Agenda
+topics and attendees will be selected by the program committee,
+but the final agenda will be formed by consensus of the attendees
+on the day.
+
+3) This year we would also like to try and make sure we are
+including new members in the community that the program committee
+may not be familiar with. The Google form has an area for people to
+add required/optional attendees. Please encourage new members of the
+community to submit a request for an invite as well, but additionally
+if maintainers or long term community members could add nominees to
+the form it would help us make sure that new members get the proper
+consideration.
+
+For discussion leaders, slides and visualizations are encouraged to
+outline the subject matter and focus the discussions. Please refrain
+from lengthy presentations and talks in order for sessions to be
+productive; the sessions are supposed to be interactive, inclusive
+discussions.
+
+We are still looking into the virtual component. We will likely run
+something similar to what we did last year, but details on that will
+be forthcoming.
+
+2023: https://lwn.net/Articles/lsfmmbpf2023/
+
+2022: https://lwn.net/Articles/lsfmm2022/
+
+2019: https://lwn.net/Articles/lsfmm2019/
+
+2018: https://lwn.net/Articles/lsfmm2018/
+
+2017: https://lwn.net/Articles/lsfmm2017/
+
+2016: https://lwn.net/Articles/lsfmm2016/
+
+2015: https://lwn.net/Articles/lsfmm2015/
+
+2014: http://lwn.net/Articles/LSFMM2014/
+
+4) If you have feedback on last year's meeting that we can use to
+improve this year's, please also send that to:
+
+          lsf-pc@lists.linux-foundation.org
+
+Thank you on behalf of the program committee:
+
+          Amir Goldstein (Filesystems)
+          Jan Kara (Filesystems)
+          Martin K. Petersen (Storage)
+          Javier González (Storage)
+          Michal Hocko (MM)
+          Dan Williams (MM)
+          Daniel Borkmann (BPF)
+          Martin KaFai Lau (BPF)
+
