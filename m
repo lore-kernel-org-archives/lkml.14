@@ -1,120 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D663C2C6;
-	Wed, 14 Feb 2024 10:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69EF417543;
+	Wed, 14 Feb 2024 10:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707906196; cv=none; b=AvJ9EoC9ykW6LEQhG5HnFoW/QQXzpvEP5aTdc95fLvSZZ2tQcQZnyUhDGkyh6yPCd2rgnHH4Vx5k3hazf/221LzInUx52YfVUHBBVcezwxVzx4kSuDiYaWHzQsaEGD7diz5ZsdISJpwCiaOsQPrDbm8dVpR+xz9dgKxL0xzBAAY=
+	t=1707906250; cv=none; b=SoXmaCXK9rQpVW3t6Vb8EMC7SrdbRiGIZJaViMjwUlghGAeQHSOSbryXgyNRqfjycHiDNKrwdFLqK1+HkQ6cFbKa9KOHbSyku04R+OeRzCj3u7jMAshBKGUxWW4wkNkxriWGpqcwDjk4rUoMSq1Spr8GfXZf08Ed7alNQ4GJMaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707906196; c=relaxed/simple;
-	bh=QMaqZlJchyH8KIu//1PefAMMgtRPF4A6MlkANLCH/AI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=gnNFukRQWBwjwzxkACkh79/6qjwoo6WELFfXNHpMpUpOqAF6R6E/RVXYRmYmKV3O2BF1CFdshYVBjY7C7GC4hZwi43DBnTlzvWWCLmQR6rr1Ubg8syG3q4CFkQnC8Ux4PsQYQSa2R61Gr+Af5qGfwfK8tJ0s/DPPHeESxJC2nuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BhsLx1tf; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707906250; c=relaxed/simple;
+	bh=VP6OWLTFU7Iwj95xAdgUR/i01Q0SJTbE9ZgKz6xmu84=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=EPAOii1fmPeuRZOpE7A6+TNcPf4Bc7EZ1AX9sxvdom8ChFT5PDvD4VGJcEbtbDpYjGAEuMAfww71faeODfCDVpLJf8A7aIEzrxq6t7jNfGnodiXBEGEKkFUWUyFBqGo0BaZDohAYDlGV1gHeKplxYa7RYz/6U3DAyldga5oiSZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=xPELIX1z; arc=none smtp.client-ip=115.28.160.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BhsLx1tf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707906195; x=1739442195;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=QMaqZlJchyH8KIu//1PefAMMgtRPF4A6MlkANLCH/AI=;
-  b=BhsLx1tf+XhdsHOHKeKwy2f65zl9QGXeg8HBWDK34WSXTSG/KiJgtu6m
-   KKWddMIP7QQQ3Kg1Eo6ZjQ3sHw7HV8OSkiDqQ9Qccgd7yt9+5LujGDy/c
-   Ui/DTdpVirEuRHbqhnpYg0bTeV1CfVzBDB/y1cbP42OexxIofqDe2OcvM
-   gblQKhpoXyk58xnOCyrwS0jUJQt6D5an2zjkrVkm32XWGSPqwz1DBPVEt
-   h2KsteijzX37omO+OSoMLjDvDoBLYfH56+4lwfERgoVA/vtUUtQXpydUT
-   iwxK2+zdsQoKfb+7S9nD/J1T1wxHkPRYPNxWe5SEltEs+w50Dn76ldKG6
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="1794801"
-X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="1794801"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 02:23:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="3055604"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.33.229])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 02:23:12 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 14 Feb 2024 12:22:57 +0200 (EET)
-To: Vishnu Sankar <vishnuocv@gmail.com>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, vsankar@lenovo.com
-Subject: Re: [PATCH 2/2] platform/x86: thinkpad_acpi: Fix to correct wrong
- temp reporting on some ThinkPads
-In-Reply-To: <20240214052959.8550-2-vishnuocv@gmail.com>
-Message-ID: <97fb005c-92bc-790b-80b0-75149a799b4b@linux.intel.com>
-References: <20240214052959.8550-1-vishnuocv@gmail.com> <20240214052959.8550-2-vishnuocv@gmail.com>
+	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="xPELIX1z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1707905767; bh=VP6OWLTFU7Iwj95xAdgUR/i01Q0SJTbE9ZgKz6xmu84=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=xPELIX1zkthuNl7p7i0jC+9O9gRLMpQR6i86bz0hw432410swsodTqRxYGqmArAK6
+	 ooPVVN57ifBG3uEKJHR6S+7CSg8sgzPpIgku7G16GDft5x55pLkzQ5NtxPHNx+85dB
+	 sp1BmohNFFBTlvOgjn6QhkdTa/VuOM3Scq3/9Vos=
+Received: from ld50.lan (unknown [IPv6:240e:388:8d00:6500:5531:eef6:1274:cebe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id AB9B5601C2;
+	Wed, 14 Feb 2024 18:16:07 +0800 (CST)
+From: WANG Xuerui <kernel@xen0n.name>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	WANG Xuerui <git@xen0n.name>
+Subject: [PATCH for-6.8 3/5] KVM: LoongArch: Rename _kvm_get_cpucfg to _kvm_get_cpucfg_mask
+Date: Wed, 14 Feb 2024 18:15:55 +0800
+Message-ID: <20240214101557.2900512-4-kernel@xen0n.name>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240214101557.2900512-1-kernel@xen0n.name>
+References: <20240214101557.2900512-1-kernel@xen0n.name>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-2051631955-1707905357=:7959"
-Content-ID: <f7c0f68c-a877-b78a-78fb-25cb2650f791@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+From: WANG Xuerui <git@xen0n.name>
 
---8323328-2051631955-1707905357=:7959
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <7a7d916c-733b-6bf9-216b-a3ebf981ddf0@linux.intel.com>
+The function is not actually a getter of guest CPUCFG, but rather
+validation of the input CPUCFG ID plus information about the supported
+bit flags of that CPUCFG leaf. So rename it to avoid confusion.
 
-On Wed, 14 Feb 2024, Vishnu Sankar wrote:
+Signed-off-by: WANG Xuerui <git@xen0n.name>
+---
+ arch/loongarch/kvm/vcpu.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> Added non-standard thermal register support for some ThinkPads.
->=20
-> Some of the Thinkpads use a non-standard ECFW which use different
-> thermal register addresses.
-> This is a fix to correct the wrong temperature reporting on
-> those systems.
->=20
-> Tested on Lenovo ThinkPad L13 Yoga Gen2
->=20
-> Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
-> ---
-> -Improvements as requested.
-> -Improved the readability in case TPACPI_THERMAL_TPEC_12.
-> -idx < 8 from idx idx <=3D7 to match idx =3D 8
-> -KILO used from linux/units.h instead of 1000.
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index cc2332b056ba..e973500611b4 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -298,7 +298,7 @@ static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
+ 	return ret;
+ }
+ 
+-static int _kvm_get_cpucfg(int id, u64 *v)
++static int _kvm_get_cpucfg_mask(int id, u64 *v)
+ {
+ 	switch (id) {
+ 	case 2:
+@@ -330,7 +330,7 @@ static int kvm_check_cpucfg(int id, u64 val)
+ 	u64 mask;
+ 	int ret;
+ 
+-	ret = _kvm_get_cpucfg(id, &mask);
++	ret = _kvm_get_cpucfg_mask(id, &mask);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -557,7 +557,7 @@ static int kvm_loongarch_get_cpucfg_attr(struct kvm_vcpu *vcpu,
+ 	uint64_t val;
+ 	uint64_t __user *uaddr = (uint64_t __user *)attr->addr;
+ 
+-	ret = _kvm_get_cpucfg(attr->attr, &val);
++	ret = _kvm_get_cpucfg_mask(attr->attr, &val);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.43.0
 
->  static enum thermal_access_mode thermal_read_mode;
->  static bool thermal_use_labels;
-> +static bool thermal_with_ns_address;=09/*Non-standard thermal reg addres=
-s*/
-
-Comment is missing spaces.
-
-> @@ -6239,6 +6267,20 @@ static int thermal_get_sensor(int idx, s32 *value)
->  =09=09}
->  =09=09break;
-> =20
-> +=09/* The Non-standard EC uses 12 Thermal areas */
-> +=09case TPACPI_THERMAL_TPEC_12:
-> +=09=09if (idx >=3D 12)
-> +=09=09=09return -EINVAL;
-> +
-> +=09=09t =3D idx < 8 ? TP_EC_THERMAL_TMP0_NS + idx :
-> +=09=09=09=09TP_EC_THERMAL_TMP8_NS + (idx - 8);
-> +
-> +=09=09if (!acpi_ec_read(t, &tmp))
-> +=09=09=09return -EIO;
-> +
-> +=09=09*value =3D tmp * KILO;
-
-Hmm, MILLI would be much more approriate here? But if this relates to=20
-degrees, there is MILLIDEGREE_PER_DEGREE?
-
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
- i.
---8323328-2051631955-1707905357=:7959--
