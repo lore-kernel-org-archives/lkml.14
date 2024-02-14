@@ -1,116 +1,138 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C25C086644;
-	Wed, 14 Feb 2024 17:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25481272BE;
+	Wed, 14 Feb 2024 17:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707933059; cv=none; b=iEtBrxkauEcGE4/aBoeuZJoDgnXKE5bjOxGHtKvXwWI6bhr3/Z+j47FGHC3iTsxewTKx738ton7zsNQmUPVwGli6/epmdRD/AZaorHtG2EWMaCxz2rj/WJKd1m2pAxsToxy3P8L2I3kwYGOJtcu77w3kPAg8kScqlF/lLlWwfe0=
+	t=1707933058; cv=none; b=I6DphFpndxI31oGvl3jLIUd1YPmJO1ScbHEHmHw6kN6gzxXb1srlq+EwSpl4o5I7dGOai8+oOBZRtgVXnnxeWpAGknV6bHvnse/Uo3WGvI5R5jDtjGVmqbr97/mGV0CRW4tj4g1243yrz86aMDNt4X4rVRL4fjWnk/FJsczatRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707933059; c=relaxed/simple;
-	bh=1n+POexB4IxIKN4NogGOvLi6IfL+92Wk9tP/cRbJstg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tjjRrzwr7f8WjTxKaxv0IEGH6UErVg2QLfZVuY5NoyR4jY+2Eyd18DkEU8mcxyyZa/6M6gBviZP0vJH1YIe+7IlSB0rjLDEeiEft7GqX/NzAOMdEosmYYOnLKTWCVtF39DATXBYo5g2l7N9kROWz+LQtJaFkMZF5l+dP97btDD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=tGzDrNLn; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1707933058; c=relaxed/simple;
+	bh=d7TpTIQFvUc4GtfYnpnoSFurHUBHeYBqssED1WsRs90=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dEa/h4g6m6wPV946vgso88917SL8o/uvl47kL0Cd9zb7LVW14ReNIzHhM7vKsx0VfsyF9uGmu2IhG5dwSj0PugJih+QjDxImB1bur4BtqHdT2yLwHlsx1q5RAtA599bVhz5ATxaNZYXqTFU4DumyLbEfDhTH3UMJCuYyf2YA/+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=aQYrEZEW; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="tGzDrNLn"
-Received: from localhost.localdomain (unknown [4.155.48.117])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 59AB320B2004;
-	Wed, 14 Feb 2024 09:50:56 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 59AB320B2004
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1707933056;
-	bh=9VOCGDdI8wf7ppg3CttBYebJqIACHcsfFVDg2ERPXoo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tGzDrNLnvdm7wkDwXHHGty2XSx7A6lxBHg7yWMvzCC0UqI+U8U4e2wbJGTtOg3XB/
-	 RyKh3ul3asNW9w2nYqGIo8RnajGdnLV/4H3desJ8oatH+EB4pm/PlXaOW8DHN5EOkq
-	 e6pXtt2g9uuDLxBsAmBTsGpD4kImHeeEYObSBQVc=
-From: Beau Belgrave <beaub@linux.microsoft.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com
-Subject: [PATCH v3 4/4] tracing/user_events: Document multi-format flag
-Date: Wed, 14 Feb 2024 17:50:46 +0000
-Message-Id: <20240214175046.240-5-beaub@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240214175046.240-1-beaub@linux.microsoft.com>
-References: <20240214175046.240-1-beaub@linux.microsoft.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="aQYrEZEW"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8A02C40E0192;
+	Wed, 14 Feb 2024 17:50:52 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id YCe6fvn3JETS; Wed, 14 Feb 2024 17:50:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1707933050; bh=qUh4WIH3ckW7fLarRAPiVUTTPuVgUfxxHviN4hfLN8M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aQYrEZEWd9dQXNI4vF1k//9rVISI9oNp0/c0/Egkb2UXQqvVVFhxk1RE4UFreV6Jf
+	 2+AvOeCWGpsR7dLvoqBudZ0ul5oouk5m8i6Bid7ktP15NoIO0HCsCX9wCTs6aev2MB
+	 F/8AUSEiZ1T74M/PkXhDPM3QRVlgxcE5SlPrPXDU4v2Dj2GSw2EIpP06BiADHX0ir+
+	 Uk2ZpZ76/cw+0MsLLH3M3TzeFqk1oS6ixJDe09FD/WnJYHoYRmbgA1n7nvphrx6clf
+	 6vJyRRVUq5uq1bWy36hRkdH+ghJHZZUlCovNWEzyQ3GkRtJVa6jAcH4J/nVmVj5fjb
+	 h2CHPFgZdG+1nPKOF8QgPe6jtQRmBwop/GoYPzuHVIfeOibOMBoVgu/nlxcaDGWvxi
+	 uVXtoLsQMrtobrpiu2IakeOnz6FOypXiyRMvloRiWt5+T9eGjc63kRKsY6LZdQD03E
+	 RvU2VS+SxEr49hXzeC6lb00F3Bx6tZVeQH0BcOToq/fl/mEfVhx4KObvZ39pjePKDX
+	 BdkQ4uwDMDCGRHHs7hZaf6ZwOMx3dUu2z1+gQf78YsZtfdboWM4CKXaPAN+vFPvdnx
+	 wb4VA9rD6q+GerzHyPAQI0/vcCgRIYY8ssSlzfaWVxIFm+VLIfMObqoSWc9Z3Ui1iX
+	 YwP28P3368SpCgA/XN4QZ0Uo=
+Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1E99640E01BB;
+	Wed, 14 Feb 2024 17:50:41 +0000 (UTC)
+Date: Wed, 14 Feb 2024 18:50:35 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: tony.luck@intel.com, linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org, avadhut.naik@amd.com,
+	john.allen@amd.com, muralidhara.mk@amd.com,
+	naveenkrishna.chatradhi@amd.com, sathyapriya.k@amd.com
+Subject: Re: [PATCH 2/2] RAS: Introduce the FRU Memory Poison Manager
+Message-ID: <20240214175035.GKZcz9a0CieQSsMEmC@fat_crate.local>
+References: <20240214033516.1344948-1-yazen.ghannam@amd.com>
+ <20240214033516.1344948-3-yazen.ghannam@amd.com>
+ <20240214092839.GBZcyHxzsaz9NcijyV@fat_crate.local>
+ <76fe899b-73ea-4f6b-9821-84240d89b0cb@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <76fe899b-73ea-4f6b-9821-84240d89b0cb@amd.com>
 
-User programs can now ask user_events to handle the synchronization of
-multiple different formats for an event with the same name via the new
-USER_EVENT_REG_MULTI_FORMAT flag.
+On Wed, Feb 14, 2024 at 09:28:54AM -0500, Yazen Ghannam wrote:
+> > That's a good thing to have here.
 
-Add a section for USER_EVENT_REG_MULTI_FORMAT that explains the intended
-purpose and caveats of using it. Explain how deletion works in these
-cases and how to use /sys/kernel/tracing/dynamic_events for per-version
-deletion.
+Up to here. __packed still needs clarification.
 
-Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
----
- Documentation/trace/user_events.rst | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+diff --git a/drivers/ras/Kconfig b/drivers/ras/Kconfig
+index 782951aa302f..f5dde88a3188 100644
+--- a/drivers/ras/Kconfig
++++ b/drivers/ras/Kconfig
+@@ -37,14 +37,13 @@ source "drivers/ras/amd/atl/Kconfig"
+ config RAS_FMPM
+ 	tristate "FRU Memory Poison Manager"
+ 	default m
+-	depends on X86_MCE
+-	imply AMD_ATL
++	depends on AMD_ATL
+ 	help
+ 	  Support saving and restoring memory error information across reboot
+-	  cycles using ACPI ERST as persistent storage. Error information is
+-	  saved with the UEFI CPER "FRU Memory Poison" section format.
++	  using ACPI ERST as persistent storage. Error information is saved with
++	  the UEFI CPER "FRU Memory Poison" section format.
+ 
+-	  Memory may be retired during boot time and run time depending on
++	  Memory will be retired during boot time and run time depending on
+ 	  platform-specific policies.
+ 
+ endif
+diff --git a/drivers/ras/amd/fmpm.c b/drivers/ras/amd/fmpm.c
+index d6a963aca093..901a1f0018fc 100644
+--- a/drivers/ras/amd/fmpm.c
++++ b/drivers/ras/amd/fmpm.c
+@@ -12,7 +12,7 @@
+  *
+  * Implementation notes, assumptions, and limitations:
+  *
+- * - FRU Memory Poison Section and Memory Poison Descriptor definitions are not yet
++ * - FRU memory poison section and memory poison descriptor definitions are not yet
+  *   included in the UEFI specification. So they are defined here. Afterwards, they
+  *   may be moved to linux/cper.h, if appropriate.
+  *
+@@ -23,16 +23,13 @@
+  *   AMD MI300-based platform(s) assumptions:
+  *   - Memory errors are reported through x86 MCA.
+  *   - The entire DRAM row containing a memory error should be retired.
+- *   - There will be (1) FRU Memory Poison Section per CPER.
+- *   - The FRU will be the CPU Package (Processor Socket).
+- *   - The default number of Memory Poison Descriptor entries should be (8).
+- *   - The Platform will use ACPI ERST for persistent storage.
++ *   - There will be (1) FRU memory poison section per CPER.
++ *   - The FRU will be the CPU package (processor socket).
++ *   - The default number of memory poison descriptor entries should be (8).
++ *   - The platform will use ACPI ERST for persistent storage.
+  *   - All FRU records should be saved to persistent storage. Module init will
+  *     fail if any FRU record is not successfully written.
+  *
+- * - Source code will be under 'drivers/ras/amd/' unless and until there is interest
+- *   to use this module for other vendors.
+- *
+  * - Boot time memory retirement may occur later than ideal due to dependencies
+  *   on other libraries and drivers. This leaves a gap where bad memory may be
+  *   accessed during early boot stages.
 
-diff --git a/Documentation/trace/user_events.rst b/Documentation/trace/user_events.rst
-index d8f12442aaa6..1d5a7626e6a6 100644
---- a/Documentation/trace/user_events.rst
-+++ b/Documentation/trace/user_events.rst
-@@ -92,6 +92,24 @@ The following flags are currently supported.
-   process closes or unregisters the event. Requires CAP_PERFMON otherwise
-   -EPERM is returned.
- 
-++ USER_EVENT_REG_MULTI_FORMAT: The event can contain multiple formats. This
-+  allows programs to prevent themselves from being blocked when their event
-+  format changes and they wish to use the same name. When this flag is used the
-+  tracepoint name will be in the new format of "name.unique_id" vs the older
-+  format of "name". A tracepoint will be created for each unique pair of name
-+  and format. This means if several processes use the same name and format,
-+  they will use the same tracepoint. If yet another process uses the same name,
-+  but a different format than the other processes, it will use a different
-+  tracepoint with a new unique id. Recording programs need to scan tracefs for
-+  the various different formats of the event name they are interested in
-+  recording. The system name of the tracepoint will also use "user_events_multi"
-+  instead of "user_events". This prevents single-format event names conflicting
-+  with any multi-format event names within tracefs. The unique_id is output as
-+  a hex string. Recording programs should ensure the tracepoint name starts with
-+  the event name they registered and has a suffix that starts with . and only
-+  has hex characters. For example to find all versions of the event "test" you
-+  can use the regex "^test\.[0-9a-fA-F]+$".
-+
- Upon successful registration the following is set.
- 
- + write_index: The index to use for this file descriptor that represents this
-@@ -106,6 +124,9 @@ or perf record -e user_events:[name] when attaching/recording.
- **NOTE:** The event subsystem name by default is "user_events". Callers should
- not assume it will always be "user_events". Operators reserve the right in the
- future to change the subsystem name per-process to accommodate event isolation.
-+In addition if the USER_EVENT_REG_MULTI_FORMAT flag is used the tracepoint name
-+will have a unique id appended to it and the system name will be
-+"user_events_multi" as described above.
- 
- Command Format
- ^^^^^^^^^^^^^^
-@@ -156,7 +177,11 @@ to request deletes than the one used for registration due to this.
- to the event. If programs do not want auto-delete, they must use the
- USER_EVENT_REG_PERSIST flag when registering the event. Once that flag is used
- the event exists until DIAG_IOCSDEL is invoked. Both register and delete of an
--event that persists requires CAP_PERFMON, otherwise -EPERM is returned.
-+event that persists requires CAP_PERFMON, otherwise -EPERM is returned. When
-+there are multiple formats of the same event name, all events with the same
-+name will be attempted to be deleted. If only a specific version is wanted to
-+be deleted then the /sys/kernel/tracing/dynamic_events file should be used for
-+that specific format of the event.
- 
- Unregistering
- -------------
 -- 
-2.34.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
