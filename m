@@ -1,79 +1,86 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from 6.mo583.mail-out.ovh.net (6.mo583.mail-out.ovh.net [178.32.119.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8F93C17;
-	Thu, 15 Feb 2024 08:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD0C168BA
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 08:20:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.32.119.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707985239; cv=none; b=ByI+Vp5kmHx5CoToxN58OGWX2MMxVO/athFSqNbsm0MK9929WWcBB6s/jvkiPZG0sosipxcxI2zBvGoEPxxHPnLHye0pf+4q1LB2ioMMO7xaESp59wg+3KYYuaVDxz4+W/TYtxiBT/EFuw+U8XcGiNeza5320XcmPgO2k4hLBjQ=
+	t=1707985252; cv=none; b=RK7cvlktLLqotk/ypaNZUmQkoCvKGKjqdj4q2sms67jW690cyjz2PagXGN34UKgPdg0JfAoqYPk7geK8RvnRwIzxz5PdsMh5lVzddM/mcKXCiTudDgARblWWw1Omdq2/iIgHMTWUEOrqtmaA5i8jnLJa/Wguq6nakaQSbvAZOLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707985239; c=relaxed/simple;
-	bh=qlv23S/JNSmUKqWUjDar2EWWu23eXMjxHWHVPb1kCXk=;
-	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
-	 Message-ID:Subject; b=fMjv7khrYrzYfYdFrS/hCWZOF26F/tUCMVmug7+ha8U5nmhVqY5n7Uu//vMaWt1N6mtTLKXPKHqQLZfbEbRs0+3JQcolDG6oRxORTpIPMb4OOnmqnoMOj5+sV0xyj18hZF/tLtnrCJp93Da8dWrBVLF9mfEug+SuDStWpE6VWPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Received: from hamburger.collabora.co.uk (hamburger.collabora.co.uk [IPv6:2a01:4f8:1c1b:c794::1])
-	by madrid.collaboradmins.com (Postfix) with ESMTP id CEF2337813FD;
-	Thu, 15 Feb 2024 08:20:34 +0000 (UTC)
-From: "Shreeya Patel" <shreeya.patel@collabora.com>
-In-Reply-To: <20240214142247.920076071@linuxfoundation.org>
-Content-Type: text/plain; charset="utf-8"
-X-Forward: 127.0.0.1
-References: <20240214142247.920076071@linuxfoundation.org>
-Date: Thu, 15 Feb 2024 08:20:34 +0000
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, "Gustavo Padovan" <gustavo.padovan@collabora.com>, "kernelci-regressions mailing list" <kernelci-regressions@lists.collabora.co.uk>
-To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+	s=arc-20240116; t=1707985252; c=relaxed/simple;
+	bh=Zn2YmXTGnlmFWVJAWE0ZcsbcTLkjNnzhl3e0UcTBfKg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=lVbfUzhgJbIDGCkMXTw1X9rT4DNxwld9Z4+qkW521M8X1brKai+zDkgbHCHa33a/Z8GbQ7QS9Jj8R74xdBMI0XNceE0hmNWedggT+Fw/dSLLVCl/rXZ/KDeStLiT0dwaW6/7uOX2v39VsXvN8HpIuBG+TFwhfkpall8Pjv2wITA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=178.32.119.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
+Received: from director5.ghost.mail-out.ovh.net (unknown [10.108.2.12])
+	by mo583.mail-out.ovh.net (Postfix) with ESMTP id 4TZs9H093sz1Fgg
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 21:42:10 +0000 (UTC)
+Received: from ghost-submission-6684bf9d7b-62rx8 (unknown [10.108.54.171])
+	by director5.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 58D4F1FD57;
+	Wed, 14 Feb 2024 21:42:04 +0000 (UTC)
+Received: from etezian.org ([37.59.142.103])
+	by ghost-submission-6684bf9d7b-62rx8 with ESMTPSA
+	id pzx8A6wzzWWJKwIAfHX53g
+	(envelope-from <andi@etezian.org>); Wed, 14 Feb 2024 21:42:04 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-103G00581a402d0-df4d-43c0-80f3-f5461175c724,
+                    C0FC2E5C6A7315DD97BDDE4B9606AB6EEADB6D9F) smtp.auth=andi@etezian.org
+X-OVh-ClientIp:89.217.109.169
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Michael Ellerman <mpe@ellerman.id.au>, 
+ Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
+ Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Wolfram Sang <wsa@kernel.org>, 
+ Olof Johansson <olof@lixom.net>, linux-i2c@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20240212111933.963985-1-arnd@kernel.org>
+References: <20240212111933.963985-1-arnd@kernel.org>
+Subject: Re: [PATCH] i2c: pasemi: split driver into two separate modules
+Message-Id: <170794692308.4040459.7350373390928340229.b4-ty@kernel.org>
+Date: Wed, 14 Feb 2024 22:42:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <4b10-65cdc980-11-61454e00@94544082>
-Subject: =?utf-8?q?Re=3A?= [PATCH =?utf-8?q?6=2E6?= 000/124] 
- =?utf-8?q?6=2E6=2E17-rc2?= review
-User-Agent: SOGoMail 5.9.1
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.4
+X-Ovh-Tracer-Id: 3725039842831960594
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrudejgdduheefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvegjfhfukfffgggtgffosehtjeertdertdejnecuhfhrohhmpeetnhguihcuufhhhihtihcuoegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpeffteehudffvdfhudfgffdugfejjeduheehgeefgeeuhfeiuefghffgueffvdfgfeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduvdejrddtrddtrddupdekledrvddujedruddtledrudeiledpfeejrdehledrudegvddruddtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepoegrnhguihesvghtvgiiihgrnhdrohhrgheqpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehkeefpdhmohguvgepshhmthhpohhuth
 
-On Wednesday, February 14, 2024 20:00 IST, Greg Kroah-Hartman <gregkh@l=
-inuxfoundation.org> wrote:
+Hi
 
-> This is the start of the stable review cycle for the 6.6.17 release.
-> There are 124 patches in this series, all will be posted as a respons=
-e
-> to this one.  If anyone has any issues with these being applied, plea=
-se
-> let me know.
->=20
-> Responses should be made by Fri, 16 Feb 2024 14:22:24 +0000.
-> Anything received after that time might be too late.
->=20
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6=
-.17-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc=
-.git linux-6.6.y
-> and the diffstat can be found below.
->=20
+On Mon, 12 Feb 2024 12:19:04 +0100, Arnd Bergmann wrote:
+> On powerpc, it is possible to compile test both the new apple (arm) and
+> old pasemi (powerpc) drivers for the i2c hardware at the same time,
+> which leads to a warning about linking the same object file twice:
+> 
+> scripts/Makefile.build:244: drivers/i2c/busses/Makefile: i2c-pasemi-core.o is added to multiple modules: i2c-apple i2c-pasemi
+> 
+> Rework the driver to have an explicit helper module, letting Kbuild
+> take care of whether this should be built-in or a loadable driver.
+> 
+> [...]
 
-## stable-rc HEAD for linux-6.6.y:
+Applied to i2c/i2c-host-fixes on
 
-Date: 2024-02-14
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.=
-git/log/?h=3D36bb9c22c8b6e6fd34fd6fff147c78bc62a08fa2
+git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
 
-## Build failures:
-No build failures seen for the stable-rc/linux-6.6.y commit head \o/
+Thank you,
+Andi
 
-## Boot failures:
-No **new** boot failures seen for the stable-rc/linux-6.6.y commit head=
- \o/
-
-Tested-by: kernelci.org bot <bot@kernelci.org>
-
-Thanks,
-Shreeya Patel
+Patches applied
+===============
+[1/1] i2c: pasemi: split driver into two separate modules
+      commit: 3fab8a74c71a4ba32b2fa1dca7340f9107ff8dfc
 
