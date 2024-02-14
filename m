@@ -1,178 +1,128 @@
-Received: from bee.tesarici.cz (bee.tesarici.cz [77.93.223.253])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A4C134CCA;
-	Wed, 14 Feb 2024 19:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.223.253
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A1D13B7A9;
+	Wed, 14 Feb 2024 19:14:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707938062; cv=none; b=XocY33qO6/Jij2Djm7EOBbKCde/sup/PWH9FJzvxcYy/FLU/Nv++FK36diUh3MdNHqvHw+I6ctEs6e8AL1868pznyRepIPqYFWlHB24bocQKHRJuIKTeK0lXczX34GUslFXXlgR9AcZ8I0J/66KTiInlc+fDlMcU10z+abXc4Kg=
+	t=1707938064; cv=none; b=G6VIL4UZwYz5f8jEPPBV7lXmDZ+N14s03Jra2raJ4942YXZd/YOJRgobfmPTA3EevkhZGUPt9iW9PtTNYA4dfmUNK7KOuid+SVsI9X2W+SIz88nbtSlICVbpQfeaScTtYuzRNN6z1Q2ubyHR2EnexG/qlu27N+3emJiQfL/fXag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707938062; c=relaxed/simple;
-	bh=dtoL+qo2rjHSs2RZElyIu6BxXT9O3vZzuja1aFzJFgE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZyS/pba5sgCdDhNitcyqlYCNM+kBo6oh6RPoM8P4Pbllr8r/eTMbq0xpGoNNqXjXK+XG1rIVd3VdJZ+5TLOrL6TUTBKbrQ7HxLwhM5YnnXyZ0VkkfyvXSREe9Q91riiobnxUIJ8UiJdUdgQ3+Yjn4gEC/bViZsTMlZlB3U8u32c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=usCflKiA; arc=none smtp.client-ip=77.93.223.253
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
+	s=arc-20240116; t=1707938064; c=relaxed/simple;
+	bh=14BaVx8cuHZCZSoRpr+rbi+jknLxUXS3sryXnLK+89s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ozlfDEHeDrY/QXA1sijOIP4r89xWtLkkHfljfK02VeXTk64GF82v603osT4GjC9pt/A0YNucvjb8m82b8RlktJE61hNJ0PHQV5m2nQh5urZWfmFvark+AF73jPf1Et5mdW+lMbhxDj0z/Yul5vW0ZtT2gB0Wrgr2IBimLLlAu4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=Ur3hbKrq; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="usCflKiA"
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id B035B1A3C02;
-	Wed, 14 Feb 2024 20:14:16 +0100 (CET)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
-	t=1707938057; bh=+kn6Uw7nhL08sWX9dCxTs5rcdQk6XBojfgI0WQMAyeM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=usCflKiA3JOi0sndHsKiLct6zIXtCx2pAo2z6R8RG9ZpngNDPs6z9WIaKKrj5GjIl
-	 tDHR6M2vAxsifYMkJ162tDT1Na1kXS9h1CRw8bvhvtL3JuYHtL9sNlSOcViacWKgas
-	 tV0H2mY6PppGuPpBdgd/qBTAoqeh+MHxJFuCkCy72TBKG55Ak9xHJwxYWGlCNE/GDd
-	 wITsdEJ2GsMuiPbMGglmaS04jGW//E6Rddb4knK1d0SsGGKvhTWdR9XJdeLCZ4iVTt
-	 W1SwTq78Xwah5I93RkeHeAzgwt/UpxkV0rP/JdAUZje+1zf/V2enSndWWMthfZK2lS
-	 RP5m4YTchyBqg==
-Date: Wed, 14 Feb 2024 20:14:15 +0100
-From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Dave Hansen <dave.hansen@intel.com>, Petr Tesarik
- <petrtesarik@huaweicloud.com>, Jonathan Corbet <corbet@lwn.net>, Thomas
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Andy
- Lutomirski <luto@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Peter
- Zijlstra <peterz@infradead.org>, Xin Li <xin3.li@intel.com>, Arnd Bergmann
- <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Rick Edgecombe
- <rick.p.edgecombe@intel.com>, Kees Cook <keescook@chromium.org>, "Masami
- Hiramatsu (Google)" <mhiramat@kernel.org>, Pengfei Xu
- <pengfei.xu@intel.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Ze Gao
- <zegao2021@gmail.com>, "Kirill A. Shutemov"
- <kirill.shutemov@linux.intel.com>, Kai Huang <kai.huang@intel.com>, David
- Woodhouse <dwmw@amazon.co.uk>, Brian Gerst <brgerst@gmail.com>, Jason
- Gunthorpe <jgg@ziepe.ca>, Joerg Roedel <jroedel@suse.de>, "Mike Rapoport
- (IBM)" <rppt@kernel.org>, Tina Zhang <tina.zhang@intel.com>, Jacob Pan
- <jacob.jun.pan@linux.intel.com>, "open list:DOCUMENTATION"
- <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- Roberto Sassu <roberto.sassu@huaweicloud.com>, Petr Tesarik
- <petr.tesarik1@huawei-partners.com>
-Subject: Re: [PATCH v1 0/8] x86_64 SandBox Mode arch hooks
-Message-ID: <20240214201415.3dc7d69f@meshulam.tesarici.cz>
-In-Reply-To: <9EF956AB-DF48-4DAA-AB42-0FBC513ECA22@zytor.com>
-References: <20240214113516.2307-1-petrtesarik@huaweicloud.com>
-	<c424618c-d6c6-430a-8975-8851a617204e@intel.com>
-	<34B19756-91D3-4DA1-BE76-BD3122C16E95@zytor.com>
-	<20240214174143.74a4f10c@meshulam.tesarici.cz>
-	<9EF956AB-DF48-4DAA-AB42-0FBC513ECA22@zytor.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="Ur3hbKrq"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6e0a479a6cbso111044b3a.0;
+        Wed, 14 Feb 2024 11:14:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707938062; x=1708542862;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FS+0qaKLpt8lT9N1wmj76XGmLNXI3ICb4bQ8lj6EZNY=;
+        b=RY5iI7JKTJ8V8hFSymHXhC6XxG+xiNyonSf6maY1yna7t3aESISvpLa/A+5PIF//K5
+         lCiPc7HYvWaQd9jwYFRW/XFhNbBTCrUZW8eSNqxb9ZnWlskAQroh+JBEcMrsEE4NcRyJ
+         jUfUzc2j8C40CdUpLb0fU9eBL9cFBNsbqXqmO5QdstjyZPHss7IX3mseFxWnakrhuOVq
+         iAKlkkWtJwg/rSktwZEDCibagp4DwSVvYR2g2aL+4+dAqRBuOpybg3Or9bhGpAb6+Rws
+         AG47VPsIjYWIG5LH0xu03XOvuYHbw8uriuWum/35dkJvAlnodF47QbEQt8iSJgwbzfzU
+         XBWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVUdzYMGNmMZ521f5fFpqSZYPI31uYXMlCNuEujo4sDnkJKucWf6JdKep+vURsthJVbnBesrodPWmfkPb+QnNsGTXAYPoJuFSXtDWmv
+X-Gm-Message-State: AOJu0YwtqXOBekxEI8uPa+vUGM+3Qz9GfgFNLgfRXTeHwBiv/7Yq50Nd
+	N7CRYq9wmseFUDZaCj60hOAixf+giFz4CaV0l274ay5wmhkek4BN
+X-Google-Smtp-Source: AGHT+IH7ooCb5KSY4SSuPAdacKRPF6aKGNWqgf5qrXG4aBKfAXSy0m6/IfY2awqb2YdOW3oGTwlFbg==
+X-Received: by 2002:a05:6a21:3944:b0:1a0:6f99:7287 with SMTP id ac4-20020a056a21394400b001a06f997287mr2361233pzc.61.1707938061788;
+        Wed, 14 Feb 2024 11:14:21 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWUYfyxipVjWSQOmW5NfLXJ5bSfqPo6q2e45scyrFzYp6KrCYccWgFGyIpz0U6J1dG4j/VqRNBk4tuL+IrTzUckOl70CneeZPLF4OkQI9JwRkrLdMfK9ukX9Cv6LrigRaEpr1PEibU5W5uFlrIFb43qDWEyPFplLer7KN04Y3q2hdujKmRaQaH+dLxUHYz6fEkmQGqE9PYbrgs=
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id t187-20020a6281c4000000b006d99f930607sm10420142pfd.140.2024.02.14.11.14.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Feb 2024 11:14:21 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2024; t=1707938060;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=FS+0qaKLpt8lT9N1wmj76XGmLNXI3ICb4bQ8lj6EZNY=;
+	b=Ur3hbKrqW2rAbRCU2dKCACKHEY+DDvzxvdD23iuGSEY5eppKJo/ZcLYDJlzLe5yxWzCnSV
+	qbjUkGSJbGdFur338koYI/e7L9FDKGjsBjiAUlniCDCgUtTHQ/d59cl5PE1DWqiQAG0MxY
+	rYEgoJDgyfSwDYBvzT+j8fLu79nU34x9HN1uEC8r05801gxmemCLftUEYFOngWG8jZjz/N
+	FSrSkefbp5Pxr3iGjPXD4rBD99RX4y84msaoZuTeRMLNELg2oJCO/zEHwVRDv1jFUjxAlL
+	vpoOr87hd+LPPMP99HXYBIzEn0Mh0xGQGRouhV2TDq78fQW74BS1R4OEzqAZhQ==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Date: Wed, 14 Feb 2024 16:15:00 -0300
+Subject: [PATCH] kunit: make kunit_bus_type const
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240214-bus_cleanup-kunit-v1-1-1a38323eed73@marliere.net>
+X-B4-Tracking: v=1; b=H4sIADQRzWUC/x3MQQqAIBBA0avErBNGE4quEhGlUw2FhWYE0t2Tl
+ m/xf4JAnilAWyTwdHPgw2XIsgCzjm4hwTYbFCqNSmoxxTCYnUYXT7FFx5doNBpb1ROSRMjd6Wn
+ m5392/ft++PjoXGMAAAA=
+To: Brendan Higgins <brendan.higgins@linux.dev>, 
+ David Gow <davidgow@google.com>
+Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+ linux-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1126; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=14BaVx8cuHZCZSoRpr+rbi+jknLxUXS3sryXnLK+89s=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlzRE1VNxJ8zR76D76j3o1iSdYcKAZFek0I1i9g
+ kBNS2hyioWJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZc0RNQAKCRDJC4p8Y4ZY
+ phfeD/9Akfm8qZNJqn7s6OryAmRmpgQ+u0OjFB074u/3vxiwy8kZ6mJ7bXt8H6ntI7aWc5BOWMZ
+ ZG5iyJLHSCbk54saLS1+z24lajvslmUhewBBj1B3hYTeCN0WLv/zj9jbbu7papZbrFIv2ihyvIR
+ 4M9sS/tuY5WyDfhN6REEG2DekiVcy+LQfIlPil3xtEiJTQRGrt7W5Ulyyc2FKjKQpacytKCiC3i
+ nkd/UImp7YvF8nHwWbinXJB5EPz3MlPbSeq7j3e/6u9mU3Gty9p+UntvLN7X0QRmU+/DzJ6MqKV
+ ClnO16bswJ9HgFwrdxXZe+MEhpK1To0gYBmien06D8qYkQMwM9K8k/I7iSHQHl0EN5zVJDkCZ+Q
+ iasMt7BmyVIHFUaMi0212cBANa7WAV7PajaETLjhkeGF2jPWI1qTRwG0Z1AGNnT/YWDfVZT1PzO
+ fUwPRP9X1Za0Svt6qNv1Dqc8amsF6hkon7WbE7PZgEKIEqAvhJNB3TljrPXxwzEp3bQxg5G+RUw
+ iX0E7j1ghzZvKg8IAn+F2XrMuD4LHso1VC7hM39lhiC7E+8J9bOivZ3JTTRWWrWrEy2C4eTMioh
+ DQKXtyZu8MmCpLpn0yJVeR/MEyD6OcVUvOXLQ9GNUT8kasLi9r96aH2fiYb+j3DG2mnGQC5mhEZ
+ xBqxZSKPbRSdIfw==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
-On Wed, 14 Feb 2024 09:29:06 -0800
-"H. Peter Anvin" <hpa@zytor.com> wrote:
+Since commit d492cc2573a0 ("driver core: device.h: make struct
+bus_type a const *"), the driver core can properly handle constant
+struct bus_type, move the kunit_bus_type variable to be a constant
+structure as well, placing it into read-only memory which can not be
+modified at runtime.
 
-> On February 14, 2024 8:41:43 AM PST, "Petr Tesa=C5=99=C3=ADk" <petr@tesar=
-ici.cz> wrote:
-> >On Wed, 14 Feb 2024 07:28:35 -0800
-> >"H. Peter Anvin" <hpa@zytor.com> wrote:
-> > =20
-> >> On February 14, 2024 6:52:53 AM PST, Dave Hansen <dave.hansen@intel.co=
-m> wrote: =20
-> >> >On 2/14/24 03:35, Petr Tesarik wrote:   =20
-> >> >> This patch series implements x86_64 arch hooks for the generic Sand=
-Box
-> >> >> Mode infrastructure.   =20
-> >> >
-> >> >I think I'm missing a bit of context here.  What does one _do_ with
-> >> >SandBox Mode?  Why is it useful?   =20
-> >>=20
-> >> Seriously. On the surface it looks like a really bad idea =E2=80=93 ba=
-sically an ad hoc, *more* privileged version of user shave. =20
-> >
-> >Hi hpa,
-> >
-> >I agree that it kind of tries to do "user mode without user mode".
-> >There are some differences from actual user mode:
-> >
-> >First, from a process management POV, sandbox mode appears to be
-> >running in kernel mode. So, there is no way to use ptrace(2), send
-> >malicious signals or otherwise interact with the sandbox. In fact,
-> >the process can have three independent contexts: user mode, kernel mode
-> >and sandbox mode.
-> >
-> >Second, a sandbox can run unmodified kernel code and interact directly
-> >with other parts of the kernel. It's not really possible with this
-> >initial patch series, but the plan is that sandbox mode can share locks
-> >with the kernel.
-> >
-> >Third, sandbox code can be trusted for operations like parsing keys for
-> >the trusted keychain if the kernel is locked down, i.e. when even a
-> >process with UID 0 is not on the same trust level as kernel mode.
-> >
-> >HTH
-> >Petr T
-> > =20
->=20
-> This, to me, seems like "all the downsides of a microkernel without the u=
-psides." Furthermore, it breaks security-hardening features like LASS and (=
-to a lesser degree) SMAP. Not to mention dropping global pages?
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+---
+ lib/kunit/device.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I must be missing something... But I am always open to learn something new.
+diff --git a/lib/kunit/device.c b/lib/kunit/device.c
+index f5371287b375..d23b8fb166d8 100644
+--- a/lib/kunit/device.c
++++ b/lib/kunit/device.c
+@@ -35,7 +35,7 @@ struct kunit_device {
+ 
+ #define to_kunit_device(d) container_of_const(d, struct kunit_device, dev)
+ 
+-static struct bus_type kunit_bus_type = {
++static const struct bus_type kunit_bus_type = {
+ 	.name		= "kunit",
+ };
+ 
 
-I don't see how it breaks SMAP. Sandbox mode runs in its own address
-space which does not contain any user-mode pages. While running in
-sandbox mode, user pages belong to the sandboxed code, kernel pages are
-used to enter/exit kernel mode. Bottom half of the PGD is empty, all
-user page translations are removed from TLB.
+---
+base-commit: 76021a887a50892fd969cd42a5f3467f5696e50e
+change-id: 20240214-bus_cleanup-kunit-840cd37b0e10
 
-For a similar reason, I don't see right now how it breaks linear
-address space separation. Even if it did, I believe I can take care of
-it in the entry/exit path. Anyway, which branch contains the LASS
-patches now, so I can test?
+Best regards,
+-- 
+Ricardo B. Marliere <ricardo@marliere.net>
 
-As for dropping global pages, that's only part of the story. Indeed,
-patch 6/8 of the series sets CR4.PGE to zero to have a known-good
-working state, but that code is removed again by patch 8/8. I wanted to
-implement lazy TLB flushing separately, so it can be easily reverted if
-it is suspected to cause an issue.
-
-Plus, each sandbox mode can use PCID to reduce TLB flushing even more.
-I haven't done it, because it would be a waste of time if the whole
-concept is scratched.
-
-I believe that only those global pages which are actually accessed by
-the sandbox need to be flushed. Yes, some parts of the necessary logic
-are missing in the current patch series. I can add them in a v2 series
-if you wish.
-
-> All in all, I cannot see this as anything other than an enormous step in =
-the wrong direction, and it isn't even in the sense of "it is harmless if n=
-oone uses it" =E2=80=93 you are introducing architectural changes that are =
-most definitely *very* harmful both to maintainers and users.
-
-I agree that it adds some burden. After all, that's why the ultimate
-decision is up to you, the maintainers. To defend my cause, I hope you
-have noticed that if CONFIG_SANDBOX_MODE is not set:
-
-1. literally nothing changes in entry_64.
-2. sandbox_mode() always evaluates to false, so the added conditionals in f=
-ault.c and traps.c are never executed
-3. top_of_instr_stack() always returns current_top_of_stack(), which is equ=
-ivalent to the code it replaces, namely this_cpu_read(pcpu_hot.top_of_stack)
-
-So, all the interesting stuff is under arch/x86/kernel/sbm/. Shall I
-add a corresponding entry with my name to MAINTAINERS?
-
-> To me, this feels like paravirtualization all over again. 20 years later =
-we still have not been able to undo all the damage that did.
-
-OK, I can follow you here. Indeed, there is some similarity with Xen PV
-(running kernel code with CPL 3), but I don't think there's more than
-this.
-
-Petr T
