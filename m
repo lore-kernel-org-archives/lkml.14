@@ -1,83 +1,93 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D70D61DDC1
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 22:45:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C762250F6
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 22:46:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707950747; cv=none; b=EPWoXY++6kLO3Eon7UjLexzBtfj3pqJ3dAn3/ajdi51lAte2fSr+8T0P/4iPH7TZol8Qq6hoL3HLUK8fKEVNffvw12HHqXsLd2WJ/4c0eCi6FGtH5GSeuFX/ggkmrQCmAcPz5CjEVwrY+6L3kG0AxV4haB5R2tm+Aq61iHPU8c0=
+	t=1707950770; cv=none; b=D/51+PdQbSdgzwfBx1NtYjKrYSwv+RRH+WSw2zTTEv7q7UOyqMMauLvqwvRqEG4s6Nv9tL3yB1raGxf+bimgRY30r07zcEyBYqGFo/NvoHg2J5QuVP01T8vVKSIv5AZ3+DwZxQb6pLxKyCe0yWkqbBWCluvzxP7UGXZv9v2SxKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707950747; c=relaxed/simple;
-	bh=Tmfl2Q2d9LtThpZUB2HoXDesIEkpD1mXThibjey9ijo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=V4+qpJrsdOtU+eVEbBZZ//ob0uUX9PT4ZHDXONnsCV87c+/6XlpnTJUoD8DgpX6/RX9io6woXOxy5I1cYaMFr63t6NUOvCVttMA8SJ5uO7wDBtwUIMsYPS4Ec3HrmSUzMm4+BaVky+2Qt0N8VVqUHlrZZ7mRuL9XioaxwmNNpDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=cy9W9ytx; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1707950770; c=relaxed/simple;
+	bh=8bT3amGiS3fLKoyxXO7JZcJjrrEaDQwfviHZsFxAkb8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZwZCKaBs0avfgnBRWaB0vKteKRKEYumnmM/mao+11jsrxcs747Lt7HecYO2wCET3MEMmyGZbVQmqEVR9KlKoK3D30HgBbq1wKWphkgNwKYZFVXkFjFQFkH5HPPijJIICBSX9x1S8C2L0/9kjbenD5hHiiZ89c4kJcc1DoR5G5mM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VAWpfSDR; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="cy9W9ytx"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 01A25240101
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 23:45:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1707950742; bh=Tmfl2Q2d9LtThpZUB2HoXDesIEkpD1mXThibjey9ijo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:From;
-	b=cy9W9ytxBHqdbX1LWIcnKyakyzujdS1CDgOswvp3yHNu9CIHa996sftEFlzRwX8v5
-	 4osnsakbSXxk8Eny1TzcM6aVjIxPUCvFvyj7t37tZRtOjBaNWv48El3+R77WrrHIK5
-	 SOHA/KYMt03jCx6yI55QikoA/GgBTwbXhZB0jGF0gDF+KYDDEXm2IltvEf21lDWHfk
-	 t6TDpOWT8YLsK6fdcbljEosSS405wyd2Pr0/J8Y06pYkydheW0KdMv8AW6G3Ee5XK/
-	 2IgKYNzf4ZIJ094ql04cBMrAUZ3HLjxGGWqNukhm0WKcPrw0UqRoESdJKObvWPBobG
-	 WTM7HfPpfgEkg==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4TZtZY0DPtz6tw2;
-	Wed, 14 Feb 2024 23:45:40 +0100 (CET)
-From: Mark O'Donovan <shiftee@posteo.net>
-To: linux-kernel@vger.kernel.org
-Cc: ntfs3@lists.linux.dev,
-	almaz.alexandrovich@paragon-software.com,
-	Mark O'Donovan <shiftee@posteo.net>
-Subject: [PATCH] fs/ntfs3: fix build without CONFIG_NTFS3_LZX_XPRESS
-Date: Wed, 14 Feb 2024 22:45:00 +0000
-Message-Id: <20240214224500.811609-1-shiftee@posteo.net>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VAWpfSDR"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-5d81b08d6f2so293553a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 14:46:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1707950765; x=1708555565; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZZP+BxUxePmCLWZ8ZfOeiaW4IXKd0KvZFg6WZ8fL0so=;
+        b=VAWpfSDRfN4q7rvZU3wN2Mv4O4s0TQzoEaJsIKv1i3is3KnIdo4MxOLIfYqGouaZ9n
+         wMTGPZ/vLpqnrpbuLemu3bcevOmWWF4hyIC6deoCOTQvvxuS8hfjrlFjeAneydjX8Z7P
+         /RZaa+rzx5SlRizCRRllXzsFjEdMnhQjRKKGE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707950765; x=1708555565;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZZP+BxUxePmCLWZ8ZfOeiaW4IXKd0KvZFg6WZ8fL0so=;
+        b=eha+dBwPbrjQmCdoGPJ0QZZzEuQte7/xxdHSAo7M+cShLc79WgZV+rCSxuyUrNYsQo
+         t5WCdwSMh94uCF8sFIp0/ZtQBiDZ/3XdBINmJ79q4HnMlix63ikCFVI0BBcSt80uzbJg
+         qUJEhqm79/oC/C3N2nMt5cTfAV9qEbyyRYxsRHXnN3d5O0ePWZ1WcmoZ/Ql0BQbh6S+U
+         fqloubafVREq0mqN8mS7RGb+BQOI9Mh/+A2ToZImuByxliseohYeGoXpns5fgmaq6JOm
+         OjAM5bhJ4Na6V0G0yo1FMEmpPTm9twELj7XPRmVCSXMM0nIKHRyzPmv2uqBhdSH7nMvP
+         GCrA==
+X-Forwarded-Encrypted: i=1; AJvYcCUDg9U26u+UJLSTYD6e0EW6cQQpDEEb9xUtR9sa5InQxcKXwty92exkyP47/efH3+fkE5c3Vf9ArneG7xz42IX3iH9Zfn4RjEtgv/43
+X-Gm-Message-State: AOJu0Ywgd3qPQQHX+5f2luW/lo/rTpfc2oOTPA6+HVDdplDB09kx2xwk
+	A3ztimjFQW83if6nlSHq9RQJENstlZzWnMJSo3q20SPO3K5Cpihd6jKSt0frHw==
+X-Google-Smtp-Source: AGHT+IEwKqfIdExn5GXKXrbxOA/cEMTv4gqm1KamsNHD/d7odYizVrN8PnY95/ALxTdDxMyMcTnEUg==
+X-Received: by 2002:a05:6a20:c702:b0:19e:b9a8:bc7a with SMTP id hi2-20020a056a20c70200b0019eb9a8bc7amr256992pzb.60.1707950764884;
+        Wed, 14 Feb 2024 14:46:04 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXUGkaK+uG2HYDYpAKvRgJiRcIWuMgkS/9TgsR66J3nWtHqH9sZHwNHgaLV+Aw5I+5Yho+5LbjqF8WB7N2Ph3FGaG04qfiX5QSW7kmtzs5fyp0+pnVsK2+EfOXM7A8h9CUEhYuH8ztUU6gvjoHDgG8ZFkOG4w4mxDvvkYX1zzkjjzbu2uil2DaCQkewklC5noE8NtF2a36TymKP6b36GAD19eg25KxsFC0voQhzwQqjoDGrzhYs5v334PjeVpU1+m9rcgmsVBQ8FDh+pxGBjGUUKCGQk2vpZjj9j1PfF/7wJziaIGF3PdcMWCbQXb9pzJ5XoIAH058/e8a9vWQu4MX9n9FdQokJvA7jfyf2ZI1mzQz8xM5JryGztpVJddSUITqxQjIWsZHEti2kDugz+Prl2/Awio4EURa09W9UG3QIzXZ+M48m/Dp7Pi9RlMRXQO4YvvyK+ZGSSYER2RPjfYSjPGeTewRJItDlUIyHhoQp19SCBj2U1/IN3KCSE37kzpZ5VrE3mAnTjD0Y/J72QxkuvPBskpwFXlC6w0RWQBGeeYUeZFukAt3A253vVftrPFmwd1ozzR+ElMzLA9NdZkSYEhGJ8Pc=
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id j20-20020a056a00175400b006e04553a4c5sm9894509pfc.52.2024.02.14.14.46.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Feb 2024 14:46:04 -0800 (PST)
+Date: Wed, 14 Feb 2024 14:46:03 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>, Theodore Ts'o <tytso@mit.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Carlos Bilbao <carlos.bilbao@amd.com>,
+	Avadhut Naik <avadhut.naik@amd.com>, virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, tech-board-discuss@lists.linux.dev,
+	workflows@vger.kernel.org
+Subject: Re: [PATCH] Documentation: update mailing list addresses
+Message-ID: <202402141445.F9E9116E9@keescook>
+References: <20240214-lf-org-list-migration-v1-1-ef1eab4b1543@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240214-lf-org-list-migration-v1-1-ef1eab4b1543@linuxfoundation.org>
 
-When CONFIG_NTFS3_LZX_XPRESS is not set then we get the following:
-fs/ntfs3/frecord.c:2460:16: error: unused variable ‘i_size’
+On Wed, Feb 14, 2024 at 03:09:53PM -0500, Konstantin Ryabitsev wrote:
+> The mailman2 server running on lists.linuxfoundation.org will be shut
+> down in very imminent future. Update all instances of obsolete list
+> addresses throughout the tree with their new destinations.
+> 
+> Signed-off-by: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
 
-Signed-off-by: Mark O'Donovan <shiftee@posteo.net>
----
- fs/ntfs3/frecord.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for this! I had just updated the TAB's internal docs for the list
+changes too.
 
-diff --git a/fs/ntfs3/frecord.c b/fs/ntfs3/frecord.c
-index 3b42938a9d3b..7f27382e0ce2 100644
---- a/fs/ntfs3/frecord.c
-+++ b/fs/ntfs3/frecord.c
-@@ -2457,7 +2457,6 @@ int ni_read_frame(struct ntfs_inode *ni, u64 frame_vbo, struct page **pages,
- 	struct ATTR_LIST_ENTRY *le = NULL;
- 	struct runs_tree *run = &ni->file.run;
- 	u64 valid_size = ni->i_valid;
--	loff_t i_size = i_size_read(&ni->vfs_inode);
- 	u64 vbo_disk;
- 	size_t unc_size;
- 	u32 frame_size, i, npages_disk, ondisk_size;
-@@ -2509,6 +2508,7 @@ int ni_read_frame(struct ntfs_inode *ni, u64 frame_vbo, struct page **pages,
- 		err = -EOPNOTSUPP;
- 		goto out1;
- #else
-+		loff_t i_size = i_size_read(&ni->vfs_inode);
- 		u32 frame_bits = ni_ext_compress_bits(ni);
- 		u64 frame64 = frame_vbo >> frame_bits;
- 		u64 frames, vbo_data;
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-base-commit: 7e90b5c295ec1e47c8ad865429f046970c549a66
 -- 
-2.39.2
-
+Kees Cook
