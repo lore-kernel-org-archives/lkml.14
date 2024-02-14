@@ -1,135 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4856054BD8;
-	Wed, 14 Feb 2024 13:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD7F54F83
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 13:58:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707919113; cv=none; b=ktpdYu2uJCVjAMlQ6161N55oYT7ZOn61nF4+mvSO7cb0bDD4I3fl29LRn6zCuBSH1lcwyFLyNlEmXzD9wAe6s2qiDr+aRNTgFyX4UrM8mSJRlt6wbgcbtClCLpZCBq8yysXHFiBI+bseWO+q4SrIIjv3vSV75MIPBnWzr3oftKY=
+	t=1707919128; cv=none; b=alxryKP8uMC5hfwKd+0sOBVVzZNId7bMId7f73RF6yRYHKi/uaNBjDKls6AkzvjQL0jPGZlYjPD4/pzExcXdfqyOgrP2i0SQzfoVrhNP7YU06h/5kzELF2HGrFvgNZarVXRNDXddD2sC8nJc8/To5eP/inYmlhdOnAwKlionmIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707919113; c=relaxed/simple;
-	bh=C50n4gchmAkHROV+lhcLCSqTzdKXPWHKdyrMpACSx7s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=udrXFrr3LuLICAEwS7M/QulFMK0pkHx76iU675dknVOaeVPvGhEhuGIR8//cI/wj2uq2TsGHX1beKU5TyaWB3pUGlMHEk6xPYxLVxPqxil+3GfZyiYgHangsvAVNajh5eC5mYfnY78F5UJX/by5a0RyRlXSEZxv22CyKdtSIXQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=PKuP9pDv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707919128; c=relaxed/simple;
+	bh=QTo2vaKjibWxTlfxwFldo69+DAlArXcmbGu8z0hzYRM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KL/nhI8sCSEhjupfVjutJHnbAw33Sod+6X0NntauhRL/TN2EpBAfnrQdY4cePVASvqIVPIgwp3PDGV+rV+7EhMu6zkEhXfi4Y3qYcBeGSuYVFNQ7VDF2Ed+qziKI+LslQld6xSTcIRJNG0BkwYENTULUrUF06ed62Nn26h/e/OM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=AsssQ2ej; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="PKuP9pDv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64ACAC433F1;
-	Wed, 14 Feb 2024 13:58:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1707919112;
-	bh=C50n4gchmAkHROV+lhcLCSqTzdKXPWHKdyrMpACSx7s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PKuP9pDv1Hqlp/upP1M3Zsfuwtu9epu7PykUTU0rQi2OXBfRvVKq2NB32P/QPgs6d
-	 bHhwGgMfozUQkbQnEJJ2bTnCAcEv2ovSNTn8n/1dox1EiNLcXPd/LoAs+A782M9rra
-	 FKEkY7IYOafH3xvA2nh6yV7i6uKknHcl8z7wTXxk=
-Date: Wed, 14 Feb 2024 14:58:29 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Jiri Kosina <jikos@kernel.org>
-Cc: corbet@lwn.net, workflows@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, security@kernel.org,
-	Kees Cook <keescook@chromium.org>, Sasha Levin <sashal@kernel.org>,
-	Lee Jones <lee@kernel.org>
-Subject: Re: [PATCH v3] Documentation: Document the Linux Kernel CVE process
-Message-ID: <2024021459-trimness-bolt-7185@gregkh>
-References: <2024021430-blanching-spotter-c7c8@gregkh>
- <nycvar.YFH.7.76.2402141433560.21798@cbobk.fhfr.pm>
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="AsssQ2ej"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-33cdedb40c4so987057f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 05:58:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1707919124; x=1708523924; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=v2Q2Z0kn1NfJ1eM/+pIgOtt+zWhQbGntnuOFYjaTGg4=;
+        b=AsssQ2ej7zhSw+J/gtV6ynao+YDWXqOlEZHxHeSJsV6t3g5vbegZZGthpJ+v/Oz1NC
+         XQtDjMkOToolIUWNfvfhZ/XfkUcCh1On24v5hLbc5c9F+sUqFPbbq6kVYnSJBGSku5E7
+         Wh5ddpQaSYh+G2gtipZWdQY1Fx+Mg5hPnCXkROvcqQ4F8lRc+XxgxUkcdkGwmbHQZ2kr
+         BZUEtZ+4pP3H+S7ymU/0XyXyeeiD0eGUHoT9hc91q6zDyRb2x9gScA5jcTGMepDXL2V3
+         C1EKJumpdYxAS+BJUAFYwI8BdZsTsmxjkwJXx7iTkcj4LPUaK6Ru3caAuai/h+7dtIEn
+         rS2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707919124; x=1708523924;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=v2Q2Z0kn1NfJ1eM/+pIgOtt+zWhQbGntnuOFYjaTGg4=;
+        b=pGLP4mi5Ka3i5Ro7/iY4lzBKkPA93K3wEF3j7b0AkTjjAvhnDXMfao8X6/dLWJS6qv
+         gLcYoJ/TU3ziq+n0O0vY1BstpYKZAnLV2iPvW+aqt7z1qYwWY9rG/I3yF4VwyA/exQi/
+         1FFeNhKyyxo9ACaE+tawBB7l+aHvkgEeIsHBwJtiapjaWwW0dhZFTdCO5eA5HCJnpddN
+         cg/ouWKLlXHDHKZCRf6OboLDX4I9S34eHvrBvniwAbdoVcvhHmG6Cz3IirpArIxLbVKa
+         0q1iL8Bx8ijvKzNEhviJggVmrx4lQQuCKV7Sd2r8YamFqvsgMzghpN1cThEpBZtu4pe4
+         Jjkw==
+X-Forwarded-Encrypted: i=1; AJvYcCWIpH3+VloIZ4fU2xtjdSRoEUTtki0d8XvFOkYZlKH7UDorteYf1Ao9ko9LwojF1GwaZEh+997MpM6rPxzNIKZY+Itj2ACfNxZ5xfwO
+X-Gm-Message-State: AOJu0YzRtiKGTN/C+HEnQ2d5eFbW5HeSZ7SbTmNZr3ueXAmaI6yNLURc
+	rQs0uuJoJ1PEBp7lrLPiIXRlbvyrGBCT56K2AN+yDWE67Whoq0dh/T2/x4NA4OA=
+X-Google-Smtp-Source: AGHT+IHgn+C84i6k8WfBVbpgkCeTeSmK7AvBOIs04oUzRLgjnN4Fjc230os6xl6EDhs0YTi39B191w==
+X-Received: by 2002:a5d:6a8a:0:b0:33b:5590:c0d8 with SMTP id s10-20020a5d6a8a000000b0033b5590c0d8mr2032758wru.8.1707919123924;
+        Wed, 14 Feb 2024 05:58:43 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW0KIs0Wvg3WpjPl1XhfNrCXJ3W1SDOeAr5Cgfi0e4/ooyOaf6/goMabQ+NX/EXdTcgZuv2E7d9jxAN/aYO5mG/8plYFjQQWp18idSRI/rR2DnpuQhbyP3V3OJMqvMTSRAaMdirXYE2GLPQCNAibc6o2KUt75RsooJZXPFH+BN5WGnQrnJXPxmweTRPz9oKzsN8ln1ql4CeqYlmBCVd0BjH0vhs91vHDZKKcr41QmrJPThvAQ7dPLt1vpt919a5Enx6jQSE9gwzfC73ZLAhDnphiideF9Muz/GFke4sqBqW4oxWX40I/wPmkeET86Fi+giydpG5pxvpjktH4A5zOiSSEcVqbBjLxsb24PueU2YKkVYU2vU9
+Received: from claudiu-X670E-Pro-RS.. ([82.78.167.20])
+        by smtp.gmail.com with ESMTPSA id f15-20020adff58f000000b0033cdbebfda7sm4282140wro.14.2024.02.14.05.58.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Feb 2024 05:58:43 -0800 (PST)
+From: Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To: s.shtylyov@omp.ru,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	biju.das.jz@bp.renesas.com
+Cc: netdev@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	claudiu.beznea@tuxon.dev,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH net-next v4 0/6] net: ravb: Add runtime PM support (part 2)
+Date: Wed, 14 Feb 2024 15:57:54 +0200
+Message-Id: <20240214135800.2674435-1-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <nycvar.YFH.7.76.2402141433560.21798@cbobk.fhfr.pm>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 14, 2024 at 02:43:48PM +0100, Jiri Kosina wrote:
-> On Wed, 14 Feb 2024, Greg Kroah-Hartman wrote:
-> 
-> > +No CVEs will be automatically assigned for unfixed security issues in
-> > +the Linux kernel; assignment will only automatically happen after a fix
-> > +is available and applied to a stable kernel tree, and it will be tracked
-> > +that way by the git commit id of the original fix. 
-> 
-> I think this needs way more clarification .. how exactly is this going to 
-> work?
-> 
-> Do I read this correctly that *everything* that lands in -stable will 
-> automatically get CVE assigned? If so, that's just plain crazy. Just took 
-> a random peek on the topmost -stable changelog ...
-> 
-> 	ASoC: codecs: wsa883x: fix PA volume control
-> 	ASoC: codecs: lpass-wsa-macro: fix compander volume hack
-> 	ASoC: codecs: wcd938x: fix headphones volume controls
-> 	ASoC: qcom: sc8280xp: limit speaker volumes
-> 	drm/amdgpu: Fix missing error code in 'gmc_v6/7/8/9_0_hw_init()'
-> 
-> Only the last one can *potentially* be considered a CVE candidate, but 
-> someone would actually have to take a *deep* look. Most likely it'll be a 
-> functional issue, but not a security issue by any measures.
-> 
-> So I hope it's not the case, and someone will actually be doing some 
-> triage. If that's the case -- is this process described anywhere?
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-It's described as "we know it when we see it" :)
+Hi,
 
-Seriously, this is something that Sasha has already been doing
-successfully for 3+ years now with the GSD project, so look at the
-commits that have been assigned there for an example of what will be
-picked.  Also we will probably go back in time for a few years and use
-that data to populate the CVE database for older releases as long as
-they are still in currently supported releases as this is something that
-the CVE group has asked us to do already.
+Series adds runtime PM support for the ravb driver. This is a continuation
+of [1].
 
-As for your list above, I doubt any of those would be a CVE, give us
-some credit here.  Let's see how it goes and if people complain we are
-picking things that we shouldn't be picking, OR if we aren't picking
-enough, they will then be asked to join the team doing the work :)
+There are 5 more preparation patches (patches 1-5) and patch 6
+adds runtime PM support.
 
-The people that make up the current team, Lee, Sasha, and I, have a LONG
-history of fixing and triaging and managing security bugs for the
-kernel, in the community and in corporate environments.  We know how to
-do this as we have been doing it for decades already.  If you or anyone
-else wishes to help us out with this classification, we can gladly use
-the help.
+Patches in this series were part of [2].
 
-> Also, how are the CVSS-like scores going to be assigned? There are no 
-> details whatsoever about that in the document.
+Changes in v4:
+- remove unnecessary code from patch 4/6
+- improve the code in patch 5/6
 
-We will not be doing any CVSS scoring as that is outside the scope of a
-CVE entry and not required at all, and the CVE board agrees with this
-decision.  As you well know, doing something like this for the kernel
-where we have no idea what your use case is, is almost impossible on the
-best days.
+Changes in v3:
+- fixed typos
+- added patch "net: ravb: Move the update of ndev->features to
+  ravb_set_features()"
+- changes title of patch "net: ravb: Do not apply RX checksum
+  settings to hardware if the interface is down" from v2 into
+  "net: ravb: Do not apply features to hardware if the interface
+  is down", changed patch description and updated the patch
+- collected tags
 
-There are external groups that suck in the CVE entries and attempt to
-assign CVSS-like scores to issues.  It will be "interesting" to see how
-they classify things, but if the history of how well they have done this
-in the past is any indication, their tools need a lot of work and
-hopefully people stop relying on them and do the evaluation of their own
-use cases instead.
+Changes in v2:
+- address review comments
+- in patch 4/5 take into account the latest changes introduced
+  in ravb_set_features_gbeth()
 
-> In any case, by making this change we are going to make security theathre 
-> industry super-happy (they will have a lot of expensive nothing going on), 
-> and all the distros not basing on -stable very unhappy (we're already 
-> drowning because everybody and his grandma wants to become famous by 
-> publishing a CVE for something completely irrelevant). If this is the 
-> intention, it should be spelled out loud and clear.
+Changes since [2]:
+- patch 1/5 is new
+- use pm_runtime_get_noresume() and pm_runtime_active() in patches
+  3/5, 4/5
+- fixed higlighted typos in patch 4/5
 
-As we are not allowed to credit anyone in the publication of a CVE, I
-doubt the "I want a CVE!" group will get any louder than they currently
-are.  And if it generates these people to actually submit bug fixes with
-their reports, all the better for us!
+[1] https://lore.kernel.org/all/20240202084136.3426492-1-claudiu.beznea.uj@bp.renesas.com/
+[2] https://lore.kernel.org/all/20240105082339.1468817-1-claudiu.beznea.uj@bp.renesas.com/
 
-I can't speak to the "security theatre industry" but right now, we have
-a real problem of external groups assigning random CVEs to the kernel
-with absolutely no input from us and no accountability, which is causing
-a lot of us real problems.  This will take away the ability for those
-groups to continue to abuse our project just because of their broken
-engineering rules, and properly integrate them into our development
-process if they so desire to join in.
+Claudiu Beznea (6):
+  net: ravb: Get rid of the temporary variable irq
+  net: ravb: Keep the reverse order of operations in ravb_close()
+  net: ravb: Return cached statistics if the interface is down
+  net: ravb: Move the update of ndev->features to ravb_set_features()
+  net: ravb: Do not apply features to hardware if the interface is down
+  net: ravb: Add runtime PM support
 
-thanks,
+ drivers/net/ethernet/renesas/ravb_main.c | 132 ++++++++++++++++++-----
+ 1 file changed, 103 insertions(+), 29 deletions(-)
 
-greg k-h
+-- 
+2.39.2
+
