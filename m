@@ -1,209 +1,176 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from fout6-smtp.messagingengine.com (fout6-smtp.messagingengine.com [103.168.172.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CCF713DB89
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 19:58:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A899213DB89;
+	Wed, 14 Feb 2024 19:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707940734; cv=none; b=HOiXeYwdIunLxpRXXhOOCSR5Xv46mgJl4SSZib9QcReNKld0piZ6G+oSvGQCEywa/2XHYo8e2QmtcqIxhj4WgfnL5rlR89MLOPj5PVlnhK7k8zx6IIIvGsi+tc1le+epALSR87xv6tJbaEDiTlAP6P2zQE6lbcImwMpzadvGxRk=
+	t=1707940754; cv=none; b=cl2Ol+HbU0Xqh2Ovc4AZ/hM57L9Onlcomg/Pi/htOG/NIqp96j2mT9tvDLGdJyWC0Yqga4YTDifGewUWKzDl4ZB/GLVuPRlsmAqg8b+lcBSnSbaf31XC1bSX4T60iBC5M5ZGGFhHOQET4fF1fmxhB1aiuabXnQW+jJRHB55MQOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707940734; c=relaxed/simple;
-	bh=p0Xqf5l5UHbMEjlOGdUqX0v0k/kHNtp57gnPKx5Qp3I=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:Content-Type:
-	 MIME-Version:References; b=XGyeKLxiYiCYzfu2Ct5URqV4eu+/Zv9K+Bz4RNpTOv7FZoOR+/kVTdKehCD8PqGAzIbNGel+A75fHdezf5AJ2lfz8nOHz+XOtRwZIU+SrZwCRbIIRp8RaNAdfZC59yqF2jvGUNp80wuDdi//ltTD+TNRQNAQPVxPUsPPIPKpalE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=TnsCLdTh; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1707940754; c=relaxed/simple;
+	bh=8dbIZkc7iluw4d62Qz7g3VPq5jEMEKqVH19XVKGgS5k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GWTDJu72Q3h7e14nUonXNZuaXlfIBhLPAauubB6TuKXAaFbblONeWkRMdrVGIABWf+vf5BUo37OScLN+s2o0VphJ3ER0Vykma7K7N/xNdXaqpEFYYs1AGIBWJpdOTQ2fLy+7JE8idnL/WhtiPR38d4sciRUWgwSYhPmzxTSQgDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ryhl.io; spf=pass smtp.mailfrom=ryhl.io; dkim=pass (2048-bit key) header.d=ryhl.io header.i=@ryhl.io header.b=IpsE0O97; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=tf6uPpHP; arc=none smtp.client-ip=103.168.172.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ryhl.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ryhl.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TnsCLdTh"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240214194911euoutp026e63483a3e1dbd1fff06d4eb41053a7a~z0oTkvxrv1627016270euoutp02Q
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 19:49:11 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240214194911euoutp026e63483a3e1dbd1fff06d4eb41053a7a~z0oTkvxrv1627016270euoutp02Q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1707940151;
-	bh=kvbTVEQV2U0t0xEud1N/gL2u/EkcZMJX2njmT1RmQQ4=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-	b=TnsCLdThxogT96lb/v896uvU2OlICBc8AD0E7WHIhW05nG3Rs08ueJ5PjmE4wlcv4
-	 jhr8h6KVCLYJ/ogzJtYQ3DMHUahBetB8Kx38a4QOO/fXALx95qFMnTeapV6Sp3qFrB
-	 tZ1iExSayNhts8L+0cpy6b60wUN/5w5Hydp7cFrc=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240214194911eucas1p14e669af4aeca84e1455ec191ca66338e~z0oTLOyud2565825658eucas1p1-;
-	Wed, 14 Feb 2024 19:49:11 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges3new.samsung.com (EUCPMTA) with SMTP id 07.3C.09552.7391DC56; Wed, 14
-	Feb 2024 19:49:11 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240214194911eucas1p187ae3bc5b2be4e0d2155f9ce792fdf8b~z0oSvgpvu2566525665eucas1p1E;
-	Wed, 14 Feb 2024 19:49:11 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240214194911eusmtrp29b9fa61b1520cce94240425dcdbb6e75~z0oSuwOga0939409394eusmtrp2N;
-	Wed, 14 Feb 2024 19:49:11 +0000 (GMT)
-X-AuditID: cbfec7f5-83dff70000002550-d1-65cd1937bf6d
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id F6.62.10702.6391DC56; Wed, 14
-	Feb 2024 19:49:10 +0000 (GMT)
-Received: from CAMSVWEXC01.scsc.local (unknown [106.1.227.71]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240214194910eusmtip1b16ec3e3ce7b11edf9104c8d81d7b13c~z0oSi3uY70135901359eusmtip1J;
-	Wed, 14 Feb 2024 19:49:10 +0000 (GMT)
-Received: from CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348) by
-	CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) with Microsoft SMTP
-	Server (TLS) id 15.0.1497.2; Wed, 14 Feb 2024 19:49:10 +0000
-Received: from CAMSVWEXC02.scsc.local ([::1]) by CAMSVWEXC02.scsc.local
-	([fe80::3c08:6c51:fa0a:6384%13]) with mapi id 15.00.1497.012; Wed, 14 Feb
-	2024 19:49:09 +0000
-From: Daniel Gomez <da.gomez@samsung.com>
-To: "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-	"brauner@kernel.org" <brauner@kernel.org>, "jack@suse.cz" <jack@suse.cz>,
-	"hughd@google.com" <hughd@google.com>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>
-CC: "dagmcr@gmail.com" <dagmcr@gmail.com>, "linux-fsdevel@vger.kernel.org"
-	<linux-fsdevel@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"willy@infradead.org" <willy@infradead.org>, "hch@infradead.org"
-	<hch@infradead.org>, "mcgrof@kernel.org" <mcgrof@kernel.org>, Pankaj Raghav
-	<p.raghav@samsung.com>, "gost.dev@samsung.com" <gost.dev@samsung.com>
-Subject: Re: [RFC PATCH 0/9] shmem: fix llseek in hugepages
-Thread-Topic: [RFC PATCH 0/9] shmem: fix llseek in hugepages
-Thread-Index: AQHaW2RT7xV/K52STUGwCHRBbQ9MBbEKRvYA
-Date: Wed, 14 Feb 2024 19:49:09 +0000
-Message-ID: <25i3n46nanffixvzdby6jwxgboi64qnleixz33dposwuwmzj7p@6yvgyakozars>
-In-Reply-To: <20240209142901.126894-1-da.gomez@samsung.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E71788F15B89794881397A82FB093F9F@scsc.local>
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=ryhl.io header.i=@ryhl.io header.b="IpsE0O97";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tf6uPpHP"
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 665BB13800A0;
+	Wed, 14 Feb 2024 14:59:11 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute7.internal (MEProxy); Wed, 14 Feb 2024 14:59:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ryhl.io; h=cc:cc
+	:content-transfer-encoding:content-type:content-type:date:date
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1707940751;
+	 x=1708027151; bh=kblh42iEi6BqEIDvzG3EpyCmLAkUwY9rEd/N4oq3kDU=; b=
+	IpsE0O97/bbD86gLLXLQipwZ/OIBrnnnhLnx/QzMwiKFnpJniBXd7sBrelBQOSAV
+	jSkSTgZX1nx89g0KV47jWZPhZ3NQUk4BqBxkz0nD1mbcRbMjb7pKETb/CiOHrM2s
+	vf2YEPXGlwLjdySP9V1R3/H35NJ/QZ1TN64x71+rq0FLWKp+5kfuaYXPFYx9iGND
+	Wkx/iltnX9lTE9U0zOnfDP7cYgcm3QTHyHZaRa+y1nRrEpnNjPgWi/kqzEiBZ2zn
+	yb088Ug+7I6BKTx7INyiOn19fzSYf8yVgc3dQdlKhYB4m9+Q4mdatZTsXrpr4VmB
+	1t/KgLkp7Rc/SLnNuwJbBQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1707940751; x=
+	1708027151; bh=kblh42iEi6BqEIDvzG3EpyCmLAkUwY9rEd/N4oq3kDU=; b=t
+	f6uPpHPVgAQ1WDzRM7hdI3/rzMQ57aK2y7FhfjJ8oW3KEUTbLSIXL1DzcSPLOn1k
+	8sZ4PR+JUoN2glrbdN+raekmNJ5jla2p5tAoU3QgSeV+Kk9uToL4kYzM5+zF06jT
+	Vp/RlEhLspEHqqEztGFqFJ8emelp3qPXppdz+QgPd3XQ2JHVJ2mKbvo3RFN7uIUY
+	JtjvJ+wEQDmnssaa/PfZ45arE8wFh+LDS5IwqTJtx+INeOXMlRhL38rQTa3FIses
+	v5AxFf/QE+mnGsV0lv7uMa8PUY0DsGWdoJtOJH3v5v5g91NVswTD2uS+RlrrwNdh
+	A1guSIjh+Hy9MkhBd5IkQ==
+X-ME-Sender: <xms:jhvNZU_GJ0ZuCBIKeUOfpbAG6icAlhZ3bvwz8bOI4IhZhYzhXFvw6g>
+    <xme:jhvNZcuF5DXlpUeb2IvlkzLXBgUPYc793wvffxjGvMnQkMqVv19gE_QQKjmgpRrG0
+    -sKfxZ1ZNdY8M5J6g>
+X-ME-Received: <xmr:jhvNZaCxBZuCPGqjhHxsP8MPS3yYvWaD4EzF8gme8MH2Ero_hjSyBxJmzJh_rQLRpbvvf_j7bw141-zkEPeFqQXDHN3QEmSvME_m>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudejgddufeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeetlhhi
+    tggvucfthihhlhcuoegrlhhitggvsehrhihhlhdrihhoqeenucggtffrrghtthgvrhhnpe
+    fhheefgeekveeigeeftedtjeduveduhefguefgieehgfeiueetuedufeekudeuueenucff
+    ohhmrghinhepiihulhhiphgthhgrthdrtghomhenucevlhhushhtvghrufhiiigvpedtne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpegrlhhitggvsehrhihhlhdrihho
+X-ME-Proxy: <xmx:jhvNZUfNZeP2jwxt-a6QL8MxPwrGAFFa-CDmHsCw_YSbMfTK8wbBag>
+    <xmx:jhvNZZP1fVQjQgc09K-AlZ8UHlT-DCa8YGJjFrrwszEFPVKAOvUsdg>
+    <xmx:jhvNZek9roJwk2aybCwvNuMwVTxPho50f1I28DRyJv_jPgxV4jpQKg>
+    <xmx:jxvNZdmoeXur0vppkdX83C5Th_5yB2XoKBwDvNXYBMmPaN4vUDLTSg>
+Feedback-ID: i56684263:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 14 Feb 2024 14:59:08 -0500 (EST)
+Message-ID: <2d94d420-fca2-47c1-aee7-bbce7a1505cf@ryhl.io>
+Date: Wed, 14 Feb 2024 20:59:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFKsWRmVeSWpSXmKPExsWy7djP87rmkmdTDfZfFbWYs34Nm8Xrw58Y
-	Lc72/WazOD1hEZPF0099LBazpzczWezZe5LF4vKuOWwW99b8Z7W4MeEpo8X5v8dZLX7/mMPm
-	wOOxc9Zddo8Fm0o9Nq/Q8ti0qpPNY9OnSeweJ2b8ZvE4s+AIu8fnTXIem568ZQrgjOKySUnN
-	ySxLLdK3S+DKOD3lJ1vBdJGKx60djA2MZwW6GDk5JARMJP7M/svUxcjFISSwglFi0eKPbBDO
-	F0aJrtUHWSCcz4wSKxc9ZYJpuX57PjtEYjmjxM+GxwhVu66cgOo/wyixtr2bFcJZyShxbfYe
-	NpB+NgFNiX0nN4H1iwg8Z5Ro3f0RzGEW2MQscXzRNnaQKmEBa4lTh2cxgtgiAjYSmxqamSBs
-	I4lXjU1AcQ4OFgFViTPXMkBMXgFfib/PwF7iBOqc92g92C5GAVmJRyt/gU1kFhCXuPVkPtQP
-	ghKLZu9hhrDFJP7tesgGYetInL3+hBHCNpDYunQfC4StLHFtTRsTxBwdiQW7P7FB2JYSK3+s
-	YYGwtSWWLXwNNpMXaP7JmU/AwSIhMJdLYv/BVqhBLhLPV4FCBcQWlnh1fAv7BEadWUjum4Vk
-	xywkO2Yh2TELyY4FjKyrGMVTS4tz01OLjfNSy/WKE3OLS/PS9ZLzczcxApPf6X/Hv+5gXPHq
-	o94hRiYOxkOMEhzMSiK8k3rPpArxpiRWVqUW5ccXleakFh9ilOZgURLnVU2RTxUSSE8sSc1O
-	TS1ILYLJMnFwSjUwOfx7ZTx3enRyWJkTZ5THxk172FiUmJfvF3t+PvW84Cv710W3rfnPhiUv
-	FltyxUaoOvvGVZO1TgIhLMp/1S1O/ti3YK5Ufv6sG0vfL1gz79rTSyoHPXifBObO/u8oZKui
-	JTdNVKqnfDLDg8ttrjcmqUc2byufmKZw47r3g1SJFMn4sOnsT7wvTfa87Me+Z8db3pyTbW2W
-	hi9tzRK0nIPS17ma7z9XH1SnYPaizb2LfabMpt+TrDq4FwdndMbUbZ4hfmb33ua5XMUrWV8/
-	TM3Muh7Uuz0w6flLofJlR9aZBwddFhb+Hrbx1rSH98wN/gRbzm2aMq/o8PJzBqx++lVWk2eL
-	S2Tu2RU+vUGr6qGLEktxRqKhFnNRcSIA4ShCBO0DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIKsWRmVeSWpSXmKPExsVy+t/xu7pmkmdTDRZNt7CYs34Nm8Xrw58Y
-	Lc72/WazOD1hEZPF0099LBazpzczWezZe5LF4vKuOWwW99b8Z7W4MeEpo8X5v8dZLX7/mMPm
-	wOOxc9Zddo8Fm0o9Nq/Q8ti0qpPNY9OnSeweJ2b8ZvE4s+AIu8fnTXIem568ZQrgjNKzKcov
-	LUlVyMgvLrFVija0MNIztLTQMzKx1DM0No+1MjJV0rezSUnNySxLLdK3S9DLOD3lJ1vBdJGK
-	x60djA2MZwW6GDk5JARMJK7fns/excjFISSwlFGi6/YaRoiEjMTGL1dZIWxhiT/Xutggij4y
-	Sky9+w3KOcMo8Wv+cUYIZyWjxPy3F9lBWtgENCX2ndwENldE4CmjxPTfh1hAHGaBTcwSxxdt
-	A6sSFrCWOHV4FthCEQEbiU0NzUwQtpHEq8YmoDgHB4uAqsSZaxkgJq+Ar8TfZ2B3CwlYSUzb
-	fpoNxOYEmjLv0Xowm1FAVuLRyl9g05kFxCVuPZnPBPGCgMSSPeeZIWxRiZeP/0G9piNx9voT
-	qJcNJLYu3ccCYStLXFvTxgQxR0diwe5PbBC2pcTKH2tYIGxtiWULX4PN5BUQlDg58wnLBEaZ
-	WUhWz0LSPgtJ+ywk7bOQtC9gZF3FKJJaWpybnltspFecmFtcmpeul5yfu4kRmNa2Hfu5ZQfj
-	ylcf9Q4xMnEwHmKU4GBWEuGd1HsmVYg3JbGyKrUoP76oNCe1+BCjKTDkJjJLiSbnAxNrXkm8
-	oZmBqaGJmaWBqaWZsZI4r2dBR6KQQHpiSWp2ampBahFMHxMHp1QDk85zkSNtLHtjmrd4r/ws
-	ddOprapVjafw0J69uaqV24pOPSmuXZ/6yp4v0CA+bf49X6/2ZTl3ZG2eqV6aaKx33ql6/hyz
-	qQtfSc2eXKf6qqF7klSTdGGB6I55nRKK/Uu+6h9LLYnzf/ybb+NZrqneLasltM2n28ysz+Pb
-	cvrw99YY1uQkrV3m1aabQk46VSnXPDvqYb079Klw6tl7e2cm2TbZrT69Vyyjbb7SHZ8laxYE
-	NS/b+2f9Jff4C/1sloG/n/Bbvu9dv/OEYP/2jiV5StOa5M4vnfrmSKGqZd7kjbMVJj2R4L1w
-	s2DHkfA/2zckBX3f4hxs9eLkaR3eF2vlXn0MPaAimbniyu+es5kLDiuxFGckGmoxFxUnAgDn
-	ZulO9AMAAA==
-X-CMS-MailID: 20240214194911eucas1p187ae3bc5b2be4e0d2155f9ce792fdf8b
-X-Msg-Generator: CA
-X-RootMTR: 20240214194911eucas1p187ae3bc5b2be4e0d2155f9ce792fdf8b
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240214194911eucas1p187ae3bc5b2be4e0d2155f9ce792fdf8b
-References: <20240209142901.126894-1-da.gomez@samsung.com>
-	<CGME20240214194911eucas1p187ae3bc5b2be4e0d2155f9ce792fdf8b@eucas1p1.samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] rust: str: add {make,to}_{upper,lower}case() to
+ CString
+To: Boqun Feng <boqun.feng@gmail.com>, Danilo Krummrich <dakr@redhat.com>
+Cc: ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com,
+ gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+ a.hindborg@samsung.com, aliceryhl@google.com,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240214172505.5044-1-dakr@redhat.com>
+ <Zc0UNUGbmmBlzBAv@boqun-archlinux>
+Content-Language: en-US-large
+From: Alice Ryhl <alice@ryhl.io>
+In-Reply-To: <Zc0UNUGbmmBlzBAv@boqun-archlinux>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 09, 2024 at 02:29:01PM +0000, Daniel Gomez wrote:
-> Hi,
->=20
-> The following series fixes the generic/285 and generic/436 fstests for hu=
-ge
-> pages (huge=3Dalways). These are tests for llseek (SEEK_HOLE and SEEK_DAT=
-A).
->=20
-> The implementation to fix above tests is based on iomap per-block trackin=
-g for
-> uptodate and dirty states but applied to shmem uptodate flag.
+On 2/14/24 20:27, Boqun Feng wrote:
+> On Wed, Feb 14, 2024 at 06:24:10PM +0100, Danilo Krummrich wrote:
+>> Add functions to convert a CString to upper- / lowercase, either
+>> in-place or by creating a copy of the original CString.
+>>
+>> Naming followes the one from the Rust stdlib, where functions starting
+>> with 'to' create a copy and functions starting with 'make' perform an
+>> in-place conversion.
+>>
+>> This is required by the Nova project (GSP only Rust successor of
+>> Nouveau) to convert stringified enum values (representing different GPU
+>> chipsets) to strings in order to generate the corresponding firmware
+>> paths. See also [1].
+>>
+>> [1] https://rust-for-linux.zulipchat.com/#narrow/stream/288089-General/topic/String.20manipulation.20in.20kernel.20Rust
+>>
+>> Signed-off-by: Danilo Krummrich <dakr@redhat.com>
+>> ---
+>> Changes in V3:
+>>    - add an `impl DerefMut for CString`, such that these functions can be defined
+>>      for `CStr` as `&mut self` and still be called on a `CString`
+>> Changes in V2:
+>>    - expand commit message mentioning the use case
+>>    - expand function doc comments to match the ones from Rust's stdlib
+>>    - rename to_* to make_* and add the actual to_* implementations
+>> ---
+>>   rust/kernel/str.rs | 81 +++++++++++++++++++++++++++++++++++++++++++++-
+>>   1 file changed, 80 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
+>> index 7d848b83add4..02d6e510b852 100644
+>> --- a/rust/kernel/str.rs
+>> +++ b/rust/kernel/str.rs
+>> @@ -5,7 +5,7 @@
+>>   use alloc::alloc::AllocError;
+>>   use alloc::vec::Vec;
+>>   use core::fmt::{self, Write};
+>> -use core::ops::{self, Deref, Index};
+>> +use core::ops::{self, Deref, DerefMut, Index};
+>>   
+>>   use crate::{
+>>       bindings,
+>> @@ -143,6 +143,19 @@ pub const fn from_bytes_with_nul(bytes: &[u8]) -> Result<&Self, CStrConvertError
+>>           unsafe { core::mem::transmute(bytes) }
+>>       }
+>>   
+>> +    /// Creates a mutable [`CStr`] from a `[u8]` without performing any
+>> +    /// additional checks.
+>> +    ///
+>> +    /// # Safety
+>> +    ///
+>> +    /// `bytes` *must* end with a `NUL` byte, and should only have a single
+>> +    /// `NUL` byte (or the string will be truncated).
+>> +    #[inline]
+>> +    pub const unsafe fn from_bytes_with_nul_unchecked_mut(bytes: &mut [u8]) -> &mut CStr {
+>> +        // SAFETY: Properties of `bytes` guaranteed by the safety precondition.
+>> +        unsafe { &mut *(bytes as *mut [u8] as *mut CStr) }
+> 
+> First `.cast::<[u8]>().cast::<CStr>()` is preferred than `as`. Besides,
+> I think the dereference (or reborrow) is only safe if `CStr` is
+> `#[repr(transparent)]. I.e.
+> 
+> 	#[repr(transparent)]
+> 	pub struct CStr([u8]);
+> 
+> with that you can implement the function as (you can still use `cast()`
+> implementation, but I sometimes find `transmute` is more simple).
+> 
+>      pub const unsafe fn from_bytes_with_nul_unchecked_mut(bytes: &mut [u8]) -> &mut CStr {
+> 	// SAFETY: `CStr` is transparent to `[u8]`, so the transmute is
+> 	// safe to do, and per the function safety requirement, `bytes`
+> 	// is a valid `CStr`.
+> 	unsafe { core::mem::transmute(bytes) }
+>      }
+> 
+> but this is just my thought, better wait for others' feedback as well.
 
-Hi Hugh, Andrew,
+Transmuting references is generally frowned upon. It's better to use a 
+pointer cast.
 
-Could you kindly provide feedback on these patches/fixes? I'd appreciate yo=
-ur
-input on whether we're headed in the right direction, or maybe not.
+As for .cast() vs the `as` operator, I'm not sure you can use .cast() in 
+this case since the pointers are unsized. So you might have to use `as` 
+instead.
 
-Thanks,
-Daniel
-
->=20
-> The motivation is to avoid any regressions in tmpfs once it gets support =
-for
-> large folios.
->=20
-> Testing with kdevops
-> Testing has been performed using fstests with kdevops for the v6.8-rc2 ta=
-g.
-> There are currently different profiles supported [1] and for each of thes=
-e,
-> a baseline of 20 loops has been performed with the following failures for
-> hugepages profiles: generic/080, generic/126, generic/193, generic/245,
-> generic/285, generic/436, generic/551, generic/619 and generic/732.
->=20
-> If anyone interested, please find all of the failures in the expunges dir=
-ectory:
-> https://github.com/linux-kdevops/kdevops/tree/master/workflows/fstests/ex=
-punges/6.8.0-rc2/tmpfs/unassigned
->=20
-> [1] tmpfs profiles supported in kdevops: default, tmpfs_noswap_huge_never=
-,
-> tmpfs_noswap_huge_always, tmpfs_noswap_huge_within_size,
-> tmpfs_noswap_huge_advise, tmpfs_huge_always, tmpfs_huge_within_size and
-> tmpfs_huge_advise.
->=20
-> More information:
-> https://github.com/linux-kdevops/kdevops/tree/master/workflows/fstests/ex=
-punges/6.8.0-rc2/tmpfs/unassigned
->=20
-> All the patches has been tested on top of v6.8-rc2 and rebased onto lates=
-t next
-> tag available (next-20240209).
->=20
-> Daniel
->=20
-> Daniel Gomez (8):
->   shmem: add per-block uptodate tracking for hugepages
->   shmem: move folio zero operation to write_begin()
->   shmem: exit shmem_get_folio_gfp() if block is uptodate
->   shmem: clear_highpage() if block is not uptodate
->   shmem: set folio uptodate when reclaim
->   shmem: check if a block is uptodate before splice into pipe
->   shmem: clear uptodate blocks after PUNCH_HOLE
->   shmem: enable per-block uptodate
->=20
-> Pankaj Raghav (1):
->   splice: don't check for uptodate if partially uptodate is impl
->=20
->  fs/splice.c |  17 ++-
->  mm/shmem.c  | 340 ++++++++++++++++++++++++++++++++++++++++++++++++----
->  2 files changed, 332 insertions(+), 25 deletions(-)
->=20
-> --=20
-> 2.43.0=
+Alice
