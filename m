@@ -1,33 +1,21 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B9C168BC;
-	Wed, 14 Feb 2024 09:25:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DA7125CF;
+	Wed, 14 Feb 2024 09:27:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707902731; cv=none; b=nALOStXMX5dEXdC1GF6v/QNqOJW29ebdso8VD+Em7GO5Xk0GoPBwMx5NHr1BNOx217SmjMaA77nn3yKgoFnzsfcLr1xd0LppINvqPk4K7q+PwD9dMqIWw3Fyz9dU8Z+sr87KlDNW51NK7jVhsTNYmVzuq3zIcHgVZ5cIY5/5qCQ=
+	t=1707902875; cv=none; b=W6Ydv8T6M9ATFAUkbbnTCY0QphLHDLEoUTl9twG+EPE9Z6/wbJNLBuiXK+KW0wRQTdoJ/YgAAokFumRuXGmJzFObctjRk+GEaDJGizNpczvRs/VUxkIJKXWKY/yVaY9mDX3GQ+HuIPCvg8Dqo8S9cN/Au//02WduRRIVHNCjANE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707902731; c=relaxed/simple;
-	bh=1Sxlw3DtRHuf/+Tg21dw2Havl+gSDlEajrxvtNXrd24=;
+	s=arc-20240116; t=1707902875; c=relaxed/simple;
+	bh=sIaagt7mtaQOaGtU4zI5wV9vS7vA86dOsiUcFH+wHcA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CLpKDzdLGKVqJy+x/HS2EEtM8kh7smUq3C5h4q+lhXLAHNEbd+AovD3RhwbNLMdLfjL9we4L02aqeVeEgj7XnT87YjhVYwV3VvyT47W3q5sfXQK5a2FE3ObZGyZJZt928/19sA1boHCJN8+q0qCc3wfSENQV9/7FTV5QhHw+v4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f1Dyi4h1; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f1Dyi4h1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6782FC433F1;
-	Wed, 14 Feb 2024 09:25:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707902731;
-	bh=1Sxlw3DtRHuf/+Tg21dw2Havl+gSDlEajrxvtNXrd24=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=f1Dyi4h1lddcPnpZvA7OTRd+buAWhbnKUUuqixk424akMnmEN4iZ74PNi4FuEn0rJ
-	 23/2YheISdo2HTLE9XYZ8dncxaDDDD/O2euCTjPU3ZjR16ZaK/zqBkNC9/tCPrS97O
-	 fLH6KR1Y0a8DjGJojnGklo56I1z4+cOmdwEXZn7JKNUmlmaeBeH1QxbHFvSJ9gTene
-	 2BN30q5cPV9hG4U4InvnjJast3eA9+QSKgUNTKF4IiC2cfvDukmeSISKm5jNmrfN5g
-	 UdOo04qH+ihhW0jnsBPFESEBfnOQCJYc8xXadBMvKP+D2vKeyX16oad/age2C10HGr
-	 sGKnco2WhpVLg==
-Message-ID: <8fc9bac2-d0ce-4c24-b88b-fab1f65dcf37@kernel.org>
-Date: Wed, 14 Feb 2024 11:25:24 +0200
+	 In-Reply-To:Content-Type; b=FqmGoKe6A4rlOOW9SsSW7DAy5cAJSi+lttkxUjOfblIuSdatCaVShfUBDI7n/uIaUJTSWelVvXNDtzod5822YXmtG3ZW50hbKKJL3+k4EVLLrPXx3bF+9UDbAMnHsIZ4P/JF3ul6GlLR2aYidRt6KS1OajPuxteFrfb1w2jrCeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63A3FC433F1;
+	Wed, 14 Feb 2024 09:27:53 +0000 (UTC)
+Message-ID: <fb4f6b74-8af4-43c6-9119-0c3ec2a3387b@xs4all.nl>
+Date: Wed, 14 Feb 2024 10:27:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,49 +23,61 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] arm64: dts: ti: k3-am62-main: disable usb lpm
-Content-Language: en-US
-To: Andrejs Cainikovs <andrejs.cainikovs@gmail.com>,
- Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
- Tero Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Aswath Govindraju <a-govindraju@ti.com>,
- Sjoerd Simons <sjoerd@collabora.com>
-Cc: Andrejs Cainikovs <andrejs.cainikovs@toradex.com>,
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+Subject: Re: [PATCH] media: ttpci: fix two memleaks in budget_av_attach
+Content-Language: en-US, nl
+To: Zhipeng Lu <alexious@zju.edu.cn>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Yu Zhe <yuzhe@nfschina.com>,
+ Jakub Kicinski <kuba@kernel.org>, linux-media@vger.kernel.org,
  linux-kernel@vger.kernel.org
-References: <20240209130213.38908-1-andrejs.cainikovs@gmail.com>
-From: Roger Quadros <rogerq@kernel.org>
-In-Reply-To: <20240209130213.38908-1-andrejs.cainikovs@gmail.com>
+References: <20240206073719.3133481-1-alexious@zju.edu.cn>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+In-Reply-To: <20240206073719.3133481-1-alexious@zju.edu.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+On 06/02/2024 08:37, Zhipeng Lu wrote:
+> When saa7146_register_device and saa7146_vv_init fails, budget_av_attach
+> should free the resources it allocates, like the error-handling of
+> ttpci_budget_init does. Besides, there are two fixme comment refers to
+> such deallocations.
+> 
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+> ---
+>  drivers/media/pci/ttpci/budget-av.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/pci/ttpci/budget-av.c b/drivers/media/pci/ttpci/budget-av.c
+> index 230b104a7cdf..4f897f848581 100644
+> --- a/drivers/media/pci/ttpci/budget-av.c
+> +++ b/drivers/media/pci/ttpci/budget-av.c
+> @@ -1463,7 +1463,8 @@ static int budget_av_attach(struct saa7146_dev *dev, struct saa7146_pci_extensio
+>  		budget_av->has_saa7113 = 1;
+>  		err = saa7146_vv_init(dev, &vv_data);
+>  		if (err != 0) {
+> -			/* fixme: proper cleanup here */
+> +			ttpci_budget_deinit(&budget_av->budget);
+> +			kfree(budget_av);
+>  			ERR("cannot init vv subsystem\n");
+>  			return err;
+>  		}
+> @@ -1472,7 +1473,8 @@ static int budget_av_attach(struct saa7146_dev *dev, struct saa7146_pci_extensio
+>  		vv_data.vid_ops.vidioc_s_input = vidioc_s_input;
+>  
+>  		if ((err = saa7146_register_device(&budget_av->vd, dev, "knc1", VFL_TYPE_VIDEO))) {
+> -			/* fixme: proper cleanup here */
+> +			ttpci_budget_deinit(&budget_av->budget);
+> +			kfree(budget_av);
+I think this should go after the saa7146_vv_release() release below.
+Just in case saa7146_vv_release() relies on budget_av somewhere. And
+besides, it is good practice to release resources in the reverse order
+they were allocated.
 
+Regards,
 
-On 09/02/2024 15:02, Andrejs Cainikovs wrote:
-> From: Andrejs Cainikovs <andrejs.cainikovs@toradex.com>
-> 
-> AM62 USB works with some devices, while failing to operate with others.
-> 
-> [  560.189822] xhci-hcd xhci-hcd.4.auto: xHCI Host Controller
-> [  560.195631] xhci-hcd xhci-hcd.4.auto: new USB bus registered, assigned bus number 2
-> [  574.388509] xhci-hcd xhci-hcd.4.auto: can't setup: -110
-> [  574.393814] xhci-hcd xhci-hcd.4.auto: USB bus 2 deregistered
-> [  574.399544] xhci-hcd: probe of xhci-hcd.4.auto failed with error -110
-> 
-> This seems to be related to LPM (Link Power Management), and disabling it
-> turns USB into reliable working state.
-> 
-> As per AM62 reference manual:
-> 
->> 4.8.2.1 USB2SS Unsupported Features
->>
->> The following features are not supported on this family of devices:
->> ...
->> - USB 2.0 ECN: Link Power Management (LPM)
->> ...
-> 
-> Fixes: 2240f96cf3cd ("arm64: dts: ti: k3-am62-main: Add support for USB")
-> Signed-off-by: Andrejs Cainikovs <andrejs.cainikovs@toradex.com>
+	Hans
 
-Reviewed-by: Roger Quadros <rogerq@kernel.org>
+>  			ERR("cannot register capture v4l2 device\n");
+>  			saa7146_vv_release(dev);
+>  			return err;
+
