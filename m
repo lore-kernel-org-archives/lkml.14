@@ -1,88 +1,136 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A5D5A0FB;
-	Wed, 14 Feb 2024 15:30:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AAD95A785;
+	Wed, 14 Feb 2024 15:30:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707924619; cv=none; b=YguTHZpgQinPXTp4pg7B07vj5mMGn6ysILPcoFDuyl00+jUL3OasPQmfyUlmHmjUZFdvca7mz9UN68kwig3ZnFzlDTC12AIguzHZ6bmisyPyyhQhfVjv/cXwePfLnpMStYSqY/j0/vmnf5vdTrYEr40F8H1n8uvIgXz1EVYG5T0=
+	t=1707924644; cv=none; b=IuL5cZJoYnb22dx6/93CuBKalCa1KTvs5qtgdvGg5vks2HL1QLAf25WKLaQCjuF60lC8Td8KnY08pGb/4z4OBU+Cnhmoo3LdhERxCzVH8oKMo7ge2ylybDcN5IK2nkLcSHbBd40S0hQwGZ2uTzpEwi1K4H0w+RaQqIJwHS2+Rp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707924619; c=relaxed/simple;
-	bh=LNiQsxwpb6KqaUIrwzAIc1YaPde2cuUFEm8Lin9I+4c=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=YlwpW7QEF7ZJn89WRfEN/Ew3IKc86m15qPKkfgJpkf25pA0atcmKD/wjeIMyr7TZUuAdQRxVIlGsrk15PcORNpI8IQHNeOJU/RE3mF7xQnddjOBcaVE8Bmi01aUc+AgOIU8RgYy9qrm5gwdqOzYI5v99rJ2uNWUVGBtaarq8vtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=KsOG9DPa; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1707924644; c=relaxed/simple;
+	bh=oaDfMgX7jA4rJYpXSLq7LkCkF/VhsccfGzmr4lYdP5o=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=eHzqt6HWsKW+7xMqNII7hXKlDopntBTMgFsxREagnCRvcLVQSA69gz1FJ4FXibOlMlHTbUq4F2a3FFv8vWzcBtBQYAESnMxkN7q85SBekI/l4EGqsRtkEWca4RuYjXxKs7yIGCrtXnOT2JFBIypYu1oVesWYUV5G2/inFuEde1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eYt6Wjdc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="KsOG9DPa"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 41EFScet1331064
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 14 Feb 2024 07:28:38 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 41EFScet1331064
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024021201; t=1707924521;
-	bh=rk9njXpf6hzFHY17pEhUqSZF9wRgLnS+p3Equ70uV9g=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=KsOG9DPaw5ir6qEJCooeMQWJQMCKKXsB2ez4BpMq4njCXB/iMypn6kRHAYmoAYIIf
-	 bI2i7x7i9vd/OUg3t6q9x1O7qGE96Ypb/3YMNpACt0umzVvoeS2BMGQTXT/SGKUJfi
-	 Jb0GaAPO9/6YSB+JBbfT4UZkfZbg5wfA11KuWqoPUgfDi/TBxsUVGzbf3Joa5RmXtW
-	 Do14EBY5W+LnmVF10jBXuD09SgEe/1Lr8vOu1xubrGFtdkWjDBrTgWFhJUwnlmKAl+
-	 JeqS9Se6UTcm9/mW0OJ/aCaWPUbnSHpsCQvPZcWRGuggLm/w0mgmieUCXUJk1knukA
-	 F2gD2n6NiHfiA==
-Date: Wed, 14 Feb 2024 07:28:35 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Dave Hansen <dave.hansen@intel.com>,
-        Petr Tesarik <petrtesarik@huaweicloud.com>,
-        Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, Xin Li <xin3.li@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Pengfei Xu <pengfei.xu@intel.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>, Ze Gao <zegao2021@gmail.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Kai Huang <kai.huang@intel.com>, David Woodhouse <dwmw@amazon.co.uk>,
-        Brian Gerst <brgerst@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Joerg Roedel <jroedel@suse.de>,
-        "Mike Rapoport (IBM)" <rppt@kernel.org>,
-        Tina Zhang <tina.zhang@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-CC: Roberto Sassu <roberto.sassu@huaweicloud.com>, petr@tesarici.cz,
-        Petr Tesarik <petr.tesarik1@huawei-partners.com>
-Subject: Re: [PATCH v1 0/8] x86_64 SandBox Mode arch hooks
-User-Agent: K-9 Mail for Android
-In-Reply-To: <c424618c-d6c6-430a-8975-8851a617204e@intel.com>
-References: <20240214113516.2307-1-petrtesarik@huaweicloud.com> <c424618c-d6c6-430a-8975-8851a617204e@intel.com>
-Message-ID: <34B19756-91D3-4DA1-BE76-BD3122C16E95@zytor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eYt6Wjdc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 934B4C433C7;
+	Wed, 14 Feb 2024 15:30:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707924643;
+	bh=oaDfMgX7jA4rJYpXSLq7LkCkF/VhsccfGzmr4lYdP5o=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=eYt6WjdcPNZTMI0OJKu8MjI+o57ukyuk9v7ZzrfkyFXNZvyWopZVtrBKiiLFW4jMO
+	 DyjiMgGuDqV12pcm+4+EDRV2K6Lq/SMDyb8cMGeYuC59M7Sj3zURLaQ2yLf4J0E4Fu
+	 dexHynPaWg2PKdd56qdfTtRNJnBV7/GEWvefIRP1KSxz7L6V/Po1GY0mgkhA1a3bGU
+	 rbDjvyWmxej9Yr6b+QE4EmUm9y5BVMoPmxIclKB3m2qCYMCZikN8+EEsCQ0yF1aO1o
+	 0BNu5IAHrP31+b8r/MKiiP4ZcjrzWUqW2/hWoZ0wSJHy7SeL2h+jZOFBi2U8wUKsU/
+	 3IE83WTtolsJA==
+From: Kalle Valo <kvalo@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: regressions@lists.linux.dev,  linux-kernel@vger.kernel.org,
+  linux-trace-kernel@vger.kernel.org,  Jeff Johnson
+ <quic_jjohnson@quicinc.com>
+Subject: Re: [regression] tracing: kmemleak warning in
+ allocate_cmdlines_buffer()
+References: <87r0hfnr9r.fsf@kernel.org>
+	<20240214094617.1e6ec684@gandalf.local.home>
+Date: Wed, 14 Feb 2024 17:30:40 +0200
+In-Reply-To: <20240214094617.1e6ec684@gandalf.local.home> (Steven Rostedt's
+	message of "Wed, 14 Feb 2024 09:46:17 -0500")
+Message-ID: <87mss3njvj.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On February 14, 2024 6:52:53 AM PST, Dave Hansen <dave=2Ehansen@intel=2Ecom=
-> wrote:
->On 2/14/24 03:35, Petr Tesarik wrote:
->> This patch series implements x86_64 arch hooks for the generic SandBox
->> Mode infrastructure=2E
+Steven Rostedt <rostedt@goodmis.org> writes:
+
+> On Wed, 14 Feb 2024 14:50:56 +0200
+> Kalle Valo <kvalo@kernel.org> wrote:
 >
->I think I'm missing a bit of context here=2E  What does one _do_ with
->SandBox Mode?  Why is it useful?
+>> Hi Steven,
+>> 
+>> I upgraded our ath11k test setup to v6.8-rc4 and noticed a new kmemleak
+>> warning in the log:
+>
+> Thanks for the report.
+>
+>> 
+>> unreferenced object 0xffff8881010c8000 (size 32760):
+>>   comm "swapper", pid 0, jiffies 4294667296
+>>   hex dump (first 32 bytes):
+>>     ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
+>>     ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
+>>   backtrace (crc ae6ec1b9):
+>>     [<ffffffff86722405>] kmemleak_alloc+0x45/0x80
+>>     [<ffffffff8414028d>] __kmalloc_large_node+0x10d/0x190
+>>     [<ffffffff84146ab1>] __kmalloc+0x3b1/0x4c0
+>>     [<ffffffff83ed7103>] allocate_cmdlines_buffer+0x113/0x230
+>>     [<ffffffff88649c34>] tracer_alloc_buffers.isra.0+0x124/0x460
+>>     [<ffffffff8864a174>] early_trace_init+0x14/0xa0
+>>     [<ffffffff885dd5ae>] start_kernel+0x12e/0x3c0
+>>     [<ffffffff885f5758>] x86_64_start_reservations+0x18/0x30
+>>     [<ffffffff885f582b>] x86_64_start_kernel+0x7b/0x80
+>>     [<ffffffff83a001c3>] secondary_startup_64_no_verify+0x15e/0x16b
+>> 
+>> I don't see this warning in v6.8-rc3 and also reverting commit
+>> 44dc5c41b5b1 ("tracing: Fix wasted memory in saved_cmdlines logic")
+>> makes the warning go away. Let me know if you need more info or help
+>> with testing, I see the warning every time so it's easy to reproduce.
+>> 
+>
+> Hmm, I changed the code a bit and I wonder if this is a false positive?
+>
+> Instead of allocating the structure via kmalloc() I now use it as part of a
+> page.
+>
+> That is, the old code had:
+>
+>         s = kmalloc(sizeof(*s), GFP_KERNEL);
+> 	s->saved_cmdlines = kmalloc_array(TASK_COMM_LEN, val, GFP_KERNEL);
+>
+> Where as the new code has:
+>
+> 	orig_size = sizeof(*s) + val * TASK_COMM_LEN;
+> 	order = get_order(orig_size);
+> 	size = 1 << (order + PAGE_SHIFT);
+> 	page = alloc_pages(GFP_KERNEL, order);
+> 	if (!page)
+> 		return NULL;
+>
+> 	s = page_address(page);
+> 	memset(s, 0, sizeof(*s));
+>
+> 	s->saved_cmdlines = kmalloc_array(TASK_COMM_LEN, val, GFP_KERNEL);
+>
+>
+> Does kmemleak handle structures that are assigned to alloc_pages()
+> allocations? I don't think it does.
+>
+> I think we need to inform kmemleak about this. Does the following patch fix
+> this for you?
 
-Seriously=2E On the surface it looks like a really bad idea =E2=80=93 basi=
-cally an ad hoc, *more* privileged version of user shave=2E
+It does, thank you!
+
+Tested-by: Kalle Valo <kvalo@kernel.org>
+
+> diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched_switch.c
+> index e4fbcc3bede5..de4182224ea2 100644
+> --- a/kernel/trace/trace_sched_switch.c
+> +++ b/kernel/trace/trace_sched_switch.c
+
+Although the patch didn't apply for me as in my tree the functions are
+in kernel/trace/trace.c. I don't know what happened so as a quick hack I
+just manually added the three lines to my version of trace.c. Let me
+know if there's a git tree or branch you would like me to test, I can do
+that easily.
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
