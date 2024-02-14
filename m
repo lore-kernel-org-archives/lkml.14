@@ -1,361 +1,408 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42C41B814;
-	Wed, 14 Feb 2024 11:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB431AACE;
+	Wed, 14 Feb 2024 11:37:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707910618; cv=none; b=uzPwX7VVudFKDONjiHtyYZg53GxXZOeyY7AMX43qBypgqiXQRGmUH/bqjRdMEijRLncABMh01oAR1AokQWJ1heLReWp8qP3PUNoTL1wy5wNgG38i8LnrWuDQvfiW2ad4hNnAkAcIjyM7PHCFSPHVSWhUwRGUKFiJ+7jaS0Rusc0=
+	t=1707910630; cv=none; b=plMhWzxq3sYYcPCA8+3dJBmyDr4dZb+CLDIGv1KnQ/skUDjujokH9+o2/0rLEKkIan/Qsfa9Z2RtmyNpML6cDPnCSs/VTvYUSf452UHybc3KFq/X8Y5md+9HhuEnhIMrfGCDrka0FpIbioEgPFpw5gWzX61LisMWw3QfKoe+V4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707910618; c=relaxed/simple;
-	bh=T2WqLz2CjW9RPWZ0uth+/4gEHhoWLi0lbC1jmZPBsTs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sxnsxBEZo7SGKtL70AGGXpbEfFGsF5wr5KtCtrIasEiEp3w4Pih083VMneAN9HV3xlRoSab3Yss95nOEMgZbBbjNCXdg8n1rJXPOQN8joAhnvnatlDNuoJVU/93/afh5XIePNEgqqprZJ1PDaqvcnGI45Z3Py10DC45qy00n3ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=lOxmPwcF; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="lOxmPwcF"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B037440E0192;
-	Wed, 14 Feb 2024 11:36:47 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id id0nTapW-7z7; Wed, 14 Feb 2024 11:36:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1707910605; bh=rOr6deuDvMexUVv1eZg26bnq02kxdFci8fGUtHaJovs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lOxmPwcFp5f8VWJePTlH0iOrnDP+Sfpnj47A4WrOBel8yYmXsn4u6WZC+GecDzv1V
-	 BrdqZNwHWpKrnwtM7uwVOUgtNTDMcjYatar8tHD+twZFp8z9DdB2HhW5QQ8bRjNaqs
-	 UU5ZTeABC2PmdpbD83S/eRwGCzcuyNN4zp0YU4HXRla7JCAXYLPhwGCDvmaKquPbui
-	 g2b8c9YI40WyQwZ6Z+L12+/vqrmwjQVpLDrykuYaoT2fqZGFw/V8cumiTxaoWMKgS2
-	 J/wkK9sY9pq4j1ETbm9LLznlCj2KwdDI1dHwcyNcsPvirzxlT4/j3jOVVzav4MBfPu
-	 Pvcgpp5TMnj1SCuz95TLJFBwnTMVGpebNwfI7PhjvGgRX0JOKyEyT6kUnJcVYx7pIK
-	 E7493WhztPtNpxzERyLyAliyKiK81a6hpaPKsM6j8d4FqBgoLbIeMJ784D1PZ+o2mE
-	 jCT8pSBUw/WMhWeU0jYj0cAXyaOR2OqDj1bnzKAgoMf7UotUy0OtBHSob15P0/bgiL
-	 urhACpwjyunsOHZrEKmVHklUCbmUD+Ev1D3XsReW+1rU38Q7SWzPJvCdOYS8VzwkKQ
-	 tq3uux3C6RQa0VOG4+nRsClx0xlghZK7DC8brhXcmL8bxmzaaN0k8080gwI2BWD6Mh
-	 giRZ0ex00HvPW98mYr22mFRM=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7120C40E0254;
-	Wed, 14 Feb 2024 11:36:36 +0000 (UTC)
-Date: Wed, 14 Feb 2024 12:36:30 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: tony.luck@intel.com, linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org, avadhut.naik@amd.com,
-	john.allen@amd.com, muralidhara.mk@amd.com,
-	naveenkrishna.chatradhi@amd.com, sathyapriya.k@amd.com
-Subject: Re: [PATCH 2/2] RAS: Introduce the FRU Memory Poison Manager
-Message-ID: <20240214113630.GIZcylvp6-m-FNNE7H@fat_crate.local>
-References: <20240214033516.1344948-1-yazen.ghannam@amd.com>
- <20240214033516.1344948-3-yazen.ghannam@amd.com>
+	s=arc-20240116; t=1707910630; c=relaxed/simple;
+	bh=a2vh6qq7VHsS7NIXK2cTE7729KXe3Z0csZimJkYwPdw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=gW16qYIr0U4wFn2yXViwS1+YlxsB8Yf8W3yaCCzeph21xP1HK/fwDhte/OBy8NjuInL3eB9l5nswJcxBm6cQLqnAmoq9ZJiKHiT1MHu8Qgqy7XfB5zc8xkFt2fIDNGPhAWMmdh0Zal9pbxLcrKRNP9UugLapWCadeliI/PKWFvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.51])
+	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4TZbPT2J9nz9ynSS;
+	Wed, 14 Feb 2024 19:21:49 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id DB5521405A2;
+	Wed, 14 Feb 2024 19:36:55 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.45.156.69])
+	by APP1 (Coremail) with SMTP id LxC2BwAHshp7pcxlDJx9Ag--.51624S7;
+	Wed, 14 Feb 2024 12:36:55 +0100 (CET)
+From: Petr Tesarik <petrtesarik@huaweicloud.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Xin Li <xin3.li@intel.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Kees Cook <keescook@chromium.org>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Pengfei Xu <pengfei.xu@intel.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ze Gao <zegao2021@gmail.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Kai Huang <kai.huang@intel.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Brian Gerst <brgerst@gmail.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Joerg Roedel <jroedel@suse.de>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Tina Zhang <tina.zhang@intel.com>,
+	Jacob Pan <jacob.jun.pan@linux.intel.com>,
+	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
+	linux-kernel@vger.kernel.org (open list)
+Cc: Roberto Sassu <roberto.sassu@huaweicloud.com>,
+	petr@tesarici.cz,
+	Petr Tesarik <petr.tesarik1@huawei-partners.com>
+Subject: [PATCH v1 5/8] sbm: x86: handle sandbox mode faults
+Date: Wed, 14 Feb 2024 12:35:13 +0100
+Message-Id: <20240214113516.2307-6-petrtesarik@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240214113516.2307-1-petrtesarik@huaweicloud.com>
+References: <20240214113516.2307-1-petrtesarik@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240214033516.1344948-3-yazen.ghannam@amd.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:LxC2BwAHshp7pcxlDJx9Ag--.51624S7
+X-Coremail-Antispam: 1UD129KBjvJXoW3Xw48KFW8Jr4DKFy5JFyrWFg_yoWDGryxpF
+	9rAFn5GFZxWa4SvF9xAr4vvrW3Aws5Kw1YkF9rKry5Z3W2q345Xr4v9w1qqr4kZ395W3WY
+	gFW5Zrn5uan8Jw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUml14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
+	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
+	z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
+	4UJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_
+	Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x
+	IIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_
+	Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8c
+	xan2IY04v7MxkF7I0Ew4C26cxK6c8Ij28IcwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE
+	7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI
+	8E67AF67kF1VAFwI0_Wrv_Gr1UMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_
+	Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2IYs7xG6r
+	1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4U
+	JbIYCTnIWIevJa73UjIFyTuYvjfUnzVbDUUUU
+X-CM-SenderInfo: hshw23xhvd2x3n6k3tpzhluzxrxghudrp/
 
-On Tue, Feb 13, 2024 at 09:35:16PM -0600, Yazen Ghannam wrote:
-> +static void update_fru_record(struct fru_rec *rec, struct mce *m)
-> +{
-> +	struct cper_sec_fru_mem_poison *fmp = get_fmp(rec);
-> +	struct cper_fru_poison_desc fpd;
-> +	u32 entry = 0;
-> +
-> +	mutex_lock(&fmpm_update_mutex);
-> +
-> +	init_fpd(&fpd, m);
-> +
-> +	/* This is the first entry, so just save it. */
-> +	if (!has_valid_entries(fmp->validation_bits))
-> +		goto save_fpd;
+From: Petr Tesarik <petr.tesarik1@huawei-partners.com>
 
-Not needed - if it is the first entry, it'll get saved there.
+Provide a fault handler for sandbox mode. Set the sandbox mode instance
+error code, abort the sandbox and return to the caller. To allow graceful
+return from a fatal fault, save all callee-saved registers (including the
+stack pointer) just before passing control to the target function.
 
-> +	/* Ignore already recorded errors. */
-> +	if (is_dup_fpd(rec, &fpd))
-> +		goto out_unlock;
-> +
-> +	if (fmp->nr_entries >= max_nr_entries) {
-> +		pr_warn("Exceeded number of entries for FRU 0x%016llx", fmp->fru_id);
-> +		goto out_unlock;
-> +	}
-> +
-> +	entry = fmp->nr_entries;
+Modify the handlers for #PF and #DF CPU exceptions to call this handler if
+coming from sandbox mode. The check is based on the saved CS register,
+which should be modified in the entry path to a value that is otherwise not
+possible (__SBM_CS).
 
-...
+For the page fault handler, make sure that sandbox mode check is placed
+before do_kern_addr_fault(). That function calls spurious_kernel_fault(),
+which implements lazy TLB invalidation of kernel pages and it assumes that
+the faulting instruction ran with kernel-mode page tables; it would produce
+false positives for sandbox mode.
 
-> +static void retire_dram_row(u64 addr, u64 id, u32 cpu)
-> +{
-> +	struct atl_err a_err;
+Signed-off-by: Petr Tesarik <petr.tesarik1@huawei-partners.com>
+---
+ arch/x86/include/asm/ptrace.h  | 21 +++++++++++++++++++++
+ arch/x86/include/asm/sbm.h     | 24 ++++++++++++++++++++++++
+ arch/x86/include/asm/segment.h |  7 +++++++
+ arch/x86/kernel/asm-offsets.c  |  5 +++++
+ arch/x86/kernel/sbm/call_64.S  | 21 +++++++++++++++++++++
+ arch/x86/kernel/sbm/core.c     | 26 ++++++++++++++++++++++++++
+ arch/x86/kernel/traps.c        | 11 +++++++++++
+ arch/x86/mm/fault.c            |  6 ++++++
+ 8 files changed, 121 insertions(+)
 
-Yap, exactly, this should use atl_err and not struct mce.
-
-> +
-> +	memset(&a_err, 0, sizeof(struct atl_err));
-> +
-> +	a_err.addr = addr;
-> +	a_err.ipid = id;
-> +	a_err.cpu  = cpu;
-> +
-> +	amd_retire_dram_row(&a_err);
-> +}
-> +
-> +static int fru_mem_poison_handler(struct notifier_block *nb, unsigned long val, void *data)
-> +{
-> +	struct mce *m = (struct mce *)data;
-> +	struct fru_rec *rec;
-> +
-> +	if (!mce_is_memory_error(m))
-> +		return NOTIFY_DONE;
-> +
-> +	retire_dram_row(m->addr, m->ipid, m->extcpu);
-> +
-> +	/*
-> +	 * This should not happen on real errors. But it could happen from
-
-What exactly is "This" here?
-
-> +	 * software error injection, etc.
-> +	 */
-> +	rec = get_fru_record(m->ppin);
-> +	if (!rec)
-> +		return NOTIFY_DONE;
-> +
-> +	update_fru_record(rec, m);
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
-> +static struct notifier_block fru_mem_poison_nb = {
-> +	.notifier_call  = fru_mem_poison_handler,
-> +	.priority	= MCE_PRIO_LOWEST,
-> +};
-> +
-> +static u32 get_cpu_from_fru_id(u64 fru_id)
-
-Fold into the single callsite.
-
-> +{
-> +	unsigned int cpu = 0;
-> +
-> +	/* Should there be more robust error handling if none found? */
-> +	for_each_online_cpu(cpu) {
-> +		if (topology_ppin(cpu) == fru_id)
-> +			break;
-> +	}
-> +
-> +	return cpu;
-> +}
-> +
-> +static void retire_mem_fmp(struct fru_rec *rec, u32 nr_entries, u32 cpu)
-> +{
-> +	struct cper_fru_poison_desc *fpd;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < nr_entries; i++) {
-> +		fpd = get_fpd(rec, i);
-> +
-> +		if (fpd->hw_id_type != FPD_HW_ID_TYPE_MCA_IPID)
-> +			continue;
-> +
-> +		if (fpd->addr_type != FPD_ADDR_TYPE_MCA_ADDR)
-> +			continue;
-> +
-> +		retire_dram_row(fpd->addr, fpd->hw_id, cpu);
-> +	}
-> +}
-> +
-> +static void retire_mem_records(void)
-> +{
-> +	struct cper_sec_fru_mem_poison *fmp;
-> +	struct fru_rec *rec;
-> +	unsigned int i;
-> +	u32 cpu;
-> +
-> +	for_each_fru(i, rec) {
-> +		fmp = get_fmp(rec);
-> +
-> +		if (!has_valid_entries(fmp->validation_bits))
-> +			continue;
-> +
-> +		cpu = get_cpu_from_fru_id(fmp->fru_id);
-
-Pass in that fmp thing into retire_dram_row() so that you can delay
-that get_cpu_from_fru_id() call until the moment you actually need it.
-
-> +static int save_new_records(void)
-> +{
-> +	struct fru_rec *rec;
-> +	unsigned int i;
-> +	int ret = 0;
-> +
-> +	for_each_fru(i, rec) {
-> +		/* Skip restored records. Should these be fixed up? */
-
-I don't understand that question.
-
-> +		if (rec->hdr.record_length)
-> +			continue;
-> +
-> +		set_rec_fields(rec);
-> +
-> +		ret = update_record_on_storage(rec);
-> +		if (ret)
-> +			break;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static bool is_valid_fmp(struct fru_rec *rec)
-
-fmp_is_valid()
-
-> +{
-> +	struct cper_sec_fru_mem_poison *fmp = get_fmp(rec);
-> +	u32 len = get_fmp_len(rec);
-> +
-> +	if (!fmp)
-> +		return false;
-> +
-> +	if (!len)
-> +		return false;
-> +
-> +	/* Checksum must sum to zero for the entire section. */
-> +	if (do_fmp_checksum(fmp, len))
-> +		return false;
-> +
-> +	if (!(fmp->validation_bits & FMP_VALID_ARCH_TYPE))
-> +		return false;
-> +
-> +	if (fmp->fru_arch_type != FMP_ARCH_TYPE_X86_CPUID_1_EAX)
-> +		return false;
-> +
-> +	if (!(fmp->validation_bits & FMP_VALID_ARCH))
-> +		return false;
-> +
-> +	if (fmp->fru_arch != cpuid_eax(1))
-> +		return false;
-> +
-> +	if (!(fmp->validation_bits & FMP_VALID_ID_TYPE))
-> +		return false;
-> +
-> +	if (fmp->fru_id_type != FMP_ID_TYPE_X86_PPIN)
-> +		return false;
-> +
-> +	if (!(fmp->validation_bits & FMP_VALID_ID))
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
-> +static void restore_record(struct fru_rec *new, struct fru_rec *old)
-> +{
-> +	/* Records larger than max_rec_len were skipped earlier. */
-> +	size_t len = min(max_rec_len, old->hdr.record_length);
-> +
-> +	memcpy(new, old, len);
-> +}
-
-Fold into the single call site.
-
-> +
-> +static bool valid_record(struct fru_rec *old)
-> +{
-> +	struct fru_rec *new;
-> +
-> +	if (!is_valid_fmp(old)) {
-> +		pr_debug("Ignoring invalid record");
-> +		return false;
-> +	}
-> +
-> +	new = get_fru_record(old->fmp.fru_id);
-> +	if (!new) {
-> +		pr_debug("Ignoring record for absent FRU");
-> +		return false;
-> +	}
-> +
-> +	/* What if ERST has duplicate FRU entries? */
-> +	restore_record(new, old);
-> +
-> +	return true;
-> +}
-> +
-> +/*
-> + * Fetch saved records from persistent storage.
-> + *
-> + * For each found record:
-> + * - If it was not created by this module, then ignore it.
-> + * - If it is valid, then copy its data to the local cache.
-> + * - If it is not valid, then erase it.
-> + */
-> +static int get_saved_records(void)
-> +{
-> +	struct fru_rec *old;
-> +	u64 record_id;
-> +	int ret, pos;
-> +	ssize_t len;
-> +
-> +	/*
-> +	 * Assume saved records match current max size.
-> +	 *
-> +	 * However, this may not be true depending on module parameters.
-
-This must work with module parameters, though. Or, as said and
-preferrably, there should not be any module parameters at all.
-
-> +	 */
-> +	old = kmalloc(max_rec_len, GFP_KERNEL);
-> +	if (!old) {
-> +		ret = -ENOMEM;
-> +		goto out;
-> +	}
-> +
-> +	ret = erst_get_record_id_begin(&pos);
-> +	if (ret < 0)
-> +		goto out_end;
-> +
-> +	while (!erst_get_record_id_next(&pos, &record_id)) {
-> +		/*
-> +		 * Make sure to clear temporary buffer between reads to avoid
-> +		 * leftover data from records of various sizes.
-> +		 */
-> +		memset(old, 0, max_rec_len);
-> +
-> +		len = erst_read_record(record_id, &old->hdr, max_rec_len,
-> +				       sizeof(struct fru_rec), &CPER_CREATOR_FMP);
-> +
-> +		/* Should this be retried if the temporary buffer is too small? */
-
-Only when it turns out that it is necessary.
-
-> +		if (len < 0)
-> +			continue;
-> +
-> +		if (!valid_record(old))
-> +			erst_clear(record_id);
-
-Where is the check which ignores the record not created by this module?
-
-Because this clears all records it deems not valid and that thing needs
-to be really careful here and be sure what exactly it clears...
-
-Thx.
-
+diff --git a/arch/x86/include/asm/ptrace.h b/arch/x86/include/asm/ptrace.h
+index f4db78b09c8f..f66f16f037b0 100644
+--- a/arch/x86/include/asm/ptrace.h
++++ b/arch/x86/include/asm/ptrace.h
+@@ -164,6 +164,27 @@ static inline bool user_64bit_mode(struct pt_regs *regs)
+ #endif
+ }
+ 
++/*
++ * sandbox_mode() - did a register set come from SandBox Mode?
++ * @regs:  register set
++ */
++static inline bool sandbox_mode(struct pt_regs *regs)
++{
++#ifdef CONFIG_X86_64
++#ifdef CONFIG_SANDBOX_MODE
++	/*
++	 * SandBox Mode always runs in 64-bit and it is not implemented
++	 * on paravirt systems, so this is the only possible value.
++	 */
++	return regs->cs == __SBM_CS;
++#else /* !CONFIG_SANDBOX_MODE */
++	return false;
++#endif
++#else /* !CONFIG_X86_64 */
++	return false;
++#endif
++}
++
+ /*
+  * Determine whether the register set came from any context that is running in
+  * 64-bit mode.
+diff --git a/arch/x86/include/asm/sbm.h b/arch/x86/include/asm/sbm.h
+index ca4741b449e8..229b1ac3bbd4 100644
+--- a/arch/x86/include/asm/sbm.h
++++ b/arch/x86/include/asm/sbm.h
+@@ -11,23 +11,29 @@
+ 
+ #include <asm/processor.h>
+ 
++struct pt_regs;
++
+ #if defined(CONFIG_HAVE_ARCH_SBM) && defined(CONFIG_SANDBOX_MODE)
+ 
+ #include <asm/pgtable_types.h>
+ 
+ /**
+  * struct x86_sbm_state - Run-time state of the environment.
++ * @sbm:         Link back to the SBM instance.
+  * @pgd:         Sandbox mode page global directory.
+  * @stack:       Sandbox mode stack.
+  * @exc_stack:   Exception and IRQ stack.
++ * @return_sp:   Stack pointer for returning to kernel mode.
+  *
+  * One instance of this union is allocated for each sandbox and stored as SBM
+  * instance private data.
+  */
+ struct x86_sbm_state {
++	struct sbm *sbm;
+ 	pgd_t *pgd;
+ 	unsigned long stack;
+ 	unsigned long exc_stack;
++	unsigned long return_sp;
+ };
+ 
+ /**
+@@ -43,6 +49,18 @@ static inline unsigned long top_of_intr_stack(void)
+ 	return current_top_of_stack();
+ }
+ 
++/**
++ * handle_sbm_fault() - Handle a CPU fault in sandbox mode.
++ * @regs:       Saved registers at fault.
++ * @error_code: CPU error code.
++ * @address:    Fault address (CR2 register).
++ *
++ * Handle a sandbox mode fault. The caller should use sandbox_mode() to
++ * check that @regs came from sandbox mode before calling this function.
++ */
++void handle_sbm_fault(struct pt_regs *regs, unsigned long error_code,
++		      unsigned long address);
++
+ #else /* defined(CONFIG_HAVE_ARCH_SBM) && defined(CONFIG_SANDBOX_MODE) */
+ 
+ static inline unsigned long top_of_intr_stack(void)
+@@ -50,6 +68,12 @@ static inline unsigned long top_of_intr_stack(void)
+ 	return current_top_of_stack();
+ }
+ 
++static inline void handle_sbm_fault(struct pt_regs *regs,
++				    unsigned long error_code,
++				    unsigned long address)
++{
++}
++
+ #endif /* defined(CONFIG_HAVE_ARCH_SBM) && defined(CONFIG_SANDBOX_MODE) */
+ 
+ #endif /* __ASM_SBM_H */
+diff --git a/arch/x86/include/asm/segment.h b/arch/x86/include/asm/segment.h
+index 9d6411c65920..966831385d18 100644
+--- a/arch/x86/include/asm/segment.h
++++ b/arch/x86/include/asm/segment.h
+@@ -217,6 +217,13 @@
+ #define __USER_CS			(GDT_ENTRY_DEFAULT_USER_CS*8 + 3)
+ #define __CPUNODE_SEG			(GDT_ENTRY_CPUNODE*8 + 3)
+ 
++/*
++ * Sandbox runs with __USER_CS, but the interrupt entry code sets the RPL
++ * in the saved selector to zero to avoid user-mode processing (FPU, signal
++ * delivery, etc.). This is the resulting pseudo-CS.
++ */
++#define __SBM_CS			(GDT_ENTRY_DEFAULT_USER_CS*8)
++
+ #endif
+ 
+ #define IDT_ENTRIES			256
+diff --git a/arch/x86/kernel/asm-offsets.c b/arch/x86/kernel/asm-offsets.c
+index 6913b372ccf7..44d4f0a0cb19 100644
+--- a/arch/x86/kernel/asm-offsets.c
++++ b/arch/x86/kernel/asm-offsets.c
+@@ -20,6 +20,7 @@
+ #include <asm/suspend.h>
+ #include <asm/tlbflush.h>
+ #include <asm/tdx.h>
++#include <asm/sbm.h>
+ 
+ #ifdef CONFIG_XEN
+ #include <xen/interface/xen.h>
+@@ -120,4 +121,8 @@ static void __used common(void)
+ 	OFFSET(ARIA_CTX_rounds, aria_ctx, rounds);
+ #endif
+ 
++#if defined(CONFIG_HAVE_ARCH_SBM) && defined(CONFIG_SANDBOX_MODE)
++	COMMENT("SandBox Mode");
++	OFFSET(SBM_return_sp, x86_sbm_state, return_sp);
++#endif
+ }
+diff --git a/arch/x86/kernel/sbm/call_64.S b/arch/x86/kernel/sbm/call_64.S
+index 1b232c8d15b7..6a615b4f6047 100644
+--- a/arch/x86/kernel/sbm/call_64.S
++++ b/arch/x86/kernel/sbm/call_64.S
+@@ -22,6 +22,17 @@
+  * rcx  .. top of sandbox stack
+  */
+ SYM_FUNC_START(x86_sbm_exec)
++	/* save all callee-saved registers */
++	push	%rbp
++	push	%rbx
++	push	%r12
++	push	%r13
++	push	%r14
++	push	%r15
++
++	/* to be used by sandbox abort */
++	mov	%rsp, SBM_return_sp(%rdi)
++
+ 	/*
+ 	 * Set up the sandbox stack:
+ 	 * 1. Store the old stack pointer at the top of the sandbox stack,
+@@ -37,5 +48,15 @@ SYM_FUNC_START(x86_sbm_exec)
+ 
+ 	pop	%rsp
+ 
++SYM_INNER_LABEL(x86_sbm_return, SYM_L_GLOBAL)
++	ANNOTATE_NOENDBR	// IRET target via x86_sbm_fault()
++
++	/* restore callee-saved registers and return */
++	pop	%r15
++	pop	%r14
++	pop	%r13
++	pop	%r12
++	pop	%rbx
++	pop	%rbp
+ 	RET
+ SYM_FUNC_END(x86_sbm_exec)
+diff --git a/arch/x86/kernel/sbm/core.c b/arch/x86/kernel/sbm/core.c
+index 81f1b0093537..d4c378847e93 100644
+--- a/arch/x86/kernel/sbm/core.c
++++ b/arch/x86/kernel/sbm/core.c
+@@ -13,6 +13,8 @@
+ #include <asm/page.h>
+ #include <asm/sbm.h>
+ #include <asm/sections.h>
++#include <asm/segment.h>
++#include <asm/trap_pf.h>
+ #include <linux/cpumask.h>
+ #include <linux/mm.h>
+ #include <linux/sbm.h>
+@@ -23,6 +25,7 @@
+ 
+ asmlinkage int x86_sbm_exec(struct x86_sbm_state *state, sbm_func func,
+ 			    void *args, unsigned long sbm_tos);
++extern char x86_sbm_return[];
+ 
+ static inline phys_addr_t page_to_ptval(struct page *page)
+ {
+@@ -343,6 +346,8 @@ int arch_sbm_exec(struct sbm *sbm, sbm_func func, void *args)
+ 	struct x86_sbm_state *state = sbm->private;
+ 	int err;
+ 
++	state->sbm = sbm;
++
+ 	/* let interrupt handlers use the sandbox state page */
+ 	barrier();
+ 	WRITE_ONCE(current_thread_info()->sbm_state, state);
+@@ -354,3 +359,24 @@ int arch_sbm_exec(struct sbm *sbm, sbm_func func, void *args)
+ 
+ 	return err;
+ }
++
++void handle_sbm_fault(struct pt_regs *regs, unsigned long error_code,
++		      unsigned long address)
++{
++	struct x86_sbm_state *state = current_thread_info()->sbm_state;
++
++	/*
++	 * Force -EFAULT unless the fault was due to a user-mode instruction
++	 * fetch from the designated return address.
++	 */
++	if (error_code != (X86_PF_PROT | X86_PF_USER | X86_PF_INSTR) ||
++	    address != (unsigned long)x86_sbm_return)
++		state->sbm->error = -EFAULT;
++
++	/* modify IRET frame to exit from sandbox */
++	regs->ip = (unsigned long)x86_sbm_return;
++	regs->cs = __KERNEL_CS;
++	regs->flags = X86_EFLAGS_IF;
++	regs->sp = state->return_sp;
++	regs->ss = __KERNEL_DS;
++}
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index b9c9c74314e7..8fc5b17b8fb4 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -416,6 +416,12 @@ DEFINE_IDTENTRY_DF(exc_double_fault)
+ 
+ 	irqentry_nmi_enter(regs);
+ 	instrumentation_begin();
++
++	if (sandbox_mode(regs)) {
++		handle_sbm_fault(regs, error_code, 0);
++		return;
++	}
++
+ 	notify_die(DIE_TRAP, str, regs, error_code, X86_TRAP_DF, SIGSEGV);
+ 
+ 	tsk->thread.error_code = error_code;
+@@ -675,6 +681,11 @@ DEFINE_IDTENTRY_ERRORCODE(exc_general_protection)
+ 		goto exit;
+ 	}
+ 
++	if (sandbox_mode(regs)) {
++		handle_sbm_fault(regs, error_code, 0);
++		return;
++	}
++
+ 	if (gp_try_fixup_and_notify(regs, X86_TRAP_GP, error_code, desc, 0))
+ 		goto exit;
+ 
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 679b09cfe241..f223b258e53f 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -34,6 +34,7 @@
+ #include <asm/kvm_para.h>		/* kvm_handle_async_pf		*/
+ #include <asm/vdso.h>			/* fixup_vdso_exception()	*/
+ #include <asm/irq_stack.h>
++#include <asm/sbm.h>
+ 
+ #define CREATE_TRACE_POINTS
+ #include <asm/trace/exceptions.h>
+@@ -1500,6 +1501,11 @@ handle_page_fault(struct pt_regs *regs, unsigned long error_code,
+ 	if (unlikely(kmmio_fault(regs, address)))
+ 		return;
+ 
++	if (sandbox_mode(regs)) {
++		handle_sbm_fault(regs, error_code, address);
++		return;
++	}
++
+ 	/* Was the fault on kernel-controlled part of the address space? */
+ 	if (unlikely(fault_in_kernel_space(address))) {
+ 		do_kern_addr_fault(regs, error_code, address);
 -- 
-Regards/Gruss,
-    Boris.
+2.34.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
