@@ -1,59 +1,59 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465DCFBFD
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 01:18:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4328D111A4
+	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 01:18:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707873535; cv=none; b=YtDCMr1enAABgevncNxE6QXPjt3REPTCQa5Szf/E3IKW69dDfsxNLDm3j780zxFMQ2/v4P675vF53f9GR3ljWm5G32OkoQwPdFm2Im47wDlctylyCXWPWxYwWLQmZXo5MWYgwmiD+q9xB9vPG1dlFxpWQ+cpn4SU6CPuQMslGOI=
+	t=1707873540; cv=none; b=FLyDcaIUct4lhKifjxCxcuQx4e+yti7W6tCOoQdjfTXioW84b6ZJml97NoaS3YO+Nwmcc/sb+LHSJMhlhq1j+e9xla8hoMvLp5HT9TJ4Vb5NdBxB3T88MwvO1YqCBgOisCVsqD2MOJG9WkImWbXGIdKVCuKTonmX8NtzKhy9q/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707873535; c=relaxed/simple;
-	bh=uIW5926euxSClNgLwOOE3S3ASDUyyd+u+xzLETiO+QQ=;
+	s=arc-20240116; t=1707873540; c=relaxed/simple;
+	bh=RHI6z42Zh5d8W3cRQXQqriHAWaY+WIFJ7/pAR7QTFqk=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Cc:Content-Type; b=TaWQ8p6/F3WBjY/u03vtnlQTWDZBwkq4g/+vgMmK3wdsyT3aCy1m2XSZu6GOpc2yk+FJTMEDhI70r57NPCUeljJo/XIGcEYnARDunhx836bQU3iZfvsqvLw0S4W8KbVCG9h/2I8k8co0AMaCLYIlnEgWMIk8r7DAA8/aO2LpFRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LdM/dEQf; arc=none smtp.client-ip=209.85.219.202
+	 To:Cc:Content-Type; b=Q377W4pGQtpMY2SzGOEsbUcz9n7PEr1jBRKaRgt0nHGSS3jDcHh5NKM/f11E3M/Haei7UM0X1trP6VZ+gBDPNGJ/fIbHaQToq9e0fuB1UwfHnHk37pbs9IiF6LZK5lGpkhwM/5UbYits+pQXshSiS0+cAMDA0d8IWuoS0R83Uxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=usAlYD+k; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LdM/dEQf"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dbe9e13775aso7869574276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 17:18:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="usAlYD+k"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b26783b4so6183649276.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 17:18:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707873532; x=1708478332; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1707873537; x=1708478337; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:from:subject:references
          :mime-version:message-id:in-reply-to:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7+z+qLiW7RyPe7mVik6F8hhmYqDxILH4Pd/J/NiEmYE=;
-        b=LdM/dEQf71hsdzgBsk85WcA3OV3jnmDi1uoQnqqklhFOWMU7/pS4Tt4nvS+iYDuk4p
-         ZtdvS7C0n3WJwTqP+Pz0Uw0W4N9jn1vxccvDfV0Nn4nEdm+VJ8myaJ3PhP3KDUHblmpW
-         /IhuuehNaRtDkev7L1rNiH/+nxcrfqw5S39H2KFo6FI9tyWKIeO6WvhkWskU4V2Bs7Pl
-         HGS4mEiW2Vma2XCkhVbUQXrNrZs1un+25FMPUzURDRWIXIGPPVRj8gBQ0LvmXBwk37N5
-         6BWqJ/69D2serq9ccy+92NnqfPwFonwIm1DVFhO1Q4H3AegAPUyoG15zhdbE4OA+gdi8
-         RU/w==
+        bh=yqMG7Ig9b2SfPVPlsM/7MDC+R0Aj67PbG962+6WBmz0=;
+        b=usAlYD+k2+VvMgJ7cae9BNvWJSGR2VAPRbCQFxjqaD7bZ/jla9P9o2W60uRAahn1S9
+         t0PsMAMEdkvQ3ebYGa/twTA/l25wDSxHq1jE2nl38y6RCzPbGPcS+sNz93MY20Oj8TmX
+         TaWZjfMr1++6VF2UDVdKYDu/VgzY/NwiEvtS48DKE3fKgBNFRw6b/RQYpWz9BT0QHSNF
+         eTOlsx9TPa58oR1TK4aIFrt84kWO8tqaW9Fdo71oivz00AMtyNsrAQBKBZCgL++U83Oy
+         EeCRZeVaSjR+FEz7iWFQGaqGZ9Wi1ntOGRHStFvX/90yi0JaxlRhhNJkl0m/TkDJupPs
+         bsEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707873532; x=1708478332;
+        d=1e100.net; s=20230601; t=1707873537; x=1708478337;
         h=content-transfer-encoding:cc:to:from:subject:references
          :mime-version:message-id:in-reply-to:date:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=7+z+qLiW7RyPe7mVik6F8hhmYqDxILH4Pd/J/NiEmYE=;
-        b=hz59J+uqHr/FVmwlrrSYCY2WRUFfrgjuhnKpZeeAgDsstdBXPHfP+q60LEMcwb7Xa3
-         9tgYHjOnxRF1XxWgD87quk6InH2dZcOWVlKrSgH6FwuocLM7ByotafqykJ8sBT3dKpck
-         9lmyJpIdkh0vhWNLKiEdvcAgC4bIfE1Si2Wiw6a3972Yo8uKwZMlO9Zvwp/QIVxx9BzZ
-         Rf65On09k/NaFvLeLntqtAdQ/hn/oNZVt8tgQ62q00nEdRcu4h20wtfJx2ExMN/A9RWi
-         8jYoNj7M1n0vXymz2GR7F1hzBIqz43eudSfn/n6AehuqfD7hdp6iS3KbHI7HjX5VkMoF
-         kVuA==
-X-Forwarded-Encrypted: i=1; AJvYcCWoT2TbbW2AwrjD+syGF0TYKKqqq6rJ5HRRfEsC06hsyrXGL4Pv5GlUFP2/1sBJrvdQdwIVM/hP5g5REPSJY727q+zeASlyVi9SgVQz
-X-Gm-Message-State: AOJu0YyTR4dlDyP1zcBf9m+DZFRQoOnZvjMidMPkHUNnRS0y8V4e0TIi
-	jPYMRij9N8PGBDxXC9K3tNeX0mDbWNMi4TL4CTWO+7q3ZcHiIQ4c1gLMhiOW0iUmLxPJ30K568g
-	fEJ/RDg==
-X-Google-Smtp-Source: AGHT+IGp2dMy/9qKaWYQ0k2nZdGVQKNtOm74ORmTTplytfKJvBA31H1BOGiRROjUNqvnhXdaa/docslQ82Hv
+        bh=yqMG7Ig9b2SfPVPlsM/7MDC+R0Aj67PbG962+6WBmz0=;
+        b=rtopVu7KLY7nTMwxQoZ8W3pyZqhuiCV4EB0nLdM8v6obHPyoqAT4u80ZNczxMsu0AU
+         8Tp/9NYhfQJqY55xO6z+lH76PHUG3SPPFBBq/wkzasRxH8vF0oSUwsudS+jq9C48METD
+         RXOI4rFg5tJ6CEQORXMHFfsXj3ALayqNMIvf4Y7xr3oUQX4yDzBJetZGlD4Q60eA7pLp
+         za3tVC4tlxNn7070NMb5w5h2I1OePZzcXpjxic2n1Y3SzdbKId+gvv76ggDiBchy7d4d
+         4bAWclT/Xvoo+Yzk11eePKHh5PKTaBfm1dH1YbsLXB84XR9jrWaxWBc9UQrcNL0ZDbtz
+         jQTw==
+X-Forwarded-Encrypted: i=1; AJvYcCWaOM7J2t3xjHsoMF31Zuoa6aQjRHmNVEBZrvpL3OFW9T6xWXB1eG9FTuUPUH/70VNOH1ptzG6GRgQs2m7FIqG6sC9LqiStVAd6s/8N
+X-Gm-Message-State: AOJu0YxwW6eseJPzChVvYzaCwU1FvxTOemstBtFeqQ5fO9Ornk5rZ3RY
+	i0ULUKblJRGyxTQThS4VHoEQ4oyadBW9JXWXHG9A8Jnsu9AWAWg7PXLSaZ2Pm5d1zohkG/Dr0fx
+	Ir2dVGg==
+X-Google-Smtp-Source: AGHT+IFfiu9PGWO8iWx9awY+c/iA7wRH6gb0i5ccxp9fiVpalNjA9+Bu6fhnJuFR5tXOrF3/jOOBtYViO6fD
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6d92:85eb:9adc:66dd])
- (user=irogers job=sendgmr) by 2002:a05:6902:1885:b0:dc6:207e:e8b1 with SMTP
- id cj5-20020a056902188500b00dc6207ee8b1mr271997ybb.2.1707873532309; Tue, 13
- Feb 2024 17:18:52 -0800 (PST)
-Date: Tue, 13 Feb 2024 17:17:56 -0800
+ (user=irogers job=sendgmr) by 2002:a25:ac18:0:b0:dc6:ebd4:cca2 with SMTP id
+ w24-20020a25ac18000000b00dc6ebd4cca2mr33135ybi.11.1707873537303; Tue, 13 Feb
+ 2024 17:18:57 -0800 (PST)
+Date: Tue, 13 Feb 2024 17:17:58 -0800
 In-Reply-To: <20240214011820.644458-1-irogers@google.com>
-Message-Id: <20240214011820.644458-8-irogers@google.com>
+Message-Id: <20240214011820.644458-10-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,7 +62,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240214011820.644458-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
-Subject: [PATCH v1 07/30] perf vendor events intel: Update icelake events to v1.21
+Subject: [PATCH v1 09/30] perf vendor events intel: Update rocketlake events
+ to v1.02
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -77,28 +78,42 @@ Cc: Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Update icelake events to v1.21 released in:
-https://github.com/intel/perfmon/commit/54f1246b0496112c1d2b2a49e4859c85caa=
-3dbf4
+Update alderlake events to v1.02 released in:
+https://github.com/intel/perfmon/commit/4931178d1ede1099a3e4ac7e04ed9f073e0=
+3d219
 
-Improves descriptions, removes TOPDOWN.BR_MISPREDICT_SLOTS.
+Improves documentation and removes TOPDOWN.BR_MISPREDICT_SLOTS.
 
 Event json automatically generated by:
 https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/arch/x86/icelake/memory.json   |  1 +
- tools/perf/pmu-events/arch/x86/icelake/other.json    |  2 +-
- tools/perf/pmu-events/arch/x86/icelake/pipeline.json | 10 +---------
- tools/perf/pmu-events/arch/x86/mapfile.csv           |  2 +-
+ tools/perf/pmu-events/arch/x86/mapfile.csv             |  2 +-
+ tools/perf/pmu-events/arch/x86/rocketlake/memory.json  |  1 +
+ tools/perf/pmu-events/arch/x86/rocketlake/other.json   |  2 +-
+ .../perf/pmu-events/arch/x86/rocketlake/pipeline.json  | 10 +---------
  4 files changed, 4 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/icelake/memory.json b/tools/per=
-f/pmu-events/arch/x86/icelake/memory.json
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
+ents/arch/x86/mapfile.csv
+index 09145aaa0d8e..be9f342b3206 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -24,7 +24,7 @@ GenuineIntel-6-BD,v1.00,lunarlake,core
+ GenuineIntel-6-A[AC],v1.07,meteorlake,core
+ GenuineIntel-6-1[AEF],v4,nehalemep,core
+ GenuineIntel-6-2E,v4,nehalemex,core
+-GenuineIntel-6-A7,v1.01,rocketlake,core
++GenuineIntel-6-A7,v1.02,rocketlake,core
+ GenuineIntel-6-2A,v19,sandybridge,core
+ GenuineIntel-6-8F,v1.17,sapphirerapids,core
+ GenuineIntel-6-AF,v1.00,sierraforest,core
+diff --git a/tools/perf/pmu-events/arch/x86/rocketlake/memory.json b/tools/=
+perf/pmu-events/arch/x86/rocketlake/memory.json
 index e8d2ec1c029b..f84763220549 100644
---- a/tools/perf/pmu-events/arch/x86/icelake/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/icelake/memory.json
+--- a/tools/perf/pmu-events/arch/x86/rocketlake/memory.json
++++ b/tools/perf/pmu-events/arch/x86/rocketlake/memory.json
 @@ -259,6 +259,7 @@
          "BriefDescription": "Number of times an RTM execution aborted.",
          "EventCode": "0xc9",
@@ -108,11 +123,11 @@ index e8d2ec1c029b..f84763220549 100644
 ggered.",
          "SampleAfterValue": "100003",
          "UMask": "0x4"
-diff --git a/tools/perf/pmu-events/arch/x86/icelake/other.json b/tools/perf=
-/pmu-events/arch/x86/icelake/other.json
+diff --git a/tools/perf/pmu-events/arch/x86/rocketlake/other.json b/tools/p=
+erf/pmu-events/arch/x86/rocketlake/other.json
 index cfb590632918..4fdc87339555 100644
---- a/tools/perf/pmu-events/arch/x86/icelake/other.json
-+++ b/tools/perf/pmu-events/arch/x86/icelake/other.json
+--- a/tools/perf/pmu-events/arch/x86/rocketlake/other.json
++++ b/tools/perf/pmu-events/arch/x86/rocketlake/other.json
 @@ -19,7 +19,7 @@
          "BriefDescription": "Core cycles where the core was running in a m=
 anner where Turbo may be clipped to the AVX512 turbo schedule.",
@@ -127,11 +142,11 @@ tecture).  This includes high current AVX 512-bit instructions.",
          "SampleAfterValue": "200003",
          "UMask": "0x20"
      },
-diff --git a/tools/perf/pmu-events/arch/x86/icelake/pipeline.json b/tools/p=
-erf/pmu-events/arch/x86/icelake/pipeline.json
+diff --git a/tools/perf/pmu-events/arch/x86/rocketlake/pipeline.json b/tool=
+s/perf/pmu-events/arch/x86/rocketlake/pipeline.json
 index 375b78044f14..c7313fd4fdf4 100644
---- a/tools/perf/pmu-events/arch/x86/icelake/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/icelake/pipeline.json
+--- a/tools/perf/pmu-events/arch/x86/rocketlake/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/rocketlake/pipeline.json
 @@ -529,7 +529,7 @@
          "BriefDescription": "Cycles when Reservation Station (RS) is empty=
  for the thread",
@@ -168,20 +183,6 @@ s well as the out-of-order engine recovery past a branch misprediction.",
          "BriefDescription": "TMA slots available for an unhalted logical p=
 rocessor. Fixed counter - architectural event",
          "EventName": "TOPDOWN.SLOTS",
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
-ents/arch/x86/mapfile.csv
-index 932d7c094e41..953e13a136a4 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -14,7 +14,7 @@ GenuineIntel-6-B6,v1.01,grandridge,core
- GenuineIntel-6-A[DE],v1.01,graniterapids,core
- GenuineIntel-6-(3C|45|46),v35,haswell,core
- GenuineIntel-6-3F,v28,haswellx,core
--GenuineIntel-6-7[DE],v1.19,icelake,core
-+GenuineIntel-6-7[DE],v1.21,icelake,core
- GenuineIntel-6-6[AC],v1.23,icelakex,core
- GenuineIntel-6-3A,v24,ivybridge,core
- GenuineIntel-6-3E,v24,ivytown,core
 --=20
 2.43.0.687.g38aa6559b0-goog
 
