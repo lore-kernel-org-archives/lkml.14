@@ -1,59 +1,48 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73438125A3
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 07:43:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622B4125A1;
+	Wed, 14 Feb 2024 07:43:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707896586; cv=none; b=EaAGH4E5SPX33PvdI+lV1/59pK97yn8pc6bVXFbyDlmX+dXkflVBn/Tgwqj/YjoT75W1a/RJMmkv0qwjAhqe9/LkxBQLzHB5Ns3vrA+59LrmDhRmOxMPAN58qixUv6sevnO1NTjc+a33JVvcjrZPIEeBIohyMAvpoelUrhhGnGY=
+	t=1707896638; cv=none; b=m0NojRhtDoNr6xT1q8rXp4CQurjTRUEiLgir86HmKfgU8zXR5Q5q7ZjbRS4VqXHJBoT68q5/XucSCIDUr9lH1UQX1FeZYjY35/LLj4BJDMBMAvOyESHooQrvtmOxnsimVkbEK2XEBOyopOx/hpg6QAPgttclUrsQBi9aUAHHnpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707896586; c=relaxed/simple;
-	bh=VWEOVPjzwG5LyVakYdf3057OxZUScV4IOC88KiJYLM0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MRgTp2XJLoAwNpZWGwD/fVoY/tnChkSXkbStrhRJ8x/cs3DOSmRJqyhe+tTVBOPr5QePt8Lh1wYDCy7FDqYYGWHV4DV45tdsG2Jdff9BESCZ7pM0QoAfUUFg+8t8zGETvqOHiPAjA8duh3ZfJmABavTJ75F4bImDaRKt2APykek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i0+dNpg4; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707896638; c=relaxed/simple;
+	bh=v3L39AG6iIecOgYkszF4p8cxFB40CDXlfe218wo6Xg8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=GRovJkvuKPoLKq3svMyyojBd34VTsef0dn6V9shd6f+Oepb+R66SyI9IS1yN4tk7RQ4lNQJzb/3XgqnJudEiM7+pBLcrM4Q10I+fKtpH21jFr+BDrifK2SEgtOTUO8zS2f0Nif40kodEAMbOe/6QUkdVnMr95/huaK5lT4w3r/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=XIEFh2Vh; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i0+dNpg4"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d11d180652so1648811fa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 Feb 2024 23:43:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707896582; x=1708501382; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Qm35U4zALwNw8pnZRUH8OtgtOhB7/DRacCD6hYwcr6s=;
-        b=i0+dNpg4+lo1JHLpmJDwvRh6w8H5ra71CjQy3kIEHaRhKePq1hCYhxuZ3hK+5cBFxo
-         BRbi55RLs0LwK/3t4DYeKMf5qJeuyvM5vQGoIcAzVbjIAJNLE9FqOizQzYeSOVBS6DYP
-         KKL7l61ZgzngMfJEAbciAUVBzjykfRuxbSJKkC13R8ScHD/dvjjIxltAl5O1PUTgL5SN
-         IX8NziLLYbEYDYWBGPl0Ymn/3XsKLY0cwRS0uZzu/SfkvTK/BxwQFyREMnQFA45Lwu2F
-         yCiT0hx4kqsxgfDXkjlzOggoUvexfX4pElxwEx2V3Tcj37llgDFU0whPRUVZLb5nSYK8
-         1HkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707896582; x=1708501382;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qm35U4zALwNw8pnZRUH8OtgtOhB7/DRacCD6hYwcr6s=;
-        b=HPR+eIEqNYAOcu0yLhbKswv33YJmToONSPqQ8+uAd1QnKZCuiQVy1dhna0gqly9M80
-         +VPXw1vffnIGAD8iVLjuISorDkol8X3CS8oFsz98zFmG+XjnviCHRvfgWlrLYSbwvIOk
-         EGV4qrn2KDqpWQodG3EhyxkbdZOM4h/3/NTZus34nIA8VXdiKNYcFpXAjopgpeYgAP0w
-         ytEZh05Zfsh+bWo5qQPXsAhGCg8lxIBElj2Ji8MIQEdNXhqCXk9VxO+79DNMyrogjee7
-         WaxKa+ffq/AN4p6nttA1M71K1DWbm6it69/OyDgEp1okmwxnaEI6XkqDTl1NRtndjgyp
-         YKwA==
-X-Forwarded-Encrypted: i=1; AJvYcCWxaE5oBw0XE5Oe26HEC9TZU53mPoatJW8MF3Oa2CmGXYRjn1kOV4mHasLPRboLvyI/CisL+7NX8oxYeDuxBkFvDJ7RwvdiyluZ3HX9
-X-Gm-Message-State: AOJu0YyFmXsCBDGhD8yCYgRioVA9np+mpRehOBR/eysvD1gkzJeoJTgB
-	qrkS7XzjXjcI4Z5S28OaT6kz5Sxv9zLbaTjmpMrwt0RH5Sn3hUnBjm9U6fb/B1g=
-X-Google-Smtp-Source: AGHT+IFgCBpIBi9Yw7Zbk0svMSXIz5z2ckU3mgemyBuFKJc7Ohs0vatZR0iczHy/Ul9qTbzaqUc4yg==
-X-Received: by 2002:a2e:82c3:0:b0:2d0:ac7f:eef9 with SMTP id n3-20020a2e82c3000000b002d0ac7feef9mr1312036ljh.34.1707896582368;
-        Tue, 13 Feb 2024 23:43:02 -0800 (PST)
-Received: from [192.168.2.107] ([79.115.63.202])
-        by smtp.gmail.com with ESMTPSA id x17-20020a05600c21d100b00410b98a5c77sm1059749wmj.32.2024.02.13.23.43.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Feb 2024 23:43:01 -0800 (PST)
-Message-ID: <d5d71068-eff7-4a1d-ad2f-948bf0313b9c@linaro.org>
-Date: Wed, 14 Feb 2024 07:42:57 +0000
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XIEFh2Vh"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41E7hnRS112889;
+	Wed, 14 Feb 2024 01:43:49 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1707896629;
+	bh=tnihI+YM3AXr5w3Jx4CWOP0Vj9gtjnvp82oYgzAV3jc=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=XIEFh2Vhl6RYwnXj5/GrFmRlty1mzwtRrU939XWONr5OrZWnB3VH8XWGbS8Wy8/BK
+	 d4VF1tqjKDijBm9D5BIUPLasnLCsZDi687ScQrbs1CYKlwUU61fLOoRYbs3cJeUhFr
+	 KftOkUFVQdsGC6KPvDkWXsCVPu3Y0on/tH4gmC2M=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41E7hnKs015561
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 14 Feb 2024 01:43:49 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 14
+ Feb 2024 01:43:49 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 14 Feb 2024 01:43:48 -0600
+Received: from [10.24.69.142] ([10.24.69.142])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41E7hj04028714;
+	Wed, 14 Feb 2024 01:43:45 -0600
+Message-ID: <45bd5618-2e22-4715-9724-92f1d4b84608@ti.com>
+Date: Wed, 14 Feb 2024 13:13:44 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,45 +50,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] spi: spi-mem: add statistics support to ->exec_op() calls
+Subject: Re: [PATCH v2 3/3] arm64: dts: ti: Add support for TI J722S
+ Evaluation Module
 Content-Language: en-US
-To: Mark Brown <broonie@kernel.org>
-Cc: =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
- linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
- Dhruva Gole <d-gole@ti.com>, Gregory CLEMENT <gregory.clement@bootlin.com>,
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>
-References: <20240209-spi-mem-stats-v1-1-dd1a422fc015@bootlin.com>
- <b0844e5a-ee4b-4608-99a1-877660e01d57@linaro.org>
- <69f023bb-2844-496f-9f3f-4e2e80129d33@sirena.org.uk>
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <69f023bb-2844-496f-9f3f-4e2e80129d33@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+To: Michael Walle <mwalle@kernel.org>, Andrew Davis <afd@ti.com>, <nm@ti.com>,
+        <vigneshr@ti.com>, <conor+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <kristo@kernel.org>,
+        <robh+dt@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>,
+        <j-choudhary@ti.com>
+References: <20240206100608.127702-1-vaishnav.a@ti.com>
+ <20240206100608.127702-4-vaishnav.a@ti.com>
+ <CZ386ITQ83KH.1KNOV5MXLXPBF@kernel.org>
+From: Vaishnav Achath <vaishnav.a@ti.com>
+In-Reply-To: <CZ386ITQ83KH.1KNOV5MXLXPBF@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
+Hi Michael,
 
+On 12/02/24 21:32, Michael Walle wrote:
+> Hi,
+> 
+> On Tue Feb 6, 2024 at 11:06 AM CET, Vaishnav Achath wrote:
+>> +# Boards with J722s SoC
+>> +dtb-$(CONFIG_ARCH_K3) += k3-j722s-evm.dtb
+> 
+> I'm a bit confused by your names. What are the new/correct ones now?
+> Some seem to use the amXX names and some the jXX ones. I've read [1]
+> and it appears it was suggested to use the am67 names for the device
+> trees. Esp. because there is already, am62, am64, am65, am68 and
+> am69 in as names for the device trees.
+> 
+> The TRM you've linked in the cover letter doesn't shed much light
+> either. It just lists both.
+> 
 
-On 2/13/24 15:28, Mark Brown wrote:
-> On Tue, Feb 13, 2024 at 12:39:02PM +0000, Tudor Ambarus wrote:
->> On 2/9/24 13:51, Théo Lebrun wrote:
-> 
->>> +		if (!ret || ret != -ENOTSUPP || ret != -EOPNOTSUPP) {
->>> +			spi_mem_add_op_stats(ctlr->pcpu_statistics, op, ret);
->>> +			spi_mem_add_op_stats(mem->spi->pcpu_statistics, op, ret);
->>> +
-> 
->> Would be good to be able to opt out the statistics if one wants it.
-> 
->> SPI NORs can write with a single write op maximum page_size bytes, which
->> is typically 256 bytes. And since there are SPI NORs that can run at 400
->> MHz, I guess some performance penalty shouldn't be excluded.
-> 
-> If we can cope with this sort of statistics collection in the networking
-> fast path we can probably cope with it for SPI too, the immediate
-> recording is all per CPU so I'd like to see some numbers showing that
-> it's a problem before worrying about it too much.  Even the people doing
-> things like saturating CAN buses haven't been raising it as a concern
-> for the regular SPI data path.  We could add a Kconfig if it's an issue.
+Both names are correct, for other Jacinto devices J721S2 and J784S4, the 
+industrial variants (AM68, AM69 respectively) and those boards were 
+announced at a later point of time and since the automotive/J7 variants 
+were introduced first, the SoC dtsi and files have the J7XX names, for 
+AM62/AM64 there is no confusion in naming, in this case the initial TRM 
+itself mentions J722S and AM67 variants with similar capabilities, the 
+reasoning behind continuing with the J722S name is because the initial 
+support is being added for J722S EVM (the top marking on the SoC package 
+populated on the EVM say XJ722SAMW, this can be seen in the schematics 
+also), please let know if this clarifies the confusion.
 
-Ok, we can deal with it afterwards if it'll become an issue.
+Thanks and Regards,
+Vaishnav
+
+> -michael
+> 
+> [1] https://lore.kernel.org/all/81f90d13-da10-4a68-a0e7-95212f40b3e8@ti.com/
