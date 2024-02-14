@@ -1,181 +1,200 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE95A1420CE
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 22:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC9C145345;
+	Wed, 14 Feb 2024 22:36:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707950182; cv=none; b=FU9BFK7ktg/k6fzYS8x2Vsia9BCDq+R2RW3dm63l/6ar9lUB6quuDQ4t2Ek2GYEvPKaDF/Tc8DnBqg5o1pASmzfrf9AMHZfjhTYBj0X/FGoOFiyvrUWsdOmkSQmUvDR253/TPK5tNT3Xvn2VS0MQXGfAz9s+V8eyvAg9dCGJeDM=
+	t=1707950196; cv=none; b=jDNu0fXH7diguCui/UI8EOAwNqN8UV2Vo2vFB6zzrrHSTYNOTXQQBZ/Ba2WtmiIRFV4iofEZVTy+jwV280DM7vpa8MwQnr7bJXq/4QcLSjmGzwtR3VYqpOpHvo3MWPl1LpYrWEbb1sfjOLxmGEbcLZeE4RjTZXeaJkj38cJtVDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707950182; c=relaxed/simple;
-	bh=C0crMXEshWXmvClKWRf7fOFqj/1UG01MNn2e/g61qyA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u3g68uiV65RwVkRJg5fUqMR+IGN0N2yKyuuOk2SbZkDNCZFhAaSrXf1TdgnIeVCQPZpCPex1PSK2fL4HHgEgwZfw6laij9Bf2mQoLJe1Ywiq95NxbLFW/DJzs0odTbr1jCtIpP2zQypI3zFkDBXvdRayUL537nF6Na+aFS+UWxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O2yMsy/4; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707950196; c=relaxed/simple;
+	bh=lkgZhDywxWBeIykGOxxB04TPIeiXfga5OvHAInlNU1w=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=bu5kbCt4qRxoWBOPmiTRYNasgAJRreiiD7UZcTVGmfNoXX6y0CbjkW85Vkt8BEgoNaJhTG7MU9yafdQLfH3VkDzOkO+IRL319DV2nbaC6fB15ASqb+GSq9lHgo/mLSpkw0FlHUtSqpMkS5z4loa/63+gqLZgN4w8ohC+ZtuoZIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=fd3j5irO; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O2yMsy/4"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dcc80d6004bso223086276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 14:36:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707950178; x=1708554978; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mIZ+3Vimc+Fu9uNEqwRF3MpLhrYbsxAAnrlrt3WNttw=;
-        b=O2yMsy/4oK8Y+fycjp+dTg7a95J3x8uffn5QQr/GODzExUn+5G+F1syIYtUOfWJzqr
-         VWnifaveFBOThJy2sKyI/Uy6uSfYCaWQ8rs+vnJ6uTAaToe3OeN7Ck4g35cRmc7SULgW
-         laJ2nuz+VS51bFFnqHVE7welFFlu4ndy4JVcGUEPx9hVfuSNHt7B6bMWePu/VzHNqW52
-         CA42MpX0muLR6BbAaA7ZcJvUVwHp9ISH7RboIY2VBPjOK9ogFCKNPaPmrRsHKi8s4PUD
-         Ih2VJvDYzSrud5HsdsKn4sU6PKEp9zXsfcrtDRXggHej6O7KHmSUtU8JvMr7ho9EnsKS
-         a7mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707950179; x=1708554979;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mIZ+3Vimc+Fu9uNEqwRF3MpLhrYbsxAAnrlrt3WNttw=;
-        b=mWHk310EOHLy0byjCNwylK/wzITdGVkBf4nzTQ2TPTQTypttsAdNTeaMmrx59+Mczd
-         SWfhXUnYhFEk53wHjaQD5b+yF9va5LSE5nBgDiWdtvjnokCHTYctLA10a9VedC6Bdkw8
-         Q3umWFm8BuWdNS0kJ58gfNpGOMv84NZGRxkAm03ZLH5eNUc1EHzXCevuHeTtlMPEZaLX
-         uINj8ZGZE91U6KW/5xRYXf9JKGnGVGqHSxnK2VwqQNgv/frSpprn01dj07CPKvKp/Ooi
-         ONAyJUW4oqXVuZ0VRYvRhMHFSxqU4zlyJmblsCS1JXHbeFP8A6oa3V5yUAfbP4zG/vK+
-         D1ag==
-X-Forwarded-Encrypted: i=1; AJvYcCXJ4/OfhXckiIw3y9iP8vL0byzD2JMF6CrEVzCabYGrybr82tmNXGMcqgEsbNuPbcFwhk/Z3zkS9JSonNdPWsQzV5jTKyEyrgHI57Ve
-X-Gm-Message-State: AOJu0Ywkr1f3yXT+2mJ882B4RbYCmXnRRYLdolJ7Y0f/plMQXogXJ5r/
-	i9f5xfX1yA42SctjlGc3g5D+KhlpcVJ59PkGDqwlfQZ+k9FOnRWpr5YcQggZsiUts53DFhy29nf
-	HQMS46uC4qNQaa/ePJ+8Y6ei85mLfHTr++tND
-X-Google-Smtp-Source: AGHT+IFGMo5QMzgB4haA8j4PHefAYH0QGMXhhajKI9bA2/lcKpgWtoNuuV25DDWG2rPEqNS3u8mi+lX2wk/W+0Ufusg=
-X-Received: by 2002:a25:208:0:b0:dc6:9c4f:9e85 with SMTP id
- 8-20020a250208000000b00dc69c4f9e85mr3483617ybc.49.1707950178324; Wed, 14 Feb
- 2024 14:36:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fd3j5irO"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41ELiXNM012564;
+	Wed, 14 Feb 2024 22:31:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2023-11-20;
+ bh=PJsWJXWC5S8Vdi5TxjdTx2btzT8JLgP7AYShISVlxsY=;
+ b=fd3j5irOcmnaZyBvr57QzI+j//nHj6vIyy22dhu3mI3Af64KbKUtKWpwKaVxkPReeCnN
+ F5fn/w5J12KC8lTppwzmSPNEXttKj5ERnRVU3OFPMZlHGJUrPeJPfOscCLw2PPPWwxsb
+ OGKlM0ekXkhJqMkAKmiqe/RIFR7+dxjlvw7zZlK0XWfzMm6KSKm34T6s/R6EmJABSLxX
+ GbV+rV+UktXqmCy6waojCHi7mvGXGuujOJ8HvdY5lxnsR2a6C963Tc+P/mCU6MElgBDj
+ iekngahwUyH8+5T9nphLDu9N5F/vxiOyG7ljZkn5fxZT0qKp8cvVp2ltLa+o8WNBl65+ dg== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3w91w6rprq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 14 Feb 2024 22:31:43 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41EMNohK000605;
+	Wed, 14 Feb 2024 22:31:41 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3w5yk9n7c5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Wed, 14 Feb 2024 22:31:41 +0000
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41EMVTVE004281;
+	Wed, 14 Feb 2024 22:31:40 GMT
+Received: from bur-virt-x6-2-100.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3w5yk9n72r-11
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Wed, 14 Feb 2024 22:31:40 +0000
+From: Ross Philipson <ross.philipson@oracle.com>
+To: linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+        linux-efi@vger.kernel.org
+Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        dave.hansen@linux.intel.com, ardb@kernel.org, mjg59@srcf.ucam.org,
+        James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
+        jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
+        nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
+        davem@davemloft.net, kanth.ghatraju@oracle.com,
+        trenchboot-devel@googlegroups.com
+Subject: [PATCH v8 10/15] kexec: Secure Launch kexec SEXIT support
+Date: Wed, 14 Feb 2024 14:18:42 -0800
+Message-Id: <20240214221847.2066632-11-ross.philipson@oracle.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240214221847.2066632-1-ross.philipson@oracle.com>
+References: <20240214221847.2066632-1-ross.philipson@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240212213922.783301-1-surenb@google.com> <20240212213922.783301-26-surenb@google.com>
- <Zc09KRo7nMlSGpG6@dread.disaster.area>
-In-Reply-To: <Zc09KRo7nMlSGpG6@dread.disaster.area>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 14 Feb 2024 14:36:06 -0800
-Message-ID: <CAJuCfpGPyf9VzohFi8HzvT0XsW4bd3EAnCAb6xxedfJGtzZbBA@mail.gmail.com>
-Subject: Re: [PATCH v3 25/35] xfs: Memory allocation profiling fixups
-To: Dave Chinner <david@fromorbit.com>
-Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, mhocko@suse.com, 
-	vbabka@suse.cz, hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, 
-	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, 
-	corbet@lwn.net, void@manifault.com, peterz@infradead.org, 
-	juri.lelli@redhat.com, catalin.marinas@arm.com, will@kernel.org, 
-	arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com, 
-	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
-	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
-	nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev, 
-	rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com, 
-	yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com, 
-	hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org, 
-	ndesaulniers@google.com, vvvvvv@google.com, gregkh@linuxfoundation.org, 
-	ebiggers@google.com, ytcoode@gmail.com, vincent.guittot@linaro.org, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	bristot@redhat.com, vschneid@redhat.com, cl@linux.com, penberg@kernel.org, 
-	iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com, 
-	elver@google.com, dvyukov@google.com, shakeelb@google.com, 
-	songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com, 
-	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-arch@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
-	cgroups@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-14_14,2024-02-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0 mlxscore=0
+ bulkscore=0 spamscore=0 malwarescore=0 adultscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2402140170
+X-Proofpoint-ORIG-GUID: LLNZ0cqPlLL1enYzc9E7Wr0WpewFmW33
+X-Proofpoint-GUID: LLNZ0cqPlLL1enYzc9E7Wr0WpewFmW33
 
-On Wed, Feb 14, 2024 at 2:22=E2=80=AFPM Dave Chinner <david@fromorbit.com> =
-wrote:
->
-> On Mon, Feb 12, 2024 at 01:39:11PM -0800, Suren Baghdasaryan wrote:
-> > From: Kent Overstreet <kent.overstreet@linux.dev>
-> >
-> > This adds an alloc_hooks() wrapper around kmem_alloc(), so that we can
-> > have allocations accounted to the proper callsite.
-> >
-> > Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> > ---
-> >  fs/xfs/kmem.c |  4 ++--
-> >  fs/xfs/kmem.h | 10 ++++------
-> >  2 files changed, 6 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/fs/xfs/kmem.c b/fs/xfs/kmem.c
-> > index c557a030acfe..9aa57a4e2478 100644
-> > --- a/fs/xfs/kmem.c
-> > +++ b/fs/xfs/kmem.c
-> > @@ -8,7 +8,7 @@
-> >  #include "xfs_trace.h"
-> >
-> >  void *
-> > -kmem_alloc(size_t size, xfs_km_flags_t flags)
-> > +kmem_alloc_noprof(size_t size, xfs_km_flags_t flags)
-> >  {
-> >       int     retries =3D 0;
-> >       gfp_t   lflags =3D kmem_flags_convert(flags);
-> > @@ -17,7 +17,7 @@ kmem_alloc(size_t size, xfs_km_flags_t flags)
-> >       trace_kmem_alloc(size, flags, _RET_IP_);
-> >
-> >       do {
-> > -             ptr =3D kmalloc(size, lflags);
-> > +             ptr =3D kmalloc_noprof(size, lflags);
-> >               if (ptr || (flags & KM_MAYFAIL))
-> >                       return ptr;
-> >               if (!(++retries % 100))
-> > diff --git a/fs/xfs/kmem.h b/fs/xfs/kmem.h
-> > index b987dc2c6851..c4cf1dc2a7af 100644
-> > --- a/fs/xfs/kmem.h
-> > +++ b/fs/xfs/kmem.h
-> > @@ -6,6 +6,7 @@
-> >  #ifndef __XFS_SUPPORT_KMEM_H__
-> >  #define __XFS_SUPPORT_KMEM_H__
-> >
-> > +#include <linux/alloc_tag.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/sched.h>
-> >  #include <linux/mm.h>
-> > @@ -56,18 +57,15 @@ kmem_flags_convert(xfs_km_flags_t flags)
-> >       return lflags;
-> >  }
-> >
-> > -extern void *kmem_alloc(size_t, xfs_km_flags_t);
-> >  static inline void  kmem_free(const void *ptr)
-> >  {
-> >       kvfree(ptr);
-> >  }
-> >
-> > +extern void *kmem_alloc_noprof(size_t, xfs_km_flags_t);
-> > +#define kmem_alloc(...)                      alloc_hooks(kmem_alloc_no=
-prof(__VA_ARGS__))
-> >
-> > -static inline void *
-> > -kmem_zalloc(size_t size, xfs_km_flags_t flags)
-> > -{
-> > -     return kmem_alloc(size, flags | KM_ZERO);
-> > -}
-> > +#define kmem_zalloc(_size, _flags)   kmem_alloc((_size), (_flags) | KM=
-_ZERO)
-> >
-> >  /*
-> >   * Zone interfaces
-> > --
-> > 2.43.0.687.g38aa6559b0-goog
->
-> These changes can be dropped - the fs/xfs/kmem.[ch] stuff is now
-> gone in linux-xfs/for-next.
+Prior to running the next kernel via kexec, the Secure Launch code
+closes down private SMX resources and does an SEXIT. This allows the
+next kernel to start normally without any issues starting the APs etc.
 
-Thanks for the note. Will drop in the next submission.
+Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+---
+ arch/x86/kernel/slaunch.c | 73 +++++++++++++++++++++++++++++++++++++++
+ kernel/kexec_core.c       |  4 +++
+ 2 files changed, 77 insertions(+)
 
->
-> -Dave.
-> --
-> Dave Chinner
-> david@fromorbit.com
+diff --git a/arch/x86/kernel/slaunch.c b/arch/x86/kernel/slaunch.c
+index 1fae323e8d1b..429e6d39e73b 100644
+--- a/arch/x86/kernel/slaunch.c
++++ b/arch/x86/kernel/slaunch.c
+@@ -523,3 +523,76 @@ void __init slaunch_setup_txt(void)
+ 
+ 	pr_info("Intel TXT setup complete\n");
+ }
++
++static inline void smx_getsec_sexit(void)
++{
++	asm volatile ("getsec\n"
++		      : : "a" (SMX_X86_GETSEC_SEXIT));
++}
++
++/*
++ * Used during kexec and on reboot paths to finalize the TXT state
++ * and do an SEXIT exiting the DRTM and disabling SMX mode.
++ */
++void slaunch_finalize(int do_sexit)
++{
++	u64 one = TXT_REGVALUE_ONE, val;
++	void __iomem *config;
++
++	if ((slaunch_get_flags() & (SL_FLAG_ACTIVE | SL_FLAG_ARCH_TXT)) !=
++	    (SL_FLAG_ACTIVE | SL_FLAG_ARCH_TXT))
++		return;
++
++	config = ioremap(TXT_PRIV_CONFIG_REGS_BASE, TXT_NR_CONFIG_PAGES *
++			 PAGE_SIZE);
++	if (!config) {
++		pr_emerg("Error SEXIT failed to ioremap TXT private reqs\n");
++		return;
++	}
++
++	/* Clear secrets bit for SEXIT */
++	memcpy_toio(config + TXT_CR_CMD_NO_SECRETS, &one, sizeof(one));
++	memcpy_fromio(&val, config + TXT_CR_E2STS, sizeof(val));
++
++	/* Unlock memory configurations */
++	memcpy_toio(config + TXT_CR_CMD_UNLOCK_MEM_CONFIG, &one, sizeof(one));
++	memcpy_fromio(&val, config + TXT_CR_E2STS, sizeof(val));
++
++	/* Close the TXT private register space */
++	memcpy_toio(config + TXT_CR_CMD_CLOSE_PRIVATE, &one, sizeof(one));
++	memcpy_fromio(&val, config + TXT_CR_E2STS, sizeof(val));
++
++	/*
++	 * Calls to iounmap are not being done because of the state of the
++	 * system this late in the kexec process. Local IRQs are disabled and
++	 * iounmap causes a TLB flush which in turn causes a warning. Leaving
++	 * thse mappings is not an issue since the next kernel is going to
++	 * completely re-setup memory management.
++	 */
++
++	/* Map public registers and do a final read fence */
++	config = ioremap(TXT_PUB_CONFIG_REGS_BASE, TXT_NR_CONFIG_PAGES *
++			 PAGE_SIZE);
++	if (!config) {
++		pr_emerg("Error SEXIT failed to ioremap TXT public reqs\n");
++		return;
++	}
++
++	memcpy_fromio(&val, config + TXT_CR_E2STS, sizeof(val));
++
++	pr_emerg("TXT clear secrets bit and unlock memory complete.\n");
++
++	if (!do_sexit)
++		return;
++
++	if (smp_processor_id() != 0)
++		panic("Error TXT SEXIT must be called on CPU 0\n");
++
++	/* In case SMX mode was disabled, enable it for SEXIT */
++	cr4_set_bits(X86_CR4_SMXE);
++
++	/* Do the SEXIT SMX operation */
++	smx_getsec_sexit();
++
++	pr_info("TXT SEXIT complete.\n");
++}
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index d08fc7b5db97..8036a731b1bb 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -40,6 +40,7 @@
+ #include <linux/hugetlb.h>
+ #include <linux/objtool.h>
+ #include <linux/kmsg_dump.h>
++#include <linux/slaunch.h>
+ 
+ #include <asm/page.h>
+ #include <asm/sections.h>
+@@ -1268,6 +1269,9 @@ int kernel_kexec(void)
+ 		cpu_hotplug_enable();
+ 		pr_notice("Starting new kernel\n");
+ 		machine_shutdown();
++
++		/* Finalize TXT registers and do SEXIT */
++		slaunch_finalize(1);
+ 	}
+ 
+ 	kmsg_dump(KMSG_DUMP_SHUTDOWN);
+-- 
+2.39.3
+
