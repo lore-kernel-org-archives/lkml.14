@@ -1,134 +1,142 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2057.outbound.protection.outlook.com [40.107.96.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34AFA1386B3
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 18:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708023548; cv=none; b=sYB79rEz3qi6ZYoTy/QNnUPx83MiGZefOL2K3e3onxI33Lb8OmUF16KnSDuQKGKZIomxy8xTNawqmwLj0Yi0n413eyvrxzbp6q1WoElhrFzxWAZtmdyDb1x0Z13VAk5HV53MwYPkicqMqU+TKGa3bald9V8KbQ5wRBlw17IW8qg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708023548; c=relaxed/simple;
-	bh=kmiOofdVKBZVE7X7tgel+gK+VIQLaBji30JFdTlsCpE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QM44DWSah3W+l5XbNrxK535ZkzrDyOae9nGpbjO0NG37ei3OMEDgQOTN3uUzOBq4UdoHZB4qYwjOAz6gbx8kUfI1/p2jfsWRYY0awGF22BMIBIf2Su3avTCKQan47m4NBqQ3CXGTsE2HdH4U4LGqPfNcwfnCNyxj1CAhecnL6wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=UMhNdIoJ; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF46131E54;
+	Thu, 15 Feb 2024 19:01:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708023686; cv=fail; b=vBCyo/HQCFeZOM1O+hjMJSPtQhAJUR44gdk9bzKOVOoBc+jWe6p7dTkEAeUgme9AfhxyPNalNaXPMpUYiXE/sTy4FT+Fvs29LJ5ZDVDKIN5mNt3wHHCBpbEU9K8R9DViP9qwazUUheIUpzucAqqmqAVu9CBsOtJcVWa+rHRkOxU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708023686; c=relaxed/simple;
+	bh=ZTPPiqSJ4fxWlUSl+O+OlkqfsnrMjoJ6Y/rdyzMy1f0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=k6b6qNukOohtTmHWKu0W0MYQExqDkQb1+A2gbmg/wiVWHaGzt6a1+XE7gaakoLZ8tXLcwwYmLfutGvKI5vwkh1KWoeQSVyoIYSPeGvYfAXxb055bre0Ai/mFCIBqmCWUwk/HiNuR5nbBN225PaTjB0B2fCn/PWY9cM9Zdc/sjA0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=SQjQs6ZV; arc=fail smtp.client-ip=40.107.96.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="UMhNdIoJ"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id A8752240103
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 19:59:03 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1708023543; bh=kmiOofdVKBZVE7X7tgel+gK+VIQLaBji30JFdTlsCpE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:
-	 Content-Transfer-Encoding:From;
-	b=UMhNdIoJX+oPIy9wjgs8iWrbai1s3wc/ZJRKPbMdeadqavkK9jVNbBpGdRHve5KR8
-	 v+nmVTghcjYPWr7f2gz6b/cXhOvnU1/+QhIiCvfHN56JB7/JyGhR0MeTeGWDSCUAAT
-	 rK6EoYAoMwe3MLH8szK1PYHDWZ+Mt58WYjzhdrlSjQxk699XsJ/LxQrZ9JXRL2c9pN
-	 o6bbqXNsfzxDJamuyfla2solZu9SU0m17YWnfhrzVwjyqCKc6bzjESobFQ4xHLO5wQ
-	 D0C3VclvwlyA5IhL1XdnrXq/YUz65LA4dhAu+/4C61HoIBPrKbd1uoCfGVoBydwLRi
-	 h2qd9BfnOS8xA==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4TbPVX19dJz6tx2;
-	Thu, 15 Feb 2024 19:58:59 +0100 (CET)
-From: Yueh-Shun Li <shamrocklee@posteo.net>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Mark Brown <broonie@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Yueh-Shun Li <shamrocklee@posteo.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] minmax: substitute local variables using __UNIQUE_ID()
-Date: Thu, 15 Feb 2024 18:58:15 +0000
-Message-ID: <20240215185820.2285834-1-shamrocklee@posteo.net>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SQjQs6ZV"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ebt2CtzeTf0lF6prHFUKrLTgJ5xC6tCV1F0VBAMEffBDHn//hAS8IREApvyBEoC4o9BIbkNZBCVDseRc27clyjZ0BDyOy0BhAT3OrMog6FcNWAJj3NXQmUTkfHubf1Tr60mkqlMUNb/JqCL2Eo8OQuusYYu34RfzqDac1+ZKDcQBFSbbBCEm2Yf6j9Apt1ATyhRkQ3IDTCTKVnwKU55/cd5HBYSbd2JyWVtP9j0xJvx/v6iai3qsUjifIP9g93oWRzBjz42c9q2+rgXnNI9r/+FCPaqWJxn46QyF7vpSHBY3eCGhqbyg1fktr4BejRfSptp7jsprdwAihQq93w/I/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=k/8bZdg/+y3zoH0XMoYVJW3n/0LhQuxiQ95/17pVOTc=;
+ b=NzJgofH+9mqXHK++C7ZCglaFlR/uOCOKxmB0r0JaQDWMu2Q+kCvmR+9du42jv+9k/7W2UK0ZwNkPIUtsMB/xQphOh/jdWvsHgoAibFbw03nXYHe3Lf0+CHnC3eSPJmb6fKCQuR+ZPG5x/rNUUk4f2Ott/e3bbIxWV5cAK7SwAkqEj9mB4kNQRP7ByNAaQDMuvgq7xUFV0yBTLgxHSOT0fWv4MnSbgUG1SicQy95euy25b8uMtz4/fbzMjg1V1KvKH93vKOra4DW8NjUBXVokO3lVYTTyHbwOcYDxUz1EC8UiEw21aewtW213BHAUHlCc3xdIsiLKVpbEoa2B+msg2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linuxfoundation.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=k/8bZdg/+y3zoH0XMoYVJW3n/0LhQuxiQ95/17pVOTc=;
+ b=SQjQs6ZVLmjNuPHbI8hXxvPRLpksmXbWpuQBe1DH+x2YDFDGubETGAj53cXN2CYbfwReqLMoyXeg28ZJ0QnsoBcTa+t7ZbV0cU1TYIgQpMA63SF6Wy9kjrE5g10rwx3HQA74dwz2XqhVeBGNQ1ZeMwNVCj9hRZ8LC9VjGJfDljw=
+Received: from BL1P221CA0024.NAMP221.PROD.OUTLOOK.COM (2603:10b6:208:2c5::31)
+ by PH7PR12MB6490.namprd12.prod.outlook.com (2603:10b6:510:1f5::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.23; Thu, 15 Feb
+ 2024 19:01:21 +0000
+Received: from MN1PEPF0000ECD4.namprd02.prod.outlook.com
+ (2603:10b6:208:2c5:cafe::55) by BL1P221CA0024.outlook.office365.com
+ (2603:10b6:208:2c5::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.40 via Frontend
+ Transport; Thu, 15 Feb 2024 19:01:21 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ MN1PEPF0000ECD4.mail.protection.outlook.com (10.167.242.132) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7292.25 via Frontend Transport; Thu, 15 Feb 2024 19:01:21 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 15 Feb
+ 2024 13:01:20 -0600
+Received: from xhdradheys41.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Thu, 15 Feb 2024 13:01:17 -0600
+From: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+To: <gregkh@linuxfoundation.org>, <robh@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+	<balbi@kernel.org>, <Thinh.Nguyen@synopsys.com>
+CC: <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <git@amd.com>, Piyush Mehta
+	<piyush.mehta@amd.com>, Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+Subject: [PATCH] dt-bindings: usb: dwc3: Add snps,enable_guctl1_ipd_quirk
+Date: Fri, 16 Feb 2024 00:31:05 +0530
+Message-ID: <1708023665-1441674-1-git-send-email-radhey.shyam.pandey@amd.com>
+X-Mailer: git-send-email 2.1.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN1PEPF0000ECD4:EE_|PH7PR12MB6490:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6781bbae-18b9-4f16-0f8c-08dc2e587fa2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	RD34AIs4PgXaFYN2d8qk1v1UPibFqnWwBeS110bcRPO5eBpc9YzLToOaA92fCDiRm64KxQyBqPos2vqHjEzyVxB8zZbHOomE6aJOPMNhGzFQA07CJHRBgnieAHNN6eAI3Qz8hw/yWwm9507vGwVim35QjVJ/wQU+6zx+kLPEJ95yFO66k1eA9m4ZtsSRCiPj/m7bKDs+QdlC2krGmApE+30Ign9mZ+JwrGRWgFSZxOfGn5bd5mxTsOH7XHkA/EEnqokaJ0Q5TObF70UNvibzZWbmGz6QwEQtNVkudbOHx/SxnGrI2Q5+XGBezjoURIcziZwU6uEqBreDZfqgVO2TY2nUHETvm0GGMNndRD5tISOA9LEKa8IcaNUY+GMinU+0uEQEHHGLS7Bor6OLaaoDKkcVqRcUFoDBH1ZWPHb40G+Viv8lSNLYrrlTdKE+LPkUB5ffG2PyPLBdLiU5ENo8g7le04zlNF/oEsfx9n+8gzib/ojpCdqfLQq8W4LAoPQOLggfdNAUmxvuEbUoe3x3as8g7iJnFnIPlFckqqlcNitGrLaQZxyTGLtbgK9Fg1uyI/k8ZKJZ7DWf0ZK6O9/a78KaDwcU6DzFLxKESSThTc7TVDPgNKbSxQyj+GLmhOK6Ox+lCIwIyp8DIFeyY84MDLzgbt88kpuOhiDd4eBzr0E=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(396003)(136003)(376002)(346002)(230922051799003)(451199024)(1800799012)(186009)(36860700004)(82310400011)(64100799003)(46966006)(40470700004)(110136005)(8936002)(70586007)(26005)(41300700001)(336012)(478600001)(2616005)(83380400001)(8676002)(4326008)(5660300002)(36756003)(54906003)(6666004)(316002)(86362001)(82740400003)(81166007)(356005)(426003)(70206006)(2906002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Feb 2024 19:01:21.2626
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6781bbae-18b9-4f16-0f8c-08dc2e587fa2
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MN1PEPF0000ECD4.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6490
 
-Substitute identifier names of local variables used in macro
-definitions inside minmax.h with those generated by __UNIQUE_ID(prefix)
-to eliminate passible naming collisions.
+From: Piyush Mehta <piyush.mehta@amd.com>
 
-Identifier names like __x, __y and __tmp are everywhere inside the
-kernel source. This patch ensures that macros provided by minmax.h
-will work even when identifiers of these names appear in the expanded
-input arguments.
+SNPS controller when configured in HOST mode maintains Inter Packet
+Delay (IPD) of ~380ns which works with most of the super-speed hubs
+except VIA-LAB hubs. When IPD is ~380ns HOST controller fails to
+enumerate FS/LS devices when connected behind VIA-LAB hubs.
 
-Signed-off-by: Yueh-Shun Li <shamrocklee@posteo.net>
+To address the above issue, add 'snps,enable_guctl1_ipd_quirk' quirk,
+This quirk set the bit 9 of GUCTL1 that enables the workaround in HW to
+reduce the ULPI clock latency by 1 cycle, thus reducing the IPD (~360ns).
+
+Signed-off-by: Piyush Mehta <piyush.mehta@amd.com>
+Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
 ---
- include/linux/minmax.h | 41 ++++++++++++++++++++++++++++-------------
- 1 file changed, 28 insertions(+), 13 deletions(-)
+In the zynqmp public database GUCTL1 bit 9 is reserved but it is used to
+enable a fix related to Inter Packet Delay in HW. The documentation team
+is working to update GUCTL1 bit 9 description.
+---
+ Documentation/devicetree/bindings/usb/snps,dwc3.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/include/linux/minmax.h b/include/linux/minmax.h
-index 2ec559284a9f..df7e45106c3a 100644
---- a/include/linux/minmax.h
-+++ b/include/linux/minmax.h
-@@ -129,10 +129,14 @@
-  * @x: value1
-  * @y: value2
-  */
--#define min_not_zero(x, y) ({			\
--	typeof(x) __x = (x);			\
--	typeof(y) __y = (y);			\
--	__x == 0 ? __y : ((__y == 0) ? __x : min(__x, __y)); })
-+#define min_not_zero(x, y)						\
-+	__min_not_zero_impl(x, y, __UNIQUE_ID(__x), __UNIQUE_ID(__y))
-+#define __min_not_zero_impl(x, y, __x, __y)				\
-+	({								\
-+		typeof(x) __x = (x);					\
-+		typeof(y) __y = (y);					\
-+		__x == 0 ? __y : ((__y == 0) ? __x : min(__x, __y));	\
-+	})
+diff --git a/Documentation/devicetree/bindings/usb/snps,dwc3.yaml b/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
+index 8f5d250070c7..b226457a6e50 100644
+--- a/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
++++ b/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
+@@ -280,6 +280,13 @@ properties:
+       xhci reset. And the vbus will back to 5V automatically when reset done.
+     type: boolean
  
- /**
-  * clamp - return a value clamped to a given range with strict typechecking
-@@ -185,13 +189,19 @@
-  * typeof() keeps the const qualifier. Use __unqual_scalar_typeof() in order
-  * to discard the const qualifier for the __element variable.
-  */
--#define __minmax_array(op, array, len) ({				\
--	typeof(&(array)[0]) __array = (array);				\
--	typeof(len) __len = (len);					\
--	__unqual_scalar_typeof(__array[0]) __element = __array[--__len];\
--	while (__len--)							\
--		__element = op(__element, __array[__len]);		\
--	__element; })
-+#define __minmax_array(op, array, len)					\
-+	__minmax_array_impl(op, array, len, __UNIQUE_ID(__array),	\
-+			    __UNIQUE_ID(__len), __UNIQUE_ID(__element))
-+#define __minmax_array_impl(op, array, len, __array, __len, __element)	\
-+	({								\
-+		typeof(&(array)[0]) __array = (array);			\
-+		typeof(len) __len = (len);				\
-+		__unqual_scalar_typeof(__array[0])			\
-+			__element = __array[--__len];			\
-+		while (__len--)						\
-+			__element = op(__element, __array[__len]);	\
-+		__element;						\
-+	})
- 
- /**
-  * min_array - return minimum of values present in an array
-@@ -267,7 +277,12 @@ static inline bool in_range32(u32 val, u32 start, u32 len)
-  * @a: first value
-  * @b: second value
-  */
--#define swap(a, b) \
--	do { typeof(a) __tmp = (a); (a) = (b); (b) = __tmp; } while (0)
-+#define swap(a, b) __swap_impl(a, b, __UNIQUE_ID(__tmp))
-+#define __swap_impl(a, b, __tmp)			\
-+	do {						\
-+		typeof(a) __tmp = (a);			\
-+		(a) = (b);				\
-+		(b) = __tmp;				\
-+	} while (0)
- 
- #endif	/* _LINUX_MINMAX_H */
++  snps,enable_guctl1_ipd_quirk:
++    description:
++      When set, HW reduce the ULPI clock latency by 1 cycle, thus reducing
++      the IPD (~360ns) and making controller enumerate FS/LS devices
++      connected behind via-hubs.
++    type: boolean
++
+   snps,is-utmi-l1-suspend:
+     description:
+       True when DWC3 asserts output signal utmi_l1_suspend_n, false when
 -- 
-2.42.0
+2.34.1
 
