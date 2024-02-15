@@ -1,63 +1,65 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4452C12BEA5;
-	Thu, 15 Feb 2024 11:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD4912B167;
+	Thu, 15 Feb 2024 11:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707998150; cv=none; b=hEgarZq/uUVhtb//EeKbYfSZJg3iAiEro70cMt5mPcfghvywoH3psseiVoM1GPnI4M06cLzyV5K6Arn1hURaNewMdcEdChTan642kv5IHersX3bUNPQrEy6NVB3E3Na6rBUNjT2nSduv4VIE41/zK8VRl7WanoD79ZkPYHgx74k=
+	t=1707998160; cv=none; b=JzP3m93y9kdxP/Bi0KBDFpAfwWlIxkZeHizXURr/3Qjgs8Jhp9D5B/4ACMocsPAHQ+YrtHLwQn02nHRjg0oHPN3ej3nC/4PBKuD9OGaR1IW48tG9cTaqMvZG2M8VwviGf2wamEVoTN0MVwKLs2NN1/uYW0FIojCyM+oJnGQ8CEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707998150; c=relaxed/simple;
-	bh=UwgBKA092Su7T4gRmAFm/noaOlgeRAKXmMHfBci3Ne4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qsWE+KnMHBxiHnB0dLOzNLwsWw6L2NVlN4w+aEFEyLKgvutbGYyTRE+SOo8DFTC4JilVwhc8sjmMgaNpr4VomUwX8BydSZq28Rjv1LSnpNrc7b0lqiBk4nwxcbjZzpvQyGFDBXnZVc2MX09IMKdZ/xiaBooyMQMfrGUS3TD2dQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=DSg68YJk; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1707998160; c=relaxed/simple;
+	bh=//cQOtBN0V7j51HQx8FZ9ZotpiIIad0J8ye4LiZogMY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Cgd0bcsn8HWaDq2ijwa50JY4O02Z2KuEElyE1aznyj61lFA5VSOkiuDezpbxf3XTjgo2bOouWkE10183OXq4V+RjfCGbcHf7oiRZbWjmZrP8OF//OPbeA/JziFZCI4IHp+5s0+3ku+nKLfGWqG+T6hHkYPiHAEuVl5bg1CBzhSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zurich.ibm.com; spf=pass smtp.mailfrom=zurich.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ZeRwhGNM; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zurich.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zurich.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DSg68YJk"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41FBtJLr107233;
-	Thu, 15 Feb 2024 05:55:19 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707998119;
-	bh=KwThmhxPNfVS3R3S3MVlJLNpP9wkS8Nnd0NoQ91I/qs=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=DSg68YJkBpXcOnYlEsp9b65tY/nUQPytl9eRxFbniljjpeTqfmc3VFOT39F7ZmQHH
-	 ZeeNmaj4jmsNjfdPMvwcs/lZhn9jIDSq7XAoxGuPi+Kfx3Yms0o+VxBv/MsLeyVokx
-	 2WGifg+2eohqi7Nc0BZuX1NTQxOwz9WI7FAE36AY=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41FBtJvD002079
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 15 Feb 2024 05:55:19 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 15
- Feb 2024 05:55:19 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 15 Feb 2024 05:55:19 -0600
-Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41FBtI2H036707;
-	Thu, 15 Feb 2024 05:55:19 -0600
-From: Devarsh Thakkar <devarsht@ti.com>
-To: <jyri.sarha@iki.fi>, <tomi.valkeinen@ideasonboard.com>,
-        <airlied@gmail.com>, <daniel@ffwll.ch>,
-        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>
-CC: <praneeth@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>,
-        <devarsht@ti.com>
-Subject: [PATCH v4 1/2] dt-bindings: display: ti,am65x-dss: Add support for common1 region
-Date: Thu, 15 Feb 2024 17:25:15 +0530
-Message-ID: <20240215115516.3157909-2-devarsht@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240215115516.3157909-1-devarsht@ti.com>
-References: <20240215115516.3157909-1-devarsht@ti.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZeRwhGNM"
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41FBMxbm024505;
+	Thu, 15 Feb 2024 11:55:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=JQIyZwMesH5CFC5utWtjUqVuw91qgGFyn2rlfKPbq3w=;
+ b=ZeRwhGNMRLCB1BITsxyxobIBp1U9nEFm08cgWrGaCxHSUjuVzQt01m8Cce2hp45IPedp
+ 1HG7HMRWSgAIkYMiRK57v8eMUkEnvr+rjulaVUKLhdustx8vsRuidya0vkabCdvbBcVi
+ EybwPyaqyNze9yCI/Li94R46r5ja/O7U1jknbKSpIEsO2xP7/CSX4UZKCxUcy6binKkq
+ oYnMxUFnbbRa+zUGORbNtvMgcQK0/L+RdMXwmJ0brVvhGfjavL7G6XiihjH4WJUA/A8l
+ XVHSFoLC1LlIbl5hHv5ZvsqJHwa+7qfYjttnkG46bth/2qFDth0406qiCyNM0ofenyJr dg== 
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w9hpdgqxn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 Feb 2024 11:55:50 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41FBqvTE016495;
+	Thu, 15 Feb 2024 11:55:50 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w6mymvcwf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 Feb 2024 11:55:49 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41FBtjse24969942
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 15 Feb 2024 11:55:48 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D9AD820040;
+	Thu, 15 Feb 2024 11:55:45 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A9E1320065;
+	Thu, 15 Feb 2024 11:55:45 +0000 (GMT)
+Received: from spoke.zurich.ibm.com (unknown [9.4.68.71])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 15 Feb 2024 11:55:45 +0000 (GMT)
+From: Bernard Metzler <bmt@zurich.ibm.com>
+To: jgg@ziepe.ca, leon@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        syzbot+e7c51d3be3a5ddfa0d7a@syzkaller.appspotmail.com
+Subject: [PATCH] RDMA/siw: Fix handling netdev going down event
+Date: Thu, 15 Feb 2024 12:55:24 +0100
+Message-Id: <20240215115524.126477-1-bmt@zurich.ibm.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,76 +67,114 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: v4NgQi1OaHOJ0Hsh7DWgUK7XH1f27yZ1
+X-Proofpoint-GUID: v4NgQi1OaHOJ0Hsh7DWgUK7XH1f27yZ1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-15_10,2024-02-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ lowpriorityscore=0 spamscore=0 phishscore=0 bulkscore=0 mlxscore=0
+ impostorscore=0 mlxlogscore=958 malwarescore=0 clxscore=1015 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402150093
 
-TI keystone display subsystem present in AM65 and other SoCs such as AM62
-support two separate register spaces namely "common" and "common1" which
-can be used by two separate hosts to program the display controller as
-described in respective Technical Reference Manuals [1].
+siw uses the NETDEV_GOING_DOWN event to schedule work which
+gracefully clears all related siw devices connections. This
+fix avoids re-initiating and re-scheduling this work if still
+pending from a previous invocation.
 
-The common1 register space has similar set of configuration registers as
-supported in common register space except the global configuration
-registers which are exclusive to common region.
-
-This adds binding for "common1" register region too as supported by the
-hardware.
-
-[1]:
-AM62x TRM:
-https://www.ti.com/lit/pdf/spruiv7 (Section 14.8.9.1 DSS Registers)
-
-AM65x TRM:
-https://www.ti.com/lit/pdf/spruid7 (Section 12.6.5 DSS Registers)
-
-AM62A TRM:
-https://www.ti.com/lit/pdf/spruj16 (Section 14.9.9 Display Subsystem Registers)
-
-Fixes: 2d8730f1021f ("dt-bindings: display: ti,am65x-dss: Add dt-schema yaml binding")
-Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
-Reviewed-by: Aradhya Bhatia <a-bhatia1@ti.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Fixes: bdcf26bf9b3a ("rdma/siw: network and RDMA core interface")
+Reported-by: syzbot+e7c51d3be3a5ddfa0d7a@syzkaller.appspotmail.com
+Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
 ---
-V2: Add Acked-by tag
-V3: Add Fixes tag
-V4: Add Reviewed-by and AM62A TRM link
----
- .../devicetree/bindings/display/ti/ti,am65x-dss.yaml       | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/infiniband/sw/siw/siw_main.c | 56 ++++++++++++++--------------
+ 1 file changed, 28 insertions(+), 28 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-index b6767ef0d24d..55e3e490d0e6 100644
---- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-+++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-@@ -37,6 +37,7 @@ properties:
-       - description: OVR2 overlay manager for vp2
-       - description: VP1 video port 1
-       - description: VP2 video port 2
-+      - description: common1 DSS register area
+diff --git a/drivers/infiniband/sw/siw/siw_main.c b/drivers/infiniband/sw/siw/siw_main.c
+index 723903bd30c5..6c61f62b322c 100644
+--- a/drivers/infiniband/sw/siw/siw_main.c
++++ b/drivers/infiniband/sw/siw/siw_main.c
+@@ -276,6 +276,31 @@ static const struct ib_device_ops siw_device_ops = {
+ 	INIT_RDMA_OBJ_SIZE(ib_ucontext, siw_ucontext, base_ucontext),
+ };
  
-   reg-names:
-     items:
-@@ -47,6 +48,7 @@ properties:
-       - const: ovr2
-       - const: vp1
-       - const: vp2
-+      - const: common1
++/*
++ * Network link becomes unavailable. Mark all
++ * affected QP's accordingly.
++ */
++static void siw_netdev_down(struct work_struct *work)
++{
++	struct siw_device *sdev =
++		container_of(work, struct siw_device, netdev_down);
++
++	struct siw_qp_attrs qp_attrs;
++	struct list_head *pos, *tmp;
++
++	memset(&qp_attrs, 0, sizeof(qp_attrs));
++	qp_attrs.state = SIW_QP_STATE_ERROR;
++
++	list_for_each_safe(pos, tmp, &sdev->qp_list) {
++		struct siw_qp *qp = list_entry(pos, struct siw_qp, devq);
++
++		down_write(&qp->state_lock);
++		WARN_ON(siw_qp_modify(qp, &qp_attrs, SIW_QP_ATTR_STATE));
++		up_write(&qp->state_lock);
++	}
++	ib_device_put(&sdev->base_dev);
++}
++
+ static struct siw_device *siw_device_create(struct net_device *netdev)
+ {
+ 	struct siw_device *sdev;
+@@ -319,6 +344,7 @@ static struct siw_device *siw_device_create(struct net_device *netdev)
+ 	xa_init_flags(&sdev->mem_xa, XA_FLAGS_ALLOC1);
  
-   clocks:
-     items:
-@@ -147,9 +149,10 @@ examples:
-                     <0x04a07000 0x1000>, /* ovr1 */
-                     <0x04a08000 0x1000>, /* ovr2 */
-                     <0x04a0a000 0x1000>, /* vp1 */
--                    <0x04a0b000 0x1000>; /* vp2 */
-+                    <0x04a0b000 0x1000>, /* vp2 */
-+                    <0x04a01000 0x1000>; /* common1 */
-             reg-names = "common", "vidl1", "vid",
--                    "ovr1", "ovr2", "vp1", "vp2";
-+                    "ovr1", "ovr2", "vp1", "vp2", "common1";
-             ti,am65x-oldi-io-ctrl = <&dss_oldi_io_ctrl>;
-             power-domains = <&k3_pds 67 TI_SCI_PD_EXCLUSIVE>;
-             clocks =        <&k3_clks 67 1>,
+ 	ib_set_device_ops(base_dev, &siw_device_ops);
++	INIT_WORK(&sdev->netdev_down, siw_netdev_down);
+ 	rv = ib_device_set_netdev(base_dev, netdev, 1);
+ 	if (rv)
+ 		goto error;
+@@ -364,37 +390,11 @@ static struct siw_device *siw_device_create(struct net_device *netdev)
+ 	return ERR_PTR(rv);
+ }
+ 
+-/*
+- * Network link becomes unavailable. Mark all
+- * affected QP's accordingly.
+- */
+-static void siw_netdev_down(struct work_struct *work)
+-{
+-	struct siw_device *sdev =
+-		container_of(work, struct siw_device, netdev_down);
+-
+-	struct siw_qp_attrs qp_attrs;
+-	struct list_head *pos, *tmp;
+-
+-	memset(&qp_attrs, 0, sizeof(qp_attrs));
+-	qp_attrs.state = SIW_QP_STATE_ERROR;
+-
+-	list_for_each_safe(pos, tmp, &sdev->qp_list) {
+-		struct siw_qp *qp = list_entry(pos, struct siw_qp, devq);
+-
+-		down_write(&qp->state_lock);
+-		WARN_ON(siw_qp_modify(qp, &qp_attrs, SIW_QP_ATTR_STATE));
+-		up_write(&qp->state_lock);
+-	}
+-	ib_device_put(&sdev->base_dev);
+-}
+-
+ static void siw_device_goes_down(struct siw_device *sdev)
+ {
+-	if (ib_device_try_get(&sdev->base_dev)) {
+-		INIT_WORK(&sdev->netdev_down, siw_netdev_down);
++	if (ib_device_try_get(&sdev->base_dev) &&
++	    !work_pending(&sdev->netdev_down))
+ 		schedule_work(&sdev->netdev_down);
+-	}
+ }
+ 
+ static int siw_netdev_event(struct notifier_block *nb, unsigned long event,
 -- 
-2.34.1
+2.38.1
 
