@@ -1,108 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7628A129A9D;
-	Thu, 15 Feb 2024 16:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CFF013342A;
+	Thu, 15 Feb 2024 16:06:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708013115; cv=none; b=mIYaimpWEX9LkwiJN9k6qpmvwGHAv45J9ihnO+m6z7CDakfK49/Vf2V3RWjcE4JrOFMEKQ2/Qkiod7WQFtQ+L4pSUBRaDaGl3TymS5mWFeRVbZ2N2mbTGtLZ3GrGuNLBLmbg2cYm7fBxUI2X5JZKgyeh+UOmO4nJLG7LsrVaPyA=
+	t=1708013197; cv=none; b=CddAc8iwQt5auDUeW4hfYbs34zpzsX0yas+GgITu4gY9TO/6GRs+WmfB2tRyBAuMz17L4Tg7QS4iVQGJ/9Key2/GWxhDmDr9swo23o/bkBiVo4+kwLridClvkdbIVNcXgO4zYpiAktIcD72OBbtU4BWx/9EGyJJPhERboZtxCCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708013115; c=relaxed/simple;
-	bh=HyvS+k8X59AuZUHlUgEzyqcX7h3epessADbli2UvsfU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g0alAVGmI2/0bXf9jQgw8TOjIADq22xsP0Fshlm+cd32q62bLR8taeNSLYdDR+CMWiWij8fFwNzZ3YagwfHaMbiaKEH6Tb3h1liG4FV1azd16SOmUMgZMCE76uabi0/hlRcUChTxY9Vn3W+M5VRrHoKPHlyV9cMcmX6RnkC2aAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="2222938"
-X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
-   d="scan'208";a="2222938"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 08:04:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="912185118"
-X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
-   d="scan'208";a="912185118"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 08:04:49 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1raeE9-00000004prW-0Y4C;
-	Thu, 15 Feb 2024 18:04:45 +0200
-Date: Thu, 15 Feb 2024 18:04:44 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Tony Lindgren <tony@atomide.com>,
-	Haojian Zhuang <haojian.zhuang@linaro.org>,
-	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
-	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com,
-	u-kumar1@ti.com
-Subject: Re: [PATCH v3 17/18] PCI: j721e: add reset GPIO to struct j721e_pcie
-Message-ID: <Zc42HIibtoXqLyEA@smile.fi.intel.com>
-References: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
- <20240102-j7200-pcie-s2r-v3-17-5c2e4a3fac1f@bootlin.com>
+	s=arc-20240116; t=1708013197; c=relaxed/simple;
+	bh=JICvr0D4tYvl5DaKYMCiv1tn6ushEDdrtmyTwJvTNJU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=COjHdklXc+JVZrh1C0JSVEsGrIXS+R3lBP9M7SIgnCqYh7Q12CGBMietnhQCmR+aKbxQFSlTYZmPrD/gzArm64bxk9LP+FP8DZTRhvaglxNWgMRM4/dJSZLJV30bVKedLIALUqWMRRMQs8HYt8/wPzt96GCPE2lCg8fW1mu7FVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00AA4C43390;
+	Thu, 15 Feb 2024 16:06:34 +0000 (UTC)
+Date: Thu, 15 Feb 2024 11:08:08 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
+ <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+ bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, Alexei
+ Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
+ <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v7 24/36] x86/ftrace: Enable HAVE_FUNCTION_GRAPH_FREGS
+Message-ID: <20240215110808.752c9b67@gandalf.local.home>
+In-Reply-To: <170723231592.502590.12367006830540525214.stgit@devnote2>
+References: <170723204881.502590.11906735097521170661.stgit@devnote2>
+	<170723231592.502590.12367006830540525214.stgit@devnote2>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240102-j7200-pcie-s2r-v3-17-5c2e4a3fac1f@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 15, 2024 at 04:18:02PM +0100, Thomas Richard wrote:
-> From: Théo Lebrun <theo.lebrun@bootlin.com>
+On Wed,  7 Feb 2024 00:11:56 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> Add reset GPIO to struct j721e_pcie, so it can be used at suspend and
-> resume stages.
+> Support HAVE_FUNCTION_GRAPH_FREGS on x86-64, which saves ftrace_regs
+> on the stack in ftrace_graph return trampoline so that the callbacks
+> can access registers via ftrace_regs APIs.
+> 
+> Note that this only recovers 'rax' and 'rdx' registers because other
+> registers are not used anymore and recovered by caller. 'rax' and
+> 'rdx' will be used for passing the return value.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  Changes in v3:
+>   - Add a comment about rip.
+>  Changes in v2:
+>   - Save rsp register and drop clearing orig_ax.
+> ---
+>  arch/x86/Kconfig            |    3 ++-
+>  arch/x86/kernel/ftrace_64.S |   37 +++++++++++++++++++++++++++++--------
+>  2 files changed, 31 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 5edec175b9bf..ccf17d8b6f5f 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -223,7 +223,8 @@ config X86
+>  	select HAVE_FAST_GUP
+>  	select HAVE_FENTRY			if X86_64 || DYNAMIC_FTRACE
+>  	select HAVE_FTRACE_MCOUNT_RECORD
+> -	select HAVE_FUNCTION_GRAPH_RETVAL	if HAVE_FUNCTION_GRAPH_TRACER
+> +	select HAVE_FUNCTION_GRAPH_FREGS	if HAVE_DYNAMIC_FTRACE_WITH_ARGS
+> +	select HAVE_FUNCTION_GRAPH_RETVAL	if !HAVE_DYNAMIC_FTRACE_WITH_ARGS
+>  	select HAVE_FUNCTION_GRAPH_TRACER	if X86_32 || (X86_64 && DYNAMIC_FTRACE)
+>  	select HAVE_FUNCTION_TRACER
+>  	select HAVE_GCC_PLUGINS
+> diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
+> index 214f30e9f0c0..8a16f774604e 100644
+> --- a/arch/x86/kernel/ftrace_64.S
+> +++ b/arch/x86/kernel/ftrace_64.S
+> @@ -348,21 +348,42 @@ STACK_FRAME_NON_STANDARD_FP(__fentry__)
+>  SYM_CODE_START(return_to_handler)
+>  	UNWIND_HINT_UNDEFINED
+>  	ANNOTATE_NOENDBR
+> -	subq  $24, %rsp
+> +	/*
+> +	 * Save the registers requires for ftrace_regs;
+> +	 * rax, rcx, rdx, rdi, rsi, r8, r9 and rbp
+> +	 */
+> +	subq $(FRAME_SIZE), %rsp
+> +	movq %rax, RAX(%rsp)
+> +	movq %rcx, RCX(%rsp)
+> +	movq %rdx, RDX(%rsp)
+> +	movq %rsi, RSI(%rsp)
+> +	movq %rdi, RDI(%rsp)
+> +	movq %r8, R8(%rsp)
+> +	movq %r9, R9(%rsp)
+> +	movq %rbp, RBP(%rsp)
 
-...
+This unconditionally slows down function graph tracer for no good reason.
 
->  	case PCI_MODE_RC:
-> -		gpiod = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-> -		if (IS_ERR(gpiod)) {
-> -			ret = PTR_ERR(gpiod);
-> +		pcie->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-> +		if (IS_ERR(pcie->reset_gpio)) {
-> +			ret = PTR_ERR(pcie->reset_gpio);
->  			if (ret != -EPROBE_DEFER)
->  				dev_err(dev, "Failed to get reset GPIO\n");
->  			goto err_get_sync;
-> @@ -504,9 +504,9 @@ static int j721e_pcie_probe(struct platform_device *pdev)
->  		 * mode is selected while enabling the PHY. So deassert PERST#
->  		 * after 100 us.
->  		 */
-> -		if (gpiod) {
-> +		if (pcie->reset_gpio) {
->  			usleep_range(100, 200);
-> -			gpiod_set_value_cansleep(gpiod, 1);
-> +			gpiod_set_value_cansleep(pcie->reset_gpio, 1);
->  		}
+Most of the above is going to be garbage anyway, except the rax and rdx.
 
-Instead of all this, just add one line assignment. Moreover, before or after
-this patch refactor the code to use ret = dev_err_probe(...); pattern that
-eliminates those deferral probe checks.
+I would recommend than we set something else in the ftrace regs that states
+this only holds return values. Anything else will just get invalid.
+
+I'm really against saving garbage. The purpose of ftrace_regs is that it
+can hold incomplete data.
+
+-- Steve
 
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+> +	/*
+> +	 * orig_ax is not cleared because it is used for indicating the direct
+> +	 * trampoline in the fentry. And rip is not set because we don't know
+> +	 * the correct return address here.
+> +	 */
+> +
+> +	leaq FRAME_SIZE(%rsp), %rcx
+> +	movq %rcx, RSP(%rsp)
+>  
+> -	/* Save the return values */
+> -	movq %rax, (%rsp)
+> -	movq %rdx, 8(%rsp)
+> -	movq %rbp, 16(%rsp)
+>  	movq %rsp, %rdi
+>  
+>  	call ftrace_return_to_handler
+>  
+>  	movq %rax, %rdi
+> -	movq 8(%rsp), %rdx
+> -	movq (%rsp), %rax
+>  
+> -	addq $24, %rsp
+> +	/*
+> +	 * Restore only rax and rdx because other registers are not used
+> +	 * for return value nor callee saved. Caller will reuse/recover it.
+> +	 */
+> +	movq RDX(%rsp), %rdx
+> +	movq RAX(%rsp), %rax
+> +
+> +	addq $(FRAME_SIZE), %rsp
+>  	/*
+>  	 * Jump back to the old return address. This cannot be JMP_NOSPEC rdi
+>  	 * since IBT would demand that contain ENDBR, which simply isn't so for
 
