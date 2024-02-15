@@ -1,205 +1,100 @@
-Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2083.outbound.protection.outlook.com [40.107.104.83])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5D518EA2;
-	Thu, 15 Feb 2024 12:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708001769; cv=fail; b=EJiwCoKHGdSVMH7+5oasiu+bvpkk2E0wBjcrElf9EvwrFaowTnQCJXaPnO1fb03P+Bg/lZXtc7ydCa1znYpKvr8Px+lBkBK3G9d7/80SXgCTOodBOClF/3x86b/bITE5GaL/nLaon9vv+0oD3Yvj2a4azGjLsBBDM0jtE5JLrrs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708001769; c=relaxed/simple;
-	bh=Na+mcWcArG1MnTzo0+JkGbCiZju81Sc9k/ihuTBt5Ig=;
-	h=Message-ID:Date:From:Subject:To:Cc:Content-Type:MIME-Version; b=OB25F/2YwB/Ou5Y6Bm++1NSrPG/HDWCe7IrjSNnFF1ZxgDD5OFKC/vhSVhhIOjNGW8yM16hZcFiVAiBnq9GSb3jyxK707oCyrU/XcM+woQbVGAsW63ylteJD4N2zDG3egBT9QA98QUbFL4AAGpwHarIN1JB1MGeC22gqMvq4SQQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b=DdU1ANxb; arc=fail smtp.client-ip=40.107.104.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siemens.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C566212B162;
+	Thu, 15 Feb 2024 12:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708001933; cv=none; b=g7LnPkp9zdptm+dEvjlHPSoVDldGhB9UO0iVCOjedJXyNjuXDq2BeOPIZq5hwCCfJPPNO82DarpU2bIGJLjC8EX37ZW6a4X5hWQSHMGNvAB+Mzt2AJkmNR1e8XikL7GIsgp1MtBAnm80Ub74A1yobmBjHJxfgtRCZVCrrw1elww=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708001933; c=relaxed/simple;
+	bh=Ad/rzeg0qm+b8E72/V5gLfBzXXiMiZDjEciTC6pPZ+M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TSPzFhM8yRiRu6RBOr3xgTR6MdWOx0oM+9uqm8MocUHPTo31Cj1TqPVwJ29SBa9TeN96MVlPq4iNUMKiFHFMl3V8x8DiIPesQG5vQ4fNm5KSIF/Cac52RnE2azZQ41fSrCUUpp5nMUs3XiX+moWwjGGaRmmAltduOnSauaARehA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=KSpbnvKz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b="DdU1ANxb"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z19w7Nb0QtA6kKNyqT83JjNI+SMRgCeAZJR/ahXMa/5UaV6Ntzz5yxzJBMXeHBnoWAFpLGes7Ypet+9s9882c7YPAMBXqs2VxCJ9FxV/K/CWNMRffnCTM+6zbmR8v5rtVSYEJ9MX5DY/FYopnkQiyFqtcjVv0c3bexeMG3sklpq1N1zYA5YU1jR9eQzzFpgfRSuu53Z30FIkTCvFUxNtxcNjSjHl83/CtY2sfwjrV1Nbi6eqhIiv1hSNze/DIdpoNG+Wr+MilE+5ABN82pFdRlq99VbLSb2r3swD+WgW2fBusFOYFR+DxfciY5QZyKHnFSckR+fOeVjN6YxeY1oGRQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ijgKnd1PdObJ7LXbfuL6Ht4LqVhZ8MVqcCNiHi7HNQ0=;
- b=nsZlmPDkCfdPGXUlFOf1IBUIn7eFCQgmepTc2UwlpTSzXM3Wtpg8y1nfaZbE+hZNBVce1NORO9dGQOHlXQabTmuWhZ5vtwisaa/yCRzz18PTrQrmQJ5F1LN4fw+/tmClqooOQvR51cCfzlpmK17KN6omevS222CXgzbpxJzQPzOsHssrn9oGHgRixlGsl3EjtN+Rc9jSdvSDiAOaS0+w5OBpBMUNoVbmSVovcPet+b970MIr6Rs8lh3LXsB+QnkG33nBS+/rdPk7Mi+wx+vcdr16Z3fH45G6p8hvWidT/T4ivbBx+zEAmcWLARbY/aeb4RcaB4N72OIvTOXYMFTpbQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
- dkim=pass header.d=siemens.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ijgKnd1PdObJ7LXbfuL6Ht4LqVhZ8MVqcCNiHi7HNQ0=;
- b=DdU1ANxbLv8lEOvWRhUn8PKjrfA10TUc95D672pSydgF3AsRcMXnJVFRr08pIGfr7MCfLvNeiExWHMpsg6RMoWZ4KsbxN0CFKR0sm6cycrgO/TFxOCBY5uzzlq9dOjmimNfgGGMmRiiBv/HbqG0vd1bE1K00duf3kdMw+mZe9bMNW0q8GQlP6vU67W9GKLOsba5bL070KdUnQCwH0mG2+RZ5cqKxl3KFQWbvT1M7mvDYlzCI0nT2lgQbBrp6Fu+PRlqFPqS2f9rXytFQnQE8EIY6Tc812ZaQW91uq/2eOl1ZwFnsXHHQuP3g7iwSquqx7WOlPNRcA6BG60r4FaYByg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=siemens.com;
-Received: from AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:588::19)
- by DU0PR10MB6956.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:417::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.26; Thu, 15 Feb
- 2024 12:56:03 +0000
-Received: from AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::8d16:7fbb:4964:94fe]) by AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::8d16:7fbb:4964:94fe%3]) with mapi id 15.20.7270.036; Thu, 15 Feb 2024
- 12:56:03 +0000
-Message-ID: <8032b018-c870-403a-9dd9-63440de1da07@siemens.com>
-Date: Thu, 15 Feb 2024 13:55:56 +0100
-User-Agent: Mozilla Thunderbird
-From: Jan Kiszka <jan.kiszka@siemens.com>
-Subject: [PATCH v2] dt-bindings: PCI: ti,am65: Fix remaining binding warnings
-Content-Language: en-US
-To: Conor Dooley <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- devicetree <devicetree@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Kishon Vijay Abraham I <kishon@ti.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring
- <robh@kernel.org>, Nishanth Menon <nm@ti.com>, "Andrew F. Davis"
- <afd@ti.com>, Bjorn Helgaas <bhelgaas@google.com>,
- "Lopes Ivo, Diogo Miguel (T CED IFD-PT)" <diogo.ivo@siemens.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH2PR14CA0052.namprd14.prod.outlook.com
- (2603:10b6:610:56::32) To AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:20b:588::19)
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="KSpbnvKz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C564EC433F1;
+	Thu, 15 Feb 2024 12:58:50 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="KSpbnvKz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1708001929;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dsxfcdPhD8kEeco8ZBp7CrkSEujEWrVukxbbEuEYW4M=;
+	b=KSpbnvKzEbTsf3lyoqZVbKXYcOb0fjXmc8hoHRG/bglLZ20AuWeR/meJcQb1fLN8cv2zVb
+	c9rvaJgbwrw8hLuUNPNSafs3KnvRFXTKZCvBZ9xeeQryDN1c+qySTFjzPpkmvSeAzss8Ii
+	/DRRfnIN6ggqZ3N21gDSKiNZTK5rA78=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id e0407208 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Thu, 15 Feb 2024 12:58:48 +0000 (UTC)
+Date: Thu, 15 Feb 2024 13:58:47 +0100
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc: Theodore Ts'o <tytso@mit.edu>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	"H. Peter Anvin" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	"Nakajima, Jun" <jun.nakajima@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	"Kalra, Ashish" <ashish.kalra@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] x86/random: Retry on RDSEED failure
+Message-ID: <Zc4Kh6IPHYM56IcS@zx2c4.com>
+References: <DM8PR11MB5750C7D16DC566CD1329D5A5E77C2@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <CAHmME9q-eUXnXnpaDu0VOQemOYysst7SaJ-=b8-vCFP9h50Szg@mail.gmail.com>
+ <20240201045710.GD2356784@mit.edu>
+ <CAHmME9oqM2a766dBK22-yKr8=2-icg=UkQzmBOF8G5Zh_Y9E9w@mail.gmail.com>
+ <DM8PR11MB57505F657A8F08E15DC34673E7422@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <DM8PR11MB57503A2BB6F74618D64CC44AE74E2@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <Zcz2r51Tbb44ywjl@zx2c4.com>
+ <DM8PR11MB57503E654C8A0E9A41CB68AFE74E2@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <Zc0VW_NQGLWCSJwF@zx2c4.com>
+ <DM8PR11MB5750D504AC62AA407441901BE74D2@DM8PR11MB5750.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS4PR10MB6181:EE_|DU0PR10MB6956:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1c911696-2e5e-4da0-80eb-08dc2e25777c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	fGEsO6mblAMkdJIXvQsIRuaHkRp9U81B4QRukJqX+yjZRw6x9JNSY2m97l0l+pD8IAdloqDp35J3JT50ovRhYw1Giv0TK4vD3eKQG4nnCtGR0M0F1P5Fyu5lh6wOaw1K7EkfEDZPp+hb1tmTh6qgoYJyo4pf3ITsLir7EDwnwK8TQyBsFvShwZ545iG4YUp24Zk+VsuDF9uz0BbR09hw3pAZKsajLL2+UJqjnh+XH0FeWLZ0K/tTTVs8zOVAKmG8Ivn/kM8UuQqPbgzPNdcwfLg2eSDsyxvkMWo6igcT1vPh8yvEpTwtduQE3rJ8kEAlFg6dioTUKfJfsLuHi2QTUB32pZUxJNefdLi26kRo/6tJ32ffoOIkH1NBytiwGxCGvd8kw8Oun6fgGtjr5Kv5zCYfGlaDMe2ZRQIBCJ0kVwUQzymRLpk5siw1DKSLCNXILQXtcQ7L5bGQcKvtRDHs7TGg7LC97jrOdDJ5BNuDy4+zvaQ8hnJ9OZTOTBhJv4F8CQwK8xhubq/Rv1zDVdXAFMQN1g1R1bcWHcaJb1ASijNBREj2/5EkBrOEry0bbRXG
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(39860400002)(366004)(396003)(136003)(230922051799003)(1800799012)(64100799003)(186009)(451199024)(8936002)(8676002)(2906002)(44832011)(5660300002)(4326008)(7416002)(83380400001)(2616005)(107886003)(38100700002)(26005)(36756003)(86362001)(82960400001)(66556008)(54906003)(6506007)(316002)(66946007)(31696002)(66476007)(110136005)(6512007)(6486002)(478600001)(31686004)(6666004)(41300700001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MzBXeU9oTVFZSkZDblJQcEJKRit0K2dLRkI5MS9CRXBYUEhqNXNYekkxQVdC?=
- =?utf-8?B?UFhNTzNjVzQ3WEtDeWVyUjBxMGJmcDFETTYrc09TdmN1NmFNMXNBd3pFdW44?=
- =?utf-8?B?YjYxK2tDbEU5NEZoNVpuV29hZGRteWh3bmc1MEJRV1hrK21ZU3lzcjk2S0hD?=
- =?utf-8?B?blZibW9QUmxnUjdiUHh4TWptdkdGck5VOTdpVithdjdJeFN4MGJnL1JpN2lj?=
- =?utf-8?B?UjZZOXhiVFZRblUwRmFnWUtQdVBEVVE3MHlQL0kzMmNJVWQyMS9yQjBya2Zm?=
- =?utf-8?B?UVpCMjI0M3BOQlR5NHg3cWxyaFFxYzlsWm5kL20xd3d2bUxlN0RsdmhMVzZw?=
- =?utf-8?B?Wi9SQ2JldzRDVXp5VEZJUlpWOXV6eXQ4NFJjMnJndDQ0NmYwUk93b3NpVDVE?=
- =?utf-8?B?UWtWUkJid3JuK09RTWVjd3R4dUlYcCs5U3JzQ0JpNXdOcHhoSzZjc2xZR0FP?=
- =?utf-8?B?QW5WbEtvcDhDanM5blBUeXdOOW5HbmdCeGQzZHJqamJVbTRiU2FEMkJCL0oz?=
- =?utf-8?B?M2YzVzF3V2s1bUkrT0VYVDZaTWZ2WTlzUStMUDc1WXNxaUVwYmZFaHpqNXJZ?=
- =?utf-8?B?NTlmUVpGc2pqQWg4d1Q3b0tJdkNOTWxIRXBheHYvem9GYjhIRkJKc29kdkNW?=
- =?utf-8?B?d3c4SWVVNEdleVc0anVPUVorK3g2WnZ5YkRmeG56UXdLTTFNSnhqanhydUth?=
- =?utf-8?B?SGdHY0VUVWgybmJpbzJQVFJ3VnpiZmRISDd0WUJoRVZNR1lWdEcvcXUzQzNF?=
- =?utf-8?B?bmNHUXBVQklYdEV4UldmWjV4VjBPWUw3V2FDRVd3ZnV5WGw5UnFhTGh3S2FP?=
- =?utf-8?B?b3lwYVdrYTQ4VGF3Ymg0bHZKY0VzVFFySnArcUZ4ZTBPTDA3eU85TVY0KzNp?=
- =?utf-8?B?V20yZjV0Tml2V0ZLU2s5cVNZbll3c1RsWk9aREpwd0IyNG1VZ3VlNTkwS2FV?=
- =?utf-8?B?My9jVzVKRTJmaFFBcUtUQUNMaWc4cGNUVFYxOTMydjBkWWpUZWc3VXBnZ3A3?=
- =?utf-8?B?bWhXcWxEckN2eEVwYjMwS0xGbjlzMk1EajBFUk1wVzdYbVRQeTVVK1kwNGZo?=
- =?utf-8?B?V2pHOCthZ0cxUFY1eXJ0VnpuVGVPZXJRWnR1MWZONzVrZ3Rpczczc08zL3B4?=
- =?utf-8?B?U3RYbUEwczhodVNzRUgydTZveGhZN2RZWmI0TkVuQjVJckNTcWg3QW56RkhF?=
- =?utf-8?B?RDNrUnpiMVlMYzVaNUM2RnZMVjRua3VCSlZzS2QwVDkxcVpURGtycHlyeVFa?=
- =?utf-8?B?QzA1YmRBRzBDc2JqTHU5eWRIZnVlKzBhZEM5bDJFOFZIYVhYVldSY3lJQzRo?=
- =?utf-8?B?WUNYNFpNcGNMaGVJRUNMVnVqdmdpMG9oT2ZiUCtxREdPUWhFckNsNEV4YmhN?=
- =?utf-8?B?NW9VWXI2YkxMcndFSWpON0tyQUsxZVJxa2xlMXY1MVdZUlRjaUJkeTdUb1Fz?=
- =?utf-8?B?M2xCdmM0ODM0NGFzNnR2clgvbytxbUhRbHFDTk5TRjNRZ0h0cnl0b0p6RmRp?=
- =?utf-8?B?MGZyRStUUnNuQlhoOFBxVnJ0Q20wWlZmWlhJeU8zTzhMRStmVFZ5eWhraVAw?=
- =?utf-8?B?MlZhNFhNL1llRERsN2x0Qy8zaUVUY09JV3dMR2hNNENEbEZJYUE5NEpyV2hO?=
- =?utf-8?B?NEsrRUVoUmxnMmdsak5tRERPZkd1S1F4NCtqSlQ2OVM4amdXcDQydXJTUmYw?=
- =?utf-8?B?Uk1vTmZnMCtnQVZlZWFJWmNiV3UyT1h1R21WcVhBZTlEdXhpUWhzMjNXRjdX?=
- =?utf-8?B?SE9FZUtSMUtaQUZvSzlCbG5UVnJ6M2JsbG5TSTUxbXNnQWZlV0JSN0xqV0Nt?=
- =?utf-8?B?cU9UZ2lNMzVMc2J1ZGNOOG5uMzd5LzNYTDFGeGJRKzhpZHRYVDdmejRXQk9P?=
- =?utf-8?B?dzVkR3dFeTcxejFERmpDTUhsQnkyQ1RwZTVIMHNFODZNaXFoL2NibEZDbU5W?=
- =?utf-8?B?K1h5Vk1ReUFOUGNZNG5MVkxqVHR4ejVyUkNjNXoyZFJrOTUxK3h6VEs3SGVW?=
- =?utf-8?B?WDRobmhaVXNsLzZiYURjRjk4Z0ZMTExzem5UeW9aQkVVZXJDWk1YbWpSNVRO?=
- =?utf-8?B?eHQ5WU02WHhiMUhxV3gvTTRXSWJkcEpSK1FTd3gxL1VhUWFFbzVhbEU1S3Ix?=
- =?utf-8?B?cXM3aXNzL0FVQ2pUZUpJMXFDVUsyVzZMRUw4ZWMwUWtnSC8vbDhUKytVVVdy?=
- =?utf-8?B?V0E9PQ==?=
-X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1c911696-2e5e-4da0-80eb-08dc2e25777c
-X-MS-Exchange-CrossTenant-AuthSource: AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Feb 2024 12:56:03.5055
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 70lgspQXDcdFzUUd/WUJZ+oMyBgol5jAx7P5igSTBytNoRWV3o8XsdRecHfzcyJ4ozI80Kz+zpP8VskescwmfQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR10MB6956
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <DM8PR11MB5750D504AC62AA407441901BE74D2@DM8PR11MB5750.namprd11.prod.outlook.com>
 
-From: Jan Kiszka <jan.kiszka@siemens.com>
+On Thu, Feb 15, 2024 at 07:07:45AM +0000, Reshetova, Elena wrote:
+> > You said that RDRAND is faster than the bus, so failures won't be
+> > observable, while RDSEED is not because it requires collecting entropy
+> > from the ether which is slow. That makes intuitive sense on a certain
+> > dumb simplistic level: AES is just an algorithm so is fast, while
+> > entropy collection is a more physical thing so is slow. But if you read
+> > the implementation details, RDRAND is supposed to reseed after 511
+> > calls. So what's to stop you from exhausting RDSEED in one place, while
+> > also getting RDRAND to the end of its 511 calls, and *then* having your
+> > victim make the subsequent RDRAND call, which tries to reseed (or is in
+> > progress of doing so), finds that RDSEED is out of batteries, and
+> > underflows? What's the magic detail that makes this scenario not
+> > possible?
+> 
+> This was on my list of scenarios to double check whenever it is possible
+> or not, and the answer is that it is not possible (at least for Intel).
+> This scenario is also briefly described in the public doc [1]:
+> 
+> " Note that the conditioner does not send the same seed values to both the
+>  DRBG and the ENRNG. This pathway can be thought of as an alternating
+> switch, with one seed going to the DRGB and the next seed going to the ENRNG. 
+> *This construction ensures* that a software application can never obtain the
+>  value used to seed the DRBG, *nor can it launch a Denial of Service (DoS) 
+> attack against the DRBG through repeated executions of the RDSEED instruction.*"
 
-This adds the missing num-viewport, phys and phy-name properties to the
-schema. Based on driver code, num-viewport is required for the root
-complex, phys are optional. Their number corresponds to the number of
-lanes. The AM65x supports up to 2 lanes.
+Interesting, and good to hear. So also implicit must be that the time
+required by 511 calls to RDRAND exceeds the reseeding time, so that you
+couldn't exhaust the seeds indirectly by flushing RDRAND.
 
-Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-
----
-Changes in v2:
- - limit phy-names to pcie-phy[0-1]
- - fix schema-checking of example
----
- .../bindings/pci/ti,am65-pci-host.yaml        | 20 +++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
-index a20dccbafd94..c54d4e57d089 100644
---- a/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
-@@ -55,6 +55,20 @@ properties:
- 
-   dma-coherent: true
- 
-+  num-viewport:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  phys:
-+    description: per-lane PHYs
-+    minItems: 1
-+    maxItems: 2
-+
-+  phy-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      pattern: '^pcie-phy[0-1]$'
-+
- required:
-   - compatible
-   - reg
-@@ -74,6 +88,7 @@ then:
-     - dma-coherent
-     - power-domains
-     - msi-map
-+    - num-viewport
- 
- unevaluatedProperties: false
- 
-@@ -81,6 +96,7 @@ examples:
-   - |
-     #include <dt-bindings/interrupt-controller/arm-gic.h>
-     #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/phy/phy.h>
-     #include <dt-bindings/soc/ti,sci_pm_domain.h>
- 
-     pcie0_rc: pcie@5500000 {
-@@ -98,9 +114,13 @@ examples:
-         ti,syscon-pcie-id = <&scm_conf 0x0210>;
-         ti,syscon-pcie-mode = <&scm_conf 0x4060>;
-         bus-range = <0x0 0xff>;
-+        num-viewport = <16>;
-         max-link-speed = <2>;
-         dma-coherent;
-         interrupts = <GIC_SPI 340 IRQ_TYPE_EDGE_RISING>;
-         msi-map = <0x0 &gic_its 0x0 0x10000>;
-         device_type = "pci";
-+        num-lanes = <1>;
-+        phys = <&serdes0 PHY_TYPE_PCIE 0>;
-+        phy-names = "pcie-phy0";
-     };
--- 
-2.35.3
+Jason
