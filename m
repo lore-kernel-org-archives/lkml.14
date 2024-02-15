@@ -1,171 +1,96 @@
-Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1D385263;
-	Thu, 15 Feb 2024 10:34:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79768526F;
+	Thu, 15 Feb 2024 10:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707993247; cv=none; b=myZGNOKvP64u9gLPzGEwVNQhr1mYETy7Z7/kYBO3XxmYENNE+q6Cww6ipDfnD+RDpHaKR8B81A4jKuOjUGRU5KQerMZxnj1jjPJM/iau0j3S1r+Ue5ZJMcO2iHqrpW3XnnoVAoBKYFvwm4STjvJSXzCNvLq7CB92mcU4bBMLz/E=
+	t=1707993281; cv=none; b=hdDM7J9LZwvFstVe4SUeRkiTEjIwlf24GaES3mPB7Uw9ZHUT45B4K/OkTCYqZvnYmPv80TBKjjzVK3ayXSyQfjGw038uVg7pJW79XaU3pwEi5yryoeK8PKfKB++aRbjILibRGsc95xBQaE3+lBUuK9R/bxRdA48f2w731fKyYdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707993247; c=relaxed/simple;
-	bh=vWH+bbvz6ifJxldNvr7I686bbRzvQ9xgjkN0s3Xraro=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=idl98qoQVYl66XcYaPvZwEMmdehwiWOKOYo6o0CNIe9dCMrWw4gkGTJH/inTvkWI2Z8B/eGEz2ezYiDRo8U2fml5yYE6LzbEXSgSi3kfNdcKRnHXtV1LAwZSAlPoatRohYDmFFS+QC153t0geLePYYAhVsdVNbTcMKLnkbO1Rro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4Tb9yH2ldXz9yB7M;
-	Thu, 15 Feb 2024 18:18:47 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.27])
-	by mail.maildlp.com (Postfix) with ESMTP id E95541405A2;
-	Thu, 15 Feb 2024 18:33:53 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.204.63.22])
-	by APP2 (Coremail) with SMTP id GxC2BwAXUCQD6M1lUHGHAg--.4426S11;
-	Thu, 15 Feb 2024 11:33:53 +0100 (CET)
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz,
-	chuck.lever@oracle.com,
-	jlayton@kernel.org,
-	neilb@suse.de,
-	kolga@netapp.com,
-	Dai.Ngo@oracle.com,
-	tom@talpey.com,
-	paul@paul-moore.com,
-	jmorris@namei.org,
-	serge@hallyn.com,
-	zohar@linux.ibm.com,
-	dmitry.kasatkin@gmail.com,
-	eric.snowberg@oracle.com,
-	dhowells@redhat.com,
-	jarkko@kernel.org,
-	stephen.smalley.work@gmail.com,
-	omosnace@redhat.com,
-	casey@schaufler-ca.com,
-	shuah@kernel.org,
-	mic@digikod.net
-Cc: linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-integrity@vger.kernel.org,
-	keyrings@vger.kernel.org,
-	selinux@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Stefan Berger <stefanb@linux.ibm.com>
-Subject: [PATCH v10 09/25] security: Align inode_setattr hook definition with EVM
-Date: Thu, 15 Feb 2024 11:30:57 +0100
-Message-Id: <20240215103113.2369171-10-roberto.sassu@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240215103113.2369171-1-roberto.sassu@huaweicloud.com>
-References: <20240215103113.2369171-1-roberto.sassu@huaweicloud.com>
+	s=arc-20240116; t=1707993281; c=relaxed/simple;
+	bh=AqHTAn3N+1KnEOunH/6w/iyxJH/Kil5mim1zRaqivV4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Uk5P06GadfuIF6AftidYtVL2oZL++GNVarJA9Wvo44JSXNG0SY8qOB5MYZ9cqPfuHFGHzNIWmGagzG9Y5AqJgybfCQwjgleO71EWanrHd+RykBm3ZypzSdCugj4WYevK+sV/fgFOOugVYAPO35FKRIM4JL+KK6N7wPYa5UYhwm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=qfjHyfZj; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="qfjHyfZj"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4TbBJQ202Dz9sjQ;
+	Thu, 15 Feb 2024 11:34:30 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1707993270;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LtJMv3OpCPMbfXLsBLVXagbPP7DLavp46+ckP2yjejI=;
+	b=qfjHyfZj/UNcjxY50u5f+PTADR/t9f8/pkZtsIsajtcNAnN04HYby3eKmCSOxui0D+eZXm
+	+6XCy3MCNKhPz8scfdNrdTpTyQ3nJo6ULbczuLaaY0VVJCbDzXIdoayNZGXFQ7RH9WHe/z
+	f78mKbiBnlsADlt/2ifu865/to0LO/uSW/xKTb47JP96uT2ZUowlbuuN0QF18OFTn+qKnb
+	5uT1qE17szzBwp6rHr/cPL+bajrGkqIyX0E9WZZMgVumEmEnetiQFSim6WAZuDko07pcSM
+	avoJjlWteDUmtXh8KWWLxp6LtF1MtbId4kCatWRmFFrMMkMrUZbMUzRhatfcQA==
+Date: Thu, 15 Feb 2024 11:34:24 +0100
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, mcgrof@kernel.org, gost.dev@samsung.com, 
+	akpm@linux-foundation.org, kbusch@kernel.org, chandan.babu@oracle.com, p.raghav@samsung.com, 
+	linux-kernel@vger.kernel.org, hare@suse.de, linux-mm@kvack.org, david@fromorbit.com
+Subject: Re: [RFC v2 01/14] fs: Allow fine-grained control of folio sizes
+Message-ID: <l4ios6fmq4dpdncqjp3ukgnbahwuyu5pa5ntocj72qpxmnxlnv@awcgkr4fesoo>
+References: <20240213093713.1753368-1-kernel@pankajraghav.com>
+ <20240213093713.1753368-2-kernel@pankajraghav.com>
+ <20240213163431.GS6184@frogsfrogsfrogs>
+ <xy45wh2y55oinrvkhea36yxtnqmsoikp7eawaa2b5ejivfv4ku@ob72fvbkj4uh>
+ <20240213212914.GW616564@frogsfrogsfrogs>
+ <Zc0NtZrnHIXrZy53@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:GxC2BwAXUCQD6M1lUHGHAg--.4426S11
-X-Coremail-Antispam: 1UD129KBjvJXoWxZryUJr13tr1rKw1DCF1kGrg_yoW5uF1UpF
-	43G3ZxGr4rXFyxWr1vkFs8ua1S9FWfurW7JrW0gw1SyFn2qrn2gFyxKr1jkF15GrWUGrnF
-	qFsFvrs8Wr15ArJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBmb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
-	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
-	rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267
-	AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E
-	14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrV
-	C2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE
-	7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xKxwCF04k20x
-	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
-	3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Wrv_Gr1UMIIYrxkI7VAKI48JMI
-	IF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l
-	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4
-	A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjxUFgAwUUUUU
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAOBF1jj5Zf1AABsl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zc0NtZrnHIXrZy53@casper.infradead.org>
 
-From: Roberto Sassu <roberto.sassu@huawei.com>
+> > > Maybe I should have been explicit. We are planning to add support
+> > > for min order in the first round, and we want to add support for max order
+> > > once the min order support is upstreamed. It was done mainly to reduce
+> > > the scope and testing of this series.
+> > > 
+> > > I definitely agree there are usecases for setting the max order. It is
+> > > also the feedback we got from LPC.
+> > > 
+> > > So one idea would be not to expose max option until we add the support
+> > > for max order? So filesystems can only set the min_order with the
+> > > initial support?
+> > 
+> > Yeah, there's really no point in having an argument that's deliberately
+> > ignored.
+> 
+> I favour introducing the right APIs even if they're not fully implemented.
+> We have no filesystems today that need this, so it doesn't need to
+> be implemented, but if we have to go back and add it, it's more churn
+> for every filesystem.  I'm open to better ideas about the API; I think
+> for a lot of filesystems they only want to set the minimum, so maybe
+> introducing that API now would be a good thing.
 
-Add the idmap parameter to the definition, so that evm_inode_setattr() can
-be registered as this hook implementation.
+I will introduce a new API that only exposes the min order for now. I
+agree with you that I don't see a lot of filesystems other than XFS
+using this in the near future.
 
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-Acked-by: Casey Schaufler <casey@schaufler-ca.com>
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-Acked-by: Paul Moore <paul@paul-moore.com>
----
- include/linux/lsm_hook_defs.h | 3 ++-
- security/security.c           | 2 +-
- security/selinux/hooks.c      | 3 ++-
- security/smack/smack_lsm.c    | 4 +++-
- 4 files changed, 8 insertions(+), 4 deletions(-)
+We deduce min order based on the filesystem blocksize but we don't have any
+mechanisms in place from userspace to set the max order for a filesystem.
+So that also needs to be thought through and discussed with the
+community.
 
-diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-index 76458b6d53da..b00b16d58413 100644
---- a/include/linux/lsm_hook_defs.h
-+++ b/include/linux/lsm_hook_defs.h
-@@ -135,7 +135,8 @@ LSM_HOOK(int, 0, inode_readlink, struct dentry *dentry)
- LSM_HOOK(int, 0, inode_follow_link, struct dentry *dentry, struct inode *inode,
- 	 bool rcu)
- LSM_HOOK(int, 0, inode_permission, struct inode *inode, int mask)
--LSM_HOOK(int, 0, inode_setattr, struct dentry *dentry, struct iattr *attr)
-+LSM_HOOK(int, 0, inode_setattr, struct mnt_idmap *idmap, struct dentry *dentry,
-+	 struct iattr *attr)
- LSM_HOOK(int, 0, inode_getattr, const struct path *path)
- LSM_HOOK(int, 0, inode_setxattr, struct mnt_idmap *idmap,
- 	 struct dentry *dentry, const char *name, const void *value,
-diff --git a/security/security.c b/security/security.c
-index 7c240d768a76..671472b34bbf 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -2216,7 +2216,7 @@ int security_inode_setattr(struct mnt_idmap *idmap,
- 
- 	if (unlikely(IS_PRIVATE(d_backing_inode(dentry))))
- 		return 0;
--	ret = call_int_hook(inode_setattr, 0, dentry, attr);
-+	ret = call_int_hook(inode_setattr, 0, idmap, dentry, attr);
- 	if (ret)
- 		return ret;
- 	return evm_inode_setattr(idmap, dentry, attr);
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index a6bf90ace84c..cedb4cbf072e 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -3136,7 +3136,8 @@ static int selinux_inode_permission(struct inode *inode, int mask)
- 	return rc;
- }
- 
--static int selinux_inode_setattr(struct dentry *dentry, struct iattr *iattr)
-+static int selinux_inode_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
-+				 struct iattr *iattr)
- {
- 	const struct cred *cred = current_cred();
- 	struct inode *inode = d_backing_inode(dentry);
-diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-index 0fdbf04cc258..1b6abfdf7173 100644
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -1233,12 +1233,14 @@ static int smack_inode_permission(struct inode *inode, int mask)
- 
- /**
-  * smack_inode_setattr - Smack check for setting attributes
-+ * @idmap: idmap of the mount
-  * @dentry: the object
-  * @iattr: for the force flag
-  *
-  * Returns 0 if access is permitted, an error code otherwise
-  */
--static int smack_inode_setattr(struct dentry *dentry, struct iattr *iattr)
-+static int smack_inode_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
-+			       struct iattr *iattr)
- {
- 	struct smk_audit_info ad;
- 	int rc;
--- 
-2.34.1
+I hope to start working on max_order immediately after upstreaming the
+min_order feature.
 
+--
+Pankaj
