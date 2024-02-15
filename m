@@ -1,57 +1,36 @@
-Received: from out203-205-251-36.mail.qq.com (out203-205-251-36.mail.qq.com [203.205.251.36])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC9669D04
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 10:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.36
+Received: from cae.in-ulm.de (cae.in-ulm.de [217.10.14.231])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1609A69D01;
+	Thu, 15 Feb 2024 10:20:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.10.14.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707992429; cv=none; b=r4LDSXELfz3ELs8wbIXpUGrcwHcHReq4y5tjpEfaeXOrQct/GZqVQJX6+shP53zbL3AHw1RMYyafBLv4BPZxQqsot/JKXB+HVNtSYQjsXX/hB5ceru5oyzXIJvwJ8bkrpnVxy/4M49ye8Rtk6KyV39/1zze5avjIVX8+YamB7o4=
+	t=1707992441; cv=none; b=l72mBWus2NGu0JRJzPvhDlwOGbXnlQnlx40wd0umcUUBDsvlntEfzAzs3JP5MKAubJlBQynrxLZ7wZOTrKnbz1WNZexL3RArArZwlCUfHA+cXw8jElwIKUYDEetPDU11sDOHNbaXxc2wXHi+AKzsogJPHrAjc+lz+siRTC4tT6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707992429; c=relaxed/simple;
-	bh=ZdU4VeykU7M6Jfyac4J8/7W6yBvqeGFfqKVnXNdpFxk=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=Yq49jpKdCX+tcWJtCsuizFy375xHBg/6A0j+GySPWy0iJZuSJy95TvhZQK1XiyUtyxsWt2/EbPEm6E2bPCTiyF1JtPdWUxiNhBOsEFE2omNZ5ooHf0wfaaHOmNY0uBfUYEUQaNgFMBCLNhR8wWLl2dvnR3IOoNOa7TomzeYT05M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=UF3wu1BC; arc=none smtp.client-ip=203.205.251.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="UF3wu1BC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1707992117; bh=rxnDnn266sMDmHizmjyIVYluJ3+8lsiRplWvAA8yAew=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=UF3wu1BCkdt9Wkhz6SB3mqLssmKh7tfHg1Y3pm6fj0LXgrBYNmQTK9g/EcT1X3qkq
-	 UQTYNHbS4wYdBhypW7QRMZq9hbXULC3t7IBSIxUpRhmqPmhMi5bdTD03v2ixBsHEdu
-	 gACQl26bEbASIh1zVk8RwPnUW3lGAZIofll3+Ni8=
-Received: from pek-lxu-l1.wrs.com ([36.129.58.158])
-	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
-	id 3D00B63E; Thu, 15 Feb 2024 18:15:16 +0800
-X-QQ-mid: xmsmtpt1707992116t3wprnbpf
-Message-ID: <tencent_4E674FD48DC125910DEA92045DEADDA11907@qq.com>
-X-QQ-XMAILINFO: NkHKfw09D6j82obyJWxrAi/6twAtn+h3mqbpRlOmLdB8QCxLBkaXTeXTApWnbU
-	 85jma3daH0AlwaqYNY18pDO3kZx13eDH1Adhx0fSsJMhKaB4656dEJfN/p6qTY8lhLl84DKOAi+9
-	 3a4aiTnjLl55Al6UaOr7eENlv4oN1RfIWERStf4U5oqZT6jyim5J0qVzaXX/qFbwSTHxgkRe3uVj
-	 pBK8er5ck/vEnmNrJOHBNMt268rdrA9qkbsCur7GuSvL2aHSn345PXGtJLpokSULLmrGkALK/HC9
-	 ORB1T8SDFUNaMJ+7DUIMTSMg1W/Q9SAe16kL53h3zDDaYGQXfj+vgzPcnJZmOpze2gnQlZonhq2h
-	 CHCHZH4jZ4qDi6JaSuk8Spc5e5cWjQAeEzkvx0jyhTLhAEzs6tflWp9wvOUAZN2bAM4qXWFg4SBU
-	 w80ByGa+nV4J6xBBojb6GSbCh4Zr5DxQgKS5W724NtMpiHpg2+lmgBpub7SEt10jc1HCybUFKHiZ
-	 gowLIcVwQRV0GyUHRWFQvgkWSytH7T+XMKEDxr1RI937CmZrUGVOXR5JJXEH7Xe4n79io/b5j9Ep
-	 lonCxSb1KRFaYRVeu1Kkxbp6NoRjP1HKUP+jaeBUX5rbq/ewEdWzM6K/oEeuijzFZkei9fkmeJxN
-	 zdOHo2r7bqk4aSUsQOewO4Oen9CtlDbR7WVGn2IYfABnFs8ksEHEQvdBdHDRdd5sYqiU/EU1vF0q
-	 cboAmOvYzJiQjzPrRULq+V6ZP2mM7oim6NdCRiQQa3eNjWH//5sTZcALlLl4pj1Z7WaVWAJxoX0/
-	 7m7qnN785QardhKPyTydQumkNTo8Nak9fuzLai2ofnsQ5xIIjrk4l1xZ3kxOrVsAAPebCI4o8Ovf
-	 I4thKlgmUq87Db/vMCBcRy+Fdt+TtOM1k5QUFGkXh/BUg5o/IP3dr4g98kzAkaSa4/BmPjyUJo1o
-	 3co7EXS5ieNjWF9M1bsTNuNyx46HtK
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+0f999d26a4fd79c3a23b@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [dri?] KASAN: slab-use-after-free Read in drm_atomic_helper_wait_for_vblanks (2)
-Date: Thu, 15 Feb 2024 18:15:16 +0800
-X-OQ-MSGID: <20240215101515.556063-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000ec4c32061143ec95@google.com>
-References: <000000000000ec4c32061143ec95@google.com>
+	s=arc-20240116; t=1707992441; c=relaxed/simple;
+	bh=MNzjTQVy8i+SjCyYirVZZm1jgkX/BUR/FaONBXox8oA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dk/YR2Bj/CD+KLZ0FMVdpGEiYYxpljC7KUcpVSB4doMsD6s4aYDK6uSgUsvNYkqL2wagRTiJDZlYhhqHam27tJ25AJ4ZXFfcV+X282rJTc4rtG2GvpRGTPuHFppkNBhfOM0O6dxjj5zCSre2aZe/cifjQsoGZpu2s6gEp8rhi2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c--e.de; spf=pass smtp.mailfrom=c--e.de; arc=none smtp.client-ip=217.10.14.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c--e.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=c--e.de
+Received: by cae.in-ulm.de (Postfix, from userid 1000)
+	id 1F8F61402E9; Thu, 15 Feb 2024 11:10:41 +0100 (CET)
+From: "Christian A. Ehrhardt" <lk@c--e.de>
+To: linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: "Christian A. Ehrhardt" <lk@c--e.de>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Sing-Han Chen <singhanc@nvidia.com>,
+	Haotien Hsu <haotienh@nvidia.com>,
+	Utkarsh Patel <utkarsh.h.patel@intel.com>,
+	"Jonathan Hunter" <jonathanh@nvidia.com>,
+	"Wayne Chang" <waynec@nvidia.com>,
+	"WK Tsai" <wtsai@nvidia.com>
+Subject: [PATCH CFT] usb: ucsi_ccg: Fix command completion handling
+Date: Thu, 15 Feb 2024 11:10:24 +0100
+Message-Id: <20240215101024.764444-1-lk@c--e.de>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,30 +39,80 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-please test uaf in drm_atomic_helper_wait_for_vblanks
+In case of a spurious or otherwise delayed interrupt
+it is possible that CCI still reports the previous completion.
+For this reason the UCSI spec provides different completion
+bits for normal commands and for UCSI_ACK_CC_CI.
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+Only complete a sync command if the correct completion bit
+is set.
 
-diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-index 39ef0a6addeb..b16ff9020097 100644
---- a/drivers/gpu/drm/drm_atomic_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_helper.c
-@@ -1743,7 +1743,9 @@ EXPORT_SYMBOL(drm_atomic_helper_wait_for_flip_done);
- void drm_atomic_helper_commit_tail(struct drm_atomic_state *old_state)
- {
- 	struct drm_device *dev = old_state->dev;
-+	static DEFINE_MUTEX(lock);
+This should avoid the need to clear out CCI before starting
+a command. Thus remove this code.
+
+Signed-off-by: Christian A. Ehrhardt <lk@c--e.de>
+Fixes: e32fd989ac1c ("usb: typec: ucsi: ccg: Move to the new API")
+---
+Additional information:
+A similar change for ucsi_acpi.c is here:
+  https://lore.kernel.org/all/20240121204123.275441-3-lk@c--e.de/
+This restores behaviour that ucsi.c had before moving to the new API.
+I've seen timeouts with ucsi_acpi.c without that fix, often if there
+were many port events (plug/unplug).
+
+I do _not_ have CCG hardware to test this. So someone else will have to
+provide a Tested-By tag or similar (hence the CFT in the subject).
+
+But from looking at the code I think this change is needed for CCG,
+too. Additionally, the recent change to CCG here
+  https://lore.kernel.org/all/20240126030115.3791554-1-haotienh@nvidia.com/
+seems to work around the same problem.
+
+Clearing the cached CCI value should not be necessary with this
+anymore and I suspect that it can potentially cause other problems.
+However, I can send an update patch without this hunk if desired.
+
+
+ drivers/usb/typec/ucsi/ucsi_ccg.c | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/usb/typec/ucsi/ucsi_ccg.c b/drivers/usb/typec/ucsi/ucsi_ccg.c
+index dda7c7c94e08..9442307e0abd 100644
+--- a/drivers/usb/typec/ucsi/ucsi_ccg.c
++++ b/drivers/usb/typec/ucsi/ucsi_ccg.c
+@@ -616,14 +616,6 @@ static int ucsi_ccg_async_write(struct ucsi *ucsi, unsigned int offset,
+ 	struct ucsi_ccg *uc = ucsi_get_drvdata(ucsi);
+ 	u16 reg = CCGX_RAB_UCSI_DATA_BLOCK(offset);
  
-+	mutex_lock(&lock);
- 	drm_atomic_helper_commit_modeset_disables(dev, old_state);
- 
- 	drm_atomic_helper_commit_planes(dev, old_state, 0);
-@@ -1757,6 +1759,7 @@ void drm_atomic_helper_commit_tail(struct drm_atomic_state *old_state)
- 	drm_atomic_helper_wait_for_vblanks(dev, old_state);
- 
- 	drm_atomic_helper_cleanup_planes(dev, old_state);
-+	mutex_unlock(&lock);
+-	/*
+-	 * UCSI may read CCI instantly after async_write,
+-	 * clear CCI to avoid caller getting wrong data before we get CCI from ISR
+-	 */
+-	spin_lock(&uc->op_lock);
+-	uc->op_data.cci = 0;
+-	spin_unlock(&uc->op_lock);
+-
+ 	return ccg_write(uc, reg, val, val_len);
  }
- EXPORT_SYMBOL(drm_atomic_helper_commit_tail);
  
+@@ -708,9 +700,14 @@ static irqreturn_t ccg_irq_handler(int irq, void *data)
+ err_clear_irq:
+ 	ccg_write(uc, CCGX_RAB_INTR_REG, &intr_reg, sizeof(intr_reg));
+ 
+-	if (!ret && test_bit(DEV_CMD_PENDING, &uc->flags) &&
+-	    cci & (UCSI_CCI_ACK_COMPLETE | UCSI_CCI_COMMAND_COMPLETE))
+-		complete(&uc->complete);
++	if (!ret && test_bit(DEV_CMD_PENDING, &uc->flags)) {
++		bool ack = UCSI_COMMAND(uc->last_cmd_sent) == UCSI_ACK_CC_CI;
++
++		if (ack && (cci & UCSI_CCI_ACK_COMPLETE))
++			complete(&uc->complete);
++		if (!ack && (cci & UCSI_CCI_COMMAND_COMPLETE))
++			complete(&uc->complete);
++	}
+ 
+ 	return IRQ_HANDLED;
+ }
+-- 
+2.40.1
 
