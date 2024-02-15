@@ -1,210 +1,117 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5DD137C3E;
-	Thu, 15 Feb 2024 15:18:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708010303; cv=none; b=oBbSqc8Udzrf81qtMCnmNvvmXB4xYewOZNP6SYzWbW8cKYKN5KrboDYd7W15AJ5nbomlijMrsn2gau5aDNO77j/n3zyslgzT+Q4Jat8by+sXC/Z9p33YThHIIzHFkv072EEx2Ogz0y04QnvEU90IkyNV11epubnAYKt2f7S8xEw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708010303; c=relaxed/simple;
-	bh=HBHasuojlZ2tGAtcznetMkoCQJdnpT5nJFFM8hFoQ5E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Y/HJ75vIjkn6CQgD7xd1emkJcPX7bJo1hdJVAYLgovFWiIS1gtQzjYAWJNhMO+XLg70L4Atduk1jHeWSxV+n8ltZKumT9WSr0tw0dIUgz1IT5+I+LgWq3ZGxu/ktkW/QrkcyMz0uFlHFG0yyuTSUreMA4ULAhPEn9zZgBThJAR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=MNu4P6qI; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E1F132C14
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 15:21:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.212.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708010510; cv=pass; b=hbSgzKwTKJncxano+ELdZMBvIAly99SefaBsfoknYAYGe8sliPEvNU7YbeVG9JhjYmQxBZFx1vOzZIdJqbbLTcFNG0xyhEgimnj8+Veqdon965QT7Pn00qxrI+exRdBxFGtuwX5lstzMT3QCRzNSaXsL/nkVtwm6owGzRk4fAUQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708010510; c=relaxed/simple;
+	bh=SCu1j3Obem6LNJ/Xer6MTTr5+qHPF9ABl1ytvK7ClnE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SBxeRwkTHQXd98sDHWasgNRbwrxqTEGe9f/PgQs/g6+eDvFLG7h7OpuPdUWiBgSDx/DSRpJBW9MNWtyO/+jspnXIRHeRxVI+3z9Nmirv5+5nZDgH2noJFZsnPrNh/Kk6U13c90RisAB9SGsunXwuD/5fyEP0BAw6Q6e7vRquN7o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=okanakyuz.com; spf=none smtp.mailfrom=okanakyuz.com; dkim=pass (2048-bit key) header.d=okanakyuz.com header.i=@okanakyuz.com header.b=GOdGEoF2; arc=pass smtp.client-ip=23.83.212.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=okanakyuz.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=okanakyuz.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="MNu4P6qI"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 97609240007;
-	Thu, 15 Feb 2024 15:18:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708010299;
+	dkim=pass (2048-bit key) header.d=okanakyuz.com header.i=@okanakyuz.com header.b="GOdGEoF2"
+X-Sender-Id: hostingeremail|x-authuser|okanakyuz@okanakyuz.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 397755430EF
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 14:44:00 +0000 (UTC)
+Received: from fr-int-smtpout5.hostinger.io (unknown [127.0.0.6])
+	(Authenticated sender: hostingeremail)
+	by relay.mailchannels.net (Postfix) with ESMTPA id D7AB3541DB1
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 14:43:58 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1708008239; a=rsa-sha256;
+	cv=none;
+	b=Gauqmct6hHTuKM73Nxs3VRXGzUsYGG81ty6p2nsgkv+hUZeCsBO/JceoaGDCM1mHStGpZE
+	UvDOU9B1352t+MCJVrSfAExBAd+2gu2PIKwm8TfRY3ePmFeSgWs5zAK+HKMKUen/c2urAe
+	Cz/76Ydm6O6g0D9YNdCuyMwoCbzdcV4R4Nea+vgsd3kEzmzD1YQJ917Py/VcmhIwc/LTwy
+	q2wYGhshDM1u1bAwUVMCdykLzjumju0jR9a9dOmXBwg+0TsZ3aigZdtrW09B1m/KNEJX47
+	XwNaJdJAUJEIhG8vpEmZGqqkQNDZte+1r8rfPaznOjwM4/aoiMW3Z1o8X7+h8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1708008239;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7WlARA5/yoLE3vqCDpUZDlZg7z0Nm6s4ziTMlbtRK8g=;
-	b=MNu4P6qIuZ5L+2NKBXMCAIXg/mFufNUbzfb6phIdl9ZNtwvOlcvGInZcOh+9UT3LFbN4zM
-	UN+QeiAPWP1BHJAGYSl9s/YSrH6fE49OdTK6YMfcAyLb+CyDy89eOJZNErpJYBFJZzzMZp
-	LVa5Ds5kE35vRddMN75xSWb3jGokXMiwnp4HMEVqq6eIJyxL9pE/1mLawAUw1W6DFi/YCr
-	1Z2+SdExyzfFy3di/juX0CcwWv4UGDSKurTcwS8CFv31oME2EQ+wEnMr7/mh+TnDEXJAWf
-	FhWX/1EstrMAt6OtRgChG+47AZzwia+N2UlYbE8CpkrXtGBS/mI30am/3Z/UjQ==
-From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Thu, 15 Feb 2024 16:18:03 +0100
-Subject: [PATCH v3 18/18] PCI: j721e: add suspend and resume support
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
+	bh=ZsVL3roLn5ZzHljGj+vaAjti80VZi5B763mXyyAuLe4=;
+	b=vWIb4OLp/vhkrgZFpv5tu5dUxykePFR0I8aVNyr5p6LdzMqgeEsnY3iRiWv8gZPTiDYvsE
+	co+yMqwNgC5hwi9wh5yfxZaUaaQcFmEEztuce7/t4duU/YAU8pxS+7iJ++d0ufOQDAdeGR
+	1OOGPsIwBLXCDbHG73yzB8XjgWE31cYOew3FnXkRyLk47nUydPI58a8UNNYD0KhI8Dz1Q5
+	Ht5yaDSTVwDNjYNjqmosgZtlsGK+erU8phZQl7l98FJ7Qf1cI0aS2Gqqy6cvK4dmFATH6e
+	N2r9h3iCGfsQz89qeBxZqDfSJyuqNYnGLL9k/H2q0ECjSY++CIuRcM/hVFq8fg==
+ARC-Authentication-Results: i=1;
+	rspamd-55b4bfd7cb-sg4p8;
+	auth=pass smtp.auth=hostingeremail smtp.mailfrom=okanakyuz@okanakyuz.com
+X-Sender-Id: hostingeremail|x-authuser|okanakyuz@okanakyuz.com
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: hostingeremail|x-authuser|okanakyuz@okanakyuz.com
+X-MailChannels-Auth-Id: hostingeremail
+X-Wipe-Scare: 5e42464a02e90a5e_1708008239885_4279625322
+X-MC-Loop-Signature: 1708008239885:394597443
+X-MC-Ingress-Time: 1708008239885
+Received: from fr-int-smtpout5.hostinger.io ([UNAVAILABLE]. [89.116.146.168])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.113.222.71 (trex/6.9.2);
+	Thu, 15 Feb 2024 14:43:59 +0000
+From: Okan Akyuz <okanakyuz@okanakyuz.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=okanakyuz.com;
+	s=hostingermail-a; t=1708008236;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ZsVL3roLn5ZzHljGj+vaAjti80VZi5B763mXyyAuLe4=;
+	b=GOdGEoF2PAzBMzmVx2LNMV0Uxji2RIF6W4v7AVjozPEQ8r7dzBT94+9wrz1EFoC9uFN4ML
+	9hlBkJw6U7ChNXe1wQQEZueCePOHDJzvqors5mWC4r3yTGKLJ3fhAqZ59PgJ8mwpmzdqUN
+	/rokLMaGQ8bQJJWbiBEtjbJ8Ec8MfxNSqmNXzPzIOjdP5evLGAfvh7srSHaWduSzSPuYwr
+	yerE8YUJHYHM6szHVJmy5VoRopnvKaYecs3SzgHKV+rVE6hdBuFtjm1MG2QSSRSJG/KR2P
+	aNa3U6ifklI7Mx1uU2NmO9hzi9D0/K/IC1fHl4EuUK2rM6s76upLqbAY0DxxSw==
+To: jdelvare@suse.com,
+	linux@roeck-us.net,
+	corbet@lwn.net
+Cc: linux-hwmon@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	okanakyuz@okanakyuz.com
+Subject: [PATCH 3/3] The URL of the datasheet seems to have changed.
+Date: Thu, 15 Feb 2024 17:34:29 +0300
+Message-ID: <20240215143429.18069-1-okanakyuz@okanakyuz.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240102-j7200-pcie-s2r-v3-18-5c2e4a3fac1f@bootlin.com>
-References: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
-In-Reply-To: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
- Tony Lindgren <tony@atomide.com>, 
- Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>, 
- Aaro Koskinen <aaro.koskinen@iki.fi>, 
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
- Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
- linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org, 
- linux-pci@vger.kernel.org, gregory.clement@bootlin.com, 
- theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
- Thomas Richard <thomas.richard@bootlin.com>
-X-Mailer: b4 0.12.0
-X-GND-Sasl: thomas.richard@bootlin.com
+X-CM-Envelope: MS4xfFCZA+rTQrfGErnwysmhRW6ed8HufZhBIM676TCDWVRFXQk79/rxWi59It2M+bjzYO1BJgtXKqfX6DOha4l/9Qi96QmcLwZLNYs6+Mcu03DfpPqX05g4 V/h3e2DAXlImoqGNG18wuuRrwLebg5pDbvHokrGypFyCCFj5Wr8VDVQ3JpjFYwIQx2e6Gg5oC8jptgFrC+Qo2ZQQY3rNeX4O+VfnWehGzUW9YzwcDfD97tmg mbW06qhT5CT4l1H6MviK7t5ykFZiN6LhPtMSZMi3SHZm/z2Ne2eN57aQfjGyPwvZRuEYeXjF4SIXFAMLGm9ZYhl4tRivyW1F+JJCzN5IapXlXqLB6642BOtn FFnhNJiBi6CMsETPQn/pF5G9V/y3NQQyToSpuQnSeIm06CbF2/X2oBKskHAWbC4ZJHiFMMGw7mTpvA1aHfU1T6vBcGdKLA==
+X-CM-Analysis: v=2.4 cv=apu0CzZV c=1 sm=1 tr=0 ts=65ce232c a=geHYaF3j5ifCImHjKwHHfg==:117 a=geHYaF3j5ifCImHjKwHHfg==:17 a=TiQ8hZ4ATvU4YVTt:21 a=-tA9vPf7AAAA:8 a=UXzzSC1OAAAA:8 a=gAnH3GRIAAAA:8 a=ODGrRrS54UuryLqHn6gA:9 a=vtdtr2SZiqPAgdHKmkdM:22 a=NXyddzfXndtU_1loVILY:22 a=oVHKYsEdi7-vN-J5QA_j:22
+X-AuthUser: okanakyuz@okanakyuz.com
 
-From: Théo Lebrun <theo.lebrun@bootlin.com>
+The datasheet is not reachable. Therefore, I replaced it with another
+one from the manufacturer's website.
 
-Add suspend and resume support. Only the rc mode is supported.
-
-During the suspend stage PERST# is asserted, then deasserted during the
-resume stage.
-
-Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
-Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+Signed-off-by: Okan Akyuz <okanakyuz@okanakyuz.com>
 ---
- drivers/pci/controller/cadence/pci-j721e.c | 90 ++++++++++++++++++++++++++++++
- 1 file changed, 90 insertions(+)
+ Documentation/hwmon/max6620.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index 9c588e79f5ac..cfa7ba237e1a 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -6,6 +6,7 @@
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
+diff --git a/Documentation/hwmon/max6620.rst b/Documentation/hwmon/max6620.rst
+index 84c1c44d3de4..d70173bf0242 100644
+--- a/Documentation/hwmon/max6620.rst
++++ b/Documentation/hwmon/max6620.rst
+@@ -11,7 +11,7 @@ Supported chips:
  
-+#include <linux/clk-provider.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/gpio/consumer.h>
-@@ -18,10 +19,13 @@
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/regmap.h>
-+#include <linux/container_of.h>
+     Addresses scanned: none
  
- #include "../../pci.h"
- #include "pcie-cadence.h"
+-    Datasheet: http://pdfserv.maxim-ic.com/en/ds/MAX6620.pdf
++    Datasheet: https://www.analog.com/media/en/technical-documentation/data-sheets/max6620.pdf
  
-+#define cdns_pcie_to_rc(p) container_of(p, struct cdns_pcie_rc, pcie)
-+
- #define ENABLE_REG_SYS_2	0x108
- #define STATUS_REG_SYS_2	0x508
- #define STATUS_CLR_REG_SYS_2	0x708
-@@ -554,6 +558,91 @@ static void j721e_pcie_remove(struct platform_device *pdev)
- 	pm_runtime_disable(dev);
- }
- 
-+static int j721e_pcie_suspend_noirq(struct device *dev)
-+{
-+	struct j721e_pcie *pcie = dev_get_drvdata(dev);
-+
-+	if (pcie->mode == PCI_MODE_RC) {
-+		gpiod_set_value_cansleep(pcie->reset_gpio, 0);
-+		clk_disable_unprepare(pcie->refclk);
-+	}
-+
-+	cdns_pcie_disable_phy(pcie->cdns_pcie);
-+
-+	return 0;
-+}
-+
-+static int j721e_pcie_resume_noirq(struct device *dev)
-+{
-+	struct j721e_pcie *pcie = dev_get_drvdata(dev);
-+	struct cdns_pcie *cdns_pcie = pcie->cdns_pcie;
-+	int ret;
-+
-+	ret = j721e_pcie_ctrl_init(pcie);
-+	if (ret < 0) {
-+		dev_err(dev, "j721e_pcie_ctrl_init failed\n");
-+		return ret;
-+	}
-+
-+	j721e_pcie_config_link_irq(pcie);
-+
-+	/*
-+	 * This is not called explicitly in the probe, it is called by
-+	 * cdns_pcie_init_phy.
-+	 */
-+	ret = cdns_pcie_enable_phy(pcie->cdns_pcie);
-+	if (ret < 0) {
-+		dev_err(dev, "cdns_pcie_enable_phy failed\n");
-+		return -ENODEV;
-+	}
-+
-+	if (pcie->mode == PCI_MODE_RC) {
-+		struct cdns_pcie_rc *rc = cdns_pcie_to_rc(cdns_pcie);
-+
-+		ret = clk_prepare_enable(pcie->refclk);
-+		if (ret < 0) {
-+			dev_err(dev, "clk_prepare_enable failed\n");
-+			return -ENODEV;
-+		}
-+
-+		/*
-+		 * "Power Sequencing and Reset Signal Timings" table in
-+		 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
-+		 * indicates PERST# should be deasserted after minimum of 100us
-+		 * once REFCLK is stable. The REFCLK to the connector in RC
-+		 * mode is selected while enabling the PHY. So deassert PERST#
-+		 * after 100 us.
-+		 */
-+		if (pcie->reset_gpio) {
-+			usleep_range(100, 200);
-+			gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-+		}
-+
-+		ret = cdns_pcie_host_link_setup(rc);
-+		if (ret < 0) {
-+			clk_disable_unprepare(pcie->refclk);
-+			return ret;
-+		}
-+
-+		/*
-+		 * Reset internal status of BARs to force reinitialization in
-+		 * cdns_pcie_host_init().
-+		 */
-+		for (enum cdns_pcie_rp_bar bar = RP_BAR0; bar <= RP_NO_BAR; bar++)
-+			rc->avail_ib_bar[bar] = true;
-+
-+		ret = cdns_pcie_host_init(rc);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static DEFINE_NOIRQ_DEV_PM_OPS(j721e_pcie_pm_ops,
-+			       j721e_pcie_suspend_noirq,
-+			       j721e_pcie_resume_noirq);
-+
- static struct platform_driver j721e_pcie_driver = {
- 	.probe  = j721e_pcie_probe,
- 	.remove_new = j721e_pcie_remove,
-@@ -561,6 +650,7 @@ static struct platform_driver j721e_pcie_driver = {
- 		.name	= "j721e-pcie",
- 		.of_match_table = of_j721e_pcie_match,
- 		.suppress_bind_attrs = true,
-+		.pm	= pm_sleep_ptr(&j721e_pcie_pm_ops),
- 	},
- };
- builtin_platform_driver(j721e_pcie_driver);
-
+ Authors:
+     - L\. Grunenberg <contact@lgrunenberg.de>
 -- 
-2.39.2
+2.43.0
 
