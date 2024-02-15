@@ -1,95 +1,126 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5F4132491;
-	Thu, 15 Feb 2024 15:01:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F947131E3D;
+	Thu, 15 Feb 2024 15:01:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708009267; cv=none; b=qxWhZeTvt1LXAuroB0iVz4poaA8PqlF7o9AX6etxgMfpoliwpCI9fih5AqQe3/XFBgwMHF56V6xRB6kRIQect4Of8MpMejh+MNkoP6Rexy0npwyjA2RKzRhY+en1SHiLxytKmoNfg/8/eCxIxx2o2cj2FfDDSfcKyYFcOU/T0v4=
+	t=1708009283; cv=none; b=qJten8rPfNtTil7J6xT6AwRjUL3NyiSXj8q1/8Iz2wtG/HoFiKUTslrnjcebcxKZLSfqtjaG5NH2tlzFH+RcvJuCBKDBVhGZYTY6zoj9JOt8r/spuz2FKABA/oGeshO//ikcCgmROkPOxjLCeglGYfgJ4A8bYE5kagpJ7tzaBes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708009267; c=relaxed/simple;
-	bh=MtMq9tcbpWwfTdQNJk1rzVu9HeI1V4yx38+kxXa5HNg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=CpWJOoS8m8MlFbNfzEdIU70zaXRc4ceqALUygtP7BgLJpfPlXN3S+de1RiYYis8kLsxUmhsCgmPNybO9/4Sfii9p6u2Jxao0oNy46Usj8wyUY/V8qF3AzE1F32gJCnNJfvTB4qv3LwG629wDTuDbQ4zgytTDwzZM3nW2NRBLj0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ACCFDxP4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KXqXpqo8; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ACCFDxP4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KXqXpqo8"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708009264;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7jurcXevAzLq5b3XNHkngyd9aG7HXv/ajp+hOIdurHE=;
-	b=ACCFDxP4M6h+kPZxC8n5YjerDJytE7XIB0xzvUQXXsvsgxPRymDCIwAOCzBTMwjF/tAC6G
-	5DClIsEIgMg8ovLCONa+WB3EEhNaR0do2/BXAHLP/kwTJWohwek+I2LO/AhhBv4naEVE0e
-	aHQgbFkMm4aV/a+ICweO1zbPNB9N6AaJDpzcUIWsYMFaaN5tq4TzG4KtRQiOI3ZH5zRyML
-	a3IJasqR/LwhLRPH+XRe6Jqq5lcpAy4rh9jyXmQL4Rc0PsGK3z88opG/4JIKCQLL2Mssf8
-	aa1w9c8EObkVpg4klvWcgi5NpujCCu6uXwJBtrkci69IOAL7y7ahvCT+XVT0PQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708009264;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7jurcXevAzLq5b3XNHkngyd9aG7HXv/ajp+hOIdurHE=;
-	b=KXqXpqo8rLP9B7h0qdTcwSs6/WBr1zOrw9q92FTDKvwl3twYREKP5rQvKTif3BtifKxCaI
-	TvV5B162CoS6pGDQ==
-To: Marc Zyngier <maz@kernel.org>, Anup Patel <apatel@ventanamicro.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Rob
- Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Frank Rowand
- <frowand.list@gmail.com>, Conor Dooley <conor+dt@kernel.org>,
- =?utf-8?B?QmrDtnJuIFTDtnBlbA==?=
- <bjorn@kernel.org>, Atish Patra <atishp@atishpatra.org>, Andrew Jones
- <ajones@ventanamicro.com>, Sunil V L <sunilvl@ventanamicro.com>, Saravana
- Kannan <saravanak@google.com>, Anup Patel <anup@brainfault.org>,
- linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v12 04/25] genirq/irqdomain: Add DOMAIN_BUS_DEVICE_IMS
-In-Reply-To: <86o7ci3puk.wl-maz@kernel.org>
-References: <20240127161753.114685-1-apatel@ventanamicro.com>
- <20240127161753.114685-5-apatel@ventanamicro.com>
- <86o7ci3puk.wl-maz@kernel.org>
-Date: Thu, 15 Feb 2024 16:01:03 +0100
-Message-ID: <87h6i9epqo.ffs@tglx>
+	s=arc-20240116; t=1708009283; c=relaxed/simple;
+	bh=idPar8TnYrcn1/ehunJjNHy7HB5Glf8ubsjkXlG3MF4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Q7GVdUPhoW1MZ3jxQayIwDJnuCy3VtlaOaOvhhxuAPnfqMeP00mq58Ln5pZT9PpOO6CYmBOYP2ZG7tb32kaA8C1yrMrfVGXOM2Q1yP8XNSKJyA9EYdzvx04xfYMKh08Y0F+AyETv/7IJ0lB1mxD0P6hmVg30N05C68nYd22mJHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9CB4C433F1;
+	Thu, 15 Feb 2024 15:01:20 +0000 (UTC)
+Date: Thu, 15 Feb 2024 10:02:54 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
+ <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+ bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, Alexei
+ Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
+ <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v7 21/36] function_graph: Add selftest for passing local
+ variables
+Message-ID: <20240215100254.2891c5da@gandalf.local.home>
+In-Reply-To: <170723228217.502590.6615001674278328094.stgit@devnote2>
+References: <170723204881.502590.11906735097521170661.stgit@devnote2>
+	<170723228217.502590.6615001674278328094.stgit@devnote2>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 15 2024 at 11:54, Marc Zyngier wrote:
-> On Sat, 27 Jan 2024 16:17:32 +0000,
-> Anup Patel <apatel@ventanamicro.com> wrote:
->>  	DOMAIN_BUS_PCI_DEVICE_IMS,
->> +	DOMAIN_BUS_DEVICE_IMS,
->
-> Only a personal taste, but since we keep calling it "device MSI",
-> which it really is, I find it slightly odd to name the token
-> "DEVICE_IMS".
->
-> From what I understand, IMS is PCIe specific. Platform (and by
-> extension device) MSI extends far beyond PCIe. So here, DEVICE_MSI
-> would make a lot more sense and avoid confusion.
+On Wed,  7 Feb 2024 00:11:22 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-That's true, but I chose it intentionally because Interrupt Message
-Store (IMS) is a (PCI) device specific way to store the message contrary
-to PCI/MSI[-X] which has standardized storage.
+> From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> 
+> Add boot up selftest that passes variables from a function entry to a
+> function exit, and make sure that they do get passed around.
+> 
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  Changes in v2:
+>   - Add reserved size test.
+>   - Use pr_*() instead of printk(KERN_*).
+> ---
+>  kernel/trace/trace_selftest.c |  169 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 169 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
+> index f0758afa2f7d..4d86cd4c8c8c 100644
+> --- a/kernel/trace/trace_selftest.c
+> +++ b/kernel/trace/trace_selftest.c
+> @@ -756,6 +756,173 @@ trace_selftest_startup_function(struct tracer *trace, struct trace_array *tr)
+>  
+>  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>  
+> +#ifdef CONFIG_DYNAMIC_FTRACE
+> +
+> +#define BYTE_NUMBER 123
+> +#define SHORT_NUMBER 12345
+> +#define WORD_NUMBER 1234567890
+> +#define LONG_NUMBER 1234567890123456789LL
+> +
+> +static int fgraph_store_size __initdata;
+> +static const char *fgraph_store_type_name __initdata;
+> +static char *fgraph_error_str __initdata;
+> +static char fgraph_error_str_buf[128] __initdata;
+> +
+> +static __init int store_entry(struct ftrace_graph_ent *trace,
+> +			      struct fgraph_ops *gops)
+> +{
+> +	const char *type = fgraph_store_type_name;
+> +	int size = fgraph_store_size;
+> +	void *p;
+> +
+> +	p = fgraph_reserve_data(gops->idx, size);
+> +	if (!p) {
+> +		snprintf(fgraph_error_str_buf, sizeof(fgraph_error_str_buf),
+> +			 "Failed to reserve %s\n", type);
+> +		fgraph_error_str = fgraph_error_str_buf;
+> +		return 0;
+> +	}
+> +
+> +	switch (fgraph_store_size) {
+> +	case 1:
+> +		*(char *)p = BYTE_NUMBER;
+> +		break;
+> +	case 2:
+> +		*(short *)p = SHORT_NUMBER;
+> +		break;
+> +	case 4:
+> +		*(int *)p = WORD_NUMBER;
+> +		break;
+> +	case 8:
+> +		*(long long *)p = LONG_NUMBER;
+> +		break;
+> +	}
+> +
 
-So my thought was that this exactly reflects what the platform device
-requires: device specific message store, aka DMS or DSMS :)
+What would be an interesting test is to run all versions together. That is,
+to attach a callback that stores a byte, a callback that stores a short, a
+callback that stores a word and a callback that stores a long, and attach
+them all to the same function.
 
-> But hey, I don't have much skin in this game, and I can probably
-> mentally rotate the acronym...
+I guess we can add that as a separate patch.
 
-I have no strong opinion about it though.
+-- Steve
 
-Thanks,
 
-        tglx
+> +	return 1;
+> +}
+> +
