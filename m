@@ -1,97 +1,228 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB96F12BEAF;
-	Thu, 15 Feb 2024 12:17:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F302913FF5;
+	Thu, 15 Feb 2024 12:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707999430; cv=none; b=Yrum2QewLfM5Ucn2mpVPw/NLJ8NWNqvb6eaR2t8IsfxFGnqJzNQck3rmb9L0RTO61h473jqmTDwSvTJIvjJ5rGvkvmlJCN69hdMTIxtrDzRUbBOzUVl/cfHKvZ4m2eJGGSIeiojsElL7+nEtUR+a4YneHyDkLISNVsjuW+QKqcE=
+	t=1707999485; cv=none; b=KqlLPpkjiEzmORS9GoE28ZhnPVixDDxf4eDswMnznz66qHI/0eVQrFlB2cfpLmLIqa6IsppZYU/ELWm5Yk0Fos6o/KiBu9mlbf/X4RJHr9/YhE5DjIoPoTRowUBRAz5pt0kdDBSya+0AEKs2nLmKrHL0tqfT89m50ENA+7liL3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707999430; c=relaxed/simple;
-	bh=zFgVeZ+HCPKzMsMvNy4bcqrK2mPXB/8qWs0nNlUKGR8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DKFOBT6WEGnO0X18WW8YFeKNxWqqMPZTPKAKBWkOtsXK8+RGica+kKTX+zCfMadAKX/46CYTNt/aCS9MSPXybPLKtoiBs+rPK2X7mPU38EzgX8criZ3WoaHnVg+NaK1XXbIRa0fjxWpPhBfrsTwUMkuNdbApD52KOlDFzZvHOFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aZ/tVpPT; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aZ/tVpPT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707999428; x=1739535428;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=zFgVeZ+HCPKzMsMvNy4bcqrK2mPXB/8qWs0nNlUKGR8=;
-  b=aZ/tVpPTUPNsEHgqs7GZHe6nXe+DXqfuX6VSjuWDJx6kY1uyuVRkQDvT
-   fouf95ppAe1CMW1lWBPdfL+ngSng5JzOeCisQqMw+bi+O15J/Cyj9oMML
-   43GNZonbWzgtd6bTqztxpyMVA7UOMv+F3qh+ZNHECipOJIbtTDJZJIi52
-   jdQc9tH02jkTltF63CDhf0njznyLXjDbXjuYXuZer2w8yyi4Z5WYGO9J1
-   FY81m5b1RrHz0RLn182JC3VcRFta2QD+FTE27nat9LOFv0JIC50R5fPKh
-   d4q7aag5qvyoN7A5LAplMC7GZkbnh+/6Sl5EXx7N4ALvYSL065cRHHpq0
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="5049590"
-X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
-   d="scan'208";a="5049590"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 04:17:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="912156788"
-X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
-   d="scan'208";a="912156788"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 04:17:02 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1raafk-00000004mim-099p;
-	Thu, 15 Feb 2024 14:17:00 +0200
-Date: Thu, 15 Feb 2024 14:16:59 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Robin van der Gracht <robin@protonic.nl>,
-	Paul Burton <paulburton@kernel.org>
-Subject: Re: [PATCH v2 10/15] auxdisplay: linedisp: Provide a small buffer in
- the struct linedisp
-Message-ID: <Zc4Au5Q_rOAx7_4Y@smile.fi.intel.com>
-References: <20240212170423.2860895-1-andriy.shevchenko@linux.intel.com>
- <20240212170423.2860895-11-andriy.shevchenko@linux.intel.com>
- <CAMuHMdVtqWBi4Y1tj74m4V4kp-3cFe_FphKKeY7zOkrbMVkKRg@mail.gmail.com>
+	s=arc-20240116; t=1707999485; c=relaxed/simple;
+	bh=tzhtE5BnzSpYRfyiFDKGyPHBSmlkv7rCykm0IkMdLYw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jLSITt2j2xWYDWfnec1HrJmjyEbtJrp/nsI7pGLjHdTPiNXPlDmSex5AW89VFB5Gr4juBztZuvqATEPXwCUTeu4QL8q067Ba1/ENlsYo8oOGcKeaWpDcaonfalqrxWU76VS5V+HEf43D6Sd1q4NnyiljeVoilzbpPMQfP5HGBFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TbDWq4lQvz6K7LS;
+	Thu, 15 Feb 2024 20:14:31 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 46D451400D4;
+	Thu, 15 Feb 2024 20:17:59 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 15 Feb
+ 2024 12:17:58 +0000
+Date: Thu, 15 Feb 2024 12:17:57 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+CC: <linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, Ard Biesheuvel <ardb@kernel.org>, "Alison
+ Schofield" <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Yazen Ghannam <yazen.ghannam@amd.com>
+Subject: Re: [PATCH v2 3/4] acpi/ghes, efi/cper: Recognize and process CXL
+ Protocol Errors.
+Message-ID: <20240215121757.00005e72@Huawei.com>
+In-Reply-To: <20240109034755.100555-4-Smita.KoralahalliChannabasappa@amd.com>
+References: <20240109034755.100555-1-Smita.KoralahalliChannabasappa@amd.com>
+	<20240109034755.100555-4-Smita.KoralahalliChannabasappa@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdVtqWBi4Y1tj74m4V4kp-3cFe_FphKKeY7zOkrbMVkKRg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, Feb 15, 2024 at 11:40:44AM +0100, Geert Uytterhoeven wrote:
-> On Mon, Feb 12, 2024 at 6:04 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
+On Tue, 9 Jan 2024 03:47:54 +0000
+Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com> wrote:
 
-...
-
-> > +       linedisp->buf = buf ? buf : linedisp->curr;
-> > +       linedisp->num_chars = buf ? num_chars : min(num_chars, LINEDISP_DEFAULT_BUF_SZ);
+> UEFI v2.10 section N.2.13 defines a CPER record for CXL Protocol errors.
 > 
-> I think it would be safer to return an error if buf == NULL and
-> num_chars < LINEDISP_DEFAULT_BUF_SZ.
+> Add GHES support to detect CXL CPER Protocol record and cache error
+> severity, device_id, serial number and CXL RAS capability struct in
+> struct cxl_cper_event_info.
+> 
+> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+> ---
+> v2:
+> 	Change to sub-struct for protocol error specific elemenets.
+> 	Set serial number unconditionally.
+> 	Copy entire cxl_ras_capability_regs struct rather than pointer.
+> 	Calculate error severity in efi/cper and change to enum.
+> ---
+>  drivers/acpi/apei/ghes.c        | 11 ++++++
+>  drivers/firmware/efi/cper_cxl.c | 68 +++++++++++++++++++++++++++++++++
+>  include/linux/cxl-event.h       | 13 +++++++
+>  3 files changed, 92 insertions(+)
+> 
+> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+> index 60b615d361d3..1d4f3d68a0bc 100644
+> --- a/drivers/acpi/apei/ghes.c
+> +++ b/drivers/acpi/apei/ghes.c
+> @@ -714,6 +714,14 @@ static void cxl_cper_post_event(enum cxl_event_type event_type,
+>  		cper_callback(event_type, &info);
+>  }
+>  
+> +void cxl_cper_handle_prot_err(struct acpi_hest_generic_data *gdata)
+> +{
+> +	struct cxl_cper_event_info info;
+> +
+> +	if (cxl_cper_handle_prot_err_info(gdata, &info))
+> +		return;
+> +}
+> +
+>  int cxl_cper_register_callback(cxl_cper_callback callback)
+>  {
+>  	guard(rwsem_write)(&cxl_cper_rw_sem);
+> @@ -768,6 +776,9 @@ static bool ghes_do_proc(struct ghes *ghes,
+>  		else if (guid_equal(sec_type, &CPER_SEC_PROC_ARM)) {
+>  			queued = ghes_handle_arm_hw_error(gdata, sev);
+>  		}
+> +		else if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR)) {
+> +			cxl_cper_handle_prot_err(gdata);
+> +		}
+>  		else if (guid_equal(sec_type, &CPER_SEC_CXL_GEN_MEDIA_GUID)) {
+>  			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
+>  
+> diff --git a/drivers/firmware/efi/cper_cxl.c b/drivers/firmware/efi/cper_cxl.c
+> index 4fd8d783993e..9b9b8c8f1157 100644
+> --- a/drivers/firmware/efi/cper_cxl.c
+> +++ b/drivers/firmware/efi/cper_cxl.c
+> @@ -8,6 +8,7 @@
+>   */
+>  
+>  #include <linux/cper.h>
+> +#include <acpi/ghes.h>
+>  #include "cper_cxl.h"
+>  
+>  #define PROT_ERR_VALID_AGENT_TYPE		BIT_ULL(0)
+> @@ -44,6 +45,17 @@ enum {
+>  	USP,	/* CXL Upstream Switch Port */
+>  };
+>  
+> +static enum cxl_aer_err_type cper_severity_cxl_aer(int cper_severity)
+> +{
+> +	switch (cper_severity) {
+> +	case CPER_SEV_RECOVERABLE:
+> +	case CPER_SEV_FATAL:
+> +		return CXL_AER_UNCORRECTABLE;
+> +	default:
+> +		return CXL_AER_CORRECTABLE;
+> +	}
+> +}
+> +
+>  void cper_print_prot_err(const char *pfx, const struct cper_sec_prot_err *prot_err)
+>  {
+>  	if (prot_err->valid_bits & PROT_ERR_VALID_AGENT_TYPE)
+> @@ -176,3 +188,59 @@ void cper_print_prot_err(const char *pfx, const struct cper_sec_prot_err *prot_e
+>  			       sizeof(cxl_ras->header_log), 0);
+>  	}
+>  }
+> +
+> +int cxl_cper_handle_prot_err_info(struct acpi_hest_generic_data *gdata,
+> +				  struct cxl_cper_event_info *info)
+> +{
+> +	struct cper_sec_prot_err *prot_err = acpi_hest_get_payload(gdata);
+> +	struct cper_cxl_event_devid *device_id = &info->rec.hdr.device_id;
+> +	struct cper_cxl_event_sn *dev_serial_num =  &info->rec.hdr.dev_serial_num;
+> +	size_t size = sizeof(*prot_err) + prot_err->dvsec_len;
 
-I think you meant >= ?
+Not obvious what this is size of.  I'd rename it to reflect that's only
+the distance to the end of the dvsec copy.
+Or just compute the pointer below directly by putting this maths inline.
 
-> Else a careless driver that doesn't check linedisp->num_chars might
-> overflow the buffer.
+> +
+> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG)) {
+> +		pr_err(FW_WARN "Not a valid protocol error log\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_DEVICE_ID)) {
+> +		pr_err(FW_WARN "Not a valid Device ID\n");
+"No device ID\n"
+is more accurate description.
 
-Okay, check has been added.
+I'd move this down to next to where we check the data is valid.
+So keep each validity check next to where it matters rather than
+a bunch of checks up here.  (mostly because I started writing you
+didn't check it was valid down there before remembering this
+earlier code :)
 
--- 
-With Best Regards,
-Andy Shevchenko
+> +		return -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * Set device serial number unconditionally.
+> +	 *
+> +	 * Print a warning message if it is not valid. The device serial
+> +	 * number is considered valid for CXL 1.1 device, CXL 2.0 device,
+is required for
+perhaps?  These all got renamed in the CXL spec.  We should use that naming
+because it deliberately avoids limiting to particular spec versions.
+	CXL RCD, CXL SLD, CXL LD, 
+> +	 * CXL 2.0 Logical device, or CXL 2.0 Fabric Manager Managed
+> +	 * Logical Device.
 
+Not sure what this is now called.. :(
+
+
+> +	 */
+> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER) ||
+> +	      prot_err->agent_type > 0x4 || prot_err->agent_type == RCH_DP)
+> +		pr_warn(FW_WARN "Not a valid serial number\n");
+> +
+> +	dev_serial_num->lower_dw = prot_err->dev_serial_num.lower_dw;
+> +	dev_serial_num->upper_dw = prot_err->dev_serial_num.upper_dw;
+> +
+> +	/*
+> +	 * The device ID or agent address is only valid for CXL 1.1 device,
+> +	 * CXL 2.0 device, CXL 2.0 Logical device, CXL 2.0 Fabric Manager
+> +	 * Managed Logical Device, CXL Root Port, CXL Downstream Switch
+> +	 * Port, or CXL Upstream Switch Port.
+> +	 */
+> +	if (prot_err->agent_type <= 0x7 && prot_err->agent_type != RCH_DP) {
+
+> +		device_id->segment_num = prot_err->agent_addr.segment;
+> +		device_id->bus_num = prot_err->agent_addr.bus;
+> +		device_id->device_num = prot_err->agent_addr.device;
+> +		device_id->func_num = prot_err->agent_addr.function;
+> +	} else {
+> +		pr_err(FW_WARN "Not a valid agent type\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	info->p_err.cxl_ras = *(struct cxl_ras_capability_regs *)((long)prot_err + size);
+
+Casting to a long isn't nice. Keep it as a pointer for this maths
+a u8 * or void * would work.  Particularly if you did it as something
+a bit more self documenting like
+
+u8 *dvsec_start = (u8 *)(prot_err + 1);
+u8 *cap_start = dvsec_start + prot_err->dvsec_length;
+
+info->p_err.cxl_ras = *(struct cxl_ras_capability_regs *)cap_start;
+
+> +
+> +	info->p_err.severity = cper_severity_cxl_aer(gdata->error_severity);
+> +
+> +	return 0;
+> +}
 
