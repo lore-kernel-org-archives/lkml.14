@@ -1,437 +1,131 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E2969DEA
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 10:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DD667C44
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 10:12:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707991894; cv=none; b=hxDsqUKSm6uavs7Fk8xeaMg6GmY/6a0c4HuoIrD+v63rV1n9dJ+n6QA//g2hyBdhAN3F1qvKmJu3CPsFbRbt70/4Ep3S/IlaBJSRQpOr9IMYgdFUt2gCBzNId6oufV4zxuaCXuuGIqCOXu/B8GZAOuHH/JN1iZRXg+J0NaXgfok=
+	t=1707991962; cv=none; b=XxMhE6/Q3uAKtcJcgoa+a9V+01Yy2YVvaoq1o3HAAUEsCdgXbfHIRzTdFb2JN81WWogXu1wfF6bx3ybV1J0U3jWEpd3S/TMhkpugBRl2/hRtvcsbqLQngamDMMRcMp81mgDHCac5MmzYMQKu70qzvdcp0TeYy0l5gQ37EN4YJm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707991894; c=relaxed/simple;
-	bh=tsbd/aHHsK6Ij7GKg5Eu9fEFPZ4XKuJC7h5Qb1bibfk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cv5VILESRZ4CIZxQBVSygAqZe1RhSYqsBJzGRoCz/Y2jCbWyQTAie6xDbbXG264NrSM8O2/Avi8Z/QRjaB+ArSicMzurLDQ7LQxIN4tkutvafOeBmmiBcx+GuacRQfRHjVK/ach+HIwRtXybDrzQ9lPx0fDExwnhXGWhxeqJynU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=J3V/kIyT; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="J3V/kIyT"
-X-UUID: 931f1762cbea11ee9e680517dc993faa-20240215
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=W1QykbO/3midtkgKGs9LD2x16gmbkyHWS/UTAl4SFzQ=;
-	b=J3V/kIyTXLhYJtpgYQMgHw/hzlq/x3+sdRCnkAuCcpg5CjucElbEZSZHbGGVdl2Sz2bYutulUXjYt4noJfqi9234d8eN+jrDxisb+3dY6UiGzdW4amoxpRUDm/f9AhanDfsf9JHWtabiJnQxv9PHy/10VAFGtddtbI54es02THY=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:296dbec4-b394-4286-8b07-428954a623ee,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:6f543d0,CLOUDID:1570eb83-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 931f1762cbea11ee9e680517dc993faa-20240215
-Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
-	(envelope-from <shawn.sung@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 2129356478; Thu, 15 Feb 2024 18:11:24 +0800
-Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Thu, 15 Feb 2024 18:11:23 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Thu, 15 Feb 2024 18:11:23 +0800
-From: Hsiao Chien Sung <shawn.sung@mediatek.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Chun-Kuang Hu <chunkuang.hu@kernel.org>
-CC: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>,
-	Bibby Hsieh <bibby.hsieh@mediatek.com>, CK Hu <ck.hu@mediatek.com>, Sean Paul
-	<seanpaul@chromium.org>, Fei Shao <fshao@chromium.org>, Jason Chen
-	<jason-ch.chen@mediatek.corp-partner.google.com>, "Nancy . Lin"
-	<nancy.lin@mediatek.com>, <dri-devel@lists.freedesktop.org>,
-	<linux-mediatek@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, Hsiao Chien Sung <shawn.sung@mediatek.com>
-Subject: [PATCH v5 11/13] drm/mediatek: Support CRC in OVL
-Date: Thu, 15 Feb 2024 18:11:17 +0800
-Message-ID: <20240215101119.12629-12-shawn.sung@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20240215101119.12629-1-shawn.sung@mediatek.com>
-References: <20240215101119.12629-1-shawn.sung@mediatek.com>
+	s=arc-20240116; t=1707991962; c=relaxed/simple;
+	bh=eIFtCimqDhFJk6HuIKLTMzw5qvsWlj3IyY8h7yW9DwU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s979FNUPpjEo3r0UoPAX485Iqjvas94sMKEh1tFMbNnORTHjNS678y7beGDDoUwp7JYNjoRadEsedjwyh7gF1CSnVEFRNj8q0Qsj9ae/89CKXSJWjGOPdrKz0NrPMvUtj0T5Z01YW64Kq3Tp4Np5FVf1YVEENbFEBN2YeeHznsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1raYjH-0005ke-4v; Thu, 15 Feb 2024 11:12:31 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1raYjG-000rdf-8J; Thu, 15 Feb 2024 11:12:30 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1raYjG-005I4L-0U;
+	Thu, 15 Feb 2024 11:12:30 +0100
+Date: Thu, 15 Feb 2024 11:12:30 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Viorel Suman <viorel.suman@nxp.com>
+Cc: "Viorel Suman (OSS)" <viorel.suman@oss.nxp.com>, 
+	Florin Leotescu <florin.leotescu@nxp.com>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, linux-pwm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: imx-tpm: reset module on probe
+Message-ID: <zeieriiouilwf23g4v5wv7oetdee43qcm5lvxiygyxmxm7lgde@m3a2uain6g45>
+References: <20240201122242.1597601-1-viorel.suman@oss.nxp.com>
+ <vvldfzpthexjb7bir5imrdslgnnqztl2rdclfp6qiesj6hgiea@o53kcxs66mjr>
+ <3d866664-d2fd-4d36-9e8f-5242327e41b9@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK: N
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="jxbuzkk2jq3itvqv"
+Content-Disposition: inline
+In-Reply-To: <3d866664-d2fd-4d36-9e8f-5242327e41b9@nxp.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-We choose OVL as the CRC generator from other hardware
-components that are also capable of calculating CRCs,
-since its frame done event triggers vblanks, it can be
-used as a signal to know when is safe to retrieve CRC of
-the frame.
 
-Please note that position of the hardware component
-that is chosen as CRC generator in the display path is
-significant. For example, while OVL is the first module
-in VDOSYS0, its CRC won't be affected by the modules
-after it, which means effects applied by PQ, Gamma,
-Dither or any other components after OVL won't be
-calculated in CRC generation.
+--jxbuzkk2jq3itvqv
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
----
- drivers/gpu/drm/mediatek/mtk_disp_drv.h     |   3 +
- drivers/gpu/drm/mediatek/mtk_disp_ovl.c     | 197 +++++++++++++++++++-
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c |   3 +
- 3 files changed, 193 insertions(+), 10 deletions(-)
+Hello,
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_drv.h b/drivers/gpu/drm/mediatek/mtk_disp_drv.h
-index cd5ca5359b0f0..7ef8dbb07c2db 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_drv.h
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_drv.h
-@@ -104,6 +104,9 @@ void mtk_ovl_enable_vblank(struct device *dev);
- void mtk_ovl_disable_vblank(struct device *dev);
- const u32 *mtk_ovl_get_formats(struct device *dev);
- size_t mtk_ovl_get_num_formats(struct device *dev);
-+size_t mtk_ovl_crc_cnt(struct device *dev);
-+u32 *mtk_ovl_crc_entry(struct device *dev);
-+void mtk_ovl_crc_read(struct device *dev);
- 
- void mtk_ovl_adaptor_add_comp(struct device *dev, struct mtk_mutex *mutex);
- void mtk_ovl_adaptor_remove_comp(struct device *dev, struct mtk_mutex *mutex);
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-index 98c989fddcc08..cf35783ad4b02 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-@@ -25,12 +25,20 @@
- #define OVL_FME_CPL_INT					BIT(1)
- #define DISP_REG_OVL_INTSTA			0x0008
- #define DISP_REG_OVL_EN				0x000c
-+#define OVL_EN						BIT(0)
-+#define OVL_OP_8BIT_MODE				BIT(4)
-+#define OVL_HG_FOVL_CK_ON				BIT(8)
-+#define OVL_HF_FOVL_CK_ON				BIT(10)
-+#define DISP_REG_OVL_TRIG			0x0010
-+#define OVL_CRC_EN					BIT(8)
-+#define OVL_CRC_CLR					BIT(9)
- #define DISP_REG_OVL_RST			0x0014
- #define DISP_REG_OVL_ROI_SIZE			0x0020
- #define DISP_REG_OVL_DATAPATH_CON		0x0024
- #define OVL_LAYER_SMI_ID_EN				BIT(0)
- #define OVL_BGCLR_SEL_IN				BIT(2)
- #define OVL_LAYER_AFBC_EN(n)				BIT(4+n)
-+#define OVL_OUTPUT_CLAMP				BIT(26)
- #define DISP_REG_OVL_ROI_BGCLR			0x0028
- #define DISP_REG_OVL_SRC_CON			0x002c
- #define DISP_REG_OVL_CON(n)			(0x0030 + 0x20 * (n))
-@@ -43,7 +51,26 @@
- #define DISP_REG_OVL_RDMA_CTRL(n)		(0x00c0 + 0x20 * (n))
- #define DISP_REG_OVL_RDMA_GMC(n)		(0x00c8 + 0x20 * (n))
- #define DISP_REG_OVL_ADDR_MT2701		0x0040
-+#define DISP_REG_OVL_CRC			0x0270
-+#define OVL_CRC_OUT_MASK				GENMASK(30, 0)
- #define DISP_REG_OVL_CLRFMT_EXT			0x02D0
-+#define DISP_REG_OVL_CLRFMT_EXT1		0x02D8
-+#define OVL_CLRFMT_EXT1_CSC_EN(n)			(1 << (((n) * 4) + 1))
-+#define DISP_REG_OVL_Y2R_PARA_R0(n)		(0x0134 + 0x28 * (n))
-+#define OVL_Y2R_PARA_C_CF_RMY				(GENMASK(14, 0))
-+#define DISP_REG_OVL_Y2R_PARA_G0(n)		(0x013c + 0x28 * (n))
-+#define OVL_Y2R_PARA_C_CF_GMU				(GENMASK(30, 16))
-+#define DISP_REG_OVL_Y2R_PARA_B1(n)		(0x0148 + 0x28 * (n))
-+#define OVL_Y2R_PARA_C_CF_BMV				(GENMASK(14, 0))
-+#define DISP_REG_OVL_Y2R_PARA_YUV_A_0(n)	(0x014c + 0x28 * (n))
-+#define OVL_Y2R_PARA_C_CF_YA				(GENMASK(10, 0))
-+#define OVL_Y2R_PARA_C_CF_UA				(GENMASK(26, 16))
-+#define DISP_REG_OVL_Y2R_PARA_YUV_A_1(n)	(0x0150 + 0x28 * (n))
-+#define OVL_Y2R_PARA_C_CF_VA				(GENMASK(10, 0))
-+#define DISP_REG_OVL_Y2R_PRE_ADD2(n)		(0x0154 + 0x28 * (n))
-+#define DISP_REG_OVL_R2R_R0(n)			(0x0500 + 0x40 * (n))
-+#define DISP_REG_OVL_R2R_G1(n)			(0x0510 + 0x40 * (n))
-+#define DISP_REG_OVL_R2R_B2(n)			(0x0520 + 0x40 * (n))
- #define DISP_REG_OVL_ADDR_MT8173		0x0f40
- #define DISP_REG_OVL_ADDR(ovl, n)		((ovl)->data->addr + 0x20 * (n))
- #define DISP_REG_OVL_HDR_ADDR(ovl, n)		((ovl)->data->addr + 0x20 * (n) + 0x04)
-@@ -56,6 +83,8 @@
- #define OVL_CON_CLRFMT_MAN	BIT(23)
- #define OVL_CON_BYTE_SWAP	BIT(24)
- #define OVL_CON_RGB_SWAP	BIT(25)
-+#define OVL_CON_MTX_AUTO_DIS	BIT(26)
-+#define OVL_CON_MTX_EN		BIT(27)
- #define OVL_CON_CLRFMT_RGB	(1 << 12)
- #define OVL_CON_CLRFMT_RGBA8888	(2 << 12)
- #define OVL_CON_CLRFMT_ARGB8888	(3 << 12)
-@@ -63,6 +92,7 @@
- #define OVL_CON_CLRFMT_YUYV	(5 << 12)
- #define OVL_CON_MTX_YUV_TO_RGB	(6 << 16)
- #define OVL_CON_CLRFMT_PARGB8888	(OVL_CON_CLRFMT_ARGB8888 | OVL_CON_CLRFMT_MAN)
-+#define OVL_CON_MTX_PROGRAMMABLE	(8 << 16)
- #define OVL_CON_CLRFMT_RGB565(ovl)	((ovl)->data->fmt_rgb565_is_0 ? \
- 					0 : OVL_CON_CLRFMT_RGB)
- #define OVL_CON_CLRFMT_RGB888(ovl)	((ovl)->data->fmt_rgb565_is_0 ? \
-@@ -130,6 +160,10 @@ static const u32 mt8195_formats[] = {
- 	DRM_FORMAT_YUYV,
- };
- 
-+static const u32 mt8195_ovl_crc_ofs[] = {
-+	DISP_REG_OVL_CRC,
-+};
-+
- struct mtk_disp_ovl_data {
- 	unsigned int addr;
- 	unsigned int gmc_bits;
-@@ -140,12 +174,15 @@ struct mtk_disp_ovl_data {
- 	const u32 *formats;
- 	size_t num_formats;
- 	bool supports_clrfmt_ext;
-+	const u32 *crc_ofs;
-+	size_t crc_cnt;
- };
- 
- /*
-  * struct mtk_disp_ovl - DISP_OVL driver structure
-  * @crtc: associated crtc to report vblank events to
-  * @data: platform data
-+ * @crc: crc related information
-  */
- struct mtk_disp_ovl {
- 	struct drm_crtc			*crtc;
-@@ -155,8 +192,30 @@ struct mtk_disp_ovl {
- 	const struct mtk_disp_ovl_data	*data;
- 	void				(*vblank_cb)(void *data);
- 	void				*vblank_cb_data;
-+	struct mtk_drm_crc		crc;
- };
- 
-+size_t mtk_ovl_crc_cnt(struct device *dev)
-+{
-+	struct mtk_disp_ovl *ovl = dev_get_drvdata(dev);
-+
-+	return ovl->crc.cnt;
-+}
-+
-+u32 *mtk_ovl_crc_entry(struct device *dev)
-+{
-+	struct mtk_disp_ovl *ovl = dev_get_drvdata(dev);
-+
-+	return ovl->crc.va;
-+}
-+
-+void mtk_ovl_crc_read(struct device *dev)
-+{
-+	struct mtk_disp_ovl *ovl = dev_get_drvdata(dev);
-+
-+	mtk_drm_crc_read(&ovl->crc, ovl->regs);
-+}
-+
- static irqreturn_t mtk_disp_ovl_irq_handler(int irq, void *dev_id)
- {
- 	struct mtk_disp_ovl *priv = dev_id;
-@@ -236,21 +295,40 @@ void mtk_ovl_clk_disable(struct device *dev)
- void mtk_ovl_start(struct device *dev)
- {
- 	struct mtk_disp_ovl *ovl = dev_get_drvdata(dev);
-+	unsigned int reg = readl(ovl->regs + DISP_REG_OVL_DATAPATH_CON);
- 
--	if (ovl->data->smi_id_en) {
--		unsigned int reg;
-+	if (ovl->data->smi_id_en)
-+		reg |= OVL_LAYER_SMI_ID_EN;
- 
--		reg = readl(ovl->regs + DISP_REG_OVL_DATAPATH_CON);
--		reg = reg | OVL_LAYER_SMI_ID_EN;
--		writel_relaxed(reg, ovl->regs + DISP_REG_OVL_DATAPATH_CON);
-+	/*
-+	 * When doing Y2R conversion, it's common to get an output
-+	 * that is larger than 10 bits (negative numbers).
-+	 * Enable this bit to clamp the output to 10 bits per channel
-+	 * (should always be enabled)
-+	 */
-+	reg |= OVL_OUTPUT_CLAMP;
-+	writel_relaxed(reg, ovl->regs + DISP_REG_OVL_DATAPATH_CON);
-+
-+	reg = OVL_EN;
-+	if (ovl->data->crc_cnt) {
-+		/* enable crc  and its related clocks */
-+		writel_relaxed(OVL_CRC_EN, ovl->regs + DISP_REG_OVL_TRIG);
-+		reg |= OVL_OP_8BIT_MODE | OVL_HG_FOVL_CK_ON | OVL_HF_FOVL_CK_ON;
- 	}
--	writel_relaxed(0x1, ovl->regs + DISP_REG_OVL_EN);
-+	writel_relaxed(reg, ovl->regs + DISP_REG_OVL_EN);
-+
-+#if IS_REACHABLE(CONFIG_MTK_CMDQ)
-+	mtk_drm_crc_cmdq_start(&ovl->crc);
-+#endif
- }
- 
- void mtk_ovl_stop(struct device *dev)
- {
- 	struct mtk_disp_ovl *ovl = dev_get_drvdata(dev);
- 
-+#if IS_REACHABLE(CONFIG_MTK_CMDQ)
-+	mtk_drm_crc_cmdq_stop(&ovl->crc);
-+#endif
- 	writel_relaxed(0x0, ovl->regs + DISP_REG_OVL_EN);
- 	if (ovl->data->smi_id_en) {
- 		unsigned int reg;
-@@ -485,6 +563,83 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
- 	    (state->base.fb && !state->base.fb->format->has_alpha))
- 		ignore_pixel_alpha = OVL_CONST_BLEND;
- 
-+	/*
-+	 * OVL only supports 8 bits data in CRC calculation, transform 10-bit
-+	 * RGB to 8-bit RGB by leveraging the ability of the Y2R (YUV-to-RGB)
-+	 * hardware to multiply coefficients, although there is nothing to do
-+	 * with the YUV format.
-+	 */
-+	if (ovl->data->supports_clrfmt_ext) {
-+		u32 y2r_coef = 0, y2r_offset = 0, r2r_coef = 0, csc_en = 0;
-+
-+		if (is_10bit_rgb(fmt)) {
-+			con |= OVL_CON_MTX_AUTO_DIS | OVL_CON_MTX_EN | OVL_CON_MTX_PROGRAMMABLE;
-+
-+			/*
-+			 * Y2R coefficient setting
-+			 * bit 13 is 2^1, bit 12 is 2^0, bit 11 is 2^-1,
-+			 * bit 10 is 2^-2 = 0.25
-+			 */
-+			y2r_coef = BIT(10);
-+
-+			/* -1 in 10bit */
-+			y2r_offset = GENMASK(10, 0) - 1;
-+
-+			/*
-+			 * R2R coefficient setting
-+			 * bit 19 is 2^1, bit 18 is 2^0, bit 17 is 2^-1,
-+			 * bit 20 is 2^2 = 4
-+			 */
-+			r2r_coef = BIT(20);
-+
-+			/* CSC_EN is for R2R */
-+			csc_en = OVL_CLRFMT_EXT1_CSC_EN(idx);
-+
-+			/*
-+			 * 1. YUV input data - 1 and shift right for 2 bits to remove it
-+			 * [R']   [0.25    0    0]   [Y in - 1]
-+			 * [G'] = [   0 0.25    0] * [U in - 1]
-+			 * [B']   [   0    0 0.25]   [V in - 1]
-+			 *
-+			 * 2. shift left for 2 bit letting the last 2 bits become 0
-+			 * [R out]   [ 4  0  0]   [R']
-+			 * [G out] = [ 0  4  0] * [G']
-+			 * [B out]   [ 0  0  4]   [B']
-+			 */
-+		}
-+
-+		mtk_ddp_write_mask(cmdq_pkt, y2r_coef,
-+				   &ovl->cmdq_reg, ovl->regs, DISP_REG_OVL_Y2R_PARA_R0(idx),
-+				   OVL_Y2R_PARA_C_CF_RMY);
-+		mtk_ddp_write_mask(cmdq_pkt, (y2r_coef << 16),
-+				   &ovl->cmdq_reg, ovl->regs, DISP_REG_OVL_Y2R_PARA_G0(idx),
-+				   OVL_Y2R_PARA_C_CF_GMU);
-+		mtk_ddp_write_mask(cmdq_pkt, y2r_coef,
-+				   &ovl->cmdq_reg, ovl->regs, DISP_REG_OVL_Y2R_PARA_B1(idx),
-+				   OVL_Y2R_PARA_C_CF_BMV);
-+
-+		mtk_ddp_write_mask(cmdq_pkt, y2r_offset,
-+				   &ovl->cmdq_reg, ovl->regs, DISP_REG_OVL_Y2R_PARA_YUV_A_0(idx),
-+				   OVL_Y2R_PARA_C_CF_YA);
-+		mtk_ddp_write_mask(cmdq_pkt, (y2r_offset << 16),
-+				   &ovl->cmdq_reg, ovl->regs, DISP_REG_OVL_Y2R_PARA_YUV_A_0(idx),
-+				   OVL_Y2R_PARA_C_CF_UA);
-+		mtk_ddp_write_mask(cmdq_pkt, y2r_offset,
-+				   &ovl->cmdq_reg, ovl->regs, DISP_REG_OVL_Y2R_PARA_YUV_A_1(idx),
-+				   OVL_Y2R_PARA_C_CF_VA);
-+
-+		mtk_ddp_write_relaxed(cmdq_pkt, r2r_coef,
-+				      &ovl->cmdq_reg, ovl->regs, DISP_REG_OVL_R2R_R0(idx));
-+		mtk_ddp_write_relaxed(cmdq_pkt, r2r_coef,
-+				      &ovl->cmdq_reg, ovl->regs, DISP_REG_OVL_R2R_G1(idx));
-+		mtk_ddp_write_relaxed(cmdq_pkt, r2r_coef,
-+				      &ovl->cmdq_reg, ovl->regs, DISP_REG_OVL_R2R_B2(idx));
-+
-+		mtk_ddp_write_mask(cmdq_pkt, csc_en,
-+				   &ovl->cmdq_reg, ovl->regs, DISP_REG_OVL_CLRFMT_EXT1,
-+				   OVL_CLRFMT_EXT1_CSC_EN(idx));
-+	}
-+
- 	if (pending->rotation & DRM_MODE_REFLECT_Y) {
- 		con |= OVL_CON_VIRT_FLIP;
- 		addr += (pending->height - 1) * pending->pitch;
-@@ -591,15 +746,31 @@ static int mtk_disp_ovl_probe(struct platform_device *pdev)
- 		dev_err(dev, "failed to ioremap ovl\n");
- 		return PTR_ERR(priv->regs);
- 	}
-+
-+	priv->data = of_device_get_match_data(dev);
-+	platform_set_drvdata(pdev, priv);
-+
-+	if (priv->data->crc_cnt) {
-+		mtk_drm_crc_init(&priv->crc,
-+				 priv->data->crc_ofs, priv->data->crc_cnt,
-+				 DISP_REG_OVL_TRIG, OVL_CRC_CLR);
-+	}
-+
- #if IS_REACHABLE(CONFIG_MTK_CMDQ)
- 	ret = cmdq_dev_get_client_reg(dev, &priv->cmdq_reg, 0);
- 	if (ret)
- 		dev_dbg(dev, "get mediatek,gce-client-reg fail!\n");
--#endif
--
--	priv->data = of_device_get_match_data(dev);
--	platform_set_drvdata(pdev, priv);
- 
-+	if (priv->data->crc_cnt) {
-+		if (of_property_read_u32_index(dev->of_node,
-+					       "mediatek,gce-events", 0,
-+					       &priv->crc.cmdq_event)) {
-+			dev_warn(dev, "failed to get gce-events for crc\n");
-+		}
-+		priv->crc.cmdq_reg = &priv->cmdq_reg;
-+		mtk_drm_crc_cmdq_create(dev, &priv->crc);
-+	}
-+#endif
- 	ret = devm_request_irq(dev, irq, mtk_disp_ovl_irq_handler,
- 			       IRQF_TRIGGER_NONE, dev_name(dev), priv);
- 	if (ret < 0) {
-@@ -620,6 +791,10 @@ static int mtk_disp_ovl_probe(struct platform_device *pdev)
- 
- static void mtk_disp_ovl_remove(struct platform_device *pdev)
- {
-+	struct device *dev = &pdev->dev;
-+	struct mtk_disp_ovl *ovl = dev_get_drvdata(dev);
-+
-+	mtk_drm_crc_destroy(&ovl->crc);
- 	component_del(&pdev->dev, &mtk_disp_ovl_component_ops);
- 	pm_runtime_disable(&pdev->dev);
- }
-@@ -690,6 +865,8 @@ static const struct mtk_disp_ovl_data mt8195_ovl_driver_data = {
- 	.formats = mt8195_formats,
- 	.num_formats = ARRAY_SIZE(mt8195_formats),
- 	.supports_clrfmt_ext = true,
-+	.crc_ofs = mt8195_ovl_crc_ofs,
-+	.crc_cnt = ARRAY_SIZE(mt8195_ovl_crc_ofs),
- };
- 
- static const struct of_device_id mtk_disp_ovl_driver_dt_match[] = {
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-index b47be6955d9b8..ea04b2769ae8b 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-@@ -349,6 +349,9 @@ static const struct mtk_ddp_comp_funcs ddp_ovl = {
- 	.clk_enable = mtk_ovl_clk_enable,
- 	.clk_disable = mtk_ovl_clk_disable,
- 	.config = mtk_ovl_config,
-+	.crc_cnt = mtk_ovl_crc_cnt,
-+	.crc_entry = mtk_ovl_crc_entry,
-+	.crc_read = mtk_ovl_crc_read,
- 	.start = mtk_ovl_start,
- 	.stop = mtk_ovl_stop,
- 	.register_vblank_cb = mtk_ovl_register_vblank_cb,
--- 
-2.18.0
+On Thu, Feb 01, 2024 at 06:25:26PM +0200, Viorel Suman wrote:
+> On 2/1/24 15:38, Uwe Kleine-K=F6nig wrote:
+> > > +	/* Resets all internal logic and registers */
+> > > +	writel(PWM_IMX_TPM_GLOBAL_RST, tpm->base + PWM_IMX_TPM_GLOBAL);
+> > > +	writel(0, tpm->base + PWM_IMX_TPM_GLOBAL);
+> > > +
+> > This opposes the use case that the bootloader setup the pwm-backlight to
+> > show a splash screen that is simply taken over by Linux without
+> > flickering, right?
+>=20
+> Yes, I was not aware of such use case. Is it acceptable if I'll update
+>=20
+> the patch in a such way so that the software reset happens as function
+>=20
+> of a property in the related DTS node ?
 
+That sounds wrong. Why do you reset at all? If at all, only reset if all
+channels are disabled (if at all).
+
+> > Otherwise the commit log should motivate why "the module takes the
+> > default state" is better than the status quo and what this default state
+> > is.
+>=20
+> The default state above means IP internal logic being reset to the initial
+> state and
+>=20
+> registers values being set to their reset values. We're facing a situation
+> on iMX95 when
+>=20
+> A core may be reset independently from the rest of the SoC, this triggers=
+ a
+> new
+>=20
+> SPL->U-Boot->Linux boot, and in Linux probe phase PWM will inherit its st=
+ate
+> from
+>=20
+> previous Linux runtime - this leads to some issues in suspend/resume
+> functionality.
+
+What kind of issues?
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--jxbuzkk2jq3itvqv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXN44gACgkQj4D7WH0S
+/k5Ciwf7BecLTtanPQd8D4/UIOl88dzpimfzOqdiUzZeHyMfb66uhQlG/1U+6JUE
+aWOR9SWebqo2GRGhzXevHWX0cMNtVIk04tBKyeEMvn+QiCBLuoPEi4JNP9pfTFCl
+Wdhbn+YDz0/oUOEo1PkAdJiKMyIBf/kKkHMh6qepajH0K1ul5aIRPIa6UA5SfgR8
+CTFqTEnD3slilQ67anWF6oASkFZGukHluLtg1neiY6JbR6C4FwG2QjE30fsFjRll
+Yf6V171w4lQj76xAgxLMku/Z2j+l7bueEz7lJC04QBP9ZIwY/r+KnvPgzAtsoBLv
+4XehTo0rOdEfwluvr6xyP/6brmlD0A==
+=d7Gu
+-----END PGP SIGNATURE-----
+
+--jxbuzkk2jq3itvqv--
