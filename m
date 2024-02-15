@@ -1,132 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3271386A3;
-	Thu, 15 Feb 2024 23:43:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F65145B32;
+	Thu, 15 Feb 2024 23:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708040602; cv=none; b=NAWAGUUaF+wRjKMqJtyXKHXPpUtRN4j+A+KQyWyRJ6CQRUOftjZKTXfJMXTQdBcxspzX4d8aHhmIyUwETBYuAg1uhBM56NO/ewlU8qCJhtT0oPIDfaUJVluqxVoKLqppt+1U0OIQm2XRv0/Vcex0gXBnbZIRXoGocHKwXnewduk=
+	t=1708040607; cv=none; b=JsnvIXx8ozUOCnDeZJwJ7FoFAAZziQJ9EAciOcIkHOGYCP0P2apq3DjxzdBtL5QntuK7O6aNr9mAJg0H32bmRJ/EIz0NhsXypr/bJLttunW3WIwOxRE7wR9TNOrB2eKDe+f67HEZtjDV81s3s+Kr8FzrIwD8pWRNMnBKVnM9dhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708040602; c=relaxed/simple;
-	bh=Fqw4R2TCCNuFLfcj3N3za2hiQluZoyUsJ8OTL/KQZrU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pmd9q8aAh3EqNGG5aB6j5DcPX5lEX62t8jtg4w7wvor+YS+fnBjA4HGr9v90Glk7hCxPCbCCs1jywxgfPfnl8ZPgOepVCFVvx5kOwukgmvB90+tLdc7H9gsrFsiN0bp0Gu3wUXoXYY8zidGQ9V1gwNwbRMYABf0qRYI993EAdoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=naPm9z1l; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1708040607; c=relaxed/simple;
+	bh=rzXQp+0xgZRh+hAEef1Ws6p+fPGbGwqJv//E1UQ0gH4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LpKDoikVAN4VrykIz8WVEVNVJQPx/rvaXdLWql0juZod9vy5oNWlrghueAf9uUrfWqiT0AAw2zMn31iW4VgwQ6j0mEPMmM0JIiteAE7Dgos4nsDKfIyUA1T+HAigrRt83EUUbxl/wYhCVZngiyQZI6cyeWFZfHqhDu4FNT36VB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=AHhoeY/K; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="naPm9z1l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708040600; x=1739576600;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Fqw4R2TCCNuFLfcj3N3za2hiQluZoyUsJ8OTL/KQZrU=;
-  b=naPm9z1lxEtcoE03S4Te5q7v+aYQ1YGFRrQQkfOEqiQQj0XeNCD35hfD
-   e8EZnPPup9dPbrszziKRGPFXEnP3pzE0ZXhOfB+rFn0QljqZha2UQCDOb
-   TJ7qBhvipwvfmmeUJxPJdP12eQxz8QO7bEa/2BTwvHkjSSgJGOJ7em5w2
-   7xrrYmbCGgI2NlFHekhj7ryHV5b6ZbpLiSVglK07FrjbRG6UnSHZUisye
-   qJ33ANptCZC/pTeIpCXb1QhiPe8GEYiuY5XA5/iSme11oc2kKTXOvHYKD
-   5Hi6zSnIdTzfMY2XsRpD25FRQrKqGZFez+QrJ8DI1XiQMuLrWexQYGhtU
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10985"; a="2294410"
-X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
-   d="scan'208";a="2294410"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 15:43:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
-   d="scan'208";a="4003686"
-Received: from jmjohns4-mobl1.amr.corp.intel.com (HELO [10.209.57.138]) ([10.209.57.138])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 15:43:18 -0800
-Message-ID: <8a31fce6-9ad2-4868-b6bf-15997ef18334@intel.com>
-Date: Thu, 15 Feb 2024 15:43:18 -0800
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="AHhoeY/K"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=LYlr5KosbRmI8zuJFutDt7+/kwZBdkeoiz+ZEDuMca8=; b=AHhoeY/KWWcBuiZ9AWj0IDMXml
+	bcS7EOHm1+6aJvNT8cUBTR/AVx7sZ+sPEj0MPpygrijA3WKI7t0k1JhPMB3sI7mfCfRAdEQ8L8Alz
+	TcGdDYduEqaEZV4DyNavYfUirYiwuUIj7lgAC0REMgQ4ECDpdaVpcCy9m/jAKWYLotMY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1ralO4-007veu-E2; Fri, 16 Feb 2024 00:43:28 +0100
+Date: Fri, 16 Feb 2024 00:43:28 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Dimitri Fedrau <dima.fedrau@gmail.com>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Stefan Eichenberger <eichest@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 net-next 09/14] net: phy: marvell-88q2xxx: add cable
+ test support
+Message-ID: <ecfac8c1-de0d-4ccc-ad24-5e62b3d1bf5a@lunn.ch>
+References: <20240213213955.178762-1-dima.fedrau@gmail.com>
+ <20240213213955.178762-10-dima.fedrau@gmail.com>
+ <fe604759-d1cd-4a4d-ba64-69936b3e6598@lunn.ch>
+ <20240215210350.GB3103@debian>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 09/15] x86/sgx: Charge mem_cgroup for per-cgroup
- reclamation
-Content-Language: en-US
-To: Haitao Huang <haitao.huang@linux.intel.com>, jarkko@kernel.org,
- dave.hansen@linux.intel.com, tj@kernel.org, mkoutny@suse.com,
- linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org, x86@kernel.org,
- cgroups@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- hpa@zytor.com, sohil.mehta@intel.com, tim.c.chen@linux.intel.com
-Cc: zhiquan1.li@intel.com, kristen@linux.intel.com, seanjc@google.com,
- zhanb@microsoft.com, anakrish@microsoft.com, mikko.ylinen@linux.intel.com,
- yangjie@microsoft.com, chrisyan@microsoft.com
-References: <20240205210638.157741-1-haitao.huang@linux.intel.com>
- <20240205210638.157741-10-haitao.huang@linux.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20240205210638.157741-10-haitao.huang@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240215210350.GB3103@debian>
 
-On 2/5/24 13:06, Haitao Huang wrote:
->  static struct mem_cgroup *sgx_encl_get_mem_cgroup(struct sgx_encl *encl)
->  {
-> @@ -1003,14 +1001,6 @@ static struct mem_cgroup *sgx_encl_get_mem_cgroup(struct sgx_encl *encl)
->  	struct sgx_encl_mm *encl_mm;
->  	int idx;
->  
-> -	/*
-> -	 * If called from normal task context, return the mem_cgroup
-> -	 * of the current task's mm. The remainder of the handling is for
-> -	 * ksgxd.
-> -	 */
-> -	if (!current_is_ksgxd())
-> -		return get_mem_cgroup_from_mm(current->mm);
+On Thu, Feb 15, 2024 at 10:03:50PM +0100, Dimitri Fedrau wrote:
+> Am Wed, Feb 14, 2024 at 06:54:58PM +0100 schrieb Andrew Lunn:
+> > > +static int mv88q222x_cable_test_get_status(struct phy_device *phydev,
+> > > +					   bool *finished)
+> > > +{
+> > > +	int ret;
+> > > +	u32 dist;
+> > > +
+> > > +	ret = phy_read_mmd(phydev, MDIO_MMD_PCS, MDIO_MMD_PCS_MV_TDR_STATUS);
+> > > +	if (ret < 0)
+> > > +		return ret;
+> > > +
+> > > +	*finished = true;
+> > 
+> > That looks odd. Is there no status bit which says it has completed? Is
+> > it guaranteed to complete within a fixed time? How is it guaranteed that
+> > mv88q222x_cable_test_get_status() is called at the necessary delay after 
+> > mv88q222x_cable_test_start()?
+> > 
+> According to the datasheet and the Marvell API bits(0:1) can be used to
+> check if the test has completed. Sample code waits 500ms before checking
+> the bits. If the test is not completed after the delay the corresponding
+> function returns with an error.
 
-Why is this being removed?
+Thanks for the explanation.
 
-Searching the enclave mm list is a last resort.  It's expensive and
-imprecise.
+> 
+> I just used bits(7:4) where 2'b1000 means that the test is in progress,
+> and setting *finished = false. I didn't introduced any delay, relying
+> on the reschedule delay of the PHY state machine. I didn't notice any
+> problems with this approach. Anyway if the test does not complete for
+> whatever reasons we get stuck here, right ?
 
-get_mem_cgroup_from_mm(current->mm), on the other hand is fast and precise.
+It should not happen, and if it does, its a bug in the PHY
+firmware. And if that happens, the PHY is probably dead anyway.
+
+phylib does allow you to break out of the cable test state by calling
+phy_stop(). That generally happens when you admin down the interface.
+
+So please do check the test has completed.
+
+	Andrew
