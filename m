@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F3613A892;
-	Thu, 15 Feb 2024 19:50:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440C313A895
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 19:50:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708026607; cv=none; b=dAJHYH+MQ+7XWHwPCZHsZJTMzyaYPez3blk+IrBXMZvh+fKMX4LNE8mP7sZzkOMe3jNbm513s7GeDGSCFZBNwcqPpLryH1KmL+IrQPCCIdMax0EnhwvJJJfPXlixmvD1VFECl6hA5Zu789CrV9tYXMf/5tkOsii+o3JhKypYxAY=
+	t=1708026607; cv=none; b=Sf+Vtw1apqvPKiEkIp2MlIoM1JMx8T+FCAg7sRXt+OrQO06ThVdm8zKqb+Eb59bWy3xuab0AV/VYdBoXfhaOuhuqn0nAmgWd8lkswGLTLwYehe/LdQ9w1Q7HDI8WbXwvJWwl0w5U504qvMpnGJ3bEPefleRoOaLd4S90SwiDQAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708026607; c=relaxed/simple;
-	bh=vM9Yjz8P9PsfT49l0YgPkh1MPfH5J9+hMQAKATgMV/A=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=rM5NQ31QGZ9TFeD105nQHSRUG7YApM/16uR5P9tiifFYjQ7TRmPHsIJFLhtDOUP8KK/y+PCSj+OnH8oP/0G8qfTMOdq+V+FL24sRyWpt8O+4OWMpJo3ONgObiyJJ8hrtjELdQDcpgyaFlmtE1LmukABd9Cd0T1hVsudIT7T6yJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uL+5Nqtg; arc=none smtp.client-ip=10.30.226.201
+	bh=dYG3ZJdb1V/Ktyl5Eml5x37N/Z+k7Tqs1pUPFJ1zkWw=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=cPRD7YVatAPXJXqwTnMD7JvxKZmReSP5sQSG2YLgQvTMwpHwS1cVa1ylJtwCo/ED7Vr+yMpYxrDA6XTYV9dOV/d6S4z4XzY8jBN3aR89uXsuyrhGFyxnIwivxaWNyjpITbXoiGOllksokWl40AYBLvB+Wv3vhoASno2iRQAWIMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AbynkWgY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uL+5Nqtg"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 09662C43399;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AbynkWgY"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1EA3CC433A6;
 	Thu, 15 Feb 2024 19:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1708026607;
-	bh=vM9Yjz8P9PsfT49l0YgPkh1MPfH5J9+hMQAKATgMV/A=;
+	bh=dYG3ZJdb1V/Ktyl5Eml5x37N/Z+k7Tqs1pUPFJ1zkWw=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=uL+5NqtgoTxqwHst4dylsj74ebfqmK9UE3KPkD0XK52BWSthfSsjbACpMGSupV1fW
-	 JqZ2fPX1pbTtL9FgyeddeKoVYFBAXVd1g2sICTFDpKyZyi9Tqpr937nLwMSFfgESG8
-	 OwgadTLrH6kfGUTqRAR3BfZqj29MGUq8wUhmQtcof3MPHWEXeW3on6UCwgu17EHMyp
-	 WM83zIKxN85OLmEGPxkg9A08NSc52/WKiwJZ1zIky133r4GsDEetwWYzcRosdgm3Dt
-	 Vcc6JLqJGltiMP6i3sWOCpwf8ItNcjij9J2Bo+XfcZ+1PE434mywj9hhpjoMMceG7j
-	 L0j2WT5Axhj7g==
+	b=AbynkWgYYGbqxtjxaFZBHd++Mc8Qb0ySMGOmFZ1SpPbX+JcESEe64VJHAU7z+vQQk
+	 G8z9bWyxi1QvSZHQG3o2CSwcPlFNFYwArbN26V0aO1S0FeT+fxUicoWfht+HxskhuB
+	 VYSFdBT2RIon3xGhAgXjsMawx80pwB5ieIqKVKt3Kd+XrTTi5tgjGwtj4d5zR92Ufv
+	 DwGJiu+FXYGU5NCld+z1sePz8Yo5ERhH8lSUwIFKqhjL82HM5zHkylAUTP+yD/psCT
+	 pj7l7YZBS906+EBTL4fht9LVAHUZM9WL79pz3f+ydOjlr9zAc/3TSoxQVter8Z7T0L
+	 zaRXNu0uVWp5A==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E4A45DCB6F9;
-	Thu, 15 Feb 2024 19:50:06 +0000 (UTC)
-Subject: Re: [GIT PULL] SPI fixes for v6.8-rc4
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 078B5DCB6EC;
+	Thu, 15 Feb 2024 19:50:07 +0000 (UTC)
+Subject: Re: [GIT PULL] xen: branch for v6.8-rc5
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240215133916.F0534C433C7@smtp.kernel.org>
-References: <20240215133916.F0534C433C7@smtp.kernel.org>
+In-Reply-To: <20240215152426.1114-1-jgross@suse.com>
+References: <20240215152426.1114-1-jgross@suse.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240215133916.F0534C433C7@smtp.kernel.org>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v6.8-rc4
-X-PR-Tracked-Commit-Id: 269e31aecdd0b70f53a05def79480f15cbcc0fd6
+X-PR-Tracked-Message-Id: <20240215152426.1114-1-jgross@suse.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-6.8a-rc5-tag
+X-PR-Tracked-Commit-Id: fa765c4b4aed2d64266b694520ecb025c862c5a9
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a00cf1988a1359452cb4fe64d75e7a1da12dba4a
-Message-Id: <170802660693.17476.11267718874913072443.pr-tracker-bot@kernel.org>
-Date: Thu, 15 Feb 2024 19:50:06 +0000
-To: Mark Brown <broonie@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+X-PR-Merge-Commit-Id: cc9c4f0b3113d513a94bcf489f2fa8cb9cc7c679
+Message-Id: <170802660702.17476.18029040592555930591.pr-tracker-bot@kernel.org>
+Date: Thu, 15 Feb 2024 19:50:07 +0000
+To: Juergen Gross <jgross@suse.com>
+Cc: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org, sstabellini@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Thu, 15 Feb 2024 13:39:06 +0000:
+The pull request you sent on Thu, 15 Feb 2024 16:24:26 +0100:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v6.8-rc4
+> git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-6.8a-rc5-tag
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a00cf1988a1359452cb4fe64d75e7a1da12dba4a
+https://git.kernel.org/torvalds/c/cc9c4f0b3113d513a94bcf489f2fa8cb9cc7c679
 
 Thank you!
 
