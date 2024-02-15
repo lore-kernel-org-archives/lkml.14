@@ -1,154 +1,70 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F367912B15B;
-	Thu, 15 Feb 2024 11:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76AF42041;
+	Thu, 15 Feb 2024 11:59:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707998325; cv=none; b=HLvkEJVtPiPvniEnv9By31iVrnPZ6Mu/3YLnc7sh8zuHEfIzv1nEVcP5FZ296edT/C8k4jKYYOatgONLMLTXxMAF9ITJyEIvspKfM7dflOQbMPwDKnibGPd7SWjRfzP5j1c+8h8uIfFPIRNZKMo+sUvhNeHYyIJM7YSgC3OjMzs=
+	t=1707998389; cv=none; b=IJ7X3tK0ffNgyRI0yFz8HCxv2F7j/rPG3VrARRCPRCr10U1mIpZd63PN5ERssJ+ti49vIvB6oxen7jsTSyowO/c6F/+SvQMhU9qykAzrHc3a7JI9oRy8zYEQGiLQ9mthEY9aj/stIIlM+xM0/21xPpjyWcFNqsLlbb02vEBmR6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707998325; c=relaxed/simple;
-	bh=K7xEpsB2cMveNQiHzXYyaP1JLMAMdzqrLnMo4zJBzco=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Mjug8V4lDVfv4U4jjuCWYyaDJ7uZFnDrtKs3exMYD/iZ70oyptrbKrPP/U+adUJlxHA1iUYcDxYXctcPWlO9d9u+QhSLlQnXdfUf3Zx8pqmooV3CSmNjE9xYPFO6Kp8fHCAN3aGpjGJvRwn7FiqF6Z/3U0kaPbR8e0EANLCDxR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TbD5W4fnRz6K8wc;
-	Thu, 15 Feb 2024 19:55:11 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 43C96140B55;
-	Thu, 15 Feb 2024 19:58:39 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 15 Feb
- 2024 11:58:38 +0000
-Date: Thu, 15 Feb 2024 11:58:38 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-CC: <linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, Ard Biesheuvel <ardb@kernel.org>, "Alison
- Schofield" <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Yazen Ghannam <yazen.ghannam@amd.com>
-Subject: Re: [PATCH v2 2/4] efi/cper, cxl: Make definitions and structures
- global
-Message-ID: <20240215115838.000050b1@Huawei.com>
-In-Reply-To: <20240109034755.100555-3-Smita.KoralahalliChannabasappa@amd.com>
-References: <20240109034755.100555-1-Smita.KoralahalliChannabasappa@amd.com>
-	<20240109034755.100555-3-Smita.KoralahalliChannabasappa@amd.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1707998389; c=relaxed/simple;
+	bh=dckH4nUEiMyTxqGtRHPrjbAcTVSEMyT4rF8LOmQLqc8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OCS2Xk7jIiasudCWB3vOaw4V6RXGwx24ZB/aKm2tol0jwms0b6/H+o5LHOcW94HCv7eYf/tjQuXmH3yEcIKG4xwI2B2cYqdK8dz1aVkj9w8rIIlmEN/MTfEXDYKcFbhARvQfdzUgmILeCb0xZBMNz8on6KH6zfko9H59dgPBB8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Bhfb5O98; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Bhfb5O98"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1288C433F1;
+	Thu, 15 Feb 2024 11:59:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1707998389;
+	bh=dckH4nUEiMyTxqGtRHPrjbAcTVSEMyT4rF8LOmQLqc8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Bhfb5O985jewYkmWWRzcWM9AZOSahVw2KYiCX6koypcO4fWkBwROq0e214rwatSTV
+	 rSRMnJJOeLD0Qpd2G3LIOQJJLqDLMhAeBaLgRMsXdZ1ZkpLjx4wyyW648baodgQkXL
+	 FERw0Cikkn4yeNCgVHaobllR2352LHVjC3rwNchI=
+Date: Thu, 15 Feb 2024 12:59:46 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc: corbet@lwn.net, workflows@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, security@kernel.org,
+	Kees Cook <keescook@chromium.org>, Sasha Levin <sashal@kernel.org>,
+	Lee Jones <lee@kernel.org>
+Subject: Re: [PATCH v3] Documentation: Document the Linux Kernel CVE process
+Message-ID: <2024021536-immortal-amnesty-e8d2@gregkh>
+References: <2024021430-blanching-spotter-c7c8@gregkh>
+ <20240214-swinging-indigo-koala-a56069@lemur>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240214-swinging-indigo-koala-a56069@lemur>
 
-On Tue, 9 Jan 2024 03:47:53 +0000
-Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com> wrote:
-
-> In preparation to add tracepoint support, move protocol error UUID
-> definition to a common location and make CXL RAS capability struct
-> global for use across different modules.
+On Wed, Feb 14, 2024 at 08:41:26AM -0500, Konstantin Ryabitsev wrote:
+> On Wed, Feb 14, 2024 at 09:00:30AM +0100, Greg Kroah-Hartman wrote:
+> > +A list of all assigned CVEs for the Linux kernel can be found in the
+> > +archives of the linux-cve mailing list, as seen on
+> > +https://lore.kernel.org/linux-cve-announce/.  To get notice of the
+> > +assigned CVEs, please subscribe to that mailing list.
 > 
-> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> ---
-> v2:
-> 	No change.
-> ---
->  drivers/firmware/efi/cper_cxl.c | 11 -----------
->  drivers/firmware/efi/cper_cxl.h |  7 ++-----
->  include/linux/cper.h            |  4 ++++
->  include/linux/cxl-event.h       | 11 +++++++++++
->  4 files changed, 17 insertions(+), 16 deletions(-)
+> Since the archives page doesn't carry any instructions on how to subscribe,
+> I think you should link to https://subspace.kernel.org/subscribing.html here,
+> e.g.:
 > 
-> diff --git a/drivers/firmware/efi/cper_cxl.c b/drivers/firmware/efi/cper_cxl.c
-> index a55771b99a97..4fd8d783993e 100644
-> --- a/drivers/firmware/efi/cper_cxl.c
-> +++ b/drivers/firmware/efi/cper_cxl.c
-> @@ -18,17 +18,6 @@
->  #define PROT_ERR_VALID_DVSEC			BIT_ULL(5)
->  #define PROT_ERR_VALID_ERROR_LOG		BIT_ULL(6)
->  
-> -/* CXL RAS Capability Structure, CXL v3.0 sec 8.2.4.16 */
-> -struct cxl_ras_capability_regs {
-> -	u32 uncor_status;
-> -	u32 uncor_mask;
-> -	u32 uncor_severity;
-> -	u32 cor_status;
-> -	u32 cor_mask;
-> -	u32 cap_control;
-> -	u32 header_log[16];
-> -};
-> -
->  static const char * const prot_err_agent_type_strs[] = {
->  	"Restricted CXL Device",
->  	"Restricted CXL Host Downstream Port",
-> diff --git a/drivers/firmware/efi/cper_cxl.h b/drivers/firmware/efi/cper_cxl.h
-> index 86bfcf7909ec..6f8c00495708 100644
-> --- a/drivers/firmware/efi/cper_cxl.h
-> +++ b/drivers/firmware/efi/cper_cxl.h
-> @@ -7,14 +7,11 @@
->   * Author: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
->   */
->  
-> +#include <linux/cxl-event.h>
-> +
->  #ifndef LINUX_CPER_CXL_H
->  #define LINUX_CPER_CXL_H
->  
-> -/* CXL Protocol Error Section */
-> -#define CPER_SEC_CXL_PROT_ERR						\
-> -	GUID_INIT(0x80B9EFB4, 0x52B5, 0x4DE3, 0xA7, 0x77, 0x68, 0x78,	\
-> -		  0x4B, 0x77, 0x10, 0x48)
-> -
->  #pragma pack(1)
->  
->  /* Compute Express Link Protocol Error Section, UEFI v2.10 sec N.2.13 */
-> diff --git a/include/linux/cper.h b/include/linux/cper.h
-> index c1a7dc325121..2cbf0a93785a 100644
-> --- a/include/linux/cper.h
-> +++ b/include/linux/cper.h
-> @@ -89,6 +89,10 @@ enum {
->  #define CPER_NOTIFY_DMAR						\
->  	GUID_INIT(0x667DD791, 0xC6B3, 0x4c27, 0x8A, 0x6B, 0x0F, 0x8E,	\
->  		  0x72, 0x2D, 0xEB, 0x41)
-> +/* CXL Protocol Error Section */
-> +#define CPER_SEC_CXL_PROT_ERR						\
-> +	GUID_INIT(0x80B9EFB4, 0x52B5, 0x4DE3, 0xA7, 0x77, 0x68, 0x78,	\
-> +		  0x4B, 0x77, 0x10, 0x48)
->  
->  /*
->   * Flags bits definitions for flags in struct cper_record_header
-> diff --git a/include/linux/cxl-event.h b/include/linux/cxl-event.h
-> index 6ce839c59749..3a41dd5723e8 100644
-> --- a/include/linux/cxl-event.h
-> +++ b/include/linux/cxl-event.h
-> @@ -141,6 +141,17 @@ struct cxl_cper_event_rec {
->  	union cxl_event event;
->  } __packed;
->  
-> +/* CXL RAS Capability Structure, CXL v3.0 sec 8.2.4.16 */
-> +struct cxl_ras_capability_regs {
-> +	u32 uncor_status;
-> +	u32 uncor_mask;
-> +	u32 uncor_severity;
-> +	u32 cor_status;
-> +	u32 cor_mask;
-> +	u32 cap_control;
-> +	u32 header_log[16];
-> +};
-> +
->  struct cxl_cper_event_info {
->  	struct cxl_cper_event_rec rec;
->  };
+> .. please `subscribe <https://subspace.kernel.org/subscribing.html>`_ to that
+> mailing list.
+> 
+> > +No CVEs will be assigned for any issue found in a version of the kernel
+> > +that is not currently being actively supported by the Stable/LTS kernel
+> > +team.  A list of the currently supported kernel branches can be found at
+> > +https://kernel.org/category/releases.html
+> 
+> Can just be https://kernel.org/releases.html
 
+Many thanks for the changes, now made!
+
+greg k-h
