@@ -1,58 +1,59 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB37F134B4
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 08:34:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950B312B7C;
+	Thu, 15 Feb 2024 08:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707986100; cv=none; b=ipIwDyiuhqfP0lA21Pg6J0bO9fRh67OTPgzrtrRbrBev7buD5DWzmf2mYPuDzVw03UINiopbAahE2EwAlOxzbQRzoHJUJyvKIQOCeCRhgzWy6B1RfLXDD2+a4pFbocK8cnbmfCnxm9Lr2bFxuBwWQRFR3b593rww2YNzzs4R11k=
+	t=1707986149; cv=none; b=Pe34JytdlXjYAa59i5m+SzjiQMjAMpVH5FqG0/w1L+d6IfAkKTQDe3UWxqDSvS3ujYPCzbEehvw/ED16EfwUrc17MF82A/c0qfoc1l8z6XxQJKVDAqfdAcjZL8uVg9f72i1LrkPTb/ih1l+lrj/9cd8Dj9fj2fQAWX9kEMfQ9LY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707986100; c=relaxed/simple;
-	bh=HSbhLiSrK86BjMDY/y8vzjWGLlk0vqQgQeefyNv67y4=;
+	s=arc-20240116; t=1707986149; c=relaxed/simple;
+	bh=FhFRsdnjiIq6sjb+TJlazH/LxV6WTSCnRl8GCpI2gTg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GA0/3s8P7R2VD3s2A3Lep+8RR72w8sQ/RKOoru8aeR15Zm37EJXSeZZaaNFVdR0rviqEQJKavaJhaLpsub0AWx4be/+heEJcX1fAEG7308bpLSqKfoxZdy7QCRJZqG7klIm96g64VvBFuAMNGWUfdsWy3S7mc8d9KX/pSTwvRvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V8o9Upjl; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=OKnqgLA5un6rBtTaRIkAM4pRxDgrRereLOdTNYOlOgCSGmBT0qB9292bfznFuS4jyTPre/wFBm9+kPMhooL+PZpA5xLtU7VezPv4nsfFo/x64UJOddX72ySxbiAi4j4Z+2FQOnMlG4wfa8EsNEWF+QH1Sjtm3lITDB5xHcqaZ0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ImEJ3zz0; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V8o9Upjl"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-55a179f5fa1so850941a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 00:34:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707986095; x=1708590895; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kUT7KhvF7PCy+lGmvE3jvJo492xL/G0BU2rwBnlXsJU=;
-        b=V8o9UpjlohfRRbZEDtJBdQ4yb+3+1gZr1ZrMmofuIpqgh0LopOkxPXCqPioa4Z9MX1
-         sF3loipsIY6CnI78Mp12q1MIS/G8Sz7unU5OoWJqLOVoRKKJQZHkJy16pBHfdZRjWZUm
-         9gMf5bbXfHsOksjCWcUMhByxau4sqeUbss00gJydPJBvHgtysyjygJxpE+0nEZmcarEA
-         In9o7DzCWtMA516GD6DxxPhqJlNBey/vKWHYkazIdgiudtIcga2UghRvYjcr+32AD799
-         evQR4J13eKs42lxq+IaBRmd4B57ajaUkXuaeDWkC3/uT7lt63e9kXBDstLBsFrMoyU2w
-         fiKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707986095; x=1708590895;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kUT7KhvF7PCy+lGmvE3jvJo492xL/G0BU2rwBnlXsJU=;
-        b=OSj89hWsEnqWQig6BcqTAHDu/nHI+i+KfRSOm1o5DXcqZKh3PbJpcR36Xt1XsuhTJU
-         MisxAq66YklgVja/UH/DM0d+gnsC6wJWh50u4G2i1+prqUErVIuZGKMcHbm/04zbfEXX
-         Qp/ExXRLK1aui8tZ/SAXgD9hFmtjGhH5F9U6F4DsP506eZVMtbgPvNuv9ZkC3V1glIH3
-         8gfTNFRPjJhMM70UWW7i/GsxjvDuJ0XbpUKGhVLa3e4PesJRAEGjD9B4Ixuva6BPQLMg
-         KHFvStc5DRHnXVtf3hVZebFmq/BloQiFMCw7c2d8WiZAIx6enPN1TW3rimMr9xf0Od3U
-         tWlg==
-X-Gm-Message-State: AOJu0Yza3V8wAf9ebnepLakZ9Pv6i+Zct40m7X/AC4Yvqi4PsG/6F6kA
-	CTR7AXuYs3oBJSB1tLoaqtQ1CNwwNEjFuZumBUru3+Xfm46tpd0jsHcNFr0hZGU=
-X-Google-Smtp-Source: AGHT+IFuvTq4ohuoJ1f0DBYU+m4qs9J4hdbe4EjqO8bVhwswd4Onhi7S2rMZdUct2jSi+tjPH3aRSA==
-X-Received: by 2002:aa7:d98c:0:b0:55f:e574:4ea6 with SMTP id u12-20020aa7d98c000000b0055fe5744ea6mr785821eds.2.1707986095224;
-        Thu, 15 Feb 2024 00:34:55 -0800 (PST)
-Received: from [192.168.0.22] ([78.10.207.130])
-        by smtp.gmail.com with ESMTPSA id fd19-20020a056402389300b0056394d0e989sm327804edb.76.2024.02.15.00.34.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Feb 2024 00:34:54 -0800 (PST)
-Message-ID: <dfcb1556-fa09-4d2e-b128-341e9725d3de@linaro.org>
-Date: Thu, 15 Feb 2024 09:34:53 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ImEJ3zz0"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41F7X8ES008393;
+	Thu, 15 Feb 2024 08:35:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=8vUYrjsku4Wxx92le0TgU8L8Gm2U7l/97SGNJHzGThY=;
+ b=ImEJ3zz0udDpnz/XprPjZctP5Ik0OSGdAE1JxQK58tfXcKv4hTvbM6KMZmRCM/6Dduv2
+ jDjz+oPvnrZBDkNOQnSpctDTV1FkTlZt/A1O6i0bdrCsQ/2pTu5eUNDf0j/7G4xdLpJr
+ 2w3cCeDwMk3jB8RM9dx2sBI0QZX8WAzkTu0MQflui19FpedGZi+Y8kepB2echMMZsDSz
+ BKLZ676ddhpcJmFz7Zs4bsRn11WTe6NQkx5OiExXX9vbvhmCi24ZdrWzVsl0XuMD0q9P
+ JpA1E2kffSp5/j15GoJI93sqbYyaw5Fj3yfubQfRg+Ibvco38Dp7m7YN+bYoeUteg3er Lw== 
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w9eapsj4d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 Feb 2024 08:35:46 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41F6NdPK009896;
+	Thu, 15 Feb 2024 08:30:45 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3w6npm34wj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 Feb 2024 08:30:45 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41F8Udrw36700636
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 15 Feb 2024 08:30:41 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B5C5C2004E;
+	Thu, 15 Feb 2024 08:30:39 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 987DB20063;
+	Thu, 15 Feb 2024 08:30:39 +0000 (GMT)
+Received: from [9.155.206.240] (unknown [9.155.206.240])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 15 Feb 2024 08:30:39 +0000 (GMT)
+Message-ID: <9b93b9c0-4b0f-4654-b9e6-4fc045cb6817@linux.ibm.com>
+Date: Thu, 15 Feb 2024 09:30:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,238 +61,68 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 13/22] dt-bindings: chrome: Add
- google,cros-ec-typec-switch binding
+Subject: Re: [PATCH] net/iucv: fix the allocation size of iucv_path_table
+ array
 Content-Language: en-US
-To: Stephen Boyd <swboyd@chromium.org>, chrome-platform@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org, patches@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
- Pin-yen Lin <treapking@chromium.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
- Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
- Prashant Malani <pmalani@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>
-References: <20240210070934.2549994-1-swboyd@chromium.org>
- <20240210070934.2549994-14-swboyd@chromium.org>
- <46ac6ab8-b0a5-497d-91b6-1d2ced33184b@linaro.org>
- <CAE-0n52TzOAqN8Y7EdJPjDxY2iY-6Jr-Pq8fFMFtF-cXo5+OyA@mail.gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <CAE-0n52TzOAqN8Y7EdJPjDxY2iY-6Jr-Pq8fFMFtF-cXo5+OyA@mail.gmail.com>
+To: Alexander Gordeev <agordeev@linux.ibm.com>,
+        Thorsten Winkler <twinkler@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20240214163240.2537189-1-agordeev@linux.ibm.com>
+From: Alexandra Winter <wintera@linux.ibm.com>
+In-Reply-To: <20240214163240.2537189-1-agordeev@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: CNnHr_4rpEWXkhzxgecqzKTJh15Axrt7
+X-Proofpoint-ORIG-GUID: CNnHr_4rpEWXkhzxgecqzKTJh15Axrt7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-15_08,2024-02-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=925 clxscore=1015
+ malwarescore=0 priorityscore=1501 phishscore=0 adultscore=0 spamscore=0
+ impostorscore=0 suspectscore=0 mlxscore=0 lowpriorityscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2402150066
 
-On 15/02/2024 02:52, Stephen Boyd wrote:
-> Quoting Krzysztof Kozlowski (2024-02-11 05:34:25)
->> On 10/02/2024 08:09, Stephen Boyd wrote:
->>> Add a binding for the USB type-c switch controls found on some ChromeOS
->>> Embedded Controllers (ECs). When this device is a mode switch, it takes
->>> one DisplayPort (DP) port as input and some number (possibly zero) of
->>> USB SuperSpeed ports (bundles of USB SS lanes) as input, and muxes those
->>> lanes into USB type-c SuperSpeed lanes suitable for the SSTRX1/2 pins on
->>> a usb-c-connector. When this device is an orientation switch, it
->>> redirects the DP lanes to the proper USB type-c SSTRX lanes.
->>>
->>> Cc: Rob Herring <robh+dt@kernel.org>
->>> Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
->>> Cc: Conor Dooley <conor+dt@kernel.org>
->>> Cc: Lee Jones <lee@kernel.org>
->>> Cc: Benson Leung <bleung@chromium.org>
->>> Cc: Guenter Roeck <groeck@chromium.org>
->>> Cc: Prashant Malani <pmalani@chromium.org>
->>> Cc: Tzung-Bi Shih <tzungbi@kernel.org>
->>> Cc: <devicetree@vger.kernel.org>
->>> Cc: <chrome-platform@lists.linux.dev>
->>> Cc: Pin-yen Lin <treapking@chromium.org>
->>> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
->>> ---
->>>  .../chrome/google,cros-ec-typec-switch.yaml   | 365 ++++++++++++++++++
->>>  .../bindings/mfd/google,cros-ec.yaml          |   5 +
->>>  2 files changed, 370 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/chrome/google,cros-ec-typec-switch.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec-switch.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec-switch.yaml
->>> new file mode 100644
->>> index 000000000000..17a0ba928f5d
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec-switch.yaml
->>> @@ -0,0 +1,365 @@
->>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/chrome/google,cros-ec-typec-switch.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Google Chrome OS EC(Embedded Controller) USB Type C Switch
->>> +
->>> +maintainers:
->>> +  - Benson Leung <bleung@chromium.org>
->>> +  - Prashant Malani <pmalani@chromium.org>
->>> +  - Stephen Boyd <swboyd@chromium.org>
->>> +
->>> +description:
->>> +  Chrome OS devices have an Embedded Controller(EC) which has access to USB
->>> +  Type C switching. This node is intended to allow the OS to control Type C
->>> +  signal muxing for USB-C orientation and alternate modes. The node for this
->>> +  device should be under a cros-ec node like google,cros-ec-spi.
->>> +
->>
->> If this is USB Type C switch, then you miss reference to
->> usb-switch.yaml, but then ports look a bit different.
+
+
+On 14.02.24 17:32, Alexander Gordeev wrote:
+> iucv_path_table is a dynamically allocated array of pointers to
+> struct iucv_path items. Yet, its size is calculated as if it was
+> an array of struct iucv_path items.
 > 
-> Thanks for the pointer. I suspect that's in linux-next only? I'm going
-
-Yes, Greg's tree.
-
-> to move this to the cros-ec-typec.yaml file but I'll still need some
-> sort of property like 'mode-switch' or 'orientation-switch' to describe
-> what needs to be done in the kernel by changing lane assignments in the
-> drm_bridge.
+> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+> ---
+>  net/iucv/iucv.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> One problem with those properties is that they're boolean for the whole
-> device. If I have a google,cros-ec-typec node that has two input DP
-> ports and two output USB-C ports then it may be that one port needs
-> orientation switching and the other only needs to do mode switching.
-> This needs to be expressed somehow and a top-level boolean property
-> doesn't do that. It could be part of the DP endpoint node itself.
+> diff --git a/net/iucv/iucv.c b/net/iucv/iucv.c
+> index 9e62783e6acb..5b56ae6612dd 100644
+> --- a/net/iucv/iucv.c
+> +++ b/net/iucv/iucv.c
+> @@ -156,7 +156,7 @@ static char iucv_error_pathid[16] = "INVALID PATHID";
+>  static LIST_HEAD(iucv_handler_list);
+>  
+>  /*
+> - * iucv_path_table: an array of iucv_path structures.
+> + * iucv_path_table: array of pointers to iucv_path structures.
+>   */
+>  static struct iucv_path **iucv_path_table;
+>  static unsigned long iucv_max_pathid;
+> @@ -545,7 +545,7 @@ static int iucv_enable(void)
+>  
+>  	cpus_read_lock();
+>  	rc = -ENOMEM;
+> -	alloc_size = iucv_max_pathid * sizeof(struct iucv_path);
+> +	alloc_size = iucv_max_pathid * sizeof(*iucv_path_table);
+>  	iucv_path_table = kzalloc(alloc_size, GFP_KERNEL);
+>  	if (!iucv_path_table)
+>  		goto out;
 
-Maybe it can be added to the connector binding as well.
 
-> 
-> Also I don't know how to indicate that mode switching can't be changed
-> here directly. For example, on Trogdor the mode is switched by the EC,
-> and the kernel can't change the mode. Changing DP lane assignments isn't
-> going to change the situation either. The mode is still going to be
-> something like DP+USB, or just DP, etc. Maybe there needs to be a
-> different property, like 'dp-mode-lane-assignment = <array of ports>',
-> that indicates which DP ports need to do lane assignment or
-> 'dp-orientation-lane-assignment = <array of ports>' for orientation
-> control. Either way, I'm saying that 'mode-switch' and
-> 'orientation-switch' properties don't make any sense here. I was using
-> them to wedge the code into the typec switch callbacks, but if I move
-> this into the cros-ec-typec driver then I don't need them.
+Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
 
-OK
-
-> 
->>
->>> +
->>> +  no-hpd:
->>> +    description: Indicates this device doesn't signal HPD for DisplayPort
->>> +    type: boolean
->>> +
->>> +  ports:
-> [...]
->>> +
->>> +          endpoint@7:
->>> +            $ref: /schemas/graph.yaml#/$defs/endpoint-base
->>> +            description: USB-C data for EC's 7th type-c port
->>> +            unevaluatedProperties: false
->>> +            properties:
->>> +              data-lanes:
->>> +                $ref: /schemas/types.yaml#/definitions/uint32-array
->>> +                description: |
->>> +                  An array of physical USB-C data lane indexes.
->>> +                  - 0 is SSRX1 lane
->>> +                  - 1 is SSTX1 lane
->>> +                  - 2 is SSTX2 lane
->>> +                  - 3 is SSRX2 lane
->>> +                minItems: 4
->>> +                maxItems: 4
->>> +                items:
->>> +                  maximum: 3
->>> +
->>> +        anyOf:
->>> +          - required:
->>> +              - endpoint@0
->>
->> I don't get what you want to say here. This anyOf should have no effect.
-> 
-> I'm trying to say that there should be at least one usb-c data lane
-> output endpoint if there's a port@2 (usb-c output).
-
-Wait, my bad, this is good. At least one endpoint will be required.
-
-> 
->>
->>> +          - required:
->>> +              - endpoint@1
->>> +          - required:
->>> +              - endpoint@2
-> [...]
->>
->>> +
->>> +required:
->>> +  - compatible
->>> +  - ports
->>> +
->>> +allOf:
->>> +  - if:
->>> +      properties:
->>> +        no-hpd: true
->>
->> I don't understand this either. What is it for? Where did you see such
->> syntax?
-> 
-> This is saying that if the no-hpd property is present then the port@0
-> port (DP input port) is required. Otherwise no-hpd doesn't really make
-> any sense because this device isn't muxing DP onto USB type-c connectors.
-
-Then you only need if: required: like here:
-
-https://elixir.bootlin.com/linux/v6.4-rc7/source/Documentation/devicetree/bindings/net/qcom,ipa.yaml#L174
-
-> 
-> I found this syntax by searching the schema website and reading this
-> page[1]. The last yellow note about "country" not being a required
-> property led me to this syntax.
-> 
-> [1] https://json-schema.org/understanding-json-schema/reference/conditionals#ifthenelse
-
-Best regards,
-Krzysztof
-
+Good catch, thank you.
+As we allocate a more than we need, I don't this
+needs to be backported to stable. Do you agree?
