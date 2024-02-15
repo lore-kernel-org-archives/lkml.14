@@ -1,106 +1,162 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7F412B14C
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 11:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15905127B41;
+	Thu, 15 Feb 2024 11:56:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707998197; cv=none; b=f7aj3DWPUnsM3FOXZzwXpiQdSUhWrUJ3mytEEesgS6cOD9QcHl5JiGNfEtUGQjABaEMP3gF+NpsF04LeIrJ4/TrwUEl7iRvEBLCofOjOwW2xlkDGpgFTSDKebIhST6xdawm4lttLaXt5Bw8uc2frLqEWVDLOnPDYSSNRBcn7kEE=
+	t=1707998212; cv=none; b=AURPw1pbmie/0FvynviUKVdvPyuffsCmfVwiRdQJYVn8d4okG1EQQBT23qkxF67gZ5Kk9zL0g0fmL5lnnKs6AKlgDzLlCMRUqROkXyFV0OZntn1RGSYWVgLkkD8nJIY9Vp3nJwUEgfD+smspcve/TirdhbzNzxECp9FmPt0zQgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707998197; c=relaxed/simple;
-	bh=iQTZVfX1cNJJ5WOHk+XpvjTf0FitnxvY81VtHXx2k8w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HZPurUgRpsF7F9Gq89xH6MFWmL06TpAPMv56uffpZy2raQ4TtNpXqfe6KdTmklHwvDUyFH613xl1zHMgzgxZSrsDx3bD+1e9eC4Ql365UYWz9pmpJw72/Ux3Hu5uUFS+b0wp4D7/xFDqOC+dSu9HcYUBs12Wiq6rIw/hq2iw0Mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2A4A422205;
-	Thu, 15 Feb 2024 11:56:33 +0000 (UTC)
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id A3AD91346A;
-	Thu, 15 Feb 2024 11:56:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id IP28JPD7zWUrBwAAn2gu4w
-	(envelope-from <osalvador@suse.de>); Thu, 15 Feb 2024 11:56:32 +0000
-Date: Thu, 15 Feb 2024 12:57:39 +0100
-From: Oscar Salvador <osalvador@suse.de>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>,
-	Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Alexander Potapenko <glider@google.com>
-Subject: Re: [PATCH v9 4/7] mm,page_owner: Implement the tracking of the
- stacks count
-Message-ID: <Zc38M2CR2coppMFH@localhost.localdomain>
-References: <20240214170157.17530-1-osalvador@suse.de>
- <20240214170157.17530-5-osalvador@suse.de>
- <9fc95f61-827f-40ee-a823-576cdcad7939@suse.cz>
+	s=arc-20240116; t=1707998212; c=relaxed/simple;
+	bh=GuEq2m8kfPXvgra25VpHA7V6cCxxsrm6u7nxl0eVd0s=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mJEDVxCawZCvaLhPGiciN58VqEWMWjkuNyTJEwqfvuLkv/AqirbRRbXKXmQI0AGojlLBmVxGMQjmHYT6p1VWrLNKXsbKfdA1igBd+NSyg1JwInFBrOw44eECzE88gPFvm0u4ns6n1SF5Z7ockpOjq5w56XbUU/jgu5Wgn222F18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TbD2j1XwCz6J9xX;
+	Thu, 15 Feb 2024 19:52:45 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 78D9C140D1A;
+	Thu, 15 Feb 2024 19:56:47 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 15 Feb
+ 2024 11:56:47 +0000
+Date: Thu, 15 Feb 2024 11:56:46 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+CC: <linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, Ard Biesheuvel <ardb@kernel.org>, "Alison
+ Schofield" <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Yazen Ghannam <yazen.ghannam@amd.com>
+Subject: Re: [PATCH v2 1/4] acpi/ghes, cxl: Create a common CXL struct to
+ handle different CXL CPER records
+Message-ID: <20240215115646.000038d6@Huawei.com>
+In-Reply-To: <20240109034755.100555-2-Smita.KoralahalliChannabasappa@amd.com>
+References: <20240109034755.100555-1-Smita.KoralahalliChannabasappa@amd.com>
+	<20240109034755.100555-2-Smita.KoralahalliChannabasappa@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9fc95f61-827f-40ee-a823-576cdcad7939@suse.cz>
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	 REPLY(-4.00)[]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 2A4A422205
-X-Spam-Level: 
-X-Spam-Score: -4.00
-X-Spam-Flag: NO
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, Feb 15, 2024 at 12:08:53PM +0100, Vlastimil Babka wrote:
-> On 2/14/24 18:01, Oscar Salvador wrote:
-> > Implement {inc,dec}_stack_record_count() which increments or
-> > decrements on respective allocation and free operations, via
-> > __reset_page_owner() (free operation) and __set_page_owner() (alloc
-> > operation).
-> > Newly allocated stack_record structs will be added to the list stack_list
-> > via add_stack_record_to_list().
-> > Modifications on the list are protected via a spinlock with irqs
-> > disabled, since this code can also be reached from IRQ context.
-> > 
-> > Signed-off-by: Oscar Salvador <osalvador@suse.de>
-> > Reviewed-by: Marco Elver <elver@google.com>
+On Tue, 9 Jan 2024 03:47:52 +0000
+Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com> wrote:
+
+> Currently defined cxl_cper_callback interface between CXL subsystem and
+> GHES module is just confined to handling CXL Component errors only.
 > 
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-
-Thanks!
-
-
-> > +		if (atomic_try_cmpxchg_relaxed(&stack_record->count.refs, &old, 1))
-> > +			/* Add the new stack_record to our list */
-> > +			add_stack_record_to_list(stack_record, gfp_mask);
-> 			
-> 			Not returning here...
+> Extend this callback to process CXL Protocol errors as well. Achieve
+> by defining a new struct cxl_cper_event_info to include cxl_cper_event_rec
+> and other fields of CXL protocol errors which will be defined in future
+> patches.
 > 
-> > +	}
-> > +	refcount_inc(&stack_record->count);
+> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Hi Smita,
+
+I guess this will get effected by the mess around the reporting that
+Ira is fixing but in meantime some comments on the current code.
+> ---
+> v2:
+> 	cxl_cper_rec_data -> cxl_cper_event_info
+> 	data -> info
+> ---
+>  drivers/acpi/apei/ghes.c  | 6 +++++-
+>  drivers/cxl/pci.c         | 8 ++++----
+>  include/linux/cxl-event.h | 6 +++++-
+>  3 files changed, 14 insertions(+), 6 deletions(-)
 > 
-> ... means we'll increase the count to 2 on the first store, so there's a
-> bias. Which would be consistent with the failure and dummy stacks that also
-> start with a refcount of 1. But then the stack count reporting should
-> decrement by 1 to prevent confusion? (in the following patch). Imagine
-> somebody debugging an allocation stack where there are not so many of them,
-> but the allocation is large, and being sidetracked by an off-by-one error.
+> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+> index aed465d2fd68..60b615d361d3 100644
+> --- a/drivers/acpi/apei/ghes.c
+> +++ b/drivers/acpi/apei/ghes.c
+> @@ -693,6 +693,10 @@ static cxl_cper_callback cper_callback;
+>  static void cxl_cper_post_event(enum cxl_event_type event_type,
+>  				struct cxl_cper_event_rec *rec)
+>  {
+> +	struct cxl_cper_event_info info;
+> +
+> +	info.rec = *(struct cxl_cper_event_rec *)rec;
 
-Good catch Vlastimil!
-Yes, we should substract one from the total count in stack_print.
+Why cast?
 
--- 
-Oscar Salvador
-SUSE Labs
+> +
+>  	if (rec->hdr.length <= sizeof(rec->hdr) ||
+>  	    rec->hdr.length > sizeof(*rec)) {
+>  		pr_err(FW_WARN "CXL CPER Invalid section length (%u)\n",
+> @@ -707,7 +711,7 @@ static void cxl_cper_post_event(enum cxl_event_type event_type,
+>  
+>  	guard(rwsem_read)(&cxl_cper_rw_sem);
+>  	if (cper_callback)
+> -		cper_callback(event_type, rec);
+> +		cper_callback(event_type, &info);
+>  }
+>  
+>  int cxl_cper_register_callback(cxl_cper_callback callback)
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index b14237f824cf..1ad240ead4fd 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -972,9 +972,9 @@ static struct pci_driver cxl_pci_driver = {
+>  
+>  #define CXL_EVENT_HDR_FLAGS_REC_SEVERITY GENMASK(1, 0)
+>  static void cxl_cper_event_call(enum cxl_event_type ev_type,
+> -				struct cxl_cper_event_rec *rec)
+> +				struct cxl_cper_event_info *info)
+>  {
+> -	struct cper_cxl_event_devid *device_id = &rec->hdr.device_id;
+> +	struct cper_cxl_event_devid *device_id = &info->rec.hdr.device_id;
+>  	struct pci_dev *pdev __free(pci_dev_put) = NULL;
+>  	enum cxl_event_log_type log_type;
+>  	struct cxl_dev_state *cxlds;
+> @@ -996,11 +996,11 @@ static void cxl_cper_event_call(enum cxl_event_type ev_type,
+>  		return;
+>  
+>  	/* Fabricate a log type */
+> -	hdr_flags = get_unaligned_le24(rec->event.generic.hdr.flags);
+> +	hdr_flags = get_unaligned_le24(info->rec.event.generic.hdr.flags);
+>  	log_type = FIELD_GET(CXL_EVENT_HDR_FLAGS_REC_SEVERITY, hdr_flags);
+>  
+>  	cxl_event_trace_record(cxlds->cxlmd, log_type, ev_type,
+> -			       &uuid_null, &rec->event);
+> +			       &uuid_null, &info->rec.event);
+>  }
+>  
+>  static int __init cxl_pci_driver_init(void)
+> diff --git a/include/linux/cxl-event.h b/include/linux/cxl-event.h
+> index 17eadee819b6..6ce839c59749 100644
+> --- a/include/linux/cxl-event.h
+> +++ b/include/linux/cxl-event.h
+> @@ -141,8 +141,12 @@ struct cxl_cper_event_rec {
+>  	union cxl_event event;
+>  } __packed;
+>  
+> +struct cxl_cper_event_info {
+> +	struct cxl_cper_event_rec rec;
+
+Only parts of this will be relevant to the protocol errors.
+Maybe worth doing a union with the first part of rec in both
+structures but not the union cxl_event in the protocol error.
+Keep it all anonymous to avoid yet another structure in the
+reads/and writes though.
+
+> +};
+> +
+>  typedef void (*cxl_cper_callback)(enum cxl_event_type type,
+> -				  struct cxl_cper_event_rec *rec);
+> +				  struct cxl_cper_event_info *info);
+>  
+>  #ifdef CONFIG_ACPI_APEI_GHES
+>  int cxl_cper_register_callback(cxl_cper_callback callback);
+
