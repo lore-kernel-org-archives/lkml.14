@@ -1,86 +1,100 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6CC260DC5;
-	Thu, 15 Feb 2024 11:27:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5407129A75;
+	Thu, 15 Feb 2024 11:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707996448; cv=none; b=AIEv1eSSoh7UCdEloPTIdIGAeFQAMY1Ex1L6XwOSShZFt1/jQw/0Ihdqb+F1nSHfCoc6kVinJNRa7z3JoXYrmANtg83aAxLZEcToNrAMO+8pNCCFaZNgsjoRwyaPrsPbjEDKAQsnN2vJ1k23ciwswlZVLNflcrhJJtIiCYKIXYo=
+	t=1707996489; cv=none; b=kYxWriWD12sG7Plmy+PQg7cZxneGATu4CdozN11kO/PKrH5AFtzTQc1lWMzGcKemrGl1K/Z7FBAXEDUFkWDC+h8BvpN//X/Z1KBLQB2lilN3RXthmTkvV+wyEWOxdTAJ3cPyhRfmff+GoqZFS/hA4j6xFYsIq6cDqYbrMmm6SdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707996448; c=relaxed/simple;
-	bh=pneRKOG04Q5HEf5H9t1s/vwSw+7DjCJ4W7QwhEnz3pM=;
+	s=arc-20240116; t=1707996489; c=relaxed/simple;
+	bh=xO9ERZYT04zobE8avkfrLBAVFW+bp83vnhF4juLP3AY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B55X9Y5L+MRGeLPKsS/OKwWMmY2C8XMSC76H/oTMEY2t0wzgukisb/BJ14WTOo28CysTFYg620gDUMMfuJ2cDTNlkuOaL5jC5cBGrVyEuYU2sbdsdG8P6lpZs+KeiZJH3x6beecOattJHPPtnYVlfjh49cM4awjba+7JbK4uP9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 121CF1516;
-	Thu, 15 Feb 2024 03:28:07 -0800 (PST)
-Received: from bogus (unknown [10.163.74.245])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9CDD43F7B4;
-	Thu, 15 Feb 2024 03:27:20 -0800 (PST)
-Date: Thu, 15 Feb 2024 11:27:19 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Sunil V L <sunilvl@ventanamicro.com>, linux-riscv@lists.infradead.org,
-	Pierre Gondois <pierre.gondois@arm.com>
-Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Anup Patel <apatel@ventanamicro.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Atish Kumar Patra <atishp@rivosinc.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Andrew Jones <ajones@ventanamicro.com>, Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH v1 -next 0/3] RISC-V: ACPI: Enable CPPC based cpufreq
- support
-Message-ID: <20240215112719.ciq7nrh6tr2ksr5j@bogus>
-References: <20240208034414.22579-1-sunilvl@ventanamicro.com>
- <72ef475f-513b-4e33-ae85-f7e693a0cd38@arm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=W1pDdLEn9L3ZQ5itBn1VMRNfkG30OIxLFkf1xN43ZqPI7CsEkagL3JW94ATN780PLwrIcx0HIZj91KsUgWFC3ts5JBiE2LilQMpr/zPvU1HfuAWzNRAc2BzxmnvBo6IGDPZhtAFArKCXzok1D/mVmHTzo2S0u0nxXn1UOYmK23Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bkqR6Eya; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bkqR6Eya"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707996487; x=1739532487;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=xO9ERZYT04zobE8avkfrLBAVFW+bp83vnhF4juLP3AY=;
+  b=bkqR6EyawmhotfDgII8pyqI/tFR6JZ8/XUGGfVc3F5UqDexZDaf78lJy
+   HxxqxESLJK45t9yUE+GGkpw6lZW3Mbzttn+aLI1MKvWnNSZBPmDzeBu9F
+   1yJjZ0iwrSx1yMSi+nHYHXdb7wI/Bwk3cjiWjHqZE7UA8J9tYRavG+MFW
+   YUT2ExM/VQQnW2o+eoDGxLMMqieh3U9hr2m4NI4fh7pM1r/G9o2D0k36T
+   64dRsJ36i+VG5qW3zyvh37veLTzEhvckhZSN8V4KBhRy9Me/qSoa17VMg
+   Al+TI4E+PZiGjRRzCpdVCDCITdeb5C60qQ+Chyi8gleX4gn87Wc0o3lLu
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="1954098"
+X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
+   d="scan'208";a="1954098"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 03:28:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="912149520"
+X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
+   d="scan'208";a="912149520"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 03:28:04 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1raZuL-00000004m4B-4BsW;
+	Thu, 15 Feb 2024 13:28:02 +0200
+Date: Thu, 15 Feb 2024 13:28:01 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Robin van der Gracht <robin@protonic.nl>,
+	Paul Burton <paulburton@kernel.org>
+Subject: Re: [PATCH v2 03/15] auxdisplay: linedisp: Use unique number for id
+Message-ID: <Zc31QVEEzM5jQ0jy@smile.fi.intel.com>
+References: <20240212170423.2860895-1-andriy.shevchenko@linux.intel.com>
+ <20240212170423.2860895-4-andriy.shevchenko@linux.intel.com>
+ <CAMuHMdUWw-_dECEXrTt--AX400YZOhP7b+tBOD0bHYQmS0z=1g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <72ef475f-513b-4e33-ae85-f7e693a0cd38@arm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdUWw-_dECEXrTt--AX400YZOhP7b+tBOD0bHYQmS0z=1g@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Feb 09, 2024 at 12:11:11PM +0100, Pierre Gondois wrote:
-> The code looks good to me, so FWIW:
-> Reviewed-by: Pierre Gondois <pierre.gondois@arm.com>
+On Thu, Feb 15, 2024 at 11:03:27AM +0100, Geert Uytterhoeven wrote:
+> On Mon, Feb 12, 2024 at 6:04 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+
+...
+
+> >  struct linedisp {
+> >         struct device dev;
+> > +       unsigned int id;
 > 
-> +Sudeep as this touches cppc/arm in case he didn't see the patches
->
+> Note that there is a hole on 64-bit platforms.
+> Hence I'd move id below, so the hole is at the end of the
+> structure, and might be filled by future changes.
 
-Thanks!
+I had checked timer_list, but while it has holes, without debug it ends on
+4-bytes boundary (without debug enabled), otherwise on 8-bytes.
+Nevertheless, relying on the above seems fragile, so I follow your suggestion.
+Thank you!
 
-> On 2/8/24 04:44, Sunil V L wrote:
-> > This series enables the support for "Collaborative Processor Performance
-> > Control (CPPC) on ACPI based RISC-V platforms. It depends on the
-> > encoding of CPPC registers as defined in RISC-V FFH spec [2].
-> > 
-> > CPPC is described in the ACPI spec [1]. RISC-V FFH spec required to
-> > enable this, is available at [2].
-> > 
-> > [1] - https://uefi.org/specs/ACPI/6.5/08_Processor_Configuration_and_Control.html#collaborative-processor-performance-control
-> > [2] - https://github.com/riscv-non-isa/riscv-acpi-ffh/releases/download/v1.0.0/riscv-ffh.pdf
-> > 
-> > The series is based on the LPI support series.
-> > Based-on: 20240118062930.245937-1-sunilvl@ventanamicro.com
-> > (https://lore.kernel.org/lkml/20240118062930.245937-1-sunilvl@ventanamicro.com/)
-> > 
-> > Sunil V L (3):
-> >    ACPI: RISC-V: Add CPPC driver
-> >    cpufreq: Move CPPC configs to common Kconfig and add RISC-V
-> >    RISC-V: defconfig: Enable CONFIG_ACPI_CPPC_CPUFREQ
-> >
+> >         struct timer_list timer;
+> >         void (*update)(struct linedisp *linedisp);
+> >         char *buf;
 
-Looks good to me.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
 
---
-Regards,
-Sudeep
