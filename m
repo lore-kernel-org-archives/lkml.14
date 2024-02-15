@@ -1,116 +1,117 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4A041C61
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 21:16:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46BCC41C61
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 21:17:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.222.135.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708031806; cv=none; b=fADgjFPWXFSF+xswuj6m7LrYWZbB8GxG0McGRvpSrRocYrlAuOyVvnSzbpxxy287txOJ9G6x11VtLvdV8QgYZopiSp0mxS7dUyeOJMgScqDVqdIk+oVvge8B6t/wYgHjJ/dc0Z9bL5lkjiZHbP9IVK+LUDNL04I7ktZB8OXdlUo=
+	t=1708031863; cv=none; b=ZUSBRzZ3ym6Enzi4XvumMiTJPpMp3V48zoqoCe/0nf0msHHkMtrkpkhal1WjHDoexVVytPcnSWjCCvMUuKpmlIKMPgkDq9J5bx5OCO2+rD0SJ+YcfnHgKiBFDI+7QsjxSj+U4j7DHM8tUk4x1ICZ/9Ygf/irFJyXhn9ucyMAA80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708031806; c=relaxed/simple;
-	bh=pMD7ChFxXNzBIMximFwf1FhXvVBfQq11HJk6LIY7pBk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H62FGTC/BBRvC7kstRM7EqJf3bfkekz1IsS7yei0fHEbQZzxKuqBSyhgiBqhG96rdWaGQJ+DOmGK+5jRCN8mlhX3dQuav6e0zaOt+EchOtDWRsumrKDTLfWvhzW7lJe6wY+moP4Ub28koaC8tWi0/ByQ+qwl2DkkXx8G5R+7nvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1raj62-0001Kv-PX; Thu, 15 Feb 2024 22:16:42 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1raj61-000xJo-M1; Thu, 15 Feb 2024 22:16:41 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1raj61-005eqJ-1v;
-	Thu, 15 Feb 2024 22:16:41 +0100
-Date: Thu, 15 Feb 2024 22:16:41 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH 7/8] intel_th: Convert to platform remove callback
- returning void
-Message-ID: <jawceotzgdydpz74qr2e5dwgfumwjmt4wxvi43qlwldlbgemzf@v3qa2hoopawv>
-References: <20231107202818.4005791-1-u.kleine-koenig@pengutronix.de>
- <20231107202818.4005791-8-u.kleine-koenig@pengutronix.de>
- <i3oybmf3axeyk5rcef5kgfdb4cucd63h24gup6idn62nq3vvav@4mfzwzyamq27>
+	s=arc-20240116; t=1708031863; c=relaxed/simple;
+	bh=pu47OQgyk8vjdyRlJeqz8HwiOtC08XcUTOUNUqtg+lc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VNePhoZOgn18L9EXn8ya2oJ3Rsm+yuufBsjO5J8v/zFDZu4iLv7usYPBylFuesgkJBcSV4Bwl3+HVy8MF0wCz5BZ9sx5+widNax7sqyqHgGjddGpAuDW4uMDXXtDqeL+L4m0H5YxHxfh4ro8UrllVmoBWXTPS3HhyQkUoZ3Nfo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl; spf=pass smtp.mailfrom=o2.pl; dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b=t2YBex2M; arc=none smtp.client-ip=193.222.135.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=o2.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b="t2YBex2M"
+Received: (wp-smtpd smtp.tlen.pl 21725 invoked from network); 15 Feb 2024 22:10:57 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=1024a;
+          t=1708031457; bh=pu47OQgyk8vjdyRlJeqz8HwiOtC08XcUTOUNUqtg+lc=;
+          h=Subject:To:Cc:From;
+          b=t2YBex2Mt96c5TmLU9qz1g8p9iOTbLjI4FYonGYmEeh9wWtybH+13zsqncSBk8mvy
+           POg+BbpWX5BV99G8E7ZOzfR6evEUBBZlrRUPovxvc5WVIklzJtN/Nl/FeRvBiYfsfU
+           rSSKQlJ3Igyaxk6K1gidVdKFhQo4ZALTlY9wNRJQ=
+Received: from aafh184.neoplus.adsl.tpnet.pl (HELO [192.168.1.22]) (mat.jonczyk@o2.pl@[83.4.137.184])
+          (envelope-sender <mat.jonczyk@o2.pl>)
+          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <david@ixit.cz>; 15 Feb 2024 22:10:57 +0100
+Message-ID: <332bd358-95cc-4343-bff8-cc6e8c62ff89@o2.pl>
+Date: Thu, 15 Feb 2024 22:10:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ti4wgnneboywvsvn"
-Content-Disposition: inline
-In-Reply-To: <i3oybmf3axeyk5rcef5kgfdb4cucd63h24gup6idn62nq3vvav@4mfzwzyamq27>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/10] x86/Kconfig: enable X86_X2APIC by default and
+ improve help text
+Content-Language: en-GB
+To: david@ixit.cz
+Cc: bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ linux-kernel@vger.kernel.org, mingo@redhat.com, rdunlap@infradead.org,
+ tglx@linutronix.de, x86@kernel.org, yinghai@kernel.org
+References: <20220911084711.13694-2-mat.jonczyk@o2.pl>
+ <d6a06044-4137-46d7-a755-050846d8988c@ixit.cz>
+From: =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
+Autocrypt: addr=mat.jonczyk@o2.pl; keydata=
+ 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
+ TANkZ3QqXNX2
+In-Reply-To: <d6a06044-4137-46d7-a755-050846d8988c@ixit.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-WP-MailID: 7bd5281c766a93db6650fe99a66d6584
+X-WP-AV: skaner antywirusowy Poczty o2
+X-WP-SPAM: NO 0000000 [EYOV]                               
 
+W dniu 2.02.2024 o 15:08, David Heidelberg pisze:
+> Hello Mat,
+>
+> any chance you would incorporate feedback and respin the series or/and at least X2APIC parts?
+> For recent HW it becoming really necessary to have this option enabled.
+>
+> Thank you
+> David
+>
+Hello,
 
---ti4wgnneboywvsvn
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+OK, I'll rebase, update and send the X2APIC patch. Can't give you an ETA though.
 
-Hello Alexander,
+I have mostly gave up kernel development, but you keep me motivated.
 
-On Wed, Jan 10, 2024 at 09:41:54AM +0100, Uwe Kleine-K=F6nig wrote:
-> Hello,
->=20
-> On Tue, Nov 07, 2023 at 09:28:26PM +0100, Uwe Kleine-K=F6nig wrote:
-> > The .remove() callback for a platform driver returns an int which makes
-> > many driver authors wrongly assume it's possible to do error handling by
-> > returning an error code. However the value returned is ignored (apart
-> > from emitting a warning) and this typically results in resource leaks.
-> >=20
-> > To improve here there is a quest to make the remove callback return
-> > void. In the first step of this quest all drivers are converted to
-> > .remove_new(), which already returns void. Eventually after all drivers
-> > are converted, .remove_new() will be renamed to .remove().
-> >=20
-> > Trivially convert this driver from always returning zero in the remove
-> > callback to the void returning variant.
-> >=20
-> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
->=20
-> I didn't get any feedback to this patch and it didn't make it into next
-> up to now.
->=20
-> Is this still on someone's radar?
+Greetings,
 
-Is there a chance to get this patch into v6.9-rc1? Are you the right one
-to talk to about this patch? (According to MAINTAINERS you are.)
+Mateusz
 
-The patch was sent during the 6.7 merge window and now already missed
-the 6.8 one :-\
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ti4wgnneboywvsvn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXOfzgACgkQj4D7WH0S
-/k4dqgf/R8CIYnSvUQlNKDMTNeHPb0E4EE0NNapRAWbY/ewfvmDj4T8A1LqA89/k
-zeDbO4LUTvRhl3UH/tzTbFOX+JjZVtjZtVUfXgBpkYvHlDHmSIZMKfKhSJI8SxcI
-D41vUbH+fOxysM2ti4+YCS0/04TVIXLhjbjaiUgGKzRNJopEvS6Ug5VRRyOotTW9
-tkxzBHX3hYBdMNsqkd0w4MxlSoYJNmeruTlLt5u6yEMcgNgU6T3Bv/Ynd4h6yMA/
-cqsI5KDxuKivMEWM9A4gI8abitx0DXJefx5qWosmzPENHelNmCkLsaf9ED5OP6G+
-9cpmIPoWvtSP4KvSDy8+js5Terns/A==
-=Q0iC
------END PGP SIGNATURE-----
-
---ti4wgnneboywvsvn--
