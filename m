@@ -1,97 +1,119 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50CB12BF3D
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 13:36:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D012712FF7F;
+	Thu, 15 Feb 2024 13:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708004205; cv=none; b=GdJdXZWueyrRLyLS79JJCJ+i3UebWyvQKVybR70MNEHAXfck9bHBOSdHcRMZzX5ooEjSwz34Xc3tuptKRDwFNwIJgwcqKF0RDLip4LWIqFc+B/NdaAFRCkGDEtbEmAvr2POdfRhvDC9fsd/eMBKj92SSDVwI96wl/XUKu3kIO0k=
+	t=1708004234; cv=none; b=tMVHMT/pXj+zQc65LYji7SkUCkS+Jcwmw4IKOYAkrENY58dxbtTtr3pWTtkgCvOeD+Crs0mrz+b/Ux82I8zYVV8btj4KhxtrOhJvjKLlbh7+Xl/q7vuegTzpM7lemq9dDhal2yOvH6Orf1Lxb0zb5lC0c2hlD8JvKo3GMKEx4dA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708004205; c=relaxed/simple;
-	bh=+qesoz2V42RgfnQKUGiS5UYjIIFWsK48uyeINtqXE/A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BWDoUwr9QXaCGJxIsGFy8vs3NcaWSR+7xAOosbcf3u6uB5X5JefwLTQGrguHxDiMReihs4mHjQAQx6s9tt7l8nQ9CmNsDy1b3O8b06jxrkCNn6ZUazAUq+2/ueLlL0zpSrwNAuL+cjvMGHPySZOvHvW30X/SMtNUBAxqCLC8CIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=IY4OVNa0; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	s=arc-20240116; t=1708004234; c=relaxed/simple;
+	bh=PFVxtk7+DZ0DWAk3Wc+rdZQ+V9hnlPmccXAlqx5M7eM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jND8xivFnD5gg0Yy0KodKllxWqDb2Bmtruk42LgYrPPkKQGZVdab8gvMQ1Fct3Bl5nSz+17dDtstr2EnsYe3CySbckdViNd7FRk+Ze1hOr0jf3PKSgL1Zqe6qDVlmuLCURgdIGS+EIabPMfibxLvcwTSfBhd4TvFuT1jeS2rlfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S1e/2dlz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="IY4OVNa0"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-561f78f1ba1so940146a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 05:36:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1708004201; x=1708609001; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kSAPglM2wZ+xLjfRrMYJKrvwCFVOGwCTlmuHoEDAY3I=;
-        b=IY4OVNa0hihlnbwP70YHsBdcI2BzPlAKrsg/qokuZRhUvP9s82dAMSHruJ2z6p/3GA
-         KV3PD7KImFwQsfHaNMpgdBNZVtVYG7LshSc799Owvsn8V8yzoZBi267aAjG2rsCaE3US
-         mVSlhjM/cDhdG+l139cr4O4sWiS2F67SXD25oL7MHhBW61d7olpTMDmJVVFhHpUovZfO
-         VeeJ9WoIWTRDZ1ngyOqwX/Ia+q7xUZBE0FCWMr77kQx+dsq92Xu5xHVyZvDtJqH+DqVM
-         959w0q5tBVNY8XOjZjrXtVbbeatTnRNewH6skM1WkZzCJ1sJjNrqXkp/FIXCnAi1MeyS
-         fQCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708004201; x=1708609001;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kSAPglM2wZ+xLjfRrMYJKrvwCFVOGwCTlmuHoEDAY3I=;
-        b=u3UcQWvshaQNzL+J9VBjyJapqwKnTSbvjxsZ3o8/pv+p9ttJAUF+PbSl3G9gOlIM58
-         MSCK4xXG+5Gb3ujhLD4ihwE1yh6o+FFbll9TuJzveb0hQArPIf0relvfcsfx/pkAI8dK
-         +EdU/wdI+KDgl5OvmHohZG2HuXtlGxVrYYXEkay6ZqszNhAzMdDWyomcmAuzLPmGUWQs
-         aRDuXdxZetnKPdOpmxJMJG6ScjMPgD8ppmM/0F8QCZj2dur1jQLft+oyQ3bgHM5JCtVX
-         z077GuwoL3NcQnPZ6T/8ymwrlRqYgk1ersxJCpE5ofOd9y6ZoChDEnIMYBRcmhBCj3Yp
-         suyg==
-X-Forwarded-Encrypted: i=1; AJvYcCWyG0Q0awL0Bz+C7Sh0bUaoVdfYkcK4/9lRHvlp1O8dnHGethKD31VCyhIIbTR+4sw0INEQS900utFiLx0uzoFMCrnziWFQEsXWVB7t
-X-Gm-Message-State: AOJu0YwzMZPk5zrolNaNJnU3woFqV3fXEgzmAthzhS1tJ1BcjeL4RX8y
-	H9XMXCoam6QUdY1gEcjz/GwQF7yywfIVsCxGa9zCRBBRRA1lPbaL0hrkHPmj3KQ=
-X-Google-Smtp-Source: AGHT+IFWwIf8yc8YxM5C/1EMQUcZSLV33IwQsH6D1RK7xkbn7UQ2/OWS+wm0Vwr/2+XrMlsQVNBxUw==
-X-Received: by 2002:a17:907:76e5:b0:a3d:8035:fdd1 with SMTP id kg5-20020a17090776e500b00a3d8035fdd1mr1467797ejc.76.1708004200904;
-        Thu, 15 Feb 2024 05:36:40 -0800 (PST)
-Received: from raven.blarg.de (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id w24-20020a170906131800b00a3d22f53210sm542350ejb.188.2024.02.15.05.36.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Feb 2024 05:36:40 -0800 (PST)
-From: Max Kellermann <max.kellermann@ionos.com>
-To: hpa@zytor.com,
-	x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH] arch/x86/entry_fred: don't set up KVM IRQs if KVM is disabled
-Date: Thu, 15 Feb 2024 14:36:31 +0100
-Message-Id: <20240215133631.136538-1-max.kellermann@ionos.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S1e/2dlz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0BCDC433C7;
+	Thu, 15 Feb 2024 13:37:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708004234;
+	bh=PFVxtk7+DZ0DWAk3Wc+rdZQ+V9hnlPmccXAlqx5M7eM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S1e/2dlz+50J6jjmgBIN2URUTZmnc7ALcdTSep8FsCPgGRXiqVXjl56plOSsa/KNI
+	 cqiE0wvyF9OIFjSYsjxZmyalEAo5zkmZxWEAgKH0rtMCmwutb5YOz8Ky/ieebDD7GD
+	 lyp1UgYX/iJrdSFGDzzoo5Su0p0ucadd8TKNsp4Ybbxyc1ZuL6qNA6E6SzYzHyTtvf
+	 tnQqhvjWIJgUdDkXfDzN67YkP16WScFIk3xKlo3+SQEQ5ZqaOc059N4Mruat2t5EcC
+	 4nRILszRrDisu93gYIg/K45KMDHqWopKEneSp8qnYsDDw5Sy4e+Kv7bRZ6Y7TM1XNh
+	 NQKGKhq+/dTNw==
+Date: Thu, 15 Feb 2024 14:37:10 +0100
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] page_pool: disable direct recycling based on
+ pool->cpuid on destroy
+Message-ID: <Zc4Tht2TAkFOhq9Y@lore-desk>
+References: <20240215113905.96817-1-aleksander.lobakin@intel.com>
+ <87v86qc4qd.fsf@toke.dk>
+ <8aa809c0-585f-4750-98d4-e19165c6ff73@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="JwdDwmzJQxeHUrty"
+Content-Disposition: inline
+In-Reply-To: <8aa809c0-585f-4750-98d4-e19165c6ff73@intel.com>
 
-When KVM is disabled, the POSTED_INTR_* macros do not exist, and the
-build fails.
 
-Fixes: 14619d912b65 ("x86/fred: FRED entry/exit and dispatch code")
-Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
----
- arch/x86/entry/entry_fred.c | 2 ++
- 1 file changed, 2 insertions(+)
+--JwdDwmzJQxeHUrty
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/x86/entry/entry_fred.c b/arch/x86/entry/entry_fred.c
-index ac120cbdaaf2..660b7f7f9a79 100644
---- a/arch/x86/entry/entry_fred.c
-+++ b/arch/x86/entry/entry_fred.c
-@@ -114,9 +114,11 @@ static idtentry_t sysvec_table[NR_SYSTEM_VECTORS] __ro_after_init = {
- 
- 	SYSVEC(IRQ_WORK_VECTOR,			irq_work),
- 
-+#if IS_ENABLED(CONFIG_KVM)
- 	SYSVEC(POSTED_INTR_VECTOR,		kvm_posted_intr_ipi),
- 	SYSVEC(POSTED_INTR_WAKEUP_VECTOR,	kvm_posted_intr_wakeup_ipi),
- 	SYSVEC(POSTED_INTR_NESTED_VECTOR,	kvm_posted_intr_nested_ipi),
-+#endif
- };
- 
- static bool fred_setup_done __initdata;
--- 
-2.39.2
+> From: Toke H=F8iland-J=F8rgensen <toke@redhat.com>
+> Date: Thu, 15 Feb 2024 13:05:30 +0100
+>=20
+> > Alexander Lobakin <aleksander.lobakin@intel.com> writes:
+> >=20
+> >> Now that direct recycling is performed basing on pool->cpuid when set,
+> >> memory leaks are possible:
+> >>
+> >> 1. A pool is destroyed.
+> >> 2. Alloc cache is emptied (it's done only once).
+> >> 3. pool->cpuid is still set.
+> >> 4. napi_pp_put_page() does direct recycling basing on pool->cpuid.
+> >> 5. Now alloc cache is not empty, but it won't ever be freed.
+> >=20
+> > Did you actually manage to trigger this? pool->cpuid is only set for the
+> > system page pool instance which is never destroyed; so this seems a very
+> > theoretical concern?
+>=20
+> To both Lorenzo and Toke:
+>=20
+> Yes, system page pools are never destroyed, but we might latter use
+> cpuid in non-persistent PPs. Then there will be memory leaks.
+> I was able to trigger this by creating bpf/test_run page_pools with the
+> cpuid set to test direct recycling of live frames.
 
+what about avoiding the page to be destroyed int this case? I do not like t=
+he
+idea of overwriting the cpuid field for it.
+
+Regards,
+Lorenzo
+
+>=20
+> >=20
+> > I guess we could still do this in case we find other uses for setting
+> > the cpuid; I don't think the addition of the READ_ONCE() will have any
+> > measurable overhead on the common arches?
+>=20
+> READ_ONCE() is cheap, but I thought it's worth mentioning in the
+> commitmsg anyway :)
+>=20
+> >=20
+> > -Toke
+> >=20
+>=20
+> Thanks,
+> Olek
+
+--JwdDwmzJQxeHUrty
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZc4ThgAKCRA6cBh0uS2t
+rMKzAQCWGs8izokKKobJ1o5bjr0dNcsLSO9pBKgU1pZJzetrwQEA6Vm0zCDsUzog
+/Eh2aXqvy9gf0llzRVEpBYYSeLz0zgA=
+=r6Tb
+-----END PGP SIGNATURE-----
+
+--JwdDwmzJQxeHUrty--
