@@ -1,56 +1,104 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3669130ACA
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 12:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD2A12F592
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 13:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708001997; cv=none; b=rn4VJ2fdY1UZSRvv1RQpwNH89CX7UBequVeQqvvtQujJ+5xLQ82rZd7LnACmvAnBvYndfmasW+svoHQ/MZQynjg6dQOCFcV3X9wB4MjWxAtoxF1mxntad4XwhW9da7IYddyi3vHMjQv2kPpxTCKeO5Ca5CilrAizAujRAreBCzs=
+	t=1708002043; cv=none; b=qHMwu68eJjveaiCpD6JQr59U/yTmj0IMsGYcAtSAnuhXwZncvj/ZN/2TF/+8MKjaQuX4OCzMEa+W2zJWfMKfWdc/j9wnyWkDtyZMx0NsqQR4zCvWZNPoKiwE6MEfKjStjvHYseg+nWB1JxxrFIZL2+ne7wT80JT6ck/CV2HupYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708001997; c=relaxed/simple;
-	bh=UC17XZcFYPFqDIb9k2pMp2QXwXJqh0VGue9d5HvnQ3A=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=AFLjFkQlQ11iKbSpbRe62Br3rHYhyaTVA7e4diVDbUHulN3NqIfbgPps/sKvrbEaK9eMXhtNYWKMvXmca1KdxPEWTqgkcaNnbChFHAi5Lj2snxVtELxrXl5Xg2x++I14OFYAIo+aEpQ41ZNknHDguAQE3Bjp1uHvbgivz43Ss7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TbFX94csjz4x0t;
-	Thu, 15 Feb 2024 23:59:53 +1100 (AEDT)
-From: Michael Ellerman <patch-notifications@ellerman.id.au>
-To: npiggin@gmail.com, aneesh.kumar@kernel.org, naveen.n.rao@linux.ibm.com, christophe.leroy@csgroup.eu, christophe.leroy@c-s.fr, Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, nixiaoming@huawei.com, wangbing6@huawei.com, douzhaolei@huawei.com, wangfangpeng1@huawei.com
-In-Reply-To: <1705974359-43790-1-git-send-email-xiaojiangfeng@huawei.com>
-References: <1705974359-43790-1-git-send-email-xiaojiangfeng@huawei.com>
-Subject: Re: [PING PATCH] powerpc/kasan: Fix addr error caused by page alignment
-Message-Id: <170800185784.599237.15590850355904015757.b4-ty@ellerman.id.au>
-Date: Thu, 15 Feb 2024 23:57:37 +1100
+	s=arc-20240116; t=1708002043; c=relaxed/simple;
+	bh=4SWKPUMv7EW4nqf0ZKZcUDLMsoXj2DKQ/tnY3FHLWmU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jqCQcXQK8M7lNeHcP/rm/bGHsJ4s0D0BRZc2SlLzmT5ae7fDoYHwW3DtrSsCY5sgzVuG6Sq423kiozDTX2LVuw7kSaXLCwr1aeWZl2HiDX2T0YQpZHlCW8jqqIp9ITNFsritPSreni5sS0h8Vv/oneRHvTw0aGnR/12kQPeEbAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G5S4lnRe; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G5S4lnRe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5609BC433F1;
+	Thu, 15 Feb 2024 13:00:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708002042;
+	bh=4SWKPUMv7EW4nqf0ZKZcUDLMsoXj2DKQ/tnY3FHLWmU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G5S4lnRejT1r2cpeQ2pgXFBcKA68xr0Wk2uiA7EcawuOMKFRGgxUcvdQ8cr+PG+LQ
+	 88zC7TvqDxEeegJezK6D3qc98krHTD5iq7WPI8mf0gYGF16K0U382KWAV3cfD8AoYK
+	 zZhAw3GicpTELP4xerHr+nue3/kTHXusTZIe4hIusVdeSPlk+QjReohPGgMKLHK7l/
+	 OFnd19Vw4bTM2yeos//h0v00BoSi5Tyz2kFPkxsHkjWr4WV3xZQ7/V85idlQ5EH0bl
+	 pxmb7OjbkgPyKC/WSbNvMgh4aZ5PHdwQtyXqDMBRJeXBgBfpqlsmKZR/aXT1dabyE6
+	 YYXd5CA3hgSOQ==
+Date: Thu, 15 Feb 2024 13:00:38 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64/sysreg: Update ID_AA64DFR0_EL1 and ID_DFR0_EL1
+Message-ID: <b103244b-7776-48fb-8055-5c003d773087@sirena.org.uk>
+References: <20240215055159.2440898-1-anshuman.khandual@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="MBoz6r3Q+x2lnwYa"
+Content-Disposition: inline
+In-Reply-To: <20240215055159.2440898-1-anshuman.khandual@arm.com>
+X-Cookie: Pass with care.
 
-On Tue, 23 Jan 2024 09:45:59 +0800, Jiangfeng Xiao wrote:
-> In kasan_init_region, when k_start is not page aligned,
-> at the begin of for loop, k_cur = k_start & PAGE_MASK
-> is less than k_start, and then va = block + k_cur - k_start
-> is less than block, the addr va is invalid, because the
-> memory address space from va to block is not alloced by
-> memblock_alloc, which will not be reserved
-> by memblock_reserve later, it will be used by other places.
-> 
-> [...]
 
-Applied to powerpc/fixes.
+--MBoz6r3Q+x2lnwYa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[1/1] powerpc/kasan: Fix addr error caused by page alignment
-      https://git.kernel.org/powerpc/c/4a7aee96200ad281a5cc4cf5c7a2e2a49d2b97b0
+On Thu, Feb 15, 2024 at 11:21:59AM +0530, Anshuman Khandual wrote:
 
-cheers
+> This just updates ID_DFR0_EL1.CopDbg and ID_AA64DFR0_EL1.DebugVer register
+> fields as per the definitions based on DDI0601 2023-12.
+
+Just as a general note for non-trival registers it's easier to review if
+we change one register per patch, it avoids having to re-review the same
+registers repeatedly and for incremental changes like this it helps with
+the fact that diff does badly at offering context.
+
+> --- a/arch/arm64/tools/sysreg
+> +++ b/arch/arm64/tools/sysreg
+> @@ -231,6 +231,7 @@ Enum	3:0	CopDbg
+>  	0b1000	Debugv8p2
+>  	0b1001	Debugv8p4
+>  	0b1010	Debugv8p8
+> +	0b1011	Debugv8p9
+>  EndEnum
+>  EndSysreg
+
+This is ID_AA64DFR0_EL1 and is missing at least an update to PMSVer.
+
+> =20
+> @@ -1247,6 +1248,7 @@ UnsignedEnum	3:0	DebugVer
+>  	0b1000	V8P2
+>  	0b1001	V8P4
+>  	0b1010	V8P8
+> +	0b1011	V8P9
+>  EndEnum
+>  EndSysreg
+
+This is ID_DFR0_EL1 and is missing an update to at least PerfMon.
+
+--MBoz6r3Q+x2lnwYa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXOCvUACgkQJNaLcl1U
+h9CLoQf/f/tySnlXtTw6EwUy+PReauGlutR8QcsfdBL7cZt2PBLrjiqatIGbOmQN
+HYOB6Vc0iov2pqM0XoQckqy+8ZZdHbLShmkLUUft0M3Fa3sVy+SoOsCBgGEr8uFb
+KSfnQmNPDqz8muO9ohWY+i4aiigjgmLilv+6izPBxlo+wxv/MtO2mvfuCOVpoBa3
+pa/Lop3hdNB8RwP36hfCcX7irtWVlvCmjodl8pUdMJIBZ8Q1AJiKFKwkdqwQL0t2
+IgUzVT2nlkTS2AvOeruoczvp/vPRdCvTEsa78+M5VqGfUg4QIqiOdrlpvUrrmJh1
+5aS0cgkvP5PXJU9hKsVWKkWlk9atfg==
+=y6dC
+-----END PGP SIGNATURE-----
+
+--MBoz6r3Q+x2lnwYa--
