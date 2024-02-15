@@ -1,108 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56529A41;
-	Thu, 15 Feb 2024 17:07:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84EA12DD9A;
+	Thu, 15 Feb 2024 17:08:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708016838; cv=none; b=c6jX04+KKGvPm8sOLkJTVx7q5cYu4+CaNRWlxJ2eZbAFV9DpMvoQNTvFXD+jk4zPylZBPKg5CHS7mVX9ZcsRVeHurUA4XxXltIDp+s4sW6TBZcyK9qS5dSG5bLGhZtoWKBkMOPUE4owH8oD8o6dMNy7NP9m49SmRttXGsmHdQeY=
+	t=1708016939; cv=none; b=sNaMNCdR851fX61D8i5ZuQmw4wTbbxd2R4+DYB7KwarM5MWMsNM+bx1R+vY0iJk0BPeKPQQ9rb759dMBy/9rj9S6xtKyAsZtE/4Rm0CCLfmTkvRv0NKUi6Js2jL/Hxmj+z2HZRpZTkHjdO0gKXKa/DH2yeiKDWrDIQRKnNgQP/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708016838; c=relaxed/simple;
-	bh=2asH+tFhAWjLqNzzIq56m1OL7FiVFPqmNlQQz3tdsas=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eVbDvdwTFOR4iYSG7b70LySNotjaPNwA8uXmpQI1H8HDC5BmZgGnyviX3ZV+AAKyYk6Fvp3Mf0Agakc0RiOxClkNnqLYTEFyMx4QfZPWhpct3on3wd4RBFvEz22xt7lmt4B68B54bomLTDraPaoel+4JHijHW7Wx0L18ziOliM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L19myfkJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708016939; c=relaxed/simple;
+	bh=IMXJE45lWQekeaLIZjfOoc/Fs5C6NndcB5OT80m0SDc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=HJg2pzczmAbRW8lQYB08dEzSGLngcFBUU6DJ7hfWAUP4kbFgInxKHLJY6q/cC+Zrm7TZjIHTCktPhJVXRiGdKQtuua5YmD4/wlin+6wSEVWyMVpbPMjfIcxt7fIwiEzFdMjIUzLpl9GdwELvtOKz548PTym9OUddAGn9q5CmMwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vz3BXJ6+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L19myfkJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF322C433F1;
-	Thu, 15 Feb 2024 17:07:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vz3BXJ6+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14BA2C433F1;
+	Thu, 15 Feb 2024 17:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708016837;
-	bh=2asH+tFhAWjLqNzzIq56m1OL7FiVFPqmNlQQz3tdsas=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L19myfkJ+7APjC59ZGBiIdknXGONeEzfarjoEkAg1oerdjcjq4l5UWIGWanIEGw2h
-	 xdmX3tQE3k+jJiqINDy84QkFyzwq0JQ3i1dl9RNm9ao2BvaFDlYUn7ceTAS3FI+5Wi
-	 +3arUmcDgX1crlAaobeq8X++sF91VWAGiDiliHfEPnbCzHb65WGqM19dxivq0HOcv3
-	 pzNT5GCyNyrmtjMMgodD4ERd6RKsH+I8hdZGRS/PoJjGh2TEPlIefhinvYJBwJiaVZ
-	 K5TrCc8OegbWt9N+P24FYqf9c7zrowuvNBZuJ4lrIGJnCCurhG+T6xqdKG0KyLO1lv
-	 EJwmvXQWv7Ccw==
-Date: Thu, 15 Feb 2024 17:07:12 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: neil.armstrong@linaro.org, quic_jesszhan@quicinc.com, sam@ravnborg.org,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, quentin.schulz@theobroma-systems.com,
-	Heiko Stuebner <heiko.stuebner@cherry.de>
-Subject: Re: [PATCH 2/2] dt-bindings: display: panel-lvds: Add compatible for
- admatec 9904370 panel
-Message-ID: <20240215-deranged-winner-dc7fba991e59@spud>
-References: <20240215090442.3513760-1-heiko@sntech.de>
- <20240215090442.3513760-2-heiko@sntech.de>
+	s=k20201202; t=1708016939;
+	bh=IMXJE45lWQekeaLIZjfOoc/Fs5C6NndcB5OT80m0SDc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=Vz3BXJ6+GCcZ4t9+MaxoAYpJ45VKTjECTSUsRCw+Cv1KFa6c5l5nlgnyQU3A/4nxF
+	 b68y1NW3le5lEoi0pU58mdeADUp/P0yoJlcuF3gquGJ5ld9FHnwisB6G+xYMhL4nCO
+	 UXtDjMSdX3D2yFs2ICxF3kTa3WzWGyR0V5IcilOQJbqY9Wz2j+ikMC/MqRB5/TUNTw
+	 3sg3zddz7eCKnuY9j7xuH8nvbph/HqB0i4fcRLhj5BWrcqPKd2uhQZD/cKO/c/ONxd
+	 0UvxiNFNWZ0S/1jtcYuqdUIgHurhqKxNI9vA1dKAgVyn4ilfVXRl//s81sn/6Jzx6P
+	 Tkv+IELUXD2rQ==
+From: Mark Brown <broonie@kernel.org>
+To: linux-sound@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org
+In-Reply-To: <20240215132854.1907630-1-masahiroy@kernel.org>
+References: <20240215132854.1907630-1-masahiroy@kernel.org>
+Subject: Re: [PATCH] ASoC: codecs: remove redundant 'tristate' in
+ sound/soc/codecs/Kconfig
+Message-Id: <170801693779.201416.2907627102331688225.b4-ty@kernel.org>
+Date: Thu, 15 Feb 2024 17:08:57 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="oPeBBt0zBjLbBxGI"
-Content-Disposition: inline
-In-Reply-To: <20240215090442.3513760-2-heiko@sntech.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-a684c
 
+On Thu, 15 Feb 2024 22:28:54 +0900, Masahiro Yamada wrote:
+> The type 'tristate' is already specified three lines above.
+> 
+> 
 
---oPeBBt0zBjLbBxGI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to
 
-On Thu, Feb 15, 2024 at 10:04:42AM +0100, Heiko Stuebner wrote:
-> From: Heiko Stuebner <heiko.stuebner@cherry.de>
->=20
-> The 9904379 is a 10.1" 1024x600 LVDS display using the standard
-> lvds properties.
->=20
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Thanks!
 
-Cheers,
-Conor.
+[1/1] ASoC: codecs: remove redundant 'tristate' in sound/soc/codecs/Kconfig
+      commit: 74e0259495cfab4f92c64ddcbbfe454e5c2f962a
 
-> ---
->  Documentation/devicetree/bindings/display/panel/panel-lvds.yaml | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel-lvds.y=
-aml b/Documentation/devicetree/bindings/display/panel/panel-lvds.yaml
-> index 3fb24393529cd..155d8ffa8f6ef 100644
-> --- a/Documentation/devicetree/bindings/display/panel/panel-lvds.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/panel-lvds.yaml
-> @@ -39,6 +39,8 @@ properties:
->    compatible:
->      items:
->        - enum:
-> +          # Admatec 9904379 10.1" 1024x600 LVDS panel
-> +          - admatec,9904379
->            - auo,b101ew05
->            # Chunghwa Picture Tubes Ltd. 7" WXGA (800x1280) TFT LCD LVDS =
-panel
->            - chunghwa,claa070wp03xg
-> --=20
-> 2.39.2
->=20
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
---oPeBBt0zBjLbBxGI
-Content-Type: application/pgp-signature; name="signature.asc"
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
------BEGIN PGP SIGNATURE-----
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZc5EwAAKCRB4tDGHoIJi
-0sGhAQDf55K04Q4/h4RtJu3+GI/+RXj1YCV26C2tngBLGQOQegEA5azUXJRnv+Dl
-9zRdCHLcNATb8sne3m0KN7J4cyLfig4=
-=zE4Y
------END PGP SIGNATURE-----
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
---oPeBBt0zBjLbBxGI--
+Thanks,
+Mark
+
