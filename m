@@ -1,97 +1,90 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502BC14019
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 08:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A79914014
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 08:20:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707985188; cv=none; b=KJYZt//hQbNu6uQwdmCqRIvNJzzMN5xzxXFGwB+dQ+05wHfYkuTkce6Nltg/KW7R8r3rY9NVpyjBcv//fY644cTpIHOgAzsi3es0lnhdZF9kl8fdnBtgTur2Orr7MzPBPg4eZJirQ3ykE2ll80CMZq22fcgD9xKAyd/i1Khh1Qk=
+	t=1707985217; cv=none; b=reWEVX4O0FCxsAyFx/USD6tKXOQ0FooTmskXM3+nMVeCPmouh+7nnTb4sTasj0dFvIpfz9yuZS+SK/3fie2PQQFmk+CjAm7ODC2b2KTEwt2MH5OmZ7kon9vRRqAry3GWjZrW+IO0V/CvMmrH10g8+900HY3mfjv4WRCw1DCvM6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707985188; c=relaxed/simple;
-	bh=9jeZw2FGiwhq+NFUPo8oQQbJEjSW4udufONz+JW3pK0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ruHvA95brc/M1xbRoo6IIB78aOVxsT4iA6Ep1u7GjYuM6bduyrKmi6nqFC7XZLS5Xs9b4eHxLXlkAX1bVMr+3o+5VTkawGQmWUIkIjiARq6OizZvrTkz3ABuQGViwNYF/RsfxdBhWJArGBAA4ReEG4szaMGL1nZtIgAps1paKX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1raWxn-00035p-CR; Thu, 15 Feb 2024 09:19:23 +0100
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1raWxm-000qb0-O7; Thu, 15 Feb 2024 09:19:22 +0100
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1raWxm-009xy5-23;
-	Thu, 15 Feb 2024 09:19:22 +0100
-Date: Thu, 15 Feb 2024 09:19:22 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Kory Maincent <kory.maincent@bootlin.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
-	Dent Project <dentproject@linuxfoundation.org>
-Subject: Re: [PATCH net-next v3 01/17] MAINTAINERS: net: Add Oleksij to
- pse-pd maintainers
-Message-ID: <Zc3JCq2mnf5ay72E@pengutronix.de>
-References: <20240208-feature_poe-v3-0-531d2674469e@bootlin.com>
- <20240208-feature_poe-v3-1-531d2674469e@bootlin.com>
- <2a89db56-484f-466c-9dea-fce3e0da0e71@lunn.ch>
+	s=arc-20240116; t=1707985217; c=relaxed/simple;
+	bh=zaHAvH2jKFAr4zBmjLOfjuivmIOAvMHZWjSICERGKFY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NZk4lSA4ZEcdcB7iN+8JouPn5aGy5iolCdSdGKOlKvPgD2BEkMUBrsrifiN+2KwHm/LNeCvVpDrTAhWOHMd6ynTO+Y2kHcNxK+KWBeqYqXkdQGtRRC3ZczqUDEsYohBcOjpg5zg4Mvv5XU0KuL8m/gCGD7KIgsR1TESUXDmbAFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JUUQ3jf8; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JUUQ3jf8"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6078ad593easo6124957b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 00:20:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707985215; x=1708590015; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Do6lkICkviYxGolQ4jKofjndpLLNdGDEYdxEGQGE5Qw=;
+        b=JUUQ3jf8HbEIHg98bGM92I5hVP+jHpSH/zKoy1ggwRT6nqEc29AJdZrzwJxZPV08Oa
+         7jE5sbRfQbq7vls60xpLaKnP+D8gs1F7M6yBiHqcLQ8fzpVWWI3lyOpgw9xgtcP0gY3G
+         JrWUOK9+qmGqB1HOYpQIz4YCPEdbo4mfK/77Wyob/1VJc8A6cwGBaS5iG2laYZ0U6nC9
+         mdN0KBsB0OMOBVf68dF753lWwYzJFJNUmuguNGVx876z4l4CNTuS6GlaMdlDxGBjzaKB
+         0m51ADk2nwi2ojXbHAiT702vGq9Td2ecAIIMOSkvafYf0cxK1VNCqtc512h15yEOA3tG
+         /C8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707985215; x=1708590015;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Do6lkICkviYxGolQ4jKofjndpLLNdGDEYdxEGQGE5Qw=;
+        b=dWaWOU6DUn9jqgltAZtOb+tDuV7NeCe7PEtBFMbCC7sz/CgWD/9KZegLNkE6lvv7Y7
+         pShbCqzVi1ZY8zoBSuqvQOqE49T4CLJIGxlQ+oW2HgPg2em2bGww26GFwskICm82o/3H
+         NDzW2Ve04fMROul6l8H/OrTYjSMCSbzhIEsp36hzCBu/xm8p/zv1ahsV+Mxsgv+5pl3R
+         bdZEtg7EZzHdXLmY51zMbRI0PS+pm3sPS+NOeY5UI5rhT0Mhuj0r6PsQ5PLx7WHRFP7T
+         +iD5U/Fr494mq7yjt+s9wDpzJcu+3ZTJm8fcG2MuEHXxntESbTHgx0qY5aKt4jxYlkCo
+         mHsg==
+X-Forwarded-Encrypted: i=1; AJvYcCVSEJHmU8pPCSkvNno0jlA9Ww4IyV/QH9niCmtpOxk74PJRPFeCm8BHjMGUBhqVCixEKtuW7kbihn0ZMbrwkWQBxv3RR0bh8rSpFwLO
+X-Gm-Message-State: AOJu0Yy0jXpIxt3q0bFBilDpfQuODOj7lSic+s2oML8QKZsggpc2m6pl
+	LOSY9gNMiQxtY+rHuf0xV8HD6eHAXPsuGl457tw6bi5YEH9ZX3sBm33zqkQuxSd3kAsn8Yk5gsn
+	LRYaJIIEnyFkb1jqY2nI6Tj+YVwHdoVNJ02PIQw==
+X-Google-Smtp-Source: AGHT+IFR0BaawAwJFtSrOqTIsOaDiPK3hJcwFuKA/JF3s/kl+o1cA1+0zvrdu4dUcz7SxN9wKGH+LLMJUUmzevFC5+c=
+X-Received: by 2002:a25:848d:0:b0:dc6:be64:cfd1 with SMTP id
+ v13-20020a25848d000000b00dc6be64cfd1mr899082ybk.36.1707985215265; Thu, 15 Feb
+ 2024 00:20:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2a89db56-484f-466c-9dea-fce3e0da0e71@lunn.ch>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20240214-x1e80100-display-v2-0-cf05ba887453@linaro.org> <20240214-x1e80100-display-v2-3-cf05ba887453@linaro.org>
+In-Reply-To: <20240214-x1e80100-display-v2-3-cf05ba887453@linaro.org>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Thu, 15 Feb 2024 10:20:05 +0200
+Message-ID: <CAA8EJpobjxa4-Yu_mZxUPiFEcmA0OyxtM4umR1OvBg_WB4pj5Q@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] drm/msm: mdss: Add X1E80100 support
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Feb 14, 2024 at 06:13:39PM +0100, Andrew Lunn wrote:
-> On Thu, Feb 08, 2024 at 02:08:38PM +0100, Kory Maincent wrote:
-> > Oleksij was the first to add support for pse-pd net subsystem.
-> > Add himself to the maintainers seems logical.
-> > 
-> > Sponsored-by: Dent Project <dentproject@linuxfoundation.org>
-> > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+On Wed, 14 Feb 2024 at 23:24, Abel Vesa <abel.vesa@linaro.org> wrote:
+>
+> Add support for MDSS on X1E80100.
+>
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> ---
+>  drivers/gpu/drm/msm/msm_mdss.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 
-Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
-
-> Oleksij, are you O.K. with this? It would be good to Acked-by: it.
-> 
-> 	Andrew
-> 
-> 
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+With best wishes
+Dmitry
