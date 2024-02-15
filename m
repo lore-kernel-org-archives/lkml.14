@@ -1,86 +1,117 @@
-Received: from 6.mo583.mail-out.ovh.net (6.mo583.mail-out.ovh.net [178.32.119.138])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD0C168BA
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 08:20:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.32.119.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3D5134AF;
+	Thu, 15 Feb 2024 08:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707985252; cv=none; b=RK7cvlktLLqotk/ypaNZUmQkoCvKGKjqdj4q2sms67jW690cyjz2PagXGN34UKgPdg0JfAoqYPk7geK8RvnRwIzxz5PdsMh5lVzddM/mcKXCiTudDgARblWWw1Omdq2/iIgHMTWUEOrqtmaA5i8jnLJa/Wguq6nakaQSbvAZOLQ=
+	t=1707985274; cv=none; b=QRnUeBXhfcP4+gODV2Wze7sk2ye8i3ZJ2vscbRiTYPMVy9E1L6NmBv6z86Fw+9Qt8lTIR6s15U6UWtwrTC9+hu2+wtddeE+qI8ZMiMr+ixifU9mpClafg2xmLG6Rqc7POHirfQj5p1p5drqVreAtddQobcmdQNGIx/lEiTvqnVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707985252; c=relaxed/simple;
-	bh=Zn2YmXTGnlmFWVJAWE0ZcsbcTLkjNnzhl3e0UcTBfKg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=lVbfUzhgJbIDGCkMXTw1X9rT4DNxwld9Z4+qkW521M8X1brKai+zDkgbHCHa33a/Z8GbQ7QS9Jj8R74xdBMI0XNceE0hmNWedggT+Fw/dSLLVCl/rXZ/KDeStLiT0dwaW6/7uOX2v39VsXvN8HpIuBG+TFwhfkpall8Pjv2wITA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=178.32.119.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
-Received: from director5.ghost.mail-out.ovh.net (unknown [10.108.2.12])
-	by mo583.mail-out.ovh.net (Postfix) with ESMTP id 4TZs9H093sz1Fgg
-	for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 21:42:10 +0000 (UTC)
-Received: from ghost-submission-6684bf9d7b-62rx8 (unknown [10.108.54.171])
-	by director5.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 58D4F1FD57;
-	Wed, 14 Feb 2024 21:42:04 +0000 (UTC)
-Received: from etezian.org ([37.59.142.103])
-	by ghost-submission-6684bf9d7b-62rx8 with ESMTPSA
-	id pzx8A6wzzWWJKwIAfHX53g
-	(envelope-from <andi@etezian.org>); Wed, 14 Feb 2024 21:42:04 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-103G00581a402d0-df4d-43c0-80f3-f5461175c724,
-                    C0FC2E5C6A7315DD97BDDE4B9606AB6EEADB6D9F) smtp.auth=andi@etezian.org
-X-OVh-ClientIp:89.217.109.169
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Michael Ellerman <mpe@ellerman.id.au>, 
- Nicholas Piggin <npiggin@gmail.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
- Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Wolfram Sang <wsa@kernel.org>, 
- Olof Johansson <olof@lixom.net>, linux-i2c@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
- asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-In-Reply-To: <20240212111933.963985-1-arnd@kernel.org>
-References: <20240212111933.963985-1-arnd@kernel.org>
-Subject: Re: [PATCH] i2c: pasemi: split driver into two separate modules
-Message-Id: <170794692308.4040459.7350373390928340229.b4-ty@kernel.org>
-Date: Wed, 14 Feb 2024 22:42:03 +0100
+	s=arc-20240116; t=1707985274; c=relaxed/simple;
+	bh=KAnHYlZlXBpsFLWEGUL3Tjg1f+BLm1z7YZe32xRCU6g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PyT/WPQpBbsRHHNZrTfS3xs5X/iVI1SN6laE5/gsPAPXpFtdgC5Z1Gx7CtMojCKB8wTA+KKDC0GJE0M1OJPkWBcdIidqmN8OxX+VcDqhWIwfyuGPC/5k7bC4uuwLilNZfDfjhpZZS0O5cVqkrWH4/DKIVe6M+FpD5Vufc1+yvx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QcQceDLn; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QcQceDLn"
+Date: Thu, 15 Feb 2024 08:21:04 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1707985268;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WmAuT0et8a/8e1AvRSIGG17UwteqlvW45FNd3PQ2k5c=;
+	b=QcQceDLnbWXQIsGjFsLeH/8KiFcGR+Zu5hdPwyREW4Z+kLXctt86y/cWky70NdeP3SbPYw
+	1SDDOPl/FM8WBnh86JRY1VTJUJx2Tw+Bn3VN5osUsU3HzxmA81Yx4e0D4VGDuiHDuU8+lb
+	G60acbUMLMMKG6JXIr1C18jCoxUdM0U=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>,
+	Pasha Tatashin <tatashin@google.com>,
+	Michael Krebs <mkrebs@google.com>
+Subject: Re: [PATCH 2/2] KVM: selftests: Test forced instruction emulation in
+ dirty log test (x86 only)
+Message-ID: <Zc3JcNVhghB0Chlz@linux.dev>
+References: <20240215010004.1456078-1-seanjc@google.com>
+ <20240215010004.1456078-3-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.4
-X-Ovh-Tracer-Id: 3725039842831960594
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrudejgdduheefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvegjfhfukfffgggtgffosehtjeertdertdejnecuhfhrohhmpeetnhguihcuufhhhihtihcuoegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpeffteehudffvdfhudfgffdugfejjeduheehgeefgeeuhfeiuefghffgueffvdfgfeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduvdejrddtrddtrddupdekledrvddujedruddtledrudeiledpfeejrdehledrudegvddruddtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepoegrnhguihesvghtvgiiihgrnhdrohhrgheqpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehkeefpdhmohguvgepshhmthhpohhuth
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240215010004.1456078-3-seanjc@google.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hi
-
-On Mon, 12 Feb 2024 12:19:04 +0100, Arnd Bergmann wrote:
-> On powerpc, it is possible to compile test both the new apple (arm) and
-> old pasemi (powerpc) drivers for the i2c hardware at the same time,
-> which leads to a warning about linking the same object file twice:
+On Wed, Feb 14, 2024 at 05:00:04PM -0800, Sean Christopherson wrote:
+> Add forced emulation of MOV and LOCK CMPXCHG instructions in the dirty log
+> test's guest code to verify that KVM's emulator marks pages dirty as
+> expected (and obviously to verify the emulator works at all).  In the long
+> term, the guest code would ideally hammer more of KVM's emulator, but for
+> starters, cover the two major paths: writes and atomics.
 > 
-> scripts/Makefile.build:244: drivers/i2c/busses/Makefile: i2c-pasemi-core.o is added to multiple modules: i2c-apple i2c-pasemi
+> To minimize #ifdeffery, wrap only the related code that is x86 specific,
+> unnecessariliy synchronizing an extra boolean to the guest is far from the
+> end of the world.
+
+Meh, I wouldn't say the end result in guest_write_memory() is that
+pretty. Just ifdef the whole function and provide a generic implementation
+for the other architectures.
+
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  tools/testing/selftests/kvm/dirty_log_test.c | 36 ++++++++++++++++++--
+>  1 file changed, 33 insertions(+), 3 deletions(-)
 > 
-> Rework the driver to have an explicit helper module, letting Kbuild
-> take care of whether this should be built-in or a loadable driver.
-> 
-> [...]
+> diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
+> index eaad5b20854c..ff1d1c7f05d8 100644
+> --- a/tools/testing/selftests/kvm/dirty_log_test.c
+> +++ b/tools/testing/selftests/kvm/dirty_log_test.c
+> @@ -92,6 +92,29 @@ static uint64_t guest_test_phys_mem;
+>   */
+>  static uint64_t guest_test_virt_mem = DEFAULT_GUEST_TEST_MEM;
+>  
+> +static bool is_forced_emulation_enabled;
+> +
+> +static void guest_write_memory(uint64_t *mem, uint64_t val, uint64_t rand)
+> +{
+> +#ifdef __x86_64__
+> +	if (is_forced_emulation_enabled && (rand & 1)) {
+> +		if (rand & 2) {
 
-Applied to i2c/i2c-host-fixes on
+Can't you invert the logic and drop a level of indentation?
 
-git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
+	if (!(is_forced_emulation_enabled && (rand & 1))) {
+		*mem = val;
+	} else if (rand & 2) {
+		movq
+	} else {
+		cmpxchg8b
+	}
 
-Thank you,
-Andi
+> +			__asm__ __volatile__(KVM_FEP "movq %1, %0"
+> +					     : "+m" (*mem)
+> +					     : "r" (val) : "memory");
+> +		} else {
+> +			uint64_t __old = READ_ONCE(*mem);
+> +
+> +			__asm__ __volatile__(KVM_FEP LOCK_PREFIX "cmpxchgq %[new], %[ptr]"
+> +					     : [ptr] "+m" (*mem), [old] "+a" (__old)
+> +					     : [new]"r" (val) : "memory", "cc");
+> +		}
+> +	} else
+> +#endif
+> +
+> +	*mem = val;
+> +}
+> +
 
-Patches applied
-===============
-[1/1] i2c: pasemi: split driver into two separate modules
-      commit: 3fab8a74c71a4ba32b2fa1dca7340f9107ff8dfc
-
+-- 
+Thanks,
+Oliver
