@@ -1,220 +1,468 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93AE0136665
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 17:13:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E36413398C
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 17:13:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708017215; cv=none; b=bQ0rB5kIYu5cl6YLhOjlIR3QxaVl/mwZRcFgIoX33c+Mgf7ZRjJ477YLgoUkXGmJIQtlPTPI2s1Swbo/38p1XGv94QkmRSm2d5M886caEp5ctzQljP7Pnj0iTjuMVZjSdN7rNbOVSpRHatBsuS38Si7v3RFlteWcCbwYOVqr8b4=
+	t=1708017213; cv=none; b=Tr5OSMyRniSnOZ7zdi7Usd5CKPq/TvgGYbcaT3cZrEA9tmZqlieA9/COzErmhUiFYpVKUzxmafJJ+IIPPLzqkliaghqffeYWOYuC1X66L7wiAciimFfu+3oiVfLi2q0qAwqiiVjVLPAh6w6UGSkoj9klSrp2Ttw1VSqguwWBfh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708017215; c=relaxed/simple;
-	bh=idSjE5ZxrETdgNvQS1A6D66OHAY36yOOjEjpRrhdsz8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CiNGROCtg5FTUrIkiya1w2ApqTGrOj3d3ebWBbmAaa4y7JbS0JgozCsEW9YpknhnkVP/xMBCS1xR8vX6rEDtXxmqJU/4K7t9p0payNbRjfS2p5VKPg+IPd5MRpk6zga8OK7sg5gWT4w7oGb+0MVoRkzOMg+nOhn68RBehoFDwkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=WjOSu0Y7; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1708017213; c=relaxed/simple;
+	bh=xsaNzdgB2jK3HyIS9x23MK2nn5LiqTe66zzvVyyJ7mE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Vz3+vA4fZzKl+w/+/Cci0AJpY58eE+TZd7hwf6LuF9eMaT3cmhTKyWQVFt29wRePsr82L4BzgNVVtbUKT0U7jgf+lVM4Ox28zbGoSqORinMRRWfmnFiXAGa46cZt3anSFH/uEpfOC3WXoIKYwaGN1P83encIpYmSihy/wkFTusM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eG+DcD5H; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="WjOSu0Y7"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d094bc2244so14756241fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 09:13:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1708017210; x=1708622010; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ihMG/8EVMvsYmT26lwx1I8y+X87NAU6Gys1hCX2nXF8=;
-        b=WjOSu0Y7/UHoLL+NH5JB1UBR0S+wtQgJVxTjl+X9TtkbufEH/NqUaNjpZvtn7NGUdO
-         DvMOG0YnU+0BbrBtC9BnqFQcFWoocQUSlw1WfbuEue9qPhyXSREU2IE2AvzDPieZuB1S
-         uHeeMKIDVeA/Ubwoa11A7F5C0qpXedw3/UAVbRMxSe5tK6r8q/6P273ZwW6eu437uP93
-         z2WXErPGwuHEB5fmo7eiikv7K80dGRXwt5duyAxy44PDQWSqKafQvwFrpzCFBymEd5Ka
-         Z/Qv+XhzOEmI1Cuypm/ohx9/sULgfSUBOdEthOunZUiqdE3bilHHgH09uKrC5inE/dvY
-         a9bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708017210; x=1708622010;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ihMG/8EVMvsYmT26lwx1I8y+X87NAU6Gys1hCX2nXF8=;
-        b=DOTEHvTHUYVQvMPaVKXCwNR8qr9VP/XktOYVNRVXauM9qQTrNaMKAItERz8i6XjiUs
-         d66xQGTiU0Nv9qsJMq3PgU/SeHpM/K4GVztR8fhKO8yHZGUnki1dK4Wha5TQnpCY7mWE
-         cYsOpC3ebyjzdnzXG9dtXNp4txBiFQRrDzLiW+EqOql+w1NGha6G/t7YJUkQ9xK+dfx0
-         Oi8pZhIwTN8iN4MMNaNLex0tz0nN96+kSc5GhiSIU1hvLe29ZUkVIK0xzbZU/v93EYJX
-         rE1jz+gpomvOJ/xM05nh7vSa6G0djNGwj1k0E627P2yvoOln6BSi2urxDl2f3qjceFyn
-         LR9g==
-X-Forwarded-Encrypted: i=1; AJvYcCUv8TEZhqF8iCJ+6LsnH7EGzE2a+JjGx3hy01GTPvJqcR+gDLLnHlZAnfR2gvX9YQv+Yoe5DvNvaM9VWE3/kLQKW/t42G+IlNcM1ywc
-X-Gm-Message-State: AOJu0Ywtl6qpCIuw0HEG7vo9aDf+VPcTy2Qhd/DtsboZzgg7fDSWgk+y
-	QnoiL/aXmtUp8YlDXYlNjketCFZKK4Txpd7tCakwc8HSc78k20afIawLkvOedtKxtkZJU7FU5SO
-	tpuOKtoMCo5hWWVICLFTleKtK76E2G0DTfkkgTg==
-X-Google-Smtp-Source: AGHT+IHShBHlga/ALlFGDod72VEQ4CqRRylkrdaDDOu1t58KdCJidPY4qR2mrikm2F+o6lZP6QrvjOmU7JsDvVKu7FM=
-X-Received: by 2002:a2e:80cc:0:b0:2d1:1e11:e452 with SMTP id
- r12-20020a2e80cc000000b002d11e11e452mr1798647ljg.27.1708017210373; Thu, 15
- Feb 2024 09:13:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eG+DcD5H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708017211; x=1739553211;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=xsaNzdgB2jK3HyIS9x23MK2nn5LiqTe66zzvVyyJ7mE=;
+  b=eG+DcD5HNVKsAPOvPfirD4hnjA4H2lwJgge6n5GHaucHlbIv0iHyUxGV
+   3C0xpvIgoHxsIVGo3yICHH8Bo/+xnGBPCB5yOvW72FtE9m8oGv68WY8Nw
+   rnX8eDGmDzMbj1v07hGhR5m3e4hs+NVSu1hl6LmU7x1N6igjIZqn0UjAV
+   jB62qjOTBMjWCvwXDhl6+Vf5L9eCPxXq2xUhIlR+ituyq9JV9kbKekum9
+   dwFPDFgrgILGidNCLqCh1kCiEuhZRSX6RhqDAg8IFCl63cXuaTxPxQhs8
+   SD8KwIm2JJlLaHR7+wEYtv7yevg1Q0FDOVCr20Qizhrd6RcfxBSVoW708
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10985"; a="1992983"
+X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
+   d="scan'208";a="1992983"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 09:13:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
+   d="scan'208";a="3879737"
+Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
+  by fmviesa006.fm.intel.com with ESMTP; 15 Feb 2024 09:13:28 -0800
+Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rafIM-0000em-2w;
+	Thu, 15 Feb 2024 17:13:14 +0000
+Date: Fri, 16 Feb 2024 01:12:11 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: [gustavoars:testing/WFAMNAE-next20240215 1/1]
+ include/linux/fs.h:1042:29: warning: 'used' attribute does not apply to
+ types
+Message-ID: <202402160138.3DiZt3SO-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240208172459.280189-1-alisa.roman@analog.com>
- <20240208172459.280189-6-alisa.roman@analog.com> <CAMknhBHU6k8J_PLCmGYF48S1q3uXByiCwzcd+B3q3Cd-02CUow@mail.gmail.com>
- <84546728-f0cb-4b38-a71c-e053b9b9278e@gmail.com>
-In-Reply-To: <84546728-f0cb-4b38-a71c-e053b9b9278e@gmail.com>
-From: David Lechner <dlechner@baylibre.com>
-Date: Thu, 15 Feb 2024 11:13:19 -0600
-Message-ID: <CAMknhBFp-4s+-D8kD9rh0-OCc3gBs3hFX1EZ9ZmOifQOyGgUug@mail.gmail.com>
-Subject: Re: [PATCH v3 5/5] iio: adc: ad7192: Add AD7194 support
-To: Alisa-Dariana Roman <alisadariana@gmail.com>
-Cc: alexandru.tachici@analog.com, alisa.roman@analog.com, conor+dt@kernel.org, 
-	devicetree@vger.kernel.org, jic23@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, krzysztof.kozlowski@linaro.org, 
-	lars@metafoo.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	michael.hennerich@analog.com, robh+dt@kernel.org, 
-	Nuno Sa <nuno.sa@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Thu, Feb 15, 2024 at 7:22=E2=80=AFAM Alisa-Dariana Roman
-<alisadariana@gmail.com> wrote:
->
-> Hello and thank you for the feedback!
->
-> On 09.02.2024 00:27, David Lechner wrote:
-> > On Thu, Feb 8, 2024 at 11:25=E2=80=AFAM Alisa-Dariana Roman
-> > <alisadariana@gmail.com> wrote:
-> >>
-> >> Unlike the other AD719Xs, AD7194 has configurable differential
-> >> channels. The default configuration for these channels can be changed
-> >> from the devicetree.
->
-> ...
->
-> >>
-> >> +static const struct iio_info ad7194_info =3D {
-> >> +       .read_raw =3D ad7192_read_raw,
-> >> +       .write_raw =3D ad7192_write_raw,
-> >> +       .write_raw_get_fmt =3D ad7192_write_raw_get_fmt,
-> >> +       .read_avail =3D ad7192_read_avail,
-> >> +       .validate_trigger =3D ad_sd_validate_trigger,
-> >> +       .update_scan_mode =3D ad7192_update_scan_mode,
-> >> +};
-> >
-> > Isn't this identical to ad7192_info and ad7195_info now that .attrs is
-> > removed? It seems like we could consolidate here.
->
-> Those are not exactly identical since: 92 has bridge switch attribute,
-> 95 has bridge switch and ac excitation attributes and 94 has no custom
-> attributes. I used a different info structure for 94 in order to avoid
-> showing extra attributes.
->
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/WFAMNAE-next20240215
+head:   34a5c90f36e0238bfc95cda9e2eccf7e610bff1a
+commit: 34a5c90f36e0238bfc95cda9e2eccf7e610bff1a [1/1] treewide: Address -Wflexible-array-member-not-at-end warnings
+config: arm-randconfig-004-20240215 (https://download.01.org/0day-ci/archive/20240216/202402160138.3DiZt3SO-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240216/202402160138.3DiZt3SO-lkp@intel.com/reproduce)
 
-Ah, I see what you mean. I didn't look close enough at the other patch
-removing one attribute to see that were still other attributes.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202402160138.3DiZt3SO-lkp@intel.com/
 
-> >
-> >> +
-> >>   static const struct iio_info ad7195_info =3D {
-> >>          .read_raw =3D ad7192_read_raw,
-> >>          .write_raw =3D ad7192_write_raw,
-> >> @@ -1009,6 +1049,80 @@ static const struct iio_chan_spec ad7193_channe=
-ls[] =3D {
-> >>          IIO_CHAN_SOFT_TIMESTAMP(14),
-> >>   };
-> >>
-> >> +static struct iio_chan_spec ad7194_channels[] =3D {
-> >> +       AD7193_DIFF_CHANNEL(0, 1, 2, 0x001),
-> >> +       AD7193_DIFF_CHANNEL(1, 3, 4, 0x023),
-> >> +       AD7193_DIFF_CHANNEL(2, 5, 6, 0x045),
-> >> +       AD7193_DIFF_CHANNEL(3, 7, 8, 0x067),
-> >> +       AD7193_DIFF_CHANNEL(4, 9, 10, 0x089),
-> >> +       AD7193_DIFF_CHANNEL(5, 11, 12, 0x0AB),
-> >> +       AD7193_DIFF_CHANNEL(6, 13, 14, 0x0CD),
-> >> +       AD7193_DIFF_CHANNEL(7, 15, 16, 0x0EF),
-> >> +       AD719x_TEMP_CHANNEL(8, AD7194_CH_TEMP),
-> >> +       AD7193_CHANNEL(9, 1, AD7194_CH_AIN1),
-> >> +       AD7193_CHANNEL(10, 2, AD7194_CH_AIN2),
-> >> +       AD7193_CHANNEL(11, 3, AD7194_CH_AIN3),
-> >> +       AD7193_CHANNEL(12, 4, AD7194_CH_AIN4),
-> >> +       AD7193_CHANNEL(13, 5, AD7194_CH_AIN5),
-> >> +       AD7193_CHANNEL(14, 6, AD7194_CH_AIN6),
-> >> +       AD7193_CHANNEL(15, 7, AD7194_CH_AIN7),
-> >> +       AD7193_CHANNEL(16, 8, AD7194_CH_AIN8),
-> >> +       AD7193_CHANNEL(17, 9, AD7194_CH_AIN9),
-> >> +       AD7193_CHANNEL(18, 10, AD7194_CH_AIN10),
-> >> +       AD7193_CHANNEL(19, 11, AD7194_CH_AIN11),
-> >> +       AD7193_CHANNEL(20, 12, AD7194_CH_AIN12),
-> >> +       AD7193_CHANNEL(21, 13, AD7194_CH_AIN13),
-> >> +       AD7193_CHANNEL(22, 14, AD7194_CH_AIN14),
-> >> +       AD7193_CHANNEL(23, 15, AD7194_CH_AIN15),
-> >> +       AD7193_CHANNEL(24, 16, AD7194_CH_AIN16),
-> >
-> > Shouldn't these be differential channels since they are
-> > pseudo-differential inputs measuring the difference between AINx and
-> > AINCOM?
-> >
-> >> +       IIO_CHAN_SOFT_TIMESTAMP(25),
-> >> +};
-> >
-> > i.e. like this (where AINCOM is voltage0 AINx is voltagex)
-> >
-> > static struct iio_chan_spec ad7194_channels[] =3D {
-> >         AD7193_DIFF_CHANNEL(0, 1, 0, AD7194_CH_AIN1),
-> >         AD7193_DIFF_CHANNEL(1, 2, 0, AD7194_CH_AIN2),
-> >         AD7193_DIFF_CHANNEL(2, 3, 0, AD7194_CH_AIN3),
-> >         AD7193_DIFF_CHANNEL(3, 4, 0, AD7194_CH_AIN4),
-> >         AD7193_DIFF_CHANNEL(4, 5, 0, AD7194_CH_AIN5),
-> >         AD7193_DIFF_CHANNEL(5, 6, 0, AD7194_CH_AIN6),
-> >         AD7193_DIFF_CHANNEL(6, 7, 0, AD7194_CH_AIN7),
-> >         AD7193_DIFF_CHANNEL(7, 8, 0, AD7194_CH_AIN8),
-> >         AD7193_DIFF_CHANNEL(8, 9, 0, AD7194_CH_AIN9),
-> >         AD7193_DIFF_CHANNEL(9, 10, 0, AD7194_CH_AIN10),
-> >         AD7193_DIFF_CHANNEL(10, 11, 0, AD7194_CH_AIN11),
-> >         AD7193_DIFF_CHANNEL(11, 12, 0, AD7194_CH_AIN12),
-> >         AD7193_DIFF_CHANNEL(12, 13, 0, AD7194_CH_AIN13),
-> >         AD7193_DIFF_CHANNEL(13, 14, 0, AD7194_CH_AIN14),
-> >         AD7193_DIFF_CHANNEL(14, 15, 0, AD7194_CH_AIN15),
-> >         AD7193_DIFF_CHANNEL(15, 16, 0, AD7194_CH_AIN16),
-> >         AD719x_TEMP_CHANNEL(16, AD7194_CH_TEMP),
-> >         IIO_CHAN_SOFT_TIMESTAMP(17),
-> > };
-> >
->
-> I tried to follow the existing style of the driver: for each
-> pseudo-differential channel(AINx - AINCOM) there is an iio channel like
-> this in_voltagex_raw; and for each differential channel(AINx - AINy)
-> there is an iio channel like this in_voltagex-in_voltagey_raw. AD7194
-> has 16 pseudo-differential channels/8 fully differential channels so I
-> thought the (AINx - AINCOM) channels should be static and only the 8
-> differential ones could be configured by the user from the devicetree by
-> choosing the input pins.
->
-> The existing style of the driver, AD7192 has 4 pseudo differential
-> channels and 2 (non configurable) differential channels:
-> static const struct iio_chan_spec ad7192_channels[] =3D {
->         AD719x_DIFF_CHANNEL(0, 1, 2, AD7192_CH_AIN1P_AIN2M),
->         AD719x_DIFF_CHANNEL(1, 3, 4, AD7192_CH_AIN3P_AIN4M),
->         AD719x_TEMP_CHANNEL(2, AD7192_CH_TEMP),
->         AD719x_DIFF_CHANNEL(3, 2, 2, AD7192_CH_AIN2P_AIN2M),
->         AD719x_CHANNEL(4, 1, AD7192_CH_AIN1),
->         AD719x_CHANNEL(5, 2, AD7192_CH_AIN2),
->         AD719x_CHANNEL(6, 3, AD7192_CH_AIN3),
->         AD719x_CHANNEL(7, 4, AD7192_CH_AIN4),
->         IIO_CHAN_SOFT_TIMESTAMP(8),
-> };
->
-> Would it be better to respect the existing style or to do like you
-> suggested and have a total of 16 differential channels that are
-> configurable from the device tree?
+All warnings (new ones prefixed by >>):
 
-Looking at Table 20 in the AD7192 datasheet, I can see why AD7192 was
-done this way since only certain combinations of inputs can be used
-together. (Although I think indexes 4 to 7 should really be
-differential because they are the difference between the input and
-AINCOM which may not be GND, but it is probably too late to fix that.)
+   In file included from include/linux/stddef.h:5,
+                    from include/uapi/linux/posix_types.h:5,
+                    from include/uapi/linux/types.h:14,
+                    from include/linux/types.h:6,
+                    from include/linux/io.h:9,
+                    from arch/arm/mach-omap2/board-generic.c:11:
+>> include/linux/fs.h:1042:29: warning: 'used' attribute does not apply to types [-Wattributes]
+    1042 |         struct_group_tagged(file_handle_tag, __tag,
+         |                             ^~~~~~~~~~~~~~~
+   include/uapi/linux/stddef.h:29:24: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                        ^~~
+   include/linux/fs.h:1042:9: note: in expansion of macro 'struct_group_tagged'
+    1042 |         struct_group_tagged(file_handle_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> include/linux/fs.h:1042:29: warning: 'section' attribute does not apply to types [-Wattributes]
+    1042 |         struct_group_tagged(file_handle_tag, __tag,
+         |                             ^~~~~~~~~~~~~~~
+   include/uapi/linux/stddef.h:29:24: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                        ^~~
+   include/linux/fs.h:1042:9: note: in expansion of macro 'struct_group_tagged'
+    1042 |         struct_group_tagged(file_handle_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> include/uapi/linux/stddef.h:29:50: warning: declaration does not declare anything
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                                                  ^
+   include/linux/stddef.h:81:9: note: in expansion of macro '__struct_group'
+      81 |         __struct_group(TAG, NAME, /* no attrs */, MEMBERS)
+         |         ^~~~~~~~~~~~~~
+   include/linux/fs.h:1042:9: note: in expansion of macro 'struct_group_tagged'
+    1042 |         struct_group_tagged(file_handle_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> include/linux/cgroup-defs.h:545:16: warning: 'used' attribute does not apply to types [-Wattributes]
+     545 |         struct bpf_local_storage __rcu  *bpf_cgrp_storage;
+         |                ^~~~~~~~~~~~~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   include/linux/cgroup-defs.h:398:9: note: in expansion of macro 'struct_group_tagged'
+     398 |         struct_group_tagged(cgroup_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> include/linux/cgroup-defs.h:545:16: warning: 'section' attribute does not apply to types [-Wattributes]
+     545 |         struct bpf_local_storage __rcu  *bpf_cgrp_storage;
+         |                ^~~~~~~~~~~~~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   include/linux/cgroup-defs.h:398:9: note: in expansion of macro 'struct_group_tagged'
+     398 |         struct_group_tagged(cgroup_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> include/uapi/linux/stddef.h:29:50: warning: declaration does not declare anything
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                                                  ^
+   include/linux/stddef.h:81:9: note: in expansion of macro '__struct_group'
+      81 |         __struct_group(TAG, NAME, /* no attrs */, MEMBERS)
+         |         ^~~~~~~~~~~~~~
+   include/linux/cgroup-defs.h:398:9: note: in expansion of macro 'struct_group_tagged'
+     398 |         struct_group_tagged(cgroup_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/stddef.h:5,
+                    from include/uapi/linux/posix_types.h:5,
+                    from include/uapi/linux/types.h:14,
+                    from include/linux/types.h:6,
+                    from include/linux/kasan-checks.h:5,
+                    from include/asm-generic/rwonce.h:26,
+                    from ./arch/arm/include/generated/asm/rwonce.h:1,
+                    from include/linux/compiler.h:251,
+                    from include/linux/array_size.h:5,
+                    from include/linux/kernel.h:16,
+                    from arch/arm/mm/init.c:7:
+>> include/asm-generic/tlb.h:247:36: warning: 'used' attribute does not apply to types [-Wattributes]
+     247 |                             struct mmu_gather_batch     *next;
+         |                                    ^~~~~~~~~~~~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   include/asm-generic/tlb.h:246:9: note: in expansion of macro 'struct_group_tagged'
+     246 |         struct_group_tagged(mmu_gather_batch_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> include/asm-generic/tlb.h:247:36: warning: 'section' attribute does not apply to types [-Wattributes]
+     247 |                             struct mmu_gather_batch     *next;
+         |                                    ^~~~~~~~~~~~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   include/asm-generic/tlb.h:246:9: note: in expansion of macro 'struct_group_tagged'
+     246 |         struct_group_tagged(mmu_gather_batch_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> include/uapi/linux/stddef.h:29:50: warning: declaration does not declare anything
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                                                  ^
+   include/linux/stddef.h:81:9: note: in expansion of macro '__struct_group'
+      81 |         __struct_group(TAG, NAME, /* no attrs */, MEMBERS)
+         |         ^~~~~~~~~~~~~~
+   include/asm-generic/tlb.h:246:9: note: in expansion of macro 'struct_group_tagged'
+     246 |         struct_group_tagged(mmu_gather_batch_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/stddef.h:5,
+                    from include/uapi/linux/posix_types.h:5,
+                    from include/uapi/linux/types.h:14,
+                    from include/linux/types.h:6,
+                    from include/linux/kasan-checks.h:5,
+                    from include/asm-generic/rwonce.h:26,
+                    from ./arch/arm/include/generated/asm/rwonce.h:1,
+                    from include/linux/compiler.h:251,
+                    from include/linux/build_bug.h:5,
+                    from include/linux/container_of.h:5,
+                    from include/linux/list.h:5,
+                    from include/linux/module.h:12,
+                    from arch/arm/mm/mmu.c:7:
+>> include/linux/cgroup-defs.h:545:16: warning: 'used' attribute does not apply to types [-Wattributes]
+     545 |         struct bpf_local_storage __rcu  *bpf_cgrp_storage;
+         |                ^~~~~~~~~~~~~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   include/linux/cgroup-defs.h:398:9: note: in expansion of macro 'struct_group_tagged'
+     398 |         struct_group_tagged(cgroup_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> include/linux/cgroup-defs.h:545:16: warning: 'section' attribute does not apply to types [-Wattributes]
+     545 |         struct bpf_local_storage __rcu  *bpf_cgrp_storage;
+         |                ^~~~~~~~~~~~~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   include/linux/cgroup-defs.h:398:9: note: in expansion of macro 'struct_group_tagged'
+     398 |         struct_group_tagged(cgroup_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> include/uapi/linux/stddef.h:29:50: warning: declaration does not declare anything
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                                                  ^
+   include/linux/stddef.h:81:9: note: in expansion of macro '__struct_group'
+      81 |         __struct_group(TAG, NAME, /* no attrs */, MEMBERS)
+         |         ^~~~~~~~~~~~~~
+   include/linux/cgroup-defs.h:398:9: note: in expansion of macro 'struct_group_tagged'
+     398 |         struct_group_tagged(cgroup_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> include/asm-generic/tlb.h:247:36: warning: 'used' attribute does not apply to types [-Wattributes]
+     247 |                             struct mmu_gather_batch     *next;
+         |                                    ^~~~~~~~~~~~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   include/asm-generic/tlb.h:246:9: note: in expansion of macro 'struct_group_tagged'
+     246 |         struct_group_tagged(mmu_gather_batch_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> include/asm-generic/tlb.h:247:36: warning: 'section' attribute does not apply to types [-Wattributes]
+     247 |                             struct mmu_gather_batch     *next;
+         |                                    ^~~~~~~~~~~~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   include/asm-generic/tlb.h:246:9: note: in expansion of macro 'struct_group_tagged'
+     246 |         struct_group_tagged(mmu_gather_batch_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> include/uapi/linux/stddef.h:29:50: warning: declaration does not declare anything
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                                                  ^
+   include/linux/stddef.h:81:9: note: in expansion of macro '__struct_group'
+      81 |         __struct_group(TAG, NAME, /* no attrs */, MEMBERS)
+         |         ^~~~~~~~~~~~~~
+   include/asm-generic/tlb.h:246:9: note: in expansion of macro 'struct_group_tagged'
+     246 |         struct_group_tagged(mmu_gather_batch_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/stddef.h:5,
+                    from include/uapi/linux/posix_types.h:5,
+                    from include/uapi/linux/types.h:14,
+                    from include/linux/types.h:6,
+                    from include/linux/kasan-checks.h:5,
+                    from include/asm-generic/rwonce.h:26,
+                    from ./arch/arm/include/generated/asm/rwonce.h:1,
+                    from include/linux/compiler.h:251,
+                    from include/linux/array_size.h:5,
+                    from include/linux/kernel.h:16,
+                    from drivers/ata/libata-core.c:28:
+>> include/linux/types.h:239:18: warning: 'used' attribute does not apply to types [-Wattributes]
+     239 | #define rcu_head callback_head
+         |                  ^~~~~~~~~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   include/linux/bpf.h:1963:9: note: in expansion of macro 'struct_group_tagged'
+    1963 |         struct_group_tagged(bpf_prog_array_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+   include/linux/bpf.h:1964:16: note: in expansion of macro 'rcu_head'
+    1964 |         struct rcu_head rcu;
+         |                ^~~~~~~~
+>> include/linux/types.h:239:18: warning: 'section' attribute does not apply to types [-Wattributes]
+     239 | #define rcu_head callback_head
+         |                  ^~~~~~~~~~~~~
+   include/uapi/linux/stddef.h:29:30: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                              ^~~~~~~
+   include/linux/bpf.h:1963:9: note: in expansion of macro 'struct_group_tagged'
+    1963 |         struct_group_tagged(bpf_prog_array_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+   include/linux/bpf.h:1964:16: note: in expansion of macro 'rcu_head'
+    1964 |         struct rcu_head rcu;
+         |                ^~~~~~~~
+>> include/uapi/linux/stddef.h:29:50: warning: declaration does not declare anything
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                                                  ^
+   include/linux/stddef.h:81:9: note: in expansion of macro '__struct_group'
+      81 |         __struct_group(TAG, NAME, /* no attrs */, MEMBERS)
+         |         ^~~~~~~~~~~~~~
+   include/linux/bpf.h:1963:9: note: in expansion of macro 'struct_group_tagged'
+    1963 |         struct_group_tagged(bpf_prog_array_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> include/linux/perf_event.h:124:29: warning: 'used' attribute does not apply to types [-Wattributes]
+     124 |         struct_group_tagged(perf_branch_stack_tag, __tag,
+         |                             ^~~~~~~~~~~~~~~~~~~~~
+   include/uapi/linux/stddef.h:29:24: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                        ^~~
+   include/linux/perf_event.h:124:9: note: in expansion of macro 'struct_group_tagged'
+     124 |         struct_group_tagged(perf_branch_stack_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> include/linux/perf_event.h:124:29: warning: 'section' attribute does not apply to types [-Wattributes]
+     124 |         struct_group_tagged(perf_branch_stack_tag, __tag,
+         |                             ^~~~~~~~~~~~~~~~~~~~~
+   include/uapi/linux/stddef.h:29:24: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                        ^~~
+   include/linux/perf_event.h:124:9: note: in expansion of macro 'struct_group_tagged'
+     124 |         struct_group_tagged(perf_branch_stack_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> include/uapi/linux/stddef.h:29:50: warning: declaration does not declare anything
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                                                  ^
+   include/linux/stddef.h:81:9: note: in expansion of macro '__struct_group'
+      81 |         __struct_group(TAG, NAME, /* no attrs */, MEMBERS)
+         |         ^~~~~~~~~~~~~~
+   include/linux/perf_event.h:124:9: note: in expansion of macro 'struct_group_tagged'
+     124 |         struct_group_tagged(perf_branch_stack_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/stddef.h:5,
+                    from include/uapi/linux/posix_types.h:5,
+                    from include/uapi/linux/types.h:14,
+                    from include/linux/types.h:6,
+                    from include/uapi/linux/sched.h:5,
+                    from include/linux/sched.h:10,
+                    from include/linux/sched/task_stack.h:9,
+                    from kernel/trace/trace_stack.c:6:
+>> include/linux/perf_event.h:124:29: warning: 'used' attribute does not apply to types [-Wattributes]
+     124 |         struct_group_tagged(perf_branch_stack_tag, __tag,
+         |                             ^~~~~~~~~~~~~~~~~~~~~
+   include/uapi/linux/stddef.h:29:24: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                        ^~~
+   include/linux/perf_event.h:124:9: note: in expansion of macro 'struct_group_tagged'
+     124 |         struct_group_tagged(perf_branch_stack_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> include/linux/perf_event.h:124:29: warning: 'section' attribute does not apply to types [-Wattributes]
+     124 |         struct_group_tagged(perf_branch_stack_tag, __tag,
+         |                             ^~~~~~~~~~~~~~~~~~~~~
+   include/uapi/linux/stddef.h:29:24: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                        ^~~
+   include/linux/perf_event.h:124:9: note: in expansion of macro 'struct_group_tagged'
+     124 |         struct_group_tagged(perf_branch_stack_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> include/uapi/linux/stddef.h:29:50: warning: declaration does not declare anything
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                                                  ^
+   include/linux/stddef.h:81:9: note: in expansion of macro '__struct_group'
+      81 |         __struct_group(TAG, NAME, /* no attrs */, MEMBERS)
+         |         ^~~~~~~~~~~~~~
+   include/linux/perf_event.h:124:9: note: in expansion of macro 'struct_group_tagged'
+     124 |         struct_group_tagged(perf_branch_stack_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/stddef.h:5,
+                    from include/uapi/linux/posix_types.h:5,
+                    from include/uapi/linux/types.h:14,
+                    from include/linux/types.h:6,
+                    from include/linux/kasan-checks.h:5,
+                    from include/asm-generic/rwonce.h:26,
+                    from ./arch/arm/include/generated/asm/rwonce.h:1,
+                    from include/linux/compiler.h:251,
+                    from include/linux/export.h:5,
+                    from include/linux/linkage.h:7,
+                    from arch/arm/include/asm/bug.h:5,
+                    from include/linux/bug.h:5,
+                    from include/linux/mmdebug.h:5,
+                    from include/linux/mm.h:6,
+                    from include/linux/ring_buffer.h:5,
+                    from kernel/trace/trace.c:15:
+>> include/linux/perf_event.h:124:29: warning: 'used' attribute does not apply to types [-Wattributes]
+     124 |         struct_group_tagged(perf_branch_stack_tag, __tag,
+         |                             ^~~~~~~~~~~~~~~~~~~~~
+   include/uapi/linux/stddef.h:29:24: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                        ^~~
+   include/linux/perf_event.h:124:9: note: in expansion of macro 'struct_group_tagged'
+     124 |         struct_group_tagged(perf_branch_stack_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> include/linux/perf_event.h:124:29: warning: 'section' attribute does not apply to types [-Wattributes]
+     124 |         struct_group_tagged(perf_branch_stack_tag, __tag,
+         |                             ^~~~~~~~~~~~~~~~~~~~~
+   include/uapi/linux/stddef.h:29:24: note: in definition of macro '__struct_group'
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                        ^~~
+   include/linux/perf_event.h:124:9: note: in expansion of macro 'struct_group_tagged'
+     124 |         struct_group_tagged(perf_branch_stack_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+>> include/uapi/linux/stddef.h:29:50: warning: declaration does not declare anything
+      29 |                 struct TAG { MEMBERS } ATTRS NAME; \
+         |                                                  ^
+   include/linux/stddef.h:81:9: note: in expansion of macro '__struct_group'
+      81 |         __struct_group(TAG, NAME, /* no attrs */, MEMBERS)
+         |         ^~~~~~~~~~~~~~
+   include/linux/perf_event.h:124:9: note: in expansion of macro 'struct_group_tagged'
+     124 |         struct_group_tagged(perf_branch_stack_tag, __tag,
+         |         ^~~~~~~~~~~~~~~~~~~
+   In file included from kernel/trace/trace.c:8979:
+   kernel/trace/trace_selftest.c: In function 'trace_selftest_function_regs':
+   kernel/trace/trace_selftest.c:605:13: warning: variable 'len' set but not used [-Wunused-but-set-variable]
+     605 |         int len;
+         |             ^~~
 
-Tables 22, 23 and 24 in the AD7194 datasheet show that this chip is
-much more configurable than AD7192 when it comes to assigning
-channels. There are basically no restrictions on which inputs can be
-used together. So I am still confident that my suggestion is the way
-to go for AD7194. (Although I didn't actually try it on hardware, so
-can't be 100% confident. But at least 90% confident :-p)
+
+vim +/used +1042 include/linux/fs.h
+
+   991	
+   992	/*
+   993	 * f_{lock,count,pos_lock} members can be highly contended and share
+   994	 * the same cacheline. f_{lock,mode} are very frequently used together
+   995	 * and so share the same cacheline as well. The read-mostly
+   996	 * f_{path,inode,op} are kept on a separate cacheline.
+   997	 */
+   998	struct file {
+   999		union {
+  1000			/* fput() uses task work when closing and freeing file (default). */
+  1001			struct callback_head 	f_task_work;
+  1002			/* fput() must use workqueue (most kernel threads). */
+  1003			struct llist_node	f_llist;
+  1004			unsigned int 		f_iocb_flags;
+  1005		};
+  1006	
+  1007		/*
+  1008		 * Protects f_ep, f_flags.
+  1009		 * Must not be taken from IRQ context.
+  1010		 */
+  1011		spinlock_t		f_lock;
+  1012		fmode_t			f_mode;
+  1013		atomic_long_t		f_count;
+  1014		struct mutex		f_pos_lock;
+  1015		loff_t			f_pos;
+  1016		unsigned int		f_flags;
+  1017		struct fown_struct	f_owner;
+  1018		const struct cred	*f_cred;
+  1019		struct file_ra_state	f_ra;
+  1020		struct path		f_path;
+  1021		struct inode		*f_inode;	/* cached value */
+  1022		const struct file_operations	*f_op;
+  1023	
+  1024		u64			f_version;
+  1025	#ifdef CONFIG_SECURITY
+  1026		void			*f_security;
+  1027	#endif
+  1028		/* needed for tty driver, and maybe others */
+  1029		void			*private_data;
+  1030	
+  1031	#ifdef CONFIG_EPOLL
+  1032		/* Used by fs/eventpoll.c to link all the hooks to this file */
+  1033		struct hlist_head	*f_ep;
+  1034	#endif /* #ifdef CONFIG_EPOLL */
+  1035		struct address_space	*f_mapping;
+  1036		errseq_t		f_wb_err;
+  1037		errseq_t		f_sb_err; /* for syncfs */
+  1038	} __randomize_layout
+  1039	  __attribute__((aligned(4)));	/* lest something weird decides that 2 is OK */
+  1040	
+  1041	struct file_handle {
+> 1042		struct_group_tagged(file_handle_tag, __tag,
+  1043				    __u32 handle_bytes;
+  1044				    int handle_type;
+  1045				    /* file identifier */
+  1046		);
+  1047		unsigned char f_handle[];
+  1048	};
+  1049	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
