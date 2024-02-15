@@ -1,86 +1,205 @@
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2083.outbound.protection.outlook.com [40.107.104.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3820B12DD94
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 12:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708001665; cv=none; b=JGfrFsmpvJy4/gnWYVpzw4SbTr+HRvi+oKmpeHqdq8n/SG9YxF+WT9TirLC9ifjGU1grmFund+T0r2URHgxatGV6gl9jnjYf2saOSaI/6t2lYveIeWZzMTopoAF1vp/pewwd6ZwIgSOfVwes1qQstq6AY5RiPixM2YAhTtcJ0+M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708001665; c=relaxed/simple;
-	bh=ArhHyn/D3f1E+tj2caV8bkzHL77hxClMdCwgtso6IUk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pqoERnZOww2baf4/IjzmPYBjI2KHeTL2VsNZZ86NrJfUyN6nTrq7A4YLkUSnpSO5ZBH7UkoGcMDucP+DU4COj70XgW9jfKC8lchv46EdZThc4khWmDaIsXSTxlGtLpL1DYMQ/9NpdGIRpQI7xhzSZg2xeXrVol3oOgYW8MjD+ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2O57R+XM; arc=none smtp.client-ip=209.85.222.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5D518EA2;
+	Thu, 15 Feb 2024 12:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.83
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708001769; cv=fail; b=EJiwCoKHGdSVMH7+5oasiu+bvpkk2E0wBjcrElf9EvwrFaowTnQCJXaPnO1fb03P+Bg/lZXtc7ydCa1znYpKvr8Px+lBkBK3G9d7/80SXgCTOodBOClF/3x86b/bITE5GaL/nLaon9vv+0oD3Yvj2a4azGjLsBBDM0jtE5JLrrs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708001769; c=relaxed/simple;
+	bh=Na+mcWcArG1MnTzo0+JkGbCiZju81Sc9k/ihuTBt5Ig=;
+	h=Message-ID:Date:From:Subject:To:Cc:Content-Type:MIME-Version; b=OB25F/2YwB/Ou5Y6Bm++1NSrPG/HDWCe7IrjSNnFF1ZxgDD5OFKC/vhSVhhIOjNGW8yM16hZcFiVAiBnq9GSb3jyxK707oCyrU/XcM+woQbVGAsW63ylteJD4N2zDG3egBT9QA98QUbFL4AAGpwHarIN1JB1MGeC22gqMvq4SQQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b=DdU1ANxb; arc=fail smtp.client-ip=40.107.104.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2O57R+XM"
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-7d2a78c49d1so448712241.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 04:54:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708001663; x=1708606463; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ArhHyn/D3f1E+tj2caV8bkzHL77hxClMdCwgtso6IUk=;
-        b=2O57R+XM+Lr6dh3IBReev0tLqOqJb0jfy3gwAyigP/ReJoZlg5SJmr8yG2N3bXMkvA
-         nVLXinxC4QoOn2OOk+pkvHCyYY5+URopVCSjy3hY03SQgq435LDZh5fciVMLdF/N9NLQ
-         jpVhrDkrvtuVhBMQJMILoaLWTJoF9bLp8QI7WiletCY84oRSZAVlqG2b5GljJbjFfQ9X
-         lE9uHJBeW/BO+ukdd2gyafgks23JHxj8+iM40pjAdp3rMbsKLM+AYM2j/m0GYiHxy3cG
-         xQP0uOTlWTUcLBAbEYinghUzSsTtj63iMvRMjveY1JRpUfbf+WMTpgZ8rpcHx0/0E0xP
-         aemA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708001663; x=1708606463;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ArhHyn/D3f1E+tj2caV8bkzHL77hxClMdCwgtso6IUk=;
-        b=Vjy32LIds30VufmTX8UdbXEHTT9Pq9XJV+2MLTCDDefKigT1izUHxsnNLm6hJmpN2t
-         wpm+bg52VzXIK4zVW/TXxttv/f+C1P9MZfOG2ETgglec71rl1Ee/wt5uy0TAjHYkKb5l
-         YIHceFJYKKfCsH/wQnqkHhV1ibLgW0IVKb5fp1vSrK9iV2qypyxCDwVt2waU9IMTVxGS
-         AhO3Ma5JTkqU2IDoBSjVkozX6KUm4TbsqT9S6KHu2ZavYA0QCcl4kfflYUmjKW3xAg+w
-         xrb2RgV+mhjJvyN6xosIIAHOgH9nanYu6cT9r716DHjRLSW2r8SERDV9a0SWiqYNlO8Y
-         Agkg==
-X-Forwarded-Encrypted: i=1; AJvYcCVOD7GKPfBWK2xHnVNc/PgAAdt6TIRIHyAamh04YxKPK5ykmGIB8IpNaWpaA8NGbDoeAFS9WoSCdLqbhdFcNq6KVE3J/K40OTH21IgE
-X-Gm-Message-State: AOJu0YxS4m9ONVybwMUiH5kvGYlOiqRC8OieUDARdHq4pbjX0CVSGnff
-	ggEkpGdEjc60ykKYhupMTHvqaLXt3yzJIcj2jxEFCW+2JXesQWUbKKrryW2Lre4jpZE8ws1te+z
-	YUicoaeJsBh9iGnV4ut2w6bi1aQK7K9CS9bHy
-X-Google-Smtp-Source: AGHT+IFBu9var6QUGs3Tcjxsjb+/eMH1i8gZt/k72FUDM6Yiif/uAQ9zCOOW01GRNl8qOjcRchVHIEe58Sy0QyTD+uw=
-X-Received: by 2002:a05:6102:5089:b0:46e:eb29:7ba6 with SMTP id
- bl9-20020a056102508900b0046eeb297ba6mr1013277vsb.15.1708001663019; Thu, 15
- Feb 2024 04:54:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b="DdU1ANxb"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Z19w7Nb0QtA6kKNyqT83JjNI+SMRgCeAZJR/ahXMa/5UaV6Ntzz5yxzJBMXeHBnoWAFpLGes7Ypet+9s9882c7YPAMBXqs2VxCJ9FxV/K/CWNMRffnCTM+6zbmR8v5rtVSYEJ9MX5DY/FYopnkQiyFqtcjVv0c3bexeMG3sklpq1N1zYA5YU1jR9eQzzFpgfRSuu53Z30FIkTCvFUxNtxcNjSjHl83/CtY2sfwjrV1Nbi6eqhIiv1hSNze/DIdpoNG+Wr+MilE+5ABN82pFdRlq99VbLSb2r3swD+WgW2fBusFOYFR+DxfciY5QZyKHnFSckR+fOeVjN6YxeY1oGRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ijgKnd1PdObJ7LXbfuL6Ht4LqVhZ8MVqcCNiHi7HNQ0=;
+ b=nsZlmPDkCfdPGXUlFOf1IBUIn7eFCQgmepTc2UwlpTSzXM3Wtpg8y1nfaZbE+hZNBVce1NORO9dGQOHlXQabTmuWhZ5vtwisaa/yCRzz18PTrQrmQJ5F1LN4fw+/tmClqooOQvR51cCfzlpmK17KN6omevS222CXgzbpxJzQPzOsHssrn9oGHgRixlGsl3EjtN+Rc9jSdvSDiAOaS0+w5OBpBMUNoVbmSVovcPet+b970MIr6Rs8lh3LXsB+QnkG33nBS+/rdPk7Mi+wx+vcdr16Z3fH45G6p8hvWidT/T4ivbBx+zEAmcWLARbY/aeb4RcaB4N72OIvTOXYMFTpbQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
+ dkim=pass header.d=siemens.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ijgKnd1PdObJ7LXbfuL6Ht4LqVhZ8MVqcCNiHi7HNQ0=;
+ b=DdU1ANxbLv8lEOvWRhUn8PKjrfA10TUc95D672pSydgF3AsRcMXnJVFRr08pIGfr7MCfLvNeiExWHMpsg6RMoWZ4KsbxN0CFKR0sm6cycrgO/TFxOCBY5uzzlq9dOjmimNfgGGMmRiiBv/HbqG0vd1bE1K00duf3kdMw+mZe9bMNW0q8GQlP6vU67W9GKLOsba5bL070KdUnQCwH0mG2+RZ5cqKxl3KFQWbvT1M7mvDYlzCI0nT2lgQbBrp6Fu+PRlqFPqS2f9rXytFQnQE8EIY6Tc812ZaQW91uq/2eOl1ZwFnsXHHQuP3g7iwSquqx7WOlPNRcA6BG60r4FaYByg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siemens.com;
+Received: from AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:588::19)
+ by DU0PR10MB6956.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:417::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.26; Thu, 15 Feb
+ 2024 12:56:03 +0000
+Received: from AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::8d16:7fbb:4964:94fe]) by AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::8d16:7fbb:4964:94fe%3]) with mapi id 15.20.7270.036; Thu, 15 Feb 2024
+ 12:56:03 +0000
+Message-ID: <8032b018-c870-403a-9dd9-63440de1da07@siemens.com>
+Date: Thu, 15 Feb 2024 13:55:56 +0100
+User-Agent: Mozilla Thunderbird
+From: Jan Kiszka <jan.kiszka@siemens.com>
+Subject: [PATCH v2] dt-bindings: PCI: ti,am65: Fix remaining binding warnings
+Content-Language: en-US
+To: Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ devicetree <devicetree@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Kishon Vijay Abraham I <kishon@ti.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring
+ <robh@kernel.org>, Nishanth Menon <nm@ti.com>, "Andrew F. Davis"
+ <afd@ti.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ "Lopes Ivo, Diogo Miguel (T CED IFD-PT)" <diogo.ivo@siemens.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH2PR14CA0052.namprd14.prod.outlook.com
+ (2603:10b6:610:56::32) To AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:20b:588::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214170157.17530-1-osalvador@suse.de> <20240214170157.17530-8-osalvador@suse.de>
- <b730fdd3-7c7b-4790-95e6-63f0792c7f50@suse.cz>
-In-Reply-To: <b730fdd3-7c7b-4790-95e6-63f0792c7f50@suse.cz>
-From: Marco Elver <elver@google.com>
-Date: Thu, 15 Feb 2024 13:53:46 +0100
-Message-ID: <CANpmjNNaROhCP81Hp4Aee+8cMmqJBXRTxqcKawxLBBigU2whHg@mail.gmail.com>
-Subject: Re: [PATCH v9 7/7] mm,page_owner: Update Documentation regarding page_owner_stacks
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Oscar Salvador <osalvador@suse.de>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	Michal Hocko <mhocko@suse.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
-	Alexander Potapenko <glider@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS4PR10MB6181:EE_|DU0PR10MB6956:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1c911696-2e5e-4da0-80eb-08dc2e25777c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	fGEsO6mblAMkdJIXvQsIRuaHkRp9U81B4QRukJqX+yjZRw6x9JNSY2m97l0l+pD8IAdloqDp35J3JT50ovRhYw1Giv0TK4vD3eKQG4nnCtGR0M0F1P5Fyu5lh6wOaw1K7EkfEDZPp+hb1tmTh6qgoYJyo4pf3ITsLir7EDwnwK8TQyBsFvShwZ545iG4YUp24Zk+VsuDF9uz0BbR09hw3pAZKsajLL2+UJqjnh+XH0FeWLZ0K/tTTVs8zOVAKmG8Ivn/kM8UuQqPbgzPNdcwfLg2eSDsyxvkMWo6igcT1vPh8yvEpTwtduQE3rJ8kEAlFg6dioTUKfJfsLuHi2QTUB32pZUxJNefdLi26kRo/6tJ32ffoOIkH1NBytiwGxCGvd8kw8Oun6fgGtjr5Kv5zCYfGlaDMe2ZRQIBCJ0kVwUQzymRLpk5siw1DKSLCNXILQXtcQ7L5bGQcKvtRDHs7TGg7LC97jrOdDJ5BNuDy4+zvaQ8hnJ9OZTOTBhJv4F8CQwK8xhubq/Rv1zDVdXAFMQN1g1R1bcWHcaJb1ASijNBREj2/5EkBrOEry0bbRXG
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(39860400002)(366004)(396003)(136003)(230922051799003)(1800799012)(64100799003)(186009)(451199024)(8936002)(8676002)(2906002)(44832011)(5660300002)(4326008)(7416002)(83380400001)(2616005)(107886003)(38100700002)(26005)(36756003)(86362001)(82960400001)(66556008)(54906003)(6506007)(316002)(66946007)(31696002)(66476007)(110136005)(6512007)(6486002)(478600001)(31686004)(6666004)(41300700001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MzBXeU9oTVFZSkZDblJQcEJKRit0K2dLRkI5MS9CRXBYUEhqNXNYekkxQVdC?=
+ =?utf-8?B?UFhNTzNjVzQ3WEtDeWVyUjBxMGJmcDFETTYrc09TdmN1NmFNMXNBd3pFdW44?=
+ =?utf-8?B?YjYxK2tDbEU5NEZoNVpuV29hZGRteWh3bmc1MEJRV1hrK21ZU3lzcjk2S0hD?=
+ =?utf-8?B?blZibW9QUmxnUjdiUHh4TWptdkdGck5VOTdpVithdjdJeFN4MGJnL1JpN2lj?=
+ =?utf-8?B?UjZZOXhiVFZRblUwRmFnWUtQdVBEVVE3MHlQL0kzMmNJVWQyMS9yQjBya2Zm?=
+ =?utf-8?B?UVpCMjI0M3BOQlR5NHg3cWxyaFFxYzlsWm5kL20xd3d2bUxlN0RsdmhMVzZw?=
+ =?utf-8?B?Wi9SQ2JldzRDVXp5VEZJUlpWOXV6eXQ4NFJjMnJndDQ0NmYwUk93b3NpVDVE?=
+ =?utf-8?B?UWtWUkJid3JuK09RTWVjd3R4dUlYcCs5U3JzQ0JpNXdOcHhoSzZjc2xZR0FP?=
+ =?utf-8?B?QW5WbEtvcDhDanM5blBUeXdOOW5HbmdCeGQzZHJqamJVbTRiU2FEMkJCL0oz?=
+ =?utf-8?B?M2YzVzF3V2s1bUkrT0VYVDZaTWZ2WTlzUStMUDc1WXNxaUVwYmZFaHpqNXJZ?=
+ =?utf-8?B?NTlmUVpGc2pqQWg4d1Q3b0tJdkNOTWxIRXBheHYvem9GYjhIRkJKc29kdkNW?=
+ =?utf-8?B?d3c4SWVVNEdleVc0anVPUVorK3g2WnZ5YkRmeG56UXdLTTFNSnhqanhydUth?=
+ =?utf-8?B?SGdHY0VUVWgybmJpbzJQVFJ3VnpiZmRISDd0WUJoRVZNR1lWdEcvcXUzQzNF?=
+ =?utf-8?B?bmNHUXBVQklYdEV4UldmWjV4VjBPWUw3V2FDRVd3ZnV5WGw5UnFhTGh3S2FP?=
+ =?utf-8?B?b3lwYVdrYTQ4VGF3Ymg0bHZKY0VzVFFySnArcUZ4ZTBPTDA3eU85TVY0KzNp?=
+ =?utf-8?B?V20yZjV0Tml2V0ZLU2s5cVNZbll3c1RsWk9aREpwd0IyNG1VZ3VlNTkwS2FV?=
+ =?utf-8?B?My9jVzVKRTJmaFFBcUtUQUNMaWc4cGNUVFYxOTMydjBkWWpUZWc3VXBnZ3A3?=
+ =?utf-8?B?bWhXcWxEckN2eEVwYjMwS0xGbjlzMk1EajBFUk1wVzdYbVRQeTVVK1kwNGZo?=
+ =?utf-8?B?V2pHOCthZ0cxUFY1eXJ0VnpuVGVPZXJRWnR1MWZONzVrZ3Rpczczc08zL3B4?=
+ =?utf-8?B?U3RYbUEwczhodVNzRUgydTZveGhZN2RZWmI0TkVuQjVJckNTcWg3QW56RkhF?=
+ =?utf-8?B?RDNrUnpiMVlMYzVaNUM2RnZMVjRua3VCSlZzS2QwVDkxcVpURGtycHlyeVFa?=
+ =?utf-8?B?QzA1YmRBRzBDc2JqTHU5eWRIZnVlKzBhZEM5bDJFOFZIYVhYVldSY3lJQzRo?=
+ =?utf-8?B?WUNYNFpNcGNMaGVJRUNMVnVqdmdpMG9oT2ZiUCtxREdPUWhFckNsNEV4YmhN?=
+ =?utf-8?B?NW9VWXI2YkxMcndFSWpON0tyQUsxZVJxa2xlMXY1MVdZUlRjaUJkeTdUb1Fz?=
+ =?utf-8?B?M2xCdmM0ODM0NGFzNnR2clgvbytxbUhRbHFDTk5TRjNRZ0h0cnl0b0p6RmRp?=
+ =?utf-8?B?MGZyRStUUnNuQlhoOFBxVnJ0Q20wWlZmWlhJeU8zTzhMRStmVFZ5eWhraVAw?=
+ =?utf-8?B?MlZhNFhNL1llRERsN2x0Qy8zaUVUY09JV3dMR2hNNENEbEZJYUE5NEpyV2hO?=
+ =?utf-8?B?NEsrRUVoUmxnMmdsak5tRERPZkd1S1F4NCtqSlQ2OVM4amdXcDQydXJTUmYw?=
+ =?utf-8?B?Uk1vTmZnMCtnQVZlZWFJWmNiV3UyT1h1R21WcVhBZTlEdXhpUWhzMjNXRjdX?=
+ =?utf-8?B?SE9FZUtSMUtaQUZvSzlCbG5UVnJ6M2JsbG5TSTUxbXNnQWZlV0JSN0xqV0Nt?=
+ =?utf-8?B?cU9UZ2lNMzVMc2J1ZGNOOG5uMzd5LzNYTDFGeGJRKzhpZHRYVDdmejRXQk9P?=
+ =?utf-8?B?dzVkR3dFeTcxejFERmpDTUhsQnkyQ1RwZTVIMHNFODZNaXFoL2NibEZDbU5W?=
+ =?utf-8?B?K1h5Vk1ReUFOUGNZNG5MVkxqVHR4ejVyUkNjNXoyZFJrOTUxK3h6VEs3SGVW?=
+ =?utf-8?B?WDRobmhaVXNsLzZiYURjRjk4Z0ZMTExzem5UeW9aQkVVZXJDWk1YbWpSNVRO?=
+ =?utf-8?B?eHQ5WU02WHhiMUhxV3gvTTRXSWJkcEpSK1FTd3gxL1VhUWFFbzVhbEU1S3Ix?=
+ =?utf-8?B?cXM3aXNzL0FVQ2pUZUpJMXFDVUsyVzZMRUw4ZWMwUWtnSC8vbDhUKytVVVdy?=
+ =?utf-8?B?V0E9PQ==?=
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1c911696-2e5e-4da0-80eb-08dc2e25777c
+X-MS-Exchange-CrossTenant-AuthSource: AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Feb 2024 12:56:03.5055
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 70lgspQXDcdFzUUd/WUJZ+oMyBgol5jAx7P5igSTBytNoRWV3o8XsdRecHfzcyJ4ozI80Kz+zpP8VskescwmfQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR10MB6956
 
-On Thu, 15 Feb 2024 at 12:13, Vlastimil Babka <vbabka@suse.cz> wrote:
->
-> On 2/14/24 18:01, Oscar Salvador wrote:
-> > Update page_owner documentation including the new page_owner_stacks
-> > feature to show how it can be used.
-> >
-> > Signed-off-by: Oscar Salvador <osalvador@suse.de>
->
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
->
-> Thanks!
+From: Jan Kiszka <jan.kiszka@siemens.com>
 
-Looks good:
+This adds the missing num-viewport, phys and phy-name properties to the
+schema. Based on driver code, num-viewport is required for the root
+complex, phys are optional. Their number corresponds to the number of
+lanes. The AM65x supports up to 2 lanes.
 
-Reviewed-by: Marco Elver <elver@google.com>
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+
+---
+Changes in v2:
+ - limit phy-names to pcie-phy[0-1]
+ - fix schema-checking of example
+---
+ .../bindings/pci/ti,am65-pci-host.yaml        | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
+index a20dccbafd94..c54d4e57d089 100644
+--- a/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
++++ b/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
+@@ -55,6 +55,20 @@ properties:
+ 
+   dma-coherent: true
+ 
++  num-viewport:
++    $ref: /schemas/types.yaml#/definitions/uint32
++
++  phys:
++    description: per-lane PHYs
++    minItems: 1
++    maxItems: 2
++
++  phy-names:
++    minItems: 1
++    maxItems: 2
++    items:
++      pattern: '^pcie-phy[0-1]$'
++
+ required:
+   - compatible
+   - reg
+@@ -74,6 +88,7 @@ then:
+     - dma-coherent
+     - power-domains
+     - msi-map
++    - num-viewport
+ 
+ unevaluatedProperties: false
+ 
+@@ -81,6 +96,7 @@ examples:
+   - |
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
+     #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/phy/phy.h>
+     #include <dt-bindings/soc/ti,sci_pm_domain.h>
+ 
+     pcie0_rc: pcie@5500000 {
+@@ -98,9 +114,13 @@ examples:
+         ti,syscon-pcie-id = <&scm_conf 0x0210>;
+         ti,syscon-pcie-mode = <&scm_conf 0x4060>;
+         bus-range = <0x0 0xff>;
++        num-viewport = <16>;
+         max-link-speed = <2>;
+         dma-coherent;
+         interrupts = <GIC_SPI 340 IRQ_TYPE_EDGE_RISING>;
+         msi-map = <0x0 &gic_its 0x0 0x10000>;
+         device_type = "pci";
++        num-lanes = <1>;
++        phys = <&serdes0 PHY_TYPE_PCIE 0>;
++        phy-names = "pcie-phy0";
+     };
+-- 
+2.35.3
