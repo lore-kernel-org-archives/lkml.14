@@ -1,39 +1,38 @@
 Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF3EC13249D;
-	Thu, 15 Feb 2024 15:18:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84E6132C2D;
+	Thu, 15 Feb 2024 15:18:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708010288; cv=none; b=c4/dRJt+laqMArcKDScYQhJ21G1A5x05EnAZ93ji+XcvVOMB/riJJz4umDyJZCLOBKu/VWI6gfJh9HWZmpj38VziFgRf1Q6EQ6WZqZ3wej5wvzeQ6N3eMF5yyqocXUK/KztP5laaWbupMT9A921VffNmf/IJFJEJkLTyiOvDaLA=
+	t=1708010290; cv=none; b=jXC7OObq3T+J/x7jPg0Ae9NCIPPGNw2xIaKS8pzGwoFh9jSp6LcCxP9WOA+0UuQJB+vJayYaEZtmzqEe6SYu+wcwe4Zf4za81/ngiu0s3qTf0wUBi49P/6lLhaijL3ocUcHA0Z5hNWW+HId37Ydc9I0EFIZ5cJpL+UDpGKEs7sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708010288; c=relaxed/simple;
-	bh=gwP4GGnMLfEyHCmYyPO/TojmDhPU7kHveCMamRTjHN0=;
+	s=arc-20240116; t=1708010290; c=relaxed/simple;
+	bh=5c3PEdEw9K2SWSbCnl8JZa/Az4dMYehFM7efi82xY10=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fiKOCX5TDz8aXQ7a12yj/OcZQBZZIf7yufTLI2uiU1kDTUPVPeiXScNUj5PBa8/VwxV+oisddcMtasTNEy6Izl532w2Y7MI+ByzHoVQeqdw2LWnskNvF1WAQG9NUb1uSs27F/PJhi29R/zkG82Px0kfkxL/BFtr7aTIhFJO2JMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=a1sPo+Sl; arc=none smtp.client-ip=217.70.183.193
+	 In-Reply-To:To:Cc; b=TVObwfY6VFbbsdfKFBxsEyOZrG4HRaWNbjRcCf6IZAe2LHt3ukqhFsOzipten9UCJnodwEsNSXua2hG73WlmDjJzLMQXwwnhgLB7tYDizb4fen43HlEa+7Ujw0OZbw+hEFgufn75dmdOJZvcVEo6dcxeKvyNiKNiX+kwGrnIBgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hv4KJLdE; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="a1sPo+Sl"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 06364240006;
-	Thu, 15 Feb 2024 15:18:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hv4KJLdE"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2E89F240014;
+	Thu, 15 Feb 2024 15:18:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708010284;
+	t=1708010286;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5Nb4IKDaAI4vBqYGKsypVxdn/pv7j5S+qa35Zvmbq10=;
-	b=a1sPo+SljVkvFgmvNstzu6qhGzIn8T2Jlq8tR6v7f3Wbt2waxMx0PuXyqzenCM75tzcGFX
-	/EFaVr4qjHtDeGymq+4E5AB4rp8tCP1yfFcg2ezFRM5SF2tHoz+oGaVIYhdUDJDDuKqQkX
-	RMfkk8TZENhJCHFuKZRiqlsZU5G9g6gmNL0swzNg3pxdi92grHlbi6MIUQnYmxpu3f9Ueu
-	aZEd4yXKtB7eHTAtqi/3ORkRti+LBBzONHFZbGbrEJJdrI41gF656WQxq8D1waPDOhrNEJ
-	m+ECSeFtL8qio+b0CmbOQxBVJDbd5Yr8KkltuhGdubtNpfYUCvmb8wxccoMPyw==
+	bh=mPxPc7Xvb7+q1PFnLq8F3pklOXjELgiYL5RrEQlPZLM=;
+	b=hv4KJLdEm3D68ygjCeQI0f6Li0bYy6g5tgDVSnZMtNe5x1p7CsSbwqLnRHg6UPqX2YrxVe
+	10MkwKsoaqwKb5voo2rwB+E1cey1kphwHuEJI+D9LjchjctBi2Hgsm8bSrfselmBVdPuVh
+	SEebNpingPgX6J9U4thp4aGS3BJO4liAmfG4PckUMTSG/sUAOx71jXmetVFjjVbR1BNuf7
+	YwG6o1He6OZPyy76WnL8/Ke04Dc1nflsHMnflWwDL28k3u+tbMUGl0denojY3kPv8dOfy2
+	/Oa1lFZtnWTPEK6ZIwkUKlkuRKgFAjwozvFucfG1Lhd4K5etvMd9xmCCo1LXMQ==
 From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Thu, 15 Feb 2024 16:17:49 +0100
-Subject: [PATCH v3 04/18] i2c: omap: wakeup the controller during suspend()
- callback
+Date: Thu, 15 Feb 2024 16:17:51 +0100
+Subject: [PATCH v3 06/18] mux: mmio: add resume support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,8 +40,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240102-j7200-pcie-s2r-v3-4-5c2e4a3fac1f@bootlin.com>
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240102-j7200-pcie-s2r-v3-6-5c2e4a3fac1f@bootlin.com>
 References: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
 In-Reply-To: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -66,60 +65,48 @@ Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
 X-Mailer: b4 0.12.0
 X-GND-Sasl: thomas.richard@bootlin.com
 
-A device may need the controller up during suspend_noirq() or
-resume_noirq().
-But if the controller is autosuspended, there is no way to wakeup it during
-suspend_noirq() or resume_noirq() because runtime pm is disabled at this
-time.
+From: Théo Lebrun <theo.lebrun@bootlin.com>
 
-The suspend() callback wakes up the controller, so it is available until
-its suspend_noirq() callback (pm_runtime_force_suspend()).
-During the resume, it's restored by resume_noirq() callback
-(pm_runtime_force_resume()). Then resume() callback enables autosuspend.
+No need to save something during the suspend stage, as the mux core has an
+internal cache to store the state of muxes.
 
-So the controller is up during a little time slot in suspend and resume
-sequences even if it's not used.
+This cache is used by mux_chip_resume() to restore all muxes.
 
+Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 ---
- drivers/i2c/busses/i2c-omap.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ drivers/mux/mmio.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
-index 42165ef57946..c11deb285114 100644
---- a/drivers/i2c/busses/i2c-omap.c
-+++ b/drivers/i2c/busses/i2c-omap.c
-@@ -1575,9 +1575,31 @@ static int __maybe_unused omap_i2c_runtime_resume(struct device *dev)
- 	return 0;
+diff --git a/drivers/mux/mmio.c b/drivers/mux/mmio.c
+index fd1d121a584b..892ff4714b68 100644
+--- a/drivers/mux/mmio.c
++++ b/drivers/mux/mmio.c
+@@ -125,13 +125,25 @@ static int mux_mmio_probe(struct platform_device *pdev)
+ 
+ 	mux_chip->ops = &mux_mmio_ops;
+ 
++	dev_set_drvdata(dev, mux_chip);
++
+ 	return devm_mux_chip_register(dev, mux_chip);
  }
  
-+static int omap_i2c_suspend(struct device *dev)
++static int mux_mmio_resume_noirq(struct device *dev)
 +{
-+	/*
-+	 * If the controller is autosuspended, there is no way to wakeup it once
-+	 * runtime pm is disabled (in suspend_late()).
-+	 * But a device may need the controller up during suspend_noirq() or
-+	 * resume_noirq().
-+	 * Wakeup the controller while runtime pm is enabled, so it is available until
-+	 * its suspend_noirq(), and from resume_noirq().
-+	 */
-+	return pm_runtime_resume_and_get(dev);
++	struct mux_chip *mux_chip = dev_get_drvdata(dev);
++
++	return mux_chip_resume(mux_chip);
 +}
 +
-+static int omap_i2c_resume(struct device *dev)
-+{
-+	pm_runtime_mark_last_busy(dev);
-+	pm_runtime_put_autosuspend(dev);
++static DEFINE_NOIRQ_DEV_PM_OPS(mux_mmio_pm_ops, NULL, mux_mmio_resume_noirq);
 +
-+	return 0;
-+}
-+
- static const struct dev_pm_ops omap_i2c_pm_ops = {
- 	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
- 				      pm_runtime_force_resume)
-+	SET_SYSTEM_SLEEP_PM_OPS(omap_i2c_suspend, omap_i2c_resume)
- 	SET_RUNTIME_PM_OPS(omap_i2c_runtime_suspend,
- 			   omap_i2c_runtime_resume, NULL)
+ static struct platform_driver mux_mmio_driver = {
+ 	.driver = {
+ 		.name = "mmio-mux",
+ 		.of_match_table	= mux_mmio_dt_ids,
++		.pm = pm_sleep_ptr(&mux_mmio_pm_ops),
+ 	},
+ 	.probe = mux_mmio_probe,
  };
 
 -- 
