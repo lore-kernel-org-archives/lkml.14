@@ -1,73 +1,49 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.pogacic.net (smtp.pogacic.net [139.59.161.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5F4171A7;
-	Thu, 15 Feb 2024 09:05:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42CB3175B6;
+	Thu, 15 Feb 2024 09:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.59.161.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707987910; cv=none; b=gJf9lHEfxdxItbbpxPz5QCF8q4No8c7AF9hXcyGgFIOoUr0TKGcVsGsY1MFg9liH8y9Il64PHxi7IKGvXTmjCi/sv0W1RSJHKLVXQBNNj4CQxTCSyCPt8DzLqjRIUbxLPks4ws4TQ9etSduIHyAB490FBK4sJ21LfN4vsBqs4FY=
+	t=1707987911; cv=none; b=JJ52iCfD2z2D9tr92HQ1GUnUu1ax3GQS2E7pzEk/vcdzI2L90b0UwZjUbd3JrBoLDhvYYSDD7FzU5LwXQUCrIzUkE6D98zpR0GmNiIhPqLv27/Wnxk/+D2J6pmg/V0G8ItLTv/7aUijC9K4F8Ozzz4RN0PtUfGbd+DbKl8lp31U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707987910; c=relaxed/simple;
-	bh=mK2XIGIGGN3r4jmKbz0on/M6QGPvYXqiPq2RBv11Xv8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DYrZaG6ntbA1C7AfOj9XH5rPO3Y8G2GuKJTgTxmFuIXJ1dCvt4sBiy259Zgh4nF7ie7BqLnBoNT863ocKyoshbrBa+CeuJug+rM5IDBhzlBlGOblYyX+0SWPPn56KNEleyXmdJx0pptJ7EGOf5FuCr0XK3izstSQzl0YdJWk/KU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i53875b6c.versanet.de ([83.135.91.108] helo=phil.lan)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1raXfh-0002L8-3L; Thu, 15 Feb 2024 10:04:45 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: neil.armstrong@linaro.org
-Cc: quic_jesszhan@quicinc.com,
-	sam@ravnborg.org,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	heiko@sntech.de,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	quentin.schulz@theobroma-systems.com,
-	Heiko Stuebner <heiko.stuebner@cherry.de>
-Subject: [PATCH 1/2] dt-bindings: vendor-prefixes: add prefix for admatec GmbH
-Date: Thu, 15 Feb 2024 10:04:41 +0100
-Message-Id: <20240215090442.3513760-1-heiko@sntech.de>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1707987911; c=relaxed/simple;
+	bh=ssf6L958UCbi7i1ZZk8DEaZtje7THxgsOqFEbXhRFV0=;
+	h=From:To:Cc:Subject:Message-ID:Date:Content-Type:MIME-Version; b=tatR24DiT63i8fszTDe/1rgyhjhFmBpcw1n2GHwPCx62pNhnlAj1l4qc4Zef82L8CCgqMuhiFKxiU9TqGDTg+/swUjZvTh2KPB2+4EY6k4vCuhSP0QccyeJ1RreSCIIK4wodzOe6OKPINZyssEH6wMAntqH2sDyRn7InYbBdVvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pogacic.net; spf=pass smtp.mailfrom=pogacic.net; arc=none smtp.client-ip=139.59.161.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pogacic.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pogacic.net
+Received: from cloud.pogacic.net (localhost [127.0.0.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.pogacic.net (Postfix) with ESMTPSA id 2D479420DB;
+	Thu, 15 Feb 2024 03:59:53 -0500 (EST)
+From: Vanja Pogacic <vanja@pogacic.net>
+To: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: 
+Subject: Bug reporting on Raydium touchscreen
+Message-ID: <20240215085953.Horde.oa0RoVvzrHmYsnVs_gHNkTT@cloud.pogacic.net>
+User-Agent: Horde Application Framework 5
+Date: Thu, 15 Feb 2024 08:59:53 +0000
+Content-Type: text/plain; charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Heiko Stuebner <heiko.stuebner@cherry.de>
+Hello,
+I am trying to find the best way to submit a kernel bug for a raydium touchscreen driver (raydium_i2c_ts) which stops working after waking up from sleep.
+The hardware in question is a converted Chromebook (Acer Spin 512) with coreboot uefi bios.
 
-admatec GmbH is a german supplier for industrial displays.
+You can find more details and logs about the issue here:
+bbs.archlinux.org/viewtopic.php
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+Since I observed the same behavior under Fedora, Ubuntu and Arch, I concluded it would be best to contact the upstream people :)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 1a0dc04f1db47..fef2e12b504ee 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -61,6 +61,8 @@ patternProperties:
-     description: Analog Devices, Inc.
-   "^adieng,.*":
-     description: ADI Engineering, Inc.
-+  "^admatec,.*":
-+    description: admatec GmbH
-   "^advantech,.*":
-     description: Advantech Corporation
-   "^aeroflexgaisler,.*":
--- 
-2.39.2
+Any guidance will be highly appreciated.
 
+Thanks,
+Kind regards
+Vanja Pogacic
