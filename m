@@ -1,90 +1,87 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622991EA80
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 23:27:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739C01EA80
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 23:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708039632; cv=none; b=b69NSgBFgk9YVZujuIExFSqDOn4fO5eo5wkgzKnofO/nEAf5FcYVhjRNJzppQnpgkEDJ+MQnftMTgHPq5UhlhUQEHbmzz1140Asg7y/fRZYaWMlnuYIzFSB/4xWddjm4uXnut6VcXk7oZrKVCyRzQsCsY1q6bz40M//iw9on1ts=
+	t=1708039667; cv=none; b=Qs1BfE30tABjGfzqjpFrlpHI760C6tMAmeDUjTTfqMOKZzinNc3iGmKIfgRkq5aHdHufsmlj4SmsVN9UYlX17p+KAXPdBZCIaseYmxaDIh2Nf0RwSkLetRMQc0lj3fGNJiJj2C/itF7c++lj15+TMUVnHApkStx7gczkw+7hcms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708039632; c=relaxed/simple;
-	bh=hI3IaNmwmpoigHgr4TUjO4N23cGdnPbSDl/n7qwEBTw=;
+	s=arc-20240116; t=1708039667; c=relaxed/simple;
+	bh=QGvW1GfLe1IrocH8cjxvScOppkpzAMxwvT0mp2RfnA0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lyqLioEAMyse1F09/G2dzI/GHZsmrFP2xO9UrKz6Kh8cvdKFDUJWziOcUIkqscEn4shyOVudERHml2nZvCJdJr4/7xJ80Fqrf/jQFIAdLiPZJq9wJLRyPFJq5aGCGygT6t1cMu8pxas1O4cqxLPqfFoXy7dBoPmAmWdXuCZfifw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BJj/mCNx; arc=none smtp.client-ip=95.215.58.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=qRj1X69k0k+V8Z3WgMWZ077W4JlUmwT7RJpF7LmfimfTGIwjmepRu/d6CMmpkgy7kXbtWFEGeTj52hhOByT7+WQBQ3b/MnuAfbzREhMT7aDdz0OEKKtqegKGzPg8h8nDDIMQ1mA7AJWFF7XY1qQbdbTHoay165wY+xxKN/OHzeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XiALD7sx; arc=none smtp.client-ip=91.218.175.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BJj/mCNx"
-Date: Thu, 15 Feb 2024 18:26:59 -0500
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XiALD7sx"
+Date: Thu, 15 Feb 2024 15:27:37 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1708039622;
+	t=1708039663;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UoqQs6b93PcUanm6LA7hi60ibIXjv2o5oOJV4LJzspg=;
-	b=BJj/mCNxAyPczvn/s/2kbFkdB6c56NTDOkE/tE7Zr3JX61Dt5lmruksGqStkuKCzudRbzF
-	hEbNfoS3fqkBeEj+iQz+wh5dBCcTpwakdCy+8STghQU/7WlUVe//1NK1UnCKKhqGlSpkrM
-	9Si9VqvyYDqvwJyvsyonUX4WW3P7cWQ=
+	bh=AlV1eNHM+AjtDcCkEHXltO12IW2g8LwsQ0NEmnjiFdk=;
+	b=XiALD7sxsGftLsdc7KWUQouJ55zlSlwPV3nh7xxHsUP5Q1jaXwF0lqYZVT+l/9o200Z85b
+	9awx/T9/ejwpvjK4DYXKZZZ6ETdZ8/O6lxRwHwBd6xcwhYw+VJb+SpqX61k1FMIO6g64Ac
+	mEjnodWhDnjVWKr042Bg6pr5tSE6SpQ=
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Hellwig <hch@infradead.org>, linux-kernel@vger.kernel.org, 
-	fuyuanli <fuyuanli@didiglobal.com>
-Subject: Re: [PATCH] kernel/hung_task.c: export sysctl_hung_task_timeout_secs
-Message-ID: <gbzf3rqo6edvan3lzdx7udc3hzfwfjh3c74lm6ruegu5cwg64q@lt4ghwp5y33f>
-References: <20240209070935.1529844-1-kent.overstreet@linux.dev>
- <Zc2giqMeZhxuDSU9@infradead.org>
- <20240215105509.b7b3c87c24ed35cdfb111f34@linux-foundation.org>
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>,
+	Pasha Tatashin <tatashin@google.com>,
+	Michael Krebs <mkrebs@google.com>
+Subject: Re: [PATCH 2/2] KVM: selftests: Test forced instruction emulation in
+ dirty log test (x86 only)
+Message-ID: <Zc6d6fwakreoVtN5@linux.dev>
+References: <20240215010004.1456078-1-seanjc@google.com>
+ <20240215010004.1456078-3-seanjc@google.com>
+ <Zc3JcNVhghB0Chlz@linux.dev>
+ <Zc5c7Af-N71_RYq0@google.com>
+ <Zc5wTHuphbg3peZ9@linux.dev>
+ <Zc6DPEWcHh-TKCSD@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240215105509.b7b3c87c24ed35cdfb111f34@linux-foundation.org>
+In-Reply-To: <Zc6DPEWcHh-TKCSD@google.com>
 X-Migadu-Flow: FLOW_OUT
 
-On Thu, Feb 15, 2024 at 10:55:09AM -0800, Andrew Morton wrote:
-> On Wed, 14 Feb 2024 21:26:34 -0800 Christoph Hellwig <hch@infradead.org> wrote:
-> 
-> > On Fri, Feb 09, 2024 at 02:09:35AM -0500, Kent Overstreet wrote:
-> > > needed for thread_with_file; also rare but not unheard of to need this
-> > > in module code, when blocking on user input.
-> > > 
-> > > one workaround used by some code is wait_event_interruptible() - but
-> > > that can be buggy if the outer context isn't expecting unwinding.
-> > 
-> > I don't think just exporting the variable ad thus allowing write
-> > access is a good idea.  If we want to keep going down the route of
-> > this hack we should add an accessor function that returns the value.
-> > 
-> > The cleaner solution would be a new task state that explicitly
-> > marks code than can sleep forever without triggerring the hang
-> > check.  Although this might be a bit invaѕive and take a while.
+On Thu, Feb 15, 2024 at 01:33:48PM -0800, Sean Christopherson wrote:
 
-I had the same thought.
+[...]
 
-> A new PF_whatever flag would solve that simply?
+> +/* TODO: Expand this madness to also support u8, u16, and u32 operands. */
+> +#define vcpu_arch_put_guest(mem, val, rand) 						\
+> +do {											\
+> +	if (!is_forced_emulation_enabled || !(rand & 1)) {				\
+> +		*mem = val;								\
+> +	} else if (rand & 2) {								\
+> +		__asm__ __volatile__(KVM_FEP "movq %1, %0"				\
+> +				     : "+m" (*mem)					\
+> +				     : "r" (val) : "memory");				\
+> +	} else {									\
+> +		uint64_t __old = READ_ONCE(*mem);					\
+> +											\
+> +		__asm__ __volatile__(KVM_FEP LOCK_PREFIX "cmpxchgq %[new], %[ptr]"	\
+> +				     : [ptr] "+m" (*mem), [old] "+a" (__old)		\
+> +				     : [new]"r" (val) : "memory", "cc");		\
+> +	}										\
+> +} while (0)
+> +
 
-TASK_* flags are separate from PF_* flags, fortunately, and it doesn't
-look like anything but TASK_* flags go in task_struct->__state, so
-this shouldn't be a difficult change.
+Last bit of bikeshedding then I'll go... Can you just use a C function
+and #define it so you can still do ifdeffery to slam in a default
+implementation?
 
-> Which are the potential use sites for such a thing?
+I hate macros :)
 
-There's a few places in the block layer that are using the sysctl value;
-those will be easy to fix. There's definitely more places abusing
-TASK_INTERRUPTIBLE, but aside from the ones in my code I can't think of
-a way to search for them.
-
-But the block layer ones look a little suspect to me: the commit message
-indicates they were added becasue discards on some devices can take >
-100 seconds - which is true, but this is a more general problem, there's
-other places we block on IO.
-
-Might want to give this some more thought.
+-- 
+Thanks,
+Oliver
