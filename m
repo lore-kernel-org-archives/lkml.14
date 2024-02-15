@@ -1,179 +1,215 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6B7692FF
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 10:43:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A17D12BE85;
+	Thu, 15 Feb 2024 10:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707993791; cv=none; b=HmvkAqbMisLmvbbzUUrrEmcN2w4BXQCNN3iIPAp6a5ggGBNflXhVi/uABaRH5bAM2U90ryH6zxMYrSVPOUP4jYxw6LPvfjSAdG2ShZANY7dt5NJlJ/mioAQYTu69lov2dA+YQQm7AOvI91fAgSVJCvLRtn5FS6BsVRyOH1Y8ErU=
+	t=1707993803; cv=none; b=IFMLFyP+0zQ2YKUgd6STW/bP/8CMHUh3heDNWdRBVblYNeQDp2UyWspeexhPrhMK1bE25u8np9bMH5jWNYkbmC6yVFLpMOtH8mihZtRQ8wKGXtnScR2Ue+ZIpq/EYTX2u52pPey3ru/9ergvBLLIue5DDGj/QEeM139z3E5tJVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707993791; c=relaxed/simple;
-	bh=oDcHnEANbeDDvw1ayVwCcqNHoqIJeo7t4xv1EdnOe3Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nqA35lq4/U24NEEz7KU3RCMfCAbcWBUap7w01WmXc/8BMPZRD+XJYaK33oXVoHVQKGzDOYXc52NT+xbQCBLTlyJKRFucQuVTJVB1JAYNjoKSU2dI9yvYZLk6kC/9QuzariD5lrFSh4EyClPd6VdgBimYyRaxZ6jbIyLKbujbUZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NSfPG17y; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707993803; c=relaxed/simple;
+	bh=WRkahTUfWZzwX8Vr9v8Xuq2gLkRiI5fGDnkFKyJWX+w=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=XS8KjY23BqiWWruyv7HWR37oEXrgCZts8xAFD2K+GgFVA0COafQj3cvazn9iZcKYZXD8BxafEZvPJVoag+QkK6EpWhl6eYGsBsNGjl8tXb/VZSoCXGICsv5fSje6+Hw1T7IQSMPxWwjBbe1r7kQNgqjhdUqmwQP8pSoHgn1TN9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=aC1Zn/hJ; arc=none smtp.client-ip=37.18.73.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NSfPG17y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707993788;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=zKRa0yC+0MiLHkj8ok+qOeouxMk5BBGoR5MWSe6wX3I=;
-	b=NSfPG17yIqjiliyvE/gR7IcSlSO7Ubcro7B17BiCxk+30f7IXVFAdnDKp6XlgsOgIsTmxX
-	EABzRFBPqvUBKoU/u9qF2fJZoZ+byXyabNxSclJyrUUbVhwmM9djld2F8J4lIZ9S1e0oqd
-	VXCOv36AtZmDqzMC/Q8oX9z5Hdp86+o=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-467-sQkksG6rPByjON8l5lJjGQ-1; Thu, 15 Feb 2024 05:43:06 -0500
-X-MC-Unique: sQkksG6rPByjON8l5lJjGQ-1
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-68086d6c953so10320196d6.2
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 02:43:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707993786; x=1708598586;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :references:cc:to:content-language:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zKRa0yC+0MiLHkj8ok+qOeouxMk5BBGoR5MWSe6wX3I=;
-        b=w54jufcWbFLQ8m3rClm0jC0NWp8/M6ua+awk6FNrqQzw2ByEOuN/wWqGXGDWxF0pb0
-         odwNxvdmpA4p7Nn880yPe3rgPJAMp8gT/L2PQ+1AmJqo38pliCjFSLwD1raK61bxP8/c
-         ScnE8RRfWcAEg7zbQ+xRD7+RvmrsFtFuQXCSwT9Rxrc0xNifrfK4QV90DElDHKur/ZVg
-         V8paKXy1OT3jOgrSWeTmdNSvy19yutfQmh3GBfYKdipCqfDVyg2/MSyQgrwBeMqfLoov
-         pNnFFXht35z/e4evyRxI6tP0a6MQPaMlmBindiV2qVVJbqUtgcINSD8uVvNZdpsllE7Z
-         +hXw==
-X-Forwarded-Encrypted: i=1; AJvYcCWRgGUt843PNgsGWHLVP5gCLh5gRWGjHEqu9ZOWR07Vu4y9SQbu9xLgyNXINJnR+rgLn6LKovOCRFlnmE2J2lGaB+a7SXm9S77MkwQ2
-X-Gm-Message-State: AOJu0YyQqy+xBnZ2qaKjra0gg1KICDF/GSKNkSi6eYwNorPVqG3DHhv/
-	MawsU0gaX+AUKTqGVji1jTJ7DjAzkKkwufEieiO6Q09sGIkkJd2KXkTlpd9R4VhV4YS27r+5Vbl
-	dRZZL5QDDTNbJb+gV57tgGxct++MnJZTDPpEyHVIu1dMOlcKEXjZDm4HPnT0riQ==
-X-Received: by 2002:a0c:f3d4:0:b0:68f:a59:1216 with SMTP id f20-20020a0cf3d4000000b0068f0a591216mr1190729qvm.50.1707993786028;
-        Thu, 15 Feb 2024 02:43:06 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFte3jUXgsQjEwGNjWUY1CBYrm9xQ6Kr/3wAjZMWIx5O2ISAeI1pj/H170QLB8FxdTao4yy5w==
-X-Received: by 2002:a0c:f3d4:0:b0:68f:a59:1216 with SMTP id f20-20020a0cf3d4000000b0068f0a591216mr1190707qvm.50.1707993785672;
-        Thu, 15 Feb 2024 02:43:05 -0800 (PST)
-Received: from ?IPV6:2003:d8:2f3c:3f00:7177:eb0c:d3d2:4b0e? (p200300d82f3c3f007177eb0cd3d24b0e.dip0.t-ipconnect.de. [2003:d8:2f3c:3f00:7177:eb0c:d3d2:4b0e])
-        by smtp.gmail.com with ESMTPSA id lu7-20020a0562145a0700b0068efbe2235asm535657qvb.54.2024.02.15.02.43.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Feb 2024 02:43:05 -0800 (PST)
-Message-ID: <6ff877c4-dc97-4572-b45c-2384c1d40fba@redhat.com>
-Date: Thu, 15 Feb 2024 11:43:01 +0100
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="aC1Zn/hJ"
+Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id AE8E1100009;
+	Thu, 15 Feb 2024 13:43:09 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru AE8E1100009
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1707993789;
+	bh=JH0whwe9yMPahO4ftK676Nk9OMPAhJpwKYEfE7/kv2M=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version:From;
+	b=aC1Zn/hJKlJFXDVZ+wkACWbtJu26OlgtisJNavzTdaqoCPGYUN4lO/QLRkQCcaURI
+	 eE2LcgzjrsLvFgCbQa8xOI8nOqxEYKyzF8kxac1+9Vqmg8XykHBJtZOiSVD3zC/iS2
+	 qlZUAU/Ko7qhuwqRLAsznBaELJtQgTySt+o9C6uhF7CIQRaitc5raOUTuiR1DLPyRN
+	 ffacTzCT1Zz4zJ41jbfeMS6iRi2KCSLmtJyrUw8l4y2FYFO3SB008uh4App2wq4tRd
+	 S+tcJHTnHMBgHslg4YS8GY0CmRKdF1T4KHcjgaZeDCSeCzCWA8yuHJCSSo9M0LLyHg
+	 njHIvT9R09hGw==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Thu, 15 Feb 2024 13:43:09 +0300 (MSK)
+Received: from p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Thu, 15 Feb 2024 13:43:09 +0300
+Received: from p-i-exch-sc-m01.sberdevices.ru ([fe80::6d41:e8f1:b95e:ba1]) by
+ p-i-exch-sc-m01.sberdevices.ru ([fe80::6d41:e8f1:b95e:ba1%7]) with mapi id
+ 15.02.1118.040; Thu, 15 Feb 2024 13:43:09 +0300
+From: Alexey Romanov <avromanov@salutedevices.com>
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+CC: "neil.armstrong@linaro.org" <neil.armstrong@linaro.org>,
+	"clabbe@baylibre.com" <clabbe@baylibre.com>, "herbert@gondor.apana.org.au"
+	<herbert@gondor.apana.org.au>, "davem@davemloft.net" <davem@davemloft.net>,
+	"robh+dt@kernel.org" <robh+dt@kernel.org>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, "khilman@baylibre.com"
+	<khilman@baylibre.com>, "jbrunet@baylibre.com" <jbrunet@baylibre.com>,
+	"martin.blumenstingl@googlemail.com" <martin.blumenstingl@googlemail.com>,
+	"vadim.fedorenko@linux.dev" <vadim.fedorenko@linux.dev>,
+	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+	"linux-amlogic@lists.infradead.org" <linux-amlogic@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, kernel <kernel@sberdevices.ru>
+Subject: Re: [PATCH v4 00/20] Support more Amlogic SoC families in crypto
+ driver
+Thread-Topic: [PATCH v4 00/20] Support more Amlogic SoC families in crypto
+ driver
+Thread-Index: AQHaXbqRFptCyAwKyUyy1Cn5x5FmZLEHrLEAgANdAYA=
+Date: Thu, 15 Feb 2024 10:43:09 +0000
+Message-ID: <20240215104251.pcqj532ekhq5dfbt@cab-wsm-0029881.sigma.sbrf.ru>
+References: <20240212135108.549755-1-avromanov@salutedevices.com>
+ <ZcsYaPIUrBSg8iXu@Red>
+In-Reply-To: <ZcsYaPIUrBSg8iXu@Red>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1F71700A325F53478901685FB02CFC10@sberdevices.ru>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 05/18] x86/mm: Convert pte_next_pfn() to
- pte_advance_pfn()
-Content-Language: en-US
-To: Ryan Roberts <ryan.roberts@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Ard Biesheuvel <ardb@kernel.org>, Marc Zyngier <maz@kernel.org>,
- James Morse <james.morse@arm.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>, Mark Rutland <mark.rutland@arm.com>,
- Kefeng Wang <wangkefeng.wang@huawei.com>, John Hubbard
- <jhubbard@nvidia.com>, Zi Yan <ziy@nvidia.com>,
- Barry Song <21cnbao@gmail.com>, Alistair Popple <apopple@nvidia.com>,
- Yang Shi <shy828301@gmail.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-arm-kernel@lists.infradead.org, x86@kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20240215103205.2607016-1-ryan.roberts@arm.com>
- <20240215103205.2607016-6-ryan.roberts@arm.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240215103205.2607016-6-ryan.roberts@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 183458 [Feb 15 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.3
+X-KSMG-AntiSpam-Envelope-From: avromanov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a, {Track_E25351}, {Tracking_from_domain_doesnt_match_to}, smtp.sberdevices.ru:7.1.1,5.0.1;cab-wsm-0029881.sigma.sbrf.ru:7.1.1,5.0.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1;127.0.0.199:7.1.2, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/02/15 04:37:00 #23614209
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On 15.02.24 11:31, Ryan Roberts wrote:
-> Core-mm needs to be able to advance the pfn by an arbitrary amount, so
-> override the new pte_advance_pfn() API to do so.
-> 
-> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-> ---
->   arch/x86/include/asm/pgtable.h | 8 ++++----
->   1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-> index b50b2ef63672..69ed0ea0641b 100644
-> --- a/arch/x86/include/asm/pgtable.h
-> +++ b/arch/x86/include/asm/pgtable.h
-> @@ -955,13 +955,13 @@ static inline int pte_same(pte_t a, pte_t b)
->   	return a.pte == b.pte;
->   }
->   
-> -static inline pte_t pte_next_pfn(pte_t pte)
-> +static inline pte_t pte_advance_pfn(pte_t pte, unsigned long nr)
->   {
->   	if (__pte_needs_invert(pte_val(pte)))
-> -		return __pte(pte_val(pte) - (1UL << PFN_PTE_SHIFT));
-> -	return __pte(pte_val(pte) + (1UL << PFN_PTE_SHIFT));
-> +		return __pte(pte_val(pte) - (nr << PFN_PTE_SHIFT));
-> +	return __pte(pte_val(pte) + (nr << PFN_PTE_SHIFT));
->   }
-> -#define pte_next_pfn	pte_next_pfn
-> +#define pte_advance_pfn	pte_advance_pfn
->   
->   static inline int pte_present(pte_t a)
->   {
+Hello,
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+On Tue, Feb 13, 2024 at 08:21:12AM +0100, Corentin Labbe wrote:
+> Le Mon, Feb 12, 2024 at 04:50:48PM +0300, Alexey Romanov a 'ecrit :
+> > Hello!
+> >=20
+> > This patchset expand the funcionality of the Amlogic
+> > crypto driver by adding support for more SoC families:
+> > AXG, G12A, G12B, SM1, A1, S4.
+> >=20
+> > Also specify and enable crypto node in device tree
+> > for reference Amlogic devices.
+> >=20
+> > Tested on AXG, G12A/B, SM1, A1 and S4 devices via
+> > custom tests [1] and tcrypt module.
+> >=20
+> > ---
+> >=20
+>=20
+> I started to test on Lepotato board and added patchs up to  "drivers: cry=
+pto: meson: process more than MAXDESCS descriptors"
+> booting lead to:
 
--- 
-Cheers,
+Can you please give me your test cases?
+Which tool are you using or is it something custom?
 
-David / dhildenb
+> [   18.559922] gxl-crypto c883e000.crypto: will run requests pump with re=
+altime priority
+> [   18.562492] gxl-crypto c883e000.crypto: will run requests pump with re=
+altime priority
+> [   18.570328] Unable to handle kernel NULL pointer dereference at virtua=
+l address 0000000000000028
+> [   18.581135] Mem abort info:
+> [   18.581354]   ESR =3D 0x0000000096000006
+> [   18.585138]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+> [   18.593005]   SET =3D 0, FnV =3D 0
+> [   18.593334]   EA =3D 0, S1PTW =3D 0
+> [   18.597329]   FSC =3D 0x06: level 2 translation fault
+> [   18.604250] Data abort info:
+> [   18.604282]   ISV =3D 0, ISS =3D 0x00000006, ISS2 =3D 0x00000000
+> [   18.612243]   CM =3D 0, WnR =3D 0, TnD =3D 0, TagAccess =3D 0
+> [   18.614552]   GCS =3D 0, Overlay =3D 0, DirtyBit =3D 0, Xs =3D 0
+> [   18.624249] user pgtable: 4k pages, 48-bit VAs, pgdp=3D000000007b8ab00=
+0
+> [   18.626196] [0000000000000028] pgd=3D080000007b8ac003, p4d=3D080000007=
+b8ac003, pud=3D080000007b8ad003, pmd=3D0000000000000000
+> [   18.640426] Internal error: Oops: 0000000096000006 [#1] PREEMPT SMP
+> [   18.642929] Modules linked in: of_mdio fixed_phy fwnode_mdio sm4_ce(-)=
+ sm4 meson_rng meson_canvas libphy rng_core meson_gxbb_wdt watchdog amlogic=
+_gxl_crypto(+) ghash_generic gcm xctr xts cts essiv authenc cmac xcbc ccm
+> [   18.662164] CPU: 3 PID: 264 Comm: cryptomgr_test Not tainted 6.8.0-rc1=
+-00052-gf70f2b0814a0 #11
+> [   18.670698] Hardware name: Libre Computer AML-S905X-CC (DT)
+> [   18.676220] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYP=
+E=3D--)
+> [   18.683118] pc : meson_get_engine_number+0x2c/0x50 [amlogic_gxl_crypto=
+]
+> [   18.689674] lr : meson_skencrypt+0x38/0x8c [amlogic_gxl_crypto]
+> [   18.695539] sp : ffff800081393790
+> [   18.698816] x29: ffff800081393790 x28: 0000000000000400 x27: ffff80008=
+0874a80
+> [   18.705888] x26: ffff800081393830 x25: ffff800081393bd8 x24: ffff00000=
+1aaa000
+> [   18.712961] x23: 0000000000000001 x22: 0000000000000000 x21: ffff00000=
+11b1c50
+> [   18.720033] x20: ffff00007bac8248 x19: ffff0000011b1c00 x18: fffffffff=
+fffffff
+> [   18.727105] x17: 00000000000001a4 x16: ffff800078edc1f0 x15: ffff80008=
+13938e0
+> [   18.734178] x14: ffff800101393bd7 x13: 0000000000000000 x12: 000000000=
+0000000
+> [   18.741250] x11: 000000000000021c x10: fffffffff81213e0 x9 : 000000000=
+00730d5
+> [   18.748323] x8 : ffff0000011b1ca8 x7 : fefefefefefefefe x6 : fffffc000=
+007a302
+> [   18.755395] x5 : ffff800078eb4148 x4 : 0000000000000000 x3 : 000000000=
+0000028
+> [   18.762468] x2 : ffff000001aaa040 x1 : 0000000000000000 x0 : 000000000=
+0000000
+> [   18.769541] Call trace:
+> [   18.771956]  meson_get_engine_number+0x2c/0x50 [amlogic_gxl_crypto]
+> [   18.778167]  crypto_skcipher_encrypt+0xe0/0x124
+> [   18.782651]  test_skcipher_vec_cfg+0x2a8/0x6b0
+> [   18.787050]  test_skcipher_vec+0x80/0x1c4
+> [   18.791017]  alg_test_skcipher+0xbc/0x1fc
+> [   18.794985]  alg_test+0x140/0x628
+> [   18.798262]  cryptomgr_test+0x24/0x44
+> [   18.801885]  kthread+0x110/0x114
+> [   18.805076]  ret_from_fork+0x10/0x20
+> [   18.808617] Code: 1b008440 d65f03c0 9100a003 f9800071 (885f7c61)=20
+> [   18.814651] ---[ end trace 0000000000000000 ]---
+> [   18.862270] meson8b-dwmac c9410000.ethernet: IRQ eth_wake_irq not foun=
+d
+> [   18.863897] meson8b-dwmac c9410000.ethernet: IRQ eth_lpi not found
+> [   18.870349] meson8b-dwmac c9410000.ethernet: PTP uses main clock
+> [   18.880548] meson8b-dwmac c9410000.ethernet: User ID: 0x11, Synopsys I=
+D: 0x37
+> [   18.882403] meson8b-dwmac c9410000.ethernet: 	DWMAC1000
+> [   18.887926] meson8b-dwmac c9410000.ethernet: DMA HW capability registe=
+r supported
+> [   18.895215] meson8b-dwmac c9410000.ethernet: RX Checksum Offload Engin=
+e supported
+> [   18.902627] meson8b-dwmac c9410000.ethernet: COE Type 2
+> [   18.907756] meson8b-dwmac c9410000.ethernet: TX Checksum insertion sup=
+ported
+> [   18.914750] meson8b-dwmac c9410000.ethernet: Wake-Up On Lan supported
+> [   18.921246] meson8b-dwmac c9410000.ethernet: Normal descriptors
+> [   18.927017] meson8b-dwmac c9410000.ethernet: Ring mode enabled
+> [   18.932782] meson8b-dwmac c9410000.ethernet: Enable RX Mitigation via =
+HW Watchdog Timer
 
+--=20
+Thank you,
+Alexey=
