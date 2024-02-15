@@ -1,63 +1,63 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57C917741
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 09:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E5E219BCA
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 09:37:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707989823; cv=none; b=mVW8D1D1Std04weHUPI3dZCfmEwd9tOJC+ENNzfJcP1i920gsuk21kN+RcntiIoXsAWQp9vw8428qL5duh9NQKmM+qFNn1azCQsjw/kTjwQgTENazMm1Ajzklmpq6L8rWnmeYjcF9SMokxHY06pWbsaJXGHn0D9H206utYLZOVI=
+	t=1707989826; cv=none; b=JUVS8XTXWGMzW00ndY+t5DmzkymUen7gtY7MOByRoa9/DHPDBxHNyjhdSUXQLfnJUufUEIjylcZ8V+1wEB7rM2BfPOBy0Gvfv8u15hy8kVWImkspa8fZkblnZOsmaB/MCV04riWDLYz3zUf0ib0TQpJJ1i04iSFvluthqVL9qK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707989823; c=relaxed/simple;
-	bh=aHKYH9vQ7JcKnIwHUJk+K0PHkYd1aK39zza+S+q5sZc=;
+	s=arc-20240116; t=1707989826; c=relaxed/simple;
+	bh=qa3ESH7vWTFVNhW4xY+/8wA/zae1Q18vWxlN7dbb6J0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sjaCNOOuH3X55naYBpChwUx84//A8ZrrHrWbGa6DZmLj0OPuHmQzTobjiWRA8YB0YU96+tv3BeAqwRvt6SpgGXsJ8lURv52JxTRKO/dxOVrKO/ZoGNkIPR0YMpEq3olzmZ2dYJF8XhWEgvkbrX7wl+RSZ4rKyczHvkhTK4wsICU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=RG4slG63; arc=none smtp.client-ip=209.85.218.46
+	 MIME-Version; b=FMp64NpAp9ZeOzvU4rA4xeuhF4Phc+qktEPbC0Dou90irESwlvL49qnEDntvLhfKPAvNCCsbySDqhVH7YUqyArgmNngyQ9pI68NsiUa2n+O14cC9jitgon3M5qjpqcQqcbGnJ649BjwCqX4ufuxbYBMOyScKjYIzUiphM94d9K0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=NSzFrQ5u; arc=none smtp.client-ip=209.85.218.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="RG4slG63"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a3da5bf7f9cso26000166b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 01:37:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="NSzFrQ5u"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a3d62da9d25so74449466b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 01:37:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1707989818; x=1708594618; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1707989821; x=1708594621; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=m7dUZOBLu7d+3R+DKHO2TzD/GDIM7CR+ZFQySZN2YdQ=;
-        b=RG4slG634Nd/V5uD81rPAdcXUVt/QNjQV8C1lWfF2KjNp1tbz7pppnO5EKBvpYzBF0
-         nK0cbP3PTk1KOZFRCKkhvMsPJ+F/LoBNMVjs16XWI1SkF8xiKf1f4kzzkLLA7n7wvg6O
-         YbgKdlbaabWtUCxofsIlCjNy2mJBxCqgel4W9l6n44FMUyCzHl0HBbTfKDAPt7gp+5oz
-         FGgZghhljJtlLzy/7J5NzQG98aIRV3Dr7nXjoWSJmZ9TNYKNCTD83TTRpyiuqRNgeiHV
-         H9xtXa3HGK3aBOi61jz9qSBGaqP1p7/B3gGhumJPozxgiNl8V4HQO3aBI55Jgy7BWkP2
-         g9zg==
+        bh=+h1IEdtpwE+MgefySz12julwicOiuPFac8ie3+0rpxY=;
+        b=NSzFrQ5u5Yt7t+fK0EdOlsh3Ei1hAx0oLDkWkymLfXQuTs+1oZr7kqZo8txNXBL1Pa
+         Bwak8aEb6slBPPUA3idYNvHHrBcSrJD8zTb9hqSt4ebYueUORvwodNmuoWdtj7sd7r1j
+         +xFRri3nIxlXOWtghW7EdoTlCPsABBMoihyMb9e2jRz+RmRtfHve7NfykCd9YjrEAppb
+         X6wv2ffgoYHxopkHICfVRGHG1EuiF9wlGMhFcZ/MsIo55O3I4Wtf0jv/qbviPWSvfVK0
+         N32OS7Z4COufhtSj2Cz8LJ7qrtbKLqHjrladGCwSTm9SKjYRIDQBHAc8qfAofAEuesux
+         nSMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707989818; x=1708594618;
+        d=1e100.net; s=20230601; t=1707989821; x=1708594621;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=m7dUZOBLu7d+3R+DKHO2TzD/GDIM7CR+ZFQySZN2YdQ=;
-        b=dM13CgCUEevSHn2uKOfOHqKrpDlynEya83Yjq2zQ1YHT6NKQNxAEbbZuMKAVXHQaJ9
-         RwTdbSbzsZ7VOPo5lAJGI1EwUQ8kydc/Or3l3MDHRumlIthQ48iL0wA5dCdtTlegT5CP
-         thDjOWADXxeKq2Vv9Uuk8pACAjpsvUQPwum3M8CGXQHV5/oivmjqjD4+M+gf6O+qH09i
-         py/l6EwjdZpotEcAtGicmjPnLj8Ckly5TzQCFHXsgTrexXg75ZT8Z1j1fko/h7HrXpUy
-         iPi5yvCmCSfJkC2WX6cl2NC4PF+6Q/TMYH61qPJMon/cwOrGo2/vfoiIHRE8K+ZFbuH4
-         wjsQ==
-X-Gm-Message-State: AOJu0YxYg1OVXy5JB2J5zpN1gjdFbMTBwLbIXe8NhpXtVVlDCpxqmw23
-	KBmNLKteq48LfS4qOvbCH2X93Ov6Xe/hxakMKe0x1wtoUk2kLVxG+0sKjpnFyPRKfWnOmIV9RmY
-	Z
-X-Google-Smtp-Source: AGHT+IFUXii2K0AUUpMDVe1jokORv8xAqgKb9r+fePYUohnjQor5QUILIeJjCrEzoMJ9tSh3SHsKWw==
-X-Received: by 2002:a17:906:7196:b0:a3d:1899:ec3 with SMTP id h22-20020a170906719600b00a3d18990ec3mr884874ejk.35.1707989818387;
-        Thu, 15 Feb 2024 01:36:58 -0800 (PST)
+        bh=+h1IEdtpwE+MgefySz12julwicOiuPFac8ie3+0rpxY=;
+        b=DFs/UCN0DFvaISBatHiviSb7WjcLuAOY7lHJUXAaV6k3XzeI2EzSZf2g6I/j7/yGz6
+         pCdwblPcaziEVgUX+Req0FxwtILKkPmXZV8PW1tSgwvF6LPOvKv8jHb+Ro5R8BAzbTRN
+         vvbxVyUot0eR1U8mQqY4AyttguC7Q1sp+VoG/eNzUOZ0NcA5qp6+cZ2JzRWv/ohlCm/N
+         ZN+hP/mCd36/hnVtww6NLexMu4sqb/GlhUBkUU7pdVkR06eVQKJCXHjMV22mECEAbpx8
+         T2FdE+RB2AwRkrf5n8Ya0kNwh5mNETLhd46VlOhO0wgMeFH7jutO56FpAxLgJxoSJSFM
+         7Nag==
+X-Gm-Message-State: AOJu0Yw2hwmCuEnC9ZygIAm/98qx8PmXjKLaoWjWU/ChrAhcP+tFzsf6
+	KCbjwO3sdywVSOB3qYoLDdEbRgXJf8QMl6lNOA4cBKkY3gL3JsLM9SgT9ff3eCtcTGIr6COsF+h
+	x
+X-Google-Smtp-Source: AGHT+IEUQzhbJGuDHy3NZszYofnMmzmppTOLEzLxDW4Z+z34IcFGwZfKaQbb0RuKLXrx148oDnt7RQ==
+X-Received: by 2002:a17:906:2c55:b0:a3c:770:1752 with SMTP id f21-20020a1709062c5500b00a3c07701752mr794174ejh.68.1707989820789;
+        Thu, 15 Feb 2024 01:37:00 -0800 (PST)
 Received: from raven.intern.cm-ag (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id rg14-20020a1709076b8e00b00a3d09d09e90sm362059ejc.59.2024.02.15.01.36.57
+        by smtp.gmail.com with ESMTPSA id rg14-20020a1709076b8e00b00a3d09d09e90sm362059ejc.59.2024.02.15.01.37.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Feb 2024 01:36:57 -0800 (PST)
+        Thu, 15 Feb 2024 01:37:00 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: linux-kernel@vger.kernel.org
 Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v1 3/8] include linux/wordpart.h in various sources that need it
-Date: Thu, 15 Feb 2024 10:36:41 +0100
-Message-Id: <20240215093646.3265823-4-max.kellermann@ionos.com>
+Subject: [PATCH v1 6/8] linux/kernel.h: move READ and WRITE to direction.h
+Date: Thu, 15 Feb 2024 10:36:44 +0100
+Message-Id: <20240215093646.3265823-7-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240215093646.3265823-1-max.kellermann@ionos.com>
 References: <20240215093646.3265823-1-max.kellermann@ionos.com>
@@ -69,229 +69,176 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-After commit edf2f6fb51bc ("kernel.h: Move upper_*_bits() and
-lower_*_bits() to wordpart.h"), the lower/upper_*_bits functions can
-be found in that header, and all sources that use those functions
-should include the header that provides it.
-
-This is just the beginning, many more sources are still missing, but a
-large patch adding the "#include" everywhere (700+ sources) would be
-hard to review.
-
-(Found with "git grep -E '\b(upper|lower)_(16|32)_bits\('")
+Reducing dependencies on the header linux/kernel.h.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- arch/arm64/include/asm/syscall.h   | 1 +
- arch/arm64/kvm/handle_exit.c       | 1 +
- drivers/bus/uniphier-system-bus.c  | 1 +
- drivers/irqchip/irq-gic-v3-its.c   | 1 +
- drivers/spi/spi-pci1xxxx.c         | 1 +
- fs/ext4/super.c                    | 1 +
- fs/hfs/hfs_fs.h                    | 1 +
- fs/hfsplus/hfsplus_fs.h            | 1 +
- fs/notify/fanotify/fanotify_user.c | 1 +
- fs/open.c                          | 1 +
- fs/ufs/util.h                      | 1 +
- include/linux/dma-fence.h          | 1 +
- include/linux/qed/common_hsi.h     | 1 +
- include/rdma/uverbs_ioctl.h        | 2 +-
- include/soc/fsl/bman.h             | 2 ++
- include/soc/fsl/qman.h             | 1 +
- 16 files changed, 17 insertions(+), 1 deletion(-)
+ drivers/input/misc/iqs7222.c        | 1 +
+ drivers/memstick/core/memstick.c    | 1 +
+ drivers/memstick/host/jmb38x_ms.c   | 1 +
+ drivers/memstick/host/r592.c        | 1 +
+ drivers/memstick/host/rtsx_pci_ms.c | 1 +
+ drivers/memstick/host/rtsx_usb_ms.c | 1 +
+ drivers/memstick/host/tifm_ms.c     | 1 +
+ fs/overlayfs/copy_up.c              | 1 +
+ include/linux/direction.h           | 9 +++++++++
+ include/linux/kernel.h              | 4 ----
+ include/linux/nd.h                  | 1 +
+ include/linux/uio.h                 | 2 +-
+ 12 files changed, 19 insertions(+), 5 deletions(-)
+ create mode 100644 include/linux/direction.h
 
-diff --git a/arch/arm64/include/asm/syscall.h b/arch/arm64/include/asm/syscall.h
-index ab8e14b96f68..e5f462cc1a54 100644
---- a/arch/arm64/include/asm/syscall.h
-+++ b/arch/arm64/include/asm/syscall.h
+diff --git a/drivers/input/misc/iqs7222.c b/drivers/input/misc/iqs7222.c
+index 36aeeae77611..622cec9bcfe8 100644
+--- a/drivers/input/misc/iqs7222.c
++++ b/drivers/input/misc/iqs7222.c
 @@ -8,6 +8,7 @@
- #include <uapi/linux/audit.h>
- #include <linux/compat.h>
+ #include <linux/bits.h>
+ #include <linux/delay.h>
+ #include <linux/device.h>
++#include <linux/direction.h>
  #include <linux/err.h>
-+#include <linux/wordpart.h> // for lower_32_bits()
- 
- typedef long (*syscall_fn_t)(const struct pt_regs *regs);
- 
-diff --git a/arch/arm64/kvm/handle_exit.c b/arch/arm64/kvm/handle_exit.c
-index 617ae6dea5d5..91bd5b701acf 100644
---- a/arch/arm64/kvm/handle_exit.c
-+++ b/arch/arm64/kvm/handle_exit.c
-@@ -10,6 +10,7 @@
- 
- #include <linux/kvm.h>
- #include <linux/kvm_host.h>
-+#include <linux/wordpart.h> // for lower_32_bits(), upper_32_bits()
- 
- #include <asm/esr.h>
- #include <asm/exception.h>
-diff --git a/drivers/bus/uniphier-system-bus.c b/drivers/bus/uniphier-system-bus.c
-index cb5c89ce7b86..964f31287d3c 100644
---- a/drivers/bus/uniphier-system-bus.c
-+++ b/drivers/bus/uniphier-system-bus.c
-@@ -10,6 +10,7 @@
- #include <linux/of_address.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
-+#include <linux/wordpart.h> // for upper_32_bits()
- 
- /* System Bus Controller registers */
- #define UNIPHIER_SBC_BASE	0x100	/* base address of bank0 space */
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 201055382bd1..94f917352ac6 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -29,6 +29,7 @@
- #include <linux/percpu.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+diff --git a/drivers/memstick/core/memstick.c b/drivers/memstick/core/memstick.c
+index 23fea51ecbdd..fcc28853d588 100644
+--- a/drivers/memstick/core/memstick.c
++++ b/drivers/memstick/core/memstick.c
+@@ -12,6 +12,7 @@
+ #include <linux/idr.h>
+ #include <linux/fs.h>
+ #include <linux/delay.h>
++#include <linux/direction.h>
  #include <linux/slab.h>
- #include <linux/syscore_ops.h>
-+#include <linux/wordpart.h> // for lower_32_bits(), upper_32_bits()
- 
- #include <linux/irqchip.h>
- #include <linux/irqchip/arm-gic-v3.h>
-diff --git a/drivers/spi/spi-pci1xxxx.c b/drivers/spi/spi-pci1xxxx.c
-index 969965d7bc98..775673861c79 100644
---- a/drivers/spi/spi-pci1xxxx.c
-+++ b/drivers/spi/spi-pci1xxxx.c
-@@ -9,6 +9,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/iopoll.h>
- #include <linux/irq.h>
-+#include <linux/kernel.h> // for upper_32_bits(), lower_32_bits()
  #include <linux/module.h>
- #include <linux/msi.h>
- #include <linux/pci_regs.h>
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index e487623f9456..6a7686343bd0 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -48,6 +48,7 @@
- #include <linux/fsnotify.h>
- #include <linux/fs_context.h>
- #include <linux/fs_parser.h>
-+#include <linux/wordpart.h> // for lower_32_bits(), upper_32_bits()
- 
- #include "ext4.h"
- #include "ext4_extents.h"	/* Needed for trace points definition */
-diff --git a/fs/hfs/hfs_fs.h b/fs/hfs/hfs_fs.h
-index b5a6ad5df357..514d3856aa27 100644
---- a/fs/hfs/hfs_fs.h
-+++ b/fs/hfs/hfs_fs.h
-@@ -20,6 +20,7 @@
- #include <linux/mutex.h>
- #include <linux/buffer_head.h>
- #include <linux/fs.h>
-+#include <linux/wordpart.h> // for lower_32_bits()
- #include <linux/workqueue.h>
- 
- #include <asm/byteorder.h>
-diff --git a/fs/hfsplus/hfsplus_fs.h b/fs/hfsplus/hfsplus_fs.h
-index 7ededcb720c1..79cac82d050e 100644
---- a/fs/hfsplus/hfsplus_fs.h
-+++ b/fs/hfsplus/hfsplus_fs.h
-@@ -21,6 +21,7 @@
- #include <linux/mutex.h>
- #include <linux/buffer_head.h>
- #include <linux/blkdev.h>
-+#include <linux/wordpart.h> // for lower_32_bits()
- #include "hfsplus_raw.h"
- 
- #define DBG_BNODE_REFS	0x00000001
-diff --git a/fs/notify/fanotify/fanotify_user.c b/fs/notify/fanotify/fanotify_user.c
-index fbdc63cc10d9..9ca5adbf39ae 100644
---- a/fs/notify/fanotify/fanotify_user.c
-+++ b/fs/notify/fanotify/fanotify_user.c
-@@ -20,6 +20,7 @@
- #include <linux/memcontrol.h>
- #include <linux/statfs.h>
- #include <linux/exportfs.h>
-+#include <linux/wordpart.h> // for upper_32_bits()
- 
- #include <asm/ioctls.h>
- 
-diff --git a/fs/open.c b/fs/open.c
-index a7d4bb2c725f..b006de16a15a 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -34,6 +34,7 @@
- #include <linux/compat.h>
- #include <linux/mnt_idmapping.h>
- #include <linux/filelock.h>
-+#include <linux/wordpart.h> // for upper_32_bits()
- 
- #include "internal.h"
- 
-diff --git a/fs/ufs/util.h b/fs/ufs/util.h
-index 0ecd2ed792f5..0d4b89794cc5 100644
---- a/fs/ufs/util.h
-+++ b/fs/ufs/util.h
-@@ -9,6 +9,7 @@
- 
- #include <linux/buffer_head.h>
- #include <linux/fs.h>
-+#include <linux/wordpart.h> // for lower_32_bits()
- #include "swab.h"
- 
- /*
-diff --git a/include/linux/dma-fence.h b/include/linux/dma-fence.h
-index e06bad467f55..02ad83247ea8 100644
---- a/include/linux/dma-fence.h
-+++ b/include/linux/dma-fence.h
-@@ -22,6 +22,7 @@
- #include <linux/printk.h>
- #include <linux/rcupdate.h>
- #include <linux/timekeeping.h>
-+#include <linux/wordpart.h> // for lower_32_bits()
- 
- struct dma_fence;
- struct dma_fence_ops;
-diff --git a/include/linux/qed/common_hsi.h b/include/linux/qed/common_hsi.h
-index 827624840ee2..fa9cc2be077f 100644
---- a/include/linux/qed/common_hsi.h
-+++ b/include/linux/qed/common_hsi.h
-@@ -11,6 +11,7 @@
- #include <asm/byteorder.h>
- #include <linux/bitops.h>
- #include <linux/slab.h>
-+#include <linux/wordpart.h> // for lower_32_bits(), upper_32_bits()
- 
- /* dma_addr_t manip */
- #define PTR_LO(x)		((u32)(((uintptr_t)(x)) & 0xffffffff))
-diff --git a/include/rdma/uverbs_ioctl.h b/include/rdma/uverbs_ioctl.h
-index 06287de69cd2..5ed57a660ead 100644
---- a/include/rdma/uverbs_ioctl.h
-+++ b/include/rdma/uverbs_ioctl.h
-@@ -1,5 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB */
--/*
-+ /*
-  * Copyright (c) 2017, Mellanox Technologies inc.  All rights reserved.
+ #include <linux/pm_runtime.h>
+diff --git a/drivers/memstick/host/jmb38x_ms.c b/drivers/memstick/host/jmb38x_ms.c
+index e77eb8b0eb12..dc8e4f6a01df 100644
+--- a/drivers/memstick/host/jmb38x_ms.c
++++ b/drivers/memstick/host/jmb38x_ms.c
+@@ -6,6 +6,7 @@
   */
  
-diff --git a/include/soc/fsl/bman.h b/include/soc/fsl/bman.h
-index 173e4049d963..b01d8c0ac204 100644
---- a/include/soc/fsl/bman.h
-+++ b/include/soc/fsl/bman.h
-@@ -31,6 +31,8 @@
- #ifndef __FSL_BMAN_H
- #define __FSL_BMAN_H
+ #include <linux/spinlock.h>
++#include <linux/direction.h>
+ #include <linux/interrupt.h>
+ #include <linux/pci.h>
+ #include <linux/dma-mapping.h>
+diff --git a/drivers/memstick/host/r592.c b/drivers/memstick/host/r592.c
+index 461f5ffd02bc..9ab3a7a15674 100644
+--- a/drivers/memstick/host/r592.c
++++ b/drivers/memstick/host/r592.c
+@@ -12,6 +12,7 @@
+ #include <linux/pci.h>
+ #include <linux/pci_ids.h>
+ #include <linux/delay.h>
++#include <linux/direction.h>
+ #include <linux/slab.h>
+ #include <linux/kthread.h>
+ #include <linux/sched.h>
+diff --git a/drivers/memstick/host/rtsx_pci_ms.c b/drivers/memstick/host/rtsx_pci_ms.c
+index 15720a4afac2..4bd00d69a9b6 100644
+--- a/drivers/memstick/host/rtsx_pci_ms.c
++++ b/drivers/memstick/host/rtsx_pci_ms.c
+@@ -10,6 +10,7 @@
+ #include <linux/module.h>
+ #include <linux/highmem.h>
+ #include <linux/delay.h>
++#include <linux/direction.h>
+ #include <linux/platform_device.h>
+ #include <linux/memstick.h>
+ #include <linux/rtsx_pci.h>
+diff --git a/drivers/memstick/host/rtsx_usb_ms.c b/drivers/memstick/host/rtsx_usb_ms.c
+index 29271ad4728a..eeebdde571e6 100644
+--- a/drivers/memstick/host/rtsx_usb_ms.c
++++ b/drivers/memstick/host/rtsx_usb_ms.c
+@@ -10,6 +10,7 @@
+ #include <linux/module.h>
+ #include <linux/highmem.h>
+ #include <linux/delay.h>
++#include <linux/direction.h>
+ #include <linux/platform_device.h>
+ #include <linux/workqueue.h>
+ #include <linux/memstick.h>
+diff --git a/drivers/memstick/host/tifm_ms.c b/drivers/memstick/host/tifm_ms.c
+index c272453670be..c46b6157aa25 100644
+--- a/drivers/memstick/host/tifm_ms.c
++++ b/drivers/memstick/host/tifm_ms.c
+@@ -10,6 +10,7 @@
  
-+#include <linux/wordpart.h> // for upper_32_bits()
+ #include <linux/tifm.h>
+ #include <linux/memstick.h>
++#include <linux/direction.h>
+ #include <linux/highmem.h>
+ #include <linux/scatterlist.h>
+ #include <linux/log2.h>
+diff --git a/fs/overlayfs/copy_up.c b/fs/overlayfs/copy_up.c
+index 8586e2f5d243..465a7822b5dd 100644
+--- a/fs/overlayfs/copy_up.c
++++ b/fs/overlayfs/copy_up.c
+@@ -15,6 +15,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/sched/signal.h>
+ #include <linux/cred.h>
++#include <linux/direction.h>
+ #include <linux/namei.h>
+ #include <linux/fdtable.h>
+ #include <linux/ratelimit.h>
+diff --git a/include/linux/direction.h b/include/linux/direction.h
+new file mode 100644
+index 000000000000..78d70701579d
+--- /dev/null
++++ b/include/linux/direction.h
+@@ -0,0 +1,9 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_DIRECTION_H
++#define _LINUX_DIRECTION_H
 +
- /* wrapper for 48-bit buffers */
- struct bm_buffer {
- 	union {
-diff --git a/include/soc/fsl/qman.h b/include/soc/fsl/qman.h
-index 0d3d6beb7fdb..c5230a844114 100644
---- a/include/soc/fsl/qman.h
-+++ b/include/soc/fsl/qman.h
-@@ -33,6 +33,7 @@
++/* generic data direction definitions */
++#define READ			0
++#define WRITE			1
++
++#endif
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index f6a978d51c1d..55af40e63b92 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -41,10 +41,6 @@
  
- #include <linux/bitops.h>
+ #define STACK_MAGIC	0xdeadbeef
+ 
+-/* generic data direction definitions */
+-#define READ			0
+-#define WRITE			1
+-
+ #define PTR_IF(cond, ptr)	((cond) ? (ptr) : NULL)
+ 
+ #define u64_to_user_ptr(x) (		\
+diff --git a/include/linux/nd.h b/include/linux/nd.h
+index b9771ba1ef87..ef344119214b 100644
+--- a/include/linux/nd.h
++++ b/include/linux/nd.h
+@@ -7,6 +7,7 @@
+ #include <linux/fs.h>
+ #include <linux/ndctl.h>
  #include <linux/device.h>
-+#include <linux/wordpart.h> // for upper_32_bits()
++#include <linux/direction.h>
+ #include <linux/badblocks.h>
+ #include <linux/perf_event.h>
  
- /* Hardware constants */
- #define QM_CHANNEL_SWPORTAL0 0
+diff --git a/include/linux/uio.h b/include/linux/uio.h
+index bea9c89922d9..77a3e462d8c4 100644
+--- a/include/linux/uio.h
++++ b/include/linux/uio.h
+@@ -5,7 +5,7 @@
+ #ifndef __LINUX_UIO_H
+ #define __LINUX_UIO_H
+ 
+-#include <linux/kernel.h>
++#include <linux/direction.h>
+ #include <linux/thread_info.h>
+ #include <linux/mm_types.h>
+ #include <uapi/linux/uio.h>
 -- 
 2.39.2
 
