@@ -1,77 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1496812DDBB;
-	Thu, 15 Feb 2024 12:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B8458ABC;
+	Thu, 15 Feb 2024 12:45:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708001088; cv=none; b=TXBKvnHy0p4CypsMPfyaP9/fUJ/jFdvuv92ss1EztO4gOiRNGZUiHWXeUty5Dm6BU/8RAEDIg/esI6V39ZmundsUlX7kG7w1V/mbZMH+SZirr4oMG1v9H/AqcFNoyekXerWQ8TawwAhbZOunH2K7zWccwikdczR40Sp0GxeDzmA=
+	t=1708001107; cv=none; b=muMaOqtEx6LbfZMPu3vfGQsXkNX6wFe0uuTlEtlN7UZFFIHjr5HufkvNAgoCZK5qDJLNlFr7UL/fToVdLDq9BLu+IdBxEocwDH0XETVyyNnSevCVYro3zpFI8s9YvFXY5a2zJc/lcbWN6OZn1atFgqACJ14/WINn6AebNAd5q74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708001088; c=relaxed/simple;
-	bh=EdmufWQaVwffxLhQdQ6E7nT/EWdxxAEZpxmh/Eg8Yig=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=US1h/SeB38LekCG3quvX+XG6lrK5NOjPSnuf6hfduD9V+wedKK2ISeTJnwpVQJz+iQU6f25lUOAULorz9Sse7Aeq1jqwZDQ5pGWRUqJgbxWR5WRWALM2HGU5Ds9sKCD1sXkJzXgzDAfQVme1I37JJo/toQioeGJjJI7l5nuy6Sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V/MtHXi8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708001107; c=relaxed/simple;
+	bh=Mgp00C5UQtSRyPwSCiGeC8fFaUThfqgMHNgJPSY/Oug=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=E2L3UEPY+f7ZxsYY2Ftc9Ui1PGDJd+7BK5da1J92cshDHMaWdJmVipvYeJoCJ2uKPOHPUVOHkJsese3ppmKSNHQk43TN3kuWAtGZsxduMiAj31ZsZnsvrg/2HoWfuy/rYtW31HGHWCFOGtUMETsm2UFSSQiwDDv/hVRLc75+K7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Fu8GgC2M; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V/MtHXi8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE682C433F1;
-	Thu, 15 Feb 2024 12:44:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708001087;
-	bh=EdmufWQaVwffxLhQdQ6E7nT/EWdxxAEZpxmh/Eg8Yig=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=V/MtHXi8TXRaLI/EM3ODSpXgDDCPQdOxCps6ATcUHyNUss4BXT8xxpK5xF3T1kfC9
-	 mqEue4P6Ypu8e1Rv1EHR22aX0fYeal74X2pwdhVjjyxiolwBB6qMuy0bygf16ZpUWx
-	 m1YuhBdq3iINziHsfVCE4ax6YK/pBnifXyBfgwMvRcLWQ/tg5w5y1OK6dPFRIMHP3O
-	 RCcZj+UmU1eS3Kt0UqPvGR0DJNIpuPmOtCGiHP44Jf9vyo0UOuHeBRRSTx65SDRA4t
-	 lngLtn4MGguAQ9dwGzrSPX9y0Hj91DqI1Bb1lyyuUn6e9nWZT6CkLjMcmxE3FV+fen
-	 gr6tApkDqqlmw==
-From: Will Deacon <will@kernel.org>
-To: Marc Zyngier <maz@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Easwar Hariharan <eahariha@linux.microsoft.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Rob Herring <robh@kernel.org>,
-	"moderated list:ARM64 PORT AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andre Przywara <andre.przywara@arm.com>
-Cc: kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: Subscribe Microsoft Azure Cobalt 100 to ARM Neoverse N2 errata
-Date: Thu, 15 Feb 2024 12:44:38 +0000
-Message-Id: <170799764265.3746091.15823620803100752366.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20240214175522.2457857-1-eahariha@linux.microsoft.com>
-References: <20240214175522.2457857-1-eahariha@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Fu8GgC2M"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41FBe9Wx029250;
+	Thu, 15 Feb 2024 12:44:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=jss1n6W
+	RXgUmgKBvDKm6RZxp/HrIA3PlBrDIIsPb8r4=; b=Fu8GgC2Myp/wKqd/1mJ7MPl
+	xWPAyQj1+wBv8xs3BkdVqVbSdGzTO6vBY62AnwhWqFPSOXbl9Ky9ouUA0Y+1QIeE
+	SWqHGtLokC///C2mjmMhC5NdPUN9mgBcTHFHkzXLhOVXWgktDwD52nRU1mXq4jRG
+	fMWduXx0gbB9f1j0c7Ryj8MrTqacdvK1Smn9dqedQPUjGNDWhaQAhOwl9uzDqhW4
+	x5CylQCCHXt4DOgo/8k4tr5rOvgtWXy07ggR7G+C/JPK1ENOKqj4AJ/jwcKad89j
+	nsxvgU995KXlYTTqMh2L2WfabzKIwApFxQF05IhZa5ZBdAjCZO5MHJyMvhUzKwA=
+	=
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w9435sru2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 Feb 2024 12:44:52 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41FCiond026387
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 Feb 2024 12:44:51 GMT
+Received: from hu-jinlmao-lv.qualcomm.com (10.49.16.6) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Thu, 15 Feb 2024 04:44:50 -0800
+From: Mao Jinlong <quic_jinlmao@quicinc.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach
+	<mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring
+	<robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Mao
+ Jinlong" <quic_jinlmao@quicinc.com>,
+        Tao Zhang <quic_taozha@quicinc.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+CC: <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/2] coresight: tpdm: Change qcom,dsb-element-size to qcom,dsb-elem-bits
+Date: Thu, 15 Feb 2024 04:44:35 -0800
+Message-ID: <20240215124439.30037-1-quic_jinlmao@quicinc.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Mt0kXIpjqrmyvXPsQYZAt2pEM1q6xtcN
+X-Proofpoint-ORIG-GUID: Mt0kXIpjqrmyvXPsQYZAt2pEM1q6xtcN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-15_11,2024-02-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 mlxscore=0 suspectscore=0 spamscore=0
+ priorityscore=1501 malwarescore=0 adultscore=0 bulkscore=0 mlxlogscore=713
+ clxscore=1015 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402150100
 
-On Wed, 14 Feb 2024 17:55:18 +0000, Easwar Hariharan wrote:
-> Add the MIDR value of Microsoft Azure Cobalt 100, which is a Microsoft
-> implemented CPU based on r0p0 of the ARM Neoverse N2 CPU, and therefore
-> suffers from all the same errata.
-> 
-> 
+As unit of dsb element size is bit, change qcom,dsb-element-size to
+qcom,dsb-elem-bits. And CMB uses -bits suffix as well. There is no
+TPDM node in any DT now. Make such change before any TPDM node is added
+to DT. 
 
-Applied to arm64 (for-next/fixes), thanks!
+Change since V1:
+1. Update the commit message for dt-binding.
+2. Fix the dt_binding_check error for dt-binding change.
 
-[1/1] arm64: Subscribe Microsoft Azure Cobalt 100 to ARM Neoverse N2 errata
-      https://git.kernel.org/arm64/c/fb091ff39479
+Mao Jinlong (2):
+  dt-bindings: arm: qcom,coresight-tpdm: Rename qcom,dsb-element-size
+  coresight-tpda: Change qcom,dsb-element-size to qcom,dsb-elem-bits
 
-Cheers,
+ .../devicetree/bindings/arm/qcom,coresight-tpdm.yaml         | 5 ++---
+ drivers/hwtracing/coresight/coresight-tpda.c                 | 2 +-
+ 2 files changed, 3 insertions(+), 4 deletions(-)
+
 -- 
-Will
+2.41.0
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
