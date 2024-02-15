@@ -1,57 +1,67 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D443D84FC0
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 10:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 989F712A14C;
+	Thu, 15 Feb 2024 10:33:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707993203; cv=none; b=NAxXpINkFE8XLkh0A9rkl3MulRwap+POYjGaqRUtXzcVuIpYoKnKDF9w4XFxI8WQqCxTXkdzhon5objtRpCVX+2hPrmNRa/dOyWbGQpZS7DLCHk6WBjemlnGLZCzRblDu6cQH3MosGGzp5vvSKUUOIfhoIJfnNdtQuEqtAODbpg=
+	t=1707993206; cv=none; b=KDZR4wpor7toREWxxFZOrh6Tr2zL4NVuEQN7wuMcNbYbf9TrdYCs1JxQtdGdVpjMIFO9OrbAJHvq1MS8oKmc2GEQdFbhBiVqD0okFktti63JgnNVY64+7PmfM3c/5m9E6EQ+GtCorgqULiIGHDgO120pc2soyR2a1Q8I9g8NZ9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707993203; c=relaxed/simple;
-	bh=MT4/Y1PHTAJ8ayKJxBrsN+v9y+8DZ+FHAYEo1ocwO1k=;
+	s=arc-20240116; t=1707993206; c=relaxed/simple;
+	bh=Gb8s5hzWOm5I00aSMDXJz+YZ4iuHCLS/ph57hZsjdSw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=d7mZSN8D0MaADYiZaSMOvm5axAS8YWjwR1E8qrfUmqE/okVwRluRhT51L7eSHtsOf41E/0Md7grONFswchyLYWyXnOy2UATcyDiKB5OyMJw8D2rWAf3MheN4447xPpmDDxDAZjpByRhfsRJOerOBe897P3oXR4TPAtsL0byOtQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B7551650;
-	Thu, 15 Feb 2024 02:34:02 -0800 (PST)
-Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.26])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 527B93F7B4;
-	Thu, 15 Feb 2024 02:33:18 -0800 (PST)
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	David Hildenbrand <david@redhat.com>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Barry Song <21cnbao@gmail.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Yang Shi <shy828301@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	x86@kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 18/18] arm64/mm: Automatically fold contpte mappings
-Date: Thu, 15 Feb 2024 10:32:05 +0000
-Message-Id: <20240215103205.2607016-19-ryan.roberts@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240215103205.2607016-1-ryan.roberts@arm.com>
-References: <20240215103205.2607016-1-ryan.roberts@arm.com>
+	 MIME-Version; b=OwB12jsdLnoeEsXqOa6xAw01Ocf3wNGkhs2jP2arv1zGrQyd/4CcSH5NBgjaRatdN8efa7DHhdVyosndCILVIHIJ6CGA31ZCb5P7+3lcV75mOjoQh93eX/FzfPk6gg419VWconZ+Zg0fNO6ReaPF+eoO1UZltW/Fm3Zb1UqYZXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.29])
+	by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4Tb9xT0hzHz9yB76;
+	Thu, 15 Feb 2024 18:18:05 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.27])
+	by mail.maildlp.com (Postfix) with ESMTP id F239D1406BF;
+	Thu, 15 Feb 2024 18:33:11 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.204.63.22])
+	by APP2 (Coremail) with SMTP id GxC2BwAXUCQD6M1lUHGHAg--.4426S8;
+	Thu, 15 Feb 2024 11:33:11 +0100 (CET)
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: viro@zeniv.linux.org.uk,
+	brauner@kernel.org,
+	jack@suse.cz,
+	chuck.lever@oracle.com,
+	jlayton@kernel.org,
+	neilb@suse.de,
+	kolga@netapp.com,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com,
+	paul@paul-moore.com,
+	jmorris@namei.org,
+	serge@hallyn.com,
+	zohar@linux.ibm.com,
+	dmitry.kasatkin@gmail.com,
+	eric.snowberg@oracle.com,
+	dhowells@redhat.com,
+	jarkko@kernel.org,
+	stephen.smalley.work@gmail.com,
+	omosnace@redhat.com,
+	casey@schaufler-ca.com,
+	shuah@kernel.org,
+	mic@digikod.net
+Cc: linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-integrity@vger.kernel.org,
+	keyrings@vger.kernel.org,
+	selinux@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Stefan Berger <stefanb@linux.ibm.com>
+Subject: [PATCH v10 06/25] evm: Align evm_inode_post_setattr() definition with LSM infrastructure
+Date: Thu, 15 Feb 2024 11:30:54 +0100
+Message-Id: <20240215103113.2369171-7-roberto.sassu@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240215103113.2369171-1-roberto.sassu@huaweicloud.com>
+References: <20240215103113.2369171-1-roberto.sassu@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,151 +69,101 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:GxC2BwAXUCQD6M1lUHGHAg--.4426S8
+X-Coremail-Antispam: 1UD129KBjvJXoWxuF4DCFWkJF1xArWxCw17Jrb_yoW5Cw1Upa
+	95K3WkC34rWryUWr95GF4rZayFgFW8WryUX3yFgw1jyFnrtrnIqF1xK3yUCry5GrW8Grn0
+	qFnFvrn5Cr15A3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBmb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
+	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
+	rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267
+	AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E
+	14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrV
+	C2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE
+	7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xKxwCF04k20x
+	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
+	3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Wrv_Gr1UMIIYrxkI7VAKI48JMI
+	IF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l
+	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
+	A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjxUFgAwUUUUU
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAOBF1jj5pfXAAAsj
 
-There are situations where a change to a single PTE could cause the
-contpte block in which it resides to become foldable (i.e. could be
-repainted with the contiguous bit). Such situations arise, for example,
-when user space temporarily changes protections, via mprotect, for
-individual pages, such can be the case for certain garbage collectors.
+From: Roberto Sassu <roberto.sassu@huawei.com>
 
-We would like to detect when such a PTE change occurs. However this can
-be expensive due to the amount of checking required. Therefore only
-perform the checks when an indiviual PTE is modified via mprotect
-(ptep_modify_prot_commit() -> set_pte_at() -> set_ptes(nr=1)) and only
-when we are setting the final PTE in a contpte-aligned block.
+Change evm_inode_post_setattr() definition, so that it can be registered as
+implementation of the inode_post_setattr hook (to be introduced).
 
-Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+Reviewed-by: Casey Schaufler <casey@schaufler-ca.com>
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+Reviewed-by: Paul Moore <paul@paul-moore.com>
+Acked-by: Mimi Zohar <zohar@linux.ibm.com>
 ---
- arch/arm64/include/asm/pgtable.h | 26 +++++++++++++
- arch/arm64/mm/contpte.c          | 64 ++++++++++++++++++++++++++++++++
- 2 files changed, 90 insertions(+)
+ fs/attr.c                         | 2 +-
+ include/linux/evm.h               | 6 ++++--
+ security/integrity/evm/evm_main.c | 4 +++-
+ 3 files changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 8310875133ff..401087e8a43d 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -1185,6 +1185,8 @@ extern void ptep_modify_prot_commit(struct vm_area_struct *vma,
-  * where it is possible and makes sense to do so. The PTE_CONT bit is considered
-  * a private implementation detail of the public ptep API (see below).
-  */
-+extern void __contpte_try_fold(struct mm_struct *mm, unsigned long addr,
-+				pte_t *ptep, pte_t pte);
- extern void __contpte_try_unfold(struct mm_struct *mm, unsigned long addr,
- 				pte_t *ptep, pte_t pte);
- extern pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte);
-@@ -1206,6 +1208,29 @@ extern int contpte_ptep_set_access_flags(struct vm_area_struct *vma,
- 				unsigned long addr, pte_t *ptep,
- 				pte_t entry, int dirty);
- 
-+static __always_inline void contpte_try_fold(struct mm_struct *mm,
-+				unsigned long addr, pte_t *ptep, pte_t pte)
-+{
-+	/*
-+	 * Only bother trying if both the virtual and physical addresses are
-+	 * aligned and correspond to the last entry in a contig range. The core
-+	 * code mostly modifies ranges from low to high, so this is the likely
-+	 * the last modification in the contig range, so a good time to fold.
-+	 * We can't fold special mappings, because there is no associated folio.
-+	 */
-+
-+	const unsigned long contmask = CONT_PTES - 1;
-+	bool valign = ((addr >> PAGE_SHIFT) & contmask) == contmask;
-+
-+	if (unlikely(valign)) {
-+		bool palign = (pte_pfn(pte) & contmask) == contmask;
-+
-+		if (unlikely(palign &&
-+		    pte_valid(pte) && !pte_cont(pte) && !pte_special(pte)))
-+			__contpte_try_fold(mm, addr, ptep, pte);
-+	}
-+}
-+
- static __always_inline void contpte_try_unfold(struct mm_struct *mm,
- 				unsigned long addr, pte_t *ptep, pte_t pte)
- {
-@@ -1286,6 +1311,7 @@ static __always_inline void set_ptes(struct mm_struct *mm, unsigned long addr,
- 	if (likely(nr == 1)) {
- 		contpte_try_unfold(mm, addr, ptep, __ptep_get(ptep));
- 		__set_ptes(mm, addr, ptep, pte, 1);
-+		contpte_try_fold(mm, addr, ptep, pte);
- 	} else {
- 		contpte_set_ptes(mm, addr, ptep, pte, nr);
+diff --git a/fs/attr.c b/fs/attr.c
+index b53ae408ad4f..adeba0ec40f1 100644
+--- a/fs/attr.c
++++ b/fs/attr.c
+@@ -503,7 +503,7 @@ int notify_change(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	if (!error) {
+ 		fsnotify_change(dentry, ia_valid);
+ 		ima_inode_post_setattr(idmap, dentry, ia_valid);
+-		evm_inode_post_setattr(dentry, ia_valid);
++		evm_inode_post_setattr(idmap, dentry, ia_valid);
  	}
-diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
-index 50e0173dc5ee..16788f07716d 100644
---- a/arch/arm64/mm/contpte.c
-+++ b/arch/arm64/mm/contpte.c
-@@ -73,6 +73,70 @@ static void contpte_convert(struct mm_struct *mm, unsigned long addr,
- 	__set_ptes(mm, start_addr, start_ptep, pte, CONT_PTES);
+ 
+ 	return error;
+diff --git a/include/linux/evm.h b/include/linux/evm.h
+index 36ec884320d9..5cc386312b5a 100644
+--- a/include/linux/evm.h
++++ b/include/linux/evm.h
+@@ -23,7 +23,8 @@ extern enum integrity_status evm_verifyxattr(struct dentry *dentry,
+ 					     struct integrity_iint_cache *iint);
+ extern int evm_inode_setattr(struct mnt_idmap *idmap,
+ 			     struct dentry *dentry, struct iattr *attr);
+-extern void evm_inode_post_setattr(struct dentry *dentry, int ia_valid);
++extern void evm_inode_post_setattr(struct mnt_idmap *idmap,
++				   struct dentry *dentry, int ia_valid);
+ extern int evm_inode_setxattr(struct mnt_idmap *idmap,
+ 			      struct dentry *dentry, const char *name,
+ 			      const void *value, size_t size);
+@@ -98,7 +99,8 @@ static inline int evm_inode_setattr(struct mnt_idmap *idmap,
+ 	return 0;
  }
  
-+void __contpte_try_fold(struct mm_struct *mm, unsigned long addr,
-+			pte_t *ptep, pte_t pte)
-+{
-+	/*
-+	 * We have already checked that the virtual and pysical addresses are
-+	 * correctly aligned for a contpte mapping in contpte_try_fold() so the
-+	 * remaining checks are to ensure that the contpte range is fully
-+	 * covered by a single folio, and ensure that all the ptes are valid
-+	 * with contiguous PFNs and matching prots. We ignore the state of the
-+	 * access and dirty bits for the purpose of deciding if its a contiguous
-+	 * range; the folding process will generate a single contpte entry which
-+	 * has a single access and dirty bit. Those 2 bits are the logical OR of
-+	 * their respective bits in the constituent pte entries. In order to
-+	 * ensure the contpte range is covered by a single folio, we must
-+	 * recover the folio from the pfn, but special mappings don't have a
-+	 * folio backing them. Fortunately contpte_try_fold() already checked
-+	 * that the pte is not special - we never try to fold special mappings.
-+	 * Note we can't use vm_normal_page() for this since we don't have the
-+	 * vma.
-+	 */
-+
-+	unsigned long folio_start, folio_end;
-+	unsigned long cont_start, cont_end;
-+	pte_t expected_pte, subpte;
-+	struct folio *folio;
-+	struct page *page;
-+	unsigned long pfn;
-+	pte_t *orig_ptep;
-+	pgprot_t prot;
-+
-+	int i;
-+
-+	if (!mm_is_user(mm))
-+		return;
-+
-+	page = pte_page(pte);
-+	folio = page_folio(page);
-+	folio_start = addr - (page - &folio->page) * PAGE_SIZE;
-+	folio_end = folio_start + folio_nr_pages(folio) * PAGE_SIZE;
-+	cont_start = ALIGN_DOWN(addr, CONT_PTE_SIZE);
-+	cont_end = cont_start + CONT_PTE_SIZE;
-+
-+	if (folio_start > cont_start || folio_end < cont_end)
-+		return;
-+
-+	pfn = ALIGN_DOWN(pte_pfn(pte), CONT_PTES);
-+	prot = pte_pgprot(pte_mkold(pte_mkclean(pte)));
-+	expected_pte = pfn_pte(pfn, prot);
-+	orig_ptep = ptep;
-+	ptep = contpte_align_down(ptep);
-+
-+	for (i = 0; i < CONT_PTES; i++) {
-+		subpte = pte_mkold(pte_mkclean(__ptep_get(ptep)));
-+		if (!pte_same(subpte, expected_pte))
-+			return;
-+		expected_pte = pte_advance_pfn(expected_pte, 1);
-+		ptep++;
-+	}
-+
-+	pte = pte_mkcont(pte);
-+	contpte_convert(mm, addr, orig_ptep, pte);
-+}
-+EXPORT_SYMBOL(__contpte_try_fold);
-+
- void __contpte_try_unfold(struct mm_struct *mm, unsigned long addr,
- 			pte_t *ptep, pte_t pte)
+-static inline void evm_inode_post_setattr(struct dentry *dentry, int ia_valid)
++static inline void evm_inode_post_setattr(struct mnt_idmap *idmap,
++					  struct dentry *dentry, int ia_valid)
  {
+ 	return;
+ }
+diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/evm_main.c
+index cc7956d7878b..ac34f21122cd 100644
+--- a/security/integrity/evm/evm_main.c
++++ b/security/integrity/evm/evm_main.c
+@@ -870,6 +870,7 @@ int evm_inode_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 
+ /**
+  * evm_inode_post_setattr - update 'security.evm' after modifying metadata
++ * @idmap: idmap of the idmapped mount
+  * @dentry: pointer to the affected dentry
+  * @ia_valid: for the UID and GID status
+  *
+@@ -879,7 +880,8 @@ int evm_inode_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+  * This function is called from notify_change(), which expects the caller
+  * to lock the inode's i_mutex.
+  */
+-void evm_inode_post_setattr(struct dentry *dentry, int ia_valid)
++void evm_inode_post_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
++			    int ia_valid)
+ {
+ 	if (!evm_revalidate_status(NULL))
+ 		return;
 -- 
-2.25.1
+2.34.1
 
