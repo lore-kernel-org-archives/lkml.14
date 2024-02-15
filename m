@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3603A145346;
-	Thu, 15 Feb 2024 23:48:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36001139589;
+	Thu, 15 Feb 2024 23:48:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708040933; cv=none; b=t/O4sOoyeRwtKSKNdgRWiIRLF1rnSftMm20dwyi8K+3a4bm6BJToz8cZPqOJLG4siMSOhUL5Lxf5+V6SIy2gy5D8JtfAqF4xuL1jF0cnuu1dGe8Uxdn/4yuwrngJSNSxp0bhccx51Jc/ZSLlq64YeftJfKM/VrY2xprQ5TEweho=
+	t=1708040933; cv=none; b=BbJ13OxmP5JBFiqETuKJfhdRQwduztkwIvC041IoAORuDfPRU3mbrj4meH42LgE/fRztwtOhbnJrG1OuwkR183M3WEdT6qgmDR6o5iJ77y3JUYIlgLkdMmiYSQzdq8DorQpGG52JiFynTpya+K0SkdXeHwwynk2+pw/LB3FlCC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708040933; c=relaxed/simple;
-	bh=kHlJYXFc2o2nqfCsYXCiE5nblag+GF9yfKhjdNiYNhk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hJSUopXQd7JAdpD+BrTcVx8j00NFhmYdD+S+5isoDXPffB7odOjG0+obU0FPPryjnK9DAOZpro/JswmRlI7NQTwgt3cblySUtIE0neF1af8sYM0pyjSIdmc1ptWFG6dgcly9wFiMZG2o1/pIbAW7vjvHnNUwXCBUYsrSQ3X18Wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ldt4ZEkx; arc=none smtp.client-ip=10.30.226.201
+	bh=m941Sbuue6lax4UKMmxtO0nmkIxGUQrjsrLye+L4Em0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=N0sPUils8A5bTmnYDxjobVyb1dpPISk0MSHwphdpTZPGzsi6gx7xtWrlVFpMTwvxZc0tBAlGj+iUE80/8ydkcBXQld6F174flJFUWd6VE9Y9ew3NavzcnWjCUiAFhW9KgIekHQK4xIyFUKMc9WDfLBYLol6GpHhV+lW77grGwpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jog+Hq6V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ldt4ZEkx"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CBF4FC43399;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jog+Hq6V"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AA036C433C7;
 	Thu, 15 Feb 2024 23:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1708040932;
-	bh=kHlJYXFc2o2nqfCsYXCiE5nblag+GF9yfKhjdNiYNhk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Ldt4ZEkxxdQARf4z7y9yg1o5ZZ4/aP82xEHLJH5KmamlzWCW4jhjbWAX1i587Ebzg
-	 GwMkGWZEV+zCulEthzeHhvnVpQOdP0r8LMZPoTx9O9fu171cuwnVdg9HRHsrLXvUGq
-	 9jNqpii8HD9S+Gy8JuNPBrMM+bYkophvfHyj3qWOvMAZWzVGqAq3ftQsZvSxrGQoC6
-	 ek49UUc6FTgR8wj9gaYLWuTpvaEtwRmg4tfpbPb2t929SFZJZxtNGL0rBr5RHHiV37
-	 Mgkxxd3V4waxfmHOo/QdwMHBoRtnaAQw1QmqUDabBqCz9rB5r8NIw67hvUUeKkwV92
-	 Nqfnpdp0ojPEw==
+	bh=m941Sbuue6lax4UKMmxtO0nmkIxGUQrjsrLye+L4Em0=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=jog+Hq6VtmXR0FiKmWuLmOt0iPYrrIm4g7WtJXmrayWxyT2IYNZ4DnulCmA+pMiYT
+	 1AAk9Yd0qgA0cHNxMcB5Sr4VhVseXu1aDG9s3NkXwhNgE1znqYgMxMwR3qbf7bb1l+
+	 aCiqHo/nkxiCt6dh9CLOt71AIVIkLwb2uN8ImHXcFQLsoLptNBDgPp1YM2dRlgx0cW
+	 PXPUwBneIIN884CIg5Z1xrIfL3m8pUqAczCVK1A80l1yWmFfq+On333AW5NjMfjnBZ
+	 XJQ8A6ebOqo95LoKQyuOeNaYwStNQo8/QpKSwLvf778ocXRyHtX7N544ghJMh+rR9P
+	 vgivA8uZq+ODw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B54B9C4829E;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 935EAC48BC4;
 	Thu, 15 Feb 2024 23:48:52 +0000 (UTC)
 From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Date: Fri, 16 Feb 2024 07:48:54 +0800
-Subject: [PATCH 2/6] net: hisi_femac: remove unused compatible strings
+Subject: [PATCH 0/6] net: hisi-femac: add support for Hi3798MV200, remove
+ unmaintained compatibles
+Date: Fri, 16 Feb 2024 07:48:52 +0800
+Message-Id: <20240216-net-v1-0-e0ad972cda99@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,9 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240216-net-v1-2-e0ad972cda99@outlook.com>
-References: <20240216-net-v1-0-e0ad972cda99@outlook.com>
-In-Reply-To: <20240216-net-v1-0-e0ad972cda99@outlook.com>
+X-B4-Tracking: v=1; b=H4sIAOSizmUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDI0Mz3bzUEl3LRCMDi1RD82QTgzQloMqCotS0zAqwKdGxtbUABWErjFU
+ AAAA=
 To: Yisen Zhuang <yisen.zhuang@huawei.com>, 
  Salil Mehta <salil.mehta@huawei.com>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
@@ -55,11 +56,11 @@ To: Yisen Zhuang <yisen.zhuang@huawei.com>,
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
  devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708040932; l=848;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708040932; l=983;
  i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
- bh=Q6RobEliCYMOixlSWarXH2F6cDTqzSpO8SvRil35ZCg=;
- b=ic/0aLLq/JZF1P0XEK/8iZ7k8+22sry3xHwtc9XbBn5LCQaRENK+l+qF4NuHlLn3JUOfAjl80
- hhleIxNJVIkCJWBxDEHq/spq3dyp/PNQ7jhZX4WliE331rdd0VTU2CA
+ bh=m941Sbuue6lax4UKMmxtO0nmkIxGUQrjsrLye+L4Em0=;
+ b=2sOk2vozN8hrgMsvgYl+50Do8EfwMKSRFvFVYxJoAbmYU/vB+BB/DHCRm3UcUly3sw4UNcaqt
+ GOLJuJl4xeRDInpTJ7t91J0veyiVl568HonhzYAWms3HjhQcfFCslBW
 X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
  pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
 X-Endpoint-Received:
@@ -67,30 +68,27 @@ X-Endpoint-Received:
 X-Original-From: Yang Xiwen <forbidden405@outlook.com>
 Reply-To: <forbidden405@outlook.com>
 
-From: Yang Xiwen <forbidden405@outlook.com>
-
-These compatible strings are not found in any mainline dts, remove them.
-
 Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 ---
- drivers/net/ethernet/hisilicon/hisi_femac.c | 3 ---
- 1 file changed, 3 deletions(-)
+Yang Xiwen (6):
+      net: hisilicon: add support for hisi_femac core on Hi3798MV200
+      net: hisi_femac: remove unused compatible strings
+      dt-bindings: net: remove outdated hisilicon-femac
+      dt-bindings: net: add hisilicon-femac
+      net: mdio: hisi-femac: make clock optional
+      dt-bindings: net: hisilicon-femac-mdio: make clock optional
 
-diff --git a/drivers/net/ethernet/hisilicon/hisi_femac.c b/drivers/net/ethernet/hisilicon/hisi_femac.c
-index d72160efff9a..6dabc62a00b7 100644
---- a/drivers/net/ethernet/hisilicon/hisi_femac.c
-+++ b/drivers/net/ethernet/hisilicon/hisi_femac.c
-@@ -990,9 +990,6 @@ static int hisi_femac_drv_resume(struct platform_device *pdev)
- #endif
- 
- static const struct of_device_id hisi_femac_match[] = {
--	{.compatible = "hisilicon,hisi-femac-v1",},
--	{.compatible = "hisilicon,hisi-femac-v2",},
--	{.compatible = "hisilicon,hi3516cv300-femac",},
- 	{.compatible = "hisilicon,hi3798mv200-femac",},
- 	{},
- };
+ .../bindings/net/hisilicon-femac-mdio.txt          |   2 +
+ .../devicetree/bindings/net/hisilicon-femac.txt    |  41 -------
+ .../devicetree/bindings/net/hisilicon-femac.yaml   | 125 +++++++++++++++++++++
+ drivers/net/ethernet/hisilicon/hisi_femac.c        |  93 ++++++++++-----
+ drivers/net/mdio/mdio-hisi-femac.c                 |   2 +-
+ 5 files changed, 196 insertions(+), 67 deletions(-)
+---
+base-commit: 8d3dea210042f54b952b481838c1e7dfc4ec751d
+change-id: 20240216-net-9a208e17c40f
 
+Best regards,
 -- 
-2.43.0
+Yang Xiwen <forbidden405@outlook.com>
 
