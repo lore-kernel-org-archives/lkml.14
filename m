@@ -1,65 +1,68 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC63420B3D
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 14:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E715F132481
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 14:56:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708008974; cv=none; b=lJnK5iqz6HaWzsnxm+Uq4ydAiv/ZqPbP9Dvld/Lgv+7nRjyAC0TIawL42qgK/xc95FftIoc+a0FB+l24dvf1yef4vUe2068Bh8HQTHT+CJ+aYdl+E6wiWzOpN77RYggnYuhxQnjZVuQcNXEjWbKrVDcXT1FURqwTDrotOhuC3Hc=
+	t=1708008976; cv=none; b=VcDIuSWRaR+MM7GRLIfLE1haWKKAQZ7v1PaHYvgDE9bO/LPAAefjyWkmtLmNts3oMKURfaMyVPHOmna6O6jRejX8Q/B1GOeObTdp5ZlEOTIAfO+EobX915eywzeQtr31WZTRAJesoP0pVZi70Jpqc6es3NtGJgTrnEsZRykZSmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708008974; c=relaxed/simple;
-	bh=/ZXRO0BbPBK8pZ1dPsjt7GxXkirJvYdjQ4fT55CFUFE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=G5CF0es264Cunym+8bT7+oReulyRJu0ezzmjHrEqj+qbwo0mdqoBdKUmudYTwR4j8WwJ0TwtYsihz6hTsxladbRkpDluok75YFi7VJwTH2DpuaN8E5qt+nPHF7ZVrI0Qas20I8HnFmNXCyQjkFcVpKf6HD37B+JdaHRwaWXRyJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=cXibe3GH; arc=none smtp.client-ip=209.85.208.45
+	s=arc-20240116; t=1708008976; c=relaxed/simple;
+	bh=7E++P3NE3gX/uG8sJhez163L//hFb7dWE0h0h4Q6OTA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kHLrdRnxI5nYr5duBlBlUTOy+eN+eFGhLX8ZtIauyI6utgqR23KTM9yQV+hPuLQZWaq+mlMs2oE6aA1SV9T9WxcGjpSujtzh8wbVKLfJ+i8qPN2VyBOIZ+3fVOht3V+xd71yfJnym+OIHh56HUc0y6Qv4AD+2Yb7Z3zsQFNuZE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=Bhe1EYAG; arc=none smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="cXibe3GH"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-563d017696eso247482a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 06:56:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="Bhe1EYAG"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a3d484a58f6so121797766b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 06:56:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1708008970; x=1708613770; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5nXvWMW5tF9mUZIu3IKH+/C2q6hHrxXabf0w0v9TF+Q=;
-        b=cXibe3GHjLONsKbxi/wwEh+8xD0WFwwnUFLBvHCX2K+haXMRtR6Xzj0mLRvl9qdKoo
-         oyDYXIWS6bOpV/NjHKJCzB53zplcb8HbVH36GPXs9JwEHzLCjxMupDkyWgj45OAJYWaH
-         4Yvn4dtjhZqeAwL3kuZwppujytfroMpz/mBkeM18CwPI7l36lXCzzINbqyadqxLn9vSa
-         p21ex+LTrIFF74sXhnaR5m6MdlNTlfy7U24YiqSOQqb7YEQRbmrv5p0mRDNJrpLgcvpb
-         9SU/UQUpu2SE1DMqAI73iWu+jZBjoEz0/GIjc/8hD4j+7QbU+KjZy0JoWuOxjO+tM+z8
-         dimw==
+        d=ionos.com; s=google; t=1708008972; x=1708613772; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BL1pmIo7s1MX4N9LU8kIbt0i/wU5mZK2rTJkOzRk4Zc=;
+        b=Bhe1EYAG/YFEC6l9e6eDHNaQIM4E6E6brL7hYkz/QoGItPANmWPY/F4bLqNik2O+Qf
+         +amDM8s7+GgzU2OvQp1ftfuNw85DD1Hy+6HGCq78mdGCRmx8td4wtDpstteV54gBfFIX
+         VcJuXjBE4vyAJsUh4lTMeOZpWTRb3t9i4ksmZH47d76wbgxEWwzu9UXZ0UMgOc4Fkvpe
+         NGSpEIDW2tJpcDw7meTyrqWfEcQnalXfTECXIePGb++CT7hf1FKVrqlk7ovgm5aJWqQN
+         5x29ci9hY8LYuRUJA3ZwMAcfG9BNwGlU17UZIOpwru8gBd7GE6Z9AmKfkl0DUVvgqRO/
+         aD2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708008970; x=1708613770;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5nXvWMW5tF9mUZIu3IKH+/C2q6hHrxXabf0w0v9TF+Q=;
-        b=ObSG8pgA+xI68VRCB8dOPx0YgqRbwZ6SEmBPwV4fwONJhWsUIEv/4+yl/95Mauilg6
-         NwL6Zm+u/65Ps8CbqHmb0RK3CLDLLCcz4AELg1/nt3j+O+0lTImbkFZY4zJ1LNgMAR/u
-         Go6F+3AShH1o331wCbduqYphIEQ1Fyl87fekpUZwaVes5Bcbem3EHAktV1bzWHiXlDEf
-         EIA1oGIQDtg9B0b53ZBbbBdbFHA0v036hFWca6oehaWiZryoUUvgT21aUMYW1B0AtecG
-         p634iHHYohv5R57776ik/zQBejOic0fYM8YmGBORmcLgYiLk6LM9oxtqeMC6eExw8ucG
-         UOeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXH+mQ0DkSUGX3uXk337qxZEEHFx0EUi4F+IGjTbi1xsMijiER6zvByAeGPFpkhD/Y/LTM14Pxe6vJrGOkFu51RCgUglksDfUlEaBV+
-X-Gm-Message-State: AOJu0Ywmuu+h+Ip5hCz3xeDaYtPSxKHwm4V5AcwA8A+TAMIkAfXWtm7g
-	vbEiqcVv36lu3yXn06lPn94j/jTPrrlou3BuojlFrODWLJTDKr5xmfNa+MOYuJ1w1vuUbLXD1SC
-	C
-X-Google-Smtp-Source: AGHT+IEu+B4g679JrYfg2BNoCeEgkGfJ4dlSOqLdTnCeI8cmWtAq4dQB2KEUXYXMaUUhYGU5pBoE7w==
-X-Received: by 2002:a17:906:759:b0:a3d:632e:7ab4 with SMTP id z25-20020a170906075900b00a3d632e7ab4mr1552932ejb.42.1708008970173;
-        Thu, 15 Feb 2024 06:56:10 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708008972; x=1708613772;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BL1pmIo7s1MX4N9LU8kIbt0i/wU5mZK2rTJkOzRk4Zc=;
+        b=i2wkKuxk/v7E81BuVK0QbP7qT7pomkqUbae1NlsXzySz4Ronobnu/6xz8eSimaV2Ec
+         hx4fAX7Bxr8zTQO12i2u/RApb+XN/8Fb+QJNE1zEY3b+Bg3oQ1C3yOgTao27PceUgRy0
+         R3JICojrF8czUVecE7abLp+c7jn66ZQPptgpMpTC0naMPZbD7TGGFx+P/RZeO8l45jJ7
+         62Sadwa5N9w9H4gB38+vJmes67cElZKabS4UD5o8V89RjvAzvdMyAS/iBhQmBOJCbOjZ
+         z0S0aYQO2MZ08CDiZOmuT6AZ+v6vaioDKagACYMlOzG88mur3J7okb/Rzw5LSY+wjHRo
+         yedA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0ukH9GWoJvPIN23ufdKtW4VwKCzSdOIwY2G+76fPW7LZ/fEJMxY6OkrdNsfBnk1veY556chQKX8XvZHfCN+/22oBOqXHUNLtE+VFz
+X-Gm-Message-State: AOJu0YytSviOHLezeIZc0qOBXvwOmq4CQ1D2Fth68ET5gYfncMkg7wxD
+	QyRjtFDeblnkK4fJbSZn2QVGprqEGsylLg7cIaT5MSJP31p8iS0Vgi2reBTnFUQ=
+X-Google-Smtp-Source: AGHT+IFKfxSMdDU58egMnr1nDOgEiMLO3WKEhWBKIvifvsssID7+Frq6c2q9Yzb4eyPMkscD2JQmYw==
+X-Received: by 2002:a17:906:4157:b0:a3d:7ca3:fbab with SMTP id l23-20020a170906415700b00a3d7ca3fbabmr1539833ejk.27.1708008972211;
+        Thu, 15 Feb 2024 06:56:12 -0800 (PST)
 Received: from raven.intern.cm-ag (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id s18-20020a170906169200b00a3d1897ab68sm631175ejd.113.2024.02.15.06.56.09
+        by smtp.gmail.com with ESMTPSA id s18-20020a170906169200b00a3d1897ab68sm631175ejd.113.2024.02.15.06.56.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Feb 2024 06:56:09 -0800 (PST)
+        Thu, 15 Feb 2024 06:56:11 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: akpm@linux-foundation.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
 Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v1 00/14] Fast kernel headers: split linux/mm.h
-Date: Thu, 15 Feb 2024 15:55:48 +0100
-Message-Id: <20240215145602.1371274-1-max.kellermann@ionos.com>
+Subject: [PATCH v1 02/14] include/drm/drm_gem.h: add poll_table_struct forward declaration
+Date: Thu, 15 Feb 2024 15:55:50 +0100
+Message-Id: <20240215145602.1371274-3-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240215145602.1371274-1-max.kellermann@ionos.com>
+References: <20240215145602.1371274-1-max.kellermann@ionos.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,102 +72,38 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This patch set aims to clean up the linux/mm.h header and reduce
-dependencies on it by moving parts out.
+After eliminating includes of linux/mm.h, the following build failure
+occurred:
 
-The goal was to eliminate dependencies on linux/mm.h from other
-popular headers such as highmem.h and dma-mapping.h, and I started by
-checking which symbols were really used and moved those declarations
-to separate slim headers.
+ ./include/drm/drm_file.h:443:45: warning: ‘struct poll_table_struct’ declared inside parameter list will not be visible outside of this definition or declaration
+   443 | __poll_t drm_poll(struct file *filp, struct poll_table_struct *wait);
+       |                                             ^~~~~~~~~~~~~~~~~
+ In file included from drivers/gpu/drm/imagination/pvr_gem.h:12,
+                  from drivers/gpu/drm/imagination/pvr_fw.h:9:
+ ./include/drm/drm_gem.h:447:27: error: initialization of ‘__poll_t (*)(struct file *, struct poll_table_struct *)’ {aka ‘unsigned int (*)(struct file *, struct poll_table_struct *)’} from incompatible pointer type ‘__poll_t (*)(struct file *, struct poll_table_struct *)’ {aka ‘unsigned int (*)(struct file *, struct poll_table_struct *)’} [-Werror=incompatible-pointer-types]
+   447 |         .poll           = drm_poll,\
+       |                           ^~~~~~~~
 
-Max Kellermann (14):
-  drivers: add missing includes on linux/mm.h (and others)
-  include/drm/drm_gem.h: add poll_table_struct forward declaration
-  linux/mm.h: move page_kasan_tag() to mm/page_kasan_tag.h
-  linux/mm.h: move section functions to mm/page_section.h
-  linux/mm.h: move page_address() and others to mm/page_address.h
-  linux/mm.h: move page_size() to mm/page_size.h
-  linux/mm.h: move folio_next() to mm/folio_next.h
-  linux/mm.h: move devmap-related declarations to mm/devmap_managed.h
-  linux/mm.h: move usage count functions to mm/page_usage.h
-  linux/mm.h: move page_zone_id() and more to mm/page_zone.h
-  linux/mm.h: move pfmemalloc-related functions to pfmemalloc.h
-  linux/mm.h: move is_vmalloc_addr() to mm/vmalloc_addr.h
-  linux/mm.h: move high_memory to mm/high_memory.h
-  include: reduce dependencies on linux/mm.h
+The compiler is confused, and that can be fixed easily by
+forward-declaring the struct expicitly.
 
- MAINTAINERS                                   |   1 +
- arch/arm/include/asm/memory.h                 |   4 +
- arch/arm/include/asm/pgtable.h                |   2 +
- arch/arm/mm/iomap.c                           |   3 +
- arch/csky/include/asm/page.h                  |   1 +
- arch/hexagon/include/asm/mem-layout.h         |   4 +
- arch/m68k/include/asm/page_mm.h               |   1 +
- arch/m68k/include/asm/pgtable_mm.h            |   1 +
- arch/parisc/include/asm/floppy.h              |   1 +
- arch/powerpc/include/asm/book3s/32/pgtable.h  |   4 +
- arch/powerpc/include/asm/nohash/32/pgtable.h  |   1 +
- arch/powerpc/include/asm/page.h               |   1 +
- arch/x86/include/asm/floppy.h                 |   1 +
- arch/x86/include/asm/pgtable_32_areas.h       |   4 +
- .../qat/qat_common/adf_gen4_pm_debugfs.c      |   1 +
- drivers/dma/dma-axi-dmac.c                    |   1 +
- drivers/dma/sh/rcar-dmac.c                    |   1 +
- drivers/firmware/qcom/qcom_scm-legacy.c       |   1 +
- drivers/firmware/qcom/qcom_scm-smc.c          |   1 +
- drivers/firmware/raspberrypi.c                |   1 +
- drivers/iio/buffer/industrialio-buffer-dma.c  |   1 +
- drivers/iommu/iommufd/selftest.c              |   1 +
- drivers/media/platform/mediatek/vpu/mtk_vpu.c |   1 +
- drivers/media/platform/ti/omap/omap_voutlib.c |   1 +
- drivers/misc/bcm-vk/bcm_vk_dev.c              |   1 +
- drivers/misc/fastrpc.c                        |   1 +
- drivers/misc/genwqe/card_dev.c                |   1 +
- drivers/misc/uacce/uacce.c                    |   1 +
- drivers/pci/p2pdma.c                          |   1 +
- drivers/pci/pci.c                             |   1 +
- drivers/remoteproc/remoteproc_core.c          |   1 +
- drivers/soc/qcom/rmtfs_mem.c                  |   1 +
- drivers/spi/spi-bcm2835.c                     |   2 +
- drivers/spi/spi-intel.c                       |   1 +
- drivers/virtio/virtio_ring.c                  |   1 +
- include/drm/drm_file.h                        |   1 +
- include/linux/bio.h                           |   2 +
- include/linux/dma-mapping.h                   |   1 +
- include/linux/highmem-internal.h              |   2 +
- include/linux/highmem.h                       |   4 +-
- include/linux/iommu.h                         |   1 +
- include/linux/mm.h                            | 582 +-----------------
- include/linux/mm/devmap_managed.h             |  37 ++
- include/linux/mm/folio_next.h                 |  27 +
- include/linux/mm/high_memory.h                |   7 +
- include/linux/mm/page_address.h               |  71 +++
- include/linux/mm/page_kasan_tag.h             |  66 ++
- include/linux/mm/page_section.h               |  23 +
- include/linux/mm/page_size.h                  | 150 +++++
- include/linux/mm/page_usage.h                 | 177 ++++++
- include/linux/mm/page_zone.h                  |  38 ++
- include/linux/mm/pfmemalloc.h                 |  52 ++
- include/linux/mm/vmalloc_addr.h               |  33 +
- include/linux/nvme-keyring.h                  |   2 +
- include/linux/scatterlist.h                   |   2 +-
- include/linux/skbuff.h                        |   4 +
- kernel/dma/ops_helpers.c                      |   1 +
- kernel/dma/remap.c                            |   1 +
- mm/dmapool.c                                  |   1 +
- 59 files changed, 761 insertions(+), 575 deletions(-)
- create mode 100644 include/linux/mm/devmap_managed.h
- create mode 100644 include/linux/mm/folio_next.h
- create mode 100644 include/linux/mm/high_memory.h
- create mode 100644 include/linux/mm/page_address.h
- create mode 100644 include/linux/mm/page_kasan_tag.h
- create mode 100644 include/linux/mm/page_section.h
- create mode 100644 include/linux/mm/page_size.h
- create mode 100644 include/linux/mm/page_usage.h
- create mode 100644 include/linux/mm/page_zone.h
- create mode 100644 include/linux/mm/pfmemalloc.h
- create mode 100644 include/linux/mm/vmalloc_addr.h
+Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+---
+ include/drm/drm_file.h | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/include/drm/drm_file.h b/include/drm/drm_file.h
+index ab230d3af138..f24ade9f766f 100644
+--- a/include/drm/drm_file.h
++++ b/include/drm/drm_file.h
+@@ -44,6 +44,7 @@ struct drm_device;
+ struct drm_printer;
+ struct device;
+ struct file;
++struct poll_table_struct;
+ 
+ /*
+  * FIXME: Not sure we want to have drm_minor here in the end, but to avoid
 -- 
 2.39.2
 
