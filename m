@@ -1,122 +1,284 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A2B136660;
-	Thu, 15 Feb 2024 17:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652E71754B;
+	Thu, 15 Feb 2024 17:03:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708016589; cv=none; b=EekP/gC7NXHjwGhGFhLtqp6m7DHiM7rooG4RbvcEB3QmwLTZsLcK1YHjzwDBuBdWtvcl6q8fuq5AVQyxxZP2q7q2du6zMmaKGAMhe4/Sj0s9bCr+LUHhCbS5QgekmYHTrYCZOdngYUIuk1QJRb292yawawlRNoXnUI35IkW5OvA=
+	t=1708016589; cv=none; b=ZHs4VnQ5Ua/MSUTOraIRNGmEA7/aDKchd2ihxeoVtQpc+nBsRpMz1FR9kKpZBywe2zZDxGrMoadArkcrvaWLaW8B4rHR0ixJG9X/WOQzfjUutAjIwnfpfEsLOr3ZSHeSaogWDcBtdNhtFuPVZN+P+1Sa4oRgdFfepyXhYfEJ3Kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708016589; c=relaxed/simple;
-	bh=VjV8BcdelqThJ3MbQmqnK86uf/IxokI/jkq4gMntqq0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DTTEVInqJitYGOB4Pu41khhWoCudwDIGADqeGf2iC6UFOOz3PT9L4T3NHPKSmha7B9FhlcjIySIb+uewQZHo7OEffbnpgCAzHpmPURiPsPur/xJaWGvPZVpT2QHxv+W4mJSOtMeRVcy6Jq42f4Gb3Na7+pW6R5wNCfpoDXnLokA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bou2quAK; arc=none smtp.client-ip=10.30.226.201
+	bh=0uOtVcCv5by+PmmDNB00H+v5Het0bum/Kk0ohbRlwIM=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Q9m2LdA8EyPIX+qqxPZttQpVOxWtgO19qq20idjbyyf/yqZMd6jdlriTvDO3Z81FJjmUN98S/5RlDPVbcptyo4cBRU4sDxzFKekPYxaDpt9NhElqyA/E1KrlQDHHHAHyazrWUOGffYQHeKyCfjcMbCcb6y/Xi0IPKt4w0BroFik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gZZZsrpj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=s6p0JrjT; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gZZZsrpj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=s6p0JrjT; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bou2quAK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66D91C433C7;
-	Thu, 15 Feb 2024 17:03:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708016588;
-	bh=VjV8BcdelqThJ3MbQmqnK86uf/IxokI/jkq4gMntqq0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Bou2quAKZgYkJwONG/1O7OaZ2gzBTNRXUgEgrqNg19OgXv1QWeq4K8wb7T4tjiONZ
-	 wf8g4XtT6G0fbmWM8ieic3rfmXs0fjVaFRq6qjA65f7oCJ7VAsuVrHAJFpQwRP/TPd
-	 smxs4kTbm9ehT1yAS7VCT5goKXpXzdS1SJnPRMdJ5DL9ca/pUO2hhEGSxVXI7QY+S5
-	 vyJz6v+qtb4HWWr++vC2m6eYRpzwyuJyKm6yMjV1xT5bm31hKDRBhj50FGUdtKAy73
-	 FvImMWTegnm1GcWXtSOtWW9xGQl/U8oWhwmQIE6c6dbVw8pf8pSWYD8ispkB2pNYey
-	 UO5tcDqIQ5lGg==
-Date: Thu, 15 Feb 2024 17:03:04 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Mihai Sain <mihai.sain@microchip.com>
-Cc: claudiu.beznea@tuxon.dev, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-	andre.przywara@arm.com, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	cristian.birsan@microchip.com
-Subject: Re: [PATCH v3 2/3] ARM: dts: microchip: sama7g5: Add flexcom 10 node
-Message-ID: <20240215-lustily-flick-69cb48b123c3@spud>
-References: <20240215091524.14732-1-mihai.sain@microchip.com>
- <20240215091524.14732-3-mihai.sain@microchip.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gZZZsrpj";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="s6p0JrjT";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gZZZsrpj";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="s6p0JrjT"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BDF4A1F8C0;
+	Thu, 15 Feb 2024 17:03:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708016581; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cE2C3TS0NQyhae+V1iqq4n7gnKw4vfeeFaL7iWqrHjw=;
+	b=gZZZsrpjpmQlhBDxgDO1spokU/6v0eP6bD7xCleZkHwdXIM8ulgd2vT4uajBfiBFLjMoeM
+	3G9RDHq8oANn4s8747R5adZxZ54rvRTAsXcIojwOt0ApkMrRgdOUoK7rhLg+v/jWs7M/f1
+	8CytI4SbppkD2H53lAbaSzSrafBnyUo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708016581;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cE2C3TS0NQyhae+V1iqq4n7gnKw4vfeeFaL7iWqrHjw=;
+	b=s6p0JrjTp0pjN0GbdbXaqdZiElav81pS29+7FBwWDiyNegJ2BA45SA2Xp18+0igXMh1bvv
+	2xJB/6/RLRPsnWAQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708016581; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cE2C3TS0NQyhae+V1iqq4n7gnKw4vfeeFaL7iWqrHjw=;
+	b=gZZZsrpjpmQlhBDxgDO1spokU/6v0eP6bD7xCleZkHwdXIM8ulgd2vT4uajBfiBFLjMoeM
+	3G9RDHq8oANn4s8747R5adZxZ54rvRTAsXcIojwOt0ApkMrRgdOUoK7rhLg+v/jWs7M/f1
+	8CytI4SbppkD2H53lAbaSzSrafBnyUo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708016581;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cE2C3TS0NQyhae+V1iqq4n7gnKw4vfeeFaL7iWqrHjw=;
+	b=s6p0JrjTp0pjN0GbdbXaqdZiElav81pS29+7FBwWDiyNegJ2BA45SA2Xp18+0igXMh1bvv
+	2xJB/6/RLRPsnWAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 818ED13A53;
+	Thu, 15 Feb 2024 17:03:01 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id jMYSHsVDzmVVDgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 15 Feb 2024 17:03:01 +0000
+Date: Thu, 15 Feb 2024 18:03:01 +0100
+Message-ID: <875xypk6d6.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Sven van Ashbrook <svenva@chromium.org>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Hillf Danton <hdanton@sina.com>,
+	Karthikeyan Ramasubramanian <kramasub@chromium.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Brian Geffon <bgeffon@google.com>,
+	linux-sound@vger.kernel.org,
+	Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Subject: Re: [PATCH v1] ALSA: memalloc: Fix indefinite hang in non-iommu case
+In-Reply-To: <CAG-rBigFG-U-sKY77CvzghGzs+1Xm3YXzBF6N4ti0+h6UdAb8Q@mail.gmail.com>
+References: <20240214170720.v1.1.Ic3de2566a7fd3de8501b2f18afa9f94eadb2df0a@changeid>
+	<20240215034528.240-1-hdanton@sina.com>
+	<87h6iaf7di.wl-tiwai@suse.de>
+	<CAG-rBigFG-U-sKY77CvzghGzs+1Xm3YXzBF6N4ti0+h6UdAb8Q@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zfv+/8Ldmdc7cdaf"
-Content-Disposition: inline
-In-Reply-To: <20240215091524.14732-3-mihai.sain@microchip.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=gZZZsrpj;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=s6p0JrjT
+X-Spamd-Result: default: False [-4.31 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[sina.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[suse.de,sina.com,chromium.org,vger.kernel.org,google.com,linux.intel.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: BDF4A1F8C0
+X-Spam-Level: 
+X-Spam-Score: -4.31
+X-Spam-Flag: NO
+
+On Thu, 15 Feb 2024 17:07:38 +0100,
+Sven van Ashbrook wrote:
+> 
+> Hi Takashi,
+> 
+> On Thu, Feb 15, 2024 at 3:40 AM Takashi Iwai <tiwai@suse.de> wrote:
+> >
+> > Yes, the main problem is the indefinite hang from
+> > dma_alloc_noncontiguous().
+> 
+> We have a publicly-visible test [1] which readily triggers the
+> indefinite hang on non-iommu Intel SoCs such as JasperLake.
+> As noted in the commit message, iommu SoCs are not currently
+> affected.
+> 
+> > So, is the behavior more or less same even if you pass
+> > __GFP_RETRY_MAYFAIL to dma_alloc_noncontiguous()?  Or is this flag
+> > already implicitly set somewhere in the middle?  It shouldn't hang
+> > indefinitely, but the other impact to the system like OOM-killer
+> > kickoff may be seen.
+> 
+> My incomplete understanding:
+> 
+> Alsa specifies __GFP_RETRY_MAYFAIL because it wants to prevent triggering
+> the OOM killer.
+
+Ah I forgot that we set that bit commonly in the flag.
+
+> This was __GFP_NORETRY in the not-too-distant past [2],
+> but that failed too quickly, which resulted in permanent loss of audio due
+> to failed firmware dma sg allocations.
+
+Hm, the change in commit a61c7d88d38c assumed that __GFP_RETRY_MAYFAIL
+shouldn't have that big impact.  If the hang really happens with a
+high order allocation, it's dangerous to use it in other code
+allocations than noncontiguous case (i.e. SNDRV_DMA_TYPE_DEV and co).
+In the tight memory situation, a similar problem can be triggered
+quite easily, then.
+
+> In the iommu case, dma_alloc_noncontiguous() implements a backoff [3] loop
+> which ORs in __GFP_NORETRY except for minimum order allocations. We observe
+> experimentally that __GFP_RETRY_MAYFAIL does not get "stuck" on minimum order
+> allocations. So the iommu case is not affected.
+> 
+> In the non-iommu case however, dma_alloc_noncontiguous() actually becomes a
+> contiguous allocator, with no backoff loop. The commit introducing it [4]
+> states "This API is only properly implemented for dma-iommu and will simply
+> return a contigious chunk as a fallback." In this case we observe the indefinite
+> hang.
+> 
+> The alsa fallback allocator is also not affected by the problem, as it does
+> not specify __GFP_RETRY_MAYFAIL. Except in the XENPV case.
+
+So it sounds like that we should go back for __GFP_NORETRY in general
+for non-zero order allocations, not only the call you changed, as
+__GFP_RETRY_MAYFAIL doesn't guarantee the stuck.
+
+How about the changes like below?
+
+And, Kai, could you verify whether this change with the recent kernel
+code won't give significant regressions for the issues you tried to
+address with commit a61c7d88d38c?
 
 
---zfv+/8Ldmdc7cdaf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+thanks,
 
-On Thu, Feb 15, 2024 at 11:15:23AM +0200, Mihai Sain wrote:
-> Add flexcom 10 node for usage on the SAMA7G54 Curiosity board.
->=20
-> Signed-off-by: Mihai Sain <mihai.sain@microchip.com>
-> ---
->  arch/arm/boot/dts/microchip/sama7g5.dtsi | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/microchip/sama7g5.dtsi b/arch/arm/boot/dts=
-/microchip/sama7g5.dtsi
-> index 269e0a3ca269..c030b318985a 100644
-> --- a/arch/arm/boot/dts/microchip/sama7g5.dtsi
-> +++ b/arch/arm/boot/dts/microchip/sama7g5.dtsi
-> @@ -958,6 +958,30 @@ i2c9: i2c@600 {
->  			};
->  		};
-> =20
-> +		flx10: flexcom@e2820000 {
-> +			compatible =3D "atmel,sama5d2-flexcom";
+Takashi
 
-My comment here was ignored:
-https://lore.kernel.org/all/20240214-robe-pregnancy-a1b056c9fe14@spud/
-
-> +			reg =3D <0xe2820000 0x200>;
-> +			clocks =3D <&pmc PMC_TYPE_PERIPHERAL 48>;
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <1>;
-> +			ranges =3D <0x0 0xe2820000 0x800>;
-> +			status =3D "disabled";
-> +
-> +			i2c10: i2c@600 {
-> +				compatible =3D "microchip,sama7g5-i2c", "microchip,sam9x60-i2c";
-> +				reg =3D <0x600 0x200>;
-> +				interrupts =3D <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-> +				#address-cells =3D <1>;
-> +				#size-cells =3D <0>;
-> +				clocks =3D <&pmc PMC_TYPE_PERIPHERAL 48>;
-> +				atmel,fifo-size =3D <32>;
-> +				dmas =3D <&dma0 AT91_XDMAC_DT_PERID(26)>,
-> +					<&dma0 AT91_XDMAC_DT_PERID(25)>;
-> +				dma-names =3D "tx", "rx";
-> +				status =3D "disabled";
-> +			};
-> +		};
-> +
->  		flx11: flexcom@e2824000 {
->  			compatible =3D "atmel,sama5d2-flexcom";
->  			reg =3D <0xe2824000 0x200>;
-> --=20
-> 2.43.0
->=20
-
---zfv+/8Ldmdc7cdaf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZc5DxwAKCRB4tDGHoIJi
-0vJsAQDeQhIb3G2vqcVcBI18bJC0ZUioeFGxbNSWOAUjN7G2mwD/XaLf8/ElSyxG
-SZ8uAxcymPu/A6opdb1qEBlCIoZjkQg=
-=gg+J
------END PGP SIGNATURE-----
-
---zfv+/8Ldmdc7cdaf--
+--- a/sound/core/memalloc.c
++++ b/sound/core/memalloc.c
+@@ -19,17 +19,22 @@
+ #include <sound/memalloc.h>
+ #include "memalloc_local.h"
+ 
+-#define DEFAULT_GFP \
+-	(GFP_KERNEL | \
+-	 __GFP_RETRY_MAYFAIL | /* don't trigger OOM-killer */ \
+-	 __GFP_NOWARN)   /* no stack trace print - this call is non-critical */
+-
+ static const struct snd_malloc_ops *snd_dma_get_ops(struct snd_dma_buffer *dmab);
+ 
+ #ifdef CONFIG_SND_DMA_SGBUF
+ static void *snd_dma_sg_fallback_alloc(struct snd_dma_buffer *dmab, size_t size);
+ #endif
+ 
++/* default GFP bits for our allocations */
++static gfp_t default_gfp(size_t size)
++{
++	/* don't allocate intensively for high-order pages */
++	if (size > PAGE_SIZE)
++		return GFP_KERNEL | __GFP_NOWARN | __GFP_NORETRY;
++	else
++		return GFP_KERNEL | __GFP_NOWARN | __GFP_RETRY_MAYFAIL;
++}
++
+ static void *__snd_dma_alloc_pages(struct snd_dma_buffer *dmab, size_t size)
+ {
+ 	const struct snd_malloc_ops *ops = snd_dma_get_ops(dmab);
+@@ -281,7 +286,7 @@ static void *do_alloc_pages(struct device *dev, size_t size, dma_addr_t *addr,
+ 			    bool wc)
+ {
+ 	void *p;
+-	gfp_t gfp = GFP_KERNEL | __GFP_NORETRY | __GFP_NOWARN;
++	gfp_t gfp = default_gfp(size);
+ 
+  again:
+ 	p = alloc_pages_exact(size, gfp);
+@@ -466,7 +471,7 @@ static const struct snd_malloc_ops snd_dma_iram_ops = {
+  */
+ static void *snd_dma_dev_alloc(struct snd_dma_buffer *dmab, size_t size)
+ {
+-	return dma_alloc_coherent(dmab->dev.dev, size, &dmab->addr, DEFAULT_GFP);
++	return dma_alloc_coherent(dmab->dev.dev, size, &dmab->addr, default_gfp(size));
+ }
+ 
+ static void snd_dma_dev_free(struct snd_dma_buffer *dmab)
+@@ -511,7 +516,7 @@ static int snd_dma_wc_mmap(struct snd_dma_buffer *dmab,
+ #else
+ static void *snd_dma_wc_alloc(struct snd_dma_buffer *dmab, size_t size)
+ {
+-	return dma_alloc_wc(dmab->dev.dev, size, &dmab->addr, DEFAULT_GFP);
++	return dma_alloc_wc(dmab->dev.dev, size, &dmab->addr, default_gfp(size));
+ }
+ 
+ static void snd_dma_wc_free(struct snd_dma_buffer *dmab)
+@@ -546,7 +551,7 @@ static void *snd_dma_noncontig_alloc(struct snd_dma_buffer *dmab, size_t size)
+ 		return snd_dma_sg_fallback_alloc(dmab, size);
+ #endif
+ 	sgt = dma_alloc_noncontiguous(dmab->dev.dev, size, dmab->dev.dir,
+-				      DEFAULT_GFP, 0);
++				      default_gfp(size), 0);
+ #ifdef CONFIG_SND_DMA_SGBUF
+ 	if (!sgt && !get_dma_ops(dmab->dev.dev))
+ 		return snd_dma_sg_fallback_alloc(dmab, size);
+@@ -783,7 +788,7 @@ static void *snd_dma_sg_fallback_alloc(struct snd_dma_buffer *dmab, size_t size)
+ 	while (size > 0) {
+ 		chunk = min(size, chunk);
+ 		if (sgbuf->use_dma_alloc_coherent)
+-			p = dma_alloc_coherent(dmab->dev.dev, chunk, &addr, DEFAULT_GFP);
++			p = dma_alloc_coherent(dmab->dev.dev, chunk, &addr, default_gfp(size));
+ 		else
+ 			p = do_alloc_pages(dmab->dev.dev, chunk, &addr, false);
+ 		if (!p) {
+@@ -871,7 +876,7 @@ static void *snd_dma_noncoherent_alloc(struct snd_dma_buffer *dmab, size_t size)
+ 	void *p;
+ 
+ 	p = dma_alloc_noncoherent(dmab->dev.dev, size, &dmab->addr,
+-				  dmab->dev.dir, DEFAULT_GFP);
++				  dmab->dev.dir, default_gfp(size));
+ 	if (p)
+ 		dmab->dev.need_sync = dma_need_sync(dmab->dev.dev, dmab->addr);
+ 	return p;
