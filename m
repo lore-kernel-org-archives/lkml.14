@@ -1,203 +1,382 @@
-Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E28D01292E1
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 10:32:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B6D11292E7
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 10:32:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707993140; cv=none; b=DNm3tveLBky0cMEZ8DspWiSlJ4bGsjjA0tdj/qWjlsK0Pxd9JyiGkRWT52JNw0G+ui9Hu1y/eId9pFPZafVA6X7dZEuhPcZtJvHmbRpPV9IaQJptML9/1w5eIhYNFqQzM6+n4nfKlUueSM0V5DzeAYM2z3v97zE2h+moTO7/Mnw=
+	t=1707993144; cv=none; b=arCnhyj3roBR4vhZ8ExcZcPOl+xwAriWEIWZp3/eYj8l+TOxYqaYl0vqCB8ETFd449uLgTK4QAevZMEQUlJqogYv9fMLeQHxvEYNYhsewX1U66gGqZKzs7jygZAtVocjXc8CCAMFZMXvbrg5wppaoiz+3mlfYZ4nHA41hO+f8uI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707993140; c=relaxed/simple;
-	bh=cONun6TngeRrkk4IMltlDOWagNPI0xWvUxmkNTiDM40=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AboL8xo7fNkTJlIWi90tXOU8A4hSL1XZ3wSx64fhv2wKFckaOcxyBCe6dg3ECKSyyD9ftmnpqMTcuTy637SBcvTJgM0Jn/4i6LmMpc6MwV+OpEwqUrHkNHzAE6QXJ1JeIEPUVmQPLjJ7YbMNIEw5r/3YBPWsDbfpNTEGcOjDkNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WsNTaPXr; arc=none smtp.client-ip=209.85.161.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WsNTaPXr"
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-58e256505f7so509609eaf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 02:32:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707993138; x=1708597938; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BnSnP54cWq3RDS6TzZYCLsOok3bG0dcYaLglmFl6H+k=;
-        b=WsNTaPXrEu/023Pykc3vHgraElj4QzxyBWRMKnJGrFV8iAJ6W30Dqijk3kxoOBFM/I
-         Br6ayjWlTja2Tnm8yLsKrXhpeYfWh1H1jht9MW3rguQnt4gdSmuMx41ZrjO8jVGYhuKc
-         jZuzjxmijwXg51oMkYNMoNhHUf6NPwH2VoNSkTVB52QtO2yF6ChnzmYCnZfes5Rxz3yT
-         Q3njCGShnQOERmsauf6+Xl733oMjmwPbTEFxouanKkOKKtUSw9i0pSPDzgS0nc2SjjLg
-         VBfiLbp7SetN/QesKludKP8dv8pwbYqe+0Xm+45F8Y2qFghg3U6Q7ciyiVjSsWr/N7rf
-         fOpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707993138; x=1708597938;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BnSnP54cWq3RDS6TzZYCLsOok3bG0dcYaLglmFl6H+k=;
-        b=kJrZ64OHNn6sf7TINBI8xwytkqaJYWT9TcKGw/Ctk8G6hQ8IsxeaL9BjJ1nGn29biM
-         AFt8y2oLUs7aLoIvIrLAqVj8rdeZbwA4P3csP5LguUX20Q5VbienLb95QbEARepAkVI8
-         MPbyvJjR226PuaVAu/LaBoJEBunLe+l/8yvErlnLsdZd6KvJHEqaAGDnxQD6fGx6yynX
-         of+E87Qp5T/9OltaXadSPwP2fYgBzC6dMRcV9fhMjCYYKtDjqgDQj+G8yKJJMbhiAeoE
-         waK5pOlvlHP3a7NT5rK4FVbXZj2hxmZWQaj8B7aSrUu3X9OrrYGlVW/oUjiG4sxi7LgO
-         LnOg==
-X-Forwarded-Encrypted: i=1; AJvYcCUKmMNoARpE3BLU3wNoMQZQgWUwzry26s1D3Rlz0PRZzFIGRrpNqspimH40RlxywF0+LplsB8/S0zyhBjODRGCPn4HZdL5yS2SOjUw6
-X-Gm-Message-State: AOJu0YznFhQh5hELDVt6nbRvCBoQ88semf/ibQnY7w75g7rWIV7KJquw
-	rxDZiIEvOTxutHC4LcB1fPLpuETje0qiGZ9j6Ls2CPfVvj7J6C3dcdUILEysfw8pG/OkOwbDLDj
-	Es/pNVevU06f9H81gzeuirJV5ZbpnUygNnuiRDw==
-X-Google-Smtp-Source: AGHT+IEDZl0jC7JHpc3qKLwfiY44WZzrpOsYhTkKATayJtv93hEMXdcWmrqZG5pYDXKUMkeXBqFkh+j2mFsHa2Vvcl8=
-X-Received: by 2002:a4a:d2d2:0:b0:59d:f09:352b with SMTP id
- j18-20020a4ad2d2000000b0059d0f09352bmr1191490oos.9.1707993137914; Thu, 15 Feb
- 2024 02:32:17 -0800 (PST)
+	s=arc-20240116; t=1707993144; c=relaxed/simple;
+	bh=zGPpFPgOkEf0vHeV3GfdoGzLZsUOzO56F6ng+kMfFb4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UneJLJHTTsO7zvxZ3fD2U6qNFZ8mnMiab97tOKOhJ9uGm5x5CekFzCeHFMcACpfhrd5SaUkwjDADHW0yqoNlUY0IJF2JWP8pBEiLhJe+liXxPlLLnw3NWYY+h6u9tGBLTEbkXhjLVm0wnNVdFXm8fcb0fiEKSIjhVffCSC/rcVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1A3A1FB;
+	Thu, 15 Feb 2024 02:33:00 -0800 (PST)
+Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.26])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AAFA73F7B4;
+	Thu, 15 Feb 2024 02:32:16 -0800 (PST)
+From: Ryan Roberts <ryan.roberts@arm.com>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	David Hildenbrand <david@redhat.com>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Zi Yan <ziy@nvidia.com>,
+	Barry Song <21cnbao@gmail.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Yang Shi <shy828301@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	x86@kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6 00/18] Transparent Contiguous PTEs for User Mappings
+Date: Thu, 15 Feb 2024 10:31:47 +0000
+Message-Id: <20240215103205.2607016-1-ryan.roberts@arm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240213145239.379875-1-balint.dobszay@arm.com>
- <20240213145239.379875-3-balint.dobszay@arm.com> <ed8aaee7-be14-43ab-981c-d2ac04f4fc71@kernel.org>
-In-Reply-To: <ed8aaee7-be14-43ab-981c-d2ac04f4fc71@kernel.org>
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Date: Thu, 15 Feb 2024 11:32:07 +0100
-Message-ID: <CAHUa44FUmXMCLvJEB8v2_H4j+yNzR+YMU0xSO6uaaqF0BHj_2Q@mail.gmail.com>
-Subject: Re: [PATCH 2/3] tee: tstee: Add Trusted Services TEE driver
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Balint Dobszay <balint.dobszay@arm.com>, op-tee@lists.trustedfirmware.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, sumit.garg@linaro.org, corbet@lwn.net, 
-	sudeep.holla@arm.com, gyorgy.szing@arm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 15, 2024 at 9:59=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.or=
-g> wrote:
->
-> On 13/02/2024 15:52, Balint Dobszay wrote:
-> > The Trusted Services project provides a framework for developing and
-> > deploying device Root of Trust services in FF-A Secure Partitions. The
-> > FF-A SPs are accessible through the FF-A driver, but this doesn't
-> > provide a user space interface. The goal of this TEE driver is to make
-> > Trusted Services SPs accessible for user space clients.
-> >
-> > All TS SPs have the same FF-A UUID, it identifies the RPC protocol used
-> > by TS. A TS SP can host one or more services, a service is identified b=
-y
-> > its service UUID. The same type of service cannot be present twice in
-> > the same SP. During SP boot each service in an SP is assigned an
-> > interface ID, this is just a short ID to simplify message addressing.
-> > There is 1:1 mapping between TS SPs and TEE devices, i.e. a separate TE=
-E
-> > device is registered for each TS SP. This is required since contrary to
-> > the generic TEE design where memory is shared with the whole TEE
-> > implementation, in case of FF-A, memory is shared with a specific SP. A
-> > user space client has to be able to separately share memory with each S=
-P
-> > based on its endpoint ID.
-> >
-> > Signed-off-by: Balint Dobszay <balint.dobszay@arm.com>
-> > ---
->
->
-> > +static int tstee_probe(struct ffa_device *ffa_dev)
-> > +{
-> > +     struct tstee *tstee;
-> > +     int rc;
-> > +
-> > +     ffa_dev->ops->msg_ops->mode_32bit_set(ffa_dev);
-> > +
-> > +     if (!tstee_check_rpc_compatible(ffa_dev))
-> > +             return -EINVAL;
-> > +
-> > +     tstee =3D kzalloc(sizeof(*tstee), GFP_KERNEL);
-> > +     if (!tstee)
-> > +             return -ENOMEM;
-> > +
-> > +     tstee->ffa_dev =3D ffa_dev;
-> > +
-> > +     tstee->pool =3D tstee_create_shm_pool();
-> > +     if (IS_ERR(tstee->pool)) {
-> > +             rc =3D PTR_ERR(tstee->pool);
-> > +             tstee->pool =3D NULL;
-> > +             goto err;
->
-> Is it logically correct to call here tee_device_unregister()?
+Hi All,
 
-It is harmless since it ignores null pointers, but you have a point.
-It doesn't make sense to call tee_device_unregister() before
-tee_device_register() has been called.
+This is a series to opportunistically and transparently use contpte mappings
+(set the contiguous bit in ptes) for user memory when those mappings meet the
+requirements. The change benefits arm64, but there is some (very) minor
+refactoring for x86 to enable its integration with core-mm.
+
+It is part of a wider effort to improve performance by allocating and mapping
+variable-sized blocks of memory (folios). One aim is for the 4K kernel to
+approach the performance of the 16K kernel, but without breaking compatibility
+and without the associated increase in memory. Another aim is to benefit the 16K
+and 64K kernels by enabling 2M THP, since this is the contpte size for those
+kernels. We have good performance data that demonstrates both aims are being met
+(see below).
+
+Of course this is only one half of the change. We require the mapped physical
+memory to be the correct size and alignment for this to actually be useful (i.e.
+64K for 4K pages, or 2M for 16K/64K pages). Fortunately folios are solving this
+problem for us. Filesystems that support it (XFS, AFS, EROFS, tmpfs, ...) will
+allocate large folios up to the PMD size today, and more filesystems are coming.
+And for anonymous memory, "multi-size THP" is now upstream.
+
+
+Patch Layout
+============
+
+In this version, I've split the patches to better show each optimization:
+
+  - 1-2:    mm prep: misc code and docs cleanups
+  - 3-6:    mm,arm64,x86 prep: Add pte_advance_pfn() and make pte_next_pfn() a
+            generic wrapper around it
+  - 7-11:   arm64 prep: Refactor ptep helpers into new layer
+  - 12:     functional contpte implementation
+  - 23-18:  various optimizations on top of the contpte implementation
+
+
+Testing
+=======
+
+I've tested this series on both Ampere Altra (bare metal) and Apple M2 (VM):
+  - mm selftests (inc new tests written for multi-size THP); no regressions
+  - Speedometer Java script benchmark in Chromium web browser; no issues
+  - Kernel compilation; no issues
+  - Various tests under high memory pressure with swap enabled; no issues
+
+
+Performance
+===========
+
+High Level Use Cases
+~~~~~~~~~~~~~~~~~~~~
+
+First some high level use cases (kernel compilation and speedometer JavaScript
+benchmarks). These are running on Ampere Altra (I've seen similar improvements
+on Android/Pixel 6).
+
+baseline:                  mm-unstable (mTHP switched off)
+mTHP:                      + enable 16K, 32K, 64K mTHP sizes "always"
+mTHP + contpte:            + this series
+mTHP + contpte + exefolio: + patch at [6], which series supports
+
+Kernel Compilation with -j8 (negative is faster):
+
+| kernel                    | real-time | kern-time | user-time |
+|---------------------------|-----------|-----------|-----------|
+| baseline                  |      0.0% |      0.0% |      0.0% |
+| mTHP                      |     -5.0% |    -39.1% |     -0.7% |
+| mTHP + contpte            |     -6.0% |    -41.4% |     -1.5% |
+| mTHP + contpte + exefolio |     -7.8% |    -43.1% |     -3.4% |
+
+Kernel Compilation with -j80 (negative is faster):
+
+| kernel                    | real-time | kern-time | user-time |
+|---------------------------|-----------|-----------|-----------|
+| baseline                  |      0.0% |      0.0% |      0.0% |
+| mTHP                      |     -5.0% |    -36.6% |     -0.6% |
+| mTHP + contpte            |     -6.1% |    -38.2% |     -1.6% |
+| mTHP + contpte + exefolio |     -7.4% |    -39.2% |     -3.2% |
+
+Speedometer (positive is faster):
+
+| kernel                    | runs_per_min |
+|:--------------------------|--------------|
+| baseline                  |         0.0% |
+| mTHP                      |         1.5% |
+| mTHP + contpte            |         3.2% |
+| mTHP + contpte + exefolio |         4.5% |
+
+
+Micro Benchmarks
+~~~~~~~~~~~~~~~~
+
+The following microbenchmarks are intended to demonstrate the performance of
+fork() and munmap() do not regress. I'm showing results for order-0 (4K)
+mappings, and for order-9 (2M) PTE-mapped THP. Thanks to David for sharing his
+benchmarks.
+
+baseline:                  mm-unstable + batch zap [7] series
+contpte-basic:             + patches 0-19; functional contpte implementation
+contpte-batch:             + patches 20-23; implement new batched APIs
+contpte-inline:            + patch 24; __always_inline to help compiler
+contpte-fold:              + patch 25; fold contpte mapping when sensible
+
+Primary platform is Ampere Altra bare metal. I'm also showing results for M2 VM
+(on top of MacOS) for reference, although experience suggests this might not be
+the most reliable for performance numbers of this sort:
+
+| FORK           |         order-0        |         order-9        |
+| Ampere Altra   |------------------------|------------------------|
+| (pte-map)      |       mean |     stdev |       mean |     stdev |
+|----------------|------------|-----------|------------|-----------|
+| baseline       |       0.0% |      2.7% |       0.0% |      0.2% |
+| contpte-basic  |       6.3% |      1.4% |    1948.7% |      0.2% |
+| contpte-batch  |       7.6% |      2.0% |      -1.9% |      0.4% |
+| contpte-inline |       3.6% |      1.5% |      -1.0% |      0.2% |
+| contpte-fold   |       4.6% |      2.1% |      -1.8% |      0.2% |
+
+| MUNMAP         |         order-0        |         order-9        |
+| Ampere Altra   |------------------------|------------------------|
+| (pte-map)      |       mean |     stdev |       mean |     stdev |
+|----------------|------------|-----------|------------|-----------|
+| baseline       |       0.0% |      0.5% |       0.0% |      0.3% |
+| contpte-basic  |       1.8% |      0.3% |    1104.8% |      0.1% |
+| contpte-batch  |      -0.3% |      0.4% |       2.7% |      0.1% |
+| contpte-inline |      -0.1% |      0.6% |       0.9% |      0.1% |
+| contpte-fold   |       0.1% |      0.6% |       0.8% |      0.1% |
+
+| FORK           |         order-0        |         order-9        |
+| Apple M2 VM    |------------------------|------------------------|
+| (pte-map)      |       mean |     stdev |       mean |     stdev |
+|----------------|------------|-----------|------------|-----------|
+| baseline       |       0.0% |      1.4% |       0.0% |      0.8% |
+| contpte-basic  |       6.8% |      1.2% |     469.4% |      1.4% |
+| contpte-batch  |      -7.7% |      2.0% |      -8.9% |      0.7% |
+| contpte-inline |      -6.0% |      2.1% |      -6.0% |      2.0% |
+| contpte-fold   |       5.9% |      1.4% |      -6.4% |      1.4% |
+
+| MUNMAP         |         order-0        |         order-9        |
+| Apple M2 VM    |------------------------|------------------------|
+| (pte-map)      |       mean |     stdev |       mean |     stdev |
+|----------------|------------|-----------|------------|-----------|
+| baseline       |       0.0% |      0.6% |       0.0% |      0.4% |
+| contpte-basic  |       1.6% |      0.6% |     233.6% |      0.7% |
+| contpte-batch  |       1.9% |      0.3% |      -3.9% |      0.4% |
+| contpte-inline |       2.2% |      0.8% |      -1.6% |      0.9% |
+| contpte-fold   |       1.5% |      0.7% |      -1.7% |      0.7% |
+
+Misc
+~~~~
+
+John Hubbard at Nvidia has indicated dramatic 10x performance improvements for
+some workloads at [8], when using 64K base page kernel.
+
+
+---
+This series applies on top of [7], which in turn applies on top of mm-unstable
+(649936c3db47). A branch is available at [9].
+
+I believe this is ready to go into mm-unstable as soon as [7] is in (which I
+also believe to be ready). Catalin has said he is happy for this to go via the
+mm-untable branch, once suitably acked by arm64 folks; Mark has reviewed v5 and
+I've made all of his suggested minor changes - hopefully he is comfortable
+acking the remaining patches now.
+
+Note: the quoted perf numbers are against v5, but I've rerun a subset of the
+tests against this version and results are consistent. Code changes are all
+minor and are not expected to make any difference anyway.
+
+
+Changes since v5 [5]
+====================
+
+  - Keep pte_next_pfn() as generic wrapper around pte_advance_pfn(). Allowed
+    dropping arm and powerpc changes (per David)
+  - Reshaped "Refactor ptep helpers into new layer" into 4 patches to better
+    show the conversion process (no change to code diff) (per Mark)
+  - Added comment to justify pte_mknoncont() at public API interface (per Mark)
+  - Added check for efi_mm in mm_is_user() (per Mark)
+  - Simplified a couple of pointer alignment statements (per Mark)
+  - Added braces for if in contpte_try_unfold_partial() (per Mark)
+  - Renamed some variables in __contpte_try_fold() (per Mark)
+  - Fixed couple of comment typos (per Mark)
+  - Enhanced docs for pte_batch_hint() (per David)
+  - Minor tidy up in folio_pte_batch() (per David)
+  - Picked up RBs/Acks (thanks to David, Mark, Ard)
+
+
+Changes since v4 [4]
+====================
+
+  - Rebased onto David's generic fork and zap batching work
+      - I had an implementation similar to this prior to v4, but ditched it
+        because I couldn't make it reliably provide a speedup; David succeeded.
+      - roughly speaking, a few functions get renamed compared to v4:
+          - pte_batch_remaining() -> pte_batch_hint()
+	  - set_wrprotects() -> wrprotect_ptes()
+          - clear_ptes() -> [get_and_]clear_full_ptes()
+      - Had to convert pte_next_pfn() to pte_advance_pfn()
+      - Integration into core-mm is simpler because most has been done by
+        David's work
+  - Reworked patches to better show the progression from basic implementation to
+    the various optimizations.
+  - Removed the 'full' flag that I added to set_ptes() and set_wrprotects() in
+    v4: I've been able to make up most of the performance in other ways, so this
+    keeps the interface simpler.
+  - Simplified contpte_set_ptes(nr > 1): Observed that set_ptes(nr > 1) is only
+    called for ptes that are initially not present. So updated the spec to
+    require that, and no longer need to check if any ptes are initially present
+    when applying a contpte mapping.
+
+
+Changes since v3 [3]
+====================
+
+  - Added v3#1 to batch set_ptes() when splitting a huge pmd to ptes; avoids
+    need to fold contpte blocks for perf improvement
+  - Separated the clear_ptes() fast path into its own inline function (Alistair)
+  - Reworked core-mm changes to copy_present_ptes() and zap_pte_range() to
+    remove overhead when memory is all order-0 folios (for arm64 and !arm64)
+  - Significant optimization of arm64 backend fork operations (set_ptes_full()
+    and set_wrprotects()) to ensure no regression when memory is order-0 folios.
+  - fixed local variable declarations to be reverse xmas tree. - Added
+    documentation for the new backend APIs (pte_batch_remaining(),
+    set_ptes_full(), clear_ptes(), ptep_set_wrprotects())
+  - Renamed tlb_get_guaranteed_space() -> tlb_reserve_space() and pass requested
+    number of slots. Avoids allocating memory when not needed; perf improvement.
+
+
+Changes since v2 [2]
+====================
+
+  - Removed contpte_ptep_get_and_clear_full() optimisation for exit() (v2#14),
+    and replaced with a batch-clearing approach using a new arch helper,
+    clear_ptes() (v3#2 and v3#15) (Alistair and Barry)
+  - (v2#1 / v3#1)
+      - Fixed folio refcounting so that refcount >= mapcount always (DavidH)
+      - Reworked batch demarcation to avoid pte_pgprot() (DavidH)
+      - Reverted return semantic of copy_present_page() and instead fix it up in
+        copy_present_ptes() (Alistair)
+      - Removed page_cont_mapped_vaddr() and replaced with simpler logic
+        (Alistair)
+      - Made batch accounting clearer in copy_pte_range() (Alistair)
+  - (v2#12 / v3#13)
+      - Renamed contpte_fold() -> contpte_convert() and hoisted setting/
+        clearing CONT_PTE bit to higher level (Alistair)
+
+
+Changes since v1 [1]
+====================
+
+  - Export contpte_* symbols so that modules can continue to call inline
+    functions (e.g. ptep_get) which may now call the contpte_* functions (thanks
+    to JohnH)
+  - Use pte_valid() instead of pte_present() where sensible (thanks to Catalin)
+  - Factor out (pte_valid() && pte_cont()) into new pte_valid_cont() helper
+    (thanks to Catalin)
+  - Fixed bug in contpte_ptep_set_access_flags() where TLBIs were missed (thanks
+    to Catalin)
+  - Added ARM64_CONTPTE expert Kconfig (enabled by default) (thanks to Anshuman)
+  - Simplified contpte_ptep_get_and_clear_full()
+  - Improved various code comments
+
+
+[1] https://lore.kernel.org/linux-arm-kernel/20230622144210.2623299-1-ryan.roberts@arm.com/
+[2] https://lore.kernel.org/linux-arm-kernel/20231115163018.1303287-1-ryan.roberts@arm.com/
+[3] https://lore.kernel.org/linux-arm-kernel/20231204105440.61448-1-ryan.roberts@arm.com/
+[4] https://lore.kernel.org/lkml/20231218105100.172635-1-ryan.roberts@arm.com/
+[5] https://lore.kernel.org/linux-mm/633af0a7-0823-424f-b6ef-374d99483f05@arm.com/
+[6] https://lore.kernel.org/lkml/08c16f7d-f3b3-4f22-9acc-da943f647dc3@arm.com/
+[7] https://lore.kernel.org/linux-mm/20240214204435.167852-1-david@redhat.com/
+[8] https://lore.kernel.org/linux-mm/c507308d-bdd4-5f9e-d4ff-e96e4520be85@nvidia.com/
+[9] https://gitlab.arm.com/linux-arm/linux-rr/-/tree/features/granule_perf/contpte-lkml_v6
+
 
 Thanks,
-Jens
+Ryan
 
->
-> > +     }
-> > +
-> > +     tstee->teedev =3D tee_device_alloc(&tstee_desc, NULL, tstee->pool=
-, tstee);
-> > +     if (IS_ERR(tstee->teedev)) {
-> > +             rc =3D PTR_ERR(tstee->teedev);
-> > +             tstee->teedev =3D NULL;
-> > +             goto err;
-> > +     }
-> > +
-> > +     rc =3D tee_device_register(tstee->teedev);
-> > +     if (rc)
-> > +             goto err;
-> > +
-> > +     ffa_dev_set_drvdata(ffa_dev, tstee);
-> > +
-> > +     pr_info("driver initialized for endpoint 0x%x\n", ffa_dev->vm_id)=
-;
->
-> Don't print simple probe success messages. Anyway all prints in device
-> context should be dev_*.
->
-> > +
-> > +     return 0;
-> > +
-> > +err:
-> > +     tstee_deinit_common(tstee);
-> > +     return rc;
-> > +}
-> > +
-> > +static void tstee_remove(struct ffa_device *ffa_dev)
-> > +{
-> > +     tstee_deinit_common(ffa_dev->dev.driver_data);
-> > +}
-> > +
-> > +static const struct ffa_device_id tstee_device_ids[] =3D {
-> > +     /* TS RPC protocol UUID: bdcd76d7-825e-4751-963b-86d4f84943ac */
-> > +     { TS_RPC_UUID },
-> > +     {}
-> > +};
-> > +
-> > +static struct ffa_driver tstee_driver =3D {
-> > +     .name =3D "arm_tstee",
-> > +     .probe =3D tstee_probe,
-> > +     .remove =3D tstee_remove,
-> > +     .id_table =3D tstee_device_ids,
-> > +};
-> > +
-> > +static int __init mod_init(void)
-> > +{
-> > +     return ffa_register(&tstee_driver);
-> > +}
-> > +module_init(mod_init)
-> > +
-> > +static void __exit mod_exit(void)
-> > +{
-> > +     ffa_unregister(&tstee_driver);
-> > +}
-> > +module_exit(mod_exit)
-> > +
-> > +MODULE_ALIAS("arm-tstee");
->
-> Why do you need this alias? I don't see MODULE_DEVICE_TABLE, so how this
-> bus handles module loading?
->
->
-> Best regards,
-> Krzysztof
->
+Ryan Roberts (18):
+  mm: Clarify the spec for set_ptes()
+  mm: thp: Batch-collapse PMD with set_ptes()
+  mm: Introduce pte_advance_pfn() and use for pte_next_pfn()
+  arm64/mm: Convert pte_next_pfn() to pte_advance_pfn()
+  x86/mm: Convert pte_next_pfn() to pte_advance_pfn()
+  mm: Tidy up pte_next_pfn() definition
+  arm64/mm: Convert READ_ONCE(*ptep) to ptep_get(ptep)
+  arm64/mm: Convert set_pte_at() to set_ptes(..., 1)
+  arm64/mm: Convert ptep_clear() to ptep_get_and_clear()
+  arm64/mm: New ptep layer to manage contig bit
+  arm64/mm: Split __flush_tlb_range() to elide trailing DSB
+  arm64/mm: Wire up PTE_CONT for user mappings
+  arm64/mm: Implement new wrprotect_ptes() batch API
+  arm64/mm: Implement new [get_and_]clear_full_ptes() batch APIs
+  mm: Add pte_batch_hint() to reduce scanning in folio_pte_batch()
+  arm64/mm: Implement pte_batch_hint()
+  arm64/mm: __always_inline to improve fork() perf
+  arm64/mm: Automatically fold contpte mappings
+
+ arch/arm64/Kconfig                |   9 +
+ arch/arm64/include/asm/pgtable.h  | 411 ++++++++++++++++++++++++++----
+ arch/arm64/include/asm/tlbflush.h |  13 +-
+ arch/arm64/kernel/efi.c           |   4 +-
+ arch/arm64/kernel/mte.c           |   2 +-
+ arch/arm64/kvm/guest.c            |   2 +-
+ arch/arm64/mm/Makefile            |   1 +
+ arch/arm64/mm/contpte.c           | 404 +++++++++++++++++++++++++++++
+ arch/arm64/mm/fault.c             |  12 +-
+ arch/arm64/mm/fixmap.c            |   4 +-
+ arch/arm64/mm/hugetlbpage.c       |  40 +--
+ arch/arm64/mm/kasan_init.c        |   6 +-
+ arch/arm64/mm/mmu.c               |  16 +-
+ arch/arm64/mm/pageattr.c          |   6 +-
+ arch/arm64/mm/trans_pgd.c         |   6 +-
+ arch/x86/include/asm/pgtable.h    |   8 +-
+ include/linux/efi.h               |   5 +
+ include/linux/pgtable.h           |  32 ++-
+ mm/huge_memory.c                  |  58 +++--
+ mm/memory.c                       |  19 +-
+ 20 files changed, 924 insertions(+), 134 deletions(-)
+ create mode 100644 arch/arm64/mm/contpte.c
+
+--
+2.25.1
+
