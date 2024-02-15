@@ -1,67 +1,136 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC4E69940;
-	Thu, 15 Feb 2024 10:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7949C69D05;
+	Thu, 15 Feb 2024 10:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707992767; cv=none; b=qGEPZpi7hyTkl3ssgJulGwkFty/b9tA7ufni1tF0HbJ0dTEDQT5dLNa5pYoDMPy5Fhap0shqFUleKm4bF9UKf5LoYolC/Sl5NGdnUdQHUCJSVM2KsekyV4HVqpmzY5YwMuzpo2crBcleOAwJenIRsatsl/IyYJJGs0X2WnizGmc=
+	t=1707992809; cv=none; b=GhccxBjcCAHNBHiDYuHSr19hfEdVLc+fsqdDj8KfVDp5F7todqPXb3/kv/v+4mRAUnFPJY1lAGbUwLRqyRbrhuBD7U6MMkQrWzmxSmkhu0hImCHuccAo4dhZ6LojqE0DvxxAOh8rRhGUNRXQkzDR7G4JS8UUkeZf5PsAgSXLBgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707992767; c=relaxed/simple;
-	bh=y/P4R4hDfJZr0gCFtDW2pgobuhwlFJX18ctbuXp2Rto=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=UwoGoPG5PLKTaIOJ2zfsNH+rC7rVkvw/bl7yw0mXD8p8io/LHKs+EQ3fywYeczHB78CVyVU3/78WAmtDuHAQxcGv6iAp5AHp3ZQXXI7/9alw0JmEcyOPhEPSnlRWmoH91zr1WIhe3Ga6MePsq4BGCo0XhmqUttWiDQ5YxrsLEQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=I0ProOXR; arc=none smtp.client-ip=115.28.160.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="I0ProOXR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1707992756; bh=y/P4R4hDfJZr0gCFtDW2pgobuhwlFJX18ctbuXp2Rto=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=I0ProOXReh5OzzHB5mQQtlUKAJkkwkTPoB4VNzi3fjdWqcnFutbS55EeKWyftZ431
-	 bi6OYPmYG24K6xbCHqPsYI6YEohYVfgje2cccptDFGLwn+ZjfkNBhMKNxqZkpI+YWV
-	 LfO/fq02Sf7d9uq6fwUIC/t2p3UqEqTWBSizl474=
-Received: from [28.0.0.1] (unknown [49.93.119.4])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 8FA0E60122;
-	Thu, 15 Feb 2024 18:25:55 +0800 (CST)
-Message-ID: <447f4279-aea9-4f35-b87e-a3fc8c6c20ac@xen0n.name>
-Date: Thu, 15 Feb 2024 18:25:54 +0800
+	s=arc-20240116; t=1707992809; c=relaxed/simple;
+	bh=20qbWw4eZocIiRgqnsx02KAsr2J5ezEMIV7F1eRgzYQ=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VAuhYccRmQzHWyZeCZ/DHqI+x4WovnP0S/QqJFGKxgvevA4a5FrWg0dxSIN1h/DCkA2pP7O4pso8jdG0GojCSyu7Gw7maUQZewOmaLTSXl7otYoflO+iDozd4oXXXmjIUINikfkFnnI5YtrMjW1/uIA+7m7FFuCVrYB6hKLlwgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TbB3S0L7Qz67Ldy;
+	Thu, 15 Feb 2024 18:23:16 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8A0221400D4;
+	Thu, 15 Feb 2024 18:26:43 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 15 Feb
+ 2024 10:26:43 +0000
+Date: Thu, 15 Feb 2024 10:26:42 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
+CC: Peter Zijlstra <peterz@infradead.org>, Dan Williams
+	<dan.j.williams@intel.com>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, Dave Jiang
+	<dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH 1/2 v4] cleanup: Add cond_guard() to conditional guards
+Message-ID: <20240215102642.000067c5@Huawei.com>
+In-Reply-To: <20240214180452.00000974@Huawei.com>
+References: <20240208130424.59568-1-fabio.maria.de.francesco@linux.intel.com>
+	<20240208130424.59568-2-fabio.maria.de.francesco@linux.intel.com>
+	<3917370.kQq0lBPeGt@fdefranc-mobl3>
+	<20240214180452.00000974@Huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/6] LoongArch: Add pv ipi support on LoongArch VM
-Content-Language: en-US
-From: WANG Xuerui <kernel@xen0n.name>
-To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- Tianrui Zhao <zhaotianrui@loongson.cn>, Juergen Gross <jgross@suse.com>,
- Paolo Bonzini <pbonzini@redhat.com>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- virtualization@lists.linux.dev, kvm@vger.kernel.org
-References: <20240201031950.3225626-1-maobibo@loongson.cn>
- <0f4d83e2-bff9-49d9-8066-9f194ce96306@xen0n.name>
-In-Reply-To: <0f4d83e2-bff9-49d9-8066-9f194ce96306@xen0n.name>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On 2/15/24 18:11, WANG Xuerui wrote:
-> Sorry for the late reply (and Happy Chinese New Year), and thanks for 
-> providing microbenchmark numbers! But it seems the more comprehensive 
-> CoreMark results were omitted (that's also absent in v3)? While the 
+On Wed, 14 Feb 2024 18:04:52 +0000
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
-Of course the benchmark suite should be UnixBench instead of CoreMark. 
-Lesson: don't multi-task code reviews, especially not after consuming 
-beer -- a cup of coffee won't fully cancel the influence. ;-)
+> On Tue, 13 Feb 2024 17:51:26 +0100
+> "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com> wrote:
+> 
+> > On Thursday, 8 February 2024 14:04:23 CET Fabio M. De Francesco wrote:  
+> > > Add cond_guard() macro to conditional guards.
+> > > 
+> > > cond_guard() is a guard to be used with the conditional variants of locks,
+> > > like down_read_trylock() or mutex_lock_interruptible().
+> > > 
+> > > It takes a statement (or statement-expression) that is passed as its
+> > > second argument. That statement (or statement-expression) is executed if
+> > > waiting for a lock is interrupted or if a _trylock() fails in case of
+> > > contention.
+> > > 
+> > > Usage example:
+> > > 
+> > > 	cond_guard(mutex_intr, return -EINTR, &mutex);
+> > > 
+> > > Consistent with other usage of _guard(), locks are unlocked at the exit of
+> > > the scope where cond_guard() is called.
+> > >     
+> > [snip]  
+> > > 
+> > > +#define cond_guard(_name, _fail, args...) \
+> > > +	CLASS(_name, scope)(args); \
+> > > +	if (!__guard_ptr(_name)(&scope)) _fail; \
+> > > +	else { }
+> > > +    
+> > 
+> > I have converted and tested several functions in drivers/cxl and found that 
+> > there are cases where this macro needs to be called twice in the same scope.
+> > 
+> > The current implementation fails to compile because any subsequent call to 
+> > cond_guard() redefines "scope".
+> > 
+> > I have a solution for this, which is to instantiate a differently named 
+> > variable each time cond_guard() is used:
+> > 
+> > #define __UNIQUE_LINE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __LINE__)
+> > #define cond_guard(_name, _fail, args...) \
+> >         CLASS(_name, __UNIQUE_LINE_ID(scope))(args); \
+> >         if (!__guard_ptr(_name)(&__UNIQUE_LINE_ID(scope))) _fail; \
+> >         else { }
+> > 
+> > But, before sending v5, I think it's best to wait for comments from those with 
+> > more experience than me.  
+> 
+> Ah. So you can't use __UNIQUE_ID as guard does because we need it to be stable
+> across the two uses.  What you have looks fine to me.
+> We might end up with someone putting multiple calls in a macro but in my
+> view anyone doing that level of complexity in a macro is shooting themselves
+> in the foot.
 
--- 
-WANG "xen0n" Xuerui
+Thought more on this whilst cycling home.  Can you use another level
+of macros in combination with __UNIQUE_ID that guard uses?
+My skills with macros are very limited so I'm sure I got something wrong,
+but along the lines of.
 
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+#define __cond_class(__unique, _name, _fail, args...) \
+   CLASS(_name, __unique)(args); \
+         if (!__guard_ptr(_name)(&__unique)) _fail; \
+         else { }
+#define cond_class(_name, _fail, args... ) \
+    __cond_class(__UNIQUE_ID(guard), _name, _fail, args...
+
+?
+
+> 
+> Jonathan
+> 
+> 
+> > 
+> > Fabio
+> > 
+> > 
+> > 
+> >   
+> 
+> 
 
