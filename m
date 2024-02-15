@@ -1,203 +1,219 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069D4130AEC
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 13:32:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFC5130AD3;
+	Thu, 15 Feb 2024 13:32:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708003933; cv=none; b=qkplfkDvF/XBZao5xR4qqXXiAdoAnlV/yA8GSLmTVKvykvuPtOT5jMlefpuRyOF+Hv1+45LoxhdNLeV96I3cRAZUgd1lOuXAB2F7sUohpKiJSTSczpetSXdcKAlvr698oLOblyp+lhdi3/uMpqxUOAOBSuSQ02dh0JtVlXSGZts=
+	t=1708003943; cv=none; b=aBr0nmPyJVCD/NcWgNJJeM1iipZi9CF9i/acOQ3DB3KxJX/9XDYmMe8tMTbwnDByheiAo2vGStDWoLxYgWvCJUo8EZDKKIo7S0dg7J4nLPrNQKHCV7b32Sh9mZh28dyoedDXytxF4ipLOSv18LmT7ptPETcGkHed2R+lwQEGbbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708003933; c=relaxed/simple;
-	bh=m8hYdh+/UVrqtVPhk6AGLID+nWtFtpRf/uvN+uMW/6c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qW2bASTxF5Y3t1rGia+JQzbe+PYsXLzHQ7htrlrNYQfnM0fO2A7Nm8iQuBFDwCLLdABaK1e4uTD+4AC4Knzg07oeYO4IRuKJ7enagiaHirbXhLhX80ILpzPbBZQP66NJPXCYCDsSzopSwEPUl6inD0pEg8HITOgAARFBIc47cB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e2nnmTpY; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708003943; c=relaxed/simple;
+	bh=O4jJ8i/gK8Pis+sDOmjDFyNSBQ1DPWMyPahef8wSofw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WPVfZFmahOjTOCx2j0Az2+SAkFr+XOTOVWOoBjcOeiyNGATogt5MOGoUSvw6Gk/+JxBIph4mVThxTn71JeglCHnV2kUitIuHLri9qRjHVW2nI+m6tjt6IAUbVEqerCoRUhonDSnK7aB3tEljeuFyzsjZBNgDqLEPobWEqikZJxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q2M6HA2+; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e2nnmTpY"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-563d017696eso112896a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 05:32:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708003930; x=1708608730; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=itPC4yjw+MZTTzalNg7Ob1FeA2iLjpKFIQ9B9VJV75g=;
-        b=e2nnmTpYpaMea6mnpaWIiXu5yIg1UrDGSKXkeRzKMDt4SsnMlgMgaDWhNt9bIq77m5
-         OC32/A6KKguXvLbuatMyWRD3CSyImw7RGsxYiVKuK/w/H1Ffs4pXdKdEEFxx8PDTCTuo
-         624Y6m9uGHmwfBxfMe45Bz1K+VoakhATvQjg6RlkebMZH2XSp680OyYpqNCwBcECd9BB
-         LK2noxnvwLyH7SSupf3YvVZaCT5fwmMEFYmftZT5R7LNhzd9YbpqmV4gtsoukchq6z5E
-         c3oZw2xU0johSl178KKpnmqdj6zUvBMyfatigK97RAsPV4RpVSFGUjHT5GOgBk2yoWzX
-         HJxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708003930; x=1708608730;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=itPC4yjw+MZTTzalNg7Ob1FeA2iLjpKFIQ9B9VJV75g=;
-        b=C/aUbKofMtsesbaHDwyuN+D3afb2q0x/XYx4riQUo3eNm5bbKWMS2aGcnnoicKh6Jb
-         STKGTbUNvY0w9AAMQCoMmL9EiKMHrTg9bTaXNd8JwAbA1Uw4uXURycpGzFo3MIRL/Qmh
-         UT/SljDQCT1NXu02HW4y33sJOK2ga3P+WWrd0YKZwZPdSzsKanhHKiohwORwXNdQMo+j
-         au+HrRaKypfUXjhqNS2eROPlqQl0ZHFfb+W93dRehp5r2NJ9yxkHDsHr2gBgZZHAKuvK
-         G6jjMGR/o+F0U+DUxhy6RgttjHHyxJeMrCFoYBw+qAUSxS0VZhtCrfRhjPviARjYFsN6
-         1qeg==
-X-Forwarded-Encrypted: i=1; AJvYcCVo6fChHGma/dIc5OvqJwjagMxlqUW6YeojmGtlXrSkLXMMZszvZMxhkPf4mXPPn/e/uQXLbQ/868tWBv3s6plQIIcyKRbQrFkPDfJe
-X-Gm-Message-State: AOJu0YzsYD1e75mTKqbI9IuwxrsSWPjiAr5J1v3M/S0ECMRrjKBnhGXt
-	ogdSrzsLThRcRYSvEG9P9MeMdgfugwHzUtf9XKfcQ0L1yxJDuSE+u5UhBP0NR8b3No3LtTTcbHZ
-	H
-X-Google-Smtp-Source: AGHT+IE7pGrmIuos0u7FslcOP5vVFjySkiA6nt4+X/E67cQyceQ3AtGt6cC5RO+cNGVYo8uyVRvA8w==
-X-Received: by 2002:a05:6402:287:b0:561:4238:e6d3 with SMTP id l7-20020a056402028700b005614238e6d3mr1513003edv.2.1708003930158;
-        Thu, 15 Feb 2024 05:32:10 -0800 (PST)
-Received: from linaro.org ([188.24.162.93])
-        by smtp.gmail.com with ESMTPSA id p3-20020a05640243c300b00563c22abac2sm228295edc.61.2024.02.15.05.32.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Feb 2024 05:32:09 -0800 (PST)
-Date: Thu, 15 Feb 2024 15:32:08 +0200
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-	Johan Hovold <johan@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH RFC v3 3/4] spmi: pmic-arb: Make core resources acquiring
- a version operation
-Message-ID: <Zc4SWIViTS0uf952@linaro.org>
-References: <20240214-spmi-multi-master-support-v3-0-0bae0ef04faf@linaro.org>
- <20240214-spmi-multi-master-support-v3-3-0bae0ef04faf@linaro.org>
- <d9d8e86b-a499-49d1-90ad-6fae5b7dcbb7@linaro.org>
- <Zc0yXR/fC2OcObLB@linaro.org>
- <CAA8EJpq=kYeZfNbFtfQ_oLS0Xi4imyEGV+dDNO+h6LZfqmpxZg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q2M6HA2+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708003942; x=1739539942;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=O4jJ8i/gK8Pis+sDOmjDFyNSBQ1DPWMyPahef8wSofw=;
+  b=Q2M6HA2+ec7G4Q7L1VzHX8jukkN4GWCrtgcQ8QGo6r/lmZZw7lFhDsR5
+   YVW7Drt4nyejCrC6+3iTGrTMo7qnaiJ7hqJqiwL3E/nq9tS7B6SmhN5GM
+   dIjWHMTgoPW4p5UfWVv0IEYGLh8CA0HpMdXD6E09yeO2JVYW+ZGT4eVMa
+   VlfZixEhJZ822lGbWLnShIAS+6qyvZvu3GMVZxb3WrNJv/fx51hjTD2NS
+   0l2/IaC8L8VteVCtdrAiDwBilVLweiDLaUuLyn3XxxWye2w3JDZpoMsty
+   /5vgnBhREp2rw8NXzT5Hvu8wfAOTwEyKIGMEr/ukGHZyoMI1O9qgEkZsW
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="1943626"
+X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
+   d="scan'208";a="1943626"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 05:32:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
+   d="scan'208";a="26690872"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.32.150])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 05:32:14 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Alex Deucher <alexander.deucher@amd.com>,
+	amd-gfx@lists.freedesktop.org,
+	Daniel Vetter <daniel@ffwll.ch>,
+	David Airlie <airlied@gmail.com>,
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	dri-devel@lists.freedesktop.org,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>
+Subject: [PATCH 1/3] drm/radeon: Use RMW accessors for changing LNKCTL2
+Date: Thu, 15 Feb 2024 15:31:53 +0200
+Message-Id: <20240215133155.9198-2-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240215133155.9198-1-ilpo.jarvinen@linux.intel.com>
+References: <20240215133155.9198-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA8EJpq=kYeZfNbFtfQ_oLS0Xi4imyEGV+dDNO+h6LZfqmpxZg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 24-02-15 11:30:23, Dmitry Baryshkov wrote:
-> On Wed, 14 Feb 2024 at 23:36, Abel Vesa <abel.vesa@linaro.org> wrote:
-> >
-> > On 24-02-14 22:18:33, Konrad Dybcio wrote:
-> > > On 14.02.2024 22:13, Abel Vesa wrote:
-> > > > Rather than setting up the core, obsrv and chnls in probe by using
-> > > > version specific conditionals, add a dedicated "get_core_resources"
-> > > > version specific op and move the acquiring in there.
-> > > >
-> > > > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-> > > > ---
-> > > >  drivers/spmi/spmi-pmic-arb.c | 111 ++++++++++++++++++++++++++++++-------------
-> > > >  1 file changed, 78 insertions(+), 33 deletions(-)
-> > > >
-> > > > diff --git a/drivers/spmi/spmi-pmic-arb.c b/drivers/spmi/spmi-pmic-arb.c
-> > > > index 23939c0d225f..489556467a4c 100644
-> > > > --- a/drivers/spmi/spmi-pmic-arb.c
-> > > > +++ b/drivers/spmi/spmi-pmic-arb.c
-> > > > @@ -203,6 +203,7 @@ struct spmi_pmic_arb {
-> > > >   */
-> > > >  struct pmic_arb_ver_ops {
-> > > >     const char *ver_str;
-> > > > +   int (*get_core_resources)(struct platform_device *pdev, void __iomem *core);
-> > > >     int (*init_apid)(struct spmi_pmic_arb *pmic_arb, int index);
-> > > >     int (*ppid_to_apid)(struct spmi_pmic_arb *pmic_arb, u16 ppid);
-> > > >     /* spmi commands (read_cmd, write_cmd, cmd) functionality */
-> > > > @@ -956,6 +957,19 @@ static int pmic_arb_init_apid_min_max(struct spmi_pmic_arb *pmic_arb)
-> > > >     return 0;
-> > > >  }
-> > > >
-> > > > +static int pmic_arb_get_core_resources_v1(struct platform_device *pdev,
-> > > > +                                     void __iomem *core)
-> > > > +{
-> > > > +   struct spmi_pmic_arb *pmic_arb = platform_get_drvdata(pdev);
-> > > > +
-> > > > +   pmic_arb->wr_base = core;
-> > > > +   pmic_arb->rd_base = core;
-> > > > +
-> > > > +   pmic_arb->max_periphs = PMIC_ARB_MAX_PERIPHS;
-> > > > +
-> > > > +   return 0;
-> > > > +}
-> > > > +
-> > > >  static int pmic_arb_init_apid_v1(struct spmi_pmic_arb *pmic_arb, int index)
-> > > >  {
-> > > >     u32 *mapping_table;
-> > > > @@ -1063,6 +1077,41 @@ static u16 pmic_arb_find_apid(struct spmi_pmic_arb *pmic_arb, u16 ppid)
-> > > >     return apid;
-> > > >  }
-> > > >
-> > > > +static int pmic_arb_get_obsrvr_chnls_v2(struct platform_device *pdev)
-> > > > +{
-> > > > +   struct spmi_pmic_arb *pmic_arb = platform_get_drvdata(pdev);
-> > > > +   struct device *dev = &pdev->dev;
-> > > > +   struct resource *res;
-> > > > +
-> > > > +   res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > >
-> > > It's no longer indented to deep, no need to keep such aggressive wrapping
-> > >
-> >
-> > The pmic_arb_get_obsrvr_chnls_v2 is used by both:
-> > pmic_arb_get_core_resources_v2
-> > pmic_arb_get_core_resources_v7
-> >
-> > > > +                                      "obsrvr");
-> > > > +   pmic_arb->rd_base = devm_ioremap(dev, res->start,
-> > > > +                                    resource_size(res));
-> > > > +   if (IS_ERR(pmic_arb->rd_base))
-> > > > +           return PTR_ERR(pmic_arb->rd_base);
-> > > > +
-> > > > +   res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > > > +                                      "chnls");
-> > > > +   pmic_arb->wr_base = devm_ioremap(dev, res->start,
-> > > > +                                    resource_size(res));
-> > > > +   if (IS_ERR(pmic_arb->wr_base))
-> > > > +           return PTR_ERR(pmic_arb->wr_base);
-> > >
-> > > Could probably make it "devm_platform_get_and_ioremap_resource "
-> >
-> > The reason this needs to stay as is is because of reason explained by
-> > the following comment found in probe:
-> >
-> > /*
-> >  * Please don't replace this with devm_platform_ioremap_resource() or
-> >  * devm_ioremap_resource().  These both result in a call to
-> >  * devm_request_mem_region() which prevents multiple mappings of this
-> >  * register address range.  SoCs with PMIC arbiter v7 may define two
-> >  * arbiter devices, for the two physical SPMI interfaces, which  share
-> >  * some register address ranges (i.e. "core", "obsrvr", and "chnls").
-> >  * Ensure that both devices probe successfully by calling devm_ioremap()
-> >  * which does not result in a devm_request_mem_region() call.
-> >  */
-> >
-> > Even though, AFAICT, there is no platform that adds a second node for
-> > the second bus, currently, in mainline, we should probably allow the
-> > "legacy" approach to still work.
-> 
-> If there were no DT files which used two SPMI devices, I think we
-> should drop this comment and use existing helpers. We must keep
-> compatibility with the existing DTs, not with the _possible_ device
-> trees.
+Convert open coded RMW accesses for LNKCTL2 to use
+pcie_capability_clear_and_set_word() which makes its easier to
+understand what the code tries to do.
 
-Sure.
+LNKCTL2 is not really owned by any driver because it is a collection of
+control bits that PCI core might need to touch. RMW accessors already
+have support for proper locking for a selected set of registers
+(LNKCTL2 is not yet among them but likely will be in the future) to
+avoid losing concurrent updates.
 
-Should I drop the qcom,bus-id from the driver as well? It is optional
-after all.
+Suggested-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+ drivers/gpu/drm/radeon/cik.c | 40 ++++++++++++++----------------------
+ drivers/gpu/drm/radeon/si.c  | 40 ++++++++++++++----------------------
+ 2 files changed, 30 insertions(+), 50 deletions(-)
 
-> 
-> >
-> > >
-> > > Konrad
-> 
-> 
-> 
-> -- 
-> With best wishes
-> Dmitry
+diff --git a/drivers/gpu/drm/radeon/cik.c b/drivers/gpu/drm/radeon/cik.c
+index 10be30366c2b..b5e96a8fc2c1 100644
+--- a/drivers/gpu/drm/radeon/cik.c
++++ b/drivers/gpu/drm/radeon/cik.c
+@@ -9592,28 +9592,18 @@ static void cik_pcie_gen3_enable(struct radeon_device *rdev)
+ 								   PCI_EXP_LNKCTL_HAWD);
+ 
+ 				/* linkctl2 */
+-				pcie_capability_read_word(root, PCI_EXP_LNKCTL2,
+-							  &tmp16);
+-				tmp16 &= ~(PCI_EXP_LNKCTL2_ENTER_COMP |
+-					   PCI_EXP_LNKCTL2_TX_MARGIN);
+-				tmp16 |= (bridge_cfg2 &
+-					  (PCI_EXP_LNKCTL2_ENTER_COMP |
+-					   PCI_EXP_LNKCTL2_TX_MARGIN));
+-				pcie_capability_write_word(root,
+-							   PCI_EXP_LNKCTL2,
+-							   tmp16);
+-
+-				pcie_capability_read_word(rdev->pdev,
+-							  PCI_EXP_LNKCTL2,
+-							  &tmp16);
+-				tmp16 &= ~(PCI_EXP_LNKCTL2_ENTER_COMP |
+-					   PCI_EXP_LNKCTL2_TX_MARGIN);
+-				tmp16 |= (gpu_cfg2 &
+-					  (PCI_EXP_LNKCTL2_ENTER_COMP |
+-					   PCI_EXP_LNKCTL2_TX_MARGIN));
+-				pcie_capability_write_word(rdev->pdev,
+-							   PCI_EXP_LNKCTL2,
+-							   tmp16);
++				pcie_capability_clear_and_set_word(root, PCI_EXP_LNKCTL2,
++								   PCI_EXP_LNKCTL2_ENTER_COMP |
++								   PCI_EXP_LNKCTL2_TX_MARGIN,
++								   bridge_cfg2 |
++								   (PCI_EXP_LNKCTL2_ENTER_COMP |
++								    PCI_EXP_LNKCTL2_TX_MARGIN));
++				pcie_capability_clear_and_set_word(rdev->pdev, PCI_EXP_LNKCTL2,
++								   PCI_EXP_LNKCTL2_ENTER_COMP |
++								   PCI_EXP_LNKCTL2_TX_MARGIN,
++								   gpu_cfg2 |
++								   (PCI_EXP_LNKCTL2_ENTER_COMP |
++								    PCI_EXP_LNKCTL2_TX_MARGIN));
+ 
+ 				tmp = RREG32_PCIE_PORT(PCIE_LC_CNTL4);
+ 				tmp &= ~LC_SET_QUIESCE;
+@@ -9627,15 +9617,15 @@ static void cik_pcie_gen3_enable(struct radeon_device *rdev)
+ 	speed_cntl &= ~LC_FORCE_DIS_SW_SPEED_CHANGE;
+ 	WREG32_PCIE_PORT(PCIE_LC_SPEED_CNTL, speed_cntl);
+ 
+-	pcie_capability_read_word(rdev->pdev, PCI_EXP_LNKCTL2, &tmp16);
+-	tmp16 &= ~PCI_EXP_LNKCTL2_TLS;
++	tmp16 = 0;
+ 	if (speed_cap == PCIE_SPEED_8_0GT)
+ 		tmp16 |= PCI_EXP_LNKCTL2_TLS_8_0GT; /* gen3 */
+ 	else if (speed_cap == PCIE_SPEED_5_0GT)
+ 		tmp16 |= PCI_EXP_LNKCTL2_TLS_5_0GT; /* gen2 */
+ 	else
+ 		tmp16 |= PCI_EXP_LNKCTL2_TLS_2_5GT; /* gen1 */
+-	pcie_capability_write_word(rdev->pdev, PCI_EXP_LNKCTL2, tmp16);
++	pcie_capability_clear_and_set_word(rdev->pdev, PCI_EXP_LNKCTL2,
++					   PCI_EXP_LNKCTL2_TLS, tmp16);
+ 
+ 	speed_cntl = RREG32_PCIE_PORT(PCIE_LC_SPEED_CNTL);
+ 	speed_cntl |= LC_INITIATE_LINK_SPEED_CHANGE;
+diff --git a/drivers/gpu/drm/radeon/si.c b/drivers/gpu/drm/radeon/si.c
+index 85e9cba49cec..8eeaea64c75d 100644
+--- a/drivers/gpu/drm/radeon/si.c
++++ b/drivers/gpu/drm/radeon/si.c
+@@ -7193,28 +7193,18 @@ static void si_pcie_gen3_enable(struct radeon_device *rdev)
+ 								   PCI_EXP_LNKCTL_HAWD);
+ 
+ 				/* linkctl2 */
+-				pcie_capability_read_word(root, PCI_EXP_LNKCTL2,
+-							  &tmp16);
+-				tmp16 &= ~(PCI_EXP_LNKCTL2_ENTER_COMP |
+-					   PCI_EXP_LNKCTL2_TX_MARGIN);
+-				tmp16 |= (bridge_cfg2 &
+-					  (PCI_EXP_LNKCTL2_ENTER_COMP |
+-					   PCI_EXP_LNKCTL2_TX_MARGIN));
+-				pcie_capability_write_word(root,
+-							   PCI_EXP_LNKCTL2,
+-							   tmp16);
+-
+-				pcie_capability_read_word(rdev->pdev,
+-							  PCI_EXP_LNKCTL2,
+-							  &tmp16);
+-				tmp16 &= ~(PCI_EXP_LNKCTL2_ENTER_COMP |
+-					   PCI_EXP_LNKCTL2_TX_MARGIN);
+-				tmp16 |= (gpu_cfg2 &
+-					  (PCI_EXP_LNKCTL2_ENTER_COMP |
+-					   PCI_EXP_LNKCTL2_TX_MARGIN));
+-				pcie_capability_write_word(rdev->pdev,
+-							   PCI_EXP_LNKCTL2,
+-							   tmp16);
++				pcie_capability_clear_and_set_word(root, PCI_EXP_LNKCTL2,
++								   PCI_EXP_LNKCTL2_ENTER_COMP |
++								   PCI_EXP_LNKCTL2_TX_MARGIN,
++								   bridge_cfg2 &
++								   (PCI_EXP_LNKCTL2_ENTER_COMP |
++								    PCI_EXP_LNKCTL2_TX_MARGIN));
++				pcie_capability_clear_and_set_word(rdev->pdev, PCI_EXP_LNKCTL2,
++								   PCI_EXP_LNKCTL2_ENTER_COMP |
++								   PCI_EXP_LNKCTL2_TX_MARGIN,
++								   gpu_cfg2 &
++								   (PCI_EXP_LNKCTL2_ENTER_COMP |
++								    PCI_EXP_LNKCTL2_TX_MARGIN));
+ 
+ 				tmp = RREG32_PCIE_PORT(PCIE_LC_CNTL4);
+ 				tmp &= ~LC_SET_QUIESCE;
+@@ -7228,15 +7218,15 @@ static void si_pcie_gen3_enable(struct radeon_device *rdev)
+ 	speed_cntl &= ~LC_FORCE_DIS_SW_SPEED_CHANGE;
+ 	WREG32_PCIE_PORT(PCIE_LC_SPEED_CNTL, speed_cntl);
+ 
+-	pcie_capability_read_word(rdev->pdev, PCI_EXP_LNKCTL2, &tmp16);
+-	tmp16 &= ~PCI_EXP_LNKCTL2_TLS;
++	tmp16 = 0;
+ 	if (speed_cap == PCIE_SPEED_8_0GT)
+ 		tmp16 |= PCI_EXP_LNKCTL2_TLS_8_0GT; /* gen3 */
+ 	else if (speed_cap == PCIE_SPEED_5_0GT)
+ 		tmp16 |= PCI_EXP_LNKCTL2_TLS_5_0GT; /* gen2 */
+ 	else
+ 		tmp16 |= PCI_EXP_LNKCTL2_TLS_2_5GT; /* gen1 */
+-	pcie_capability_write_word(rdev->pdev, PCI_EXP_LNKCTL2, tmp16);
++	pcie_capability_clear_and_set_word(rdev->pdev, PCI_EXP_LNKCTL2,
++					   PCI_EXP_LNKCTL2_TLS, tmp16);
+ 
+ 	speed_cntl = RREG32_PCIE_PORT(PCIE_LC_SPEED_CNTL);
+ 	speed_cntl |= LC_INITIATE_LINK_SPEED_CHANGE;
+-- 
+2.39.2
+
