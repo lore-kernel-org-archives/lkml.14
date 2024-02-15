@@ -1,65 +1,61 @@
-Received: from mail.xenproject.org (mail.xenproject.org [104.130.215.37])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C7C133988;
-	Thu, 15 Feb 2024 15:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=104.130.215.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4563F12C548;
+	Thu, 15 Feb 2024 15:41:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708011676; cv=none; b=ADzyb7LylTiGlYzIpAuPP9H558EkV0R9WqPQOtm3rR9jsyS4XnrVi5CjQWMZbJS6q2YQBOJwdUjDhlRP0/bsc+bRG32mpX+pyYYSz6ZLABsJK+E5evohjOTwauFmRC13VOzhVerrq1Vmh9BTbdMZcXcwNrgm3LFW5NLEVnRzgt0=
+	t=1708011705; cv=none; b=S9Gxr1tQ3kSdtx88js+7zcHdu73Eu2GDu9tNxJzJysqtdV6iBdXxkRV+ZRs2lJ5FhupHygZIW/B5xusTmDdSMLhEKk7xpb7rMt/9Oj8u2wzOfrfQuPxnb5GxH3a2HNegRs4a+sG/qG7wzey2QJ7DDAmLiymAjTQrouGD2y4g+NE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708011676; c=relaxed/simple;
-	bh=BPxOajaOUpZ8zqhwZLHWGPlmk25NyFlciVy4aXnDiuE=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=Y/RsTmFK1y8mA59h+UrO3NpWUkucGJJJXDk3XNL+ZvSCr4Rl5IzXuleofiiOmpQRhPJxtZ94x7Y7ikE9BLrSc0PSVPvvmKL+knjGySkCGzQH2dDAIXJwqCsDQ/+OB7aMRgBAEeF2E4utSQVrCmPkpHTeK+Dolan1ALVqxf1LZYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen.org; spf=pass smtp.mailfrom=xen.org; dkim=pass (1024-bit key) header.d=xen.org header.i=@xen.org header.b=Hu3vy5io; arc=none smtp.client-ip=104.130.215.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen.org
+	s=arc-20240116; t=1708011705; c=relaxed/simple;
+	bh=Pgd5J6Uby1Zyd/C1wyBnm9ePGiFzIsnkC58Bl/jyjRE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q0Fg4Ww3BqvVSzCocNrvI6N8/iuCS0qDDFMxayNoSBw4M1OP6FXlAvti09RMbiO5aO4EDp1oCJM32uMewsw4maeKidYTRCD2Dmr+V+tCygZyuSImO1YYrlYK3ZcZr/iSOQLTKoGU2lMr9+5L3f4I/20oC7D4lTETCDCqTcNEhk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VtlnUwjB; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xen.org header.i=@xen.org header.b="Hu3vy5io"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=xen.org;
-	s=20200302mail; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
-	Subject:To:From; bh=TEpTKi5UZCiDihe14d8Icy5BIjVsO8aW29qRo71K668=; b=Hu3vy5ioZ
-	A2o4SB5Ah6zJp7nMx/Qnx/ooYOEoOrdDLeqBIr//u6kyvxrovmIZ/lxMajKOKn+4Pt8/buEe73GBb
-	pqrpMAjM5hYBKdZ+NZI01N1vFsy5vT0M98ud51iJV6Kw0k37LsUfGJd++yOKfOCj1FBdi1fZMtZ8P
-	efGMNk7I=;
-Received: from xenbits.xenproject.org ([104.239.192.120])
-	by mail.xenproject.org with esmtp (Exim 4.92)
-	(envelope-from <paul@xen.org>)
-	id 1radgB-0001B5-T7; Thu, 15 Feb 2024 15:29:39 +0000
-Received: from 54-240-197-226.amazon.com ([54.240.197.226] helo=REM-PW02S00X.ant.amazon.com)
-	by xenbits.xenproject.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <paul@xen.org>)
-	id 1radgB-00089r-DW; Thu, 15 Feb 2024 15:29:39 +0000
-From: Paul Durrant <paul@xen.org>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	David Hildenbrand <david@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Paul Durrant <paul@xen.org>,
-	Shuah Khan <shuah@kernel.org>,
-	kvm@vger.kernel.org,
-	linux-doc@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VtlnUwjB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708011703; x=1739547703;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Pgd5J6Uby1Zyd/C1wyBnm9ePGiFzIsnkC58Bl/jyjRE=;
+  b=VtlnUwjB9oH4wtbAK9eJ9lbg3AmBfsaYryM5f8oAsH8z6R4NtEW91Ssp
+   1cinY5rg96Km0fe17mqRO6mh5pkQd9rX+dZs1T3miXlNSTuVnGESqPoBe
+   riOXqhWDmbrfHkzGBaiuYgbp8muTtM1G6edSDGL0KMDomhxURAVnuLXKy
+   X0l8CWv5gLMQeyKvUMUwahZD5LvewgHDT5h+vqvMG55O1kN8fz6HZ4bWT
+   1LWqalsvQviAtPlqrcujah3tfNfqthsDc1GSrPtJlu39mIxSxeqIXjeSz
+   WoGGs51XPhU4EZj8uUtm7QnDLpHBXlfakemCQJgw0SSFbJyiC+Pk4V2dn
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="5888083"
+X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
+   d="scan'208";a="5888083"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 07:41:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="935682308"
+X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
+   d="scan'208";a="935682308"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 15 Feb 2024 07:41:39 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id B54E2204; Thu, 15 Feb 2024 17:41:38 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Johannes Berg <johannes.berg@intel.com>,
 	linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v13 00/21] KVM: xen: update shared_info and vcpu_info handling
-Date: Thu, 15 Feb 2024 15:28:55 +0000
-Message-Id: <20240215152916.1158-1-paul@xen.org>
-X-Mailer: git-send-email 2.39.2
+	linux-wireless@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: Johannes Berg <johannes@sipsolutions.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Subject: [PATCH net-next v1 1/1] wireless: Add KHZ_PER_GHZ to units.h and reuse
+Date: Thu, 15 Feb 2024 17:41:36 +0200
+Message-ID: <20240215154136.630029-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,92 +64,70 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Paul Durrant <pdurrant@amazon.com>
+The KHZ_PER_GHZ might be used by others (with the name aligned
+with similar constants). Define it in units.h and convert
+wireless to use it.
 
-This series contains a new patch from Sean added since v12 [1]:
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ include/linux/units.h | 5 ++++-
+ net/wireless/reg.c    | 7 +++----
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
-* KVM: s390: Refactor kvm_is_error_gpa() into kvm_is_gpa_in_memslot()
-
-This frees up the function name kvm_is_error_gpa() such that it can then be
-re-defined in:
-
-* KVM: pfncache: allow a cache to be activated with a fixed (userspace) HVA
-
-to be used for a simple GPA validation helper function. The patch also now
-contains an either/or address check for GPA versus HVA in
-__kvm_gpc_refresh().
-
-In:
-
-* KVM: pfncache: add a mark-dirty helper
-
-The function name has been changed from kvm_gpc_mark_dirty() to
-kvm_gpc_mark_dirty_in_slot().
-
-In:
-
-* KVM: x86/xen: allow shared_info to be mapped by fixed HVA
-
-missing HVA validation checks have been added and the 'hva == 0' test
-has been changed to '!hva'. The KVM_XEN_ATTR_TYPE_SHARED_INFO and
-KVM_XEN_ATTR_TYPE_SHARED_INFO_HVA cases are still largely handled as one
-though as separation leads to duplicate calls to
-kvm_xen_shared_info_init() which looks messy.
-
-Also, patches with a 'xen' prefix have now been modified to have a
-'x86/xen' prefix and patches with a 'selftests / xen' prefix have been
-modified to have simply a 'selftests' prefix.
-
-[1] https://lore.kernel.org/kvm/20240115125707.1183-1-paul@xen.org/
-
-David Woodhouse (1):
-  KVM: pfncache: rework __kvm_gpc_refresh() to fix locking issues
-
-Paul Durrant (19):
-  KVM: pfncache: Add a map helper function
-  KVM: pfncache: remove unnecessary exports
-  KVM: x86/xen: mark guest pages dirty with the pfncache lock held
-  KVM: pfncache: add a mark-dirty helper
-  KVM: pfncache: remove KVM_GUEST_USES_PFN usage
-  KVM: pfncache: stop open-coding offset_in_page()
-  KVM: pfncache: include page offset in uhva and use it consistently
-  KVM: pfncache: allow a cache to be activated with a fixed (userspace)
-    HVA
-  KVM: x86/xen: separate initialization of shared_info cache and content
-  KVM: x86/xen: re-initialize shared_info if guest (32/64-bit) mode is
-    set
-  KVM: x86/xen: allow shared_info to be mapped by fixed HVA
-  KVM: x86/xen: allow vcpu_info to be mapped by fixed HVA
-  KVM: selftests: map Xen's shared_info page using HVA rather than GFN
-  KVM: selftests: re-map Xen's vcpu_info using HVA rather than GPA
-  KVM: x86/xen: advertize the KVM_XEN_HVM_CONFIG_SHARED_INFO_HVA
-    capability
-  KVM: x86/xen: split up kvm_xen_set_evtchn_fast()
-  KVM: x86/xen: don't block on pfncache locks in
-    kvm_xen_set_evtchn_fast()
-  KVM: pfncache: check the need for invalidation under read lock first
-  KVM: x86/xen: allow vcpu_info content to be 'safely' copied
-
-Sean Christopherson (1):
-  KVM: s390: Refactor kvm_is_error_gpa() into kvm_is_gpa_in_memslot()
-
- Documentation/virt/kvm/api.rst                |  53 ++-
- arch/s390/kvm/diag.c                          |   2 +-
- arch/s390/kvm/gaccess.c                       |  14 +-
- arch/s390/kvm/kvm-s390.c                      |   4 +-
- arch/s390/kvm/priv.c                          |   4 +-
- arch/s390/kvm/sigp.c                          |   2 +-
- arch/x86/kvm/x86.c                            |   7 +-
- arch/x86/kvm/xen.c                            | 361 +++++++++++------
- include/linux/kvm_host.h                      |  49 ++-
- include/linux/kvm_types.h                     |   8 -
- include/uapi/linux/kvm.h                      |   9 +-
- .../selftests/kvm/x86_64/xen_shinfo_test.c    |  59 ++-
- virt/kvm/pfncache.c                           | 382 ++++++++++--------
- 13 files changed, 591 insertions(+), 363 deletions(-)
-
-
-base-commit: 7455665a3521aa7b56245c0a2810f748adc5fdd4
+diff --git a/include/linux/units.h b/include/linux/units.h
+index 45110daaf8d3..00e15de33eca 100644
+--- a/include/linux/units.h
++++ b/include/linux/units.h
+@@ -24,10 +24,13 @@
+ #define NANOHZ_PER_HZ		1000000000UL
+ #define MICROHZ_PER_HZ		1000000UL
+ #define MILLIHZ_PER_HZ		1000UL
++
+ #define HZ_PER_KHZ		1000UL
+-#define KHZ_PER_MHZ		1000UL
+ #define HZ_PER_MHZ		1000000UL
+ 
++#define KHZ_PER_MHZ		1000UL
++#define KHZ_PER_GHZ		1000000UL
++
+ #define MILLIWATT_PER_WATT	1000UL
+ #define MICROWATT_PER_MILLIWATT	1000UL
+ #define MICROWATT_PER_WATT	1000000UL
+diff --git a/net/wireless/reg.c b/net/wireless/reg.c
+index 50cadbad485f..753f8e9aa4b1 100644
+--- a/net/wireless/reg.c
++++ b/net/wireless/reg.c
+@@ -57,6 +57,8 @@
+ #include <linux/verification.h>
+ #include <linux/moduleparam.h>
+ #include <linux/firmware.h>
++#include <linux/units.h>
++
+ #include <net/cfg80211.h>
+ #include "core.h"
+ #include "reg.h"
+@@ -1289,20 +1291,17 @@ static bool is_valid_rd(const struct ieee80211_regdomain *rd)
+ static bool freq_in_rule_band(const struct ieee80211_freq_range *freq_range,
+ 			      u32 freq_khz)
+ {
+-#define ONE_GHZ_IN_KHZ	1000000
+ 	/*
+ 	 * From 802.11ad: directional multi-gigabit (DMG):
+ 	 * Pertaining to operation in a frequency band containing a channel
+ 	 * with the Channel starting frequency above 45 GHz.
+ 	 */
+-	u32 limit = freq_khz > 45 * ONE_GHZ_IN_KHZ ?
+-			20 * ONE_GHZ_IN_KHZ : 2 * ONE_GHZ_IN_KHZ;
++	u32 limit = freq_khz > 45 * KHZ_PER_GHZ ? 20 * KHZ_PER_GHZ : 2 * KHZ_PER_GHZ;
+ 	if (abs(freq_khz - freq_range->start_freq_khz) <= limit)
+ 		return true;
+ 	if (abs(freq_khz - freq_range->end_freq_khz) <= limit)
+ 		return true;
+ 	return false;
+-#undef ONE_GHZ_IN_KHZ
+ }
+ 
+ /*
 -- 
-2.39.2
+2.43.0.rc1.1.gbec44491f096
 
