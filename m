@@ -1,58 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA03A23D0
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 20:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24EB26A349;
+	Thu, 15 Feb 2024 20:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708030501; cv=none; b=OlMLajth1JAf+41Wrta0EIGBHOw2Bb8Z3kFZmGWB4OtVv6iQA4MiviBrHozM/Xwpbfbe7VowC8oe7PGbvGMeuEdO8LbBNzatveiv8vhIc1WPzypfuQ5j+zX/TgN6BGKBZItJsEoyMIdyeMkIsg5OrUs0ez7i47NXSsVitphLyVg=
+	t=1708030516; cv=none; b=KM3svwPKGBaIMeMnJBqlL3PXknvT+C1OEWGxX3hwbnC/9Zc3hfK5e6GJMTVS6csRM7QrEZSvL6NES8mKS3l9hdfHOUITGHE0zGagWBrddu4yDrNu6Pdtmfw8vbUzWxtIIZSeRFYhZWwvTq0EofFTWULNyH7veRxaut8OYH76hho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708030501; c=relaxed/simple;
-	bh=aHAAf/eYEqbMIgGiLamIQT1uJEOPhsZ0QPwFACiwfUU=;
+	s=arc-20240116; t=1708030516; c=relaxed/simple;
+	bh=+BMQn3bOtWH+FWUM64l+j3RtIw016nUn+Jnnh0s+X2c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BZcxK6JBrzIEhuZVFthXJslZcnjR9Wxy3cjYNOMdi6+U+7df+tTuAPNLUncBfSspqwdSjSmSFjDawUM5yeAsYTl4ZNy76lh0+hSFhbXab/VOFI+pqAlI/lEeYQk6h0QBejwMyXNY4J7NzNZv+JEjP0iJV74tyo9FXMsGwsSh/gE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WoJ9DZUy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kn5N8qmlAAxRZhIhoiJYPfJS2Jd4OmSPffCJ5GDw1XGFjibs3FKOm/q5y5VXdn1fJqoLAKutgIt0NlYvaUejuUkj6tS8VFaYHCSdyd8q+p/opSDVJdMi/5LZTHpPuu1TQWoyd4lXha6nziNWT9ztaGn89oGFAIXO3xQ6KvUsm0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XTWdWTFO; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WoJ9DZUy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DB09C433C7;
-	Thu, 15 Feb 2024 20:55:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708030500;
-	bh=aHAAf/eYEqbMIgGiLamIQT1uJEOPhsZ0QPwFACiwfUU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=WoJ9DZUySKcUVt698bLNFZSqjCBxDsHZBzx0w7xhhFLhfFL1hxCGrgare77HrenbD
-	 kPyxbUggv6UM5rHVsAqn8flx4cpihCFuaaYqsFS9zkJ3e2vhzHg/7/QdWYF57EkHh8
-	 f50CyMlqd7tS3uJJgMWzhSWrFiciasp1T5CyyPfb7Sbukzfm5Z3/HH2/7DKuGo6PJT
-	 +k/SuM1rgvBxJG2/p4vcv6EYUYuuD//sxf4LPDKz3xvY90CfVq7qteiiwV3jpKKcSC
-	 8hFDURfcdrUrBFit3+lcbnjhoz743SsVbIY46ucp1poK6xC2O6S5Qiw2GsMFNjVN/r
-	 38ZzM6BvDWtBg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id F010BCE0D0D; Thu, 15 Feb 2024 12:54:59 -0800 (PST)
-Date: Thu, 15 Feb 2024 12:54:59 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ankur Arora <ankur.a.arora@oracle.com>, linux-kernel@vger.kernel.org,
-	peterz@infradead.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	willy@infradead.org, mgorman@suse.de, jpoimboe@kernel.org,
-	mark.rutland@arm.com, jgross@suse.com, andrew.cooper3@citrix.com,
-	bristot@kernel.org, mathieu.desnoyers@efficios.com,
-	glaubitz@physik.fu-berlin.de, anton.ivanov@cambridgegreys.com,
-	mattst88@gmail.com, krypton@ulrich-teichert.org,
-	rostedt@goodmis.org, David.Laight@aculab.com, richard@nod.at,
-	jon.grimm@amd.com, bharata@amd.com, boris.ostrovsky@oracle.com,
-	konrad.wilk@oracle.com
-Subject: Re: [PATCH 00/30] PREEMPT_AUTO: support lazy rescheduling
-Message-ID: <fe7fc182-31f4-4b0d-97dd-e48d7b8edc25@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240213055554.1802415-1-ankur.a.arora@oracle.com>
- <a7e785f8-d4c3-4b1b-9abe-36ac0b971e44@paulmck-laptop>
- <87le7mpjpr.fsf@oracle.com>
- <4e070ae0-29dc-41ee-aee6-0d3670304825@paulmck-laptop>
- <0d4a4eec-ce91-48da-91b6-1708a97edaeb@paulmck-laptop>
- <87sf1tcx5b.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XTWdWTFO"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d7232dcb3eso10822795ad.2;
+        Thu, 15 Feb 2024 12:55:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708030514; x=1708635314; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=r7KeUmQ5rtQIKjg5bbnS3xkReICqYXg+NK0gShllzn0=;
+        b=XTWdWTFO41LkP3ajBo/IfnkDBaOM5TO5ob3AWl+3iQV4d5UYxfDsbgb0k+KDwBSM7l
+         CxrJUFNFm9LOs1ls15BwoQdwRPRBOq4FVf+sc+Tp2+DpbCGWMOB+JiVpj0aFv51oFEyW
+         QvFo/JS+azW0zR/IDebriZJt3WbdkvLnXHpbM4tgFCuEVaywTez9hTtHYZEu7XRh6M9A
+         JhKo/W04HXExW1pTVxZ6pHFOVmzB45sVuefClgs+4A6CxtSOBVIUtgPKXmNjXum/sbS2
+         e+fu5sTzQ/JpTWdg4L61AaYV86MLiqEWGnfEsLG0UkUAM7lABG0C6djWjngrpdQ6kzMR
+         7lcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708030514; x=1708635314;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r7KeUmQ5rtQIKjg5bbnS3xkReICqYXg+NK0gShllzn0=;
+        b=ex6hmhtN9VItBU7/i/z2gOxbJaOnKXX9pOZjAl4xkhr7+uzRy8zKPKtPgszDHG8Hl7
+         +kyKvGOlZKMAFf00bbvHYduGl4ZjbM2X+7wp+9wNEcHtrxX+f9bJBO1pLIQCjCryb7gt
+         F8CYp8yk8DSGBdj5q8dRUHeWag8VQo4anscYNcTBx1JdDrolLBe4BTmTeeCLHS9Jw+Nb
+         ciT2feyuVOQVLlmRKJmpgz+EXdcdCqJ/Ng9jtj8RYmEID4GFXOz6ryVss/x+x0H8lSm4
+         e+KuONewq8JY/iKdv+KQXlS7QjOhtOshrmVFxnF9GzOofrgzBHB6MC46MER9jofaQSgQ
+         1fzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWLtgHCAFKsMercILbrOjNCoOLRLKHO0dKVW3ck6erSNf4+XycaPSt5ReYD8Ns3Lzd8UR7GQbyTr/9P3IFHM1LcsuOzFRmTKPDcLwQRPfFonykvkd0NsVY2pf2E1E+r9BoSiYCL
+X-Gm-Message-State: AOJu0YwK6oXof1NNG7Nk6WZig3pCXParU237DjeGqvcM8gGLKuP0ExK4
+	0ZHOCTEcvJWNsKLBqeJZKXUPtEAZ6HrBOmJUSSpVwOVzv8VOVYnY
+X-Google-Smtp-Source: AGHT+IF7vFLlsC6PM38G1zfNCpMrYhgcMQQS0vF9cRox0azJFhgKB3VSOd4zEVDtNy7j0rmcWMxpwg==
+X-Received: by 2002:a17:902:7c01:b0:1d9:f495:cfa4 with SMTP id x1-20020a1709027c0100b001d9f495cfa4mr2658373pll.62.1708030514195;
+        Thu, 15 Feb 2024 12:55:14 -0800 (PST)
+Received: from google.com ([2620:0:1000:8411:9dc5:487d:7c08:30bb])
+        by smtp.gmail.com with ESMTPSA id x9-20020a170902e04900b001db561fa164sm1671380plx.25.2024.02.15.12.55.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Feb 2024 12:55:13 -0800 (PST)
+Sender: Minchan Kim <minchan.kim@gmail.com>
+Date: Thu, 15 Feb 2024 12:55:11 -0800
+From: Minchan Kim <minchan@kernel.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Kairui Song <ryncsn@gmail.com>, linux-mm@kvack.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Huang, Ying" <ying.huang@intel.com>, Chris Li <chrisl@kernel.org>,
+	Yu Zhao <yuzhao@google.com>, Barry Song <v-songbaohua@oppo.com>,
+	SeongJae Park <sj@kernel.org>, Hugh Dickins <hughd@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Michal Hocko <mhocko@suse.com>, Yosry Ahmed <yosryahmed@google.com>,
+	stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm/swap: fix race when skipping swapcache
+Message-ID: <Zc56L6oL4JmxqaFN@google.com>
+References: <20240206182559.32264-1-ryncsn@gmail.com>
+ <1d259a51-46e6-4d3b-9455-38dbcc17b168@redhat.com>
+ <CAMgjq7Cy3njsQzGi5Wa_JaM4NaO4eDGO5D8cY+KEB0ERd_JrGw@mail.gmail.com>
+ <4c651673-132f-4cd8-997e-175f586fd2e6@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,40 +79,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87sf1tcx5b.ffs@tglx>
+In-Reply-To: <4c651673-132f-4cd8-997e-175f586fd2e6@redhat.com>
 
-On Thu, Feb 15, 2024 at 09:04:00PM +0100, Thomas Gleixner wrote:
-> On Thu, Feb 15 2024 at 11:28, Paul E. McKenney wrote:
-> > On Wed, Feb 14, 2024 at 07:45:18PM -0800, Paul E. McKenney wrote:
-> > I am also getting these from builds that enable KASAN:
-> >
-> > vmlinux.o: warning: objtool: mwait_idle+0x13: call to tif_resched.constprop.0() leaves .noinstr.text section
-> > vmlinux.o: warning: objtool: acpi_processor_ffh_cstate_enter+0x36: call to tif_resched.constprop.0() leaves .noinstr.text section
-> > vmlinux.o: warning: objtool: cpu_idle_poll.isra.0+0x18: call to tif_resched.constprop.0() leaves .noinstr.text section
-> > vmlinux.o: warning: objtool: acpi_safe_halt+0x0: call to tif_resched.constprop.0() leaves .noinstr.text section
-> > vmlinux.o: warning: objtool: poll_idle+0x33: call to tif_resched.constprop.0() leaves .noinstr.text section
-> > vmlinux.o: warning: objtool: default_enter_idle+0x18: call to tif_resched.constprop.0() leaves .noinstr.text section
-> >
-> > Does tif_resched() need to be marked noinstr or some such?
+Hi David,
+
+On Thu, Feb 15, 2024 at 09:03:28PM +0100, David Hildenbrand wrote:
+
+< snip >
+
+> > > 
+> > > We would detect later, that the PTE changed, but we would temporarily
+> > > mess with that swap slot that we might no longer "own".
+> > > 
+> > > I was thinking about alternatives, it's tricky because of the concurrent
+> > > MADV_DONTNEED possibility. Something with another fake-swap entry type
+> > > (similar to migration entries) might work, but would require more changes.
+> > 
+> > Yeah, in the long term I also think more work is needed for the swap subsystem.
+> > 
+> > In my opinion, for this particular issue, or, for cache bypassed
+> > swapin, a new swap map value similar to SWAP_MAP_BAD/SWAP_MAP_SHMEM
+> > might be needed, that may even help to simplify the swap count release
+> > routine for cache bypassed swapin, and improve the performance.
 > 
-> __always_inline() probably
+> The question is if we really want to track that in the swapcache and not
+> rather in the page table.
+> 
+> Imagine the following:
+> 
+> (1) allocate the folio and lock it (we do that already)
+> 
+> (2) take the page table lock. If the PTE is still the same, insert a new
+> "swapin_in_process" fake swp entry that references the locked folio.
+> 
+> (3) read the folio from swap. This will unlock the folio IIUC. (we do that
+> already)
+> 
+> (4) relock the folio. (we do that already, might not want to fail)
+> 
+> (4) take the PTE lock. If the PTE did not change, turn it into a present PTE
+> entry. Otherwise, cleanup.
+> 
+> 
+> Any concurrent swap-in users would spot the new "swapin_in_process" fake swp
+> entry and wait for the page lock (just like we do with migration entries).
+> 
+> Zap code would mostly only clear the "swapin_in_process" fake swp entry and
+> leave the cleanup to (4) above. Fortunately, concurrent fork() is impossible
+> as that cannot race with page faults.
+> 
+> There might be one minor thing to optimize with the folio lock above. But in
+> essence, it would work just like migration entries, just that they are
+> installed only while we actually do read the content from disk etc.
 
-That does the trick, thank you!
+That's a great idea. I was thinking to have the synchronization in the
+page table but couldn't reach to the other non_swap_entry idea.
 
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-diff --git a/include/linux/thread_info.h b/include/linux/thread_info.h
-index 8752dbc2dac75..43b729935804e 100644
---- a/include/linux/thread_info.h
-+++ b/include/linux/thread_info.h
-@@ -81,7 +81,7 @@ typedef enum {
-  * reduce to the same value (TIF_NEED_RESCHED) leaving any scheduling behaviour
-  * unchanged.
-  */
--static inline int tif_resched(resched_t rs)
-+static __always_inline int tif_resched(resched_t rs)
- {
- 	return TIF_NEED_RESCHED + rs * TIF_NEED_RESCHED_LAZY_OFFSET;
- }
+Only concern of the approach is that it would be harder to have the fix
+in the stable tree. If there isn't strong objection, I prefer the
+Kairui's orginal solution(with some tweak of scheduler if it's
+necessary) first and then pursue your idea on latest tree.
