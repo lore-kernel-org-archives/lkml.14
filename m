@@ -1,260 +1,197 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D643133416
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 10:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5F712DD8A;
+	Thu, 15 Feb 2024 10:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707993376; cv=none; b=XlSF46CTTor6hA4OaY32ZDxKtZQu1uTMCJsZ42QJzZ8XssrUw4MpNPm7aHxbekRu+vPZJXmjDWYgVv+rzD5MqMlSwrn7s7Np479kvil69zvmXv+YqzH8upc782Ke+NB7bFQ+rK7vh9dEdTjNbcLMLZZC1hKEGCPAqIHI/fM25k4=
+	t=1707993383; cv=none; b=DA3LpkUHC9eyDnlR04140RlSC98UnOjyyyTqpoCYOa07QpRp6XTc8AhiCAdXYLmjRTS8T1KWDZq8GJ5akAN+Tr3vHRPXLOcIQqvCGp98IR1T5VkQa/3DCEzE0VXx9kbPg1wEpjJoqT+8RjjmZoPJuEnQbiUbz4suOoG08uE3Hj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707993376; c=relaxed/simple;
-	bh=11oYkl9ZkxYy7KWSDC4IMM2JkbglL8sRs6RXiYwDyAQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o+PTq8mhqR+lxNENmMMlNYWjtqHm+Z+B+1D4mfBPOClud69Wwt9aH5SOTodWZyEpPptlyWHdDtza1X5wYpe9tWMlo1Puuh4eDGCxB/LhW0AlEoJDAA8G+WMExGmBRZF+FUR92XrXU7e5MqPhOqda9Og9aNGiotM98XzXdK3/m7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YkP2KpTe; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YkP2KpTe"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a3d6d160529so85738566b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 02:36:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707993372; x=1708598172; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=STa2oLZBFBMUPR8Jzc0nI7GOTVmKblKkt7T7A8BOCxc=;
-        b=YkP2KpTeSS2t3kekRipAncjBcFLrYTimDo3CmUg6jd1RQqvlryfI93HosAWboofIQC
-         dtDVsbef0YjPqlZSsugtllNuM8pjmoSCwbHCkRw5Zvg0Dmr69EQRpYEewySPWJt4htDi
-         dKuyPQZMtkPpCrJs5ajxgoX2tk4aIOW59NVvIhz8BhBTWhjF4B7+asH5KELBWD99JTff
-         98a4FXL5EzAQU0oxBRGOwWFc+LHfbn34wNNsvV2SGnZ5GfFHmKH4lc92lV6jqayXQkzA
-         AjxkcdslrJ0Yh1lNqnc6eP7po7rlyn1cw4gQG+avWZ5BGGjg3yHox8wa9Zi41rJzSgnd
-         dJiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707993372; x=1708598172;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=STa2oLZBFBMUPR8Jzc0nI7GOTVmKblKkt7T7A8BOCxc=;
-        b=Y8AatbLaid/4lUZ9HHWrKav38rwpfe8hR0eo+9G2xHc1QW4xkmpQin0lyrsQsb0Vpc
-         F2pE4zGWWEFt61/D0+8ol+lejvg4eMGO08Z1XeSgdpIkXN8L2VKNlkL3mj3k9KP1+TNi
-         b4DMZ6vHDLWcM76cJT58SYxIiIFit7u1HzBXY5dnG7JZoA9Mbg4CBQRdLDMUwd8SLGGO
-         fmTYxUTwP4AQsdT3axTtUNvnv571JofutgiaB3jWJYGqI7Zv0FPB8QP6nmkkAdc/G583
-         S5ejy1VQq3K+CIzEvqC9rD7GoXmdj9NcdxAjNjUzcClP8eED1ecS0E6QxqtSSKDUMiwB
-         fQCw==
-X-Forwarded-Encrypted: i=1; AJvYcCWtQWpCBF34FIlsobvgmntFM5/4aHK/ltZbYC4WQAJm1bYn3Te8ZZui7ig8IFZlWDu9WNfVk/ONYfbFPxbymNe0MT6VrWtCcHySX/zj
-X-Gm-Message-State: AOJu0YxNkmdDMNb6PximDoTEHv0MOArk6g6+ZrX6ZMvb0E95AiVoPgZA
-	wcjN6ouIFRzfBzlLpacbQqpNoMdZK2LE8lsnmls9Xgb3d+nHIYy/ZJCq4zEQMfw=
-X-Google-Smtp-Source: AGHT+IH9ipuKJXciacYhkuCO6cSAEbNFjzPJ0N4bPDVYrWpn1P9JnTeL2DZeFALfWkY+jzFZnmJ7RA==
-X-Received: by 2002:a17:906:fa94:b0:a3c:a15c:407d with SMTP id lt20-20020a170906fa9400b00a3ca15c407dmr1078337ejb.72.1707993372446;
-        Thu, 15 Feb 2024 02:36:12 -0800 (PST)
-Received: from [192.168.192.135] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
-        by smtp.gmail.com with ESMTPSA id oq25-20020a170906cc9900b00a3cd41b3c19sm400567ejb.199.2024.02.15.02.36.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Feb 2024 02:36:12 -0800 (PST)
-Message-ID: <5f6e505b-78c7-4bb3-ba57-fb7601c80a10@linaro.org>
-Date: Thu, 15 Feb 2024 11:36:09 +0100
+	s=arc-20240116; t=1707993383; c=relaxed/simple;
+	bh=7U/Hluo2JXn9fIBbrObOrmuIk6veMU1+jX/b84qJfPI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=c19UTPOx8UnEFdFbmVpxgrDRat3aH0XR5TovqdSLR3BLl2yh18rfa7rEFp1msrcCDMS/2AyjoLtqlzQ9swMxdq+kMGx5tSOTx0qhqbrsOx7/fCTAhhYD8SLRnMQ+YIe9QFEH3OqTZ6WW0eldRzjTpVdYUzMG4Gv26tE7sSmkWTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.51])
+	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4TbB0s5QQkz9yTLZ;
+	Thu, 15 Feb 2024 18:21:01 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id 411991406BE;
+	Thu, 15 Feb 2024 18:36:08 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.204.63.22])
+	by APP1 (Coremail) with SMTP id LxC2BwA3LxjQ6M1l4QeNAg--.58293S6;
+	Thu, 15 Feb 2024 11:36:07 +0100 (CET)
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: viro@zeniv.linux.org.uk,
+	brauner@kernel.org,
+	jack@suse.cz,
+	chuck.lever@oracle.com,
+	jlayton@kernel.org,
+	neilb@suse.de,
+	kolga@netapp.com,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com,
+	paul@paul-moore.com,
+	jmorris@namei.org,
+	serge@hallyn.com,
+	zohar@linux.ibm.com,
+	dmitry.kasatkin@gmail.com,
+	eric.snowberg@oracle.com,
+	dhowells@redhat.com,
+	jarkko@kernel.org,
+	stephen.smalley.work@gmail.com,
+	omosnace@redhat.com,
+	casey@schaufler-ca.com,
+	shuah@kernel.org,
+	mic@digikod.net
+Cc: linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-integrity@vger.kernel.org,
+	keyrings@vger.kernel.org,
+	selinux@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Stefan Berger <stefanb@linux.ibm.com>
+Subject: [PATCH v10 14/25] security: Introduce path_post_mknod hook
+Date: Thu, 15 Feb 2024 11:31:02 +0100
+Message-Id: <20240215103113.2369171-15-roberto.sassu@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240215103113.2369171-1-roberto.sassu@huaweicloud.com>
+References: <20240215103113.2369171-1-roberto.sassu@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] phy: qcom: edp: Add set_mode op for configuring
- eDP/DP submode
-Content-Language: en-US
-To: Abel Vesa <abel.vesa@linaro.org>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
- <kishon@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Johan Hovold <johan@kernel.org>,
- linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-References: <20240129-x1e80100-phy-edp-compatible-refactor-v3-0-e71f3359c535@linaro.org>
- <20240129-x1e80100-phy-edp-compatible-refactor-v3-2-e71f3359c535@linaro.org>
- <CAA8EJpr5Ci7M92ibsCMec3wcQTVqFkaVgRQUhKUSdhg66YhW1Q@mail.gmail.com>
- <Zbdcao0emQyBodCK@linaro.org>
- <CAA8EJppkEksTL90KLcaw0adg73K=ngoYp8semB_u5YFk6rChhA@mail.gmail.com>
- <Zc3o32p1i0GtmmQj@linaro.org>
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
- BB/OmIWU6X+LZW6P88ZmHe+KeyABLMP5s1tJNK1j4ntT7mECcWZDzafPWF4F6m4WJOG27kTJ
- HGWdmtO+RvadOVi6CoUDqALsmfS3MUG5Pj2Ne9+0jRg4hEnB92AyF9rW2G3qisFcwPgvatt7
- TXD5E38mLyOPOUyXNj9XpDbt1hNwKQfiidmPh5e7VNAWRnW1iCMMoKqzM1Anzq7e5Afyeifz
- zRcQPLaqrPjnKqZGL2BKQSZDh6NkI5ZLRhhHQf61fkWcUpTp1oDC6jWVfT7hwRVIQLrrNj9G
- MpPzrlN4YuAqKeIer1FMt8cq64ifgTzxHzXsMcUdclzq2LTk2RXaPl6Jg/IXWqUClJHbamSk
- t1bfif3SnmhA6TiNvEpDKPiT3IDs42THU6ygslrBxyROQPWLI9IL1y8S6RtEh8H+NZQWZNzm
- UQ3imZirlPjxZtvz1BtnnBWS06e7x/UEAguj7VHCuymVgpl2Za17d1jj81YN5Rp5L9GXxkV1
- aUEwONM3eCI3qcYm5JNc5X+JthZOWsbIPSC1Rhxz3JmWIwP1udr5E3oNRe9u2LIEq+wH/toH
- kpPDhTeMkvt4KfE5m5ercid9+ZXAqoaYLUL4HCEw+HW0DXcKDwARAQABzShLb25yYWQgRHli
- Y2lvIDxrb25yYWQuZHliY2lvQGxpbmFyby5vcmc+wsGOBBMBCAA4FiEEU24if9oCL2zdAAQV
- R4cBcg5dfFgFAmQ5bqwCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQR4cBcg5dfFjO
- BQ//YQV6fkbqQCceYebGg6TiisWCy8LG77zV7DB0VMIWJv7Km7Sz0QQrHQVzhEr3trNenZrf
- yy+o2tQOF2biICzbLM8oyQPY8B///KJTWI2khoB8IJSJq3kNG68NjPg2vkP6CMltC/X3ohAo
- xL2UgwN5vj74QnlNneOjc0vGbtA7zURNhTz5P/YuTudCqcAbxJkbqZM4WymjQhe0XgwHLkiH
- 5LHSZ31MRKp/+4Kqs4DTXMctc7vFhtUdmatAExDKw8oEz5NbskKbW+qHjW1XUcUIrxRr667V
- GWH6MkVceT9ZBrtLoSzMLYaQXvi3sSAup0qiJiBYszc/VOu3RbIpNLRcXN3KYuxdQAptacTE
- mA+5+4Y4DfC3rUSun+hWLDeac9z9jjHm5rE998OqZnOU9aztbd6zQG5VL6EKgsVXAZD4D3RP
- x1NaAjdA3MD06eyvbOWiA5NSzIcC8UIQvgx09xm7dThCuQYJR4Yxjd+9JPJHI6apzNZpDGvQ
- BBZzvwxV6L1CojUEpnilmMG1ZOTstktWpNzw3G2Gis0XihDUef0MWVsQYJAl0wfiv/0By+XK
- mm2zRR+l/dnzxnlbgJ5pO0imC2w0TVxLkAp0eo0LHw619finad2u6UPQAkZ4oj++iIGrJkt5
- Lkn2XgB+IW8ESflz6nDY3b5KQRF8Z6XLP0+IEdLOOARkOW7yEgorBgEEAZdVAQUBAQdAwmUx
- xrbSCx2ksDxz7rFFGX1KmTkdRtcgC6F3NfuNYkYDAQgHwsF2BBgBCAAgFiEEU24if9oCL2zd
- AAQVR4cBcg5dfFgFAmQ5bvICGwwACgkQR4cBcg5dfFju1Q//Xta1ShwL0MLSC1KL1lXGXeRM
- 8arzfyiB5wJ9tb9U/nZvhhdfilEDLe0jKJY0RJErbdRHsalwQCrtq/1ewQpMpsRxXzAjgfRN
- jc4tgxRWmI+aVTzSRpywNahzZBT695hMz81cVZJoZzaV0KaMTlSnBkrviPz1nIGHYCHJxF9r
- cIu0GSIyUjZ/7xslxdvjpLth16H27JCWDzDqIQMtg61063gNyEyWgt1qRSaK14JIH/DoYRfn
- jfFQSC8bffFjat7BQGFz4ZpRavkMUFuDirn5Tf28oc5ebe2cIHp4/kajTx/7JOxWZ80U70mA
- cBgEeYSrYYnX+UJsSxpzLc/0sT1eRJDEhI4XIQM4ClIzpsCIN5HnVF76UQXh3a9zpwh3dk8i
- bhN/URmCOTH+LHNJYN/MxY8wuukq877DWB7k86pBs5IDLAXmW8v3gIDWyIcgYqb2v8QO2Mqx
- YMqL7UZxVLul4/JbllsQB8F/fNI8AfttmAQL9cwo6C8yDTXKdho920W4WUR9k8NT/OBqWSyk
- bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
- nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
- izWDgYvmBE8=
-In-Reply-To: <Zc3o32p1i0GtmmQj@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:LxC2BwA3LxjQ6M1l4QeNAg--.58293S6
+X-Coremail-Antispam: 1UD129KBjvJXoWxWr43Xr48uryrGF43ur4xCrg_yoWrWFyUpa
+	18tFnxGrWrGFy3Wr1kAFsrCa4SvrW5u3y7JFZ0gwnIyFnxtrnYqF4S9r1Y9r9xGrWUKryI
+	va17tr43Gr4Utr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBqb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
+	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
+	rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267
+	AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E
+	14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I
+	80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCj
+	c4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28Icx
+	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
+	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8Jr1lIxkGc2Ij64vIr41lIx
+	AIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI
+	42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z2
+	80aVCY1x0267AKxVWxJr0_GcJvcSsGvfC2KfnxnUUI43ZEXa7IUbGXdUUUUUU==
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAOBF1jj5Zf2wAAsr
 
-On 15.02.2024 11:35, Abel Vesa wrote:
-> On 24-01-29 11:40:24, Dmitry Baryshkov wrote:
->> On Mon, 29 Jan 2024 at 10:06, Abel Vesa <abel.vesa@linaro.org> wrote:
->>>
->>> On 24-01-29 06:05:09, Dmitry Baryshkov wrote:
->>>> On Mon, 29 Jan 2024 at 02:26, Abel Vesa <abel.vesa@linaro.org> wrote:
->>>>>
->>>>> Future platforms should not use different compatibles to differentiate
->>>>> between eDP and DP mode. Instead, they should use a single compatible as the
->>>>> IP block is the same. It will be the job of the controller to set the submode
->>>>> of the PHY accordingly.
->>>>>
->>>>> The existing platforms will remain with separate compatibles for each mode.
->>>>>
->>>>> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
->>>>> ---
->>>>>  drivers/phy/qualcomm/phy-qcom-edp.c | 71 ++++++++++++++++++++++++++-----------
->>>>>  1 file changed, 51 insertions(+), 20 deletions(-)
->>>>>
->>>>> diff --git a/drivers/phy/qualcomm/phy-qcom-edp.c b/drivers/phy/qualcomm/phy-qcom-edp.c
->>>>> index 8e5078304646..af941d6c5588 100644
->>>>> --- a/drivers/phy/qualcomm/phy-qcom-edp.c
->>>>> +++ b/drivers/phy/qualcomm/phy-qcom-edp.c
->>>>> @@ -14,6 +14,7 @@
->>>>>  #include <linux/module.h>
->>>>>  #include <linux/of.h>
->>>>>  #include <linux/phy/phy.h>
->>>>> +#include <linux/phy/phy-dp.h>
->>>>>  #include <linux/platform_device.h>
->>>>>  #include <linux/regulator/consumer.h>
->>>>>  #include <linux/reset.h>
->>>>> @@ -68,19 +69,21 @@
->>>>>
->>>>>  #define TXn_TRAN_DRVR_EMP_EN                    0x0078
->>>>>
->>>>> -struct qcom_edp_cfg {
->>>>> -       bool is_dp;
->>>>> -
->>>>> -       /* DP PHY swing and pre_emphasis tables */
->>>>> +struct qcom_edp_swing_pre_emph_cfg {
->>>>>         const u8 (*swing_hbr_rbr)[4][4];
->>>>>         const u8 (*swing_hbr3_hbr2)[4][4];
->>>>>         const u8 (*pre_emphasis_hbr_rbr)[4][4];
->>>>>         const u8 (*pre_emphasis_hbr3_hbr2)[4][4];
->>>>>  };
->>>>>
->>>>> +struct qcom_edp_phy_cfg {
->>>>> +       bool is_edp;
->>>>> +       const struct qcom_edp_swing_pre_emph_cfg *swing_pre_emph_cfg;
->>>>> +};
->>>>> +
->>>>>  struct qcom_edp {
->>>>>         struct device *dev;
->>>>> -       const struct qcom_edp_cfg *cfg;
->>>>> +       const struct qcom_edp_phy_cfg *cfg;
->>>>>
->>>>>         struct phy *phy;
->>>>>
->>>>> @@ -96,6 +99,8 @@ struct qcom_edp {
->>>>>
->>>>>         struct clk_bulk_data clks[2];
->>>>>         struct regulator_bulk_data supplies[2];
->>>>> +
->>>>> +       bool is_edp;
->>>>>  };
->>>>>
->>>>>  static const u8 dp_swing_hbr_rbr[4][4] = {
->>>>> @@ -126,8 +131,7 @@ static const u8 dp_pre_emp_hbr2_hbr3[4][4] = {
->>>>>         { 0x04, 0xff, 0xff, 0xff }
->>>>>  };
->>>>>
->>>>> -static const struct qcom_edp_cfg dp_phy_cfg = {
->>>>> -       .is_dp = true,
->>>>> +static const struct qcom_edp_swing_pre_emph_cfg dp_phy_swing_pre_emph_cfg = {
->>>>>         .swing_hbr_rbr = &dp_swing_hbr_rbr,
->>>>>         .swing_hbr3_hbr2 = &dp_swing_hbr2_hbr3,
->>>>>         .pre_emphasis_hbr_rbr = &dp_pre_emp_hbr_rbr,
->>>>> @@ -162,18 +166,28 @@ static const u8 edp_pre_emp_hbr2_hbr3[4][4] = {
->>>>>         { 0x00, 0xff, 0xff, 0xff }
->>>>>  };
->>>>>
->>>>> -static const struct qcom_edp_cfg edp_phy_cfg = {
->>>>> -       .is_dp = false,
->>>>> +static const struct qcom_edp_swing_pre_emph_cfg edp_phy_swing_pre_emph_cfg = {
->>>>>         .swing_hbr_rbr = &edp_swing_hbr_rbr,
->>>>>         .swing_hbr3_hbr2 = &edp_swing_hbr2_hbr3,
->>>>>         .pre_emphasis_hbr_rbr = &edp_pre_emp_hbr_rbr,
->>>>>         .pre_emphasis_hbr3_hbr2 = &edp_pre_emp_hbr2_hbr3,
->>>>>  };
->>>>>
->>>>> +static const struct qcom_edp_phy_cfg sc7280_dp_phy_cfg = {
->>>>> +};
->>>>> +
->>>>> +static const struct qcom_edp_phy_cfg sc8280xp_dp_phy_cfg = {
->>>>> +       .swing_pre_emph_cfg = &dp_phy_swing_pre_emph_cfg,
->>>>> +};
->>>>> +
->>>>> +static const struct qcom_edp_phy_cfg sc8280xp_edp_phy_cfg = {
->>>>> +       .is_edp = true,
->>>>> +       .swing_pre_emph_cfg = &edp_phy_swing_pre_emph_cfg,
->>>>> +};
->>>>> +
->>>>>  static int qcom_edp_phy_init(struct phy *phy)
->>>>>  {
->>>>>         struct qcom_edp *edp = phy_get_drvdata(phy);
->>>>> -       const struct qcom_edp_cfg *cfg = edp->cfg;
->>>>>         int ret;
->>>>>         u8 cfg8;
->>>>>
->>>>> @@ -200,7 +214,7 @@ static int qcom_edp_phy_init(struct phy *phy)
->>>>>                DP_PHY_PD_CTL_PLL_PWRDN | DP_PHY_PD_CTL_DP_CLAMP_EN,
->>>>>                edp->edp + DP_PHY_PD_CTL);
->>>>>
->>>>> -       if (cfg && cfg->is_dp)
->>>>> +       if (edp->cfg->swing_pre_emph_cfg && !edp->is_edp)
->>>>
->>>> I think (!edp->is_edp) should be enough here.
->>>
->>> Actually, in case of DP, the cfg8 needs to be 0xb7 for sc8280xp, while for sc7280 it should be 0x37.
->>>
->>> So to differentiate between first and second we check if the config
->>> provides a swing_pre_emph_cfg
->>
->> Using swing_pre_emph_cfg to distinguish between those two cases is a pure hack.
->> Is there any sensible meaning behind those bits? If not, just put
->> those values into the configuration data.
-> 
-> So the only thing that I was able to find is that this reg has to do
-> with some TX and RX zero bits preamble. It seems it needs to be
-> different between DP configurations (with or without swing and pre-emph).
-> 
-> But leaving that aside, unless we add another knob that actually depends
-> on swing and pre-emph configuration being available, there is no other
-> way around it, for now, at least.
+From: Roberto Sassu <roberto.sassu@huawei.com>
 
-Until we know better, I'd say this hack is fine, but please leave a comment
-so that we don't fully forget about it.
+In preparation for moving IMA and EVM to the LSM infrastructure, introduce
+the path_post_mknod hook.
 
-Konrad
+IMA-appraisal requires all existing files in policy to have a file
+hash/signature stored in security.ima. An exception is made for empty files
+created by mknod, by tagging them as new files.
+
+LSMs could also take some action after files are created.
+
+The new hook cannot return an error and cannot cause the operation to be
+reverted.
+
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Acked-by: Casey Schaufler <casey@schaufler-ca.com>
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+Acked-by: Paul Moore <paul@paul-moore.com>
+Acked-by: Christian Brauner <brauner@kernel.org>
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+---
+ fs/namei.c                    |  5 +++++
+ include/linux/lsm_hook_defs.h |  2 ++
+ include/linux/security.h      |  5 +++++
+ security/security.c           | 14 ++++++++++++++
+ 4 files changed, 26 insertions(+)
+
+diff --git a/fs/namei.c b/fs/namei.c
+index ef867f1d6704..9280aa5d60a7 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -4063,6 +4063,11 @@ static int do_mknodat(int dfd, struct filename *name, umode_t mode,
+ 					  dentry, mode, 0);
+ 			break;
+ 	}
++
++	if (error)
++		goto out2;
++
++	security_path_post_mknod(idmap, dentry);
+ out2:
+ 	done_path_create(&path, dentry);
+ 	if (retry_estale(error, lookup_flags)) {
+diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+index 7f9e9240606e..dba5d8204dc5 100644
+--- a/include/linux/lsm_hook_defs.h
++++ b/include/linux/lsm_hook_defs.h
+@@ -94,6 +94,8 @@ LSM_HOOK(int, 0, path_mkdir, const struct path *dir, struct dentry *dentry,
+ LSM_HOOK(int, 0, path_rmdir, const struct path *dir, struct dentry *dentry)
+ LSM_HOOK(int, 0, path_mknod, const struct path *dir, struct dentry *dentry,
+ 	 umode_t mode, unsigned int dev)
++LSM_HOOK(void, LSM_RET_VOID, path_post_mknod, struct mnt_idmap *idmap,
++	 struct dentry *dentry)
+ LSM_HOOK(int, 0, path_truncate, const struct path *path)
+ LSM_HOOK(int, 0, path_symlink, const struct path *dir, struct dentry *dentry,
+ 	 const char *old_name)
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 2997348afcb7..977dd9f7f51a 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -1893,6 +1893,7 @@ int security_path_mkdir(const struct path *dir, struct dentry *dentry, umode_t m
+ int security_path_rmdir(const struct path *dir, struct dentry *dentry);
+ int security_path_mknod(const struct path *dir, struct dentry *dentry, umode_t mode,
+ 			unsigned int dev);
++void security_path_post_mknod(struct mnt_idmap *idmap, struct dentry *dentry);
+ int security_path_truncate(const struct path *path);
+ int security_path_symlink(const struct path *dir, struct dentry *dentry,
+ 			  const char *old_name);
+@@ -1927,6 +1928,10 @@ static inline int security_path_mknod(const struct path *dir, struct dentry *den
+ 	return 0;
+ }
+ 
++static inline void security_path_post_mknod(struct mnt_idmap *idmap,
++					    struct dentry *dentry)
++{ }
++
+ static inline int security_path_truncate(const struct path *path)
+ {
+ 	return 0;
+diff --git a/security/security.c b/security/security.c
+index 145e3141339c..b55f9ad294cc 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -1801,6 +1801,20 @@ int security_path_mknod(const struct path *dir, struct dentry *dentry,
+ }
+ EXPORT_SYMBOL(security_path_mknod);
+ 
++/**
++ * security_path_post_mknod() - Update inode security field after file creation
++ * @idmap: idmap of the mount
++ * @dentry: new file
++ *
++ * Update inode security field after a file has been created.
++ */
++void security_path_post_mknod(struct mnt_idmap *idmap, struct dentry *dentry)
++{
++	if (unlikely(IS_PRIVATE(d_backing_inode(dentry))))
++		return;
++	call_void_hook(path_post_mknod, idmap, dentry);
++}
++
+ /**
+  * security_path_mkdir() - Check if creating a new directory is allowed
+  * @dir: parent directory
+-- 
+2.34.1
+
