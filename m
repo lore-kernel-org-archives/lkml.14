@@ -1,114 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12015134CDD;
-	Thu, 15 Feb 2024 16:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36ED3134CF3
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 16:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708012965; cv=none; b=n4QffQSPGyT9xO/96rst4auUuW8iY55SZVQD+P/QORNOqzkLXQsJbyYDONgjUUrGLga3cXJf39ZjhZp/BOWra6UvQWStUMxZS2/OskqVDBLpePezr/qpxom1BBNNnEiKm19SjqKYpJOvd8r9def0GGxWpKTLG0yzj+6KrU0O5jg=
+	t=1708012980; cv=none; b=h7JIZ29CEsTTgxXiCGmJV2gS97ddZytNuhegZoeBM+28HMjowWZM+7wv7V7D/d/XLvmITT/ajDsyjnQa85+SX24xJrXGgf4ep5TT07GTGZ8hI34Md0tiTCyvCyjWoYlvUWHJo0ectBG+oXXLJbjCE+/YDlWQ5Phx7rS79y2jpBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708012965; c=relaxed/simple;
-	bh=ge/zuWB1BjZSun2O80x3sHKgvzwxKxsHTgxhF2+KWu8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WFcaeIqNmSp5ZUlgM5lkG5STL53/ScE4tSPsnXtmeHNKmN+lUEPziHkf4YAvrUElSsGQcNxxlDKnvxkjLOtZ0HWXXsjG0U+JyrQAQlLyob9QrvIs1sf3EaTe4nIIAMi4SsHaP9iOYYO88NQie541afqbGzExwfGCKcfTGUeYR5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AvvRB9ip; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708012980; c=relaxed/simple;
+	bh=LIu2ftgfgDnm4yLR9EGjnqhVdVgGtxweSCzm0qeHe+8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=aa373TmQKs/uXMUvLDL1HMP0P8p119/131e50400W2+wrAynBzXVj+zAa5hB+/tyEY8lc67eNZiV5cnBmygagl6kMcIJM1BFqoVzTHzy1an0KQGvG+SWWQyYjlJXTrmVqiVOlR/diN+d8I0cz+n/6nev0P82sVZjSdW6ab1PXj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gh8y4J4W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AvvRB9ip"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708012965; x=1739548965;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ge/zuWB1BjZSun2O80x3sHKgvzwxKxsHTgxhF2+KWu8=;
-  b=AvvRB9ipm2VovBhACaqhXNciyHsepHb41AXcPSPGv9LrvQAnruXGP7cW
-   H+xROfhSo423E+WHmQeJwHcTQNBoB3JQp1kNckuLU5Asd7HLYmHSHz706
-   rHTFvutW8yL8lRE+/iH9jPmXdhSPr+H/6X6B/tO0zOy7OQkNNu7JOQ3pC
-   LgqETMu+azO1QV1ucKfFMJerwIVpL5oz7WLfZmMXPjZZCkU77JmQcIlLV
-   wAxffkxjhLZMtFCl2WUVfMCLd/9w5+x3KqGa40WCK00COZvvQH4mYMW3z
-   /wxeAqQSLdJgdqcBhPaTqYDCtRq+nvXBufovhurMTD7mab43V/gr2yUal
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="19525816"
-X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
-   d="scan'208";a="19525816"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 08:02:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="935684857"
-X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
-   d="scan'208";a="935684857"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Feb 2024 08:02:37 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id DBD95204; Thu, 15 Feb 2024 18:02:35 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Al Cooper <alcooperx@gmail.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] serial: 8250_bcm7271: Replace custom unit definitions
-Date: Thu, 15 Feb 2024 18:02:34 +0200
-Message-ID: <20240215160234.653305-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gh8y4J4W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18D5FC433C7;
+	Thu, 15 Feb 2024 16:02:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708012979;
+	bh=LIu2ftgfgDnm4yLR9EGjnqhVdVgGtxweSCzm0qeHe+8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=Gh8y4J4WSklsO9cCgrK7dWDV09e/sLTQd5dWl869DfXporGPp2ZtWm4t1U1xc8TxT
+	 ifZz7Sa7OHXjhNTrdoF6N4mtv2OCYpxZbHLgK/keOe3lcOHuj9sxxXfm3LWEdgLkzU
+	 M3LVi/OC0WN4AgwSEtsWSxTObQO73/6U/h+jxzrxyW3qUdSrlyyrkqx9mG/3eDZ4zP
+	 H03dFAcIAq/KM8l3U/4zDKnUjnrCGh9arMAr6w3dLn1s60ToB6d7orDwcEFVpWIw9r
+	 FyYEUaShbs2VD2Qv0Y5QQLizKDFRAMwg4Prd9NaI/Oi6es9kY3txP9stS8r33EeJb2
+	 5EV+HNc2WQOOQ==
+From: Maxime Ripard <mripard@kernel.org>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+In-Reply-To: <94c9b76ee906d1b790dfcc435f4221b1197df586.1708003402.git.geert+renesas@glider.be>
+References: <94c9b76ee906d1b790dfcc435f4221b1197df586.1708003402.git.geert+renesas@glider.be>
+Subject: Re: (subset) [PATCH v2] drm: Spelling s/hardward/hardware/g
+Message-Id: <170801297623.1530193.16390570241474104331.b4-ty@kernel.org>
+Date: Thu, 15 Feb 2024 17:02:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.3
 
-Replace custom unit definitions that are available via units.h.
+On Thu, 15 Feb 2024 14:24:15 +0100, Geert Uytterhoeven wrote:
+> Fix misspellings of "hardware".
+> 
+> 
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/tty/serial/8250/8250_bcm7271.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+Applied to drm/drm-misc (drm-misc-next).
 
-diff --git a/drivers/tty/serial/8250/8250_bcm7271.c b/drivers/tty/serial/8250/8250_bcm7271.c
-index 504c4c020857..1532fa2e8ec4 100644
---- a/drivers/tty/serial/8250/8250_bcm7271.c
-+++ b/drivers/tty/serial/8250/8250_bcm7271.c
-@@ -22,6 +22,7 @@
- #include <linux/delay.h>
- #include <linux/clk.h>
- #include <linux/debugfs.h>
-+#include <linux/units.h>
- 
- #include "8250.h"
- 
-@@ -187,21 +188,19 @@
- #define TX_BUF_SIZE 4096
- #define RX_BUF_SIZE 4096
- #define RX_BUFS_COUNT 2
--#define KHZ    1000
--#define MHZ(x) ((x) * KHZ * KHZ)
- 
- static const u32 brcmstb_rate_table[] = {
--	MHZ(81),
--	MHZ(108),
--	MHZ(64),		/* Actually 64285715 for some chips */
--	MHZ(48),
-+	81 * HZ_PER_MHZ,
-+	108 * HZ_PER_MHZ,
-+	64 * HZ_PER_MHZ,		/* Actually 64285715 for some chips */
-+	48 * HZ_PER_MHZ,
- };
- 
- static const u32 brcmstb_rate_table_7278[] = {
--	MHZ(81),
--	MHZ(108),
-+	81 * HZ_PER_MHZ,
-+	108 * HZ_PER_MHZ,
- 	0,
--	MHZ(48),
-+	48 * HZ_PER_MHZ,
- };
- 
- struct brcmuart_priv {
--- 
-2.43.0.rc1.1.gbec44491f096
+Thanks!
+Maxime
 
