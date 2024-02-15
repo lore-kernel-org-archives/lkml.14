@@ -1,101 +1,211 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7B1130ADA;
-	Thu, 15 Feb 2024 14:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8A2131E30;
+	Thu, 15 Feb 2024 14:20:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708006819; cv=none; b=VbyDRIfWDXP850LP9gooQloeam+dsXpOybHuC8wvQy0sKeSvFR4zx5hUuGZzl31RJEnXRx55MIzeS1W8Pa9oYBSYwpNnZFnQGBQVG+QgB1IHuwz+et0qA+JcXbpFeJNmiGFGI1g7HcBLlWp2LgRVBjWiB3cXBzDlOvoh3YI7IVI=
+	t=1708006856; cv=none; b=p6NXcgxLzi8kKxOSPOuYNJ4Lf6P/fpHLVa5wJucaJqVjsfAtV2mZXoj2W15EMFZ5G19qD45qpSiuWKa27LxIpHHS4SAYKtJpbuorUcgfP/LANcDoHxn8pSbNPkmdZbLSXW/C6FZpXXvguCPnB+fxzazd6IFNan8FTzvOgYL6mew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708006819; c=relaxed/simple;
-	bh=PullOvSOvstiiYMgcHnwd9VygvmFZsrOtFt1fJGokB8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nv2BCoS8e02/bxoWJ7AyVHsIgk17SiorGFPn5RumaSqs4NlQw9UYzxP42RgAyRjKV2jh1MzAtrIaaDbZXrLJGDnbLU/EWmlyGhzXaibtaf9DZ859ixqtQKbybdu+sohu/B4sacoWHVveyRSEYdfQLJmEnVOr11vwbVFpoBF4Pds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=SJeGbuhm; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1708006856; c=relaxed/simple;
+	bh=qG3ZHYBiDwbAE38UnY8R+8ABLhQ9dBG0ngefFLJqfQw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uF69odVXWxJ3AftY8cx73ax1HeQT/XuN6bzn1sS1bBHmm8IFit0IOm/xlsdEgoeeWTwUTm3ixkhaYApoSR/BmfpCJFh3gdOD7jxkBnvLtlWZKEBB7dkbmaVt1xyxxlIahZ8+mPsj7651UL3PgRMK+qU8DDoGIcnwMw+oXI/qRhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YWuvvNYS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SJeGbuhm"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41FEJxtx023347;
-	Thu, 15 Feb 2024 08:19:59 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1708006799;
-	bh=u5Efv4NH6LtRrGCMOj0uLzoSpUJhq4ciZ4y37cudC9g=;
-	h=From:To:CC:Subject:Date;
-	b=SJeGbuhmmiKwNumDR9Ol4SGBOoTiuhxWP07VL++Zr7U2cnkukDtwhM+lOFmKYoHGL
-	 3/Rcn8B2tZ32xNWzrK3qKctRM3pqfh2jFth+cD3QLLvQWvJ2IM3zgMcWBZNsCQPZLt
-	 KVadkClvyklkmzKPA5WTrwxKaR8C32W2H3DPazDg=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41FEJxZb016848
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 15 Feb 2024 08:19:59 -0600
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 15
- Feb 2024 08:19:59 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 15 Feb 2024 08:19:58 -0600
-Received: from lelvsmtp5.itg.ti.com ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41FEJwiL057677;
-	Thu, 15 Feb 2024 08:19:58 -0600
-From: Andrew Davis <afd@ti.com>
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero
- Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter
- Rosin <peda@axentia.se>
-CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Andrew Davis <afd@ti.com>
-Subject: [PATCH] arm64: dts: ti: k3-j721e: Fix mux-reg-masks in hbmc_mux
-Date: Thu, 15 Feb 2024 08:19:57 -0600
-Message-ID: <20240215141957.13775-1-afd@ti.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YWuvvNYS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D682C433C7;
+	Thu, 15 Feb 2024 14:20:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708006855;
+	bh=qG3ZHYBiDwbAE38UnY8R+8ABLhQ9dBG0ngefFLJqfQw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YWuvvNYSkkYbAeaaoOcy8L5gq1oLZLOaKS5668bg69MkV9SPWOqz9ygbAXOsJYJ3D
+	 dkOXamVOHnRWvK0xwGBkloa1s7T4YohYJaHFHdPf0VxpBbz0JMg8UgnQUW3fWuFnYH
+	 IKSjr0LC782og6hOtPNSlMRDaFAxzG+1QGIdrK+TDDujmBrRAp2ViTvvSvk+Ab1p4v
+	 SauZlv9oSzEzNT5XfMZH3D5tvaGCS47cV2mPOr88T+TOxn1233MUbUWkkkD6fHYW4q
+	 tc60G2YvmseIfR3Yoo4kdTocKeIcnGLFh1/HeSwZc74SnyBeB5F7jUX20L3IRTKCSB
+	 fNhfHXQrMvOTw==
+Date: Thu, 15 Feb 2024 08:20:52 -0600
+From: Rob Herring <robh@kernel.org>
+To: Karel Balej <karelb@gimli.ms.mff.cuni.cz>
+Cc: Karel Balej <balejk@matfyz.cz>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 1/6] dt-bindings: mfd: add entry for Marvell
+ 88PM886 PMIC
+Message-ID: <20240215142052.GA4180777-robh@kernel.org>
+References: <20240211094609.2223-1-karelb@gimli.ms.mff.cuni.cz>
+ <20240211094609.2223-2-karelb@gimli.ms.mff.cuni.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240211094609.2223-2-karelb@gimli.ms.mff.cuni.cz>
 
-Change offset in mux-reg-masks property for hbmc_mux node
-since reg-mux property is used in compatible.
+On Sun, Feb 11, 2024 at 10:35:51AM +0100, Karel Balej wrote:
+> From: Karel Balej <balejk@matfyz.cz>
+> 
+> Marvell 88PM886 is a PMIC with several subdevices such as onkey,
+> regulators or battery and charger. It comes in at least two revisions,
+> A0 and A1 -- only A1 is described here at the moment.
+> 
+> Signed-off-by: Karel Balej <balejk@matfyz.cz>
+> ---
+> 
+> Notes:
+>     RFC v2:
+>     - Address Rob's feedback:
+>       - Drop mention of 88PM880.
+>       - Make sure the file passes bindings check (add the necessary header
+>         and fix `interrupt-cells`).
+>       - Other small changes.
+>     - Add regulators. Changes with respect to the regulator RFC series:
+>       - Address Krzysztof's comments:
+>         - Drop unused compatible.
+>         - Fix sub-node pattern.
+> 
+>  .../bindings/mfd/marvell,88pm88x.yaml         | 74 +++++++++++++++++++
 
-While here, update the reg region to include 4 bytes as this
-is a 32bit register.
+Filename should match the compatible.
 
-Fixes: 2765149273f4 ("mux: mmio: use reg property when parent device is not a syscon")
-Suggested-by: Peter Rosin <peda@axentia.se>
-Signed-off-by: Andrew Davis <afd@ti.com>
----
- arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+In general, drop the 'x' wildcard.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-index 40caa86e600fe..4618b697fbc47 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-@@ -353,9 +353,9 @@ fss: bus@47000000 {
- 
- 		hbmc_mux: mux-controller@47000004 {
- 			compatible = "reg-mux";
--			reg = <0x00 0x47000004 0x00 0x2>;
-+			reg = <0x00 0x47000004 0x00 0x4>;
- 			#mux-control-cells = <1>;
--			mux-reg-masks = <0x4 0x2>; /* HBMC select */
-+			mux-reg-masks = <0x0 0x2>; /* HBMC select */
- 		};
- 
- 		hbmc: hyperbus@47034000 {
--- 
-2.39.2
+>  .../regulator/marvell,88pm88x-regulator.yaml  | 28 +++++++
+>  2 files changed, 102 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/marvell,88pm88x.yaml
+>  create mode 100644 Documentation/devicetree/bindings/regulator/marvell,88pm88x-regulator.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/marvell,88pm88x.yaml b/Documentation/devicetree/bindings/mfd/marvell,88pm88x.yaml
+> new file mode 100644
+> index 000000000000..29ab979862d5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/marvell,88pm88x.yaml
+> @@ -0,0 +1,74 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/marvell,88pm88x.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Marvell 88PM88X PMIC core
+> +
+> +maintainers:
+> +  - Karel Balej <balejk@matfyz.cz>
+> +
+> +description:
+> +  Marvell 88PM886 is a PMIC providing several functions such as onkey,
+> +  regulators or battery and charger.
+> +
+> +properties:
+> +  compatible:
+> +    const: marvell,88pm886-a1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
 
+What is the device providing interrupts to (in DT)?
+
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  "#interrupt-cells":
+> +    const: 1
+> +
+> +  regulators:
+> +    $ref: /schemas/regulator/marvell,88pm88x-regulator.yaml#
+
+That's simple enough, I'd just move the regulator nodes into this doc.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupt-controller
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    i2c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      pmic@30 {
+> +        compatible = "marvell,88pm886-a1";
+> +        reg = <0x30>;
+> +        interrupts = <0 4 IRQ_TYPE_LEVEL_HIGH>;
+> +        interrupt-parent = <&gic>;
+> +        interrupt-controller;
+> +        #interrupt-cells = <1>;
+> +
+> +        regulators {
+> +          ldo2: ldo2 {
+> +            regulator-min-microvolt = <3100000>;
+> +            regulator-max-microvolt = <3300000>;
+> +            };
+> +
+> +          ldo15: ldo15 {
+> +            regulator-min-microvolt = <3300000>;
+> +            regulator-max-microvolt = <3300000>;
+> +            };
+> +
+> +          buck2: buck2 {
+> +            regulator-min-microvolt = <1800000>;
+> +            regulator-max-microvolt = <1800000>;
+> +            };
+> +        };
+> +      };
+> +    };
+> +...
+> diff --git a/Documentation/devicetree/bindings/regulator/marvell,88pm88x-regulator.yaml b/Documentation/devicetree/bindings/regulator/marvell,88pm88x-regulator.yaml
+> new file mode 100644
+> index 000000000000..1b4b5f1b4932
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/marvell,88pm88x-regulator.yaml
+> @@ -0,0 +1,28 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/regulator/marvell,88pm88x-regulator.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Regulators of Marvell 88PM88X PMICs.
+> +
+> +maintainers:
+> +  - Karel Balej <balejk@matfyz.cz>
+> +
+> +description: |
+> +  This is a part of device tree bindings for Marvell 88PM88X MFD.
+> +
+> +  The regulators node is represented as a sub-node of the PMIC node on the
+> +  device tree.
+> +
+> +  See also Documentation/devicetree/bindings/mfd/marvell,88pm88x.yaml for
+> +  additional information and example.
+> +
+> +patternProperties:
+> +  "^(ldo(1[0-6]|[1-9])|buck[1-5])$":
+> +    type: object
+> +    $ref: /schemas/regulator/regulator.yaml#
+> +    description: LDO or buck regulator.
+> +    unevaluatedProperties: false
+> +
+> +additionalProperties: false
+> -- 
+> 2.43.0
+> 
