@@ -1,59 +1,66 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6028512AAD4
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 10:41:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A864C15D
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 10:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707993700; cv=none; b=fV3MRG3UR/3zXoMXH3AYu+5IsVH28MInKE7CYqcfzY1xqR+rGgEaWLO4Ha3ClchZ/zr0zOVZmdj5QOyZW1TNTF8bnyUGDb0zMLdUq/53OwxFmd58e6sbVup0LkVXtOih9v3dixFfILAOAjxf5gazZxcNDuhZ3oDc7+R709Ap+d8=
+	t=1707993755; cv=none; b=qXEVBInkjpxHFldsGmUf+DtEv39MTIO61dRd1tcwVe7hpZ4ZUDGhDrr4XZBMVKHklwmvlqBgvPnRwg9M3vYtkGf2mPgDm+OiHHabNYKugWNeKKI7zRdb+ALnCSaegRVVCezVNzUlB9UeDUL1EQna872AXurAt+LwRDYIxNuMpqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707993700; c=relaxed/simple;
-	bh=89kL2m38VBLYpfi08xjvcphV/ms31WL7c/6vBV5WjpU=;
+	s=arc-20240116; t=1707993755; c=relaxed/simple;
+	bh=/h6044P2lGm268g6KeLYTlIgmBaQqEF0UcGXmu0jXnM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YJdu1oGVjuKv6gOcDup2puoReL3TZPXsjTnlqm1EZCCngBJOsAclXnswzxhZMH77nyCdUjvR7z6fZLMunOplfhh+58ENADiznXIOq8RzbOKTVjsvqsnJ5iP8j6rQMBtHQXwciNWnMj2krJoFl52X6MCzthpsagvtcnDCaZ7tuxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xqZ8IFgw; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=oyDQ8UX3FUJI6K9ZqirTm9SAkWfhQWyJemS1jFmkkeanYfhcPiqNlxjAFTK8VMfBxYDfxm1OfceBEZ5qcqszaswMV/L6NgOOwiQ6DacK/mnsI9NdQdBNK382Pw7KaBTgiSEb6LLfkaZo26apsAYYxzoMZsvK4NM1Wu1pq2vsNK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XsYuJN1L; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xqZ8IFgw"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-51197ca63f5so911619e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 02:41:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707993696; x=1708598496; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VUYBcKj53WAi3y6gltiMvu5JfERqWvi9YPUJbVOf3Mo=;
-        b=xqZ8IFgwUXKumSOUVZAIsE0FgE4GYClyDu3Vl9k/AxbjuLtH0kQeMDXvcjb+Xbt3LY
-         fsHyeJMIF/NT5CWUElsZ+p+9DabFV6VRAogrsYH7IcrJB64hzHSw/aKogwwNGB1lKfLu
-         g+rrfTps2TJa7zi8/NGRw+PxEobtTT0PMz+RA0G1VofzxPbCOASoyqj3qRruNmGRBNjb
-         UhzW6i0o0KS8msLx6/jz7XZdxgVoxfZtQ0o4D9XEUOYxdOnWaAiBBA/y8vQ90L1TJCXP
-         mJaiwhk2QYTtWuLSLEK47S3i/P9hwy/pPc1I/QPpMON8G+9aL+tDEC0PYqbkEcVg4rRt
-         xOyw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XsYuJN1L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707993753;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=CmuQ7jlV5StRyQKCMnSZiYTZwMgVbzqFDx1+VQ1He2U=;
+	b=XsYuJN1Ln5oWptyo+dkWnYL9UjLDLCAgBXPhMdsPhqL97f2wzSy2/jhQbi8gTR6vW1Z6t8
+	1rqmHGv935fU+aixiKZVTqG52SQCnJ/+UV1t3np38wExuDVyBn7WVLlfrF49qgu0qlfRg2
+	kpoM9Rl4jT4bJf8fy0R0gGVCDN4kCxQ=
+Received: from mail-vk1-f199.google.com (mail-vk1-f199.google.com
+ [209.85.221.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-382-Uy1rWxsgOayf6Y2VkmSc3w-1; Thu, 15 Feb 2024 05:42:31 -0500
+X-MC-Unique: Uy1rWxsgOayf6Y2VkmSc3w-1
+Received: by mail-vk1-f199.google.com with SMTP id 71dfb90a1353d-4c0313ab162so244485e0c.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 02:42:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707993696; x=1708598496;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VUYBcKj53WAi3y6gltiMvu5JfERqWvi9YPUJbVOf3Mo=;
-        b=KMu1SoFezMsgoegEeTMpVmpCl+7I74kGTJsdJyJQKwpQirWA9rzYbSSjTd8Z0KErIt
-         wpX/J6Okm4lZpL5LYFQRekMxLtKiCELY/JTBz/CVpboID/pSA9cj8o4z+YyDjmWY5Ny/
-         3VTRszkp3dB2gwMyW/A655ykO+DF9/BzPv5rR+7cKMn4aqMi8QhG3PM96fZjq6M8oCxn
-         rGcmntMpC/kcgIXyMsT0cJigNb5n28AIhRuTLsx7z0Kfq2pIcHCg++3hQ1F075IZBaN0
-         sp+5Wch1zXrSLQ5WpAkwqvh6iq4fwm0+Qln1ngzgNytaqzJBD3i88evJbHfTEzpOO+bu
-         ZtbA==
-X-Forwarded-Encrypted: i=1; AJvYcCXNYtYEEkET0zi6grA9tVDEfX3BPclFuZyavAHf+iwZfgq6oPWpbNg3WyyT51TFo98jxzHzpTXL3N4q5JUDK8lRw5DRADfg6sUSucvI
-X-Gm-Message-State: AOJu0YynZSCeDpmIZkP4Jr9hIOMI4Vl+0ckDkzK3B3ekUVVD4hesiaY1
-	kME5Yddu47CJzd6+BE5JLf/ceKSr3UBUZzSLsyltC11Yp4FdOb/QSpnbu/xmS7w=
-X-Google-Smtp-Source: AGHT+IEcAT4U/SeoV9QZ1GoMtyBdueDaX8N8avvtZi0g2w+pf1DVcF9RtUYsg2KCjzAVQ534XzYb1w==
-X-Received: by 2002:a05:6512:3ca5:b0:511:87c6:3060 with SMTP id h37-20020a0565123ca500b0051187c63060mr1648595lfv.12.1707993696399;
-        Thu, 15 Feb 2024 02:41:36 -0800 (PST)
-Received: from [192.168.192.135] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
-        by smtp.gmail.com with ESMTPSA id t26-20020ac243ba000000b005119fdbac87sm189167lfl.289.2024.02.15.02.41.33
+        d=1e100.net; s=20230601; t=1707993751; x=1708598551;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CmuQ7jlV5StRyQKCMnSZiYTZwMgVbzqFDx1+VQ1He2U=;
+        b=ooffBqvuPLeItyoOHL5inf6ejVL6nMPMYqwdIbNhvo9tEdIV+ZL9WZbRH5BA5kQRaz
+         dGy8napZ+1neNmSyxT71oa6BlM3f3+d1C/PEL+AjUdPCKB/uBTAyDnBSiuHwlrxhZUha
+         JAXbb35yO7nABTcVmYgGnwMbeJVXP4qUGq4u3f48e6Ok9FswRD33i0CuqixhB2PIz0+a
+         gZQ6AGgCcJQ/H7nFGe4bqeoxGFNgvyb0cQlqoIJvVfYfyaduLa9tC1a4sndgK4CI+cup
+         RQqwU7/ksVBG9OJXJ7hUKGgXryt23/I3tbTgg5Lu5bcboj+auNAmTvueMwDnRmJfpXF1
+         tqBw==
+X-Forwarded-Encrypted: i=1; AJvYcCUqkBlZMDRap8O9o9RxgA3+HcXIBgcbjYN+qzqxQnPpa7jHpsZ6uHm5UFlJGF8/O1+elRtWAhHe45A4G0DhX9puU90V+wjlkRSpPZnU
+X-Gm-Message-State: AOJu0Yx7Z0YGrha4tXHlE/Ayow1fWPepjEpu1a0d4imQwobJwAA9f8jr
+	6rg69vKyydfOQOrkH7BzItopMKJu4JKuM4vRAC+itIMSzRa9K5uk/eFZHd8+tc9Eb6Sp4GBacHu
+	MvdRg9xPqQSLqNtjEolXYFgw2dXaGTVvgiOQIQT6QBnqCgIaN8RVdxKkz6DYhag==
+X-Received: by 2002:a1f:d502:0:b0:4c0:1bb6:322 with SMTP id m2-20020a1fd502000000b004c01bb60322mr1080658vkg.15.1707993750907;
+        Thu, 15 Feb 2024 02:42:30 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHMiuIlXMhc0yS1rTV968GiZtxO95OE2uSApX5wtMbNkEqknL8qJRKqS1uqudeSIroiZglpZQ==
+X-Received: by 2002:a1f:d502:0:b0:4c0:1bb6:322 with SMTP id m2-20020a1fd502000000b004c01bb60322mr1080635vkg.15.1707993750584;
+        Thu, 15 Feb 2024 02:42:30 -0800 (PST)
+Received: from ?IPV6:2003:d8:2f3c:3f00:7177:eb0c:d3d2:4b0e? (p200300d82f3c3f007177eb0cd3d24b0e.dip0.t-ipconnect.de. [2003:d8:2f3c:3f00:7177:eb0c:d3d2:4b0e])
+        by smtp.gmail.com with ESMTPSA id lu7-20020a0562145a0700b0068efbe2235asm535657qvb.54.2024.02.15.02.42.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Feb 2024 02:41:35 -0800 (PST)
-Message-ID: <20ab318e-e79f-419e-b68b-85ae0e5ab128@linaro.org>
-Date: Thu, 15 Feb 2024 11:41:32 +0100
+        Thu, 15 Feb 2024 02:42:30 -0800 (PST)
+Message-ID: <e9ce88d6-0e2e-4b8b-825a-bcb85180e21d@redhat.com>
+Date: Thu, 15 Feb 2024 11:42:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,130 +68,115 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] drm/panel: Add driver for DJN HX83112A LCD panel
+Subject: Re: [PATCH v6 04/18] arm64/mm: Convert pte_next_pfn() to
+ pte_advance_pfn()
 Content-Language: en-US
-To: neil.armstrong@linaro.org, Luca Weiss <luca.weiss@fairphone.com>,
- Linus Walleij <linus.walleij@linaro.org>
-Cc: Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg
- <sam@ravnborg.org>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, ~postmarketos/upstreaming@lists.sr.ht,
- phone-devel@vger.kernel.org
-References: <20240110-fp4-panel-v2-0-8ad11174f65b@fairphone.com>
- <20240110-fp4-panel-v2-2-8ad11174f65b@fairphone.com>
- <CACRpkdaWTfPDCin_L6pefHsokjNyO8Mo6hWPdzPLLi1EUkKUuA@mail.gmail.com>
- <CYBZEZ4IM6IL.VR04W7933VI@fairphone.com>
- <CACRpkdZQbVXfBa70nhDOqfWPbsh-6DgX-uvZOxr19pzMmF2giQ@mail.gmail.com>
- <CYCLSCKPPBOC.1B1MP3VOOC0Q8@fairphone.com>
- <cdc18e2a-b7eb-4b54-a513-481148fb3b0d@linaro.org>
- <CYCMVXHYVDCI.HVH1TR8MWEUK@fairphone.com>
- <CACRpkdacS9ojXUuogygkz6xxCf3mMq6GG_75sze8ukUu=rxVyw@mail.gmail.com>
- <f99d363c-d4a6-44b3-8057-3925f8dac1d5@linaro.org>
- <CYL76M5KT424.G3BC6JX74XVN@fairphone.com>
- <CZ4P5PWJTODV.3UJ89H6M8W07H@fairphone.com>
- <f9164049-6529-42c1-a35a-e91132c823b9@linaro.org>
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <f9164049-6529-42c1-a35a-e91132c823b9@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+To: Ryan Roberts <ryan.roberts@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Ard Biesheuvel <ardb@kernel.org>, Marc Zyngier <maz@kernel.org>,
+ James Morse <james.morse@arm.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, Mark Rutland <mark.rutland@arm.com>,
+ Kefeng Wang <wangkefeng.wang@huawei.com>, John Hubbard
+ <jhubbard@nvidia.com>, Zi Yan <ziy@nvidia.com>,
+ Barry Song <21cnbao@gmail.com>, Alistair Popple <apopple@nvidia.com>,
+ Yang Shi <shy828301@gmail.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20240215103205.2607016-1-ryan.roberts@arm.com>
+ <20240215103205.2607016-5-ryan.roberts@arm.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240215103205.2607016-5-ryan.roberts@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 14.02.2024 10:50, neil.armstrong@linaro.org wrote:
-> On 14/02/2024 10:33, Luca Weiss wrote:
->> On Mon Jan 22, 2024 at 12:27 PM CET, Luca Weiss wrote:
->>> On Fri Jan 12, 2024 at 11:26 AM CET,  wrote:
->>>> On 12/01/2024 11:23, Linus Walleij wrote:
->>>>> On Fri, Jan 12, 2024 at 10:52 AM Luca Weiss <luca.weiss@fairphone.com> wrote:
->>>>>
->>>>>> Since there's zero indication Truly is involved in this panel in my
->>>>>> documentation - much less the number 5P65 - I'm not going to add that.
->>>>
->>>> Ack
->>>>
->>>>>
->>>>> OK then, I fold, thanks for looking into it.
->>>>> Keep the Himax hx83112a file name and symbols.
->>>>>
->>>>>> So in short this panel is the model 9A-3R063-1102B from DJN, which uses
->>>>>> a Himax HX83112A driver IC.
->>>>>
->>>>> So compatible = "djn,9a-3r063-1102b" since the setup sequences for
->>>>> hx83112a are clearly for this one display?
->>>>
->>>> Yep let's settle on that!
->>>
->>
->> Hi Neil and Linus,
->>
->> Any feedback about the below question?
->>
->> Regards
->> Luca
->>
->>> It's clear to me to use "djn,9a-3r063-1102b" in the driver now but what
->>> about dts?
->>>
->>> Currently here in v2 we have this:
->>> compatible = "fairphone,fp4-hx83112a-djn", "himax,hx83112a";
->>>
->>> Should this just become this?
->>> compatible = "djn,9a-3r063-1102b";
->>>
->>> Or e.g. this?
->>> compatible = "djn,9a-3r063-1102b", "himax,hx83112a";
->>>
->>> Or something else completely? Do we have some documentation / best
->>> practises around this maybe?
+On 15.02.24 11:31, Ryan Roberts wrote:
+> Core-mm needs to be able to advance the pfn by an arbitrary amount, so
+> override the new pte_advance_pfn() API to do so.
 > 
-> Sorry I totally missed the question.
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> ---
+>   arch/arm64/include/asm/pgtable.h | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> Not sure if "himax,hx83112a" is needed here, the "djn,9a-3r063-1102b" is enough to know the IC is hx83112a.
-> 
-> I don't think you'll ever find a "djn,9a-3r063-1102b" with another controller IC ?
-> 
-> And "himax,hx83112a" alone as fallback is not enough to describe the panel hardware, so I think it should be dropped.
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index 52d0b0a763f1..b6d3e9e0a946 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -351,10 +351,10 @@ static inline pgprot_t pte_pgprot(pte_t pte)
+>   	return __pgprot(pte_val(pfn_pte(pfn, __pgprot(0))) ^ pte_val(pte));
+>   }
+>   
+> -#define pte_next_pfn pte_next_pfn
+> -static inline pte_t pte_next_pfn(pte_t pte)
+> +#define pte_advance_pfn pte_advance_pfn
+> +static inline pte_t pte_advance_pfn(pte_t pte, unsigned long nr)
+>   {
+> -	return pfn_pte(pte_pfn(pte) + 1, pte_pgprot(pte));
+> +	return pfn_pte(pte_pfn(pte) + nr, pte_pgprot(pte));
+>   }
+>   
+>   static inline void set_ptes(struct mm_struct *mm,
+> @@ -370,7 +370,7 @@ static inline void set_ptes(struct mm_struct *mm,
+>   		if (--nr == 0)
+>   			break;
+>   		ptep++;
+> -		pte = pte_next_pfn(pte);
+> +		pte = pte_advance_pfn(pte, 1);
 
-+1
 
-Konrad
+Acked-by: David Hildenbrand <david@redhat.com>
+
+-- 
+Cheers,
+
+David / dhildenb
+
