@@ -1,119 +1,116 @@
-Received: from kozue.soulik.info (kozue.soulik.info [108.61.200.231])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD9138D;
-	Thu, 15 Feb 2024 03:25:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=108.61.200.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9818610E
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 03:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707967525; cv=none; b=MYSt5Q6EYzrA740cynMEyrZi3fZ96xT78JJez99P0Wxrn3D6rX9MzyQmvM7Oi6tMJiY1KCVipC+zhmhzqxoOVeqtQfgpBCxW2PQG86FwrICta07Ld17S/BSaeonHcj47hg1OZnhpN1wihWUc6iJJ6YQIY1sWg90+iJjNkeL6RVk=
+	t=1707968030; cv=none; b=RulnQpyg5EcQpyCWpfL9R9guA2yPS8m7h4I6w8ZqCmu3N3DdLMTBfqs9m/lvX6C9HQ6Gdq3q1npijehKWP89N76/QDLFiS3TYoqOBof2wBwon/UVLV1yuvTDEGRX/9sUeYmVDYvc8an/kh7sglmclQCIC0/pZYIJjx1Dy2m2J9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707967525; c=relaxed/simple;
-	bh=QRTneIcWg5vU9jdq7Rpt6DeMeZg1EmrsBxMFImT+B6s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JjUrMheGLfW/J84DEQs5gO+3iPjxVa/tanIvlUC/qHJ+8no8DdQKs8U/imDgtk0qSIRTcRShTYgk2MHfrQlNsbIh/OGiz8oCI61JrsIAUkBql9YMCtYkioELSeECOlY1XeGxXkCAJdSprxD6gf0hBJ4BGZ4OhkTbZZkow77IZ4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=soulik.info; spf=pass smtp.mailfrom=soulik.info; dkim=pass (1024-bit key) header.d=soulik.info header.i=@soulik.info header.b=c+cgp3Sk; arc=none smtp.client-ip=108.61.200.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=soulik.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soulik.info
+	s=arc-20240116; t=1707968030; c=relaxed/simple;
+	bh=TCZSJ/XNJaPFnnPAuJVmZMNZx3dUX1ubTXjBc6BND2M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ulKdOIUNIPW2RS9cWg+TtfPE6w27TvzQ+MLj6GQct+1nH4HDaf1X1Eb+8vJI6vl1If45XUuvjTrsMvddsOdHhGMW488/jPR9wzgyQIq5TOSPLK8Eh1cKR1Ll3O8lyEpH2IFNt+2p+UgyvyDMuwGixVNrehCzpl8s/4eafNT4VWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=otG5x9Uy; arc=none smtp.client-ip=209.85.221.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=soulik.info header.i=@soulik.info header.b="c+cgp3Sk"
-Received: from [192.168.10.7] (unknown [10.0.12.132])
-	by kozue.soulik.info (Postfix) with ESMTPSA id EC2A12FE714;
-	Thu, 15 Feb 2024 12:15:27 +0900 (JST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 kozue.soulik.info EC2A12FE714
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=soulik.info; s=mail;
-	t=1707966930; bh=aH50rFraaCRdc5hvH2MqbJ63B91M1/DEldo2KgKsQfo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=c+cgp3SknYJ0XrDMF8TUzLl7RbtQaiobqy82PoTpL3e2pADa13V+m4AvZeYuX6b64
-	 QW2rf9TfyWCM943Z7mp2TxEo3VapOemJ6o6GPz+WTT0dboIheS6CpkT2tvl2JwOPDl
-	 Otd9Hx2RljBdRLx3UaH8rOmjkUALrcY/joEnAoFk=
-Message-ID: <1f80b5ea-1209-438f-b07f-3a4a308ee35d@soulik.info>
-Date: Thu, 15 Feb 2024 11:16:02 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="otG5x9Uy"
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-4b978e5e240so208546e0c.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 19:33:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707968027; x=1708572827; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fVf6gZc4QGYJ3h+idoxj2vV7qjkpHx1O2OfEs7P0+bE=;
+        b=otG5x9UynCg5gs+Wy/WT5KolqXus+YVTIVO/958347m8vtdMqVsf8GxD2GuREMPcbO
+         ZaYsdB7a8ZZFTaOhTN2uRt6l2nL3TMOGOQ56twT5yAcDl+1OqSXUTnpaQl19wmm9rF/I
+         UviBa1GwsA4ixaic4vDh5yPerK9nxFGnDUYIp/NjCfx8P1IWDMxNWdL8PI0vDNTopR2P
+         4Xmwdg9EYALuOzib5IUM2pRDxA9NjQ2YB9iL0w+eODpO923HIm4ECP/JhcroeadziO7L
+         YuqVapRE/hpSLzhSNiRtQ6yb/QvE4ayncVm7NwaEr6KbSRUE7/QmBPCUYC62qFZKOZFg
+         1EIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707968027; x=1708572827;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fVf6gZc4QGYJ3h+idoxj2vV7qjkpHx1O2OfEs7P0+bE=;
+        b=ugdttMbWvjxG8e+J8Ur50BIeb9rg5dzAqWzDd6T8SY6xO+h+UaRrmuHG9F2JVIyGP2
+         5KhFqxxkbS8gnL41RaJdMfE4BDk0nokLZxKloz2PLcBCA3ALIl2unw6u2jWScmJ5NuI1
+         SWYo28BHLP5iJxcyN7DWjRL1TBnBPvhi6a9bchlXyUBHXks5OOOGydmBxwptabgFL22e
+         wZkKohN9USm2vd70FD0xXFBK3h7phc9Y4JJmL4AoRuiRWGPn1nje1klsmg40BZBNL6ZJ
+         qcQVTE6c1NvFVwLk3wYarqVq4m1A55W4gsZUUE3gKenoyVAwWpt1KlexP9RihbtCGu7A
+         p/iQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWUbCqHsxSZIgsSVNNQbh9Kgaa6pWS/L6MVsUdm+JY8+xNBB3ZmUJSYaJtmpIiFfut7m5nkm+9c6EWPlGH/Vi4C+czCJcbm+8lVaz3Z
+X-Gm-Message-State: AOJu0YylbGcR5mpW2TU5V3IQZPNLeXS7h1z4QDcdfA9W0qykuCQoXbOT
+	mQaCKgmmsdlyfvxGp9U4BzcnnZHpelXABZ6xDLcGJzaWrhaZFzm6koyarESMlYc8ASZthETWdWd
+	pF3VPf1vnFawhhe0MfAxoU4UJwyAW42cu6lOf
+X-Google-Smtp-Source: AGHT+IFRu6qWXK6iKFa30lwovzXRFsLYhJ1iV7RGR1j8fU1/0lchFPKaCqnUKJtNUxrh1UZmYKHIncUqE3mKqQUY+K8=
+X-Received: by 2002:a1f:db01:0:b0:4c0:8ec:2331 with SMTP id
+ s1-20020a1fdb01000000b004c008ec2331mr423435vkg.2.1707968027271; Wed, 14 Feb
+ 2024 19:33:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: v4l2-mem2mem: fix mem order in last buf
-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Cc: mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
- Hsia-Jun Li <randy.li@synaptics.com>, sebastian.fricke@collabora.com,
- alexious@zju.edu.cn, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240210180414.49184-1-randy.li@synaptics.com>
- <a43eaa0cfedeccc85410d2e26f296bda8de635cd.camel@collabora.com>
-Content-Language: en-US
-From: Randy Li <ayaka@soulik.info>
-In-Reply-To: <a43eaa0cfedeccc85410d2e26f296bda8de635cd.camel@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240112055251.36101-1-vannapurve@google.com> <20240112055251.36101-2-vannapurve@google.com>
+ <etvf2mon464whscbxqktdd7bputnqmmwmoeg7ssixsk4kljfek@4wngbgzbbmck>
+In-Reply-To: <etvf2mon464whscbxqktdd7bputnqmmwmoeg7ssixsk4kljfek@4wngbgzbbmck>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Thu, 15 Feb 2024 09:03:33 +0530
+Message-ID: <CAGtprH-95FEUzpc-yxQMo87gpqgMxyz9W8tiWtu_ZHhMW-jjuA@mail.gmail.com>
+Subject: Re: [RFC V1 1/5] swiotlb: Support allocating DMA memory from SWIOTLB
+To: "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com, 
+	rientjes@google.com, seanjc@google.com, erdemaktas@google.com, 
+	ackerleytng@google.com, jxgao@google.com, sagis@google.com, oupton@google.com, 
+	peterx@redhat.com, vkuznets@redhat.com, dmatlack@google.com, 
+	pgonda@google.com, michael.roth@amd.com, thomas.lendacky@amd.com, 
+	dave.hansen@linux.intel.com, linux-coco@lists.linux.dev, 
+	chao.p.peng@linux.intel.com, isaku.yamahata@gmail.com, andrew.jones@linux.dev, 
+	corbet@lwn.net, hch@lst.de, m.szyprowski@samsung.com, rostedt@goodmis.org, 
+	iommu@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 2024/2/15 04:38, Nicolas Dufresne wrote:
-> Hi,
+On Wed, Feb 14, 2024 at 8:20=E2=80=AFPM Kirill A. Shutemov <kirill@shutemov=
+.name> wrote:
 >
->>   media: v4l2-mem2mem: fix mem order in last buf
-> mem order ? Did you mean call order ?
-std::memory_order
+> On Fri, Jan 12, 2024 at 05:52:47AM +0000, Vishal Annapurve wrote:
+> > Modify SWIOTLB framework to allocate DMA memory always from SWIOTLB.
+> >
+> > CVMs use SWIOTLB buffers for bouncing memory when using dma_map_* APIs
+> > to setup memory for IO operations. SWIOTLB buffers are marked as shared
+> > once during early boot.
+> >
+> > Buffers allocated using dma_alloc_* APIs are allocated from kernel memo=
+ry
+> > and then converted to shared during each API invocation. This patch ens=
+ures
+> > that such buffers are also allocated from already shared SWIOTLB
+> > regions. This allows enforcing alignment requirements on regions marked
+> > as shared.
 >
-> Le dimanche 11 février 2024 à 02:04 +0800, Hsia-Jun Li a écrit :
->> From: "Hsia-Jun(Randy) Li" <randy.li@synaptics.com>
->>
->> The has_stopped property in struct v4l2_m2m_ctx is operated
->> without a lock protecction. Then the userspace calls to
->                   protection   When ?                   ~~
-Access to those 3 booleans you mentioned later.
->> v4l2_m2m_encoder_cmd()/v4l2_m2m_decoder_cmd() may lead to
->> a critical section issue.
-> As there is no locking, there is no critical section, perhaps a better phrasing
-> could help.
-
-"concurrent accesses to shared resources can lead to unexpected or 
-erroneous behavior, so parts of the program where the shared resource is 
-accessed need to be protected in ways that avoid the concurrent access."
-
-It didn't say we need a lock here.
-
->> Signed-off-by: Hsia-Jun(Randy) Li <randy.li@synaptics.com>
->> ---
->>   drivers/media/v4l2-core/v4l2-mem2mem.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
->> index 75517134a5e9..f1de71031e02 100644
->> --- a/drivers/media/v4l2-core/v4l2-mem2mem.c
->> +++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
->> @@ -635,9 +635,9 @@ void v4l2_m2m_last_buffer_done(struct v4l2_m2m_ctx *m2m_ctx,
->>   			       struct vb2_v4l2_buffer *vbuf)
->>   {
->>   	vbuf->flags |= V4L2_BUF_FLAG_LAST;
->> -	vb2_buffer_done(&vbuf->vb2_buf, VB2_BUF_STATE_DONE);
->> -
->>   	v4l2_m2m_mark_stopped(m2m_ctx);
->> +
->> +	vb2_buffer_done(&vbuf->vb2_buf, VB2_BUF_STATE_DONE);
-> While it most likely fix the issue while testing, since userspace most likely
-> polls on that queue and don't touch the driver until the poll was signalled, I
-> strongly believe this is insufficient. When I look at vicodec and wave5, they
-> both add a layer of locking on top of the mem2mem framework to fix this issue.
-
-Maybe a memory barrier is enough. Since vb2_buffer_done() itself would 
-invoke the (spin)lock operation.
-
-When the poll() returns in userspace, the future operation for those 
-three boolean variables won't happen before the lock.
-
-> I think this is unfortunate, but v4l2_m2m_mark_stopped() is backed by 3 booleans
-> accessed in many places that aren't in any known atomic context. I think it
-> would be nice to remove the spurious locking in drivers and try and fix this
-> issue in the framework itself.
-I tend to not introduce more locks here. There is a spinlock in m2m_ctx 
-which is a pain in the ass, something we could reuse it to save our CPU 
-but it just can't be access.
+> But does it work in practice?
 >
-> Nicolas
+> Some devices (like GPUs) require a lot of DMA memory. So with this approa=
+ch
+> we would need to have huge SWIOTLB buffer that is unused in most VMs.
 >
->>   }
->>   EXPORT_SYMBOL_GPL(v4l2_m2m_last_buffer_done);
->>   
+
+Current implementation limits the size of statically allocated SWIOTLB
+memory pool to 1G. I was proposing to enable dynamic SWIOTLB for CVMs
+in addition to aligning the memory allocations to hugepage sizes, so
+that the SWIOTLB pool can be scaled up on demand.
+
+The issue with aligning the pool areas to hugepages is that hugepage
+allocation at runtime is not guaranteed. Guaranteeing the hugepage
+allocation might need calculating the upper bound in advance, which
+defeats the purpose of enabling dynamic SWIOTLB. I am open to
+suggestions here.
+
+> --
+>   Kiryl Shutsemau / Kirill A. Shutemov
