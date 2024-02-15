@@ -1,191 +1,139 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3F0133996;
-	Thu, 15 Feb 2024 15:18:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9784134CDC
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 15:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708010293; cv=none; b=QDjL1FSFy6LfPRJg+TiyrIVScAe9VnDmJxfIAakydEDR3rMqSv6257742aTfnbiVrZe9iS32Vm16UuLU6dy15yzYPByoxeKCACFm47/O5L1NIRvn1hDjqUR2304VVUnb3JMsx54yV79rchvIZSc9tZ6FDWHESpaW9plj1mIPMdA=
+	t=1708010294; cv=none; b=CKlxgXtR6u+sAQ/Oi1BxA4KCB6tgXYwsVsrBUgXz92AASx9x7N0PqFqudsDJa1z6o867yHInz8d5T5/FeDvnUWb4VaiTX2RmfD17LvDUv5URQCarxwNk814mrFCe7HdoWseL25PYg8kEyDA7/oGW4qTmpaq9AFi2cuFQzVV+aiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708010293; c=relaxed/simple;
-	bh=e8PnsOii99gP0WA1XiPKpyChAqiQWSXdi7Ps4pRmQWk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mLTTiceF5y64OH2g/lWJ5xONVcyT6JVEi1puW2ub0/o3NQuKYA1V/8VPndgrG+NIcbGhohqzr5i4RCXkeXYz2K/F5MG+dWmWkyfvIJbC7ZXevZUtjtkGBjS0Z9eh6MUORu4IZRfzQQje+rsjPosAtrmKe9h+JvQcjKPxaGh1qg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gg8LSpng; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1708010294; c=relaxed/simple;
+	bh=0moq0mcoUJnqJgfLCw56ofLM3dtVq9Kx/sgkFcuifvc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u/u4smlT7Ka8RenXttaz2uMmoaB0IMcCTMxi7DT+JRrgHdlGzDEfQ+VEg9NEbnSR92UVFV9BQzOA9iZKNm9yWzdUu7iesC6rR/r9qL/HdEBbnnwPDNBONiGc0ULGog86k9jsczcle/QH/v2OpVIi2TxA/rNNyLkRmeYhGUCF2bM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GAeDjyOd; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gg8LSpng"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8674D24000C;
-	Thu, 15 Feb 2024 15:18:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708010288;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=p1V15uXYgQovRfHKkboS9SmVJZ6AkIUbwkHyEKcbL1E=;
-	b=gg8LSpngj0cgh6SQ5tDzggpeMP+2IxDATwuUVkbIqHMrw16NmysDOc3hrVYBH0vJ7zbilS
-	cYPTI8ULj3TpzeK9LhxhUJ8Q4u64dJqIvvVC9h1K8RuPe5f3LSXPoOXtEc5AyQW/1jnlcd
-	8VM2zrisMKFufiPbpa8CzNUB0Ug8CL0M05l0UkOKzyYoGuhPjRcyiPr1vtT95jZMjsVgJO
-	B7QyabGQf/i0NwG7+tBwo2rL9u1iHiiB+44dM4/V6ZH4zuu4Ak1IoYnqMVfBMie5548gIp
-	gs8Zm9DT4yckBC7P5w0lnPZSiAXLQetc7HfzuGew1/mjZ2H2lOdFly2qQCFy3g==
-From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Thu, 15 Feb 2024 16:17:53 +0100
-Subject: [PATCH v3 08/18] phy: ti: phy-j721e-wiz: split wiz_clock_init()
- function
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GAeDjyOd"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-78731e44587so62842285a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 07:18:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708010291; x=1708615091; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=kwWfU3Ro1z0XktmL8m4mtOaaeAQD2IJrZimJ0lbSENo=;
+        b=GAeDjyOdKMyJoJq6GbpeUb8/TqUOKMqCPhyFu8i2j7JeDIxwxzz2zoK6jBmHc8IIX/
+         kuTjxA8foaHtdZTfIR8+Nr3dJQs0Iv2mqaGHgw7oswz3JCKo7f1rlE+g+1sIHi3kweTg
+         G3DVcyifGy30LRieDv7LDh9XddeW3luF5kZVhFsi0mH7OtE3O2tdd+t6au+i/Ic4DL2F
+         2X6cOSDt8huWZJBDr4w+5w98O4E2i6GDZPpoVNaH60vHlI8FkGPy8vUgDZ3oECdll+Ph
+         CouVGCVbh+Ojiv3tm1SMpPbBFIsacWMgoGwq6pKxSIYfHVdSAOiWMQ4ygzQMvvwaPTgB
+         mRtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708010291; x=1708615091;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kwWfU3Ro1z0XktmL8m4mtOaaeAQD2IJrZimJ0lbSENo=;
+        b=axisLNaOPkUCH91scB8LZzMoySsf9z4zCdEkfiWnlL26oQAKb95vWf2As67LL31ADD
+         Kl9Lp5EDAqYTg8gx37RUTZYUcOoAKQefpyzt7wXndaV7C2xzljrfMCu4MB+FmMUZOIlf
+         QE70hky2lqCGAUU5L1Wg6SU3dj5rNHBkksJAymbxDQhctYcogVm8c9sPRAgeRD/OmkQE
+         RWdEc2R170xtP3SH03qGxaM8EyJ5gJtIgIuIBJS3RTVw0VHVQVFo2U9m7h/8JY0wZjh8
+         T1RbVaHNVjHNbj9uxJHRUcoOJk31EvJs14vlr0wSZVXVGLtC7kvYEiLEg+wwLDMe4SOq
+         0O1w==
+X-Forwarded-Encrypted: i=1; AJvYcCUmUmCGXMxAbrXqM7pXanYha5nvzCQB0giuz8+onag/TeOXGGO9c1WMVbO197v+caIlB5+pzVp53M42DumzJ3bpDv/0j3c76mYoyLVG
+X-Gm-Message-State: AOJu0Yy/cMhQ/UlPK5Z6456PZh9fiy+Bcn3ypXBOwp88rKdfkwGRfdXy
+	/YKUGb/ADfJBsLiYn3h7ccructNNXHLpMFoYQDQnTVHMLFnX1wUVOn5tke7pnR5SqyLwxpVF3lB
+	HLCeaReApl6GTXFuZj0akv/y0pAA2zcQTaRmg2w==
+X-Google-Smtp-Source: AGHT+IEZ6QB3M6um48zblbG5/nvFRICNI0XNyCLsrHF5dTGPKc3t3UmN+k1fe2w7rx+t0rUIY2qhxPuZ3tJEtf7DuNA=
+X-Received: by 2002:a0c:e409:0:b0:68f:2b7:ae39 with SMTP id
+ o9-20020a0ce409000000b0068f02b7ae39mr1704887qvl.40.1708010291520; Thu, 15 Feb
+ 2024 07:18:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240102-j7200-pcie-s2r-v3-8-5c2e4a3fac1f@bootlin.com>
-References: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
-In-Reply-To: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
- Tony Lindgren <tony@atomide.com>, 
- Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>, 
- Aaro Koskinen <aaro.koskinen@iki.fi>, 
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
- Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
- linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org, 
- linux-pci@vger.kernel.org, gregory.clement@bootlin.com, 
- theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
- Thomas Richard <thomas.richard@bootlin.com>
-X-Mailer: b4 0.12.0
-X-GND-Sasl: thomas.richard@bootlin.com
+References: <CA+G9fYuHF34bSbN9ktKuMAv1eOFVrf+Gw1MC_rG5trUQv9A_Pw@mail.gmail.com>
+ <Zc4UZkFp6Jr051gE@slm.duckdns.org>
+In-Reply-To: <Zc4UZkFp6Jr051gE@slm.duckdns.org>
+From: Anders Roxell <anders.roxell@linaro.org>
+Date: Thu, 15 Feb 2024 16:18:00 +0100
+Message-ID: <CADYN=9KmFfQM9BxthsOYXraE=hVtydVbOXF8dH6otx_7aSafrQ@mail.gmail.com>
+Subject: Re: next-20240215: workqueue.c: undefined reference to `irq_work_queue_on'
+To: Tejun Heo <tj@kernel.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>, 
+	Linux-Next Mailing List <linux-next@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, Lai Jiangshan <jiangshanlai@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The wiz_clock_init() function mixes probe and hardware configuration.
-Rename the wiz_clock_init() to wiz_clock_probe() and move the hardware
-configuration part in a new function named wiz_clock_init().
+On Thu, 15 Feb 2024 at 14:40, Tejun Heo <tj@kernel.org> wrote:
+>
+> Hello,
 
-This hardware configuration sequence must be called during the resume
-stage of the driver.
+Hey Tejun,
 
-Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
----
- drivers/phy/ti/phy-j721e-wiz.c | 65 ++++++++++++++++++++++++------------------
- 1 file changed, 37 insertions(+), 28 deletions(-)
+>
+> Can you see whether the following patch fixes the build?
 
-diff --git a/drivers/phy/ti/phy-j721e-wiz.c b/drivers/phy/ti/phy-j721e-wiz.c
-index ce8a99801a4c..45c5a4e9cd12 100644
---- a/drivers/phy/ti/phy-j721e-wiz.c
-+++ b/drivers/phy/ti/phy-j721e-wiz.c
-@@ -1076,25 +1076,11 @@ static int wiz_clock_register(struct wiz *wiz)
- 	return ret;
- }
- 
--static int wiz_clock_init(struct wiz *wiz, struct device_node *node)
-+static void wiz_clock_init(struct wiz *wiz)
- {
--	const struct wiz_clk_mux_sel *clk_mux_sel = wiz->clk_mux_sel;
--	struct device *dev = wiz->dev;
--	struct device_node *clk_node;
--	const char *node_name;
- 	unsigned long rate;
--	struct clk *clk;
--	int ret;
--	int i;
--
--	clk = devm_clk_get(dev, "core_ref_clk");
--	if (IS_ERR(clk))
--		return dev_err_probe(dev, PTR_ERR(clk),
--				     "core_ref_clk clock not found\n");
--
--	wiz->input_clks[WIZ_CORE_REFCLK] = clk;
- 
--	rate = clk_get_rate(clk);
-+	rate = clk_get_rate(wiz->input_clks[WIZ_CORE_REFCLK]);
- 	if (rate >= 100000000)
- 		regmap_field_write(wiz->pma_cmn_refclk_int_mode, 0x1);
- 	else
-@@ -1119,6 +1105,39 @@ static int wiz_clock_init(struct wiz *wiz, struct device_node *node)
- 		break;
- 	}
- 
-+	if (wiz->input_clks[WIZ_CORE_REFCLK1]) {
-+		rate = clk_get_rate(wiz->input_clks[WIZ_CORE_REFCLK1]);
-+		if (rate >= 100000000)
-+			regmap_field_write(wiz->pma_cmn_refclk1_int_mode, 0x1);
-+		else
-+			regmap_field_write(wiz->pma_cmn_refclk1_int_mode, 0x3);
-+
-+	}
-+
-+	rate = clk_get_rate(wiz->input_clks[WIZ_EXT_REFCLK]);
-+	if (rate >= 100000000)
-+		regmap_field_write(wiz->pma_cmn_refclk_mode, 0x0);
-+	else
-+		regmap_field_write(wiz->pma_cmn_refclk_mode, 0x2);
-+}
-+
-+static int wiz_clock_probe(struct wiz *wiz, struct device_node *node)
-+{
-+	const struct wiz_clk_mux_sel *clk_mux_sel = wiz->clk_mux_sel;
-+	struct device *dev = wiz->dev;
-+	struct device_node *clk_node;
-+	const char *node_name;
-+	struct clk *clk;
-+	int ret;
-+	int i;
-+
-+	clk = devm_clk_get(dev, "core_ref_clk");
-+	if (IS_ERR(clk))
-+		return dev_err_probe(dev, PTR_ERR(clk),
-+				     "core_ref_clk clock not found\n");
-+
-+	wiz->input_clks[WIZ_CORE_REFCLK] = clk;
-+
- 	if (wiz->data->pma_cmn_refclk1_int_mode) {
- 		clk = devm_clk_get(dev, "core_ref1_clk");
- 		if (IS_ERR(clk))
-@@ -1126,12 +1145,6 @@ static int wiz_clock_init(struct wiz *wiz, struct device_node *node)
- 					     "core_ref1_clk clock not found\n");
- 
- 		wiz->input_clks[WIZ_CORE_REFCLK1] = clk;
--
--		rate = clk_get_rate(clk);
--		if (rate >= 100000000)
--			regmap_field_write(wiz->pma_cmn_refclk1_int_mode, 0x1);
--		else
--			regmap_field_write(wiz->pma_cmn_refclk1_int_mode, 0x3);
- 	}
- 
- 	clk = devm_clk_get(dev, "ext_ref_clk");
-@@ -1141,11 +1154,7 @@ static int wiz_clock_init(struct wiz *wiz, struct device_node *node)
- 
- 	wiz->input_clks[WIZ_EXT_REFCLK] = clk;
- 
--	rate = clk_get_rate(clk);
--	if (rate >= 100000000)
--		regmap_field_write(wiz->pma_cmn_refclk_mode, 0x0);
--	else
--		regmap_field_write(wiz->pma_cmn_refclk_mode, 0x2);
-+	wiz_clock_init(wiz);
- 
- 	switch (wiz->type) {
- 	case AM64_WIZ_10G:
-@@ -1589,7 +1598,7 @@ static int wiz_probe(struct platform_device *pdev)
- 		goto err_get_sync;
- 	}
- 
--	ret = wiz_clock_init(wiz, node);
-+	ret = wiz_clock_probe(wiz, node);
- 	if (ret < 0) {
- 		dev_warn(dev, "Failed to initialize clocks\n");
- 		goto err_get_sync;
+This patch fixes the build. Thank you for the quick fix.
 
--- 
-2.39.2
+Tested-by: Anders Roxell <anders.roxell@linaro.org>
 
+>
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 8df18f3a9748..41be05a8ba5e 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -107,6 +107,8 @@ config CONSTRUCTORS
+>
+>  config IRQ_WORK
+>         bool
+> +       depends on SMP
+> +       default y
+>
+>  config BUILDTIME_TABLE_SORT
+>         bool
+> diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+> index 04e35dbe6799..6ae441e13804 100644
+> --- a/kernel/workqueue.c
+> +++ b/kernel/workqueue.c
+> @@ -1209,6 +1209,20 @@ static struct irq_work *bh_pool_irq_work(struct worker_pool *pool)
+>         return &per_cpu(bh_pool_irq_works, pool->cpu)[high];
+>  }
+>
+> +static void kick_bh_pool(struct worker_pool *pool)
+> +{
+> +#ifdef CONFIG_SMP
+> +       if (unlikely(pool->cpu != smp_processor_id())) {
+> +               irq_work_queue_on(bh_pool_irq_work(pool), pool->cpu);
+> +               return;
+> +       }
+> +#endif
+> +       if (pool->attrs->nice == HIGHPRI_NICE_LEVEL)
+> +               raise_softirq_irqoff(HI_SOFTIRQ);
+> +       else
+> +               raise_softirq_irqoff(TASKLET_SOFTIRQ);
+> +}
+> +
+>  /**
+>   * kick_pool - wake up an idle worker if necessary
+>   * @pool: pool to kick
+> @@ -1227,15 +1241,7 @@ static bool kick_pool(struct worker_pool *pool)
+>                 return false;
+>
+>         if (pool->flags & POOL_BH) {
+> -               if (likely(pool->cpu == smp_processor_id())) {
+> -                       if (pool->attrs->nice == HIGHPRI_NICE_LEVEL)
+> -                               raise_softirq_irqoff(HI_SOFTIRQ);
+> -                       else
+> -                               raise_softirq_irqoff(TASKLET_SOFTIRQ);
+> -               } else {
+> -                       irq_work_queue_on(bh_pool_irq_work(pool), pool->cpu);
+> -               }
+> -
+> +               kick_bh_pool(pool);
+>                 return true;
+>         }
+>
