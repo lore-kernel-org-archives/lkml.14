@@ -1,42 +1,41 @@
 Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F01133413;
-	Thu, 15 Feb 2024 15:36:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F3F133432;
+	Thu, 15 Feb 2024 15:36:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708011408; cv=none; b=Tgmo59HoFSX85eqaDajWjBNaABrB+NuZO+iw3NEfkWrSQvcRuESCAf8zzT2vzHUnZHOSZFRoN/zlsfbUK+21vfGsxBpZ+l15l1C4/64GbVtRxlKb831MESCc4ZuwojWleBX/7YgMUI5olSR0YRLSwyewV8JMMLcXIzAOW6tF1mQ=
+	t=1708011409; cv=none; b=JWYzKZNhntrfo7OMFp1gmmvsqZ5oxj3dtWO4iZB/4yuqkckN0eB9qar1+ms2ePRO3+MP6WBt/MOgFpjZoGbrG0dPsAM0ueMYTZXIrUu60RO7qwNrANBKpOIa1TaBifcN5iU6+Az4CjoIZIv/d9rMOLp7uspp65vNaULvHl0Wfko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708011408; c=relaxed/simple;
-	bh=8WF6UR9eF6nZvmRireCrz2oeCtLoHCVzVebIRGr2RAo=;
+	s=arc-20240116; t=1708011409; c=relaxed/simple;
+	bh=FjdprrnC/XsA9GWxGqo/QmO/W07N1XedtxUX8gEVkh8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YOdY2rjouqBXcUQm9q23JgWBTsYvY0XXUHgFfJbh6zPmVody05P5VE+K2fHYLlYGhcqQJ8Zls1FZre2/CXJ5Oa+fKKY0y3zTmn1M1oEs23vwcQIzPf7o4imJ4Y2VI4Qp9QkvCA4eoq5UXWiWxGKdJSgm2nK44xz3iFO1yvFlcY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CRUEGZFA; arc=none smtp.client-ip=217.70.178.240
+	 In-Reply-To:To:Cc; b=AR/QDfnFBCWP2lSh4W9fpftZLL/jqsi2d4SqnE1a01EcoGDggQ4JBTuPaUQKTRTLgonkGpzwLpNIjeQbkI5XzPkzBeYCiBrm+BlHLRjW7UZVftJB7CDdgfwHNENIPVWw3D/+uVvUtJTjjKbFIEWxDgQwvgnc3Cosa8dZIHDaig0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RQdOi/+x; arc=none smtp.client-ip=217.70.178.240
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CRUEGZFA"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RQdOi/+x"
 Received: from relay9-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::229])
-	by mslow1.mail.gandi.net (Postfix) with ESMTP id 28449C8768;
+	by mslow1.mail.gandi.net (Postfix) with ESMTP id B757FC876C;
 	Thu, 15 Feb 2024 15:36:39 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id F2AD1FF809;
-	Thu, 15 Feb 2024 15:36:30 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B78B4FF807;
+	Thu, 15 Feb 2024 15:36:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708011391;
+	t=1708011392;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+VdOMGdhUfnRqC84Ds5qac0THeFNjbkMbQFO9qc5HW0=;
-	b=CRUEGZFAXDgeTHu5kecJXNIKhz+bUdJmbxnNGF5IbvVOjnsmfTe46lk6qelri2fgmCdKq+
-	2Jh6vqUVAIrheNpl12a3Dj7k+iabPy6JR1FZJG8FhvJ83X3CPI+UjhYbx/nbWIxdcpDbOO
-	aL2znWcb6ADFHg82PPNcN3cplGUcwcfFjli+xinRpHFGoADaoDSOxAXhqyoCvy9aODs6o1
-	0u9ltZK/fg0pzqJL39yt7+dFVzMkx6SwlJZgKgK8AikZIRIb2KZ7Z4k7Wh8UzptJjcB3SJ
-	3/p4WQP2ABd7a2rUQUDGRfJCkchtZSeL+gcSPb/ImFH8j1aMuNqmbeivhCUPfw==
+	bh=ZVIMZPbdYf3ZH4bucFJyX+oUYzajS9yHWDPkyGO2CoA=;
+	b=RQdOi/+xBIS2kluyOnNaH9ORWUF5pi0TEliRBZFwz7PAVW7PSOlvE/kYx3RaC6N9rOIMX+
+	0oit69wYMUXzjmfjvETTh+iadx6jC0tfiJgVW7WoIzzLz+YjyECs6/sWqMDERhuF4mkFsa
+	9Pu/ZASDXLgAI94bnHzeFtmXcm/1S6KMguQNkjdeF/ixSjR1uvUASU41olKyDVuECPDOhz
+	Fo3mzAlxxushnul31gJEKdW1ZdnxOuXnQw641Np/zGjXV6BNv8o8JEL5JCi8e0tVCUKCpL
+	xxsYIZGWEtbzLGHYt1D+e8D+UhSIZHGcjrVVlgczoIZ2asqkazmQnR2a2lyIxw==
 From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-Date: Thu, 15 Feb 2024 16:36:18 +0100
-Subject: [PATCH 1/4] wifi: wilc1000: split deeply nested RCU list traversal
- in dedicated helper
+Date: Thu, 15 Feb 2024 16:36:20 +0100
+Subject: [PATCH 3/4] wifi: wilc1000: fix declarations ordering
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,7 +44,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240215-wilc_fix_rcu_usage-v1-1-f610e46c6f82@bootlin.com>
+Message-Id: <20240215-wilc_fix_rcu_usage-v1-3-f610e46c6f82@bootlin.com>
 References: <20240215-wilc_fix_rcu_usage-v1-0-f610e46c6f82@bootlin.com>
 In-Reply-To: <20240215-wilc_fix_rcu_usage-v1-0-f610e46c6f82@bootlin.com>
 To: linux-wireless@vger.kernel.org
@@ -57,57 +56,82 @@ Cc: Ajay Singh <ajay.kathat@microchip.com>,
 X-Mailer: b4 0.12.4
 X-GND-Sasl: alexis.lothore@bootlin.com
 
-Move netif_wake_queue and its surrounding RCU operations in a dedicated
-function to clarify wilc_txq_task and ease refactoring
+Fix reverse-christmas tree order in some functions before adding more
+variables
 
 Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
 ---
- drivers/net/wireless/microchip/wilc1000/netdev.c | 25 +++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+ drivers/net/wireless/microchip/wilc1000/hif.c    | 16 ++++++++--------
+ drivers/net/wireless/microchip/wilc1000/netdev.c |  6 +++---
+ 2 files changed, 11 insertions(+), 11 deletions(-)
 
+diff --git a/drivers/net/wireless/microchip/wilc1000/hif.c b/drivers/net/wireless/microchip/wilc1000/hif.c
+index f3800aa9e9f8..c42859a727c3 100644
+--- a/drivers/net/wireless/microchip/wilc1000/hif.c
++++ b/drivers/net/wireless/microchip/wilc1000/hif.c
+@@ -1567,11 +1567,11 @@ int wilc_deinit(struct wilc_vif *vif)
+ 
+ void wilc_network_info_received(struct wilc *wilc, u8 *buffer, u32 length)
+ {
+-	int result;
+-	struct host_if_msg *msg;
+-	int id;
+ 	struct host_if_drv *hif_drv;
++	struct host_if_msg *msg;
+ 	struct wilc_vif *vif;
++	int result;
++	int id;
+ 
+ 	id = get_unaligned_le32(&buffer[length - 4]);
+ 	vif = wilc_get_vif_from_idx(wilc, id);
+@@ -1608,11 +1608,11 @@ void wilc_network_info_received(struct wilc *wilc, u8 *buffer, u32 length)
+ 
+ void wilc_gnrl_async_info_received(struct wilc *wilc, u8 *buffer, u32 length)
+ {
+-	int result;
+-	struct host_if_msg *msg;
+-	int id;
+ 	struct host_if_drv *hif_drv;
++	struct host_if_msg *msg;
+ 	struct wilc_vif *vif;
++	int result;
++	int id;
+ 
+ 	mutex_lock(&wilc->deinit_lock);
+ 
+@@ -1654,10 +1654,10 @@ void wilc_gnrl_async_info_received(struct wilc *wilc, u8 *buffer, u32 length)
+ 
+ void wilc_scan_complete_received(struct wilc *wilc, u8 *buffer, u32 length)
+ {
+-	int result;
+-	int id;
+ 	struct host_if_drv *hif_drv;
+ 	struct wilc_vif *vif;
++	int result;
++	int id;
+ 
+ 	id = get_unaligned_le32(&buffer[length - 4]);
+ 	vif = wilc_get_vif_from_idx(wilc, id);
 diff --git a/drivers/net/wireless/microchip/wilc1000/netdev.c b/drivers/net/wireless/microchip/wilc1000/netdev.c
-index 22f461f477f1..62414ab8846e 100644
+index 96f239adc078..092801d33915 100644
 --- a/drivers/net/wireless/microchip/wilc1000/netdev.c
 +++ b/drivers/net/wireless/microchip/wilc1000/netdev.c
-@@ -140,6 +140,19 @@ int wilc_wlan_get_num_conn_ifcs(struct wilc *wilc)
- 	return ret_val;
- }
- 
-+static void wilc_wake_tx_queues(struct wilc *wl)
-+{
-+	int srcu_idx;
-+	struct wilc_vif *ifc;
-+
-+	srcu_idx = srcu_read_lock(&wl->srcu);
-+	list_for_each_entry_rcu(ifc, &wl->vif_list, list) {
-+		if (ifc->mac_opened && netif_queue_stopped(ifc->ndev))
-+			netif_wake_queue(ifc->ndev);
-+	}
-+	srcu_read_unlock(&wl->srcu, srcu_idx);
-+}
-+
- static int wilc_txq_task(void *vp)
+@@ -814,12 +814,12 @@ static int wilc_mac_close(struct net_device *ndev)
+ void wilc_frmw_to_host(struct wilc *wilc, u8 *buff, u32 size,
+ 		       u32 pkt_offset)
  {
- 	int ret;
-@@ -160,17 +173,7 @@ static int wilc_txq_task(void *vp)
- 		do {
- 			ret = wilc_wlan_handle_txq(wl, &txq_count);
- 			if (txq_count < FLOW_CONTROL_LOWER_THRESHOLD) {
--				int srcu_idx;
--				struct wilc_vif *ifc;
--
--				srcu_idx = srcu_read_lock(&wl->srcu);
--				list_for_each_entry_rcu(ifc, &wl->vif_list,
--							list) {
--					if (ifc->mac_opened &&
--					    netif_queue_stopped(ifc->ndev))
--						netif_wake_queue(ifc->ndev);
--				}
--				srcu_read_unlock(&wl->srcu, srcu_idx);
-+				wilc_wake_tx_queues(wl);
- 			}
- 			if (ret != WILC_VMM_ENTRY_FULL_RETRY)
- 				break;
+-	unsigned int frame_len = 0;
+-	int stats;
+ 	unsigned char *buff_to_send = NULL;
+-	struct sk_buff *skb;
+ 	struct net_device *wilc_netdev;
++	unsigned int frame_len = 0;
+ 	struct wilc_vif *vif;
++	struct sk_buff *skb;
++	int stats;
+ 
+ 	if (!wilc)
+ 		return;
 
 -- 
 2.43.0
