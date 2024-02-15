@@ -1,140 +1,101 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4711B133285;
-	Thu, 15 Feb 2024 14:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137BA1350C8
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 14:46:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708008405; cv=none; b=c5UKq5GocFYYNFKslQDaKwH3JHKQgtHsYJEa6RY466D2fkow2XOgssRwjj8KOPEnc1hx1vPG4pOoCiVDiC6hDnhh74PEMVrZ768Y4cfF6UxhBXUBm3V8Iv6tKFQTUi2fmrMh47V6QLxOjtb2wP7cJ/hzia9qA4o96mooizY9XWc=
+	t=1708008408; cv=none; b=CB7oq3T9KwHhYxBQHvCwG1FPXu2b8TTzkuciW5xBPmFXfo30auQ/Gahu2NGIjT0AF+upWlsDufYIwtZR6FKSeTjuYIONEUNGO54aRn3YGDQGdsEgiT2rn6kT1CgiLWfo8xQoAQ2AJSHKU+lGzVkm5au5cf+XaN8xmT99cH8X+e8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708008405; c=relaxed/simple;
-	bh=+A5CzyStXl3uuRu7VAvAaofgyGw3Ro+0xr6rIKIjCf8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=u+jBCYiGrGRGReNoIxsMl4445FHlthHFUjnFJLAhspg1potzoXSuz3OQoaWgARMpZ2dlZ6/mtDNq38G+YBGPPJ3ae6G8ppdWGbjDN86VPZ/wfeRGOoVqM7VqcxYYS10Bqe8Z5jBDCZjFpkJbWtYoxtMxMPhbfP+o8gat8hSGxc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=YtP1iOrG; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	s=arc-20240116; t=1708008408; c=relaxed/simple;
+	bh=EHRIQ+Pwu96xPVv3sgr0n4iDrs21tFEsr1wYg+lkbr0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Z7JHQz5Wguh7xqbJ1Bf/37bh3GLYVd9zTNXyIcqOrkVrHH9jLqvV+NnSZWgrZJmJ7jYWh9n1n0aN8e0vYbccrpaoZnOyaMe5vENdd+eL1XrAnFqvU6Y1QIJloydQ//RmJEbcO2zVwkV8CGOCRZKD3Ux5wY280TQpqwIx9Shpels=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vDggIoqU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Gl1Fw7AW; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="YtP1iOrG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1708008401;
-	bh=+A5CzyStXl3uuRu7VAvAaofgyGw3Ro+0xr6rIKIjCf8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YtP1iOrGBZ2DFcfkMrFn0KrohYHueOZWWxnb1yMeBkD/1lvsW2xGteSYalPZKSM84
-	 dPZuexmp1ywRE4ZTQOjFAgKyIAvz+xWNg3zjhDySnvi/5JJ+HqV6yNHbJnIgA2V+Cz
-	 LrEIdoTvdqClLxE1CDwMu7BvH4kU+HynYTL8FGvWqQVF+ZUtTFmBtps3Fll4hy5iYb
-	 VWfnhivvj+Lue04BRQYIzFUyJj/QJixaTtTpM98rtcdyFCecmfELtoqdx9qmJ4d3Cn
-	 Wpo8Zfth0EElxlDfWMpTqDJD6h2d2p2Z/MvkLxve0QsVGqva4CwWkicSMaV5TpJXl8
-	 BS4uFSpfm9ZuQ==
-Received: from thinkos.internal.efficios.com (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TbHvP59RfzZKm;
-	Thu, 15 Feb 2024 09:46:41 -0500 (EST)
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: Dan Williams <dan.j.williams@intel.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dave Chinner <david@fromorbit.com>
-Cc: linux-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Russell King <linux@armlinux.org.uk>,
-	linux-arch@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-xfs@vger.kernel.org,
-	dm-devel@lists.linux.dev,
-	nvdimm@lists.linux.dev,
-	linux-s390@vger.kernel.org
-Subject: [PATCH v6 7/9] dax: Check for data cache aliasing at runtime
-Date: Thu, 15 Feb 2024 09:46:31 -0500
-Message-Id: <20240215144633.96437-8-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240215144633.96437-1-mathieu.desnoyers@efficios.com>
-References: <20240215144633.96437-1-mathieu.desnoyers@efficios.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vDggIoqU";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Gl1Fw7AW"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1708008404;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r3UcZ+n3SU4Ya49g3SiL14FXqOPCAdpR0yWfzakXsOk=;
+	b=vDggIoqUWoAP/2TM8w9iPe8+nYmUGn8PnYLDoByWiKUBZx4mf0X+aM2ZtZFMoHdzNKpKmG
+	GcBd32OTk5vlB63Fkr71QP0XoMgkcwUlJJu9O1gKtMfuW7XXOws8A2iyzyvAigeDPoeA85
+	jec6H9iEfxaj3HPf7ZnwyuTYySfDqGYKMKVht1xXrIYmyFcnQ2QQ1+ekuyxK/O6uEYCqt5
+	4YldK/hBLK1GjB/TF+V7ZvAuj22RtkhcfMlYLWZCnK3/CFIttzlbkZJKFrqoz9+Y0ChoRk
+	JGLwygjFgUi2CnorDIST6Gq6yIPD8FflQ+MWjQVN5rb+9xVUehoJAm5JCtvqwg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1708008404;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r3UcZ+n3SU4Ya49g3SiL14FXqOPCAdpR0yWfzakXsOk=;
+	b=Gl1Fw7AW41XM0MqKYMiPnMIudLGD1oWP+RCO0o1aEMj1LyROSWT5SH5wRRHVSFcqRBb7px
+	ndleIR/QXrLHmdCA==
+To: Ulf Hansson <ulf.hansson@linaro.org>, Daniel Lezcano
+ <daniel.lezcano@linaro.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Daniel Bristot de Oliveira
+ <bristot@redhat.com>
+Subject: Re: [RFD] Remove irq_timings
+In-Reply-To: <CAPDyKFoynM_gN=tzsWnE_xAgmy6R8Hie-_yO5zoJTjwNjR38Hg@mail.gmail.com>
+References: <875xyqg2yr.ffs@tglx>
+ <79fadb9b-c4c8-4727-b812-7e519556cce1@linaro.org>
+ <CAPDyKFoynM_gN=tzsWnE_xAgmy6R8Hie-_yO5zoJTjwNjR38Hg@mail.gmail.com>
+Date: Thu, 15 Feb 2024 15:46:44 +0100
+Message-ID: <87jzn5eqej.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Replace the following fs/Kconfig:FS_DAX dependency:
+On Thu, Feb 15 2024 at 12:23, Ulf Hansson wrote:
+> On Wed, 14 Feb 2024 at 22:39, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+>> On 14/02/2024 22:17, Thomas Gleixner wrote:
+>> > Daniel!
+>> >
+>> > It's 7 years now that we merged irq timings into the kernel, but we
+>> > still have zero users for this.
+>
+> Wow, is it really 7 years since then. :-)
+>
+>> >
+>> > I'm tempted to declare this experiment failed and remove the whole thing
+>> > for good.
+>> >
+>> > Comments?
+>>
+>> I worked on an irq cpuidle governor which had better results than the
+>> menu governor and equal than the teo governor. But I never succeed to
+>> have better results without putting some arbitrary when computing the
+>> next event.
+>>
+>> At one moment, Daniel Bristot de Oliveira (Cc'ed) was thinking to may be
+>> use it for the deadline scheduler.
+>>
+>> Ulf (Cc'ed) may be has a plan for the next event for the CPU cluster.
+>
+> Yes, I still have that plan, but haven't been able to run some real tests yet.
+>
+>>
+>> But if no one has plan to use it, there is no good reason to keep it and
+>> I'm fine if we remove it.
+>
+> Besides that the code isn't really used at the moment, is it also
+> blocking us from doing some cleanup/refactoring or other related code?
 
-  depends on !(ARM || MIPS || SPARC)
+No. I just stumbled over it (again) and wondered whether it is ever
+going to be used or not. If not there is no point to carry dead weight
+around, but there is no hurry.
 
-By a runtime check within alloc_dax(). This runtime check returns
-ERR_PTR(-EOPNOTSUPP) if the @ops parameter is non-NULL (which means
-the kernel is using an aliased mapping) on an architecture which
-has data cache aliasing.
+Thanks,
 
-Change the return value from NULL to PTR_ERR(-EOPNOTSUPP) for
-CONFIG_DAX=n for consistency.
-
-This is done in preparation for using cpu_dcache_is_aliasing() in a
-following change which will properly support architectures which detect
-data cache aliasing at runtime.
-
-Fixes: d92576f1167c ("dax: does not work correctly with virtual aliasing caches")
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: linux-arch@vger.kernel.org
-Cc: linux-cxl@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-xfs@vger.kernel.org
-Cc: dm-devel@lists.linux.dev
-Cc: nvdimm@lists.linux.dev
----
- drivers/dax/super.c | 10 ++++++++++
- fs/Kconfig          |  1 -
- 2 files changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/dax/super.c b/drivers/dax/super.c
-index 205b888d45bf..ce5bffa86bba 100644
---- a/drivers/dax/super.c
-+++ b/drivers/dax/super.c
-@@ -450,6 +450,16 @@ struct dax_device *alloc_dax(void *private, const struct dax_operations *ops)
- 	dev_t devt;
- 	int minor;
- 
-+	/*
-+	 * Unavailable on architectures with virtually aliased data caches,
-+	 * except for device-dax (NULL operations pointer), which does
-+	 * not use aliased mappings from the kernel.
-+	 */
-+	if (ops && (IS_ENABLED(CONFIG_ARM) ||
-+	    IS_ENABLED(CONFIG_MIPS) ||
-+	    IS_ENABLED(CONFIG_SPARC)))
-+		return ERR_PTR(-EOPNOTSUPP);
-+
- 	if (WARN_ON_ONCE(ops && !ops->zero_page_range))
- 		return ERR_PTR(-EINVAL);
- 
-diff --git a/fs/Kconfig b/fs/Kconfig
-index 42837617a55b..e5efdb3b276b 100644
---- a/fs/Kconfig
-+++ b/fs/Kconfig
-@@ -56,7 +56,6 @@ endif # BLOCK
- config FS_DAX
- 	bool "File system based Direct Access (DAX) support"
- 	depends on MMU
--	depends on !(ARM || MIPS || SPARC)
- 	depends on ZONE_DEVICE || FS_DAX_LIMITED
- 	select FS_IOMAP
- 	select DAX
--- 
-2.39.2
+        tglx
 
