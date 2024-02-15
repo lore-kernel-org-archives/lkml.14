@@ -1,109 +1,161 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F036313DBA4
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 22:53:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6914A13A86F;
+	Thu, 15 Feb 2024 22:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708037593; cv=none; b=NgoydLpNssak3ck9i1ktyVF7e2Q3m6Z/+gbYJntXVGaXNnZX7Czd3Ad8ie4lwFOoCjwCG/u/GHXc9GTPCWm9rsoB+QMaORHVfaG+coWatJ2ROaAffEnV5nzYXUCX58OFrt8FFfD3SvknDC0F8X3OrLPkxq28J1Ezn2yflHgIIEM=
+	t=1708037617; cv=none; b=mZSghxkm/u89fewr2WPf3N6U13AZd94E0e6QieV2eeDRwIQUrrCqoqNwzUOrv0k21j3F16+I/LI3nmpWm0jUmnCUxJP4x0tt7M/z7S9et9dYLqB8ZDGDHX4I/DzqvnXYMpRaXBdRFH6P30vdb4IwTD0E4IbbdeZlvJF3AuyJ3ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708037593; c=relaxed/simple;
-	bh=2FVu6yXE7U52ivGAjAAmrkoj6QOniMtDTmis6EZTPqk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WDLRDDuLRaTi6gx3B1QxC/6NDqkK7Yjqxc0go8RQpJoxYi5U1b9x+TmxnpywwfQkGa4sRdxEoMjlQylL7oCMWmbU6Y/JtiwXGFx59Zdj+ch9nRYxLynVdto8Qb7jdreUIrJc3Jo3nlM7yJmUdSI317w3eOsScAjMabA6CYv4epQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BWDPUI76; arc=none smtp.client-ip=209.85.208.52
+	s=arc-20240116; t=1708037617; c=relaxed/simple;
+	bh=mVmdnH/gleyZRHJKTGo3Zk+ijax5waOA2VGEMQ90394=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gEMoqZW5Rxz5NWojIeAcuGEdu6op6wzYpYoxJ6WLgfB12YP8wFht7ax+BKCXPZBBD90NvuIbGvwNnZp8yBJbb9tyOdRqkuAxKlFZRRhWXA9rmboj/HdURlABEZWp1CmV7lgKHPQCCYmMVAmA/pTh/htL31ll3eQJSI+EZHOVWBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XypwHuFk; arc=none smtp.client-ip=209.85.222.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BWDPUI76"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-563b49a0f44so1819946a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 14:53:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XypwHuFk"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-785d567fa26so4052585a.3;
+        Thu, 15 Feb 2024 14:53:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708037590; x=1708642390; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dM/iULill3Uj1lqLW3ClBj2hmpKY1OGRqTHuq9SM0pI=;
-        b=BWDPUI761uEVi/IbW1IVGWVCU8g7Go4vM06p9/RqZvQ7FtrceMYVbvu1gFglsQSyLX
-         HiQGfAT+sOlgTaUU6yGW1bjjHR9ZnScsyKTKJ70bwaW6+W5ttgGWGNgXjovhig+hrR89
-         pu1airmC/WKTUPRbGJzkVERB4w1/TRLQ6PtSPK9cwSAAmAw2Q5JkTGs2g4+s2++h2Xbv
-         226EAZReGPz0N1zoEdGqpzJl0ih8iFBHtktSxruvJfHnKAkoDGhWt48mY/jAauQ2LF/c
-         TMW4DAHNSMBXhhkNwPz2yJVv2vzb+gLWdf/oXDTXmTfB/YsgOGYYrfA3V9yzec7n9YPD
-         QoVg==
+        d=gmail.com; s=20230601; t=1708037615; x=1708642415; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3LGmj+4Ox8DNbnQHN45Al/A5FlWzwlLmvFimBSFQ88o=;
+        b=XypwHuFklUBDb5CL0dq1L9R82ohwkj07ckWajdKVHyK6dVr7jL4bxPwRZD4i5876DO
+         bLLQvkHAiQ7iDNk0cito2iTAnm5PqJ0s9PDQiDiv5a+BNUju1JzksHmgbyzPocCpxrGh
+         soaA/XWZjOVvdHr7YBRzI+njQAxm/bS+F+CzCQaJiTEu5R8Cu2Wu/8fEAoJEpq3cTBXw
+         DT5Haj/CUh9iGCKU5ySlsV7BfQRr+aYnX+bRGXSVl+Qv7bCKPipYaoENiYnQyrZfCdyN
+         BEg1aCbrCtVGUgHIsJdO0Ek5CrU/Q8ahfcUNXZjaSZmFZsGR0mWSa0c2mpJ5LnhXonzX
+         1i7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708037590; x=1708642390;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dM/iULill3Uj1lqLW3ClBj2hmpKY1OGRqTHuq9SM0pI=;
-        b=XWUwqIxGR8ItFQ1HSlYW4lVOkBme4fDE4VdhmjAu8HhTJCtdDRasUlV5zfSeB46IAk
-         6U6kptw4DSlq3RCe0mYVfAHyUQ57afuKeRotiLP5W0YBaQRKQbbzlTwhRC9XC6QXW2z3
-         W1xel8oP8A39OOfwArCoZK1CopLIm0jW+dKcx950M9jwvIWxQcSeQq3idncTkqSV1GXb
-         zsJCZSGg82ph0LJYo6/t6995z/cDWpy4aWAF+ssonp1fOjRIb45nKLPLGhPqC68gu5yJ
-         jzRIoKVqPMuryB/ssfE1ZNY/v4VIt5SR4gxjcnVQMoR/9vyBL6qNLQLZ9A1XkzcJGIkJ
-         o3UA==
-X-Forwarded-Encrypted: i=1; AJvYcCW6bx1AA5tdwKMJ0E0z6/9NcdqoxKZFaIs8CJBQPYNiUPQjilt4ysdpk6BjCdodPyyMzRIT5ID5REzqxa8ZPoH0FU4rrjMae0/ujfqU
-X-Gm-Message-State: AOJu0YynGXrIVSazF0pkcWKswId8l89ehtZMRYSqztv/iUlEjzihwEcO
-	njjLBvSO7CBNfsbRCRfeN7biUYfM5p/DJdyzy4NYmd9uBM/kUvGE
-X-Google-Smtp-Source: AGHT+IHhX9TEWUB84SFRhuZNXr7KhVPFBUH31IMkj66V/NmQ7Seh5e4nlfDjHV17LK9b77QMCKR7cQ==
-X-Received: by 2002:a17:907:86a4:b0:a3b:ad02:98b1 with SMTP id qa36-20020a17090786a400b00a3bad0298b1mr6506310ejc.10.1708037590040;
-        Thu, 15 Feb 2024 14:53:10 -0800 (PST)
-Received: from pinguine.lan (ip-176-198-146-182.um43.pools.vodafone-ip.de. [176.198.146.182])
-        by smtp.gmail.com with ESMTPSA id s6-20020a17090699c600b00a3d88bdf5aasm966467ejn.103.2024.02.15.14.53.09
+        d=1e100.net; s=20230601; t=1708037615; x=1708642415;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3LGmj+4Ox8DNbnQHN45Al/A5FlWzwlLmvFimBSFQ88o=;
+        b=A/elrnEyhjSZpGGqYXSbZpcFKtv/3ZU/IOw8SfKdB1IBGQw89aG/SUxdPU8k0fbG6m
+         FgBdyvJ0X27IlctWw59Pzo5fC+MdEY4EgogvG+hn0dDftRd/GOyzx4g+JYP8kyqoDhGo
+         RWpDCy+EOw+Zzy5sQOF5VJUxqnqnDaAn1u/swMA98zPJBwswfJXx61kj4uM4BWy8q9U/
+         hgWyFfZArJBtMKTBSNOtnoSiTp0W6tCjkBpcS5tbP4yNUewerxOsm+KKybWnhxo9iVHE
+         fl9C5Zw5cZR7oK8hRPC0PC/6qrSSeE8t3F6/Oq/hbyBMqzrprLw8U8G4gQ7Noh4OV0ve
+         WaWw==
+X-Forwarded-Encrypted: i=1; AJvYcCVwRgTNepVl4MP2jM8QPQDSCOyU5lzlVxoiVXL7Qq+xRivv+6ZDk9K9cWqVY/wE52kVC/OCtocLP0WpCiFjbBmYZEDZ3l8YFY8dRziBnInj/ncp3hN0jOOlzftHFMUXwFn28/7RtLyQ
+X-Gm-Message-State: AOJu0YwglgCZXZmQ+6ZdfD6XF0Se7pFQoJE6T+kuv8bCx1EoSVRaY6q+
+	EQWAHOi9sXB1+cDSMmo96nexFKwkObl+ewT8EZaOR+fFSj1uLkB6
+X-Google-Smtp-Source: AGHT+IHynkdzBL+6w805/MNC3X+1JCGgVdnQ1SYu5l7m8zh13dbhAhq1No1F0QgY2V54D9ytwVyRJQ==
+X-Received: by 2002:a05:620a:491a:b0:787:2f14:553 with SMTP id vy26-20020a05620a491a00b007872f140553mr3219040qkn.18.1708037615202;
+        Thu, 15 Feb 2024 14:53:35 -0800 (PST)
+Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id oq27-20020a05620a611b00b007873ee07d53sm249933qkn.3.2024.02.15.14.53.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Feb 2024 14:53:09 -0800 (PST)
-From: "Moritz C. Weber" <mo.c.weber@gmail.com>
-To: florian.fainelli@broadcom.com
-Cc: linux-staging@lists.linux.dev,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	"Moritz C. Weber" <mo.c.weber@gmail.com>
-Subject: [PATCH 2/3] Staging: vc04_services: bcm2835-camera: fixed several brace coding style checks
-Date: Thu, 15 Feb 2024 23:52:49 +0100
-Message-Id: <20240215225249.11010-1-mo.c.weber@gmail.com>
-X-Mailer: git-send-email 2.30.2
+        Thu, 15 Feb 2024 14:53:34 -0800 (PST)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id 0D90A1200064;
+	Thu, 15 Feb 2024 17:53:34 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Thu, 15 Feb 2024 17:53:34 -0500
+X-ME-Sender: <xms:7JXOZRgBZ6aQD34AAZvPjtJwHBOQ9VoQkcGtL2iZkmkI6i4KORBtig>
+    <xme:7JXOZWAj7X6GdnatCF4Bia4OYKoupYbrdBjdZK5_3I53TraAimTwOkECjYRF8OtYl
+    s-9EyJkn7TbmAGZNw>
+X-ME-Received: <xmr:7JXOZRGooOx8ojHlMoguVQtDYJlAbzyIfnrMvmtmh7CdJC9k05nkfHt2Srs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddugddtgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
+    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
+    htvghrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveeiudff
+    iedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsg
+    hoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieeg
+    qddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigi
+    hmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:7JXOZWRB9gnKnXRCM5WtHIiiImXExo7DMhDEwZFxa3_8t_G_ybSbpw>
+    <xmx:7JXOZexzDbm7mFeu7TXHxO6yq_nQalDfXQEphWnUPjqtNxEQGRumBQ>
+    <xmx:7JXOZc7_VufFMtdKx38UmibPUU0UlaCv8cXoVx2ryKHTRt5uePXc2Q>
+    <xmx:7pXOZVo1uyRzZmJzaTduCOd5hMSENvLpwAdrXNGikp-VoMmqzQe3Y07q6nU>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 15 Feb 2024 17:53:32 -0500 (EST)
+Date: Thu, 15 Feb 2024 14:53:28 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC] efi: Add ACPI_MEMORY_NVS into the linear map
+Message-ID: <Zc6V6GnSQ_q1OAFC@boqun-archlinux>
+References: <20240215225116.3435953-1-boqun.feng@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240215225116.3435953-1-boqun.feng@gmail.com>
 
-Fixed coding style checks raised by checkpatch
+(Cc the correct arm mailing list)
 
-Signed-off-by: Moritz C. Weber <mo.c.weber@gmail.com>
----
- .../vc04_services/bcm2835-camera/controls.c        | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/staging/vc04_services/bcm2835-camera/controls.c b/drivers/staging/vc04_services/bcm2835-camera/controls.c
-index 6bce45925..e670226f1 100644
---- a/drivers/staging/vc04_services/bcm2835-camera/controls.c
-+++ b/drivers/staging/vc04_services/bcm2835-camera/controls.c
-@@ -533,17 +533,15 @@ static int ctrl_set_image_effect(struct bcm2835_mmal_dev *dev,
- 
- 		control = &dev->component[COMP_CAMERA]->control;
- 
--		ret = vchiq_mmal_port_parameter_set(
--				dev->instance, control,
--				MMAL_PARAMETER_IMAGE_EFFECT_PARAMETERS,
--				&imagefx, sizeof(imagefx));
-+		ret = vchiq_mmal_port_parameter_set(dev->instance, control,
-+						    MMAL_PARAMETER_IMAGE_EFFECT_PARAMETERS,
-+						    &imagefx, sizeof(imagefx));
- 		if (ret)
- 			goto exit;
- 
--		ret = vchiq_mmal_port_parameter_set(
--				dev->instance, control,
--				MMAL_PARAMETER_COLOUR_EFFECT,
--				&dev->colourfx, sizeof(dev->colourfx));
-+		ret = vchiq_mmal_port_parameter_set(dev->instance, control,
-+						    MMAL_PARAMETER_COLOUR_EFFECT,
-+						    &dev->colourfx, sizeof(dev->colourfx));
- 	}
- 
- exit:
--- 
-2.30.2
-
+On Thu, Feb 15, 2024 at 02:51:06PM -0800, Boqun Feng wrote:
+> Currently ACPI_MEMORY_NVS is omitted from the linear map, which causes
+> a trouble with the following firmware memory region setup:
+> 
+> 	[..] efi:   0x0000dfd62000-0x0000dfd83fff [ACPI Reclaim|...]
+> 	[..] efi:   0x0000dfd84000-0x0000dfd87fff [ACPI Mem NVS|...]
+> 
+> , on ARM64 with 64k page size, the whole 0x0000dfd80000-0x0000dfd8ffff
+> range will be omitted from the the linear map due to 64k round-up. And
+> a page fault happens when trying to access the ACPI_RECLAIM_MEMORY:
+> 
+> 	[...] Unable to handle kernel paging request at virtual address ffff0000dfd80000
+> 
+> To fix this, add ACPI_MEMORY_NVS into the linear map.
+> 
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> Cc: stable@vger.kernel.org # 5.15+
+> ---
+> We hit this in an ARM64 Hyper-V VM when using 64k page size, although
+> this issue may also be fixed if the efi memory regions are all 64k
+> aligned, but I don't find this memory region setup is invalid per UEFI
+> spec, also I don't find that spec disallows ACPI_MEMORY_NVS to be mapped
+> in the OS linear map, but if there is any better way or I'm reading the
+> spec incorrectly, please let me know.
+> 
+> It's Cced stable since 5.15 because that's when Hyper-V ARM64 support is
+> added, and Hyper-V is the only one that hits the problem so far.
+> 
+>  drivers/firmware/efi/efi-init.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/firmware/efi/efi-init.c b/drivers/firmware/efi/efi-init.c
+> index a00e07b853f2..9a1b9bc66d50 100644
+> --- a/drivers/firmware/efi/efi-init.c
+> +++ b/drivers/firmware/efi/efi-init.c
+> @@ -139,6 +139,7 @@ static __init int is_usable_memory(efi_memory_desc_t *md)
+>  	case EFI_LOADER_CODE:
+>  	case EFI_LOADER_DATA:
+>  	case EFI_ACPI_RECLAIM_MEMORY:
+> +	case EFI_ACPI_MEMORY_NVS:
+>  	case EFI_BOOT_SERVICES_CODE:
+>  	case EFI_BOOT_SERVICES_DATA:
+>  	case EFI_CONVENTIONAL_MEMORY:
+> @@ -202,8 +203,12 @@ static __init void reserve_regions(void)
+>  			if (!is_usable_memory(md))
+>  				memblock_mark_nomap(paddr, size);
+>  
+> -			/* keep ACPI reclaim memory intact for kexec etc. */
+> -			if (md->type == EFI_ACPI_RECLAIM_MEMORY)
+> +			/*
+> +			 * keep ACPI reclaim and NVS memory and intact for kexec
+> +			 * etc.
+> +			 */
+> +			if (md->type == EFI_ACPI_RECLAIM_MEMORY ||
+> +			    md->type == EFI_ACPI_MEMORY_NVS)
+>  				memblock_reserve(paddr, size);
+>  		}
+>  	}
+> -- 
+> 2.43.0
+> 
