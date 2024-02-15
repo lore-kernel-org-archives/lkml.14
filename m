@@ -1,134 +1,155 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B7D137C5E
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 16:08:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777B51339A9;
+	Thu, 15 Feb 2024 16:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708013307; cv=none; b=qLsCjIbxNmcCnvovtw+ZR5a//Rbydr3q6nlksCqYyfwc138E0aYn02Rc+SCn2OQ9kii7MoTOm98SIbwEW6IvA6tAlRkVnPurL5PCTeLwQlxJtfLnuWmQdKC6kFQDurXLF57gku15ceKVtD1s5+IXHYvKTyqnx80+bchePNs7h9E=
+	t=1708013330; cv=none; b=MCIhCiy/YuLBqBdCm2gV2TMh3BDWi6oGvXWVvSJIqVBDW4DOBBmw8B+38YrQb36H2hHJE/Ug9B/yCEjcYE0apqqF1r3zybRC/2U2RBMX/gIoIbWKvugYVKVe1sXpg7jizXrTa9ZhlBewogS0dI/T+jx7lSbxgWAqJSKt4U8LAVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708013307; c=relaxed/simple;
-	bh=ur7gFVD70mLlwTc0wM06u3j1P5Yr4YCTQ5oi2mHpDZY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UJodG2l5nsOpzYMMzx9a89cWNiMdEIrgtJ9/nMcjUSnDcfGl0XfOS6OsQHEgIc1SvjtzMA86WpMQsghzfCtS8fK4YS13VkPkV0gXRLUeKu3cAMfuuLPiSmTV9wnTSrKGN7vnygAz7EX59V1e8WYeiv6b/vVCSnggIwW5fMcYtxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=K4d7CeIH; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="K4d7CeIH"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 7FA32240103
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 17:08:17 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1708013297; bh=ur7gFVD70mLlwTc0wM06u3j1P5Yr4YCTQ5oi2mHpDZY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:
-	 Content-Transfer-Encoding:From;
-	b=K4d7CeIHp5bVoLYhZFXM8a5mzWQhV+21BofAx3N1nnU+IBpNUsIgfLY2ImAdzA86+
-	 oXaDhkretH0gZd4Coo18EdKs+/e4ypEmDD6HOr4xpJ0iJELbfGQX9CHNI/K43XdpO2
-	 dTy/VS9ELeZn7WmM7u/f9tGMxf6grOAH+fhbSDfoHjvF5UtfRakY1KGw3IHX3B4mS/
-	 TFzt+BGGPw5qjgf3rcwhXAxDWmgnX2y+uD43lrRfHF/LuhPIIOLQWDGUeX3YZGlBC6
-	 H0xbdf+biBJKVlpafZbf7fBlDNhGcHmSF+qVIT1Rf/bqDtQkcMw3DoAQzUHAu7lKTV
-	 UW6owzfI/NwPg==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4TbKjT3ttfz9rxD;
-	Thu, 15 Feb 2024 17:08:13 +0100 (CET)
-From: Yueh-Shun Li <shamrocklee@posteo.net>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Mark Brown <broonie@kernel.org>
-Cc: Yueh-Shun Li <shamrocklee@posteo.net>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] minmax: substitute local variables using __UNIQUE_ID()
-Date: Thu, 15 Feb 2024 16:07:21 +0000
-Message-ID: <20240215160726.2254451-1-shamrocklee@posteo.net>
+	s=arc-20240116; t=1708013330; c=relaxed/simple;
+	bh=oG6XQpiguIejDhBna2Kjxoiz9TbXaIQMa+9CRNJEo5k=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=god0upz6gD373yJSEVVNhb+AbDghSGqRUUiiTLDhUQtrzQpjIr3SxItGP8L7yy2T3f+JvtCk2dQzZJ1+Wsp2VUixoXw+dCfK44wkqh1VDZ8ZKmmviLVEx1GrHh9x6sqnsZZhufQty5ar8qHjucVVXlK5MBUrLY7HnNWYa/kWy4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F360C433F1;
+	Thu, 15 Feb 2024 16:08:48 +0000 (UTC)
+Date: Thu, 15 Feb 2024 11:10:21 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
+ <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+ bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, Alexei
+ Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
+ <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v7 25/36] arm64: ftrace: Enable
+ HAVE_FUNCTION_GRAPH_FREGS
+Message-ID: <20240215111021.05163ba1@gandalf.local.home>
+In-Reply-To: <170723232647.502590.10808588686838195094.stgit@devnote2>
+References: <170723204881.502590.11906735097521170661.stgit@devnote2>
+	<170723232647.502590.10808588686838195094.stgit@devnote2>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Substitute identifier names of local variables used in macro
-definitions inside minmax.h with those generated by __UNIQUE_ID(prefix)
-to eliminate passible naming collisions.
+On Wed,  7 Feb 2024 00:12:06 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-Identifier names like __x, __y and __tmp are everywhere inside the
-kernel source. This patch ensures that macros provided by minmax.h
-will work even when identifiers of these names appear in the expanded
-input arguments.
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Enable CONFIG_HAVE_FUNCTION_GRAPH_FREGS on arm64. Note that this
+> depends on HAVE_DYNAMIC_FTRACE_WITH_ARGS which is enabled if the
+> compiler supports "-fpatchable-function-entry=2". If not, it
+> continue to use ftrace_ret_regs.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  Changes in v3:
+>    - Newly added.
+> ---
+>  arch/arm64/Kconfig               |    2 ++
+>  arch/arm64/include/asm/ftrace.h  |    6 ++++++
+>  arch/arm64/kernel/entry-ftrace.S |   28 ++++++++++++++++++++++++++++
+>  3 files changed, 36 insertions(+)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index aa7c1d435139..34becd41ae66 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -194,6 +194,8 @@ config ARM64
+>  	select HAVE_DYNAMIC_FTRACE
+>  	select HAVE_DYNAMIC_FTRACE_WITH_ARGS \
+>  		if $(cc-option,-fpatchable-function-entry=2)
+> +	select HAVE_FUNCTION_GRAPH_FREGS \
+> +		if HAVE_DYNAMIC_FTRACE_WITH_ARGS
+>  	select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS \
+>  		if DYNAMIC_FTRACE_WITH_ARGS && DYNAMIC_FTRACE_WITH_CALL_OPS
+>  	select HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS \
+> diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
+> index ab158196480c..efd5dbf74dd6 100644
+> --- a/arch/arm64/include/asm/ftrace.h
+> +++ b/arch/arm64/include/asm/ftrace.h
+> @@ -131,6 +131,12 @@ ftrace_regs_set_return_value(struct ftrace_regs *fregs,
+>  	fregs->regs[0] = ret;
+>  }
+>  
+> +static __always_inline unsigned long
+> +ftrace_regs_get_frame_pointer(struct ftrace_regs *fregs)
+> +{
+> +	return fregs->fp;
+> +}
+> +
+>  static __always_inline void
+>  ftrace_override_function_with_return(struct ftrace_regs *fregs)
+>  {
+> diff --git a/arch/arm64/kernel/entry-ftrace.S b/arch/arm64/kernel/entry-ftrace.S
+> index f0c16640ef21..d87ccdb9e678 100644
+> --- a/arch/arm64/kernel/entry-ftrace.S
+> +++ b/arch/arm64/kernel/entry-ftrace.S
+> @@ -328,6 +328,33 @@ SYM_FUNC_END(ftrace_stub_graph)
+>   * Run ftrace_return_to_handler() before going back to parent.
+>   * @fp is checked against the value passed by ftrace_graph_caller().
+>   */
+> +#ifdef CONFIG_HAVE_FUNCTION_GRAPH_FREGS
+> +SYM_CODE_START(return_to_handler)
+> +	/* save ftrace_regs except for PC */
+> +	sub	sp, sp, #FREGS_SIZE
+> +	stp	x0, x1, [sp, #FREGS_X0]
+> +	stp	x2, x3, [sp, #FREGS_X2]
+> +	stp	x4, x5, [sp, #FREGS_X4]
+> +	stp	x6, x7, [sp, #FREGS_X6]
+> +	str	x8,     [sp, #FREGS_X8]
+> +	str	x29, [sp, #FREGS_FP]
+> +	str	x9,  [sp, #FREGS_LR]
+> +	str	x10, [sp, #FREGS_SP]
 
-Signed-off-by: Yueh-Shun Li <shamrocklee@posteo.net>
----
- include/linux/minmax.h | 41 ++++++++++++++++++++++++++++-------------
- 1 file changed, 28 insertions(+), 13 deletions(-)
+Here too. The above is just garbage.
 
-diff --git a/include/linux/minmax.h b/include/linux/minmax.h
-index 2ec559284a9f..70b740b76f73 100644
---- a/include/linux/minmax.h
-+++ b/include/linux/minmax.h
-@@ -129,10 +129,14 @@
-  * @x: value1
-  * @y: value2
-  */
--#define min_not_zero(x, y) ({			\
--	typeof(x) __x = (x);			\
--	typeof(y) __y = (y);			\
--	__x == 0 ? __y : ((__y == 0) ? __x : min(__x, __y)); })
-+#define min_not_zero(x, y) \
-+	__min_not_zero_impl(x, y, __UNIQUE_ID(__x), __UNIQUE_ID(__y))
-+#define __min_not_zero_impl(x, y, __x, __y)                          \
-+	({                                                           \
-+		typeof(x) __x = (x);                                 \
-+		typeof(y) __y = (y);                                 \
-+		__x == 0 ? __y : ((__y == 0) ? __x : min(__x, __y)); \
-+	})
- 
- /**
-  * clamp - return a value clamped to a given range with strict typechecking
-@@ -185,13 +189,19 @@
-  * typeof() keeps the const qualifier. Use __unqual_scalar_typeof() in order
-  * to discard the const qualifier for the __element variable.
-  */
--#define __minmax_array(op, array, len) ({				\
--	typeof(&(array)[0]) __array = (array);				\
--	typeof(len) __len = (len);					\
--	__unqual_scalar_typeof(__array[0]) __element = __array[--__len];\
--	while (__len--)							\
--		__element = op(__element, __array[__len]);		\
--	__element; })
-+#define __minmax_array(op, array, len)                            \
-+	__minmax_array_impl(op, array, len, __UNIQUE_ID(__array), \
-+			    __UNIQUE_ID(__len), __UNIQUE_ID(__element))
-+#define __minmax_array_impl(op, array, len, __array, __len, __element) \
-+	({                                                             \
-+		typeof(&(array)[0]) __array = (array);                 \
-+		typeof(len) __len = (len);                             \
-+		__unqual_scalar_typeof(__array[0])                     \
-+			__element = __array[--__len];                  \
-+		while (__len--)                                        \
-+			__element = op(__element, __array[__len]);     \
-+		__element;                                             \
-+	})
- 
- /**
-  * min_array - return minimum of values present in an array
-@@ -267,7 +277,12 @@ static inline bool in_range32(u32 val, u32 start, u32 len)
-  * @a: first value
-  * @b: second value
-  */
--#define swap(a, b) \
--	do { typeof(a) __tmp = (a); (a) = (b); (b) = __tmp; } while (0)
-+#define swap(a, b) __swap_impl(a, b, __UNIQUE_ID(__tmp))
-+#define __swap_impl(a, b, __tmp)       \
-+	do {                           \
-+		typeof(a) __tmp = (a); \
-+		(a) = (b);             \
-+		(b) = __tmp;           \
-+	} while (0)
- 
- #endif	/* _LINUX_MINMAX_H */
--- 
-2.42.0
+Let's not fill in garbarge registers. The above is useless on return of a
+function. Heck, adding zeros is better than this. But really, we need to
+have ftrace regs to have some kind of flag that can state what it holds.
+Right now I see three states:
+
+ 1 - holds all regs and pt_regs can be retrieved
+ 2 - only holds function entry regs (parameters and stack)
+ 3 - only holds function exit regs (return value and stack)
+
+Don't save anything else unless needed.
+
+-- Steve
+
+> +
+> +	mov	x0, sp
+> +	bl	ftrace_return_to_handler	// addr = ftrace_return_to_hander(fregs);
+> +	mov	x30, x0				// restore the original return address
+> +
+> +	/* restore return value regs */
+> +	ldp x0, x1, [sp, #FREGS_X0]
+> +	ldp x2, x3, [sp, #FREGS_X2]
+> +	ldp x4, x5, [sp, #FREGS_X4]
+> +	ldp x6, x7, [sp, #FREGS_X6]
+> +	add sp, sp, #FREGS_SIZE
+> +
+> +	ret
+> +SYM_CODE_END(return_to_handler)
+> +#else /* !CONFIG_HAVE_FUNCTION_GRAPH_FREGS */
+>  SYM_CODE_START(return_to_handler)
+>  	/* save return value regs */
+>  	sub sp, sp, #FGRET_REGS_SIZE
+> @@ -350,4 +377,5 @@ SYM_CODE_START(return_to_handler)
+>  
+>  	ret
+>  SYM_CODE_END(return_to_handler)
+> +#endif /* CONFIG_HAVE_FUNCTION_GRAPH_FREGS */
+>  #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
 
