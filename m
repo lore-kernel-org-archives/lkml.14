@@ -1,100 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C566212B162;
-	Thu, 15 Feb 2024 12:58:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D02B12B162;
+	Thu, 15 Feb 2024 12:59:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708001933; cv=none; b=g7LnPkp9zdptm+dEvjlHPSoVDldGhB9UO0iVCOjedJXyNjuXDq2BeOPIZq5hwCCfJPPNO82DarpU2bIGJLjC8EX37ZW6a4X5hWQSHMGNvAB+Mzt2AJkmNR1e8XikL7GIsgp1MtBAnm80Ub74A1yobmBjHJxfgtRCZVCrrw1elww=
+	t=1708001956; cv=none; b=KW+VAk/dnG+3RgI5uhEtjX5O6X/UH0azEYtvJjfwDLqvsEZbyKB0frChkZJnWKTdO2vTS8+uME7lVwqyc2DhaBij/KbnDZEK6NkcMyaweYWzBqXVLNKIqj9Xs6/Xalp2O/52jPVb29UNQ9KkQA+606TeKO4JxxSCtPNW3pR1thU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708001933; c=relaxed/simple;
-	bh=Ad/rzeg0qm+b8E72/V5gLfBzXXiMiZDjEciTC6pPZ+M=;
+	s=arc-20240116; t=1708001956; c=relaxed/simple;
+	bh=t2wWwdv8gsHGUFU9xSsq2sd3TsOFW6DhmUhaco8Iz/k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TSPzFhM8yRiRu6RBOr3xgTR6MdWOx0oM+9uqm8MocUHPTo31Cj1TqPVwJ29SBa9TeN96MVlPq4iNUMKiFHFMl3V8x8DiIPesQG5vQ4fNm5KSIF/Cac52RnE2azZQ41fSrCUUpp5nMUs3XiX+moWwjGGaRmmAltduOnSauaARehA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=KSpbnvKz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=uS8DTLWv3KOFXU0z7ZSLDOaUYLl8se5mFkENhcnJrk0cNTt4fi617OIolhsBAMCzjbH3Hi4/UuVQm+A/hGeNNo66XlcbFL8Bz2+yJaxDG84Vwduy2f1+zh60lyz6PPS8jpHxlVBwTOzqQvQplBIsjFyiOOF6IHLaOdDutTPWzBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iefFi7C0; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="KSpbnvKz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C564EC433F1;
-	Thu, 15 Feb 2024 12:58:50 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="KSpbnvKz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1708001929;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dsxfcdPhD8kEeco8ZBp7CrkSEujEWrVukxbbEuEYW4M=;
-	b=KSpbnvKzEbTsf3lyoqZVbKXYcOb0fjXmc8hoHRG/bglLZ20AuWeR/meJcQb1fLN8cv2zVb
-	c9rvaJgbwrw8hLuUNPNSafs3KnvRFXTKZCvBZ9xeeQryDN1c+qySTFjzPpkmvSeAzss8Ii
-	/DRRfnIN6ggqZ3N21gDSKiNZTK5rA78=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id e0407208 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Thu, 15 Feb 2024 12:58:48 +0000 (UTC)
-Date: Thu, 15 Feb 2024 13:58:47 +0100
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: "Reshetova, Elena" <elena.reshetova@intel.com>
-Cc: Theodore Ts'o <tytso@mit.edu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	"H. Peter Anvin" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	"Nakajima, Jun" <jun.nakajima@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"Kalra, Ashish" <ashish.kalra@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] x86/random: Retry on RDSEED failure
-Message-ID: <Zc4Kh6IPHYM56IcS@zx2c4.com>
-References: <DM8PR11MB5750C7D16DC566CD1329D5A5E77C2@DM8PR11MB5750.namprd11.prod.outlook.com>
- <CAHmME9q-eUXnXnpaDu0VOQemOYysst7SaJ-=b8-vCFP9h50Szg@mail.gmail.com>
- <20240201045710.GD2356784@mit.edu>
- <CAHmME9oqM2a766dBK22-yKr8=2-icg=UkQzmBOF8G5Zh_Y9E9w@mail.gmail.com>
- <DM8PR11MB57505F657A8F08E15DC34673E7422@DM8PR11MB5750.namprd11.prod.outlook.com>
- <DM8PR11MB57503A2BB6F74618D64CC44AE74E2@DM8PR11MB5750.namprd11.prod.outlook.com>
- <Zcz2r51Tbb44ywjl@zx2c4.com>
- <DM8PR11MB57503E654C8A0E9A41CB68AFE74E2@DM8PR11MB5750.namprd11.prod.outlook.com>
- <Zc0VW_NQGLWCSJwF@zx2c4.com>
- <DM8PR11MB5750D504AC62AA407441901BE74D2@DM8PR11MB5750.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iefFi7C0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708001955; x=1739537955;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=t2wWwdv8gsHGUFU9xSsq2sd3TsOFW6DhmUhaco8Iz/k=;
+  b=iefFi7C0MRtreJf89kqJ06Rd5laIHk1eVTRl3MFQ5lH/w5YvGjq20BuF
+   v/uC+xXHS2xbosdBnLqhO+jkO5AGQ7W9SWkObwrx3hu1/wfakz3WqFBwm
+   jg8E0l2AsXQk4o0MHr9kCST4IKBWI9OU4IELuv9zKBSifp+7qV+QGlo04
+   x18UTaepxfuleSjSxOVr3lWFNcTxVgP1joCwwftnbNLO2LIqAGpZyFQ0c
+   2+e4o0P8zpX72HtiuIZv7+tCoEUBueypBcQ/Pm9GwuIF4BOgTrHP0PquC
+   t9qxZJQmNkAsMJpOq0PNqYZ+ZVcZNglv92Xucx8YMUkMdyJIbWLS3fThI
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="1961394"
+X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
+   d="scan'208";a="1961394"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 04:59:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
+   d="scan'208";a="8227918"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 04:59:12 -0800
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 0535111F871;
+	Thu, 15 Feb 2024 14:53:09 +0200 (EET)
+Date: Thu, 15 Feb 2024 12:53:09 +0000
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Umang Jain <umang.jain@ideasonboard.com>
+Cc: linux-media@vger.kernel.org,
+	Kieran Bingham <kieran.bingham@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 3/5] media: i2c: imx335: Support multiple link
+ frequency
+Message-ID: <Zc4JNYxvLCfkyQKb@kekkonen.localdomain>
+References: <20240131055208.170934-1-umang.jain@ideasonboard.com>
+ <20240131055208.170934-4-umang.jain@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DM8PR11MB5750D504AC62AA407441901BE74D2@DM8PR11MB5750.namprd11.prod.outlook.com>
+In-Reply-To: <20240131055208.170934-4-umang.jain@ideasonboard.com>
 
-On Thu, Feb 15, 2024 at 07:07:45AM +0000, Reshetova, Elena wrote:
-> > You said that RDRAND is faster than the bus, so failures won't be
-> > observable, while RDSEED is not because it requires collecting entropy
-> > from the ether which is slow. That makes intuitive sense on a certain
-> > dumb simplistic level: AES is just an algorithm so is fast, while
-> > entropy collection is a more physical thing so is slow. But if you read
-> > the implementation details, RDRAND is supposed to reseed after 511
-> > calls. So what's to stop you from exhausting RDSEED in one place, while
-> > also getting RDRAND to the end of its 511 calls, and *then* having your
-> > victim make the subsequent RDRAND call, which tries to reseed (or is in
-> > progress of doing so), finds that RDSEED is out of batteries, and
-> > underflows? What's the magic detail that makes this scenario not
-> > possible?
+Hi Umang,
+
+On Wed, Jan 31, 2024 at 11:22:06AM +0530, Umang Jain wrote:
+> Support link frequency of 445MHz in addition to 594MHz.
+> Break out the register set specific to each data lane rate and also add
+> the general timing register set corresponding to the each data
+> lane rate.
 > 
-> This was on my list of scenarios to double check whenever it is possible
-> or not, and the answer is that it is not possible (at least for Intel).
-> This scenario is also briefly described in the public doc [1]:
-> 
-> " Note that the conditioner does not send the same seed values to both the
->  DRBG and the ENRNG. This pathway can be thought of as an alternating
-> switch, with one seed going to the DRGB and the next seed going to the ENRNG. 
-> *This construction ensures* that a software application can never obtain the
->  value used to seed the DRBG, *nor can it launch a Denial of Service (DoS) 
-> attack against the DRBG through repeated executions of the RDSEED instruction.*"
+> Signed-off-by: Umang Jain <umang.jain@ideasonboard.com>
 
-Interesting, and good to hear. So also implicit must be that the time
-required by 511 calls to RDRAND exceeds the reseeding time, so that you
-couldn't exhaust the seeds indirectly by flushing RDRAND.
+Please use the same subject line prefix (i.e. without "i2c: ").
 
-Jason
+-- 
+Regards,
+
+Sakari Ailus
