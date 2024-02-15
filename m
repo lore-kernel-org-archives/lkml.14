@@ -1,818 +1,138 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D5713849B
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 18:03:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A28B135A40;
+	Thu, 15 Feb 2024 18:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708020215; cv=none; b=FNlBYyt+pRdoT/VmKa6gJ2bDR0GNEsqLdDS8LdspxWTejVE/JEZ2dA3sKD+Wz8iopm3n2+JhQBbIdfEZ2OMYzF6+GJxiGVMF+gpHRt/Wc8K4a59OVYIG+kR3bCk0+Bt/EzP+NtBbMxBmTWMRSd7c8JWXn/HsFTdRSucyKzP1x24=
+	t=1708020269; cv=none; b=BpiYtl1CwAv1uBR+rQvye2YYcbn89TiSkPeUIyMYpa81dLZODF2w14XZGJ/+ICarTSuEAylIJ8U6LPpcri8hA4qys95KNAD136ntWrpNUq0fGHz+IGa6PZ2NPSqnw8VgcUrEun1ibO7BHpvzG9LJ3S1zUK1dpQZFlPHNxIPfEo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708020215; c=relaxed/simple;
-	bh=Txd+1IeG13ZW41fycKpLPUTBldOE5VLB5/uwpXHaSFM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Pvp5OlwWxp3O35BoakUmmaU04OE7V/YwS0m+DhNYp+hQFHfeheCyH6igGpe5TVP+d63RmMRfn2fCl3dxA7TnSHVGx8rZUdn0yiWHkIjnxciSHo5CIOfyaY4sySNfubHSuLsFBUe9/zk39ZTxk5RQ7NFevOIR2d8tkwAbgoEzt7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=postmarketos.org; spf=pass smtp.mailfrom=postmarketos.org; dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b=oYhuob+B; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=postmarketos.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=postmarketos.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b="oYhuob+B"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1708020210;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=u8OYjnytavyuK1ooZ6JVVOU4O9TdVVegn54cJnCjT7U=;
-	b=oYhuob+BNZXcll9D9W+zTJTpmaGMe/6lSTEdRm7wmXZPVfXbBCLB4+lVdE3fBECSTgQBpq
-	6Y53m4ygaZWn9VIGiMxmCvB3Vi42TMQkC6uAVkDne8ZLvJ5sQF0I0I4joMd5Y7FLSnn/TG
-	6Va6OOLns3TH8rdzkkSkI+swwTPiBLPPvtEUJTJfBieNV642Q2J7ot44j17LGsIcNEYY1L
-	PvdUKqSdt/Ridzpu9DYoT6ccShd/9nC9BlbGThw3Ljp7y3AKaC4R+IFSqqvf9uaLfFlTD/
-	sY4UQAfGrYwIginAVdaZP8383hti7Kt6Rbm73rvRmDxT5QtH8oDd7InVrHZ7zA==
-From: Stefan Hansson <newbyte@postmarketos.org>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: ~postmarketos/upstreaming@lists.sr.ht,
-	phone-devel@vger.kernel.org,
-	Stefan Hansson <newbyte@postmarketos.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v6 1/4] ARM: dts: qcom: samsung-matisse-common: Add initial common device tree
-Date: Thu, 15 Feb 2024 19:01:59 +0100
-Message-ID: <20240215180322.99089-2-newbyte@postmarketos.org>
-In-Reply-To: <20240215180322.99089-1-newbyte@postmarketos.org>
-References: <20240215180322.99089-1-newbyte@postmarketos.org>
+	s=arc-20240116; t=1708020269; c=relaxed/simple;
+	bh=OOdq3VXO7hmheUjpDNjJV2uW/HQVgnjzp9qxVRAt1Q4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t3JHiYjptI1O+TOVaA1Gq4Ni7YB2lKibv4+UNYEzJG+SmHbhW5TIaXv5ycDkME9Xu0C0NyEnh3stgmaMDZr2d/KNR46jTKArhaKvheuiGvdUC+M1NLgUvV8r4zo8KZ3Ksgoy307Tswbe914TRRjvZ/DznN1PYgNyjWHw0zfhqiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-59cbf204d52so125954eaf.1;
+        Thu, 15 Feb 2024 10:04:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708020267; x=1708625067;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Lb5qWV79xfsy1nob2raR3IdkShVhRb4uV1Pha2M3jlQ=;
+        b=dipl/1mVYsc0eLzzSW95xt0CHidvf9jEry0PnvBB2GhqnlhbjJKYauiZZqzdQrmApz
+         LgPsNuf2ucrPbFE98zTAsUexY9MQzlppJJC4fdp0zRijeKTY8nQJiPvPTUZCbr3LlWyd
+         fZe9wzfdO+uFxINL2lZSxDURiKf08/shYxqp2q+4lPivD7dJKHX5lCvsEKedIxhL89ss
+         eIUyZ6DhQ5aaoLo/MPoXqd0IqIUW+CcNASwtezO68U5RPgwNrKggQOgWPn0X0KMF30D7
+         PJ6mZ5OmASKtdjNioLVdhKln4IRS1pmb+9V7+EFW97gmw1t1K+Nap/vgTZ11UOgvQLku
+         U75Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUcf0cA/ftJkfCfsMx+Go1cbbOZ4e8ybMnTrA7mYhhE1wi7RfE1jSWwAnMKu0aaBOi4tkic12qsK5uAMwzelKG3TnJ8oGaMEtQ3OZMIxkqHGmzlKP8nuy4zhugDB3qSVsRTe9Wvm0HS8sr1/khsVfDu5uJpmfve9lo95CyLSYT7xC4qRzI=
+X-Gm-Message-State: AOJu0Yw/XMnWVyoFJ6zLMCMRSpFIuhQf5X4XqW8etlzh2RNLFNk9x3Gp
+	WU68kNO0GuOAgLQWheLncAgDX9z3b1u2Ww6sPrNG8iV4i1w1794L2VAVxSakXQGn9DCQwUAk1yg
+	eQ4TyhdLa3+MIw8ATP5QIk9usWTZIu4nd
+X-Google-Smtp-Source: AGHT+IFtgxPxCy0j7Fv+BWzHYBZiXW3bHFmfrbcpc91leSPMJZqEpf3xxW9UF1Qig/NKYHxMcHLKEG4GC2jON4Ds9O0=
+X-Received: by 2002:a4a:d5d8:0:b0:59c:d8cd:ecee with SMTP id
+ a24-20020a4ad5d8000000b0059cd8cdeceemr2219735oot.1.1708020266819; Thu, 15 Feb
+ 2024 10:04:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <6017196.lOV4Wx5bFT@kreacher> <22182690.EfDdHjke4D@kreacher>
+In-Reply-To: <22182690.EfDdHjke4D@kreacher>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 15 Feb 2024 19:04:15 +0100
+Message-ID: <CAJZ5v0i4i=OAj142eV3Vton5o25YzMF6x0ZSNFBOZgjWb1ccpg@mail.gmail.com>
+Subject: Re: [PATCH v2 6/9] wifi: iwlwifi: mvm: Set THERMAL_TRIP_FLAG_RW_TEMP directly
+To: Linux PM <linux-pm@vger.kernel.org>, 
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Cc: Lukasz Luba <lukasz.luba@arm.com>, LKML <linux-kernel@vger.kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Zhang Rui <rui.zhang@intel.com>, 
+	netdev@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
+	Ido Schimmel <idosch@nvidia.com>, Petr Machata <petrm@nvidia.com>, linux-wireless@vger.kernel.org, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Manaf Meethalavalappu Pallikunhi <quic_manafm@quicinc.com>, Kalle Valo <kvalo@kernel.org>, 
+	Johannes Berg <johannes@sipsolutions.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-According to the dts from the kernel source code released by Samsung,
-matissewifi and matisselte only have minor differences in hardware, so
-use a shared dtsi to reduce duplicated code. Additionally, this should
-make adding support for matisse3g easier should someone want to do that
-at a later point.
+On Mon, Feb 12, 2024 at 7:42=E2=80=AFPM Rafael J. Wysocki <rjw@rjwysocki.ne=
+t> wrote:
+>
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> It is now possible to flag trip points with THERMAL_TRIP_FLAG_RW_TEMP
+> to allow their temperature to be set from user space via sysfs instead
+> of using a nonzero writable trips mask during thermal zone registration,
+> so make the iwlwifi code do that.
+>
+> No intentional functional impact.
+>
+> Note that this change is requisite for dropping the mask argument from
+> thermal_zone_device_register_with_trips() going forward.
+>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>
+> v1 -> v2:
+>    * Rename trip flag (Stanislaw).
+>    * Fix coding mistake in iwl_mvm_thermal_zone_register().
+>    * Add "wifi:" prefix to the subject (Kalle).
 
-As such, add a common device tree for all matisse devices by Samsung
-based on the matissewifi dts. Support for matisselte will be introduced
-in a later patch in this series and will use the common dtsi as well.
+I think that all of the feedback on the v1 of this patch has been
+addressed, so are there any more concerns regarding it?
 
-Signed-off-by: Stefan Hansson <newbyte@postmarketos.org>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../qcom-apq8026-samsung-matisse-wifi.dts     | 609 +++---------------
- ... qcom-msm8226-samsung-matisse-common.dtsi} |  73 ---
- 2 files changed, 83 insertions(+), 599 deletions(-)
- rewrite arch/arm/boot/dts/qcom/qcom-apq8026-samsung-matisse-wifi.dts (84%)
- copy arch/arm/boot/dts/qcom/{qcom-apq8026-samsung-matisse-wifi.dts => qcom-msm8226-samsung-matisse-common.dtsi} (85%)
+If not, it would be nice to get an ACK for it, so it can be routed
+through the PM tree.
 
-diff --git a/arch/arm/boot/dts/qcom/qcom-apq8026-samsung-matisse-wifi.dts b/arch/arm/boot/dts/qcom/qcom-apq8026-samsung-matisse-wifi.dts
-dissimilarity index 84%
-index 0c28309c6cc5..ac8aef5f9d09 100644
---- a/arch/arm/boot/dts/qcom/qcom-apq8026-samsung-matisse-wifi.dts
-+++ b/arch/arm/boot/dts/qcom/qcom-apq8026-samsung-matisse-wifi.dts
-@@ -1,526 +1,83 @@
--// SPDX-License-Identifier: BSD-3-Clause
--/*
-- * Copyright (c) 2022, Matti Lehtimäki <matti.lehtimaki@gmail.com>
-- */
--
--/dts-v1/;
--
--#include <dt-bindings/input/input.h>
--#include "qcom-msm8226.dtsi"
--#include "pm8226.dtsi"
--
--/delete-node/ &adsp_region;
--/delete-node/ &smem_region;
--
--/ {
--	model = "Samsung Galaxy Tab 4 10.1";
--	compatible = "samsung,matisse-wifi", "qcom,apq8026";
--	chassis-type = "tablet";
--
--	aliases {
--		mmc0 = &sdhc_1; /* SDC1 eMMC slot */
--		mmc1 = &sdhc_2; /* SDC2 SD card slot */
--		display0 = &framebuffer0;
--	};
--
--	chosen {
--		#address-cells = <1>;
--		#size-cells = <1>;
--		ranges;
--
--		stdout-path = "display0";
--
--		framebuffer0: framebuffer@3200000 {
--			compatible = "simple-framebuffer";
--			reg = <0x03200000 0x800000>;
--			width = <1280>;
--			height = <800>;
--			stride = <(1280 * 3)>;
--			format = "r8g8b8";
--		};
--	};
--
--	gpio-hall-sensor {
--		compatible = "gpio-keys";
--
--		event-hall-sensor {
--			label = "Hall Effect Sensor";
--			gpios = <&tlmm 110 GPIO_ACTIVE_LOW>;
--			linux,input-type = <EV_SW>;
--			linux,code = <SW_LID>;
--			debounce-interval = <15>;
--			linux,can-disable;
--			wakeup-source;
--		};
--	};
--
--	gpio-keys {
--		compatible = "gpio-keys";
--		autorepeat;
--
--		key-home {
--			label = "Home";
--			gpios = <&tlmm 108 GPIO_ACTIVE_LOW>;
--			linux,code = <KEY_HOMEPAGE>;
--			debounce-interval = <15>;
--		};
--
--		key-volume-down {
--			label = "Volume Down";
--			gpios = <&tlmm 107 GPIO_ACTIVE_LOW>;
--			linux,code = <KEY_VOLUMEDOWN>;
--			debounce-interval = <15>;
--		};
--
--		key-volume-up {
--			label = "Volume Up";
--			gpios = <&tlmm 106 GPIO_ACTIVE_LOW>;
--			linux,code = <KEY_VOLUMEUP>;
--			debounce-interval = <15>;
--		};
--	};
--
--	i2c-backlight {
--		compatible = "i2c-gpio";
--		sda-gpios = <&tlmm 20 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
--		scl-gpios = <&tlmm 21 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
--
--		pinctrl-0 = <&backlight_i2c_default_state>;
--		pinctrl-names = "default";
--
--		i2c-gpio,delay-us = <4>;
--
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		backlight@2c {
--			compatible = "ti,lp8556";
--			reg = <0x2c>;
--
--			dev-ctrl = /bits/ 8 <0x80>;
--			init-brt = /bits/ 8 <0x3f>;
--
--			pwms = <&backlight_pwm 0 100000>;
--			pwm-names = "lp8556";
--
--			rom-a0h {
--				rom-addr = /bits/ 8 <0xa0>;
--				rom-val = /bits/ 8 <0x44>;
--			};
--
--			rom-a1h {
--				rom-addr = /bits/ 8 <0xa1>;
--				rom-val = /bits/ 8 <0x6c>;
--			};
--
--			rom-a5h {
--				rom-addr = /bits/ 8 <0xa5>;
--				rom-val = /bits/ 8 <0x24>;
--			};
--		};
--	};
--
--	backlight_pwm: pwm {
--		compatible = "clk-pwm";
--		#pwm-cells = <2>;
--		clocks = <&mmcc CAMSS_GP0_CLK>;
--		pinctrl-0 = <&backlight_pwm_default_state>;
--		pinctrl-names = "default";
--	};
--
--	reg_tsp_1p8v: regulator-tsp-1p8v {
--		compatible = "regulator-fixed";
--		regulator-name = "tsp_1p8v";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <1800000>;
--
--		gpio = <&tlmm 31 GPIO_ACTIVE_HIGH>;
--		enable-active-high;
--
--		pinctrl-names = "default";
--		pinctrl-0 = <&tsp_en_default_state>;
--	};
--
--	reg_tsp_3p3v: regulator-tsp-3p3v {
--		compatible = "regulator-fixed";
--		regulator-name = "tsp_3p3v";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
--
--		gpio = <&tlmm 73 GPIO_ACTIVE_HIGH>;
--		enable-active-high;
--
--		pinctrl-names = "default";
--		pinctrl-0 = <&tsp_en1_default_state>;
--	};
--
--	reserved-memory {
--		#address-cells = <1>;
--		#size-cells = <1>;
--		ranges;
--
--		framebuffer@3200000 {
--			reg = <0x03200000 0x800000>;
--			no-map;
--		};
--
--		mpss@8400000 {
--			reg = <0x08400000 0x1f00000>;
--			no-map;
--		};
--
--		mba@a300000 {
--			reg = <0x0a300000 0x100000>;
--			no-map;
--		};
--
--		reserved@cb00000 {
--			reg = <0x0cb00000 0x700000>;
--			no-map;
--		};
--
--		wcnss@d200000 {
--			reg = <0x0d200000 0x700000>;
--			no-map;
--		};
--
--		adsp_region: adsp@d900000 {
--			reg = <0x0d900000 0x1800000>;
--			no-map;
--		};
--
--		venus@f100000 {
--			reg = <0x0f100000 0x500000>;
--			no-map;
--		};
--
--		smem_region: smem@fa00000 {
--			reg = <0x0fa00000 0x100000>;
--			no-map;
--		};
--
--		reserved@fb00000 {
--			reg = <0x0fb00000 0x260000>;
--			no-map;
--		};
--
--		rfsa@fd60000 {
--			reg = <0x0fd60000 0x20000>;
--			no-map;
--		};
--
--		rmtfs@fd80000 {
--			compatible = "qcom,rmtfs-mem";
--			reg = <0x0fd80000 0x180000>;
--			no-map;
--
--			qcom,client-id = <1>;
--		};
--	};
--};
--
--&adsp {
--	status = "okay";
--};
--
--&blsp1_i2c2 {
--	status = "okay";
--
--	accelerometer@1d {
--		compatible = "st,lis2hh12";
--		reg = <0x1d>;
--
--		interrupt-parent = <&tlmm>;
--		interrupts = <54 IRQ_TYPE_LEVEL_HIGH>;
--
--		pinctrl-names = "default";
--		pinctrl-0 = <&accel_int_default_state>;
--
--		st,drdy-int-pin = <1>;
--
--		vdd-supply = <&pm8226_l19>;
--		vddio-supply = <&pm8226_lvs1>;
--	};
--};
--
--&blsp1_i2c4 {
--	status = "okay";
--
--	muic: usb-switch@25 {
--		compatible = "siliconmitus,sm5502-muic";
--		reg = <0x25>;
--
--		interrupt-parent = <&tlmm>;
--		interrupts = <67 IRQ_TYPE_EDGE_FALLING>;
--
--		pinctrl-names = "default";
--		pinctrl-0 = <&muic_int_default_state>;
--	};
--};
--
--&blsp1_i2c5 {
--	status = "okay";
--
--	touchscreen@4a {
--		compatible = "atmel,maxtouch";
--		reg = <0x4a>;
--
--		interrupt-parent = <&tlmm>;
--		interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
--
--		linux,keycodes = <KEY_RESERVED>,
--				 <KEY_RESERVED>,
--				 <KEY_RESERVED>,
--				 <KEY_RESERVED>,
--				 <KEY_APPSELECT>,
--				 <KEY_BACK>;
--
--		pinctrl-names = "default";
--		pinctrl-0 = <&tsp_int_rst_default_state>;
--
--		reset-gpios = <&pm8226_gpios 6 GPIO_ACTIVE_LOW>;
--
--		vdd-supply = <&reg_tsp_1p8v>;
--		vdda-supply = <&reg_tsp_3p3v>;
--	};
--};
--
--&rpm_requests {
--	regulators {
--		compatible = "qcom,rpm-pm8226-regulators";
--
--		pm8226_s3: s3 {
--			regulator-min-microvolt = <1200000>;
--			regulator-max-microvolt = <1300000>;
--		};
--
--		pm8226_s4: s4 {
--			regulator-min-microvolt = <1800000>;
--			regulator-max-microvolt = <1800000>;
--		};
--
--		pm8226_s5: s5 {
--			regulator-min-microvolt = <1150000>;
--			regulator-max-microvolt = <1150000>;
--		};
--
--		pm8226_l1: l1 {
--			regulator-min-microvolt = <1225000>;
--			regulator-max-microvolt = <1225000>;
--		};
--
--		pm8226_l2: l2 {
--			regulator-min-microvolt = <1200000>;
--			regulator-max-microvolt = <1200000>;
--		};
--
--		pm8226_l3: l3 {
--			regulator-min-microvolt = <750000>;
--			regulator-max-microvolt = <1337500>;
--			regulator-always-on;
--		};
--
--		pm8226_l4: l4 {
--			regulator-min-microvolt = <1200000>;
--			regulator-max-microvolt = <1200000>;
--		};
--
--		pm8226_l5: l5 {
--			regulator-min-microvolt = <1200000>;
--			regulator-max-microvolt = <1200000>;
--		};
--
--		pm8226_l6: l6 {
--			regulator-min-microvolt = <1800000>;
--			regulator-max-microvolt = <1800000>;
--			regulator-always-on;
--		};
--
--		pm8226_l7: l7 {
--			regulator-min-microvolt = <1850000>;
--			regulator-max-microvolt = <1850000>;
--		};
--
--		pm8226_l8: l8 {
--			regulator-min-microvolt = <1800000>;
--			regulator-max-microvolt = <1800000>;
--			regulator-always-on;
--		};
--
--		pm8226_l9: l9 {
--			regulator-min-microvolt = <2050000>;
--			regulator-max-microvolt = <2050000>;
--		};
--
--		pm8226_l10: l10 {
--			regulator-min-microvolt = <1800000>;
--			regulator-max-microvolt = <1800000>;
--		};
--
--		pm8226_l12: l12 {
--			regulator-min-microvolt = <1800000>;
--			regulator-max-microvolt = <1800000>;
--		};
--
--		pm8226_l14: l14 {
--			regulator-min-microvolt = <2750000>;
--			regulator-max-microvolt = <2750000>;
--		};
--
--		pm8226_l15: l15 {
--			regulator-min-microvolt = <1800000>;
--			regulator-max-microvolt = <3300000>;
--		};
--
--		pm8226_l16: l16 {
--			regulator-min-microvolt = <3000000>;
--			regulator-max-microvolt = <3350000>;
--		};
--
--		pm8226_l17: l17 {
--			regulator-min-microvolt = <2950000>;
--			regulator-max-microvolt = <2950000>;
--
--			regulator-system-load = <200000>;
--			regulator-allow-set-load;
--			regulator-always-on;
--		};
--
--		pm8226_l18: l18 {
--			regulator-min-microvolt = <2950000>;
--			regulator-max-microvolt = <2950000>;
--		};
--
--		pm8226_l19: l19 {
--			regulator-min-microvolt = <2850000>;
--			regulator-max-microvolt = <3000000>;
--		};
--
--		pm8226_l20: l20 {
--			regulator-min-microvolt = <3075000>;
--			regulator-max-microvolt = <3075000>;
--		};
--
--		pm8226_l21: l21 {
--			regulator-min-microvolt = <1800000>;
--			regulator-max-microvolt = <2950000>;
--		};
--
--		pm8226_l22: l22 {
--			regulator-min-microvolt = <1800000>;
--			regulator-max-microvolt = <3000000>;
--		};
--
--		pm8226_l23: l23 {
--			regulator-min-microvolt = <1800000>;
--			regulator-max-microvolt = <3300000>;
--		};
--
--		pm8226_l24: l24 {
--			regulator-min-microvolt = <1300000>;
--			regulator-max-microvolt = <1350000>;
--		};
--
--		pm8226_l25: l25 {
--			regulator-min-microvolt = <1775000>;
--			regulator-max-microvolt = <2125000>;
--		};
--
--		pm8226_l26: l26 {
--			regulator-min-microvolt = <1225000>;
--			regulator-max-microvolt = <1300000>;
--		};
--
--		pm8226_l27: l27 {
--			regulator-min-microvolt = <1800000>;
--			regulator-max-microvolt = <1800000>;
--		};
--
--		pm8226_l28: l28 {
--			regulator-min-microvolt = <1800000>;
--			regulator-max-microvolt = <2950000>;
--		};
--
--		pm8226_lvs1: lvs1 {};
--	};
--};
--
--&sdhc_1 {
--	vmmc-supply = <&pm8226_l17>;
--	vqmmc-supply = <&pm8226_l6>;
--
--	bus-width = <8>;
--	non-removable;
--
--	status = "okay";
--};
--
--&sdhc_2 {
--	vmmc-supply = <&pm8226_l18>;
--	vqmmc-supply = <&pm8226_l21>;
--
--	bus-width = <4>;
--	cd-gpios = <&tlmm 38 GPIO_ACTIVE_LOW>;
--
--	status = "okay";
--};
--
--&tlmm {
--	accel_int_default_state: accel-int-default-state {
--		pins = "gpio54";
--		function = "gpio";
--		drive-strength = <2>;
--		bias-disable;
--	};
--
--	backlight_i2c_default_state: backlight-i2c-default-state {
--		pins = "gpio20", "gpio21";
--		function = "gpio";
--		drive-strength = <2>;
--		bias-disable;
--	};
--
--	backlight_pwm_default_state: backlight-pwm-default-state {
--		pins = "gpio33";
--		function = "gp0_clk";
--	};
--
--	muic_int_default_state: muic-int-default-state {
--		pins = "gpio67";
--		function = "gpio";
--		drive-strength = <2>;
--		bias-disable;
--	};
--
--	tsp_en_default_state: tsp-en-default-state {
--		pins = "gpio31";
--		function = "gpio";
--		drive-strength = <2>;
--		bias-disable;
--	};
--
--	tsp_en1_default_state: tsp-en1-default-state {
--		pins = "gpio73";
--		function = "gpio";
--		drive-strength = <2>;
--		bias-disable;
--	};
--
--	tsp_int_rst_default_state: tsp-int-rst-default-state {
--		pins = "gpio17";
--		function = "gpio";
--		drive-strength = <10>;
--		bias-pull-up;
--	};
--};
--
--&usb {
--	extcon = <&muic>, <&muic>;
--	status = "okay";
--};
--
--&usb_hs_phy {
--	extcon = <&muic>;
--	v1p8-supply = <&pm8226_l10>;
--	v3p3-supply = <&pm8226_l20>;
--};
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2022, Matti Lehtimäki <matti.lehtimaki@gmail.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "qcom-msm8226-samsung-matisse-common.dtsi"
-+
-+/ {
-+	model = "Samsung Galaxy Tab 4 10.1";
-+	compatible = "samsung,matisse-wifi", "qcom,apq8026";
-+	chassis-type = "tablet";
-+
-+	reg_tsp_3p3v: regulator-tsp-3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "tsp_3p3v";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpio = <&tlmm 73 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&tsp_en1_default_state>;
-+	};
-+};
-+
-+&blsp1_i2c2 {
-+	status = "okay";
-+
-+	accelerometer@1d {
-+		compatible = "st,lis2hh12";
-+		reg = <0x1d>;
-+
-+		interrupt-parent = <&tlmm>;
-+		interrupts = <54 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&accel_int_default_state>;
-+
-+		st,drdy-int-pin = <1>;
-+
-+		vdd-supply = <&pm8226_l19>;
-+		vddio-supply = <&pm8226_lvs1>;
-+	};
-+};
-+
-+&blsp1_i2c5 {
-+	status = "okay";
-+
-+	touchscreen@4a {
-+		compatible = "atmel,maxtouch";
-+		reg = <0x4a>;
-+
-+		interrupt-parent = <&tlmm>;
-+		interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
-+
-+		linux,keycodes = <KEY_RESERVED>,
-+				 <KEY_RESERVED>,
-+				 <KEY_RESERVED>,
-+				 <KEY_RESERVED>,
-+				 <KEY_APPSELECT>,
-+				 <KEY_BACK>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&tsp_int_rst_default_state>;
-+
-+		reset-gpios = <&pm8226_gpios 6 GPIO_ACTIVE_LOW>;
-+
-+		vdd-supply = <&reg_tsp_1p8v>;
-+		vdda-supply = <&reg_tsp_3p3v>;
-+	};
-+};
-+
-+&tlmm {
-+	tsp_en1_default_state: tsp-en1-default-state {
-+		pins = "gpio73";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/qcom/qcom-apq8026-samsung-matisse-wifi.dts b/arch/arm/boot/dts/qcom/qcom-msm8226-samsung-matisse-common.dtsi
-similarity index 85%
-copy from arch/arm/boot/dts/qcom/qcom-apq8026-samsung-matisse-wifi.dts
-copy to arch/arm/boot/dts/qcom/qcom-msm8226-samsung-matisse-common.dtsi
-index 0c28309c6cc5..6d116f9b443b 100644
---- a/arch/arm/boot/dts/qcom/qcom-apq8026-samsung-matisse-wifi.dts
-+++ b/arch/arm/boot/dts/qcom/qcom-msm8226-samsung-matisse-common.dtsi
-@@ -3,8 +3,6 @@
-  * Copyright (c) 2022, Matti Lehtimäki <matti.lehtimaki@gmail.com>
-  */
- 
--/dts-v1/;
--
- #include <dt-bindings/input/input.h>
- #include "qcom-msm8226.dtsi"
- #include "pm8226.dtsi"
-@@ -13,10 +11,6 @@
- /delete-node/ &smem_region;
- 
- / {
--	model = "Samsung Galaxy Tab 4 10.1";
--	compatible = "samsung,matisse-wifi", "qcom,apq8026";
--	chassis-type = "tablet";
--
- 	aliases {
- 		mmc0 = &sdhc_1; /* SDC1 eMMC slot */
- 		mmc1 = &sdhc_2; /* SDC2 SD card slot */
-@@ -141,19 +135,6 @@ reg_tsp_1p8v: regulator-tsp-1p8v {
- 		pinctrl-0 = <&tsp_en_default_state>;
- 	};
- 
--	reg_tsp_3p3v: regulator-tsp-3p3v {
--		compatible = "regulator-fixed";
--		regulator-name = "tsp_3p3v";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
--
--		gpio = <&tlmm 73 GPIO_ACTIVE_HIGH>;
--		enable-active-high;
--
--		pinctrl-names = "default";
--		pinctrl-0 = <&tsp_en1_default_state>;
--	};
--
- 	reserved-memory {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -223,26 +204,6 @@ &adsp {
- 	status = "okay";
- };
- 
--&blsp1_i2c2 {
--	status = "okay";
--
--	accelerometer@1d {
--		compatible = "st,lis2hh12";
--		reg = <0x1d>;
--
--		interrupt-parent = <&tlmm>;
--		interrupts = <54 IRQ_TYPE_LEVEL_HIGH>;
--
--		pinctrl-names = "default";
--		pinctrl-0 = <&accel_int_default_state>;
--
--		st,drdy-int-pin = <1>;
--
--		vdd-supply = <&pm8226_l19>;
--		vddio-supply = <&pm8226_lvs1>;
--	};
--};
--
- &blsp1_i2c4 {
- 	status = "okay";
- 
-@@ -258,33 +219,6 @@ muic: usb-switch@25 {
- 	};
- };
- 
--&blsp1_i2c5 {
--	status = "okay";
--
--	touchscreen@4a {
--		compatible = "atmel,maxtouch";
--		reg = <0x4a>;
--
--		interrupt-parent = <&tlmm>;
--		interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
--
--		linux,keycodes = <KEY_RESERVED>,
--				 <KEY_RESERVED>,
--				 <KEY_RESERVED>,
--				 <KEY_RESERVED>,
--				 <KEY_APPSELECT>,
--				 <KEY_BACK>;
--
--		pinctrl-names = "default";
--		pinctrl-0 = <&tsp_int_rst_default_state>;
--
--		reset-gpios = <&pm8226_gpios 6 GPIO_ACTIVE_LOW>;
--
--		vdd-supply = <&reg_tsp_1p8v>;
--		vdda-supply = <&reg_tsp_3p3v>;
--	};
--};
--
- &rpm_requests {
- 	regulators {
- 		compatible = "qcom,rpm-pm8226-regulators";
-@@ -499,13 +433,6 @@ tsp_en_default_state: tsp-en-default-state {
- 		bias-disable;
- 	};
- 
--	tsp_en1_default_state: tsp-en1-default-state {
--		pins = "gpio73";
--		function = "gpio";
--		drive-strength = <2>;
--		bias-disable;
--	};
--
- 	tsp_int_rst_default_state: tsp-int-rst-default-state {
- 		pins = "gpio17";
- 		function = "gpio";
--- 
-2.43.0
-
+> ---
+>  drivers/net/wireless/intel/iwlwifi/mvm/tt.c |    6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+>
+> Index: linux-pm/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- linux-pm.orig/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
+> +++ linux-pm/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
+> @@ -667,9 +667,6 @@ static  struct thermal_zone_device_ops t
+>         .set_trip_temp =3D iwl_mvm_tzone_set_trip_temp,
+>  };
+>
+> -/* make all trips writable */
+> -#define IWL_WRITABLE_TRIPS_MSK (BIT(IWL_MAX_DTS_TRIPS) - 1)
+> -
+>  static void iwl_mvm_thermal_zone_register(struct iwl_mvm *mvm)
+>  {
+>         int i, ret;
+> @@ -692,11 +689,12 @@ static void iwl_mvm_thermal_zone_registe
+>         for (i =3D 0 ; i < IWL_MAX_DTS_TRIPS; i++) {
+>                 mvm->tz_device.trips[i].temperature =3D THERMAL_TEMP_INVA=
+LID;
+>                 mvm->tz_device.trips[i].type =3D THERMAL_TRIP_PASSIVE;
+> +               mvm->tz_device.trips[i].flags =3D THERMAL_TRIP_FLAG_RW_TE=
+MP;
+>         }
+>         mvm->tz_device.tzone =3D thermal_zone_device_register_with_trips(=
+name,
+>                                                         mvm->tz_device.tr=
+ips,
+>                                                         IWL_MAX_DTS_TRIPS=
+,
+> -                                                       IWL_WRITABLE_TRIP=
+S_MSK,
+> +                                                       0,
+>                                                         mvm, &tzone_ops,
+>                                                         NULL, 0, 0);
+>         if (IS_ERR(mvm->tz_device.tzone)) {
+>
+>
+>
+>
