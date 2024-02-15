@@ -1,200 +1,93 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7F3966B4B;
-	Thu, 15 Feb 2024 10:05:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B42679FE;
+	Thu, 15 Feb 2024 10:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707991523; cv=none; b=Zccmf1TcshUte7QSMUlHkEsn5GXPlqQrpdBraLpmgOB6H2NVdyckfTsiwUVrcimubnAWHqZVi7HElCQr1YVJ4/5dAT6G6uStr9FAfozh0lB4C4ZqDb4kLqwdpiGfrC6vOQSWj08LalNTYOczbMqKJqyvXScZH9SojBNwaPWJV3s=
+	t=1707991880; cv=none; b=Y5tZURc/NxGG7sKmg8zMUHFQznINMJlVuWKG2uXAsRzbU7vRC+a4atgyB+e6bO+2D8h8AWGDJaze/4wvZk7BkzTfW7hY6rq6MHQICR2iOmHDk3IG4Bl7MQahA2ZR2ulKE1+ITEElxHHM8+NikdUn42Qly2F9HNK7whlMZPu6ntM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707991523; c=relaxed/simple;
-	bh=zXR1Th1Fns4JSC7Jtt7QoNy6Isissiie5f7KTXRyD6A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RHoB4HYVyRr5afl0LHxrZI92wIEMWt8/oXQ1BpQ3t6WHWNvWpf7La3ipsg3sq14iMwLwR/biQ2LKMw1x6Ni3uKOq5Qf9RxApJimdcygwZG/2kjozt8zlTH7hV7182xVl39FQ5ZHJEAaz1JjjT7mBZfetq8DU/aLHusdUqi1bEHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-511a04c837bso775214e87.0;
-        Thu, 15 Feb 2024 02:05:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707991519; x=1708596319;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sMGJ76noLanla/25q8E8XYSHetkA+XFXEotUyozLh+0=;
-        b=PL/5fKiheZGESkle5RNOy37J0oUpdiKmjro4412xeZJylgJ00EzlfAzjUclrrOoa/w
-         kEV/idGXySw/4vqURvy2GyHr5g4ICKDKMjADixm3s9aUg8nZIYeHfHRiTvGgqXaZKzoK
-         0qWlWOpyiaF/nnt8VFShu79+lnk2H3AdKWnwPPzl86rmweBxOdCbCiy8LLJ/CosLbeSJ
-         aw30KPdvZOt+FRS/LjuhyTjxjNJYf1jffJWvnqoq3qJsXkOVbrRsZ9saKtoGgn0j7dvG
-         TvMImkz9/zc9nRhYClt04vt/kXKSgYQax2PnfVgsgs0VUPnYA3MmtXhunE9S8tDDsDSf
-         ABTg==
-X-Forwarded-Encrypted: i=1; AJvYcCWdIMkwH6bFK2BWSOfSOdeI5QhyrvA8EkBSZuBkFYBAY5UzAqt9ABgRvnkf7qkzgZL2hldJ8WHvWI6a1mSBMGVIX1kOtqkD7KhZBd4t
-X-Gm-Message-State: AOJu0Yyy7rIvZsOxNlzSalBLFsymvg55Bixx4nNSSj1WqtQrXbiM3Wbo
-	Hzid2lsPX/ZTS63brBL0DXRszY415YwLsUzMQwHGzxb/AxBu/oJkslV406TE1wIq3Q==
-X-Google-Smtp-Source: AGHT+IGuKk8ytxzR5E+csW4iJscA2ebWInfYZQ+TaRtE0Dn9WyeQH1XRAXoNxabfhu/kV3SJ9ZhZIQ==
-X-Received: by 2002:a05:6512:3d0f:b0:512:8a75:53f9 with SMTP id d15-20020a0565123d0f00b005128a7553f9mr815582lfv.57.1707991518871;
-        Thu, 15 Feb 2024 02:05:18 -0800 (PST)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id v22-20020a197416000000b0051181cbea91sm178297lfe.228.2024.02.15.02.05.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Feb 2024 02:05:18 -0800 (PST)
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-511a04c837bso775176e87.0;
-        Thu, 15 Feb 2024 02:05:18 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV7yxXMkr9BV7pLCXIobItVSglQVQh8m8qfyB6QH0AwSKuJyGar0F61eaic8zFnxUKb6lNj6LMSnpzlOdgmTYGgE4CB28vJSbXvXKep
-X-Received: by 2002:a05:6512:3d0f:b0:512:8a75:53f9 with SMTP id
- d15-20020a0565123d0f00b005128a7553f9mr815564lfv.57.1707991518416; Thu, 15 Feb
- 2024 02:05:18 -0800 (PST)
+	s=arc-20240116; t=1707991880; c=relaxed/simple;
+	bh=xW+SMn0yzEP/atgRxvcp9tLl5suSkW1RNJRYWpnVzMw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=evIdEcEJWOsMfS5pcffuz/4WxaBspfrhk+T3T7bg/RubsFJ+qA8fRZs1oxgpFZSby1iUNNYVgJRpDwYGB4KkoPw/QM8NTBKpd9Ll1Jx0/2taa49NUZNKBRrVMuWwP7pPMuG3HVfdkrGa/NksjYgaft85mKcKa9S/FTT6lzBD7DE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=D8rhLhfm; arc=none smtp.client-ip=115.28.160.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="D8rhLhfm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1707991875; bh=xW+SMn0yzEP/atgRxvcp9tLl5suSkW1RNJRYWpnVzMw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=D8rhLhfmUsPVebdqxjmKjA3kZ3+hs01T1ZODKFHrBEuL4KR0WjE5tXdkjPjXvRuGC
+	 f2gVDGHZAr8bLZnWPJ8TFOcxDgRaNTPVeZZ+rtAJ04TTcR6/DMpX+OXJFmodbBg79o
+	 /1mtIiq5IregwWfi0EnZt1u/F/zuZWlae+14ueb0=
+Received: from [28.0.0.1] (unknown [49.93.119.4])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 0960E60114;
+	Thu, 15 Feb 2024 18:11:14 +0800 (CST)
+Message-ID: <0f4d83e2-bff9-49d9-8066-9f194ce96306@xen0n.name>
+Date: Thu, 15 Feb 2024 18:11:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240212170423.2860895-1-andriy.shevchenko@linux.intel.com> <20240212170423.2860895-8-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20240212170423.2860895-8-andriy.shevchenko@linux.intel.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 15 Feb 2024 11:05:00 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdW=gTH12vLALAU_ioCKX9E2mJ3uR+8Q6GT0brc4yg83_A@mail.gmail.com>
-Message-ID: <CAMuHMdW=gTH12vLALAU_ioCKX9E2mJ3uR+8Q6GT0brc4yg83_A@mail.gmail.com>
-Subject: Re: [PATCH v2 07/15] auxdisplay: linedisp: Group line display drivers together
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Robin van der Gracht <robin@protonic.nl>, Paul Burton <paulburton@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/6] LoongArch: Add pv ipi support on LoongArch VM
+Content-Language: en-US
+To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, Juergen Gross <jgross@suse.com>,
+ Paolo Bonzini <pbonzini@redhat.com>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ virtualization@lists.linux.dev, kvm@vger.kernel.org
+References: <20240201031950.3225626-1-maobibo@loongson.cn>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20240201031950.3225626-1-maobibo@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Andy,
+Hi,
 
-On Mon, Feb 12, 2024 at 6:04=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> For better usability group the line display drivers together in Kconfig
-> and Makefile.
+On 2/1/24 11:19, Bibo Mao wrote:
+> [snip]
 >
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Here is the microbenchmarck data with perf bench futex wake case on 3C5000
+> single-way machine, there are 16 cpus on 3C5000 single-way machine, VM
+> has 16 vcpus also. The benchmark data is ms time unit to wakeup 16 threads,
+> the performance is higher if data is smaller.
+> 
+> perf bench futex wake, Wokeup 16 of 16 threads in ms
+> --physical machine--   --VM original--   --VM with pv ipi patch--
+>    0.0176 ms               0.1140 ms            0.0481 ms
+> 
+> ---
+> Change in V4:
+>    1. Modfiy pv ipi hook function name call_func_ipi() and
+> call_func_single_ipi() with send_ipi_mask()/send_ipi_single(), since pv
+> ipi is used for both remote function call and reschedule notification.
+>    2. Refresh changelog.
+> 
+> Change in V3:
+>    1. Add 128 vcpu ipi multicast support like x86
+>    2. Change cpucfg base address from 0x10000000 to 0x40000000, in order
+> to avoid confliction with future hw usage
+>    3. Adjust patch order in this patchset, move patch
+> Refine-ipi-ops-on-LoongArch-platform to the first one.
 
-Thanks for your patch!
+Sorry for the late reply (and Happy Chinese New Year), and thanks for 
+providing microbenchmark numbers! But it seems the more comprehensive 
+CoreMark results were omitted (that's also absent in v3)? While the 
+changes between v4 and v2 shouldn't be performance-sensitive IMO (I 
+haven't checked carefully though), it could be better to showcase the 
+improvements / non-harmfulness of the changes and make us confident in 
+accepting the changes.
 
-> --- a/drivers/auxdisplay/Kconfig
-> +++ b/drivers/auxdisplay/Kconfig
-> @@ -25,12 +25,6 @@ config CHARLCD
->           This is some character LCD core interface that multiple drivers=
- can
->           use.
->
-> -config LINEDISP
-> -       tristate "Character line display core support" if COMPILE_TEST
-> -       help
-> -         This is the core support for single-line character displays, to=
- be
-> -         selected by drivers that use it.
-> -
->  config HD44780_COMMON
->         tristate "Common functions for HD44780 (and compatibles) LCD disp=
-lays" if COMPILE_TEST
->         select CHARLCD
-> @@ -52,6 +46,16 @@ config HD44780
->           kernel and started at boot.
->           If you don't understand what all this is about, say N.
->
-> +config LCD2S
-> +       tristate "lcd2s 20x4 character display over I2C console"
-> +       depends on I2C
-> +       select CHARLCD
-> +       help
-> +         This is a driver that lets you use the lcd2s 20x4 character dis=
-play
-> +         from Modtronix engineering as a console output device. The disp=
-lay
-> +         is a simple single color character display. You have to connect=
- it
-> +         to an I2C bus.
-> +
+-- 
+WANG "xen0n" Xuerui
 
-I think it would be good to have "# <display type> section" comments,
-to make the grouping clear.
-Else I wonder why "L" is sorted before "K" ;-)
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
->  config KS0108
->         tristate "KS0108 LCD Controller"
->         depends on PARPORT_PC
-> @@ -153,6 +157,12 @@ config CFAG12864B_RATE
->           If you compile this as a module, you can still override this
->           value using the module parameters.
->
-> +config LINEDISP
-> +       tristate "Character line display core support" if COMPILE_TEST
-> +       help
-> +         This is the core support for single-line character displays, to=
- be
-> +         selected by drivers that use it.
-> +
->  config IMG_ASCII_LCD
->         tristate "Imagination Technologies ASCII LCD Display"
->         depends on HAS_IOMEM
-> @@ -177,16 +187,6 @@ config HT16K33
->           Say yes here to add support for Holtek HT16K33, RAM mapping 16*=
-8
->           LED controller driver with keyscan.
->
-> -config LCD2S
-> -       tristate "lcd2s 20x4 character display over I2C console"
-> -       depends on I2C
-> -       select CHARLCD
-> -       help
-> -         This is a driver that lets you use the lcd2s 20x4 character dis=
-play
-> -         from Modtronix engineering as a console output device. The disp=
-lay
-> -         is a simple single color character display. You have to connect=
- it
-> -         to an I2C bus.
-> -
->  config ARM_CHARLCD
->         bool "ARM Ltd. Character LCD Driver"
->         depends on PLAT_VERSATILE
-
-Shouldn't this (and PARPORT_PANEL and friends) be moved up, to the
-character LCD section?
-
-> diff --git a/drivers/auxdisplay/Makefile b/drivers/auxdisplay/Makefile
-> index 6968ed4d3f0a..43bad850481c 100644
-> --- a/drivers/auxdisplay/Makefile
-> +++ b/drivers/auxdisplay/Makefile
-> @@ -5,12 +5,12 @@
->
->  obj-$(CONFIG_CHARLCD)          +=3D charlcd.o
->  obj-$(CONFIG_HD44780_COMMON)   +=3D hd44780_common.o
-> -obj-$(CONFIG_ARM_CHARLCD)      +=3D arm-charlcd.o
-> +obj-$(CONFIG_HD44780)          +=3D hd44780.o
-> +obj-$(CONFIG_LCD2S)            +=3D lcd2s.o
->  obj-$(CONFIG_KS0108)           +=3D ks0108.o
->  obj-$(CONFIG_CFAG12864B)       +=3D cfag12864b.o cfag12864bfb.o
-> -obj-$(CONFIG_IMG_ASCII_LCD)    +=3D img-ascii-lcd.o
-> -obj-$(CONFIG_HD44780)          +=3D hd44780.o
-> -obj-$(CONFIG_HT16K33)          +=3D ht16k33.o
-> -obj-$(CONFIG_PARPORT_PANEL)    +=3D panel.o
-> -obj-$(CONFIG_LCD2S)            +=3D lcd2s.o
->  obj-$(CONFIG_LINEDISP)         +=3D line-display.o
-> +obj-$(CONFIG_IMG_ASCII_LCD)    +=3D img-ascii-lcd.o
-> +obj-$(CONFIG_HT16K33)          +=3D ht16k33.o
-> +obj-$(CONFIG_ARM_CHARLCD)      +=3D arm-charlcd.o
-> +obj-$(CONFIG_PARPORT_PANEL)    +=3D panel.o
-
-IMHO it hurts to not sort Makefile entries alphabetically.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
