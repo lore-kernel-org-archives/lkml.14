@@ -1,61 +1,59 @@
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BEAD31A60;
-	Thu, 15 Feb 2024 18:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B10C18E02
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 18:44:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708022554; cv=none; b=CH1UkxEWw55BVJceBEL7NgOY/M7nzmrm4Cl73pb/QfUx0A18mPgB78Io/4HzjTPUwBFE2fK+SfvNoFj+upgsxiEyoZQL7IXLZZYziKaF+cdtHUS2lSV/E9MpRv7s4hWskyiPffuyon9OmCZStzrsSQO9bTVprKDYunG+6Tw0sBI=
+	t=1708022675; cv=none; b=btmMRnY9yuuu/MtA8MfSDLzC5ZHnvyA1BXoq64Y9EWLWw3Anye8Vo72VWkSdZ4jYZk6cmzjLuGuUOJVbRDVYv1TFtczWrmysr3Qu/Sv5i2/W1B5pUBTE5Zt6eAdX9g/VLvPoIO1rJbaJpRLakTgx6I64nNiCz7J4U+rTBkNcaSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708022554; c=relaxed/simple;
-	bh=/ruk8jX9/WGq73QOc11X011S2e3YQNYcOULuqZ/S4Xw=;
+	s=arc-20240116; t=1708022675; c=relaxed/simple;
+	bh=Ov3h6NmCfWVCrQRPZcBAGDu7dD9jbUeBaBXLPNApxYg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sp+vPPaHeUVsRHksT2yu5GhIGGkofYDBufjnB0l4RKxxXlFvW6hLUiRGUK7Xuoj5wcxSGJmE89Us1/DFGKxXqv13CSG5mKygTvix1ymqvXmjekTg/Tc9r4oe/HdchYU3wqjoqU3Zvwn/zXHR4blp0FVuy7mJ8DlO72Yij/XyBBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aoWo3Q9L; arc=none smtp.client-ip=209.85.210.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=rFwxcqcQQ+U/khDmq6Kju/pT4gWxBJtmfDCtoXX7tkgjU3aBJX/OPNTx+xTqFlIwac+h+jEy/ao8EQoZCxviMv/HORHomLL+zPabusPH431a2zu+KscishsE5FVuXk1EmJNUkK8CqjCQ3ZewQ6CD4czg+SrNuT3XQ5p9ceder+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WG5tRvTJ; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aoWo3Q9L"
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6e2e6bcc115so563444a34.3;
-        Thu, 15 Feb 2024 10:42:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WG5tRvTJ"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2d10f52e7d8so13229161fa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 10:44:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708022552; x=1708627352; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1708022671; x=1708627471; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=+o70wlUduz1li0fSfRZ7G8yjDLISCYX73d3koZT25b4=;
-        b=aoWo3Q9LUYOJxPvN2bAzD0XwCreuy8Y/Vx48WS0uDn0JHkWYBhN/27gCyOS+1uWY04
-         fFmkx2TtjpLal6QvOfb6D+UQeE+Si4ie+HYy8lFno/NooAhmefKluGep5gQ8MZ0+65YW
-         T6MBdzB2woaBFmX5mAzUuQPvWNyuI4gGPMU5rIUIFbFhqofDteVxFvFF23M78xBwR6HX
-         p25vZYpX7BBxFpkGNJxovSgHEC0YaRzMn0KiLwIPU621ezEACWPw37Y44xWkAk9Vl//M
-         Tjmb+U2WAZlAKORxGZaAioR6KM1V4D828QewopYYn2bRwaItITry0mR2XkVpgBgYJ4e4
-         ejYg==
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/1q2t5THAXaIQHLTF3wmnuNYqSVcOhZJZA6IWBoe7FA=;
+        b=WG5tRvTJ1rdHfIHXlYPaO0CM7ZXYcZCypeRc6bGXR/Zs23BLfe/Slp5NPYbVR0/UMc
+         CN/nKy5+yZlhAoFrBZVY616VDSdy3FGGcTjODyZWg6JKpw+Q2FMfpxW+zBkX1B/+x0Kl
+         J2Q68R0xsy9p7EesHzQM1fszC447pm1rTAyXEcVqQqCqeC0Z+ZG9csY/BY2LR4CH4CAF
+         gEo1uKOVSxwMW3yGF1F4dYD3IVf6vJVOa7gRsLGkC1nz+29/HsxsO3sqVsgptWbmFEDx
+         NdaHnr0vL9SOc6Whe922s6fXDm8wUUV0u/re/fBQiX3Nn+Z/Q8SdxOK7rREgf+7eAKQ/
+         LIXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708022552; x=1708627352;
+        d=1e100.net; s=20230601; t=1708022671; x=1708627471;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+o70wlUduz1li0fSfRZ7G8yjDLISCYX73d3koZT25b4=;
-        b=mpXYLsuzk8DNf6q7W10sJ/pRvLS9STORGPFslcPg30ftBVxYMBc+M+ecsMNY/pSg9V
-         gs21L6BBmH1lgmhhcxrxzsdeQEAdxhYo4UiDJo8EVSjLFpLJnBvpVrNFkalHlQN61yCj
-         QzMuszudW4rfjqtuXJX1s15Lvb/T4NV2u0lr26w9uk24SOpEs+F1azHBQRrikz0r4u4M
-         NX1QEM2dsMCMM+LSwn6H3KC5Bs8qL1SrStO4b0sY2Y0I6B+1bUAJiB0VNkDbkpE2052u
-         nZ09ouGC4vK8R2cj+yoJrB9mPBbIAhuQxrWGcEqu0FTsMSLsIpT6LGs4n7vTwGLwlvPD
-         ZtyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXzoctTZK8SWzzPRQqWjbYSYAT1uWh9a0revqt3nU5QY8POMctvdXcZIQVA1da0vcc9t3W8DimH83vp4Tii5mv23Qy7wkIlLBKGl5nL
-X-Gm-Message-State: AOJu0YxD3wy8Rjk07VpE32D/+qj2Y91LYvVNgjhqtP8+sRy/mkMoitmO
-	fEKoCI93BRonNmcTZ1T2o7YVwWq1orI0QuPWHzCCkBs7os493OeQ
-X-Google-Smtp-Source: AGHT+IGTAkWah9VSrIviYpJQRJHPHcA+YvTkdJfpHxjC5vJIab9tzg7UJTIEtzAW0OvvmVkrnWkZ1g==
-X-Received: by 2002:a05:6358:5928:b0:176:5a5e:4b7c with SMTP id g40-20020a056358592800b001765a5e4b7cmr3062920rwf.6.1708022551830;
-        Thu, 15 Feb 2024 10:42:31 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p23-20020a637417000000b005dcbb855530sm1055015pgc.76.2024.02.15.10.42.30
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/1q2t5THAXaIQHLTF3wmnuNYqSVcOhZJZA6IWBoe7FA=;
+        b=KdMVWnfIJMiPgP+X+zr2RU72L85N+IzugfznGKmc/rd/3Vgniro7JPUYAnoQhfE1gN
+         RbX+i32gLkIEusmsXsaXmldYUnRHDp2IONySsnpoplXS4DlW3VFouvekn75dQ6KZoCh7
+         /uisXAW0dEN2qTx/hxa2hNvRQLDmlGffX5Jxk1b46s6wG5egjrzbE/DU3+K1iSnvg7Wu
+         YYzdPf6Pg9WHmUEeroNFB02cQWuBspIkERzovRWmZygPWO+VdPKxfc9Fg3wxzw4dSQtz
+         7h3TeySMdeX7wW9lwB6on0hwbcMsyCsQ8mta98qUDlfk30TCyWMHasRwaidZpfXQteii
+         56lg==
+X-Forwarded-Encrypted: i=1; AJvYcCXpDlC6hi//VBTDH5KHVKBnVdP9uzehT/ww2F+r8L96P62/HG4SyyAwd5Pgt5oRGINzqxkDkqYp1DAVOZcJOvWJt6crwzYaIsVAMVD3
+X-Gm-Message-State: AOJu0YxCFEFvJTmG0P7JeaTV4ywm7NtiVc3eFIlP9fGBRRUtZgyeqO6Q
+	1tHAjTI7HIoJuok4ckQGMFU3zmkTCTFiVQaTro7hSme1xECSsyQs+qkDoP3Y/BM=
+X-Google-Smtp-Source: AGHT+IHBrUEPEGVeK0vtIcVNlx2ltmsJu5vHeHHZz0wFy9l8DbCDpMTbmDuhROJn4UpG+ml/N/UStA==
+X-Received: by 2002:a2e:a483:0:b0:2d1:33a:6c85 with SMTP id h3-20020a2ea483000000b002d1033a6c85mr1959604lji.8.1708022671457;
+        Thu, 15 Feb 2024 10:44:31 -0800 (PST)
+Received: from [192.168.192.135] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
+        by smtp.gmail.com with ESMTPSA id t20-20020a2e9d14000000b002d0b4fdf3a2sm383976lji.46.2024.02.15.10.44.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Feb 2024 10:42:30 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <a7b70196-2387-4532-94ac-81220fd07088@roeck-us.net>
-Date: Thu, 15 Feb 2024 10:42:29 -0800
+        Thu, 15 Feb 2024 10:44:30 -0800 (PST)
+Message-ID: <bc7d9859-f7ec-41c5-8a9e-170ccdfff46a@linaro.org>
+Date: Thu, 15 Feb 2024 19:44:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,163 +61,118 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 2/2] lib: checksum: Use aligned accesses for
- ip_fast_csum and csum_ipv6_magic tests
+Subject: Re: [PATCH v2 2/3] PCI: qcom: Read back PARF_LTSSM register
 Content-Language: en-US
-To: John David Anglin <dave.anglin@bell.net>,
- David Laight <David.Laight@ACULAB.COM>,
- Charlie Jenkins <charlie@rivosinc.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Andrew Morton <akpm@linux-foundation.org>, Helge Deller <deller@gmx.de>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Parisc List <linux-parisc@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20240214-fix_sparse_errors_checksum_tests-v8-0-36b60e673593@rivosinc.com>
- <20240214-fix_sparse_errors_checksum_tests-v8-2-36b60e673593@rivosinc.com>
- <2ec91b11-23c7-4beb-8cef-c68367c8f029@roeck-us.net>
- <a7e9691432374000b9566a0201d004e6@AcuMS.aculab.com>
- <c22f28a2-b042-4abe-b9e4-a925b97073bb@roeck-us.net>
- <4723822c-2acf-4c41-899c-1e3d5659d1d8@bell.net>
- <1e302d8f-4e94-4278-b556-b8fc54956efb@roeck-us.net>
- <e73bdc36-5fb1-4ea8-9f96-608eb1a9b6af@bell.net>
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <e73bdc36-5fb1-4ea8-9f96-608eb1a9b6af@bell.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, linux-arm-msm@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Johan Hovold <johan+linaro@kernel.org>
+References: <20240215161114.GA1292081@bhelgaas>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240215161114.GA1292081@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2/15/24 09:25, John David Anglin wrote:
-> On 2024-02-15 12:06 p.m., Guenter Roeck wrote:
->> On 2/15/24 08:51, John David Anglin wrote:
->>> On 2024-02-15 10:44 a.m., Guenter Roeck wrote:
->>>> On 2/15/24 02:27, David Laight wrote:
->>>>> ...
->>>>>> It would be worthwhile tracking this down since there are
->>>>>> lots of unaligned data accesses (8-byte accesses on 4-byte aligned addresses)
->>>>>> when running the kernel in 64-bit mode.
+On 15.02.2024 17:11, Bjorn Helgaas wrote:
+> On Thu, Feb 15, 2024 at 11:21:45AM +0100, Konrad Dybcio wrote:
+>> On 14.02.2024 23:28, Bjorn Helgaas wrote:
+>>> On Wed, Feb 14, 2024 at 10:35:16PM +0100, Konrad Dybcio wrote:
+>>>> On 12.02.2024 22:17, Bjorn Helgaas wrote:
+>>>>> Maybe include the reason in the subject?  "Read back" is literally
+>>>>> what the diff says.
 >>>>>
->>>>> Hmmm....
->>>>> For performance reasons you really don't want any of them.
->>>>> The misaligned 64bit fields need an __attribute((aligned(4)) marker.
+>>>>> On Sat, Feb 10, 2024 at 06:10:06PM +0100, Konrad Dybcio wrote:
+>>>>>> To ensure write completion, read the PARF_LTSSM register after setting
+>>>>>> the LTSSM enable bit before polling for "link up".
 >>>>>
->>>>> If the checksum code can do them it really needs to detect
->>>>> and handle the misalignment.
->>>>>
->>>>> The misaligned trap handler probably ought to contain a
->>>>> warn_on_once() to dump stack on the first such error.
->>>>> They can then be fixed one at a time.
->>>>>
+>>>>> The write will obviously complete *some* time; I assume the point is
+>>>>> that it's important for it to complete before some other event, and it
+>>>>> would be nice to know why that's important.
 >>>>
->>>> Unaligned LDD at unwind_once+0x4a8/0x5e0
->>>>
->>>> Decoded:
->>>>
->>>> Unaligned LDD at unwind_once (arch/parisc/kernel/unwind.c:212 arch/parisc/kernel/unwind.c:243 arch/parisc/kernel/unwind.c:371 arch/parisc/kernel/unwind.c:445)
->>>>
->>>> Source:
->>>>
->>>> static bool pc_is_kernel_fn(unsigned long pc, void *fn)
->>>> {
->>>>         return (unsigned long)dereference_kernel_function_descriptor(fn) == pc;
->>> This looks wrong to me.  Function descriptors should always be 8-byte aligned.  I think this
->>> routine should return false if fn isn't 8-byte aligned.
+>>>> Right, that's very much meaningful on non-total-store-ordering
+>>>> architectures, like arm64, where the CPU receives a store instruction,
+>>>> but that does not necessarily impact the memory/MMIO state immediately.
+>>>
+>>> I was hinting that maybe we could say what the other event is, or what
+>>> problem this solves?  E.g., maybe it's as simple as "there's no point
+>>> in polling for link up until after the PARF_LTSSM store completes."
+>>>
+>>> But while the read of PARF_LTSSM might reduce the number of "is the
+>>> link up" polls, it probably wouldn't speed anything up otherwise, so I
+>>> suspect there's an actual functional reason for this patch, and that's
+>>> what I'm getting at.
 >>
->> Below you state "Code entry points only need 4-byte alignment."
+>> So, the register containing the "enable switch" (PARF_LTSSM) can (due
+>> to the armv8 memory model) be "written" but not "change the value of
+>> memory/mmio from the perspective of other (non-CPU) memory-readers
+>> (such as the MMIO-mapped PCI controller itself)".
 >>
->> I think that contradicts each other. Also, the calling code is,
->> for example,
->>     pc_is_kernel_fn(pc, syscall_exit)
+>> In that case, the CPU will happily continue calling qcom_pcie_link_up()
+>> in a loop, waiting for the PCIe controller to bring the link up, however
+>> the PCIE controller may have never received the PARF_LTSSM "enable link"
+>> write by the time we decide to time out on checking the link status.
 >>
->> I fail to see how this can be consolidated if it is ok
->> that syscall_exit is 4-byte aligned but, at the same time,
->> must be 8-byte aligned to be considered to be a kernel function.
-> In the above call, syscall_exit is treated as a function pointer. It points to an 8-byte aligned
-> function descriptor.  The descriptor holds the actual address of the function.  It only needs
-> 4-byte alignment.
+>> It may also never happen for you, but that's exactly like a classic race
+>> condition, where it may simply not manifest due to the code around the
+>> problematic lines hiding it. It may also only manifest on certain CPU
+>> cores that try to be smarter than you and keep reordering/delaying
+>> instructions if they don't seem immediately necessary.
 > 
-> Descriptors need 8-byte alignment for efficiency on 64-bit parisc. The pc and gp are accessed
-> using ldd instructions.
+> Does this mean the register is mapped incorrectly, e.g., I see arm64
+> has many different kinds of mappings for cacheability,
+> write-buffering, etc?
+
+No, it's correctly mapped as "device" memory, but even that gives no
+guarantees about when the writes are "flushed" out of the CPU/cluster
+
 > 
+> Or, if it is already mapped correctly, are we confident that none of
+> the *other* register writes need similar treatment?  Is there a rule
+> we can apply to know when the read-after-write is needed?
 
-How about the patch below ?
+Generally, it's a good idea to add such readbacks after all timing-
+critical writes, especially when they concern asserting reset,
+enabling/disabling power, etc., to make sure we're not assuming the
+hardware state of a peripheral has changed before we ask it to do so. 
 
-Guenter
-
----
-diff --git a/arch/parisc/kernel/unwind.c b/arch/parisc/kernel/unwind.c
-index 27ae40a443b8..c2b9e23cbc0a 100644
---- a/arch/parisc/kernel/unwind.c
-+++ b/arch/parisc/kernel/unwind.c
-@@ -214,24 +214,14 @@ static bool pc_is_kernel_fn(unsigned long pc, void *fn)
-
-  static int unwind_special(struct unwind_frame_info *info, unsigned long pc, int frame_size)
-  {
--       /*
--        * We have to use void * instead of a function pointer, because
--        * function pointers aren't a pointer to the function on 64-bit.
--        * Make them const so the compiler knows they live in .text
--        * Note: We could use dereference_kernel_function_descriptor()
--        * instead but we want to keep it simple here.
--        */
--       extern void * const ret_from_kernel_thread;
--       extern void * const syscall_exit;
--       extern void * const intr_return;
--       extern void * const _switch_to_ret;
-+       void (*ret_from_kernel_thread)(void);
-+       void (*syscall_exit)(void);
-+       void (*intr_return)(void);
-+       void (*_switch_to_ret)(void);
-  #ifdef CONFIG_IRQSTACKS
--       extern void * const _call_on_stack;
-+       void (*_call_on_stack)(void);
-  #endif /* CONFIG_IRQSTACKS */
--       void *ptr;
--
--       ptr = dereference_kernel_function_descriptor(&handle_interruption);
--       if (pc_is_kernel_fn(pc, ptr)) {
-+       if (pc_is_kernel_fn(pc, handle_interruption)) {
-                 struct pt_regs *regs = (struct pt_regs *)(info->sp - frame_size - PT_SZ_ALGN);
-                 dbg("Unwinding through handle_interruption()\n");
-                 info->prev_sp = regs->gr[30];
-
+Konrad
