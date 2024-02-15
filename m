@@ -1,145 +1,165 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E465A1386AE;
-	Thu, 15 Feb 2024 19:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A10139563
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 19:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708024555; cv=none; b=GWVgRDbybBE3kToo9JiyccV5pLxHcMQ0LJFWTDuGgXYqPCBFLtTr/Ae/cXqlYZjtB+cR13mLADUfGhIzCZjQxyLR0AYBf1/71VTFY5md4gEA5LTKGv3VfTekwW8VbjExHHhnOevyMFYXAO+n8leuFRkhn9Bj65qnTqmCus+eo+k=
+	t=1708024580; cv=none; b=dcb/di1sD/7IJQhBEOgcJaxLJQrJs3smQgG7PQ7G8E2m7S6UhhhgrAlt6seBfmM/HUJd7VE8qPxliPAHuuX5dJsrD4jWcgxApgp60vfi/Qiu2j9hO8CVS02G6sM4IWFHg+Jcgy+tBzvI8ofuTp0saGC3GuzSW2D/turlLWFllp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708024555; c=relaxed/simple;
-	bh=KxKSSdW354cOvf8mK+8TWJRT0uDhJmiIeexOvN+MHkk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MDrxpxGiZvt4UJUW54T6U2If0mVZItvHHKHOWKWWEUFvBY3YsAjvkFv1SA+/m5WFckmOyADF+gKLDPKavIFrMRBbDBtlr01zz9ctGhhEiUintnBxtdpAuXe+xj1QxE2cESA01vWWsRQKyWpdzgtcy4yJ7H2jQRyjIgOIHYfI8ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P81HOJ48; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1708024580; c=relaxed/simple;
+	bh=A5vfHKGPj12dTNIK/i4MDdUnEZY45MV3bb0G7KPm7SM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gZ0m+7PfFi0F287yX+Hlgih6N1lyQQoEU9yKhAvSjJnqkSSkFt9+ICJDIH7EKwzs28FFPz+thR2UI0It/bO4Hg6dTGi68Ujj9TTNvehotytywKmBgNiWr/nVfDDbM7epKFC7gEwhZlGzH28VzwJhX3+4o0EBuUBbDHSP0X50OVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IPDFJBIj; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P81HOJ48"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708024553; x=1739560553;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=KxKSSdW354cOvf8mK+8TWJRT0uDhJmiIeexOvN+MHkk=;
-  b=P81HOJ48si7BLQA+GN6QXZKKqG0W+5CRuRYOb6k5nOMOB4NthNoEQZ96
-   a+1eZgBwh376V6K2rtFgEuLJcW5m0dMGWViUgtHzjxDmRCPVFT6DBRbHk
-   59V4RglkJAuouscZpradL5s04nXhXSN1EBrHJ9JLJq7RRi6xEZTTpYNbT
-   RT64rDxKxyCzELijUgDGIrOxkG763nHQ5lFx5y5kA3XzzFlrNawW2Ukfn
-   mkRMRPPxWKqUGfBGFebNWT97Frj40KUENtdDfKyM0OjLRZUVTvzrgIzAA
-   IyHkhOrrOv68vAPOwUKk7xqCqE98L9t6Pnir9pPHmdzQu8KWoTOoKD14K
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10985"; a="12853156"
-X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
-   d="scan'208";a="12853156"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 11:15:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
-   d="scan'208";a="3590430"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by fmviesa009.fm.intel.com with ESMTP; 15 Feb 2024 11:15:45 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rahCg-0000iO-2m;
-	Thu, 15 Feb 2024 19:15:42 +0000
-Date: Fri, 16 Feb 2024 03:14:44 +0800
-From: kernel test robot <lkp@intel.com>
-To: Petr Tesarik <petrtesarik@huaweicloud.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	David Kaplan <david.kaplan@amd.com>,
-	Larry Dewey <larry.dewey@amd.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Carlos Bilbao <carlos.bilbao@amd.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Petr Mladek <pmladek@suse.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Eric DeVolder <eric.devolder@oracle.com>,
-	Marc =?iso-8859-1?Q?Aur=E8le?= La France <tsi@tuyoix.net>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nhat Pham <nphamcs@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Christian Brauner (Microsoft)" <brauner@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	Mike Christie <michael.christie@oracle.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Maninder Singh <maninder1.s@samsung.com>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Roberto Sassu <roberto.sassu@huaweicloud.com>, petr@tesarici.cz,
-	Petr Tesarik <petr.tesarik1@huawei-partners.com>
-Subject: Re: [PATCH v1 4/5] sbm: SandBox Mode KUnit test suite
-Message-ID: <202402160357.4hi1ecdG-lkp@intel.com>
-References: <20240214113035.2117-5-petrtesarik@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IPDFJBIj"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41FIhcOV028350;
+	Thu, 15 Feb 2024 19:16:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=5JKqmrk
+	fJABfYZUDeP6CxLqjc+esD9/niU7UB8pF9iE=; b=IPDFJBIjt6eQ3pMXlX7H4MJ
+	Jy8ekGzdDGT/b3K9EY2X+c42Jj8vaCoCZunrr764X61cxU4Dvs7Y8gBgnyccLaF9
+	SPYsw8VMllI26tQfEPNhHCsIGCbZ3vak6PZ2vFZwM0mn3JHcOeHCIANeBDm1qtUn
+	86BfRWY7WK1xl5ANFJhhHEnpBdeWfHDybRM5N0+02638dnPepqaQopD8uWumOpYL
+	fSvNIMKiRWgChbdUfWnDmd6FoS1yGF7SBpRJc/GziIWQeBp+arbqGPw8F+9aqAhc
+	fybf/O9Y7y+4uLF6Mk6sqVYTvxMNZNveZSN/xfHX3EFVq3ytL9ynqqmnmlVuFoQ=
+	=
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w9fkf9s4k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 Feb 2024 19:16:08 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41FJG7NR021010
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 Feb 2024 19:16:07 GMT
+Received: from abhinavk-linux1.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Thu, 15 Feb 2024 11:16:06 -0800
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+To: <dri-devel@lists.freedesktop.org>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+CC: Paloma Arellano <quic_parellan@quicinc.com>, <robdclark@gmail.com>,
+        <freedreno@lists.freedesktop.org>, <dmitry.baryshkov@linaro.org>,
+        <intel-gfx@lists.freedesktop.org>, <jani.nikula@linux.intel.com>,
+        <ville.syrjala@linux.intel.com>, <quic_jesszhan@quicinc.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v5] drm/dp: add an API to indicate if sink supports VSC SDP
+Date: Thu, 15 Feb 2024 11:15:56 -0800
+Message-ID: <20240215191556.3227259-1-quic_abhinavk@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240214113035.2117-5-petrtesarik@huaweicloud.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 06Dg6ymyuWe8JYZebRgPmoLvB9lxHZX7
+X-Proofpoint-GUID: 06Dg6ymyuWe8JYZebRgPmoLvB9lxHZX7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-15_18,2024-02-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ adultscore=0 lowpriorityscore=0 impostorscore=0 mlxlogscore=999
+ spamscore=0 bulkscore=0 suspectscore=0 mlxscore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402150154
 
-Hi Petr,
+From: Paloma Arellano <quic_parellan@quicinc.com>
 
-kernel test robot noticed the following build errors:
+YUV420 format is supported only in the VSC SDP packet and not through
+MSA. Hence add an API which indicates the sink support which can be used
+by the rest of the DP programming.
 
-[auto build test ERROR on akpm-mm/mm-everything]
-[also build test ERROR on linus/master v6.8-rc4 next-20240215]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+changes in v5:
+	- rebased on top of drm-tip
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Petr-Tesarik/sbm-SandBox-Mode-core-data-types-and-functions/20240214-193528
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20240214113035.2117-5-petrtesarik%40huaweicloud.com
-patch subject: [PATCH v1 4/5] sbm: SandBox Mode KUnit test suite
-config: hexagon-allmodconfig (https://download.01.org/0day-ci/archive/20240216/202402160357.4hi1ecdG-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 1c10821022f1799452065fb57474e894e2562b7f)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240216/202402160357.4hi1ecdG-lkp@intel.com/reproduce)
+changes in v4:
+	- bail out early if dpcd rev check fails
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402160357.4hi1ecdG-lkp@intel.com/
+changes in v3:
+	- fix the commit title prefix to drm/dp
+	- get rid of redundant !!
+	- break out this change from series [1] to get acks from drm core
+	  maintainers
 
-All errors (new ones prefixed by >>):
+Changes in v2:
+	- Move VSC SDP support check API from dp_panel.c to
+	  drm_dp_helper.c
 
->> kernel/sbm_test.c:648:25: error: use of undeclared identifier 'current_stack_pointer'
-     648 |         unsigned long old_sp = current_stack_pointer;
-         |                                ^
-   kernel/sbm_test.c:651:2: error: use of undeclared identifier 'current_stack_pointer'
-     651 |         current_stack_pointer = (unsigned long)end_of_stack(current);
-         |         ^
-   kernel/sbm_test.c:654:2: error: use of undeclared identifier 'current_stack_pointer'
-     654 |         current_stack_pointer = old_sp;
-         |         ^
-   3 errors generated.
+[1]: https://patchwork.freedesktop.org/series/129180/
 
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Paloma Arellano <quic_parellan@quicinc.com>
+Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+---
+ drivers/gpu/drm/display/drm_dp_helper.c | 23 +++++++++++++++++++++++
+ include/drm/display/drm_dp_helper.h     |  2 ++
+ 2 files changed, 25 insertions(+)
 
-vim +/current_stack_pointer +648 kernel/sbm_test.c
-
-   645	
-   646	static SBM_DEFINE_FUNC(stack_overflow)
-   647	{
- > 648		unsigned long old_sp = current_stack_pointer;
-   649		int err;
-   650	
-   651		current_stack_pointer = (unsigned long)end_of_stack(current);
-   652		barrier();
-   653		err = kaboom();
-   654		current_stack_pointer = old_sp;
-   655		return err;
-   656	}
-   657	
-
+diff --git a/drivers/gpu/drm/display/drm_dp_helper.c b/drivers/gpu/drm/display/drm_dp_helper.c
+index 8d6ce46471ae..61b11cb45245 100644
+--- a/drivers/gpu/drm/display/drm_dp_helper.c
++++ b/drivers/gpu/drm/display/drm_dp_helper.c
+@@ -2913,6 +2913,29 @@ void drm_dp_vsc_sdp_log(struct drm_printer *p, const struct drm_dp_vsc_sdp *vsc)
+ }
+ EXPORT_SYMBOL(drm_dp_vsc_sdp_log);
+ 
++/**
++ * drm_dp_vsc_sdp_supported() - check if vsc sdp is supported
++ * @aux: DisplayPort AUX channel
++ * @dpcd: DisplayPort configuration data
++ *
++ * Returns true if vsc sdp is supported, else returns false
++ */
++bool drm_dp_vsc_sdp_supported(struct drm_dp_aux *aux, const u8 dpcd[DP_RECEIVER_CAP_SIZE])
++{
++	u8 rx_feature;
++
++	if (dpcd[DP_DPCD_REV] < DP_DPCD_REV_13)
++		return false;
++
++	if (drm_dp_dpcd_readb(aux, DP_DPRX_FEATURE_ENUMERATION_LIST, &rx_feature) != 1) {
++		drm_dbg_dp(aux->drm_dev, "failed to read DP_DPRX_FEATURE_ENUMERATION_LIST\n");
++		return false;
++	}
++
++	return (rx_feature & DP_VSC_SDP_EXT_FOR_COLORIMETRY_SUPPORTED);
++}
++EXPORT_SYMBOL(drm_dp_vsc_sdp_supported);
++
+ /**
+  * drm_dp_get_pcon_max_frl_bw() - maximum frl supported by PCON
+  * @dpcd: DisplayPort configuration data
+diff --git a/include/drm/display/drm_dp_helper.h b/include/drm/display/drm_dp_helper.h
+index d02014a87f12..36351f3cdba9 100644
+--- a/include/drm/display/drm_dp_helper.h
++++ b/include/drm/display/drm_dp_helper.h
+@@ -100,6 +100,8 @@ struct drm_dp_vsc_sdp {
+ 
+ void drm_dp_vsc_sdp_log(struct drm_printer *p, const struct drm_dp_vsc_sdp *vsc);
+ 
++bool drm_dp_vsc_sdp_supported(struct drm_dp_aux *aux, const u8 dpcd[DP_RECEIVER_CAP_SIZE]);
++
+ int drm_dp_psr_setup_time(const u8 psr_cap[EDP_PSR_RECEIVER_CAP_SIZE]);
+ 
+ static inline int
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
