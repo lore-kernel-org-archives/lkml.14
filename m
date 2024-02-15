@@ -1,64 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D55F841A81;
-	Thu, 15 Feb 2024 19:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80AAF136983
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 19:40:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708026029; cv=none; b=Dt0zJzfUUSbUftY8MKTFDAiQKouQVPuJFeKsCkr1/7y4eZJBoNMoW5rnvr0mvmENcc6kDr5HQu6ReAu7+0BOLSVOrHdosyrH+vAMTY7lu4qdRHcZvrkW+kW7pmDjaNZXrlcCC10Bldm2RP/CQ3cr67em8HHuF0aGATq9SxqSuJE=
+	t=1708026046; cv=none; b=N05+X+68lQ01hel2cIJMtbqNDzChXEOSkAual7p1fwJiGMBtKU8j8lDx3Cp3iCBEbfgPQy47ucA2cCkVbYTXDk+4GMmKKxvuewT2wUhyWkptG8MqDYTea3xJ9kfNELzb0/FCUUS5BYeE7rEGmeIoRWrtkr8kIUEvThPu4zRFSOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708026029; c=relaxed/simple;
-	bh=qLdn8H0HRBzthy+dj0BE8u7JRCMQcxy04vJ6ZPWUk60=;
+	s=arc-20240116; t=1708026046; c=relaxed/simple;
+	bh=jokuoCNs89OtbgBuZAnY+h16wX3YDNSNuOYB2bmOCdY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MRV/2MyLvwUoILozLs6qhuvd55oj5UR/fWgWUDvs7hh30ctwhVEXxU88zfXSe0Xx/tmvBRBLVD9VfOv+jz1Ik8txYcaTqVYydATTxJG1VrzSUgDaSsgnoyIRrApwl3RwHUVaKs7F1doFf2DpeUDwegKS03NdXnYwK3mZYMTE494=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gYG/qJMN; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tl9397RsgNGkkqZBInJpNPlSq8rzNHAhoT6AOgc9ROKN7MflH9NcJCq8cKQk4NjvNqcWcRA+yKDiMRriN9Q8tvsPPLFR6MCGKiXIaO3sLXTSIDvvcZIIekVhrY6LSeb6l6zMBC30+XHRK2tOBQiC0mdW6MAzbQ9YysrqsUj+nq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JNiBl6sS; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gYG/qJMN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708026028; x=1739562028;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qLdn8H0HRBzthy+dj0BE8u7JRCMQcxy04vJ6ZPWUk60=;
-  b=gYG/qJMND6IZEUhFaTlrqKquKTTJpGsfwj7EA4J64HAyFpUKMeQANiCI
-   /FJigisIEkoxAHx3torvX93rNj2+Y0oFeZUwxDFdoaiOYEsFNOwnXr5gh
-   vBezQtouLxYOMxp5w/TFKh2mPwMUiUi+l9PdRIOCpa9Eh5IS3Av69JmcE
-   fIAwI/KApz9tIVoRljdnk9HW1qLB9m2iP8v8Mj7eVUQsj6TyTx3qPaNFs
-   eGfEEmm8Zp51+CMwQWt7kUoR2L+YTwyYTMWxbByMY9tX0mcRg2cBXqxht
-   VLopto8VmWRmZJ00oCFPMtNoeOUTqV7TYovm5e1fQohH+F9916ufj4Jp0
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10985"; a="19558170"
-X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
-   d="scan'208";a="19558170"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 11:40:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10985"; a="826457139"
-X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
-   d="scan'208";a="826457139"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 11:40:23 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1raham-00000004sOA-2c4p;
-	Thu, 15 Feb 2024 21:40:20 +0200
-Date: Thu, 15 Feb 2024 21:40:20 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Al Cooper <alcooperx@gmail.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Jiri Slaby <jirislaby@kernel.org>
-Subject: Re: [PATCH v1 1/1] serial: 8250_bcm7271: Replace custom unit
- definitions
-Message-ID: <Zc5opIrKD0UdXqrk@smile.fi.intel.com>
-References: <20240215160234.653305-1-andriy.shevchenko@linux.intel.com>
- <7132d989-533f-47ef-803b-6001de3aff33@broadcom.com>
- <Zc5kTdkTqXEE6cA3@smile.fi.intel.com>
- <d4619f25-12d8-4f95-8e5e-e83516e8230a@broadcom.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JNiBl6sS"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d51ba18e1bso12879825ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 11:40:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1708026045; x=1708630845; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=N45lPs3M9TrNxSLc9/f/ZRjzHt59sujwqrGC6tXBgWE=;
+        b=JNiBl6sSNFysLdej+LyFOyX1xlFxK9H27wtXxtlXKL4/utIkKlaCOs0xLToapqzrq+
+         naEXDSOqeGHSPkvq5MXpXtFsvskgxCJqeX8Bcb142GFDbNlxqMrKGLbK0hiWCpNd88IE
+         XKFrZjr+81oI3v9C86fDJ6EFjIDUeiXCzZwVs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708026045; x=1708630845;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N45lPs3M9TrNxSLc9/f/ZRjzHt59sujwqrGC6tXBgWE=;
+        b=RK/mkQqWp6GKEbP4DVqdHN/Wa7NRH3FTVAy1FXFh3a4U/QNBqmukvnO0NgGx3cyl/r
+         Kt6bocXVrfZcbUCUBF1LKo5hagIcbhYMIIBPlfN+VBPJWukI6FWcZODCMiDc0VffQgNm
+         yGTKv9uc/Q/mWGHJwnYHQsxb0xwgkQ5BsiLrSugchzzxyY+4JCihdz+QoiLldiS0KlK9
+         uPoZxDdLpXgGFahpUTKvMHjNd5tm2w19+IjpEwiAzordJoOWB0pKJSSdTqlrVcWVy5n4
+         iSL94I4ZGkHM9AuZUiLJzSDz+AJ0lubGLaJcJupFJutdb9E+kKXFg7hBjNAKd2onb3by
+         M9UQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUEKD4CpWfxjXR3wpvFdlv2y5rlQkvkX/wTfv6zgCDKPgzbD8qCBFXMqXnDqTVVKAJKS/E9G3JkCecqHrmh2gzCM++u1nQ9OoaCZkN6
+X-Gm-Message-State: AOJu0YztzWUGmK6bMdhE/ng1DgSpgSm4vjgoX7DjBtUFzXBc3kObUZzr
+	4YYV9P0LVCDtLkY1pdQEUXPazRNng9kZ5HKj+KiE0Zi65deFfj03OgV3RZvJ/Q==
+X-Google-Smtp-Source: AGHT+IFx9b8jYULzNHxK13eAZ7tnM5C0S0j71SlJw2uZYPQ138X7hnoC7MKrw3Y2FjevZ5APngnOvA==
+X-Received: by 2002:a17:902:c1cc:b0:1da:1e0a:eeff with SMTP id c12-20020a170902c1cc00b001da1e0aeeffmr2681211plc.67.1708026044715;
+        Thu, 15 Feb 2024 11:40:44 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id 6-20020a170902c10600b001db2b8b2da7sm1618299pli.122.2024.02.15.11.40.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Feb 2024 11:40:44 -0800 (PST)
+Date: Thu, 15 Feb 2024 11:40:43 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Michal Hocko <mhocko@suse.com>, corbet@lwn.net,
+	workflows@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, security@kernel.org,
+	Sasha Levin <sashal@kernel.org>, Lee Jones <lee@kernel.org>
+Subject: Re: [PATCH v3] Documentation: Document the Linux Kernel CVE process
+Message-ID: <202402151134.4ED3C9070@keescook>
+References: <2024021430-blanching-spotter-c7c8@gregkh>
+ <Zc5PycMenLBYECAn@tiehlicka>
+ <2024021518-stature-frightful-e7fc@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,53 +68,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d4619f25-12d8-4f95-8e5e-e83516e8230a@broadcom.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <2024021518-stature-frightful-e7fc@gregkh>
 
-On Thu, Feb 15, 2024 at 11:27:39AM -0800, Florian Fainelli wrote:
-> On 2/15/24 11:21, Andy Shevchenko wrote:
-> > On Thu, Feb 15, 2024 at 10:35:11AM -0800, Florian Fainelli wrote:
-> > > On 2/15/24 08:02, Andy Shevchenko wrote:
+On Thu, Feb 15, 2024 at 07:20:09PM +0100, Greg Kroah-Hartman wrote:
+> Here's an example of what the CVE announcement is going to look like for
+> a "test" that we have been doing for our scripts
+> 	https://lore.kernel.org/linux-cve-announce/2024021353-drainage-unstuffed-a7c0@gregkh/T/#u
+> ...
+> the latest release is impossible, the individual change to resolve this
+> issue can be found at:
+> 	https://git.kernel.org/stable/linux/c/f08adf5add9a071160c68bb2a61d697f39ab0758
 
-...
+This is the "original fix", a v5.16 commit, which was backported to all
+the stables. For this case, that seems fine (it's pretty easy to grep
+the stable trees for the SHA).
 
-> > > > -#define KHZ    1000
-> > > > -#define MHZ(x) ((x) * KHZ * KHZ)
-> > > >    static const u32 brcmstb_rate_table[] = {
-> > > > -	MHZ(81),
-> > > > -	MHZ(108),
-> > > > -	MHZ(64),		/* Actually 64285715 for some chips */
-> > > > -	MHZ(48),
-> > > > +	81 * HZ_PER_MHZ,
-> > > > +	108 * HZ_PER_MHZ,
-> > > > +	64 * HZ_PER_MHZ,		/* Actually 64285715 for some chips */
-> > > > +	48 * HZ_PER_MHZ,
-> > > 
-> > > The previous notation was IMHO more readable,
-> > 
-> > I tend to disagree as we read in plain text "frequency is 64 MHz",
-> > the patch follows natural language.
-> > 
-> > > can we meet in the middle and do:
-> > > 
-> > > #define MHZ(x)	((x) * HZ_PER_MHZ
-> > > 
-> > > and avoid touching the tables entirely?
-> > 
-> > I don't like the intermediate layer which hides the implementation of MHZ().
-> > What does it do exactly? You need to look at the internals, with the patch
-> > applied you immediately see that these are just constants.
-> 
-> OK, I suppose today's color is blue for the bike shed.
-
-Sky is blue and sun is shining and I am happy person :-)
-
-> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-
-Thank you!
+In the case of a fix only being in -stable, what will be listed for
+SHAs here? Each stable SHA? Something else?
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Kees Cook
