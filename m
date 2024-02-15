@@ -1,45 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9AE0B67D;
-	Thu, 15 Feb 2024 08:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E8C13AD1;
+	Thu, 15 Feb 2024 08:32:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707985951; cv=none; b=scFJ6IA2rSFVXstrJY6Gse8NZy1XolZC6a0kLymwkagHGUMrdSAWeREiFNVIOOpSt0GCKyQ4owJIs1v1SYSR2XB6GukXtDUwr6EP/QL5uDa8E5dHz3YiklFtjTN6LhpVZNFj4N4gbUphhdcU/Kg1qHFJyqeEZfz69glzt8A9Vmo=
+	t=1707985977; cv=none; b=o8mYfQ2AM28spPQA32z1tF1jd5yArSdflCdvqBz0M80YHPWRzs6mms3goG8AZ4SwhBO8ixXVGfJnAyCs5TUkAM/Ev5LavMDVVGFy2r/Kjporrn/g8Gn8UAZgeMDYZ+kCmPQ2YpGZ3ap+PdW0KpifiJfWApFnAaDku8setjqSarE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707985951; c=relaxed/simple;
-	bh=UGfF3lZh/KRtVtdUp6G6TZfp0sNrsZF0XSORI0xUMqc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=t/mRUZrrHF+pyq17F9j9WVDurhskwxTAgFPiUdXnmEVxM4Lm9lb3ddsJX301A9dSwrhOWLMvzp65P83dvV2YgNX+VaLAZCRm8ZQBrIYswJ4RFExOWBpwWm4FMZFl5LjiDrVyo8FlHv+JRDfbE6NER3W90Sn5AAeJaIlCiPJQN+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i8QsKOXK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707985977; c=relaxed/simple;
+	bh=AhM39UWbG/Oh4jBUS4gyxetK2SaA22mS/2gf/zbMErk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qYhViza5DsJYxDzCdeBy2hXeErEgqW6ZnMUzUlixmhG25i6/ulyqnZw06Uh99xoA/cV07w097bLO33Rz0cC+pp6GdjXF/3jYXD+9VfAYJ72/GLR4aKgNbRcs8dy/Ncn+KNKMu1Q/lNpMbR0HSJzuLupIjRmh85S+DrSZn7PWykk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=eE0oELpZ; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i8QsKOXK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A71FC433F1;
-	Thu, 15 Feb 2024 08:32:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707985951;
-	bh=UGfF3lZh/KRtVtdUp6G6TZfp0sNrsZF0XSORI0xUMqc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=i8QsKOXKyHAd6n28S9dhVqcePsxd7+GXhKkS0K6gYkoj6rN9LqZ0Rc0QgZiG1WZJu
-	 EW3mQrItGu4KHyMPz12l9rhBTpYClYR4MN+UWhFyF1dTjO/Z/DieqmrTYwjY1F21id
-	 tad+V68IP0d5n4lIQjhUELQMdh+lojWDIc/fUYYhfz5hshSl4mv8ruEG+ntj/ZDng5
-	 8gUJqbVJBI77WMkSVfI9ims40OuBZUZ+VfhwskM2AkUgnfekCz2pnukWlZEp7kVUIG
-	 6zElqNqeDA4KRJ+rVBGNOml2711HtD7oE0KnGfTja69xEjloD3YPq8j8nAD5LwmfeI
-	 koCu3N2PTpowQ==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	=?UTF-8?q?Pierre-Cl=C3=A9ment=20Tosi?= <ptosi@google.com>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] kallsyms: ignore ARMv4 thunks along with others
-Date: Thu, 15 Feb 2024 09:32:08 +0100
-Message-Id: <20240215083225.3976252-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eE0oELpZ"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41F8W7O0072534;
+	Thu, 15 Feb 2024 02:32:07 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1707985927;
+	bh=/X1wR89ZBb3UtaGiPPrCIVmHNgdtrQGVd2HpQqSUzhQ=;
+	h=From:To:CC:Subject:Date;
+	b=eE0oELpZXEvMKOUNUGTX3O4fEgEYYOhyqxck6kjejIqmBheSWSWS/45w0gsARc/6y
+	 1oiQTmGG7wPKxLRV4l69YU+szViKJGrWQPDE18c4R+ybSf2QofJPqZbk6fF1DKrWr9
+	 UfK0aaw82Sq3c6bTQod9/+dv7iJfZ6voS6whNDjo=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41F8W7bt005206
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 15 Feb 2024 02:32:07 -0600
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 15
+ Feb 2024 02:32:07 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 15 Feb 2024 02:32:07 -0600
+Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41F8W5RU107645;
+	Thu, 15 Feb 2024 02:32:06 -0600
+From: Devarsh Thakkar <devarsht@ti.com>
+To: <jyri.sarha@iki.fi>, <tomi.valkeinen@ideasonboard.com>,
+        <airlied@gmail.com>, <daniel@ffwll.ch>,
+        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <tzimmermann@suse.de>, <robh@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>
+CC: <praneeth@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>,
+        <devarsht@ti.com>
+Subject: [PATCH v3 0/2] Add common1 region for AM62, AM62A & AM65x
+Date: Thu, 15 Feb 2024 14:02:03 +0530
+Message-ID: <20240215083205.2902634-1-devarsht@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,54 +62,26 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-From: Arnd Bergmann <arnd@arndb.de>
+This adds DSS common1 region for respective SoCs supporting it.
 
-lld is now able to build ARMv4 and ARMv4T kernels, which means it can
-generate thunks for those (__ARMv4PILongThunk_*, __ARMv4PILongBXThunk_*)
-that can interfere with kallsyms table generation since they do not get
-ignore like the corresponding ARMv5+ ones are:
-
-Inconsistent kallsyms data
-Try "make KALLSYMS_EXTRA_PASS=1" as a workaround
-
-Replace the hardcoded list of thunk symbols with a more general regex that
-covers this one along with future symbols that follow the same pattern.
-
-Fixes: 5eb6e280432d ("ARM: 9289/1: Allow pre-ARMv5 builds with ld.lld 16.0.0 and newer")
-Fixes: efe6e3068067 ("kallsyms: fix nonconverging kallsyms table with lld")
-Suggested-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-v2: use a regular expression instead of listing each one.
----
- scripts/mksysmap | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
-
-diff --git a/scripts/mksysmap b/scripts/mksysmap
-index 9ba1c9da0a40..57ff5656d566 100755
---- a/scripts/mksysmap
-+++ b/scripts/mksysmap
-@@ -48,17 +48,8 @@ ${NM} -n ${1} | sed >${2} -e "
- / __kvm_nvhe_\\$/d
- / __kvm_nvhe_\.L/d
+Changelog:
+V2 : Remove do-not-merge tag and add am62a dss common1 reion
+V3 : Add Fixes tag to each commit
  
--# arm64 lld
--/ __AArch64ADRPThunk_/d
--
--# arm lld
--/ __ARMV5PILongThunk_/d
--/ __ARMV7PILongThunk_/d
--/ __ThumbV7PILongThunk_/d
--
--# mips lld
--/ __LA25Thunk_/d
--/ __microLA25Thunk_/d
-+# lld arm/aarch64/mips thunks
-+/ __[[:alnum:]]*Thunk_/d
- 
- # CFI type identifiers
- / __kcfi_typeid_/d
+Devarsh Thakkar (2):
+  dt-bindings: display: ti,am65x-dss: Add support for common1 region
+  arm64: dts: ti: Add common1 register space for AM62x, AM62A & AM65x
+    SoCs
+
+ .../devicetree/bindings/display/ti/ti,am65x-dss.yaml       | 7 +++++--
+ arch/arm64/boot/dts/ti/k3-am62-main.dtsi                   | 5 +++--
+ arch/arm64/boot/dts/ti/k3-am62a-main.dtsi                  | 5 +++--
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi                   | 5 +++--
+ 4 files changed, 14 insertions(+), 8 deletions(-)
+
 -- 
-2.39.2
+2.34.1
 
