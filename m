@@ -1,160 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C26B4A08;
-	Thu, 15 Feb 2024 11:39:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9740129A98
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 11:42:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707997161; cv=none; b=TiMXa1lG2PU08GU3Y4265wIkVc/65ICyhabTY8AoBnmckvK9FXuhukwGE8b4Pp74dZ1WtF197IVGT/OcCnrFVrHWBmhXfb47YS0InDizF7YkEuazOBeGZaUElCEsf5PKnwKDATL+I7y/LhMJ3Poij7byQhOkEafWz2Tg9TfraFY=
+	t=1707997378; cv=none; b=R1pNXozC8nMoO3XA4zL9q8ERgXZ/XVxm6QN+4sQvWT0LLjPqIPepcppnm/oowtIVgMHni+GUXkZ0+KGf+IMnI5+M5z7dw5hXn6riEtriySaqTiiu8SUIRliiXXIdwTr7erGRTrhh902QOqnXCIIFCRcJqipjEEVvykPiRulu7UE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707997161; c=relaxed/simple;
-	bh=xHD1jYlDl3OhNy/NvkoRutSUDcPPUt2DKryla2HlDLA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MeR+TkS283JkEX6EFUWC74c60AIkRi6RXNQaHtxqHCbl20JccO/HMa5ODlmxV8PvG1WYWgwjRTsDt9N9fFEucER/cerrzRlGC721A0tEtokTeFjIH7pbLWg6wRCDeWYu2zgEwmmPIhWqsjpn/qO58Q4JVVNksV5h7ZxOz0LMFU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZFKuhjFB; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1707997378; c=relaxed/simple;
+	bh=/FTXlztzle2L/AhigWw1U4jQU2T/XKgKPnl46C3daJk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u0uNOLPDsq8sO8PQ8/MpxH/utU4k2yZEMUOS9Du7411X9yYcLKrQeiEfeit8hKDZfzYEXN/kLwqRfNizYwiacRhYGduVEtrmDUK8IFlKzbJ2XhtjaZ9eSPx7+d5LUsUvf5fEELcrv6/m84Hk/Kvqhjr75fRHuxrDtD2skWApde4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OgdT35T/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZFKuhjFB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707997160; x=1739533160;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=xHD1jYlDl3OhNy/NvkoRutSUDcPPUt2DKryla2HlDLA=;
-  b=ZFKuhjFBoe83Ct/j45txcE+dR3Qjx8OQvqhYD9C7e0cTVl7TKyAUNOkz
-   xh17gb25n7iyEmexiTZAaa9P8/RuvjmH1sKzFjDloNIiYRigQ5mWf56Yj
-   bm061E2DclSb9aeBJQ6gJWKVY0b4oK91pEw8OnlKdF+q32/qQfw6jUugE
-   M9D8cbE22QV5HNLnJq89YwGEqlwWsmmFemzso4IdS7OalkfbtiVRsTFZd
-   GA6ZxStwTDELybwv9YDRIUkCU8K4biPyBXQYIrmQxQhEwy1ihP4DbgC0Y
-   cj5rAQQ0yFYVIAPcYjI5G3vM71T4pDihWW449sE91KYAV/3tNl4WpYprN
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="2217772"
-X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
-   d="scan'208";a="2217772"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 03:39:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
-   d="scan'208";a="34554740"
-Received: from newjersey.igk.intel.com ([10.102.20.203])
-  by fmviesa001.fm.intel.com with ESMTP; 15 Feb 2024 03:39:17 -0800
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	=?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next] page_pool: disable direct recycling based on pool->cpuid on destroy
-Date: Thu, 15 Feb 2024 12:39:05 +0100
-Message-ID: <20240215113905.96817-1-aleksander.lobakin@intel.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OgdT35T/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707997375;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Xii2dGZNUM53ImanG6FtSPY3VdLuDxHQOVnxEu+XqVY=;
+	b=OgdT35T/QoeKVWWKMjtqQdx9e2l9EIH651v/EXRSp+8ybbxFa+s7ZZfvJK3NrimXKxThjJ
+	y7YGnU8m+YsnBH4FfITkNHgqS7FPywkPVjFt6yaSaTSbXHor8WRKw55giE79+FSFPTK7sM
+	YRgm/lqxTtRmhYabNyBoKRitma7nROo=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-619-Za6kuhPdP7mORgoJwagK2g-1; Thu, 15 Feb 2024 06:42:52 -0500
+X-MC-Unique: Za6kuhPdP7mORgoJwagK2g-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9FAAF845DC1;
+	Thu, 15 Feb 2024 11:42:51 +0000 (UTC)
+Received: from bfoster (unknown [10.22.16.56])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4C20F2166B36;
+	Thu, 15 Feb 2024 11:42:51 +0000 (UTC)
+Date: Thu, 15 Feb 2024 06:44:28 -0500
+From: Brian Foster <bfoster@redhat.com>
+To: Christoph Hellwig <hch@lst.de>
+Cc: linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>,
+	Jan Kara <jack@suse.com>, David Howells <dhowells@redhat.com>,
+	Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/14] writeback: don't call mapping_set_error on
+ AOP_WRITEPAGE_ACTIVATE
+Message-ID: <Zc35HOF8+vVEkdQu@bfoster>
+References: <20240215063649.2164017-1-hch@lst.de>
+ <20240215063649.2164017-2-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240215063649.2164017-2-hch@lst.de>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-Now that direct recycling is performed basing on pool->cpuid when set,
-memory leaks are possible:
+On Thu, Feb 15, 2024 at 07:36:36AM +0100, Christoph Hellwig wrote:
+> mapping_set_error should only be called on 0 returns (which it ignores)
+> or a negative error code.
+> 
+> writepage_cb ends up being able to call writepage_cb on the magic
+> AOP_WRITEPAGE_ACTIVATE return value from ->writepage which means
+> success but the caller needs to unlock the page.  Ignore that and
+> just call mapping_set_error on negative errors.
+> 
+> (no fixes tag as this goes back more than 20 years over various renames
+>  and refactors so I've given up chasing down the original introduction)
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
 
-1. A pool is destroyed.
-2. Alloc cache is emptied (it's done only once).
-3. pool->cpuid is still set.
-4. napi_pp_put_page() does direct recycling basing on pool->cpuid.
-5. Now alloc cache is not empty, but it won't ever be freed.
+Reviewed-by: Brian Foster <bfoster@redhat.com>
 
-In order to avoid that, rewrite pool->cpuid to -1 when unlinking NAPI to
-make sure no direct recycling will be possible after emptying the cache.
-This involves a bit of overhead as pool->cpuid now must be accessed
-via READ_ONCE() to avoid partial reads.
-Rename page_pool_unlink_napi() -> page_pool_disable_direct_recycling()
-to reflect what it actually does and unexport it.
-
-Fixes: 2b0cfa6e4956 ("net: add generic percpu page_pool allocator")
-Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
----
- include/net/page_pool/types.h |  5 -----
- net/core/page_pool.c          | 10 +++++++---
- net/core/skbuff.c             |  2 +-
- 3 files changed, 8 insertions(+), 9 deletions(-)
-
-diff --git a/include/net/page_pool/types.h b/include/net/page_pool/types.h
-index 3828396ae60c..3590fbe6e3f1 100644
---- a/include/net/page_pool/types.h
-+++ b/include/net/page_pool/types.h
-@@ -210,17 +210,12 @@ struct page_pool *page_pool_create_percpu(const struct page_pool_params *params,
- struct xdp_mem_info;
- 
- #ifdef CONFIG_PAGE_POOL
--void page_pool_unlink_napi(struct page_pool *pool);
- void page_pool_destroy(struct page_pool *pool);
- void page_pool_use_xdp_mem(struct page_pool *pool, void (*disconnect)(void *),
- 			   struct xdp_mem_info *mem);
- void page_pool_put_page_bulk(struct page_pool *pool, void **data,
- 			     int count);
- #else
--static inline void page_pool_unlink_napi(struct page_pool *pool)
--{
--}
--
- static inline void page_pool_destroy(struct page_pool *pool)
- {
- }
-diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-index 89c835fcf094..e8b9399d8e32 100644
---- a/net/core/page_pool.c
-+++ b/net/core/page_pool.c
-@@ -949,8 +949,13 @@ void page_pool_use_xdp_mem(struct page_pool *pool, void (*disconnect)(void *),
- 	pool->xdp_mem_id = mem->id;
- }
- 
--void page_pool_unlink_napi(struct page_pool *pool)
-+static void page_pool_disable_direct_recycling(struct page_pool *pool)
- {
-+	/* Disable direct recycling based on pool->cpuid.
-+	 * Paired with READ_ONCE() in napi_pp_put_page().
-+	 */
-+	WRITE_ONCE(pool->cpuid, -1);
-+
- 	if (!pool->p.napi)
- 		return;
- 
-@@ -962,7 +967,6 @@ void page_pool_unlink_napi(struct page_pool *pool)
- 
- 	WRITE_ONCE(pool->p.napi, NULL);
- }
--EXPORT_SYMBOL(page_pool_unlink_napi);
- 
- void page_pool_destroy(struct page_pool *pool)
- {
-@@ -972,7 +976,7 @@ void page_pool_destroy(struct page_pool *pool)
- 	if (!page_pool_put(pool))
- 		return;
- 
--	page_pool_unlink_napi(pool);
-+	page_pool_disable_direct_recycling(pool);
- 	page_pool_free_frag(pool);
- 
- 	if (!page_pool_release(pool))
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 0d9a489e6ae1..b41856585c24 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -1018,7 +1018,7 @@ bool napi_pp_put_page(struct page *page, bool napi_safe)
- 		unsigned int cpuid = smp_processor_id();
- 
- 		allow_direct = napi && READ_ONCE(napi->list_owner) == cpuid;
--		allow_direct |= (pp->cpuid == cpuid);
-+		allow_direct |= READ_ONCE(pp->cpuid) == cpuid;
- 	}
- 
- 	/* Driver set this to memory recycling info. Reset it on recycle.
--- 
-2.43.0
+>  mm/page-writeback.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+> index 3f255534986a2f..703e83c69ffe08 100644
+> --- a/mm/page-writeback.c
+> +++ b/mm/page-writeback.c
+> @@ -2535,7 +2535,9 @@ static int writepage_cb(struct folio *folio, struct writeback_control *wbc,
+>  {
+>  	struct address_space *mapping = data;
+>  	int ret = mapping->a_ops->writepage(&folio->page, wbc);
+> -	mapping_set_error(mapping, ret);
+> +
+> +	if (ret < 0)
+> +		mapping_set_error(mapping, ret);
+>  	return ret;
+>  }
+>  
+> -- 
+> 2.39.2
+> 
+> 
 
