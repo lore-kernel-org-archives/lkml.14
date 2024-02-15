@@ -1,90 +1,103 @@
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8BE13A252;
-	Thu, 15 Feb 2024 19:42:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41EE813A25D
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 19:43:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708026145; cv=none; b=hO3gA16k9BuoKtb3U5C00u0itsjfP8u1FMbz/c0QlqbIw2gTGhJQDGXmOvNVykgOz5B3vQ0n0F7Vyrk0uKxsZfoGHciq+ozVP4Ckghmx8sHfSdl8Wcy4Z712oQPWMRVGmc+/7es/KP2xRfEnmRaDTTOZsu4Em/hPOqg4hfwozZo=
+	t=1708026221; cv=none; b=tGZvqKn2shgCNLV6Do9amJL7BcfRHExGKgWhLNQZwN6u1oxAJvVWG9m1e5idCRujB/CuYcvRYWKmjy8+cMorOiWBIZ8OAcp3WzNKwQd4g0qS/lWKPDZUO0BowLr0S04h3rflZfp5MHfvOVFDgmzEoweXsqYFsQ4fI0xCvoxPHPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708026145; c=relaxed/simple;
-	bh=4qLmN4QeIb1XHEXWSfCSf+PqwEjw73xNNLMKPiCBaOs=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=PvyupocbXxsMW+cDRVgL+pu3RTnKHcvolV+1LbsSt1Outa1Wax7aJKwvEEbuEMA0ulmlb2wI5B+G/F5gAgoBlotvqhoYWf3VT6udkGVFwpQZUiKzTm8nCcjSrNdTHQYTlFebwkddf7KgkQjYK5IcPfeymhdTMQ/ZLqab5DazdBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=dFtui1+D; arc=none smtp.client-ip=208.88.110.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
+	s=arc-20240116; t=1708026221; c=relaxed/simple;
+	bh=HDDFchT229HxwZ+4S2Oyhh6QwaUnpPOF1xD3S5Yhof8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XVvhXHBptJQJkuxjQecdWv2NKJJ8WE2vg4HCFRpLNxFPaRJzm6VFxN68n3Lr2OWmDOLU1+t5fhhWzp+1CXafWUTrt8EREiMQaraer/46VqxcMCf412E13QEnlu7Ym9kUgwtTm0jR5QCkiLZUPF71PdodQKdPMiKlzmRD4K2R5Pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=INZoQ/FA; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="dFtui1+D"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id D89459C2B79;
-	Thu, 15 Feb 2024 14:42:14 -0500 (EST)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id czNSXTnX_0Np; Thu, 15 Feb 2024 14:42:14 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 3A8219C45E9;
-	Thu, 15 Feb 2024 14:42:14 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 3A8219C45E9
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="INZoQ/FA"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-411de7c6b3dso9848655e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 11:43:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1708026134; bh=d0kaTdAspeMgz7/MP6qC8ExPvkrFjxSvhwBGjWMBF3c=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=dFtui1+D6xeFRwkukPMrjqdBh9H1FWX42dXfOVsL3fJ0JLhtKvMrf2xlZAyXrUYO7
-	 Of6Fe547fJ+HFh8jqFkuU4O0Lngi9+u+5haXhB0M3LJsnVXjTChWSaq645ZG6obVwv
-	 IXa/+eg3quyWkYhpCWCPotjPaPhtqQ2iwntABdkVVWRtzrg46hMrU1ZyTIai2WvyEo
-	 Q3O4SbACYkH8W48o7nxJcwoH5wna0r3wguFkBw44ABlDfxuAJPuOwsCrZgl+FaBeou
-	 5T32jxrRZIO046MTicgqygNWWuiqvHma1inGwCORA7JVJ4vgl48fSKy0plgDsgInmb
-	 A/yhs+mk23fDA==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id P9_wQCFyOOFl; Thu, 15 Feb 2024 14:42:14 -0500 (EST)
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [192.168.48.237])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 066379C2B79;
-	Thu, 15 Feb 2024 14:42:14 -0500 (EST)
-Date: Thu, 15 Feb 2024 14:42:13 -0500 (EST)
-From: Charles Perry <charles.perry@savoirfairelinux.com>
-To: Rob Herring <robh@kernel.org>
-Cc: mdf <mdf@kernel.org>, Allen VANDIVER <avandiver@markem-imaje.com>, 
-	Brian CODY <bcody@markem-imaje.com>, hao wu <hao.wu@intel.com>, 
-	yilun xu <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>, 
-	krzysztof kozlowski+dt <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, 
-	Michal Simek <michal.simek@amd.com>, 
-	kishore Manne <nava.kishore.manne@amd.com>, 
-	linux-fpga <linux-fpga@vger.kernel.org>, 
-	devicetree <devicetree@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Message-ID: <747282644.1027419.1708026133594.JavaMail.zimbra@savoirfairelinux.com>
-In-Reply-To: <20240215133240.GA4061942-robh@kernel.org>
-References: <20240207180142.79625-1-charles.perry@savoirfairelinux.com> <20240207180142.79625-3-charles.perry@savoirfairelinux.com> <20240215133240.GA4061942-robh@kernel.org>
-Subject: Re: [PATCH v3 2/5] dt-bindings: fpga: xlnx,fpga-slave-serial:
- rename gpios
+        d=gmail.com; s=20230601; t=1708026218; x=1708631018; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7D3Hve9+ECAggWL+Tt6SbntilYeA7K9pgcMz0v6dHa4=;
+        b=INZoQ/FA8tl9BlvvOFbLhWKl+0iobU8yPNJBetgQmI6LhMOWfFGVt1HFLa43vTtbXr
+         N6yXn+cFH0Yy+IoHfASBNuGuGHtQczdZCdKKitNLCsRjQoDsG+LitELQIpuUDA445z29
+         wFcX2rH8h9AjfFIfRyylIRvuMzj2eLlANYM8RfpocjTg6C/9iZTeVJ9Pjb6TL8kNaGBL
+         tqKSN3P7+C9FWPb2p6Ps6Tb65ysEnXxwkby0lOiWjm6rDS6Br+S9P9qgWgAS1t4ApFpt
+         PMvP/yhLfkH8D40/dQiyItiyv3p2j419iBUSoQICWRMCsBqjptCAOwv3uAdpRUuBVbL8
+         sckQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708026218; x=1708631018;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7D3Hve9+ECAggWL+Tt6SbntilYeA7K9pgcMz0v6dHa4=;
+        b=NBJXfFYhJOq7QctA+6lq0eLvbII1vIo6MAVgWB/DRY8VDf/9YKOFGEXa0Iz4nZ+EXC
+         taKz8b9G/N0wYazVH2+TmdVsF8kc+LRDCiXTnbBhHQM1xkTWDcjGMtEj2f8QzHYRT2KW
+         1/M9QfQObfVK8SpWeCLP5PkbEeybanwIHWBBm+7OVXqYm7CczSvRilFrb0B0ZziYGp+4
+         VzBgYhhk1Ht89q4o1wJa6mSnhqCq1gFkPhIouwJqvqhDQT8Val0y9Rwxxkf2UFS6os+z
+         ybdyzZEWkVRzazVQL69+S91Gg4qfwUqXb4ZpkgQGKV888Dnuio9e+fjo0pV+8Wb1SWf7
+         cfVg==
+X-Forwarded-Encrypted: i=1; AJvYcCV40Il7rqtEZgd16siJXVGfzojKBL2v0sr3DcXSqz+WqbZhlzi3iS6nSrruseF6VUDtkH0AlcVun+iaLyhCDq9JMwcYjBgHkNNo86dI
+X-Gm-Message-State: AOJu0YxK+HHCgoTk2TON/DIpBvMgrsz1yaL4a7q8D4zwCQtRQuHKk7ZM
+	QttuUUVOHriwVz0k3nZTAR8zjTWDT+wUWWRueUVL0O/mBE/jeDez
+X-Google-Smtp-Source: AGHT+IE4y+314+eegQYovl6v69vxT7kokVg98vDhwNONtKWxXDw7xVMWeBJpuZ/HTGCVKOJ71i2H4Q==
+X-Received: by 2002:a05:6000:2cc:b0:33d:1665:b2b0 with SMTP id o12-20020a05600002cc00b0033d1665b2b0mr463406wry.53.1708026218325;
+        Thu, 15 Feb 2024 11:43:38 -0800 (PST)
+Received: from aaron-macbookpro.. (host-92-14-37-217.as13285.net. [92.14.37.217])
+        by smtp.gmail.com with ESMTPSA id bu23-20020a056000079700b0033b7d9c14desm85706wrb.5.2024.02.15.11.43.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Feb 2024 11:43:37 -0800 (PST)
+From: Aaron Parfitt <aaronparfitt123@gmail.com>
+To: gregkh@linuxfoundation.org
+Cc: linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	philipp.g.hortmann@gmail.com,
+	Aaron Parfitt <aaronparfitt123@gmail.com>
+Subject: [PATCH v2] Staging: rtl8192e: rtl819x_HTProc: Removed braces from single statement block in ht_on_assoc_rsp
+Date: Thu, 15 Feb 2024 19:40:47 +0000
+Message-ID: <20240215194045.37205-3-aaronparfitt123@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.8.15_GA_4581 (ZimbraWebClient - GC121 (Linux)/8.8.15_GA_4581)
-Thread-Topic: dt-bindings: fpga: xlnx,fpga-slave-serial: rename gpios
-Thread-Index: 8UFoOUIQo66Y04KiBhC3i+CHQF5HTA==
+Content-Transfer-Encoding: 8bit
 
-On Feb 15, 2024, at 8:32 AM, Rob Herring robh@kernel.org wrote:
-> On Wed, Feb 07, 2024 at 01:01:25PM -0500, Charles Perry wrote:
->> By convention, gpio consumer names should not contain underscores
->> (prog_b here) and shouldn't contain active low suffixes (-b here).
-> 
-> Yes, that is the preference, but we are stuck with supporting the old
-> name. It is not worth it to carry both in the binding and kernel.
-> 
-> Rob
+Remove braces from single statement blocks in the rtl8192e staging
+driver to clear checkpatch.pl warnings, improving code readability
+and adhering to coding style guidelines.
 
-Ok, I'll go back to "prog_b", "init-b" and drop patch 2 and 3 for v4.
+Changelog since v1:
+- Updated the subject line to make it more unique and descriptive.
+- Refined the patch description for clarity and conciseness.
+- Incorporated feedback from Philipp to improve code style compliance.
 
-Regards,
-Charles
+Signed-off-by: Aaron Parfitt <aaronparfitt123@gmail.com>
+---
+ drivers/staging/rtl8192e/rtl819x_HTProc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/staging/rtl8192e/rtl819x_HTProc.c b/drivers/staging/rtl8192e/rtl819x_HTProc.c
+index 6d0912f90198..49b882c363bf 100644
+--- a/drivers/staging/rtl8192e/rtl819x_HTProc.c
++++ b/drivers/staging/rtl8192e/rtl819x_HTProc.c
+@@ -480,9 +480,9 @@ void ht_on_assoc_rsp(struct rtllib_device *ieee)
+ 	}
+ 
+ 	ht_info->current_mpdu_density = pPeerHTCap->MPDUDensity;
+-	if (ht_info->iot_action & HT_IOT_ACT_TX_USE_AMSDU_8K) {
++	if (ht_info->iot_action & HT_IOT_ACT_TX_USE_AMSDU_8K)
+ 		ht_info->current_ampdu_enable = false;
+-	}
++
+ 	ht_info->cur_rx_reorder_enable = 1;
+ 
+ 	if (pPeerHTCap->MCS[0] == 0)
+-- 
+2.43.0
+
