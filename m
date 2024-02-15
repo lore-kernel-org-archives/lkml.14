@@ -1,104 +1,128 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637F719A;
-	Thu, 15 Feb 2024 00:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35913391
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 00:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707955546; cv=none; b=GduJfJLbWaECRZrwdOWV/RCdlRTbQkX5XBWkMB3BLY36QAEZQ/gRumTRIBPhurMRcx/SwM19tvG6AFDkxlaxZALplr6YMexyo/YCKUMzD98bgIpDd2J+pKoHKt20JSxrC22MAMqOW6rqY+B5v6P9aarPe8PmiDvlg8uSej8zMwk=
+	t=1707955668; cv=none; b=bFkkxVu5bjTUdYMrgqqAbP1GFbA/6uqZoM0S7jIVuygo7n/RFWGW+86F4zaOyNxHOjiEfj+UXivjEQ2yV7TZv9ZTgKP+nwOwIcSDDzIk8eFQqysF8gDM0rAooaxJXtBw8a8wZ//nfQpEEuxmunQK4BVblfIrOKQvBAN1V8v3ONY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707955546; c=relaxed/simple;
-	bh=RyT0hAFnyZXFspK1xF3WX3kXpHesaIlud3qAHvWfYQ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AalmuE0/7ECz2MxrFqWfK3hvd8V3lJeRh61hVIXodRnaIJHVouHzL9sXsxfpHAiyj99kKlTVi6VLXHTua8NoYeeyzZlR+UdWPNRU7reP19fW/GhvTOdCoK49LKIZIRhunAoF1ucwSlKi8EsOu2hQy7rgDoHyRLFCP3V4TVC6ejE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QyYCwzrl; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707955668; c=relaxed/simple;
+	bh=mqihVnhqmNxSJUbv/RGxqZmC0xVgRGexMSCP0Ns7bYU=;
+	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jIr4qiAOsBp6mj/v4YBC/zglGrZJLojIse6Q6gkWJIrjXRreDLaBgZoHL7haKQPYiZMUJtM4SWMkGzNsnf9SV/aadv7ECHCRklpNJDIYn3GVx34m1uZhcfxUYtCuR4QUpgYtbiYti+CrM6jCVqkD4NPT5KSadQGYMvxRl87AYmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fQff7ErD; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QyYCwzrl"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-785d4dba20cso21497385a.3;
-        Wed, 14 Feb 2024 16:05:45 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fQff7ErD"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5114b2b3b73so360103e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 16:07:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707955544; x=1708560344; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0RoGSg2VttRw4fae6dvJDXsrdDpNftzBOM5PYVXiVHg=;
-        b=QyYCwzrlPqDYwZWDknwfByM5xU6oDRigoj6cAGfBpNCE+Jwmx4BDUsY9arhPA8ArkC
-         kdPwm/KrygqgVAFSl/Raatd/6/4Io6hq4br1dJ1oGYVuZGoAn3GxwsXEsj755uOxTGVf
-         eFyLwW6RC7mXed64uygbXctmRY0g7T39TkUCJjPR2J6Ki4WHFlgA1n6IIi5kRswY40rO
-         dTnbnL2Jynx98TD4aAZZIrfeCvJYn8/eVoglrD8WxH0zY4cQcopXpDEdYOksjgOcGONN
-         qTizpdYd7hTUwVd+yyAoO6e4SUCRDoGDuYCArGvb0nbrXuTR2ZIO2Asy22yDPu0rMjZ3
-         kShw==
+        d=chromium.org; s=google; t=1707955664; x=1708560464; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Er+ESEKbgXvc1t5qmUg/dKRx14VLf4dPpeD7i9BwE5I=;
+        b=fQff7ErDYFXHPoXlCcp/lvCOR3Te7xvdHQXRtCT/rId6rLQMyHpA9vn3Gz9WEg9UfU
+         fON4MwJPefDvY37/bIhw3ej3KJicuaNxTv52zYf+ggnZS+MNlAZr/14y1phKF57NI9wL
+         qKZ8Tj/ROM+48yVbFjN2fGizHornGEHZtW9w8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707955544; x=1708560344;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0RoGSg2VttRw4fae6dvJDXsrdDpNftzBOM5PYVXiVHg=;
-        b=mnsDLUV4t8PyJOjq3ec7thKwmntou3IcZzurOmdDm1EJYUdMxkFko/GNceLv8UIGf7
-         c0iMtI8KpwgQxaJM7rm9ZgaXSeDyzTDaaWSYono1Rxd2kawxVoP0oBVxJ04GamDrDLvo
-         n+9M4qTUgYeJ4OT7v7U3fj/BNHCHH3kz5V/lP5cGdhJnYwt7Icc3qcuLhJ/bQx99PDdQ
-         QAXKbTjWxLKSYMGMSM4WZWNsMkENtHKOcDhxe/WIWUfjmRkpYJWbNYhxSAl17xLhGvpa
-         A9E7sxW6ix+e/SWs4QXQxAEuYwjcyj2ykieYu/0gnkPR6tEb+2GLKddn97LlVf8xa3+K
-         /SNw==
-X-Forwarded-Encrypted: i=1; AJvYcCWQ+jlYcMuez65xImd2v34MAPLaSMmKETfHl7D+sZmV4vDPDDbhd2VROYha5E5vgbtmBMTZqXHwVtDufc5uSKCIvDQTgSRKRqhuSrtVpReBVTOjiF19hF5ek5oTPncpAwJOUZYH
-X-Gm-Message-State: AOJu0YyjZO5W4LvN+lehCkMzyo6h/fn8faF4yRJm+jhp84VqeCAFoVJP
-	QC8fgBVCPU+uWzpnPLgP/7BwlFaG9yKyK27Ww7bDxuklMlZoXNe+
-X-Google-Smtp-Source: AGHT+IFpjE8rZ/HqeC/vKl01yY1yV6zz1HzKkGi6yhJBnaiEDIrmnxls2pdAv8XI9iMUXxFwVbHNVQ==
-X-Received: by 2002:a05:622a:45:b0:42c:7c3d:e20e with SMTP id y5-20020a05622a004500b0042c7c3de20emr310372qtw.41.1707955544138;
-        Wed, 14 Feb 2024 16:05:44 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id i6-20020ac85e46000000b0042c5ec26eccsm43286qtx.72.2024.02.14.16.05.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Feb 2024 16:05:43 -0800 (PST)
-Message-ID: <1533ba43-c622-4a1e-b2f6-5ba0a6a8a1a2@gmail.com>
-Date: Wed, 14 Feb 2024 16:05:40 -0800
+        d=1e100.net; s=20230601; t=1707955664; x=1708560464;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Er+ESEKbgXvc1t5qmUg/dKRx14VLf4dPpeD7i9BwE5I=;
+        b=OJfGqfpS4Rn5mT5Vn0PKgpmYaBRl1TLX8tG+9CTIE2HjCXw/issZ22/0Rgb3cJqOz6
+         vR7Xx3riUlfcLz9WKLAO4MAaGCfZAfiWZ/KinIOXS+G4q6dXJKnac76fhG1IyLQLrBbu
+         QFI7veUC/foKlE28gKnSi2020ERvjr+uTlbwqc+vLyYaU0x6RZyyPjdJHyQaa2hi0Ixj
+         tJ0t8ZEr4kldRitCheayCmEh680CMvUDqobbh77vSXwy3Ae013SHOggcEnJzW7DU0jFD
+         Z9qmDV8AtypoM/gEoy+iWt6371W485H6doHZhArRi4/WNzgLn6eiABHvQlcXdFYQwoE8
+         xkQA==
+X-Gm-Message-State: AOJu0Yxb+iJADgrve2LAC5jl1asFJBoXnCagpwNd9VsieOZ2SrhUH0Ij
+	ffAqubvA7D9q+uS749DPi380mtWCQUNqB62TZGaz+1WV2f6zgLMmD3QIFro1GMdTQ5yP5HZ1znJ
+	WxzEi8543PosoSDL4Lk3NyPt1rlWoSHHSYeIQ
+X-Google-Smtp-Source: AGHT+IFV146fri/yEai625WOmmn4P92hjYL0lv0BuNrjWlIcprz/viy3Rv+xCRbYoWq6nvQJZDmqN9KcjzHIR0bVyZk=
+X-Received: by 2002:a05:6512:77:b0:511:7292:c4db with SMTP id
+ i23-20020a056512007700b005117292c4dbmr243676lfo.12.1707955664213; Wed, 14 Feb
+ 2024 16:07:44 -0800 (PST)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 14 Feb 2024 16:07:43 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.6 000/124] 6.6.17-rc2 review
-Content-Language: en-US
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, allen.lkml@gmail.com
-References: <20240214142247.920076071@linuxfoundation.org>
-From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20240214142247.920076071@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <18ac05fb-a78d-4e95-a73d-461f509cdc5f@linaro.org>
+References: <20240210070934.2549994-1-swboyd@chromium.org> <20240210070934.2549994-19-swboyd@chromium.org>
+ <18ac05fb-a78d-4e95-a73d-461f509cdc5f@linaro.org>
+From: Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.10
+Date: Wed, 14 Feb 2024 16:07:43 -0800
+Message-ID: <CAE-0n50Y_GRMt8km=XjGC5Zm5dvb2t4gccznJn9HEFS4p7y8fQ@mail.gmail.com>
+Subject: Re: [PATCH 18/22] dt-bindings: chrome: Add binding for ChromeOS Pogo
+ pin connector
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, chrome-platform@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org, patches@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, 
+	Pin-yen Lin <treapking@chromium.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 2/14/24 06:30, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.17 release.
-> There are 124 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 16 Feb 2024 14:22:24 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.17-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+Quoting Krzysztof Kozlowski (2024-02-11 05:39:36)
+> On 10/02/2024 08:09, Stephen Boyd wrote:
+> > diff --git a/Documentation/devicetree/bindings/chrome/google,pogo-pin-connector.yaml b/Documentation/devicetree/bindings/chrome/google,pogo-pin-connector.yaml
+> > new file mode 100644
+> > index 000000000000..5ba68fd95fcd
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/chrome/google,pogo-pin-connector.yaml
+> > @@ -0,0 +1,61 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+[...]
+>
+> > +properties:
+> > +  compatible:
+> > +    const: google,pogo-pin-connector
+> > +
+> > +  "#address-cells":
+> > +    const: 1
+> > +
+> > +  "#size-cells":
+> > +    const: 0
+> > +
+> > +  port:
+> > +    $ref: /schemas/graph.yaml#/properties/port
+> > +    description: Connection to USB2 port providing USB signals
+> > +    required:
+> > +      - endpoint
+>
+> Drop required.
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+Why? I'd like to make it so you can't have the node defined without
+connecting it up to the rest of the system. Is that bad?
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+>
+>
+> > +
+> > +patternProperties:
+> > +  "^keyboard@[0-9a-f]{1,2}$":
+> > +    description: The detachable keyboard
+>
+> If this is detachable why do you define it in DT? Only hard-wired USB
+> devices, which need some sort of special handling. are described in DT.
 
+From the commit text:
+
+ We expect to find a keyboard on the other side of this connector with a
+ specific vid/pid, so describe that as a child device at the port of the
+ usb device connected upstream.
+
+ChromeOS userspace is checking that the connected device downstream of
+this port has the expected vid/pid to quickly rule out USB keyboards
+that aren't the detachable keyboard. I wanted to express this in DT so
+that it didn't live in ChromeOS userspace forever.
