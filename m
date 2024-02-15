@@ -1,122 +1,147 @@
-Received: from out203-205-221-209.mail.qq.com (out203-205-221-209.mail.qq.com [203.205.221.209])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8D8112FB13
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 13:20:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37CDE12E1C7;
+	Thu, 15 Feb 2024 13:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708003251; cv=none; b=nQ8wYD9rIl1IRRhN2xotJ/v63DSEmH0WFAQpyKuqOgQxM5S8nCn9ON/VIYtIwdSl89o0VBfGnr16UbSOkySvRpHodaYSBfolv0c4+O2WSfg2g4ELIKLTrX8uLz5fyf1D+wb95cjq2JXy78nUIjERZeeyedUls4wBMoqvwr7PSlw=
+	t=1708003285; cv=none; b=Tjq0MNSacRXxu7iXwuu19XJFT0MU/k6ySqj0rQ0JLLi5EYUOJiDPN/1WVbaCoO2ktDHmcAxmXyGorKKODr8hJ05WAanTAB90rLISKtbqqvu4HH5hB5YKBVPBAI+vuyTJ8P7eunam2mQP2Mt7YngiqMizr8n7VTNpI7LQ6Ye78ew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708003251; c=relaxed/simple;
-	bh=13KH5H07oc9COrFUMNfc4LQtgoGK3DNw6zWZWS8pPyc=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=ksQUD31S4oM60YLtGqhyra6RjOw0Kya15NS7SDo262vXrnKaJU7zcvXwE3q7QcDnftyTNuI+ozuNCdcRRxTFLAYtBBOqWfCDHnlNlsQ4EYnFIvS53ovtZ3AapCHgXPmtUVfWBd+lBuRhzI79WftVFHpM92IXJdxKX8E1MR0Gg+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=xLlNt7cM; arc=none smtp.client-ip=203.205.221.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1708003285; c=relaxed/simple;
+	bh=BSWnMB/tyIIHifk7sXF2NKDatOLCFfN+5bwJjTs/U+c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qiP5eTD2QpFSZQ51Nw5fu5NzYzC2USpvUuZhjHso7kdxi3UinjLoue8IYkB1EP9Ij4kX0vGvEiAay4pWq1omO/Ezj4AdABU3AYvlXqjZ1i8mYxsaIptytLCgYZhB6QRmCxb38FGdwt4KFvDxduIKsbz37+Vw3QzCa4BKAxyAcgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=BFnvSgDo; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=+LD7b1lB; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=BFnvSgDo; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=+LD7b1lB; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="xLlNt7cM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1708002940; bh=74lDoTuQg5It9Dyrlq+T3M84frrgQFC8myhCS/1J5CQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=xLlNt7cMpB007nxeBQgg08jSbyl2bklaBtaXESSLmcZoXOSD4hVi3zDQcO4seOPkF
-	 8/q8jkqTv2LmFKt4ArCFjK5MSDrtVZXAjhwIk40iO4TLGa88ax2BpQow/cB1iNZZ+7
-	 sjFyNcp2mokrBqQ/N46OR5fwj8DodrgclcDBvSt8=
-Received: from pek-lxu-l1.wrs.com ([36.129.58.158])
-	by newxmesmtplogicsvrszc5-2.qq.com (NewEsmtp) with SMTP
-	id 8BA8E5C; Thu, 15 Feb 2024 21:02:11 +0800
-X-QQ-mid: xmsmtpt1708002131tzf3vszm9
-Message-ID: <tencent_9A767366D63D613790969436A84B2C74F509@qq.com>
-X-QQ-XMAILINFO: NvH2zBBgt3uTOnUTxJcm5ftnkQHSoEL/UJYcdW9SZwScbnDxQrfu2FZmb6Dmv6
-	 Z46P9ZjBHsIB8gnvf/Xd650nMG0ZO8jZU9ATQ8tKfBcjw08/MrWAEgM/PVQv/GNLYLbgJJQpSWhO
-	 3CFy6SkNTTYidyDM0cGQ5G5+rZInMTrSVE5mMLcwLiaqQNy01OeV6WE/FgC0MZKYRI5BLS9Slszz
-	 MqDX7/3hV2m0sxKsXBDOlMWR2HwxkOircVZ9saEjmi5vQvzAC/tE0rJgv2496kXERx/CuTUrLaiD
-	 ooGdPVfXdSzNyEUVBYG/mfywkm2fsbp1sWqG5tM8E+LZUT2LocuXgtdf9xedw9/UNT5EHXRECZaW
-	 laHdY+sbEU2xllde563Lk5HDzu54Tn/+8tc+hzx5X66T0O5gxoLwGTKqC/L+vmgdCTL2AbVwRIQd
-	 /LYaDabXbF+R57p2RuJihQImvUr3Dz3RYGWz6RmrRc3FvMuKyzJHiTAD3goee25g0ykUU6hX96sW
-	 4BeFdblNyNtaTfES+Rc6WeBrNlTyitB/VsodnZ788JKb1UDgA9zBkOQyUo7l3jybnahXuz4+c6Jl
-	 qApk7OuScF6jcvy5uzq5E800DkfFor2IP9Z6squ458a8lpTRRU6Rb2Ri7TP0MFmWgpoxou3dl2k6
-	 rp6Xq9u5L5bsdY5Fj752BCeiKrQqkx9kYOM4RRdvJrlAkBLB11m0AVx3Ra8D6X7Snm1NbJfYHsJk
-	 ZjKnAyFDWF2oGmVjuNnzHn3+SIPNCGNUKV/9vHFnirTCt9OEA/zgnAW3SiyePr5vBgIwchRYtITW
-	 RZyy3O+u7hmAQsNxrtIlJQK9COznNcqwthB9M4zork/vWl3+m17xF2XLTYSGxXLhI/5RQ86LkzrE
-	 cxjZHTVX8CK6/ivXqnOb96BV0v9DBU+JYdp10ftKsl
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+0f999d26a4fd79c3a23b@syzkaller.appspotmail.com
-Cc: airlied@gmail.com,
-	daniel@ffwll.ch,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	syzkaller-bugs@googlegroups.com,
-	tzimmermann@suse.de
-Subject: [PATCH] drm/atomic-helpers: fix uaf in drm_atomic_helper_wait_for_vblanks
-Date: Thu, 15 Feb 2024 21:02:12 +0800
-X-OQ-MSGID: <20240215130211.769401-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000ec4c32061143ec95@google.com>
-References: <000000000000ec4c32061143ec95@google.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="BFnvSgDo";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="+LD7b1lB";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="BFnvSgDo";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="+LD7b1lB"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4F0381F8A4;
+	Thu, 15 Feb 2024 13:21:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1708003280; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xm0Tb8e8noxuVf8MCl9TTXqq20dalcFNRaBn9WsQ6rs=;
+	b=BFnvSgDo7Q2HACJulBf+Ey8iBoUsKoC4LDtDilbW21o2MQsbuhq1hK9+Wp4NpfwyDDLW0S
+	nY3P7Otb0pnNQMJPm9pUFkvY5uMPqVtQCFBBUM51zxaMj1VMy1TrBwQGMH+cZBrLaodyFu
+	rA+jnCfR+e+XFt3Fq3oPMoRR+nlA8b0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1708003280;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xm0Tb8e8noxuVf8MCl9TTXqq20dalcFNRaBn9WsQ6rs=;
+	b=+LD7b1lBuqfbsRedQhmt6VxGkigvNNAaq3lQEOnBrW6eRsgdEF4frThpDPW6Vh29uso6a0
+	vf8U4Ux1Oid68ZBA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1708003280; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xm0Tb8e8noxuVf8MCl9TTXqq20dalcFNRaBn9WsQ6rs=;
+	b=BFnvSgDo7Q2HACJulBf+Ey8iBoUsKoC4LDtDilbW21o2MQsbuhq1hK9+Wp4NpfwyDDLW0S
+	nY3P7Otb0pnNQMJPm9pUFkvY5uMPqVtQCFBBUM51zxaMj1VMy1TrBwQGMH+cZBrLaodyFu
+	rA+jnCfR+e+XFt3Fq3oPMoRR+nlA8b0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1708003280;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xm0Tb8e8noxuVf8MCl9TTXqq20dalcFNRaBn9WsQ6rs=;
+	b=+LD7b1lBuqfbsRedQhmt6VxGkigvNNAaq3lQEOnBrW6eRsgdEF4frThpDPW6Vh29uso6a0
+	vf8U4Ux1Oid68ZBA==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 42E48139D0;
+	Thu, 15 Feb 2024 13:21:20 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id umJRENAPzmXlGAAAn2gu4w
+	(envelope-from <jack@suse.cz>); Thu, 15 Feb 2024 13:21:20 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id EC959A0809; Thu, 15 Feb 2024 14:21:19 +0100 (CET)
+Date: Thu, 15 Feb 2024 14:21:19 +0100
+From: Jan Kara <jack@suse.cz>
+To: syzbot <syzbot+3f6ef04b7cf85153b528@syzkaller.appspotmail.com>
+Cc: axboe@kernel.dk, brauner@kernel.org, jack@suse.cz,
+	jfs-discussion@lists.sourceforge.net, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, reiserfs-devel@vger.kernel.org,
+	shaggy@kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [reiserfs?] BUG: unable to handle kernel paging request
+ in reiserfs_readdir_inode
+Message-ID: <20240215132119.gtxttrj3jsft2hwe@quack3>
+References: <000000000000a3818b05f18916e0@google.com>
+ <00000000000018f2c806116ae6d3@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00000000000018f2c806116ae6d3@google.com>
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spamd-Result: default: False [2.87 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 BAYES_HAM(-0.03)[55.33%];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=9688428cfef5e8d5];
+	 TAGGED_RCPT(0.00)[3f6ef04b7cf85153b528];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 RCPT_COUNT_SEVEN(0.00)[10];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[];
+	 SUBJECT_HAS_QUESTION(0.00)[]
+X-Spam-Level: **
+X-Spam-Score: 2.87
+X-Spam-Flag: NO
 
-To briefly summarize the issues reported by syzbot, there are two task call stacks
-as follows:
+On Thu 15-02-24 04:38:04, syzbot wrote:
+> syzbot suspects this issue was fixed by commit:
+> 
+> commit 6f861765464f43a71462d52026fbddfc858239a5
+> Author: Jan Kara <jack@suse.cz>
+> Date:   Wed Nov 1 17:43:10 2023 +0000
+> 
+>     fs: Block writes to mounted block devices
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14ffd320180000
+> start commit:   534293368afa Merge tag 'kbuild-fixes-v6.3' of git://git.ke..
+> git tree:       upstream
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=9688428cfef5e8d5
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3f6ef04b7cf85153b528
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=138d82bac80000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1123fed2c80000
+> 
+> If the result looks correct, please mark the issue as fixed by replying with:
 
-Task A                                 Task B
-------------------------------------   ----------------------------------
-drm_atomic_nonblocking_commit          drm_atomic_commit
-drm_atomic_helper_commit               drm_atomic_helper_commit
-commit_work
-commit_tail
-drm_atomic_helper_commit_tail          commit_tail 
-                                       drm_atomic_helper_commit_tail
-                                       drm_client_modeset_commit_atomic
-                                       drm_atomic_state_default_clear
-drm_atomic_helper_wait_for_vblanks
+Frankly I don't see the reproducer doing anything suspicious but since we
+have no reproducer and this is reiserfs:
 
-When two prerequisites are met simultaneously, the current issue will be triggered:
-1. There is an overlap in the memory range occupied by the crtcs member set contained
-   in the instance state of "struct drm_atomic_state" created by Task A and Task B
-2. The context of drm_atomic_helper_commit_tail() has no lock protection, resulting
-   in the instance state->crtcs sub item being released by other task
+#syz fix: fs: Block writes to mounted block devices
 
-The solution is to add a lock in drm_atomic_helper_commit_tail() to ensure that
-there is no other task interference when accessing the instance state.
-
-Reported-and-tested-by: syzbot+0f999d26a4fd79c3a23b@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
- drivers/gpu/drm/drm_atomic_helper.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-index 39ef0a6addeb..b16ff9020097 100644
---- a/drivers/gpu/drm/drm_atomic_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_helper.c
-@@ -1743,7 +1743,9 @@ EXPORT_SYMBOL(drm_atomic_helper_wait_for_flip_done);
- void drm_atomic_helper_commit_tail(struct drm_atomic_state *old_state)
- {
- 	struct drm_device *dev = old_state->dev;
-+	static DEFINE_MUTEX(lock);
- 
-+	mutex_lock(&lock);
- 	drm_atomic_helper_commit_modeset_disables(dev, old_state);
- 
- 	drm_atomic_helper_commit_planes(dev, old_state, 0);
-@@ -1757,6 +1759,7 @@ void drm_atomic_helper_commit_tail(struct drm_atomic_state *old_state)
- 	drm_atomic_helper_wait_for_vblanks(dev, old_state);
- 
- 	drm_atomic_helper_cleanup_planes(dev, old_state);
-+	mutex_unlock(&lock);
- }
- EXPORT_SYMBOL(drm_atomic_helper_commit_tail);
- 
+								Honza
 -- 
-2.43.0
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
