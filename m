@@ -1,171 +1,99 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B66912F367
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 10:50:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB543129A69
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 10:52:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707994227; cv=none; b=fcAG5gHHcuxoN+olLD2UcqhJhgHVdb/h4HuFKJyNoqCMc7s/EfuCAmX88x9Ax2G70p0DCOKpcaAMtjEBggG20LDmG8iko8tnW/w2g2dqqgkjSBJ+Rl6acwgSl5KBMQTmJY33KTxpNaAwu/yGH/3YhuChSu1YMkvNK1rIixSGxms=
+	t=1707994368; cv=none; b=IO0VOr2qQlElF+50Nrgi1chyWuBsckXVdz1Nl1ZEy7xCD3ncJd0zjT0kDZHGcM56njKC4YEgrKxh3f8FZd4XREBpk+VcR0O8uHaSHjPLPgT1YEjaW8iwYQJAVuiXMrQGS0+JClm0A0zWx2djKK6x30sni/mj3h9dE9Lh6hHdfpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707994227; c=relaxed/simple;
-	bh=qMYEWneeTS1e+IMgvbdElteGWUWNf/LO/YAa5yYNKbk=;
-	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
-	 Cc:In-Reply-To:To; b=tvK98sDVDk9ZxzdB9Cc0+9Kla3GD7GqLMm24G5scRwUPjmQvImLT+Megk3RWG8kPYswG5GuIaPtJV+Mb0+X5H9scmzfkKEiGU15PIpj02ys51m3OkLtHVhV4XffuY8n1aPJigZoWhsmenY2uFe8c1jxV6/lN90grdXXVt2cOfxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Vm9wgtZz; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1707994368; c=relaxed/simple;
+	bh=DrS69cbqai6YRkZOkha+qInzsRn3vy2Nx9Kf8zL2FDg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V2AX9QcSWdU3R9dN5kEqmH+25qazJ9E1czaH6yXWYIcMDGydmeiHsr7CMkbRBBLZqoI+vODrfKrqFxyOy2tbU94incAA6hinwBDXyImTDj7BOZEZ20p/yiNWd5PRiqXs8T8hHyq2dfi4DBcy0UobVwkXwYruT84dBg7yfUL87ZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=oz1Vt0o5; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Vm9wgtZz"
-Content-Type: text/plain; charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1707994222;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tDrgJC7hzHurmZ2XnlYtAZDoBfMM4U/XsubK9yFFoCo=;
-	b=Vm9wgtZzKYFyuphTro/pr6m6ImxEcuFX8SzrfmEdR+feYaOKmgKKECxQGgT9bJW4r6pZup
-	eydUOoFabVf9XQeh1ayo4PdPDH2Gf/rzyEZT4MWldGjqa8jZwVDAIZg9QTGVulWBHGuZ9e
-	1z/zZ/u+0jZlbvLzPbozgmThbZqveu8=
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="oz1Vt0o5"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-db3a09e96daso574703276.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 02:52:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1707994364; x=1708599164; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XVJlypdB8EeG025OlVruBqkZML3RozZ3SqRoFlfo3os=;
+        b=oz1Vt0o5HgvOetZMbPmc1EmSDgi6OMeTrk/C5F/cq05VC1vSRghiGrO4TzcjMw12Kt
+         whmoIrF5g3WSjer4qLS5Yt/XCJL+Nvuo2Ue/6r/tJfsJCgNw7ZTYHC3aT3weiq8DMi6T
+         ep7byMx25T9VxXopNCrGp9uBaZt9ad6BjHulrOdfGM3tlz5JBEDZcHnXbBzxE35q5ri2
+         ClqqEHSG03dmfG89r02sHdpsCQYTWBlDKWWXjpM+Wv6No/4cVe218D7J+rk4M6FQjuv8
+         N2ZV5cQYGXE4BZDtMEIL7+N1G9n6Klb/Z3acjyBsOFzbPiJjKeQ68yxwmSFi4de0GvvH
+         ubcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707994364; x=1708599164;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XVJlypdB8EeG025OlVruBqkZML3RozZ3SqRoFlfo3os=;
+        b=G1Q6OmNd2PeQV82bsB/ohM8IMUIBxHLli+sr11UPjDXu45EbeLSFgdsw0OZTFD5mig
+         8LvnkOhgPs6a49Om09ReHLPNcxWcTr4Vkptmagfi0L92WDsDiaXEUPIiC+k77sz+Xs/o
+         eTHycCw2bHDT+8F/zO+pGcftCEdVosu5tI5cUmDTQYqMkl/W3gu6xrlo0QeWMWk1DZ2T
+         gfX1f37LIXel51f+c1S0AoUpj3o3nAzUEWsGqbyfmHmJUnsQC6PWIh6+h9nGihPkfTIP
+         LAmQvRwToMfl/Zf+KSgudHKNs2tqbOWPUaohRWKttdh2f6axddYUJ7YmnMRgcJqCxV4n
+         5Ejg==
+X-Forwarded-Encrypted: i=1; AJvYcCXc82eq5YsUIFIawa9W8RuTMtnMhZgEGNr2xaO701DRpH2t5Ps39o6fmqUUoGyKfSNu10rFxr/VlK5yCQO0a0ifdI4pQkZfZTJD3t5r
+X-Gm-Message-State: AOJu0YzF2cM4G8yG6BNtgFb9ju06hBuin7DnbResjDMVNg0pxOF7z6YD
+	k+22wfDLMYZksKA7FduwSEfV8GmjHDfhi8IFyjspGRKaGxG38c45J1sy95bKKbQ=
+X-Google-Smtp-Source: AGHT+IGKdFSiqy84NLrVA30/4Kts6hwSkrE6XMGw/mKt98wEEGkyKykv5EX2wDueJiJJVPejLrF0lw==
+X-Received: by 2002:a25:a049:0:b0:dcc:ae3:d8a0 with SMTP id x67-20020a25a049000000b00dcc0ae3d8a0mr1020389ybh.48.1707994364556;
+        Thu, 15 Feb 2024 02:52:44 -0800 (PST)
+Received: from localhost ([2620:10d:c091:400::5:4922])
+        by smtp.gmail.com with ESMTPSA id bk30-20020a05620a1a1e00b00785d7f634bcsm502508qkb.8.2024.02.15.02.52.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Feb 2024 02:52:43 -0800 (PST)
+Date: Thu, 15 Feb 2024 05:52:42 -0500
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeelb@google.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] mm: Fix spelling mistake "commdandline" ->
+ "commandline"
+Message-ID: <20240215105242.GA1282507@cmpxchg.org>
+References: <20240215090544.1649201-1-colin.i.king@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: Re: [PATCH v1 1/2] padata: downgrade padata_do_multithreaded to serial execution for non-SMP
-Date: Thu, 15 Feb 2024 18:49:46 +0800
-Message-Id: <05F7392A-FCC9-48E3-92B3-3A43A9D0C987@linux.dev>
-References: <146c8a41-8864-4cff-80ce-173812441844@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Steffen Klassert <steffen.klassert@secunet.com>,
- Daniel Jordan <daniel.m.jordan@oracle.com>, Jane Chu <jane.chu@oracle.com>,
- "Paul E . McKenney" <paulmck@kernel.org>,
- Randy Dunlap <rdunlap@infradead.org>, kernel test robot <lkp@intel.com>,
- Gang Li <ligang.bdlg@bytedance.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org
-In-Reply-To: <146c8a41-8864-4cff-80ce-173812441844@linux.dev>
-To: Gang Li <gang.li@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240215090544.1649201-1-colin.i.king@gmail.com>
 
+On Thu, Feb 15, 2024 at 09:05:44AM +0000, Colin Ian King wrote:
+> There is a spelling mistake in a pr_warn_once message. Fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> ---
+>  mm/memcontrol.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 94d1b278c458..95c3fccb321b 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -8014,7 +8014,7 @@ static int __init setup_swap_account(char *s)
+>  	bool res;
+>  
+>  	if (!kstrtobool(s, &res) && !res)
+> -		pr_warn_once("The swapaccount=0 commdandline option is deprecated "
+> +		pr_warn_once("The swapaccount=0 commandline option is deprecated "
 
+Quality workmanship.
 
-> On Feb 13, 2024, at 23:15, Gang Li <gang.li@linux.dev> wrote:
->=20
-> =EF=BB=BF
->=20
->> On 2024/2/13 22:52, Muchun Song wrote:
->>> On 2024/2/13 19:13, Gang Li wrote:
->>> Randy Dunlap and kernel test robot reported a warning:
->>>=20
->>> ```
->>> WARNING: unmet direct dependencies detected for PADATA
->>>    Depends on [n]: SMP [=3Dn]
->>>    Selected by [y]:
->>>    - HUGETLBFS [=3Dy] && (X86 [=3Dy] || SPARC64 || ARCH_SUPPORTS_HUGETLB=
-FS [=3Dn] || BROKEN [=3Dn]) && (SYSFS [=3Dy] || SYSCTL [=3Dn])
->>> ```
->>>=20
->>> hugetlb parallelization depends on PADATA, and PADATA depends on SMP.
->>>=20
->>> PADATA consists of two distinct functionality: One part is
->>> padata_do_multithreaded which disregards order and simply divides
->>> tasks into several groups for parallel execution. Hugetlb
->>> init parallelization depends on padata_do_multithreaded.
->>>=20
->>> The other part is composed of a set of APIs that, while handling data in=
-
->>> an out-of-order parallel manner, can eventually return the data with
->>> ordered sequence. Currently Only `crypto/pcrypt.c` use them.
->>>=20
->>> All users of PADATA of non-SMP case currently only use
->>> padata_do_multithreaded. It is easy to implement a serial one in
->>> include/linux/padata.h. And it is not necessary to implement another
->>> functionality unless the only user of crypto/pcrypt.c does not depend on=
-
->>> SMP in the future.
->>>=20
->>> Fixes: a2cefb08be66 ("hugetlb: have CONFIG_HUGETLBFS select CONFIG_PADAT=
-A")
->>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
->>> Closes: https://lore.kernel.org/lkml/ec5dc528-2c3c-4444-9e88-d2c48395b43=
-3@infradead.org/
->>> Reported-by: kernel test robot <lkp@intel.com>
->>> Closes: https://lore.kernel.org/oe-kbuild-all/202402020454.6EPkP1hi-lkp@=
-intel.com/
->>> Signed-off-by: Gang Li <ligang.bdlg@bytedance.com>
->>> ---
->>>   fs/Kconfig             |  2 +-
->>>   include/linux/padata.h | 13 +++++++++----
->>>   2 files changed, 10 insertions(+), 5 deletions(-)
->>>=20
->>> diff --git a/fs/Kconfig b/fs/Kconfig
->>> index 4a51331f172e5..7963939592d70 100644
->>> --- a/fs/Kconfig
->>> +++ b/fs/Kconfig
->>> @@ -261,7 +261,7 @@ menuconfig HUGETLBFS
->>>       depends on X86 || SPARC64 || ARCH_SUPPORTS_HUGETLBFS || BROKEN
->>>       depends on (SYSFS || SYSCTL)
->>>       select MEMFD_CREATE
->>> -    select PADATA
->>> +    select PADATA if SMP
->> I'd like to drop this dependence since HugeTLB does not depend
->> on PADATA anymore. If some users take care about the kernel
->> image size, it also can disable PADATA individually.
->=20
-> Only CRYPTO_PCRYPT, HUGETLBFS and DEFERRED_STRUCT_PAGE_INIT select
-> PADATA. If drop this dependence, hugetlb init parallelization may not
-> work at all.
-
-Oh, right. In this case, maybe current choice is better.
-
->=20
-> Maybe we can set PADATA enabled on default?
->=20
->>>       help
->>>         hugetlbfs is a filesystem backing for HugeTLB pages, based on
->>>         ramfs. For architectures that support it, say Y here and read
->>> diff --git a/include/linux/padata.h b/include/linux/padata.h
->>> index 8f418711351bc..7b84eb7d73e7f 100644
->>> --- a/include/linux/padata.h
->>> +++ b/include/linux/padata.h
->>> @@ -180,10 +180,6 @@ struct padata_instance {
->>>   #ifdef CONFIG_PADATA
->>>   extern void __init padata_init(void);
->>> -#else
->>> -static inline void __init padata_init(void) {}
->>> -#endif
->>> -
->>>   extern struct padata_instance *padata_alloc(const char *name);
->>>   extern void padata_free(struct padata_instance *pinst);
->>>   extern struct padata_shell *padata_alloc_shell(struct padata_instance *=
-pinst);
->>> @@ -194,4 +190,13 @@ extern void padata_do_serial(struct padata_priv *pa=
-data);
->>>   extern void __init padata_do_multithreaded(struct padata_mt_job *job);=
-
->>>   extern int padata_set_cpumask(struct padata_instance *pinst, int cpuma=
-sk_type,
->>>                     cpumask_var_t cpumask);
->>> +#else
->>> +static inline void __init padata_init(void) {}
->>> +static inline void __init padata_do_multithreaded(struct padata_mt_job *=
-job)
->>> +{
->>> +    if (job->size)
->> I think we could drop this check, at least now there is no users will
->> pass a zero of ->size to this function, and even if someone does in the
->> future, I think it is really a corner case, it is unnecessary to optimize=
-
->> it and ->thread_fn is supporsed to handle case of zero size if it dose
->> pass a zero size.
->> Thanks.
->>> +        job->thread_fn(job->start, job->start + job->size, job->fn_arg)=
-;
->>> +}
->>> +#endif
->>> +
->>>   #endif
+Thanks Colin ;)
