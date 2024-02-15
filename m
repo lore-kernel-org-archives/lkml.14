@@ -1,63 +1,55 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76E2138497;
-	Thu, 15 Feb 2024 19:57:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3861A13AA50;
+	Thu, 15 Feb 2024 19:57:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708027022; cv=none; b=bRNFml3whB3VEjXFdhnBkikh5pIRGIx1Jb2xE88Q8vvP6Qg+RokQx6QNDH227qp+RBeq88h9DG/34uue9PZx3bSs5GjP3/e8flMipwasmakbAOmVIPh8q4qP+T5gDla9EQAFShsGRDItNWpqUxRnsROYbEWwcgqOFiA5XscJ/GI=
+	t=1708027024; cv=none; b=A/F40R4nLE1kA+9kpGpQwfgP0lAyULOKPZRc7iK/0OY9R8UU67T14pnaqtuiLR161uSTys08vzLTO5+mXElSlsQxzcslzPyuPowry93CxrUQVJtYmK9Q09nkc27OQW/uIU1Lc4BnJxkVjR2Vy47uaeRpr4Wy8hZTAbtSx1ttg4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708027022; c=relaxed/simple;
-	bh=v47pHAasn8MdjYA+f3l9jeSxWB4YEIsd1dzvoMOTMrs=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=KzeTTRKgDF4OwQ5n81V4C74i0WCxxqaQ8Am7zSGsHrLF1on4NOQeqsdHOGWrwAqZ64qUFUtGSwvQxCrBDjTKEJB3XiJGzF1cGvqiTOhb4kTKF/s40OdqRFPrG/WMNdgi9hswmZfQ3bYrWyO6nQ3zvHHmTqeC4caF+HS+lJ8kF2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZfP0KVV5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dGpVmmF+; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1708027024; c=relaxed/simple;
+	bh=FPqnHmJFsKLimOsWnA+dHbHzCniAsnCLgjpuMnn5MPw=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=Aulb0kXOtPeyAAHuYfMMvsCmk0RlEzqJ/vi3aUZb/kk1oX4Mh1NqXWnsNSn7ZZYryxiSjeI86ND598t7EcgNHiGyEM5OZ1anZbeWq1+/8fn2A6nefi1ueVyfp0q5ee6vLZUO57AHFnHcf1kZf7pluSIglPRZKCuLf+qgFRhEZpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=snFJqbv4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cI7BUHGV; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZfP0KVV5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dGpVmmF+"
-Date: Thu, 15 Feb 2024 19:56:58 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="snFJqbv4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cI7BUHGV"
+Date: Thu, 15 Feb 2024 19:57:01 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708027018;
+	s=2020; t=1708027021;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ePc7duUErdFHn02Yhoblfga7WwrJ8JliqVSXzIVyRKU=;
-	b=ZfP0KVV5Icv0+0mzzUd3Q+La/rwtXbIGfz7kxD3EPwkknDOKDWDDnra7yc2cLpZKhEbF2P
-	jb0wOe6YPGMwsCOJ/DoprC30ZTu64TzAV72ShmQe4CxmkfsU28OazJhQfLlZczcapo2mBF
-	nB+lknudKkEhkBXLs6ZgDQP6K+2C0wPWHLz6AwlKBky9qmdZPz2lEz5Q0izEpmz3RRBaA2
-	0bt6fIe/1qPNhFcjsxEqCRNfXZTmttXALPqcyn/Jcf3QKO0RTyOXl8NKqGyoTptFj73l0K
-	OEh7qdDYWwYx4k8aII5BeaOd3rkE/UTk3QBfcp5cEoOO92FkDKP/xRbs1672Rg==
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=AI3hsuLUVavlaaszlq83CucsGXkpH9S2krMw0wOgMp8=;
+	b=snFJqbv4UPGMqo/ARpoq8Va+tN6KXUWoM68++xc3QFUJ4pNsH2soucOTHd2W6782VyOLt1
+	grVTItT9SuUCb+KB1xw0uuJaz8Ys/Z9XKuYpqbj4FYiCZDjFKrLh/v6N8RavpS1mH5mwN/
+	EY3s6xPBSQB4UIPhpU5TSB2ZecEonONlv7qrYeCtmuh8SkCmXizLfucmRLnDQ5wllrIQ3n
+	AiPI1EDfO1YmLkAqlocMsd7kyFO6c64VqgX8FPilotBAbCfkqe/iw0hzNcERJcc9TnW+5d
+	xkFFsRBeTNs1k3Mp0iBXW/b7m6Oux3HtI+j73MnlKg60SfjOxuwqBNzu50jnEg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708027018;
+	s=2020e; t=1708027021;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ePc7duUErdFHn02Yhoblfga7WwrJ8JliqVSXzIVyRKU=;
-	b=dGpVmmF+8oKWtI7RRlcA4hV/LqHKEFvfnR5FeNdJEYOwNxDaERjfa7Y2XxWvdise30bXjD
-	SAT3f/ywUH7ZHcDA==
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=AI3hsuLUVavlaaszlq83CucsGXkpH9S2krMw0wOgMp8=;
+	b=cI7BUHGV1T2bMWzXl5PoG2WualLeL2uwtq14NZTaWc++PAuHFDfa39lwWhzigR9Vrx+9o4
+	9tWYt24fnnfVayAA==
 From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/msi] genirq/msi: Provide allocation/free functions for
- "wired" MSI interrupts
-Cc: Thomas Gleixner <tglx@linutronix.de>, Anup Patel <apatel@ventanamicro.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240127161753.114685-12-apatel@ventanamicro.com>
-References: <20240127161753.114685-12-apatel@ventanamicro.com>
+Subject: [tip: irq/msi] platform-msi: Remove unused interfaces
+Cc: Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170802701803.398.1858299374515135823.tip-bot2@tip-bot2>
+Message-ID: <170802702109.398.16219125857644382762.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,159 +59,66 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/msi branch of tip:
 
-Commit-ID:     0ee1578b00bcf5ef8e7955f0c6f02a624443eb29
-Gitweb:        https://git.kernel.org/tip/0ee1578b00bcf5ef8e7955f0c6f02a624443eb29
+Commit-ID:     1a4671ff7a903e87e4e76213e200bb8bcfa942e4
+Gitweb:        https://git.kernel.org/tip/1a4671ff7a903e87e4e76213e200bb8bcfa942e4
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Sat, 27 Jan 2024 21:47:39 +05:30
+AuthorDate:    Thu, 15 Feb 2024 16:35:43 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 15 Feb 2024 17:55:41 +01:00
+CommitterDate: Thu, 15 Feb 2024 17:55:40 +01:00
 
-genirq/msi: Provide allocation/free functions for "wired" MSI interrupts
-
-To support wire to MSI bridges proper in the MSI core infrastructure it is
-required to have separate allocation/free interfaces which can be invoked
-from the regular irqdomain allocaton/free functions.
-
-The mechanism for allocation is:
-  - Allocate the next free MSI descriptor index in the domain
-  - Store the hardware interrupt number and the trigger type
-    which was extracted by the irqdomain core from the firmware spec
-    in the MSI descriptor device cookie so it can be retrieved by
-    the underlying interrupt domain and interrupt chip
-  - Use the regular MSI allocation mechanism for the newly allocated
-    index which returns a fully initialized Linux interrupt on succes
-
-This works because:
-  - the domains have a fixed size
-  - each hardware interrupt is only allocated once
-  - the underlying domain does not care about the MSI index it only cares
-    about the hardware interrupt number and the trigger type
-
-The free function looks up the MSI index in the MSI descriptor of the
-provided Linux interrupt number and uses the regular index based free
-functions of the MSI core.
+platform-msi: Remove unused interfaces
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20240127161753.114685-12-apatel@ventanamicro.com
-
 ---
- include/linux/irqdomain.h | 17 ++++++++++-
- kernel/irq/msi.c          | 68 ++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 85 insertions(+)
+ drivers/base/platform-msi.c | 16 ++--------------
+ include/linux/msi.h         |  3 ---
+ 2 files changed, 2 insertions(+), 17 deletions(-)
 
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index ee0a82c..21ecf58 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -619,6 +619,23 @@ static inline bool irq_domain_is_msi_device(struct irq_domain *domain)
- 
- #endif	/* CONFIG_IRQ_DOMAIN_HIERARCHY */
- 
-+#ifdef CONFIG_GENERIC_MSI_IRQ
-+int msi_device_domain_alloc_wired(struct irq_domain *domain, unsigned int hwirq,
-+				  unsigned int type);
-+void msi_device_domain_free_wired(struct irq_domain *domain, unsigned int virq);
-+#else
-+static inline int msi_device_domain_alloc_wired(struct irq_domain *domain, unsigned int hwirq,
-+						unsigned int type)
-+{
-+	WARN_ON_ONCE(1);
-+	return -EINVAL;
-+}
-+static inline void msi_device_domain_free_wired(struct irq_domain *domain, unsigned int virq)
-+{
-+	WARN_ON_ONCE(1);
-+}
-+#endif
-+
- #else /* CONFIG_IRQ_DOMAIN */
- static inline void irq_dispose_mapping(unsigned int virq) { }
- static inline struct irq_domain *irq_find_matching_fwnode(
-diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
-index 5289fc2..07e9daa 100644
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -1540,6 +1540,50 @@ struct msi_map msi_domain_alloc_irq_at(struct device *dev, unsigned int domid, u
- 	return map;
- }
- 
-+/**
-+ * msi_device_domain_alloc_wired - Allocate a "wired" interrupt on @domain
-+ * @domain:	The domain to allocate on
-+ * @hwirq:	The hardware interrupt number to allocate for
-+ * @type:	The interrupt type
-+ *
-+ * This weirdness supports wire to MSI controllers like MBIGEN.
-+ *
-+ * @hwirq is the hardware interrupt number which is handed in from
-+ * irq_create_fwspec_mapping(). As the wire to MSI domain is sparse, but
-+ * sized in firmware, the hardware interrupt number cannot be used as MSI
-+ * index. For the underlying irq chip the MSI index is irrelevant and
-+ * all it needs is the hardware interrupt number.
-+ *
-+ * To handle this the MSI index is allocated with MSI_ANY_INDEX and the
-+ * hardware interrupt number is stored along with the type information in
-+ * msi_desc::cookie so the underlying interrupt chip and domain code can
-+ * retrieve it.
-+ *
-+ * Return: The Linux interrupt number (> 0) or an error code
-+ */
-+int msi_device_domain_alloc_wired(struct irq_domain *domain, unsigned int hwirq,
-+				  unsigned int type)
-+{
-+	unsigned int domid = MSI_DEFAULT_DOMAIN;
-+	union msi_instance_cookie icookie = { };
-+	struct device *dev = domain->dev;
-+	struct msi_map map = { };
-+
-+	if (WARN_ON_ONCE(!dev || domain->bus_token != DOMAIN_BUS_WIRED_TO_MSI))
-+		return -EINVAL;
-+
-+	icookie.value = ((u64)type << 32) | hwirq;
-+
-+	msi_lock_descs(dev);
-+	if (WARN_ON_ONCE(msi_get_device_domain(dev, domid) != domain))
-+		map.index = -EINVAL;
-+	else
-+		map = __msi_domain_alloc_irq_at(dev, domid, MSI_ANY_INDEX, NULL, &icookie);
-+	msi_unlock_descs(dev);
-+
-+	return map.index >= 0 ? map.virq : map.index;
-+}
-+
- static void __msi_domain_free_irqs(struct device *dev, struct irq_domain *domain,
- 				   struct msi_ctrl *ctrl)
+diff --git a/drivers/base/platform-msi.c b/drivers/base/platform-msi.c
+index b56e919..0d01890 100644
+--- a/drivers/base/platform-msi.c
++++ b/drivers/base/platform-msi.c
+@@ -206,8 +206,8 @@ static void platform_msi_free_priv_data(struct device *dev)
+  * Returns:
+  * Zero for success, or an error code in case of failure
+  */
+-int platform_msi_domain_alloc_irqs(struct device *dev, unsigned int nvec,
+-				   irq_write_msi_msg_t write_msi_msg)
++static int platform_msi_domain_alloc_irqs(struct device *dev, unsigned int nvec,
++					  irq_write_msi_msg_t write_msi_msg)
  {
-@@ -1666,6 +1710,30 @@ void msi_domain_free_irqs_all(struct device *dev, unsigned int domid)
+ 	int err;
+ 
+@@ -221,18 +221,6 @@ int platform_msi_domain_alloc_irqs(struct device *dev, unsigned int nvec,
+ 
+ 	return err;
  }
+-EXPORT_SYMBOL_GPL(platform_msi_domain_alloc_irqs);
+-
+-/**
+- * platform_msi_domain_free_irqs - Free MSI interrupts for @dev
+- * @dev:	The device for which to free interrupts
+- */
+-void platform_msi_domain_free_irqs(struct device *dev)
+-{
+-	msi_domain_free_irqs_all(dev, MSI_DEFAULT_DOMAIN);
+-	platform_msi_free_priv_data(dev);
+-}
+-EXPORT_SYMBOL_GPL(platform_msi_domain_free_irqs);
  
  /**
-+ * msi_device_domain_free_wired - Free a wired interrupt in @domain
-+ * @domain:	The domain to free the interrupt on
-+ * @virq:	The Linux interrupt number to free
-+ *
-+ * This is the counterpart of msi_device_domain_alloc_wired() for the
-+ * weird wired to MSI converting domains.
-+ */
-+void msi_device_domain_free_wired(struct irq_domain *domain, unsigned int virq)
-+{
-+	struct msi_desc *desc = irq_get_msi_desc(virq);
-+	struct device *dev = domain->dev;
-+
-+	if (WARN_ON_ONCE(!dev || !desc || domain->bus_token != DOMAIN_BUS_WIRED_TO_MSI))
-+		return;
-+
-+	msi_lock_descs(dev);
-+	if (!WARN_ON_ONCE(msi_get_device_domain(dev, MSI_DEFAULT_DOMAIN) != domain)) {
-+		msi_domain_free_irqs_range_locked(dev, MSI_DEFAULT_DOMAIN, desc->msi_index,
-+						  desc->msi_index);
-+	}
-+	msi_unlock_descs(dev);
-+}
-+
-+/**
-  * msi_get_domain_info - Get the MSI interrupt domain info for @domain
-  * @domain:	The interrupt domain to retrieve data from
-  *
+  * platform_msi_get_host_data - Query the private data associated with
+diff --git a/include/linux/msi.h b/include/linux/msi.h
+index ef16796..b0842ea 100644
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -635,9 +635,6 @@ struct msi_domain_info *msi_get_domain_info(struct irq_domain *domain);
+ struct irq_domain *platform_msi_create_irq_domain(struct fwnode_handle *fwnode,
+ 						  struct msi_domain_info *info,
+ 						  struct irq_domain *parent);
+-int platform_msi_domain_alloc_irqs(struct device *dev, unsigned int nvec,
+-				   irq_write_msi_msg_t write_msi_msg);
+-void platform_msi_domain_free_irqs(struct device *dev);
+ 
+ /* When an MSI domain is used as an intermediate domain */
+ int msi_domain_prepare_irqs(struct irq_domain *domain, struct device *dev,
