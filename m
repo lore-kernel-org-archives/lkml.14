@@ -1,181 +1,156 @@
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB6951755E;
-	Thu, 15 Feb 2024 09:30:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7306017BA0
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 09:30:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707989419; cv=none; b=C71ZOkP/GuMLST6U06Kf2MYGpbx2BfJTbMPfswHf3GyeIjFxSmH68e//Y+7m3fMAeE0jhtCp9TvFeJNhKtJIWScrP4/bdtOfzV93h3m2QiaDfr5wK5PrKxhsVigI8wkGJ3/FxJtvxUfSCsr8zaqJ/5UgfPi29VNCWvVwHiu0CUY=
+	t=1707989427; cv=none; b=nxJn9ZClZhoVaki1prnMeIkARLOorsFnOHEdZN709L9YXE5oy+jANjzcMKAVeBmgJRMXumcIQWKrT6ZGCTAiEBueD8yo342MwEUMbEGXMRqac0VK/M93l/vEd03ryWl0ElwYXfy3TD/h/EqMcGQue2Ov3S32X9AIzrjLEkTGodc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707989419; c=relaxed/simple;
-	bh=Ik1XoRnguygiVaidD4Z1D3ctYb5//n0o9fEn7++ICzI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=utx8hq4QG7oQV7fNWSaT/ZWmBkYSyY6RrxsntwoHQqK13q2uOyA+v8jznLHCJF9re7JhI9Bjysk8x5+aYwaotMZb4xG/8Un4dcdDBwh9lKdC9Osi2jo7vN5Mhr6mlJlWmb8yqyHiXkS9dpri5QOTYOGRRmNJ1sv7VVq4iyXKEng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4Tb8XZ6KKxz9y4yW;
-	Thu, 15 Feb 2024 17:14:54 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.27])
-	by mail.maildlp.com (Postfix) with ESMTP id E5DA41408C5;
-	Thu, 15 Feb 2024 17:30:11 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-	by APP2 (Coremail) with SMTP id GxC2BwDnICWT2c1lIr+GAg--.1387S2;
-	Thu, 15 Feb 2024 10:30:11 +0100 (CET)
-Message-ID: <fefdfdf75163992ecba6292cfd6ad0e8321ee74a.camel@huaweicloud.com>
-Subject: Re: [PATCH v9 19/25] integrity: Move
- integrity_kernel_module_request() to IMA
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: Stefan Berger <stefanb@linux.ibm.com>, Paul Moore <paul@paul-moore.com>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, chuck.lever@oracle.com, 
-	jlayton@kernel.org, neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, 
-	tom@talpey.com, jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com, 
-	dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com, dhowells@redhat.com, 
-	jarkko@kernel.org, stephen.smalley.work@gmail.com, eparis@parisplace.org, 
-	casey@schaufler-ca.com, shuah@kernel.org, mic@digikod.net, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org, 
-	selinux@vger.kernel.org, linux-kselftest@vger.kernel.org, Roberto Sassu
-	 <roberto.sassu@huawei.com>
-Date: Thu, 15 Feb 2024 10:29:52 +0100
-In-Reply-To: <1d8f8990-43e2-4afc-835e-629c7328d497@linux.ibm.com>
-References: <20240115181809.885385-1-roberto.sassu@huaweicloud.com>
-	 <20240115181809.885385-20-roberto.sassu@huaweicloud.com>
-	 <fd6ddc3d-e5d3-4b9c-b00b-ac2b1f22d653@linux.ibm.com>
-	 <CAHC9VhTY=X7z5SRQZzFe25FGB2E3FBBkuZ_YYA1+ETyr7pv=tA@mail.gmail.com>
-	 <7940b9d0-3133-4b08-b397-ad9ee34e3b34@linux.ibm.com>
-	 <b95967cd1aa2a4e751a8be3d23f72b7e1db0e4b6.camel@huaweicloud.com>
-	 <1d8f8990-43e2-4afc-835e-629c7328d497@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1707989427; c=relaxed/simple;
+	bh=4ILdyWdSvMLol8jxdDnLSvgHKrBM8vPf4GNHm0JWmpY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jygs+fjAUmpNFvygwQ+nicfKgo2KKLFI1RUobpomgoYov8t7GK47tf8bIfDoEMOjfaSkpX24FBMehCXcRG+3RbCIXhkWxbHN2hrRmK+97URzpF9wJikCuwvzEXt7Ao3Kpw6SOxytC4uqXFkR5lV4oEiAtCaJBA7iteWBTU8qor0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=nW+x/sC/; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=a0QZXljE; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=nW+x/sC/; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=a0QZXljE; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="nW+x/sC/";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="a0QZXljE";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="nW+x/sC/";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="a0QZXljE"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 71D2321E6F;
+	Thu, 15 Feb 2024 09:30:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1707989423; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ItpbHQ3bDK2Ms6tbFLF9ssZWlzu3EH1B6fIwNh9aF2g=;
+	b=nW+x/sC/btYdct1t+azeY4/OpFnHWcucp0cgCJ2BLeUqzyr8hp0XmcLLB4ICd8idTcZF8S
+	lN9ro9mvNHm6mB/F09T5I/WtxRdtRCGh9AzG5105vs3BEU5xdimOCY7sr0LXCDsYgtKtA/
+	KsJUoE0CDxvZOkGBP+UUpQGPvI4qitA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1707989423;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ItpbHQ3bDK2Ms6tbFLF9ssZWlzu3EH1B6fIwNh9aF2g=;
+	b=a0QZXljEiEzIKftYOPfeA0eKZuqWdDB8QuQmlg/PREAHzYbs/k+HNi9VLqLj5quCxNGJTe
+	A9VAUoFRXnXb+xBA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1707989423; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ItpbHQ3bDK2Ms6tbFLF9ssZWlzu3EH1B6fIwNh9aF2g=;
+	b=nW+x/sC/btYdct1t+azeY4/OpFnHWcucp0cgCJ2BLeUqzyr8hp0XmcLLB4ICd8idTcZF8S
+	lN9ro9mvNHm6mB/F09T5I/WtxRdtRCGh9AzG5105vs3BEU5xdimOCY7sr0LXCDsYgtKtA/
+	KsJUoE0CDxvZOkGBP+UUpQGPvI4qitA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1707989423;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ItpbHQ3bDK2Ms6tbFLF9ssZWlzu3EH1B6fIwNh9aF2g=;
+	b=a0QZXljEiEzIKftYOPfeA0eKZuqWdDB8QuQmlg/PREAHzYbs/k+HNi9VLqLj5quCxNGJTe
+	A9VAUoFRXnXb+xBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5D7DB13A82;
+	Thu, 15 Feb 2024 09:30:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Y8SAFq/ZzWUxGwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Thu, 15 Feb 2024 09:30:23 +0000
+Message-ID: <a310c3cf-049d-4067-b950-f6abf9b5b098@suse.cz>
+Date: Thu, 15 Feb 2024 10:30:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CM-TRANSID:GxC2BwDnICWT2c1lIr+GAg--.1387S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxur4xJFyfZw1ftw4UZw1xAFb_yoWrGr1kpF
-	W8ta95CFWUXrn8C3W8tw1xurW3K3yxGrsrWrn8JryfCrn09rnFvr42yF43uFyfCr48Jr10
-	gws7t34Iv3s8A37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
-	6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUFYFCUUUUU
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAOBF1jj5Ze2QAAso
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 2/7] lib/stackdepot: Move stack_record struct
+ definition into the header
+To: Marco Elver <elver@google.com>, Oscar Salvador <osalvador@suse.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>,
+ Andrey Konovalov <andreyknvl@gmail.com>,
+ Alexander Potapenko <glider@google.com>
+References: <20240214170157.17530-1-osalvador@suse.de>
+ <20240214170157.17530-3-osalvador@suse.de>
+ <CANpmjNPypJM5icG9M5yP5-psSofbA7D35eaKx+E6NyCsHMa=qg@mail.gmail.com>
+Content-Language: en-US
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <CANpmjNPypJM5icG9M5yP5-psSofbA7D35eaKx+E6NyCsHMa=qg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -2.59
+X-Spamd-Result: default: False [-2.59 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 BAYES_HAM(-1.30)[90.07%];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.cz:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[linux-foundation.org,vger.kernel.org,kvack.org,suse.com,gmail.com,google.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[]
+X-Spam-Flag: NO
 
-On Tue, 2024-02-13 at 11:31 -0500, Stefan Berger wrote:
->=20
-> On 2/13/24 03:57, Roberto Sassu wrote:
-> > On Mon, 2024-02-12 at 15:28 -0500, Stefan Berger wrote:
-> > >=20
-> > > On 2/12/24 12:56, Paul Moore wrote:
-> > > > On Mon, Feb 12, 2024 at 12:48=E2=80=AFPM Stefan Berger <stefanb@lin=
-ux.ibm.com> wrote:
-> > > > > On 1/15/24 13:18, Roberto Sassu wrote:
-> > > >=20
-> > > > ...
-> > > >=20
-> > > > > > +/**
-> > > > > > + * ima_kernel_module_request - Prevent crypto-pkcs1pad(rsa,*) =
-requests
-> > > > > > + * @kmod_name: kernel module name
-> > > > > > + *
-> > > > > > + * We have situation, when public_key_verify_signature() in ca=
-se of RSA > + * algorithm use alg_name to store internal information in ord=
-er to
-> > > > > > + * construct an algorithm on the fly, but crypto_larval_lookup=
-() will try
-> > > > > > + * to use alg_name in order to load kernel module with same na=
-me.
-> > > > > > + * Since we don't have any real "crypto-pkcs1pad(rsa,*)" kerne=
-l modules,
-> > > > > > + * we are safe to fail such module request from crypto_larval_=
-lookup().
-> > > > > > + *
-> > > > > > + * In this way we prevent modprobe execution during digsig ver=
-ification
-> > > > > > + * and avoid possible deadlock if modprobe and/or it's depende=
-ncies
-> > > > > > + * also signed with digsig.
-> > > > >=20
-> > > > > This text needs to some reformulation at some point..
-> > > >=20
-> > > > There is no time like the present.  If you have a suggestion I woul=
-d
-> > > > love to hear it and I'm sure Roberto would too.
-> > > >=20
-> > >=20
-> > > My interpretation of the issue after possibly lossy decoding of the
-> > > above sentences:
-> > >=20
-> > > Avoid a deadlock by rejecting a virtual kernel module with the name
-> > > "crypto-pkcs1pad(rsa,*)". This module may be requested by
-> > > crypto_larval_lookup() while trying to verify an RSA signature in
-> > > public_key_verify_signature(). Since the loading of the RSA module ma=
-y
-> > > itself cause the request for an RSA signature verification it will
-> > > otherwise lead to a deadlock.
-> >=20
-> > I can be even more precise I guess (I actually reproduced it). >
-> > Avoid a verification loop where verifying the signature of the modprobe
-> > binary requires executing modprobe itself. Since the modprobe iint-
-> > > mutex is already held when the signature verification is performed, a
-> > deadlock occurs as soon as modprobe is executed within the critical
-> > region, since the same lock cannot be taken again.
->=20
-> When ecdsa is used for signing files it could get stuck as well and=20
-> would need this patch:
->=20
-> diff --git a/security/integrity/ima/ima_main.c=20
-> b/security/integrity/ima/ima_main.c
-> index 45f1a102c599..2e71dc977d43 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -1110,7 +1110,9 @@ EXPORT_SYMBOL_GPL(ima_measure_critical_data);
->    */
->   static int ima_kernel_module_request(char *kmod_name)
->   {
-> -       if (strncmp(kmod_name, "crypto-pkcs1pad(rsa,", 20) =3D=3D 0)
-> +       if (strncmp(kmod_name, "crypto-pkcs1pad(rsa,", 20) =3D=3D 0 ||
-> +           strncmp(kmod_name, "crypto-ecdsa-nist-p", 19) =3D=3D 0 ||
-> +           strcmp(kmod_name, "cryptomgr") =3D=3D 0)
->                  return -EINVAL;
->=20
->          return 0;
->=20
-> Rejecting cryptomgr seems necessary in the ecdsa case though I am not=20
-> sure what the side effects of rejecting it all the time could be.
+On 2/15/24 09:16, Marco Elver wrote:
+> On Wed, 14 Feb 2024 at 18:00, Oscar Salvador <osalvador@suse.de> wrote:
+>>
+>> In order to move the heavy lifting into page_owner code, this one
+>> needs to have access to the stack_record structure, which right now
+>> sits in lib/stackdepot.c.
+>> Move it to the stackdepot.h header so page_owner can access
+>> stack_record's struct fields.
+>>
+>> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+>> Reviewed-by: Marco Elver <elver@google.com>
+>> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+>> ---
 
-Thanks. Ok, let's find a proper way once IMA/EVM are moved to the LSM
-infrastructure.
+>>  #define DEPOT_POOLS_CAP 8192
+>> -/* The pool_index is offset by 1 so the first record does not have a 0 handle. */
+>> +/* The pool_index is offset by 1 so the first record does not have a 0 handle */
+> 
+> Why this comment change? We lost the '.' -- for future reference, it'd
+> be good to ensure unnecessary changes don't creep into the diff. This
+> is just nitpicking, 
 
-Roberto
+Agree with this part.
 
->     Stefan
->=20
-> >=20
-> > This happens when public_key_verify_signature(), in case of RSA
-> > algorithm, use alg_name to store internal information in order to
-> > construct an algorithm on the fly, but crypto_larval_lookup() will try
-> > to use alg_name in order to load a kernel module with same name.
-> >=20
-> > Since we don't have any real "crypto-pkcs1pad(rsa,*)" kernel modules,
-> > we are safe to fail such module request from crypto_larval_lookup(),
-> > and avoid the verification loop.
-> >=20
-> > Roberto
-> >=20
-> >=20
+> and I've already reviewed this change, so no need
+> to send a v+1.
 
+But confused by this remark. There is a number of nontrivial changes in the
+series from v8, and IIRC v8 was dropped from mm/ meanwhile, so a v+1 of the
+whole series is expected and not fixups. Which means including patches that
+were already reviewed. That's the usual process.
