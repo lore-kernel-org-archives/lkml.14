@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3057130E58
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 10:33:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 074AC130E50
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 10:33:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707993194; cv=none; b=OKTpyrZpZlOAO99qF2GRCEAzP7VNeiF6knbstS0deaD50Pc+rCWbDwLH5CuNq6t9GZDOSnbcJxi2Sbm/LkISdYDdQSzwpGN1kHcXtPcuLocaUtunUfzf8tMYAmJ43oYo0eVe3R7wcfkWY6ZgHFC1xFroVjv/B++Xf5eD4FRrCUc=
+	t=1707993196; cv=none; b=No4i58qOCFk/hFPf4CRdE290bQF1VdRMEZ+GmtTKs2qcFGm+4e9hCKMqf0Ksfk33HFnJhDn15ycm1a8QNoJOyPFmtGrV4QIq2OCWGYD8odFFnXatJlRUb6lge9oJacWcFHv0dp2deXjLGtX00s8Rk1/dmUZ82+8s5lUzvrtoJgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707993194; c=relaxed/simple;
-	bh=4dt5LCeatOElsPUkFZ0pGfvF4+jB8UBy2mT55eRRhoI=;
+	s=arc-20240116; t=1707993196; c=relaxed/simple;
+	bh=UQ5MbKtdXY2+2WI/a5CIOKIBnSOSlIvamDyhPiGi7rw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WqH799jRnjXZcrsRXPrcyUOnJ1ZNo3nRt5KMdZdbceEV4Cvm3byEHy3BhJ5zk5t9G6xMuiGIAcddtXivCkrggSZ01dUJtcLICLhb1iTXsMfHBbQdRENtizFHSICDMt6JTnF3PxN4vutGCK3BtolfK6nYKeKi6f/ZF7PksPv0i3A=
+	 MIME-Version; b=J/LqXb3rhk4udjzf3/GVZRPY2jHlSlcHqTECQ1rS3mWMQi0+zjabyxjOir9jFJo6dsFGCiyIUFu/fNdfQD3Afh2H35kvSVP2PK8wXIExYsgsliiL68ck/KB+/pfs+wwEmDCYlSbLPGG1LfJ+QIzzi/ZYPtmm/lsStuDbt3koN5o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 20A7A15A1;
-	Thu, 15 Feb 2024 02:33:52 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 871BF15BF;
+	Thu, 15 Feb 2024 02:33:55 -0800 (PST)
 Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.26])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17B8B3F7B4;
-	Thu, 15 Feb 2024 02:33:07 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B9B93F7B4;
+	Thu, 15 Feb 2024 02:33:11 -0800 (PST)
 From: Ryan Roberts <ryan.roberts@arm.com>
 To: Catalin Marinas <catalin.marinas@arm.com>,
 	Will Deacon <will@kernel.org>,
@@ -46,9 +46,9 @@ Cc: Ryan Roberts <ryan.roberts@arm.com>,
 	linuxppc-dev@lists.ozlabs.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 15/18] mm: Add pte_batch_hint() to reduce scanning in folio_pte_batch()
-Date: Thu, 15 Feb 2024 10:32:02 +0000
-Message-Id: <20240215103205.2607016-16-ryan.roberts@arm.com>
+Subject: [PATCH v6 16/18] arm64/mm: Implement pte_batch_hint()
+Date: Thu, 15 Feb 2024 10:32:03 +0000
+Message-Id: <20240215103205.2607016-17-ryan.roberts@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240215103205.2607016-1-ryan.roberts@arm.com>
 References: <20240215103205.2607016-1-ryan.roberts@arm.com>
@@ -60,109 +60,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some architectures (e.g. arm64) can tell from looking at a pte, if some
-follow-on ptes also map contiguous physical memory with the same pgprot.
-(for arm64, these are contpte mappings).
+When core code iterates over a range of ptes and calls ptep_get() for
+each of them, if the range happens to cover contpte mappings, the number
+of pte reads becomes amplified by a factor of the number of PTEs in a
+contpte block. This is because for each call to ptep_get(), the
+implementation must read all of the ptes in the contpte block to which
+it belongs to gather the access and dirty bits.
 
-Take advantage of this knowledge to optimize folio_pte_batch() so that
-it can skip these ptes when scanning to create a batch. By default, if
-an arch does not opt-in, folio_pte_batch() returns a compile-time 1, so
-the changes are optimized out and the behaviour is as before.
+This causes a hotspot for fork(), as well as operations that unmap
+memory such as munmap(), exit and madvise(MADV_DONTNEED). Fortunately we
+can fix this by implementing pte_batch_hint() which allows their
+iterators to skip getting the contpte tail ptes when gathering the batch
+of ptes to operate on. This results in the number of PTE reads returning
+to 1 per pte.
 
-arm64 will opt-in to providing this hint in the next patch, which will
-greatly reduce the cost of ptep_get() when scanning a range of contptes.
-
-Acked-by: David Hildenbrand <david@redhat.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
 Tested-by: John Hubbard <jhubbard@nvidia.com>
 Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
 ---
- include/linux/pgtable.h | 21 +++++++++++++++++++++
- mm/memory.c             | 19 ++++++++++++-------
- 2 files changed, 33 insertions(+), 7 deletions(-)
+ arch/arm64/include/asm/pgtable.h | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index bc005d84f764..a36cf4e124b0 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -212,6 +212,27 @@ static inline int pmd_dirty(pmd_t pmd)
- #define arch_flush_lazy_mmu_mode()	do {} while (0)
- #endif
- 
-+#ifndef pte_batch_hint
-+/**
-+ * pte_batch_hint - Number of pages that can be added to batch without scanning.
-+ * @ptep: Page table pointer for the entry.
-+ * @pte: Page table entry.
-+ *
-+ * Some architectures know that a set of contiguous ptes all map the same
-+ * contiguous memory with the same permissions. In this case, it can provide a
-+ * hint to aid pte batching without the core code needing to scan every pte.
-+ *
-+ * An architecture implementation may ignore the PTE accessed state. Further,
-+ * the dirty state must apply atomically to all the PTEs described by the hint.
-+ *
-+ * May be overridden by the architecture, else pte_batch_hint is always 1.
-+ */
-+static inline unsigned int pte_batch_hint(pte_t *ptep, pte_t pte)
-+{
-+	return 1;
-+}
-+#endif
-+
- #ifndef pte_advance_pfn
- static inline pte_t pte_advance_pfn(pte_t pte, unsigned long nr)
- {
-diff --git a/mm/memory.c b/mm/memory.c
-index 3b8e56eb08a3..4dd8e35b593a 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -988,16 +988,20 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
- {
- 	unsigned long folio_end_pfn = folio_pfn(folio) + folio_nr_pages(folio);
- 	const pte_t *end_ptep = start_ptep + max_nr;
--	pte_t expected_pte = __pte_batch_clear_ignored(pte_next_pfn(pte), flags);
--	pte_t *ptep = start_ptep + 1;
-+	pte_t expected_pte, *ptep;
- 	bool writable;
-+	int nr;
- 
- 	if (any_writable)
- 		*any_writable = false;
- 
- 	VM_WARN_ON_FOLIO(!pte_present(pte), folio);
- 
--	while (ptep != end_ptep) {
-+	nr = pte_batch_hint(start_ptep, pte);
-+	expected_pte = __pte_batch_clear_ignored(pte_advance_pfn(pte, nr), flags);
-+	ptep = start_ptep + nr;
-+
-+	while (ptep < end_ptep) {
- 		pte = ptep_get(ptep);
- 		if (any_writable)
- 			writable = !!pte_write(pte);
-@@ -1011,17 +1015,18 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
- 		 * corner cases the next PFN might fall into a different
- 		 * folio.
- 		 */
--		if (pte_pfn(pte) == folio_end_pfn)
-+		if (pte_pfn(pte) >= folio_end_pfn)
- 			break;
- 
- 		if (any_writable)
- 			*any_writable |= writable;
- 
--		expected_pte = pte_next_pfn(expected_pte);
--		ptep++;
-+		nr = pte_batch_hint(ptep, pte);
-+		expected_pte = pte_advance_pfn(expected_pte, nr);
-+		ptep += nr;
- 	}
- 
--	return ptep - start_ptep;
-+	return min(ptep - start_ptep, max_nr);
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index a8f1a35e3086..d759a20d2929 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -1213,6 +1213,15 @@ static inline void contpte_try_unfold(struct mm_struct *mm, unsigned long addr,
+ 		__contpte_try_unfold(mm, addr, ptep, pte);
  }
  
++#define pte_batch_hint pte_batch_hint
++static inline unsigned int pte_batch_hint(pte_t *ptep, pte_t pte)
++{
++	if (!pte_valid_cont(pte))
++		return 1;
++
++	return CONT_PTES - (((unsigned long)ptep >> 3) & (CONT_PTES - 1));
++}
++
  /*
+  * The below functions constitute the public API that arm64 presents to the
+  * core-mm to manipulate PTE entries within their page tables (or at least this
 -- 
 2.25.1
 
