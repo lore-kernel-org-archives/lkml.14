@@ -1,49 +1,43 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8831F53369;
-	Thu, 15 Feb 2024 11:26:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE416129A73;
+	Thu, 15 Feb 2024 11:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707996398; cv=none; b=jhKPI6PZxsCUSC95ygDUnsNzNmRlE5YOHBO3KsWUHz8Snjxlto9UbDKCP2GBXr49o0C4WhLRyw6pE35OV0dXj5q3HvURu3y+0Sm9Kgf6LAtdtQMEiP1JgvprV7KKzduDjIIZHkVJaTa/f+JaixULYx0Bu3IwPrf9T9vINeJ16ZM=
+	t=1707996437; cv=none; b=rApBY1nxJJGzWVwrIQZs8yU5G8pX1/YrHwEd46HJOVHgh5XHDlsqyIyz2eFJUmYtUtAiXgexLuZkvdCpXP+5vtxNc5YxFSVaItSuuJHFAL/ayKQkdJzaXJyGmiJexjyzBHBBbkEp8uWYyvs/rhFOBMAQhrtYd3pVgxa3D4qoVeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707996398; c=relaxed/simple;
-	bh=pBEYU4AJhnNOJ1+oImLXGXidM99AZZHk0MSAwGM42SA=;
+	s=arc-20240116; t=1707996437; c=relaxed/simple;
+	bh=3QEwyfFVheZ/zGtQUqz+1x4knQPosUQAoxSSUWU/cUU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jZRsaR9VE5JZ0mEbB/mFxYpq+q+f0NPA1ybyQrNbh3bgYDI/tjx6qcvYDiRY/UfmpXPSkbfROO3i+Ynh5DL4MmteOpnUSx3SSe4FQ6py2NfmCIQpOricOUDvGtpXW8spku7GI/9ir4sLV5lRYUNpNdievsfgFu0xEjqtTTxX5sU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 128ABDA7;
-	Thu, 15 Feb 2024 03:27:17 -0800 (PST)
-Received: from bogus (unknown [10.163.74.245])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7821A3F7B4;
-	Thu, 15 Feb 2024 03:26:27 -0800 (PST)
-Date: Thu, 15 Feb 2024 11:26:26 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Saravana Kannan <saravanak@google.com>, David Dai <davidai@google.com>
-Cc: Rob Herring <robh@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Quentin Perret <qperret@google.com>,
-	Masami Hiramatsu <mhiramat@google.com>,
-	Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Pavan Kondeti <quic_pkondeti@quicinc.com>,
-	Gupta Pankaj <pankaj.gupta@amd.com>, Mel Gorman <mgorman@suse.de>,
-	kernel-team@android.com, linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/2] dt-bindings: cpufreq: add virtual cpufreq device
-Message-ID: <20240215112626.zfkiq2i2imbqcdof@bogus>
-References: <20240127004321.1902477-1-davidai@google.com>
- <20240127004321.1902477-2-davidai@google.com>
- <20240131170608.GA1441369-robh@kernel.org>
- <CAGETcx8S0oS67oMZsPKk6_MGAtygoHEf_LN1gbcNDEBqRJ4PPg@mail.gmail.com>
- <20240202155352.GA37864-robh@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=LoZ996sLoMLgnsIa/X73/x2qtRTywJtFzuf4MMf+qsnBrY1cYOBSnw3ZUuQIsdRJr6ldGQgCjmshTF+LAhqEG0caSbBlzO15q4pND/hv0TdZvNN6D5uFtH5trPlPVTa5iTixVaFpuPC/CWmDWYZWTJ6gO/EW+NOrAPrKFa/u/2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ui14pvUH; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ui14pvUH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 975ABC433C7;
+	Thu, 15 Feb 2024 11:27:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1707996437;
+	bh=3QEwyfFVheZ/zGtQUqz+1x4knQPosUQAoxSSUWU/cUU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ui14pvUHZpUiECmyZ7f3D4E+AMnJNSbJEFwHeggEl6RX+PCmEiBnow7WcTEAd3RPq
+	 kEMq8JcFvUvcQ12t3azIcJS6FlYb0DGo6rFxq1kCFwHz6uvZPe+bLewUl10iN6gekc
+	 f33e5fFhpy1MsaBbanDmKK6HyVCBPbx9fq6iNTMQ=
+Date: Thu, 15 Feb 2024 12:27:14 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	allen.lkml@gmail.com,
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 6.7 000/127] 6.7.5-rc2 review
+Message-ID: <2024021556-pungent-huddle-8204@gregkh>
+References: <20240214142244.209814342@linuxfoundation.org>
+ <4cc8718f-6035-49f7-bd50-39564ac4fba4@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,28 +46,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240202155352.GA37864-robh@kernel.org>
+In-Reply-To: <4cc8718f-6035-49f7-bd50-39564ac4fba4@nvidia.com>
 
-On Fri, Feb 02, 2024 at 09:53:52AM -0600, Rob Herring wrote:
-> On Wed, Jan 31, 2024 at 10:23:03AM -0800, Saravana Kannan wrote:
-> >
-> > We also need the OPP tables to indicate which CPUs are part of the
-> > same cluster, etc. Don't want to invent a new "protocol" and just use
-> > existing DT bindings.
+On Thu, Feb 15, 2024 at 11:14:22AM +0000, Jon Hunter wrote:
 > 
-> Topology binding is for that.
+> On 14/02/2024 14:29, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 6.7.5 release.
+> > There are 127 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Fri, 16 Feb 2024 14:22:16 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.7.5-rc2.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.7.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
 > 
-> What about when x86 and other ACPI systems need to do this too? You 
-> define a discoverable interface, then it works regardless of firmware. 
-> KVM, Virtio, VFIO, etc. are all their own protocols.
->
+> 
+> No new regressions for Tegra ...
+> 
+> Test results for stable-v6.7:
+>     10 builds:    10 pass, 0 fail
+>     26 boots:     26 pass, 0 fail
+>     116 tests:    115 pass, 1 fail
+> 
+> Linux version:    6.7.5-rc2-gc94a8b48bd4b
+> Boards tested:    tegra124-jetson-tk1, tegra186-p2771-0000,
+>                   tegra194-p2972-0000, tegra194-p3509-0000+p3668-0000,
+>                   tegra20-ventana, tegra210-p2371-2180,
+>                   tegra210-p3450-0000, tegra30-cardhu-a04
+> 
+> Test failures:    tegra186-p2771-0000: pm-system-suspend.sh
 
-+1 for the above. I have mentioned the same couple of times but I am told
-it can be taken up later which I fail to understand. Once we define DT
-bindings, it must be supported for long time which doesn't provide any
-motivation to such a discoverable interface which works on any virtual
-platforms irrespective of the firmware.
+Is this on track to be fixed anywhere in Linus's tree yet?
 
---
-Regards,
-Sudeep
+thanks for testing,
+
+greg k-h
