@@ -1,95 +1,131 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [195.130.132.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB0612B162
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 13:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C3558ABC
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 13:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708002198; cv=none; b=kyIVnBI9i52jI1wZDEIXW/7nkyeLJ+zu+eatZmTVd9j7m3jjVI5qYZs8bnKEpqlZqrPu/pMA32ui7SPtGEL4+JAsq+1U9mgOz4tfQb/pFqf8keUZ5wEqevzNHKDibCiLMbpfJFMHtdYB5sdzzOq05p42qT0AlqL0GrEQyv1tHkw=
+	t=1708002235; cv=none; b=MfKiwouiK0uo11arfUk6FSsRmL6U0MUR/+EHtUIc3OpT7+K9qRZIcoNnk6uomCvuCbEjnpEiXUGIiWvpH/snDFDPtGPYUF5xhbTmdJRBzjsC64SDg4ZF3/OJFVga7+08gKi2AjUGXAbX15gOGiO2jsT4rwH3GADWSxiMeVzSIOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708002198; c=relaxed/simple;
-	bh=wvApUvfsPpkye9qYeykoXI5vL0JTgpBbmDj74OcOvPc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mZqAkXucRauy/BpyTMmkf2A5y12v7QQOgza/6sTAJ0mBxKQOsuTHdDX7DMsy1iDLbv5EUPfaK+SMb3M/vio31UCljbznSWR58GijO92TE9xvfS+rFkyt7DIo0lHtxid4hRlmQDOEQvuGDROKDsfho5o0JZ96tYPSi/AZdx2L0w8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QYvDWg3Z; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QYvDWg3Z"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-563b49a0f44so866094a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 05:03:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708002195; x=1708606995; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=n8gYmBFcHw+PMY96x5bP3A9cd014PWA82CxsQ116n3w=;
-        b=QYvDWg3Zh68mLlYVJGdedlSaH+gS7hQjSAzX5xwWdnVFqgNsu0bMIlkQE8yWZ+Fxkq
-         T1/xmmQ0w1xk8hvoeboPJ/g01GDSrseTvJhLns2TJ+kVBsLJUUdRtIph1IjlfQyLHxkL
-         xDEKZ/ZaIDRftfjo4uXSmthtVpebqqgc8OpGpa4S9gK1vXZ6KBjJKKkCujqXt83L+3dG
-         XPEfhuUWb0uy1jCApWP9kUSii8hD4kUiODHUykKU9vyH3KEVSSpgaGUBnM7O7uWf76Wn
-         tskSaLkMRo63VU62l9I2tAN2nv3buWT9mNg+PeyG8+/x7Egxn1WGmaLSMDavL1iuTvzn
-         DqHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708002195; x=1708606995;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=n8gYmBFcHw+PMY96x5bP3A9cd014PWA82CxsQ116n3w=;
-        b=CuJoSANthOOrOAc2/Fr1qSgjYxRBuJfdqkm6hyDA58+5mWxfE5oBMlCmkPhZBVMokn
-         uI/INqZmOAWffQcke1sPhKF1ukyFwTPm4sz4rwm/hCzdHPrMCSDr9lwHpKn0dpp1okal
-         XsDFthoOOZOVQjqsDIqobwrRNeBHI3FqEAMpZ9nUIclz+5K2fwqz22ZSz43Q9H72z4Bg
-         Cyu+zDpKknyz56wiYTQXkVbBqx084s+65OQ+p2GUqcUI3w94Zbbnu0/A4TJaW4uwzSpp
-         XW/Bgi97WRFVqLZmez8pKbYt/vCwHkpc/bCES66W+7Wi0EikGYM2AQ2ZFIqghh30DrG2
-         pB9w==
-X-Forwarded-Encrypted: i=1; AJvYcCU2laeCx2SMo6eF7xaVXzNSTSucDwif2j9v3KCvO1DoWWwvL8chpF8NVeMDhP7tD77zQ/I4ydDajVxB45Duaygu9cc7EfC6N5QdUBYK
-X-Gm-Message-State: AOJu0YyMk9fQVGy1JgyeZ3mjfZ8S0QOV3TiXjM1p8e6utV0vTVJdkm0O
-	Ry8LHlxNwDmMlndUdoiYpmsH/x74nJFOuULYm41v2aMnt4C4CLUIoEQbvoqn3sP99iwrKfSeqim
-	c
-X-Google-Smtp-Source: AGHT+IEb+RndYySUvLziRX7ktIL1fHsO13e6I5nTzg2PeebZxffYPxzn2nhNVF5dHx9ZFPWdwJfmzA==
-X-Received: by 2002:a05:600c:3591:b0:412:41:bb3d with SMTP id p17-20020a05600c359100b004120041bb3dmr1648825wmq.3.1708002181939;
-        Thu, 15 Feb 2024 05:03:01 -0800 (PST)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id fc10-20020a05600c524a00b004120c78fc39sm2387969wmb.3.2024.02.15.05.03.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Feb 2024 05:03:01 -0800 (PST)
-Message-ID: <00d0beb5-6800-418d-be1a-89e32b867fb3@linaro.org>
-Date: Thu, 15 Feb 2024 14:03:00 +0100
+	s=arc-20240116; t=1708002235; c=relaxed/simple;
+	bh=g063c6mfbeUy0PcgSIIdWAMOgQxBDicgTnmvxo0W8cA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YZyz4y0bL9jYYxPKmkH7L1lj9nbDOaIlvz8WI1mmVHGoXlE7mzfmaQ8MHvxyCYHFv7muTBaIzkPvtzRO45v/wCyTZeRA3P47UHnE8iCcgtnSDlIytP+xlRbwNEN8EEYOLKg3Or5R90PNH2NZzauCeAdGJgcDt9oCc7NzzP5qSH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:ac52:3a54:2a84:d65a])
+	by xavier.telenet-ops.be with bizsmtp
+	id nR3r2B00H0LVNSS01R3r79; Thu, 15 Feb 2024 14:03:52 +0100
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rabOy-000gx8-EY;
+	Thu, 15 Feb 2024 14:03:51 +0100
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rabP5-00HYHC-Ns;
+	Thu, 15 Feb 2024 14:03:51 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH resend] intel_th: Use bitfield helpers
+Date: Thu, 15 Feb 2024 14:03:50 +0100
+Message-Id: <b72856c9d2d3f9938ce7f3124a466754534981d9.1708002102.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] thermal: Drop spaces before TABs
-Content-Language: en-US
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <480478a53fd42621e97b2db36e181903cc0f53e3.1708001426.git.geert+renesas@glider.be>
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <480478a53fd42621e97b2db36e181903cc0f53e3.1708001426.git.geert+renesas@glider.be>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 15/02/2024 13:51, Geert Uytterhoeven wrote:
-> There is never a need to have a space before a TAB, but it hurts the
-> eyes of vim users.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v2:
->    - Drop change to removed drivers/thermal/st/st_thermal_syscfg.c.
-> ---
+Use the FIELD_{GET,PREP}() helpers, instead of open-coding the same
+operations.
 
-Applied, thanks
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Compile-tested only.
+---
+ drivers/hwtracing/intel_th/msu.c |  8 ++++----
+ drivers/hwtracing/intel_th/pti.c | 13 +++++++------
+ 2 files changed, 11 insertions(+), 10 deletions(-)
 
+diff --git a/drivers/hwtracing/intel_th/msu.c b/drivers/hwtracing/intel_th/msu.c
+index 9621efe0e95c4df8..b6e76c5f8d2f38ea 100644
+--- a/drivers/hwtracing/intel_th/msu.c
++++ b/drivers/hwtracing/intel_th/msu.c
+@@ -7,6 +7,7 @@
+ 
+ #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
+ 
++#include <linux/bitfield.h>
+ #include <linux/types.h>
+ #include <linux/module.h>
+ #include <linux/device.h>
+@@ -787,8 +788,8 @@ static int msc_configure(struct msc *msc)
+ 	reg &= ~(MSC_MODE | MSC_WRAPEN | MSC_EN | MSC_RD_HDR_OVRD);
+ 
+ 	reg |= MSC_EN;
+-	reg |= msc->mode << __ffs(MSC_MODE);
+-	reg |= msc->burst_len << __ffs(MSC_LEN);
++	reg |= FIELD_PREP(MSC_MODE, msc->mode);
++	reg |= FIELD_PREP(MSC_LEN, msc->burst_len);
+ 
+ 	if (msc->wrap)
+ 		reg |= MSC_WRAPEN;
+@@ -1699,8 +1700,7 @@ static int intel_th_msc_init(struct msc *msc)
+ 	INIT_LIST_HEAD(&msc->iter_list);
+ 
+ 	msc->burst_len =
+-		(ioread32(msc->reg_base + REG_MSU_MSC0CTL) & MSC_LEN) >>
+-		__ffs(MSC_LEN);
++		FIELD_GET(MSC_LEN, ioread32(msc->reg_base + REG_MSU_MSC0CTL));
+ 
+ 	return 0;
+ }
+diff --git a/drivers/hwtracing/intel_th/pti.c b/drivers/hwtracing/intel_th/pti.c
+index 09132ab8bc23265a..eadc236ec43e0ad3 100644
+--- a/drivers/hwtracing/intel_th/pti.c
++++ b/drivers/hwtracing/intel_th/pti.c
+@@ -7,6 +7,7 @@
+ 
+ #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
+ 
++#include <linux/bitfield.h>
+ #include <linux/types.h>
+ #include <linux/module.h>
+ #include <linux/device.h>
+@@ -152,12 +153,12 @@ static int intel_th_pti_activate(struct intel_th_device *thdev)
+ 	u32 ctl = PTI_EN;
+ 
+ 	if (pti->patgen)
+-		ctl |= pti->patgen << __ffs(PTI_PATGENMODE);
++		ctl |= FIELD_PREP(PTI_PATGENMODE, pti->patgen);
+ 	if (pti->freeclk)
+ 		ctl |= PTI_FCEN;
+-	ctl |= pti->mode << __ffs(PTI_MODE);
+-	ctl |= pti->clkdiv << __ffs(PTI_CLKDIV);
+-	ctl |= pti->lpp_dest << __ffs(LPP_DEST);
++	ctl |= FIELD_PREP(PTI_MODE, pti->mode);
++	ctl |= FIELD_PREP(PTI_CLKDIV, pti->clkdiv);
++	ctl |= FIELD_PREP(LPP_DEST, pti->lpp_dest);
+ 
+ 	iowrite32(ctl, pti->base + REG_PTI_CTL);
+ 
+@@ -179,8 +180,8 @@ static void read_hw_config(struct pti_device *pti)
+ {
+ 	u32 ctl = ioread32(pti->base + REG_PTI_CTL);
+ 
+-	pti->mode	= (ctl & PTI_MODE) >> __ffs(PTI_MODE);
+-	pti->clkdiv	= (ctl & PTI_CLKDIV) >> __ffs(PTI_CLKDIV);
++	pti->mode	= FIELD_GET(PTI_MODE, ctl);
++	pti->clkdiv	= FIELD_GET(PTI_CLKDIV, ctl);
+ 	pti->freeclk	= !!(ctl & PTI_FCEN);
+ 
+ 	if (!pti_mode[pti->mode])
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.34.1
 
