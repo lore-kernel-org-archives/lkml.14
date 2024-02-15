@@ -1,48 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A1712AACB
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 12:44:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1496812DDBB;
+	Thu, 15 Feb 2024 12:44:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708001084; cv=none; b=ojTSO+E42fv945ZNpxsWvmgJAJF/XLsR/D4V55aHZwGVdr5BlziKxKZ/X2EVpCK8RRFko0w9yA36H509VT5ttFyEIcxfwFsA1w8INSgGtdSkB5QrzlsYrMoZS7zWq8r752/zauwUNnB+ak6gRNDuVDijbV7jWGFB9dO+0tN+hfA=
+	t=1708001088; cv=none; b=TXBKvnHy0p4CypsMPfyaP9/fUJ/jFdvuv92ss1EztO4gOiRNGZUiHWXeUty5Dm6BU/8RAEDIg/esI6V39ZmundsUlX7kG7w1V/mbZMH+SZirr4oMG1v9H/AqcFNoyekXerWQ8TawwAhbZOunH2K7zWccwikdczR40Sp0GxeDzmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708001084; c=relaxed/simple;
-	bh=cAmuYY8stIVt1YffPK/9ukIye27tCzUrEGNy9mrrUZU=;
+	s=arc-20240116; t=1708001088; c=relaxed/simple;
+	bh=EdmufWQaVwffxLhQdQ6E7nT/EWdxxAEZpxmh/Eg8Yig=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eUSTBTSmEhX1wSbk8cmToPKBw6tfS36o2rmwDuxAT7Ox1q//V4mbAee08Xcn3kvsGPcp0yWYIsmPoGKm/l9JUbvmBPlNcIRQMIIyxk7zHlSARrbLYima7qzoHO1kaqVw6Rkwg6cfTlBzrFTTVPXWaHofTWqSyEW2T4wJ1HbMDaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ovFsYQEq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=US1h/SeB38LekCG3quvX+XG6lrK5NOjPSnuf6hfduD9V+wedKK2ISeTJnwpVQJz+iQU6f25lUOAULorz9Sse7Aeq1jqwZDQ5pGWRUqJgbxWR5WRWALM2HGU5Ds9sKCD1sXkJzXgzDAfQVme1I37JJo/toQioeGJjJI7l5nuy6Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V/MtHXi8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ovFsYQEq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F0F1C43390;
-	Thu, 15 Feb 2024 12:44:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V/MtHXi8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE682C433F1;
+	Thu, 15 Feb 2024 12:44:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708001084;
-	bh=cAmuYY8stIVt1YffPK/9ukIye27tCzUrEGNy9mrrUZU=;
+	s=k20201202; t=1708001087;
+	bh=EdmufWQaVwffxLhQdQ6E7nT/EWdxxAEZpxmh/Eg8Yig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ovFsYQEqmn2rziJijv9i7nFLCDCf0v7mNM2MV3OJq87S8yDHfu2QkNvIyjP8kkC3p
-	 cfGQAcpnOOLbXbrXMJQdbdwhufI7f1CtsR3QInhjGACNZSc6u0wtInGo44kBSX/esg
-	 OmNVjMKUXrUEBCeg0ZdRTg85Sf4i3zWQas3sypJWd1+M+98WJ898BOzi/lPGKyiYE6
-	 GUdWZVCp87z7YENe5HthYhBd8PIdBK9jCPcjZ39/hi+Wmcvxu6Boe8+Dr4l450aWRU
-	 j7WZQ6nryDbbOytjNHXxm79ItrURRudGGPL6LUM/L/iUoYoNA6YqazExovgwAQAqIG
-	 CLTUtfxrPam6A==
+	b=V/MtHXi8TXRaLI/EM3ODSpXgDDCPQdOxCps6ATcUHyNUss4BXT8xxpK5xF3T1kfC9
+	 mqEue4P6Ypu8e1Rv1EHR22aX0fYeal74X2pwdhVjjyxiolwBB6qMuy0bygf16ZpUWx
+	 m1YuhBdq3iINziHsfVCE4ax6YK/pBnifXyBfgwMvRcLWQ/tg5w5y1OK6dPFRIMHP3O
+	 RCcZj+UmU1eS3Kt0UqPvGR0DJNIpuPmOtCGiHP44Jf9vyo0UOuHeBRRSTx65SDRA4t
+	 lngLtn4MGguAQ9dwGzrSPX9y0Hj91DqI1Bb1lyyuUn6e9nWZT6CkLjMcmxE3FV+fen
+	 gr6tApkDqqlmw==
 From: Will Deacon <will@kernel.org>
-To: Mark Brown <broonie@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>
+To: Marc Zyngier <maz@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Easwar Hariharan <eahariha@linux.microsoft.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Rob Herring <robh@kernel.org>,
+	"moderated list:ARM64 PORT AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andre Przywara <andre.przywara@arm.com>
 Cc: kernel-team@android.com,
 	Will Deacon <will@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	Dave Martin <Dave.Martin@arm.com>,
-	Doug Anderson <dianders@chromium.org>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] arm64/sve: Lower the maximum allocation for the SVE ptrace regset
-Date: Thu, 15 Feb 2024 12:44:37 +0000
-Message-Id: <170799768132.3746307.14703611184129999692.b4-ty@kernel.org>
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: Subscribe Microsoft Azure Cobalt 100 to ARM Neoverse N2 errata
+Date: Thu, 15 Feb 2024 12:44:38 +0000
+Message-Id: <170799764265.3746091.15823620803100752366.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20240213-arm64-sve-ptrace-regset-size-v2-1-c7600ca74b9b@kernel.org>
-References: <20240213-arm64-sve-ptrace-regset-size-v2-1-c7600ca74b9b@kernel.org>
+In-Reply-To: <20240214175522.2457857-1-eahariha@linux.microsoft.com>
+References: <20240214175522.2457857-1-eahariha@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,25 +56,17 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Tue, 13 Feb 2024 18:24:38 +0000, Mark Brown wrote:
-> Doug Anderson observed that ChromeOS crashes are being reported which
-> include failing allocations of order 7 during core dumps due to ptrace
-> allocating storage for regsets:
+On Wed, 14 Feb 2024 17:55:18 +0000, Easwar Hariharan wrote:
+> Add the MIDR value of Microsoft Azure Cobalt 100, which is a Microsoft
+> implemented CPU based on r0p0 of the ARM Neoverse N2 CPU, and therefore
+> suffers from all the same errata.
 > 
->   chrome: page allocation failure: order:7,
->           mode:0x40dc0(GFP_KERNEL|__GFP_COMP|__GFP_ZERO),
->           nodemask=(null),cpuset=urgent,mems_allowed=0
->    ...
->   regset_get_alloc+0x1c/0x28
->   elf_core_dump+0x3d8/0xd8c
->   do_coredump+0xeb8/0x1378
 > 
-> [...]
 
 Applied to arm64 (for-next/fixes), thanks!
 
-[1/1] arm64/sve: Lower the maximum allocation for the SVE ptrace regset
-      https://git.kernel.org/arm64/c/2813926261e4
+[1/1] arm64: Subscribe Microsoft Azure Cobalt 100 to ARM Neoverse N2 errata
+      https://git.kernel.org/arm64/c/fb091ff39479
 
 Cheers,
 -- 
