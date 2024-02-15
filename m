@@ -1,99 +1,115 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97FFE12CDBA
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 12:38:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCBB12E1FB;
+	Thu, 15 Feb 2024 12:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708000702; cv=none; b=Vrs+jVTFDF98I6HP5L/otnOwIB72lsfwYhKuHUq9XqI0DJCHS1O4AAFPQ13jc9HcgFFO5Wri3dYXzZLKbx8BlQ6hjIHxljh7jBt2OoPPGSLVauiBfYEsISIePjb9N3e3GJ9eKWyX4e4gMKvwhKBSsbKLIwzUZ8oYh3qOVN48AJI=
+	t=1708000706; cv=none; b=srGfhePGblmYGVt0KoJcZ3LIQC70/EZ96kAseaznuXX7DQ9RAeNqFeir//3iPi4BsmyFD7RKgGgUKYnOwfrNslvAFYhQR1Xu5k17xtY5RtWOxtdBak15fNQRxFn/j1zYWs8x8q4MdkbKosCMuyFb1LYsjqPBNHoJPd8uCT9a8vU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708000702; c=relaxed/simple;
-	bh=DgW0/XHFyuTsoRhvV5ziiagS+vbVnW2v6G9k6XFqQaM=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=ljHUkMpcUUdnyVkdQyAQkeyGAP8cWPmHMhs8GMsI72hGQ817v8JZqfb9EK9Jv3UGfcuLgOLckRRTwvXtlD6zjyePv9E1FK8moTVEHXNu6WsXWwQl+CtWbBYwOIr98d3JBQWPcXTgHZP97Qse2uU2o8NTfS9deXIp4ZnZCHqyllk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e/aJ4/pD; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708000706; c=relaxed/simple;
+	bh=wX8xUiIMHpOyqdGdolyWgF5hNZn2Vqj8dYkmFKwuuDQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b/ba81O9TlG6nFNkudHg/FmkKJXrJAU2rmyYgwHuVAG9AtsSRzgq/fVGdGvZrT1lhBp/Gcc048rBi7B8ygkVvyxLVDMXDTClZPEV8SZTUP0BoHrwdrBvLOF+Lm6lEFPPVaoaoK/h6nYyLZvRo8LinqtU70KlSK3F6k+iMKvr+7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hrMhz0kT; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e/aJ4/pD"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a293f2280c7so115382666b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 04:38:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708000698; x=1708605498; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=DgW0/XHFyuTsoRhvV5ziiagS+vbVnW2v6G9k6XFqQaM=;
-        b=e/aJ4/pDDHPAVe0aHKjhVL1XTd6DDeYL6F1YUoY7vrxA/+duK5muOzqK5AO0XSpOMQ
-         MKgs6mAiuJxeUZMAknUoT4w/i8ixERmqNhlTOqmvwFwHnQW7wbcNcF/Lhquc2iZxyCq8
-         1FZP58a6G52eWRQOB+fs5kLErPr+QQns5atroWYlGmQOnL8fIusseKeix2YXDP30F7kd
-         xszjbcnoRLKAYtWfC811iTHxbp4zyZWk02hSenGvHpxmJAG16d9XJAhT8qPpKoVtNxxk
-         xBH4NAl6TEpvtZR/OwzfMSWTtytvYG+B7EG86cDaJW2UBCL//qlmxTgY/slU7cgg/Pah
-         bs8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708000698; x=1708605498;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DgW0/XHFyuTsoRhvV5ziiagS+vbVnW2v6G9k6XFqQaM=;
-        b=Frwh2De8oyGtP1hqlPfNqUmVjtJFE82ne897RO7avKzaQxSkd45OHQwqNfsX6vKLXp
-         JT8Oh5KcpTGi282xa64D5iCbSC4nXtAjBTmUbPbfR1P38UmqlzDaXhBonPf5vbNdGv5/
-         4Xmrfvo68QJnzvZGEolx2aPOERPORla4chfGge+4bO9gSRU8nQU+e8uePjcqBQP9EQve
-         GeCW++LJerHW1Fwk3fEyJnifXU6TPqVP1reH2Qxq46Or76PF305VMBzL6mYt6WGFyTCi
-         MgaGyBKX29xTn4f1VMff2Vf/A1qI7L/2js7WS8KcHT+expV9hH58WES8CKqchXF7mo/J
-         bV7w==
-X-Gm-Message-State: AOJu0YznK5K/28d8J01Rki3nv/hY3WoaoW4sFJ3HSzppv/dLlyqNHG/h
-	21s0AheYVCmbrk0ul7hKYvdT14qLtIldVDVvwrLP74VNs9douVFPsfJoejUgDF27jpwOIlyXd2r
-	QP1pdCct+i3Z5SKK9IrKjOYWFnnLNRbl5
-X-Google-Smtp-Source: AGHT+IFjMqnp/JVN62EDS+c7oJ+THbUNCPZ8btx/Uz4+iYloJ/cYD8PNcCDEp9fDRS8iTrkiDD44NtBTi8S5pO9ESt8=
-X-Received: by 2002:a17:907:382:b0:a3d:7d05:21ac with SMTP id
- ss2-20020a170907038200b00a3d7d0521acmr1312590ejb.53.1708000698392; Thu, 15
- Feb 2024 04:38:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hrMhz0kT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708000705; x=1739536705;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=wX8xUiIMHpOyqdGdolyWgF5hNZn2Vqj8dYkmFKwuuDQ=;
+  b=hrMhz0kTTyRHcOYHmZzRwSQRH+m0k8yKAufCMcYyCrbuXICn2fWRhQ+3
+   AteNkByHBBXN4LQmHCsAZVe2ouhT41M6mT0FdWC+Xjitv6sYAIzJNrQEX
+   D6hsr1wZcHKeVO41TCFcgVPJvKYkWUiFevZoR/kVFvJHZrzELxtamp5RA
+   bEIg6E/4Y79UftZ1SUPxDNfyqeoXixzP2X0hhQElKRC1C87YRK8U97P8t
+   3TgRWD2BFXNub7zL4QGOA6F2406P8RcGJ9G1L2HvDhIKvmTTIG9F3ADfh
+   jxR8oa5QEJlwCwpW7ivTMCvkQxQRdjSECas+I084hTAhoR2JoPxW5DGAb
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="5051960"
+X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
+   d="scan'208";a="5051960"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 04:38:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="912159489"
+X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
+   d="scan'208";a="912159489"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 04:38:21 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rab0N-00000004n1N-1fm1;
+	Thu, 15 Feb 2024 14:38:19 +0200
+Date: Thu, 15 Feb 2024 14:38:18 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Robin van der Gracht <robin@protonic.nl>,
+	Paul Burton <paulburton@kernel.org>
+Subject: Re: [PATCH v2 00/15] auxdisplay: linedisp: Clean up and add new
+ driver
+Message-ID: <Zc4FutGKA0gUFvev@smile.fi.intel.com>
+References: <20240212170423.2860895-1-andriy.shevchenko@linux.intel.com>
+ <Zcz--YJmWLm0ikUT@smile.fi.intel.com>
+ <CAMuHMdW5nwtuZpTyf+_41bcHeR+MA6Ko2++JiC8Xz6u1tDNQ_Q@mail.gmail.com>
+ <CAMuHMdWKAf_Yi59RWoA5=K=ajS0-+Vn8tgwzy5tAzLmqizZLtg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Jon Maser <jonmaser8@gmail.com>
-Date: Thu, 15 Feb 2024 04:38:07 -0800
-Message-ID: <CAF=mWJOZqD7VnbzrsqCZ1t=sc9d+NUUOzBp5u-GuiwZHS-3K7w@mail.gmail.com>
-Subject: hi! I was wondering if Linus and the linux community could help make
- linux jobs
-To: LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdWKAf_Yi59RWoA5=K=ajS0-+Vn8tgwzy5tAzLmqizZLtg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-id like to run this by linus torevalds since he runs the linux kernel project
+On Thu, Feb 15, 2024 at 12:05:37PM +0100, Geert Uytterhoeven wrote:
+> On Wed, Feb 14, 2024 at 7:45 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Wed, Feb 14, 2024 at 6:57 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > > On Mon, Feb 12, 2024 at 07:01:33PM +0200, Andy Shevchenko wrote:
+> > > > Add a new initial driver for Maxim MAX6958/6959 chips.
+> > > > While developing that driver I realised that there is a lot
+> > > > of duplication between ht16k33 and a new one. Hence set of
+> > > > cleanups and refactorings.
+> > > >
+> > > > Note, the new driver has minimum support of the hardware and
+> > > > I have plans to cover more features in the future.
+> > > >
+> > > > In v2:
+> > > > - updated DT bindings to follow specifications and requirements (Krzysztof)
+> > > > - unified return code variable (err everywhere)
+> > > > - left patches 10 and 13 untouched, we may amend later on (Robin)
+> > >
+> > > Geert, I would like to apply at least the first 13 patches.
+> > > Do you have any comments or even possibility to perform a regression test?
+> >
+> > I'll try to give it a try on my Adafruit Quad 14-segment display tomorrow...
+> 
+> With the missing return-statement added, the ht16k33 driver builds
+> and works fine: the kernel version is happily scrolling by.
+> I didn't test userspace line display control, as there is an issue
+> with the uSD interface on my OrangeCrab, preventing it from booting
+> into userspace.
+> 
+> Tested-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-linux users and linus torevalds with the help of ibm/red
-hat/microsoft/etc could advocate teaching linux in colleges all across
-the globe, with companies invested in linux providing an
-infrastructure for remote access, for a more profitable linux
-industry. we're not talking about stuff like kernel programming, we're
-talking stuff like linux research.
+Thank you!
 
-one thing that caught my eye was rust interoperability in the linux
-kernel, this could mean alot of new jobs for linux. imagine taking a
-nntp boot course in rust programming and working for red hat making
-proprietary software, or some other project available to developers
+So far I have applied patches 1-6,8-9 with the respective suggestions
+implemented.
 
-also ive noticed most governments have some sort of linux
-implementation and they can contribute to a job market
+-- 
+With Best Regards,
+Andy Shevchenko
 
-so yeah hers what i think, and im on a head of antipsych pills, as a campaign
 
-0. linus and companies discuss the future of linux jobs, possibly
-remote and in person
-1. with 0, advocate linux/bsd/unix in colleges across the globe
-2. with 1, invest in business infrastructure
-3. make preparations for some sort of web site connecting empoloyees with 2
-4. deploy!
-thats just a rough guess, id really like for linus to atleast try 1 so
-linux has a future in this world, you never know, windows and gpt4
-might really take off
-
-would be nice if linux was like the internet super hero
-
-so what do you say? bring linux classes to universities and colleges
-so we can all get jobs?
-
-hope this email makes sense, damned zyprexa lol
-
-jon masters
