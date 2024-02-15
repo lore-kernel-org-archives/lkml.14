@@ -1,78 +1,94 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2F412C53F
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 12:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C1312C53F
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 12:38:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708000687; cv=none; b=hyALht58jc7hWiT8pMyqvRfTCZbCyYqeN+JFmqL/KNYY3hoGo4iyxZGc/21hkda4WTxGbbNKT5BfZJ229dD2iDXNJpJiDSY8cT6aNjI8fezeEkYE912a9nmPpg3REpBlrJwenY5Cw5djX+sOjLF0SZr9JVBoIOjlq7PJeRCxmwI=
+	t=1708000691; cv=none; b=L6pdBpV1ZPHUonZilVg3Y3g+hZedtIDaZ8tK/cc28ZU1I3B1WWpb3WWJNrQvUShCZNAg+/dikhXF6n1MpI8sEF2adroZ0DtyU6ZkcdVNkRz03Qb9JlmpBPp05F2ZxlYWO55UHQrkDzJE53irRNdbrTit4P4xnvm9MmzQmi4lb7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708000687; c=relaxed/simple;
-	bh=LznutpEVOxHt4TsC0YpPkpc5D9HK8cOlRg1tQl6qTLM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=mYLR2hWgbIkWXQHk2lwWSrzMHVGfr7u4jsn0k1JSP7NtGiGH814748+KH8zb5bYYHTnqso8LIA3ARwrk+2caHV39hJo7Okbdxa0saBupWb4C5HFyx3PfahFMGTaJa59tV3AjHJ0Vr9NJiNGcqraqfl62NB8LHtdTzDh++iMNI/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7c0001148c3so58957239f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 04:38:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708000685; x=1708605485;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y4EiGIu2mTjtQ2BKESlH87IOtFfw0dlvPHITGr5W5T4=;
-        b=ErkDTMrJ//3RlNAD5xBnVbonY0O9pMRQUarfPO+zhqmXcH3mrz66Kos8qgxUlRCOc6
-         vHHIEVK905w+zaJlJ8KhmALpzMXIRiS/F/vV3bA92cYXZ08iWSuKWF/oU6MNCRpi5p85
-         aOkvi0vSjDuuzA0kc0CeWNP6mHDiayxJ1/rVNxwuCbIhQJtwCk9AjfHoWqUbZJJMbqV2
-         ye/95dqKB1FlZedOHlt0bPh27JM1AzAc0IC6fYFetFSGHSR1BbYzWQgeh0UvFnmq812F
-         vZrNje3b/R3dUDIL+/Jc9XBir9S2uMKr78iwlq/TTDyGrkMCCNMJzuV7Susv1YqbfCCB
-         CR/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX1j+lX5R3hsAWba8P7hZ/VaMgEVIhCgQ+fjbretmViJMWw8A6N1lIqhAsXLajTbSXhEgcXjHF2uYWnaysjzev6fBI5HKs8WppQNx0V
-X-Gm-Message-State: AOJu0YxHBwRVg+2I/tPRCNdcTQqTa12bAGjI4y3CDyWTIRcsobwiQTvQ
-	n3o1AYGrrJp4ViqxpKd8e60S4bTGOC+6ek/XeC3SZ64HTVPqxZK0tHhp8VbE8FggIX+TWnsjQ9H
-	x+m3Jt84Hi3xRVhNpQYNrCPOWTifZETdMa2ZfyoCHqhe5tLW3t6h2cM8=
-X-Google-Smtp-Source: AGHT+IFL92pJv2bjiJRhXIiR95FF9dQns631ia4A87d6518YNfgSwHqS1NKPmdx+39TqBAEzlU9IOeqWxjvpkl7HaHm7mH6Rg4Wu
+	s=arc-20240116; t=1708000691; c=relaxed/simple;
+	bh=+YDv/UVW9GahoPsSU0vjY9QtDCOt4MHJf1o+Lr+1AaQ=;
+	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=t9JI0iOI1vF0ty3JWvqtdJ6eZ7x4n81kDJHP5PeYUJ4M3C/JyHp1WiuZQP+cbssnoygn9ani8gtCSrAgqFQpGZyQW3UV1FgfrLT3fbrxvbi/UAz/yVfl0/xRU0QeKpIHApCudjVfSaEcLWp76ttWtFiZURoBvT6vooszeu3HBHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AVt56Hh/; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AVt56Hh/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 330B6C433F1;
+	Thu, 15 Feb 2024 12:38:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708000690;
+	bh=+YDv/UVW9GahoPsSU0vjY9QtDCOt4MHJf1o+Lr+1AaQ=;
+	h=Date:From:To:cc:Subject:From;
+	b=AVt56Hh/4LB9ZLN3K4rrPNea9Djud73tkWbuxzuoQ9SDjKPEw9HIRF69cHQXtvNRf
+	 IIIqs8tGjMYUdyrLFV5kkFgSZGIeGZ32igb9Zcwoee+0FDycER5CHnc0VaQHBevJCl
+	 Ndo+3lNfIM/eTYE/HBiuhaVjs/cw9pc2i2bnzshhBMfesyw6V5zDBI7sO2Q5cjatVN
+	 sz0JfE0cui+WNAcr7zyX9P/2eqtPPBjLwjAAljwY3gbyBT4V0yW7I55cqSjGNwAiQz
+	 e5yu7ZF3szPHAO7gGUI5dUyBFT49pU9ijWzNUcmJ6dCBgVY1bYw+EFAUiwg6U8Bbly
+	 wnTYXgCZbWM9w==
+Date: Thu, 15 Feb 2024 13:38:10 +0100 (CET)
+From: Jiri Kosina <jikos@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+cc: linux-kernel@vger.kernel.org, 
+    Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: [GIT PULL] HID fixes
+Message-ID: <nycvar.YFH.7.76.2402151330460.21798@cbobk.fhfr.pm>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:4387:b0:471:3c6d:b574 with SMTP id
- bo7-20020a056638438700b004713c6db574mr10331jab.4.1708000684861; Thu, 15 Feb
- 2024 04:38:04 -0800 (PST)
-Date: Thu, 15 Feb 2024 04:38:04 -0800
-In-Reply-To: <000000000000a3818b05f18916e0@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000018f2c806116ae6d3@google.com>
-Subject: Re: [syzbot] [reiserfs?] BUG: unable to handle kernel paging request
- in reiserfs_readdir_inode
-From: syzbot <syzbot+3f6ef04b7cf85153b528@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, brauner@kernel.org, jack@suse.cz, 
-	jfs-discussion@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, reiserfs-devel@vger.kernel.org, 
-	shaggy@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 
-syzbot suspects this issue was fixed by commit:
+Linus,
 
-commit 6f861765464f43a71462d52026fbddfc858239a5
-Author: Jan Kara <jack@suse.cz>
-Date:   Wed Nov 1 17:43:10 2023 +0000
+please pull from
 
-    fs: Block writes to mounted block devices
+  git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git tags/hid-for-linus-2024021501
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14ffd320180000
-start commit:   534293368afa Merge tag 'kbuild-fixes-v6.3' of git://git.ke..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9688428cfef5e8d5
-dashboard link: https://syzkaller.appspot.com/bug?extid=3f6ef04b7cf85153b528
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=138d82bac80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1123fed2c80000
+to receive HID subsystem fixes, namely:
 
-If the result looks correct, please mark the issue as fixed by replying with:
+=====
+- fix for 'MSC_SERIAL = 0' corner case handling in wacom driver 
+  (Jason Gerecke)
 
-#syz fix: fs: Block writes to mounted block devices
+- ACPI S3 suspend/resume fix for intel-ish-hid (Even Xu)
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+- race condition fix preventing Wacom driver from losing events shortly
+  after initialization (Jason Gerecke)
+
+- fix preventing certain Logitech HID++ devices from spamming kernel log 
+  (Oleksandr Natalenko)
+=====
+
+Thanks.
+
+----------------------------------------------------------------
+Even Xu (1):
+      HID: Intel-ish-hid: Ishtp: Fix sensor reads after ACPI S3 suspend
+
+Jason Gerecke (1):
+      HID: wacom: Do not register input devices until after hid_hw_start
+
+Manuel Fombuena (1):
+      HID: multitouch: Add required quirk for Synaptics 0xcddc device
+
+Oleksandr Natalenko (1):
+      HID: logitech-hidpp: Do not flood kernel log
+
+Tatsunosuke Tobita (1):
+      HID: wacom: generic: Avoid reporting a serial of '0' to userspace
+
+ drivers/hid/hid-logitech-hidpp.c         | 13 +++++--
+ drivers/hid/hid-multitouch.c             |  4 ++
+ drivers/hid/intel-ish-hid/ishtp/bus.c    |  2 +
+ drivers/hid/intel-ish-hid/ishtp/client.c |  4 +-
+ drivers/hid/wacom_sys.c                  | 63 ++++++++++++++++++++++----------
+ drivers/hid/wacom_wac.c                  |  9 ++++-
+ 6 files changed, 70 insertions(+), 25 deletions(-)
+
+-- 
+Jiri Kosina
+SUSE Labs
+
