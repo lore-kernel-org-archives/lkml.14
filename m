@@ -1,63 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA36013AA35;
-	Thu, 15 Feb 2024 19:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282B612BF1E;
+	Thu, 15 Feb 2024 19:52:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708026607; cv=none; b=WzXzj6/E5VoI7JSEtCrwN9avwqw6l8Cs1ubbD1GafUM6KVjljq3rIMtTa/9crrqu9W/PXxyNo+mm8/eUHfQ+gczWDm8ZwW5nCdpZncv5f+IxdozvioMCBMR7gUVWFFCtJg5rADsLIoscxlPvpUaWxi/C8PUnOLlv7idSpdKpJyM=
+	t=1708026761; cv=none; b=YCwuNZU2eWEUZ1CGhcLGJ35EOo2v8WTkAaP2vVPPBAnJF/arxja9wGYW0FIGVyC0IxDDU3HjMaMcdCdyTDD4ynvuzeYEsDA0inpumJ4EHSQrrHjY0TtbgBg72LieTDXfUcjTAeo9qu971n1qirMeek5Ra29PR+lAnowbLqNatfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708026607; c=relaxed/simple;
-	bh=jDIZVjmxrgUu27lhO2P/zOKIwiJENod221wvbFXGcl8=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=mlhXNCxZuZV5NJBgTWqIiplZiWN/eJ3Vw95wKuor8y7eIRr0hVd9O5J9v3hJTFwAhOail5jhHIhRH1IRb8fP810jTxCE0qZJF5u5F+nhLlVgnQchpMgk/lhTFtoXW1VwyTB/H5IqIRv2JU1zERvlZU0csOplyuaMJAXT/mbHNHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jmuka/BD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jmuka/BD"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5A100C43609;
-	Thu, 15 Feb 2024 19:50:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708026607;
-	bh=jDIZVjmxrgUu27lhO2P/zOKIwiJENod221wvbFXGcl8=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=Jmuka/BD+sT+9hXwIG0LfNMV/TwOqeklYb8thXneq8yxleDzsLmuu7xUyPfwBQFxE
-	 htfU+7ICwXDjBAq7RBjuTC2QsM7tU6zRT1edxD8tQ9aFTyCacca6dR+Ii+aGGeP9q3
-	 RGHXFak7Q0V+RBfKxx5N1fjJPW420LaRn/1TrG6KGTwl5vWR27M+Of5f27Tv/45K0q
-	 hmOUW+oF9ZFXyCZiG9IE5bkWWBOk80RDaXCDLqTJ7jfw8wfy2lUdJ+wPzaW1q58Epz
-	 Gnnpg38fqjjxDOhYZE5ZcQ5xWGqu20rxSdpJsrkNo7+OzEHQcvVZxxGcrJdruUC1BL
-	 kwDH6R/fIITXg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3E9B5DCB6EC;
-	Thu, 15 Feb 2024 19:50:07 +0000 (UTC)
-Subject: Re: [GIT PULL] Devicetree fixes for v6.8
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240215153248.GA181950-robh@kernel.org>
-References: <20240215153248.GA181950-robh@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240215153248.GA181950-robh@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-6.8-1
-X-PR-Tracked-Commit-Id: 4e06ec0774f5bebf10e27bc7a5ace4b48ae0fa56
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 339e2fca02141ee74bd705b3d409aa81d9ca3d0a
-Message-Id: <170802660725.17476.10766418345866334930.pr-tracker-bot@kernel.org>
-Date: Thu, 15 Feb 2024 19:50:07 +0000
-To: Rob Herring <robh@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+	s=arc-20240116; t=1708026761; c=relaxed/simple;
+	bh=HFKcFyvW4sPTCSrx6Kmc7KZ0WwpPVFK4hWtVZSJM1R0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Bcc3XojfoAWIPlvvRLzmzoyWRsURCBDw3/gTfAV+81tN1iQC8UsKalYRdyMPCb1dPeiZ715E/TChYHTVAC48qLjoD8c+j7gexSjes1f2xvytAb4AgYWEE1aHlHpf2U3ba5Co2UnyQRXUObVwfZ5/KXe8ImvbJ1fUcO2GfgnL7vQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-214309bbbf0so153773fac.1;
+        Thu, 15 Feb 2024 11:52:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708026759; x=1708631559;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=isRTNv4OHZOkLMBzStzx/NL9+OwNxPNX48FNAMKoAGQ=;
+        b=loksQ0MSkzqufIavgnSrG1wakdbzEjd6CXBsOy3jCYBZyVlGBDlIre5mVvh3k/Qc0W
+         CfTBq6vZbXi25xSNphWh5vMslr62NkGRta45YhGCPYyi9lJvcdm87CuvDWwhvcAvbQDH
+         mTwtefgGoeIBwNRyZPgFnP0fk03cts6nKydYP6atNkH+hH7J6Z4dgdM7vM6dWNcvs1Y5
+         L3FCN3xeoxtyeUmKRolvgZdbkE8NTgxZBQMdnS8DsqVkSafFdlS/X3o4uKbB8CncrVXF
+         +JCMr8mIzdiTaCL7AawHS0zhuj3avTHmBMCmGY+wlii/j08FyhXVgNhW/MB6uzMoFtst
+         iMNA==
+X-Forwarded-Encrypted: i=1; AJvYcCWkLuZYRcv75UaEft/i+nVgF+Xuk8YUdEpNKKYUdEwuRO3anw3NDup2Jgsyjeus26cxE5HE0bY7Ma1CBDQUrHYfIBkQTl/gtfoK7sBU3D2tpf+Uhm1sRRuDFMwf+N77HUNNjPwNSYFk1A==
+X-Gm-Message-State: AOJu0YyrVQCXRRR7r9ys1R5YnWydUDnMztY8p3SWjG7YWm89HAhHN3ca
+	4UmwxN1SLh2FWrWeMVbTsQezmHiIJCgDKZUqsyJ9z4aq/5Trsti9nLJXhdp7Pd8mCLk4t4oO5mj
+	ARsnRIJDiPzmKLlUCldRUQYysyTY=
+X-Google-Smtp-Source: AGHT+IGgeFXmuc9BaiFv7Y2D9C02UVAGPHRoglZQav+UEKZvUc4R4Kp77gwoBmGYHdKm9l1BGZ59wZfoZGQg85Yf690=
+X-Received: by 2002:a4a:3803:0:b0:59a:bfb:f556 with SMTP id
+ c3-20020a4a3803000000b0059a0bfbf556mr270551ooa.0.1708026759039; Thu, 15 Feb
+ 2024 11:52:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <52cf0eab-dbbd-4f12-b100-c7db1daea442@gmail.com>
+In-Reply-To: <52cf0eab-dbbd-4f12-b100-c7db1daea442@gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 15 Feb 2024 20:52:27 +0100
+Message-ID: <CAJZ5v0hHEWEvo83kuvn9=UnW3wpVQ_Eg8bKHNVCMCbvJEA535g@mail.gmail.com>
+Subject: Re: [PATCH] Fix keyboard on ASUS EXPERTBOOK B2502FBA, see bug:217323
+To: Sviatoslav Harasymchuk <sviatoslav.harasymchuk@gmail.com>
+Cc: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The pull request you sent on Thu, 15 Feb 2024 09:32:48 -0600:
+On Sun, Feb 11, 2024 at 1:08=E2=80=AFAM Sviatoslav Harasymchuk
+<sviatoslav.harasymchuk@gmail.com> wrote:
+>
+> For: ASUS ExpertBook B2502FBA
+> Similar to patch:
+> https://lore.kernel.org/linux-acpi/20230411183144.6932-1-pmenzel@molgen.m=
+pg.de/
+> For the bug:
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D217323
+>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D217323
+> Signed-off-by: Sviatoslav Harasymchuk <sviatoslav.harasymchuk@gmail.com>
+> Tested-by: Sviatoslav Harasymchuk <sviatoslav.harasymchuk@gmail.com>
+> ---
+>   drivers/acpi/resource.c | 7 +++++++
+>   1 file changed, 7 insertions(+)
+>
+> diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+> index dacad1d846c0..41fe6f2d4fa8 100644
+> --- a/drivers/acpi/resource.c
+> +++ b/drivers/acpi/resource.c
+> @@ -489,6 +489,13 @@ static const struct dmi_system_id
+> irq1_level_low_skip_override[] =3D {
+>               DMI_MATCH(DMI_BOARD_NAME, "B2502CBA"),
+>           },
+>       },
+> +    {
+> +        /* Asus ExpertBook B2502FBA */
+> +        .matches =3D {
+> +            DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +            DMI_MATCH(DMI_BOARD_NAME, "B2502FBA"),
+> +        },
+> +    },
+>       {
+>           /* Asus Vivobook E1504GA */
+>           .matches =3D {
+> --
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-6.8-1
+Applied as 6.9 material, but I rewrote the subject and changelog and
+had to fix up white space (presumably broken by your email client or
+similar).
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/339e2fca02141ee74bd705b3d409aa81d9ca3d0a
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+I would appreciate being more careful next time.
