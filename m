@@ -1,733 +1,299 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4FBC58AC7
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 11:23:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBB5E53369;
+	Thu, 15 Feb 2024 11:24:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707996207; cv=none; b=iNRlqELX5C4iM5eHY/4eAfBJRfc7wvC9/akEPfJ0M/7jU8eC41340v8HFaLDt9aXLCnkWn6kRp2fHmKfoYDv1JNPc4HuZSe3TLaY5ujYzciUFLiFWUlNwcpjUADarGVXG5TVaYV62yVzlHoPf+Fr7xxsX5EsYEvHIugJ00OOC5I=
+	t=1707996242; cv=none; b=gYDvp5Od0GXzUTwFS8sLT4ewcqrOut2/dyLGO57fXnz65SRxwW8Usl83LLcE1/QBBnZ5tplt+AP6ekGPDPKxypS5XrUeEF4gXkunMDuUYbbA+3sm8inUXhmNq5Xy7ebHZ5UJ+C4urFM7pYuza9MUtzTjJEafF81Yi/VePdT3TnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707996207; c=relaxed/simple;
-	bh=lQzGyT8ucgv0/cuFUmldaiWt20xaRwxIxHPfh7CEBPY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kLM1f6xxZF//kHVzrHXZ778FCPM3zf8rfoTM/tB1Gz3JCZkDAFtWPY6O3yp5f0R8WZXyJHUku8HiETpd/n6Kcr6wxOoya5Gq/flfURu8jfY4rVwgQZrf0qE0TrAkadgvOzPKxVE076DT4WA92JEtyh1cKOLt3DLgiw+KXPrsS8o=
+	s=arc-20240116; t=1707996242; c=relaxed/simple;
+	bh=hVGzQRzhASRK0PBLcdMUoc1nqlbrfvpv32F2cqVIqwE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BP3sCe0Rou1DaR2Ybaj4fhYiTcQ1rtQ0V94p56fe1TO4vciDgfdQgzz5wOFGVJRDrA44uILpbM2kmTnIq2ZZ2M0cZdBgAtSgfIoW62E+KI1lSngB4B2FlPyopxWKW2svZaZlZzyOSficVM2chNYFmLQnkNdYS9XIjHdOqNiAdok=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D48E2150C;
-	Thu, 15 Feb 2024 03:24:04 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.68.11])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4026F3F7B4;
-	Thu, 15 Feb 2024 03:23:20 -0800 (PST)
-Date: Thu, 15 Feb 2024 11:23:17 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	David Hildenbrand <david@redhat.com>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	John Hubbard <jhubbard@nvidia.com>, Zi Yan <ziy@nvidia.com>,
-	Barry Song <21cnbao@gmail.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Yang Shi <shy828301@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 10/18] arm64/mm: New ptep layer to manage contig bit
-Message-ID: <Zc30JQJEoAMqdt_T@FVFF77S0Q05N>
-References: <20240215103205.2607016-1-ryan.roberts@arm.com>
- <20240215103205.2607016-11-ryan.roberts@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C631DA7;
+	Thu, 15 Feb 2024 03:24:41 -0800 (PST)
+Received: from [10.57.49.250] (unknown [10.57.49.250])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A84F73F7B4;
+	Thu, 15 Feb 2024 03:23:58 -0800 (PST)
+Message-ID: <b72c54bf-17a8-453c-8fbb-fbc90abdb45a@arm.com>
+Date: Thu, 15 Feb 2024 11:23:57 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240215103205.2607016-11-ryan.roberts@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 05/11] coresight: replicator: Move ACPI support from
+ AMBA driver to platform driver
+Content-Language: en-GB
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ linux-arm-kernel@lists.infradead.org
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Sudeep Holla <sudeep.holla@arm.com>, Mike Leach <mike.leach@linaro.org>,
+ James Clark <james.clark@arm.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+ linux-stm32@st-md-mailman.stormreply.com
+References: <20240123054608.1790189-1-anshuman.khandual@arm.com>
+ <20240123054608.1790189-6-anshuman.khandual@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20240123054608.1790189-6-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 15, 2024 at 10:31:57AM +0000, Ryan Roberts wrote:
-> Create a new layer for the in-table PTE manipulation APIs. For now, The
-> existing API is prefixed with double underscore to become the
-> arch-private API and the public API is just a simple wrapper that calls
-> the private API.
-> 
-> The public API implementation will subsequently be used to transparently
-> manipulate the contiguous bit where appropriate. But since there are
-> already some contig-aware users (e.g. hugetlb, kernel mapper), we must
-> first ensure those users use the private API directly so that the future
-> contig-bit manipulations in the public API do not interfere with those
-> existing uses.
-> 
-> The following APIs are treated this way:
-> 
->  - ptep_get
->  - set_pte
->  - set_ptes
->  - pte_clear
->  - ptep_get_and_clear
->  - ptep_test_and_clear_young
->  - ptep_clear_flush_young
->  - ptep_set_wrprotect
->  - ptep_set_access_flags
-> 
-> Tested-by: John Hubbard <jhubbard@nvidia.com>
-> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+Hi Anshuman
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+On 23/01/2024 05:46, Anshuman Khandual wrote:
+> Add support for the dynamic replicator device in the platform driver, which
+> can then be used on ACPI based platforms. This change would now allow
+> runtime power management for repliacator devices on ACPI based systems.
+> 
+> The driver would try to enable the APB clock if available. Also, rename the
+> code to reflect the fact that it now handles both static and dynamic
+> replicators.
+> 
+> Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Mike Leach <mike.leach@linaro.org>
+> Cc: James Clark <james.clark@arm.com>
+> Cc: linux-acpi@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: coresight@lists.linaro.org
+> Tested-by: Sudeep Holla <sudeep.holla@arm.com> # Boot and driver probe only
+> Acked-by: Sudeep Holla <sudeep.holla@arm.com> # For ACPI related changes
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
-Mark.
+I think the patch is doing three different things:
+
+1) Use new helper to register/remove AMBA/Platform drivers
+2) Refactor replicator_probe() to make sure it can be reused for 
+platform/amba driver, by moving the pm_runtime_put() to the callers.
+3) Actually moving the ACPI driver to Platform driver
+
+While (1) and (3) are obvious, (2) gave me hard time to review this
+patch, without proper description. If you don't mind, are you able to
+split the patch and add proper description of the 3 changes mentioned
+above.
+
+
+Kind regards
+Suzuki
 
 > ---
->  arch/arm64/include/asm/pgtable.h | 83 +++++++++++++++++---------------
->  arch/arm64/kernel/efi.c          |  4 +-
->  arch/arm64/kernel/mte.c          |  2 +-
->  arch/arm64/kvm/guest.c           |  2 +-
->  arch/arm64/mm/fault.c            | 12 ++---
->  arch/arm64/mm/fixmap.c           |  4 +-
->  arch/arm64/mm/hugetlbpage.c      | 40 +++++++--------
->  arch/arm64/mm/kasan_init.c       |  6 +--
->  arch/arm64/mm/mmu.c              | 14 +++---
->  arch/arm64/mm/pageattr.c         |  6 +--
->  arch/arm64/mm/trans_pgd.c        |  6 +--
->  11 files changed, 93 insertions(+), 86 deletions(-)
+> Changes in V4:
 > 
-> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-> index 9a2df85eb493..7336d40a893a 100644
-> --- a/arch/arm64/include/asm/pgtable.h
-> +++ b/arch/arm64/include/asm/pgtable.h
-> @@ -93,7 +93,8 @@ static inline pteval_t __phys_to_pte_val(phys_addr_t phys)
->  	__pte(__phys_to_pte_val((phys_addr_t)(pfn) << PAGE_SHIFT) | pgprot_val(prot))
->  
->  #define pte_none(pte)		(!pte_val(pte))
-> -#define pte_clear(mm,addr,ptep)	set_pte(ptep, __pte(0))
-> +#define __pte_clear(mm, addr, ptep) \
-> +				__set_pte(ptep, __pte(0))
->  #define pte_page(pte)		(pfn_to_page(pte_pfn(pte)))
->  
->  /*
-> @@ -137,7 +138,7 @@ static inline pteval_t __phys_to_pte_val(phys_addr_t phys)
->   * so that we don't erroneously return false for pages that have been
->   * remapped as PROT_NONE but are yet to be flushed from the TLB.
->   * Note that we can't make any assumptions based on the state of the access
-> - * flag, since ptep_clear_flush_young() elides a DSB when invalidating the
-> + * flag, since __ptep_clear_flush_young() elides a DSB when invalidating the
->   * TLB.
->   */
->  #define pte_accessible(mm, pte)	\
-> @@ -261,7 +262,7 @@ static inline pte_t pte_mkdevmap(pte_t pte)
->  	return set_pte_bit(pte, __pgprot(PTE_DEVMAP | PTE_SPECIAL));
->  }
->  
-> -static inline void set_pte(pte_t *ptep, pte_t pte)
-> +static inline void __set_pte(pte_t *ptep, pte_t pte)
->  {
->  	WRITE_ONCE(*ptep, pte);
->  
-> @@ -275,8 +276,7 @@ static inline void set_pte(pte_t *ptep, pte_t pte)
->  	}
->  }
->  
-> -#define ptep_get ptep_get
-> -static inline pte_t ptep_get(pte_t *ptep)
-> +static inline pte_t __ptep_get(pte_t *ptep)
->  {
->  	return READ_ONCE(*ptep);
->  }
-> @@ -308,7 +308,7 @@ static inline void __check_safe_pte_update(struct mm_struct *mm, pte_t *ptep,
->  	if (!IS_ENABLED(CONFIG_DEBUG_VM))
->  		return;
->  
-> -	old_pte = ptep_get(ptep);
-> +	old_pte = __ptep_get(ptep);
->  
->  	if (!pte_valid(old_pte) || !pte_valid(pte))
->  		return;
-> @@ -317,7 +317,7 @@ static inline void __check_safe_pte_update(struct mm_struct *mm, pte_t *ptep,
->  
->  	/*
->  	 * Check for potential race with hardware updates of the pte
-> -	 * (ptep_set_access_flags safely changes valid ptes without going
-> +	 * (__ptep_set_access_flags safely changes valid ptes without going
->  	 * through an invalid entry).
->  	 */
->  	VM_WARN_ONCE(!pte_young(pte),
-> @@ -363,23 +363,22 @@ static inline pte_t pte_advance_pfn(pte_t pte, unsigned long nr)
->  	return pfn_pte(pte_pfn(pte) + nr, pte_pgprot(pte));
->  }
->  
-> -static inline void set_ptes(struct mm_struct *mm,
-> -			    unsigned long __always_unused addr,
-> -			    pte_t *ptep, pte_t pte, unsigned int nr)
-> +static inline void __set_ptes(struct mm_struct *mm,
-> +			      unsigned long __always_unused addr,
-> +			      pte_t *ptep, pte_t pte, unsigned int nr)
->  {
->  	page_table_check_ptes_set(mm, ptep, pte, nr);
->  	__sync_cache_and_tags(pte, nr);
->  
->  	for (;;) {
->  		__check_safe_pte_update(mm, ptep, pte);
-> -		set_pte(ptep, pte);
-> +		__set_pte(ptep, pte);
->  		if (--nr == 0)
->  			break;
->  		ptep++;
->  		pte = pte_advance_pfn(pte, 1);
->  	}
->  }
-> -#define set_ptes set_ptes
->  
->  /*
->   * Huge pte definitions.
-> @@ -546,7 +545,7 @@ static inline void __set_pte_at(struct mm_struct *mm,
->  {
->  	__sync_cache_and_tags(pte, nr);
->  	__check_safe_pte_update(mm, ptep, pte);
-> -	set_pte(ptep, pte);
-> +	__set_pte(ptep, pte);
->  }
->  
->  static inline void set_pmd_at(struct mm_struct *mm, unsigned long addr,
-> @@ -860,8 +859,7 @@ static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
->  	return pte_pmd(pte_modify(pmd_pte(pmd), newprot));
->  }
->  
-> -#define __HAVE_ARCH_PTEP_SET_ACCESS_FLAGS
-> -extern int ptep_set_access_flags(struct vm_area_struct *vma,
-> +extern int __ptep_set_access_flags(struct vm_area_struct *vma,
->  				 unsigned long address, pte_t *ptep,
->  				 pte_t entry, int dirty);
->  
-> @@ -871,7 +869,8 @@ static inline int pmdp_set_access_flags(struct vm_area_struct *vma,
->  					unsigned long address, pmd_t *pmdp,
->  					pmd_t entry, int dirty)
->  {
-> -	return ptep_set_access_flags(vma, address, (pte_t *)pmdp, pmd_pte(entry), dirty);
-> +	return __ptep_set_access_flags(vma, address, (pte_t *)pmdp,
-> +							pmd_pte(entry), dirty);
->  }
->  
->  static inline int pud_devmap(pud_t pud)
-> @@ -905,12 +904,13 @@ static inline bool pud_user_accessible_page(pud_t pud)
->  /*
->   * Atomic pte/pmd modifications.
->   */
-> -#define __HAVE_ARCH_PTEP_TEST_AND_CLEAR_YOUNG
-> -static inline int __ptep_test_and_clear_young(pte_t *ptep)
-> +static inline int __ptep_test_and_clear_young(struct vm_area_struct *vma,
-> +					      unsigned long address,
-> +					      pte_t *ptep)
->  {
->  	pte_t old_pte, pte;
->  
-> -	pte = ptep_get(ptep);
-> +	pte = __ptep_get(ptep);
->  	do {
->  		old_pte = pte;
->  		pte = pte_mkold(pte);
-> @@ -921,18 +921,10 @@ static inline int __ptep_test_and_clear_young(pte_t *ptep)
->  	return pte_young(pte);
->  }
->  
-> -static inline int ptep_test_and_clear_young(struct vm_area_struct *vma,
-> -					    unsigned long address,
-> -					    pte_t *ptep)
-> -{
-> -	return __ptep_test_and_clear_young(ptep);
-> -}
+> - Added pm_runtime_disable() in replicator_platform_probe()
+> - Changed replicator_platform_remove() for platform_driver->remove_new()
+> 
+>   drivers/acpi/arm64/amba.c                     |  1 -
+>   .../coresight/coresight-replicator.c          | 81 ++++++++++---------
+>   2 files changed, 43 insertions(+), 39 deletions(-)
+> 
+> diff --git a/drivers/acpi/arm64/amba.c b/drivers/acpi/arm64/amba.c
+> index 171b5c2c7edd..270f4e3819a2 100644
+> --- a/drivers/acpi/arm64/amba.c
+> +++ b/drivers/acpi/arm64/amba.c
+> @@ -27,7 +27,6 @@ static const struct acpi_device_id amba_id_list[] = {
+>   	{"ARMHC503", 0}, /* ARM CoreSight Debug */
+>   	{"ARMHC979", 0}, /* ARM CoreSight TPIU */
+>   	{"ARMHC97C", 0}, /* ARM CoreSight SoC-400 TMC, SoC-600 ETF/ETB */
+> -	{"ARMHC98D", 0}, /* ARM CoreSight Dynamic Replicator */
+>   	{"ARMHC9CA", 0}, /* ARM CoreSight CATU */
+>   	{"ARMHC9FF", 0}, /* ARM CoreSight Dynamic Funnel */
+>   	{"", 0},
+> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
+> index 91d93060dda5..9b5f52725f43 100644
+> --- a/drivers/hwtracing/coresight/coresight-replicator.c
+> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
+> @@ -31,6 +31,7 @@ DEFINE_CORESIGHT_DEVLIST(replicator_devs, "replicator");
+>    * @base:	memory mapped base address for this component. Also indicates
+>    *		whether this one is programmable or not.
+>    * @atclk:	optional clock for the core parts of the replicator.
+> + * @pclk:	APB clock if present, otherwise NULL
+>    * @csdev:	component vitals needed by the framework
+>    * @spinlock:	serialize enable/disable operations.
+>    * @check_idfilter_val: check if the context is lost upon clock removal.
+> @@ -38,6 +39,7 @@ DEFINE_CORESIGHT_DEVLIST(replicator_devs, "replicator");
+>   struct replicator_drvdata {
+>   	void __iomem		*base;
+>   	struct clk		*atclk;
+> +	struct clk		*pclk;
+>   	struct coresight_device	*csdev;
+>   	spinlock_t		spinlock;
+>   	bool			check_idfilter_val;
+> @@ -243,6 +245,10 @@ static int replicator_probe(struct device *dev, struct resource *res)
+>   			return ret;
+>   	}
+>   
+> +	drvdata->pclk = coresight_get_enable_apb_pclk(dev);
+> +	if (IS_ERR(drvdata->pclk))
+> +		return -ENODEV;
+> +
+>   	/*
+>   	 * Map the device base for dynamic-replicator, which has been
+>   	 * validated by AMBA core
+> @@ -285,7 +291,6 @@ static int replicator_probe(struct device *dev, struct resource *res)
+>   	}
+>   
+>   	replicator_reset(drvdata);
+> -	pm_runtime_put(dev);
+>   
+>   out_disable_clk:
+>   	if (ret && !IS_ERR_OR_NULL(drvdata->atclk))
+> @@ -301,29 +306,33 @@ static int replicator_remove(struct device *dev)
+>   	return 0;
+>   }
+>   
+> -static int static_replicator_probe(struct platform_device *pdev)
+> +static int replicator_platform_probe(struct platform_device *pdev)
+>   {
+> +	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>   	int ret;
+>   
+>   	pm_runtime_get_noresume(&pdev->dev);
+>   	pm_runtime_set_active(&pdev->dev);
+>   	pm_runtime_enable(&pdev->dev);
+>   
+> -	/* Static replicators do not have programming base */
+> -	ret = replicator_probe(&pdev->dev, NULL);
 > -
-> -#define __HAVE_ARCH_PTEP_CLEAR_YOUNG_FLUSH
-> -static inline int ptep_clear_flush_young(struct vm_area_struct *vma,
-> +static inline int __ptep_clear_flush_young(struct vm_area_struct *vma,
->  					 unsigned long address, pte_t *ptep)
->  {
-> -	int young = ptep_test_and_clear_young(vma, address, ptep);
-> +	int young = __ptep_test_and_clear_young(vma, address, ptep);
->  
->  	if (young) {
->  		/*
-> @@ -955,12 +947,11 @@ static inline int pmdp_test_and_clear_young(struct vm_area_struct *vma,
->  					    unsigned long address,
->  					    pmd_t *pmdp)
->  {
-> -	return ptep_test_and_clear_young(vma, address, (pte_t *)pmdp);
-> +	return __ptep_test_and_clear_young(vma, address, (pte_t *)pmdp);
->  }
->  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
->  
-> -#define __HAVE_ARCH_PTEP_GET_AND_CLEAR
-> -static inline pte_t ptep_get_and_clear(struct mm_struct *mm,
-> +static inline pte_t __ptep_get_and_clear(struct mm_struct *mm,
->  				       unsigned long address, pte_t *ptep)
->  {
->  	pte_t pte = __pte(xchg_relaxed(&pte_val(*ptep), 0));
-> @@ -984,15 +975,15 @@ static inline pmd_t pmdp_huge_get_and_clear(struct mm_struct *mm,
->  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
->  
->  /*
-> - * ptep_set_wrprotect - mark read-only while trasferring potential hardware
-> + * __ptep_set_wrprotect - mark read-only while trasferring potential hardware
->   * dirty status (PTE_DBM && !PTE_RDONLY) to the software PTE_DIRTY bit.
->   */
-> -#define __HAVE_ARCH_PTEP_SET_WRPROTECT
-> -static inline void ptep_set_wrprotect(struct mm_struct *mm, unsigned long address, pte_t *ptep)
-> +static inline void __ptep_set_wrprotect(struct mm_struct *mm,
-> +					unsigned long address, pte_t *ptep)
->  {
->  	pte_t old_pte, pte;
->  
-> -	pte = ptep_get(ptep);
-> +	pte = __ptep_get(ptep);
->  	do {
->  		old_pte = pte;
->  		pte = pte_wrprotect(pte);
-> @@ -1006,7 +997,7 @@ static inline void ptep_set_wrprotect(struct mm_struct *mm, unsigned long addres
->  static inline void pmdp_set_wrprotect(struct mm_struct *mm,
->  				      unsigned long address, pmd_t *pmdp)
->  {
-> -	ptep_set_wrprotect(mm, address, (pte_t *)pmdp);
-> +	__ptep_set_wrprotect(mm, address, (pte_t *)pmdp);
->  }
->  
->  #define pmdp_establish pmdp_establish
-> @@ -1084,7 +1075,7 @@ static inline void arch_swap_restore(swp_entry_t entry, struct folio *folio)
->  #endif /* CONFIG_ARM64_MTE */
->  
->  /*
-> - * On AArch64, the cache coherency is handled via the set_ptes() function.
-> + * On AArch64, the cache coherency is handled via the __set_ptes() function.
->   */
->  static inline void update_mmu_cache_range(struct vm_fault *vmf,
->  		struct vm_area_struct *vma, unsigned long addr, pte_t *ptep,
-> @@ -1136,6 +1127,22 @@ extern pte_t ptep_modify_prot_start(struct vm_area_struct *vma,
->  extern void ptep_modify_prot_commit(struct vm_area_struct *vma,
->  				    unsigned long addr, pte_t *ptep,
->  				    pte_t old_pte, pte_t new_pte);
+> -	if (ret) {
+> -		pm_runtime_put_noidle(&pdev->dev);
+> +	ret = replicator_probe(&pdev->dev, res);
+> +	pm_runtime_put(&pdev->dev);
+> +	if (ret)
+>   		pm_runtime_disable(&pdev->dev);
+> -	}
+>   
+>   	return ret;
+>   }
+>   
+> -static void static_replicator_remove(struct platform_device *pdev)
+> +static void replicator_platform_remove(struct platform_device *pdev)
+>   {
+> -	replicator_remove(&pdev->dev);
+> +	struct replicator_drvdata *drvdata = dev_get_drvdata(&pdev->dev);
 > +
-> +#define ptep_get				__ptep_get
-> +#define set_pte					__set_pte
-> +#define set_ptes				__set_ptes
-> +#define pte_clear				__pte_clear
-> +#define __HAVE_ARCH_PTEP_GET_AND_CLEAR
-> +#define ptep_get_and_clear			__ptep_get_and_clear
-> +#define __HAVE_ARCH_PTEP_TEST_AND_CLEAR_YOUNG
-> +#define ptep_test_and_clear_young		__ptep_test_and_clear_young
-> +#define __HAVE_ARCH_PTEP_CLEAR_YOUNG_FLUSH
-> +#define ptep_clear_flush_young			__ptep_clear_flush_young
-> +#define __HAVE_ARCH_PTEP_SET_WRPROTECT
-> +#define ptep_set_wrprotect			__ptep_set_wrprotect
-> +#define __HAVE_ARCH_PTEP_SET_ACCESS_FLAGS
-> +#define ptep_set_access_flags			__ptep_set_access_flags
+> +	if (drvdata)
+> +		replicator_remove(&pdev->dev);
 > +
->  #endif /* !__ASSEMBLY__ */
->  
->  #endif /* __ASM_PGTABLE_H */
-> diff --git a/arch/arm64/kernel/efi.c b/arch/arm64/kernel/efi.c
-> index d0e08e93b246..9afcc690fe73 100644
-> --- a/arch/arm64/kernel/efi.c
-> +++ b/arch/arm64/kernel/efi.c
-> @@ -103,7 +103,7 @@ static int __init set_permissions(pte_t *ptep, unsigned long addr, void *data)
->  {
->  	struct set_perm_data *spd = data;
->  	const efi_memory_desc_t *md = spd->md;
-> -	pte_t pte = ptep_get(ptep);
-> +	pte_t pte = __ptep_get(ptep);
->  
->  	if (md->attribute & EFI_MEMORY_RO)
->  		pte = set_pte_bit(pte, __pgprot(PTE_RDONLY));
-> @@ -111,7 +111,7 @@ static int __init set_permissions(pte_t *ptep, unsigned long addr, void *data)
->  		pte = set_pte_bit(pte, __pgprot(PTE_PXN));
->  	else if (system_supports_bti_kernel() && spd->has_bti)
->  		pte = set_pte_bit(pte, __pgprot(PTE_GP));
-> -	set_pte(ptep, pte);
-> +	__set_pte(ptep, pte);
->  	return 0;
->  }
->  
-> diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
-> index 59bfe2e96f8f..dcdcccd40891 100644
-> --- a/arch/arm64/kernel/mte.c
-> +++ b/arch/arm64/kernel/mte.c
-> @@ -67,7 +67,7 @@ int memcmp_pages(struct page *page1, struct page *page2)
->  	/*
->  	 * If the page content is identical but at least one of the pages is
->  	 * tagged, return non-zero to avoid KSM merging. If only one of the
-> -	 * pages is tagged, set_ptes() may zero or change the tags of the
-> +	 * pages is tagged, __set_ptes() may zero or change the tags of the
->  	 * other page via mte_sync_tags().
->  	 */
->  	if (page_mte_tagged(page1) || page_mte_tagged(page2))
-> diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
-> index 6e0df623c8e9..629145fd3161 100644
-> --- a/arch/arm64/kvm/guest.c
-> +++ b/arch/arm64/kvm/guest.c
-> @@ -1072,7 +1072,7 @@ int kvm_vm_ioctl_mte_copy_tags(struct kvm *kvm,
->  		} else {
->  			/*
->  			 * Only locking to serialise with a concurrent
-> -			 * set_ptes() in the VMM but still overriding the
-> +			 * __set_ptes() in the VMM but still overriding the
->  			 * tags, hence ignoring the return value.
->  			 */
->  			try_page_mte_tagging(page);
-> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-> index 3235e23309ec..9a1c66183d16 100644
-> --- a/arch/arm64/mm/fault.c
-> +++ b/arch/arm64/mm/fault.c
-> @@ -191,7 +191,7 @@ static void show_pte(unsigned long addr)
->  		if (!ptep)
->  			break;
->  
-> -		pte = ptep_get(ptep);
-> +		pte = __ptep_get(ptep);
->  		pr_cont(", pte=%016llx", pte_val(pte));
->  		pte_unmap(ptep);
->  	} while(0);
-> @@ -205,16 +205,16 @@ static void show_pte(unsigned long addr)
->   *
->   * It needs to cope with hardware update of the accessed/dirty state by other
->   * agents in the system and can safely skip the __sync_icache_dcache() call as,
-> - * like set_ptes(), the PTE is never changed from no-exec to exec here.
-> + * like __set_ptes(), the PTE is never changed from no-exec to exec here.
->   *
->   * Returns whether or not the PTE actually changed.
->   */
-> -int ptep_set_access_flags(struct vm_area_struct *vma,
-> -			  unsigned long address, pte_t *ptep,
-> -			  pte_t entry, int dirty)
-> +int __ptep_set_access_flags(struct vm_area_struct *vma,
-> +			    unsigned long address, pte_t *ptep,
-> +			    pte_t entry, int dirty)
->  {
->  	pteval_t old_pteval, pteval;
-> -	pte_t pte = ptep_get(ptep);
-> +	pte_t pte = __ptep_get(ptep);
->  
->  	if (pte_same(pte, entry))
->  		return 0;
-> diff --git a/arch/arm64/mm/fixmap.c b/arch/arm64/mm/fixmap.c
-> index c0a3301203bd..bfc02568805a 100644
-> --- a/arch/arm64/mm/fixmap.c
-> +++ b/arch/arm64/mm/fixmap.c
-> @@ -121,9 +121,9 @@ void __set_fixmap(enum fixed_addresses idx,
->  	ptep = fixmap_pte(addr);
->  
->  	if (pgprot_val(flags)) {
-> -		set_pte(ptep, pfn_pte(phys >> PAGE_SHIFT, flags));
-> +		__set_pte(ptep, pfn_pte(phys >> PAGE_SHIFT, flags));
->  	} else {
-> -		pte_clear(&init_mm, addr, ptep);
-> +		__pte_clear(&init_mm, addr, ptep);
->  		flush_tlb_kernel_range(addr, addr+PAGE_SIZE);
->  	}
->  }
-> diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-> index 48e8b429879d..0f0e10bb0a95 100644
-> --- a/arch/arm64/mm/hugetlbpage.c
-> +++ b/arch/arm64/mm/hugetlbpage.c
-> @@ -145,14 +145,14 @@ pte_t huge_ptep_get(pte_t *ptep)
->  {
->  	int ncontig, i;
->  	size_t pgsize;
-> -	pte_t orig_pte = ptep_get(ptep);
-> +	pte_t orig_pte = __ptep_get(ptep);
->  
->  	if (!pte_present(orig_pte) || !pte_cont(orig_pte))
->  		return orig_pte;
->  
->  	ncontig = num_contig_ptes(page_size(pte_page(orig_pte)), &pgsize);
->  	for (i = 0; i < ncontig; i++, ptep++) {
-> -		pte_t pte = ptep_get(ptep);
-> +		pte_t pte = __ptep_get(ptep);
->  
->  		if (pte_dirty(pte))
->  			orig_pte = pte_mkdirty(orig_pte);
-> @@ -177,11 +177,11 @@ static pte_t get_clear_contig(struct mm_struct *mm,
->  			     unsigned long pgsize,
->  			     unsigned long ncontig)
->  {
-> -	pte_t orig_pte = ptep_get(ptep);
-> +	pte_t orig_pte = __ptep_get(ptep);
->  	unsigned long i;
->  
->  	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++) {
-> -		pte_t pte = ptep_get_and_clear(mm, addr, ptep);
-> +		pte_t pte = __ptep_get_and_clear(mm, addr, ptep);
->  
->  		/*
->  		 * If HW_AFDBM is enabled, then the HW could turn on
-> @@ -229,7 +229,7 @@ static void clear_flush(struct mm_struct *mm,
->  	unsigned long i, saddr = addr;
->  
->  	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++)
-> -		ptep_get_and_clear(mm, addr, ptep);
-> +		__ptep_get_and_clear(mm, addr, ptep);
->  
->  	flush_tlb_range(&vma, saddr, addr);
->  }
-> @@ -247,12 +247,12 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
->  
->  	if (!pte_present(pte)) {
->  		for (i = 0; i < ncontig; i++, ptep++, addr += pgsize)
-> -			set_ptes(mm, addr, ptep, pte, 1);
-> +			__set_ptes(mm, addr, ptep, pte, 1);
->  		return;
->  	}
->  
->  	if (!pte_cont(pte)) {
-> -		set_ptes(mm, addr, ptep, pte, 1);
-> +		__set_ptes(mm, addr, ptep, pte, 1);
->  		return;
->  	}
->  
-> @@ -263,7 +263,7 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
->  	clear_flush(mm, addr, ptep, pgsize, ncontig);
->  
->  	for (i = 0; i < ncontig; i++, ptep++, addr += pgsize, pfn += dpfn)
-> -		set_ptes(mm, addr, ptep, pfn_pte(pfn, hugeprot), 1);
-> +		__set_ptes(mm, addr, ptep, pfn_pte(pfn, hugeprot), 1);
->  }
->  
->  pte_t *huge_pte_alloc(struct mm_struct *mm, struct vm_area_struct *vma,
-> @@ -393,7 +393,7 @@ void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
->  	ncontig = num_contig_ptes(sz, &pgsize);
->  
->  	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++)
-> -		pte_clear(mm, addr, ptep);
-> +		__pte_clear(mm, addr, ptep);
->  }
->  
->  pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
-> @@ -401,10 +401,10 @@ pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
->  {
->  	int ncontig;
->  	size_t pgsize;
-> -	pte_t orig_pte = ptep_get(ptep);
-> +	pte_t orig_pte = __ptep_get(ptep);
->  
->  	if (!pte_cont(orig_pte))
-> -		return ptep_get_and_clear(mm, addr, ptep);
-> +		return __ptep_get_and_clear(mm, addr, ptep);
->  
->  	ncontig = find_num_contig(mm, addr, ptep, &pgsize);
->  
-> @@ -424,11 +424,11 @@ static int __cont_access_flags_changed(pte_t *ptep, pte_t pte, int ncontig)
->  {
->  	int i;
->  
-> -	if (pte_write(pte) != pte_write(ptep_get(ptep)))
-> +	if (pte_write(pte) != pte_write(__ptep_get(ptep)))
->  		return 1;
->  
->  	for (i = 0; i < ncontig; i++) {
-> -		pte_t orig_pte = ptep_get(ptep + i);
-> +		pte_t orig_pte = __ptep_get(ptep + i);
->  
->  		if (pte_dirty(pte) != pte_dirty(orig_pte))
->  			return 1;
-> @@ -452,7 +452,7 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
->  	pte_t orig_pte;
->  
->  	if (!pte_cont(pte))
-> -		return ptep_set_access_flags(vma, addr, ptep, pte, dirty);
-> +		return __ptep_set_access_flags(vma, addr, ptep, pte, dirty);
->  
->  	ncontig = find_num_contig(mm, addr, ptep, &pgsize);
->  	dpfn = pgsize >> PAGE_SHIFT;
-> @@ -471,7 +471,7 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
->  
->  	hugeprot = pte_pgprot(pte);
->  	for (i = 0; i < ncontig; i++, ptep++, addr += pgsize, pfn += dpfn)
-> -		set_ptes(mm, addr, ptep, pfn_pte(pfn, hugeprot), 1);
-> +		__set_ptes(mm, addr, ptep, pfn_pte(pfn, hugeprot), 1);
->  
->  	return 1;
->  }
-> @@ -485,8 +485,8 @@ void huge_ptep_set_wrprotect(struct mm_struct *mm,
->  	size_t pgsize;
->  	pte_t pte;
->  
-> -	if (!pte_cont(ptep_get(ptep))) {
-> -		ptep_set_wrprotect(mm, addr, ptep);
-> +	if (!pte_cont(__ptep_get(ptep))) {
-> +		__ptep_set_wrprotect(mm, addr, ptep);
->  		return;
->  	}
->  
-> @@ -500,7 +500,7 @@ void huge_ptep_set_wrprotect(struct mm_struct *mm,
->  	pfn = pte_pfn(pte);
->  
->  	for (i = 0; i < ncontig; i++, ptep++, addr += pgsize, pfn += dpfn)
-> -		set_ptes(mm, addr, ptep, pfn_pte(pfn, hugeprot), 1);
-> +		__set_ptes(mm, addr, ptep, pfn_pte(pfn, hugeprot), 1);
->  }
->  
->  pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
-> @@ -510,7 +510,7 @@ pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
->  	size_t pgsize;
->  	int ncontig;
->  
-> -	if (!pte_cont(ptep_get(ptep)))
-> +	if (!pte_cont(__ptep_get(ptep)))
->  		return ptep_clear_flush(vma, addr, ptep);
->  
->  	ncontig = find_num_contig(mm, addr, ptep, &pgsize);
-> @@ -543,7 +543,7 @@ pte_t huge_ptep_modify_prot_start(struct vm_area_struct *vma, unsigned long addr
->  		 * when the permission changes from executable to non-executable
->  		 * in cases where cpu is affected with errata #2645198.
->  		 */
-> -		if (pte_user_exec(ptep_get(ptep)))
-> +		if (pte_user_exec(__ptep_get(ptep)))
->  			return huge_ptep_clear_flush(vma, addr, ptep);
->  	}
->  	return huge_ptep_get_and_clear(vma->vm_mm, addr, ptep);
-> diff --git a/arch/arm64/mm/kasan_init.c b/arch/arm64/mm/kasan_init.c
-> index c2a9f4f6c7dd..9ee16cfce587 100644
-> --- a/arch/arm64/mm/kasan_init.c
-> +++ b/arch/arm64/mm/kasan_init.c
-> @@ -112,8 +112,8 @@ static void __init kasan_pte_populate(pmd_t *pmdp, unsigned long addr,
->  		if (!early)
->  			memset(__va(page_phys), KASAN_SHADOW_INIT, PAGE_SIZE);
->  		next = addr + PAGE_SIZE;
-> -		set_pte(ptep, pfn_pte(__phys_to_pfn(page_phys), PAGE_KERNEL));
-> -	} while (ptep++, addr = next, addr != end && pte_none(ptep_get(ptep)));
-> +		__set_pte(ptep, pfn_pte(__phys_to_pfn(page_phys), PAGE_KERNEL));
-> +	} while (ptep++, addr = next, addr != end && pte_none(__ptep_get(ptep)));
->  }
->  
->  static void __init kasan_pmd_populate(pud_t *pudp, unsigned long addr,
-> @@ -271,7 +271,7 @@ static void __init kasan_init_shadow(void)
->  	 * so we should make sure that it maps the zero page read-only.
->  	 */
->  	for (i = 0; i < PTRS_PER_PTE; i++)
-> -		set_pte(&kasan_early_shadow_pte[i],
-> +		__set_pte(&kasan_early_shadow_pte[i],
->  			pfn_pte(sym_to_pfn(kasan_early_shadow_page),
->  				PAGE_KERNEL_RO));
->  
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index 343629a17042..6208c7541f87 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -173,16 +173,16 @@ static void init_pte(pmd_t *pmdp, unsigned long addr, unsigned long end,
->  
->  	ptep = pte_set_fixmap_offset(pmdp, addr);
->  	do {
-> -		pte_t old_pte = ptep_get(ptep);
-> +		pte_t old_pte = __ptep_get(ptep);
->  
-> -		set_pte(ptep, pfn_pte(__phys_to_pfn(phys), prot));
-> +		__set_pte(ptep, pfn_pte(__phys_to_pfn(phys), prot));
->  
->  		/*
->  		 * After the PTE entry has been populated once, we
->  		 * only allow updates to the permission attributes.
->  		 */
->  		BUG_ON(!pgattr_change_is_safe(pte_val(old_pte),
-> -					      pte_val(ptep_get(ptep))));
-> +					      pte_val(__ptep_get(ptep))));
->  
->  		phys += PAGE_SIZE;
->  	} while (ptep++, addr += PAGE_SIZE, addr != end);
-> @@ -852,12 +852,12 @@ static void unmap_hotplug_pte_range(pmd_t *pmdp, unsigned long addr,
->  
->  	do {
->  		ptep = pte_offset_kernel(pmdp, addr);
-> -		pte = ptep_get(ptep);
-> +		pte = __ptep_get(ptep);
->  		if (pte_none(pte))
->  			continue;
->  
->  		WARN_ON(!pte_present(pte));
-> -		pte_clear(&init_mm, addr, ptep);
-> +		__pte_clear(&init_mm, addr, ptep);
->  		flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
->  		if (free_mapped)
->  			free_hotplug_page_range(pte_page(pte),
-> @@ -985,7 +985,7 @@ static void free_empty_pte_table(pmd_t *pmdp, unsigned long addr,
->  
->  	do {
->  		ptep = pte_offset_kernel(pmdp, addr);
-> -		pte = ptep_get(ptep);
-> +		pte = __ptep_get(ptep);
->  
->  		/*
->  		 * This is just a sanity check here which verifies that
-> @@ -1004,7 +1004,7 @@ static void free_empty_pte_table(pmd_t *pmdp, unsigned long addr,
->  	 */
->  	ptep = pte_offset_kernel(pmdp, 0UL);
->  	for (i = 0; i < PTRS_PER_PTE; i++) {
-> -		if (!pte_none(ptep_get(&ptep[i])))
-> +		if (!pte_none(__ptep_get(&ptep[i])))
->  			return;
->  	}
->  
-> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
-> index 73a5e8f82586..0c4e3ecf989d 100644
-> --- a/arch/arm64/mm/pageattr.c
-> +++ b/arch/arm64/mm/pageattr.c
-> @@ -36,12 +36,12 @@ bool can_set_direct_map(void)
->  static int change_page_range(pte_t *ptep, unsigned long addr, void *data)
->  {
->  	struct page_change_data *cdata = data;
-> -	pte_t pte = ptep_get(ptep);
-> +	pte_t pte = __ptep_get(ptep);
->  
->  	pte = clear_pte_bit(pte, cdata->clear_mask);
->  	pte = set_pte_bit(pte, cdata->set_mask);
->  
-> -	set_pte(ptep, pte);
-> +	__set_pte(ptep, pte);
->  	return 0;
->  }
->  
-> @@ -245,5 +245,5 @@ bool kernel_page_present(struct page *page)
->  		return true;
->  
->  	ptep = pte_offset_kernel(pmdp, addr);
-> -	return pte_valid(ptep_get(ptep));
-> +	return pte_valid(__ptep_get(ptep));
->  }
-> diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
-> index f71ab4704cce..5139a28130c0 100644
-> --- a/arch/arm64/mm/trans_pgd.c
-> +++ b/arch/arm64/mm/trans_pgd.c
-> @@ -33,7 +33,7 @@ static void *trans_alloc(struct trans_pgd_info *info)
->  
->  static void _copy_pte(pte_t *dst_ptep, pte_t *src_ptep, unsigned long addr)
->  {
-> -	pte_t pte = ptep_get(src_ptep);
-> +	pte_t pte = __ptep_get(src_ptep);
->  
->  	if (pte_valid(pte)) {
->  		/*
-> @@ -41,7 +41,7 @@ static void _copy_pte(pte_t *dst_ptep, pte_t *src_ptep, unsigned long addr)
->  		 * read only (code, rodata). Clear the RDONLY bit from
->  		 * the temporary mappings we use during restore.
->  		 */
-> -		set_pte(dst_ptep, pte_mkwrite_novma(pte));
-> +		__set_pte(dst_ptep, pte_mkwrite_novma(pte));
->  	} else if ((debug_pagealloc_enabled() ||
->  		   is_kfence_address((void *)addr)) && !pte_none(pte)) {
->  		/*
-> @@ -55,7 +55,7 @@ static void _copy_pte(pte_t *dst_ptep, pte_t *src_ptep, unsigned long addr)
->  		 */
->  		BUG_ON(!pfn_valid(pte_pfn(pte)));
->  
-> -		set_pte(dst_ptep, pte_mkpresent(pte_mkwrite_novma(pte)));
-> +		__set_pte(dst_ptep, pte_mkpresent(pte_mkwrite_novma(pte)));
->  	}
->  }
->  
-> -- 
-> 2.25.1
-> 
+>   	pm_runtime_disable(&pdev->dev);
+> +	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
+> +		clk_put(drvdata->pclk);
+>   }
+>   
+>   #ifdef CONFIG_PM
+> @@ -334,6 +343,8 @@ static int replicator_runtime_suspend(struct device *dev)
+>   	if (drvdata && !IS_ERR(drvdata->atclk))
+>   		clk_disable_unprepare(drvdata->atclk);
+>   
+> +	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
+> +		clk_disable_unprepare(drvdata->pclk);
+>   	return 0;
+>   }
+>   
+> @@ -344,6 +355,8 @@ static int replicator_runtime_resume(struct device *dev)
+>   	if (drvdata && !IS_ERR(drvdata->atclk))
+>   		clk_prepare_enable(drvdata->atclk);
+>   
+> +	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
+> +		clk_prepare_enable(drvdata->pclk);
+>   	return 0;
+>   }
+>   #endif
+> @@ -353,31 +366,32 @@ static const struct dev_pm_ops replicator_dev_pm_ops = {
+>   			   replicator_runtime_resume, NULL)
+>   };
+>   
+> -static const struct of_device_id static_replicator_match[] = {
+> +static const struct of_device_id replicator_match[] = {
+>   	{.compatible = "arm,coresight-replicator"},
+>   	{.compatible = "arm,coresight-static-replicator"},
+>   	{}
+>   };
+>   
+> -MODULE_DEVICE_TABLE(of, static_replicator_match);
+> +MODULE_DEVICE_TABLE(of, replicator_match);
+>   
+>   #ifdef CONFIG_ACPI
+> -static const struct acpi_device_id static_replicator_acpi_ids[] = {
+> +static const struct acpi_device_id replicator_acpi_ids[] = {
+>   	{"ARMHC985", 0}, /* ARM CoreSight Static Replicator */
+> +	{"ARMHC98D", 0}, /* ARM CoreSight Dynamic Replicator */
+>   	{}
+>   };
+>   
+> -MODULE_DEVICE_TABLE(acpi, static_replicator_acpi_ids);
+> +MODULE_DEVICE_TABLE(acpi, replicator_acpi_ids);
+>   #endif
+>   
+> -static struct platform_driver static_replicator_driver = {
+> -	.probe          = static_replicator_probe,
+> -	.remove_new     = static_replicator_remove,
+> +static struct platform_driver replicator_driver = {
+> +	.probe          = replicator_platform_probe,
+> +	.remove_new     = replicator_platform_remove,
+>   	.driver         = {
+> -		.name   = "coresight-static-replicator",
+> +		.name   = "coresight-replicator",
+>   		/* THIS_MODULE is taken care of by platform_driver_register() */
+> -		.of_match_table = of_match_ptr(static_replicator_match),
+> -		.acpi_match_table = ACPI_PTR(static_replicator_acpi_ids),
+> +		.of_match_table = of_match_ptr(replicator_match),
+> +		.acpi_match_table = ACPI_PTR(replicator_acpi_ids),
+>   		.pm	= &replicator_dev_pm_ops,
+>   		.suppress_bind_attrs = true,
+>   	},
+> @@ -386,7 +400,13 @@ static struct platform_driver static_replicator_driver = {
+>   static int dynamic_replicator_probe(struct amba_device *adev,
+>   				    const struct amba_id *id)
+>   {
+> -	return replicator_probe(&adev->dev, &adev->res);
+> +	int ret;
+> +
+> +	ret = replicator_probe(&adev->dev, &adev->res);
+> +	if (!ret)
+> +		pm_runtime_put(&adev->dev);
+> +
+> +	return ret;
+>   }
+>   
+>   static void dynamic_replicator_remove(struct amba_device *adev)
+> @@ -416,27 +436,12 @@ static struct amba_driver dynamic_replicator_driver = {
+>   
+>   static int __init replicator_init(void)
+>   {
+> -	int ret;
+> -
+> -	ret = platform_driver_register(&static_replicator_driver);
+> -	if (ret) {
+> -		pr_info("Error registering platform driver\n");
+> -		return ret;
+> -	}
+> -
+> -	ret = amba_driver_register(&dynamic_replicator_driver);
+> -	if (ret) {
+> -		pr_info("Error registering amba driver\n");
+> -		platform_driver_unregister(&static_replicator_driver);
+> -	}
+> -
+> -	return ret;
+> +	return coresight_init_driver("replicator", &dynamic_replicator_driver, &replicator_driver);
+>   }
+>   
+>   static void __exit replicator_exit(void)
+>   {
+> -	platform_driver_unregister(&static_replicator_driver);
+> -	amba_driver_unregister(&dynamic_replicator_driver);
+> +	coresight_remove_driver(&dynamic_replicator_driver, &replicator_driver);
+>   }
+>   
+>   module_init(replicator_init);
+
