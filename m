@@ -1,166 +1,213 @@
-Received: from mail-lf1-f74.google.com (mail-lf1-f74.google.com [209.85.167.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FB212DD9B
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 10:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9992612E1C4;
+	Thu, 15 Feb 2024 10:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707993986; cv=none; b=Ty35SkfH+IJo7u5va7xYRhAVBlJN8n441Sv0vQvxyfb0YRc+BOKxgDZDmMaxsPV7kLASmoCiU0wYOdShS1xx84bn8IF2wBYZ3qxj9KHioNfih4ej4lxFn55oqULKvie6nRYJZHRtRxVdrZCbbP1tcwn4T2zfrI2bPfK2PBIzBu0=
+	t=1707993987; cv=none; b=GEN6WkEfV5SUsRRNtxdBJMi8GDWogOCuc+4tzIQLSs7bCO4+KXalnE+mWvXImigA4whFVijV3Ky/hdoyzCZo8ZYSSF+Oi/b20mIcWC+4vGpAXN5MfP3nbmWH/R0oGCKTlybrnNUn2BK0ZbIZoJr14hrLSrwynqqnGYPYa8A8b0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707993986; c=relaxed/simple;
-	bh=Wjpow9OdLAB7Tv+gTtRq4fdEi+a2MFCDQbMPfSnlgs4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Dq3OJkGTMhY4iK69fekA9McSGKStDOX/m005dHZ87+MIFF5Fd4XPa1CKxyC7pFymc3JEXS7Q+wN+RNzVz2nydB0LDpEKRUXBm8wlbbeo6t/Jen6HOeEyQ/Lyqf+wANieCHjkaJXq0QxmDYtXiX5ORD48kYo/tvgMWBteQon341A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wFlTZbAu; arc=none smtp.client-ip=209.85.167.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1707993987; c=relaxed/simple;
+	bh=m1LjF1npWj8tCKHK1NcAZBpF2cD039mfR5VwBO1BovM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=kccfve1LLYruIby3ee7i3f8uAtjKVcHl/PJIX6wLXuxIww1yzZz22c++Ib6sxkXWLcy6nSnd0haZ0f2T+q5iPIfFYMGcGxXZoRXYmSj6KCnN0Vuqz4rfZgjA51jb4/qZcRh53xWavexcDAGnNC0PhDAKP0lkrRMw67H1PJ4dQBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=UY6Fx3jO; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wFlTZbAu"
-Received: by mail-lf1-f74.google.com with SMTP id 2adb3069b0e04-511a02e2094so560235e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 02:46:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707993983; x=1708598783; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Uuf0w26zOY/ZYw+214pJM99jPH6tZMQ5JsKDNPkdddo=;
-        b=wFlTZbAuj4mGxRER7NIF/dkONC45s0c2Bs+i1YP7dKhS7Lwv6M2Mqq46E/Y6AObTn3
-         PUCLvdhlnmDt5RZjblaV4xpPmmU4QBILfSPIsjSK1RfcJfQRIPXAVQ7Ptp01WvK8MFzU
-         zr6ismTStKvtssdxn68fwki5FlvSaaZEzYiOjZFjCZB7ylgp7z7IoCQtToH8YxsnG0w+
-         lklLoUHKpFG7Dz0WZc1dNNCsH9r5Qz+X6o/p/lMMcP2Sx8JtSLXoqTR4AkV1es/jRGic
-         8JCAf9MRJQ6zWEe2OzYTdH1OrbYZHlVvjVSiScAupO4HZgbw3gwCYdU0RX/voiIq8G7K
-         Sxyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707993983; x=1708598783;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Uuf0w26zOY/ZYw+214pJM99jPH6tZMQ5JsKDNPkdddo=;
-        b=nsekWHlbMG4xHEOGWe6twB6sXPbTV1n7ULu+ZWoV0n21pisoMcIybHOy4sbr1CEECE
-         qKFl1dhvHvkBy43OmQ4IV828A9d54li1IOaT3sM7oNe6jWutEJaBjiJg6ZPiyesSPl6G
-         IKLGqWnNn/3EgEebSWA1gAMOiSVczD+6uw2epnpA7oLezRF2G9FzUgqcnS5nYlHEiVig
-         EARUsXcOSoK1g9oxLUHbcP+hgM6Oh1lEUJdUYjtvj4eIxU2loIUBU/27q2BCh0ofugRd
-         GEEYYFR7stJbI5Ytha5+nXFa32OqeEgr9JQ39VANJuD7DoykI0s3H9m9vwFC9fT6VRan
-         yKEg==
-X-Forwarded-Encrypted: i=1; AJvYcCVqCrD9+2GTUCpG30erp4UxAapyDYQ6tGZuedg8koMwgC0ZmKsd3MoSJ01doQelKShDQurkrHAm4F7o7D5gqEt4hCVLLXUnCy7ddUOD
-X-Gm-Message-State: AOJu0Yzhpv0iRg9PfYjcKVAIUs/8q1PIteGCWQIgEiRUy2xYSymsmXf1
-	cFhCuUjEwQXyN8r8Atz8Vbp/jIDo+BeOvaXq7HlYm77Sf+LoLUv+iYkz6tz/3Kvm1NbwmTBbaTL
-	Fr/icARybAU+UoQ==
-X-Google-Smtp-Source: AGHT+IE9zG2u4vdtMqWFUcANs2kx7N8Qf7EJTWQ7H2i+KfsdbYhdQFfsxBZOUZ33yQE5Mqn8w3PW+3+N6KhH9bk=
-X-Received: from aliceryhl2.c.googlers.com ([fda3:e722:ac3:cc00:68:949d:c0a8:572])
- (user=aliceryhl job=sendgmr) by 2002:ac2:5f45:0:b0:511:7b36:b293 with SMTP id
- 5-20020ac25f45000000b005117b36b293mr1491lfz.10.1707993982857; Thu, 15 Feb
- 2024 02:46:22 -0800 (PST)
-Date: Thu, 15 Feb 2024 10:46:01 +0000
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="UY6Fx3jO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1707993986; x=1739529986;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:to:cc;
+  bh=m1LjF1npWj8tCKHK1NcAZBpF2cD039mfR5VwBO1BovM=;
+  b=UY6Fx3jOMxV3CrJQzLMf9i15vr0aa8ezR/NecGHE3kehyXm5VcCE/Nqn
+   70B2FUz/F6NhT/E+YqoDloyJ6H5KJOKreM0JqfMvMe8LbSIcaWo4qgRmJ
+   X1h49QteXFNcCWk+l6B28N8QzVUX5kNgcsBM7U/nuTszksBXLcJ7Y0i4F
+   Z8mE2BbIvJKqobYVfoZnUUzLLZHZuUvlOCMAjQRXKWXW1eSxS3KsMuOIw
+   hRZT7zLKMcONeUIY6DoygyTY3pJfs4nyqJQ8SxlLEyPh+JMnC62NxnHL2
+   Zx3f6WUMeTf3YfrZoe/GQB4tXM6IvS3WrWQO8Tw8S4BlKLG5iNhPFZM2a
+   g==;
+X-CSE-ConnectionGUID: sBOc7X1pTDaZ9glc9RjUSQ==
+X-CSE-MsgGUID: IeU7h4lfSoWKR0brJFk/NA==
+X-IronPort-AV: E=Sophos;i="6.06,161,1705388400"; 
+   d="scan'208";a="247024159"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 Feb 2024 03:46:24 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 15 Feb 2024 03:46:01 -0700
+Received: from che-lt-i66125lx.microchip.com (10.10.85.11) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Thu, 15 Feb 2024 03:45:56 -0700
+From: Durai Manickam KR <durai.manickamkr@microchip.com>
+Date: Thu, 15 Feb 2024 16:15:44 +0530
+Subject: [PATCH] dt-bindings: dma: convert atmel-dma.txt to YAML
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3433; i=aliceryhl@google.com;
- h=from:subject; bh=Wjpow9OdLAB7Tv+gTtRq4fdEi+a2MFCDQbMPfSnlgs4=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBlzeqIUKpX/8JczXxuWtJZWfGOc5q5/Yw8LXTt8
- H+AO0fSVXKJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZc3qiAAKCRAEWL7uWMY5
- RgeiD/0fIaUn7Rk7askqJtujymGJW1OjLrC+ofrwiSTKw6Ug6sKA/N4UNLrhTazCtGC8mZzRzxZ
- qO2it4Posj+hFgba2Khi6wXiLXq3PTtS/oK2jx445JBzBYT/qUSdSP4NlgX8NcUZrynlnOg4bek
- 2cYrUvE379rQ0Xa7ZTWDp8b3jrnD/esGFgkcbg8bn1nyl4fbJ1djLD/m7jFSV/5yBsysSq70dJy
- fGvXIiPXEm1hWv/BTCiknyTCt/koiFbodfR6svLIhBO4WMS7g6NH7IoA3L7EqXN3ko3WmghCUYp
- S3//21tc7oagChhHosUQsD2IjxAheQ4slYbULjdgGdrBiuAt162ONfuxvW4kj2Xoxos95KYjTng
- l3/fcnyFu96tYqQS3PPyTrBXrCePudJyUcFZabeulNOhSthJIONERJV28xL6p/lxUlvWqYdrxB+
- Y6+8sORRJMOxDP8pPo7kN9aQBhQvv92VhkMnY/LbLi6cQcdwUhDLT/TEtwtpzbb3zPhNiqto4tG
- eeMgHsmjKhpuXjhY1I+7IFp9zXFk1c/IFNzpyZaul9RGVTuRZSNdx82zaHtazPdSOeeZ99Yo1zq
- UPJopjCZZN/fHMzmvMQbw37m9B7R6NEZVnmxsjmqom6qhUCMW0ZN1lFYW03Dv/8CJPen01daNbz XwEVrlBhaPXZG4g==
-X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
-Message-ID: <20240215104601.1267763-1-aliceryhl@google.com>
-Subject: [PATCH v2] rust: stop using ptr_metadata feature
-From: Alice Ryhl <aliceryhl@google.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, 
-	"=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>
-Cc: Martin Rodriguez Reboredo <yakoyoku@gmail.com>, Trevor Gross <tmgross@umich.edu>, 
-	Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240215-dmac-v1-1-8f1c6f031c98@microchip.com>
+X-B4-Tracking: v=1; b=H4sIAFfrzWUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDI0MT3ZTcxGRd0zQTi7QU8zTjJMsUJaDSgqLUtMwKsDHRsbW1AFX/e49
+ WAAAA
+To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	"Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+	<conor+dt@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>,
+	"Alexandre Belloni" <alexandre.belloni@bootlin.com>, Claudiu Beznea
+	<claudiu.beznea@tuxon.dev>, Ludovic Desroches
+	<ludovic.desroches@microchip.com>, Tudor Ambarus <tudor.ambarus@linaro.org>
+CC: <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	"Durai Manickam KR" <durai.manickamkr@microchip.com>
+X-Mailer: b4 0.12.4
 
-The `byte_sub` method was stabilized in Rust 1.75.0. By using that
-method, we no longer need the unstable `ptr_metadata` feature for
-implementing `Arc::from_raw`.
+Added a description, required properties and appropriate compatibles
+for all the SoCs that are supported by microchip.
 
-This brings us one step closer towards not using unstable compiler
-features.
-
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-Reviewed-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
-Reviewed-by: Trevor Gross <tmgross@umich.edu>
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+Signed-off-by: Durai Manickam KR <durai.manickamkr@microchip.com>
 ---
-Changes since v1:
-- Reword safety comments on metadata.
-- Instead of casting directly to `*mut`, use `cast_mut` for changing the
-  mutability of `ptr`.
-- Added Reviewed-by tags.
-- Link to v1: https://lore.kernel.org/rust-for-linux/20240205091842.2858516-1-aliceryhl@google.com/
+ .../devicetree/bindings/dma/atmel-dma.txt          | 42 -------------
+ .../bindings/dma/microchip,at91-dma.yaml           | 71 ++++++++++++++++++++++
+ 2 files changed, 71 insertions(+), 42 deletions(-)
 
- rust/kernel/lib.rs      |  1 -
- rust/kernel/sync/arc.rs | 16 +++++++---------
- 2 files changed, 7 insertions(+), 10 deletions(-)
-
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index b89ecf4e97a0..b8d4c8167a29 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -17,7 +17,6 @@
- #![feature(dispatch_from_dyn)]
- #![feature(new_uninit)]
- #![feature(offset_of)]
--#![feature(ptr_metadata)]
- #![feature(receiver_trait)]
- #![feature(unsize)]
- 
-diff --git a/rust/kernel/sync/arc.rs b/rust/kernel/sync/arc.rs
-index 77cdbcf7bd2e..a74e1963d89d 100644
---- a/rust/kernel/sync/arc.rs
-+++ b/rust/kernel/sync/arc.rs
-@@ -30,7 +30,7 @@
-     mem::{ManuallyDrop, MaybeUninit},
-     ops::{Deref, DerefMut},
-     pin::Pin,
--    ptr::{NonNull, Pointee},
-+    ptr::NonNull,
- };
- use macros::pin_data;
- 
-@@ -239,22 +239,20 @@ pub unsafe fn from_raw(ptr: *const T) -> Self {
-         // binary, so its layout is not so large that it can trigger arithmetic overflow.
-         let val_offset = unsafe { refcount_layout.extend(val_layout).unwrap_unchecked().1 };
- 
--        let metadata: <T as Pointee>::Metadata = core::ptr::metadata(ptr);
--        // SAFETY: The metadata of `T` and `ArcInner<T>` is the same because `ArcInner` is a struct
--        // with `T` as its last field.
-+        // Pointer casts leave the metadata unchanged. This is okay because the metadata of `T` and
-+        // `ArcInner<T>` is the same since `ArcInner` is a struct with `T` as its last field.
-         //
-         // This is documented at:
-         // <https://doc.rust-lang.org/std/ptr/trait.Pointee.html>.
--        let metadata: <ArcInner<T> as Pointee>::Metadata =
--            unsafe { core::mem::transmute_copy(&metadata) };
-+        let ptr = ptr as *const ArcInner<T>;
+diff --git a/Documentation/devicetree/bindings/dma/atmel-dma.txt b/Documentation/devicetree/bindings/dma/atmel-dma.txt
+deleted file mode 100644
+index f69bcf5a6343..000000000000
+--- a/Documentation/devicetree/bindings/dma/atmel-dma.txt
++++ /dev/null
+@@ -1,42 +0,0 @@
+-* Atmel Direct Memory Access Controller (DMA)
+-
+-Required properties:
+-- compatible: Should be "atmel,<chip>-dma".
+-- reg: Should contain DMA registers location and length.
+-- interrupts: Should contain DMA interrupt.
+-- #dma-cells: Must be <2>, used to represent the number of integer cells in
+-the dmas property of client devices.
+-
+-Example:
+-
+-dma0: dma@ffffec00 {
+-	compatible = "atmel,at91sam9g45-dma";
+-	reg = <0xffffec00 0x200>;
+-	interrupts = <21>;
+-	#dma-cells = <2>;
+-};
+-
+-DMA clients connected to the Atmel DMA controller must use the format
+-described in the dma.txt file, using a three-cell specifier for each channel:
+-a phandle plus two integer cells.
+-The three cells in order are:
+-
+-1. A phandle pointing to the DMA controller.
+-2. The memory interface (16 most significant bits), the peripheral interface
+-(16 less significant bits).
+-3. Parameters for the at91 DMA configuration register which are device
+-dependent:
+-  - bit 7-0: peripheral identifier for the hardware handshaking interface. The
+-  identifier can be different for tx and rx.
+-  - bit 11-8: FIFO configuration. 0 for half FIFO, 1 for ALAP, 2 for ASAP.
+-
+-Example:
+-
+-i2c0@i2c@f8010000 {
+-	compatible = "atmel,at91sam9x5-i2c";
+-	reg = <0xf8010000 0x100>;
+-	interrupts = <9 4 6>;
+-	dmas = <&dma0 1 7>,
+-	       <&dma0 1 8>;
+-	dma-names = "tx", "rx";
+-};
+diff --git a/Documentation/devicetree/bindings/dma/microchip,at91-dma.yaml b/Documentation/devicetree/bindings/dma/microchip,at91-dma.yaml
+new file mode 100644
+index 000000000000..a0a582902e4d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/microchip,at91-dma.yaml
+@@ -0,0 +1,71 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/microchip,at91-dma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-         // SAFETY: The pointer is in-bounds of an allocation both before and after offsetting the
-         // pointer, since it originates from a previous call to `Arc::into_raw` and is still valid.
--        let ptr = unsafe { (ptr as *mut u8).sub(val_offset) as *mut () };
--        let ptr = core::ptr::from_raw_parts_mut(ptr, metadata);
-+        let ptr = unsafe { ptr.byte_sub(val_offset) };
- 
-         // SAFETY: By the safety requirements we know that `ptr` came from `Arc::into_raw`, so the
-         // reference count held then will be owned by the new `Arc` object.
--        unsafe { Self::from_inner(NonNull::new_unchecked(ptr)) }
-+        unsafe { Self::from_inner(NonNull::new_unchecked(ptr.cast_mut())) }
-     }
- 
-     /// Returns an [`ArcBorrow`] from the given [`Arc`].
++title: Atmel Direct Memory Access Controller (DMA)
++
++maintainers:
++  - Ludovic Desroches <ludovic.desroches@microchip.com>
++  - Tudor Ambarus <tudor.ambarus@linaro.org>
++
++description: |
++  The Atmel Direct Memory Access Controller (DMAC) transfers data from a source
++  peripheral to a destination peripheral over one or more AMBA buses. One channel
++  is required for each source/destination pair. In the most basic configuration,
++  the DMAC has one master interface and one channel. The master interface reads
++  the data from a source and writes it to a destination. Two AMBA transfers are
++  required for each DMAC data transfer. This is also known as a dual-access transfer.
++  The DMAC is programmed via the APB interface.
++
++properties:
++  compatible:
++    oneOf:
++      - enum:
++          - atmel,at91sam9g45-dma
++          - atmel,at91sam9rl-dma
++  reg:
++    description: Should contain DMA registers location and length.
++    maxItems: 1
++
++  interrupts:
++    description: Should contain the DMA interrupts associated to the DMA channels.
++    maxItems: 1
++
++  "#dma-cells":
++    description:
++      Must be <2>, used to represent the number of integer cells in the dmas
++      property of client devices.
++    const: 2
++
++  clocks:
++    description: Should contain a clock specifier for each entry in clock-names.
++    maxItems: 1
++
++  clock-names:
++    description: Should contain the clock of the DMA controller.
++    const: dma_clk
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#dma-cells"
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    dma0: dma-controller@ffffec00 {
++            compatible = "atmel,at91sam9g45-dma";
++            reg = <0xffffec00 0x200>;
++            interrupts = <21>;
++            #dma-cells = <2>;
++            clocks = <&pmc 2 20>;
++            clock-names = "dma_clk";
++    };
++
++...
 
-base-commit: f090f0d0eea9666a96702b29bc9a64cbabee85c5
+---
+base-commit: 7e90b5c295ec1e47c8ad865429f046970c549a66
+change-id: 20240214-dmac-5f48fd7f3b9d
+
+Best regards,
 -- 
-2.43.0.687.g38aa6559b0-goog
+Durai Manickam KR <durai.manickamkr@microchip.com>
 
