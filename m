@@ -1,16 +1,16 @@
 Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24EA12F392
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 12:59:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E16212FB13;
+	Thu, 15 Feb 2024 12:59:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708001992; cv=none; b=d+FDqiPiAsuXejL41bRqmGION3DZ/V5At14edfRIPzkj8Mm5IvoOnQUCYvqNRaQz+q6Qy1EWTSle9hmHxySw2AMg6Aui5/DrVmPNHej6OxK2f4EZv7r2I/ScQ/067VazffXjpMDtueSArnAcckvQ0xBJ6Lb44+PViDR1hP3Pm/o=
+	t=1708001994; cv=none; b=aBKsrgxSUL1usjLqcg2QAw0bp7HvhKkKlTnYvz5qTm6NrJlcT/hEgUi12134+jnaQip6lL5FDVnydUL7LbV1nYGK5qhAX7/GQZxJ0JUicMCtH7mUogp4xmFLsLH5+mbTsiL9dxQvEEPgPOg4g4f7ZNbDXLQel+3N6q17ywxx/Xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708001992; c=relaxed/simple;
-	bh=ElM/cQWji1/DDHC+PMi+Ga8e53OuMa9b6/YuzGQQLsc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=cxS6laqWP+/RuWaF9hNXvacJAAjQH4NJ3WXwjVneme6Z4PHbe6etwzUKkiUahtfQGtp5yILm5MDs1LnSmBfpkvaubkvKD1RRmFECp43bfbKjOAH9j67o6drY6D8nxMRtWcEGdGlxUHEbtbHA1lTVJVMipuLUVBH9xjAUrh+x6LQ=
+	s=arc-20240116; t=1708001994; c=relaxed/simple;
+	bh=V7Z1PZjYZh7HQea+HEPXEsxV86UAB10ZcV9jP139qCA=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=p33fXZP+B+0kRTk0z4r2OiqfKhDGkyQSsro5QWidwCIQ05sh/4+AYHuLcwrtqVXzdYtODF/gG2n1ju2q61NM0IOGphftxZ1AVrEAZrM/YrwG3dO5Oh1895i6wdWrK2g5AK4FdUKPQ/fRlb/VrNms4Q2i5PppHzaXJNJM94M78MY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; arc=none smtp.client-ip=150.107.74.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
@@ -18,15 +18,14 @@ Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TbFX33JVZz4wcr;
-	Thu, 15 Feb 2024 23:59:47 +1100 (AEDT)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TbFX64ZqNz4x0m;
+	Thu, 15 Feb 2024 23:59:50 +1100 (AEDT)
 From: Michael Ellerman <patch-notifications@ellerman.id.au>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>, Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc: Nicholas Piggin <npiggin@gmail.com>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux@ew.tq-group.com
-In-Reply-To: <20240124103838.43675-1-matthias.schiffer@ew.tq-group.com>
-References: <20240124103838.43675-1-matthias.schiffer@ew.tq-group.com>
-Subject: Re: [PATCH v2] powerpc/6xx: set High BAT Enable flag on G2_LE cores
-Message-Id: <170800185782.599237.17634953739221214432.b4-ty@ellerman.id.au>
+To: linux-kselftest@vger.kernel.org, shuah@kernel.org, skhan@linuxfoundation.org, npiggin@gmail.com, christophe.leroy@csgroup.eu, nathanl@linux.ibm.com, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, R Nageswara Sastry <rnsastry@linux.ibm.com>
+In-Reply-To: <20240131130859.14968-1-rnsastry@linux.ibm.com>
+References: <20240131130859.14968-1-rnsastry@linux.ibm.com>
+Subject: Re: [PATCH] papr_vpd.c: calling devfd before get_system_loc_code
+Message-Id: <170800185781.599237.11241417718468325077.b4-ty@ellerman.id.au>
 Date: Thu, 15 Feb 2024 23:57:37 +1100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,19 +36,20 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On Wed, 24 Jan 2024 11:38:38 +0100, Matthias Schiffer wrote:
-> MMU_FTR_USE_HIGH_BATS is set for G2_LE cores and derivatives like e300cX,
-> but the high BATs need to be enabled in HID2 to work. Add register
-> definitions and add the needed setup to __setup_cpu_603.
+On Wed, 31 Jan 2024 18:38:59 +0530, R Nageswara Sastry wrote:
+> Calling get_system_loc_code before checking devfd and errno - fails the test
+> when the device is not available, expected a SKIP.
+> Change the order of 'SKIP_IF_MSG' correctly SKIP when the /dev/papr-vpd device
+> is not available.
 > 
-> This fixes boot on CPUs like the MPC5200B with STRICT_KERNEL_RWX enabled
-> on systems where the flag has not been set by the bootloader already.
+> with out patch: Test FAILED on line 271
+> with patch: [SKIP] Test skipped on line 266: /dev/papr-vpd not present
 > 
 > [...]
 
 Applied to powerpc/fixes.
 
-[1/1] powerpc/6xx: set High BAT Enable flag on G2_LE cores
-      https://git.kernel.org/powerpc/c/a038a3ff8c6582404834852c043dadc73a5b68b4
+[1/1] papr_vpd.c: calling devfd before get_system_loc_code
+      https://git.kernel.org/powerpc/c/f09696279b5dd1770a3de2e062f1c5d1449213ff
 
 cheers
