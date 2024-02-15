@@ -1,197 +1,90 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 976CB85263
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 11:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 695E612EBEF
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 11:03:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707995016; cv=none; b=CSHyFyhOTLGxyN8zrDKab/pPKvYYnIKLhrItPEKpW3s/A0fQzmfrzP1J4WPGKuLgjsz9wggo+Ch4h1lpoAKm0/0gBgnX3gxu1ECg7X5cI5r6TVwfxQVHWUQwQ3yPq0pzH9yQXoGZB9o7F68uVAt4qo9uxrGtGcuBHrpHqOSsHr0=
+	t=1707995023; cv=none; b=DQBn56YVqFlOaKSIpgAiGhtvlvo/vf8ZjJOloWa6NHDJZRTIdOKKOzIsG8WZc26DudiJE5YsC/HqaxQN1XQyJpx9kEU6qnv9IGlYwT2WHrt6UDx9cuGq/Mx1K2tnu/CoVzWrP4bE96SBo3NEqxm2EOAExAvdZR0e6hjbqfH5vz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707995016; c=relaxed/simple;
-	bh=kzVcnFNNmOzs8GOwtdRGbBUIEmsIgui7Ywhz5JyEn4I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fSBmaOPMAHXqtHGQpO3aycYGGQBjs8q6Lu/KRRXR9RNXa73d16k83MoY1bbdcQZYe2q4q30q2p6O+avCOKCPciT4lHvwstQlmJyXYAgY5qSPa2WEXsDdWfWH+4zvYbtaL27MZ2Q0o/VHqh1VaQzV8xq/j24BdCBtxXWkZXlUEGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=OOHlvkaY; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1707995023; c=relaxed/simple;
+	bh=OBvnn+vLzA5myTGqwxaRCsbH/Eb4JV3XiuBr+hyLuMo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=unhgcFVGP+805UuO2au1o4FCEdXpl5VQ63TEYF8lDzs5pyaeC/Z3Z4JGs3KzlUx5wBUFPQTW7HlskxIROjg4k4Z4Gfgth27DYeNtUCSLYt1GP48d+xb9UTAw1AHYNSeaati7Blc35b7zJwpCdeEeN3OiB3f8BjSgPA/JW68rNRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OHYM8pY6; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="OOHlvkaY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1707995012;
-	bh=kzVcnFNNmOzs8GOwtdRGbBUIEmsIgui7Ywhz5JyEn4I=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OOHlvkaYWNTke3pqt/4FzLNGWD1eIML9eIavJsoffiGO3wXred/AEM1ag73zXgWHX
-	 pynJjtKjObXzNhw13Bx7Ff/zOAGLvtTGPN/G1TVDdakVqPzWJE6WKd/TiEfOge646C
-	 WrYA/0e/x9Bg1BcD6DEWikTlQGOVKdSAxcB+kQ698h3B5VfOGQk0gcLm5EvPlOaaZv
-	 gNnKjmB2G6f2vTvx9Ybs53sqA0w5OrGV1Vzghf6egNm4JO5wupYNeOn/FsvRhn6Iw3
-	 He3p+9CIYOkCW3TxsUeFR+aF5OWEwaXSbwdrQLxXK3fJQ1xenzlccAInyEBK0aA/QE
-	 hOTysuuzCOV3A==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 71B223781144;
-	Thu, 15 Feb 2024 11:03:31 +0000 (UTC)
-Message-ID: <7664fece-c29a-4374-a59c-4ce8fe831494@collabora.com>
-Date: Thu, 15 Feb 2024 12:02:22 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OHYM8pY6"
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-4c081a0d56eso152308e0c.2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 03:03:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707995020; x=1708599820; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=OBvnn+vLzA5myTGqwxaRCsbH/Eb4JV3XiuBr+hyLuMo=;
+        b=OHYM8pY6HPtlWR8GaT57w2PYhNg/CMxuFCxTbd3aL3FG3mbbxYljhQlhHIafBDQUic
+         CONjoNA6HhNvXBWb970PzhUl01c8W6SYHh/bxmTWAORxDATCuS+2md023XBwVv/1bWsv
+         TGMm2OLgApVbJw3IeNV9Kpyx5AIVb6tuzWTcBp9X/iIAScgesmD/yvc6mdmpDeYmYirt
+         oU4BU+rWfO9dXaGDhlHl5IPjKgFJorwfQB9dNXy5TJQ+/ce6lYzgIlc+OmWykJbG6Vpd
+         grxWq3Od4+AV2AEVaWqGB8JYMdhushhVa+FKfi84gOMNYiLgP+EC+gw2FwbNT6oDsj1a
+         aEww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707995020; x=1708599820;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OBvnn+vLzA5myTGqwxaRCsbH/Eb4JV3XiuBr+hyLuMo=;
+        b=Fxj0EUtzqckC35401KMulmROy2RAqZ9gkjgPzE43B3YFhUU0ylrCSlKvfc35hNZLVG
+         3H726PCHJh38dIWNCmHCF1r11rQJxn+oi+VE3luGn3QylEFZZ9gZUaBdCnVJBF2t1JqO
+         XH8GMrYHXpRDOsjdV71AztcrVC142pSFhC/bIDYJQkzCnPS/+B/zPjtSDCFbHsqXd27q
+         jxT73Rxub3+zP4ywt70OXE0RDynHVtLRqTmC6cl90h9y1kVA7X8AMbpj9/R3wAlDsKt6
+         iDy4NnrlCjijVj6pMjK2RhWjTaBeFrIHdoJ11cAIUZUmPsqhcnk6yMbzKem66MhLt3K5
+         Bv/g==
+X-Gm-Message-State: AOJu0Yy9ZWVM1DFtzgPxW/n5Q6rP2xM9cU1+zcOhfYHGRS1voaiOV5nO
+	TUR4e3u3AU89VQHx5Vj/j/SfhdmRHSQvn+kDRw9NUT8nScuagcDy+b++0/C1MoeTp0EBUCxGKn9
+	euXE/rjELC9QfU0/oqmBpHk54Mo3IevY1fNGakuV9VgWEYTRDsXE=
+X-Google-Smtp-Source: AGHT+IEYRlBkhUM8iWKwiW+yr8eYjy4B779TPoJKTltHiC2zBtjSq3OeyP9rmxZ3uB2kTMQTsVbCA3nxH7Tk/iDNTWQ=
+X-Received: by 2002:a1f:dd82:0:b0:4c0:2802:a1d8 with SMTP id
+ u124-20020a1fdd82000000b004c02802a1d8mr969343vkg.15.1707995020685; Thu, 15
+ Feb 2024 03:03:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/13] drm/mediatek: Support alpha blending in OVL
-Content-Language: en-US
-To: Hsiao Chien Sung <shawn.sung@mediatek.com>,
- Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>,
- Bibby Hsieh <bibby.hsieh@mediatek.com>, CK Hu <ck.hu@mediatek.com>,
- Sean Paul <seanpaul@chromium.org>, Fei Shao <fshao@chromium.org>,
- Jason Chen <jason-ch.chen@mediatek.corp-partner.google.com>,
- "Nancy . Lin" <nancy.lin@mediatek.com>, dri-devel@lists.freedesktop.org,
- linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240215101119.12629-1-shawn.sung@mediatek.com>
- <20240215101119.12629-9-shawn.sung@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240215101119.12629-9-shawn.sung@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <CA+G9fYuHF34bSbN9ktKuMAv1eOFVrf+Gw1MC_rG5trUQv9A_Pw@mail.gmail.com>
+In-Reply-To: <CA+G9fYuHF34bSbN9ktKuMAv1eOFVrf+Gw1MC_rG5trUQv9A_Pw@mail.gmail.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 15 Feb 2024 16:33:28 +0530
+Message-ID: <CA+G9fYu1sEsMRJg-f5e-y9PQ1hyNDWJhnWo21w6BB78Y9-9yhQ@mail.gmail.com>
+Subject: Re: next-20240215: workqueue.c: undefined reference to `irq_work_queue_on'
+To: open list <linux-kernel@vger.kernel.org>, 
+	Linux-Next Mailing List <linux-next@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Il 15/02/24 11:11, Hsiao Chien Sung ha scritto:
-> Support "Pre-multiplied" and "None" blend mode on MediaTek's chips.
-> Before this patch, only the "Coverage" mode is supported.
-> 
-> Please refer to the description of the commit
-> "drm/mediatek: Support alpha blending in display driver"
-> for more information.
-> 
-> Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
-> ---
->   drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 83 +++++++++++++++++++++----
->   1 file changed, 72 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> index c42fce38a35eb..98c989fddcc08 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> @@ -39,6 +39,7 @@
->   #define DISP_REG_OVL_PITCH_MSB(n)		(0x0040 + 0x20 * (n))
->   #define OVL_PITCH_MSB_2ND_SUBBUF			BIT(16)
->   #define DISP_REG_OVL_PITCH(n)			(0x0044 + 0x20 * (n))
-> +#define OVL_CONST_BLEND					BIT(28)
->   #define DISP_REG_OVL_RDMA_CTRL(n)		(0x00c0 + 0x20 * (n))
->   #define DISP_REG_OVL_RDMA_GMC(n)		(0x00c8 + 0x20 * (n))
->   #define DISP_REG_OVL_ADDR_MT2701		0x0040
-> @@ -52,13 +53,16 @@
->   #define GMC_THRESHOLD_HIGH	((1 << GMC_THRESHOLD_BITS) / 4)
->   #define GMC_THRESHOLD_LOW	((1 << GMC_THRESHOLD_BITS) / 8)
->   
-> +#define OVL_CON_CLRFMT_MAN	BIT(23)
->   #define OVL_CON_BYTE_SWAP	BIT(24)
-> -#define OVL_CON_MTX_YUV_TO_RGB	(6 << 16)
-> +#define OVL_CON_RGB_SWAP	BIT(25)
->   #define OVL_CON_CLRFMT_RGB	(1 << 12)
->   #define OVL_CON_CLRFMT_RGBA8888	(2 << 12)
->   #define OVL_CON_CLRFMT_ARGB8888	(3 << 12)
->   #define OVL_CON_CLRFMT_UYVY	(4 << 12)
->   #define OVL_CON_CLRFMT_YUYV	(5 << 12)
-> +#define OVL_CON_MTX_YUV_TO_RGB	(6 << 16)
-> +#define OVL_CON_CLRFMT_PARGB8888	(OVL_CON_CLRFMT_ARGB8888 | OVL_CON_CLRFMT_MAN)
->   #define OVL_CON_CLRFMT_RGB565(ovl)	((ovl)->data->fmt_rgb565_is_0 ? \
->   					0 : OVL_CON_CLRFMT_RGB)
->   #define OVL_CON_CLRFMT_RGB888(ovl)	((ovl)->data->fmt_rgb565_is_0 ? \
-> @@ -72,6 +76,22 @@
->   #define	OVL_CON_VIRT_FLIP	BIT(9)
->   #define	OVL_CON_HORZ_FLIP	BIT(10)
->   
-> +static inline bool is_10bit_rgb(u32 fmt)
-> +{
-> +	switch (fmt) {
-> +	case DRM_FORMAT_XRGB2101010:
-> +	case DRM_FORMAT_ARGB2101010:
-> +	case DRM_FORMAT_RGBX1010102:
-> +	case DRM_FORMAT_RGBA1010102:
-> +	case DRM_FORMAT_XBGR2101010:
-> +	case DRM_FORMAT_ABGR2101010:
-> +	case DRM_FORMAT_BGRX1010102:
-> +	case DRM_FORMAT_BGRA1010102:
-> +		return true;
-> +	}
-> +	return false;
-> +}
-> +
->   static const u32 mt8173_formats[] = {
->   	DRM_FORMAT_XRGB8888,
->   	DRM_FORMAT_ARGB8888,
-> @@ -89,12 +109,20 @@ static const u32 mt8173_formats[] = {
->   static const u32 mt8195_formats[] = {
->   	DRM_FORMAT_XRGB8888,
->   	DRM_FORMAT_ARGB8888,
-> +	DRM_FORMAT_XRGB2101010,
->   	DRM_FORMAT_ARGB2101010,
->   	DRM_FORMAT_BGRX8888,
->   	DRM_FORMAT_BGRA8888,
-> +	DRM_FORMAT_BGRX1010102,
->   	DRM_FORMAT_BGRA1010102,
->   	DRM_FORMAT_ABGR8888,
->   	DRM_FORMAT_XBGR8888,
-> +	DRM_FORMAT_XBGR2101010,
-> +	DRM_FORMAT_ABGR2101010,
-> +	DRM_FORMAT_RGBX8888,
-> +	DRM_FORMAT_RGBA8888,
-> +	DRM_FORMAT_RGBX1010102,
-> +	DRM_FORMAT_RGBA1010102,
->   	DRM_FORMAT_RGB888,
->   	DRM_FORMAT_BGR888,
->   	DRM_FORMAT_RGB565,
-> @@ -254,9 +282,7 @@ static void mtk_ovl_set_bit_depth(struct device *dev, int idx, u32 format,
->   	reg = readl(ovl->regs + DISP_REG_OVL_CLRFMT_EXT);
->   	reg &= ~OVL_CON_CLRFMT_BIT_DEPTH_MASK(idx);
->   
-> -	if (format == DRM_FORMAT_RGBA1010102 ||
-> -	    format == DRM_FORMAT_BGRA1010102 ||
-> -	    format == DRM_FORMAT_ARGB2101010)
-> +	if (is_10bit_rgb(format))
->   		bit_depth = OVL_CON_CLRFMT_10_BIT;
->   
->   	reg |= OVL_CON_CLRFMT_BIT_DEPTH(bit_depth, idx);
-> @@ -274,7 +300,13 @@ void mtk_ovl_config(struct device *dev, unsigned int w,
->   	if (w != 0 && h != 0)
->   		mtk_ddp_write_relaxed(cmdq_pkt, h << 16 | w, &ovl->cmdq_reg, ovl->regs,
->   				      DISP_REG_OVL_ROI_SIZE);
-> -	mtk_ddp_write_relaxed(cmdq_pkt, 0x0, &ovl->cmdq_reg, ovl->regs, DISP_REG_OVL_ROI_BGCLR);
-> +
-> +	/*
-> +	 * The background color should be opaque black (ARGB),
-> +	 * otherwise there will be no effect with alpha blend
-> +	 */
-> +	mtk_ddp_write_relaxed(cmdq_pkt, 0xff000000, &ovl->cmdq_reg,
-> +			      ovl->regs, DISP_REG_OVL_ROI_BGCLR);
+On Thu, 15 Feb 2024 at 15:41, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>
+> On today's Linux next-20240215 tinyconfig builds failed on arm, arm64, powerpc,
+> s390 and riscv with gcc-13 and clang.
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> build error:
+> -------
+> aarch64-linux-gnu-ld: kernel/workqueue.o: in function `kick_pool':
+> workqueue.c:(.text+0x9e4): undefined reference to `irq_work_queue_on'
+> workqueue.c:(.text+0x9e4): relocation truncated to fit:
+> R_AARCH64_CALL26 against undefined symbol `irq_work_queue_on'
 
-Multiple (all of?) OVL color registers, like{L0-3,EL0-2}_YUV1BIT_COLOR(x),
-ROI_BGCLR, L{0-3}_CLR and others do follow this exact layout:
+Anders bisect this build regression and found first bad commit,
 
-#define OVL_COLOR_ALPHA				GENMASK(31, 24)
-#define OVL_COLOR_GREEN				GENMASK(23, 16)
-#define OVL_COLOR_RED				GENMASK(15, 8)
-#define OVL_COLOR_BLUE				GENMASK(7, 0)
+# first bad commit: [3bc1e711c26bff01d41ad71145ecb8dcb4412576]
+workqueue: Don't implicitly make UNBOUND workqueues w/ @max_active==1
+ordered
 
-...so we can define those as they're valid for multiple registers, and then
-we can use the definition instead of an apparently random value.
-
-/*
-  * The background color should be opaque black (ARGB),
-  * otherwise there will be no effect with alpha blend
-  */
-mtk_ddp_write_relaxed(cmdq_pkt, OVL_COLOR_ALPHA, &ovl->cmdq_reg,
-		      ovl->regs, DISP_REG_OVL_ROI_BGCLR);
-
-Everything else looks ok.
-
-Regards,
-Angelo
-
+- Naresh
