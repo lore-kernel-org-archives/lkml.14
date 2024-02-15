@@ -1,85 +1,93 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCEBEC7
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 01:02:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7701EEC7
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 01:04:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707958970; cv=none; b=OSwwVv+J9818gIiZ7C29hTOL9/dGSxHBALbP4yfAy7nfQ0pfaPRS1XGSP0FdEB0fRVMmu/j6CgSpo6y7xGyMinorUu83T7XnMg2oq7TNDrp6g42EejDTt+ktOvrruEx7JocIUZqvijDNasc2YQeUI/igos3PciKCWBdOaRF+PMA=
+	t=1707959042; cv=none; b=kU4awFzrtEyfOCGIFLArfcidYDtn8MCi+TNn6IvGKhH0sQHqbMMFnyD48HumL+rApc3PhkWIFj93inttX648QFvpJTFqWgS5g+OOfEqQzdbjklO43+Reg6ZdbQMeV+aLXB2+2O0I75Io74/T6Bx8RG7ZmR+ld0gxTdL45+cp5vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707958970; c=relaxed/simple;
-	bh=Sibafm6sqfut3pthWhmBw87/ptRneGZPBq7CN4LIOvM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=qtuiGSiHDEWtaZzjNOAvDtokpR1XwKxA/VXeCDrMe6RffeRf9nz5DP0Ae6LFy3g9Ryr98zkYpgOIAEnVz+T/2bSky87demxrnWxHPfV47wCGbJjNYxbL/rVOOj9hK4sxumTQbdo4nH8XbG8NzldzVm/59x4VPrDOGXwq/DjnP5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sMiIKM7o; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PdCLD3Kh; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1707959042; c=relaxed/simple;
+	bh=AFIEZrspV5zSanxweZKG4w8pZtq/hNqIYlVJ0DALHqc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=F2XKYNDmd4gCNjv/SkGis/+QEck8ZxYJHtqi7i6wfMltdzuI5aRzmJyVpLZInC31RmqpYcPaJmMxG/zoc2PsEaCTbf0+sQH6fnslvR/3jQwrDca8jk/cajKkFyRoPGy8QIdx1m0667PDPvs2fTQp8TycHkM+QMluSLMUyAfhr2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IsGLiLbz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sMiIKM7o";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PdCLD3Kh"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1707958966;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GfvQ1S2KxmtsJBdyutBnJ1y5QRJHOWP3UsNVglbau+0=;
-	b=sMiIKM7o51mBC4nUqsJO3huKc6na5wpofIyI5c+sMHRk+jkcREB1p6W8Ja33vpSAQUEnbv
-	hg2bOWVb/GC7Jv7yEY4iUglry7eHmKCgFo7LJ5uvwnQdIFF8d9ULD3AUWJ+3U22VUFmyKg
-	1fJigcbwBk1sGddsG0S2eGsob2HFlM9B9xewuq6XhBMT528HCdMPWdvs8s9t5HJ74ZDvZr
-	JQYDl2R8O89BMg8fWxV4wRCn08++n7Pgu/OX4rUSsHxFxAB8+LXs0QSs4EHmftqCrtivwx
-	uMfkbWLgwFO87/m2cmqPKIPx7VpsVn9ZjEAkTLfgT7/3FKtQArQnlY34YzQ7PQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1707958966;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GfvQ1S2KxmtsJBdyutBnJ1y5QRJHOWP3UsNVglbau+0=;
-	b=PdCLD3KhqXR1PsICH6XSeR/hqShKKQYvMcWc02dNxAPIEJwkg12uSLHA2Qs9WqpalHpeSL
-	Czu5q3Bq1RzOGhAQ==
-To: Doug Anderson <dianders@chromium.org>
-Cc: Bitao Hu <yaoma@linux.alibaba.com>, akpm@linux-foundation.org,
- pmladek@suse.com, maz@kernel.org, liusong@linux.alibaba.com,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] watchdog/softlockup: report the most time-consuming
- hardirq
-In-Reply-To: <CAD=FV=URLh5N6smwdnPXn6di8iek_vn=uBYFWBpCdsuRjLK8ew@mail.gmail.com>
-References: <20240123121223.22318-1-yaoma@linux.alibaba.com>
- <20240123121223.22318-3-yaoma@linux.alibaba.com> <8734tufwjh.ffs@tglx>
- <CAD=FV=URLh5N6smwdnPXn6di8iek_vn=uBYFWBpCdsuRjLK8ew@mail.gmail.com>
-Date: Thu, 15 Feb 2024 02:02:45 +0100
-Message-ID: <87wmr6edze.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IsGLiLbz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEE8BC43330
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 01:04:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707959041;
+	bh=AFIEZrspV5zSanxweZKG4w8pZtq/hNqIYlVJ0DALHqc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=IsGLiLbzJ+zhnBeG5NmJHr/PpUHwifpxlBZycv2a2cRHUOoo0rkQ2UTcCXORRKVdP
+	 fCrY2Bvhcr53qqSM54Oz4V/WhZEbefWmXxhSm7oct3ILAGi2KAQ9M+7mEfGdSchUO4
+	 Qe7s0595qgzhIbrmJkndjGHWoNkQBbE/A6vJUTOFfnHQxND7DxPymHLgSd5Cfqvpui
+	 hBDrJ5gxLyVUom1NxmnqQkib6E1b8tArHQbRi1x8udxFA5R8d0B8pbEasP+2SqZ9Rt
+	 SyafFj5vTCF8u+OuJBBvLO1WfCEgnUTNIOasrfhw1Vg3aWciikHEF/+SPSdJx3JD3o
+	 8hagbhvi9PrYA==
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-363cd34bf13so1198785ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 17:04:01 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV0XoMPCL1RCPxSw87Qv1sRGjC2GXCproJHtX2nW48uA4jXDW1M7l4wGJnUngDl5Niz9tL9CXci0M7gXqp+g8rUWL+yscMY3McFZ54v
+X-Gm-Message-State: AOJu0YyPWbH3T1SC0CovGkXmOZtThZhFtHAycy2iLM614wnDmQuSVAXC
+	x3D5cd2VFnJJkWOmX6zSk0JpFXlKq6kcsp89amwa6t3f1lQP2Zzf09xiHNfTXyotvpPNuk6TFHm
+	8MuNsPYPUK3o+6GtZDkwUkEL4GhpqD5boiGLD
+X-Google-Smtp-Source: AGHT+IGhz74aPmK7rKmScOst/rNBWBrM/czpuZT6ISx4KY0n+9nVENJQgM3AzCqF/bkf4YNEsYZ6Op+Clpvr/RGTdiU=
+X-Received: by 2002:a05:6e02:5aa:b0:364:26a6:cca6 with SMTP id
+ k10-20020a056e0205aa00b0036426a6cca6mr211380ils.5.1707959041056; Wed, 14 Feb
+ 2024 17:04:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20240213-async-free-v3-1-b89c3cc48384@kernel.org>
+ <c4ae18fb13ab1c63cdd34da9fe7b1e0f1a91c909.camel@linux.intel.com>
+ <CAF8kJuMXjp1A1kdS_x-S_dyst8MLHwjuAEt-SfGERKVYZNmRww@mail.gmail.com> <f495b4844ffd9ad4340051edf8744d9d5584747b.camel@linux.intel.com>
+In-Reply-To: <f495b4844ffd9ad4340051edf8744d9d5584747b.camel@linux.intel.com>
+From: Chris Li <chrisl@kernel.org>
+Date: Wed, 14 Feb 2024 17:03:48 -0800
+X-Gmail-Original-Message-ID: <CAF8kJuM8609V48u6gz3tXiB67LofFghE1xEQU0q8t9o+sSiJdg@mail.gmail.com>
+Message-ID: <CAF8kJuM8609V48u6gz3tXiB67LofFghE1xEQU0q8t9o+sSiJdg@mail.gmail.com>
+Subject: Re: [PATCH v3] mm: swap: async free swap slot cache entries
+To: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, Wei Xu <weixugc@google.com>, Yu Zhao <yuzhao@google.com>, 
+	Greg Thelen <gthelen@google.com>, Chun-Tse Shao <ctshao@google.com>, 
+	Yosry Ahmed <yosryahmed@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Mel Gorman <mgorman@techsingularity.net>, Huang Ying <ying.huang@intel.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Kairui Song <kasong@tencent.com>, 
+	Barry Song <v-songbaohua@oppo.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 14 2024 at 15:39, Doug Anderson wrote:
-> On Wed, Feb 14, 2024 at 3:36=E2=80=AFPM Thomas Gleixner <tglx@linutronix.=
-de> wrote:
->> On Tue, Jan 23 2024 at 20:12, Bitao Hu wrote:
->> As a side note: While C does not allow proper encapsulation it's a non
->> starter to fiddle with the interrupt descriptor internals in random code
->> just because the compiler allows you to do so. While not enforced there
->> are clear boundaries and we went a long way to encapsulate this.
+On Wed, Feb 14, 2024 at 2:54=E2=80=AFPM Tim Chen <tim.c.chen@linux.intel.co=
+m> wrote:
 >
-> I think you must have gotten dropped from all the future versions of
-> this patch series when Bitao took my advice and started using
-> interrupt counts instead of tracing. For what it's worth, the latest
-> version can be found at:
+> On Wed, 2024-02-14 at 10:56 -0800, Chris Li wrote:
+> > On Tue, Feb 13, 2024 at 4:08=E2=80=AFPM Tim Chen <tim.c.chen@linux.inte=
+l.com> wrote:
+> > >
+> > >
+> > > >
+> > > >  extern bool swap_slot_cache_enabled;
+> > > > +extern uint8_t slot_cache_async_free __read_mostly;
+> > >
+> > > Why wouldn't you enable the async_free always?
+> > > Otherwise the patch looks fine to me.
+> >
+> > Thanks for the feedback.
+> >
+> > Just in case someone doesn't care about this optimization and wants to
+> > opt out this behavior?
+> > Anyway, I am happy to update the patch without the sysfs control file a=
+s well.
+> >
 >
-> https://lore.kernel.org/r/20240214021430.87471-1-yaoma@linux.alibaba.com
+> At least I couldn't see a downside to enable it always in the latest
+> patch.  I think adding an extra sysfs is unnecessary.
 
-Yes. I'm not on CC and for some stupid reason it evaded my LKML filters.
+Thanks, I just sent out V4 to remove the sysfs control file.
 
-Let me find that thread and stare at it.
-
-Thanks,
-
-        tglx
+Chris
