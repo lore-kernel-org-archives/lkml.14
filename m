@@ -1,121 +1,125 @@
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [195.130.132.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D2D130E2D
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 13:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1BDE130AD3
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 13:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708003709; cv=none; b=ko7pE+6x8XJ/jmzEsquifbHkhz44f+iwVrYu9RkZYjXqNWimmOsiI2LjDc05eRRW8xHr/hooyUm4ZMPg9PwnrORtC4Xzv2AZuIAIFKQ3Rf/J+0AXrNeLNEyLoEjWQKjQ0dGVgV6fbLJpoQ+2X969+t6+9JroSt5dy2pBMMMYANg=
+	t=1708003750; cv=none; b=GLziREP125nAHoB45ma1l7xYJzeqpQHvkVWowJmvJwiK8jEIs4kVmWggNRvE/ok/GSd2C9JPAkBpfLnD/8JpfmpzxQInSMfpwodA1P6iAAIhPQRiQPhFMwhAbptHn2qfcRfO8H3GWUnQ/6jcRsyNMwPg1I2l25tYOMetzAliBWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708003709; c=relaxed/simple;
-	bh=yErmxTR4sdF8IYbb0NbWHYGlmsiQdjhvfNimdEVhaeA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HLV3QnaKaQLGWLSywRQWhPH2hYlMhnbh4ravfutExBZr0F7ZLZNTLeqehKynHXlN/lTYNQ0ki0/8n7Wb3zVHagfIqv8SFoSCeGhY5MdSW3AyHAlulUOtMlVjqOG0CclUhd/JJVeAseSujhQ8xOQfNnnbHM+8soDzpkx2ixuL1fI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:ac52:3a54:2a84:d65a])
-	by baptiste.telenet-ops.be with bizsmtp
-	id nRUJ2B0060LVNSS01RUJxk; Thu, 15 Feb 2024 14:28:18 +0100
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rabmd-000gzE-2Y;
-	Thu, 15 Feb 2024 14:28:18 +0100
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rabmk-00HZka-E7;
-	Thu, 15 Feb 2024 14:28:18 +0100
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: John Stultz <jstultz@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Cc: linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH resend] selftests: timers: clocksource-switch: Adapt progress to kselftest framework
-Date: Thu, 15 Feb 2024 14:28:17 +0100
-Message-Id: <7960007c8517109b592995ad10a3058fbe5aae75.1708003520.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1708003750; c=relaxed/simple;
+	bh=5eeVkjyvudX/pKW1hZPYEgCAdxgDwkfCTULdfvhHo34=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XZUiRrvS2rw4LZWl4AOcl7OsEVcPsFtX+Id7Twxrg3cPsnom89g6WNwTV33jfLqBslH6/6vhQDmuSSBaUDVzQPSnYNwaXNWm5pnhHW1uz3ZxS736nbis+xSkiYDBlr16Lz4lEcm5DYyyVg1EDrzO+v0YOM8PS20uLWMb1/IKnRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fIi2kKdx; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fIi2kKdx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708003747;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5eeVkjyvudX/pKW1hZPYEgCAdxgDwkfCTULdfvhHo34=;
+	b=fIi2kKdxi6c/z2Gze5kvSwiUpHLV/+S9QQMNDg2AlLKsU7MhInBbwm0CH0iy18lD667IB2
+	teiScUIRzzJdTo+CHSrwvC9Yeb3Sfl3dSguWg76oiYopwdNmcIw+N3pPylK4VbbKsuFmoL
+	GPpVWfZHiMP+FLdn+rdkiTQsrF6ZHcc=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-207-guwUvk8nN-yG5PPP6LDCyg-1; Thu, 15 Feb 2024 08:29:06 -0500
+X-MC-Unique: guwUvk8nN-yG5PPP6LDCyg-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a2bc664528fso61754666b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 05:29:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708003745; x=1708608545;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5eeVkjyvudX/pKW1hZPYEgCAdxgDwkfCTULdfvhHo34=;
+        b=Q8xl9SLiH76w7CeR8E4yBAnRb85HbVVfIRnv+Ox0zX6XwSRDAIxHDnqK79U4wVKwMs
+         08jBNo4hHmeUEKfK5UKk4L1iCLwS5gi5iLcoLtbnZfYWDzQsNqNdJ1XfcB2zl6juJqZP
+         oJ0M8WLwU9nf5rDq2BOHYBk9eOl6/eoFAAorLdqplE6IxhH0foqDd5jbuzhrKDXWuzSx
+         6gyHRRw55uvp/pSOqsfohmLbCa//RpyFYAoYXez5RuqgJWD3otuMR93HoZIr2ZfaXkeY
+         uqPW9jD5uuAoizs2wCZ6cq2G8N9w01zZS64fI4pGv4Vm9q1tOUOa31tp3HIsVUm4ZZVN
+         ooGA==
+X-Forwarded-Encrypted: i=1; AJvYcCV0M/3jtR6m6OY7bm8Nho7uDLKIQjFkqkct5dUUfKQAhGwPy5bvGfZZg11Ctsrx43Xfe1uJEOC5SUqsgAdSLvrOD1zNNS4gik/OPF+4
+X-Gm-Message-State: AOJu0Yy37Bjhu7/hham2ByXdDAuM5BLZEm0opuuF1N9FwMwamc+31jBa
+	jdt3MoJbCX6mWDh35N8kD2rTv8PRxdXpAQo6i+f85GKdm0ISbfcm520b7l3zm6Vr46Sg034VVbG
+	zfQ9Z1X6yyTZ/s7Q59jF2SQs1PFs2/+WpBHiKXDgis5TvnYCkJBQgLFh0V07vkQ==
+X-Received: by 2002:a17:906:24d7:b0:a3d:3781:6edc with SMTP id f23-20020a17090624d700b00a3d37816edcmr1280806ejb.55.1708003745155;
+        Thu, 15 Feb 2024 05:29:05 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHenfB7DY75o/58zvNxuONlHdNOgFk3aJKOzSO8iJ3lT0l6WsgAs9wbABWWtdZ7pihKzcwGfA==
+X-Received: by 2002:a17:906:24d7:b0:a3d:3781:6edc with SMTP id f23-20020a17090624d700b00a3d37816edcmr1280785ejb.55.1708003744827;
+        Thu, 15 Feb 2024 05:29:04 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id vh2-20020a170907d38200b00a3d784f1daesm539293ejc.132.2024.02.15.05.29.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Feb 2024 05:29:04 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+	id EC50910F59BF; Thu, 15 Feb 2024 14:29:03 +0100 (CET)
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>, Lorenzo Bianconi
+ <lorenzo@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] page_pool: disable direct recycling based on
+ pool->cpuid on destroy
+In-Reply-To: <8aa809c0-585f-4750-98d4-e19165c6ff73@intel.com>
+References: <20240215113905.96817-1-aleksander.lobakin@intel.com>
+ <87v86qc4qd.fsf@toke.dk> <8aa809c0-585f-4750-98d4-e19165c6ff73@intel.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date: Thu, 15 Feb 2024 14:29:03 +0100
+Message-ID: <87plwxdffk.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-When adapting the test to the kselftest framework, a few printf() calls
-indicating test progress were not updated.
+Alexander Lobakin <aleksander.lobakin@intel.com> writes:
 
-Fix this by replacing these printf() calls by ksft_print_msg() calls.
+> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+> Date: Thu, 15 Feb 2024 13:05:30 +0100
+>
+>> Alexander Lobakin <aleksander.lobakin@intel.com> writes:
+>>=20
+>>> Now that direct recycling is performed basing on pool->cpuid when set,
+>>> memory leaks are possible:
+>>>
+>>> 1. A pool is destroyed.
+>>> 2. Alloc cache is emptied (it's done only once).
+>>> 3. pool->cpuid is still set.
+>>> 4. napi_pp_put_page() does direct recycling basing on pool->cpuid.
+>>> 5. Now alloc cache is not empty, but it won't ever be freed.
+>>=20
+>> Did you actually manage to trigger this? pool->cpuid is only set for the
+>> system page pool instance which is never destroyed; so this seems a very
+>> theoretical concern?
+>
+> To both Lorenzo and Toke:
+>
+> Yes, system page pools are never destroyed, but we might latter use
+> cpuid in non-persistent PPs. Then there will be memory leaks.
+> I was able to trigger this by creating bpf/test_run page_pools with the
+> cpuid set to test direct recycling of live frames.
+>
+>>=20
+>> I guess we could still do this in case we find other uses for setting
+>> the cpuid; I don't think the addition of the READ_ONCE() will have any
+>> measurable overhead on the common arches?
+>
+> READ_ONCE() is cheap, but I thought it's worth mentioning in the
+> commitmsg anyway :)
 
-Fixes: ce7d101750ff8450 ("selftests: timers: clocksource-switch: adapt to kselftest framework")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-When just running the test, the output looks like:
+Right. I'm OK with changing this as a form of future-proofing if we end
+up finding other uses for setting the cpuid field, so:
 
-    # Validating clocksource arch_sys_counter
-    TAP version 13
-    1..12
-    ok 1 CLOCK_REALTIME
-    ...
-    # Validating clocksource ffca0000.timer
-    TAP version 13
-    1..12
-    ok 1 CLOCK_REALTIME
-    ...
-
-When redirecting the test output to a file, the progress prints are not
-interspersed with the test output, but collated at the end:
-
-    TAP version 13
-    1..12
-    ok 1 CLOCK_REALTIME
-    ...
-    TAP version 13
-    1..12
-    ok 1 CLOCK_REALTIME
-    ...
-    # Totals: pass:6 fail:0 xfail:0 xpass:0 skip:6 error:0
-    # Validating clocksource arch_sys_counter
-    # Validating clocksource ffca0000.timer
-    ...
-
-This makes it hard to match the test results with the timer under test.
-Is there a way to fix this?  The test does use fork().
-
-Thanks!
----
- tools/testing/selftests/timers/clocksource-switch.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/tools/testing/selftests/timers/clocksource-switch.c b/tools/testing/selftests/timers/clocksource-switch.c
-index c5264594064c8516..83faa4e354e389c2 100644
---- a/tools/testing/selftests/timers/clocksource-switch.c
-+++ b/tools/testing/selftests/timers/clocksource-switch.c
-@@ -156,8 +156,8 @@ int main(int argc, char **argv)
- 	/* Check everything is sane before we start switching asynchronously */
- 	if (do_sanity_check) {
- 		for (i = 0; i < count; i++) {
--			printf("Validating clocksource %s\n",
--				clocksource_list[i]);
-+			ksft_print_msg("Validating clocksource %s\n",
-+					clocksource_list[i]);
- 			if (change_clocksource(clocksource_list[i])) {
- 				status = -1;
- 				goto out;
-@@ -169,7 +169,7 @@ int main(int argc, char **argv)
- 		}
- 	}
- 
--	printf("Running Asynchronous Switching Tests...\n");
-+	ksft_print_msg("Running Asynchronous Switching Tests...\n");
- 	pid = fork();
- 	if (!pid)
- 		return run_tests(runtime);
--- 
-2.34.1
+Reviewed-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
 
