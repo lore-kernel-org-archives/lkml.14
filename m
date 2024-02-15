@@ -1,70 +1,45 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FCC13B295;
-	Thu, 15 Feb 2024 20:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A711386A2
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 20:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708030086; cv=none; b=uDV5ZV9SX7vb9rxORKtEqJXK9YNCv66/S+OwDUQ7XgGjce+xH/1fCAiMJmYd1OxaFMsQ61hL6/mmkXRQrPa5bTahXueZWe3u6v+I6TXWviqRZPPAmaVmeNZ6fHgkS5uV1jKKd2GEpfwiz3BiR4krvcnKTIuxreFVDPzlJwugWxI=
+	t=1708030165; cv=none; b=cRqK5W9a5E8xmP4vHk2CfnZLJhDNAVT2uECfBvRVoPRrWSowco2sNDwYxzh+W+n14jkZGVD5ZSBeuKi46/RFeZUC3VCIR9LaxTZOVxmFZrUqXZmPio0mmxmBuxQQ/apP7J2O7DPi2aJ7rckOnyFk2DDVb8Iccg/Tt9tJfNKKqfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708030086; c=relaxed/simple;
-	bh=2HCXSQsU9UnX7lXFl7AHSAP6YihKzbTu9UWh/36f/Bc=;
+	s=arc-20240116; t=1708030165; c=relaxed/simple;
+	bh=0dm4M/tOhRdCY0W1L/G80kJB1M4a1vn/EahhWczht+4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UDNcz7Lr+eg+gJNe8ZXcsifNcDck9w0R/wcY+/AF47pAqyhxy/5uM/8uXv+UbW1f0Xn3Pnnpg0oFQK1KxfYBpTvh7Ap+vL72dueaZJMFcg5Ulwfl+1FiJ5NyDEy5DKMOhH2vlTOdZlpCfm0Afn8Vv2xKEtmUO2SR8TRWYb+ZNhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LfaaT220; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=TWg/+l1Urhvn8lJPFNMFryhtTGBbB56wnEXKb0TUP8laosNp3EOBmnwrB/m3sPXalQNK/BgSUtPeD+fcdFhL7w0iHG1s/mjxZCPD/WDrouqnwiGwu66nwH//6USxJrHfTakwzp1d1OO9ZLcyLmfH3sQvkthCOOCgnQYGYeL6P54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VOkWN8/1; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LfaaT220"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708030083; x=1739566083;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2HCXSQsU9UnX7lXFl7AHSAP6YihKzbTu9UWh/36f/Bc=;
-  b=LfaaT220aNVsyzZE1C0tHNXnf9MpVixHEQqQ530gbDIse83eR+GtA6p+
-   /ZBGeAdvnyAMxJ2ktpO9Vu0PZGoJ29MEwTzZP2bh4sX4dFUYSUkt9Jk9/
-   jir4JDQHrlDOIOpzu1sYCIj4ADh8fr+TWBwOvCvpSS/lDkULTMJYDSSDP
-   D7GTzdUx09rdeUftVXbQU82l1EGPPFdFKEoVARpBXTxvs2vaFGztDzngp
-   AUGUDyaIpz4qmd+uTlkCmsZWzVQ8ZCpddviG9Ozfr80ZoR4V1vn1S/8KH
-   W8UdyQ4cbDPQSi2cRFAE0jbFztAadOHeDq2rdMseqp62ljI921KD1zar1
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10985"; a="2278658"
-X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
-   d="scan'208";a="2278658"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 12:48:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
-   d="scan'208";a="3810566"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by fmviesa008.fm.intel.com with ESMTP; 15 Feb 2024 12:47:58 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1raieB-0000lE-28;
-	Thu, 15 Feb 2024 20:47:55 +0000
-Date: Fri, 16 Feb 2024 04:47:21 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mario Limonciello <mario.limonciello@amd.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>
-Cc: oe-kbuild-all@lists.linux.dev, amd-gfx@lists.freedesktop.org,
-	"open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
-	linux-fbdev@vger.kernel.org, nouveau@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org,
-	linux-renesas-soc@vger.kernel.org,
-	"open list:ACPI" <linux-acpi@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Melissa Wen <mwen@igalia.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v6 1/5] drm: Stop using `select ACPI_VIDEO` in all drivers
-Message-ID: <202402160446.YAlmYBPI-lkp@intel.com>
-References: <20240214215756.6530-2-mario.limonciello@amd.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VOkWN8/1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=jHFrq5HIyUWoCxAdEwkduDo127lxJShRivQAP6AdoDM=; b=VOkWN8/1WJXC7xBMvX0s5mnqR0
+	mGI9L494eh6WlelnEgS3tf5udAqMpwKhgn11cfqPAWC8ks2CB38LMVBgana3vvCANhFKc52X+4zUh
+	v8iTTXVApJc2OySlF2Mhu3g6OJi+HSWxC7F7ZvAs4X42hvfJCyAZndA0vZno6OJdXQ3fI/ifzRiOk
+	VsbPSBrE1pS9QNUtwCm5NywjZvDcmhFU5gTCoyocJIDujSYi7LnKTpAM8D2JeMg4uhicDCplfBpLB
+	yhN1VM0ktLp3KQdCHG3ba8KZ94yTQ23dLDzutUIw4cQrqazDEoTxYiq3L568wOrqbTI47uj7ZV82l
+	gagcmC5g==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1raifW-00000002pGZ-1VM5;
+	Thu, 15 Feb 2024 20:49:18 +0000
+Date: Thu, 15 Feb 2024 20:49:18 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: linux-mtd@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Richard Weinberger <richard@nod.at>,
+	Lee Jones <lee@kernel.org>, Andy Lowe <alowe@mvista.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH 2/2] mtd: Remove support for Carillo Ranch driver
+Message-ID: <Zc54zg2JhofPkB38@casper.infradead.org>
+References: <20231208224703.1603264-1-willy@infradead.org>
+ <20231208224703.1603264-2-willy@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,58 +48,323 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240214215756.6530-2-mario.limonciello@amd.com>
+In-Reply-To: <20231208224703.1603264-2-willy@infradead.org>
 
-Hi Mario,
+On Fri, Dec 08, 2023 at 10:47:03PM +0000, Matthew Wilcox (Oracle) wrote:
+> As far as anybody can tell, this product never shipped.  If it did,
+> it shipped in 2007 and nobody has access to one any more.  Remove the
+> mtd NOR driver.
 
-kernel test robot noticed the following build errors:
+The fbdev removal made it in; this patch seems outstanding?
 
-[auto build test ERROR on drm-misc/drm-misc-next]
-[also build test ERROR on drm-intel/for-linux-next-fixes drm-tip/drm-tip linus/master v6.8-rc4 next-20240215]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/drm-Stop-using-select-ACPI_VIDEO-in-all-drivers/20240215-055936
-base:   git://anongit.freedesktop.org/drm/drm-misc drm-misc-next
-patch link:    https://lore.kernel.org/r/20240214215756.6530-2-mario.limonciello%40amd.com
-patch subject: [PATCH v6 1/5] drm: Stop using `select ACPI_VIDEO` in all drivers
-config: openrisc-randconfig-r064-20240215 (https://download.01.org/0day-ci/archive/20240216/202402160446.YAlmYBPI-lkp@intel.com/config)
-compiler: or1k-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240216/202402160446.YAlmYBPI-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402160446.YAlmYBPI-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   or1k-linux-ld: drivers/video/fbdev/nvidia/nv_backlight.o: in function `nvidia_bl_init':
->> nv_backlight.c:(.text+0x26c): undefined reference to `backlight_device_register'
->> nv_backlight.c:(.text+0x26c): relocation truncated to fit: R_OR1K_INSN_REL_26 against undefined symbol `backlight_device_register'
-   or1k-linux-ld: drivers/video/fbdev/nvidia/nv_backlight.o: in function `nvidia_bl_exit':
->> nv_backlight.c:(.text+0x32c): undefined reference to `backlight_device_unregister'
->> nv_backlight.c:(.text+0x32c): relocation truncated to fit: R_OR1K_INSN_REL_26 against undefined symbol `backlight_device_unregister'
-   or1k-linux-ld: drivers/video/fbdev/aty/aty128fb.o: in function `aty128_remove':
->> aty128fb.c:(.text+0x14c): undefined reference to `backlight_device_unregister'
->> aty128fb.c:(.text+0x14c): relocation truncated to fit: R_OR1K_INSN_REL_26 against undefined symbol `backlight_device_unregister'
-   or1k-linux-ld: drivers/video/fbdev/aty/aty128fb.o: in function `aty128_init':
->> aty128fb.c:(.text.unlikely+0x5bc): undefined reference to `backlight_device_register'
->> aty128fb.c:(.text.unlikely+0x5bc): relocation truncated to fit: R_OR1K_INSN_REL_26 against undefined symbol `backlight_device_register'
-   or1k-linux-ld: drivers/auxdisplay/ht16k33.o: in function `ht16k33_fbdev_probe':
->> ht16k33.c:(.text+0x17f4): undefined reference to `devm_backlight_device_register'
->> ht16k33.c:(.text+0x17f4): relocation truncated to fit: R_OR1K_INSN_REL_26 against undefined symbol `devm_backlight_device_register'
-
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for FB_BACKLIGHT
-   Depends on [n]: HAS_IOMEM [=y] && FB [=y] && BACKLIGHT_CLASS_DEVICE [=n]
-   Selected by [y]:
-   - HT16K33 [=y] && AUXDISPLAY [=y] && FB [=y] && I2C [=y] && INPUT [=y]
-   - FB_ATMEL [=y] && FB [=y] && OF [=y] && HAVE_CLK [=y] && HAS_IOMEM [=y] && (HAVE_FB_ATMEL [=n] || COMPILE_TEST [=y])
-   - FB_NVIDIA [=y] && HAS_IOMEM [=y] && FB [=y] && PCI [=y] && FB_NVIDIA_BACKLIGHT [=y]
-   - FB_ATY128 [=y] && HAS_IOMEM [=y] && FB [=y] && PCI [=y] && FB_ATY128_BACKLIGHT [=y]
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>  drivers/mtd/maps/Kconfig        |   7 -
+>  drivers/mtd/maps/Makefile       |   1 -
+>  drivers/mtd/maps/intel_vr_nor.c | 265 --------------------------------
+>  3 files changed, 273 deletions(-)
+>  delete mode 100644 drivers/mtd/maps/intel_vr_nor.c
+> 
+> diff --git a/drivers/mtd/maps/Kconfig b/drivers/mtd/maps/Kconfig
+> index e098ae937ce8..8a8b19874e23 100644
+> --- a/drivers/mtd/maps/Kconfig
+> +++ b/drivers/mtd/maps/Kconfig
+> @@ -341,13 +341,6 @@ config MTD_UCLINUX
+>  	help
+>  	  Map driver to support image based filesystems for uClinux.
+>  
+> -config MTD_INTEL_VR_NOR
+> -	tristate "NOR flash on Intel Vermilion Range Expansion Bus CS0"
+> -	depends on PCI
+> -	help
+> -	  Map driver for a NOR flash bank located on the Expansion Bus of the
+> -	  Intel Vermilion Range chipset.
+> -
+>  config MTD_PLATRAM
+>  	tristate "Map driver for platform device RAM (mtd-ram)"
+>  	select MTD_RAM
+> diff --git a/drivers/mtd/maps/Makefile b/drivers/mtd/maps/Makefile
+> index 094cfb244086..a9083c888e3b 100644
+> --- a/drivers/mtd/maps/Makefile
+> +++ b/drivers/mtd/maps/Makefile
+> @@ -40,6 +40,5 @@ obj-$(CONFIG_MTD_UCLINUX)	+= uclinux.o
+>  obj-$(CONFIG_MTD_NETtel)	+= nettel.o
+>  obj-$(CONFIG_MTD_SCB2_FLASH)	+= scb2_flash.o
+>  obj-$(CONFIG_MTD_PLATRAM)	+= plat-ram.o
+> -obj-$(CONFIG_MTD_INTEL_VR_NOR)	+= intel_vr_nor.o
+>  obj-$(CONFIG_MTD_VMU)		+= vmu-flash.o
+>  obj-$(CONFIG_MTD_LANTIQ)	+= lantiq-flash.o
+> diff --git a/drivers/mtd/maps/intel_vr_nor.c b/drivers/mtd/maps/intel_vr_nor.c
+> deleted file mode 100644
+> index d67b845b0e89..000000000000
+> --- a/drivers/mtd/maps/intel_vr_nor.c
+> +++ /dev/null
+> @@ -1,265 +0,0 @@
+> -/*
+> - * drivers/mtd/maps/intel_vr_nor.c
+> - *
+> - * An MTD map driver for a NOR flash bank on the Expansion Bus of the Intel
+> - * Vermilion Range chipset.
+> - *
+> - * The Vermilion Range Expansion Bus supports four chip selects, each of which
+> - * has 64MiB of address space.  The 2nd BAR of the Expansion Bus PCI Device
+> - * is a 256MiB memory region containing the address spaces for all four of the
+> - * chip selects, with start addresses hardcoded on 64MiB boundaries.
+> - *
+> - * This map driver only supports NOR flash on chip select 0.  The buswidth
+> - * (either 8 bits or 16 bits) is determined by reading the Expansion Bus Timing
+> - * and Control Register for Chip Select 0 (EXP_TIMING_CS0).  This driver does
+> - * not modify the value in the EXP_TIMING_CS0 register except to enable writing
+> - * and disable boot acceleration.  The timing parameters in the register are
+> - * assumed to have been properly initialized by the BIOS.  The reset default
+> - * timing parameters are maximally conservative (slow), so access to the flash
+> - * will be slower than it should be if the BIOS has not initialized the timing
+> - * parameters.
+> - *
+> - * Author: Andy Lowe <alowe@mvista.com>
+> - *
+> - * 2006 (c) MontaVista Software, Inc. This file is licensed under
+> - * the terms of the GNU General Public License version 2. This program
+> - * is licensed "as is" without any warranty of any kind, whether express
+> - * or implied.
+> - */
+> -
+> -#include <linux/module.h>
+> -#include <linux/kernel.h>
+> -#include <linux/slab.h>
+> -#include <linux/pci.h>
+> -#include <linux/mtd/mtd.h>
+> -#include <linux/mtd/map.h>
+> -#include <linux/mtd/partitions.h>
+> -#include <linux/mtd/cfi.h>
+> -#include <linux/mtd/flashchip.h>
+> -
+> -#define DRV_NAME "vr_nor"
+> -
+> -struct vr_nor_mtd {
+> -	void __iomem *csr_base;
+> -	struct map_info map;
+> -	struct mtd_info *info;
+> -	struct pci_dev *dev;
+> -};
+> -
+> -/* Expansion Bus Configuration and Status Registers are in BAR 0 */
+> -#define EXP_CSR_MBAR 0
+> -/* Expansion Bus Memory Window is BAR 1 */
+> -#define EXP_WIN_MBAR 1
+> -/* Maximum address space for Chip Select 0 is 64MiB */
+> -#define CS0_SIZE 0x04000000
+> -/* Chip Select 0 is at offset 0 in the Memory Window */
+> -#define CS0_START 0x0
+> -/* Chip Select 0 Timing Register is at offset 0 in CSR */
+> -#define EXP_TIMING_CS0 0x00
+> -#define TIMING_CS_EN		(1 << 31)	/* Chip Select Enable */
+> -#define TIMING_BOOT_ACCEL_DIS	(1 <<  8)	/* Boot Acceleration Disable */
+> -#define TIMING_WR_EN		(1 <<  1)	/* Write Enable */
+> -#define TIMING_BYTE_EN		(1 <<  0)	/* 8-bit vs 16-bit bus */
+> -#define TIMING_MASK		0x3FFF0000
+> -
+> -static void vr_nor_destroy_partitions(struct vr_nor_mtd *p)
+> -{
+> -	mtd_device_unregister(p->info);
+> -}
+> -
+> -static int vr_nor_init_partitions(struct vr_nor_mtd *p)
+> -{
+> -	/* register the flash bank */
+> -	/* partition the flash bank */
+> -	return mtd_device_register(p->info, NULL, 0);
+> -}
+> -
+> -static void vr_nor_destroy_mtd_setup(struct vr_nor_mtd *p)
+> -{
+> -	map_destroy(p->info);
+> -}
+> -
+> -static int vr_nor_mtd_setup(struct vr_nor_mtd *p)
+> -{
+> -	static const char * const probe_types[] =
+> -	    { "cfi_probe", "jedec_probe", NULL };
+> -	const char * const *type;
+> -
+> -	for (type = probe_types; !p->info && *type; type++)
+> -		p->info = do_map_probe(*type, &p->map);
+> -	if (!p->info)
+> -		return -ENODEV;
+> -
+> -	p->info->dev.parent = &p->dev->dev;
+> -
+> -	return 0;
+> -}
+> -
+> -static void vr_nor_destroy_maps(struct vr_nor_mtd *p)
+> -{
+> -	unsigned int exp_timing_cs0;
+> -
+> -	/* write-protect the flash bank */
+> -	exp_timing_cs0 = readl(p->csr_base + EXP_TIMING_CS0);
+> -	exp_timing_cs0 &= ~TIMING_WR_EN;
+> -	writel(exp_timing_cs0, p->csr_base + EXP_TIMING_CS0);
+> -
+> -	/* unmap the flash window */
+> -	iounmap(p->map.virt);
+> -
+> -	/* unmap the csr window */
+> -	iounmap(p->csr_base);
+> -}
+> -
+> -/*
+> - * Initialize the map_info structure and map the flash.
+> - * Returns 0 on success, nonzero otherwise.
+> - */
+> -static int vr_nor_init_maps(struct vr_nor_mtd *p)
+> -{
+> -	unsigned long csr_phys, csr_len;
+> -	unsigned long win_phys, win_len;
+> -	unsigned int exp_timing_cs0;
+> -	int err;
+> -
+> -	csr_phys = pci_resource_start(p->dev, EXP_CSR_MBAR);
+> -	csr_len = pci_resource_len(p->dev, EXP_CSR_MBAR);
+> -	win_phys = pci_resource_start(p->dev, EXP_WIN_MBAR);
+> -	win_len = pci_resource_len(p->dev, EXP_WIN_MBAR);
+> -
+> -	if (!csr_phys || !csr_len || !win_phys || !win_len)
+> -		return -ENODEV;
+> -
+> -	if (win_len < (CS0_START + CS0_SIZE))
+> -		return -ENXIO;
+> -
+> -	p->csr_base = ioremap(csr_phys, csr_len);
+> -	if (!p->csr_base)
+> -		return -ENOMEM;
+> -
+> -	exp_timing_cs0 = readl(p->csr_base + EXP_TIMING_CS0);
+> -	if (!(exp_timing_cs0 & TIMING_CS_EN)) {
+> -		dev_warn(&p->dev->dev, "Expansion Bus Chip Select 0 "
+> -		       "is disabled.\n");
+> -		err = -ENODEV;
+> -		goto release;
+> -	}
+> -	if ((exp_timing_cs0 & TIMING_MASK) == TIMING_MASK) {
+> -		dev_warn(&p->dev->dev, "Expansion Bus Chip Select 0 "
+> -		       "is configured for maximally slow access times.\n");
+> -	}
+> -	p->map.name = DRV_NAME;
+> -	p->map.bankwidth = (exp_timing_cs0 & TIMING_BYTE_EN) ? 1 : 2;
+> -	p->map.phys = win_phys + CS0_START;
+> -	p->map.size = CS0_SIZE;
+> -	p->map.virt = ioremap(p->map.phys, p->map.size);
+> -	if (!p->map.virt) {
+> -		err = -ENOMEM;
+> -		goto release;
+> -	}
+> -	simple_map_init(&p->map);
+> -
+> -	/* Enable writes to flash bank */
+> -	exp_timing_cs0 |= TIMING_BOOT_ACCEL_DIS | TIMING_WR_EN;
+> -	writel(exp_timing_cs0, p->csr_base + EXP_TIMING_CS0);
+> -
+> -	return 0;
+> -
+> -      release:
+> -	iounmap(p->csr_base);
+> -	return err;
+> -}
+> -
+> -static const struct pci_device_id vr_nor_pci_ids[] = {
+> -	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x500D)},
+> -	{0,}
+> -};
+> -
+> -static void vr_nor_pci_remove(struct pci_dev *dev)
+> -{
+> -	struct vr_nor_mtd *p = pci_get_drvdata(dev);
+> -
+> -	vr_nor_destroy_partitions(p);
+> -	vr_nor_destroy_mtd_setup(p);
+> -	vr_nor_destroy_maps(p);
+> -	kfree(p);
+> -	pci_release_regions(dev);
+> -	pci_disable_device(dev);
+> -}
+> -
+> -static int vr_nor_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+> -{
+> -	struct vr_nor_mtd *p = NULL;
+> -	unsigned int exp_timing_cs0;
+> -	int err;
+> -
+> -	err = pci_enable_device(dev);
+> -	if (err)
+> -		goto out;
+> -
+> -	err = pci_request_regions(dev, DRV_NAME);
+> -	if (err)
+> -		goto disable_dev;
+> -
+> -	p = kzalloc(sizeof(*p), GFP_KERNEL);
+> -	err = -ENOMEM;
+> -	if (!p)
+> -		goto release;
+> -
+> -	p->dev = dev;
+> -
+> -	err = vr_nor_init_maps(p);
+> -	if (err)
+> -		goto release;
+> -
+> -	err = vr_nor_mtd_setup(p);
+> -	if (err)
+> -		goto destroy_maps;
+> -
+> -	err = vr_nor_init_partitions(p);
+> -	if (err)
+> -		goto destroy_mtd_setup;
+> -
+> -	pci_set_drvdata(dev, p);
+> -
+> -	return 0;
+> -
+> -      destroy_mtd_setup:
+> -	map_destroy(p->info);
+> -
+> -      destroy_maps:
+> -	/* write-protect the flash bank */
+> -	exp_timing_cs0 = readl(p->csr_base + EXP_TIMING_CS0);
+> -	exp_timing_cs0 &= ~TIMING_WR_EN;
+> -	writel(exp_timing_cs0, p->csr_base + EXP_TIMING_CS0);
+> -
+> -	/* unmap the flash window */
+> -	iounmap(p->map.virt);
+> -
+> -	/* unmap the csr window */
+> -	iounmap(p->csr_base);
+> -
+> -      release:
+> -	kfree(p);
+> -	pci_release_regions(dev);
+> -
+> -      disable_dev:
+> -	pci_disable_device(dev);
+> -
+> -      out:
+> -	return err;
+> -}
+> -
+> -static struct pci_driver vr_nor_pci_driver = {
+> -	.name = DRV_NAME,
+> -	.probe = vr_nor_pci_probe,
+> -	.remove = vr_nor_pci_remove,
+> -	.id_table = vr_nor_pci_ids,
+> -};
+> -
+> -module_pci_driver(vr_nor_pci_driver);
+> -
+> -MODULE_AUTHOR("Andy Lowe");
+> -MODULE_DESCRIPTION("MTD map driver for NOR flash on Intel Vermilion Range");
+> -MODULE_LICENSE("GPL");
+> -MODULE_DEVICE_TABLE(pci, vr_nor_pci_ids);
+> -- 
+> 2.42.0
+> 
