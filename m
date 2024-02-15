@@ -1,374 +1,191 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA120136642
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 17:19:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86115135A47;
+	Thu, 15 Feb 2024 17:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708017559; cv=none; b=VKZW8NdgvUnbYOfjQ2vUjeS9MgNFKWkJnThCT++K0MnaIdngprGa3L9npoFu0dQSuNUuOTJqpCW2BMhmZ5fT157J2hIqobA0qyfVgU4f22c5TBYiQl4PdnsjmQzh+yJuDL1QCKDI6x2rGFgv7exp5UmzuquuAAL5YwokC9K17iw=
+	t=1708017606; cv=none; b=RqqB7N5dQCeQAMjm24CtkP4DhQypRsNkQfSMadyv0AnQqf1NGM++FRWnwrDsfYSFlrVTDF2qACilemBS4AouwvWIUVzzYXdT1UszLUicUNdPbMQYu/AUtWMOKL0232uL634tcUJyNdO6iDm0dE/6xTPDQNPrVX14UN68rzuWYV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708017559; c=relaxed/simple;
-	bh=v/XADi085pTDQFnJvJ0SZOENbNwpi/b0x6jIKlLw6xI=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=WPs/0M9Zb9YYAnKEN6Ql0ttnSlGbT7X7FVls51SwvIphqD3Bw62daXW9qGV7+Mace7ruILKjUooG2JW/yudN3suVCDmlYqdlMwYA9gxTJaRW4NwiM45yqVUfi21Z2SHXJnyvqKUUojy+BxC7XbaS7G7p4wHirPAdAn2W2rbhlvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rmoar.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QwEh5JKo; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rmoar.bounces.google.com
+	s=arc-20240116; t=1708017606; c=relaxed/simple;
+	bh=dVETtyeLtR2My/4QlLj70COlAQIwHB4SgtL2Kzh7V9k=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pgfHDZ8AX8LVCyYm5oUAGiQ1GU8v0+WJgnrUeQ/pAfW1NbjrlSFhYp2IMzDURdIQGwPGTxiCuapVdS/N2k9fTAr5RQNuUT+ZFFHEYoj07T+cZnHQI90UG7aRL2udedicMi9akAlzfcpaNHQ8H+1AsBBFNrD/sXk0RSKAEoSafy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KDGde8LK; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QwEh5JKo"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc74645bfa8so1454624276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 09:19:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KDGde8LK"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-41202eae372so9086835e9.0;
+        Thu, 15 Feb 2024 09:20:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708017556; x=1708622356; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+        d=gmail.com; s=20230601; t=1708017603; x=1708622403; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=Je/OUWP1qPeulJpIvCAQz1kDrZhjiWg8SJiukvHtTak=;
-        b=QwEh5JKog0Mthh3Gj2xbOh5CDNH7t8bscJGG29MnCZmwvl9LPQpizX+8XakkmDkKCO
-         arCfLL2lrRIvouCFyKYiPBoFTPT4Q2GwltK6itmBNmQS0CuSfIuL2p8bl1tHvCimtL3Y
-         OL0b/7UoMMsmcDZ1OahF0jdBh9LklRSttec+axBPu0svKSEnM4AMY0jRkqj4S03u2x6U
-         4QdQ226bBtDq6L16noyP2SHGNgYNicZYyS/byIbXahVgQRT+N/i806njZxKZ2zTnoB4c
-         UfGND99nenQizR15uB5nxGx6knDTnFxNPDnxtWLgyJUUxfu5gEoVEv/NB0R1jTe9LIxp
-         xL0w==
+        bh=Omd5ccM95usrHn5L6mpoqqeGE9+GSJ9q916jIPFa6vk=;
+        b=KDGde8LKEZnfz9eIRueUmLmCGFWcoXluZvB/QcSx4XV5yFysHe4SD0X4W7bZVcGdbO
+         qr2BDbkvmVX7ydQN8rV+WNl/57DzLgoq50lZaSYDWH5zPsFJfZTb22awXarELaM9ZbC3
+         u+pLGOldITJ52VlHMQqxsN+6shwue8Pf7wpcBbZeQ7oC90W6fZkB5QetENn9TK1qIVZW
+         ePAnwvtZkg/R31bL80Hgjrqpq0UJRIgF0Kbt63JMQ/QrLxNSo9jhyQevT78I+YVl5tO1
+         2/pduNDy0OgZtAd0C8BgHxzqtbUD7hCzdeeVdRDuSMfcNYNq/NikoIwBK+9LElrxHI/U
+         9esA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708017556; x=1708622356;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=1e100.net; s=20230601; t=1708017603; x=1708622403;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Je/OUWP1qPeulJpIvCAQz1kDrZhjiWg8SJiukvHtTak=;
-        b=fCPwigQ2V0s4aqp68k2C93IN2yo7dg6bm7ToD1zcA/vnXP/2fkqiULEeffrDRkkvtS
-         U6XlSJBGCVmL44/FsyKbBboOnoW0sH9NuWCCUyG6JDbL0aISFakIOw7HjCXsoGTSAyYn
-         c/QASaJUP1+N/I+47h5MVcr1HpH+8JhmLL1iG/DW6lnb67GoyYdH3uWwT3dIprp+UgO9
-         Y0P+yhC/8Tji/PQy7gr3nCuWWn7kd92G/rIm26oBeBIJL7ZNcYJJTNizciMd7mbTNHIU
-         YBFalCoK/GKpXZWHNP88kmhtu5TbsGjt2qcfJDcGalyuOyNNsV33PllPMWKM2lfhAlKB
-         e33g==
-X-Forwarded-Encrypted: i=1; AJvYcCXGeDmRoqIJ+jkRZFO1/XVFPGVCJoZPXcng8HX/WQLZJeMkd3XINY/OSSxKf+pa8xopi2NshpgeyM7YLhDB+jw84JOQH/NU7tSpEQ5G
-X-Gm-Message-State: AOJu0YxqlNBrxdXLnDpPlGWaPlMKDu6+butRLmd+ZFL7FHFDFtph6Ca0
-	Vfq5fu7w5xEU+YjniRS2oR2BcM+wpTDLKecnsabQM3OlaZUymaoGunZXO/KzDack6HL7wz6WbQ=
-	=
-X-Google-Smtp-Source: AGHT+IFmJD76xjEzonvqtMrm7uBUII0pmwIOzvgHjIARWX5En5BWjAcEvI/rTg6MV1ugOwjSiHuE/oRgbQ==
-X-Received: from rmoar-specialist.c.googlers.com ([fda3:e722:ac3:cc00:2b:7d90:c0a8:45d3])
- (user=rmoar job=sendgmr) by 2002:a05:6902:1005:b0:dc7:59d9:7b46 with SMTP id
- w5-20020a056902100500b00dc759d97b46mr75845ybt.3.1708017555875; Thu, 15 Feb
- 2024 09:19:15 -0800 (PST)
-Date: Thu, 15 Feb 2024 17:18:59 +0000
+        bh=Omd5ccM95usrHn5L6mpoqqeGE9+GSJ9q916jIPFa6vk=;
+        b=f91pIUPveRqnmjCPg83WpmYeDjDPLo4nFmg90atrKx5c9l2hJI25S5QXQf3fIlZm1V
+         TiXf3cH0Lr3ROpwBS/a66iTi7Y9M6MEpe422MEv4RfKIWQ0aDUewg1EZvUBoGPjG3drj
+         FCfsxKpz13laGc/4Z0vkavH5Ce8g70h4mzeUTHqadc+NC4VKry9lIs/pYhvD9QgTUdK9
+         MdxlraZ4YA7WsHu6qmrQ2OK34jG/dHRgc9wcpXcwvr2/o4FeeEQC0SQiJZBACu94vpzx
+         Fj001xZHCQmurp5a+jpB29qVE4Z8pPxZdUUtYng+yF11rgrcw30OtQ2a4u2rzIAQJ003
+         N4UQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUIdhonCPgR8lkJkankpBnGS30CzD9/uYQrl5WmnTbIGTApjDSx0MQU3xMg7kYVg40Zv3ySsdw4kw++QLdDFKlvNuDoUOCdFolmrA0FbE0bJwAlSNRxU65NpGPoLjBrBxw2fwOl8S1v
+X-Gm-Message-State: AOJu0YwYRaH9tnhHuguwyACL7wPLb8ytfyK4tmYZgEDH6PBZXhERa+Q1
+	PDaS9n3FhjX33C7HbG4r54mPuVxNkczA9Ksgk5WOox4dRW4KyrbW
+X-Google-Smtp-Source: AGHT+IGmfLVdR5bxJM/dsQRRY8Tki3/u77x1ze6iXFkZgjQouJHtpmGke1UfDnSwmSUZk1P8Eq4BmA==
+X-Received: by 2002:a05:600c:4896:b0:411:defc:c7df with SMTP id j22-20020a05600c489600b00411defcc7dfmr1910145wmp.24.1708017602474;
+        Thu, 15 Feb 2024 09:20:02 -0800 (PST)
+Received: from [192.168.90.166] (146.red-83-35-56.dynamicip.rima-tde.net. [83.35.56.146])
+        by smtp.gmail.com with ESMTPSA id fa25-20020a05600c519900b0041228b2e179sm1346006wmb.39.2024.02.15.09.20.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Feb 2024 09:20:02 -0800 (PST)
+Message-ID: <795736e9c25b836c5939d9117a3a2580ed4e22f8.camel@gmail.com>
+Subject: Re: [PATCH] drivers: iio: pressure: Add SPI support for BMP38x and
+ BMP390
+From: Angel Iglesias <ang.iglesiasg@gmail.com>
+To: Vasileios Amoiridis <vassilisamir@gmail.com>, jic23@kernel.org
+Cc: lars@metafoo.de, andriy.shevchenko@linux.intel.com, 579lpy@gmail.com, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 15 Feb 2024 18:20:00 +0100
+In-Reply-To: <20240215164332.506736-1-vassilisamir@gmail.com>
+References: <20240215164332.506736-1-vassilisamir@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (by Flathub.org) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
-Message-ID: <20240215171859.1907668-1-rmoar@google.com>
-Subject: [KTAP V2 PATCH v3] ktap_v2: add test metadata
-From: Rae Moar <rmoar@google.com>
-To: frowand.list@gmail.com, davidgow@google.com, keescook@chromium.org, 
-	Tim.Bird@sony.com, shuah@kernel.org, brendanhiggins@google.com, 
-	dlatypov@google.com
-Cc: tytso@google.com, gustavo.padovan@collabora.com, 
-	ricardo.canuelo@collabora.com, corbet@lwn.net, kernelci@lists.linux.dev, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Rae Moar <rmoar@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
 
-Add specification for test metadata to the KTAP v2 spec.
+On Thu, 2024-02-15 at 17:43 +0100, Vasileios Amoiridis wrote:
+> According to the datasheet of BMP38x and BMP390 devices, in SPI
+> operation, the first byte that returns after a read operation is
+> garbage and it needs to be dropped and return the rest of the
+> bytes.
 
-KTAP v1 only specifies the output format of very basic test information:
-test result and test name. Any additional test information either gets
-added to general diagnostic data or is not included in the output at all.
+Hey good catch! It flew past me when I added this devices because I tested =
+only
+on i2c at the time.
 
-The purpose of KTAP metadata is to create a framework to include and
-easily identify additional important test information in KTAP.
+Kind regards,
+Angel
 
-KTAP metadata could include any test information that is pertinent for
-user interaction before or after the running of the test. For example,
-the test file path or the test speed.
-
-Since this includes a large variety of information, this specification
-will recognize notable types of KTAP metadata to ensure consistent format
-across test frameworks. See the full list of types in the specification.
-
-Example of KTAP Metadata:
-
- KTAP version 2
- #:ktap_test: main
- #:ktap_arch: uml
- 1..1
-     KTAP version 2
-     #:ktap_test: suite_1
-     #:ktap_subsystem: example
-     #:ktap_test_file: lib/test.c
-     1..2
-     ok 1 test_1
-     #:ktap_test: test_2
-     #:ktap_speed: very_slow
-     # test_2 has begun
-     #:custom_is_flaky: true
-     ok 2 test_2
- # suite_1 has passed
- ok 1 suite_1
-
-The changes to the KTAP specification outline the format, location, and
-different types of metadata.
-
-Reviewed-by: David Gow <davidgow@google.com>
-Signed-off-by: Rae Moar <rmoar@google.com>
----
-Changes since v2:
-- Change format of metadata line from "# prefix_type: value" to
-  "#:prefix_type: value".
-- Add examples of edge cases, such as diagnostic information interrupting
-  metadata lines and lines in the wrong location, to the example in the
-  specification.
-- Add current list of accepted prefixes.
-- Add notes on indentation and generated files.
-- Fix a few typos.
-
- Documentation/dev-tools/ktap.rst | 182 ++++++++++++++++++++++++++++++-
- 1 file changed, 178 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/dev-tools/ktap.rst b/Documentation/dev-tools/ktap.rst
-index ff77f4aaa6ef..42a7e50b9270 100644
---- a/Documentation/dev-tools/ktap.rst
-+++ b/Documentation/dev-tools/ktap.rst
-@@ -17,19 +17,22 @@ KTAP test results describe a series of tests (which may be nested: i.e., test
- can have subtests), each of which can contain both diagnostic data -- e.g., log
- lines -- and a final result. The test structure and results are
- machine-readable, whereas the diagnostic data is unstructured and is there to
--aid human debugging.
-+aid human debugging. Since version 2, tests can also contain metadata which
-+consists of important supplemental test information and can be
-+machine-readable.
-+
-+KTAP output is built from five different types of lines:
- 
--KTAP output is built from four different types of lines:
- - Version lines
- - Plan lines
- - Test case result lines
- - Diagnostic lines
-+- Metadata lines
- 
- In general, valid KTAP output should also form valid TAP output, but some
- information, in particular nested test results, may be lost. Also note that
- there is a stagnant draft specification for TAP14, KTAP diverges from this in
--a couple of places (notably the "Subtest" header), which are described where
--relevant later in this document.
-+a couple of places, which are described where relevant later in this document.
- 
- Version lines
- -------------
-@@ -166,6 +169,171 @@ even if they do not start with a "#": this is to capture any other useful
- kernel output which may help debug the test. It is nevertheless recommended
- that tests always prefix any diagnostic output they have with a "#" character.
- 
-+KTAP metadata lines
-+-------------------
-+
-+KTAP metadata lines are used to include and easily identify important
-+supplemental test information in KTAP. These lines may appear similar to
-+diagnostic lines. The format of metadata lines is below:
-+
-+.. code-block:: none
-+
-+	#:<prefix>_<metadata type>: <metadata value>
-+
-+The <prefix> indicates where to find the specification for the type of
-+metadata, such as the name of a test framework or "ktap" to indicate this
-+specification. The list of currently approved prefixes and where to find the
-+documentation of the metadata types is below. Note any metadata type that does
-+not use a prefix from the list below must use the prefix "custom".
-+
-+Current List of Approved Prefixes:
-+
-+- ``ktap``: See Types of KTAP Metadata below for the list of metadata types.
-+
-+The format of <metadata type> and <value> varies based on the type. See the
-+individual specification. For "custom" types the <metadata type> can be any
-+string excluding ":", spaces, or newline characters and the <value> can be any
-+string.
-+
-+**Location:**
-+
-+The first KTAP metadata line for a test must be "#:ktap_test: <test name>",
-+which acts as a header to associate metadata with the correct test. Metadata
-+for the main KTAP level uses the test name "main".
-+
-+For test cases, the location of the metadata is between the prior test result
-+line and the current test result line. For test suites, the location of the
-+metadata is between the suite's version line and test plan line. For the main
-+level, the location of the metadata is between the main version line and main
-+test plan line. See the example below.
-+
-+Note that a test case's metadata is inline with the test's result line. Whereas
-+a suite's metadata is inline with the suite's version line and thus will be
-+more indented than the suite's result line. Additionally, metadata for the main
-+level is inline with the main version line.
-+
-+KTAP metadata for a test does not need to be contiguous. For example, a kernel
-+warning or other diagnostic output could interrupt metadata lines. However, it
-+is recommended to keep a test's metadata lines in the correct location and
-+together when possible, as this improves readability.
-+
-+**Example of KTAP metadata:**
-+
-+::
-+
-+        KTAP version 2
-+        #:ktap_test: main
-+        #:ktap_arch: uml
-+        1..1
-+          KTAP version 2
-+          #:ktap_test: suite_1
-+          #:ktap_subsystem: example
-+          #:ktap_test_file: lib/test.c
-+          1..2
-+          # WARNING: test_1 skipped
-+          ok 1 test_1 # SKIP
-+          #:ktap_test: test_2
-+          #:ktap_speed: very_slow
-+          # test_2 has begun
-+          #:custom_is_flaky: true
-+          ok 2 test_2
-+          #:ktap_duration: 1.231s
-+        # suite_1 passed
-+        ok 1 suite_1
-+
-+In this example, the tests are running on UML. The test suite "suite_1" is part
-+of the subsystem "example" and belongs to the file "lib/test.c". It has
-+two subtests, "test_1" and "test_2". The subtest "test_2" has a speed of
-+"very_slow" and has been marked with a custom KTAP metadata type called
-+"custom_is_flaky" with the value of "true".
-+
-+Additionally "test_2" has a duration of 1.231s. The ktap_duration line is not
-+contiguous with the other metadata and is not in the correct location, which
-+is not recommended. However, it is allowed because it is below the
-+"#:ktap_test: test_2" line.
-+
-+**Types of KTAP Metadata:**
-+
-+This is the current list of KTAP metadata types recognized in this
-+specification. Note that all of these metadata types are optional (except for
-+ktap_test as the KTAP metadata header).
-+
-+- ``ktap_test``: Name of test (used as header of KTAP metadata). This should
-+  match the test name printed in the test result line: "ok 1 [test_name]".
-+
-+- ``ktap_module``: Name of the module containing the test
-+
-+- ``ktap_subsystem``: Name of the subsystem being tested
-+
-+- ``ktap_start_time``: Time tests started in ISO8601 format
-+
-+  - Example: "#:ktap_start_time: 2024-01-09T13:09:01.990000+00:00"
-+
-+- ``ktap_duration``: Time taken (in seconds) to execute the test
-+
-+  - Example: "#:ktap_duration: 10.154s"
-+
-+- ``ktap_speed``: Category of how fast test runs: "normal", "slow", or
-+  "very_slow"
-+
-+- ``ktap_test_file``: Path to source file containing the test. This metadata
-+  line can be repeated if the test is spread across multiple files.
-+
-+  - Example: "#:ktap_test_file: lib/test.c"
-+
-+- ``ktap_generated_file``: Description of and path to file generated during
-+  test execution. This could be a core dump, generated filesystem image, some
-+  form of visual output (for graphics drivers), etc. This metadata line can be
-+  repeated to attach multiple files to the test. Note use ktap_log_file or
-+  ktap_error_file instead of this type if more applicable.
-+
-+  - Example: "#:ktap_generated_file: Core dump: /var/lib/systemd/coredump/hello.core"
-+
-+- ``ktap_log_file``: Path to file containing kernel log test output
-+
-+  - Example: "#:ktap_log_file: /sys/kernel/debugfs/kunit/example/results"
-+
-+- ``ktap_error_file``: Path to file containing context for test failure or
-+  error. This could include the difference between optimal test output and
-+  actual test output.
-+
-+  - Example: "#:ktap_error_file: fs/results/example.out.bad"
-+
-+- ``ktap_results_url``: Link to webpage describing this test run and its
-+  results
-+
-+  - Example: "#:ktap_results_url: https://kcidb.kernelci.org/hello"
-+
-+- ``ktap_arch``: Architecture used during test run
-+
-+  - Example: "#:ktap_arch: x86_64"
-+
-+- ``ktap_compiler``: Compiler used during test run
-+
-+  - Example: "#:ktap_compiler: gcc (GCC) 10.1.1 20200507 (Red Hat 10.1.1-1)"
-+
-+- ``ktap_respository_url``: Link to git repository of the checked out code.
-+
-+  - Example: "#:ktap_respository_url: https://github.com/torvalds/linux.git"
-+
-+- ``ktap_git_branch``: Name of git branch of checked out code
-+
-+  - Example: "#:ktap_git_branch: kselftest/kunit"
-+
-+- ``ktap_kernel_version``: Version of Linux Kernel being used during test run
-+
-+  - Example: "#:ktap_kernel_version: 6.7-rc1"
-+
-+- ``ktap_commit_hash``: The full git commit hash of the checked out base code.
-+
-+  - Example: "#:ktap_commit_hash: 064725faf8ec2e6e36d51e22d3b86d2707f0f47f"
-+
-+**Other Metadata Types:**
-+
-+There can also be KTAP metadata that is not included in the recognized list
-+above. This metadata must be prefixed with the test framework, ie. "kselftest",
-+or with the prefix "custom". For example, "# custom_batch: 20".
-+
- Unknown lines
- -------------
- 
-@@ -206,6 +374,7 @@ An example of a test with two nested subtests:
- 	KTAP version 2
- 	1..1
- 	  KTAP version 2
-+	  #:ktap_test: example
- 	  1..2
- 	  ok 1 test_1
- 	  not ok 2 test_2
-@@ -219,6 +388,7 @@ An example format with multiple levels of nested testing:
- 	KTAP version 2
- 	1..2
- 	  KTAP version 2
-+	  #:ktap_test: example_test_1
- 	  1..2
- 	    KTAP version 2
- 	    1..2
-@@ -254,6 +424,7 @@ Example KTAP output
- 	KTAP version 2
- 	1..1
- 	  KTAP version 2
-+	  #:ktap_test: main_test
- 	  1..3
- 	    KTAP version 2
- 	    1..1
-@@ -261,11 +432,14 @@ Example KTAP output
- 	    ok 1 test_1
- 	  ok 1 example_test_1
- 	    KTAP version 2
-+	    #:ktap_test: example_test_2
-+	    #:ktap_speed: slow
- 	    1..2
- 	    ok 1 test_1 # SKIP test_1 skipped
- 	    ok 2 test_2
- 	  ok 2 example_test_2
- 	    KTAP version 2
-+	    #:ktap_test: example_test_3
- 	    1..3
- 	    ok 1 test_1
- 	    # test_2: FAIL
-
-base-commit: 906f02e42adfbd5ae70d328ee71656ecb602aaf5
--- 
-2.43.0.687.g38aa6559b0-goog
+> Signed-off-by: Vasileios Amoiridis <vassilisamir@gmail.com>
+> ---
+> =C2=A0drivers/iio/pressure/bmp280-spi.c | 47 ++++++++++++++++++++++++++++=
+++-
+> =C2=A0drivers/iio/pressure/bmp280.h=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 ++
+> =C2=A02 files changed, 48 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/iio/pressure/bmp280-spi.c b/drivers/iio/pressure/bmp=
+280-
+> spi.c
+> index 433d6fac83c4..c4b4a5d67f94 100644
+> --- a/drivers/iio/pressure/bmp280-spi.c
+> +++ b/drivers/iio/pressure/bmp280-spi.c
+> @@ -35,6 +35,32 @@ static int bmp280_regmap_spi_read(void *context, const=
+ void
+> *reg,
+> =C2=A0	return spi_write_then_read(spi, reg, reg_size, val, val_size);
+> =C2=A0}
+> =C2=A0
+> +static int bmp380_regmap_spi_read(void *context, const void *reg,
+> +				=C2=A0 size_t reg_size, void *val, size_t
+> val_size)
+> +{
+> +	struct spi_device *spi =3D to_spi_device(context);
+> +	u8 ret[BMP380_SPI_MAX_REG_COUNT_READ + 1];
+> +	ssize_t status;
+> +	u8 buf;
+> +
+> +	memcpy(&buf, reg, reg_size);
+> +	buf |=3D 0x80;
+> +
+> +	/*
+> +	 * According to the BMP380, BMP388, BMP390 datasheets, for a basic
+> +	 * read operation, after the write is done, 2 bytes are received and
+> +	 * the first one has to be dropped. The 2nd one is the requested
+> +	 * value.
+> +	 */
+> +	status =3D spi_write_then_read(spi, &buf, 1, ret, val_size + 1);
+> +	if (status)
+> +		return status;
+> +
+> +	memcpy(val, ret + 1, val_size);
+> +
+> +	return 0;
+> +}
+> +
+> =C2=A0static struct regmap_bus bmp280_regmap_bus =3D {
+> =C2=A0	.write =3D bmp280_regmap_spi_write,
+> =C2=A0	.read =3D bmp280_regmap_spi_read,
+> @@ -42,10 +68,18 @@ static struct regmap_bus bmp280_regmap_bus =3D {
+> =C2=A0	.val_format_endian_default =3D REGMAP_ENDIAN_BIG,
+> =C2=A0};
+> =C2=A0
+> +static struct regmap_bus bmp380_regmap_bus =3D {
+> +	.write =3D bmp280_regmap_spi_write,
+> +	.read =3D bmp380_regmap_spi_read,
+> +	.reg_format_endian_default =3D REGMAP_ENDIAN_BIG,
+> +	.val_format_endian_default =3D REGMAP_ENDIAN_BIG,
+> +};
+> +
+> =C2=A0static int bmp280_spi_probe(struct spi_device *spi)
+> =C2=A0{
+> =C2=A0	const struct spi_device_id *id =3D spi_get_device_id(spi);
+> =C2=A0	const struct bmp280_chip_info *chip_info;
+> +	struct regmap_bus *bmp_regmap_bus;
+> =C2=A0	struct regmap *regmap;
+> =C2=A0	int ret;
+> =C2=A0
+> @@ -58,8 +92,19 @@ static int bmp280_spi_probe(struct spi_device *spi)
+> =C2=A0
+> =C2=A0	chip_info =3D spi_get_device_match_data(spi);
+> =C2=A0
+> +	switch (chip_info->chip_id[0]) {
+> +	case BMP380_CHIP_ID:
+> +	case BMP390_CHIP_ID:
+> +		bmp_regmap_bus =3D &bmp380_regmap_bus;
+> +		break;
+> +	default:
+> +		bmp_regmap_bus =3D &bmp280_regmap_bus;
+> +		break;
+> +	}
+> +
+> +
+> =C2=A0	regmap =3D devm_regmap_init(&spi->dev,
+> -				=C2=A0 &bmp280_regmap_bus,
+> +				=C2=A0 bmp_regmap_bus,
+> =C2=A0				=C2=A0 &spi->dev,
+> =C2=A0				=C2=A0 chip_info->regmap_config);
+> =C2=A0	if (IS_ERR(regmap)) {
+> diff --git a/drivers/iio/pressure/bmp280.h b/drivers/iio/pressure/bmp280.=
+h
+> index 4012387d7956..ca482b7e4295 100644
+> --- a/drivers/iio/pressure/bmp280.h
+> +++ b/drivers/iio/pressure/bmp280.h
+> @@ -191,6 +191,8 @@
+> =C2=A0#define BMP380_TEMP_SKIPPED		0x800000
+> =C2=A0#define BMP380_PRESS_SKIPPED		0x800000
+> =C2=A0
+> +#define BMP380_SPI_MAX_REG_COUNT_READ=C2=A0=C2=A0 3
+> +
+> =C2=A0/* BMP280 specific registers */
+> =C2=A0#define BMP280_REG_HUMIDITY_LSB		0xFE
+> =C2=A0#define BMP280_REG_HUMIDITY_MSB		0xFD
 
