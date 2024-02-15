@@ -1,86 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12264130ADC;
-	Thu, 15 Feb 2024 13:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A04130AC4
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 13:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708003825; cv=none; b=kieo63uiT0C2PW+jJaQlrnzSR7A+IwL/FTaHY2LYe5bwubbci9CeNBmpuH64Z83d2sDsF1DqyKhRNECyhBRLV/miaw7GU1Fs359pl7WBiB1Tq+Bga94RR7W0Tmd936euXw7Nd/EWvsCCmuh5zspacR7uAALEguQKznPYV2SKjDo=
+	t=1708003911; cv=none; b=P79RdVzBa/7Dm+lit5THwmRD+YMM39lj3Q4sbtNo+5JMmFZN1o133DD+T+TtcEYcJkesdR8wWcKwL6TW66OD9hFjKGpu42mrTr054c2NGbKZhg/Bo06QOSb8mKgsPN24RDaKGPG7ZGJIjme1aQH0xYMF8Yc/xGDumsp/Y86AkJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708003825; c=relaxed/simple;
-	bh=p+0qP4/2n7COOyx8ru8nVeV5lUukoT2wVONrXg/kkws=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kU9GLrR93Um+Gidj/1K/D8FM2Dp7GSwp8Zs4TKxOyGyJPi9FjNdOl6KUYE5hLJAPpMx42enMnixyoeJr6PZztZk/HVfTQUR8Pe4mmeJpy4CaLQxocHTDEfuTn3A8jNkvCfDm1PMxeuVFvycalEb3UbawR1FFAyKMD1plGeeP9pQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bCj4W7Y8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708003911; c=relaxed/simple;
+	bh=lUl0Pib7si2dQHCXFrZb+InEVOkZVwOiAw43kh+jhak=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dhCB6t2bezkuT8Rs3vHAWhw6Or8wJzqwqi9utx5sKDexguU9N92WXCzpP7geD8OGiQPc5+Xp/quRGOzscDmT4jBH62IPiLXccJGA2cWQkdNvwEv6Cj5BnpQDykQLOrrXtmMOC004ptvc6oFwpvGzubX3PNdeSB4lV9wrBgt3CJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BqGCzj/G; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bCj4W7Y8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A139C433F1;
-	Thu, 15 Feb 2024 13:30:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708003824;
-	bh=p+0qP4/2n7COOyx8ru8nVeV5lUukoT2wVONrXg/kkws=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bCj4W7Y8UPPXgaDjZ4gi9mQGUtdeSWR+5EhXCTTdwjIBkCwmXOnSkt+oiA78XQMMF
-	 w/yBiBQYmnMcQYJJsfkgtV/DNdt1l8pASkj3i4AzDy/xw3hgeN7Fnj6EfuLL5olMhD
-	 OtYeYLjHeOz6T0j6MH0ht8Ul7Z6tOV9INvclJ+BrBrVAuoUCV6GvCKApP8MMhBLMmb
-	 /Dh9908cQpTrlH+g8SdEpk5MlfQR1uAGW7OT69Fx/t6Jb5MRAundprc0DNQNgz7Ujb
-	 B+E2reJ+3rz1FTc9FutG3OQzV+FVDkGIOBcKPaT2GfOP6Ci2EkESmLcmN3YcLur8W0
-	 +MBPoZ2Px58Dg==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: linux-sound@vger.kernel.org
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Takashi Iwai <tiwai@suse.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: codecs: remove redundant 'tristate' in sound/soc/codecs/Kconfig
-Date: Thu, 15 Feb 2024 22:28:54 +0900
-Message-Id: <20240215132854.1907630-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BqGCzj/G"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dc6d8bd612dso806110276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 05:31:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708003909; x=1708608709; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yGh//nbX6ksAbjoH86pu+1OoxjeTYU/3tdUOfH2WwY4=;
+        b=BqGCzj/G9jhFSsh2Za755/LzU6uyT+nqeNHXOXWrVvZpkLqcH6kmzgf4tPtVkwkEU0
+         wyf4WLzEQMX1M5SRb9clyi+Wdlay+Rj3eHfkjDTKRJCeBQ5oJAaHdR739mCMQ0siELsY
+         pMJ4k9VWaGRJ5KWxpNJKYgc2ezLDBvP27pFM9/oAuXmwlEVFp9qUZnpYcCWRIHkcj3AB
+         vZ2lGqYF2zsUly9WRW5AgoT6GXIqqR4cK0IiLdb30LSDU5k9ul21dtva44MEhEtMEhsa
+         4JFzDwH3I9iI/ebxA/XSbuogUGtrJJo0jsA7Qcel1rqwY+WfQASMKFs9+z71WRRioqem
+         0bXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708003909; x=1708608709;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yGh//nbX6ksAbjoH86pu+1OoxjeTYU/3tdUOfH2WwY4=;
+        b=ayKbVLcFHHcRS9bYpKcrnv+bVDM2bccnz18rcELQ1+1hI6uKkrTbez+ECkI9XGdCzP
+         J5SdVDrhtBsBIH+KX2lNoJnE+GX005IwJEkK04Ma8vX8c63VZ84HbxDb6TzeybEHkwsD
+         qNfQx1dm0tghye4cUREV6gbq0PAzgnGjDVGq5Ja9fLXXL/oR1Ahfc3DequCXVNRph4Nf
+         /8ckjaANqvDiTFRbuA2q/ecrK+OHMnHkbvCK3IWg0zyDdswtokc+Bl89fV1M1Jl4KSOK
+         hFU0W47vHbgjbT09uMncG+U1/gM5Mw21e+yDk2rBCUH+pZQN0zgjsp0EYv94CXB1KtCH
+         D7KA==
+X-Forwarded-Encrypted: i=1; AJvYcCXNwOKW80rD0ZdY7ySxawnySv4p2WVLXFKUUy+MomlL2COEZWonzpy3VeFPOvUPl/nWorB2L0Ks8H0vBB0vwhKObABMsTLGOI5t7W7s
+X-Gm-Message-State: AOJu0YyJOh/DSFJGk6qfIJi7Xx8BITV199PWFgIM8L0DVm/m7v8ModPb
+	lQsMExqz2+x/N/ii8d2soNTrX0oCGCMMVWOgZZM04c0wDhSKi/zGXLYh9tVTdZz5Zmbwg0As6OP
+	qf3/rOgFVruAZTa6vIu4zn9mF/E/7vTc9GdAQbA==
+X-Google-Smtp-Source: AGHT+IHl3qgWvQCqRJMe39KHtu2wuTpCX4Lckf3lqFQQ+kVziMGrJ7Juv/tfm7isqbWZN8sE5IWX6zuYqEnZ+zYcRZE=
+X-Received: by 2002:a25:b949:0:b0:dcb:b41c:77ef with SMTP id
+ s9-20020a25b949000000b00dcbb41c77efmr1387473ybm.24.1708003908799; Thu, 15 Feb
+ 2024 05:31:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240213-ktd2801-deps-v1-1-7feb5385eb9a@skole.hr>
+In-Reply-To: <20240213-ktd2801-deps-v1-1-7feb5385eb9a@skole.hr>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 15 Feb 2024 14:31:37 +0100
+Message-ID: <CACRpkdYm0dNZZvzAZ-VQ+MaHeL7NmGCmCVw42WMx6BFf4Lw0Pw@mail.gmail.com>
+Subject: Re: [PATCH] backlight: ktd2801: depend on GPIOLIB
+To: =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Cc: Lee Jones <lee@kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, 
+	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>, Arnd Bergmann <arnd@kernel.org>, 
+	Karel Balej <balejk@matfyz.cz>, dri-devel@lists.freedesktop.org, 
+	linux-leds@vger.kernel.org, linux-fbdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The type 'tristate' is already specified three lines above.
+On Tue, Feb 13, 2024 at 7:13=E2=80=AFPM Duje Mihanovi=C4=87 <duje.mihanovic=
+@skole.hr> wrote:
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+> LEDS_EXPRESSWIRE depends on GPIOLIB, and so must anything selecting it:
+>
+> WARNING: unmet direct dependencies detected for LEDS_EXPRESSWIRE
+>   Depends on [n]: NEW_LEDS [=3Dy] && GPIOLIB [=3Dn]
+>   Selected by [m]:
+>   - BACKLIGHT_KTD2801 [=3Dm] && HAS_IOMEM [=3Dy] && BACKLIGHT_CLASS_DEVIC=
+E [=3Dm]
+>
+> Fixes: 66c76c1cd984 ("backlight: Add Kinetic KTD2801 backlight support")
+> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
 
- sound/soc/codecs/Kconfig | 3 ---
- 1 file changed, 3 deletions(-)
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index 59f9742e9ff4..f7e06ba99570 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -2300,7 +2300,6 @@ config SND_SOC_WSA881X
- 	tristate "WSA881X Codec"
- 	depends on SOUNDWIRE
- 	select REGMAP_SOUNDWIRE
--	tristate
- 	help
- 	  This enables support for Qualcomm WSA8810/WSA8815 Class-D
- 	  Smart Speaker Amplifier.
-@@ -2309,7 +2308,6 @@ config SND_SOC_WSA883X
- 	tristate "WSA883X Codec"
- 	depends on SOUNDWIRE
- 	select REGMAP_SOUNDWIRE
--	tristate
- 	help
- 	  This enables support for Qualcomm WSA8830/WSA8835 Class-D
- 	  Smart Speaker Amplifier.
-@@ -2318,7 +2316,6 @@ config SND_SOC_WSA884X
- 	tristate "WSA884X Codec"
- 	depends on SOUNDWIRE
- 	select REGMAP_SOUNDWIRE
--	tristate
- 	help
- 	  This enables support for Qualcomm WSA8840/WSA8845/WSA8845H Class-D
- 	  Smart Speaker Amplifier.
--- 
-2.40.1
+Technically you can also select GPIOLIB, because it is available on
+all platforms, so it may be easier for users, but then you never know
+which GPIOs you get in practice.
 
+Yours,
+Linus Walleij
