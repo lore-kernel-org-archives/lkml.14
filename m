@@ -1,103 +1,89 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41EE813A25D
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 19:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3461386A4
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 19:44:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708026221; cv=none; b=tGZvqKn2shgCNLV6Do9amJL7BcfRHExGKgWhLNQZwN6u1oxAJvVWG9m1e5idCRujB/CuYcvRYWKmjy8+cMorOiWBIZ8OAcp3WzNKwQd4g0qS/lWKPDZUO0BowLr0S04h3rflZfp5MHfvOVFDgmzEoweXsqYFsQ4fI0xCvoxPHPg=
+	t=1708026294; cv=none; b=DkGnUgWqsRqaQc00ToW3OdTk3rLG9C9sYBFXl4kuzkTzk+kufcEBmuJ0n2z2hRXP3t37O4bAkilV/muGYIfDT8EDzJIadMenv+uJMszJK0mSvfBKT0V7ZDm2LQI/3Bm+o/gXkQGPhi0cyFDhk/YD0YDr1PYRc34DXVb84i5GoU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708026221; c=relaxed/simple;
-	bh=HDDFchT229HxwZ+4S2Oyhh6QwaUnpPOF1xD3S5Yhof8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XVvhXHBptJQJkuxjQecdWv2NKJJ8WE2vg4HCFRpLNxFPaRJzm6VFxN68n3Lr2OWmDOLU1+t5fhhWzp+1CXafWUTrt8EREiMQaraer/46VqxcMCf412E13QEnlu7Ym9kUgwtTm0jR5QCkiLZUPF71PdodQKdPMiKlzmRD4K2R5Pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=INZoQ/FA; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708026294; c=relaxed/simple;
+	bh=3cQ305fQjLggWM1EqW102dAerdwvIg6LDFX8WTSlQBs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BiwZ7rp4NiXehWKd5u6Jd4Z6yWnSZjXuFGetBkflEgJihOnpgpBc+fJo21PxOKst2iRYRLVNrf3Ngd8/cE1H1imheiFki1MHySqu4mqDTlp+sqrlTmiSHG61C97Q3y8T+OsODLKc7D904OIMWn/U8SS646SWwxZpSG17L07TYfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=aGqecW/i; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="INZoQ/FA"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-411de7c6b3dso9848655e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 11:43:40 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aGqecW/i"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e104196e6eso1309065b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 11:44:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708026218; x=1708631018; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7D3Hve9+ECAggWL+Tt6SbntilYeA7K9pgcMz0v6dHa4=;
-        b=INZoQ/FA8tl9BlvvOFbLhWKl+0iobU8yPNJBetgQmI6LhMOWfFGVt1HFLa43vTtbXr
-         N6yXn+cFH0Yy+IoHfASBNuGuGHtQczdZCdKKitNLCsRjQoDsG+LitELQIpuUDA445z29
-         wFcX2rH8h9AjfFIfRyylIRvuMzj2eLlANYM8RfpocjTg6C/9iZTeVJ9Pjb6TL8kNaGBL
-         tqKSN3P7+C9FWPb2p6Ps6Tb65ysEnXxwkby0lOiWjm6rDS6Br+S9P9qgWgAS1t4ApFpt
-         PMvP/yhLfkH8D40/dQiyItiyv3p2j419iBUSoQICWRMCsBqjptCAOwv3uAdpRUuBVbL8
-         sckQ==
+        d=chromium.org; s=google; t=1708026293; x=1708631093; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0hDV144BFjsd9eBmeIR68UbZ9/AgjyHKPCmhViDvmjs=;
+        b=aGqecW/icQqZdRGfozZoLDspPO0Y73F3xwlKF4uDhicaMTJcxxPFpYr40aOeGrSXXO
+         tUOmpvT/p+8bsQusDSQtnXOOp7nru25dFzYCmageEAW1RcrCftnpbEnqDCX3+00FYCG5
+         5diXyeXjU6yM9ayHnvJznkoM6rhSfix16/vvM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708026218; x=1708631018;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7D3Hve9+ECAggWL+Tt6SbntilYeA7K9pgcMz0v6dHa4=;
-        b=NBJXfFYhJOq7QctA+6lq0eLvbII1vIo6MAVgWB/DRY8VDf/9YKOFGEXa0Iz4nZ+EXC
-         taKz8b9G/N0wYazVH2+TmdVsF8kc+LRDCiXTnbBhHQM1xkTWDcjGMtEj2f8QzHYRT2KW
-         1/M9QfQObfVK8SpWeCLP5PkbEeybanwIHWBBm+7OVXqYm7CczSvRilFrb0B0ZziYGp+4
-         VzBgYhhk1Ht89q4o1wJa6mSnhqCq1gFkPhIouwJqvqhDQT8Val0y9Rwxxkf2UFS6os+z
-         ybdyzZEWkVRzazVQL69+S91Gg4qfwUqXb4ZpkgQGKV888Dnuio9e+fjo0pV+8Wb1SWf7
-         cfVg==
-X-Forwarded-Encrypted: i=1; AJvYcCV40Il7rqtEZgd16siJXVGfzojKBL2v0sr3DcXSqz+WqbZhlzi3iS6nSrruseF6VUDtkH0AlcVun+iaLyhCDq9JMwcYjBgHkNNo86dI
-X-Gm-Message-State: AOJu0YxK+HHCgoTk2TON/DIpBvMgrsz1yaL4a7q8D4zwCQtRQuHKk7ZM
-	QttuUUVOHriwVz0k3nZTAR8zjTWDT+wUWWRueUVL0O/mBE/jeDez
-X-Google-Smtp-Source: AGHT+IE4y+314+eegQYovl6v69vxT7kokVg98vDhwNONtKWxXDw7xVMWeBJpuZ/HTGCVKOJ71i2H4Q==
-X-Received: by 2002:a05:6000:2cc:b0:33d:1665:b2b0 with SMTP id o12-20020a05600002cc00b0033d1665b2b0mr463406wry.53.1708026218325;
-        Thu, 15 Feb 2024 11:43:38 -0800 (PST)
-Received: from aaron-macbookpro.. (host-92-14-37-217.as13285.net. [92.14.37.217])
-        by smtp.gmail.com with ESMTPSA id bu23-20020a056000079700b0033b7d9c14desm85706wrb.5.2024.02.15.11.43.37
+        d=1e100.net; s=20230601; t=1708026293; x=1708631093;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0hDV144BFjsd9eBmeIR68UbZ9/AgjyHKPCmhViDvmjs=;
+        b=adyes75HFk/iUjsgQ15fI5M3Gm39dRVUwxovWgWqBE+4SLSxfjX5b771RygL9s1iHB
+         tsEnihdAMm+5Hp9HFInbJoMh+zi1UrMvovCZTTofxPjO8fgxMUUdw96hgATfh1jjbOKs
+         yAmsfR0IiOb9jpXBMGhQSsl8/B64BSpzQJyMBuIYFxmfEPh70TWcuF2eO6qEAJki+km1
+         Qx97/iTRihiEdyYp53GRtvJFXetpenqNQ18ebVzzqqjlmki/S7L19Tw2x3Mrm4JtkneQ
+         EwLEJ3INvnLhALzaCRJTCF7wjZW13s6hkKIqNeQvc2SqZgt650Tvd6vV3FvXG5tFN/dl
+         B9kA==
+X-Forwarded-Encrypted: i=1; AJvYcCVvWSbIax9fcn1o5ZRbuwoe7bGJdJh9Mxsc8c8voVw+WXkoJeok7a3K05gT1S8mosFBcmASgQ3EuLAnVN0xZ7eDp3iUQdyFtVwu6D/N
+X-Gm-Message-State: AOJu0YwCzXblyFbbTa38jXJ374wiGhcjc9MyVfSw3vx0oHko+920M4m5
+	XrcaBaNX2NDMGkipS4HZvRWgclkan6UE4SJWdInIrq47dbEkpgtMgH7iA4rgTw==
+X-Google-Smtp-Source: AGHT+IHAlFu09JKJgWNU7G7gtL6cufvqGGvWZ8o5JKMDXq3LqEJ77Og35l7+WVrzQRVTXVY8pxpJ3Q==
+X-Received: by 2002:a62:f20c:0:b0:6e0:47b9:b727 with SMTP id m12-20020a62f20c000000b006e047b9b727mr2675158pfh.30.1708026293017;
+        Thu, 15 Feb 2024 11:44:53 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id k19-20020aa788d3000000b006e07f1829b0sm1695902pff.219.2024.02.15.11.44.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Feb 2024 11:43:37 -0800 (PST)
-From: Aaron Parfitt <aaronparfitt123@gmail.com>
-To: gregkh@linuxfoundation.org
-Cc: linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	philipp.g.hortmann@gmail.com,
-	Aaron Parfitt <aaronparfitt123@gmail.com>
-Subject: [PATCH v2] Staging: rtl8192e: rtl819x_HTProc: Removed braces from single statement block in ht_on_assoc_rsp
-Date: Thu, 15 Feb 2024 19:40:47 +0000
-Message-ID: <20240215194045.37205-3-aaronparfitt123@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        Thu, 15 Feb 2024 11:44:52 -0800 (PST)
+Date: Thu, 15 Feb 2024 11:44:52 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Michal Wajdeczko <michal.wajdeczko@intel.com>,
+	Jani Nikula <jani.nikula@intel.com>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	Nicolas Palix <nicolas.palix@imag.fr>, cocci@inria.fr,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] cocci: Add rules to find str_plural() replacements
+Message-ID: <202402151144.70E863483C@keescook>
+References: <20240215180156.work.548-kees@kernel.org>
+ <Zc5nCsE74E33PdD2@smile.fi.intel.com>
+ <Zc5nKZezYhg3Khtr@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zc5nKZezYhg3Khtr@smile.fi.intel.com>
 
-Remove braces from single statement blocks in the rtl8192e staging
-driver to clear checkpatch.pl warnings, improving code readability
-and adhering to coding style guidelines.
+On Thu, Feb 15, 2024 at 09:34:01PM +0200, Andy Shevchenko wrote:
+> On Thu, Feb 15, 2024 at 09:33:31PM +0200, Andy Shevchenko wrote:
+> > On Thu, Feb 15, 2024 at 10:02:00AM -0800, Kees Cook wrote:
+> > > Add rules for finding places where str_plural() can be used. This
+> > > currently finds:
+> > >  54 files changed, 62 insertions(+), 61 deletions(-)
+> > 
+> > Can we extend this to cover string_choices and call the script probably
+> > str_choices.cocci ?
+> 
+> (And add it to MAINTAINERS?)
 
-Changelog since v1:
-- Updated the subject line to make it more unique and descriptive.
-- Refined the patch description for clarity and conciseness.
-- Incorporated feedback from Philipp to improve code style compliance.
+Sure! I'll send a v2.
 
-Signed-off-by: Aaron Parfitt <aaronparfitt123@gmail.com>
----
- drivers/staging/rtl8192e/rtl819x_HTProc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/staging/rtl8192e/rtl819x_HTProc.c b/drivers/staging/rtl8192e/rtl819x_HTProc.c
-index 6d0912f90198..49b882c363bf 100644
---- a/drivers/staging/rtl8192e/rtl819x_HTProc.c
-+++ b/drivers/staging/rtl8192e/rtl819x_HTProc.c
-@@ -480,9 +480,9 @@ void ht_on_assoc_rsp(struct rtllib_device *ieee)
- 	}
- 
- 	ht_info->current_mpdu_density = pPeerHTCap->MPDUDensity;
--	if (ht_info->iot_action & HT_IOT_ACT_TX_USE_AMSDU_8K) {
-+	if (ht_info->iot_action & HT_IOT_ACT_TX_USE_AMSDU_8K)
- 		ht_info->current_ampdu_enable = false;
--	}
-+
- 	ht_info->cur_rx_reorder_enable = 1;
- 
- 	if (pPeerHTCap->MCS[0] == 0)
 -- 
-2.43.0
-
+Kees Cook
