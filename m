@@ -1,152 +1,123 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A6E13FEB;
-	Thu, 15 Feb 2024 08:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D530C111BD;
+	Thu, 15 Feb 2024 08:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707985066; cv=none; b=IgcGOkL0dsvIN6zgMCG88VTEHTymzmk1vhzf1w80HNYgRY1SKJf+H651CV3SFoGhCz5hv0SSrlgmrypGAvCU6Luqd8suzAFb9iqLQpVwslnZ8XOaXnDvtm+C5tYonYwnJR4ekuU/JNN2QCc5lXvyvuH3IuOFCdBn0ca+/Qvllfo=
+	t=1707985088; cv=none; b=dme8rhbVRHdEScgpDEpA73N+ydzdCh9FycrnnpDt7Rv1kBOf4mUpZJGJRxEvu0jBPe1MBf4YIoUfKH9/jV1681ayIl0TnDeYPIKwQLprW4F1QjzqWIoj5f2DULdVmjdulAhbeezeusgYLHVJ/SVUKXGeRE+nrZeIvRJjEvUhTbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707985066; c=relaxed/simple;
-	bh=iHnSVR/o4PCirzYxOuLSrGJ0jY9TGuRvF1WutqVts7I=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=OqO1eb2lP/CttRYvcEVorfTYgfW68RW7Ri4karMgypxWvukI140AjOidb430BotcpDtlWEdCjF+TAeNTG11U9d99a5tD0FgFdBXvd/WODrwzQo/w/JmXdLB2AK+/v9ZOW744Yq4ZgMAVwbu8eeMWYnuPhN1mEQsZbjJg0aEleO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=X+NfAZLU; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="X+NfAZLU"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 41F8GFuv1589561
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 15 Feb 2024 00:16:17 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 41F8GFuv1589561
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024021201; t=1707984986;
-	bh=DD0WdTiLzRbhyl1lU6s1kmEpZNGlVGntzwYvTp/OgxY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=X+NfAZLU3AMZ2IHW0uaYerX383bpCn8RbHJGNuGmq0cjQKG5LrKDq33I2OEvQYSLT
-	 0NjaCa63zhtLiBZ30Q20vrgl1PEsarU7x8PGas74tO1ekvQpoY0qlTKxfgaBcNJti2
-	 cY14+GNfZX47M1q+NL67uYeVxlNCLFKuKmzUbZVYCs18pynaAPZ7IJwPmv+IAGfb5W
-	 LvJdMxN6A0iTLGNYgPgq/jJJ3gG1mxO+tN8dO40AkGvrYzCWE3ZLK4bT5Gm74mBhgr
-	 dhdhGST5bk/3fyOdCd0rH2nNPJXr3kHC6NDDBNa7pPz0pwYownaMNn02nXNmX79rcT
-	 41J1Ehzh2xorg==
-Date: Thu, 15 Feb 2024 00:16:13 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: =?UTF-8?Q?Petr_Tesa=C5=99=C3=ADk?= <petr@tesarici.cz>,
-        Xin Li <xin@zytor.com>
-CC: Dave Hansen <dave.hansen@intel.com>,
-        Petr Tesarik <petrtesarik@huaweicloud.com>,
-        Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, Xin Li <xin3.li@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Pengfei Xu <pengfei.xu@intel.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>, Ze Gao <zegao2021@gmail.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Kai Huang <kai.huang@intel.com>, David Woodhouse <dwmw@amazon.co.uk>,
-        Brian Gerst <brgerst@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Joerg Roedel <jroedel@suse.de>,
-        "Mike Rapoport (IBM)" <rppt@kernel.org>,
-        Tina Zhang <tina.zhang@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Roberto Sassu <roberto.sassu@huaweicloud.com>,
-        Petr Tesarik <petr.tesarik1@huawei-partners.com>
-Subject: Re: [PATCH v1 0/8] x86_64 SandBox Mode arch hooks
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20240215075932.66fef954@meshulam.tesarici.cz>
-References: <20240214113516.2307-1-petrtesarik@huaweicloud.com> <c424618c-d6c6-430a-8975-8851a617204e@intel.com> <20240214192214.78734652@meshulam.tesarici.cz> <c66fa3f4-13f0-4355-9bf4-34fec31182de@zytor.com> <20240215075932.66fef954@meshulam.tesarici.cz>
-Message-ID: <5434F240-2F74-4D9F-8BEE-220C8EC53C0F@zytor.com>
+	s=arc-20240116; t=1707985088; c=relaxed/simple;
+	bh=GjvxOvr7YHWbvDJgSZqVDoq5LPxPbh4MFABALTZefzc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f+8KgAUWq3LuVL9CxZDAIZSIjnjMqRghfOQpS88TiGuL/rvUAxq+lKx76sEi5ys+Lf1msjgFq+w8ygPSzmtByiv06USGU56D0TfgWLI5wjREgFKemRCXLZnRCN7dPNetkekOzaqngx8Mz03nDBSMUzHbpRdtwkzE5Qg5jV+6Brw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1raWwR-000393-WB; Thu, 15 Feb 2024 09:18:00 +0100
+Message-ID: <11248961-9180-4330-8537-1cd0037edb85@leemhuis.info>
+Date: Thu, 15 Feb 2024 09:17:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] Documentation: Document the Linux Kernel CVE process
+Content-Language: en-US, de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, corbet@lwn.net,
+ workflows@vger.kernel.org
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ security@kernel.org, Kees Cook <keescook@chromium.org>,
+ Sasha Levin <sashal@kernel.org>, Lee Jones <lee@kernel.org>
+References: <2024021430-blanching-spotter-c7c8@gregkh>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 n7RI
+In-Reply-To: <2024021430-blanching-spotter-c7c8@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1707985086;9c9ec4e8;
+X-HE-SMSGID: 1raWwR-000393-WB
 
-On February 14, 2024 10:59:32 PM PST, "Petr Tesa=C5=99=C3=ADk" <petr@tesari=
-ci=2Ecz> wrote:
->On Wed, 14 Feb 2024 10:52:47 -0800
->Xin Li <xin@zytor=2Ecom> wrote:
->
->> On 2/14/2024 10:22 AM, Petr Tesa=C5=99=C3=ADk wrote:
->> > On Wed, 14 Feb 2024 06:52:53 -0800
->> > Dave Hansen <dave=2Ehansen@intel=2Ecom> wrote:
->> >  =20
->> >> On 2/14/24 03:35, Petr Tesarik wrote: =20
->> >>> This patch series implements x86_64 arch hooks for the generic Sand=
-Box
->> >>> Mode infrastructure=2E =20
->> >>
->> >> I think I'm missing a bit of context here=2E  What does one _do_ wit=
-h
->> >> SandBox Mode?  Why is it useful? =20
->> >=20
->> > I see, I split the patch series into the base infrastructure and the
->> > x86_64 implementation, but I forgot to merge the two recipient lists=
-=2E
->> > :-(
->> >=20
->> > Anyway, in the long term I would like to work on gradual decompositio=
-n
->> > of the kernel into a core part and many self-contained components=2E
->> > Sandbox mode is a useful tool to enforce isolation=2E
->> >=20
->> > In its current form, sandbox mode is too limited for that, but I'm
->> > trying to find some balance between "publish early" and reaching a
->> > feature level where some concrete examples can be shown=2E I'd rather
->> > fail fast than maintain hundreds of patches in an out-of-tree branch
->> > before submitting (and failing anyway)=2E
->> >=20
->> > Petr T
->> >  =20
->>=20
->> What you're proposing sounds a gigantic thing, which could potentially
->> impact all subsystems=2E
->
->True=2E Luckily, sandbox mode allows me to move gradually, one component
->at a time=2E
->
->>  Unless you prove it has big advantages with real
->> world usages, I guess nobody even wants to look into the patches=2E
->>=20
->> BTW, this seems another attempt to get the idea of micro-kernel into
->> Linux=2E
->
->We know it's not feasible to convert Linux to a micro-kernel=2E AFAICS
->that would require some kind of big switch, affecting all subsystems at
->once=2E
->
->But with a growing code base and more or less constant bug-per-LOC rate,
->people will continue to come up with some ideas how to limit the
->potential impact of each bug=2E Logically, one of the concepts that come
->to mind is decomposition=2E
->
->If my attempt helps to clarify how such decomposition should be done to
->be acceptable, it is worthwile=2E If nothing else, I can summarize the
->situation and ask Jonathan if he would kindly accept it as a LWN
->article=2E=2E=2E
->
->Petr T
->
+On 14.02.24 09:00, Greg Kroah-Hartman wrote:
+> The Linux kernel project now has the ability to assign CVEs to fixed
+> issues, so document the process and how individual developers can get a
+> CVE if one is not automatically assigned for their fixes.
+> [...]
 
-I have been thinking more about this, and I'm more than ever convinced tha=
-t exposing kernel memory to *any* kind of user space is a really, really ba=
-d idea=2E It is not a door we ever want to open; once that line gets muddle=
-d, the attack surface opens up dramatically=2E
+This following is just nitpicking, hence feel free to ignore.
 
-And, in fact, we already have a sandbox mode in the kernel =E2=80=93 it is=
- called eBPF=2E 
+> +As always, it is best to take all released kernel changes, as they are
+> +tested together in a unified whole by many community members, and not as
+> +individual cherry-picked changes.  Also note that for many bugs, the
+> +solution to the overall problem is not found in a single change, but by
+> +the sum of many fixes on top of each other.  Ideally CVEs will be
+> +assigned to all fixes for all issues, but sometimes we do not notice
+> +fixes in released kernels, so do not assume that because a specific
+> +change does not have a CVE assigned to it, that it is not relevant to
+> +take.
+
+There are a four "not" in the last pretty long sentence which makes it
+kinda hard to parse. Avoiding that could look like this:
+
+Ideally CVEs will be assigned to all fixes for all issues -- but
+sometimes we will fail to notice fixes, therefore assume that some
+changes without an assigned CVE might still be relevant to take.
+
+Or like this:
+
+Ideally CVEs will be assigned to all fixes for all issues, but sometimes
+we will overlook fixes -- therefore assume that some changes that lack
+an assigned CVE might still be relevant to take.
+
+Not sure if that really makes it better, I guess you as a native speaker
+are a better judge here.
+
+Ciao, Thorsten (who also wondered what "to all fixes for all issues"
+exactly means, but whatever)
+
