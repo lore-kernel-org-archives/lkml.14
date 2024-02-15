@@ -1,101 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3EC413B7A7;
-	Thu, 15 Feb 2024 18:26:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F7D13B7A3
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 18:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708021561; cv=none; b=jb7vrrEv783LIXQwvv3fNWFm6hZLWtKg/Y5AaEMEBg/+jOLCqP2DbvvLpdRWYPq6p08ntU5efCWb3CBfcP+Tpj04o0nULU257iHwQK37igDfjfenQqwIRAXM4q9WFAMRrMf/v/WdQrjPrwGs5B7PSX3pdJkAuz6zJ4ZVHsKxJSY=
+	t=1708021563; cv=none; b=KkX0vz4qkrb/zpkpge1/lTGmk/lobmPvx5HZJabgOM0bp3hqD2woNRuoq8Qk1jyxoPMg1oaFN1c+RlyZFyXS6fJSLI4bF/6dbJThZMmFgdaAng7CGu4WdTgZn2BYVJ8p6SjsDM5ul0wsCSvXtgSn20HP2joLUUX1IRZARDsTUj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708021561; c=relaxed/simple;
-	bh=Bd2G68hqKS5Z3hOL7RVjNT3ktLWLRKfWpJwK9WO2ZZU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qYTQfCVb+pnCGL/lwBXShECdG7vkMhvhF1sqPcsS6h0ycyTOd8BviASYJO+xfdq4Md/7HQN8D/XDr9k0UJH7VFMp15cOLgeesZH8dve12NiDacShO5EVSlyfCKKh13YVe7laBo9diHAzGx/m1YCWfrJYTZgx/x7QtEBf/gFkAV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DrKHk5wG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708021563; c=relaxed/simple;
+	bh=dk7nldjBHf2OhhUJm5xdgR4jejE5bUggZf5m/L2de8I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QPU0aQZLJf5cScoD+IzP0ADtaekCk0WKRenpByHfAsKg0W5eWX4J0FBNmLZhPozjqNe6XQFUlTdmvrXOXQpCgoNlLpzRbKKHknX3QtT88rdMBwmKWSe2ZanjQV3ZNHvNBBc7d7Q++dBdbFVnfR/fIDqq6x4Rg0iPqyWgjZkQcak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=el+YSwMe; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DrKHk5wG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6341C433B2;
-	Thu, 15 Feb 2024 18:25:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708021560;
-	bh=Bd2G68hqKS5Z3hOL7RVjNT3ktLWLRKfWpJwK9WO2ZZU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=DrKHk5wG3+p2ZNKh926Eg3PmQNr1YBtWGcvEyZ4C5er1uZVhGrM2rgByhgETbQrm7
-	 BQYnB6PuTyLD0Ndab/b+2yC3okD9/dNVb9oOyQIef9PQF68Ce2SR5TSLhkE48Bp00D
-	 8mmNPJMdjngvXnltry1uzjHwCcFt0RxQ6Pt/bB5KahecBb91mNbAccgCtDQiLrMOM6
-	 0T7u4FkqUtKZYsYJn7s7iuXgMhttya1dzDUXtO6j1GkZb9rP170k+jLt03bJ2Rk5SY
-	 WIZxozBeW+gHSmKpFP1iW12oy2z48RnDrJQM7zhAIu1m6PKNOhWMABqb0B/MQLHLVZ
-	 C6WFhawJE35kw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 15 Feb 2024 19:25:34 +0100
-Subject: [PATCH net 07/13] selftests: mptcp: pm nl: also list skipped tests
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="el+YSwMe"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a3d002bc6f7so115747666b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 10:26:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1708021559; x=1708626359; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=4sjjC6lYZHHWcZkiJkEdyU7XkS4SkECfb3ViIZBKdrI=;
+        b=el+YSwMetnVQOm6Ng602mTNUm2syJGnqaMdy0M0M0zx5SFhwOb2cDP7ZN9W2io9m0M
+         NsUFcpM0cMvIGY3ucIQpsawuiDgYLXaoS1cqkLEl/jKZ6h4GeAc0r+5RBnT3AxTCeLgk
+         8t0jnDZXBIMStqpKMhKMaKK0p6Ph3dVtW+KdI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708021559; x=1708626359;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4sjjC6lYZHHWcZkiJkEdyU7XkS4SkECfb3ViIZBKdrI=;
+        b=p/P9uMBjU688h9VHT2Q04oxjqM14JyCXcKgQs+ts8iLSlp+iLEyejlYPVQZhjcIdGT
+         4vkSKCF0akKnSZMsQ+Pz155Qsz/Gbsq8LOu1hu/cgB4lIVeJEGz1X3/udKg/5qzXDF4C
+         C+zTBuyHnTp7eP2jQv0cZMT0itxp9ToAh0Xfn6nWPI/8E2MkzMMZFZUVQjrb2UduRvbM
+         oe5URZiETst3SrgdrGw0P6ff4t0EgH2fkOqIbYEtL0PRGW0iE0AEKAF6+UCOrFnF1jQX
+         WXFUjHpxgKSf3pef72BaBpdfMvAQNpd+JpFJQGutQTUVS0HtEE4xOBl0qa7m2trQjgoM
+         shQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXK8XsZmDnchJm5hEuydHGCuD5OfztV44sz5JjuzgkB3RY6FtCfRR7o7MtTRdBm/7Vo/1C6He936blOt6+TKuBmHvKofD05b5TVM8vR
+X-Gm-Message-State: AOJu0YxTs5MB+bg1hQmQMuBHjn7w1psWd52eBoj0HF24wVCSZ2NYX/MP
+	mGR1qGEq/GCEZCKEHBCzaKuL5oc1uZ0xidZkt1V1Mv06NnfS1unIkVKAa9iQLmN/PykBscxDiLK
+	pOVM=
+X-Google-Smtp-Source: AGHT+IHMhZvO1+oru/8r10lDFJWoz9eMi/4EiTq2VMQEKvrfYlX5lEKb8ARORXLnRGJbZLRCN6Oa8w==
+X-Received: by 2002:a17:906:ae48:b0:a3c:de7:f59a with SMTP id lf8-20020a170906ae4800b00a3c0de7f59amr1895327ejb.60.1708021558794;
+        Thu, 15 Feb 2024 10:25:58 -0800 (PST)
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
+        by smtp.gmail.com with ESMTPSA id hd16-20020a170907969000b00a385535a02asm806128ejc.171.2024.02.15.10.25.57
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Feb 2024 10:25:57 -0800 (PST)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-55a179f5fa1so1771430a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 10:25:57 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU61meHaU0n7IWwWlPWhNfxgIcFcAvT0sNi4vkxlx4XHlABmsusuleRQw8+lg0lAbMdwaL2fFlmvRjl9jBVLwwn5znUuCG3tueKMd5q
+X-Received: by 2002:aa7:cf8d:0:b0:560:14c4:58fe with SMTP id
+ z13-20020aa7cf8d000000b0056014c458femr1868778edx.29.1708021557034; Thu, 15
+ Feb 2024 10:25:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240215-upstream-net-20240215-misc-fixes-v1-7-8c01a55d8f6a@kernel.org>
-References: <20240215-upstream-net-20240215-misc-fixes-v1-0-8c01a55d8f6a@kernel.org>
-In-Reply-To: <20240215-upstream-net-20240215-misc-fixes-v1-0-8c01a55d8f6a@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Davide Caratti <dcaratti@redhat.com>, 
- Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1225; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=Bd2G68hqKS5Z3hOL7RVjNT3ktLWLRKfWpJwK9WO2ZZU=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlzlcdltt1zNZUj1lxTpJ+Xy4MXRQYvcDQW8XzH
- GrXkE9RgsuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZc5XHQAKCRD2t4JPQmmg
- czImEADH4fD2jn4rT8o8cr3H5ap+mhXSAssT2+gbN49a+XXOHtsbxYazUOjB1CrvRCk8qy51r34
- IAlcd13y43tpHnfgZMHC+N3imLhP9K7jnMD9iikPxxrSwR/RFJRg5UtzQPV/PqrNUeURLXMUWhO
- cxaZvN1Ht8kWK0MaUr+2JUDyYygHmK1jFw1vruj+4W2+0HJeiL98+f+SF+LvcIkgAL4bROQKY3q
- ePYBQJqXiPCv0hddekcxtykeCo0jhN9pdRngG3K5asBYeH3RbIrlbe93hUuSh+BrAbGqDBPh+hA
- CQiOr+6yqL04CGu9vAm6J16TdhynT0nXxRS8h2m5mBigoW3+OJv4wHF33/dedBw34TsZHBMs+Wb
- BxHbuxXN7Oq6xOyrGf7dK2vHofeBNGTe113NV6chZedvf22hv/EbqMpBHMavveporR8zBNaLnva
- eS1YSzGEZyV+u18XZ6W5SHyHUccU6nnhdQZPWWlwl4IbQEwxjdClYRpcmjj4S2p7/OF+LovBUBZ
- H0e/Fpt9tGZrunSr3/oz30p2vl55s7J6CI9NEzBxF00mW3EwvXByajoHGrt2jVe27t/mpJlaTe0
- wndPLN2Gp01EkLSC12YJjytI7nUPY+hIFOdAhBN2y+k7UD4ESLwYf984Js2Iu3SUfrBQ3QsgPD2
- C9ACKtGvooElWAA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+References: <CAKwvOdk_obRUkD6WQHhS9uoFVe3HrgqH5h+FpqsNNgmj4cmvCQ@mail.gmail.com>
+ <DM6PR02MB40587AD6ABBF1814E9CCFA7CB84B2@DM6PR02MB4058.namprd02.prod.outlook.com>
+ <CAHk-=wi3p5C1n03UYoQhgVDJbh_0ogCpwbgVGnOdGn6RJ6hnKA@mail.gmail.com>
+ <ZcZyWrawr1NUCiQZ@google.com> <CAKwvOdmKaYYxf7vjvPf2vbn-Ly+4=JZ_zf+OcjYOkWCkgyU_kA@mail.gmail.com>
+ <CAHk-=wgEABCwu7HkJufpWC=K7u_say8k6Tp9eHvAXFa4DNXgzQ@mail.gmail.com>
+ <CAHk-=wgBt9SsYjyHWn1ZH5V0Q7P6thqv_urVCTYqyWNUWSJ6_g@mail.gmail.com>
+ <CAFULd4ZUa56KDLXSoYjoQkX0BcJwaipy3ZrEW+0tbi_Lz3FYAw@mail.gmail.com>
+ <CAHk-=wiRQKkgUSRsLHNkgi3M4M-mwPq+9-RST=neGibMR=ubUw@mail.gmail.com>
+ <CAHk-=wh2LQtWKNpV-+0+saW0+6zvQdK6vd+5k1yOEp_H_HWxzQ@mail.gmail.com> <Zc3NvWhOK//UwyJe@tucnak>
+In-Reply-To: <Zc3NvWhOK//UwyJe@tucnak>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 15 Feb 2024 10:25:40 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wiar+J2t6C5k6T8hZXGu0HDj3ZjH9bNGFBkkQOHj4Xkog@mail.gmail.com>
+Message-ID: <CAHk-=wiar+J2t6C5k6T8hZXGu0HDj3ZjH9bNGFBkkQOHj4Xkog@mail.gmail.com>
+Subject: Re: [PATCH] Kconfig: Explicitly disable asm goto w/ outputs on gcc-11
+ (and earlier)
+To: Jakub Jelinek <jakub@redhat.com>
+Cc: Uros Bizjak <ubizjak@gmail.com>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Sean Christopherson <seanjc@google.com>, "Andrew Pinski (QUIC)" <quic_apinski@quicinc.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-If the feature is not supported by older kernels, and instead of just
-ignoring some tests, we should mark them as skipped, so we can still
-track them.
+On Thu, 15 Feb 2024 at 00:39, Jakub Jelinek <jakub@redhat.com> wrote:
+>
+> Can it be guarded with
+> #if GCC_VERSION < 140100
 
-Fixes: d85555ac11f9 ("selftests: mptcp: pm_netlink: format subtests results in TAP")
-Cc: stable@vger.kernel.org
-Reviewed-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/pm_netlink.sh | 6 ++++++
- 1 file changed, 6 insertions(+)
+Ack. I'll update the workaround to do that, and add the new and
+improved bugzilla pointer.
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-index 8f4ff123a7eb..79e83a2c95de 100755
---- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -194,6 +194,12 @@ subflow 10.0.1.1" "          (nofullmesh)"
- 	ip netns exec $ns1 ./pm_nl_ctl set id 1 flags backup,fullmesh
- 	check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
- subflow,backup,fullmesh 10.0.1.1" "          (backup,fullmesh)"
-+else
-+	for st in fullmesh nofullmesh backup,fullmesh; do
-+		st="          (${st})"
-+		printf "%-50s%s\n" "${st}" "[SKIP]"
-+		mptcp_lib_result_skip "${st}"
-+	done
- fi
- 
- mptcp_lib_result_print_all_tap
+Thanks for fixing this so quickly.
 
--- 
-2.43.0
-
+                Linus
