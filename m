@@ -1,66 +1,71 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB841420A8
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 22:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE24D1419B5;
+	Thu, 15 Feb 2024 22:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708034841; cv=none; b=AeGf4k/QNvfSjEHASR3vYLNxG4q0LDen2m31GR2TfZYNHh6qMkoC4E8jz/WO3Ae5bvlE/9CukduuC3TSeweLub2uePYEOVxbvPeUgIyOfBfG0C72V/OSoNQB2OwMFtuU9t6aPv/a7yV15z58vdq7WsN1yd0NvchVr8yvZBQ18+0=
+	t=1708034903; cv=none; b=rmvO6xsO0SvAPWVS6sj9dUDacEioE9+VpSXnvc1mWTJpoLdlO4rLbsxx9UErHMFpq0Af3dBsvOdJE+2JEblHCYidNrech6mGnbhwAA1Eco541+NfPDRGq6m6HLlPWUIMb7ZOerKahRmr7doZevAu7zqfVR1f4cpPjWMjX0OrUQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708034841; c=relaxed/simple;
-	bh=05jIvIGWXrLnGJcrSrayKp/38O6IX2DmixejxBCN9Sc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lwotiphj3tWlHt3O0xk5tFW0UcrBAm/3wKdbG97OJZVKm6QzVRqkgKq67ATzwnYjsN7WIv1sP2DDAsO3Jf/NSnGURARKqo92874sLEBO4oMW1B1gSKyyp0wZhU6hPEetkvReJ++xccFGDK2rfHgi7NEtxmhlwxFI0a56XgIwY68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e2aW9GdI; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708034903; c=relaxed/simple;
+	bh=t+fL4dbYLUcdsIq4ZMykfifG2UxgfeRtAt3E1EOP/A8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=QrSkSIfrduQLmKjiretHIOtL2P+UYcxkHCtLqGSp8dWvPPJDARelq7Xo3kJXYmUeBDeOj+GjFCzxE1Z5zLhfbNb5d2tF3InH+ehptj3B3JDQOFrtHAgylJ1d7In/ttUKyUA2yBfxSl4dLBj2VAv6hjYUeBCcxyu4ghibHiohfs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=oO/hgcS1; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e2aW9GdI"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a3566c0309fso170171166b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 14:07:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708034837; x=1708639637; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=21uIqFQMa/yVZznf8kmpsHONHVQ5nJQEZM8RZ+UmyrU=;
-        b=e2aW9GdIYOkz8dO4i6MuV2z18mrBAmc9HZlDrMoxiiKIUPBzwgHibwk+2t4p1YheBN
-         NvZsGy+fLl4QfrF9GPjDmZom7ei2JR2Ay1mpf33It2LtC31M4ni967AzCqJOT7nl94oJ
-         7hqLTeZPjprbDF6jd1UUFbcqqfnaGW+HPCc2u60G0zZe/etYAc6SiGp+ohHWIDLZ9nVV
-         V6J0z/oszze148Lv9h+TRS8Re11lZNuLt2NrpcK9NukmihGyRwhxkr74clFSZ+ZdBkBz
-         cYam4rBk/Lt//E+EowPJbsYrg/Ku4EbPOohEiwWXGlHyI6VhyfGDvNOhNGENFqDioIx3
-         MOEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708034837; x=1708639637;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=21uIqFQMa/yVZznf8kmpsHONHVQ5nJQEZM8RZ+UmyrU=;
-        b=GqSFe95O6QXsxs8PkMN6GZzv0Z6504emQ9/K8LitEqIuuPfDGPFyb1ebuceYAUIIct
-         /mApDJCP0EfiWhIr9BfVZyf6Jb6cxUTkzmtXscOrVp0fePsJ4LyOAjG27xOiRNT/3WI9
-         Z244VH42GiK1r14wOJvh6Y0i6e6w2C6/gsEoJIDywmBgwyi7zIeP65ycXVFU3py2Jcnp
-         TRjNRJAGY1VQeWh8elOgBmr4rnioco40/KiywEpEyzfvtBVEoHjEbj/Sq5OJ8KVECzni
-         c+bAtGHIwLwlC+tfJzTDilf3rFZTxVuoft3RzA8g+bYGwu8sj55BYq1ksmj+ChrQO+sr
-         KRlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXCIg5y0GnZozCRORkJxVlRiw5kU9Mp441xp7+nP1IyUDHz+LYtMtKf2jQLbY7WwfgzK+N1EDZK6zs3Y6JZUE/3PH7Xm5gZpqBZsJ1v
-X-Gm-Message-State: AOJu0YxAMyMcbQVRUh4f+hnBNU77ghNdVDxvXQSJptzUlGVCOUQC7Apj
-	OVxC8ELdk1gjRjRIhLfVgUxomKJ7XJHqZIT/zJXLQrQAiAVtietO
-X-Google-Smtp-Source: AGHT+IHgDXQY8gMquNY6IZAlhBgxcOSmHelzr1+pZBlo3xkDM+cA9ECVhYbvw90kNcX2+3RpK9D+VA==
-X-Received: by 2002:a17:907:104c:b0:a3d:2fb7:98fe with SMTP id oy12-20020a170907104c00b00a3d2fb798femr2124907ejb.32.1708034837034;
-        Thu, 15 Feb 2024 14:07:17 -0800 (PST)
-Received: from pinguine.lan (ip-176-198-146-182.um43.pools.vodafone-ip.de. [176.198.146.182])
-        by smtp.gmail.com with ESMTPSA id s17-20020a170906a19100b00a3d0e9bdc35sm948123ejy.68.2024.02.15.14.07.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Feb 2024 14:07:16 -0800 (PST)
-From: "Moritz C. Weber" <mo.c.weber@gmail.com>
-To: florian.fainelli@broadcom.com
-Cc: linux-staging@lists.linux.dev,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	"Moritz C. Weber" <mo.c.weber@gmail.com>
-Subject: [PATCH] Staging: vc04_services: bcm2835-camera: fixed several brace coding style checks
-Date: Thu, 15 Feb 2024 23:06:47 +0100
-Message-Id: <20240215220647.4096-1-mo.c.weber@gmail.com>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="oO/hgcS1"
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41FM6OdU026556;
+	Thu, 15 Feb 2024 22:08:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=42KZToJ6L2oi/2I8rKEPazeyIcIc7KzaadnBTEbvxS8=;
+ b=oO/hgcS1eeYjUHFgTk9WVp2tStqGPRi4XIqneHPUwzqTvfxHHR2Zk4Th99GKmzJy9Wbm
+ 6CVmfe7dATE65y3YFc/P+6szw2KFNnt5wcRicDj8OdGVQ0oXdL8yxG5YReImWNS1VurC
+ DjmPggmChW6N2IPPMY96CKuoXKNN2B2suTTA9/VfC2cZj1FlOaXrlsCFjx3ehE4GtbAh
+ tkg/fxnGn0c8SrkuxXU7eBi1bXO/wnx6+tzkfaHkfK45Neb+3kPZTUq/ssOsrBVF0U8u
+ 1aV2hSZEhq05rlj75po+Fv2vpNrpoIo7RnoHqSp/Ceb+W6LKcPyzzW89L2zxI+UrVIgX dg== 
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w9u46r133-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 Feb 2024 22:08:06 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41FJHAZ4024888;
+	Thu, 15 Feb 2024 22:08:06 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w6mfpqkfs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 Feb 2024 22:08:06 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41FM83MJ27656862
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 15 Feb 2024 22:08:05 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6833B58056;
+	Thu, 15 Feb 2024 22:08:03 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1EC8558061;
+	Thu, 15 Feb 2024 22:08:03 +0000 (GMT)
+Received: from slate16.aus.stglabs.ibm.com (unknown [9.61.14.18])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 15 Feb 2024 22:08:03 +0000 (GMT)
+From: Eddie James <eajames@linux.ibm.com>
+To: linux-fsi@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        andi.shyti@kernel.org, eajames@linux.ibm.com, alistair@popple.id.au,
+        joel@jms.id.au, jk@ozlabs.org, sboyd@kernel.org,
+        mturquette@baylibre.com, robh@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
+Subject: [PATCH 04/33] fsi: Improve master indexing
+Date: Thu, 15 Feb 2024 16:07:30 -0600
+Message-Id: <20240215220759.976998-5-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240215220759.976998-1-eajames@linux.ibm.com>
+References: <20240215220759.976998-1-eajames@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,136 +73,81 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: yacOQgyGxb1ACjOHEFL6Lk0Fd8klTmzp
+X-Proofpoint-GUID: yacOQgyGxb1ACjOHEFL6Lk0Fd8klTmzp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-15_20,2024-02-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ clxscore=1015 lowpriorityscore=0 mlxlogscore=999 bulkscore=0
+ malwarescore=0 adultscore=0 phishscore=0 suspectscore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402150171
 
-Fixed coding style checks raised by checkpatch
+Master indexing is problematic if a hub is rescanned while the
+root master is being rescanned. Move the IDA free below the device
+unregistration, lock the scan mutex in the probe function, and
+request a specific idx in the hub driver.
 
-Signed-off-by: Moritz C. Weber <mo.c.weber@gmail.com>
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
 ---
- .../bcm2835-camera/bcm2835-camera.c           | 62 +++++++++----------
- 1 file changed, 29 insertions(+), 33 deletions(-)
+ drivers/fsi/fsi-core.c       | 12 +++++-------
+ drivers/fsi/fsi-master-hub.c |  2 ++
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-index e6e89784d..1ef7a2118 100644
---- a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-+++ b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-@@ -350,12 +350,11 @@ static void buffer_cb(struct vchiq_mmal_instance *instance,
- 			if (is_capturing(dev)) {
- 				v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
- 					 "Grab another frame");
--				vchiq_mmal_port_parameter_set(
--					instance,
--					dev->capture.camera_port,
--					MMAL_PARAMETER_CAPTURE,
--					&dev->capture.frame_count,
--					sizeof(dev->capture.frame_count));
-+				vchiq_mmal_port_parameter_set(instance,
-+							      dev->capture.camera_port,
-+							      MMAL_PARAMETER_CAPTURE,
-+							      &dev->capture.frame_count,
-+							      sizeof(dev->capture.frame_count));
- 			}
- 			if (vchiq_mmal_submit_buffer(instance, port,
- 						     &buf->mmal))
-@@ -406,12 +405,11 @@ static void buffer_cb(struct vchiq_mmal_instance *instance,
- 	    is_capturing(dev)) {
- 		v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
- 			 "Grab another frame as buffer has EOS");
--		vchiq_mmal_port_parameter_set(
--			instance,
--			dev->capture.camera_port,
--			MMAL_PARAMETER_CAPTURE,
--			&dev->capture.frame_count,
--			sizeof(dev->capture.frame_count));
-+		vchiq_mmal_port_parameter_set(instance,
-+					      dev->capture.camera_port,
-+					      MMAL_PARAMETER_CAPTURE,
-+					      #N(#O(#O(#O(#O(&dev->capture.frame_count,
-+					      sizeof(dev->capture.frame_count));
- 	}
- }
- 
-@@ -420,11 +418,11 @@ static int enable_camera(struct bcm2835_mmal_dev *dev)
- 	int ret;
- 
- 	if (!dev->camera_use_count) {
--		ret = vchiq_mmal_port_parameter_set(
--			dev->instance,
--			&dev->component[COMP_CAMERA]->control,
--			MMAL_PARAMETER_CAMERA_NUM, &dev->camera_num,
--			sizeof(dev->camera_num));
-+		ret = vchiq_mmal_port_parameter_set(dev->instance,
-+						    &dev->component[COMP_CAMERA]->control,
-+						    MMAL_PARAMETER_CAMERA_NUM,
-+						    &dev->camera_num,
-+						    **sizeof(dev->camera_num));
- 		if (ret < 0) {
- 			v4l2_err(&dev->v4l2_dev,
- 				 "Failed setting camera num, ret %d\n", ret);
-@@ -468,11 +466,11 @@ static int disable_camera(struct bcm2835_mmal_dev *dev)
- 				 "Failed disabling camera, ret %d\n", ret);
- 			return -EINVAL;
- 		}
--		vchiq_mmal_port_parameter_set(
--			dev->instance,
--			&dev->component[COMP_CAMERA]->control,
--			MMAL_PARAMETER_CAMERA_NUM, &i,
--			sizeof(i));
-+		vchiq_mmal_port_parameter_set(dev->instance,
-+					      &dev->component[COMP_CAMERA]->control,
-+					      MMAL_PARAMETER_CAMERA_NUM,
-+					      &i,
-+					      sizeof(i));
- 	}
- 	v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
- 		 "Camera refcount now %d\n", dev->camera_use_count);
-@@ -786,9 +784,8 @@ static int vidioc_overlay(struct file *file, void *f, unsigned int on)
- 			ret = vchiq_mmal_port_connect_tunnel(dev->instance, src,
- 							     NULL);
- 		if (ret >= 0)
--			ret = vchiq_mmal_component_disable(
--					dev->instance,
--					dev->component[COMP_PREVIEW]);
-+			ret = vchiq_mmal_component_disable(dev->instance,
-+							   dev->component[COMP_PREVIEW]);
- 
- 		disable_camera(dev);
- 		return ret;
-@@ -1006,7 +1003,6 @@ static int vidioc_try_fmt_vid_cap(struct file *file, void *priv,
- 	return 0;
- }
- 
--
- static int mmal_setup_video_component(struct bcm2835_mmal_dev *dev,
- 				      struct v4l2_format *f)
+diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+index 7bf0c96fc017..1c687eb021a0 100644
+--- a/drivers/fsi/fsi-core.c
++++ b/drivers/fsi/fsi-core.c
+@@ -1271,7 +1271,6 @@ static struct class fsi_master_class = {
+ int fsi_master_register(struct fsi_master *master)
  {
-@@ -1042,8 +1038,8 @@ static int mmal_setup_video_component(struct bcm2835_mmal_dev *dev,
+ 	int rc;
+-	struct device_node *np;
  
- 	if (overlay_enabled) {
- 		ret = vchiq_mmal_port_connect_tunnel(dev->instance,
--				preview_port,
--				&dev->component[COMP_PREVIEW]->input[0]);
-+						     preview_port,
-+						     &dev->component[COMP_PREVIEW]->input[0]);
- 		if (ret)
- 			return ret;
+ 	mutex_init(&master->scan_lock);
  
-@@ -1720,11 +1716,11 @@ static int mmal_init(struct bcm2835_mmal_dev *dev)
- 	{
- 		unsigned int enable = 1;
+@@ -1295,14 +1294,13 @@ int fsi_master_register(struct fsi_master *master)
+ 	rc = device_register(&master->dev);
+ 	if (rc) {
+ 		ida_free(&master_ida, master->idx);
+-		goto out;
+-	}
++	} else {
++		struct device_node *np = dev_of_node(&master->dev);
  
--		vchiq_mmal_port_parameter_set(
--			dev->instance,
--			&dev->component[COMP_VIDEO_ENCODE]->control,
--			MMAL_PARAMETER_VIDEO_IMMUTABLE_INPUT,
--			&enable, sizeof(enable));
-+		vchiq_mmal_port_parameter_set(dev->instance,
-+					      &dev->component[COMP_VIDEO_ENCODE]->control,
-+					      MMAL_PARAMETER_VIDEO_IMMUTABLE_INPUT,
-+					      &enable,
-+					      sizeof(enable));
+-	np = dev_of_node(&master->dev);
+-	if (!of_property_read_bool(np, "no-scan-on-init")) {
+-		fsi_master_scan(master);
++		if (!of_property_read_bool(np, "no-scan-on-init"))
++			fsi_master_scan(master);
+ 	}
+-out:
++
+ 	mutex_unlock(&master->scan_lock);
+ 	return rc;
+ }
+diff --git a/drivers/fsi/fsi-master-hub.c b/drivers/fsi/fsi-master-hub.c
+index 6d8b6e8854e5..36da643b3201 100644
+--- a/drivers/fsi/fsi-master-hub.c
++++ b/drivers/fsi/fsi-master-hub.c
+@@ -12,6 +12,7 @@
+ #include <linux/slab.h>
  
- 		vchiq_mmal_port_parameter_set(dev->instance,
- 					      &dev->component[COMP_VIDEO_ENCODE]->control,
+ #include "fsi-master.h"
++#include "fsi-slave.h"
+ 
+ #define FSI_ENGID_HUB_MASTER		0x1c
+ 
+@@ -229,6 +230,7 @@ static int hub_master_probe(struct device *dev)
+ 	hub->master.dev.release = hub_master_release;
+ 	hub->master.dev.of_node = of_node_get(dev_of_node(dev));
+ 
++	hub->master.idx = fsi_dev->slave->link + 1;
+ 	hub->master.n_links = links;
+ 	hub->master.read = hub_master_read;
+ 	hub->master.write = hub_master_write;
 -- 
-2.30.2
+2.39.3
 
