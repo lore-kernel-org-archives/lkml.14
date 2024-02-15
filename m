@@ -1,131 +1,87 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C53917BB9
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 09:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+Received: from lgeamrelo11.lge.com (lgeamrelo13.lge.com [156.147.23.53])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96F86182D8
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 09:25:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.147.23.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707989146; cv=none; b=qiyvcdd4Wf6KEiHjDS9yAfjjbnTrqly/yOEr3fbn/rQ6ShP1hfS98K6y2DApXpu/elTNiq09VcQoTDpl12Uu9gLviLys5pnDDX5dtI+SYs9oTZO+TIn/cN+qSUV3YFuGgDFjo36eVQLft2hhW+BRs8KiPATNssAxj08h10jIX5A=
+	t=1707989149; cv=none; b=DAKyw/qiu2oSazBmy0HySoZVkC4dxc1L1O1mbA4C0ZKiWlKqTkcukCPXWyQoQRavFBRBUenUvB5aWVaqyifn87CpdsXJuW8tWbmJW+3YQuuTxWRqTTmzlOpvkj1tSL4JyjLxdoqVKaRKVQ6uihsSVKfteXdGigc9VsU9i3+c9nU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707989146; c=relaxed/simple;
-	bh=ovUyhUiMjBKTnx4DSiTfVdweq3UHIu1azJ/rG3mlzsU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qyCiCJCyNHXecjFPENFloh2D3JxJasVI6Uc2MrBwDs74OaW5DCcPDu/gUHDmyPValiD0eKWon7kgTTuDv3XU0b+zbTfY0ljiKzp3QQac5O5kJeBpM9RyFM9vhA2QAyFdsHymEwcMg9AOcg0Dxj2fZ4wm6TVq/0S/5i3+XYnBEMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=te1hOjk9; arc=none smtp.client-ip=209.85.219.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="te1hOjk9"
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dc6d8bd618eso569010276.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 01:25:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707989144; x=1708593944; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ut8NlXOEY0y/ncuagbllCtcYDmgG86ebbFIp8z5hh8U=;
-        b=te1hOjk9XbaUg0o+jvjaQb0DlHJh2hri0GdgTFcbE1PR1bAl8k5GFnANjnUflYHS6M
-         l4wcXyA7Kvi97d3PFUnwOkiYLfONFwEwgh33i9AHB+dz0duApDOvblyL86Z+32Y/TLGd
-         a06JQ726EjKwcKP31mI+8iqhNFocYW3YwRx1QZKwauRf32XHe90smEGAGZvMhWF2G0e2
-         g+mStjP23DTNtYptuNz17TkVa3w60Sy1MFBDqw6zBbZFxKH/ORFR8lQzm3vyraIi6siP
-         ZA9pPZGguq6QyxTMmOF9s9m0g9hApAYHXvKlpRuobpvY1DxMRlXOoTnUi//bl/ATeG2t
-         UC1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707989144; x=1708593944;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ut8NlXOEY0y/ncuagbllCtcYDmgG86ebbFIp8z5hh8U=;
-        b=J1mO2sENrzvzlyQT9HADQ8C0zwxqVU+zbI1rYh5XdTOAYOMZNukKduxljOcEi88OqY
-         UXWmvfiukD415EWcYIbjhWn3nR0pZ1rzAgTwcG95zhRy3ancnEMljcRia7QYBBhEe5gt
-         AAqo7F0GuDxYEjC4g/SV4RI8+nqUEItqQBSfN9G6KCKbnYR0eSw9VXnNDTM3J7b+sQJz
-         21h4NsrMpUydz6LoJT2GD5ahkQG1Xf9vuWyHk3uNaows8OYefNDFh9d2fTfQlXqdm7gL
-         aYZJnwNeGKJ9Uf70nWXVMcFaG0g6vMMU4l7RiJCBo2mW/NovMg4Z2BSJK+R5FLyIfw5K
-         tN3g==
-X-Forwarded-Encrypted: i=1; AJvYcCUfXb/g/1XqdTiwfLIl+L7/p36YnLUbYb8SIKDKnLwAKdMtuYv+GGquC28IC8Uqo8WmWVdF57QBU5SZLKyxrRot5lSoF4tjehpLTF7K
-X-Gm-Message-State: AOJu0YzrIA4aqxqzPZ77tuLnmeS9pT91DeQpfMHcXdXcuHAQiYETsKLw
-	UqoZ134Q5AGDBcpTRwBzEWVyFRWHNHIafB5+c40OcTNjvabRimGpPxJFMxQMRjdL2zObREQXUVl
-	YosCIgykiK4xtUixUpJqEIyVzGRd8WlCKLLSPJQ==
-X-Google-Smtp-Source: AGHT+IGK2EB5aTs8BfG4jSsckxgl2EOaTmuQv0ycjxUuZs5Mb4QsZ7LrFpeHU2Kn6y9+s5eezLpdwLHcymkVAR1BGTw=
-X-Received: by 2002:a25:7447:0:b0:dcc:273e:1613 with SMTP id
- p68-20020a257447000000b00dcc273e1613mr1232044ybc.40.1707989144074; Thu, 15
- Feb 2024 01:25:44 -0800 (PST)
+	s=arc-20240116; t=1707989149; c=relaxed/simple;
+	bh=WW+WFmDnH2V+1GQsgAFG07eSRILRm8Qu3HVR57TR4a4=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ZoWdVuw62aMdgDw0HjloOmyDaB74Bu9GEsf6evFw+ETgK8n2r3rbVXJ0MK77eZXgoFBC/Epq3yWwzKndvRzzJ47CujQb676xwjwZLcvcT9AyosoWtcWszZBptmWROz4BpA0wcMdludL8fEr5Qu00V0gW8OG1dIOjzNvOCIl1wi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lge.com; spf=pass smtp.mailfrom=lge.com; arc=none smtp.client-ip=156.147.23.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lge.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lge.com
+Received: from unknown (HELO lgemrelse6q.lge.com) (156.147.1.121)
+	by 156.147.23.53 with ESMTP; 15 Feb 2024 17:55:46 +0900
+X-Original-SENDERIP: 156.147.1.121
+X-Original-MAILFROM: chanho.min@lge.com
+Received: from unknown (HELO ?10.178.36.63?) (10.178.36.63)
+	by 156.147.1.121 with ESMTP; 15 Feb 2024 17:55:46 +0900
+X-Original-SENDERIP: 10.178.36.63
+X-Original-MAILFROM: chanho.min@lge.com
+Subject: Re: [PATCH 3/6] arm64: dts: Fix dtc interrupt_provider warnings
+To: Rob Herring <robh@kernel.org>, soc@kernel.org,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Tsahee Zidenberg <tsahee@annapurnalabs.com>,
+ Antoine Tenart <atenart@kernel.org>, Joel Stanley <joel@jms.id.au>,
+ Andrew Jeffery <andrew@codeconstruct.com.au>, Ray Jui <rjui@broadcom.com>,
+ Scott Branden <sbranden@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn <andrew@lunn.ch>,
+ Gregory Clement <gregory.clement@bootlin.com>,
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+ =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
+ Thierry Reding <thierry.reding@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>, Stefan Agner <stefan@agner.ch>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+ Tony Lindgren <tony@atomide.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Magnus Damm <magnus.damm@gmail.com>, Linus Walleij <linusw@kernel.org>,
+ Imre Kaloz <kaloz@openwrt.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor
+ <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+ openbmc@lists.ozlabs.org, linux-tegra@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com, linux-omap@vger.kernel.org,
+ linux-mediatek@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kbuild@vger.kernel.org,
+ Lee Gunho <gunho.lee@lge.com>
+References: <20240213-arm-dt-cleanups-v1-0-f2dee1292525@kernel.org>
+ <20240213-arm-dt-cleanups-v1-3-f2dee1292525@kernel.org>
+From: Chanho Min <chanho.min@lge.com>
+Message-ID: <f5aeffed-9365-b1db-4c32-4ed6da208ea0@lge.com>
+Date: Thu, 15 Feb 2024 17:55:46 +0900
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240215-topic-sm8650-gpu-v2-0-6be0b4bf2e09@linaro.org> <20240215-topic-sm8650-gpu-v2-2-6be0b4bf2e09@linaro.org>
-In-Reply-To: <20240215-topic-sm8650-gpu-v2-2-6be0b4bf2e09@linaro.org>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 15 Feb 2024 11:25:33 +0200
-Message-ID: <CAA8EJprpYEhGi5b+uWGWtOa+qbSwUR8C0j9NLC+ah_-nvy-=Ng@mail.gmail.com>
-Subject: Re: [PATCH v2 2/6] dt-bindings: arm-smmu: Document SM8650 GPU SMMU
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	iommu@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20240213-arm-dt-cleanups-v1-3-f2dee1292525@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-On Thu, 15 Feb 2024 at 11:20, Neil Armstrong <neil.armstrong@linaro.org> wrote:
->
-> Document the GPU SMMU found on the SM8650 platform.
->
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
->  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> index a4042ae24770..3ad5c850f3bf 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> @@ -93,6 +93,7 @@ properties:
->                - qcom,sm8350-smmu-500
->                - qcom,sm8450-smmu-500
->                - qcom,sm8550-smmu-500
-> +              - qcom,sm8650-smmu-500
->            - const: qcom,adreno-smmu
->            - const: qcom,smmu-500
->            - const: arm,mmu-500
-> @@ -508,7 +509,10 @@ allOf:
->    - if:
->        properties:
->          compatible:
-> -          const: qcom,sm8550-smmu-500
-> +          contains:
-> +            enum:
-> +              - qcom,sm8550-smmu-500
-> +              - qcom,sm8650-smmu-500
+On 24. 2. 14. 4:34 Rob Herring wrote:
+> The dtc interrupt_provider warning is off by default. Fix all the warnings
+> so it can be enabled.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Doesn't this cause warnings for non-GPU SMMU on this platform?
+>   arch/arm64/boot/dts/lg/lg1312.dtsi                  | 1 -
+>   arch/arm64/boot/dts/lg/lg1313.dtsi                  | 1 -
+Acked-by: Chanho Min <chanho.min@lge.com>
 
->      then:
->        properties:
->          clock-names:
-> @@ -544,7 +548,6 @@ allOf:
->                - qcom,sdx65-smmu-500
->                - qcom,sm6350-smmu-500
->                - qcom,sm6375-smmu-500
-> -              - qcom,sm8650-smmu-500
->                - qcom,x1e80100-smmu-500
->      then:
->        properties:
->
-> --
-> 2.34.1
->
-
-
--- 
-With best wishes
-Dmitry
