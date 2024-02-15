@@ -1,139 +1,119 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5A612F5BB;
-	Thu, 15 Feb 2024 13:41:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7005131731;
+	Thu, 15 Feb 2024 13:41:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708004475; cv=none; b=iq8sWj3cB/XhssynJ63EZ5JTNFYngrYB9QniRRDWk55hNgOEA3IQv3sxK84FO9p+vprTfdjP8dFHmEl9RbqPPIOqcJhBP10lnRjJv4bgUIVzgvGxLdXBlj4MZrbATkFxj+v2J/lKc8CJYj0G8s4+fzJsf4vkzce+1tGYfWu7h8M=
+	t=1708004484; cv=none; b=GIeP26NI84Mfqyb6djj8t8e9MdcSSWMscAYXDhgDmJvAZT5eSCQd65YgP8U9QV557kHM+0HxIOsmw2IjbNEctPkdhi4Xtii7uU2O41ksSHb16GTGteIeBDl4u8eGzFSasLSKMcNkxOQZMcaC6xaG2d1iOis+uVREBzpZ0yeVY58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708004475; c=relaxed/simple;
-	bh=ERzAARGdkYek7a8RWsQHxBtyT1ON3LOa2GCXXf3xHmI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Scye8cDeruaDHXfW9auMlXMSD/jE/YcI6yzD+zOyyZsnIyGfcHZXyym303TIzhVslSJugnBlfCwPdgqKjcgOm68Z/nMfqExEYnAuHz4FzybardGKhUE/3z1dn1tf6g18rd2vBFf+Qfi5Mqq3t/AklyMnjRmdiH7NNjeuIK0k2gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fdRiLU63; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1708004484; c=relaxed/simple;
+	bh=H0RRjq8hyhzq5G7/H4AWcACfk52o+wWu6HicUSnX2I4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iDkR29p1riiMVqcs1SDBEhcs6k6L9GFfMB3t2zjiB+QaXnWkNeuO2XwY2wPXuVC1Kdj+QocT7u2+7ZLnSbZsQSCR5YixO5vjFquSOrldoBnhtlInWFFDQ4gTMSE4+0bdP0v9uBnczuYw9XONPYGn1GhGOXV/Ixd+0hk4CFVpgN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uwx+MJZn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fdRiLU63"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41FCgX0N028489;
-	Thu, 15 Feb 2024 13:41:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=RRmyacOzbnm8G8/TfM9F5VaEBokOpdiiuqMXlQmyfIM=;
- b=fdRiLU63FohITYvxkf0yViHroj8cH4iEqyVkU4NrR+uh5Ds+FfPoQoi6VXAKkOdmRUQP
- f9r5Juj76v5bDOfEIlQY/tbI7VEI9FcevL/qwQP+h+/S+mbttu3ahoiyIhoJHJael9XG
- jeRWbmH7tJvZrV/hlWvmnoCKWosIj1HgvnoYeF3HieYcOQhpNMU/pcDhA2AQrG/oSRoO
- UuRs+7vIBrRIEbLtZZ65y8nirClAR5LfCEgPQzUmRmROomIuCFajkMaroMtYK8TK98Ew
- ZN/uvTOi55YozQpdZQFNrprHciGlJtITiy/njIHd8r2hMDZP0X1MbOxlBhIP4JXVvY/M uw== 
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w9jut1hwr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 Feb 2024 13:41:12 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41FCfYEr009886;
-	Thu, 15 Feb 2024 13:37:04 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3w6p634gf8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 Feb 2024 13:37:04 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41FDawfB62915008
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 15 Feb 2024 13:37:01 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DB2C52004B;
-	Thu, 15 Feb 2024 13:36:57 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B2F602005A;
-	Thu, 15 Feb 2024 13:36:57 +0000 (GMT)
-Received: from [9.152.224.128] (unknown [9.152.224.128])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 15 Feb 2024 13:36:57 +0000 (GMT)
-Message-ID: <47789946-0ffe-462e-9e2e-43b03ea41fe0@linux.ibm.com>
-Date: Thu, 15 Feb 2024 14:36:57 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uwx+MJZn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 835C0C433C7;
+	Thu, 15 Feb 2024 13:41:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708004484;
+	bh=H0RRjq8hyhzq5G7/H4AWcACfk52o+wWu6HicUSnX2I4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=uwx+MJZn5At3nragiOq9siMG1CR+uoolg9EI1ShM7CamoTnbxjurXcuNBTPVr5/8f
+	 UF6//v36UECKUthdF1kzbbpXQnPOf3fzWa5bxHnYHE21tNMO09gUky0HPKQ97GqaVB
+	 RzZWno4WVsmbgF7m8bJaHCWh19CYUINJKnvTeVbi7XLa1gBpKjc6BZtRNbjgsNnF1Q
+	 D1X++1F5VryoVk9kFUcoM22+TgtlUY9Ix5XTspwu6VUYPWleMJAiRIyGOBX1Ix2Yiu
+	 X4MM19D9VlZu516qJADt0iTw9TgQnXIPDQ97VwUbP6h2LqoMOi7cgKclXxZei2BjHk
+	 +On3bkTbPRDQw==
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d09cf00214so11561251fa.0;
+        Thu, 15 Feb 2024 05:41:24 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWftHktNQ2jm34MLvCpts8Kn1LcIqzMV39ROcJWCffIAE1l00dmT2cg23EMWRjex79iCQe3SAzQsikmnbH/7KdYMOsz+bcskap08UK6nXSTL+nvV3WVWBelmjl6eijROYjAQvt/4G/EEmglgNjdgi/ZM7DQ/4szfX0aY4jcnE8Fk+RzOXGh
+X-Gm-Message-State: AOJu0YzxUwZ1PNH+KXZ3A9NB5c5su2RuUrYg6v9bpVcIovBAAOIeDIQh
+	agJWsrEaM6kB8Hmt0aMsEooMWVcCqhQzZ+4Porz7dBE9WazxpPRl29wEP+ix046Iwh6Q210obXt
+	V4kwi7k52w6TqeYa4Z2oFefx4+Xk=
+X-Google-Smtp-Source: AGHT+IFJi5xkPKZanwc1lVjx5ydelh3r7qoUdYjjZx2jFBVwBAh5n8+2iFh4G23E5hUpFejQKAisEoA1TLUH2ManFOo=
+X-Received: by 2002:a2e:9d84:0:b0:2d1:1df7:95db with SMTP id
+ c4-20020a2e9d84000000b002d11df795dbmr1412596ljj.13.1708004483103; Thu, 15 Feb
+ 2024 05:41:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net/af_iucv: fix virtual vs physical address confusion
-Content-Language: en-US
-To: Alexander Gordeev <agordeev@linux.ibm.com>,
-        Thorsten Winkler <twinkler@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20240215080500.2616848-1-agordeev@linux.ibm.com>
-From: Alexandra Winter <wintera@linux.ibm.com>
-In-Reply-To: <20240215080500.2616848-1-agordeev@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 6Wyj8PHle2IkM-Ef66rK71eMEPS9-5_N
-X-Proofpoint-GUID: 6Wyj8PHle2IkM-Ef66rK71eMEPS9-5_N
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-15_12,2024-02-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- lowpriorityscore=0 clxscore=1015 mlxscore=0 mlxlogscore=999 malwarescore=0
- priorityscore=1501 adultscore=0 bulkscore=0 impostorscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2402150109
+References: <20230917192009.254979-1-arnd@kernel.org> <CAK7LNASua5xkkg84s4o4GZ00hFRc10V9BmqyxfWfPi=JVFYC8g@mail.gmail.com>
+ <Zc4F3JttXSsBsw-P@bergen.fjasle.eu>
+In-Reply-To: <Zc4F3JttXSsBsw-P@bergen.fjasle.eu>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Thu, 15 Feb 2024 22:40:46 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT2DNE3RMLdXhLbSRHz6nfuP825UK39sQHkJW4x+OyfVg@mail.gmail.com>
+Message-ID: <CAK7LNAT2DNE3RMLdXhLbSRHz6nfuP825UK39sQHkJW4x+OyfVg@mail.gmail.com>
+Subject: Re: [PATCH] [v2] Documentation: kbuild: explain handling optional dependencies
+To: Nicolas Schier <nicolas@fjasle.eu>
+Cc: Arnd Bergmann <arnd@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>, 
+	Javier Martinez Canillas <javierm@redhat.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	linux-kbuild@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Feb 15, 2024 at 9:39=E2=80=AFPM Nicolas Schier <nicolas@fjasle.eu> =
+wrote:
+>
+> On Mon 25 Sep 2023 16:06:41 GMT, Masahiro Yamada wrote:
+> > On Mon, Sep 18, 2023 at 4:20=E2=80=AFAM Arnd Bergmann <arnd@kernel.org>
+> > wrote:
+> > >
+> > > From: Arnd Bergmann <arnd@arndb.de>
+> > >
+> > > This problem frequently comes up in randconfig testing, with
+> > > drivers failing to link because of a dependency on an optional
+> > > feature.
+> > >
+> > > The Kconfig language for this is very confusing, so try to
+> > > document it in "Kconfig hints" section.
+> > >
+> > > Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+> > > Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > > Reviewed-by: Nicolas Schier <nicolas@fjasle.eu>
+> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > > ---
+> > > v2: fix typos pointed out by Nicolas Schier
+> >
+> >
+> > Applied to linux-kbuild. Thanks.
+>
+> Hi Masahiro,
+>
+> this patch seems to got lost, or did you intentionally removed it
+> again?
+>
+> Kind regards,
+> Nicolas
 
 
 
-On 15.02.24 09:05, Alexander Gordeev wrote:
-> Fix virtual vs physical address confusion. This does not fix a bug
-> since virtual and physical address spaces are currently the same.
-> 
-> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
-> ---
->  net/iucv/af_iucv.c | 10 ++++------
->  1 file changed, 4 insertions(+), 6 deletions(-)
-> 
-> diff --git a/net/iucv/af_iucv.c b/net/iucv/af_iucv.c
-> index 498a0c35b7bb..4aa1c72e6c49 100644
-> --- a/net/iucv/af_iucv.c
-> +++ b/net/iucv/af_iucv.c
-> @@ -1060,13 +1060,12 @@ static int iucv_sock_sendmsg(struct socket *sock, struct msghdr *msg,
->  			int i;
->  
->  			/* skip iucv_array lying in the headroom */
-> -			iba[0].address = (u32)(addr_t)skb->data;
-> +			iba[0].address = (u32)virt_to_phys(skb->data);
->  			iba[0].length = (u32)skb_headlen(skb);
->  			for (i = 0; i < skb_shinfo(skb)->nr_frags; i++) {
->  				skb_frag_t *frag = &skb_shinfo(skb)->frags[i];
->  
-> -				iba[i + 1].address =
-> -					(u32)(addr_t)skb_frag_address(frag);
-> +				iba[i + 1].address = (u32)virt_to_phys(skb_frag_address(frag));
->  				iba[i + 1].length = (u32)skb_frag_size(frag);
->  			}
->  			err = pr_iucv->message_send(iucv->path, &txmsg,
-> @@ -1162,13 +1161,12 @@ static void iucv_process_message(struct sock *sk, struct sk_buff *skb,
->  			struct iucv_array *iba = (struct iucv_array *)skb->head;
->  			int i;
->  
-> -			iba[0].address = (u32)(addr_t)skb->data;
-> +			iba[0].address = (u32)virt_to_phys(skb->data);
->  			iba[0].length = (u32)skb_headlen(skb);
->  			for (i = 0; i < skb_shinfo(skb)->nr_frags; i++) {
->  				skb_frag_t *frag = &skb_shinfo(skb)->frags[i];
->  
-> -				iba[i + 1].address =
-> -					(u32)(addr_t)skb_frag_address(frag);
-> +				iba[i + 1].address = (u32)virt_to_phys(skb_frag_address(frag));
->  				iba[i + 1].length = (u32)skb_frag_size(frag);
->  			}
->  			rc = pr_iucv->message_receive(path, msg,
+Oh?
+
+I can see it in the mainline.
 
 
-Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
 
-I would have preferred to do all the translations in __iucv_* functions in iucv.c,
-but I understand that for __iucv_message_receive() this would mean significant changes. 
+
+commit 28d49e171676afb7df7f47798391364af9abed7f
+Author:     Arnd Bergmann <arnd@arndb.de>
+AuthorDate: Sun Sep 17 21:19:59 2023 +0200
+Commit:     Masahiro Yamada <masahiroy@kernel.org>
+CommitDate: Mon Sep 25 16:01:05 2023 +0900
+
+    Documentation: kbuild: explain handling optional dependencies
+
+
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
