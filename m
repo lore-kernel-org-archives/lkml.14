@@ -1,168 +1,152 @@
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34934BA37
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 08:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A6E13FEB;
+	Thu, 15 Feb 2024 08:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707985058; cv=none; b=OGMzykEJL0R+FezsSxmgq2SVK2T84/d8hcMmYf82Hkj8Z3gDftim+tAJLMEeekb0WUFYayz+8yWU1Lawp/LvoF7eotsRcDqOktojR1lw1m6ws1B6qrOtGlQRgacuXE2Xgti/bURBgdLMIrUkqfFcEy/2cbbuDOnXsuRBDdGumRM=
+	t=1707985066; cv=none; b=IgcGOkL0dsvIN6zgMCG88VTEHTymzmk1vhzf1w80HNYgRY1SKJf+H651CV3SFoGhCz5hv0SSrlgmrypGAvCU6Luqd8suzAFb9iqLQpVwslnZ8XOaXnDvtm+C5tYonYwnJR4ekuU/JNN2QCc5lXvyvuH3IuOFCdBn0ca+/Qvllfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707985058; c=relaxed/simple;
-	bh=ObsUxoGxez0LdKV/Ad1hJnJsNNoaFgbnjlFPLPLghAc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xet6sZePrbtUZDjRM47ygVYefHwRtm965GpvH9ShaP2toPCzRnjcmovs/i3a6jj5JfVa85UXI8I/1N5N8TCcpX35+r2BrUVxk4uBdvcWikvJ6ct0wE+iH1kFYx1wlxmUfWMk8Mec5fPszPxd/8TP1q43M9uXX68g9Hpm+cxXDw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qdMkWYj2; arc=none smtp.client-ip=209.85.222.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707985066; c=relaxed/simple;
+	bh=iHnSVR/o4PCirzYxOuLSrGJ0jY9TGuRvF1WutqVts7I=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=OqO1eb2lP/CttRYvcEVorfTYgfW68RW7Ri4karMgypxWvukI140AjOidb430BotcpDtlWEdCjF+TAeNTG11U9d99a5tD0FgFdBXvd/WODrwzQo/w/JmXdLB2AK+/v9ZOW744Yq4ZgMAVwbu8eeMWYnuPhN1mEQsZbjJg0aEleO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=X+NfAZLU; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qdMkWYj2"
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-7d5c257452dso243593241.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 00:17:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707985056; x=1708589856; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fOVmPP6lQ2riMOBP13temKZcA4Pty/mUrj2ihpJln/U=;
-        b=qdMkWYj2tOzzuaZtOQ4VRtMlFbD/cXGV4fsEfKG2TFoeILOJaSJAx5DiZUgteWfrhE
-         ojpGVscBVDLdYmFzujAOEpRRyIkaVRrMT2IbHFt6jCzDLnIlFaV/GAgcH44XX8aBItyr
-         QlTyyTN4AOwCtPh7KUcrwKL6BwjYwuAQPhs3Xm09gk3pnX1IQjFfpvMXkx2diuwcWflD
-         aCgfM2Zf03mzj+1U9fF9ESKw6zKnNcJhiEbqJUmkQBlK5jgf4kd7Fmle4REDRDaKOTPd
-         bGasJynCMlkc+fe+fP9RR2EAwJL6B7fQ26+2k6a5fpqz+Kf64k8Ods3XyZK4P+0hOFNc
-         bKBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707985056; x=1708589856;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fOVmPP6lQ2riMOBP13temKZcA4Pty/mUrj2ihpJln/U=;
-        b=Kg/rOgUZusy/ESq8pyNC9G7r1Gka+1ufwrVaHIIxAVRCkm3xZAvY0W4PW3xkCCvm3S
-         Ka4Xm0DnLyW6Mr5nS44McgADOgLjvdXj7nxD0NC6EBYbjtejq+vzDvrcL/COdyeL9ntD
-         xFWTdimjvrlLGUe5ny098gXz0PWVm5t4OLiEphM0cpnRX2vn2l6IYAlGjx48OoMT6uDr
-         DyfZ1vleGMxbDDPqn8rytkCS/FX/gGnbmtNC4Npd91x0noy8XDIiYUCDjEQKZdhIaMix
-         gRzcE/zIH+ARFPTrvisgYTNA9/hkx2uhIb62whvpebzYXxXrMH0Y58SLxpo5sN/+LXyW
-         SaWg==
-X-Forwarded-Encrypted: i=1; AJvYcCWw13tfROvhqN91hIY2koEDjOPUKffdHZdj9j7b0bW/6Cu+Qstl+YhOzAKLMSpgGWK4djQenaPc0AmNT71Qy9PoCTMLsDE9FYY/a8nY
-X-Gm-Message-State: AOJu0YxTBVPsZHhlFMusuzDX5DiONoSVly6R9x9Nm7vmarB+ESoPWQt1
-	MAACGVpVddjIVJV0lB+roq3H7rdIOV3wVc3U4s9JO/NFLRnoEeJ0JkvzGb/qZX+WU1TGo9M2T2B
-	484qY/J8omPk3L6LTBQ/Jg65x+WpEP21Ric5W
-X-Google-Smtp-Source: AGHT+IHwqMAMNut0/kXd7nN2WbGlppHAuHdkJ2b3rdaD3wbBRsbiRq7IfGLC/ircqJtgxyn2SxB+ScFA7uw53jct6jA=
-X-Received: by 2002:a05:6102:304c:b0:46c:f977:4f9f with SMTP id
- w12-20020a056102304c00b0046cf9774f9fmr1386243vsa.0.1707985055778; Thu, 15 Feb
- 2024 00:17:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="X+NfAZLU"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 41F8GFuv1589561
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 15 Feb 2024 00:16:17 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 41F8GFuv1589561
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024021201; t=1707984986;
+	bh=DD0WdTiLzRbhyl1lU6s1kmEpZNGlVGntzwYvTp/OgxY=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=X+NfAZLU3AMZ2IHW0uaYerX383bpCn8RbHJGNuGmq0cjQKG5LrKDq33I2OEvQYSLT
+	 0NjaCa63zhtLiBZ30Q20vrgl1PEsarU7x8PGas74tO1ekvQpoY0qlTKxfgaBcNJti2
+	 cY14+GNfZX47M1q+NL67uYeVxlNCLFKuKmzUbZVYCs18pynaAPZ7IJwPmv+IAGfb5W
+	 LvJdMxN6A0iTLGNYgPgq/jJJ3gG1mxO+tN8dO40AkGvrYzCWE3ZLK4bT5Gm74mBhgr
+	 dhdhGST5bk/3fyOdCd0rH2nNPJXr3kHC6NDDBNa7pPz0pwYownaMNn02nXNmX79rcT
+	 41J1Ehzh2xorg==
+Date: Thu, 15 Feb 2024 00:16:13 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: =?UTF-8?Q?Petr_Tesa=C5=99=C3=ADk?= <petr@tesarici.cz>,
+        Xin Li <xin@zytor.com>
+CC: Dave Hansen <dave.hansen@intel.com>,
+        Petr Tesarik <petrtesarik@huaweicloud.com>,
+        Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, Xin Li <xin3.li@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Pengfei Xu <pengfei.xu@intel.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>, Ze Gao <zegao2021@gmail.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Kai Huang <kai.huang@intel.com>, David Woodhouse <dwmw@amazon.co.uk>,
+        Brian Gerst <brgerst@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Joerg Roedel <jroedel@suse.de>,
+        "Mike Rapoport (IBM)" <rppt@kernel.org>,
+        Tina Zhang <tina.zhang@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Roberto Sassu <roberto.sassu@huaweicloud.com>,
+        Petr Tesarik <petr.tesarik1@huawei-partners.com>
+Subject: Re: [PATCH v1 0/8] x86_64 SandBox Mode arch hooks
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20240215075932.66fef954@meshulam.tesarici.cz>
+References: <20240214113516.2307-1-petrtesarik@huaweicloud.com> <c424618c-d6c6-430a-8975-8851a617204e@intel.com> <20240214192214.78734652@meshulam.tesarici.cz> <c66fa3f4-13f0-4355-9bf4-34fec31182de@zytor.com> <20240215075932.66fef954@meshulam.tesarici.cz>
+Message-ID: <5434F240-2F74-4D9F-8BEE-220C8EC53C0F@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214170157.17530-1-osalvador@suse.de> <20240214170157.17530-3-osalvador@suse.de>
-In-Reply-To: <20240214170157.17530-3-osalvador@suse.de>
-From: Marco Elver <elver@google.com>
-Date: Thu, 15 Feb 2024 09:16:58 +0100
-Message-ID: <CANpmjNPypJM5icG9M5yP5-psSofbA7D35eaKx+E6NyCsHMa=qg@mail.gmail.com>
-Subject: Re: [PATCH v9 2/7] lib/stackdepot: Move stack_record struct
- definition into the header
-To: Oscar Salvador <osalvador@suse.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Alexander Potapenko <glider@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 14 Feb 2024 at 18:00, Oscar Salvador <osalvador@suse.de> wrote:
+On February 14, 2024 10:59:32 PM PST, "Petr Tesa=C5=99=C3=ADk" <petr@tesari=
+ci=2Ecz> wrote:
+>On Wed, 14 Feb 2024 10:52:47 -0800
+>Xin Li <xin@zytor=2Ecom> wrote:
 >
-> In order to move the heavy lifting into page_owner code, this one
-> needs to have access to the stack_record structure, which right now
-> sits in lib/stackdepot.c.
-> Move it to the stackdepot.h header so page_owner can access
-> stack_record's struct fields.
+>> On 2/14/2024 10:22 AM, Petr Tesa=C5=99=C3=ADk wrote:
+>> > On Wed, 14 Feb 2024 06:52:53 -0800
+>> > Dave Hansen <dave=2Ehansen@intel=2Ecom> wrote:
+>> >  =20
+>> >> On 2/14/24 03:35, Petr Tesarik wrote: =20
+>> >>> This patch series implements x86_64 arch hooks for the generic Sand=
+Box
+>> >>> Mode infrastructure=2E =20
+>> >>
+>> >> I think I'm missing a bit of context here=2E  What does one _do_ wit=
+h
+>> >> SandBox Mode?  Why is it useful? =20
+>> >=20
+>> > I see, I split the patch series into the base infrastructure and the
+>> > x86_64 implementation, but I forgot to merge the two recipient lists=
+=2E
+>> > :-(
+>> >=20
+>> > Anyway, in the long term I would like to work on gradual decompositio=
+n
+>> > of the kernel into a core part and many self-contained components=2E
+>> > Sandbox mode is a useful tool to enforce isolation=2E
+>> >=20
+>> > In its current form, sandbox mode is too limited for that, but I'm
+>> > trying to find some balance between "publish early" and reaching a
+>> > feature level where some concrete examples can be shown=2E I'd rather
+>> > fail fast than maintain hundreds of patches in an out-of-tree branch
+>> > before submitting (and failing anyway)=2E
+>> >=20
+>> > Petr T
+>> >  =20
+>>=20
+>> What you're proposing sounds a gigantic thing, which could potentially
+>> impact all subsystems=2E
 >
-> Signed-off-by: Oscar Salvador <osalvador@suse.de>
-> Reviewed-by: Marco Elver <elver@google.com>
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-> ---
->  include/linux/stackdepot.h | 47 ++++++++++++++++++++++++++++++++++++++
->  lib/stackdepot.c           | 45 +-----------------------------------
->  2 files changed, 48 insertions(+), 44 deletions(-)
+>True=2E Luckily, sandbox mode allows me to move gradually, one component
+>at a time=2E
 >
-> diff --git a/include/linux/stackdepot.h b/include/linux/stackdepot.h
-> index adcbb8f23600..c4b5ad57c066 100644
-> --- a/include/linux/stackdepot.h
-> +++ b/include/linux/stackdepot.h
-> @@ -30,6 +30,53 @@ typedef u32 depot_stack_handle_t;
->   */
->  #define STACK_DEPOT_EXTRA_BITS 5
+>>  Unless you prove it has big advantages with real
+>> world usages, I guess nobody even wants to look into the patches=2E
+>>=20
+>> BTW, this seems another attempt to get the idea of micro-kernel into
+>> Linux=2E
 >
-> +#define DEPOT_HANDLE_BITS (sizeof(depot_stack_handle_t) * 8)
-> +
-> +#define DEPOT_POOL_ORDER 2 /* Pool size order, 4 pages */
-> +#define DEPOT_POOL_SIZE (1LL << (PAGE_SHIFT + DEPOT_POOL_ORDER))
-> +#define DEPOT_STACK_ALIGN 4
-> +#define DEPOT_OFFSET_BITS (DEPOT_POOL_ORDER + PAGE_SHIFT - DEPOT_STACK_ALIGN)
-> +#define DEPOT_POOL_INDEX_BITS (DEPOT_HANDLE_BITS - DEPOT_OFFSET_BITS - \
-> +                              STACK_DEPOT_EXTRA_BITS)
-> +
-> +#ifdef CONFIG_STACKDEPOT
-> +/* Compact structure that stores a reference to a stack. */
-> +union handle_parts {
-> +       depot_stack_handle_t handle;
-> +       struct {
-> +               /* pool_index is offset by 1 */
-> +               u32 pool_index  : DEPOT_POOL_INDEX_BITS;
-> +               u32 offset      : DEPOT_OFFSET_BITS;
-> +               u32 extra       : STACK_DEPOT_EXTRA_BITS;
-> +       };
-> +};
-> +
-> +struct stack_record {
-> +       struct list_head hash_list;     /* Links in the hash table */
-> +       u32 hash;                       /* Hash in hash table */
-> +       u32 size;                       /* Number of stored frames */
-> +       union handle_parts handle;      /* Constant after initialization */
-> +       refcount_t count;
-> +       union {
-> +               unsigned long entries[CONFIG_STACKDEPOT_MAX_FRAMES];    /* Frames */
-> +               struct {
-> +                       /*
-> +                        * An important invariant of the implementation is to
-> +                        * only place a stack record onto the freelist iff its
-> +                        * refcount is zero. Because stack records with a zero
-> +                        * refcount are never considered as valid, it is safe to
-> +                        * union @entries and freelist management state below.
-> +                        * Conversely, as soon as an entry is off the freelist
-> +                        * and its refcount becomes non-zero, the below must not
-> +                        * be accessed until being placed back on the freelist.
-> +                        */
-> +                       struct list_head free_list;     /* Links in the freelist */
-> +                       unsigned long rcu_state;        /* RCU cookie */
-> +               };
-> +       };
-> +};
-> +#endif
-> +
->  typedef u32 depot_flags_t;
+>We know it's not feasible to convert Linux to a micro-kernel=2E AFAICS
+>that would require some kind of big switch, affecting all subsystems at
+>once=2E
 >
->  /*
-> diff --git a/lib/stackdepot.c b/lib/stackdepot.c
-> index c043a4186bc5..4a661a6777da 100644
-> --- a/lib/stackdepot.c
-> +++ b/lib/stackdepot.c
-> @@ -36,55 +36,12 @@
->  #include <linux/memblock.h>
->  #include <linux/kasan-enabled.h>
+>But with a growing code base and more or less constant bug-per-LOC rate,
+>people will continue to come up with some ideas how to limit the
+>potential impact of each bug=2E Logically, one of the concepts that come
+>to mind is decomposition=2E
 >
-> -#define DEPOT_HANDLE_BITS (sizeof(depot_stack_handle_t) * 8)
-> -
-> -#define DEPOT_POOL_ORDER 2 /* Pool size order, 4 pages */
-> -#define DEPOT_POOL_SIZE (1LL << (PAGE_SHIFT + DEPOT_POOL_ORDER))
-> -#define DEPOT_STACK_ALIGN 4
-> -#define DEPOT_OFFSET_BITS (DEPOT_POOL_ORDER + PAGE_SHIFT - DEPOT_STACK_ALIGN)
-> -#define DEPOT_POOL_INDEX_BITS (DEPOT_HANDLE_BITS - DEPOT_OFFSET_BITS - \
-> -                              STACK_DEPOT_EXTRA_BITS)
->  #define DEPOT_POOLS_CAP 8192
-> -/* The pool_index is offset by 1 so the first record does not have a 0 handle. */
-> +/* The pool_index is offset by 1 so the first record does not have a 0 handle */
+>If my attempt helps to clarify how such decomposition should be done to
+>be acceptable, it is worthwile=2E If nothing else, I can summarize the
+>situation and ask Jonathan if he would kindly accept it as a LWN
+>article=2E=2E=2E
+>
+>Petr T
+>
 
-Why this comment change? We lost the '.' -- for future reference, it'd
-be good to ensure unnecessary changes don't creep into the diff. This
-is just nitpicking, and I've already reviewed this change, so no need
-to send a v+1.
+I have been thinking more about this, and I'm more than ever convinced tha=
+t exposing kernel memory to *any* kind of user space is a really, really ba=
+d idea=2E It is not a door we ever want to open; once that line gets muddle=
+d, the attack surface opens up dramatically=2E
+
+And, in fact, we already have a sandbox mode in the kernel =E2=80=93 it is=
+ called eBPF=2E 
