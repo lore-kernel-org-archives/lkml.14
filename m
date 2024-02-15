@@ -1,118 +1,159 @@
-Received: from cae.in-ulm.de (cae.in-ulm.de [217.10.14.231])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1609A69D01;
-	Thu, 15 Feb 2024 10:20:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.10.14.231
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92CB967C44
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 10:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707992441; cv=none; b=l72mBWus2NGu0JRJzPvhDlwOGbXnlQnlx40wd0umcUUBDsvlntEfzAzs3JP5MKAubJlBQynrxLZ7wZOTrKnbz1WNZexL3RArArZwlCUfHA+cXw8jElwIKUYDEetPDU11sDOHNbaXxc2wXHi+AKzsogJPHrAjc+lz+siRTC4tT6M=
+	t=1707992511; cv=none; b=FepVnFXr5QQd0nIN4mcS9Fqu+mYhL7hdEO9EXAudzAiSznTSPzYFjT/K8LwSAqoS460xyU6jrtaZHierYLq3KiWoMVxOsP5yYYgpaACDYHR1Kep95dZDUqDuA7iGxZIwVwT+CUCOBMcbGye/thhtJYnWYWlRCSQmvTlCbehAfF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707992441; c=relaxed/simple;
-	bh=MNzjTQVy8i+SjCyYirVZZm1jgkX/BUR/FaONBXox8oA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dk/YR2Bj/CD+KLZ0FMVdpGEiYYxpljC7KUcpVSB4doMsD6s4aYDK6uSgUsvNYkqL2wagRTiJDZlYhhqHam27tJ25AJ4ZXFfcV+X282rJTc4rtG2GvpRGTPuHFppkNBhfOM0O6dxjj5zCSre2aZe/cifjQsoGZpu2s6gEp8rhi2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c--e.de; spf=pass smtp.mailfrom=c--e.de; arc=none smtp.client-ip=217.10.14.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c--e.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=c--e.de
-Received: by cae.in-ulm.de (Postfix, from userid 1000)
-	id 1F8F61402E9; Thu, 15 Feb 2024 11:10:41 +0100 (CET)
-From: "Christian A. Ehrhardt" <lk@c--e.de>
-To: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: "Christian A. Ehrhardt" <lk@c--e.de>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Sing-Han Chen <singhanc@nvidia.com>,
-	Haotien Hsu <haotienh@nvidia.com>,
-	Utkarsh Patel <utkarsh.h.patel@intel.com>,
-	"Jonathan Hunter" <jonathanh@nvidia.com>,
-	"Wayne Chang" <waynec@nvidia.com>,
-	"WK Tsai" <wtsai@nvidia.com>
-Subject: [PATCH CFT] usb: ucsi_ccg: Fix command completion handling
-Date: Thu, 15 Feb 2024 11:10:24 +0100
-Message-Id: <20240215101024.764444-1-lk@c--e.de>
-X-Mailer: git-send-email 2.30.2
+	s=arc-20240116; t=1707992511; c=relaxed/simple;
+	bh=YT83jAApk16SoeiAMl/v7WhogysHMW2ucF4uBrLYJgg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ULo9kWJqARMehmK1GNZYAJZos0L1ouSF6iwISlMfZ5XuHFm9EMBuJq8XODrk2p4NHCTPPozzIK6jRv8ThuI/5+xladPdU5WBj2BLgfRkzrB0UGRhcb4Ay0Ht8C+ZEJ3047W5gEfydwoVFPZ1zNHuECmINWBBh7qBkijb3X/K+A8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qAe9h4xU; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qAe9h4xU"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-55a8fd60af0so1005142a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 02:21:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707992508; x=1708597308; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ciw4pOtP95/auA7ToeOHSPYuZOxAhM3oTuFVWwrCe4I=;
+        b=qAe9h4xU3pMbFl23XO/ZRH6n82/1CKM2lo537rbZeqm43te562ztbUeDff6kWIRf0C
+         7M5/g81oe68UHsfpziByW4UkYpBdhCdpokZwzFcwxJ70wP5JOSH4MilRmWkiLKbgVfbp
+         dBv/ZCTTOK58R6uL0ysfDOi9J7OMnI3JlpJS7yYYmKpPh+EEXl+GgKgzBqMSAojfefTY
+         GJOLsH96vhnt0APzgjq4/xkUIRBduTRfWRm3Rx8XV6XRKcxSoTjuph+piV0dfZtzswZr
+         /RxuqTklo0odpllCRQvQqBlKZm5yrYyd+kEos58S1Rsq3DmxMJZizwZBmBKQHpgge5kC
+         4fXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707992508; x=1708597308;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ciw4pOtP95/auA7ToeOHSPYuZOxAhM3oTuFVWwrCe4I=;
+        b=K1vm2+a0ORrH4KeybKAko36nFTZgpxI17w25tC27W0+yGzofDchbLIClzoha3lUP8U
+         ODOgTb3fREMEn3CyfnE09IXy8Ememyb2iRpLVEbY9eAv+WTPFvM7CCUXbNGglL9ep1s+
+         Y9RknUdyCqVfH3FfNKKzPnCHPKXOIWeuGcjFws2U7e4vNiBApSP2hwK0DUafIpPM9ShK
+         jwFeXnh4PWtK/34h5X3l9sJbMym6eewtAayN6tvyxpQKzQZrI1qPdL7dIJjMOFv1Gdr3
+         zPmDikdzMuboB657pgbbpGPbjKpkAjQCDDDFpKhyaDOowpm3v4kGitrn65PuU3VBKmzU
+         ARpw==
+X-Forwarded-Encrypted: i=1; AJvYcCXWu5tlF7F0YY2OSWzXMXmPAvFLiqjJVed0cVPxGcQ+jJnM475SIWVPiaRntrYe0pwon8BAvCviVAMXuDPHVQ1xU21ajGHNB3KPSuqC
+X-Gm-Message-State: AOJu0YxfoEpCd+l81VKvWH+uGnKiSAnOggPV0XvX4iLe2ypEfcii7ozT
+	q/OlC36+6f4eY3VVyDyks9ruuzp1RxLIBL7dQKJG3AwtacQNGqueL2LP558jT9I=
+X-Google-Smtp-Source: AGHT+IEjU1fLiIjBQfeIMSUt81GJzz0CYW7vyVaEhVKuxOdlx7UsMzgiXgzjyjabpUtPbw2S8mJrAQ==
+X-Received: by 2002:aa7:d518:0:b0:561:fec0:cd44 with SMTP id y24-20020aa7d518000000b00561fec0cd44mr1251437edq.27.1707992507614;
+        Thu, 15 Feb 2024 02:21:47 -0800 (PST)
+Received: from [192.168.192.135] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
+        by smtp.gmail.com with ESMTPSA id em2-20020a056402364200b005639fbc1ff4sm405940edb.43.2024.02.15.02.21.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Feb 2024 02:21:47 -0800 (PST)
+Message-ID: <3a040d65-4843-4e7d-818e-2523d112c74a@linaro.org>
+Date: Thu, 15 Feb 2024 11:21:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] PCI: qcom: Read back PARF_LTSSM register
+Content-Language: en-US
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, linux-arm-msm@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Johan Hovold <johan+linaro@kernel.org>
+References: <20240214222819.GA1269395@bhelgaas>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240214222819.GA1269395@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-In case of a spurious or otherwise delayed interrupt
-it is possible that CCI still reports the previous completion.
-For this reason the UCSI spec provides different completion
-bits for normal commands and for UCSI_ACK_CC_CI.
+On 14.02.2024 23:28, Bjorn Helgaas wrote:
+> On Wed, Feb 14, 2024 at 10:35:16PM +0100, Konrad Dybcio wrote:
+>> On 12.02.2024 22:17, Bjorn Helgaas wrote:
+>>> Maybe include the reason in the subject?  "Read back" is literally
+>>> what the diff says.
+>>>
+>>> On Sat, Feb 10, 2024 at 06:10:06PM +0100, Konrad Dybcio wrote:
+>>>> To ensure write completion, read the PARF_LTSSM register after setting
+>>>> the LTSSM enable bit before polling for "link up".
+>>>
+>>> The write will obviously complete *some* time; I assume the point is
+>>> that it's important for it to complete before some other event, and it
+>>> would be nice to know why that's important.
+>>
+>> Right, that's very much meaningful on non-total-store-ordering
+>> architectures, like arm64, where the CPU receives a store instruction,
+>> but that does not necessarily impact the memory/MMIO state immediately.
+> 
+> I was hinting that maybe we could say what the other event is, or what
+> problem this solves?  E.g., maybe it's as simple as "there's no point
+> in polling for link up until after the PARF_LTSSM store completes."
+> 
+> But while the read of PARF_LTSSM might reduce the number of "is the
+> link up" polls, it probably wouldn't speed anything up otherwise, so I
+> suspect there's an actual functional reason for this patch, and that's
+> what I'm getting at.
 
-Only complete a sync command if the correct completion bit
-is set.
+So, the register containing the "enable switch" (PARF_LTSSM) can (due
+to the armv8 memory model) be "written" but not "change the value of
+memory/mmio from the perspective of other (non-CPU) memory-readers
+(such as the MMIO-mapped PCI controller itself)".
 
-This should avoid the need to clear out CCI before starting
-a command. Thus remove this code.
+In that case, the CPU will happily continue calling qcom_pcie_link_up()
+in a loop, waiting for the PCIe controller to bring the link up, however
+the PCIE controller may have never received the PARF_LTSSM "enable link"
+write by the time we decide to time out on checking the link status.
 
-Signed-off-by: Christian A. Ehrhardt <lk@c--e.de>
-Fixes: e32fd989ac1c ("usb: typec: ucsi: ccg: Move to the new API")
----
-Additional information:
-A similar change for ucsi_acpi.c is here:
-  https://lore.kernel.org/all/20240121204123.275441-3-lk@c--e.de/
-This restores behaviour that ucsi.c had before moving to the new API.
-I've seen timeouts with ucsi_acpi.c without that fix, often if there
-were many port events (plug/unplug).
+It may also never happen for you, but that's exactly like a classic race
+condition, where it may simply not manifest due to the code around the
+problematic lines hiding it. It may also only manifest on certain CPU
+cores that try to be smarter than you and keep reordering/delaying
+instructions if they don't seem immediately necessary.
 
-I do _not_ have CCG hardware to test this. So someone else will have to
-provide a Tested-By tag or similar (hence the CFT in the subject).
-
-But from looking at the code I think this change is needed for CCG,
-too. Additionally, the recent change to CCG here
-  https://lore.kernel.org/all/20240126030115.3791554-1-haotienh@nvidia.com/
-seems to work around the same problem.
-
-Clearing the cached CCI value should not be necessary with this
-anymore and I suspect that it can potentially cause other problems.
-However, I can send an update patch without this hunk if desired.
-
-
- drivers/usb/typec/ucsi/ucsi_ccg.c | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/usb/typec/ucsi/ucsi_ccg.c b/drivers/usb/typec/ucsi/ucsi_ccg.c
-index dda7c7c94e08..9442307e0abd 100644
---- a/drivers/usb/typec/ucsi/ucsi_ccg.c
-+++ b/drivers/usb/typec/ucsi/ucsi_ccg.c
-@@ -616,14 +616,6 @@ static int ucsi_ccg_async_write(struct ucsi *ucsi, unsigned int offset,
- 	struct ucsi_ccg *uc = ucsi_get_drvdata(ucsi);
- 	u16 reg = CCGX_RAB_UCSI_DATA_BLOCK(offset);
- 
--	/*
--	 * UCSI may read CCI instantly after async_write,
--	 * clear CCI to avoid caller getting wrong data before we get CCI from ISR
--	 */
--	spin_lock(&uc->op_lock);
--	uc->op_data.cci = 0;
--	spin_unlock(&uc->op_lock);
--
- 	return ccg_write(uc, reg, val, val_len);
- }
- 
-@@ -708,9 +700,14 @@ static irqreturn_t ccg_irq_handler(int irq, void *data)
- err_clear_irq:
- 	ccg_write(uc, CCGX_RAB_INTR_REG, &intr_reg, sizeof(intr_reg));
- 
--	if (!ret && test_bit(DEV_CMD_PENDING, &uc->flags) &&
--	    cci & (UCSI_CCI_ACK_COMPLETE | UCSI_CCI_COMMAND_COMPLETE))
--		complete(&uc->complete);
-+	if (!ret && test_bit(DEV_CMD_PENDING, &uc->flags)) {
-+		bool ack = UCSI_COMMAND(uc->last_cmd_sent) == UCSI_ACK_CC_CI;
-+
-+		if (ack && (cci & UCSI_CCI_ACK_COMPLETE))
-+			complete(&uc->complete);
-+		if (!ack && (cci & UCSI_CCI_COMMAND_COMPLETE))
-+			complete(&uc->complete);
-+	}
- 
- 	return IRQ_HANDLED;
- }
--- 
-2.40.1
-
+Konrad
