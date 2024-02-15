@@ -1,118 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8510613AF0;
-	Thu, 15 Feb 2024 15:08:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B654D13248B;
+	Thu, 15 Feb 2024 15:09:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708009691; cv=none; b=PVGPfL8ZhabEVNcGln61pbvZqc4vXVebNpsSX2B9hRBTWfuT9a+bmd8w1gQ1JGYkX09GWTrLbdyrmCUsVsSavTExKUIoSFnJKoTmppyWKSkpiIKjEgVLfHWva9IlQ+wgNv0f9ZtOyOBBYLYWfGrGZjpooekPjXtCdkcqR0fh75c=
+	t=1708009750; cv=none; b=ZS0TNRfEONbuuj3Uu+SOkBufrxyet6KfJP0gCZoIRSjcI71Ld1skzE/u74u6miQfF5On6HI7ejADJ66n6YOjKOKGXTxvJ1gks5kxk+KvWuRJuge3tPPTVNsPyF5I+CU+rtdB1R9HjfJO6NU1wQ7yYIJsnd5tm7ZofPf8uTIq8wE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708009691; c=relaxed/simple;
-	bh=nneF9xSwpmvvSrQTIwVRr6WPxaypX0oRVP9xZNFAWJA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ne6f2ldFqQTRwtWYEupiD6SDGD3WCaO98Cp4m+frlqckhLOK8erkIQAXGsCAQL3Zo3imlPIWdFoFfYgyqpS1drWau/AvMHjp1TvGzHUIqOimO7BbxCKJTl76cuZZlXGsY8g28kkMHmyG+TRniGkaYXGdn0Ylz+49ijTgXNzEsYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MSb2wHlf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708009750; c=relaxed/simple;
+	bh=jPhUX7fseszIBa5Cz4g6HtJ32wY5HpFdNrxQegeyAcU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=NvTFK7ob65JjjQRxYT0b8MsQ527COx/nNBg/Z1/linjnvrd0T3DYpdDlUnjwldsJrMi6waJS1tKAcltQuQxAByOw7mU9qYMHM1Ku1Up+Q6h60JDIxokK2uO2KdhEFm9R1hezOzfR8AIlNSYOuvCxsm5Jz3WlFGwKQmJdmAskE70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xude8sqO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MSb2wHlf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A993C433F1;
-	Thu, 15 Feb 2024 15:08:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xude8sqO"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 833DAC433C7;
+	Thu, 15 Feb 2024 15:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708009690;
-	bh=nneF9xSwpmvvSrQTIwVRr6WPxaypX0oRVP9xZNFAWJA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MSb2wHlfmhYR4fsXlhz3741dHPdDL6zxJdrHPh6h73dbvtLM55oPrb02X0JjrsUCU
-	 kDr9JlBaYctKAZO3kqdlvn9WBX40Wy1R8DqOf/o1zeE5xtDXp7GQC6kT8RsBbG3orv
-	 iOpnaet5A5gHM/RbQCeaTeCnt0V0h9/CxrsYTnDVX75zXYM/M9yjJxymK89zOwdJOo
-	 K8I6LRBng85mFDVxq2Hdzr8zuVV3+BnX+jktiXCC3HpWUpgs0uJYwZQhu/pI8DA56T
-	 F23qxPHJmwVeb4MpyfKH609w61gx+Sk6+fC3m5/ONrjgvi1WA906eO/ICz443ZEJCV
-	 SUMBKbOggdGLg==
-Date: Thu, 15 Feb 2024 09:08:07 -0600
-From: Rob Herring <robh@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Marc Zyngier <maz@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Peter Rosin <peda@axentia.se>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2] of: OF_IRQ: select IRQ_DOMAIN instead of depending on
- it
-Message-ID: <20240215150807.GA28377-robh@kernel.org>
-References: <20240213225619.11726-1-rdunlap@infradead.org>
- <867cj75q52.wl-maz@kernel.org>
- <c6e55baf-4f0c-4342-971a-713ed55f5a51@app.fastmail.com>
- <8634tv57i2.wl-maz@kernel.org>
- <886629be-a492-4c8c-aa79-d13847cb228a@app.fastmail.com>
+	s=k20201202; t=1708009750;
+	bh=jPhUX7fseszIBa5Cz4g6HtJ32wY5HpFdNrxQegeyAcU=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=Xude8sqOiVdg231+aBTlQVEWxWUncmugjUAZEc0e7eyRqBCGubPrQQnuxVjpYahyl
+	 SyWkj+WsA758DXkerF6rhcrP2IdoOgzYq/ErVepbUZYetP+fEWqEXLMjzG3DCu7Xco
+	 LddQ4tsH/psTEwtMApnURTE+kBVQigwCzXEd+H0pLrmz1Z2941NFh61JX5YGiK9OIP
+	 xMB2KIBKcpPDhtP1wl96WpdxWpuhYK9/eTo4W3tkpCigpMaUYqbW29dQhd9oNSbfmQ
+	 QxEplSeiaQhTaqzKh5JbuuWkpj9x40iyKry3A5PqbV/wOQcD9zSjTCbEp6TseGHvu1
+	 CjyVjlgcGbxXw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5E7C4829E;
+	Thu, 15 Feb 2024 15:09:10 +0000 (UTC)
+From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
+Date: Thu, 15 Feb 2024 23:09:11 +0800
+Subject: [PATCH] clk: set initial best mux parent to current parent when
+ determining rate
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <886629be-a492-4c8c-aa79-d13847cb228a@app.fastmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240215-mux-v1-1-ebb2fba31d49@outlook.com>
+X-B4-Tracking: v=1; b=H4sIABYpzmUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDI0NT3dzSCl2zlCSLJGNzQxNTSwMloMqCotS0zAqwKdGxtbUALxNcR1U
+ AAAA=
+To: Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>
+Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Yang Xiwen <forbidden405@outlook.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708009751; l=1451;
+ i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
+ bh=fggch9mxMQ8SzPlFXnQcVvzDJCD3ro+vLZXoDYu1RGE=;
+ b=wxjkbfTu/rBP44OMka17mBI8BMrBoao1MdhKtAdERg9Fwk4DSHxtLiTFHjXE1Uzk37ksKfWK6
+ Vqg0qaYsmCACkojwPFrwYG6rvVm8oPv0ZySlUoc58fjg8jpb2yMSbLX
+X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
+ pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
+X-Endpoint-Received:
+ by B4 Relay for forbidden405@outlook.com/20230724 with auth_id=67
+X-Original-From: Yang Xiwen <forbidden405@outlook.com>
+Reply-To: <forbidden405@outlook.com>
 
-On Wed, Feb 14, 2024 at 06:22:53PM +0100, Arnd Bergmann wrote:
-> On Wed, Feb 14, 2024, at 17:35, Marc Zyngier wrote:
-> > On Wed, 14 Feb 2024 16:06:06 +0000,
-> > "Arnd Bergmann" <arnd@arndb.de> wrote:
-> >> 
-> >> On Wed, Feb 14, 2024, at 10:52, Marc Zyngier wrote:
-> >> > On Tue, 13 Feb 2024 22:56:19 +0000, Randy Dunlap <rdunlap@infradead.org> wrote:
-> >> >>
-> >> >> diff -- a/drivers/of/Kconfig b/drivers/of/Kconfig
-> >> >> --- a/drivers/of/Kconfig
-> >> >> +++ b/drivers/of/Kconfig
-> >> >> @@ -80,7 +80,8 @@ config OF_ADDRESS
-> >> >>  
-> >> >>  config OF_IRQ
-> >> >>  	def_bool y
-> >> >> -	depends on !SPARC && IRQ_DOMAIN
-> >> >> +	depends on !SPARC
-> >> >> +	select IRQ_DOMAIN
-> >> > 
-> >> >
-> >> > This seems to be moving is the right direction.
-> >> 
-> >> Can we move the 'select IRQ_DOMAIN' under CONFIG_IRQCHIP
-> >> then and remove the individual selects from the irqchip
-> >> drivers? It looks like CONFIG_OF (other than sparc) now
-> >> unconditionally enables OF_IRQ and IRQCHIP anyway.
-> >
-> > As long as it also works ACPI, it should be OK.
-> 
-> Out of the four architectures that have ACPI support (x86,
-> arm64, loongarch, rv64), only x86 doesn't always select
-> IRQ_DOMAIN already, and x86 selects it for almost all
-> configs:
-> 
-> config X86_UP_APIC
->         bool "Local APIC support on uniprocessors" if !PCI_MSI
->         default PCI_MSI
->         depends on X86_32 && !SMP && !X86_32_NON_STANDARD
-> 
-> config X86_LOCAL_APIC
->         def_bool y
->         depends on X86_64 || SMP || X86_32_NON_STANDARD || X86_UP_APIC || PCI_MSI
->         select IRQ_DOMAIN_HIERARCHY
-> 
-> so it's only disabled here with
-> 
-> CONFIG_64BIT=n
-> CONFIG_SMP=n
-> CONFIG_X86_32_NON_STANDARD=n
-> CONFIG_ACPI=y
-> CONFIG_PCI=y (implied by ACPI)
-> CONFIG_PCI_MSI=n
-> 
-> As far as I can tell, this specific configuration is
-> currently able to save a little bit of kernel size
-> by avoiding IRQ_DOMAIN, but we are probably better off
-> enabling it here as well for consistency
+From: Yang Xiwen <forbidden405@outlook.com>
 
-+1
+Originally, the initial clock rate is hardcoded to 0, this can lead to
+some problem when setting a very small rate with CLK_MUX_ROUND_NEAREST.
 
-Also, looks like we have a couple of 'select OF_IRQ' that could be 
-dropped.
+For example, if the lowest possible rate privided by the mux is 1000Hz,
+setting a rate below 500Hz will fail, because no clock can provide a
+better rate than the non-existant 0. But it should succeed with 1000Hz
+being set.
 
-Rob
+Setting the initial best parent to current parent could solve this bug
+very well.
+
+Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
+---
+This is actually a v2 of [1], but seems too simple to have a unittest.
+It's tested in a mmc host driver.
+
+[1]: https://lore.kernel.org/linux-clk/20230421-clk-v3-1-9ff79e7e7fed@outlook.com/
+---
+ drivers/clk/clk.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 2253c154a824..d98cebd7ff03 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -649,6 +649,10 @@ int clk_mux_determine_rate_flags(struct clk_hw *hw,
+ 
+ 	/* find the parent that can provide the fastest rate <= rate */
+ 	num_parents = core->num_parents;
++	if (core->parent) {
++		best_parent = core->parent;
++		best = clk_core_get_rate_nolock(best_parent);
++	}
+ 	for (i = 0; i < num_parents; i++) {
+ 		unsigned long parent_rate;
+ 
+
+---
+base-commit: 8d3dea210042f54b952b481838c1e7dfc4ec751d
+change-id: 20240215-mux-6db8b3714590
+
+Best regards,
+-- 
+Yang Xiwen <forbidden405@outlook.com>
+
