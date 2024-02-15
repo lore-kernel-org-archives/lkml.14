@@ -1,112 +1,205 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB2FF12BF06
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 13:02:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A770212BF06;
+	Thu, 15 Feb 2024 13:02:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708002143; cv=none; b=UDv5XSN/QpBfg5MHssJLS1mWRwqYt5mL5Ns+z8V957Tt9tH/M12cPJgWaDVYluMzMJKx/Q3kw0M7ATSTO28NPTvEKwh4JU9XOzfBgEQnj6HJwMP8+nQkJERSEophDb5RrqXIxaontQGgFyhjoDWR/8V5ppPbfFNOYuAm4tnf2MA=
+	t=1708002156; cv=none; b=L2mQ4DPWuK29N3WnwoywNRIpgxzpLX3nNRF5xfgSyjVxb198OT9E8mIFmWVouajHs2U3rCwLF4tCuWOoGdUp5DSJVXiNOn7E07BfuYXe5KZN6CEmkIcsqXDquUABVTD1Uc49IUeLRgHjlLJZTYmA8p1XIUouKCZLmt7HVXbqin8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708002143; c=relaxed/simple;
-	bh=2agPtJl3v9niVpIiQlLbesjxGfDjfBKYPIlmRtWAQQg=;
-	h=From:To:CC:Date:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=aB9SuiqwI34tsVb8KlIwt21zzxUGJ0+LcWuhGeecIXRkQoeDU/9b16peQ7SEDCv7Nv0/EB5gy0niPFqzPX0NTqjoFL3H3oHPzeN1E+SDbQcO2b+Ycu8O6flw2hyVnB6ePUfVB4Y/qjQ4eSxXCgqvZuECygzex0xppPxSEHKYQww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=XRSmcQyy; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1708002156; c=relaxed/simple;
+	bh=rFnluREXCTsXDodZeJ12RC10HbHmX2bC2fcQYUPV5bQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nysj6F2uEfvgk80cONQPZrz98nE7qTKVutq1yFi5WzLpvlJ/UOnP38xJJ+Z9zJfeGdB4TV79fjqSJZM8PDFtaVwDC0IePv7OdwtHajiZhNof3YByJXjzYRofpSGxNxAGHGF7ggL+LMKR36H7wl9V6TbhD/H6hgFsujT9W0MptYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CRTGEx/j; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="XRSmcQyy"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-783f553fdabso52883785a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 05:02:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1708002139; x=1708606939; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:user-agent
-         :references:in-reply-to:message-id:date:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2agPtJl3v9niVpIiQlLbesjxGfDjfBKYPIlmRtWAQQg=;
-        b=XRSmcQyyL03rLtS3VvikblzeXgnjVle+cPooHiMTpSqCYxGtdPogrYx4e94aLpG9a3
-         mlPF6S095uzEPFaMh9eFHLt94D2qehvCLO7K5ePpMlXpdwLIHxcIAw/B/6BVUcvvsbs6
-         kDsTaaCyES02fsNI4BdSVAd97sEhNNOzCt9J3QibrU/NAfdPoSri1w3GjLTlhI/tkERt
-         btBHYvk61sr3HPK0IxUbuBMDPBQ+xfUxxG8dvHUgjqPHmRdjwVQAVuxBOE3jePArorqF
-         80mtq8ST85jd5p20eubUPllgeOC/EAWE/Fhps98X8n+YTCaXL5XQN6Ep4GNHVWWR+0N2
-         di4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708002139; x=1708606939;
-        h=content-transfer-encoding:mime-version:subject:user-agent
-         :references:in-reply-to:message-id:date:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2agPtJl3v9niVpIiQlLbesjxGfDjfBKYPIlmRtWAQQg=;
-        b=H9CoBtwiFwPrJylc5JKLEyKf+zuPcTIL67SZ7bpgQdDHC2OBTmygBgMQGeZJt0t69M
-         J4UR27tJznAcqGsJO6oPWaTXCoP3OdPLB8/Q2glJaCCPvN/1gOf9JrbeuCth+ILHv056
-         Kh5Di49OVQ4Sl+nZWfonYRFLdlNa6Dy1DW7STgZMJqALi0YGDZHbYLhPNQ8Ych/wxsbg
-         N/n1OF4RtJPPUunVTeNIe659eJ2peXToGYdyOPkqfhoEHZM1phabQ3Pv1w0e2q9rJlG5
-         9ND3nKyBzAG8X1dny98hjpeY+xcNv3qRDD1S+Nxdghrg7xhG/jbvUSuNatQxtqfw5GRp
-         G1hQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUKTq9/Ro+VjuWHU08cYJtbqKJ5H1WciDgQPtE5H78TvzDc8UM9ZJDxNBVlx5qNipJH10OjgmYsFuvL1/zJ01Neq+vtDUcgRWEN/E4A
-X-Gm-Message-State: AOJu0YwCetZqlHlEqy+d6dVFig+JafE77V/8zMswBECci+t7SDLxTf1J
-	Kk80REZF0+YwScZCqPmEcE71Ef/mN8m3/s+h4SDMgnIwRLeBOuV/MCbRidz5mg==
-X-Google-Smtp-Source: AGHT+IGXRXkvIjtM2XptNphgmbdrAs5LHYnEl5lJFcxgwonSt9iT8GNqc5kaY+tfx3dBMBTZqxQN6g==
-X-Received: by 2002:a05:620a:1d:b0:787:2529:6073 with SMTP id j29-20020a05620a001d00b0078725296073mr2061569qki.6.1708002139428;
-        Thu, 15 Feb 2024 05:02:19 -0800 (PST)
-Received: from [192.168.7.16] ([70.22.175.108])
-        by smtp.gmail.com with ESMTPSA id i6-20020a05620a248600b0078723db4da9sm570760qkn.98.2024.02.15.05.02.18
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 15 Feb 2024 05:02:19 -0800 (PST)
-From: Paul Moore <paul@paul-moore.com>
-To: Kees Cook <keescook@chromium.org>, Casey Schaufler <casey@schaufler-ca.com>
-CC: Jann Horn <jannh@google.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, John Johansen <john.johansen@canonical.com>, <linux-security-module@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Date: Thu, 15 Feb 2024 08:02:18 -0500
-Message-ID: <18dacdbced8.28a4.85c95baa4474aabc7814e68940a78392@paul-moore.com>
-In-Reply-To: <202402141644.808307E71@keescook>
-References: <20240214160538.1086089-1-jannh@google.com>
- <a4a77e0e-8d5e-4c9d-aff4-9fe0d8b89cf0@schaufler-ca.com>
- <202402141644.808307E71@keescook>
-User-Agent: AquaMail/1.49.2 (build: 104902408)
-Subject: Re: [PATCH] security: fix integer overflow in lsm_set_self_attr() syscall
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CRTGEx/j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708002154; x=1739538154;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rFnluREXCTsXDodZeJ12RC10HbHmX2bC2fcQYUPV5bQ=;
+  b=CRTGEx/jtbXPFdhSZh4sUI9T2F1lsYycMKmkCQescyPWJEY08dkT2RcZ
+   YGbyYbkFEVARjalMhNaCTGvRUhwYVr4BZ34/p+CwgYJECGOUyLJPv+KYd
+   VGTnjqaiAmfz7R78aVMsHqVxzfjjb/xP33pEDU9O0DdopdVz+REFLMZnF
+   OiflknJNiP9Fr1TLX+/p5nqw0jKV0nzIVTA4HSOX4pui9GJG0EiSQZMeV
+   3CNapgRqOhfNCJVgxM74IbbF60X+Lco2VgkLt4Vz4GD467RzqcpGFpNQL
+   J6a3SnEGuAB0BnHl+lBFaHBlpoklOnvXx3AEpcdmEVfY77PKzMuUUco/n
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="27534020"
+X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
+   d="scan'208";a="27534020"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 05:02:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
+   d="scan'208";a="3596575"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa010.jf.intel.com with ESMTP; 15 Feb 2024 05:02:32 -0800
+Date: Thu, 15 Feb 2024 20:58:43 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
+	Maxim Levitsky <mlevitsk@redhat.com>
+Subject: Re: [PATCH 1/2] KVM: x86: Move "KVM no-APIC vCPU" key management
+ into local APIC code
+Message-ID: <Zc4Kgz9et4uzlp/a@yilunxu-OptiPlex-7050>
+References: <20240209222047.394389-1-seanjc@google.com>
+ <20240209222047.394389-2-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset="us-ascii"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240209222047.394389-2-seanjc@google.com>
 
-On February 14, 2024 7:45:43 PM Kees Cook <keescook@chromium.org> wrote:
-> On Wed, Feb 14, 2024 at 08:53:52AM -0800, Casey Schaufler wrote:
->> On 2/14/2024 8:05 AM, Jann Horn wrote:
->>> security_setselfattr() has an integer overflow bug that leads to
->>> out-of-bounds access when userspace provides bogus input:
->>> `lctx->ctx_len + sizeof(*lctx)` is checked against `lctx->len` (and,
->>> redundantly, also against `size`), but there are no checks on
->>> `lctx->ctx_len`.
->>> Therefore, userspace can provide an `lsm_ctx` with `->ctx_len` set to a
->>> value between `-sizeof(struct lsm_ctx)` and -1, and this bogus `->ctx_len`
->>> will then be passed to an LSM module as a buffer length, causing LSM
->>> modules to perform out-of-bounds accesses.
->>>
->>> The following reproducer will demonstrate this under ASAN (if AppArmor is
->>> loaded as an LSM):
->>> ```
->>> #define _GNU_SOURCE
->>> #include <unistd.h>
->>> #include <stdint.h>
->>> #include <stdlib.h>
->>> #include <sys/syscall.h>
->>>
->>> struct lsm_ctx {
->>> uint64_t id;
->>> uint64_t flags;
->>> uint64_t len;
->>> uint64_t ctx_len;
->
-> Do we want to take the opportunity to reduce this to u32 for len and u32
-> for ctx_len? All FS operations are limited to INT_MAX anyway...
+On Fri, Feb 09, 2024 at 02:20:46PM -0800, Sean Christopherson wrote:
+> Move incrementing and decrementing of kvm_has_noapic_vcpu into
+> kvm_create_lapic() and kvm_free_lapic() respectively to fix a benign bug
+> bug where KVM fails to decrement the count if vCPU creation ultimately
+  ^
 
-Not at this point, no.
+remove the duplicate word, others LGTM.
 
---
-paul-moore.com
+Reviewed-by: Xu Yilun <yilun.xu@linux.intel.com>
 
-
-
+> fails, e.g. due to a memory allocation failing.
+> 
+> Note, the bug is benign as kvm_has_noapic_vcpu is used purely to optimize
+> lapic_in_kernel() checks, and that optimization is quite dubious.  That,
+> and practically speaking no setup that cares at all about performance runs
+> with a userspace local APIC.
+> 
+> Reported-by: Li RongQing <lirongqing@baidu.com>
+> Cc: Maxim Levitsky <mlevitsk@redhat.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  arch/x86/kvm/lapic.c | 27 ++++++++++++++++++++++++++-
+>  arch/x86/kvm/x86.c   | 29 +++--------------------------
+>  2 files changed, 29 insertions(+), 27 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index 3242f3da2457..681f6d82d015 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -124,6 +124,9 @@ static inline int __apic_test_and_clear_vector(int vec, void *bitmap)
+>  	return __test_and_clear_bit(VEC_POS(vec), (bitmap) + REG_POS(vec));
+>  }
+>  
+> +__read_mostly DEFINE_STATIC_KEY_FALSE(kvm_has_noapic_vcpu);
+> +EXPORT_SYMBOL_GPL(kvm_has_noapic_vcpu);
+> +
+>  __read_mostly DEFINE_STATIC_KEY_DEFERRED_FALSE(apic_hw_disabled, HZ);
+>  __read_mostly DEFINE_STATIC_KEY_DEFERRED_FALSE(apic_sw_disabled, HZ);
+>  
+> @@ -2466,8 +2469,10 @@ void kvm_free_lapic(struct kvm_vcpu *vcpu)
+>  {
+>  	struct kvm_lapic *apic = vcpu->arch.apic;
+>  
+> -	if (!vcpu->arch.apic)
+> +	if (!vcpu->arch.apic) {
+> +		static_branch_dec(&kvm_has_noapic_vcpu);
+>  		return;
+> +	}
+>  
+>  	hrtimer_cancel(&apic->lapic_timer.timer);
+>  
+> @@ -2809,6 +2814,11 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns)
+>  
+>  	ASSERT(vcpu != NULL);
+>  
+> +	if (!irqchip_in_kernel(vcpu->kvm)) {
+> +		static_branch_inc(&kvm_has_noapic_vcpu);
+> +		return 0;
+> +	}
+> +
+>  	apic = kzalloc(sizeof(*apic), GFP_KERNEL_ACCOUNT);
+>  	if (!apic)
+>  		goto nomem;
+> @@ -2844,6 +2854,21 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns)
+>  	static_branch_inc(&apic_sw_disabled.key); /* sw disabled at reset */
+>  	kvm_iodevice_init(&apic->dev, &apic_mmio_ops);
+>  
+> +	/*
+> +	 * Defer evaluating inhibits until the vCPU is first run, as this vCPU
+> +	 * will not get notified of any changes until this vCPU is visible to
+> +	 * other vCPUs (marked online and added to the set of vCPUs).
+> +	 *
+> +	 * Opportunistically mark APICv active as VMX in particularly is highly
+> +	 * unlikely to have inhibits.  Ignore the current per-VM APICv state so
+> +	 * that vCPU creation is guaranteed to run with a deterministic value,
+> +	 * the request will ensure the vCPU gets the correct state before VM-Entry.
+> +	 */
+> +	if (enable_apicv) {
+> +		apic->apicv_active = true;
+> +		kvm_make_request(KVM_REQ_APICV_UPDATE, vcpu);
+> +	}
+> +
+>  	return 0;
+>  nomem_free_apic:
+>  	kfree(apic);
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index b66c45e7f6f8..59119157bd20 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -12053,27 +12053,9 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+>  	if (r < 0)
+>  		return r;
+>  
+> -	if (irqchip_in_kernel(vcpu->kvm)) {
+> -		r = kvm_create_lapic(vcpu, lapic_timer_advance_ns);
+> -		if (r < 0)
+> -			goto fail_mmu_destroy;
+> -
+> -		/*
+> -		 * Defer evaluating inhibits until the vCPU is first run, as
+> -		 * this vCPU will not get notified of any changes until this
+> -		 * vCPU is visible to other vCPUs (marked online and added to
+> -		 * the set of vCPUs).  Opportunistically mark APICv active as
+> -		 * VMX in particularly is highly unlikely to have inhibits.
+> -		 * Ignore the current per-VM APICv state so that vCPU creation
+> -		 * is guaranteed to run with a deterministic value, the request
+> -		 * will ensure the vCPU gets the correct state before VM-Entry.
+> -		 */
+> -		if (enable_apicv) {
+> -			vcpu->arch.apic->apicv_active = true;
+> -			kvm_make_request(KVM_REQ_APICV_UPDATE, vcpu);
+> -		}
+> -	} else
+> -		static_branch_inc(&kvm_has_noapic_vcpu);
+> +	r = kvm_create_lapic(vcpu, lapic_timer_advance_ns);
+> +	if (r < 0)
+> +		goto fail_mmu_destroy;
+>  
+>  	r = -ENOMEM;
+>  
+> @@ -12194,8 +12176,6 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
+>  	srcu_read_unlock(&vcpu->kvm->srcu, idx);
+>  	free_page((unsigned long)vcpu->arch.pio_data);
+>  	kvfree(vcpu->arch.cpuid_entries);
+> -	if (!lapic_in_kernel(vcpu))
+> -		static_branch_dec(&kvm_has_noapic_vcpu);
+>  }
+>  
+>  void kvm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+> @@ -12472,9 +12452,6 @@ bool kvm_vcpu_is_bsp(struct kvm_vcpu *vcpu)
+>  	return (vcpu->arch.apic_base & MSR_IA32_APICBASE_BSP) != 0;
+>  }
+>  
+> -__read_mostly DEFINE_STATIC_KEY_FALSE(kvm_has_noapic_vcpu);
+> -EXPORT_SYMBOL_GPL(kvm_has_noapic_vcpu);
+> -
+>  void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu)
+>  {
+>  	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> -- 
+> 2.43.0.687.g38aa6559b0-goog
+> 
+> 
