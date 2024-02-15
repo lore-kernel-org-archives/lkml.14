@@ -1,118 +1,89 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-251-36.mail.qq.com (out203-205-251-36.mail.qq.com [203.205.251.36])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9032669D00
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 10:20:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC9669D04
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 10:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707992403; cv=none; b=VejIcHoTS3AeLLJSXCNp6ImriJOjTF7mS4fgRN09yATq/+8FEwRw7gnINEYHmnX6FpY9VB/9ruLXALaoRm/fCCIuZwmSr/5JxnMXlx1FBVCXnZ77qkHbiAWqeTM60450kgFBIF+QfZZfsCRlL7R3cNEvp6U/s88XryY01RdNnDE=
+	t=1707992429; cv=none; b=r4LDSXELfz3ELs8wbIXpUGrcwHcHReq4y5tjpEfaeXOrQct/GZqVQJX6+shP53zbL3AHw1RMYyafBLv4BPZxQqsot/JKXB+HVNtSYQjsXX/hB5ceru5oyzXIJvwJ8bkrpnVxy/4M49ye8Rtk6KyV39/1zze5avjIVX8+YamB7o4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707992403; c=relaxed/simple;
-	bh=6T+B23RM48DgKeyvyI3A1orWH9VcY1C1hi6ykGKmpV4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hdCM1i5XbPzcD0gQTJJ+LA2rLSdVOZrHRslmBwSgx/YG54jAWRX+J4qpEBlxuZTyelF4Zv50Z/uSSl8IRnShOrI4RroGAlchzWDzkQx1pDJ1AaCNduYVMkwF7v1XXxq09/0NFc/GVn8e1B3HALrBLEqwe2lRSdeZqzXU7amUIp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=Satc0Gr7; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1707992429; c=relaxed/simple;
+	bh=ZdU4VeykU7M6Jfyac4J8/7W6yBvqeGFfqKVnXNdpFxk=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=Yq49jpKdCX+tcWJtCsuizFy375xHBg/6A0j+GySPWy0iJZuSJy95TvhZQK1XiyUtyxsWt2/EbPEm6E2bPCTiyF1JtPdWUxiNhBOsEFE2omNZ5ooHf0wfaaHOmNY0uBfUYEUQaNgFMBCLNhR8wWLl2dvnR3IOoNOa7TomzeYT05M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=UF3wu1BC; arc=none smtp.client-ip=203.205.251.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="Satc0Gr7"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-411e71d8a2bso4986875e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 02:20:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1707992399; x=1708597199; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=S3f0rb4C5lvPslwqInmE+iQAff85wgbT5AhACglF67s=;
-        b=Satc0Gr7dlkIf4mTMylvPBzcysXP5Y0We7A2r+7GRPVKq0ypgv6NB+ymw81vh29Nf+
-         5B+1Q+sQz/8x+cUC1zc2ul+wcXyWcWqKva7+TEAE5A2q24sAixzu0aRMUsFAqNFwLuDr
-         VmIrEYo1uh0aAZRqDThQCrbb/KdDQsRjVONkpmnnct1cWsyeJHxhXlydF1DQdS0q5/eG
-         OuxvAfva4GXpcHJxtpd+b1NQVUwXaOmnWDuVWwDXW77oupIbE835nIJVh7EAeaXM2q9o
-         k0ysVx+jBM2BvslKpXrg9vtE4Wp6rS3cHpUntG230L34nIJ8WwCJaNAApMQYeV0+b53k
-         N/oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707992399; x=1708597199;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S3f0rb4C5lvPslwqInmE+iQAff85wgbT5AhACglF67s=;
-        b=WG/C3nz52pNgKq+JPqk8Bbe9VwQoO/iTUwiKqTicOMLrE53K93gJdPIbmJ4XLWurYG
-         75xYvT0wf6ZCnPG/35kExxNivCUaZfH5MPzY4tZ+NsshLlvIbsMkXQ6HsHDc6ld3KpCN
-         BCUXesmQsdlg6sQ7hkaN3QJ7AwFbg5tPPB6kcAQpxlK4WIoxBHi1Wq/EL/ERd/CC/s2Q
-         j6yUaYtTndHLM04Qi6h9vxPPQ14v52W/TejILEFkdVv4crxIifGe+50lyb6IeILthtB9
-         nwRLh+TkmTdzo9faY1VaAPUGtPx8GGlgiPXpwssGDoF6WHJ6plFEb/4yeTY9XObyK4lA
-         2xPg==
-X-Forwarded-Encrypted: i=1; AJvYcCV9p2YGQx2D8jKJIoGYmXWoF3xLhCV52sowHWdqKaprKSFe0RVONfROmJVJ3M5GYgOsLEFgZKN7ZMgp819JpfnJGZEtpkdNuaOOoRC+
-X-Gm-Message-State: AOJu0YwQpgyfDcPbo/DAloMYwxBPwd8f89j0hOpc+XrsQ6nZ8qDgsvi7
-	T/7rtUfkH7lDOLASCzRJfRUjT2jTdm4NOXmDHdtdob03sQx/tZuChW2leHu8/qI=
-X-Google-Smtp-Source: AGHT+IEMO7O+5pkB5+NxkwSGjJ6icX5ZUnJ2Axo2drnnhvTA2O1MS5a8l4X/yqzJHPWAoy7WsV1Yxg==
-X-Received: by 2002:a05:600c:1f8d:b0:410:c5a9:a24a with SMTP id je13-20020a05600c1f8d00b00410c5a9a24amr908467wmb.20.1707992398598;
-        Thu, 15 Feb 2024 02:19:58 -0800 (PST)
-Received: from [192.168.50.4] ([82.78.167.20])
-        by smtp.gmail.com with ESMTPSA id t12-20020a05600c198c00b004107686650esm1518508wmq.36.2024.02.15.02.19.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Feb 2024 02:19:57 -0800 (PST)
-Message-ID: <0815e67c-36b8-4626-90a2-f11607915da2@tuxon.dev>
-Date: Thu, 15 Feb 2024 12:19:56 +0200
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="UF3wu1BC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1707992117; bh=rxnDnn266sMDmHizmjyIVYluJ3+8lsiRplWvAA8yAew=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=UF3wu1BCkdt9Wkhz6SB3mqLssmKh7tfHg1Y3pm6fj0LXgrBYNmQTK9g/EcT1X3qkq
+	 UQTYNHbS4wYdBhypW7QRMZq9hbXULC3t7IBSIxUpRhmqPmhMi5bdTD03v2ixBsHEdu
+	 gACQl26bEbASIh1zVk8RwPnUW3lGAZIofll3+Ni8=
+Received: from pek-lxu-l1.wrs.com ([36.129.58.158])
+	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
+	id 3D00B63E; Thu, 15 Feb 2024 18:15:16 +0800
+X-QQ-mid: xmsmtpt1707992116t3wprnbpf
+Message-ID: <tencent_4E674FD48DC125910DEA92045DEADDA11907@qq.com>
+X-QQ-XMAILINFO: NkHKfw09D6j82obyJWxrAi/6twAtn+h3mqbpRlOmLdB8QCxLBkaXTeXTApWnbU
+	 85jma3daH0AlwaqYNY18pDO3kZx13eDH1Adhx0fSsJMhKaB4656dEJfN/p6qTY8lhLl84DKOAi+9
+	 3a4aiTnjLl55Al6UaOr7eENlv4oN1RfIWERStf4U5oqZT6jyim5J0qVzaXX/qFbwSTHxgkRe3uVj
+	 pBK8er5ck/vEnmNrJOHBNMt268rdrA9qkbsCur7GuSvL2aHSn345PXGtJLpokSULLmrGkALK/HC9
+	 ORB1T8SDFUNaMJ+7DUIMTSMg1W/Q9SAe16kL53h3zDDaYGQXfj+vgzPcnJZmOpze2gnQlZonhq2h
+	 CHCHZH4jZ4qDi6JaSuk8Spc5e5cWjQAeEzkvx0jyhTLhAEzs6tflWp9wvOUAZN2bAM4qXWFg4SBU
+	 w80ByGa+nV4J6xBBojb6GSbCh4Zr5DxQgKS5W724NtMpiHpg2+lmgBpub7SEt10jc1HCybUFKHiZ
+	 gowLIcVwQRV0GyUHRWFQvgkWSytH7T+XMKEDxr1RI937CmZrUGVOXR5JJXEH7Xe4n79io/b5j9Ep
+	 lonCxSb1KRFaYRVeu1Kkxbp6NoRjP1HKUP+jaeBUX5rbq/ewEdWzM6K/oEeuijzFZkei9fkmeJxN
+	 zdOHo2r7bqk4aSUsQOewO4Oen9CtlDbR7WVGn2IYfABnFs8ksEHEQvdBdHDRdd5sYqiU/EU1vF0q
+	 cboAmOvYzJiQjzPrRULq+V6ZP2mM7oim6NdCRiQQa3eNjWH//5sTZcALlLl4pj1Z7WaVWAJxoX0/
+	 7m7qnN785QardhKPyTydQumkNTo8Nak9fuzLai2ofnsQ5xIIjrk4l1xZ3kxOrVsAAPebCI4o8Ovf
+	 I4thKlgmUq87Db/vMCBcRy+Fdt+TtOM1k5QUFGkXh/BUg5o/IP3dr4g98kzAkaSa4/BmPjyUJo1o
+	 3co7EXS5ieNjWF9M1bsTNuNyx46HtK
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+0f999d26a4fd79c3a23b@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [dri?] KASAN: slab-use-after-free Read in drm_atomic_helper_wait_for_vblanks (2)
+Date: Thu, 15 Feb 2024 18:15:16 +0800
+X-OQ-MSGID: <20240215101515.556063-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <000000000000ec4c32061143ec95@google.com>
+References: <000000000000ec4c32061143ec95@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 1/3] net: macb: queue tie-off or disable during
- WOL suspend
-Content-Language: en-US
-To: "Karumanchi, Vineeth" <vineeth.karumanchi@amd.com>,
- nicolas.ferre@microchip.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, linux@armlinux.org.uk
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, git@amd.com
-References: <20240130104845.3995341-1-vineeth.karumanchi@amd.com>
- <20240130104845.3995341-2-vineeth.karumanchi@amd.com>
- <d8c48839-8b22-47ad-b270-e96a1ad1adee@tuxon.dev>
- <6a8d100c-57a5-4c92-b744-453c106352ad@amd.com>
-From: claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <6a8d100c-57a5-4c92-b744-453c106352ad@amd.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi, Vineeth,
+please test uaf in drm_atomic_helper_wait_for_vblanks
 
-On 15.02.2024 07:43, Karumanchi, Vineeth wrote:
-> Hi Claudiu,
-> 
-> On 2/3/2024 9:08 PM, claudiu beznea wrote:
-> <...>
->>>           queue->tx_skb = NULL;
->>> @@ -2568,6 +2574,16 @@ static int macb_alloc_consistent(struct macb *bp)
->>>       if (bp->macbgem_ops.mog_alloc_rx_buffers(bp))
->>>           goto out_err;
->>>   +    /* Required for tie off descriptor for PM cases */
->>> +    if (!(bp->caps & MACB_CAPS_QUEUE_DISABLE)) {
->>> +        bp->rx_ring_tieoff = dma_alloc_coherent(&bp->pdev->dev,
->>> +                            macb_dma_desc_get_size(bp),
->>> +                            &bp->rx_ring_tieoff_dma,
->>> +                            GFP_KERNEL);
->>> +        if (!bp->rx_ring_tieoff)
->>> +            goto out_err;
->> You also need to free the previously allocated rx buffers.
-> 
-> Are you referring to (bp->macbgem_ops.mog_alloc_rx_buffers(bp)) allocation ?
-> It was freed in macb_free_consistent():
->              ...
->              bp->macbgem_ops.mog_free_rx_buffers(bp);
->              ...
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
 
-You're right, my bad.
+diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+index 39ef0a6addeb..b16ff9020097 100644
+--- a/drivers/gpu/drm/drm_atomic_helper.c
++++ b/drivers/gpu/drm/drm_atomic_helper.c
+@@ -1743,7 +1743,9 @@ EXPORT_SYMBOL(drm_atomic_helper_wait_for_flip_done);
+ void drm_atomic_helper_commit_tail(struct drm_atomic_state *old_state)
+ {
+ 	struct drm_device *dev = old_state->dev;
++	static DEFINE_MUTEX(lock);
+ 
++	mutex_lock(&lock);
+ 	drm_atomic_helper_commit_modeset_disables(dev, old_state);
+ 
+ 	drm_atomic_helper_commit_planes(dev, old_state, 0);
+@@ -1757,6 +1759,7 @@ void drm_atomic_helper_commit_tail(struct drm_atomic_state *old_state)
+ 	drm_atomic_helper_wait_for_vblanks(dev, old_state);
+ 
+ 	drm_atomic_helper_cleanup_planes(dev, old_state);
++	mutex_unlock(&lock);
+ }
+ EXPORT_SYMBOL(drm_atomic_helper_commit_tail);
+ 
 
-> 
-> Please let me know if you are referring to different buffers.
-
-I was referring to bp->macbgem_ops.mog_alloc_rx_buffers but hat is covered
-as you pointed out.
-
-Thank you,
-Claudiu Beznea
