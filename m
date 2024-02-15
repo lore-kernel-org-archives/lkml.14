@@ -1,46 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313EE131E23;
-	Thu, 15 Feb 2024 16:07:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C39132493
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 16:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708013247; cv=none; b=ewxra0tTOkfolzVKDORMGFuacIMCBeLlhzla1Lo8ut+Ro8qrD+mR+K4zsz4UYjQ0JW3ogu1Zfatu8jcgvXUo7oWxBh6OU5kb65YmHHpGIbDe/4P3cxpUpM6HiH1F6F95DlOmHJKA3rCoiAdtVoSAugp3mjw20kEJUu66wIOmpt0=
+	t=1708013260; cv=none; b=hcdwYpa+foPp0f1OYm46+rQfDdnLXWOe6VNh5iTjl/yUQNohpHCAEt6Z3Cztt2esjZpJ4s25J+q/1t9vH5i/sEe1CxreMzLhmv3YfLd0gGGwD6+6voMPkjIT8ixHKFoy3o6GrbNYdL7YIh0A+VKOiRZsaI4VMP5mqTIeWHFgME4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708013247; c=relaxed/simple;
-	bh=bX0WSp5usPgKDpNCMxLWwyyg6EnfaeMFJnUbjbX+wh4=;
+	s=arc-20240116; t=1708013260; c=relaxed/simple;
+	bh=cFkg1NFdHZsMSWSF0TXSI9aqTMhPctGcVI+y8TWc5G0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FkQEIOHFvaWipJ7a68etz+o8xeDoTB4hjRESvLUbuhI157x1n/6vJsbHrJB2JczCAaV0XlwfPVHleRaR1iBHvJCmy40/KeoTQhLQDVtU+yDWogwFE+WNWMZBqR80PFKxTn5R+BE9yRMhGJb2CBQ2w/H97SzauTEqWQGS9k+obPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YpqIRu28; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=MR2YndrdxOsV4ivRlFQMDakjGfutkLEc2lozcLXY3VgWOwo+lWvKhhgN4eJN1OwJIKBrUbSBmVtf/BdwN0Q7rZn4pYptD0DFcR9OYoHsdxpDX3e/BUSxGk17w6JqnIhC+InG/EDh5NLdwmWNgSTv2vp9Pg3pYqWHgFU035MzYgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=sAaTsuOo; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=iqKsAvd/; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=sAaTsuOo; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=iqKsAvd/; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YpqIRu28"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708013245; x=1739549245;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=bX0WSp5usPgKDpNCMxLWwyyg6EnfaeMFJnUbjbX+wh4=;
-  b=YpqIRu286QUrZnSaGnXFNkwdiEbH8xKimsYPReRDItRQ7f/InuKlPr1F
-   Tiq01NBc1qaMmfkAMHOfqvN6CNo3kl4qi/jSrWJa5YKpm8Hjqy0Zw1aHL
-   D/rmgXOXmP/7AQ+HhFU0VZACwkbrFSF7qQutYSvdSkC1MrjQ4qAW0ZQcQ
-   oisCsnLxsek2z/hn4NMHaPe8QUiXUzSzM6zSrkLKTZWtor1BZyKDSj6qj
-   8EQOG/NgAdzuo2nqFTKwXEnL7N4aIhr6cBXxApQelxYfaAc4sDWd0hQ5P
-   0dlFGdL30t8qnEndR863Z4JENxn0wvQd05n6PliA20v1px9JCF0CNlIS4
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="2234965"
-X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
-   d="scan'208";a="2234965"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 08:06:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
-   d="scan'208";a="26725514"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.246.113.87]) ([10.246.113.87])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 08:06:29 -0800
-Message-ID: <57689db8-3793-484a-9c85-bdbcec1d36ae@intel.com>
-Date: Thu, 15 Feb 2024 09:06:27 -0700
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="sAaTsuOo";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="iqKsAvd/";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="sAaTsuOo";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="iqKsAvd/"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BC6CD1F8BD;
+	Thu, 15 Feb 2024 16:07:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1708013256; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L3aB1O/XufYYPRfT2DCizHtazLUMIEGEshtMYMYqQ3Y=;
+	b=sAaTsuOolJA7WH22a80PJT82B1Q2K1Bv9f6lSI8om+Ges4rttWumugW2DwUBcg/X6QaFMt
+	GBNCkwhNQGCsH6K3ZBAGX3YywGGwtp5CT5lJWBMwqzHFe6uxd7XWgq0ANKZL8JbtOBdILD
+	ARc8fdYscDtSvR3YZLx9RKzuPcTWBjk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1708013256;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L3aB1O/XufYYPRfT2DCizHtazLUMIEGEshtMYMYqQ3Y=;
+	b=iqKsAvd/rVBbS4oTm+QGapY4qfLETqvB1Bb+E/cp2PXXY3momkbYlVRYfteePXfUmVlMeO
+	Yqp6+YleRvmhMhCw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1708013256; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L3aB1O/XufYYPRfT2DCizHtazLUMIEGEshtMYMYqQ3Y=;
+	b=sAaTsuOolJA7WH22a80PJT82B1Q2K1Bv9f6lSI8om+Ges4rttWumugW2DwUBcg/X6QaFMt
+	GBNCkwhNQGCsH6K3ZBAGX3YywGGwtp5CT5lJWBMwqzHFe6uxd7XWgq0ANKZL8JbtOBdILD
+	ARc8fdYscDtSvR3YZLx9RKzuPcTWBjk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1708013256;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L3aB1O/XufYYPRfT2DCizHtazLUMIEGEshtMYMYqQ3Y=;
+	b=iqKsAvd/rVBbS4oTm+QGapY4qfLETqvB1Bb+E/cp2PXXY3momkbYlVRYfteePXfUmVlMeO
+	Yqp6+YleRvmhMhCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 969BC13A82;
+	Thu, 15 Feb 2024 16:07:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id QONoJMg2zmVIfwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Thu, 15 Feb 2024 16:07:36 +0000
+Message-ID: <7d2b44bb-e3b0-435d-98ff-670b5029bd93@suse.cz>
+Date: Thu, 15 Feb 2024 17:07:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,119 +80,144 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] dmaengine: idxd: Remove shadow Event Log head stored
- in idxd
+Subject: Re: [PATCH v5 2/3] mm/compaction: add support for >0 order folio
+ memory compaction.
+To: Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc: "Huang, Ying" <ying.huang@intel.com>, Ryan Roberts
+ <ryan.roberts@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ David Hildenbrand <david@redhat.com>, "Yin, Fengwei"
+ <fengwei.yin@intel.com>, Yu Zhao <yuzhao@google.com>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Johannes Weiner <hannes@cmpxchg.org>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Kemeng Shi <shikemeng@huaweicloud.com>,
+ Mel Gorman <mgorman@techsingularity.net>, Rohan Puri
+ <rohan.puri15@gmail.com>, Mcgrof Chamberlain <mcgrof@kernel.org>,
+ Adam Manzanares <a.manzanares@samsung.com>,
+ "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+References: <20240214220420.1229173-1-zi.yan@sent.com>
+ <20240214220420.1229173-3-zi.yan@sent.com>
 Content-Language: en-US
-To: Fenghua Yu <fenghua.yu@intel.com>, Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
-References: <20240215024931.1739621-1-fenghua.yu@intel.com>
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240215024931.1739621-1-fenghua.yu@intel.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20240214220420.1229173-3-zi.yan@sent.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=sAaTsuOo;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="iqKsAvd/"
+X-Spamd-Result: default: False [-1.80 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 XM_UA_NO_VERSION(0.01)[];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 TO_DN_SOME(0.00)[];
+	 R_RATELIMIT(0.00)[to_ip_from(RLfsxmn1qwoupcjwdqfx65548p)];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%];
+	 ARC_NA(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 RCPT_COUNT_TWELVE(0.00)[19];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FREEMAIL_CC(0.00)[intel.com,arm.com,linux-foundation.org,infradead.org,redhat.com,google.com,linux.intel.com,cmpxchg.org,linux.alibaba.com,huaweicloud.com,techsingularity.net,gmail.com,kernel.org,samsung.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: BC6CD1F8BD
+X-Spam-Level: 
+X-Spam-Score: -1.80
+X-Spam-Flag: NO
 
+On 2/14/24 23:04, Zi Yan wrote:
+> From: Zi Yan <ziy@nvidia.com>
+> 
+> Before last commit, memory compaction only migrates order-0 folios and
+> skips >0 order folios.  Last commit splits all >0 order folios during
+> compaction.  This commit migrates >0 order folios during compaction by
+> keeping isolated free pages at their original size without splitting them
+> into order-0 pages and using them directly during migration process.
+> 
+> What is different from the prior implementation:
+> 1. All isolated free pages are kept in a NR_PAGE_ORDERS array of page
+>    lists, where each page list stores free pages in the same order.
+> 2. All free pages are not post_alloc_hook() processed nor buddy pages,
+>    although their orders are stored in first page's private like buddy
+>    pages.
+> 3. During migration, in new page allocation time (i.e., in
+>    compaction_alloc()), free pages are then processed by post_alloc_hook().
+>    When migration fails and a new page is returned (i.e., in
+>    compaction_free()), free pages are restored by reversing the
+>    post_alloc_hook() operations using newly added
+>    free_pages_prepare_fpi_none().
+> 
+> Step 3 is done for a latter optimization that splitting and/or merging
+> free pages during compaction becomes easier.
+> 
+> Note: without splitting free pages, compaction can end prematurely due to
+> migration will return -ENOMEM even if there is free pages.  This happens
+> when no order-0 free page exist and compaction_alloc() return NULL.
+> 
+> Signed-off-by: Zi Yan <ziy@nvidia.com>
+> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> Tested-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> Tested-by: Yu Zhao <yuzhao@google.com>
 
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-On 2/14/24 7:49 PM, Fenghua Yu wrote:
-> head is defined in idxd->evl as a shadow of head in the EVLSTATUS register.
-> There are two issues related to the shadow head:
-> 
-> 1. Mismatch between the shadow head and the state of the EVLSTATUS
->    register:
->    If Event Log is supported, upon completion of the Enable Device command,
->    the Event Log head in the variable idxd->evl->head should be cleared to
->    match the state of the EVLSTATUS register. But the variable is not reset
->    currently, leading mismatch between the variable and the register state.
->    The mismatch causes incorrect processing of Event Log entries.
-> 
-> 2. Unnecessary shadow head definition:
->    The shadow head is unnecessary as head can be read directly from the
->    EVLSTATUS register. Reading head from the register incurs no additional
->    cost because event log head and tail are always read together and
->    tail is already read directly from the register as required by hardware.
-> 
-> Remove the shadow Event Log head stored in idxd->evl to address the
-> mentioned issues.
-> 
-> Fixes: 244da66cda35 ("dmaengine: idxd: setup event log configuration")
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+Noticed a possible simplification:
 
-Much better fix.
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -447,6 +447,8 @@ extern void prep_compound_page(struct page *page, unsigned int order);
+>  
+>  extern void post_alloc_hook(struct page *page, unsigned int order,
+>  					gfp_t gfp_flags);
+> +extern bool free_pages_prepare_fpi_none(struct page *page, unsigned int order);
+> +
+>  extern int user_min_free_kbytes;
+>  
+>  extern void free_unref_page(struct page *page, unsigned int order);
+> @@ -481,7 +483,7 @@ int split_free_page(struct page *free_page,
+>   * completes when free_pfn <= migrate_pfn
+>   */
+>  struct compact_control {
+> -	struct list_head freepages;	/* List of free pages to migrate to */
+> +	struct list_head freepages[NR_PAGE_ORDERS];	/* List of free pages to migrate to */
+>  	struct list_head migratepages;	/* List of pages being migrated */
+>  	unsigned int nr_freepages;	/* Number of isolated free pages */
+>  	unsigned int nr_migratepages;	/* Number of pages to migrate */
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 7ae4b74c9e5c..e6e2ac722a82 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1179,6 +1179,12 @@ static __always_inline bool free_pages_prepare(struct page *page,
+>  	return true;
+>  }
+>  
+> +__always_inline bool free_pages_prepare_fpi_none(struct page *page,
+> +			unsigned int order)
+> +{
+> +	return free_pages_prepare(page, order, FPI_NONE);
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
-> Change Log:
-> - A previous patch tries to fix this issue in a different way:
-> https://lore.kernel.org/lkml/20240209191851.1050501-1-fenghua.yu@intel.com/
->   After discussion with Dave Jiang, removing shadow head might be
->   a right fix.
-> 
->  drivers/dma/idxd/cdev.c    | 2 +-
->  drivers/dma/idxd/debugfs.c | 2 +-
->  drivers/dma/idxd/idxd.h    | 1 -
->  drivers/dma/idxd/irq.c     | 3 +--
->  4 files changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-> index 77f8885cf407..e5a94a93a3cc 100644
-> --- a/drivers/dma/idxd/cdev.c
-> +++ b/drivers/dma/idxd/cdev.c
-> @@ -345,7 +345,7 @@ static void idxd_cdev_evl_drain_pasid(struct idxd_wq *wq, u32 pasid)
->  	spin_lock(&evl->lock);
->  	status.bits = ioread64(idxd->reg_base + IDXD_EVLSTATUS_OFFSET);
->  	t = status.tail;
-> -	h = evl->head;
-> +	h = status.head;
->  	size = evl->size;
->  
->  	while (h != t) {
-> diff --git a/drivers/dma/idxd/debugfs.c b/drivers/dma/idxd/debugfs.c
-> index 9cfbd9b14c4c..f3f25ee676f3 100644
-> --- a/drivers/dma/idxd/debugfs.c
-> +++ b/drivers/dma/idxd/debugfs.c
-> @@ -68,9 +68,9 @@ static int debugfs_evl_show(struct seq_file *s, void *d)
->  
->  	spin_lock(&evl->lock);
->  
-> -	h = evl->head;
->  	evl_status.bits = ioread64(idxd->reg_base + IDXD_EVLSTATUS_OFFSET);
->  	t = evl_status.tail;
-> +	h = evl_status.head;
->  	evl_size = evl->size;
->  
->  	seq_printf(s, "Event Log head %u tail %u interrupt pending %u\n\n",
-> diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-> index 47de3f93ff1e..d0f5db6cf1ed 100644
-> --- a/drivers/dma/idxd/idxd.h
-> +++ b/drivers/dma/idxd/idxd.h
-> @@ -300,7 +300,6 @@ struct idxd_evl {
->  	unsigned int log_size;
->  	/* The number of entries in the event log. */
->  	u16 size;
-> -	u16 head;
->  	unsigned long *bmap;
->  	bool batch_fail[IDXD_MAX_BATCH_IDENT];
->  };
-> diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
-> index c8a0aa874b11..348aa21389a9 100644
-> --- a/drivers/dma/idxd/irq.c
-> +++ b/drivers/dma/idxd/irq.c
-> @@ -367,9 +367,9 @@ static void process_evl_entries(struct idxd_device *idxd)
->  	/* Clear interrupt pending bit */
->  	iowrite32(evl_status.bits_upper32,
->  		  idxd->reg_base + IDXD_EVLSTATUS_OFFSET + sizeof(u32));
-> -	h = evl->head;
->  	evl_status.bits = ioread64(idxd->reg_base + IDXD_EVLSTATUS_OFFSET);
->  	t = evl_status.tail;
-> +	h = evl_status.head;
->  	size = idxd->evl->size;
->  
->  	while (h != t) {
-> @@ -378,7 +378,6 @@ static void process_evl_entries(struct idxd_device *idxd)
->  		h = (h + 1) % size;
->  	}
->  
-> -	evl->head = h;
->  	evl_status.head = h;
->  	iowrite32(evl_status.bits_lower32, idxd->reg_base + IDXD_EVLSTATUS_OFFSET);
->  	spin_unlock(&evl->lock);
+Seems like free_pages_prepare() currently only passes  fpi_flags to
+should_skip_kasan_poison() and that ignores them. You could remove the
+parameter from both and declare and use free_pages_prepare(page, order)
+directly.
+
+> +}
+> +
+>  /*
+>   * Frees a number of pages from the PCP lists
+>   * Assumes all pages on list are in same zone.
+
