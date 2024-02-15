@@ -1,114 +1,151 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C09BA3F;
-	Thu, 15 Feb 2024 07:02:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A0BA947E
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 07:07:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707980531; cv=none; b=CEYDMdzaNlMJ7KUQr2aThN9ub8ci5R+UTR3kJLLXsAF+MkdqbmNpoXCdF2YC9p0o5HP2ze21DjFPNsoPRuFTKzg8TYUhnBU4q/Y9v+5zOMBQ/4oFF4tLQ0hQ5nJSKmx7LSPTrLF4jJnpMrxnNl5EfnK4k9DjuihOC1mlLHaUz/8=
+	t=1707980846; cv=none; b=CVlqR9IxAYdLye80lkTm8k6Y+9EHOOSQtaB/Jbw4FMJ4dWvOJyjxhEAAQOZBNTklclHyJ9WHePyIg1JAOvHmbEEbhIra23exMsPIW+QCiNP+OTPCNshxjQ5Y5iNJtgw3pGUCQcQH1ZuqoVeMBWb9bN80LJg7OTyB1QwbBd5QVF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707980531; c=relaxed/simple;
-	bh=c1eutWs/h7+zqMutLtkSQP4xND8+gBTwO84eSFmq2Vg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QHl0HQsP1DT/Ga0MSYK2y3gFx+JOd/w5rSP8tb57MbPBot34K8BNP3kTnY4FyyDTA765FQraYn/uKQSuKC59X6NdckyjYZDCf9kL7FogTatGwPK8TCDE9bFw4zRs7ASGNEd8ZQ7cjTPNzmefjKanKfRz/YbKalauxTrZi2tJ/6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.224] (ip5f5aeca7.dynamic.kabel-deutschland.de [95.90.236.167])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id A176561E5FE01;
-	Thu, 15 Feb 2024 08:00:55 +0100 (CET)
-Message-ID: <fc1be95d-b34b-4153-ba0b-f124180a33ec@molgen.mpg.de>
-Date: Thu, 15 Feb 2024 08:00:54 +0100
+	s=arc-20240116; t=1707980846; c=relaxed/simple;
+	bh=l4PLZm6Ml4E90WhlhQFbI5aXHf5cXcCSh206fgqAU0g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fLA9jgs+Bd7vVWx2FiXfle7p07kpDyOZ7ihjXSX+4Tdj1BNZRtSC5B+0W2OZMvGXSm1gVHV+ZbaAZamrtlgug6XNkE9LR8V20IdxQM+Bu1oDByCbmIe3fgZ01pryb7vSBDIgqb0OrxrcopNgk4/YQxlZpXeSuAqbmPzlp0Rm61s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QrMIUfg5; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QrMIUfg5"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4120933b710so36555e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 23:07:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707980843; x=1708585643; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nddqiVq/3r6Pac3WeXAXpKp40eZ00zZsFZh1wnDRavA=;
+        b=QrMIUfg55py1divoB0RlsHH4fnDX/7GuVM3EJHUAX68DRPZGKfsHimoTNUEIuY7kkH
+         qFLQXrowJkI1QOdK4CLJMNhEuu7vGo20SDJJNdysz/az14iBN0/ecrLcrSE+x2LlhSaK
+         ndQjZ53Fl4NTSgNJ5Q8czn/0gcyy68KzeKoWVvlXG4BjF3T0GncLprsiSsGd4V0rPj9Y
+         7nzExaZalfrzau/EkJ77LZCfYPn7wja4KVTrZMb/J3FqfNbwOf8QPFCOVXRXdvqKEJRf
+         HOEs6vZ1VzAJNcAELd5bHmdiM0VCQqJ/BF4HV+fliKia7yxekXg8D1+Kh2lFWXppIvhH
+         MoAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707980843; x=1708585643;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nddqiVq/3r6Pac3WeXAXpKp40eZ00zZsFZh1wnDRavA=;
+        b=BNkjK5ds6tHCe62nMhqF7HJzr3z2cWuJz/QnLoBabTcI9juFmeDHsKLf65G1jGT3bV
+         nKuSZCB0gAgnN0JIQAnBKYT6VTGpb/wcOCUjVpAfqeM907ItbUP/GG4MiydnuJ/0GGgq
+         vO3ljeEwrt/3Bzcvy9PEbLmaY3gBZCb9TTpSR2t9deY7HaVFBEF9j7r+OaA/cwoBAABE
+         LnYZOzX4VpQ3azTg+JcYjSn8DA/nHmzoE4/VJS1N+G7vSxUZyJdT2Tgfay/K9hAgZsNd
+         7wMvesDsHPTSMvX+tPyBZ/7F50NE7DKKOj4YWIxn38mrH1wB3rg9ml7NwCrGVW6Evs65
+         9USw==
+X-Forwarded-Encrypted: i=1; AJvYcCW+8iLlqmcMJB8TznJpxB88qVyTLrua0azcglATdsoPIY+RMozQNzphXbFFk08ETPb3pIzZ0jqRNeaTw7Ge9+DLSxyucuQC5cjBvOmS
+X-Gm-Message-State: AOJu0Yxwtv/Fd3G5f4sUfX8IJPSuJEFKSXBxELi6puRZltBJet11BrmG
+	FQQ+sIgAAxu8pbKHbKYCHEEvaIzckdhkuNNZQSNwxwEIpP4qZFAx8xeZVNJHHqdU1j6yuJ0cizM
+	L+pcHI6PJ55YDaEK4JEcYfDnwftG3zkn2zyhi
+X-Google-Smtp-Source: AGHT+IEZGK7rs/84Y0QnbGxrQrX9DEMxASQW0pm5voFFt9sqVtOtLAZsKqN9qO601ExmYB592dcSsKBKGPOQoW+IK6I=
+X-Received: by 2002:a05:600c:4e12:b0:411:f6b6:faf5 with SMTP id
+ b18-20020a05600c4e1200b00411f6b6faf5mr249572wmq.3.1707980843006; Wed, 14 Feb
+ 2024 23:07:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [PATCH net-next v2 0/8] drivers: net: Convert
- EEE handling to use linkmode bitmaps
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Ariel Elior <aelior@marvell.com>,
- Manish Chopra <manishc@marvell.com>,
- Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>, netdev@vger.kernel.org,
- linux-usb@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
- linux-kernel@vger.kernel.org
-References: <20240214-keee-u32-cleanup-v2-0-4ac534b83d66@lunn.ch>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240214-keee-u32-cleanup-v2-0-4ac534b83d66@lunn.ch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240209115950.3885183-1-chengming.zhou@linux.dev>
+ <20240209115950.3885183-2-chengming.zhou@linux.dev> <CAOUHufbg6zbqQaw1CPRWKpOv3NR=mi1xb31hG3WFMoZhj406Tw@mail.gmail.com>
+ <8123c4be-d696-4e9e-884f-aa12f6099ddb@linux.dev>
+In-Reply-To: <8123c4be-d696-4e9e-884f-aa12f6099ddb@linux.dev>
+From: Yu Zhao <yuzhao@google.com>
+Date: Thu, 15 Feb 2024 02:06:46 -0500
+Message-ID: <CAOUHufbVNF_zDm93W2nj+V5G3FrAx7jdcaiO+gdabmG7L_6AOw@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/1] mm/swap: queue reclaimable folio to local rotate
+ batch when !folio_test_lru()
+To: Chengming Zhou <chengming.zhou@linux.dev>
+Cc: willy@infradead.org, hannes@cmpxchg.org, yosryahmed@google.com, 
+	nphamcs@gmail.com, akpm@linux-foundation.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Chengming Zhou <zhouchengming@bytedance.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Dear Andrew,
+On Wed, Feb 14, 2024 at 4:18=E2=80=AFAM Chengming Zhou <chengming.zhou@linu=
+x.dev> wrote:
+>
+> On 2024/2/14 15:13, Yu Zhao wrote:
+> > On Fri, Feb 9, 2024 at 6:00=E2=80=AFAM <chengming.zhou@linux.dev> wrote=
+:
+> >>
+> >> From: Chengming Zhou <zhouchengming@bytedance.com>
+> >>
+> >> All LRU move interfaces have a problem that it has no effect if the
+> >> folio is isolated from LRU (in cpu batch or isolated by shrinker).
+> >> Since it can't move/change folio LRU status when it's isolated, mostly
+> >> just clear the folio flag and do nothing in this case.
+> >>
+> >> In our case, a written back and reclaimable folio won't be rotated to
+> >> the tail of inactive list, since it's still in cpu lru_add batch. It
+> >> may cause the delayed reclaim of this folio and evict other folios.
+> >>
+> >> This patch changes to queue the reclaimable folio to cpu rotate batch
+> >> even when !folio_test_lru(), hoping it will likely be handled after
+> >> the lru_add batch which will put folio on the LRU list first, so
+> >> will be rotated to the tail successfully when handle rotate batch.
+> >>
+> >> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+> >
+> > I don't think the analysis is correct. IIRC, writeback from non
+> > reclaim paths doesn't require isolation and the reclaim path doesn't
+> > use struct folio_batch lru_add.
+>
+> Ah, my bad, I forgot to mention the important context in the message:
+>
+> This is not from the normal reclaim context, it's from zswap writeback
+> reclaim context, which will first set PG_reclaim flag, then submit the
+> async writeback io.
+>
+> If the writeback io complete fast enough, folio_rotate_reclaimable()
+> will be called before that folio put on LRU list (it still in the local
+> lru_add batch, so it's somewhat like isolated too)
+>
+> >
+> > Did you see any performance improvements with this patch? In general,
+> > this kind of patches should have performance numbers to show it really
+> > helps (not just in theory).
+>
+> Right, there are some improvements, the numbers are put in cover letter.
+> But this solution is not good enough, just RFC for discussion. :)
+>
+>                            mm-unstable-hot   zswap-lru-reclaim
+> real                       63.34             62.72
+> user                       1063.20           1060.30
+> sys                        272.04            256.14
+> workingset_refault_anon    2103297.00        1788155.80
+> workingset_refault_file    28638.20          39249.40
+> workingset_activate_anon   746134.00         695435.40
+> workingset_activate_file   4344.60           4255.80
+> workingset_restore_anon    653163.80         605315.60
+> workingset_restore_file    1079.00           883.00
+> workingset_nodereclaim     0.00              0.00
+> pgscan                     12971305.60       12730331.20
+> pgscan_kswapd              0.00              0.00
+> pgscan_direct              12971305.60       12730331.20
+> pgscan_khugepaged          0.00              0.00
+>
+> >
+> > My guess is that you are hitting this problem [1].
+> >
+> > [1] https://lore.kernel.org/linux-mm/20221116013808.3995280-1-yuzhao@go=
+ogle.com/
+>
+> Right, I just see it, it's the same problem. The only difference is that
+> in your case the folio is isolated by shrinker, in my case, the folio is
+> in cpu lru_add batch. Anyway, the result is the same, that folio can't be
+> rotated successfully when writeback complete.
 
-
-Thank you very much for this patch-set.
-
-
-Am 15.02.24 um 12:13 AM schrieb Andrew Lunn:
-> EEE has until recently been limited to lower speeds due to the use of
-> the legacy u32 for link speeds. This restriction has been lifted, with
-> the use of linkmode bitmaps. This patchset convert some MAC drivers
-
-Maybe reference the commit introducing them?
-
-One small nit: convert*s*
-
-> still using the old _u32 to link modes, with the aim of soon being
-> able to remove the legacy _u32 members in the keee structure.
-> 
-> A couple of Intel drivers do odd things with EEE, setting the autoneg
-> bit. It is unclear why, no other driver does, ethtool does not display
-> it, and EEE is always negotiated. One patch in this series deletes
-> this code. Comments on why its actually useful and should be kept are
-> gratefully received.
-
-Nice find.
-
-
-Kind regards,
-
-Paul
-
-
-> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-> ---
-> Changes in v2:
-> - igb: Fix type 100BaseT to 1000BaseT.
-> - Link to v1: https://lore.kernel.org/r/20240204-keee-u32-cleanup-v1-0-fb6e08329d9a@lunn.ch
-> 
-> ---
-> Andrew Lunn (8):
->        net: usb: r8152: Use linkmode helpers for EEE
->        net: usb: ax88179_178a: Use linkmode helpers for EEE
->        net: qlogic: qede: Use linkmode helpers for EEE
->        net: ethernet: ixgbe: Convert EEE to use linkmodes
->        net: intel: i40e/igc: Remove setting Autoneg in EEE capabilities
->        net: intel: e1000e: Use linkmode helpers for EEE
->        net: intel: igb: Use linkmode helpers for EEE
->        net: intel: igc: Use linkmode helpers for EEE
-> 
->   drivers/net/ethernet/intel/e1000e/ethtool.c      | 17 +++++--
->   drivers/net/ethernet/intel/i40e/i40e_ethtool.c   |  7 +--
->   drivers/net/ethernet/intel/igb/igb_ethtool.c     | 33 ++++++++-----
->   drivers/net/ethernet/intel/igc/igc_ethtool.c     | 13 ++---
->   drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c | 48 ++++++++++---------
->   drivers/net/ethernet/qlogic/qede/qede_ethtool.c  | 60 +++++++++++++++---------
->   drivers/net/usb/Kconfig                          |  1 +
->   drivers/net/usb/ax88179_178a.c                   |  9 ++--
->   drivers/net/usb/r8152.c                          | 31 ++++++------
->   9 files changed, 123 insertions(+), 96 deletions(-)
-> ---
-> base-commit: d1d77120bc2867b3e449e07ee656a26b2fb03d1e
-> change-id: 20240204-keee-u32-cleanup-b86d68458d80
-> 
-> Best regards,
+In that case, a better solution would be to make lru_add add
+(_reclaim() && !_dirty() && !_writeback()) folios at the tail.
+(_rotate() needs to leave _reclaim() set if it fails to rotate.)
