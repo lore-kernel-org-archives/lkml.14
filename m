@@ -1,78 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51DA1136642;
-	Thu, 15 Feb 2024 18:15:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAEB613173F;
+	Thu, 15 Feb 2024 18:16:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708020927; cv=none; b=MpJvTNzLXV2QOVwAfmIGnIZbZrF/1E8D3PGVhe9BNgoyX9zhcwQRZp+phdz29BEa2ndJ0SRVj8vfkOreSXYjuT1AKexUR2ogH2olAUydg0rpsI5fYCEHfV1rBJ4z2zgq4nmfdtGND8nLvaesXX3LKT+uvQhbCKkpRro8gx127E4=
+	t=1708020997; cv=none; b=i6WGMax2lmYajYhBVEn2LLCJYbWBWMOMfniNJ4h2ZrlESSzQbXKHPV7bjNNeyWSVC7cflV4N1aV8L+DY7JC8a2XOMN/1w1dGjNM3juZea2mq+07WGlfqNNZxDA10fJBsvpqhCAJaWyAxJW64zCUJtp703+hS/kEU9qn+hd9Kdsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708020927; c=relaxed/simple;
-	bh=/tRgUyJ1kN5lOG9h641EhrX4DWRyxFSJ+IDVag2vG2o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KCqXKHkUyLVn3SkckCStKxvSmipRpEuQL6KmoxgYecK+PF1feLzNpdjHb07neceO66rTrQ2pZaDKD94ww0c1+wGciQ9EOUq5DoZYkEcCspihbKmcPzEzHJKBeLpZw4fuuRYuuu8TzXnaU1cDVnxzoNThd6Q1wpIRyoDWPzOHg7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=flw+uQMV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708020997; c=relaxed/simple;
+	bh=Awfuobtglup8WyFBxQDNA8oCZmqRri8Ujo/a4iJOCY8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gnCX7jkVbACY7qBzraLRSrw8pWZ15bM/1UBhKxJkTabIECAkDWjmygfw04T/O6wcaH+51YWkc7exoxe10ZpMpRoopFJ8fPoeJACGDnYWERVjKGglZuAcACs2SxwIxupdIv+9N3D5bt0G5HUBV7zIwDDdljFcwd04yRuxRFmi/yI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G0kqmNTp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="flw+uQMV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AB9BC433C7;
-	Thu, 15 Feb 2024 18:15:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G0kqmNTp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F21B3C433F1;
+	Thu, 15 Feb 2024 18:16:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708020926;
-	bh=/tRgUyJ1kN5lOG9h641EhrX4DWRyxFSJ+IDVag2vG2o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=flw+uQMVyQlYiGFcuLIWtwJqSO0Wqyaqmz+ERXsV8fgW8CSnYcdDlfg/n/SYUZ3L9
-	 13zRFa8rxCyBJVTpOJapbt15iHX3v5xYoVgophFoCJIYV4rhpTea9RJg9oZ3C9Btyc
-	 lNtJd/9a4YCJ4r7JBGl51QDNwSMQtOizvGxxQis9nldGmJkGzYlyABZejF7LLOUp0O
-	 rGRwu8VBORKFwwC6QWn0ozBmYo76YM+Wf/BMw5jCV2zygSEmG5zFH68A+qSGlIb1Bk
-	 H7L1ASVRJ/pUGeXk7BDPyE+1BGAolxewXhdp+DZ+qo1w09aanpAgIFDzFHeMjGdG4c
-	 NB5S2udn1Wvxw==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: gregkh@linuxfoundation.org
-Cc: akpm@linux-foundation.org,
-	allen.lkml@gmail.com,
-	conor@kernel.org,
-	f.fainelli@gmail.com,
-	jonathanh@nvidia.com,
-	linux-kernel@vger.kernel.org,
-	linux@roeck-us.net,
-	lkft-triage@lists.linaro.org,
-	patches@kernelci.org,
-	patches@lists.linux.dev,
-	pavel@denx.de,
-	rwarsow@gmx.de,
-	shuah@kernel.org,
-	srw@sladewatkins.net,
-	stable@vger.kernel.org,
-	sudipm.mukherjee@gmail.com,
-	torvalds@linux-foundation.org,
-	Miguel Ojeda <ojeda@kernel.org>
-Subject: Re: [PATCH 6.6 000/124] 6.6.17-rc2 review
-Date: Thu, 15 Feb 2024 19:15:08 +0100
-Message-ID: <20240215181508.865801-1-ojeda@kernel.org>
-In-Reply-To: <20240214142247.920076071@linuxfoundation.org>
-References: <20240214142247.920076071@linuxfoundation.org>
+	s=k20201202; t=1708020997;
+	bh=Awfuobtglup8WyFBxQDNA8oCZmqRri8Ujo/a4iJOCY8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G0kqmNTpIor7iaOu/2rdZjj3yexSHjy0aPtL0aNOqXocBxWRDo8spEueJE7bxj1cL
+	 RYl9w78bsmG+wQDMOWzLnb8PX/3jQ4Xh8cl9mh8we71zaK3eTXgifaKyO/e46YFfot
+	 QTXBOwVTNxvUCZ1DalIieuDa5l9jwR+APUTbsWoPDPk6iN3KyTw2C4pCYVME5JQhiM
+	 HQf/R1QN6JOtTHtEXEpVRk+6xHkcm2Z7iQGLfxePjk7DESqHspDY/xLy1FZf4t6K38
+	 Zc3byWLalus4sXghfKDlfFUNHzmuN2HJNyV2riukbwH8cX+/ARbxuri8gxEAAL5JZJ
+	 pMjbhPg8N6KEw==
+Received: by pali.im (Postfix)
+	id EC44F75F; Thu, 15 Feb 2024 19:16:33 +0100 (CET)
+Date: Thu, 15 Feb 2024 19:16:33 +0100
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To: Jean Delvare <jdelvare@suse.de>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang <wsa@kernel.org>,
+	linux-i2c@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	Marius Hoch <mail@mariushoch.de>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Dell.Client.Kernel@dell.com, Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: Ideas for a generic solution to support accelerometer lis3lv02d
+ in Dell laptops/notebooks?
+Message-ID: <20240215181633.2aevovw6wkxq5si2@pali>
+References: <4820e280-9ca4-4d97-9d21-059626161bfc@molgen.mpg.de>
+ <a1128471-bbff-4124-a7e5-44de4b1730b7@redhat.com>
+ <20231223125350.xqggx3nyzyjjmnut@pali>
+ <20240213150708.57148f6a@endymion.delvare>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240213150708.57148f6a@endymion.delvare>
+User-Agent: NeoMutt/20180716
 
-On Wed, 14 Feb 2024 15:30:09 +0100, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.6.17 release.
-> There are 124 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 16 Feb 2024 14:22:24 +0000.
-> Anything received after that time might be too late.
+On Tuesday 13 February 2024 15:07:08 Jean Delvare wrote:
+> On Sat, 23 Dec 2023 13:53:50 +0100, Pali Rohár wrote:
+> > smbus is not really bus which provides discovering and identifying
+> > devices on the bus.
+> 
+> For completeness, SMBus version 2.0 actually added support for device
+> discovery and even dynamic slave address allocation. This is explained
+> in chapter 5, section 5.6 (SMBus Address resolution protocol).
+> 
+> Unfortunately, this is an optional feature which requires active
+> cooperation from each device connected to the bus. If any device on the
+> bus supports SMBus ARP then you should get an answer when probing
+> (7-bit) I2C address 0x61.
+> 
+> Long ago I had a plan to add support for SMBus ARP to the kernel, but
+> gave up because I couldn't find any system implementing it. If the
+> accelerometer device in Dell laptops supported ARP then we could use it
+> to figure out the device's address, unfortunately this doesn't seem to
+> be the case.
+> 
+> -- 
+> Jean Delvare
+> SUSE L3 Support
 
-Built and QEMU-booted for Rust:
+According to my notes, accelerometer in Dell laptops should use
+LNG3DMTR-LGA16-3x3 chipset. From what I found it should be
+pin-compatible with LIS302DL, just in different package.
 
-Tested-by: Miguel Ojeda <ojeda@kernel.org>
+ST LIS302DL datasheet is on the website:
+https://www.st.com/resource/en/datasheet/lis302dl.pdf
 
-Cheers,
-Miguel
+It is dual i2c and SPI bus support chipset. But in the datasheet there
+is nothing about SMBus, looks like this is designed for i2c usage. So I
+highly doubt that chipset supports SMBus version 2.0 with ARP extension.
 
+Anyway, SMBus ARP is new thing to me, I have never heard about it or its
+usage before. Has anybody else found some device which supports it?
+Would be interesting to know if this is not just another standard which
+was not publicly deployed yet.
