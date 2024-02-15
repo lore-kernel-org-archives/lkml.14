@@ -1,112 +1,77 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDEE31B953
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 09:03:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF621171A9;
+	Thu, 15 Feb 2024 09:05:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707987826; cv=none; b=jrY+pJraGsbXzNnfeNOTNqhU50GB02z7P0pueXyxtjsZyxejvm/nMR1c5O810RIg4fb9gqc9Lg+jJFWWxs8Ah5V4nEFMfXNhZ814aMvTwTipwVPdMQ4Xk9sW4KXrpM0cGSckJcV6nTlMB7Qvvr+D8jhu6vRDz+Ai6jsOIH6rbUY=
+	t=1707987909; cv=none; b=GAfuC1Qnhmsrf+peNhvkpGcaLWjapxe3E9TAEBpNDtO7n8TAxwPlzlY/qn4fsfAg05wElmjcime73kbyX74Shz8T8JWBl7lytkZ5Gmz/MexCf88aCDSZ+8NXrc3hxeCV7hctviyqXuTooKMS1wL8ShSCvf6NrKAb7fl4nm7wjiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707987826; c=relaxed/simple;
-	bh=zQrS4HbyreGN0s+IdWF/KCYWN7W7xmEy9D7hkjVlPjI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uXYr5/rwitUQRZiT6eNHEfHtjKdd9YpwLvuiHmHiJu+z5wR1q7y3EGPcl8iCmmE23Z4PHvBopuTA3hfy2i7vWvuUXFbvm/K3E/fGCxvlssaOkfIzm7NY2hlErlD0wlr8a+r8Crt3BCRiX65Q3HGbJfGLc1PPZ95xaq6dhmUvT/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=RDH3eo22; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="RDH3eo22"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1707987823; x=1739523823;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=zQrS4HbyreGN0s+IdWF/KCYWN7W7xmEy9D7hkjVlPjI=;
-  b=RDH3eo22clDNCtVla1di1eQ8VSzHgRbKjLC9BqYHWMybg4rSaXSY2Yp1
-   6UqlBvmfDhAJM4pNBJDU3Man/uYHWIKPTdjPdHITu2sLoI7DA6dn8+5rT
-   h2ZceNHlecPt4g/5j2Gp0u4uOy69XnBfG2RBf9ADnsfFztPUSkN4Uc52H
-   0Cu0oZ5GmsQoFiXBVhvfgeFu46oVxteDCByCG2yLdu3axmkVWvZVdClA7
-   7Nqg3YIi3iCFYTFiqo7hBmvTa3hJGQRuORsBWX5Bd5/++GpO5Ybk0I0rj
-   YZshxyPcmLg6jAdFgx+mmmUJrwXN9LY47XRalRV7KZRRCN/vGlpp4LG4/
-   A==;
-X-IronPort-AV: E=Sophos;i="6.06,161,1705359600"; 
-   d="scan'208";a="35419042"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 15 Feb 2024 10:03:40 +0100
-Received: from steina-w.localnet (steina-w.tq-net.de [10.123.53.25])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id D8F34280075;
-	Thu, 15 Feb 2024 10:03:39 +0100 (CET)
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Aradhya Bhatia <a-bhatia1@ti.com>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Sam Ravnborg <sam@ravnborg.org>, dri-devel@lists.freedesktop.org, marex@denx.de, Jan Kiszka <jan.kiszka@siemens.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] drm/bridge: tc358767: Fix DRM_BRIDGE_ATTACH_NO_CONNECTOR case
-Date: Thu, 15 Feb 2024 10:03:41 +0100
-Message-ID: <3277848.aeNJFYEL58@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <2f3bb86b-6f8c-4807-985e-344a0c47864c@siemens.com>
-References: <20231108-tc358767-v2-0-25c5f70a2159@ideasonboard.com> <f6af46e0-aadb-450a-9349-eec1337ea870@ti.com> <2f3bb86b-6f8c-4807-985e-344a0c47864c@siemens.com>
+	s=arc-20240116; t=1707987909; c=relaxed/simple;
+	bh=c2Ytc7I4JEAtHKJs79kozCQcZ6U8S5voc1kf5LhshRg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=k4bf3y9eu02Q4Z0+Q9PQQePuEM3Ql8WZuWBkCz3UvwVYtcc1BlGAuO9Q1Tiq9tk6LvkIJGT38wgYH6J2uoPUuBJu81QiqO8TXb9w3vKg90Qu2U1SqU+SKdsZ6hjq3kXmFHGZ3b5rttYVaHOSIYHZaywzzWbq+dpdqi9XPBOUXxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i53875b6c.versanet.de ([83.135.91.108] helo=phil.lan)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1raXfh-0002L8-OK; Thu, 15 Feb 2024 10:04:45 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: neil.armstrong@linaro.org
+Cc: quic_jesszhan@quicinc.com,
+	sam@ravnborg.org,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	heiko@sntech.de,
+	dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	quentin.schulz@theobroma-systems.com,
+	Heiko Stuebner <heiko.stuebner@cherry.de>
+Subject: [PATCH 2/2] dt-bindings: display: panel-lvds: Add compatible for admatec 9904370 panel
+Date: Thu, 15 Feb 2024 10:04:42 +0100
+Message-Id: <20240215090442.3513760-2-heiko@sntech.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240215090442.3513760-1-heiko@sntech.de>
+References: <20240215090442.3513760-1-heiko@sntech.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
 
-Hi everyone,
+From: Heiko Stuebner <heiko.stuebner@cherry.de>
 
-Am Donnerstag, 15. Februar 2024, 09:53:54 CET schrieb Jan Kiszka:
-> On 11.12.23 09:07, Aradhya Bhatia wrote:
-> > On 06/12/23 17:41, Tomi Valkeinen wrote:
-> >> Hi,
-> >>=20
-> >> On 08/11/2023 14:45, Alexander Stein wrote:
-> >>> Hi Tomi,
-> >>>=20
-> >>> Am Mittwoch, 8. November 2023, 12:27:21 CET schrieb Tomi Valkeinen:
-> >>>> These two patches are needed to make tc358767 work in the
-> >>>> DRM_BRIDGE_ATTACH_NO_CONNECTOR case, at least when using a DP
-> >>>> connector.
-> >>>>=20
-> >>>> I have tested this with TI AM654 EVM with a tc358767 add-on card
-> >>>> connected to a DP monitor.
-> >>>=20
-> >>> Just a question regarding the usage of this DSI-DP bridge.
-> >>> What is the state of the DSI lanes after the DSI host has been
-> >>> initialized,
-> >>> but before calling atomic_pre_enable? AFAIK this bridge requires LP-11
-> >>> on DSI
-> >>> at any time for accessing the AUX channel.
-> >=20
-> > + Marek
-> >=20
-> > Marek, Alexander,
-> >=20
-> > A quick grep tells me that you have added devicetree for tc358767 in DSI
-> > to (e)DP mode on other platforms. Could you please test these patches
-> > and report if you find any issue?
+The 9904379 is a 10.1" 1024x600 LVDS display using the standard
+lvds properties.
 
-Sorry, I can't provide any feedback here. I've yet to setup the DSI-DP=20
-correctly.
+Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
+---
+ Documentation/devicetree/bindings/display/panel/panel-lvds.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Best regards,
-Alexander
-
-> Is this the last blocker to move forward with these fixes? I'd really
-> like to see them finally merged.
->=20
-> Thanks,
-> Jan
-
-
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
-
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-lvds.yaml b/Documentation/devicetree/bindings/display/panel/panel-lvds.yaml
+index 3fb24393529cd..155d8ffa8f6ef 100644
+--- a/Documentation/devicetree/bindings/display/panel/panel-lvds.yaml
++++ b/Documentation/devicetree/bindings/display/panel/panel-lvds.yaml
+@@ -39,6 +39,8 @@ properties:
+   compatible:
+     items:
+       - enum:
++          # Admatec 9904379 10.1" 1024x600 LVDS panel
++          - admatec,9904379
+           - auo,b101ew05
+           # Chunghwa Picture Tubes Ltd. 7" WXGA (800x1280) TFT LCD LVDS panel
+           - chunghwa,claa070wp03xg
+-- 
+2.39.2
 
