@@ -1,116 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 642AD1754B;
-	Thu, 15 Feb 2024 17:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3297913248C;
+	Thu, 15 Feb 2024 17:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708016580; cv=none; b=kUdKSkZTEWHQJUCoa+Ua2xQdkmXsaDI+6zWKFLUArJWm/obB5AqznJsFcEu/bpLwCZOgXhyehRmaes7qtjJiDKUTOmweDMb3leYSmeGj9/ilZG0zJ5MuvVGiHFvlk7gYCdBRL++irHxMpWTXMxW9Kve/LrFqfFjddJPkWCkf5Dc=
+	t=1708016588; cv=none; b=qvQtTEbJt6yWTGX6KYmwJUwFvUu7ysD5B8n1pBKGyndd+TN6kF9gYrIyjNuqDtZW7IiqHXBk0bFzk4s2F6TMBeFLXU/NXJxEAYli8topMFE9EaUpjfdS3LimkI30Ss3e+mkRz20rZ4gYcCzPnUHta9pNP8XZ5no1UMuaJ3C6cVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708016580; c=relaxed/simple;
-	bh=N1m0kPjc7D24yEHh5GCbtG5RxZ9QtaO4otDQYDmi8rE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=d1ofM9+Zn/7QqDpBYBCY1qGMEG4rQV4SXmyyLroZpsre6MDCY/44vd2rMIYO6305vsbN+5ByzVHNxWnL1MHsqA3+dy4Op/fuOEMEF4NwQK40mlronK+8+NWJWAQnd5q3SmSb3ugfhnOBUDpF2VkE50GTTGd+ESwLwh5z9oMihiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J7HEMHyI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708016588; c=relaxed/simple;
+	bh=sBjIQr0LJN1UQmJuAshlDh6mfxOXLwZHlVBLUfWTVko=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZszAHokXqaZ/3YgkF3JaGXMzfy07PMqQCGQypgnhcLN7qkd/ExjuFEcZ4n2Tcimyl3U7nojckPx2QHCLqjL4ni2RTS/ipIY0lpfKxXrUsYiAFE9ttbfP0/MBLDzWphSp7fscpdpdr9RYkAF5hdMTKWfjqvP7SlQ3dsa9T6QAGlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=p6myUNPD; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J7HEMHyI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E2BDC433F1;
-	Thu, 15 Feb 2024 17:02:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708016579;
-	bh=N1m0kPjc7D24yEHh5GCbtG5RxZ9QtaO4otDQYDmi8rE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=J7HEMHyICW+lND9f9nL4zGh4EuhNKxyu1pocmvfWJJJ41LXKdStLT7I4cpsU/oGGf
-	 U1XYFWSwlYncng5/yRVzAS3VJy/k3BkLT2u75gOwk5lRhOx7r/9ezkKYPe+bLTtsJy
-	 juTBxqB3UvitOk2fmthh37dWaznvCbCKomD5X1QqoZsntIaWIjm9jgBlou1aGXLUhc
-	 uosFTdmdeekyQbJiTMg7hbChm1ZIxN0L3hiJRAH38bK2Fl5rCS8c8LUjmElxC6dQc1
-	 nKoBWHBddKeTd6zfad9lxr0YUytYEmJ3ZbyAR2+20SyK2sPGfpewTvoyX6/ybb9dSh
-	 8fluJ185PiChw==
-Date: Thu, 15 Feb 2024 11:02:58 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: Re: [PATCH] PCI: dwc: Use the correct sleep function in wait_for_link
-Message-ID: <20240215170258.GA1292702@bhelgaas>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p6myUNPD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=u/mYX+MjRO3DI3EVu94sKRU6KZIW+DvzqhZHidC3ciA=; b=p6myUNPDNUYzlgNwueonruyCm5
+	4SKo1EIbhCRzoeTGWkgSaBgvgkrkdAdWwG2/AfEiwMJNu6/cS6fGxDvmhXF3pGcigG2QvXL66W4XL
+	gm3MYAy3QNwqqlc0jiuvCVDDGqNkyqFulx3c44UIeCWkbmwkeTWliz4033r1KEnpK3saUbdbqcXIY
+	QapD93pOZASpPAsxUwTOwZ5s1m9XcvDIgZSAF3GdljlGWs+B88xiPcngHoRmbvErdhroqW+xfMF9q
+	YAu9EKBF8s8C4jFNvGSuBdJzVAbENuxK2u6OG6O0FkYy5HUWBeiYOsQalJkZRDXcPfSche/WdsZEG
+	oJXZb9Tw==;
+Received: from [50.53.50.0] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1raf8a-0000000H6WZ-06MM;
+	Thu, 15 Feb 2024 17:03:04 +0000
+Message-ID: <dd8ee0cd-4b00-4b94-b3c9-51c9574dd01c@infradead.org>
+Date: Thu, 15 Feb 2024 09:03:03 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7611f6f9-a021-4bbd-bc71-5363af3d9391@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] hexagon: select FRAME_POINTER instead of redefining it
+Content-Language: en-US
+To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
+Cc: Brian Cain <bcain@quicinc.com>, linux-hexagon@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240215140702.1910276-1-masahiroy@kernel.org>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240215140702.1910276-1-masahiroy@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 15, 2024 at 02:35:13PM +0100, Alexander Lobakin wrote:
-> From: Konrad Dybcio <konrad.dybcio@linaro.org>
-> Date: Thu, 15 Feb 2024 11:39:31 +0100
+
+
+On 2/15/24 06:07, Masahiro Yamada wrote:
+> Because FRAME_POINTER is defined in lib/Kconfig.debug, the arch Kconfig
+> should select it.
 > 
-> > According to [1], msleep should be used for large sleeps, such as the
-> > 100-ish ms one in this function. Comply with the guide and use it.
-> > 
-> > [1] https://www.kernel.org/doc/Documentation/timers/timers-howto.txt
-> > 
-> > Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> > ---
-> > Tested on Qualcomm SC8280XP CRD
-> > ---
-> >  drivers/pci/controller/dwc/pcie-designware.c | 2 +-
-> >  drivers/pci/controller/dwc/pcie-designware.h | 3 +--
-> >  2 files changed, 2 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > index 250cf7f40b85..abce6afceb91 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > @@ -655,7 +655,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
-> >  		if (dw_pcie_link_up(pci))
-> >  			break;
-> >  
-> > -		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
-> > +		msleep(LINK_WAIT_MSLEEP_MAX);
+> Add 'select FRAME_POINTER' to HEXAGON. ARCH_WANT_FRAME_POINTERS must
+> also be selected to avoid the unmet dependency warning.
 > 
-> Just use fsleep(LINK_WAIT_USLEEP_MAX) and let the kernel decide which
-> function to pick.
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-Odd.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/timers/timers-howto.rst?id=v6.7#n114
-mentions fsleep() (with no real guidance about when to use it), but
-https://www.kernel.org/doc/Documentation/timers/timers-howto.txt 
-seems to be a stale copy from 2017, before fsleep() was added.  I
-emailed helpdesk@kernel.org to see if the stale content can be
-removed.
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
 
-I do think fsleep() should be more widely used.
+Thanks.
 
-> >  /* Parameters for the waiting for link up routine */
-> >  #define LINK_WAIT_MAX_RETRIES		10
-> > -#define LINK_WAIT_USLEEP_MIN		90000
-> > -#define LINK_WAIT_USLEEP_MAX		100000
-> > +#define LINK_WAIT_MSLEEP_MAX		100
+> ---
+> 
+>  arch/hexagon/Kconfig | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/hexagon/Kconfig b/arch/hexagon/Kconfig
+> index a880ee067d2e..e922026fef09 100644
+> --- a/arch/hexagon/Kconfig
+> +++ b/arch/hexagon/Kconfig
+> @@ -7,7 +7,9 @@ config HEXAGON
+>  	select ARCH_32BIT_OFF_T
+>  	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
+>  	select ARCH_NO_PREEMPT
+> +	select ARCH_WANT_FRAME_POINTERS
+>  	select DMA_GLOBAL_POOL
+> +	select FRAME_POINTER
+>  	# Other pending projects/to-do items.
+>  	# select HAVE_REGS_AND_STACK_ACCESS_API
+>  	# select HAVE_HW_BREAKPOINT if PERF_EVENTS
+> @@ -43,9 +45,6 @@ config HEXAGON_PHYS_OFFSET
+>  	help
+>  	  Platforms that don't load the kernel at zero set this.
+>  
+> -config FRAME_POINTER
+> -	def_bool y
+> -
+>  config LOCKDEP_SUPPORT
+>  	def_bool y
+>  
 
-Since you're touching this anyway, it would be helpful to include the
-units on the timeout.
-
-USLEEP/MSLEEP is definitely a hint, but I think the "SLEEP" part
-suggests something about atomic/non-atomic context and isn't relevant
-to the time interval itself, and something like "TIMEOUT" would be
-better.
-
-I think an explicit "_US" or "_MS" would better indicate the units.
-
-This is turning into a long tangent, but I'm not a huge fan of the
-LINK_WAIT_* pattern where I have to look up the code that uses
-LINK_WAIT_MAX_RETRIES and LINK_WAIT_USLEEP_MAX and do the math to see
-what the actual timeout is.  Obviously not fodder for *this* patch.
-
-Bjorn
+-- 
+#Randy
