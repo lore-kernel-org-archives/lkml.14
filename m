@@ -1,82 +1,74 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E776A1386AE
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 19:33:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAFB31386AE;
+	Thu, 15 Feb 2024 19:34:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708025624; cv=none; b=VYjekGZkQmgfvVbq974wA0JAp8f88oiS0SPrbjPszaBYoSc5kkpXJHyhTF3xzLftVdwZeJ/dSHec+iHGyZ7N6ieXGSemP5ePSNqzuseiV1LwauVHgqILkUoufCJooBWy5Jj7jgODcIFwlwt+8UoxoTP6UbFZFZAcP6JBHOFLM2M=
+	t=1708025648; cv=none; b=hwqSypCUdgYvaU3H7bCMm+ML9UqidyM3hZvWBWDzQD6fAG1frSiF+6SLFNgZbw6nVbvR+dOB6XWFR8cu+M3LLa2oy4V+kPffTkmwoGY28j+3B3p5DNtIlgVxTPFa37OsinS+iAZhNJtVRZBQGWtwdqjyNyjRkswGSAUQSVMwqKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708025624; c=relaxed/simple;
-	bh=fY7bPeUGECHTJGAnq11eLS1BJV4utg9nEqgu+9p9e5s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NZ9VhNGVw67I5yIgFdT6olZT+dLLDhIAmTjS51twLb7k+6yzldh2zi1j3x4te6D88dMKgfYXEdono8mtANvndUQMe5LWLEwflU6HRhxLlFqud4db8DfgR4b23T6c8MkrYhuOSa0D90ZA6MlMWzq1UP7+eWDkIZrwoNUyDly7lmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=eg+FHDE7; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	s=arc-20240116; t=1708025648; c=relaxed/simple;
+	bh=pwr40pe20aNMHUfTjs/G++NlbzwOhpj6C+tL7b0oO2A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YUUtOERJ3epL3o/nPj2XZQFUkl7E/1VE53S9ger5MyYvaYoD8alkWdm0Sk2v2pvXhKI/7EOZNHzoC2oG981jvlIt2n3wyi005+qw2ieEGLNpEwq9QZ7dRu+kOEhdR2fUGkuFDN5Yls5FkVLHo2ynFSF9CfD7sKVjMeoqNgm25hs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=g02ySvEJ; arc=none smtp.client-ip=195.181.215.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="eg+FHDE7"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2d0e5212559so15534191fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 11:33:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1708025620; x=1708630420; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fY7bPeUGECHTJGAnq11eLS1BJV4utg9nEqgu+9p9e5s=;
-        b=eg+FHDE7vwPXtRWJ0BP3d2css1ZPc1GQJpSKyiil/iL2GsR5X4vjfI+PTgrKwdg23E
-         rSwqf5iugy7O0gtdajsUIypHrWbkRZYSyLnmRkb0Qifa+m3Es943y3PqzY7VHGhRvg9B
-         CaKq1hoq9PH09hICsmFkM1hjstBTXmW9kBJs6FotG4jpzxxP9iHZFv92k/3jAUDRobzb
-         2OrzYIzBcN1+uoPENrFLjG1HvZAVeHITrYw1Is5u6bvR9yfV57oaNx0OWqdSRZ3rz83N
-         wBya0HvKPU0aHW8aAArCdjqIXpTbsmK1UQXZJXTCcJ8t/qHnsezyoPROC7lbDl3bhRIT
-         HfTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708025620; x=1708630420;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fY7bPeUGECHTJGAnq11eLS1BJV4utg9nEqgu+9p9e5s=;
-        b=B5Ym7L7CHKLfWUziqn1hQ1UiEE1rEpVe6QE05FMSl9+C7pdRjGf7lNXBht9SpGHMtm
-         oUEM+/PLEUfpJs+UCBCBL619gS91kz/p3HaxaZPvyBp+FnA1L0qMS4WWdSEDVTVq43JV
-         2u59ZTjDbQM5dq4DHaAc58YVBqTbxs6Xsf2PZl6AIlVLdDVaUVa5wnFIQSQBFQZlmqXh
-         R8Kmfv6oyWEoA12z2A5MBpy4OQUj+IVe854VI6kMeOG7UDTjozVOBuQEYwuyjtqaup9y
-         tB/bHICbitj9+I0EyNbRVw2NKK0eY+Ic9S0Hg+Tri6hiaK5oJQUhqFOuUXSj93jNQ1X5
-         aN9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUdKK7o3KsAuPLOFl2tXLRKKKW5ct/w6G+n579t3UcHlVJga/khhVXsy54qrsaOs5afGkkKnuJJnJATqQAex4bNGvxcJ5HYintI21nd
-X-Gm-Message-State: AOJu0Yxc9HajrjtCf+8NzQD3MSdXqG6UjW6lXIlCRIc8TROwWBh3eMCF
-	L3FlPO1mzFPcnTfZUnyOsA8neAGuy1u/Znw3JmtZVXprpJ5ab+TTKdA3NO7WAzjBS4ynEhPQnpr
-	K4q2El4paB2tCGhkEIyseElPv4J0F3NDr+Pm5Fw==
-X-Google-Smtp-Source: AGHT+IEkD9DfmAVvJoUA76C927vp9QSuWjLrw/gPYp/wFh5Xl4sFBBEvu2vXnNp5wym+2fg+tY6NIQ36BY/T6qfRVrE=
-X-Received: by 2002:a05:651c:b08:b0:2d2:145e:b36c with SMTP id
- b8-20020a05651c0b0800b002d2145eb36cmr302147ljr.21.1708025619959; Thu, 15 Feb
- 2024 11:33:39 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="g02ySvEJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
+	t=1708025635; bh=pwr40pe20aNMHUfTjs/G++NlbzwOhpj6C+tL7b0oO2A=;
+	h=From:To:Cc:Subject:Date:From;
+	b=g02ySvEJW41OZpOAIQqt+yYPmbgc12PSVMzwqFuTFh0V683CfHdTtB0FHTTmmxY30
+	 7gjC18Wmp6M36jJ5KhHgC2rNnZ+3JqpJkU1SqX6bPQp6HMImVhsPMuYyqo3wEv/UH/
+	 s7JFEWsqUUlRSlkFF+bZmE+8JFsTwtyOytylQ6NY=
+From: =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megi@xff.cz>
+To: linux-usb@vger.kernel.org
+Cc: Ondrej Jirman <megi@xff.cz>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] Revert "usb: typec: tcpm: reset counter when enter into unattached state after try role"
+Date: Thu, 15 Feb 2024 20:33:50 +0100
+Message-ID: <20240215193352.1026707-1-megi@xff.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240215145602.1371274-1-max.kellermann@ionos.com>
- <20240215145602.1371274-10-max.kellermann@ionos.com> <Zc5mRRhhU7flXB2f@casper.infradead.org>
-In-Reply-To: <Zc5mRRhhU7flXB2f@casper.infradead.org>
-From: Max Kellermann <max.kellermann@ionos.com>
-Date: Thu, 15 Feb 2024 20:33:28 +0100
-Message-ID: <CAKPOu+_LbVg4YNumZWAc6R+bA+_LTBniUkQgH=WRaFDCjnDoDg@mail.gmail.com>
-Subject: Re: [PATCH v1 09/14] linux/mm.h: move usage count functions to mm/page_usage.h
-To: Matthew Wilcox <willy@infradead.org>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 15, 2024 at 8:30=E2=80=AFPM Matthew Wilcox <willy@infradead.org=
-> wrote:
-> Why does this want to be its own header instead of being part of
-> page_ref.h?
+From: Ondrej Jirman <megi@xff.cz>
 
-Because I thought page_ref.h was a low-level header and the new one
-would be higher-level with (slightly) heavier dependencies. Keeping
-different layers of code in separate headers helps keeping
-dependencies lean. I used the term "usage" from the explanatory
-comment at the top. I'll amend the patch description to explain that
-detail.
+The reverted commit makes the state machine only ever go from SRC_ATTACH_WAIT
+to SNK_TRY in endless loop when toggling. After revert it goes to SRC_ATTACHED
+after initially trying SNK_TRY earlier, as it should for toggling to ever detect
+the power source mode and the port is again able to provide power to attached
+power sinks.
+
+This reverts commit 2d6d80127006ae3da26b1f21a65eccf957f2d1e5.
+---
+ drivers/usb/typec/tcpm/tcpm.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+See https://lore.kernel.org/all/odggrbbgjpardze76qiv57mw6tllisyu5sbrta37iadjzwamcv@qr3ubwnlzqqt/
+for more.
+
+diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
+index f7d7daa60c8d..295ae7eb912c 100644
+--- a/drivers/usb/typec/tcpm/tcpm.c
++++ b/drivers/usb/typec/tcpm/tcpm.c
+@@ -3743,9 +3743,6 @@ static void tcpm_detach(struct tcpm_port *port)
+ 	if (tcpm_port_is_disconnected(port))
+ 		port->hard_reset_count = 0;
+ 
+-	port->try_src_count = 0;
+-	port->try_snk_count = 0;
+-
+ 	if (!port->attached)
+ 		return;
+ 
+-- 
+2.43.0
+
