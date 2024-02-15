@@ -1,174 +1,93 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC2312C548
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 15:45:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DCF113472D;
+	Thu, 15 Feb 2024 15:45:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708011913; cv=none; b=F3QACcgSnazbku2ONuC5XR+sRnS7uzCIgEqs7RQ3tIKirfhHD3cmt3ljxMrwpxwOc/qAdEJBm+48eWuj2OHUcNGCIqvydtnTtcbPdJvYp93sodB+vmh2Pj/knCHfFQGIfLttJboJR8gr3GH19wBcEAlR637i9AZYI83mdl6Jjio=
+	t=1708011941; cv=none; b=aHwPcplyiSO3gJSgX+lZpTnM1TFXBksJomB95n1ye2yltl33Mix73KOFffyxexnHgNmBRYAX1MRAXghMxg7Em7RQU0GQ3iZGQpMYaCCM+rb6iR3eaarhT9NLUhS2bI5WzMlyXTZAa2Y3x2+JD002Ap1gpyU0ohmcr4uxFVSKqbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708011913; c=relaxed/simple;
-	bh=jGrsuTrQ50aMOx/Q4bJMab8iuOMogw82FMKiSbI60CE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A4ow7AqHV5hbRBzM1IEhPYUNoQg1ZkWUFcAxA2cATehowijwsN+O8b5fkaS1YS9+wA/gLy8NmJRwiAy6WAclBoDR/pMyuypwWz8iYRwn6xOsuqxwwrsm0CoVIH4s+TW3REpDdwktKrgMOANljPKR5afdlsLXpxySW8UFyU1ePOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ATXPKSXU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ATXPKSXU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708011910;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zgRj/r6jJKBOT9E5bjhJrMIbJaqPHZG5ug6maI133dw=;
-	b=ATXPKSXUfTE16I3RJlsVWrpayfFr/38J8GeR88Vvi+xk7rhLQ5noM1+NPOQK98fz3rnGix
-	4vvWCB3rn6sypRAezpwYGz7BmWHyUyECMY97nLR5+yiwmG13pcns1XCxWYe5Kc72qOxNi5
-	9+7vBRzPOJ9NqpRgur6eqgu9xutOTv4=
-Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com
- [209.85.128.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-217-q4hhKtxyNxu0aM8dTBttYQ-1; Thu, 15 Feb 2024 10:45:08 -0500
-X-MC-Unique: q4hhKtxyNxu0aM8dTBttYQ-1
-Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-607df0c12abso6998467b3.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 07:45:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708011908; x=1708616708;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zgRj/r6jJKBOT9E5bjhJrMIbJaqPHZG5ug6maI133dw=;
-        b=CBDWjgmO4thw5rCybyzwZzKYQUTJZMgmbujpWRWKDsMz1pK5pmittTfGTgNJuVkpT/
-         mS7uXYBvLjKyrWmHveN9x5DjA63353Tb2kZYvUAArzoxhoRWTf3IO2nyKZ1ghofZ5YqY
-         BK0OS9T9mhJ8C23C3M6VTUEoQzjpJPJyWLG2Xq8+fjgT87AeOuvmob1+dqKE9sYivWes
-         FMD2E5cl3RIFb1EqWnvbQbnL/qRzyKwZCWJaNBvWSifxXglP4+0YrHjuVtHGSHh0G4cz
-         r2hMajdPBdKxndX2xXv4cjl4CV5rUpcpPhw9Irm+EnZosEC4gtuRzOHe3DFfOz9bqltr
-         gHqg==
-X-Forwarded-Encrypted: i=1; AJvYcCW66jTflHYacA2fdiYSXXWVjMw+OHIoCqzmX4Wz11H7enq9F0N/W3+M5NM0Hyb0hnxH2gA6+/eQUGUx3jJsiR7RSz7Uebpx7r3sgqdE
-X-Gm-Message-State: AOJu0YwO+CRDh+p8ChP82lB8x/W3gBjEAdM8xhjQjccj31tZaNLO1hto
-	4GnhOwMXgltMaZRghqtvJLV/52Xygbgo+DSuY1q9YaOKLGkzlrzeY27K7GCyAcw20oJkoT0lFFI
-	RPOL0W3qxsSpRT1n8cdSqYwY4GnV+joP9VlYmjWvh5DSsJO9JXryX27RCvlGiNRtUZdNVKhEMPB
-	4p+NyFEqMBtEVXf7dZ+JgbsTIjSZ02wBAfp158
-X-Received: by 2002:a0d:e2d6:0:b0:5ff:fdd5:d368 with SMTP id l205-20020a0de2d6000000b005fffdd5d368mr1990520ywe.44.1708011908408;
-        Thu, 15 Feb 2024 07:45:08 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF7G3wF/llkvMZxRUqMJv2ohvPHXABLz4Ismq8yT+WDgcWzbT/FJJn6vSBV+U06iKvGRxaKLxllo++71kRJ/Jg=
-X-Received: by 2002:a0d:e2d6:0:b0:5ff:fdd5:d368 with SMTP id
- l205-20020a0de2d6000000b005fffdd5d368mr1990454ywe.44.1708011907148; Thu, 15
- Feb 2024 07:45:07 -0800 (PST)
+	s=arc-20240116; t=1708011941; c=relaxed/simple;
+	bh=vN6J3AW5mtof2ECx6LjKZ0g0AWl2ltYlQ1vrf5U8b24=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bcLYpHTBBW5FrSQQuSYxhKPAIPMfiG6afF7muAuy5NfcjbxNM3FupImKYzNaa61P+NHjko2491dFv/xoCln2T0e2qI1XNsZCejTG2LmMs0VL9FynTPSLIdxLOAOjlGKlu7Bg0j0fO5C4cibzFuaNGePq8BJ5Is1DW7CMitfeQCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="2231622"
+X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
+   d="scan'208";a="2231622"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 07:45:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="912182511"
+X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
+   d="scan'208";a="912182511"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 07:45:32 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy@kernel.org>)
+	id 1radvU-00000004pco-36lU;
+	Thu, 15 Feb 2024 17:45:28 +0200
+Date: Thu, 15 Feb 2024 17:45:28 +0200
+From: Andy Shevchenko <andy@kernel.org>
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Tony Lindgren <tony@atomide.com>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com,
+	u-kumar1@ti.com
+Subject: Re: [PATCH v3 13/18] phy: cadence-torrent: remove noop_ops phy
+ operations
+Message-ID: <Zc4xmGNLrVrQEuwC@smile.fi.intel.com>
+References: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
+ <20240102-j7200-pcie-s2r-v3-13-5c2e4a3fac1f@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1707758174-142161-1-git-send-email-steven.sistare@oracle.com>
- <1707758174-142161-4-git-send-email-steven.sistare@oracle.com>
- <CAJaqyWfYHqf2=8BMo5ReKEB137fxGZR4XEJ2d4imXOOXAX2wHQ@mail.gmail.com>
- <e1b80fee-30df-4733-9072-ce67e3edc72f@oracle.com> <CAJaqyWe1=eQ4eQyv+wOqbr3pfZst6gmss2SrDZSNkY_ZVXcf=Q@mail.gmail.com>
- <996cfabf-c612-43c8-9e56-03fb58a1ebec@oracle.com>
-In-Reply-To: <996cfabf-c612-43c8-9e56-03fb58a1ebec@oracle.com>
-From: Eugenio Perez Martin <eperezma@redhat.com>
-Date: Thu, 15 Feb 2024 16:44:30 +0100
-Message-ID: <CAJaqyWdKC6rLBOykSeWc87QtJ757LNXd78R59JRizUyAQCu+ig@mail.gmail.com>
-Subject: Re: [PATCH V2 3/3] vdpa_sim: flush workers on suspend
-To: Steven Sistare <steven.sistare@oracle.com>
-Cc: virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Si-Wei Liu <si-wei.liu@oracle.com>, 
-	Xie Yongji <xieyongji@bytedance.com>, Stefano Garzarella <sgarzare@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240102-j7200-pcie-s2r-v3-13-5c2e4a3fac1f@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Feb 14, 2024 at 8:52=E2=80=AFPM Steven Sistare
-<steven.sistare@oracle.com> wrote:
->
-> On 2/14/2024 2:39 PM, Eugenio Perez Martin wrote:
-> > On Wed, Feb 14, 2024 at 6:50=E2=80=AFPM Steven Sistare
-> > <steven.sistare@oracle.com> wrote:
-> >>
-> >> On 2/13/2024 11:10 AM, Eugenio Perez Martin wrote:
-> >>> On Mon, Feb 12, 2024 at 6:16=E2=80=AFPM Steve Sistare <steven.sistare=
-@oracle.com> wrote:
-> >>>>
-> >>>> Flush to guarantee no workers are running when suspend returns.
-> >>>>
-> >>>> Signed-off-by: Steve Sistare <steven.sistare@oracle.com>
-> >>>> ---
-> >>>>  drivers/vdpa/vdpa_sim/vdpa_sim.c | 13 +++++++++++++
-> >>>>  1 file changed, 13 insertions(+)
-> >>>>
-> >>>> diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_si=
-m/vdpa_sim.c
-> >>>> index be2925d0d283..a662b90357c3 100644
-> >>>> --- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
-> >>>> +++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-> >>>> @@ -74,6 +74,17 @@ static void vdpasim_worker_change_mm_sync(struct =
-vdpasim *vdpasim,
-> >>>>         kthread_flush_work(work);
-> >>>>  }
-> >>>>
-> >>>> +static void flush_work_fn(struct kthread_work *work) {}
-> >>>> +
-> >>>> +static void vdpasim_flush_work(struct vdpasim *vdpasim)
-> >>>> +{
-> >>>> +       struct kthread_work work;
-> >>>> +
-> >>>> +       kthread_init_work(&work, flush_work_fn);
-> >>>
-> >>> If the work is already queued, doesn't it break the linked list
-> >>> because of the memset in kthread_init_work?
-> >>
-> >> work is a local variable.  It completes before vdpasim_flush_work retu=
-rns,
-> >> thus is never already queued on entry to vdpasim_flush_work.
-> >> Am I missing your point?
-> >
-> > No, sorry, I was the one missing that. Thanks for explaining it :)!
-> >
-> > I'm not so used to the kthread queue, but why not calling
-> > kthread_flush_work on vdpasim->work directly?
->
-> vdpasim->work is not the only work posted to vdpasim->worker; see
-> vdpasim_worker_change_mm_sync.  Posting a new no-op work guarantees
-> they are all flushed.
->
+On Thu, Feb 15, 2024 at 04:17:58PM +0100, Thomas Richard wrote:
+> Even if a PHY is already configured, the PHY operations are needed during
+> resume stage, as the PHY is in reset state.
+> The noop_ops PHY operations is removed to always have PHY operations.
+> The already_configured flag is checked at the begening of init, configure
+> and poweron operations to keep the already_configured behaviour.
 
-But it is ok to have concurrent mm updates, isn't it? Moreover, they
-can be enqueued immediately after the kthread_flush_work already, as
-there is no lock protecting it.
+...
 
-> - Steve
->
-> >>>> +       kthread_queue_work(vdpasim->worker, &work);
-> >>>> +       kthread_flush_work(&work);
-> >>>> +}
-> >>>> +
-> >>>>  static struct vdpasim *vdpa_to_sim(struct vdpa_device *vdpa)
-> >>>>  {
-> >>>>         return container_of(vdpa, struct vdpasim, vdpa);
-> >>>> @@ -511,6 +522,8 @@ static int vdpasim_suspend(struct vdpa_device *v=
-dpa)
-> >>>>         vdpasim->running =3D false;
-> >>>>         mutex_unlock(&vdpasim->mutex);
-> >>>>
-> >>>> +       vdpasim_flush_work(vdpasim);
-> >>>
-> >>> Do we need to protect the case where vdpasim_kick_vq and
-> >>> vdpasim_suspend are called "at the same time"? Correct userland shoul=
-d
-> >>> not be doing it but buggy or mailious could be. Just calling
-> >>> vdpasim_flush_work with the mutex acquired would solve the issue,
-> >>> doesn't it?
-> >>
-> >> Good catch.  I need to serialize access to vdpasim->running plus the w=
-orker queue
-> >> in these two functions.  vdpasim_kick_vq currently takes no locks. In =
-case it is called
-> >> from non-task contexts, I should define a new spinlock to be acquired =
-in both functions.
-> >>
-> >> - Steve
-> >>
-> >
->
+> +	if (cdns_phy->already_configured) {
+> +		/* Give 5ms to 10ms delay for the PIPE clock to be stable */
+> +		usleep_range(5000, 10000);
+
+fsleep() ?
+(Yes, I see this is the original code, perhaps later in a separate change)
+
+> +		return 0;
+> +	}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
