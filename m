@@ -1,49 +1,79 @@
-Received: from smtp.pogacic.net (smtp.pogacic.net [139.59.161.62])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42CB3175B6;
-	Thu, 15 Feb 2024 09:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.59.161.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3591F1BDCE;
+	Thu, 15 Feb 2024 09:05:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707987911; cv=none; b=JJ52iCfD2z2D9tr92HQ1GUnUu1ax3GQS2E7pzEk/vcdzI2L90b0UwZjUbd3JrBoLDhvYYSDD7FzU5LwXQUCrIzUkE6D98zpR0GmNiIhPqLv27/Wnxk/+D2J6pmg/V0G8ItLTv/7aUijC9K4F8Ozzz4RN0PtUfGbd+DbKl8lp31U=
+	t=1707987927; cv=none; b=L+M1svmpIcc6na7RvlGeECkxacdz0Ia+av7aVZZ9LaR5mLhYb9f3Ky8dL7rx0sGiYCxBiwylmwmxmKiVLs1WzkkqQEksCQtKKsuPl/yovhEJUgzERuuK3v323vVeKJjOs5KyCz+UVEmChkJqjpOvLirFdn7Efic4Y7b/KxqfB3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707987911; c=relaxed/simple;
-	bh=ssf6L958UCbi7i1ZZk8DEaZtje7THxgsOqFEbXhRFV0=;
-	h=From:To:Cc:Subject:Message-ID:Date:Content-Type:MIME-Version; b=tatR24DiT63i8fszTDe/1rgyhjhFmBpcw1n2GHwPCx62pNhnlAj1l4qc4Zef82L8CCgqMuhiFKxiU9TqGDTg+/swUjZvTh2KPB2+4EY6k4vCuhSP0QccyeJ1RreSCIIK4wodzOe6OKPINZyssEH6wMAntqH2sDyRn7InYbBdVvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pogacic.net; spf=pass smtp.mailfrom=pogacic.net; arc=none smtp.client-ip=139.59.161.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pogacic.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pogacic.net
-Received: from cloud.pogacic.net (localhost [127.0.0.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.pogacic.net (Postfix) with ESMTPSA id 2D479420DB;
-	Thu, 15 Feb 2024 03:59:53 -0500 (EST)
-From: Vanja Pogacic <vanja@pogacic.net>
-To: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: 
-Subject: Bug reporting on Raydium touchscreen
-Message-ID: <20240215085953.Horde.oa0RoVvzrHmYsnVs_gHNkTT@cloud.pogacic.net>
-User-Agent: Horde Application Framework 5
-Date: Thu, 15 Feb 2024 08:59:53 +0000
-Content-Type: text/plain; charset=utf-8
+	s=arc-20240116; t=1707987927; c=relaxed/simple;
+	bh=ni7i9p6FhBuB+4RQY0gV4ps5YNzcgFJ8gd9v8c6Fzgg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=q+lFy0BCAO+DIR0zS97iyHxhS4HlZNfsIdWDgynkdA3XCTsx5fPRVV63mayCGDLBkOurUOfSBjRdZPn4SyCtgxcg70FRs4GZkEDET29YvVHZbOBWsCpnb0iRpqhoC+kEjTy6KUqgWkVqONwBOp1BK/euwYwsmUyaI9qS5Eo3kRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i53875b6c.versanet.de ([83.135.91.108] helo=phil.lan)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1raXgE-0002M4-96; Thu, 15 Feb 2024 10:05:18 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: neil.armstrong@linaro.org
+Cc: quic_jesszhan@quicinc.com,
+	sam@ravnborg.org,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	heiko@sntech.de,
+	dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	quentin.schulz@theobroma-systems.com,
+	Heiko Stuebner <heiko.stuebner@cherry.de>
+Subject: [PATCH 2/3] dt-bindings: display: ltk500hd1829: add variant compatible for ltk101b4029w
+Date: Thu, 15 Feb 2024 10:05:14 +0100
+Message-Id: <20240215090515.3513817-3-heiko@sntech.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240215090515.3513817-1-heiko@sntech.de>
+References: <20240215090515.3513817-1-heiko@sntech.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hello,
-I am trying to find the best way to submit a kernel bug for a raydium touchscreen driver (raydium_i2c_ts) which stops working after waking up from sleep.
-The hardware in question is a converted Chromebook (Acer Spin 512) with coreboot uefi bios.
+From: Heiko Stuebner <heiko.stuebner@cherry.de>
 
-You can find more details and logs about the issue here:
-bbs.archlinux.org/viewtopic.php
+Add the compatible for the ltk101b4029w panel, that is really similar
+to the ltk500hd1829.
 
-Since I observed the same behavior under Fedora, Ubuntu and Arch, I concluded it would be best to contact the upstream people :)
+Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
+---
+ .../bindings/display/panel/leadtek,ltk500hd1829.yaml          | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Any guidance will be highly appreciated.
+diff --git a/Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml b/Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml
+index c5944b4d636c5..d589f16772145 100644
+--- a/Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml
++++ b/Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml
+@@ -14,7 +14,9 @@ allOf:
+ 
+ properties:
+   compatible:
+-    const: leadtek,ltk500hd1829
++    enum:
++      - leadtek,ltk101b4029w
++      - leadtek,ltk500hd1829
+   reg: true
+   backlight: true
+   reset-gpios: true
+-- 
+2.39.2
 
-Thanks,
-Kind regards
-Vanja Pogacic
