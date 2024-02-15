@@ -1,32 +1,34 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD716137C35
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 18:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2441384BA
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 18:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708020213; cv=none; b=rJU0rZ4Exnw7p86ioUXDtU4f59nd72UvSvpIXJNY6s31Yoc62nBJxKh9IfdQ4Z5ew9oR20sZd1+RRjQEv34nEi9h0cZQxL2sAHeL5B50gCtq14BTs70sbNSRYGHo3/zNPRSob78Dy8waSoTtmpEHLH+ovZJ080iYRKxsGPA94LY=
+	t=1708020216; cv=none; b=VvGiFZPW24I5IcIvxaej78b+hAPC0gzcUAtMLl2w3AI6NWOkjzEsIz9E6LRmLfSd9eEvSGazzQAI1Mxk6vL1/0KFkRo+fdNAfjMb/NnOO1CVCOOwd74CjK9JTrnV82dybVngD3Q0vjJZ8En9e7KzuTjvRryFKx2+lMQ5/oEBKoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708020213; c=relaxed/simple;
-	bh=HKanBpsGd5WhYiDimwy9XwtjAltU0LiKFEN2I4Q1tw4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QoOgfu7h4jKBxziktAyKdjcxTdYhadLkT5Jr100jvo7HCjM4gyDdLAb2i9aG+HjoT5WnNuLzIPRobk5RoALrC2j2kJNnB+cjtByGDIC/maPONVzYL4vtFzsnZ0DjrJGkr1S9XW3QbzV/dNVZMjlyMbBbOZHb5BBLBL86JeImhjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=postmarketos.org; spf=pass smtp.mailfrom=postmarketos.org; dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b=jNna6iLf; arc=none smtp.client-ip=91.218.175.185
+	s=arc-20240116; t=1708020216; c=relaxed/simple;
+	bh=Ycb04z0TQwvPmB4LG7faRAixQix29MoW65T7iFnIb9c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kqap83apXDcAWxfqii9xwf8NASgztVttEn4exB/Y0cYwDroVJ0ZG1sR4o6Z0+rBTXNN0BQyvYfS7Gwif3binxSO/ReM9Fwpj648N4ZwPNKFI+8gLhJG+t5B1PoQ7ZukZS1D6S0QU8FEKoOO+j+1lfYkBo2oppNji3hkIfRmlLXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=postmarketos.org; spf=pass smtp.mailfrom=postmarketos.org; dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b=i0H4sebp; arc=none smtp.client-ip=91.218.175.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=postmarketos.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=postmarketos.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b="jNna6iLf"
+	dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b="i0H4sebp"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1708020209;
+	s=key1; t=1708020212;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=1VE/5xVbfZhsE1tQbNSqD+Z1w2MonyJu5sdqEf5rHvY=;
-	b=jNna6iLfnijI1WQyWubeQ9gKdsprAsc/klgETqPUBgq0WFVUsXzTT9iw9BfSQdHEiU2obC
-	AIHZvRsLv7nPZqa6mq/5S1OnHu2ixv9MKzcSFRrqmtBo5xDEKdGOm4RWv4EL0LitbqoHgB
-	gcn8pRvfiQ1fp4gM1uQYFG5lQZnJxQ2e8Q9GXyXJn8raw9YubkmyBdlADK5mYChpiasITG
-	xaNKCZCK7h/Fx/ehVPnLkCU9ujtkmA3k3yT/fQBHuIAcovOdNyZkpk7MUJIUb+h4EvFcuV
-	IrveVxtoaMGbtSXtUU+UzXYymtm2b+h4FPimEnhhfQQxyhzAAUOnX2BwJtd61Q==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XX0Rh2Nt++xF/IVkn5h4WMBkbMdKoALWeVdeACVylhI=;
+	b=i0H4sebphrDX3QNM24COttVHt/ywLThAgJ4jvPBW5eUhmKbfPhYXw98oTfIJ3fOzPWNk7+
+	O36hlRWj1nZdRm3BjMADmBKcOwQ+CsASnK9uIdJrcZGcoDPovb1miT+t5cQroCQO6RS9WV
+	Qv9nVR3TAiV95RsjuHWGgEkl4yzUKnxQ678S9tkw5GcGAv8mCi/QShC44g6lFROC1/XMN1
+	57XoxJZFPYD9P7TsED4tqxO8ysyMu+hFgsRiTcUUHz1GpXIeRA0eRSPl5z6EFGU/cBZ1Y8
+	Au9lh52hBd+QDSxuzYbektgeguoxCHK2efoEOJ0PIvt0ggGD4AlV4iehaqcIVQ==
 From: Stefan Hansson <newbyte@postmarketos.org>
 To: Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konrad.dybcio@linaro.org>,
@@ -38,10 +40,13 @@ To: Bjorn Andersson <andersson@kernel.org>,
 	linux-kernel@vger.kernel.org
 Cc: ~postmarketos/upstreaming@lists.sr.ht,
 	phone-devel@vger.kernel.org,
-	Stefan Hansson <newbyte@postmarketos.org>
-Subject: [PATCH v6 0/4] Add samsung-matisselte and common matisse dtsi
-Date: Thu, 15 Feb 2024 19:01:58 +0100
-Message-ID: <20240215180322.99089-1-newbyte@postmarketos.org>
+	Stefan Hansson <newbyte@postmarketos.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v6 2/4] dt-bindings: arm: qcom: Add Samsung Galaxy Tab 4 10.1 LTE
+Date: Thu, 15 Feb 2024 19:02:00 +0100
+Message-ID: <20240215180322.99089-3-newbyte@postmarketos.org>
+In-Reply-To: <20240215180322.99089-1-newbyte@postmarketos.org>
+References: <20240215180322.99089-1-newbyte@postmarketos.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,60 +56,27 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-This series adds a common samsung-matisse dtsi and reworks
-samsung-matisse-wifi to use it, and introduces samsung-matisselte. I
-choose matisselte over matisse-lte as this is how most other devices
-(klte, s3ve3g) do it and it is the codename that Samsung gave the
-device. See individual commits for more information.
+This documents Samsung Galaxy Tab 4 10.1 LTE (samsung,matisselte)
+which is a tablet by Samsung based on the MSM8926 SoC.
 
+Signed-off-by: Stefan Hansson <newbyte@postmarketos.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
-Changes since v1:
+ Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
- - Rebased on latest linux-next
- - Added qcom,msm8226 compatible to matisselte inspired by recent Lumia
-   830 patch. This is done as in v1, the patch was rejected because I
-   included the msm8226 dtsi despite not marking matisselte as
-   compatible with msm8226, and I was not sure how to resolve that. As
-   such, I'm copying what was done in the Lumia 830 (microsoft-tesla)
-   patch given that it was accepted.
-
-Changes since v2:
-
- - Updated commit message for UART patch to explain why it was added.
- - Gave more flags to git to provide a hopefully more readable patch.
-
-Changes since v3:
-
- - Collect tags.
- - Remove spurious copyright notice.
- - Miscellaneous fixes following review feedback.
-
-Changes since v4:
-
- - Collect tags.
- - Enable SD card support on matisselte.
-
-Changes since v5:
-
- - Rebased on latest linux-next.
-
-Stefan Hansson (4):
-  ARM: dts: qcom: samsung-matisse-common: Add initial common device tree
-  dt-bindings: arm: qcom: Add Samsung Galaxy Tab 4 10.1 LTE
-  ARM: dts: qcom: Add support for Samsung Galaxy Tab 4 10.1 LTE
-    (SM-T535)
-  ARM: dts: qcom: samsung-matisse-common: Add UART
-
- .../devicetree/bindings/arm/qcom.yaml         |   1 +
- arch/arm/boot/dts/qcom/Makefile               |   1 +
- .../qcom-apq8026-samsung-matisse-wifi.dts     | 617 +++---------------
- ... qcom-msm8226-samsung-matisse-common.dtsi} |  75 +--
- .../qcom/qcom-msm8926-samsung-matisselte.dts  |  37 ++
- 5 files changed, 133 insertions(+), 598 deletions(-)
- rewrite arch/arm/boot/dts/qcom/qcom-apq8026-samsung-matisse-wifi.dts (84%)
- copy arch/arm/boot/dts/qcom/{qcom-apq8026-samsung-matisse-wifi.dts => qcom-msm8226-samsung-matisse-common.dtsi} (85%)
- create mode 100644 arch/arm/boot/dts/qcom/qcom-msm8926-samsung-matisselte.dts
-
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index 2b993b4c51dc..66beaac60e1d 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -146,6 +146,7 @@ properties:
+               - microsoft,superman-lte
+               - microsoft,tesla
+               - motorola,peregrine
++              - samsung,matisselte
+           - const: qcom,msm8926
+           - const: qcom,msm8226
+ 
 -- 
 2.43.0
 
