@@ -1,159 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF2912B8B;
-	Thu, 15 Feb 2024 07:43:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540ABDDC4
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 07:46:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707983016; cv=none; b=RI1Q/W4oSwzVZhKhj8LsCD28EMItIykKlsE5s9kd6ds8NaKC8MUrqrghqhLaSJICKa82iAHbXspuMn2ZSaxYlb/DsQFU6+GRoW85qWCSDBeLp1luBg/4i6L/0OU8cABnT4PSbOeUD0Kc3/xC6GB6iXlCKUWEHuZLp+ovcpdnFiE=
+	t=1707983176; cv=none; b=igrrOdb1zo8hvxPWn2+8iXyLQdbYOIu91ZBturxqbvv/n5OSLABWEwBtBOKE46+ZXR6AHUE2O8R4QBjDD7/NhbEXOPBeLc8qzPQ6UajEg//VMObAHaYO3P9IQpps/UH/ycu/1emb25Xw8Sl+3++k5PO8UPMfor8/MU1/L/0G1bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707983016; c=relaxed/simple;
-	bh=Zab4zbYyzSEJ6rZgWp5a8PIv1/MD6puSacJ4VYyk8rk=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Y5GBSTcflgP0I1z/Eo73N4EUimhlJuuuBICgFz//A/Oh8te+cv8PvDbTM2UzLeDY4Ewq3cGWsCQZCVfE3Lu9k/JcbDMEKmN45DhC/xHpT0c9Aoax5DdBUeG12z9oKyX+KSfCIz+hDkqyO2Ll2Aiznx37vdj705kiKnwIllfR5jE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nMTXrk/M; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707983176; c=relaxed/simple;
+	bh=c/2GB3BtXo0+oGkI0nfxQUO1zBWY2xEFEuuIPQ58jhc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L63M7E+5hjIAJN9tRGv17zzDjQZAqCpV5mT8x+Z+DNoHfr18KsQvIG4TGi6WtVWkm5qA5yTa9C0GBVRKY35nX0b/Vp8SMTFgF9ZS7bpjPX39b8qVslUlb+hndXwqgEhqHTl83VBf2n//WwhHL9oBwgTutI/ZAA6uSiWN6RC9gXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=2/rt2MJN; arc=none smtp.client-ip=209.85.221.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nMTXrk/M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707983013; x=1739519013;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Zab4zbYyzSEJ6rZgWp5a8PIv1/MD6puSacJ4VYyk8rk=;
-  b=nMTXrk/MteIcSV8zNRntvQ7VY16Nfb2WqNQ/QNRzOcqEgZgJ+37eJWza
-   FG5aYlTVMdxDO9/6ieX0cnpu6W9qrnNh0TJT7R2DMey0Yruj8T7NFF9s0
-   vqCHsCRXkg8NkdllWAkwSAy9nu6ppB/DejTP8pbBI1QT5HVttBmNukb5P
-   O6DLB1zfiI+NRtSn2hcenLQa+0rDSyHH4gLXUfXgDgKzNSgKoc5wiaZXk
-   /ndch+xHDY4KsSfG/72BNne5elffpo3Ucej0IfoU2KbyT7xnFcBu1po/k
-   Wvi8+4PI76yiVwAD0tjzjrsOik+C/clsFaZIfsB6NUU7YXXpKEDpj3a+K
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="2202489"
-X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
-   d="scan'208";a="2202489"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 23:43:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
-   d="scan'208";a="34260199"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.127]) ([10.239.159.127])
-  by orviesa002.jf.intel.com with ESMTP; 14 Feb 2024 23:43:29 -0800
-Message-ID: <7cd18221-0d25-4b99-887b-3a344be0da9d@linux.intel.com>
-Date: Thu, 15 Feb 2024 15:37:46 +0800
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="2/rt2MJN"
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-4c0ac2d5de7so167723e0c.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 Feb 2024 23:46:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707983174; x=1708587974; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c/2GB3BtXo0+oGkI0nfxQUO1zBWY2xEFEuuIPQ58jhc=;
+        b=2/rt2MJNWShWJ/+7ufymqS8xIRXEyU0z6bgj7kM0VKarjNdmIWCL7Kh+FWMbAGf/LI
+         IQaDnzVtWeNsV3tJbjQ2KDyzygDW6RqoHQthO/PLniAvpD6scd6iMOZNzIPIYjAt/scy
+         cfoyGiiAAndkufeLc5HCz1qEKdp9a9sJ4bJcSQnVKjqAkcQ+WrIbNIFN+glK7na6pywH
+         aR3gnBUF+hnXDR1IdUKqi3QyEfBWbe92mR8VGS4r/ohExpI1fGz58wmzFbD/qLWXozkz
+         iU4S59EB8kRFQ6xFTltSEcEcnF+RPraClByevlM7pc1etf9xSpNPcI5HHyh8ODbipjQv
+         Btyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707983174; x=1708587974;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=c/2GB3BtXo0+oGkI0nfxQUO1zBWY2xEFEuuIPQ58jhc=;
+        b=WcDPuquVbotNARaehzuRzCYG7clkDaE0N1md87ZLjcn7qPTN2tq2HoYaiAILQhNt+i
+         Lpa7pvJaE+mdhvBIePovGb3GvHdGKLtfMBFhxKB1U+JCwKboPCozLFmLqY0ETEyoqTjP
+         TBcOCvbkBhNLVIkhhT1ZmKQNFR2kn7OdJ+k3NovWVe5IyY90/n8FA7EmS9htOiodFU8m
+         qVUexhIPuVxkip5ID6wOQZRcpIkGChJmc24l2MdanBWYOC9PGhzSv/gkyFvvQ6zIJEOq
+         naYaU0T32ROf+Ruaoy85hnQKIPqC4c/I0a4tHzScZfzj8JbTM1a9I9jp0GnbXxe8P1e0
+         P0XQ==
+X-Gm-Message-State: AOJu0YzOY7UrWM1qG/6ICEBiKxzGqMwgwknY7s09TIos0cSkUjNrBrKu
+	FyNQzgeYoPnrsaYvq7oUVDHuxQUEhqjiYlr6YD/aZ3r6hUNMkIZQzOQ/sCAZ28vf7pMBZmNvRpS
+	a0dpZ/YB8h0/uEuyBTw0cAOJkXIJKgkF3nSJ6qg==
+X-Google-Smtp-Source: AGHT+IGWJEHeP8ceukZBq9swU7nqm4iIxqr2YFfw7ue2G9JOtY14BpVkMbbx8NFLoRLb6GCWS0VkVQHn/Tt9QFS7yBY=
+X-Received: by 2002:a1f:4b44:0:b0:4c0:24e6:f49d with SMTP id
+ y65-20020a1f4b44000000b004c024e6f49dmr674610vka.1.1707983174166; Wed, 14 Feb
+ 2024 23:46:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, Ethan Zhao <haifeng.zhao@linux.intel.com>,
- "Tian, Kevin" <kevin.tian@intel.com>, "Liu, Yi L" <yi.l.liu@intel.com>,
- "bhelgaas@google.com" <bhelgaas@google.com>,
- "robin.murphy@arm.com" <robin.murphy@arm.com>,
- "dwmw2@infradead.org" <dwmw2@infradead.org>,
- "will@kernel.org" <will@kernel.org>, "lukas@wunner.de" <lukas@wunner.de>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v12 5/5] iommu/vt-d: improve ITE fault handling if target
- device isn't present
-To: Jason Gunthorpe <jgg@ziepe.ca>
-References: <20240129034924.817005-1-haifeng.zhao@linux.intel.com>
- <20240129034924.817005-6-haifeng.zhao@linux.intel.com>
- <BN9PR11MB52761CC3E5F08D4B7BAD7F918C7E2@BN9PR11MB5276.namprd11.prod.outlook.com>
- <7adec292-9d38-41ab-a982-bd840b24f3ab@intel.com>
- <0aee453c-e98f-4b72-8107-31d4731abcdb@linux.intel.com>
- <BN9PR11MB5276D3372267CE9246170FA78C7D2@BN9PR11MB5276.namprd11.prod.outlook.com>
- <500c4582-ec05-4a9e-9b68-d2ae19aed49b@linux.intel.com>
- <20240130162958.GF50608@ziepe.ca>
- <6a48f023-2701-4f2f-8077-14fe348794dd@linux.intel.com>
- <20240201193427.GQ50608@ziepe.ca>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20240201193427.GQ50608@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240211101421.166779-1-warthog618@gmail.com> <20240215010733.GA30995@rigel>
+In-Reply-To: <20240215010733.GA30995@rigel>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 15 Feb 2024 08:46:03 +0100
+Message-ID: <CAMRc=MdrkCp2xMq4_Qa3i-tMNUL0=x8ubSRgGjRJHWPzw3=KAQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: uapi: clarify default_values being logical
+To: Kent Gibson <warthog618@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linus.walleij@linaro.org, andy@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/2/24 3:34 AM, Jason Gunthorpe wrote:
-> On Wed, Jan 31, 2024 at 02:21:20PM +0800, Baolu Lu wrote:
->> An rbtree for IOMMU device data for the VT-d driver would be beneficial.
->> It also benefits other paths of fault handling, such as the I/O page
->> fault handling path, where it currently still relies on the PCI
->> subsystem to convert a RID value into a pci_device structure.
->>
->> Given that such an rbtree would be helpful for multiple individual
->> drivers that handle PCI devices, it seems valuable to implement it in
->> the core?
-> rbtree is already supposed to be a re-usable library.
-> 
-> There is already good helper support in rbtree to make things easy to
-> implement. I see arm hasn't used them yet, it should look something
-> like this:
+On Thu, Feb 15, 2024 at 2:07=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
+wrote:
+>
+> On Sun, Feb 11, 2024 at 06:14:21PM +0800, Kent Gibson wrote:
+> > The documentation for default_values mentions high/low which can be
+> > confusing, particularly when the ACTIVE_LOW flag is set.
+> >
+> > Replace high/low with active/inactive to clarify that the values are
+> > logical not physical.
+> >
+> > Similarly, clarify the interpretation of values in struct gpiohandle_da=
+ta.
+> >
+> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+>
+> Just checking where we are at with this patch, given you've merged the
+> two documentation patches that followed on from it.
+>
+> I realize you have bigger fish to fry at the moment, so sorry for any
+> distraction, but I just want to ensure there isn't something you are
+> expecting from me or it hasn't fallen through the cracks.
+>
+> Cheers,
+> Kent.
 
-I have posted a similar implementation for the vt-d driver here:
+Now queued. I had skimmed through the discussion and was under the
+impression that you'll be sending a v2 of this one, sorry.
 
-https://lore.kernel.org/linux-iommu/20240215072249.4465-1-baolu.lu@linux.intel.com/
-
-Based on this implementation, only patches 1 and 2 are required. The
-last patch could be like below (code compiled but not tested, comments
-not changed yet):
-
-diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
-index f9b63c2875f7..30a659a4d3ed 100644
---- a/drivers/iommu/intel/dmar.c
-+++ b/drivers/iommu/intel/dmar.c
-@@ -1272,6 +1272,7 @@ static int qi_check_fault(struct intel_iommu 
-*iommu, int index, int wait_index)
-  {
-         u32 fault;
-         int head, tail;
-+       u64 iqe_err, ite_sid;
-         struct q_inval *qi = iommu->qi;
-         int shift = qi_shift(iommu);
-
-@@ -1316,6 +1317,13 @@ static int qi_check_fault(struct intel_iommu 
-*iommu, int index, int wait_index)
-                 tail = readl(iommu->reg + DMAR_IQT_REG);
-                 tail = ((tail >> shift) - 1 + QI_LENGTH) % QI_LENGTH;
-
-+               /*
-+                * SID field is valid only when the ITE field is Set in 
-FSTS_REG
-+                * see Intel VT-d spec r4.1, section 11.4.9.9
-+                */
-+               iqe_err = dmar_readq(iommu->reg + DMAR_IQER_REG);
-+               ite_sid = DMAR_IQER_REG_ITESID(iqe_err);
-+
-                 writel(DMA_FSTS_ITE, iommu->reg + DMAR_FSTS_REG);
-                 pr_info("Invalidation Time-out Error (ITE) cleared\n");
-
-@@ -1325,6 +1333,19 @@ static int qi_check_fault(struct intel_iommu 
-*iommu, int index, int wait_index)
-                         head = (head - 2 + QI_LENGTH) % QI_LENGTH;
-                 } while (head != tail);
-
-+               /*
-+                * If got ITE, we need to check if the sid of ITE is the 
-same as
-+                * current ATS invalidation target device, if yes, don't 
-try this
-+                * request anymore if the target device isn't present.
-+                * 0 value of ite_sid means old VT-d device, no ite_sid 
-value.
-+                */
-+               if (ite_sid) {
-+                       struct device *dev = device_rbtree_find(iommu, 
-ite_sid);
-+
-+                       if (!dev || !pci_device_is_present(to_pci_dev(dev)))
-+                               return -ETIMEDOUT;
-+               }
-+
-                 if (qi->desc_status[wait_index] == QI_ABORT)
-                         return -EAGAIN;
-         }
-
-Best regards,
-baolu
+Bart
