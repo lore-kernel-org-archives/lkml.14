@@ -1,151 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CFF013342A;
-	Thu, 15 Feb 2024 16:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FFD91350F0;
+	Thu, 15 Feb 2024 16:06:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708013197; cv=none; b=CddAc8iwQt5auDUeW4hfYbs34zpzsX0yas+GgITu4gY9TO/6GRs+WmfB2tRyBAuMz17L4Tg7QS4iVQGJ/9Key2/GWxhDmDr9swo23o/bkBiVo4+kwLridClvkdbIVNcXgO4zYpiAktIcD72OBbtU4BWx/9EGyJJPhERboZtxCCo=
+	t=1708013202; cv=none; b=Yt1g1QdaAdZt+tzW/qHQRnkMXVJSE81wb11aM4juZOdfLgi6BRZhiCeehIf1tlK9KqeyTLSJ8nEx8noJXLzGRz1Do6ul2DLoC2gEst/6sK5y4LcclQseJSca2XxJSnPu9j7TbIiXQhSKSuwcR40eQoYpiGIfbn6drr96adsxlmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708013197; c=relaxed/simple;
-	bh=JICvr0D4tYvl5DaKYMCiv1tn6ushEDdrtmyTwJvTNJU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=COjHdklXc+JVZrh1C0JSVEsGrIXS+R3lBP9M7SIgnCqYh7Q12CGBMietnhQCmR+aKbxQFSlTYZmPrD/gzArm64bxk9LP+FP8DZTRhvaglxNWgMRM4/dJSZLJV30bVKedLIALUqWMRRMQs8HYt8/wPzt96GCPE2lCg8fW1mu7FVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00AA4C43390;
-	Thu, 15 Feb 2024 16:06:34 +0000 (UTC)
-Date: Thu, 15 Feb 2024 11:08:08 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
- <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
- <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
- bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, Alexei
- Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
- Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
- <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
- Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v7 24/36] x86/ftrace: Enable HAVE_FUNCTION_GRAPH_FREGS
-Message-ID: <20240215110808.752c9b67@gandalf.local.home>
-In-Reply-To: <170723231592.502590.12367006830540525214.stgit@devnote2>
-References: <170723204881.502590.11906735097521170661.stgit@devnote2>
-	<170723231592.502590.12367006830540525214.stgit@devnote2>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1708013202; c=relaxed/simple;
+	bh=akjpUr+ZYSjEQ/296swH0R+gJmt5trZjoLKfmLO+NZU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=V6cmz3/Oo016awz1fZcC2MbXZFD7PGBxR27dUKPwq8IaHTXUsQgLczsY91WXgyBHcP6OSuOqWyo4eaksIo/LN5aVqsOwyhzmqMcVdRBv1qUKPpAY2EITjgmRDfHbpyOIRuZ5SEpwBauq6VGeHgG5PPRzaVBAPcDKF7ilJfcG5Ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=q+DVNN2Q; arc=none smtp.client-ip=193.104.135.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="q+DVNN2Q"
+Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
+	by mail1.fiberby.net (Postfix) with ESMTPSA id 0E11F600D4;
+	Thu, 15 Feb 2024 16:06:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
+	s=202008; t=1708013196;
+	bh=akjpUr+ZYSjEQ/296swH0R+gJmt5trZjoLKfmLO+NZU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=q+DVNN2QORy7bWZJmmlebtJiMPJDFrwsJrv5EHEWHCk5oEuNzyP+UCunwTvFR9dvu
+	 dn+LZ7CSwcrQPShycKPCZ+Aqc9IRXWZaYmAjCg+Nb3X0OcUmkhfpZZBHN4/7jbxvvq
+	 w5ymk2v4y9F7HIk3xnvFAEnyb+dJWAnnvapHXPdE6BiMHtRksemd7laYjg4THKBLMo
+	 Rqogm2f+2zKhVl9QNSfHdJdZmEFPkJL+owLTCUu9yL/k3qR3jmr4fe8mmZkfLShX5J
+	 qbMvemeeVmmU79S/8Ptf1LyGOngQ3KAHnEv/NWvAmwG40/CVZFhnohOTiKDvuNTXHX
+	 HNOXDs+ShwJYA==
+Received: by x201s (Postfix, from userid 1000)
+	id 42E0D202FB6; Thu, 15 Feb 2024 16:05:44 +0000 (UTC)
+From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
+To: Jamal Hadi Salim <jhs@mojatatu.com>,
+	Cong Wang <xiyou.wangcong@gmail.com>,
+	Jiri Pirko <jiri@resnulli.us>
+Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	llu@fiberby.dk
+Subject: [PATCH net-next 1/3] net: sched: cls_api: add skip_sw counter
+Date: Thu, 15 Feb 2024 16:04:42 +0000
+Message-ID: <20240215160458.1727237-2-ast@fiberby.net>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240215160458.1727237-1-ast@fiberby.net>
+References: <20240215160458.1727237-1-ast@fiberby.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed,  7 Feb 2024 00:11:56 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+Maintain a count of skip_sw filters.
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Support HAVE_FUNCTION_GRAPH_FREGS on x86-64, which saves ftrace_regs
-> on the stack in ftrace_graph return trampoline so that the callbacks
-> can access registers via ftrace_regs APIs.
-> 
-> Note that this only recovers 'rax' and 'rdx' registers because other
-> registers are not used anymore and recovered by caller. 'rax' and
-> 'rdx' will be used for passing the return value.
-> 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  Changes in v3:
->   - Add a comment about rip.
->  Changes in v2:
->   - Save rsp register and drop clearing orig_ax.
-> ---
->  arch/x86/Kconfig            |    3 ++-
->  arch/x86/kernel/ftrace_64.S |   37 +++++++++++++++++++++++++++++--------
->  2 files changed, 31 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 5edec175b9bf..ccf17d8b6f5f 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -223,7 +223,8 @@ config X86
->  	select HAVE_FAST_GUP
->  	select HAVE_FENTRY			if X86_64 || DYNAMIC_FTRACE
->  	select HAVE_FTRACE_MCOUNT_RECORD
-> -	select HAVE_FUNCTION_GRAPH_RETVAL	if HAVE_FUNCTION_GRAPH_TRACER
-> +	select HAVE_FUNCTION_GRAPH_FREGS	if HAVE_DYNAMIC_FTRACE_WITH_ARGS
-> +	select HAVE_FUNCTION_GRAPH_RETVAL	if !HAVE_DYNAMIC_FTRACE_WITH_ARGS
->  	select HAVE_FUNCTION_GRAPH_TRACER	if X86_32 || (X86_64 && DYNAMIC_FTRACE)
->  	select HAVE_FUNCTION_TRACER
->  	select HAVE_GCC_PLUGINS
-> diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
-> index 214f30e9f0c0..8a16f774604e 100644
-> --- a/arch/x86/kernel/ftrace_64.S
-> +++ b/arch/x86/kernel/ftrace_64.S
-> @@ -348,21 +348,42 @@ STACK_FRAME_NON_STANDARD_FP(__fentry__)
->  SYM_CODE_START(return_to_handler)
->  	UNWIND_HINT_UNDEFINED
->  	ANNOTATE_NOENDBR
-> -	subq  $24, %rsp
-> +	/*
-> +	 * Save the registers requires for ftrace_regs;
-> +	 * rax, rcx, rdx, rdi, rsi, r8, r9 and rbp
-> +	 */
-> +	subq $(FRAME_SIZE), %rsp
-> +	movq %rax, RAX(%rsp)
-> +	movq %rcx, RCX(%rsp)
-> +	movq %rdx, RDX(%rsp)
-> +	movq %rsi, RSI(%rsp)
-> +	movq %rdi, RDI(%rsp)
-> +	movq %r8, R8(%rsp)
-> +	movq %r9, R9(%rsp)
-> +	movq %rbp, RBP(%rsp)
+This counter is protected by the cb_lock, and is updated
+at the same time as offloadcnt.
 
-This unconditionally slows down function graph tracer for no good reason.
+Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
+---
+ include/net/sch_generic.h | 1 +
+ net/sched/cls_api.c       | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-Most of the above is going to be garbage anyway, except the rax and rdx.
-
-I would recommend than we set something else in the ftrace regs that states
-this only holds return values. Anything else will just get invalid.
-
-I'm really against saving garbage. The purpose of ftrace_regs is that it
-can hold incomplete data.
-
--- Steve
-
-
-> +	/*
-> +	 * orig_ax is not cleared because it is used for indicating the direct
-> +	 * trampoline in the fentry. And rip is not set because we don't know
-> +	 * the correct return address here.
-> +	 */
-> +
-> +	leaq FRAME_SIZE(%rsp), %rcx
-> +	movq %rcx, RSP(%rsp)
->  
-> -	/* Save the return values */
-> -	movq %rax, (%rsp)
-> -	movq %rdx, 8(%rsp)
-> -	movq %rbp, 16(%rsp)
->  	movq %rsp, %rdi
->  
->  	call ftrace_return_to_handler
->  
->  	movq %rax, %rdi
-> -	movq 8(%rsp), %rdx
-> -	movq (%rsp), %rax
->  
-> -	addq $24, %rsp
-> +	/*
-> +	 * Restore only rax and rdx because other registers are not used
-> +	 * for return value nor callee saved. Caller will reuse/recover it.
-> +	 */
-> +	movq RDX(%rsp), %rdx
-> +	movq RAX(%rsp), %rax
-> +
-> +	addq $(FRAME_SIZE), %rsp
->  	/*
->  	 * Jump back to the old return address. This cannot be JMP_NOSPEC rdi
->  	 * since IBT would demand that contain ENDBR, which simply isn't so for
+diff --git a/include/net/sch_generic.h b/include/net/sch_generic.h
+index 934fdb977551..46a63d1818a0 100644
+--- a/include/net/sch_generic.h
++++ b/include/net/sch_generic.h
+@@ -476,6 +476,7 @@ struct tcf_block {
+ 	struct flow_block flow_block;
+ 	struct list_head owner_list;
+ 	bool keep_dst;
++	atomic_t skipswcnt; /* Number of skip_sw filters */
+ 	atomic_t offloadcnt; /* Number of oddloaded filters */
+ 	unsigned int nooffloaddevcnt; /* Number of devs unable to do offload */
+ 	unsigned int lockeddevcnt; /* Number of devs that require rtnl lock. */
+diff --git a/net/sched/cls_api.c b/net/sched/cls_api.c
+index ca5676b2668e..397c3d29659c 100644
+--- a/net/sched/cls_api.c
++++ b/net/sched/cls_api.c
+@@ -3483,6 +3483,8 @@ static void tcf_block_offload_inc(struct tcf_block *block, u32 *flags)
+ 	if (*flags & TCA_CLS_FLAGS_IN_HW)
+ 		return;
+ 	*flags |= TCA_CLS_FLAGS_IN_HW;
++	if (tc_skip_sw(*flags))
++		atomic_inc(&block->skipswcnt);
+ 	atomic_inc(&block->offloadcnt);
+ }
+ 
+@@ -3491,6 +3493,8 @@ static void tcf_block_offload_dec(struct tcf_block *block, u32 *flags)
+ 	if (!(*flags & TCA_CLS_FLAGS_IN_HW))
+ 		return;
+ 	*flags &= ~TCA_CLS_FLAGS_IN_HW;
++	if (tc_skip_sw(*flags))
++		atomic_dec(&block->skipswcnt);
+ 	atomic_dec(&block->offloadcnt);
+ }
+ 
+-- 
+2.43.0
 
