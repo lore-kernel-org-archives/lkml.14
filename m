@@ -1,155 +1,131 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 520DD13173F;
-	Thu, 15 Feb 2024 14:57:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A2A132C05
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 14:58:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708009067; cv=none; b=fFWy5pJqhtCu9Tr6wbTbLDOYrgm2Ot1yZrnBBe78lGwZkFAXFx6SFGda43bk5lvac+S9ijN/61YDI9sUMT2Q5giPU/kL2klReUglXUnICKs5UtPAJ//IoQBD2lSIbEKzY+tkx/wmYuxndR3M2QivBduAAhs0K5woRNbqD4OxMdU=
+	t=1708009138; cv=none; b=Sr8fpHYMesJHxKIcAT+vuw2faHusJme6eiPfMuEeCHBYWG2RqiSrFN3W2HUeozUYKRg3/9Mj4y/VjDLF/El3G4N4i4vhVEwXuFD7ZdDAhxsbVlttWEDE7cWX5XRsdUW68cxbiRhgm9yUHpIOyGqq+om/hs+qRPFYqHdYTScypf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708009067; c=relaxed/simple;
-	bh=1Gv7+LBoNQLxJ3O3mSHbpiF5DyNS3KBkgKz/fRO/mSE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nb1pr7DjZzlrjCTJrS8ehvHrq4z+L2S7NLwcAqs8TwpDlWv9Hdld+7cXtbM+t1PQj841Ksq7Z7rI8zCWNlF3Kv4xLGLxoEJMi38DI2OPYsArsw2gvf05/z6qOamAfRPvUwxPqzyC4cccvdNaDRMwXpqZ3BkABOZT++3E32pgNik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B24851FB;
-	Thu, 15 Feb 2024 06:58:18 -0800 (PST)
-Received: from [192.168.178.6] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B27B13F7A6;
-	Thu, 15 Feb 2024 06:57:35 -0800 (PST)
-Message-ID: <265e5f2c-9b45-420f-89b1-44369aeb8418@arm.com>
-Date: Thu, 15 Feb 2024 15:57:34 +0100
+	s=arc-20240116; t=1708009138; c=relaxed/simple;
+	bh=6IMij2aMCDzlI1InstPj/0SjhHnSgb7se0txHOjqYec=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P1v/H9CnwgbcIlreQPtPOt7i+oj8a4D2OWeChEXKNnKGMu9UP+lUjuWNJnM7hsjn0DHz8sMd5v2YqibNVyN458u20SrXD6c1CfdT1bhv7X/zbrEaICCZ2PvHtVTnOirHQWUThOQfCgjsPYWWHraPkPg9TxpAUF7zcF1QRKuXkLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QCSBC1fn; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QCSBC1fn"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dcbef31a9dbso664656276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 06:58:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708009135; x=1708613935; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Tw/wN6EwhF1l4GL2nZ/ht1qejqJOWh5ecVMENBzDBDY=;
+        b=QCSBC1fn1Ka2h7g6fyuo/iR+OmsxJN+44ewMiK7TnEvXLUwE54/Fla7TeargSAD7FL
+         K4XY0N++HOd/XQR20ySjDvDEt4AT0wRqIA6SonOzfFP5z8DdEIZqaTEQUNCb8KPaAgTi
+         KuGZZAXkpnbLQ8uo8Gzowy4mMy4fIf8FjABi8dPX6Dpz9E5EvFoaI1UKe7ERn4Wuu7vW
+         9RpviaBpJWGkU607Q3RTsx1Q9BMnNxYkHWLkp9p4vl9Ttstb/nKLi8MMIMkJ5YhE7prP
+         AqX5xmoXXbk2RV4MOgo4U2hdSmx6j9jUjLVFg+6dNyF4KktkZz5uVsTEJBtCoOEQfFva
+         7uKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708009135; x=1708613935;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Tw/wN6EwhF1l4GL2nZ/ht1qejqJOWh5ecVMENBzDBDY=;
+        b=YJrV9qXHMeNvabOJRmLmdytTYCmKYY954ihmXhPdwTiMPKwfDxMG4f9W4qH4jQ/+wY
+         XalQcYgAwcY6rSCW3Df+XLoFDD4jC7juYOoXwkVgNBcrs/sM6UsIDzFdhZQTXGhUFery
+         oA+fGilL3ZedlIdpZwMLi17NjGacW1iy78pLdCK1mQ56hllPfEDKjoa+69VyIi3Zt5M9
+         Zjt9Jy+Ai1wawQecz71fFp2XX5XMYjDmo8S129Ad/9DeDW2sgiVhgHIVgA9QgU5TKqtU
+         PFaG6rHHwrim9Y2dSbdCrsnbP7wq+tkP9+HfqEL++xiXQStg6H2CQkwJXnRkIDKG0Ndf
+         g2vQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVdUVZ7RI8ZR+7sAinMLJhR4BHvLlcS6A3rqdjHLbAdTEZEpszE1EL1/VkHRjNcjcC6tE9cpp0cP+K6aYMRx59A52jxiY8lKO6Y77RV
+X-Gm-Message-State: AOJu0Yx3HFFoD6y/M4jumANBUnTMYn9QQIgx60s7RMCRDEhnU+anYhkN
+	RuB3UPeaZ5mIqNtp1UjxK8zEKU63PsMvWa/EVQrXQ0mFgcNzI/fiYtlixTXkdlZyas2TRuxB3lT
+	nF6hggyI33yoLbsKn6OWqG2mOAV/Duq9Ij20H
+X-Google-Smtp-Source: AGHT+IHbdGXWcfbi3sM7zNcX3xbLXT1pZZDBplduLx68NqKeXRGL2TAUM4SLA4O1Gc053VxRA9U/P0Ad1H3i0YzTDwI=
+X-Received: by 2002:a25:8750:0:b0:dbe:9509:141c with SMTP id
+ e16-20020a258750000000b00dbe9509141cmr1821330ybn.30.1708009135319; Thu, 15
+ Feb 2024 06:58:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] cpufreq: scmi: Add boost frequency support
-Content-Language: en-US
-To: Sibi Sankar <quic_sibis@quicinc.com>, Sudeep Holla
- <sudeep.holla@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>
-Cc: cristian.marussi@arm.com, rafael@kernel.org, morten.rasmussen@arm.com,
- lukasz.luba@arm.com, sboyd@kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- quic_mdtipton@quicinc.com, linux-arm-msm@vger.kernel.org, nm@ti.com
-References: <20240117110443.2060704-1-quic_sibis@quicinc.com>
- <20240123060827.a3vszziftj6pszt3@vireshk-i7> <Za-RtBrSxI-j4Jdx@bogus>
- <e968092a-dc2b-4351-9489-acf874bbc7b6@arm.com>
- <01b3d0ed-3fd3-86c6-7b0f-48d34a5d9ba8@quicinc.com>
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-In-Reply-To: <01b3d0ed-3fd3-86c6-7b0f-48d34a5d9ba8@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240212213922.783301-1-surenb@google.com> <20240212213922.783301-32-surenb@google.com>
+ <Zc3X8XlnrZmh2mgN@tiehlicka>
+In-Reply-To: <Zc3X8XlnrZmh2mgN@tiehlicka>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Thu, 15 Feb 2024 06:58:42 -0800
+Message-ID: <CAJuCfpHc2ee_V6SGAc_31O_ikjGGNivhdSG+2XNcc9vVmzO-9g@mail.gmail.com>
+Subject: Re: [PATCH v3 31/35] lib: add memory allocations report in show_mem()
+To: Michal Hocko <mhocko@suse.com>
+Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, vbabka@suse.cz, 
+	hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, 
+	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, 
+	corbet@lwn.net, void@manifault.com, peterz@infradead.org, 
+	juri.lelli@redhat.com, catalin.marinas@arm.com, will@kernel.org, 
+	arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com, 
+	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
+	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
+	nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev, 
+	rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com, 
+	yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com, 
+	hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org, 
+	ndesaulniers@google.com, vvvvvv@google.com, gregkh@linuxfoundation.org, 
+	ebiggers@google.com, ytcoode@gmail.com, vincent.guittot@linaro.org, 
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
+	bristot@redhat.com, vschneid@redhat.com, cl@linux.com, penberg@kernel.org, 
+	iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com, 
+	elver@google.com, dvyukov@google.com, shakeelb@google.com, 
+	songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com, 
+	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	iommu@lists.linux.dev, linux-arch@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
+	cgroups@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 13/02/2024 08:35, Sibi Sankar wrote:
-> 
-> 
-> On 1/31/24 20:37, Dietmar Eggemann wrote:
->> On 23/01/2024 11:15, Sudeep Holla wrote:
->>> On Tue, Jan 23, 2024 at 11:38:27AM +0530, Viresh Kumar wrote:
->>>> On 17-01-24, 16:34, Sibi Sankar wrote:
+On Thu, Feb 15, 2024 at 1:22=E2=80=AFAM Michal Hocko <mhocko@suse.com> wrot=
+e:
+>
+> On Mon 12-02-24 13:39:17, Suren Baghdasaryan wrote:
+> [...]
+> > @@ -423,4 +424,18 @@ void __show_mem(unsigned int filter, nodemask_t *n=
+odemask, int max_zone_idx)
+> >  #ifdef CONFIG_MEMORY_FAILURE
+> >       printk("%lu pages hwpoisoned\n", atomic_long_read(&num_poisoned_p=
+ages));
+> >  #endif
+> > +#ifdef CONFIG_MEM_ALLOC_PROFILING
+> > +     {
+> > +             struct seq_buf s;
+> > +             char *buf =3D kmalloc(4096, GFP_ATOMIC);
+> > +
+> > +             if (buf) {
+> > +                     printk("Memory allocations:\n");
+> > +                     seq_buf_init(&s, buf, 4096);
+> > +                     alloc_tags_show_mem_report(&s);
+> > +                     printk("%s", buf);
+> > +                     kfree(buf);
+> > +             }
+> > +     }
+> > +#endif
+>
+> I am pretty sure I have already objected to this. Memory allocations in
+> the oom path are simply no go unless there is absolutely no other way
+> around that. In this case the buffer could be preallocated.
 
-[...]
+Good point. We will change this to a smaller buffer allocated on the
+stack and will print records one-by-one. Thanks!
 
->> root@juno:/sys/devices/system/cpu/cpufreq# cat boost policy*/boost
->> 1
->> 0
->> 0
->>
->> root@juno:/sys/devices/system/cpu/cpufreq# cat
->> policy*/scaling_available_frequencies policy*/scaling_boost_frequencies
->> 450000 575000 700000
->> 450000 625000 800000
->> 775000 850000
->> 950000 1100000
->>
->> If I disable system-wide boost I see the correct influence on
->> 'cpufreq_pressure':
->>
->> root@juno:/sys/devices/system/cpu/cpufreq# echo 0 > boost
->>
->> [  439.466682] cpufreq_update_pressure() cpu=1 cpufreq_pressure=280
->> [  439.472797] cpufreq_update_pressure() cpu=2 cpufreq_pressure=280
->> [  439.478889] cpufreq_update_pressure() cpu=0 cpufreq_pressure=79
->> [  439.484852] cpufreq_update_pressure() cpu=3 cpufreq_pressure=79
->> [  439.490843] cpufreq_update_pressure() cpu=4 cpufreq_pressure=79
->> [  439.499621] cpufreq_update_pressure() cpu=5 cpufreq_pressure=79
->>
->> reflecting the max frequency change from '1100000 to 800000' on CPU1,2
->> and from '850000 to 700000' on CPU0,3-5.
->>
->> root@juno:/sys/devices/system/cpu/cpufreq# echo 1 > boost
->>
->> [ 2722.693113] cpufreq_update_pressure() cpu=1 cpufreq_pressure=0
->> [ 2722.699041] cpufreq_update_pressure() cpu=2 cpufreq_pressure=0
->> [ 2722.704962] cpufreq_update_pressure() cpu=0 cpufreq_pressure=0
->> [ 2722.710842] cpufreq_update_pressure() cpu=3 cpufreq_pressure=0
->> [ 2722.719644] cpufreq_update_pressure() cpu=4 cpufreq_pressure=0
->> [ 2722.728224] cpufreq_update_pressure() cpu=5 cpufreq_pressure=0
->>
->> What doesn't work for me is to disable boost per policy:
->>
->> root@juno:/sys/devices/system/cpu/cpufreq# echo 1 > boost
->> root@juno:/sys/devices/system/cpu/cpufreq# echo 0 > policy0/boost
->> root@juno:/sys/devices/system/cpu/cpufreq# echo 0 > policy1/boost
->>
->> Here I don't see 'cpufreq_pressure' changes.
->>
->> BTW, what's the use case you have in mind for this feature? Is it to cap
->> high OPPs for CPUs in a certain CPUfreq policy?
-> 
-> Yeah, that's exactly the use case for X1E. Boost frequencies defined in
-> the SoC are achievable by only one CPU in a cluster i.e. either the
-> other CPUs in the same cluster should be in low power mode or offline.
-> So it's mostly for book keeping i.e. we wouldn't to intimate incorrectly
-> that the CPUs are running at max possible frequency when it's actually
-> running at a lower frequency.
-
-I see.
-
-What about the issue with the settings of the global and the per-policy
-'boost' file?
-
-On my Juno-r0 the initial boost values are:
-
-(1) Initial setting:
-
-root@juno:/sys/devices/system/cpu/cpufreq# cat boost policy*/boost
-1
-0
-0
-
-Should they not all be 1 ?
-
-
-(2) Disabling system-wide boost
-
-root@juno:/sys/devices/system/cpu/cpufreq# echo 0 > boost
-
-Here I see 'cpufreq_pressure > 0' for all CPUs.
-
-
-(3) Enabling system-wide boost
-
-root@juno:/sys/devices/system/cpu/cpufreq# echo 1 > boost
-
-And here 'cpufreq_pressure == 0' for all CPUs.
-
-
-(4) Disabling boost for policy0.
-
-root@juno:/sys/devices/system/cpu/cpufreq# echo 0 > policy0/boost
-
-root@juno:/sys/devices/system/cpu/cpufreq# cat boost policy*/boost
-1
-0
-1
-
-Here nothing happened. But I was expecting to see 'cpufreq_pressure > 0'
-for CPUs of policy0:
-
-root@juno:/sys/devices/system/cpu/cpufreq# cat policy0/affected_cpus
-0 3 4 5
+>
+> --
+> Michal Hocko
+> SUSE Labs
