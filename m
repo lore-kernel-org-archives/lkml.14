@@ -1,59 +1,59 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0DE717591
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 09:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A0B134D3
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 09:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707988279; cv=none; b=KNZhYZw14IAwnIauAzKIhsU45LAeYfs93TOiDJD/gUf8rtiNjCdFfB3oMaqQ+svKmIQB6+Bv1p55ibzLQxPFri/v+pgBlamxaz1X/T03cMy6T7bT8S7t4iLUsTydUUnmKl9MEO6/TRTMCIlS9NmRxUMRg7w75OY0rzSE7JOrie8=
+	t=1707988338; cv=none; b=dKqwXfYkBE18KpCIvukLMj5mer/nSylAWFu+ArtYzr9oXVmTwNY9vZ4nA/8qWTID6bGA4ulhb8NdOA16vIDTWfP9+63Ej0d/A6vUaspd3IxBalMj9FXehtU9CZCAoMwfitRDlXmVNwODhsdIlNA4fyl54u6Qw5Puf8hvOvO3BIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707988279; c=relaxed/simple;
-	bh=08TdCLw9ZyL/F0z+U/nofGrkl3hzLyDh2rftDf34KeY=;
+	s=arc-20240116; t=1707988338; c=relaxed/simple;
+	bh=axb07rsJSprQtzvZ9lDU3nupZqM162p+jcZvjk4j4TY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DZYTgovENGH4h1fMcs5iLeKjOTzy7XCC+ztYOqA6yN9QitmzhbFvhZbETgLYBGDLFkq4CQQCnBFc7EV6jqQxTgmYmPHiOqTMnMa4zZRcyECTssvEfQ0jQgmG2xyxkKaVFTBb3mCRQar6JLHd3B1xidp7egxBua5Jv+rOCw4/Sys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RJLyO+BG; arc=none smtp.client-ip=209.85.208.49
+	 In-Reply-To:Content-Type; b=K/tQmuaEBC2DbZEbKM+t9GnZ52UU3oEpFUBmkAQT86LPsCbsVYu+I1HNUzVHhj2Twd50fz1wwu1BpKL1MBMF8Hk1f6DPESYNmcfrquPWTaTqD+iMHpw35oKyA7eq5AS6saGN28q7arYi9OE74HOW8tdCQC9Jjgjz2neHydg+3fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bnv3phRi; arc=none smtp.client-ip=209.85.208.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RJLyO+BG"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-563b7b41e20so282731a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 01:11:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bnv3phRi"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5610cc8cc1aso664260a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 01:12:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707988276; x=1708593076; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1707988333; x=1708593133; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=UGSpXyZhY+wfdI1eSt+U0weAcplrqycGRbshA+zYafA=;
-        b=RJLyO+BGGZh2ysKQ/XcH0pnQsAXgTqgRlpZdCdz4BgvFeVqtDW7oxp2Gqe9shome1s
-         S6J75bYrd4uGFnpuENgWuega8R+2m0IzSTzjNZSVCVzcyLmQXDPpE+8UVauD2r2oD5Nv
-         N8IljWq+2dy3zSi6Ta2trgQ6CdZMLXAF/v699asX/Nmr+uf4aheQ+JnlC5FbE1bPPX5t
-         lHp1kcFNz5mjSJyoEk2n+ctwhlSAPqhm6iOc5PUSE6S0G30u8ebikuytcEBTqvrMeFDP
-         ChpGz2vlFnr+4FJb/L5vbZ8ncIA/VSz7/xnHs7M3UGP29rkVMdCQOpbHtl42TlaqJB0z
-         DMXw==
+        bh=joiT44UsnuH9KUogrNtWPy4rxGmoiIGP+jNUh/pD02o=;
+        b=bnv3phRitYYYWcCTo70BSFQbJxsFifgXVmGa9wcVGvdsnYNh48AtkVpJHsxId6rKMX
+         oE1/WmRcT4I325lI7HTVPdWFHDjhPWEQX2+dKfKBThRXd0G33vysDGCq4/byU3wjf86T
+         u6+FXnfgAM2/S8hl5cOmUo00DrwL7/2EOIbGXgks05ufwmF2mg4S+WgCcEeCVZaeLVA5
+         rsHAUEw//6avyl9OKa9E7sLqy0gbNSLckOPDnl0mXF2sQROC35lDrFQjj+88j4jgR0Ok
+         eQLYW0xnQkfQtb1eQ3ZO+E7epw9yx0xrksEBuhV8SnhkLt32SV1bSHZBiPhcsYGGKAQA
+         OytQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707988276; x=1708593076;
+        d=1e100.net; s=20230601; t=1707988333; x=1708593133;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UGSpXyZhY+wfdI1eSt+U0weAcplrqycGRbshA+zYafA=;
-        b=HKhSS4oQglqDv+LlxPs5aJVYAfv+XFIZDcX0GKaLhNyMsgN3RVQMaKqIpzf/9HpIf+
-         iMLYL/nN4PpH0OF9x6eOy9bcUjAjLTbusJCv8muwNSQpdu3QfLfvwBcrKZWIXFxn0PtP
-         nQPo5D9k7nPeSDr509jD9VgZxBEadBNL566fvLwmgGRptNrWd4MEZD9OBOdku/paLvRi
-         DQ0ZoUBu9+gTzdELr5nZoOaANFXJAq++RoJQAEXHPOlHB7oQXn6+oU+3srcpYAdgdNxA
-         TP3QsEvNBcCvwZ7fp7X588mydI5BNtl3tgzqvcuDFvkO55LwnPw3XiK6I3YnQoM4QH/E
-         2d5A==
-X-Forwarded-Encrypted: i=1; AJvYcCXTHnO5up7hvRX8UFN3UuckJTAchUWEcYqXuMFRFAgNUoOARvI7tt1b5t8PerSupwuV3p7cEWfWfOtoUkZOTNo1k7GEEOkbVKU1e2Y3
-X-Gm-Message-State: AOJu0YwZlmweUpHW7mhSMLaWLTXYYeEMBXh4Qhud5XfmDgoG2W2f4v7s
-	MyO07CAVH45+rvR7jgQnSOaYCeF0ENLdW/1qOBSxkfVtG8RXllgMs+3DOSHVjhU=
-X-Google-Smtp-Source: AGHT+IF5OEgFzNoSzIio++XMYcVKg6/A2isw5HlMImMVzW9iJoppYyOuWXgBx6Yna1XeuyLkoD2Kxg==
-X-Received: by 2002:a50:fb0b:0:b0:563:85cc:fee9 with SMTP id d11-20020a50fb0b000000b0056385ccfee9mr913054edq.1.1707988271081;
-        Thu, 15 Feb 2024 01:11:11 -0800 (PST)
+        bh=joiT44UsnuH9KUogrNtWPy4rxGmoiIGP+jNUh/pD02o=;
+        b=oxpzEk3kFSo3gooa56DntOpguGgmpn1hb1qQ2QAjaTYso+nCpO+qe8/PhZNh9AcXSe
+         W4yrROE11/fWGUB0U9OJ0h77/kBpFV+JJUWAEQrhbeMzsfhbAQYs/al0+ihnslh69rJp
+         iREV5DNAG1tShhLryrdng6jmwutxVD83fMMGmnI7W5FGdYvLtJFUVicjC5VxPwlsHu2A
+         Z96NQgwRHP9jIkgH62cyHF1rPRVELn50Sd3uZejAK+b6fpJm6JZBe+oHRGSY0cBq6dcM
+         sy1qmSObPYl+SmpijNQb77xBlyBr3cxcrBtwqwCfIlGpDvXo8LzpGwdNE3l2Q6ZwmlKJ
+         HxFw==
+X-Forwarded-Encrypted: i=1; AJvYcCXUa5i6N07CXXluSji2VkKKIQ+/xoNLYHjmIx0Fw/bMXWP42b7FVZ3ibgd5AA6VaErw2BU8pF+UqAtpVBOjviqtcCzEJbrHrGeR4w1t
+X-Gm-Message-State: AOJu0YxKt4pfsCO8RIlpBnDavLX2p1uK6x0VmSI8uFVmnryM9LRor03J
+	WhFRLo2QZly/MZ87AEvQhgFTgDTbZZguMEUeDKaUlNMlsSvdMBXHdO0tPt6ggw4=
+X-Google-Smtp-Source: AGHT+IGJygtJOAk1NvMHZfNT6tBC1WXkafZ/gPjyVkP/5QXWUjZpW6nO3fmdahsM78cgbqMQ5HIdyg==
+X-Received: by 2002:aa7:d411:0:b0:55e:ea35:1da4 with SMTP id z17-20020aa7d411000000b0055eea351da4mr867899edq.4.1707988333563;
+        Thu, 15 Feb 2024 01:12:13 -0800 (PST)
 Received: from [192.168.0.22] ([78.10.207.130])
-        by smtp.gmail.com with ESMTPSA id w15-20020a50d78f000000b0055ef4a779d9sm381258edi.34.2024.02.15.01.11.09
+        by smtp.gmail.com with ESMTPSA id w15-20020a50d78f000000b0055ef4a779d9sm381258edi.34.2024.02.15.01.12.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Feb 2024 01:11:10 -0800 (PST)
-Message-ID: <be4e6ded-6596-472b-a988-0909a5451a72@linaro.org>
-Date: Thu, 15 Feb 2024 10:11:09 +0100
+        Thu, 15 Feb 2024 01:12:13 -0800 (PST)
+Message-ID: <51cb3592-8cf1-4c0b-9810-54c85c29995d@linaro.org>
+Date: Thu, 15 Feb 2024 10:12:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,8 +61,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/23] dt-bindings: gpio: nomadik: convert into yaml
- format
+Subject: Re: [PATCH 02/23] dt-bindings: gpio: nomadik: add optional ngpios
+ property
 Content-Language: en-US
 To: =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
  Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
@@ -77,7 +77,7 @@ Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
  Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
  Tawfik Bayouk <tawfik.bayouk@mobileye.com>
 References: <20240214-mbly-gpio-v1-0-f88c0ccf372b@bootlin.com>
- <20240214-mbly-gpio-v1-1-f88c0ccf372b@bootlin.com>
+ <20240214-mbly-gpio-v1-2-f88c0ccf372b@bootlin.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -123,54 +123,18 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240214-mbly-gpio-v1-1-f88c0ccf372b@bootlin.com>
+In-Reply-To: <20240214-mbly-gpio-v1-2-f88c0ccf372b@bootlin.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 On 14/02/2024 17:23, Théo Lebrun wrote:
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +
-> +  gpio-controller: true
-> +
-> +  interrupt-controller: true
-> +
-> +  "#interrupt-cells":
-> +    const: 2
-> +
-> +  gpio-bank:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
+> This GPIO controller can support a lesser number of GPIOs than 32.
+> Express that in devicetree using an optional, generic property.
+> 
+> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+> ---
 
-Missing description, unless it is a common property (but then where do I
-find it?).
-
-> +
-> +  st,supports-sleepmode:
-> +    description: Whether the controller can sleep or not.
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  gpio-ranges:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - "#gpio-cells"
-> +  - gpio-controller
-> +  - interrupt-controller
-> +  - gpio-bank
-
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
