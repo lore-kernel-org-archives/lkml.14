@@ -1,144 +1,155 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D550614831F;
-	Thu, 15 Feb 2024 23:14:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A611482EF
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 23:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708038881; cv=none; b=uKzcDdsENHXt9idApPsapKGjT8PbYINQq/k2nzhNiz40qGB7fs4ubVEzkdLNRqCHldWJvkBTN/bA6l45sWS5kuPuOvoMTVNY1P0BmrFzRsGQ+nG6SJ5IRSoFBB5/YgKAYcWsozK+7iWLTVd1LX9scTsgSj/k4GLpsX7TbYtuaxc=
+	t=1708038881; cv=none; b=ecgtM2GaLRc+FZrmbJNU7lD7etRCrmyakVvnAIwB8otwfqOofM4vM3lHm209OMpSnWgwXLlTfSwiJw/oxztCosW9MN4QS8eznTRJGVoJ/mJ0DYH9nHYj1fWk56CLFN41NLEHmuCpsmix9MVonif9HdVW/K+PTKAilSXbwcIjrKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708038881; c=relaxed/simple;
-	bh=Z3OEL+EPx//2PPX5akfH6NjY88NSSeAdRzhgVXlU2FY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YPGzabfRwSNaSIcmICw6BPR5i25qFjUtETH8YYF4MJIcvJAZbLnKDd9WOiJqbySKSRCQ4JF6EM78siZlHLAN7lxjgGTaQ1oX64gnoFP+jzpjg3efLlXn7F6mtoGgO6AqXy0ym2Au4xClcS0ZQ6+6VPokIrWz4Z7zA4B3xSx/tt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=l0t/KbJD; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	bh=Jt1Mpx1uMY7XnHlh/3E2LCtQ+SRD+/n8kJk/hjL1Z1k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=HWRyM1VwNnVdKwqL4pckbJF6PX50AEcvHMiRDv0hEAnW4kdqMMp4hP0utZACQIyQ46Ai7EOx2O/P/8orpA2ZrLoudREh05uFR+SQjxXy4sKza7yk011kv1GFD4ggMybKK/JKt5egX4V/U9CCNyOTW/COHbJSxxIN6Q6terLrwi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gBwIIfka; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="l0t/KbJD"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41FMVlZk029466;
-	Thu, 15 Feb 2024 23:14:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=mYgdjqbNen7QY26guvqSRH2EI5oLC0HipXuyG4L6aUg=;
- b=l0t/KbJDbNWRLKk455fieLXtavaZR51pzGJRXubExor826DNo8xjmcTpEG/o4362YCAB
- ys4/Ynhvj0W2bDLadGsClABAKZGkGH0jsU0yNvU8t/nFZAqBhW7A6KhHoxpWrfrOgoY1
- xJgvxgMDoKiRRamJz+w1DTVf6Dw/3zKUwzukZsnO9wePwC7aPkpJRwZOFjH+pRsxm8zh
- mfVBH9TH/tWcr4eO4f9X1o3Mz/UspEzHDk3XhoNbyg6GDuJutG9fI9JbKd528g29M2fi
- V0jn5AZAW70Ah0aaqYIEdEGlM8ewC7q2ugUBPRL1cSPNZQwjwAQzzggId6eIFc4wVZHs Kw== 
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w9ug4166k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 Feb 2024 23:14:34 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41FKZ6ce009680;
-	Thu, 15 Feb 2024 23:14:33 GMT
-Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3w6npm7h4x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 Feb 2024 23:14:33 +0000
-Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
-	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41FNEUPL52626034
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 15 Feb 2024 23:14:32 GMT
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5B7F458066;
-	Thu, 15 Feb 2024 23:14:30 +0000 (GMT)
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A3B8458050;
-	Thu, 15 Feb 2024 23:14:29 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 15 Feb 2024 23:14:29 +0000 (GMT)
-From: Stefan Berger <stefanb@linux.ibm.com>
-To: keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
-        herbert@gondor.apana.org.au, davem@davemloft.net
-Cc: linux-kernel@vger.kernel.org, saulo.alessandre@tse.jus.br,
-        Stefan Berger <stefanb@linux.ibm.com>
-Subject: [PATCH v2 12/14] crypto: ecc - Implement and use ecc_curve_get_nbytes to get curve's nbytes
-Date: Thu, 15 Feb 2024 18:14:11 -0500
-Message-ID: <20240215231414.3857320-13-stefanb@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240215231414.3857320-1-stefanb@linux.ibm.com>
-References: <20240215231414.3857320-1-stefanb@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gBwIIfka"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708038879; x=1739574879;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Jt1Mpx1uMY7XnHlh/3E2LCtQ+SRD+/n8kJk/hjL1Z1k=;
+  b=gBwIIfkaonPZTy5benTGbNenhLKKsFflLtO2UBCaVU2nI9M5xvx+avQ/
+   O5hqdUMkw+I+RU7ZB1CLheRyWtAXayno2vkFnTZ9HB6C/jRj+bLPwPLgb
+   MbZCZvcu+b1lGuI7PIhqCPTEiWt/klR1WFD3Rd+8uimQDwb29PS6Uq4lG
+   oEf/HByjl4v3Lum/RXG7m97JvrP1Roc7f+xBgrbH2fTKO1qsCJSAutv2h
+   aAnkhwHRVhlYCyKmH46pqsBW50X/cAJUAXsiFNwMhG0IsjuCIxlhoVu/M
+   pkUaGkTVRrcmi5Qko8SUwkvICU39PTyd7pb4K1gPco4Dbic9QnIgUutiQ
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10985"; a="2066304"
+X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
+   d="scan'208";a="2066304"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 15:14:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10985"; a="912250184"
+X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
+   d="scan'208";a="912250184"
+Received: from yshin-mobl1.amr.corp.intel.com (HELO rpedgeco-desk4.intel.com) ([10.209.95.133])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 15:14:36 -0800
+From: Rick Edgecombe <rick.p.edgecombe@intel.com>
+To: Liam.Howlett@oracle.com,
+	akpm@linux-foundation.org,
+	debug@rivosinc.com,
+	broonie@kernel.org,
+	kirill.shutemov@linux.intel.com,
+	keescook@chromium.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	luto@kernel.org,
+	peterz@infradead.org,
+	hpa@zytor.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: rick.p.edgecombe@intel.com
+Subject: [RFC PATCH 0/8] Cover a guard gap corner case
+Date: Thu, 15 Feb 2024 15:13:24 -0800
+Message-Id: <20240215231332.1556787-1-rick.p.edgecombe@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 7mzzmiueXgSosQUZrfe6zxpT-pAbo5TH
-X-Proofpoint-ORIG-GUID: 7mzzmiueXgSosQUZrfe6zxpT-pAbo5TH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-15_22,2024-02-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- lowpriorityscore=0 adultscore=0 malwarescore=0 priorityscore=1501
- impostorscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0 clxscore=1015
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402150181
 
-Implement ecc_curve_get_nbytes to get a curve's number of bytes (nbytes).
-The number of bytes can be derived from the nbits field of a curve, if
-set, otherwise from the ndigits field.
+Hi,
 
-Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
----
- crypto/ecc.c                  |  6 ++----
- include/crypto/internal/ecc.h | 11 +++++++++++
- 2 files changed, 13 insertions(+), 4 deletions(-)
+In working on x86’s shadow stack feature, I came across some limitations 
+around the kernel’s handling of guard gaps. AFAICT these limitations are 
+not too important for the traditional stack usage of guard gaps, but have 
+bigger impact on shadow stack’s usage. And now in addition to x86, we have 
+two other architectures implementing shadow stack like features that plan 
+to use guard gaps. I wanted to see about addressing them, but I have not 
+worked on mmap() placement related code before, so would greatly 
+appreciate if people could take a look and point me in the right 
+direction.
 
-diff --git a/crypto/ecc.c b/crypto/ecc.c
-index 73fbbfc8d69c..f643719450b8 100644
---- a/crypto/ecc.c
-+++ b/crypto/ecc.c
-@@ -1478,10 +1478,8 @@ static int __ecc_is_key_valid(const struct ecc_curve *curve,
- int ecc_is_key_valid(unsigned int curve_id, unsigned int ndigits,
- 		     const u64 *private_key, unsigned int private_key_len)
- {
--	int nbytes;
- 	const struct ecc_curve *curve = ecc_get_curve(curve_id);
--
--	nbytes = ndigits << ECC_DIGITS_TO_BYTES_SHIFT;
-+	int nbytes = ecc_curve_get_nbytes(curve);
- 
- 	if (private_key_len != nbytes)
- 		return -EINVAL;
-@@ -1506,7 +1504,7 @@ int ecc_gen_privkey(unsigned int curve_id, unsigned int ndigits, u64 *privkey)
- {
- 	const struct ecc_curve *curve = ecc_get_curve(curve_id);
- 	u64 priv[ECC_MAX_DIGITS];
--	unsigned int nbytes = ndigits << ECC_DIGITS_TO_BYTES_SHIFT;
-+	unsigned int nbytes = ecc_curve_get_nbytes(curve);
- 	unsigned int nbits = vli_num_bits(curve->n, ndigits);
- 	int err;
- 
-diff --git a/include/crypto/internal/ecc.h b/include/crypto/internal/ecc.h
-index 6229aa3f3218..5d485d3221d3 100644
---- a/include/crypto/internal/ecc.h
-+++ b/include/crypto/internal/ecc.h
-@@ -93,6 +93,17 @@ static inline void ecc_digits_to_bytes(const u64 *in, unsigned int ndigits,
- 	memcpy(out, &tmp[o], nbytes);
- }
- 
-+/**
-+ * ecc_curve_get_nbytes() - Get the number of bytes the curve requires
-+ * @curve:   The curve
-+ */
-+static inline unsigned int ecc_curve_get_nbytes(const struct ecc_curve *curve)
-+{
-+	if (curve->nbits)
-+		return DIV_ROUND_UP(curve->nbits, 8);
-+	return curve->g.ndigits << ECC_DIGITS_TO_BYTES_SHIFT;
-+}
-+
- /**
-  * ecc_is_key_valid() - Validate a given ECDH private key
-  *
+The nature of the limitations of concern is as follows. In order to ensure 
+guard gaps between mappings, mmap() would need to consider two things:
+ 1. That the new mapping isn’t placed in an any existing mapping’s guard
+    gap.
+ 2. That the new mapping isn’t placed such that any existing mappings are
+    not in *its* guard gaps
+Currently mmap never considers (2), and (1) is not considered in some 
+situations.
+
+When not passing an address hint, or passing one without 
+MAP_FIXED_NOREPLACE, (1) is enforced. With MAP_FIXED_NOREPLACE, (1) is not 
+enforced. With MAP_FIXED, (1) is not considered, but this seems to be 
+expected since MAP_FIXED can already clobber existing mappings. For 
+MAP_FIXED_NOREPLACE I would have guessed it should respect the guard gaps 
+of existing mappings, but it is probably a little ambiguous.
+
+In this RFC I just tried to add enforcement of (2) for the normal (no 
+address hint) case and only for the newer shadow stack memory (not 
+stacks). The reason is that with the no-address-hint situation, landing 
+next to a guard gap could come up naturally and so be more influencable by 
+attackers such that two shadow stacks could be adjacent without a guard 
+gap. Where as the address-hint scenarios would require more control - 
+being able to call mmap() with specific arguments. As for why not just fix 
+the other corner cases anyway, I thought it might have some greater 
+possibility of affecting existing apps.
+
+Thanks,
+
+Rick
+
+Rick Edgecombe (8):
+  mm: Switch mm->get_unmapped_area() to a flag
+  mm: Introduce arch_get_unmapped_area_vmflags()
+  mm: Use get_unmapped_area_vmflags()
+  thp: Add thp_get_unmapped_area_vmflags()
+  mm: Take placement mappings gap into account
+  x86/mm: Implement HAVE_ARCH_UNMAPPED_AREA_VMFLAGS
+  x86/mm: Care about shadow stack guard gap during placement
+  selftests/x86: Add placement guard gap test for shstk
+
+ arch/s390/mm/hugetlbpage.c                    |   2 +-
+ arch/s390/mm/mmap.c                           |   4 +-
+ arch/sparc/kernel/sys_sparc_64.c              |  15 +--
+ arch/sparc/mm/hugetlbpage.c                   |   2 +-
+ arch/x86/include/asm/pgtable_64.h             |   1 +
+ arch/x86/kernel/cpu/sgx/driver.c              |   2 +-
+ arch/x86/kernel/sys_x86_64.c                  |  43 +++++--
+ arch/x86/mm/hugetlbpage.c                     |   2 +-
+ arch/x86/mm/mmap.c                            |   4 +-
+ drivers/char/mem.c                            |   2 +-
+ drivers/dax/device.c                          |   6 +-
+ fs/hugetlbfs/inode.c                          |   2 +-
+ fs/proc/inode.c                               |  15 +--
+ fs/ramfs/file-mmu.c                           |   2 +-
+ include/linux/huge_mm.h                       |  11 ++
+ include/linux/mm.h                            |   4 +
+ include/linux/mm_types.h                      |   6 +-
+ include/linux/sched/coredump.h                |   1 +
+ include/linux/sched/mm.h                      |  22 ++++
+ io_uring/io_uring.c                           |   2 +-
+ mm/debug.c                                    |   6 -
+ mm/huge_memory.c                              |  23 ++--
+ mm/mmap.c                                     | 108 ++++++++++++++----
+ mm/shmem.c                                    |  11 +-
+ mm/util.c                                     |   6 +-
+ .../testing/selftests/x86/test_shadow_stack.c |  67 ++++++++++-
+ 26 files changed, 273 insertions(+), 96 deletions(-)
+
 -- 
-2.43.0
+2.34.1
 
