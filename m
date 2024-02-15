@@ -1,197 +1,344 @@
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EEEA12BEA1;
-	Thu, 15 Feb 2024 10:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9169F12BEA6
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 10:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707993317; cv=none; b=eX3hnhbsEmMP5pKqT3slZdUHCycw0lyc2i5MWywdwRMWvk1JPMK2tHSJqoObBoY9zJObdXvi04OZFg7BfqPwErD/OUMxSG5OoQ2VJPSBGWKK4bOSRb8GA6CnNtr0oKz7GFc1UMh6xH7esHsgUyIZ6MB4aKiVm2SOYZTZX43O/QQ=
+	t=1707993317; cv=none; b=tqvQvp2wrcEXMINn6n2iVWuomPyaJ36WB5BwVRBTCWPigJCSsy6fjTKN80THpuX1If2ZNvr7VmRQoXBVnVBrntjySBwxVQsWs8JVa5AaOLIOPEGGT0/BbZ94R1GHwhegzQJPmko0OJpkzWZedhNVZSXnTP0K8if1oQKpDXUdxQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707993317; c=relaxed/simple;
-	bh=Adzea/64dyfP+ZiKHHfxWlQgVC2D2ha11OYacrM4nU0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EWZCJ2FrPPtVYekIj4tsauz07ogny4+UrrwPU25y27EkmI1Rt7stBupdbe8a4Ms5BXPjRElNHRqHoOAy50gkJbN9xEdsamkUQmsq7RZFjfbe7Amo/+0614NcPod1En+07jysXeURUEh7rUD1OG2CFDdxDKVH5ePSOyoq7GT9Rx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4Tb9zZ6Gksz9yTLZ;
-	Thu, 15 Feb 2024 18:19:54 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id 71C5914059D;
-	Thu, 15 Feb 2024 18:35:12 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.204.63.22])
-	by APP1 (Coremail) with SMTP id LxC2BwA3LxjQ6M1l4QeNAg--.58293S2;
-	Thu, 15 Feb 2024 11:35:11 +0100 (CET)
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz,
-	chuck.lever@oracle.com,
-	jlayton@kernel.org,
-	neilb@suse.de,
-	kolga@netapp.com,
-	Dai.Ngo@oracle.com,
-	tom@talpey.com,
-	paul@paul-moore.com,
-	jmorris@namei.org,
-	serge@hallyn.com,
-	zohar@linux.ibm.com,
-	dmitry.kasatkin@gmail.com,
-	eric.snowberg@oracle.com,
-	dhowells@redhat.com,
-	jarkko@kernel.org,
-	stephen.smalley.work@gmail.com,
-	omosnace@redhat.com,
-	casey@schaufler-ca.com,
-	shuah@kernel.org,
-	mic@digikod.net
-Cc: linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-integrity@vger.kernel.org,
-	keyrings@vger.kernel.org,
-	selinux@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Stefan Berger <stefanb@linux.ibm.com>
-Subject: [PATCH v10 10/25] security: Introduce inode_post_setattr hook
-Date: Thu, 15 Feb 2024 11:30:58 +0100
-Message-Id: <20240215103113.2369171-11-roberto.sassu@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240215103113.2369171-1-roberto.sassu@huaweicloud.com>
-References: <20240215103113.2369171-1-roberto.sassu@huaweicloud.com>
+	bh=TVCbekeYL5HqEL4TO52as8x52YtA6o5n2cQd1i3PBPw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JGebI0tQyeOSgS9LbT7Ht3fzs0FM399AwTCMMVOq831O07U0YpdxX5C6JCdHzweyYQnKARu/HxKj6vCMKuRI/E8IKnxnAUrzNqWaZzz3lIe0Yn1lmkMOGfm8z2gVo8VD72IODVj85XBSK+p+CjyFFQ7x4vPBHWNvh3RAi9H2MPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tn/2RuP8; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tn/2RuP8"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-55c2cf644f3so785929a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 02:35:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707993314; x=1708598114; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=N3bUsJsObnwj4sLkeC1K1b+OO1Xl0R0RIuNuiAAkYYo=;
+        b=tn/2RuP8QwbGIC7fSkzH1Hrr7+I0t4vpkpJvwgxCFTCM8BKQJxSBzvL9zd3feSZ4SA
+         3xkA9EeNp8LS4wgy/CylxvO8foW5+CH5AOhXfvxxgQgkyPtEHuQycB6wPsikzbbdnMEC
+         wpaas9/vPyo1PaIIFmUGKEZTg4Gdj8Pkge36NboJXFm6pVPCA2n3/btUSIXAx5AFbN9/
+         QQCbQkxFySxgKo1r4pj288X/dN1ngcVnpfvZHccqwjn3eVW2ORjIsz85vP5Zhv2T/g+y
+         cl3w16TQVjrIBotHMpWRIic6JBd8UTOQNNa3UJzJfAQaot8LBpLuF71UqppnyspBYWfB
+         mJvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707993314; x=1708598114;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N3bUsJsObnwj4sLkeC1K1b+OO1Xl0R0RIuNuiAAkYYo=;
+        b=VI2VZxBGJWzRTTFkMCQf9VLxcxt0hFSzBYMHA2p5Gg5hqckMHklGY8TkrgFT3UxpEL
+         kYRY8Yia5O0w4clXY7BmyabmO0io1/4txTsHzAq8kB3iyyvlKcloHuipQmrFgevMaytT
+         8QniVUROW0XcIyGmkZ0hnVEJksH37wL/iYNrODxm9ajtH2UYffEcGG133s++2Z9cvCQQ
+         iFd2olfsfKEjdwL6FD4zttypG6JtsVfXjJBWUsFkkQrTw0tJpfLJDxBNaRLHjpQmkK2i
+         P3fXSo/1wCOaS6rkj8veOdpS5c5PjDWREFalpBqoWWS0u+sehlx/FPbKMdww8BADJ7Gc
+         EUfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW/bDe2PoztBY8dnphe3kFWf3nuS34Ks6Lo6fQtr8vMBbNsA9Z1gQuuci00vttvGWji4iWg8YD1AqH7b5g/0kpgoc/er7kzdef2zOEk
+X-Gm-Message-State: AOJu0YyY9LM4S9rqLTHNxjAk/IybnGw+f4OpyJPw5mu1aa6BNdizUAZ3
+	C4PVbA4qwU2WFhdVVxNiDElKIVE+5hB0ZnJU2TJ1IeGh3sACYu/vUkFfRjRROmw=
+X-Google-Smtp-Source: AGHT+IGCwYqNlRi9x/LRJJGkyV6rYWcvsm3xa8OFszDBDSuIFbli6+SmOqD6iV1/8Ad6vlHO9S76Eg==
+X-Received: by 2002:a05:6402:1a44:b0:561:ca60:46b2 with SMTP id bf4-20020a0564021a4400b00561ca6046b2mr947309edb.33.1707993313428;
+        Thu, 15 Feb 2024 02:35:13 -0800 (PST)
+Received: from linaro.org ([188.24.162.93])
+        by smtp.gmail.com with ESMTPSA id ek5-20020a056402370500b00560c07f986asm411263edb.58.2024.02.15.02.35.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Feb 2024 02:35:12 -0800 (PST)
+Date: Thu, 15 Feb 2024 12:35:11 +0200
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Johan Hovold <johan@kernel.org>,
+	linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] phy: qcom: edp: Add set_mode op for configuring
+ eDP/DP submode
+Message-ID: <Zc3o32p1i0GtmmQj@linaro.org>
+References: <20240129-x1e80100-phy-edp-compatible-refactor-v3-0-e71f3359c535@linaro.org>
+ <20240129-x1e80100-phy-edp-compatible-refactor-v3-2-e71f3359c535@linaro.org>
+ <CAA8EJpr5Ci7M92ibsCMec3wcQTVqFkaVgRQUhKUSdhg66YhW1Q@mail.gmail.com>
+ <Zbdcao0emQyBodCK@linaro.org>
+ <CAA8EJppkEksTL90KLcaw0adg73K=ngoYp8semB_u5YFk6rChhA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:LxC2BwA3LxjQ6M1l4QeNAg--.58293S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxurWUGr4fGFWUKrWkWryDJrb_yoWrAw13pF
-	WrK3Z8K34rWFW7Wr1kJF47ua1SgFy5urWUXrWFgwnFyFnrtw1aqF43Ka4jkr13GrW8Gr9I
-	q3ZFvrsxCr15Aw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkvb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x
-	0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02
-	F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4I
-	kC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK
-	82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGw
-	C20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26rWY6r4UJwCIc40Y0x0EwIxG
-	rwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr
-	1UMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAI
-	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07UQZ2-UUUUU=
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAOBF1jj5pfXgAAsh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA8EJppkEksTL90KLcaw0adg73K=ngoYp8semB_u5YFk6rChhA@mail.gmail.com>
 
-From: Roberto Sassu <roberto.sassu@huawei.com>
+On 24-01-29 11:40:24, Dmitry Baryshkov wrote:
+> On Mon, 29 Jan 2024 at 10:06, Abel Vesa <abel.vesa@linaro.org> wrote:
+> >
+> > On 24-01-29 06:05:09, Dmitry Baryshkov wrote:
+> > > On Mon, 29 Jan 2024 at 02:26, Abel Vesa <abel.vesa@linaro.org> wrote:
+> > > >
+> > > > Future platforms should not use different compatibles to differentiate
+> > > > between eDP and DP mode. Instead, they should use a single compatible as the
+> > > > IP block is the same. It will be the job of the controller to set the submode
+> > > > of the PHY accordingly.
+> > > >
+> > > > The existing platforms will remain with separate compatibles for each mode.
+> > > >
+> > > > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> > > > ---
+> > > >  drivers/phy/qualcomm/phy-qcom-edp.c | 71 ++++++++++++++++++++++++++-----------
+> > > >  1 file changed, 51 insertions(+), 20 deletions(-)
+> > > >
+> > > > diff --git a/drivers/phy/qualcomm/phy-qcom-edp.c b/drivers/phy/qualcomm/phy-qcom-edp.c
+> > > > index 8e5078304646..af941d6c5588 100644
+> > > > --- a/drivers/phy/qualcomm/phy-qcom-edp.c
+> > > > +++ b/drivers/phy/qualcomm/phy-qcom-edp.c
+> > > > @@ -14,6 +14,7 @@
+> > > >  #include <linux/module.h>
+> > > >  #include <linux/of.h>
+> > > >  #include <linux/phy/phy.h>
+> > > > +#include <linux/phy/phy-dp.h>
+> > > >  #include <linux/platform_device.h>
+> > > >  #include <linux/regulator/consumer.h>
+> > > >  #include <linux/reset.h>
+> > > > @@ -68,19 +69,21 @@
+> > > >
+> > > >  #define TXn_TRAN_DRVR_EMP_EN                    0x0078
+> > > >
+> > > > -struct qcom_edp_cfg {
+> > > > -       bool is_dp;
+> > > > -
+> > > > -       /* DP PHY swing and pre_emphasis tables */
+> > > > +struct qcom_edp_swing_pre_emph_cfg {
+> > > >         const u8 (*swing_hbr_rbr)[4][4];
+> > > >         const u8 (*swing_hbr3_hbr2)[4][4];
+> > > >         const u8 (*pre_emphasis_hbr_rbr)[4][4];
+> > > >         const u8 (*pre_emphasis_hbr3_hbr2)[4][4];
+> > > >  };
+> > > >
+> > > > +struct qcom_edp_phy_cfg {
+> > > > +       bool is_edp;
+> > > > +       const struct qcom_edp_swing_pre_emph_cfg *swing_pre_emph_cfg;
+> > > > +};
+> > > > +
+> > > >  struct qcom_edp {
+> > > >         struct device *dev;
+> > > > -       const struct qcom_edp_cfg *cfg;
+> > > > +       const struct qcom_edp_phy_cfg *cfg;
+> > > >
+> > > >         struct phy *phy;
+> > > >
+> > > > @@ -96,6 +99,8 @@ struct qcom_edp {
+> > > >
+> > > >         struct clk_bulk_data clks[2];
+> > > >         struct regulator_bulk_data supplies[2];
+> > > > +
+> > > > +       bool is_edp;
+> > > >  };
+> > > >
+> > > >  static const u8 dp_swing_hbr_rbr[4][4] = {
+> > > > @@ -126,8 +131,7 @@ static const u8 dp_pre_emp_hbr2_hbr3[4][4] = {
+> > > >         { 0x04, 0xff, 0xff, 0xff }
+> > > >  };
+> > > >
+> > > > -static const struct qcom_edp_cfg dp_phy_cfg = {
+> > > > -       .is_dp = true,
+> > > > +static const struct qcom_edp_swing_pre_emph_cfg dp_phy_swing_pre_emph_cfg = {
+> > > >         .swing_hbr_rbr = &dp_swing_hbr_rbr,
+> > > >         .swing_hbr3_hbr2 = &dp_swing_hbr2_hbr3,
+> > > >         .pre_emphasis_hbr_rbr = &dp_pre_emp_hbr_rbr,
+> > > > @@ -162,18 +166,28 @@ static const u8 edp_pre_emp_hbr2_hbr3[4][4] = {
+> > > >         { 0x00, 0xff, 0xff, 0xff }
+> > > >  };
+> > > >
+> > > > -static const struct qcom_edp_cfg edp_phy_cfg = {
+> > > > -       .is_dp = false,
+> > > > +static const struct qcom_edp_swing_pre_emph_cfg edp_phy_swing_pre_emph_cfg = {
+> > > >         .swing_hbr_rbr = &edp_swing_hbr_rbr,
+> > > >         .swing_hbr3_hbr2 = &edp_swing_hbr2_hbr3,
+> > > >         .pre_emphasis_hbr_rbr = &edp_pre_emp_hbr_rbr,
+> > > >         .pre_emphasis_hbr3_hbr2 = &edp_pre_emp_hbr2_hbr3,
+> > > >  };
+> > > >
+> > > > +static const struct qcom_edp_phy_cfg sc7280_dp_phy_cfg = {
+> > > > +};
+> > > > +
+> > > > +static const struct qcom_edp_phy_cfg sc8280xp_dp_phy_cfg = {
+> > > > +       .swing_pre_emph_cfg = &dp_phy_swing_pre_emph_cfg,
+> > > > +};
+> > > > +
+> > > > +static const struct qcom_edp_phy_cfg sc8280xp_edp_phy_cfg = {
+> > > > +       .is_edp = true,
+> > > > +       .swing_pre_emph_cfg = &edp_phy_swing_pre_emph_cfg,
+> > > > +};
+> > > > +
+> > > >  static int qcom_edp_phy_init(struct phy *phy)
+> > > >  {
+> > > >         struct qcom_edp *edp = phy_get_drvdata(phy);
+> > > > -       const struct qcom_edp_cfg *cfg = edp->cfg;
+> > > >         int ret;
+> > > >         u8 cfg8;
+> > > >
+> > > > @@ -200,7 +214,7 @@ static int qcom_edp_phy_init(struct phy *phy)
+> > > >                DP_PHY_PD_CTL_PLL_PWRDN | DP_PHY_PD_CTL_DP_CLAMP_EN,
+> > > >                edp->edp + DP_PHY_PD_CTL);
+> > > >
+> > > > -       if (cfg && cfg->is_dp)
+> > > > +       if (edp->cfg->swing_pre_emph_cfg && !edp->is_edp)
+> > >
+> > > I think (!edp->is_edp) should be enough here.
+> >
+> > Actually, in case of DP, the cfg8 needs to be 0xb7 for sc8280xp, while for sc7280 it should be 0x37.
+> >
+> > So to differentiate between first and second we check if the config
+> > provides a swing_pre_emph_cfg
+> 
+> Using swing_pre_emph_cfg to distinguish between those two cases is a pure hack.
+> Is there any sensible meaning behind those bits? If not, just put
+> those values into the configuration data.
 
-In preparation for moving IMA and EVM to the LSM infrastructure, introduce
-the inode_post_setattr hook.
+So the only thing that I was able to find is that this reg has to do
+with some TX and RX zero bits preamble. It seems it needs to be
+different between DP configurations (with or without swing and pre-emph).
 
-At inode_setattr hook, EVM verifies the file's existing HMAC value. At
-inode_post_setattr, EVM re-calculates the file's HMAC based on the modified
-file attributes and other file metadata.
+But leaving that aside, unless we add another knob that actually depends
+on swing and pre-emph configuration being available, there is no other
+way around it, for now, at least.
 
-Other LSMs could similarly take some action after successful file attribute
-change.
-
-The new hook cannot return an error and cannot cause the operation to be
-reverted.
-
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-Acked-by: Casey Schaufler <casey@schaufler-ca.com>
-Acked-by: Paul Moore <paul@paul-moore.com>
-Acked-by: Christian Brauner <brauner@kernel.org>
----
- fs/attr.c                     |  1 +
- include/linux/lsm_hook_defs.h |  2 ++
- include/linux/security.h      |  7 +++++++
- security/security.c           | 16 ++++++++++++++++
- 4 files changed, 26 insertions(+)
-
-diff --git a/fs/attr.c b/fs/attr.c
-index adeba0ec40f1..990e1b3a3c91 100644
---- a/fs/attr.c
-+++ b/fs/attr.c
-@@ -502,6 +502,7 @@ int notify_change(struct mnt_idmap *idmap, struct dentry *dentry,
- 
- 	if (!error) {
- 		fsnotify_change(dentry, ia_valid);
-+		security_inode_post_setattr(idmap, dentry, ia_valid);
- 		ima_inode_post_setattr(idmap, dentry, ia_valid);
- 		evm_inode_post_setattr(idmap, dentry, ia_valid);
- 	}
-diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-index b00b16d58413..a0e9e48015a4 100644
---- a/include/linux/lsm_hook_defs.h
-+++ b/include/linux/lsm_hook_defs.h
-@@ -137,6 +137,8 @@ LSM_HOOK(int, 0, inode_follow_link, struct dentry *dentry, struct inode *inode,
- LSM_HOOK(int, 0, inode_permission, struct inode *inode, int mask)
- LSM_HOOK(int, 0, inode_setattr, struct mnt_idmap *idmap, struct dentry *dentry,
- 	 struct iattr *attr)
-+LSM_HOOK(void, LSM_RET_VOID, inode_post_setattr, struct mnt_idmap *idmap,
-+	 struct dentry *dentry, int ia_valid)
- LSM_HOOK(int, 0, inode_getattr, const struct path *path)
- LSM_HOOK(int, 0, inode_setxattr, struct mnt_idmap *idmap,
- 	 struct dentry *dentry, const char *name, const void *value,
-diff --git a/include/linux/security.h b/include/linux/security.h
-index d0eb20f90b26..56c841aa3994 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -361,6 +361,8 @@ int security_inode_follow_link(struct dentry *dentry, struct inode *inode,
- int security_inode_permission(struct inode *inode, int mask);
- int security_inode_setattr(struct mnt_idmap *idmap,
- 			   struct dentry *dentry, struct iattr *attr);
-+void security_inode_post_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
-+				 int ia_valid);
- int security_inode_getattr(const struct path *path);
- int security_inode_setxattr(struct mnt_idmap *idmap,
- 			    struct dentry *dentry, const char *name,
-@@ -879,6 +881,11 @@ static inline int security_inode_setattr(struct mnt_idmap *idmap,
- 	return 0;
- }
- 
-+static inline void
-+security_inode_post_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
-+			    int ia_valid)
-+{ }
-+
- static inline int security_inode_getattr(const struct path *path)
- {
- 	return 0;
-diff --git a/security/security.c b/security/security.c
-index 671472b34bbf..8b8a03291a8e 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -2223,6 +2223,22 @@ int security_inode_setattr(struct mnt_idmap *idmap,
- }
- EXPORT_SYMBOL_GPL(security_inode_setattr);
- 
-+/**
-+ * security_inode_post_setattr() - Update the inode after a setattr operation
-+ * @idmap: idmap of the mount
-+ * @dentry: file
-+ * @ia_valid: file attributes set
-+ *
-+ * Update inode security field after successful setting file attributes.
-+ */
-+void security_inode_post_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
-+				 int ia_valid)
-+{
-+	if (unlikely(IS_PRIVATE(d_backing_inode(dentry))))
-+		return;
-+	call_void_hook(inode_post_setattr, idmap, dentry, ia_valid);
-+}
-+
- /**
-  * security_inode_getattr() - Check if getting file attributes is allowed
-  * @path: file
--- 
-2.34.1
-
+> 
+> >
+> > >
+> > > >                 cfg8 = 0xb7;
+> > > >         else
+> > > >                 cfg8 = 0x37;
+> > > > @@ -234,7 +248,7 @@ static int qcom_edp_phy_init(struct phy *phy)
+> > > >
+> > > >  static int qcom_edp_set_voltages(struct qcom_edp *edp, const struct phy_configure_opts_dp *dp_opts)
+> > > >  {
+> > > > -       const struct qcom_edp_cfg *cfg = edp->cfg;
+> > > > +       const struct qcom_edp_swing_pre_emph_cfg *cfg = edp->cfg->swing_pre_emph_cfg;
+> > > >         unsigned int v_level = 0;
+> > > >         unsigned int p_level = 0;
+> > > >         u8 ldo_config;
+> > > > @@ -245,6 +259,9 @@ static int qcom_edp_set_voltages(struct qcom_edp *edp, const struct phy_configur
+> > > >         if (!cfg)
+> > > >                 return 0;
+> > > >
+> > > > +       if (edp->is_edp)
+> > > > +               cfg = &edp_phy_swing_pre_emph_cfg;
+> > > > +
+> > > >         for (i = 0; i < dp_opts->lanes; i++) {
+> > > >                 v_level = max(v_level, dp_opts->voltage[i]);
+> > > >                 p_level = max(p_level, dp_opts->pre[i]);
+> > > > @@ -261,7 +278,7 @@ static int qcom_edp_set_voltages(struct qcom_edp *edp, const struct phy_configur
+> > > >         if (swing == 0xff || emph == 0xff)
+> > > >                 return -EINVAL;
+> > > >
+> > > > -       ldo_config = (cfg && cfg->is_dp) ? 0x1 : 0x0;
+> > > > +       ldo_config = edp->is_edp ? 0x0 : 0x1;
+> > > >
+> > > >         writel(ldo_config, edp->tx0 + TXn_LDO_CONFIG);
+> > > >         writel(swing, edp->tx0 + TXn_TX_DRV_LVL);
+> > > > @@ -447,10 +464,9 @@ static int qcom_edp_set_vco_div(const struct qcom_edp *edp, unsigned long *pixel
+> > > >  static int qcom_edp_phy_power_on(struct phy *phy)
+> > > >  {
+> > > >         const struct qcom_edp *edp = phy_get_drvdata(phy);
+> > > > -       const struct qcom_edp_cfg *cfg = edp->cfg;
+> > > >         u32 bias0_en, drvr0_en, bias1_en, drvr1_en;
+> > > >         unsigned long pixel_freq;
+> > > > -       u8 ldo_config;
+> > > > +       u8 ldo_config = 0x0;
+> > > >         int timeout;
+> > > >         int ret;
+> > > >         u32 val;
+> > > > @@ -468,7 +484,8 @@ static int qcom_edp_phy_power_on(struct phy *phy)
+> > > >                 return timeout;
+> > > >
+> > > >
+> > > > -       ldo_config = (cfg && cfg->is_dp) ? 0x1 : 0x0;
+> > > > +       if (edp->cfg->swing_pre_emph_cfg && !edp->cfg->is_edp)
+> > >
+> > > I'd assume this should be `if (!edp->is_edp)`, see qcom_edp_set_voltages()
+> > >
+> >
+> > Yep. will fix.
+> >
+> > > > +               ldo_config = 0x1;
+> > > >
+> > > >         writel(ldo_config, edp->tx0 + TXn_LDO_CONFIG);
+> > > >         writel(ldo_config, edp->tx1 + TXn_LDO_CONFIG);
+> > > > @@ -589,6 +606,18 @@ static int qcom_edp_phy_power_off(struct phy *phy)
+> > > >         return 0;
+> > > >  }
+> > > >
+> > > > +static int qcom_edp_phy_set_mode(struct phy *phy, enum phy_mode mode, int submode)
+> > > > +{
+> > > > +       struct qcom_edp *edp = phy_get_drvdata(phy);
+> > > > +
+> > > > +       if (mode != PHY_MODE_DP)
+> > > > +               return -EINVAL;
+> > > > +
+> > > > +       edp->is_edp = submode == PHY_SUBMODE_EDP ? true : false;
+> > > > +
+> > > > +       return 0;
+> > > > +}
+> > > > +
+> > > >  static int qcom_edp_phy_exit(struct phy *phy)
+> > > >  {
+> > > >         struct qcom_edp *edp = phy_get_drvdata(phy);
+> > > > @@ -604,6 +633,7 @@ static const struct phy_ops qcom_edp_ops = {
+> > > >         .configure      = qcom_edp_phy_configure,
+> > > >         .power_on       = qcom_edp_phy_power_on,
+> > > >         .power_off      = qcom_edp_phy_power_off,
+> > > > +       .set_mode       = qcom_edp_phy_set_mode,
+> > > >         .exit           = qcom_edp_phy_exit,
+> > > >         .owner          = THIS_MODULE,
+> > > >  };
+> > > > @@ -781,6 +811,7 @@ static int qcom_edp_phy_probe(struct platform_device *pdev)
+> > > >
+> > > >         edp->dev = dev;
+> > > >         edp->cfg = of_device_get_match_data(&pdev->dev);
+> > > > +       edp->is_edp = edp->cfg->is_edp;
+> > > >
+> > > >         edp->edp = devm_platform_ioremap_resource(pdev, 0);
+> > > >         if (IS_ERR(edp->edp))
+> > > > @@ -839,10 +870,10 @@ static int qcom_edp_phy_probe(struct platform_device *pdev)
+> > > >  }
+> > > >
+> > > >  static const struct of_device_id qcom_edp_phy_match_table[] = {
+> > > > -       { .compatible = "qcom,sc7280-edp-phy" },
+> > > > -       { .compatible = "qcom,sc8180x-edp-phy" },
+> > > > -       { .compatible = "qcom,sc8280xp-dp-phy", .data = &dp_phy_cfg },
+> > > > -       { .compatible = "qcom,sc8280xp-edp-phy", .data = &edp_phy_cfg },
+> > > > +       { .compatible = "qcom,sc7280-edp-phy" , .data = &sc7280_dp_phy_cfg, },
+> > > > +       { .compatible = "qcom,sc8180x-edp-phy", .data = &sc7280_dp_phy_cfg, },
+> > > > +       { .compatible = "qcom,sc8280xp-dp-phy", .data = &sc8280xp_dp_phy_cfg, },
+> > > > +       { .compatible = "qcom,sc8280xp-edp-phy", .data = &sc8280xp_edp_phy_cfg, },
+> > > >         { }
+> > > >  };
+> > > >  MODULE_DEVICE_TABLE(of, qcom_edp_phy_match_table);
+> > > >
+> > > > --
+> > > > 2.34.1
+> > > >
+> > >
+> > >
+> > > --
+> > > With best wishes
+> > > Dmitry
+> 
+> 
+> 
+> -- 
+> With best wishes
+> Dmitry
