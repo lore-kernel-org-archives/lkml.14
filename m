@@ -1,131 +1,135 @@
-Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD547130ADA;
-	Thu, 15 Feb 2024 14:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.165.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8ADA131E38;
+	Thu, 15 Feb 2024 14:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708006913; cv=none; b=lX3c8X1g8u+0d3Ear8EqSRsfJt1lSronWzUIWQQeux1JCBcerdSvR5laLxVVDbzA9aPUL+OPTHhQ85w7stqorEID1JC+oxT5ALS56xb2zqnsF9/dRDWH2b50lTF4Vwsk0cqOENT6Qc7zTfKDLLYGUdNMiLXn3n5+ue+Dlv9IUgY=
+	t=1708006935; cv=none; b=WSnN8YAZG+EqteOCIxFRtpplP+UwcpmD8j5opdsxfpQhGB3GnWWlUJs3ZYbJzg0IWWx72rM/D4UjlcDMbbfH0j5rHdRqddC4i5BXJlp2mMnnRMcaYz5Lc9+h5Wn2uOnxsHBMvcnF4tLQvOu0GBCucqLuTxWZlXrsMeDQDrW65gM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708006913; c=relaxed/simple;
-	bh=ZdAF2Hedn11YRPJ8FW4xDYC4UE4K3UNWPgPTBjO3qUw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MooCcGv6s5J0ZJLTYZ7PMrrUlwtkhIW7uL+9AjQDG/RD37jGYM5ljv54H5eR39FW8LWJn519zpzq91ImVpJdTZUZ+yvNEH3T8MvqtJSo3tpxBF7K1Pe9uoXYRTL6TUkmUteaZMkJ6g50g7LoSitvAb3OC81u6VZhsqVzlPPq4gY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr; spf=pass smtp.mailfrom=skole.hr; arc=none smtp.client-ip=161.53.165.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skole.hr
-Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
-	by mx.skole.hr (mx.skole.hr) with ESMTP id 2C97E92570;
-	Thu, 15 Feb 2024 15:21:45 +0100 (CET)
-From: Duje =?utf-8?B?TWloYW5vdmnEhw==?= <duje.mihanovic@skole.hr>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Lee Jones <lee@kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>,
- Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>,
- Arnd Bergmann <arnd@kernel.org>, Karel Balej <balejk@matfyz.cz>,
- dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
- linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] backlight: ktd2801: depend on GPIOLIB
-Date: Thu, 15 Feb 2024 15:20:50 +0100
-Message-ID: <5772702.DvuYhMxLoT@radijator>
-In-Reply-To:
- <CACRpkdYm0dNZZvzAZ-VQ+MaHeL7NmGCmCVw42WMx6BFf4Lw0Pw@mail.gmail.com>
-References:
- <20240213-ktd2801-deps-v1-1-7feb5385eb9a@skole.hr>
- <CACRpkdYm0dNZZvzAZ-VQ+MaHeL7NmGCmCVw42WMx6BFf4Lw0Pw@mail.gmail.com>
+	s=arc-20240116; t=1708006935; c=relaxed/simple;
+	bh=ECMr//ZIck/Tif42+N9tnk+eC4TmXipGsgU9IFIbA/Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jM38xzSDYdoXJP+9dIczpP30jyKNrq5tDsUHM+wpFmGMm9Cha65VN2bF+Ji/giUAi7/ls30l+mokLAfgw8lUlgnxw0kNNl9mmBIsLGYH9tSz+hKx0J07d1acULJR/jqhaiK5zOAlmHYlHGtewBbmGU5WgIplW2cfaFPulNDfV7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JER++TAe; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JER++TAe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6FF7C433F1;
+	Thu, 15 Feb 2024 14:22:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708006935;
+	bh=ECMr//ZIck/Tif42+N9tnk+eC4TmXipGsgU9IFIbA/Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JER++TAe+qybmy9TeGC3CbZVTBJu3mnF3b1XXqc8gR3Y9k0QHLEYWJm5RJaTlrJVR
+	 pZRK+KwTU/cVQWws6A5Ho+jU5yQjjWj8q4GwlzCDybj3eroe3yJRL3X0GElb3+qaj3
+	 Wx09/kzw8JI2PE6BsYq6Cc4waRRh5ywH33JtGarmTTbcz3HLjC3IgbmBZkREiUQkGL
+	 jkhEjiNjKw+S4kv2raEIecGvl3VHH3r4h81ct8YLX/JlIQgczJTDSBQkF4pZFLXphy
+	 Zab0FuPaTRxUfe7qB0jPQOxIqAF/Bu+8BLFhaSpI2kogq5Y5pw7F36YnhG1iWbUcK6
+	 2vUp2qYP2Fw7g==
+Date: Thu, 15 Feb 2024 14:22:09 +0000
+From: Will Deacon <will@kernel.org>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: sagi@grimberg.me, hch@lst.de, axboe@kernel.dk, kbusch@kernel.org,
+	joro@8bytes.org, robin.murphy@arm.com, jgg@nvidia.com,
+	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev, murphyt7@tcd.ie, baolu.lu@linux.intel.com
+Subject: Re: [PATCH v1 0/2] nvme-pci: Fix dma-iommu mapping failures when
+ PAGE_SIZE=64KB
+Message-ID: <20240215142208.GA753@willie-the-truck>
+References: <cover.1707851466.git.nicolinc@nvidia.com>
+ <20240214164138.GA31927@willie-the-truck>
+ <Zc0bLAIXSAqsQJJv@Asurada-Nvidia>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Autocrypt: addr=duje.mihanovic@skole.hr;
- keydata=
- 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
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zc0bLAIXSAqsQJJv@Asurada-Nvidia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Thursday, February 15, 2024 2:31:37 PM CET Linus Walleij wrote:
-> On Tue, Feb 13, 2024 at 7:13=E2=80=AFPM Duje Mihanovi=C4=87 <duje.mihanov=
-ic@skole.hr>=20
-wrote:
-> > LEDS_EXPRESSWIRE depends on GPIOLIB, and so must anything selecting it:
-> >=20
-> > WARNING: unmet direct dependencies detected for LEDS_EXPRESSWIRE
-> >=20
-> >   Depends on [n]: NEW_LEDS [=3Dy] && GPIOLIB [=3Dn]
-> >   Selected by [m]:
-> >   - BACKLIGHT_KTD2801 [=3Dm] && HAS_IOMEM [=3Dy] && BACKLIGHT_CLASS_DEV=
-ICE=20
-[=3Dm]
-> >=20
-> > Fixes: 66c76c1cd984 ("backlight: Add Kinetic KTD2801 backlight support")
-> > Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
->=20
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->=20
-> Technically you can also select GPIOLIB, because it is available on
-> all platforms, so it may be easier for users, but then you never know
-> which GPIOs you get in practice.
+On Wed, Feb 14, 2024 at 11:57:32AM -0800, Nicolin Chen wrote:
+> On Wed, Feb 14, 2024 at 04:41:38PM +0000, Will Deacon wrote:
+> > On Tue, Feb 13, 2024 at 01:53:55PM -0800, Nicolin Chen wrote:
+> > > It's observed that an NVME device is causing timeouts when Ubuntu boots
+> > > with a kernel configured with PAGE_SIZE=64KB due to failures in swiotlb:
+> > >     systemd[1]: Started Journal Service.
+> > >  => nvme 0000:00:01.0: swiotlb buffer is full (sz: 327680 bytes), total 32768 (slots), used 32 (slots)
+> > >     note: journal-offline[392] exited with irqs disabled
+> > >     note: journal-offline[392] exited with preempt_count 1
+> > >
+> > > An NVME device under a PCIe bus can be behind an IOMMU, so dma mappings
+> > > going through dma-iommu might be also redirected to swiotlb allocations.
+> > > Similar to dma_direct_max_mapping_size(), dma-iommu should implement its
+> > > dma_map_ops->max_mapping_size to return swiotlb_max_mapping_size() too.
+> > >
+> > > Though an iommu_dma_max_mapping_size() is a must, it alone can't fix the
+> > > issue. The swiotlb_max_mapping_size() returns 252KB, calculated from the
+> > > default pool 256KB subtracted by min_align_mask NVME_CTRL_PAGE_SIZE=4KB,
+> > > while dma-iommu can roundup a 252KB mapping to 256KB at its "alloc_size"
+> > > when PAGE_SIZE=64KB via iova->granule that is often set to PAGE_SIZE. So
+> > > this mismatch between NVME_CTRL_PAGE_SIZE=4KB and PAGE_SIZE=64KB results
+> > > in a similar failure, though its signature has a fixed size "256KB":
+> > >     systemd[1]: Started Journal Service.
+> > >  => nvme 0000:00:01.0: swiotlb buffer is full (sz: 262144 bytes), total 32768 (slots), used 128 (slots)
+> > >     note: journal-offline[392] exited with irqs disabled
+> > >     note: journal-offline[392] exited with preempt_count 1
+> > >
+> > > Both failures above occur to NVME behind IOMMU when PAGE_SIZE=64KB. They
+> > > were likely introduced for the security feature by:
+> > > commit 82612d66d51d ("iommu: Allow the dma-iommu api to use bounce buffers"),
+> > >
+> > > So, this series bundles two fixes together against that. They should be
+> > > taken at the same time to entirely fix the mapping failures.
+> > 
+> > It's a bit of a shot in the dark, but I've got a pending fix to some of
+> > the alignment handling in swiotlb. It would be interesting to know if
+> > patch 1 has any impact at all on your NVME allocations:
+> > 
+> > https://lore.kernel.org/r/20240205190127.20685-1-will@kernel.org
+> 
+> I applied these three patches locally for a test.
 
-Now that I think of it, wouldn't that be the better solution? I opted for=20
-"depends on" only because Arnd did the same in his KTD2692 patch, but if=20
-select is better (and it seems to be for users) then I'd go for that in bot=
-h=20
-patches.
+Thank you!
 
-Regards,
-=2D-=20
-Duje
+> Though I am building with a v6.6 kernel, I see some warnings:
+>                  from kernel/dma/swiotlb.c:26:
+> kernel/dma/swiotlb.c: In function ‘swiotlb_area_find_slots’:
+> ./include/linux/minmax.h:21:35: warning: comparison of distinct pointer types lacks a cast
+>    21 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+>       |                                   ^~
+> ./include/linux/minmax.h:27:18: note: in expansion of macro ‘__typecheck’
+>    27 |                 (__typecheck(x, y) && __no_side_effects(x, y))
+>       |                  ^~~~~~~~~~~
+> ./include/linux/minmax.h:37:31: note: in expansion of macro ‘__safe_cmp’
+>    37 |         __builtin_choose_expr(__safe_cmp(x, y), \
+>       |                               ^~~~~~~~~~
+> ./include/linux/minmax.h:75:25: note: in expansion of macro ‘__careful_cmp’
+>    75 | #define max(x, y)       __careful_cmp(x, y, >)
+>       |                         ^~~~~~~~~~~~~
+> kernel/dma/swiotlb.c:1007:26: note: in expansion of macro ‘max’
+>  1007 |                 stride = max(stride, PAGE_SHIFT - IO_TLB_SHIFT + 1);
+>       |                          ^~~
+> 
+> Replacing with a max_t() can fix these.
 
+Weird, I haven't seen that. I can fix it as you suggest, but please can
+you also share your .config so I can look into it further?
 
+> And it seems to get worse, as even a 64KB mapping is failing:
+> [    0.239821] nvme 0000:00:01.0: swiotlb buffer is full (sz: 65536 bytes), total 32768 (slots), used 0 (slots)
+> 
+> With a printk, I found the iotlb_align_mask isn't correct:
+>    swiotlb_area_find_slots:alloc_align_mask 0xffff, iotlb_align_mask 0x800
+> 
+> But fixing the iotlb_align_mask to 0x7ff still fails the 64KB
+> mapping..
 
+Hmm. A mask of 0x7ff doesn't make a lot of sense given that the slabs
+are 2KiB aligned. I'll try plugging in some of the constants you have
+here, as something definitely isn't right...
+
+Will
