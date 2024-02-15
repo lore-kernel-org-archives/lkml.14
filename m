@@ -1,104 +1,55 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD2A12F592
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 13:00:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CFF4128837
+	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 13:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708002043; cv=none; b=qHMwu68eJjveaiCpD6JQr59U/yTmj0IMsGYcAtSAnuhXwZncvj/ZN/2TF/+8MKjaQuX4OCzMEa+W2zJWfMKfWdc/j9wnyWkDtyZMx0NsqQR4zCvWZNPoKiwE6MEfKjStjvHYseg+nWB1JxxrFIZL2+ne7wT80JT6ck/CV2HupYA=
+	t=1708002066; cv=none; b=M5KTnMaZw1olaytqV3TeUrf3nHBUKpmBi8IwE4brOoU2lMl1SVyJvaJ06QBQQJ4BUYq1+vBaQYNTNzDOkDyuyXC0M90igVctwYFrV/dxLWTTSZ/h7DBiTM0RIQg7Wa0aAD3zWgCoKc9mvUiNfas25MnNTu52pCB9oLhh4z655Ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708002043; c=relaxed/simple;
-	bh=4SWKPUMv7EW4nqf0ZKZcUDLMsoXj2DKQ/tnY3FHLWmU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jqCQcXQK8M7lNeHcP/rm/bGHsJ4s0D0BRZc2SlLzmT5ae7fDoYHwW3DtrSsCY5sgzVuG6Sq423kiozDTX2LVuw7kSaXLCwr1aeWZl2HiDX2T0YQpZHlCW8jqqIp9ITNFsritPSreni5sS0h8Vv/oneRHvTw0aGnR/12kQPeEbAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G5S4lnRe; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G5S4lnRe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5609BC433F1;
-	Thu, 15 Feb 2024 13:00:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708002042;
-	bh=4SWKPUMv7EW4nqf0ZKZcUDLMsoXj2DKQ/tnY3FHLWmU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=G5S4lnRejT1r2cpeQ2pgXFBcKA68xr0Wk2uiA7EcawuOMKFRGgxUcvdQ8cr+PG+LQ
-	 88zC7TvqDxEeegJezK6D3qc98krHTD5iq7WPI8mf0gYGF16K0U382KWAV3cfD8AoYK
-	 zZhAw3GicpTELP4xerHr+nue3/kTHXusTZIe4hIusVdeSPlk+QjReohPGgMKLHK7l/
-	 OFnd19Vw4bTM2yeos//h0v00BoSi5Tyz2kFPkxsHkjWr4WV3xZQ7/V85idlQ5EH0bl
-	 pxmb7OjbkgPyKC/WSbNvMgh4aZ5PHdwQtyXqDMBRJeXBgBfpqlsmKZR/aXT1dabyE6
-	 YYXd5CA3hgSOQ==
-Date: Thu, 15 Feb 2024 13:00:38 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64/sysreg: Update ID_AA64DFR0_EL1 and ID_DFR0_EL1
-Message-ID: <b103244b-7776-48fb-8055-5c003d773087@sirena.org.uk>
-References: <20240215055159.2440898-1-anshuman.khandual@arm.com>
+	s=arc-20240116; t=1708002066; c=relaxed/simple;
+	bh=jc15789bDMt21egKqX/pmOgCvN19cqwTcBI3ocGrRmo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=pMqs75Q0QG7pHJeBK1KQmwTCvJWBSv8VcEuyq3ERyBrYAMfwCZlMQz35E2gYjWexOYQLavJZD6AH9ZMnAwYsaSK2WYhikajVfT+HEaQBWn878l7FrAUc+zVUgTnyhMgBrkfGnVZIkz3r7whs644uAL44FD9Fg7QhTrlUJdB1IFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TbFYW3FMLz4wcM;
+	Fri, 16 Feb 2024 00:01:03 +1100 (AEDT)
+From: Michael Ellerman <patch-notifications@ellerman.id.au>
+To: Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, kernel test robot <lkp@intel.com>
+In-Reply-To: <bbd84ad52bf377e8d3b5865a906f2dc5d99964ba.1707832677.git.christophe.leroy@csgroup.eu>
+References: <bbd84ad52bf377e8d3b5865a906f2dc5d99964ba.1707832677.git.christophe.leroy@csgroup.eu>
+Subject: Re: [PATCH] powerpc: Force inlining of arch_vmap_p{u/m}d_supported()
+Message-Id: <170800202445.601034.6210064022309317315.b4-ty@ellerman.id.au>
+Date: Fri, 16 Feb 2024 00:00:24 +1100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="MBoz6r3Q+x2lnwYa"
-Content-Disposition: inline
-In-Reply-To: <20240215055159.2440898-1-anshuman.khandual@arm.com>
-X-Cookie: Pass with care.
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
+On Tue, 13 Feb 2024 14:58:37 +0100, Christophe Leroy wrote:
+> arch_vmap_pud_supported() and arch_vmap_pmd_supported() are
+> expected to constant-fold to false when RADIX is not enabled.
+> 
+> Force inlining in order to avoid following failure which
+> leads to unexpected call of non-existing pud_set_huge() and
+> pmd_set_huge() on powerpc 8xx.
+> 
+> [...]
 
---MBoz6r3Q+x2lnwYa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to powerpc/next.
 
-On Thu, Feb 15, 2024 at 11:21:59AM +0530, Anshuman Khandual wrote:
+[1/1] powerpc: Force inlining of arch_vmap_p{u/m}d_supported()
+      https://git.kernel.org/powerpc/c/c5aebb53b32460bc52680dd4e2a2f6b84d5ea521
 
-> This just updates ID_DFR0_EL1.CopDbg and ID_AA64DFR0_EL1.DebugVer register
-> fields as per the definitions based on DDI0601 2023-12.
-
-Just as a general note for non-trival registers it's easier to review if
-we change one register per patch, it avoids having to re-review the same
-registers repeatedly and for incremental changes like this it helps with
-the fact that diff does badly at offering context.
-
-> --- a/arch/arm64/tools/sysreg
-> +++ b/arch/arm64/tools/sysreg
-> @@ -231,6 +231,7 @@ Enum	3:0	CopDbg
->  	0b1000	Debugv8p2
->  	0b1001	Debugv8p4
->  	0b1010	Debugv8p8
-> +	0b1011	Debugv8p9
->  EndEnum
->  EndSysreg
-
-This is ID_AA64DFR0_EL1 and is missing at least an update to PMSVer.
-
-> =20
-> @@ -1247,6 +1248,7 @@ UnsignedEnum	3:0	DebugVer
->  	0b1000	V8P2
->  	0b1001	V8P4
->  	0b1010	V8P8
-> +	0b1011	V8P9
->  EndEnum
->  EndSysreg
-
-This is ID_DFR0_EL1 and is missing an update to at least PerfMon.
-
---MBoz6r3Q+x2lnwYa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXOCvUACgkQJNaLcl1U
-h9CLoQf/f/tySnlXtTw6EwUy+PReauGlutR8QcsfdBL7cZt2PBLrjiqatIGbOmQN
-HYOB6Vc0iov2pqM0XoQckqy+8ZZdHbLShmkLUUft0M3Fa3sVy+SoOsCBgGEr8uFb
-KSfnQmNPDqz8muO9ohWY+i4aiigjgmLilv+6izPBxlo+wxv/MtO2mvfuCOVpoBa3
-pa/Lop3hdNB8RwP36hfCcX7irtWVlvCmjodl8pUdMJIBZ8Q1AJiKFKwkdqwQL0t2
-IgUzVT2nlkTS2AvOeruoczvp/vPRdCvTEsa78+M5VqGfUg4QIqiOdrlpvUrrmJh1
-5aS0cgkvP5PXJU9hKsVWKkWlk9atfg==
-=y6dC
------END PGP SIGNATURE-----
-
---MBoz6r3Q+x2lnwYa--
+cheers
