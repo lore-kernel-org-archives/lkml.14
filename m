@@ -1,127 +1,244 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5972C17735;
-	Thu, 15 Feb 2024 08:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92514199AB;
+	Thu, 15 Feb 2024 09:01:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707987600; cv=none; b=I9xbPIZuwIsr2i9vdlpm+c6avmp3YBKZZ9ZXElTLZ031EPI8hn0tcXOfdpYnyhtShTWo2jqKZzLDCLAxe360Q3gOR+Scrri5BUE1OH3jOpN6Jlv38JNaopcRXCiwqkSugVGtJpsQbQG/8qwQwRQnA3LhhxbV2VFYWKL+VTi6/Gk=
+	t=1707987677; cv=none; b=GpRJUAaereD2G1q58uWKJhBPEPTddceIvTFQkXsyKU4Q+VnHk8bnR199Y1QSW7haX5YOeBxGhqunQaHp1XfBsQmgcHidNmPTzJsKw4hV3QsTfAxKZIG2XlM8sJH05jY4cGTLwezUwvQCgDPpoB32yFsmc6JMccWsNh4MIAWB3i8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707987600; c=relaxed/simple;
-	bh=8sH34bcCAfPZ6BcBe3vhl8Ve/pfsgVLRkkldwF3b2SQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o0vfBwd4iMzGgw4N/cQ7ZupgADBJXOv0vNmom/t9EotcaP9PjyeHTWb6d7+LMdwBBU7hd9vhpFwIMI/e3sdUHp1I73j92wB1FRdQp3Yw8Fy7otCAb1KUNIq5jXV7nKbajaWE59VCpsmb6t3KKPoI2xwfbfBifXwZ0wETSa/saJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=EjriM654; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1707987677; c=relaxed/simple;
+	bh=SiUIHayVYcHe9bkFxdrXvjU/ru0D8DtTz59xRaJtJBY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YcVVy5ZILHgSmqPUVkqvkC/iYxDaMWDu0xfiAvLW3r4aEoQYd0l2npd5v39LGoqlnCUs7LEqwi2CEgw3h/2gAE6Uv8HroLxFg2zzgH2ihtsTO8Kq4VrrnFh0FPifpmH3h9m3Kst4rGbQaCGqS2Cus56HMFliE6VJCLTB6U0sWRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d03AaO80; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EjriM654"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41F8xqmf069807;
-	Thu, 15 Feb 2024 02:59:52 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707987592;
-	bh=E4nYCjg/IPqoS28GVxV+kUtpflsdAduZL2xQjVyGLGI=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=EjriM654oGVCvwWDwLs5Z1tIlb6D0RRJY+o1JzSTc1iHFTBUWvfi31bZDwy1tT4gI
-	 s2FqZ0cue4phw+i9eNCpDOrk+LN+TFLzhfBMIQPd9PrDHnJki8ULnL2fHOr06BfF8B
-	 SKMRy/6TXegaAaTpzKcZokUzwNhUbaWFdL18Z30A=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41F8xqor009209
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 15 Feb 2024 02:59:52 -0600
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 15
- Feb 2024 02:59:52 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 15 Feb 2024 02:59:52 -0600
-Received: from localhost (dhruva.dhcp.ti.com [172.24.227.68])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41F8xpJk013744;
-	Thu, 15 Feb 2024 02:59:52 -0600
-Date: Thu, 15 Feb 2024 14:29:51 +0530
-From: Dhruva Gole <d-gole@ti.com>
-To: Markus Schneider-Pargmann <msp@baylibre.com>
-CC: Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen
- Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero Kristo
-	<kristo@kernel.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>, Andrew Davis
-	<afd@ti.com>,
-        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/3] dt-bindings: cpufreq: Add nvmem-cells for chip
- information
-Message-ID: <20240215085951.xrcitu2so5gqcewn@dhruva>
-References: <20240206145721.2418893-1-msp@baylibre.com>
- <20240206145721.2418893-2-msp@baylibre.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d03AaO80"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D62AC43390;
+	Thu, 15 Feb 2024 09:01:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707987677;
+	bh=SiUIHayVYcHe9bkFxdrXvjU/ru0D8DtTz59xRaJtJBY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=d03AaO80PMznAQ1ygGgl4bP0JD/qWg8lwUAYD+Cd0KOAbgw27sPii/DOLCtE9wDv7
+	 kgjhC5bdEAdt+IPU9T9VwDKHOmfzmcl/NVCU5ed4BO78QZjSy9MOH3YX6y49OcHyT0
+	 nqkOvzjulchPTBi1+5V9FTsIiarwJANjG+ZTThceD2MUbOALEivnzP6D57dXeKgzLM
+	 VWgtPxQ13aFGJmFZYynLjEZ/zZcdFnFTNe+L4X1YXFlHVSm9v/RLHNr5SVYYaUrbAJ
+	 3e4+THnFEVAhZ+kaFSSbZETU2qEWz2cPDi0kWcg3Wrqd7ZAOO/3iGWcgUZK+i6bCs8
+	 POayKDFk0TKow==
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-51182ece518so715354e87.3;
+        Thu, 15 Feb 2024 01:01:16 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWP7CX7KVF10AhNKyV+NjbqXfw3cHQMgUjpOGEejdFNOTRdFHEyo4LA2rkbOdgVMoB+eY4PJsfmbGfi5aRrNDTpLSB65yiMQPl08qKZCnakrZ06jAxVyeGMqOUZJ0XoHZROriWMUr6fLDfhcZ0dKO10Inu1LAflxtQkdLgCNcXy1YeyfJyXt5xISJx1RxJcXn+Hx9jRT1RX4e16L79ophtu8A3n
+X-Gm-Message-State: AOJu0YwSXx2fa5GdVOS9r9CSfaaF5jt42OxzXcXTueJgZ71ViTR8xcbc
+	pCXqMNppsSMiUF6E7B6seYQUxFqjwzBXEnS+c7YNwKrUnkTHMLSabZ2rm3OHtGYU1rjGMKy+06n
+	nnqFmli6g5EpNmr7bahnLQTdbt+U=
+X-Google-Smtp-Source: AGHT+IESsSC82ZPO7zHm75aViouaK3gACXPSL8wbxHFLyvmlDJHekLM2uaQ5vnuSYH17EGhdPcRUbgpXLJsKGUFiH2M=
+X-Received: by 2002:ac2:4946:0:b0:511:6ec9:d380 with SMTP id
+ o6-20020ac24946000000b005116ec9d380mr904187lfi.30.1707987675245; Thu, 15 Feb
+ 2024 01:01:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240206145721.2418893-2-msp@baylibre.com>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20240214221847.2066632-1-ross.philipson@oracle.com> <20240214221847.2066632-16-ross.philipson@oracle.com>
+In-Reply-To: <20240214221847.2066632-16-ross.philipson@oracle.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 15 Feb 2024 10:01:03 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXF3k_c4Wn9GU+NC_+_aYfDpAzAUnfR=A4L_T+re1H3G=w@mail.gmail.com>
+Message-ID: <CAMj1kXF3k_c4Wn9GU+NC_+_aYfDpAzAUnfR=A4L_T+re1H3G=w@mail.gmail.com>
+Subject: Re: [PATCH v8 15/15] x86: EFI stub DRTM launch support for Secure Launch
+To: Ross Philipson <ross.philipson@oracle.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
+	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-efi@vger.kernel.org, dpsmith@apertussolutions.com, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, 
+	mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, 
+	jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu, 
+	herbert@gondor.apana.org.au, davem@davemloft.net, kanth.ghatraju@oracle.com, 
+	trenchboot-devel@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
-
-On Feb 06, 2024 at 15:57:19 +0100, Markus Schneider-Pargmann wrote:
-> Add nvmem-cells to describe chip information like chipvariant and
-> chipspeed. If nvmem-cells are used, the syscon property is not necessary
-> anymore.
-> 
-> Signed-off-by: Markus Schneider-Pargmann <msp@baylibre.com>
-> Acked-by: Andrew Davis <afd@ti.com>
+On Wed, 14 Feb 2024 at 23:32, Ross Philipson <ross.philipson@oracle.com> wrote:
+>
+> This support allows the DRTM launch to be initiated after an EFI stub
+> launch of the Linux kernel is done. This is accomplished by providing
+> a handler to jump to when a Secure Launch is in progress. This has to be
+> called after the EFI stub does Exit Boot Services.
+>
+> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 > ---
->  .../bindings/opp/operating-points-v2-ti-cpu.yaml | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/opp/operating-points-v2-ti-cpu.yaml b/Documentation/devicetree/bindings/opp/operating-points-v2-ti-cpu.yaml
-> index 02d1d2c17129..b1881a0834fe 100644
-> --- a/Documentation/devicetree/bindings/opp/operating-points-v2-ti-cpu.yaml
-> +++ b/Documentation/devicetree/bindings/opp/operating-points-v2-ti-cpu.yaml
-> @@ -34,6 +34,14 @@ properties:
->        points to syscon node representing the control module
->        register space of the SoC.
->  
-> +  nvmem-cells:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+>  drivers/firmware/efi/libstub/x86-stub.c | 55 +++++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>
+> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+> index 0d510c9a06a4..4df2cf539194 100644
+> --- a/drivers/firmware/efi/libstub/x86-stub.c
+> +++ b/drivers/firmware/efi/libstub/x86-stub.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/efi.h>
+>  #include <linux/pci.h>
+>  #include <linux/stddef.h>
+> +#include <linux/slr_table.h>
+>
+>  #include <asm/efi.h>
+>  #include <asm/e820/types.h>
+> @@ -810,6 +811,57 @@ static efi_status_t efi_decompress_kernel(unsigned long *kernel_entry)
+>         return EFI_SUCCESS;
+>  }
+>
+> +static void efi_secure_launch(struct boot_params *boot_params)
+> +{
+> +       struct slr_entry_uefi_config *uefi_config;
+> +       struct slr_uefi_cfg_entry *uefi_entry;
+> +       struct slr_entry_dl_info *dlinfo;
+> +       efi_guid_t guid = SLR_TABLE_GUID;
+> +       struct slr_table *slrt;
+> +       u64 memmap_hi;
+> +       void *table;
+> +       u8 buf[64] = {0};
 > +
-> +  nvmem-cell-names:
-> +    items:
-> +      - const: chipvariant
-> +      - const: chipspeed
+
+If you add a flex array to slr_entry_uefi_config as I suggested in
+response to the other patch, we could simplify this substantially
+
+static struct slr_entry_uefi_config cfg = {
+        .hdr.tag        = SLR_ENTRY_UEFI_CONFIG,
+        .hdr.size       = sizeof(cfg),
+        .revision       = SLR_UEFI_CONFIG_REVISION,
+        .nr_entries     = 1,
+        .entries[0]     = {
+                .pcr    = 18,
+                .evt_info = "Measured UEFI memory map",
+        },
+};
+
+cfg.entries[0].cfg  = boot_params->efi_info.efi_memmap |
+                      (u64)boot_params->efi_info.efi_memmap_hi << 32;
+cfg.entries[0].size = boot_params->efi_info.efi_memmap_size;
+
+
+
+> +       table = get_efi_config_table(guid);
 > +
->    opp-shared: true
->  
->  patternProperties:
-> @@ -55,7 +63,13 @@ patternProperties:
->  
->  required:
->    - compatible
-> -  - syscon
+> +       /*
+> +        * The presence of this table indicated a Secure Launch
+> +        * is being requested.
+> +        */
+> +       if (!table)
+> +               return;
 > +
-> +oneOf:
-> +  - required:
-> +      - syscon
-> +  - required:
-> +      - nvmem-cells
-> +      - nvmem-cell-names
+> +       slrt = (struct slr_table *)table;
+> +
+> +       if (slrt->magic != SLR_TABLE_MAGIC)
+> +               return;
+> +
 
-Reviewed-by: Dhruva Gole <d-gole@ti.com>
+slrt = (struct slr_table *)get_efi_config_table(guid);
+if (!slrt || slrt->magic != SLR_TABLE_MAGIC)
+        return;
+
+> +       /* Add config information to measure the UEFI memory map */
+> +       uefi_config = (struct slr_entry_uefi_config *)buf;
+> +       uefi_config->hdr.tag = SLR_ENTRY_UEFI_CONFIG;
+> +       uefi_config->hdr.size = sizeof(*uefi_config) + sizeof(*uefi_entry);
+> +       uefi_config->revision = SLR_UEFI_CONFIG_REVISION;
+> +       uefi_config->nr_entries = 1;
+> +       uefi_entry = (struct slr_uefi_cfg_entry *)(buf + sizeof(*uefi_config));
+> +       uefi_entry->pcr = 18;
+> +       uefi_entry->cfg = boot_params->efi_info.efi_memmap;
+> +       memmap_hi = boot_params->efi_info.efi_memmap_hi;
+> +       uefi_entry->cfg |= memmap_hi << 32;
+> +       uefi_entry->size = boot_params->efi_info.efi_memmap_size;
+> +       memcpy(&uefi_entry->evt_info[0], "Measured UEFI memory map",
+> +               strlen("Measured UEFI memory map"));
+> +
+
+Drop all of this
+
+> +       if (slr_add_entry(slrt, (struct slr_entry_hdr *)uefi_config))
+
+if (slr_add_entry(slrt, &uefi_config.hdr))
 
 
--- 
-Best regards,
-Dhruva Gole <d-gole@ti.com>
+> +               return;
+> +
+> +       /* Jump through DL stub to initiate Secure Launch */
+> +       dlinfo = (struct slr_entry_dl_info *)
+> +               slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_DL_INFO);
+> +
+> +       asm volatile ("jmp *%%rax"
+> +                     : : "a" (dlinfo->dl_handler), "D" (&dlinfo->bl_context));
+
+Fix the prototype and just do
+
+dlinfo->dl_handler(&dlinfo->bl_context);
+unreachable();
+
+
+So in summary, this becomes
+
+static void efi_secure_launch(struct boot_params *boot_params)
+{
+        static struct slr_entry_uefi_config cfg = {
+                .hdr.tag        = SLR_ENTRY_UEFI_CONFIG,
+                .hdr.size       = sizeof(cfg),
+                .revision       = SLR_UEFI_CONFIG_REVISION,
+                .nr_entries     = 1,
+                .entries[0]     = {
+                        .pcr    = 18,
+                        .evt_info = "Measured UEFI memory map",
+                },
+        };
+        struct slr_entry_dl_info *dlinfo;
+        efi_guid_t guid = SLR_TABLE_GUID;
+        struct slr_table *slrt;
+
+        /*
+         * The presence of this table indicated a Secure Launch
+         * is being requested.
+         */
+        slrt = (struct slr_table *)get_efi_config_table(guid);
+        if (!slrt || slrt->magic != SLR_TABLE_MAGIC)
+                return;
+
+        cfg.entries[0].cfg  = boot_params->efi_info.efi_memmap |
+                              (u64)boot_params->efi_info.efi_memmap_hi << 32;
+        cfg.entries[0].size = boot_params->efi_info.efi_memmap_size;
+
+        if (slr_add_entry(slrt, &cfg.hdr))
+                return;
+
+        /* Jump through DL stub to initiate Secure Launch */
+        dlinfo = (struct slr_entry_dl_info *)
+                 slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_DL_INFO);
+
+        dlinfo->dl_handler(&dlinfo->bl_context);
+
+        unreachable();
+}
+
+
+> +}
+> +
+>  static void __noreturn enter_kernel(unsigned long kernel_addr,
+>                                     struct boot_params *boot_params)
+>  {
+> @@ -934,6 +986,9 @@ void __noreturn efi_stub_entry(efi_handle_t handle,
+>                 goto fail;
+>         }
+>
+> +       /* If a Secure Launch is in progress, this never returns */
+
+if (IS_ENABLED(CONFIG_SECURE_LAUNCH))
+
+> +       efi_secure_launch(boot_params);
+> +
+>         /*
+>          * Call the SEV init code while still running with the firmware's
+>          * GDT/IDT, so #VC exceptions will be handled by EFI.
+> --
+> 2.39.3
+>
