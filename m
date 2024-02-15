@@ -1,223 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6948883A04
-	for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 10:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B085512AAEA;
+	Thu, 15 Feb 2024 10:58:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707994652; cv=none; b=lUXHJ7QSRHiGu4DsOpRGvs+t4fe2+75pBv/hbVmYlcgv1M0IU/GNRv5DP8DXIQEAwENzOnEjetPPo8Sj6bmKkUJ5cwOvkSFyUeaFDmAo3Z6CSZbv0sj7jbfamrcPI3AwoRiHV9kE2YjctsmnRsW6RemA8zFZDsUsKqOBeHM5Gn0=
+	t=1707994690; cv=none; b=fgSwty/+16Q4H1W99kUBc4gHpqshPbrd7BAVew9UjpCsioHOcWeGGQobJIDJMVQQ21uF+501ehgVSS6hcvsNE3ibese/WAEeoQjp4jSkrmTytvyxppUEAz4ETzkCdIADQBb7sBsEzIvqoRf6DxSiZ8PRrdygpdU5/rQKXQHWJl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707994652; c=relaxed/simple;
-	bh=fia32X7UBkpe3dW/uCV30sxHEtkvNs3IFKVG0jds3Xg=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=ZUqUdv8tE7iTwqtQZHeWXJrfs4F5tYCPWuJRLpC5z3qs4ojUuI+odHKdhDFd2pxgQVVd097EYdEfDh3dl4Gu7HUkC5coORx3NdvaXCzfSAxr82qheVi+5BEhOmi69imOoOyuSTl8f38G52CXEn+/A1hE9nuO+NVP2plMMggE1bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mHQocX0N; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mHQocX0N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707994650; x=1739530650;
-  h=date:from:to:cc:subject:message-id;
-  bh=fia32X7UBkpe3dW/uCV30sxHEtkvNs3IFKVG0jds3Xg=;
-  b=mHQocX0NIv7g3h5GEdXhlJtdfzBGrjVLn67K4FSizxLk8N3qluHj719Z
-   wU2lGPJBqlBgTf8Ni8aocHr7wIrW+c5gAguhZoY/SY5F5RPSYcZ6KCEQ1
-   ApjJVq/+dhh2LwcvxyjN/aiBIozUQLjEnMuwpo61W93DgEGJM2AgYPVIr
-   dy+Bs0kTFC+dRS0xVsjolf1P/Fm/ACe6D9jJWP9eWUKeH/isY50SYS4xK
-   WU7cjmd3fR+BnIqMwntPbxhp3yjvDsXRQRTNar1KxCmsBoQ/9u//GA1Lo
-   rYmcFsSJBW0VgZnYjrIqRWH9pQo7CqVUBqO4FswCAIhZ+ZR++CzjqyWjO
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="1948591"
-X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
-   d="scan'208";a="1948591"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 02:57:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
-   d="scan'208";a="3460932"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by fmviesa009.fm.intel.com with ESMTP; 15 Feb 2024 02:56:52 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1raZPb-0000QS-0W;
-	Thu, 15 Feb 2024 10:56:37 +0000
-Date: Thu, 15 Feb 2024 18:55:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/merge] BUILD SUCCESS
- 218b13db258c091e646857fc962ef45fe2163054
-Message-ID: <202402151840.iW7Gvdz6-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1707994690; c=relaxed/simple;
+	bh=vUesT69O7egr26kxPrRgX5ev/5Rrb6u8SstpGni/Rss=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b+pFcV0VFXn7FdkuEQsBu7uBd7nET47ED3WXR39H+bMPODbzjSHX5hxSd53mELRSjPodhAk3qtZ5/mTSb6VS9xAmQDjz/y0i3F4yQdXaHd5lIlrVrXpiSjmbASuBkByWlGPR143Jdu0xXcwMeq11GazL/y+bYU8xui3vKr+TbLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6078350e130so7048797b3.0;
+        Thu, 15 Feb 2024 02:58:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707994686; x=1708599486;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=noynfA6+8D/0XF211K1pp3EPN1BH66Mm0ZHWHWfYWy8=;
+        b=W1QZQ1Jomsd6f/zfOLZdtkCI7Gfyl1XLzfJhQ5Tx7dZtHPtSaDPslCYziu+CBqQ1p3
+         IMpv2WqMOcGxB716BHiD69wWceRA2J3fy7Uum/7HAuqgI81G9Szn6oPWI97a2edjT56g
+         w/Da3f4HgQbxm5oGFiiAr7agM8agCETDgVwoOrnR9jsuUXKTCn8918VZAhvze+cIw9Ei
+         xVfUzr2W3EdcVnEERF2ExtWSbyoAHr9Kj0hLSzYHrTcH1HeQBieY1qLG4OIhdSK3es+w
+         N3BIrhijt6PaybdE35r2NfnxrElPvmPOXW0r6h/07nyf8sH008C/+YO2IINHWRJSXVW4
+         JC4A==
+X-Forwarded-Encrypted: i=1; AJvYcCUusYzdIbF9TWARKFy1K7A5OopSIqFvkD73E0OlCCUvE+tV5L5LJ0oeXRA7U9ylnR4jukcm7A8wz29CS18iW0FM8eqOb3Eu9VSOgtXJ
+X-Gm-Message-State: AOJu0Yx4zEpGgjmxDq2T7/1tzBP6Skhoqd+5RK/Fo/WnuQqnFKnKvCri
+	rMe+fmi6lYDB6F15NOE8LXIwYbeAP0JWqjOlQ/g5l3GQkpBqEjE8+3cW716Pnp9lQQ==
+X-Google-Smtp-Source: AGHT+IGyQRKvD7MpSfh04UErENSY1UqOWXAS+fj6K3UTjRjIPhIGzzmpM6ZsQ6Qj3+uxnbm5HcxupA==
+X-Received: by 2002:a0d:ca12:0:b0:607:84d9:9820 with SMTP id m18-20020a0dca12000000b0060784d99820mr1213084ywd.24.1707994686268;
+        Thu, 15 Feb 2024 02:58:06 -0800 (PST)
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com. [209.85.128.181])
+        by smtp.gmail.com with ESMTPSA id h130-20020a816c88000000b006042cdc8de6sm190142ywc.101.2024.02.15.02.58.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Feb 2024 02:58:06 -0800 (PST)
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-607c5679842so7515717b3.2;
+        Thu, 15 Feb 2024 02:58:06 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWzy1y1fVNMWvdWk/VJFQS6NUWisVkGkwSzPdO1r1IkITSpjeYrWd8NjlzJB5EgcyisTZ/C7hznxY+K9vK+bsQQXbH8eD8BTRLf/0UI
+X-Received: by 2002:a81:994b:0:b0:607:a0ab:c238 with SMTP id
+ q72-20020a81994b000000b00607a0abc238mr1320310ywg.8.1707994685833; Thu, 15 Feb
+ 2024 02:58:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240212170423.2860895-1-andriy.shevchenko@linux.intel.com>
+ <20240212170423.2860895-15-andriy.shevchenko@linux.intel.com>
+ <ZcpSDOk-IQVasHud@smile.fi.intel.com> <ZcpSaHW-RQ3dzywP@smile.fi.intel.com>
+In-Reply-To: <ZcpSaHW-RQ3dzywP@smile.fi.intel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 15 Feb 2024 11:57:53 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdV8mTa-qutFgqRKJyES7evEqEYhs=_eHtrKTTs5NkNa9A@mail.gmail.com>
+Message-ID: <CAMuHMdV8mTa-qutFgqRKJyES7evEqEYhs=_eHtrKTTs5NkNa9A@mail.gmail.com>
+Subject: Re: [PATCH v2 14/15] dt-bindings: auxdisplay: Add Maxim MAX6958/6959
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Robin van der Gracht <robin@protonic.nl>, Paul Burton <paulburton@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/merge
-branch HEAD: 218b13db258c091e646857fc962ef45fe2163054  Merge branch 'x86/core' into x86/merge, to ease integration testing
+Hi Andy,
 
-elapsed time: 1445m
+On Mon, Feb 12, 2024 at 6:16=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> On Mon, Feb 12, 2024 at 07:14:53PM +0200, Andy Shevchenko wrote:
+> > On Mon, Feb 12, 2024 at 07:01:47PM +0200, Andy Shevchenko wrote:
+> > > Add initial device tree documentation for Maxim MAX6958/6959.
+> >
+> > Oh, this is an old version :-(
+>
+> Here is a new one:
+>
+> From d8c826e06cf9237cd5fc6b2bb0b1cac5aff4fd8a Mon Sep 17 00:00:00 2001
+> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Date: Thu, 8 Feb 2024 17:23:38 +0200
+> Subject: [PATCH 1/1] dt-bindings: auxdisplay: Add Maxim MAX6958/6959
+>
+> Add initial device tree documentation for Maxim MAX6958/6959.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-configs tested: 150
-configs skipped: 2
+Thanks for your patch!
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/auxdisplay/maxim,max6959.yaml
+> @@ -0,0 +1,44 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/auxdisplay/maxim,max6959.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MAX6958/6959 7-segment LED display controller with keyscan
+> +
+> +maintainers:
+> +  - Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> +
+> +description:
+> +  The Maxim MAX6958/6959 7-segment LED display controller provides
+> +  an I2C interface to up to four 7-segment LED digits. The MAX6959
+> +  in comparison to MAX6958 has the debounce and interrupt support.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240215   gcc  
-arc                   randconfig-002-20240215   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                        clps711x_defconfig   clang
-arm                                 defconfig   clang
-arm                          ep93xx_defconfig   clang
-arm                      integrator_defconfig   clang
-arm                   randconfig-001-20240215   clang
-arm                   randconfig-002-20240215   gcc  
-arm                   randconfig-003-20240215   gcc  
-arm                   randconfig-004-20240215   gcc  
-arm                        shmobile_defconfig   gcc  
-arm                        spear6xx_defconfig   clang
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240215   clang
-arm64                 randconfig-002-20240215   clang
-arm64                 randconfig-003-20240215   gcc  
-arm64                 randconfig-004-20240215   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240215   gcc  
-csky                  randconfig-002-20240215   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240215   clang
-hexagon               randconfig-002-20240215   clang
-i386         buildonly-randconfig-001-20240215   clang
-i386         buildonly-randconfig-002-20240215   clang
-i386         buildonly-randconfig-003-20240215   clang
-i386         buildonly-randconfig-004-20240215   clang
-i386         buildonly-randconfig-005-20240215   clang
-i386         buildonly-randconfig-006-20240215   clang
-i386                  randconfig-001-20240215   gcc  
-i386                  randconfig-002-20240215   gcc  
-i386                  randconfig-003-20240215   clang
-i386                  randconfig-004-20240215   gcc  
-i386                  randconfig-005-20240215   gcc  
-i386                  randconfig-006-20240215   gcc  
-i386                  randconfig-011-20240215   clang
-i386                  randconfig-012-20240215   clang
-i386                  randconfig-013-20240215   gcc  
-i386                  randconfig-014-20240215   gcc  
-i386                  randconfig-015-20240215   clang
-i386                  randconfig-016-20240215   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240215   gcc  
-loongarch             randconfig-002-20240215   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240215   gcc  
-nios2                 randconfig-002-20240215   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                  or1klitex_defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                randconfig-001-20240215   gcc  
-parisc                randconfig-002-20240215   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                          g5_defconfig   gcc  
-powerpc                      makalu_defconfig   clang
-powerpc               randconfig-001-20240215   gcc  
-powerpc               randconfig-002-20240215   clang
-powerpc               randconfig-003-20240215   clang
-powerpc                     tqm8555_defconfig   clang
-powerpc64             randconfig-001-20240215   clang
-powerpc64             randconfig-002-20240215   gcc  
-powerpc64             randconfig-003-20240215   clang
-riscv                            allmodconfig   clang
-riscv                            allyesconfig   clang
-riscv                 randconfig-001-20240215   gcc  
-riscv                 randconfig-002-20240215   gcc  
-s390                             alldefconfig   gcc  
-s390                             allmodconfig   clang
-s390                             allyesconfig   gcc  
-s390                  randconfig-001-20240215   clang
-s390                  randconfig-002-20240215   clang
-sh                               allmodconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                     magicpanelr2_defconfig   gcc  
-sh                    randconfig-001-20240215   gcc  
-sh                    randconfig-002-20240215   gcc  
-sh                           se7343_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64               randconfig-001-20240215   gcc  
-sparc64               randconfig-002-20240215   gcc  
-um                               allmodconfig   clang
-um                               allyesconfig   gcc  
-um                    randconfig-001-20240215   gcc  
-um                    randconfig-002-20240215   gcc  
-x86_64                            allnoconfig   clang
-x86_64       buildonly-randconfig-001-20240215   clang
-x86_64       buildonly-randconfig-002-20240215   clang
-x86_64       buildonly-randconfig-003-20240215   gcc  
-x86_64       buildonly-randconfig-004-20240215   gcc  
-x86_64       buildonly-randconfig-005-20240215   clang
-x86_64       buildonly-randconfig-006-20240215   gcc  
-x86_64                randconfig-001-20240215   clang
-x86_64                randconfig-002-20240215   clang
-x86_64                randconfig-003-20240215   gcc  
-x86_64                randconfig-004-20240215   clang
-x86_64                randconfig-005-20240215   clang
-x86_64                randconfig-006-20240215   clang
-x86_64                randconfig-011-20240215   gcc  
-x86_64                randconfig-012-20240215   gcc  
-x86_64                randconfig-013-20240215   gcc  
-x86_64                randconfig-014-20240215   gcc  
-x86_64                randconfig-015-20240215   gcc  
-x86_64                randconfig-016-20240215   clang
-x86_64                randconfig-071-20240215   clang
-x86_64                randconfig-072-20240215   clang
-x86_64                randconfig-073-20240215   gcc  
-x86_64                randconfig-074-20240215   gcc  
-x86_64                randconfig-075-20240215   clang
-x86_64                randconfig-076-20240215   gcc  
-xtensa                  cadence_csp_defconfig   gcc  
-xtensa                randconfig-001-20240215   gcc  
-xtensa                randconfig-002-20240215   gcc  
-xtensa                         virt_defconfig   gcc  
+IUIC, the primary differentiating factor is that the MAX6959 adds input
+and GPIO support?  Debounce and interrupt support are merely features
+of input support.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +  Type of the chip can be autodetected via specific register read,
+> +  and hence the features may be enabled in the driver at run-time.
+
+I don't think you need to read that register, as the users of the
+features (keypad mapping, interrupts property, ...) also need to be
+described in DTS (once supported).
+
+> +  Given hardware is simple and does not provide any additional pins,
+> +  such as reset or enable.
+
+Does this matter? I.e. is it important to say this in the bindings?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
