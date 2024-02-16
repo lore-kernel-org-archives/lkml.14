@@ -1,32 +1,33 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C40B1B952;
-	Fri, 16 Feb 2024 08:58:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9FD1B95A;
+	Fri, 16 Feb 2024 08:58:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708073915; cv=none; b=fTcQc4Y6PH5/+N1oxNTJ/Ll6/uS9zr0qhC7SleJqq3IvKtl5bWoaDHNkqkq+fsEFh5iBFcYqar7ACLybk3o5CtVkZp7VE9qjrPH5jgdHd6LmN5gIuQGE2jBLWqBKeoiJfEHS+B/oM1O7xScgQQp/fQyPPKBPaO0LmCrH5vyOGy0=
+	t=1708073916; cv=none; b=oMgQsztKDh3pWAWo6IDH4sA+jMyE/pJ3uJYNE3cOCGTQHmbbs5ngYZz+BpL5V9AWLY3P/BAKOmt2FWMyZJ2VJKrRwtI9Em2LqdztiIMvKTsQ57XXG0gSvuzDLlCSOO8+/W5H9jt9EvgZ1+JB4t/xO1rj3MLaywEJ7qJ2677X+3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708073915; c=relaxed/simple;
-	bh=6rGzVUEnAIPXFTtTRrlSD4OhQqOoYi3GoHpLdubGYK8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EFBGKIooXE3tKpCJ3BE7LsCbVDs49DAPMXkHlb8WMxDx/ZVTX9ohrGwmcyii3bvYZvJcm8Gx2erxGUYYpA/mzw0HZqqETKgBYy0DWKc4pTYgsI/sWMvfvdY6ozNVs8hL2jsmiZHjrGHnIcSIq2K5Me6qwUZw2dUPHX+n0H70qcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=NLQtBI3X; arc=none smtp.client-ip=115.28.160.31
+	s=arc-20240116; t=1708073916; c=relaxed/simple;
+	bh=WzF4cixCPUKQp/NgbAjzvNdu2i9KtmYFWq3pDpAX4VY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Cbb4S3nfeRtD0kTYpsz6or5vK3OMZNpn3tF9VmBQnCpssXwNfJi+2dFRmWYztwKjaFwYq7gKbEpkwEot7yX237v8mzGlVLlP/uQN5kNFB0gWjobSnNwwYpZidtXm9J+4QZ63vzAbTlWIfXWnC1IS1bdbMsPIb4WxFFotBF3K/Ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=F9bXnQpg; arc=none smtp.client-ip=115.28.160.31
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="NLQtBI3X"
+	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="F9bXnQpg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1708073909; bh=6rGzVUEnAIPXFTtTRrlSD4OhQqOoYi3GoHpLdubGYK8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=NLQtBI3X1DWM6UJ8hj3z7FZFI5vgib6gb868bu/iQRvEdicp3LOtgbUdzBnGVDqpi
-	 IbwoKZDGgBscy1jAumcWEoUpfVUJlzva0C7PEEVUItMRweNOTTEGFMoyUt5iDiBdmd
-	 WmJd7iSmggXf/bMQruItZCRZ8T5PtqyTSJopcX4s=
+	t=1708073911; bh=WzF4cixCPUKQp/NgbAjzvNdu2i9KtmYFWq3pDpAX4VY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=F9bXnQpgwb2FtaeGfQJodNaSJrq9YUMnHgqBlv1a4o/9oaEQ+z9VH0GKcx9O2cwsK
+	 EBzBff4UhzVOI9FHYClUt+t7QFrJVSIxCwOLyQqcqfSlm9p06pl3ry2g05V49biFwg
+	 1vVq1ctq3TmPlJBElaHaf8nu5dRM10xhtdyE3tKI=
 Received: from ld50.lan (unknown [IPv6:240e:388:8d00:6500:cda4:aa27:b0f6:1748])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 2A2E06011B;
-	Fri, 16 Feb 2024 16:58:26 +0800 (CST)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 43BF8601C2;
+	Fri, 16 Feb 2024 16:58:31 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Paolo Bonzini <pbonzini@redhat.com>,
 	Huacai Chen <chenhuacai@kernel.org>
@@ -36,10 +37,12 @@ Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH for-6.8 v3 0/3] KVM: LoongArch: Fix wrong CPUCFG ID handling
-Date: Fri, 16 Feb 2024 16:58:19 +0800
-Message-ID: <20240216085822.3032984-1-kernel@xen0n.name>
+Subject: [PATCH for-6.8 v3 2/3] LoongArch: KVM: Rename _kvm_get_cpucfg to _kvm_get_cpucfg_mask
+Date: Fri, 16 Feb 2024 16:58:21 +0800
+Message-ID: <20240216085822.3032984-3-kernel@xen0n.name>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240216085822.3032984-1-kernel@xen0n.name>
+References: <20240216085822.3032984-1-kernel@xen0n.name>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,53 +53,46 @@ Content-Transfer-Encoding: 8bit
 
 From: WANG Xuerui <git@xen0n.name>
 
-Hi,
+The function is not actually a getter of guest CPUCFG, but rather
+validation of the input CPUCFG ID plus information about the supported
+bit flags of that CPUCFG leaf. So rename it to avoid confusion.
 
-While trying to add loongarch to the Rust kvm-bindings crate, I
-accidentally discovered faulty logic in the handling of CPUCFG IDs
-("leaves" for those more familiar with x86), that could result in
-incorrectly accepting every possible int for the ID; fortunately it is
-6.8 material that hasn't seen a release yet, so a fix is possible.
+Signed-off-by: WANG Xuerui <git@xen0n.name>
+---
+ arch/loongarch/kvm/vcpu.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-The first patch contains the fix, while the rest are general
-drive-by refactoring and comment cleanups.
-
-Although it is currently the Chinese holiday season, Huacai told me
-over IM that he's able to test the series and handle the upstreaming, so
-going through the loongarch tree seems to be the way forward for the
-series.
-
-v3 changes:
-
-- Fixed the validation by accepting every CPUCFG IDs from 0 to 20
-  inclusive, instead of only 2; this was a misunderstanding of mine
-  regarding the userland. (currently the only known user, the QEMU
-  target/loongarch KVM code, expects to be able to set all these 21
-  CPUCFG leaves, even though 7~15 are undefined according to the
-  LoongArch reference manual.) This also had the effect of squashing the
-  first 2 patches.
-- Made the _kvm_get_cpucfg_mask return a mask in all valid cases,
-  allowing the mask check to be lifted out of the CPUCFG2 case.
-- Swapped the "LoongArch:" and "KVM:" tags because right now the patches
-  are likely to reach mainline through the loongarch tree, and having
-  the "LoongArch:" prefix first is the convention here.
-
-v2 changes:
-
-- Squashed the v1 patches 4 and 5 according to Huacai's review
-- Reworded comments according to Huacai's suggestion
-- Use WARN_ON_ONCE (instead of BUG) to replace unreachable() for not
-  crashing the kernel (per checkpatch.pl suggestion)
-
-WANG Xuerui (3):
-  LoongArch: KVM: Fix input validation of _kvm_get_cpucfg and
-    kvm_check_cpucfg
-  LoongArch: KVM: Rename _kvm_get_cpucfg to _kvm_get_cpucfg_mask
-  LoongArch: KVM: Streamline kvm_check_cpucfg and improve comments
-
- arch/loongarch/kvm/vcpu.c | 81 ++++++++++++++++++---------------------
- 1 file changed, 38 insertions(+), 43 deletions(-)
-
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 56da0881fc94..d86da3811bea 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -298,7 +298,7 @@ static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
+ 	return ret;
+ }
+ 
+-static int _kvm_get_cpucfg(int id, u64 *v)
++static int _kvm_get_cpucfg_mask(int id, u64 *v)
+ {
+ 	switch (id) {
+ 	case 2:
+@@ -335,7 +335,7 @@ static int kvm_check_cpucfg(int id, u64 val)
+ 	u64 mask = 0;
+ 	int ret;
+ 
+-	ret = _kvm_get_cpucfg(id, &mask);
++	ret = _kvm_get_cpucfg_mask(id, &mask);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -563,7 +563,7 @@ static int kvm_loongarch_get_cpucfg_attr(struct kvm_vcpu *vcpu,
+ 	uint64_t val;
+ 	uint64_t __user *uaddr = (uint64_t __user *)attr->addr;
+ 
+-	ret = _kvm_get_cpucfg(attr->attr, &val);
++	ret = _kvm_get_cpucfg_mask(attr->attr, &val);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.43.0
 
