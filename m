@@ -1,43 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C1F12BF24
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 13:55:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F94E12BEA5;
+	Fri, 16 Feb 2024 13:55:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708091725; cv=none; b=Z2FpDvgGhdDxrizoU8Rjs7f3Y9ATj1q3e7OhW10ae0Vkq8CkQVYtTvbkXRC1WcWB/ne2j1pCEQB6U+41Zm3r8Qvb9aCfb0LL9s41921/CqlbSpLC1nfO4thDlMyG5XQRd/q6Rz9QaowXQxVfo9jPmabKyDETEvNwc3PoBkVoZCQ=
+	t=1708091750; cv=none; b=HipsJNY0xEGQm8FvEyCV0XR3BUrZBwv6KOnqFIrYFTDI+Vjn7tMiFLS+rvQAry06UCxnJqk+Ogcx2ww8QaRVFl4irKuwbR0+1t+W7tPtg/ciKc6/plAzRmYjhkNsadyJAQECc8b0yEzHku/dOivzXA/CYALBI5opBTWD3BY1ypk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708091725; c=relaxed/simple;
-	bh=JYRadvk8epVLTennqJxblFfin4HjDeQtbPYeVdFZkTc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=O+Xn5H4DP1QZOQs6qeJPHmcA6m2/GNdHpXvIcsV9uPrKeHRjxUh1vGu/47s9Ghb5v2AAvuFe477EJKBG0oPnzhz1Q3AMyCjJhxGhKj2q03IOZyKO8YkdFSUlrKNhdxT5SN7XAp5AFUI+NXI6x9v2WNXORtUc90kPwEk3jU3qyvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bYstjYEp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708091750; c=relaxed/simple;
+	bh=wk1n0oWjh34QbIeqz7ZNkSxon2SKxcvJK+7DW2eQqgQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Pya6G4fj2vChfGTNOHw+H/eSaLXtBtALgoG8R5DYBe4fr1TZZ/+dvHpDv9IhuyVwqQbIC2rpflSVP5SPM9P1Qn3gb68Wc+14y4NDoOrj+5e2wgGLGLvB+VHb9uR1JlusTiSzIbFNlqIB4OdUHkk1OQlqyon4iZ24ciJMF69DVh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=D0vTeH6i; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bYstjYEp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C1C3C433F1;
-	Fri, 16 Feb 2024 13:55:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708091724;
-	bh=JYRadvk8epVLTennqJxblFfin4HjDeQtbPYeVdFZkTc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bYstjYEpD43jdQrvSD9EDleeWQBd8QQ3QVGDGvKpPEQNlpsXc6iJA55H/CJFOsD9n
-	 cPAaiLLKMOQ3+sH6TBYOIWjaUZQYLxDSdYc6qBSMmWU34M+0xFis417Xawxz9wKhMV
-	 cC6yqKHucIo2a/LMRM1DPwMnr3BjNm4aB9sitOzfpTw5XBOFTsZCzoVwGckGN9tGVg
-	 s4iUPran2WXVNXUTh0Rzoaz7sGHOBq5yZArA87Lpjgza3Sc1cv3k6/tOXzfpnjEQAc
-	 nVbehF86OK3ddbZ6SlgoKgp+AfuELIE8bnHzL4qr0/fdqsvXNCMcHI5KjAlG02H5bf
-	 k4T6qGglqjteA==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
-	"Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-	linuxppc-dev@lists.ozlabs.org
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] powerpc: remove unused *_syscall_64.o variables in Makefile
-Date: Fri, 16 Feb 2024 22:55:17 +0900
-Message-Id: <20240216135517.2002749-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="D0vTeH6i"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41GDtfk7095614;
+	Fri, 16 Feb 2024 07:55:41 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1708091741;
+	bh=F9VQ5cICpZyC3r18cZBGn07fwGkoD+GP7y8K4AAm+eI=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=D0vTeH6iRGxWDLIMUVjHx1yZA+fx/gdkMIEGg4Oc7/0GcccVZag+dRB0KmnzAj5TH
+	 8C34jyf+tR208prQcQBZ9S/oTJv2q8PRAjl0TJKbcgSB/I9+THXPtNaS7YsQQutNUp
+	 V997ubZuN8vS5k62LKS/9c3YvFuAYBhY59hyrqsE=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41GDtfnG004093
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 16 Feb 2024 07:55:41 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 16
+ Feb 2024 07:55:40 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 16 Feb 2024 07:55:40 -0600
+Received: from uda0490681.. ([10.24.69.142])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41GDtXrT127060;
+	Fri, 16 Feb 2024 07:55:37 -0600
+From: Vaishnav Achath <vaishnav.a@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <vaishnav.a@ti.com>, <u-kumar1@ti.com>,
+        <s-vadapalli@ti.com>
+Subject: [PATCH 1/2] arm64: dts: ti: k3-j722s-evm: Enable CPSW3G RGMII1
+Date: Fri, 16 Feb 2024 19:25:32 +0530
+Message-ID: <20240216135533.904130-2-vaishnav.a@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240216135533.904130-1-vaishnav.a@ti.com>
+References: <20240216135533.904130-1-vaishnav.a@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,43 +60,92 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Commit ab1a517d55b0 ("powerpc/syscall: Rename syscall_64.c into
-interrupt.c") missed to update these three lines:
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
 
-  GCOV_PROFILE_syscall_64.o := n
-  KCOV_INSTRUMENT_syscall_64.o := n
-  UBSAN_SANITIZE_syscall_64.o := n
+Enable MAC Port 1 of CPSW3G instance of CPSW Ethernet Switch in
+RGMII-RXID mode of operation. Port 2 is not connected on the EVM,
+thus keep it disabled.
 
-To restore the original behavior, we could replace them with:
-
-  GCOV_PROFILE_interrupt.o := n
-  KCOV_INSTRUMENT_interrupt.o := n
-  UBSAN_SANITIZE_interrupt.o := n
-
-However, nobody has noticed the functional change in the past three
-years, so they were unneeded.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
 ---
+ arch/arm64/boot/dts/ti/k3-j722s-evm.dts | 53 +++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
- arch/powerpc/kernel/Makefile | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-index 2919433be355..72d1cd6443bc 100644
---- a/arch/powerpc/kernel/Makefile
-+++ b/arch/powerpc/kernel/Makefile
-@@ -191,9 +191,6 @@ GCOV_PROFILE_kprobes-ftrace.o := n
- KCOV_INSTRUMENT_kprobes-ftrace.o := n
- KCSAN_SANITIZE_kprobes-ftrace.o := n
- UBSAN_SANITIZE_kprobes-ftrace.o := n
--GCOV_PROFILE_syscall_64.o := n
--KCOV_INSTRUMENT_syscall_64.o := n
--UBSAN_SANITIZE_syscall_64.o := n
- UBSAN_SANITIZE_vdso.o := n
+diff --git a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
+index b4f2fee53a97..9e12a6e9111f 100644
+--- a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
++++ b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
+@@ -8,6 +8,7 @@
  
- # Necessary for booting with kcov enabled on book3e machines
+ /dts-v1/;
+ 
++#include <dt-bindings/net/ti-dp83867.h>
+ #include "k3-j722s.dtsi"
+ 
+ / {
+@@ -160,6 +161,58 @@ J722S_IOPAD(0x0240, PIN_INPUT, 0) /* (B24) MMC1_SDCD */
+ 		>;
+ 		bootph-all;
+ 	};
++
++	mdio_pins_default: mdio-default-pins {
++		pinctrl-single,pins = <
++			J722S_IOPAD(0x0160, PIN_OUTPUT, 0) /* (AC24) MDIO0_MDC */
++			J722S_IOPAD(0x015c, PIN_INPUT, 0) /* (AD25) MDIO0_MDIO */
++		>;
++	};
++
++	rgmii1_pins_default: rgmii1-default-pins {
++		pinctrl-single,pins = <
++			J722S_IOPAD(0x014c, PIN_INPUT, 0) /* (AC25) RGMII1_RD0 */
++			J722S_IOPAD(0x0150, PIN_INPUT, 0) /* (AD27) RGMII1_RD1 */
++			J722S_IOPAD(0x0154, PIN_INPUT, 0) /* (AE24) RGMII1_RD2 */
++			J722S_IOPAD(0x0158, PIN_INPUT, 0) /* (AE26) RGMII1_RD3 */
++			J722S_IOPAD(0x0148, PIN_INPUT, 0) /* (AE27) RGMII1_RXC */
++			J722S_IOPAD(0x0144, PIN_INPUT, 0) /* (AD23) RGMII1_RX_CTL */
++			J722S_IOPAD(0x0134, PIN_OUTPUT, 0) /* (AF27) RGMII1_TD0 */
++			J722S_IOPAD(0x0138, PIN_OUTPUT, 0) /* (AE23) RGMII1_TD1 */
++			J722S_IOPAD(0x013c, PIN_OUTPUT, 0) /* (AG25) RGMII1_TD2 */
++			J722S_IOPAD(0x0140, PIN_OUTPUT, 0) /* (AF24) RGMII1_TD3 */
++			J722S_IOPAD(0x0130, PIN_OUTPUT, 0) /* (AG26) RGMII1_TXC */
++			J722S_IOPAD(0x012c, PIN_OUTPUT, 0) /* (AF25) RGMII1_TX_CTL */
++		>;
++	};
++};
++
++&cpsw3g {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&rgmii1_pins_default>;
++};
++
++&cpsw3g_mdio {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&mdio_pins_default>;
++
++	cpsw3g_phy0: ethernet-phy@0 {
++		reg = <0>;
++		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
++		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
++		ti,min-output-impedance;
++	};
++};
++
++&cpsw_port1 {
++	phy-mode = "rgmii-rxid";
++	phy-handle = <&cpsw3g_phy0>;
++};
++
++&cpsw_port2 {
++	status = "disabled";
+ };
+ 
+ &main_gpio1 {
 -- 
-2.40.1
+2.34.1
 
