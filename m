@@ -1,132 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp-fw-52002.amazon.com (smtp-fw-52002.amazon.com [52.119.213.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15DE412F58E;
-	Fri, 16 Feb 2024 15:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6864B5465D;
+	Fri, 16 Feb 2024 15:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708097807; cv=none; b=byQWZGzrDjac3uEN+fiPjj/TtzQEG8YkWCl6NA6ZPa5BY5oMt+Z3C10e3pt+Z7xQuoES6KgkeyRrKfGCzKDaR4r482GWuyn8SWWANnhK+mhS8OCinqsBkKGd90EL2RDunl1810iFdi/KE4bbfMvCCcmeT1O6Dp2W6VAYUs8YwEU=
+	t=1708097879; cv=none; b=i8tDbXqFS9d7Ue8esDNdgXBRUMsf2n45TcqU7oxDGPgqKGnJhyDNS/HKbH8V11LKSsxHCR0o96nCcul2Y2IZqWyNTs63+MH1GZwCG8mDsxIuJUW091TNHxnyu6/QXwAAhPUxiKLEtf0KPd35Ufoo0QSSAYyfn5FtWYUUh56HmFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708097807; c=relaxed/simple;
-	bh=nx6D/LSdFMWECnG/RJwTottdK0TUpvHXvzRCViA52jc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ln2NeveJTLXAdCwwqCQMpJ0C/i5GS9npi5Q0+3tLfNIDJp+MCBIwvCjTuWQlfE+eIXEJZhYPPpSc2KRuJCr5Ttr5lwwPXfzyGVPUZMZiwE7n3Yp4c9WYJTo9DhA8YMJ6wpAMq70/TlGfoTaw7jQdyn5bbvc9VY9cH7tuHqrbIwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Euo5EcFm; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708097879; c=relaxed/simple;
+	bh=y9Q3fD2tnKTk+FgvsD0F3JDBSD+nj+VyEVSlrWNPkAQ=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=d3ZX8atQlO2qbkHGfRnNtc9PQcItouKytwVOQFzMDrxc9gxb77AYMCHX4KoEX/Q6D60bObo8z4HzTV3ejeSx1K1yicdwtjIOTTfd1OO7vymUVl8Pm3ESqdlQroh9mIcjOnQ6pUhtQOAO+n109TOYVP8mJzMh7YuwoX4v4Jyfn3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=gmc3RLnk; arc=none smtp.client-ip=52.119.213.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Euo5EcFm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708097807; x=1739633807;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nx6D/LSdFMWECnG/RJwTottdK0TUpvHXvzRCViA52jc=;
-  b=Euo5EcFmm8Imc9BaOYfsYY2yuklEQ08fwJBlefdRnVOyBZwNE1KnvMun
-   RpV2gXc0Vfkm921ghGP7AKdqfwIIvXeNbI8Z/HtK5LfdI1cftmGd6Bg7c
-   pm7TGpZ1eJzmquxdxhiM/uWsUamYsl6nmzONff1yNcy6kGzUCWyPzMpbB
-   lmNIL1zx2NY+QX5m6hFIaFFI85CrSxw6dpqwVjjaHwrcd7McnWPhWgQHN
-   c/QMGUKkCC6LbsULsQLlK/9z8kFmxdW1VD6s0TSlC4UVJOKRSsWbIa+ri
-   5nuW5Ip6Q3hZcUgLqhQ8AEwCuVnOF4XdA65lcbvO8nrcR5kE7MM4fw/H2
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10986"; a="2361655"
-X-IronPort-AV: E=Sophos;i="6.06,165,1705392000"; 
-   d="scan'208";a="2361655"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 07:36:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10986"; a="826590448"
-X-IronPort-AV: E=Sophos;i="6.06,165,1705392000"; 
-   d="scan'208";a="826590448"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 07:36:41 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rb0GT-000000055Fl-3XR5;
-	Fri, 16 Feb 2024 17:36:37 +0200
-Date: Fri, 16 Feb 2024 17:36:37 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Leonardo Bras <leobras@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Tony Lindgren <tony@atomide.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Shanker Donthineni <sdonthineni@nvidia.com>,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [RFC PATCH v2 2/4] irq/spurious: Account for multiple handles in
- note_interrupt
-Message-ID: <Zc-BBQGauwIEJJXy@smile.fi.intel.com>
-References: <20240216075948.131372-2-leobras@redhat.com>
- <20240216075948.131372-4-leobras@redhat.com>
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="gmc3RLnk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1708097878; x=1739633878;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=0cZh71B0l8IG4uZIp4OIszUKFw5xlrbFMIKov5F9rMU=;
+  b=gmc3RLnki406KhSIyDzlrLXhs60xT4GU23LmmmnOWGxS4T6hfCDSu6pa
+   x4grGGjjJtDqoVUkrGwxLWXfqw3psxUj5uVL5gDHk9fTh44/u4FX1NkDu
+   qMGx5hYqrJ0TOoVk2d6GdC+2ak0L81wJQKP3gYHWKu6nH5sB+s5yKvnPQ
+   8=;
+X-IronPort-AV: E=Sophos;i="6.06,165,1705363200"; 
+   d="scan'208";a="613548127"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 15:37:56 +0000
+Received: from EX19MTAUEC002.ant.amazon.com [10.0.0.204:15970]
+ by smtpin.naws.us-east-1.prod.farcaster.email.amazon.dev [10.0.23.202:2525] with esmtp (Farcaster)
+ id a4a5ea06-05a2-4ef6-b192-ef4a9bf9607e; Fri, 16 Feb 2024 15:37:54 +0000 (UTC)
+X-Farcaster-Flow-ID: a4a5ea06-05a2-4ef6-b192-ef4a9bf9607e
+Received: from EX19D008UEA001.ant.amazon.com (10.252.134.62) by
+ EX19MTAUEC002.ant.amazon.com (10.252.135.253) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 16 Feb 2024 15:37:50 +0000
+Received: from EX19MTAUEC001.ant.amazon.com (10.252.135.222) by
+ EX19D008UEA001.ant.amazon.com (10.252.134.62) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 16 Feb 2024 15:37:50 +0000
+Received: from dev-dsk-ptyadav-1c-37607b33.eu-west-1.amazon.com (10.15.11.255)
+ by mail-relay.amazon.com (10.252.135.200) with Microsoft SMTP Server id
+ 15.2.1118.40 via Frontend Transport; Fri, 16 Feb 2024 15:37:50 +0000
+Received: by dev-dsk-ptyadav-1c-37607b33.eu-west-1.amazon.com (Postfix, from userid 23027615)
+	id BFA7920CE8; Fri, 16 Feb 2024 16:37:49 +0100 (CET)
+From: Pratyush Yadav <ptyadav@amazon.de>
+To: Alexander Graf <graf@amazon.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-mm@kvack.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kexec@lists.infradead.org>,
+	<linux-doc@vger.kernel.org>, <x86@kernel.org>, Eric Biederman
+	<ebiederm@xmission.com>, "H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski
+	<luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt
+	<rostedt@goodmis.org>, Andrew Morton <akpm@linux-foundation.org>, "Mark
+ Rutland" <mark.rutland@arm.com>, Tom Lendacky <thomas.lendacky@amd.com>,
+	Ashish Kalra <ashish.kalra@amd.com>, James Gowans <jgowans@amazon.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, <arnd@arndb.de>,
+	<pbonzini@redhat.com>, <madvenka@linux.microsoft.com>, Anthony Yznaga
+	<anthony.yznaga@oracle.com>, Usama Arif <usama.arif@bytedance.com>, "David
+ Woodhouse" <dwmw@amazon.co.uk>, Benjamin Herrenschmidt
+	<benh@kernel.crashing.org>, Rob Herring <robh+dt@kernel.org>, "Krzysztof
+ Kozlowski" <krzk@kernel.org>
+Subject: Re: [PATCH v3 05/17] kexec: Add KHO support to kexec file loads
+In-Reply-To: <20240117144704.602-6-graf@amazon.com> (Alexander Graf's message
+	of "Wed, 17 Jan 2024 14:46:52 +0000")
+References: <20240117144704.602-1-graf@amazon.com>
+	<20240117144704.602-6-graf@amazon.com>
+Date: Fri, 16 Feb 2024 16:37:49 +0100
+Message-ID: <mafs0le7k8lo2.fsf@amazon.de>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240216075948.131372-4-leobras@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
 
-On Fri, Feb 16, 2024 at 04:59:44AM -0300, Leonardo Bras wrote:
-> Currently note_interrupt() will check threads_handled for changes and use
-> it to mark an IRQ as handled, in order to avoid having a threaded
-> interrupt to falsely trigger unhandled IRQ detection.
-> 
-> This detection can still be falsely triggered if we have many IRQ handled
-> accounted between each check of threads_handled, as those will be counted
-> as a single one in the unhandled IRQ detection.
-> 
-> In order to fix this, subtract from irqs_unhandled the number of IRQs
-> handled since the last check (threads_handled_last - threads_handled).
+Hi,
 
-...
+On Wed, Jan 17 2024, Alexander Graf wrote:
 
-> +static inline int get_handled_diff(struct irq_desc *desc)
-> +{
-> +	unsigned int handled;
-> +	int diff;
-> +
-> +	handled = (unsigned int)atomic_read(&desc->threads_handled);
-> +	handled |= SPURIOUS_DEFERRED;
-> +
-> +	diff = handled - desc->threads_handled_last;
-> +	diff >>= SPURIOUS_DEFERRED_SHIFT;
-> +
-> +	/*
-> +	 * Note: We keep the SPURIOUS_DEFERRED bit set. We are handling the
-> +	 * previous invocation right now. Keep it for the current one, so the
-> +	 * next hardware interrupt will account for it.
-> +	 */
+> Kexec has 2 modes: A user space driven mode and a kernel driven mode.
+> For the kernel driven mode, kernel code determines the physical
+> addresses of all target buffers that the payload gets copied into.
+>
+> With KHO, we can only safely copy payloads into the "scratch area".
+> Teach the kexec file loader about it, so it only allocates for that
+> area. In addition, enlighten it with support to ask the KHO subsystem
+> for its respective payloads to copy into target memory. Also teach the
+> KHO subsystem how to fill the images for file loads.
 
-> +	if (diff != 0)
+This patch causes compilation failures when CONFIG_KEXEC_FILE is not
+enabled. I am not listing them all here since there are a bunch. You can
+try disabling it and see them for yourself.
 
-	if (diff)
+Since Documentation/kho/usage.rst says:
 
-> +		desc->threads_handled_last = handled;
-> +
-> +	return diff;
-> +}
+    It is important that you use the ``-s`` parameter to use the
+    in-kernel kexec file loader, as user space kexec tooling currently
+    has no support for KHO with the user space based file loader.
 
-...
+you can just make CONFIG_KEXEC_FILE a dependency for CONFIG_KEXEC_KHO to
+get rid of these errors.
 
-> +			diff = get_handled_diff(desc);
-> +			if (diff > 0) {
+Or, if you foresee wanting to use the user space tooling to use KHO as
+well then you should refactor your code to work with the option enabled
+and disabled.
 
-diff may not be negative as you always right shift by 1 (or more) bit. Hence
+>
+> Signed-off-by: Alexander Graf <graf@amazon.com>
+[...]
 
-			if (diff)
+--
+Regards,
+Pratyush Yadav
 
-will suffice (also be aligned with the similar check inside the helper) and
-making the helper to return unsigned value will be clearer. Am I correct?
 
--- 
-With Best Regards,
-Andy Shevchenko
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
 
 
