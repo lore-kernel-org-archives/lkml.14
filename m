@@ -1,130 +1,108 @@
-Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C5978B73;
-	Fri, 16 Feb 2024 12:17:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D868154F92;
+	Fri, 16 Feb 2024 12:20:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708085865; cv=none; b=gq0ZblXmSi60zO0kRqYi/Q3gvyCgkcaqlHEaSdYyJCKDimsCLvaX0ijNyMn5SISdrAauxCBHnqVvXNlqITY/uhbLAPzAUQYE3L7Wqt3XceCWzeBtyJcVlyFK7xLLlbPriqgGpntahGsynEdfh3fVO6GC2A6lPIqjnJGXumBwAJ8=
+	t=1708086012; cv=none; b=Yd5tvanxtlqkO1CRlY70yplaq9f/Eh9lI5vi15XlZYrwCFrScagU82raRCJrV4tMiJtlPLkH/w0HMTBzsT8HVLb+1VBLT0Y6ck1lG2LgEr2A6qB3SvWCg2b9fYiop/+T847W7g0QXA1cYWmeyRK6k6xwbuU+qBYDu6gIqbpUSwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708085865; c=relaxed/simple;
-	bh=0v2HTKd1MhqMMkaLSnmMvrLTyR08S+pwHmoDQiG/cXk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jBZomeD+FijDWBWHv5IaBJDKyUfDDch47iT8D+uFb5S6PCpbO+UuPzKYu6GshCftWt/wt+OtYJmS2Wz6D9J7uRPvxQLwNLx51hFWveYqdGAg7jEMisBnaGElvCjat6r0nZX5c121FlYrQ9pvCANzQjkqZu6EmjlblGTrypiSlCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=Vp3gMGfo; arc=none smtp.client-ip=193.104.135.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
+	s=arc-20240116; t=1708086012; c=relaxed/simple;
+	bh=C1oxywUq64oqrzy/WRVZCjsNy7F0xfzOO3QucocTZ+0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=jZXmUuyDsHGpvpXZjK9NZMZGgdYrlgWeIyJW3CvdW4pRH+Ts0iZZlT8KQtJMpIlRyum4xbnEgADDUPY857+eZ/OHOMrrIfgSkEN2ES8UNEWJdQhipjR82DCKJvJo1I5PQiqU6TQsFWUtdFXMwQqAJTxcGJFQ8owJ0uzuLHUo+q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jSIIGRyS; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="Vp3gMGfo"
-Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 9C18F600D4;
-	Fri, 16 Feb 2024 12:17:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
-	s=202008; t=1708085856;
-	bh=0v2HTKd1MhqMMkaLSnmMvrLTyR08S+pwHmoDQiG/cXk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Vp3gMGfomSCIg29dn+sWT9Om0w471AcpLihb+qJuAr0I7SZzRWqIerOqx9L3H9gei
-	 hVi/roCmn990Zrm/8kXgNUCQzXdffhTk7kpf7XBOJYUt0HMd5eypwVVCvFx4ytz93l
-	 sbLWlHqPJmr1TS3MD4GcUfTm+X77Pg8/lrtXHhVp6rNphemQyAsvKeh12wNvv7gDs9
-	 Qghz+F8XCsPpDUqw7sQvL57JIOKW2iRU+2KlwpIZ0rn5RIzfy3tOBhYKQtOPmKi1oa
-	 Um0UxMg0tKGAsjZ3kWGpZt16OyMv3jOieFsH8QKAb3k7tMK+Ij39CLvIOhF6/D1KYn
-	 rXM4KLXEeUFpw==
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	by x201s (Postfix) with ESMTP id 0EAF7200224;
-	Fri, 16 Feb 2024 12:17:28 +0000 (UTC)
-Message-ID: <110f8523-4d61-4a1d-ae18-480d89e3c930@fiberby.net>
-Date: Fri, 16 Feb 2024 12:17:28 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jSIIGRyS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708086011; x=1739622011;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=C1oxywUq64oqrzy/WRVZCjsNy7F0xfzOO3QucocTZ+0=;
+  b=jSIIGRySa26WcdWlqqwayFX2l3jjwPTEMvqMXu2Zjw961YALGIhiwKSQ
+   mdj1BN0lgBHD77YhL/YPsSSg6qlppyLyHb1g/FY8Dpo00QZnFDbun+4tj
+   k88jUWXq+jk9DLhlQ0VxrjQVE5/pXrN+F/W9vGi2rpvkg/N/r9bwoFzqk
+   MqauntKke4235gAafIo8iaFeTXYPx1VcqEOrpmUYhDTmRmwRiwZuIHlpk
+   HwMtLbCDEoBUHOvswVFMLVDiiSjxKGGD1/bKP8d9STdqW3poTwL0P9Q/f
+   xSONop9HtdYXL0Ehi33UTc5oRlVnAQP2SF+TQpkOc2bUFm0VuKU1W1rFK
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10985"; a="2362098"
+X-IronPort-AV: E=Sophos;i="6.06,164,1705392000"; 
+   d="scan'208";a="2362098"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 04:20:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,164,1705392000"; 
+   d="scan'208";a="4118732"
+Received: from eliteleevi.tm.intel.com ([10.237.54.20])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 04:20:08 -0800
+Date: Fri, 16 Feb 2024 14:19:54 +0200 (EET)
+From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+X-X-Sender: kvehmane@eliteleevi.tm.intel.com
+To: Takashi Iwai <tiwai@suse.de>
+cc: Hillf Danton <hdanton@sina.com>, Sven van Ashbrook <svenva@chromium.org>, 
+    Karthikeyan Ramasubramanian <kramasub@chromium.org>, 
+    LKML <linux-kernel@vger.kernel.org>, Brian Geffon <bgeffon@google.com>, 
+    linux-sound@vger.kernel.org, Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
+    "Arava, Jairaj" <jairaj.arava@intel.com>
+Subject: Re: [PATCH v1] ALSA: memalloc: Fix indefinite hang in non-iommu
+ case
+In-Reply-To: <87frxsiueo.wl-tiwai@suse.de>
+Message-ID: <alpine.DEB.2.22.394.2402161246520.14041@eliteleevi.tm.intel.com>
+References: <20240214170720.v1.1.Ic3de2566a7fd3de8501b2f18afa9f94eadb2df0a@changeid> <20240215034528.240-1-hdanton@sina.com> <87h6iaf7di.wl-tiwai@suse.de> <CAG-rBigFG-U-sKY77CvzghGzs+1Xm3YXzBF6N4ti0+h6UdAb8Q@mail.gmail.com> <875xypk6d6.wl-tiwai@suse.de>
+ <20240216043426.1218-1-hdanton@sina.com> <87plwwiz6z.wl-tiwai@suse.de> <87frxsiueo.wl-tiwai@suse.de>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7 02160 Espoo
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 0/3] make skip_sw actually skip software
-To: Marcelo Ricardo Leitner <mleitner@redhat.com>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang
- <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
- Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, llu@fiberby.dk
-References: <20240215160458.1727237-1-ast@fiberby.net>
- <CALnP8ZZYftDYCVFQ18a8+GN8-n_YsWkXOWeCVAoVZFfjLezK2Q@mail.gmail.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Asbj=C3=B8rn_Sloth_T=C3=B8nnesen?= <ast@fiberby.net>
-In-Reply-To: <CALnP8ZZYftDYCVFQ18a8+GN8-n_YsWkXOWeCVAoVZFfjLezK2Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Marcelo,
+Hi,
 
-On 2/15/24 18:00, Marcelo Ricardo Leitner wrote:
-> On Thu, Feb 15, 2024 at 04:04:41PM +0000, Asbjørn Sloth Tønnesen wrote:
-> ...
->> Since we use TC flower offload for the hottest
->> prefixes, and leave the long tail to Linux / the CPU.
->> we therefore need both the hardware and software
->> datapath to perform well.
->>
->> I found that skip_sw rules, are quite expensive
->> in the kernel datapath, sice they must be evaluated
->> and matched upon, before the kernel checks the
->> skip_sw flag.
->>
->> This patchset optimizes the case where all rules
->> are skip_sw.
+On Fri, 16 Feb 2024, Takashi Iwai wrote:
+
+> On Fri, 16 Feb 2024 09:35:32 +0100, Takashi Iwai wrote:
+> > The fact that we have to drop __GFP_RETRY_MAYFAIL indicates that the
+> > handling there doesn't suffice -- at least for the audio operation.
 > 
-> The talk is interesting. Yet, I don't get how it is set up.
-> How do you use a dedicated block for skip_sw, and then have a
-> catch-all on sw again please?
+> Reconsidering on this again, I wonder keeping __GFP_RETRY_MAYFAIL
+> makes sense.  We did have __GFP_NORETRY for avoiding OOM-killer.
+> But it's been over ages, and the memory allocation core became smart
+> enough.
+> 
+> The side-effect of __GFP_RETRY_MAYFAIL is that the page reclaim and
+> compaction happens even for high-order allocations, and that must be
 
-Bird installs the DFZ Internet routing table into the main kernel table
-for the software datapath.
+for the original problem that led to "ALSA: memalloc: use 
+__GFP_RETRY_MAYFAIL for DMA mem allocs", reclaim for low-order case
+would be enough. I.e. the case was:
 
-Bird also installs a subset of routing table into an aux. kernel table.
+> OTOH, a slight concern with the drop of __GFP_RETRY_MAYFAIL is whether
+> allowing OOM-killer for low order allocations is acceptable or not.
+> 
+> There are two patterns of calling allocators:
+[..]
+> 3. SNDRV_DMA_TYPE_NONCONTIG for large size:
+>    this is called often, once per stream open, since the driver
+>    doesn't keep the buffer.
 
-flower-route then picks up the routes from the aux. kernel table, and
-installs them as TC skip_sw filters.
+So with SOF we have additional case where we do an allocation for the DSP 
+firmware (snd_dma_alloc_pages(SNDRV_DMA_TYPE_DEV_SG, ...)) and this is 
+called at system resume. With s/__GPF_RETRY_MAYFAIL/__GFP_NORETRY/, these 
+allocations failed (on a iommu enabled Chromebook) at system resume in a 
+case where system was not really running out of memory (reclaim was 
+possible). A failed allocation means there's no audio in the system after 
+resume, so we want to try harder.
 
-On these machines we don't have any non-skip_sw TC filters.
+But yeah, I think the proposed handling for (3) category would work. If 
+needed, we can further specialize the DSP firmware case with some hint 
+to snd_dma_alloc_pages().
 
-Since 2021, we have statically offloaded all inbound traffic, since
-nexthop for our IP space is always the switch next to it, which does
-interior L3 routing. Thereby we could offload ~50% of the packets.
-
-I have put an example of the static script here:
-https://files.fiberby.net/ast/2024/tc_skip_sw/mlx5_static_offload.sh
-
-And `tc filter show dev enp5s0f0np0 ingress` after running the script:
-https://files.fiberby.net/ast/2024/tc_skip_sw/mlx_offload_demo_tc_dump.txt
-
-
-> I'm missing which traffic is being matched against the sw datapath. In
-> theory, you have all the heavy duty filters offloaded, so the sw
-> datapath should be seeing only a few packets, right?
-
-We are an residential ISP, our traffic is therefore residential Internet
-traffic, we run the BGP routers as a router on a stick, the filters therefore
-see both inbound and outbound traffic.
-
-~50% of packets are inbound traffic, our own prefixes are therefore the
-hottest prefixes. Most streaming traffic is handled internally, and is
-therefore not seen on our core routers. We regularly have 5%-10% of all
-outbound traffic going towards the same prefix, and have 50% of outbound
-traffic distributed across just a few prefixes.
-
-We currently only offload our own prefixes, and a select few other known
-high-traffic prefixes.
-
-The goal is to offload the majority of the trafic, but it is still early
-days for flower-route, and I need to implement some smarter chain layout
-first and dynamic filter placement based on hardware counters.
-
-Even when I get flower-route to offload almost all traffic, there will still
-be a long tail of prefixes not in hardware, so the kernel still needs
-to not be pulled down by the offloaded filters.
-
--- 
-Best regards
-Asbjørn Sloth Tønnesen
-Network Engineer
-Fiberby - AS42541
+Br, Kai
