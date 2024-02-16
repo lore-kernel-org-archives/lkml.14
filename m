@@ -1,83 +1,86 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5282F43687
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 16:44:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154AB12FF9D
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 16:44:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708101848; cv=none; b=Jv1d1D/tDud1bonAuL+RiH66CcZ/yLheXY7GcLdkvIAJQ4msHYUV3wycE0I4r3hZU4IT30On2WcuQ5RjrQm030IayK9KWSMV+fRwYhbzc3N1I5MX9M0kq4cqWFFnGdWHHxGg8rXqYJ15X02nlgr4zsaVcUc2FnOpCiZEvSPrirk=
+	t=1708101878; cv=none; b=pFeWplrsIpzvjP9eOnMxYd6hDqrsE+EOqjmONKIiG3KKh3gWqV0Pna9W5g/1en7ScaZtIccuTTKL7SWwwWArutxygMY9g5kcn7nztW1K1DVBKJ9RLCEq6FACQV3w4K4EMKNLqN+w7oi0CiCZyfH8uysycnr2656XkARYPjKblz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708101848; c=relaxed/simple;
-	bh=DNofHlxt60HhajpC6kgIcM2jyLwxGD85DFjpF5ALyCk=;
+	s=arc-20240116; t=1708101878; c=relaxed/simple;
+	bh=MsdgmZ5Drh3S5d2siye8gmy/YW6Lz3bGzj8pyYi4rB4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GblDj2WzxA0DJPkdlgoxlCH1ffaYnTfAuyu/0VNCXe+pGSvqQyZ+Z8NOu0+CP9zwcNY0POawZXAKsBbWSrwt8QhNXeV1/HwYzWRk/zAD7fDe3wEqh/NUEeTTHbGNmtxY+dWM22DPjnwJlKAkxx6+X50VgYqDzzHp016NOt+4gPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=oXxYf1GP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RPF5q9EE; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=oXxYf1GP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RPF5q9EE; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=cFgYoSvB6fm5kDZCj9GzQ0IXgd/4Ed6kFbdcbdtdnnhMtIMKk6GYkkH5ksLFTVK+bUDtuAB/A/d++j/0ZmmrDs9iqurn2lbFaol+AGhrNCSEZQib6ZDjTv1Sag/EafWHl6OuRePH2RVzNz6uJi5euYKT4MzvJZlPERko8cII8kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=cEjpeyFS; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="oXxYf1GP";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RPF5q9EE";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="oXxYf1GP";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RPF5q9EE"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 5E9731FB73;
-	Fri, 16 Feb 2024 16:44:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1708101843; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eXJu1lti/YL9b9eLBL5o0g1fuOA+z3Z1pve6u3c4mhQ=;
-	b=oXxYf1GPFWXOcgqcHA2ePzg3k8lbTe5hjXx7KDjENBXhJ9IOAOBTKxP0EQ3/bP9kiX08RB
-	9FQk652sf8JXla23ZARcq32SRIXxMkEKc2OQrTBrfeWNoHeEbJAePYu7OlHMCpE4u/Xc2/
-	7SoYKKFkwFfTTEovCasaVjo1CXzA3Ok=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1708101843;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eXJu1lti/YL9b9eLBL5o0g1fuOA+z3Z1pve6u3c4mhQ=;
-	b=RPF5q9EEsaz/WG47s0EwJdUF0GQIGvUBDsYv42hxwOdVr/W2jEkFKDERCD5cUHa3ywLC7y
-	lvRNIfmWHVdNxTBQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1708101843; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eXJu1lti/YL9b9eLBL5o0g1fuOA+z3Z1pve6u3c4mhQ=;
-	b=oXxYf1GPFWXOcgqcHA2ePzg3k8lbTe5hjXx7KDjENBXhJ9IOAOBTKxP0EQ3/bP9kiX08RB
-	9FQk652sf8JXla23ZARcq32SRIXxMkEKc2OQrTBrfeWNoHeEbJAePYu7OlHMCpE4u/Xc2/
-	7SoYKKFkwFfTTEovCasaVjo1CXzA3Ok=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1708101843;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eXJu1lti/YL9b9eLBL5o0g1fuOA+z3Z1pve6u3c4mhQ=;
-	b=RPF5q9EEsaz/WG47s0EwJdUF0GQIGvUBDsYv42hxwOdVr/W2jEkFKDERCD5cUHa3ywLC7y
-	lvRNIfmWHVdNxTBQ==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 4B3C813343;
-	Fri, 16 Feb 2024 16:44:03 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id 4lLoENOQz2XgVgAAn2gu4w
-	(envelope-from <dwagner@suse.de>); Fri, 16 Feb 2024 16:44:03 +0000
-Date: Fri, 16 Feb 2024 17:44:02 +0100
-From: Daniel Wagner <dwagner@suse.de>
-To: Christoph Hellwig <hch@lst.de>
-Cc: James Smart <james.smart@broadcom.com>, 
-	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>, Hannes Reinecke <hare@suse.de>, 
-	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v0 1/6] nvme-fabrics: introduce connect_sync option
-Message-ID: <jfjchxptpfcpolpy2etiigflqvfcp2nzk53iwb6rx2zsdfd6by@h6ezfayjfqai>
-References: <20240216084526.14133-1-dwagner@suse.de>
- <20240216084526.14133-2-dwagner@suse.de>
- <20240216094909.GA19961@lst.de>
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="cEjpeyFS"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-50e4e36c09cso780368e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 08:44:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1708101874; x=1708706674; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=76wOtguCiFQWboTMzhB4hnS3UP+WhC0vzMoeMQ3V+XQ=;
+        b=cEjpeyFS+iXFzXFVEXLxHGu3SMD0HruK3eZJfGXx8XRyHJcrhfwT1BaVpEuzJZ9vn1
+         DWM9PpqdTlFAkl8iHBhr86P9gruDzI8NiRm2UYaztRvd/198+Goavo0teBCD8kThxJus
+         kCz912iN3ui0QbJrJ8BsGkUL855cuiPBYIyIE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708101874; x=1708706674;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=76wOtguCiFQWboTMzhB4hnS3UP+WhC0vzMoeMQ3V+XQ=;
+        b=OZkQtTaiVn6BZ3y7jBUEH82s1neCDOsBfIOtfPgq9Y9pNhy4bxznRIU+xQbZIvN/Lq
+         J80d1tS2Tni0n6tJDnHAEpvkitdLOCaj47HDlTAEJzd8R5h/5W0TPWByzg9r8F0EdUik
+         Tn7Y16LQM6BpDsF6nMYrDYTRsKMF0r/jgVlS6mMjkSEy/sLyQ3kJYTF6u7m0FkGrb706
+         Kp5qWhXjMVVbUyl664XIbe0rp/pPBvucmYIchHYm8Lu3iQnX4b2QUb/JLqDx81k8wBqe
+         Hc3QG/Q78ExRsfyHLLQ/FpZ/pD+Mf5e6mviEIcy8jMXQ0OKHBQA3QNxfWNkwp71zVIXV
+         u+HA==
+X-Forwarded-Encrypted: i=1; AJvYcCUGsPfxJh1gtm5i6liYdwwe6RY20vaBkehNYlpUSNCZVP5k9HexATZBCw+Fwf4XG+Bb4Yheosg/Zs99YzdZqPPNsjve8/fRs12pryW4
+X-Gm-Message-State: AOJu0YwA2x5CUy1V8hXlQRhT0zv7U2wOXsTmzGvqE/UKXrp+EsayStV2
+	zrugCNBNMAMMwRqs4GOj2ePQ1Aze7BGY9IX9u2IubesQg7HnvAMUFX6d7e1ZUbY=
+X-Google-Smtp-Source: AGHT+IEuloFhVFC2o5Kh7YQza+RJRv4NnWpfLQKn44MYcnzGH2WMyJG+wXU911TQAAApZBNb+DUWPw==
+X-Received: by 2002:a19:9156:0:b0:511:5b35:d11c with SMTP id y22-20020a199156000000b005115b35d11cmr3508815lfj.2.1708101873965;
+        Fri, 16 Feb 2024 08:44:33 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id v17-20020a05600c445100b00411fdf85d44sm2910563wmn.37.2024.02.16.08.44.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Feb 2024 08:44:33 -0800 (PST)
+Date: Fri, 16 Feb 2024 17:44:31 +0100
+From: Daniel Vetter <daniel@ffwll.ch>
+To: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	amd-gfx@lists.freedesktop.org,
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+	"open list:ACPI" <linux-acpi@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Melissa Wen <mwen@igalia.com>, Dave Airlie <airlied@redhat.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Subject: Re: [PATCH v4 1/3] drm: Add drm_get_acpi_edid() helper
+Message-ID: <Zc-Q73e7Z3ErVC67@phenom.ffwll.local>
+Mail-Followup-To: Jani Nikula <jani.nikula@linux.intel.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	amd-gfx@lists.freedesktop.org,
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+	"open list:ACPI" <linux-acpi@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Melissa Wen <mwen@igalia.com>, Dave Airlie <airlied@redhat.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+References: <20240207224429.104625-1-mario.limonciello@amd.com>
+ <20240207224429.104625-2-mario.limonciello@amd.com>
+ <87y1bvb7ns.fsf@intel.com>
+ <ZcYHaXNJ8IqbLIra@phenom.ffwll.local>
+ <9fa0c1ad-dd7d-4350-aad1-4723450850bd@amd.com>
+ <ZcZ1tdXqH90RabvV@phenom.ffwll.local>
+ <350ee747-c1bf-4513-aad3-f43b11fcdf0f@amd.com>
+ <874jedapmq.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,58 +89,290 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240216094909.GA19961@lst.de>
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=oXxYf1GP;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=RPF5q9EE
-X-Spamd-Result: default: False [-2.81 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.de:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_SEVEN(0.00)[7];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 5E9731FB73
-X-Spam-Level: 
-X-Spam-Score: -2.81
-X-Spam-Flag: NO
+In-Reply-To: <874jedapmq.fsf@intel.com>
+X-Operating-System: Linux phenom 6.6.11-amd64 
 
-On Fri, Feb 16, 2024 at 10:49:09AM +0100, Christoph Hellwig wrote:
-> On Fri, Feb 16, 2024 at 09:45:21AM +0100, Daniel Wagner wrote:
-> > The TCP and RDMA transport are doing a synchronous connect, meaning the
-> > syscal returns with the final result, that is. it either failed or
-> > succeeded.
-> > 
-> > This isn't the case for FC. This transport just setups and triggers
-> > the connect and returns without waiting on the result.
+On Mon, Feb 12, 2024 at 01:27:57PM +0200, Jani Nikula wrote:
+> On Sat, 10 Feb 2024, Mario Limonciello <mario.limonciello@amd.com> wrote:
+> > On 2/9/2024 12:57, Daniel Vetter wrote:
+> >> On Fri, Feb 09, 2024 at 09:34:13AM -0600, Mario Limonciello wrote:
+> >>> On 2/9/2024 05:07, Daniel Vetter wrote:
+> >>>> On Thu, Feb 08, 2024 at 11:57:11AM +0200, Jani Nikula wrote:
+> >>>>> On Wed, 07 Feb 2024, Mario Limonciello <mario.limonciello@amd.com> wrote:
+> >>>>>> Some manufacturers have intentionally put an EDID that differs from
+> >>>>>> the EDID on the internal panel on laptops.  Drivers can call this
+> >>>>>> helper to attempt to fetch the EDID from the BIOS's ACPI _DDC method.
+> >>>>>>
+> >>>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> >>>>>> ---
+> >>>>>>    drivers/gpu/drm/Kconfig    |  5 +++
+> >>>>>>    drivers/gpu/drm/drm_edid.c | 77 ++++++++++++++++++++++++++++++++++++++
+> >>>>>>    include/drm/drm_edid.h     |  1 +
+> >>>>>>    3 files changed, 83 insertions(+)
+> >>>>>>
+> >>>>>> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+> >>>>>> index 6ec33d36f3a4..ec2bb71e8b36 100644
+> >>>>>> --- a/drivers/gpu/drm/Kconfig
+> >>>>>> +++ b/drivers/gpu/drm/Kconfig
+> >>>>>> @@ -21,6 +21,11 @@ menuconfig DRM
+> >>>>>>    	select KCMP
+> >>>>>>    	select VIDEO_CMDLINE
+> >>>>>>    	select VIDEO_NOMODESET
+> >>>>>> +	select ACPI_VIDEO if ACPI
+> >>>>>> +	select BACKLIGHT_CLASS_DEVICE if ACPI
+> >>>>>> +	select INPUT if ACPI
+> >>>>>> +	select X86_PLATFORM_DEVICES if ACPI && X86
+> >>>>>> +	select ACPI_WMI if ACPI && X86
+> >>>>>
+> >>>>> I think I'll defer to drm maintainers on whether this is okay or
+> >>>>> something to be avoided.
+> >>>>
+> >>>> Uh yeah this is a bit much, and select just messes with everything. Just
+> >>>> #ifdef this in the code with a dummy alternative, if users configure their
+> >>>> kernel without acpi but need it, they get to keep all the pieces.
+> >>>>
+> >>>> Alternatively make a DRM_ACPI_HELPERS symbol, but imo a Kconfig for every
+> >>>> function is also not great. And just using #ifdef in the code also works
+> >>>> for CONFIG_OF, which is exactly the same thing for platforms using dt to
+> >>>> describe hw.
+> >>>>
+> >>>> Also I'd expect ACPI code to already provide dummy functions if ACPI is
+> >>>> provided, so you probably dont even need all that much #ifdef in the code.
+> >>>>
+> >>>> What we defo cant do is select platform/hw stuff just because you enable
+> >>>> CONFIG_DRM.
+> >>>> -Sima
+> >>>
+> >>> The problem was with linking.  I'll experiment with #ifdef for the next
+> >>> version.
+> >> 
+> >> Ah yes, if e.g. acpi is a module but drm is built-in then it will compile,
+> >> but not link.
+> >> 
+> >> You need
+> >> 
+> >> 	depends on (ACPI || ACPI=n)
+> >> 
+> >> for this. Looks a bit funny but works for all combinations.
+> >
+> > Nope; this fails at link time with this combination:
+> >
+> > CONFIG_ACPI=y
+> > CONFIG_ACPI_VIDEO=m
+> > CONFIG_DRM=y
+> >
+> > ld: drivers/gpu/drm/drm_edid.o: in function `drm_do_probe_acpi_edid':
+> > drm_edid.c:(.text+0xd34): undefined reference to `acpi_video_get_edid'
+> > make[5]: *** [scripts/Makefile.vmlinux:37: vmlinux] Error 1
+> >
+> > So the logical solution is to try
+> > 	depends on (ACPI_VIDEO || ACPI_VIDEO=n)
+> >
+> > But that leads me back to the rabbit hole of why I had the selects moved 
+> > to drm instead of drivers in the first place:
+> >
+> > drivers/gpu/drm/Kconfig:8:error: recursive dependency detected!
+> > drivers/gpu/drm/Kconfig:8:      symbol DRM depends on ACPI_VIDEO
+> > drivers/acpi/Kconfig:213:       symbol ACPI_VIDEO depends on 
+> > BACKLIGHT_CLASS_DEVICE
+> > drivers/video/backlight/Kconfig:136:    symbol BACKLIGHT_CLASS_DEVICE is 
+> > selected by DRM_RADEON
+> > drivers/gpu/drm/radeon/Kconfig:3:       symbol DRM_RADEON depends on DRM
 > 
-> That's really weird and unexpected.  James, can you explain the reason
-> behind this?
-
-James answered this point on my attempt to make this synchronous:
-
-https://lore.kernel.org/linux-nvme/0605ac36-16d5-2026-d3c6-62d346db6dfb@gmail.com/
-
-> > Introduce a flag
-> > to allow user space to control the behavior, wait or don't wait.
+> Generally speaking the root cause is using "select" instead of "depends
+> on" in the first place. The excessive selects are just band-aid over
+> that root cause. And if you try to convert some but not all the selects
+> to depends ons, you'll get recursive dependencies.
 > 
-> I'd expect this to be the default, but I'll wait to hear more about
-> the rationale.  If we keep the async default the option looks sensible.
+> Quoting Documentation/kbuild/kconfig-language.rst:
+> 
+>   Note:
+> 	select should be used with care. select will force
+> 	a symbol to a value without visiting the dependencies.
+> 	By abusing select you are able to select a symbol FOO even
+> 	if FOO depends on BAR that is not set.
+> 	In general use select only for non-visible symbols
+> 	(no prompts anywhere) and for symbols with no dependencies.
+> 	That will limit the usefulness but on the other hand avoid
+> 	the illegal configurations all over.
+> 
+> Yeah, we ignore that, and get to keep all the pieces.
 
-Ideally, we could agree on behavior which is the same for all
-transports.
+Yeah we need radically fewer select and replace them with depends. The
+idea is that people just magically get the correct kernel config because
+even menuconfig sucks at showing you why you cannot enable a driver.
+
+But it's really not a good solution to that issue, and we need to stop
+suffering. Reality is that enabling a correct config for complex drivers
+like we have in drm is a bit a black belt art :-/
+-Sima
+
+> 
+> 
+> BR,
+> Jani.
+> 
+> 
+> >
+> >
+> >> 
+> >> Since this gets mess it might be useful to have a DRM_ACPI_HELPERS Kconfig
+> >> that controls all this.
+> >
+> > How about all those selects that I had in this patch moved to 
+> > DRM_ACPI_HELPERS and keep the patch that drops from all the drivers then?
+> >
+> >> -Sima
+> >> 
+> >>>
+> >>>>
+> >>>>>
+> >>>>>
+> >>>>>>    	help
+> >>>>>>    	  Kernel-level support for the Direct Rendering Infrastructure (DRI)
+> >>>>>>    	  introduced in XFree86 4.0. If you say Y here, you need to select
+> >>>>>> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+> >>>>>> index 923c4423151c..c649b4f9fd8e 100644
+> >>>>>> --- a/drivers/gpu/drm/drm_edid.c
+> >>>>>> +++ b/drivers/gpu/drm/drm_edid.c
+> >>>>>> @@ -28,6 +28,7 @@
+> >>>>>>     * DEALINGS IN THE SOFTWARE.
+> >>>>>>     */
+> >>>>>> +#include <acpi/video.h>
+> >>>>>>    #include <linux/bitfield.h>
+> >>>>>>    #include <linux/cec.h>
+> >>>>>>    #include <linux/hdmi.h>
+> >>>>>> @@ -2188,6 +2189,49 @@ drm_do_probe_ddc_edid(void *data, u8 *buf, unsigned int block, size_t len)
+> >>>>>>    	return ret == xfers ? 0 : -1;
+> >>>>>>    }
+> >>>>>> +/**
+> >>>>>> + * drm_do_probe_acpi_edid() - get EDID information via ACPI _DDC
+> >>>>>> + * @data: struct drm_device
+> >>>>>> + * @buf: EDID data buffer to be filled
+> >>>>>> + * @block: 128 byte EDID block to start fetching from
+> >>>>>> + * @len: EDID data buffer length to fetch
+> >>>>>> + *
+> >>>>>> + * Try to fetch EDID information by calling acpi_video_get_edid() function.
+> >>>>>> + *
+> >>>>>> + * Return: 0 on success or error code on failure.
+> >>>>>> + */
+> >>>>>> +static int
+> >>>>>> +drm_do_probe_acpi_edid(void *data, u8 *buf, unsigned int block, size_t len)
+> >>>>>> +{
+> >>>>>> +	struct drm_device *ddev = data;
+> >>>>>> +	struct acpi_device *acpidev = ACPI_COMPANION(ddev->dev);
+> >>>>>> +	unsigned char start = block * EDID_LENGTH;
+> >>>>>> +	void *edid;
+> >>>>>> +	int r;
+> >>>>>> +
+> >>>>>> +	if (!acpidev)
+> >>>>>> +		return -ENODEV;
+> >>>>>> +
+> >>>>>> +	/* fetch the entire edid from BIOS */
+> >>>>>> +	r = acpi_video_get_edid(acpidev, ACPI_VIDEO_DISPLAY_LCD, -1, &edid);
+> >>>>>> +	if (r < 0) {
+> >>>>>> +		DRM_DEBUG_KMS("Failed to get EDID from ACPI: %d\n", r);
+> >>>>>> +		return -EINVAL;
+> >>>>>> +	}
+> >>>>>> +	if (len > r || start > r || start + len > r) {
+> >>>>>> +		r = -EINVAL;
+> >>>>>> +		goto cleanup;
+> >>>>>> +	}
+> >>>>>> +
+> >>>>>> +	memcpy(buf, edid + start, len);
+> >>>>>> +	r = 0;
+> >>>>>> +
+> >>>>>> +cleanup:
+> >>>>>> +	kfree(edid);
+> >>>>>> +
+> >>>>>> +	return r;
+> >>>>>> +}
+> >>>>>> +
+> >>>>>>    static void connector_bad_edid(struct drm_connector *connector,
+> >>>>>>    			       const struct edid *edid, int num_blocks)
+> >>>>>>    {
+> >>>>>> @@ -2643,6 +2687,39 @@ struct edid *drm_get_edid(struct drm_connector *connector,
+> >>>>>>    }
+> >>>>>>    EXPORT_SYMBOL(drm_get_edid);
+> >>>>>> +/**
+> >>>>>> + * drm_get_acpi_edid - get EDID data, if available
+> >>>>>
+> >>>>> I'd prefer all the new EDID API to be named drm_edid_*. Makes a clean
+> >>>>> break from the old API, and is more consistent.
+> >>>>>
+> >>>>> So perhaps drm_edid_read_acpi() to be in line with all the other struct
+> >>>>> drm_edid based EDID reading functions.
+> >>>>>
+> >>>>>> + * @connector: connector we're probing
+> >>>>>> + *
+> >>>>>> + * Use the BIOS to attempt to grab EDID data if possible.
+> >>>>>> + *
+> >>>>>> + * The returned pointer must be freed using drm_edid_free().
+> >>>>>> + *
+> >>>>>> + * Return: Pointer to valid EDID or NULL if we couldn't find any.
+> >>>>>> + */
+> >>>>>> +const struct drm_edid *drm_get_acpi_edid(struct drm_connector *connector)
+> >>>>>> +{
+> >>>>>> +	const struct drm_edid *drm_edid;
+> >>>>>> +
+> >>>>>> +	switch (connector->connector_type) {
+> >>>>>> +	case DRM_MODE_CONNECTOR_LVDS:
+> >>>>>> +	case DRM_MODE_CONNECTOR_eDP:
+> >>>>>> +		break;
+> >>>>>> +	default:
+> >>>>>> +		return NULL;
+> >>>>>> +	}
+> >>>>>> +
+> >>>>>> +	if (connector->force == DRM_FORCE_OFF)
+> >>>>>> +		return NULL;
+> >>>>>> +
+> >>>>>> +	drm_edid = drm_edid_read_custom(connector, drm_do_probe_acpi_edid, connector->dev);
+> >>>>>> +
+> >>>>>> +	/* Note: Do *not* call connector updates here. */
+> >>>>>> +
+> >>>>>> +	return drm_edid;
+> >>>>>> +}
+> >>>>>> +EXPORT_SYMBOL(drm_get_acpi_edid);
+> >>>>>> +
+> >>>>>>    /**
+> >>>>>>     * drm_edid_read_custom - Read EDID data using given EDID block read function
+> >>>>>>     * @connector: Connector to use
+> >>>>>> diff --git a/include/drm/drm_edid.h b/include/drm/drm_edid.h
+> >>>>>> index 7923bc00dc7a..ca41be289fc6 100644
+> >>>>>> --- a/include/drm/drm_edid.h
+> >>>>>> +++ b/include/drm/drm_edid.h
+> >>>>>> @@ -410,6 +410,7 @@ struct edid *drm_do_get_edid(struct drm_connector *connector,
+> >>>>>>    	void *data);
+> >>>>>>    struct edid *drm_get_edid(struct drm_connector *connector,
+> >>>>>>    			  struct i2c_adapter *adapter);
+> >>>>>> +const struct drm_edid *drm_get_acpi_edid(struct drm_connector *connector);
+> >>>>>
+> >>>>> There's a comment
+> >>>>>
+> >>>>> /* Interface based on struct drm_edid */
+> >>>>>
+> >>>>> towards the end of the file, gathering all the new API under it.
+> >>>>>
+> >>>>> Other than that, LGTM,
+> >>>>>
+> >>>>> BR,
+> >>>>> Jani.
+> >>>>>
+> >>>>>>    u32 drm_edid_get_panel_id(struct i2c_adapter *adapter);
+> >>>>>>    struct edid *drm_get_edid_switcheroo(struct drm_connector *connector,
+> >>>>>>    				     struct i2c_adapter *adapter);
+> >>>>>
+> >>>>> -- 
+> >>>>> Jani Nikula, Intel
+> >>>>
+> >>>
+> >> 
+> >
+> 
+> -- 
+> Jani Nikula, Intel
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
