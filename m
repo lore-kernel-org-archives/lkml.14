@@ -1,320 +1,208 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91ACB1C28B;
-	Fri, 16 Feb 2024 09:50:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0B51CA9F;
+	Fri, 16 Feb 2024 09:50:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708077017; cv=none; b=fepY1ff2BalL7g7O077CYs4ynjxHHkjHVkvntxzTqL8dAHq0GhK1AT+dsRlE+jhDlNVb+sctfLSZoV7JfJgdIcGADlUP2u/DSSJbIYuo9eY4V5CKD7ePmp5PWkf8qjWPW9fEJH8XzsBCRS2yOx0SVobxT76FqiNAXtiCqbutAIs=
+	t=1708077023; cv=none; b=ktVxuNHZgN5fpvVo+aMHu7sb2ZjU27cCbcfmViWxzc3P/rorsAoZSh8jpt/Jbt3tt+UPZVhWH29lcHgVT4qXYqvx4q82ucJ7Wmx1zJoFfI+80e83EnZIHFDuTfIBMDT6cX/rTbD6KlBR3mqEM0EelnztYBbWDMPAgiT8R16w5ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708077017; c=relaxed/simple;
-	bh=XKCprlTz0347plqDoKqAZwoHqGS/Pp12Co1OcFZtcqQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tFTZgqgxuIfxoE2X7Lh6k3gj62A7RlsZ4J9PApGYoZLvoldFQz2grDpN/e/ckv+ZdzFXidNPxYdA82+1Y/lF8VO6vpQ/wZYh0HifygDFr0PwTX/IcrmTPO+Oz1LiOqsZ+e3NMGCGwN595zpnPgYE6R4kpqsxxDJzKngk0Dgbt7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HufZPPzj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708077023; c=relaxed/simple;
+	bh=1mTdNO4V1eFXbnPb2R5VZhnZvQQf805QVG+mCRBHEdg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tvYGBgTGrE3x6WCLVRu8JBl2r2MlyrABchA2u8HQX/TuwjXC6LxaEh7vish6hX21HN5SU7DN9+bQE2t+Y/1xAhnS2Q+4n36bNw0+oMQV85SykLxcwqr6CUvnd9aaKhqksS9jy2Eo9NV9V3CNg0l7hTVYNGbDips01tpK4Fwg8i0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=BVDs9+k9; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HufZPPzj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7B7BC43390;
-	Fri, 16 Feb 2024 09:50:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708077017;
-	bh=XKCprlTz0347plqDoKqAZwoHqGS/Pp12Co1OcFZtcqQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HufZPPzjo9osR7IHp88TOsioOOI2iusPmafShVqE64mnkt1Nx1Wylvu4QNqbkpe2o
-	 04iZlz1zfVI1WMl6LVPJQSiZbr6n9lDTNFd9+Lh97VSBKnzO43jYqdqHu2q9lx+EyK
-	 SKqW1CNpu1zhK9SrQbb2EA6+9J6YsdQUXMCBenOZdw3DXqTmucqYJODiS5M8q69H5v
-	 DSuO4I6jQ87on7nezZo5HZyyzJv0LNfgrpMfxDasFKMMLCOax+BuDoBVKRrBSCPOkn
-	 YRiw1xS4lIiQ+6swcM0UmlGNEkmJc422G1ZvmitB5SOmm30uyZWtSJXZtSg4JQsBBm
-	 Do77vMXvomvgA==
-Date: Fri, 16 Feb 2024 10:50:10 +0100
-From: Benjamin Tissoires <bentiss@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-input@vger.kernel.org, linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH RFC bpf-next v2 02/10] bpf/helpers: introduce sleepable
- timers
-Message-ID: <rhdu4st5tfabsdqs27ewhvdlwblhj2re4o56iz3fq3bsuokxxe@gtuqdjffj2hn>
-References: <20240214-hid-bpf-sleepable-v2-0-5756b054724d@kernel.org>
- <20240214-hid-bpf-sleepable-v2-2-5756b054724d@kernel.org>
- <mth43jfjhwtatwfo3unefrze62opht3yklleblslyz2adc6p5p@wm3miaqhhtkt>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="BVDs9+k9"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41G4qEC7014621;
+	Fri, 16 Feb 2024 10:50:08 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	selector1; bh=wXNfPpiAtMSvOZBWcNaTSHdLVlAlOkosNoeNMWjNKJc=; b=BV
+	Ds9+k9U0AGGVvR6N+eYzSsEFAtWb7HbUPITItNZOjlExTLWPfZoSSxjZ5KRjlx4X
+	ZsKPJ/JgoJo6p3MxoyxYP/tarCqc9L21ZYsWHdjfMmstvFqPdTlzr6hBm4MxdeaO
+	gFuKdr8b7IYBj3tvNAodkFiGCwmvwh+XGYMGeScoi1lh/stwL3SBeKf0eWqMFIVe
+	zSW+tb8aI1UrrLAsHP0uBaqHCaVWweS6qrPt/0nlwbQ3vIYhksS8OpzwJCEdDxMb
+	H9DqqAYZA3yeIgAQUG3qJBfrTKuac6ONTn71qkSxeOUaPR0FECFFDIqvUk77+nus
+	DlRBcS2lz/PhavIpUk/g==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wa124gy80-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 Feb 2024 10:50:08 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id D4F8A4002D;
+	Fri, 16 Feb 2024 10:50:04 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 38326237D78;
+	Fri, 16 Feb 2024 10:49:22 +0100 (CET)
+Received: from localhost (10.201.20.114) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 16 Feb
+ 2024 10:49:21 +0100
+From: Antonio Borneo <antonio.borneo@foss.st.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre
+ Torgue <alexandre.torgue@foss.st.com>,
+        Catalin Marinas
+	<catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+CC: Antonio Borneo <antonio.borneo@foss.st.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH 05/12] irqchip/stm32-exti: Skip secure events
+Date: Fri, 16 Feb 2024 10:47:50 +0100
+Message-ID: <20240216094758.916722-6-antonio.borneo@foss.st.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240216094758.916722-1-antonio.borneo@foss.st.com>
+References: <20240216094758.916722-1-antonio.borneo@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <mth43jfjhwtatwfo3unefrze62opht3yklleblslyz2adc6p5p@wm3miaqhhtkt>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SAFCAS1NODE2.st.com (10.75.90.13) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-16_08,2024-02-14_01,2023-05-22_02
 
-On Feb 15 2024, Benjamin Tissoires wrote:
-> On Feb 14 2024, Benjamin Tissoires wrote:
-> > They are implemented as a kfunc, which means a little bit of tweaks in
-> > the verifier.
-> > 
-> > Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
-> > 
-> > ---
-> > 
-> > changes in v2 (compared to the one attaches to v1 0/9):
-> > - make use of a kfunc
-> > - add a (non-used) BPF_F_TIMER_SLEEPABLE
-> > - the callback is *not* called, it makes the kernel crashes
-> > ---
-> >  include/linux/bpf_verifier.h |   2 +
-> >  include/uapi/linux/bpf.h     |  12 +++++
-> >  kernel/bpf/helpers.c         | 105 ++++++++++++++++++++++++++++++++++++++++---
-> >  kernel/bpf/verifier.c        |  72 ++++++++++++++++++++++++++---
-> >  4 files changed, 180 insertions(+), 11 deletions(-)
-> > 
-> > diff --git a/include/linux/bpf_verifier.h b/include/linux/bpf_verifier.h
-> > index 84365e6dd85d..789ef5fec547 100644
-> > --- a/include/linux/bpf_verifier.h
-> > +++ b/include/linux/bpf_verifier.h
-> > @@ -426,6 +426,7 @@ struct bpf_verifier_state {
-> >  	 * while they are still in use.
-> >  	 */
-> >  	bool used_as_loop_entry;
-> > +	bool in_sleepable;
-> >  
-> >  	/* first and last insn idx of this verifier state */
-> >  	u32 first_insn_idx;
-> > @@ -626,6 +627,7 @@ struct bpf_subprog_info {
-> >  	bool is_async_cb: 1;
-> >  	bool is_exception_cb: 1;
-> >  	bool args_cached: 1;
-> > +	bool is_sleepable: 1;
-> >  
-> >  	u8 arg_cnt;
-> >  	struct bpf_subprog_arg_info args[MAX_BPF_FUNC_REG_ARGS];
-> > diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> > index d96708380e52..0838597028a9 100644
-> > --- a/include/uapi/linux/bpf.h
-> > +++ b/include/uapi/linux/bpf.h
-> > @@ -7427,6 +7427,18 @@ enum {
-> >  	BPF_F_TIMER_CPU_PIN = (1ULL << 1),
-> >  };
-> >  
-> > +/* Extra flags to control bpf_timer_init() behaviour, in addition to CLOCK_*.
-> > + *     - BPF_F_TIMER_SLEEPABLE: Timer will run in a workqueue in a sleepable
-> > + *       context.
-> > + */
-> > +enum {
-> > +	/* CLOCK_* are using bits 0 to 3 */
-> > +	BPF_F_TIMER_SLEEPABLE = (1ULL << 4),
-> > +	__MAX_BPF_F_TIMER_INIT,
-> > +};
-> > +
-> > +#define MAX_BPF_F_TIMER_INIT __MAX_BPF_F_TIMER_INIT
-> > +
-> >  /* BPF numbers iterator state */
-> >  struct bpf_iter_num {
-> >  	/* opaque iterator state; having __u64 here allows to preserve correct
-> > diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-> > index 4db1c658254c..2dbc09ce841a 100644
-> > --- a/kernel/bpf/helpers.c
-> > +++ b/kernel/bpf/helpers.c
-> > @@ -1097,9 +1097,11 @@ const struct bpf_func_proto bpf_snprintf_proto = {
-> >   */
-> >  struct bpf_hrtimer {
-> >  	struct hrtimer timer;
-> > +	struct work_struct work;
-> >  	struct bpf_map *map;
-> >  	struct bpf_prog *prog;
-> >  	void __rcu *callback_fn;
-> > +	void __rcu *sleepable_cb_fn;
-> >  	void *value;
-> >  };
-> >  
-> > @@ -1113,18 +1115,59 @@ struct bpf_timer_kern {
-> >  	struct bpf_spin_lock lock;
-> >  } __attribute__((aligned(8)));
-> >  
-> > +static void bpf_timer_work_cb(struct work_struct *work)
-> > +{
-> > +	struct bpf_hrtimer *t = container_of(work, struct bpf_hrtimer, work);
-> > +	struct bpf_map *map = t->map;
-> > +	void *value = t->value;
-> > +	bpf_callback_t callback_fn;
-> > +	void *key;
-> > +	u32 idx;
-> > +
-> > +	BTF_TYPE_EMIT(struct bpf_timer);
-> > +
-> > +	rcu_read_lock();
-> > +	callback_fn = rcu_dereference(t->sleepable_cb_fn);
-> > +	rcu_read_unlock();
-> > +	if (!callback_fn)
-> > +		return;
-> > +
-> > +	/* FIXME: do we need any locking? */
-> > +	if (map->map_type == BPF_MAP_TYPE_ARRAY) {
-> > +		struct bpf_array *array = container_of(map, struct bpf_array, map);
-> > +
-> > +		/* compute the key */
-> > +		idx = ((char *)value - array->value) / array->elem_size;
-> > +		key = &idx;
-> > +	} else { /* hash or lru */
-> > +		key = value - round_up(map->key_size, 8);
-> > +	}
-> > +
-> > +	/* FIXME: this crashes the system with
-> > +	 * BUG: kernel NULL pointer dereference, address: 000000000000000b
-> > +	 */
-> > +	/* callback_fn((u64)(long)map, (u64)(long)key, (u64)(long)value, 0, 0); */
-> 
-> I've found an interesting side effect here.
-> 
-> If I uncomment the line above, I get the following dumpstack:
-> 
-> [    5.375257] BUG: kernel NULL pointer dereference, address: 000000000000000b
-> [    5.376587] #PF: supervisor instruction fetch in kernel mode
-> [    5.376932] #PF: error_code(0x0010) - not-present page
-> [    5.377249] PGD 1016e6067 P4D 1016e6067 PUD 1016e5067 PMD 0 
-> [    5.377602] Oops: 0010 [#1] PREEMPT SMP NOPTI
-> [    5.377876] CPU: 0 PID: 10 Comm: kworker/0:1 Not tainted 6.8.0-rc2-gd2c1e1837606-dirty #285
-> [    5.378378] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-1.fc39 04/01/2014
-> [    5.378913] Workqueue: events bpf_timer_work_cb
-> [    5.379197] RIP: 0010:0xb
-> [    5.379369] Code: Unable to access opcode bytes at 0xffffffffffffffe1.
-> [    5.379768] RSP: 0018:ffffa5300005be10 EFLAGS: 00010246
-> [    5.380088] RAX: 0000000000000068 RBX: 000000000000000b RCX: 0000000000000000
-> [    5.380523] RDX: ffffa530012a5ff0 RSI: ffffa530012a5fe8 RDI: ffff915ec2bad000
-> [    5.380947] RBP: ffff915ec2bad000 R08: 0000000000000000 R09: 0000000000000001
-> [    5.381368] R10: 0000000000000000 R11: ffffffff9166f820 R12: ffffa530012a5ff0
-> [    5.381793] R13: ffffa530012a5fe8 R14: ffff915ec0073005 R15: ffffffff900aea8a
-> [    5.382213] FS:  0000000000000000(0000) GS:ffff915efbc00000(0000) knlGS:0000000000000000
-> [    5.382691] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    5.383036] CR2: ffffffffffffffe1 CR3: 000000010761e003 CR4: 0000000000770ef0
-> [    5.383460] PKRU: 55555554
-> [    5.383643] Call Trace:
-> [    5.383831]  <TASK>
-> [    5.383994]  ? __die+0x23/0x70
-> [    5.384228]  ? page_fault_oops+0x181/0x4a0
-> [    5.384541]  ? exc_page_fault+0x67/0x1a0
-> [    5.384840]  ? asm_exc_page_fault+0x26/0x30
-> [    5.385154]  ? process_one_work+0x16a/0x4b0
-> [    5.385467]  ? bpf_timer_work_cb+0xfc/0x240
-> [    5.385789]  ? process_one_work+0x1d4/0x4b0
-> [    5.386101]  ? worker_thread+0x1d5/0x3c0
-> [    5.386393]  ? __pfx_worker_thread+0x10/0x10
-> [    5.386724]  ? kthread+0xf5/0x130
-> [    5.386974]  ? __pfx_kthread+0x10/0x10
-> [    5.387255]  ? ret_from_fork+0x31/0x50
-> [    5.387537]  ? __pfx_kthread+0x10/0x10
-> [    5.387820]  ? ret_from_fork_asm+0x1b/0x30
-> [    5.388127]  </TASK>
-> 
-> And it looks like the callback is properly called, but the fault comes
-> after:
-> 
-> (gdb) list *(process_one_work+0x16a)
-> 0xffffffff810aea8a is in process_one_work (kernel/workqueue.c:2606).
-> 2601		 * disabled.
-> 2602		 */
-> 2603		set_work_pool_and_clear_pending(work, pool->id);
-> 2604	
-> 2605		pwq->stats[PWQ_STAT_STARTED]++;
-> 2606		raw_spin_unlock_irq(&pool->lock);
-> 2607	
-> 2608		lock_map_acquire(&pwq->wq->lockdep_map);
-> 2609		lock_map_acquire(&lockdep_map);
-> 2610		/*
-> 
-> And there is no real reason for the spinlock to not be set unless there
-> is a memroy corruption.
-> 
-> And if in my program I call bpf_timer_set_callback() before bpf_timer_set_sleepable_cb()
-> like:
-> 	bpf_timer_set_callback(timer, timer_cb1);
-> 	bpf_timer_set_sleepable_cb(timer, timer_cb1);
-> 
-> I do not see the corruption in the memory.
-> 
-> So it seems that when BPF calls the helper, the callback_fn is set in a
-> mode that it is not polluting the memory, while when calling the function
-> pointer from a kfunc, something is not properly set and there is a
-> memory corruption.
-> 
-> Does that rings any bell?
+Secure OS can reserve some EXTI event, marking them as "secure" by
+setting the corresponding bit in register SECCFGR (aka TZENR).
+These events cannot be used by Linux.
 
-Sigh... I found the issue, it was in my code: basically push_callback_call()
-was never called because I called it from the helper validation call,
-not the kfunc one :(
+Read the list of reserved events and check it during irq domain
+allocation.
 
+Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
 ---
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index cb1266566b69..58082df468e5 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -501,6 +501,7 @@ static bool is_dynptr_ref_function(enum bpf_func_id func_id)
- }
+ drivers/irqchip/irq-stm32-exti.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
+index de18cddf6b88..85a40e07fbc3 100644
+--- a/drivers/irqchip/irq-stm32-exti.c
++++ b/drivers/irqchip/irq-stm32-exti.c
+@@ -36,6 +36,7 @@ struct stm32_exti_bank {
+ 	u32 rpr_ofst;
+ 	u32 fpr_ofst;
+ 	u32 trg_ofst;
++	u32 seccfgr_ofst;
+ };
  
- static bool is_sync_callback_calling_kfunc(u32 btf_id);
-+static bool is_callback_calling_kfunc(u32 btf_id);
- static bool is_bpf_throw_kfunc(struct bpf_insn *insn);
+ #define UNDEF_REG ~0
+@@ -54,10 +55,12 @@ struct stm32_exti_chip_data {
+ 	u32 mask_cache;
+ 	u32 rtsr_cache;
+ 	u32 ftsr_cache;
++	u32 event_reserved;
+ };
  
- static bool is_bpf_timer_set_sleepable_cb_kfunc(u32 btf_id);
-@@ -9452,7 +9453,7 @@ static int push_callback_call(struct bpf_verifier_env *env, struct bpf_insn *ins
- 	 */
- 	env->subprog_info[subprog].is_cb = true;
- 	if (bpf_pseudo_kfunc_call(insn) &&
--	    !is_sync_callback_calling_kfunc(insn->imm)) {
-+	    !is_callback_calling_kfunc(insn->imm)) {
- 		verbose(env, "verifier bug: kfunc %s#%d not marked as callback-calling\n",
- 			func_id_name(insn->imm), insn->imm);
- 		return -EFAULT;
-@@ -10440,10 +10441,6 @@ static int check_helper_call(struct bpf_verifier_env *env, struct bpf_insn *insn
- 		break;
- 	}
+ struct stm32_exti_host_data {
+ 	void __iomem *base;
++	struct device *dev;
+ 	struct stm32_exti_chip_data *chips_data;
+ 	const struct stm32_exti_drv_data *drv_data;
+ 	struct hwspinlock *hwlock;
+@@ -73,6 +76,7 @@ static const struct stm32_exti_bank stm32f4xx_exti_b1 = {
+ 	.rpr_ofst	= 0x14,
+ 	.fpr_ofst	= UNDEF_REG,
+ 	.trg_ofst	= UNDEF_REG,
++	.seccfgr_ofst	= UNDEF_REG,
+ };
  
--	if (is_bpf_timer_set_sleepable_cb_kfunc(func_id))
--		err = push_callback_call(env, insn, insn_idx, meta.subprogno,
--					 set_timer_callback_state);
--
- 	if (err)
- 		return err;
+ static const struct stm32_exti_bank *stm32f4xx_exti_banks[] = {
+@@ -93,6 +97,7 @@ static const struct stm32_exti_bank stm32h7xx_exti_b1 = {
+ 	.rpr_ofst	= 0x88,
+ 	.fpr_ofst	= UNDEF_REG,
+ 	.trg_ofst	= UNDEF_REG,
++	.seccfgr_ofst	= UNDEF_REG,
+ };
  
-@@ -11370,6 +11367,12 @@ static bool is_bpf_timer_set_sleepable_cb_kfunc(u32 btf_id)
- 	return btf_id == special_kfunc_list[KF_bpf_timer_set_sleepable_cb];
- }
+ static const struct stm32_exti_bank stm32h7xx_exti_b2 = {
+@@ -104,6 +109,7 @@ static const struct stm32_exti_bank stm32h7xx_exti_b2 = {
+ 	.rpr_ofst	= 0x98,
+ 	.fpr_ofst	= UNDEF_REG,
+ 	.trg_ofst	= UNDEF_REG,
++	.seccfgr_ofst	= UNDEF_REG,
+ };
  
-+static bool is_callback_calling_kfunc(u32 btf_id)
-+{
-+	return is_sync_callback_calling_kfunc(btf_id) ||
-+	       is_bpf_timer_set_sleepable_cb_kfunc(btf_id);
-+}
-+
- static bool is_rbtree_lock_required_kfunc(u32 btf_id)
- {
- 	return is_bpf_rbtree_api_kfunc(btf_id);
-@@ -12140,6 +12143,16 @@ static int check_kfunc_call(struct bpf_verifier_env *env, struct bpf_insn *insn,
- 		}
- 	}
+ static const struct stm32_exti_bank stm32h7xx_exti_b3 = {
+@@ -115,6 +121,7 @@ static const struct stm32_exti_bank stm32h7xx_exti_b3 = {
+ 	.rpr_ofst	= 0xA8,
+ 	.fpr_ofst	= UNDEF_REG,
+ 	.trg_ofst	= UNDEF_REG,
++	.seccfgr_ofst	= UNDEF_REG,
+ };
  
-+	if (is_bpf_timer_set_sleepable_cb_kfunc(meta.func_id)) {
-+		err = push_callback_call(env, insn, insn_idx, meta.subprogno,
-+					 set_timer_callback_state);
-+		if (err) {
-+			verbose(env, "kfunc %s#%d failed callback verification\n",
-+				func_name, meta.func_id);
-+			return err;
-+		}
+ static const struct stm32_exti_bank *stm32h7xx_exti_banks[] = {
+@@ -137,6 +144,7 @@ static const struct stm32_exti_bank stm32mp1_exti_b1 = {
+ 	.rpr_ofst	= 0x0C,
+ 	.fpr_ofst	= 0x10,
+ 	.trg_ofst	= 0x3EC,
++	.seccfgr_ofst	= 0x14,
+ };
+ 
+ static const struct stm32_exti_bank stm32mp1_exti_b2 = {
+@@ -148,6 +156,7 @@ static const struct stm32_exti_bank stm32mp1_exti_b2 = {
+ 	.rpr_ofst	= 0x2C,
+ 	.fpr_ofst	= 0x30,
+ 	.trg_ofst	= 0x3E8,
++	.seccfgr_ofst	= 0x34,
+ };
+ 
+ static const struct stm32_exti_bank stm32mp1_exti_b3 = {
+@@ -159,6 +168,7 @@ static const struct stm32_exti_bank stm32mp1_exti_b3 = {
+ 	.rpr_ofst	= 0x4C,
+ 	.fpr_ofst	= 0x50,
+ 	.trg_ofst	= 0x3E4,
++	.seccfgr_ofst	= 0x54,
+ };
+ 
+ static const struct stm32_exti_bank *stm32mp1_exti_banks[] = {
+@@ -707,6 +717,12 @@ static int stm32_exti_h_domain_alloc(struct irq_domain *dm,
+ 	bank  = hwirq / IRQS_PER_BANK;
+ 	chip_data = &host_data->chips_data[bank];
+ 
++	/* Check if event is reserved (Secure) */
++	if (chip_data->event_reserved & BIT(hwirq % IRQS_PER_BANK)) {
++		dev_err(host_data->dev, "event %lu is reserved, secure\n", hwirq);
++		return -EPERM;
 +	}
 +
- 	rcu_lock = is_kfunc_bpf_rcu_read_lock(&meta);
- 	rcu_unlock = is_kfunc_bpf_rcu_read_unlock(&meta);
+ 	event_trg = readl_relaxed(host_data->base + chip_data->reg_bank->trg_ofst);
+ 	chip = (event_trg & BIT(hwirq % IRQS_PER_BANK)) ?
+ 	       &stm32_exti_h_chip : &stm32_exti_h_chip_direct;
+@@ -806,6 +822,10 @@ stm32_exti_chip_data *stm32_exti_chip_init(struct stm32_exti_host_data *h_data,
+ 	if (stm32_bank->emr_ofst != UNDEF_REG)
+ 		writel_relaxed(0, base + stm32_bank->emr_ofst);
  
----
++	/* reserve Secure events */
++	if (stm32_bank->seccfgr_ofst != UNDEF_REG)
++		chip_data->event_reserved = readl_relaxed(base + stm32_bank->seccfgr_ofst);
++
+ 	pr_info("%pOF: bank%d\n", node, bank_idx);
+ 
+ 	return chip_data;
+@@ -911,6 +931,7 @@ static int stm32_exti_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	dev_set_drvdata(dev, host_data);
++	host_data->dev = dev;
+ 
+ 	/* check for optional hwspinlock which may be not available yet */
+ 	ret = of_hwspin_lock_get_id(np, 0);
+-- 
+2.34.1
 
-[...]
-
-Cheers,
-Benjamin
