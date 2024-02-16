@@ -1,38 +1,59 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3AF159B5F;
-	Fri, 16 Feb 2024 13:34:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72EAD129A6F
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 13:37:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708090482; cv=none; b=D4rhVYsK9qVKty2e352AJZBruf15keVpUgr6tx2iLMXa7/VPmv6xDt1KU6FRv08JTB1inbjbU2LCfmJh7QwW3hnMw2PcX9evlYC2CcAspffgxOVmqUuoxcTef4LHkad1Iy+lioYV9YXzdWLc+otjkC5SodcdxM1KoaxnzNIDZpg=
+	t=1708090646; cv=none; b=T1LhtkxaFm4AN785hxKM4crvl/8hJX059IF7bXiIso422qkgZ70C93O/6/FfoRMf9HkTIggL/OVfbIDzWllYZd9KdgC2WloQz+uEG6iatGKg/eYEE5zl0WBEhAVaE27WZk/GL8e32UWGs2s/bwv9ba2daFbXd/fKQh7XKJizW3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708090482; c=relaxed/simple;
-	bh=S6GH26MOvmbaGoEuB+DlOWQVrSfvfmK+ZAJKIJVu1tc=;
+	s=arc-20240116; t=1708090646; c=relaxed/simple;
+	bh=tBzEnpo6V6IoCla74hvhX5lK3lSzxG36T+6/aFqAzK0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bxn68tmJHjVYR8PzOWze4AH8t1bF/u26r3ViJlPcWFellHE0Ll8Hmv/iZYVwF6lefB3Dc5lUXCCjismhR5T+cm+MHOzf837Zg2yCf0OTJTYVP1z2qcfapuOvft96E2a48gpgQDMjRl4+/LILpfRYaT26hTzC921Y+43qx1zOOqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=bhik6z12; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	 In-Reply-To:Content-Type; b=tBQIjkDWJfDb58mqQqlB9tP5jb41iARtrgeudZLTj8wmIN7NZjD8stLPAi9U7BxWJVo1BJ78G4ApgUAhgOkA50cTiHZyCpjc9Mp3425cOe/eUDqGRfsIN/706pFvOM6aaDbj/NmXPDdbz5OF4MTgqmO6dVFAZxeWVSJhitP1LrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oK0GGcr+; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="bhik6z12"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1708090402; x=1708695202; i=deller@gmx.de;
-	bh=S6GH26MOvmbaGoEuB+DlOWQVrSfvfmK+ZAJKIJVu1tc=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=bhik6z12dhMQh+ymMFYThdU/H5OON3gs4pbF/rk5WIpDBAw8hP6VMvOw3lLRVWfQ
-	 B5sUJR8/osD7lgL7hfe1Iqsb6l1KzJ/wV/5FlHrkZP0h0kah2NBxl1PLcfs5EIgYk
-	 SbNJTPOBxIllw9fjkD3GU1jA1q1vEsi62jAFw1ZEv6BdIFIuKmydX24BbRDLoMLw/
-	 1pG2BkThewn9nIvk+KKXClvUPUsOffR5O/UzBqckIQkUrTfRX2jeXWPVnH/M3fqHQ
-	 IkIvONMhW06korD6AvDC+HIfu7rA7c4ILSOczcDX7c27NaAv1ipRHWHIwl7GPvAFz
-	 rCtPU6lVFY0afI7iTA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.20.55] ([94.134.148.214]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MmlXK-1r91dc2nf4-00jrDx; Fri, 16
- Feb 2024 14:33:22 +0100
-Message-ID: <1e889ddc-e5ea-41c8-a316-61bae12dfa9c@gmx.de>
-Date: Fri, 16 Feb 2024 14:48:04 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oK0GGcr+"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5620595f743so2628968a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 05:37:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708090643; x=1708695443; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=e7mWMJkXIbMvIROqSSXDtNCbW+ZmdhTlFHhBB0TaXxE=;
+        b=oK0GGcr+00a4YBQ4s1ZbfeMtjS67Pqr9ckiM1AGc7SxRMGyAiuueFPGuJdjOUvT+9g
+         o4IH36XRpN8s8UG0G1Mf8FLiaO03w2G1hYZi3wwGVd+oc9wnnrJBD08PncWFsz+HnsHH
+         i4Z7S/7zvCv/hwxMh/Mj7mL/0KDzFM/thM++VHd9Ow4oWd4G+LYLHpCOAqnZl5Ac4VXx
+         MhRQgPrQ/jkJB9Aj/Bjjk3cheoDcSMxZl3NonBD1fdqQfSTMJZ4Pxi3Ck1ayY9jpOxYr
+         TRC1niilKRi3dWpG7ig/GSjYE4QaqGwhmucRt+0T95i2h0L6vpmUleIOa18+AAHhf0Bf
+         WVfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708090643; x=1708695443;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=e7mWMJkXIbMvIROqSSXDtNCbW+ZmdhTlFHhBB0TaXxE=;
+        b=Gqp3j0EMy24geemepdKPGoccT/6fsXkc7TvXsf/zkjL7kgZ9O5CdlpJZf1rV9rFxk9
+         OKnVUopKx9+kwnYA3wKp7uZ9yqMc9vZCh8mHIIFvB8WHi8NaB5u/wGNC6BE4f+B3mcD+
+         +B5a01AzMjY0R31sF92vmMwBYH/7vpbttP3550aEA15378dj0oUIfbUKo0D0uUo3vrhG
+         vbja9fy0Y9zwVKfhCL1n+XiHGObc2ptpxN6ff20YHrCOzzLmdSVPrU3d/VhasoTNzLEo
+         gWGk6vb1DLag3JlUl3Aoh0sFtco0d48XGEzjk/gb0NSgmgHFBLocfG5eUaj+3rGRSnUD
+         nIlA==
+X-Forwarded-Encrypted: i=1; AJvYcCX/iMsr+PhhQaqEGlNLQ+1RSAhNR+60WECoQstjt8tSzm2U0BtzHIn9X0WhvMUld0HL//pogUTa1bWnVHELODXy6OYmahdr+L5vq1I/
+X-Gm-Message-State: AOJu0YxPU77+q8CR8sL+YsfroBkssuZlTg0HdCzHiMxhvjEnMlUsBcgA
+	4IDPeACB8h38QGsr0LN7kklOLxEjybG1YwmtpUnFCP9AI8l6clIH/EVqUzSXRuo=
+X-Google-Smtp-Source: AGHT+IFwsnhqo5fuZJ8FqRpHtnHU94q/U/1l85xYwdqcS08wSTd5C15gHUgVfO6Fv6+Xgy0dq7WHEQ==
+X-Received: by 2002:a05:6402:50c:b0:563:c54e:fb with SMTP id m12-20020a056402050c00b00563c54e00fbmr160941edv.15.1708090642646;
+        Fri, 16 Feb 2024 05:37:22 -0800 (PST)
+Received: from [192.168.192.135] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
+        by smtp.gmail.com with ESMTPSA id y2-20020a50eb02000000b00561a443a393sm1495698edp.92.2024.02.16.05.37.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 Feb 2024 05:37:21 -0800 (PST)
+Message-ID: <b11ec88e-5408-4bcc-9d93-942ad81eccde@linaro.org>
+Date: Fri, 16 Feb 2024 14:37:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,184 +61,84 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] parisc/unaligned: Rewrite 64-bit inline assembly of
- emulate_ldd()
+Subject: Re: [PATCH v4 2/2] phy: qcom: edp: Add set_mode op for configuring
+ eDP/DP submode
 Content-Language: en-US
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240216073315.3801833-1-linux@roeck-us.net>
-From: Helge Deller <deller@gmx.de>
-Autocrypt: addr=deller@gmx.de; keydata=
- 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
-In-Reply-To: <20240216073315.3801833-1-linux@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:mtogNv3jHbkEpeD6Y3ODqTtw7RlDpefnjzIS5HdIZYXNtECJfO+
- +3zrdf/ms5ZHl8BWKGOmVdvIFtThgbOjjRQ+4CDIwCHmyHzdpy2PKapdaMJwMR/xMtRoQ7W
- y5cPUnwBnAMtrOCRJEjcrIQ+pjPgTwTbbIJLC/KNPKJzh6cYg0hbmG1ExI6VqpTWJDWg7ez
- BW5jYJO3Lqs2ly6H0DJtA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:QDJGDsXe/mI=;hn24JNmWWYk+OZ58glZ5NduYEZV
- 435BlSb4VLP8SJeVX+smWnNWbuwVsJudf1XF1YC3w3trbF+xjdOSRIy0j/igDXFW498tVLr84
- DHvnuhGJIeklObFeBSugEC3JOGhnK030XOnXnmaplWOpGY80tZunUFWe14tCasag97NNKPMxr
- /dmTOpLVt+McIMaL8aa0GXxeAofi9NfOfhf4jEkoBmfQ233pWX+xEfmSFtIVeAAVmNqSbRSQS
- 9u9vMvLxgYsfot99DjpChzFk/lUtw+GvnoSQH9MSVgs6isgeNZrEGlhGO2rWZ2SvzJ4hBzWJK
- zpBzYEVitKGg/KTyHPp7g0iIJ16r9xycYe/3FZjWOLE6Tf1XcFpvpekMWOm11tKSPTbeDxOMS
- wL/Gv1DlD2JFaPJON2C0/1ZF+kPGMdVJubrQ9bhancQTmHI1PYkJCM610Qg8NuUnAEq926Wfp
- +7VHBIUqfAzgJ36MD/EaenD46VFn9peou3sy3frd2E7j9rdjZi+Mr5n9BqboED0TRLcPmrzlX
- 0FfiTbJb2XOjV73wR7y1BRr6FNh9b7fDXX3weryTYXJ0bzWQfUGwkX+W0tacr1FuE33/6V/nK
- AmSWly4/TyeARpGJQkg63jij/prLftz+eeSwOh7Uhe6Q1OQJGAIFcuAKYcFjPAXDvwKIrOoQJ
- S21mulwz4UfaE/hUdOr9nMR2A63yyDkFiKdDdCjnc6CIiAjfoOC8hZFT+h7FxWUcWcx8jtFzA
- aTJgBGJyCXTYqhdsOtglNFJskYjG6SOGhG0gfeSt6HCnGcFL2kwIIzb7/n7IjdlhFFMm80TJY
- 2nRtHzGTcyuZsd2iQ/dbQ2+7zTXg+Xsi1C9euQhLNSDpc=
+To: Abel Vesa <abel.vesa@linaro.org>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Johan Hovold <johan@kernel.org>
+Cc: linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+References: <20240216-x1e80100-phy-edp-compatible-refactor-v4-0-c07fd1a52186@linaro.org>
+ <20240216-x1e80100-phy-edp-compatible-refactor-v4-2-c07fd1a52186@linaro.org>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240216-x1e80100-phy-edp-compatible-refactor-v4-2-c07fd1a52186@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2/16/24 08:33, Guenter Roeck wrote:
-> Convert to use real temp variables instead of clobbering processor
-> registers.
-
-Thanks for doing this.
-It was on my todo list since quite some time :-)
-
-> This aligns the 64-bit inline assembly code with the 32-bit
-> assembly code which was rewritten with commit 427c1073a2a1
-> ("parisc/unaligned: Rewrite 32-bit inline assembly of emulate_ldd()").
->
-> While at it, fix comment in 32-bit rewrite code. Temporary variables are
-> now used for both 32-bit and 64-bit code, so move their declarations
-> to the function header.
->
-> No functional change intended.
->
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+On 16.02.2024 14:02, Abel Vesa wrote:
+> Future platforms should not use different compatibles to differentiate
+> between eDP and DP mode. Instead, they should use a single compatible as
+> the IP block is the same. It will be the job of the controller to set the
+> submode of the PHY accordingly.
+> 
+> The existing platforms will remain with separate compatibles for each
+> mode.
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 > ---
-> Implemented while analyzing a bug. I am not really sure of it is worth
-> the effort, but I figured that I might as well submit it.
->
->   arch/parisc/kernel/unaligned.c | 29 +++++++++++++----------------
->   1 file changed, 13 insertions(+), 16 deletions(-)
->
-> diff --git a/arch/parisc/kernel/unaligned.c b/arch/parisc/kernel/unalign=
-ed.c
-> index c520e551a165..622c7b549fb8 100644
-> --- a/arch/parisc/kernel/unaligned.c
-> +++ b/arch/parisc/kernel/unaligned.c
-> @@ -169,7 +169,8 @@ static int emulate_ldw(struct pt_regs *regs, int tor=
-eg, int flop)
->   static int emulate_ldd(struct pt_regs *regs, int toreg, int flop)
->   {
->   	unsigned long saddr =3D regs->ior;
-> -	__u64 val =3D 0;
-> +	unsigned long shift;
-> +	__u64 val =3D 0, temp1;
 
-temp1 is ok to be "long".
+[...]
 
->   	ASM_EXCEPTIONTABLE_VAR(ret);
->
->   	DPRINTF("load " RFMT ":" RFMT " to r%d for 8 bytes\n",
-> @@ -180,25 +181,22 @@ static int emulate_ldd(struct pt_regs *regs, int t=
-oreg, int flop)
->
->   #ifdef CONFIG_64BIT
->   	__asm__ __volatile__  (
-> -"	depd,z	%3,60,3,%%r19\n"		/* r19=3D(ofs&7)*8 */
-> -"	mtsp	%4, %%sr1\n"
-> -"	depd	%%r0,63,3,%3\n"
-> -"1:	ldd	0(%%sr1,%3),%0\n"
-> -"2:	ldd	8(%%sr1,%3),%%r20\n"
-> -"	subi	64,%%r19,%%r19\n"
-> -"	mtsar	%%r19\n"
-> -"	shrpd	%0,%%r20,%%sar,%0\n"
-> +"	depd,z	%4,60,3,%2\n"		/* shift=3D(ofs&7)*8 */
-> +"	mtsp	%5, %%sr1\n"
-> +"	depd	%%r0,63,3,%4\n"
-> +"1:	ldd	0(%%sr1,%4),%0\n"
-> +"2:	ldd	8(%%sr1,%4),%3\n"
-> +"	subi	64,%2,%2\n"
-> +"	mtsar	%2\n"
-> +"	shrpd	%0,%3,%%sar,%0\n"
->   "3:	\n"
->   	ASM_EXCEPTIONTABLE_ENTRY_EFAULT(1b, 3b, "%1")
->   	ASM_EXCEPTIONTABLE_ENTRY_EFAULT(2b, 3b, "%1")
-> -	: "=3Dr" (val), "+r" (ret)
-> -	: "0" (val), "r" (saddr), "r" (regs->isr)
-> -	: "r19", "r20" );
-> +	: "+r" (val), "+r" (ret), "=3D&r" (shift), "=3D&r" (temp1)
-> +	: "r" (saddr), "r" (regs->isr) );
+>  
+> +static int qcom_edp_phy_set_mode(struct phy *phy, enum phy_mode mode, int submode)
+> +{
+> +	struct qcom_edp *edp = phy_get_drvdata(phy);
+> +
+> +	if (mode != PHY_MODE_DP)
+> +		return -EINVAL;
+> +
+> +	edp->is_edp = submode == PHY_SUBMODE_EDP ? true : false;
 
-addr is actually being modified.
-That's why I moved it into the output registers and
-shuffled shift and temp1 one backwards, so that the registers
-are now in the same ordering as on the 32-bit path.
+it's bool-converted even without the ternary operator
 
-I've pushed the modified patch here:
-https://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git/co=
-mmit/?h=3Dfor-next&id=3Da6ea53ce77e9dd6e388d673bdd4d80741f97b914
-
-Please double-check!
-
-Thanks!
-Helge
-
-
->   #else
-> -    {
-> -	unsigned long shift, temp1;
->   	__asm__ __volatile__  (
-> -"	zdep	%2,29,2,%3\n"		/* r19=3D(ofs&3)*8 */
-> +"	zdep	%2,29,2,%3\n"		/* shift=3D(ofs&3)*8 */
->   "	mtsp	%5, %%sr1\n"
->   "	dep	%%r0,31,2,%2\n"
->   "1:	ldw	0(%%sr1,%2),%0\n"
-> @@ -214,7 +212,6 @@ static int emulate_ldd(struct pt_regs *regs, int tor=
-eg, int flop)
->   	ASM_EXCEPTIONTABLE_ENTRY_EFAULT(3b, 4b, "%1")
->   	: "+r" (val), "+r" (ret), "+r" (saddr), "=3D&r" (shift), "=3D&r" (tem=
-p1)
->   	: "r" (regs->isr) );
-> -    }
->   #endif
->
->   	DPRINTF("val =3D 0x%llx\n", val);
-
+Konrad
