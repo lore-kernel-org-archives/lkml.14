@@ -1,145 +1,165 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238907869A;
-	Fri, 16 Feb 2024 13:13:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDAD91292D6;
+	Fri, 16 Feb 2024 13:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708089185; cv=none; b=swTmDZRqkcV9o07xxGUadmobnCA24BpKVtDbbDauhlBFq7U7x0v51GofwPMF+N+bt8LTjTUiteJl+zVLdejHKLc4HZ4i2qABNrGlI94WelVlRWDrA3+Gx6T3GYAe6rT2wnhrGa2wLHzvAdmZ43oZ64fIE98zjDqvoTNQHMvcBPs=
+	t=1708089212; cv=none; b=LpkBacXCcODohmJ6/uqxuUixnjqR3pMROqzX2TerQjcBJenjyPAodwTlnVZcbI8wJe5Xltb35xmhx2w307sclN639OIJXSTl9lsrE8rEfCTlnayjtwVJ0+Rmr/bHu47z3ueFKrmEqV/AxyUgchyQrMLiyx51pa+0Q2Zrs9UgehY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708089185; c=relaxed/simple;
-	bh=w7PxYeL2YJi5lLDMuxgVxDRatSZggnbIIYFFi/StyVM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rqjVew5IFDNVP5NQn31cOn71skeiHDxChDXH1O+It5hVc2k66oEx+p6k43fkXspmEou4IF1cMwm5ReRz9Us4ef49uQ0M0r019c3/dPasgU9HgxVWaDS2uHFuIzQ62I3Qk7IDj+aiF34ku+C1QnghF9GfzuIH2mq7Mjn92BpxgwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GS5BaKqN; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1708089212; c=relaxed/simple;
+	bh=RfrwlrMiLdeDpDWa6yYuEsg2k4+fP3eIrFX3FgB6HzI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ZwmjAMF2oux4sqnD1FaRJcIDJ6+m3rEHZM+wws69+MvPW9PqcE+A1ZdaDKF2G8qxmhviYg2bWbxOc9shy8hDFgFSuRteMh8IIxfDRtLne3oxXzWS/F85dI3BNg7zs6wjmSevme3ukhMo7s4xNSCNpWdV21bhKXdNP2W8LPPjb1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=G82As20d; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GS5BaKqN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708089183; x=1739625183;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=w7PxYeL2YJi5lLDMuxgVxDRatSZggnbIIYFFi/StyVM=;
-  b=GS5BaKqNgsQIZ3t5w+TgaKFsz651czMeXfIT6oy62qz1QijaP3uG9a/3
-   VxM8uM8zfL6nHDFhw1M24m7DdsHTPkhHQeIm1n63y+DZdqMl6Hxq7InUW
-   EFsAWI96wnhMrMzgWRH+vSLOsL2VRDimknejCPqMkFAHlVkCVNXhPmfu5
-   t23qNgPfOlsUY1rPF+wmf5gbnlyD8ORBXzErLvKaDB6jVj1x3CGL2YGTK
-   JtdVCpb8ZeWCI6bunxtbAa5oNpBTn5k2sNiB+1C+Q885pamSchC4CIRFL
-   WWE7Df8uAjbYvMTruSqqX07hXei2iR+WGyItGn1q75vQeV7UW2kZ6/TTt
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10985"; a="2083623"
-X-IronPort-AV: E=Sophos;i="6.06,164,1705392000"; 
-   d="scan'208";a="2083623"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 05:13:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,164,1705392000"; 
-   d="scan'208";a="3801537"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by fmviesa009.fm.intel.com with ESMTP; 16 Feb 2024 05:12:58 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ray1N-0001IA-17;
-	Fri, 16 Feb 2024 13:12:54 +0000
-Date: Fri, 16 Feb 2024 21:12:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Yannick Fertre <yannick.fertre@foss.st.com>,
-	Philippe Cornu <philippe.cornu@foss.st.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>
-Cc: oe-kbuild-all@lists.linux.dev, dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
-Subject: Re: [PATCH v5 2/3] drm/stm: lvds: add new STM32 LVDS Display
- Interface Transmitter driver
-Message-ID: <202402162038.HP7VzIHX-lkp@intel.com>
-References: <20240206-lvds-v5-2-bd16797b0f09@foss.st.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="G82As20d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1708089191; x=1708693991; i=deller@gmx.de;
+	bh=RfrwlrMiLdeDpDWa6yYuEsg2k4+fP3eIrFX3FgB6HzI=;
+	h=X-UI-Sender-Class:Date:Subject:To:References:From:In-Reply-To;
+	b=G82As20dOtzFpVH19131yEHZLVek2C77KIHuQ7gBYIy8b9Kk8PjDX5ZKY0KlAP4u
+	 DVkgdAnOk1UDx6FPOQkRUvaz8Je/JEQ+vnd5aScKaFo9YzXlnYQYlZHapEHsiSo6g
+	 C7HJeBYz+FPKSXMKT6IZxWg6qQs8qtckn4IsihKE3isjC54tcIMIf7hkWbd0Et/1L
+	 81EXEDUJ2Ozfm1a6itNjjw6IlO+faEKREBHdWfDm21hgg3BofW/8PCq+GvUBQnqDn
+	 E766sA4SSriniq8I2kWK87Q/SXF3gAGfuWX5hR5Pob/AcG5JR7MlO2C7Tsu77fmud
+	 E9qH44HYl6XjFhffPA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.20.55] ([94.134.148.214]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MQMuX-1rNPDq0fB3-00MKR0; Fri, 16
+ Feb 2024 14:13:11 +0100
+Message-ID: <3a0a120e-ac4d-4c1a-a22f-1b0800ecb973@gmx.de>
+Date: Fri, 16 Feb 2024 14:29:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240206-lvds-v5-2-bd16797b0f09@foss.st.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] parisc/kprobes: always include asm-generic/kprobes.h
+Content-Language: en-US
+To: Max Kellermann <max.kellermann@ionos.com>, svens@stackframe.org,
+ James.Bottomley@HansenPartnership.com, mcgrof@kernel.org,
+ linux-parisc@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240211230945.297104-1-max.kellermann@ionos.com>
+From: Helge Deller <deller@gmx.de>
+Autocrypt: addr=deller@gmx.de; keydata=
+ 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
+In-Reply-To: <20240211230945.297104-1-max.kellermann@ionos.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ckrHekCxADyq41bO85BcniguE/Xexk5wIcXWinJ3cCW0B/QSja8
+ oioxcl8bUDzMKt+ZE2Cg5WwPNg6lx+baiOibFNMuMEgk+JnQIvZoLNY6N0qRuGZPHeyzVnf
+ LuhppQ8hicZGgzabySSNxLy3wr1Yzyi0P5qquPbj592ggWAC+6CWAA9ivRcfgq5AkQy6+4U
+ Wn3ig2uNFsxQcBi76vsNw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:DFSVkUWosFM=;scRSUk8NUIPNlb5vY6DC8GUCPwN
+ jrj4imVmEZfstZkZ/HXBOaCPutKLLdnJxKlHjJVh7HxIDl2anRKY9aULfhyd7SZUTDQO+B7DS
+ kp9+fVDUFvAdIo6kZZMr4fEb7LKdpugUjT6SgmOPDmLb6/FpxYPXglX1Xnb3CuaOg6UjbH02u
+ N5txv71OhFRWa6QVU4cew/W4AHPq43NHGRSvWNy51t1izTglVHkDS1BNFGvyKW2dqvB95EV0m
+ ONbuZpHoIy11DbqE6aCwOcX4GuJjv+xNFpIX+OxFISs4k3ufEyOfkoBx35+9vlbam2qWdYjs/
+ NkTHozA5XnOOAjCh/n4A9na8JDPGjATBlm5zf9/n16cg8iKINNAQtx23d64o9lf5b3QabFfKW
+ pededWvaqGl5mc3m8d7IDOXl4Poj8dWyeYH7eq6Akn3peJhN7qnUBCfgeXE0f3gBrHlAcXM/g
+ y5k46XdYlyVx9MVpgPjdkUIRMDMxdxJkp1TlTJKv9OcObI+bO3aPlQBbM5xJlwfCU6X+xKTsk
+ BW8+BbJ7HQoeOdT/vvdMmqtP2Ug5SnOVl2o4YpSWa8OGcS7Q4SiOq0Wj6O3mu4nOvdUifV4GJ
+ umq7bzvJDKRvuqGhmtVwBPHRMITiKnLQ+hj3hb7J7gOF/jnvMWAFhfJPcHScCDHFXmWLLxZlB
+ 3ESxRzZ9iwiEE1iJdwmIHGk0YWl5SxLJ53A2+EMQh6TbRQaAVeRkr0sVs1E+uS+VDbDatf77u
+ Tt7mKWbXyGWWtsm8z+cfS13Ixpjx7XdEP0HhkaPHHm0LN0/e1wDJ47EBz8GQUDaG4Nc3DQEKO
+ c2bnHqBB0seR5y8hbCUZqs2hti+0yQiPqJ+6TyVQNfMPA=
 
-Hi Raphael,
+On 2/12/24 00:09, Max Kellermann wrote:
+> The NOKPROBE_SYMBOL macro (and others) were moved to
+> asm-generic/kprobes.h in 2017 by commit 7d134b2ce639 ("kprobes: move
+> kprobe declarations to asm-generic/kprobes.h"), and this new header
+> was included by asm/kprobes.h unconditionally on all architectures.
+>
+> When kprobe support was added to parisc in 2017 by commit
+> 8858ac8e9e9b1 ("parisc: Implement kprobes"), that header was only
+> included when CONFIG_KPROBES was enabled.
+>
+> This can lead to build failures when NOKPROBE_SYMBOL is used, but
+> CONFIG_KPROBES is disabled.  This mistake however was never actually
+> noticed because linux/kprobes.h also includes asm-generic/kprobes.h
+> (though I do not understand why that is, because it also includes
+> asm/kprobes.h).
+>
+> To prevent eventual build failures, I suggest to always include
+> asm-generic/kprobes.h on parisc, just like all the other architectures
+> do.  This way, including asm/kprobes.h suffices, and nobody (outside
+> of arch/) ever needs to explicitly include asm-generic/kprobes.h.
+>
+> Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 
-kernel test robot noticed the following build warnings:
+applied to parisc git tree.
 
-[auto build test WARNING on bb3bc3eac316b7c388733e625cc2343131b69dee]
+Thanks!
+Helge
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Raphael-Gallais-Pou/dt-bindings-display-add-STM32-LVDS-device/20240206-194740
-base:   bb3bc3eac316b7c388733e625cc2343131b69dee
-patch link:    https://lore.kernel.org/r/20240206-lvds-v5-2-bd16797b0f09%40foss.st.com
-patch subject: [PATCH v5 2/3] drm/stm: lvds: add new STM32 LVDS Display Interface Transmitter driver
-config: arm-randconfig-r132-20240214 (https://download.01.org/0day-ci/archive/20240216/202402162038.HP7VzIHX-lkp@intel.com/config)
-compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project.git 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
-reproduce: (https://download.01.org/0day-ci/archive/20240216/202402162038.HP7VzIHX-lkp@intel.com/reproduce)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402162038.HP7VzIHX-lkp@intel.com/
+> ---
+>   arch/parisc/include/asm/kprobes.h | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/parisc/include/asm/kprobes.h b/arch/parisc/include/asm=
+/kprobes.h
+> index 0a175ac87698..0f42f5c8e3b6 100644
+> --- a/arch/parisc/include/asm/kprobes.h
+> +++ b/arch/parisc/include/asm/kprobes.h
+> @@ -10,9 +10,10 @@
+>   #ifndef _PARISC_KPROBES_H
+>   #define _PARISC_KPROBES_H
+>
+> +#include <asm-generic/kprobes.h>
+> +
+>   #ifdef CONFIG_KPROBES
+>
+> -#include <asm-generic/kprobes.h>
+>   #include <linux/types.h>
+>   #include <linux/ptrace.h>
+>   #include <linux/notifier.h>
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/gpu/drm/stm/lvds.c:318:17: sparse: sparse: symbol 'lvds_bitmap_jeida_rgb888' was not declared. Should it be static?
->> drivers/gpu/drm/stm/lvds.c:335:17: sparse: sparse: symbol 'lvds_bitmap_vesa_rgb888' was not declared. Should it be static?
-   drivers/gpu/drm/stm/lvds.c: note: in included file (through include/linux/mmzone.h, include/linux/gfp.h, include/linux/stackdepot.h, ...):
-   include/linux/page-flags.h:242:46: sparse: sparse: self-comparison always evaluates to false
-
-vim +/lvds_bitmap_jeida_rgb888 +318 drivers/gpu/drm/stm/lvds.c
-
-   308	
-   309	/*
-   310	 * Expected JEIDA-RGB888 data to be sent in LSB format
-   311	 *	    bit6 ............................bit0
-   312	 * CHAN0   {ONE, ONE, ZERO, ZERO, ZERO, ONE, ONE}
-   313	 * CHAN1   {G2,  R7,  R6,   R5,   R4,   R3,  R2}
-   314	 * CHAN2   {B3,  B2,  G7,   G6,   G5,   G4,  G3}
-   315	 * CHAN3   {DE,  VS,  HS,   B7,   B6,   B5,  B4}
-   316	 * CHAN4   {CE,  B1,  B0,   G1,   G0,   R1,  R0}
-   317	 */
- > 318	enum lvds_pixel lvds_bitmap_jeida_rgb888[5][7] = {
-   319		{ PIX_ONE, PIX_ONE, PIX_ZER, PIX_ZER, PIX_ZER, PIX_ONE, PIX_ONE },
-   320		{ PIX_G_2, PIX_R_7, PIX_R_6, PIX_R_5, PIX_R_4, PIX_R_3, PIX_R_2 },
-   321		{ PIX_B_3, PIX_B_2, PIX_G_7, PIX_G_6, PIX_G_5, PIX_G_4, PIX_G_3 },
-   322		{ PIX_D_E, PIX_V_S, PIX_H_S, PIX_B_7, PIX_B_6, PIX_B_5, PIX_B_4 },
-   323		{ PIX_C_E, PIX_B_1, PIX_B_0, PIX_G_1, PIX_G_0, PIX_R_1, PIX_R_0 }
-   324	};
-   325	
-   326	/*
-   327	 * Expected VESA-RGB888 data to be sent in LSB format
-   328	 *	    bit6 ............................bit0
-   329	 * CHAN0   {ONE, ONE, ZERO, ZERO, ZERO, ONE, ONE}
-   330	 * CHAN1   {G0,  R5,  R4,   R3,   R2,   R1,  R0}
-   331	 * CHAN2   {B1,  B0,  G5,   G4,   G3,   G2,  G1}
-   332	 * CHAN3   {DE,  VS,  HS,   B5,   B4,   B3,  B2}
-   333	 * CHAN4   {CE,  B7,  B6,   G7,   G6,   R7,  R6}
-   334	 */
- > 335	enum lvds_pixel lvds_bitmap_vesa_rgb888[5][7] = {
-   336		{ PIX_ONE, PIX_ONE, PIX_ZER, PIX_ZER, PIX_ZER, PIX_ONE, PIX_ONE },
-   337		{ PIX_G_0, PIX_R_5, PIX_R_4, PIX_R_3, PIX_R_2, PIX_R_1, PIX_R_0 },
-   338		{ PIX_B_1, PIX_B_0, PIX_G_5, PIX_G_4, PIX_G_3, PIX_G_2, PIX_G_1 },
-   339		{ PIX_D_E, PIX_V_S, PIX_H_S, PIX_B_5, PIX_B_4, PIX_B_3, PIX_B_2 },
-   340		{ PIX_C_E, PIX_B_7, PIX_B_6, PIX_G_7, PIX_G_6, PIX_R_7, PIX_R_6 }
-   341	};
-   342	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
