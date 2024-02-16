@@ -1,96 +1,67 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from TWMBX01.aspeed.com (211-20-114-70.hinet-ip.hinet.net [211.20.114.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E0754F9F;
-	Fri, 16 Feb 2024 12:04:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC151BC57;
+	Fri, 16 Feb 2024 12:10:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708085055; cv=none; b=KfiYZ6pOtfiFTIZwnGkL4/Ce7ph0A3PLh1QVaPP+8YFrH0fSfD2kwCTbDPXOzyoFE8a/E8v8amXm3Ff75ZwapOVcCFA0ZkbcUMC2AF8xH4G03N6D79+2siTI5QCwznuYAdjAwYfG3uhG3JdwnXVM9lO5ydqrI8KCqdfKcuuCam4=
+	t=1708085408; cv=none; b=ZJhb+p89WiHBmHs5H5FaY7fcGcDBtaIkopY02HcN2tv1nAZ8OuMtA4X/vlFdP9oCqnQvrSUlyqnE1OfA5+rrkoJKOkmqxrfFcFvUP4Zq/n92m+pECEIwT+txvWor5qtDRKxeB6DKgCbLudilthEsbhxccG902bqfcJvTYG7g3Ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708085055; c=relaxed/simple;
-	bh=txhQp0jogdoMQ2L1WM7B/43LJL2QWlfyavzQEY/JY74=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=dqNhcMAIBkDycssgQjE1n99FwicXfmG12HB5TDnQ3eZnwn3baxr8iigM/1MNoR1RUeJL6JhXEdpCsFXI2qokrel97OOpqeKDLz/A+AyCJnqR+fUG6BYbjGrdJJxsTB1JhyBnHpCJVpfq48+Usn0x4tDOD4Dwi2LLSyYiIwQUXjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=JtIcpkoQ; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="JtIcpkoQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1708085026; x=1708689826; i=markus.elfring@web.de;
-	bh=txhQp0jogdoMQ2L1WM7B/43LJL2QWlfyavzQEY/JY74=;
-	h=X-UI-Sender-Class:Date:Subject:To:References:Cc:From:
-	 In-Reply-To;
-	b=JtIcpkoQZxGFlJ0IQOL97W7CuQay9aUKqPycYbs6uQRkTnSgBuHOM+Wa6idHAzRh
-	 Nze5JgGNS2udVCNcaw/9Kyh9f6KjwHLIoIpKvQ9R2f3jPSCNttcxH9bT7WwQHNDIR
-	 K1xoRTt2yQDI8+soLllF2qX0MU+Fg5+Tq1A3zY2spVk1euKgrv0gq5do5gbJEVGMO
-	 WMRaeB96/Sl1kNjSEzAPr8uFTysUNhWV2aPA2/2tSW1cEuLLoPyU1jkOl3GVzTmXj
-	 X6LPd45VHmXeP7auXy9/507o+BH1ZGKl84gd06DVJyz5+nV+EmGaaF0flHJ+CxtWm
-	 nFNwPUTZ8gIayiNwXw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.80.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M1JB0-1rYBmy0sby-002loV; Fri, 16
- Feb 2024 13:03:46 +0100
-Message-ID: <62122744-7e88-4aa3-b9cf-82442021a7ee@web.de>
-Date: Fri, 16 Feb 2024 13:03:42 +0100
+	s=arc-20240116; t=1708085408; c=relaxed/simple;
+	bh=/Cn0GaGjavwprH4dlcyGZLnvLz0zGHMC+umQ8K0F/5I=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=D61lMLhr+Gj0rSHpqftP8OJEvn9yAQcJnNQcsyFekZdvgJMNba0IeJ+sOuYzADMAm5ke0As0r7HukmOA1KAVsggJm6LnAkUwBJtP72VMM9PuCzANiHRiHweJFnSTcHwjkSF1NHyYQEDks9zv1y2hLrVBO6SQjFcExZn2e+GBEnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=aspeedtech.com; spf=fail smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=aspeedtech.com
+Received: from TWMBX02.aspeed.com (192.168.0.24) by TWMBX01.aspeed.com
+ (192.168.0.124) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Fri, 16 Feb
+ 2024 20:05:44 +0800
+Received: from twmbx02.aspeed.com (192.168.10.10) by TWMBX02.aspeed.com
+ (192.168.0.24) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 16 Feb 2024 20:04:57 +0800
+From: Tommy Huang <tommy_huang@aspeedtech.com>
+To: <brendan.higgins@linux.dev>, <andi.shyti@kernel.org>,
+	<p.zabel@pengutronix.de>, <linux-i2c@vger.kernel.org>,
+	<openbmc@lists.ozlabs.org>
+CC: <benh@kernel.crashing.org>, <joel@jms.id.au>, <andrew@aj.id.au>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-aspeed@lists.ozlabs.org>,
+	<linux-kernel@vger.kernel.org>, <BMC-SW@aspeedtech.com>
+Subject: [PATCH] i2c: aspeed: Fix the dummy irq expected print
+Date: Fri, 16 Feb 2024 20:04:55 +0800
+Message-ID: <20240216120455.4138642-1-tommy_huang@aspeedtech.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [cocci] [PATCH v2] cocci: Add rules to find str_plural()
- replacements
-Content-Language: en-GB
-To: Kees Cook <keescook@chromium.org>,
- Michal Wajdeczko <michal.wajdeczko@intel.com>, cocci@inria.fr,
- kernel-janitors@vger.kernel.org
-References: <20240215194834.it.509-kees@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>, Jani Nikula <jani.nikula@intel.com>,
- Julia Lawall <Julia.Lawall@inria.fr>, Nicolas Palix <nicolas.palix@imag.fr>,
- linux-hardening@vger.kernel.org
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240215194834.it.509-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:D9mtTTzD8XRjj8XwO7mhylIMnIpadtQOenzv/X33J1JYqJb03k/
- ASyTFeVi4vMiWUZtCoYWzlKw/yTyYGFU/+tSa1T83EFba38fW9HtYwTMQvffze2lS9IB4HQ
- jsYbLSJ+wHikYjEIEDEsaFFBn2x55hozrXlvpiaBENmn8vLxBOuKXENb/E0IsVGGu4k2RQS
- ttJoeGvmO3n1jDnz2vfdA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:8xgo3VmYz+w=;FlPFNDyHCzlGUJiM10MhB47BzGj
- 2ZBWwhJcYnppUsTo8B04HahvjicV9oO/yMLQNdayXmXMfkj2JDr1/xibYY8E8JdMojQVjqmi1
- hZRoE17E4kuO8SKqhdF6X5vXr01BaQo2hWBn8vXgt1jR18dadHmpSuUmdQsfrFdZWL3zFcd1D
- LTc53NcGdjqtJ+YZYGEOXmXoqQEOLKZhnUYekWUOY0ktQlejpyB0gq1dmqJHLinu2Fxm5756G
- lNzt+kZa0s4CY2RgPZMwMZeltuuwNKkvqWZtU0mV9NIRFAZ/9+Au6wz14Wb5PIJ1tMfaQ20zS
- UkNXjT7xWmxkbykE6hP7SfaZb+y5e4KyEU3h1O7pMHGwgvPwls536GgyFMHL99OZq0FYcexsV
- PPXcraLxUqCzGJvUZK4PVbc0ZpyjUhowIhsRSmxlDMWdmImSzKiOgMT8B+ExQ+55xAyb2Urew
- CpaG+spHqDhwNzAW/1G3mJlD8zDFf3NGWwUWrcIaktPp7SQ1kr7FVl13rvGYQGIW/RQtchKTL
- gscMLGaHPjtwVJuDOx0B+/GQ6N57na+IGeRUsxQQLMPAevLkbILgfrIE7lnPCHa/JU0BTPHFW
- x0Xr7qwn69MLxDzmqgNNymAa9gXgukj+PrnemiPd90bGLmVNeqwYZoQwHNrW3ZJflv0usPoP4
- kmY6TbyTLH9nFtQfGBeUKSTVboHWz0JaPt8WQBY/A1rD5dM8cKFKK6DXyTaDxNZvu5ZOhbOwz
- qqEwCeZEdtaVT/erUcwbAJGeRuaM3mx5BcivkONa7tRIXxwFFlILwQhwLICL4Iaw9d2dGfA0q
- 0SvGk8XXB9J5LS4vedoTam7ZyBbVODSV12nC6T5rklJdw=
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-> Add rules for finding places where str_plural() can be used.
-=E2=80=A6
-> +++ b/scripts/coccinelle/api/string_choices.cocci
-> @@ -0,0 +1,41 @@
-=E2=80=A6
-> +/// Find places to use string_choices.h's various helpers.
-> +//
-> +// Confidence: Medium
-> +// Options: --no-includes --include-headers
-> +virtual patch
-> +virtual context
-> +virtual report
+When the i2c error condition occurred and master state was not idle,
+the master irq function will goto complete state without any other
+interrupt handling. It would cause dummy irq expected print. Under
+this condition, assign the irq_status into irq_handle.
 
-Would you like to support another operation mode?
+Signed-off-by: Tommy Huang <tommy_huang@aspeedtech.com>
+---
+ drivers/i2c/busses/i2c-aspeed.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-virtual context, patch, report, org
+diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
+index 5511fd46a65e..ce8c4846b7fa 100644
+--- a/drivers/i2c/busses/i2c-aspeed.c
++++ b/drivers/i2c/busses/i2c-aspeed.c
+@@ -445,6 +445,7 @@ static u32 aspeed_i2c_master_irq(struct aspeed_i2c_bus *bus, u32 irq_status)
+ 			irq_status);
+ 		irq_handled |= (irq_status & ASPEED_I2CD_INTR_MASTER_ERRORS);
+ 		if (bus->master_state != ASPEED_I2C_MASTER_INACTIVE) {
++			irq_handled = irq_status;
+ 			bus->cmd_err = ret;
+ 			bus->master_state = ASPEED_I2C_MASTER_INACTIVE;
+ 			goto out_complete;
+-- 
+2.25.1
 
-Regards,
-Markus
