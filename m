@@ -1,263 +1,133 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB1A132499;
-	Fri, 16 Feb 2024 17:05:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF423135A6D
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 17:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708103127; cv=none; b=k84au/8na5o/Z7DCa4W50pt7rsmWpSxT8U8F6mYgWIDp0ZixPitQ52RUU2ENxJQPd0SCKl9NwqyF9zDmnzB5TQjHXajJwiKFMV30z9LdcC2bc+XsTX3kanb8N3vO6up23JLgb6zkoxpyHnUfuhg6JM3zKPGJ4n82XtarBUS7AF0=
+	t=1708103130; cv=none; b=DX80ObCho1712cKmtUmyZVorPYgBV/7zjgcsC1/4RAiNbkDV8fGT67yjDkYL7EujGTApS3yY1CHDSMmW+Pd4j1KbBY2cUK25XGNPf9ycf6E547PPvdxO4KkgCSrM8evsErfQO1JfliymHDinwfBYBNENgjQ/aZvY+ZV9slynHUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708103127; c=relaxed/simple;
-	bh=0acUJ6uhxWQwJKn7gi4S72wsDmO2zKXXbszxoTmv7G4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PZs+v9n0u5Ttx2IFinSVv6bl44FamCCQMaXXtYwACuMKAxIdLw8YOy0cc41q3+CZBuWlbKzQxb5YmbEcU9b2IM6tUY7v32hRBpEfetObmWDAxdX/WxPGPVhzDozr0NGPJ4r2XFluo0UyoQLBveC8slkYz8p6Mgd0vslCEM5NonU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=fSl+Rs8U; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1708103130; c=relaxed/simple;
+	bh=YEe1iIkMkTl6mXT05twz1lybD8lNCICMNljhIyX2vlU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=X2QIOlM2v1zuBNBxRsXrVHVE562Ezs56ZG9kfbV17pc1JdiTRdstWfQk0Wb/n6xBo+1C5rKe5S32iHbSWsE8JfrUha8GgcKTp0vbLJmNNlsMyJllHglY9U25MWu3Iw/+YhsZSaW3TyRJ+sE4wjTWJNrDKGUq4OV6T00uRcG9GWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cQf/OelZ; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="fSl+Rs8U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1708103118;
-	bh=0acUJ6uhxWQwJKn7gi4S72wsDmO2zKXXbszxoTmv7G4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fSl+Rs8UwtZbetXwLzKoBc/NSLFQ5FvZKOHQ7rKmRn2MUUJ4A3CPsAciDhnEw4j0o
-	 brJS6ny3EwVfgOgSwcW5goVxQ4Chz91HMZQWWxeDj8R+ntuLj8c52hIRZRq45ky/wb
-	 ASsvCCTNlwdn9xxvMKKM/iJ2Nntz9Pogw4RSNHxRg4v+ghohvtEksBIHcxLqe+lrqz
-	 axJla6A47c9FMusCkrhWrrI2G7oQA+GO6EMB/bJH91nYYxQXSgvhDZE6p5cEiXs7dw
-	 tWWXEVZGX/GNLNPgXU9zuJpgCqTFT08P7YaqxFtNhQgySQCB52H5bcarREFsVxkWcQ
-	 b7IIj68+sYOSg==
-Received: from jupiter.universe (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: sre)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id DEECE37820C0;
-	Fri, 16 Feb 2024 17:05:17 +0000 (UTC)
-Received: by jupiter.universe (Postfix, from userid 1000)
-	id DE6484800D4; Fri, 16 Feb 2024 18:05:16 +0100 (CET)
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Heiko Stuebner <heiko@sntech.de>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-rockchip@lists.infradead.org,
-	linux-phy@lists.infradead.org
-Cc: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Frank Wang <frank.wang@rock-chips.com>,
-	Kever Yang <kever.yang@rock-chips.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	kernel@collabora.com
-Subject: [PATCH v3 08/10] arm64: dts: rockchip: add USB3 to rk3588-evb1
-Date: Fri, 16 Feb 2024 18:01:23 +0100
-Message-ID: <20240216170514.75200-9-sebastian.reichel@collabora.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240216170514.75200-1-sebastian.reichel@collabora.com>
-References: <20240216170514.75200-1-sebastian.reichel@collabora.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cQf/OelZ"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1d7354ba334so20514045ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 09:05:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708103128; x=1708707928; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xzo0goznw/Ntco681h4qJZM6h9c/lx0QHhOStfpeEEE=;
+        b=cQf/OelZQD1t6FaPQ0oMy0KKqc5oNg2hYs56A1NyX34m6vmtCCXaiLg8nvAtjtE+TH
+         OGrnmZGVMmvUL2rfSPWh8X+waHrlYBtl53Pn5p5rs/kc21CCDBkU14kSRJqoK4oWZm6a
+         AuHhpv1seLydHEu2ewb/vn9mTjTE7o652JuTxA8hOlT0F3fTYl1wz5bzHff71xYz9Don
+         MJzI/2bRl7JzN5LrMlCJd2oa4I3h2LE3OU9F9nXe3k5oclaT6+/dEy3TPEzrbZ4XXKCe
+         SB4NOINgXSXuQ54AdM4Wq3eQ5kysD9QcoEOs3pykgaJQhrqyBZiPtikrdAvPLjRda8b4
+         Nf9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708103128; x=1708707928;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xzo0goznw/Ntco681h4qJZM6h9c/lx0QHhOStfpeEEE=;
+        b=nMWbx3V+JJhIszjV+hhmv9sZdS0NsYI0DJqL0oPIxP6NiCLbAb9FLlaRgOE7Neomi8
+         Hb7PqmcBr5K2p7F7Zk21HLwGR2mDVO5NXZliEtUgC8+j3mPzzOVgUEUKXcSSTu+I4Nz+
+         6PyErj7pmza19f9uK3oIcKalvE5THURANEKfEM2xbrzBVrMNhCjKxEhwG0tcLcHGcC4d
+         JaCWQg/uweRasQhscdWVt1bzpOdXegN1foqhKu2Qgz7UwCHCZZ2lJw1SRMcFZwC1eaQi
+         Q5D1JaO0vFWfy0njTS8QQi/xYzga2uQdfer3hM+DKvJv6di7HoLSXIu9n3BmTt+FxX5A
+         2gWg==
+X-Forwarded-Encrypted: i=1; AJvYcCUmtMSrZ776AAFtOpGaJN7AKE2t5WkzNZfSi/czEz1WT+BTJHeG5R+/R6VnAHSR9Gu/XpRUoDHexSgi9pk9enTMIF9h9KQjEwRrkB1n
+X-Gm-Message-State: AOJu0YxD0c8WMh/mPVmBYRbg3Nlpe59n0QyAqKdniX32fQNwH5ojXvRV
+	qOaCNCnhQD8rmWywLNjuLZCYN810safPuhfvppjaYgu8LIeZFjRzJm/sWuJ2JA==
+X-Google-Smtp-Source: AGHT+IFDCzyH9aJybTu6AycRvO1SYkFXYvfxU6Es1A/vZvue0R0CuBR+Bwn5hZW7hpoZN5rF/ZEwJA==
+X-Received: by 2002:a17:902:d2c5:b0:1db:701b:33e0 with SMTP id n5-20020a170902d2c500b001db701b33e0mr6357753plc.14.1708103128010;
+        Fri, 16 Feb 2024 09:05:28 -0800 (PST)
+Received: from [127.0.1.1] ([120.138.12.48])
+        by smtp.gmail.com with ESMTPSA id b15-20020a170902d50f00b001d9aa663282sm95508plg.266.2024.02.16.09.05.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Feb 2024 09:05:26 -0800 (PST)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Date: Fri, 16 Feb 2024 22:35:21 +0530
+Subject: [PATCH] arm64: dts: sm8650: Add msi-map-mask for PCIe nodes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240216-sm8550-msi-map-fix-v1-1-b66d83ce48b7@linaro.org>
+X-B4-Tracking: v=1; b=H4sIANCVz2UC/x2MQQqAIBAAvyJ7bkFFQ/pKdLBaaw9WuBBB+Pek4
+ wzMvCBUmAQG9UKhm4XPo4HpFCx7PDZCXhuD1dZpa3qUHLzXmIUxxwsTPxjnkMiTdWsy0MKrUNP
+ /dJxq/QCbmuN3ZAAAAA==
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1655;
+ i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
+ bh=YEe1iIkMkTl6mXT05twz1lybD8lNCICMNljhIyX2vlU=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBlz5XTZlP1P9oCFUUIiXdV0t5k+20GxBAJixguy
+ WJaznFAxzuJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZc+V0wAKCRBVnxHm/pHO
+ 9U4aB/wIVpxyFUp+gK/gJRJ91smrvGmTk8YfnaRAHiwLEN0phPdcRslim8zkXKDBR07EQVwjdMN
+ o+bO7kSkjl5fK9wj79VVyhl+JB28ej5M8lhXogmrlIN7MKVKhEkO4/u3rbt43RhpS7M38Ojhz7m
+ zROIaziDGj21hQBpHO3GAfTD6bBUlEAY8CdSv7mRev53j94zslS6FComze1ZVB87U1r2e2unWBO
+ cWJUEd1N9TBzTSiMUp43RM8+8IS+1K3RYjGxv3BhyHcWNOuUPD4UBPI4VhHRhvM9RWre8mH2vQB
+ CIob/rGzp3nO4GtjpzaspPlxXobnpPhcKwmiUbI5Lf2sbhRn
+X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
 
-Add support for the board's USB3 connectors. It has 1x USB Type-A
-and 1x USB Type-C.
+"msi-map-mask" is a required property for all Qcom PCIe controllers as it
+would allow all PCIe devices under a bus to share the same MSI identifier.
 
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Without this property, each device has to use a separate MSI identifier
+which is not possible due to platform limitations.
+
+Currently, this is not an issue since only one device is connected to the
+bus on boards making use of this SoC.
+
+Fixes: a33a532b3b1e ("arm64: dts: qcom: sm8650: Use GIC-ITS for PCIe0 and PCIe1")
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- .../boot/dts/rockchip/rk3588-evb1-v10.dts     | 143 ++++++++++++++++++
- 1 file changed, 143 insertions(+)
+ arch/arm64/boot/dts/qcom/sm8650.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts b/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts
-index ac7c677b0fb9..0e82dbb4c5ff 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts
-@@ -9,6 +9,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/pinctrl/rockchip.h>
-+#include <dt-bindings/usb/pd.h>
- #include "rk3588.dtsi"
+diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+index d488b3b3265e..12ba839f215e 100644
+--- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+@@ -2277,6 +2277,7 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
+ 			/* Entries are reversed due to the unusual ITS DeviceID encoding */
+ 			msi-map = <0x0 &gic_its 0x1401 0x1>,
+ 				  <0x100 &gic_its 0x1400 0x1>;
++			msi-map-mask = <0xff00>;
  
- / {
-@@ -224,6 +225,18 @@ vcc5v0_usb: vcc5v0-usb-regulator {
- 		regulator-max-microvolt = <5000000>;
- 		vin-supply = <&vcc5v0_usbdcin>;
- 	};
-+
-+	vbus5v0_typec: vbus5v0-typec {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vbus5v0_typec";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		enable-active-high;
-+		gpio = <&gpio4 RK_PD0 GPIO_ACTIVE_HIGH>;
-+		vin-supply = <&vcc5v0_usb>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&typec5v_pwren>;
-+	};
- };
+ 			linux,pci-domain = <0>;
+ 			num-lanes = <2>;
+@@ -2404,6 +2405,7 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
+ 			/* Entries are reversed due to the unusual ITS DeviceID encoding */
+ 			msi-map = <0x0 &gic_its 0x1481 0x1>,
+ 				  <0x100 &gic_its 0x1480 0x1>;
++			msi-map-mask = <0xff00>;
  
- &combphy0_ps {
-@@ -284,6 +297,56 @@ &gmac0_rgmii_clk
- &i2c2 {
- 	status = "okay";
- 
-+	usbc0: usb-typec@22 {
-+		compatible = "fcs,fusb302";
-+		reg = <0x22>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <RK_PB4 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&usbc0_int>;
-+		vbus-supply = <&vbus5v0_typec>;
-+		status = "okay";
-+
-+		usb_con: connector {
-+			compatible = "usb-c-connector";
-+			label = "USB-C";
-+			data-role = "dual";
-+			power-role = "dual";
-+			try-power-role = "source";
-+			op-sink-microwatt = <1000000>;
-+			sink-pdos =
-+				<PDO_FIXED(5000, 1000, PDO_FIXED_USB_COMM)>;
-+			source-pdos =
-+				<PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					usbc0_orien_sw: endpoint {
-+						remote-endpoint = <&usbdp_phy0_orientation_switch>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					usbc0_role_sw: endpoint {
-+						remote-endpoint = <&dwc3_0_role_switch>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					dp_altmode_mux: endpoint {
-+						remote-endpoint = <&usbdp_phy0_dp_altmode_mux>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+
- 	hym8563: rtc@51 {
- 		compatible = "haoyu,hym8563";
- 		reg = <0x51>;
-@@ -410,6 +473,16 @@ vcc5v0_host_en: vcc5v0-host-en {
- 			rockchip,pins = <4 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
- 		};
- 	};
-+
-+	usb-typec {
-+		usbc0_int: usbc0-int {
-+			rockchip,pins = <3 RK_PB4 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+
-+		typec5v_pwren: typec5v-pwren {
-+			rockchip,pins = <4 RK_PD0 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
- };
- 
- &pwm2 {
-@@ -1040,6 +1113,22 @@ &sata0 {
- 	status = "okay";
- };
- 
-+&u2phy0 {
-+	status = "okay";
-+};
-+
-+&u2phy0_otg {
-+	status = "okay";
-+};
-+
-+&u2phy1 {
-+	status = "okay";
-+};
-+
-+&u2phy1_otg {
-+	status = "okay";
-+};
-+
- &u2phy2 {
- 	status = "okay";
- };
-@@ -1078,3 +1167,57 @@ &usb_host1_ehci {
- &usb_host1_ohci {
- 	status = "okay";
- };
-+
-+&usbdp_phy0 {
-+	orientation-switch;
-+	mode-switch;
-+	sbu1-dc-gpios = <&gpio4 RK_PA6 GPIO_ACTIVE_HIGH>;
-+	sbu2-dc-gpios = <&gpio4 RK_PA7 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		usbdp_phy0_orientation_switch: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&usbc0_orien_sw>;
-+		};
-+
-+		usbdp_phy0_dp_altmode_mux: endpoint@1 {
-+			reg = <1>;
-+			remote-endpoint = <&dp_altmode_mux>;
-+		};
-+	};
-+};
-+
-+&usbdp_phy1 {
-+	/*
-+	 * USBDP PHY1 is wired to a female USB3 Type-A connector. Additionally
-+	 * the differential pairs 2+3 and the aux channel are wired to a RTD2166,
-+	 * which converts the DP signal into VGA. This is exposed on the
-+	 * board via a female VGA connector.
-+	 */
-+	rockchip,dp-lane-mux = <2 3>;
-+	status = "okay";
-+};
-+
-+&usb_host0_xhci {
-+	dr_mode = "otg";
-+	usb-role-switch;
-+	status = "okay";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		dwc3_0_role_switch: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&usbc0_role_sw>;
-+		};
-+	};
-+};
-+
-+&usb_host1_xhci {
-+	dr_mode = "host";
-+	status = "okay";
-+};
+ 			linux,pci-domain = <1>;
+ 			num-lanes = <2>;
+
+---
+base-commit: d37e1e4c52bc60578969f391fb81f947c3e83118
+change-id: 20240216-sm8550-msi-map-fix-ab8fe5e24df1
+
+Best regards,
 -- 
-2.43.0
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
