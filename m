@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 824A1135A51;
-	Fri, 16 Feb 2024 18:51:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B59135A73
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 18:52:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708109519; cv=none; b=AXNi2z1zhgKcmQnFvKTYM4VZlxw0zajmbgdYtAtK46t76T+9S+wsep+33EAN8qSBIEBIoXiE4V+b4jd+iZXvZac+EhD0ZJyFh+AlQ9fQ5SXh+TVo1angul8qIxRQ5caWcv4fxWXrm2gDawkAyJLCNXNe4fmBLXtK+1xeijuhJFY=
+	t=1708109524; cv=none; b=AwyvN+zfAkPjIHJiSlThOM8/JawZfF2v8Lgxtb9QmsiYzAqsTEuxcPTFGCgiw+Z4kw9WMug/AnWdM40sTrSa10so8OAKzy3eHqTTZ9LcHq9pJQguFhusPdgIKwtFWpVIVRKraIHpOwrWEHtJoOLqe/dDzqDpxskInRnv7jxaCZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708109519; c=relaxed/simple;
-	bh=z1wEHUsx8sHtbllePsy0F6JldriJlX548LiYZM+POiY=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=fPZeXsVnYe9Vpkpx1s1DXjNhrb8RkSbbuOeYqeYCHQYMQwCkD2F6njfa5tI0bkQrXq7IHYTG2btIOvcrWlvX2H6wUpwh47V65oPvalWENtW3A9grTrN5VTmBrxlec4z4lPzjxnoVAIWmHbLOhtHYBGxqOg3UTJTfHJWMpv8DPF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N4uy0BTp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708109524; c=relaxed/simple;
+	bh=EOW4rDET4aXDWr3T3YBtcUDyirIWwK7Mgu+E0m+Y3tc=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=PCR84VomngPphAuV3TVE97F1pSOWeR69YdJFqf/chm65aIFx9axj2VltK9LuY4H50kPTp48A3wc//OboyB0itMo9Y/jT0zQtwITO2d0LmBKan13lBZiw+YRqyNQzCRI6OyhBPHQWIVSbGrJSDSoi5/UQvYoZSaatiT2RTWdKtbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rovVMdF/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N4uy0BTp"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 585DAC433C7;
-	Fri, 16 Feb 2024 18:51:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rovVMdF/"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 238C2C433C7;
+	Fri, 16 Feb 2024 18:52:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708109519;
-	bh=z1wEHUsx8sHtbllePsy0F6JldriJlX548LiYZM+POiY=;
+	s=k20201202; t=1708109524;
+	bh=EOW4rDET4aXDWr3T3YBtcUDyirIWwK7Mgu+E0m+Y3tc=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=N4uy0BTpCOQxCLKVnVo8dcLA+5KUZ1AjSVs9amcy8kCwPmY3FIRaMECzD4EMRh5mN
-	 2wYRBqPjwppAiODRVzC9yrlmJ08soDZQLiJLZbB/2Sk+luvq3E1xSgK9/7GictWwor
-	 hA1OlOMWnybdThxHPKkm6ysHmdYl+5K8YzbF1afrRFdrB/fXGhF+JEOsUaaedHEPCP
-	 2hU74pisTlbW4ACErRCGgjJPwRUFgJh2Hvzp7die1qoUfWnLky9MM5bvORnsseg9AU
-	 fAFsGVclLib4Gr5MoeForlyyBZiJgJFz1U0r7ggs0nI76UwV7tg4V+w8OsPGZslxRG
-	 lOev0EwKAq6/Q==
+	b=rovVMdF/NnD1866quW3UyEwyiAcbSaGpaH/YGuufOPAXSpMNN3gOeevQSPhyz6N2a
+	 ZrMGLSCEofjvwAB+rYp9xp/cGwFSHiLTTELbCc1eN1eoFc/AcFnKPi3oTgxSSTFHE7
+	 O63nC6X96AcvrYLtBqE61JbCqWIpdRIScdbmpecmzFm1/izZ+c+BBtYTkHUuvx6QOb
+	 k35P0c7H2bK5Tf/942TMVt7o0BUJSdHIzJERKfEa5t110w/NuIqrvwjGRcLDWRx/4F
+	 nZVIu4XxBXuoYM4hDCMcvSPtbAvqHzOyz0hqK7pXQiWApsZlMyjppESwC+OykU+MCB
+	 xt1e7T5FBV61A==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 42692D84BCD;
-	Fri, 16 Feb 2024 18:51:59 +0000 (UTC)
-Subject: Re: [GIT PULL] KVM fixes and cleanups for 6.8-rc5
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1057AD8C968;
+	Fri, 16 Feb 2024 18:52:04 +0000 (UTC)
+Subject: Re: [GIT PULL] arm64 fixes for -rc5
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240216171030.12745-1-pbonzini@redhat.com>
-References: <20240216171030.12745-1-pbonzini@redhat.com>
-X-PR-Tracked-List-Id: <kvm.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240216171030.12745-1-pbonzini@redhat.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
-X-PR-Tracked-Commit-Id: 9895ceeb5cd61092f147f8d611e2df575879dd6f
+In-Reply-To: <20240216115819.GA1804@willie-the-truck>
+References: <20240216115819.GA1804@willie-the-truck>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240216115819.GA1804@willie-the-truck>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
+X-PR-Tracked-Commit-Id: 2813926261e436d33bc74486b51cce60b76edf78
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 683b783c2093e0172738f899ba188bc406b0595f
-Message-Id: <170810951926.23532.3882456779664688966.pr-tracker-bot@kernel.org>
-Date: Fri, 16 Feb 2024 18:51:59 +0000
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+X-PR-Merge-Commit-Id: 3f3f64cb60eef5bf3a787573cd05803171eb99ec
+Message-Id: <170810952406.23532.1437982823384303516.pr-tracker-bot@kernel.org>
+Date: Fri, 16 Feb 2024 18:52:04 +0000
+To: Will Deacon <will@kernel.org>
+Cc: torvalds@linux-foundation.org, catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel-team@android.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 16 Feb 2024 12:10:30 -0500:
+The pull request you sent on Fri, 16 Feb 2024 11:58:20 +0000:
 
-> https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/683b783c2093e0172738f899ba188bc406b0595f
+https://git.kernel.org/torvalds/c/3f3f64cb60eef5bf3a787573cd05803171eb99ec
 
 Thank you!
 
