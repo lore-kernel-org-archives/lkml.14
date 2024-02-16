@@ -1,294 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A6558AC0;
-	Fri, 16 Feb 2024 11:05:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D35C65193;
+	Fri, 16 Feb 2024 11:05:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708081544; cv=none; b=O04bj2wAH3/Hi7GB5Ya40F8ZIFUIvHwAWBDP9ZPj8HVXK7+16CkJM076hlawSjpOOrwvbsTCZst4/i0rjHl0RUsJaGawXB5KF+Hn6k5L5KZwiUraaRydLQbTic04kAbvmDknVsqZyQPRayvC0XmrEbcZrdqxWHsmKIxN5hzh4Ik=
+	t=1708081557; cv=none; b=B7uBkjWU9KbU4TnoRQgVCcf2nxgJDQjr5C2kBzMiK3vUf9RueC+MLwXLoFRGGYXg4a9n8+zoxrMV0jshIcepb+j3QdrnqYdwLoO17yd5ftjyFUVgB+jKoLF9oCgTC8O/OTtUcnAX3eO/9ttSKNXi2dg5ndteX2FYIzD2ByOwIH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708081544; c=relaxed/simple;
-	bh=04/0rCcowbZ6LhgeozKI78kK1WE+TDUCuzqyX4cOs54=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hIlbFJpqbCvJMHxoVPxwcWCeCfcVqwMUBeH/fwm0qI9INX7vjJ06wZ2uD0NwJOooRi2vCkZLSraXYxBIjsGvKbLIZQpWxEMQH19HNfapGQtZQkBzl3AJfXA9+x38+LeLeLa5ulCi34nvld+S5gZhzEL8TgjzVLN50IPiarHcPds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=In+XUmzD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708081557; c=relaxed/simple;
+	bh=9EwGRDiJUOCQYFRJiAC9JK5wa11kNaXqYFEr9m1LBXI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZHGZacx8oOWd4+HrNjVHu3DvU+W/eInM4wsBtsozQ/RaDjBpnhxcd0q+bkySmvK0mWkOCOqrae+t1nasyPOAVRdGHaudGTUrWYUmj07V3Y9BEKmWrE7OxZAiwVz5bdMI57D0aCFYwKV7ecNh4TmKBe+hT/3Q+A59WPW4n27x2es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tUr/PeLl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="In+XUmzD"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 31B06C43330;
-	Fri, 16 Feb 2024 11:05:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tUr/PeLl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7011BC433F1;
+	Fri, 16 Feb 2024 11:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708081544;
-	bh=04/0rCcowbZ6LhgeozKI78kK1WE+TDUCuzqyX4cOs54=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=In+XUmzDUqnVgxXJ46aHfVc1FezSPbMtS1kxRpb4G346M52lWpWnu2IiTCTiWD7oy
-	 ReNoji4Ql3sqnlrWO4XqBI6YRD6q2mmat50wZwH4oIt12V//UwhW08d+oWj6yHsXC3
-	 rHTEsm5MU2ie3dMZnLpdRnNxLq279QAhWaMveRyRfzi0OCU7/Ac7cInd/FSHOO/J5J
-	 T+rzGjYE3+J/838+Ne9zjr0ceVDlhiGfOT28dU0y5yDNdUYwLgHAHnQxrbDWgu/Xzs
-	 JhcT1yVuAFywBQpBi/k6PUI5csOPOVQhiSgnAV4STbngG/FgQpiwbbk/2p7x9iB3rw
-	 DdpUFZRwyyeFQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B1FC48BF6;
-	Fri, 16 Feb 2024 11:05:44 +0000 (UTC)
-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
- <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Fri, 16 Feb 2024 14:05:32 +0300
-Subject: [PATCH net-next v2 4/8] net: dsa: mt7530: get rid of useless error
- returns on phylink code path
+	s=k20201202; t=1708081556;
+	bh=9EwGRDiJUOCQYFRJiAC9JK5wa11kNaXqYFEr9m1LBXI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=tUr/PeLlXLrcCeA8bz9B7z5OEd4rXjFpW7Jcpru53mBQK0XYTWFg3ovrgPrPj8PII
+	 BsX8YUTpL+Xf2J4nyojXidQ0RNCBnb2P6x7xypkdjCWnpA0f8nP3AbT2lMa9Quela+
+	 /X89F3sPJV9ztGQ0+5hDGDM1O2Cdt8AU+0FXX+dEBqrOeyA+eXfg2p8jWiyD+0Yosz
+	 uzUdXEr73HYuu++3e/2FUDx6ILb6wVPPxGzSvHUTb/+cGUEmgiw8hjwieFJrvQbjHq
+	 ymbNDzYlRCnI8obgptfdqrDhjT0w2zVxLCHZN80HpQ0eG37EOX0MUmK04qcPhtr+3J
+	 t87c6twyf0/lw==
+Date: Fri, 16 Feb 2024 11:05:43 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Vasileios Amoiridis <vassilisamir@gmail.com>, lars@metafoo.de,
+ ang.iglesiasg@gmail.com, 579lpy@gmail.com, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers: iio: pressure: Add SPI support for BMP38x and
+ BMP390
+Message-ID: <20240216110543.5d6289f6@jic23-huawei>
+In-Reply-To: <Zc5D35_4FdERZXe4@smile.fi.intel.com>
+References: <20240215164332.506736-1-vassilisamir@gmail.com>
+	<Zc5D35_4FdERZXe4@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id:
- <20240216-for-netnext-mt7530-improvements-3-v2-4-094cae3ff23b@arinc9.com>
-References:
- <20240216-for-netnext-mt7530-improvements-3-v2-0-094cae3ff23b@arinc9.com>
-In-Reply-To:
- <20240216-for-netnext-mt7530-improvements-3-v2-0-094cae3ff23b@arinc9.com>
-To: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
- Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, 
- Florian Fainelli <f.fainelli@gmail.com>, 
- Vladimir Oltean <olteanv@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Russell King <linux@armlinux.org.uk>
-Cc: mithat.guner@xeront.com, erkin.bozoglu@xeront.com, 
- Bartel Eerdekens <bartel.eerdekens@constell8.be>, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, 
- =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708081540; l=6745;
- i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=EL1vGonmNpBImZU3uthb96aDLRU2riphSBzoDbxXdI8=;
- b=YQwL4VvRatyXpfnXGPW9IetSxUnkNH6eigKYAzu0rfRUg9jvxRUlaEaCtz0RMh86/iHYu+AQ1
- YunXx+hyr9+BLFaZcCQG3bUGNv3FkHyny4T0EYLIOT9lUQ8l699WJ8v
-X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
- pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
-X-Endpoint-Received:
- by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt with auth_id=115
-X-Original-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-Reply-To: <arinc.unal@arinc9.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Arınç ÜNAL <arinc.unal@arinc9.com>
+On Thu, 15 Feb 2024 19:03:27 +0200
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-Remove error returns on the cases where they are already handled with the
-function the mac_port_get_caps member in mt753x_table points to.
+> On Thu, Feb 15, 2024 at 05:43:32PM +0100, Vasileios Amoiridis wrote:
+> > According to the datasheet of BMP38x and BMP390 devices, in SPI
+> > operation, the first byte that returns after a read operation is
+> > garbage and it needs to be dropped and return the rest of the
+> > bytes.  
+> 
+> Thank you for the patch, my comments below.
+> 
+> ...
+> 
+> > +static int bmp380_regmap_spi_read(void *context, const void *reg,
+> > +				  size_t reg_size, void *val, size_t val_size)
+> > +{
+> > +	struct spi_device *spi = to_spi_device(context);
+> > +	u8 ret[BMP380_SPI_MAX_REG_COUNT_READ + 1];
+> > +	ssize_t status;
+> > +	u8 buf;  
+> 
+> AFAIU this buffer is not DMA-capable.
 
-mt7531_mac_config() is also called from mt7531_cpu_port_config() outside of
-phylink but the port and interface modes are already handled there.
+Doesn't matter in this case as spi_write_then_read() bounces anyway so you don't need
+to provide it with a dma safe buffer. It's in the docs, so we can rely
+on this not changing.
 
-Change the functions and the mac_port_config function pointer to void now
-that there're no error returns anymore.
-
-Remove mt753x_is_mac_port() that used to help the said error returns.
-
-On mt7531_mac_config(), switch to if statements to simplify the code.
-
-Remove internal phy cases from mt753x_phylink_mac_config(), there is no
-need to check the interface mode as that's already handled with the
-function the mac_port_get_caps member in mt753x_table points to.
-
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-Acked-by: Daniel Golle <daniel@makrotopia.org>
-Tested-by: Daniel Golle <daniel@makrotopia.org>
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
----
- drivers/net/dsa/mt7530.c | 81 ++++++++++--------------------------------------
- drivers/net/dsa/mt7530.h |  6 ++--
- 2 files changed, 19 insertions(+), 68 deletions(-)
-
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 296711fd5c43..c069bf273733 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -2587,7 +2587,7 @@ static void mt7988_mac_port_get_caps(struct dsa_switch *ds, int port,
- 	}
- }
- 
--static int
-+static void
- mt7530_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
- 		  phy_interface_t interface)
- {
-@@ -2597,22 +2597,14 @@ mt7530_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
- 		mt7530_setup_port5(priv->ds, interface);
- 	else if (port == 6)
- 		mt7530_setup_port6(priv->ds, interface);
--
--	return 0;
- }
- 
--static int mt7531_rgmii_setup(struct mt7530_priv *priv, u32 port,
--			      phy_interface_t interface,
--			      struct phy_device *phydev)
-+static void mt7531_rgmii_setup(struct mt7530_priv *priv, u32 port,
-+			       phy_interface_t interface,
-+			       struct phy_device *phydev)
- {
- 	u32 val;
- 
--	if (priv->p5_sgmii) {
--		dev_err(priv->dev, "RGMII mode is not available for port %d\n",
--			port);
--		return -EINVAL;
--	}
--
- 	val = mt7530_read(priv, MT7531_CLKGEN_CTRL);
- 	val |= GP_CLK_EN;
- 	val &= ~GP_MODE_MASK;
-@@ -2640,20 +2632,14 @@ static int mt7531_rgmii_setup(struct mt7530_priv *priv, u32 port,
- 		case PHY_INTERFACE_MODE_RGMII_ID:
- 			break;
- 		default:
--			return -EINVAL;
-+			break;
- 		}
- 	}
--	mt7530_write(priv, MT7531_CLKGEN_CTRL, val);
--
--	return 0;
--}
- 
--static bool mt753x_is_mac_port(u32 port)
--{
--	return (port == 5 || port == 6);
-+	mt7530_write(priv, MT7531_CLKGEN_CTRL, val);
- }
- 
--static int
-+static void
- mt7531_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
- 		  phy_interface_t interface)
- {
-@@ -2661,42 +2647,21 @@ mt7531_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
- 	struct phy_device *phydev;
- 	struct dsa_port *dp;
- 
--	if (!mt753x_is_mac_port(port)) {
--		dev_err(priv->dev, "port %d is not a MAC port\n", port);
--		return -EINVAL;
--	}
--
--	switch (interface) {
--	case PHY_INTERFACE_MODE_RGMII:
--	case PHY_INTERFACE_MODE_RGMII_ID:
--	case PHY_INTERFACE_MODE_RGMII_RXID:
--	case PHY_INTERFACE_MODE_RGMII_TXID:
-+	if (phy_interface_mode_is_rgmii(interface)) {
- 		dp = dsa_to_port(ds, port);
- 		phydev = dp->user->phydev;
--		return mt7531_rgmii_setup(priv, port, interface, phydev);
--	case PHY_INTERFACE_MODE_SGMII:
--	case PHY_INTERFACE_MODE_NA:
--	case PHY_INTERFACE_MODE_1000BASEX:
--	case PHY_INTERFACE_MODE_2500BASEX:
--		/* handled in SGMII PCS driver */
--		return 0;
--	default:
--		return -EINVAL;
-+		mt7531_rgmii_setup(priv, port, interface, phydev);
- 	}
--
--	return -EINVAL;
- }
- 
--static int
-+static void
- mt753x_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
- 		  const struct phylink_link_state *state)
- {
- 	struct mt7530_priv *priv = ds->priv;
- 
--	if (!priv->info->mac_port_config)
--		return 0;
--
--	return priv->info->mac_port_config(ds, port, mode, state->interface);
-+	if (priv->info->mac_port_config)
-+		priv->info->mac_port_config(ds, port, mode, state->interface);
- }
- 
- static struct phylink_pcs *
-@@ -2725,17 +2690,11 @@ mt753x_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
- 	u32 mcr_cur, mcr_new;
- 
- 	switch (port) {
--	case 0 ... 4:
--		if (state->interface != PHY_INTERFACE_MODE_GMII &&
--		    state->interface != PHY_INTERFACE_MODE_INTERNAL)
--			goto unsupported;
--		break;
- 	case 5:
- 		if (priv->p5_interface == state->interface)
- 			break;
- 
--		if (mt753x_mac_config(ds, port, mode, state) < 0)
--			goto unsupported;
-+		mt753x_mac_config(ds, port, mode, state);
- 
- 		if (priv->p5_intf_sel != P5_DISABLED)
- 			priv->p5_interface = state->interface;
-@@ -2744,16 +2703,10 @@ mt753x_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
- 		if (priv->p6_interface == state->interface)
- 			break;
- 
--		if (mt753x_mac_config(ds, port, mode, state) < 0)
--			goto unsupported;
-+		mt753x_mac_config(ds, port, mode, state);
- 
- 		priv->p6_interface = state->interface;
- 		break;
--	default:
--unsupported:
--		dev_err(ds->dev, "%s: unsupported %s port: %i\n",
--			__func__, phy_modes(state->interface), port);
--		return;
- 	}
- 
- 	mcr_cur = mt7530_read(priv, MT7530_PMCR_P(port));
-@@ -2836,7 +2789,6 @@ mt7531_cpu_port_config(struct dsa_switch *ds, int port)
- 	struct mt7530_priv *priv = ds->priv;
- 	phy_interface_t interface;
- 	int speed;
--	int ret;
- 
- 	switch (port) {
- 	case 5:
-@@ -2861,9 +2813,8 @@ mt7531_cpu_port_config(struct dsa_switch *ds, int port)
- 	else
- 		speed = SPEED_1000;
- 
--	ret = mt7531_mac_config(ds, port, MLO_AN_FIXED, interface);
--	if (ret)
--		return ret;
-+	mt7531_mac_config(ds, port, MLO_AN_FIXED, interface);
-+
- 	mt7530_write(priv, MT7530_PMCR_P(port),
- 		     PMCR_CPU_PORT_SETTING(priv->id));
- 	mt753x_phylink_mac_link_up(ds, port, MLO_AN_FIXED, interface, NULL,
-diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
-index 26a6d2160c08..b1665de7f640 100644
---- a/drivers/net/dsa/mt7530.h
-+++ b/drivers/net/dsa/mt7530.h
-@@ -730,9 +730,9 @@ struct mt753x_info {
- 	void (*mac_port_validate)(struct dsa_switch *ds, int port,
- 				  phy_interface_t interface,
- 				  unsigned long *supported);
--	int (*mac_port_config)(struct dsa_switch *ds, int port,
--			       unsigned int mode,
--			       phy_interface_t interface);
-+	void (*mac_port_config)(struct dsa_switch *ds, int port,
-+				unsigned int mode,
-+				phy_interface_t interface);
- };
- 
- /* struct mt7530_priv -	This is the main data structure for holding the state
-
--- 
-2.40.1
+https://elixir.bootlin.com/linux/latest/source/drivers/spi/spi.c#L4391
 
