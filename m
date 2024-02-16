@@ -1,486 +1,410 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28EE130AD8
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 17:04:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A6D433987
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 17:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708103090; cv=none; b=DccVg0LVOb4wljOQajoTsBygMjNczQoaMUvJsHrqVgoHv1R0tnM3ZvMlX2wu0iw4okFHIJiRa6u5hjl+JdkRS8Vzq1MlS/qMVb75sAfK0WYqyZ+aF4WAIPvYhdTdHJydym/04Gr6jNAsOAwElRYYBsP05BsE7I3JuVyswEYsnzs=
+	t=1708103090; cv=none; b=R5P26V2ud/4XTjptrqliyYuy/RosaHPhGMEbBhoXn0d2TN+vkwNMjAjWpDMoz+rbsZ0LnCWL+gJMpwCX/nvwIj1x37fvWqhYrvrKSKNFGuzc+DKI+9sSPH3sQ9jc37iLvui39eK/q7J5ghd9+wIPcJEzUMNQhLTyu440tFLEQGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708103090; c=relaxed/simple;
-	bh=+v//8WVn3MVA+fRB3iK8/p8gHK/v/DBelqoowUcll7Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YRf5TDsmVDzRJ+zn0CAr3rUgqGnmPjPU/juLw6BaZ/2OY5VMQON2lbYtqF+wOKgotqHuwOOIMHrobUvlO2J2fX9vAm/dtYmcmnQy745DULk0gspGE8NOqodPG9RhYKc1GUul8WcrYunQ1yZ71OHCuD5XrzseQgOsX4n1udXoFMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=Zd8OtdDE; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	bh=ub6pqJApu3aHhSCW8ZP49OQ/OImP8xXZtrj2SLi+MBE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SQRoytH9aKUNRaanoa0M8lpiTy4jugjllA67yKG6+PflgjnTaqOhysuoHYf3SvRniHIO24+11kijQOx6Hi9a/Z4OBoJiw6yrBC97jWH8lqX/JJEftfLuGo7IhQldZfK6YxQGtJruNCGX1QEOqC7re9IX3dXz+kMxk6iyDbPiAvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=FZDfBj5s; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=JN2VGths; arc=none smtp.client-ip=66.111.4.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Zd8OtdDE"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-411baa02bc3so3037455e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 09:04:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1708103087; x=1708707887; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ivwhLebdUuD1A5Otgnd7/ZhxAtbeQ+cN+CSubuJmL3g=;
-        b=Zd8OtdDEC2a5xM47t94P4YiCouctBdD3MN35OYgBXXL6bGDuH03bR6BGcz2vsrPAVF
-         x3/Ow6ua3aZusYMjoXz+BqUUl2VPye+ifZI2pZ1aIJn5nt4Dlc5sdQGOxLKC3iDgp0s+
-         hJKbo0W9zItAkyUvnJVLnY7/W3vlNDJc2r3U4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708103087; x=1708707887;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ivwhLebdUuD1A5Otgnd7/ZhxAtbeQ+cN+CSubuJmL3g=;
-        b=wKHIjxV1OkIdtxlyFEaSyjmLy+S7KYqFK0UKgZU3ykgjoOJz2fuu2T21t8Ynohy/PT
-         cTMqkUWRqghKcaEq8YgK9YE8GzegLzsgAcjKIlm7un0NB6QKR+YJ5O0jiKuUimWrfzZT
-         1IYVQOeT/HkW59qUWci9YGb6ycKkL+Cxs4GMxA/iEM2yBfHCyDo821mMrFEhAhDBxtAA
-         LGfAY3fLumAMza9Ic9TYmP4EWcovIexLto5q1jKjaphUGVI+U81kTAXqMB5M0P61qfgS
-         K9MYOJK7WhH1nC2FroWLgdh8Ejeb1MpIgqo3ukO/y5JK1TSjSHM8rpkrJBrzop4VT84q
-         9xIA==
-X-Forwarded-Encrypted: i=1; AJvYcCWkGWSoPJfhMT1qHH+TazEOrQEFOVHAsNI2KMnH4W7YiQY0oYWYdd4YjL2505HS3uFVpw1vV2BVlXo+n1Qr91Jn+F+J+fmBN9e041HI
-X-Gm-Message-State: AOJu0YwNTH62jbePql00W9s69ScUGileROCZ9+UdCeHy4MxfiF0gdIm2
-	4Ycx09bY0NmEIVxMVSnAFaoZhF8z0VHFpHqA6xYLV9oe99XijqoOTpwMRhoNkkg=
-X-Google-Smtp-Source: AGHT+IGxIbJQdotpNxoYDDuZqhrA0VU+pE2iwUZz2LV9N47mgjCflPHbe0NI9pdRvHAvhxRb9JEmlQ==
-X-Received: by 2002:a05:600c:4446:b0:412:cd2:2ce6 with SMTP id v6-20020a05600c444600b004120cd22ce6mr1930753wmn.3.1708103086789;
-        Fri, 16 Feb 2024 09:04:46 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id k10-20020a7bc40a000000b004101f27737asm2849571wmi.29.2024.02.16.09.04.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 09:04:45 -0800 (PST)
-Date: Fri, 16 Feb 2024 18:04:43 +0100
-From: Daniel Vetter <daniel@ffwll.ch>
-To: Hsiao Chien Sung <shawn.sung@mediatek.com>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Bibby Hsieh <bibby.hsieh@mediatek.com>, CK Hu <ck.hu@mediatek.com>,
-	Sean Paul <seanpaul@chromium.org>, Fei Shao <fshao@chromium.org>,
-	Jason Chen <jason-ch.chen@mediatek.corp-partner.google.com>,
-	"Nancy . Lin" <nancy.lin@mediatek.com>,
-	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 10/13] drm/mediatek: Support CRC in display driver
-Message-ID: <Zc-Vq2MeG9X37JJe@phenom.ffwll.local>
-Mail-Followup-To: Hsiao Chien Sung <shawn.sung@mediatek.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	David Airlie <airlied@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Bibby Hsieh <bibby.hsieh@mediatek.com>, CK Hu <ck.hu@mediatek.com>,
-	Sean Paul <seanpaul@chromium.org>, Fei Shao <fshao@chromium.org>,
-	Jason Chen <jason-ch.chen@mediatek.corp-partner.google.com>,
-	"Nancy . Lin" <nancy.lin@mediatek.com>,
-	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240215101119.12629-1-shawn.sung@mediatek.com>
- <20240215101119.12629-11-shawn.sung@mediatek.com>
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="FZDfBj5s";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JN2VGths"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.nyi.internal (Postfix) with ESMTP id 113095C003F;
+	Fri, 16 Feb 2024 12:04:47 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Fri, 16 Feb 2024 12:04:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:reply-to:subject:subject:to:to; s=fm1; t=1708103087; x=
+	1708189487; bh=ZH53TYSgqNLH2t7OXmnHBSODgAGrqTB8UB8RRzsq1uM=; b=F
+	ZDfBj5sgL8sgcGN4il/GLNbtHrmWPLHRJpMnsPvygDN1X8dD4nsC5i5QWH/V9zo9
+	wH2xpyuIrhxWiOImM4agTRiKVYfs1u4lmGbgZgUl2s0Z89OSwX9PbMo+iAveQE5/
+	HajGEHiaMIMPH5DTK2Y79Zot5vXR6EX/rz1J06U9L2SNj7Q4Ff5DCHneH7sg4KSG
+	2+cUnOIsYlAmigLCDnueiTqRlHZ5B8i2yZXZhwrgBJJTfM1YuH7XD2Gdvq/gmnTn
+	76uwkuQuhG49HGl+OmlMrzha5AAzOy70oCFNoVpq80+QQ69vsUbi7X6im9Q6+cMd
+	iu/ktFJq/G8eGSm+DeTag==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:reply-to
+	:subject:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm1; t=1708103087; x=1708189487; bh=Z
+	H53TYSgqNLH2t7OXmnHBSODgAGrqTB8UB8RRzsq1uM=; b=JN2VGthsx20KKIlYf
+	9fqzmltovz9Bm4ed1Yy7kQ3IvxGjwWzRP48F5WU9JTeIE5pn22nvoPwaIu0Vdzs3
+	7gi3nSit/os/8jvQ7wxIDT7tNELfMHgIrNze/29pBgbg7F/vBbQII/DkpFEPn1Yi
+	CDTXPuKyAiX9qyF+jTb4f24qsaqTzxvZfLx0rLLlNqJLOYoHfm/FALOewdOTUGkt
+	rh8Z6+zVwcm2kMc/2nLN5SwV4wEJlYd+YgusvaKA1wlAPkw4onKsT+D6wqMKERzo
+	ffxEsEHqwAmX2s7Yr0phMx/nsQycFFjyaGfIZKeT1j31HoCqPKNSREs0/1WPaUv0
+	YL8cw==
+X-ME-Sender: <xms:qpXPZa6HPh-c1AF64CJp2oTpQgepg0CKyGUVmDw1Ayeao10pKUfD3w>
+    <xme:qpXPZT415LtHl6zeDHFAUaum970X0PC1uUY4UjvtMprnM6KYUQo9TwvPIZvgYaK8y
+    ruAF7IFb_7apuTQ_Q>
+X-ME-Received: <xmr:qpXPZZe3iNhadhySCWIG-wpVvZP1ub5xXqJI7aFZ-maiSAaJIshUoqrzemQoFjEbk5_UJyPwdkWSmDOdwOeaouGNO-e3S9Ji2buQ0u8IBUMHd32ARSnjEDvR>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddvgdeliecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvfevufffkfforhggtgfgsehtkeertdertdejnecuhfhrohhmpegkihcujggr
+    nhcuoeiiihdrhigrnhesshgvnhhtrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfelud
+    fhhfejtddttedujedtueeiveeutedutdeutdfhffffgfeufffhgeejffenucffohhmrghi
+    nhepkhgvrhhnvghlrdhorhhgpdhfohhlihhoshdrmhhmpdgtohhmphgrtghtihhonhdrmh
+    hmpdhsphhlihhtrdhmmhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpeiiihdrhigrnhesshgvnhhtrdgtohhm
+X-ME-Proxy: <xmx:qpXPZXJBP33woB6L5OkHCPS_ZzYH0EN4jabbUl2C4FWnp0e42EBvAw>
+    <xmx:qpXPZeINF5Z9Adidw5cuoOK56L4Hg1nH3C7YWutsFnaKTrGr4gZqAw>
+    <xmx:qpXPZYyRiOdRwvdDPjOLor42GHmJSWB4dpenyeq82HnwagUsHs0vog>
+    <xmx:r5XPZTC0plhXSZT-ytjmeZRwweQTscAKCqUl3jgfld-3bwjBNgPlYw>
+Feedback-ID: iccd040f4:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 16 Feb 2024 12:04:41 -0500 (EST)
+From: Zi Yan <zi.yan@sent.com>
+To: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: Zi Yan <ziy@nvidia.com>,
+	"Huang, Ying" <ying.huang@intel.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	David Hildenbrand <david@redhat.com>,
+	"Yin, Fengwei" <fengwei.yin@intel.com>,
+	Yu Zhao <yuzhao@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Kemeng Shi <shikemeng@huaweicloud.com>,
+	Mel Gorman <mgorman@techsingularity.net>,
+	Rohan Puri <rohan.puri15@gmail.com>,
+	Mcgrof Chamberlain <mcgrof@kernel.org>,
+	Adam Manzanares <a.manzanares@samsung.com>,
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+Subject: [PATCH v6 0/4] Enable >0 order folio memory compaction
+Date: Fri, 16 Feb 2024 12:04:28 -0500
+Message-ID: <20240216170432.1268753-1-zi.yan@sent.com>
+X-Mailer: git-send-email 2.43.0
+Reply-To: Zi Yan <ziy@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240215101119.12629-11-shawn.sung@mediatek.com>
-X-Operating-System: Linux phenom 6.6.11-amd64 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 15, 2024 at 06:11:16PM +0800, Hsiao Chien Sung wrote:
-> Register CRC related function pointers to support
-> CRC retrieval.
-> 
-> Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_crtc.c     | 239 ++++++++++++++++++++
->  drivers/gpu/drm/mediatek/mtk_drm_crtc.h     |  39 ++++
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |   3 +
->  3 files changed, 281 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> index 14cf75fa217f9..6cb1ed419dee7 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> @@ -68,6 +68,9 @@ struct mtk_drm_crtc {
->  	/* lock for display hardware access */
->  	struct mutex			hw_lock;
->  	bool				config_updating;
-> +
-> +	struct mtk_ddp_comp		*crc_provider;
-> +	unsigned int			frames;
->  };
->  
->  struct mtk_crtc_state {
-> @@ -635,6 +638,14 @@ static void mtk_crtc_ddp_irq(void *data)
->  	struct drm_crtc *crtc = data;
->  	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
->  	struct mtk_drm_private *priv = crtc->dev->dev_private;
-> +	struct mtk_ddp_comp *comp = mtk_crtc->crc_provider;
-> +
-> +	/*
-> +	 * crc providers should make sure the crc is always correct
-> +	 * by resetting it in .crc_read()
-> +	 */
-> +	if (crtc->crc.opened)
-> +		comp->funcs->crc_read(comp->dev);
->  
->  #if IS_REACHABLE(CONFIG_MTK_CMDQ)
->  	if (!priv->data->shadow_register && !mtk_crtc->cmdq_client.chan)
-> @@ -646,6 +657,24 @@ static void mtk_crtc_ddp_irq(void *data)
->  	if (!priv->data->shadow_register)
->  		mtk_crtc_ddp_config(crtc, NULL);
->  #endif
-> +
-> +	/*
-> +	 * drm_crtc_add_crc_entry() could take more than 50ms to finish
-> +	 * put it at the end of the isr
-> +	 */
+From: Zi Yan <ziy@nvidia.com>
 
-Uh this looks really scary, especially since you put this before the call
-to drm_crtc_handle_vblank in the function below, which really shouldn't be
-unecessarily delayed (because that's the one that takes the vblank
-timestamp).
+Hi all,
 
-This sounds like the perfect application for a vblank worker though, so
-you please look into drm_vblank_work.h. And if that is not useable due to
-hardware constraint, then please explain in a comment here and in the
-commit message why you cannot use that and have to roll your own. vblank
-work really should be your first choice here, because:
-- it's designed for expensive vblank work
-- it gives you all the flush/cancel_sync functions you need for disabling
-  crc again, and in a race-free implementation. Much better to use common
-  code than to reinvent synchronization wheels in drivers :-)
+This patchset enables >0 order folio memory compaction, which is one of
+the prerequisitions for large folio support[1]. It is on top of
+mm-everything-2024-02-16-01-35.
 
-> +	if (crtc->crc.opened) {
+I am aware of that split free pages is necessary for folio
+migration in compaction, since if >0 order free pages are never split
+and no order-0 free page is scanned, compaction will end prematurely due
+to migration returns -ENOMEM. Free page split becomes a must instead of
+an optimization.
 
-Because this is probably not race-free, so we need something solid here.
-
-Cheers, Sima
+lkp ncompare results (on a 8-CPU (Intel Xeon E5-2650 v4 @2.20GHz) 16G VM)
+for default LRU (-no-mglru) and CONFIG_LRU_GEN are shown at the bottom,
+copied from V3[4].
+In sum, most of vm-scalability applications do not see performance
+change, and the others see ~4% to ~26% performance boost under default LRU
+and ~2% to ~6% performance boost under CONFIG_LRU_GEN.
 
 
-> +		/*
-> +		 * skip the first crc because the first frame is configured by
-> +		 * mtk_crtc_ddp_hw_init() when atomic enable
-> +		 */
-> +		if (++mtk_crtc->frames > 1) {
-> +			drm_crtc_add_crc_entry(crtc, true,
-> +					       drm_crtc_vblank_count(crtc),
-> +					       comp->funcs->crc_entry(comp->dev));
-> +		}
-> +	} else {
-> +		mtk_crtc->frames = 0;
-> +	}
->  	mtk_drm_finish_page_flip(mtk_crtc);
->  }
->  
-> @@ -704,6 +733,40 @@ static void mtk_drm_crtc_update_output(struct drm_crtc *crtc,
->  	}
->  }
->  
-> +static int mtk_drm_crtc_set_crc_source(struct drm_crtc *crtc, const char *src)
-> +{
-> +	if (src && strcmp(src, "auto") != 0) {
-> +		DRM_ERROR("%s(crtc-%d): unknown source '%s'\n",
-> +			  __func__, drm_crtc_index(crtc), src);
-> +		return -EINVAL;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int mtk_drm_crtc_verify_crc_source(struct drm_crtc *crtc,
-> +					  const char *src,
-> +					  size_t *cnt)
-> +{
-> +	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
-> +	struct mtk_ddp_comp *comp = mtk_crtc->crc_provider;
-> +
-> +	if (!comp) {
-> +		DRM_ERROR("%s(crtc-%d): no crc provider\n",
-> +			  __func__, drm_crtc_index(crtc));
-> +		return -ENOENT;
-> +	}
-> +
-> +	if (src && strcmp(src, "auto") != 0) {
-> +		DRM_ERROR("%s(crtc-%d): unknown source '%s'\n",
-> +			  __func__, drm_crtc_index(crtc), src);
-> +		return -EINVAL;
-> +	}
-> +
-> +	*cnt = comp->funcs->crc_cnt(comp->dev);
-> +
-> +	return 0;
-> +}
-> +
->  int mtk_drm_crtc_plane_check(struct drm_crtc *crtc, struct drm_plane *plane,
->  			     struct mtk_plane_state *state)
->  {
-> @@ -841,6 +904,8 @@ static const struct drm_crtc_funcs mtk_crtc_funcs = {
->  	.atomic_destroy_state	= mtk_drm_crtc_destroy_state,
->  	.enable_vblank		= mtk_drm_crtc_enable_vblank,
->  	.disable_vblank		= mtk_drm_crtc_disable_vblank,
-> +	.set_crc_source		= mtk_drm_crtc_set_crc_source,
-> +	.verify_crc_source	= mtk_drm_crtc_verify_crc_source,
->  };
->  
->  static const struct drm_crtc_helper_funcs mtk_crtc_helper_funcs = {
-> @@ -1033,6 +1098,11 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
->  
->  			if (comp->funcs->ctm_set)
->  				has_ctm = true;
-> +
-> +			if (comp->funcs->crc_cnt &&
-> +			    comp->funcs->crc_entry &&
-> +			    comp->funcs->crc_read)
-> +				mtk_crtc->crc_provider = comp;
->  		}
->  
->  		mtk_ddp_comp_register_vblank_cb(comp, mtk_crtc_ddp_irq,
-> @@ -1137,3 +1207,172 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
->  
->  	return 0;
->  }
-> +
-> +void mtk_drm_crc_init(struct mtk_drm_crc *crc,
-> +		      const u32 *crc_offset_table, size_t crc_count,
-> +		      u32 reset_offset, u32 reset_mask)
-> +{
-> +	crc->ofs = crc_offset_table;
-> +	crc->cnt = crc_count;
-> +	crc->rst_ofs = reset_offset;
-> +	crc->rst_msk = reset_mask;
-> +	crc->va = kcalloc(crc->cnt, sizeof(*crc->va), GFP_KERNEL);
-> +	if (!crc->va) {
-> +		DRM_ERROR("failed to allocate memory for crc\n");
-> +		crc->cnt = 0;
-> +	}
-> +}
-> +
-> +void mtk_drm_crc_read(struct mtk_drm_crc *crc, void __iomem *reg)
-> +{
-> +	if (!crc->cnt || !crc->ofs || !crc->va)
-> +		return;
-> +
-> +#if IS_REACHABLE(CONFIG_MTK_CMDQ)
-> +	/* sync to see the most up-to-date copy of the DMA buffer */
-> +	dma_sync_single_for_cpu(crc->cmdq_client.chan->mbox->dev,
-> +				crc->pa, crc->cnt * sizeof(*crc->va),
-> +				DMA_FROM_DEVICE);
-> +#else
-> +	/* read crc with cpu for the platforms without cmdq */
-> +	{
-> +		u32 n;
-> +
-> +		for (n = 0; n < crc->cnt; n++)
-> +			crc->va[n] = readl(reg + crc->ofs[n]);
-> +
-> +		n = readl(reg + crc->rst_ofs);
-> +
-> +		/* pull reset bit */
-> +		n |= crc->rst_msk;
-> +		writel(n, reg + crc->rst_ofs);
-> +
-> +		/* release reset bit */
-> +		n &= ~crc->rst_msk;
-> +		writel(n, reg + crc->rst_ofs);
-> +	}
-> +#endif
-> +}
-> +
-> +void mtk_drm_crc_destroy(struct mtk_drm_crc *crc)
-> +{
-> +	if (!crc->cnt)
-> +		return;
-> +
-> +#if IS_REACHABLE(CONFIG_MTK_CMDQ)
-> +	if (crc->pa) {
-> +		dma_unmap_single(crc->cmdq_client.chan->mbox->dev,
-> +				 crc->pa, crc->cnt * sizeof(*crc->va),
-> +				 DMA_TO_DEVICE);
-> +		crc->pa = 0;
-> +	}
-> +	if (crc->cmdq_client.chan) {
-> +		mtk_drm_cmdq_pkt_destroy(&crc->cmdq_handle);
-> +		mbox_free_channel(crc->cmdq_client.chan);
-> +		crc->cmdq_client.chan = NULL;
-> +	}
-> +#endif
-> +	kfree(crc->va);
-> +	crc->va = NULL;
-> +	crc->cnt = 0;
-> +}
-> +
-> +#if IS_REACHABLE(CONFIG_MTK_CMDQ)
-> +void mtk_drm_crc_cmdq_create(struct device *dev, struct mtk_drm_crc *crc)
-> +{
-> +	int i;
-> +
-> +	if (!crc->cnt) {
-> +		dev_warn(dev, "%s: not support\n", __func__);
-> +		goto cleanup;
-> +	}
-> +
-> +	if (!crc->ofs) {
-> +		dev_warn(dev, "%s: not defined\n", __func__);
-> +		goto cleanup;
-> +	}
-> +
-> +	crc->cmdq_client.client.dev = dev;
-> +	crc->cmdq_client.client.tx_block = false;
-> +	crc->cmdq_client.client.knows_txdone = true;
-> +	crc->cmdq_client.client.rx_callback = NULL;
-> +	crc->cmdq_client.chan = mbox_request_channel(&crc->cmdq_client.client, 0);
-> +	if (IS_ERR(crc->cmdq_client.chan)) {
-> +		dev_warn(dev, "%s: failed to create mailbox client\n", __func__);
-> +		crc->cmdq_client.chan = NULL;
-> +		goto cleanup;
-> +	}
-> +
-> +	if (mtk_drm_cmdq_pkt_create(&crc->cmdq_client, &crc->cmdq_handle, PAGE_SIZE)) {
-> +		dev_warn(dev, "%s: failed to create cmdq packet\n", __func__);
-> +		goto cleanup;
-> +	}
-> +
-> +	if (!crc->va) {
-> +		dev_warn(dev, "%s: no memory\n", __func__);
-> +		goto cleanup;
-> +	}
-> +
-> +	/* map the entry to get a dma address for cmdq to store the crc */
-> +	crc->pa = dma_map_single(crc->cmdq_client.chan->mbox->dev,
-> +				 crc->va, crc->cnt * sizeof(*crc->va),
-> +				 DMA_FROM_DEVICE);
-> +
-> +	if (dma_mapping_error(crc->cmdq_client.chan->mbox->dev, crc->pa)) {
-> +		dev_err(dev, "%s: failed to map dma\n", __func__);
-> +		goto cleanup;
-> +	}
-> +
-> +	if (crc->cmdq_event)
-> +		cmdq_pkt_wfe(&crc->cmdq_handle, crc->cmdq_event, true);
-> +
-> +	for (i = 0; i < crc->cnt; i++) {
-> +		/* put crc to spr1 register */
-> +		cmdq_pkt_read_s(&crc->cmdq_handle, crc->cmdq_reg->subsys,
-> +				crc->cmdq_reg->offset + crc->ofs[i],
-> +				CMDQ_THR_SPR_IDX1);
-> +
-> +		/* copy spr1 register to physical address of the crc */
-> +		cmdq_pkt_assign(&crc->cmdq_handle, CMDQ_THR_SPR_IDX0,
-> +				CMDQ_ADDR_HIGH(crc->pa + i * sizeof(*crc->va)));
-> +		cmdq_pkt_write_s(&crc->cmdq_handle, CMDQ_THR_SPR_IDX0,
-> +				 CMDQ_ADDR_LOW(crc->pa + i * sizeof(*crc->va)),
-> +				 CMDQ_THR_SPR_IDX1);
-> +	}
-> +	/* reset crc */
-> +	mtk_ddp_write_mask(&crc->cmdq_handle, ~0, crc->cmdq_reg, 0,
-> +			   crc->rst_ofs, crc->rst_msk);
-> +
-> +	/* clear reset bit */
-> +	mtk_ddp_write_mask(&crc->cmdq_handle, 0, crc->cmdq_reg, 0,
-> +			   crc->rst_ofs, crc->rst_msk);
-> +
-> +	/* jump to head of the cmdq packet */
-> +	cmdq_pkt_jump(&crc->cmdq_handle, crc->cmdq_handle.pa_base);
-> +
-> +	return;
-> +cleanup:
-> +	mtk_drm_crc_destroy(crc);
-> +}
-> +
-> +void mtk_drm_crc_cmdq_start(struct mtk_drm_crc *crc)
-> +{
-> +	if (!crc->cmdq_client.chan)
-> +		return;
-> +
-> +	dma_sync_single_for_device(crc->cmdq_client.chan->mbox->dev,
-> +				   crc->cmdq_handle.pa_base,
-> +				   crc->cmdq_handle.cmd_buf_size,
-> +				   DMA_TO_DEVICE);
-> +	mbox_send_message(crc->cmdq_client.chan, &crc->cmdq_handle);
-> +	mbox_client_txdone(crc->cmdq_client.chan, 0);
-> +}
-> +
-> +void mtk_drm_crc_cmdq_stop(struct mtk_drm_crc *crc)
-> +{
-> +	if (!crc->cmdq_client.chan)
-> +		return;
-> +
-> +	mbox_flush(crc->cmdq_client.chan, 2000);
-> +}
-> +#endif
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.h b/drivers/gpu/drm/mediatek/mtk_drm_crtc.h
-> index 3c224595fa714..0683ec4bc26f6 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.h
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.h
-> @@ -15,6 +15,45 @@
->  #define MTK_MAX_BPC	10
->  #define MTK_MIN_BPC	3
->  
-> +/**
-> + * struct mtk_drm_crc - crc related information
-> + * @ofs: register offset of crc
-> + * @rst_ofs: register offset of crc reset
-> + * @rst_msk: register mask of crc reset
-> + * @cnt: count of crc
-> + * @va: pointer to the start of crc array
-> + * @pa: physical address of the crc for gce to access
-> + * @cmdq_event: the event to trigger the cmdq
-> + * @cmdq_reg: address of the register that cmdq is going to access
-> + * @cmdq_client: handler to control cmdq (mbox channel, thread ...etc.)
-> + * @cmdq_handle: cmdq packet to store the commands
-> + */
-> +struct mtk_drm_crc {
-> +	const u32 *ofs;
-> +	u32 rst_ofs;
-> +	u32 rst_msk;
-> +	size_t cnt;
-> +	u32 *va;
-> +#if IS_REACHABLE(CONFIG_MTK_CMDQ)
-> +	dma_addr_t pa;
-> +	u32 cmdq_event;
-> +	struct cmdq_client_reg *cmdq_reg;
-> +	struct cmdq_client cmdq_client;
-> +	struct cmdq_pkt cmdq_handle;
-> +#endif
-> +};
-> +
-> +void mtk_drm_crc_init(struct mtk_drm_crc *crc,
-> +		      const u32 *crc_offset_table, size_t crc_count,
-> +		      u32 reset_offset, u32 reset_mask);
-> +void mtk_drm_crc_read(struct mtk_drm_crc *crc, void __iomem *reg);
-> +void mtk_drm_crc_destroy(struct mtk_drm_crc *crc);
-> +#if IS_REACHABLE(CONFIG_MTK_CMDQ)
-> +void mtk_drm_crc_cmdq_create(struct device *dev, struct mtk_drm_crc *crc);
-> +void mtk_drm_crc_cmdq_start(struct mtk_drm_crc *crc);
-> +void mtk_drm_crc_cmdq_stop(struct mtk_drm_crc *crc);
-> +#endif
-> +
->  void mtk_drm_crtc_commit(struct drm_crtc *crtc);
->  int mtk_drm_crtc_create(struct drm_device *drm_dev,
->  			const unsigned int *path,
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> index 215b7234ff13c..231017470607e 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> @@ -87,6 +87,9 @@ struct mtk_ddp_comp_funcs {
->  	void (*remove)(struct device *dev, struct mtk_mutex *mutex);
->  	unsigned int (*encoder_index)(struct device *dev);
->  	enum drm_mode_status (*mode_valid)(struct device *dev, const struct drm_display_mode *mode);
-> +	size_t (*crc_cnt)(struct device *dev);
-> +	u32 *(*crc_entry)(struct device *dev);
-> +	void (*crc_read)(struct device *dev);
->  };
->  
->  struct mtk_ddp_comp {
-> -- 
-> 2.18.0
-> 
+Changelog
+===
+
+From V5 [6]
+1. Removed unused parameter in prepare_free_pages() and used it instead
+of my old prepare_free_pages_fpi_none() (per Vlastimil Babka).
+
+2. Removed unnecessary INIT_LIST_HEAD() in compaction_free()
+(per Vlastimil Babka).
+
+3. Fixed cc->nr_migratepages update in compaction_free()
+(per Vlastimil Babka).
+
+
+From V4 [5]:
+1. Refactored code in compaction_alloc() in Patch 3 (per Yu Zhao).
+
+
+From V3 [4]:
+1. Restructured isolate_migratepages_block() to minimize PageHuge() use
+in Patch 1 (per Vlastimil Babka).
+
+2. Used folio_put_testzero() instead of folio_set_count() to properly
+handle free pages in compaction_free() (per Vlastimil Babka).
+
+3. Simplified code to use struct list_head instead of a new struct page_list
+(per Vlastimil Babka).
+
+4. Restructured compaction_alloc() code to reduce indentation and
+increase readability (per Vlastimil Babka).
+
+
+From V2 [3]:
+1. Added missing free page count in fast isolation path. This fixed the
+weird performance outcome.
+
+
+From V1 [2]:
+1. Used folio_test_large() instead of folio_order() > 0. (per Matthew
+Wilcox)
+
+2. Fixed code rebase error. (per Baolin Wang)
+
+3. Used list_split_init() instead of list_split(). (per Ryan Boberts)
+
+4. Added free_pages_prepare_fpi_none() to avoid duplicate free page code
+in compaction_free().
+
+5. Dropped source page order sorting patch.
+
+
+From RFC [1]:
+1. Enabled >0 order folio compaction in the first patch by splitting all
+to-be-migrated folios. (per Huang, Ying)
+
+2. Stopped isolating compound pages with order greater than cc->order
+to avoid wasting effort, since cc->order gives a hint that no free pages
+with order greater than it exist, thus migrating the compound pages will fail.
+(per Baolin Wang)
+
+3. Retained the folio check within lru lock. (per Baolin Wang)
+
+4. Made isolate_freepages_block() generate order-sorted multi lists.
+(per Johannes Weiner)
+
+Overview
+===
+
+To support >0 order folio compaction, the patchset changes how free pages used
+for migration are kept during compaction. Free pages used to be split into
+order-0 pages that are post allocation processed (i.e., PageBuddy flag cleared,
+page order stored in page->private is zeroed, and page reference is set to 1).
+Now all free pages are kept in a NR_PAGE_ORDER array of page lists based
+on their order without post allocation process. When migrate_pages() asks for
+a new page, one of the free pages, based on the requested page order, is
+then processed and given out. And THP <2MB would need this feature.
+
+
+Feel free to give comments and ask questions.
+
+Thanks.
+
+[1] https://lore.kernel.org/linux-mm/f8d47176-03a8-99bf-a813-b5942830fd73@arm.com/
+[2] https://lore.kernel.org/linux-mm/20231113170157.280181-1-zi.yan@sent.com/
+[3] https://lore.kernel.org/linux-mm/20240123034636.1095672-1-zi.yan@sent.com/
+[4] https://lore.kernel.org/linux-mm/20240202161554.565023-1-zi.yan@sent.com/
+[5] https://lore.kernel.org/linux-mm/20240212163510.859822-1-zi.yan@sent.com/
+[6] https://lore.kernel.org/linux-mm/20240214220420.1229173-1-zi.yan@sent.com/
+
+
+Hi Andrew,
+
+Baolin's patch on nr_migratepages was based on this one, a better fixup
+for it might be below. Since before my patchset, compaction only deals with
+order-0 pages.
+
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 01ec85cfd623f..e60135e2019d6 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -1798,7 +1798,7 @@ static struct folio *compaction_alloc(struct folio *src, unsigned long data)
+ 	dst = list_entry(cc->freepages.next, struct folio, lru);
+ 	list_del(&dst->lru);
+ 	cc->nr_freepages--;
+-	cc->nr_migratepages -= 1 << order;
++	cc->nr_migratepages--;
+ 
+ 	return dst;
+ }
+@@ -1814,7 +1814,7 @@ static void compaction_free(struct folio *dst, unsigned long data)
+ 
+ 	list_add(&dst->lru, &cc->freepages);
+ 	cc->nr_freepages++;
+-	cc->nr_migratepages += 1 << order;
++	cc->nr_migratepages++;
+ }
+
+
+vm-scalability results on CONFIG_LRU_GEN
+===
+
+=========================================================================================
+compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
+  gcc-13/defconfig/debian/300s/qemu-vm/mmap-xread-seq-mt/vm-scalability
+
+commit: 
+  6.8.0-rc1-mm-everything-2024-01-29-07-19+
+  6.8.0-rc1-split-folio-in-compaction+
+  6.8.0-rc1-folio-migration-in-compaction+
+  6.8.0-rc1-folio-migration-free-page-split+
+
+6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
+---------------- --------------------------- --------------------------- --------------------------- 
+         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
+             \          |                \          |                \          |                \  
+  15107616            +3.2%   15590339            +1.3%   15297619            +3.0%   15567998        vm-scalability.throughput
+
+=========================================================================================
+compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
+  gcc-13/defconfig/debian/300s/qemu-vm/mmap-pread-seq/vm-scalability
+
+commit: 
+  6.8.0-rc1-mm-everything-2024-01-29-07-19+
+  6.8.0-rc1-split-folio-in-compaction+
+  6.8.0-rc1-folio-migration-in-compaction+
+  6.8.0-rc1-folio-migration-free-page-split+
+
+6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
+---------------- --------------------------- --------------------------- --------------------------- 
+         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
+             \          |                \          |                \          |                \  
+  12611785            +1.8%   12832919            +0.9%   12724223            +1.6%   12812682        vm-scalability.throughput
+
+
+=========================================================================================
+compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
+  gcc-13/defconfig/debian/300s/qemu-vm/lru-file-readtwice/vm-scalability
+
+commit: 
+  6.8.0-rc1-mm-everything-2024-01-29-07-19+
+  6.8.0-rc1-split-folio-in-compaction+
+  6.8.0-rc1-folio-migration-in-compaction+
+  6.8.0-rc1-folio-migration-free-page-split+
+
+6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
+---------------- --------------------------- --------------------------- --------------------------- 
+         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
+             \          |                \          |                \          |                \  
+   9833393            +5.7%   10390190            +3.0%   10126606            +5.9%   10408804        vm-scalability.throughput
+
+=========================================================================================
+compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
+  gcc-13/defconfig/debian/300s/qemu-vm/lru-file-mmap-read/vm-scalability
+
+commit: 
+  6.8.0-rc1-mm-everything-2024-01-29-07-19+
+  6.8.0-rc1-split-folio-in-compaction+
+  6.8.0-rc1-folio-migration-in-compaction+
+  6.8.0-rc1-folio-migration-free-page-split+
+
+6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
+---------------- --------------------------- --------------------------- --------------------------- 
+         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
+             \          |                \          |                \          |                \  
+   7034709 ±  3%      +2.9%    7241429            +3.2%    7256680 ±  2%      +3.9%    7308375        vm-scalability.throughput
+
+
+
+vm-scalability results on default LRU (with -no-mglru suffix)
+===
+
+=========================================================================================
+compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
+  gcc-13/defconfig/debian/300s/qemu-vm/mmap-xread-seq-mt/vm-scalability
+
+commit: 
+  6.8.0-rc1-mm-everything-2024-01-29-07-19-no-mglru+
+  6.8.0-rc1-split-folio-in-compaction-no-mglru+
+  6.8.0-rc1-folio-migration-in-compaction-no-mglru+
+  6.8.0-rc1-folio-migration-free-page-split-no-mglru+
+
+6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
+---------------- --------------------------- --------------------------- --------------------------- 
+         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
+             \          |                \          |                \          |                \  
+  14401491            +3.7%   14940270            +2.4%   14748626            +4.0%   14975716        vm-scalability.throughput
+
+=========================================================================================
+compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
+  gcc-13/defconfig/debian/300s/qemu-vm/mmap-pread-seq/vm-scalability
+
+commit: 
+  6.8.0-rc1-mm-everything-2024-01-29-07-19-no-mglru+
+  6.8.0-rc1-split-folio-in-compaction-no-mglru+
+  6.8.0-rc1-folio-migration-in-compaction-no-mglru+
+  6.8.0-rc1-folio-migration-free-page-split-no-mglru+
+
+6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
+---------------- --------------------------- --------------------------- --------------------------- 
+         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
+             \          |                \          |                \          |                \  
+  11407497            +5.1%   11989632            -0.5%   11349272            +4.8%   11957423        vm-scalability.throughput
+
+=========================================================================================
+compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
+  gcc-13/defconfig/debian/300s/qemu-vm/mmap-pread-seq-mt/vm-scalability
+
+commit: 
+  6.8.0-rc1-mm-everything-2024-01-29-07-19-no-mglru+
+  6.8.0-rc1-split-folio-in-compaction-no-mglru+
+  6.8.0-rc1-folio-migration-in-compaction-no-mglru+
+  6.8.0-rc1-folio-migration-free-page-split-no-mglru+
+
+6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
+---------------- --------------------------- --------------------------- --------------------------- 
+         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
+             \          |                \          |                \          |                \  
+  11348474            +3.3%   11719453            -1.2%   11208759            +3.7%   11771926        vm-scalability.throughput
+
+=========================================================================================
+compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
+  gcc-13/defconfig/debian/300s/qemu-vm/lru-file-readtwice/vm-scalability
+
+commit: 
+  6.8.0-rc1-mm-everything-2024-01-29-07-19-no-mglru+
+  6.8.0-rc1-split-folio-in-compaction-no-mglru+
+  6.8.0-rc1-folio-migration-in-compaction-no-mglru+
+  6.8.0-rc1-folio-migration-free-page-split-no-mglru+
+
+6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
+---------------- --------------------------- --------------------------- --------------------------- 
+         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
+             \          |                \          |                \          |                \  
+   8065614 ±  3%      +7.7%    8686626 ±  2%      +5.0%    8467577 ±  4%     +11.8%    9016077 ±  2%  vm-scalability.throughput
+
+=========================================================================================
+compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
+  gcc-13/defconfig/debian/300s/qemu-vm/lru-file-mmap-read/vm-scalability
+
+commit: 
+  6.8.0-rc1-mm-everything-2024-01-29-07-19-no-mglru+
+  6.8.0-rc1-split-folio-in-compaction-no-mglru+
+  6.8.0-rc1-folio-migration-in-compaction-no-mglru+
+  6.8.0-rc1-folio-migration-free-page-split-no-mglru+
+
+6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
+---------------- --------------------------- --------------------------- --------------------------- 
+         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
+             \          |                \          |                \          |                \  
+   6438422 ±  2%     +27.5%    8206734 ±  2%     +10.6%    7118390           +26.2%    8127192 ±  4%  vm-scalability.throughput
+
+Zi Yan (4):
+  mm/page_alloc: remove unused fpi_flags in free_pages_prepare()
+  mm/compaction: enable compacting >0 order folios.
+  mm/compaction: add support for >0 order folio memory compaction.
+  mm/compaction: optimize >0 order folio compaction with free page
+    split.
+
+ mm/compaction.c | 225 ++++++++++++++++++++++++++++++++----------------
+ mm/internal.h   |   4 +-
+ mm/page_alloc.c |  12 +--
+ 3 files changed, 162 insertions(+), 79 deletions(-)
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.43.0
+
