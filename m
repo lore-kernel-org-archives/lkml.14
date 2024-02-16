@@ -1,641 +1,127 @@
-Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8927F1353E4;
-	Fri, 16 Feb 2024 18:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5008A1353F5
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 18:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708109420; cv=none; b=I8fQ65Mpp+cEdU7O9WXIjGgxEaQQuFllmISSKpcrezaRHT63ArOAgrUnZzU7peTx+K8TkuQQwG9zbj2xj4/bT0up0egeieltnMdGy1bQMAVhf0qdvcTPTshJja6WZU5Hf2qaxE+TMhU3q/j7kxjN6xNSwZ2n87lzmvver8LZ+xw=
+	t=1708109496; cv=none; b=k5j4d5ma2Rvq6l8P5Kf2ZApCaU/+KaDCHWOqZPN4QfBW0L7D/J74onzHdJAVsRzKw/KaddofJqrX3hpSrGIQJmrKNTg1iA9eCnL51HYklthpe+Qdye2cgJBE6njCIQBk6oPUcC76v1uzeWAutTTTJq/tCDeYjr9FV1tf29p3aUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708109420; c=relaxed/simple;
-	bh=tbJz+VoRPmCXahHuYcaY5Ch3kNggxKmAUarvUk99t+A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=niVFqpz1jF3nbBJIQum1fo51QcMMxUjcq7oLbmVhMqNZOjvhX0sepP8T4RmyLzQxtZ5rOqR4Lwsum+sdAbOaBKNVGXVCKRxWQbt53FJSFOP6/W553d8FANLLpD2U3S/ZFdKlLlWbxmqQTNSnPesZooDBVF8c22yXAJnz1n5SjkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=Hjgy1aB1; arc=none smtp.client-ip=195.181.215.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
+	s=arc-20240116; t=1708109496; c=relaxed/simple;
+	bh=W/b5bbABKz79xZXU+epksZPjBorx/kdtQ4bqersfPQU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=fd7PwkRnaD4miF1oEBPH8R32GHMzyOLVL/LgUoIcCR627lzcjgUUKTzdkZBHrpV8ZVd4G5O9pfn6JJGZ8xE4DIxKpLmClhsdCHRewpsDZXYOtJ7f2ShyWWRepCFS+NtVOLOvAt0ncGekq5PQr1BvoI6R2K8V9w7FRzI/wz71F4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=nBZoFDGN; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="Hjgy1aB1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
-	t=1708109416; bh=tbJz+VoRPmCXahHuYcaY5Ch3kNggxKmAUarvUk99t+A=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=Hjgy1aB1M5GIBNIOcz3ZuTGOoMH4QQ219YExRy4yC7eKHWjs7kBwGh/lj2M8f1TqA
-	 /eCAyPVooRpd0dIYDyW/tw+r0pkRy/amX4QW4tGbf5pI78O4mJnzf5PjzNBfYmQ8gH
-	 PMVTDypcHtngzKrulPTRfFEUsXzXcrqtU1X8nrkQ=
-From: =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megi@xff.cz>
-To: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andrey Skvortsov <andrej.skvortzov@gmail.com>
-Cc: Icenowy Zheng <icenowy@aosc.io>,
-	Dalton Durst <dalton@ubports.com>,
-	Shoji Keita <awaittrot@shjk.jp>,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ondrej Jirman <megi@xff.cz>
-Subject: [PATCH v3 3/4] iio: magnetometer: add a driver for Voltafield AF8133J magnetometer
-Date: Fri, 16 Feb 2024 19:50:01 +0100
-Message-ID: <20240216185008.1370618-4-megi@xff.cz>
-In-Reply-To: <20240216185008.1370618-1-megi@xff.cz>
-References: <20240216185008.1370618-1-megi@xff.cz>
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="nBZoFDGN"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-68873473ce6so13577796d6.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 10:51:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1708109494; x=1708714294; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=yJXAWTaFF9uXvOf/kvT65ZY3tmlJVTyrCsu5Mk/WAvU=;
+        b=nBZoFDGNZz4PwvsLUlhZUgE8Jt3u3lCeQrKDQmRIbJkRpd82huXjwT7PYI33ZA78Pe
+         ZrKIN/835Y7wQDU7WZrxuM0BR2vznGU7c9eAy0icwPheEF1xEzp/LygXFloaVNLHxzhG
+         CidKQkCxNSUAWb/erzdwbrvug1COnFwCvk3vwQvK2qYkg1cagUnO6AdcxYS3s4E1mwIE
+         sg70u722zzLe7FCKXz340a0hoV/7rTlQfZR+nLU6UzqA2xj3CF/6FnGm3iz4LCDxsBZ8
+         077+eItDF7J1AhXsFoYZek3bdjjrlRHM4DQGdSbSYziVfYMKJltmL8rx61/kUjNLYJ9m
+         KKBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708109494; x=1708714294;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yJXAWTaFF9uXvOf/kvT65ZY3tmlJVTyrCsu5Mk/WAvU=;
+        b=lm4gTrjMUEoJqNeqJXwkdLZMSxVxpPiqH/h7DCY3zG4hPPr8jFjNECRexI5AZa0xQ7
+         SGqeX03DAf/btdDwDfRbBSGstRy3bPavzQ9rtlAFdkw8t4onUKNXoC58o+oVXTRwxBtO
+         faqBWS4bWFGB3XC6WI/IlNh8lyYyNSZ16w3GmTgrcQJhPm9AzpnMAu1RVRu22Lh2yEIv
+         cQiB1KSi51Nj0z/OZxsIwFQbWt00UiX3Y4c7PlH5j1Ozd35skaJyHQThIPYWmw97TOm2
+         ZHIWXbJfwuzsyWD9HjS3GkGeGzjBhhvJglehe9wbcQbDiDQt1gEcSDOLXHRH41zkBCcz
+         bYkg==
+X-Forwarded-Encrypted: i=1; AJvYcCWom/GUMHrKlFpdLpjkHm3XdXcssFZUY7gFLZbrV8duk5pxitnYGNx7cSl2kO/INlgfvHI+Hv+f7BxRr0ikb4sSSAvy2TZ77/yu0Ano
+X-Gm-Message-State: AOJu0YyFD9HfE2KixMWoOYpkZMuE5+qHBeZUD49mja0vh/szaLWueE1s
+	Ksp67tCrXsjsjbIStl7pxVV45U2RGW99PxAf66Tf8bobblvwSUFyhghsVXfICHGU0Tt4gSdgaMS
+	6
+X-Google-Smtp-Source: AGHT+IF2l2KObMJDyh64wfZZvs6qbBnTPVlf8mdhwZ8NToSMz7Jt1XOTlHhrPjU2Am3rXxkevztHMw==
+X-Received: by 2002:a05:6214:4884:b0:68c:5a42:41a3 with SMTP id pc4-20020a056214488400b0068c5a4241a3mr8259751qvb.34.1708109494126;
+        Fri, 16 Feb 2024 10:51:34 -0800 (PST)
+Received: from nicolas-tpx395.localdomain ([2606:6d00:11:3354::7a9])
+        by smtp.gmail.com with ESMTPSA id nf7-20020a0562143b8700b0068cdc0a0d42sm178010qvb.25.2024.02.16.10.51.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Feb 2024 10:51:33 -0800 (PST)
+Message-ID: <f1c4efc4d8d2b01a50f3ab23e2c5767de111f4a8.camel@ndufresne.ca>
+Subject: Re: [PATCH] drivers: wave5: Remove unnecessary semicolons
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Thorsten Blum <thorsten.blum@toblux.com>, Nas Chung
+	 <nas.chung@chipsnmedia.com>, Jackson Lee <jackson.lee@chipsnmedia.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
+  linux-kernel@vger.kernel.org
+Date: Fri, 16 Feb 2024 13:51:33 -0500
+In-Reply-To: <20240213140441.8640-1-thorsten.blum@toblux.com>
+References: <20240213140441.8640-1-thorsten.blum@toblux.com>
+Autocrypt: addr=nicolas@ndufresne.ca; prefer-encrypt=mutual; keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-From: Icenowy Zheng <icenowy@aosc.io>
+Hi,
 
-AF8133J is a simple I2C-connected magnetometer, without interrupts.
+Le mardi 13 f=C3=A9vrier 2024 =C3=A0 15:04 +0100, Thorsten Blum a =C3=A9cri=
+t=C2=A0:
+> Remove unnecessary semicolons reported by Coccinelle/coccicheck and the
+> semantic patch at scripts/coccinelle/misc/semicolon.cocci.
+>=20
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
 
-Add a simple IIO driver for it.
+Thanks for the fix.
 
-Co-developed-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Dalton Durst <dalton@ubports.com>
-Signed-off-by: Shoji Keita <awaittrot@shjk.jp>
-Co-developed-by: Ondrej Jirman <megi@xff.cz>
-Signed-off-by: Ondrej Jirman <megi@xff.cz>
-Reviewed-by: Andrey Skvortsov <andrej.skvortzov@gmail.com>
-Tested-by: Andrey Skvortsov <andrej.skvortzov@gmail.com>
----
- drivers/iio/magnetometer/Kconfig   |  12 +
- drivers/iio/magnetometer/Makefile  |   1 +
- drivers/iio/magnetometer/af8133j.c | 524 +++++++++++++++++++++++++++++
- 3 files changed, 537 insertions(+)
- create mode 100644 drivers/iio/magnetometer/af8133j.c
+Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
 
-diff --git a/drivers/iio/magnetometer/Kconfig b/drivers/iio/magnetometer/Kconfig
-index 38532d840f2a..cd2917d71904 100644
---- a/drivers/iio/magnetometer/Kconfig
-+++ b/drivers/iio/magnetometer/Kconfig
-@@ -6,6 +6,18 @@
- 
- menu "Magnetometer sensors"
- 
-+config AF8133J
-+	tristate "Voltafield AF8133J 3-Axis Magnetometer"
-+	depends on I2C
-+	depends on OF
-+	select REGMAP_I2C
-+	help
-+	  Say yes here to build support for Voltafield AF8133J I2C-based
-+	  3-axis magnetometer chip.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called af8133j.
-+
- config AK8974
- 	tristate "Asahi Kasei AK8974 3-Axis Magnetometer"
- 	depends on I2C
-diff --git a/drivers/iio/magnetometer/Makefile b/drivers/iio/magnetometer/Makefile
-index b1c784ea71c8..ec5c46fbf999 100644
---- a/drivers/iio/magnetometer/Makefile
-+++ b/drivers/iio/magnetometer/Makefile
-@@ -4,6 +4,7 @@
- #
- 
- # When adding new entries keep the list in alphabetical order
-+obj-$(CONFIG_AF8133J)	+= af8133j.o
- obj-$(CONFIG_AK8974)	+= ak8974.o
- obj-$(CONFIG_AK8975)	+= ak8975.o
- obj-$(CONFIG_BMC150_MAGN) += bmc150_magn.o
-diff --git a/drivers/iio/magnetometer/af8133j.c b/drivers/iio/magnetometer/af8133j.c
-new file mode 100644
-index 000000000000..fcb4f0a8e633
---- /dev/null
-+++ b/drivers/iio/magnetometer/af8133j.c
-@@ -0,0 +1,524 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * af8133j.c - Voltafield AF8133J magnetometer driver
-+ *
-+ * Copyright 2021 Icenowy Zheng <icenowy@aosc.io>
-+ * Copyright 2024 Ondřej Jirman <megi@xff.cz>
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
-+
-+#include <linux/iio/iio.h>
-+#include <linux/iio/trigger_consumer.h>
-+#include <linux/iio/triggered_buffer.h>
-+
-+#define AF8133J_REG_OUT		0x03
-+#define AF8133J_REG_PCODE	0x00
-+#define AF8133J_REG_PCODE_VAL	0x5e
-+#define AF8133J_REG_STATUS	0x02
-+#define AF8133J_REG_STATUS_ACQ	BIT(0)
-+#define AF8133J_REG_STATE	0x0a
-+#define AF8133J_REG_STATE_STBY	0x00
-+#define AF8133J_REG_STATE_WORK	0x01
-+#define AF8133J_REG_RANGE	0x0b
-+#define AF8133J_REG_RANGE_22G	0x12
-+#define AF8133J_REG_RANGE_12G	0x34
-+#define AF8133J_REG_SWR		0x11
-+#define AF8133J_REG_SWR_PERFORM	0x81
-+
-+static const char * const af8133j_supply_names[] = {
-+	"avdd",
-+	"dvdd",
-+};
-+
-+struct af8133j_data {
-+	struct i2c_client *client;
-+	struct regmap *regmap;
-+	struct mutex mutex;
-+	struct iio_mount_matrix orientation;
-+
-+	struct gpio_desc *reset_gpiod;
-+	struct regulator_bulk_data supplies[ARRAY_SIZE(af8133j_supply_names)];
-+
-+	u8 range;
-+};
-+
-+enum af8133j_axis {
-+	AXIS_X = 0,
-+	AXIS_Y,
-+	AXIS_Z,
-+};
-+
-+static struct iio_mount_matrix *
-+af8133j_get_mount_matrix(struct iio_dev *indio_dev,
-+			 const struct iio_chan_spec *chan)
-+{
-+	struct af8133j_data *data = iio_priv(indio_dev);
-+
-+	return &data->orientation;
-+}
-+
-+static const struct iio_chan_spec_ext_info af8133j_ext_info[] = {
-+	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, af8133j_get_mount_matrix),
-+	{ }
-+};
-+
-+#define AF8133J_CHANNEL(_si, _axis) { \
-+	.type = IIO_MAGN, \
-+	.modified = 1, \
-+	.channel2 = IIO_MOD_ ## _axis, \
-+	.address = AXIS_ ## _axis, \
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
-+	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
-+	.info_mask_shared_by_type_available = BIT(IIO_CHAN_INFO_SCALE), \
-+	.ext_info = af8133j_ext_info, \
-+	.scan_index = _si, \
-+	.scan_type = { \
-+		.sign = 's', \
-+		.realbits = 16, \
-+		.storagebits = 16, \
-+		.endianness = IIO_LE, \
-+	}, \
-+}
-+
-+static const struct iio_chan_spec af8133j_channels[] = {
-+	AF8133J_CHANNEL(0, X),
-+	AF8133J_CHANNEL(1, Y),
-+	AF8133J_CHANNEL(2, Z),
-+	IIO_CHAN_SOFT_TIMESTAMP(3),
-+};
-+
-+static int af8133j_product_check(struct af8133j_data *data)
-+{
-+	struct device *dev = &data->client->dev;
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_read(data->regmap, AF8133J_REG_PCODE, &val);
-+	if (ret) {
-+		dev_err(dev, "Error reading product code (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	if (val != AF8133J_REG_PCODE_VAL) {
-+		dev_err(dev, "Invalid product code (0x%02x)\n", val);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int af8133j_reset(struct af8133j_data *data)
-+{
-+	struct device *dev = &data->client->dev;
-+	int ret;
-+
-+	if (data->reset_gpiod) {
-+		/* If we have GPIO reset line, use it */
-+		gpiod_set_value_cansleep(data->reset_gpiod, 1);
-+		udelay(10);
-+		gpiod_set_value_cansleep(data->reset_gpiod, 0);
-+	} else {
-+		/* Otherwise use software reset */
-+		ret = regmap_write(data->regmap, AF8133J_REG_SWR,
-+				   AF8133J_REG_SWR_PERFORM);
-+		if (ret) {
-+			dev_err(dev, "Failed to reset the chip\n");
-+			return ret;
-+		}
-+	}
-+
-+	/* Wait for reset to finish */
-+	usleep_range(1000, 1100);
-+
-+	/* Restore range setting */
-+	if (data->range == AF8133J_REG_RANGE_22G) {
-+		ret = regmap_write(data->regmap, AF8133J_REG_RANGE, data->range);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void af8133j_power_down(struct af8133j_data *data)
-+{
-+	gpiod_set_value_cansleep(data->reset_gpiod, 1);
-+	regulator_bulk_disable(ARRAY_SIZE(data->supplies), data->supplies);
-+}
-+
-+static int af8133j_power_up(struct af8133j_data *data)
-+{
-+	struct device *dev = &data->client->dev;
-+	int ret;
-+
-+	ret = regulator_bulk_enable(ARRAY_SIZE(data->supplies), data->supplies);
-+	if (ret) {
-+		dev_err(dev, "Could not enable regulators\n");
-+		return ret;
-+	}
-+
-+	gpiod_set_value_cansleep(data->reset_gpiod, 0);
-+
-+	/* Wait for power on reset */
-+	usleep_range(15000, 16000);
-+
-+	ret = af8133j_reset(data);
-+	if (ret) {
-+		af8133j_power_down(data);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int af8133j_take_measurement(struct af8133j_data *data)
-+{
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_write(data->regmap,
-+			   AF8133J_REG_STATE, AF8133J_REG_STATE_WORK);
-+	if (ret)
-+		return ret;
-+
-+	/* The datasheet says "Mesaure Time <1.5ms" */
-+	ret = regmap_read_poll_timeout(data->regmap, AF8133J_REG_STATUS, val,
-+				       val & AF8133J_REG_STATUS_ACQ,
-+				       500, 1500);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(data->regmap,
-+			   AF8133J_REG_STATE, AF8133J_REG_STATE_STBY);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int af8133j_read_measurement(struct af8133j_data *data, __le16 buf[3])
-+{
-+	struct device *dev = &data->client->dev;
-+	int ret;
-+
-+	ret = pm_runtime_resume_and_get(dev);
-+	if (ret) {
-+		/*
-+		 * Ignore EACCES because that happens when RPM is disabled
-+		 * during system sleep, while userspace leave eg. hrtimer
-+		 * trigger attached and IIO core keeps trying to do measurements.
-+		 */
-+		if (ret != -EACCES)
-+			dev_err(dev, "Failed to power on (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	scoped_guard(mutex, &data->mutex) {
-+		ret = af8133j_take_measurement(data);
-+		if (ret)
-+			goto out_rpm_put;
-+
-+		ret = regmap_bulk_read(data->regmap, AF8133J_REG_OUT,
-+				       buf, sizeof(__le16) * 3);
-+	}
-+
-+out_rpm_put:
-+	pm_runtime_mark_last_busy(dev);
-+	pm_runtime_put_autosuspend(dev);
-+
-+	return ret;
-+}
-+
-+static const int af8133j_scales[][2] = {
-+	[0] = { 0, 366210 }, // 12 gauss
-+	[1] = { 0, 671386 }, // 22 gauss
-+};
-+
-+static int af8133j_read_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *chan, int *val,
-+			    int *val2, long mask)
-+{
-+	struct af8133j_data *data = iio_priv(indio_dev);
-+	__le16 buf[3];
-+	int ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = af8133j_read_measurement(data, buf);
-+		if (ret)
-+			return ret;
-+
-+		*val = sign_extend32(le16_to_cpu(buf[chan->address]),
-+				     chan->scan_type.realbits - 1);
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SCALE:
-+		*val = 0;
-+
-+		if (data->range == AF8133J_REG_RANGE_12G)
-+			*val2 = af8133j_scales[0][1];
-+		else
-+			*val2 = af8133j_scales[1][1];
-+
-+		return IIO_VAL_INT_PLUS_NANO;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int af8133j_read_avail(struct iio_dev *indio_dev,
-+			      struct iio_chan_spec const *chan,
-+			      const int **vals, int *type, int *length,
-+			      long mask)
-+{
-+	switch (mask) {
-+	case IIO_CHAN_INFO_SCALE:
-+		*vals = (const int *)af8133j_scales;
-+		*length = ARRAY_SIZE(af8133j_scales) * 2;
-+		*type = IIO_VAL_INT_PLUS_NANO;
-+		return IIO_AVAIL_LIST;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int af8133j_set_scale(struct af8133j_data *data,
-+			     unsigned int val, unsigned int val2)
-+{
-+	struct device *dev = &data->client->dev;
-+	u8 range;
-+	int ret = 0;
-+
-+	if (af8133j_scales[0][0] == val && af8133j_scales[0][1] == val2)
-+		range = AF8133J_REG_RANGE_12G;
-+	else if (af8133j_scales[1][0] == val && af8133j_scales[1][1] == val2)
-+		range = AF8133J_REG_RANGE_22G;
-+	else
-+		return -EINVAL;
-+
-+	pm_runtime_disable(dev);
-+
-+	/*
-+	 * When suspended, just store the new range to data->range to be
-+	 * applied later during power up.
-+	 */
-+	if (!pm_runtime_status_suspended(dev))
-+		scoped_guard(mutex, &data->mutex)
-+			ret = regmap_write(data->regmap,
-+					   AF8133J_REG_RANGE, range);
-+
-+	pm_runtime_enable(dev);
-+
-+	data->range = range;
-+	return ret;
-+}
-+
-+static int af8133j_write_raw(struct iio_dev *indio_dev,
-+			     struct iio_chan_spec const *chan,
-+			     int val, int val2, long mask)
-+{
-+	struct af8133j_data *data = iio_priv(indio_dev);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_SCALE:
-+		return af8133j_set_scale(data, val, val2);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int af8133j_write_raw_get_fmt(struct iio_dev *indio_dev,
-+				     struct iio_chan_spec const *chan,
-+				     long mask)
-+{
-+	return IIO_VAL_INT_PLUS_NANO;
-+}
-+
-+static const struct iio_info af8133j_info = {
-+	.read_raw = af8133j_read_raw,
-+	.read_avail = af8133j_read_avail,
-+	.write_raw = af8133j_write_raw,
-+	.write_raw_get_fmt = af8133j_write_raw_get_fmt,
-+};
-+
-+static irqreturn_t af8133j_trigger_handler(int irq, void *p)
-+{
-+	struct iio_poll_func *pf = p;
-+	struct iio_dev *indio_dev = pf->indio_dev;
-+	struct af8133j_data *data = iio_priv(indio_dev);
-+	s64 timestamp = iio_get_time_ns(indio_dev);
-+	struct {
-+		__le16 values[3];
-+		s64 timestamp __aligned(8);
-+	} sample;
-+	int ret;
-+
-+	memset(&sample, 0, sizeof(sample));
-+
-+	ret = af8133j_read_measurement(data, sample.values);
-+	if (ret)
-+		goto out_done;
-+
-+	iio_push_to_buffers_with_timestamp(indio_dev, &sample, timestamp);
-+
-+out_done:
-+	iio_trigger_notify_done(indio_dev->trig);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static const struct regmap_config af8133j_regmap_config = {
-+	.name = "af8133j_regmap",
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = AF8133J_REG_SWR,
-+	.cache_type = REGCACHE_NONE,
-+};
-+
-+static void af8133j_power_down_action(void *ptr)
-+{
-+	struct af8133j_data *data = ptr;
-+
-+	if (!pm_runtime_status_suspended(&data->client->dev))
-+		af8133j_power_down(data);
-+}
-+
-+static int af8133j_probe(struct i2c_client *client)
-+{
-+	struct device *dev = &client->dev;
-+	struct af8133j_data *data;
-+	struct iio_dev *indio_dev;
-+	struct regmap *regmap;
-+	int ret, i;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	regmap = devm_regmap_init_i2c(client, &af8133j_regmap_config);
-+	if (IS_ERR(regmap))
-+		return dev_err_probe(dev, PTR_ERR(regmap),
-+				     "regmap initialization failed\n");
-+
-+	data = iio_priv(indio_dev);
-+	i2c_set_clientdata(client, indio_dev);
-+	data->client = client;
-+	data->regmap = regmap;
-+	data->range = AF8133J_REG_RANGE_12G;
-+	mutex_init(&data->mutex);
-+
-+	data->reset_gpiod = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(data->reset_gpiod))
-+		return dev_err_probe(dev, PTR_ERR(data->reset_gpiod),
-+				     "Failed to get reset gpio\n");
-+
-+	for (i = 0; i < ARRAY_SIZE(af8133j_supply_names); i++)
-+		data->supplies[i].supply = af8133j_supply_names[i];
-+	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(data->supplies),
-+				      data->supplies);
-+	if (ret)
-+		return ret;
-+
-+	ret = iio_read_mount_matrix(dev, &data->orientation);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to read mount matrix\n");
-+
-+	ret = af8133j_power_up(data);
-+	if (ret)
-+		return ret;
-+
-+	pm_runtime_set_active(dev);
-+
-+	ret = devm_add_action_or_reset(dev, af8133j_power_down_action, data);
-+	if (ret)
-+		return ret;
-+
-+	ret = af8133j_product_check(data);
-+	if (ret)
-+		return ret;
-+
-+	indio_dev->info = &af8133j_info;
-+	indio_dev->name = "af8133j";
-+	indio_dev->channels = af8133j_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(af8133j_channels);
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
-+					      &af8133j_trigger_handler, NULL);
-+	if (ret)
-+		return dev_err_probe(&client->dev, ret,
-+				     "Failed to setup iio triggered buffer\n");
-+
-+	ret = devm_iio_device_register(dev, indio_dev);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to register iio device");
-+
-+	pm_runtime_get_noresume(dev);
-+	pm_runtime_use_autosuspend(dev);
-+	pm_runtime_set_autosuspend_delay(dev, 500);
-+	ret = devm_pm_runtime_enable(dev);
-+	if (ret)
-+		return ret;
-+
-+	pm_runtime_put_autosuspend(dev);
-+
-+	return 0;
-+}
-+
-+static int af8133j_runtime_suspend(struct device *dev)
-+{
-+	struct iio_dev *indio_dev = dev_get_drvdata(dev);
-+	struct af8133j_data *data = iio_priv(indio_dev);
-+
-+	af8133j_power_down(data);
-+
-+	return 0;
-+}
-+
-+static int af8133j_runtime_resume(struct device *dev)
-+{
-+	struct iio_dev *indio_dev = dev_get_drvdata(dev);
-+	struct af8133j_data *data = iio_priv(indio_dev);
-+
-+	return af8133j_power_up(data);
-+}
-+
-+const struct dev_pm_ops af8133j_pm_ops = {
-+	SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_force_resume)
-+	RUNTIME_PM_OPS(af8133j_runtime_suspend, af8133j_runtime_resume, NULL)
-+};
-+
-+static const struct of_device_id af8133j_of_match[] = {
-+	{ .compatible = "voltafield,af8133j", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, af8133j_of_match);
-+
-+static const struct i2c_device_id af8133j_id[] = {
-+	{ "af8133j", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, af8133j_id);
-+
-+static struct i2c_driver af8133j_driver = {
-+	.driver = {
-+		.name = "af8133j",
-+		.of_match_table = af8133j_of_match,
-+		.pm = pm_ptr(&af8133j_pm_ops),
-+	},
-+	.probe = af8133j_probe,
-+	.id_table = af8133j_id,
-+};
-+
-+module_i2c_driver(af8133j_driver);
-+
-+MODULE_AUTHOR("Icenowy Zheng <icenowy@aosc.io>");
-+MODULE_AUTHOR("Ondřej Jirman <megi@xff.cz>");
-+MODULE_DESCRIPTION("Voltafield AF8133J magnetic sensor driver");
-+MODULE_LICENSE("GPL");
--- 
-2.43.0
+> ---
+>  drivers/media/platform/chips-media/wave5/wave5-hw.c      | 2 +-
+>  drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/media/platform/chips-media/wave5/wave5-hw.c b/driver=
+s/media/platform/chips-media/wave5/wave5-hw.c
+> index f1e022fb148e..2d82791f575e 100644
+> --- a/drivers/media/platform/chips-media/wave5/wave5-hw.c
+> +++ b/drivers/media/platform/chips-media/wave5/wave5-hw.c
+> @@ -2315,7 +2315,7 @@ static bool wave5_vpu_enc_check_common_param_valid(=
+struct vpu_instance *inst,
+>  				param->intra_refresh_mode);
+>  			return false;
+>  		}
+> -	};
+> +	}
+>  	return true;
+> =20
+>  invalid_refresh_argument:
+> diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c b/d=
+rivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
+> index f29cfa3af94a..8bbf9d10b467 100644
+> --- a/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
+> +++ b/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
+> @@ -92,7 +92,7 @@ static int switch_state(struct vpu_instance *inst, enum=
+ vpu_instance_state state
+>  		break;
+>  	case VPU_INST_STATE_STOP:
+>  		break;
+> -	};
+> +	}
+> =20
+>  	dev_dbg(inst->dev->dev, "Switch state from %s to %s.\n",
+>  		state_to_str(inst->state), state_to_str(state));
 
