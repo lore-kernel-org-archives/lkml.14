@@ -1,112 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423401B950;
-	Fri, 16 Feb 2024 09:08:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEBB31B815
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 09:10:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708074507; cv=none; b=XYBmf6hK7iGSPUH2akDtai+EAsPGoTH/OAFuEZnwVPhHZOYdYhdQf2a+lqfQfCpiHnq4A9gGOE01xa+GtC1S8PSB++5xCk94L81/K1gWVHCHnVJ42DXp0M2jyNPyfCt5SFhYTK20LiLsY8IOvZRVc6Sv5hslKVjk34b2YIkY9DM=
+	t=1708074603; cv=none; b=U9FzfEq6kXWfBeLQFUJ4NHmAqc3EDxJMBLebMBSuLGfueFAxmF2Yjdse6Wa1xcssXYKMYZDyJonpaRAbQphnwwTjuHJkmEAXLrVXfsvJrXKIaL3zfC/4IyiTs4anaWA+MDdGPKT/FQO+3vxetzFo4zQv1m6OCgX4oevIx8KOaMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708074507; c=relaxed/simple;
-	bh=bP0+2GvyJajM/pooFA5KnylYJbVPHA/lz4kwRQQKOaw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=fL10/wLsOOPIuTSIdxpZUBvCxahs0rTJl5RdXXw3dcRivQn7FdA5S5ZOwXW46Eosu94NgBzhmYm6K34rjdzGZndibScVB2qdlrApsfhfPCQEL8zKTg0AOrR/sN1ykPhTq4tAHwOeM4MNMHG0k/Z9a/4mjm1f9dwrPDJQXB1RluY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XMx6/EQZ; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1708074603; c=relaxed/simple;
+	bh=RKdmNzovEWVqmjvCpvHCRoTK7UqOk6nOdR+X9CIp0mM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TNdyW7ZTq2mj3AtPhiT8+maUfF47J1Iv2cDB1bcun7DNOaF4LYpo0OmFGzJJVWRyBRlriRSgau395+1SWmwoR8WLdtZCKfz+dM8uWtyW9WgAsTIHzccJKmApotNOitCZyl4zyHVqSUpNoEPqBoKrHEdr0bk7k0iCTdZ2GAVw8kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MKKyLvzm; arc=none smtp.client-ip=209.85.217.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XMx6/EQZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708074505; x=1739610505;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=bP0+2GvyJajM/pooFA5KnylYJbVPHA/lz4kwRQQKOaw=;
-  b=XMx6/EQZVpBrc2MQd1oW/1USmOq9J9yDmnyE+Pt/uvsZCY+a2B3a6R7o
-   3v7kqiHdi5rxg50SsZCxupFoBacT1gsPpzvX7D95XkLwdFbj+TsCX8Qa4
-   n2fxG1v53g0TiGa6Oc+yVCD+6ZDzn/ccEWqIcnMoyolK07mP/RtB/7pU0
-   fMNGC9IKOJMjyAiRA3xaMu1vk40zIcnSG7dYMrxL53ArcLiH01R7XMsz+
-   FbvWDwpeMigWep/bL2jFzqm+1+7/5NHmmg6UHoyfRLCzvKhpb0LBKOzAQ
-   XM/HkZWLBpq3EreXBjWdPybUFy3IAmu+IXO7a2p8m6EpZfWkrjg29C23M
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10985"; a="27650633"
-X-IronPort-AV: E=Sophos;i="6.06,164,1705392000"; 
-   d="scan'208";a="27650633"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 01:08:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,164,1705392000"; 
-   d="scan'208";a="8431336"
-Received: from pshishpo-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.48.79])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 01:08:02 -0800
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org,
- mhocko@suse.com, vbabka@suse.cz, hannes@cmpxchg.org,
- roman.gushchin@linux.dev, mgorman@suse.de, dave@stgolabs.net,
- willy@infradead.org, liam.howlett@oracle.com, corbet@lwn.net,
- void@manifault.com, peterz@infradead.org, juri.lelli@redhat.com,
- catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de,
- tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
- x86@kernel.org, peterx@redhat.com, david@redhat.com, axboe@kernel.dk,
- mcgrof@kernel.org, masahiroy@kernel.org, nathan@kernel.org,
- dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev, rppt@kernel.org,
- paulmck@kernel.org, pasha.tatashin@soleen.com, yosryahmed@google.com,
- yuzhao@google.com, dhowells@redhat.com, hughd@google.com,
- andreyknvl@gmail.com, keescook@chromium.org, ndesaulniers@google.com,
- vvvvvv@google.com, gregkh@linuxfoundation.org, ebiggers@google.com,
- ytcoode@gmail.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
- rostedt@goodmis.org, bsegall@google.com, bristot@redhat.com,
- vschneid@redhat.com, cl@linux.com, penberg@kernel.org,
- iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com,
- elver@google.com, dvyukov@google.com, shakeelb@google.com,
- songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com,
- minchan@google.com, kaleshsingh@google.com, kernel-team@android.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- iommu@lists.linux.dev, linux-arch@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-modules@vger.kernel.org, kasan-dev@googlegroups.com,
- cgroups@vger.kernel.org
-Subject: Re: [PATCH v3 00/35] Memory allocation profiling
-In-Reply-To: <plijmr6acz2cvrfokgc46bt5budre5d5ed3alpapu4gvhkqkmn@55yhfdhigjp3>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20240212213922.783301-1-surenb@google.com>
- <87sf1s4xef.fsf@intel.com>
- <plijmr6acz2cvrfokgc46bt5budre5d5ed3alpapu4gvhkqkmn@55yhfdhigjp3>
-Date: Fri, 16 Feb 2024 11:07:59 +0200
-Message-ID: <87jzn44w0g.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MKKyLvzm"
+Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-46d331e3fd2so858934137.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 01:10:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708074601; x=1708679401; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BFXkHkaZjLIExOljo2tyqPMEuvx89YjO8mstMPgUNwM=;
+        b=MKKyLvzmpGO5DRroKxzFrjhFIeDtFTiZb2MVMm/WRYFrr84tTx/PHjPZacChq00eyX
+         13nhXr/xn7428ctE/XDd9atSqYRc235ZDBQ1Lf3/rLsBPoTTuRbRXXwFxAs/GCnMmb2t
+         l2ioT/ci/CaF4lUj3+A8bAveUYK0697GNYuYh+o+eT+jhgBweOlug1Y5Adwxs+ZfaYif
+         UoCabZ2+jsMs+7DuT+kx2CAlKVUzON1B/6Ck3w8DJVzbm8Rwfu9DpVkIfAYOMysuH6Da
+         /NDFJLO27UFvOdG+HhYembLvPNyuU2hiMf4J8GZMdNlRnK/EcQnfwCDcxWWnJ22wyxl0
+         IWZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708074601; x=1708679401;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BFXkHkaZjLIExOljo2tyqPMEuvx89YjO8mstMPgUNwM=;
+        b=TQiWbOPrkuenRI9GDhMI6vtgmXKxxhQz+QLArm1B2o4E0s95RBgMMJxiBRxyyiZU95
+         PrkkcAaXlr7uPuaJ0FXHu9Pc4LgIgxsRvlGmzDNOMVoVTmT2BIbmye1vw+Q8kmYwCnyh
+         3BTZ2sTG61knI9+m1AhCIZgX2Eqb4IpXd4E94TlgtK0SfrIJ1Z5nUF4gdeG9s3kYDVvi
+         sQgXZuGvtMQMfnZHyw7P0c0Ypmop9jQbzhOHZkBNwbc9Di41RI+8a+byQGS3wEFFoske
+         8vxwlhpljFJlUYKj2QRSkFqPga0QZwFXkAt05nhmlu8NtXCN88NAY/a///TeZxv80HHD
+         cLbw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/ivzoaTDgE9ym2z2sHiGzsR8UxGHxdFuv+WZ/42KN7kPg+Grtn2V2MokkLZKPhylgDQ32isWVEfXnE741Ff+SGCdZ60oN4XjmQ5vD
+X-Gm-Message-State: AOJu0Yz0MMFZQa73opIYk2f9AliCWqGe60v6ahx42zH51XCg9vNBpEJf
+	fO7f1PcxmjOrlqtC8ej0OotxYa5n++LFeAffPQ3qkTgoa1o33X3cLWIsQx21yY//sFQmoFUYCoM
+	8C5yDlWOyS895XajTOHvvU51LQjy9PBdI2bj+
+X-Google-Smtp-Source: AGHT+IE+YRbJk7VDMzz3D3amekUL1+l3+CmSNZ5i1D/cQ5UH+VxvljUAhLV8lOJpACZwspK/ZLU2oy1303I7RbZw0xE=
+X-Received: by 2002:a05:6102:35c:b0:46d:1ffd:d87d with SMTP id
+ e28-20020a056102035c00b0046d1ffdd87dmr3366416vsa.17.1708074600649; Fri, 16
+ Feb 2024 01:10:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20240214172505.5044-1-dakr@redhat.com> <Zc0UNUGbmmBlzBAv@boqun-archlinux>
+ <2d94d420-fca2-47c1-aee7-bbce7a1505cf@ryhl.io> <Zc1mWCBKNuLrS-tI@boqun-archlinux>
+ <CAH5fLghO6Jy_hJXhRU_+eBSDHHveAvEOJA6fNkmMS9mqHvS6iQ@mail.gmail.com> <Zc5BJvyGIXgDQ21j@boqun-archlinux>
+In-Reply-To: <Zc5BJvyGIXgDQ21j@boqun-archlinux>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Fri, 16 Feb 2024 10:09:49 +0100
+Message-ID: <CAH5fLggP+vBN=X8TDVkV4Le=Np=5hiCGn5fo+N9=H70zRKXAYw@mail.gmail.com>
+Subject: Re: [PATCH v3] rust: str: add {make,to}_{upper,lower}case() to CString
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Alice Ryhl <alice@ryhl.io>, Danilo Krummrich <dakr@redhat.com>, ojeda@kernel.org, 
+	alex.gaynor@gmail.com, wedsonaf@gmail.com, gary@garyguo.net, 
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@samsung.com, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 16 Feb 2024, Kent Overstreet <kent.overstreet@linux.dev> wrote:
-> On Fri, Feb 16, 2024 at 10:38:00AM +0200, Jani Nikula wrote:
->> I wonder if it wouldn't be too much trouble to write at least a brief
->> overview document under Documentation/ describing what this is all
->> about? Even as follow-up. People seeing the patch series have the
->> benefit of the cover letter and the commit messages, but that's hardly
->> documentation.
->> 
->> We have all these great frameworks and tools but their discoverability
->> to kernel developers isn't always all that great.
+On Thu, Feb 15, 2024 at 5:51=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
+rote:
 >
-> commit f589b48789de4b8f77bfc70b9f3ab2013c01eaf2
-> Author: Kent Overstreet <kent.overstreet@linux.dev>
-> Date:   Wed Feb 14 01:13:04 2024 -0500
+> On Thu, Feb 15, 2024 at 10:38:07AM +0100, Alice Ryhl wrote:
+> > On Thu, Feb 15, 2024 at 2:18=E2=80=AFAM Boqun Feng <boqun.feng@gmail.co=
+m> wrote:
+> > >
+> > > On Wed, Feb 14, 2024 at 08:59:06PM +0100, Alice Ryhl wrote:
+> > > > On 2/14/24 20:27, Boqun Feng wrote:
+> > > > > On Wed, Feb 14, 2024 at 06:24:10PM +0100, Danilo Krummrich wrote:
+> > > > > > --- a/rust/kernel/str.rs
+> > > > > > +++ b/rust/kernel/str.rs
+> > > > > > @@ -5,7 +5,7 @@
+> > > > > >   use alloc::alloc::AllocError;
+> > > > > >   use alloc::vec::Vec;
+> > > > > >   use core::fmt::{self, Write};
+> > > > > > -use core::ops::{self, Deref, Index};
+> > > > > > +use core::ops::{self, Deref, DerefMut, Index};
+> > > > > >   use crate::{
+> > > > > >       bindings,
+> > > > > > @@ -143,6 +143,19 @@ pub const fn from_bytes_with_nul(bytes: &[=
+u8]) -> Result<&Self, CStrConvertError
+> > > > > >           unsafe { core::mem::transmute(bytes) }
+> > > > > >       }
+> > > > > > +    /// Creates a mutable [`CStr`] from a `[u8]` without perfo=
+rming any
+> > > > > > +    /// additional checks.
+> > > > > > +    ///
+> > > > > > +    /// # Safety
+> > > > > > +    ///
+> > > > > > +    /// `bytes` *must* end with a `NUL` byte, and should only =
+have a single
+> > > > > > +    /// `NUL` byte (or the string will be truncated).
+> > > > > > +    #[inline]
+> > > > > > +    pub const unsafe fn from_bytes_with_nul_unchecked_mut(byte=
+s: &mut [u8]) -> &mut CStr {
+> > > > > > +        // SAFETY: Properties of `bytes` guaranteed by the saf=
+ety precondition.
+> > > > > > +        unsafe { &mut *(bytes as *mut [u8] as *mut CStr) }
+> > > > >
+> > > > > First `.cast::<[u8]>().cast::<CStr>()` is preferred than `as`. Be=
+sides,
+> > > > > I think the dereference (or reborrow) is only safe if `CStr` is
+> > > > > `#[repr(transparent)]. I.e.
+> > > > >
+> > > > >     #[repr(transparent)]
+> > > > >     pub struct CStr([u8]);
+> > > > >
+> > > > > with that you can implement the function as (you can still use `c=
+ast()`
+> > > > > implementation, but I sometimes find `transmute` is more simple).
+> > > > >
+> > > > >      pub const unsafe fn from_bytes_with_nul_unchecked_mut(bytes:=
+ &mut [u8]) -> &mut CStr {
+> > > > >     // SAFETY: `CStr` is transparent to `[u8]`, so the transmute =
+is
+> > > > >     // safe to do, and per the function safety requirement, `byte=
+s`
+> > > > >     // is a valid `CStr`.
+> > > > >     unsafe { core::mem::transmute(bytes) }
+> > > > >      }
+> > > > >
+> > > > > but this is just my thought, better wait for others' feedback as =
+well.
+> > > >
+> > > > Transmuting references is generally frowned upon. It's better to us=
+e a
+> > > > pointer cast.
+> > > >
+> > >
+> > > Ok, but honestly, I don't think the pointer casting is better ;-) Wha=
+t
+> > > wants to be done here is simply converting a `&mut [u8]` to `&mut CSt=
+r`,
+> > > adding two levels of pointer casting is kinda noise. (Also
+> > > `from_bytes_with_nul` uses `transmute` as well).
+> >
+> > Here's my logic for preferring pointer casts: Transmute raises
+> > questions about the layout of fat pointers, whereas pointer casts are
+> > obviously okay.
+> >
 >
->     memprofiling: Documentation
->     
->     Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+> But in this case, eventually you need to worry about fat pointer layout
+> when you dereference the `*mut CStr`, right? In other words, the
+> dereference is only safe if `*mut [u8]` has the same fat pointer layout
+> as `*mut CStr`. I prefer to transmute here because it's a newtype
+> paradigm, and transmute kinda makes that clear.
 
-Thanks! Wasn't part of this series and I wasn't aware it existed.
+No, if the `*mut CStr` and `*mut [u8]` types disagree on whether the
+data or vtable pointer is first in the layout, then an as cast should
+swap them.
 
-BR,
-Jani.
+The question of whether their vtables (well I guess it's just a length
+in this case) are compatible is separate.
 
-
--- 
-Jani Nikula, Intel
+Alice
