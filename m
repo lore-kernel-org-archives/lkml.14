@@ -1,39 +1,39 @@
 Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA9F12F58A;
-	Fri, 16 Feb 2024 15:53:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BF212F361;
+	Fri, 16 Feb 2024 15:53:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708098786; cv=none; b=td3FSe5buf/8SrUgkK7f0+++lxHuiF+CTQ6WN9c8EjmutthMXaDNj/pz7Ylc1Y1YFb5gRl8M1KjBrB7uw8Ue6bOmfyPJtvmvHOMXjSyURuN/0atTJho4c1v+a1hfrWj8UYZ7GOpwHKrQlexCp3F6TBwFn9QPtUrVgQvYuvSJkTY=
+	t=1708098787; cv=none; b=bNivhShLqJMQRklkZvlWr7dJeyB4A00ZsRXxZ2tIJBOXAIkjLPfPuqj5zxWwDRUTGQD1R7c3fMKr/Xk0FUh7s94ZwopZ2KZfHMW3Zdi9iSUJfG0pG0ZnNuPL83bskKb3GETTsu0Oa7IeCC9cB6Wln2fnxp+/FrZLGKRJAt9LdFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708098786; c=relaxed/simple;
-	bh=V4PCxhGFH/jAAOAVBdY7uV5Loj9ZYxch0/IxD1tU438=;
+	s=arc-20240116; t=1708098787; c=relaxed/simple;
+	bh=/eZVwRgt2j1BXqRGlnyzPhAuRD9XUH7xvoTcScbOTyM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=H902W9PEHYAnhJu5QcQ89zK7J+lF9n/uPFNrn/lGn3DhykoBsvB2CFjchMWmL5tdz41qxsB4+QJSrV/RXGDBFPCTEsLf6i2nHeHlCKrzBeBkItZZn5043T/kqyyyV+EykzmJVBXv6AJqmAVakSi3NRrptyr7DAYU0UeH9U/scYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gdSnkKdC; arc=none smtp.client-ip=217.70.183.193
+	 In-Reply-To:To:Cc; b=IK6T8ecT4o3Tm7yPgs0zNR8TSOaCdW0KHVaRvGlmU2QWrG3kvZj4uABvvHL7z9XzvFHVGihto1o2n3JujBSB0kUwM4XUdGaKq5raKPjbdTdTFVHyH7dWVcqL3jXzmgRjXVrNul3QtaC2mE41fj5ZFAlQc+BwrkKdCYugI9AUlCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QISedQ2q; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gdSnkKdC"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id ED3C3240008;
-	Fri, 16 Feb 2024 15:53:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QISedQ2q"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 535DE240010;
+	Fri, 16 Feb 2024 15:52:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708098782;
+	t=1708098778;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=04SFsb4YU2FLhX8c3BxjY03HBAIbE1GiOjr4sY7glFo=;
-	b=gdSnkKdC8MDHGhmseptmYi7uQcOpt+2+nGF7b176TtpsvoCUMXpH1gQnMYikSsEzZWVgns
-	s6wTqDapPaEo7bDjQ8pIeXUJp7N+waY+9YdFtYKy4F4g+7Z3JqpD7sCypPthb1b6JddOrg
-	2TMLuPUvAC0OhKrNdCz5r/sdqYF/n3dvXAvH46tuKwAyTC/+4s9fCQn/foh2caMhIanw4t
-	uijtVb53YhicB0Ahz64zQEOc5ccwTNslmCsziEPUGViHbZDCmar1YVQniayevymRMUsnhr
-	L33Iqr//g5cvesrR0HpNEnxt4R2NRAbpAOCFRs2xmzWPRZniPIGLQCmGMYjscA==
+	bh=u126WbGtnDgFCy3tvttwAlHJg1ScL3beIrXWK0ZN9vY=;
+	b=QISedQ2q4l18bCK7EgHlLflrB/UFRhtKWpXB+HNpOy43V1jqngPNlgZ6qje4kobyNJNQVX
+	OAZqYsMk6vOl8qsoqrkgwDJyCVb1uoHGZKI2tUtivMwcEpzgZlHat4MnasIkallCxhYiTm
+	kwHEsG5+6HYG58TjFiYi5V2Ypy+le4aPjRqzkzIUZTyP2pKDms/gk4NMov/83120nOku8N
+	5ffIqReDf/AhltmKqnIVwwio05VyFUZiIaygJdWnsrlhACvk/kybm7vlQ0ohFDA0Wtbq2T
+	mFwlCAQuyfTkanVrsHpOH5oJjPaMR0d8k8f6VwWFkaxgW3XQ7lbGfZAC6LJ0Ow==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Fri, 16 Feb 2024 16:52:23 +0100
-Subject: [PATCH RFC net-next v8 05/13] net: net_tstamp: Add unspec field to
- hwtstamp_source enumeration
+Date: Fri, 16 Feb 2024 16:52:20 +0100
+Subject: [PATCH RFC net-next v8 02/13] net: Make dev_get_hwtstamp_phylib
+ accessible
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240216-feature_ptp_netnext-v8-5-510f42f444fb@bootlin.com>
+Message-Id: <20240216-feature_ptp_netnext-v8-2-510f42f444fb@bootlin.com>
 References: <20240216-feature_ptp_netnext-v8-0-510f42f444fb@bootlin.com>
 In-Reply-To: <20240216-feature_ptp_netnext-v8-0-510f42f444fb@bootlin.com>
 To: Florian Fainelli <florian.fainelli@broadcom.com>, 
@@ -68,9 +68,8 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
 X-Mailer: b4 0.12.4
 X-GND-Sasl: kory.maincent@bootlin.com
 
-Prepare for future support of saving hwtstamp source in PTP xarray by
-introducing HWTSTAMP_SOURCE_UNSPEC to hwtstamp_source enum, setting it
-to 0 to match old behavior of no source defined.
+Make the dev_get_hwtstamp_phylib function accessible in prevision to use
+it from ethtool to read the hwtstamp current configuration.
 
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
@@ -78,21 +77,45 @@ Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 Change in v8:
 - New patch
 ---
- include/linux/net_tstamp.h | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/netdevice.h | 2 ++
+ net/core/dev_ioctl.c      | 5 +++--
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/net_tstamp.h b/include/linux/net_tstamp.h
-index 3799c79b6c83..662074b08c94 100644
---- a/include/linux/net_tstamp.h
-+++ b/include/linux/net_tstamp.h
-@@ -14,6 +14,7 @@
- 					 SOF_TIMESTAMPING_RAW_HARDWARE)
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index c541550b0e6e..fa92085c29a8 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -4005,6 +4005,8 @@ int generic_hwtstamp_set_lower(struct net_device *dev,
+ int dev_set_hwtstamp_phylib(struct net_device *dev,
+ 			    struct kernel_hwtstamp_config *cfg,
+ 			    struct netlink_ext_ack *extack);
++int dev_get_hwtstamp_phylib(struct net_device *dev,
++			    struct kernel_hwtstamp_config *cfg);
+ int dev_ethtool(struct net *net, struct ifreq *ifr, void __user *userdata);
+ unsigned int dev_get_flags(const struct net_device *);
+ int __dev_change_flags(struct net_device *dev, unsigned int flags,
+diff --git a/net/core/dev_ioctl.c b/net/core/dev_ioctl.c
+index 9a66cf5015f2..5d3b169d8f18 100644
+--- a/net/core/dev_ioctl.c
++++ b/net/core/dev_ioctl.c
+@@ -268,14 +268,15 @@ static int dev_eth_ioctl(struct net_device *dev,
+  * -EOPNOTSUPP for phylib for now, which is still more accurate than letting
+  * the netdev handle the GET request.
+  */
+-static int dev_get_hwtstamp_phylib(struct net_device *dev,
+-				   struct kernel_hwtstamp_config *cfg)
++int dev_get_hwtstamp_phylib(struct net_device *dev,
++			    struct kernel_hwtstamp_config *cfg)
+ {
+ 	if (phy_has_hwtstamp(dev->phydev))
+ 		return phy_hwtstamp_get(dev->phydev, cfg);
  
- enum hwtstamp_source {
-+	HWTSTAMP_SOURCE_UNSPEC,
- 	HWTSTAMP_SOURCE_NETDEV,
- 	HWTSTAMP_SOURCE_PHYLIB,
- };
+ 	return dev->netdev_ops->ndo_hwtstamp_get(dev, cfg);
+ }
++EXPORT_SYMBOL_GPL(dev_get_hwtstamp_phylib);
+ 
+ static int dev_get_hwtstamp(struct net_device *dev, struct ifreq *ifr)
+ {
 
 -- 
 2.25.1
