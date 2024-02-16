@@ -1,35 +1,35 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949751353E2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE42454BD3;
 	Fri, 16 Feb 2024 17:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708105365; cv=none; b=mvyG3Q7GLv554GhLXSTdYHpqZHLv4QGaspUtQ4WjhbHclR1bxdcrjRwrwSNRHDTD3VNR2nzfVsoURx1ABWwTSPKJvRlabxooqy12jyS3Knapp/Ao4iYgHUPWt3iK107RQrs95ixuSf9xy/LlFgx3Bzsr5ibYw7fXbw/WM329tdg=
+	t=1708105366; cv=none; b=ms/5KwQM5CqOrHOK+cXYIwD0H+FAtRDcL0NXFXgDejpnxbX+MLaf///ZYouKumlV2t6w3YAt16MoX8uuuoEwBEphOChvo7VEqPbhLhAFY+q4k02vN63eL7FI1Esi19LWzO7ZcxAfg4mw/zBMk6jP4T5pfe/tLXSkxoV0GGlX+4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708105365; c=relaxed/simple;
-	bh=1MQtowLsqNnUAtF7k2m7ABSUA8raDS+7g0jCaM4jd/8=;
+	s=arc-20240116; t=1708105366; c=relaxed/simple;
+	bh=ixMcKFY+IUbSdpEbmhiHUnPBLE8f92Qaft2wepBV4zg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IVt2H8RspuLD2Qy4MtJ9AulB8QWgNHlXn0vl0gs1b6j05oxN7Brhqu0LH1c/X9Fu+yWp/uHuOw3I9ZUYO6YWlKydJlL0B7105j6NbpScjBaYcmndt1tpXVBwIilu3qUJsEEw0vj1PiHMCozEoFyruYO/BbWeKUaKHwtE2AHdlOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Bnt1BzpK; arc=none smtp.client-ip=217.70.183.193
+	 MIME-Version:Content-Type; b=cz5eqmWhqzMp9TEfFFj9/XRWaPUBsl3Rmmq82qp8CaTFmffxQWwShpVez/+vstXzwoF8SAsU9utisWE7rkQtqphqK6TdSIWlOJVhALg+cquNBJGdXFMewATB1L6MIIVff4b+a5ieHd3Kp2ogxnE0yPGz1VKjXnrUVzTmKs1t2ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=U5AM+IIy; arc=none smtp.client-ip=217.70.183.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Bnt1BzpK"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 536F2240002;
-	Fri, 16 Feb 2024 17:42:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="U5AM+IIy"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9749360006;
+	Fri, 16 Feb 2024 17:42:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708105361;
+	t=1708105356;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=bQ4JZ6IQLu/PlyZzbHme0fXEJFmS6Qd3821XRXAYit4=;
-	b=Bnt1BzpKaZvhFgM9qnJiViQlFu22FurjerkDxdon4W6SuFwXs25VRhtTK+JbP2FpppOjkB
-	IZnKtBB9Dk2VvtGLig+xQpu9ZlLClxOaRX25I32URFCJZxaFex23GS/P1PmVn79w5IhHUI
-	67JUsglDUIQ54lqCF/csfOkXBv3lwnsfUX0smiJCL8r2MW5/Sn6mwjpdY0MHQK1lTg/PWI
-	n6Avq63EWLfnZ5hqvBpTKZYe8J3iKW9pkIVw8ROsNgaAVW8YzDdzoe0nRIgox3glBBPenp
-	hxnqdql32MsE+g1ukbD1EKabFVR2bwR90hqVLJmW+m6zJemr56dGS8ofjBGKxA==
+	bh=GD5dmA3icQ0aFc9IWzxUyFJ8W/NRInrfQ2B2LPqfRyo=;
+	b=U5AM+IIy6md4avJJAAMXfYrFomYfUJ2NYz0D2DlzvrKlAEhC1mtZzsWbfK7eTTe5xqo1e5
+	I9NqxdAk5lA0mwfZhopG+b310YVrQX690Zt43Kq28oYAjEVRu7lo6zMS6/+BmDeRYeTSsK
+	gPFkyl1+sbyFCAxZzMHRwvXB/LAQj6dJkhHSkV7EQGVgvxnN5GBUgrqG/sTt08uefgJ0ge
+	+gkHCMzF3ua+yjZmcIHsChfLoTvP+KELgBl/7XmhMxCdJJ5sfyV47r1eduQmajjohAhhqJ
+	JofoBINFJBMrA8/FWUBGCWaTZqRrdbOG1eTvHTiymN2SZojFtWGAhWhR1g5Vig==
 From: Gregory CLEMENT <gregory.clement@bootlin.com>
 To: Paul Burton <paulburton@kernel.org>,
 	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
@@ -44,10 +44,12 @@ Cc: Vladimir  Kondratiev <vladimir.kondratiev@mobileye.com>,
 	Alexandre Belloni <alexandre.belloni@bootlin.com>,
 	=?UTF-8?q?Th=C3=A9o=20Lebrun?= <theo.lebrun@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH v8 12/14] MIPS: Share generic kernel code with other architecture
-Date: Fri, 16 Feb 2024 18:42:21 +0100
-Message-ID: <20240216174227.409400-13-gregory.clement@bootlin.com>
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+	Rob Herring <robh@kernel.org>
+Subject: [PATCH v8 06/14] dt-bindings: Add vendor prefix for Mobileye Vision Technologies Ltd.
+Date: Fri, 16 Feb 2024 18:42:15 +0100
+Message-ID: <20240216174227.409400-7-gregory.clement@bootlin.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240216174227.409400-1-gregory.clement@bootlin.com>
 References: <20240216174227.409400-1-gregory.clement@bootlin.com>
@@ -57,68 +59,34 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: gregory.clement@bootlin.com
 
-Some architectures might seek to utilize a significant portion of the
-generic kernel code while maintaining independence from the generic
-kernel due to specific peculiarities.
+Mobileye Vision Technologies Ltd. is a company developing autonomous
+driving technologies and advanced driver-assistance systems (ADAS)
+including cameras, computer chips and software.
 
-This patch allows for the reuse of core code, preventing unnecessary
-duplication.
-
-Suggested-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 ---
- arch/mips/Kbuild           | 1 +
- arch/mips/Kconfig          | 3 +++
- arch/mips/generic/Makefile | 6 +++---
- 3 files changed, 7 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/mips/Kbuild b/arch/mips/Kbuild
-index e2d623621a00e..e901bf554483b 100644
---- a/arch/mips/Kbuild
-+++ b/arch/mips/Kbuild
-@@ -11,6 +11,7 @@ obj- := $(platform-y)
- # mips object files
- # The object files are linked as core-y files would be linked
- 
-+obj-y += generic/
- obj-y += kernel/
- obj-y += mm/
- obj-y += net/
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 797ae590ebdba..5549d26448941 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -109,6 +109,9 @@ config MIPS_FIXUP_BIGPHYS_ADDR
- config MIPS_GENERIC
- 	bool
- 
-+config MACH_GENERIC_CORE
-+	bool
-+
- config MACH_INGENIC
- 	bool
- 	select SYS_SUPPORTS_32BIT_KERNEL
-diff --git a/arch/mips/generic/Makefile b/arch/mips/generic/Makefile
-index e37a59bae0a62..56011d738441f 100644
---- a/arch/mips/generic/Makefile
-+++ b/arch/mips/generic/Makefile
-@@ -4,9 +4,9 @@
- # Author: Paul Burton <paul.burton@mips.com>
- #
- 
--obj-y += init.o
--obj-y += irq.o
--obj-y += proc.o
-+obj-$(CONFIG_MACH_GENERIC_CORE) += init.o
-+obj-$(CONFIG_MACH_GENERIC_CORE) += irq.o
-+obj-$(CONFIG_MACH_GENERIC_CORE) += proc.o
- 
- obj-$(CONFIG_YAMON_DT_SHIM)		+= yamon-dt.o
- obj-$(CONFIG_LEGACY_BOARD_SEAD3)	+= board-sead3.o
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 1a0dc04f1db47..fb088d9c6f5b2 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -911,6 +911,8 @@ patternProperties:
+     description: Miyoo
+   "^mntre,.*":
+     description: MNT Research GmbH
++  "^mobileye,.*":
++    description: Mobileye Vision Technologies Ltd.
+   "^modtronix,.*":
+     description: Modtronix Engineering
+   "^moortec,.*":
 -- 
 2.43.0
 
