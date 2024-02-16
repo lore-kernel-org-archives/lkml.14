@@ -1,183 +1,191 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from edc2-mailout4.edc.trendmicro.com (edc2vmout04.edc.trendmicro.com [216.104.20.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113F91339B1;
-	Fri, 16 Feb 2024 18:03:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708106623; cv=none; b=apKYCRSDKUl3j8pFw6MctWWjf5q3tfiGWbQxS6+7VSeNGelppo3GXf2XfEfa18/lYWf0IpukdihQ/IY5C8zm/x6MLkBS/HQAQ6z+acyXYHkSP/q9fnk6xeOfvJjWXpaSa4EujWgcsDXrGull/wCEmzhh6ADanItXEupfs939P0U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708106623; c=relaxed/simple;
-	bh=k4JUf4tEgF+ZTNcSICdK73ztE/zkp6cdsdcD3cdcRXY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KCYKsln1HPCfEdJjhq9RVKjib4v7KjWvFn7gFiy03SyDT97QWGGDEM4xirwy5RUlNsyXZxE8faBzf5GpCkxj3zGfm67S9BZNpIjq7g/rnThioSCIffKnHmGfjGz7sB3y2Ow79r0xuPiIgiok1cfRzvyzaUPwnFmf/OTdA+iDIj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iv7mNiWr; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95544133997;
+	Fri, 16 Feb 2024 18:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.104.20.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708106645; cv=fail; b=CF+VkYRXbtuXE7g4nhlPX/vvpwOE8aBkKPUXHI49ItnQo62tSwQ8P4qQ+PiAZtfoEsIh4Q0zIQNG93RmrGCGGxeH95UsgY/HIj7cTNMHsJPsFu1lUXKZplJGVDbhcSVKjnI87vIh4/NDd/whLeC5qGWmRSuZnm69wZHB+eR/bHU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708106645; c=relaxed/simple;
+	bh=g/5G/CY7sEIP5u/uF1xtIfiYpmv86AIN2KPnI2WwFkE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=LFvNj20cYlHpkDnh6QpmW0esgEjLEk3beUo7HXyGmxXPMRy0mKkR1FUgaNmBkOkP5ANvoSXmIwsOUQOb8Rodmiy9hI9pNZZ39FKikpkGsds0OEQVUXjBkCJjX97kyu7CX5LdiLbP1IPB1mp4bzYzhOtuEERnW+38cH8945OX56Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trendmicro.com; spf=pass smtp.mailfrom=trendmicro.com; dkim=pass (1024-bit key) header.d=trendmicro.com header.i=@trendmicro.com header.b=RRrW3b+O; arc=fail smtp.client-ip=216.104.20.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trendmicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trendmicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iv7mNiWr"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5128d914604so2009210e87.3;
-        Fri, 16 Feb 2024 10:03:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708106620; x=1708711420; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Jrmz6zDR44TvQ+brUsRRWaHMMl1NQ48wtumgFrZ6enM=;
-        b=iv7mNiWrl3jQ8JeslfOSK5FGJBcixm6ddRK3x7Nb0JvjrkOmqVW+Cv21RLJfHEJMPg
-         kdJinQ9IElkinkFbYrFE9snoRFoYTmuvlQU22CMwWsm7LRmY4hciIaIgp8ySYJ1Oh2d4
-         omotI6hmw/6SbTQUSZ2cq94herdWYaH8sp9/ojGy2WBKSGNI7ScBbw1GHoXZybcCMrTB
-         xehraXJUudsqEUEMT+EwQPaC0cdG02+r+effPUKmlL/qSFLNcpU7XDm59IJQFcdnWJKJ
-         mN5hbHnTjjpzjuzwcYqhJNSczuLk6ZRlVotlfW67937Z79/nymo81erDztIrIuPHyM36
-         VCqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708106620; x=1708711420;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Jrmz6zDR44TvQ+brUsRRWaHMMl1NQ48wtumgFrZ6enM=;
-        b=icUjZoyqW8abKlRvn4K/ZtvRTXzJJ9rYOPL8kzvPnL8lFFSh2J+jvMKrnS/IzPIi4L
-         8tnjzSsq0gik6Q4Z2prOjr26iAD0MN5i/gPQGDFuNiC1HxkNjB3eXoTg7Xc0G7Kcbr+H
-         tzBaj1FC9aLraLwXKl7xk/U2gjeB0tnCrYHgH306p8rpRLnyLre6POaPAf2TgzaiKX/3
-         xCNgEJFV0uD4AFaF/w6BZMFgklNP5PGM3/oL9+2Ci6q5NO1csGv6zkHzcndaCtcXxzpA
-         LzkC31qKE0r/YYIJ9DOK8sBv4fyTJBjJ11sznbHY3m+NyQz/5RjDKDZPdo4cF7VvKwPo
-         7BMg==
-X-Forwarded-Encrypted: i=1; AJvYcCW/JqDJr6y6ob0CLhhFNwjIg0Ey7O0rjttIimCx9EDLRASuv9c35pbsSbSwZl69X7W8tvVydL84WWNuL68xvvzzbRf+PAVFaMRiPaKQmUJ6cC3bDYCrB/DFx/WePtAygRnI0+1C8gHY
-X-Gm-Message-State: AOJu0YyAvJ5bfWI+er5D4ZRiD9UA2uyYW/KL/WhKR32YTvAKT7ycB/TA
-	5ablxrA5flL9g3U7nHq25NvevAW+kRR5bAt1IsZVOGDfEE6hZ8ayP1TTHjCB
-X-Google-Smtp-Source: AGHT+IE+spxlqHoj7KaTR0bQ6pFqc8Ygq6HcrnDGJ5st4jPvcMkE0nfK4WOkmZDMuGs4q42SUxRhLA==
-X-Received: by 2002:a05:6512:201a:b0:511:ae2c:8991 with SMTP id a26-20020a056512201a00b00511ae2c8991mr3343020lfb.40.1708106619661;
-        Fri, 16 Feb 2024 10:03:39 -0800 (PST)
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id d6-20020ac24c86000000b005128cf5b323sm30941lfl.251.2024.02.16.10.03.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 10:03:39 -0800 (PST)
-Date: Fri, 16 Feb 2024 21:03:36 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, 
-	Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] spi: dw: Drop default number of CS setting
-Message-ID: <eestmqctjaqdrugnjy23pybblzvncrbez77tc6l7fdqmfkf6rz@q44jazumavjq>
-References: <20240215180102.13887-1-fancer.lancer@gmail.com>
- <20240215180102.13887-4-fancer.lancer@gmail.com>
- <Zc5mxyTjq6X_QRsQ@smile.fi.intel.com>
- <4sbbhf4ltdwrmj7rrr6f7lnjbdxrwfjoutmcgsh2c44jy5fxzj@xgqdscqdnkkv>
- <CAHp75VeK0kb40Ma9WjMAGQE9Y5O1OdeuNhQwDvYCaLHbvj+60Q@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=trendmicro.com header.i=@trendmicro.com header.b="RRrW3b+O"
+Received: from edc2-mailout4.edc.trendmicro.com (unknown [127.0.0.1])
+	by DDEI (Postfix) with ESMTP id 69ADC427C74;
+	Fri, 16 Feb 2024 17:58:25 +0000 (UTC)
+Received: from edc2-mailout4.edc.trendmicro.com (unknown [127.0.0.1])
+	by DDEI (Postfix) with ESMTP id 56348426C2F;
+	Fri, 16 Feb 2024 17:58:25 +0000 (UTC)
+X-TM-AS-ERS: 10.34.72.183-127.5.254.253
+X-TM-AS-SMTP: 1.0 RURDMi1FWENIMDIuZXUudHJlbmRuZXQub3Jn emRpLWRpc2Nsb3N1cmVzQ
+	HRyZW5kbWljcm8uY29t
+X-DDEI-TLS-USAGE: Used
+Received: from EDC2-EXCH02.eu.trendnet.org (unknown [10.34.72.183])
+	by edc2-mailout4.edc.trendmicro.com (Postfix) with ESMTPS;
+	Fri, 16 Feb 2024 17:58:25 +0000 (UTC)
+Received: from EDC2-EXCH02.eu.trendnet.org (10.34.72.183) by
+ EDC2-EXCH02.eu.trendnet.org (10.34.72.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 16 Feb 2024 09:58:23 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.100)
+ by exhybridemea.trendmicro.com (10.34.72.184) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Fri, 16 Feb 2024 09:58:23 -0800
+Received: from DM5PR0102MB3477.prod.exchangelabs.com (2603:10b6:4:a1::19) by
+ CH0PR01MB7019.prod.exchangelabs.com (2603:10b6:610:108::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7270.40; Fri, 16 Feb 2024 17:58:20 +0000
+Received: from DM5PR0102MB3477.prod.exchangelabs.com
+ ([fe80::62f9:a52f:7777:ce4e]) by DM5PR0102MB3477.prod.exchangelabs.com
+ ([fe80::62f9:a52f:7777:ce4e%4]) with mapi id 15.20.7292.029; Fri, 16 Feb 2024
+ 17:58:20 +0000
+From: "zdi-disclosures@trendmicro.com" <zdi-disclosures@trendmicro.com>
+To: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"valentina.manea.m@gmail.com" <valentina.manea.m@gmail.com>,
+	"shuah@kernel.org" <shuah@kernel.org>, "i@zenithal.me" <i@zenithal.me>
+Subject: RE: ZDI-CAN-22273: New Vulnerability Report
+Thread-Topic: ZDI-CAN-22273: New Vulnerability Report
+Thread-Index: AdoDaZfX1Pq+Y8aLRweLJ8giuYn76QAnSoKAFz2O8lAAAHKGgAAALldg
+Content-Class:
+Date: Fri, 16 Feb 2024 17:58:20 +0000
+Message-ID: <DM5PR0102MB3477B499A8A3292D6BFFBE80804C2@DM5PR0102MB3477.prod.exchangelabs.com>
+References: <DM5PR0102MB347711AF2F5655852AC60BEB80DBA@DM5PR0102MB3477.prod.exchangelabs.com>
+ <2023102134-reflux-saddling-c750@gregkh>
+ <DM5PR0102MB3477B594C9D018BC884DF3E4804C2@DM5PR0102MB3477.prod.exchangelabs.com>
+ <2024021605-disloyal-overlying-ed56@gregkh>
+In-Reply-To: <2024021605-disloyal-overlying-ed56@gregkh>
+Accept-Language: en-US, es-ES
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels: MSIP_Label_fb50d67e-2428-41a1-85f0-bee73fd61572_ActionId=c44f7461-1107-46df-a12f-d72c1d6224a5;MSIP_Label_fb50d67e-2428-41a1-85f0-bee73fd61572_ContentBits=0;MSIP_Label_fb50d67e-2428-41a1-85f0-bee73fd61572_Enabled=true;MSIP_Label_fb50d67e-2428-41a1-85f0-bee73fd61572_Method=Privileged;MSIP_Label_fb50d67e-2428-41a1-85f0-bee73fd61572_Name=Public
+ Information - no
+ protection;MSIP_Label_fb50d67e-2428-41a1-85f0-bee73fd61572_SetDate=2024-02-16T17:44:28Z;MSIP_Label_fb50d67e-2428-41a1-85f0-bee73fd61572_SiteId=3e04753a-ae5b-42d4-a86d-d6f05460f9e4;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM5PR0102MB3477:EE_|CH0PR01MB7019:EE_
+x-ms-office365-filtering-correlation-id: 67e0f5e3-4c9d-439a-673d-08dc2f18dcb3
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2Kj9pB47e2pYPqgVEOVpdgsMECz7uafgfgkXR38B2FA+LKIbaCKMtrrzx2snGZQaIFYuhuVGJXS6k77ottF7FHX2/m/bLi35emdCTBIVAbPK9RSsvdKKkEn23CK03Xk0exw1PqkH3mJOLSkYko4K8Ps8VEr9t9inOFafwTFKLj5ctyovgUnNrhYhTACjGQ98qsCGweLkWCtfD8czkGbScE8GNz+FBLJQ32aTRE6TvirmNeDEAIsoOut+pkeErLEfC630bdr8qJenoi7//qQog1YzAD73yO4y32MIqo2pMKv4zqA1eygzCzb/uoQtxYE/qFpOppWdoxIaf/ui4P/kmIGvSNmvJBNLE9eUxTBTQ/iZ+ZvrCA5xYTrqB4xvjCcheTSVGnCzJTaOEVAMEnUSieac1zsi1c+q3SxnSdlcaGhMza5r65ol4HvvoFbe/6kddAd7kWbx5cyFICMiveoloYgAQbyeVGPNoknJfALVMXqpD65dn292It/knQ8Bec1U1wh+NtmsC5YWzXHEKrw5ty8cQL95Dz6zWw3vpa3VBgBswgdUix69mrJ6YPw3Oo5pYp65frF9mWHRgN3xhW0RN6pEGf3Vk/vN2+vexJje6t5JJ5x8bJGWpFn8HtPBGP/r
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR0102MB3477.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(396003)(346002)(136003)(39860400002)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(5660300002)(4744005)(2906002)(55016003)(8936002)(26005)(66946007)(41300700001)(8676002)(4326008)(52536014)(6506007)(64756008)(66476007)(66556008)(66446008)(83380400001)(76116006)(6916009)(53546011)(7696005)(38070700009)(71200400001)(9686003)(33656002)(316002)(54906003)(478600001)(122000001)(86362001)(82960400001)(38100700002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?zhuvhrzwXhyzoOIGtJPA8GcZAK3g+lxTwpINUB0HUiLws9YgAmhj3j+aXlH2?=
+ =?us-ascii?Q?uRweh2ye5lpLSGKK2SE1Uh7lPSKSNac1bjVuNFfpKgazeu1gAIgnBJWshcQI?=
+ =?us-ascii?Q?y67SCJ2d0NuoYOL/TksYNg3iMC7QsxZknNiIhqQA0bLY5xvFSwMHK3L0v9Wo?=
+ =?us-ascii?Q?Ef7GDW/LASsHqEhD5IIhdEw9REOJrIiO+b+5bUmKL8s3/Ed4y0SDKxX7pF8X?=
+ =?us-ascii?Q?KRhV9GX7hIPUHm2+WwyYZk9BUFtR7Zc70OEB/YgnH8HEQ0EMDb2zivhcYEkI?=
+ =?us-ascii?Q?qomkWWdHkwm/QGgg5r8PiH2fS6OC1MUTIP3p1WZmQW2ijmql3tWrgEKIetT6?=
+ =?us-ascii?Q?mwnBjUver+z6t12rxhyD9PQXt9X3CvA0rDh1s2jQhKsTcVYcClwgqaFnkECj?=
+ =?us-ascii?Q?a2ibokeBUbLE9nmMpFtAmUDRbTJJXDOznVxmxkMDwMeM/XQS/De5pHbk//Kk?=
+ =?us-ascii?Q?he9PEM7mYL77JXV4QnC02xiF7OeHDrfrBa2EPxDE1nKQfmetY7VsJ1rrfd5I?=
+ =?us-ascii?Q?u78rgGcKAnxk8zl3r2LqJf2W7jrvgW6AKaRvovlCqIAV60oSyuHG3k0JiGwD?=
+ =?us-ascii?Q?nsqGgfvOpLI2I1GRNyXZLt8QCkJYzWxSmU8bMghBTu+aGRJk80JMxRYjnaCZ?=
+ =?us-ascii?Q?xXMqMAXAQnN3qBcHxTNHHgvk0N/aTKYjMsZowc/+S79hNovAlecz5MUt5Gkk?=
+ =?us-ascii?Q?NeXhy6EAW7VOn7vLUFlS6RuhstShTl1nXs3qOG5C/XqXNc55B7v+jehyUM1T?=
+ =?us-ascii?Q?T+fbw49sKQQ9sbyZTV/IGRkATODAt6YCpP2sJ6+3X6SR7S2EGHs+yj3AE2Jb?=
+ =?us-ascii?Q?ckQ/TJH0DrbMBr55BKlUCB1K9dC17utP+MozQ4SdF503F0sXFAlKCfdNPv64?=
+ =?us-ascii?Q?wff3rlIKYZnSRDwdEprY5WvCUq2nOfBfTsmtIxBCDaEOTYNeRhQC93TKRhlI?=
+ =?us-ascii?Q?11K5PpEpr176NSuqdRw6dbmnoRs1hylhzcpf7wuG9eASoFBL9woX8i48vWYG?=
+ =?us-ascii?Q?opV9fCvCT/c4i/kzGKDBzVlkAE/kjZ3JPcJ1fzpdT4aXSeOyEwRXC7NcIf6/?=
+ =?us-ascii?Q?TqQsLuDt9pjiuRYyoNm6fsvT8o/r6GM/rNGKMQ35e9rjqlejs+FsIppT6Fk9?=
+ =?us-ascii?Q?gQJzsdYcU+DomfGnEUoQ/VUzwhiN3j9oziTN1Z9nikY1OWDJa93bDN5w4CU8?=
+ =?us-ascii?Q?hvf+cLg30xAPIH5saqzSo5GOIT5sgmCBfwyWZrUAdcf2HTx/S1tywbz5N+YB?=
+ =?us-ascii?Q?JzfH+GFLkNw3EwLwNlglx4OQDvyNruRQ+OHC6kteyZ7AVHHWO+XfVR/q0WSF?=
+ =?us-ascii?Q?sEyilPtYkysvf4/PCFAmQ8cqjltV+ftvAoBdPk3MTy+MaX41i/C+6ftrN38K?=
+ =?us-ascii?Q?F9LCZRqbm3BW606GTCQ7IEi+lxzDQbbonP4uAGa/0169GSZCN+5IW2JDY7O1?=
+ =?us-ascii?Q?Yoi8i+qawJ/d2YIzULvpC6eNxcmJTQ51x6HfdVQgK+RvvHWh9PbqIYNkrDV9?=
+ =?us-ascii?Q?MDRcs1Luk8bW8GDXXtc8iJJcQdXPhndsSnCP5DJK4d5jrBlHcLDNaP6c6ICj?=
+ =?us-ascii?Q?WWY6Gt/79IMFzhgLwFXpNfh/AXTvxLNHVYsMfKCQ/XWGmC2ZUqcmpqjWzdas?=
+ =?us-ascii?Q?CQ=3D=3D?=
+arc-seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XpXcA5wmh0s5Ieg//nQuOIoAFY/6qwPikyllE6TLhpoTFErZlex7w9CbvQay9niWrdEtSc/DdeYPOu5/baijEQaSoyKt2KGbNb7QvHfEYEhIpDipHZ2LixOXBVeVr8O3dd+aK7TwWLRTOjGO+Qja651i4kPQQL5eGbbKyU3UlDsIMO3ifGWb8LlH6bFArbXdUrrNkzva5tR81w+LZE5LFwv+Ku5cSk8sCUstOjSriFRnDXCKczBOJVDkg/RVZBGWriySYbpG3LNlwrK31LqubKkQlgT1ztzNblu2RsOrZx4StR53ew+WRBAShEyC92MQOpYR2PRXpRApOXSG+zUcsA==
+arc-message-signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xAwcjUJIfWKPGPbSELy1iPEHIqUPhPSFETpWEyqwW8g=;
+ b=FXI3Of3OaghjfOykAm6RG7ngBCb1ZeDdgOxZGOXXfioq/ZyCQdchS58bG5Amxshbc3vCM9jkBv0+S2XdwyXrvY4DRQ3M+XUP4/BB9Xol60/TkbA2nbs4fEYsaRjGNaPLg0RjdZSwEjKUhHx8+KyDFg/NNCgefkj0kuBvxR98xR1SesjpKj00xUhhO+b/kVeUNxDlSlL1wRbjYrJRCAngyRhTUBMCZTvNhMKp85HxptYM87omsPti3UK4h+cAJPvCyfATPvsY8K2i73skkcjyk4608p1Nd+upaWL5ZC3Yd0XBE9uFfdizn2Z3avXcjHe6LfPpajcwq+y8Vhp5F6fUoQ==
+arc-authentication-results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=trendmicro.com; dmarc=pass action=none
+ header.from=trendmicro.com; dkim=pass header.d=trendmicro.com; arc=none
+x-ms-exchange-crosstenant-authas: Internal
+x-ms-exchange-crosstenant-authsource: DM5PR0102MB3477.prod.exchangelabs.com
+x-ms-exchange-crosstenant-network-message-id: 67e0f5e3-4c9d-439a-673d-08dc2f18dcb3
+x-ms-exchange-crosstenant-originalarrivaltime: 16 Feb 2024 17:58:20.7761 (UTC)
+x-ms-exchange-crosstenant-fromentityheader: Hosted
+x-ms-exchange-crosstenant-id: 3e04753a-ae5b-42d4-a86d-d6f05460f9e4
+x-ms-exchange-crosstenant-mailboxtype: HOSTED
+x-ms-exchange-crosstenant-userprincipalname: pkpMGre4pQxb5B1gze40hdqNItFBBX6OtnjA/cNpzOK0unbi3Wb6SSnZebdQLn4cZxxZcUlPhg8c5NrAy89RaRlZwVWWPVyJ5Ac28Cqgtx0=
+x-ms-exchange-transport-crosstenantheadersstamped: CH0PR01MB7019
+x-originatororg: trendmicro.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VeK0kb40Ma9WjMAGQE9Y5O1OdeuNhQwDvYCaLHbvj+60Q@mail.gmail.com>
+X-TM-AS-ERS: 10.34.72.183-127.5.254.253
+X-TM-AS-SMTP: 1.0 RURDMi1FWENIMDIuZXUudHJlbmRuZXQub3Jn emRpLWRpc2Nsb3N1cmVzQ
+	HRyZW5kbWljcm8uY29t
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=trendmicro.com;
+	s=tmoutbound; t=1708106305;
+	bh=g/5G/CY7sEIP5u/uF1xtIfiYpmv86AIN2KPnI2WwFkE=; l=1647;
+	h=From:To:Date;
+	b=RRrW3b+OdFXbCcWFbIMHoX0k4riGVEkkJFJ4ksC1SGHXPQm2YiiueA8o7yJrBeqjP
+	 /Y1nkNnci5Bz9775qOS8SOWZFQTqdJtcYm25gIMoJcEA4dC2GvaP/8/TeOeru4Jw4W
+	 RkuslsqYbytKIVg370ZQeLiZXrcv1bYwPPlLCWXs=
 
-On Fri, Feb 16, 2024 at 07:00:28PM +0200, Andy Shevchenko wrote:
-> On Fri, Feb 16, 2024 at 5:36 PM Serge Semin <fancer.lancer@gmail.com> wrote:
-> > On Thu, Feb 15, 2024 at 09:32:23PM +0200, Andy Shevchenko wrote:
-> > > On Thu, Feb 15, 2024 at 09:00:48PM +0300, Serge Semin wrote:
-> > > > DW APB/AHB SSI core now supports the procedure which automatically
-> > > > determines the number of native CS. Thus there is no longer point in
-> > > > defaulting to four CS if platform doesn't specify the real number.
-> 
-> the platform
+Hi Greg,
+Thanks for the update :)
 
-Ok. Thanks.
+Cheers,
+Rebecca
 
-> 
-> 
-> ...
-> 
-> > > > -   num_cs = 4;
-> > >
-> > > Simply update the default here?
-> > >
-> > > > -   device_property_read_u32(&pdev->dev, "num-cs", &num_cs);
-> >
-> > Do you suggest to simply:
-> >
-> > --- a/drivers/spi/spi-dw-mmio.c
-> > +++ b/drivers/spi/spi-dw-mmio.c
-> > @@ -364,8 +364,9 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
-> >                                      &dws->reg_io_width))
-> >                 dws->reg_io_width = 4;
-> >
-> > -       num_cs = 4;
-> > +       num_cs = 0;
-> >
-> >         device_property_read_u32(&pdev->dev, "num-cs", &num_cs);
-> >
-> > ?
-> 
-> Either this or do
-> 
-> num_cs = dw_spi_get_num_cs_from_hw(...);
+-----Original Message-----
+From: gregkh@linuxfoundation.org <gregkh@linuxfoundation.org>
+Sent: Friday, February 16, 2024 12:37 PM
+To: ZDI Disclosures Mailbox <zdi-disclosures@trendmicro.com>
+Cc: linux-kernel@vger.kernel.org; linux-usb@vger.kernel.org; valentina.mane=
+a.m@gmail.com; shuah@kernel.org; i@zenithal.me
+Subject: Re: ZDI-CAN-22273: New Vulnerability Report
 
-This is supposed to be generically done in
-dw_spi_add_host()->dw_spi_hw_init() together with some other
-auto-detections.
+On Fri, Feb 16, 2024 at 05:27:57PM +0000, zdi-disclosures@trendmicro.com wr=
+ote:
+> Hello,
+> Do you have any updates to share regarding this vulnerability? The 120-da=
+y deadline for this case was January 31, 2024. We will publish this soon in=
+ accordance with the ZDI 120-day Disclosure policy if there is not an avail=
+able fix.
 
-> 
-> What would work better WRT hardware?
+I asked some questions to this, a few hours after you sent this to us,
+yet we recieved no response and as such it did not go anywhere.
 
-I'd stick with defaulting the dws->num_cs to zero here.
+So this is all on you now.
 
-> 
-> ...
-> 
-> > My idea was to make the statement looking closer to what is
-> > implemented for "reg-io-width" property. An alternative to what you
-> > suggest and to my patch can be converting the dw_spi::num_cs type to
-> > u32 and pass it to the device_property_read_u32() method directly:
-> 
-> ...patch...
-> 
-> > What do you think? Would that be better?
-> 
+Also note, you are talking on a public mailing list, there is not much
+left to "disclose" :)
 
-> I like the change, but again, are you sure it won't break any setups?
+thanks,
 
-Well, I thought about this for quite some time. Here are the possible
-options:
-1. If "num-cs" property is specified, then nothing is changed. The
-actual number of native chip-selects will be read from there.
-2. If "num-cs" property isn't specified, then the auto-detection
-procedure will be attempted. Here are some considerations in this
-regard:
-   2.1 defaulting to "4" hasn't been correct in the first place
-       because by default the IP-core is synthesized with a single
-       native CS line. So auto-detection would be more portable than
-       guessing with a constant value.
-   2.2 If some IP-cores have all SER bits writable then we'll just
-       get to detect more than there are actual chip-selects. No
-       regression in this case.
-   2.3 If some IP-cores don't support the SER bits being
-       simultaneously set then it violates what is described in the
-       HW manuals - broadcasting is supposed to be supported by all DW
-       SSI devices (currently I've got DW APB SSI v3.10a, v3.22a,
-       v3.22b, v4.02a, v4.03a and DW AHB SSI 1.01a databooks
-       confirming that).
-   2.4 In case of 2.3 at least one chip-select shall be auto-detected
-       unless the SER register doesn't permit an invalid value being
-       written, which is also an undocumented case.
-   2.5. In case of 2.3 and 2.4 either "num-cs" property or a
-        platform-specific compatible string is supposed to be
-        specified since the device isn't generic DW APB/AHB SSI.
-        But if such device is discovered we'll see what could be done
-        then.
+greg k-h
+TREND MICRO EMAIL NOTICE
 
-So AFAICS the probability to break some setup shall be rather small.
+The information contained in this email and any attachments is confidential=
+ and may be subject to copyright or other intellectual property protection.=
+ If you are not the intended recipient, you are not authorized to use or di=
+sclose this information, and we request that you notify us by reply mail or=
+ telephone and delete the original message from your mail system.
 
-> If yes, go for this!
-
-Ok. Thanks.
-
--Serge(y)
-
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+For details about what personal information we collect and why, please see =
+our Privacy Notice on our website at: Read privacy policy<http://www.trendm=
+icro.com/privacy>
