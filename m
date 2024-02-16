@@ -1,133 +1,134 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25ABA137C5A;
-	Fri, 16 Feb 2024 20:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A48211384B5;
+	Fri, 16 Feb 2024 20:22:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708114946; cv=none; b=THbKRU3mPW0TKxmEyVCBE+jCBZmDqY75qoyASNIEXwdqE/xBZrRc4WpNPoYdNjSser34sXYnEzwdm3bh1eoe6MO1fK89W4bkrIsQeXq4ThnBtKO/facJKB3TcKfsmJM4tkgZXdwh3KieweSLxcxfbnYZHEYba6G6HiGTChH/IgY=
+	t=1708114975; cv=none; b=DuCSN9EsGQU+dmrdTNbQnaW6vQGctPE1Esibv79zQToh+/VQay9navhBDk6C3J8Y7oUZ2/hvkMAtCr9CEslPgdCRDPWpGXk2NHj5rjofT8T9mYNdtp9rIt7nnBL+9S3ZgGWPKLwY8qo/4XcrxwAEH+fhlpx8lQGkZlcXIgcVgWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708114946; c=relaxed/simple;
-	bh=pnCogIDz14LG5tHCuqzaTGDuVoRYHckFSaXPPX5xATI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C+jeZxzIvDTOHcNHNbn/AiMwru+8OT7/NVbuzS1+8vSW9x8u18oIEp0As2nPBfpawzqeYzMAfOFbVql6jtIsCiVN8iM1+Ke5cdyRUABpR8zRGYwFXt5olLnlloKGrtEX+YY2uImxZLAUg0/Tty26S84HioJh4UJC0K9em3HsuQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	s=arc-20240116; t=1708114975; c=relaxed/simple;
+	bh=4PYSs4dleB3/NFv00OZmfg/mp6ic+ohpvdY3ebs4U9U=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=KSwlVCvIhlG/sz2fHLQV9qbJkeY7x43Nh05M4l12UwvOvjMoXvVYomGoMpDpnHEGd1ySlbwwyi5cQH49wngvqrppQ7D1777jmbd7Kf2hI0tExOthkLJuTs+3Fg+3s0pIKTIDU8pNJjP/Zbv5Fya505494LdplNVJ2r6hkWQtdYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A6uSvDHD; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2995185dbbbso141325a91.3;
-        Fri, 16 Feb 2024 12:22:24 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A6uSvDHD"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e141a24ba1so569103b3a.2;
+        Fri, 16 Feb 2024 12:22:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708114973; x=1708719773; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eU81Q2BIgD5tYrvXfgv/ucxZ4EAgYPkPtfRpCQEtrgQ=;
+        b=A6uSvDHDifXaNhJE+omMflnMznumPrdVKH/4mp0XRC65qS7Lc6t/tMjFF+cMiRSJ9x
+         NfdwFIU0Yu8dOvIzEEcM4WlaFlWR30cf2ClUNijb5eMPcuz17QYCxluyf/M7jgjbu34n
+         Pg0JwqF87pHEgbY0n4iDZ8glHUmGaXJJziXb1V5pOTvbbYbWpBNPGAppmxia6/E6uYmS
+         c8nbGqCzabf15bfAe4qeUVGb+0fqYwickMJDbXyE1pdUW85f90P+nfOzrL3qpeLkKsFW
+         tXbOO9hTuJg7sP+lekp858ydco+kcgM+S7Pj4i2yo66F15bnre976tQd3U4gEzGwjWJH
+         aWrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708114944; x=1708719744;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Oq0A0N9FMvQiwLtedEjU1Y/XLo5XcWAr1iJu9cUBjms=;
-        b=XbjlfEqd+soG7CDvwv1svXhAN+6q+9p5qM1xGRrzcZCwmaLMe+cWmCQMP3tFLzK5s5
-         vZD4Q2P2MOQb1/WuCNKrOpeRIXzzX5YyMGLR5J7hdf6fepJMaOOatR2YlbWob6xPvNDi
-         Cdd4w9HP+T8uGIMRSKj1HrTGRdjr6Z8C2D2J1lvBhy+4RdePyZvLAw3yIwwZTwqn/+qT
-         h1t4caU/0DqaQ71pi1y3qB/FmSjLe75jZOex613fSdmer7IuXdxEFayS3lMbz6/+TGOc
-         Kr/oVYlJ10/LfaEmpYEWRiGl8QUuIH1Ums3Ctir4XR0P8TtdGgFhDAwiK60pIGVIZKyQ
-         OwTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCViRTV6pk25t8bwPxbK1Ecv35GIy19g8oPun8kbS481pRrFx+YijGyOcwIcLTb8vpb3fNd7KKwMJlOVmlLaThOO3ME5V7QwPB5FCnajvXfZ70ZdvBTbmuCc60lfX3xUHHw3Lqq5/cXqGxZTgF8sJw==
-X-Gm-Message-State: AOJu0Yx4HBD9BFvtEnK9VDVtae3cMXJRoKLiw+xMJBavzAdWV4vv/TVH
-	hdfjFFSrQIMFbwVT9YaeZnpuGsAMXCUhXlM1Yv9ygEkoLx5/JmPzttHGSC3Vs8mCIDA5aN22YiR
-	EtKXHTEBjsAMyA0LBRZn5QcRH+2k=
-X-Google-Smtp-Source: AGHT+IFguJIhRwRsgj6T4qcPSOxXHVK81XmIp86YrUJaYpTa7bcm2JYGq7PJIvPTaMXl36nvaefa641o/QO8CYYI9Dw=
-X-Received: by 2002:a17:90a:a883:b0:299:1aaa:5ff with SMTP id
- h3-20020a17090aa88300b002991aaa05ffmr4758561pjq.7.1708114944478; Fri, 16 Feb
- 2024 12:22:24 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708114973; x=1708719773;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eU81Q2BIgD5tYrvXfgv/ucxZ4EAgYPkPtfRpCQEtrgQ=;
+        b=r5G6E5+jOUzpyI5oggIVBN+2UnGUdxuXpb3zY50xzTdNZ1YLPsSOcAT99P0kGudNPL
+         UT1lwizArl6DwGWkZ9L6O8Cl9aWyM0TZjymuvF0Lb/f7fpLtrKVUR2jrqZiju3tb+M6i
+         RPWDp2WrmWOilHoHTbjRAD2ZO1SSeoZ0SfWD5djw2SXedih9qF1GDTV/LbipKImIqLTs
+         MEZ73SI9aldK95lrG12T7B54qC9Cx2vWNOUsD0OjI041kZeACGFYWuPlIKQzpTCo/So2
+         WwE21c4QPdF5g9I9E1du0lu9EwzOqosdfRODcYBbD9tNDo0xoAM9CMPw6Mw9saYm6GoF
+         Ih9w==
+X-Forwarded-Encrypted: i=1; AJvYcCVM2LE1SRql0XXixRHsNuWFlUAWWE/zN/As20vch/hErHqm440jEIowYCoH7dWN4jg0JYM7kia/tWsktt6eyy9vYi4omuspbfltxY39uK4+6ADVlbMnMJKuGnq8caHRFgtcVMgFoBZNW3Saq+KiNbafin+REBa1WGA4AASrdl9970nTI2Vu
+X-Gm-Message-State: AOJu0Yw1+t/VbVGBzESqil4mkNQKTEXYZ+vjReuujqGsx7oWGpaiomLU
+	uj9OKSrLX3GDTs28UGheLE8TfQF1y5rwjlrJ7yP6vRuaWwwCMtXN
+X-Google-Smtp-Source: AGHT+IEL2CDAl8m9TiNWfNbu7Vk5I4kYXLmLqswmwlh3NHCOrqSBtIKU6QO374pmOPIxQSEgD24QcQ==
+X-Received: by 2002:a05:6a20:9f98:b0:19e:ca3a:612b with SMTP id mm24-20020a056a209f9800b0019eca3a612bmr6613211pzb.54.1708114972731;
+        Fri, 16 Feb 2024 12:22:52 -0800 (PST)
+Received: from mhkubun.hawaii.rr.com (076-173-166-017.res.spectrum.com. [76.173.166.17])
+        by smtp.gmail.com with ESMTPSA id fk10-20020a056a003a8a00b006df50bbbaecsm352146pfb.86.2024.02.16.12.22.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Feb 2024 12:22:52 -0800 (PST)
+From: mhkelley58@gmail.com
+X-Google-Original-From: mhklinux@outlook.com
+To: haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org
+Subject: [PATCH v3 1/1] PCI: hv: Fix ring buffer size calculation
+Date: Fri, 16 Feb 2024 12:22:40 -0800
+Message-Id: <20240216202240.251818-1-mhklinux@outlook.com>
+X-Mailer: git-send-email 2.25.1
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214045356.748330-1-irogers@google.com> <20240214045356.748330-7-irogers@google.com>
-In-Reply-To: <20240214045356.748330-7-irogers@google.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 16 Feb 2024 12:22:12 -0800
-Message-ID: <CAM9d7cg5O_1yKpk_X5vn380Cu28ObLjjjnOONHF75D07ZbkR3g@mail.gmail.com>
-Subject: Re: [PATCH v4 6/8] perf tests: Use scandirat for shell script finding
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, James Clark <james.clark@arm.com>, 
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 13, 2024 at 8:54=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> Avoid filename appending buffers by using openat, faccessat and
-> scandirat more widely. Turn the script's path back to a file name
-> using readlink from /proc/<pid>/fd/<fd>.
->
-> Read the script's description using api/io.h to avoid fdopen
-> conversions. Whilst reading perform additional sanity checks on the
-> script's contents.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/tests/builtin-test.c  |  21 ++---
->  tools/perf/tests/tests-scripts.c | 144 ++++++++++++++++++-------------
->  tools/perf/tests/tests-scripts.h |   1 -
->  3 files changed, 95 insertions(+), 71 deletions(-)
->
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
-est.c
-> index eff3c62e9b47..6d5001daaf63 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -300,22 +300,20 @@ static int test_and_print(struct test_suite *t, int=
- subtest)
->  }
->
->  struct shell_test {
-> -       const char *dir;
->         const char *file;
->  };
->
->  static int shell_test__run(struct test_suite *test, int subdir __maybe_u=
-nused)
->  {
->         int err;
-> -       char script[PATH_MAX];
->         struct shell_test *st =3D test->priv;
-> +       char *cmd;
->
-> -       path__join(script, sizeof(script) - 3, st->dir, st->file);
-> -
-> -       if (verbose > 0)
-> -               strncat(script, " -v", sizeof(script) - strlen(script) - =
-1);
-> -
-> -       err =3D system(script);
-> +       asprintf(&cmd, "%s%s", st->file, verbose ? " -v" : "");
-> +       if (!cmd)
-> +               return TEST_FAIL;
+From: Michael Kelley <mhklinux@outlook.com>
 
-It fails to build.
+For a physical PCI device that is passed through to a Hyper-V guest VM,
+current code specifies the VMBus ring buffer size as 4 pages.  But this
+is an inappropriate dependency, since the amount of ring buffer space
+needed is unrelated to PAGE_SIZE. For example, on x86 the ring buffer
+size ends up as 16 Kbytes, while on ARM64 with 64 Kbyte pages, the ring
+size bloats to 256 Kbytes. The ring buffer for PCI pass-thru devices
+is used for only a few messages during device setup and removal, so any
+space above a few Kbytes is wasted.
 
-tests/tests-scripts.c: In function =E2=80=98shell_test__run=E2=80=99:
-tests/tests-scripts.c:130:9: error: ignoring return value of
-=E2=80=98asprintf=E2=80=99 declared with attribute =E2=80=98warn_unused_res=
-ult=E2=80=99
-[-Werror=3Dunused-result]
-  130 |         asprintf(&cmd, "%s%s", file, verbose ? " -v" : "");
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Fix this by declaring the ring buffer size to be a fixed 16 Kbytes.
+Furthermore, use the VMBUS_RING_SIZE() macro so that the ring buffer
+header is properly accounted for, and so the size is rounded up to a
+page boundary, using the page size for which the kernel is built. While
+w/64 Kbyte pages this results in a 64 Kbyte ring buffer header plus a
+64 Kbyte ring buffer, that's the smallest possible with that page size.
+It's still 128 Kbytes better than the current code.
 
-Thanks,
-Namhyung
+Cc: <stable@vger.kernel.org> # 5.15.x
+Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Reviewed-by: Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
 
+---
+Changes in v3:
+* Add #include of sizes.h
+Changes in v2:
+* Use SZ_16K instead of 16 * 1024
+---
+ drivers/pci/controller/pci-hyperv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> +       err =3D system(cmd);
-> +       free(cmd);
->         if (!err)
->                 return TEST_OK;
->
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 1eaffff40b8d..5992280e8110 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -49,6 +49,7 @@
+ #include <linux/refcount.h>
+ #include <linux/irqdomain.h>
+ #include <linux/acpi.h>
++#include <linux/sizes.h>
+ #include <asm/mshyperv.h>
+ 
+ /*
+@@ -465,7 +466,7 @@ struct pci_eject_response {
+ 	u32 status;
+ } __packed;
+ 
+-static int pci_ring_size = (4 * PAGE_SIZE);
++static int pci_ring_size = VMBUS_RING_SIZE(SZ_16K);
+ 
+ /*
+  * Driver specific state.
+-- 
+2.25.1
+
