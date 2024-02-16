@@ -1,46 +1,57 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from relay.smtp-ext.broadcom.com (unknown [192.19.166.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02FEC146912
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 18:42:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 744C31350FB;
+	Fri, 16 Feb 2024 18:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708108947; cv=none; b=CHmiclOoAkWP923z5vcbSMwyrTR5syGmEPmfklcX5yZuGb5q9ZvlfxMo8rAchqilRAQ3bWwN3HgsvVquWLSGYLOWviAFaPTH/AeXJgGg8RJObmAB8ukkRAUWD4+4rZpAYyDwEj6XeeI1BMs27jBZwOLQUQMmgFlDzz8lJ1wNf94=
+	t=1708108972; cv=none; b=GNdhAIHrb759bNvN09MZdOwfixYdAjJq2nnk34InBJrQeoAsbo5zVqytFJnKREkAxeEEHJt07Kv1lv77buLCxIXDSJnFX9NdNCCVeBj6Iv6TS4yvWgDBXcFiqJYCe5xYtl+4gZpR3yqe/V/fcbH8chaxXgj+r/z5Qlmq/xOp+v4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708108947; c=relaxed/simple;
-	bh=YOt99fgiOeGafpp1nEhSIUqA34CgCiK6op8GicPElws=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c6cL/+krNqC6ZHADvOpE+9t9GJwdBOllN0Ya0Yt+Lo9Zl0N9i8PX0P427XgVE6sPNMcUk0SD1+f/TFx6T5se5d25JxGbncLDgHuCIVXVr44iHl3WO8s8u8RPo4JuZ47kYAaz4VWNBUnWqtqelVz32ByeKkyCY64R4K1E3M6ToTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DLxdkdtb; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1708108972; c=relaxed/simple;
+	bh=i9k3K96piVEikMIz1+hmpkE1mIU1mvLihqfUZnhngpg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Bvk7fqj2erGx6IL/mTH3jrZ8osXEgW/S0Vc7e0SjTpbSE/pT9XNTfqn3bk50pmsYnuqm+yNSchGDKVWnndOF5V0ruO2onRHbuQbQE2KsIdXKDt2SDlqSK67c7POmxa8lK9c9AnL1Q8di29jbqjokPSam5FFqar+hIvkVDubM72o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=JWlLMDNU; arc=none smtp.client-ip=192.19.166.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DLxdkdtb"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1708108944;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+6/2b6cdY93cfhwg+wgl1iJpv6T7icr8cPzff5WRiiM=;
-	b=DLxdkdtbNwcuA4gLo4jd1yD05qIOD+omQNvakwfPpgTo6UMoTeIbl9XzhWZhJZwtRffA+j
-	S6COGILK/oPKkNX85TmWz314nYUf1N7NFk3Rob9ONKeUXrHUuFrI9W4PpXWgZer+wkhrb/
-	NjTdniGek0pEoQhqcV0ARz6GeS0cHrQ=
-From: Oliver Upton <oliver.upton@linux.dev>
-To: kvmarm@lists.linux.dev
-Cc: kvm@vger.kernel.org,
-	Marc Zyngier <maz@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	linux-kernel@vger.kernel.org,
-	Oliver Upton <oliver.upton@linux.dev>
-Subject: [PATCH v3 10/10] KVM: arm64: vgic: Don't acquire the lpi_list_lock in vgic_put_irq()
-Date: Fri, 16 Feb 2024 18:41:53 +0000
-Message-ID: <20240216184153.2714504-11-oliver.upton@linux.dev>
-In-Reply-To: <20240216184153.2714504-1-oliver.upton@linux.dev>
-References: <20240216184153.2714504-1-oliver.upton@linux.dev>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="JWlLMDNU"
+Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 41628C001645;
+	Fri, 16 Feb 2024 10:42:44 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 41628C001645
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1708108964;
+	bh=i9k3K96piVEikMIz1+hmpkE1mIU1mvLihqfUZnhngpg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=JWlLMDNUIQVlrb/EVKF/dk8fEIJvopreIsxpUCoO7nxUIkrJ6gOGCuE8aKTcHRE9a
+	 6qD1F2aN7+hE+zbbxuacaz45WZG4SPfUHVrK9wSeLZoOct7ymlGge+lFetseCtfQQc
+	 LNY38g7VwzgZv38I7IgGL5TvBdaIXwGDvVaGUX+Y=
+Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id AB8CA18041CAC7;
+	Fri, 16 Feb 2024 10:42:42 -0800 (PST)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: netdev@vger.kernel.org
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Doug Berger <opendmb@gmail.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	linux-kernel@vger.kernel.org (open list),
+	Justin Chen <justin.chen@broadcom.com>
+Subject: [PATCH net-next 2/3] net: bcmgenet: Pass "main" clock down to the MDIO driver
+Date: Fri, 16 Feb 2024 10:42:36 -0800
+Message-Id: <20240216184237.259954-3-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240216184237.259954-1-florian.fainelli@broadcom.com>
+References: <20240216184237.259954-1-florian.fainelli@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,98 +59,32 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-The LPI xarray's xa_lock is sufficient for synchronizing writers when
-freeing a given LPI. Furthermore, readers can only take a new reference
-on an IRQ if it was already nonzero.
+GENET has historically had to create a MDIO platform device for its
+controller and pass some auxiliary data to it, like a MDIO completion
+callback. Now we also pass the "main" clock to allow for the MDIO bus
+controller to manage that clock adequately around I/O accesses.
 
-Stop taking the lpi_list_lock unnecessarily and get rid of
-__vgic_put_lpi_locked().
-
-Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
+Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
 ---
- arch/arm64/kvm/vgic/vgic-its.c |  4 ++--
- arch/arm64/kvm/vgic/vgic.c     | 21 ++++-----------------
- arch/arm64/kvm/vgic/vgic.h     |  1 -
- 3 files changed, 6 insertions(+), 20 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmmii.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/kvm/vgic/vgic-its.c b/arch/arm64/kvm/vgic/vgic-its.c
-index c3d1bca0b458..d84cb7618c59 100644
---- a/arch/arm64/kvm/vgic/vgic-its.c
-+++ b/arch/arm64/kvm/vgic/vgic-its.c
-@@ -647,7 +647,7 @@ static void vgic_its_cache_translation(struct kvm *kvm, struct vgic_its *its,
- 	 * was in the cache, and increment it on the new interrupt.
- 	 */
- 	if (cte->irq)
--		__vgic_put_lpi_locked(kvm, cte->irq);
-+		vgic_put_irq(kvm, cte->irq);
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+index cbbe004621bc..7a21950da77c 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+@@ -476,6 +476,10 @@ static int bcmgenet_mii_register(struct bcmgenet_priv *priv)
+ 	ppd.wait_func = bcmgenet_mii_wait;
+ 	ppd.wait_func_data = priv;
+ 	ppd.bus_name = "bcmgenet MII bus";
++	/* Pass a reference to our "main" clock which is used for MDIO
++	 * transfers
++	 */
++	ppd.clk = priv->clk;
  
- 	/*
- 	 * The irq refcount is guaranteed to be nonzero while holding the
-@@ -684,7 +684,7 @@ void vgic_its_invalidate_cache(struct kvm *kvm)
- 		if (!cte->irq)
- 			break;
- 
--		__vgic_put_lpi_locked(kvm, cte->irq);
-+		vgic_put_irq(kvm, cte->irq);
- 		cte->irq = NULL;
- 	}
- 
-diff --git a/arch/arm64/kvm/vgic/vgic.c b/arch/arm64/kvm/vgic/vgic.c
-index 2a288d6c0be7..c8208f81fdc8 100644
---- a/arch/arm64/kvm/vgic/vgic.c
-+++ b/arch/arm64/kvm/vgic/vgic.c
-@@ -110,13 +110,13 @@ static void vgic_irq_release(struct kref *ref)
- {
- }
- 
--/*
-- * Drop the refcount on the LPI. Must be called with lpi_list_lock held.
-- */
--void __vgic_put_lpi_locked(struct kvm *kvm, struct vgic_irq *irq)
-+void vgic_put_irq(struct kvm *kvm, struct vgic_irq *irq)
- {
- 	struct vgic_dist *dist = &kvm->arch.vgic;
- 
-+	if (irq->intid < VGIC_MIN_LPI)
-+		return;
-+
- 	if (!kref_put(&irq->refcount, vgic_irq_release))
- 		return;
- 
-@@ -126,19 +126,6 @@ void __vgic_put_lpi_locked(struct kvm *kvm, struct vgic_irq *irq)
- 	kfree_rcu(irq, rcu);
- }
- 
--void vgic_put_irq(struct kvm *kvm, struct vgic_irq *irq)
--{
--	struct vgic_dist *dist = &kvm->arch.vgic;
--	unsigned long flags;
--
--	if (irq->intid < VGIC_MIN_LPI)
--		return;
--
--	raw_spin_lock_irqsave(&dist->lpi_list_lock, flags);
--	__vgic_put_lpi_locked(kvm, irq);
--	raw_spin_unlock_irqrestore(&dist->lpi_list_lock, flags);
--}
--
- void vgic_flush_pending_lpis(struct kvm_vcpu *vcpu)
- {
- 	struct vgic_cpu *vgic_cpu = &vcpu->arch.vgic_cpu;
-diff --git a/arch/arm64/kvm/vgic/vgic.h b/arch/arm64/kvm/vgic/vgic.h
-index f874b9932c5a..0c2b82de8fa3 100644
---- a/arch/arm64/kvm/vgic/vgic.h
-+++ b/arch/arm64/kvm/vgic/vgic.h
-@@ -180,7 +180,6 @@ vgic_get_mmio_region(struct kvm_vcpu *vcpu, struct vgic_io_device *iodev,
- 		     gpa_t addr, int len);
- struct vgic_irq *vgic_get_irq(struct kvm *kvm, struct kvm_vcpu *vcpu,
- 			      u32 intid);
--void __vgic_put_lpi_locked(struct kvm *kvm, struct vgic_irq *irq);
- void vgic_put_irq(struct kvm *kvm, struct vgic_irq *irq);
- bool vgic_get_phys_line_level(struct vgic_irq *irq);
- void vgic_irq_set_phys_pending(struct vgic_irq *irq, bool pending);
+ 	/* Unimac MDIO bus controller starts at UniMAC offset + MDIO_CMD
+ 	 * and is 2 * 32-bits word long, 8 bytes total.
 -- 
-2.44.0.rc0.258.g7320e95886-goog
+2.34.1
 
