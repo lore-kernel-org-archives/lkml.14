@@ -1,89 +1,155 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543E7148FFC
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 23:26:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562F1146904
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 23:27:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708125982; cv=none; b=vBBTtaf6a51xxaKL8V6D8tDy3WibHb1FJjPM7xxtYWJidJAFPaA2egpUSwLNEfSLZdtown58+hlS1IboU7Gmb3vKjrnuNRA1j9skrWpgxHrVGJbUkQH+H6S1fLTZb2v3yvM07TW/H2XUGgwFp8F0C3z8Tphk8gCWynQYfM/bEYU=
+	t=1708126069; cv=none; b=k41uAX1uhtcAwUQMe5IV3n2xiR2EgKYJRBQh9zCOD5oHheswhaKUpp4eRVAuw1EAlD4Im2H9PJ8u8AOObvzdvJGdD3cDB4jwqmYVt4qafr6oE/nu9B3Ctt1RRxcWzWWnSUBD3qAJ9gMqIEM7t3mh3PBtLAONvYCwVPmopXK0G5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708125982; c=relaxed/simple;
-	bh=HjwfytaqXF8iH9Dbpef0PBEdfS3nBXLDDCpMfB7MbjI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NLpRpdWZu3bguPgtfusFCpq6HaXksAGs1PX7DTAoTUaSKVoRVs8UyhhUmhmd2mWPbVoAJUDGrAy0dFhR/THu8ZpUytu/QQwytnVhpKVkMhUGspfoN7aE3wD4pOk4FwITS+41d0VmyNABZsrJ0SeSpdebWjIrdDQrRLsg94MynKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=C1BPf5NM; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1708126069; c=relaxed/simple;
+	bh=RNT0g0cgXQrcIvbNgrkk3LhFhJNchXw4WLd58eWGTyM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WMym5lUPTwVNTSChcJoMOhB++PV8eHIvO6E2inXQhdJ+AKjis8O/KOkxfDbKTBUxzZ5a+Lvf30EcGIZNrSNNnzFwJx9TdOVa76z6uISohtJSKLwApIE5WcQgdKyqDalPi6CchfFHTEmHqHZREeUF6mm1iVBH630ejsPeMYirvRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SRBq0NJN; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="C1BPf5NM"
-Date: Fri, 16 Feb 2024 18:26:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1708125977;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=i1dxXMhVUP1rgHFbx3bYUtrQ4Vj3OMrjAfFZh9B2nko=;
-	b=C1BPf5NM9g0o4QItUPGRDmMrvEdGWmyuKm4wf1nFggUVoULHG8BShovAlb221Bb8TlJ2Ja
-	KutXp2dyrtywnpnLlJsZyWbMnLgEtGr2j6xQgJwjPAMGkgKbYaLIt/Hwmsmi7ACHkQBytE
-	lKW+kj7xiaratGuJKp1Q6urfXB8QmCo=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Kees Cook <keescook@chromium.org>
-Cc: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org, 
-	mhocko@suse.com, vbabka@suse.cz, hannes@cmpxchg.org, roman.gushchin@linux.dev, 
-	mgorman@suse.de, dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, 
-	corbet@lwn.net, void@manifault.com, peterz@infradead.org, juri.lelli@redhat.com, 
-	catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, tglx@linutronix.de, 
-	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
-	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
-	nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev, 
-	rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com, 
-	yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com, hughd@google.com, 
-	andreyknvl@gmail.com, ndesaulniers@google.com, vvvvvv@google.com, 
-	gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com, 
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
-	bsegall@google.com, bristot@redhat.com, vschneid@redhat.com, cl@linux.com, 
-	penberg@kernel.org, iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com, 
-	elver@google.com, dvyukov@google.com, shakeelb@google.com, 
-	songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com, minchan@google.com, 
-	kaleshsingh@google.com, kernel-team@android.com, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, iommu@lists.linux.dev, linux-arch@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-modules@vger.kernel.org, 
-	kasan-dev@googlegroups.com, cgroups@vger.kernel.org
-Subject: Re: [PATCH v3 13/35] lib: add allocation tagging support for memory
- allocation profiling
-Message-ID: <lvrwtp73y2upktswswekhhilrp2i742tmhcxi2c4gayyn24qd2@hdktbg3qutgb>
-References: <20240212213922.783301-1-surenb@google.com>
- <20240212213922.783301-14-surenb@google.com>
- <202402121433.5CC66F34B@keescook>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SRBq0NJN"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5d42e7ab8a9so1946700a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 15:27:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1708126067; x=1708730867; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lLi9PHtxZsuZz7e5RQdykX5MWOEl3dE9qrCPIM1hrRo=;
+        b=SRBq0NJNtAZ6jpCpaDoDq0gS2MIV1sFPCquA0NnTAn0Bn4+TCURcDgAjIDwJ5oVser
+         eeounGyiNP722gPZ4vqG3zFwHZeCT5zHIZZj/QNwLUB/DA6U5ImtNn8MuYPeAyPRlbzK
+         /OVmhGvYIXJeeObYRBrFPapXbsXeD2Yx0EVHo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708126067; x=1708730867;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lLi9PHtxZsuZz7e5RQdykX5MWOEl3dE9qrCPIM1hrRo=;
+        b=CSvE0fP+aWFSdkgYtiLU4we1ekgB7LZ0nCk2PsyoAfzh+o5NWWr1I0MMGfqOOqhMMT
+         l+jmjlJOwChiuMkewUTSIkVJgZq8FKZtpLCTPgz6YSdY/reiKsG9zGw4CLIIALqhjYSt
+         I2H+ZDoW0qC0YEFVaHth9Hnr3OKV77dYaPyVx53el6zxY13EjEg22clDZAEZi+8yyu8v
+         hzj2vm9pq2vwtKTrZZz8PBBMcvcU58TUw82zMFlz5GO/LgjkFIyNdUR6ok7EDo10iUqT
+         RGUFU8BYUX1uLoBS2FrMFAPogzrbLgawox+zV3W228C0HUn3uFNHh58hMSUIl8FVR0Kd
+         Sy1w==
+X-Forwarded-Encrypted: i=1; AJvYcCWjB3+FQSfAxQ4YtHCovdFdPtMGvvCFJo8+Rrb2GcygA+R5j1SeIeYsvYXBPhKUvjmEo6oJtMiUPOhDzlHq1L69WYe2e/Bnx/h1/Ir+
+X-Gm-Message-State: AOJu0YyPAZB0cxEtTFi2rRBKGAod9zd6NZTex82VEUkzBu7VE5xUCIy6
+	mz6a77jjw4tdoURB6Uw03zkKZ/9i0VuC19gLMlr8Yz92Go7uSJKobBf+s7zxmg==
+X-Google-Smtp-Source: AGHT+IGPCpilatN+troOQhhuhZJ1ZyJIP1f1BukTAiQCIoKk/LNCdR5GS6r7rJFOX+rcu0p3vRbu7Q==
+X-Received: by 2002:a05:6a20:4fa2:b0:19e:a9bf:d51a with SMTP id gh34-20020a056a204fa200b0019ea9bfd51amr5455247pzb.32.1708126067651;
+        Fri, 16 Feb 2024 15:27:47 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id kn14-20020a170903078e00b001d8f82c61cdsm369379plb.231.2024.02.16.15.27.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Feb 2024 15:27:47 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Jamal Hadi Salim <jhs@mojatatu.com>,
+	Cong Wang <xiyou.wangcong@gmail.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	netdev@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH] net: sched: Annotate struct tc_pedit with __counted_by
+Date: Fri, 16 Feb 2024 15:27:44 -0800
+Message-Id: <20240216232744.work.514-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202402121433.5CC66F34B@keescook>
-X-Migadu-Flow: FLOW_OUT
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2338; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=RNT0g0cgXQrcIvbNgrkk3LhFhJNchXw4WLd58eWGTyM=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlz+9w9qSnRo2mb+YJM+Gu1IwPUsAtgHSw+l89v
+ SbeoLT1YpuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZc/vcAAKCRCJcvTf3G3A
+ JgMGD/9xRXBIxLCBH7+ga8H8o/WOsCi9LCOVzwWZDpHbh6TZefl0ftvDhBHx7fg1n4l61k6f3w9
+ 1El1BpQBebgi7nX+Ets4Ub4/N8660HPXoRbAz6As6Ne5h8z2F1kw3ZBn6ITb7uqN2izMxRfy3/T
+ 8XA/eTuICYCEYDIQa4FqnmhVLh6WkR8mN0/N+LTAymXxd00ECGrhXlJW2dhrUhhTbhkzdvUF3WB
+ XEWJGtf4nP0kA3omfRN5CDGZ0YjDY2GS1mKIvj6eoJZrXXb+a09jCGPm9Y7qU1MB0F5A8pVlwNF
+ hK3T5yvnAdsN2FsboC223ZEzRd9XnGjM+xA+ZoQtpE5cKpu/HX80H11TmqAw/RZZtwbycKZ3MN1
+ VAlI70Igu9n71hjMCRL6of2MjZud4bPUAduFb42FOvZvXqiKkkwRD0LAy0+R2VX8/KsB2E4TrUA
+ vKh4f615Zd5qR3DKd3mjl1F5VnBxqa7oW67YYU/f+MCg86r+pT9RYj3Yl2tLNnjtBTLG+ePv8rK
+ otI00CvwQ2/R2IU/zEL5jtJqM9y+xTTP4Y2MVa2Mv/3RJSPHSSV8x40Hrpc+RA6rIjMFj19BWI5
+ oKc5WEPBofLAACgXz8fhUrXfyuUZfg0qeE0JqzukNFzqWGCbGESpOyHoQBYnslPSqhqGdZ3oJjl
+ TVrnnPI y3rX9jFg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 12, 2024 at 02:40:12PM -0800, Kees Cook wrote:
-> On Mon, Feb 12, 2024 at 01:38:59PM -0800, Suren Baghdasaryan wrote:
-> > diff --git a/include/linux/sched.h b/include/linux/sched.h
-> > index ffe8f618ab86..da68a10517c8 100644
-> > --- a/include/linux/sched.h
-> > +++ b/include/linux/sched.h
-> > @@ -770,6 +770,10 @@ struct task_struct {
-> >  	unsigned int			flags;
-> >  	unsigned int			ptrace;
-> >  
-> > +#ifdef CONFIG_MEM_ALLOC_PROFILING
-> > +	struct alloc_tag		*alloc_tag;
-> > +#endif
-> 
-> Normally scheduling is very sensitive to having anything early in
-> task_struct. I would suggest moving this the CONFIG_SCHED_CORE ifdef
-> area.
+Prepare for the coming implementation by GCC and Clang of the __counted_by
+attribute. Flexible array members annotated with __counted_by can have
+their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+(for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+functions).
 
-This is even hotter than the scheduler members; we actually do want it
-up front.
+As found with Coccinelle[1], add __counted_by for struct tc_pedit.
+Additionally, since the element count member must be set before accessing
+the annotated flexible array member, move its initialization earlier.
+
+Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>
+Cc: Jiri Pirko <jiri@resnulli.us>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: netdev@vger.kernel.org
+Cc: linux-hardening@vger.kernel.org
+---
+ include/uapi/linux/tc_act/tc_pedit.h | 2 +-
+ net/sched/act_pedit.c                | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/uapi/linux/tc_act/tc_pedit.h b/include/uapi/linux/tc_act/tc_pedit.h
+index f3e61b04fa01..f5cab7fc96ab 100644
+--- a/include/uapi/linux/tc_act/tc_pedit.h
++++ b/include/uapi/linux/tc_act/tc_pedit.h
+@@ -62,7 +62,7 @@ struct tc_pedit_sel {
+ 	tc_gen;
+ 	unsigned char           nkeys;
+ 	unsigned char           flags;
+-	struct tc_pedit_key     keys[0];
++	struct tc_pedit_key     keys[] __counted_by(nkeys);
+ };
+ 
+ #define tc_pedit tc_pedit_sel
+diff --git a/net/sched/act_pedit.c b/net/sched/act_pedit.c
+index 2ef22969f274..21e863d2898c 100644
+--- a/net/sched/act_pedit.c
++++ b/net/sched/act_pedit.c
+@@ -515,11 +515,11 @@ static int tcf_pedit_dump(struct sk_buff *skb, struct tc_action *a,
+ 		spin_unlock_bh(&p->tcf_lock);
+ 		return -ENOBUFS;
+ 	}
++	opt->nkeys = parms->tcfp_nkeys;
+ 
+ 	memcpy(opt->keys, parms->tcfp_keys,
+ 	       flex_array_size(opt, keys, parms->tcfp_nkeys));
+ 	opt->index = p->tcf_index;
+-	opt->nkeys = parms->tcfp_nkeys;
+ 	opt->flags = parms->tcfp_flags;
+ 	opt->action = p->tcf_action;
+ 	opt->refcnt = refcount_read(&p->tcf_refcnt) - ref;
+-- 
+2.34.1
+
