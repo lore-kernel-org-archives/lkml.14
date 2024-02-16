@@ -1,59 +1,59 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B2E175BC
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 07:59:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941FC1802A
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 08:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708070357; cv=none; b=IYTrl3BWveV+3nj4pGi3MgZRaIA8xiMfuqf1y9pdBWgW5AtOq4UH2uQG9/oa9Mw+r1CeHV1+4Z9/NQ/IOCuoJqdm6ISl3JAx+gIsK71At9CF1izILZq8j/S7llZoYZ2AL7n0vrBXp6x1ezp666PzGbnMRgxjwM8jJbxJ5iQvifA=
+	t=1708070404; cv=none; b=EssDRnalOJzV5gYrYz1M65Ls9UxkUs4YLr9zT0oTrEMWEnVIcrZym6NvdvIVU+Z1xgnvl+xtllI5reXnKQuDq+asSwfnsZDZPdd5H6atTZpRDYvx9pllL28H2KTumlrRk1uHLhgZSjRB6p1mquKe9w3HPye+/fDCn3Cq6m1NNmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708070357; c=relaxed/simple;
-	bh=hhId4jM1GUqxb0jYWWEctZlFKyWiYOU7olPisxXp8lg=;
+	s=arc-20240116; t=1708070404; c=relaxed/simple;
+	bh=7VNQY4VBdHaNt7VCbhfDojf+O3CY/ijnDrxHyqycB9s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H5R6ZGM3uETXTyKTsU92xRce6xvXi/nXA3x5HFGKLrQj4SixxGsTm7DhXVXWXVF9fFuuyaD35GyVDjbY+8o11Je2LankuT+ffEEd+cmAmEV0SjjbSLW2ElzBkL3j8l6sTAtX0hVPU1H/NKUHznZwIHFWnCPYHoXTp98Njts7Zto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZtmnxGDz; arc=none smtp.client-ip=209.85.218.49
+	 In-Reply-To:Content-Type; b=UOakaxY3J/uadjdrcCVF2/e+DuEA7pVYext12bLAFCswE9c7RBhIoWqGI4Zn7voJz/blDS8wSEKc0E00UDjUSoqAHGYtUG/MUGSp7fpwaKBrQoo8AnKoOemmfb6Djjs7kvacSn2VtED/0f76djyPQ+x2Jw/97amrWBowSObxmUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C4KPOQhd; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZtmnxGDz"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a36126ee41eso228011266b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 23:59:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C4KPOQhd"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a2d7e2e7fe0so324536066b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 00:00:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708070353; x=1708675153; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1708070401; x=1708675201; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=usLl1SC7mqZ4nRORR9VF1N5sgvT4/fyPtc3ZzGoJbJY=;
-        b=ZtmnxGDzBCzM5Or4qPy7SKAdOdJXnHN3WFyRA7BQ6xANtkDfoT9xYPRGlyrDCL0gbN
-         YHARAuJonynocHgoMyZSWcL0576YUa+eIpqtxv3tsrVTArO1gq6dtKZ/fpMk21FmTP/2
-         HyC3lI4Q0tU7m8noROTwPC3LyMlDir8ouqTHPEwHWk01piO7kC6l7WmZ9djU7KqcMf7/
-         4/Q+UV9KfBjMJL04Gwncxp2zeqFfhw2PPasLgSMVV/qs1O/y02fGraqH616ycHgL+SE0
-         SO4XS1ykc4OOasK0mTrwphR7j8EZhwiRTHhr7T0qAcWtgFrz3+RA+nAqn1Zlisw85GPF
-         A6FQ==
+        bh=jZwRQvaLKAmsHzDqcK2w0RoorC1NNJ/xO/vFiVpk2gs=;
+        b=C4KPOQhdLBtD7Y8I0eYCfqCVfICVxjGO8zfdE//RRRVUS2cLEOOcIYA/l9FgQkD4ee
+         GIdCmUYiCzBiuLpixts6unJYMoYyj5Fi6EjSKqOxhmUwf3BpKzMmXa79twVUHcPjIUB4
+         3Kgd3VasJ2wqPMZlxEL0VT13wP9MZe5bl8M4sS2z02y/mY6vs9VXTYiEi/xuxrwYS+cG
+         QlYRZtjuQGi6rlFW5hzDEvsFGGawHduThX7rCT3BrlLD4j3fctbGgvR9UPYSDekAYkEw
+         /EYiHoLEDkMezyhloVnCsV61Uyc7Yx4jAhVwniAQd4xrOlvvj+CrL7CwVX7HXA+6sKDZ
+         5z1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708070353; x=1708675153;
+        d=1e100.net; s=20230601; t=1708070401; x=1708675201;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=usLl1SC7mqZ4nRORR9VF1N5sgvT4/fyPtc3ZzGoJbJY=;
-        b=GyiQ2RDN2sq/iFjUMNlvSi6E9aVFQnT/qe5H/ZZQTLaaCAphxC/HYz+yxYAEzq8MSR
-         Fb1g/Ywk0kO7uMeHaEsXSaBSn0ezaAINj9YpG5dnA1oDLLJr4kw3ENO1n1u3vj/OnKII
-         ZbIfdA5dFTh3Dup7WqEw/GyNxVMHNGEJGv0Na2Dt1gfu7zHvp7FmFkQRtQ/vPGW0Z9pq
-         ao1EjcP8Nv1F8SQ+vIbujnMYF1VG+uqtnafvK0e3V7V2x1Dl7q25YE8oneVp7sAXN6Km
-         LNXR39GmE/s38yCij9lIS9jvnyidYGGbE/SjWnfRa3jbaC8p1sQs5tirn8tVS/i+AzSm
-         mn6g==
-X-Forwarded-Encrypted: i=1; AJvYcCVSLcuWtm/1noJkORg4m7UE2N9w2P8gXfpuglfgGdi/JFKJ4xyeE0tw4GpNxPTUIpJtuhbq5Qm7PPNH7RpShf+H9rKcdKXzQ9tc/f5U
-X-Gm-Message-State: AOJu0YyvyDmrx+mKcGk+cZCfdjvHnht0jmTdKHUzfI8T+1JpgqoBEy5m
-	QpJxDDuTgS4yLD8SUjvn5qDxjLddErZDv3PzvwLXA81Z2giAzTRqy8lRXLJ+CtE=
-X-Google-Smtp-Source: AGHT+IFKHhGo76S0hx7a0bcY1oJwxjoA5BJY7EqlErTpU/hlLwU0IoSjORalLVe5hY3xri0E7cGrlQ==
-X-Received: by 2002:a17:906:bc5a:b0:a3c:875b:f378 with SMTP id s26-20020a170906bc5a00b00a3c875bf378mr2312843ejv.36.1708070353445;
-        Thu, 15 Feb 2024 23:59:13 -0800 (PST)
+        bh=jZwRQvaLKAmsHzDqcK2w0RoorC1NNJ/xO/vFiVpk2gs=;
+        b=AzILD/R72MNUv3LqUfZ9VQ1nCtxsHN8v4pdaPP1FUKoGl4GvV4XSfzr0w1AFEuNGLl
+         1iJaCFzuOZ/askki7MM60nodC5pTzYs40VQTkKdwWJLwVIH5GKojCIPc8pM+72sNgHYW
+         dVPZFrvUvqFlt/+DTfa6/Z5+u2LZHZVJuzShEpQlVPxEicDpaalldjq9vpazQruWMmyL
+         otmPN5ZVd6wR1kw69TGYWlkAs3Ifj667hvsanydWQQHluBJFtU786hDaMFFt0fINX6CZ
+         dlqku8ImtfNtBnAx7PIr1Aj8Hjvt3fvwy+6CKrThOSBM2akJiLtb5AjDd2A2vT5pbvK7
+         IsxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWdiNTdPGseXtcmu+pUtP/lkgdUovOM2nRNXusL9gLysCOcDHcccLz+9VsxwuvqZWS/3rT0g2DBCxqNJHI42kWzA1faxaq/LTpd81Np
+X-Gm-Message-State: AOJu0Yyof6XoAcDPM9ezUnCsq5A//EfhXNVuGtKWgZSfk7YveMAb8AZU
+	AqIJqucO8V+5pr7Gs2wASQvGhsgqxgn5Dte6HwvDNxldCyDpk7zrSMSGDjqrPiM=
+X-Google-Smtp-Source: AGHT+IFP8xUE/nP1s5OBIrXrGtcRCSjOMJXyLsCICzNcsdXhl+PJxzD6L+dSnZINeRXwgO9q5pb5bQ==
+X-Received: by 2002:a17:906:f812:b0:a38:3eb1:40a1 with SMTP id kh18-20020a170906f81200b00a383eb140a1mr6471984ejb.26.1708070400808;
+        Fri, 16 Feb 2024 00:00:00 -0800 (PST)
 Received: from [192.168.0.22] ([78.10.207.130])
-        by smtp.gmail.com with ESMTPSA id r5-20020a1709062cc500b00a3d1580d702sm1296186ejr.185.2024.02.15.23.59.12
+        by smtp.gmail.com with ESMTPSA id r5-20020a1709062cc500b00a3d1580d702sm1296186ejr.185.2024.02.15.23.59.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Feb 2024 23:59:12 -0800 (PST)
-Message-ID: <42b16256-0dcb-4065-bdd1-a27b33f169e2@linaro.org>
-Date: Fri, 16 Feb 2024 08:59:11 +0100
+        Fri, 16 Feb 2024 00:00:00 -0800 (PST)
+Message-ID: <42b7e3bb-a152-4ded-91f3-fb8043a7f413@linaro.org>
+Date: Fri, 16 Feb 2024 08:59:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,8 +61,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 12/13] MIPS: mobileye: eyeq5: add evaluation board I2C
- temp sensor
+Subject: Re: [PATCH 13/13] MIPS: mobileye: eyeq5: add resets to I2C
+ controllers
 Content-Language: en-US
 To: =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
  Linus Walleij <linus.walleij@linaro.org>, Andi Shyti
@@ -77,7 +77,7 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
  Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
  Tawfik Bayouk <tawfik.bayouk@mobileye.com>
 References: <20240215-mbly-i2c-v1-0-19a336e91dca@bootlin.com>
- <20240215-mbly-i2c-v1-12-19a336e91dca@bootlin.com>
+ <20240215-mbly-i2c-v1-13-19a336e91dca@bootlin.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -123,37 +123,19 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240215-mbly-i2c-v1-12-19a336e91dca@bootlin.com>
+In-Reply-To: <20240215-mbly-i2c-v1-13-19a336e91dca@bootlin.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 On 15/02/2024 17:52, Théo Lebrun wrote:
-> Declare the temperature sensor on I2C bus 2. Its label is the schematics
-> identifier.
+> Add resets properties to each I2C controller. This depends on the
+> reset-eyeq5 platform reset controller driver.
 > 
 > Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 > ---
->  arch/mips/boot/dts/mobileye/eyeq5-epm5.dts | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/mips/boot/dts/mobileye/eyeq5-epm5.dts b/arch/mips/boot/dts/mobileye/eyeq5-epm5.dts
-> index 6898b2d8267d..1f8549acd40d 100644
-> --- a/arch/mips/boot/dts/mobileye/eyeq5-epm5.dts
-> +++ b/arch/mips/boot/dts/mobileye/eyeq5-epm5.dts
-> @@ -21,3 +21,11 @@ memory@0 {
->  		      <0x8 0x02000000 0x0 0x7E000000>;
->  	};
->  };
-> +
-> +&i2c2 {
-> +	tmp112@48 {
 
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-
-
-temperature-sensor, power-sensor etc.
+This should be squashed with previous patch adding i2c controllers.
+Don't add incomplete nodes just to fix them in next patch.
 
 Best regards,
 Krzysztof
