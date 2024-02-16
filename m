@@ -1,32 +1,73 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 940FB13FF5
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 05:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 655AD12E5D;
+	Fri, 16 Feb 2024 05:31:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708061198; cv=none; b=iAZC+f5b3/lDg9HL/mTj3V58B4ufjzx4VgqEx08PvxGqdqQaifXaIqKjHxi0JtoYM2uFL2qEc+C3WN4N0NxEKz691xvkNmLdhmTpppyIOApjkPtYDu/eKxgllB1Tl8jK3m1ntTPh03fjqfMcF87GYiLvzDlfUfho2bxSw4AHMZ0=
+	t=1708061490; cv=none; b=SoJxg2jKgThgm3yBJ4qTpKpNr4+R0bKh1a0MRIEbtzuGP1kgcVMvIwBVZuvMyVb/F/r/NY+wEuRblxxoEDZhWcThizjVI97brMPvESIFT+VbTbvpoFN9iYswfUQ2oZfemAHF19EDnnH/S201u8OQnfpFF9BkPXS6+WF4TyTXOrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708061198; c=relaxed/simple;
-	bh=BCGUs+XPqlsHMKywtVkBNYulrsfSierwkDKEjUULfzY=;
+	s=arc-20240116; t=1708061490; c=relaxed/simple;
+	bh=IO6wXrWgnOjdRNHYOyVqjCgY14opWEM+FIcIepTxP2A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V6eSzuf3oMOrS+vxjC1mybfl0G8e2HXVcIVBecLUL9h5r/p4qaxYyyI9SHaJkBxKoLJkomSdj9C81mhsZKK3YxtWGsgyzesUM9hUGoaMvpVtQwJiwF4hXRUAtQplxDjqgZXz3/MGlMFLLss7tMwUff2YdR+1NQb+qrIIVPsPDBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d85ff70000001748-73-65cef2034c86
-Date: Fri, 16 Feb 2024 14:26:22 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Phil Auld <pauld@redhat.com>
-Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	bristot@redhat.com, vschneid@redhat.com,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kernel_team@skhynix.com, akpm@linux-foundation.org
-Subject: Re: [PATCH] sched/numa, mm: do not promote folios to nodes not set
- N_MEMORY
-Message-ID: <20240216052621.GA32626@system.software.com>
-References: <20240214035355.18335-1-byungchul@sk.com>
- <20240214123137.GA70927@lorien.usersys.redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=JlCl4B4P+ip47/mzFdPIgnkxjsoG3Scqc+TuIGgbPFYgUJ910FCrnNDjmMG+lG44glB33yHaLpfYwCtkW2aY7iz9nykT0wiH9NgKnqnn6dCwiC2FKKa61s8vr6dUprB2ecsueixEPiKgC33DJL+hdxUj1Ow3qsFrMffzdeMstCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CYk41q+X; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CYk41q+X"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-29080973530so1336033a91.1;
+        Thu, 15 Feb 2024 21:31:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708061489; x=1708666289; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tjqvFkfM5Lfa1Uthf+wvZFrrDCYAGzM+X3+/QDBtjEM=;
+        b=CYk41q+XMi7pEKFm5ccZKryI1/CHhTiA7ESChp5L3AErW7lk+c6fwAlDxdq0QA2Ziu
+         Wq783wrwrhBm2ql3TTt2eYxeYsQYusCD//alGnMcBRn33hZin5Ki2tbdKnvj8jtVou+F
+         lhphAjHoZYV2+O9FnhAo/8BbGWh+pcLIt3FU8Fg3SE5sd5lpge2VsZOW0ilLyaBEi1QC
+         NEb+XQUJ/DW6gd3BPFVVUn+RF8r4E7QXHyJMxgNp9gj0hA8UEtAqkNzC71PRqQe7l9x+
+         bh0Qiy7wnzUNkc6fFp9hBB+gX0f9h9lx5FuBp8sKfXuj0Qu0802jdPJZV/o3VRj2fQb2
+         t0Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708061489; x=1708666289;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tjqvFkfM5Lfa1Uthf+wvZFrrDCYAGzM+X3+/QDBtjEM=;
+        b=HR7kWmDHH4q5HyxWEjUGkObw+LKQETEY3i/Flsi+5WjXKAHKLOuzEX+3KP1nOe9thb
+         JLg5ogYbJq0tInZ3/owStAFcUf+iEPnCh7m2gFdM4YFBkyAKRv1p/wtjyIB09UorLc12
+         8Me6Yi5M/A7xiLw/Ds+f8KyKvwSCr4Q9GWGT4C7IcZQga+7Arhiiezy2BtOurQHKtIWA
+         vtUCnVXcYiuFO90FOOh+mAfLZWEHPKh0RN2g55wfXg33cLsnEw6lTU8i87qrxp+nB6gV
+         gU10zsSu96OEeYXc/BKTAJZK5ZxfwVqsTlmliEKygs0p5GF851HrMOC2Y/q4ZspLqYBM
+         lGCA==
+X-Forwarded-Encrypted: i=1; AJvYcCV2LLl/Vc2tJSsHqqbQ9q/Sf/0O1Co53K4ifxlZgdKJwuBYaJvJ/6ai+fckKg5NISDKhxg/iX83yj12DkwwbGyfzVxGKxq5
+X-Gm-Message-State: AOJu0Yx22YpN8iIWUREUPawBtTK9D0y5/UrsRIlyZRaGy5WGvWjox4S6
+	N7jbOfIk4L4M3cVxJ2YRbsIEHoSI6XJ9YBQ/sg8Kt6GFibSscm5K
+X-Google-Smtp-Source: AGHT+IF3YmN1qawIPxNBZ267l/ivRrJxf0WqB2STpKTxG3GPCe2BMlVFVyRTIk7pohrmWgR5uF5SPQ==
+X-Received: by 2002:a17:90b:fca:b0:299:3007:ad13 with SMTP id gd10-20020a17090b0fca00b002993007ad13mr1404504pjb.32.1708061488696;
+        Thu, 15 Feb 2024 21:31:28 -0800 (PST)
+Received: from localhost (dhcp-141-239-158-86.hawaiiantel.net. [141.239.158.86])
+        by smtp.gmail.com with ESMTPSA id t22-20020a17090a1c9600b00298e639d17esm2647645pjt.22.2024.02.15.21.31.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Feb 2024 21:31:28 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Thu, 15 Feb 2024 19:31:26 -1000
+From: Tejun Heo <tj@kernel.org>
+To: torvalds@linux-foundation.org, mpatocka@redhat.com
+Cc: linux-kernel@vger.kernel.org, dm-devel@lists.linux.dev,
+	msnitzer@redhat.com, ignat@cloudflare.com, damien.lemoal@wdc.com,
+	bob.liu@oracle.com, houtao1@huawei.com, peterz@infradead.org,
+	mingo@kernel.org, netdev@vger.kernel.org, allen.lkml@gmail.com,
+	kernel-team@meta.com, Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>, David Wei <davidhwei@meta.com>
+Subject: Re: [PATCH 6/8] net: tcp: tsq: Convert from tasklet to BH workqueue
+Message-ID: <Zc7zLsEhDzGkCH9m@slm.duckdns.org>
+References: <20240130091300.2968534-1-tj@kernel.org>
+ <20240130091300.2968534-7-tj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,168 +76,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240214123137.GA70927@lorien.usersys.redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjkeLIzCtJLcpLzFFi42LhesuzSJf507lUgwtnZS3mrF/DZnHp8VU2
-	i+kvG1ksnk7Yymxxt38qi8XlXXPYLO6t+c9qMfndM0aLSwcWMFmc2HuW0eJ47wEmi30dD5gs
-	Oo58Y7bYevQ7uwOfx5p5axg9WvbdYvdYsKnUY/MKLY9Nnyaxe9y5tofN48SM3ywe7/ddZfPY
-	fLra4/MmuQCuKC6blNSczLLUIn27BK6MQ78PsBf81qxoO3+aqYHxhGIXIyeHhICJxPMn71i7
-	GDnA7L9LxUDCLAKqEg1P57GA2GwC6hI3bvxkBrFFBBQk3k3vYu9i5OJgFjjFJDHh8wV2kF5h
-	gTCJv28UQGp4BSwk/n/cww5iCwlkScyacp4RIi4ocXLmE7CZzAJaEjf+vWQCaWUWkJZY/o8D
-	JMwpYC8x7Vc/WImogLLEgW3HmUBWSQi0s0ss+zGBCeJkSYmDK26wTGAUmIVk7CwkY2chjF3A
-	yLyKUSgzryw3MTPHRC+jMi+zQi85P3cTIzCWltX+id7B+OlC8CFGAQ5GJR7eA3/OpgqxJpYV
-	V+YeYpTgYFYS4Z3UeyZViDclsbIqtSg/vqg0J7X4EKM0B4uSOK/Rt/IUIYH0xJLU7NTUgtQi
-	mCwTB6dUA6PnpuomucLjDLfq2H/s/CZ69DiXZrvoQx79P/bnDFk3THS6w/4s+c/+g2md+9n+
-	hZdGPzgg+4HhgfnuaOPPi8qWn2gWT53YwJ0zk/fuN3a+8pOpghkiG/bNVJF6Ldj8VPjR1rrP
-	d7rnOXX+/afz/VdOmwzDTNHv6RPb/fa0y7C88+0y3VqoOFOJpTgj0VCLuag4EQAJH9QvoQIA
-	AA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKLMWRmVeSWpSXmKPExsXC5WfdrMv86VyqwcafAhZz1q9hs7j0+Cqb
-	xfSXjSwWTydsZba42z+VxeLw3JOsFpd3zWGzuLfmP6vF5HfPGC0uHVjAZHFi71lGi+O9B5gs
-	9nU8YLLoOPKN2WLr0e/sDvwea+atYfRo2XeL3WPBplKPzSu0PDZ9msTucefaHjaPEzN+s3i8
-	33eVzWPxiw9MHptPV3t83iQXwB3FZZOSmpNZllqkb5fAlXHo9wH2gt+aFW3nTzM1MJ5Q7GLk
-	4JAQMJH4u1Ssi5GTg0VAVaLh6TwWEJtNQF3ixo2fzCC2iICCxLvpXexdjFwczAKnmCQmfL7A
-	DtIrLBAm8feNAkgNr4CFxP+Pe9hBbCGBLIlZU84zQsQFJU7OfAI2k1lAS+LGv5dMIK3MAtIS
-	y/9xgIQ5Bewlpv3qBysRFVCWOLDtONMERt5ZSLpnIemehdC9gJF5FaNIZl5ZbmJmjqlecXZG
-	ZV5mhV5yfu4mRmBkLKv9M3EH45fL7ocYBTgYlXh4D/w5myrEmlhWXJl7iFGCg1lJhHdS75lU
-	Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4rxe4akJQgLpiSWp2ampBalFMFkmDk6pBkZR9VPzRd6l
-	CkUq/JrLfk9YS12MgS361cX/0qEsLL/5jj/jd7jyccn39yKWUTd3C4mUbgiZL3rRq9dU8rp5
-	yS+vqowDQkcsDwsHP+uetzxu7p60nNvPP1zKWSwa+u/2hvtLm41ZKtkatj8NkVHM6vF4+a+H
-	Z576sw3mnhvlNyyaw5oib978wleJpTgj0VCLuag4EQBti/rFiAIAAA==
-X-CFilter-Loop: Reflected
+In-Reply-To: <20240130091300.2968534-7-tj@kernel.org>
 
-On Wed, Feb 14, 2024 at 07:31:37AM -0500, Phil Auld wrote:
-> Hi,
-> 
-> On Wed, Feb 14, 2024 at 12:53:55PM +0900 Byungchul Park wrote:
-> > While running qemu with a configuration where some CPUs don't have their
-> > local memory and with a kernel numa balancing on, the following oops has
-> > been observed. It's because of null pointers of ->zone_pgdat of zones of
-> > those nodes that are not initialized at booting time. So should avoid
-> > nodes not set N_MEMORY from getting promoted.
-> > 
-> > > BUG: unable to handle page fault for address: 00000000000033f3
-> > > #PF: supervisor read access in kernel mode
-> > > #PF: error_code(0x0000) - not-present page
-> > > PGD 0 P4D 0
-> > > Oops: 0000 [#1] PREEMPT SMP NOPTI
-> > > CPU: 2 PID: 895 Comm: masim Not tainted 6.6.0-dirty #255
-> > > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-> > >    rel-1.16.0-0-gd239552ce722-prebuilt.qemu.org 04/01/2014
-> > > RIP: 0010:wakeup_kswapd (./linux/mm/vmscan.c:7812)
-> > > Code: (omitted)
-> > > RSP: 0000:ffffc90004257d58 EFLAGS: 00010286
-> > > RAX: ffffffffffffffff RBX: ffff88883fff0480 RCX: 0000000000000003
-> > > RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88883fff0480
-> > > RBP: ffffffffffffffff R08: ff0003ffffffffff R09: ffffffffffffffff
-> > > R10: ffff888106c95540 R11: 0000000055555554 R12: 0000000000000003
-> > > R13: 0000000000000000 R14: 0000000000000000 R15: ffff88883fff0940
-> > > FS:  00007fc4b8124740(0000) GS:ffff888827c00000(0000) knlGS:0000000000000000
-> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > CR2: 00000000000033f3 CR3: 000000026cc08004 CR4: 0000000000770ee0
-> > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > PKRU: 55555554
-> > > Call Trace:
-> > >  <TASK>
-> > > ? __die
-> > > ? page_fault_oops
-> > > ? __pte_offset_map_lock
-> > > ? exc_page_fault
-> > > ? asm_exc_page_fault
-> > > ? wakeup_kswapd
-> > > migrate_misplaced_page
-> > > __handle_mm_fault
-> > > handle_mm_fault
-> > > do_user_addr_fault
-> > > exc_page_fault
-> > > asm_exc_page_fault
-> > > RIP: 0033:0x55b897ba0808
-> > > Code: (omitted)
-> > > RSP: 002b:00007ffeefa821a0 EFLAGS: 00010287
-> > > RAX: 000055b89983acd0 RBX: 00007ffeefa823f8 RCX: 000055b89983acd0
-> > > RDX: 00007fc2f8122010 RSI: 0000000000020000 RDI: 000055b89983acd0
-> > > RBP: 00007ffeefa821a0 R08: 0000000000000037 R09: 0000000000000075
-> > > R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000000
-> > > R13: 00007ffeefa82410 R14: 000055b897ba5dd8 R15: 00007fc4b8340000
-> > >  </TASK>
-> > > Modules linked in:
-> > > CR2: 00000000000033f3
-> > > ---[ end trace 0000000000000000  ]---
-> > > RIP: 0010:wakeup_kswapd (./linux/mm/vmscan.c:7812)
-> > > Code: (omitted)
-> > > RSP: 0000:ffffc90004257d58 EFLAGS: 00010286
-> > > RAX: ffffffffffffffff RBX: ffff88883fff0480 RCX: 0000000000000003
-> > > RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88883fff0480
-> > > RBP: ffffffffffffffff R08: ff0003ffffffffff R09: ffffffffffffffff
-> > > R10: ffff888106c95540 R11: 0000000055555554 R12: 0000000000000003
-> > > R13: 0000000000000000 R14: 0000000000000000 R15: ffff88883fff0940
-> > > FS:  00007fc4b8124740(0000) GS:ffff888827c00000(0000) knlGS:0000000000000000
-> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > CR2: 00000000000033f3 CR3: 000000026cc08004 CR4: 0000000000770ee0
-> > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > PKRU: 55555554
-> > > note: masim[895] exited with irqs disabled
-> 
-> I think you could trim the down a little bit.
+Hello,
 
-Thank you for the feedback. I will.
+On Mon, Jan 29, 2024 at 11:11:53PM -1000, Tejun Heo wrote:
+> The only generic interface to execute asynchronously in the BH context is
+> tasklet; however, it's marked deprecated and has some design flaws. To
+> replace tasklets, BH workqueue support was recently added. A BH workqueue
+> behaves similarly to regular workqueues except that the queued work items
+> are executed in the BH context.
+> 
+> This patch converts TCP Small Queues implementation from tasklet to BH
+> workqueue.
+> 
+> Semantically, this is an equivalent conversion and there shouldn't be any
+> user-visible behavior changes. While workqueue's queueing and execution
+> paths are a bit heavier than tasklet's, unless the work item is being queued
+> every packet, the difference hopefully shouldn't matter.
+> 
+> My experience with the networking stack is very limited and this patch
+> definitely needs attention from someone who actually understands networking.
 
-> > 
-> > Signed-off-by: Byungchul Park <byungchul@sk.com>
-> > Reported-by: hyeongtak.ji@sk.com
-> > ---
-> >  kernel/sched/fair.c | 17 +++++++++++++++++
-> >  1 file changed, 17 insertions(+)
-> > 
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index d7a3c63a2171..6d215cc85f14 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -1828,6 +1828,23 @@ bool should_numa_migrate_memory(struct task_struct *p, struct folio *folio,
-> >  	int dst_nid = cpu_to_node(dst_cpu);
-> >  	int last_cpupid, this_cpupid;
-> >  
-> > +	/*
-> > +	 * A node of dst_nid might not have its local memory. Promoting
-> > +	 * a folio to the node is meaningless. What's even worse, oops
-> > +	 * can be observed by the null pointer of ->zone_pgdat in
-> > +	 * various points of the code during migration.
-> > +	 *
-> 
-> > +	 * For instance, oops has been observed at CPU2 while qemu'ing:
-> > +	 *
-> > +	 * {qemu} \
-> > +	 *    -numa node,nodeid=0,mem=1G,cpus=0-1 \
-> > +	 *    -numa node,nodeid=1,cpus=2-3 \
-> > +	 *    -numa node,nodeid=2,mem=8G \
-> > +	 *    ...
-> 
-> This part above should probably be in the commit message not in the code.
-> The first paragraph of comment is plenty.
+On Jakub's recommendation, I asked David Wei to perform production memcache
+benchmark on the backported conversion patch. There was no discernible
+difference before and after. Given that this is likely as hot as it gets for
+the path on a real workloal, the conversions shouldn't hopefully be
+noticeable in terms of performance impact.
 
-I will.
+Jakub, I'd really appreciate if you could ack. David, would it be okay if I
+add your Tested-by?
 
-Thanks. I will respin it.
+Thanks.
 
-	Byungchul
-
-> Otherwise, I think the check probably makes sense.
-> 
-> 
-> Cheers,
-> Phil
-> 
-> > +	 */
-> > +	if (!node_state(dst_nid, N_MEMORY))
-> > +		return false;
-> > +
-> >  	/*
-> >  	 * The pages in slow memory node should be migrated according
-> >  	 * to hot/cold instead of private/shared.
-> > -- 
-> > 2.17.1
-> > 
-> > 
-> 
-> -- 
+-- 
+tejun
