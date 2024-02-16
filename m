@@ -1,125 +1,84 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBA81B966
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 13:22:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17BA21B966
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 13:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708089764; cv=none; b=sE6P1OwQ+wT0F50+Mvvly9nyktLBlIvm7gyCs0kx6cjT9eiKH7VBOK8YEZ5cQP8O2CSICVIWjX3SdVUlBUou4AcOFMGCzyV/oHJE1jXne2iq3OAGPBRfreD2JtHpm0VUNwgHiMQicumwLOJHdrmrbM6cW2mycuEeikbAWvEFtXk=
+	t=1708089802; cv=none; b=e+sGxBet2j6Roohj6pVWws1YbSER6cYbOwJj7R2N0Ft83Gp9PFk3X3F1s2sor4KO4XJ5qxiGgeUyVWG+bMCypdrP2jS/o6nPOtSOi0X9OHhSmjcmHMuxB4RGxG6rzoIkwDyhAHIXZwUR/j0Hnxbg+QYRer64bqe3oatY+cj6fhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708089764; c=relaxed/simple;
-	bh=FsNmchVQuTTQMH/B9KKVO168bioDU6bYqSApofTtot0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=XYYGBDbopif4Cyg7E1K1VWPOP7uSXRYGbdRNt0nKehXpuzmfX25VzxG4SVGkklDWiKj9xlCKSuE1Mp9ahYQ5iutNi7yLmXD1rcmxZUmapg2bT0LduBZAj1iEfTEMuRyN7Vi5tbCREU0GHugxH5eFVVmn4KMWpBlVWvcW0W1KTyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=eHKPBkH2; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="eHKPBkH2"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a3de25186fbso70706066b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 05:22:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1708089761; x=1708694561; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=aFDoU4DI8sHTODaC/giqLy7tDcjeeFmno8f2AA/diI4=;
-        b=eHKPBkH2tMIilq4kf2bVe+e/ZL9zguR1zfgq62EbyiN37NgFkoS/11M03mJw672bWS
-         N+P9UTArMHbk1D44BdD/JHqriApONz5nIgW9qpKwOQYfz0AG/svStcyI5Cjrq2P13vwX
-         cqjI2PyXoc/Xg72bkkJnbAWPa2Slh58QfB7dqNTWSJQqwIE6YorRYd6GLcsgf05bdsIm
-         CsQLyUWenYGxwKiaNJXNpcT0rl2YNd2KmO/7YqDe6sWvKlBWegDJZC6hvyyP3mjv+OSX
-         O51xxt5BCR06A6WIQdz8gQ5B7AZl3AXxZsaLBs7pmkiYiZWYy7heieT0AtKX3QrrIpxN
-         Dnrg==
+	s=arc-20240116; t=1708089802; c=relaxed/simple;
+	bh=FqSWe7JHiE+uJcy2YTdzs/EetirgcQbQTZpnVkzmo8Q=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=U7z69AChDVJD37wowEKDrGqQ5cHoQrhdmUX2kJ7fwRoGscd1u1HFj2M8mW0EKMVSmrqH+1VEVlTQObuh5nnYbg8RC1HEGZb+EbTyscJpKkQfJeCiNAWD9STbFb7FfwW/ePkheP+C2L++7HnmuF1cxJ1Zu9J4ESL94QrNlrElO48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-365067c1349so8472235ab.3
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 05:23:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708089761; x=1708694561;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aFDoU4DI8sHTODaC/giqLy7tDcjeeFmno8f2AA/diI4=;
-        b=tauOt41htKvLIZA2ZzE9FpxMGff8Zh/BtWg9BwzlPJL/Gu92XeELsJe7gWGpJkprmH
-         zgvr9E1yfE33yO8lB3eg90FhCq06Dbb9vh7HWoQagOBpHc8d53kheRETQW477IyIcCuC
-         u0pxHk6ClvINwwqZ3WpM4f6sqpaHBRaCUTfUBM5Fyrn2u7P5WHD+HkSviSvjGHEoD8DK
-         T1/sBkau6xepCsRI8Rm/upJXoc6st1NGXrV6wmIFkEYPvRn0pOoyoIq4622ouK3OJemq
-         rBXOrSQbQdVG0SiKJrjeVhUi6+bjWOuBkSY57c5/rWYf0+Vkc0wv8a0Tnrz9YHA0JAQO
-         bZeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVOE4LrX43NNm5W6VvWfvp/0tieRP00AN+5JSk//u9JzdOs1Y6L83OiOkJGjprAFav+iSURK02Cw4I3dISoAsOpPZkJK48zoplPGCK/
-X-Gm-Message-State: AOJu0Yzn7ZQigi08TuThZKfB1btjn+//DONkd/BsUmOrr3clDJBozRYG
-	+e0w+hBuH3VXjn9cfEef+Fxmz3/RCssj2zOoi7l++z9Jn6id7/KAXJggsSeMyi4=
-X-Google-Smtp-Source: AGHT+IHMkALfGXBfUoxsJpAiTgK6gRswQPXjfjP645gXjCyLE3nug2dYR+7QvReh0nh5hW3kChm2/w==
-X-Received: by 2002:a17:907:382:b0:a3d:841e:3d75 with SMTP id ss2-20020a170907038200b00a3d841e3d75mr3286997ejb.61.1708089761265;
-        Fri, 16 Feb 2024 05:22:41 -0800 (PST)
-Received: from otso.luca.vpn.lucaweiss.eu (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id gz15-20020a170906f2cf00b00a38103ab710sm1553060ejb.125.2024.02.16.05.22.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 05:22:41 -0800 (PST)
-From: Luca Weiss <luca.weiss@fairphone.com>
-Date: Fri, 16 Feb 2024 14:22:38 +0100
-Subject: [PATCH] Bluetooth: Add more Bluetooth version defines
+        d=1e100.net; s=20230601; t=1708089800; x=1708694600;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pui2IuVeVwTnvL6WtkW/nNwS2Ezf2FXXIiCC2gR7PNI=;
+        b=A4YTvI6xcgwYBUS2YcDI7sdNHtWpAt7Hu+p/7hxyAqItcbbkilfsooVJYyPe2dsYzv
+         ugspd+kH4migPcg0YqVEmxxepU+QimYSVsHBwlh421z8tqaG+Odlb2It2TMezErhhXO4
+         9tS8J3GSbfXn5Y04Ox0nAiHjBMdiwaFfg26a3Zp674VPnNVuC19Pb+hk4Wnf1ZLV8Hub
+         VreH2f3VEmzXC3JAQeX3by2oSG+fN6b0U1C9tYprSyf/za/G0pUAq63qt5YHg+viuKuA
+         gNnUHdK/S9BjrnsxRhS5UfYs5UjZDY8E5kheusy+XJE6MVTKZRm20KquJrT6Vp98V0/H
+         Ua0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXsohNMjS3w1yo7NtvEhwTMkT9jImL/Qt6h8mQ5PTwNAfv12bP1lyEtN0k/0bxa4LVFAW8sC1w+Yu6VwH/VTajtzGr9PGWp6nqJ+fy6
+X-Gm-Message-State: AOJu0YwDqqRushC4APJLBvr/4IRcQ0wMe+jIHoYxbY50HtZ6nqnnY34j
+	sQKi1Syj1/ufNFp1JGZ3OiAcMs/CE48ce4HZUzDeOxuAnKSI3M+XAZAuQYTHQE1tWDSJlQA+8IO
+	HOOE5oQ25sCU1IRjYUAzeSR0+8N4Rs8lJWV0ArXzcCwQFebt9IPIYaug=
+X-Google-Smtp-Source: AGHT+IHP3zirBrdpmR87Ieqf/kCU11sHaFTXhByBqF1DIC5U6wixLWGetyvp0XpBzZg6W+D+cSFdv2yl1SN+mh8JUPbcqnKzWsq0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240216-bluetooth-defines-v1-1-6c39aacc66a8@fairphone.com>
-X-B4-Tracking: v=1; b=H4sIAJ1hz2UC/x2MWwqAIBAAryL7neDag+oq0UfWlguhoRZBdPekz
- 2GYeSBSYIrQiwcCXRzZuwxYCJjt5DaSvGQGrXSlNDbS7Ccl75OVC63sKErTopqprkrsEHJ3hCz
- u/zmM7/sBiaEz5WMAAAA=
-To: Marcel Holtmann <marcel@holtmann.org>, 
- Johan Hedberg <johan.hedberg@gmail.com>, 
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, linux-bluetooth@vger.kernel.org, 
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- phone-devel@vger.kernel.org, Luca Weiss <luca.weiss@fairphone.com>
-X-Mailer: b4 0.12.4
+X-Received: by 2002:a05:6e02:154f:b0:363:9d58:8052 with SMTP id
+ j15-20020a056e02154f00b003639d588052mr368389ilu.2.1708089800292; Fri, 16 Feb
+ 2024 05:23:20 -0800 (PST)
+Date: Fri, 16 Feb 2024 05:23:20 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ca829f06117fa50c@google.com>
+Subject: [syzbot] Monthly v9fs report (Feb 2024)
+From: syzbot <syzbot+listc76971b2e26402bae4ab@syzkaller.appspotmail.com>
+To: asmadeus@codewreck.org, ericvh@kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, lucho@ionkov.net, 
+	syzkaller-bugs@googlegroups.com, v9fs@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Add the various Bluetooth version identifiers found in the "Assigned
-Numbers" document[0] from the Bluetooth SIG.
+Hello v9fs maintainers/developers,
 
-[0] https://www.bluetooth.com/specifications/assigned-numbers/
+This is a 31-day syzbot report for the v9fs subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/v9fs
 
-Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
----
-To be clear, I don't have a use case for these extra defines myself but
-some time ago when working on Bluetooth I came across this and thought
-it would be interesting to have the list complete. No other motives.
----
- include/net/bluetooth/bluetooth.h | 9 +++++++++
- 1 file changed, 9 insertions(+)
+During the period, 2 new issues were detected and 0 were fixed.
+In total, 5 issues are still open and 26 have been fixed so far.
 
-diff --git a/include/net/bluetooth/bluetooth.h b/include/net/bluetooth/bluetooth.h
-index 7ffa8c192c3f..818eb142eda3 100644
---- a/include/net/bluetooth/bluetooth.h
-+++ b/include/net/bluetooth/bluetooth.h
-@@ -39,11 +39,20 @@
- #endif
- 
- /* Bluetooth versions */
-+#define BLUETOOTH_VER_1_0B	0
- #define BLUETOOTH_VER_1_1	1
- #define BLUETOOTH_VER_1_2	2
- #define BLUETOOTH_VER_2_0	3
- #define BLUETOOTH_VER_2_1	4
-+#define BLUETOOTH_VER_3_0	5
- #define BLUETOOTH_VER_4_0	6
-+#define BLUETOOTH_VER_4_1	7
-+#define BLUETOOTH_VER_4_2	8
-+#define BLUETOOTH_VER_5_0	9
-+#define BLUETOOTH_VER_5_1	10
-+#define BLUETOOTH_VER_5_2	11
-+#define BLUETOOTH_VER_5_3	12
-+#define BLUETOOTH_VER_5_4	13
- 
- /* Reserv for core and drivers use */
- #define BT_SKB_RESERVE	8
+Some of the still happening issues:
+
+Ref Crashes Repro Title
+<1> 1611    Yes   WARNING in v9fs_fid_get_acl
+                  https://syzkaller.appspot.com/bug?extid=a83dc51a78f0f4cf20da
+<2> 265     Yes   BUG: corrupted list in p9_fd_cancelled (2)
+                  https://syzkaller.appspot.com/bug?extid=1d26c4ed77bc6c5ed5e6
+<3> 9       Yes   KASAN: slab-use-after-free Read in v9fs_stat2inode_dotl
+                  https://syzkaller.appspot.com/bug?extid=7a3d75905ea1a830dbe5
 
 ---
-base-commit: 841c35169323cd833294798e58b9bf63fa4fa1de
-change-id: 20240216-bluetooth-defines-b810ce543191
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Best regards,
--- 
-Luca Weiss <luca.weiss@fairphone.com>
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
