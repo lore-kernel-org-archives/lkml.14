@@ -1,219 +1,280 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8699124B35;
-	Fri, 16 Feb 2024 09:51:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DAE124B39
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 09:52:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708077119; cv=none; b=oxWOGoGghIZn/fPmttGOQh8BeRcrAFwYYXai3eLclcbnbn4RRa9eofOB/ZwzIrEyjJuRB7Qge/37GSmin66TTfXbJQEYX8rbE4DJBC3pgFocTpo1IgG2rp2q9EBAzDrnWgh8s/aX7E1W0iTFE7gTk3ywcs80mgQ3rivzA9kAVO8=
+	t=1708077126; cv=none; b=JLzVgQcuSWrV/6l/oK1VXABbDXAtDZwwUOQCuu8qthgRFw/1CiAmEXiIhQLc8bf8smPhtAe5kFTNHadqNOP+zHvi3emM/FoQQvw8zVBN7kLSQqZb1TqbWwssJXK5NKy/EleEFrT+2p/iVdr1mIaCv6rTEQupcMpwqprppQ+D6SQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708077119; c=relaxed/simple;
-	bh=yROMIqIoOVSo2FXVFME/TMKQSUfQnNfARoZHqmtZUXE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Zo1wchXF/kRTBpUwu2DoYsPWMPc5iTb3ZFQohyQx/DexTyTtMm1usKrPSCEIWLA1dOa2Rd0QUUBuSzRXM+Uk7jn6FRhDihqV+Ht6TfehYm8MMkUXJOfooP+XtIejeLLw+xpztOefqY7bXdjPq3IkKCH44YtJyO+ewgrv5imeC3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=vMBtceVO; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1708077126; c=relaxed/simple;
+	bh=1DmYPShGc1WqUllF/gBgHGJAcAVWQWXf2YSAvLKPay0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Mj0eLrvRRmDrQqSBCsDWTacUoM9CA/5KdRmL3TloFNu8/MiW1S+nsoqfSD4fTn//V2YFyebVg5uJarP/fFwtc6SJAlVO7zBMI/1+8oPb5VZ1qHHKkytZMqfOXsdv+cCR3M4mYyIsNo3L3W8MvO3RxbQ/52CTfR8rbo8abff8tik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c9JY2yn4; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="vMBtceVO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1708077115;
-	bh=yROMIqIoOVSo2FXVFME/TMKQSUfQnNfARoZHqmtZUXE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=vMBtceVOtsEGY6H1ID0zF//+wnYKAG6zYamUnkWQbaCxE64tr7AWEYiZeRKinck5C
-	 3qx0aUFv/3YkdnDIWgSRcQE2Db/usV9DUq7a1+ZgEjE8tpIQlIG/1dgYo0eXyeZPuw
-	 wtSQ4HH5gdaYwrX3Dpob1wiODJbrucsnfkGkJgcvgiauocKCZ8yk76AD8mInGRu/6U
-	 ngzjoU0rkTZAErX6TZ761UrXw/gwkAAUTNXndFXnh/UlxGJv6RJtX46QtvIbpHY+Eq
-	 sd0+Ozuw+ca1HiBlaTZB4pELYnLKdo2/vMMJ3VQUnjzUfFl70HKuk/k3dvuBOwwGTy
-	 VypEUbWao2ZZA==
-Received: from shreeya.shreeya (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: shreeya)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 9D9863782084;
-	Fri, 16 Feb 2024 09:51:51 +0000 (UTC)
-From: Shreeya Patel <shreeya.patel@collabora.com>
-To: heiko@sntech.de,
-	mchehab@kernel.org,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	p.zabel@pengutronix.de,
-	jose.abreu@synopsys.com,
-	nelson.costa@synopsys.com,
-	dmitry.osipenko@collabora.com,
-	sebastian.reichel@collabora.com,
-	shawn.wen@rock-chips.com
-Cc: kernel@collabora.com,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-clk@vger.kernel.org,
-	linux-dt@vger.kernel.org,
-	linux-arm@lists.infradead.org,
-	Shreeya Patel <shreeya.patel@collabora.com>
-Subject: [PATCH 2/4] dt-bindings: media: Document bindings for HDMI RX Controller
-Date: Fri, 16 Feb 2024 15:19:20 +0530
-Message-Id: <20240216094922.257674-3-shreeya.patel@collabora.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240216094922.257674-1-shreeya.patel@collabora.com>
-References: <20240216094922.257674-1-shreeya.patel@collabora.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c9JY2yn4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708077124; x=1739613124;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=1DmYPShGc1WqUllF/gBgHGJAcAVWQWXf2YSAvLKPay0=;
+  b=c9JY2yn4aIqQXuMhK47puFQnbOrYO7GPCZliex8X34k7QMZ+ypIMo7xQ
+   HR0ifF53J9uQDmXMJCjl3DINRTTD3QGZW+QzU8RuUGlqmq4E9TebCs+6z
+   mwUhQZjWeEVbMFKG47hq5t4Xo4ESCkfgEv/TfOsUCMiH7ZSNY2r0qqLnA
+   eZoEYiHC1UuLQ3GAfbev2ONpGDdoMuJzPgCEvtMCndAAXVlZpR/OL8Is5
+   lblJKPTF0OfAjd6dyxOMHrWy20s8NnP/7O42TBJT2YKG1O9jmY8zzyrMU
+   NwmnneuZ9RlBuGwGTKo1g6Po2SX8kV6ddKeDtLI9aIRyxDdu7k+apxV36
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10985"; a="13305122"
+X-IronPort-AV: E=Sophos;i="6.06,164,1705392000"; 
+   d="scan'208";a="13305122"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 01:52:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10985"; a="935815479"
+X-IronPort-AV: E=Sophos;i="6.06,164,1705392000"; 
+   d="scan'208";a="935815479"
+Received: from pshishpo-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.48.79])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 01:51:57 -0800
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ dri-devel@lists.freedesktop.org, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Tvrtko Ursulin
+ <tvrtko.ursulin@linux.intel.com>
+Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>, robdclark@gmail.com,
+ freedreno@lists.freedesktop.org, dmitry.baryshkov@linaro.org,
+ intel-gfx@lists.freedesktop.org, ville.syrjala@linux.intel.com,
+ quic_jesszhan@quicinc.com, linux-kernel@vger.kernel.org,
+ intel-xe@lists.freedesktop.org
+Subject: Re: [PATCH v2] drm/dp: move intel_dp_vsc_sdp_pack() to generic helper
+In-Reply-To: <20240215190834.3222812-1-quic_abhinavk@quicinc.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240215190834.3222812-1-quic_abhinavk@quicinc.com>
+Date: Fri, 16 Feb 2024 11:51:54 +0200
+Message-ID: <87eddc4tz9.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Document bindings for the Synopsys DesignWare HDMI RX Controller.
+On Thu, 15 Feb 2024, Abhinav Kumar <quic_abhinavk@quicinc.com> wrote:
+> intel_dp_vsc_sdp_pack() can be re-used by other DRM drivers as well.
+> Lets move this to drm_dp_helper to achieve this.
+>
+> changes in v2:
+> 	- rebased on top of drm-tip
+>
+> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
 
-Reviewed-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
----
- .../bindings/media/snps,dw-hdmi-rx.yaml       | 128 ++++++++++++++++++
- 1 file changed, 128 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.yaml
+Acked-by: Jani Nikula <jani.nikula@intel.com>
 
-diff --git a/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.yaml b/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.yaml
-new file mode 100644
-index 000000000000..a70d96b548ee
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.yaml
-@@ -0,0 +1,128 @@
-+# SPDX-License-Identifier: (GPL-3.0 OR BSD-2-Clause)
-+# Device Tree bindings for Synopsys DesignWare HDMI RX Controller
-+
-+---
-+$id: http://devicetree.org/schemas/media/snps,dw-hdmi-rx.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Synopsys DesignWare HDMI RX Controller
-+
-+maintainers:
-+  - Shreeya Patel <shreeya.patel@collabora.com>
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: rockchip,rk3588-hdmirx-ctrler
-+      - const: snps,dw-hdmi-rx
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 3
-+
-+  interrupt-names:
-+    items:
-+      - const: cec
-+      - const: hdmi
-+      - const: dma
-+
-+  clocks:
-+    maxItems: 7
-+
-+  clock-names:
-+    items:
-+      - const: aclk
-+      - const: audio
-+      - const: cr_para
-+      - const: pclk
-+      - const: ref
-+      - const: hclk_s_hdmirx
-+      - const: hclk_vo1
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 4
-+
-+  reset-names:
-+    items:
-+      - const: rst_a
-+      - const: rst_p
-+      - const: rst_ref
-+      - const: rst_biu
-+
-+  pinctrl-names:
-+    const: default
-+
-+  memory-region:
-+    maxItems: 1
-+
-+  hdmirx-5v-detection-gpios:
-+    description: GPIO specifier for 5V detection.
-+    maxItems: 1
-+
-+  rockchip,grf:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      The phandle of the syscon node for the GRF register.
-+
-+  rockchip,vo1_grf:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      The phandle of the syscon node for the VO1 GRF register.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-names
-+  - clocks
-+  - clock-names
-+  - power-domains
-+  - resets
-+  - pinctrl-0
-+  - pinctrl-names
-+  - hdmirx-5v-detection-gpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/rockchip,rk3588-cru.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/power/rk3588-power.h>
-+    #include <dt-bindings/reset/rockchip,rk3588-cru.h>
-+    hdmirx_ctrler: hdmirx-controller@fdee0000 {
-+      compatible = "rockchip,rk3588-hdmirx-ctrler", "snps,dw-hdmi-rx";
-+      reg = <0x0 0xfdee0000 0x0 0x6000>;
-+      interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH 0>,
-+                   <GIC_SPI 436 IRQ_TYPE_LEVEL_HIGH 0>,
-+                   <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH 0>;
-+      interrupt-names = "cec", "hdmi", "dma";
-+      clocks = <&cru ACLK_HDMIRX>,
-+               <&cru CLK_HDMIRX_AUD>,
-+               <&cru CLK_CR_PARA>,
-+               <&cru PCLK_HDMIRX>,
-+               <&cru CLK_HDMIRX_REF>,
-+               <&cru PCLK_S_HDMIRX>,
-+               <&cru HCLK_VO1>;
-+      clock-names = "aclk",
-+                    "audio",
-+                    "cr_para",
-+                    "pclk",
-+                    "ref",
-+                    "hclk_s_hdmirx",
-+                    "hclk_vo1";
-+      power-domains = <&power RK3588_PD_VO1>;
-+      resets = <&cru SRST_A_HDMIRX>, <&cru SRST_P_HDMIRX>,
-+               <&cru SRST_HDMIRX_REF>, <&cru SRST_A_HDMIRX_BIU>;
-+      reset-names = "rst_a", "rst_p", "rst_ref", "rst_biu";
-+      pinctrl-0 = <&hdmim1_rx_cec &hdmim1_rx_hpdin &hdmim1_rx_scl &hdmim1_rx_sda &hdmirx_5v_detection>;
-+      pinctrl-names = "default";
-+      memory-region = <&hdmirx_cma>;
-+      hdmirx-5v-detection-gpios = <&gpio1 RK_PC6 GPIO_ACTIVE_LOW>;
-+    };
+> ---
+>  drivers/gpu/drm/display/drm_dp_helper.c | 78 +++++++++++++++++++++++++
+>  drivers/gpu/drm/i915/display/intel_dp.c | 71 +---------------------
+>  include/drm/display/drm_dp_helper.h     |  3 +
+>  3 files changed, 83 insertions(+), 69 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/display/drm_dp_helper.c b/drivers/gpu/drm/display/drm_dp_helper.c
+> index 8d6ce46471ae..6c91f400ecb1 100644
+> --- a/drivers/gpu/drm/display/drm_dp_helper.c
+> +++ b/drivers/gpu/drm/display/drm_dp_helper.c
+> @@ -2913,6 +2913,84 @@ void drm_dp_vsc_sdp_log(struct drm_printer *p, const struct drm_dp_vsc_sdp *vsc)
+>  }
+>  EXPORT_SYMBOL(drm_dp_vsc_sdp_log);
+>  
+> +/**
+> + * drm_dp_vsc_sdp_pack() - pack a given vsc sdp into generic dp_sdp
+> + * @vsc: vsc sdp initialized according to its purpose as defined in
+> + *       table 2-118 - table 2-120 in DP 1.4a specification
+> + * @sdp: valid handle to the generic dp_sdp which will be packed
+> + * @size: valid size of the passed sdp handle
+> + *
+> + * Returns length of sdp on success and error code on failure
+> + */
+> +ssize_t drm_dp_vsc_sdp_pack(const struct drm_dp_vsc_sdp *vsc,
+> +			    struct dp_sdp *sdp, size_t size)
+> +{
+> +	size_t length = sizeof(struct dp_sdp);
+> +
+> +	if (size < length)
+> +		return -ENOSPC;
+> +
+> +	memset(sdp, 0, size);
+> +
+> +	/*
+> +	 * Prepare VSC Header for SU as per DP 1.4a spec, Table 2-119
+> +	 * VSC SDP Header Bytes
+> +	 */
+> +	sdp->sdp_header.HB0 = 0; /* Secondary-Data Packet ID = 0 */
+> +	sdp->sdp_header.HB1 = vsc->sdp_type; /* Secondary-data Packet Type */
+> +	sdp->sdp_header.HB2 = vsc->revision; /* Revision Number */
+> +	sdp->sdp_header.HB3 = vsc->length; /* Number of Valid Data Bytes */
+> +
+> +	if (vsc->revision == 0x6) {
+> +		sdp->db[0] = 1;
+> +		sdp->db[3] = 1;
+> +	}
+> +
+> +	/*
+> +	 * Revision 0x5 and revision 0x7 supports Pixel Encoding/Colorimetry
+> +	 * Format as per DP 1.4a spec and DP 2.0 respectively.
+> +	 */
+> +	if (!(vsc->revision == 0x5 || vsc->revision == 0x7))
+> +		goto out;
+> +
+> +	/* VSC SDP Payload for DB16 through DB18 */
+> +	/* Pixel Encoding and Colorimetry Formats  */
+> +	sdp->db[16] = (vsc->pixelformat & 0xf) << 4; /* DB16[7:4] */
+> +	sdp->db[16] |= vsc->colorimetry & 0xf; /* DB16[3:0] */
+> +
+> +	switch (vsc->bpc) {
+> +	case 6:
+> +		/* 6bpc: 0x0 */
+> +		break;
+> +	case 8:
+> +		sdp->db[17] = 0x1; /* DB17[3:0] */
+> +		break;
+> +	case 10:
+> +		sdp->db[17] = 0x2;
+> +		break;
+> +	case 12:
+> +		sdp->db[17] = 0x3;
+> +		break;
+> +	case 16:
+> +		sdp->db[17] = 0x4;
+> +		break;
+> +	default:
+> +		WARN(1, "Missing case %d\n", vsc->bpc);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Dynamic Range and Component Bit Depth */
+> +	if (vsc->dynamic_range == DP_DYNAMIC_RANGE_CTA)
+> +		sdp->db[17] |= 0x80;  /* DB17[7] */
+> +
+> +	/* Content Type */
+> +	sdp->db[18] = vsc->content_type & 0x7;
+> +
+> +out:
+> +	return length;
+> +}
+> +EXPORT_SYMBOL(drm_dp_vsc_sdp_pack);
+> +
+>  /**
+>   * drm_dp_get_pcon_max_frl_bw() - maximum frl supported by PCON
+>   * @dpcd: DisplayPort configuration data
+> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
+> index 217196196e50..a9458df475e2 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dp.c
+> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
+> @@ -4089,73 +4089,6 @@ intel_dp_needs_vsc_sdp(const struct intel_crtc_state *crtc_state,
+>  	return false;
+>  }
+>  
+> -static ssize_t intel_dp_vsc_sdp_pack(const struct drm_dp_vsc_sdp *vsc,
+> -				     struct dp_sdp *sdp, size_t size)
+> -{
+> -	size_t length = sizeof(struct dp_sdp);
+> -
+> -	if (size < length)
+> -		return -ENOSPC;
+> -
+> -	memset(sdp, 0, size);
+> -
+> -	/*
+> -	 * Prepare VSC Header for SU as per DP 1.4a spec, Table 2-119
+> -	 * VSC SDP Header Bytes
+> -	 */
+> -	sdp->sdp_header.HB0 = 0; /* Secondary-Data Packet ID = 0 */
+> -	sdp->sdp_header.HB1 = vsc->sdp_type; /* Secondary-data Packet Type */
+> -	sdp->sdp_header.HB2 = vsc->revision; /* Revision Number */
+> -	sdp->sdp_header.HB3 = vsc->length; /* Number of Valid Data Bytes */
+> -
+> -	if (vsc->revision == 0x6) {
+> -		sdp->db[0] = 1;
+> -		sdp->db[3] = 1;
+> -	}
+> -
+> -	/*
+> -	 * Revision 0x5 and revision 0x7 supports Pixel Encoding/Colorimetry
+> -	 * Format as per DP 1.4a spec and DP 2.0 respectively.
+> -	 */
+> -	if (!(vsc->revision == 0x5 || vsc->revision == 0x7))
+> -		goto out;
+> -
+> -	/* VSC SDP Payload for DB16 through DB18 */
+> -	/* Pixel Encoding and Colorimetry Formats  */
+> -	sdp->db[16] = (vsc->pixelformat & 0xf) << 4; /* DB16[7:4] */
+> -	sdp->db[16] |= vsc->colorimetry & 0xf; /* DB16[3:0] */
+> -
+> -	switch (vsc->bpc) {
+> -	case 6:
+> -		/* 6bpc: 0x0 */
+> -		break;
+> -	case 8:
+> -		sdp->db[17] = 0x1; /* DB17[3:0] */
+> -		break;
+> -	case 10:
+> -		sdp->db[17] = 0x2;
+> -		break;
+> -	case 12:
+> -		sdp->db[17] = 0x3;
+> -		break;
+> -	case 16:
+> -		sdp->db[17] = 0x4;
+> -		break;
+> -	default:
+> -		MISSING_CASE(vsc->bpc);
+> -		break;
+> -	}
+> -	/* Dynamic Range and Component Bit Depth */
+> -	if (vsc->dynamic_range == DP_DYNAMIC_RANGE_CTA)
+> -		sdp->db[17] |= 0x80;  /* DB17[7] */
+> -
+> -	/* Content Type */
+> -	sdp->db[18] = vsc->content_type & 0x7;
+> -
+> -out:
+> -	return length;
+> -}
+> -
+>  static ssize_t
+>  intel_dp_hdr_metadata_infoframe_sdp_pack(struct drm_i915_private *i915,
+>  					 const struct hdmi_drm_infoframe *drm_infoframe,
+> @@ -4248,8 +4181,8 @@ static void intel_write_dp_sdp(struct intel_encoder *encoder,
+>  
+>  	switch (type) {
+>  	case DP_SDP_VSC:
+> -		len = intel_dp_vsc_sdp_pack(&crtc_state->infoframes.vsc, &sdp,
+> -					    sizeof(sdp));
+> +		len = drm_dp_vsc_sdp_pack(&crtc_state->infoframes.vsc, &sdp,
+> +					  sizeof(sdp));
+>  		break;
+>  	case HDMI_PACKET_TYPE_GAMUT_METADATA:
+>  		len = intel_dp_hdr_metadata_infoframe_sdp_pack(dev_priv,
+> diff --git a/include/drm/display/drm_dp_helper.h b/include/drm/display/drm_dp_helper.h
+> index d02014a87f12..8474504d4c88 100644
+> --- a/include/drm/display/drm_dp_helper.h
+> +++ b/include/drm/display/drm_dp_helper.h
+> @@ -812,4 +812,7 @@ int drm_dp_bw_overhead(int lane_count, int hactive,
+>  		       int bpp_x16, unsigned long flags);
+>  int drm_dp_bw_channel_coding_efficiency(bool is_uhbr);
+>  
+> +ssize_t drm_dp_vsc_sdp_pack(const struct drm_dp_vsc_sdp *vsc,
+> +			    struct dp_sdp *sdp, size_t size);
+> +
+>  #endif /* _DRM_DP_HELPER_H_ */
+
 -- 
-2.39.2
-
+Jani Nikula, Intel
