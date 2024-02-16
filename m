@@ -1,115 +1,74 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152DE1C2AF;
-	Fri, 16 Feb 2024 10:18:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D4F2377F;
+	Fri, 16 Feb 2024 10:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708078762; cv=none; b=dV56Z1DjEMxCvK0jaCVbyiuAI6K9XgrGPttnwe/h4qqE++n6PB6PqCBn2PkwK3sNac68TAIsMstAuxMJsIbMWbOPjb3YV/o2hb/wv3mXEbgbXllzNTs170No7zICOREkUKQxump2TaP2Rm+IJw+M1FOaRjCVB5NYVxua9mLKi/o=
+	t=1708078826; cv=none; b=bSDpg9esidO/g4e1sEsXc8LjjvFqd7C77AT6V/ovaMj0EhyUmYvxjy7Y90zqqZbCNumzOSmUmWdZB1dtcxVXz9Ifaq3Y/v4jkdRbCeR/mZnSIPs89VMP6KSWXzWU/6IA/6M9ry/DEb7XuRoLsiK/gaPrsqAEsU9+r4brKiDAijc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708078762; c=relaxed/simple;
-	bh=HpbFXax0SSZwQVzKfKJjbyz8O1acvNAm90x+8EqL0dg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
-	 References:In-Reply-To; b=UXlGn+LINLvs6qy5+eTEWEFOLPOgPbaUYXP7avCiXw6v1tPgvjN/QnThwuOe1jmRkN2uYHoNRZtpBQs5LJvyVjSo5JgPn/6t3MZOYDpZcmOccjnvB4PauVVFYy23Gg+iy/QAymIxZU2B2PA+W82ea2rhPjacyv1/36waSqnC+To=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=eh8YJm3k; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1708078826; c=relaxed/simple;
+	bh=pZsYna/et6p2/duoVCMi3/XrHQ+0U2MOIh5owo7Tw0Q=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=RjOxw1x2tKjkHtImoH5EmA+KcyskE9ynw7mMOhykKApwUkHqxeSDcym4CY+NMJQ88r/bTzwobyV6cQ+oVlxaaq1RmD+PcpDvPAEIaO2v0UXlGzaxwL9Z/PhPOdtGUNf9hQROSaXg+vsofSQA8QqPWhVBZXj1yAfEhjsua4Bm4FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TvvV+oPi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="eh8YJm3k"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0C906C000B;
-	Fri, 16 Feb 2024 10:18:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708078703;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QkIxqpdXEsO6giA3YQnaxtDqAl6uPWLK8CAbLV3KLI0=;
-	b=eh8YJm3kUD1UuhBwS35H7wRNZy4ZF6hgzNJpUu35b50ZAg+V/H/jT5FrzGVZeywZdOFVOO
-	qWjMGMJ7YUoXZn4AdzwFlqvvxO0Yjhj/5X0cybxa1eMp7xSASJLcuroACW1ofq4QybyH61
-	bahy1K3tVUurkVZo8QX307ELC4hrLQHabc/teilfUjUvRoy9M3KJCDb+Mk84nOBbi29KSG
-	Vej84jav2Q1yR90dBRgocxHeSc7JasGEuswPpI/CQ+PUfkTgYJaMtyYo7HwXDCj6QEW8t8
-	KSY5nkRoXwlm4mDG0JETgFIxMUtBDEvL/Cca2D++XD/DWFc9Ip8rXsxO3THTvA==
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TvvV+oPi"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4145EC433B2;
+	Fri, 16 Feb 2024 10:20:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708078826;
+	bh=pZsYna/et6p2/duoVCMi3/XrHQ+0U2MOIh5owo7Tw0Q=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=TvvV+oPiL7QxQtHP+CNstFlmM1I3NW/nXjBqhpT3MMXTLvJXGPnb5tTvp8w3o7gni
+	 WPu6KV7rgFqO8x8CNtn8vG+mfZSZdyHDCqynPqXsl8RH9UxPKSwB2t45jNbWL8U06u
+	 mMDzNkrOYI/OqT5e6irJ2lVBrVY+TO2HmRJ5wvT2FLlWUH3QpsaAlh22VPg5vJ3deb
+	 XemMWIh3w5LHZ+AYn8IFpq9L3EHQEXNoCnPzxjfBbTdo2CJ8RyYlITKCIy2xabeQxR
+	 skY3lS34th8BTiVxhE0VSblwt79MzHUfET1g5dqpvqKtgsea+Idq53g3VlPdpJ0FkU
+	 VuaFqrmMh6eXw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2B974D8C966;
+	Fri, 16 Feb 2024 10:20:26 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 16 Feb 2024 11:18:22 +0100
-Message-Id: <CZ6FD7EHIJDT.32IEDVT9FG2GP@bootlin.com>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: Re: [PATCH 02/13] dt-bindings: i2c: nomadik: add mobileye,eyeq5-i2c
- bindings and example
-Cc: "Linus Walleij" <linus.walleij@linaro.org>, "Andi Shyti"
- <andi.shyti@kernel.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- <linux-arm-kernel@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-mips@vger.kernel.org>, "Gregory Clement"
- <gregory.clement@bootlin.com>, "Vladimir Kondratiev"
- <vladimir.kondratiev@mobileye.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
- <tawfik.bayouk@mobileye.com>
-To: "Rob Herring" <robh@kernel.org>
-X-Mailer: aerc 0.15.2
-References: <20240215-mbly-i2c-v1-0-19a336e91dca@bootlin.com>
- <20240215-mbly-i2c-v1-2-19a336e91dca@bootlin.com>
- <20240216022227.GA850600-robh@kernel.org>
-In-Reply-To: <20240216022227.GA850600-robh@kernel.org>
-X-GND-Sasl: theo.lebrun@bootlin.com
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH RESEND2 net-next] tcp: Spelling s/curcuit/circuit/
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170807882617.14678.5225852820514541606.git-patchwork-notify@kernel.org>
+Date: Fri, 16 Feb 2024 10:20:26 +0000
+References: <edf02e55949ac00329a6df72940cc2f5e8bec55e.1708002686.git.geert+renesas@glider.be>
+In-Reply-To: <edf02e55949ac00329a6df72940cc2f5e8bec55e.1708002686.git.geert+renesas@glider.be>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: edumazet@google.com, davem@davemloft.net, dsahern@kernel.org,
+ kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
-Hello,
+Hello:
 
-On Fri Feb 16, 2024 at 3:22 AM CET, Rob Herring wrote:
-> On Thu, Feb 15, 2024 at 05:52:09PM +0100, Th=C3=A9o Lebrun wrote:
-> > Add EyeQ5 bindings to the existing Nomadik I2C dt-bindings. Add the two
-> > EyeQ5-specific properties behind a conditional. Add an example for this
-> > compatible.
+This patch was applied to netdev/net-next.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-[...]
+On Thu, 15 Feb 2024 14:12:21 +0100 you wrote:
+> Fix a misspelling of "circuit".
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  net/ipv4/tcp_input.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > +allOf:
-> > +  - $ref: /schemas/i2c/i2c-controller.yaml#
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            const: mobileye,eyeq5-i2c
-> > +    then:
-> > +      properties:
-> > +        mobileye,olb:
-> > +          $ref: /schemas/types.yaml#/definitions/phandle
-> > +          description: A phandle to the OLB syscon.
->
-> Define properties at the top-level and then restrict them in if/then=20
-> schemas.
+Here is the summary with links:
+  - [RESEND2,net-next] tcp: Spelling s/curcuit/circuit/
+    https://git.kernel.org/netdev/net-next/c/21bd52ea38a8
 
-Noted, thanks.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-> > +        mobileye,id:
-> > +          $ref: /schemas/types.yaml#/definitions/uint32
-> > +          description: Platform-wide controller ID (integer starting f=
-rom zero).
->
-> instance indexes are a NAK. You can use i2cN aliases if you must.
->
-> Why do you need it? To access OLB? If so, add cell args to the OLB=20
-> phandle instead.
 
-Why we do what we do: I2C controller must write a 2 bit value depending
-on the bus speed. All I2C controllers write into the same register.
-Index is used to compute the shift.
-
-mobileye,olb is a phandle to a syscon. I'll be using i2cN aliases I
-guess.
-
-Thanks,
-
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
