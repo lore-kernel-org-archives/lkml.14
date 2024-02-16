@@ -1,122 +1,140 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 319DF145B18
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 21:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B6FD28E2B
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 21:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708118363; cv=none; b=e4QF98SI3H5IqKGD9Zi0ScGCPBhrqMgF4nDkPo3ov6lZl7Q61CHxp2Vjv3xUMNPjIzBpyMtxZB64V5afZ54QQSKvdx3umkTxpDviEpsk1vGxSabZWtw07LS4T4r0h5Cx/L6wdwy5Zhur4uWb6Ik2nNLdrFdLGn+NPLJSfMciZWk=
+	t=1708118500; cv=none; b=T4SbgY8u+RXCKckbMTCmZnKrTRKxJsOvz98jNnSEQC2bNxd0cqJT47riJLld7op/rlgmPnpS9eOaGYF1RtjdBw65uSkmINoD7iD+j5M/TePstKUB18jeN26yNHDL9xh/AQ87KmJLVi11YayFWLgNMdmOJceW5dmkZMQ3orsVApQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708118363; c=relaxed/simple;
-	bh=pjViwhXqVkFuRcb9TtMCBqAXy9IB1rtSAVc+/tWHUoM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kRsOXr3HTxulqNFnVihQhOjVFcoE94A18Idfh7r4EdqZ2wnYBW/Y11AsXMYfsB4qJklZuVuqn0Whd7FS3OdUX0YhUDJhsOeldURa34bdxDsUFSLohRmesNhybOx41sl5/13bjt8q3sTQMQ2Cl5EJhizrBdIXoXZ0XO4y+S48IzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=cK//LtsA; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1708118500; c=relaxed/simple;
+	bh=ajIfTTJzvOem9RjpDO0sHV2Di8N5jpKs0vwWC7FTWe4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=MKdhP2E8XeoNwY7sQYSYPFbQg7lXBWr9fLpQpr4my9erQUmSMSAH0ylCPTpHta2ANmhaP3ZuAn4zg0RiHP1n+3OXdinA3gAcy6ZnKqvv3e50q3MrnL9SqYKoaGg4QjdQj2XOuyp0g/y5QBPbrCeARAYYn6gdmgD3YPOpBEPjIF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Xa+o0qyt; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cK//LtsA"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5ce2aada130so2155717a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 13:19:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708118361; x=1708723161; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Slargkifk+xN9eeRz4eeZrRCV6UdKDbpUow5tWWQ8Nw=;
-        b=cK//LtsAUxR2N9tqu1a4AEH4D2i/Y92EaTnzsi/SJFgrT3dL9zfI5+nNd3hAKDw8TP
-         momltlpGm0AD7E5gBbFA2Hypdq/fvYQLheII8S3zF0ZQQyVWd6jtMPnlLOzwAUZntsRQ
-         G5NCF21aCMVf1iM/jXLB2XOn8k+OuwQmGfaFs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708118361; x=1708723161;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Slargkifk+xN9eeRz4eeZrRCV6UdKDbpUow5tWWQ8Nw=;
-        b=vqDLWdgqjAbOamEqNcLjFhpJa+8agGjvk0FVRpAuwbVOjNg8FPfvUNrxvsSIC2q/cj
-         qPRUkmwW1aBnhonuwShWHu2rLs3xFs+jioaK8BpUhxhMMPWcjY8wlRyp2UuDsNlAg1m2
-         4EDN4da0VYpbG47Xx/7WZBgHfSrwLKKBu+LMBWjPrvFsKWwtAfTkKNgnPzBk6w/zXZuM
-         e2vlzYmWXy+N7RPjWCO6/DLDzLn1Tb4efxtSHjgk0nUtq5HfzUEvCBmQL7V2tkWNACXy
-         Vru2T7RYV6BAWbGJv6ccIHhaiKoWuMb0dn7UByKIZfMXthgKlvj9ijLrlVK5WGbkaI+s
-         AXnA==
-X-Forwarded-Encrypted: i=1; AJvYcCVH7tvZeF0rM+0l010j6NrV6VN27l/aeyBRn7RVnz+hMkI7FOaKtS5JovUiqlWO0HxlBsFAfScSEg0fNCBbu9hg7MKEsWTxZpBqneUN
-X-Gm-Message-State: AOJu0Yx9LnbMpzWXEsNcZO2deojkAbRNG5vBwH9wj3xAjy15P8PTRy2l
-	dxW5tGugZnb8QL8ukZBHYYGXgfPhvFTll2/ogzWeshq5D8MIREi1/cMPDuX9AQ==
-X-Google-Smtp-Source: AGHT+IHmIetBf12lZgnCIBsuyMKApScxQdHnKJTRQax45DnTFQUW8k5/OMVTOg+jgfmD8hQL5KfA0Q==
-X-Received: by 2002:a05:6a21:670b:b0:19c:9b7b:66a with SMTP id wh11-20020a056a21670b00b0019c9b7b066amr6805585pzb.49.1708118361358;
-        Fri, 16 Feb 2024 13:19:21 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id kq15-20020a056a004b0f00b006db05eb1301sm395754pfb.21.2024.02.16.13.19.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 13:19:20 -0800 (PST)
-Date: Fri, 16 Feb 2024 13:19:20 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Leon Romanovsky <leon@kernel.org>, Lin Ma <linma@zju.edu.cn>,
-	Simon Horman <horms@kernel.org>, Breno Leitao <leitao@debian.org>,
-	Tobias Brunner <tobias@strongswan.org>,
-	Raed Salem <raeds@nvidia.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH] [RFC] xfrm: work around a clang-19 fortifiy-string
- false-positive
-Message-ID: <202402161301.BBFA14EE@keescook>
-References: <20240216202657.2493685-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Xa+o0qyt"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41GFrbVG003888;
+	Fri, 16 Feb 2024 21:21:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=IvpyXiAwCa/OFsRcJi0azX9ua/TEzLkdCgKl8JCgA2s=; b=Xa
+	+o0qytWHAn7xI8RuTspOaIW8SD6KZhDIcwgGZqXWrv5YPl90BILYc+RcMI4Sq/QK
+	8XQED7X/iUhshTv99q2YshDLLsWAIbTQ5HXpUJKybpdD49mZ2788QxwqG6TFgD9b
+	Ah0I58lCDbO/RjEa/0qUn2lYtCcVEcFl8vWJ/iQIY3pqaaDTD3W9gObbEKdD0GOR
+	CKWXMpke7Rnt9WOBWztupcN3V9pMSYwNgG4UJ6i51MQn5W/eupQliZI7nHxIpbDE
+	iBo/qe4YLGwoDlAk8P7M+WaOoyQPzSi08aWIG+mQzWPyqDuVO+pXBor9PYyyoQsj
+	7Ac5VAah/tSYND2LtFiw==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wa3bh1kkt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 Feb 2024 21:21:20 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41GLLJ9Y020308
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 Feb 2024 21:21:19 GMT
+Received: from [10.71.111.207] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 16 Feb
+ 2024 13:21:19 -0800
+Message-ID: <9a3a51f8-e772-4e54-a9be-5801ff6edf7a@quicinc.com>
+Date: Fri, 16 Feb 2024 13:21:18 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240216202657.2493685-1-arnd@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/panel: boe-tv101wum-nl6: make use of
+ prepare_prev_first
+Content-Language: en-US
+To: Douglas Anderson <dianders@chromium.org>,
+        <dri-devel@lists.freedesktop.org>
+CC: Stephen Boyd <swboyd@chromium.org>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Daniel Vetter <daniel@ffwll.ch>, David Airlie
+	<airlied@gmail.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        "Maarten
+ Lankhorst" <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard
+	<mripard@kernel.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        "Sam
+ Ravnborg" <sam@ravnborg.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        <linux-kernel@vger.kernel.org>
+References: <20240216123111.1.I71c103720909790e1ec5a3f5bd96b18ab7b596fa@changeid>
+From: Jessica Zhang <quic_jesszhan@quicinc.com>
+In-Reply-To: <20240216123111.1.I71c103720909790e1ec5a3f5bd96b18ab7b596fa@changeid>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: CF0aSLU5Gwi1AMhVrXMFJ11UtAo1Hh7j
+X-Proofpoint-ORIG-GUID: CF0aSLU5Gwi1AMhVrXMFJ11UtAo1Hh7j
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-16_20,2024-02-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
+ mlxscore=0 bulkscore=0 clxscore=1011 adultscore=0 priorityscore=1501
+ malwarescore=0 mlxlogscore=999 phishscore=0 lowpriorityscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402160167
 
-On Fri, Feb 16, 2024 at 09:26:40PM +0100, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+
+
+On 2/16/2024 12:31 PM, Douglas Anderson wrote:
+> The panel on sc7180-trogdor-wormdingler and
+> sc7180-trogdor-quackingstick hasn't been coming up since commit
+> 9e15123eca79 ("drm/msm/dsi: Stop unconditionally powering up DSI hosts
+> at modeset"). Let's add "prepare_prev_first" as has been done for many
+> other DSI panels.
 > 
-> clang-19 recently got branched from clang-18 and is not yet released.
-> The current version introduces exactly one new warning that I came
-> across in randconfig testing, in the copy_to_user_tmpl() function:
+> Fixes: 9e15123eca79 ("drm/msm/dsi: Stop unconditionally powering up DSI hosts at modeset")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+
+Hi Doug,
+
+Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+
+Thanks,
+
+Jessica Zhang
+
+> ---
+> This of course gets into debates about getting a nicer solution that
+> doesn't involve adding "prepare_prev_first" to every DSI panel out
+> there, maybe building on Dmitry's work [1]. While it would be nice if
+> we could get there, getting this landed is easy to backport to stable
+> trees and gets the panel working again.
 > 
-> include/linux/fortify-string.h:420:4: error: call to '__write_overflow_field' declared with 'warning' attribute: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror,-Wattribute-warning]
->   420 |                         __write_overflow_field(p_size_field, size);
+> [1] https://lore.kernel.org/r/20231016165355.1327217-4-dmitry.baryshkov@linaro.org
 > 
-> I have not yet produced a minimized test case for it, but I have a
-> local workaround, which avoids the memset() here by replacing it with
-> an initializer.
+>   drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c | 2 ++
+>   1 file changed, 2 insertions(+)
 > 
-> The memset is required to avoid leaking stack data to user space
-> and was added in commit 1f86840f8977 ("xfrm_user: fix info leak in
-> copy_to_user_tmpl()"). Simply changing the initializer to set all fields
-> still risks leaking data in the padding between them, which the compiler
-> is free to do here. To work around that problem, explicit padding fields
-> have to get added as well.
-
-Per C11, padding bits are zero initialized if there is an initializer,
-so "= { }" here should be sufficient -- no need to add the struct
-members.
-
-> Since this is a false positive, a better fix would likely be to
-> fix the compiler.
-
-As Nathan has found, this appears to be a loop unrolling bug in Clang.
-https://github.com/ClangBuiltLinux/linux/issues/1985
-
-The shorter fix (in the issue) is to explicitly range-check before
-the loop:
-
-       if (xp->xfrm_nr > XFRM_MAX_DEPTH)
-               return -ENOBUFS;
-
--- 
-Kees Cook
+> diff --git a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
+> index c4c0f08e9202..bc08814954f9 100644
+> --- a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
+> +++ b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
+> @@ -1871,6 +1871,8 @@ static int boe_panel_add(struct boe_panel *boe)
+>   
+>   	gpiod_set_value(boe->enable_gpio, 0);
+>   
+> +	boe->base.prepare_prev_first = true;
+> +
+>   	drm_panel_init(&boe->base, dev, &boe_panel_funcs,
+>   		       DRM_MODE_CONNECTOR_DSI);
+>   	err = of_drm_get_panel_orientation(dev->of_node, &boe->orientation);
+> -- 
+> 2.44.0.rc0.258.g7320e95886-goog
+> 
