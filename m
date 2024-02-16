@@ -1,39 +1,39 @@
 Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9724F13474A;
-	Fri, 16 Feb 2024 15:53:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC0C12F5BD;
+	Fri, 16 Feb 2024 15:53:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708098796; cv=none; b=M/hVgUPkv8iqPcFcGt8cJH8We7bJRegx7mLtWykLSVEuHmrgRYrE6fW6pBKZrw+Xw+m5b2oHCAM53x+0fw549gIdUTgLkRdAthKvSysZTSUnWk8MgdUaeh0U67lqjfF2kXgbjojUzHD24QShjumhCOPARGOPi9El49Fg57XEUZk=
+	t=1708098789; cv=none; b=CRJksWjTonp/SKq04QwxPdCVoEJO/3wcsiiUqCPp6kW1dVUChefNleOt4NlFlutQLVYSxxJczIlS/QqcoFM/6xH+oM86Id7TdAVrTjvOh7kaSUGg7oGpxvivpMq6KWrfWWxeyEyt9u+nebGQ+dWW9MgbIQoxMYKbpdchzEiFkX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708098796; c=relaxed/simple;
-	bh=m63sn46iT9jJ53lmrMnM/h7ln3uAQ84q794woJtdiLw=;
+	s=arc-20240116; t=1708098789; c=relaxed/simple;
+	bh=K4jQePCfifiFIe8J84Jn3MXRGz6izMsLHd8t9SZ4DjM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gSvDf4voNu3No5dUKQQ1kkYUFsheBUuCyL14XxqXgodPhwlxWlxCujoyKJbV44S+PF0qEFdwf/1oYvzesV7oOwAgkGFB5nbQz1LcZREBwhPRIvCY0dWyQRdq2GEKUipxX7+I1VhdllKbHwpz4pHkQSt5lPAjVnWr2/JEvXGxq9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=MXicvnGU; arc=none smtp.client-ip=217.70.183.193
+	 In-Reply-To:To:Cc; b=S/7GlG8oYI0JRd8kMjbEaGrqxj7DvhLBiiba5HHt8ZBSOwv/N8iZwQSEGLWUJmeYEy/MCxNiwdLnEYlWQzMpSwm9iGhRrvFEE+/x0TACCDRNytBjmpLl3aRSlD2RFWQGW1Cupl4Ms1s/wzijny26q5/onvwadbbCBCh10/JcfMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IKuVaC1w; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="MXicvnGU"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8A0E7240011;
-	Fri, 16 Feb 2024 15:53:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IKuVaC1w"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1AC01240013;
+	Fri, 16 Feb 2024 15:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708098790;
+	t=1708098783;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4dyp4ZffrffjhrfM2wbIdinffuC+fV5X30LFDIIkaGE=;
-	b=MXicvnGUU79iYnMIxKJ72GejK6Xq+EowgxAOMZfLIbjxSoP9lScLLMBctwATz2xDf3LBrR
-	cyXi8pyR05U+NNaELfo6tFatzy8obBy+P9o34hmimJ1eqb1vYWyQGo7ZI17iidI1B2i6ND
-	U28hmqMu1N80ojkE30cETqZpOASYExQJy1fTpuMKmEvUqhk1wUVDLGHsbFGBvOt8gbNe2a
-	SLLg0fqZdlfM3P1V0fxOcd4W7RREt+tlzRJGogOn0+fyJNufMBlrNqr0VYto5xX244Fcox
-	hkicLeRoaZIzUFnoeSwdJxPfsrwmK1Aje8pow4cpgeRouUidElyeUrbeooFdsA==
+	bh=RhZgLIkxpe/0N8/EK/Gq/Ga7GfWC8IHhW79eCnnNMpM=;
+	b=IKuVaC1wBDUWfIxM3YNcP5smZvkO7fboKzBLQkkN6OTtoaz4fbmsNki6q4KTs86inu0jUe
+	kd4xt60yvzOd9xUJh8paJku+VTsOMn/Uv0I15dAvi/lSD0bnjxw4MeEYGwTPxAg/ZY2gKJ
+	+W2pp4gVlGKUJ7luQZ3v1eCMUb4m+fqYVFwOFv3FFRCBecUo65t1lLW9zQnAJ23eci1nsH
+	/UT3NUUcKdgzM7ilqDp1MrW5nHyMVTl/u2jpX/6uwwwBZjNPgBFrqs7wDi98ore2Uxy6UZ
+	lx9WztwiOdEl/8KfrO29M/h64rPWu7jS57LAhG88QA4ClJ7fSYTLp9rJivKDbQ==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Fri, 16 Feb 2024 16:52:30 +0100
-Subject: [PATCH RFC net-next v8 12/13] net: ethtool: tsinfo: Add support
- for hwtstamp provider and get/set hwtstamp config
+Date: Fri, 16 Feb 2024 16:52:24 +0100
+Subject: [PATCH RFC net-next v8 06/13] net: Add struct
+ kernel_ethtool_ts_info
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240216-feature_ptp_netnext-v8-12-510f42f444fb@bootlin.com>
+Message-Id: <20240216-feature_ptp_netnext-v8-6-510f42f444fb@bootlin.com>
 References: <20240216-feature_ptp_netnext-v8-0-510f42f444fb@bootlin.com>
 In-Reply-To: <20240216-feature_ptp_netnext-v8-0-510f42f444fb@bootlin.com>
 To: Florian Fainelli <florian.fainelli@broadcom.com>, 
@@ -68,1111 +68,1665 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
 X-Mailer: b4 0.12.4
 X-GND-Sasl: kory.maincent@bootlin.com
 
-Enhance 'get' command to retrieve tsinfo of hwtstamp providers within a
-network topology and read current hwtstamp configuration.
+In prevision to add new UAPI for hwtstamp we will be limited to the struct
+ethtool_ts_info that is currently passed in fixed binary format through the
+ETHTOOL_GET_TS_INFO ethtool ioctl. It would be good if new kernel code
+already started operating on an extensible kernel variant of that
+structure, similar in concept to struct kernel_hwtstamp_config vs struct
+hwtstamp_config.
 
-Introduce support for ETHTOOL_MSG_TSINFO_SET ethtool netlink socket to
-configure hwtstamp of a PHC provider. Note that simultaneous hwtstamp
-isn't supported; configuring a new one disables the previous setting.
-
-Also, add support for a specific dump command to retrieve all hwtstamp
-providers within the network topology, with added functionality for
-filtered dump to target a single interface.
+Since struct ethtool_ts_info is in include/uapi/linux/ethtool.h, here
+we introduce the kernel-only structure in include/linux/ethtool.h.
+The manual copy is then made in the function called by ETHTOOL_GET_TS_INFO.
 
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
+ drivers/net/bonding/bond_main.c                    |  4 ++--
+ drivers/net/can/dev/dev.c                          |  2 +-
+ drivers/net/can/peak_canfd/peak_canfd.c            |  2 +-
+ drivers/net/can/usb/gs_usb.c                       |  2 +-
+ drivers/net/can/usb/peak_usb/pcan_usb_core.c       |  2 +-
+ drivers/net/can/usb/peak_usb/pcan_usb_core.h       |  2 +-
+ drivers/net/dsa/hirschmann/hellcreek_hwtstamp.c    |  2 +-
+ drivers/net/dsa/hirschmann/hellcreek_hwtstamp.h    |  2 +-
+ drivers/net/dsa/microchip/ksz_ptp.c                |  2 +-
+ drivers/net/dsa/microchip/ksz_ptp.h                |  2 +-
+ drivers/net/dsa/mv88e6xxx/hwtstamp.c               |  2 +-
+ drivers/net/dsa/mv88e6xxx/hwtstamp.h               |  4 ++--
+ drivers/net/dsa/ocelot/felix.c                     |  2 +-
+ drivers/net/dsa/sja1105/sja1105_ptp.c              |  2 +-
+ drivers/net/dsa/sja1105/sja1105_ptp.h              |  2 +-
+ drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c       |  2 +-
+ .../net/ethernet/aquantia/atlantic/aq_ethtool.c    |  2 +-
+ .../net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c    |  2 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c  |  2 +-
+ drivers/net/ethernet/broadcom/tg3.c                |  2 +-
+ drivers/net/ethernet/cadence/macb.h                |  2 +-
+ drivers/net/ethernet/cadence/macb_main.c           |  4 ++--
+ drivers/net/ethernet/cavium/liquidio/lio_ethtool.c |  2 +-
+ .../net/ethernet/cavium/thunder/nicvf_ethtool.c    |  2 +-
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c |  2 +-
+ drivers/net/ethernet/cisco/enic/enic_ethtool.c     |  2 +-
+ drivers/net/ethernet/engleder/tsnep_ethtool.c      |  2 +-
+ drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c |  2 +-
+ .../net/ethernet/freescale/dpaa2/dpaa2-ethtool.c   |  2 +-
+ .../net/ethernet/freescale/enetc/enetc_ethtool.c   |  2 +-
+ drivers/net/ethernet/freescale/fec_main.c          |  2 +-
+ drivers/net/ethernet/freescale/gianfar_ethtool.c   |  2 +-
+ .../net/ethernet/fungible/funeth/funeth_ethtool.c  |  2 +-
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h        |  2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c |  2 +-
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.c |  2 +-
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.h |  2 +-
+ drivers/net/ethernet/intel/e1000e/ethtool.c        |  2 +-
+ drivers/net/ethernet/intel/i40e/i40e_ethtool.c     |  2 +-
+ drivers/net/ethernet/intel/ice/ice_ethtool.c       |  2 +-
+ drivers/net/ethernet/intel/igb/igb_ethtool.c       |  2 +-
+ drivers/net/ethernet/intel/igc/igc_ethtool.c       |  2 +-
+ drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c   |  2 +-
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c    |  2 +-
+ .../ethernet/marvell/octeontx2/nic/otx2_ethtool.c  |  2 +-
+ drivers/net/ethernet/mellanox/mlx4/en_ethtool.c    |  2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/en.h       |  2 +-
+ .../net/ethernet/mellanox/mlx5/core/en_ethtool.c   |  4 ++--
+ .../ethernet/mellanox/mlx5/core/ipoib/ethtool.c    |  2 +-
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.h     |  2 +-
+ .../net/ethernet/mellanox/mlxsw/spectrum_ethtool.c |  2 +-
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_ptp.c |  4 ++--
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_ptp.h | 10 ++++-----
+ drivers/net/ethernet/microchip/lan743x_ethtool.c   |  2 +-
+ .../ethernet/microchip/lan966x/lan966x_ethtool.c   |  2 +-
+ .../net/ethernet/microchip/sparx5/sparx5_ethtool.c |  2 +-
+ drivers/net/ethernet/mscc/ocelot_net.c             |  2 +-
+ drivers/net/ethernet/mscc/ocelot_ptp.c             |  2 +-
+ .../net/ethernet/pensando/ionic/ionic_ethtool.c    |  2 +-
+ drivers/net/ethernet/qlogic/qede/qede_ethtool.c    |  2 +-
+ drivers/net/ethernet/qlogic/qede/qede_ptp.c        |  2 +-
+ drivers/net/ethernet/qlogic/qede/qede_ptp.h        |  2 +-
+ drivers/net/ethernet/renesas/ravb_main.c           |  2 +-
+ drivers/net/ethernet/renesas/rswitch.c             |  2 +-
+ drivers/net/ethernet/sfc/ethtool.c                 |  2 +-
+ drivers/net/ethernet/sfc/falcon/nic.h              |  2 +-
+ drivers/net/ethernet/sfc/ptp.c                     |  2 +-
+ drivers/net/ethernet/sfc/ptp.h                     |  5 +++--
+ drivers/net/ethernet/sfc/siena/ethtool.c           |  2 +-
+ drivers/net/ethernet/sfc/siena/ptp.c               |  2 +-
+ drivers/net/ethernet/sfc/siena/ptp.h               |  4 ++--
+ .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |  2 +-
+ drivers/net/ethernet/ti/am65-cpsw-ethtool.c        |  2 +-
+ drivers/net/ethernet/ti/cpsw_ethtool.c             |  4 ++--
+ drivers/net/ethernet/ti/cpsw_priv.h                |  2 +-
+ drivers/net/ethernet/ti/icssg/icssg_ethtool.c      |  2 +-
+ drivers/net/ethernet/ti/netcp_ethss.c              |  4 ++--
+ drivers/net/ethernet/xscale/ixp4xx_eth.c           |  2 +-
+ drivers/net/macvlan.c                              |  2 +-
+ drivers/net/netdevsim/ethtool.c                    |  2 +-
+ drivers/net/phy/bcm-phy-ptp.c                      |  2 +-
+ drivers/net/phy/dp83640.c                          |  2 +-
+ drivers/net/phy/marvell_ptp.c                      |  2 +-
+ drivers/net/phy/micrel.c                           |  4 ++--
+ drivers/net/phy/mscc/mscc_ptp.c                    |  2 +-
+ drivers/net/phy/nxp-c45-tja11xx.c                  |  2 +-
+ drivers/ptp/ptp_ines.c                             |  2 +-
+ drivers/s390/net/qeth_ethtool.c                    |  2 +-
+ include/linux/can/dev.h                            |  2 +-
+ include/linux/ethtool.h                            | 25 +++++++++++++++++++---
+ include/linux/mii_timestamper.h                    |  2 +-
+ include/linux/phy.h                                |  2 +-
+ include/net/dsa.h                                  |  2 +-
+ include/soc/mscc/ocelot.h                          |  2 +-
+ net/8021q/vlan_dev.c                               |  2 +-
+ net/dsa/user.c                                     |  2 +-
+ net/ethtool/common.c                               |  6 +++---
+ net/ethtool/common.h                               |  2 +-
+ net/ethtool/ioctl.c                                | 12 +++++++++--
+ net/ethtool/tsinfo.c                               |  6 +++---
+ net/sched/sch_taprio.c                             |  2 +-
+ 101 files changed, 150 insertions(+), 122 deletions(-)
 
-Pointer attached_dev is used to know if the phy is on the net topology.
-This might not be enough and might need Maxime Chevallier link topology
-patch series:
-https://lore.kernel.org/netdev/20240213150431.1796171-1-maxime.chevallier@bootlin.com/
-
-Change in v8:
-- New patch
----
- drivers/ptp/ptp_clock.c              |  45 +++
- include/linux/ethtool.h              |   4 +
- include/linux/netdevice.h            |   2 +
- include/linux/ptp_clock_kernel.h     |  32 ++
- include/uapi/linux/ethtool_netlink.h |  12 +
- include/uapi/linux/net_tstamp.h      |   3 +-
- net/core/dev.c                       |  23 ++
- net/ethtool/common.c                 |  31 ++
- net/ethtool/common.h                 |   3 +
- net/ethtool/netlink.c                |  14 +-
- net/ethtool/netlink.h                |   6 +-
- net/ethtool/tsinfo.c                 | 604 +++++++++++++++++++++++++++++++++--
- 12 files changed, 756 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
-index d7cd7e01990e..ccb81d49d2eb 100644
---- a/drivers/ptp/ptp_clock.c
-+++ b/drivers/ptp/ptp_clock.c
-@@ -575,6 +575,51 @@ struct ptp_clock *ptp_clock_get_by_index(int index)
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index cb67ece47328..1a5405879bbd 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -5751,10 +5751,10 @@ static void bond_ethtool_get_drvinfo(struct net_device *bond_dev,
  }
- EXPORT_SYMBOL(ptp_clock_get_by_index);
  
-+struct ptp_clock *netdev_ptp_clock_find(struct net_device *dev,
-+					unsigned long *indexp)
-+{
-+	struct ptp_clock *ptp;
-+	unsigned long index;
-+
-+	xa_for_each_start(&ptp_clocks_map, index, ptp, *indexp) {
-+		if ((ptp->phc_source == HWTSTAMP_SOURCE_NETDEV &&
-+		     ptp->netdev == dev) ||
-+		    (ptp->phc_source == HWTSTAMP_SOURCE_PHYLIB &&
-+		     ptp->phydev->attached_dev == dev)) {
-+			*indexp = index;
-+			return ptp;
-+		}
-+	}
-+
-+	return NULL;
-+};
-+EXPORT_SYMBOL(netdev_ptp_clock_find);
-+
-+bool netdev_support_hwtstamp(struct net_device *dev,
-+			     struct hwtstamp_provider *hwtst)
-+{
-+	struct ptp_clock *tmp_ptp;
-+	unsigned long index = 0;
-+
-+	netdev_for_each_ptp_clock_start(dev, index, tmp_ptp, 0) {
-+		if (tmp_ptp != hwtst->ptp)
-+			continue;
-+
-+		if (ptp_clock_from_phylib(hwtst->ptp) &&
-+		    hwtst->qualifier == HWTSTAMP_PROVIDER_QUALIFIER_PRECISE)
-+			return true;
-+
-+		if (ptp_clock_from_netdev(hwtst->ptp) &&
-+		    dev_support_hwtstamp_qualifier(dev, hwtst->qualifier))
-+			return true;
-+
-+		return false;
-+	}
-+
-+	return false;
-+}
-+EXPORT_SYMBOL(netdev_support_hwtstamp);
-+
- /* module operations */
- 
- static void __exit ptp_exit(void)
-diff --git a/include/linux/ethtool.h b/include/linux/ethtool.h
-index f74190a8d9ee..5a00873bef48 100644
---- a/include/linux/ethtool.h
-+++ b/include/linux/ethtool.h
-@@ -650,6 +650,7 @@ struct ethtool_rxfh_param {
-  * @cmd: command number = %ETHTOOL_GET_TS_INFO
-  * @so_timestamping: bit mask of the sum of the supported SO_TIMESTAMPING flags
-  * @phc_index: device index of the associated PHC, or -1 if there is none
-+ * @phc_qualifier: qualifier of the associated PHC
-  * @tx_types: bit mask of the supported hwtstamp_tx_types enumeration values
-  * @rx_filters: bit mask of the supported hwtstamp_rx_filters enumeration values
+ static int bond_ethtool_get_ts_info(struct net_device *bond_dev,
+-				    struct ethtool_ts_info *info)
++				    struct kernel_ethtool_ts_info *info)
+ {
+ 	struct bonding *bond = netdev_priv(bond_dev);
+-	struct ethtool_ts_info ts_info;
++	struct kernel_ethtool_ts_info ts_info;
+ 	struct net_device *real_dev;
+ 	bool sw_tx_support = false;
+ 	struct list_head *iter;
+diff --git a/drivers/net/can/dev/dev.c b/drivers/net/can/dev/dev.c
+index 3a3be5cdfc1f..0e120873bbc8 100644
+--- a/drivers/net/can/dev/dev.c
++++ b/drivers/net/can/dev/dev.c
+@@ -376,7 +376,7 @@ EXPORT_SYMBOL(can_eth_ioctl_hwts);
+  * supporting hardware timestamps
   */
-@@ -657,6 +658,7 @@ struct kernel_ethtool_ts_info {
- 	u32 cmd;
- 	u32 so_timestamping;
- 	int phc_index;
-+	enum hwtstamp_provider_qualifier phc_qualifier;
- 	enum hwtstamp_tx_types tx_types;
- 	enum hwtstamp_rx_filters rx_filters;
- };
-@@ -671,6 +673,7 @@ struct kernel_ethtool_ts_info {
-  *	RSS.
-  * @supported_coalesce_params: supported types of interrupt coalescing.
-  * @supported_ring_params: supported ring params.
-+ * @supported_hwtstamp_qualifier: bitfield of supported hwtstamp qualifier.
-  * @get_drvinfo: Report driver/device information. Modern drivers no
-  *	longer have to implement this callback. Most fields are
-  *	correctly filled in by the core using system information, or
-@@ -851,6 +854,7 @@ struct ethtool_ops {
- 	u32	cap_rss_sym_xor_supported:1;
- 	u32	supported_coalesce_params;
- 	u32	supported_ring_params;
-+	u32	supported_hwtstamp_qualifiers;
- 	void	(*get_drvinfo)(struct net_device *, struct ethtool_drvinfo *);
- 	int	(*get_regs_len)(struct net_device *);
- 	void	(*get_regs)(struct net_device *, struct ethtool_regs *, void *);
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index 583a18ed83d9..079c960dc97c 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -4013,6 +4013,8 @@ int dev_set_hwtstamp_phylib(struct net_device *dev,
- 			    struct netlink_ext_ack *extack);
- int dev_get_hwtstamp_phylib(struct net_device *dev,
- 			    struct kernel_hwtstamp_config *cfg);
-+bool dev_support_hwtstamp_qualifier(struct net_device *dev,
-+				    enum hwtstamp_provider_qualifier qualifier);
- int dev_ethtool(struct net *net, struct ifreq *ifr, void __user *userdata);
- unsigned int dev_get_flags(const struct net_device *);
- int __dev_change_flags(struct net_device *dev, unsigned int flags,
-diff --git a/include/linux/ptp_clock_kernel.h b/include/linux/ptp_clock_kernel.h
-index 174a0b98632b..142f755d507b 100644
---- a/include/linux/ptp_clock_kernel.h
-+++ b/include/linux/ptp_clock_kernel.h
-@@ -406,6 +406,32 @@ struct phy_device *ptp_clock_phydev(struct ptp_clock *ptp);
- 
- struct ptp_clock *ptp_clock_get_by_index(int index);
- 
-+/**
-+ * netdev_ptp_clock_find() - obtain the next PTP clock in the netdev
-+ *			     topology
-+ *
-+ * @dev:    Pointer of the net device
-+ * @index:  Pointer of ptp clock index start point
-+ */
-+
-+struct ptp_clock *netdev_ptp_clock_find(struct net_device *dev,
-+					unsigned long *indexp);
-+
-+#define netdev_for_each_ptp_clock_start(dev, index, entry, start) \
-+	for (index = start, entry = netdev_ptp_clock_find(dev, &index); \
-+	     entry; index++, entry = netdev_ptp_clock_find(dev, &index))
-+
-+/**
-+ * netdev_support_hwtstamp() - return true if the hwtstamp belong to the
-+ *			       netdev topology
-+ *
-+ * @dev:    Pointer of the net device
-+ * @hwtst:  Pointer of the hwtstamp provider
-+ */
-+
-+bool netdev_support_hwtstamp(struct net_device *dev,
-+			     struct hwtstamp_provider *hwtst);
-+
- /**
-  * ptp_find_pin() - obtain the pin index of a given auxiliary function
-  *
-@@ -489,6 +515,12 @@ static inline struct phy_device *ptp_clock_phydev(struct ptp_clock *ptp);
- { return NULL; }
- static inline struct ptp_clock *ptp_clock_get_by_index(int index);
- { return NULL; }
-+static inline struct ptp_clock *netdev_ptp_clock_find(struct net_device *dev,
-+						      unsigned long *indexp)
-+{ return NULL; }
-+static inline bool netdev_support_hwtstamp(struct net_device *dev,
-+					   struct hwtstamp_provider *hwtst);
-+{ return false; }
- static inline int ptp_find_pin(struct ptp_clock *ptp,
- 			       enum ptp_pin_function func, unsigned int chan)
- { return -1; }
-diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
-index 3f89074aa06c..07a33522532b 100644
---- a/include/uapi/linux/ethtool_netlink.h
-+++ b/include/uapi/linux/ethtool_netlink.h
-@@ -57,6 +57,7 @@ enum {
- 	ETHTOOL_MSG_PLCA_GET_STATUS,
- 	ETHTOOL_MSG_MM_GET,
- 	ETHTOOL_MSG_MM_SET,
-+	ETHTOOL_MSG_TSINFO_SET,
- 
- 	/* add new constants above here */
- 	__ETHTOOL_MSG_USER_CNT,
-@@ -470,6 +471,15 @@ enum {
+ int can_ethtool_op_get_ts_info_hwts(struct net_device *dev,
+-				    struct ethtool_ts_info *info)
++				    struct kernel_ethtool_ts_info *info)
+ {
+ 	info->so_timestamping =
+ 		SOF_TIMESTAMPING_TX_SOFTWARE |
+diff --git a/drivers/net/can/peak_canfd/peak_canfd.c b/drivers/net/can/peak_canfd/peak_canfd.c
+index 31c9c127e24b..b50005397463 100644
+--- a/drivers/net/can/peak_canfd/peak_canfd.c
++++ b/drivers/net/can/peak_canfd/peak_canfd.c
+@@ -777,7 +777,7 @@ static const struct net_device_ops peak_canfd_netdev_ops = {
  };
  
- /* TSINFO */
-+enum {
-+	ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_UNSPEC,
-+	ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_INDEX,		/* u32 */
-+	ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_QUALIFIER,		/* u32 */
-+
-+	__ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_CNT,
-+	ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_MAX = (__ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_CNT - 1)
-+};
-+
- 
- enum {
- 	ETHTOOL_A_TSINFO_UNSPEC,
-@@ -478,6 +488,8 @@ enum {
- 	ETHTOOL_A_TSINFO_TX_TYPES,			/* bitset */
- 	ETHTOOL_A_TSINFO_RX_FILTERS,			/* bitset */
- 	ETHTOOL_A_TSINFO_PHC_INDEX,			/* u32 */
-+	ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_NEST,	/* nest - *_TSINFO_HWTSTAMP_PROVIDER_* */
-+	ETHTOOL_A_TSINFO_HWTSTAMP_FLAGS,		/* u32 */
- 
- 	/* add new constants above here */
- 	__ETHTOOL_A_TSINFO_CNT,
-diff --git a/include/uapi/linux/net_tstamp.h b/include/uapi/linux/net_tstamp.h
-index a9ed48ee8fc7..49675a36a0b2 100644
---- a/include/uapi/linux/net_tstamp.h
-+++ b/include/uapi/linux/net_tstamp.h
-@@ -43,8 +43,9 @@ enum {
- 	SOF_TIMESTAMPING_OPT_TX_SWHW = (1<<14),
- 	SOF_TIMESTAMPING_BIND_PHC = (1 << 15),
- 	SOF_TIMESTAMPING_OPT_ID_TCP = (1 << 16),
-+	SOF_TIMESTAMPING_GHWTSTAMP = (1 << 17),
- 
--	SOF_TIMESTAMPING_LAST = SOF_TIMESTAMPING_OPT_ID_TCP,
-+	SOF_TIMESTAMPING_LAST = SOF_TIMESTAMPING_GHWTSTAMP,
- 	SOF_TIMESTAMPING_MASK = (SOF_TIMESTAMPING_LAST - 1) |
- 				 SOF_TIMESTAMPING_LAST
- };
-diff --git a/net/core/dev.c b/net/core/dev.c
-index d8dd293a7a27..39a7fac3f79c 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -10800,6 +10800,29 @@ void netdev_set_default_ethtool_ops(struct net_device *dev,
+ static int peak_get_ts_info(struct net_device *dev,
+-			    struct ethtool_ts_info *info)
++			    struct kernel_ethtool_ts_info *info)
+ {
+ 	info->so_timestamping =
+ 		SOF_TIMESTAMPING_TX_SOFTWARE |
+diff --git a/drivers/net/can/usb/gs_usb.c b/drivers/net/can/usb/gs_usb.c
+index 95b0fdb602c8..acfa51643120 100644
+--- a/drivers/net/can/usb/gs_usb.c
++++ b/drivers/net/can/usb/gs_usb.c
+@@ -1145,7 +1145,7 @@ static int gs_usb_set_phys_id(struct net_device *netdev,
  }
- EXPORT_SYMBOL_GPL(netdev_set_default_ethtool_ops);
  
-+bool
-+dev_support_hwtstamp_qualifier(struct net_device *dev,
-+			       enum hwtstamp_provider_qualifier qualifier)
-+{
-+	const struct ethtool_ops *ops = dev->ethtool_ops;
-+
-+	if (!ops)
-+		return false;
-+
-+	/* Return true with precise qualifier and with NIC without
-+	 * qualifier description to not break the old behavior.
-+	 */
-+	if (!ops->supported_hwtstamp_qualifiers &&
-+	    qualifier == HWTSTAMP_PROVIDER_QUALIFIER_PRECISE)
-+		return true;
-+
-+	if (ops->supported_hwtstamp_qualifiers & BIT(qualifier))
-+		return true;
-+
-+	return false;
-+}
-+EXPORT_SYMBOL_GPL(dev_support_hwtstamp_qualifier);
-+
- /**
-  * netdev_sw_irq_coalesce_default_on() - enable SW IRQ coalescing by default
-  * @dev: netdev to enable the IRQ coalescing on
-diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-index b3f45c307301..37071929128a 100644
---- a/net/ethtool/common.c
-+++ b/net/ethtool/common.c
-@@ -426,6 +426,7 @@ const char sof_timestamping_names[][ETH_GSTRING_LEN] = {
- 	[const_ilog2(SOF_TIMESTAMPING_OPT_TX_SWHW)]  = "option-tx-swhw",
- 	[const_ilog2(SOF_TIMESTAMPING_BIND_PHC)]     = "bind-phc",
- 	[const_ilog2(SOF_TIMESTAMPING_OPT_ID_TCP)]   = "option-id-tcp",
-+	[const_ilog2(SOF_TIMESTAMPING_GHWTSTAMP)]    = "get-hwtstamp",
- };
- static_assert(ARRAY_SIZE(sof_timestamping_names) == __SOF_TIMESTAMPING_CNT);
+ static int gs_usb_get_ts_info(struct net_device *netdev,
+-			      struct ethtool_ts_info *info)
++			      struct kernel_ethtool_ts_info *info)
+ {
+ 	struct gs_can *dev = netdev_priv(netdev);
  
-@@ -629,11 +630,41 @@ int ethtool_check_ops(const struct ethtool_ops *ops)
+diff --git a/drivers/net/can/usb/peak_usb/pcan_usb_core.c b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
+index 1efa39e134f4..3d68fef46ded 100644
+--- a/drivers/net/can/usb/peak_usb/pcan_usb_core.c
++++ b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
+@@ -897,7 +897,7 @@ int peak_usb_set_eeprom(struct net_device *netdev,
  	return 0;
  }
  
-+int ethtool_get_ts_info_by_phc(struct net_device *dev,
-+			       struct kernel_ethtool_ts_info *info,
-+			       struct hwtstamp_provider *hwtstamp)
-+{
-+	const struct ethtool_ops *ops = dev->ethtool_ops;
-+
-+	memset(info, 0, sizeof(*info));
-+	info->cmd = ETHTOOL_GET_TS_INFO;
-+	info->phc_qualifier = hwtstamp->qualifier;
-+
-+	if (!netdev_support_hwtstamp(dev, hwtstamp))
-+		return -ENODEV;
-+
-+	if (ptp_clock_from_phylib(hwtstamp->ptp) &&
-+	    phy_has_tsinfo(ptp_clock_phydev(hwtstamp->ptp)))
-+		return phy_ts_info(ptp_clock_phydev(hwtstamp->ptp), info);
-+
-+	if (ptp_clock_from_netdev(hwtstamp->ptp) && ops->get_ts_info)
-+		return ops->get_ts_info(dev, info);
-+
-+	info->so_timestamping = SOF_TIMESTAMPING_RX_SOFTWARE |
-+				SOF_TIMESTAMPING_SOFTWARE;
-+	info->phc_index = -1;
-+
-+	return 0;
-+}
-+
- int __ethtool_get_ts_info(struct net_device *dev, struct kernel_ethtool_ts_info *info)
+-int pcan_get_ts_info(struct net_device *dev, struct ethtool_ts_info *info)
++int pcan_get_ts_info(struct net_device *dev, struct kernel_ethtool_ts_info *info)
  {
- 	const struct ethtool_ops *ops = dev->ethtool_ops;
- 	struct phy_device *phydev = dev->phydev;
+ 	info->so_timestamping =
+ 		SOF_TIMESTAMPING_TX_SOFTWARE |
+diff --git a/drivers/net/can/usb/peak_usb/pcan_usb_core.h b/drivers/net/can/usb/peak_usb/pcan_usb_core.h
+index f6cf84bb718f..abab00930b9d 100644
+--- a/drivers/net/can/usb/peak_usb/pcan_usb_core.h
++++ b/drivers/net/can/usb/peak_usb/pcan_usb_core.h
+@@ -145,7 +145,7 @@ void peak_usb_get_ts_time(struct peak_time_ref *time_ref, u32 ts, ktime_t *tv);
+ int peak_usb_netif_rx_64(struct sk_buff *skb, u32 ts_low, u32 ts_high);
+ void peak_usb_async_complete(struct urb *urb);
+ void peak_usb_restart_complete(struct peak_usb_device *dev);
+-int pcan_get_ts_info(struct net_device *dev, struct ethtool_ts_info *info);
++int pcan_get_ts_info(struct net_device *dev, struct kernel_ethtool_ts_info *info);
  
-+	if (dev->hwtstamp.ptp)
-+		return ethtool_get_ts_info_by_phc(dev, info, &dev->hwtstamp);
-+
- 	memset(info, 0, sizeof(*info));
- 	info->cmd = ETHTOOL_GET_TS_INFO;
+ /* common 32-bit CAN channel ID ethtool management */
+ int peak_usb_get_eeprom_len(struct net_device *netdev);
+diff --git a/drivers/net/dsa/hirschmann/hellcreek_hwtstamp.c b/drivers/net/dsa/hirschmann/hellcreek_hwtstamp.c
+index bd7aacc71a63..ca2500aba96f 100644
+--- a/drivers/net/dsa/hirschmann/hellcreek_hwtstamp.c
++++ b/drivers/net/dsa/hirschmann/hellcreek_hwtstamp.c
+@@ -16,7 +16,7 @@
+ #include "hellcreek_ptp.h"
  
-diff --git a/net/ethtool/common.h b/net/ethtool/common.h
-index 9de3d6255818..99575a403d0d 100644
---- a/net/ethtool/common.h
-+++ b/net/ethtool/common.h
-@@ -45,6 +45,9 @@ bool convert_legacy_settings_to_link_ksettings(
- int ethtool_get_max_rxfh_channel(struct net_device *dev, u32 *max);
- int ethtool_get_max_rxnfc_channel(struct net_device *dev, u64 *max);
- int __ethtool_get_ts_info(struct net_device *dev, struct kernel_ethtool_ts_info *info);
-+int ethtool_get_ts_info_by_phc(struct net_device *dev,
-+			       struct kernel_ethtool_ts_info *info,
-+			       struct hwtstamp_provider *hwtst);
- 
- extern const struct ethtool_phy_ops *ethtool_phy_ops;
- extern const struct ethtool_pse_ops *ethtool_pse_ops;
-diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
-index bd04f28d5cf4..4a4dc1765d10 100644
---- a/net/ethtool/netlink.c
-+++ b/net/ethtool/netlink.c
-@@ -306,6 +306,7 @@ ethnl_default_requests[__ETHTOOL_MSG_USER_CNT] = {
- 	[ETHTOOL_MSG_PLCA_GET_STATUS]	= &ethnl_plca_status_request_ops,
- 	[ETHTOOL_MSG_MM_GET]		= &ethnl_mm_request_ops,
- 	[ETHTOOL_MSG_MM_SET]		= &ethnl_mm_request_ops,
-+	[ETHTOOL_MSG_TSINFO_SET]	= &ethnl_tsinfo_request_ops,
- };
- 
- static struct ethnl_dump_ctx *ethnl_dump_context(struct netlink_callback *cb)
-@@ -974,9 +975,9 @@ static const struct genl_ops ethtool_genl_ops[] = {
- 	{
- 		.cmd	= ETHTOOL_MSG_TSINFO_GET,
- 		.doit	= ethnl_default_doit,
--		.start	= ethnl_default_start,
--		.dumpit	= ethnl_default_dumpit,
--		.done	= ethnl_default_done,
-+		.start	= ethnl_tsinfo_start,
-+		.dumpit	= ethnl_tsinfo_dumpit,
-+		.done	= ethnl_tsinfo_done,
- 		.policy = ethnl_tsinfo_get_policy,
- 		.maxattr = ARRAY_SIZE(ethnl_tsinfo_get_policy) - 1,
- 	},
-@@ -1125,6 +1126,13 @@ static const struct genl_ops ethtool_genl_ops[] = {
- 		.policy = ethnl_mm_set_policy,
- 		.maxattr = ARRAY_SIZE(ethnl_mm_set_policy) - 1,
- 	},
-+	{
-+		.cmd	= ETHTOOL_MSG_TSINFO_SET,
-+		.flags	= GENL_UNS_ADMIN_PERM,
-+		.doit	= ethnl_default_set_doit,
-+		.policy = ethnl_tsinfo_set_policy,
-+		.maxattr = ARRAY_SIZE(ethnl_tsinfo_set_policy) - 1,
-+	},
- };
- 
- static const struct genl_multicast_group ethtool_nl_mcgrps[] = {
-diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
-index 9a333a8d04c1..8a6f767ab6db 100644
---- a/net/ethtool/netlink.h
-+++ b/net/ethtool/netlink.h
-@@ -422,7 +422,7 @@ extern const struct nla_policy ethnl_pause_get_policy[ETHTOOL_A_PAUSE_STATS_SRC
- extern const struct nla_policy ethnl_pause_set_policy[ETHTOOL_A_PAUSE_TX + 1];
- extern const struct nla_policy ethnl_eee_get_policy[ETHTOOL_A_EEE_HEADER + 1];
- extern const struct nla_policy ethnl_eee_set_policy[ETHTOOL_A_EEE_TX_LPI_TIMER + 1];
--extern const struct nla_policy ethnl_tsinfo_get_policy[ETHTOOL_A_TSINFO_HEADER + 1];
-+extern const struct nla_policy ethnl_tsinfo_get_policy[ETHTOOL_A_TSINFO_MAX + 1];
- extern const struct nla_policy ethnl_cable_test_act_policy[ETHTOOL_A_CABLE_TEST_HEADER + 1];
- extern const struct nla_policy ethnl_cable_test_tdr_act_policy[ETHTOOL_A_CABLE_TEST_TDR_CFG + 1];
- extern const struct nla_policy ethnl_tunnel_info_get_policy[ETHTOOL_A_TUNNEL_INFO_HEADER + 1];
-@@ -441,6 +441,7 @@ extern const struct nla_policy ethnl_plca_set_cfg_policy[ETHTOOL_A_PLCA_MAX + 1]
- extern const struct nla_policy ethnl_plca_get_status_policy[ETHTOOL_A_PLCA_HEADER + 1];
- extern const struct nla_policy ethnl_mm_get_policy[ETHTOOL_A_MM_HEADER + 1];
- extern const struct nla_policy ethnl_mm_set_policy[ETHTOOL_A_MM_MAX + 1];
-+extern const struct nla_policy ethnl_tsinfo_set_policy[ETHTOOL_A_TSINFO_MAX + 1];
- 
- int ethnl_set_features(struct sk_buff *skb, struct genl_info *info);
- int ethnl_act_cable_test(struct sk_buff *skb, struct genl_info *info);
-@@ -448,6 +449,9 @@ int ethnl_act_cable_test_tdr(struct sk_buff *skb, struct genl_info *info);
- int ethnl_tunnel_info_doit(struct sk_buff *skb, struct genl_info *info);
- int ethnl_tunnel_info_start(struct netlink_callback *cb);
- int ethnl_tunnel_info_dumpit(struct sk_buff *skb, struct netlink_callback *cb);
-+int ethnl_tsinfo_start(struct netlink_callback *cb);
-+int ethnl_tsinfo_dumpit(struct sk_buff *skb, struct netlink_callback *cb);
-+int ethnl_tsinfo_done(struct netlink_callback *cb);
- 
- extern const char stats_std_names[__ETHTOOL_STATS_CNT][ETH_GSTRING_LEN];
- extern const char stats_eth_phy_names[__ETHTOOL_A_STATS_ETH_PHY_CNT][ETH_GSTRING_LEN];
-diff --git a/net/ethtool/tsinfo.c b/net/ethtool/tsinfo.c
-index 608d270018cb..a898371745a0 100644
---- a/net/ethtool/tsinfo.c
-+++ b/net/ethtool/tsinfo.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- 
- #include <linux/net_tstamp.h>
-+#include <linux/ptp_clock_kernel.h>
- 
- #include "netlink.h"
- #include "common.h"
-@@ -8,50 +9,192 @@
- 
- struct tsinfo_req_info {
- 	struct ethnl_req_info		base;
-+	struct {
-+		int index;
-+		u32 qualifier;
-+	} hwtst;
-+	bool				get_hwtstamp;
- };
- 
- struct tsinfo_reply_data {
- 	struct ethnl_reply_data		base;
--	struct kernel_ethtool_ts_info		ts_info;
-+	union {
-+		struct kernel_ethtool_ts_info		ts_info;
-+		struct {
-+			u32 tx_type;
-+			u32 rx_filter;
-+			u32 flags;
-+		} hwtst_config;
-+	};
- };
- 
-+#define TSINFO_REQINFO(__req_base) \
-+	container_of(__req_base, struct tsinfo_req_info, base)
-+
- #define TSINFO_REPDATA(__reply_base) \
- 	container_of(__reply_base, struct tsinfo_reply_data, base)
- 
--const struct nla_policy ethnl_tsinfo_get_policy[] = {
-+const struct nla_policy
-+ethnl_tsinfo_hwtstamp_provider_policy[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_MAX + 1] = {
-+	[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_INDEX] = { .type = NLA_U32 },
-+	[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_QUALIFIER] = { .type = NLA_U32 },
-+};
-+
-+const struct nla_policy ethnl_tsinfo_get_policy[ETHTOOL_A_TSINFO_MAX + 1] = {
- 	[ETHTOOL_A_TSINFO_HEADER]		=
- 		NLA_POLICY_NESTED(ethnl_header_policy),
-+	[ETHTOOL_A_TSINFO_TIMESTAMPING] = { .type = NLA_NESTED },
-+	[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_NEST] = { .type = NLA_NESTED },
- };
- 
-+static int
-+tsinfo_parse_request(struct ethnl_req_info *req_base, struct nlattr **tb,
-+		     struct netlink_ext_ack *extack)
-+{
-+	struct nlattr *hwtst_tb[ARRAY_SIZE(ethnl_tsinfo_hwtstamp_provider_policy)];
-+	struct tsinfo_req_info *req = TSINFO_REQINFO(req_base);
-+	unsigned long val = 0, mask = 0;
-+	int ret;
-+
-+	req->hwtst.index = -1;
-+
-+	if (tb[ETHTOOL_A_TSINFO_TIMESTAMPING]) {
-+		ret = ethnl_parse_bitset(&val, &mask, __SOF_TIMESTAMPING_CNT,
-+					 tb[ETHTOOL_A_TSINFO_TIMESTAMPING],
-+					 sof_timestamping_names, extack);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (val & SOF_TIMESTAMPING_GHWTSTAMP) {
-+			/* We support only the get of the current hwtstamp config
-+			 * for now.
-+			 */
-+			if (tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_NEST])
-+				return -EOPNOTSUPP;
-+
-+			req->get_hwtstamp = true;
-+			return 0;
-+		}
-+	}
-+
-+	if (!tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_NEST])
-+		return 0;
-+
-+	ret = nla_parse_nested(hwtst_tb,
-+			       ARRAY_SIZE(ethnl_tsinfo_hwtstamp_provider_policy) - 1,
-+			       tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_NEST],
-+			       ethnl_tsinfo_hwtstamp_provider_policy, extack);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (!hwtst_tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_INDEX] ||
-+	    !hwtst_tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_QUALIFIER])
-+		return -EINVAL;
-+
-+	ret = nla_get_u32(hwtst_tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_INDEX]);
-+	if (ret < 0)
-+		return -EINVAL;
-+	req->hwtst.index = ret;
-+
-+	ret = nla_get_u32(hwtst_tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_QUALIFIER]);
-+	if (ret < 0 || HWTSTAMP_PROVIDER_QUALIFIER_CNT <= ret)
-+		return -EINVAL;
-+	req->hwtst.qualifier = ret;
-+
-+	return 0;
-+}
-+
- static int tsinfo_prepare_data(const struct ethnl_req_info *req_base,
- 			       struct ethnl_reply_data *reply_base,
- 			       const struct genl_info *info)
+ int hellcreek_get_ts_info(struct dsa_switch *ds, int port,
+-			  struct ethtool_ts_info *info)
++			  struct kernel_ethtool_ts_info *info)
  {
- 	struct tsinfo_reply_data *data = TSINFO_REPDATA(reply_base);
-+	struct tsinfo_req_info *req = TSINFO_REQINFO(req_base);
- 	struct net_device *dev = reply_base->dev;
- 	int ret;
+ 	struct hellcreek *hellcreek = ds->priv;
  
- 	ret = ethnl_ops_begin(dev);
- 	if (ret < 0)
- 		return ret;
--	ret = __ethtool_get_ts_info(dev, &data->ts_info);
-+
-+	if (!netif_device_present(dev)) {
-+		ret = -ENODEV;
-+		goto out;
-+	}
-+
-+	if (req->get_hwtstamp) {
-+		struct kernel_hwtstamp_config cfg = {};
-+
-+		if (!dev->netdev_ops->ndo_hwtstamp_get) {
-+			ret = -EOPNOTSUPP;
-+			goto out;
-+		}
-+
-+		ret = dev_get_hwtstamp_phylib(dev, &cfg);
-+		data->hwtst_config.tx_type = BIT(cfg.tx_type);
-+		data->hwtst_config.rx_filter = BIT(cfg.rx_filter);
-+		data->hwtst_config.flags = BIT(cfg.flags);
-+		goto out;
-+	}
-+
-+	if (req->hwtst.index != -1) {
-+		struct hwtstamp_provider hwtstamp;
-+
-+		hwtstamp.ptp = ptp_clock_get_by_index(req->hwtst.index);
-+		if (!hwtstamp.ptp) {
-+			ret = -ENODEV;
-+			goto out;
-+		}
-+		hwtstamp.qualifier = req->hwtst.qualifier;
-+
-+		ret = ethtool_get_ts_info_by_phc(dev, &data->ts_info,
-+						 &hwtstamp);
-+	} else {
-+		ret = __ethtool_get_ts_info(dev, &data->ts_info);
-+	}
-+
-+out:
- 	ethnl_ops_complete(dev);
+diff --git a/drivers/net/dsa/hirschmann/hellcreek_hwtstamp.h b/drivers/net/dsa/hirschmann/hellcreek_hwtstamp.h
+index 71af77efb28b..7d88da2134f2 100644
+--- a/drivers/net/dsa/hirschmann/hellcreek_hwtstamp.h
++++ b/drivers/net/dsa/hirschmann/hellcreek_hwtstamp.h
+@@ -48,7 +48,7 @@ void hellcreek_port_txtstamp(struct dsa_switch *ds, int port,
+ 			     struct sk_buff *skb);
  
+ int hellcreek_get_ts_info(struct dsa_switch *ds, int port,
+-			  struct ethtool_ts_info *info);
++			  struct kernel_ethtool_ts_info *info);
+ 
+ long hellcreek_hwtstamp_work(struct ptp_clock_info *ptp);
+ 
+diff --git a/drivers/net/dsa/microchip/ksz_ptp.c b/drivers/net/dsa/microchip/ksz_ptp.c
+index 1fe105913c75..f0bd46e5d4ec 100644
+--- a/drivers/net/dsa/microchip/ksz_ptp.c
++++ b/drivers/net/dsa/microchip/ksz_ptp.c
+@@ -293,7 +293,7 @@ static int ksz_ptp_enable_mode(struct ksz_device *dev)
+ /* The function is return back the capability of timestamping feature when
+  * requested through ethtool -T <interface> utility
+  */
+-int ksz_get_ts_info(struct dsa_switch *ds, int port, struct ethtool_ts_info *ts)
++int ksz_get_ts_info(struct dsa_switch *ds, int port, struct kernel_ethtool_ts_info *ts)
+ {
+ 	struct ksz_device *dev = ds->priv;
+ 	struct ksz_ptp_data *ptp_data;
+diff --git a/drivers/net/dsa/microchip/ksz_ptp.h b/drivers/net/dsa/microchip/ksz_ptp.h
+index 0ca8ca4f804e..2f1783c0d723 100644
+--- a/drivers/net/dsa/microchip/ksz_ptp.h
++++ b/drivers/net/dsa/microchip/ksz_ptp.h
+@@ -38,7 +38,7 @@ int ksz_ptp_clock_register(struct dsa_switch *ds);
+ void ksz_ptp_clock_unregister(struct dsa_switch *ds);
+ 
+ int ksz_get_ts_info(struct dsa_switch *ds, int port,
+-		    struct ethtool_ts_info *ts);
++		    struct kernel_ethtool_ts_info *ts);
+ int ksz_hwtstamp_get(struct dsa_switch *ds, int port, struct ifreq *ifr);
+ int ksz_hwtstamp_set(struct dsa_switch *ds, int port, struct ifreq *ifr);
+ void ksz_port_txtstamp(struct dsa_switch *ds, int port, struct sk_buff *skb);
+diff --git a/drivers/net/dsa/mv88e6xxx/hwtstamp.c b/drivers/net/dsa/mv88e6xxx/hwtstamp.c
+index 331b4ca089ff..49e6e1355142 100644
+--- a/drivers/net/dsa/mv88e6xxx/hwtstamp.c
++++ b/drivers/net/dsa/mv88e6xxx/hwtstamp.c
+@@ -64,7 +64,7 @@ static int mv88e6xxx_ptp_read(struct mv88e6xxx_chip *chip, int addr,
+ #define TX_TSTAMP_TIMEOUT	msecs_to_jiffies(40)
+ 
+ int mv88e6xxx_get_ts_info(struct dsa_switch *ds, int port,
+-			  struct ethtool_ts_info *info)
++			  struct kernel_ethtool_ts_info *info)
+ {
+ 	const struct mv88e6xxx_ptp_ops *ptp_ops;
+ 	struct mv88e6xxx_chip *chip;
+diff --git a/drivers/net/dsa/mv88e6xxx/hwtstamp.h b/drivers/net/dsa/mv88e6xxx/hwtstamp.h
+index cf7fb6d660b1..85acc758e3eb 100644
+--- a/drivers/net/dsa/mv88e6xxx/hwtstamp.h
++++ b/drivers/net/dsa/mv88e6xxx/hwtstamp.h
+@@ -121,7 +121,7 @@ void mv88e6xxx_port_txtstamp(struct dsa_switch *ds, int port,
+ 			     struct sk_buff *skb);
+ 
+ int mv88e6xxx_get_ts_info(struct dsa_switch *ds, int port,
+-			  struct ethtool_ts_info *info);
++			  struct kernel_ethtool_ts_info *info);
+ 
+ int mv88e6xxx_hwtstamp_setup(struct mv88e6xxx_chip *chip);
+ void mv88e6xxx_hwtstamp_free(struct mv88e6xxx_chip *chip);
+@@ -157,7 +157,7 @@ static inline void mv88e6xxx_port_txtstamp(struct dsa_switch *ds, int port,
+ }
+ 
+ static inline int mv88e6xxx_get_ts_info(struct dsa_switch *ds, int port,
+-					struct ethtool_ts_info *info)
++					struct kernel_ethtool_ts_info *info)
+ {
+ 	return -EOPNOTSUPP;
+ }
+diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
+index 61e95487732d..b5cd7d7f47ef 100644
+--- a/drivers/net/dsa/ocelot/felix.c
++++ b/drivers/net/dsa/ocelot/felix.c
+@@ -1220,7 +1220,7 @@ static int felix_get_sset_count(struct dsa_switch *ds, int port, int sset)
+ }
+ 
+ static int felix_get_ts_info(struct dsa_switch *ds, int port,
+-			     struct ethtool_ts_info *info)
++			     struct kernel_ethtool_ts_info *info)
+ {
+ 	struct ocelot *ocelot = ds->priv;
+ 
+diff --git a/drivers/net/dsa/sja1105/sja1105_ptp.c b/drivers/net/dsa/sja1105/sja1105_ptp.c
+index a7d41e781398..a1f4ca6ad888 100644
+--- a/drivers/net/dsa/sja1105/sja1105_ptp.c
++++ b/drivers/net/dsa/sja1105/sja1105_ptp.c
+@@ -111,7 +111,7 @@ int sja1105_hwtstamp_get(struct dsa_switch *ds, int port, struct ifreq *ifr)
+ }
+ 
+ int sja1105_get_ts_info(struct dsa_switch *ds, int port,
+-			struct ethtool_ts_info *info)
++			struct kernel_ethtool_ts_info *info)
+ {
+ 	struct sja1105_private *priv = ds->priv;
+ 	struct sja1105_ptp_data *ptp_data = &priv->ptp_data;
+diff --git a/drivers/net/dsa/sja1105/sja1105_ptp.h b/drivers/net/dsa/sja1105/sja1105_ptp.h
+index 416461ee95d2..8add2bd5f728 100644
+--- a/drivers/net/dsa/sja1105/sja1105_ptp.h
++++ b/drivers/net/dsa/sja1105/sja1105_ptp.h
+@@ -101,7 +101,7 @@ void sja1105pqrs_ptp_cmd_packing(u8 *buf, struct sja1105_ptp_cmd *cmd,
+ 				 enum packing_op op);
+ 
+ int sja1105_get_ts_info(struct dsa_switch *ds, int port,
+-			struct ethtool_ts_info *ts);
++			struct kernel_ethtool_ts_info *ts);
+ 
+ void sja1105_ptp_txtstamp_skb(struct dsa_switch *ds, int slot,
+ 			      struct sk_buff *clone);
+diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c b/drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c
+index 58e7e88aae5b..21407a26f806 100644
+--- a/drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c
++++ b/drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c
+@@ -577,7 +577,7 @@ static int xgbe_set_rxfh(struct net_device *netdev,
+ }
+ 
+ static int xgbe_get_ts_info(struct net_device *netdev,
+-			    struct ethtool_ts_info *ts_info)
++			    struct kernel_ethtool_ts_info *ts_info)
+ {
+ 	struct xgbe_prv_data *pdata = netdev_priv(netdev);
+ 
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_ethtool.c b/drivers/net/ethernet/aquantia/atlantic/aq_ethtool.c
+index a2606ee3b0a5..d0aecd1d7357 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_ethtool.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_ethtool.c
+@@ -652,7 +652,7 @@ static int aq_ethtool_set_wol(struct net_device *ndev,
+ }
+ 
+ static int aq_ethtool_get_ts_info(struct net_device *ndev,
+-				  struct ethtool_ts_info *info)
++				  struct kernel_ethtool_ts_info *info)
+ {
+ 	struct aq_nic_s *aq_nic = netdev_priv(ndev);
+ 
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
+index 58956ed8f531..c7b56a5e5425 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
+@@ -3634,7 +3634,7 @@ static int bnx2x_set_channels(struct net_device *dev,
+ }
+ 
+ static int bnx2x_get_ts_info(struct net_device *dev,
+-			     struct ethtool_ts_info *info)
++			     struct kernel_ethtool_ts_info *info)
+ {
+ 	struct bnx2x *bp = netdev_priv(dev);
+ 
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+index dfb5944683f8..fba4c9960a11 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+@@ -4829,7 +4829,7 @@ static int bnxt_get_dump_data(struct net_device *dev, struct ethtool_dump *dump,
+ }
+ 
+ static int bnxt_get_ts_info(struct net_device *dev,
+-			    struct ethtool_ts_info *info)
++			    struct kernel_ethtool_ts_info *info)
+ {
+ 	struct bnxt *bp = netdev_priv(dev);
+ 	struct bnxt_ptp_cfg *ptp;
+diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
+index 7d0a2f5f3282..9dd0decf9bfa 100644
+--- a/drivers/net/ethernet/broadcom/tg3.c
++++ b/drivers/net/ethernet/broadcom/tg3.c
+@@ -6150,7 +6150,7 @@ static void tg3_refclk_write(struct tg3 *tp, u64 newval)
+ 
+ static inline void tg3_full_lock(struct tg3 *tp, int irq_sync);
+ static inline void tg3_full_unlock(struct tg3 *tp);
+-static int tg3_get_ts_info(struct net_device *dev, struct ethtool_ts_info *info)
++static int tg3_get_ts_info(struct net_device *dev, struct kernel_ethtool_ts_info *info)
+ {
+ 	struct tg3 *tp = netdev_priv(dev);
+ 
+diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
+index aa5700ac9c00..44fa86b0c157 100644
+--- a/drivers/net/ethernet/cadence/macb.h
++++ b/drivers/net/ethernet/cadence/macb.h
+@@ -1163,7 +1163,7 @@ struct macb_ptp_info {
+ 	s32 (*get_ptp_max_adj)(void);
+ 	unsigned int (*get_tsu_rate)(struct macb *bp);
+ 	int (*get_ts_info)(struct net_device *dev,
+-			   struct ethtool_ts_info *info);
++			   struct kernel_ethtool_ts_info *info);
+ 	int (*get_hwtst)(struct net_device *netdev,
+ 			 struct kernel_hwtstamp_config *tstamp_config);
+ 	int (*set_hwtst)(struct net_device *netdev,
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 898debfd4db3..4266de5a1ee7 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -3376,7 +3376,7 @@ static s32 gem_get_ptp_max_adj(void)
+ }
+ 
+ static int gem_get_ts_info(struct net_device *dev,
+-			   struct ethtool_ts_info *info)
++			   struct kernel_ethtool_ts_info *info)
+ {
+ 	struct macb *bp = netdev_priv(dev);
+ 
+@@ -3417,7 +3417,7 @@ static struct macb_ptp_info gem_ptp_info = {
+ #endif
+ 
+ static int macb_get_ts_info(struct net_device *netdev,
+-			    struct ethtool_ts_info *info)
++			    struct kernel_ethtool_ts_info *info)
+ {
+ 	struct macb *bp = netdev_priv(netdev);
+ 
+diff --git a/drivers/net/ethernet/cavium/liquidio/lio_ethtool.c b/drivers/net/ethernet/cavium/liquidio/lio_ethtool.c
+index d3e07b6ed5e1..5835965dbc32 100644
+--- a/drivers/net/ethernet/cavium/liquidio/lio_ethtool.c
++++ b/drivers/net/ethernet/cavium/liquidio/lio_ethtool.c
+@@ -2497,7 +2497,7 @@ static int lio_set_intr_coalesce(struct net_device *netdev,
+ }
+ 
+ static int lio_get_ts_info(struct net_device *netdev,
+-			   struct ethtool_ts_info *info)
++			   struct kernel_ethtool_ts_info *info)
+ {
+ 	struct lio *lio = GET_LIO(netdev);
+ 
+diff --git a/drivers/net/ethernet/cavium/thunder/nicvf_ethtool.c b/drivers/net/ethernet/cavium/thunder/nicvf_ethtool.c
+index 34125b8cd935..6a04d2530176 100644
+--- a/drivers/net/ethernet/cavium/thunder/nicvf_ethtool.c
++++ b/drivers/net/ethernet/cavium/thunder/nicvf_ethtool.c
+@@ -836,7 +836,7 @@ static int nicvf_set_pauseparam(struct net_device *dev,
+ }
+ 
+ static int nicvf_get_ts_info(struct net_device *netdev,
+-			     struct ethtool_ts_info *info)
++			     struct kernel_ethtool_ts_info *info)
+ {
+ 	struct nicvf *nic = netdev_priv(netdev);
+ 
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
+index 47eecde36285..3d091947ae00 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
+@@ -1550,7 +1550,7 @@ static int set_flash(struct net_device *netdev, struct ethtool_flash *ef)
  	return ret;
  }
  
--static int tsinfo_reply_size(const struct ethnl_req_info *req_base,
--			     const struct ethnl_reply_data *reply_base)
-+static int
-+tsinfo_reply_size_hwtstamp_config(const struct tsinfo_reply_data *data,
-+				  bool compact)
+-static int get_ts_info(struct net_device *dev, struct ethtool_ts_info *ts_info)
++static int get_ts_info(struct net_device *dev, struct kernel_ethtool_ts_info *ts_info)
  {
--	const struct tsinfo_reply_data *data = TSINFO_REPDATA(reply_base);
--	bool compact = req_base->flags & ETHTOOL_FLAG_COMPACT_BITSETS;
--	const struct kernel_ethtool_ts_info *ts_info = &data->ts_info;
- 	int len = 0;
- 	int ret;
- 
--	BUILD_BUG_ON(__SOF_TIMESTAMPING_CNT > 32);
--	BUILD_BUG_ON(__HWTSTAMP_TX_CNT > 32);
--	BUILD_BUG_ON(__HWTSTAMP_FILTER_CNT > 32);
-+	if (data->hwtst_config.flags)
-+		len += nla_total_size(sizeof(u32));
-+
-+	if (data->hwtst_config.tx_type) {
-+		ret = ethnl_bitset32_size(&data->hwtst_config.tx_type,
-+					  NULL, __HWTSTAMP_TX_CNT,
-+					  ts_tx_type_names, compact);
-+		if (ret < 0)
-+			return ret;
-+		len += ret;	/* _TSINFO_TX_TYPES */
-+	}
-+	if (data->hwtst_config.rx_filter) {
-+		ret = ethnl_bitset32_size(&data->hwtst_config.rx_filter,
-+					  NULL, __HWTSTAMP_FILTER_CNT,
-+					  ts_rx_filter_names, compact);
-+		if (ret < 0)
-+			return ret;
-+		len += ret;	/* _TSINFO_RX_FILTERS */
-+	}
-+
-+	return len;
-+}
-+
-+static int
-+tsinfo_reply_size_ts_info(const struct kernel_ethtool_ts_info *ts_info,
-+			  bool compact)
-+{
-+	int len = 0;
-+	int ret;
- 
- 	if (ts_info->so_timestamping) {
- 		ret = ethnl_bitset32_size(&ts_info->so_timestamping, NULL,
-@@ -77,19 +220,37 @@ static int tsinfo_reply_size(const struct ethnl_req_info *req_base,
- 			return ret;
- 		len += ret;	/* _TSINFO_RX_FILTERS */
- 	}
--	if (ts_info->phc_index >= 0)
-+	if (ts_info->phc_index >= 0) {
-+		/* _TSINFO_HWTSTAMP_PROVIDER_NEST */
-+		len += nla_total_size(sizeof(u32) * 2);
- 		len += nla_total_size(sizeof(u32));	/* _TSINFO_PHC_INDEX */
-+	}
- 
- 	return len;
+ 	struct port_info *pi = netdev_priv(dev);
+ 	struct  adapter *adapter = pi->adapter;
+diff --git a/drivers/net/ethernet/cisco/enic/enic_ethtool.c b/drivers/net/ethernet/cisco/enic/enic_ethtool.c
+index 241906697019..497c0c6a17d1 100644
+--- a/drivers/net/ethernet/cisco/enic/enic_ethtool.c
++++ b/drivers/net/ethernet/cisco/enic/enic_ethtool.c
+@@ -599,7 +599,7 @@ static int enic_set_rxfh(struct net_device *netdev,
  }
  
--static int tsinfo_fill_reply(struct sk_buff *skb,
--			     const struct ethnl_req_info *req_base,
-+static int tsinfo_reply_size(const struct ethnl_req_info *req_base,
- 			     const struct ethnl_reply_data *reply_base)
+ static int enic_get_ts_info(struct net_device *netdev,
+-			    struct ethtool_ts_info *info)
++			    struct kernel_ethtool_ts_info *info)
  {
- 	const struct tsinfo_reply_data *data = TSINFO_REPDATA(reply_base);
- 	bool compact = req_base->flags & ETHTOOL_FLAG_COMPACT_BITSETS;
--	const struct kernel_ethtool_ts_info *ts_info = &data->ts_info;
-+	struct tsinfo_req_info *req = TSINFO_REQINFO(req_base);
-+
-+	BUILD_BUG_ON(__SOF_TIMESTAMPING_CNT > 32);
-+	BUILD_BUG_ON(__HWTSTAMP_TX_CNT > 32);
-+	BUILD_BUG_ON(__HWTSTAMP_FILTER_CNT > 32);
-+
-+	if (req->get_hwtstamp)
-+		return tsinfo_reply_size_hwtstamp_config(data, compact);
-+
-+	return tsinfo_reply_size_ts_info(&data->ts_info, compact);
-+}
-+
-+static int tsinfo_fill_ts_info(struct sk_buff *skb,
-+			       const struct kernel_ethtool_ts_info *ts_info,
-+			       bool compact)
-+{
-+	struct nlattr *nest;
- 	int ret;
+ 	info->so_timestamping = SOF_TIMESTAMPING_TX_SOFTWARE |
+ 				SOF_TIMESTAMPING_RX_SOFTWARE |
+diff --git a/drivers/net/ethernet/engleder/tsnep_ethtool.c b/drivers/net/ethernet/engleder/tsnep_ethtool.c
+index 65ec1abc9442..9aa286ba1f00 100644
+--- a/drivers/net/ethernet/engleder/tsnep_ethtool.c
++++ b/drivers/net/ethernet/engleder/tsnep_ethtool.c
+@@ -305,7 +305,7 @@ static void tsnep_ethtool_get_channels(struct net_device *netdev,
+ }
  
- 	if (ts_info->so_timestamping) {
-@@ -116,13 +277,416 @@ static int tsinfo_fill_reply(struct sk_buff *skb,
- 		if (ret < 0)
- 			return ret;
- 	}
--	if (ts_info->phc_index >= 0 &&
--	    nla_put_u32(skb, ETHTOOL_A_TSINFO_PHC_INDEX, ts_info->phc_index))
--		return -EMSGSIZE;
-+	if (ts_info->phc_index >= 0) {
-+		ret = nla_put_u32(skb, ETHTOOL_A_TSINFO_PHC_INDEX,
-+				  ts_info->phc_index);
-+		if (ret)
-+			return -EMSGSIZE;
-+
-+		nest = nla_nest_start(skb, ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_NEST);
-+		if (!nest)
-+			return -EMSGSIZE;
+ static int tsnep_ethtool_get_ts_info(struct net_device *netdev,
+-				     struct ethtool_ts_info *info)
++				     struct kernel_ethtool_ts_info *info)
+ {
+ 	struct tsnep_adapter *adapter = netdev_priv(netdev);
  
-+		ret = nla_put_u32(skb,
-+				  ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_INDEX,
-+				  ts_info->phc_index);
-+		if (ret) {
-+			nla_nest_cancel(skb, nest);
-+			return ret;
-+		}
-+
-+		ret = nla_put_u32(skb,
-+				  ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_QUALIFIER,
-+				  ts_info->phc_qualifier);
-+		if (ret) {
-+			nla_nest_cancel(skb, nest);
-+			return ret;
-+		}
-+
-+		nla_nest_end(skb, nest);
-+	}
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c b/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
+index 5bd0b36d1feb..0e923d805732 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
+@@ -394,7 +394,7 @@ static int dpaa_set_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd)
+ }
+ 
+ static int dpaa_get_ts_info(struct net_device *net_dev,
+-			    struct ethtool_ts_info *info)
++			    struct kernel_ethtool_ts_info *info)
+ {
+ 	struct device *dev = net_dev->dev.parent;
+ 	struct device_node *mac_node = dev->of_node;
+diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-ethtool.c b/drivers/net/ethernet/freescale/dpaa2/dpaa2-ethtool.c
+index e80e9388c71f..7f476519b7ad 100644
+--- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-ethtool.c
++++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-ethtool.c
+@@ -794,7 +794,7 @@ int dpaa2_phc_index = -1;
+ EXPORT_SYMBOL(dpaa2_phc_index);
+ 
+ static int dpaa2_eth_get_ts_info(struct net_device *dev,
+-				 struct ethtool_ts_info *info)
++				 struct kernel_ethtool_ts_info *info)
+ {
+ 	if (!dpaa2_ptp)
+ 		return ethtool_op_get_ts_info(dev, info);
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_ethtool.c b/drivers/net/ethernet/freescale/enetc/enetc_ethtool.c
+index f7753ea5b57e..5e684b23c5f5 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_ethtool.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc_ethtool.c
+@@ -841,7 +841,7 @@ static int enetc_set_coalesce(struct net_device *ndev,
+ }
+ 
+ static int enetc_get_ts_info(struct net_device *ndev,
+-			     struct ethtool_ts_info *info)
++			     struct kernel_ethtool_ts_info *info)
+ {
+ 	int *phc_idx;
+ 
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index 207f1f66c117..cabf469e6e7a 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -2719,7 +2719,7 @@ static void fec_enet_get_regs(struct net_device *ndev,
+ }
+ 
+ static int fec_enet_get_ts_info(struct net_device *ndev,
+-				struct ethtool_ts_info *info)
++				struct kernel_ethtool_ts_info *info)
+ {
+ 	struct fec_enet_private *fep = netdev_priv(ndev);
+ 
+diff --git a/drivers/net/ethernet/freescale/gianfar_ethtool.c b/drivers/net/ethernet/freescale/gianfar_ethtool.c
+index 7a15b9245698..f581402ad740 100644
+--- a/drivers/net/ethernet/freescale/gianfar_ethtool.c
++++ b/drivers/net/ethernet/freescale/gianfar_ethtool.c
+@@ -1448,7 +1448,7 @@ static int gfar_get_nfc(struct net_device *dev, struct ethtool_rxnfc *cmd,
+ }
+ 
+ static int gfar_get_ts_info(struct net_device *dev,
+-			    struct ethtool_ts_info *info)
++			    struct kernel_ethtool_ts_info *info)
+ {
+ 	struct gfar_private *priv = netdev_priv(dev);
+ 	struct platform_device *ptp_dev;
+diff --git a/drivers/net/ethernet/fungible/funeth/funeth_ethtool.c b/drivers/net/ethernet/fungible/funeth/funeth_ethtool.c
+index 4edd0adfc6c7..7f081e6e8c87 100644
+--- a/drivers/net/ethernet/fungible/funeth/funeth_ethtool.c
++++ b/drivers/net/ethernet/fungible/funeth/funeth_ethtool.c
+@@ -1040,7 +1040,7 @@ static int fun_set_rxfh(struct net_device *netdev,
+ }
+ 
+ static int fun_get_ts_info(struct net_device *netdev,
+-			   struct ethtool_ts_info *info)
++			   struct kernel_ethtool_ts_info *info)
+ {
+ 	info->so_timestamping = SOF_TIMESTAMPING_RX_SOFTWARE |
+ 				SOF_TIMESTAMPING_RX_HARDWARE |
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+index d7e175a9cb49..922224402e9b 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+@@ -772,7 +772,7 @@ struct hnae3_ae_ops {
+ 	void (*get_rx_hwts)(struct hnae3_handle *handle, struct sk_buff *skb,
+ 			    u32 nsec, u32 sec);
+ 	int (*get_ts_info)(struct hnae3_handle *handle,
+-			   struct ethtool_ts_info *info);
++			   struct kernel_ethtool_ts_info *info);
+ 	int (*get_link_diagnosis_info)(struct hnae3_handle *handle,
+ 				       u32 *status_code);
+ 	void (*clean_vf_config)(struct hnae3_ae_dev *ae_dev, int num_vfs);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+index 999a0ee162a6..da58bd888f51 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+@@ -1994,7 +1994,7 @@ static int hns3_set_tunable(struct net_device *netdev,
+ 				 ETHTOOL_RING_USE_TX_PUSH)
+ 
+ static int hns3_get_ts_info(struct net_device *netdev,
+-			    struct ethtool_ts_info *info)
++			    struct kernel_ethtool_ts_info *info)
+ {
+ 	struct hnae3_handle *handle = hns3_get_handle(netdev);
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.c
+index 80a2a0073d97..449630b1e58c 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.c
+@@ -378,7 +378,7 @@ int hclge_ptp_set_cfg(struct hclge_dev *hdev, struct ifreq *ifr)
+ }
+ 
+ int hclge_ptp_get_ts_info(struct hnae3_handle *handle,
+-			  struct ethtool_ts_info *info)
++			  struct kernel_ethtool_ts_info *info)
+ {
+ 	struct hclge_vport *vport = hclge_get_vport(handle);
+ 	struct hclge_dev *hdev = vport->back;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.h
+index bbee74cd8404..63483636c074 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.h
+@@ -138,6 +138,6 @@ int hclge_ptp_set_cfg(struct hclge_dev *hdev, struct ifreq *ifr);
+ int hclge_ptp_init(struct hclge_dev *hdev);
+ void hclge_ptp_uninit(struct hclge_dev *hdev);
+ int hclge_ptp_get_ts_info(struct hnae3_handle *handle,
+-			  struct ethtool_ts_info *info);
++			  struct kernel_ethtool_ts_info *info);
+ int hclge_ptp_cfg_qry(struct hclge_dev *hdev, u32 *cfg);
+ #endif
+diff --git a/drivers/net/ethernet/intel/e1000e/ethtool.c b/drivers/net/ethernet/intel/e1000e/ethtool.c
+index ff243ae71b78..8e76d8ca1265 100644
+--- a/drivers/net/ethernet/intel/e1000e/ethtool.c
++++ b/drivers/net/ethernet/intel/e1000e/ethtool.c
+@@ -2306,7 +2306,7 @@ static int e1000e_set_eee(struct net_device *netdev, struct ethtool_keee *edata)
+ }
+ 
+ static int e1000e_get_ts_info(struct net_device *netdev,
+-			      struct ethtool_ts_info *info)
++			      struct kernel_ethtool_ts_info *info)
+ {
+ 	struct e1000_adapter *adapter = netdev_priv(netdev);
+ 
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_ethtool.c b/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
+index 1b5473358e1a..f3f04bc0af99 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
+@@ -2549,7 +2549,7 @@ static void i40e_get_strings(struct net_device *netdev, u32 stringset,
+ }
+ 
+ static int i40e_get_ts_info(struct net_device *dev,
+-			    struct ethtool_ts_info *info)
++			    struct kernel_ethtool_ts_info *info)
+ {
+ 	struct i40e_pf *pf = i40e_netdev_to_pf(dev);
+ 
+diff --git a/drivers/net/ethernet/intel/ice/ice_ethtool.c b/drivers/net/ethernet/intel/ice/ice_ethtool.c
+index 3cc364a4d682..bb6e34be1016 100644
+--- a/drivers/net/ethernet/intel/ice/ice_ethtool.c
++++ b/drivers/net/ethernet/intel/ice/ice_ethtool.c
+@@ -3356,7 +3356,7 @@ ice_set_rxfh(struct net_device *netdev, struct ethtool_rxfh_param *rxfh,
+ }
+ 
+ static int
+-ice_get_ts_info(struct net_device *dev, struct ethtool_ts_info *info)
++ice_get_ts_info(struct net_device *dev, struct kernel_ethtool_ts_info *info)
+ {
+ 	struct ice_pf *pf = ice_netdev_to_pf(dev);
+ 
+diff --git a/drivers/net/ethernet/intel/igb/igb_ethtool.c b/drivers/net/ethernet/intel/igb/igb_ethtool.c
+index b87b23d2151c..d065771272ce 100644
+--- a/drivers/net/ethernet/intel/igb/igb_ethtool.c
++++ b/drivers/net/ethernet/intel/igb/igb_ethtool.c
+@@ -2381,7 +2381,7 @@ static void igb_get_strings(struct net_device *netdev, u32 stringset, u8 *data)
+ }
+ 
+ static int igb_get_ts_info(struct net_device *dev,
+-			   struct ethtool_ts_info *info)
++			   struct kernel_ethtool_ts_info *info)
+ {
+ 	struct igb_adapter *adapter = netdev_priv(dev);
+ 
+diff --git a/drivers/net/ethernet/intel/igc/igc_ethtool.c b/drivers/net/ethernet/intel/igc/igc_ethtool.c
+index 47c797dd2cd9..037b552a129a 100644
+--- a/drivers/net/ethernet/intel/igc/igc_ethtool.c
++++ b/drivers/net/ethernet/intel/igc/igc_ethtool.c
+@@ -1559,7 +1559,7 @@ static int igc_ethtool_set_channels(struct net_device *netdev,
+ }
+ 
+ static int igc_ethtool_get_ts_info(struct net_device *dev,
+-				   struct ethtool_ts_info *info)
++				   struct kernel_ethtool_ts_info *info)
+ {
+ 	struct igc_adapter *adapter = netdev_priv(dev);
+ 
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
+index b1e7338a4ed1..58762576550c 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
+@@ -3168,7 +3168,7 @@ static int ixgbe_set_rxfh(struct net_device *netdev,
+ }
+ 
+ static int ixgbe_get_ts_info(struct net_device *dev,
+-			     struct ethtool_ts_info *info)
++			     struct kernel_ethtool_ts_info *info)
+ {
+ 	struct ixgbe_adapter *adapter = netdev_priv(dev);
+ 
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+index 23adf53c2aa1..7a8e0862b43a 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -5255,7 +5255,7 @@ static int mvpp2_get_ts_config(struct mvpp2_port *port, struct ifreq *ifr)
+ }
+ 
+ static int mvpp2_ethtool_get_ts_info(struct net_device *dev,
+-				     struct ethtool_ts_info *info)
++				     struct kernel_ethtool_ts_info *info)
+ {
+ 	struct mvpp2_port *port = netdev_priv(dev);
+ 
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c
+index 7f786de61014..0db62eb0dab3 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c
+@@ -954,7 +954,7 @@ static u32 otx2_get_link(struct net_device *netdev)
+ }
+ 
+ static int otx2_get_ts_info(struct net_device *netdev,
+-			    struct ethtool_ts_info *info)
++			    struct kernel_ethtool_ts_info *info)
+ {
+ 	struct otx2_nic *pfvf = netdev_priv(netdev);
+ 
+diff --git a/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c b/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
+index 619e1c3ef7f9..0c906f3e06db 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
+@@ -1903,7 +1903,7 @@ static int mlx4_en_set_channels(struct net_device *dev,
+ }
+ 
+ static int mlx4_en_get_ts_info(struct net_device *dev,
+-			       struct ethtool_ts_info *info)
++			       struct kernel_ethtool_ts_info *info)
+ {
+ 	struct mlx4_en_priv *priv = netdev_priv(dev);
+ 	struct mlx4_en_dev *mdev = priv->mdev;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+index 55c6ace0acd5..314cddfde2e3 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+@@ -1187,7 +1187,7 @@ int mlx5e_set_rxfh(struct net_device *dev, struct ethtool_rxfh_param *rxfh,
+ u32 mlx5e_ethtool_get_rxfh_key_size(struct mlx5e_priv *priv);
+ u32 mlx5e_ethtool_get_rxfh_indir_size(struct mlx5e_priv *priv);
+ int mlx5e_ethtool_get_ts_info(struct mlx5e_priv *priv,
+-			      struct ethtool_ts_info *info);
++			      struct kernel_ethtool_ts_info *info);
+ int mlx5e_ethtool_flash_device(struct mlx5e_priv *priv,
+ 			       struct ethtool_flash *flash);
+ void mlx5e_ethtool_get_pauseparam(struct mlx5e_priv *priv,
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+index cc51ce16df14..201132b56404 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+@@ -1459,7 +1459,7 @@ static int mlx5e_set_pauseparam(struct net_device *netdev,
+ }
+ 
+ int mlx5e_ethtool_get_ts_info(struct mlx5e_priv *priv,
+-			      struct ethtool_ts_info *info)
++			      struct kernel_ethtool_ts_info *info)
+ {
+ 	struct mlx5_core_dev *mdev = priv->mdev;
+ 
+@@ -1483,7 +1483,7 @@ int mlx5e_ethtool_get_ts_info(struct mlx5e_priv *priv,
+ }
+ 
+ static int mlx5e_get_ts_info(struct net_device *dev,
+-			     struct ethtool_ts_info *info)
++			     struct kernel_ethtool_ts_info *info)
+ {
+ 	struct mlx5e_priv *priv = netdev_priv(dev);
+ 
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ethtool.c b/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ethtool.c
+index 779d92b762d3..905bdbaffb9a 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ethtool.c
+@@ -136,7 +136,7 @@ static int mlx5i_get_coalesce(struct net_device *netdev,
+ }
+ 
+ static int mlx5i_get_ts_info(struct net_device *netdev,
+-			     struct ethtool_ts_info *info)
++			     struct kernel_ethtool_ts_info *info)
+ {
+ 	struct mlx5e_priv *priv = mlx5i_epriv(netdev);
+ 
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.h b/drivers/net/ethernet/mellanox/mlxsw/spectrum.h
+index 898d24232935..dbf1e2b7844e 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.h
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.h
+@@ -238,7 +238,7 @@ struct mlxsw_sp_ptp_ops {
+ 			    struct hwtstamp_config *config);
+ 	void (*shaper_work)(struct work_struct *work);
+ 	int (*get_ts_info)(struct mlxsw_sp *mlxsw_sp,
+-			   struct ethtool_ts_info *info);
++			   struct kernel_ethtool_ts_info *info);
+ 	int (*get_stats_count)(void);
+ 	void (*get_stats_strings)(u8 **p);
+ 	void (*get_stats)(struct mlxsw_sp_port *mlxsw_sp_port,
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_ethtool.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_ethtool.c
+index 0f29e9c19411..be8105220185 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_ethtool.c
+@@ -1068,7 +1068,7 @@ mlxsw_sp_get_module_eeprom_by_page(struct net_device *dev,
+ }
+ 
+ static int
+-mlxsw_sp_get_ts_info(struct net_device *netdev, struct ethtool_ts_info *info)
++mlxsw_sp_get_ts_info(struct net_device *netdev, struct kernel_ethtool_ts_info *info)
+ {
+ 	struct mlxsw_sp_port *mlxsw_sp_port = netdev_priv(netdev);
+ 	struct mlxsw_sp *mlxsw_sp = mlxsw_sp_port->mlxsw_sp;
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_ptp.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_ptp.c
+index cbb6c75a6620..5b174cb95eb8 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_ptp.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_ptp.c
+@@ -1276,7 +1276,7 @@ int mlxsw_sp1_ptp_hwtstamp_set(struct mlxsw_sp_port *mlxsw_sp_port,
+ }
+ 
+ int mlxsw_sp1_ptp_get_ts_info(struct mlxsw_sp *mlxsw_sp,
+-			      struct ethtool_ts_info *info)
++			      struct kernel_ethtool_ts_info *info)
+ {
+ 	info->phc_index = ptp_clock_index(mlxsw_sp->clock->ptp);
+ 
+@@ -1661,7 +1661,7 @@ int mlxsw_sp2_ptp_hwtstamp_set(struct mlxsw_sp_port *mlxsw_sp_port,
+ }
+ 
+ int mlxsw_sp2_ptp_get_ts_info(struct mlxsw_sp *mlxsw_sp,
+-			      struct ethtool_ts_info *info)
++			      struct kernel_ethtool_ts_info *info)
+ {
+ 	info->phc_index = ptp_clock_index(mlxsw_sp->clock->ptp);
+ 
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_ptp.h b/drivers/net/ethernet/mellanox/mlxsw/spectrum_ptp.h
+index a8b88230959a..769095d4932d 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_ptp.h
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_ptp.h
+@@ -11,7 +11,7 @@ struct mlxsw_sp;
+ struct mlxsw_sp_port;
+ struct mlxsw_sp_ptp_clock;
+ 
+-static inline int mlxsw_sp_ptp_get_ts_info_noptp(struct ethtool_ts_info *info)
++static inline int mlxsw_sp_ptp_get_ts_info_noptp(struct kernel_ethtool_ts_info *info)
+ {
+ 	info->so_timestamping = SOF_TIMESTAMPING_RX_SOFTWARE |
+ 				SOF_TIMESTAMPING_SOFTWARE;
+@@ -50,7 +50,7 @@ int mlxsw_sp1_ptp_hwtstamp_set(struct mlxsw_sp_port *mlxsw_sp_port,
+ void mlxsw_sp1_ptp_shaper_work(struct work_struct *work);
+ 
+ int mlxsw_sp1_ptp_get_ts_info(struct mlxsw_sp *mlxsw_sp,
+-			      struct ethtool_ts_info *info);
++			      struct kernel_ethtool_ts_info *info);
+ 
+ int mlxsw_sp1_get_stats_count(void);
+ void mlxsw_sp1_get_stats_strings(u8 **p);
+@@ -84,7 +84,7 @@ int mlxsw_sp2_ptp_hwtstamp_set(struct mlxsw_sp_port *mlxsw_sp_port,
+ 			       struct hwtstamp_config *config);
+ 
+ int mlxsw_sp2_ptp_get_ts_info(struct mlxsw_sp *mlxsw_sp,
+-			      struct ethtool_ts_info *info);
++			      struct kernel_ethtool_ts_info *info);
+ 
+ int mlxsw_sp2_ptp_txhdr_construct(struct mlxsw_core *mlxsw_core,
+ 				  struct mlxsw_sp_port *mlxsw_sp_port,
+@@ -152,7 +152,7 @@ static inline void mlxsw_sp1_ptp_shaper_work(struct work_struct *work)
+ }
+ 
+ static inline int mlxsw_sp1_ptp_get_ts_info(struct mlxsw_sp *mlxsw_sp,
+-					    struct ethtool_ts_info *info)
++					    struct kernel_ethtool_ts_info *info)
+ {
+ 	return mlxsw_sp_ptp_get_ts_info_noptp(info);
+ }
+@@ -227,7 +227,7 @@ mlxsw_sp2_ptp_hwtstamp_set(struct mlxsw_sp_port *mlxsw_sp_port,
+ }
+ 
+ static inline int mlxsw_sp2_ptp_get_ts_info(struct mlxsw_sp *mlxsw_sp,
+-					    struct ethtool_ts_info *info)
++					    struct kernel_ethtool_ts_info *info)
+ {
+ 	return mlxsw_sp_ptp_get_ts_info_noptp(info);
+ }
+diff --git a/drivers/net/ethernet/microchip/lan743x_ethtool.c b/drivers/net/ethernet/microchip/lan743x_ethtool.c
+index 8a6ae171e375..40b1632c82dc 100644
+--- a/drivers/net/ethernet/microchip/lan743x_ethtool.c
++++ b/drivers/net/ethernet/microchip/lan743x_ethtool.c
+@@ -1029,7 +1029,7 @@ static int lan743x_ethtool_set_rxfh(struct net_device *netdev,
+ }
+ 
+ static int lan743x_ethtool_get_ts_info(struct net_device *netdev,
+-				       struct ethtool_ts_info *ts_info)
++				       struct kernel_ethtool_ts_info *ts_info)
+ {
+ 	struct lan743x_adapter *adapter = netdev_priv(netdev);
+ 
+diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_ethtool.c b/drivers/net/ethernet/microchip/lan966x/lan966x_ethtool.c
+index 06811c60d598..301576c66039 100644
+--- a/drivers/net/ethernet/microchip/lan966x/lan966x_ethtool.c
++++ b/drivers/net/ethernet/microchip/lan966x/lan966x_ethtool.c
+@@ -546,7 +546,7 @@ static int lan966x_set_pauseparam(struct net_device *dev,
+ }
+ 
+ static int lan966x_get_ts_info(struct net_device *dev,
+-			       struct ethtool_ts_info *info)
++			       struct kernel_ethtool_ts_info *info)
+ {
+ 	struct lan966x_port *port = netdev_priv(dev);
+ 	struct lan966x *lan966x = port->lan966x;
+diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_ethtool.c b/drivers/net/ethernet/microchip/sparx5/sparx5_ethtool.c
+index a06dc5a9b355..4f800c1a435d 100644
+--- a/drivers/net/ethernet/microchip/sparx5/sparx5_ethtool.c
++++ b/drivers/net/ethernet/microchip/sparx5/sparx5_ethtool.c
+@@ -1183,7 +1183,7 @@ static void sparx5_config_port_stats(struct sparx5 *sparx5, int portno)
+ }
+ 
+ static int sparx5_get_ts_info(struct net_device *dev,
+-			      struct ethtool_ts_info *info)
++			      struct kernel_ethtool_ts_info *info)
+ {
+ 	struct sparx5_port *port = netdev_priv(dev);
+ 	struct sparx5 *sparx5 = port->sparx5;
+diff --git a/drivers/net/ethernet/mscc/ocelot_net.c b/drivers/net/ethernet/mscc/ocelot_net.c
+index 21a87a3fc556..7c9540a71725 100644
+--- a/drivers/net/ethernet/mscc/ocelot_net.c
++++ b/drivers/net/ethernet/mscc/ocelot_net.c
+@@ -980,7 +980,7 @@ static int ocelot_port_get_sset_count(struct net_device *dev, int sset)
+ }
+ 
+ static int ocelot_port_get_ts_info(struct net_device *dev,
+-				   struct ethtool_ts_info *info)
++				   struct kernel_ethtool_ts_info *info)
+ {
+ 	struct ocelot_port_private *priv = netdev_priv(dev);
+ 	struct ocelot *ocelot = priv->port.ocelot;
+diff --git a/drivers/net/ethernet/mscc/ocelot_ptp.c b/drivers/net/ethernet/mscc/ocelot_ptp.c
+index cb32234a5bf1..b3c28260adf8 100644
+--- a/drivers/net/ethernet/mscc/ocelot_ptp.c
++++ b/drivers/net/ethernet/mscc/ocelot_ptp.c
+@@ -580,7 +580,7 @@ int ocelot_hwstamp_set(struct ocelot *ocelot, int port, struct ifreq *ifr)
+ EXPORT_SYMBOL(ocelot_hwstamp_set);
+ 
+ int ocelot_get_ts_info(struct ocelot *ocelot, int port,
+-		       struct ethtool_ts_info *info)
++		       struct kernel_ethtool_ts_info *info)
+ {
+ 	info->phc_index = ocelot->ptp_clock ?
+ 			  ptp_clock_index(ocelot->ptp_clock) : -1;
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_ethtool.c b/drivers/net/ethernet/pensando/ionic/ionic_ethtool.c
+index cd3c0b01402e..035f8f3cefb9 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_ethtool.c
++++ b/drivers/net/ethernet/pensando/ionic/ionic_ethtool.c
+@@ -958,7 +958,7 @@ static int ionic_get_module_eeprom(struct net_device *netdev,
+ }
+ 
+ static int ionic_get_ts_info(struct net_device *netdev,
+-			     struct ethtool_ts_info *info)
++			     struct kernel_ethtool_ts_info *info)
+ {
+ 	struct ionic_lif *lif = netdev_priv(netdev);
+ 	struct ionic *ionic = lif->ionic;
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_ethtool.c b/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
+index dfa15619fd78..69aaa95d95b0 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
+@@ -1137,7 +1137,7 @@ static int qede_set_channels(struct net_device *dev,
+ }
+ 
+ static int qede_get_ts_info(struct net_device *dev,
+-			    struct ethtool_ts_info *info)
++			    struct kernel_ethtool_ts_info *info)
+ {
+ 	struct qede_dev *edev = netdev_priv(dev);
+ 
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_ptp.c b/drivers/net/ethernet/qlogic/qede/qede_ptp.c
+index 747cc5e2bb78..63e3dac4d5f7 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_ptp.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_ptp.c
+@@ -321,7 +321,7 @@ int qede_ptp_hw_ts(struct qede_dev *edev, struct ifreq *ifr)
+ 			    sizeof(config)) ? -EFAULT : 0;
+ }
+ 
+-int qede_ptp_get_ts_info(struct qede_dev *edev, struct ethtool_ts_info *info)
++int qede_ptp_get_ts_info(struct qede_dev *edev, struct kernel_ethtool_ts_info *info)
+ {
+ 	struct qede_ptp *ptp = edev->ptp;
+ 
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_ptp.h b/drivers/net/ethernet/qlogic/qede/qede_ptp.h
+index 1db0f021c645..adafc894797e 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_ptp.h
++++ b/drivers/net/ethernet/qlogic/qede/qede_ptp.h
+@@ -17,7 +17,7 @@ void qede_ptp_tx_ts(struct qede_dev *edev, struct sk_buff *skb);
+ int qede_ptp_hw_ts(struct qede_dev *edev, struct ifreq *req);
+ void qede_ptp_disable(struct qede_dev *edev);
+ int qede_ptp_enable(struct qede_dev *edev);
+-int qede_ptp_get_ts_info(struct qede_dev *edev, struct ethtool_ts_info *ts);
++int qede_ptp_get_ts_info(struct qede_dev *edev, struct kernel_ethtool_ts_info *ts);
+ 
+ static inline void qede_ptp_record_rx_ts(struct qede_dev *edev,
+ 					 union eth_rx_cqe *cqe,
+diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+index f9a1e9038dbf..c2c2281374c6 100644
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -1753,7 +1753,7 @@ static int ravb_set_ringparam(struct net_device *ndev,
+ }
+ 
+ static int ravb_get_ts_info(struct net_device *ndev,
+-			    struct ethtool_ts_info *info)
++			    struct kernel_ethtool_ts_info *info)
+ {
+ 	struct ravb_private *priv = netdev_priv(ndev);
+ 	const struct ravb_hw_info *hw_info = priv->info;
+diff --git a/drivers/net/ethernet/renesas/rswitch.c b/drivers/net/ethernet/renesas/rswitch.c
+index dcab638c57fe..7452efb58b6d 100644
+--- a/drivers/net/ethernet/renesas/rswitch.c
++++ b/drivers/net/ethernet/renesas/rswitch.c
+@@ -1809,7 +1809,7 @@ static const struct net_device_ops rswitch_netdev_ops = {
+ 	.ndo_set_mac_address = eth_mac_addr,
+ };
+ 
+-static int rswitch_get_ts_info(struct net_device *ndev, struct ethtool_ts_info *info)
++static int rswitch_get_ts_info(struct net_device *ndev, struct kernel_ethtool_ts_info *info)
+ {
+ 	struct rswitch_device *rdev = netdev_priv(ndev);
+ 
+diff --git a/drivers/net/ethernet/sfc/ethtool.c b/drivers/net/ethernet/sfc/ethtool.c
+index 37c69c8d90b1..8d5ecf1a9310 100644
+--- a/drivers/net/ethernet/sfc/ethtool.c
++++ b/drivers/net/ethernet/sfc/ethtool.c
+@@ -226,7 +226,7 @@ static void efx_ethtool_get_fec_stats(struct net_device *net_dev,
+ }
+ 
+ static int efx_ethtool_get_ts_info(struct net_device *net_dev,
+-				   struct ethtool_ts_info *ts_info)
++				   struct kernel_ethtool_ts_info *ts_info)
+ {
+ 	struct efx_nic *efx = efx_netdev_priv(net_dev);
+ 
+diff --git a/drivers/net/ethernet/sfc/falcon/nic.h b/drivers/net/ethernet/sfc/falcon/nic.h
+index 9f413474bd9f..ada6e036fd97 100644
+--- a/drivers/net/ethernet/sfc/falcon/nic.h
++++ b/drivers/net/ethernet/sfc/falcon/nic.h
+@@ -297,7 +297,7 @@ static inline struct falcon_board *falcon_board(struct ef4_nic *efx)
+ 	return &data->board;
+ }
+ 
+-struct ethtool_ts_info;
++struct kernel_ethtool_ts_info;
+ 
+ extern const struct ef4_nic_type falcon_a1_nic_type;
+ extern const struct ef4_nic_type falcon_b0_nic_type;
+diff --git a/drivers/net/ethernet/sfc/ptp.c b/drivers/net/ethernet/sfc/ptp.c
+index c3bffbf0ba2b..6fd2fdbaa418 100644
+--- a/drivers/net/ethernet/sfc/ptp.c
++++ b/drivers/net/ethernet/sfc/ptp.c
+@@ -1864,7 +1864,7 @@ static int efx_ptp_ts_init(struct efx_nic *efx, struct kernel_hwtstamp_config *i
  	return 0;
  }
  
-+static int
-+tsinfo_fill_hwtstamp_config(struct sk_buff *skb,
-+			    const struct tsinfo_reply_data *data,
-+			    bool compact)
-+{
-+	int ret;
-+
-+	if (data->hwtst_config.flags) {
-+		ret = nla_put_u32(skb, ETHTOOL_A_TSINFO_HWTSTAMP_FLAGS,
-+				  data->hwtst_config.flags);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	if (data->hwtst_config.tx_type) {
-+		ret = ethnl_put_bitset32(skb, ETHTOOL_A_TSINFO_TX_TYPES,
-+					 &data->hwtst_config.tx_type, NULL,
-+					 __HWTSTAMP_TX_CNT,
-+					 ts_tx_type_names, compact);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	if (data->hwtst_config.rx_filter) {
-+		ret = ethnl_put_bitset32(skb, ETHTOOL_A_TSINFO_RX_FILTERS,
-+					 &data->hwtst_config.rx_filter,
-+					 NULL, __HWTSTAMP_FILTER_CNT,
-+					 ts_rx_filter_names, compact);
-+		if (ret < 0)
-+			return ret;
-+	}
-+	return 0;
-+}
-+
-+static int tsinfo_fill_reply(struct sk_buff *skb,
-+			     const struct ethnl_req_info *req_base,
-+			     const struct ethnl_reply_data *reply_base)
-+{
-+	const struct tsinfo_reply_data *data = TSINFO_REPDATA(reply_base);
-+	bool compact = req_base->flags & ETHTOOL_FLAG_COMPACT_BITSETS;
-+	struct tsinfo_req_info *req = TSINFO_REQINFO(req_base);
-+
-+	if (req->get_hwtstamp)
-+		return tsinfo_fill_hwtstamp_config(skb, data, compact);
-+
-+	return tsinfo_fill_ts_info(skb, &data->ts_info, compact);
-+}
-+
-+struct ethnl_tsinfo_dump_ctx {
-+	struct tsinfo_req_info		*req_info;
-+	struct tsinfo_reply_data	*reply_data;
-+	unsigned long			pos_ifindex;
-+	unsigned long			pos_phcindex;
-+	enum hwtstamp_provider_qualifier pos_phcqualifier;
-+};
-+
-+static int ethnl_tsinfo_dump_one_ptp(struct sk_buff *skb, struct net_device *dev,
-+				     struct netlink_callback *cb,
-+				     struct ptp_clock *ptp)
-+{
-+	struct ethnl_tsinfo_dump_ctx *ctx = (void *)cb->ctx;
-+	struct tsinfo_reply_data *reply_data;
-+	struct tsinfo_req_info *req_info;
-+	void *ehdr;
-+	int ret;
-+
-+	reply_data = ctx->reply_data;
-+	req_info = ctx->req_info;
-+	req_info->hwtst.index = ptp_clock_index(ptp);
-+
-+	for (; ctx->pos_phcqualifier < HWTSTAMP_PROVIDER_QUALIFIER_CNT;
-+	     ctx->pos_phcqualifier++) {
-+		if (!dev_support_hwtstamp_qualifier(dev, ctx->pos_phcqualifier))
-+			continue;
-+
-+		ehdr = ethnl_dump_put(skb, cb,
-+				      ETHTOOL_MSG_TSINFO_GET_REPLY);
-+		if (!ehdr)
-+			return -EMSGSIZE;
-+
-+		memset(reply_data, 0, sizeof(*reply_data));
-+		reply_data->base.dev = dev;
-+		req_info->hwtst.qualifier = ctx->pos_phcqualifier;
-+		ret = tsinfo_prepare_data(&req_info->base,
-+					  &reply_data->base,
-+					  genl_info_dump(cb));
-+		if (ret < 0)
-+			break;
-+
-+		ret = ethnl_fill_reply_header(skb, dev,
-+					      ETHTOOL_A_TSINFO_HEADER);
-+		if (ret < 0)
-+			break;
-+
-+		ret = tsinfo_fill_reply(skb, &req_info->base,
-+					&reply_data->base);
-+		if (ret < 0)
-+			break;
-+	}
-+
-+	reply_data->base.dev = NULL;
-+	if (ret < 0)
-+		genlmsg_cancel(skb, ehdr);
-+	else
-+		genlmsg_end(skb, ehdr);
-+	return ret;
-+}
-+
-+static int ethnl_tsinfo_dump_one_dev(struct sk_buff *skb, struct net_device *dev,
-+				     struct netlink_callback *cb)
-+{
-+	struct ethnl_tsinfo_dump_ctx *ctx = (void *)cb->ctx;
-+	struct ptp_clock *ptp;
-+	int ret;
-+
-+	netdev_for_each_ptp_clock_start(dev, ctx->pos_phcindex, ptp,
-+					ctx->pos_phcindex) {
-+		ret = ethnl_tsinfo_dump_one_ptp(skb, dev, cb, ptp);
-+		if (ret < 0 && ret != -EOPNOTSUPP)
-+			break;
-+		ctx->pos_phcqualifier = HWTSTAMP_PROVIDER_QUALIFIER_PRECISE;
-+	}
-+
-+	return ret;
-+}
-+
-+int ethnl_tsinfo_dumpit(struct sk_buff *skb, struct netlink_callback *cb)
-+{
-+	struct ethnl_tsinfo_dump_ctx *ctx = (void *)cb->ctx;
-+	struct net *net = sock_net(skb->sk);
-+	struct net_device *dev;
-+	int ret = 0;
-+
-+	rtnl_lock();
-+	if (ctx->req_info->base.dev) {
-+		ret = ethnl_tsinfo_dump_one_dev(skb,
-+						ctx->req_info->base.dev,
-+						cb);
-+	} else {
-+		for_each_netdev_dump(net, dev, ctx->pos_ifindex) {
-+			ret = ethnl_tsinfo_dump_one_dev(skb, dev, cb);
-+			if (ret < 0 && ret != -EOPNOTSUPP)
-+				break;
-+			ctx->pos_phcindex = 0;
-+		}
-+	}
-+	rtnl_unlock();
-+
-+	if (ret == -EMSGSIZE && skb->len)
-+		return skb->len;
-+	return ret;
-+}
-+
-+static int
-+tsinfo_dump_parse_request(struct nlattr **tb, struct netlink_ext_ack *extack)
-+{
-+	unsigned long val = 0, mask = 0;
-+	int ret;
-+
-+	ret = ethnl_parse_bitset(&val, &mask, __SOF_TIMESTAMPING_CNT,
-+				 tb[ETHTOOL_A_TSINFO_TIMESTAMPING],
-+				 sof_timestamping_names, extack);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (val & SOF_TIMESTAMPING_GHWTSTAMP)
-+		/* We do not support several hwtstamp config for now */
-+		return -EOPNOTSUPP;
-+
-+	return 0;
-+}
-+
-+int ethnl_tsinfo_start(struct netlink_callback *cb)
-+{
-+	const struct genl_dumpit_info *info = genl_dumpit_info(cb);
-+	struct ethnl_tsinfo_dump_ctx *ctx = (void *)cb->ctx;
-+	struct nlattr **tb = info->info.attrs;
-+	struct tsinfo_reply_data *reply_data;
-+	struct tsinfo_req_info *req_info;
-+	int ret;
-+
-+	BUILD_BUG_ON(sizeof(*ctx) > sizeof(cb->ctx));
-+
-+	req_info = kzalloc(sizeof(*req_info), GFP_KERNEL);
-+	if (!req_info)
-+		return -ENOMEM;
-+	reply_data = kzalloc(sizeof(*reply_data), GFP_KERNEL);
-+	if (!reply_data) {
-+		ret = -ENOMEM;
-+		goto free_req_info;
-+	}
-+
-+	ret = ethnl_parse_header_dev_get(&req_info->base,
-+					 tb[ETHTOOL_A_TSINFO_HEADER],
-+					 sock_net(cb->skb->sk), cb->extack,
-+					 false);
-+	if (ret < 0)
-+		goto free_reply_data;
-+
-+	ret = tsinfo_dump_parse_request(tb, cb->extack);
-+	if (ret < 0)
-+		goto put_header_dev;
-+
-+	ctx->req_info = req_info;
-+	ctx->reply_data = reply_data;
-+	ctx->pos_ifindex = 0;
-+	ctx->pos_phcindex = 0;
-+	ctx->pos_phcqualifier = HWTSTAMP_PROVIDER_QUALIFIER_PRECISE;
-+
-+	return 0;
-+
-+put_header_dev:
-+	if (req_info->base.dev) {
-+		ethnl_parse_header_dev_put(&req_info->base);
-+		req_info->base.dev = NULL;
-+	}
-+free_reply_data:
-+	kfree(reply_data);
-+free_req_info:
-+	kfree(req_info);
-+
-+	return ret;
-+}
-+
-+int ethnl_tsinfo_done(struct netlink_callback *cb)
-+{
-+	struct ethnl_tsinfo_dump_ctx *ctx = (void *)cb->ctx;
-+	struct tsinfo_req_info *req_info;
-+
-+	req_info = ctx->req_info;
-+	if (req_info->base.dev) {
-+		ethnl_parse_header_dev_put(&req_info->base);
-+		req_info->base.dev = NULL;
-+	}
-+	kfree(ctx->reply_data);
-+	kfree(ctx->req_info);
-+
-+	return 0;
-+}
-+
-+/* TSINFO_SET (set hwtstamp config) */
-+const struct nla_policy ethnl_tsinfo_set_policy[ETHTOOL_A_TSINFO_MAX + 1] = {
-+	[ETHTOOL_A_TSINFO_HEADER] = NLA_POLICY_NESTED(ethnl_header_policy),
-+	[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_NEST] = { .type = NLA_NESTED },
-+	[ETHTOOL_A_TSINFO_HWTSTAMP_FLAGS] = { .type = NLA_U32 },
-+	[ETHTOOL_A_TSINFO_RX_FILTERS] = { .type = NLA_NESTED },
-+	[ETHTOOL_A_TSINFO_TX_TYPES] = { .type = NLA_NESTED },
-+};
-+
-+static int ethnl_set_tsinfo_validate(struct ethnl_req_info *req_base,
-+				     struct genl_info *info)
-+{
-+	const struct net_device_ops *ops = req_base->dev->netdev_ops;
-+
-+	if (!ops->ndo_hwtstamp_set || !ops->ndo_hwtstamp_get)
-+		return -EOPNOTSUPP;
-+
-+	return 1;
-+}
-+
-+static int ethnl_set_tsinfo(struct ethnl_req_info *req_base,
-+			    struct genl_info *info)
-+{
-+	struct nlattr *hwtst_tb[ARRAY_SIZE(ethnl_tsinfo_hwtstamp_provider_policy)];
-+	unsigned long mask = 0, req_rx_filter, req_tx_type;
-+	struct kernel_hwtstamp_config hwtst_config = {0};
-+	struct net_device *dev = req_base->dev;
-+	struct hwtstamp_provider hwtstamp;
-+	struct nlattr **tb = info->attrs;
-+	int ret, phc_index = 0;
-+	bool mod = false;
-+
-+	BUILD_BUG_ON(__HWTSTAMP_TX_CNT > 32);
-+	BUILD_BUG_ON(__HWTSTAMP_FILTER_CNT > 32);
-+
-+	if (!netif_device_present(dev))
-+		return -ENODEV;
-+
-+	if (tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_NEST]) {
-+		ret = nla_parse_nested(hwtst_tb,
-+				       ARRAY_SIZE(ethnl_tsinfo_hwtstamp_provider_policy) - 1,
-+				       tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_NEST],
-+				       ethnl_tsinfo_hwtstamp_provider_policy, info->extack);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (!hwtst_tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_INDEX] ||
-+		    !hwtst_tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_QUALIFIER])
-+			return -EINVAL;
-+
-+		memcpy(&hwtstamp, &dev->hwtstamp, sizeof(hwtstamp));
-+		if (hwtstamp.ptp)
-+			phc_index = ptp_clock_index(hwtstamp.ptp);
-+
-+		ethnl_update_u32(&phc_index,
-+				 hwtst_tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_INDEX],
-+				 &mod);
-+		ethnl_update_u32(&hwtstamp.qualifier,
-+				 hwtst_tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_QUALIFIER],
-+				 &mod);
-+
-+		/* Does the hwtstamp supported in the netdev topology */
-+		if (mod) {
-+			hwtstamp.ptp = ptp_clock_get_by_index(phc_index);
-+			if (!hwtstamp.ptp)
-+				return -ENODEV;
-+
-+			if (!netdev_support_hwtstamp(dev, &hwtstamp))
-+				return -ENODEV;
-+		}
-+	}
-+
-+	/* Get current hwtstamp config if we are not changing the hwtstamp
-+	 * source
-+	 */
-+	if (!mod) {
-+		ret = dev_get_hwtstamp_phylib(dev, &hwtst_config);
-+		if (ret < 0 && ret != EOPNOTSUPP)
-+			return ret;
-+	}
-+
-+	/* Get the hwtstamp config from netlink */
-+	if (tb[ETHTOOL_A_TSINFO_TX_TYPES]) {
-+		ret = ethnl_parse_bitset(&req_tx_type, &mask,
-+					 __HWTSTAMP_TX_CNT,
-+					 tb[ETHTOOL_A_TSINFO_TX_TYPES],
-+					 ts_tx_type_names, info->extack);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (ffs(req_tx_type) != fls(req_tx_type))
-+			return -EINVAL;
-+
-+		hwtst_config.tx_type = ffs(req_tx_type) - 1;
-+	}
-+	if (tb[ETHTOOL_A_TSINFO_RX_FILTERS]) {
-+		ret = ethnl_parse_bitset(&req_rx_filter, &mask,
-+					 __HWTSTAMP_FILTER_CNT,
-+					 tb[ETHTOOL_A_TSINFO_RX_FILTERS],
-+					 ts_rx_filter_names, info->extack);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (ffs(req_rx_filter) != fls(req_rx_filter))
-+			return -EINVAL;
-+
-+		hwtst_config.rx_filter = ffs(req_rx_filter) - 1;
-+	}
-+	if (tb[ETHTOOL_A_TSINFO_HWTSTAMP_FLAGS]) {
-+		ret = nla_get_u32(tb[ETHTOOL_A_TSINFO_HWTSTAMP_FLAGS]);
-+		if (ret < 0)
-+			return ret;
-+		hwtst_config.flags = ret;
-+	}
-+
-+	ret = net_hwtstamp_validate(&hwtst_config);
-+	if (ret)
-+		return ret;
-+
-+	/* Disable current time stamping if we try to enable another one */
-+	if (mod && (hwtst_config.tx_type || hwtst_config.rx_filter)) {
-+		struct kernel_hwtstamp_config zero_config = {0};
-+
-+		ret = dev_set_hwtstamp_phylib(dev, &zero_config, info->extack);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	/* Changed the selected hwtstamp source if needed */
-+	if (mod)
-+		memcpy(&dev->hwtstamp, &hwtstamp, sizeof(hwtstamp));
-+
-+	ret = dev_set_hwtstamp_phylib(dev, &hwtst_config, info->extack);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 1;
-+}
-+
- const struct ethnl_request_ops ethnl_tsinfo_request_ops = {
- 	.request_cmd		= ETHTOOL_MSG_TSINFO_GET,
- 	.reply_cmd		= ETHTOOL_MSG_TSINFO_GET_REPLY,
-@@ -130,7 +694,11 @@ const struct ethnl_request_ops ethnl_tsinfo_request_ops = {
- 	.req_info_size		= sizeof(struct tsinfo_req_info),
- 	.reply_data_size	= sizeof(struct tsinfo_reply_data),
+-void efx_ptp_get_ts_info(struct efx_nic *efx, struct ethtool_ts_info *ts_info)
++void efx_ptp_get_ts_info(struct efx_nic *efx, struct kernel_ethtool_ts_info *ts_info)
+ {
+ 	struct efx_ptp_data *ptp = efx->ptp_data;
+ 	struct efx_nic *primary = efx->primary;
+diff --git a/drivers/net/ethernet/sfc/ptp.h b/drivers/net/ethernet/sfc/ptp.h
+index 2f30dbb490d2..6946203499ef 100644
+--- a/drivers/net/ethernet/sfc/ptp.h
++++ b/drivers/net/ethernet/sfc/ptp.h
+@@ -12,7 +12,7 @@
+ #include <linux/net_tstamp.h>
+ #include "net_driver.h"
  
-+	.parse_request		= tsinfo_parse_request,
- 	.prepare_data		= tsinfo_prepare_data,
- 	.reply_size		= tsinfo_reply_size,
- 	.fill_reply		= tsinfo_fill_reply,
-+
-+	.set_validate		= ethnl_set_tsinfo_validate,
-+	.set			= ethnl_set_tsinfo,
+-struct ethtool_ts_info;
++struct kernel_ethtool_ts_info;
+ int efx_ptp_probe(struct efx_nic *efx, struct efx_channel *channel);
+ void efx_ptp_defer_probe_with_channel(struct efx_nic *efx);
+ struct efx_channel *efx_ptp_channel(struct efx_nic *efx);
+@@ -23,7 +23,8 @@ int efx_ptp_set_ts_config(struct efx_nic *efx,
+ 			  struct netlink_ext_ack *extack);
+ int efx_ptp_get_ts_config(struct efx_nic *efx,
+ 			  struct kernel_hwtstamp_config *config);
+-void efx_ptp_get_ts_info(struct efx_nic *efx, struct ethtool_ts_info *ts_info);
++void efx_ptp_get_ts_info(struct efx_nic *efx,
++			 struct kernel_ethtool_ts_info *ts_info);
+ bool efx_ptp_is_ptp_tx(struct efx_nic *efx, struct sk_buff *skb);
+ int efx_ptp_get_mode(struct efx_nic *efx);
+ int efx_ptp_change_mode(struct efx_nic *efx, bool enable_wanted,
+diff --git a/drivers/net/ethernet/sfc/siena/ethtool.c b/drivers/net/ethernet/sfc/siena/ethtool.c
+index 14dd3893bdef..4c182d4edfc2 100644
+--- a/drivers/net/ethernet/sfc/siena/ethtool.c
++++ b/drivers/net/ethernet/sfc/siena/ethtool.c
+@@ -226,7 +226,7 @@ static void efx_ethtool_get_fec_stats(struct net_device *net_dev,
+ }
+ 
+ static int efx_ethtool_get_ts_info(struct net_device *net_dev,
+-				   struct ethtool_ts_info *ts_info)
++				   struct kernel_ethtool_ts_info *ts_info)
+ {
+ 	struct efx_nic *efx = netdev_priv(net_dev);
+ 
+diff --git a/drivers/net/ethernet/sfc/siena/ptp.c b/drivers/net/ethernet/sfc/siena/ptp.c
+index 4b5e2f0ba350..c473a4b6dd44 100644
+--- a/drivers/net/ethernet/sfc/siena/ptp.c
++++ b/drivers/net/ethernet/sfc/siena/ptp.c
+@@ -1780,7 +1780,7 @@ static int efx_ptp_ts_init(struct efx_nic *efx,
+ }
+ 
+ void efx_siena_ptp_get_ts_info(struct efx_nic *efx,
+-			       struct ethtool_ts_info *ts_info)
++			       struct kernel_ethtool_ts_info *ts_info)
+ {
+ 	struct efx_ptp_data *ptp = efx->ptp_data;
+ 	struct efx_nic *primary = efx->primary;
+diff --git a/drivers/net/ethernet/sfc/siena/ptp.h b/drivers/net/ethernet/sfc/siena/ptp.h
+index 6352f84424f6..b6133e7c5608 100644
+--- a/drivers/net/ethernet/sfc/siena/ptp.h
++++ b/drivers/net/ethernet/sfc/siena/ptp.h
+@@ -12,7 +12,7 @@
+ #include <linux/net_tstamp.h>
+ #include "net_driver.h"
+ 
+-struct ethtool_ts_info;
++struct kernel_ethtool_ts_info;
+ void efx_siena_ptp_defer_probe_with_channel(struct efx_nic *efx);
+ struct efx_channel *efx_siena_ptp_channel(struct efx_nic *efx);
+ int efx_siena_ptp_set_ts_config(struct efx_nic *efx,
+@@ -21,7 +21,7 @@ int efx_siena_ptp_set_ts_config(struct efx_nic *efx,
+ int efx_siena_ptp_get_ts_config(struct efx_nic *efx,
+ 				struct kernel_hwtstamp_config *config);
+ void efx_siena_ptp_get_ts_info(struct efx_nic *efx,
+-			       struct ethtool_ts_info *ts_info);
++			       struct kernel_ethtool_ts_info *ts_info);
+ bool efx_siena_ptp_is_ptp_tx(struct efx_nic *efx, struct sk_buff *skb);
+ int efx_siena_ptp_get_mode(struct efx_nic *efx);
+ int efx_siena_ptp_change_mode(struct efx_nic *efx, bool enable_wanted,
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+index 0e44b84fb7e7..d2e81b179ad3 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+@@ -1199,7 +1199,7 @@ static int stmmac_set_channels(struct net_device *dev,
+ }
+ 
+ static int stmmac_get_ts_info(struct net_device *dev,
+-			      struct ethtool_ts_info *info)
++			      struct kernel_ethtool_ts_info *info)
+ {
+ 	struct stmmac_priv *priv = netdev_priv(dev);
+ 
+diff --git a/drivers/net/ethernet/ti/am65-cpsw-ethtool.c b/drivers/net/ethernet/ti/am65-cpsw-ethtool.c
+index d6ce2c9f0a8d..c42ca2424deb 100644
+--- a/drivers/net/ethernet/ti/am65-cpsw-ethtool.c
++++ b/drivers/net/ethernet/ti/am65-cpsw-ethtool.c
+@@ -692,7 +692,7 @@ static void am65_cpsw_get_eth_mac_stats(struct net_device *ndev,
  };
+ 
+ static int am65_cpsw_get_ethtool_ts_info(struct net_device *ndev,
+-					 struct ethtool_ts_info *info)
++					 struct kernel_ethtool_ts_info *info)
+ {
+ 	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
+ 
+diff --git a/drivers/net/ethernet/ti/cpsw_ethtool.c b/drivers/net/ethernet/ti/cpsw_ethtool.c
+index f7b283353ba2..53ed23d68722 100644
+--- a/drivers/net/ethernet/ti/cpsw_ethtool.c
++++ b/drivers/net/ethernet/ti/cpsw_ethtool.c
+@@ -717,7 +717,7 @@ int cpsw_set_ringparam(struct net_device *ndev,
+ }
+ 
+ #if IS_ENABLED(CONFIG_TI_CPTS)
+-int cpsw_get_ts_info(struct net_device *ndev, struct ethtool_ts_info *info)
++int cpsw_get_ts_info(struct net_device *ndev, struct kernel_ethtool_ts_info *info)
+ {
+ 	struct cpsw_common *cpsw = ndev_to_cpsw(ndev);
+ 
+@@ -738,7 +738,7 @@ int cpsw_get_ts_info(struct net_device *ndev, struct ethtool_ts_info *info)
+ 	return 0;
+ }
+ #else
+-int cpsw_get_ts_info(struct net_device *ndev, struct ethtool_ts_info *info)
++int cpsw_get_ts_info(struct net_device *ndev, struct kernel_ethtool_ts_info *info)
+ {
+ 	info->so_timestamping =
+ 		SOF_TIMESTAMPING_TX_SOFTWARE |
+diff --git a/drivers/net/ethernet/ti/cpsw_priv.h b/drivers/net/ethernet/ti/cpsw_priv.h
+index 7efa72502c86..1f448290b9f4 100644
+--- a/drivers/net/ethernet/ti/cpsw_priv.h
++++ b/drivers/net/ethernet/ti/cpsw_priv.h
+@@ -510,6 +510,6 @@ int cpsw_set_ringparam(struct net_device *ndev,
+ int cpsw_set_channels_common(struct net_device *ndev,
+ 			     struct ethtool_channels *chs,
+ 			     cpdma_handler_fn rx_handler);
+-int cpsw_get_ts_info(struct net_device *ndev, struct ethtool_ts_info *info);
++int cpsw_get_ts_info(struct net_device *ndev, struct kernel_ethtool_ts_info *info);
+ 
+ #endif /* DRIVERS_NET_ETHERNET_TI_CPSW_PRIV_H_ */
+diff --git a/drivers/net/ethernet/ti/icssg/icssg_ethtool.c b/drivers/net/ethernet/ti/icssg/icssg_ethtool.c
+index 9a7dd7efcf69..0164f7e053af 100644
+--- a/drivers/net/ethernet/ti/icssg/icssg_ethtool.c
++++ b/drivers/net/ethernet/ti/icssg/icssg_ethtool.c
+@@ -110,7 +110,7 @@ static void emac_get_ethtool_stats(struct net_device *ndev,
+ }
+ 
+ static int emac_get_ts_info(struct net_device *ndev,
+-			    struct ethtool_ts_info *info)
++			    struct kernel_ethtool_ts_info *info)
+ {
+ 	struct prueth_emac *emac = netdev_priv(ndev);
+ 
+diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
+index 02cb6474f6dc..d286709ca3b9 100644
+--- a/drivers/net/ethernet/ti/netcp_ethss.c
++++ b/drivers/net/ethernet/ti/netcp_ethss.c
+@@ -1999,7 +1999,7 @@ static int keystone_set_link_ksettings(struct net_device *ndev,
+ 
+ #if IS_ENABLED(CONFIG_TI_CPTS)
+ static int keystone_get_ts_info(struct net_device *ndev,
+-				struct ethtool_ts_info *info)
++				struct kernel_ethtool_ts_info *info)
+ {
+ 	struct netcp_intf *netcp = netdev_priv(ndev);
+ 	struct gbe_intf *gbe_intf;
+@@ -2027,7 +2027,7 @@ static int keystone_get_ts_info(struct net_device *ndev,
+ }
+ #else
+ static int keystone_get_ts_info(struct net_device *ndev,
+-				struct ethtool_ts_info *info)
++				struct kernel_ethtool_ts_info *info)
+ {
+ 	info->so_timestamping =
+ 		SOF_TIMESTAMPING_TX_SOFTWARE |
+diff --git a/drivers/net/ethernet/xscale/ixp4xx_eth.c b/drivers/net/ethernet/xscale/ixp4xx_eth.c
+index e0d26148dfd9..4b09823e3713 100644
+--- a/drivers/net/ethernet/xscale/ixp4xx_eth.c
++++ b/drivers/net/ethernet/xscale/ixp4xx_eth.c
+@@ -1015,7 +1015,7 @@ static void ixp4xx_get_drvinfo(struct net_device *dev,
+ }
+ 
+ static int ixp4xx_get_ts_info(struct net_device *dev,
+-			      struct ethtool_ts_info *info)
++			      struct kernel_ethtool_ts_info *info)
+ {
+ 	struct port *port = netdev_priv(dev);
+ 
+diff --git a/drivers/net/macvlan.c b/drivers/net/macvlan.c
+index a3cc665757e8..77b60b87b7c4 100644
+--- a/drivers/net/macvlan.c
++++ b/drivers/net/macvlan.c
+@@ -1084,7 +1084,7 @@ static int macvlan_ethtool_get_link_ksettings(struct net_device *dev,
+ }
+ 
+ static int macvlan_ethtool_get_ts_info(struct net_device *dev,
+-				       struct ethtool_ts_info *info)
++				       struct kernel_ethtool_ts_info *info)
+ {
+ 	struct net_device *real_dev = macvlan_dev_real_dev(dev);
+ 
+diff --git a/drivers/net/netdevsim/ethtool.c b/drivers/net/netdevsim/ethtool.c
+index bd546d4d26c6..a49f84f0e877 100644
+--- a/drivers/net/netdevsim/ethtool.c
++++ b/drivers/net/netdevsim/ethtool.c
+@@ -141,7 +141,7 @@ nsim_set_fecparam(struct net_device *dev, struct ethtool_fecparam *fecparam)
+ }
+ 
+ static int nsim_get_ts_info(struct net_device *dev,
+-			    struct ethtool_ts_info *info)
++			    struct kernel_ethtool_ts_info *info)
+ {
+ 	struct netdevsim *ns = netdev_priv(dev);
+ 
+diff --git a/drivers/net/phy/bcm-phy-ptp.c b/drivers/net/phy/bcm-phy-ptp.c
+index d3e825c951ee..874a1b64b115 100644
+--- a/drivers/net/phy/bcm-phy-ptp.c
++++ b/drivers/net/phy/bcm-phy-ptp.c
+@@ -841,7 +841,7 @@ static int bcm_ptp_hwtstamp(struct mii_timestamper *mii_ts,
+ }
+ 
+ static int bcm_ptp_ts_info(struct mii_timestamper *mii_ts,
+-			   struct ethtool_ts_info *ts_info)
++			   struct kernel_ethtool_ts_info *ts_info)
+ {
+ 	struct bcm_ptp_private *priv = mii2priv(mii_ts);
+ 
+diff --git a/drivers/net/phy/dp83640.c b/drivers/net/phy/dp83640.c
+index 64fd1a109c0f..b3a9dca6cc1b 100644
+--- a/drivers/net/phy/dp83640.c
++++ b/drivers/net/phy/dp83640.c
+@@ -1395,7 +1395,7 @@ static void dp83640_txtstamp(struct mii_timestamper *mii_ts,
+ }
+ 
+ static int dp83640_ts_info(struct mii_timestamper *mii_ts,
+-			   struct ethtool_ts_info *info)
++			   struct kernel_ethtool_ts_info *info)
+ {
+ 	struct dp83640_private *dp83640 =
+ 		container_of(mii_ts, struct dp83640_private, mii_ts);
+diff --git a/drivers/net/phy/marvell_ptp.c b/drivers/net/phy/marvell_ptp.c
+index 09398af55db7..527b33b57d16 100644
+--- a/drivers/net/phy/marvell_ptp.c
++++ b/drivers/net/phy/marvell_ptp.c
+@@ -519,7 +519,7 @@ static int marvell_ptp_hwtstamp(struct mii_timestamper *mii_ts,
+ }
+ 
+ static int marvell_ptp_ts_info(struct mii_timestamper *mii_ts,
+-			       struct ethtool_ts_info *ts_info)
++			       struct kernel_ethtool_ts_info *ts_info)
+ {
+ 	struct marvell_ptp *ptp = mii_ts_to_ptp(mii_ts);
+ 
+diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+index 1c9eba331b01..b3571003135a 100644
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -2374,7 +2374,7 @@ static void lan8814_ptp_tx_ts_get(struct phy_device *phydev,
+ 	*seq_id = lanphy_read_page_reg(phydev, 5, PTP_TX_MSG_HEADER2);
+ }
+ 
+-static int lan8814_ts_info(struct mii_timestamper *mii_ts, struct ethtool_ts_info *info)
++static int lan8814_ts_info(struct mii_timestamper *mii_ts, struct kernel_ethtool_ts_info *info)
+ {
+ 	struct kszphy_ptp_priv *ptp_priv = container_of(mii_ts, struct kszphy_ptp_priv, mii_ts);
+ 	struct phy_device *phydev = ptp_priv->phydev;
+@@ -3651,7 +3651,7 @@ static irqreturn_t lan8841_handle_interrupt(struct phy_device *phydev)
+ }
+ 
+ static int lan8841_ts_info(struct mii_timestamper *mii_ts,
+-			   struct ethtool_ts_info *info)
++			   struct kernel_ethtool_ts_info *info)
+ {
+ 	struct kszphy_ptp_priv *ptp_priv;
+ 
+diff --git a/drivers/net/phy/mscc/mscc_ptp.c b/drivers/net/phy/mscc/mscc_ptp.c
+index e66d20eff7c4..c1ddae36a2ae 100644
+--- a/drivers/net/phy/mscc/mscc_ptp.c
++++ b/drivers/net/phy/mscc/mscc_ptp.c
+@@ -1134,7 +1134,7 @@ static int vsc85xx_hwtstamp(struct mii_timestamper *mii_ts,
+ }
+ 
+ static int vsc85xx_ts_info(struct mii_timestamper *mii_ts,
+-			   struct ethtool_ts_info *info)
++			   struct kernel_ethtool_ts_info *info)
+ {
+ 	struct vsc8531_private *vsc8531 =
+ 		container_of(mii_ts, struct vsc8531_private, mii_ts);
+diff --git a/drivers/net/phy/nxp-c45-tja11xx.c b/drivers/net/phy/nxp-c45-tja11xx.c
+index d18c133e6013..5af5ade4fc64 100644
+--- a/drivers/net/phy/nxp-c45-tja11xx.c
++++ b/drivers/net/phy/nxp-c45-tja11xx.c
+@@ -1058,7 +1058,7 @@ static int nxp_c45_hwtstamp(struct mii_timestamper *mii_ts,
+ }
+ 
+ static int nxp_c45_ts_info(struct mii_timestamper *mii_ts,
+-			   struct ethtool_ts_info *ts_info)
++			   struct kernel_ethtool_ts_info *ts_info)
+ {
+ 	struct nxp_c45_phy *priv = container_of(mii_ts, struct nxp_c45_phy,
+ 						mii_ts);
+diff --git a/drivers/ptp/ptp_ines.c b/drivers/ptp/ptp_ines.c
+index 1d2940a78455..5fc3631310da 100644
+--- a/drivers/ptp/ptp_ines.c
++++ b/drivers/ptp/ptp_ines.c
+@@ -556,7 +556,7 @@ static bool ines_timestamp_expired(struct ines_timestamp *ts)
+ }
+ 
+ static int ines_ts_info(struct mii_timestamper *mii_ts,
+-			struct ethtool_ts_info *info)
++			struct kernel_ethtool_ts_info *info)
+ {
+ 	info->so_timestamping =
+ 		SOF_TIMESTAMPING_TX_HARDWARE |
+diff --git a/drivers/s390/net/qeth_ethtool.c b/drivers/s390/net/qeth_ethtool.c
+index c1caf7734c3e..f184c58ecf24 100644
+--- a/drivers/s390/net/qeth_ethtool.c
++++ b/drivers/s390/net/qeth_ethtool.c
+@@ -247,7 +247,7 @@ static int qeth_set_channels(struct net_device *dev,
+ }
+ 
+ static int qeth_get_ts_info(struct net_device *dev,
+-			    struct ethtool_ts_info *info)
++			    struct kernel_ethtool_ts_info *info)
+ {
+ 	struct qeth_card *card = dev->ml_priv;
+ 
+diff --git a/include/linux/can/dev.h b/include/linux/can/dev.h
+index 1b92aed49363..23492213ea35 100644
+--- a/include/linux/can/dev.h
++++ b/include/linux/can/dev.h
+@@ -186,7 +186,7 @@ void close_candev(struct net_device *dev);
+ int can_change_mtu(struct net_device *dev, int new_mtu);
+ int can_eth_ioctl_hwts(struct net_device *netdev, struct ifreq *ifr, int cmd);
+ int can_ethtool_op_get_ts_info_hwts(struct net_device *dev,
+-				    struct ethtool_ts_info *info);
++				    struct kernel_ethtool_ts_info *info);
+ 
+ int register_candev(struct net_device *dev);
+ void unregister_candev(struct net_device *dev);
+diff --git a/include/linux/ethtool.h b/include/linux/ethtool.h
+index b90c33607594..f74190a8d9ee 100644
+--- a/include/linux/ethtool.h
++++ b/include/linux/ethtool.h
+@@ -18,6 +18,7 @@
+ #include <linux/if_ether.h>
+ #include <linux/netlink.h>
+ #include <uapi/linux/ethtool.h>
++#include <uapi/linux/net_tstamp.h>
+ 
+ struct compat_ethtool_rx_flow_spec {
+ 	u32		flow_type;
+@@ -644,6 +645,22 @@ struct ethtool_rxfh_param {
+ 	u8	input_xfrm;
+ };
+ 
++/**
++ * struct kernel_ethtool_ts_info - kernel copy of struct ethtool_ts_info
++ * @cmd: command number = %ETHTOOL_GET_TS_INFO
++ * @so_timestamping: bit mask of the sum of the supported SO_TIMESTAMPING flags
++ * @phc_index: device index of the associated PHC, or -1 if there is none
++ * @tx_types: bit mask of the supported hwtstamp_tx_types enumeration values
++ * @rx_filters: bit mask of the supported hwtstamp_rx_filters enumeration values
++ */
++struct kernel_ethtool_ts_info {
++	u32 cmd;
++	u32 so_timestamping;
++	int phc_index;
++	enum hwtstamp_tx_types tx_types;
++	enum hwtstamp_rx_filters rx_filters;
++};
++
+ /**
+  * struct ethtool_ops - optional netdev operations
+  * @cap_link_lanes_supported: indicates if the driver supports lanes
+@@ -900,7 +917,7 @@ struct ethtool_ops {
+ 	int	(*get_dump_data)(struct net_device *,
+ 				 struct ethtool_dump *, void *);
+ 	int	(*set_dump)(struct net_device *, struct ethtool_dump *);
+-	int	(*get_ts_info)(struct net_device *, struct ethtool_ts_info *);
++	int	(*get_ts_info)(struct net_device *, struct kernel_ethtool_ts_info *);
+ 	int     (*get_module_info)(struct net_device *,
+ 				   struct ethtool_modinfo *);
+ 	int     (*get_module_eeprom)(struct net_device *,
+@@ -1041,7 +1058,8 @@ int ethtool_get_phc_vclocks(struct net_device *dev, int **vclock_index);
+ 
+ /* Some generic methods drivers may use in their ethtool_ops */
+ u32 ethtool_op_get_link(struct net_device *dev);
+-int ethtool_op_get_ts_info(struct net_device *dev, struct ethtool_ts_info *eti);
++int ethtool_op_get_ts_info(struct net_device *dev,
++			   struct kernel_ethtool_ts_info *eti);
+ 
+ /**
+  * ethtool_mm_frag_size_add_to_min - Translate (standard) additional fragment
+@@ -1090,7 +1108,8 @@ static inline int ethtool_mm_frag_size_min_to_add(u32 val_min, u32 *val_add,
+  * @info: buffer to hold the result
+  * Returns zero on success, non-zero otherwise.
+  */
+-int ethtool_get_ts_info_by_layer(struct net_device *dev, struct ethtool_ts_info *info);
++int ethtool_get_ts_info_by_layer(struct net_device *dev,
++				 struct kernel_ethtool_ts_info *info);
+ 
+ /**
+  * ethtool_sprintf - Write formatted string to ethtool string data
+diff --git a/include/linux/mii_timestamper.h b/include/linux/mii_timestamper.h
+index 26b04f73f214..995db62570f9 100644
+--- a/include/linux/mii_timestamper.h
++++ b/include/linux/mii_timestamper.h
+@@ -59,7 +59,7 @@ struct mii_timestamper {
+ 			   struct phy_device *phydev);
+ 
+ 	int  (*ts_info)(struct mii_timestamper *mii_ts,
+-			struct ethtool_ts_info *ts_info);
++			struct kernel_ethtool_ts_info *ts_info);
+ 
+ 	struct device *device;
+ };
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 9a31243e9f7e..ea9e4f3c8bb1 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -1606,7 +1606,7 @@ static inline bool phy_rxtstamp(struct phy_device *phydev, struct sk_buff *skb,
+ }
+ 
+ static inline int phy_ts_info(struct phy_device *phydev,
+-			      struct ethtool_ts_info *tsinfo)
++			      struct kernel_ethtool_ts_info *tsinfo)
+ {
+ 	return phydev->mii_ts->ts_info(phydev->mii_ts, tsinfo);
+ }
+diff --git a/include/net/dsa.h b/include/net/dsa.h
+index 7c0da9effe4e..64d2fa463688 100644
+--- a/include/net/dsa.h
++++ b/include/net/dsa.h
+@@ -931,7 +931,7 @@ struct dsa_switch_ops {
+ 	 * ethtool timestamp info
+ 	 */
+ 	int	(*get_ts_info)(struct dsa_switch *ds, int port,
+-			       struct ethtool_ts_info *ts);
++			       struct kernel_ethtool_ts_info *ts);
+ 
+ 	/*
+ 	 * ethtool MAC merge layer
+diff --git a/include/soc/mscc/ocelot.h b/include/soc/mscc/ocelot.h
+index 1e1b40f4e664..6a37b29f4b4c 100644
+--- a/include/soc/mscc/ocelot.h
++++ b/include/soc/mscc/ocelot.h
+@@ -1016,7 +1016,7 @@ void ocelot_port_get_eth_mac_stats(struct ocelot *ocelot, int port,
+ void ocelot_port_get_eth_phy_stats(struct ocelot *ocelot, int port,
+ 				   struct ethtool_eth_phy_stats *phy_stats);
+ int ocelot_get_ts_info(struct ocelot *ocelot, int port,
+-		       struct ethtool_ts_info *info);
++		       struct kernel_ethtool_ts_info *info);
+ void ocelot_set_ageing_time(struct ocelot *ocelot, unsigned int msecs);
+ int ocelot_port_vlan_filtering(struct ocelot *ocelot, int port, bool enabled,
+ 			       struct netlink_ext_ack *extack);
+diff --git a/net/8021q/vlan_dev.c b/net/8021q/vlan_dev.c
+index 790b54a7cbe3..d0c08c871d30 100644
+--- a/net/8021q/vlan_dev.c
++++ b/net/8021q/vlan_dev.c
+@@ -677,7 +677,7 @@ static void vlan_ethtool_get_drvinfo(struct net_device *dev,
+ }
+ 
+ static int vlan_ethtool_get_ts_info(struct net_device *dev,
+-				    struct ethtool_ts_info *info)
++				    struct kernel_ethtool_ts_info *info)
+ {
+ 	const struct vlan_dev_priv *vlan = vlan_dev_priv(dev);
+ 	return ethtool_get_ts_info_by_layer(vlan->real_dev, info);
+diff --git a/net/dsa/user.c b/net/dsa/user.c
+index 5d666dfb317d..525de266a0d5 100644
+--- a/net/dsa/user.c
++++ b/net/dsa/user.c
+@@ -1726,7 +1726,7 @@ static int dsa_user_set_rxnfc(struct net_device *dev,
+ }
+ 
+ static int dsa_user_get_ts_info(struct net_device *dev,
+-				struct ethtool_ts_info *ts)
++				struct kernel_ethtool_ts_info *ts)
+ {
+ 	struct dsa_user_priv *p = netdev_priv(dev);
+ 	struct dsa_switch *ds = p->dp->ds;
+diff --git a/net/ethtool/common.c b/net/ethtool/common.c
+index e56bde53cd5c..b3f45c307301 100644
+--- a/net/ethtool/common.c
++++ b/net/ethtool/common.c
+@@ -629,7 +629,7 @@ int ethtool_check_ops(const struct ethtool_ops *ops)
+ 	return 0;
+ }
+ 
+-int __ethtool_get_ts_info(struct net_device *dev, struct ethtool_ts_info *info)
++int __ethtool_get_ts_info(struct net_device *dev, struct kernel_ethtool_ts_info *info)
+ {
+ 	const struct ethtool_ops *ops = dev->ethtool_ops;
+ 	struct phy_device *phydev = dev->phydev;
+@@ -651,7 +651,7 @@ int __ethtool_get_ts_info(struct net_device *dev, struct ethtool_ts_info *info)
+ 
+ int ethtool_get_phc_vclocks(struct net_device *dev, int **vclock_index)
+ {
+-	struct ethtool_ts_info info = { };
++	struct kernel_ethtool_ts_info info = { };
+ 	int num = 0;
+ 
+ 	if (!__ethtool_get_ts_info(dev, &info))
+@@ -661,7 +661,7 @@ int ethtool_get_phc_vclocks(struct net_device *dev, int **vclock_index)
+ }
+ EXPORT_SYMBOL(ethtool_get_phc_vclocks);
+ 
+-int ethtool_get_ts_info_by_layer(struct net_device *dev, struct ethtool_ts_info *info)
++int ethtool_get_ts_info_by_layer(struct net_device *dev, struct kernel_ethtool_ts_info *info)
+ {
+ 	return __ethtool_get_ts_info(dev, info);
+ }
+diff --git a/net/ethtool/common.h b/net/ethtool/common.h
+index 0f2b5f7eacee..9de3d6255818 100644
+--- a/net/ethtool/common.h
++++ b/net/ethtool/common.h
+@@ -44,7 +44,7 @@ bool convert_legacy_settings_to_link_ksettings(
+ 	const struct ethtool_cmd *legacy_settings);
+ int ethtool_get_max_rxfh_channel(struct net_device *dev, u32 *max);
+ int ethtool_get_max_rxnfc_channel(struct net_device *dev, u64 *max);
+-int __ethtool_get_ts_info(struct net_device *dev, struct ethtool_ts_info *info);
++int __ethtool_get_ts_info(struct net_device *dev, struct kernel_ethtool_ts_info *info);
+ 
+ extern const struct ethtool_phy_ops *ethtool_phy_ops;
+ extern const struct ethtool_pse_ops *ethtool_pse_ops;
+diff --git a/net/ethtool/ioctl.c b/net/ethtool/ioctl.c
+index 1763e8b697e1..d20396f338da 100644
+--- a/net/ethtool/ioctl.c
++++ b/net/ethtool/ioctl.c
+@@ -65,7 +65,8 @@ u32 ethtool_op_get_link(struct net_device *dev)
+ }
+ EXPORT_SYMBOL(ethtool_op_get_link);
+ 
+-int ethtool_op_get_ts_info(struct net_device *dev, struct ethtool_ts_info *info)
++int ethtool_op_get_ts_info(struct net_device *dev,
++			   struct kernel_ethtool_ts_info *info)
+ {
+ 	info->so_timestamping =
+ 		SOF_TIMESTAMPING_TX_SOFTWARE |
+@@ -2456,13 +2457,20 @@ static int ethtool_get_dump_data(struct net_device *dev,
+ 
+ static int ethtool_get_ts_info(struct net_device *dev, void __user *useraddr)
+ {
++	struct kernel_ethtool_ts_info kernel_info;
+ 	struct ethtool_ts_info info;
+ 	int err;
+ 
+-	err = __ethtool_get_ts_info(dev, &info);
++	err = __ethtool_get_ts_info(dev, &kernel_info);
+ 	if (err)
+ 		return err;
+ 
++	info.cmd = kernel_info.cmd;
++	info.so_timestamping = kernel_info.so_timestamping;
++	info.phc_index = kernel_info.phc_index;
++	info.tx_types = kernel_info.tx_types;
++	info.rx_filters = kernel_info.rx_filters;
++
+ 	if (copy_to_user(useraddr, &info, sizeof(info)))
+ 		return -EFAULT;
+ 
+diff --git a/net/ethtool/tsinfo.c b/net/ethtool/tsinfo.c
+index 9daed0aab162..608d270018cb 100644
+--- a/net/ethtool/tsinfo.c
++++ b/net/ethtool/tsinfo.c
+@@ -12,7 +12,7 @@ struct tsinfo_req_info {
+ 
+ struct tsinfo_reply_data {
+ 	struct ethnl_reply_data		base;
+-	struct ethtool_ts_info		ts_info;
++	struct kernel_ethtool_ts_info		ts_info;
+ };
+ 
+ #define TSINFO_REPDATA(__reply_base) \
+@@ -45,7 +45,7 @@ static int tsinfo_reply_size(const struct ethnl_req_info *req_base,
+ {
+ 	const struct tsinfo_reply_data *data = TSINFO_REPDATA(reply_base);
+ 	bool compact = req_base->flags & ETHTOOL_FLAG_COMPACT_BITSETS;
+-	const struct ethtool_ts_info *ts_info = &data->ts_info;
++	const struct kernel_ethtool_ts_info *ts_info = &data->ts_info;
+ 	int len = 0;
+ 	int ret;
+ 
+@@ -89,7 +89,7 @@ static int tsinfo_fill_reply(struct sk_buff *skb,
+ {
+ 	const struct tsinfo_reply_data *data = TSINFO_REPDATA(reply_base);
+ 	bool compact = req_base->flags & ETHTOOL_FLAG_COMPACT_BITSETS;
+-	const struct ethtool_ts_info *ts_info = &data->ts_info;
++	const struct kernel_ethtool_ts_info *ts_info = &data->ts_info;
+ 	int ret;
+ 
+ 	if (ts_info->so_timestamping) {
+diff --git a/net/sched/sch_taprio.c b/net/sched/sch_taprio.c
+index c5de70efdc86..06bf9cb894ca 100644
+--- a/net/sched/sch_taprio.c
++++ b/net/sched/sch_taprio.c
+@@ -1612,7 +1612,7 @@ static int taprio_parse_clockid(struct Qdisc *sch, struct nlattr **tb,
+ 
+ 	if (FULL_OFFLOAD_IS_ENABLED(q->flags)) {
+ 		const struct ethtool_ops *ops = dev->ethtool_ops;
+-		struct ethtool_ts_info info = {
++		struct kernel_ethtool_ts_info info = {
+ 			.cmd = ETHTOOL_GET_TS_INFO,
+ 			.phc_index = -1,
+ 		};
 
 -- 
 2.25.1
