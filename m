@@ -1,121 +1,125 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597E71350C8
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 18:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C67741C65;
+	Fri, 16 Feb 2024 18:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708108303; cv=none; b=JswvYlVhzzlhzzeghn4DjLQ+didPVce39SMJNgA4S2etN8ZgbWthI31G/SG5P4KkoJTlZg1P0lw+gXxCiNwJn693lOyR+6MX0P3Iv/6kPlViXruXDKFPHrBC/mCYUYcIQQDRZUUq6JVLfmCJrDU9MBV/sFLbBE1/SIsyRU4duNY=
+	t=1708108306; cv=none; b=bllmPxcUeAqatn5E3eIE/mY66WbCrncmwFbTGt/4awAiibPynb5iWKACfwzjloqK82yGE+Tto//6mLsNqpGDlWs1Ozlf9bghnOGYgaTZIyzxzAhVbtiszw67sJZnQQ+hyYKl4nwE/bKL3Q87scdsxsYdTAgc0fWwWASBh0eYFJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708108303; c=relaxed/simple;
-	bh=ZOaTdU6+mkYKcu73jBNLA/JSAJmZHt+8O8zlVTj/AiM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CpNxZGtHhm6Z01k2ZmWFu5OhKd1lN4Cfip12lKbb3nfxvEKtFV1adZcZst3FZA3SM3IQLr5NcbJTdgs2cLWuT+0CXABamg9JKF2AxHnOCOzWQfFqdRTxsq8GjbPFI+x7jMAbJWnfu5HLPCkJUJP4Kq2H6Y/tYbKQefUClpQk0RU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=N0SEb23L; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
+	s=arc-20240116; t=1708108306; c=relaxed/simple;
+	bh=s9cIRkFaKtrccc7vtLJUttfg3iWmA2GqRjx0bO9OYd8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fU/PikZsBP6SN/8k1zfecuPBrOZh6HDaR1Mp6VaIlk+UPZkKWREdDV9Gd7Ll4XjV7ijTUxx8WW9lcYubG3YQtbCsu9LfQEupwiT71r+48/dkB5uZfa4HqVb1KeMkrAvPKAbZtsnp70l8FiyYISwSPDcdNgr/zd0SKaxuoE7XPlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qTNUD52m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="N0SEb23L"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3c1333b0974so1781021b6e.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 10:31:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1708108301; x=1708713101; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eIq/RsKJ+ZDmqaV4DNR53VSSNnL2VAVCUisag/qJ124=;
-        b=N0SEb23LelsStLT58qIHRcuxwaRuV+ph907HfptgXBYsWzkKUUA6vLZG8d8B0yWkgD
-         50vde9a1DrDily4MklVo7zvFUooP3m70ZqxC/tcveowBwH0YLvGbP96Sb4qMBKpLI+UX
-         mBq2Zlphj5vn0HoEQlREACIte4xStNScB9C9c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708108301; x=1708713101;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eIq/RsKJ+ZDmqaV4DNR53VSSNnL2VAVCUisag/qJ124=;
-        b=PBBSwq+vQfosGrsp0HRW3qII/WfkiiKcAoR7Uepz8mBAvSfC0RcqNN9KgruzAFAPqO
-         jF5YXZ+Cy++V56W0dDCEyBeaBwej9ecgmTFp75icBp96K3ROlra2UjGJuzQTDluAoGkQ
-         j+gwvD8nGNzgsj0tYDhhks1giLvWJt9ktziyxDHIVCO3Eqr1wkaxaihlXdT1MVhyPvNR
-         7EJYJXy55KQJ1kIS+7yGjGpE2bvuuhgxu3ETx5r+XH/FRViUmu2oBeVd9tOmoqv4ENJb
-         aGJUSugikkIXEtdw5XtxkzpJLRNyz1d42ggvFztosgAzKSplWlFKdO/37F2tOlDgqF1T
-         TWsg==
-X-Gm-Message-State: AOJu0Yyq2opdH4xOkPpoQgjh+/3v5EvaXcB8xhyHa8G97gOcm2AdjswK
-	b/NEw6KqN0BlFYEGhgQjzyPq/744eISPqa9Fi4+zFLZGEsYZr11dol7uDTJYWTAgrEI1WVFUluu
-	1
-X-Google-Smtp-Source: AGHT+IHfLlmYY2tH68nTJrzTI3LtFVSzFmMAcGztCM/IKH8k8dg4/JeX+ZCpu5PdJvYZxlHkpp3T/g==
-X-Received: by 2002:a05:6808:1642:b0:3c0:4d21:e62a with SMTP id az2-20020a056808164200b003c04d21e62amr6746614oib.31.1708108300676;
-        Fri, 16 Feb 2024 10:31:40 -0800 (PST)
-Received: from joelbox2.. (c-98-249-43-138.hsd1.va.comcast.net. [98.249.43.138])
-        by smtp.gmail.com with ESMTPSA id nd13-20020a056214420d00b0068cdadb5e7esm159722qvb.31.2024.02.16.10.31.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 10:31:39 -0800 (PST)
-From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To: linux-kernel@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>
-Cc: Suleiman Souhlal <suleiman@google.com>,
-	Youssef Esmat <youssefesmat@google.com>,
-	David Vernet <void@manifault.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	joseph.salisbury@canonical.com,
-	Luca Abeni <luca.abeni@santannapisa.it>,
-	Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
-	Vineeth Pillai <vineeth@bitbyteword.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Phil Auld <pauld@redhat.com>,
-	Joel Fernandes <joel@joelfernandes.org>
-Subject: [PATCH 02/10] sched/core: Clear prev->dl_server in CFS pick fast path
-Date: Fri, 16 Feb 2024 13:31:00 -0500
-Message-Id: <20240216183108.1564958-3-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240216183108.1564958-1-joel@joelfernandes.org>
-References: <20240216183108.1564958-1-joel@joelfernandes.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qTNUD52m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2258DC433C7;
+	Fri, 16 Feb 2024 18:31:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708108305;
+	bh=s9cIRkFaKtrccc7vtLJUttfg3iWmA2GqRjx0bO9OYd8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qTNUD52mWWrTFRVL3RFKZTQ4HXBrw8mY1wPxDEkLg0PSOKnV39juO/H8ICq31kwH1
+	 IKxlawS6VlNOP3EW5QmnyXC00lx0TOGC9L+oPwAtz5dEERDVKGzPv+DUX0GwJhugfn
+	 HYMD/ZHG093YVDxSZ32Nj0tYMiZ9FXqU4TEvO4fW0pkvtLnb6Ryot5KRpWJlRGX0IF
+	 RWipJUTEm+YTfUsNsbTkeG2MOXfNF7kCb4Mnfw4JPpPavXsmQBJlgC4DYgD6+pCCJ2
+	 3SSIdurWIBj6174ERkqXYqAIOW7ThXrBXUOEZhB59qqV6HGwRgNW+040qtsUIQ97BW
+	 74KhpymgE4BJg==
+Date: Fri, 16 Feb 2024 12:31:43 -0600
+From: Bjorn Andersson <andersson@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mukesh Ojha <quic_mojha@quicinc.com>, Mark Brown <broonie@kernel.org>, 
+	konrad.dybcio@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v11 1/4] firmware: qcom: scm: provide a read-modify-write
+ function
+Message-ID: <6lmxlfopjzxbvn5oe6uha2ppdjderuymgq3h3gz2suyb5i2vs6@mpadw4b37s5t>
+References: <1704727654-13999-1-git-send-email-quic_mojha@quicinc.com>
+ <1704727654-13999-2-git-send-email-quic_mojha@quicinc.com>
+ <CACRpkdY7fbFyNNd6GAikxC3+wk0ca8Yn_8__zkp+Q-deJeJ_LQ@mail.gmail.com>
+ <3a17f36a-04bf-04f2-7a22-82b76977b325@quicinc.com>
+ <CACRpkdbnj3W3k=snTx3iadHWU+RNv9GY4B3O4K0hu8TY+DrK=Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdbnj3W3k=snTx3iadHWU+RNv9GY4B3O4K0hu8TY+DrK=Q@mail.gmail.com>
 
-From: Youssef Esmat <youssefesmat@google.com>
+On Tue, Jan 09, 2024 at 02:34:10PM +0100, Linus Walleij wrote:
+> On Tue, Jan 9, 2024 at 2:24 PM Mukesh Ojha <quic_mojha@quicinc.com> wrote:
+> > On 1/9/2024 6:44 PM, Linus Walleij wrote:
+> > > On Mon, Jan 8, 2024 at 4:28 PM Mukesh Ojha <quic_mojha@quicinc.com> wrote:
+> > >
+> > >> It was realized by Srinivas K. that there is a need of
+> > >> read-modify-write scm exported function so that it can
+> > >> be used by multiple clients.
+> > >>
+> > >> Let's introduce qcom_scm_io_rmw() which masks out the bits
+> > >> and write the passed value to that bit-offset.
+> > > (...)
+> > >> +int qcom_scm_io_rmw(phys_addr_t addr, unsigned int mask, unsigned int val)
+> > >> +{
+> > >> +       unsigned int old, new;
+> > >> +       int ret;
+> > >> +
+> > >> +       if (!__scm)
+> > >> +               return -EINVAL;
+> > >> +
+> > >> +       spin_lock(&__scm->lock);
+> > >> +       ret = qcom_scm_io_readl(addr, &old);
+> > >> +       if (ret)
+> > >> +               goto unlock;
+> > >> +
+> > >> +       new = (old & ~mask) | (val & mask);
+> > >> +
+> > >> +       ret = qcom_scm_io_writel(addr, new);
+> > >> +unlock:
+> > >> +       spin_unlock(&__scm->lock);
+> > >> +       return ret;
+> > >> +}
+> > >> +EXPORT_SYMBOL_GPL(qcom_scm_io_rmw);
+> > >
+> > > This looks a lot like you are starting to re-invent regmaps
+> > > regmap_update_bits().
+> > >
+> > > If you are starting to realize you need more and more of
+> > > regmap, why not use regmap and its functions?
+> >
+> > I think, this discussion has happened already ..
+> >
+> > https://lore.kernel.org/lkml/CACRpkdb95V5GC81w8fiuLfx_V1DtWYpO33FOfMnArpJeC9SDQA@mail.gmail.com/
+> 
+> That discussion ended with:
+> 
+> [Bjorn]
+> > We'd still need qcom_scm_io_readl() and qcom_scm_io_writel() exported to
+> > implement the new custom regmap implementation - and the struct
+> > regmap_config needed in just pinctrl-msm alone would be larger than the
+> > one function it replaces.
+> 
+> When you add more and more accessors the premise starts to
+> change, and it becomes more and more of a reimplementation.
+> 
+> It may be time to actually fix this.
+> 
 
-In case the previous pick was a DL server pick, ->dl_server might be
-set. Clear it in the fast path as well.
+Thought I had replied to this already, did we discuss this previously as
+well?
 
-Signed-off-by: Youssef Esmat <youssefesmat@google.com>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- kernel/sched/core.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+My concern with expressing this as a regmap is that from the provider's
+point of view, the regmap would span the entire 32-bit address space.
+I'm guessing that there's something on the other side limiting what
+subregions are actually accessible for each platform/firmware
+configuration, but I'm not convinced that regmap a good abstraction...
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 7f3a2596c1ed..63f41453b79e 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6036,6 +6036,13 @@ __pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 			p = pick_next_task_idle(rq);
- 		}
- 
-+		/*
-+		 * This is a normal CFS pick, but the previous could be a DL pick.
-+		 * Clear it as previous is no longer picked.
-+		 */
-+		if (prev->dl_server)
-+			prev->dl_server = NULL;
-+
- 		/*
- 		 * This is the fast path; it cannot be a DL server pick;
- 		 * therefore even if @p == @prev, ->dl_server must be NULL.
--- 
-2.34.1
+Regards,
+Bjorn
 
+> Yours,
+> Linus Walleij
