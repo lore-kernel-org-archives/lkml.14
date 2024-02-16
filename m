@@ -1,57 +1,57 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27F1946F
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 00:08:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC760DDCA
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 00:08:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708042133; cv=none; b=P/T722mCxLLalc5x7JdlS8C97cyPNUkjVwFkFt7+PKX4dJN0xvvkouL8NhH9ZnlT44Z5MUB2F9AwlK8TlCp7FYX3T6+YnA/UvWMGA8zqU0VQGH+86UgGUJqrx9B0bWLausYrlt7zTbh+WAjH6UA1M8NAxMVYLiaLeO3X5hyoZW8=
+	t=1708042139; cv=none; b=j54iWof2BUwkj7/pxGlHCzLHP5NVSrP6fBKiWi0+ZpT15QtAT7aCwJV3Mhkd5AUNekdD0zO2juT0EN+jj++oEKSdC8j06kwAHM7pIPdhsb/9bSDFfUJeLuC0pG6+puZLc4i5Xh8Ap14EHAP84XYZ0WSqB8rwfAQjkPikYixuk+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708042133; c=relaxed/simple;
-	bh=8VSz8YhXCzbdmH6lcJ0g9fYzRT+znl2jSP343uwb5Vg=;
+	s=arc-20240116; t=1708042139; c=relaxed/simple;
+	bh=JkAv4hlLlinDg6WO1Ei4HQwcmM/jZtqgc/bSglhHsww=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=alObSoSScStqyjtd/h/vTVqR6J8ma6u7XWT8zxMzv0vFxcv9jb6Mn8/PzbZCAFMwIsLYu4hRqbOJZ1SGNnqUyKV6upBawRWofxqBYOfro5+wz0S5RM3ugshjpEu7AwZVnDXvIVjW9tkGNJR66OzsqD8V4cNoOHj8KYViq3ej5xM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=bak94Cr+; arc=none smtp.client-ip=209.85.214.178
+	 MIME-Version; b=KaaxG/x/hlIDsvZj2k+rycV/wCG3by5xEls5/NSkTBGEIConLaaAY4JodlEJHpDQMmlKEij9Yyb+PNEc++h9AnzCcHbscJ2ycQt8/fwMsnruHySALRaQFpuQ7bJ4PNnT641oo6NEsFAEAldugi2VbX0AogFDWRnY1zeucfVU9qQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=S6Y5JR1w; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="bak94Cr+"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d780a392fdso1301725ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 16:08:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="S6Y5JR1w"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d93edfa76dso1264925ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 16:08:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1708042130; x=1708646930; darn=vger.kernel.org;
+        d=sifive.com; s=google; t=1708042136; x=1708646936; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=97Vl//GERs+wHDqqFSQvA7qG8VAex8iXqN6MPz7a8Ck=;
-        b=bak94Cr+9m27sXnJFE7F8kwdW2D69B0F2dlY1FdiKsGZsVY8OQFMBHbwrfU5tSWHf+
-         RY/ZNCR1M431Sq6pFZntOAhUHHKtQO2vZrC5ESOe5Iq+xZtVCZiboHH9oz3W+lqtjjg9
-         e1TylvH0ZzqaosfpkVsBtDdmsNEiPbZd6AIqgxApcTfiKDArMfxUiDUGaUGLtv+tBe5f
-         fUAGoRXvVmASOy5MKjXx4WaPEKSjDv7qCVc/wBal9gA0m3zEaxhyEPlwvVcxuU5yOdy4
-         QdRiMuyOgBlqMRooJs5s8/5Y6mJSUYdgFAaEV8WXRKt+KXwur1i/m5vJIimmFjfpoRzs
-         zYEQ==
+        bh=p/acc0KNWqEiBrI2bUhG9VfOZxykMoq55GvaWo8V2Yc=;
+        b=S6Y5JR1w3TP0drTyAZGnJwJacp5+a+bICH80W8ZiRiRzeQ6eVW4km8dbVHFSpXeCOc
+         K3TqdDSVQLPlKuUMygKZw6DsQsBXjAZ1i7XBsVzddTelE1Lx2Bd3RULAvVh9IMufj7ti
+         jNYBx2G43Jbc3Zc7muX0X9pBd6aCPIichTxJpOVSkBCXeYKPl+ENebSJEFYBw++d6Jkm
+         ocP7RaUkwiW23wZb482Zj9MzzIKCysCwb63uGe2sISP2DGu3tpAeUW91XFCk9kC4zUTO
+         haQ7NdzywK4jzWMinCq//YVnLX2ocPmRgVhDeEUJMaBlFKyQxqCYoL+RRX4DmQuE9a+7
+         eTgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708042130; x=1708646930;
+        d=1e100.net; s=20230601; t=1708042136; x=1708646936;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=97Vl//GERs+wHDqqFSQvA7qG8VAex8iXqN6MPz7a8Ck=;
-        b=O0EUjHNYVNjO3hn4P0EokwBHKWRv6HQZsfDQkn+RehriKyWQ4lUIC9XfdC9o1Wwe0z
-         WoR8bizcK4u8+zDpktgAkzEdN7yY6mBHIOm6sjEIlLuBtJ/aduLh+/mejA4Yg+vXXekg
-         cgyX4Ng0MTpmDjl0CY388LaVGYF06YkoyE6N+ov+og96jk+KjUM0JLUoW7G9RL5qy3Wf
-         NdbizHPD3I3vnwG+obYtN1Cwpx3kasbJ362bvNgPWw+9eBeRpg0sEnsDY5qi27f+9Ya5
-         LrSA32N6TmPmTE1Rv0OMvoulcekfTmmFFUZ6W6Sg7jOCJ7BeBUq7m3F3DydQBq/rlHSK
-         XTlw==
-X-Forwarded-Encrypted: i=1; AJvYcCVX1vC/ZSgk5N9ImOuzOihAPWwDvRfZgOFdPZwfTFgn6BDHNogXuyVyOm/3W3FqZH2jICd43Ypiadhkav8OgqdTVrAS+SGAFyLC3pZh
-X-Gm-Message-State: AOJu0YyaBcUrUcChgdDS2FV4McnUjB6UiVfPsLxCeV7VSyl1zsW4CAIQ
-	GFq+8VKHZqCyJ4fBgFuZSJpWaVeK71kz78it/VT5j9jCPGUTbYgkPocfZNtldEg=
-X-Google-Smtp-Source: AGHT+IHM3CCjf5Wmu1mQ0DXHmEVhMoKJarp5BUlbNPnrFrVhOAN6O5I6g9AI9OcGFnljzXBeMdhPNw==
-X-Received: by 2002:a17:903:443:b0:1db:a54b:acaf with SMTP id iw3-20020a170903044300b001dba54bacafmr558755plb.39.1708042129975;
-        Thu, 15 Feb 2024 16:08:49 -0800 (PST)
+        bh=p/acc0KNWqEiBrI2bUhG9VfOZxykMoq55GvaWo8V2Yc=;
+        b=hsHKCFNx4m9EWVqgMAZ076U8W7v8rwPVIHiUi4rWdYsl15wFpYRJw1bw+V9fLTZM/N
+         FLihkZuH6UmSo0nVDTdehircsmi4oj797tFuIymbIniACyfTf56hLmbFyx6HMzCHY8Nw
+         KoHl8YpCzAKyA7KcvdVwz7vLGlgcMdWz39fl0ZNyy/j7QerpWFRLKvwejic1iMbxBaQm
+         3plkDi3b3ZuWjGEwUSdJSvoTlC4dRq3wfdEbv1wh23pmnLyNPk6hls7yxkQPgDoWpZ2W
+         XmguGjsCWlLF0b34MIytsYh0Fyqee6NRMqIGQ7C15c5AcbHkGCCxnGx4Yd4IiluV3DFX
+         LpjA==
+X-Forwarded-Encrypted: i=1; AJvYcCUdgfWIZUk/JtuEVjyQB22S7z9S9h2JW4G17AVCwtJF63H2imFbH+GenL8cl4ivEmoU2AR3CYQ6rwhbG3NTKIMAmGfB82MYZTVHvDu8
+X-Gm-Message-State: AOJu0YxEJMobjB1uDZzTRUzcbExX0VlsdHhYfcJ37NYNtNERry2LOmrZ
+	gcQq15Y/otrG1ssSgeGd2fA6d/JbGYO4jIoWnNJOJNygiC0umPi97g08nR4lkwU=
+X-Google-Smtp-Source: AGHT+IHJy/A1S+sldWkfbkh3Ezw6XCoeo322r0XKeVNd/Im9EAWCGT0knZuiKSibPYqHNzxRxpUokQ==
+X-Received: by 2002:a17:902:ec89:b0:1db:aa46:4923 with SMTP id x9-20020a170902ec8900b001dbaa464923mr46470plg.40.1708042136146;
+        Thu, 15 Feb 2024 16:08:56 -0800 (PST)
 Received: from sw06.internal.sifive.com ([4.53.31.132])
-        by smtp.gmail.com with ESMTPSA id bb6-20020a170902bc8600b001db3d365082sm1789486plb.265.2024.02.15.16.08.47
+        by smtp.gmail.com with ESMTPSA id bb6-20020a170902bc8600b001db3d365082sm1789486plb.265.2024.02.15.16.08.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Feb 2024 16:08:48 -0800 (PST)
+        Thu, 15 Feb 2024 16:08:54 -0800 (PST)
 From: Samuel Holland <samuel.holland@sifive.com>
 To: Will Deacon <will@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
@@ -65,10 +65,11 @@ Cc: Palmer Dabbelt <palmer@dabbelt.com>,
 	Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	linux-arm-kernel@lists.infradead.org,
+	Greentime Hu <greentime.hu@sifive.com>,
 	Samuel Holland <samuel.holland@sifive.com>
-Subject: [PATCH v1 4/6] drivers/perf: Add SiFive Extensible Cache PMU driver
-Date: Thu, 15 Feb 2024 16:08:16 -0800
-Message-ID: <20240216000837.1868917-5-samuel.holland@sifive.com>
+Subject: [PATCH v1 6/6] drivers/perf: Add SiFive Private L2 Cache PMU driver
+Date: Thu, 15 Feb 2024 16:08:18 -0800
+Message-ID: <20240216000837.1868917-7-samuel.holland@sifive.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240216000837.1868917-1-samuel.holland@sifive.com>
 References: <20240216000837.1868917-1-samuel.holland@sifive.com>
@@ -80,148 +81,154 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Eric Lin <eric.lin@sifive.com>
+From: Greentime Hu <greentime.hu@sifive.com>
 
-Add a driver for the PMU found in the SiFive Extensible Cache
+Add a driver for the PMU found in the SiFive Private L2 Cache
 controller. This PMU provides a configurable number of counters and a
 variety of events. Events are grouped into sets. Each counter can count
 events from only one set at a time; however, it can count any number of
 events within that set simultaneously. The PMU hardware does not provide
-an overflow interrupt.
+an overflow interrupt or a way to atomically control groups of counters.
 
-The counter inhibit register is used to atomically start/stop/read a
-group of counters so their values can be usefully compared.
+A separate Private L2 Cache instance exists for each core, so this
+driver supports per-core and per-task profiling.
 
 Some events can be filtered further by client ID (e.g. CPU or external
 DMA master). That functionality is not supported by this driver.
 
-This driver further assumes that a single Extensible Cache instance is
-shared by all CPUs in the system.
-
 Example usage:
 
-$ perf stat -e sifive_ecache_pmu/inner_rd_request/,
-	       sifive_ecache_pmu/inner_wr_request/,
-	       sifive_ecache_pmu/inner_rd_request_hit/,
-	       sifive_ecache_pmu/inner_wr_request_hit/ ls
+$ perf stat -e sifive_pl2_pmu/inner_get/,sifive_pl2_pmu/outer_get/ ls
 
- Performance counter stats for 'system wide':
+ Performance counter stats for 'ls':
 
-            148001      sifive_ecache_pmu/inner_rd_request/
-            121064      sifive_ecache_pmu/inner_wr_request/
-            113124      sifive_ecache_pmu/inner_rd_request_hit/
-            120860      sifive_ecache_pmu/inner_wr_request_hit/
+             95041      sifive_pl2_pmu/inner_get/
+                 3      sifive_pl2_pmu/outer_get/
 
-       0.010643962 seconds time elapsed
+       0.003971538 seconds time elapsed
 
-Example combining the read/write events together within each counter:
+       0.000000000 seconds user
+       0.006315000 seconds sys
 
-$ perf stat -e sifive_ecache_pmu/event=0x601/,
-	       sifive_ecache_pmu/event=0xc001/ ls
+Example combining multiple events together within each counter:
 
- Performance counter stats for 'system wide':
+$ perf stat -e sifive_pl2_pmu/event=0x301/,   # inner_put_*_data
+	       sifive_pl2_pmu/event=0x303/ ls # outer_put_*_data
 
-            262619      sifive_ecache_pmu/event=0x601/
-            224533      sifive_ecache_pmu/event=0xc001/
+ Performance counter stats for 'ls':
 
-       0.009794808 seconds time elapsed
+              6828      sifive_pl2_pmu/event=0x301/
+                11      sifive_pl2_pmu/event=0x303/
 
+       0.005696538 seconds time elapsed
+
+       0.000000000 seconds user
+       0.006337000 seconds sys
+
+Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+Co-developed-by: Eric Lin <eric.lin@sifive.com>
 Signed-off-by: Eric Lin <eric.lin@sifive.com>
 Co-developed-by: Samuel Holland <samuel.holland@sifive.com>
 Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
 ---
 
- drivers/perf/Kconfig             |  10 +
- drivers/perf/Makefile            |   1 +
- drivers/perf/sifive_ecache_pmu.c | 675 +++++++++++++++++++++++++++++++
- include/linux/cpuhotplug.h       |   1 +
- 4 files changed, 687 insertions(+)
- create mode 100644 drivers/perf/sifive_ecache_pmu.c
+Changes in v1:
+ - Add missing events to PL2 sets 2, 4, and 5
+ - Use event_base and config_base to precompute register addresses
+ - Check event validity earlier, in the .event_init hook
+ - Implement .filter for systems where only some CPUs have a PL2
+ - Only allocate percpu data when probing each PL2 instance
+ - Reference count the `struct pmu` to fix unbind/bind crashes
+ - Probe via DT since the PMU driver is now the only PL2 driver
+ - Allow the driver to be built as a module
+
+ drivers/perf/Kconfig          |  10 +
+ drivers/perf/Makefile         |   1 +
+ drivers/perf/sifive_pl2_pmu.c | 748 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 759 insertions(+)
+ create mode 100644 drivers/perf/sifive_pl2_pmu.c
 
 diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
-index b4e4db7424b4..8a3b2b88d8b5 100644
+index 8a3b2b88d8b5..bd5ebed8630b 100644
 --- a/drivers/perf/Kconfig
 +++ b/drivers/perf/Kconfig
-@@ -164,6 +164,16 @@ config SIFIVE_CCACHE_PMU
+@@ -174,6 +174,16 @@ config SIFIVE_ECACHE_PMU
  	  for measuring whole-system L2/L3 cache performance using the perf
  	  events subsystem.
  
-+config SIFIVE_ECACHE_PMU
-+	tristate "SiFive Extensible Cache PMU"
++config SIFIVE_PL2_PMU
++	tristate "SiFive Private L2 Cache PMU"
 +	depends on RISCV || COMPILE_TEST
 +	depends on OF
 +	help
-+	  Support for the Extensible Cache performance monitoring unit (PMU) on
-+	  SiFive platforms. The Composable Cache PMU provides up to 8 counters
-+	  for measuring whole-system L2/L3 cache performance using the perf
-+	  events subsystem.
++	  Support for the Private L2 Cache performance monitoring unit (PMU) on
++	  SiFive platforms. The Private L2 Cache PMU provides up to 64 counters
++	  for measuring per-program or per-hart L2 cache performance using the
++	  perf events subsystem.
 +
  config THUNDERX2_PMU
  	tristate "Cavium ThunderX2 SoC PMU UNCORE"
  	depends on ARCH_THUNDER2 || COMPILE_TEST
 diff --git a/drivers/perf/Makefile b/drivers/perf/Makefile
-index 51ef5f50ace4..a51686b413f2 100644
+index a51686b413f2..d5501196dcd8 100644
 --- a/drivers/perf/Makefile
 +++ b/drivers/perf/Makefile
-@@ -16,6 +16,7 @@ obj-$(CONFIG_RISCV_PMU) += riscv_pmu.o
- obj-$(CONFIG_RISCV_PMU_LEGACY) += riscv_pmu_legacy.o
+@@ -17,6 +17,7 @@ obj-$(CONFIG_RISCV_PMU_LEGACY) += riscv_pmu_legacy.o
  obj-$(CONFIG_RISCV_PMU_SBI) += riscv_pmu_sbi.o
  obj-$(CONFIG_SIFIVE_CCACHE_PMU) += sifive_ccache_pmu.o
-+obj-$(CONFIG_SIFIVE_ECACHE_PMU) += sifive_ecache_pmu.o
+ obj-$(CONFIG_SIFIVE_ECACHE_PMU) += sifive_ecache_pmu.o
++obj-$(CONFIG_SIFIVE_PL2_PMU) += sifive_pl2_pmu.o
  obj-$(CONFIG_THUNDERX2_PMU) += thunderx2_pmu.o
  obj-$(CONFIG_XGENE_PMU) += xgene_pmu.o
  obj-$(CONFIG_ARM_SPE_PMU) += arm_spe_pmu.o
-diff --git a/drivers/perf/sifive_ecache_pmu.c b/drivers/perf/sifive_ecache_pmu.c
+diff --git a/drivers/perf/sifive_pl2_pmu.c b/drivers/perf/sifive_pl2_pmu.c
 new file mode 100644
-index 000000000000..51b2fa3781c9
+index 000000000000..d0bbac0dec06
 --- /dev/null
-+++ b/drivers/perf/sifive_ecache_pmu.c
-@@ -0,0 +1,675 @@
++++ b/drivers/perf/sifive_pl2_pmu.c
+@@ -0,0 +1,748 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * SiFive EC (Extensible Cache) PMU driver
++ * SiFive Private L2 Cache PMU driver
 + *
-+ * Copyright (C) 2023-2024 SiFive, Inc.
-+ * Copyright (C) Eric Lin <eric.lin@sifive.com>
-+ *
++ * Copyright (C) 2018-2024 SiFive, Inc.
 + */
 +
-+#include <linux/cpuhotplug.h>
++#include <linux/cpu_pm.h>
 +#include <linux/cpumask.h>
 +#include <linux/device.h>
 +#include <linux/module.h>
++#include <linux/mutex.h>
 +#include <linux/of.h>
 +#include <linux/perf_event.h>
 +#include <linux/platform_device.h>
++#include <linux/refcount.h>
 +
-+#define ECACHE_SELECT_OFFSET		0x2000
-+#define ECACHE_CLIENT_FILTER_OFFSET	0x2200
-+#define ECACHE_COUNTER_INHIBIT_OFFSET	0x2800
-+#define ECACHE_COUNTER_OFFSET		0x3000
++#define PL2_SELECT_OFFSET		0x2000
++#define PL2_CLIENT_FILTER_OFFSET	0x2800
++#define PL2_COUNTER_OFFSET		0x3000
 +
-+#define ECACHE_PMU_MAX_COUNTERS		8
++#define PL2_PMU_MAX_COUNTERS		64
 +
-+struct sifive_ecache_pmu_slice {
++struct sifive_pl2_pmu_event {
 +	void __iomem			*base;
-+};
-+
-+struct sifive_ecache_pmu {
-+	struct pmu			pmu;
-+	struct hlist_node		node;
-+	struct notifier_block		cpu_pm_nb;
-+	struct perf_event		*events[ECACHE_PMU_MAX_COUNTERS];
-+	DECLARE_BITMAP(used_mask, ECACHE_PMU_MAX_COUNTERS);
++	DECLARE_BITMAP(used_mask, PL2_PMU_MAX_COUNTERS);
 +	unsigned int			cpu;
-+	unsigned int			txn_flags;
 +	int				n_counters;
-+	int				n_slices;
-+	struct sifive_ecache_pmu_slice	slice[] __counted_by(n_slices);
++	struct perf_event		*events[] __counted_by(n_counters);
 +};
 +
-+#define to_ecache_pmu(p) (container_of(p, struct sifive_ecache_pmu, pmu))
++struct sifive_pl2_pmu {
++	struct pmu			pmu;
++	struct notifier_block		cpu_pm_nb;
++	refcount_t			refcount;
++	struct sifive_pl2_pmu_event	*__percpu *event;
++};
 +
-+/* Store the counter mask for a group in the leader's extra_reg */
-+#define event_group_mask(event) (event->group_leader->hw.extra_reg.config)
++#define to_pl2_pmu(p) (container_of(p, struct sifive_pl2_pmu, pmu))
++
++static DEFINE_MUTEX(g_mutex);
++static struct sifive_pl2_pmu *g_pl2_pmu;
 +
 +#ifndef readq
 +static inline u64 readq(void __iomem *addr)
@@ -242,38 +249,15 @@ index 000000000000..51b2fa3781c9
 + * sysfs attributes
 + *
 + * We export:
-+ * - cpumask, used by perf user space and other tools to know on which CPUs to create events
 + * - events, used by perf user space and other tools to create events symbolically, e.g.:
-+ *     perf stat -a -e sifive_ecache_pmu/event=inner_put_partial_data_hit/ ls
-+ *     perf stat -a -e sifive_ecache_pmu/event=0x101/ ls
++ *     perf stat -a -e sifive_pl2_pmu/event=inner_put_partial_data_hit/ ls
++ *     perf stat -a -e sifive_pl2_pmu/event=0x101/ ls
 + * - formats, used by perf user space and other tools to configure events
 + */
 +
-+/* cpumask */
-+static ssize_t cpumask_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct sifive_ecache_pmu *ecache_pmu = dev_get_drvdata(dev);
-+
-+	if (ecache_pmu->cpu >= nr_cpu_ids)
-+		return 0;
-+
-+	return sysfs_emit(buf, "%d\n", ecache_pmu->cpu);
-+};
-+
-+static DEVICE_ATTR_RO(cpumask);
-+
-+static struct attribute *sifive_ecache_pmu_cpumask_attrs[] = {
-+	&dev_attr_cpumask.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group sifive_ecache_pmu_cpumask_group = {
-+	.attrs = sifive_ecache_pmu_cpumask_attrs,
-+};
-+
 +/* events */
-+static ssize_t sifive_ecache_pmu_event_show(struct device *dev, struct device_attribute *attr,
-+					    char *page)
++static ssize_t sifive_pl2_pmu_event_show(struct device *dev, struct device_attribute *attr,
++					 char *page)
 +{
 +	struct perf_pmu_events_attr *pmu_attr;
 +
@@ -282,164 +266,281 @@ index 000000000000..51b2fa3781c9
 +}
 +
 +#define SET_EVENT_SELECT(_event, _set)	(BIT_ULL((_event) + 8) | (_set))
-+#define ECACHE_PMU_EVENT_ATTR(_name, _event, _set) \
-+	PMU_EVENT_ATTR_ID(_name, sifive_ecache_pmu_event_show, SET_EVENT_SELECT(_event, _set))
++#define PL2_PMU_EVENT_ATTR(_name, _event, _set) \
++	PMU_EVENT_ATTR_ID(_name, sifive_pl2_pmu_event_show, SET_EVENT_SELECT(_event, _set))
 +
-+enum ecache_pmu_event_set1 {
-+	INNER_REQUEST = 0,
-+	INNER_RD_REQUEST,
-+	INNER_WR_REQUEST,
-+	INNER_PF_REQUEST,
-+	OUTER_PRB_REQUEST,
-+	INNER_REQUEST_HIT,
-+	INNER_RD_REQUEST_HIT,
-+	INNER_WR_REQUEST_HIT,
-+	INNER_PF_REQUEST_HIT,
-+	OUTER_PRB_REQUEST_HIT,
-+	INNER_REQUEST_HITPF,
-+	INNER_RD_REQUEST_HITPF,
-+	INNER_WR_REQUEST_HITPF,
-+	INNER_PF_REQUEST_HITPF,
-+	OUTER_PRB_REQUEST_HITPF,
-+	INNER_REQUEST_MISS,
-+	INNER_RD_REQUEST_MISS,
-+	INNER_WR_REQUEST_MISS,
-+	INNER_PF_REQUEST_MISS,
-+	OUTER_PRB_REQUEST_MISS,
-+	ECACHE_PMU_MAX_EVENT1_IDX
++enum pl2_pmu_event_set1 {
++	INNER_PUT_FULL_DATA = 0,
++	INNER_PUT_PARTIAL_DATA,
++	INNER_ATOMIC_DATA,
++	INNER_GET,
++	INNER_PREFETCH_READ,
++	INNER_PREFETCH_WRITE,
++	INNER_ACQUIRE_BLOCK_NTOB,
++	INNER_ACQUIRE_BLOCK_NTOT,
++	INNER_ACQUIRE_BLOCK_BTOT,
++	INNER_ACQUIRE_PERM_NTOT,
++	INNER_ACQUIRE_PERM_BTOT,
++	INNER_RELEASE_TTOB,
++	INNER_RELEASE_TTON,
++	INNER_RELEASE_BTON,
++	INNER_RELEASE_DATA_TTOB,
++	INNER_RELEASE_DATA_TTON,
++	INNER_RELEASE_DATA_BTON,
++	INNER_RELEASE_DATA_TTOT,
++	INNER_PROBE_BLOCK_TOT,
++	INNER_PROBE_BLOCK_TOB,
++	INNER_PROBE_BLOCK_TON,
++	INNER_PROBE_PERM_TON,
++	INNER_PROBE_ACK_TTOB,
++	INNER_PROBE_ACK_TTON,
++	INNER_PROBE_ACK_BTON,
++	INNER_PROBE_ACK_TTOT,
++	INNER_PROBE_ACK_BTOB,
++	INNER_PROBE_ACK_NTON,
++	INNER_PROBE_ACK_DATA_TTOB,
++	INNER_PROBE_ACK_DATA_TTON,
++	INNER_PROBE_ACK_DATA_TTOT,
++	PL2_PMU_MAX_EVENT1_IDX
 +};
 +
-+enum ecache_pmu_event_set2 {
-+	OUTER_REQUEST = 0,
-+	OUTER_RD_REQUEST,
-+	OUTER_PUT_REQUEST,
-+	OUTER_EV_REQUEST,
-+	OUTER_PF_REQUEST,
-+	INNER_PRB_REQUEST,
-+	INNER_REQUEST_WCYC,
-+	INNER_RD_REQUEST_WCYC,
-+	INNER_WR_REQUEST_WCYC,
-+	INNER_PF_REQUEST_WCYC,
-+	OUTER_PRB_REQUEST_WCYC,
-+	OUTER_REQUEST_WCYC,
-+	OUTER_RD_REQUEST_WCYC,
-+	OUTER_PUT_REQUEST_WCYC,
-+	OUTER_EV_REQUEST_WCYC,
-+	OUTER_PF_REQUEST_WCYC,
-+	INNER_PRB_REQUEST_WCYC,
-+	INNER_AG_WCYC,
-+	INNER_AP_WCYC,
-+	INNER_AH_WCYC,
-+	INNER_BP_WCYC,
-+	INNER_CP_WCYC,
-+	INNER_CX_WCYC,
-+	INNER_DG_WCYC,
-+	INNER_DP_WCYC,
-+	INNER_DX_WCYC,
-+	INNER_EG_WCYC,
-+	OUTER_AG_WCYC,
-+	OUTER_AP_WCYC,
-+	OUTER_AH_WCYC,
-+	OUTER_BP_WCYC,
-+	OUTER_CP_WCYC,
-+	OUTER_CX_WCYC,
-+	OUTER_DG_WCYC,
-+	OUTER_DP_WCYC,
-+	OUTER_DX_WCYC,
-+	OUTER_EG_WCYC,
-+	ECACHE_PMU_MAX_EVENT2_IDX
++enum pl2_pmu_event_set2 {
++	INNER_PUT_FULL_DATA_HIT = 0,
++	INNER_PUT_PARTIAL_DATA_HIT,
++	INNER_ATOMIC_DATA_HIT,
++	INNER_GET_HIT,
++	INNER_PREFETCH_READ_HIT,
++	INNER_ACQUIRE_BLOCK_NTOB_HIT,
++	INNER_ACQUIRE_PERM_NTOT_HIT,
++	INNER_RELEASE_TTOB_HIT,
++	INNER_RELEASE_DATA_TTOB_HIT,
++	OUTER_PROBE_BLOCK_TOT_HIT,
++	INNER_PUT_FULL_DATA_HIT_SHARED,
++	INNER_PUT_PARTIAL_DATA_HIT_SHARED,
++	INNER_ATOMIC_DATA_HIT_SHARED,
++	INNER_GET_HIT_SHARED,
++	INNER_PREFETCH_READ_HIT_SHARED,
++	INNER_ACQUIRE_BLOCK_NTOB_HIT_SHARED,
++	INNER_ACQUIRE_PERM_NTOT_HIT_SHARED,
++	INNER_RELEASE_TTOB_HIT_SHARED,
++	INNER_RELEASE_DATA_TTOB_HIT_SHARED,
++	OUTER_PROBE_BLOCK_TOT_HIT_SHARED,
++	OUTER_PROBE_BLOCK_TOT_HIT_DIRTY,
++	PL2_PMU_MAX_EVENT2_IDX
 +};
 +
-+static struct attribute *sifive_ecache_pmu_events[] = {
-+	/*  pmEventSelect1 */
-+	ECACHE_PMU_EVENT_ATTR(inner_request, INNER_REQUEST, 1),
-+	ECACHE_PMU_EVENT_ATTR(inner_rd_request, INNER_RD_REQUEST, 1),
-+	ECACHE_PMU_EVENT_ATTR(inner_wr_request, INNER_WR_REQUEST, 1),
-+	ECACHE_PMU_EVENT_ATTR(inner_pf_request, INNER_PF_REQUEST, 1),
-+	ECACHE_PMU_EVENT_ATTR(outer_prb_request, OUTER_PRB_REQUEST, 1),
-+	ECACHE_PMU_EVENT_ATTR(inner_request_hit, INNER_REQUEST_HIT,  1),
-+	ECACHE_PMU_EVENT_ATTR(inner_rd_request_hit, INNER_RD_REQUEST_HIT, 1),
-+	ECACHE_PMU_EVENT_ATTR(inner_wr_request_hit, INNER_WR_REQUEST_HIT, 1),
-+	ECACHE_PMU_EVENT_ATTR(inner_pf_request_hit, INNER_PF_REQUEST_HIT, 1),
-+	ECACHE_PMU_EVENT_ATTR(outer_prb_request_hit, OUTER_PRB_REQUEST_HIT, 1),
-+	ECACHE_PMU_EVENT_ATTR(inner_request_hitpf, INNER_REQUEST_HITPF,  1),
-+	ECACHE_PMU_EVENT_ATTR(inner_rd_request_hitpf, INNER_RD_REQUEST_HITPF, 1),
-+	ECACHE_PMU_EVENT_ATTR(inner_wr_request_hitpf, INNER_WR_REQUEST_HITPF, 1),
-+	ECACHE_PMU_EVENT_ATTR(inner_pf_request_hitpf, INNER_PF_REQUEST_HITPF, 1),
-+	ECACHE_PMU_EVENT_ATTR(outer_prb_request_hitpf, OUTER_PRB_REQUEST_HITPF, 1),
-+	ECACHE_PMU_EVENT_ATTR(inner_request_miss, INNER_REQUEST_MISS,  1),
-+	ECACHE_PMU_EVENT_ATTR(inner_rd_request_miss, INNER_RD_REQUEST_MISS, 1),
-+	ECACHE_PMU_EVENT_ATTR(inner_wr_request_miss, INNER_WR_REQUEST_MISS, 1),
-+	ECACHE_PMU_EVENT_ATTR(inner_pf_request_miss, INNER_PF_REQUEST_MISS, 1),
-+	ECACHE_PMU_EVENT_ATTR(outer_prb_request_miss, OUTER_PRB_REQUEST_MISS, 1),
++enum pl2_pmu_event_set3 {
++	OUTER_PUT_FULL_DATA = 0,
++	OUTER_PUT_PARTIAL_DATA,
++	OUTER_ATOMIC_DATA,
++	OUTER_GET,
++	OUTER_PREFETCH_READ,
++	OUTER_PREFETCH_WRITE,
++	OUTER_ACQUIRE_BLOCK_NTOB,
++	OUTER_ACQUIRE_BLOCK_NTOT,
++	OUTER_ACQUIRE_BLOCK_BTOT,
++	OUTER_ACQUIRE_PERM_NTOT,
++	OUTER_ACQUIRE_PERM_BTOT,
++	OUTER_RELEARE_TTOB,
++	OUTER_RELEARE_TTON,
++	OUTER_RELEARE_BTON,
++	OUTER_RELEARE_DATA_TTOB,
++	OUTER_RELEARE_DATA_TTON,
++	OUTER_RELEARE_DATA_BTON,
++	OUTER_RELEARE_DATA_TTOT,
++	OUTER_PROBE_BLOCK_TOT,
++	OUTER_PROBE_BLOCK_TOB,
++	OUTER_PROBE_BLOCK_TON,
++	OUTER_PROBE_PERM_TON,
++	OUTER_PROBE_ACK_TTOB,
++	OUTER_PROBE_ACK_TTON,
++	OUTER_PROBE_ACK_BTON,
++	OUTER_PROBE_ACK_TTOT,
++	OUTER_PROBE_ACK_BTOB,
++	OUTER_PROBE_ACK_NTON,
++	OUTER_PROBE_ACK_DATA_TTOB,
++	OUTER_PROBE_ACK_DATA_TTON,
++	OUTER_PROBE_ACK_DATA_TTOT,
++	PL2_PMU_MAX_EVENT3_IDX
++};
 +
-+	/*  pmEventSelect2 */
-+	ECACHE_PMU_EVENT_ATTR(outer_request, OUTER_REQUEST, 2),
-+	ECACHE_PMU_EVENT_ATTR(outer_rd_request, OUTER_RD_REQUEST, 2),
-+	ECACHE_PMU_EVENT_ATTR(outer_put_request, OUTER_PUT_REQUEST, 2),
-+	ECACHE_PMU_EVENT_ATTR(outer_ev_request, OUTER_EV_REQUEST, 2),
-+	ECACHE_PMU_EVENT_ATTR(outer_pf_request, OUTER_PF_REQUEST, 2),
-+	ECACHE_PMU_EVENT_ATTR(inner_prb_request, INNER_PRB_REQUEST, 2),
-+	ECACHE_PMU_EVENT_ATTR(inner_request_wcyc, INNER_REQUEST_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(inner_rd_request_wcyc, INNER_RD_REQUEST_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(inner_wr_request_wcyc, INNER_WR_REQUEST_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(inner_pf_request_wcyc, INNER_PF_REQUEST_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(outer_prb_request_wcyc, OUTER_PRB_REQUEST_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(outer_request_wcyc, OUTER_REQUEST_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(outer_rd_request_wcyc, OUTER_RD_REQUEST_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(outer_put_request_wcyc, OUTER_PUT_REQUEST_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(outer_ev_request_wcyc, OUTER_EV_REQUEST_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(outer_pf_request_wcyc, OUTER_PF_REQUEST_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(inner_prb_request_wcyc, INNER_PRB_REQUEST_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(inner_ag_wcyc, INNER_AG_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(inner_ap_wcyc, INNER_AP_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(inner_ah_wcyc, INNER_AH_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(inner_bp_wcyc, INNER_BP_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(inner_cp_wcyc, INNER_CP_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(inner_cx_wcyc, INNER_CX_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(inner_dg_wcyc, INNER_DG_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(inner_dp_wcyc, INNER_DP_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(inner_dx_wcyc, INNER_DX_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(inner_eg_wcyc, INNER_EG_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(outer_ag_wcyc, OUTER_AG_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(outer_ap_wcyc, OUTER_AP_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(outer_ah_wcyc, OUTER_AH_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(outer_bp_wcyc, OUTER_BP_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(outer_cp_wcyc, OUTER_CP_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(outer_cx_wcyc, OUTER_CX_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(outer_dg_wcyc, OUTER_DG_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(outer_dp_wcyc, OUTER_DP_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(outer_dx_wcyc, OUTER_DX_WCYC, 2),
-+	ECACHE_PMU_EVENT_ATTR(outer_eg_wcyc, OUTER_EG_WCYC, 2),
++enum pl2_pmu_event_set4 {
++	INNER_HINT_HITS_MSHR = 0,
++	INNER_READ_HITS_MSHR,
++	INNER_WRITE_HITS_MSHR,
++	INNER_READ_REPLAY,
++	INNER_WRITE_REPLAY,
++	OUTER_PROBE_REPLAY,
++	REPLAY,
++	SLEEP_BY_MISS_QUEUE,
++	SLEEP_BY_EVICT_QUEUE,
++	SLEEP_FOR_BACK_PROBE,
++	SLEEP,
++	PL2_PMU_MAX_EVENT4_IDX
++};
++
++enum pl2_pmu_event_set5 {
++	READ_SLEEP_TIMER_EXPIRE = 0,
++	READ_OLDEST_TIMER_EXPIRE,
++	WRITE_SLEEP_TIMER_EXPIRE,
++	WRITE_OLDEST_TIMER_EXPIRE,
++	READ_SLEEP,
++	READ_DIR_UPDATE_WAKEUP,
++	READ_MISS_QUEUE_WAKEUP,
++	READ_EVICT_QUEUE_WAKEUP,
++	READ_SLEEP_TIMER_WAKEUP,
++	WRITE_SLEEP,
++	WRITE_DIR_UPDATE_WAKEUP,
++	WRITE_MISS_QUEUE_WAKEUP,
++	WRITE_EVICT_QUEUE_WAKEUP,
++	WRITE_SLEEP_TIMER_WAKEUP,
++	PL2_PMU_MAX_EVENT5_IDX
++};
++
++static struct attribute *sifive_pl2_pmu_events[] = {
++	PL2_PMU_EVENT_ATTR(inner_put_full_data, INNER_PUT_FULL_DATA, 1),
++	PL2_PMU_EVENT_ATTR(inner_put_partial_data, INNER_PUT_PARTIAL_DATA, 1),
++	PL2_PMU_EVENT_ATTR(inner_atomic_data, INNER_ATOMIC_DATA, 1),
++	PL2_PMU_EVENT_ATTR(inner_get, INNER_GET, 1),
++	PL2_PMU_EVENT_ATTR(inner_prefetch_read, INNER_PREFETCH_READ, 1),
++	PL2_PMU_EVENT_ATTR(inner_prefetch_write, INNER_PREFETCH_WRITE, 1),
++	PL2_PMU_EVENT_ATTR(inner_acquire_block_ntob, INNER_ACQUIRE_BLOCK_NTOB, 1),
++	PL2_PMU_EVENT_ATTR(inner_acquire_block_ntot, INNER_ACQUIRE_BLOCK_NTOT, 1),
++	PL2_PMU_EVENT_ATTR(inner_acquire_block_btot, INNER_ACQUIRE_BLOCK_BTOT, 1),
++	PL2_PMU_EVENT_ATTR(inner_acquire_perm_ntot, INNER_ACQUIRE_PERM_NTOT, 1),
++	PL2_PMU_EVENT_ATTR(inner_acquire_perm_btot, INNER_ACQUIRE_PERM_BTOT, 1),
++	PL2_PMU_EVENT_ATTR(inner_release_ttob, INNER_RELEASE_TTOB, 1),
++	PL2_PMU_EVENT_ATTR(inner_release_tton, INNER_RELEASE_TTON, 1),
++	PL2_PMU_EVENT_ATTR(inner_release_bton, INNER_RELEASE_BTON, 1),
++	PL2_PMU_EVENT_ATTR(inner_release_data_ttob, INNER_RELEASE_DATA_TTOB, 1),
++	PL2_PMU_EVENT_ATTR(inner_release_data_tton, INNER_RELEASE_DATA_TTON, 1),
++	PL2_PMU_EVENT_ATTR(inner_release_data_bton, INNER_RELEASE_DATA_BTON, 1),
++	PL2_PMU_EVENT_ATTR(inner_release_data_ttot, INNER_RELEASE_DATA_TTOT, 1),
++	PL2_PMU_EVENT_ATTR(inner_probe_block_tot, INNER_PROBE_BLOCK_TOT, 1),
++	PL2_PMU_EVENT_ATTR(inner_probe_block_tob, INNER_PROBE_BLOCK_TOB, 1),
++	PL2_PMU_EVENT_ATTR(inner_probe_block_ton, INNER_PROBE_BLOCK_TON, 1),
++	PL2_PMU_EVENT_ATTR(inner_probe_perm_ton, INNER_PROBE_PERM_TON, 1),
++	PL2_PMU_EVENT_ATTR(inner_probe_ack_ttob, INNER_PROBE_ACK_TTOB, 1),
++	PL2_PMU_EVENT_ATTR(inner_probe_ack_tton, INNER_PROBE_ACK_TTON, 1),
++	PL2_PMU_EVENT_ATTR(inner_probe_ack_bton, INNER_PROBE_ACK_BTON, 1),
++	PL2_PMU_EVENT_ATTR(inner_probe_ack_ttot, INNER_PROBE_ACK_TTOT, 1),
++	PL2_PMU_EVENT_ATTR(inner_probe_ack_btob, INNER_PROBE_ACK_BTOB, 1),
++	PL2_PMU_EVENT_ATTR(inner_probe_ack_nton, INNER_PROBE_ACK_NTON, 1),
++	PL2_PMU_EVENT_ATTR(inner_probe_ack_data_ttob, INNER_PROBE_ACK_DATA_TTOB, 1),
++	PL2_PMU_EVENT_ATTR(inner_probe_ack_data_tton, INNER_PROBE_ACK_DATA_TTON, 1),
++	PL2_PMU_EVENT_ATTR(inner_probe_ack_data_ttot, INNER_PROBE_ACK_DATA_TTOT, 1),
++
++	PL2_PMU_EVENT_ATTR(inner_put_full_data_hit, INNER_PUT_FULL_DATA_HIT, 2),
++	PL2_PMU_EVENT_ATTR(inner_put_partial_data_hit, INNER_PUT_PARTIAL_DATA_HIT, 2),
++	PL2_PMU_EVENT_ATTR(inner_atomic_data_hit, INNER_ATOMIC_DATA_HIT, 2),
++	PL2_PMU_EVENT_ATTR(inner_get_hit, INNER_GET_HIT, 2),
++	PL2_PMU_EVENT_ATTR(inner_prefetch_read_hit, INNER_PREFETCH_READ_HIT, 2),
++	PL2_PMU_EVENT_ATTR(inner_acquire_block_ntob_hit, INNER_ACQUIRE_BLOCK_NTOB_HIT, 2),
++	PL2_PMU_EVENT_ATTR(inner_acquire_perm_ntot_hit, INNER_ACQUIRE_PERM_NTOT_HIT, 2),
++	PL2_PMU_EVENT_ATTR(inner_release_ttob_hit, INNER_RELEASE_TTOB_HIT, 2),
++	PL2_PMU_EVENT_ATTR(inner_release_data_ttob_hit, INNER_RELEASE_DATA_TTOB_HIT, 2),
++	PL2_PMU_EVENT_ATTR(outer_probe_block_tot_hit, OUTER_PROBE_BLOCK_TOT_HIT, 2),
++	PL2_PMU_EVENT_ATTR(inner_put_full_data_hit_shared, INNER_PUT_FULL_DATA_HIT_SHARED, 2),
++	PL2_PMU_EVENT_ATTR(inner_put_partial_data_hit_shared, INNER_PUT_PARTIAL_DATA_HIT_SHARED, 2),
++	PL2_PMU_EVENT_ATTR(inner_atomic_data_hit_shared, INNER_ATOMIC_DATA_HIT_SHARED, 2),
++	PL2_PMU_EVENT_ATTR(inner_get_hit_shared, INNER_GET_HIT_SHARED, 2),
++	PL2_PMU_EVENT_ATTR(inner_prefetch_read_hit_shared, INNER_PREFETCH_READ_HIT_SHARED, 2),
++	PL2_PMU_EVENT_ATTR(inner_acquire_block_ntob_hit_shared,
++			   INNER_ACQUIRE_BLOCK_NTOB_HIT_SHARED, 2),
++	PL2_PMU_EVENT_ATTR(inner_acquire_perm_ntot_hit_shared,
++			   INNER_ACQUIRE_PERM_NTOT_HIT_SHARED, 2),
++	PL2_PMU_EVENT_ATTR(inner_release_ttob_hit_shared, INNER_RELEASE_TTOB_HIT_SHARED, 2),
++	PL2_PMU_EVENT_ATTR(inner_release_data_ttob_hit_shared,
++			   INNER_RELEASE_DATA_TTOB_HIT_SHARED, 2),
++	PL2_PMU_EVENT_ATTR(outer_probe_block_tot_hit_shared, OUTER_PROBE_BLOCK_TOT_HIT_SHARED, 2),
++	PL2_PMU_EVENT_ATTR(outer_probe_block_tot_hit_dirty, OUTER_PROBE_BLOCK_TOT_HIT_DIRTY, 2),
++
++	PL2_PMU_EVENT_ATTR(outer_put_full_data, OUTER_PUT_FULL_DATA, 3),
++	PL2_PMU_EVENT_ATTR(outer_put_partial_data, OUTER_PUT_PARTIAL_DATA, 3),
++	PL2_PMU_EVENT_ATTR(outer_atomic_data, OUTER_ATOMIC_DATA, 3),
++	PL2_PMU_EVENT_ATTR(outer_get, OUTER_GET, 3),
++	PL2_PMU_EVENT_ATTR(outer_prefetch_read, OUTER_PREFETCH_READ, 3),
++	PL2_PMU_EVENT_ATTR(outer_prefetch_write, OUTER_PREFETCH_WRITE, 3),
++	PL2_PMU_EVENT_ATTR(outer_acquire_block_ntob, OUTER_ACQUIRE_BLOCK_NTOB, 3),
++	PL2_PMU_EVENT_ATTR(outer_acquire_block_ntot, OUTER_ACQUIRE_BLOCK_NTOT, 3),
++	PL2_PMU_EVENT_ATTR(outer_acquire_block_btot, OUTER_ACQUIRE_BLOCK_BTOT, 3),
++	PL2_PMU_EVENT_ATTR(outer_acquire_perm_ntot, OUTER_ACQUIRE_PERM_NTOT, 3),
++	PL2_PMU_EVENT_ATTR(outer_acquire_perm_btot, OUTER_ACQUIRE_PERM_BTOT, 3),
++	PL2_PMU_EVENT_ATTR(outer_release_ttob, OUTER_RELEARE_TTOB, 3),
++	PL2_PMU_EVENT_ATTR(outer_release_tton, OUTER_RELEARE_TTON, 3),
++	PL2_PMU_EVENT_ATTR(outer_release_bton, OUTER_RELEARE_BTON, 3),
++	PL2_PMU_EVENT_ATTR(outer_release_data_ttob, OUTER_RELEARE_DATA_TTOB, 3),
++	PL2_PMU_EVENT_ATTR(outer_release_data_tton, OUTER_RELEARE_DATA_TTON, 3),
++	PL2_PMU_EVENT_ATTR(outer_release_data_bton, OUTER_RELEARE_DATA_BTON, 3),
++	PL2_PMU_EVENT_ATTR(outer_release_data_ttot, OUTER_RELEARE_DATA_TTOT, 3),
++	PL2_PMU_EVENT_ATTR(outer_probe_block_tot, OUTER_PROBE_BLOCK_TOT, 3),
++	PL2_PMU_EVENT_ATTR(outer_probe_block_tob, OUTER_PROBE_BLOCK_TOB, 3),
++	PL2_PMU_EVENT_ATTR(outer_probe_block_ton, OUTER_PROBE_BLOCK_TON, 3),
++	PL2_PMU_EVENT_ATTR(outer_probe_perm_ton, OUTER_PROBE_PERM_TON, 3),
++	PL2_PMU_EVENT_ATTR(outer_probe_ack_ttob, OUTER_PROBE_ACK_TTOB, 3),
++	PL2_PMU_EVENT_ATTR(outer_probe_ack_tton, OUTER_PROBE_ACK_TTON, 3),
++	PL2_PMU_EVENT_ATTR(outer_probe_ack_bton, OUTER_PROBE_ACK_BTON, 3),
++	PL2_PMU_EVENT_ATTR(outer_probe_ack_ttot, OUTER_PROBE_ACK_TTOT, 3),
++	PL2_PMU_EVENT_ATTR(outer_probe_ack_btob, OUTER_PROBE_ACK_BTOB, 3),
++	PL2_PMU_EVENT_ATTR(outer_probe_ack_nton, OUTER_PROBE_ACK_NTON, 3),
++	PL2_PMU_EVENT_ATTR(outer_probe_ack_data_ttob, OUTER_PROBE_ACK_DATA_TTOB, 3),
++	PL2_PMU_EVENT_ATTR(outer_probe_ack_data_tton, OUTER_PROBE_ACK_DATA_TTON, 3),
++	PL2_PMU_EVENT_ATTR(outer_probe_ack_data_ttot, OUTER_PROBE_ACK_DATA_TTOT, 3),
++
++	PL2_PMU_EVENT_ATTR(inner_hint_hits_mshr, INNER_HINT_HITS_MSHR, 4),
++	PL2_PMU_EVENT_ATTR(inner_read_hits_mshr, INNER_READ_HITS_MSHR, 4),
++	PL2_PMU_EVENT_ATTR(inner_write_hits_mshr, INNER_WRITE_HITS_MSHR, 4),
++	PL2_PMU_EVENT_ATTR(inner_read_replay, INNER_READ_REPLAY, 4),
++	PL2_PMU_EVENT_ATTR(inner_write_replay, INNER_WRITE_REPLAY, 4),
++	PL2_PMU_EVENT_ATTR(outer_probe_replay, OUTER_PROBE_REPLAY, 4),
++	PL2_PMU_EVENT_ATTR(replay, REPLAY, 4),
++	PL2_PMU_EVENT_ATTR(sleep_by_miss_queue, SLEEP_BY_MISS_QUEUE, 4),
++	PL2_PMU_EVENT_ATTR(sleep_by_evict_queue, SLEEP_BY_EVICT_QUEUE, 4),
++	PL2_PMU_EVENT_ATTR(sleep_for_back_probe, SLEEP_FOR_BACK_PROBE, 4),
++	PL2_PMU_EVENT_ATTR(sleep, SLEEP, 4),
++
++	PL2_PMU_EVENT_ATTR(read_sleep_timer_expire, READ_SLEEP_TIMER_EXPIRE, 5),
++	PL2_PMU_EVENT_ATTR(read_oldest_timer_expire, READ_OLDEST_TIMER_EXPIRE, 5),
++	PL2_PMU_EVENT_ATTR(write_sleep_timer_expire, WRITE_SLEEP_TIMER_EXPIRE, 5),
++	PL2_PMU_EVENT_ATTR(write_oldest_timer_expire, WRITE_OLDEST_TIMER_EXPIRE, 5),
++	PL2_PMU_EVENT_ATTR(read_sleep, READ_SLEEP, 5),
++	PL2_PMU_EVENT_ATTR(read_dir_update_wakeup, READ_DIR_UPDATE_WAKEUP, 5),
++	PL2_PMU_EVENT_ATTR(read_miss_queue_wakeup, READ_MISS_QUEUE_WAKEUP, 5),
++	PL2_PMU_EVENT_ATTR(read_evict_queue_wakeup, READ_EVICT_QUEUE_WAKEUP, 5),
++	PL2_PMU_EVENT_ATTR(read_sleep_timer_wakeup, READ_SLEEP_TIMER_WAKEUP, 5),
++	PL2_PMU_EVENT_ATTR(write_sleep, WRITE_SLEEP, 5),
++	PL2_PMU_EVENT_ATTR(write_dir_update_wakeup, WRITE_DIR_UPDATE_WAKEUP, 5),
++	PL2_PMU_EVENT_ATTR(write_miss_queue_wakeup, WRITE_MISS_QUEUE_WAKEUP, 5),
++	PL2_PMU_EVENT_ATTR(write_evict_queue_wakeup, WRITE_EVICT_QUEUE_WAKEUP, 5),
++	PL2_PMU_EVENT_ATTR(write_sleep_timer_wakeup, WRITE_SLEEP_TIMER_WAKEUP, 5),
 +	NULL
 +};
 +
-+static struct attribute_group sifive_ecache_pmu_events_group = {
++static struct attribute_group sifive_pl2_pmu_events_group = {
 +	.name = "events",
-+	.attrs = sifive_ecache_pmu_events,
++	.attrs = sifive_pl2_pmu_events,
 +};
 +
 +/* formats */
 +PMU_FORMAT_ATTR(event, "config:0-63");
 +
-+static struct attribute *sifive_ecache_pmu_formats[] = {
++static struct attribute *sifive_pl2_pmu_formats[] = {
 +	&format_attr_event.attr,
 +	NULL,
 +};
 +
-+static struct attribute_group sifive_ecache_pmu_format_group = {
++static struct attribute_group sifive_pl2_pmu_format_group = {
 +	.name = "format",
-+	.attrs = sifive_ecache_pmu_formats,
++	.attrs = sifive_pl2_pmu_formats,
 +};
 +
 +/*
 + * Per PMU device attribute groups
 + */
 +
-+static const struct attribute_group *sifive_ecache_pmu_attr_grps[] = {
-+	&sifive_ecache_pmu_cpumask_group,
-+	&sifive_ecache_pmu_events_group,
-+	&sifive_ecache_pmu_format_group,
++static const struct attribute_group *sifive_pl2_pmu_attr_grps[] = {
++	&sifive_pl2_pmu_events_group,
++	&sifive_pl2_pmu_format_group,
 +	NULL,
 +};
 +
@@ -447,9 +548,8 @@ index 000000000000..51b2fa3781c9
 + * Event Initialization
 + */
 +
-+static int sifive_ecache_pmu_event_init(struct perf_event *event)
++static int sifive_pl2_pmu_event_init(struct perf_event *event)
 +{
-+	struct sifive_ecache_pmu *ecache_pmu = to_ecache_pmu(event->pmu);
 +	struct hw_perf_event *hwc = &event->hw;
 +	u64 config = event->attr.config;
 +	u64 ev_type = config >> 8;
@@ -458,11 +558,23 @@ index 000000000000..51b2fa3781c9
 +	/* Check if this is a valid set and event */
 +	switch (set) {
 +	case 1:
-+		if (ev_type >= BIT_ULL(ECACHE_PMU_MAX_EVENT1_IDX))
++		if (ev_type >= BIT_ULL(PL2_PMU_MAX_EVENT1_IDX))
 +			return -ENOENT;
 +		break;
 +	case 2:
-+		if (ev_type >= BIT_ULL(ECACHE_PMU_MAX_EVENT2_IDX))
++		if (ev_type >= BIT_ULL(PL2_PMU_MAX_EVENT2_IDX))
++			return -ENOENT;
++		break;
++	case 3:
++		if (ev_type >= BIT_ULL(PL2_PMU_MAX_EVENT3_IDX))
++			return -ENOENT;
++		break;
++	case 4:
++		if (ev_type >= BIT_ULL(PL2_PMU_MAX_EVENT4_IDX))
++			return -ENOENT;
++		break;
++	case 5:
++		if (ev_type >= BIT_ULL(PL2_PMU_MAX_EVENT5_IDX))
 +			return -ENOENT;
 +		break;
 +	default:
@@ -473,72 +585,21 @@ index 000000000000..51b2fa3781c9
 +	hwc->idx = -1;
 +	hwc->config = config;
 +
-+	event->cpu = ecache_pmu->cpu;
-+
 +	return 0;
-+}
-+
-+/*
-+ * Low-level functions: reading and writing counters
-+ */
-+
-+static void configure_counter(const struct sifive_ecache_pmu *ecache_pmu,
-+			      const struct hw_perf_event *hwc, u64 config)
-+{
-+	for (int i = 0; i < ecache_pmu->n_slices; i++) {
-+		void __iomem *base = ecache_pmu->slice[i].base;
-+
-+		if (config)
-+			writeq(0, base + hwc->event_base);
-+		writeq(config, base + hwc->config_base);
-+	}
-+}
-+
-+static u64 read_counter(const struct sifive_ecache_pmu *ecache_pmu, const struct hw_perf_event *hwc)
-+{
-+	u64 value = 0;
-+
-+	for (int i = 0; i < ecache_pmu->n_slices; i++) {
-+		void __iomem *base = ecache_pmu->slice[i].base;
-+
-+		value += readq(base + hwc->event_base);
-+	}
-+
-+	return value;
-+}
-+
-+static void write_inhibit(const struct sifive_ecache_pmu *ecache_pmu, u64 mask)
-+{
-+	u64 used_mask;
-+
-+	/* Inhibit all unused counters in addition to the provided mask */
-+	bitmap_to_arr64(&used_mask, ecache_pmu->used_mask, ECACHE_PMU_MAX_COUNTERS);
-+	mask |= ~used_mask;
-+
-+	for (int i = 0; i < ecache_pmu->n_slices; i++) {
-+		void __iomem *base = ecache_pmu->slice[i].base;
-+
-+		writeq(mask, base + ECACHE_COUNTER_INHIBIT_OFFSET);
-+	}
 +}
 +
 +/*
 + * pmu->read: read and update the counter
 + */
-+static void sifive_ecache_pmu_read(struct perf_event *event)
++static void sifive_pl2_pmu_read(struct perf_event *event)
 +{
-+	struct sifive_ecache_pmu *ecache_pmu = to_ecache_pmu(event->pmu);
 +	struct hw_perf_event *hwc = &event->hw;
 +	u64 prev_raw_count, new_raw_count;
 +	u64 oldval;
 +
-+	/* Inhibit the entire group during a read transaction for atomicity */
-+	if (ecache_pmu->txn_flags == PERF_PMU_TXN_READ && event->group_leader == event)
-+		write_inhibit(ecache_pmu, event_group_mask(event));
-+
 +	do {
 +		prev_raw_count = local64_read(&hwc->prev_count);
-+		new_raw_count = read_counter(ecache_pmu, hwc);
++		new_raw_count = readq((void *)hwc->event_base);
 +
 +		oldval = local64_cmpxchg(&hwc->prev_count, prev_raw_count, new_raw_count);
 +	} while (oldval != prev_raw_count);
@@ -555,9 +616,8 @@ index 000000000000..51b2fa3781c9
 +/*
 + * pmu->start: start the event
 + */
-+static void sifive_ecache_pmu_start(struct perf_event *event, int flags)
++static void sifive_pl2_pmu_start(struct perf_event *event, int flags)
 +{
-+	struct sifive_ecache_pmu *ecache_pmu = to_ecache_pmu(event->pmu);
 +	struct hw_perf_event *hwc = &event->hw;
 +
 +	if (WARN_ON_ONCE(!(hwc->state & PERF_HES_STOPPED)))
@@ -567,25 +627,25 @@ index 000000000000..51b2fa3781c9
 +
 +	/* Set initial value to 0 */
 +	local64_set(&hwc->prev_count, 0);
++	writeq(0, (void *)hwc->event_base);
 +
 +	/* Enable this counter to count events */
-+	configure_counter(ecache_pmu, hwc, hwc->config);
++	writeq(hwc->config, (void *)hwc->config_base);
 +}
 +
 +/*
 + * pmu->stop: stop the counter
 + */
-+static void sifive_ecache_pmu_stop(struct perf_event *event, int flags)
++static void sifive_pl2_pmu_stop(struct perf_event *event, int flags)
 +{
-+	struct sifive_ecache_pmu *ecache_pmu = to_ecache_pmu(event->pmu);
 +	struct hw_perf_event *hwc = &event->hw;
 +
 +	if (hwc->state & PERF_HES_STOPPED)
 +		return;
 +
 +	/* Disable this counter to count events */
-+	configure_counter(ecache_pmu, hwc, 0);
-+	sifive_ecache_pmu_read(event);
++	writeq(0, (void *)hwc->config_base);
++	sifive_pl2_pmu_read(event);
 +
 +	hwc->state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
 +}
@@ -593,29 +653,29 @@ index 000000000000..51b2fa3781c9
 +/*
 + * pmu->add: add the event to the PMU
 + */
-+static int sifive_ecache_pmu_add(struct perf_event *event, int flags)
++static int sifive_pl2_pmu_add(struct perf_event *event, int flags)
 +{
-+	struct sifive_ecache_pmu *ecache_pmu = to_ecache_pmu(event->pmu);
++	struct sifive_pl2_pmu *pl2_pmu = to_pl2_pmu(event->pmu);
++	struct sifive_pl2_pmu_event *ptr = *this_cpu_ptr(pl2_pmu->event);
 +	struct hw_perf_event *hwc = &event->hw;
 +	int idx;
 +
 +	/* Find an available counter idx to use for this event */
 +	do {
-+		idx = find_first_zero_bit(ecache_pmu->used_mask, ecache_pmu->n_counters);
-+		if (idx >= ecache_pmu->n_counters)
++		idx = find_first_zero_bit(ptr->used_mask, ptr->n_counters);
++		if (idx >= ptr->n_counters)
 +			return -EAGAIN;
-+	} while (test_and_set_bit(idx, ecache_pmu->used_mask));
++	} while (test_and_set_bit(idx, ptr->used_mask));
 +
-+	event_group_mask(event) |= BIT_ULL(idx);
-+	hwc->config_base = ECACHE_SELECT_OFFSET + 8 * idx;
-+	hwc->event_base = ECACHE_COUNTER_OFFSET + 8 * idx;
++	hwc->config_base = (unsigned long)ptr->base + PL2_SELECT_OFFSET + 8 * idx;
++	hwc->event_base = (unsigned long)ptr->base + PL2_COUNTER_OFFSET + 8 * idx;
 +	hwc->idx = idx;
 +	hwc->state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
 +
-+	ecache_pmu->events[idx] = event;
++	ptr->events[idx] = event;
 +
 +	if (flags & PERF_EF_START)
-+		sifive_ecache_pmu_start(event, PERF_EF_RELOAD);
++		sifive_pl2_pmu_start(event, PERF_EF_RELOAD);
 +
 +	perf_event_update_userpage(event);
 +
@@ -625,245 +685,256 @@ index 000000000000..51b2fa3781c9
 +/*
 + * pmu->del: delete the event from the PMU
 + */
-+static void sifive_ecache_pmu_del(struct perf_event *event, int flags)
++static void sifive_pl2_pmu_del(struct perf_event *event, int flags)
 +{
-+	struct sifive_ecache_pmu *ecache_pmu = to_ecache_pmu(event->pmu);
++	struct sifive_pl2_pmu *pl2_pmu = to_pl2_pmu(event->pmu);
++	struct sifive_pl2_pmu_event *ptr = *this_cpu_ptr(pl2_pmu->event);
 +	struct hw_perf_event *hwc = &event->hw;
 +	int idx = hwc->idx;
 +
 +	/* Stop and release this counter */
-+	sifive_ecache_pmu_stop(event, PERF_EF_UPDATE);
++	sifive_pl2_pmu_stop(event, PERF_EF_UPDATE);
 +
-+	ecache_pmu->events[idx] = NULL;
-+	clear_bit(idx, ecache_pmu->used_mask);
++	ptr->events[idx] = NULL;
++	clear_bit(idx, ptr->used_mask);
 +
 +	perf_event_update_userpage(event);
 +}
 +
 +/*
-+ * Transaction synchronization
++ * pmu->filter: check if the PMU can be used with a CPU
 + */
-+
-+static void sifive_ecache_pmu_start_txn(struct pmu *pmu, unsigned int txn_flags)
++static bool sifive_pl2_pmu_filter(struct pmu *pmu, int cpu)
 +{
-+	struct sifive_ecache_pmu *ecache_pmu = to_ecache_pmu(pmu);
++	struct sifive_pl2_pmu *pl2_pmu = to_pl2_pmu(pmu);
++	struct sifive_pl2_pmu_event *ptr = *this_cpu_ptr(pl2_pmu->event);
 +
-+	ecache_pmu->txn_flags = txn_flags;
-+
-+	/* Inhibit any counters that were deleted since the last transaction */
-+	if (txn_flags == PERF_PMU_TXN_ADD)
-+		write_inhibit(ecache_pmu, 0);
-+}
-+
-+static int sifive_ecache_pmu_commit_txn(struct pmu *pmu)
-+{
-+	struct sifive_ecache_pmu *ecache_pmu = to_ecache_pmu(pmu);
-+
-+	ecache_pmu->txn_flags = 0;
-+
-+	/* Successful transaction: atomically uninhibit the counters in this group */
-+	write_inhibit(ecache_pmu, 0);
-+
-+	return 0;
-+}
-+
-+static void sifive_ecache_pmu_cancel_txn(struct pmu *pmu)
-+{
-+	struct sifive_ecache_pmu *ecache_pmu = to_ecache_pmu(pmu);
-+
-+	ecache_pmu->txn_flags = 0;
-+
-+	/* Failed transaction: leave the counters in this group inhibited */
++	/* Filter out CPUs with no PL2 instance (no percpu data allocated) */
++	return !ptr;
 +}
 +
 +/*
 + * Driver initialization
 + */
 +
-+static void sifive_ecache_pmu_hw_init(const struct sifive_ecache_pmu *ecache_pmu)
++static void sifive_pl2_pmu_hw_init(const struct sifive_pl2_pmu_event *ptr)
 +{
-+	for (int i = 0; i < ecache_pmu->n_slices; i++) {
-+		void __iomem *base = ecache_pmu->slice[i].base;
++	/* Disable the client filter (not supported by this driver) */
++	writeq(0, ptr->base + PL2_CLIENT_FILTER_OFFSET);
++}
 +
-+		/* Disable the client filter (not supported by this driver) */
-+		writeq(0, base + ECACHE_CLIENT_FILTER_OFFSET);
++static int sifive_pl2_pmu_pm_notify(struct notifier_block *nb, unsigned long cmd, void *v)
++{
++	struct sifive_pl2_pmu *pl2_pmu = container_of(nb, struct sifive_pl2_pmu, cpu_pm_nb);
++	struct sifive_pl2_pmu_event *ptr = *this_cpu_ptr(pl2_pmu->event);
++	struct perf_event *event;
++
++	if (!ptr || bitmap_empty(ptr->used_mask, PL2_PMU_MAX_COUNTERS))
++		return NOTIFY_OK;
++
++	for (int idx = 0; idx < ptr->n_counters; idx++) {
++		event = ptr->events[idx];
++		if (!event)
++			continue;
++
++		switch (cmd) {
++		case CPU_PM_ENTER:
++			/* Stop and update the counter */
++			sifive_pl2_pmu_stop(event, PERF_EF_UPDATE);
++			break;
++		case CPU_PM_ENTER_FAILED:
++		case CPU_PM_EXIT:
++			/* Restore and enable the counter */
++			sifive_pl2_pmu_start(event, PERF_EF_RELOAD);
++			break;
++		default:
++			break;
++		}
 +	}
++
++	return NOTIFY_OK;
 +}
 +
-+static int sifive_ecache_pmu_online_cpu(unsigned int cpu, struct hlist_node *node)
++static int sifive_pl2_pmu_pm_register(struct sifive_pl2_pmu *pl2_pmu)
 +{
-+	struct sifive_ecache_pmu *ecache_pmu =
-+		hlist_entry_safe(node, struct sifive_ecache_pmu, node);
-+
-+	if (ecache_pmu->cpu >= nr_cpu_ids)
-+		ecache_pmu->cpu = cpu;
-+
-+	return 0;
-+}
-+
-+static int sifive_ecache_pmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
-+{
-+	struct sifive_ecache_pmu *ecache_pmu =
-+		hlist_entry_safe(node, struct sifive_ecache_pmu, node);
-+
-+	/* Do nothing if this CPU does not own the events */
-+	if (cpu != ecache_pmu->cpu)
++	if (!IS_ENABLED(CONFIG_CPU_PM))
 +		return 0;
 +
-+	/* Pick a random online CPU */
-+	ecache_pmu->cpu = cpumask_any_but(cpu_online_mask, cpu);
-+	if (ecache_pmu->cpu >= nr_cpu_ids)
-+		return 0;
-+
-+	/* Migrate PMU events from this CPU to the target CPU */
-+	perf_pmu_migrate_context(&ecache_pmu->pmu, cpu, ecache_pmu->cpu);
-+
-+	return 0;
++	pl2_pmu->cpu_pm_nb.notifier_call = sifive_pl2_pmu_pm_notify;
++	return cpu_pm_register_notifier(&pl2_pmu->cpu_pm_nb);
 +}
 +
-+static int sifive_ecache_pmu_probe(struct platform_device *pdev)
++static void sifive_pl2_pmu_pm_unregister(struct sifive_pl2_pmu *pl2_pmu)
 +{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *ecache_node = dev_of_node(dev);
-+	struct sifive_ecache_pmu *ecache_pmu;
-+	struct device_node *slice_node;
-+	u32 slice_counters;
-+	int n_slices, ret;
-+	int i = 0;
++	if (!IS_ENABLED(CONFIG_CPU_PM))
++		return;
 +
-+	n_slices = of_get_available_child_count(ecache_node);
-+	if (!n_slices)
-+		return -ENODEV;
-+
-+	ecache_pmu = devm_kzalloc(dev, struct_size(ecache_pmu, slice, n_slices), GFP_KERNEL);
-+	if (!ecache_pmu)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, ecache_pmu);
-+
-+	ecache_pmu->pmu = (struct pmu) {
-+		.parent		= dev,
-+		.attr_groups	= sifive_ecache_pmu_attr_grps,
-+		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_NO_INTERRUPT,
-+		.task_ctx_nr	= perf_invalid_context,
-+		.event_init	= sifive_ecache_pmu_event_init,
-+		.add		= sifive_ecache_pmu_add,
-+		.del		= sifive_ecache_pmu_del,
-+		.start		= sifive_ecache_pmu_start,
-+		.stop		= sifive_ecache_pmu_stop,
-+		.read		= sifive_ecache_pmu_read,
-+		.start_txn	= sifive_ecache_pmu_start_txn,
-+		.commit_txn	= sifive_ecache_pmu_commit_txn,
-+		.cancel_txn	= sifive_ecache_pmu_cancel_txn,
-+	};
-+	ecache_pmu->cpu = nr_cpu_ids;
-+	ecache_pmu->n_counters = ECACHE_PMU_MAX_COUNTERS;
-+	ecache_pmu->n_slices = n_slices;
-+
-+	for_each_available_child_of_node(ecache_node, slice_node) {
-+		struct sifive_ecache_pmu_slice *slice = &ecache_pmu->slice[i++];
-+
-+		slice->base = devm_of_iomap(dev, slice_node, 0, NULL);
-+		if (IS_ERR(slice->base))
-+			return PTR_ERR(slice->base);
-+
-+		/* Get number of counters from slice node */
-+		ret = of_property_read_u32(slice_node, "sifive,perfmon-counters", &slice_counters);
-+		if (ret)
-+			return dev_err_probe(dev, ret,
-+					     "Slice %pOF missing sifive,perfmon-counters property\n",
-+					     slice_node);
-+
-+		ecache_pmu->n_counters = min_t(u32, slice_counters, ecache_pmu->n_counters);
-+	}
-+
-+	sifive_ecache_pmu_hw_init(ecache_pmu);
-+
-+	ret = cpuhp_state_add_instance(CPUHP_AP_PERF_RISCV_SIFIVE_ECACHE_ONLINE, &ecache_pmu->node);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to add CPU hotplug instance\n");
-+
-+	ret = perf_pmu_register(&ecache_pmu->pmu, "sifive_ecache_pmu", -1);
-+	if (ret) {
-+		dev_err_probe(dev, ret, "Failed to register PMU\n");
-+		goto err_remove_instance;
-+	}
-+
-+	return 0;
-+
-+err_remove_instance:
-+	cpuhp_state_remove_instance(CPUHP_AP_PERF_RISCV_SIFIVE_ECACHE_ONLINE, &ecache_pmu->node);
-+
-+	return ret;
++	cpu_pm_unregister_notifier(&pl2_pmu->cpu_pm_nb);
 +}
 +
-+static void sifive_ecache_pmu_remove(struct platform_device *pdev)
++static struct sifive_pl2_pmu *sifive_pl2_pmu_get(void)
 +{
-+	struct sifive_ecache_pmu *ecache_pmu = platform_get_drvdata(pdev);
-+
-+	perf_pmu_unregister(&ecache_pmu->pmu);
-+	cpuhp_state_remove_instance(CPUHP_AP_PERF_RISCV_SIFIVE_ECACHE_ONLINE, &ecache_pmu->node);
-+}
-+
-+static const struct of_device_id sifive_ecache_pmu_of_match[] = {
-+	{ .compatible = "sifive,extensiblecache0" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, sifive_ecache_pmu_of_match);
-+
-+static struct platform_driver sifive_ecache_pmu_driver = {
-+	.probe	= sifive_ecache_pmu_probe,
-+	.remove_new	= sifive_ecache_pmu_remove,
-+	.driver	= {
-+		.name		= "sifive_ecache_pmu",
-+		.of_match_table	= sifive_ecache_pmu_of_match,
-+	},
-+};
-+
-+static void __exit sifive_ecache_pmu_exit(void)
-+{
-+	platform_driver_unregister(&sifive_ecache_pmu_driver);
-+	cpuhp_remove_multi_state(CPUHP_AP_PERF_RISCV_SIFIVE_ECACHE_ONLINE);
-+}
-+module_exit(sifive_ecache_pmu_exit);
-+
-+static int __init sifive_ecache_pmu_init(void)
-+{
++	struct sifive_pl2_pmu *pl2_pmu;
 +	int ret;
 +
-+	ret = cpuhp_setup_state_multi(CPUHP_AP_PERF_RISCV_SIFIVE_ECACHE_ONLINE,
-+				      "perf/sifive/ecache:online",
-+				      sifive_ecache_pmu_online_cpu,
-+				      sifive_ecache_pmu_offline_cpu);
-+	if (ret)
-+		return ret;
++	guard(mutex)(&g_mutex);
 +
-+	ret = platform_driver_register(&sifive_ecache_pmu_driver);
++	pl2_pmu = g_pl2_pmu;
++	if (pl2_pmu) {
++		refcount_inc(&pl2_pmu->refcount);
++		return pl2_pmu;
++	}
++
++	pl2_pmu = kzalloc(sizeof(*pl2_pmu), GFP_KERNEL);
++	if (!pl2_pmu)
++		return ERR_PTR(-ENOMEM);
++
++	pl2_pmu->pmu = (struct pmu) {
++		.attr_groups	= sifive_pl2_pmu_attr_grps,
++		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_NO_INTERRUPT,
++		.task_ctx_nr	= perf_sw_context,
++		.event_init	= sifive_pl2_pmu_event_init,
++		.add		= sifive_pl2_pmu_add,
++		.del		= sifive_pl2_pmu_del,
++		.start		= sifive_pl2_pmu_start,
++		.stop		= sifive_pl2_pmu_stop,
++		.read		= sifive_pl2_pmu_read,
++		.filter		= sifive_pl2_pmu_filter,
++	};
++
++	refcount_set(&pl2_pmu->refcount, 1);
++
++	pl2_pmu->event = alloc_percpu(typeof(*pl2_pmu->event));
++	if (!pl2_pmu->event) {
++		ret = -ENOMEM;
++		goto err_free;
++	}
++
++	ret = sifive_pl2_pmu_pm_register(pl2_pmu);
 +	if (ret)
-+		goto err_remove_state;
++		goto err_free_percpu;
++
++	ret = perf_pmu_register(&pl2_pmu->pmu, "sifive_pl2_pmu", -1);
++	if (ret) {
++		pr_err("%s: Failed to register PMU: %d\n", __func__, ret);
++		goto err_unregister_pm;
++	}
++
++	g_pl2_pmu = pl2_pmu;
++
++	return pl2_pmu;
++
++err_unregister_pm:
++	sifive_pl2_pmu_pm_unregister(pl2_pmu);
++err_free_percpu:
++	free_percpu(pl2_pmu->event);
++err_free:
++	kfree(pl2_pmu);
++
++	return ERR_PTR(ret);
++}
++
++static void sifive_pl2_pmu_put(void)
++{
++	struct sifive_pl2_pmu *pl2_pmu;
++
++	guard(mutex)(&g_mutex);
++
++	pl2_pmu = g_pl2_pmu;
++	if (!refcount_dec_and_test(&pl2_pmu->refcount))
++		return;
++
++	g_pl2_pmu = NULL;
++	perf_pmu_unregister(&pl2_pmu->pmu);
++	sifive_pl2_pmu_pm_unregister(pl2_pmu);
++	free_percpu(pl2_pmu->event);
++	kfree(pl2_pmu);
++}
++
++static int sifive_pl2_pmu_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev_of_node(dev);
++	struct sifive_pl2_pmu_event *ptr;
++	struct sifive_pl2_pmu *pl2_pmu;
++	unsigned int cpu;
++	u32 n_counters;
++	int ret;
++
++	/* Instances without a sifive,perfmon-counters property do not contain a PMU */
++	ret = of_property_read_u32(np, "sifive,perfmon-counters", &n_counters);
++	if (ret || !n_counters)
++		return -ENODEV;
++
++	/* Determine the CPU affinity of this PL2 instance */
++	for_each_possible_cpu(cpu) {
++		struct device_node *cache_node, *cpu_node;
++
++		cpu_node = of_cpu_device_node_get(cpu);
++		if (!cpu_node)
++			continue;
++
++		cache_node = of_parse_phandle(cpu_node, "next-level-cache", 0);
++		of_node_put(cpu_node);
++		if (!cache_node)
++			continue;
++
++		of_node_put(cache_node);
++		if (cache_node == np)
++			break;
++	}
++	if (cpu >= nr_cpu_ids)
++		return -ENODEV;
++
++	ptr = devm_kzalloc(dev, struct_size(ptr, events, n_counters), GFP_KERNEL);
++	if (!ptr)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, ptr);
++
++	ptr->cpu = cpu;
++	ptr->n_counters = n_counters;
++
++	ptr->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(ptr->base))
++		return PTR_ERR(ptr->base);
++
++	sifive_pl2_pmu_hw_init(ptr);
++
++	pl2_pmu = sifive_pl2_pmu_get();
++	if (IS_ERR(pl2_pmu))
++		return PTR_ERR(pl2_pmu);
++
++	*per_cpu_ptr(pl2_pmu->event, cpu) = ptr;
 +
 +	return 0;
-+
-+err_remove_state:
-+	cpuhp_remove_multi_state(CPUHP_AP_PERF_RISCV_SIFIVE_ECACHE_ONLINE);
-+
-+	return ret;
 +}
-+module_init(sifive_ecache_pmu_init);
++
++static void sifive_pl2_pmu_remove(struct platform_device *pdev)
++{
++	struct sifive_pl2_pmu_event *ptr = platform_get_drvdata(pdev);
++
++	*per_cpu_ptr(g_pl2_pmu->event, ptr->cpu) = NULL;
++	sifive_pl2_pmu_put();
++}
++
++static const struct of_device_id sifve_pl2_pmu_of_match[] = {
++	{ .compatible = "sifive,pl2cache1" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, sifve_pl2_pmu_of_match);
++
++static struct platform_driver sifive_pl2_pmu_driver = {
++	.probe	= sifive_pl2_pmu_probe,
++	.remove_new	= sifive_pl2_pmu_remove,
++	.driver	= {
++		.name		= "sifive_pl2_pmu",
++		.of_match_table	= sifve_pl2_pmu_of_match,
++	},
++};
++module_platform_driver(sifive_pl2_pmu_driver);
 +
 +MODULE_LICENSE("GPL");
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index be6361fdc8ba..55bd3a5e0033 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -231,6 +231,7 @@ enum cpuhp_state {
- 	CPUHP_AP_PERF_POWERPC_HV_24x7_ONLINE,
- 	CPUHP_AP_PERF_POWERPC_HV_GPCI_ONLINE,
- 	CPUHP_AP_PERF_RISCV_SIFIVE_CCACHE_ONLINE,
-+	CPUHP_AP_PERF_RISCV_SIFIVE_ECACHE_ONLINE,
- 	CPUHP_AP_PERF_CSKY_ONLINE,
- 	CPUHP_AP_WATCHDOG_ONLINE,
- 	CPUHP_AP_WORKQUEUE_ONLINE,
 -- 
 2.43.0
 
