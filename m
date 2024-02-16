@@ -1,167 +1,263 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2062.outbound.protection.outlook.com [40.107.244.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088051350FA;
-	Fri, 16 Feb 2024 18:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708106976; cv=fail; b=p651pVqQlJv30anZ/3jyPdcwlpcPwj60qJT3k8NucHIw1mKaWXFnzgnEahAbdGnDidnqdp5X0q1EoENi7bv86LXhJh7WNdSEffOEHLldCL1UW/InJWIYNkLQJ9I/BuTllrKy05pOxoC8ZMVROM53LTJtsKGsQ5xpYf8d1Q1npKw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708106976; c=relaxed/simple;
-	bh=iAvKayrX8QJrSRmwkHAdhPx63JbZqt35Hk/9enpYD10=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Ip63hxXVlh69jRmbXNh+LugbvrB8DgGXgF62ndPnXCL6TPhf9NOwbjPFUGJU/n2yHWCoJ0eQjz0WAJZmNgoPndr+lEURtohkY3pajGBZ2pYVKeYpJwer6xgFA0DLgWb1Jj/WVyVEzOdXEs3cj+obT5UB1spyZGuqRAibxuBSiE4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=tU10yuhm; arc=fail smtp.client-ip=40.107.244.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6532B131E22;
+	Fri, 16 Feb 2024 18:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708107072; cv=none; b=tVy7pBcVmmCaxoJ4yocG8p5cxDhWtGcm0P5VHVFJidJr9CIExCYO33axMWmGAwozwByALee7OLOQiAg92DjOPeVKEchaTZBmZiWrt1lDQkV9P0QrBmsuWQpIe3FmC3S6utDr54sRlIeuMcrMfO2HSt0AKRwRs1GrQvCGdSxDPYk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708107072; c=relaxed/simple;
+	bh=dOdBSF/spqI2eaHH5amVjAuvpLT9fkyGH1OPSanhWg0=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=CJsZSVP0dzqxeo57ukolvRzb7i2xm8hpQbVA/c/1JCvDyEcskRNHxiaQP7o3kyGk6COBFgM2DVAbd5XQXaT6gQrMIXq6zrGeOsKZ7egXso4DTshzIKGkYN/0C7qKpR0/N8Lwxy3tzfjhpxvJquT2c/Wml/MBBsDReIDMrENKJDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k+yMQWQ9; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="tU10yuhm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HbWlwtI66PPb8R5BC2hCzjWo0exdON/yPuwYl0fIcUg+iwanXxk8g6kdXOLsQN1keB5idXf5CSI7738gUTfqJf6uIfE3DQvkr6rbCLWBLLdEJR57/WBo0Aul2SnnjG/zFVGDovZ31hvI1zAxpZZcDSunH4K538ESXJh2heQvoolcdZJQ08bnWyOQ8UGLQg8o+KpEz/VeD8omGIZZ2fdSv+dD0Sf0vjlOikCiF3mLAcg+4Fj6LOErZb2T5GKLaH+Eo7JGIh6q3Pumq65N61JpXdXjzNPTFOTTvLI9IRTAPykGb1uRz0llI0+OOl8bAiaKpaVE1EaSB1euMNw66YvkUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZkAXukFiMFs6ljePLp0g1Vf4GOHUZnyIOY39GLY4UZs=;
- b=m7DWkikKEdwqxfbs2vEa0gVXbcGcCr/xT1XQ6V9kBT63nHVL1OVewgsHnjqyGli4N0V30buv9+7HzLMtT9DUOsnTODkarnzLaQ6DL5gfwKWqHrkI7eOWo8RhHyyHRXgHkb8ZBQyIG2Tl16wN5g50ilAlE0KHEVvmL2XgGjsOYw3XihKuncT1SlDrfn73aqWct81bxfgjGXbCJWSZybuWT99D/1b+CdW40IdTuR1Yk9JkbrEmmVz5QcVPgg6JUOiOUqcRyKqR4uBEeaxe8JCATv9uuTIw6Xacyc4ffj+00dfGAhj5TSq1b902y+Of2Nf+XjTNmGg+J6aQBcsbgImXJg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZkAXukFiMFs6ljePLp0g1Vf4GOHUZnyIOY39GLY4UZs=;
- b=tU10yuhm7z4Y756K6pc90g7nX6OsIxBjvziDSZ40Na7GieW+jhyc77nyRxre9pBQrq2jhhznq1XJ7F4Fq9a9mBF7+QRskudmxiF4vYJ4km4Cqz2FEplkS5Bzo4YWDXRWj/f0hDbdrQB6f9OdIqdlfvpeTYIhKIEKQyWna84Ob3U=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
- by CH3PR12MB8583.namprd12.prod.outlook.com (2603:10b6:610:15f::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.15; Fri, 16 Feb
- 2024 18:09:30 +0000
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::9d:17f1:8b3b:1958]) by CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::9d:17f1:8b3b:1958%4]) with mapi id 15.20.7316.012; Fri, 16 Feb 2024
- 18:09:30 +0000
-Date: Fri, 16 Feb 2024 19:09:25 +0100
-From: Robert Richter <rrichter@amd.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] cxl/pci: Fix disabling memory if DVSEC CXL Range does
- not match a CFMWS window
-Message-ID: <Zc-k1TDk1hfvakQS@rric.localdomain>
-References: <20240216160113.407141-1-rrichter@amd.com>
- <65cfa34b741ea_5c762946@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <65cfa34b741ea_5c762946@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-X-ClientProxiedBy: FR5P281CA0031.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:f3::7) To CYYPR12MB8750.namprd12.prod.outlook.com
- (2603:10b6:930:be::18)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k+yMQWQ9"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-785bdb57dfaso276699585a.1;
+        Fri, 16 Feb 2024 10:11:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708107069; x=1708711869; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q2VcV/zAh3FXbIILZmQkmLaI1bc79dnMNsN1hFDEP10=;
+        b=k+yMQWQ92pcDo3jaMqX4yinnaDAA715b/kPruZDnGYIEBT92Aadw+uWITcdOUF0xMc
+         /3/twx992LrymsnVLaFdKXmShi5AHsyOjyIYPigiEpfAiVgYtfI5UFnOa9XX72nhT1D4
+         0VIUFEitFzPsPw2LOhtqHi2K5O1rSJSPPivIHRiEZj7UHkzOnSt/F5zLXJXYQsDGffWd
+         D0afLPdDcVCgM+rGcPX4E8wh2YExLush2krK/pEkAlkGACGVm9j1OX2Do1L0aBTFpknF
+         P6BZRLBxMSyLrloVhp+Bw4uvQwmYxw96HKtg+xhvGW5BBnWIZnJnSZtZv0AIgxwndfsJ
+         b/PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708107069; x=1708711869;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=q2VcV/zAh3FXbIILZmQkmLaI1bc79dnMNsN1hFDEP10=;
+        b=lj6EWQZbVDkSQAfEOg1+REAn4xaX5TVAEtrbz22/hqCrd4A6MR35X9lrO0LoV+IYgA
+         9q9Ll57VbzHjbb24kKcFAJurL5FRR1WtSc1cOMBlpRdMTG9AoshkjXOkj2bRDp+GuN6i
+         ZvEHW+eqxKrk6N29WxkNa6QcCh2DnLSzB9e/0lRuMvXsvp1GzITmNroOsakEO5aqCttY
+         zuEiS0i6KwGS+9IYSDuQDw/aNiTdO9Gzkk2X38Rhl6IyNtsr7+j0ixLLf1Kqr0DWg3Hp
+         zz9QCZE/vRplWkW8ASdE7mjFDVa3JcBlh9mCzaKN6AU7Vwy7GboH9KGcgYJATxOpg7+S
+         JBqw==
+X-Forwarded-Encrypted: i=1; AJvYcCVigQAJmwE81+JLrtGd77QGshIw402xW6OzhPlF+Sb3UD35g4Jw3K5roSMdmkNRnSqQdNNvHz7Lyq9pVCjxxZ00JTxhNC6cSE3vor7c7r3jHo1bYHkLoGrbYo3j3gbq6ocdnGUE
+X-Gm-Message-State: AOJu0YyPHZNO2tmoJtF7zzck+Vwt4ES2bwc1EX1qBF+M5ATP2dx/o5sT
+	cDLwyp9zaCQuV/0dqTIHrc9DzDioVBM5QiPg1M3ugkW25NE0HIWT
+X-Google-Smtp-Source: AGHT+IHsBYzDnClhP8w/yiMD+b1tcVxKmXl+ytCU1xcujbC6S78DWrKL442mjZgxAZDEnSJquqVkwA==
+X-Received: by 2002:a05:620a:1919:b0:787:2ba4:c78b with SMTP id bj25-20020a05620a191900b007872ba4c78bmr10458836qkb.9.1708107069258;
+        Fri, 16 Feb 2024 10:11:09 -0800 (PST)
+Received: from localhost (56.148.86.34.bc.googleusercontent.com. [34.86.148.56])
+        by smtp.gmail.com with ESMTPSA id r17-20020a05620a03d100b00785cad6c218sm163419qkm.131.2024.02.16.10.11.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Feb 2024 10:11:08 -0800 (PST)
+Date: Fri, 16 Feb 2024 13:11:08 -0500
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Abhishek Chauhan <quic_abchauha@quicinc.com>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Andrew Halaney <ahalaney@redhat.com>
+Cc: kernel@quicinc.com
+Message-ID: <65cfa53c89e52_e53c9294ce@willemb.c.googlers.com.notmuch>
+In-Reply-To: <20240215215632.2899370-1-quic_abchauha@quicinc.com>
+References: <20240215215632.2899370-1-quic_abchauha@quicinc.com>
+Subject: Re: [PATCH net-next v1] net: Add skb user timestamp flag to
+ distinguish between timestamps
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|CH3PR12MB8583:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9e0672cb-9de0-4a9a-8c9d-08dc2f1a6be9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Dplh0z5vOhFDGRhdxuT/ykHCpsBS3aWvM07oXdZxRDhBq/Y+iFqE/W/SHGNUB+RnpBWBsSgvwMj/n5+DvqcH96lhlkIHJz/OqkDpoMPM7UEfyFPIUy7b16h9Z/S5NDJIPEDEK2PMusHB8ShsMNKzy7jRlThNz8+DCAElpKNKSy3Y6tCqOOwKvtVpTmAy1RB5mhi6r7ihs1nO0MX1pMOPXWw4eUoApGxwdGl3rADgV3ZO0+LdTqR1xXR5ILIvyYTKXt/ty8OUqWR+/Oy/vyY4AodPgWel1Dtwb61NlLxv43by7TIPi9dL0MWm2Kjxkg66NlMJoynrkFn3fI2e5YkCVh4r9P9xtpgNxTJw1LfaFsK+uwBpVw6x6UQMgZxQs+JD0BbbhQpeUoc+q8QG+4RFun3A/dhKJeNalpPuPnafRxBuhSNc29hG0lFwsLST6ootZh1+2FYVoxgWnyiB/MaFsghVCt7wSLud0Xx8dkKJKroz5fWgGXuO6H6DyVcMcjCc8hjBCC6sFJ3LXb/rhogNQi+y8SWFFmqs1uAWUuEtSfa5OkwsxX2WsAK2YVX5nwut
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(136003)(396003)(346002)(39860400002)(376002)(230922051799003)(64100799003)(186009)(1800799012)(451199024)(6486002)(6512007)(6666004)(9686003)(478600001)(41300700001)(4326008)(8936002)(8676002)(66556008)(2906002)(5660300002)(53546011)(6506007)(316002)(54906003)(66476007)(66946007)(6916009)(83380400001)(38100700002)(26005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?sqfnwJvGGL3w32Oi0wQx9899U0P4Ny+2r4g8RazqmVot8nxeXV5YH1JK9aFP?=
- =?us-ascii?Q?WoNZhoYSQJ2ZqX6uhVeTliK3qviVMvIor0AZy4wK7D28BK2LN3NRI5gdiyOR?=
- =?us-ascii?Q?zYELBxZPKLu/9fTPa0pkEbY0K0gEN4kxrmbJA/V7DBMJnOHBlznWPDZpHdXY?=
- =?us-ascii?Q?OahQX912TE+OWtWpvnbRdRpWFR3JdPryMvscYIePQsanrBm/X+OnHuVZuvUH?=
- =?us-ascii?Q?ga6F7cKT4vdsJX6P+8hsMUtUpt+i64cHW5B9O6LOF8unc07Pv0SdRwxBCtUo?=
- =?us-ascii?Q?MBOAidAGbT3CG8gaJ8ndp6mEneyiuMGZJASNnHTq9e4xcKw1CPIoczdGnY6Y?=
- =?us-ascii?Q?Xfm8Av1AVZoRWQ1EjhvJwOYROsGqtZctd9TbvQymAPkzCkQNFXm/OSdAln92?=
- =?us-ascii?Q?qDuczsgkmHz1ZuugHkXrm6tKOgLXjFjz3FmtAY922Oe+NVPBM6ZOerEPfRoX?=
- =?us-ascii?Q?hbE91wP3nbydat7rZZCQzGzmuyGnj+KejFGtkTav+RXNr4TbkgJ2wdgpR22B?=
- =?us-ascii?Q?ejdsjItTNGzj/wILRjH0T2gEjyRzv783+aiR5EiEfh7juZGzcyqb5AtEbDLf?=
- =?us-ascii?Q?jVJVPwPZeLuWpQ5s/bTuukWZ/fUtmW1pWHo1W2fur6yiHag7RV9fq00x1dIh?=
- =?us-ascii?Q?4c+z9n3GC+9mF4Qnh+KhrIW+RMY5OXzEDUBa0wzIwHzzU6fFAcE7Wc4nTau7?=
- =?us-ascii?Q?/wrvQwzmsmaCCAfF9UZ0uCLJXihQ4o9MXLgE1jDz3DWuFsd46Q2PYbI25Yi0?=
- =?us-ascii?Q?fsUWcl8PCagMmOYh5BjwZZgbAp3pQoDj8hmBgickSUDywRR/5UnjMPHtoU8C?=
- =?us-ascii?Q?2ahiDfd/+NSwcqXZz6Onic1BrfTEnmIjAfm9QWCzmpP/xWcboHbUTPmUuUb2?=
- =?us-ascii?Q?yO2Zmw2RqkRgmXs5jQFxYLZfRxccndwE1QXRsnpPhWkMpDDcG8awuhhDInj0?=
- =?us-ascii?Q?Xvv6xN2p+KaBz37BaUKjMaK5SyslNFwP41/008S6fwlJeVX+I6e/ebUOMWEV?=
- =?us-ascii?Q?PKfAhsdeY0gjYhTETgk3BjOipFMgn6s9TW0B61Sx8ixVWNdqURosZrhHXXwW?=
- =?us-ascii?Q?0NDQpMfj4t2QTkb1fcO2/SGzYiRdaj2KRIj2XpjdyfcH8FR95FV1nyUKwkD2?=
- =?us-ascii?Q?xUTGp6Tir7nyGf4uHsdJm3cSttYd+s2il+ffotf+jKne0liPxdvMLh7gM/Ly?=
- =?us-ascii?Q?nUhcKEcnsim/bKrt+UfgdxXceffdDFQX4VEM/hT5Lq3KHe5CxI4Rp2Jxx62+?=
- =?us-ascii?Q?0hVmrBG0zttHZBOI34CyJgI5CLUxZ3LAXD13HtgG/8qdi2aSNGBJ5zRjqVj6?=
- =?us-ascii?Q?r8sMfO3c/Qwm1ifS555Dpt1St8TVAMGW20fcneurO89uzUczT4nIlJgJ1ADE?=
- =?us-ascii?Q?yZE0YNWnViG6c7sLp++UlzxVVNaQdPdEBtBjFhlGLitu09ZSdmU3Icw/AQWC?=
- =?us-ascii?Q?17dXYuNwpo6KkUrqCqPQZGmNWljRwzPqsGzoMbuwW90BYW9eaI+qnmuAFgbh?=
- =?us-ascii?Q?IgwzxKTgTkmPah2oKpGylGqzKFwWs+rLzMSW7X/PWyt7j6ANH8u00DcK77P+?=
- =?us-ascii?Q?FDw9RixK71mKBnsTxDS5A6whH6gFu0L1xvPSvRqI?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9e0672cb-9de0-4a9a-8c9d-08dc2f1a6be9
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2024 18:09:30.7025
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4S+FlNK53UzuL5qLyv+vF4/tg7qTswZRpocMYZ4L983dgN4X/H5NUgq5STiYdvwZhjFG8/giExGVoeZnJ7V/dA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8583
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-On 16.02.24 10:02:51, Dan Williams wrote:
-> Robert Richter wrote:
-> > The Linux CXL subsystem is built on the assumption that HPA == SPA.
-> > That is, the host physical address (HPA) the HDM decoder registers are
-> > programmed with are system physical addresses (SPA).
-> > 
-> > During HDM decoder setup, the DVSEC CXL range registers (cxl-3.1,
-> > 8.1.3.8) are checked if the memory is enabled and the CXL range is in
-> > a HPA window that is described in a CFMWS structure of the CXL host
-> > bridge (cxl-3.1, 9.18.1.3).
-> > 
-> > Now, if the HPA is not an SPA, the CXL range does not match a CFMWS
-> > window and the CXL memory range will be disabled then. The HDM decoder
-> > stops working which causes system memory being disabled and further a
-> > system hang during HDM decoder initialization, typically when a CXL
-> > enabled kernel boots.
-> > 
-> > Prevent a system hang and do not disable the HDM decoder if the
-> > decoder's CXL range is not found in a CFMWS window.
-> > 
-> > Note the change only fixes a hardware hang, but does not implement
-> > HPA/SPA translation. Support for this can be added in a follow on
-> > patch series.
-> > 
-> > Signed-off-by: Robert Richter <rrichter@amd.com>
-> > ---
-> >  drivers/cxl/core/pci.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> > index a0e7ed5ae25f..18616ca873e5 100644
-> > --- a/drivers/cxl/core/pci.c
-> > +++ b/drivers/cxl/core/pci.c
-> > @@ -478,8 +478,8 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
-> >  	}
-> >  
-> >  	if (!allowed) {
-> > -		cxl_set_mem_enable(cxlds, 0);
-> > -		info->mem_enabled = 0;
-> > +		dev_err(dev, "Range register decodes outside platform defined CXL ranges.\n");
-> > +		return -ENXIO;
-> >  	}
+Abhishek Chauhan wrote:
+> Bridge driver today has no support to forward the userspace timestamp
+> packets and ends up resetting the timestamp. ETF qdisc checks the
+> packet coming from userspace and encounters to be 0 thereby dropping
+> time sensitive packets. These changes will allow userspace timestamps
+> packets to be forwarded from the bridge to NIC drivers.
 > 
-> This looks good to me.
+> Signed-off-by: Abhishek Chauhan <quic_abchauha@quicinc.com>
+> ---
+> Note:- I am a little skeptical of using bool inside the skbuff
+> structure as no one today has used bool so far in the struct.
+> (Expecting some comments from upstream for sure) 
+> 
+> I am also touching the heart of sk buff so i hope this is reviewed
+> thoroughly. I have crossed checked multiple times on all the ipv4
+> /ipv6 paths where userspace timestamp is populated. I tried as much
+> as possible to cover all the references and made sure i put my changes
+> in place.  
+> 
+> Bug description:- If the physical network interface is bridged the 
+> etf packets are dropped since bridge driver before forwarding the packet
+> is setting the userspace timestamp to 0.
+> 
+> Bridge driver call stack 
+> 
+> [  157.120189] now is set to 1706054553072734733
+> [  157.120194] tx time from SKB is 0 <== SKB when reaches the etf qdisc is 0 
+> [  157.120195] q->last time is 0
+> [  157.120197] CPU: 3 PID: 9206 Comm: a.out Tainted: G        W  OE  X  -------  ---  5.14.0-999.323ES.test.el9.aarch64 #1
+> [  157.120201] Hardware name: Qualcomm SA8775P Ride (DT)
+> [  157.120202] Call trace:
+> [  157.120203]  dump_backtrace+0xb0/0x130
+> [  157.120212]  show_stack+0x1c/0x30
+> [  157.120215]  dump_stack_lvl+0x74/0x8c
+> [  157.120220]  dump_stack+0x14/0x24
+> [  157.120223]  etf_enqueue_timesortedlist+0x114/0x20c [sch_etf]
+> [  157.120230]  dev_qdisc_enqueue+0x2c/0x110
+> [  157.120234]  __dev_xmit_skb+0x114/0x644
+> [  157.120236]  __dev_queue_xmit+0x31c/0x774
+> [  157.120238]  br_dev_queue_push_xmit+0xd4/0x120 [bridge]
+> [  157.120253]  br_forward_finish+0xdc/0xec [bridge]  <== This function is culprit as its making the tstamp as 0
+> [root@ecbldauto-lvarm04-lnx ~]# [  157.120263]  __br_forward+0xd8/0x210 [bridge]
+> [  157.120272]  br_forward+0x12c/0x150 [bridge]
+> [  157.120281]  br_dev_xmit+0x288/0x49c [bridge]
+> [  157.120290]  dev_hard_start_xmit+0xe4/0x2b4
+> [  157.120292]  __dev_queue_xmit+0x6ac/0x774
+> [  157.120294]  neigh_resolve_output+0x128/0x1ec
+> [  157.120297]  ip_finish_output2+0x184/0x54c
+> [  157.120300]  __ip_finish_output+0xa4/0x19c
+> [  157.120302]  ip_finish_output+0x38/0xf0
+> [  157.120303]  ip_output+0x13c/0x1f4
+> [  157.120305]  ip_send_skb+0x54/0x10c
+> [  157.120307]  udp_send_skb+0x128/0x394
+> [  157.120310]  udp_sendmsg+0x7e8/0xa6c
+> [  157.120311]  inet_sendmsg+0x48/0x70
+> [  157.120313]  sock_sendmsg+0x54/0x60
+> [  157.120315]  ____sys_sendmsg+0x1f8/0x254
+> [  157.120316]  ___sys_sendmsg+0x84/0xcc
+> [  157.120318]  __sys_sendmsg+0x60/0xb0
+> [  157.120319]  __arm64_sys_sendmsg+0x28/0x30
+> [  157.120320]  invoke_syscall.constprop.0+0x7c/0xd0
+> [  157.120323]  el0_svc_common.constprop.0+0x140/0x150
+> [  157.120325]  do_el0_svc+0x38/0xa0
+> [  157.120327]  el0_svc+0x38/0x1d0
+> [  157.120329]  el0t_64_sync_handler+0xb4/0x130
+> [  157.120330]  el0t_64_sync+0x17c/0x180
+> 
+> After my changes:- 
+> [ 2215.130148] now is set to 1706056610952501031 
+> [ 2215.130154] tx time from SKB is 1706056610953467393 <== Time is forwarded to etf correctly
+> [ 2215.130155] q->last time is 1706056591423364609
+> [ 2215.130158] CPU: 1 PID: 108166 Comm: a.out Tainted: G        W  OE  X  -------  ---  5.14.0-999.323ES.test.el9.aarch64 #1
+> [ 2215.130162] Hardware name: Qualcomm SA8775P Ride (DT) [ 2215.130163] Call trace:
+> [ 2215.130164]  dump_backtrace+0xb0/0x130 
+> [ 2215.130172]  show_stack+0x1c/0x30 [root@ecbldauto-lvarm04-lnx ~]# 
+> [ 2215.130175]  dump_stack_lvl+0x74/0x8c [ 2215.130181]  dump_stack+0x14/0x24 
+> [ 2215.130184]  etf_enqueue_timesortedlist+0x114/0x20c [sch_etf] 
+> [ 2215.130191]  dev_qdisc_enqueue+0x2c/0x110 
+> [ 2215.130197]  __dev_xmit_skb+0x114/0x644 
+> [ 2215.130200]  __dev_queue_xmit+0x31c/0x774 
+> [ 2215.130202]  br_dev_queue_push_xmit+0xd4/0x120 [bridge] 
+> [ 2215.130217]  br_forward_finish+0xe4/0xf0 [bridge] 
+> [ 2215.130226]  __br_forward+0xd8/0x20c [bridge] 
+> [ 2215.130235]  br_forward+0x12c/0x150 [bridge] 
+> [ 2215.130243]  br_dev_xmit+0x288/0x49c [bridge] 
+> [ 2215.130252]  dev_hard_start_xmit+0xe4/0x2b4 
+> [ 2215.130254]  __dev_queue_xmit+0x6ac/0x774 
+> [ 2215.130257]  neigh_hh_output+0xcc/0x140 
+> [ 2215.130260]  ip_finish_output2+0x300/0x54c 
+> [ 2215.130262]  __ip_finish_output+0xa4/0x19c 
+> [ 2215.130263]  ip_finish_output+0x38/0xf0 
+> [ 2215.130265]  ip_output+0x13c/0x1f4 
+> [ 2215.130267]  ip_send_skb+0x54/0x110 
+> [ 2215.130269]  udp_send_skb+0x128/0x394 
+> [ 2215.130271]  udp_sendmsg+0x7e8/0xa6c 
+> [ 2215.130272]  inet_sendmsg+0x48/0x70 
+> [ 2215.130275]  sock_sendmsg+0x54/0x60 
+> [ 2215.130277]  ____sys_sendmsg+0x1f8/0x254 
+> [ 2215.130278]  ___sys_sendmsg+0x84/0xcc 
+> [ 2215.130279]  __sys_sendmsg+0x60/0xb0 
+> [ 2215.130281]  __arm64_sys_sendmsg+0x28/0x30 
+> [ 2215.130282]  invoke_syscall.constprop.0+0x7c/0xd0
+> [ 2215.130285]  el0_svc_common.constprop.0+0x140/0x150
+> [ 2215.130287]  do_el0_svc+0x38/0xa0
+> [ 2215.130289]  el0_svc+0x38/0x1d0
+> [ 2215.130291]  el0t_64_sync_handler+0xb4/0x130 
+> [ 2215.130292]  el0t_64_sync+0x17c/0x180
+> 
+> 
+>  include/linux/skbuff.h  | 13 +++++++++++++
+>  include/net/inet_sock.h |  1 +
+>  include/net/sock.h      |  1 +
+>  net/core/sock.c         |  1 +
+>  net/ipv4/ip_output.c    |  3 +++
+>  net/ipv4/raw.c          |  1 +
+>  net/ipv6/ip6_output.c   |  2 ++
+>  net/ipv6/raw.c          |  1 +
+>  net/packet/af_packet.c  |  3 +++
+>  9 files changed, 26 insertions(+)
+> 
+> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+> index 2dde34c29203..b098b7d30b56 100644
+> --- a/include/linux/skbuff.h
+> +++ b/include/linux/skbuff.h
+> @@ -744,6 +744,7 @@ typedef unsigned char *sk_buff_data_t;
+>   *	@tstamp: Time we arrived/left
+>   *	@skb_mstamp_ns: (aka @tstamp) earliest departure time; start point
+>   *		for retransmit timer
+> + *	@user_delivery_time: states that timestamp was populated from userspace
+>   *	@rbnode: RB tree node, alternative to next/prev for netem/tcp
+>   *	@list: queue head
+>   *	@ll_node: anchor in an llist (eg socket defer_list)
+> @@ -879,6 +880,8 @@ struct sk_buff {
+>  		ktime_t		tstamp;
+>  		u64		skb_mstamp_ns; /* earliest departure time */
+>  	};
+> +	/* States that time is from userspace */
+> +	bool            user_delivery_time;
+>  	/*
+>  	 * This is the control buffer. It is free to use for every
+>  	 * layer. Please put your private variables there. If you
+> @@ -4208,6 +4211,16 @@ static inline void skb_clear_tstamp(struct sk_buff *skb)
+>  	if (skb->mono_delivery_time)
+>  		return;
+>  
+> +	/* When userspace timestamp packets are forwarded via bridge
+> +	 * the br_forward_finish clears the tstamp and the tstamp
+> +	 * from the userspace is lost. Hence the check for user
+> +	 * delivery time. With the below check now tc-etf qdisc will
+> +	 * not end up dropping the packets if the packet is forwarded via
+> +	 * bridge interface.
+> +	 */
+> +	if (skb->user_delivery_time)
+> +		return;
+> +
+>  	skb->tstamp = 0;
+>  }
+>  
+> diff --git a/include/net/inet_sock.h b/include/net/inet_sock.h
+> index d94c242eb3ed..e7523545a493 100644
+> --- a/include/net/inet_sock.h
+> +++ b/include/net/inet_sock.h
+> @@ -175,6 +175,7 @@ struct inet_cork {
+>  	__u16			gso_size;
+>  	u64			transmit_time;
+>  	u32			mark;
+> +	bool			user_delivery_time;
+>  };
 
-Thanks, Dan
+There's no need for a cork member, as by definition the fields in this
+struct are coming from userspace.
+
+There is a very high bar to adding new fields to sk_buff, because it
+is used by many paths and would be enormous if stuck with fields for
+every intersection between a pair of features.
+
+The goal here is for the bridge to disambiguate earliest delivery time
+timestamps from which? From those looped through ip forwarding? Why
+does the bridge zero the tstamp field at all? That might help finding
+a reasonable implementation.
+
+We have run in the issue of labeling the value of skb->tstamp before.
+With redirect and looping it is definitely subtle.
