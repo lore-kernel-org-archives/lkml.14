@@ -1,183 +1,161 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94357130AD8
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 17:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F191E130E27
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 17:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708103063; cv=none; b=sTxaIRwWzBeQH5QAwKE+WX+kKMh9N1HQq7rcttYjRNutILqaFhzXN82PKfatW4KXUjeAJCeuJtEo3dfnsC1It4DGrNY3jAwyopEHgH4mGnrqCkZzp+rVgTFaOsKQmwJd4uFW3YToXrZCHh9uKG1V8/7HEVo+1poP72w4YLW3WbQ=
+	t=1708103091; cv=none; b=FgRWZsKlHf4aiS4RGtHb3CsBFFtePAtOndqY5lMRLJYS5pjj5ASQc6j2/t0NMfx2fR993r4E6pcPfanphjuL7nFQgdV5Wfl4NnlA9nmPBr5qJ9grygFo55MQQoSlD3BJNlJHUj7ndODGclpgEqQ3YNnStYRkNuaGH4M4sX/gC7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708103063; c=relaxed/simple;
-	bh=3a7FMORiulYeKmE84zKi/piBb+dkvwU96kx/uVbaQFg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vo71jfa0M04voWckAlHdO4M7xHXDTsmLArewspkawvKYSZFDfSFQ/RVLPDIQU2bK3D0l3OKyvE1+P+10wRZQ35xvsWjXr1vEo+tqRRi4EZnDejwJIA7Xb98GUKpsc5jI53oZqgfZKYoBJd7mQglaSfKxmxhBBukYynyTL8E0B1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qdH7rwIE; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1708103091; c=relaxed/simple;
+	bh=AZRPic9i3EQrfTrEUZCLdsDgVGaWankE3PcrdXSA2IE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aW5d9cXhfmBNks5KearoDHitcxkmGiiVJuxbtKUHL55StgOUnkBFf4xva3r7ecxgrQIbWuhiDZ/spfCgfBF3QJuX+lTuB0qAl2Br065gmVFJ+YmrQwWFuZOK4oK8IvtwkjBw7xaKQKZztaklT6NY2CZy9Yz4W6buZ+g4ilMH74Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=KeWgkpLH; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=nA9WCOef; arc=none smtp.client-ip=66.111.4.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qdH7rwIE"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dcc73148611so2506653276.3
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 09:04:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708103060; x=1708707860; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AONf6Rwt70Y/InxvAsZm9qasH+QAXmnPb6exgsQbAn0=;
-        b=qdH7rwIEutJjohj3+iLQ+MrYMO2JOxTZXt6DXmZHUv4X0WOsHTSDV2pY0udsMdTxtd
-         fofwGxmK4la2Ejmxb14rS2/69OpBaCCYH3oE6YLgqnyflnOj7KwxVInQOUlWoyZNCw6F
-         UtxWHzIoJjDI5gsC5hm7OT61vrKzYu3SvSEcYgPVQOj1ixFQKtyoHh69I2vb7X89nQPC
-         fy49PYaHmgz/BIyi9V2/HaaQPH+gvUWs8wvQODnJ/1Ggx9UG5p0dWyX3Qoj13/abE4KN
-         XZCU5DSADi8rvmwmeeZiyGwGVKBtS5q7JvcvcDqanvdlGVWhPMEzpmPo8p0b43EMG9E+
-         v37g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708103060; x=1708707860;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AONf6Rwt70Y/InxvAsZm9qasH+QAXmnPb6exgsQbAn0=;
-        b=jPljJuBf7vJj1UWUkiCaVJJotoLqU6DPigdAKT2RBAdtTZb4CbUIgvwlsQMhrp1Har
-         LdEcgGOvVqz3s9rcnVuT04X7MPObM3K5zuwit9txmjcwJ2dZPm6lxOGBiSoYOyO+B6Nm
-         p8UvJmabZCGPkeMLdMO+uRxL1I45UF5HvI4OovUXhPVZ97b2VdNgfthThniX/+DBZDg5
-         P5NYqssIp7keY6CANbkDjZjVw5FFdahetODTDvJKdVWrXMXiebFehEsOpm654YdhIu2E
-         vz+0tppOrVO8v/3fJDE7bMJlkzIKvJDvAp8IoUixvLXpgpLFe62mBq0Qa3DKij26Etms
-         v5rA==
-X-Forwarded-Encrypted: i=1; AJvYcCU87LhRsdUHY1slJ0gbjUCFuGoZFIWd7ogI6SXDIsDYluRBcIGzrZhRKFdPXtfZCZBJkGpVbowPUHmTdxPaHVB7EwIz8seulBlyjmv/
-X-Gm-Message-State: AOJu0Yy+9kKw/yxr9CN7aCPkhnX2yuARr/cBx//yHjaH0z2tncDITjI5
-	95vsi0eYBmL/tdW85HlkfNFLJHe32QNAKkWUFCHask7sk77n+DwcEbc97mqLT/5p/DaNfyxVd0j
-	VBYlGoNp2nUEcvNrPkO/93Y6pCs+SqwObTDr2
-X-Google-Smtp-Source: AGHT+IFKsCqKFJOqQT8bKrODn1/sGXg8SwbGnvmT7NLpaIG7hZMAXzI7k8uueS2KJuQc/CnCvGizvtw3FBEC6oUeP1g=
-X-Received: by 2002:a81:71d6:0:b0:604:a75:4274 with SMTP id
- m205-20020a8171d6000000b006040a754274mr4969437ywc.51.1708103060160; Fri, 16
- Feb 2024 09:04:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="KeWgkpLH";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nA9WCOef"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.nyi.internal (Postfix) with ESMTP id C12E75C0032;
+	Fri, 16 Feb 2024 12:04:47 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Fri, 16 Feb 2024 12:04:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
+	1708103087; x=1708189487; bh=WD56Myi2ma1dKYxOJWeOyvZTZc0rVPwnTQ4
+	cjyMsISI=; b=KeWgkpLHvEgib+nAV2iSIRK1oPhtFJyIarQ2y/xOs5yYd/BGSPz
+	uimtlyTVya0vqRic9W7BfgqjjY/LiexKL75iLtAUb85dLjtGN25wGGAlDaLiQk6c
+	WUFjKBSoUHSGYwyDxL4/B5/EZlmvfLjjqnqSzLtGWJ+zhHfTU9pGWlFeGmNhlSj/
+	Zcfc0IBHI4hlVFRbnFLGfZ0xDWKz4kJqM74Go/BaWahS+1feW0dSN8W5DCijwwNS
+	Rm3mPzCcdqxQnCZ0Xk42Mq4B9po52QwbtXkezGK10XmaF8hxeNF9oNzD6UZswpm6
+	OwwYof0mMUOaovwZeY/Arq5YQqj5aH3ZgHg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1708103087; x=1708189487; bh=WD56Myi2ma1dKYxOJWeOyvZTZc0rVPwnTQ4
+	cjyMsISI=; b=nA9WCOef4yROrcXUY6gTn/Rl5akvLP8BE1kABzdgqYYdWRfoOUS
+	7TwaSNJI/uFo5/U1YOQLzow4T/pS8+OLFS/o/s8lNY5EUzoupMI5myGgUovIa2jX
+	yuKRRDYn5DRzsNd4V3HE0f/RUaNIui4QMdOQ8DRjp1Ql3NXakxOmuoEdVuafF5xq
+	BAfsVpiMWNsQv+2T59MPucgsAzhdTXWgw0TkXbMOhWsYMqYwkBg9zQJol2c/63N+
+	H76UfoGN4mLp/0SyxB+hnvOHXyY5Vo/hVfm1nQfsVqqSTCPUbyc4pPw7YEFFPbJ1
+	wLEKWg5SZdqRFHjWVTzTj+rxP1oKJmEUGzQ==
+X-ME-Sender: <xms:r5XPZc9FkUuxUBRow1HRLQlUfWJShSMhwAoq398OwDYV-LQfPv0hVw>
+    <xme:r5XPZUvPXNb-16E-vT5Bf72XYhT1ZZgoaFAGGjKcgeigoNV1bKG_ZM4Rjn-FI9XXn
+    x4A3odzFJNmTWmbFQ>
+X-ME-Received: <xmr:r5XPZSD9RcLo643qMFxQU1-5RtCMm9pBlSqnhYgy3txW6C-EzhL2BWjuree69M8gZgXllG6z84BMkt_6y2iHupR4rMm0jUpZ4IfDZk7H_KDA0ZSEkga1WnUq>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddvgdeliecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvfevufffkffojghfrhggtgfgsehtkeertdertdejnecuhfhrohhmpegkihcu
+    jggrnhcuoeiiihdrhigrnhesshgvnhhtrdgtohhmqeenucggtffrrghtthgvrhhnpeejke
+    etkeffleelkeduffdtfedvtdejjeeutdeutdetgeejgfevtdefudejkeeiveenucevlhhu
+    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpeiiihdrhigrnhessh
+    gvnhhtrdgtohhm
+X-ME-Proxy: <xmx:r5XPZcfymvfxRGHOwQMjAzymtvxx-5rRT3PTSE36bLdW0KyC6T5A7Q>
+    <xmx:r5XPZRPtz0CxvTkQD_QK6r5zmKK5tdVWnAJuyng68Ol6kwallfxSyQ>
+    <xmx:r5XPZWmf8e9mxaqBy14czsjIky4GFS0cBqZWK1dpwKD39yutOeiHOQ>
+    <xmx:r5XPZcGemWdAfQTnGkWJ-0kH7k8nSopol84fHAG-EKyDhfNbjvJI4w>
+Feedback-ID: iccd040f4:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 16 Feb 2024 12:04:47 -0500 (EST)
+From: Zi Yan <zi.yan@sent.com>
+To: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: Zi Yan <ziy@nvidia.com>,
+	"Huang, Ying" <ying.huang@intel.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	David Hildenbrand <david@redhat.com>,
+	"Yin, Fengwei" <fengwei.yin@intel.com>,
+	Yu Zhao <yuzhao@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Kemeng Shi <shikemeng@huaweicloud.com>,
+	Mel Gorman <mgorman@techsingularity.net>,
+	Rohan Puri <rohan.puri15@gmail.com>,
+	Mcgrof Chamberlain <mcgrof@kernel.org>,
+	Adam Manzanares <a.manzanares@samsung.com>,
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+Subject: [PATCH v6 1/4] mm/page_alloc: remove unused fpi_flags in free_pages_prepare()
+Date: Fri, 16 Feb 2024 12:04:29 -0500
+Message-ID: <20240216170432.1268753-2-zi.yan@sent.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240216170432.1268753-1-zi.yan@sent.com>
+References: <20240216170432.1268753-1-zi.yan@sent.com>
+Reply-To: Zi Yan <ziy@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240212213922.783301-1-surenb@google.com> <20240212213922.783301-21-surenb@google.com>
- <e845a3ee-e6c0-47dd-81e9-ae0fb08886d1@suse.cz>
-In-Reply-To: <e845a3ee-e6c0-47dd-81e9-ae0fb08886d1@suse.cz>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Fri, 16 Feb 2024 09:04:06 -0800
-Message-ID: <CAJuCfpGrVM6DieUZPAoxNNx2zfR9cWeC1-7NboatGEQ4qPbckw@mail.gmail.com>
-Subject: Re: [PATCH v3 20/35] lib: add codetag reference into slabobj_ext
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, mhocko@suse.com, 
-	hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, 
-	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, 
-	corbet@lwn.net, void@manifault.com, peterz@infradead.org, 
-	juri.lelli@redhat.com, catalin.marinas@arm.com, will@kernel.org, 
-	arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com, 
-	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
-	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
-	nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev, 
-	rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com, 
-	yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com, 
-	hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org, 
-	ndesaulniers@google.com, vvvvvv@google.com, gregkh@linuxfoundation.org, 
-	ebiggers@google.com, ytcoode@gmail.com, vincent.guittot@linaro.org, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	bristot@redhat.com, vschneid@redhat.com, cl@linux.com, penberg@kernel.org, 
-	iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com, 
-	elver@google.com, dvyukov@google.com, shakeelb@google.com, 
-	songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com, 
-	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-arch@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
-	cgroups@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 16, 2024 at 7:36=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wr=
-ote:
->
-> On 2/12/24 22:39, Suren Baghdasaryan wrote:
-> > To store code tag for every slab object, a codetag reference is embedde=
-d
-> > into slabobj_ext when CONFIG_MEM_ALLOC_PROFILING=3Dy.
-> >
-> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> > Co-developed-by: Kent Overstreet <kent.overstreet@linux.dev>
-> > Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-> > ---
-> >  include/linux/memcontrol.h | 5 +++++
-> >  lib/Kconfig.debug          | 1 +
-> >  mm/slab.h                  | 4 ++++
-> >  3 files changed, 10 insertions(+)
-> >
-> > diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> > index f3584e98b640..2b010316016c 100644
-> > --- a/include/linux/memcontrol.h
-> > +++ b/include/linux/memcontrol.h
-> > @@ -1653,7 +1653,12 @@ unsigned long mem_cgroup_soft_limit_reclaim(pg_d=
-ata_t *pgdat, int order,
-> >   * if MEMCG_DATA_OBJEXTS is set.
-> >   */
-> >  struct slabobj_ext {
-> > +#ifdef CONFIG_MEMCG_KMEM
-> >       struct obj_cgroup *objcg;
-> > +#endif
-> > +#ifdef CONFIG_MEM_ALLOC_PROFILING
-> > +     union codetag_ref ref;
-> > +#endif
-> >  } __aligned(8);
->
-> So this means that compiling with CONFIG_MEM_ALLOC_PROFILING will increas=
-e
-> the memory overhead of arrays allocated for CONFIG_MEMCG_KMEM, even if
-> allocation profiling itself is not enabled in runtime? Similar concern to
-> the unconditional page_ext usage, that this would hinder enabling in a
-> general distro kernel.
->
-> The unused field overhead would be smaller than currently page_ext, but
-> getting rid of it when alloc profiling is not enabled would be more work
-> than introducing an early boot param for the page_ext case. Could be howe=
-ver
-> solved similarly to how page_ext is populated dynamically at runtime.
-> Hopefully it wouldn't add noticeable cpu overhead.
+From: Zi Yan <ziy@nvidia.com>
 
-Yes, slabobj_ext overhead is much smaller than page_ext one but still
-considerable and it would be harder to eliminate. Boot-time resizing
-of the extension object might be doable but that again would be quite
-complex and better be done as a separate patchset. This is lower on my
-TODO list than page_ext ones since the overhead is order of magnitude
-smaller.
+fpi_flags is only passed to should_skip_kasan_poison() but ignored
+by the function. Remove the unused parameter.
 
->
-> >  static inline void __inc_lruvec_kmem_state(void *p, enum node_stat_ite=
-m idx)
-> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> > index 7bbdb0ddb011..9ecfcdb54417 100644
-> > --- a/lib/Kconfig.debug
-> > +++ b/lib/Kconfig.debug
-> > @@ -979,6 +979,7 @@ config MEM_ALLOC_PROFILING
-> >       depends on !DEBUG_FORCE_WEAK_PER_CPU
-> >       select CODE_TAGGING
-> >       select PAGE_EXTENSION
-> > +     select SLAB_OBJ_EXT
-> >       help
-> >         Track allocation source code and record total allocation size
-> >         initiated at that code location. The mechanism can be used to t=
-rack
-> > diff --git a/mm/slab.h b/mm/slab.h
-> > index 77cf7474fe46..224a4b2305fb 100644
-> > --- a/mm/slab.h
-> > +++ b/mm/slab.h
-> > @@ -569,6 +569,10 @@ int alloc_slab_obj_exts(struct slab *slab, struct =
-kmem_cache *s,
-> >
-> >  static inline bool need_slab_obj_ext(void)
-> >  {
-> > +#ifdef CONFIG_MEM_ALLOC_PROFILING
-> > +     if (mem_alloc_profiling_enabled())
-> > +             return true;
-> > +#endif
-> >       /*
-> >        * CONFIG_MEMCG_KMEM creates vector of obj_cgroup objects conditi=
-onally
-> >        * inside memcg_slab_post_alloc_hook. No other users for now.
->
+Signed-off-by: Zi Yan <ziy@nvidia.com>
+---
+ mm/page_alloc.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 7ae4b74c9e5c..70c1ed3addf3 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1061,7 +1061,7 @@ static int free_tail_page_prepare(struct page *head_page, struct page *page)
+  * on-demand allocation and then freed again before the deferred pages
+  * initialization is done, but this is not likely to happen.
+  */
+-static inline bool should_skip_kasan_poison(struct page *page, fpi_t fpi_flags)
++static inline bool should_skip_kasan_poison(struct page *page)
+ {
+ 	if (IS_ENABLED(CONFIG_KASAN_GENERIC))
+ 		return deferred_pages_enabled();
+@@ -1081,10 +1081,10 @@ static void kernel_init_pages(struct page *page, int numpages)
+ }
+ 
+ static __always_inline bool free_pages_prepare(struct page *page,
+-			unsigned int order, fpi_t fpi_flags)
++			unsigned int order)
+ {
+ 	int bad = 0;
+-	bool skip_kasan_poison = should_skip_kasan_poison(page, fpi_flags);
++	bool skip_kasan_poison = should_skip_kasan_poison(page);
+ 	bool init = want_init_on_free();
+ 	bool compound = PageCompound(page);
+ 
+@@ -1266,7 +1266,7 @@ static void __free_pages_ok(struct page *page, unsigned int order,
+ 	unsigned long pfn = page_to_pfn(page);
+ 	struct zone *zone = page_zone(page);
+ 
+-	if (!free_pages_prepare(page, order, fpi_flags))
++	if (!free_pages_prepare(page, order))
+ 		return;
+ 
+ 	/*
+@@ -2379,7 +2379,7 @@ static bool free_unref_page_prepare(struct page *page, unsigned long pfn,
+ {
+ 	int migratetype;
+ 
+-	if (!free_pages_prepare(page, order, FPI_NONE))
++	if (!free_pages_prepare(page, order))
+ 		return false;
+ 
+ 	migratetype = get_pfnblock_migratetype(page, pfn);
+-- 
+2.43.0
+
