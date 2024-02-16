@@ -1,145 +1,110 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805951BF47;
-	Fri, 16 Feb 2024 09:38:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119401CA9E
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 09:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708076298; cv=none; b=Ubm4k+EfiTcwstoZWh13wAQ63DZ+z1/ANNMQfZPB8kHTih1X/usC6xSzqKIz80zYl3npsl8yyOizlxQFjkdDc3Q4ehL+FXTGpxgl6iKAGmEB5m+BWPHRjufiRZisE9l0WGl4OBnC97QLOck3Xsvf1X9rMIOuh2KjfSkcMOeF/WY=
+	t=1708076300; cv=none; b=Wl+qUG9nyFhElqkypb4LvWOOqdE6cneve4Uwa7jWIhgOrYIYHPOZZJu3njSnqVArK/oOh6i0eJcKPWhzkU1Bo9xUIPP7GiFfi+Vw2KsyXY18SWXSnsy2f7xdb95E/vSdaRDlAGRKkXkW4ZIOLSh0dmqEYa2f0Ym1QmFdhzs7gqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708076298; c=relaxed/simple;
-	bh=2gDw0o66DflpWYG/Gy8TCph2SB91NzGgN6Z10TivAUU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bSj2IoCC5Z8/v2unUAO3j3MdEF1teaZw7vvqTRcMU8KU2k6TayUWn5uMFJ48UPU614q1LRj16V0Y/8zOprtdAQeJ8RLFaY73QOSC9zejw0Dt1bWcHG/tzEsVwONhQytrguLba2MCrB1DIPrnAaF3CgMRDZTeI+i+DCD4ty2rQb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=Ulvq/xe6; arc=none smtp.client-ip=115.28.160.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
+	s=arc-20240116; t=1708076300; c=relaxed/simple;
+	bh=YztRVAMrWM4QMn+3khyc9Qi6zHLT7tuCgUnaeHsjBWA=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eXv9cAWqDG+0CejLidkg/JdiBwAwdwxLJ1ct50IuRDVUsEZKcebpqSo5Qc0x9M0Z6d00L/MtnSojDMINuTBE6Pjq9gy1eRJrmbiOTTPGwN7GFzHXdw4lXTUG1u3hi3yodUhwNIIt5kENa1D0zkVLy8IxKO3DdtYEfpXxA7oxB8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=kzsImYzU; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="Ulvq/xe6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1708076292; bh=2gDw0o66DflpWYG/Gy8TCph2SB91NzGgN6Z10TivAUU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ulvq/xe6cFTI8BwAFq0qNG5RRJDH/Y5KfG0hNR+0SLrn7PeldaNl13frJGtctTvxa
-	 4abex99Is7H4g0WLJHBr7sO2yztEjCnTxSTTWCJWuRiC2Hmeuk3QL5eAju+X7vqhcE
-	 Oe03bg/ZhJUVxnEmXcqf8lksMfnmNCfeJdWG7T/Q=
-Received: from ld50.lan (unknown [IPv6:240e:388:8d00:6500:cda4:aa27:b0f6:1748])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 9404E601C2;
-	Fri, 16 Feb 2024 17:38:12 +0800 (CST)
-From: WANG Xuerui <kernel@xen0n.name>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH RESEND for-6.8 v3 3/3] LoongArch: KVM: Streamline kvm_check_cpucfg and improve comments
-Date: Fri, 16 Feb 2024 17:37:59 +0800
-Message-ID: <20240216093759.3038760-4-kernel@xen0n.name>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240216093759.3038760-1-kernel@xen0n.name>
-References: <20240216093759.3038760-1-kernel@xen0n.name>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="kzsImYzU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1708076299; x=1739612299;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YztRVAMrWM4QMn+3khyc9Qi6zHLT7tuCgUnaeHsjBWA=;
+  b=kzsImYzUbBZoYiwXC+9uy0pp1ZuZk/d9GIdSdbtUNdSQNZd0fT3WXEej
+   0dIftEaEeDM02t4G2Bnk6UWEFNvdiVziMFEUic4HLK0hFuuiO9y7mhMAY
+   tesxCYOF43VtetgGl9F6X03EbmFVREzaBS0NrUC/IMlrSdfFfNaZa6kcH
+   l8Vqy0cBE2pPNOSB1HqKiJDe46EZbk9nNa02pVo4SNfIaDqRQEiGrAcg3
+   0unVnNhGKiYcwQCeIslJtxvyIutR6GIbs+JjT1EEymDw3LG5tYcFeKFBp
+   DkNnjOOct8UWQMEivyxrxrxlnnl4B5TX2O0d+nWAY25jgl1w+R0RGEVLr
+   Q==;
+X-CSE-ConnectionGUID: Z3dkU+2hRsuPUT2NteERjg==
+X-CSE-MsgGUID: 2bUyP5NgQWuU9FhmhwOPQA==
+X-IronPort-AV: E=Sophos;i="6.06,164,1705388400"; 
+   d="asc'?scan'208";a="16346714"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 16 Feb 2024 02:38:17 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 16 Feb 2024 02:38:07 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Fri, 16 Feb 2024 02:38:05 -0700
+Date: Fri, 16 Feb 2024 09:37:24 +0000
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Samuel Holland <samuel.holland@sifive.com>
+CC: Conor Dooley <conor@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Greentime Hu <greentime.hu@sifive.com>,
+	<linux-riscv@lists.infradead.org>, Green Wan <green.wan@sifive.com>, Albert
+ Ou <aou@eecs.berkeley.edu>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] MAINTAINERS: Update SiFive driver maintainers
+Message-ID: <20240216-exit-pointer-43dc427bf4df@wendy>
+References: <20240215234941.1663791-1-samuel.holland@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="mYkzGwyutxXcaTiN"
+Content-Disposition: inline
+In-Reply-To: <20240215234941.1663791-1-samuel.holland@sifive.com>
 
-From: WANG Xuerui <git@xen0n.name>
+--mYkzGwyutxXcaTiN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-All the checks currently done in kvm_check_cpucfg can be realized with
-early returns, so just do that to avoid extra cognitive burden related
-to the return value handling.
+On Thu, Feb 15, 2024 at 03:49:11PM -0800, Samuel Holland wrote:
+> Add myself as a maintainer for the various SiFive drivers, since I have
+> been performing cleanup activity on these drivers and reviewing patches
+> to them for a while now. Remove Palmer as a maintainer, as he is focused
+> on overall RISC-V architecture support.
+>=20
+> Collapse some duplicate entries into the main SiFive drivers entry:
+>  - Conor is already maintainer of standalone cache drivers as a whole,
+>    and these files are also covered by the "sifive" file name regex.
 
-While at it, clean up comments of _kvm_get_cpucfg_mask and
-kvm_check_cpucfg, by removing comments that are merely restatement of
-the code nearby, and paraphrasing the rest so they read more natural
-for English speakers (that likely are not familiar with the actual
-Chinese-influenced grammar).
+And the binding isn't affected since I get all binding patches anyway.
 
-No functional changes intended.
+>  - Paul's git tree has not been updated since 2018, and all file names
+>    matching the "fu540" pattern also match the "sifive" pattern.
+>  - Green has not been active on the LKML for a couple of years.
+>=20
+> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
 
-Signed-off-by: WANG Xuerui <git@xen0n.name>
----
- arch/loongarch/kvm/vcpu.c | 42 +++++++++++++++++++--------------------
- 1 file changed, 20 insertions(+), 22 deletions(-)
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index e5acd4c08071..a241db6d77a6 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -302,20 +302,16 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
- {
- 	switch (id) {
- 	case 2:
--		/* Return CPUCFG2 features which have been supported by KVM */
-+		/* CPUCFG2 features unconditionally supported by KVM */
- 		*v = CPUCFG2_FP     | CPUCFG2_FPSP  | CPUCFG2_FPDP     |
- 		     CPUCFG2_FPVERS | CPUCFG2_LLFTP | CPUCFG2_LLFTPREV |
- 		     CPUCFG2_LAM;
- 		/*
--		 * If LSX is supported by CPU, it is also supported by KVM,
--		 * as we implement it.
-+		 * For the ISA extensions listed below, if one is supported
-+		 * by the host, then it is also supported by KVM.
- 		 */
- 		if (cpu_has_lsx)
- 			*v |= CPUCFG2_LSX;
--		/*
--		 * if LASX is supported by CPU, it is also supported by KVM,
--		 * as we implement it.
--		 */
- 		if (cpu_has_lasx)
- 			*v |= CPUCFG2_LASX;
- 
-@@ -345,24 +341,26 @@ static int kvm_check_cpucfg(int id, u64 val)
- 
- 	switch (id) {
- 	case 2:
--		/* CPUCFG2 features checking */
- 		if (!(val & CPUCFG2_LLFTP))
--			/* The LLFTP must be set, as guest must has a constant timer */
--			ret = -EINVAL;
--		else if ((val & CPUCFG2_FP) && (!(val & CPUCFG2_FPSP) || !(val & CPUCFG2_FPDP)))
--			/* Single and double float point must both be set when enable FP */
--			ret = -EINVAL;
--		else if ((val & CPUCFG2_LSX) && !(val & CPUCFG2_FP))
--			/* FP should be set when enable LSX */
--			ret = -EINVAL;
--		else if ((val & CPUCFG2_LASX) && !(val & CPUCFG2_LSX))
--			/* LSX, FP should be set when enable LASX, and FP has been checked before. */
--			ret = -EINVAL;
--		break;
-+			/* Guests must have a constant timer */
-+			return -EINVAL;
-+		if ((val & CPUCFG2_FP) && (!(val & CPUCFG2_FPSP) || !(val & CPUCFG2_FPDP)))
-+			/* Single and double float point must both be set when FP is enabled */
-+			return -EINVAL;
-+		if ((val & CPUCFG2_LSX) && !(val & CPUCFG2_FP))
-+			/* LSX architecturally implies FP but val does not satisfy that */
-+			return -EINVAL;
-+		if ((val & CPUCFG2_LASX) && !(val & CPUCFG2_LSX))
-+			/* LASX architecturally implies LSX and FP but val does not satisfy that */
-+			return -EINVAL;
-+		return 0;
- 	default:
--		break;
-+		/*
-+		 * Values for the other CPUCFG IDs are not being further validated
-+		 * besides the mask check above.
-+		 */
-+		return 0;
- 	}
--	return ret;
- }
- 
- static int kvm_get_one_reg(struct kvm_vcpu *vcpu,
--- 
-2.43.0
+Thanks for doing this :)
 
+Cheers,
+Conor.
+
+--mYkzGwyutxXcaTiN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZc8s1AAKCRB4tDGHoIJi
+0s1nAQCTZODj0RTvd44DM0Y7k+8LPG3mmMncetbaGsTQ8IvxWwEAqbfS75MldlXS
+KFexxnGBuPQaptsVig9ZWd2+H8Ei0AM=
+=Zecr
+-----END PGP SIGNATURE-----
+
+--mYkzGwyutxXcaTiN--
