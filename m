@@ -1,125 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C67741C65;
-	Fri, 16 Feb 2024 18:31:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924BE1353E5
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 18:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708108306; cv=none; b=bllmPxcUeAqatn5E3eIE/mY66WbCrncmwFbTGt/4awAiibPynb5iWKACfwzjloqK82yGE+Tto//6mLsNqpGDlWs1Ozlf9bghnOGYgaTZIyzxzAhVbtiszw67sJZnQQ+hyYKl4nwE/bKL3Q87scdsxsYdTAgc0fWwWASBh0eYFJs=
+	t=1708108306; cv=none; b=kU62QZ2j6tKTqrOha/28zw58wx3S72sMhrKstVkXj9ghHz4A6GlD6ZU2mSb0hYvL68eFDhDsmzHi0iLTcNK3ph1ZAFIkLpWhDm8ETLOmi+GUuNhqlirjdCZs3W7xn/GsT33rS4O6jBTizfV9E/mwPQmiQUE/UgBGfk1/WqRT42c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708108306; c=relaxed/simple;
-	bh=s9cIRkFaKtrccc7vtLJUttfg3iWmA2GqRjx0bO9OYd8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fU/PikZsBP6SN/8k1zfecuPBrOZh6HDaR1Mp6VaIlk+UPZkKWREdDV9Gd7Ll4XjV7ijTUxx8WW9lcYubG3YQtbCsu9LfQEupwiT71r+48/dkB5uZfa4HqVb1KeMkrAvPKAbZtsnp70l8FiyYISwSPDcdNgr/zd0SKaxuoE7XPlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qTNUD52m; arc=none smtp.client-ip=10.30.226.201
+	bh=BiiWEkX4I10hm0Y+ah7m6xE4dk8P54pifKn/ZYznW2g=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=OiKIgvF8AxSI+vro7C02ozjVfpp4HVmklJLcM7hQDahj73lRON2rN15k5A6UmjNYD/E1sQspIeKx25xo7EPGdHZ0qyxD8AYDcQsef1vV0LBWyG5UEOieT/mjUbnApduVVlQnvwVac0akdjH4WYaYMTA42Exxh0r7BttH9KPKWiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=affI+dTq; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qTNUD52m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2258DC433C7;
-	Fri, 16 Feb 2024 18:31:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708108305;
-	bh=s9cIRkFaKtrccc7vtLJUttfg3iWmA2GqRjx0bO9OYd8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qTNUD52mWWrTFRVL3RFKZTQ4HXBrw8mY1wPxDEkLg0PSOKnV39juO/H8ICq31kwH1
-	 IKxlawS6VlNOP3EW5QmnyXC00lx0TOGC9L+oPwAtz5dEERDVKGzPv+DUX0GwJhugfn
-	 HYMD/ZHG093YVDxSZ32Nj0tYMiZ9FXqU4TEvO4fW0pkvtLnb6Ryot5KRpWJlRGX0IF
-	 RWipJUTEm+YTfUsNsbTkeG2MOXfNF7kCb4Mnfw4JPpPavXsmQBJlgC4DYgD6+pCCJ2
-	 3SSIdurWIBj6174ERkqXYqAIOW7ThXrBXUOEZhB59qqV6HGwRgNW+040qtsUIQ97BW
-	 74KhpymgE4BJg==
-Date: Fri, 16 Feb 2024 12:31:43 -0600
-From: Bjorn Andersson <andersson@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mukesh Ojha <quic_mojha@quicinc.com>, Mark Brown <broonie@kernel.org>, 
-	konrad.dybcio@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v11 1/4] firmware: qcom: scm: provide a read-modify-write
- function
-Message-ID: <6lmxlfopjzxbvn5oe6uha2ppdjderuymgq3h3gz2suyb5i2vs6@mpadw4b37s5t>
-References: <1704727654-13999-1-git-send-email-quic_mojha@quicinc.com>
- <1704727654-13999-2-git-send-email-quic_mojha@quicinc.com>
- <CACRpkdY7fbFyNNd6GAikxC3+wk0ca8Yn_8__zkp+Q-deJeJ_LQ@mail.gmail.com>
- <3a17f36a-04bf-04f2-7a22-82b76977b325@quicinc.com>
- <CACRpkdbnj3W3k=snTx3iadHWU+RNv9GY4B3O4K0hu8TY+DrK=Q@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="affI+dTq"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6818a9fe380so13862416d6.2
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 10:31:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google; t=1708108303; x=1708713103; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OS0mEpzEEFGetzR6NtkyoXN8TWiVnIyPmeWduyYdhXs=;
+        b=affI+dTqhOv2xxiSZ+dyvFmb9JgvjzInrIzZuv5+cVOuNMWSXyYCPrRBeu5iS4mj4c
+         e3ZZi19gmrTb9jmmBE86fqdT6OByBU8C9BGmkOSvKzc8oYoqF7jQvVD2cClauReYKhqn
+         45LMMyZ5Og0zZl0zp7vEoRXaxykck4RXtdQdE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708108303; x=1708713103;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OS0mEpzEEFGetzR6NtkyoXN8TWiVnIyPmeWduyYdhXs=;
+        b=diZ2AmVR7USHZIE+eyrDqc8V+zoHfghYKUqi8Ordkbri3mL0dIbEWf38Wi0bE8/E6R
+         dRWlbaRoBF5MLq8xokYr3zEpI97SCMDsh0VQovECaYuaL2N5NxDnRdkcbKZex7kr7N8i
+         biLLYirQmQOA0JdLPfxotrYSKJuJmcS3mZZx8WMnenvjkU9e7LoQqBMpzR60YdMxLFGk
+         qGqccW7Np0X3pJ/5gubNYwkYsqU+9DPDUp4iwfiYeruL0E5uL1L5aeM1Pjx6reWi4yO6
+         qVO56/jL764PIdgRXLHYVNsd5hHKROYI8TA0fAwtoLrvDI1cBAsNaaeuxBiQ0UQXpQn2
+         SHmQ==
+X-Gm-Message-State: AOJu0YxhI8TbtyzbPLpZfyeTC+75zt2cMTuS25M1Cn57fIaPZ/MU2oi0
+	QFwFqhmBXdMTGcMS2w1o1MS5odrpBaABtUnxgg4rACyDIsP0RC5RZ6MMSSpjFy+17glFEynuufu
+	L
+X-Google-Smtp-Source: AGHT+IHBo8ZmZGNl4vr3CeJCFDtCUPLEwDFNgk+oyNvQak4sFIggeBOWvdQftkTYFaUjbF5QR3fWwQ==
+X-Received: by 2002:a0c:e38e:0:b0:68f:3ecd:840b with SMTP id a14-20020a0ce38e000000b0068f3ecd840bmr1086525qvl.23.1708108302915;
+        Fri, 16 Feb 2024 10:31:42 -0800 (PST)
+Received: from joelbox2.. (c-98-249-43-138.hsd1.va.comcast.net. [98.249.43.138])
+        by smtp.gmail.com with ESMTPSA id nd13-20020a056214420d00b0068cdadb5e7esm159722qvb.31.2024.02.16.10.31.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Feb 2024 10:31:42 -0800 (PST)
+From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To: linux-kernel@vger.kernel.org,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>
+Cc: Suleiman Souhlal <suleiman@google.com>,
+	Youssef Esmat <youssefesmat@google.com>,
+	David Vernet <void@manifault.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	joseph.salisbury@canonical.com,
+	Luca Abeni <luca.abeni@santannapisa.it>,
+	Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
+	Vineeth Pillai <vineeth@bitbyteword.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Phil Auld <pauld@redhat.com>,
+	"Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: [PATCH 03/10] sched/core: Fix priority checking for DL server picks
+Date: Fri, 16 Feb 2024 13:31:01 -0500
+Message-Id: <20240216183108.1564958-4-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240216183108.1564958-1-joel@joelfernandes.org>
+References: <20240216183108.1564958-1-joel@joelfernandes.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdbnj3W3k=snTx3iadHWU+RNv9GY4B3O4K0hu8TY+DrK=Q@mail.gmail.com>
 
-On Tue, Jan 09, 2024 at 02:34:10PM +0100, Linus Walleij wrote:
-> On Tue, Jan 9, 2024 at 2:24 PM Mukesh Ojha <quic_mojha@quicinc.com> wrote:
-> > On 1/9/2024 6:44 PM, Linus Walleij wrote:
-> > > On Mon, Jan 8, 2024 at 4:28 PM Mukesh Ojha <quic_mojha@quicinc.com> wrote:
-> > >
-> > >> It was realized by Srinivas K. that there is a need of
-> > >> read-modify-write scm exported function so that it can
-> > >> be used by multiple clients.
-> > >>
-> > >> Let's introduce qcom_scm_io_rmw() which masks out the bits
-> > >> and write the passed value to that bit-offset.
-> > > (...)
-> > >> +int qcom_scm_io_rmw(phys_addr_t addr, unsigned int mask, unsigned int val)
-> > >> +{
-> > >> +       unsigned int old, new;
-> > >> +       int ret;
-> > >> +
-> > >> +       if (!__scm)
-> > >> +               return -EINVAL;
-> > >> +
-> > >> +       spin_lock(&__scm->lock);
-> > >> +       ret = qcom_scm_io_readl(addr, &old);
-> > >> +       if (ret)
-> > >> +               goto unlock;
-> > >> +
-> > >> +       new = (old & ~mask) | (val & mask);
-> > >> +
-> > >> +       ret = qcom_scm_io_writel(addr, new);
-> > >> +unlock:
-> > >> +       spin_unlock(&__scm->lock);
-> > >> +       return ret;
-> > >> +}
-> > >> +EXPORT_SYMBOL_GPL(qcom_scm_io_rmw);
-> > >
-> > > This looks a lot like you are starting to re-invent regmaps
-> > > regmap_update_bits().
-> > >
-> > > If you are starting to realize you need more and more of
-> > > regmap, why not use regmap and its functions?
-> >
-> > I think, this discussion has happened already ..
-> >
-> > https://lore.kernel.org/lkml/CACRpkdb95V5GC81w8fiuLfx_V1DtWYpO33FOfMnArpJeC9SDQA@mail.gmail.com/
-> 
-> That discussion ended with:
-> 
-> [Bjorn]
-> > We'd still need qcom_scm_io_readl() and qcom_scm_io_writel() exported to
-> > implement the new custom regmap implementation - and the struct
-> > regmap_config needed in just pinctrl-msm alone would be larger than the
-> > one function it replaces.
-> 
-> When you add more and more accessors the premise starts to
-> change, and it becomes more and more of a reimplementation.
-> 
-> It may be time to actually fix this.
-> 
+In core scheduling, a DL server pick (which is CFS task) should be given higher
+priority than tasks in other classes.
 
-Thought I had replied to this already, did we discuss this previously as
-well?
+Not doing so causes CFS starvation. A kselftest is added later to demonstrate
+this.  A CFS task that is competing with RT tasks can be completely starved
+without this and the DL server's boosting completely ignored.
 
-My concern with expressing this as a regmap is that from the provider's
-point of view, the regmap would span the entire 32-bit address space.
-I'm guessing that there's something on the other side limiting what
-subregions are actually accessible for each platform/firmware
-configuration, but I'm not convinced that regmap a good abstraction...
+Fix these problems.
 
-Regards,
-Bjorn
+Reviewed-by: Vineeth Pillai <vineeth@bitbyteword.org>
+Reported-by: Suleiman Souhlal <suleiman@google.com>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ kernel/sched/core.c | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
-> Yours,
-> Linus Walleij
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 63f41453b79e..0a05caf9d3d7 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -162,6 +162,9 @@ static inline int __task_prio(const struct task_struct *p)
+ 	if (p->sched_class == &stop_sched_class) /* trumps deadline */
+ 		return -2;
+ 
++	if (p->dl_server)
++		return -1; /* deadline */
++
+ 	if (rt_prio(p->prio)) /* includes deadline */
+ 		return p->prio; /* [-1, 99] */
+ 
+@@ -191,8 +194,24 @@ static inline bool prio_less(const struct task_struct *a,
+ 	if (-pb < -pa)
+ 		return false;
+ 
+-	if (pa == -1) /* dl_prio() doesn't work because of stop_class above */
+-		return !dl_time_before(a->dl.deadline, b->dl.deadline);
++	if (pa == -1) { /* dl_prio() doesn't work because of stop_class above */
++		const struct sched_dl_entity *a_dl, *b_dl;
++
++		a_dl = &a->dl;
++		/*
++		 * Since,'a' and 'b' can be CFS tasks served by DL server,
++		 * __task_prio() can return -1 (for DL) even for those. In that
++		 * case, get to the dl_server's DL entity.
++		 */
++		if (a->dl_server)
++			a_dl = a->dl_server;
++
++		b_dl = &b->dl;
++		if (b->dl_server)
++			b_dl = b->dl_server;
++
++		return !dl_time_before(a_dl->deadline, b_dl->deadline);
++	}
+ 
+ 	if (pa == MAX_RT_PRIO + MAX_NICE)	/* fair */
+ 		return cfs_prio_less(a, b, in_fi);
+-- 
+2.34.1
+
