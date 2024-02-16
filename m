@@ -1,156 +1,109 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B34B1B94C;
-	Fri, 16 Feb 2024 01:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF431B964
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 01:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708045260; cv=none; b=QWOLl7ST9mRbqgt1mwzolNEMkf2dZxmyBTQzSv89fPICMCVBewcjOv/zAOguiwegqQRy+hs7VWZ3kT/Z77x7+xNfTBymo1YqmBFtYhuI2j1Afpf3d7IKtbTJACCqgD/7XjmYm8c1RDO50tJQk6MMOaNgXMQIAxVTxRuYhlQvhvU=
+	t=1708045264; cv=none; b=K+Fjhd8FFTycC7JYe1gnurJVv7oTpZZ0Wq0JrfwoD1t4ZPsYwCrOIA1GKdt1FOGqLUyvqgAENKNg2JeGQ7cRQ6hPKbbLvR5OPjmN6YD89QGYQgxiPzu/Od3Ylxtvy2EmXHkodaTXGPNNE0XrpGOlhAJgGiGsBFwMH6UtSXg7vTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708045260; c=relaxed/simple;
-	bh=AmzPTvv5M4opzOrGDol8wAuHPupOVjr12LX5HdJiY0g=;
+	s=arc-20240116; t=1708045264; c=relaxed/simple;
+	bh=A52H0dqD8kleqE238ieALR6ZBY6GGUNS1919tKqbDeQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OszL+gzW82JSFgrDUsdXp52GIWLH8i9JesIYSomHRlsgfsv9G3btkT4LqYYGAbqMbUib5khobL0wPFacdSXKoxSQAy0yhbt9ogWii0tEl/TPRFyyY78bMdvGIWctdh+CUAQJil4dWdHtrBIX7564kTDErZXevW5IGIg6Sj/dczw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N4sqZ5DE; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=DP+sXLRhEbgDICMyLjZcae2UlhEEuC6mNNuFOd078oVstfIF5c/TeOUekgebCPWASvmJkIA+akR9ZB75Z6E49cDYZg5zCbHZj8KB+6MAQS5zXn8slB+LXtKu6ZVMnvli8yGgcjW9bOroEsCSVzTj2ScVa4R0YNZEF+kpSf2Wxbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VwI1BtmZ; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N4sqZ5DE"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-33d153254b7so157683f8f.0;
-        Thu, 15 Feb 2024 17:00:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708045256; x=1708650056; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=sA/QklIh0ei5Flo8BxEpchDfFmK+iFfJziNsfkxsH4E=;
-        b=N4sqZ5DElB/RAK6xCFsDYOLqTm2RCHJYoTNgzZw2uSGRJMf8A0+r8Pt5kXkNYz2zHC
-         20sSo+uhUzd2nlJHfuisuG6wsG0TDZBIqY+b3ZWGz9Kc+ZZt04BYnGrvyvu0ciM+M9MO
-         tDM6cKJ87v5k0g8T5yMvMDfoljdeaOJPfYFnFld+mXf+ff+zpRZdJ3OSY6eTgYNCjiUX
-         XkgMtIi248rZz1qjvWRXCtgrr5kdS+w35YbYypzbXEHpqGMiGsj1CcsiBmeibEZgAXCR
-         ZMHvtXf9WI56cup7Q/Wwh+zFbhYwE05ycpUWDDa+LJ2RyYEizSUE2f12hCD06QBbpQci
-         A76g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708045256; x=1708650056;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sA/QklIh0ei5Flo8BxEpchDfFmK+iFfJziNsfkxsH4E=;
-        b=lXbLNxVySB/iK0pwretI7jvQE+ZzpyHp8nSlRMNrpPnBdmYmtlA4/5bSMDa7IDx2j3
-         Bl1o49FEMTzyqDJ5UVEy6swksprIZvzFE9nPLb8YW/hnImCXO0uIqetbFYb4RPAyXl0C
-         H0Lti9DQc3z034PyptaCc6otyuM/THeZVCkzfSu3EE71N5wXjwTwo1sIFJZK5H5A/nh1
-         0nEvNgFQA4Ic+o3v4dxjtRUhsCdmOSyCmXql/PhefN3hxh24Ms+VNhLXmbrmA2t5Wemv
-         HEg6UBzSJLDpoxxI9ER1jtqhrnZNTapSdOFIetPeGFE3qJDFFQEmL12Zq947ZARaw2JZ
-         kvbw==
-X-Forwarded-Encrypted: i=1; AJvYcCXe3ts6tzH5onNB/yx8Qn24p9+qcZCwLGpHvOnBpNzmGPtctyvQ8ifgRaBAZl9dzdId9LLRGvm8PbaolrJX7HZ+eDfYOIPgUuCVUqerCnqWWq5wwzN68C3KZ9qYYPjb1dtanheO
-X-Gm-Message-State: AOJu0YwExE2V42PXACsl5+YN1aZS3CU7MYEjYQkFfn9IaijL/9TFAiyr
-	02X4cgNR3Nyyp1cYQKXvgq9CWJZef2m0slmJrqfBrpPBiOANX7Uz
-X-Google-Smtp-Source: AGHT+IHLdYf0etTI3WWCm+mBFGoOsJwiVWqy35pH8x16+kG3WcTlLbpXpZOTKr6e0lzPmWc7Xz33Sg==
-X-Received: by 2002:adf:fe0b:0:b0:33d:1d45:60a3 with SMTP id n11-20020adffe0b000000b0033d1d4560a3mr83158wrr.44.1708045256264;
-        Thu, 15 Feb 2024 17:00:56 -0800 (PST)
-Received: from skbuf ([188.25.173.195])
-        by smtp.gmail.com with ESMTPSA id x6-20020adff0c6000000b0033cfc035940sm621176wro.34.2024.02.15.17.00.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Feb 2024 17:00:55 -0800 (PST)
-Date: Fri, 16 Feb 2024 03:00:53 +0200
-From: Vladimir Oltean <olteanv@gmail.com>
-To: arinc.unal@arinc9.com
-Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	mithat.guner@xeront.com, erkin.bozoglu@xeront.com,
-	Luiz Angelo Daros de Luca <luizluca@gmail.com>,
-	Alvin =?utf-8?Q?=C5=A0ipraga?= <ALSI@bang-olufsen.dk>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2] net: dsa: remove OF-based MDIO bus
- registration from DSA core
-Message-ID: <20240216010053.asbu75kdi65jjuky@skbuf>
-References: <20240213-for-netnext-dsa-mdio-bus-v2-1-0ff6f4823a9e@arinc9.com>
- <20240213-for-netnext-dsa-mdio-bus-v2-1-0ff6f4823a9e@arinc9.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VwI1BtmZ"
+Date: Thu, 15 Feb 2024 20:00:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1708045258;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BBDDxkjYnEavfD3mPCDXRmZmPfVkLnkDBgf+7vi9zKM=;
+	b=VwI1BtmZHZ8AkEFSDPZcDAbf2+PV4v1WRQyNv3uIXV1rbNjzQt5Leg53FPjWDtQ/KaxbAn
+	GxjPODEgB7rm5NhFMSI3EYn8tBPiHukc5PvTq1vOA+l7XGhliE2x7w1hLnpYG9dWz5RqKW
+	pX+V+s/4pq5j3IaGneZUuQMv6MupngE=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Suren Baghdasaryan <surenb@google.com>, mhocko@suse.com, 
+	vbabka@suse.cz, hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, 
+	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, corbet@lwn.net, 
+	void@manifault.com, peterz@infradead.org, juri.lelli@redhat.com, 
+	catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, tglx@linutronix.de, 
+	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
+	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
+	nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev, 
+	rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com, 
+	yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com, hughd@google.com, 
+	andreyknvl@gmail.com, keescook@chromium.org, ndesaulniers@google.com, 
+	vvvvvv@google.com, gregkh@linuxfoundation.org, ebiggers@google.com, 
+	ytcoode@gmail.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com, 
+	rostedt@goodmis.org, bsegall@google.com, bristot@redhat.com, vschneid@redhat.com, 
+	cl@linux.com, penberg@kernel.org, iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, 
+	glider@google.com, elver@google.com, dvyukov@google.com, shakeelb@google.com, 
+	songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com, minchan@google.com, 
+	kaleshsingh@google.com, kernel-team@android.com, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, iommu@lists.linux.dev, linux-arch@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-modules@vger.kernel.org, 
+	kasan-dev@googlegroups.com, cgroups@vger.kernel.org
+Subject: Re: [PATCH v3 13/35] lib: add allocation tagging support for memory
+ allocation profiling
+Message-ID: <wdj72247rptlp4g7dzpvgrt3aupbvinskx3abxnhrxh32bmxvt@pm3d3k6rn7pm>
+References: <20240212213922.783301-1-surenb@google.com>
+ <20240212213922.783301-14-surenb@google.com>
+ <20240215165438.cd4f849b291c9689a19ba505@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240213-for-netnext-dsa-mdio-bus-v2-1-0ff6f4823a9e@arinc9.com>
- <20240213-for-netnext-dsa-mdio-bus-v2-1-0ff6f4823a9e@arinc9.com>
+In-Reply-To: <20240215165438.cd4f849b291c9689a19ba505@linux-foundation.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Feb 13, 2024 at 10:29:05AM +0300, Arınç ÜNAL via B4 Relay wrote:
-> From: Arınç ÜNAL <arinc.unal@arinc9.com>
+On Thu, Feb 15, 2024 at 04:54:38PM -0800, Andrew Morton wrote:
+> On Mon, 12 Feb 2024 13:38:59 -0800 Suren Baghdasaryan <surenb@google.com> wrote:
 > 
-> The code block under the "!ds->user_mii_bus && ds->ops->phy_read" check
-> under dsa_switch_setup() populates ds->user_mii_bus. The use of
-> ds->user_mii_bus is inappropriate when the MDIO bus of the switch is
-> described on the device tree [1].
+> > +Example output.
+> > +
+> > +::
+> > +
+> > +    > cat /proc/allocinfo
+> > +
+> > +      153MiB     mm/slub.c:1826 module:slub func:alloc_slab_page
+> > +     6.08MiB     mm/slab_common.c:950 module:slab_common func:_kmalloc_order
+> > +     5.09MiB     mm/memcontrol.c:2814 module:memcontrol func:alloc_slab_obj_exts
+> > +     4.54MiB     mm/page_alloc.c:5777 module:page_alloc func:alloc_pages_exact
+> > +     1.32MiB     include/asm-generic/pgalloc.h:63 module:pgtable func:__pte_alloc_one
 > 
-> For this reason, use this code block only for switches [with MDIO bus]
-> probed on platform_data, and OF which the switch MDIO bus isn't described
-> on the device tree. Therefore, remove OF-based MDIO bus registration as
-> it's useless for these cases.
-> 
-> These subdrivers which control switches [with MDIO bus] probed on OF, will
-> lose the ability to register the MDIO bus OF-based:
-> 
-> drivers/net/dsa/b53/b53_common.c
-> drivers/net/dsa/lan9303-core.c
-> drivers/net/dsa/vitesse-vsc73xx-core.c
-> 
-> These subdrivers let the DSA core driver register the bus:
-> - ds->ops->phy_read() and ds->ops->phy_write() are present.
-> - ds->user_mii_bus is not populated.
-> 
-> The commit fe7324b93222 ("net: dsa: OF-ware slave_mii_bus") which brought
-> OF-based MDIO bus registration on the DSA core driver is reasonably recent
-> and, in this time frame, there have been no device trees in the Linux
-> repository that started describing the MDIO bus, or dt-bindings defining
-> the MDIO bus for the switches these subdrivers control. So I don't expect
-> any devices to be affected.
-> 
-> The logic we encourage is that all subdrivers should register the switch
-> MDIO bus on their own [2]. And, for subdrivers which control switches [with
-> MDIO bus] probed on OF, this logic must be followed to support all cases
-> properly:
-> 
-> No switch MDIO bus defined: Populate ds->user_mii_bus, register the MDIO
-> bus, set the interrupts for PHYs if "interrupt-controller" is defined at
-> the switch node. This case should only be covered for the switches which
-> their dt-bindings documentation didn't document the MDIO bus from the
-> start. This is to keep supporting the device trees that do not describe the
-> MDIO bus on the device tree but the MDIO bus is being used nonetheless.
-> 
-> Switch MDIO bus defined: Don't populate ds->user_mii_bus, register the MDIO
-> bus, set the interrupts for PHYs if ["interrupt-controller" is defined at
-> the switch node and "interrupts" is defined at the PHY nodes under the
-> switch MDIO bus node].
-> 
-> Switch MDIO bus defined but explicitly disabled: If the device tree says
-> status = "disabled" for the MDIO bus, we shouldn't need an MDIO bus at all.
-> Instead, just exit as early as possible and do not call any MDIO API.
-> 
-> After all subdrivers that control switches with MDIO buses are made to
-> register the MDIO buses on their own, we will be able to get rid of
-> dsa_switch_ops :: phy_read() and :: phy_write(), and the code block for
-> registering the MDIO bus on the DSA core driver.
-> 
-> Link: https://lore.kernel.org/netdev/20231213120656.x46fyad6ls7sqyzv@skbuf/ [1]
-> Link: https://lore.kernel.org/netdev/20240103184459.dcbh57wdnlox6w7d@skbuf/ [2]
-> Suggested-by: Luiz Angelo Daros de Luca <luizluca@gmail.com>
-> Acked-by: Luiz Angelo Daros de Luca <luizluca@gmail.com>
-> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-> ---
-> Changes in v2:
-> - Remove mention to drivers/net/dsa/realtek/realtek-mdio.c as it now
->   registers the MDIO bus OF-based on its own, and now under
->   drivers/net/dsa/realtek/rtl83xx.c. I've waited until this happened
->   because if this patch was applied beforehand, there would be no way to
->   set IRQs on PHYs as the subdriver doesn't do that for the MDIO bus
->   registered non-OF-based.
-> - Link to v1: https://lore.kernel.org/r/20240122053348.6589-1-arinc.unal@arinc9.com
-> ---
+> I don't really like the fancy MiB stuff.  Wouldn't it be better to just
+> present the amount of memory in plain old bytes, so people can use sort
+> -n on it?
 
-Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+They can use sort -h on it; the string_get_size() patch was specifically
+so that we could make the output compatible with sort -h
+
+> And it's easier to tell big-from-small at a glance because
+> big has more digits.
+> 
+> Also, the first thing any sort of downstream processing of this data is
+> going to have to do is to convert the fancified output back into
+> plain-old-bytes.  So why not just emit plain-old-bytes?
+> 
+> If someone wants the fancy output (and nobody does) then that can be
+> done in userspace.
+
+I like simpler, more discoverable tools; e.g. we've got a bunch of
+interesting stuff in scripts/ but it doesn't get used nearly as much -
+not as accessible as cat'ing a file, definitely not going to be
+installed by default.
+
+I'm just optimizing for the most common use case. I doubt there's going
+to be nearly as much consumption by tools, and I'm ok with making them
+do the conversion back to bytes if they really need it.
