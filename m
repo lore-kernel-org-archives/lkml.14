@@ -1,91 +1,79 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp-out3.simply.com (smtp-out3.simply.com [94.231.106.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD7DE12FB2A;
-	Fri, 16 Feb 2024 16:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA00112FB28;
+	Fri, 16 Feb 2024 16:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708100033; cv=none; b=N03AQ0Tv/8Y/D/XMjpMjgNltGbxirvZNSloMoyuM+ZBOdJcd/WgDAjqlPYUiTt05+w6snmJE7FDBWm9mTtgJMrJCgU1Zrda4w7y2Ab6FF0NUrrPyw3EXyaQO/4XvB6GLO21ALlpWKPlj1f9wzWmWt5BcL3ojPad97UPGeodR6MM=
+	t=1708100220; cv=none; b=iTru77MpiS/WIw2KL4YChGSAPn8LAWcbVNwbypN8GNjlhyF7Nd5ovG72KRYEKWS0akK5BL+dvwUqv6ja+6Q1Lckwny8i9dwrCES90WMBDZ0Hy66SqlOtUiqiPqa0LHEXHwWJZdp/FLzrZi4Jce7SOhZgBkifpggMKHKfkjGU/F0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708100033; c=relaxed/simple;
-	bh=pgWB8gIDXuJeUwDAXlFyiHSuW8VCIa9c0sSJlQvxunQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=M6kck5E1nmqu/l49ZEy0lm+OG9r26K8yQh6WDBGdvWwop9tc/cUaxva5odVm6C5YQgcCIH56Ye7LMmvINlLLHYM42j7ZYGQ2zOW1rRBKWCftvhh+4FPsdFrHcBrEHumex6mOb6FlZwgU/WgV96PjkRjb3Z88cPiZvqi1dsr20/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lFFJCQwz; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1708100220; c=relaxed/simple;
+	bh=liz7hMDTXQKAHx17d3Q2hZCzsVNFEYpzXI9l9StcDXU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t9CTvMPyLsVcIl2d7rwD4Ae+I/7eEVfJ32aK3XhBT6zkEkkkYRL4Piw0vMOoXak5XeWcGc2C68p1cVSrtUM6EzGztT4gbhiED2qklybnvfMqBI4J7jKovYbaQXPGLVE1kxghDRR2HZUJK9khAEI0lRhV8Y9a4SHb239bu1Jf/cU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=pass (1024-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=pW2GhKc2; arc=none smtp.client-ip=94.231.106.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gaisler.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lFFJCQwz"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41GDrAhE004249;
-	Fri, 16 Feb 2024 16:13:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=+s47s+oRh66JHw0QvJ6IVx2HVUlYYq8i2oqDQRbbDig=; b=lF
-	FJCQwzs80Of5CG+ukeY9DHL2bH7il19HDv5gI9hnHgau0nkXlj3Ld+CmTXojaddx
-	fQOiQ30S7Zzn04MpZ/j6dG5B+s56Brbakz1+kqEs74n2IM5SCbxOUeXv7DL0AjW6
-	5OO11o6eA+hAZgkBsXxevUFrifBHQt/MwqGlMYN0p3rNbRqkIvNycD8W+2BBeqJy
-	JKMXJniTgZoNf5mbyLzJ1nU5V7U5Te0LY/srqMU6VZevK1Hf/lLSbjrsTi08k9IO
-	qSrwT4+7Y1ig9oOieup8oGy9Dnok7ZcUacZ3LaSn5EGzK6Qn4wUB+6gcJdfzjx7H
-	ZP+m9OL9Sta2iQC41VQg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w9fkfc0y0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 Feb 2024 16:13:36 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41GGDZiH015439
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 Feb 2024 16:13:35 GMT
-Received: from [10.226.59.182] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 16 Feb
- 2024 08:13:35 -0800
-Message-ID: <ce40205b-25c6-6ba5-23a4-70a51b4e1b21@quicinc.com>
-Date: Fri, 16 Feb 2024 09:13:34 -0700
+	dkim=pass (1024-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="pW2GhKc2"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp.simply.com (Simply.com) with ESMTP id 4Tbxs30dDDz67v9;
+	Fri, 16 Feb 2024 17:16:55 +0100 (CET)
+Received: from [10.10.15.23] (h-98-128-223-123.NA.cust.bahnhof.se [98.128.223.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(Client did not present a certificate)
+	by smtp.simply.com (Simply.com) with ESMTPSA id 4Tbxrs6S7bz680p;
+	Fri, 16 Feb 2024 17:16:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
+	s=unoeuro; t=1708100214;
+	bh=2cjalXf5F8CnOcBPgVTsnQNi+U8AlIg/iVflwmW0vJA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=pW2GhKc22vVCAaydbIZNw9ztcDwfgnp+2xubvy/rnIJkIrZtFXDibsLshRcXETge2
+	 vuF8SXPO2JQ/MyBGgIG0kXBx1VIAfmqfbOJzyF0GyubAQVPhaxK5DVYaRODZU/6exG
+	 KkI40Pnj9S2f5C1Uotdhn0InxAK91r5xczn126MM=
+Message-ID: <86dbf602-7c2c-426e-8e7d-b91572357b3b@gaisler.com>
+Date: Fri, 16 Feb 2024 17:16:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: [PATCH] f2fs: doc: Fix bouncing email address for Sahitya Tummala
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] sparc: Use shared font data
 Content-Language: en-US
-To: <jaegeuk@kernel.org>, <chao@kernel.org>, <quic_stummala@quicinc.com>,
-        <quic_bjorande@quicinc.com>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>
-References: <20240202165208.4091800-1-quic_jhugo@quicinc.com>
-From: Jeffrey Hugo <quic_jhugo@quicinc.com>
-In-Reply-To: <20240202165208.4091800-1-quic_jhugo@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To: linux@treblig.org, davem@davemloft.net, sam@ravnborg.org,
+ benh@kernel.crashing.org, akpm@linux-foundation.org
+Cc: sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+ mpe@ellerman.id.au, glaubitz@physik.fu-berlin.de
+References: <20230807010914.799713-1-linux@treblig.org>
+From: Andreas Larsson <andreas@gaisler.com>
+In-Reply-To: <20230807010914.799713-1-linux@treblig.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Cr2KoCkvvaPxsIziVfFyMR7TPWg19cuW
-X-Proofpoint-GUID: Cr2KoCkvvaPxsIziVfFyMR7TPWg19cuW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-16_15,2024-02-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 malwarescore=0
- adultscore=0 lowpriorityscore=0 impostorscore=0 mlxlogscore=307
- spamscore=0 bulkscore=0 suspectscore=0 mlxscore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402160130
 
-On 2/2/2024 9:52 AM, Jeffrey Hugo wrote:
-> The servers for the @codeaurora domain are long retired and any messages
-> addressed there will bounce.  Sahitya Tummala has a .mailmap entry to an
-> updated address, but the documentation files still list @codeaurora
-> which might be a problem for anyone reading the documentation directly.
-> Update the documentation files to match the .mailmap update.
+On 2023-08-07 03:09, linux@treblig.org wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
 > 
-> Signed-off-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
+> sparc has a 'btext' font used for the console which is almost identical
+> to the shared font_sun8x16, so use it rather than duplicating the data.
+> 
+> They were actually identical until about a decade ago when
+>    commit bcfbeecea11c ("drivers: console: font_: Change a glyph from
+>                         "broken bar" to "vertical line"")
+> 
+> which changed the | in the shared font to be a solid
+> bar rather than a broken bar.  That's the only difference.
+> 
+> This was originally spotted by PMD which noticed that PPC does
+> the same thing with the same data, and they also share a bunch
+> of functions to manipulate the data.
+> 
+> Tested very lightly with a boot without FS in qemu.
+> 
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 
-Jaegeuk Kim will you apply this?
+Applied to my for-next branch.
 
--Jeff
+Thanks,
+Andreas
