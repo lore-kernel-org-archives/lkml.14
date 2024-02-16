@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3AB458AC1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A6558AC0;
 	Fri, 16 Feb 2024 11:05:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708081544; cv=none; b=j10MqBAvSpLm5+FxGmkoTmsh4QoYUZlBS0N2NY1QMcC2oUp8711feCyZG2eCfwB1kC/icbLIN0QszgLIauwWjoz9XmQn4gmAa8ItCSbVOdUre1p5dqP+R0XwrKLNJdpypk54D8clOieQhkJYPkQMn3sBXXgwPDq+OWDszH606yE=
+	t=1708081544; cv=none; b=O04bj2wAH3/Hi7GB5Ya40F8ZIFUIvHwAWBDP9ZPj8HVXK7+16CkJM076hlawSjpOOrwvbsTCZst4/i0rjHl0RUsJaGawXB5KF+Hn6k5L5KZwiUraaRydLQbTic04kAbvmDknVsqZyQPRayvC0XmrEbcZrdqxWHsmKIxN5hzh4Ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708081544; c=relaxed/simple;
-	bh=td9ArVknXuzyTB8FXUOyI13YbxdPw2V6dLjZ0FXccDI=;
+	bh=04/0rCcowbZ6LhgeozKI78kK1WE+TDUCuzqyX4cOs54=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=u4jr5FyOjCaJGofAm7YbtCpXoF+lWk6D6Id1QlXqdXGvJOowUxpnGxj/rTyp1c66HB+JUrJnzC5UD0U+QfWEmoTKNLv1yxr8BnF0H+LxcFLEaTf5LqoT1M9BRfkZfbH5emjZxaUNjmxxM2NreaU6yRGTlh6CWauEoFLi902rqTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P/XlO3pL; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=hIlbFJpqbCvJMHxoVPxwcWCeCfcVqwMUBeH/fwm0qI9INX7vjJ06wZ2uD0NwJOooRi2vCkZLSraXYxBIjsGvKbLIZQpWxEMQH19HNfapGQtZQkBzl3AJfXA9+x38+LeLeLa5ulCi34nvld+S5gZhzEL8TgjzVLN50IPiarHcPds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=In+XUmzD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P/XlO3pL"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5AED7C4166A;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="In+XUmzD"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 31B06C43330;
 	Fri, 16 Feb 2024 11:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1708081544;
-	bh=td9ArVknXuzyTB8FXUOyI13YbxdPw2V6dLjZ0FXccDI=;
+	bh=04/0rCcowbZ6LhgeozKI78kK1WE+TDUCuzqyX4cOs54=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=P/XlO3pL9pqeVzP2EWfZwOcV2OYLrhF091DQWn2r3Xh05ASkcpAfRXC7K8LqTd6qG
-	 YkTF1FpLRBkWHwrJ1HaojsFK8zM+6lrD2wmtut0YQXyXHklYO8HNzoUP/sAscb//+A
-	 NsNAUWFQ+TWc/vuduAHUKPNCISoqyYMmT2cQOL4yx//uPdNd7H3qnh0YLzO7iuzpTW
-	 Ep4dx1OTUVvkydxCTIQC3N7Hjx+Lv7b0NQ6mYc/+RsmxQCNHJ9vOfhqgoEyIvluVIX
-	 5hwLey8r9HLbVY6hI2BPmfO801DakYk/2xpzqb4CCruR5iIbuf7ogDrkPfPm8+bgr9
-	 NLzUr0QNmei4g==
+	b=In+XUmzDUqnVgxXJ46aHfVc1FezSPbMtS1kxRpb4G346M52lWpWnu2IiTCTiWD7oy
+	 ReNoji4Ql3sqnlrWO4XqBI6YRD6q2mmat50wZwH4oIt12V//UwhW08d+oWj6yHsXC3
+	 rHTEsm5MU2ie3dMZnLpdRnNxLq279QAhWaMveRyRfzi0OCU7/Ac7cInd/FSHOO/J5J
+	 T+rzGjYE3+J/838+Ne9zjr0ceVDlhiGfOT28dU0y5yDNdUYwLgHAHnQxrbDWgu/Xzs
+	 JhcT1yVuAFywBQpBi/k6PUI5csOPOVQhiSgnAV4STbngG/FgQpiwbbk/2p7x9iB3rw
+	 DdpUFZRwyyeFQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 491E8C48BF0;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B1FC48BF6;
 	Fri, 16 Feb 2024 11:05:44 +0000 (UTC)
 From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
  <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Fri, 16 Feb 2024 14:05:36 +0300
-Subject: [PATCH net-next v2 8/8] net: dsa: mt7530: simplify link operations
- and force link down on all ports
+Date: Fri, 16 Feb 2024 14:05:32 +0300
+Subject: [PATCH net-next v2 4/8] net: dsa: mt7530: get rid of useless error
+ returns on phylink code path
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,7 +43,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Message-Id:
- <20240216-for-netnext-mt7530-improvements-3-v2-8-094cae3ff23b@arinc9.com>
+ <20240216-for-netnext-mt7530-improvements-3-v2-4-094cae3ff23b@arinc9.com>
 References:
  <20240216-for-netnext-mt7530-improvements-3-v2-0-094cae3ff23b@arinc9.com>
 In-Reply-To:
@@ -63,11 +63,11 @@ Cc: mithat.guner@xeront.com, erkin.bozoglu@xeront.com,
  linux-mediatek@lists.infradead.org, 
  =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708081540; l=5194;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708081540; l=6745;
  i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=3PnEpSD/b9sLXrH/ouiQE55BJAdoplXfAHA3Ch+TLls=;
- b=mSaVHEzCy4ejGcjX96SnPb/qltroYfKxJok9jX4XC6EEKUgprqU+eyIwYXvYzGj3FGdeQTMiz
- RZCb+leeyYiAYQTbPcfrjcTZTQSfLKSqIKcXmsLArrQw1X2bfF2KpZu
+ bh=EL1vGonmNpBImZU3uthb96aDLRU2riphSBzoDbxXdI8=;
+ b=YQwL4VvRatyXpfnXGPW9IetSxUnkNH6eigKYAzu0rfRUg9jvxRUlaEaCtz0RMh86/iHYu+AQ1
+ YunXx+hyr9+BLFaZcCQG3bUGNv3FkHyny4T0EYLIOT9lUQ8l699WJ8v
 X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
  pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
 X-Endpoint-Received:
@@ -77,138 +77,217 @@ Reply-To: <arinc.unal@arinc9.com>
 
 From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-Currently, the link operations for switch MACs are scattered across
-port_enable, port_disable, phylink_mac_config, phylink_mac_link_up, and
-phylink_mac_link_down.
+Remove error returns on the cases where they are already handled with the
+function the mac_port_get_caps member in mt753x_table points to.
 
-port_enable and port_disable clears the link settings. Move that to
-mt7530_setup() and mt7531_setup_common() which set up the switches. This
-way, the link settings are cleared on all ports at setup, and then only
-once with phylink_mac_link_down() when a link goes down.
+mt7531_mac_config() is also called from mt7531_cpu_port_config() outside of
+phylink but the port and interface modes are already handled there.
 
-Enable force mode at setup to apply the force part of the link settings.
-This ensures that only active ports will have their link up.
+Change the functions and the mac_port_config function pointer to void now
+that there're no error returns anymore.
 
-Now that the bit for setting the port on force mode is done on
-mt7530_setup() and mt7531_setup_common(), get rid of PMCR_FORCE_MODE_ID()
-which helped determine which bit to use for the switch model.
+Remove mt753x_is_mac_port() that used to help the said error returns.
 
-The "MT7621 Giga Switch Programming Guide v0.3", "MT7531 Reference Manual
-for Development Board v1.0", and "MT7988A Wi-Fi 7 Generation Router
-Platform: Datasheet (Open Version) v0.1" documents show that these bits are
-enabled at reset:
+On mt7531_mac_config(), switch to if statements to simplify the code.
 
-PMCR_IFG_XMIT(1) (not part of PMCR_LINK_SETTINGS_MASK)
-PMCR_MAC_MODE (not part of PMCR_LINK_SETTINGS_MASK)
-PMCR_TX_EN
-PMCR_RX_EN
-PMCR_BACKOFF_EN (not part of PMCR_LINK_SETTINGS_MASK)
-PMCR_BACKPR_EN (not part of PMCR_LINK_SETTINGS_MASK)
-PMCR_TX_FC_EN
-PMCR_RX_FC_EN
+Remove internal phy cases from mt753x_phylink_mac_config(), there is no
+need to check the interface mode as that's already handled with the
+function the mac_port_get_caps member in mt753x_table points to.
 
-These bits also don't exist on the MT7530_PMCR_P(6) register of the switch
-on the MT7988 SoC:
-
-PMCR_IFG_XMIT()
-PMCR_MAC_MODE
-PMCR_BACKOFF_EN
-PMCR_BACKPR_EN
-
-Remove the setting of the bits not part of PMCR_LINK_SETTINGS_MASK on
-phylink_mac_config as they're already set.
-
-Suggested-by: Vladimir Oltean <olteanv@gmail.com>
+Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+Acked-by: Daniel Golle <daniel@makrotopia.org>
+Tested-by: Daniel Golle <daniel@makrotopia.org>
 Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
 ---
- drivers/net/dsa/mt7530.c | 26 +++++++++++++-------------
- drivers/net/dsa/mt7530.h |  2 --
- 2 files changed, 13 insertions(+), 15 deletions(-)
+ drivers/net/dsa/mt7530.c | 81 ++++++++++--------------------------------------
+ drivers/net/dsa/mt7530.h |  6 ++--
+ 2 files changed, 19 insertions(+), 68 deletions(-)
 
 diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 5c8ad41ce8cd..1ae11b180d54 100644
+index 296711fd5c43..c069bf273733 100644
 --- a/drivers/net/dsa/mt7530.c
 +++ b/drivers/net/dsa/mt7530.c
-@@ -1018,7 +1018,6 @@ mt7530_port_enable(struct dsa_switch *ds, int port,
- 	priv->ports[port].enable = true;
- 	mt7530_rmw(priv, MT7530_PCR_P(port), PCR_MATRIX_MASK,
- 		   priv->ports[port].pm);
--	mt7530_clear(priv, MT7530_PMCR_P(port), PMCR_LINK_SETTINGS_MASK);
- 
- 	mutex_unlock(&priv->reg_mutex);
- 
-@@ -1038,7 +1037,6 @@ mt7530_port_disable(struct dsa_switch *ds, int port)
- 	priv->ports[port].enable = false;
- 	mt7530_rmw(priv, MT7530_PCR_P(port), PCR_MATRIX_MASK,
- 		   PCR_MATRIX_CLR);
--	mt7530_clear(priv, MT7530_PMCR_P(port), PMCR_LINK_SETTINGS_MASK);
- 
- 	mutex_unlock(&priv->reg_mutex);
+@@ -2587,7 +2587,7 @@ static void mt7988_mac_port_get_caps(struct dsa_switch *ds, int port,
+ 	}
  }
-@@ -2257,6 +2255,12 @@ mt7530_setup(struct dsa_switch *ds)
- 	mt7530_mib_reset(ds);
  
- 	for (i = 0; i < MT7530_NUM_PORTS; i++) {
-+		/* Clear link settings and enable force mode to force link down
-+		 * on all ports until they're enabled later.
-+		 */
-+		mt7530_rmw(priv, MT7530_PMCR_P(i), PMCR_LINK_SETTINGS_MASK |
-+			   PMCR_FORCE_MODE, PMCR_FORCE_MODE);
-+
- 		/* Disable forwarding by default on all ports */
- 		mt7530_rmw(priv, MT7530_PCR_P(i), PCR_MATRIX_MASK,
- 			   PCR_MATRIX_CLR);
-@@ -2359,6 +2363,12 @@ mt7531_setup_common(struct dsa_switch *ds)
- 		     UNU_FFP_MASK);
+-static int
++static void
+ mt7530_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
+ 		  phy_interface_t interface)
+ {
+@@ -2597,22 +2597,14 @@ mt7530_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
+ 		mt7530_setup_port5(priv->ds, interface);
+ 	else if (port == 6)
+ 		mt7530_setup_port6(priv->ds, interface);
+-
+-	return 0;
+ }
  
- 	for (i = 0; i < MT7530_NUM_PORTS; i++) {
-+		/* Clear link settings and enable force mode to force link down
-+		 * on all ports until they're enabled later.
-+		 */
-+		mt7530_rmw(priv, MT7530_PMCR_P(i), PMCR_LINK_SETTINGS_MASK |
-+			   MT7531_FORCE_MODE, MT7531_FORCE_MODE);
-+
- 		/* Disable forwarding by default on all ports */
- 		mt7530_rmw(priv, MT7530_PCR_P(i), PCR_MATRIX_MASK,
- 			   PCR_MATRIX_CLR);
-@@ -2657,23 +2667,13 @@ mt753x_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
- 			  const struct phylink_link_state *state)
+-static int mt7531_rgmii_setup(struct mt7530_priv *priv, u32 port,
+-			      phy_interface_t interface,
+-			      struct phy_device *phydev)
++static void mt7531_rgmii_setup(struct mt7530_priv *priv, u32 port,
++			       phy_interface_t interface,
++			       struct phy_device *phydev)
+ {
+ 	u32 val;
+ 
+-	if (priv->p5_sgmii) {
+-		dev_err(priv->dev, "RGMII mode is not available for port %d\n",
+-			port);
+-		return -EINVAL;
+-	}
+-
+ 	val = mt7530_read(priv, MT7531_CLKGEN_CTRL);
+ 	val |= GP_CLK_EN;
+ 	val &= ~GP_MODE_MASK;
+@@ -2640,20 +2632,14 @@ static int mt7531_rgmii_setup(struct mt7530_priv *priv, u32 port,
+ 		case PHY_INTERFACE_MODE_RGMII_ID:
+ 			break;
+ 		default:
+-			return -EINVAL;
++			break;
+ 		}
+ 	}
+-	mt7530_write(priv, MT7531_CLKGEN_CTRL, val);
+-
+-	return 0;
+-}
+ 
+-static bool mt753x_is_mac_port(u32 port)
+-{
+-	return (port == 5 || port == 6);
++	mt7530_write(priv, MT7531_CLKGEN_CTRL, val);
+ }
+ 
+-static int
++static void
+ mt7531_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
+ 		  phy_interface_t interface)
+ {
+@@ -2661,42 +2647,21 @@ mt7531_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
+ 	struct phy_device *phydev;
+ 	struct dsa_port *dp;
+ 
+-	if (!mt753x_is_mac_port(port)) {
+-		dev_err(priv->dev, "port %d is not a MAC port\n", port);
+-		return -EINVAL;
+-	}
+-
+-	switch (interface) {
+-	case PHY_INTERFACE_MODE_RGMII:
+-	case PHY_INTERFACE_MODE_RGMII_ID:
+-	case PHY_INTERFACE_MODE_RGMII_RXID:
+-	case PHY_INTERFACE_MODE_RGMII_TXID:
++	if (phy_interface_mode_is_rgmii(interface)) {
+ 		dp = dsa_to_port(ds, port);
+ 		phydev = dp->user->phydev;
+-		return mt7531_rgmii_setup(priv, port, interface, phydev);
+-	case PHY_INTERFACE_MODE_SGMII:
+-	case PHY_INTERFACE_MODE_NA:
+-	case PHY_INTERFACE_MODE_1000BASEX:
+-	case PHY_INTERFACE_MODE_2500BASEX:
+-		/* handled in SGMII PCS driver */
+-		return 0;
+-	default:
+-		return -EINVAL;
++		mt7531_rgmii_setup(priv, port, interface, phydev);
+ 	}
+-
+-	return -EINVAL;
+ }
+ 
+-static int
++static void
+ mt753x_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
+ 		  const struct phylink_link_state *state)
  {
  	struct mt7530_priv *priv = ds->priv;
--	u32 mcr_cur, mcr_new;
  
- 	if ((port == 5 || port == 6) && priv->info->mac_port_config)
- 		priv->info->mac_port_config(ds, port, mode, state->interface);
- 
--	mcr_cur = mt7530_read(priv, MT7530_PMCR_P(port));
--	mcr_new = mcr_cur;
--	mcr_new &= ~PMCR_LINK_SETTINGS_MASK;
--	mcr_new |= PMCR_IFG_XMIT(1) | PMCR_MAC_MODE | PMCR_BACKOFF_EN |
--		   PMCR_BACKPR_EN | PMCR_FORCE_MODE_ID(priv->id);
+-	if (!priv->info->mac_port_config)
+-		return 0;
 -
- 	/* Are we connected to external phy */
- 	if (port == 5 && dsa_is_user_port(ds, 5))
--		mcr_new |= PMCR_EXT_PHY;
--
--	if (mcr_new != mcr_cur)
--		mt7530_write(priv, MT7530_PMCR_P(port), mcr_new);
-+		mt7530_set(priv, MT7530_PMCR_P(port), PMCR_EXT_PHY);
+-	return priv->info->mac_port_config(ds, port, mode, state->interface);
++	if (priv->info->mac_port_config)
++		priv->info->mac_port_config(ds, port, mode, state->interface);
  }
  
- static void mt753x_phylink_mac_link_down(struct dsa_switch *ds, int port,
+ static struct phylink_pcs *
+@@ -2725,17 +2690,11 @@ mt753x_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
+ 	u32 mcr_cur, mcr_new;
+ 
+ 	switch (port) {
+-	case 0 ... 4:
+-		if (state->interface != PHY_INTERFACE_MODE_GMII &&
+-		    state->interface != PHY_INTERFACE_MODE_INTERNAL)
+-			goto unsupported;
+-		break;
+ 	case 5:
+ 		if (priv->p5_interface == state->interface)
+ 			break;
+ 
+-		if (mt753x_mac_config(ds, port, mode, state) < 0)
+-			goto unsupported;
++		mt753x_mac_config(ds, port, mode, state);
+ 
+ 		if (priv->p5_intf_sel != P5_DISABLED)
+ 			priv->p5_interface = state->interface;
+@@ -2744,16 +2703,10 @@ mt753x_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
+ 		if (priv->p6_interface == state->interface)
+ 			break;
+ 
+-		if (mt753x_mac_config(ds, port, mode, state) < 0)
+-			goto unsupported;
++		mt753x_mac_config(ds, port, mode, state);
+ 
+ 		priv->p6_interface = state->interface;
+ 		break;
+-	default:
+-unsupported:
+-		dev_err(ds->dev, "%s: unsupported %s port: %i\n",
+-			__func__, phy_modes(state->interface), port);
+-		return;
+ 	}
+ 
+ 	mcr_cur = mt7530_read(priv, MT7530_PMCR_P(port));
+@@ -2836,7 +2789,6 @@ mt7531_cpu_port_config(struct dsa_switch *ds, int port)
+ 	struct mt7530_priv *priv = ds->priv;
+ 	phy_interface_t interface;
+ 	int speed;
+-	int ret;
+ 
+ 	switch (port) {
+ 	case 5:
+@@ -2861,9 +2813,8 @@ mt7531_cpu_port_config(struct dsa_switch *ds, int port)
+ 	else
+ 		speed = SPEED_1000;
+ 
+-	ret = mt7531_mac_config(ds, port, MLO_AN_FIXED, interface);
+-	if (ret)
+-		return ret;
++	mt7531_mac_config(ds, port, MLO_AN_FIXED, interface);
++
+ 	mt7530_write(priv, MT7530_PMCR_P(port),
+ 		     PMCR_CPU_PORT_SETTING(priv->id));
+ 	mt753x_phylink_mac_link_up(ds, port, MLO_AN_FIXED, interface, NULL,
 diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
-index 8a8144868eaa..a71166e0a7fc 100644
+index 26a6d2160c08..b1665de7f640 100644
 --- a/drivers/net/dsa/mt7530.h
 +++ b/drivers/net/dsa/mt7530.h
-@@ -304,8 +304,6 @@ enum mt7530_vlan_port_acc_frm {
- 					 MT7531_FORCE_DPX | \
- 					 MT7531_FORCE_RX_FC | \
- 					 MT7531_FORCE_TX_FC)
--#define  PMCR_FORCE_MODE_ID(id)		((((id) == ID_MT7531) || ((id) == ID_MT7988)) ?	\
--					 MT7531_FORCE_MODE : PMCR_FORCE_MODE)
- #define  PMCR_LINK_SETTINGS_MASK	(PMCR_TX_EN | PMCR_FORCE_SPEED_1000 | \
- 					 PMCR_RX_EN | PMCR_FORCE_SPEED_100 | \
- 					 PMCR_TX_FC_EN | PMCR_RX_FC_EN | \
+@@ -730,9 +730,9 @@ struct mt753x_info {
+ 	void (*mac_port_validate)(struct dsa_switch *ds, int port,
+ 				  phy_interface_t interface,
+ 				  unsigned long *supported);
+-	int (*mac_port_config)(struct dsa_switch *ds, int port,
+-			       unsigned int mode,
+-			       phy_interface_t interface);
++	void (*mac_port_config)(struct dsa_switch *ds, int port,
++				unsigned int mode,
++				phy_interface_t interface);
+ };
+ 
+ /* struct mt7530_priv -	This is the main data structure for holding the state
 
 -- 
 2.40.1
