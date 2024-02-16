@@ -1,158 +1,86 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D0D1487D6
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 20:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104FE14A083;
+	Fri, 16 Feb 2024 20:33:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708115601; cv=none; b=hsTj+tFcNLWbpJ83pF8q40mOhOXeUcjjvwy/uXw5xTUhoL44KBFv4vwSnFr6s0CC8IC2ddCYc7VYBrO8uzQlGIjE7TKHh6LQV85FswNUZqjry7DPR5qtjAWY2T7WNzMly2/f67mS6xljLZxkpVCL0soCmmD6xLWaj4SU2VC4MsA=
+	t=1708115602; cv=none; b=J7fd/IateRe2KdyXKOFNq2m8mOUFMSgSNHq2AlyJwcUaFSXHRTPYt+nttuJVO5CaKWnfgOmcBI7/VfYjfImF0EvCWKwf7vg3cPIPf9HMPQNbOQgRUd5eGTlqmNhTj8Qv7jGKro7KD2sEmoxk4izPn+3HN9I473QdPAaLBWMWuAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708115601; c=relaxed/simple;
-	bh=4LhLqDvGFT+IFCIuC4QIrfBunrKDwXswnSE7spSs1og=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HGXUbS1aaOMQtbtwHOhKaDLox7Qubw/cEWT9dZIuWrnno+rxBVZ1rPp4fvJRMCf43K7chJKqPJfTrMtijVmTErtvVKCB1Xdba2i0epcgR96xikMOlPC9BXacMvzoyFuyBNpHP6etbxsp7adcAkVugaPELJGKKVxwvAO8nIIwIPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=pw8lpZRn; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1708115602; c=relaxed/simple;
+	bh=1k4hBx0smdtZuP5mnz0mn9vpM3lMDeZ7dObeRWkPNpw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mWc72IUGTHZp0iFbPRzdY/91SBGL5FzaMm1s6xSOSk43iU/bsUtj6rGkBosPdKoqlGL7q56oBHGGTZrypGU7EyJOXbDcptB5wDGTw7OoOFBsEZfGLEPZKsEJBzLZY8PxZcDBZZja/5eRaGlq8eCOzxjb6aFGUopXwIJ/TmrR2I4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZLD9lB2w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="pw8lpZRn"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d09cf00214so15778481fa.0
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 12:33:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708115597; x=1708720397; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CC1pu2stpbN83NTwAu2tyUDsfSSkKlZ+7hcnIJ0S5bk=;
-        b=pw8lpZRn9/vsWZaABII0+DvViHbRjQuPwgLb4i/WqjXSHfa+GQL9WfkQm2XwOqrj0T
-         GgdQaumG3DKydg4bv2YIWQ8DAmwCPQF0Id8uxPCSEMJedRMKpx3RxsIAMQ6tN1ae2qvI
-         D2D0o7vb0bRHjGZSY6USu9vvbc8cKt05nC3L3FfK6STwd8GsqxUbPidtj7TA7VxbNmET
-         EHfo18kb0Si1z/F0xUrdzARIVWWY7FZ9wjAnfB7ibIP7WJc1tZ6h9POam9qgL/6A7YsS
-         TaXO73fSKrUMelRH2EDx7SbMwFinYm4Emmni39o3pSPCUmZsPjSPEPLEJA3dp5BxJU9R
-         xGqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708115597; x=1708720397;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CC1pu2stpbN83NTwAu2tyUDsfSSkKlZ+7hcnIJ0S5bk=;
-        b=VoC1jCzd185Cl6T9M2js90QEuF1ezRHK6xWe6+ghLxZ60o83Ps10FXCEQeDHgYxT/R
-         17IOiBIVr6hSHqpYbUU8shCOdN7yMEwnHxvcLG4+eTuAYC/YnFZBD4BrfkuJ6rx0zxrw
-         wNVDteFDrQbJpSXZKoVKBK/ouWT1W3MOxeQHYh7cx5AXlPlfICqLtZBkUGthoXh+6icO
-         aFM/qD6mnrW3xr49ekfacM6t24IjrQG74bqAj0xSsZOaQKeTdNMH2rROlxI/M7MyD4QO
-         lt7SQUgFxmnwnHN6opu0Iyp8dlMHNoKR7OIT/P/hs4l4idlm4M7Gw24LfRbdLe9BpuFu
-         zolg==
-X-Forwarded-Encrypted: i=1; AJvYcCWuusckvk0b1t7rHTpgDx+Jy/INk1ax4nEl2tG7Vxghma4LGBnJcn8qGSlMViPEDrsBKnFX9aqUR8FIAaMqxLyMYxxUXTx24kj47cCs
-X-Gm-Message-State: AOJu0YyLzeTBCGJ01XIzB+NQJ5ghU57LpYCdnQxeeY0vFuqB1XOCP+DC
-	/xJ1r6CoexENNQ6cZZ3qk04lggF/CA3jStni8bS4toC98hCugW5rqUpqOScMyX8=
-X-Google-Smtp-Source: AGHT+IEodiKrpQa3Lrik26TTHjpOXpZBll1rH3wk3i2Jrykp7F0GsM6rUA/Fp5cYuEYiOGeqkA/RiQ==
-X-Received: by 2002:a2e:9b8d:0:b0:2d0:85dc:bf9b with SMTP id z13-20020a2e9b8d000000b002d085dcbf9bmr4383652lji.14.1708115597122;
-        Fri, 16 Feb 2024 12:33:17 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:7758:12d:16:5f19])
-        by smtp.gmail.com with ESMTPSA id m5-20020a05600c4f4500b0041253d0acd6sm1420528wmq.47.2024.02.16.12.33.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 12:33:16 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kalle Valo <kvalo@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Saravana Kannan <saravanak@google.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Alex Elder <elder@linaro.org>,
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Abel Vesa <abel.vesa@linaro.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lukas Wunner <lukas@wunner.de>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: linux-bluetooth@vger.kernel.org,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v5 04/18] dt-bindings: net: bluetooth: qualcomm: describe regulators for QCA6390
-Date: Fri, 16 Feb 2024 21:32:01 +0100
-Message-Id: <20240216203215.40870-5-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240216203215.40870-1-brgl@bgdev.pl>
-References: <20240216203215.40870-1-brgl@bgdev.pl>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZLD9lB2w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C237C4166D;
+	Fri, 16 Feb 2024 20:33:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708115600;
+	bh=1k4hBx0smdtZuP5mnz0mn9vpM3lMDeZ7dObeRWkPNpw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZLD9lB2wzlChBxKsIkE5U+RmYdxk23oblh8RGx9FhOVN4d+kXAuqNIj51CbDzaihi
+	 gYGXypBa4OTU2TJV8oT3VuYuJqhRgPy64rDdjcqf6MvjDu1L96VZX1i0WYFyNO6K5n
+	 hZAZc26eqcUpSvaosKerIHc1PkCvRh4pwfyQnfRx4hLN4xZZrQ/MhHp8Q2GB7Q99lw
+	 avSQjOaJ8cHO6cT985q1NSBvmRvthFGzAKaNq7wbFSe6eDAloN3OWhU6MBrd0l+FLW
+	 4K3kGbwkczAJTD/7F2b9xpeHvFTO6claOWMhb0KzCvzejGdwZPufoDZCE1WCU8uOH3
+	 Smir5zwhBek2Q==
+Date: Fri, 16 Feb 2024 14:33:16 -0600
+From: Bjorn Andersson <andersson@kernel.org>
+To: Luca Weiss <luca.weiss@fairphone.com>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, Lee Jones <lee@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/3] dt-bindings: mfd: qcom,spmi-pmic: Add pbs to SPMI
+ device types
+Message-ID: <zaqjoyucfohfdqlkkjdwh3ggakmvgir7na5s7egorbcxdpvsit@oxmlh7jhjo4x>
+References: <20240205-pmi632-ppg-v1-0-e236c95a2099@fairphone.com>
+ <20240205-pmi632-ppg-v1-1-e236c95a2099@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240205-pmi632-ppg-v1-1-e236c95a2099@fairphone.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Feb 05, 2024 at 10:51:38AM +0100, Luca Weiss wrote:
+> Add the PBS (Programmable Boot Sequencer) to the list of devices.
+> 
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
 
-QCA6390 has a compatible listed in the bindings but is missing the
-regulators description. Add the missing supply property and list the
-required ones in the allOf section.
+Reviewed-by: Bjorn Andersson <andersson@kernel.org>
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- .../net/bluetooth/qualcomm-bluetooth.yaml       | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Regards,
+Bjorn
 
-diff --git a/Documentation/devicetree/bindings/net/bluetooth/qualcomm-bluetooth.yaml b/Documentation/devicetree/bindings/net/bluetooth/qualcomm-bluetooth.yaml
-index eba2f3026ab0..702d04cdb247 100644
---- a/Documentation/devicetree/bindings/net/bluetooth/qualcomm-bluetooth.yaml
-+++ b/Documentation/devicetree/bindings/net/bluetooth/qualcomm-bluetooth.yaml
-@@ -62,6 +62,9 @@ properties:
-   vdddig-supply:
-     description: VDD_DIG supply regulator handle
- 
-+  vddbtcmx-supply:
-+    description: VDD_BT_CMX supply regulator handle
-+
-   vddbtcxmx-supply:
-     description: VDD_BT_CXMX supply regulator handle
- 
-@@ -180,6 +183,20 @@ allOf:
-         - vddrfa0p8-supply
-         - vddrfa1p2-supply
-         - vddrfa1p9-supply
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - qcom,qca6390-bt
-+    then:
-+      required:
-+        - vddrfacmn-supply
-+        - vddaon-supply
-+        - vddbtcmx-supply
-+        - vddrfa0p8-supply
-+        - vddrfa1p2-supply
-+        - vddrfa1p7-supply
- 
- examples:
-   - |
--- 
-2.40.1
-
+> ---
+>  Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+> index 8103fb61a16c..b7f01cbb8fff 100644
+> --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+> @@ -160,6 +160,10 @@ patternProperties:
+>      type: object
+>      $ref: /schemas/nvmem/qcom,spmi-sdam.yaml#
+>  
+> +  "^pbs@[0-9a-f]+$":
+> +    type: object
+> +    $ref: /schemas/soc/qcom/qcom,pbs.yaml#
+> +
+>    "phy@[0-9a-f]+$":
+>      type: object
+>      $ref: /schemas/phy/qcom,snps-eusb2-repeater.yaml#
+> 
+> -- 
+> 2.43.0
+> 
