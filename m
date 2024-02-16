@@ -1,71 +1,68 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48821BF28;
-	Fri, 16 Feb 2024 09:51:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B61F31C290;
+	Fri, 16 Feb 2024 09:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708077107; cv=none; b=IgnLnFgijI3VmivbizQ5pMtAv/RbpuVnnVhS//1iSkJWiAeD+h/l7iTWjS1wUXGrcHQ8tjh/Dh3vCyEUlgY+l0xc5h69HbrWlcznW3Em4SSkm3JstdC1qd6vQkcdHidLfZn2ed2FbxoNypHPKo3YO4MqSmpBERe2waCKZO09b2c=
+	t=1708077108; cv=none; b=UznHXLhlDY1+8fV+Qmp12uCzXx89txX8C7+Vx4iQuuoLKSz0j9KgkNaYMjYAOkkt2Q2zCl3QE+8tLBnOdA45iacrKNcOQK0aJ+cXYyZxEntPhbm953M5j3qAUWZSLnTdyIsTt9/+8i+uXwC/ZOV9P8zXRANzEC5QqDGW6xRRknM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708077107; c=relaxed/simple;
-	bh=htFPPCRNPyJQ94F7XATypHzQyMpmSmZex9/abw55Q3I=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LUsNMdz3FaNYmVVcpUjSDqCYqk4+zNFFm77jWZRvQEZ2ao4nQjYxr0pc8xawxhkHt+dR8NVmA7TdKThmMwb+0ZizZ1X98lL+CC1kVZ3n6KqxTIjLmwZXexD74NLMbfhUaSw/4uBpuLNn8shaneAHfW9pKUyDcL0h6E+NarhIBJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=xt+JEEOw; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1708077108; c=relaxed/simple;
+	bh=tkuaNBMkKydcINY6S71b/9WvjINpnpK8UWPJ1sC4kN0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=IT5jviDYObivr97xWbn0DIVMnLk3dcdI0E00/gnCt1oGJINgYskeXu+nH8odWzjTe/XBNgjtNF29c6gU/9WUtD9r+Z0r+XYxX1LHQdPSc/opAYAsN1kDtjso2kscx0PPKWUG26uBLGGETSoACSqPt5TtCCTu6EMeM86WeSxv4IE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=gANvFRmV; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="xt+JEEOw"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41G4pWkN008754;
-	Fri, 16 Feb 2024 10:51:12 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=lG/404Pv7+RWktWppSnM5oXw2eG/j2wJbKBMjahgEeU=; b=xt
-	+JEEOw+Ke7EY8qyrUeZiwOJT3tauI1vIwgaAlXu5nGDeERibdAWnYzvHCzLdDAcD
-	/M/Dj1RmLPL76E0HRMjqcqRLrO4psSWmYTDy6dMWg/AW1FxLiUmR22Qy61JzJnq0
-	r+Zpiz755STDbThG8QMFjSu6iUiP0h2+ii2B4PhbEzQNARVW5xAK6Mzo3LB3Aqk3
-	dVaFLpWL29O50ZXeyrZvaE+jtPEEp3ZwkkV3e1nyB3AxwcMaaHl7n5Y/w3y58ldv
-	HVLasqjIys8nV9GYU2inrWte1DoEL/SM/yq6dXQa6JgxzHLAFm7h07NbcAVIQ38b
-	mSQfinnDFxDLA2UtKldA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wa124gy9r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 Feb 2024 10:51:12 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id C89584002D;
-	Fri, 16 Feb 2024 10:51:08 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7A35522D187;
-	Fri, 16 Feb 2024 10:50:27 +0100 (CET)
-Received: from localhost (10.201.20.114) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 16 Feb
- 2024 10:50:27 +0100
-From: Antonio Borneo <antonio.borneo@foss.st.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre
- Torgue <alexandre.torgue@foss.st.com>,
-        Catalin Marinas
-	<catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-CC: Antonio Borneo <antonio.borneo@foss.st.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Christian Bruel
-	<christian.bruel@foss.st.com>
-Subject: [PATCH 10/12] arm64: dts: st: Add v2m to GIC node on stm32mp251
-Date: Fri, 16 Feb 2024 10:47:55 +0100
-Message-ID: <20240216094758.916722-11-antonio.borneo@foss.st.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240216094758.916722-1-antonio.borneo@foss.st.com>
-References: <20240216094758.916722-1-antonio.borneo@foss.st.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="gANvFRmV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1708077105;
+	bh=tkuaNBMkKydcINY6S71b/9WvjINpnpK8UWPJ1sC4kN0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=gANvFRmVZ4eC1ndXJdBrndZE/qXSLcyVDMVrnGXkk7nbNYTGhPdiHThqBNBARIRyO
+	 pACNdAAf7TlNyoGb2sQPx7scMeb1urIqKg6qY/FPEDkEzcm0rIPP3aACVTk5IT2V+S
+	 2qi39wzFwU3nDlXdZtGEffKzMDyFTFglSa0+0jTZzIE/j9DuwIFmMjowjX4hC79zV8
+	 tg1rTZ3bnGxs5Z56Ir8VYr2epyyRlAeMWg7A+L6NRzXbIpFuQ2MLPC1mnanfzEV2c4
+	 lDobBAS/odXA/tm+ZLwscUbvTT9i+LFWrdbu1TNzy/oqOeL/U4A3m9PlowQfFp70yV
+	 ucM8cckugY7OA==
+Received: from shreeya.shreeya (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: shreeya)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id B27543781F9C;
+	Fri, 16 Feb 2024 09:51:40 +0000 (UTC)
+From: Shreeya Patel <shreeya.patel@collabora.com>
+To: heiko@sntech.de,
+	mchehab@kernel.org,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	p.zabel@pengutronix.de,
+	jose.abreu@synopsys.com,
+	nelson.costa@synopsys.com,
+	dmitry.osipenko@collabora.com,
+	sebastian.reichel@collabora.com,
+	shawn.wen@rock-chips.com
+Cc: kernel@collabora.com,
+	linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-clk@vger.kernel.org,
+	linux-dt@vger.kernel.org,
+	linux-arm@lists.infradead.org,
+	Shreeya Patel <shreeya.patel@collabora.com>
+Subject: [PATCH 1/4] clk: rockchip: rst-rk3588: Add BIU reset
+Date: Fri, 16 Feb 2024 15:19:19 +0530
+Message-Id: <20240216094922.257674-2-shreeya.patel@collabora.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240216094922.257674-1-shreeya.patel@collabora.com>
+References: <20240216094922.257674-1-shreeya.patel@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,52 +70,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SAFCAS1NODE2.st.com (10.75.90.13) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-16_08,2024-02-14_01,2023-05-22_02
 
-From: Christian Bruel <christian.bruel@foss.st.com>
+Export hdmirx_biu soft reset id which is required by the hdmirx controller.
 
-The GIC of STM32MP25 includes v2m extension for PCIEe MSI support.
-
-Add the v2m sub-node to the GIC interrupt controller and adapt the
-other properties accordingly.
-
-Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
-Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
+Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
 ---
- arch/arm64/boot/dts/st/stm32mp251.dtsi | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/clk/rockchip/rst-rk3588.c               | 1 +
+ include/dt-bindings/reset/rockchip,rk3588-cru.h | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-index 96859d098ef8..5c9095382cc7 100644
---- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
-+++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-@@ -81,12 +81,20 @@ scmi_reset: protocol@16 {
- 	intc: interrupt-controller@4ac00000 {
- 		compatible = "arm,cortex-a7-gic";
- 		#interrupt-cells = <3>;
--		#address-cells = <1>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
- 		interrupt-controller;
- 		reg = <0x0 0x4ac10000 0x0 0x1000>,
- 		      <0x0 0x4ac20000 0x0 0x2000>,
- 		      <0x0 0x4ac40000 0x0 0x2000>,
- 		      <0x0 0x4ac60000 0x0 0x2000>;
-+		ranges;
-+
-+		v2m0: v2m@48090000 {
-+			compatible = "arm,gic-v2m-frame";
-+			reg = <0x0 0x48090000 0x0 0x1000>;
-+			msi-controller;
-+		};
- 	};
+diff --git a/drivers/clk/rockchip/rst-rk3588.c b/drivers/clk/rockchip/rst-rk3588.c
+index e855bb8d5413..c4ebc01f1c9c 100644
+--- a/drivers/clk/rockchip/rst-rk3588.c
++++ b/drivers/clk/rockchip/rst-rk3588.c
+@@ -577,6 +577,7 @@ static const int rk3588_register_offset[] = {
  
- 	psci {
+ 	/* SOFTRST_CON59 */
+ 	RK3588_CRU_RESET_OFFSET(SRST_A_HDCP1_BIU, 59, 6),
++	RK3588_CRU_RESET_OFFSET(SRST_A_HDMIRX_BIU, 59, 7),
+ 	RK3588_CRU_RESET_OFFSET(SRST_A_VO1_BIU, 59, 8),
+ 	RK3588_CRU_RESET_OFFSET(SRST_H_VOP1_BIU, 59, 9),
+ 	RK3588_CRU_RESET_OFFSET(SRST_H_VOP1_S_BIU, 59, 10),
+diff --git a/include/dt-bindings/reset/rockchip,rk3588-cru.h b/include/dt-bindings/reset/rockchip,rk3588-cru.h
+index d4264db2a07f..e2fe4bd5f7f0 100644
+--- a/include/dt-bindings/reset/rockchip,rk3588-cru.h
++++ b/include/dt-bindings/reset/rockchip,rk3588-cru.h
+@@ -751,4 +751,6 @@
+ #define SRST_P_TRNG_CHK			658
+ #define SRST_TRNG_S			659
+ 
++#define SRST_A_HDMIRX_BIU		660
++
+ #endif
 -- 
-2.34.1
+2.39.2
 
