@@ -1,204 +1,87 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFA31B803;
-	Fri, 16 Feb 2024 00:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB16E8F55;
+	Fri, 16 Feb 2024 01:00:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708045177; cv=none; b=cIjXAgpETXHgACYVWIvezKxdKgnvL/dowRihtt1GFcionTx3HacNv5DAJjQZXwVogh4mPYyl1FgjeuwJYTpApT/CAXSdjYybGS5789ELqs5U8FDBXc6UwW+em4s209yksBI2kStFQgymLcYsdAm8uEBhWTeOu/oTk8ElXRRaBCc=
+	t=1708045248; cv=none; b=T35SKdWDwGM7rrhW5yASyNWn57YZqrQBj1dYPVIxXrvBnSn5LoAn2tyXrKRSgU6ombTqz8ClRN1neCe5Gs2pyfJvZAY7M8Mj5/MXzQM6SIe2we6f5KW9IsDyqnSCy88EbEiWjRg330L1n3MTSNLmz3WMvfz748/5B8uMHtQgP1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708045177; c=relaxed/simple;
-	bh=39A/xiTKQauSSJ8A4yn+0yojQ14leyJe5VSWz1gzLh8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OcTLkDU1x0Xjabx3lFpM+0+y3c9lCPwicjIbBbolZFyvzRS3OuNgCdmA76Mn/S03M6cocuwgZI8Fjc4BuF7U4r8EeTwfjJhQH6BDAhmOF1BveNjLVKROFzrdoSuRrI7iNMDTynFFEQd8NtZ2nEg7NnHfpJyKK7En/F2Aowm6vYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=VcTIveCh; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1708045248; c=relaxed/simple;
+	bh=+dDgnU3ZkrjHe2f8ANYZEXxyh3W3/N5+qFKaHROFQjU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hR6tp7xY4lLeceN5QlLarKBHN0uY/dmNszCK3QwOQD0TnuTgnQhl/Q/duhuOwcop6XRFZxkxoV1++h5MVqq9GUQ5g0NWIhAZJQkc3SRc6WHTRT3a5bVTCU1WBBiCm8NU+qAlewW8ghXiGHaFedNP8SZg3q1tMLE+O126r+gQti4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BCqteF2K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="VcTIveCh"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41G0ltnK019880;
-	Fri, 16 Feb 2024 00:59:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=YBL6RfIICPWsz3SJ2ooj1M90QUk7ahuLlrso6UxkTJE=; b=Vc
-	TIveChnsiIzkGMrr81edteIWPv53EFcXNnUtsQccVUYsQq8WWHUHie5FI49Lihxc
-	XpSLKGpAK6qivrMI4BJSlc5Y7unJbGhLHtyMoWiSdvq0iqP/vSz/Rt3407T5fAnS
-	RloqcZIxHTfsPoC4uWVw28wTXa5DRCUO4c2bdy+GVln13PZcm2tie35O5B0klrdG
-	johSvcjumnxPA8bjVd9zCA2Q7/dKy3LY8ij4xoaB2KhVGVbWz7OvzHWo/WARNd7f
-	TgSkrx1Iznf13Ipc1I3vnFj9eBq0i9Pu1bZQPBkNICCQW8pWLDem9f5J9suk9EBx
-	3jotmovvfsVLCEo3NyTw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w9cudjq3r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 Feb 2024 00:59:29 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41G0wmqG029211
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 Feb 2024 00:58:48 GMT
-Received: from hu-kriskura-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 15 Feb 2024 16:58:43 -0800
-From: Krishna Kurapati <quic_kriskura@quicinc.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring
-	<robh+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Wesley Cheng
-	<quic_wcheng@quicinc.com>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Felipe Balbi
-	<balbi@kernel.org>, Johan Hovold <johan@kernel.org>
-CC: <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_ppratap@quicinc.com>, <quic_jackp@quicinc.com>,
-        Krishna Kurapati
-	<quic_kriskura@quicinc.com>
-Subject: [PATCH v15 6/9] usb: dwc3: qcom: Add helper function to request wakeup interrupts
-Date: Fri, 16 Feb 2024 06:27:53 +0530
-Message-ID: <20240216005756.762712-7-quic_kriskura@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240216005756.762712-1-quic_kriskura@quicinc.com>
-References: <20240216005756.762712-1-quic_kriskura@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BCqteF2K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 693EEC433F1;
+	Fri, 16 Feb 2024 01:00:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708045248;
+	bh=+dDgnU3ZkrjHe2f8ANYZEXxyh3W3/N5+qFKaHROFQjU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=BCqteF2KZkBD/XMzhKjjbxKUtvLqdkGNuCWI6A6kWgqy+syTndaIHpsbIhS4pxbAp
+	 UmMEkDDCao9xjdSYkDm918Pe9jerH5dLqNeZecLL9epIYcUVa2Wh9XaqOa8Q0wJChH
+	 LyNbx57nXbkJWKvWX9aYrj3gMnnlnsHnwYGzv5Hs1lHC49ajycJ38Fk/pwZJZJ3uNY
+	 WmSIxelgEKaoYY8p2UUD2trduuEQ49XwsN6zBKl6fh3Nr785Q8CQEGszFEn2+UTMJc
+	 z4vwAs/mm5M+FkBxUtOsZ+CB8h99b4zHz5aX7TXxka3YG+Msx94e84uU2yTu2fVxgY
+	 yVC2AwsLICM9g==
+Date: Thu, 15 Feb 2024 17:00:46 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Saeed Mahameed <saeed@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Leon Romanovsky
+ <leonro@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>, Jiri Pirko
+ <jiri@nvidia.com>, Leonid Bloch <lbloch@nvidia.com>, Itay Avraham
+ <itayavr@nvidia.com>, Saeed Mahameed <saeedm@nvidia.com>, David Ahern
+ <dsahern@kernel.org>, Aron Silverton <aron.silverton@oracle.com>,
+ andrew.gospodarek@broadcom.com, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org
+Subject: Re: [PATCH V4 0/5] mlx5 ConnectX control misc driver
+Message-ID: <20240215170046.58d565ef@kernel.org>
+In-Reply-To: <Zc22mMN2ovCadgRY@infradead.org>
+References: <20240207072435.14182-1-saeed@kernel.org>
+	<Zcx53N8lQjkpEu94@infradead.org>
+	<20240214074832.713ca16a@kernel.org>
+	<Zc22mMN2ovCadgRY@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: gCIWrzbUwCkicjeNN7KcMdHli-kPupDH
-X-Proofpoint-ORIG-GUID: gCIWrzbUwCkicjeNN7KcMdHli-kPupDH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-15_24,2024-02-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=852 priorityscore=1501 spamscore=0 suspectscore=0 phishscore=0
- bulkscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0 clxscore=1015
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402160005
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The logic for requesting interrupts is duplicated for each interrupt. In
-the upcoming patches that introduces support for multiport, it would be
-better to clean up the duplication before reading mulitport related
-interrupts.
+On Wed, 14 Feb 2024 23:00:40 -0800 Christoph Hellwig wrote:
+> On Wed, Feb 14, 2024 at 07:48:32AM -0800, Jakub Kicinski wrote:
+> > Overreach is unfortunate, I'd love to say "please do merge it as part 
+> > of RDMA". You probably don't trust my opinion but Jason admitted himself
+> > this is primarily for RDMA. RDMA is what it is in terms of openness and
+> > all vendors trying to sell their secret magic sauce.  
+> 
+> Common.  RDMA has two important open standards, one of them even done
+> in IETF that most open of all standards organizations.
 
-Refactor interrupt setup call by adding a new helper function for
-requesting the wakeup interrupts. To simplify implementation, make
-the display name same as the interrupt name expected in DT.
+While I don't dispute that there are standards which can be read,
+the practical interoperability of RDMA devices is extremely low.
+By practical I mean having two devices from different vendors
+achieve any reasonable performance talking to each other.
+Even two devices from _the same_ vendor but different generations
+are unlikely to perform.
 
-Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
-Reviewed-by: Bjorn Andersson <andersson@kernel.org>
-Acked-by: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
----
- drivers/usb/dwc3/dwc3-qcom.c | 53 ++++++++++++++++--------------------
- 1 file changed, 24 insertions(+), 29 deletions(-)
+Given how RDMA is deployed (uniform, greenfield/full replacement)
+this is entirely reasonable from the engineering perspective.
 
-diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-index dbd6a5b2b289..08df29584366 100644
---- a/drivers/usb/dwc3/dwc3-qcom.c
-+++ b/drivers/usb/dwc3/dwc3-qcom.c
-@@ -535,6 +535,22 @@ static int dwc3_qcom_get_irq(struct platform_device *pdev,
- 	return ret;
- }
- 
-+static int dwc3_qcom_request_irq(struct dwc3_qcom *qcom, int irq,
-+				 const char *name)
-+{
-+	int ret;
-+
-+	/* Keep wakeup interrupts disabled until suspend */
-+	ret = devm_request_threaded_irq(qcom->dev, irq, NULL,
-+					qcom_dwc3_resume_irq,
-+					IRQF_ONESHOT | IRQF_NO_AUTOEN,
-+					name, qcom);
-+	if (ret)
-+		dev_err(qcom->dev, "failed to request irq %s: %d\n", name, ret);
-+
-+	return ret;
-+}
-+
- static int dwc3_qcom_setup_irq(struct platform_device *pdev)
- {
- 	struct dwc3_qcom *qcom = platform_get_drvdata(pdev);
-@@ -545,57 +561,36 @@ static int dwc3_qcom_setup_irq(struct platform_device *pdev)
- 	irq = dwc3_qcom_get_irq(pdev, "qusb2_phy",
- 				pdata ? pdata->qusb2_phy_irq_index : -1);
- 	if (irq > 0) {
--		/* Keep wakeup interrupts disabled until suspend */
--		ret = devm_request_threaded_irq(qcom->dev, irq, NULL,
--					qcom_dwc3_resume_irq,
--					IRQF_ONESHOT | IRQF_NO_AUTOEN,
--					"qcom_dwc3 QUSB2", qcom);
--		if (ret) {
--			dev_err(qcom->dev, "qusb2_phy_irq failed: %d\n", ret);
-+		ret = dwc3_qcom_request_irq(qcom, irq, "hs_phy_irq");
-+		if (ret)
- 			return ret;
--		}
- 		qcom->qusb2_phy_irq = irq;
- 	}
- 
- 	irq = dwc3_qcom_get_irq(pdev, "dp_hs_phy_irq",
- 				pdata ? pdata->dp_hs_phy_irq_index : -1);
- 	if (irq > 0) {
--		ret = devm_request_threaded_irq(qcom->dev, irq, NULL,
--					qcom_dwc3_resume_irq,
--					IRQF_ONESHOT | IRQF_NO_AUTOEN,
--					"qcom_dwc3 DP_HS", qcom);
--		if (ret) {
--			dev_err(qcom->dev, "dp_hs_phy_irq failed: %d\n", ret);
-+		ret = dwc3_qcom_request_irq(qcom, irq, "dp_hs_phy_irq");
-+		if (ret)
- 			return ret;
--		}
- 		qcom->dp_hs_phy_irq = irq;
- 	}
- 
- 	irq = dwc3_qcom_get_irq(pdev, "dm_hs_phy_irq",
- 				pdata ? pdata->dm_hs_phy_irq_index : -1);
- 	if (irq > 0) {
--		ret = devm_request_threaded_irq(qcom->dev, irq, NULL,
--					qcom_dwc3_resume_irq,
--					IRQF_ONESHOT | IRQF_NO_AUTOEN,
--					"qcom_dwc3 DM_HS", qcom);
--		if (ret) {
--			dev_err(qcom->dev, "dm_hs_phy_irq failed: %d\n", ret);
-+		ret = dwc3_qcom_request_irq(qcom, irq, "dm_hs_phy_irq");
-+		if (ret)
- 			return ret;
--		}
- 		qcom->dm_hs_phy_irq = irq;
- 	}
- 
- 	irq = dwc3_qcom_get_irq(pdev, "ss_phy_irq",
- 				pdata ? pdata->ss_phy_irq_index : -1);
- 	if (irq > 0) {
--		ret = devm_request_threaded_irq(qcom->dev, irq, NULL,
--					qcom_dwc3_resume_irq,
--					IRQF_ONESHOT | IRQF_NO_AUTOEN,
--					"qcom_dwc3 SS", qcom);
--		if (ret) {
--			dev_err(qcom->dev, "ss_phy_irq failed: %d\n", ret);
-+		ret = dwc3_qcom_request_irq(qcom, irq, "ss_phy_irq");
-+		if (ret)
- 			return ret;
--		}
- 		qcom->ss_phy_irq = irq;
- 	}
- 
--- 
-2.34.1
+But this is a bit of a vicious cycle, vendors have little incentive 
+to interoperate, and primarily focus on adding secret sauce outside of 
+the standard. In fact you're lucky if the vendor didn't bake some
+extension which requires custom switches into the NICs :(
 
+Compare that to WiFi, which is a level of standardization netdev folks
+are more accustomed to. You can connect a new device from vendor X to 
+a 10 year old AP from vendor Y and it will run with high perf.
+
+Unfortunately because of the AI craze I have some experience
+with RDMA deployments now. Perhaps you have more, perhaps your
+experience differs.
