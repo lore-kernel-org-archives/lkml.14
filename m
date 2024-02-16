@@ -1,97 +1,109 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B233134BD
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 06:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1243B14A81;
+	Fri, 16 Feb 2024 06:24:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708064634; cv=none; b=G6cpBz8D7Rb8hCffgxq81z4WIVyIMpMix3VgbzyrUnDwtgcOiE/iJbG9D0KAYDY4GiVkoj1q+spPPtEvI7Milv6tNx8UuzRVX732pJYGGKSAifdbzHohWXrJQHwJUi6k0wQi6Ee0JLe9r4LtWy8E0i7FRC9vcH1G6sFjVttJTQI=
+	t=1708064693; cv=none; b=J5FiEOrzUN6rb3oFExi/+EUo6lzzjoN9qr4Xw+dUJwD/acbJrUsUp3gOL/5NQlM0LBnQvBZBlD/eFXnSlVRc9ZaL7WE5NiMLPQ/qOnaqmjkQPq5IoIF4m3HZpwz5Pqy+FBC+fnwuj+OCVBO7uSvFwntJCDm6jTWQ0F32pBlFIM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708064634; c=relaxed/simple;
-	bh=ap/AL4lHqZzJD3EPHrLC+i1FRpn+6ST6a8n/eXsj+LM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N6DMnUn7bwgKn47JBLUmYd7QvzZaNug83dBTEKLbRR3zATKClPPvwCWkcezi2H5KIuwrvda+9Id3G39bkYE/n7q1iFpdHeEwEVVMmC+8PS8xpDnXOkV8OrquOSUobdmR/B0a3dWU1f1bvqPzbi4OYqWRSYg9H5DHxejJGVcnEFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kZ/URTLy; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708064693; c=relaxed/simple;
+	bh=58jsamH6fpBXvb3zVcY4VXG6i2XIuZ4ke/SCLFjUqa8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PoherUSgZoVXBDeF+TBzbLn+Sd2Dw/IwheSJztoHRSXkIw8wVCLAn38MLIDO4oSUT1LP7BT8EhGrO7X+jski1Vtw+l1gQgyIPOxnOhMIvLBHFSWKo19KzL6r1i2EIu6wpnJhrM8EgLr1wiYclwZfLKbXNejIpzlSAh4UHVLb7jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=DE6cs8R6; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZ/URTLy"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-33cddf4b4b5so1209493f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 22:23:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708064631; x=1708669431; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ULnf0Z09ErzJv2F7WbwiQD8y1ATNtggEr2XiUFYMGWQ=;
-        b=kZ/URTLyo4lWSCtKt/6r9Yhp2MLVXSNuRFL1Te55dwuylRs5kANWeZHyhjqZUPtD6x
-         p7d8vRQek34amCqGUZqE2BtLu1DeP2Z/uvWVfpeMOwsaTsv+/0uFxUgpp7D2ui8SiBGj
-         tkpkT2gB8keNFpkld3CkFdxNLkry6OfZj37t8RCttKZfF9fh4J6N8ZwSDTdOsflffzjo
-         FD6r8IfZzAHDC2WgSdzlwsu5GLEbPS/rO4cvi8RoiF0vkUxJ6mmmeDoUsfIlyU/woFlU
-         YJ7ymsnQXYzUa94VDAeMqHE+2Ok3nJqxzI2i8o/067+eLt8LwPhTIFjn50xVSz5v2swY
-         XU+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708064631; x=1708669431;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ULnf0Z09ErzJv2F7WbwiQD8y1ATNtggEr2XiUFYMGWQ=;
-        b=tLHUYNjgbEUaL1jeLF+79qwVJHoKjIpckItelAcnKgnJZTb4U1QhvJSKRXkvKJ7W4C
-         XzAcNlpD3oF4uWIzrylXvYH3alvieScYJB/p+oaRGhreU51kuP72X6bwM1GvKF6a650V
-         vyjfhKACdGV2t9IGWYdv0Br7FcH62jUQlch5jxxlYa4MjWC9PK5klIQo59JO1TCMaLp0
-         wuK29/V4Y6OjUqEH8OfEVLpVgMoignNUPclGnc1jv58yxwcii6hxw1q99P7lqnv3byo3
-         BZEHn3Ez6uX2Xj0jEXooZxHh+VgMBClwRhP/CerNkO7CJDklcDqWO7/uwUR6n0CAN1Rr
-         Hudg==
-X-Forwarded-Encrypted: i=1; AJvYcCWPHPCNUBxuoIsUoe9Wm2vwlDBuBjK7KzvyTBmi54+o+n7EAgl78b4XMFoVJT0BlPPyvsnDIN5hZoF5rpWnqm6pO7gVSJO+G8ubwaYS
-X-Gm-Message-State: AOJu0YxiJSoByNpwGiL+R62lGJpLBR1crBJ+3QVqJXunPkdzG50twIMC
-	SpuS8jXN073Fu1R4BTKJTKkA5zqkD4+ZTHRtIs5DgCGogDgilxo=
-X-Google-Smtp-Source: AGHT+IEFpRRluIj/VNQ0ddoJrREHJO8NwODHJ49Yy8tONDulEsaSpT8rB/bDu00rmTtoMmv68HMUcg==
-X-Received: by 2002:adf:fdc6:0:b0:33c:f4fc:b91b with SMTP id i6-20020adffdc6000000b0033cf4fcb91bmr3185444wrs.52.1708064630631;
-        Thu, 15 Feb 2024 22:23:50 -0800 (PST)
-Received: from p183 ([46.53.248.67])
-        by smtp.gmail.com with ESMTPSA id bt21-20020a056000081500b0033d1f25b798sm567514wrb.82.2024.02.15.22.23.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Feb 2024 22:23:50 -0800 (PST)
-Date: Fri, 16 Feb 2024 09:23:48 +0300
-From: Alexey Dobriyan <adobriyan@gmail.com>
-To: Michal Wajdeczko <michal.wajdeczko@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-kernel@vger.kernel.org, Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Jani Nikula <jani.nikula@intel.com>
-Subject: Re: [RFC] include/linux/make_type.h: Helpers for making u16/u32/u64
- values
-Message-ID: <bfb4c75e-8031-4dde-b881-21bdb238b802@p183>
-References: <ffa107dd-23dd-47e0-b3bb-06c60ca3e2e2@p183>
- <Zcz5GmAtPbdInWJU@smile.fi.intel.com>
- <cee345b1-a5aa-41bb-acb7-9b2aaef5bfb5@p183>
- <53297b2e-b7ff-4b92-b937-116cadaf8b6d@intel.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DE6cs8R6"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41G6OXTK111902;
+	Fri, 16 Feb 2024 00:24:33 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1708064673;
+	bh=12nw2Brj6XluV4ZS8ekE7bWjOTcayhqSm+k5+LH/OD4=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=DE6cs8R6udxGVdqT78h/6UhnYiK3OXJg0upv4Ggl5yiGLdaH63Y13ylf1k0/kBSHE
+	 ajXDHsVSNeWRi/5cF/ll5CSd5Gm3uOzl37RU/+ZtvErpr/1/Q95MwwqX16mTPDpd2j
+	 1115VONNuvl5lGzeeRu2Q/5Xp9xha4C814TYT3KM=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41G6OXD3076377
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 16 Feb 2024 00:24:33 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 16
+ Feb 2024 00:24:33 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 16 Feb 2024 00:24:33 -0600
+Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41G6OWM1097196;
+	Fri, 16 Feb 2024 00:24:33 -0600
+From: Devarsh Thakkar <devarsht@ti.com>
+To: <jyri.sarha@iki.fi>, <tomi.valkeinen@ideasonboard.com>,
+        <airlied@gmail.com>, <daniel@ffwll.ch>,
+        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <tzimmermann@suse.de>, <robh@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>
+CC: <praneeth@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>,
+        <devarsht@ti.com>
+Subject: [PATCH v5 4/4] arm64: dts: ti: Add common1 register space for AM62A SoC
+Date: Fri, 16 Feb 2024 11:54:26 +0530
+Message-ID: <20240216062426.4170528-5-devarsht@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240216062426.4170528-1-devarsht@ti.com>
+References: <20240216062426.4170528-1-devarsht@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <53297b2e-b7ff-4b92-b937-116cadaf8b6d@intel.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Wed, Feb 14, 2024 at 06:55:38PM +0100, Michal Wajdeczko wrote:
-> 
-> 
-> On 14.02.2024 18:39, Alexey Dobriyan wrote:
-> > On Wed, Feb 14, 2024 at 07:32:10PM +0200, Andy Shevchenko wrote:
-> >> On Wed, Feb 14, 2024 at 08:20:55PM +0300, Alexey Dobriyan wrote:
-> 
-> ...
-> 
-> > 
-> > Thirdly, there were no users posted.
-> 
-> for make_u64() there is already one at [1]
-> [1]
-> https://elixir.bootlin.com/linux/v6.8-rc4/source/drivers/gpu/drm/xe/xe_gt_pagefault.c#L555
+This adds common1 register space for AM62A SoC which is using TI's Keystone
+display hardware and supporting it as described in
+Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
 
-OK, this one doesn't truncate too.
+Fixes: 3618811657b3 ("arm64: dts: ti: k3-am62a-main: Add node for Display SubSystem (DSS)")
+Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+---
+V1->V4 :
+- No change (this was part of "arm64: dts: ti: Add common1 register
+  space for AM62x, AM62A & AM65x SoCs )
 
-Honestly wordpath.h _sucks_ as a name.
+V5 :
+- Split this as a separate patch from "arm64: dts: ti: Add common1
+  register space for AM62x, AM62A & AM65x SoCs"
+- Remove Reviewed-By tag as this is split from older revision
+---
+ arch/arm64/boot/dts/ti/k3-am62a-main.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-I'd go with stdint.h, at least this name is known from userspace.
+diff --git a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
+index 2749533cf4fd..dbdd6bec4667 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
+@@ -994,9 +994,10 @@ dss: dss@30200000 {
+ 		      <0x00 0x30207000 0x00 0x1000>, /* ovr1 */
+ 		      <0x00 0x30208000 0x00 0x1000>, /* ovr2 */
+ 		      <0x00 0x3020a000 0x00 0x1000>, /* vp1: Tied OFF in the SoC */
+-		      <0x00 0x3020b000 0x00 0x1000>; /* vp2: Used as DPI Out */
++		      <0x00 0x3020b000 0x00 0x1000>, /* vp2: Used as DPI Out */
++		      <0x00 0x30201000 0x00 0x1000>; /* common1 */
+ 		reg-names = "common", "vidl1", "vid",
+-			    "ovr1", "ovr2", "vp1", "vp2";
++			    "ovr1", "ovr2", "vp1", "vp2", "common1";
+ 		power-domains = <&k3_pds 186 TI_SCI_PD_EXCLUSIVE>;
+ 		clocks = <&k3_clks 186 6>,
+ 			 <&k3_clks 186 0>,
+-- 
+2.34.1
+
