@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B8114AD33;
-	Fri, 16 Feb 2024 22:37:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376AF14F9D0;
+	Fri, 16 Feb 2024 22:37:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708123023; cv=none; b=pxiSCR4xn4JfVrLmvhfBEbMut0daA4OksYCpM16Azyl+OT7ZLz/D+ZJZfMkSB6sMn3ssIVVB1DSWUbIUBm0uPpavodjzXSf+h8EC2BqUypFxLPEUKadGDQIqya7dc+XYQHm1D2raTrmF3OvnEMmfunmcJweM36QkZyX7bNty8VU=
+	t=1708123026; cv=none; b=Bprgz6GWafVRglnMXzQDEe0q5AGqHymQoIiL/2j7ZCDBi8foTLZTA8AlwJ+/t7/ng8ccqPOsrpZuG0wFIokHFzpE6R5/oedqzFsbaEibO+ErrdVPVMjjNStfVtkoPXi6alDHaUV31Pw/9t7jX25QinU4JFgyzAVcEtgjbzsbgBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708123023; c=relaxed/simple;
-	bh=SAdPuLjhilobCNPcWWFQ6UbKmsBElzGTcLLtPhYgvDc=;
+	s=arc-20240116; t=1708123026; c=relaxed/simple;
+	bh=JzqwkQRLgk7k3EhjNENSRph/tpijOyPkAp/qgI/FbTw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RqT/hJhz00UbuEQW7X1ovVlHHQQ19Eu7+pEGTswKQzaXDn7VXNbY63wyoecDRSHXtuH3cZW43FE8/SKqGkL4KWRB4sEPeOBD1TwFCQSOe9TP6vZGDU91mm43YtaszluIx80b3xeyo+kB1sN9iKJ8t5pdpTcv7d7CZZRCus/BwEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wlk1/bAX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AH3GgmyyveSnrfuUZLXWcP5CIbU5zV8h8awhH/9N82Yd0A0Cpam5+N0Q4K08wZOkzhSoV8OaeB+uhRLVC8tyOADevR/eujrJ0jHOhEDV465t2dRnJke2f+tiU578+fhUSN5kIBt1tWOMGRM6dqUHf9lwN3c8k/Vji15jLvXE9Zs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cpf0ihhq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wlk1/bAX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76808C43330;
-	Fri, 16 Feb 2024 22:37:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cpf0ihhq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F6F8C43394;
+	Fri, 16 Feb 2024 22:37:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708123022;
-	bh=SAdPuLjhilobCNPcWWFQ6UbKmsBElzGTcLLtPhYgvDc=;
+	s=k20201202; t=1708123025;
+	bh=JzqwkQRLgk7k3EhjNENSRph/tpijOyPkAp/qgI/FbTw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Wlk1/bAXpFbe/BP4FrctXle6GHcBWa8dalqwsVEZohWx4qXCfdHMm2cgVsdYzSbRr
-	 h6sDz6F3yrrL1QM2qqqQsdJwkCZWZg/BLQrb5t7vMq2xu3pp4+7EJDBqY2y9wBN0kE
-	 9C2JNtlc10CPiTt70XBgiEcjMynVcVbsj1ObYB9rYrfjnmopPaN4T8+hS6zWsvpW9+
-	 d/OnfYz6lQqvvH6hG4BOuE07EnP/DN7xGYlLJi90l4iDShKuURFPctLgBlZODLVumc
-	 QDvQtSDItAlsOFTG0GTO53ckh3uieu/jbKcSoiaahMmODbChf6UEG22puU7A6POHBD
-	 cjeL7na3NZqHA==
+	b=cpf0ihhqBaUaKZ07WeiSCPM47kBjhAMQgJCpHLZ9rhjUDTBV6VtowPTO0pUbdEeul
+	 hJuq3UBxK7cSRkydkOexMZ9/aC6bK69eK0eILbfniBszT3zJCAtah0tZ5MGvmHHYXC
+	 bnYwrrSbGHcKUqmjKMWY5XErsxP7alzoEc9UfNMHe3BAJLbBEWShRIke7M6DpQmw1t
+	 lsegDz1nI0IGTbq9/Y0gr8b1eaqCKwyOl4g991v7UhUqz6oXIDRGrPJtY4ZfDi6OTp
+	 6+M4pNTQoAl6SX5npzFOlEd5RX9IDzfEvsQBLGaGtCaZzn7/ZFIee+nURADQrLtUyA
+	 5Q6NQ/pJXm9nQ==
 Received: by mercury (Postfix, from userid 1000)
-	id D22DE10633F2; Fri, 16 Feb 2024 23:36:56 +0100 (CET)
+	id DD78E10633F4; Fri, 16 Feb 2024 23:36:56 +0100 (CET)
 From: Sebastian Reichel <sre@kernel.org>
 To: Sebastian Reichel <sre@kernel.org>,
 	Rob Herring <robh+dt@kernel.org>,
@@ -44,10 +44,11 @@ Cc: Dong Aisheng <aisheng.dong@nxp.com>,
 	Mark Brown <broonie@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
 	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 13/16] ARM: dts: nxp: imx: fix weim node name
-Date: Fri, 16 Feb 2024 23:34:32 +0100
-Message-ID: <20240216223654.1312880-14-sre@kernel.org>
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v3 15/16] dt-bindings: arm: add UNI-T UTi260B
+Date: Fri, 16 Feb 2024 23:34:34 +0100
+Message-ID: <20240216223654.1312880-16-sre@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240216223654.1312880-1-sre@kernel.org>
 References: <20240216223654.1312880-1-sre@kernel.org>
@@ -59,139 +60,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-DT node names should be generic, so replace "weim" node name with
-"memory-controller" in all i.MX SoC DT files.
+Add compatible value for i.MX6ULL based UNI-T UTi260B thermal camera.
 
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Sebastian Reichel <sre@kernel.org>
 ---
- arch/arm/boot/dts/nxp/imx/imx1.dtsi    | 2 +-
- arch/arm/boot/dts/nxp/imx/imx27.dtsi   | 2 +-
- arch/arm/boot/dts/nxp/imx/imx31.dtsi   | 2 +-
- arch/arm/boot/dts/nxp/imx/imx35.dtsi   | 2 +-
- arch/arm/boot/dts/nxp/imx/imx51.dtsi   | 2 +-
- arch/arm/boot/dts/nxp/imx/imx6qdl.dtsi | 2 +-
- arch/arm/boot/dts/nxp/imx/imx6sl.dtsi  | 2 +-
- arch/arm/boot/dts/nxp/imx/imx6sx.dtsi  | 2 +-
- arch/arm/boot/dts/nxp/imx/imx6ul.dtsi  | 2 +-
- 9 files changed, 9 insertions(+), 9 deletions(-)
+ Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/nxp/imx/imx1.dtsi b/arch/arm/boot/dts/nxp/imx/imx1.dtsi
-index 1ac10965fdfd..389ecb1ebf8f 100644
---- a/arch/arm/boot/dts/nxp/imx/imx1.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx1.dtsi
-@@ -251,7 +251,7 @@ gpio4: gpio@21c300 {
- 			};
- 		};
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 228dcc5c7d6f..7b65f9c9c1a5 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -708,6 +708,7 @@ properties:
+               - toradex,colibri-imx6ull      # Colibri iMX6ULL Modules
+               - toradex,colibri-imx6ull-emmc # Colibri iMX6ULL 1GB (eMMC) Module
+               - toradex,colibri-imx6ull-wifi # Colibri iMX6ULL Wi-Fi / BT Modules
++              - uni-t,uti260b             # UNI-T UTi260B Thermal Camera
+           - const: fsl,imx6ull
  
--		weim: weim@220000 {
-+		weim: memory-controller@220000 {
- 			#address-cells = <2>;
- 			#size-cells = <1>;
- 			compatible = "fsl,imx1-weim";
-diff --git a/arch/arm/boot/dts/nxp/imx/imx27.dtsi b/arch/arm/boot/dts/nxp/imx/imx27.dtsi
-index ec472695c71e..ec3ccc8f4095 100644
---- a/arch/arm/boot/dts/nxp/imx/imx27.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx27.dtsi
-@@ -568,7 +568,7 @@ nfc: nand-controller@d8000000 {
- 			status = "disabled";
- 		};
- 
--		weim: weim@d8002000 {
-+		weim: memory-controller@d8002000 {
- 			#address-cells = <2>;
- 			#size-cells = <1>;
- 			compatible = "fsl,imx27-weim";
-diff --git a/arch/arm/boot/dts/nxp/imx/imx31.dtsi b/arch/arm/boot/dts/nxp/imx/imx31.dtsi
-index e1ae7c175f7d..00006c90d9a7 100644
---- a/arch/arm/boot/dts/nxp/imx/imx31.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx31.dtsi
-@@ -352,7 +352,7 @@ nfc: nand@b8000000 {
- 				status = "disabled";
- 			};
- 
--			weim: weim@b8002000 {
-+			weim: memory-controller@b8002000 {
- 				compatible = "fsl,imx31-weim", "fsl,imx27-weim";
- 				reg = <0xb8002000 0x1000>;
- 				clocks = <&clks 56>;
-diff --git a/arch/arm/boot/dts/nxp/imx/imx35.dtsi b/arch/arm/boot/dts/nxp/imx/imx35.dtsi
-index 2d20e5541acc..442dc15677b8 100644
---- a/arch/arm/boot/dts/nxp/imx/imx35.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx35.dtsi
-@@ -374,7 +374,7 @@ nfc: nand@bb000000 {
- 				status = "disabled";
- 			};
- 
--			weim: weim@b8002000 {
-+			weim: memory-controller@b8002000 {
- 				#address-cells = <2>;
- 				#size-cells = <1>;
- 				clocks = <&clks 0>;
-diff --git a/arch/arm/boot/dts/nxp/imx/imx51.dtsi b/arch/arm/boot/dts/nxp/imx/imx51.dtsi
-index c96d6311dfa7..4efce49022e4 100644
---- a/arch/arm/boot/dts/nxp/imx/imx51.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx51.dtsi
-@@ -578,7 +578,7 @@ m4if: m4if@83fd8000 {
- 				reg = <0x83fd8000 0x1000>;
- 			};
- 
--			weim: weim@83fda000 {
-+			weim: memory-controller@83fda000 {
- 				#address-cells = <2>;
- 				#size-cells = <1>;
- 				compatible = "fsl,imx51-weim";
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl.dtsi
-index 81142c523fa8..8431b8a994f4 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6qdl.dtsi
-@@ -1158,7 +1158,7 @@ mmdc1: memory-controller@21b4000 { /* MMDC1 */
- 				status = "disabled";
- 			};
- 
--			weim: weim@21b8000 {
-+			weim: memory-controller@21b8000 {
- 				#address-cells = <2>;
- 				#size-cells = <1>;
- 				compatible = "fsl,imx6q-weim";
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6sl.dtsi b/arch/arm/boot/dts/nxp/imx/imx6sl.dtsi
-index 28111efb19a6..6aa61235e39e 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6sl.dtsi
-@@ -949,7 +949,7 @@ rngb: rngb@21b4000 {
- 				clocks = <&clks IMX6SL_CLK_DUMMY>;
- 			};
- 
--			weim: weim@21b8000 {
-+			weim: memory-controller@21b8000 {
- 				#address-cells = <2>;
- 				#size-cells = <1>;
- 				reg = <0x021b8000 0x4000>;
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6sx.dtsi b/arch/arm/boot/dts/nxp/imx/imx6sx.dtsi
-index df3a375f0a3e..0de359d62a47 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6sx.dtsi
-@@ -1107,7 +1107,7 @@ fec2: ethernet@21b4000 {
- 				status = "disabled";
- 			};
- 
--			weim: weim@21b8000 {
-+			weim: memory-controller@21b8000 {
- 				#address-cells = <2>;
- 				#size-cells = <1>;
- 				compatible = "fsl,imx6sx-weim", "fsl,imx6q-weim";
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
-index 8aa365f837ca..aeb7e07fd309 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
-@@ -975,7 +975,7 @@ memory-controller@21b0000 {
- 				clocks = <&clks IMX6UL_CLK_MMDC_P0_IPG>;
- 			};
- 
--			weim: weim@21b8000 {
-+			weim: memory-controller@21b8000 {
- 				#address-cells = <2>;
- 				#size-cells = <1>;
- 				compatible = "fsl,imx6ul-weim", "fsl,imx6q-weim";
+       - description: i.MX6ULL Armadeus Systems OPOS6ULDev Board
 -- 
 2.43.0
 
