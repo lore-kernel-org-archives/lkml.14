@@ -1,225 +1,161 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2082.outbound.protection.outlook.com [40.107.237.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB7B0135A62
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 20:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708113716; cv=none; b=isEgENpT1jmhM1jthgFILpUiGPGJUSWm9QZdM5A5W+rYGlzjjWsulFBxOws3zZ/KQ0xDQ9K6ZdCCwNztRG+0LnZr7Qs2XKWX/A+/W7G0MCFOs+OhZ6MzWoUXs9DKEixSxAe17+q2hJ5mqWX/CzdnhLOQhx5fkU14KETm4Oyv8Eo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708113716; c=relaxed/simple;
-	bh=NuyAjhXJza4q0jRrAdQBVNUOFB0Q3GISFLDj6J9JQHo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=M3/Llo2daHptOGl0mpwPsVhaU42k7H2aeijzxunl8Y2xJcXB+1y6CjJBVBw/RSzi488rUXO6FT9kZY43Y6DUgU96QQjlA5zEbhjRvVSdk0QwBH3hWGxZjlqsv0ySU/KOJfpKnswqPxLA+K2qi1xNfkDuiHc5RJL8mEfi7WvNSUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dOExT7Gh; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9877A1353E4;
+	Fri, 16 Feb 2024 20:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708113846; cv=fail; b=gDDYnwIdKy8ZVtuQSXVzprVss8sOSsEwmStzkHUXY9VouAKvTzJmPyFUSiKW9vs/bhg0cmIdzHGh1Y9+zcjK7X21CshvCc4oHG97lMpUsC4U1iE9Unk6EpaezzCgIp5Nasqd3n9gem95RA2VQSkjEhoHwE1NazW4KFNKbFxhOyM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708113846; c=relaxed/simple;
+	bh=s5ghp3jSCzu0IR9QYDwda3Vlvkvw64yMH4ktT5pZPPM=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 Content-Type:MIME-Version; b=hl/LoS7rLLm8URtpsEVHLgtwwYHD2ExaxokUp8Pl5qlnExoBIYiUHABinu/2tZCzuqS7TXMBb5G7BCrpCBA+dzwqZX928B2p31OoiW4PoiNHPCDmELM9zls+U5HZE6AQPmI7s8sH2OpVxQmGqoJiyevk72Vwd80+DfH+ehHZsFg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=CJWXtv2b; arc=fail smtp.client-ip=40.107.237.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dOExT7Gh"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dcbfe1a42a4so5261039276.2
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 12:01:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708113714; x=1708718514; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hnC1Wqu1hjzO44T2i0P4fr+YtBb6/PxLiNAZpb948xQ=;
-        b=dOExT7GhJzeTmIik1aKj1ZwA/he4l/GYUS8mvocVlOoOQS4qYrTuY2zNH/aniNE4sV
-         0fIw88UltgPRCxzgBjWwDv7riekqZzIhGd4ePw2u72LEQ+wdnSYo5HXMsKGjrEsYnhMt
-         6785oyrINHNAhVKnA1TEDQtDiXRidj+Qzlg9DNni67ba/h/xX06RobHKt6k1mgOn/brw
-         NoZnLQOKO3SQbXDlk+nV1yBoPfPM7oH0eiL3KbievHnAmHyxJf/TWfecz2PX+lnQ5MKO
-         OtA5JdNwZINAFuoLaKqzK5x5XFyWUktR+uM1ApQ5JxR1jEKt1aagEM9uqyHsVxNcgxIp
-         7T7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708113714; x=1708718514;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hnC1Wqu1hjzO44T2i0P4fr+YtBb6/PxLiNAZpb948xQ=;
-        b=KeDP1+DkpwaQpSuflwuhFL79KA0UmtXdUkbKJBnG5qHMEfuyobm39pFKqopvOYPzJC
-         rjFhWBeB1BzljINYEWgX9nBlmbQID/6oCfuQlqjAek6F9ZaMiNeGgxlGXLORiqK9TBM0
-         0V4dUQ+U5F7APpFPYEnE4VJF1E4nALvETP1rl1Wbc24CVj39CZ4BWAvVj9lZ9hlUv5K2
-         LFpnRgnHT5cGjMfwYXqKXy56dS74ymNEyt5K7f3AnlopvCR/1af0Jp10gIGWMJgWdVdc
-         DDumDaSJgbqi5VE0lQiZQCyNtyKCiYogLFfARDzkkrXQEeQyIvT3PC7tw9PX3hDAvdMf
-         PLAA==
-X-Forwarded-Encrypted: i=1; AJvYcCWLj3jkfdZ0i0oeHK7N7Y7uSSaUC5Me9IV/B4QMugsL3esfb5OI+tYr0GBawS33UoSDBoA3ZGH/VRnmGkE71YDlPLfydRUwzqA+9A6T
-X-Gm-Message-State: AOJu0YwknlpqLY01l34AxuvyRYyLU2dZlvFnXCng+AX44mRN2IDoCzmq
-	321tLP68G104l4bcOHL+svganN5G8VW7KBicYMnGHgqYP+vhVf0ovf/Ezo+65RxKxdq/WM4lvjt
-	HytxOH00+ynyG7luGuw==
-X-Google-Smtp-Source: AGHT+IFsCdaVZr8ZBA4nJqkvY7/NE5G/bJ2OgSA7Qdq0i5ahbMzq/UWaYnaW84Y6C8WrjD7VtzJgJ7eIeU2LSu+N
-X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:29b4])
- (user=yosryahmed job=sendgmr) by 2002:a05:6902:1105:b0:dc6:d678:371d with
- SMTP id o5-20020a056902110500b00dc6d678371dmr1411009ybu.3.1708113713690; Fri,
- 16 Feb 2024 12:01:53 -0800 (PST)
-Date: Fri, 16 Feb 2024 20:01:51 +0000
-In-Reply-To: <CAGsJ_4zSDP_A32jUPrYPwZ=uwU4o0a6x-GW2HO3vu8yUh0qYjA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="CJWXtv2b"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Scp5Enqht/icmpZOotvRY7/I5jlQPBsjmrxudk6W+g8/BMn4E+nGCq27wdSjWj4Ah65aBdPZQgDQiMyPGD7OkXqggD1H1/dYHr+3jtcsDh1fOgnJncPlxPIrMrJwsMxL2ae+uNyQB+3KXbzyoZGYxUEMMXtHeLoOqbt3YbwIaEV3SghwNMK3CQMURSz2AdnjFKEnIGooNPe7XhmMFY54FsZ0JC41QS8qFNU5lfpLbunErfoiuCMOvkv5OxfsJMZEWIs2owMBTwmU7QFy/NQfgvIdzTMvjc13GXcWI6MB6zV16AtAoan5+opx2T51Alvr6+dH/fcCsFAFs1itZDR1Rw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=s5ghp3jSCzu0IR9QYDwda3Vlvkvw64yMH4ktT5pZPPM=;
+ b=b0jGrXbSMwqgFNedO95EdPcpbMAHECsOKXukQzCZHTPiXhCfxZU0U5rat5F4JhC13ou6OuFPAg1UyVa0xIB7RTpDpsa31Q25YXe2idoI9+LUtOl6ihnx54ZFP/vSsZNlip3/+4okoaXKEW/CRSiD8Q4RuOZ/WlwIb+j8CPinCF5HmqYL/WTyv8dMR6zLKOrm8b7QqGLkClOGL9cF0vbQeAbC67l7IXhbq/kcZxXQ/qrbIv1iLm0pcfoli04Yrh26n+xMQxuminKx4s8pYfV3A2fBX9BcDpMNQ0iHhb8sbntaLDPZEIoCdcskcgkb9ZcAM73Hoce5Nv9/w0w0rYnO3w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=s5ghp3jSCzu0IR9QYDwda3Vlvkvw64yMH4ktT5pZPPM=;
+ b=CJWXtv2bh/3O5glmwoMqFcyMdJfQF8L69FliI9BYRpzGYoHb5awF6LLEJeNZzjH8dVFTEkLx05LYUC7VwvkYmEK8QMKr988BYpItfjXYMtySqwj7PGfFP/J7I0oS7f6qb0vtOOBT3RTvBsNgiBSJxkrllOn7XDLBGYGeR3A0+FDdUUYeBZIvkdt0Fcd6AVt9bIa3JaJfnQDaPqtEje5SZZbThxUSLbFKQLoo42azszRTD9AGicx7med9olgPk5rWyMbebcsji3x/Q3fLhytlT2ZHgtAePgngW0XKcx7EHfNzmxwSfZlsfysbDZyFpEWAJXPTsDN3GQYJFpyPyqKvMg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BYAPR12MB2743.namprd12.prod.outlook.com (2603:10b6:a03:61::28)
+ by CY5PR12MB6453.namprd12.prod.outlook.com (2603:10b6:930:37::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.13; Fri, 16 Feb
+ 2024 20:04:01 +0000
+Received: from BYAPR12MB2743.namprd12.prod.outlook.com
+ ([fe80::d726:fa79:bfce:f670]) by BYAPR12MB2743.namprd12.prod.outlook.com
+ ([fe80::d726:fa79:bfce:f670%7]) with mapi id 15.20.7316.012; Fri, 16 Feb 2024
+ 20:04:01 +0000
+References: <20240216-feature_ptp_netnext-v8-0-510f42f444fb@bootlin.com>
+ <20240216-feature_ptp_netnext-v8-10-510f42f444fb@bootlin.com>
+User-agent: mu4e 1.10.8; emacs 28.2
+From: Rahul Rameshbabu <rrameshbabu@nvidia.com>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>, Broadcom internal
+ kernel review list <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn
+ <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Richard Cochran <richardcochran@gmail.com>,
+ Radu Pirea <radu-nicolae.pirea@oss.nxp.com>, Jay Vosburgh
+ <j.vosburgh@gmail.com>, Andy Gospodarek <andy@greyhouse.net>, Nicolas
+ Ferre <nicolas.ferre@microchip.com>, Claudiu Beznea
+ <claudiu.beznea@tuxon.dev>, Willem de Bruijn
+ <willemdebruijn.kernel@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+ Horatiu Vultur <horatiu.vultur@microchip.com>,
+ UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>, Vladimir
+ Oltean <vladimir.oltean@nxp.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Maxime Chevallier
+ <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH RFC net-next v8 10/13] net: netdevsim: ptp_mock: Convert
+ to netdev_ptp_clock_register
+Date: Fri, 16 Feb 2024 11:48:30 -0800
+In-reply-to: <20240216-feature_ptp_netnext-v8-10-510f42f444fb@bootlin.com>
+Message-ID: <871q9cgor3.fsf@nvidia.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR03CA0018.namprd03.prod.outlook.com
+ (2603:10b6:a03:33a::23) To BYAPR12MB2743.namprd12.prod.outlook.com
+ (2603:10b6:a03:61::28)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240216030539.110404-1-21cnbao@gmail.com> <Zc8bjZFZAZneObQG@google.com>
- <b717ae0c-ed4f-4ebc-90cf-51a8da0a6583@bytedance.com> <CAGsJ_4zSDP_A32jUPrYPwZ=uwU4o0a6x-GW2HO3vu8yUh0qYjA@mail.gmail.com>
-Message-ID: <Zc-_L70_b6Dw1BQa@google.com>
-Subject: Re: [PATCH] mm: zswap: increase reject_compress_poor but not
- reject_compress_fail if compression returns ENOSPC
-From: Yosry Ahmed <yosryahmed@google.com>
-To: Barry Song <21cnbao@gmail.com>
-Cc: Chengming Zhou <zhouchengming@bytedance.com>, akpm@linux-foundation.org, 
-	hannes@cmpxchg.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Barry Song <v-songbaohua@oppo.com>, Nhat Pham <nphamcs@gmail.com>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2743:EE_|CY5PR12MB6453:EE_
+X-MS-Office365-Filtering-Correlation-Id: eef35c70-da02-4db7-9010-08dc2f2a6ae9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	sgCKktBmgB6OwyGYmYx19XODkAzKF4wdsImWkmuxaFaGUxxhdPeT92T6eou/Lpneh1zukR6nXSVhqSdQcdLM2U5IXQ1S486KXQR6FBBQhRxoYKUI8/V5NP0llHVS+LI9Cvhh0y4VhSGcPfbhA6NCOyJTLQhcHp/3HLgZdaPUhGU4+4iVKG7quZ7KwEIVwGFto9WWuUOvpC+HHu0Ltni1UI8UnlShwR6/mPccapI6qlYh6AaD/GTUb0TZZl90Iw1EWvGhr1XwbdlO/SYg/SwTx52vdfx3bUlTCmXkc8Yg7H7ueTQ4yuRWOCzG/BOhnXNkg785m1zzmsMdLOKg/KvRextdywrdxzTMI/VrJsWBegsdd8/EuCg3g8Mb6u0FkxaZ+hzzqrh0hXg2e0OnaEd7ARb/WaF7xmNkq3MH6JfTpkS+neUsMaUvH/vDqpRwRt7ciP8sprjw6KJi6CLVgEqqFHiAmuPo5JqrprVsbFDNTAQM0tRM8ur2UNygCtXeQT6PILy4IW0wvJdcEiPzqtOC+6xiO+RAVOXLyXXJoYvt+q7xu6QE/T8eB9OrZNznl/p1
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2743.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(396003)(376002)(39860400002)(366004)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(2906002)(7416002)(6666004)(26005)(6512007)(8936002)(36756003)(6506007)(6486002)(478600001)(38100700002)(2616005)(83380400001)(4326008)(8676002)(66946007)(66476007)(86362001)(66556008)(5660300002)(54906003)(316002)(6916009)(41300700001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?LDALfNHR+QP6XMJV/C0JPjaJY15FrZGJY1rlucq/jCryYXFN7JTZcsG6M/rB?=
+ =?us-ascii?Q?kFMeKTUySaV6W8hbEXOD4f5t2o+wvNqL+8S/dAUp1vmHGJ+ej4Mh9WWKdcNr?=
+ =?us-ascii?Q?s7AFtO1oWR+o28wR2dVtjUOueNGLPucM3nqZu6n+5/XdzDIoJURTmW4N7a8f?=
+ =?us-ascii?Q?WCDwL46I0RwTFmszX4Tb/gCdpach7BX/q3k4iJPdvmL03QxQwLbsaXeny/m2?=
+ =?us-ascii?Q?9Se5apMYVTghxon60BOyoEhHZ/Oet6/67f6agPBJv+isMhZYyCmh/9irvXFY?=
+ =?us-ascii?Q?rKd4jxgS+jmho+M6DPml+iGTLJr/TntY8SGhX14v1nquqC/X4HxtxmltjhYJ?=
+ =?us-ascii?Q?QONgyVjn4LP7T5MdGAprDYnuIEp7UtlnH9TdP8LIMKBEKyATQIy/KBQtSuqw?=
+ =?us-ascii?Q?CBJEgckW//z9vMrFOA+HSxzpCfXKlRgnj9ZmCT4J7i9RTuqx0cvbvSjxEFyh?=
+ =?us-ascii?Q?WY48cPkaa8MSmTmaT7XNKP0GGAfx4WQhnUqFyqexP9mVdNod0RjlKIJ7UTz/?=
+ =?us-ascii?Q?ZTYQmCLHMT/kBRyho2QdlSv5K49don1o55ARtoUhgykqka/EHU5fkmnKRRAC?=
+ =?us-ascii?Q?9Bdd2Y1IkqYXeHgE4Pf02iLQdzrZF50x0hG68IU2loxiMJyDiMPL7HEp1SJm?=
+ =?us-ascii?Q?0oLe4iriw4DiKxazzOC5Tm0s/wC8u0EdkuFpRCwFD0VEiJaeZy65sevtkeoV?=
+ =?us-ascii?Q?dsWFZHwATZo4tqcEvB/AcysHc31xdt5JAIrULGuxPBmFokMidCT/PH/cqqHc?=
+ =?us-ascii?Q?zUrFkuhpo28Xa0rBBOr0Ok5L/v1ztq+BfSWcczOzIiYPFo3XWbwh5OtKwta7?=
+ =?us-ascii?Q?/Bw6FakL0vETnZMOp/pYfb0Eiy6mL+9NTmkpxElb/uC36rqGruDjS5OG1QHi?=
+ =?us-ascii?Q?45gp7QauXshjwiPz4m0Pr1q3tAMsaNjQL3r5HanlEj7qMQBqBayfTuddpi5U?=
+ =?us-ascii?Q?sEhZipGV9tuqqBdB7UmAikz/DeG3JjZJjsFlMZvaKcL2hymybGqKKHzuqjd4?=
+ =?us-ascii?Q?tzo9UOxjSUuDzJVD6hSX7NXvHh5FjRN3C1pxMI6VryA0KQBa/GOtKOhHdV4V?=
+ =?us-ascii?Q?iXAPirE/mE/OioxXNtdrfjnivD50gaBXwfyN0gvRxnX0yNjA8NkIfNFI42bq?=
+ =?us-ascii?Q?W/vxY3Cit5tpiN3JAzs/OclRUhIfVFT0wFcwNu+5yHMkuvjkRGtVoBXoLA87?=
+ =?us-ascii?Q?FbQ5EAexZP9GD53cxZlUXvjZ3S7PaCcPORxYwWL+Nrgr151JTLEnJsUwT8dU?=
+ =?us-ascii?Q?WmNUISz2FW7ziWIj2bqq6uIpz6w3sp+QCHn7HrJ8d3O/rsWvWSaLaY/iPyJn?=
+ =?us-ascii?Q?sLskf7nsicf8uzzw9nIdW/M7TULmpV9nEjeAgwSfsua9ABXQUJQK+2N+faYy?=
+ =?us-ascii?Q?23iFqa7peXs2LolEL/kU61an34YEQ/sBWycoDECfUXLqtjEc8jkN6IhiQ/SW?=
+ =?us-ascii?Q?AtL7cf1zkHQ31Mu+Ju0KywmNmEEfbBlT3I0dyI4+i2xmp6fl52bC5muOG1Wp?=
+ =?us-ascii?Q?NlVs2nVaCeMINyHsxYtx8ZOorfdsQedtCXcsYBRFR0RA/jFwTQcw9P5LuD2g?=
+ =?us-ascii?Q?2O1bgcFSCaQMVRyjHDNxsCgFigQGtlJoMfVjebYDTJDsD3asQACBZ7vju5/x?=
+ =?us-ascii?Q?Rw=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eef35c70-da02-4db7-9010-08dc2f2a6ae9
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2743.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2024 20:04:00.9837
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Akat9Y/cG+SiSkWGteXfjIH40RyATGXEt5UocBWrE8zO8V1fDWicU9wHobuHCCN+lxu/+yzkIMZZnOQJ7ukwrA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6453
 
-> > >> diff --git a/mm/zswap.c b/mm/zswap.c
-> > >> index 6319d2281020..9a21dbe8c056 100644
-> > >> --- a/mm/zswap.c
-> > >> +++ b/mm/zswap.c
-> > >> @@ -1627,7 +1627,10 @@ bool zswap_store(struct folio *folio)
-> > >>      dlen = acomp_ctx->req->dlen;
-> > >>
-> > >>      if (ret) {
-> > >> -            zswap_reject_compress_fail++;
-> > >> +            if (ret == -ENOSPC)
-> > >> +                    zswap_reject_compress_poor++;
-> > >> +            else
-> > >> +                    zswap_reject_compress_fail++;
-> > >
-> > > With this diff, we have four locations in zswap_store() where we
-> > > increment zswap_reject_compress_{poor/fail}.
-> > >
-> > > How about the following instead?A
-> > >
-> > > diff --git a/mm/zswap.c b/mm/zswap.c
-> > > index 62fe307521c93..3a7e8ba7f6116 100644
-> > > --- a/mm/zswap.c
-> > > +++ b/mm/zswap.c
-> > > @@ -1059,24 +1059,16 @@ static bool zswap_compress(struct folio *folio, struct zswap_entry *entry)
-> > >        */
-> > >       ret = crypto_wait_req(crypto_acomp_compress(acomp_ctx->req), &acomp_ctx->wait);
-> > >       dlen = acomp_ctx->req->dlen;
-> > > -     if (ret) {
-> > > -             zswap_reject_compress_fail++;
-> > > +     if (ret)
-> > >               goto unlock;
-> > > -     }
-> > >
-> > >       zpool = zswap_find_zpool(entry);
-> > >       gfp = __GFP_NORETRY | __GFP_NOWARN | __GFP_KSWAPD_RECLAIM;
-> > >       if (zpool_malloc_support_movable(zpool))
-> > >               gfp |= __GFP_HIGHMEM | __GFP_MOVABLE;
-> > >       ret = zpool_malloc(zpool, dlen, gfp, &handle);
-> > > -     if (ret == -ENOSPC) {
-> > > -             zswap_reject_compress_poor++;
-> > > -             goto unlock;
-> > > -     }
-> > > -     if (ret) {
-> > > -             zswap_reject_alloc_fail++;
-> > > +     if (ret)
-> > >               goto unlock;
-> > > -     }
-> > >
-> > >       buf = zpool_map_handle(zpool, handle, ZPOOL_MM_WO);
-> > >       memcpy(buf, dst, dlen);
-> > > @@ -1086,6 +1078,10 @@ static bool zswap_compress(struct folio *folio, struct zswap_entry *entry)
-> > >       entry->length = dlen;
-> > >
-> > >  unlock:
-> > > +     if (ret == -ENOSPC)
-> > > +             zswap_reject_compress_poor++;
-> > > +     else if (ret)
-> > > +             zswap_reject_alloc_fail++;
-> >
-> > Here have two cases: zswap_reject_compress_fail, zswap_reject_alloc_fail.
+On Fri, 16 Feb, 2024 16:52:28 +0100 Kory Maincent <kory.maincent@bootlin.com> wrote:
+> The hardware registration clock for net device is now using
+> netdev_ptp_clock_register to save the net_device pointer within the PTP
+> clock xarray. netdevsim is registering its ptp through the mock driver.
+> It is the only driver using the mock driver to register a ptp clock.
+> Convert the mock driver to the new API.
+>
+> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+> ---
+> Shouldn't we move the mock driver in the netdevsim directory as it is only
+> used by netdevsim driver?
 
-Ah brain fart, sorry.
+This gets interesting. I think the reason it live under drivers/ptp
+rather than drivers/net/netdevsim is because a bunch of reference/simple
+phc implementations live under drivers/ptp already. In the case of mlx5,
+it lives under the mlx5 driver directory to avoid needing to export
+symbols between some mlx5_ptp driver and the netdev driver. I think
+since the mock-up driver makes for a good reference for developers
+wanting to know what it would take to implement the functionality for a
+phc, it is fine living under drivers/ptp. That is just my opinion
+though.
 
-> 
-> Is it safe to differentiate these two cases by checking ret == -ENOMEM ?
-> otherwise, it seems the original patch still makes more sense?
+>
+> Changes in v8:
+> - New patch
+> ---
 
-I don't think it is in all cases, some allocators return other error
-codes. It seems unlikely that we'll get any of them, but it can be
-missed in the future. How about we use different return codes to
-differentiate failures, and still centralize the counters handling.
-
-Something like the following (ideally that one is not a brain fart):
-
-diff --git a/mm/zswap.c b/mm/zswap.c
-index 62fe307521c93..20ba25b7601a7 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -1021,12 +1021,12 @@ static bool zswap_compress(struct folio *folio, struct zswap_entry *entry)
- {
- 	struct crypto_acomp_ctx *acomp_ctx;
- 	struct scatterlist input, output;
-+	int comp_ret = 0, alloc_ret = 0;
- 	unsigned int dlen = PAGE_SIZE;
- 	unsigned long handle;
- 	struct zpool *zpool;
- 	char *buf;
- 	gfp_t gfp;
--	int ret;
- 	u8 *dst;
-
- 	acomp_ctx = raw_cpu_ptr(entry->pool->acomp_ctx);
-@@ -1057,26 +1057,18 @@ static bool zswap_compress(struct folio *folio, struct zswap_entry *entry)
- 	 * but in different threads running on different cpu, we have different
- 	 * acomp instance, so multiple threads can do (de)compression in parallel.
- 	 */
--	ret = crypto_wait_req(crypto_acomp_compress(acomp_ctx->req), &acomp_ctx->wait);
-+	comp_ret = crypto_wait_req(crypto_acomp_compress(acomp_ctx->req), &acomp_ctx->wait);
- 	dlen = acomp_ctx->req->dlen;
--	if (ret) {
--		zswap_reject_compress_fail++;
-+	if (comp_ret)
- 		goto unlock;
--	}
-
- 	zpool = zswap_find_zpool(entry);
- 	gfp = __GFP_NORETRY | __GFP_NOWARN | __GFP_KSWAPD_RECLAIM;
- 	if (zpool_malloc_support_movable(zpool))
- 		gfp |= __GFP_HIGHMEM | __GFP_MOVABLE;
--	ret = zpool_malloc(zpool, dlen, gfp, &handle);
--	if (ret == -ENOSPC) {
--		zswap_reject_compress_poor++;
--		goto unlock;
--	}
--	if (ret) {
--		zswap_reject_alloc_fail++;
-+	alloc_ret = zpool_malloc(zpool, dlen, gfp, &handle);
-+	if (alloc_ret)
- 		goto unlock;
--	}
-
- 	buf = zpool_map_handle(zpool, handle, ZPOOL_MM_WO);
- 	memcpy(buf, dst, dlen);
-@@ -1086,6 +1078,13 @@ static bool zswap_compress(struct folio *folio, struct zswap_entry *entry)
- 	entry->length = dlen;
-
- unlock:
-+	if (comp_ret == -ENOSPC || alloc_ret == -ENOSPC)
-+		zswap_reject_compress_poor++;
-+	else if (comp_ret)
-+		zswap_reject_compress_fail++;
-+	else if (alloc_ret)
-+		zswap_reject_alloc_fail++;
-+
- 	mutex_unlock(&acomp_ctx->mutex);
- 	return ret == 0;
- }
-
-> 
-> >
-> > >       mutex_unlock(&acomp_ctx->mutex);
-> > >       return ret == 0;
-> > >  }
-> > >
-> > >>              goto put_dstmem;
-> > >>      }
-> > >>
-> > >> --
-> > >> 2.34.1
-> > >>
-> 
-> Thanks
-> Barry
+Reviewed-by: Rahul Rameshbabu <rrameshbabu@nvidia.com>
