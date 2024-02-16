@@ -1,73 +1,71 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C2217BC4
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 23:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9E917BC4;
+	Fri, 16 Feb 2024 23:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708125552; cv=none; b=PDRQR99/0LQJvkxnn+Ih1uCqtQEHUubBmWB74wsTaMojwhWOIMRck3RYWy60WFGdCZMIIckM0gev0DgoxuED+UcTNi/6GxL2MvunMTUHtno4F1jHbddzaDcgTiQBVgIv9U5oL2uqT8SeaQiHt3qEI+INkhrB6P2Fe+1v5uwXAEQ=
+	t=1708125583; cv=none; b=Iu16qJc3ALbFOx+6GL5lKkwk2/u5s+a0ebxjFkT+2gQTOCBdR24DAvoggrsI4p1D2ZdC5E36loMgskmefXqCO8wakPlwjoBGv3qCzlIjVTZm0O9L3DUvN9dsd1EFrLyrnZXShZMcHI31BXzE1Zz2FnQvapwTU56ip+4TmLFsdFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708125552; c=relaxed/simple;
-	bh=+0tVT7b1fxqTxgx0N4I95PE69+poGgPKlWQA0oDaDX8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TH0iIVhiqDuSy460Zta7aG0sv3Ov7cdTZmJ4cLV1XXimqR+FmJfyjCqZTjb3O5svmdI6oNvRzc0ASGdMf/Lww37yBgHEaMU3B/d8BXcwww+CXoxbwwsLRBQ2HHozuUD2fd7k8QPfVr7AF9tZUqwVG8OT8Bmr+igwOhtZ2ea38b4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SRGQ6I5N; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1708125583; c=relaxed/simple;
+	bh=fjIU+zlerVHYuBNajmsFB5i5JeZP6npjq7DiluzmWi4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VLHe3dCJ1EOMMYxr0v/tmQ7ILc4c/NdilP/zsoW1P77Tz91kXhncc1dA7JBiUVOWa3R3MGJtcv0dHm7o2rN41hukawzRCuyiLJoYoW1JdvCWRX4uqWVj2WSifnOPLOevs9O0+8zRNqbI6iF+zrdnmWWpfWscRFmlf0dPmFhPu1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HUJHhpa+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SRGQ6I5N"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=GHk08+9Qr2abvfFoZHWP0gAwqgSKn3bFiclZzT/m3D8=; b=SRGQ6I5N1G03NQ6vP4wxMnClZn
-	THcmHjIQNAwBdcbLWQGtRr+3kCticVuyeY3k/kKPNGY1NKj4FUwb3Ly9NEWBKOYBdR7Bkg6Zbwpqg
-	VxkTGowlfryva2I7GeU45K0oJAhFMv+MoEVs5k07IxrGijqOgelK6w1rhaI/5WlP7Xmpxt9p6Q/7a
-	jVHV3Q7BpwI1FWnMNdNDLM56KDOaFEht0IQQAQTxKSeXdfwoCU/QOetet+MvssFKs2XgYYmBp0pg9
-	4PKK2ubTgI9DmkbjfHTvkoVe09IKsCyDGpWnf/1NrpNBmAZBOQSB9PUymTs0WAJ8+2SEqBhBoYzes
-	P0Do0m1Q==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rb7U1-00000005uni-0Zym;
-	Fri, 16 Feb 2024 23:19:05 +0000
-Date: Fri, 16 Feb 2024 23:19:05 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Sidhartha Kumar <sidhartha.kumar@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	akpm@linux-foundation.org, apopple@nvidia.com
-Subject: Re: [PATCH v2 4/6] mm/migrate_device: convert
- __migrate_device_pages() to folios
-Message-ID: <Zc_taXK-X-NYPQli@casper.infradead.org>
-References: <20240216211320.222431-1-sidhartha.kumar@oracle.com>
- <20240216211320.222431-4-sidhartha.kumar@oracle.com>
- <Zc_Z1PT20tNlsiFf@casper.infradead.org>
- <71db0ad0-a385-8572-7bea-bb11f76a6345@oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HUJHhpa+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24CA6C433C7;
+	Fri, 16 Feb 2024 23:19:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708125583;
+	bh=fjIU+zlerVHYuBNajmsFB5i5JeZP6npjq7DiluzmWi4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=HUJHhpa+/5ES23IPLNXuLICqnvj24ym/TrQipfIMGXStHNyDmpPkSipqhDBaHQRJI
+	 f33NT1pWQtJSSFCphWV2AtQlGhoDQ1x6FRTno6jFWS3/M6K2ttLhSXDFDS2o8nXcWT
+	 mC+3gB7ix6M6GyXPXInd6D31MEsg3D+rCSHRdNSLDkTTOWpyHliy/JOVQ1upCMz7v5
+	 Idm8Add7cZKe6sRT8EEX24lM5rDUl/WdHlC0A7chzs88Un1xgm6ocbAEhIwJ6odOEP
+	 dOKFGw6CHgEtJjznqgUN9TWHHd3Rbnb69nsK25x4QqjhZe2mquzoQasC/9c16FgI7J
+	 7KW+BCEhOBgrA==
+From: Bjorn Andersson <andersson@kernel.org>
+To: konrad.dybcio@linaro.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	linux-arm-sm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Viken Dadhaniya <quic_vdadhani@quicinc.com>
+Cc: quic_msavaliy@quicinc.com,
+	quic_vtanuku@quicinc.com,
+	quic_cchiluve@quicinc.com,
+	quic_anupkulk@quicinc.com
+Subject: Re: [PATCH v3] arm64: dts: qcom: sc7280: add slimbus DT node
+Date: Fri, 16 Feb 2024 17:19:40 -0600
+Message-ID: <170812557757.19212.2528185580656595315.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240215090910.30021-1-quic_vdadhani@quicinc.com>
+References: <20240215090910.30021-1-quic_vdadhani@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <71db0ad0-a385-8572-7bea-bb11f76a6345@oracle.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 16, 2024 at 02:00:31PM -0800, Sidhartha Kumar wrote:
-> On 2/16/24 1:55 PM, Matthew Wilcox wrote:
-> > On Fri, Feb 16, 2024 at 01:13:18PM -0800, Sidhartha Kumar wrote:
-> > > Use migrate_pfn_to_folio() so we can work with folios directly in
-> > > __migrate_device_pages().
-> > 
-> > i don't understand why this would be correct if we have multipage
-> > folios.
-> > 
+
+On Thu, 15 Feb 2024 14:39:10 +0530, Viken Dadhaniya wrote:
+> Populate the DTSI node for slimbus instance to be
+> used by bluetooth FM audio case.
 > 
-> Alistair mentioned that he is working on order > 0 device page support so I
-> was under the impression that currently device pages are only order 0.
+> 
 
-That might well be true, but I'm *very* uncomfortable with doing a folio
-conversion in core MM that won't work with large folios.  We need to
-consider what will happen with large device folios.
+Applied, thanks!
 
-(for filesystems, I am less bothered.  Individual filesystems control
-whether they see large folios or not, and for lesser filesystems it may
-never be worth converting them to support large folios)
+[1/1] arm64: dts: qcom: sc7280: add slimbus DT node
+      commit: 498006fd49c2d8b09c1eb55120667812d3b8f313
+
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
