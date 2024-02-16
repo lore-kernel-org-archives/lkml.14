@@ -1,196 +1,146 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37DFA12EBE9
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 14:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0992312C812
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 14:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708094795; cv=none; b=l/OUNMzcCpvybpL+FRWb7ro3+6TWxGjANd9R3oVl0NLhqcVVXCqkZMF2NcTrabltzp3h/rrbKtWFGCkY+EDqVJQiYgcFEXkK4V32iVZWS2zSaL0iK91ZURHnGISUF6oEsVv0SPJM7qQ8aynyW8C0qZALnuagLbBdmrn+4/biJiY=
+	t=1708094882; cv=none; b=hY4fQV6naet7RarDTPXnUekRPjJOlYP1Ab5erPMvceJy6rbYpKccJuTRiF7g/F1MRPDeBZ7VEVXpVmRwG6561ITQnPhC8+QS6BS0K7zVjHaKwlNNwO18ujul55dD1l8NnzVIqMzvpOG5oTxWltvCAI6yVtSbiyTkFHlp+bai5hY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708094795; c=relaxed/simple;
-	bh=kQgCQV2ejZAgL1RDEszT7XD1VAdbi09GHQNIRR3CH2Q=;
-	h=From:References:MIME-Version:In-Reply-To:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cCAEd3sipr2T8FnN5sxrZjkBV47MJSOVAU4srkBWvsTTF7XsJAdpv2l2A23KmGNBV+NgNNQQd3pIeyNwFtznzYYgB1F7fp92jJmv18R7Ekzm2iluhZwOi4eHdAxAf2owdym4aK7XGMvxfeI7NTIWaR9zU9YvEyqhwqiXbVNknLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LLIJr1KR; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708094882; c=relaxed/simple;
+	bh=lZmHjqtF/2UNAgt4ejNsB9asktrwsrIKoHWPhPxN+yQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=chEmA0U5REWJBW26O7bawMhkwxEaAdBvvv/IBbLT12MvCcQmSTo9uYJRfW+dJCenUxKFoiWDbE+GVFIGiICzAUYsw4gtNIfG6Oio36F2lU3ITQNrENofX4O//Xb481EJXZZmM8/cE0UvbxCxaikCWIqgDbBPs4Utcv8TLmwMQAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FqTA0YyX; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LLIJr1KR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708094792;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kQgCQV2ejZAgL1RDEszT7XD1VAdbi09GHQNIRR3CH2Q=;
-	b=LLIJr1KRU4/Cj5vi/mXAw/1u8s0a1tNMd1A0eUF98tvnsFycf4jc9abcBLJmk0pVxIBhm+
-	TiBdxeIodPwkppA8pYjXv/5ssqU6kqaiPV9zHvV2Y6MlRf4U2YBY1eN5jzHsDlBXkoYSYC
-	rpBHVdvlljtJ4jBVv1r6kZwKAYRxnWc=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-434-D98pZApUNg-B7XzCfL6qLA-1; Fri, 16 Feb 2024 09:46:30 -0500
-X-MC-Unique: D98pZApUNg-B7XzCfL6qLA-1
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-56261857d31so1170327a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 06:46:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FqTA0YyX"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a3dfb2e03e7so40145866b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 06:48:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708094879; x=1708699679; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lZmHjqtF/2UNAgt4ejNsB9asktrwsrIKoHWPhPxN+yQ=;
+        b=FqTA0YyXJf2+q95osnaIshR7zoH2YMbUWYOASaU7RuZAkowsbG5jEerfFa7Ec5+/B5
+         OJhlLS5uBsLlFhrbh2VflPHsbPXnZQnfaq8xED66mlPA3mNFUojjQYloooEGJtX3agt6
+         /t6LXl7AN2czzx54+YQaf4Tmxqh3CvuZjZBw5Fr0qF8tLfAbfwdwiGvmE17dpInNFZiW
+         ZeI373iyy4wbNqoP/CEz02DWzWg5AxsxVTx+BPpBPD9MqhD65J4WsMJcu6XTclfim0+x
+         G/LhInPoksV9WyemVU1uapd7v1xQ+Z++zvLAh38/nNu3gmrG2jFsDYWM9/lJm8yQKHhN
+         d4+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708094789; x=1708699589;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:in-reply-to
-         :mime-version:references:from:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=kQgCQV2ejZAgL1RDEszT7XD1VAdbi09GHQNIRR3CH2Q=;
-        b=fHxod7zW86+06cWMzvSH7+rglgmqcUEK29Z2+Z2Ivjgp9FR94qle+rBfxveqKI7ni6
-         s+yBZ8PM+qrShxN4TN6oTs1bQgKK8ztupfjMEIyth5MkdRyGX/v/86ZUbrwEhr5DFEcG
-         Jm3oB49ljyZpqed7rgYR0vIvVmgiSItBbUSGoLyfAf1qSJhkqpAh3WqfFSgi09+CoFtb
-         f2tTSWMB47zG4p7ObdPINrM11h198VDeTI/vwsqK0sSJeDTXIiXo5+SyTToAhuwimCsi
-         pXleFJTL6434aPJVDpV3D6l40Z3ULeVZkoluuq1lFahBE7lqXUGbOQ+mHZR16CqAWgTc
-         la4w==
-X-Forwarded-Encrypted: i=1; AJvYcCU6pM+sOmuke/xNL9gsuiuoqqLqduBYKgpkET4N3ZTWE1TVino2SLKiFUWZTqTxS6s+DtqYzi441Qywc1DoSGbn+8K3asE09cwYiuez
-X-Gm-Message-State: AOJu0YwrQv9TfDDk6VJBgvAAUTN1vdE6aGXB0Zjs1BOyJ8pEt/CtyGF9
-	DtA3xrKwXgbbB/3jDumwK8bSqScDspr0F8CsW69ZI1ICkOESJubxiQG6uoDoWEqCzot0nJG55Ju
-	/mAhMibBoKiQIp8pbkJNh41i32vjLQ74qGpY/2+6ttK/tm6Kxm5cx40x5XihFU06KDbu0HCuKo/
-	yg4ZIRaAGIPMME1fM3X8bKFQuqin/QE8exq5gYap8cGfod
-X-Received: by 2002:aa7:c253:0:b0:562:12bf:eb04 with SMTP id y19-20020aa7c253000000b0056212bfeb04mr3657583edo.33.1708094789173;
-        Fri, 16 Feb 2024 06:46:29 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGtK6bnEwYShnAs2Wl18PE46X0x60j4EBbLcBRxntyiGnk+nOVjkJMoo4M9O7EbXMwbiHFJNWEF2kJQPYbA++A=
-X-Received: by 2002:aa7:c253:0:b0:562:12bf:eb04 with SMTP id
- y19-20020aa7c253000000b0056212bfeb04mr3657567edo.33.1708094788806; Fri, 16
- Feb 2024 06:46:28 -0800 (PST)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 16 Feb 2024 06:46:27 -0800
-From: Marcelo Ricardo Leitner <mleitner@redhat.com>
-References: <20240215160458.1727237-1-ast@fiberby.net> <CALnP8ZZYftDYCVFQ18a8+GN8-n_YsWkXOWeCVAoVZFfjLezK2Q@mail.gmail.com>
- <110f8523-4d61-4a1d-ae18-480d89e3c930@fiberby.net>
+        d=1e100.net; s=20230601; t=1708094879; x=1708699679;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lZmHjqtF/2UNAgt4ejNsB9asktrwsrIKoHWPhPxN+yQ=;
+        b=TTBvqO/GPFZJm/urDi9PhnLlUOr4TfGhHJG5xu93dLUwE14W0jizsRf2V3rQrCvKj9
+         mioMryQ96zzivpEGnV5/nHHBTasV78ed94hzWJggLQ+yOye1mMBl0c2PSHSqfQ02diOm
+         t1dMzhDanLvZylKD6eiBfO+OyoTLORizLb9jt5ML0g4YjMTIjJgt7v+lSenKxnRw06J9
+         rR2/tDZkUkO8+ck4PikLSm664LzSUMxjvjqw25qyEZNzYpMtqpVQ0iHVB04t3KCkA5mG
+         +EqDEm3VXMroBY3nPDnoKvXO3H/BtFe6ZwIjlUIAnP6djuvEWYnjEAWyf6wPEy2vBpnp
+         Bdbw==
+X-Forwarded-Encrypted: i=1; AJvYcCXVX9VvX5GgaerffGxseaTCLCyEVnuHiQpqkshwQZl3UX8HiybVjG695PgL+4MUEzwHIhDxDOeGPx6kfW8Js2EF9uNtcogZix1RcT9I
+X-Gm-Message-State: AOJu0YzDbFIj08bHWGhtyV8V07t1ZwkCIrZvZoi6DRvrKT6DuCWPDF+0
+	iX1jyzPOYh60+KgMQsSBzMVqINLKxu9QOpjb8lE3n/3Px2StEzwd/NKKWeWLBr0=
+X-Google-Smtp-Source: AGHT+IH8C2qIVCzYP3fytmbQmm9WMTVGYp1c2Rah7vM8VLxTCkHnrWY4pW4cSRo2RCYxVAUafW2vcQ==
+X-Received: by 2002:a17:906:110f:b0:a3d:6592:a7e with SMTP id h15-20020a170906110f00b00a3d65920a7emr4170696eja.37.1708094879255;
+        Fri, 16 Feb 2024 06:47:59 -0800 (PST)
+Received: from [192.168.0.22] ([78.10.207.130])
+        by smtp.gmail.com with ESMTPSA id fj16-20020a1709069c9000b00a3d07f3ac61sm222ejc.101.2024.02.16.06.47.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 Feb 2024 06:47:58 -0800 (PST)
+Message-ID: <18583e61-bc7e-47ef-ab2c-c669785dfd08@linaro.org>
+Date: Fri, 16 Feb 2024 15:47:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <110f8523-4d61-4a1d-ae18-480d89e3c930@fiberby.net>
-Date: Fri, 16 Feb 2024 06:46:27 -0800
-Message-ID: <CALnP8ZbxQUiz5VuC29250fnfEjiurUTW9oezy1MDB9vrPZbwmw@mail.gmail.com>
-Subject: Re: Re: [PATCH net-next 0/3] make skip_sw actually skip software
-To: =?UTF-8?B?QXNiasO4cm4gU2xvdGggVMO4bm5lc2Vu?= <ast@fiberby.net>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, 
-	Jiri Pirko <jiri@resnulli.us>, Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llu@fiberby.dk
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] dt-bindings: trivial-devices: Add qca,qca4024
+Content-Language: en-US
+To: =?UTF-8?Q?Pawe=C5=82_Owoc?= <frut3k7@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Robert Marko <robimarko@gmail.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
+ Guenter Roeck <linux@roeck-us.net>, Peter Yin <peteryin.openbmc@gmail.com>,
+ Patrick Rudolph <patrick.rudolph@9elements.com>,
+ Michal Simek <michal.simek@amd.com>, Marek Vasut <marex@denx.de>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
+ Fabio Estevam <festevam@denx.de>,
+ Alexander Stein <alexander.stein@ew.tq-group.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-spi@vger.kernel.org
+References: <ZcH9u7Vo2sFERIHJ@finisterre.sirena.org.uk>
+ <20240207224546.44030-1-frut3k7@gmail.com>
+ <20240207224546.44030-2-frut3k7@gmail.com>
+ <cd8c2f79-2307-4ad8-90c7-747d40f14ede@linaro.org>
+ <CAKEyCaAy9U_qQ=pXPYaGetEuuuVuoejxjKPrG92fBFauy1wwuw@mail.gmail.com>
+ <263bb77f-b91d-4139-91a5-0ddeda0ece17@linaro.org>
+ <CAKEyCaD=2Md8f=K0pfAFmSCQjL0PkBvAzG_g5Me-wpd5iv2rVw@mail.gmail.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <CAKEyCaD=2Md8f=K0pfAFmSCQjL0PkBvAzG_g5Me-wpd5iv2rVw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 16, 2024 at 12:17:28PM +0000, Asbj=C3=B8rn Sloth T=C3=B8nnesen =
-wrote:
-> Hi Marcelo,
->
-> On 2/15/24 18:00, Marcelo Ricardo Leitner wrote:
-> > On Thu, Feb 15, 2024 at 04:04:41PM +0000, Asbj=C3=B8rn Sloth T=C3=B8nne=
-sen wrote:
-> > ...
-> > > Since we use TC flower offload for the hottest
-> > > prefixes, and leave the long tail to Linux / the CPU.
-> > > we therefore need both the hardware and software
-> > > datapath to perform well.
-> > >
-> > > I found that skip_sw rules, are quite expensive
-> > > in the kernel datapath, sice they must be evaluated
-> > > and matched upon, before the kernel checks the
-> > > skip_sw flag.
-> > >
-> > > This patchset optimizes the case where all rules
-> > > are skip_sw.
-> >
-> > The talk is interesting. Yet, I don't get how it is set up.
-> > How do you use a dedicated block for skip_sw, and then have a
-> > catch-all on sw again please?
->
-> Bird installs the DFZ Internet routing table into the main kernel table
-> for the software datapath.
->
-> Bird also installs a subset of routing table into an aux. kernel table.
->
-> flower-route then picks up the routes from the aux. kernel table, and
-> installs them as TC skip_sw filters.
->
-> On these machines we don't have any non-skip_sw TC filters.
->
-> Since 2021, we have statically offloaded all inbound traffic, since
-> nexthop for our IP space is always the switch next to it, which does
-> interior L3 routing. Thereby we could offload ~50% of the packets.
->
-> I have put an example of the static script here:
-> https://files.fiberby.net/ast/2024/tc_skip_sw/mlx5_static_offload.sh
->
-> And `tc filter show dev enp5s0f0np0 ingress` after running the script:
-> https://files.fiberby.net/ast/2024/tc_skip_sw/mlx_offload_demo_tc_dump.tx=
-t
+On 16/02/2024 14:39, Paweł Owoc wrote:
+> To be clear, I don't want to add support for the QCA4024, I just want
+> to use this SoC with its own firmware connected to another SoC
+> (IPQ8072A) via spi.
 
-Ahh ok. So from tc/flower perspective, you actually offload
-everything. :-)
+I know and this does not change what I told you days ago: this is not a
+trivial device, IMO. Please open the schematics or datasheet and check
+its pins.
 
-The part that was confusing to me is that what you need done in sw,
-you don't do it in tc sw, but rather with the IP the stack itself. So
-you actually offload a flower filter with these, lets say, exceptions.
-
-It seems to me a better fix for this is to have action trap to "resume
-to sw" to itself. Then even if you have traffic that triggers a miss
-in hw, you could add a catch-all filter to trigger the trap.
-
-With the catch-all idea, you may also instead of using trap directly,
-use a goto chain X. I just don't remember if you need to have a flow
-in chain X that is not offloaded, or an inexistant chain is enough.
-
-These ideas are rooted on the fact that now the offloading can resume
-processing at a given chain, or even at a given action that triggered
-the miss. With this, it should skip all the filtering that is
-unnecessary in your case. IOW, instead of trying to make the filtering
-smarter, which current proposal would be limited to this use case
-pretty much (instead of using a dedicated list for skip_sw), it
-resumes the processing at a better spot, and with what we already
-have.
-
-One caveat with this approach is that it will cause an skb_extension
-to be allocated for all this traffic that is handled in sw. There's a
-small performance penalty on it.
-
-WDYT? Or maybe I missed something?
-
->
->
-> > I'm missing which traffic is being matched against the sw datapath. In
-> > theory, you have all the heavy duty filters offloaded, so the sw
-> > datapath should be seeing only a few packets, right?
->
-> We are an residential ISP, our traffic is therefore residential Internet
-> traffic, we run the BGP routers as a router on a stick, the filters there=
-fore
-> see both inbound and outbound traffic.
->
-> ~50% of packets are inbound traffic, our own prefixes are therefore the
-> hottest prefixes. Most streaming traffic is handled internally, and is
-> therefore not seen on our core routers. We regularly have 5%-10% of all
-> outbound traffic going towards the same prefix, and have 50% of outbound
-> traffic distributed across just a few prefixes.
->
-> We currently only offload our own prefixes, and a select few other known
-> high-traffic prefixes.
->
-> The goal is to offload the majority of the trafic, but it is still early
-> days for flower-route, and I need to implement some smarter chain layout
-> first and dynamic filter placement based on hardware counters.
-
-Cool. Btw, be aware that after a few chain jumps, performance may drop
-considerably even if offloaded.
-
->
-> Even when I get flower-route to offload almost all traffic, there will st=
-ill
-> be a long tail of prefixes not in hardware, so the kernel still needs
-> to not be pulled down by the offloaded filters.
->
-> --
-> Best regards
-> Asbj=C3=B8rn Sloth T=C3=B8nnesen
-> Network Engineer
-> Fiberby - AS42541
->
+Best regards,
+Krzysztof
 
