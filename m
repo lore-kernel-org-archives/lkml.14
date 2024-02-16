@@ -1,55 +1,77 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B6C2FC01;
-	Fri, 16 Feb 2024 06:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24BE9C15D
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 07:06:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708066781; cv=none; b=UHMOPmp3+rxx20C+aRxK9DI8wfwIKLD/ynhHhmdMEO9pPZPl2LPWTm+tkQF1Kq1T19UDyhgVs11MBOUAHAcwW3Aq2i9oQ6U6CyhHQM6wGQAllyqw86tAtXn+e7YlIxj8nD1pkbPrUzEmpTnwoSoU0bIwRJ0eoEquzTojGWnCNVU=
+	t=1708067163; cv=none; b=t9IYFOWDuQVwz7/cZGl8lJgLyt5zxkfh0ioJBF92YOHElCDhJduZn49DiGiDWri7+N1iMVn20M0kMAhKSnYD9QfCGViSnjjQoNaHnprqPgmjPfI5xa0zrHhiODS8gIrJ+VJqIdi82co25PLtrMy6ONAHAcFBlRgNyNCPVwfuzsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708066781; c=relaxed/simple;
-	bh=9Bdp+1r/OqcKTlUqSz41twCITHzsqK6lYijcbC3Zeig=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QE5qJnddVBi3Y8teQgtpPRTcS8Td2j9JS3i1ZCgGNLfbr1aGcWuQ9oktA/Wy2VCWL1/Z8apcyhtgq5fRqit44DkG5K+hxCQYDcev4ohFSqiPP0W7lUVGR0ARiaS8OUzI8eWOgGOmTy6Bz0Bt6CjCUWrxunKpOJCY9jlwE0hTLkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vy7uMHxn; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1708067163; c=relaxed/simple;
+	bh=UumdA+u7mJW1hsa/1bKQOt92hrmkFZLp9HYQzcowhO4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hJGV4QeYjF00A6MT/q+F3r0jjRXVOFkS67mkPjLpNDDBCgf7/FDQjXcqaDrTo4evRUemUS8DN/GuXhtPx3TxUYJHQSANDBtFhkGP/gtc06vlqrmvOUeXMOaoNh7o1nmWiZRPF5VUsrajuLcxZujUaQp6o/e7JQW47s/BkOiLB4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=raa9/M0A; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vy7uMHxn"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41G6xVFr009824;
-	Fri, 16 Feb 2024 00:59:31 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1708066771;
-	bh=9488Fqw/4A/CrgJLyaVNYxs+5hfqdJMVXU+J6xLUSfY=;
-	h=From:To:CC:Subject:Date;
-	b=vy7uMHxnyE3PRcLr3P3yrvzrrg8myTVq+/L0JxNBcxUrcqLDY3pS4qPCBhZ6W4Iq6
-	 +N1IxCepbTUfPGdj0jJEDvQ+at24PILdZv3YT0oswc9QUmHX9qWJp4UmzBr2IdunJV
-	 XTAclO1DcsuyriLbYEB9vWstocGCJ8JcevR3nOBg=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41G6xVaf113613
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 16 Feb 2024 00:59:31 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 16
- Feb 2024 00:59:30 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 16 Feb 2024 00:59:30 -0600
-Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41G6xR4f016551;
-	Fri, 16 Feb 2024 00:59:27 -0600
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <kishon@kernel.org>, <vigneshr@ti.com>
-CC: <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: [PATCH] MAINTAINERS: PCI: TI DRA7XX/J721E: Add Siddharth Vadapalli as a reviewer
-Date: Fri, 16 Feb 2024 12:29:26 +0530
-Message-ID: <20240216065926.473805-1-s-vadapalli@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="raa9/M0A"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-33cf6374e58so187995f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 23:06:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708067159; x=1708671959; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uFOh+ffUHbTzqoNg7f3NtavVRglY5kTfBM1QkaehxhQ=;
+        b=raa9/M0ADHybg3Km+WVEYYYwBWYohUB0O3J1xjZLFhytcuPrIUNKFpHIyP8HcCfijk
+         vv/zWvRRcWacWxBvMMdnWYCfPcHohzwZ6lDHBhaQtnblk+EguFOaAvjctmZrLmjQJ48T
+         JCUP6r8nHoqGci6loztw/OeBrJ9h93uHNH9m5tvpbxgUVcMRYoaScOlue5a2w5M2ZCcZ
+         L6tvKYisrc2F+cD+OK+1wPGbB8FcIwxU04cutzKQ8ZcgZEuY1ytjoQkriL/FE2pdke7j
+         0Z/uDS7PqN6Xj7HnFT/o0D1XNSLZi6PSj08gGB55USt9LQe6jWUApmeGa89PwZzXhb+Z
+         XyPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708067159; x=1708671959;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uFOh+ffUHbTzqoNg7f3NtavVRglY5kTfBM1QkaehxhQ=;
+        b=SNUGlkvdIp5FRJnqzIY+crQc+yUWmYkKO/BwWOlriOIfgvDrVIsPcnrWueqYkNoSf+
+         c0oYtfDpPjlPDBAU3bvWOkXWmAxV1jdu+OcM66x2K5Higl3AUIzUKOoSecrheWUMvjLs
+         fJhJ07Fcdot5AHQ37QjOBVGPEDDGLPp5KQZR8hG5cgsXDBz+egG1JWYDPgkfp2unAUTR
+         SHRWrjmyRV6laf48VolorGTQQcxW9FZhSQOcqduukmePjXWq280T5vG5YkM3JhcWG7Tg
+         zZiczjVnKT44Sb0Fe5+9nnfZz9/Himog8+I9F4MiEgjxvJ4DImep+B1Ju+3awhoJoEyl
+         jaAA==
+X-Forwarded-Encrypted: i=1; AJvYcCWQiR6iuIm8YzSWJHTdB6+A2bWMXh0RjEXvc16BCQRD6/5sAfIOPvoIsM104MpcL5oL2ApDkUpyoQEW+WBdHeFePvDl32DM/rmQO78M
+X-Gm-Message-State: AOJu0Yxh1tX5NdI17ziFbHc0upqUhl+4/008Z/LLpsjk8kTGLOjh9zLd
+	Va5HxUk8AfdW/SONYS8bxDAQI90ulu5UwR6L6TNml0RWtxljiZfvjPatjVTCaoY=
+X-Google-Smtp-Source: AGHT+IGy0mnVYtYozVNTM9NIVBhX9/4wYTRqXkWmb8HX1VziUVkIvro8ChPAqsm7xYi9J/dZTIyEkw==
+X-Received: by 2002:a5d:4486:0:b0:33d:d32:2a5b with SMTP id j6-20020a5d4486000000b0033d0d322a5bmr2407932wrq.3.1708067159298;
+        Thu, 15 Feb 2024 23:05:59 -0800 (PST)
+Received: from ta2.c.googlers.com.com (105.168.195.35.bc.googleusercontent.com. [35.195.168.105])
+        by smtp.gmail.com with ESMTPSA id k18-20020a5d66d2000000b0033940016d6esm1298839wrw.93.2024.02.15.23.05.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Feb 2024 23:05:58 -0800 (PST)
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+To: broonie@kernel.org,
+	robh@kernel.org,
+	andi.shyti@kernel.org,
+	krzysztof.kozlowski@linaro.org,
+	semen.protsenko@linaro.org,
+	conor+dt@kernel.org
+Cc: alim.akhtar@samsung.com,
+	linux-spi@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	andre.draszik@linaro.org,
+	peter.griffin@linaro.org,
+	kernel-team@android.com,
+	willmcvicker@google.com,
+	devicetree@vger.kernel.org,
+	Tudor Ambarus <tudor.ambarus@linaro.org>
+Subject: [PATCH v3 00/12] spi: s3c64xx: remove OF alias ID dependency
+Date: Fri, 16 Feb 2024 07:05:43 +0000
+Message-ID: <20240216070555.2483977-1-tudor.ambarus@linaro.org>
+X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,29 +79,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Since I have been contributing to the driver for a while and wish to help
-with the review process, add myself as a reviewer.
+The driver was wrong as it assumed that the alias values in devicetree
+have a particular meaning in identifying instances. This immediately
+breaks when there is a dtb file that does not use the same alias values,
+e.g. because it only needs some of the SPI ports.
 
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Tested gs101 SPI with spi-loopback-test, all went fine. I updated
+exynos850 as it uses the same USI.SPI_VERSION as gs101. Maybe Sam can
+test exynos850, if not, we can drop that patch (12/12).
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cd7980e5b1ad..7d6a60002fc1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16976,6 +16976,7 @@ F:	drivers/pci/controller/dwc/*designware*
- 
- PCI DRIVER FOR TI DRA7XX/J721E
- M:	Vignesh Raghavendra <vigneshr@ti.com>
-+R:	Siddharth Vadapalli <s-vadapalli@ti.com>
- L:	linux-omap@vger.kernel.org
- L:	linux-pci@vger.kernel.org
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+v3:
+- fix indentation in dt-bindings
+- collect Rob's R-b
+
+v2:
+- update bindings to consider the asymmetric case where the RX FIFO
+  depth can differ from the TX FIFO depth
+- update commit message in patch 11/12 to describe the GS101 change
+  (I was wrongly mentioning exynos 850). 
+
+Tudor Ambarus (12):
+  spi: dt-bindings: introduce FIFO depth properties
+  spi: s3c64xx: define a magic value
+  spi: s3c64xx: allow full FIFO masks
+  spi: s3c64xx: determine the fifo depth only once
+  spi: s3c64xx: retrieve the FIFO depth from the device tree
+  spi: s3c64xx: allow FIFO depth to be determined from the compatible
+  spi: s3c64xx: let the SPI core determine the bus number
+  spi: s3c64xx: introduce s3c64xx_spi_set_port_id()
+  spi: s3c64xx: get rid of the OF alias ID dependency
+  spi: s3c64xx: deprecate fifo_lvl_mask, rx_lvl_offset and port_id
+  spi: s3c64xx: switch gs101 to new port config data
+  spi: s3c64xx: switch exynos850 to new port config data
+
+ .../bindings/spi/spi-controller.yaml          |  27 ++++
+ drivers/spi/spi-s3c64xx.c                     | 142 ++++++++++++++----
+ 2 files changed, 138 insertions(+), 31 deletions(-)
+
 -- 
-2.34.1
+2.44.0.rc0.258.g7320e95886-goog
 
