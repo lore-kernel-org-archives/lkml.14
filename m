@@ -1,57 +1,57 @@
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA66414C584
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 22:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14D914D42A
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 22:32:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708122782; cv=none; b=GD3lTJNS/w3cgXtA7KPYRMYQEMLjNnBwi7pjp6kx0IJvr2hlAHUrj349UmvR+F9d4wfhPg1UH5h+LsSJjQrb4IgQNUnEeb00z7+IBlBey4XIHbl0iUCmf1uYcFPGCfUu8ZvPAkEM8DwBxuvWQjnogeFzIEBvs/4IS8Hb3xfqxTw=
+	t=1708122783; cv=none; b=TJKMqg7VapG04Uq71rXvajxkGRMloUTpcsiV+675hYg94rN+xj0CTTE0FPX2CJVhtFLoGkMmtdKUxAHTX4IAv+P6pNmVinkdDmb0p9oEQSR1SzRTigRs3DFPwltonWrb8fuNYdbyM2zJ065IGFpkTn3kwBbKO2YMwJkMwuJqiBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708122782; c=relaxed/simple;
-	bh=oNX62pMUU90L6hUa+fYBn5B6a/Cz7XpyL+vXMyzirPI=;
+	s=arc-20240116; t=1708122783; c=relaxed/simple;
+	bh=cy8fD8owLu7Gb9LJp8nPw2GScsIkZmy7V7thy5M7DVU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HqSklyGo6QNbyAsgTIIwCETvc/E0/gLOqL9SPDssBTVa3RKI4XjVZs226P2z0utkAml6TkrYBCH82gnK6mB8uuDvvgmDkzw2itPA1XGuyVuD3BsT6MU1D1r7jFsomOWHYJaUPVoFQSqwuCZr9wJCphEZFzVv1n9XBRDjahM3dak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oznrvelo; arc=none smtp.client-ip=209.85.167.182
+	 MIME-Version; b=rHI7eZUTN89g9twirala/h/tI2GY5+6j/daHwa/McniN9ZyGdVrK+BN5G5VpeS4mLRyqV916Aao/DAaEBGJRhsDxhobMG2o3G5E4lEwXueQZediBXjfecnuuePmQGdsIGKg735AfSrWPJt/SVFDW31Q3TXlXAMt53vE6Nnm5vM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o2BgKMZz; arc=none smtp.client-ip=209.85.167.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oznrvelo"
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3c031a077d5so811159b6e.0
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 14:32:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o2BgKMZz"
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3bba0ac2e88so2096234b6e.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 14:32:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708122776; x=1708727576; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1708122778; x=1708727578; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DCV4aOoJ46ZF0jxbpqrKcxUZe1JHXLoObrCyTWUqx7U=;
-        b=oznrvelocY4PrrufeiON287TMF4g79TVubYXwzsLcAnxe676OeWhaKLmVa8qKAqMwI
-         zCgnMCLT6MzJtDl9lKyDXSmdZQjtXGPNXNfXauOdbSfJJ6LEYn+ENcujZoHcaNYoCZ+y
-         BRNvyd7wdzSri8SdDKzIb8syxHajCXme2akseaXGkHPwjFzHIVZrZk8OEmWWt52dlHH+
-         wcXCx+bD/P022DlFR6gb+XIbqb3T+oRei0vFybhwZ68wXW8JYkOtguTf1P9ln2Rz4Nql
-         kW7cKwAgAsjYHIo3roT4cKJrwq3d0OOEoFJ5eNTHliWoVxZbK1sN8lyO4A+qQao3fWRy
-         2lfA==
+        bh=F0Q8XrtyaDtTLycbBxdBWNasLRrDLF8CQ529QvpMu38=;
+        b=o2BgKMZz61w8yBkKIudRJ1DKovZ7sG6prZikvx1SP4N6PdJLxp5vRLNTKG20SVxMFN
+         rDQV4o60BM/ZoikqsijsJpw6qSjHp1WjuCxw78BV3a/VhpRRVp7LtsDBOJ/5P980wvh1
+         T2dm0WwcFVmI59viq5wXMaV6BpEqYGDAM0lvzy/oTL8JG8ii+RRhpXr+wcUO9vf6yb81
+         i3UviphYPNhsYrKW21mtuS+NMGW/BUUIjxridRHsB0ROmJL2Or4hPve6W22HM/U5tsXT
+         cAGOW2a82R+vuNlFCYnPbPsNxqgiyO4OjH4b/HZ5eigaQdbQ7YNkjZg6gfOthJ2lR6U+
+         LdiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708122776; x=1708727576;
+        d=1e100.net; s=20230601; t=1708122778; x=1708727578;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DCV4aOoJ46ZF0jxbpqrKcxUZe1JHXLoObrCyTWUqx7U=;
-        b=U5tW1IFmWijxc0oMkBWCOc3PqLvAJeyfKR4coWVDqUoUW1zZod9ZubNyIRNGFbfD+y
-         T7OvZIsW5O9BIO4kUpNnDiBf0FXrwmyqydlXVnq5V4UtfjmCM9yZOnOVf+tRixx5WHBV
-         zZ2PpA5TMXKturF4MQ/A1ZN2JFIQrzhF4GwC1JqiYZ/ykNL0zCZRgCIJQ4uGKmprIT1+
-         OuUQUcFqqC95eKUxNOYLL9r8THa/tCCk5XndjC6it9ZS4F07QwnlyepsEDebv7FYK/xX
-         ysY0bGNHD18WmHdz9yKMD8QPY30/hUzKo19WRyzIYoxdgayY108KlrRPK3HgAZpsmUxz
-         +X/A==
-X-Forwarded-Encrypted: i=1; AJvYcCUPrgcKZHAhgCZgjCq8kKIHUvivnmgqOpALvu/V8glRsEeX8HzA3f4he8NKKZIi3fIHHd/4jo665JfDeefM5zEFs3/mbxThvtgz/6wN
-X-Gm-Message-State: AOJu0Yw95gVs71ITW3iDi2I6kImFXNtTSE+Xl5VbOmauDud5O2C2LTVh
-	AJfHEJUH1qYFCcH/qO/cJKj7Z82ZA7pVOioieJyvPS11R/i43BIpeshcjiEhNbQ=
-X-Google-Smtp-Source: AGHT+IFnN/E8rGVWnZClhHIv5Rc/zQJ+qc0bASHH7kYmDNLb0Px/qgz7WMcw6A17agjspSoQfrKAnw==
-X-Received: by 2002:a05:6808:2288:b0:3bf:f1da:633 with SMTP id bo8-20020a056808228800b003bff1da0633mr7530049oib.54.1708122776687;
-        Fri, 16 Feb 2024 14:32:56 -0800 (PST)
+        bh=F0Q8XrtyaDtTLycbBxdBWNasLRrDLF8CQ529QvpMu38=;
+        b=RphM9q4BAl5bj6gp4b0IOAY0uFfaLD+Q59OnhTufX6BDyhPjz5TxiMmMAs6t2Mzi0s
+         W7MvN4OiGdFA4i4ypLEaU1OtJM7p6kukD4oD+VfqWvFbzvNG8YA3x9YZw7jODfffHKV9
+         59Q2KSTaLupsSOaUW1reM4albexF/wqcK63nCdR91Hd4qLFvgg3PH2mjtH7OFlCX+/yS
+         ANissLW3Mbg0Yn3RCNoSC2hn6nnmvJjQFwUw1ggdXNPceTht61d69UH4Ixj1viRWZ8tj
+         4cWDx0atO2D6fN2JTPsIlg14e+cQUYw/PRmIHcgwdhFf9NNv/57OOBRmb8dx9IhByOvX
+         jc2w==
+X-Forwarded-Encrypted: i=1; AJvYcCUtWmAL1lIVuEUpzdREZ5WTspIymtaSRlgFGcY/IYwhhiiBgFuBGRojC0XB2q9Bhy+tCh/pbt+R+Fye+8ImhUO5H+6KZKwEtgR4loib
+X-Gm-Message-State: AOJu0YyLkZU++styk/O8bEKu6IZxgZnqCoP2t2g3oKi8XeN0IzmDw/uY
+	+eFfQQPx7NqWtjURvoh2++6M2m8ED4I7YOSOpskL1pZOsC1nmpnRhkbxi3SQUmA=
+X-Google-Smtp-Source: AGHT+IGO/xCWLZmyTJbwJPT2qLTOqgJQOv6j8s+OeMiTVDT/g7p1BSb/4WKprfhPTFe2IMheib9xGw==
+X-Received: by 2002:a05:6808:b05:b0:3c0:48f2:d5d2 with SMTP id s5-20020a0568080b0500b003c048f2d5d2mr4236124oij.17.1708122778454;
+        Fri, 16 Feb 2024 14:32:58 -0800 (PST)
 Received: from localhost ([136.62.192.75])
-        by smtp.gmail.com with ESMTPSA id bf19-20020a056808191300b003c0315ead99sm126430oib.45.2024.02.16.14.32.56
+        by smtp.gmail.com with ESMTPSA id w24-20020a056830111800b006e2c16b7df4sm142378otq.23.2024.02.16.14.32.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 14:32:56 -0800 (PST)
+        Fri, 16 Feb 2024 14:32:58 -0800 (PST)
 From: Sam Protsenko <semen.protsenko@linaro.org>
 To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	Sylwester Nawrocki <s.nawrocki@samsung.com>,
@@ -67,9 +67,9 @@ Cc: Alim Akhtar <alim.akhtar@samsung.com>,
 	devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 13/16] clk: samsung: Add CPU clock support for Exynos850
-Date: Fri, 16 Feb 2024 16:32:42 -0600
-Message-Id: <20240216223245.12273-14-semen.protsenko@linaro.org>
+Subject: [PATCH 15/16] clk: samsung: exynos850: Add CMU_CPUCL0 and CMU_CPUCL1
+Date: Fri, 16 Feb 2024 16:32:44 -0600
+Message-Id: <20240216223245.12273-16-semen.protsenko@linaro.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240216223245.12273-1-semen.protsenko@linaro.org>
 References: <20240216223245.12273-1-semen.protsenko@linaro.org>
@@ -81,262 +81,577 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Implement CPU clock control for Exynos850 SoC. It follows the same
-procedure which is already implemented for other SoCs in clk-cpu.c:
+Implement support for CPU clock management units:
+  - CMU_CPUCL0: clocks for cluster 0: 4 x Cortex-A55 (cpu0..cpu3)
+  - CMU_CPUCL1: clocks for cluster 1: 4 x Cortex-A55 (cpu4..cpu7)
 
-1. Set the correct rate for the alternate parent (if needed) before
-   switching to use it as the CPU clock
-2. Switch to the alternate parent, so the CPU continues to get clocked
-   while the PLL is being re-configured
-3. Adjust the dividers for the CPU related buses (ACLK, ATCLK, etc)
-4. Re-configure the PLL for the new CPU clock rate. It's done
-   automatically, as the CPU clock rate change propagates to the PLL
-   clock, because the CPU clock has CLK_SET_RATE_PARENT flag set in
-   exynos_register_cpu_clock()
-5. Once the PLL is locked, set it back as the CPU clock source
-6. Set alternate parent clock rate back to max speed
+CPU PLLs are generating main CPU clocks for each cluster, and there are
+alternate ("switch") clocks that can be used temporarily while
+re-configuring the PLL for a new rate. ACLK, ATCLK, PCLKDBG and
+PERIPHCLK clocks are driving corresponding buses. CLK_CLUSTERx_SCLK are
+actual leaf CPU clocks and should be used to change CPU rates. Also some
+CoreSight clocks can be derived from DBG_USER (debug clock).
 
-As in already existing clk-cpu.c code, the divider and mux clocks are
-configured in a low-level fashion (using direct register access instead
-of CCF API), to avoid affecting how DIV and MUX clock flags are declared
-in the actual clock driver (clk-exynos850.c).
+PLL table was extracted from ECT table. ECT stands for "Exynos
+Characteristic Table", it's a Samsung specific binary data populated by
+BL2 bootloader in RAM at 0x90000000 address, containing PLL tables for
+various CMUs and other hardware specific information.
 
-No functional change. This patch adds support for Exynos850 CPU clock,
-but doesn't enable it per se.
+The particular PLL type used in CMU_CPUCL0 and CMU_CPUCL1 (pll0822x) is
+an integer PLL with middle FVCO. The equation to calculate its output
+rate is:
+
+    fout = fin * M / (P*2^S)
+
+where:
+
+    fin = 26 MHz (OSCCLK frequency)
+    M = 64..1023
+    P = 1..63
+    S = 0..6
+
+The PLL table tries to keep "P" value low to reduce the locking time,
+which for pll0822x is "t = P * 150" (in OSCCLK cycles).
 
 Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
 ---
- drivers/clk/samsung/clk-cpu.c | 183 ++++++++++++++++++++++++++++++++++
- drivers/clk/samsung/clk-cpu.h |   4 +
- 2 files changed, 187 insertions(+)
+ drivers/clk/samsung/clk-exynos850.c | 440 +++++++++++++++++++++++++++-
+ 1 file changed, 439 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/samsung/clk-cpu.c b/drivers/clk/samsung/clk-cpu.c
-index 5ea618da0bc1..cdf592da42e9 100644
---- a/drivers/clk/samsung/clk-cpu.c
-+++ b/drivers/clk/samsung/clk-cpu.c
-@@ -29,6 +29,7 @@
-  * down in order to keep the output clock rate within the previous OPP limits.
-  */
+diff --git a/drivers/clk/samsung/clk-exynos850.c b/drivers/clk/samsung/clk-exynos850.c
+index 82cfa22c0788..6215471c4ac6 100644
+--- a/drivers/clk/samsung/clk-exynos850.c
++++ b/drivers/clk/samsung/clk-exynos850.c
+@@ -14,13 +14,16 @@
+ #include <dt-bindings/clock/exynos850.h>
  
-+#include <linux/delay.h>
- #include <linux/errno.h>
- #include <linux/io.h>
- #include <linux/slab.h>
-@@ -396,6 +397,178 @@ static int exynos5433_cpuclk_post_rate_change(struct clk_notifier_data *ndata,
- 	return 0;
- }
+ #include "clk.h"
++#include "clk-cpu.h"
+ #include "clk-exynos-arm64.h"
  
-+/* ---- Exynos850 ----------------------------------------------------------- */
+ /* NOTE: Must be equal to the last clock ID increased by one */
+-#define CLKS_NR_TOP			(CLK_DOUT_G3D_SWITCH + 1)
++#define CLKS_NR_TOP			(CLK_DOUT_CPUCL1_SWITCH + 1)
+ #define CLKS_NR_APM			(CLK_GOUT_SYSREG_APM_PCLK + 1)
+ #define CLKS_NR_AUD			(CLK_GOUT_AUD_CMU_AUD_PCLK + 1)
+ #define CLKS_NR_CMGP			(CLK_GOUT_SYSREG_CMGP_PCLK + 1)
++#define CLKS_NR_CPUCL0			(CLK_CLUSTER0_SCLK + 1)
++#define CLKS_NR_CPUCL1			(CLK_CLUSTER1_SCLK + 1)
+ #define CLKS_NR_G3D			(CLK_GOUT_G3D_SYSREG_PCLK + 1)
+ #define CLKS_NR_HSI			(CLK_GOUT_HSI_CMU_HSI_PCLK + 1)
+ #define CLKS_NR_IS			(CLK_GOUT_IS_SYSREG_PCLK + 1)
+@@ -47,6 +50,10 @@
+ #define CLK_CON_MUX_MUX_CLKCMU_CORE_CCI		0x1018
+ #define CLK_CON_MUX_MUX_CLKCMU_CORE_MMC_EMBD	0x101c
+ #define CLK_CON_MUX_MUX_CLKCMU_CORE_SSS		0x1020
++#define CLK_CON_MUX_MUX_CLKCMU_CPUCL0_DBG	0x1024
++#define CLK_CON_MUX_MUX_CLKCMU_CPUCL0_SWITCH	0x1028
++#define CLK_CON_MUX_MUX_CLKCMU_CPUCL1_DBG	0x102c
++#define CLK_CON_MUX_MUX_CLKCMU_CPUCL1_SWITCH	0x1030
+ #define CLK_CON_MUX_MUX_CLKCMU_DPU		0x1034
+ #define CLK_CON_MUX_MUX_CLKCMU_G3D_SWITCH	0x1038
+ #define CLK_CON_MUX_MUX_CLKCMU_HSI_BUS		0x103c
+@@ -69,6 +76,10 @@
+ #define CLK_CON_DIV_CLKCMU_CORE_CCI		0x1824
+ #define CLK_CON_DIV_CLKCMU_CORE_MMC_EMBD	0x1828
+ #define CLK_CON_DIV_CLKCMU_CORE_SSS		0x182c
++#define CLK_CON_DIV_CLKCMU_CPUCL0_DBG		0x1830
++#define CLK_CON_DIV_CLKCMU_CPUCL0_SWITCH	0x1834
++#define CLK_CON_DIV_CLKCMU_CPUCL1_DBG		0x1838
++#define CLK_CON_DIV_CLKCMU_CPUCL1_SWITCH	0x183c
+ #define CLK_CON_DIV_CLKCMU_DPU			0x1840
+ #define CLK_CON_DIV_CLKCMU_G3D_SWITCH		0x1844
+ #define CLK_CON_DIV_CLKCMU_HSI_BUS		0x1848
+@@ -97,6 +108,10 @@
+ #define CLK_CON_GAT_GATE_CLKCMU_CORE_CCI	0x2020
+ #define CLK_CON_GAT_GATE_CLKCMU_CORE_MMC_EMBD	0x2024
+ #define CLK_CON_GAT_GATE_CLKCMU_CORE_SSS	0x2028
++#define CLK_CON_GAT_GATE_CLKCMU_CPUCL0_DBG	0x202c
++#define CLK_CON_GAT_GATE_CLKCMU_CPUCL0_SWITCH	0x2030
++#define CLK_CON_GAT_GATE_CLKCMU_CPUCL1_DBG	0x2034
++#define CLK_CON_GAT_GATE_CLKCMU_CPUCL1_SWITCH	0x2038
+ #define CLK_CON_GAT_GATE_CLKCMU_DPU		0x203c
+ #define CLK_CON_GAT_GATE_CLKCMU_G3D_SWITCH	0x2040
+ #define CLK_CON_GAT_GATE_CLKCMU_HSI_BUS		0x2044
+@@ -130,6 +145,10 @@ static const unsigned long top_clk_regs[] __initconst = {
+ 	CLK_CON_MUX_MUX_CLKCMU_CORE_CCI,
+ 	CLK_CON_MUX_MUX_CLKCMU_CORE_MMC_EMBD,
+ 	CLK_CON_MUX_MUX_CLKCMU_CORE_SSS,
++	CLK_CON_MUX_MUX_CLKCMU_CPUCL0_DBG,
++	CLK_CON_MUX_MUX_CLKCMU_CPUCL0_SWITCH,
++	CLK_CON_MUX_MUX_CLKCMU_CPUCL1_DBG,
++	CLK_CON_MUX_MUX_CLKCMU_CPUCL1_SWITCH,
+ 	CLK_CON_MUX_MUX_CLKCMU_DPU,
+ 	CLK_CON_MUX_MUX_CLKCMU_G3D_SWITCH,
+ 	CLK_CON_MUX_MUX_CLKCMU_HSI_BUS,
+@@ -152,6 +171,10 @@ static const unsigned long top_clk_regs[] __initconst = {
+ 	CLK_CON_DIV_CLKCMU_CORE_CCI,
+ 	CLK_CON_DIV_CLKCMU_CORE_MMC_EMBD,
+ 	CLK_CON_DIV_CLKCMU_CORE_SSS,
++	CLK_CON_DIV_CLKCMU_CPUCL0_DBG,
++	CLK_CON_DIV_CLKCMU_CPUCL0_SWITCH,
++	CLK_CON_DIV_CLKCMU_CPUCL1_DBG,
++	CLK_CON_DIV_CLKCMU_CPUCL1_SWITCH,
+ 	CLK_CON_DIV_CLKCMU_DPU,
+ 	CLK_CON_DIV_CLKCMU_G3D_SWITCH,
+ 	CLK_CON_DIV_CLKCMU_HSI_BUS,
+@@ -180,6 +203,10 @@ static const unsigned long top_clk_regs[] __initconst = {
+ 	CLK_CON_GAT_GATE_CLKCMU_CORE_CCI,
+ 	CLK_CON_GAT_GATE_CLKCMU_CORE_MMC_EMBD,
+ 	CLK_CON_GAT_GATE_CLKCMU_CORE_SSS,
++	CLK_CON_GAT_GATE_CLKCMU_CPUCL0_DBG,
++	CLK_CON_GAT_GATE_CLKCMU_CPUCL0_SWITCH,
++	CLK_CON_GAT_GATE_CLKCMU_CPUCL1_DBG,
++	CLK_CON_GAT_GATE_CLKCMU_CPUCL1_SWITCH,
+ 	CLK_CON_GAT_GATE_CLKCMU_DPU,
+ 	CLK_CON_GAT_GATE_CLKCMU_G3D_SWITCH,
+ 	CLK_CON_GAT_GATE_CLKCMU_HSI_BUS,
+@@ -234,6 +261,14 @@ PNAME(mout_core_mmc_embd_p)	= { "oscclk", "dout_shared0_div2",
+ 				    "oscclk", "oscclk" };
+ PNAME(mout_core_sss_p)		= { "dout_shared0_div3", "dout_shared1_div3",
+ 				    "dout_shared0_div4", "dout_shared1_div4" };
++/* List of parent clocks for Muxes in CMU_TOP: for CMU_CPUCL0 */
++PNAME(mout_cpucl0_switch_p)	= { "fout_shared0_pll", "fout_shared1_pll",
++				    "dout_shared0_div2", "dout_shared1_div2" };
++PNAME(mout_cpucl0_dbg_p)	= { "dout_shared0_div4", "dout_shared1_div4" };
++/* List of parent clocks for Muxes in CMU_TOP: for CMU_CPUCL1 */
++PNAME(mout_cpucl1_switch_p)	= { "fout_shared0_pll", "fout_shared1_pll",
++				    "dout_shared0_div2", "dout_shared1_div2" };
++PNAME(mout_cpucl1_dbg_p)	= { "dout_shared0_div4", "dout_shared1_div4" };
+ /* List of parent clocks for Muxes in CMU_TOP: for CMU_G3D */
+ PNAME(mout_g3d_switch_p)	= { "dout_shared0_div2", "dout_shared1_div2",
+ 				    "dout_shared0_div3", "dout_shared1_div3" };
+@@ -300,6 +335,18 @@ static const struct samsung_mux_clock top_mux_clks[] __initconst = {
+ 	MUX(CLK_MOUT_CORE_SSS, "mout_core_sss", mout_core_sss_p,
+ 	    CLK_CON_MUX_MUX_CLKCMU_CORE_SSS, 0, 2),
+ 
++	/* CPUCL0 */
++	MUX(CLK_MOUT_CPUCL0_DBG, "mout_cpucl0_dbg", mout_cpucl0_dbg_p,
++	    CLK_CON_MUX_MUX_CLKCMU_CPUCL0_DBG, 0, 1),
++	MUX(CLK_MOUT_CPUCL0_SWITCH, "mout_cpucl0_switch", mout_cpucl0_switch_p,
++	    CLK_CON_MUX_MUX_CLKCMU_CPUCL0_SWITCH, 0, 2),
 +
-+#define E850_DIV_RATIO_MASK	GENMASK(3, 0)
-+#define E850_BUSY_MASK		BIT(16)
++	/* CPUCL1 */
++	MUX(CLK_MOUT_CPUCL1_DBG, "mout_cpucl1_dbg", mout_cpucl1_dbg_p,
++	    CLK_CON_MUX_MUX_CLKCMU_CPUCL1_DBG, 0, 1),
++	MUX(CLK_MOUT_CPUCL1_SWITCH, "mout_cpucl1_switch", mout_cpucl1_switch_p,
++	    CLK_CON_MUX_MUX_CLKCMU_CPUCL1_SWITCH, 0, 2),
 +
-+/* Max time for divider or mux to stabilize, usec */
-+#define E850_DIV_MUX_STAB_TIME	100
-+/* OSCCLK clock rate, Hz */
-+#define E850_OSCCLK		(26 * MHZ)
+ 	/* DPU */
+ 	MUX(CLK_MOUT_DPU, "mout_dpu", mout_dpu_p,
+ 	    CLK_CON_MUX_MUX_CLKCMU_DPU, 0, 2),
+@@ -378,6 +425,18 @@ static const struct samsung_div_clock top_div_clks[] __initconst = {
+ 	DIV(CLK_DOUT_CORE_SSS, "dout_core_sss", "gout_core_sss",
+ 	    CLK_CON_DIV_CLKCMU_CORE_SSS, 0, 4),
+ 
++	/* CPUCL0 */
++	DIV(CLK_DOUT_CPUCL0_DBG, "dout_cpucl0_dbg", "gout_cpucl0_dbg",
++	    CLK_CON_DIV_CLKCMU_CPUCL0_DBG, 0, 3),
++	DIV(CLK_DOUT_CPUCL0_SWITCH, "dout_cpucl0_switch", "gout_cpucl0_switch",
++	    CLK_CON_DIV_CLKCMU_CPUCL0_SWITCH, 0, 3),
 +
-+/**
-+ * struct exynos850_cpuclk_regs - Register offsets for Exynos850 CPU clocks
-+ * @mux:		offset of MUX register for choosing CPU clock source
-+ * @divs:		offsets of DIV registers (ACLK, ATCLK, PCLKDBG and
-+ *			PERIPHCLK)
-+ */
-+struct exynos850_cpuclk_regs {
-+	u32 mux;
-+	u32 divs[4];
++	/* CPUCL1 */
++	DIV(CLK_DOUT_CPUCL1_DBG, "dout_cpucl1_dbg", "gout_cpucl1_dbg",
++	    CLK_CON_DIV_CLKCMU_CPUCL1_DBG, 0, 3),
++	DIV(CLK_DOUT_CPUCL1_SWITCH, "dout_cpucl1_switch", "gout_cpucl1_switch",
++	    CLK_CON_DIV_CLKCMU_CPUCL1_SWITCH, 0, 3),
++
+ 	/* DPU */
+ 	DIV(CLK_DOUT_DPU, "dout_dpu", "gout_dpu",
+ 	    CLK_CON_DIV_CLKCMU_DPU, 0, 4),
+@@ -442,6 +501,18 @@ static const struct samsung_gate_clock top_gate_clks[] __initconst = {
+ 	GATE(CLK_GOUT_AUD, "gout_aud", "mout_aud",
+ 	     CLK_CON_GAT_GATE_CLKCMU_AUD, 21, 0, 0),
+ 
++	/* CPUCL0 */
++	GATE(CLK_GOUT_CPUCL0_DBG, "gout_cpucl0_dbg", "mout_cpucl0_dbg",
++	     CLK_CON_GAT_GATE_CLKCMU_CPUCL0_DBG, 21, 0, 0),
++	GATE(CLK_GOUT_CPUCL0_SWITCH, "gout_cpucl0_switch", "mout_cpucl0_switch",
++	     CLK_CON_GAT_GATE_CLKCMU_CPUCL0_SWITCH, 21, 0, 0),
++
++	/* CPUCL1 */
++	GATE(CLK_GOUT_CPUCL1_DBG, "gout_cpucl1_dbg", "mout_cpucl1_dbg",
++	     CLK_CON_GAT_GATE_CLKCMU_CPUCL1_DBG, 21, 0, 0),
++	GATE(CLK_GOUT_CPUCL1_SWITCH, "gout_cpucl1_switch", "mout_cpucl1_switch",
++	     CLK_CON_GAT_GATE_CLKCMU_CPUCL1_SWITCH, 21, 0, 0),
++
+ 	/* DPU */
+ 	GATE(CLK_GOUT_DPU, "gout_dpu", "mout_dpu",
+ 	     CLK_CON_GAT_GATE_CLKCMU_DPU, 21, 0, 0),
+@@ -1030,6 +1101,373 @@ static const struct samsung_cmu_info cmgp_cmu_info __initconst = {
+ 	.clk_name		= "gout_clkcmu_cmgp_bus",
+ };
+ 
++/* ---- CMU_CPUCL0 ---------------------------------------------------------- */
++
++/* Register Offset definitions for CMU_CPUCL0 (0x10900000) */
++#define PLL_LOCKTIME_PLL_CPUCL0				0x0000
++#define PLL_CON0_PLL_CPUCL0				0x0100
++#define PLL_CON1_PLL_CPUCL0				0x0104
++#define PLL_CON3_PLL_CPUCL0				0x010c
++#define PLL_CON0_MUX_CLKCMU_CPUCL0_DBG_USER		0x0600
++#define PLL_CON0_MUX_CLKCMU_CPUCL0_SWITCH_USER		0x0610
++#define CLK_CON_MUX_MUX_CLK_CPUCL0_PLL			0x100c
++#define CLK_CON_DIV_DIV_CLK_CLUSTER0_ACLK		0x1800
++#define CLK_CON_DIV_DIV_CLK_CLUSTER0_ATCLK		0x1808
++#define CLK_CON_DIV_DIV_CLK_CLUSTER0_PCLKDBG		0x180c
++#define CLK_CON_DIV_DIV_CLK_CLUSTER0_PERIPHCLK		0x1810
++#define CLK_CON_DIV_DIV_CLK_CPUCL0_CMUREF		0x1814
++#define CLK_CON_DIV_DIV_CLK_CPUCL0_CPU			0x1818
++#define CLK_CON_DIV_DIV_CLK_CPUCL0_PCLK			0x181c
++#define CLK_CON_GAT_CLK_CPUCL0_CLUSTER0_ATCLK		0x2000
++#define CLK_CON_GAT_CLK_CPUCL0_CLUSTER0_PCLK		0x2004
++#define CLK_CON_GAT_CLK_CPUCL0_CLUSTER0_PERIPHCLK	0x2008
++#define CLK_CON_GAT_CLK_CPUCL0_CLUSTER0_SCLK		0x200c
++#define CLK_CON_GAT_CLK_CPUCL0_CMU_CPUCL0_PCLK		0x2010
++#define CLK_CON_GAT_GATE_CLK_CPUCL0_CPU			0x2020
++
++static const unsigned long cpucl0_clk_regs[] __initconst = {
++	PLL_LOCKTIME_PLL_CPUCL0,
++	PLL_CON0_PLL_CPUCL0,
++	PLL_CON1_PLL_CPUCL0,
++	PLL_CON3_PLL_CPUCL0,
++	PLL_CON0_MUX_CLKCMU_CPUCL0_DBG_USER,
++	PLL_CON0_MUX_CLKCMU_CPUCL0_SWITCH_USER,
++	CLK_CON_MUX_MUX_CLK_CPUCL0_PLL,
++	CLK_CON_DIV_DIV_CLK_CLUSTER0_ACLK,
++	CLK_CON_DIV_DIV_CLK_CLUSTER0_ATCLK,
++	CLK_CON_DIV_DIV_CLK_CLUSTER0_PCLKDBG,
++	CLK_CON_DIV_DIV_CLK_CLUSTER0_PERIPHCLK,
++	CLK_CON_DIV_DIV_CLK_CPUCL0_CMUREF,
++	CLK_CON_DIV_DIV_CLK_CPUCL0_CPU,
++	CLK_CON_DIV_DIV_CLK_CPUCL0_PCLK,
++	CLK_CON_GAT_CLK_CPUCL0_CLUSTER0_ATCLK,
++	CLK_CON_GAT_CLK_CPUCL0_CLUSTER0_PCLK,
++	CLK_CON_GAT_CLK_CPUCL0_CLUSTER0_PERIPHCLK,
++	CLK_CON_GAT_CLK_CPUCL0_CLUSTER0_SCLK,
++	CLK_CON_GAT_CLK_CPUCL0_CMU_CPUCL0_PCLK,
++	CLK_CON_GAT_GATE_CLK_CPUCL0_CPU,
 +};
 +
-+static const struct exynos850_cpuclk_regs e850cl0_cpuclk_regs = {
-+	.mux	= 0x100c,
-+	.divs	= { 0x1800, 0x1808, 0x180c, 0x1810 },
++/* List of parent clocks for Muxes in CMU_CPUCL0 */
++PNAME(mout_pll_cpucl0_p)		 = { "oscclk", "fout_cpucl0_pll" };
++PNAME(mout_cpucl0_switch_user_p)	 = { "oscclk", "dout_cpucl0_switch" };
++PNAME(mout_cpucl0_dbg_user_p)		 = { "oscclk", "dout_cpucl0_dbg" };
++PNAME(mout_cpucl0_pll_p)		 = { "mout_pll_cpucl0",
++					     "mout_cpucl0_switch_user" };
++
++static const struct samsung_pll_rate_table cpu_pll_rates[] __initconst = {
++	PLL_35XX_RATE(26 * MHZ, 2210000000U, 255, 3, 0),
++	PLL_35XX_RATE(26 * MHZ, 2106000000U, 243, 3, 0),
++	PLL_35XX_RATE(26 * MHZ, 2002000000U, 231, 3, 0),
++	PLL_35XX_RATE(26 * MHZ, 1846000000U, 213, 3, 0),
++	PLL_35XX_RATE(26 * MHZ, 1742000000U, 201, 3, 0),
++	PLL_35XX_RATE(26 * MHZ, 1586000000U, 183, 3, 0),
++	PLL_35XX_RATE(26 * MHZ, 1456000000U, 168, 3, 0),
++	PLL_35XX_RATE(26 * MHZ, 1300000000U, 150, 3, 0),
++	PLL_35XX_RATE(26 * MHZ, 1157000000U, 267, 3, 1),
++	PLL_35XX_RATE(26 * MHZ, 1053000000U, 243, 3, 1),
++	PLL_35XX_RATE(26 * MHZ, 949000000U,  219, 3, 1),
++	PLL_35XX_RATE(26 * MHZ, 806000000U,  186, 3, 1),
++	PLL_35XX_RATE(26 * MHZ, 650000000U,  150, 3, 1),
++	PLL_35XX_RATE(26 * MHZ, 546000000U,  252, 3, 2),
++	PLL_35XX_RATE(26 * MHZ, 442000000U,  204, 3, 2),
++	PLL_35XX_RATE(26 * MHZ, 351000000U,  162, 3, 2),
++	PLL_35XX_RATE(26 * MHZ, 247000000U,  114, 3, 2),
++	PLL_35XX_RATE(26 * MHZ, 182000000U,  168, 3, 3),
++	PLL_35XX_RATE(26 * MHZ, 130000000U,  120, 3, 3),
 +};
 +
-+static const struct exynos850_cpuclk_regs e850cl1_cpuclk_regs = {
-+	.mux	= 0x1000,
-+	.divs	= { 0x1800, 0x1808, 0x180c, 0x1810 },
++static const struct samsung_pll_clock cpucl0_pll_clks[] __initconst = {
++	PLL(pll_0822x, CLK_FOUT_CPUCL0_PLL, "fout_cpucl0_pll", "oscclk",
++	    PLL_LOCKTIME_PLL_CPUCL0, PLL_CON3_PLL_CPUCL0, cpu_pll_rates),
++};
++
++static const struct samsung_mux_clock cpucl0_mux_clks[] __initconst = {
++	MUX_F(CLK_MOUT_PLL_CPUCL0, "mout_pll_cpucl0", mout_pll_cpucl0_p,
++	      PLL_CON0_PLL_CPUCL0, 4, 1,
++	      CLK_SET_RATE_PARENT | CLK_RECALC_NEW_RATES, 0),
++	MUX_F(CLK_MOUT_CPUCL0_SWITCH_USER, "mout_cpucl0_switch_user",
++	      mout_cpucl0_switch_user_p,
++	      PLL_CON0_MUX_CLKCMU_CPUCL0_SWITCH_USER, 4, 1,
++	      CLK_SET_RATE_PARENT, 0),
++	MUX(CLK_MOUT_CPUCL0_DBG_USER, "mout_cpucl0_dbg_user",
++	    mout_cpucl0_dbg_user_p,
++	    PLL_CON0_MUX_CLKCMU_CPUCL0_DBG_USER, 4, 1),
++	MUX_F(CLK_MOUT_CPUCL0_PLL, "mout_cpucl0_pll", mout_cpucl0_pll_p,
++	      CLK_CON_MUX_MUX_CLK_CPUCL0_PLL, 0, 1, CLK_SET_RATE_PARENT, 0),
++};
++
++static const struct samsung_div_clock cpucl0_div_clks[] __initconst = {
++	DIV_F(CLK_DOUT_CPUCL0_CPU, "dout_cpucl0_cpu", "mout_cpucl0_pll",
++	      CLK_CON_DIV_DIV_CLK_CPUCL0_CPU, 0, 1,
++	      CLK_GET_RATE_NOCACHE, CLK_DIVIDER_READ_ONLY),
++	DIV_F(CLK_DOUT_CPUCL0_CMUREF, "dout_cpucl0_cmuref", "dout_cpucl0_cpu",
++	      CLK_CON_DIV_DIV_CLK_CPUCL0_CMUREF, 0, 3,
++	      CLK_GET_RATE_NOCACHE, CLK_DIVIDER_READ_ONLY),
++	DIV_F(CLK_DOUT_CPUCL0_PCLK, "dout_cpucl0_pclk", "dout_cpucl0_cpu",
++	      CLK_CON_DIV_DIV_CLK_CPUCL0_PCLK, 0, 4,
++	      CLK_GET_RATE_NOCACHE, CLK_DIVIDER_READ_ONLY),
++
++	/* EMBEDDED_CMU_CPUCL0 */
++	DIV_F(CLK_DOUT_CLUSTER0_ACLK, "dout_cluster0_aclk", "gout_cluster0_cpu",
++	      CLK_CON_DIV_DIV_CLK_CLUSTER0_ACLK, 0, 4,
++	      CLK_GET_RATE_NOCACHE, CLK_DIVIDER_READ_ONLY),
++	DIV_F(CLK_DOUT_CLUSTER0_ATCLK, "dout_cluster0_atclk",
++	      "gout_cluster0_cpu", CLK_CON_DIV_DIV_CLK_CLUSTER0_ATCLK, 0, 4,
++	      CLK_GET_RATE_NOCACHE, CLK_DIVIDER_READ_ONLY),
++	DIV_F(CLK_DOUT_CLUSTER0_PCLKDBG, "dout_cluster0_pclkdbg",
++	      "gout_cluster0_cpu", CLK_CON_DIV_DIV_CLK_CLUSTER0_PCLKDBG, 0, 4,
++	      CLK_GET_RATE_NOCACHE, CLK_DIVIDER_READ_ONLY),
++	DIV_F(CLK_DOUT_CLUSTER0_PERIPHCLK, "dout_cluster0_periphclk",
++	      "gout_cluster0_cpu", CLK_CON_DIV_DIV_CLK_CLUSTER0_PERIPHCLK, 0, 4,
++	      CLK_GET_RATE_NOCACHE, CLK_DIVIDER_READ_ONLY),
++};
++
++static const struct samsung_gate_clock cpucl0_gate_clks[] __initconst = {
++	GATE(CLK_GOUT_CPUCL0_CMU_CPUCL0_PCLK, "gout_cpucl0_cmu_cpucl0_pclk",
++	     "dout_cpucl0_pclk",
++	     CLK_CON_GAT_CLK_CPUCL0_CMU_CPUCL0_PCLK, 21, CLK_IGNORE_UNUSED, 0),
++
++	/* EMBEDDED_CMU_CPUCL0 */
++	GATE(CLK_GOUT_CLUSTER0_CPU, "gout_cluster0_cpu", "dout_cpucl0_cpu",
++	     CLK_CON_GAT_GATE_CLK_CPUCL0_CPU, 21, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_GOUT_CLUSTER0_SCLK, "gout_cluster0_sclk", "gout_cluster0_cpu",
++	     CLK_CON_GAT_CLK_CPUCL0_CLUSTER0_SCLK, 21, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_GOUT_CLUSTER0_ATCLK, "gout_cluster0_atclk",
++	     "dout_cluster0_atclk",
++	     CLK_CON_GAT_CLK_CPUCL0_CLUSTER0_ATCLK, 21, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_GOUT_CLUSTER0_PERIPHCLK, "gout_cluster0_periphclk",
++	     "dout_cluster0_periphclk",
++	     CLK_CON_GAT_CLK_CPUCL0_CLUSTER0_PERIPHCLK, 21,
++	     CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_GOUT_CLUSTER0_PCLK, "gout_cluster0_pclk",
++	     "dout_cluster0_pclkdbg",
++	     CLK_CON_GAT_CLK_CPUCL0_CLUSTER0_PCLK, 21, CLK_IGNORE_UNUSED, 0),
 +};
 +
 +/*
-+ * Set alternate parent rate to "rate" value or less.
-+ *
-+ * rate: Desired alt_parent rate, or 0 for max alt_parent rate
-+ *
-+ * Exynos850 doesn't have CPU clock divider in CMU_CPUCLx block (CMUREF divider
-+ * doesn't affect CPU speed). So CPUCLx_SWITCH divider from CMU_TOP is used
-+ * instead to adjust alternate parent speed.
-+ *
-+ * It's possible to use clk_set_max_rate() instead of this function, but it
-+ * would set overly pessimistic rate values to alternate parent.
++ * Each parameter is going to be written into the corresponding DIV register. So
++ * the actual divider value for each parameter will be 1/(param+1). All these
++ * parameters must be in the range of 0..15, as the divider range for all of
++ * these DIV clocks is 1..16. The default values for these dividers is
++ * (1, 3, 3, 1).
 + */
-+static int exynos850_alt_parent_set_max_rate(const struct clk_hw *alt_parent,
-+					     unsigned long rate)
++#define E850_CPU_DIV0(aclk, atclk, pclkdbg, periphclk) \
++	(((aclk) << 16) | ((atclk) << 12) | ((pclkdbg) << 8) | \
++	 ((periphclk) << 4))
++
++static const struct exynos_cpuclk_cfg_data exynos850_cluster_clk_d[] __initconst
++= {
++	{ 2210000, E850_CPU_DIV0(1, 3, 3, 1) },
++	{ 2106000, E850_CPU_DIV0(1, 3, 3, 1) },
++	{ 2002000, E850_CPU_DIV0(1, 3, 3, 1) },
++	{ 1846000, E850_CPU_DIV0(1, 3, 3, 1) },
++	{ 1742000, E850_CPU_DIV0(1, 3, 3, 1) },
++	{ 1586000, E850_CPU_DIV0(1, 3, 3, 1) },
++	{ 1456000, E850_CPU_DIV0(1, 3, 3, 1) },
++	{ 1300000, E850_CPU_DIV0(1, 3, 3, 1) },
++	{ 1157000, E850_CPU_DIV0(1, 3, 3, 1) },
++	{ 1053000, E850_CPU_DIV0(1, 3, 3, 1) },
++	{ 949000,  E850_CPU_DIV0(1, 3, 3, 1) },
++	{ 806000,  E850_CPU_DIV0(1, 3, 3, 1) },
++	{ 650000,  E850_CPU_DIV0(1, 3, 3, 1) },
++	{ 546000,  E850_CPU_DIV0(1, 3, 3, 1) },
++	{ 442000,  E850_CPU_DIV0(1, 3, 3, 1) },
++	{ 351000,  E850_CPU_DIV0(1, 3, 3, 1) },
++	{ 247000,  E850_CPU_DIV0(1, 3, 3, 1) },
++	{ 182000,  E850_CPU_DIV0(1, 3, 3, 1) },
++	{ 130000,  E850_CPU_DIV0(1, 3, 3, 1) },
++	{ 0 }
++};
++
++static const struct samsung_cpu_clock cpucl0_cpu_clks[] __initconst = {
++	CPU_CLK(CLK_CLUSTER0_SCLK, "cluster0_clk", CLK_MOUT_PLL_CPUCL0,
++		CLK_MOUT_CPUCL0_SWITCH_USER, 0, 0x0, CPUCLK_LAYOUT_E850_CL0,
++		exynos850_cluster_clk_d),
++};
++
++static const struct samsung_cmu_info cpucl0_cmu_info __initconst = {
++	.pll_clks		= cpucl0_pll_clks,
++	.nr_pll_clks		= ARRAY_SIZE(cpucl0_pll_clks),
++	.mux_clks		= cpucl0_mux_clks,
++	.nr_mux_clks		= ARRAY_SIZE(cpucl0_mux_clks),
++	.div_clks		= cpucl0_div_clks,
++	.nr_div_clks		= ARRAY_SIZE(cpucl0_div_clks),
++	.gate_clks		= cpucl0_gate_clks,
++	.nr_gate_clks		= ARRAY_SIZE(cpucl0_gate_clks),
++	.cpu_clks		= cpucl0_cpu_clks,
++	.nr_cpu_clks		= ARRAY_SIZE(cpucl0_cpu_clks),
++	.nr_clk_ids		= CLKS_NR_CPUCL0,
++	.clk_regs		= cpucl0_clk_regs,
++	.nr_clk_regs		= ARRAY_SIZE(cpucl0_clk_regs),
++	.clk_name		= "dout_cpucl0_switch",
++	.manual_plls		= true,
++};
++
++static void __init exynos850_cmu_cpucl0_init(struct device_node *np)
 +{
-+	struct clk_hw *clk_div, *clk_divp;
-+	unsigned long divp_rate, div_rate, div;
-+	int ret;
-+
-+	/* Divider from CMU_TOP */
-+	clk_div = clk_hw_get_parent(alt_parent);
-+	if (!clk_div)
-+		return -ENOENT;
-+	/* Divider's parent from CMU_TOP */
-+	clk_divp = clk_hw_get_parent(clk_div);
-+	if (!clk_divp)
-+		return -ENOENT;
-+	/* Divider input rate */
-+	divp_rate = clk_hw_get_rate(clk_divp);
-+	if (!divp_rate)
-+		return -EINVAL;
-+
-+	/* Calculate new alt_parent rate for integer divider value */
-+	if (rate == 0)
-+		div = 1;
-+	else
-+		div = DIV_ROUND_UP(divp_rate, rate);
-+	div_rate = DIV_ROUND_UP(divp_rate, div);
-+	WARN_ON(div >= MAX_DIV);
-+
-+	/* alt_parent will propagate this change up to the divider */
-+	ret = clk_set_rate(alt_parent->clk, div_rate);
-+	if (ret)
-+		return ret;
-+	udelay(E850_DIV_MUX_STAB_TIME);
-+
-+	return 0;
++	exynos_arm64_register_cmu(NULL, np, &cpucl0_cmu_info);
 +}
 +
-+/* Handler for pre-rate change notification from parent clock */
-+static int exynos850_cpuclk_pre_rate_change(struct clk_notifier_data *ndata,
-+					    struct exynos_cpuclk *cpuclk)
++/* Register CMU_CPUCL0 early, as CPU clocks should be available ASAP */
++CLK_OF_DECLARE(exynos850_cmu_cpucl0, "samsung,exynos850-cmu-cpucl0",
++	       exynos850_cmu_cpucl0_init);
++
++/* ---- CMU_CPUCL1 ---------------------------------------------------------- */
++
++/* Register Offset definitions for CMU_CPUCL1 (0x10800000) */
++#define PLL_LOCKTIME_PLL_CPUCL1				0x0000
++#define PLL_CON0_PLL_CPUCL1				0x0100
++#define PLL_CON1_PLL_CPUCL1				0x0104
++#define PLL_CON3_PLL_CPUCL1				0x010c
++#define PLL_CON0_MUX_CLKCMU_CPUCL1_DBG_USER		0x0600
++#define PLL_CON0_MUX_CLKCMU_CPUCL1_SWITCH_USER		0x0610
++#define CLK_CON_MUX_MUX_CLK_CPUCL1_PLL			0x1000
++#define CLK_CON_DIV_DIV_CLK_CLUSTER1_ACLK		0x1800
++#define CLK_CON_DIV_DIV_CLK_CLUSTER1_ATCLK		0x1808
++#define CLK_CON_DIV_DIV_CLK_CLUSTER1_PCLKDBG		0x180c
++#define CLK_CON_DIV_DIV_CLK_CLUSTER1_PERIPHCLK		0x1810
++#define CLK_CON_DIV_DIV_CLK_CPUCL1_CMUREF		0x1814
++#define CLK_CON_DIV_DIV_CLK_CPUCL1_CPU			0x1818
++#define CLK_CON_DIV_DIV_CLK_CPUCL1_PCLK			0x181c
++#define CLK_CON_GAT_CLK_CPUCL1_CLUSTER1_ATCLK		0x2000
++#define CLK_CON_GAT_CLK_CPUCL1_CLUSTER1_PCLK		0x2004
++#define CLK_CON_GAT_CLK_CPUCL1_CLUSTER1_PERIPHCLK	0x2008
++#define CLK_CON_GAT_CLK_CPUCL1_CLUSTER1_SCLK		0x200c
++#define CLK_CON_GAT_CLK_CPUCL1_CMU_CPUCL1_PCLK		0x2010
++#define CLK_CON_GAT_GATE_CLK_CPUCL1_CPU			0x2020
++
++static const unsigned long cpucl1_clk_regs[] __initconst = {
++	PLL_LOCKTIME_PLL_CPUCL1,
++	PLL_CON0_PLL_CPUCL1,
++	PLL_CON1_PLL_CPUCL1,
++	PLL_CON3_PLL_CPUCL1,
++	PLL_CON0_MUX_CLKCMU_CPUCL1_DBG_USER,
++	PLL_CON0_MUX_CLKCMU_CPUCL1_SWITCH_USER,
++	CLK_CON_MUX_MUX_CLK_CPUCL1_PLL,
++	CLK_CON_DIV_DIV_CLK_CLUSTER1_ACLK,
++	CLK_CON_DIV_DIV_CLK_CLUSTER1_ATCLK,
++	CLK_CON_DIV_DIV_CLK_CLUSTER1_PCLKDBG,
++	CLK_CON_DIV_DIV_CLK_CLUSTER1_PERIPHCLK,
++	CLK_CON_DIV_DIV_CLK_CPUCL1_CMUREF,
++	CLK_CON_DIV_DIV_CLK_CPUCL1_CPU,
++	CLK_CON_DIV_DIV_CLK_CPUCL1_PCLK,
++	CLK_CON_GAT_CLK_CPUCL1_CLUSTER1_ATCLK,
++	CLK_CON_GAT_CLK_CPUCL1_CLUSTER1_PCLK,
++	CLK_CON_GAT_CLK_CPUCL1_CLUSTER1_PERIPHCLK,
++	CLK_CON_GAT_CLK_CPUCL1_CLUSTER1_SCLK,
++	CLK_CON_GAT_CLK_CPUCL1_CMU_CPUCL1_PCLK,
++	CLK_CON_GAT_GATE_CLK_CPUCL1_CPU,
++};
++
++/* List of parent clocks for Muxes in CMU_CPUCL0 */
++PNAME(mout_pll_cpucl1_p)		 = { "oscclk", "fout_cpucl1_pll" };
++PNAME(mout_cpucl1_switch_user_p)	 = { "oscclk", "dout_cpucl1_switch" };
++PNAME(mout_cpucl1_dbg_user_p)		 = { "oscclk", "dout_cpucl1_dbg" };
++PNAME(mout_cpucl1_pll_p)		 = { "mout_pll_cpucl1",
++					     "mout_cpucl1_switch_user" };
++
++static const struct samsung_pll_clock cpucl1_pll_clks[] __initconst = {
++	PLL(pll_0822x, CLK_FOUT_CPUCL1_PLL, "fout_cpucl1_pll", "oscclk",
++	    PLL_LOCKTIME_PLL_CPUCL1, PLL_CON3_PLL_CPUCL1, cpu_pll_rates),
++};
++
++static const struct samsung_mux_clock cpucl1_mux_clks[] __initconst = {
++	MUX_F(CLK_MOUT_PLL_CPUCL1, "mout_pll_cpucl1", mout_pll_cpucl1_p,
++	      PLL_CON0_PLL_CPUCL1, 4, 1,
++	      CLK_SET_RATE_PARENT | CLK_RECALC_NEW_RATES, 0),
++	MUX_F(CLK_MOUT_CPUCL1_SWITCH_USER, "mout_cpucl1_switch_user",
++	      mout_cpucl1_switch_user_p,
++	      PLL_CON0_MUX_CLKCMU_CPUCL1_SWITCH_USER, 4, 1,
++	      CLK_SET_RATE_PARENT, 0),
++	MUX(CLK_MOUT_CPUCL1_DBG_USER, "mout_cpucl1_dbg_user",
++	    mout_cpucl1_dbg_user_p,
++	    PLL_CON0_MUX_CLKCMU_CPUCL1_DBG_USER, 4, 1),
++	MUX_F(CLK_MOUT_CPUCL1_PLL, "mout_cpucl1_pll", mout_cpucl1_pll_p,
++	      CLK_CON_MUX_MUX_CLK_CPUCL1_PLL, 0, 1, CLK_SET_RATE_PARENT, 0),
++};
++
++static const struct samsung_div_clock cpucl1_div_clks[] __initconst = {
++	DIV_F(CLK_DOUT_CPUCL1_CPU, "dout_cpucl1_cpu", "mout_cpucl1_pll",
++	      CLK_CON_DIV_DIV_CLK_CPUCL1_CPU, 0, 1,
++	      CLK_GET_RATE_NOCACHE, CLK_DIVIDER_READ_ONLY),
++	DIV_F(CLK_DOUT_CPUCL1_CMUREF, "dout_cpucl1_cmuref", "dout_cpucl1_cpu",
++	      CLK_CON_DIV_DIV_CLK_CPUCL1_CMUREF, 0, 3,
++	      CLK_GET_RATE_NOCACHE, CLK_DIVIDER_READ_ONLY),
++	DIV_F(CLK_DOUT_CPUCL1_PCLK, "dout_cpucl1_pclk", "dout_cpucl1_cpu",
++	      CLK_CON_DIV_DIV_CLK_CPUCL1_PCLK, 0, 4,
++	      CLK_GET_RATE_NOCACHE, CLK_DIVIDER_READ_ONLY),
++
++	/* EMBEDDED_CMU_CPUCL1 */
++	DIV_F(CLK_DOUT_CLUSTER1_ACLK, "dout_cluster1_aclk", "gout_cluster1_cpu",
++	      CLK_CON_DIV_DIV_CLK_CLUSTER1_ACLK, 0, 4,
++	      CLK_GET_RATE_NOCACHE, CLK_DIVIDER_READ_ONLY),
++	DIV_F(CLK_DOUT_CLUSTER1_ATCLK, "dout_cluster1_atclk",
++	      "gout_cluster1_cpu", CLK_CON_DIV_DIV_CLK_CLUSTER1_ATCLK, 0, 4,
++	      CLK_GET_RATE_NOCACHE, CLK_DIVIDER_READ_ONLY),
++	DIV_F(CLK_DOUT_CLUSTER1_PCLKDBG, "dout_cluster1_pclkdbg",
++	      "gout_cluster1_cpu", CLK_CON_DIV_DIV_CLK_CLUSTER1_PCLKDBG, 0, 4,
++	      CLK_GET_RATE_NOCACHE, CLK_DIVIDER_READ_ONLY),
++	DIV_F(CLK_DOUT_CLUSTER1_PERIPHCLK, "dout_cluster1_periphclk",
++	      "gout_cluster1_cpu", CLK_CON_DIV_DIV_CLK_CLUSTER1_PERIPHCLK, 0, 4,
++	      CLK_GET_RATE_NOCACHE, CLK_DIVIDER_READ_ONLY),
++};
++
++static const struct samsung_gate_clock cpucl1_gate_clks[] __initconst = {
++	GATE(CLK_GOUT_CPUCL1_CMU_CPUCL1_PCLK, "gout_cpucl1_cmu_cpucl1_pclk",
++	     "dout_cpucl1_pclk",
++	     CLK_CON_GAT_CLK_CPUCL1_CMU_CPUCL1_PCLK, 21, CLK_IGNORE_UNUSED, 0),
++
++	/* EMBEDDED_CMU_CPUCL1 */
++	GATE(CLK_GOUT_CLUSTER1_CPU, "gout_cluster1_cpu", "dout_cpucl1_cpu",
++	     CLK_CON_GAT_GATE_CLK_CPUCL1_CPU, 21, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_GOUT_CLUSTER1_SCLK, "gout_cluster1_sclk", "gout_cluster1_cpu",
++	     CLK_CON_GAT_CLK_CPUCL1_CLUSTER1_SCLK, 21, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_GOUT_CLUSTER1_ATCLK, "gout_cluster1_atclk",
++	     "dout_cluster1_atclk",
++	     CLK_CON_GAT_CLK_CPUCL1_CLUSTER1_ATCLK, 21, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_GOUT_CLUSTER1_PERIPHCLK, "gout_cluster1_periphclk",
++	     "dout_cluster1_periphclk",
++	     CLK_CON_GAT_CLK_CPUCL1_CLUSTER1_PERIPHCLK, 21,
++	     CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_GOUT_CLUSTER1_PCLK, "gout_cluster1_pclk",
++	     "dout_cluster1_pclkdbg",
++	     CLK_CON_GAT_CLK_CPUCL1_CLUSTER1_PCLK, 21, CLK_IGNORE_UNUSED, 0),
++};
++
++static const struct samsung_cpu_clock cpucl1_cpu_clks[] __initconst = {
++	CPU_CLK(CLK_CLUSTER1_SCLK, "cluster1_clk", CLK_MOUT_PLL_CPUCL1,
++		CLK_MOUT_CPUCL1_SWITCH_USER, 0, 0x0, CPUCLK_LAYOUT_E850_CL1,
++		exynos850_cluster_clk_d),
++};
++
++static const struct samsung_cmu_info cpucl1_cmu_info __initconst = {
++	.pll_clks		= cpucl1_pll_clks,
++	.nr_pll_clks		= ARRAY_SIZE(cpucl1_pll_clks),
++	.mux_clks		= cpucl1_mux_clks,
++	.nr_mux_clks		= ARRAY_SIZE(cpucl1_mux_clks),
++	.div_clks		= cpucl1_div_clks,
++	.nr_div_clks		= ARRAY_SIZE(cpucl1_div_clks),
++	.gate_clks		= cpucl1_gate_clks,
++	.nr_gate_clks		= ARRAY_SIZE(cpucl1_gate_clks),
++	.cpu_clks		= cpucl1_cpu_clks,
++	.nr_cpu_clks		= ARRAY_SIZE(cpucl1_cpu_clks),
++	.nr_clk_ids		= CLKS_NR_CPUCL1,
++	.clk_regs		= cpucl1_clk_regs,
++	.nr_clk_regs		= ARRAY_SIZE(cpucl1_clk_regs),
++	.clk_name		= "dout_cpucl1_switch",
++	.manual_plls		= true,
++};
++
++static void __init exynos850_cmu_cpucl1_init(struct device_node *np)
 +{
-+	const unsigned int shifts[4] = { 16, 12, 8, 4 }; /* E850_CPU_DIV0() */
-+	const struct exynos850_cpuclk_regs * const regs = cpuclk->chip->regs;
-+	const struct exynos_cpuclk_cfg_data *cfg_data = cpuclk->cfg;
-+	const struct clk_hw *alt_parent = cpuclk->alt_parent;
-+	void __iomem *base = cpuclk->ctrl_base;
-+	unsigned long alt_prate = clk_hw_get_rate(alt_parent);
-+	unsigned long flags;
-+	u32 mux_reg;
-+	size_t i;
-+	int ret;
-+
-+	/* No actions are needed when switching to or from OSCCLK parent */
-+	if (ndata->new_rate == E850_OSCCLK || ndata->old_rate == E850_OSCCLK)
-+		return 0;
-+
-+	/* Find out the divider values to use for clock data */
-+	while ((cfg_data->prate * 1000) != ndata->new_rate) {
-+		if (cfg_data->prate == 0)
-+			return -EINVAL;
-+		cfg_data++;
-+	}
-+
-+	/*
-+	 * If the old parent clock speed is less than the clock speed of
-+	 * the alternate parent, then it should be ensured that at no point
-+	 * the armclk speed is more than the old_prate until the dividers are
-+	 * set.  Also workaround the issue of the dividers being set to lower
-+	 * values before the parent clock speed is set to new lower speed
-+	 * (this can result in too high speed of armclk output clocks).
-+	 */
-+	if (alt_prate > ndata->old_rate || ndata->old_rate > ndata->new_rate) {
-+		unsigned long tmp_rate = min(ndata->old_rate, ndata->new_rate);
-+
-+		ret = exynos850_alt_parent_set_max_rate(alt_parent, tmp_rate);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	spin_lock_irqsave(cpuclk->lock, flags);
-+
-+	/* Select the alternate parent */
-+	mux_reg = readl(base + regs->mux);
-+	writel(mux_reg | 1, base + regs->mux);
-+	wait_until_mux_stable(base + regs->mux, 16, 1, 0);
-+
-+	/* Alternate parent is active now. Set the dividers */
-+	for (i = 0; i < ARRAY_SIZE(shifts); ++i) {
-+		unsigned long div = (cfg_data->div0 >> shifts[i]) & 0xf;
-+		u32 val;
-+
-+		val = readl(base + regs->divs[i]);
-+		val = (val & ~E850_DIV_RATIO_MASK) | div;
-+		writel(val, base + regs->divs[i]);
-+		wait_until_divider_stable(base + regs->divs[i], E850_BUSY_MASK);
-+	}
-+
-+	spin_unlock_irqrestore(cpuclk->lock, flags);
-+
-+	return 0;
++	exynos_arm64_register_cmu(NULL, np, &cpucl1_cmu_info);
 +}
 +
-+/* Handler for post-rate change notification from parent clock */
-+static int exynos850_cpuclk_post_rate_change(struct clk_notifier_data *ndata,
-+					     struct exynos_cpuclk *cpuclk)
-+{
-+	const struct exynos850_cpuclk_regs * const regs = cpuclk->chip->regs;
-+	const struct clk_hw *alt_parent = cpuclk->alt_parent;
-+	void __iomem *base = cpuclk->ctrl_base;
-+	unsigned long flags;
-+	u32 mux_reg;
++/* Register CMU_CPUCL1 early, as CPU clocks should be available ASAP */
++CLK_OF_DECLARE(exynos850_cmu_cpucl1, "samsung,exynos850-cmu-cpucl1",
++	       exynos850_cmu_cpucl1_init);
 +
-+	/* No actions are needed when switching to or from OSCCLK parent */
-+	if (ndata->new_rate == E850_OSCCLK || ndata->old_rate == E850_OSCCLK)
-+		return 0;
-+
-+	spin_lock_irqsave(cpuclk->lock, flags);
-+
-+	/* Select main parent (PLL) for mux */
-+	mux_reg = readl(base + regs->mux);
-+	writel(mux_reg & ~1, base + regs->mux);
-+	wait_until_mux_stable(base + regs->mux, 16, 1, 0);
-+
-+	spin_unlock_irqrestore(cpuclk->lock, flags);
-+
-+	/* Set alt_parent rate back to max */
-+	return exynos850_alt_parent_set_max_rate(alt_parent, 0);
-+}
-+
- /* -------------------------------------------------------------------------- */
+ /* ---- CMU_G3D ------------------------------------------------------------- */
  
- /* Common round rate callback usable for all types of CPU clocks */
-@@ -458,6 +631,16 @@ static const struct exynos_cpuclk_chip exynos_clkcpu_chips[] = {
- 		.pre_rate_cb	= exynos5433_cpuclk_pre_rate_change,
- 		.post_rate_cb	= exynos5433_cpuclk_post_rate_change,
- 	},
-+	[CPUCLK_LAYOUT_E850_CL0] = {
-+		.regs		= &e850cl0_cpuclk_regs,
-+		.pre_rate_cb	= exynos850_cpuclk_pre_rate_change,
-+		.post_rate_cb	= exynos850_cpuclk_post_rate_change,
-+	},
-+	[CPUCLK_LAYOUT_E850_CL1] = {
-+		.regs		= &e850cl1_cpuclk_regs,
-+		.pre_rate_cb	= exynos850_cpuclk_pre_rate_change,
-+		.post_rate_cb	= exynos850_cpuclk_post_rate_change,
-+	},
- };
- 
- /* helper function to register a CPU clock */
-diff --git a/drivers/clk/samsung/clk-cpu.h b/drivers/clk/samsung/clk-cpu.h
-index 4382ab005ad3..892843611b0a 100644
---- a/drivers/clk/samsung/clk-cpu.h
-+++ b/drivers/clk/samsung/clk-cpu.h
-@@ -17,10 +17,14 @@
-  * enum exynos_cpuclk_layout - CPU clock registers layout compatibility
-  * @CPUCLK_LAYOUT_E4210: Exynos4210 compatible layout
-  * @CPUCLK_LAYOUT_E5433: Exynos5433 compatible layout
-+ * @CPUCLK_LAYOUT_E850_CL0: Exynos850 cluster 0 compatible layout
-+ * @CPUCLK_LAYOUT_E850_CL1: Exynos850 cluster 1 compatible layout
-  */
- enum exynos_cpuclk_layout {
- 	CPUCLK_LAYOUT_E4210,
- 	CPUCLK_LAYOUT_E5433,
-+	CPUCLK_LAYOUT_E850_CL0,
-+	CPUCLK_LAYOUT_E850_CL1,
- };
- 
- /**
+ /* Register Offset definitions for CMU_G3D (0x11400000) */
 -- 
 2.39.2
 
