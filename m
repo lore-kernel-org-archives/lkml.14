@@ -1,37 +1,59 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C606878695;
-	Fri, 16 Feb 2024 13:14:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBCB129A6A
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 13:15:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708089260; cv=none; b=DgRoUUjlEIYggB14RTeHQD0NFOLGotN3BKMO69U3MDuBwj7V0qFnBHS44ji48DR1GwOZH8bMe3LNd2vVieSyt47Ip8CFW4POmOxHhpNpjD51/hbuVvAjYwTuhK/nUUdwQyLgsx5hMphvzX/ZGK2cRIpsMUGJzgvRI3xCuL6lZds=
+	t=1708089341; cv=none; b=ROrAahb1ZF/+nZ7GLF4Yx74pSr914/IVgGOoH4xPD3Ux1m8oCxE8c1fGWbM+9/SuC/pB6VvZYj4wmQ619HPxJJfCqh5+rJZjGXXZH6/YB0jE/6EHRaPLJLYWIBbE2+DYLGVOiqY2kJBUaqCF5xv7TGcETdBGNKrE+ZjNrjtjvWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708089260; c=relaxed/simple;
-	bh=f0LUsS9SDzP69bj7Fmp7ctSUX2hl6rFEkJO/i6dzlZc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=FOjdtX3cFRIK5osdgx3+pM0mGEsfjv1xFRhVMld1y1Ktg2gvZqFoannx7pgaailOWDjvcLLYfEhdAzClGOCjCavH9HZ+dh0J6qGx1n2lBNMfsOYBQyPXSWEzbj3zf8S5j9fJjJzXGE6D0TUsVnOuKFnQBfn7qvJLs1J4B8aaoEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=V4kKaAhP; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1708089341; c=relaxed/simple;
+	bh=KshJW+Af2TZqa/p/ikCF46YxCA1R2gN0qy3Ynw3oeAo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FJv50fFrNn2stCNpUj5icNOw8BH/r6+33hkKm0p0WDmxtn8z6zlcahBsDb+BashFFLfaKj8aBFP3bmOVDcC64XvFAZwsX/m0WZRX15yhZwuX3R1HcFkBkvAIqWI82NlplwVvcXe7FMuXf45Hwq1zNr3Fj96/ef7+kprfIAHeqtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yLh07+Qv; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="V4kKaAhP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1708089236; x=1708694036; i=deller@gmx.de;
-	bh=f0LUsS9SDzP69bj7Fmp7ctSUX2hl6rFEkJO/i6dzlZc=;
-	h=X-UI-Sender-Class:Date:Subject:To:References:From:In-Reply-To;
-	b=V4kKaAhPbVZ5jB0TiDaes3SlMfjWRvJ4pZ25o6HFjeXnfmKKpqFJIwkSdrB1Ogke
-	 bWRWvZzR9EBWnbf/oHHYaUVywBrf4g3Ze5+ZGTDrf8Spyp9a4zQkdJLVTrzgiRZBh
-	 OmKf+dHPiPiHhmqhU8jXDJ/2FNF4p8WRutFIJj3BMTCW3PRGlqT0WJzC0QEVLglGo
-	 pGLK4vvzYp6U7IH3T1ziofzhXsBMAwiMOP8fWhqi2Eh93HabA0mO9oulRTTi1Dd63
-	 OPKvCcJzCZPTABn0qLUSlm8egbwH+NuihLPWYwWCkyYmNsAV0kEP2U1nzJgug5Qfp
-	 DDUmJFSOYpgJiXoq5A==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.20.55] ([94.134.148.214]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N95eJ-1qvWVA3Z27-0164q4; Fri, 16
- Feb 2024 14:13:55 +0100
-Message-ID: <2eac5921-1bf4-4013-8002-f62a96d71829@gmx.de>
-Date: Fri, 16 Feb 2024 14:30:14 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yLh07+Qv"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a2f22bfb4e6so259574066b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 05:15:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708089337; x=1708694137; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PBSXdOntPeLAic2YSCGmE1hb9lcDpa7YnXt2WuP35RU=;
+        b=yLh07+QvXUvfz5HwCuG/XW+4M3bctiuB41dspqytbspm5euFsfIHTMyuQwBcMDC23k
+         46DHtM5ScrA+rHGX/pSJQi61RLYVlWth5DOfZwwAvdbCc5jT1Ed1c9rkmGsIRTmXiGmV
+         2OLUc0xUXsuqcNDpGdxu2XY3czfssi2AHjGO/GdgF8G98XP5/dPCfMT7cMLgyy+WsmoJ
+         ceyv7T2M060+tifdge2Ngjv0Liw2ZvWB75s2KOKo9QSm9ipPVva62scgYhkfHoqZIqiS
+         wTsufVBP2owe8Nm3AoYWdeErYL5Y/ftBhp8q27MPNCnKhxxeQ99bfRIiCAw/8OmBP2OK
+         83Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708089337; x=1708694137;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PBSXdOntPeLAic2YSCGmE1hb9lcDpa7YnXt2WuP35RU=;
+        b=rriC20oNz28u1A1j3Id03NfeXcp+2AZCSlN3j3ZSLCF7AmkNSEu//LQv+YGlQRg1wy
+         lMdX50WggIsgD7a1902Q4za5Xq/DeSYA3B3EEEyD1hYR4/yeG6PrHZVqSnmKPkDrSIVP
+         9E2NLSLkAcfq0RzpPsdXshhQd25MOErsR/ENJh+39HczDpCDWYnrF5f4tPYrxxC9T3d8
+         R652f6wsGa0jdSwuH0UQ3N9XPTDHSg1xv8P1MVLkan8f4WI+yV6B/1SsD+Jq1fRwuGvx
+         2RV87jstUXlMOeSzo1dxjwurN5s7Ecr/9T77R+pHNek08wJ4rdum7Emo0vPr+IS2ppYe
+         G/4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUBC3ZYam0qfE1C7gHAiFh/OgkeD4gnQYphOGuRq+KoY9D4u1Z+2tSnPU3O/adM6w7o5PHlDavUcG0bJmPV2EMeSr9mRpwGIzUdpa9S
+X-Gm-Message-State: AOJu0YwmglIMmYIWuKaUNHP20tbNht+CUTs6DQK3SoakXFKhMqiMi3nG
+	PE8EJ4LSt/Qc+9ZYj2hrwoWLh2bsbCpTF34jZI1TbVgPqY5EZgxdBLx8qpTxHec=
+X-Google-Smtp-Source: AGHT+IHN0T63GBIdlJqFXJYWH/wKCTSEx2gfTLEy2txVqfz2CGcrM5HbyOvRyjHKjO5dSTDnv5EuJw==
+X-Received: by 2002:a17:906:a29a:b0:a3b:fd70:f9e6 with SMTP id i26-20020a170906a29a00b00a3bfd70f9e6mr3237189ejz.5.1708089337225;
+        Fri, 16 Feb 2024 05:15:37 -0800 (PST)
+Received: from [192.168.192.135] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
+        by smtp.gmail.com with ESMTPSA id i26-20020a170906251a00b00a3ce36ce4f9sm1534655ejb.83.2024.02.16.05.15.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 Feb 2024 05:15:36 -0800 (PST)
+Message-ID: <ad827531-a470-451d-8f60-0fb82065cee5@linaro.org>
+Date: Fri, 16 Feb 2024 14:15:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,118 +61,62 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] parisc/ftrace: add missing CONFIG_DYNAMIC_FTRACE check
+Subject: Re: [PATCH] arm64: dts: qcom: sm6350: Add interconnect for MDSS
 Content-Language: en-US
-To: Max Kellermann <max.kellermann@ionos.com>, rostedt@goodmis.org,
- mhiramat@kernel.org, mark.rutland@arm.com,
- James.Bottomley@HansenPartnership.com, linux-trace-kernel@vger.kernel.org,
- linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240211224314.169314-1-max.kellermann@ionos.com>
-From: Helge Deller <deller@gmx.de>
-Autocrypt: addr=deller@gmx.de; keydata=
- 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
-In-Reply-To: <20240211224314.169314-1-max.kellermann@ionos.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:lp3J+gk+fOmyD1YDJc2WUVnFI0sDL9yYEI89g3O1Z/HwLiqp5D6
- niRcNqXUi9ZDjEag6L1hF0qBAGHsW/6dD0pCSV2ZwOpa9kMbYiHAc371hE3usDlBPlq1E0U
- TItUW741aD9oe7w+O3okXpz6DW0ZlFHXO8OlMYCel7qejjQst3NUPS46NG4PPlStxnCt+A+
- 77ifW3Kor/IXyfauP/h+g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:whPwJXuJBm4=;4ST2qXZ2d/a/PxkhogzX1I3vrw2
- m27z4gJeBYQF/1tXxcUKSuZSx0nRsHI6sfa18ZZQ95X46RgzkygFBl6D2S+Q2w8jJDzENV6P3
- PxcirTUAmHXlKj0Q8H8eu4BLALD0bOfVjaHNPXbH7NHzkUT8CLAWEZWtdg2V6pGarweaEIwpY
- aJFimgaQ6FqxwDrR5SJrkyC3yjpkz5p8RFsUIiZqRwJWOkyyQe8bEuZtXU/N3b3kQnWRZxNsZ
- F0uosfueK6yFKMaRUoHIYaplw4SznCMWg89YKLWgchtUuE6iignm5NS1fRsvil2HgB9foHiGm
- 6LH9MEDYprVpPVS1UV1u3iqiWIpS+318eE8fyVAQI5jrJiSC8+eyTEj8K0sz25v768s4eWnLM
- OV5N5w0v8d0TFqjt879x+uSE/HsN3TIEHwHuIo/IcnseWEnlwCeeY3fsVc/IY7hvDIAXZPj+8
- 5kzfy0G2KYZ6WYXl842/1Pnzc95sgzOTpsZbFy1QudhPXXAWkTSw4hLy1GoR5ixABNPWaXghv
- VK+1YtG1b1QZhrSDIWta9T3gbZCvSJZZx6bbL7CUzrUulP8a8J4ApPPKJGTn1feWTl7bJRW15
- qQ6d0F+IezU2LouzluLfRzMxTqNAUt30y6vDvi4dH/eOAps9BgxvuyyuGhmNV/0VNVKeZxZke
- tvzLEUUAxss9VAzTD64JifYf+1l95HpVlFdY4dRsjorosle9yKeWAc/5BPkIf2JUsGLJ/ZIWM
- xSiy3ibXo8jmaUvVppSjbI1H68j4DPfcVrsKwFPXLKlHXrYStviKCqSTiFAqFlhqtU9SiHwEb
- OaIoizpmkBT03C/DoduCWFYUrPE8umGTI2KQew7fd4CUE=
+To: Luca Weiss <luca.weiss@fairphone.com>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240216-sm6350-interconnect-v1-1-9d55667c06ca@fairphone.com>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240216-sm6350-interconnect-v1-1-9d55667c06ca@fairphone.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2/11/24 23:43, Max Kellermann wrote:
-> Fixes a bug revealed by -Wmissing-prototypes when
-> CONFIG_FUNCTION_GRAPH_TRACER is enabled but not CONFIG_DYNAMIC_FTRACE:
->
->   arch/parisc/kernel/ftrace.c:82:5: error: no previous prototype for 'ft=
-race_enable_ftrace_graph_caller' [-Werror=3Dmissing-prototypes]
->      82 | int ftrace_enable_ftrace_graph_caller(void)
->         |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->   arch/parisc/kernel/ftrace.c:88:5: error: no previous prototype for 'ft=
-race_disable_ftrace_graph_caller' [-Werror=3Dmissing-prototypes]
->      88 | int ftrace_disable_ftrace_graph_caller(void)
->         |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->
-> Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
-
-
-applied to parisc git tree.
-
-Thanks!
-Helge
-
-
+On 16.02.2024 14:11, Luca Weiss wrote:
+> Add the definition for the interconnect used in the display subsystem.
+> 
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
 > ---
->   arch/parisc/kernel/ftrace.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/parisc/kernel/ftrace.c b/arch/parisc/kernel/ftrace.c
-> index d1defb9ede70..621a4b386ae4 100644
-> --- a/arch/parisc/kernel/ftrace.c
-> +++ b/arch/parisc/kernel/ftrace.c
-> @@ -78,7 +78,7 @@ asmlinkage void notrace __hot ftrace_function_trampoli=
-ne(unsigned long parent,
->   #endif
->   }
->
-> -#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> +#if defined(CONFIG_DYNAMIC_FTRACE) && defined(CONFIG_FUNCTION_GRAPH_TRA=
-CER)
->   int ftrace_enable_ftrace_graph_caller(void)
->   {
->   	static_key_enable(&ftrace_graph_enable.key);
 
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+
+Konrad
