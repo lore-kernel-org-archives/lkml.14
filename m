@@ -1,170 +1,171 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A649614E2F5
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 20:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91AC6150994
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 20:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708115611; cv=none; b=Qa12Vf/kMeSF9943pXSd4p7mH5Op2R4QUTsx3mNrDrbvYbsVxBEofjsG0N/EQ7ap1h+gBfvj0hO/Xixsdm5ouMPLcASCcMYoUzY4xiz6+nNIgB7jKIkIb16SatUmRVcozvMYImlgZfItkVoEYG2ueuW4qxmopa2PFPZK5F2f8vc=
+	t=1708115612; cv=none; b=RfUcevFIlKVaTOrQoDgUE7BJgQP0XnNgCkHfMKKXU5xfI7h2MkEaePW4Z+NXQjKFmfRsY1hxvQPpsBrq2Ez1mexUR1u93VSNIiKZPnIrN7puIgF7ton9kSmkTPRTwtdJr/GQ836i7zRJxW/piCcaHJOA3Gf9vjecNwEEu92A+Mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708115611; c=relaxed/simple;
-	bh=T8LMOzu9nHFuhW9wH9M9lyPtW0uvmulpUpoeoDk93nw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jkMEjbpS0Yazkjdrk/Ee2VdsCFOEd76AVaMtPzWloh7XwGXbD9Xq0QsbebmG66v1ElgvQP0gBPOC+9nTYWJE6k8K9uswNk/sL/TRTmL+bRjIHpwYPZyuCA4V6nId9EHBMGs63WZFCLthjbsRyrLojQo8gij2x2ZNWB8N3uq0Yfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=YVIPWyKN; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1708115612; c=relaxed/simple;
+	bh=iWQpZyVUYNR0FgdTLJWWfXolJLly1aZ0q2sdWcfiADU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=HmQ3F3AtXYmho2xl1uFIuqxY21soBKltA6U5b8IeaBSJpapeLqF7UqkBsMWWZmgmZq3+tWlmwEmQBXwjW3H3s+8tuoAV2GX3rs9GoCQZdaUHLQ/E0mTpuWJScUlUS2gaEJFlonXg0iuIIuDroupKjsSpYtzHd+eFnzYfJcttcN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=JlO18UXd; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="YVIPWyKN"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6e0507eb60cso1689967b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 12:33:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="JlO18UXd"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d109e82bd0so29995951fa.3
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 12:33:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1708115608; x=1708720408; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1Zm8eYFzkCy2fo8YTnXRxd26L7cmwWO4QztMTfO2g44=;
-        b=YVIPWyKNH/yv0q2Wzs1bQY/uU0afe4THM76hliu5A516OA/5PYhthrzlkpfS8rks8z
-         PoNPVVxtJwDLJwDFCr2THrAfs79bxaY0l5hpxAOqD6BKoIChXZ048XiPTKcwO23jGNPH
-         AOdY1vzXLuHK4/Yg73/OfdNLU1j3GnB7mYX/acMUbkVTiYjxCjTsr171lCaFFHton14q
-         VOQyIVkHSY3O6yMoLIzECGEOYfDS4DgOdk4YA2OPAKxNA6puZ799A5oOULJAyxc1yNnP
-         XDeoOqG/5nYcrTBnh915YhZyWM/KWP5c/Vp8Ta29FIlBVESb5R/ZUF7+SbStpHsip492
-         8hAQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708115608; x=1708720408; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VPKtETY44L+sLLhmL3uaX4nFnllKG+8eyvkbzTNtgX4=;
+        b=JlO18UXdAY40EYPh5vQMlAFsIPsHixgABilZ9EkLiVRSYzLOSjW5w+ypfcbuMeHrfZ
+         CjEn1EyR1b4/rA7fxre/BWWN0FumJvdbBNy7LiHW23Uu6JgXO3AM6b3HgrQuCxUexSO8
+         8XpfNDuMNPm8XbbzzOhjM0K5uGImrSyKsDGkLl9V7jvCAEkeoP4cJwkHiR5U34FMABTe
+         qFXW5mmFrbqL/QQqcnHl68kZl3ACLvKxIv8BqgCo+nyqzzqAviso6s6C5/trv4oan69U
+         Q0X06jqsaVauq/rzu3/3ZqSQftU65tbC/WCOJ4wIWUW7SJBKnuP/5gxaSFP1Pe861jde
+         u2rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1708115608; x=1708720408;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1Zm8eYFzkCy2fo8YTnXRxd26L7cmwWO4QztMTfO2g44=;
-        b=ohbZqxmL1M81NYw1WR0HZY+ZUMn76f/sS9VapuDca0Xp2QnqsAd5mJCNEjZ/FI18gY
-         jxt9jOYBjI4hEVN5u/PZvRffOFXi+V7tplwHR86m0hfXBB88rK6dYb9fjj5ecUwTPjB/
-         6LF+3YiKiH+VNOSqfH7XYnmC4LBhe5XkKkpCKaoIyye4+y/cDQ9Ptu4DuT91vxnlMdUb
-         asmeZ0U0jl60NBirHGhED1W6Y3XZml0zQuu08g5CdxTgmoDovbjJLuDyqQtF+WxPH5IW
-         wgmaeVK2D2ueNF8ZyZWjnSV1o6D8eoN2qcanOBpPvRhqVe5VpWHCmIe8oex0uLCjV4iq
-         BPDw==
-X-Forwarded-Encrypted: i=1; AJvYcCXvzTq4/+BrLeEoI/S0IuAEaPSl6RH/jgIT6CaIhxZapHkDGyvfrLVGScaBDAA5cL2qKYXeFTUOYpYcvxMa3kQ89uYImtSgegVe8R1t
-X-Gm-Message-State: AOJu0YxgzLHeiJ1bmpWQOmctSduXvqT4V8B3adTPcpLNm/vZvjLXvTdK
-	znCaI2frq2zofwpJxT55Ulatzh/XY9Qi5Ao8zz/+s1FY682gsgOG767cLZY5iHPrwB7eDEAm1Qe
-	6
-X-Google-Smtp-Source: AGHT+IEE+9Rd2cRZiKFG//TBC6A5MVnz4PILwOrfl9W9HSLIQgriikVS1s20Act5uHkKuWl8Niuu8A==
-X-Received: by 2002:a05:6a00:2190:b0:6dd:839a:b070 with SMTP id h16-20020a056a00219000b006dd839ab070mr7424707pfi.34.1708115607225;
-        Fri, 16 Feb 2024 12:33:27 -0800 (PST)
-Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id s32-20020a056a0017a000b006e091489776sm369918pfg.92.2024.02.16.12.33.26
+        bh=VPKtETY44L+sLLhmL3uaX4nFnllKG+8eyvkbzTNtgX4=;
+        b=bb8ON44qk6HKbpNXpI7XMZTCwgnBaYN/QQd/+dcKl6pwF0CdYez6NS/2GWPMRsuw9F
+         f6vLoXe0n3BSl8oP/k4bTKbe1CDY/pjp7p5a0pmCaQ85r8dJasgbQJYv5KujTCTr94aZ
+         jssVzeJcRSFhZ8+y92ObLtZaUqjoHaAxDJHN5Nik8nooJBTvEcrnmbSBxAL+X2lgxhxG
+         1HkdGDXHa8adKsdtN0Q1xSVlSio8X94xN440E34PM40y5/SPUTO5tb9oqCBB+8fpLi+y
+         6hIcJ5Ehy9Td5wNjQhEGxVfA2psN1OVvwI89/Tu3FagkwGOek1OvyY94diCuYxrudz/U
+         3MTg==
+X-Forwarded-Encrypted: i=1; AJvYcCUCG34oXhNl2/8AM/weYisEa0t7vZnENgk2oJf0iXKukB14nHh1r4hENb5IXl5nR8YMcTBQZeF3bD5fTh81Q5KQIF7T3YJqTbWA9G4P
+X-Gm-Message-State: AOJu0Yxm7XBCEMSQN5S3FfCKpU725l/pEwMzTEH6HpLqW5PcBg2FdEYc
+	+vfUg/tMBhN4HmIX/jfV7zt+m3zG2BOw6+wSs9a9KKzdogHeDiyp3/t9e0uAuwU=
+X-Google-Smtp-Source: AGHT+IEA6PoShhob8vA8LHOTLObGA6LSgflaMRnbW+2bPuCja7p6p6LxUhdbKaL3IWhCeNx0gCY0nA==
+X-Received: by 2002:a2e:9198:0:b0:2d0:cfe6:4364 with SMTP id f24-20020a2e9198000000b002d0cfe64364mr4325724ljg.36.1708115608679;
+        Fri, 16 Feb 2024 12:33:28 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:7758:12d:16:5f19])
+        by smtp.gmail.com with ESMTPSA id m5-20020a05600c4f4500b0041253d0acd6sm1420528wmq.47.2024.02.16.12.33.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 12:33:26 -0800 (PST)
-From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Fri, 16 Feb 2024 12:33:18 -0800
-Subject: [PATCH v4 1/2] riscv: lib: Introduce has_fast_misaligned_access
- function
+        Fri, 16 Feb 2024 12:33:28 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kalle Valo <kvalo@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Saravana Kannan <saravanak@google.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Alex Elder <elder@linaro.org>,
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lukas Wunner <lukas@wunner.de>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: linux-bluetooth@vger.kernel.org,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-wireless@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v5 11/18] PCI/pwrctl: reuse the OF node for power controlled devices
+Date: Fri, 16 Feb 2024 21:32:08 +0100
+Message-Id: <20240216203215.40870-12-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240216203215.40870-1-brgl@bgdev.pl>
+References: <20240216203215.40870-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240216-disable_misaligned_probe_config-v4-1-dc01e581c0ac@rivosinc.com>
-References: <20240216-disable_misaligned_probe_config-v4-0-dc01e581c0ac@rivosinc.com>
-In-Reply-To: <20240216-disable_misaligned_probe_config-v4-0-dc01e581c0ac@rivosinc.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Jisheng Zhang <jszhang@kernel.org>, Evan Green <evan@rivosinc.com>, 
- =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <cleger@rivosinc.com>, 
- Eric Biggers <ebiggers@kernel.org>, 
- Elliot Berman <quic_eberman@quicinc.com>, Charles Lohr <lohr85@gmail.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Charlie Jenkins <charlie@rivosinc.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708115604; l=2683;
- i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
- bh=T8LMOzu9nHFuhW9wH9M9lyPtW0uvmulpUpoeoDk93nw=;
- b=7Z+H3hr0K9ilHDGmJqtDgek8qNy9Awetiw6Ny/gJ+In8L9mHa7UCmYXxVvrHClWXiNWwcuPXb
- K1XoWmZBrhWC+w962RzV4XLb4sUNyxBe846G8yUAdaQFcIBdIZcGO1j
-X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
- pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
+Content-Transfer-Encoding: 8bit
 
-Create has_fast_misaligned_access to avoid needing to explicitly check
-the fast_misaligned_access_speed_key static key.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-Reviewed-by: Evan Green <evan@rivosinc.com>
+With PCI power control we deal with two struct device objects bound to
+two different drivers but consuming the same OF node. We must not bind
+the pinctrl twice. To that end: before setting the OF node of the newly
+instantiated PCI device, check if a platform device consuming the same
+OF node doesn't already exist on the platform bus and - if so - mark the
+PCI device as reusing the OF node.
+
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- arch/riscv/include/asm/cpufeature.h | 15 ++++++++++-----
- arch/riscv/lib/csum.c               |  7 ++-----
- 2 files changed, 12 insertions(+), 10 deletions(-)
+ drivers/pci/of.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/asm/cpufeature.h
-index 5a626ed2c47a..eb3ac304fc42 100644
---- a/arch/riscv/include/asm/cpufeature.h
-+++ b/arch/riscv/include/asm/cpufeature.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-- * Copyright 2022-2023 Rivos, Inc
-+ * Copyright 2022-2024 Rivos, Inc
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index 51e3dd0ea5ab..b908fe1ae951 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -6,6 +6,7 @@
   */
+ #define pr_fmt(fmt)	"PCI: OF: " fmt
  
- #ifndef _ASM_CPUFEATURE_H
-@@ -28,8 +28,6 @@ struct riscv_isainfo {
++#include <linux/cleanup.h>
+ #include <linux/irqdomain.h>
+ #include <linux/kernel.h>
+ #include <linux/pci.h>
+@@ -13,6 +14,7 @@
+ #include <linux/of_irq.h>
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
++#include <linux/platform_device.h>
+ #include "pci.h"
  
- DECLARE_PER_CPU(struct riscv_cpuinfo, riscv_cpuinfo);
- 
--DECLARE_PER_CPU(long, misaligned_access_speed);
+ #ifdef CONFIG_PCI
+@@ -25,16 +27,20 @@
+  */
+ int pci_set_of_node(struct pci_dev *dev)
+ {
+-	struct device_node *node;
 -
- /* Per-cpu ISA extensions. */
- extern struct riscv_isainfo hart_isa[NR_CPUS];
+ 	if (!dev->bus->dev.of_node)
+ 		return 0;
  
-@@ -53,6 +51,15 @@ static inline bool check_unaligned_access_emulated(int cpu)
- static inline void unaligned_emulation_finish(void) {}
- #endif
+-	node = of_pci_find_child_device(dev->bus->dev.of_node, dev->devfn);
++	struct device_node *node __free(device_node) =
++		of_pci_find_child_device(dev->bus->dev.of_node, dev->devfn);
+ 	if (!node)
+ 		return 0;
  
-+DECLARE_PER_CPU(long, misaligned_access_speed);
+-	device_set_node(&dev->dev, of_fwnode_handle(node));
++	struct device *pdev __free(put_device) =
++		bus_find_device_by_of_node(&platform_bus_type, node);
++	if (pdev)
++		dev->bus->dev.of_node_reused = true;
 +
-+DECLARE_STATIC_KEY_FALSE(fast_misaligned_access_speed_key);
-+
-+static __always_inline bool has_fast_misaligned_accesses(void)
-+{
-+	return static_branch_likely(&fast_misaligned_access_speed_key);
-+}
-+
- unsigned long riscv_get_elf_hwcap(void);
- 
- struct riscv_isa_ext_data {
-@@ -135,6 +142,4 @@ static __always_inline bool riscv_cpu_has_extension_unlikely(int cpu, const unsi
- 	return __riscv_isa_extension_available(hart_isa[cpu].isa, ext);
++	device_set_node(&dev->dev, of_fwnode_handle(no_free_ptr(node)));
+ 	return 0;
  }
  
--DECLARE_STATIC_KEY_FALSE(fast_misaligned_access_speed_key);
--
- #endif
-diff --git a/arch/riscv/lib/csum.c b/arch/riscv/lib/csum.c
-index af3df5274ccb..47392a83239d 100644
---- a/arch/riscv/lib/csum.c
-+++ b/arch/riscv/lib/csum.c
-@@ -3,7 +3,7 @@
-  * Checksum library
-  *
-  * Influenced by arch/arm64/lib/csum.c
-- * Copyright (C) 2023 Rivos Inc.
-+ * Copyright (C) 2023-2024 Rivos Inc.
-  */
- #include <linux/bitops.h>
- #include <linux/compiler.h>
-@@ -318,10 +318,7 @@ unsigned int do_csum(const unsigned char *buff, int len)
- 	 * branches. The largest chunk of overlap was delegated into the
- 	 * do_csum_common function.
- 	 */
--	if (static_branch_likely(&fast_misaligned_access_speed_key))
--		return do_csum_no_alignment(buff, len);
--
--	if (((unsigned long)buff & OFFSET_MASK) == 0)
-+	if (has_fast_misaligned_accesses() || (((unsigned long)buff & OFFSET_MASK) == 0))
- 		return do_csum_no_alignment(buff, len);
- 
- 	return do_csum_with_alignment(buff, len);
-
 -- 
-2.43.0
+2.40.1
 
