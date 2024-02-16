@@ -1,45 +1,45 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BF21D6BD;
-	Fri, 16 Feb 2024 04:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11EB425570;
+	Fri, 16 Feb 2024 04:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708056008; cv=none; b=rYiNAAx865T0KSfXeO4tzhl6MV98yHDjs9qTE4hIcgxcWZHaJjpeLu2qUBSIgra5dOG5hLpJVspJstDZbtUjRJ5PBEAioIlZ5/w+d4eZ2xmfwqFmI3n4vJXGkRL+Z+VkInxHQFTakcb+EcB0KSoHU25gRwGrk6+JRsN3n2qPrVM=
+	t=1708056012; cv=none; b=GBHdh4RkXiloRTgVT3Jg0CaHLz8XxWzGwwt+SEsnnKzPJue34oPIchnpjrjwn92sEhA/mj7KJbnxPdWvoFXtw+JlocCgOOhHAMUKwu0Li1Y0cpwkyef6SS9bQ3T0d1hKfzKDyCz+FSANADqhKLQPd0z+kYzZSeDXgWS4Jz6yOrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708056008; c=relaxed/simple;
-	bh=IWEzTYooovusuufLCyetWQDO8aOMyj3MLGWCNH90IxY=;
+	s=arc-20240116; t=1708056012; c=relaxed/simple;
+	bh=ZZLPLsZWCalttWXiDGhwha2n4wH1k7VH4xe9hZ3MlSk=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E64Edrkek0XoN3nKAVkP0Ui60JIWQQG8/PpACT47zh0qafNmLf85P8ApJ+6xYgfn+M+9Gpi/9s0XicOlroJJtM/YM36Ze5W1m4wAMfFwzujB7XJq/XKuCwiutc88LnKNin7QqTEfIWf6Nu/4+mIj9QZr5bQZW+ULQumZbDtsO4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=d2aDqMml; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=c4zCBstGSHAR1jrGkU0Ai6yIoq6yB2GSWgqJXRZ+Nn4ll3TYmp039LNilpzVn55nsVUNDURWzeTCRCxIcLQKdybfyCcZTl1ALhsQLg/uwMskUxBVFfCWJifLJJeGLtCkSPclYyuQETyCHTba0RNjH8VIpwlWudF8zCiLZQtdo3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ppynnOJb; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="d2aDqMml"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41G3iu5n015135;
-	Fri, 16 Feb 2024 03:59:45 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ppynnOJb"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41G3soTk025107;
+	Fri, 16 Feb 2024 03:59:38 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=qcppdkim1; bh=YgMbSpdThd+52u2tW8ty
-	04Q0ADWlPVuDMRgoZX+EaX4=; b=d2aDqMmlqJfA5l2vlnB6CSS/frp1J+y23GNS
-	gF0Psrmf62Yfz8UF+Wo4TCO/6UCoXGTcdk2GKicm5VF8DQUAvw+wMpcmqVqk1YEc
-	cPoPK6wMnPSgQZYWyOkS53JCeHMBO+tUdV7GaZ+pf6qmGukEGJYiMt0L7ToeWkRA
-	tj01EhrCO+n0wxHnUfVEwjrGt6DX4MGFNK1XUHQWui6096yIxhHZwXoVsi5RwwHd
-	ZrgIlNVMEFOFP1hGCs7Vn2h8TcpmZMII4EItubD+netOv4Kgob+MbnkKKyx7+GEH
-	2zDXLICZ6CQ5dag5gzvEkxa1aG+D4RTLNjNohTYTFRxumTEWsw==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w9xv9g3w3-1
+	:mime-version:content-type; s=qcppdkim1; bh=KGVDChVURpH1tdgstEOz
+	iOjOuMUArOQdBZVeUE2YmVQ=; b=ppynnOJbTKKLlAd6O1cYiEj+JwSQfFwxdvD+
+	5ODQSEtZ2F/jTamm0pnGtszA9y8zFXdvhsZwyXqKdwRPy6RkyXkG2gwaqdpdMX/E
+	dCQNQkeqsHyQ8MUZMmR+XxaLo+ylUsfauPurSpQG9TbRs65aDv/6CVotjFsAlL4+
+	3MZDC8LZ4GHsqscy2C1CUV5NJmBAEUwwFCD3YewKxBwHXSrTutrUbxkxvIMnWZ6/
+	1hUIZcNZfl2GmmRoLxIx0ITLAufWXILO8l8tpsF3JgKJ/3zaFV8UnBWKCSUuPq+H
+	d7VpyoPorZv3Ty3U2hZDm8qKmn8ssoxmaUPFuELFtAtDy3T4YA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w9fkfap2v-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 Feb 2024 03:59:44 +0000 (GMT)
+	Fri, 16 Feb 2024 03:59:38 +0000 (GMT)
 Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41G3xiid014731
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41G3xb6T032284
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 Feb 2024 03:59:44 GMT
+	Fri, 16 Feb 2024 03:59:37 GMT
 Received: from hu-wcheng-lv.qualcomm.com (10.49.16.6) by
  nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 15 Feb 2024 19:59:43 -0800
+ 15.2.1118.40; Thu, 15 Feb 2024 19:59:36 -0800
 From: Wesley Cheng <quic_wcheng@quicinc.com>
 To: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
         <perex@perex.cz>, <conor+dt@kernel.org>, <corbet@lwn.net>,
@@ -51,10 +51,12 @@ To: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
 CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-sound@vger.kernel.org>, <linux-usb@vger.kernel.org>,
         <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>, Wesley Cheng <quic_wcheng@quicinc.com>
-Subject: [PATCH v16 39/50] ASoC: Introduce SND kcontrols to select sound card and PCM device
-Date: Thu, 15 Feb 2024 19:59:12 -0800
-Message-ID: <20240216035923.23392-40-quic_wcheng@quicinc.com>
+        <alsa-devel@alsa-project.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Wesley Cheng <quic_wcheng@quicinc.com>
+Subject: [PATCH v16 14/50] xhci: sideband: add initial api to register a sideband entity
+Date: Thu, 15 Feb 2024 19:58:47 -0800
+Message-ID: <20240216035923.23392-15-quic_wcheng@quicinc.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240216035923.23392-1-quic_wcheng@quicinc.com>
 References: <20240216035923.23392-1-quic_wcheng@quicinc.com>
@@ -69,268 +71,588 @@ X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
  nalasex01b.na.qualcomm.com (10.47.209.197)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: TzQt_SKuhlhULYokY8llwr4vr83IyyId
-X-Proofpoint-GUID: TzQt_SKuhlhULYokY8llwr4vr83IyyId
+X-Proofpoint-ORIG-GUID: Bji5nvZBJSW3egKZ6fVaWqHUpxubgBHk
+X-Proofpoint-GUID: Bji5nvZBJSW3egKZ6fVaWqHUpxubgBHk
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-16_03,2024-02-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- bulkscore=0 adultscore=0 mlxscore=0 priorityscore=1501 suspectscore=0
- spamscore=0 phishscore=0 lowpriorityscore=0 mlxlogscore=999
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402160031
+ definitions=2024-02-16_02,2024-02-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ adultscore=0 lowpriorityscore=0 impostorscore=0 mlxlogscore=999
+ spamscore=0 bulkscore=0 suspectscore=0 mlxscore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402160029
 
-Add SND kcontrol to SOC USB, which will allow for userpsace to determine
-which USB card number and PCM device to offload.  This allows for userspace
-to potentially tag an alternate path for a specific USB SND card and PCM
-device.  Previously, control was absent, and the offload path would be
-enabled on the last USB SND device which was connected.  This logic will
-continue to be applicable if no mixer input is received for specific device
-selection.
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-An example to configure the offload device using tinymix:
-tinymix -D 0 set 'USB Offload Playback Route Select' 1 0
+Introduce XHCI sideband, which manages the USB endpoints being requested by
+a client driver.  This is used for when client drivers are attempting to
+offload USB endpoints to another entity for handling USB transfers.  XHCI
+sideband will allow for drivers to fetch the required information about the
+transfer ring, so the user can submit transfers independently.  Expose the
+required APIs for drivers to register and request for a USB endpoint and to
+manage XHCI secondary interrupters.
 
-The above command will configure the offload path to utilize card#1 and PCM
-stream#0.
+Multiple ring segment page linking, proper endpoint clean up, and allowing
+module compliation added by Wesley Cheng to complete original concept code
+by Mathias Nyman.
 
-Change-Id: I02edabc01d198f7e0905080f0c751cd5146cb278
+Change-Id: I157b79bff90dafdc40c2da3cdc68bb4bf7d31c9f
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Co-developed-by: Wesley Cheng <quic_wcheng@quicinc.com>
 Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
 ---
- include/sound/soc-usb.h |  16 ++++
- sound/soc/soc-usb.c     | 157 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 173 insertions(+)
+ drivers/usb/host/Kconfig          |   9 +
+ drivers/usb/host/Makefile         |   2 +
+ drivers/usb/host/xhci-sideband.c  | 411 ++++++++++++++++++++++++++++++
+ drivers/usb/host/xhci.h           |   4 +
+ include/linux/usb/xhci-sideband.h |  68 +++++
+ 5 files changed, 494 insertions(+)
+ create mode 100644 drivers/usb/host/xhci-sideband.c
+ create mode 100644 include/linux/usb/xhci-sideband.h
 
-diff --git a/include/sound/soc-usb.h b/include/sound/soc-usb.h
-index 8f2d3064b520..18cdc59df9aa 100644
---- a/include/sound/soc-usb.h
-+++ b/include/sound/soc-usb.h
-@@ -6,6 +6,12 @@
- #ifndef __LINUX_SND_SOC_USB_H
- #define __LINUX_SND_SOC_USB_H
+diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+index 4448d0ab06f0..6135603c5dc4 100644
+--- a/drivers/usb/host/Kconfig
++++ b/drivers/usb/host/Kconfig
+@@ -104,6 +104,15 @@ config USB_XHCI_RZV2M
+ 	  Say 'Y' to enable the support for the xHCI host controller
+ 	  found in Renesas RZ/V2M SoC.
  
-+enum snd_soc_usb_kctl {
-+	SND_SOC_USB_KCTL_CARD_ROUTE,
-+	SND_SOC_USB_KCTL_PCM_ROUTE,
-+	SND_SOC_USB_KCTL_MAX,
-+};
++config USB_XHCI_SIDEBAND
++	tristate "xHCI support for sideband"
++	help
++	  Say 'Y' to enable the support for the xHCI sideband capability.
++	  provide a mechanism for a sideband datapath for payload associated
++	  with audio class endpoints. This allows for an audio DSP to use
++	  xHCI USB endpoints directly, allowing CPU to sleep while playing
++	  audio
 +
- /**
-  * struct snd_soc_usb_device
-  * @card_idx - sound card index associated with USB device
-@@ -24,16 +30,26 @@ struct snd_soc_usb_device {
-  * struct snd_soc_usb
-  * @list - list head for SND SOC struct list
-  * @component - reference to ASoC component
-+ * @kctl - list of kcontrols created
-  * @num_supported_streams - number of supported concurrent sessions
-  * @connection_status_cb - callback to notify connection events
-+ * @put_offload_dev - callback to select USB sound card/PCM device
-+ * @get_offload_dev - callback to fetch selected USB sound card/PCM device
-  * @priv_data - driver data
-  **/
- struct snd_soc_usb {
- 	struct list_head list;
- 	struct snd_soc_component *component;
-+	struct snd_kcontrol *kctl[SND_SOC_USB_KCTL_MAX];
- 	unsigned int num_supported_streams;
- 	int (*connection_status_cb)(struct snd_soc_usb *usb,
- 			struct snd_soc_usb_device *sdev, bool connected);
-+	int (*put_offload_dev)(struct snd_kcontrol *kcontrol,
-+			       struct snd_ctl_elem_value *ucontrol,
-+			       enum snd_soc_usb_kctl type);
-+	int (*get_offload_dev)(struct snd_kcontrol *kcontrol,
-+			       struct snd_ctl_elem_value *ucontrol,
-+			       enum snd_soc_usb_kctl type);
- 	void *priv_data;
+ config USB_XHCI_TEGRA
+ 	tristate "xHCI support for NVIDIA Tegra SoCs"
+ 	depends on PHY_TEGRA_XUSB
+diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
+index be4e5245c52f..435a1e93b40b 100644
+--- a/drivers/usb/host/Makefile
++++ b/drivers/usb/host/Makefile
+@@ -32,6 +32,8 @@ endif
+ xhci-rcar-hcd-y				+= xhci-rcar.o
+ xhci-rcar-hcd-$(CONFIG_USB_XHCI_RZV2M)	+= xhci-rzv2m.o
+ 
++obj-$(CONFIG_USB_XHCI_SIDEBAND) += xhci-sideband.o
++
+ obj-$(CONFIG_USB_PCI)	+= pci-quirks.o
+ 
+ obj-$(CONFIG_USB_EHCI_HCD)	+= ehci-hcd.o
+diff --git a/drivers/usb/host/xhci-sideband.c b/drivers/usb/host/xhci-sideband.c
+new file mode 100644
+index 000000000000..0944bf31d772
+--- /dev/null
++++ b/drivers/usb/host/xhci-sideband.c
+@@ -0,0 +1,411 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * xHCI host controller sideband support
++ *
++ * Copyright (c) 2023, Intel Corporation.
++ *
++ * Author: Mathias Nyman
++ */
++
++#include <linux/usb/xhci-sideband.h>
++#include <linux/dma-direct.h>
++
++#include "xhci.h"
++
++/* sideband internal helpers */
++static struct sg_table *
++xhci_ring_to_sgtable(struct xhci_sideband *sb, struct xhci_ring *ring)
++{
++	struct xhci_segment *seg;
++	struct sg_table	*sgt;
++	unsigned int n_pages;
++	struct page **pages;
++	struct device *dev;
++	size_t sz;
++	int i;
++
++	dev = xhci_to_hcd(sb->xhci)->self.sysdev;
++	sz = ring->num_segs * TRB_SEGMENT_SIZE;
++	n_pages = PAGE_ALIGN(sz) >> PAGE_SHIFT;
++	pages = kvmalloc_array(n_pages, sizeof(struct page *), GFP_KERNEL);
++	if (!pages)
++		return NULL;
++
++	sgt = kzalloc(sizeof(struct sg_table), GFP_KERNEL);
++	if (!sgt) {
++		kvfree(pages);
++		return NULL;
++	}
++
++	seg = ring->first_seg;
++	/*
++	 * Rings can potentially have multiple segments, create an array that
++	 * carries page references to allocated segments.  Utilize the
++	 * sg_alloc_table_from_pages() to create the sg table, and to ensure
++	 * that page links are created.
++	 */
++	for (i = 0; i < ring->num_segs; i++) {
++		dma_get_sgtable(dev, sgt, seg->trbs, seg->dma,
++					TRB_SEGMENT_SIZE);
++		pages[i] = sg_page(sgt->sgl);
++		sg_free_table(sgt);
++		seg = seg->next;
++	}
++
++	if (sg_alloc_table_from_pages(sgt, pages, n_pages, 0, sz, GFP_KERNEL)) {
++		kvfree(pages);
++		kfree(sgt);
++
++		return NULL;
++	}
++	/*
++	 * Save first segment dma address to sg dma_address field for the sideband
++	 * client to have access to the IOVA of the ring.
++	 */
++	sg_dma_address(sgt->sgl) = ring->first_seg->dma;
++
++	return sgt;
++}
++
++static void
++__xhci_sideband_remove_endpoint(struct xhci_sideband *sb, struct xhci_virt_ep *ep)
++{
++	/*
++	 * Issue a stop endpoint command when an endpoint is removed.
++	 * The stop ep cmd handler will handle the ring cleanup.
++	 */
++	xhci_stop_endpoint_sync(sb->xhci, ep, 0, GFP_KERNEL);
++
++	ep->sideband = NULL;
++	sb->eps[ep->ep_index] = NULL;
++}
++
++/* sideband api functions */
++
++/**
++ * xhci_sideband_add_endpoint - add endpoint to sideband access list
++ * @sb: sideband instance for this usb device
++ * @host_ep: usb host endpoint
++ *
++ * Adds an endpoint to the list of sideband accessed endpoints for this usb
++ * device.
++ * After an endpoint is added the sideband client can get the endpoint transfer
++ * ring buffer by calling xhci_sideband_endpoint_buffer()
++ *
++ * Return: 0 on success, negative error otherwise.
++ */
++int
++xhci_sideband_add_endpoint(struct xhci_sideband *sb,
++			   struct usb_host_endpoint *host_ep)
++{
++	struct xhci_virt_ep *ep;
++	unsigned int ep_index;
++
++	mutex_lock(&sb->mutex);
++	ep_index = xhci_get_endpoint_index(&host_ep->desc);
++	ep = &sb->vdev->eps[ep_index];
++
++	if (ep->ep_state & EP_HAS_STREAMS) {
++		mutex_unlock(&sb->mutex);
++		return -EINVAL;
++	}
++
++	/*
++	 * Note, we don't know the DMA mask of the audio DSP device, if its
++	 * smaller than for xhci it won't be able to access the endpoint ring
++	 * buffer. This could be solved by not allowing the audio class driver
++	 * to add the endpoint the normal way, but instead offload it immediately,
++	 * and let this function add the endpoint and allocate the ring buffer
++	 * with the smallest common DMA mask
++	 */
++	if (sb->eps[ep_index] || ep->sideband) {
++		mutex_unlock(&sb->mutex);
++		return -EBUSY;
++	}
++
++	ep->sideband = sb;
++	sb->eps[ep_index] = ep;
++	mutex_unlock(&sb->mutex);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(xhci_sideband_add_endpoint);
++
++/**
++ * xhci_sideband_remove_endpoint - remove endpoint from sideband access list
++ * @sb: sideband instance for this usb device
++ * @host_ep: usb host endpoint
++ *
++ * Removes an endpoint from the list of sideband accessed endpoints for this usb
++ * device.
++ * sideband client should no longer touch the endpoint transfer buffer after
++ * calling this.
++ *
++ * Return: 0 on success, negative error otherwise.
++ */
++int
++xhci_sideband_remove_endpoint(struct xhci_sideband *sb,
++			      struct usb_host_endpoint *host_ep)
++{
++	struct xhci_virt_ep *ep;
++	unsigned int ep_index;
++
++	mutex_lock(&sb->mutex);
++	ep_index = xhci_get_endpoint_index(&host_ep->desc);
++	ep = sb->eps[ep_index];
++
++	if (!ep || !ep->sideband) {
++		mutex_unlock(&sb->mutex);
++		return -ENODEV;
++	}
++
++	__xhci_sideband_remove_endpoint(sb, ep);
++	xhci_initialize_ring_info(ep->ring, 1);
++	mutex_unlock(&sb->mutex);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(xhci_sideband_remove_endpoint);
++
++int
++xhci_sideband_stop_endpoint(struct xhci_sideband *sb,
++			    struct usb_host_endpoint *host_ep)
++{
++	struct xhci_virt_ep *ep;
++	unsigned int ep_index;
++
++	ep_index = xhci_get_endpoint_index(&host_ep->desc);
++	ep = sb->eps[ep_index];
++
++	if (!ep || ep->sideband != sb)
++		return -EINVAL;
++
++	return xhci_stop_endpoint_sync(sb->xhci, ep, 0, GFP_KERNEL);
++}
++EXPORT_SYMBOL_GPL(xhci_sideband_stop_endpoint);
++
++/**
++ * xhci_sideband_get_endpoint_buffer - gets the endpoint transfer buffer address
++ * @sb: sideband instance for this usb device
++ * @host_ep: usb host endpoint
++ *
++ * Returns the address of the endpoint buffer where xHC controller reads queued
++ * transfer TRBs from. This is the starting address of the ringbuffer where the
++ * sideband client should write TRBs to.
++ *
++ * Caller needs to free the returned sg_table
++ *
++ * Return: struct sg_table * if successful. NULL otherwise.
++ */
++struct sg_table *
++xhci_sideband_get_endpoint_buffer(struct xhci_sideband *sb,
++			      struct usb_host_endpoint *host_ep)
++{
++	struct xhci_virt_ep *ep;
++	unsigned int ep_index;
++
++	ep_index = xhci_get_endpoint_index(&host_ep->desc);
++	ep = sb->eps[ep_index];
++
++	if (!ep)
++		return NULL;
++
++	return xhci_ring_to_sgtable(sb, ep->ring);
++}
++EXPORT_SYMBOL_GPL(xhci_sideband_get_endpoint_buffer);
++
++/**
++ * xhci_sideband_get_event_buffer - return the event buffer for this device
++ * @sb: sideband instance for this usb device
++ *
++ * If a secondary xhci interupter is set up for this usb device then this
++ * function returns the address of the event buffer where xHC writes
++ * the transfer completion events.
++ *
++ * Caller needs to free the returned sg_table
++ *
++ * Return: struct sg_table * if successful. NULL otherwise.
++ */
++struct sg_table *
++xhci_sideband_get_event_buffer(struct xhci_sideband *sb)
++{
++	if (!sb || !sb->ir)
++		return NULL;
++
++	return xhci_ring_to_sgtable(sb, sb->ir->event_ring);
++}
++EXPORT_SYMBOL_GPL(xhci_sideband_get_event_buffer);
++
++/**
++ * xhci_sideband_create_interrupter - creates a new interrupter for this sideband
++ * @sb: sideband instance for this usb device
++ * @num_seg: number of event ring segments to allocate
++ * @ip_autoclear: IP autoclearing support such as MSI implemented
++ *
++ * Sets up a xhci interrupter that can be used for this sideband accessed usb
++ * device. Transfer events for this device can be routed to this interrupters
++ * event ring by setting the 'Interrupter Target' field correctly when queueing
++ * the transfer TRBs.
++ * Once this interrupter is created the interrupter target ID can be obtained
++ * by calling xhci_sideband_interrupter_id()
++ *
++ * Returns 0 on success, negative error otherwise
++ */
++int
++xhci_sideband_create_interrupter(struct xhci_sideband *sb, int num_seg,
++				 bool ip_autoclear)
++{
++	int ret = 0;
++
++	if (!sb)
++		return -ENODEV;
++
++	mutex_lock(&sb->mutex);
++	if (sb->ir) {
++		ret = -EBUSY;
++		goto out;
++	}
++
++	sb->ir = xhci_create_secondary_interrupter(xhci_to_hcd(sb->xhci),
++			num_seg);
++	if (!sb->ir) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	sb->ir->ip_autoclear = ip_autoclear;
++
++out:
++	mutex_unlock(&sb->mutex);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(xhci_sideband_create_interrupter);
++
++/**
++ * xhci_sideband_remove_interrupter - remove the interrupter from a sideband
++ * @sb: sideband instance for this usb device
++ *
++ * Removes a registered interrupt for a sideband.  This would allow for other
++ * sideband users to utilize this interrupter.
++ */
++void
++xhci_sideband_remove_interrupter(struct xhci_sideband *sb)
++{
++	if (!sb || !sb->ir)
++		return;
++
++	mutex_lock(&sb->mutex);
++	xhci_remove_secondary_interrupter(xhci_to_hcd(sb->xhci), sb->ir);
++
++	sb->ir = NULL;
++	mutex_unlock(&sb->mutex);
++}
++EXPORT_SYMBOL_GPL(xhci_sideband_remove_interrupter);
++
++/**
++ * xhci_sideband_interrupter_id - return the interrupter target id
++ * @sb: sideband instance for this usb device
++ *
++ * If a secondary xhci interrupter is set up for this usb device then this
++ * function returns the ID used by the interrupter. The sideband client
++ * needs to write this ID to the 'Interrupter Target' field of the transfer TRBs
++ * it queues on the endpoints transfer ring to ensure transfer completion event
++ * are written by xHC to the correct interrupter event ring.
++ *
++ * Returns interrupter id on success, negative error othgerwise
++ */
++int
++xhci_sideband_interrupter_id(struct xhci_sideband *sb)
++{
++	if (!sb || !sb->ir)
++		return -ENODEV;
++
++	return sb->ir->intr_num;
++}
++EXPORT_SYMBOL_GPL(xhci_sideband_interrupter_id);
++
++/**
++ * xhci_sideband_register - register a sideband for a usb device
++ * @udev: usb device to be accessed via sideband
++ *
++ * Allows for clients to utilize XHCI interrupters and fetch transfer and event
++ * ring parameters for executing data transfers.
++ *
++ * Return: pointer to a new xhci_sideband instance if successful. NULL otherwise.
++ */
++struct xhci_sideband *
++xhci_sideband_register(struct usb_device *udev)
++{
++	struct usb_hcd *hcd = bus_to_hcd(udev->bus);
++	struct xhci_hcd *xhci = hcd_to_xhci(hcd);
++	struct xhci_virt_device *vdev;
++	struct xhci_sideband *sb;
++
++	/* make sure the usb device is connected to a xhci controller */
++	if (!udev->slot_id)
++		return NULL;
++
++	sb = kzalloc_node(sizeof(*sb), GFP_KERNEL, dev_to_node(hcd->self.sysdev));
++	if (!sb)
++		return NULL;
++
++	mutex_init(&sb->mutex);
++
++	/* check this device isn't already controlled via sideband */
++	spin_lock_irq(&xhci->lock);
++
++	vdev = xhci->devs[udev->slot_id];
++
++	if (!vdev || vdev->sideband) {
++		xhci_warn(xhci, "XHCI sideband for slot %d already in use\n",
++			  udev->slot_id);
++		spin_unlock_irq(&xhci->lock);
++		kfree(sb);
++		return NULL;
++	}
++
++	sb->xhci = xhci;
++	sb->vdev = vdev;
++	vdev->sideband = sb;
++
++	spin_unlock_irq(&xhci->lock);
++
++	return sb;
++}
++EXPORT_SYMBOL_GPL(xhci_sideband_register);
++
++/**
++ * xhci_sideband_unregister - unregister sideband access to a usb device
++ * @sb: sideband instance to be unregistered
++ *
++ * Unregisters sideband access to a usb device and frees the sideband
++ * instance.
++ * After this the endpoint and interrupter event buffers should no longer
++ * be accessed via sideband. The xhci driver can now take over handling
++ * the buffers.
++ */
++void
++xhci_sideband_unregister(struct xhci_sideband *sb)
++{
++	struct xhci_hcd *xhci = sb->xhci;
++	int i;
++
++	mutex_lock(&sb->mutex);
++	for (i = 0; i < EP_CTX_PER_DEV; i++)
++		if (sb->eps[i])
++			__xhci_sideband_remove_endpoint(sb, sb->eps[i]);
++	mutex_unlock(&sb->mutex);
++
++	xhci_sideband_remove_interrupter(sb);
++
++	spin_lock_irq(&xhci->lock);
++	sb->xhci = NULL;
++	sb->vdev->sideband = NULL;
++	spin_unlock_irq(&xhci->lock);
++
++	kfree(sb);
++}
++EXPORT_SYMBOL_GPL(xhci_sideband_unregister);
++MODULE_LICENSE("GPL");
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index 77042df42b46..22aa9f2a2c0a 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -693,6 +693,8 @@ struct xhci_virt_ep {
+ 	int			next_frame_id;
+ 	/* Use new Isoch TRB layout needed for extended TBC support */
+ 	bool			use_extended_tbc;
++	/* set if this endpoint is controlled via sideband access*/
++	struct xhci_sideband			*sideband;
  };
  
-diff --git a/sound/soc/soc-usb.c b/sound/soc/soc-usb.c
-index bc77204fd2db..ade09b416d45 100644
---- a/sound/soc/soc-usb.c
-+++ b/sound/soc/soc-usb.c
-@@ -15,6 +15,9 @@ static struct device_node *snd_soc_find_phandle(struct device *dev)
- {
- 	struct device_node *node;
+ enum xhci_overhead_type {
+@@ -756,6 +758,8 @@ struct xhci_virt_device {
+ 	u16				current_mel;
+ 	/* Used for the debugfs interfaces. */
+ 	void				*debugfs_private;
++	/* set if this device is registered for sideband access */
++	struct xhci_sideband			*sideband;
+ };
  
-+	if (!dev)
-+		return ERR_PTR(-ENODEV);
+ /*
+diff --git a/include/linux/usb/xhci-sideband.h b/include/linux/usb/xhci-sideband.h
+new file mode 100644
+index 000000000000..1035dae43cee
+--- /dev/null
++++ b/include/linux/usb/xhci-sideband.h
+@@ -0,0 +1,68 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * xHCI host controller sideband support
++ *
++ * Copyright (c) 2023, Intel Corporation.
++ *
++ * Author: Mathias Nyman <mathias.nyman@linux.intel.com>
++ */
 +
- 	node = of_parse_phandle(dev->of_node, "usb-soc-be", 0);
- 	if (!node)
- 		return ERR_PTR(-ENODEV);
-@@ -38,6 +41,152 @@ static struct snd_soc_usb *snd_soc_find_usb_ctx(struct device_node *node)
- 	return NULL;
- }
- 
-+/* SOC USB sound kcontrols */
-+static int soc_usb_put_offload_pcm_dev(struct snd_kcontrol *kcontrol,
-+			      struct snd_ctl_elem_value *ucontrol)
-+{
-+	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
-+	struct snd_soc_usb *ctx = snd_soc_find_usb_ctx(component->dev->of_node);
-+	int ret = 0;
++#ifndef __LINUX_XHCI_SIDEBAND_H
++#define __LINUX_XHCI_SIDEBAND_H
 +
-+	mutex_lock(&ctx_mutex);
-+	if (ctx && ctx->put_offload_dev)
-+		ret = ctx->put_offload_dev(kcontrol, ucontrol,
-+						SND_SOC_USB_KCTL_PCM_ROUTE);
-+	mutex_unlock(&ctx_mutex);
++#include <linux/scatterlist.h>
++#include <linux/usb.h>
 +
-+	return ret;
-+}
++#define	EP_CTX_PER_DEV		31	/* FIMXME defined twice, from xhci.h */
 +
-+static int soc_usb_get_offload_pcm_dev(struct snd_kcontrol *kcontrol,
-+				   struct snd_ctl_elem_value *ucontrol)
-+{
-+	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
-+	struct snd_soc_usb *ctx = snd_soc_find_usb_ctx(component->dev->of_node);
-+	int ret = 0;
++struct xhci_sideband;
 +
-+	ucontrol->value.integer.value[0] = -1;
++/**
++ * struct xhci_sideband - representation of a sideband accessed usb device.
++ * @xhci: The xhci host controller the usb device is connected to
++ * @vdev: the usb device accessed via sideband
++ * @eps: array of endpoints controlled via sideband
++ * @ir: event handling and buffer for sideband accessed device
++ *
++ * FIXME usb device accessed via sideband Keeping track of sideband accessed usb devices.
++ */
 +
-+	mutex_lock(&ctx_mutex);
-+	if (ctx && ctx->get_offload_dev)
-+		ret = ctx->get_offload_dev(kcontrol, ucontrol,
-+						SND_SOC_USB_KCTL_PCM_ROUTE);
-+	mutex_unlock(&ctx_mutex);
-+
-+	return ret;
-+
-+}
-+
-+static int soc_usb_put_offload_card_dev(struct snd_kcontrol *kcontrol,
-+			      struct snd_ctl_elem_value *ucontrol)
-+{
-+	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
-+	struct snd_soc_usb *ctx = snd_soc_find_usb_ctx(component->dev->of_node);
-+	int ret = 0;
-+
-+	mutex_lock(&ctx_mutex);
-+	if (ctx && ctx->put_offload_dev)
-+		ret = ctx->put_offload_dev(kcontrol, ucontrol,
-+						SND_SOC_USB_KCTL_CARD_ROUTE);
-+	mutex_unlock(&ctx_mutex);
-+
-+	return ret;
-+}
-+
-+static int soc_usb_get_offload_card_dev(struct snd_kcontrol *kcontrol,
-+				   struct snd_ctl_elem_value *ucontrol)
-+{
-+	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
-+	struct snd_soc_usb *ctx = snd_soc_find_usb_ctx(component->dev->of_node);
-+	int ret = 0;
-+
-+	ucontrol->value.integer.value[0] = -1;
-+
-+	mutex_lock(&ctx_mutex);
-+	if (ctx && ctx->get_offload_dev)
-+		ret = ctx->get_offload_dev(kcontrol, ucontrol,
-+						SND_SOC_USB_KCTL_CARD_ROUTE);
-+	mutex_unlock(&ctx_mutex);
-+
-+	return ret;
-+
-+}
-+
-+static int soc_usb_offload_pcm_info(struct snd_kcontrol *kcontrol,
-+			      struct snd_ctl_elem_info *uinfo)
-+{
-+	uinfo->type = SNDRV_CTL_ELEM_TYPE_INTEGER;
-+	uinfo->count = 1;
-+	uinfo->value.integer.min = -1;
-+	/* Arbitrary max value, as there is no 'limit' on number of PCM devices */
-+	uinfo->value.integer.max = 0xff;
-+
-+	return 0;
-+}
-+
-+static int soc_usb_offload_card_info(struct snd_kcontrol *kcontrol,
-+			      struct snd_ctl_elem_info *uinfo)
-+{
-+	uinfo->type = SNDRV_CTL_ELEM_TYPE_INTEGER;
-+	uinfo->count = 1;
-+	uinfo->value.integer.min = -1;
-+	uinfo->value.integer.max = SNDRV_CARDS;
-+
-+	return 0;
-+}
-+
-+static const struct snd_kcontrol_new soc_usb_kcontrols[] = {
-+	[SND_SOC_USB_KCTL_CARD_ROUTE] = {
-+		.iface = SNDRV_CTL_ELEM_IFACE_CARD,
-+		.access = SNDRV_CTL_ELEM_ACCESS_READWRITE,
-+		.name = "USB Offload Playback Route Card Select",
-+		.info = soc_usb_offload_card_info,
-+		.get = soc_usb_get_offload_card_dev,
-+		.put = soc_usb_put_offload_card_dev,
-+	},
-+	[SND_SOC_USB_KCTL_PCM_ROUTE] = {
-+		.iface = SNDRV_CTL_ELEM_IFACE_CARD,
-+		.access = SNDRV_CTL_ELEM_ACCESS_READWRITE,
-+		.name = "USB Offload Playback Route PCM Select",
-+		.info = soc_usb_offload_pcm_info,
-+		.get = soc_usb_get_offload_pcm_dev,
-+		.put = soc_usb_put_offload_pcm_dev,
-+	},
++struct xhci_sideband {
++	struct xhci_hcd                 *xhci;
++	struct xhci_virt_device         *vdev;
++	struct xhci_virt_ep             *eps[EP_CTX_PER_DEV];
++	struct xhci_interrupter         *ir;
++	struct mutex			mutex;
 +};
 +
-+static int snd_soc_usb_control_remove(struct snd_soc_usb *usb)
-+{
-+	struct snd_soc_component *component = usb->component;
-+	int i;
++struct xhci_sideband *
++xhci_sideband_register(struct usb_device *udev);
++void
++xhci_sideband_unregister(struct xhci_sideband *sb);
++int
++xhci_sideband_add_endpoint(struct xhci_sideband *sb,
++			   struct usb_host_endpoint *host_ep);
++int
++xhci_sideband_remove_endpoint(struct xhci_sideband *sb,
++			      struct usb_host_endpoint *host_ep);
++int
++xhci_sideband_stop_endpoint(struct xhci_sideband *sb,
++			    struct usb_host_endpoint *host_ep);
++struct sg_table *
++xhci_sideband_get_endpoint_buffer(struct xhci_sideband *sb,
++				  struct usb_host_endpoint *host_ep);
++struct sg_table *
++xhci_sideband_get_event_buffer(struct xhci_sideband *sb);
 +
-+	for (i = 0; i < SND_SOC_USB_KCTL_MAX; i++) {
-+		if (usb->kctl[i]) {
-+			snd_ctl_remove(component->card->snd_card,
-+					usb->kctl[i]);
-+			snd_ctl_free_one(usb->kctl[i]);
-+			usb->kctl[i] = NULL;
-+		}
-+	}
++int
++xhci_sideband_create_interrupter(struct xhci_sideband *sb, int num_seg,
++				 bool ip_autoclear);
 +
-+	return 0;
-+}
++void
++xhci_sideband_remove_interrupter(struct xhci_sideband *sb);
 +
-+static int snd_soc_usb_control_init(struct snd_soc_usb *usb)
-+{
-+	struct snd_soc_component *component = usb->component;
-+	int ret;
-+	int i;
++int
++xhci_sideband_interrupter_id(struct xhci_sideband *sb);
 +
-+	for (i = 0; i < SND_SOC_USB_KCTL_MAX; i++) {
-+		usb->kctl[i] = snd_ctl_new1(&soc_usb_kcontrols[i], component);
-+		ret = snd_ctl_add(component->card->snd_card, usb->kctl[i]);
-+		if (ret < 0)
-+			return ret;
-+	}
++#endif /* __LINUX_XHCI_SIDEBAND_H */
 +
-+	return ret;
-+}
-+
- /**
-  * snd_soc_usb_get_components_tag() - Retrieve SOC USB component tag
-  * @playback: direction of audio stream
-@@ -158,6 +307,12 @@ EXPORT_SYMBOL_GPL(snd_soc_usb_free_port);
-  */
- int snd_soc_usb_add_port(struct snd_soc_usb *usb)
- {
-+	int ret;
-+
-+	ret = snd_soc_usb_control_init(usb);
-+	if (ret < 0)
-+		return ret;
-+
- 	mutex_lock(&ctx_mutex);
- 	list_add_tail(&usb->list, &usb_ctx_list);
- 	mutex_unlock(&ctx_mutex);
-@@ -187,6 +342,8 @@ int snd_soc_usb_remove_port(struct snd_soc_usb *usb)
- 	}
- 	mutex_unlock(&ctx_mutex);
- 
-+	snd_soc_usb_control_remove(usb);
-+
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(snd_soc_usb_remove_port);
