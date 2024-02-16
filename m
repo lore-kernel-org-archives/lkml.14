@@ -1,56 +1,56 @@
 Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D7C130E59
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 17:04:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0253B13249C
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 17:04:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708103093; cv=none; b=l5k6Tb9Xi2KZyid4r/06rfLFTUQc4AIEAKrupxj7kHrSdZ6NAq6jxYMNEI3IZPeGnh4Po1PKEq9MVwzGFCzjYvNs98NOC+tDpvRsxj41URSWEBfNrzFRak3OQvrE61fcnL3axwvMijv366GGpiGwBaDVDGqSOh/+Oe7duPk2B7Y=
+	t=1708103096; cv=none; b=A2Gkp262CKdU4rZIIKPb8RTuSUKSfF6Hp54Wd3ysxXIgrVt7VuOyoI3DbaiA5MuVNxsFHDFHYOsRNJ+7oxCmGBD19ImYBsuYvXyG1NPyL0Rr2Atu4cubKHeF0f2VSuXJG4YKCxDLPRA60O0slc/UuOggT7vfrBLStDzzdi/tClg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708103093; c=relaxed/simple;
-	bh=pHij3X8JOVWOkfWCWqtjgbkOy9WQpzuTbSOzombxQTo=;
+	s=arc-20240116; t=1708103096; c=relaxed/simple;
+	bh=82Y1OAgcDxB2eyqtTi+XVPaxghLqy53X5y/mvWFu9A8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u2fL4i8k4LWSqp++ijJnoSXFPZIPWGQzmUFkYDoSwkvj2gjFrreGla26lcNA/l5XEP8PBjPNko3FlSL2+sFIjPI4sgUIVf1v5Ow1TOA0d8lXY/eKsPdHF3U71cRC1s1LAmFgTbyYSiUDAc1VwkcQAZtM7WuZBh02IBPds+zhSn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=ko4K3rk2; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=qgfQCRP5; arc=none smtp.client-ip=66.111.4.25
+	 MIME-Version:Content-Type; b=nAEuXN0pT0Pp4jRUlMu/1RzTMVYe11gPuvojR+lrSsS0EXvDyXkCk4DY+WEawymr4eKj4b8hTNFP3cPCtbD2/NG22qZmkzuATld35uZz5lSCKDwpX11JZrTr8HJ6hBwcbGpOho6p21YIMn3NqWokLccnBLy5CDF0VQWmo9B7YqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=Qh+SFOC2; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hrjQmkGw; arc=none smtp.client-ip=66.111.4.25
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="ko4K3rk2";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qgfQCRP5"
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailout.nyi.internal (Postfix) with ESMTP id A355E5C009C;
-	Fri, 16 Feb 2024 12:04:50 -0500 (EST)
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="Qh+SFOC2";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hrjQmkGw"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.nyi.internal (Postfix) with ESMTP id 4C4285C00A3;
+	Fri, 16 Feb 2024 12:04:54 -0500 (EST)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 16 Feb 2024 12:04:50 -0500
+  by compute6.internal (MEProxy); Fri, 16 Feb 2024 12:04:54 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
-	1708103090; x=1708189490; bh=+doHrWMX2AVjOxCrYcWaACj3dxXZqOZangV
-	ROH6gYto=; b=ko4K3rk2g+mrEQbTGfvy/IoeGbtndA10HCmGrX6ZBtcKPPtBtmT
-	9LaRVxlDcb81bTq/B6JKEfTj0gCUyY/09qsnrLNmSWu0fJfzBKl+r+N7hGehbV2D
-	7joQdvSWDxEWjTYywpwgts3JDLO1Bnxgs4q7zjVkES4oSRsGHAO0evn2ipnoUiWT
-	CTwaQqhvmPadH8fnZ5lZNN+TTjPTka0U7WHOirLr97H9oJHc74BbEb8hFUT1i/S1
-	gNau3uupUOetpVvyVlkyGiGoQC5dCqDAnfQMdDvkpl7LjzKLvqHyVKdnUvJhOTwI
-	LJ/ofpw/r5sFrWKmzvfDXYaZMDGoqyJUFmg==
+	1708103094; x=1708189494; bh=bTCMfMRgj0TAxiQeyNSNVpFoxlWh0Oj72NH
+	6xXdaFx0=; b=Qh+SFOC2uzfXFBf2MQSyLCdE/iSEti9OEl50htzixNEhyH3p6uD
+	ttorsdTatpDLJct9xYK/4M3p/v7LE26pEawkhX7e/2gw/IgIzs+ZnS0OlP6lk+GM
+	ky8YC+gWiiRpMIiUyVUI440RtoKFFQL6F3XF/7jnQTCtljg5jUe8YyQDVCwSs2X0
+	EiaOz0v44hVK/fl2b4G4CGshkV4t5MDCSjUGswZ2+MZXyZCka1nlMw/+KtnzqqMb
+	bRnU1jjZCdIibwvZ3ewjRHaciWMNXBOY5T5oWefeQM53QEmyjbNvjT09kiFL+KHE
+	MK3s+71oUT9iXOSHIQqrV9Pigpngwe7lufQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
 	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1708103090; x=1708189490; bh=+doHrWMX2AVjOxCrYcWaACj3dxXZqOZangV
-	ROH6gYto=; b=qgfQCRP5yc+VoPEksHSAB8Efae6JHt8FyDzmpfmb6aE6OVR6fsu
-	o58jzMAEDbkzYZWozsaSClSp7LCI2wa0UkI/tXVALveXxZMu7PlLvcMoD3ZFAuhI
-	x+tK9PYeHp0r6IZJ9kOf6w85wl/wUXQqSCy24i4jrrEiyFQWhKT9w+ZXeOr9J7wa
-	HobdQOTKH6m77luNHiVbfb11c7ETZCjpMV48bpe5gxJAD794fI4itPyVDw6/FnOj
-	0jYPhx++z0pZe5cvQFcxm2ZVhKJm99zbJHuQxIz7MdYqVzPe3TZ2Fr6CW1zM7kqf
-	Kl7OHb4N/oW3SF9IzhZ0BWfYSwN7Qrge5Ew==
-X-ME-Sender: <xms:sJXPZaNma2Jk__oETLG9xOH_X-vgb0PbyvT6E-pdJ3o0fo50gJSqbg>
-    <xme:sJXPZY9BK6bM4CKLa774weOsqbOWbr0KbfbuAXNkvtEKvPIcoESxFT59F-E09HQkW
-    5UC-lcgUTESVJrqQw>
-X-ME-Received: <xmr:sJXPZRS8hQYSALXJ4I30kPay3yv9VQBa4k-aQ9mEH_K0Yv3a3YCvPaUBYc-90Flj3sG9CNkxtgW3r7mXgQyTJIpHVgAQkGxkM3hxagvE9XfBrkPceupn7U9r>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddvgdeliecutefuodetggdotefrodftvf
+	1708103094; x=1708189494; bh=bTCMfMRgj0TAxiQeyNSNVpFoxlWh0Oj72NH
+	6xXdaFx0=; b=hrjQmkGwrw/QsZ5Oscv5eFQex/wKIva4wZWzZZTaY8WxwPrCbpL
+	/ZEs1k6WWt/DCUHTPsxn+xV/sxbFuyc/GeRxj0F+KqJKqsHAdfouZeJPYmbY3Llc
+	qFDPmgp0dlEjvCp0JEAVVMc7CTuB4tudRrtgDKZQNbEDGajyQl7TZbpmBYzOK2AN
+	+R8PjACg5jv+jcaXiSiRoegIQsH6NxUP8XFWTtzFS6HWHrSqvz589A1OuKpQ5i50
+	n3BqTWs+bOWlfzAO30MSVhbfDDlzGhM5UXXuob7GZAgXH9cPTf8pucGiIF2vUIRf
+	sMR7aFPAF37x1XJ6C+uErmm2LAwmQQ172bg==
+X-ME-Sender: <xms:tZXPZa3D2j_MERrBKctuJUQNjK5uR2hJTyslpKPYR23L5gKxGzibHA>
+    <xme:tZXPZdHaZG2kEdmvsBNoTDuYE9bVeHFtCdzXEVF_29FPwnGAoIvluhJMpZZLMsdWZ
+    F9W5e4nfSdkcm4jWQ>
+X-ME-Received: <xmr:tZXPZS5JlR7YrDAt-o8_LoIFUY6YwyuWpHzRSmmFWt8ti4cYhaqDcYy-p2UXXpzo7QvWlL3IJDi-8_9HNOPCvrIZo3IikmpTU1-HUs_nlxA4KeiLoakH0esN>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddvgdelhecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpefhvfevufffkffojghfrhggtgfgsehtkeertdertdejnecuhfhrohhmpegkihcu
@@ -58,13 +58,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddvgdeliecutefuodetggdote
     etkeffleelkeduffdtfedvtdejjeeutdeutdetgeejgfevtdefudejkeeiveenucevlhhu
     shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpeiiihdrhigrnhessh
     gvnhhtrdgtohhm
-X-ME-Proxy: <xmx:sJXPZat4Pu1_IgA_8tgwlrpISU0nIxKGoc2Sfxdls9m8XniMI_54ig>
-    <xmx:sJXPZSfH6ueDbOt8GEQkBGXoBGl8LWuJWGgKgAGvcn40Q7zN7cwqUQ>
-    <xmx:sJXPZe1xvpgTtNA6M2o87J2Dfcex9SUZxGvRCUzpCjXlSdxhidFGgA>
-    <xmx:spXPZVV0qb_iRo7HJuGLfxqCWC7urdNDJX7fNgS4LDYMxf3OaKmAhw>
+X-ME-Proxy: <xmx:tZXPZb3omsRd4Gh_unjytLInkPSPx28ZhZffPl90MhlMDMW6Q_cd4w>
+    <xmx:tZXPZdGqjpNfHgN_SFnr80W6ejNms-JT3lRMbcItvw-W5wMjBsrrxA>
+    <xmx:tZXPZU8dyTj8X2r66a1dkUmSmsACKYhgtT93LZqZHivRkobfhzGwtg>
+    <xmx:tpXPZb_x42GGfPrEd_tI5M6TW2RNv2Jh4cF3zA4zg9NaaVxskZDEAg>
 Feedback-ID: iccd040f4:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 16 Feb 2024 12:04:47 -0500 (EST)
+ 16 Feb 2024 12:04:52 -0500 (EST)
 From: Zi Yan <zi.yan@sent.com>
 To: linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
@@ -86,9 +86,9 @@ Cc: Zi Yan <ziy@nvidia.com>,
 	Mcgrof Chamberlain <mcgrof@kernel.org>,
 	Adam Manzanares <a.manzanares@samsung.com>,
 	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-Subject: [PATCH v6 2/4] mm/compaction: enable compacting >0 order folios.
-Date: Fri, 16 Feb 2024 12:04:30 -0500
-Message-ID: <20240216170432.1268753-3-zi.yan@sent.com>
+Subject: [PATCH v6 4/4] mm/compaction: optimize >0 order folio compaction with free page split.
+Date: Fri, 16 Feb 2024 12:04:32 -0500
+Message-ID: <20240216170432.1268753-5-zi.yan@sent.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240216170432.1268753-1-zi.yan@sent.com>
 References: <20240216170432.1268753-1-zi.yan@sent.com>
@@ -104,20 +104,26 @@ Content-Transfer-Encoding: 8bit
 
 From: Zi Yan <ziy@nvidia.com>
 
-migrate_pages() supports >0 order folio migration and during compaction,
-even if compaction_alloc() cannot provide >0 order free pages,
-migrate_pages() can split the source page and try to migrate the base
-pages from the split.  It can be a baseline and start point for adding
-support for compacting >0 order folios.
+During migration in a memory compaction, free pages are placed in an array
+of page lists based on their order.  But the desired free page order
+(i.e., the order of a source page) might not be always present, thus
+leading to migration failures and premature compaction termination.  Split
+a high order free pages when source migration page has a lower order to
+increase migration successful rate.
+
+Note: merging free pages when a migration fails and a lower order free
+page is returned via compaction_free() is possible, but there is too much
+work.  Since the free pages are not buddy pages, it is hard to identify
+these free pages using existing PFN-based page merging algorithm.
 
 Signed-off-by: Zi Yan <ziy@nvidia.com>
-Suggested-by: Huang Ying <ying.huang@intel.com>
 Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 Tested-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 Tested-by: Yu Zhao <yuzhao@google.com>
 Cc: Adam Manzanares <a.manzanares@samsung.com>
 Cc: David Hildenbrand <david@redhat.com>
+Cc: Huang Ying <ying.huang@intel.com>
 Cc: Johannes Weiner <hannes@cmpxchg.org>
 Cc: Kemeng Shi <shikemeng@huaweicloud.com>
 Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
@@ -129,120 +135,59 @@ Cc: Vishal Moola (Oracle) <vishal.moola@gmail.com>
 Cc: Vlastimil Babka <vbabka@suse.cz>
 Cc: Yin Fengwei <fengwei.yin@intel.com>
 ---
- mm/compaction.c | 66 ++++++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 52 insertions(+), 14 deletions(-)
+ mm/compaction.c | 35 ++++++++++++++++++++++++++++++-----
+ 1 file changed, 30 insertions(+), 5 deletions(-)
 
 diff --git a/mm/compaction.c b/mm/compaction.c
-index cc801ce099b4..aa6aad805c4d 100644
+index f21836ca243a..b2a570e00a8e 100644
 --- a/mm/compaction.c
 +++ b/mm/compaction.c
-@@ -816,6 +816,21 @@ static bool too_many_isolated(struct compact_control *cc)
- 	return too_many;
- }
- 
-+/*
-+ * 1. if the page order is larger than or equal to target_order (i.e.,
-+ * cc->order and when it is not -1 for global compaction), skip it since
-+ * target_order already indicates no free page with larger than target_order
-+ * exists and later migrating it will most likely fail;
-+ *
-+ * 2. compacting > pageblock_order pages does not improve memory fragmentation,
-+ * skip them;
-+ */
-+static bool skip_isolation_on_order(int order, int target_order)
-+{
-+	return (target_order != -1 && order >= target_order) ||
-+		order >= pageblock_order;
-+}
-+
- /**
-  * isolate_migratepages_block() - isolate all migrate-able pages within
-  *				  a single pageblock
-@@ -947,7 +962,22 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
- 			valid_page = page;
- 		}
- 
--		if (PageHuge(page) && cc->alloc_contig) {
-+		if (PageHuge(page)) {
-+			/*
-+			 * skip hugetlbfs if we are not compacting for pages
-+			 * bigger than its order. THPs and other compound pages
-+			 * are handled below.
-+			 */
-+			if (!cc->alloc_contig) {
-+				const unsigned int order = compound_order(page);
-+
-+				if (order <= MAX_PAGE_ORDER) {
-+					low_pfn += (1UL << order) - 1;
-+					nr_scanned += (1UL << order) - 1;
-+				}
-+				goto isolate_fail;
-+			}
-+			/* for alloc_contig case */
- 			if (locked) {
- 				unlock_page_lruvec_irqrestore(locked, flags);
- 				locked = NULL;
-@@ -1008,21 +1038,24 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
- 		}
- 
- 		/*
--		 * Regardless of being on LRU, compound pages such as THP and
--		 * hugetlbfs are not to be compacted unless we are attempting
--		 * an allocation much larger than the huge page size (eg CMA).
--		 * We can potentially save a lot of iterations if we skip them
--		 * at once. The check is racy, but we can consider only valid
--		 * values and the only danger is skipping too much.
-+		 * Regardless of being on LRU, compound pages such as THP
-+		 * (hugetlbfs is handled above) are not to be compacted unless
-+		 * we are attempting an allocation larger than the compound
-+		 * page size. We can potentially save a lot of iterations if we
-+		 * skip them at once. The check is racy, but we can consider
-+		 * only valid values and the only danger is skipping too much.
- 		 */
- 		if (PageCompound(page) && !cc->alloc_contig) {
- 			const unsigned int order = compound_order(page);
- 
--			if (likely(order <= MAX_PAGE_ORDER)) {
--				low_pfn += (1UL << order) - 1;
--				nr_scanned += (1UL << order) - 1;
-+			/* Skip based on page order and compaction target order. */
-+			if (skip_isolation_on_order(order, cc->order)) {
-+				if (order <= MAX_PAGE_ORDER) {
-+					low_pfn += (1UL << order) - 1;
-+					nr_scanned += (1UL << order) - 1;
-+				}
-+				goto isolate_fail;
- 			}
--			goto isolate_fail;
- 		}
- 
- 		/*
-@@ -1165,10 +1198,11 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
- 			}
- 
- 			/*
--			 * folio become large since the non-locked check,
--			 * and it's on LRU.
-+			 * Check LRU folio order under the lock
- 			 */
--			if (unlikely(folio_test_large(folio) && !cc->alloc_contig)) {
-+			if (unlikely(skip_isolation_on_order(folio_order(folio),
-+							     cc->order) &&
-+				     !cc->alloc_contig)) {
- 				low_pfn += folio_nr_pages(folio) - 1;
- 				nr_scanned += folio_nr_pages(folio) - 1;
- 				folio_set_lru(folio);
-@@ -1788,6 +1822,10 @@ static struct folio *compaction_alloc(struct folio *src, unsigned long data)
+@@ -1832,15 +1832,40 @@ static struct folio *compaction_alloc(struct folio *src, unsigned long data)
  	struct compact_control *cc = (struct compact_control *)data;
  	struct folio *dst;
- 
-+	/* this makes migrate_pages() split the source page and retry */
-+	if (folio_test_large(src) > 0)
-+		return NULL;
+ 	int order = folio_order(src);
++	bool has_isolated_pages = false;
++	int start_order;
++	struct page *freepage;
++	unsigned long size;
 +
- 	if (list_empty(&cc->freepages)) {
- 		isolate_freepages(cc);
++again:
++	for (start_order = order; start_order < NR_PAGE_ORDERS; start_order++)
++		if (!list_empty(&cc->freepages[start_order]))
++			break;
  
+-	if (list_empty(&cc->freepages[order])) {
+-		isolate_freepages(cc);
+-		if (list_empty(&cc->freepages[order]))
++	/* no free pages in the list */
++	if (start_order == NR_PAGE_ORDERS) {
++		if (has_isolated_pages)
+ 			return NULL;
++		isolate_freepages(cc);
++		has_isolated_pages = true;
++		goto again;
++	}
++
++	freepage = list_first_entry(&cc->freepages[start_order], struct page,
++				lru);
++	size = 1 << start_order;
++
++	list_del(&freepage->lru);
++
++	while (start_order > order) {
++		start_order--;
++		size >>= 1;
++
++		list_add(&freepage[size].lru, &cc->freepages[start_order]);
++		set_page_private(&freepage[size], start_order);
+ 	}
++	dst = (struct folio *)freepage;
+ 
+-	dst = list_first_entry(&cc->freepages[order], struct folio, lru);
+-	list_del(&dst->lru);
+ 	post_alloc_hook(&dst->page, order, __GFP_MOVABLE);
+ 	if (order)
+ 		prep_compound_page(&dst->page, order);
 -- 
 2.43.0
 
