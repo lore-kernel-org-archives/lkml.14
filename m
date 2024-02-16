@@ -1,98 +1,177 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC7B1B815;
-	Fri, 16 Feb 2024 09:01:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E20D1B80B
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 09:02:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708074083; cv=none; b=V+vocj7m7ltPHmWzsdEBXEE5h8zOgPpxFAaxJ0Mi7DLfXDQq9n2NlRlEpzHNz9dSEMCijfjuVyJW8JJUq9X8fIm7rY70e2M4aWbN1EI1FgOav+QYPymvRvyq7FS2HfeoLeXTYpdD75HCM7w/dJ6UJjLKXzR9SO9YdFniQ/h84t0=
+	t=1708074159; cv=none; b=Gv4eK7wfhKvLnC0FI/aoEEutoj+ug9OCwjIIsJ0HKrP6qvPuxI2TGYFNq0nrqr+s002gEpzD38p/lI639YVxsj0Zb0LkGar+u1jrVTryLoh3VRSl+KmHiRsr+FS8ldiSSxE32zPj7f6AkUQ7ZyiEQMmBI+4IjN4kvcl1a7wV6N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708074083; c=relaxed/simple;
-	bh=4VUvmXl2vQzyr22bW6omoNl/se8xyRB6W/s9RNs7f8M=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BOtXPzfa7djM5yKK83dIVyaDAcQRWfuJWA5Bg7d/gcNPROaA3uvQdbaFHjNYEGNjJb/xnPSJhoH+qHAwbj4dmYS+pP8SWPyzyWj/NVhRaP4ctqgXds7wJL5RSwesZs7e2koNIhM/BZlU/HQxm00d6n7guCGSVFbhaM6Geg7jUl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=qTNp52b6; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1708074159; c=relaxed/simple;
+	bh=0ASL8/2Fnq0OuCZD8H09gdyT0FLFuomqfwj8h+QBwB4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GPCC4F9Gzn3DdMECBbixUv3zW4Xd72lfts2mC+15CfnCunXJdGpWBNcLt7UzFs553rTC+uJhJzFWFnjL9zWLcaVQwrjox51oa3MScAU2823JsqHsUHkPLQv/VTzAX+9u1k28ixNGH4QxCahaiNQTr60eI/whPbOHANFd8EgPlmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Aa4qGi5k; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="qTNp52b6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1708074082; x=1739610082;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4VUvmXl2vQzyr22bW6omoNl/se8xyRB6W/s9RNs7f8M=;
-  b=qTNp52b6k4G50gIfKyzMZJWYD9lwV0n5xQlNOmpUq2UuhJM/dGY/Mzxz
-   fSEC7gGWRCukVGJJ7OhwBWQtScf33z20pA71EV6JA2tLzE8YmVfFv6dyo
-   Spf8XnnmjqLELJvB1MwBIlc8588i1JG+gTfjJPTgdc7uFJ06Zxf4rhCSx
-   AzRJXI+4/qk/m/bNz1LzvYT1hzzkJNSm/J4j56oBFVcIu29C30v0d5N6J
-   Fhab3e8DSjsHOIM4Gv3b9ebWJqJueVtO+gImOqH4tuMYQUo5U801Kz9KA
-   jpda09E5s0Uz80/1DSUuH8axsK5sVI0cEt+J7vcfb+jSg0bBTLnibkPDc
-   A==;
-X-CSE-ConnectionGUID: V4AMy5vTSCGqR2VTSU2Ydg==
-X-CSE-MsgGUID: 1fB5pH1vRqWAptwi4dmqVw==
-X-IronPort-AV: E=Sophos;i="6.06,164,1705388400"; 
-   d="asc'?scan'208";a="247083940"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 16 Feb 2024 02:01:14 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 16 Feb 2024 02:00:38 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Fri, 16 Feb 2024 02:00:37 -0700
-Date: Fri, 16 Feb 2024 08:59:56 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Rob Herring <robh@kernel.org>
-CC: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dt-bindings: vendor-prefixes: Add missing prefixes used
- in compatibles
-Message-ID: <20240216-percolate-wooing-b5e4f6814d15@wendy>
-References: <20240216025839.902288-1-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Aa4qGi5k"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dc6d9a8815fso1914980276.3
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 01:02:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708074157; x=1708678957; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aC0zV0jURwgzq9Q6615BgsaS7tbK8PR71BWfZKB9Bg0=;
+        b=Aa4qGi5ko2WzUV+jH6oa9oWrZHue0INtEQodKMwZR6oy3qFY32F7/uf0Ro+Qike6sh
+         m5ajjY6rF0LavNZfRoy2p4RP/PP1yXtuX02ypA0PYGfHpLaoabIdf3fLcHrkvvhjnohg
+         cjOItnTUFyF6XUMwzZDvwCA+D+cO0ZTrAuRhhJUadlOBRhCob4rMzccgQxIMvl7WlSKn
+         tgf2qKEgQ4I715/ta689QJRUTChZE6GR2DEoP4DyerGfEN+Csa1egLgGeWs2xjVX7w3j
+         zp/InkjOkfMB1PKGN9U7ay33MxCloKc3paseNzbzkPHhO5dZzXoyZ2Aal+jL6PSesebg
+         wgmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708074157; x=1708678957;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aC0zV0jURwgzq9Q6615BgsaS7tbK8PR71BWfZKB9Bg0=;
+        b=IBCx+9OrDodx+LITn6KIsUznMfTKkuqykTZHkDHta5ZgD78ieUkGEocptlqpVT8t7C
+         +KO9r0OZIIFfu9zR1UFr3uSI2wWlc0+3NqrcwHuWHSwf586q7U5f/cP6v56OeMudbqpO
+         dImnbDjVMUgsnPssYfbFaggtfkmXGIZyx1OYs0nXSiM4XuOQELgpdn3ch7sEwVYmzNyp
+         8g6sbTD4YmC6kwivYVGFBUaO68OlZgQqphOwG70HOed0beOmJrvp/ja0dZ0jzIuubcKs
+         EwonWhj/rAl2pBSr58B0hSMt0QpmiTCYfnOnSqoBPwcaVNZUtohuHDyfVxnYyM/c3VZa
+         QeJw==
+X-Forwarded-Encrypted: i=1; AJvYcCVVwYDgyWnM2edNEeyQbXYRV3l4vQWcezy0GTJogKIMJ2WoHxuywuAO++Qs9QCCED/t28OdBiYNfyoZYfXyxyuGhA9/9hxW39s2Ok4K
+X-Gm-Message-State: AOJu0YxzbxMC7t5GZvsN1BXpvNL0xLZTsFc9MolAXmQ1b7ti6K/6/bI7
+	euYu6SJA1AKa+y83ByvaLCn5qm6WKwKsCrbjpS2wa3omrpPZ8G8PwNQi4U5AtPz0FL42jQKRSfn
+	91HZBJpeaAwDckQSPVNuel5IbM621v6sjlnxY
+X-Google-Smtp-Source: AGHT+IEM+380cGg5HHP1OkOXBhTo7zHOdUbLmTZ9RIz7nJiHcIKUi7+k7jSA3j73/vSCaixotNnzkCuz3vuGoeIcxZc=
+X-Received: by 2002:a05:6902:1b85:b0:dc6:421a:3024 with SMTP id
+ ei5-20020a0569021b8500b00dc6421a3024mr5156888ybb.43.1708074156727; Fri, 16
+ Feb 2024 01:02:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kMsPZaCbowEcvdGt"
-Content-Disposition: inline
-In-Reply-To: <20240216025839.902288-1-robh@kernel.org>
+References: <20240212213922.783301-1-surenb@google.com> <20240212213922.783301-14-surenb@google.com>
+ <20240215165438.cd4f849b291c9689a19ba505@linux-foundation.org>
+ <wdj72247rptlp4g7dzpvgrt3aupbvinskx3abxnhrxh32bmxvt@pm3d3k6rn7pm>
+ <CA+CK2bBod-1FtrWQH89OUhf0QMvTar1btTsE0wfROwiCumA8tg@mail.gmail.com> <iqynyf7tiei5xgpxiifzsnj4z6gpazujrisdsrjagt2c6agdfd@th3rlagul4nn>
+In-Reply-To: <iqynyf7tiei5xgpxiifzsnj4z6gpazujrisdsrjagt2c6agdfd@th3rlagul4nn>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Fri, 16 Feb 2024 01:02:25 -0800
+Message-ID: <CAJuCfpHxaCQ_sy0u88EcdkgsV-GX3AbhCaiaRW-DWYFvZK1=Ew@mail.gmail.com>
+Subject: Re: [PATCH v3 13/35] lib: add allocation tagging support for memory
+ allocation profiling
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	mhocko@suse.com, vbabka@suse.cz, hannes@cmpxchg.org, roman.gushchin@linux.dev, 
+	mgorman@suse.de, dave@stgolabs.net, willy@infradead.org, 
+	liam.howlett@oracle.com, corbet@lwn.net, void@manifault.com, 
+	peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com, 
+	will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com, 
+	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
+	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
+	nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev, 
+	rppt@kernel.org, paulmck@kernel.org, yosryahmed@google.com, yuzhao@google.com, 
+	dhowells@redhat.com, hughd@google.com, andreyknvl@gmail.com, 
+	keescook@chromium.org, ndesaulniers@google.com, vvvvvv@google.com, 
+	gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com, 
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
+	bsegall@google.com, bristot@redhat.com, vschneid@redhat.com, cl@linux.com, 
+	penberg@kernel.org, iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, 
+	glider@google.com, elver@google.com, dvyukov@google.com, shakeelb@google.com, 
+	songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com, 
+	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	iommu@lists.linux.dev, linux-arch@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
+	cgroups@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
---kMsPZaCbowEcvdGt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Thu, Feb 15, 2024 at 5:27=E2=80=AFPM Kent Overstreet
+<kent.overstreet@linux.dev> wrote:
+>
+> On Thu, Feb 15, 2024 at 08:22:44PM -0500, Pasha Tatashin wrote:
+> > On Thu, Feb 15, 2024 at 8:00=E2=80=AFPM Kent Overstreet
+> > <kent.overstreet@linux.dev> wrote:
+> > >
+> > > On Thu, Feb 15, 2024 at 04:54:38PM -0800, Andrew Morton wrote:
+> > > > On Mon, 12 Feb 2024 13:38:59 -0800 Suren Baghdasaryan <surenb@googl=
+e.com> wrote:
+> > > >
+> > > > > +Example output.
+> > > > > +
+> > > > > +::
+> > > > > +
+> > > > > +    > cat /proc/allocinfo
+> > > > > +
+> > > > > +      153MiB     mm/slub.c:1826 module:slub func:alloc_slab_page
+> > > > > +     6.08MiB     mm/slab_common.c:950 module:slab_common func:_k=
+malloc_order
+> > > > > +     5.09MiB     mm/memcontrol.c:2814 module:memcontrol func:all=
+oc_slab_obj_exts
+> > > > > +     4.54MiB     mm/page_alloc.c:5777 module:page_alloc func:all=
+oc_pages_exact
+> > > > > +     1.32MiB     include/asm-generic/pgalloc.h:63 module:pgtable=
+ func:__pte_alloc_one
+> > > >
+> > > > I don't really like the fancy MiB stuff.  Wouldn't it be better to =
+just
+> > > > present the amount of memory in plain old bytes, so people can use =
+sort
+> > > > -n on it?
+> > >
+> > > They can use sort -h on it; the string_get_size() patch was specifica=
+lly
+> > > so that we could make the output compatible with sort -h
+> > >
+> > > > And it's easier to tell big-from-small at a glance because
+> > > > big has more digits.
+> > > >
+> > > > Also, the first thing any sort of downstream processing of this dat=
+a is
+> > > > going to have to do is to convert the fancified output back into
+> > > > plain-old-bytes.  So why not just emit plain-old-bytes?
+> > > >
+> > > > If someone wants the fancy output (and nobody does) then that can b=
+e
+> > > > done in userspace.
+> > >
+> > > I like simpler, more discoverable tools; e.g. we've got a bunch of
+> > > interesting stuff in scripts/ but it doesn't get used nearly as much =
+-
+> > > not as accessible as cat'ing a file, definitely not going to be
+> > > installed by default.
+> >
+> > I also prefer plain bytes instead of MiB. A driver developer that
+> > wants to verify up-to the byte allocations for a new data structure
+> > that they added is going to be disappointed by the rounded MiB
+> > numbers.
+>
+> That's a fair point.
+>
+> > The data contained in this file is not consumable without at least
+> > "sort -h -r", so why not just output bytes instead?
+> >
+> > There is /proc/slabinfo  and there is a slabtop tool.
+> > For raw /proc/allocinfo we can create an alloctop tool that would
+> > parse, sort and show data in human readable format based on various
+> > criteria.
+> >
+> > We should also add at the top of this file "allocinfo - version: 1.0",
+> > to allow future extensions (i.e. column for proc name).
+>
+> How would we feel about exposing two different versions in /proc? It
+> should be a pretty minimal addition to .text.
+>
+> Personally, I hate trying to count long strings digits by eyeball...
 
-On Thu, Feb 15, 2024 at 08:58:29PM -0600, Rob Herring wrote:
-> +  "^calao,.*":
-> +    description: CALAO Systems SAS
->    "^calaosystems,.*":
->      description: CALAO Systems SAS
+Maybe something like this work for everyone then?:
 
-> +  "^IBM,.*":
-> +    description: International Business Machines (IBM)
->    "^ibm,.*":
->      description: International Business Machines (IBM)
-
-These ones add duplicates with no indication of which one is to be used
-going forward. Why not mark one as deprecated?
-
---kMsPZaCbowEcvdGt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZc8j/gAKCRB4tDGHoIJi
-0jHHAP9m6zejCzScXNn4O0yHvYY6eMVkEdaoEhiGysHZGMbaOQD/cXYqCtmf0bRt
-euQMpaEOCIxBgvycTmpAuYcfJH/Orwo=
-=qFDR
------END PGP SIGNATURE-----
-
---kMsPZaCbowEcvdGt--
+160432128 (153MiB)     mm/slub.c:1826 module:slub func:alloc_slab_page
