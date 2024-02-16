@@ -1,66 +1,86 @@
-Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B24A11E520;
-	Fri, 16 Feb 2024 20:13:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7291E1E520;
+	Fri, 16 Feb 2024 20:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708114407; cv=none; b=lSXmZsEgrO/QYMSaeUS6yjhOM7MkK+VFA5yFv9UoeDBxAjPWNy2C5jHrG/PyPflGJXh6dt4XSvURp23aNXJNFkWceLQ01mmoErLiVkv2l1MjezPhdFdY83HNOArVmZSSW7jQ96WHt9BKxQl6cSkT4UgDn0hapgyVH4GhwxfvmSk=
+	t=1708114484; cv=none; b=bNL9GY+one8htTPiRlz6mrmPLi098rrt/S5Rs+UCnBhj1hE+9fjqLfqthM425yzfjU/F5wiCrkJE9/r/8CLB4FzRCqe1LKDLfC/gy8rjYSszM2gZhSK0WmtbQDhLm10smbUoz9bWE61p4EemwbljWnBWkivfTry2wO3DIh/SOwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708114407; c=relaxed/simple;
-	bh=VHh3A/a2nR3iSQNoSou/NkN5vDVvHJHc6cRd27gcQSQ=;
-	h=From:Subject:Date:Message-ID:To; b=BqHi9qy6bX54YG8LDMyoP4yYJxcstIUIJ61z5VAizE41tXgv2I4Ux4x9G9PoRkPPCkzCSKuyxjYMoUkdH+bbbhIAmW74rRmZYcCSErXEdwe1gsOVZBK6f3NRA5dD/gKktu+Omcg/QJfgULR0cHL858fWsUvmhelvIn3tAKYEi48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=EIsTpwWx; arc=none smtp.client-ip=185.125.188.121
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1708114484; c=relaxed/simple;
+	bh=rz9O3Ft4Sq9iNKhwmyORbUt4YE+nVvYLvIYmshWX/0E=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=fQ36AeecPWeE0+QpfU8KEC+8BT0m2wmO6fV/fjW7rh2bu5WeIsXeP+OlPbCfGyrE8cyjdH8THTVrDpWyLtrBMIiPp94XNPSaRP5EdZsk3zctzakxOHQI0bGI8fQ+BK77BtTaq1I8boYssyo/v4XeGZUQDhJYIDwLAJGXYaKq/oY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4IOyeAYE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Da4zfJRF; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="EIsTpwWx"
-Received: from canonical.com (1.general.jsalisbury.us.vpn [10.172.66.188])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 4750C40ED9;
-	Fri, 16 Feb 2024 20:13:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1708114396;
-	bh=mNXMXJpB6SYOKdJVIlb1vORS5AD/OoZy5hFTQSrzUiY=;
-	h=From:Subject:Date:Message-ID:To;
-	b=EIsTpwWxel+CCLCm+yIeVX341Km+y8gtnFN4efHT+jV5BHiYMLitx3Z0fDdIXPl+j
-	 sSIXmROv0bzCuvqENZAWYMvHy8fzx5eBtiOPUs6Rn4IBQTYHGDMIO33pfUTIPjLSFn
-	 eBuHm8pdlgsNR9msizzcPvPzN1Z+xzVMEy8FOyAREKfjdfdstzs2SvfixknMBvk/hd
-	 ubY6LuuKkjPn1TITQPznaKC3ZV/BsCCI19K1EeUdPDAH/UofW5aYHQmxHPQhWPicYg
-	 axqqZDwzTXGRIVSIUJKTZnAnpfuHLOxLk3VKCLdqu5SRVcjB9NSjLMxFtIVYGNVam0
-	 ujfwKemAAeIqg==
-From: Joseph Salisbury <joseph.salisbury@canonical.com>
-Subject: [ANNOUNCE] 5.15.148-rt74
-Date: Fri, 16 Feb 2024 19:34:38 -0000
-Message-ID: <170811207811.495171.1435664719831296032@jupiter.home.arpa>
-To: LKML <linux-kernel@vger.kernel.org>,linux-rt-users <linux-rt-users@vger.kernel.org>,Steven Rostedt <rostedt@goodmis.org>,Thomas Gleixner <tglx@linutronix.de>,Carsten Emde <C.Emde@osadl.org>,John Kacur <jkacur@redhat.com>,Sebastian Andrzej Siewior <bigeasy@linutronix.de>,Daniel Wagner <daniel.wagner@suse.com>,Tom Zanussi <tom.zanussi@linux.intel.com>,Clark Williams <williams@redhat.com>,Pavel Machek <pavel@denx.de>,Joseph Salisbury <joseph.salisbury@canonical.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4IOyeAYE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Da4zfJRF"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1708114481;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V7j9WqHfayRaIIREmzZW0nKi8Bnarz7ICJN+nBCweXc=;
+	b=4IOyeAYEjUjHckRrd1S3aY4uvbscEQQWp3tmFMOm42bvd2WU30njrgMiIwPVpiO/QL2XrY
+	Eo/+d1WwQBI9/cf+/ZHlOY0PAb5MnbCkf1RHtPZpiPvsL+/Gb+9uGeQh2f0V1XPvZ3D9xB
+	YNywcoeXeE2mkpdfYOzELxJhVKyDzsqSRKt0l4+rOEWtIQqpWyrI3hjb4x8cj82hSrVDQO
+	y+XKMUzsc/EtPRi2YgU/4B4Dr0yNHNzd3L2oAqYSTZl7nEr4t0KnsihOTi2Blagu4tAIBp
+	Sa0K+tMysEGj9ASvDgGdpG7TAc+bANkrkIkHUbU8ap/WhbuYf/WvQt5c/Pk+jQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1708114481;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V7j9WqHfayRaIIREmzZW0nKi8Bnarz7ICJN+nBCweXc=;
+	b=Da4zfJRFHUQE+UmdbrPWJ8vlFxBbtg2C2O6aQ74Anm52kZ3pnZVLFYmT+jfpjjwcMLR+94
+	2RuTbIsMTmkjVYBQ==
+To: Anup Patel <apatel@ventanamicro.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, Rob
+ Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Frank Rowand
+ <frowand.list@gmail.com>, Conor Dooley <conor+dt@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>, =?utf-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@kernel.org>, Atish
+ Patra <atishp@atishpatra.org>, Andrew Jones <ajones@ventanamicro.com>,
+ Sunil V L <sunilvl@ventanamicro.com>, Saravana Kannan
+ <saravanak@google.com>, Anup Patel <anup@brainfault.org>,
+ linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Anup Patel
+ <apatel@ventanamicro.com>
+Subject: Re: [PATCH v12 20/25] irqchip/riscv-imsic: Add device MSI domain
+ support for PCI devices
+In-Reply-To: <20240127161753.114685-21-apatel@ventanamicro.com>
+References: <20240127161753.114685-1-apatel@ventanamicro.com>
+ <20240127161753.114685-21-apatel@ventanamicro.com>
+Date: Fri, 16 Feb 2024 21:14:40 +0100
+Message-ID: <87bk8gcgjz.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain
 
-Hello RT-list!
+On Sat, Jan 27 2024 at 21:47, Anup Patel wrote:
+> +#ifdef CONFIG_RISCV_IMSIC_PCI
+> +
+> +static void imsic_pci_mask_irq(struct irq_data *d)
+> +{
+> +	pci_msi_mask_irq(d);
+> +	irq_chip_mask_parent(d);
+> +}
+> +
+> +static void imsic_pci_unmask_irq(struct irq_data *d)
+> +{
+> +	pci_msi_unmask_irq(d);
+> +	irq_chip_unmask_parent(d);
 
-I'm pleased to announce the 5.15.148-rt74 stable release.
+That's asymmetric vs. mask().  
 
-You can get this release via the git tree at:
+Thanks,
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
-
-  branch: v5.15-rt
-  Head SHA1: b24880f53d0b955d6c02a98f6c23c9c6837803fd
-
-Or to build 5.15.148-rt74 directly, the following patches should be applied:
-
-  https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.15.tar.xz
-
-  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.15.148.xz
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/5.15/patch-5.15.148-rt74.patch.xz
-
-
-Enjoy!
-Joseph Salisbury
+        tglx
