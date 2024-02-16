@@ -1,152 +1,251 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE05BF9FE
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 05:45:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD3514265
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 05:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708062328; cv=none; b=kIVoTCewITJPZYJhSsmqQHv/AxB6N71zcvYDiTqDP24ilBax1qYmlTAAaI6CSIk39ONXLbTvEpgcUojiLlcHdwdPKUzf+Qv7HZv5PAWq9S3RaBtSR2fpEh+xZb3MuJecmGGLqOY92TOX1O8HQ3Z2Y3WNO9URNVG+9ANteL7ymxc=
+	t=1708062370; cv=none; b=GYGSCoyaRsv1aDn6/5aoAAWQ8o9OC6RvChWhGd/kjvmtZbnnXoAynA7vhTsSw6AVxdvTEyHYRMYrW+ulU1QqNIxEO2lJ45EZ/2LFMYVqoDHQnmXqq169fy8Jir4cYezbMIEq6wUsRj96lTgOi3y2/1oOB3VEGe0uxWapEd8PSK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708062328; c=relaxed/simple;
-	bh=NXeerdPnSdjRJMAOoy0b+p1owK1ag5JZVRlrO+XLnFM=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=QE5K4pkW6Giky1k1jsumXAehS/oMZ+WuRV2x6tQf9W8h8xjGL9qBo2/ZreazBoAocxIOMIsm5NpOALekZJvRE5HGZDuSuydFVq5Q7SEYpsz7IkOd/1EuA3vooNbHxn+7esFVmqmC2l/8qnXWrZ3QV0Er1dO4pIV8bVarFBmT+Ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-363cef35a5eso13943325ab.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 21:45:26 -0800 (PST)
+	s=arc-20240116; t=1708062370; c=relaxed/simple;
+	bh=R0KCav4SBl9GvGgw+8QcoFmIYdIjb1VCg/aRrAEv/Xg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HIdpJIovd8i8Tk+rwY4tt6qcorXXhS6c+u9AZfHHIrXfvE8JzcftEY9c66ttAOhTGQiBu/LvsgRZfEC8uNiv0Vtyot0fJ3n7uB0vLl+BClCVeUOi+0gOck+O+wyahN5DV9XJcM6Fh1P7wjU9L7CD39DHY4SR/8fLmDfH66zoOhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VikvTVZ4; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VikvTVZ4"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a3de5884d68so8250466b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 21:46:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1708062366; x=1708667166; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OkqqhJ7YhNw/r5K4OKJ0M5Gv5GBbPK3jd5hErO5/nXs=;
+        b=VikvTVZ4tiAB2XSnTmh9GOP6Mk6drmf5DfxpJVhC1HAWz0cHDNmPlJWtCI+DXCfFkc
+         9WZ0PQAlVpqEe3+sLRzvC1nhuBhcE1H+x0FVDr9uhDEL+ft+SbQ55l8FH98oiM4RJNUp
+         gqRk/ktsjGRybF4PtF4QqXGcvMe7JGHCktFNM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708062326; x=1708667126;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VbMnwxI0bsWGHkIgRlCRYPURp0x7Da8PjZhkcBzxrIk=;
-        b=fdUjXHl+M/BujOAG9AE23jkZPVIKKlX0FiW3U76VCk/nIgX5MsAs+LcgetJHff5kx2
-         XJvNIMunIFLpC5m3LyZ//5bX/3lGCaW9+dcixe9VoCHnl+85XHBdY3p7xsv99RcsGn2/
-         XP1XGWPlx/P3jdVp+WpimvAA3JwatAt9ZyMpOmoSOh4wxlP3LZsGsniTvfZhr6iDzTJm
-         D5h8GLQxh/12uYFVjWpUolJNPwklc3W0bE0UgNd7rBg9n9Q0oaT9h+KZ26AaxsjpVrM/
-         LpXq24ST9jNZMBHw6pCE4m2HqklTgleIfPIhk2Gyvoo3C8c3JwmlwiCrHdG7rdEKbz/C
-         Wj8A==
-X-Forwarded-Encrypted: i=1; AJvYcCUKdKTYtWq4Ou7FW5cfJV/KgD31KyNBnbUbGlTcSIN1bzuMDB4fuUf8NBsBphAbNCCwpA7mwpmDl/I5rrbDYTmv7+DSEFxgZnsFWlXf
-X-Gm-Message-State: AOJu0YyzLfJ2gd6o5N350hAM6L4xdhFMEGQA8oJKWeGssri61N8RAsah
-	0irV0+mnr7g/XbCSfV6Wn5kMux4SlvsDyP56OAr8J5T+On37gYLf8nYmNTrJ866sA0SG+iYmmmP
-	iNPmXZ7wyNp2AEoeSqpaj+U1p+/w5uGvaPTYtQqv2Wzkgwg0nxoOG+KU=
-X-Google-Smtp-Source: AGHT+IFIgJMUnbYJEWOTsYZF3gO/ldOeMCK6h12ZamDBIKLbO7DV8UZZBZVadxEdTzG74omaDR4Db2ukCOqPK+8WytHVbozM3OBZ
+        d=1e100.net; s=20230601; t=1708062366; x=1708667166;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OkqqhJ7YhNw/r5K4OKJ0M5Gv5GBbPK3jd5hErO5/nXs=;
+        b=GZ9GwVDkBGEjHQIPpIDQ7D1GrvUovMLFizibRojhkq2UMM4x2HP7gkjS6hB8BsnwVp
+         HeWWc3AXKgE8DPBWUJz4GK3ZhXHZBMCuqpDpRaq8fxkR6C1pR2w2OHV1lpa7mjup9nmn
+         igFSbN2FvgN2SiFyAH0GpErpdq51bavPsVm6v7XpLVZu4xboN05w6SakOX0LwLl7RrHH
+         PQgx4PljcktrCEh0FerSODqKFzTRmZa46TwvDyJGCbHX7UqM3YDaS4uE/ECtfRebXf3G
+         PS3D/UZnbdf/YpH/5MydwDplZ1DAMg4AId12TBVjX+tSe8OK4VUjqJiY8PkdjZBHBINh
+         egPg==
+X-Gm-Message-State: AOJu0YxiaL8ENksgD1IYb7Wg1AMN6uw6JsMp+nNw1HvspPlDLSGtcYJl
+	wL1XwhSBDNewk8EJj/Lfg+81DyV1XEdIzJ/ar2Za9f7Eycl3GzqB/zMllqCwkxBTC8jlZORMKQJ
+	NQQ==
+X-Google-Smtp-Source: AGHT+IEAfBeX96elStQQfNqRqIKRlhn52uScuXvRq2XBZQPEm4+LaOS1SWok8rCNDwM99xMhKEgLgQ==
+X-Received: by 2002:a17:906:1d4d:b0:a3d:765:7bdc with SMTP id o13-20020a1709061d4d00b00a3d07657bdcmr2681552ejh.25.1708062365807;
+        Thu, 15 Feb 2024 21:46:05 -0800 (PST)
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com. [209.85.128.51])
+        by smtp.gmail.com with ESMTPSA id qx22-20020a170906fcd600b00a3d76123920sm1205100ejb.223.2024.02.15.21.46.05
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Feb 2024 21:46:05 -0800 (PST)
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4121b1aad00so2305515e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 21:46:05 -0800 (PST)
+X-Received: by 2002:a05:600c:1da6:b0:411:c45a:38fc with SMTP id
+ p38-20020a05600c1da600b00411c45a38fcmr3258760wms.3.1708062364654; Thu, 15 Feb
+ 2024 21:46:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:12c8:b0:363:c919:eec7 with SMTP id
- i8-20020a056e0212c800b00363c919eec7mr339653ilm.6.1708062326068; Thu, 15 Feb
- 2024 21:45:26 -0800 (PST)
-Date: Thu, 15 Feb 2024 21:45:26 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000331e0906117940f9@google.com>
-Subject: [syzbot] [mm?] WARNING in move_pages
-From: syzbot <syzbot+06ae923a4359a62d0bac@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, axelrasmussen@google.com, brauner@kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, lokeshgidra@google.com, peterx@redhat.com, 
-	rppt@kernel.org, syzkaller-bugs@googlegroups.com, usama.anjum@collabora.com, 
-	viro@zeniv.linux.org.uk
+References: <0000000000008b96230610c6b3fe@google.com>
+In-Reply-To: <0000000000008b96230610c6b3fe@google.com>
+From: Tomasz Figa <tfiga@chromium.org>
+Date: Fri, 16 Feb 2024 14:45:44 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5Afg2=8wfcQt_+rqJdSEOuWZXfjNE0bzcVN+AnN5EGYng@mail.gmail.com>
+Message-ID: <CAAFQd5Afg2=8wfcQt_+rqJdSEOuWZXfjNE0bzcVN+AnN5EGYng@mail.gmail.com>
+Subject: Re: [syzbot] [usb?] [media?] possible deadlock in vb2_video_unregister_device
+To: syzbot <syzbot+3b1d4b3d5f7a358bf9a9@syzkaller.appspotmail.com>, 
+	Hans Verkuil <hverkuil@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	mchehab@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-usb@vger.kernel.org, m.szyprowski@samsung.com, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Wed, Feb 7, 2024 at 5:44=E2=80=AFPM syzbot
+<syzbot+3b1d4b3d5f7a358bf9a9@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    ed5551279c91 Merge 6.8-rc3 into usb-next
+> git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/us=
+b.git usb-testing
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D16940d7be8000=
+0
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D28a3704ea90ef=
+255
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3D3b1d4b3d5f7a358=
+bf9a9
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for D=
+ebian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D14450a38180=
+000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D1603629fe8000=
+0
+>
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/10b543a7171a/dis=
+k-ed555127.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/dc10f27643e8/vmlinu=
+x-ed555127.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/bb6389e754b9/b=
+zImage-ed555127.xz
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the comm=
+it:
+> Reported-by: syzbot+3b1d4b3d5f7a358bf9a9@syzkaller.appspotmail.com
+>
+> usb 1-1: SerialNumber: syz
+> usb 1-1: config 0 descriptor??
+> usbtv 1-1:0.0: Fushicai USBTV007 Audio-Video Grabber
+> usb 1-1: USB disconnect, device number 2
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> WARNING: possible recursive locking detected
+> 6.8.0-rc3-syzkaller-00047-ged5551279c91 #0 Not tainted
+> --------------------------------------------
+> kworker/0:2/694 is trying to acquire lock:
+> ffff888109f20b70 (&usbtv->vb2q_lock){+.+.}-{3:3}, at: vb2_video_unregiste=
+r_device drivers/media/common/videobuf2/videobuf2-v4l2.c:1269 [inline]
+> ffff888109f20b70 (&usbtv->vb2q_lock){+.+.}-{3:3}, at: vb2_video_unregiste=
+r_device+0x12b/0x2d0 drivers/media/common/videobuf2/videobuf2-v4l2.c:1245
+>
+> but task is already holding lock:
+> ffff888109f20b70 (&usbtv->vb2q_lock){+.+.}-{3:3}, at: usbtv_video_free+0x=
+28/0x70 drivers/media/usb/usbtv/usbtv-video.c:966
+>
 
-syzbot found the following issue on:
+Looking at usbtv_video_free [1], it calls
+vb2_video_unregister_device() with the queue mutex locked, which is
+just wrong. I wonder how (and if) it even worked before. Laurent,
+Hans, Mauro, any idea who is maintaining this driver? I don't see a
+matching entry in the MAINTAINERS file.
 
-HEAD commit:    ae00c445390b Add linux-next specific files for 20240212
-git tree:       linux-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=126cddf4180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4eb3a27eddb32a14
-dashboard link: https://syzkaller.appspot.com/bug?extid=06ae923a4359a62d0bac
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16aa2720180000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1437d320180000
+[1] https://elixir.bootlin.com/linux/v6.8-rc4/source/drivers/media/usb/usbt=
+v/usbtv-video.c#L964
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/8b2a2d0b511f/disk-ae00c445.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/a668a09c9d03/vmlinux-ae00c445.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/4ad623928692/bzImage-ae00c445.xz
+Best regards,
+Tomasz
 
-The issue was bisected to:
-
-commit 31d97016c80a83daa4c938014c81282810a14773
-Author: Lokesh Gidra <lokeshgidra@google.com>
-Date:   Thu Feb 8 21:22:04 2024 +0000
-
-    userfaultfd: use per-vma locks in userfaultfd operations
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=170b3442180000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=148b3442180000
-console output: https://syzkaller.appspot.com/x/log.txt?x=108b3442180000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+06ae923a4359a62d0bac@syzkaller.appspotmail.com
-Fixes: 31d97016c80a ("userfaultfd: use per-vma locks in userfaultfd operations")
-
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 5065 at mm/userfaultfd.c:1706 move_pages+0x438/0xff0 mm/userfaultfd.c:1706
-Modules linked in:
-CPU: 0 PID: 5065 Comm: syz-executor296 Not tainted 6.8.0-rc4-next-20240212-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
-RIP: 0010:move_pages+0x438/0xff0 mm/userfaultfd.c:1706
-Code: 0b 90 e9 d2 fe ff ff 90 0f 0b 90 31 ff 4c 89 e6 e8 6d 72 90 ff 4d 85 e4 74 2b e8 83 6d 90 ff e9 ba fd ff ff e8 79 6d 90 ff 90 <0f> 0b 90 45 31 e4 e9 a9 fd ff ff e8 68 6d 90 ff 45 31 e4 45 31 ff
-RSP: 0018:ffffc9000345f640 EFLAGS: 00010293
-RAX: ffffffff82036f37 RBX: 1ffff9200068bedc RCX: ffff88801fc41e00
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffffc9000345f770 R08: ffffffff82036e0e R09: 1ffffffff1f0cfa5
-R10: dffffc0000000000 R11: fffffbfff1f0cfa6 R12: 0000000000000000
-R13: dffffc0000000000 R14: ffff88801ec54188 R15: 0000000000000000
-FS:  0000555556d1f380(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000005fdeb8 CR3: 000000001fd14000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- userfaultfd_move fs/userfaultfd.c:2008 [inline]
- userfaultfd_ioctl+0x5c10/0x72c0 fs/userfaultfd.c:2126
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:871 [inline]
- __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:857
- do_syscall_64+0xfb/0x240
- entry_SYSCALL_64_after_hwframe+0x6d/0x75
-RIP: 0033:0x7fe1b68902e9
-Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffe594e4008 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007ffe594e41d8 RCX: 00007fe1b68902e9
-RDX: 0000000020000000 RSI: 00000000c028aa05 RDI: 0000000000000003
-RBP: 00007fe1b6903610 R08: 00007ffe594e41d8 R09: 00007ffe594e41d8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-R13: 00007ffe594e41c8 R14: 0000000000000001 R15: 0000000000000001
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+> other info that might help us debug this:
+>  Possible unsafe locking scenario:
+>
+>        CPU0
+>        ----
+>   lock(&usbtv->vb2q_lock);
+>   lock(&usbtv->vb2q_lock);
+>
+>  *** DEADLOCK ***
+>
+>  May be due to missing lock nesting notation
+>
+> 7 locks held by kworker/0:2/694:
+>  #0: ffff888106ad2138 ((wq_completion)usb_hub_wq){+.+.}-{0:0}, at: proces=
+s_one_work+0x789/0x15d0 kernel/workqueue.c:2608
+>  #1: ffffc90001c0fd80 ((work_completion)(&hub->events)){+.+.}-{0:0}, at: =
+process_one_work+0x7eb/0x15d0 kernel/workqueue.c:2609
+>  #2: ffff88810af2f190 (&dev->mutex){....}-{3:3}, at: device_lock include/=
+linux/device.h:990 [inline]
+>  #2: ffff88810af2f190 (&dev->mutex){....}-{3:3}, at: hub_event+0x1be/0x4f=
+40 drivers/usb/core/hub.c:5840
+>  #3: ffff888107799190 (&dev->mutex){....}-{3:3}, at: device_lock include/=
+linux/device.h:990 [inline]
+>  #3: ffff888107799190 (&dev->mutex){....}-{3:3}, at: usb_disconnect+0x10a=
+/0x910 drivers/usb/core/hub.c:2287
+>  #4: ffff88810779a160 (&dev->mutex){....}-{3:3}, at: device_lock include/=
+linux/device.h:990 [inline]
+>  #4: ffff88810779a160 (&dev->mutex){....}-{3:3}, at: __device_driver_lock=
+ drivers/base/dd.c:1095 [inline]
+>  #4: ffff88810779a160 (&dev->mutex){....}-{3:3}, at: device_release_drive=
+r_internal+0xa4/0x610 drivers/base/dd.c:1292
+>  #5: ffff888109f20b70 (&usbtv->vb2q_lock){+.+.}-{3:3}, at: usbtv_video_fr=
+ee+0x28/0x70 drivers/media/usb/usbtv/usbtv-video.c:966
+>  #6: ffff888109f20ae0 (&usbtv->v4l2_lock){+.+.}-{3:3}, at: usbtv_video_fr=
+ee+0x32/0x70 drivers/media/usb/usbtv/usbtv-video.c:967
+>
+> stack backtrace:
+> CPU: 0 PID: 694 Comm: kworker/0:2 Not tainted 6.8.0-rc3-syzkaller-00047-g=
+ed5551279c91 #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS G=
+oogle 01/25/2024
+> Workqueue: usb_hub_wq hub_event
+> Call Trace:
+>  <TASK>
+>  __dump_stack lib/dump_stack.c:88 [inline]
+>  dump_stack_lvl+0xd9/0x1b0 lib/dump_stack.c:106
+>  check_deadlock kernel/locking/lockdep.c:3062 [inline]
+>  validate_chain kernel/locking/lockdep.c:3856 [inline]
+>  __lock_acquire+0x210a/0x3b30 kernel/locking/lockdep.c:5137
+>  lock_acquire kernel/locking/lockdep.c:5754 [inline]
+>  lock_acquire+0x1ae/0x520 kernel/locking/lockdep.c:5719
+>  __mutex_lock_common kernel/locking/mutex.c:608 [inline]
+>  __mutex_lock+0x175/0x9d0 kernel/locking/mutex.c:752
+>  vb2_video_unregister_device drivers/media/common/videobuf2/videobuf2-v4l=
+2.c:1269 [inline]
+>  vb2_video_unregister_device+0x12b/0x2d0 drivers/media/common/videobuf2/v=
+ideobuf2-v4l2.c:1245
+>  usbtv_video_free+0x4a/0x70 drivers/media/usb/usbtv/usbtv-video.c:970
+>  usbtv_disconnect+0x5c/0xd0 drivers/media/usb/usbtv/usbtv-core.c:138
+>  usb_unbind_interface+0x1e5/0x960 drivers/usb/core/driver.c:461
+>  device_remove drivers/base/dd.c:569 [inline]
+>  device_remove+0x11f/0x170 drivers/base/dd.c:561
+>  __device_release_driver drivers/base/dd.c:1272 [inline]
+>  device_release_driver_internal+0x44a/0x610 drivers/base/dd.c:1295
+>  bus_remove_device+0x22c/0x420 drivers/base/bus.c:574
+>  device_del+0x39a/0xa50 drivers/base/core.c:3814
+>  usb_disable_device+0x36c/0x7f0 drivers/usb/core/message.c:1416
+>  usb_disconnect+0x2e1/0x910 drivers/usb/core/hub.c:2296
+>  hub_port_connect drivers/usb/core/hub.c:5352 [inline]
+>  hub_port_connect_change drivers/usb/core/hub.c:5652 [inline]
+>  port_event drivers/usb/core/hub.c:5812 [inline]
+>  hub_event+0x1be0/0x4f40 drivers/usb/core/hub.c:5894
+>  process_one_work+0x886/0x15d0 kernel/workqueue.c:2633
+>  process_scheduled_works kernel/workqueue.c:2706 [inline]
+>  worker_thread+0x8b9/0x1290 kernel/workqueue.c:2787
+>  kthread+0x2c6/0x3a0 kernel/kthread.c:388
+>  ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+>  ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
+>  </TASK>
+>
+>
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+>
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
+>
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+>
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+>
+> If you want to undo deduplication, reply with:
+> #syz undup
