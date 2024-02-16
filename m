@@ -1,66 +1,66 @@
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB792137C5F
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 18:31:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42DDE1350D2
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 18:31:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708108316; cv=none; b=lPnuoPQTshDqh4yhPNKlv921wlo/K7jvZJxD3T60j0dge74PerQdfE4lPtV8bhTNmzqtBMxt9Jgk1+yA4Bj1tZJwn4DYzMFNwJ+g0j5Cm90E9wuujSiErgPUx9T2nSVRkfhKHVI4i0p7iGLvH6sURHv3lX7oOlM9EfRhsMU3+ms=
+	t=1708108319; cv=none; b=J5Lj/P+yfAsOqpKQ/U02wu2+oW44FH4nP99PCMWO9IjsJhB12B5n1kcUnPjo+syaCtmBsVv16EWS0Z9aZCdMEI02tlj37uHcZrAzIV9KW4luqlv4VSSEdxlWtzGsTRzGhle+BRsXkAwXezWTYG9mu2yAPEc6z3fIwOn9Ir8ibGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708108316; c=relaxed/simple;
-	bh=OSrAg2NG3ZYsMO+/bzATjsRdKuLLDdxyzjpAKJt8kcI=;
+	s=arc-20240116; t=1708108319; c=relaxed/simple;
+	bh=cu3MMzOHuWJKImjKqYJ4/NXYAdw+8BhcKEGy95D0Imk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QmSycv+SglgppT7zIKpLjOUir86yxsdpBpuR9SL0GKO4hjuEZ7g/8+bSmgQkVAhG4eCX1AFmz+mT5qwn/wcNKTpukMQ8ApDC4N6s9Z8xEr4edYYjEmKCGwawase3chghKBNeyZj3ULyM/x6nj9zn4Wa9s6chFjk9zNr8HDpZrYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=IWLjp5kO; arc=none smtp.client-ip=209.85.167.182
+	 MIME-Version; b=YVEgxKwXQuy5HhsAqPP4G4PjDxHU1FUrRSVrqAPZD4ZBZ/4FR1UjI89uKZxmz/8Kqzw8ly1jQMBXaSksQsjpydtR2Cm8VxzROqWFCb3v2czKDT6uOdCC65SPAmdqnq5jgdixo/MzCBbL2KlgmTMmvevLBy5spIlk0fsxkekgAZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=g5RWjmtE; arc=none smtp.client-ip=209.85.219.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="IWLjp5kO"
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3c1333b0974so1781265b6e.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 10:31:53 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="g5RWjmtE"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6818aa07d81so15849196d6.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 10:31:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1708108312; x=1708713112; darn=vger.kernel.org;
+        d=joelfernandes.org; s=google; t=1708108316; x=1708713116; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KGM3mRROwFt6krNu3XhZIaE8fo5xphzgJ2jbr0QsLYo=;
-        b=IWLjp5kOd3hA6PD7W8g/XiIb7drzezRD/dyQvKXbO9e+voJzI6qDg+tRGwSsYNaXJM
-         SotwRPZmBAIxnLIQKZzK1fpWs8YSv/nmO7jSvX1ovtUMs/k+TgAbuPAgm54koNAdgoVs
-         N+fX7a53cfvDMf7h5iM/eUPP+N5ntSylj2QPQ=
+        bh=+jDrn7wgy/ve0lPoR/xKtbF/cZLSIaETTt3wbkL2858=;
+        b=g5RWjmtE4GeWFZAaV/uIOkmk7lxOE7p7YrGvVJmAcKzXvTzNblJIjIzroSJ1DZOx8s
+         10g4s5s2oVoLfPMsw/ZdSlJcCRY/0V6duVc/nPqY+7wYUNTvLMH+bgC1ZNqZWi3hLG1Y
+         Yg244tgwGgsbBZ1rcW/qjluZ+b7u7d335ytdM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708108312; x=1708713112;
+        d=1e100.net; s=20230601; t=1708108316; x=1708713116;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KGM3mRROwFt6krNu3XhZIaE8fo5xphzgJ2jbr0QsLYo=;
-        b=izAOeDaJKQ/mjAXymzgO6FEzxfLGu7Gan+RK1wySTtnltYWM+awkFyHIAgnNmoLyDE
-         DWMrJlAeDYgOqIwZlcaeNqVceXZc/lYPCaPdbGUujKHUZSoOPxo7D7+MBM9W7EpsJLvl
-         IP4eCfLOuUZNkd6l+xvhJqiIA1Pp3z23KLww732G6FEBtTbiJYtTAnKM0orS/KfuEv0Z
-         Ic5DeRdONv+zLca14+fUzX3r8d1qHn0DlyAGPq+cJ50nVpx9/wzf+51cL5BpszcDw2h/
-         yLtf2sSeJQ3IORMyf9KlDCsmBv9bpI1bdD5+bq0J59aNMMb5cWLn2dEMKZxmKGo7AVgL
-         vJ8w==
-X-Gm-Message-State: AOJu0YyugUReleA17wVYX/maCBFEL/o3x/D3kbNIUw4FgJyqaa5z2NI/
-	aQZyGkaVNj3PC4tjY6PjPcCiDcG2bW0Blj4igho6bScLF8WVPV+aopXkfkuMhNr14buh9bW0sI6
-	P
-X-Google-Smtp-Source: AGHT+IEE7A2/TJwSEhArltOB3UrmLoXJF/SdE7sg3qzp5oni/oYQqIESe/97hAGPhadzbXunlifSeg==
-X-Received: by 2002:a05:6808:1309:b0:3c1:325f:4527 with SMTP id y9-20020a056808130900b003c1325f4527mr6544337oiv.40.1708108311913;
-        Fri, 16 Feb 2024 10:31:51 -0800 (PST)
+        bh=+jDrn7wgy/ve0lPoR/xKtbF/cZLSIaETTt3wbkL2858=;
+        b=WAIQu2v4gTMzLeSE93OM23AF12QpTKC2BO8Gl/awIoRkI2bVmQATw5UhqnZ14vVdxy
+         D5C7SBR94dGqEGwZVBKOqM2uN3MfguDVFz6Ic1KZ3/3YA9QY0J8mLRmy9+6EJgvKKz7H
+         +X45+zHTeTt7TNoMkB6vVuYnxMWJ6+lKb1TgbOO9ro2CJ9BGybK0nY0E6e/SVkgIeBXX
+         Omx/XmkYgLwmdSS5Fep6hTyebL8+fbm13Dpp8U1uWSZ7WBih7RDtkifH2xE4rq3lS0NY
+         W2f1cdugKnj0pN+2gZLL29Xm6kBwl9qhSBTZ5HVi0dx8Hi/e+ApzpJ2J+bmwGytgJCaV
+         NYSA==
+X-Gm-Message-State: AOJu0YzspS2xvuJnMoAkk1Dr+aVfnqS03PZl/iaX262nm9Xkz7mDygNa
+	N03HPQSYGPzhNeoL8EaJJwrFTiE/2RKhP3zLncWe3lYreeIANRvIvpHnWhGIt0kUHd9zJyImtci
+	w
+X-Google-Smtp-Source: AGHT+IEMG/tv2++C9Upd1PzGPby/mwewGK3XuvH9GyHJN5ozTK/AseozSEHuW8OieKt6MmugUwdvUQ==
+X-Received: by 2002:a0c:ca0f:0:b0:68f:144f:4c4 with SMTP id c15-20020a0cca0f000000b0068f144f04c4mr6750511qvk.37.1708108316068;
+        Fri, 16 Feb 2024 10:31:56 -0800 (PST)
 Received: from joelbox2.. (c-98-249-43-138.hsd1.va.comcast.net. [98.249.43.138])
-        by smtp.gmail.com with ESMTPSA id nd13-20020a056214420d00b0068cdadb5e7esm159722qvb.31.2024.02.16.10.31.50
+        by smtp.gmail.com with ESMTPSA id nd13-20020a056214420d00b0068cdadb5e7esm159722qvb.31.2024.02.16.10.31.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 10:31:51 -0800 (PST)
+        Fri, 16 Feb 2024 10:31:55 -0800 (PST)
 From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
 To: linux-kernel@vger.kernel.org,
-	Shuah Khan <shuah@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Jonathan Corbet <corbet@lwn.net>
 Cc: Suleiman Souhlal <suleiman@google.com>,
 	Youssef Esmat <youssefesmat@google.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	David Vernet <void@manifault.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
 	"Paul E . McKenney" <paulmck@kernel.org>,
 	joseph.salisbury@canonical.com,
 	Dietmar Eggemann <dietmar.eggemann@arm.com>,
@@ -74,11 +74,10 @@ Cc: Suleiman Souhlal <suleiman@google.com>,
 	Shuah Khan <skhan@linuxfoundation.org>,
 	Phil Auld <pauld@redhat.com>,
 	"Joel Fernandes (Google)" <joel@joelfernandes.org>,
-	linux-kselftest@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH 07/10] selftests/sched: Add a test to verify that DL server works with core scheduling
-Date: Fri, 16 Feb 2024 13:31:05 -0500
-Message-Id: <20240216183108.1564958-8-joel@joelfernandes.org>
+	linux-doc@vger.kernel.org
+Subject: [PATCH 09/10] admin-guide/hw-vuln: Correct prctl() argument description
+Date: Fri, 16 Feb 2024 13:31:07 -0500
+Message-Id: <20240216183108.1564958-10-joel@joelfernandes.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240216183108.1564958-1-joel@joelfernandes.org>
 References: <20240216183108.1564958-1-joel@joelfernandes.org>
@@ -90,368 +89,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This test verifies that DL server infrastructure gives CFS tasks a fixed
-bandwidth even when RT tasks are being "core scheduled" on a core.
-Verify that they are getting the expected bandwidth (and thus not being
-starved).
-
-Also verified that not having core scheduling fixes makes the test fail
-as the CFS task gets no bandwidth.
-
-Sample output:
-
- # Runtime of PID 97 is 4.440000 seconds
- # Runtime of PID 98 is 4.560000 seconds
- # Runtime of PID 99 is 4.550000 seconds
- ok 1 PASS
-
-Notes about test that generated the sample output:
-
-The test runs for 12 seconds. We check the runtimes at 9 seconds. We
-expect the CFS task (PID 7) to get ~50% of the 9 seconds. The DL server
-is configured for 50% bandwidth.
-
-The RT tasks (PID 98, 99) each get 50% as well, because they run
-concurrently on 2 hyperthreads of a core.
+Correct the description for arg4 which appears to be outdated.
 
 Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- tools/testing/selftests/sched/Makefile        |  13 +-
- tools/testing/selftests/sched/common.c        |  24 ++
- tools/testing/selftests/sched/common.h        |   8 +
- .../selftests/sched/cs_dlserver_test.c        | 254 ++++++++++++++++++
- 4 files changed, 290 insertions(+), 9 deletions(-)
- create mode 100644 tools/testing/selftests/sched/common.c
- create mode 100644 tools/testing/selftests/sched/common.h
- create mode 100644 tools/testing/selftests/sched/cs_dlserver_test.c
+ Documentation/admin-guide/hw-vuln/core-scheduling.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/sched/Makefile b/tools/testing/selftests/sched/Makefile
-index 099ee9213557..f491d741cb45 100644
---- a/tools/testing/selftests/sched/Makefile
-+++ b/tools/testing/selftests/sched/Makefile
-@@ -1,14 +1,9 @@
- # SPDX-License-Identifier: GPL-2.0+
-+TEST_GEN_PROGS := cs_dlserver_test
+diff --git a/Documentation/admin-guide/hw-vuln/core-scheduling.rst b/Documentation/admin-guide/hw-vuln/core-scheduling.rst
+index cf1eeefdfc32..338d639a8127 100644
+--- a/Documentation/admin-guide/hw-vuln/core-scheduling.rst
++++ b/Documentation/admin-guide/hw-vuln/core-scheduling.rst
+@@ -62,8 +62,8 @@ arg3:
  
--ifneq ($(shell $(CC) --version 2>&1 | head -n 1 | grep clang),)
--CLANG_FLAGS += -no-integrated-as
--endif
-+cs_dlserver_test: cs_dlserver_test.c common.c
+ arg4:
+     ``pid_type`` for which the operation applies. It is one of
+-    ``PR_SCHED_CORE_SCOPE_``-prefixed macro constants.  For example, if arg4
+-    is ``PR_SCHED_CORE_SCOPE_THREAD_GROUP``, then the operation of this command
++    ``PIDTIME_``-prefixed macro constants.  For example, if arg4
++    is ``PIDTYPE_TGID``, then the operation of this command
+     will be performed for all tasks in the task group of ``pid``.
  
--CFLAGS += -O2 -Wall -g -I./ $(KHDR_INCLUDES) -Wl,-rpath=./ \
--	  $(CLANG_FLAGS)
--LDLIBS += -lpthread
--
--TEST_GEN_FILES := cs_prctl_test
--TEST_PROGS := cs_prctl_test
-+CFLAGS += $(KHDR_INCLUDES)
-+CFLAGS += -Wall
- 
- include ../lib.mk
-diff --git a/tools/testing/selftests/sched/common.c b/tools/testing/selftests/sched/common.c
-new file mode 100644
-index 000000000000..5cf0022acc8d
---- /dev/null
-+++ b/tools/testing/selftests/sched/common.c
-@@ -0,0 +1,24 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include "common.h"
-+
-+bool hyperthreading_enabled(void)
-+{
-+	FILE *file = fopen("/sys/devices/system/cpu/smt/active", "r");
-+	char smt_active[2];
-+
-+	if (file == NULL) {
-+		ksft_print_msg("Could not determine if hyperthreading is enabled\n");
-+		return false;
-+	}
-+
-+	if (fgets(smt_active, sizeof(smt_active), file)	== NULL) {
-+		perror("Failed to read smt_active");
-+		return false;
-+	}
-+	fclose(file);
-+
-+	if (smt_active[0] != '1')
-+		return false;
-+	return true;
-+}
-diff --git a/tools/testing/selftests/sched/common.h b/tools/testing/selftests/sched/common.h
-new file mode 100644
-index 000000000000..7bcedbd0ed99
---- /dev/null
-+++ b/tools/testing/selftests/sched/common.h
-@@ -0,0 +1,8 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#include <stdio.h>
-+#include <stdbool.h>
-+#include <dirent.h>
-+#include "../kselftest.h"
-+
-+bool hyperthreading_enabled(void);
-diff --git a/tools/testing/selftests/sched/cs_dlserver_test.c b/tools/testing/selftests/sched/cs_dlserver_test.c
-new file mode 100644
-index 000000000000..9f2a74a25686
---- /dev/null
-+++ b/tools/testing/selftests/sched/cs_dlserver_test.c
-@@ -0,0 +1,254 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Use the DL server infrastructure to give CFS tasks a fixed bandwidth
-+ * even when RT tasks are being "core scheduled" on a core. Verify that
-+ * they are getting the expected bandwidth (and thus not being starved).
-+ *
-+ * Copyright (c) 2024 Google.
-+ * Author: Joel Fernandes <joel@joelfernandes.org>
-+ *
-+ * This library is free software; you can redistribute it and/or modify it
-+ * under the terms of version 2.1 of the GNU Lesser General Public License as
-+ * published by the Free Software Foundation.
-+ *
-+ * This library is distributed in the hope that it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License
-+ * for more details.
-+ *
-+ * You should have received a copy of the GNU Lesser General Public License
-+ * along with this library; if not, see <http://www.gnu.org/licenses>.
-+ */
-+
-+#define _GNU_SOURCE
-+
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <sched.h>
-+#include <time.h>
-+#include <sys/wait.h>
-+#include <sys/types.h>
-+#include <sys/prctl.h>
-+#include <fcntl.h>
-+#include <string.h>
-+
-+#include "common.h"
-+
-+enum pid_type {PIDTYPE_PID = 0, PIDTYPE_TGID, PIDTYPE_PGID};
-+
-+#define RUN_TIME 12 // Running time of the test in seconds
-+#define CORE_ID 0 // Assuming we're pinning processes to the first core
-+#define DL_SERVER_DEBUGFS "/sys/kernel/debug/sched/fair_server"
-+
-+void write_server_debugfs(char *file, char *type, unsigned long value)
-+{
-+	char path[1024], buf[1024];
-+	int fd, n;
-+
-+	snprintf(path, sizeof(path), "%s/%s/%s", DL_SERVER_DEBUGFS, file, type);
-+	fd = open(path,	O_WRONLY);
-+	if (fd == -1) {
-+		perror("Failed to open file for writing");
-+		return;
-+	}
-+	n = snprintf(buf, sizeof(buf), "%lu\n", value);
-+	n = write(fd, buf, n);
-+	if (n == -1)
-+		perror("Failed to write file");
-+
-+	close(fd);
-+}
-+
-+void write_dl_server_params(void)
-+{
-+	DIR *dir;
-+	struct dirent *entry;
-+
-+	if (access(DL_SERVER_DEBUGFS, F_OK) == -1) {
-+		perror("DL server debugfs not found, cannot set DL parameters.");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	dir = opendir(DL_SERVER_DEBUGFS);
-+	if (dir	== NULL) {
-+		perror("Failed to open directory");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	while ((entry = readdir(dir)) != NULL) {
-+		if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
-+			continue;
-+
-+		write_server_debugfs(entry->d_name, "period", 100000000);
-+		write_server_debugfs(entry->d_name, "runtime", 50000000);
-+	}
-+	closedir(dir);
-+}
-+
-+void process_func(void)
-+{
-+	unsigned long long count = 0;
-+	time_t end;
-+
-+	// Busy loop for RUN_TIME seconds
-+	end = time(NULL) + RUN_TIME;
-+	while (time(NULL) < end) {
-+		count++; // Just a dummy operation
-+	}
-+}
-+
-+void set_affinity(int cpu_id)
-+{
-+	cpu_set_t cpuset;
-+
-+	CPU_ZERO(&cpuset);
-+	CPU_SET(cpu_id, &cpuset);
-+	CPU_SET(cpu_id + 1, &cpuset);
-+
-+	if (sched_setaffinity(0, sizeof(cpu_set_t), &cpuset) != 0) {
-+		perror("sched_setaffinity");
-+		exit(EXIT_FAILURE);
-+	}
-+}
-+
-+void set_sched(int policy, int priority)
-+{
-+	struct sched_param param;
-+
-+	param.sched_priority = priority;
-+	if (sched_setscheduler(0, policy, &param) != 0) {
-+		perror("sched_setscheduler");
-+		exit(EXIT_FAILURE);
-+	}
-+}
-+
-+float get_process_runtime(int pid)
-+{
-+	char path[256];
-+	FILE *file;
-+	long utime, stime;
-+	int fields;
-+
-+	snprintf(path, sizeof(path), "/proc/%d/stat", pid);
-+	file = fopen(path, "r");
-+	if (file == NULL) {
-+		perror("Failed to open stat file");
-+		return -1; // Indicate failure
-+	}
-+
-+	// Skip the first 13 fields and read the 14th and 15th
-+	fields = fscanf(file,
-+					"%*d %*s %*c %*d %*d %*d %*d %*d %*u %*u %*u %*u %*u %lu %lu",
-+					&utime, &stime);
-+	fclose(file);
-+
-+	if (fields != 2) {
-+		fprintf(stderr, "Failed to read stat file\n");
-+		return -1; // Indicate failure
-+	}
-+
-+	// Calculate the total time spent in the process
-+	long total_time = utime + stime;
-+	long ticks_per_second = sysconf(_SC_CLK_TCK);
-+	float runtime_seconds = total_time * 1.0 / ticks_per_second;
-+
-+	return runtime_seconds;
-+}
-+
-+int main(void)
-+{
-+	float runtime1, runtime2, runtime3;
-+	int pid1, pid2, pid3;
-+
-+	if (!hyperthreading_enabled())
-+		ksft_test_result_skip("This test requires hyperthreading to be enabled\n");
-+
-+	write_dl_server_params();
-+
-+	ksft_print_header();
-+	ksft_set_plan(1);
-+
-+	// Create and set up a CFS task
-+	pid1 = fork();
-+	if (pid1 == 0) {
-+		set_affinity(CORE_ID);
-+		process_func();
-+		exit(0);
-+	} else if (pid1 < 0) {
-+		perror("fork for p1");
-+		ksft_exit_fail();
-+	}
-+
-+	// Create a new unique cookie for the CFS task
-+	if (prctl(PR_SCHED_CORE, PR_SCHED_CORE_CREATE, pid1, PIDTYPE_TGID, 0) < 0) {
-+		perror("prctl for pid1");
-+		ksft_exit_fail();
-+	}
-+
-+	// Create a new unique cookie for the current process. Future
-+	// forks will inherit this cookie.
-+	if (prctl(PR_SCHED_CORE, PR_SCHED_CORE_CREATE, 0, PIDTYPE_TGID, 0) < 0) {
-+		perror("prctl for current process");
-+		ksft_exit_fail();
-+	}
-+
-+	// Create an RT task which inherits the parent's cookie
-+	pid2 = fork();
-+	if (pid2 == 0) {
-+		set_affinity(CORE_ID);
-+		set_sched(SCHED_FIFO, 50);
-+		process_func();
-+		exit(0);
-+	} else if (pid2 < 0) {
-+		perror("fork for p2");
-+		ksft_exit_fail();
-+	}
-+
-+	// Create another RT task which inherits the parent's cookie
-+	pid3 = fork();
-+	if (pid3 == 0) {
-+		set_affinity(CORE_ID);
-+		set_sched(SCHED_FIFO, 50);
-+		process_func();
-+		exit(0);
-+	} else if (pid3 < 0) {
-+		perror("fork for p3");
-+		ksft_exit_fail();
-+	}
-+
-+	sleep(RUN_TIME * 3 / 4);
-+	runtime1 = get_process_runtime(pid1);
-+	if (runtime1 != -1)
-+		ksft_print_msg("Runtime of PID %d is %f seconds\n", pid1, runtime1);
-+	else
-+		ksft_exit_fail_msg("Error getting runtime for PID %d\n", pid1);
-+
-+	runtime2 = get_process_runtime(pid2);
-+	if (runtime2 != -1)
-+		ksft_print_msg("Runtime of PID %d is %f seconds\n", pid2, runtime2);
-+	else
-+		ksft_exit_fail_msg("Error getting runtime for PID %d\n", pid2);
-+
-+	runtime3 = get_process_runtime(pid3);
-+	if (runtime3 != -1)
-+		ksft_print_msg("Runtime of PID %d is %f seconds\n", pid3, runtime3);
-+	else
-+		ksft_exit_fail_msg("Error getting runtime for PID %d\n", pid3);
-+
-+	// Make sure runtime1 is within 30% of runtime2
-+	if (runtime1 < 0.7 * runtime2 || runtime1 > 1.3	* runtime2)
-+		ksft_exit_fail_msg("Runtime of PID %d is not within 30%% of runtime of PID %d\n",
-+						   pid1, pid2);
-+
-+	// Make	sure runtime1 is within 30% of runtime3
-+	if (runtime1 < 0.7 * runtime3 || runtime1 > 1.3 * runtime3)
-+		ksft_exit_fail_msg("Runtime of PID %d is not within 30%% of runtime of PID %d\n",
-+						   pid1, pid3);
-+
-+	waitpid(pid1, NULL, 0);
-+	waitpid(pid2, NULL, 0);
-+	waitpid(pid3, NULL, 0);
-+
-+	ksft_test_result_pass("PASS\n");
-+	return 0;
-+}
+ arg5:
 -- 
 2.34.1
 
