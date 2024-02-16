@@ -1,144 +1,207 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5774520DC8
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 10:17:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2955E1B81C;
+	Fri, 16 Feb 2024 10:18:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708078672; cv=none; b=JtoIaNGjA0asw1utMkUeGnIkRLiawpcHVWyeOh2huLewmUPovTSETdeYsqhG/t6oI2DyxTtMV62uJfXfpNuT9YdnLIQQZjNcXJxQ+okosgH7icmaRpbTkMi/hSi5NVeE6dXdmpmZKxegeyNIF+U8PAhfCoVvVqVBD7EXpfoRboI=
+	t=1708078740; cv=none; b=uAqB4geXG91c5xSupXMCVugMD4OST8HKuHjjMS89KBx+2Lydv9Nw5+DKhnAwmbGdXvF0Y+AVObZgX9nn43VLZaGaFhYlFvFxgRUhEuWeCKxoed8oTSJKGdv7O3c7VasHQ3VG8qhgJecUKfCW3QHWMw1JzpxHt88lnV3jCRfq4hI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708078672; c=relaxed/simple;
-	bh=lYwWiTcbrS7Hlpr3W3PSBMI1bxolZRwLidJEh2BgiBU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PSeFIGy5DYHvSqfVgNu+Ce0hzzV6KYiziEPFZdR0FSyMODjqfkGz6KQxSUSIVDvSsPtve/VqsJE3OZT8iuzPhnkvm/IHVvP1rRPQs4+U0v8l5GJheUtFXLNKhN57pCA0XfRLjW1l9AQzewLInkXzHL0Dl0/Cf+poO1J+mwew2Ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4TbntY1H9lz9t0H;
-	Fri, 16 Feb 2024 11:17:41 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id mi_EVeu5gp-A; Fri, 16 Feb 2024 11:17:41 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4TbntY0hNgz9syQ;
-	Fri, 16 Feb 2024 11:17:41 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 13E978B765;
-	Fri, 16 Feb 2024 11:17:41 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id d_saBaDgKqUf; Fri, 16 Feb 2024 11:17:40 +0100 (CET)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.232.102])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id AE7698B786;
-	Fri, 16 Feb 2024 11:17:40 +0100 (CET)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 2/2] powerpc: Don't ignore errors from set_memory_{n}p() in __kernel_map_pages()
-Date: Fri, 16 Feb 2024 11:17:34 +0100
-Message-ID: <20ef75884aa6a636e8298736f3d1056b0793d3d9.1708078640.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <3656d47c53bff577739dac536dbae31fff52f6d8.1708078640.git.christophe.leroy@csgroup.eu>
-References: <3656d47c53bff577739dac536dbae31fff52f6d8.1708078640.git.christophe.leroy@csgroup.eu>
+	s=arc-20240116; t=1708078740; c=relaxed/simple;
+	bh=2l/Luo4DE+UQCMB52S0bZ89e7WBP7HLxzEg0RHVs1EM=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IxMxBT3PQ1ldS470je2nKsg7DbZecj2bwRHmbyPVKzS9Eo0/eewHixWaefVvtmKwBoNpyeuf0wtGoy3RAv6FFQuUHihNaf4IN71p0QpGhhbkQbExBvAXd5fVzTt1a8yY3U4j0xP09LTlYLhwspjhvpmiIZqzI+ST7KsT59mmx2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=agRpDnIm; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Q8L9QANS; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=miCOrLyg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pM9icsqo; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="agRpDnIm";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Q8L9QANS";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="miCOrLyg";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pM9icsqo"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id DC0151FB5B;
+	Fri, 16 Feb 2024 10:18:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708078736; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6h/xSWPlRf7PDPu4yMf74pKtHxhg0XmMUweyxazKoaE=;
+	b=agRpDnImeZyWS78Js8bdcFUV2NVhV7IwcGA1IGE11p01MkbTPglbP3M+dRhVP9WpGpZENr
+	Qyans5g34aYETR60cHOrUolFUicF3B9gdr2sFgmK0uh/HfV0W5Ug3BRLxhxv94YFeyLVUK
+	5jmzREIDTfr/WECikcnGIOJ+2VW8W4M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708078736;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6h/xSWPlRf7PDPu4yMf74pKtHxhg0XmMUweyxazKoaE=;
+	b=Q8L9QANS+g9P7FTChcAKpxBYo+tyKUXnlM/vE39cSrXUfqFmQEZXJfN+0nReqsMNzXZcxQ
+	UVSmAonCbLL0YNCA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708078735; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6h/xSWPlRf7PDPu4yMf74pKtHxhg0XmMUweyxazKoaE=;
+	b=miCOrLygZO1ScyMykcr/WPln1exiufOHnRAQ+P+O7JUOavlFJVVOSm3K4voL2m/oNYNHQC
+	ZZy36v58yOjUyEe0lNAOQgKbqoVMifbAQbYOAZDkr5PQ3jPVNL9npMAGC6lOuzvRoRc1Tj
+	271Uh/XjQ8rgqJ1zxqR3/IE+8+3M6X8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708078735;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6h/xSWPlRf7PDPu4yMf74pKtHxhg0XmMUweyxazKoaE=;
+	b=pM9icsqomFguXaYdYV31rptOO8JdN00gPdel3E6ToBIlUWpNNvmPvbxF9WRFZb7CPAxPfS
+	ZGnuj6UADbhYajDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9FA4C1398D;
+	Fri, 16 Feb 2024 10:18:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id st+PJY82z2XPeAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Fri, 16 Feb 2024 10:18:55 +0000
+Date: Fri, 16 Feb 2024 11:18:55 +0100
+Message-ID: <87frxsiueo.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Hillf Danton <hdanton@sina.com>
+Cc: Sven van Ashbrook <svenva@chromium.org>,
+	Karthikeyan Ramasubramanian <kramasub@chromium.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Brian Geffon <bgeffon@google.com>,
+	linux-sound@vger.kernel.org,
+	Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Subject: Re: [PATCH v1] ALSA: memalloc: Fix indefinite hang in non-iommu case
+In-Reply-To: <87plwwiz6z.wl-tiwai@suse.de>
+References: <20240214170720.v1.1.Ic3de2566a7fd3de8501b2f18afa9f94eadb2df0a@changeid>
+	<20240215034528.240-1-hdanton@sina.com>
+	<87h6iaf7di.wl-tiwai@suse.de>
+	<CAG-rBigFG-U-sKY77CvzghGzs+1Xm3YXzBF6N4ti0+h6UdAb8Q@mail.gmail.com>
+	<875xypk6d6.wl-tiwai@suse.de>
+	<20240216043426.1218-1-hdanton@sina.com>
+	<87plwwiz6z.wl-tiwai@suse.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708078656; l=3039; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=lYwWiTcbrS7Hlpr3W3PSBMI1bxolZRwLidJEh2BgiBU=; b=4QARmfP/MsmV0cSeFLmXJPnoW3jSj70yLfwQEZm7bgqm/aoOmeUTLZTt5MFHsmyBTPxi4HZBG S35ItvkrnzqARQrxHroqWT2Nb9KgE28JTsCR0mTCqsJOcEmn3QM+Q2A
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -3.30
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[sina.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_SEVEN(0.00)[7];
+	 MID_CONTAINS_FROM(1.00)[];
+	 FREEMAIL_TO(0.00)[sina.com];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Flag: NO
 
-set_memory_p() and set_memory_np() can fail.
+On Fri, 16 Feb 2024 09:35:32 +0100,
+Takashi Iwai wrote:
+> 
+> On Fri, 16 Feb 2024 05:34:24 +0100,
+> Hillf Danton wrote:
+> > 
+> > On Thu, 15 Feb 2024 18:03:01 +0100 Takashi Iwai <tiwai@suse.de> wrote:
+> > > 
+> > > So it sounds like that we should go back for __GFP_NORETRY in general
+> > > for non-zero order allocations, not only the call you changed, as
+> > > __GFP_RETRY_MAYFAIL doesn't guarantee the stuck.
+> > > 
+> > > How about the changes like below?
+> > > 
+> > > +/* default GFP bits for our allocations */
+> > > +static gfp_t default_gfp(size_t size)
+> > > +{
+> > > +	/* don't allocate intensively for high-order pages */
+> > > +	if (size > PAGE_SIZE)
+> > > +		return GFP_KERNEL | __GFP_NOWARN | __GFP_NORETRY;
+> > > +	else
+> > > +		return GFP_KERNEL | __GFP_NOWARN | __GFP_RETRY_MAYFAIL;
+> > > +}
+> > 
+> > Looks like an overdose because both __GFP_NORETRY and __GFP_RETRY_MAYFAIL
+> > are checked in __alloc_pages_slowpath().
+> 
+> If the check there worked as expected, this shouldn't have been a
+> problem, no?
+> 
+> The fact that we have to drop __GFP_RETRY_MAYFAIL indicates that the
+> handling there doesn't suffice -- at least for the audio operation.
 
-As mentioned in linux/mm.h:
+Reconsidering on this again, I wonder keeping __GFP_RETRY_MAYFAIL
+makes sense.  We did have __GFP_NORETRY for avoiding OOM-killer.
+But it's been over ages, and the memory allocation core became smart
+enough.
 
-/*
- * To support DEBUG_PAGEALLOC architecture must ensure that
- * __kernel_map_pages() never fails
- */
+The side-effect of __GFP_RETRY_MAYFAIL is that the page reclaim and
+compaction happens even for high-order allocations, and that must be
+the issue we see now.  For dma_alloc_contiguous() with IOMMU, this
+wasn't visible because the loop there sets __GFP_NORETRY explicitly
+unless the minimal order.
 
-So panic in case set_memory_p() or set_memory_np() fail
-in __kernel_map_pages().
+So, basically we could have achieved the more or less same effect just
+by dropping __GFP_NORETRY from DEFAULT_GFP definition.
+(Now it's a drop of __GFP_RETRY_MAYFAIL)
 
-Link: https://github.com/KSPP/linux/issues/7
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/include/asm/book3s/64/hash.h |  2 +-
- arch/powerpc/mm/book3s64/hash_utils.c     |  3 ++-
- arch/powerpc/mm/pageattr.c                | 10 +++++++---
- 3 files changed, 10 insertions(+), 5 deletions(-)
+OTOH, a slight concern with the drop of __GFP_RETRY_MAYFAIL is whether
+allowing OOM-killer for low order allocations is acceptable or not.
 
-diff --git a/arch/powerpc/include/asm/book3s/64/hash.h b/arch/powerpc/include/asm/book3s/64/hash.h
-index 6e70ae511631..8f47ae79f2a6 100644
---- a/arch/powerpc/include/asm/book3s/64/hash.h
-+++ b/arch/powerpc/include/asm/book3s/64/hash.h
-@@ -269,7 +269,7 @@ int hash__create_section_mapping(unsigned long start, unsigned long end,
- 				 int nid, pgprot_t prot);
- int hash__remove_section_mapping(unsigned long start, unsigned long end);
- 
--void hash__kernel_map_pages(struct page *page, int numpages, int enable);
-+int hash__kernel_map_pages(struct page *page, int numpages, int enable);
- 
- #endif /* !__ASSEMBLY__ */
- #endif /* __KERNEL__ */
-diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
-index 0626a25b0d72..01c3b4b65241 100644
---- a/arch/powerpc/mm/book3s64/hash_utils.c
-+++ b/arch/powerpc/mm/book3s64/hash_utils.c
-@@ -2172,7 +2172,7 @@ static void kernel_unmap_linear_page(unsigned long vaddr, unsigned long lmi)
- 				     mmu_kernel_ssize, 0);
- }
- 
--void hash__kernel_map_pages(struct page *page, int numpages, int enable)
-+int hash__kernel_map_pages(struct page *page, int numpages, int enable)
- {
- 	unsigned long flags, vaddr, lmi;
- 	int i;
-@@ -2189,6 +2189,7 @@ void hash__kernel_map_pages(struct page *page, int numpages, int enable)
- 			kernel_unmap_linear_page(vaddr, lmi);
- 	}
- 	local_irq_restore(flags);
-+	return 0;
- }
- #endif /* CONFIG_DEBUG_PAGEALLOC || CONFIG_KFENCE */
- 
-diff --git a/arch/powerpc/mm/pageattr.c b/arch/powerpc/mm/pageattr.c
-index 16b8d20d6ca8..62b678585878 100644
---- a/arch/powerpc/mm/pageattr.c
-+++ b/arch/powerpc/mm/pageattr.c
-@@ -106,17 +106,21 @@ int change_memory_attr(unsigned long addr, int numpages, long action)
- #ifdef CONFIG_ARCH_SUPPORTS_DEBUG_PAGEALLOC
- void __kernel_map_pages(struct page *page, int numpages, int enable)
- {
-+	int err;
- 	unsigned long addr = (unsigned long)page_address(page);
- 
- 	if (PageHighMem(page))
- 		return;
- 
- 	if (IS_ENABLED(CONFIG_PPC_BOOK3S_64) && !radix_enabled())
--		hash__kernel_map_pages(page, numpages, enable);
-+		err = hash__kernel_map_pages(page, numpages, enable);
- 	else if (enable)
--		set_memory_p(addr, numpages);
-+		err = set_memory_p(addr, numpages);
- 	else
--		set_memory_np(addr, numpages);
-+		err = set_memory_np(addr, numpages);
-+
-+	if (err)
-+		panic("%s: set_memory_%sp() failed\n", enable ? "" : "n");
- }
- #endif
- #endif
--- 
-2.43.0
+There are two patterns of calling allocators:
+1. SNDRV_DMA_TYPE_DEV for large pages:
+   this is usually only once at driver probe, and the pages are
+   preserved via PCM buffer preallocation mechanism
 
+2. SNDRV_DMA_TYPE_DEV for lower orders:
+   those are usually at probes for some communication buffers, and in
+   most cases they are kept by drivers, too
+
+3. SNDRV_DMA_TYPE_NONCONTIG for large size:
+   this is called often, once per stream open, since the driver
+   doesn't keep the buffer.
+
+4. SNDRV_DMA_TYPE_NONCONTIG for lower orders:
+   basically same as case 2.
+
+That is, triggering OOM-killer would be OK for 2 and 4, but we have to
+avoid for 3.  So, __GFP_RETRY_MAYFAIL would be still useful for there.
+
+And for 3, there are two paths:
+- with IOMMU => we may pass __GFP_RETRY_MAYFAIL unconditionally to
+  dma_alloc_noncontiguous()
+- without IOMMU => dma_alloc_noncontiguous() without MAYFAIL,
+  but fallback allocation should become conditional:
+  - higher order: default (or explicitly with NORETRY)
+  - lower order: MAYFAIL
+
+OTOH, the avoidance of OOM-killer wouldn't be bad even for 2 and 4 (as its
+usefulness is dubious).  Then the conditionally setting MAYFAIL
+wouldn't be bad for the calls of other dma_alloc_coherent() & co,
+too.
+
+
+Takashi
