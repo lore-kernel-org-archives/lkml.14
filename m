@@ -1,92 +1,275 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E921612EBC8;
-	Fri, 16 Feb 2024 16:44:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 911DD43687
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 16:45:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708101896; cv=none; b=Qcz80kwzdl0cqsAfJvTIcC6MRvxG8bz4GnsFBq4fg3TUiU6Fga9CQQxXbiucbLMYYPEaqVZ/+IkkACwpld1U3fCHcts6SGr9C3tpiAXlz+ixxXmV4XRTdDvl4GNEGWU/X5RDdmC6u0dIwgfKxClv8RJ8JQf634ai7lGnVlcY3JA=
+	t=1708101916; cv=none; b=or8kpMN3UEoS+pG/VLmcnRsrnInpuovr1r0tgPSoMpRTNzvYpq79990G12Hd5yK0zEfK4I7Fc6UctvfEdYjvVgHi0qjb945OSNllVbOS50ZAjFJAFJAKujrmtZZFzPJx3cZm934TxPP5za6mFYLMKbb7nuKFDgZQIDbq7E/EGDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708101896; c=relaxed/simple;
-	bh=DREtwBpdo744kwdkZr603r+e8INTDQG/jJ9H007lpGU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RxLovDh91sA9PJJeOkPXB7vnFJ626ydfzMpOiSoXkGZ/6bAs0NJjOFK8zHNokVx5V86gi4ml2f1zKbU33AaFD4gFYO7c/0l4xJVodY1QBKbvzfj3Kyjd+z557mw4xcD5i9yYUN/PBfnouqntkRxhld5jCtlnr+0JhxL2wMPPr0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=OCN94ZFt; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1708101916; c=relaxed/simple;
+	bh=KRDASqWMP4FmjtwV9SInKRI/O/iLjYCFWTgDjM85YK0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bgcLnTxlQh5pvguaxbJCl+/aw8xnEAWQMHsPIpnNVPl34xyaIGyslfjlHXq72vqi8sqlbAs6nSk0XKjAq4VgA4X+JLEI48w6kRHBSP2rVqH7h1PM7szxk8yFnDvBC0CjoeAKTVkgO2s9cj+vTSvmxkk1q+O9neH/meFJoAcoWtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=odMN4+Dt; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OCN94ZFt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=DJeGR7MecqykZ6Yo2+icCQoR/1eFxGrSeBJy2YqSm+M=; b=OCN94ZFtA2QEKgR8FMWB0K+p5s
-	10xo3S9zwWVEv2IFIeoXxpbbNNExUy8MZRj0tu1FNV/NY7izR3/2GvWwzHS2/XsaEYF+ukqdDg3MN
-	Qv5SSGtzWgcPs7bYwCIe9KA6mt7hrHCgzJpSXdDL3JHSnKsNipkrO74wBTX2Qcf82tdNThyU5SP0l
-	1BKYP2iS076KAPaM4V7YHg+OePMJZGawKk8QNT0Gom1sxZxHCPo3qAKGoqs61M88f1QaDG+Ls4B18
-	qX1XBOg1OJc9N8wiSkxUWLBcBWp6525NUhTj8vuLe5WU416KrZa4p/zydvGXPT1JSv+uvfOBWEVB0
-	HzJd44Rw==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rb1K3-000000058zn-0K4J;
-	Fri, 16 Feb 2024 16:44:23 +0000
-Date: Fri, 16 Feb 2024 16:44:22 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Petr Tesarik <petrtesarik@huaweicloud.com>
-Cc: Dave Hansen <dave.hansen@intel.com>,
-	Petr =?utf-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>, Xin Li <xin3.li@intel.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Pengfei Xu <pengfei.xu@intel.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>, Ze Gao <zegao2021@gmail.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Brian Gerst <brgerst@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Joerg Roedel <jroedel@suse.de>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Tina Zhang <tina.zhang@intel.com>,
-	Jacob Pan <jacob.jun.pan@linux.intel.com>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Roberto Sassu <roberto.sassu@huaweicloud.com>,
-	David Howells <dhowells@redhat.com>,
-	Petr Tesarik <petr.tesarik1@huawei-partners.com>
-Subject: Re: [RFC 6/8] KEYS: PGP data parser
-Message-ID: <Zc-Q5pVHjngq9lpX@casper.infradead.org>
-References: <fb4a40c7-af9a-406a-95ab-406595f3ffe5@intel.com>
- <20240216152435.1575-1-petrtesarik@huaweicloud.com>
- <20240216152435.1575-7-petrtesarik@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="odMN4+Dt"
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-60777bcfed2so17554607b3.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 08:45:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708101912; x=1708706712; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yqMJBdmCbC/RM9PRo3lm7SAMuIGxpy4kB2I1M6Qh1Sw=;
+        b=odMN4+DtMaBIStE4V0Gyk/UdKuc7ha27bLtVpyKeudQ9H4WmsUbUnmcdYXlqTfrfDn
+         j9AwL5xlt2PQKP7dtoW1QcmMal0BhWC/mDIYq9XqLTtm7EfYEQvCSqgCWpp0ozd6Vqrg
+         i1dx5OlytEq1OancQA2b9D8xXm/I9JPwkS+R+SZQpKobemBHc8DEbuX2szRF/uKCRBaf
+         sXrsyU1dK7oMYLr2haBccjYZ9QD9wISsnJJInmLY+cLGrH9KocGpj0Er0ZlQdW8n/HDP
+         /DFOKd6aiWUU34XSpFPxjfdAOnZ7XoZokv78cq3Mw/hMC/zSho7RbgbfLkxzdqwl7zlS
+         Sd7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708101912; x=1708706712;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yqMJBdmCbC/RM9PRo3lm7SAMuIGxpy4kB2I1M6Qh1Sw=;
+        b=dLPmWEvmcYK2QClGsMrB+BiXHz5UXoFwfJIvVynxMOsJ93Ey5dtIzyYSiiYwdVffOf
+         yXkyuii8qzArWXpgsDHwo5DL8jx4Qghk5w2E+8jXwJsbYCZWBdREU+k1KjcikLOjyNwv
+         ZHf+KyOfJsfXAojL0PeKOzf+z1dDnhe7WFhmxqV8JgFiKj4DpcPVu6hpE59FLgzXy+kU
+         A34PMeYYQ4xDdgaWxDcdYuCf5WSOsfip4nWynnODSSXfb6RMH9n3DJSoMxHwecV0WWip
+         Nrln0/jYXREywJ7VgPELTLpRyANnqc9E4F4wqoX/w0VjCvfLl6TdG8Apvecb6Vy8WzA+
+         JGBw==
+X-Forwarded-Encrypted: i=1; AJvYcCXa/k8SYmzCmYbFJ8a71Qy+RqgmLBlHs4AilnW+zuzYiIwdhaw+/vx880sg8ickBeZAe8B3jSwn4WV5I2dxL5w6RA0E+0CoPqM+uluy
+X-Gm-Message-State: AOJu0YwLSfPJ7PObewHij6yz6ujfmsyN2lPSJXOy6yHR5th6WcTxeqDf
+	/40PAdgI7iJLPI9doe6S+d8b53CVhXcAAxIop/kupQz+T8iw4ez2oedgRUoMs7q2tAK2ar5O7A0
+	eX8DmDRTn1DLJsK3V7NR/wu5N+8e7I+zlPdMN
+X-Google-Smtp-Source: AGHT+IG8/ofM2uf/y914CU8c22R1iloHjqFZxLjTIvqCNCo3t1Vtfj5gxB8K/liUcdy0qkkmiNCjnhDlVc5UviII96I=
+X-Received: by 2002:a0d:d489:0:b0:607:d02f:3587 with SMTP id
+ w131-20020a0dd489000000b00607d02f3587mr6663621ywd.4.1708101912180; Fri, 16
+ Feb 2024 08:45:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240216152435.1575-7-petrtesarik@huaweicloud.com>
+References: <20240212213922.783301-1-surenb@google.com> <20240212213922.783301-15-surenb@google.com>
+ <039a817d-20c4-487d-a443-f87e19727305@suse.cz>
+In-Reply-To: <039a817d-20c4-487d-a443-f87e19727305@suse.cz>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Fri, 16 Feb 2024 08:44:58 -0800
+Message-ID: <CAJuCfpE_JUmLWJwbiJh1qX-YMCwgVvUthrF30o=sY_YtaVvgjw@mail.gmail.com>
+Subject: Re: [PATCH v3 14/35] lib: introduce support for page allocation tagging
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, mhocko@suse.com, 
+	hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, 
+	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, 
+	corbet@lwn.net, void@manifault.com, peterz@infradead.org, 
+	juri.lelli@redhat.com, catalin.marinas@arm.com, will@kernel.org, 
+	arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com, 
+	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
+	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
+	nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev, 
+	rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com, 
+	yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com, 
+	hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org, 
+	ndesaulniers@google.com, vvvvvv@google.com, gregkh@linuxfoundation.org, 
+	ebiggers@google.com, ytcoode@gmail.com, vincent.guittot@linaro.org, 
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
+	bristot@redhat.com, vschneid@redhat.com, cl@linux.com, penberg@kernel.org, 
+	iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com, 
+	elver@google.com, dvyukov@google.com, shakeelb@google.com, 
+	songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com, 
+	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	iommu@lists.linux.dev, linux-arch@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
+	cgroups@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 16, 2024 at 04:24:33PM +0100, Petr Tesarik wrote:
-> From: David Howells <dhowells@redhat.com>
-> 
-> Implement a PGP data parser for the crypto key type to use when
-> instantiating a key.
-> 
-> This parser attempts to parse the instantiation data as a PGP packet
-> sequence (RFC 4880) and if it parses okay, attempts to extract a public-key
-> algorithm key or subkey from it.
+On Fri, Feb 16, 2024 at 1:45=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wr=
+ote:
+>
+> On 2/12/24 22:39, Suren Baghdasaryan wrote:
+> > Introduce helper functions to easily instrument page allocators by
+> > storing a pointer to the allocation tag associated with the code that
+> > allocated the page in a page_ext field.
+> >
+> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> > Co-developed-by: Kent Overstreet <kent.overstreet@linux.dev>
+> > Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+> > +
+> > +#ifdef CONFIG_MEM_ALLOC_PROFILING
+> > +
+> > +#include <linux/page_ext.h>
+> > +
+> > +extern struct page_ext_operations page_alloc_tagging_ops;
+> > +extern struct page_ext *page_ext_get(struct page *page);
+> > +extern void page_ext_put(struct page_ext *page_ext);
+> > +
+> > +static inline union codetag_ref *codetag_ref_from_page_ext(struct page=
+_ext *page_ext)
+> > +{
+> > +     return (void *)page_ext + page_alloc_tagging_ops.offset;
+> > +}
+> > +
+> > +static inline struct page_ext *page_ext_from_codetag_ref(union codetag=
+_ref *ref)
+> > +{
+> > +     return (void *)ref - page_alloc_tagging_ops.offset;
+> > +}
+> > +
+> > +static inline union codetag_ref *get_page_tag_ref(struct page *page)
+> > +{
+> > +     if (page && mem_alloc_profiling_enabled()) {
+> > +             struct page_ext *page_ext =3D page_ext_get(page);
+> > +
+> > +             if (page_ext)
+> > +                     return codetag_ref_from_page_ext(page_ext);
+>
+> I think when structured like this, you're not getting the full benefits o=
+f
+> static keys, and the compiler probably can't improve that on its own.
+>
+> - page is tested before the static branch is evaluated
+> - when disabled, the result is NULL, and that's again tested in the calle=
+rs
 
-I don't understand why we want to do this in-kernel instead of in
-userspace and then pass in the actual key.
+Yes, that sounds right. I'll move the static branch check earlier like
+you suggested. Thanks!
 
+>
+> > +     }
+> > +     return NULL;
+> > +}
+> > +
+> > +static inline void put_page_tag_ref(union codetag_ref *ref)
+> > +{
+> > +     page_ext_put(page_ext_from_codetag_ref(ref));
+> > +}
+> > +
+> > +static inline void pgalloc_tag_add(struct page *page, struct task_stru=
+ct *task,
+> > +                                unsigned int order)
+> > +{
+> > +     union codetag_ref *ref =3D get_page_tag_ref(page);
+>
+> So the more optimal way would be to test mem_alloc_profiling_enabled() he=
+re
+> as the very first thing before trying to get the ref.
+>
+> > +     if (ref) {
+> > +             alloc_tag_add(ref, task->alloc_tag, PAGE_SIZE << order);
+> > +             put_page_tag_ref(ref);
+> > +     }
+> > +}
+> > +
+> > +static inline void pgalloc_tag_sub(struct page *page, unsigned int ord=
+er)
+> > +{
+> > +     union codetag_ref *ref =3D get_page_tag_ref(page);
+>
+> And same here.
+>
+> > +     if (ref) {
+> > +             alloc_tag_sub(ref, PAGE_SIZE << order);
+> > +             put_page_tag_ref(ref);
+> > +     }
+> > +}
+> > +
+> > +#else /* CONFIG_MEM_ALLOC_PROFILING */
+> > +
+> > +static inline void pgalloc_tag_add(struct page *page, struct task_stru=
+ct *task,
+> > +                                unsigned int order) {}
+> > +static inline void pgalloc_tag_sub(struct page *page, unsigned int ord=
+er) {}
+> > +
+> > +#endif /* CONFIG_MEM_ALLOC_PROFILING */
+> > +
+> > +#endif /* _LINUX_PGALLOC_TAG_H */
+> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > index 78d258ca508f..7bbdb0ddb011 100644
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -978,6 +978,7 @@ config MEM_ALLOC_PROFILING
+> >       depends on PROC_FS
+> >       depends on !DEBUG_FORCE_WEAK_PER_CPU
+> >       select CODE_TAGGING
+> > +     select PAGE_EXTENSION
+> >       help
+> >         Track allocation source code and record total allocation size
+> >         initiated at that code location. The mechanism can be used to t=
+rack
+> > diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
+> > index 4fc031f9cefd..2d5226d9262d 100644
+> > --- a/lib/alloc_tag.c
+> > +++ b/lib/alloc_tag.c
+> > @@ -3,6 +3,7 @@
+> >  #include <linux/fs.h>
+> >  #include <linux/gfp.h>
+> >  #include <linux/module.h>
+> > +#include <linux/page_ext.h>
+> >  #include <linux/proc_fs.h>
+> >  #include <linux/seq_buf.h>
+> >  #include <linux/seq_file.h>
+> > @@ -124,6 +125,22 @@ static bool alloc_tag_module_unload(struct codetag=
+_type *cttype,
+> >       return module_unused;
+> >  }
+> >
+> > +static __init bool need_page_alloc_tagging(void)
+> > +{
+> > +     return true;
+>
+> So this means the page_ext memory overead is paid unconditionally once
+> MEM_ALLOC_PROFILING is compile time enabled, even if never enabled during
+> runtime? That makes it rather costly to be suitable for generic distro
+> kernels where the code could be compile time enabled, and runtime enablin=
+g
+> suggested in a debugging/support scenario. It's what we do with page_owne=
+r,
+> debug_pagealloc, slub_debug etc.
+>
+> Ideally we'd have some vmalloc based page_ext flavor for later-than-boot
+> runtime enablement, as we now have for stackdepot. But that could be
+> explored later. For now it would be sufficient to add an early_param boot
+> parameter to control the enablement including page_ext, like page_owner a=
+nd
+> other features do.
+
+Sounds reasonable. In v1 of this patchset we used early boot parameter
+but after LSF/MM discussion that was changed to runtime controls.
+Sounds like we would need both here. Should be easy to add.
+
+Allocating/reclaiming dynamically the space for page_ext, slab_ext,
+etc is not trivial and if done would be done separately. I looked into
+it before and listed the encountered issues in the cover letter of v2
+[1], see "things we could not address" section.
+
+[1] https://lore.kernel.org/all/20231024134637.3120277-1-surenb@google.com/
+
+>
+> > +}
+> > +
+> > +static __init void init_page_alloc_tagging(void)
+> > +{
+> > +}
+> > +
+> > +struct page_ext_operations page_alloc_tagging_ops =3D {
+> > +     .size =3D sizeof(union codetag_ref),
+> > +     .need =3D need_page_alloc_tagging,
+> > +     .init =3D init_page_alloc_tagging,
+> > +};
+> > +EXPORT_SYMBOL(page_alloc_tagging_ops);
+>
+>
+> --
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to kernel-team+unsubscribe@android.com.
+>
