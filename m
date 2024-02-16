@@ -1,496 +1,308 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624412C860;
-	Fri, 16 Feb 2024 10:28:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A6328E2E;
+	Fri, 16 Feb 2024 10:30:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708079323; cv=none; b=rmQIVfLkgks8sW3wQS3ldKvcgH5o1ua1jgvQvVQZNQcq6voZAwa5ZpKe6btwhf8PzewczCigOXqn2AjoIsKYEp6autAullSGshK+WAVD+UFoHILatMK+XS5KBOJV9BBHFHYqpc/ndxb/UNdsn4dHLzL1MVQ2k7OvOqsCIWPDDWg=
+	t=1708079402; cv=none; b=lBMucYwmM+VREd6sRNmb/J67/K1HieMOQy8Le3kxuF14g6BuNLQqQkoKyMsHBnjmn63X4ClN0eKs0ysSVwlGm2tdi5ftvjX3Ms3h3wAskUk7vOaqfgwIvAesr71Hps5+UWsSIPsiX9knoRfPGFAaViOapLv780tBQVQIQQqJhD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708079323; c=relaxed/simple;
-	bh=32pqVwO+RqnwFfeQjxXXUN1e/1XXDkQ0T1CtIpBLZps=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bfzjgisc/oOClIZ/n0NHCbAhUvTEW+mWzYfF+RlQCw8iA95g6Isejjgqo60rpZAqHaC2ZY4k/tK2GwW4d9IgUAs4ZHwbeFXRzEnRJGd3xkQoJY2nxQu1LJEpOryOTDFMA/ig86vs4q5TB3eO3b3eUtmWrdEvcFyhlBM8sZhLtxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=bokedZ5L; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1708079402; c=relaxed/simple;
+	bh=nRq2taqq+XVslMrJ3ND/dEzSlU7hSfFj1FuNCS5WZD8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OkewVaGKqhZ0T5O4ABCOALGg3rCBv4lXNK6xJJsx/SZowZiqOaFgojMIHE7WSBF7OX58kQWLQEBJMVfYLRt3eic2Ruvm+uNBsfAaOIjMG8yyoYWlx+FdU7CV9i7w5eynfdVdP4uqHuOkRxuMITnR7FPzRtjSwykQfOshVJfSPlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UaGwzZrq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="bokedZ5L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1708079320; x=1739615320;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=MB/nN9a0T/r1EBacRJA4wapz9QQsMCAXdIXZIw6yqkc=;
-  b=bokedZ5LEAuB7WNDt8rwuV2fT2hZuD+WY8jw0viP+lxudc0CuIK4Vq1K
-   oZvWpoYxPbQOVqEIjg1Epl8ZT7o3e5oGSXG6nQgH439b+AoiKAH19CYzy
-   hFRl2DLZAtp4p/diTZ0ngUNXpd4bknvS5ESIvFXFvZWc5q0G23jHQQFzD
-   z7cyliDoGvBKmvbnpAv7mbdnjdMKpy/mXiyWCvVCd6iqeA/24sPdD0XjS
-   tXbWckNb1oU8O+tO5Au2MDM3TsSm8XDNlpoTrYber2e2DrjtXddR1mt8y
-   NdBA+dgdzHCRGkMseABkTSUtFxN2ZzOf1Vjalk2yz9p06yQNSomzaVaRR
-   w==;
-X-IronPort-AV: E=Sophos;i="6.06,164,1705359600"; 
-   d="scan'208";a="35443367"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 16 Feb 2024 11:28:36 +0100
-Received: from steina-w.localnet (steina-w.tq-net.de [10.123.53.25])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 6E28B280075;
-	Fri, 16 Feb 2024 11:28:34 +0100 (CET)
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Paul Elder <paul.elder@ideasonboard.com>
-Cc: kieran.bingham@ideasonboard.com, tomi.valkeinen@ideasonboard.com, umang.jain@ideasonboard.com, aford173@gmail.com, Paul Elder <paul.elder@ideasonboard.com>, Dafna Hirschfeld <dafna@fastmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Heiko Stuebner <heiko@sntech.de>, "moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v12 11/12] media: rkisp1: Fix endianness on raw streams on i.MX8MP
-Date: Fri, 16 Feb 2024 11:28:36 +0100
-Message-ID: <1980499.usQuhbGJ8B@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <20240216095458.2919694-12-paul.elder@ideasonboard.com>
-References: <20240216095458.2919694-1-paul.elder@ideasonboard.com> <20240216095458.2919694-12-paul.elder@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UaGwzZrq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84EDCC433C7;
+	Fri, 16 Feb 2024 10:29:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708079401;
+	bh=nRq2taqq+XVslMrJ3ND/dEzSlU7hSfFj1FuNCS5WZD8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UaGwzZrq4Qr94CfqggpesJXcHiJ5oZKuWrI0VWeMiVTNOOBL/wfZVO6FsP2A6m8x/
+	 MfgCQ6yPBhhPErqgJGTnIHxo5/A02RoDmnr2jrbwfmxv42Xmm75xYaCjdcqAJaPJbo
+	 7FO21loEEjIl+ErrnJNGy8HNaUiLukLCyK/rW8CE/k8/Oh2VBqQRkXdCITG0prZooM
+	 uVS/2Aq8W1bXAXQA/cRUxXssRfOC9UYsDfUtogCr0lj0j41qDX+dck32jxwdfRKnMv
+	 8RmG5U7t6mcu1msWt4g7PXpUAZMzEN0v7bd90j84GL5F9NyFUCrPAj3HtbjRpJU4VL
+	 AEe4tMVm5WEbA==
+Date: Fri, 16 Feb 2024 11:29:55 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+Cc: dlemoal@kernel.org, p.zabel@pengutronix.de, axboe@kernel.dk,
+	michal.simek@amd.com, linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ata: ahci_ceva: fix error handling for Xilinx GT PHY
+ support
+Message-ID: <Zc85I1u5x9vh1IJI@x1-carbon>
+References: <1708020060-1439879-1-git-send-email-radhey.shyam.pandey@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1708020060-1439879-1-git-send-email-radhey.shyam.pandey@amd.com>
 
-Hi Paul,
+Hello Radhey,
 
-thanks for updating this.
-
-Am Freitag, 16. Februar 2024, 10:54:57 CET schrieb Paul Elder:
-> The i.MX8MP has extra register fields in the memory interface control
-> register for setting the output format, which work with the output
-> alignment format register for byte-swapping and LSB/MSB alignment.
->=20
-> With processed and 8-bit raw streams, it doesn't cause any problems to
-> not set these, but with raw streams of higher bit depth the endianness
-> is swapped and the data is not aligned properly.
->=20
-> Add support for settings these registers and plumb them in to fix this.
->=20
-> Signed-off-by: Paul Elder <paul.elder@ideasonboard.com>
+On Thu, Feb 15, 2024 at 11:31:00PM +0530, Radhey Shyam Pandey wrote:
+> Platform clock and phy error resources are not cleaned up in Xilinx GT PHY
+> error path.
+> 
+> To fix it create a wrapper ceva_ahci_platform_enable_resources() API which
+> is a customized version of ahci_platform_enable_resources() and inline with
+> SATA IP programming sequence it does:
+> 
+> - Assert SATA reset
+> - Program PS GTR phy
+> - Bring SATA by de-asserting the reset
+> - Wait for GT lane PLL to be locked
+> 
+> It switches to ceva_ahci_platform_enable_resources() in resume path
+> as same SATA programming sequence (as in probe) should be followed.
+> 
+> It also cleanup mix usage of ahci_platform_enable_resources() and custom
+> implementation in probe function as both are not required.
+> 
+> Fixes: 9a9d3abe24bb ("ata: ahci: ceva: Update the driver to support xilinx GT phy")
+> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
 > ---
-> Changes in v12:
-> - replace MP_OUTPUT_FORMAT feature flag with MAIN_STRIDE
->=20
-> New in v6
+> Changes for v2:
+> 
+> - Create wrapper ceva_ahci_platform_enable_resources()
+> - Remove legacy ahci_platform_enable_resources() and its related code.
+> - Modified commit description and merge 1/2 and 2/2 fix as it is
+>   automatically done when reusing ahci_platform_enable_resources()
+>   logic.
+> - Drop Reviewed-by: Damien Le Moal <dlemoal@kernel.org> tag.
 > ---
->  .../platform/rockchip/rkisp1/rkisp1-capture.c | 93 ++++++++++++++-----
->  .../platform/rockchip/rkisp1/rkisp1-regs.h    |  8 ++
->  2 files changed, 78 insertions(+), 23 deletions(-)
->=20
-> diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c
-> b/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c index
-> 64b1d1104e20..28a99b31581b 100644
-> --- a/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c
-> +++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c
-> @@ -48,16 +48,20 @@ enum rkisp1_plane {
->   * @fmt_type: helper filed for pixel format
->   * @uv_swap: if cb cr swapped, for yuv
->   * @yc_swap: if y and cb/cr swapped, for yuv
-> + * @byte_swap: if byte pairs are swapped, for raw
->   * @write_format: defines how YCbCr self picture data is written to memo=
-ry
-> - * @output_format: defines sp output format
-> + * @output_format_mp: defines mp output format
-> + * @output_format_sp: defines sp output format
->   * @mbus: the mbus code on the src resizer pad that matches the pixel
-> format */
->  struct rkisp1_capture_fmt_cfg {
->  	u32 fourcc;
->  	u32 uv_swap : 1;
->  	u32 yc_swap : 1;
-> +	u32 byte_swap : 1;
->  	u32 write_format;
-> -	u32 output_format;
-> +	u32 output_format_mp;
-> +	u32 output_format_sp;
->  	u32 mbus;
+>  drivers/ata/ahci_ceva.c | 125 +++++++++++++++++++++++++---------------
+>  1 file changed, 79 insertions(+), 46 deletions(-)
+> 
+> diff --git a/drivers/ata/ahci_ceva.c b/drivers/ata/ahci_ceva.c
+> index 64f7f7d6ba84..c04f5033f981 100644
+> --- a/drivers/ata/ahci_ceva.c
+> +++ b/drivers/ata/ahci_ceva.c
+> @@ -88,7 +88,6 @@ struct ceva_ahci_priv {
+>  	u32 axicc;
+>  	bool is_cci_enabled;
+>  	int flags;
+> -	struct reset_control *rst;
 >  };
->=20
-> @@ -96,42 +100,50 @@ static const struct rkisp1_capture_fmt_cfg
-> rkisp1_mp_fmts[] =3D { .fourcc =3D V4L2_PIX_FMT_YUYV,
->  		.uv_swap =3D 0,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_YUVINT,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_YUV422,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_2X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_UYVY,
->  		.uv_swap =3D 0,
->  		.yc_swap =3D 1,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_YUVINT,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_YUV422,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_2X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_YUV422P,
->  		.uv_swap =3D 0,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_YUV_PLA_OR_RAW8,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_YUV422,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_2X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_NV16,
->  		.uv_swap =3D 0,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_YUV_SPLA,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_YUV422,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_2X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_NV61,
->  		.uv_swap =3D 1,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_YUV_SPLA,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_YUV422,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_2X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_NV16M,
->  		.uv_swap =3D 0,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_YUV_SPLA,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_YUV422,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_2X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_NV61M,
->  		.uv_swap =3D 1,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_YUV_SPLA,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_YUV422,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_2X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_YVU422M,
->  		.uv_swap =3D 1,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_YUV_PLA_OR_RAW8,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_YUV422,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_2X8,
->  	},
->  	/* yuv400 */
-> @@ -139,6 +151,7 @@ static const struct rkisp1_capture_fmt_cfg
-> rkisp1_mp_fmts[] =3D { .fourcc =3D V4L2_PIX_FMT_GREY,
->  		.uv_swap =3D 0,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_YUV_PLA_OR_RAW8,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_YUV400,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_2X8,
->  	},
->  	/* yuv420 */
-> @@ -146,81 +159,107 @@ static const struct rkisp1_capture_fmt_cfg
-> rkisp1_mp_fmts[] =3D { .fourcc =3D V4L2_PIX_FMT_NV21,
->  		.uv_swap =3D 1,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_YUV_SPLA,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_YUV420,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_1_5X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_NV12,
->  		.uv_swap =3D 0,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_YUV_SPLA,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_YUV420,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_1_5X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_NV21M,
->  		.uv_swap =3D 1,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_YUV_SPLA,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_YUV420,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_1_5X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_NV12M,
->  		.uv_swap =3D 0,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_YUV_SPLA,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_YUV420,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_1_5X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_YUV420,
->  		.uv_swap =3D 0,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_YUV_PLA_OR_RAW8,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_YUV420,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_1_5X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_YVU420,
->  		.uv_swap =3D 1,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_YUV_PLA_OR_RAW8,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_YUV420,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_1_5X8,
->  	},
->  	/* raw */
->  	{
->  		.fourcc =3D V4L2_PIX_FMT_SRGGB8,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_YUV_PLA_OR_RAW8,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_RAW8,
->  		.mbus =3D MEDIA_BUS_FMT_SRGGB8_1X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_SGRBG8,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_YUV_PLA_OR_RAW8,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_RAW8,
->  		.mbus =3D MEDIA_BUS_FMT_SGRBG8_1X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_SGBRG8,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_YUV_PLA_OR_RAW8,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_RAW8,
->  		.mbus =3D MEDIA_BUS_FMT_SGBRG8_1X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_SBGGR8,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_YUV_PLA_OR_RAW8,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_RAW8,
->  		.mbus =3D MEDIA_BUS_FMT_SBGGR8_1X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_SRGGB10,
-> +		.byte_swap =3D 1,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_RAW12,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_RAW10,
->  		.mbus =3D MEDIA_BUS_FMT_SRGGB10_1X10,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_SGRBG10,
-> +		.byte_swap =3D 1,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_RAW12,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_RAW10,
->  		.mbus =3D MEDIA_BUS_FMT_SGRBG10_1X10,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_SGBRG10,
-> +		.byte_swap =3D 1,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_RAW12,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_RAW10,
->  		.mbus =3D MEDIA_BUS_FMT_SGBRG10_1X10,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_SBGGR10,
-> +		.byte_swap =3D 1,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_RAW12,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_RAW10,
->  		.mbus =3D MEDIA_BUS_FMT_SBGGR10_1X10,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_SRGGB12,
-> +		.byte_swap =3D 1,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_RAW12,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_RAW12,
->  		.mbus =3D MEDIA_BUS_FMT_SRGGB12_1X12,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_SGRBG12,
-> +		.byte_swap =3D 1,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_RAW12,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_RAW12,
->  		.mbus =3D MEDIA_BUS_FMT_SGRBG12_1X12,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_SGBRG12,
-> +		.byte_swap =3D 1,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_RAW12,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_RAW12,
->  		.mbus =3D MEDIA_BUS_FMT_SGBRG12_1X12,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_SBGGR12,
-> +		.byte_swap =3D 1,
->  		.write_format =3D RKISP1_MI_CTRL_MP_WRITE_RAW12,
-> +		.output_format_mp =3D RKISP1_CIF_MI_INIT_MP_OUTPUT_RAW12,
->  		.mbus =3D MEDIA_BUS_FMT_SBGGR12_1X12,
->  	},
+>  
+>  static unsigned int ceva_ahci_read_id(struct ata_device *dev,
+> @@ -189,6 +188,60 @@ static const struct scsi_host_template ahci_platform_sht = {
+>  	AHCI_SHT(DRV_NAME),
 >  };
-> @@ -235,50 +274,50 @@ static const struct rkisp1_capture_fmt_cfg
-> rkisp1_sp_fmts[] =3D { .fourcc =3D V4L2_PIX_FMT_YUYV,
->  		.uv_swap =3D 0,
->  		.write_format =3D RKISP1_MI_CTRL_SP_WRITE_INT,
-> -		.output_format =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV422,
-> +		.output_format_sp =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV422,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_2X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_UYVY,
->  		.uv_swap =3D 0,
->  		.yc_swap =3D 1,
->  		.write_format =3D RKISP1_MI_CTRL_SP_WRITE_INT,
-> -		.output_format =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV422,
-> +		.output_format_sp =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV422,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_2X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_YUV422P,
->  		.uv_swap =3D 0,
->  		.write_format =3D RKISP1_MI_CTRL_SP_WRITE_PLA,
-> -		.output_format =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV422,
-> +		.output_format_sp =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV422,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_2X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_NV16,
->  		.uv_swap =3D 0,
->  		.write_format =3D RKISP1_MI_CTRL_SP_WRITE_SPLA,
-> -		.output_format =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV422,
-> +		.output_format_sp =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV422,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_2X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_NV61,
->  		.uv_swap =3D 1,
->  		.write_format =3D RKISP1_MI_CTRL_SP_WRITE_SPLA,
-> -		.output_format =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV422,
-> +		.output_format_sp =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV422,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_2X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_NV16M,
->  		.uv_swap =3D 0,
->  		.write_format =3D RKISP1_MI_CTRL_SP_WRITE_SPLA,
-> -		.output_format =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV422,
-> +		.output_format_sp =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV422,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_2X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_NV61M,
->  		.uv_swap =3D 1,
->  		.write_format =3D RKISP1_MI_CTRL_SP_WRITE_SPLA,
-> -		.output_format =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV422,
-> +		.output_format_sp =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV422,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_2X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_YVU422M,
->  		.uv_swap =3D 1,
->  		.write_format =3D RKISP1_MI_CTRL_SP_WRITE_PLA,
-> -		.output_format =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV422,
-> +		.output_format_sp =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV422,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_2X8,
->  	},
->  	/* yuv400 */
-> @@ -286,19 +325,19 @@ static const struct rkisp1_capture_fmt_cfg
-> rkisp1_sp_fmts[] =3D { .fourcc =3D V4L2_PIX_FMT_GREY,
->  		.uv_swap =3D 0,
->  		.write_format =3D RKISP1_MI_CTRL_SP_WRITE_PLA,
-> -		.output_format =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV422,
-> +		.output_format_sp =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV422,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_2X8,
->  	},
->  	/* rgb */
->  	{
->  		.fourcc =3D V4L2_PIX_FMT_XBGR32,
->  		.write_format =3D RKISP1_MI_CTRL_SP_WRITE_PLA,
-> -		.output_format =3D RKISP1_MI_CTRL_SP_OUTPUT_RGB888,
-> +		.output_format_sp =3D RKISP1_MI_CTRL_SP_OUTPUT_RGB888,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_2X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_RGB565,
->  		.write_format =3D RKISP1_MI_CTRL_SP_WRITE_PLA,
-> -		.output_format =3D RKISP1_MI_CTRL_SP_OUTPUT_RGB565,
-> +		.output_format_sp =3D RKISP1_MI_CTRL_SP_OUTPUT_RGB565,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_2X8,
->  	},
->  	/* yuv420 */
-> @@ -306,37 +345,37 @@ static const struct rkisp1_capture_fmt_cfg
-> rkisp1_sp_fmts[] =3D { .fourcc =3D V4L2_PIX_FMT_NV21,
->  		.uv_swap =3D 1,
->  		.write_format =3D RKISP1_MI_CTRL_SP_WRITE_SPLA,
-> -		.output_format =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV420,
-> +		.output_format_sp =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV420,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_1_5X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_NV12,
->  		.uv_swap =3D 0,
->  		.write_format =3D RKISP1_MI_CTRL_SP_WRITE_SPLA,
-> -		.output_format =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV420,
-> +		.output_format_sp =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV420,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_1_5X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_NV21M,
->  		.uv_swap =3D 1,
->  		.write_format =3D RKISP1_MI_CTRL_SP_WRITE_SPLA,
-> -		.output_format =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV420,
-> +		.output_format_sp =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV420,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_1_5X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_NV12M,
->  		.uv_swap =3D 0,
->  		.write_format =3D RKISP1_MI_CTRL_SP_WRITE_SPLA,
-> -		.output_format =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV420,
-> +		.output_format_sp =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV420,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_1_5X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_YUV420,
->  		.uv_swap =3D 0,
->  		.write_format =3D RKISP1_MI_CTRL_SP_WRITE_PLA,
-> -		.output_format =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV420,
-> +		.output_format_sp =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV420,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_1_5X8,
->  	}, {
->  		.fourcc =3D V4L2_PIX_FMT_YVU420,
->  		.uv_swap =3D 1,
->  		.write_format =3D RKISP1_MI_CTRL_SP_WRITE_PLA,
-> -		.output_format =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV420,
-> +		.output_format_sp =3D RKISP1_MI_CTRL_SP_OUTPUT_YUV420,
->  		.mbus =3D MEDIA_BUS_FMT_YUYV8_1_5X8,
->  	},
->  };
-> @@ -484,10 +523,12 @@ static void rkisp1_mp_config(struct rkisp1_capture
-> *cap) */
->  	if (rkisp1_has_feature(rkisp1, MAIN_STRIDE)) {
->  		reg =3D rkisp1_read(rkisp1,=20
-RKISP1_CIF_MI_OUTPUT_ALIGN_FORMAT);
-> -		if (cap->pix.cfg->yc_swap)
-> +		if (cap->pix.cfg->yc_swap || cap->pix.cfg->byte_swap)
->  			reg |=3D=20
-RKISP1_CIF_OUTPUT_ALIGN_FORMAT_MP_BYTE_SWAP_BYTES;
->  		else
->  			reg &=3D=20
-~RKISP1_CIF_OUTPUT_ALIGN_FORMAT_MP_BYTE_SWAP_BYTES;
+>  
+> +static int ceva_ahci_platform_enable_resources(struct ahci_host_priv *hpriv)
+> +{
+> +	int rc, i;
 > +
-> +		reg |=3D RKISP1_CIF_OUTPUT_ALIGN_FORMAT_MP_LSB_ALIGNMENT;
->  		rkisp1_write(rkisp1, RKISP1_CIF_MI_OUTPUT_ALIGN_FORMAT,=20
-reg);
+> +	rc = ahci_platform_enable_regulators(hpriv);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = ahci_platform_enable_clks(hpriv);
+> +	if (rc)
+> +		goto disable_regulator;
+> +
+> +	/* Assert the controller reset */
+> +	rc = ahci_platform_assert_rsts(hpriv);
+> +	if (rc)
+> +		goto disable_clks;
+> +
+> +	for (i = 0; i < hpriv->nports; i++) {
+> +		rc = phy_init(hpriv->phys[i]);
+> +		if (rc)
+> +			goto disable_rsts;
+> +	}
+> +
+> +	/* De-assert the controller reset */
+> +	ahci_platform_deassert_rsts(hpriv);
+> +
+> +	for (i = 0; i < hpriv->nports; i++) {
+> +		rc = phy_power_on(hpriv->phys[i]);
+> +		if (rc) {
+> +			phy_exit(hpriv->phys[i]);
+> +			goto disable_phys;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +disable_rsts:
+> +	ahci_platform_deassert_rsts(hpriv);
+> +
+> +disable_phys:
+> +	while (--i >= 0) {
+> +		phy_power_off(hpriv->phys[i]);
+> +		phy_exit(hpriv->phys[i]);
+> +	}
+> +
+> +disable_clks:
+> +	ahci_platform_disable_clks(hpriv);
+> +
+> +disable_regulator:
+> +	ahci_platform_disable_regulators(hpriv);
+> +
+> +	return rc;
+> +}
+> +
+>  static int ceva_ahci_probe(struct platform_device *pdev)
+>  {
+>  	struct device_node *np = pdev->dev.of_node;
+> @@ -203,47 +256,19 @@ static int ceva_ahci_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  
+>  	cevapriv->ahci_pdev = pdev;
+> -
+> -	cevapriv->rst = devm_reset_control_get_optional_exclusive(&pdev->dev,
+> -								  NULL);
+> -	if (IS_ERR(cevapriv->rst))
+> -		dev_err_probe(&pdev->dev, PTR_ERR(cevapriv->rst),
+> -			      "failed to get reset\n");
+> -
+>  	hpriv = ahci_platform_get_resources(pdev, 0);
+>  	if (IS_ERR(hpriv))
+>  		return PTR_ERR(hpriv);
+>  
+> -	if (!cevapriv->rst) {
+> -		rc = ahci_platform_enable_resources(hpriv);
+> -		if (rc)
+> -			return rc;
+> -	} else {
+> -		int i;
+> -
+> -		rc = ahci_platform_enable_clks(hpriv);
+> -		if (rc)
+> -			return rc;
+> -		/* Assert the controller reset */
+> -		reset_control_assert(cevapriv->rst);
+> -
+> -		for (i = 0; i < hpriv->nports; i++) {
+> -			rc = phy_init(hpriv->phys[i]);
+> -			if (rc)
+> -				return rc;
+> -		}
+> -
+> -		/* De-assert the controller reset */
+> -		reset_control_deassert(cevapriv->rst);
+> +	hpriv->rsts = devm_reset_control_get_optional_exclusive(&pdev->dev,
+> +								NULL);
+> +	if (IS_ERR(hpriv->rsts))
+> +		dev_err_probe(&pdev->dev, PTR_ERR(hpriv->rsts),
+> +			      "failed to get reset\n");
+>  
+
+Here you just continue on even though there was an error.
+You should return the error here.
+
+It can be done in one statement:
+return dev_err_probe(&pdev->dev, PTR_ERR(hpriv->rsts),
+		     "failed to get reset\n");
+
+Otherwise, this looks good.
+
+
+Kind regards,
+Niklas
+
+> -		for (i = 0; i < hpriv->nports; i++) {
+> -			rc = phy_power_on(hpriv->phys[i]);
+> -			if (rc) {
+> -				phy_exit(hpriv->phys[i]);
+> -				return rc;
+> -			}
+> -		}
+> -	}
+> +	rc = ceva_ahci_platform_enable_resources(hpriv);
+> +	if (rc)
+> +		return rc;
+>  
+>  	if (of_property_read_bool(np, "ceva,broken-gen2"))
+>  		cevapriv->flags = CEVA_FLAG_BROKEN_GEN2;
+> @@ -252,52 +277,60 @@ static int ceva_ahci_probe(struct platform_device *pdev)
+>  	if (of_property_read_u8_array(np, "ceva,p0-cominit-params",
+>  					(u8 *)&cevapriv->pp2c[0], 4) < 0) {
+>  		dev_warn(dev, "ceva,p0-cominit-params property not defined\n");
+> -		return -EINVAL;
+> +		rc = -EINVAL;
+> +		goto disable_resources;
 >  	}
->=20
-> @@ -554,7 +595,7 @@ static void rkisp1_sp_config(struct rkisp1_capture *c=
-ap)
-> mi_ctrl &=3D ~RKISP1_MI_CTRL_SP_FMT_MASK;
->  	mi_ctrl |=3D cap->pix.cfg->write_format |
->  		   RKISP1_MI_CTRL_SP_INPUT_YUV422 |
-> -		   cap->pix.cfg->output_format |
-> +		   cap->pix.cfg->output_format_sp |
->  		   RKISP1_CIF_MI_SP_AUTOUPDATE_ENABLE;
->  	rkisp1_write(rkisp1, RKISP1_CIF_MI_CTRL, mi_ctrl);
->  }
-> @@ -946,6 +987,7 @@ static void rkisp1_cap_stream_enable(struct
-> rkisp1_capture *cap) struct rkisp1_device *rkisp1 =3D cap->rkisp1;
->  	struct rkisp1_capture *other =3D &rkisp1->capture_devs[cap->id ^ 1];
->  	bool has_self_path =3D rkisp1_has_feature(rkisp1, SELF_PATH);
-> +	u32 reg;
->=20
->  	cap->ops->set_data_path(cap);
->  	cap->ops->config(cap);
-> @@ -965,8 +1007,13 @@ static void rkisp1_cap_stream_enable(struct
-> rkisp1_capture *cap) */
->  	if (!has_self_path || !other->is_streaming) {
->  		/* force cfg update */
-> -		rkisp1_write(rkisp1, RKISP1_CIF_MI_INIT,
-> -			     RKISP1_CIF_MI_INIT_SOFT_UPD);
-> +		reg =3D rkisp1_read(rkisp1, RKISP1_CIF_MI_INIT);
-> +
-> +		if (rkisp1_has_feature(rkisp1, MAIN_STRIDE))
-> +			reg |=3D cap->pix.cfg->output_format_mp;
-
-I don't have any documents regarding that ISP, but shouldn't you clear the=
-=20
-bits for output_format_mp before OR'ing the new ones on top?
-
-Best regards,
-Alexander
-
-> +
-> +		reg |=3D RKISP1_CIF_MI_INIT_SOFT_UPD;
-> +		rkisp1_write(rkisp1, RKISP1_CIF_MI_INIT, reg);
->  		rkisp1_set_next_buf(cap);
+>  
+>  	if (of_property_read_u8_array(np, "ceva,p1-cominit-params",
+>  					(u8 *)&cevapriv->pp2c[1], 4) < 0) {
+>  		dev_warn(dev, "ceva,p1-cominit-params property not defined\n");
+> -		return -EINVAL;
+> +		rc = -EINVAL;
+> +		goto disable_resources;
 >  	}
->  	spin_unlock_irq(&cap->buf.lock);
-> diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-regs.h
-> b/drivers/media/platform/rockchip/rkisp1/rkisp1-regs.h index
-> 3b19c8411360..762243016f05 100644
-> --- a/drivers/media/platform/rockchip/rkisp1/rkisp1-regs.h
-> +++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-regs.h
-> @@ -144,6 +144,14 @@
->  /* MI_INIT */
->  #define RKISP1_CIF_MI_INIT_SKIP				BIT(2)
->  #define RKISP1_CIF_MI_INIT_SOFT_UPD			BIT(4)
-> +#define RKISP1_CIF_MI_INIT_MP_OUTPUT_YUV400		(0 << 5)
-> +#define RKISP1_CIF_MI_INIT_MP_OUTPUT_YUV420		(1 << 5)
-> +#define RKISP1_CIF_MI_INIT_MP_OUTPUT_YUV422		(2 << 5)
-> +#define RKISP1_CIF_MI_INIT_MP_OUTPUT_YUV444		(3 << 5)
-> +#define RKISP1_CIF_MI_INIT_MP_OUTPUT_RAW12		(4 << 5)
-> +#define RKISP1_CIF_MI_INIT_MP_OUTPUT_RAW8		(5 << 5)
-> +#define RKISP1_CIF_MI_INIT_MP_OUTPUT_JPEG		(6 << 5)
-> +#define RKISP1_CIF_MI_INIT_MP_OUTPUT_RAW10		(7 << 5)
->=20
->  /* MI_CTRL_SHD */
->  #define RKISP1_CIF_MI_CTRL_SHD_MP_IN_ENABLED		BIT(0)
-
-
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
-
-
+>  
+>  	/* Read OOB timing value for COMWAKE from device-tree*/
+>  	if (of_property_read_u8_array(np, "ceva,p0-comwake-params",
+>  					(u8 *)&cevapriv->pp3c[0], 4) < 0) {
+>  		dev_warn(dev, "ceva,p0-comwake-params property not defined\n");
+> -		return -EINVAL;
+> +		rc = -EINVAL;
+> +		goto disable_resources;
+>  	}
+>  
+>  	if (of_property_read_u8_array(np, "ceva,p1-comwake-params",
+>  					(u8 *)&cevapriv->pp3c[1], 4) < 0) {
+>  		dev_warn(dev, "ceva,p1-comwake-params property not defined\n");
+> -		return -EINVAL;
+> +		rc = -EINVAL;
+> +		goto disable_resources;
+>  	}
+>  
+>  	/* Read phy BURST timing value from device-tree */
+>  	if (of_property_read_u8_array(np, "ceva,p0-burst-params",
+>  					(u8 *)&cevapriv->pp4c[0], 4) < 0) {
+>  		dev_warn(dev, "ceva,p0-burst-params property not defined\n");
+> -		return -EINVAL;
+> +		rc = -EINVAL;
+> +		goto disable_resources;
+>  	}
+>  
+>  	if (of_property_read_u8_array(np, "ceva,p1-burst-params",
+>  					(u8 *)&cevapriv->pp4c[1], 4) < 0) {
+>  		dev_warn(dev, "ceva,p1-burst-params property not defined\n");
+> -		return -EINVAL;
+> +		rc = -EINVAL;
+> +		goto disable_resources;
+>  	}
+>  
+>  	/* Read phy RETRY interval timing value from device-tree */
+>  	if (of_property_read_u16_array(np, "ceva,p0-retry-params",
+>  					(u16 *)&cevapriv->pp5c[0], 2) < 0) {
+>  		dev_warn(dev, "ceva,p0-retry-params property not defined\n");
+> -		return -EINVAL;
+> +		rc = -EINVAL;
+> +		goto disable_resources;
+>  	}
+>  
+>  	if (of_property_read_u16_array(np, "ceva,p1-retry-params",
+>  					(u16 *)&cevapriv->pp5c[1], 2) < 0) {
+>  		dev_warn(dev, "ceva,p1-retry-params property not defined\n");
+> -		return -EINVAL;
+> +		rc = -EINVAL;
+> +		goto disable_resources;
+>  	}
+>  
+>  	/*
+> @@ -335,7 +368,7 @@ static int __maybe_unused ceva_ahci_resume(struct device *dev)
+>  	struct ahci_host_priv *hpriv = host->private_data;
+>  	int rc;
+>  
+> -	rc = ahci_platform_enable_resources(hpriv);
+> +	rc = ceva_ahci_platform_enable_resources(hpriv);
+>  	if (rc)
+>  		return rc;
+>  
+> -- 
+> 2.34.1
+> 
