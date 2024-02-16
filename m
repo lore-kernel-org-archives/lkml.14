@@ -1,116 +1,367 @@
-Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278B1130E2B;
-	Fri, 16 Feb 2024 16:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95827130AF6
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 16:53:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708102418; cv=none; b=Zu66BY4xl0rrT5AM5zvXzgV7AaSl5PsOWcjTaysncTvoxJqGEGgTqeUlpF1aCtpSNs6hd3lBssdIMCmF/6BI1xAyR77krJAAU3oZIn0WYtE3haUlNRX0mmhtpS1U1R6Mb8naeK2ywL/UHbcoXW5aBa9Hvh8MKcT53nxflJPJz9Y=
+	t=1708102414; cv=none; b=Q3y487LJb5u27Ni6ddqp+zTa9gFUfre7WaP+Kb9MVZT/VJE5f4e9WJqfz7XHr6vjFg/Lpg5LckhKUIy+kYZNX3GYPP9WljSri/WLun7j9RjIjVoZCvHTv3J9Wa2UU6EvEzTABRC2KE2XhrzXoHSp1qTivU6M8a7xotSA8xuH9D4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708102418; c=relaxed/simple;
-	bh=p+T7UhwuH1nBkWMxDYvNjDDJXqUPMgBVuhPNeXJWCME=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=E4cSg50v4hHWe+NZ5SU1PO5Fuwf21hmGRdlM3m+0mk9wbfiMVsDZOalk5XFMVPI6dTzZRBMEuHGbJu9OuXp8C07xbKWCzYEqtIk0KFngCggoXUeWsErwJk0LWSewjs+91PGnANQMr7HFvI/zqjhSLCXQuby1kBoBiqc52XsXGE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4TbyKh0XDHz9xFH8;
-	Sat, 17 Feb 2024 00:38:16 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.27])
-	by mail.maildlp.com (Postfix) with ESMTP id ECBB614059D;
-	Sat, 17 Feb 2024 00:53:22 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-	by APP2 (Coremail) with SMTP id GxC2BwCX0SXwks9lALGbAg--.29869S2;
-	Fri, 16 Feb 2024 17:53:22 +0100 (CET)
-Message-ID: <5916fa3ac3d0ce2ade71e7ed1c9eb6923e374c1f.camel@huaweicloud.com>
-Subject: Re: [RFC 6/8] KEYS: PGP data parser
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: Matthew Wilcox <willy@infradead.org>, Petr Tesarik
-	 <petrtesarik@huaweicloud.com>
-Cc: Dave Hansen <dave.hansen@intel.com>, Petr =?UTF-8?Q?Tesa=C5=99=C3=ADk?=
- <petr@tesarici.cz>, Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "maintainer:X86
- ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H. Peter Anvin"
- <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Oleg Nesterov
- <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Xin Li
- <xin3.li@intel.com>, Arnd Bergmann <arnd@arndb.de>,  Andrew Morton
- <akpm@linux-foundation.org>, Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Kees Cook <keescook@chromium.org>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>,  Pengfei Xu <pengfei.xu@intel.com>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Ze Gao <zegao2021@gmail.com>,  "Kirill A. Shutemov"
- <kirill.shutemov@linux.intel.com>, Kai Huang <kai.huang@intel.com>, David
- Woodhouse <dwmw@amazon.co.uk>,  Brian Gerst <brgerst@gmail.com>, Jason
- Gunthorpe <jgg@ziepe.ca>, Joerg Roedel <jroedel@suse.de>, "Mike Rapoport
- (IBM)" <rppt@kernel.org>, Tina Zhang <tina.zhang@intel.com>, Jacob Pan
- <jacob.jun.pan@linux.intel.com>, "open list:DOCUMENTATION"
- <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- David Howells <dhowells@redhat.com>, Petr Tesarik
- <petr.tesarik1@huawei-partners.com>
-Date: Fri, 16 Feb 2024 17:53:01 +0100
-In-Reply-To: <Zc-Q5pVHjngq9lpX@casper.infradead.org>
-References: <fb4a40c7-af9a-406a-95ab-406595f3ffe5@intel.com>
-	 <20240216152435.1575-1-petrtesarik@huaweicloud.com>
-	 <20240216152435.1575-7-petrtesarik@huaweicloud.com>
-	 <Zc-Q5pVHjngq9lpX@casper.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1708102414; c=relaxed/simple;
+	bh=FEf2Y/KAfI8ze9u45mC8SvInXV3LWFvYIZqq3fzfF80=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E6YrF1R6qMu7rKmXEm1GKAnYFBplFddMCjkjHVIUPFsFMiYeQZeA3QxOdjGM3LopaSHbWAzyumOndfX8prct5akwOzoXe0Lk2lr68ILUbb/1LKxDOqiMkefM1gsogAUnY0kyfXEl6YaaTD5Kwm0jWLfTakE3dACtPgr5eBwWJYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Edf+Jawn; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Edf+Jawn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708102411;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=pqSCd0hgk7x07BO/xgvUIHu8B6Qz2MMzhRXvndmAPFw=;
+	b=Edf+Jawn6gEWhWqOlaNOu2WkX8wCH29HkYBvWyfS3AiKYUxhSwZqJ1eHBLQckbGd0kSyeB
+	BagJOWOeye/N/7NTWGouj8hCAqVYaOl4G0CRlG3hulOYv4lWz2hD1AN3JRG+hoS0BYOQa7
+	44BWMEb2IrFFZ+fBjNnuN0pSjtsWigU=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-622-aVAoSnNKOUyze70gYEjcEQ-1; Fri, 16 Feb 2024 11:53:29 -0500
+X-MC-Unique: aVAoSnNKOUyze70gYEjcEQ-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4121ac8634aso5302225e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 08:53:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708102408; x=1708707208;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pqSCd0hgk7x07BO/xgvUIHu8B6Qz2MMzhRXvndmAPFw=;
+        b=bagxF16QPVf7JYpoPGapvZq83XiOUL8+jsIAPgxNEp7EBxrVowrCnbih/EUKtcnzBP
+         ve/vPbtK+m67WmOcrgofdmlStTTmCagAKlUABwYmfscdljQlACXQwM3JLfNxfSZK5sYK
+         c362hHiNaGM/79Qmhxai8oVcc2DT3y2xFAPSMh22fTTKnwqcEbX9DBw6ayN2qEBDzEDa
+         akxHYUHBj4MIHWbIWIPxkZVfHCU+yzImS8A3P0l2EQrAk/TiVijgu2eTWjGAK81THCg1
+         fiQkE0+4X98zz0/XSd1SQdgQUHdXAphrSkodFEnfsvJ92HsONoeLwKj28eATpd480CDf
+         P1fw==
+X-Forwarded-Encrypted: i=1; AJvYcCVkQ9hK4XzSxLMoxwPpmODWB1KqEbSOJx7a8ycNaX+k0TakCAXFqqfyFXh3FY0HXKwikHLClkFh2XRJ1tRnNvL1fiqnUgyWC7h+21z7
+X-Gm-Message-State: AOJu0YzlPdewupyTvvsUE/68k8/m3ojyD7zG7qSxHv0Hjg5/6J1AIvxM
+	CBWAbe7Ja88XVHZWkOrVg1sQXG+OalqCZQjDiTExmgDbqjHDzIEgL+UsujQUiQO5EV1vhoobBeG
+	WUw0h6WWoIyukzbIn54LYB7XPJetCKt96nFzborBOQIKQXoE1db4jksW0YbLbfWYdsgCsOg==
+X-Received: by 2002:a05:600c:444e:b0:411:e167:364d with SMTP id v14-20020a05600c444e00b00411e167364dmr4458160wmn.30.1708102407881;
+        Fri, 16 Feb 2024 08:53:27 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGRWAtlJztSTXbj6hzbNRhTXzUEdZ0WPSvj70JHzFfAWZu7xPBoLXE5w0iBKB6/tHd2Psb3rA==
+X-Received: by 2002:a05:600c:444e:b0:411:e167:364d with SMTP id v14-20020a05600c444e00b00411e167364dmr4458129wmn.30.1708102407379;
+        Fri, 16 Feb 2024 08:53:27 -0800 (PST)
+Received: from ?IPV6:2003:d8:2f3c:3f00:7177:eb0c:d3d2:4b0e? (p200300d82f3c3f007177eb0cd3d24b0e.dip0.t-ipconnect.de. [2003:d8:2f3c:3f00:7177:eb0c:d3d2:4b0e])
+        by smtp.gmail.com with ESMTPSA id az5-20020a05600c600500b0040e4733aecbsm2932847wmb.15.2024.02.16.08.53.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 Feb 2024 08:53:26 -0800 (PST)
+Message-ID: <c2f3a1d0-30cf-4680-83bd-08f5d8a54deb@redhat.com>
+Date: Fri, 16 Feb 2024 17:53:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CM-TRANSID:GxC2BwCX0SXwks9lALGbAg--.29869S2
-X-Coremail-Antispam: 1UD129KBjvdXoWruw45Cr4kJF4ruF4rZFWkWFg_yoWDtFg_ZF
-	WIqw4qkw4DGrZ3u3W29Fs3XFZ3KFWUA34UJw1UWFZFyr93JF93JFZ3Ww1rZ3Z3GayIyrnr
-	G3s5Xr95tw129jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbx8FF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJV
-	W0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
-	c2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Wrv_Gr1UMIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j
-	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUd8n
-	5UUUUU=
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAPBF1jj5ZtzAABsO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] mm/swap: fix race when skipping swapcache
+Content-Language: en-US
+To: Kairui Song <kasong@tencent.com>, linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ "Huang, Ying" <ying.huang@intel.com>, Chris Li <chrisl@kernel.org>,
+ Minchan Kim <minchan@kernel.org>, Yu Zhao <yuzhao@google.com>,
+ Barry Song <v-songbaohua@oppo.com>, SeongJae Park <sj@kernel.org>,
+ Hugh Dickins <hughd@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Matthew Wilcox <willy@infradead.org>, Michal Hocko <mhocko@suse.com>,
+ Yosry Ahmed <yosryahmed@google.com>, stable@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240216095105.14502-1-ryncsn@gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240216095105.14502-1-ryncsn@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 2024-02-16 at 16:44 +0000, Matthew Wilcox wrote:
-> On Fri, Feb 16, 2024 at 04:24:33PM +0100, Petr Tesarik wrote:
-> > From: David Howells <dhowells@redhat.com>
-> >=20
-> > Implement a PGP data parser for the crypto key type to use when
-> > instantiating a key.
-> >=20
-> > This parser attempts to parse the instantiation data as a PGP packet
-> > sequence (RFC 4880) and if it parses okay, attempts to extract a public=
--key
-> > algorithm key or subkey from it.
->=20
-> I don't understand why we want to do this in-kernel instead of in
-> userspace and then pass in the actual key.
+On 16.02.24 10:51, Kairui Song wrote:
+> From: Kairui Song <kasong@tencent.com>
+> 
+> When skipping swapcache for SWP_SYNCHRONOUS_IO, if two or more threads
+> swapin the same entry at the same time, they get different pages (A, B).
+> Before one thread (T0) finishes the swapin and installs page (A)
+> to the PTE, another thread (T1) could finish swapin of page (B),
+> swap_free the entry, then swap out the possibly modified page
+> reusing the same entry. It breaks the pte_same check in (T0) because
+> PTE value is unchanged, causing ABA problem. Thread (T0) will
+> install a stalled page (A) into the PTE and cause data corruption.
+> 
+> One possible callstack is like this:
+> 
+> CPU0                                 CPU1
+> ----                                 ----
+> do_swap_page()                       do_swap_page() with same entry
+> <direct swapin path>                 <direct swapin path>
+> <alloc page A>                       <alloc page B>
+> swap_read_folio() <- read to page A  swap_read_folio() <- read to page B
+> <slow on later locks or interrupt>   <finished swapin first>
+> ...                                  set_pte_at()
+>                                       swap_free() <- entry is free
+>                                       <write to page B, now page A stalled>
+>                                       <swap out page B to same swap entry>
+> pte_same() <- Check pass, PTE seems
+>                unchanged, but page A
+>                is stalled!
+> swap_free() <- page B content lost!
+> set_pte_at() <- staled page A installed!
+> 
+> And besides, for ZRAM, swap_free() allows the swap device to discard
+> the entry content, so even if page (B) is not modified, if
+> swap_read_folio() on CPU0 happens later than swap_free() on CPU1,
+> it may also cause data loss.
+> 
+> To fix this, reuse swapcache_prepare which will pin the swap entry using
+> the cache flag, and allow only one thread to pin it. Release the pin
+> after PT unlocked. Racers will simply wait since it's a rare and very
+> short event. A schedule() call is added to avoid wasting too much CPU
+> or adding too much noise to perf statistics
+> 
+> Other methods like increasing the swap count don't seem to be a good
+> idea after some tests, that will cause racers to fall back to use the
+> swap cache again. Parallel swapin using different methods leads to
+> a much more complex scenario.
+> 
+> Reproducer:
+> 
+> This race issue can be triggered easily using a well constructed
+> reproducer and patched brd (with a delay in read path) [1]:
+> 
+> With latest 6.8 mainline, race caused data loss can be observed easily:
+> $ gcc -g -lpthread test-thread-swap-race.c && ./a.out
+>    Polulating 32MB of memory region...
+>    Keep swapping out...
+>    Starting round 0...
+>    Spawning 65536 workers...
+>    32746 workers spawned, wait for done...
+>    Round 0: Error on 0x5aa00, expected 32746, got 32743, 3 data loss!
+>    Round 0: Error on 0x395200, expected 32746, got 32743, 3 data loss!
+>    Round 0: Error on 0x3fd000, expected 32746, got 32737, 9 data loss!
+>    Round 0 Failed, 15 data loss!
+> 
+> This reproducer spawns multiple threads sharing the same memory region
+> using a small swap device. Every two threads updates mapped pages one by
+> one in opposite direction trying to create a race, with one dedicated
+> thread keep swapping out the data out using madvise.
+> 
+> The reproducer created a reproduce rate of about once every 5 minutes,
+> so the race should be totally possible in production.
+> 
+> After this patch, I ran the reproducer for over a few hundred rounds
+> and no data loss observed.
+> 
+> Performance overhead is minimal, microbenchmark swapin 10G from 32G
+> zram:
+> 
+> Before:     10934698 us
+> After:      11157121 us
+> Non-direct: 13155355 us (Dropping SWP_SYNCHRONOUS_IO flag)
+> 
+> Fixes: 0bcac06f27d7 ("mm, swap: skip swapcache for swapin of synchronous device")
+> Link: https://github.com/ryncsn/emm-test-project/tree/master/swap-stress-race [1]
+> Reported-by: "Huang, Ying" <ying.huang@intel.com>
+> Closes: https://lore.kernel.org/lkml/87bk92gqpx.fsf_-_@yhuang6-desk2.ccr.corp.intel.com/
+> Signed-off-by: Kairui Song <kasong@tencent.com>
+> Cc: stable@vger.kernel.org
+> 
+> ---
+> Update from V2:
+> - Add a schedule() if raced to prevent repeated page faults wasting CPU
+>    and add noise to perf statistics.
+> - Use a bool to state the special case instead of reusing existing
+>    variables fixing error handling [Minchan Kim].
+> 
+> V2: https://lore.kernel.org/all/20240206182559.32264-1-ryncsn@gmail.com/
+> 
+> Update from V1:
+> - Add some words on ZRAM case, it will discard swap content on swap_free so the race window is a bit different but cure is the same. [Barry Song]
+> - Update comments make it cleaner [Huang, Ying]
+> - Add a function place holder to fix CONFIG_SWAP=n built [SeongJae Park]
+> - Update the commit message and summary, refer to SWP_SYNCHRONOUS_IO instead of "direct swapin path" [Yu Zhao]
+> - Update commit message.
+> - Collect Review and Acks.
+> 
+> V1: https://lore.kernel.org/all/20240205110959.4021-1-ryncsn@gmail.com/
+> 
+>   include/linux/swap.h |  5 +++++
+>   mm/memory.c          | 20 ++++++++++++++++++++
+>   mm/swap.h            |  5 +++++
+>   mm/swapfile.c        | 13 +++++++++++++
+>   4 files changed, 43 insertions(+)
+> 
+> diff --git a/include/linux/swap.h b/include/linux/swap.h
+> index 4db00ddad261..8d28f6091a32 100644
+> --- a/include/linux/swap.h
+> +++ b/include/linux/swap.h
+> @@ -549,6 +549,11 @@ static inline int swap_duplicate(swp_entry_t swp)
+>   	return 0;
+>   }
+>   
+> +static inline int swapcache_prepare(swp_entry_t swp)
+> +{
+> +	return 0;
+> +}
+> +
+>   static inline void swap_free(swp_entry_t swp)
+>   {
+>   }
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 7e1f4849463a..7059230d0a54 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -3799,6 +3799,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+>   	struct page *page;
+>   	struct swap_info_struct *si = NULL;
+>   	rmap_t rmap_flags = RMAP_NONE;
+> +	bool need_clear_cache = false;
+>   	bool exclusive = false;
+>   	swp_entry_t entry;
+>   	pte_t pte;
+> @@ -3867,6 +3868,20 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+>   	if (!folio) {
+>   		if (data_race(si->flags & SWP_SYNCHRONOUS_IO) &&
+>   		    __swap_count(entry) == 1) {
+> +			/*
+> +			 * Prevent parallel swapin from proceeding with
+> +			 * the cache flag. Otherwise, another thread may
+> +			 * finish swapin first, free the entry, and swapout
+> +			 * reusing the same entry. It's undetectable as
+> +			 * pte_same() returns true due to entry reuse.
+> +			 */
+> +			if (swapcache_prepare(entry)) {
+> +				/* Relax a bit to prevent rapid repeated page faults */
+> +				schedule();
+> +				goto out;
+> +			}
+> +			need_clear_cache = true;
+> +
 
-Sigh, this is a long discussion.
+I took a closer look at __read_swap_cache_async() and it essentially
+does something similar.
 
-PGP keys would be used as a system-wide trust anchor to verify RPM
-package headers, which already contain file digests that can be used as
-reference values for kernel-enforced integrity appraisal.
+Instead of returning, it keeps retrying until it finds that
+swapcache_prepare() fails for another reason than -EEXISTS (e.g.,
+freed concurrently) or it finds the entry in the swapcache.
 
-With the assumptions that:
+So if you would succeed here on a freed+reused swap entry,
+__read_swap_cache_async() would simply retry.
 
-- In a locked-down system the kernel has more privileges than root
-- The kernel cannot offload this task to an user space process due to
-  insufficient isolation
+It spells that out:
 
-the only available option is to do it in the kernel (that is what I got
-as suggestion).
+		/*
+		 * We might race against __delete_from_swap_cache(), and
+		 * stumble across a swap_map entry whose SWAP_HAS_CACHE
+		 * has not yet been cleared.  Or race against another
+		 * __read_swap_cache_async(), which has set SWAP_HAS_CACHE
+		 * in swap_map, but not yet added its folio to swap cache.
+		 */
 
-Roberto
+Whereby we could not race against this code here as well where we
+speculatively set SWAP_HAS_CACHE and might never add something to the swap
+cache.
+
+
+I'd probably avoid the wrong returns and do something even closer to
+__read_swap_cache_async().
+
+while (true) {
+	/*
+	 * Fake that we are trying to insert a page into the swapcache, to
+	 * serialize against concurrent threads wanting to do the same.
+	 * [more from your description]
+	 */
+	ret = swapcache_prepare(entry);
+	if (likely(!ret)
+		/*
+		 * Move forward with swapin, we'll recheck if the PTE hasn't
+		 * changed later.
+		 */
+		break;
+	else if (ret != -EEXIST)
+		goto out;
+	
+	/*
+          * See __read_swap_cache_async(). We might either have raced against
+          * another thread, or the entry could have been freed and reused in the
+	 * meantime. Make sure that the PTE did not change, to detect freeing.
+	 */
+	vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
+				       vmf->address, &vmf->ptl);
+	if (!vmf->pte || !pte_same(ptep_get(vmf->pte), vmf->orig_pte))
+		goto unlock;
+
+
+	schedule();
+}
+
+
+
+I was skeptical about the schedule(), but __read_swap_cache_async() does it
+already because there is no better way to wait for the event to happen.
+
+With something like above you would no longer depend on the speed of schedule() to
+determine how often you would retry the fault, which would likely make sense.
+
+I do wonder about the schedule() vs. schedule_timeout_uninterruptible(), though.
+No expert on that area, do you have any idea?
+
+-- 
+Cheers,
+
+David / dhildenb
 
