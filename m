@@ -1,121 +1,110 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF6DB134B2
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 05:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3432810A14
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 05:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708062873; cv=none; b=lhnJyieR92Beublm3aEVD4ZbAv0WhPOlt4gN9M4akkQMqkyMLNZUDw7+eyt4AAv2tIaeLN+D3QipI5A8GjpNw/z+gX1bkptxSV96XVnqKN39kOnfKRqNuGbUHoVmd4BgCZN53VQX+rB0i3u2RIpxCkBDIl3FDYdWh/H8YNWoaxw=
+	t=1708062959; cv=none; b=CZvGQKv9tveUK95FXJKQrPuc6kmyx2lc9aWP1hFJxwiYExzXp51DKojkGzy74Yw1t7xBnLrh/6EEV0HjNVnConws8823fSLG1rhIfvt2JIURD8xmt3o/ogbSe1xAD6AKLVpLKsk64vggaPWWhBf6BMMGnTmXFf+4KwYG//nOW9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708062873; c=relaxed/simple;
-	bh=q1gtVAj3lvEe8b98I0528UWfo/5v+mmHvNmP7iA02S0=;
-	h=Mime-Version:Subject:From:To:CC:In-Reply-To:Message-ID:Date:
-	 Content-Type:References; b=qagfdlOUL6fSTnK4zsf2mT8ynAiKH3kiwKiN+38lPA1td8kPuOYhkfIRAbD4omKfcblPZ77tf4hOX9WQ+eXnRKlbDnLxpnt2O3MzW0Gudm3RwNUsQNVIhLU9gSNo2SAXqzf5VUMWKYbP43k3kAVkVJVVN+X9/uT9sOpOYEp7wrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=FIk2/7ny; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1708062959; c=relaxed/simple;
+	bh=2Vjrs5FZz43nTUdRRVI78nsOlBnjfKONB07Jcj9DcH4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c1bZTuhBaE3BaUZVjsRe4izVEFBWeMVGi7vKszrYGfUz/gmrwRvczsiyHPIt53HdN8FujtBkBijWXyBzl2hdhS5GWr2pP/ua3N97I8ViHTX8NU+1Ch6g46E1h+y2RkEEYzXcHh5Z69LooxC9sK//YveRxXRQScxzXSqCY0g3/SM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V9Xm2rGI; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FIk2/7ny"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240216055428epoutp0173e98110c409db9aec9ef5837c8c21c0~0QiEMP5aD3226832268epoutp01b
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 05:54:28 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240216055428epoutp0173e98110c409db9aec9ef5837c8c21c0~0QiEMP5aD3226832268epoutp01b
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1708062868;
-	bh=q1gtVAj3lvEe8b98I0528UWfo/5v+mmHvNmP7iA02S0=;
-	h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-	b=FIk2/7nyuWDMu3XQTesMOFOnCujZ5BveQZ5JTKA5lvjijnPI1i1au2OmHTqGrWORV
-	 fc0+Kr5gqsKMgG+paStP78XKRs8qMtikRo0AK47f0zYA4maf5WCXp58/TBi9OYhQ36
-	 ohNZEvynIRpZOBQWosfRr6lziRKUKmdLdhRcWNq8=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-	20240216055427epcas5p34f65ef318a454c13df99df12149e1aa7~0QiDdT30g0434004340epcas5p3V;
-	Fri, 16 Feb 2024 05:54:27 +0000 (GMT)
-X-AuditID: b6c32a4b-39fff700000025c8-38-65cef89375a1
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	3B.F9.09672.398FEC56; Fri, 16 Feb 2024 14:54:27 +0900 (KST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V9Xm2rGI"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-411d9e901dcso25465e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 21:55:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708062955; x=1708667755; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lt3nfXVdUDnrjPi6tnq9n89wBe9oLKZaw75kjL4PRyg=;
+        b=V9Xm2rGIAXKp+jDA4ULkGGeAhedo9EG/SKYKI7T/rfpTUdbpDORw1oWvazmSTUrb1v
+         1qnyJEn4vFz/R6LZVlUJSoMprkwO5TWgV6y7DCdhVSio3vXM7c8pAtzn6stxtJhmsYgE
+         ALlBulbuusJEeAM8fBg2FUiaWHO6TIeBZNu1CZtGRP3SHp6AlIYoKdSxrzybFfLte5ze
+         /y6ygz1FfRsyn9Isn5pN0mXKtR9Kpa/G6CR5R/+L66l1zWS5Cq6PKrelrQKGVTNPsyrR
+         6/SQABNeDGBxEpTLiXfo4JB6K4tW+6zWftyhzoi3CuKRLJhG3Z/mRa2jgSYR4WetCRr+
+         RfxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708062955; x=1708667755;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lt3nfXVdUDnrjPi6tnq9n89wBe9oLKZaw75kjL4PRyg=;
+        b=dpLOfFUloU2brsGt5OGPLvq5e29eJe2jW58T7zzyO5EBhKHU2khsEWJZT6Gax5MHlQ
+         rEDWShZ+zRfrJ23zXAghwUexxWvLHjakuk+TxniRGm6VAmdiRmWzY0tDsc7idkRZwa4T
+         FHuzq6YGTIi9gOwFdElfy6SCKvR8Ai9d4h/s09bG9ALMNcRN4NRYk9cQgJD4DSQxuScu
+         8cG6xKFx4oGO21ckGhq2lPLX7NHIRbSpW95gy1SBn6vHH54cj7WJlks+J+7CXb2MjqQ6
+         muHMrPoFYBN8OEJC/IDdOysa2H2Mdu3Yfj5qLMQ69Ovjm3UVeh1OeIyEgpRw7WSzvuxm
+         VB6w==
+X-Forwarded-Encrypted: i=1; AJvYcCXap+rvPa6f/rAUE8Da3Acai6Ihgaln+vQ3p2I+ygw+vNrzNwJri/hSByxMFzvTm2Aa3a1u1HAHJWSm/p13gR36OC82tH1yEtCNLqC/
+X-Gm-Message-State: AOJu0YzaTeccrfOi1/izft4AqmrHX7y/UzOpASOClHCEGGpmxdqUjuCg
+	o1dbwHM53lb1wJ1bAxMGQT3tJ1fF/q5/2/wtwyxIdV5CJ7TKph9Nj8oV8WgeyR3q88bTY9ApH0B
+	vezobUMdVfVoAl+MRHx8ZtaXY+bRav7rwTw5A
+X-Google-Smtp-Source: AGHT+IE33prC+j4X7W/r4BxN9/hCYWkPb+uYN6QR+91KbcEXuxHRt7COS48f5exLRZfX2quewY025NFwAlRWhfAZ8BU=
+X-Received: by 2002:a05:600c:b91:b0:412:2fe0:35a1 with SMTP id
+ fl17-20020a05600c0b9100b004122fe035a1mr123288wmb.6.1708062955326; Thu, 15 Feb
+ 2024 21:55:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: Re: [PATCH v3 1/2] ACPI: use %pe for better readability of errors
- while printing
-Reply-To: onkarnath.1@samsung.com
-Sender: Onkarnath <onkarnath.1@samsung.com>
-From: Onkarnath <onkarnath.1@samsung.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-CC: "lenb@kernel.org" <lenb@kernel.org>, "bhelgaas@google.com"
-	<bhelgaas@google.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-	"mingo@redhat.com" <mingo@redhat.com>, "peterz@infradead.org"
-	<peterz@infradead.org>, "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-	"vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-	"dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>, "rostedt@goodmis.org"
-	<rostedt@goodmis.org>, "bsegall@google.com" <bsegall@google.com>,
-	"mgorman@suse.de" <mgorman@suse.de>, "bristot@redhat.com"
-	<bristot@redhat.com>, "vschneid@redhat.com" <vschneid@redhat.com>,
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Rohit Thapliyal
-	<r.thapliyal@samsung.com>, Maninder Singh <maninder1.s@samsung.com>,
-	"helgaas@kernel.org" <helgaas@kernel.org>, Stanislaw Gruszka
-	<stanislaw.gruszka@linux.intel.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <CAJZ5v0gBrc0FctEswQj_JMcZRqoswRgXvBRzT++tseUWBgYJWA@mail.gmail.com>
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20240216054540epcms5p3b0b3f97fe4ec4a8126549a579e596910@epcms5p3>
-Date: Fri, 16 Feb 2024 11:15:40 +0530
-X-CMS-MailID: 20240216054540epcms5p3b0b3f97fe4ec4a8126549a579e596910
+MIME-Version: 1.0
+References: <20240208061825.36640-1-byungchul@sk.com>
+In-Reply-To: <20240208061825.36640-1-byungchul@sk.com>
+From: Yu Zhao <yuzhao@google.com>
+Date: Fri, 16 Feb 2024 00:55:17 -0500
+Message-ID: <CAOUHufYUC-oWePfqbbmm15Ue9QLfPg1G2nhXn6iSX_A460O6Uw@mail.gmail.com>
+Subject: Re: [PATCH] mm, vmscan: Don't turn on cache_trim_mode at the highest
+ scan priority
+To: Byungchul Park <byungchul@sk.com>
+Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kernel_team@skhynix.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPKsWRmVeSWpSXmKPExsWy7bCmhu7kH+dSDVr3SlssacqwuPT4KpvF
-	9JeNLBZPJ2xltnh1Zi2bxd3+qSwWOx++ZbNYvq+f0eLyrjlsFmfnHWez+Nx7hNHi8Pw2FovJ
-	754xWlw6sIDJ4njvASaLjfeyLeZ+mcpssa/jAZPFxz0bGC06jnxjttj41cNi69Hv7A5iHmvm
-	rWH0aNl3i91jwaZSj80rtDw2repk87hzbQ+bx7yTgR7v911l8+jbsorRY/Ppao/Pm+QCuKO4
-	bFJSczLLUov07RK4Mra9ky+Yy10xu2caewPjR64uRk4OCQETiX/9C1m7GLk4hAR2M0qc7NjI
-	1MXIwcErICjxd4cwSI2wQLTEtAuHmEFsIQFFif2LJ7JDxLUlDk64DRZnE9CU+LP8KVhcBCi+
-	ZNFVsDizwDQOiebvZhC7eCVmtD9lgbClJbYv38oIYnMKBEp8m9cNFReVuLn6LTuM/f7YfEYI
-	W0Si9d5ZZghbUOLBz92MMHPmfFjHCmEXS8w8cgqqpkbi/t25TBC2ucT6JavAZvIK+Eo83H2H
-	HeRFFgFViQt/nCFKXCQeLj7CBHGytsSyha+ZQUqYgd5av0sfokRWYuqpdVAlfBK9v58wwXy1
-	Yx6MrSrxa8pUuA/v/57LBmF7SHw4vpUdEspnGSVeXVvMOIFRYRYioGch2TwLYfMCRuZVjJKp
-	BcW56anFpgXGeanlesWJucWleel6yfm5mxjBaVLLewfjowcf9A4xMnEwHmKU4GBWEuGd1Hsm
-	VYg3JbGyKrUoP76oNCe1+BCjNAeLkjjv69a5KUIC6YklqdmpqQWpRTBZJg5OqQYmQ8Pzn99e
-	ebtc9MLOmD+/dpzzlbo+r888hpUhniln8SF7d96H3oa6O2d8WcfWdTKhJ2DJ1djJdgUHK765
-	zFlz8edb45sZT55fdhC9cftHNFd/wm7H9Uw6Ns+Yn644FCZ9hd9Aa18j1zmhH886t0+aMzXR
-	0eu4V9LTwyd8f3j6OKwxCd0sJd2m94uVefHNBKmZf8Qcas34hZy3b68Je+/9hK1vWsp7t/0/
-	HwZ85bPj5rG+Z5e0Z9K2PYtnazGL33M96Z6/RnvtGaHbcx+xbWL1m9r6dopB4DRhzv0sVR0z
-	jnHeW2N1e8ftmSUBipNj+Sce7V2isjC/tS3QTFH3drer++MlU5Xba5OlDpce4feuV2Ipzkg0
-	1GIuKk4EAC5E5x4CBAAA
-X-CMS-RootMailID: 20240213074430epcas5p4c520bf2cce121cf5fa970eed429231a8
-References: <CAJZ5v0gBrc0FctEswQj_JMcZRqoswRgXvBRzT++tseUWBgYJWA@mail.gmail.com>
-	<20240213074416.2169929-1-onkarnath.1@samsung.com>
-	<CGME20240213074430epcas5p4c520bf2cce121cf5fa970eed429231a8@epcms5p3>
 
->On Tue, Feb 13, 2024 at 9:20=E2=80=AFAM=20Onkarnarth=20<onkarnath.1=40sams=
-ung.com>=20wrote:=0D=0A>>=0D=0A>>=20From:=20Onkarnath=20<onkarnath.1=40sams=
-ung.com>=0D=0A>>=0D=0A>>=20As=20%pe=20is=20already=20introduced,=20it's=20b=
-etter=20to=20use=20it=20in=20place=20of=20(%ld)=20for=0D=0A>>=20printing=20=
-errors=20in=20logs.=20It=20would=20enhance=20readability=20of=20logs.=0D=0A=
->>=0D=0A>>=20Signed-off-by:=20Maninder=20Singh=20<maninder1.s=40samsung.com=
->=0D=0A>=0D=0A>What=20exactly=20is=20the=20role=20of=20this=20S-o-b?=20=20H=
-as=20the=20person=20helped=20you=20to=0D=0A>develop=20the=20patch=20or=20so=
-mething=20else?=0D=0A>=0D=0A=0D=0AYes=20It=20was=20meant=20for=20Co-develop=
-ed=20tag,=20Because=20We=20are=20working=20collectively=20for=20making=20er=
-rors=20more=20readable=20for=20our=20product=20kernel.(5.4)=0D=0AAnd=20some=
-=20part=20of=20this=20patch=20was=20made=20by=20him.=0D=0A=0D=0AThen=20we=
-=20checked=20that=20it=20is=20also=20suggested=20by=20open=20source=20to=20=
-have=20%pe=20for=20printing=20errors:=0D=0Ahttps://lore.kernel.org/all/9297=
-2476-0b1f-4d0a-9951-af3fc8bc6e65=40suswa.mountain/=0D=0A=0D=0ASo=20I=20prep=
-ared=20same=20changes=20for=20open=20source=20kernel,=20and=20because=20of=
-=20smaller=20patch=20I=20kept=20it=20as=20normal=20signed-off=20tag=20only.=
-=0D=0AIf=20it=20is=20needed=20I=20can=20resend=20with=20Co-developed=20tag.=
-=0D=0A=0D=0AThanks,=0D=0AOnkarnath
+On Thu, Feb 8, 2024 at 1:18=E2=80=AFAM Byungchul Park <byungchul@sk.com> wr=
+ote:
+>
+> With cache_trim_mode on, reclaim logic doesn't bother reclaiming anon
+> pages. However, it should be more careful to turn on the mode because
+> it's going to prevent anon pages from reclaimed even if there are huge
+> ammount of anon pages that are very cold so should be reclaimed. Even
+> worse, that can lead kswapd_failures to be MAX_RECLAIM_RETRIES and stop
+> until direct reclaim eventually works to resume kswapd.
+
+Is a theory or something observed in the real world? If it's the
+former, would this change risk breaking existing use cases? It's the
+latter, where are the performance numbers to show what it looks like
+before and after this patch?
+
+> Signed-off-by: Byungchul Park <byungchul@sk.com>
+> ---
+>  mm/vmscan.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index bba207f41b14..25b55fdc0d41 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -2268,7 +2268,8 @@ static void prepare_scan_control(pg_data_t *pgdat, =
+struct scan_control *sc)
+>          * anonymous pages.
+>          */
+>         file =3D lruvec_page_state(target_lruvec, NR_INACTIVE_FILE);
+> -       if (file >> sc->priority && !(sc->may_deactivate & DEACTIVATE_FIL=
+E))
+> +       if (sc->priority !=3D 1 && file >> sc->priority &
+
+Why 1?
+
+> +           !(sc->may_deactivate & DEACTIVATE_FILE))
+>                 sc->cache_trim_mode =3D 1;
+>         else
+>                 sc->cache_trim_mode =3D 0;
