@@ -1,125 +1,123 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D921A1350DA;
-	Fri, 16 Feb 2024 18:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460DE1353EB
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 18:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708109080; cv=none; b=FHe6ktGz0p66+Rd7oaL/FWUphn2e9LLTPhdLllA2vCVrpVwFc3sZ7Ozm1LAfKW3xKbZWSyk8AWoDNOd8RXpmX9xwiydfu4qRB925+Ybiox/ist5A69Eng/MyHlrBqQEGPRf1P3tG2FPSg1pNSi2kw8i0d3QdEMSnc2BcdLMoWqI=
+	t=1708109155; cv=none; b=Y+9q2yL7/LyYvwfAg/r0iHf31JD3USJnP918gLdlxWq4qH93h8MSBhdEbP0SgnYm4NFSEvWk3eOXVSWRT05Via/EdjTtK2G/hTxOWRgBlpPMx21WBiFS9mLkY9ZNZUn9QS7hztEGDJqJZqEmih9sP5BUCNlbnkCc1rCqrWXpaI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708109080; c=relaxed/simple;
-	bh=hJV2Di9TWXWAH3jf5tFtKbA4cNPOaMlqPYf8O81MJlc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SzX8HJuw3lTLzPe7/rhqkaaQ+nessS4K0+m5lHCzexDwlQQmcb/XwwwEBrQ12ckP9JUrYJRvXYqitKYq2WNgZDZs04tOURTu58Prpx8UGhnxGVUPMm38A4O8ctjHLwJlnooUaldcVXze+9qy7AvXUk+fnNVb6jEJfOLIyEpLKyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WnwjsxD1; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1708109155; c=relaxed/simple;
+	bh=xL5njaKZTLPLQp18TE8okk0OD0L3Unq9XV1SmRPOGWk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ICqLl6puv5km8XXqtKs7XGzGgdQtfiNIQlJACl16lG6HFYLJejrN81CQFasOR0cEK61FhGEwU4Mn96lGhW7RZ0PzibhdcaXLtphwFEczUPOZrS7I7u2kq69C0lS6tILKtrYcCOt8wYiFeOFQoGxFY8hmgEkNd0cmFihIF/X558I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yZlxN9LA; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WnwjsxD1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=JPht/1NFabyfyAOA5BnhQyFPe9WOLuLC26kmHTjwpJ4=; b=WnwjsxD1L1lvhPKHcta+fg5QNv
-	mNvLs2E2BVgDiXG1+rHXoVpgxMdweoF9Z2/QMR1miNan5T+p9pxwVUexrD0fzJRd32j1ZQc+rUOE/
-	rFRXTBwu9OXwEiyLB5XvSnD0fXw8C0xLmH8XSGYVkSYh3kCbEqTrLeMy/O5Iz+S43136WS33xxVyg
-	43ePNyMUTLCyiv58BFK8ket/CJEtNsLx2PMuTmHc70Y4WGS99GrItcIBoXuAseN071UXVmNrJagnq
-	8EyLtNzGZ1LrbvCNbw3qhKQe7coIJR2tNt21j+DZ5ta3RSeWN0Mp9pEejrT/Xdqa5Aqfdtj/4Zlz9
-	Fc7OTCpw==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rb3Bz-00000005ODb-2ifl;
-	Fri, 16 Feb 2024 18:44:11 +0000
-Date: Fri, 16 Feb 2024 18:44:11 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Roberto Sassu <roberto.sassu@huaweicloud.com>
-Cc: Petr Tesarik <petrtesarik@huaweicloud.com>,
-	Dave Hansen <dave.hansen@intel.com>,
-	Petr =?utf-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>, Xin Li <xin3.li@intel.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Pengfei Xu <pengfei.xu@intel.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>, Ze Gao <zegao2021@gmail.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Brian Gerst <brgerst@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Joerg Roedel <jroedel@suse.de>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Tina Zhang <tina.zhang@intel.com>,
-	Jacob Pan <jacob.jun.pan@linux.intel.com>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Petr Tesarik <petr.tesarik1@huawei-partners.com>
-Subject: Re: [RFC 6/8] KEYS: PGP data parser
-Message-ID: <Zc-s-42WoZhW_2c8@casper.infradead.org>
-References: <fb4a40c7-af9a-406a-95ab-406595f3ffe5@intel.com>
- <20240216152435.1575-1-petrtesarik@huaweicloud.com>
- <20240216152435.1575-7-petrtesarik@huaweicloud.com>
- <Zc-Q5pVHjngq9lpX@casper.infradead.org>
- <5916fa3ac3d0ce2ade71e7ed1c9eb6923e374c1f.camel@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yZlxN9LA"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-363c3f7dc20so5825ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 10:45:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708109153; x=1708713953; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LLDTPlS4ViQ1CSZl9D6URfWqsRaq0fnTo/1FRytbftA=;
+        b=yZlxN9LAVy0DOQE8c9TGurn/q0IFkt64vtFB8UpE9sqn+I65BhICr1wI0IUrpRh+6l
+         kzhOOrlX2zVrHMlLLRv0M3slb9IhW+GAcdrgBpWgdtGLXzNOSql15JqmqcujDl0O2Vg/
+         cLLqCVRgpplqN3EXCa4uqsyQRf8c906LWTEodeMbuNYe3OJK6faSXI8tNyC06wbCR6QK
+         MgHXo0yE85CMTDocEE0Z2nlZgY6/2erDGFKWT+BLuG2eWHWZ1cvGQ8NpzyJWDwuQW8+N
+         JpaHs/M0dNPhu3Ft0+UdrlE4n7ja3Rg3+/yU1KJJILCu47HmbL9THfA4xudOPgkMOOsu
+         5xsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708109153; x=1708713953;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LLDTPlS4ViQ1CSZl9D6URfWqsRaq0fnTo/1FRytbftA=;
+        b=u5JLA32NMS8qij6sqC+kjJGmq9sCaEvd1i+Dt5IHaBBj5kcKeZhc0dPLENtNoDrhHN
+         4oO1KRGajzt8/Wh1umR14Su7l5Y+A6/ldIKmRLjCTB+Q/i9nkCtDJMkyHwz7Uax9RknQ
+         6txkPNTfZ//K3nMg1dzuCnweoFF39a2OOQ/i1bMpkfmul95mr+a6VZXajfEX6+1S7PbF
+         EEGxb2Qu6eTqTMTxK2EkI2vVbyDkXHRGoOO3qxdpqDFL2ZMFEiMMZQHU+SdRBcaTdF/V
+         oRLehAWgKuf2smpwf/0IsO9XVACzl3ZkMc1bW6nvSQ/RlWVn0X9o1wY8oCo3HJmofFEl
+         Ehkg==
+X-Forwarded-Encrypted: i=1; AJvYcCV/D2EEfJNF8pVSuSCwZapQ4H+2G49SLQO6Md075u+vI5OGdenUgUVahUfKdIY1UH+B/Go4JTPHouoMifCghQmlOme189G8gSSRRZ1o
+X-Gm-Message-State: AOJu0YzU03SbK4Uy2L7pCtAcX05yU02SqA/1XDfAFesJkMQR1E8GQgBm
+	C/CeHgylLQ7vcVKbU4G7aihpLRd5Je8j0N+HZnU+BAjvbAxxZkgd7L+zyb4bT6mGQl7KY8Seu6c
+	ncwSYobisYx0Z65h2afw+kS2OY8IJsbaJw79d
+X-Google-Smtp-Source: AGHT+IFu/Tl10B4BCgdhkVBwE/NPQCGO31aX0SPuQ2bAZb33WxC1H+Rj8Z3BWlqowPH14vGrzjQappquaWk/lBx21jU=
+X-Received: by 2002:a05:6e02:304a:b0:363:bad1:b8d6 with SMTP id
+ be10-20020a056e02304a00b00363bad1b8d6mr21553ilb.1.1708109153177; Fri, 16 Feb
+ 2024 10:45:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5916fa3ac3d0ce2ade71e7ed1c9eb6923e374c1f.camel@huaweicloud.com>
+References: <20240216094154.3263843-1-leitao@debian.org> <20240216092905.4e2d3c7c@hermes.local>
+ <0e0ba573-1ae0-4a4b-8286-fdbc8dbe7639@gmail.com>
+In-Reply-To: <0e0ba573-1ae0-4a4b-8286-fdbc8dbe7639@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Fri, 16 Feb 2024 19:45:37 +0100
+Message-ID: <CANn89i+5F7d4i7Ds4V6TtkzzAjQjNQ8xOeoYqZr8tY6tWWmMEg@mail.gmail.com>
+Subject: Re: [PATCH net-next v2] net: sysfs: Do not create sysfs for non BQL device
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Stephen Hemminger <stephen@networkplumber.org>, Breno Leitao <leitao@debian.org>, kuba@kernel.org, 
+	davem@davemloft.net, pabeni@redhat.com, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, horms@kernel.org, 
+	Johannes Berg <johannes.berg@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 16, 2024 at 05:53:01PM +0100, Roberto Sassu wrote:
-> On Fri, 2024-02-16 at 16:44 +0000, Matthew Wilcox wrote:
-> > On Fri, Feb 16, 2024 at 04:24:33PM +0100, Petr Tesarik wrote:
-> > > From: David Howells <dhowells@redhat.com>
-> > > 
-> > > Implement a PGP data parser for the crypto key type to use when
-> > > instantiating a key.
-> > > 
-> > > This parser attempts to parse the instantiation data as a PGP packet
-> > > sequence (RFC 4880) and if it parses okay, attempts to extract a public-key
-> > > algorithm key or subkey from it.
-> > 
-> > I don't understand why we want to do this in-kernel instead of in
-> > userspace and then pass in the actual key.
-> 
-> Sigh, this is a long discussion.
+On Fri, Feb 16, 2024 at 7:41=E2=80=AFPM Florian Fainelli <f.fainelli@gmail.=
+com> wrote:
+>
+> On 2/16/24 09:29, Stephen Hemminger wrote:
+> > On Fri, 16 Feb 2024 01:41:52 -0800
+> > Breno Leitao <leitao@debian.org> wrote:
+> >
+> >> +static bool netdev_uses_bql(const struct net_device *dev)
+> >> +{
+> >> +    if (dev->features & NETIF_F_LLTX ||
+> >> +        dev->priv_flags & IFF_NO_QUEUE)
+> >> +            return false;
+> >> +
+> >> +    return IS_ENABLED(CONFIG_BQL);
+> >> +}
+> >
+> > Various compilers will warn about missing parens in that expression.
+> > It is valid but mixing & and || can be bug trap.
+> >
+> >       if ((dev->features & NETIF_F_LLTX) || (dev->priv_flags & IFF_NO_Q=
+UEUE))
+> >               return false;
+> >
+> > Not all drivers will be using bql, it requires driver to have that code=
+.
+> > So really it means driver could be using BQL.
+> > Not sure if there is a way to find out if driver has the required BQL b=
+its.
+>
+> There is not a feature flag to be keying off if that is what you are
+> after, you would need to audit the drivers and see whether they make
+> calls to netdev_tx_sent_queue(), netdev_tx_reset_queue(),
+> netdev_tx_completed_queue().
+>
+> I suppose you might be able to programmatically extract that information
+> by looking at whether a given driver object file has a reference to
+> dql_{reset,avail,completed} or do that at the source level, whichever is
+> easier.
 
-Well, yes.  When you don't lay out why this is of value, it turns into a
-long discussion.  This isn't fun for me either.
+Note that the suggested patch does not change current functionality.
 
-> PGP keys would be used as a system-wide trust anchor to verify RPM
-> package headers, which already contain file digests that can be used as
-> reference values for kernel-enforced integrity appraisal.
+Traditionally, we had sysfs entries fpr BQL for all netdev, regardless of t=
+hem
+using BQL or not.
 
-The one example we have of usage comes in patch 7 of this series and is:
+The patch seems to be a good first step.
 
-gpg --dearmor < <PGP key> | keyctl padd asymmetric "" @u
-
-And you're already using two userspace programs there.  Why not a third?
-
-gpg --dearmor < <PGP key> | ./scripts/parse-pgp-packets | keyctl padd asymmetric "" @u
-
-> With the assumptions that:
-> 
-> - In a locked-down system the kernel has more privileges than root
-> - The kernel cannot offload this task to an user space process due to
->   insufficient isolation
-> 
-> the only available option is to do it in the kernel (that is what I got
-> as suggestion).
-
-This sounds like there's some other way of getting the key into the
-kernel which doesn't rely on userspace.  Or are you assuming that nobody
-bothered to trojan 'cat'?
+If anyone wants to refine it further, this is great, but I suspect
+very few users will benefit from
+having less sysfs entries for real/physical devices....
