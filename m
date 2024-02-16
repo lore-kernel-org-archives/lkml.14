@@ -1,151 +1,116 @@
-Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.145])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078D5135A6F
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 21:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.222.135.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85731E865;
+	Fri, 16 Feb 2024 21:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708118802; cv=none; b=bTRd/CaMnqniWWYjyafcZHyewfEcZ3XJXLPUhBXDJe5FMl0NxkliA0JuEiVDLwv6l5CZI0r0bDuH0E/oGnnRgAQYcY1LNiA1DG7czzSoSJPj02irxSAitw1/wVoxbH7CRbVnwNWhzw50ptHMl8GRY0iH7T3k0czjsVMj4j0ZEyQ=
+	t=1708118893; cv=none; b=FZFj8ggUivRGPQi2+xLq3iPhvSZA5ejw6jhXuhVltG8ZWdCPiIj5D0hlyI6yh2C/q00N/YJ5Q5HyFI4OksvWrUIuwz+4V1eGYABEsStR9eUtIvNNdYGFYHoghEel3vCPbcyu5DPjtKjAikfuaOsOX5E/04aD6AhZY0rHUiuos00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708118802; c=relaxed/simple;
-	bh=vIJEL7CbUVuJ5NoMQt5ManfshOXEdBki/VegX3TJQpU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JxH4ufoMTk0vUn11ynu5o1HC6ZfLN5nQDhTCEwVSD7GL5VdyQnxuFOlYlpzJOFXEGDOws31zffmbizVty3E/NlCPd0WrcDrMOiZYtH+pVt0xQENN+aOXIBbSuXJRKhyj69o+g+6olQm16JZyDEDel979VBe5nZgJu+nzBix4Moc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl; spf=pass smtp.mailfrom=o2.pl; dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b=fEoOZrRJ; arc=none smtp.client-ip=193.222.135.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=o2.pl
+	s=arc-20240116; t=1708118893; c=relaxed/simple;
+	bh=XMtDEBRwm/nhhA+FVIRTNNGO9Tm+d6KI3nOFo2hlxL4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZcbW6fjz9wBK5KK2bIGZ9sPUwcDwkd3BprhAkxNPNdAwzRxLYCcfXmvS6Jt3LNqjzFaJnjFV/k56TiF9Q1iNdSt/6LcCvFNXvb3VJatuU/4U4nFUosjhjFmu9eCtSKYNOnGDLSgKwre0UrMFu3OyoS/66AsR4Otr5N6KMjzZcdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=HzsS66Cq; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b="fEoOZrRJ"
-Received: (wp-smtpd smtp.tlen.pl 25088 invoked from network); 16 Feb 2024 22:19:58 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=1024a;
-          t=1708118399; bh=Q4cvTn+OjHbTSfCP4AlHayDKYqdCAA/rUJ5rdOEe5JM=;
-          h=Subject:To:Cc:From;
-          b=fEoOZrRJCm8hpDYWqN63H+W2PX06WhO4aNnT1YxO6f2skyISAJpj7/17SR7a4ff+O
-           HtUwtc3HACHKpsDF1U2yEUBvh716w+R4i0eSrlgqInARw1j0wOuCEDMcUKjNP1PdE6
-           YmBu7oEuDA4aaLvAnQVI53mIdvI2lnxkuhVitWTE=
-Received: from aafh184.neoplus.adsl.tpnet.pl (HELO [192.168.1.22]) (mat.jonczyk@o2.pl@[83.4.137.184])
-          (envelope-sender <mat.jonczyk@o2.pl>)
-          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <rafael@kernel.org>; 16 Feb 2024 22:19:58 +0100
-Message-ID: <041e0f89-ad58-4df0-aa1e-e0d92065e5a9@o2.pl>
-Date: Fri, 16 Feb 2024 22:19:56 +0100
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="HzsS66Cq"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7F1C640E01A9;
+	Fri, 16 Feb 2024 21:28:00 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id MGfmZixOSE64; Fri, 16 Feb 2024 21:27:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1708118878; bh=VAh0+9UxLT1H6XK9rCU87AdZyd52PVk7MN7aqBNuBTY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HzsS66CqmlH1i53tTYIqZ/fUJ7QLhvfUmJr0mlb/M1NoCu/kKI7JJEstCTWo5tdXc
+	 K58bypHvlNHK5p6YWXri1tsUIlm20x6REqW1EJlPmezGChFbhIKqaC+wj9a1WwKAGH
+	 f1zHKxRsmwp8tiUILahXjdp53zCdx6M/mcJddbuaPAkv9dIrgaLCjhgVIdWLzn7YIB
+	 YUegvLeKFKaOtNHGNRwFJ+Yic0TiZzBF+blMlIgqC2otBOFkwOmEMwdu4QFj5V7/Q9
+	 wWLVEU1yEzIri8CpzzGd4yyWVcRhEaz7o8mo3lMOPii4nghlqRxD53kbdXZ62zqH4v
+	 218pHd2UeHvoGdvBCG9RvrppWbOyGloj06AfhtH3evXMX/FXxzxi6jAJ1IOFiDbpZZ
+	 dEUPya0MrH0f995RlkmXz645mjaLyrwfFei21Ola1JR95OXOGPy7p6gGHJWbH4xNDo
+	 X6wLA2RK+7cQ5t80OcTxUpZP6NyKbSb2w6oHI4wPvar7H74JkcjTo371K1A2EfTy9B
+	 oDQBZtOmclUOJ+YTly4+Jm2o1MbJ6pIhcuupuahLpIQgWDvb+DqD8D6r8aRx8gAG6E
+	 vM7rSYoPOHTvtMo9fbZR2DNFa730TVM98l/KNM2QBsVSiDV/KZFOlRq4HsDWzCdS0J
+	 WI30ckcoCi21w2YbKU7Vf7Us=
+Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0862B40E0192;
+	Fri, 16 Feb 2024 21:27:52 +0000 (UTC)
+Date: Fri, 16 Feb 2024 22:27:45 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-tip-commits@vger.kernel.org, x86@kernel.org
+Subject: Re: [tip: x86/bugs] x86/retpoline: Ensure default return thunk isn't
+ used at runtime
+Message-ID: <20240216212745.GAZc_TURO0t35GjTQM@fat_crate.local>
+References: <20231010171020.462211-4-david.kaplan@amd.com>
+ <170774721951.398.8999401565129728535.tip-bot2@tip-bot2>
+ <20240215032049.GA3944823@dev-arch.thelio-3990X>
+ <20240215155349.GBZc4zjaHn8hj6xOq3@fat_crate.local>
+ <20240216054235.ecpwuni2f3yphhuc@treble>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] acpi,pci: warn about duplicate IRQ routing entries
- returned from _PRT
-Content-Language: en-GB
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
- Len Brown <lenb@kernel.org>, Jean Delvare <jdelvare@suse.de>,
- Borislav Petkov <bp@alien8.de>
-References: <20240216184946.GA1349514@bhelgaas>
- <520eaafc-e723-49d4-8a6b-375fc64dd511@o2.pl>
- <CAJZ5v0iVTAg+tmuVQJwN0pv77arUsF5fGF2CYaug7xgqiYC_vA@mail.gmail.com>
-From: =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
-Autocrypt: addr=mat.jonczyk@o2.pl; keydata=
- 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
- TANkZ3QqXNX2
-In-Reply-To: <CAJZ5v0iVTAg+tmuVQJwN0pv77arUsF5fGF2CYaug7xgqiYC_vA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-WP-MailID: 69a51b667a1284e92c04d63a45060fe1
-X-WP-AV: skaner antywirusowy Poczty o2
-X-WP-SPAM: NO 0000000 [ITPA]                               
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240216054235.ecpwuni2f3yphhuc@treble>
 
-W dniu 16.02.2024 o 21:51, Rafael J. Wysocki pisze:
+On Thu, Feb 15, 2024 at 09:42:35PM -0800, Josh Poimboeuf wrote:
+> Right, the good news is this isn't a regression and the warning is
+> working as designed.
+> 
+> This should tell the build to invoke objtool on that file:
+> 
+> diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+> index b1b8dd1608f7..92d67379f570 100644
+> --- a/arch/x86/entry/vdso/Makefile
+> +++ b/arch/x86/entry/vdso/Makefile
+> @@ -36,6 +36,7 @@ UBSAN_SANITIZE_vma.o			:= y
+>  KCSAN_SANITIZE_vma.o			:= y
+>  OBJECT_FILES_NON_STANDARD_vma.o		:= n
+>  OBJECT_FILES_NON_STANDARD_extable.o	:= n
+> +OBJECT_FILES_NON_STANDARD_vdso-image-64.o := n
 
-> On Fri, Feb 16, 2024 at 9:20 PM Mateusz Jończyk <mat.jonczyk@o2.pl> wrote:
->> W dniu 16.02.2024 o 19:49, Bjorn Helgaas pisze:
->>> On Fri, Feb 16, 2024 at 07:26:06PM +0100, Rafael J. Wysocki wrote:
->>>> On Tue, Dec 26, 2023 at 1:50 PM Mateusz Jończyk <mat.jonczyk@o2.pl> wrote:
->>>>> On some platforms, the ACPI _PRT function returns duplicate interrupt
->>>>> routing entries. Linux uses the first matching entry, but sometimes the
->>>>> second matching entry contains the correct interrupt vector.
->>>>>
->>>>> As a debugging aid, print a warning to dmesg if duplicate interrupt
->>>>> routing entries are present. This way, we could check how many models
->>>>> are affected.
->>>>>
->>>>> This happens on a Dell Latitude E6500 laptop with the i2c-i801 Intel
->>>>> SMBus controller. This controller is nonfunctional unless its interrupt
->>>>> usage is disabled (using the "disable_features=0x10" module parameter).
->>>>>
->>>>> After investigation, it turned out that the driver was using an
->>>>> incorrect interrupt vector: in lspci output for this device there was:
->>>>>         Interrupt: pin B routed to IRQ 19
->>>>> but after running i2cdetect (without using any i2c-i801 module
->>>>> parameters) the following was logged to dmesg:
->>>>>
->>>>>         [...]
->>>>>         i801_smbus 0000:00:1f.3: Timeout waiting for interrupt!
->>>>>         i801_smbus 0000:00:1f.3: Transaction timeout
->>>>>         i801_smbus 0000:00:1f.3: Timeout waiting for interrupt!
->>>>>         i801_smbus 0000:00:1f.3: Transaction timeout
->>>>>         irq 17: nobody cared (try booting with the "irqpoll" option)
->>>>>
->>>>> Existence of duplicate entries in a table returned by the _PRT method
->>>>> was confirmed by disassembling the ACPI DSDT table.
+Right, this should be:
 
-[snip]
+diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+index c4df99aa1615..4a514cafd73e 100644
+--- a/arch/x86/entry/vdso/Makefile
++++ b/arch/x86/entry/vdso/Makefile
+@@ -36,6 +36,8 @@ UBSAN_SANITIZE_vma.o			:= y
+ KCSAN_SANITIZE_vma.o			:= y
+ OBJECT_FILES_NON_STANDARD_vma.o		:= n
+ OBJECT_FILES_NON_STANDARD_extable.o	:= n
++OBJECT_FILES_NON_STANDARD_vdso-image-32.o := n
++OBJECT_FILES_NON_STANDARD_vdso-image-64.o := n
+ 
+ # vDSO images to build
+ vdso_img-$(VDSO64-y)		+= 64
 
->>> And neither of the two _PRT entries yields a working i801 device?
->> Unpatched Linux uses the first matching entry, but the second one gives
->> a working i801 device. The point is to print a warning message to see
->> how many devices are affected and whether it is safe to switch the code
->> to use the last matching entry in all instances.
->>
->> Therefore I used dev_warn().
-> I don't quite see a connection between the above and the log level.
+for completeness.
 
-OK, so I'll use dev_info() then.
+Lemme know if you want to write a formal patch or I should.
 
-Greetings,
-Mateusz
+If you do, please make sure to include the exact way to reproduce
+because we might need it in the future.
 
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
