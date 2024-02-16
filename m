@@ -1,81 +1,90 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF6DDF6B
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 03:08:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778F1DF58;
+	Fri, 16 Feb 2024 03:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708052909; cv=none; b=tLjBfizsLX9aFNYGDLr0tKO1JvdYWg+LRi5qsbkJDI+83aSovtILaC+m3DeF7+DT/wtKgu+TpcfHF8xlnLlMWHYAI7ZJOt40qfA1i4vMruq6q+elcZHCWPUssmCxSjjfFyBfsSRysQe2c5hTWx+ndAjWivns/1pZNbJg3iJ468U=
+	t=1708053075; cv=none; b=BWiaYfA//yVeM1YR3byBh4uGPkd/H0sU3lgzISfdeF3ADEBKLbtaQ9qPeoEyEvnbZB4vRWjcsx2Tsk0YyC66EUoYvIWCjKip8TgyvusSsRLqpzESmeYh4kzqFIu2lFcqF8g2izhF7r+o1lDbzQZ3VAGWRgi3i2wLMAwDhhKtUQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708052909; c=relaxed/simple;
-	bh=1YttCzjE6mOrF3+LP/4DSNa0r7I7TpydBBW2aaDUmpY=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=hPVV1KlD17HW/JKPOXEOq1srbb6PJTwCbzUDAQcc6H+xNfVMDFYvT+w2BSDg565xIAwteX9tuOKbt/P6wa0CfZ8/h6uYcTHsVMTpx/MzN+pfRqRwqasnfQjD0YuIDPzI6XuCG4HS7aqyKuTZ5VvKIzTC8Ik7dNZS/mn06zFsOMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=YDzA8ziX; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1708053075; c=relaxed/simple;
+	bh=255anHpEUFk/gSI9Ws2TxhyYTTQN5rCLXpeTmNKYgYc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=mA0DfBTEASjopatkNCawFJlrYHWenUo2Qs1NdSZWlMA3aiPMfIfUT2lok4IwKTuLuxe3yIM+Qmj1QZCcmlXMZKd46ytgu8GOwWq/rSyqL6Z5WfD67AwObQvsVSc0KJN/jMAzZL5ytcqMtlrqH06zR/XSPwcui+vhoM5X4zl7cUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=aoq1wuo3; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="YDzA8ziX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1708052601; bh=KM/2SxIvi3sdxAANb2LES0IEDaLLu1dAqWsSF6vtL10=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=YDzA8ziXQ7tJYnPHiStukWadpKK1ufZ9K876FV/HHy2Yvs74pdMtNj2mcMdC7IVZF
-	 lmMugg9B4IKvKnsE2FxsraUJJ4zccW8mhaaHww9350O/Y5kbRSuEkczQsEwZPrxvKx
-	 pl75UihAQPrQ7OY2V5ZQUkAD4F9apIrIRnG8I8TY=
-Received: from pek-lxu-l1.wrs.com ([36.129.58.158])
-	by newxmesmtplogicsvrszc5-2.qq.com (NewEsmtp) with SMTP
-	id D334A69; Fri, 16 Feb 2024 11:03:19 +0800
-X-QQ-mid: xmsmtpt1708052599tie84jb6e
-Message-ID: <tencent_24D4467C09AD6EC92ECD4C9AA7FF46C89206@qq.com>
-X-QQ-XMAILINFO: NDgMZBR9sMmaeBpgQMl54R3Z8CrkN+EM7/P2rzUNOfzb2xcjHzAo3snq0OVeUP
-	 qacUQTeCfS2Uxi/8Qfv0A9pB8IhEccEyjo3kPI3zFqvfyoLblIyAHqT7nQugG9JaptJeUeP3QTz+
-	 vIjk02mhkjDOMD+w+jPq4mrWxFWN4GHJk1VdaAGh01tr4eKYxklt+ZdlAeIOYeTjTdODJopYtxey
-	 gZkmKwQQ+1d7pk+qsSbULfqwR5v+oYWiom15ywI/NjjvwvRB0z0UxvS05ii0LA3GRQ5RT0rhLttg
-	 pHsIY16Viu8T4nr5bEkch7wUCbUAdBg6cqIj0qz504cTq4caf2hHptQitlQ005tQXlqatQI56iZA
-	 pbSjCNXI5zr3CgQ4yAG9xoJZTV9N0htvJqBRXPTMJVSbgkvJnS8jbebb5YTTB0o67P4i67qNluHj
-	 uazlJBiMeFDtGudG5ju/Lz8a4YjzvoU8FrLxObnA/HjUcAGb2me3JqImABVXki8f6mYyAS7oQnQz
-	 pYNOLij/3mfOCnoECrp9fbyVekX1/1/6yfv6PQDzgZcRoqXijerOnVXuhFL7dAhDaeN+IFcVZ8oV
-	 jna347lvNLn328/c8wiJTJrwquxanQ2c9L6qZ4MQ+GX+VJMflosygTnZ8Vvl3F1HB5eyqMrBmDDm
-	 y2BSI2whKI/gmgUjI5SpMe7o5Je2Un/zUjH7j83IbSVtbdQuBLed1nAr36Q7LdsFPrjGSfQ8LWvU
-	 DtyV8ZwBByMXRnC8Tv0c+fi3SP5h5eLNY/oEmSTyaiFXarDkI1erDYgJXAnGpq3JKiCkkWN0zz22
-	 3VbGS3EbiT7/cCX/0XfQDyxTCGb8mpn2GUbsGOJYtSv32mWCiFgK2F1d8F5EbIn06xAEW6l0ari1
-	 uCnViqcDdwhCehj5sz0jCZ5t/hRl8BZQ3s5rvFHyQjcz2t9ikvVTg=
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+ce750e124675d4599449@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [pvrusb2?] KASAN: slab-use-after-free Read in pvr2_context_set_notify (2)
-Date: Fri, 16 Feb 2024 11:03:19 +0800
-X-OQ-MSGID: <20240216030318.910216-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <00000000000028b68806103b4266@google.com>
-References: <00000000000028b68806103b4266@google.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="aoq1wuo3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1708053071;
+	bh=h6O0PTL8V1E7B5aSsOjIKqVjqP8hh0cL2eatGAHCFm0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=aoq1wuo35NJmsiEbk0oTETv4y0pj+ZI3DF6r7eRPCS1M9W/sPV49aH2pySAdKBVI2
+	 eFSL193SLWat+qrgv8Uvrj7grma0knW7+JbNeJhVGX0Opy/oyIEIZQWIdlH/zBODiM
+	 wk1xY5cN3QSieTG9urY3y9SOfLplLGBidlNbMXJ4mJ1/FH5ELMVhigezqAV+dML2va
+	 bAt180bTwB0owFeE3mb2r3Q5RUuPcXLSeeNMqRU2j8Opd8EyoJLQft1hL8/g3JEpxw
+	 if7JB4mFNk4oOOvjMD7ocgYvV4U+Oi2cUp6Xco6geYjwKqZZ0cZl9rWq1BJtWbpmeA
+	 5jKJN4fEQbznQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TbcQR0m8lz4wnp;
+	Fri, 16 Feb 2024 14:11:11 +1100 (AEDT)
+Date: Fri, 16 Feb 2024 14:11:10 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Mark Brown <broonie@kernel.org>
+Cc: Dhruva Gole <d-gole@ti.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build warning after merge of the spi tree
+Message-ID: <20240216141110.7819d939@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/5hvRLO_JClsApL6+A0cFJfL";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-please test uaf in pvr2_context_set_notify
+--Sig_/5hvRLO_JClsApL6+A0cFJfL
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+Hi all,
 
-diff --git a/drivers/media/usb/pvrusb2/pvrusb2-context.c b/drivers/media/usb/pvrusb2/pvrusb2-context.c
-index 1764674de98b..e93bca93ce4c 100644
---- a/drivers/media/usb/pvrusb2/pvrusb2-context.c
-+++ b/drivers/media/usb/pvrusb2/pvrusb2-context.c
-@@ -267,9 +267,9 @@ static void pvr2_context_exit(struct pvr2_context *mp)
- void pvr2_context_disconnect(struct pvr2_context *mp)
- {
- 	pvr2_hdw_disconnect(mp->hdw);
--	mp->disconnect_flag = !0;
- 	if (!pvr2_context_shutok())
- 		pvr2_context_notify(mp);
-+	mp->disconnect_flag = !0;
- }
- 
- 
+After merging the spi tree, today's linux-next build (htmldocs) produced
+this warning:
 
+Documentation/spi/spi-summary.rst:274: WARNING: Title underline too short.
+
+Declare target Devices
+^^^^^^^^^^^^^^^^^^^^^
+
+Introduced by commit
+
+  99769a52464d ("spi: Update the "master/slave" terminology in documentatio=
+n")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/5hvRLO_JClsApL6+A0cFJfL
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXO0k4ACgkQAVBC80lX
+0Gx/DAf/SaOBycm+MnyWAvUc/Xi34bSkq6N317I8FRQRzUdc3PIsyWR/XdONLb5E
+xJihEoZ+PAcasFOGhXOlhDdFovHvH/5fnIrAEusEbNE5rxBHIXOoN4bTVwKm+1vG
+eIko7zyuAOSflH79C2+JRfYNektrvscC4L3ohF/oPomVgWFerz6/MGnj0+05Jdpt
+jeUeerQCHqyF+C7NldEbcC04Wub/IZAdPLU5TnzE/R3sMkFARMThA9sa7vMgOIKh
+YOBDou//7QWCmDKbNC2zJs2nxKt1/0N8+oBFLrWixYnR2WZJifeRXmjCvZ/vzwAH
+RSIUen6l1n+OCNyRhwEl+NBB5I64Dw==
+=rN5t
+-----END PGP SIGNATURE-----
+
+--Sig_/5hvRLO_JClsApL6+A0cFJfL--
