@@ -1,218 +1,189 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF03F17BBB
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 07:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06652DDC4;
+	Fri, 16 Feb 2024 07:47:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708069567; cv=none; b=NyapTieDZ1N0lMjwUivYfu/D+N9y0ZVzHBgJuULdKM2nlMeX0x0WFV8vgdUuUK2TH3FEkbNsZeTpMVfLK8WYvDgbsmy+RxriaC3L0bGxFGjjBcx/8iaGfhdzZ8accaBzHZkIEBEYvQeP7fG0GreMngeg6lgxug6Jip8g+g8LFEQ=
+	t=1708069652; cv=none; b=ny0upML1gsrfVfXqfZnaazuQLxXTlpl3LU6gYX8c/MTeeU0XEA0D8DQYk0nVhk1EI/rsPeL6d/OTX0zSID9e+6DBgkpICG+FsQKl6kBKziQ7dLQ6wjhp7rTk1Vcr7mHzGrAojYglVBUSFWhTuXs/dHtpEBcuw7n6evRTypGu9Bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708069567; c=relaxed/simple;
-	bh=qxi68lyOJMjik5eJnJg22N7ge48TRtALAJKarbJRt28=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kos63eomcd4MZxSsiafbAGQH/O5CkBSYwx+EwJcilZfYQq31cQvkmemnQUgMIbWc26yOuY7R5uZ7C6AyTNWvSQ+WrbbM9+Fxy2+wqT1We0ayHWy5WO2OwQHNNjEje9F9zsdVNe/mwBlFLyrgr34hEiGy3oS7nS1uicNT65U+W18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d85ff70000001748-62-65cf12b5bc6e
-Date: Fri, 16 Feb 2024 16:45:51 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Phil Auld <pauld@redhat.com>
-Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	bristot@redhat.com, vschneid@redhat.com,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kernel_team@skhynix.com, akpm@linux-foundation.org
-Subject: Re: [PATCH] sched/numa, mm: do not promote folios to nodes not set
- N_MEMORY
-Message-ID: <20240216074551.GD32626@system.software.com>
-References: <20240214035355.18335-1-byungchul@sk.com>
- <20240214123137.GA70927@lorien.usersys.redhat.com>
- <20240214200318.GA74174@lorien.usersys.redhat.com>
+	s=arc-20240116; t=1708069652; c=relaxed/simple;
+	bh=UkQNSsCosNH9uXR41zqk38q6dvmrPTadrT4OC5Os+7Y=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fgm0+bVf8g36PTgRtymaJlxWK0XJLIY/f6ZSZTmXD5f8z5WdhF7y8jH7HwuGfn68dUx5ZnqnHXyM3pGsVIF9dWLtiImGBYvbvCcwSj53dRRAv7wM7cjGb0APKxcXKaxO2zTY0TBwSwKEaomVHYsqhPxHQN5IQvs3Ykg7mN4st0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=KWSqTlGm; arc=none smtp.client-ip=45.89.224.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="KWSqTlGm"
+Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id A89C412000C;
+	Fri, 16 Feb 2024 10:47:22 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru A89C412000C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1708069642;
+	bh=JBIQUmjhGqPH9CX2watwkGz5Gl4QEsmX9X4DCeR6veI=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:From;
+	b=KWSqTlGmCZbZaVN413ix6tubW0zlKnEts0ric9KI0eH7kJJePjFTvu7bcJnL+ahty
+	 +2uDTqajV2lOb3OSckxNBL/KHb4uDUDBsmMsMExUM5K7+glolNWcGmBd5+oKO8kbJ1
+	 K/awcGxdJG+Y8H86k5T6iZ9TqTog5qUwM53cAUgpioSYhnmRRfGavHtflpdnuUHDUr
+	 3jw3LSKEuKRLvP/sqwHXCaw7u86+ejG3RCp5NWsYGMNzA7PfJRct0Nj0cnBGtiVg0R
+	 lMLXD/ty9kYKzokg/lOHLqXqq0/p5BEgXOa1pckZ6Cnqpeus4ieUFcC1NAOaGDNqsB
+	 kePv4zKdeuhCA==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Fri, 16 Feb 2024 10:47:22 +0300 (MSK)
+Received: from localhost (100.64.160.123) by p-i-exch-sc-m01.sberdevices.ru
+ (172.16.192.107) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 16 Feb
+ 2024 10:47:22 +0300
+Date: Fri, 16 Feb 2024 10:47:16 +0300
+From: Dmitry Rokosov <ddrokosov@salutedevices.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>
+CC: Viacheslav Bocharov <adeep@lexina.in>, Jerome Brunet
+	<jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Martin
+ Blumenstingl <martin.blumenstingl@googlemail.com>,
+	<linux-amlogic@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: Re: [DMARC error][DKIM error] [PATCH 0/5] soc: amlogic: add new
+ meson-gx-socinfo-sm driver
+Message-ID: <20240216074716.a33hrvl5xnpm7aep@CAB-WSD-L081021>
+References: <20231122125643.1717160-1-adeep@lexina.in>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20240214200318.GA74174@lorien.usersys.redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjkeLIzCtJLcpLzFFi42LhesuzSHer0PlUg4f9AhZz1q9hs7j0+Cqb
-	xfSXjSwWTydsZba42z+VxeLyrjlsFvfW/Ge1mPzuGaPFpQMLmCxO7D3LaHG89wCTxb6OB0wW
-	HUe+MVtsPfqd3YHPY828NYweLftusXss2FTqsXmFlsemT5PYPe5c28PmcWLGbxaP9/uusnls
-	Pl3t8XmTXABXFJdNSmpOZllqkb5dAlfGtlUrWQrmGlQcvr6BsYHxnWoXIweHhICJxIpuSRjz
-	xk/xLkZODhYBVYk7e1sYQWw2AXWJGzd+MoPYIgIKEu+md7F3MXJxMAucYpKY8PkCO0ivsECY
-	xN83CiA1vAIWEr1//jCC1AgJzGeUuHRpMyNEQlDi5MwnLCA2s4CWxI1/L5lAepkFpCWW/+MA
-	CXMK2Et0P7/FBGKLCihLHNh2nAlkjoRAO7vEol+dYHMkBCQlDq64wTKBUWAWkrGzkIydhTB2
-	ASPzKkahzLyy3MTMHBO9jMq8zAq95PzcTYzAWFpW+yd6B+OnC8GHGAU4GJV4eA/8OZsqxJpY
-	VlyZe4hRgoNZSYR3Uu+ZVCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8Rt/KU4QE0hNLUrNTUwtS
-	i2CyTBycUg2MYuqabcGKxb1yTzZMO9O583b3qu3PHJoF1Bd9Z3LiYi9cF/zd7cUTbrlXN25l
-	HGSfsWKdxIW4ByEb9CZOjFp1SpBDRnOxTomIEkPWXqfnvkF7Db4FeRkGt6/ebuqziatLrY49
-	ecOhOaf4lPdJv0ya9CHmgqzJ9AWrNirXTLScqbvrh/KuCcVvlViKMxINtZiLihMBQVHqGqEC
-	AAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrGLMWRmVeSWpSXmKPExsXC5WfdrLtF6Hyqwe8XNhZz1q9hs7j0+Cqb
-	xfSXjSwWTydsZba42z+VxeLw3JOsFpd3zWGzuLfmP6vF5HfPGC0uHVjAZHFi71lGi+O9B5gs
-	9nU8YLLoOPKN2WLr0e/sDvwea+atYfRo2XeL3WPBplKPzSu0PDZ9msTucefaHjaPEzN+s3i8
-	33eVzWPxiw9MHptPV3t83iQXwB3FZZOSmpNZllqkb5fAlbFt1UqWgrkGFYevb2BsYHyn2sXI
-	wSEhYCJx46d4FyMnB4uAqsSdvS2MIDabgLrEjRs/mUFsEQEFiXfTu9i7GLk4mAVOMUlM+HyB
-	HaRXWCBM4u8bBZAaXgELid4/fxhBaoQE5jNKXLq0mREiIShxcuYTFhCbWUBL4sa/l0wgvcwC
-	0hLL/3GAhDkF7CW6n99iArFFBZQlDmw7zjSBkXcWku5ZSLpnIXQvYGRexSiSmVeWm5iZY6pX
-	nJ1RmZdZoZecn7uJERgby2r/TNzB+OWy+yFGAQ5GJR7eA3/OpgqxJpYVV+YeYpTgYFYS4Z3U
-	eyZViDclsbIqtSg/vqg0J7X4EKM0B4uSOK9XeGqCkEB6YklqdmpqQWoRTJaJg1OqgfFUipif
-	dEhtxu1palscp3CIfQo0n5OZfKJk2aIrEZ5BbQHpi7xnCDPlMSzd8S5+5drnnWZKqTsZdsjq
-	plge0rn28KzZasWiSoFdjMWcss0Skkp382Ye875rYLDhhdbOhkfqvQ3LbEplUm8nJltM6VuU
-	+vwvn8HZEuW7jwukxbiuCPIeTQ/do8RSnJFoqMVcVJwIAK76GJCJAgAA
-X-CFilter-Loop: Reflected
+In-Reply-To: <20231122125643.1717160-1-adeep@lexina.in>
+User-Agent: NeoMutt/20220415
+X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
+ p-i-exch-sc-m01.sberdevices.ru (172.16.192.107)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 183487 [Feb 16 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.3
+X-KSMG-AntiSpam-Envelope-From: ddrokosov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a, {Tracking_uf_ne_domains}, {Track_E25351}, {Tracking_from_domain_doesnt_match_to}, github.com:7.1.1;127.0.0.199:7.1.2;smtp.sberdevices.ru:5.0.1,7.1.1;100.64.160.123:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;elixir.bootlin.com:7.1.1;salutedevices.com:7.1.1;lists.infradead.org:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/02/16 06:18:00
+X-KSMG-LinksScanning: Clean, bases: 2024/02/16 07:22:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/02/16 06:42:00 #23632408
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On Wed, Feb 14, 2024 at 03:03:18PM -0500, Phil Auld wrote:
-> On Wed, Feb 14, 2024 at 07:31:37AM -0500 Phil Auld wrote:
-> > Hi,
-> > 
-> > On Wed, Feb 14, 2024 at 12:53:55PM +0900 Byungchul Park wrote:
-> > > While running qemu with a configuration where some CPUs don't have their
-> > > local memory and with a kernel numa balancing on, the following oops has
-> > > been observed. It's because of null pointers of ->zone_pgdat of zones of
-> > > those nodes that are not initialized at booting time. So should avoid
-> > > nodes not set N_MEMORY from getting promoted.
-> > > 
-> > > > BUG: unable to handle page fault for address: 00000000000033f3
-> > > > #PF: supervisor read access in kernel mode
-> > > > #PF: error_code(0x0000) - not-present page
-> > > > PGD 0 P4D 0
-> > > > Oops: 0000 [#1] PREEMPT SMP NOPTI
-> > > > CPU: 2 PID: 895 Comm: masim Not tainted 6.6.0-dirty #255
-> > > > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-> > > >    rel-1.16.0-0-gd239552ce722-prebuilt.qemu.org 04/01/2014
-> > > > RIP: 0010:wakeup_kswapd (./linux/mm/vmscan.c:7812)
-> > > > Code: (omitted)
-> > > > RSP: 0000:ffffc90004257d58 EFLAGS: 00010286
-> > > > RAX: ffffffffffffffff RBX: ffff88883fff0480 RCX: 0000000000000003
-> > > > RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88883fff0480
-> > > > RBP: ffffffffffffffff R08: ff0003ffffffffff R09: ffffffffffffffff
-> > > > R10: ffff888106c95540 R11: 0000000055555554 R12: 0000000000000003
-> > > > R13: 0000000000000000 R14: 0000000000000000 R15: ffff88883fff0940
-> > > > FS:  00007fc4b8124740(0000) GS:ffff888827c00000(0000) knlGS:0000000000000000
-> > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > CR2: 00000000000033f3 CR3: 000000026cc08004 CR4: 0000000000770ee0
-> > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > > PKRU: 55555554
-> > > > Call Trace:
-> > > >  <TASK>
-> > > > ? __die
-> > > > ? page_fault_oops
-> > > > ? __pte_offset_map_lock
-> > > > ? exc_page_fault
-> > > > ? asm_exc_page_fault
-> > > > ? wakeup_kswapd
-> > > > migrate_misplaced_page
-> > > > __handle_mm_fault
-> > > > handle_mm_fault
-> > > > do_user_addr_fault
-> > > > exc_page_fault
-> > > > asm_exc_page_fault
-> > > > RIP: 0033:0x55b897ba0808
-> > > > Code: (omitted)
-> > > > RSP: 002b:00007ffeefa821a0 EFLAGS: 00010287
-> > > > RAX: 000055b89983acd0 RBX: 00007ffeefa823f8 RCX: 000055b89983acd0
-> > > > RDX: 00007fc2f8122010 RSI: 0000000000020000 RDI: 000055b89983acd0
-> > > > RBP: 00007ffeefa821a0 R08: 0000000000000037 R09: 0000000000000075
-> > > > R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000000
-> > > > R13: 00007ffeefa82410 R14: 000055b897ba5dd8 R15: 00007fc4b8340000
-> > > >  </TASK>
-> > > > Modules linked in:
-> > > > CR2: 00000000000033f3
-> > > > ---[ end trace 0000000000000000  ]---
-> > > > RIP: 0010:wakeup_kswapd (./linux/mm/vmscan.c:7812)
-> > > > Code: (omitted)
-> > > > RSP: 0000:ffffc90004257d58 EFLAGS: 00010286
-> > > > RAX: ffffffffffffffff RBX: ffff88883fff0480 RCX: 0000000000000003
-> > > > RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88883fff0480
-> > > > RBP: ffffffffffffffff R08: ff0003ffffffffff R09: ffffffffffffffff
-> > > > R10: ffff888106c95540 R11: 0000000055555554 R12: 0000000000000003
-> > > > R13: 0000000000000000 R14: 0000000000000000 R15: ffff88883fff0940
-> > > > FS:  00007fc4b8124740(0000) GS:ffff888827c00000(0000) knlGS:0000000000000000
-> > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > CR2: 00000000000033f3 CR3: 000000026cc08004 CR4: 0000000000770ee0
-> > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > > PKRU: 55555554
-> > > > note: masim[895] exited with irqs disabled
-> > 
-> > I think you could trim the down a little bit.
-> > 
-> > 
-> > > 
-> > > Signed-off-by: Byungchul Park <byungchul@sk.com>
-> > > Reported-by: hyeongtak.ji@sk.com
-> > > ---
-> > >  kernel/sched/fair.c | 17 +++++++++++++++++
-> > >  1 file changed, 17 insertions(+)
-> > > 
-> > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > > index d7a3c63a2171..6d215cc85f14 100644
-> > > --- a/kernel/sched/fair.c
-> > > +++ b/kernel/sched/fair.c
-> > > @@ -1828,6 +1828,23 @@ bool should_numa_migrate_memory(struct task_struct *p, struct folio *folio,
-> > >  	int dst_nid = cpu_to_node(dst_cpu);
-> > >  	int last_cpupid, this_cpupid;
-> > >  
-> > > +	/*
-> > > +	 * A node of dst_nid might not have its local memory. Promoting
-> > > +	 * a folio to the node is meaningless. What's even worse, oops
-> > > +	 * can be observed by the null pointer of ->zone_pgdat in
-> > > +	 * various points of the code during migration.
-> > > +	 *
-> > 
-> > > +	 * For instance, oops has been observed at CPU2 while qemu'ing:
-> > > +	 *
-> > > +	 * {qemu} \
-> > > +	 *    -numa node,nodeid=0,mem=1G,cpus=0-1 \
-> > > +	 *    -numa node,nodeid=1,cpus=2-3 \
-> > > +	 *    -numa node,nodeid=2,mem=8G \
-> > > +	 *    ...
-> > 
-> > This part above should probably be in the commit message not in the code.
-> > The first paragraph of comment is plenty.
-> > 
-> > Otherwise, I think the check probably makes sense.
-> >
+Hello Neil,
+
+May I put in my two cents on this patch series?
+
+There appears to be a misunderstanding regarding the terminology used.
+Allow me to clarify my perspective.
+
+The original Amlogic chipid has the following format:
+
+    4 bytes      12 bytes
+    +-------+-------------------+
+    |       |                   |
+    | CPUID | SOC SERIAL NUMBER |
+    |       |                   |
+    +-------+-------------------+
+    0                          15
+
+
+In the current uboot [1] and kernel [2] upstream, only the SOC SERIAL
+NUMBER bytes are read from efuse OTP storage (and it isn't swapped, as
+Amlogic reference code does [3]). We refer to these bytes as "serial".
+
+The original chipid value is utilized in several algorithms (for
+example, in the Amlogic boot protocols), making it crucial to have the
+ability to read the original chipid value as intended by the vendor.
+
+In my opinion, we should align our naming terminology as follows:
+    - "chipid" - Represents the complete Amlogic SoC ID, includes
+                 "cpuid" and "serial"
+    - "serial" - 12 byte unique SoC number, identifying particular die
+
+We strongly believe that this patch series is essential and are highly interested in seeing it applied to the upstream linux-amlogic, for the following reasons:
+    - We use chipid for device identification in our boards
+    - The Amlogic boot protocols utilize the full version of chipid
+      (ADNL, Optimus). As I mentioned in the IRC, we are preparing a
+      patch series for uboot incorporating them.
+    - in OPTEE: for generation of SSK (Secure Storage Key) [4]
+    - RPMB: for generation of RPMB key, further provisioned into RPMB
+      controller (thus particular SoC is bound to particular eMMC
+
+Therefore, I propose that we rename "soc_id" in the Viacheslav patch
+series to "chipid" and subsequently port this patch series to uboot.
+
+What are your thoughts on this matter?
+
+Links:
+[1] - https://elixir.bootlin.com/u-boot/v2024.01/source/arch/arm/mach-meson/sm.c#L84
+[2] - https://elixir.bootlin.com/linux/v6.7.4/source/drivers/firmware/meson/meson_sm.c#L268
+[3] - https://github.com/CoreELEC/u-boot/blob/3efc85a8370796bcec3bcadcdecec9aed973f4a9/arch/arm/mach-meson/g12a/bl31_apis.c#L398-L417
+[4] - https://github.com/OP-TEE/optee_os/blob/5df2a985b2ffd0b6f1107f12ca2a88203bf31328/core/tee/tee_fs_key_manager.c#L152
+
+On Wed, Nov 22, 2023 at 03:56:38PM +0300, Viacheslav Bocharov wrote:
+> The Amlogic Meson SoC Secure Monitor implements a call to retrieve an
+> unique SoC ID starting from the GX Family and all new families.
+> But GX-family chips (e.g. GXB, GXL and newer) supports also 128-bit
+> chip ID. 128-bit chip ID consists 32-bit SoC version and 96-bit OTP data.
 > 
-> Actually, after looking at the memory.c code I wonder if this check should
-> not be made farther up in the numa migrate machinery.
-
-First of all, we cannot avoid hinting fault. It's because no one knows
-which node a task eventually runs on until a hinting fault occurs. So
-should let it go get hinting fault *and then* we can make the decision
-if we can migrate the folio or not. Assuming that, IMHO,
-should_numa_migrate_memory() is a good place to make it.
-
-Thoughts? Am I missing something?
-
-	Byungchul
-
-> Cheers,
-> Phil
+> This is the second attempt to publish data from the Amlogic secure monitor
+> chipid call. After discussions with Neil Armstrong, it was decided to
+> publish the chipid call results through the soc driver. Since
+> soc_device_match cannot wait for the soc driver to load, and the secure
+> monitor calls in turn depend on the sm driver, it was necessary to create
+> a new driver rather than expand an existing one.
 > 
-> > 
-> > Cheers,
-> > Phil
-> > 
-> > > +	 */
-> > > +	if (!node_state(dst_nid, N_MEMORY))
-> > > +		return false;
-> > > +
-> > >  	/*
-> > >  	 * The pages in slow memory node should be migrated according
-> > >  	 * to hot/cold instead of private/shared.
-> > > -- 
-> > > 2.17.1
-> > > 
-> > > 
-> > 
-> > -- 
-> > 
-> > 
+> In the patches, in addition to writing the driver:
+> - convert commonly used structures and functions of the meson-gx-socinfo
+> driver to a header file.
+> - transfer the chipid sm call constants to a header file (perhaps they
+> need renaming?).
+> - add secure-monitor references for amlogic,meson-gx-ao-secure sections
+> in dts files of the a1, axg, g12, gx families.
+> 
+> Viacheslav Bocharov (5):
+>   soc: amlogic: meson-gx-socinfo: move common code to header file
+>   soc: amlogic: meson-gx-socinfo: move common code to exported function
+>   firmware: meson_sm: move common definitions to header file
+>   soc: amlogic: Add Amlogic secure-monitor SoC Information driver
+>   arm64: dts: meson: add dts links to secure-monitor for soc driver in
+>     a1, axg, gx, g12
+> 
+>  arch/arm64/boot/dts/amlogic/meson-a1.dtsi     |   1 +
+>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |   1 +
+>  .../boot/dts/amlogic/meson-g12-common.dtsi    |   1 +
+>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi     |   1 +
+>  drivers/firmware/meson/meson_sm.c             |   4 -
+>  drivers/soc/amlogic/Kconfig                   |  10 +
+>  drivers/soc/amlogic/Makefile                  |   1 +
+>  .../soc/amlogic/meson-gx-socinfo-internal.h   | 102 ++++++++++
+>  drivers/soc/amlogic/meson-gx-socinfo-sm.c     | 178 ++++++++++++++++++
+>  drivers/soc/amlogic/meson-gx-socinfo.c        | 106 ++---------
+>  include/linux/firmware/meson/meson_sm.h       |   4 +
+>  11 files changed, 317 insertions(+), 92 deletions(-)
+>  create mode 100644 drivers/soc/amlogic/meson-gx-socinfo-internal.h
+>  create mode 100644 drivers/soc/amlogic/meson-gx-socinfo-sm.c
 > 
 > -- 
+> 2.34.1
+> 
+> 
+> _______________________________________________
+> linux-amlogic mailing list
+> linux-amlogic@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-amlogic
+
+-- 
+Thank you,
+Dmitry
