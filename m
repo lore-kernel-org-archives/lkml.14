@@ -1,40 +1,40 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10319133981;
-	Fri, 16 Feb 2024 17:05:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB76133995;
+	Fri, 16 Feb 2024 17:05:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708103125; cv=none; b=LjFpdm8yY4Tfgj2oZBqIR33kKqBub+kkDvclJZPGMhNSHeps2jQml+gxJRT+RR/dT+LuaxHZI/xjqVOwaOoHURxXkWzLHY0HjxrA7WD9dBLrdo8lbSAlq9zybwLDCpDnrzHT95RsLvHdeZr9PkQWQx0Iy5SwdRNF1SKTluLqJUk=
+	t=1708103126; cv=none; b=hDkbkGEtctu5j3k4NLeYZ8uU56iI8EZHuXmtYNw1X9AJBgX3GB1B+g//AItx8J7pDCd6QaW7iTOjYJUiED7Y0NaP/0nOkQZoDTSFE4JikIhGj97HVHYL+eirSyIiXjVrKYE29Mfi5C6evVSJ5Wc3OjEvh1dKSMPKMr6bK5y4dEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708103125; c=relaxed/simple;
-	bh=6zOLQPXZQ2JGX+nNdATNogWmxrlrJE9gXcKsVLFpIy8=;
+	s=arc-20240116; t=1708103126; c=relaxed/simple;
+	bh=WAwF9+4NxVFIAxAbMjIC26UpfeO4GAskAOtMN4AnYh8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CmGxheuCvxQOu/Y0Y2AJM0S1jx1vJmKqkjX6OIkRJ+w3NwmYVjorpQ0pR4TB0hXc/FTOEM4PoosPgVNRiQPQfFdqBsXNYrhybWwc2wa9gIfktygZUWPpsguLYSZkWONKJ1sMglEqMWH94vgknWEcxoCt3aFIhqWozKCoDuYhYyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=gehxll/w; arc=none smtp.client-ip=46.235.227.194
+	 MIME-Version; b=fDIcpBH9p0Ajz2KxHLtCYGiAS+TXsd9pJxqFYWOylzay9X3+x2zCqbN58G+9iSnNzr3K1bJ7w/iA6lBX+h7LaEK7qI5A+Rwv0L3FcsKdpPVZLgkPjdl8pVorgNXY72gGHxKvRI5V38geKNCXfmfPUfy4XGLvzL7JbNbnWMJHaDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=w7k2Cie/; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="gehxll/w"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="w7k2Cie/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1708103117;
-	bh=6zOLQPXZQ2JGX+nNdATNogWmxrlrJE9gXcKsVLFpIy8=;
+	s=mail; t=1708103118;
+	bh=WAwF9+4NxVFIAxAbMjIC26UpfeO4GAskAOtMN4AnYh8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gehxll/wSV8g4gjc91Mu+SvyPw/bwR/kHkIdmzQSPJkesRQ7wq/mrBrSTphV2mwEs
-	 AQ9caNixCQ9yWYTk3Gzdy+0FSU/mTwr8NzGaPej5D31Fk0jlZA8ekvPp3dxZ/yMA15
-	 7+mj2kgx8vl2RR3DRuCnrlTMzwi1JxehB7BA94wbPY3N0KJ0MAKE9EUmQ3NYqmaFgc
-	 3HTrhD/T9GEdPSeO7V9S/a68+x4Vk7CkOel4JO8cnbx2LzV78QvCM9om0T/9egVnOE
-	 uVki/rYGyAP/L/So/Q+LfUGFDThk7TQQ2UKKuTwwcQVS8IeyFLdDfDt/fg9QvZ4SUc
-	 7cOz5PfYyziUQ==
+	b=w7k2Cie/vvju8NAWz8fKFRuJ1p+QmjDGqWNi1S72mOPSYVUdVU4eLsCStQGNy5IkW
+	 6oTNaC7cYRGyAmbq1Vjp4BAwqedg1VpkN4lywILUvfrdJfmVvzE4t81bynI9itSxAD
+	 J6IFMHtHO+tiNHReD7EIP5Gp3zm5sJLr+QB+3JCT46Oiw21QoV+vcJFoCNgVhTtKPg
+	 onkylhCRLxoyh6VIqVEGYC/i53zHsBeEhs5kYx792ty8ghvYBs4c+Ug9oI3mP1cfcx
+	 m82utQDwXQWMLpEkuqfZCcTR5wt/KhiCCBTQN/8tJZWy8+xhxkQp3/NSwweXagrx9S
+	 dNDv+15Lc2ZYQ==
 Received: from jupiter.universe (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(No client certificate requested)
 	(Authenticated sender: sre)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C0FC637820BD;
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id EFCD337820C2;
 	Fri, 16 Feb 2024 17:05:17 +0000 (UTC)
 Received: by jupiter.universe (Postfix, from userid 1000)
-	id D8F784800D1; Fri, 16 Feb 2024 18:05:16 +0100 (CET)
+	id E02C44800D5; Fri, 16 Feb 2024 18:05:16 +0100 (CET)
 From: Sebastian Reichel <sebastian.reichel@collabora.com>
 To: Heiko Stuebner <heiko@sntech.de>,
 	Vinod Koul <vkoul@kernel.org>,
@@ -50,9 +50,9 @@ Cc: Rob Herring <robh+dt@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	Sebastian Reichel <sebastian.reichel@collabora.com>,
 	kernel@collabora.com
-Subject: [PATCH v3 05/10] arm64: dts: rockchip: reorder usb2phy properties for rk3588
-Date: Fri, 16 Feb 2024 18:01:20 +0100
-Message-ID: <20240216170514.75200-6-sebastian.reichel@collabora.com>
+Subject: [PATCH v3 09/10] arm64: dts: rockchip: add upper USB3 port to rock-5a
+Date: Fri, 16 Feb 2024 18:01:24 +0100
+Message-ID: <20240216170514.75200-10-sebastian.reichel@collabora.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240216170514.75200-1-sebastian.reichel@collabora.com>
 References: <20240216170514.75200-1-sebastian.reichel@collabora.com>
@@ -64,54 +64,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Reorder common DT properties alphabetically for usb2phy, according
-to latest DT style rules.
+Enable full support (XHCI, EHCI, OHCI) for the upper USB3 port from
+Radxa Rock 5 Model A. The lower one is already supported.
 
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3588s.dtsi | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ .../boot/dts/rockchip/rk3588s-rock-5a.dts      | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-index 38e075b7b661..8708436dd545 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-@@ -545,13 +545,13 @@ usb2phy2_grf: syscon@fd5d8000 {
- 		u2phy2: usb2phy@8000 {
- 			compatible = "rockchip,rk3588-usb2phy";
- 			reg = <0x8000 0x10>;
--			interrupts = <GIC_SPI 391 IRQ_TYPE_LEVEL_HIGH 0>;
--			resets = <&cru SRST_OTGPHY_U2_0>, <&cru SRST_P_USB2PHY_U2_0_GRF0>;
--			reset-names = "phy", "apb";
-+			#clock-cells = <0>;
- 			clocks = <&cru CLK_USB2PHY_HDPTXRXPHY_REF>;
- 			clock-names = "phyclk";
- 			clock-output-names = "usb480m_phy2";
--			#clock-cells = <0>;
-+			interrupts = <GIC_SPI 391 IRQ_TYPE_LEVEL_HIGH 0>;
-+			resets = <&cru SRST_OTGPHY_U2_0>, <&cru SRST_P_USB2PHY_U2_0_GRF0>;
-+			reset-names = "phy", "apb";
- 			status = "disabled";
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts b/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
+index 2002fd0221fa..149058352f4e 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
+@@ -698,6 +698,14 @@ regulator-state-mem {
+ 	};
+ };
  
- 			u2phy2_host: host-port {
-@@ -570,13 +570,13 @@ usb2phy3_grf: syscon@fd5dc000 {
- 		u2phy3: usb2phy@c000 {
- 			compatible = "rockchip,rk3588-usb2phy";
- 			reg = <0xc000 0x10>;
--			interrupts = <GIC_SPI 392 IRQ_TYPE_LEVEL_HIGH 0>;
--			resets = <&cru SRST_OTGPHY_U2_1>, <&cru SRST_P_USB2PHY_U2_1_GRF0>;
--			reset-names = "phy", "apb";
-+			#clock-cells = <0>;
- 			clocks = <&cru CLK_USB2PHY_HDPTXRXPHY_REF>;
- 			clock-names = "phyclk";
- 			clock-output-names = "usb480m_phy3";
--			#clock-cells = <0>;
-+			interrupts = <GIC_SPI 392 IRQ_TYPE_LEVEL_HIGH 0>;
-+			resets = <&cru SRST_OTGPHY_U2_1>, <&cru SRST_P_USB2PHY_U2_1_GRF0>;
-+			reset-names = "phy", "apb";
- 			status = "disabled";
++&u2phy0 {
++	status = "okay";
++};
++
++&u2phy0_otg {
++	status = "okay";
++};
++
+ &u2phy2 {
+ 	status = "okay";
+ };
+@@ -721,6 +729,11 @@ &uart2 {
+ 	status = "okay";
+ };
  
- 			u2phy3_host: host-port {
++&usbdp_phy0 {
++	status = "okay";
++	rockchip,dp-lane-mux = <2 3>;
++};
++
+ &usb_host0_ehci {
+ 	status = "okay";
+ 	pinctrl-names = "default";
+@@ -731,6 +744,11 @@ &usb_host0_ohci {
+ 	status = "okay";
+ };
+ 
++&usb_host0_xhci {
++	dr_mode = "host";
++	status = "okay";
++};
++
+ &usb_host1_ehci {
+ 	status = "okay";
+ };
 -- 
 2.43.0
 
