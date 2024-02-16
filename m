@@ -1,120 +1,99 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E41E712FB07
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 15:52:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA9F12F58A;
+	Fri, 16 Feb 2024 15:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708098757; cv=none; b=T7dCK46hElTcMM/U9xUkuJdS+lxWiOwLl62LSRsCFMP+V+KB4FGumtkE9oEOeqrWkfp2KEhD1iL8nv8jWxVlu0GT4HK2xGRPpGJetIf/trle8v6UZnNaO+J/zZMAArQ3mK9Ry2vB3A9K0w66FmuSp1Mh9lF0or7tEg2wTWG50tE=
+	t=1708098786; cv=none; b=td3FSe5buf/8SrUgkK7f0+++lxHuiF+CTQ6WN9c8EjmutthMXaDNj/pz7Ylc1Y1YFb5gRl8M1KjBrB7uw8Ue6bOmfyPJtvmvHOMXjSyURuN/0atTJho4c1v+a1hfrWj8UYZ7GOpwHKrQlexCp3F6TBwFn9QPtUrVgQvYuvSJkTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708098757; c=relaxed/simple;
-	bh=Twfvqn5z2TPQUG3mCx7eOkQhXIYHDRrgU1d+jAxcuDQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=KeKzU1cpleEiHa25W0hxVsaNe+YnCqd2mDTcxtpMBB9dt7HhkCmuzGB5nV2FYFKMSYwSRM2L/OcYZKsS8KsTsWWFdUG2WZfVPiP/yTZl71eM+RUG4k4eN7rYKVQB0tQlHQC8Ld6DcJun99BdbgZr9O/iJ2gwyUqew2DWcjqSA9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hvc00JVY; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1708098786; c=relaxed/simple;
+	bh=V4PCxhGFH/jAAOAVBdY7uV5Loj9ZYxch0/IxD1tU438=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=H902W9PEHYAnhJu5QcQ89zK7J+lF9n/uPFNrn/lGn3DhykoBsvB2CFjchMWmL5tdz41qxsB4+QJSrV/RXGDBFPCTEsLf6i2nHeHlCKrzBeBkItZZn5043T/kqyyyV+EykzmJVBXv6AJqmAVakSi3NRrptyr7DAYU0UeH9U/scYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gdSnkKdC; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hvc00JVY"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5dcbb769a71so1552758a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 07:52:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708098754; x=1708703554; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vdWqN4twnny7sh0kB73t0EmMejLUnVRIUmMC6P4B0Co=;
-        b=hvc00JVY9QTiNJqrNSc9ww1n6V66a9ToFhqNn+QVc2hFHv9CJ6kl7fuFuU91Wpo9V5
-         AOCQ23wjPxaSVZ9fbzmTAfUlNhiX6nzvr6qmqmlarf1sT2G9/M8ahxG0T4/HOX1pwKyt
-         Ax1X4TNQfp8gFyCudeWba74kxXywGXaUm2sZN3k7Hu7zf+wOVlrIYKPj/ewPyq3Mrzoa
-         58i6se1eDpBM+th90UaVbSHE68Fci2xO4ngxX5kOopyDQkfNbH1yXd91RfyN3apqurfX
-         daI5BHm9rXCiweNWm7SUN4yth5rOCv4esCUEdSJahGAgEn+ejMzNp19HOI/jVYYEH7Ed
-         08pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708098754; x=1708703554;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vdWqN4twnny7sh0kB73t0EmMejLUnVRIUmMC6P4B0Co=;
-        b=eChAi6kXcFYp+wsKnLd/bJSgU0YgFPkfW90eLEyW2FhMOk2xSemPhGSkuqls9neien
-         0Cv5KXgwwNn3SfZ0fXxMpRMD5ayWG0pPlAG1rezPjOUG0tVxl7ReMY35ws4wbO6r7V2K
-         GlZREvrTMybP2WOY2z9CaRvserrzlUDJoUykyHTXI9hYxZ8+XKRTMSOunKwj7FwUGPIJ
-         kRDZUls1YMwHoZseim8npwaJlbIpfB4/5sSW6ywrs1lEq5zPTKPfY84zfIGBshbIVHN5
-         D155iUmrV/Ojv3ZvXPRiohZJrkIHTHYI77Pa5RjCteN509EvPQWtJrN7mEII55Lo6sCL
-         1OTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXdAcMjFjUA4CT8TQwQmZTdUONERPAm9zUHDJd3wBsJhMAw68bVbGL64J7M+KfpqhKH9IOdc4Zjb4oCN3nNm39yzDCc0eCzaZNBDA7p
-X-Gm-Message-State: AOJu0YwTQUft6cuUHCUemz+ClcWAqCgEm2ANc+yqTF8qT90LWP/DKGxz
-	nFbLG+pxpXCZu1ObjAMxwKIpOPjs6N5ibb4DV88fnEppOtVQ4ioLyPQV2xKAe9YzujQBr7s5mFG
-	/Fg==
-X-Google-Smtp-Source: AGHT+IHdTJArPS4Wa/fITdXprcQUHngTC0JP272as27E3u1351Uiji0GihlmCXFNyvIDmjcngg5SUcACTOg=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6a02:a09:b0:5dc:23a4:3a with SMTP id
- cm9-20020a056a020a0900b005dc23a4003amr13383pgb.7.1708098754138; Fri, 16 Feb
- 2024 07:52:34 -0800 (PST)
-Date: Fri, 16 Feb 2024 07:52:32 -0800
-In-Reply-To: <df6ad8b9-4e53-4357-ab17-e9af62342849@xen.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gdSnkKdC"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id ED3C3240008;
+	Fri, 16 Feb 2024 15:53:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1708098782;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=04SFsb4YU2FLhX8c3BxjY03HBAIbE1GiOjr4sY7glFo=;
+	b=gdSnkKdC8MDHGhmseptmYi7uQcOpt+2+nGF7b176TtpsvoCUMXpH1gQnMYikSsEzZWVgns
+	s6wTqDapPaEo7bDjQ8pIeXUJp7N+waY+9YdFtYKy4F4g+7Z3JqpD7sCypPthb1b6JddOrg
+	2TMLuPUvAC0OhKrNdCz5r/sdqYF/n3dvXAvH46tuKwAyTC/+4s9fCQn/foh2caMhIanw4t
+	uijtVb53YhicB0Ahz64zQEOc5ccwTNslmCsziEPUGViHbZDCmar1YVQniayevymRMUsnhr
+	L33Iqr//g5cvesrR0HpNEnxt4R2NRAbpAOCFRs2xmzWPRZniPIGLQCmGMYjscA==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Date: Fri, 16 Feb 2024 16:52:23 +0100
+Subject: [PATCH RFC net-next v8 05/13] net: net_tstamp: Add unspec field to
+ hwtstamp_source enumeration
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240215152916.1158-1-paul@xen.org> <20240215152916.1158-22-paul@xen.org>
- <23e7ec31a67a73fe94b2b04dbca26ea5ca1ea238.camel@infradead.org> <df6ad8b9-4e53-4357-ab17-e9af62342849@xen.org>
-Message-ID: <Zc-EwMoijOo7w49N@google.com>
-Subject: Re: [PATCH v13 21/21] KVM: pfncache: rework __kvm_gpc_refresh() to
- fix locking issues
-From: Sean Christopherson <seanjc@google.com>
-To: paul@xen.org
-Cc: David Woodhouse <dwmw2@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>, 
-	David Hildenbrand <david@redhat.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Shuah Khan <shuah@kernel.org>, kvm@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-s390@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240216-feature_ptp_netnext-v8-5-510f42f444fb@bootlin.com>
+References: <20240216-feature_ptp_netnext-v8-0-510f42f444fb@bootlin.com>
+In-Reply-To: <20240216-feature_ptp_netnext-v8-0-510f42f444fb@bootlin.com>
+To: Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Richard Cochran <richardcochran@gmail.com>, 
+ Radu Pirea <radu-nicolae.pirea@oss.nxp.com>, 
+ Jay Vosburgh <j.vosburgh@gmail.com>, Andy Gospodarek <andy@greyhouse.net>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Horatiu Vultur <horatiu.vultur@microchip.com>, UNGLinuxDriver@microchip.com, 
+ Simon Horman <horms@kernel.org>, Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+ Rahul Rameshbabu <rrameshbabu@nvidia.com>, 
+ Kory Maincent <kory.maincent@bootlin.com>
+X-Mailer: b4 0.12.4
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Fri, Feb 16, 2024, Paul Durrant wrote:
-> On 16/02/2024 13:04, David Woodhouse wrote:
-> > On Thu, 2024-02-15 at 15:29 +0000, Paul Durrant wrote:
-> > > From: David Woodhouse <dwmw@amazon.co.uk>
-> > > 
-> > > This function can race with kvm_gpc_deactivate(), which does not take
-> > > the ->refresh_lock. This means kvm_gpc_deactivate() can wipe the ->pfn
-> > > and ->khva fields, and unmap the latter, while hva_to_pfn_retry() has
-> > > temporarily dropped its write lock on gpc->lock.
-> > 
-> > Let's drop this from your series for now, as it's contentious.
-> > 
-> > Sean didn't like calling it a 'fix', which I had conceded and reworked
-> > the commit message. It was on the list somewhere, and also in
-> > https://git.infradead.org/users/dwmw2/linux.git/commitdiff/f19755000a7
-> > 
-> > I *also* think we should do this simpler one:
-> > https://git.infradead.org/users/dwmw2/linux.git/commitdiff/cc69506d19a
-> > ... which almost makes the first one unnecessary, but I think we should
-> > do it *anyway* because the rwlock abuse it fixes is kind of awful.
-> > 
-> > And while we still can't actually *identify* the race condition that
-> > led to a dereference of a NULL gpc->khva while holding the read lock
-> > and gpc->valid and gpc->active both being true... I'll eat my hat if
-> > cleaning up and simplifying the locking (and making it self-contained)
-> > *doesn't* fix it.
+Prepare for future support of saving hwtstamp source in PTP xarray by
+introducing HWTSTAMP_SOURCE_UNSPEC to hwtstamp_source enum, setting it
+to 0 to match old behavior of no source defined.
 
-Heh, I'm not taking that bet.
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+---
 
-> > But either way, it isn't really part of your series. The only reason it
-> > was tacked on the end was because it would have merge conflicts with
-> > your series, which had been outstanding for months already.
-> > 
-> > So drop this one, and I'll work this bit out with Sean afterwards.
+Change in v8:
+- New patch
+---
+ include/linux/net_tstamp.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-FWIW, I'm not opposed to overhauling the gpc locking, I agree it's a mess.  I just
-want to proceed slower than I would for a fix, it's a lot to digest.
+diff --git a/include/linux/net_tstamp.h b/include/linux/net_tstamp.h
+index 3799c79b6c83..662074b08c94 100644
+--- a/include/linux/net_tstamp.h
++++ b/include/linux/net_tstamp.h
+@@ -14,6 +14,7 @@
+ 					 SOF_TIMESTAMPING_RAW_HARDWARE)
+ 
+ enum hwtstamp_source {
++	HWTSTAMP_SOURCE_UNSPEC,
+ 	HWTSTAMP_SOURCE_NETDEV,
+ 	HWTSTAMP_SOURCE_PHYLIB,
+ };
 
-> Ok. Sean, I assume that since this is the last patch in the series it's
-> superfluous for me to post a v14 just for this?
+-- 
+2.25.1
 
-Correct, definitely no need for a new version.
