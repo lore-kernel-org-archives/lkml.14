@@ -1,345 +1,103 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ECFB134CCE
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 18:31:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC1A145B21;
+	Fri, 16 Feb 2024 18:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708108319; cv=none; b=m35VZ1lFWRBhaEtmLG7oMsQl9LdRpRRKvaB18PsVFnxq3k+y2rqDImRc9b5bqP8KUTwDm8IXIVPwwQkVC+6TFyC0WoKC4LIb6hu/3lrSIjpwSwW9FJXbAacgAMtttmOiCZPl1MXBYgOpTGQGXoq9d96C75jRhsmEP65a6P98WVg=
+	t=1708108324; cv=none; b=LfkYluSmg7UnSnP5m4fJbvgufEoPDTKol2ZajxXDg40LbukYl3DYZaRXBGzlqb7ymUZmHEG6Jdkaqb51f/EuaMIVs07/wVa5ZLEsFv1zQS2J58un4UubnXt6Qmc4V0/kHBW8P3Yx5cu9soumAx8yW8RJq4UQrrLyv2At/eM68OQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708108319; c=relaxed/simple;
-	bh=mZ2gOIXcUxYPUWs6+iWh+plbgTcX3Uoy+H9V33hkCIo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QkXXf+iTroUwqpWgtgTcwzpeVQmzY8fwEDEd+QO11aqc1tpXe25QC74HSzz1zDu+vslG5ecW8DRubooIJ8+R6n14MOU8c1yLibMmhFSPn4PFD3NccxzJFAJ6yWoUTth0GyuChJu1OY4jxdpue5au4vYr4UO8dPEn93epnf1wVX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=T1FQqQW9; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
+	s=arc-20240116; t=1708108324; c=relaxed/simple;
+	bh=EuQ0oWNycJc6EUI4ZgzFYPB2MfQHGg5k+ggiEumBsng=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=XyU6Fa2JLRhIiGE6vuhTBw2LlSlE6nYE/0d3MZEN4hIFeCuAX42xyWJnPmp4Vu/t0lnbMWxXvYLV/F0VQOmdvVyUtcD2FeeAfOTCNLt2caPaSRMhq5aa8C1BjoBVgm+QNjGKQuQRIqihS9u3In+kDDEB80iDXoDJ8OGyIcXW1A0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JIjUVToZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="T1FQqQW9"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-686a92a8661so11902706d6.0
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 10:31:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1708108314; x=1708713114; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CDhDd9Kfjsqh4jLKpVf7J36w/JnuAi2f5V71QMuGAEk=;
-        b=T1FQqQW9TyHh7HgT+F67Khdj1PilhW3VPjsjqYihnfFaIn7pw8ggciDJAkQGDTSSBI
-         iqoTmDz6YS4G1PF1+7y7A17Uu3oZhNRu0a1tRPTOqV+6v3KDzJ2nGLwkEIUejXwMqCkv
-         bEyROjqgxfZs9uHnGSFc68A/67hVrl3WKckNk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708108314; x=1708713114;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CDhDd9Kfjsqh4jLKpVf7J36w/JnuAi2f5V71QMuGAEk=;
-        b=lI3ISlLeHh3kPa+wHgN3Ii5S+WxW5iHf78G/gZDmtEkA+OaYDlAwjdbqXsXwUW4pji
-         Y0atdckzYXe5M4Gn654kAzRRsPsuZcg1fQ6SyvI5BZK74pY258lKOGdSGPyZ67Gz5zlm
-         vUkrr2s51tp3+fDCM8aNde8pIeWo+SYiSvV8cb8Yw+OEZUA4y8vAH7DlLxouJjVF7Qct
-         yVDnR7x6IDWqpf4LUJqW+CPMlof2GhKsYJ4zg/S4ltRFqYmYqN75NgBFp6oolrzHME8+
-         slxky6gvzSCzxtu2fof+m12UipATb072nLchOLKsFGgpo6EQ+egLAVTONybV28kmOMMG
-         7EBQ==
-X-Gm-Message-State: AOJu0YyR721HDtnq1q6diSwu93X/KZ89iTEW4wBgRSoPVrcNo1/z9/FN
-	+Qgs5QXYC7w2eNCyO7nR5aHmi+1nPIoOGKP6I5V0L/3ECOg8HIh+7OyIDO1yuXmz1zdACo2DdVq
-	n
-X-Google-Smtp-Source: AGHT+IGhLeBZCvEV3RiqOD8Gk2JJl2wSyxA9sXMztIfDCRh/Q2EdnLcbUU8EEBlGLC3HNXEpawOwhw==
-X-Received: by 2002:a05:6214:5904:b0:68c:668b:c610 with SMTP id qo4-20020a056214590400b0068c668bc610mr7398414qvb.2.1708108314017;
-        Fri, 16 Feb 2024 10:31:54 -0800 (PST)
-Received: from joelbox2.. (c-98-249-43-138.hsd1.va.comcast.net. [98.249.43.138])
-        by smtp.gmail.com with ESMTPSA id nd13-20020a056214420d00b0068cdadb5e7esm159722qvb.31.2024.02.16.10.31.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 10:31:53 -0800 (PST)
-From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To: linux-kernel@vger.kernel.org,
-	Shuah Khan <shuah@kernel.org>
-Cc: Suleiman Souhlal <suleiman@google.com>,
-	Youssef Esmat <youssefesmat@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	David Vernet <void@manifault.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	joseph.salisbury@canonical.com,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Luca Abeni <luca.abeni@santannapisa.it>,
-	Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
-	Vineeth Pillai <vineeth@bitbyteword.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Phil Auld <pauld@redhat.com>,
-	"Joel Fernandes (Google)" <joel@joelfernandes.org>,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH 08/10] selftests/sched: Migrate cs_prctl_test to kselfttest
-Date: Fri, 16 Feb 2024 13:31:06 -0500
-Message-Id: <20240216183108.1564958-9-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240216183108.1564958-1-joel@joelfernandes.org>
-References: <20240216183108.1564958-1-joel@joelfernandes.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JIjUVToZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6E82C433C7;
+	Fri, 16 Feb 2024 18:32:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708108323;
+	bh=EuQ0oWNycJc6EUI4ZgzFYPB2MfQHGg5k+ggiEumBsng=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=JIjUVToZ9OnNPRW7wZ74ZAXQQlIcXyhcK2EAgw6bEzGMA96/l9Xd7ImlVnHC/HSAA
+	 AHp2+W08dKHJh4ynlYb8oC1vIqJUnjz/XHaw/Git88hTRb6S7T27UZAlW7HzwbtGaE
+	 dm0L+KbwQX9tKFdiwbF3rjc3v9vtOQNzWrSig5Ss89NDi1ArxCLMZynVlP0YG3BOzY
+	 VQ5i8oLalUDpiLoMop1oM9vz4DCHALT1OkCJDXKELTO84yhaKTPDsSofHOulle52zg
+	 yeFghWg60WN9u/87wAo2PLiNihR7A5n+nIvour5wfyw4UHCFHWpJJy8mttA348xfOl
+	 ZxsitMFTnBynw==
+Date: Fri, 16 Feb 2024 12:32:02 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Rob Herring <robh@kernel.org>
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Sean Paul <sean@poorly.run>, Maxime Ripard <mripard@kernel.org>, 
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ Rob Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, freedreno@lists.freedesktop.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ David Airlie <airlied@gmail.com>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ Rob Clark <robdclark@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Daniel Vetter <daniel@ffwll.ch>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+In-Reply-To: <20240216-x1e80100-display-v3-2-28b1c33ac8c0@linaro.org>
+References: <20240216-x1e80100-display-v3-0-28b1c33ac8c0@linaro.org>
+ <20240216-x1e80100-display-v3-2-28b1c33ac8c0@linaro.org>
+Message-Id: <170810832158.3497594.1997532394027797497.robh@kernel.org>
+Subject: Re: [PATCH v3 2/4] dt-bindings: display/msm: Document MDSS on
+ X1E80100
 
-This test begs to be a kselftest, is in the kselftest hierarchy and does
-not even use a single kselftest API. Convert it.
 
-It simplifies some of the code and the output also looks much nicer now:
+On Fri, 16 Feb 2024 19:01:06 +0200, Abel Vesa wrote:
+> Document the MDSS hardware found on the Qualcomm X1E80100 platform.
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> ---
+>  .../bindings/display/msm/qcom,x1e80100-mdss.yaml   | 253 +++++++++++++++++++++
+>  1 file changed, 253 insertions(+)
+> 
 
- Totals: pass:17 fail:0 xfail:0 xpass:0 skip:0 error:0
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- tools/testing/selftests/sched/Makefile        |  6 +-
- tools/testing/selftests/sched/cs_prctl_test.c | 74 ++++++++++---------
- 2 files changed, 43 insertions(+), 37 deletions(-)
+yamllint warnings/errors:
 
-diff --git a/tools/testing/selftests/sched/Makefile b/tools/testing/selftests/sched/Makefile
-index f491d741cb45..90c53bc1337e 100644
---- a/tools/testing/selftests/sched/Makefile
-+++ b/tools/testing/selftests/sched/Makefile
-@@ -1,9 +1,11 @@
- # SPDX-License-Identifier: GPL-2.0+
- TEST_GEN_PROGS := cs_dlserver_test
--
--cs_dlserver_test: cs_dlserver_test.c common.c
-+TEST_GEN_PROGS += cs_prctl_test
- 
- CFLAGS += $(KHDR_INCLUDES)
- CFLAGS += -Wall
- 
- include ../lib.mk
-+
-+$(OUTPUT)/cs_dlserver_test: cs_dlserver_test.c common.c
-+$(OUTPUT)/cs_prctl_test: cs_prctl_test.c common.c
-diff --git a/tools/testing/selftests/sched/cs_prctl_test.c b/tools/testing/selftests/sched/cs_prctl_test.c
-index 7ba057154343..bb7aee703cdf 100644
---- a/tools/testing/selftests/sched/cs_prctl_test.c
-+++ b/tools/testing/selftests/sched/cs_prctl_test.c
-@@ -28,10 +28,11 @@
- #include <unistd.h>
- #include <time.h>
- #include <errno.h>
--#include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
- 
-+#include "common.h"
-+
- #if __GLIBC_PREREQ(2, 30) == 0
- #include <sys/syscall.h>
- static pid_t gettid(void)
-@@ -80,7 +81,7 @@ static int _prctl(int option, unsigned long arg2, unsigned long arg3, unsigned l
- 	int res;
- 
- 	res = prctl(option, arg2, arg3, arg4, arg5);
--	printf("%d = prctl(%d, %ld, %ld, %ld, %lx)\n", res, option, (long)arg2, (long)arg3,
-+	ksft_print_msg("%d = prctl(%d, %ld, %ld, %ld, %lx)\n", res, option, (long)arg2, (long)arg3,
- 	       (long)arg4, arg5);
- 	return res;
- }
-@@ -91,21 +92,20 @@ static int _prctl(int option, unsigned long arg2, unsigned long arg3, unsigned l
- static void __handle_error(char *fn, int ln, char *msg)
- {
- 	int pidx;
--	printf("(%s:%d) - ", fn, ln);
-+	ksft_print_msg("(%s:%d) - ", fn, ln);
- 	perror(msg);
- 	if (need_cleanup) {
- 		for (pidx = 0; pidx < num_processes; ++pidx)
- 			kill(procs[pidx].cpid, 15);
- 		need_cleanup = 0;
- 	}
--	exit(EXIT_FAILURE);
-+	ksft_exit_fail();
- }
- 
- static void handle_usage(int rc, char *msg)
- {
--	puts(USAGE);
--	puts(msg);
--	putchar('\n');
-+	ksft_print_msg("%s\n", USAGE);
-+	ksft_print_msg("%s\n\n", msg);
- 	exit(rc);
- }
- 
-@@ -117,7 +117,7 @@ static unsigned long get_cs_cookie(int pid)
- 	ret = prctl(PR_SCHED_CORE, PR_SCHED_CORE_GET, pid, PIDTYPE_PID,
- 		    (unsigned long)&cookie);
- 	if (ret) {
--		printf("Not a core sched system\n");
-+		ksft_print_msg("Not a core sched system\n");
- 		return -1UL;
- 	}
- 
-@@ -160,7 +160,7 @@ static int child_func_process(void *arg)
- 
- 	ret = write(ca->pfd[1], &ca->thr_tids, sizeof(int) * ca->num_threads);
- 	if (ret == -1)
--		printf("write failed on pfd[%d] - error (%s)\n",
-+		ksft_print_msg("write failed on pfd[%d] - error (%s)\n",
- 			ca->pfd[1], strerror(errno));
- 
- 	close(ca->pfd[1]);
-@@ -192,7 +192,7 @@ void create_processes(int num_processes, int num_threads, struct child_args proc
- 	for (i = 0; i < num_processes; ++i) {
- 		ret = read(proc[i].pfd[0], &proc[i].thr_tids, sizeof(int) * proc[i].num_threads);
- 		if (ret == -1)
--			printf("read failed on proc[%d].pfd[0] error (%s)\n",
-+			ksft_print_msg("read failed on proc[%d].pfd[0] error (%s)\n",
- 				i, strerror(errno));
- 		close(proc[i].pfd[0]);
- 	}
-@@ -202,30 +202,29 @@ void disp_processes(int num_processes, struct child_args proc[])
- {
- 	int i, j;
- 
--	printf("tid=%d, / tgid=%d / pgid=%d: %lx\n", gettid(), getpid(), getpgid(0),
-+	ksft_print_msg("tid=%d, / tgid=%d / pgid=%d: %lx\n", gettid(), getpid(), getpgid(0),
- 	       get_cs_cookie(getpid()));
- 
- 	for (i = 0; i < num_processes; ++i) {
--		printf("    tid=%d, / tgid=%d / pgid=%d: %lx\n", proc[i].cpid, proc[i].cpid,
-+		ksft_print_msg("    tid=%d, / tgid=%d / pgid=%d: %lx\n", proc[i].cpid, proc[i].cpid,
- 		       getpgid(proc[i].cpid), get_cs_cookie(proc[i].cpid));
- 		for (j = 0; j < proc[i].num_threads; ++j) {
--			printf("        tid=%d, / tgid=%d / pgid=%d: %lx\n", proc[i].thr_tids[j],
-+			ksft_print_msg("        tid=%d, / tgid=%d / pgid=%d: %lx\n", proc[i].thr_tids[j],
- 			       proc[i].cpid, getpgid(0), get_cs_cookie(proc[i].thr_tids[j]));
- 		}
- 	}
- 	puts("\n");
- }
- 
--static int errors;
--
- #define validate(v) _validate(__LINE__, v, #v)
- void _validate(int line, int val, char *msg)
- {
- 	if (!val) {
--		++errors;
--		printf("(%d) FAILED: %s\n", line, msg);
-+		ksft_print_msg("(%d) FAILED: %s\n", line, msg);
-+		ksft_inc_fail_cnt();
- 	} else {
--		printf("(%d) PASSED: %s\n", line, msg);
-+		ksft_print_msg("(%d) PASSED: %s\n", line, msg);
-+		ksft_inc_pass_cnt();
- 	}
- }
- 
-@@ -254,13 +253,17 @@ int main(int argc, char *argv[])
- 			keypress = 1;
- 			break;
- 		case 'h':
--			printf(USAGE);
-+			ksft_print_msg(USAGE);
- 			exit(EXIT_SUCCESS);
- 		default:
- 			handle_usage(20, "unknown option");
- 		}
- 	}
- 
-+	if (!hyperthreading_enabled()) {
-+		ksft_exit_skip("This test requires hyperthreading to be enabled\n");
-+	}
-+
- 	if (num_processes < 1 || num_processes > MAX_PROCESSES)
- 		handle_usage(1, "Bad processes value");
- 
-@@ -272,17 +275,22 @@ int main(int argc, char *argv[])
- 
- 	srand(time(NULL));
- 
--	/* put into separate process group */
-+	/* Put into separate process group */
- 	if (setpgid(0, 0) != 0)
- 		handle_error("process group");
- 
--	printf("\n## Create a thread/process/process group hiearchy\n");
-+	ksft_print_header();
-+
-+	/* Increase the count if adding more validate() statements. */
-+	ksft_set_plan(17);
-+
-+	ksft_print_msg("\n## Create a thread/process/process group hiearchy\n");
- 	create_processes(num_processes, num_threads, procs);
- 	need_cleanup = 1;
- 	disp_processes(num_processes, procs);
- 	validate(get_cs_cookie(0) == 0);
- 
--	printf("\n## Set a cookie on entire process group\n");
-+	ksft_print_msg("\n## Set a cookie on entire process group\n");
- 	if (_prctl(PR_SCHED_CORE, PR_SCHED_CORE_CREATE, 0, PIDTYPE_PGID, 0) < 0)
- 		handle_error("core_sched create failed -- PGID");
- 	disp_processes(num_processes, procs);
-@@ -296,7 +304,7 @@ int main(int argc, char *argv[])
- 	validate(get_cs_cookie(0) == get_cs_cookie(pid));
- 	validate(get_cs_cookie(0) == get_cs_cookie(procs[pidx].thr_tids[0]));
- 
--	printf("\n## Set a new cookie on entire process/TGID [%d]\n", pid);
-+	ksft_print_msg("\n## Set a new cookie on entire process/TGID [%d]\n", pid);
- 	if (_prctl(PR_SCHED_CORE, PR_SCHED_CORE_CREATE, pid, PIDTYPE_TGID, 0) < 0)
- 		handle_error("core_sched create failed -- TGID");
- 	disp_processes(num_processes, procs);
-@@ -305,7 +313,7 @@ int main(int argc, char *argv[])
- 	validate(get_cs_cookie(pid) != 0);
- 	validate(get_cs_cookie(pid) == get_cs_cookie(procs[pidx].thr_tids[0]));
- 
--	printf("\n## Copy the cookie of current/PGID[%d], to pid [%d] as PIDTYPE_PID\n",
-+	ksft_print_msg("\n## Copy the cookie of current/PGID[%d], to pid [%d] as PIDTYPE_PID\n",
- 	       getpid(), pid);
- 	if (_prctl(PR_SCHED_CORE, PR_SCHED_CORE_SHARE_TO, pid, PIDTYPE_PID, 0) < 0)
- 		handle_error("core_sched share to itself failed -- PID");
-@@ -315,7 +323,7 @@ int main(int argc, char *argv[])
- 	validate(get_cs_cookie(pid) != 0);
- 	validate(get_cs_cookie(pid) != get_cs_cookie(procs[pidx].thr_tids[0]));
- 
--	printf("\n## Copy cookie from a thread [%d] to current/PGID [%d] as PIDTYPE_PID\n",
-+	ksft_print_msg("\n## Copy cookie from a thread [%d] to current/PGID [%d] as PIDTYPE_PID\n",
- 	       procs[pidx].thr_tids[0], getpid());
- 	if (_prctl(PR_SCHED_CORE, PR_SCHED_CORE_SHARE_FROM, procs[pidx].thr_tids[0],
- 		   PIDTYPE_PID, 0) < 0)
-@@ -325,7 +333,7 @@ int main(int argc, char *argv[])
- 	validate(get_cs_cookie(0) == get_cs_cookie(procs[pidx].thr_tids[0]));
- 	validate(get_cs_cookie(pid) != get_cs_cookie(procs[pidx].thr_tids[0]));
- 
--	printf("\n## Copy cookie from current [%d] to current as pidtype PGID\n", getpid());
-+	ksft_print_msg("\n## Copy cookie from current [%d] to current as pidtype PGID\n", getpid());
- 	if (_prctl(PR_SCHED_CORE, PR_SCHED_CORE_SHARE_TO, 0, PIDTYPE_PGID, 0) < 0)
- 		handle_error("core_sched share to self failed -- PGID");
- 	disp_processes(num_processes, procs);
-@@ -340,20 +348,16 @@ int main(int argc, char *argv[])
- 	validate(_prctl(PR_SCHED_CORE, PR_SCHED_CORE_SHARE_TO, 0, PIDTYPE_PGID, 1) < 0
- 		&& errno == EINVAL);
- 
--	if (errors) {
--		printf("TESTS FAILED. errors: %d\n", errors);
--		res = 10;
--	} else {
--		printf("SUCCESS !!!\n");
--	}
--
--	if (keypress)
-+	if (keypress) {
-+		ksft_print_msg("Waiting for keypress to exit\n");
- 		getchar();
--	else
-+	} else {
- 		sleep(delay);
-+	}
- 
- 	for (pidx = 0; pidx < num_processes; ++pidx)
- 		kill(procs[pidx].cpid, 15);
- 
-+	ksft_finished();
- 	return res;
- }
--- 
-2.34.1
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/display/msm/qcom,x1e80100-mdss.example.dts:24:18: fatal error: dt-bindings/clock/qcom,x1e80100-dispcc.h: No such file or directory
+   24 |         #include <dt-bindings/clock/qcom,x1e80100-dispcc.h>
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[2]: *** [scripts/Makefile.lib:419: Documentation/devicetree/bindings/display/msm/qcom,x1e80100-mdss.example.dtb] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1428: dt_binding_check] Error 2
+make: *** [Makefile:240: __sub-make] Error 2
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240216-x1e80100-display-v3-2-28b1c33ac8c0@linaro.org
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
