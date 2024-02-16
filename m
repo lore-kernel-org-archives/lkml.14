@@ -1,124 +1,107 @@
-Received: from out203-205-221-236.mail.qq.com (out203-205-221-236.mail.qq.com [203.205.221.236])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D0577F05
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 19:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.236
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F25F135A49
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 19:06:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708110315; cv=none; b=EBKHK52G09MplzFka5wvgpy+a19hrT+UjMGtUcb3xce3HSAgaDmksU9CkILI//wP3GkS0SEWnjecmr6kOWU/LENkdFTB2hADtGCueUS/VKGnOPvVCJzmrWtAyO/VF1hBuqcqh92/qrQESnkbpZjhLMwyy4KNyPNuqQZ5uKV5R30=
+	t=1708110381; cv=none; b=pELGI8ndPiA7rcuNUtMsMPvdslqrq5dWeEVb2l0IdkaSHvaEYVDsS9ILyXNIawzh7G2agCE3Uh/qL75pGl+dAnAWlbAztSMP+74eh8t0ElTCfhVf9LmYe+yMzcClc+oi/gNhJJEeJ46sHajzjobV4aKYc+GUUE6C4mmDbzFq8uI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708110315; c=relaxed/simple;
-	bh=/CdKXp/M0IoZ35hcQEsRX21/nqp6k3E+d9PhAK6qvWM=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=ubflAlgVbqw95H5lio7v4wIls8AJQ75EuW854R/izcHd9pXS+ehJ6ljXKUCYA1N8rvE9RDssU7tpOpHsJiEovDHaj3DMg3ohsh3UZCjcq3dXhG6AljppfOoNRo/xwOkS0gEM9M25fdUj+vfPB0fL8j+Y24A7uKPCMUDn4La8OXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=X8qngnjZ; arc=none smtp.client-ip=203.205.221.236
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1708110381; c=relaxed/simple;
+	bh=tyXKpT94FpSnBWMVzJImdgL6izGWv0FtXsMQPeQnSGA=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=bJX/ZFMw7bwHmrqnNQ+rkC+GqMCAqFNMTZjWPigx1Bk74QgPZFZI3MrUCiLy5eSKSMAyaDXVaiVFwgf+vry40JSkEY5LrO8iITrJYYl27Lecd0ThQWre9McUlUDG0da3/zKBcsb2thlSdYBM/+ltvwky+4n9GN9gpDfZNqnHyBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=EsUq5vSB; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="X8qngnjZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1708110004;
-	bh=tnXXBc9Dk9zk7+Jx65RRNfhiBjugPoxHOwEKCCZqCk4=;
-	h=From:To:Cc:Subject:Date;
-	b=X8qngnjZoBF5u5759OHcd3yi6Fg1ZPbr3Bx9B7zpGGg2hSjBrWK0GrqeKFmBHfowu
-	 3NQACBS2DcLK705NkmOl8H+G3KdWF9LRnS9YvdgixEhMcNG/qQrBpd0lxOeCAXznyO
-	 ABSVucae6HftGVnh01ZOf7xz8NVOYVwNHx71P7+E=
-Received: from localhost.localdomain ([2409:8a60:2a63:47a0:34af:c8ac:3595:9c10])
-	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
-	id 1BA45; Sat, 17 Feb 2024 03:00:00 +0800
-X-QQ-mid: xmsmtpt1708110000txpy65wqo
-Message-ID: <tencent_5CD40341EC9384E9B7CC127EA5CF2655B408@qq.com>
-X-QQ-XMAILINFO: MdIvn1KXX/GIZaBqqhfY5ZNopXF6lFNATki9PxNHb1s0aqdSaXmHESGehNahBx
-	 fvLc2ueJ32JX/nmq2Cg78kEyZZS3UfagYnaTbOc22pjVzu7S+6wJ4FzisZYqIpM2+G5aZ9w+v7ce
-	 vfdUWGq1NQwWpwvdgvzA40qfEKJI0wy0HXt6XN/83B8O5YUCVcfNlGuEsW8Myt1nEwp6AHn/8aNm
-	 YyLI3xjbMZp9d+hpmAYz1SPJoQIYt3tDrAbJ5u74+dSHfFIekue6PFa5xugw7S+a2Y/+U9OvuF3w
-	 Zkdatxzvx6gtPTUvKAxMoll23mEw0oFcl4ZkiDvBV5VBa7XzqZ6E3xUmZloGFRu3Iq8Fsbxd1nSV
-	 7zDaJtimT9jNeT3s8av6gUxOyGYlLN7wU7VxPYI71uzLTHfj4XimKeidRtYdl5zC6Z0n/ylOcJ4P
-	 4zir20b1vpBFhVkrZk6Ssdn7AIE4X7We6gXHYJHAO4TIsxplPGgjoHpHNJ73lohIVpOG9czEAKdr
-	 iDtRF+P3/+sbW3ZureR3map+rifPyanpXeQwJJ7UAzizzPMuxlMqeyz8vnenZgUEYpQy/yjOlSpO
-	 qJyU12xSV43XBoUeS7aYpbp8yPtUWrnCHhMO4BmM8oqVIsNHCnrgIzp0rt3K0YbJKGNLKwSBP62e
-	 bgxMAvHsMgu0ztRcby1LqqRV5G9Yw2jmKANEuem4dvvsod7xLptaOQpbdFPcIiHvicMpQYf6HiiE
-	 1n+BNShPiqnqgxYvMGdK0P9BTEBn3o+PKLm3+3A73OGmZzw/JZ+m3wgmycXBjSn326D1Ex1xStDK
-	 BU/VUbaoaAXDAWij2hE0naFkYgdVqISocd4aQRirlV+Oh7kgpEX7ENhZrmrblkI4t/hfPSZ5PT55
-	 +n60dep3xxW7tPzv4PC37yxVdzmy7v5Yr2QuXGcZwMW5grd9Uuj+m58WKvutNTxwe7CjEZMQEhrQ
-	 tAgxi3U7ELfAXgpCEQbQEYJgtljn6P9Eb6ghQQTmCI429KRoP5Z7UKtwYho1/A0Ie17mgwcY54KR
-	 3PQazk/g==
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-From: wenyang.linux@foxmail.com
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>
-Cc: Wen Yang <wenyang.linux@foxmail.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Mel Gorman <mgorman@techsingularity.net>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] coredump debugging: add a tracepoint to report the coredumping
-Date: Sat, 17 Feb 2024 02:59:47 +0800
-X-OQ-MSGID: <20240216185947.352535-1-wenyang.linux@foxmail.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="EsUq5vSB"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d7858a469aso20969065ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 11:06:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1708110379; x=1708715179; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G57ATopsWGdgfukCf+oinJCn957kvcdWv+8EF1OVrlg=;
+        b=EsUq5vSB9682MEt9Ck0RPUdwAjiPnXC2vB10k9m87Qhos0KmkMghLmA7zHZ4IHhe62
+         3DNfbTN/yepxzaXFcSZtML4IJjgY543BDC+gQ/8bMTj4rsfrq0nQ53rIuaBHfPIN/3TH
+         C+EV+4LejAWb+h6GVeFN28Yq78ezcCD7BaJle8V6HOBq7krhimv0WPj/MNiAT8PDfIOj
+         twfcjxNqe8kWoFSeCMYj4f1mgmZFKS++paenjJmnULdk9U8PJEfrRA2Q9JVTKWjJuHU9
+         hz6gZeO0U+bLYw+jR/DOUlJZgs5d5Wer2TXqYzIiJ+9BidIaKRfua1/hlDopU9G+LzbF
+         6R7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708110379; x=1708715179;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G57ATopsWGdgfukCf+oinJCn957kvcdWv+8EF1OVrlg=;
+        b=ujODdJAYcThCr6JFzQJtbGMB+dX0x6gisq+1vB+safDHQ/OrvJOXshZ8Kpq/kzUjo1
+         nszOT+m5VVt7NAESLv+2mjncIozBobkgOC1mkfW6lCt2nwy8czpTincpbbO6D/blN2oW
+         i0I50PAF955sZ7CWHhBkW3sUyLc7TfMNFJzzY8dH2aYLyl0w2vMkyeVM3dnRpw1p3gxC
+         5zHzarH4ACZ1olXkz+wOkXDp6Jajb8q9KxfHi0KPHWydUjP9Heztv3i7kxldMrjj+fpt
+         iGWHU211Qg5V6YZDNRsz3nzX0/vQbdMfYbx1wZvvPgs4ZiHAWYdZqKDpxlM0kYuKeqpE
+         8CEA==
+X-Forwarded-Encrypted: i=1; AJvYcCUEE0wg4YPb11MShNtPN+gLv9PNXLyajvuxLtlYB9JF0IOvT4zPv3g9k5Dic6WzWs2IEaxS2jcVzGlYz8JJFaS1Lknat6gY0ZdO7dSZ
+X-Gm-Message-State: AOJu0YzkdZ2SX1ImRCI4gtI5UYPIeQOQGtK+WZrY6XgT797lGljLCPFU
+	akRFY9P2sNXTkkc1BKAIVr6IDKW2+hKnkktVM6DGKF4RMoF9T4s8GKA/GOQFO+0=
+X-Google-Smtp-Source: AGHT+IHYib0QY99Hae2xO/F1iLN49cqNkEPihSniQRy/XogBo6z3UOnPW2TTuRKdLELfbmQ5iRUjXQ==
+X-Received: by 2002:a17:902:ec8b:b0:1db:b8da:ddfd with SMTP id x11-20020a170902ec8b00b001dbb8daddfdmr1220943plg.50.1708110379239;
+        Fri, 16 Feb 2024 11:06:19 -0800 (PST)
+Received: from localhost ([192.184.165.199])
+        by smtp.gmail.com with ESMTPSA id x12-20020a170902e04c00b001d958de13c7sm220415plx.0.2024.02.16.11.06.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Feb 2024 11:06:18 -0800 (PST)
+Date: Fri, 16 Feb 2024 11:06:18 -0800 (PST)
+X-Google-Original-Date: Fri, 16 Feb 2024 11:06:15 PST (-0800)
+Subject:     Re: (subset) [PATCH v8 0/4] RISC-V: Add MMC support for TH1520 boards
+In-Reply-To: <20231212-flammable-idiom-660b1d85e20d@spud>
+CC: Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+  jszhang@kernel.org, guoren@kernel.org, wefu@redhat.com, Conor Dooley <conor@kernel.org>,
+  robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, dfustini@baylibre.com,
+  Conor Dooley <conor.dooley@microchip.com>, jkridner@beagleboard.org, robertcnelson@beagleboard.org,
+  linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: Conor Dooley <conor@kernel.org>
+Message-ID: <mhng-a8843466-ecdf-4e7b-a866-c0cd2683774f@palmer-ri-x1c9>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Wen Yang <wenyang.linux@foxmail.com>
+On Tue, 12 Dec 2023 11:13:25 PST (-0800), Conor Dooley wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
+>
+> On Wed, 06 Dec 2023 00:09:20 -0800, Drew Fustini wrote:
+>> This series enables the MMC controller in the T-Head TH1520 SoC and
+>> enables the eMMC and microSD on both the BeagleV Ahead and the Sipeed
+>> LicheePi 4A.
+>>
+>> The drivers/mmc/host patches from v6 were applied by Ulf and are already
+>> in the linux-next [1][2] as well as the bindings patch [3]. Thus v7 was
+>> only a defconfig patch and three device tree patches. This v8 is a
+>> followup to change the dwcmshc node names to match the documentation.
+>>
+>> [...]
+>
+> Applied to riscv-dt-for-next, thanks! The defconfig patch is Palmer's
+> to take :)
 
-Currently coredump_task_exit() takes some time to wait for the generation
-of the dump file. But if the user-space wants to receive a notification
-as soon as possible it maybe inconvenient.
+Sorry I missed this.  It's on my staging branch, but I'm still debugging 
+some boot hangs post-merge so it might take a bit to show up on 
+linux-next...
 
-Add the new trace_sched_process_coredump() into coredump_task_exit(),
-this way a user-space monitor could easily wait for the exits and
-potentially make some preparations in advance.
-
-Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org
----
- include/trace/events/sched.h | 7 +++++++
- kernel/exit.c                | 1 +
- 2 files changed, 8 insertions(+)
-
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index dbb01b4b7451..ce7448065986 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -334,6 +334,13 @@ DEFINE_EVENT(sched_process_template, sched_process_exit,
- 	     TP_PROTO(struct task_struct *p),
- 	     TP_ARGS(p));
- 
-+/*
-+ * Tracepoint for a task coredumping:
-+ */
-+DEFINE_EVENT(sched_process_template, sched_process_coredump,
-+	     TP_PROTO(struct task_struct *p),
-+	     TP_ARGS(p));
-+
- /*
-  * Tracepoint for waiting on task to unschedule:
-  */
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 493647fd7c07..c11e12d73f4e 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -425,6 +425,7 @@ static void coredump_task_exit(struct task_struct *tsk)
- 			self.next = xchg(&core_state->dumper.next, &self);
- 		else
- 			self.task = NULL;
-+		trace_sched_process_coredump(tsk);
- 		/*
- 		 * Implies mb(), the result of xchg() must be visible
- 		 * to core_state->dumper.
--- 
-2.25.1
-
+>
+> [2/4] riscv: dts: thead: Add TH1520 mmc controllers and sdhci clock
+>       https://git.kernel.org/conor/c/a77f02e84896
+> [3/4] riscv: dts: thead: Enable BeagleV Ahead eMMC and microSD
+>       https://git.kernel.org/conor/c/18d92a03b319
+> [4/4] riscv: dts: thead: Enable LicheePi 4A eMMC and microSD
+>       https://git.kernel.org/conor/c/b6b5028473ce
+>
+> Thanks,
+> Conor.
