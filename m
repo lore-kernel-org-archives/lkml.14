@@ -1,163 +1,154 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45E9171B6;
-	Fri, 16 Feb 2024 08:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32CF71AAA5;
+	Fri, 16 Feb 2024 08:35:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708072517; cv=none; b=fR/nqCQXpEhJlTMNXU3evN/+MGXT2/Z8LQtWRGfTtVAVErMCeNLXf6NKdZObgIpfHu9PxxXGQImBiKDpSRQAJ4O3BSv71qTPJnehyrNtV/ajGt79mFPX6yKSm1Lnb79o0jXGjInV2KAWX6Mj7/AMWQVieDMlTksN0Dy3ChqitV8=
+	t=1708072536; cv=none; b=NUQKkrsElwBVOIGnXMVMFNseuTzM/gQVda54HFN5joNxXrms122mFERsGapCtyM6bkTXkh/Pzg3ugESuMRE7pOjGlIZOb0CmaIYOOmFm1DnfKzQpsINDen8O/2EQDABGt2LTAkusUbPyIMnXN0XNMBZ0/49HLa5B7cwpxvrN4i8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708072517; c=relaxed/simple;
-	bh=ITmCMI4xWgouC17/92dBGHeJbGzaQW2iSuy8CYT4Aao=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c6BrImbWCUnbBzodD8FusnpFziR45ifpcHzMGiWH+1G15K7SPQulPWLEk0yh7A4SvdgqfrAokM+kjYTD0H1Z8I+wSDEwv3PesuKwvbon3n5m1LvvtAQigXJAa4r/+fobFi8LOX9lF7fwVA7I5ZTy9gyssLWOljB+xtBbI4FeT9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j57sHRJE; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1708072536; c=relaxed/simple;
+	bh=9oCIM5U9c/Uf/jN3kabebTYcMoMEyicBQQuvHlQ2VqM=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QqBN4d2e2ngdO66TGhk8XMwgUBsfC6CoKyTe5rZ+yNpLsA3Vmb5Hjxn5lzeXUsX489O1cUaG4fEICcGfXHb4QTOzzhHT4XOTv/78VogJdPVF3I8uPuGwjuXWuooMIUJ+lSvtnJKoDe80yYIF3CpZ3Absnlh7cCT1DgEWFhPx8Go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=IkVERSf1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cELwtcWR; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=IkVERSf1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cELwtcWR; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j57sHRJE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708072515; x=1739608515;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ITmCMI4xWgouC17/92dBGHeJbGzaQW2iSuy8CYT4Aao=;
-  b=j57sHRJEu1lOWZmbHe1oaQdZ703Js6woBBDZpqIwQXbFzjSPmeySlALZ
-   yqypOXh6EAPOTMQLLB8ySYpVsba4JPiHOlbcoHN00CNGmHBSqQV0GgLH6
-   qQamVL9lbhEpgx8WvjDCaawKtGapEwuUq8W58oWiZWtqBDP7pIehfugCg
-   eYqlRwh3QUi7M0FpMuCv5R2+LHEZAgsPBsAEq4UpB+8l9Xb1AlRCtxLhl
-   xjwzy3+zvsFkT25JivG7xOwAUtodgFrlFLlzuMQ2tkXxE1EbG5ghIKBEs
-   1ZcQbR/THkisx99k3NxB63dFz3tc5/oOk7JpC/RtWSIxSgeIv59m7O8fS
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10985"; a="6024139"
-X-IronPort-AV: E=Sophos;i="6.06,164,1705392000"; 
-   d="scan'208";a="6024139"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 00:35:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,164,1705392000"; 
-   d="scan'208";a="8427146"
-Received: from zprzybys-mobl.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.213.22.138])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 00:35:13 -0800
-From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-To: reinette.chatre@intel.com,
-	shuah@kernel.org,
-	fenghua.yu@intel.com
-Cc: linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Subject: [PATCH v6 1/5] selftests/resctrl: Add test groups and name L3 CAT test L3_CAT
-Date: Fri, 16 Feb 2024 09:34:56 +0100
-Message-ID: <62192ad50be67f750b78a0e28a62b7704fbc63f5.1708072203.git.maciej.wieczor-retman@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1708072203.git.maciej.wieczor-retman@intel.com>
-References: <cover.1708072203.git.maciej.wieczor-retman@intel.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="IkVERSf1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cELwtcWR";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="IkVERSf1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cELwtcWR"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6C2612210E;
+	Fri, 16 Feb 2024 08:35:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708072533; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BxY1rjQUL7/INb2efaS+2g4HNuLqJyFSIxGdTguqZSo=;
+	b=IkVERSf1uTRyLMSHLDiuxvLfwvEPROKChTS+lcP8z4M5QhhuIwIbZ/xES0fvgjtS1NhxZP
+	FTyu7OL4egXPWFdKler2wN9WXyqBo274gODBNAJJwrr5ePyM6t1HJje+wZYTP2Fv1KNXgX
+	0JGJprsacKglALT/Tng9HvlYdpqvZwM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708072533;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BxY1rjQUL7/INb2efaS+2g4HNuLqJyFSIxGdTguqZSo=;
+	b=cELwtcWRAo3eI8Kgc6Y46SvDHMn95dLeTh4Y5IiOZrVY28ng9ZS5GkgaYJYTu0Tlzfc2TD
+	q3mckq0C3NiYJ2DA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708072533; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BxY1rjQUL7/INb2efaS+2g4HNuLqJyFSIxGdTguqZSo=;
+	b=IkVERSf1uTRyLMSHLDiuxvLfwvEPROKChTS+lcP8z4M5QhhuIwIbZ/xES0fvgjtS1NhxZP
+	FTyu7OL4egXPWFdKler2wN9WXyqBo274gODBNAJJwrr5ePyM6t1HJje+wZYTP2Fv1KNXgX
+	0JGJprsacKglALT/Tng9HvlYdpqvZwM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708072533;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BxY1rjQUL7/INb2efaS+2g4HNuLqJyFSIxGdTguqZSo=;
+	b=cELwtcWRAo3eI8Kgc6Y46SvDHMn95dLeTh4Y5IiOZrVY28ng9ZS5GkgaYJYTu0Tlzfc2TD
+	q3mckq0C3NiYJ2DA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1D16D1398D;
+	Fri, 16 Feb 2024 08:35:33 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id dA1KBVUez2UTYAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Fri, 16 Feb 2024 08:35:33 +0000
+Date: Fri, 16 Feb 2024 09:35:32 +0100
+Message-ID: <87plwwiz6z.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Hillf Danton <hdanton@sina.com>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Sven van Ashbrook <svenva@chromium.org>,
+	Karthikeyan Ramasubramanian <kramasub@chromium.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Brian Geffon <bgeffon@google.com>,
+	linux-sound@vger.kernel.org,
+	Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Subject: Re: [PATCH v1] ALSA: memalloc: Fix indefinite hang in non-iommu case
+In-Reply-To: <20240216043426.1218-1-hdanton@sina.com>
+References: <20240214170720.v1.1.Ic3de2566a7fd3de8501b2f18afa9f94eadb2df0a@changeid>
+	<20240215034528.240-1-hdanton@sina.com>
+	<87h6iaf7di.wl-tiwai@suse.de>
+	<CAG-rBigFG-U-sKY77CvzghGzs+1Xm3YXzBF6N4ti0+h6UdAb8Q@mail.gmail.com>
+	<875xypk6d6.wl-tiwai@suse.de>
+	<20240216043426.1218-1-hdanton@sina.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spamd-Result: default: False [0.41 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[sina.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 MID_CONTAINS_FROM(1.00)[];
+	 FREEMAIL_TO(0.00)[sina.com];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.49)[79.68%]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: 0.41
 
-From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+On Fri, 16 Feb 2024 05:34:24 +0100,
+Hillf Danton wrote:
+> 
+> On Thu, 15 Feb 2024 18:03:01 +0100 Takashi Iwai <tiwai@suse.de> wrote:
+> > 
+> > So it sounds like that we should go back for __GFP_NORETRY in general
+> > for non-zero order allocations, not only the call you changed, as
+> > __GFP_RETRY_MAYFAIL doesn't guarantee the stuck.
+> > 
+> > How about the changes like below?
+> > 
+> > +/* default GFP bits for our allocations */
+> > +static gfp_t default_gfp(size_t size)
+> > +{
+> > +	/* don't allocate intensively for high-order pages */
+> > +	if (size > PAGE_SIZE)
+> > +		return GFP_KERNEL | __GFP_NOWARN | __GFP_NORETRY;
+> > +	else
+> > +		return GFP_KERNEL | __GFP_NOWARN | __GFP_RETRY_MAYFAIL;
+> > +}
+> 
+> Looks like an overdose because both __GFP_NORETRY and __GFP_RETRY_MAYFAIL
+> are checked in __alloc_pages_slowpath().
 
-To select test to run -t parameter can be used. However, -t cat
-currently maps to L3 CAT test which will be confusing after more CAT
-related tests will be added.
+If the check there worked as expected, this shouldn't have been a
+problem, no?
 
-Allow selecting tests as groups and call L3 CAT test "L3_CAT", "CAT"
-group will enable all CAT related tests.
+The fact that we have to drop __GFP_RETRY_MAYFAIL indicates that the
+handling there doesn't suffice -- at least for the audio operation.
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
----
-Changelog v5:
-- Add Reinette's reviewed-by tag.
 
-Changelog v3:
-- Expand group description in struct comment (Reinette).
+thanks,
 
-Changelog v2:
-- Move this patch from Ilpo's series here (Ilpo).
-
- tools/testing/selftests/resctrl/cat_test.c      |  3 ++-
- tools/testing/selftests/resctrl/resctrl.h       |  3 +++
- tools/testing/selftests/resctrl/resctrl_tests.c | 16 +++++++++++-----
- 3 files changed, 16 insertions(+), 6 deletions(-)
-
-diff --git a/tools/testing/selftests/resctrl/cat_test.c b/tools/testing/selftests/resctrl/cat_test.c
-index 24af8310288a..39fc9303b8e8 100644
---- a/tools/testing/selftests/resctrl/cat_test.c
-+++ b/tools/testing/selftests/resctrl/cat_test.c
-@@ -295,7 +295,8 @@ static int cat_run_test(const struct resctrl_test *test, const struct user_param
- }
- 
- struct resctrl_test l3_cat_test = {
--	.name = "CAT",
-+	.name = "L3_CAT",
-+	.group = "CAT",
- 	.resource = "L3",
- 	.feature_check = test_resource_feature_check,
- 	.run_test = cat_run_test,
-diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
-index c52eaf46f24d..a1462029998e 100644
---- a/tools/testing/selftests/resctrl/resctrl.h
-+++ b/tools/testing/selftests/resctrl/resctrl.h
-@@ -65,6 +65,8 @@ struct user_params {
- /*
-  * resctrl_test:	resctrl test definition
-  * @name:		Test name
-+ * @group:		Test group - a common name for tests that share some characteristic
-+ *			(e.g., L3 CAT test belongs to the CAT group). Can be NULL
-  * @resource:		Resource to test (e.g., MB, L3, L2, etc.)
-  * @vendor_specific:	Bitmask for vendor-specific tests (can be 0 for universal tests)
-  * @disabled:		Test is disabled
-@@ -73,6 +75,7 @@ struct user_params {
-  */
- struct resctrl_test {
- 	const char	*name;
-+	const char	*group;
- 	const char	*resource;
- 	unsigned int	vendor_specific;
- 	bool		disabled;
-diff --git a/tools/testing/selftests/resctrl/resctrl_tests.c b/tools/testing/selftests/resctrl/resctrl_tests.c
-index 75fc49ba3efb..3044179ee6e9 100644
---- a/tools/testing/selftests/resctrl/resctrl_tests.c
-+++ b/tools/testing/selftests/resctrl/resctrl_tests.c
-@@ -65,11 +65,15 @@ static void cmd_help(void)
- 	printf("usage: resctrl_tests [-h] [-t test list] [-n no_of_bits] [-b benchmark_cmd [option]...]\n");
- 	printf("\t-b benchmark_cmd [option]...: run specified benchmark for MBM, MBA and CMT\n");
- 	printf("\t   default benchmark is builtin fill_buf\n");
--	printf("\t-t test list: run tests specified in the test list, ");
-+	printf("\t-t test list: run tests/groups specified by the list, ");
- 	printf("e.g. -t mbm,mba,cmt,cat\n");
--	printf("\t\tSupported tests:\n");
--	for (i = 0; i < ARRAY_SIZE(resctrl_tests); i++)
--		printf("\t\t\t%s\n", resctrl_tests[i]->name);
-+	printf("\t\tSupported tests (group):\n");
-+	for (i = 0; i < ARRAY_SIZE(resctrl_tests); i++) {
-+		if (resctrl_tests[i]->group)
-+			printf("\t\t\t%s (%s)\n", resctrl_tests[i]->name, resctrl_tests[i]->group);
-+		else
-+			printf("\t\t\t%s\n", resctrl_tests[i]->name);
-+	}
- 	printf("\t-n no_of_bits: run cache tests using specified no of bits in cache bit mask\n");
- 	printf("\t-p cpu_no: specify CPU number to run the test. 1 is default\n");
- 	printf("\t-h: help\n");
-@@ -199,7 +203,9 @@ int main(int argc, char **argv)
- 				bool found = false;
- 
- 				for (i = 0; i < ARRAY_SIZE(resctrl_tests); i++) {
--					if (!strcasecmp(token, resctrl_tests[i]->name)) {
-+					if (!strcasecmp(token, resctrl_tests[i]->name) ||
-+					    (resctrl_tests[i]->group &&
-+					     !strcasecmp(token, resctrl_tests[i]->group))) {
- 						if (resctrl_tests[i]->disabled)
- 							tests++;
- 						resctrl_tests[i]->disabled = false;
--- 
-2.43.0
-
+Takashi
