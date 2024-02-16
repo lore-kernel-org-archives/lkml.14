@@ -1,74 +1,155 @@
-Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145AB14A81;
-	Fri, 16 Feb 2024 05:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBA128EC;
+	Fri, 16 Feb 2024 05:36:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708061544; cv=none; b=c4tbHeaPnaoZC0TwyeLOcPU6hyS0L4u3GLyFU1rDjMEjP9LEAz/2WkiJalZ9x/gcMdT6q+1hTPZEpbijwVt45kCP3wm2V5FP3yMr3HchnrDPAUe+G9VKCVF6dwfuwCVKdprwqxePeHsU6wxC9u7ZGtZaG96pfRPa1fEp2lkvJDw=
+	t=1708061806; cv=none; b=N3HRdqQdAtEFYvJUtYGizcneShQq7fqO0fdwzTuuit8nuwvgB5YQM/M7EJkWAPN0BXTT4rsOB0qfzEugGOk4teizvequm4gDmsDChA2Xmdb5wKAUZ00AC1QT1dVoZ+EYan3hzTS4elkXktS+wgeVrvivb2UYG3G7WcrhwOG2/aA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708061544; c=relaxed/simple;
-	bh=pvjLrBptRgZtu6rGXWEV4j3B7BGqqXBHy2HA9pkezu0=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=GywKWkFScxK7gzMnsG1Fikk6DRV1fXvBM86AfJYSAQDUFNPqmQvVwadzJVRJpW09e7uj8uwzTRqTyMsU4osparZfgbE4xnP8ceQqrTGqo+T5G2CNKDQiq4JiB2iwQg9juRQeC5v5D0x8YTDHL1kNbnk/FbrEfN6WKwX9DyE0XkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=IGekkKEq; arc=none smtp.client-ip=162.62.57.252
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1708061806; c=relaxed/simple;
+	bh=mRflPSxs4pLh6jh9HLk3XOJ5488O52HahU07Ty24MOs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=RszB09BS4xDTFpEJwvr6bJMQ1kGga7FaPh+h/WG+BXJlMPuwJi4s+EtSmzv+uNM+K5Bv9fsXz4uxnLjuL9NoJtNaSsx43KzcLFG5T3lJO7zTtjwOoreVWXWzZlWVNS8erwv+4SFymCX4HzBTQxWFk7MwNkWypgH5l1FQpycP+mI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=SsTNCG6z; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="IGekkKEq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1708061529;
-	bh=Rvc2fug7Uaq7xVmmRaQlwuGeSMbuRAplnzQ8RFybO+A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=IGekkKEqZSvkfUrhyAbbsENmo7dhUEBui5K9mzYltJbIscCtJ2y75vag2/xLoHZCC
-	 E2iqatlNGCMqAWBu3GbU1fsGfSqufTBhq8s4GhEe8NVpYNFZiq2fqh8fYuJnovunZI
-	 UlDYYVIqDsH6Xt3mw2nBi1t8F/3ixz1yxXKu0RQU=
-Received: from localhost.localdomain ([139.211.125.72])
-	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
-	id 7260DA6F; Fri, 16 Feb 2024 13:28:38 +0800
-X-QQ-mid: xmsmtpt1708061318tu8npfz2r
-Message-ID: <tencent_B08771190400813E0CC41E36A3F540AACA07@qq.com>
-X-QQ-XMAILINFO: MhK4DKsBP06iqGy2wE/u1l4Yh6I8YTHfADpjwLTLTNdtTagXHK9S1CpiaKQGqV
-	 X2ka1d/1xV3NuSj0A7Axu/50vllF0N5IHM1Pk9JnpQSGxQQ/uBwtFPdMFpqqEfpRAAMFw+29eJuC
-	 iHd0xfFb/2QJRpDKM612Rau0c2tB3Zq0LYs8m5fJMwSOF6IWnIrdw8AX5Hwni9E3Gd8UJ+pQrdQW
-	 Dou4rV7GIGF28LJTNl1lptFlE+J1r+XJWKAZPrBAwjUW3vX67Jy/ciZO1GE6ncm7GzQk4iaRmjCV
-	 cAaWaYu0hf0tYVCadC+UfGxQ31dqz4YhYPPMJzbwq1E91ikMGh5CZybWrRURg5YIiMrV9rEhYUmM
-	 eajCSWX9PTqsSXZZRBrHPefFN/HTC2RtusYSrga7EYMZk7Kp+ArbY+5/IZm1H73IvFmCir4Y6m/S
-	 wz94oo6vXMoEzXgemay/04Gfrw0wMDL0WLDzPP4xJvAhC8iRBRNPUqa0zhz17s8b2E/lDmfkV6OR
-	 OZ21xG/m/KsOCBJMHlBfLdIBK933YlJzvR6bte5c4qg6yunNnxJnIeUgdfHivmpSduU5Fd5fYoSG
-	 2eo5QE4RACBClImnGxDlSanZTKMigPpJlT6UmfKCfwYk9/n+0L81ONfsHMKeRtUhMGnkAbmQ03AN
-	 ZAkUqLf93aj7uALxuH3HFaJ1V+4y81kCosf2cxVHs48Iawlf6NKd/3zdUne/oPYE7H2XnJAutZIi
-	 FUKghMfWwS/dUo/cKcEGUFtPwI2N6NGLC4UeurV7wJg4w/5nrLaYlxp3uZ/p/rVtGmouUHQ4fvZO
-	 ambAsVaAW2flHz+mLUqvzrX1H5ec4kWkUeMoWKrLa6mxgrsWaj4LQT3kgsvgD+H6w76ypgg+bSln
-	 r6Q/r+E9iJ9NpavZGUZdnELssjAHlKbcOxonFnqnXkeJghGf/VackIeIK047+XinQ+MrxmWdKryi
-	 S+LMf9w9hWI0DZ4R07cXTb8SEuK61UJIJoewGHG5nL/TvYWt9gVyt8hM2J1kR/u54ZsXBxNt1Q86
-	 e5dOSO/5JIt3y1oBnPOJ6ImuZymuw=
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-From: "Ran.Park" <ranpark@foxmail.com>
-To: ricardo@marliere.net
-Cc: akinobu.mita@gmail.com,
-	corbet@lwn.net,
-	linux-doc@vger.kernel.org,
-	linux-kernel-mentees@lists.linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	ranpark@foxmail.com,
-	skhan@linuxfoundation.org
-Subject: Re: [PATCH] Fixed case issue with 'fault-injection' in documentation
-Date: Fri, 16 Feb 2024 13:28:38 +0800
-X-OQ-MSGID: <20240216052838.4547-1-ranpark@foxmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <piosq44nxwlfeutperrk6d23bx564qlbfirc5xlbouyrunf24r@u6qsgqp47fz6>
-References: <piosq44nxwlfeutperrk6d23bx564qlbfirc5xlbouyrunf24r@u6qsgqp47fz6>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SsTNCG6z"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41G5aCXF093423;
+	Thu, 15 Feb 2024 23:36:12 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1708061772;
+	bh=w4YhGTK+t27RaSNPXnZt3dIUmjnBjmFi3fc525Pd/Ok=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=SsTNCG6zI1H0UbO7K0MjzmdianYqMiZw566yUj8DUZo+NdirokPOgJt3Xv9BARR7z
+	 Ux+q0Ebp2Lii4BY01MzGfZCmHgpZjdoB0pDFw7SeVD3tCvKojz/pWzBHHSDac74/V+
+	 4SMXGVIwpZBlfjX/vJeqapP5voOfv/dk/oApZh9o=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41G5aCkG063356
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 15 Feb 2024 23:36:12 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 15
+ Feb 2024 23:36:12 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 15 Feb 2024 23:36:12 -0600
+Received: from [172.24.227.94] (uda0132425.dhcp.ti.com [172.24.227.94])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41G5a6C9032963;
+	Thu, 15 Feb 2024 23:36:07 -0600
+Message-ID: <d2b6dcda-cd22-4163-bdf5-2bc4b8e276ea@ti.com>
+Date: Fri, 16 Feb 2024 11:06:05 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] arm64: dts: ti: Add common1 register space for
+ AM62x, AM62A & AM65x SoCs
+Content-Language: en-US
+To: Devarsh Thakkar <devarsht@ti.com>, <jyri.sarha@iki.fi>,
+        <tomi.valkeinen@ideasonboard.com>, <airlied@gmail.com>,
+        <daniel@ffwll.ch>, <maarten.lankhorst@linux.intel.com>,
+        <mripard@kernel.org>, <tzimmermann@suse.de>, <robh@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <nm@ti.com>, <kristo@kernel.org>
+CC: <praneeth@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>
+References: <20240215115516.3157909-1-devarsht@ti.com>
+ <20240215115516.3157909-3-devarsht@ti.com>
+From: Vignesh Raghavendra <vigneshr@ti.com>
+In-Reply-To: <20240215115516.3157909-3-devarsht@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Thank you for your reply. I'm sorry that I noticed this problem 
-while browsing the document. I have not seen any report about this problem 
-on lore.kernel.org or other places. Should I mention the situation elsewhere 
-and then resend the patch to mention and fix the problem.
 
+
+On 15/02/24 17:25, Devarsh Thakkar wrote:
+> This adds common1 register space for AM62x, AM62A and AM65x SoC's which are
+> using TI's Keystone display hardware and supporting it as described in
+> Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+> 
+> Fixes: 3618811657b3 ("arm64: dts: ti: k3-am62a-main: Add node for Display SubSystem (DSS)")
+> Fixes: 8ccc1073c7bb ("arm64: dts: ti: k3-am62-main: Add node for DSS")
+> Fixes: fc539b90eda2 ("arm64: dts: ti: am654: Add DSS node")
+
+This doesn't work. Patch wont apply cleanly to kernels before before
+AM62A was introduced.
+
+Please split this into 3 patches, one per SoC with appropriate Fixes: tag.
+
+> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+> Reviewed-by: Aradhya Bhatia <a-bhatia1@ti.com>
+> ---
+> V2: Add common1 region for AM62A SoC too
+> V3: Add Fixes tag
+> V4: Add Reviewed-by
+> ---
+>  arch/arm64/boot/dts/ti/k3-am62-main.dtsi  | 5 +++--
+>  arch/arm64/boot/dts/ti/k3-am62a-main.dtsi | 5 +++--
+>  arch/arm64/boot/dts/ti/k3-am65-main.dtsi  | 5 +++--
+>  3 files changed, 9 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+> index fe0cc4a9a501..8cee4d94cdd3 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+> @@ -779,9 +779,10 @@ dss: dss@30200000 {
+>  		      <0x00 0x30207000 0x00 0x1000>, /* ovr1 */
+>  		      <0x00 0x30208000 0x00 0x1000>, /* ovr2 */
+>  		      <0x00 0x3020a000 0x00 0x1000>, /* vp1: Used for OLDI */
+> -		      <0x00 0x3020b000 0x00 0x1000>; /* vp2: Used as DPI Out */
+> +		      <0x00 0x3020b000 0x00 0x1000>, /* vp2: Used as DPI Out */
+> +		      <0x00 0x30201000 0x00 0x1000>; /* common1 */
+>  		reg-names = "common", "vidl1", "vid",
+> -			    "ovr1", "ovr2", "vp1", "vp2";
+> +			    "ovr1", "ovr2", "vp1", "vp2", "common1";
+>  		power-domains = <&k3_pds 186 TI_SCI_PD_EXCLUSIVE>;
+>  		clocks = <&k3_clks 186 6>,
+>  			 <&dss_vp1_clk>,
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
+> index 972971159a62..f475daea548e 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
+> @@ -994,9 +994,10 @@ dss: dss@30200000 {
+>  		      <0x00 0x30207000 0x00 0x1000>, /* ovr1 */
+>  		      <0x00 0x30208000 0x00 0x1000>, /* ovr2 */
+>  		      <0x00 0x3020a000 0x00 0x1000>, /* vp1: Tied OFF in the SoC */
+> -		      <0x00 0x3020b000 0x00 0x1000>; /* vp2: Used as DPI Out */
+> +		      <0x00 0x3020b000 0x00 0x1000>, /* vp2: Used as DPI Out */
+> +		      <0x00 0x30201000 0x00 0x1000>; /* common1 */
+>  		reg-names = "common", "vidl1", "vid",
+> -			    "ovr1", "ovr2", "vp1", "vp2";
+> +			    "ovr1", "ovr2", "vp1", "vp2", "common1";
+>  		power-domains = <&k3_pds 186 TI_SCI_PD_EXCLUSIVE>;
+>  		clocks = <&k3_clks 186 6>,
+>  			 <&k3_clks 186 0>,
+> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+> index 07010d31350e..ff857117d719 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+> @@ -991,9 +991,10 @@ dss: dss@4a00000 {
+>  		      <0x0 0x04a07000 0x0 0x1000>, /* ovr1 */
+>  		      <0x0 0x04a08000 0x0 0x1000>, /* ovr2 */
+>  		      <0x0 0x04a0a000 0x0 0x1000>, /* vp1 */
+> -		      <0x0 0x04a0b000 0x0 0x1000>; /* vp2 */
+> +		      <0x0 0x04a0b000 0x0 0x1000>, /* vp2 */
+> +		      <0x0 0x04a01000 0x0 0x1000>; /* common1 */
+>  		reg-names = "common", "vidl1", "vid",
+> -			"ovr1", "ovr2", "vp1", "vp2";
+> +			"ovr1", "ovr2", "vp1", "vp2", "common1";
+>  
+>  		ti,am65x-oldi-io-ctrl = <&dss_oldi_io_ctrl>;
+>  
+
+-- 
+Regards
+Vignesh
