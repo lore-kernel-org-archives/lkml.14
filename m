@@ -1,57 +1,57 @@
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F55148FE3
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 22:32:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9F114A091
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 22:32:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708122774; cv=none; b=GrQNTG0lv3OFt2BH1e1GFdo+iNQ+256JNYOC4rI7DC+V8PYGXgGdB1i3IL+GhCzanJugLc7YZeFkV9WxqjqGcacz9E9PD/zUhjzQzegFjzsYWwTsu7LRAeOpVE8qjUaFXbJ1QNBuHa9UH0iLEFLVBHXvTaBNBGHQkcgYgxoMhYI=
+	t=1708122776; cv=none; b=EdwQZFGVDxSmA70Zi+0085GR+UTKH/DjY4ERHnyFd9940p4e85fnoTn1ZalRcB3akM0Z89XD2TBDjvFXMQRdvLL5tUZxP+2nBqsC8127HyY+nb85g++94/1mNKsqiQc8MqfsHAYmWNEAZBJ62an7PZ+ALWlfEcQdX0vmwwBdVNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708122774; c=relaxed/simple;
-	bh=fUhPeOsXzdNBsgyQxrK5IygDWIDaj8fhKRsiYpXQ/2I=;
+	s=arc-20240116; t=1708122776; c=relaxed/simple;
+	bh=5ZoYtRQ2HjiqGEQZUVOcP2ADlsbfU9MvFiIZ1YzKk+I=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ewLU79Kr8drsHwlm11azVNJ6+M1FbngH/V09MA0d1CNSkBdVVszE9IXxKUrkRMp9fWR/AngaQDMUH9l24V9rUTNIsIMmv04JBRr7MicqQ36tzf58j+PLXz9hfLtnx69n9XIIOHvJ+IRj9BV4QhThX776+N6ewp+jB7xBxU/R03M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qGelz+X2; arc=none smtp.client-ip=209.85.160.46
+	 MIME-Version; b=LhJHBQ4Rg1ngJv9OtwUXZZ5LZ7sgjZN+E+VV4A3iLSkXyoj3D0RvhEi0SK6AxhO2+hSSfRCg8obOjUXPWgtoYSejA8bS1YEtywJamOHu/ATD0NHev5jXsdp34bACL4s8nzJ10UV1fPaEMSHbFYt3b+GCdy034nDw/qj2BNd1dxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DBMVlEig; arc=none smtp.client-ip=209.85.161.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qGelz+X2"
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2185a9966bcso1005790fac.0
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 14:32:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DBMVlEig"
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-59d11e0b9e1so1260704eaf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 14:32:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708122771; x=1708727571; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1708122772; x=1708727572; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nlC/G6qyLD1CwPpss1xClTu9E95TKvCvWeyrCtKG5kY=;
-        b=qGelz+X2/WUYFpaVUPxY+y87ukCI3bLkN9E4o1PmfA7C/0+rh2oVbnFdS4VRXDsJvy
-         BeLhlGBKI6smGXcQyPZrXZ7jr8m4x/wAqHnmQIPz+CSLkNZWRlEO4psI3ELXqlx7p2Sd
-         wLCLlK5gzg7WfEPTYDT8AgjMFs+B29/v586OKe4JbMrIx3VC5qussasvaidDPReJfYVx
-         j4I3gysef9kCc7dUUBJrknj6OLtYpeX6cNTF+9ffIe+d17/hcZACz2g2bMNrEj7I/WkK
-         QXbfLnGr6OYXb0EexN99y3SyxQUPiOEIrAdHYiqFSzge6flefkVps8dQg98EggIGHhWD
-         5DEA==
+        bh=TdZ9WPH7Nl2aH1xgLChF6BzPk0ENAzSqqSLTSdJZTwM=;
+        b=DBMVlEigKGHihYH4vHTOqa2xGoY5LAu+v3b+3DT+OmFF4Tm7FOSURfukWf8t2pVFAq
+         Te2su/ak4htE/Xt8W630Ymmg1WsXrpiXWx8YFkGsgWOCI3W+v7ka8RIWIG8l0zYZc/D3
+         6dasOe1n02caAX7Pkli3J3tVwmqq6sV29rBX64ItwYuvsu5rsa3naYF8lwOpQnk8TDTB
+         CbOK20I2G9tHRnrt0a+5C36CYSm6J9aVB5NuGYbEFKartO9jv7zKMrw0paHUXxqFH8GS
+         Y0D2AKiMbmBJvu/IwrbzMs3La5nYDH0A67czw+d1rYZui+JVTzudWQLBKmQ1UxQz/zoC
+         S/yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708122771; x=1708727571;
+        d=1e100.net; s=20230601; t=1708122772; x=1708727572;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nlC/G6qyLD1CwPpss1xClTu9E95TKvCvWeyrCtKG5kY=;
-        b=PKEV/ySQyliDYZlcaW3eYXYoEUED8guIkOM3LH+PKfiWGYhsqa/n/8P22iRw40sY76
-         4tltpdR6tN146tFz3uGWa4zCzhDBtQCkxyOVd9+UA3r6ETtofN70NLC3Yx2BRle/VZhL
-         6zCBuU9hdIMViON8IiLF19/XyrytwxUeylY8lwlKknhO5SwEUKQ4UafiwpV/KkZvBN8K
-         49LjrxqhAnKCc2b1shekHPuzKB5PEMPYTorja2X4bX8GOL/j3AfvtzEN0JfjgNhOTzeF
-         NMYnK6M+OhkNM26S2Bt8GfgjUx/4IQay1YlWg23pBTzN5dzeqhjKJcNO7CFbDqyOnq/y
-         orzw==
-X-Forwarded-Encrypted: i=1; AJvYcCUaRZv/MN1fV7F4tTVrNtPZ9eV78ZsLfQ9TAdftysTzDhMI7Sjk4mknSEY9gFYmoQTU+NffTPmPuaJ8+AaHRwwuc9OXdzw1FDqSfYK/
-X-Gm-Message-State: AOJu0YzaJ3l2zgAPVv32C8/E/b6MgO/pIGwwkx6ndlRQJw6YhGTVEgRf
-	wd360/jvHVASb+eCm6Lh1PHVMUqTqYixMgQhyerpG9CnKnLqh4T5yJePNDzwR3I=
-X-Google-Smtp-Source: AGHT+IGgBApNRJdHSI5RltpwrFjfe0Qj3vZrtXr7b8eXFtTr0yxqKQTrNrnJdUOvMQ6fSTrYCOGONA==
-X-Received: by 2002:a05:6871:5828:b0:21a:5fa3:48a7 with SMTP id oj40-20020a056871582800b0021a5fa348a7mr4293326oac.26.1708122770919;
-        Fri, 16 Feb 2024 14:32:50 -0800 (PST)
+        bh=TdZ9WPH7Nl2aH1xgLChF6BzPk0ENAzSqqSLTSdJZTwM=;
+        b=k2ET8tTRQyLZmDv94UHNudn7JkW2ciVfaVWoD3uDUn0GkKAePHGbcmhPIzl1Wul/pO
+         I/iqYrhbfr3A3yuPs7TRJ3ZAQdf97bU5YFZ3gKEVx5vfZsYuTB1Ud/L0JeBwVK6t+lF8
+         19h3Epoy4uVAiK8KhWZ2H24mJotCKkVPSy0Ln+Pzz1cDKZdsAEaXHb3yhKGO3MaT84sF
+         ZI/WvsDjjXsYJurBOLLshOqVFQd53EJfRigmt9frnMpeImTX0hX4IL7Z1hIS9Vc2x0lN
+         SYlIed98mmS7hS1Kb6g8rW6LUsw8+WE3ktrKZrTuHgL2pdZz+8FjHFIrl6r96xwyJXzx
+         qXfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUtLgjuu6xhScfIS0snCNtD65F72SZM8TtIi7P+ro2YzOOWE7917n4z6Fihvqa5RIbVwAOyvSbEjyxUXtusJ2P5Cgb/wvK98o/GbnmX
+X-Gm-Message-State: AOJu0Yx1V+fkcKewcesWn+5gOSpDgb5RGmQH7hRAsjtlX9YCZVO3GQSq
+	EKSo6uIG+JEXTc8YImaBXkAfmRYOpn8N7iR9hvJaGgLDkpvjcTWJVPaP92GJdtY=
+X-Google-Smtp-Source: AGHT+IEMIIixM6tZ8mov4ea8ABTWuLoN2rQ27ib9tS5wc4QS07D1l+RHgpL5ftrUdHkxPlwhEXPf7w==
+X-Received: by 2002:a05:6820:2b11:b0:59f:aa2e:ef8b with SMTP id dt17-20020a0568202b1100b0059faa2eef8bmr1528834oob.0.1708122772629;
+        Fri, 16 Feb 2024 14:32:52 -0800 (PST)
 Received: from localhost ([136.62.192.75])
-        by smtp.gmail.com with ESMTPSA id n24-20020a9d7418000000b006e2e1400bd2sm142227otk.0.2024.02.16.14.32.50
+        by smtp.gmail.com with ESMTPSA id x11-20020a4a9b8b000000b0059d24cfb5e3sm137045ooj.4.2024.02.16.14.32.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 14:32:50 -0800 (PST)
+        Fri, 16 Feb 2024 14:32:52 -0800 (PST)
 From: Sam Protsenko <semen.protsenko@linaro.org>
 To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	Sylwester Nawrocki <s.nawrocki@samsung.com>,
@@ -67,9 +67,9 @@ Cc: Alim Akhtar <alim.akhtar@samsung.com>,
 	devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 06/16] clk: samsung: Group CPU clock functions by chip
-Date: Fri, 16 Feb 2024 16:32:35 -0600
-Message-Id: <20240216223245.12273-7-semen.protsenko@linaro.org>
+Subject: [PATCH 08/16] clk: samsung: Use clk.h as a single header for Samsung CCF
+Date: Fri, 16 Feb 2024 16:32:37 -0600
+Message-Id: <20240216223245.12273-9-semen.protsenko@linaro.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240216223245.12273-1-semen.protsenko@linaro.org>
 References: <20240216223245.12273-1-semen.protsenko@linaro.org>
@@ -81,173 +81,168 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-clk-cpu.c is going to get messy as new chips support is added.
-Restructure the code by pulling related functions and definitions
-together, grouping those by their relation to a particular chip or other
-categories, to simplify the code navigation.
+Make both CPU and PLL clock headers to be included indirectly via clk.h.
+All Samsung clock drivers already include clk.h, which provides API for
+Samsung CCF clocks like muxes, gates, etc. Both CPU and PLL Samsung
+clock are not that different. It makes sense to only use both clk-cpu.h
+and clk-pll.h internally for Samsung CCF framework, and make clk.h the
+facade for Samsung CCF. This way all clock drivers only have to include
+clk.h.
 
 No functional change.
 
 Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
 ---
- drivers/clk/samsung/clk-cpu.c | 114 ++++++++++++++++++----------------
- 1 file changed, 61 insertions(+), 53 deletions(-)
+ drivers/clk/samsung/clk-cpu.c        | 1 -
+ drivers/clk/samsung/clk-exynos3250.c | 2 --
+ drivers/clk/samsung/clk-exynos4.c    | 1 -
+ drivers/clk/samsung/clk-exynos5250.c | 1 -
+ drivers/clk/samsung/clk-exynos5260.c | 1 -
+ drivers/clk/samsung/clk-exynos5420.c | 1 -
+ drivers/clk/samsung/clk-exynos5433.c | 2 --
+ drivers/clk/samsung/clk-pll.c        | 2 +-
+ drivers/clk/samsung/clk-s3c64xx.c    | 1 -
+ drivers/clk/samsung/clk-s5pv210.c    | 1 -
+ drivers/clk/samsung/clk.h            | 1 +
+ 11 files changed, 2 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/clk/samsung/clk-cpu.c b/drivers/clk/samsung/clk-cpu.c
-index 427018e8dd8c..d550a4bb632f 100644
+index a59949990919..4c46416281a3 100644
 --- a/drivers/clk/samsung/clk-cpu.c
 +++ b/drivers/clk/samsung/clk-cpu.c
-@@ -38,34 +38,6 @@
- #include "clk.h"
- #include "clk-cpu.h"
+@@ -36,7 +36,6 @@
+ #include <linux/clk-provider.h>
  
--#define E4210_SRC_CPU		0x0
--#define E4210_STAT_CPU		0x200
--#define E4210_DIV_CPU0		0x300
--#define E4210_DIV_CPU1		0x304
--#define E4210_DIV_STAT_CPU0	0x400
--#define E4210_DIV_STAT_CPU1	0x404
--
--#define E5433_MUX_SEL2		0x008
--#define E5433_MUX_STAT2		0x208
--#define E5433_DIV_CPU0		0x400
--#define E5433_DIV_CPU1		0x404
--#define E5433_DIV_STAT_CPU0	0x500
--#define E5433_DIV_STAT_CPU1	0x504
--
--#define E4210_DIV0_RATIO0_MASK	GENMASK(2, 0)
--#define E4210_DIV1_HPM_MASK	GENMASK(6, 4)
--#define E4210_DIV1_COPY_MASK	GENMASK(2, 0)
--#define E4210_MUX_HPM_MASK	BIT(20)
--#define E4210_DIV0_ATB_SHIFT	16
--#define E4210_DIV0_ATB_MASK	(DIV_MASK << E4210_DIV0_ATB_SHIFT)
--
--/* Divider stabilization time, msec */
--#define MAX_STAB_TIME		10
--#define MAX_DIV			8
--#define DIV_MASK		GENMASK(2, 0)
--#define DIV_MASK_ALL		GENMASK(31, 0)
--#define MUX_MASK		GENMASK(2, 0)
--
+ #include "clk.h"
+-#include "clk-cpu.h"
+ 
  struct exynos_cpuclk;
  
- typedef int (*exynos_rate_change_fn_t)(struct clk_notifier_data *ndata,
-@@ -103,6 +75,15 @@ struct exynos_cpuclk {
- 	exynos_rate_change_fn_t			post_rate_cb;
- };
+diff --git a/drivers/clk/samsung/clk-exynos3250.c b/drivers/clk/samsung/clk-exynos3250.c
+index bf149fae04c3..d1b72a75bc5a 100644
+--- a/drivers/clk/samsung/clk-exynos3250.c
++++ b/drivers/clk/samsung/clk-exynos3250.c
+@@ -14,8 +14,6 @@
+ #include <dt-bindings/clock/exynos3250.h>
  
-+/* ---- Common code --------------------------------------------------------- */
-+
-+/* Divider stabilization time, msec */
-+#define MAX_STAB_TIME		10
-+#define MAX_DIV			8
-+#define DIV_MASK		GENMASK(2, 0)
-+#define DIV_MASK_ALL		GENMASK(31, 0)
-+#define MUX_MASK		GENMASK(2, 0)
-+
- /*
-  * Helper function to wait until divider(s) have stabilized after the divider
-  * value has changed.
-@@ -142,33 +123,21 @@ static void wait_until_mux_stable(void __iomem *mux_reg, u32 mux_pos,
- 	pr_err("%s: re-parenting mux timed-out\n", __func__);
- }
+ #include "clk.h"
+-#include "clk-cpu.h"
+-#include "clk-pll.h"
  
--/* common round rate callback usable for all types of CPU clocks */
--static long exynos_cpuclk_round_rate(struct clk_hw *hw, unsigned long drate,
--				     unsigned long *prate)
--{
--	struct clk_hw *parent = clk_hw_get_parent(hw);
--	*prate = clk_hw_round_rate(parent, drate);
--	return *prate;
--}
-+/* ---- Exynos 3/4/5 -------------------------------------------------------- */
+ #define SRC_LEFTBUS		0x4200
+ #define DIV_LEFTBUS		0x4500
+diff --git a/drivers/clk/samsung/clk-exynos4.c b/drivers/clk/samsung/clk-exynos4.c
+index d5b1e9f49d8b..3d57020a620f 100644
+--- a/drivers/clk/samsung/clk-exynos4.c
++++ b/drivers/clk/samsung/clk-exynos4.c
+@@ -16,7 +16,6 @@
+ #include <linux/of_address.h>
  
--/* common recalc rate callback usable for all types of CPU clocks */
--static unsigned long exynos_cpuclk_recalc_rate(struct clk_hw *hw,
--					       unsigned long parent_rate)
--{
--	/*
--	 * The CPU clock output (armclk) rate is the same as its parent
--	 * rate. Although there exist certain dividers inside the CPU
--	 * clock block that could be used to divide the parent clock,
--	 * the driver does not make use of them currently, except during
--	 * frequency transitions.
--	 */
--	return parent_rate;
--}
-+#define E4210_SRC_CPU		0x0
-+#define E4210_STAT_CPU		0x200
-+#define E4210_DIV_CPU0		0x300
-+#define E4210_DIV_CPU1		0x304
-+#define E4210_DIV_STAT_CPU0	0x400
-+#define E4210_DIV_STAT_CPU1	0x404
+ #include "clk.h"
+-#include "clk-cpu.h"
  
--static const struct clk_ops exynos_cpuclk_clk_ops = {
--	.recalc_rate = exynos_cpuclk_recalc_rate,
--	.round_rate = exynos_cpuclk_round_rate,
--};
-+#define E4210_DIV0_RATIO0_MASK	GENMASK(2, 0)
-+#define E4210_DIV1_HPM_MASK	GENMASK(6, 4)
-+#define E4210_DIV1_COPY_MASK	GENMASK(2, 0)
-+#define E4210_MUX_HPM_MASK	BIT(20)
-+#define E4210_DIV0_ATB_SHIFT	16
-+#define E4210_DIV0_ATB_MASK	(DIV_MASK << E4210_DIV0_ATB_SHIFT)
+ /* Exynos4 clock controller register offsets */
+ #define SRC_LEFTBUS		0x4200
+diff --git a/drivers/clk/samsung/clk-exynos5250.c b/drivers/clk/samsung/clk-exynos5250.c
+index 58df80de52ef..4953da754994 100644
+--- a/drivers/clk/samsung/clk-exynos5250.c
++++ b/drivers/clk/samsung/clk-exynos5250.c
+@@ -14,7 +14,6 @@
+ #include <linux/of_address.h>
  
- /*
-  * Helper function to set the 'safe' dividers for the CPU clock. The parameters
-@@ -300,6 +269,15 @@ static int exynos_cpuclk_post_rate_change(struct clk_notifier_data *ndata,
- 	return 0;
- }
+ #include "clk.h"
+-#include "clk-cpu.h"
+ #include "clk-exynos5-subcmu.h"
  
-+/* ---- Exynos5433 ---------------------------------------------------------- */
-+
-+#define E5433_MUX_SEL2		0x008
-+#define E5433_MUX_STAT2		0x208
-+#define E5433_DIV_CPU0		0x400
-+#define E5433_DIV_CPU1		0x404
-+#define E5433_DIV_STAT_CPU0	0x500
-+#define E5433_DIV_STAT_CPU1	0x504
-+
- /*
-  * Helper function to set the 'safe' dividers for the CPU clock. The parameters
-  * div and mask contain the divider value and the register bit mask of the
-@@ -398,6 +376,36 @@ static int exynos5433_cpuclk_post_rate_change(struct clk_notifier_data *ndata,
- 	return 0;
- }
+ #define APLL_LOCK		0x0
+diff --git a/drivers/clk/samsung/clk-exynos5260.c b/drivers/clk/samsung/clk-exynos5260.c
+index 16da6ef5ca0c..280330ded100 100644
+--- a/drivers/clk/samsung/clk-exynos5260.c
++++ b/drivers/clk/samsung/clk-exynos5260.c
+@@ -11,7 +11,6 @@
  
-+/* -------------------------------------------------------------------------- */
+ #include "clk-exynos5260.h"
+ #include "clk.h"
+-#include "clk-pll.h"
+ 
+ #include <dt-bindings/clock/exynos5260-clk.h>
+ 
+diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+index bd7b304d2c00..531ef1c3fa30 100644
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -15,7 +15,6 @@
+ #include <linux/clk.h>
+ 
+ #include "clk.h"
+-#include "clk-cpu.h"
+ #include "clk-exynos5-subcmu.h"
+ 
+ #define APLL_LOCK		0x0
+diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
+index d3779eefb438..379744f0a5b6 100644
+--- a/drivers/clk/samsung/clk-exynos5433.c
++++ b/drivers/clk/samsung/clk-exynos5433.c
+@@ -17,9 +17,7 @@
+ #include <dt-bindings/clock/exynos5433.h>
+ 
+ #include "clk.h"
+-#include "clk-cpu.h"
+ #include "clk-exynos-arm64.h"
+-#include "clk-pll.h"
+ 
+ /* NOTE: Must be equal to the last clock ID increased by one */
+ #define CLKS_NR_TOP			(CLK_SCLK_HDMI_SPDIF_DISP + 1)
+diff --git a/drivers/clk/samsung/clk-pll.c b/drivers/clk/samsung/clk-pll.c
+index 4bbdf5e91650..37aa7beb547a 100644
+--- a/drivers/clk/samsung/clk-pll.c
++++ b/drivers/clk/samsung/clk-pll.c
+@@ -14,8 +14,8 @@
+ #include <linux/timekeeping.h>
+ #include <linux/clk-provider.h>
+ #include <linux/io.h>
 +
-+/* Common round rate callback usable for all types of CPU clocks */
-+static long exynos_cpuclk_round_rate(struct clk_hw *hw, unsigned long drate,
-+				     unsigned long *prate)
-+{
-+	struct clk_hw *parent = clk_hw_get_parent(hw);
-+	*prate = clk_hw_round_rate(parent, drate);
-+	return *prate;
-+}
-+
-+/* Common recalc rate callback usable for all types of CPU clocks */
-+static unsigned long exynos_cpuclk_recalc_rate(struct clk_hw *hw,
-+					       unsigned long parent_rate)
-+{
-+	/*
-+	 * The CPU clock output (armclk) rate is the same as its parent
-+	 * rate. Although there exist certain dividers inside the CPU
-+	 * clock block that could be used to divide the parent clock,
-+	 * the driver does not make use of them currently, except during
-+	 * frequency transitions.
-+	 */
-+	return parent_rate;
-+}
-+
-+static const struct clk_ops exynos_cpuclk_clk_ops = {
-+	.recalc_rate = exynos_cpuclk_recalc_rate,
-+	.round_rate = exynos_cpuclk_round_rate,
-+};
-+
- /*
-  * This notifier function is called for the pre-rate and post-rate change
-  * notifications of the parent clock of cpuclk.
+ #include "clk.h"
+-#include "clk-pll.h"
+ 
+ #define PLL_TIMEOUT_US		20000U
+ #define PLL_TIMEOUT_LOOPS	1000000U
+diff --git a/drivers/clk/samsung/clk-s3c64xx.c b/drivers/clk/samsung/clk-s3c64xx.c
+index d27a1f73f077..8ee3ffdf2b8d 100644
+--- a/drivers/clk/samsung/clk-s3c64xx.c
++++ b/drivers/clk/samsung/clk-s3c64xx.c
+@@ -14,7 +14,6 @@
+ #include <dt-bindings/clock/samsung,s3c64xx-clock.h>
+ 
+ #include "clk.h"
+-#include "clk-pll.h"
+ 
+ /* S3C64xx clock controller register offsets. */
+ #define APLL_LOCK		0x000
+diff --git a/drivers/clk/samsung/clk-s5pv210.c b/drivers/clk/samsung/clk-s5pv210.c
+index cd85342e4ddb..29f2531fd5d3 100644
+--- a/drivers/clk/samsung/clk-s5pv210.c
++++ b/drivers/clk/samsung/clk-s5pv210.c
+@@ -13,7 +13,6 @@
+ #include <linux/of_address.h>
+ 
+ #include "clk.h"
+-#include "clk-pll.h"
+ 
+ #include <dt-bindings/clock/s5pv210.h>
+ 
+diff --git a/drivers/clk/samsung/clk.h b/drivers/clk/samsung/clk.h
+index 516b716407e5..8157479f45eb 100644
+--- a/drivers/clk/samsung/clk.h
++++ b/drivers/clk/samsung/clk.h
+@@ -11,6 +11,7 @@
+ #define __SAMSUNG_CLK_H
+ 
+ #include <linux/clk-provider.h>
++#include "clk-cpu.h"
+ #include "clk-pll.h"
+ 
+ /**
 -- 
 2.39.2
 
