@@ -1,220 +1,125 @@
-Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF8912A16C;
-	Fri, 16 Feb 2024 13:38:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9ED12A15F;
+	Fri, 16 Feb 2024 13:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708090734; cv=none; b=kB2+d6uqN/u99klaxNKxCPDcYrOvbIpsiM3uYkeh78LvxJKY4GW6819DoTBEauOi3bzXY9Ufq+NIn0Q4DY9hna7PDgqbhI7ZaMt/AfYXQXOii5fHI3a+46pft+1F0fyWi+HyqxkT3RMZAnyv8cJ6NK8BkCUIKUshSwtXprvTYT8=
+	t=1708090773; cv=none; b=hZsK/2BBlMOv6bo3ZFIkKyPMjdN0z8pp6N04F9d5uhX2ZcphQ+peEDRg3RKbgccTYXOrEXKcowV7JXmvLzMB6kJIHx0G/76DjoU94s8Iz/y2lKLqbTo1hsUEFxXuIfIivz15uoW/JyPxq4MhFNoX00+wuRPzp63cSaLf7UXOgD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708090734; c=relaxed/simple;
-	bh=5N3X7lp87ZiHhf4Mvpp9zVNBKPXjjavdVv2neQg8O1A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hitUnGstj3zABHmoSqa03UQRK+LB0KUYeB+nKjiUdemmqsnxlL3giaQRfVg+smgGzuXaqKRISrEfYI6KzrlFW6w5qYgI5UgHIMPF7OdovGiNO9Z3bS8JQ8v663Ii/agX7ZZBXq9Aw+R4CzCJLnrroeoneLshTlO/4rlKwd/PEyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=QBNyrtkG; arc=none smtp.client-ip=193.104.135.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
+	s=arc-20240116; t=1708090773; c=relaxed/simple;
+	bh=FDu00HfUQqbq8LOUT3Fr67reUqKl66h6XTNuu8HMX0I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bUjGTc6YBqG8zkbagUqpEwEMV6BLr4AiwPyG+Zwl+qKP3rrVhypodkkJkBgTfBH9JNvq4ksEJOH1AzUILwklS3cLwN6zsNAAIkXGDNc/sGED9H3/uHG1+hXlX4uL1G5WukQN+voS5/qZc9HzeZyjeaz7D76KYSzB2eKog1N6ZjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VL9m6VwJ; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="QBNyrtkG"
-Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 97F1E600D4;
-	Fri, 16 Feb 2024 13:38:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
-	s=202008; t=1708090727;
-	bh=5N3X7lp87ZiHhf4Mvpp9zVNBKPXjjavdVv2neQg8O1A=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QBNyrtkGfchK5k290FeKAGyMxNYN3m4UxvXRnyc/0lBGIEh8nwkHZ3pifFmy3Sv/G
-	 gEYnUHqysQzgUVMv6TJQx32+DvgGsLXu+Go3d27vUj4WWpqIpftll8h6JjQdFVTM22
-	 BbqOA6E47/cwzO+tHqp3NMqI5hlEIDXfVLR5j94AACQ7XZXorXwLF00hPjQmjVZ/l1
-	 PB5XAxI9vLMGTrCSHf83MobQ2Jld1hrMbzWol3FsqTegF1Z/jMYeGwDIiwDTN5fX1d
-	 WNhz1zPl1YXFJCqez/5bLiQJxZj4Vjm/AlXrmRFE5nx6WqlIWRUeoeds/CR5PkhoDw
-	 EkYY/1f0ME4Sg==
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	by x201s (Postfix) with ESMTP id 94BDD2004F9;
-	Fri, 16 Feb 2024 13:38:27 +0000 (UTC)
-Message-ID: <901babe8-71dc-41c7-931a-e450a12d7e1f@fiberby.net>
-Date: Fri, 16 Feb 2024 13:38:27 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VL9m6VwJ"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-5ca29c131ebso1630163a12.0;
+        Fri, 16 Feb 2024 05:39:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708090771; x=1708695571; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BOqL2waxPXgBWJKgEVSZwCFl44Mn/Oy806uHCqDxXrQ=;
+        b=VL9m6VwJjgQk6QXeKSYyG39oCkq21z8UgNOIXliiv2JneAl/HMh52WS02yipGv1ViN
+         R55HkbctbZXBsxFE77B7WeJTO43l9ULnDqaqIvaTOkhffKHvsUW4CubVgsxjaBWz2qLv
+         imtvAnyAo/tNECDIyAKMNe31xiKR04ZnbqQhOPtHFwa3QGWdTflBw3QyPmBytJKzhVCa
+         OK9bI3+InLl4+gLGOgGSY+8HASRQxFZHdPm2ZBHx8tFFrwYHQUtDy39WBe1rmgkr489S
+         EPVqTyVxvrDSJHAUe0E6Mvho0VxP6hznX0RJmgtOiz0zH8gtIhaQ0L/QF4q/x923uwsx
+         fvzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708090771; x=1708695571;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BOqL2waxPXgBWJKgEVSZwCFl44Mn/Oy806uHCqDxXrQ=;
+        b=E6j7DwKhj9mk1Tk1FHLDsB9oMoMmmZPjEIh816xIiNNBAtQ+VHoI427Q/itFVMPvvX
+         ISUMtedeTORtB9UdWrVmdiNeTMEMPo4pDDei/ZfXEX0GxNgQBbP5nvHj2D9o+hUrkSwU
+         k6yjymWG0CEE+J1sVuYcyGpcUvbO6/0I0NW6OQ6kVmC0QMBEH9e50s7L85KisSTVYm0X
+         jUop7HnU1J9KJJy2ivyorxRDiPrGXpikHS5wM06X+8hadUcUMed+KU5N19v3YNi43QFU
+         G9Dxk8nDGb07Lbnw3REYwyJKIrACWfwzQyQG2o7Of8q9aRW0K0MDqeGgCRPXj4lmzla9
+         x66A==
+X-Forwarded-Encrypted: i=1; AJvYcCXTvKSy4FhTg9g3BPIH5VgPm1d8mtMaV8/np8cs9kUvw5t99QjjhHgJwW89wlhE1bE8k5bzVDJOWoYx906MG+dHQ5DlQ9MihDlOHwrYCHZSQ8YlaqfKCVj8ok/K6Oz5N0Z6g3yfHPZ2nIbd9F5lLTDj74Xq6YDJGDjStNax+TkSycC/cA==
+X-Gm-Message-State: AOJu0Yyh1pR49zMDw/xhvkbYfEtJZ3U/rnQGW+YZY3pU1+ODBdcezsOE
+	KUjBxHPtYjPbcvI+uPZRE3nvCd8RHhjhLc7gmDd94MMK1BmJm9V4tTawjBx1I2yaEOlQ7aS2NbT
+	0P74q85HAC0EtLnqTCA4618uWNQ==
+X-Google-Smtp-Source: AGHT+IGfehBtqkqqjqbZ9qLvhnFe77HVWNt2MibfH86q4iGYZZFvpZ/g9U4+dnBA39NBUnC7mvckcuyiNa8mRg3PcN4=
+X-Received: by 2002:a17:90a:c706:b0:296:f874:6844 with SMTP id
+ o6-20020a17090ac70600b00296f8746844mr4509458pjt.15.1708090770798; Fri, 16 Feb
+ 2024 05:39:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 3/3] net: sched: make skip_sw actually skip
- software
-To: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
- Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, llu@fiberby.dk, Vlad Buslov
- <vladbu@nvidia.com>, Marcelo Ricardo Leitner <mleitner@redhat.com>
-References: <20240215160458.1727237-1-ast@fiberby.net>
- <20240215160458.1727237-4-ast@fiberby.net>
- <CAM0EoMmyGwA9Q=RibR+Fc41_dPZyhBRWiBEejSbPsS9NhaUFVQ@mail.gmail.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Asbj=C3=B8rn_Sloth_T=C3=B8nnesen?= <ast@fiberby.net>
-In-Reply-To: <CAM0EoMmyGwA9Q=RibR+Fc41_dPZyhBRWiBEejSbPsS9NhaUFVQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <ZcH9u7Vo2sFERIHJ@finisterre.sirena.org.uk> <20240207224546.44030-1-frut3k7@gmail.com>
+ <20240207224546.44030-2-frut3k7@gmail.com> <cd8c2f79-2307-4ad8-90c7-747d40f14ede@linaro.org>
+ <CAKEyCaAy9U_qQ=pXPYaGetEuuuVuoejxjKPrG92fBFauy1wwuw@mail.gmail.com> <263bb77f-b91d-4139-91a5-0ddeda0ece17@linaro.org>
+In-Reply-To: <263bb77f-b91d-4139-91a5-0ddeda0ece17@linaro.org>
+From: =?UTF-8?Q?Pawe=C5=82_Owoc?= <frut3k7@gmail.com>
+Date: Fri, 16 Feb 2024 14:39:19 +0100
+Message-ID: <CAKEyCaD=2Md8f=K0pfAFmSCQjL0PkBvAzG_g5Me-wpd5iv2rVw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: trivial-devices: Add qca,qca4024
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Robert Marko <robimarko@gmail.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Mark Brown <broonie@kernel.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Peter Yin <peteryin.openbmc@gmail.com>, 
+	Patrick Rudolph <patrick.rudolph@9elements.com>, Michal Simek <michal.simek@amd.com>, 
+	Marek Vasut <marex@denx.de>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>, Fabio Estevam <festevam@denx.de>, 
+	Alexander Stein <alexander.stein@ew.tq-group.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Jamal,
+To be clear, I don't want to add support for the QCA4024, I just want
+to use this SoC with its own firmware connected to another SoC
+(IPQ8072A) via spi.
 
-On 2/15/24 17:49, Jamal Hadi Salim wrote:
-> On Thu, Feb 15, 2024 at 11:06 AM Asbjørn Sloth Tønnesen <ast@fiberby.net> wrote:
->>
->> TC filters come in 3 variants:
->> - no flag (no opinion, process wherever possible)
->> - skip_hw (do not process filter by hardware)
->> - skip_sw (do not process filter by software)
->>
->> However skip_sw is implemented so that the skip_sw
->> flag can first be checked, after it has been matched.
->>
->> IMHO it's common when using skip_sw, to use it on all rules.
->>
->> So if all filters in a block is skip_sw filters, then
->> we can bail early, we can thus avoid having to match
->> the filters, just to check for the skip_sw flag.
->>
->>   +----------------------------+--------+--------+--------+
->>   | Test description           | Pre    | Post   | Rel.   |
->>   |                            | kpps   | kpps   | chg.   |
->>   +----------------------------+--------+--------+--------+
->>   | basic forwarding + notrack | 1264.9 | 1277.7 |  1.01x |
->>   | switch to eswitch mode     | 1067.1 | 1071.0 |  1.00x |
->>   | add ingress qdisc          | 1056.0 | 1059.1 |  1.00x |
->>   +----------------------------+--------+--------+--------+
->>   | 1 non-matching rule        |  927.9 | 1057.1 |  1.14x |
->>   | 10 non-matching rules      |  495.8 | 1055.6 |  2.13x |
->>   | 25 non-matching rules      |  280.6 | 1053.5 |  3.75x |
->>   | 50 non-matching rules      |  162.0 | 1055.7 |  6.52x |
->>   | 100 non-matching rules     |   87.7 | 1019.0 | 11.62x |
->>   +----------------------------+--------+--------+--------+
->>
->> perf top (100 n-m skip_sw rules - pre patch):
->>    25.57%  [kernel]  [k] __skb_flow_dissect
->>    20.77%  [kernel]  [k] rhashtable_jhash2
->>    14.26%  [kernel]  [k] fl_classify
->>    13.28%  [kernel]  [k] fl_mask_lookup
->>     6.38%  [kernel]  [k] memset_orig
->>     3.22%  [kernel]  [k] tcf_classify
->>
->> perf top (100 n-m skip_sw rules - post patch):
->>     4.28%  [kernel]  [k] __dev_queue_xmit
->>     3.80%  [kernel]  [k] check_preemption_disabled
->>     3.68%  [kernel]  [k] nft_do_chain
->>     3.08%  [kernel]  [k] __netif_receive_skb_core.constprop.0
->>     2.59%  [kernel]  [k] mlx5e_xmit
->>     2.48%  [kernel]  [k] mlx5e_skb_from_cqe_mpwrq_nonlinear
->>
-> 
-> The concept makes sense - but i am wondering when you have a mix of
-> skip_sw and skip_hw if it makes more sense to just avoid looking up
-> skip_sw at all in the s/w datapath? Potentially by separating the
-> hashes for skip_sw/hw. I know it's a deeper surgery - but would be
-> more general purpose....unless i am missing something
- >
->> Test setup:
->>   DUT: Intel Xeon D-1518 (2.20GHz) w/ Nvidia/Mellanox ConnectX-6 Dx 2x100G
->>   Data rate measured on switch (Extreme X690), and DUT connected as
->>   a router on a stick, with pktgen and pktsink as VLANs.
->>   Pktgen was in range 12.79 - 12.95 Mpps across all tests.
->>
-> 
-> Hrm. Those are "tiny" numbers (25G @64B is about 3x that). What are
-> the packet sizes?
-> Perhaps the traffic generator is a limitation here?
-> Also feels like you are doing exact matches? A sample flower rule
-> would have helped.
-
-Yeah, I would also have liked those number to be higher. Sorry forgot to mention it is 64B packets.
-
-Sadly, I used two machine to compensate for my lack of pktgen skills.
-I know that there are faster packet generators, but I just used the in-kernel one,
-and haven't invested much time into it, but the normal ethtool params mentioned in
-the doc didn't change much, and since it was still more than enough packets that DUT
-would go to 100% CPU, I didn't pursue it further.
-
-pktgen A: Xeon E5-1620 v2 @ 3.70GHz w/ ConnectX-6 Dx and 100G link.
-pktgen B: Xeon(R) D-2123IT @ 2.20GHz w/ Intel X722 and 10G link.
-
-Both pktgen boxes are running stock Debian bullseye kernel (v6.1)
-
-I found this to work best:
-./pktgen_sample05_flow_per_thread.sh -i enp8s0f0np0 -s 64 -d 10.53.22.3 -m 2a:11:22:33:21:11 -p 1024-65000 -t 8 -n 0
-
-Datarates monitored through SNMP using:
-   snmpdelta -Cp 10 -c public -v 2c -Cs $hostname IF-MIB::ifInUcastPkts.1057 IF-MIB::ifOutUcastPkts.1057
-
-VLAN config, MAC and IP addressing:
-   v21:
-     2a:11:22:33:21:11 - 10.53.21.1/27 - dut v21      (tagged VLAN)
-     2a:11:22:33:21:12 - 10.53.21.2/27 - pktgen-a     (untagged)
-     2a:11:22:33:21:13 - 10.53.21.3/27 - pktgen-b     (untagged)
-
-   v22:
-     2a:11:22:33:22:21 - 10.53.22.2/31 - dut v22      (tagged VLAN)
-     2a:11:22:33:22:22 - 10.53.22.3/31 - packet drop  (untagged)
-
-
-Switch MAC address table config:
-   # static entry
-   create fdb 2a:11:22:33:21:11 vlan "v21" port 57
-
-   # blackhole pktsink
-   create fdb 2a:11:22:33:22:22 vlan "v22" blackhole
-
-flow control are disabled on all links:
-   ethtool -A $dev rx off tx off
-
-I have uploaded the script used for the flower rules in the tests here:
-   https://files.fiberby.net/ast/2024/tc_skip_sw/flower_placement_tests.sh
-
-
-> cheers,
-> jamal
->> Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
->> ---
->>   include/net/pkt_cls.h | 5 +++++
->>   net/core/dev.c        | 3 +++
->>   2 files changed, 8 insertions(+)
->>
->> diff --git a/include/net/pkt_cls.h b/include/net/pkt_cls.h
->> index a4ee43f493bb..a065da4df7ff 100644
->> --- a/include/net/pkt_cls.h
->> +++ b/include/net/pkt_cls.h
->> @@ -74,6 +74,11 @@ static inline bool tcf_block_non_null_shared(struct tcf_block *block)
->>          return block && block->index;
->>   }
->>
->> +static inline bool tcf_block_has_skip_sw_only(struct tcf_block *block)
->> +{
->> +       return block && atomic_read(&block->filtercnt) == atomic_read(&block->skipswcnt);
->> +}
->> +
->>   static inline struct Qdisc *tcf_block_q(struct tcf_block *block)
->>   {
->>          WARN_ON(tcf_block_shared(block));
->> diff --git a/net/core/dev.c b/net/core/dev.c
->> index d8dd293a7a27..7cd014e5066e 100644
->> --- a/net/core/dev.c
->> +++ b/net/core/dev.c
->> @@ -3910,6 +3910,9 @@ static int tc_run(struct tcx_entry *entry, struct sk_buff *skb,
->>          if (!miniq)
->>                  return ret;
->>
->> +       if (tcf_block_has_skip_sw_only(miniq->block))
->> +               return ret;
->> +
->>          tc_skb_cb(skb)->mru = 0;
->>          tc_skb_cb(skb)->post_ct = false;
->>          tcf_set_drop_reason(skb, *drop_reason);
->> --
->> 2.43.0
->>
-
--- 
-Best regards
-Asbjørn Sloth Tønnesen
-Network Engineer
-Fiberby - AS42541
+On Fri, Feb 16, 2024 at 8:19=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 15/02/2024 23:01, frut3k7 wrote:
+> > The device I use has the QCA4024 chip connected via the spi controller:
+> >         blsp1_spi4: spi@78b8000 {
+> >             compatible =3D "qcom,spi-qup-v2.2.1";
+> >             #address-cells =3D <1>;
+> >             #size-cells =3D <0>;
+> >             reg =3D <0x78b8000 0x600>;
+> >             interrupts =3D <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
+> >             clocks =3D <&gcc GCC_BLSP1_QUP4_SPI_APPS_CLK>,
+> >                  <&gcc GCC_BLSP1_AHB_CLK>;
+> >             clock-names =3D "core", "iface";
+> >             dmas =3D <&blsp_dma 18>, <&blsp_dma 19>;
+> >             dma-names =3D "tx", "rx";
+> >             status =3D "disabled";
+> >         };
+> >
+> > and apart from setting the frequency and gpio there is nothing else:
+> >         &blsp1_spi4 {
+> >             status =3D "okay";
+> >
+> >             pinctrl-0 =3D <&spi_3_pins &quartz_pins>;
+> >             pinctrl-names =3D "default";
+> >
+> >             /* Qualcomm QCA4024 IoT */
+> >             iot@3 {
+> >                 compatible =3D "qca,qca4024";
+> >                 reg =3D <0>;
+> >                 spi-max-frequency =3D <24000000>;
+>
+> That's your downstream or fork DTS, not hardware description. You could
+> have several regulators not listed here, because your downstream has
+> always-on, or clocks which are not taken and works due to
+> assigned-clocks in other places... Sorry, that's not an argument. Never
+> use downstream DTS as proof how hardware looks. It is usually dis-proof,
+> that things are certainly missing.
+>
+> Best regards,
+> Krzysztof
+>
