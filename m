@@ -1,166 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01olkn2077.outbound.protection.outlook.com [40.92.52.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C781B966;
-	Fri, 16 Feb 2024 13:38:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708090709; cv=none; b=JYCD6uJWh5pGiKZqx3L/CtNozK09SG4lp4+k5oj1lD2TN5GjB0oZZyNf2kogj8pTNsW20AU25IvTii0sXkLFfYNDWHBSp8FPzu2FFNOiYPQBymtbHNCto0Tf2nNqawjPJty8YEemSKrltT5C5+pKKgnDDAPsH+Ob3zbcyJ1u/80=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708090709; c=relaxed/simple;
-	bh=1u9HwamzWLOm9AMbpv7x1BatZRX6+yB9Jmf2+70ZxCk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TKqqYSdufq87zI+4O9DAkOX13t1ERHlYZjITz1hQ9dBKnUYEJPs57sR8yy8C+UtrQ60+0zJlP7EpMFo6Wmldp2cUJplOKuVX5GBNy7KyvVmCVw2bY97X9S2EkzA01hzkYiMG+IYFQAHC9bgQxg/m9jSF8jPba/9N4kPKaNl6hJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eOIC0/dV; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D8F6129A89;
+	Fri, 16 Feb 2024 13:38:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.52.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708090723; cv=fail; b=RGfFvJ2nEezPDQt8oS/J7hmtT99h/dRN2y3WG8KjnjSary7bAG1wgz/KpeZO6Ngk+NRq3n2DktlWZT08yUJeyBmFces7eYU5VU++zTaVU8X65qj7k5M/Gqs6oainMMKCyRy7uv+pxH167j3hUqsJPg5meaF2/FSB/GDawJ6utr0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708090723; c=relaxed/simple;
+	bh=/phnVtKduuzpYCMql2XacEK0dJvamFR88xiTUZXtGfY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=SrIX3a3i3LL7QdpQr+2jF2zUwPeeQSfuwwjZcN/bnsVfzH2UkwB0M+ERkdb9s7HPxPubVYIGX9hzcIg7+IL46LdDNY/yfjixJM9JMuqz6ZUNi1Ks9JOlxQNoQuyqhaqXJMWn5c9EJ6GX9CnUZygpWTFHAUXONiEARNxfEnhtVaw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=oNIHsTN/; arc=fail smtp.client-ip=40.92.52.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eOIC0/dV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 003F7C433C7;
-	Fri, 16 Feb 2024 13:38:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708090709;
-	bh=1u9HwamzWLOm9AMbpv7x1BatZRX6+yB9Jmf2+70ZxCk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=eOIC0/dVvZxnqVJu25rVJGRMzQVkBX+NLonF1mB6rBXjiS74yPS8A8SFRvJ5trq1Q
-	 fH4TqdwTr1mXPNd2ko6fTLjHBAJkC7etcguYz0DfUr84WbUyR+UmW3TeLMT9zZaUfy
-	 +ueglii2LAnw0tc2/gZ197NdnuOmUTuxmkWTAQeV9X/RgjouHRCX2MwI0ERB5Wou6b
-	 T6xOT7JWsnWf/pU7lhWHbNjoX0Dm+3XZCL/i2jUlzUFLf4hp6U+UqHiE7t20NqlhhN
-	 3R7DCRbtRogSOEEhGBrLstZQa7SWBZg8NR3yyRqbrOXh09t3acaHEz3meKe/TS3mEP
-	 uH7KjqqnU3JiA==
-Date: Fri, 16 Feb 2024 13:38:16 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Mike Looijmans <mike.looijmans@topic.nl>
-Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Lars-Peter Clausen <lars@metafoo.de>,
- Liam Beguin <liambeguin@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Maksim Kiselev <bigunclemax@gmail.com>, Marcus Folkesson
- <marcus.folkesson@gmail.com>, Marius Cristea
- <marius.cristea@microchip.com>, Mark Brown <broonie@kernel.org>, Niklas
- Schnelle <schnelle@linux.ibm.com>, Okan Sahin <okan.sahin@analog.com>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] iio: adc: ti-ads1298: Add driver
-Message-ID: <20240216133816.18c42c99@jic23-huawei>
-In-Reply-To: <20240214063736.88283-2-mike.looijmans@topic.nl>
-References: <20240214063736.88283-1-mike.looijmans@topic.nl>
-	<1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.da2f422c-5c6b-41b4-8916-d1a90f0f0973@emailsignatures365.codetwo.com>
-	<20240214063736.88283-2-mike.looijmans@topic.nl>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="oNIHsTN/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PpW6YI0Hw+DmhW0goT1pxasx1GhoOhB6I1FhLHhw0Fwa02EKS/F3JSYVfYJ35ImWJ2hW2Z3C22S8bmwZ3u7AuOxu+LYkIW4FK1U8CO0O8/i0Ec/jEgjDAWc+C7LEs0tadYj+qsSMXPdGjsqFYnzHE2pJwIux2gVl6o5wEtaU8IOPkobb3FZJbb10a24Im7eCSbTVXDSkICU+CjP66YYL7Z0GjtQVNH3/Q7gdaKCGq+x8cHxNShQDBqH5iIdQdvYvzVduhZtKX2BAnVKvltKtb2FTTTdUuY67u2c70ptym6mJWzCuoTsltiaQSOSCPP1el41owo28XuKb0CnRDoT/7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NXlz5Tv8LPem8hDcxARYDxu3ROdCTTWA73Hxuvqk5Ds=;
+ b=fTgLd3oQ6Jj1klwFwk4Uk1Ld0ZiGtPHo1KJPD68mM6fGssRO5UTbaI1Ma00bvJErWI8R0A+rXfBW9AsKHkX+QbrHR7qwHrKqzJdu6xgY7p6EKZjb5BCeS2UlDoPOrQASk7NbNUpAzyIUjHDJsSp2AlvMYos4Nm3ZwISB85LPJ9TaAQ15Hq9QVToWAZbAMKd2Kw5j0UPAjp9kDZqU327kZNbmf//xvPnGnY1QiLVBaUVrQyvtpy0WJgFDgQDKr6Gs8bZSSoGJjG75l9QfzQKZIOp2w6tet+KoFKH8rFWUFtakZ5wFz5WQJK/Umq2upHBiBxLow7wT6jWpsdxOih9VfQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NXlz5Tv8LPem8hDcxARYDxu3ROdCTTWA73Hxuvqk5Ds=;
+ b=oNIHsTN/Gy4nUw8af+YZ+e1mou2tpjNkkdhlBgUxnaZ1S5gphQnO7igGYYIhuO9vrd2Dv7N1otJz3sf9rFEbgkvrqRmwoGqjnpIRaOKI83fjpkYlGnjfXZjDOd5iQ7KavqThHSXsDFLLM7Vbun3O3YUMSWa/4IocWOE4W5M5LFKGY86goIZOEsIyraP0iRv+EJ2JCFdYUp6W8t+cBoxtnXcf0HxYAg3ot9i2vldskmikqVsHCk65pgQ+Bv+3TD+ODCAlg97nt6ApShB/wJm/pdJPqEAPDQah8jzaISoIjiYaKac8QikhLiAtIpA1YyyrMPirRIvtFZMY7YCypJT31Q==
+Received: from SEZPR06MB6959.apcprd06.prod.outlook.com (2603:1096:101:1ed::14)
+ by TYZPR06MB6075.apcprd06.prod.outlook.com (2603:1096:400:33a::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.31; Fri, 16 Feb
+ 2024 13:38:36 +0000
+Received: from SEZPR06MB6959.apcprd06.prod.outlook.com
+ ([fe80::9a6b:d813:8f4b:cba1]) by SEZPR06MB6959.apcprd06.prod.outlook.com
+ ([fe80::9a6b:d813:8f4b:cba1%4]) with mapi id 15.20.7292.029; Fri, 16 Feb 2024
+ 13:38:36 +0000
+Message-ID:
+ <SEZPR06MB695927E7E18D62EB1E6FB603964C2@SEZPR06MB6959.apcprd06.prod.outlook.com>
+Date: Fri, 16 Feb 2024 21:38:31 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/6] net: hisi-femac: add support for Hi3798MV200,
+ remove unmaintained compatibles
+Content-Language: en-US
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Yisen Zhuang <yisen.zhuang@huawei.com>,
+ Salil Mehta <salil.mehta@huawei.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Yang Xiwen <forbidden405@foxmail.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20240216-net-v2-0-89bd4b7065c2@outlook.com>
+ <254d3c4d-bc74-4a26-9c23-17b4399c3755@lunn.ch>
+From: Yang Xiwen <forbidden405@outlook.com>
+In-Reply-To: <254d3c4d-bc74-4a26-9c23-17b4399c3755@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TMN:
+ [yXQgq+55od0JIBEqBu2jo3QX4Rap48wBQDoRErO+WXWHikzINOtF40+h9vGfGdOwprq4B2cZQvE=]
+X-ClientProxiedBy: PU1PR01CA0004.apcprd01.prod.exchangelabs.com
+ (2603:1096:803:15::16) To SEZPR06MB6959.apcprd06.prod.outlook.com
+ (2603:1096:101:1ed::14)
+X-Microsoft-Original-Message-ID:
+ <774de70b-5521-4d94-89fe-a7816f2d1c1f@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR06MB6959:EE_|TYZPR06MB6075:EE_
+X-MS-Office365-Filtering-Correlation-Id: 71e5d116-fdbf-4f0a-d3c2-08dc2ef49347
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	oaSY59WvLm9HLaV0mljXoQvUfssyppB4y7HC/9HRiVXHJWIifatMhd1sle9eRS+3fC+Cc9PZlQrrVm3aWrxBo3kk1y0mq0hnk+E/go6OR6p4ja7lwb1gAb7YpaZBzqwgSXaOKb7frz5aQZZfPoCfs6GPnbDgpcvKNw+WxSK8UB1FmlATaHBSa92bsglsDNxDMN3eTkw5gyOS0jThwI/0A4uc9D1t5geXQvb1Lus0WqEMwIokRxKAYV9yRSgzFXxKCw0I+Zyc/YxVcJ2zMXWdjUJvof2AsGCmmSp2MW2AVqdqwFWKAG4ka5QtizYV4rNnxQ5aWgOSgQ4pqJGX5q9SuTf/4B7qzVYpsbvKPklDnc6pa8FVsqGWKCEcvNR8vveHhKYldThABYmSKdvPTyitYKYFkIIczVo9eM/rzu9IeqgkFHMvCN6PqBFXOVED2Vt7E6PkOO1P3QRpOKc/ZSttqO9JxWQuZvH/PUiyGG3m0TvXniIm2T8op8eXCchVKsnsv7K2TziVIg4/quhH3+u5ciPotKkRbmQzJYPmsWc6Ztg=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YXBBWGROa200OEI2U1Z0a1hDSkJVdzgrMXRyNFEyQkNYblBuckcvelFLWEpN?=
+ =?utf-8?B?UUxMWUlHTExqdmNJRFpWbEZSdnBxUVZiNmVvVFJqRWp4TWlpeHNxZU1uRHZa?=
+ =?utf-8?B?MzFxeFdTZ3lBbHZqZnFlUkJlMTJtSGlVaXBGOVJKNE5TMUhhYzdnZ3pCQk9G?=
+ =?utf-8?B?M05naTVxYzNUOS9Mamp4WTZMZENtcWllZVFGVHU5cnpFSUovUmUwNFNRL29C?=
+ =?utf-8?B?NTZhWTNIVUJKelBSWEc4bU9jdVY5dDJLZytrekRvTkNGd0Q1MzZaL1BGMG1V?=
+ =?utf-8?B?Zk5yQ25lbms1NDlQZmZOK0lQOXIvRWRGd1p5RG5xQmRBWjM4VkZSUENnV1lB?=
+ =?utf-8?B?Ui9MRzh3NTJKNGUvbDVYSUM2dktpVjJtWkIrRGJCbkhBeW9jQlJzd25vTmpw?=
+ =?utf-8?B?ZG5tOXdZc3FCSEYzcDFoYzFpUW9hUkhiU3pUR3RNWk1hN0FQcE8yT1RDMVlX?=
+ =?utf-8?B?Vk1ZaDA2aEZlSmJhY2xOVWt1dStCLzZqZDdxSEhEMjcxZENnN3JsWW8reTZM?=
+ =?utf-8?B?dzAyeURKdVVadnN3Y0VId1ZRSVpmb3ZDZ2piS3hlQzVRWFBCc2p2TTUvVFJS?=
+ =?utf-8?B?OXpIbC9VMDUzbFpyWk1LV2NzSUN4WnYyVTJ3cFZBWENyUnNDd2Q1YnFqZUMy?=
+ =?utf-8?B?V1o4U05tZ1N2VEJKaUxkMXdNZ1BtSFdxSXU2YUc4c2o2QzYxWjBLcm1IU1VD?=
+ =?utf-8?B?T0pDS2FGRWtwZ3JmZmFmMUNRUDIwcjRkeFdLWWNlQWlQWlJ2elRGNEt2eE9V?=
+ =?utf-8?B?UXYyN1U2Vm4yRjlCSnlGcHVmUFlzTXV6YVJFcnIvZlJCR1VoczVTdjk5MmZm?=
+ =?utf-8?B?UU12cFRuRlNTY3hUUWFCcWN6dlUwTzVzUnVSNXRrR1VoS2R6aWd2R1JUK1dF?=
+ =?utf-8?B?dzhLU2g1T2FkazBjNEZCV1FtbXQ0THFuVEx4SEhHai9mSkRoR00vay90L2Nm?=
+ =?utf-8?B?b21mR2UxN2FEajRmQ3JkNXh5VjNmbUt3NEtkQ1lFWlFFT1lmaDZvNU1tZXNi?=
+ =?utf-8?B?RWMxZkRXbGs3MVZtM2hlNzNVVkl5VXZKV3RaYy93YmE5ditlTlpJWFJGRjVi?=
+ =?utf-8?B?MDArMVJzYnpIQTFTbVlUeHVqeCtGSEpRdjZwaXFYM1JnZUJScUxmckRKZmgy?=
+ =?utf-8?B?ekM3dTByWlk0ZlpkQitmV2YvRmxJUzBWcFRKT2xZOHFQL0g4L0RXcStZT0R2?=
+ =?utf-8?B?bVA1aS9Ha3hTeWxwaUNGRGc4dXpnOGJZVkFoRy9mMFNiS3FGcmFJNTFVNWFO?=
+ =?utf-8?B?YS9KUWtVaVc0V0RoRmU1Rzk1aWhnNjdoZHdObUJYaCtrUWN0dTVBYmo2M1dn?=
+ =?utf-8?B?aVVXQ3ZGTlBQZHZXWGdEdno1VU5PeUpzRTZCRklRVWJONXpGbU96Q1E1Rlph?=
+ =?utf-8?B?b1dHOTYwa2Z2WGNnZ3FyZWMrK2EwY0xhcTlMcTlYem1xMy9xM0dWMUdTUExs?=
+ =?utf-8?B?NHpmZzRKNmt4Wi84NDNIVEpQRG90Vzd6UmdVdENKNXhPRzFsVVVrS2QxNEQ5?=
+ =?utf-8?B?M1d6dW5KajYvRGFjU1lEMGQrWG1NUTVwVXRrbklxQzMzV2NmYkx6a01TVHNk?=
+ =?utf-8?B?WnA4cGkzVDA3Y2JmTEZUSWc3Z3h0dmYwSjZxbkRUT3kxeWJZYkJtczlqQmlu?=
+ =?utf-8?B?cUdPd1hyUjgvaE5XbUhQWURJMElsZ0hLVmh5QjREYWd3U1IzMUp6NjNJZjFI?=
+ =?utf-8?B?WDBIMUVXSUFmR1BMM2gvOHk4N2c0MzF3QzlKcUptTnBPcEdMaEpCdGlLcVRZ?=
+ =?utf-8?Q?30amQ1+2nItLu5HsnUdb+uBVdKajtLLnCwuIz+5?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71e5d116-fdbf-4f0a-d3c2-08dc2ef49347
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB6959.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2024 13:38:35.8776
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB6075
 
-On Wed, 14 Feb 2024 07:37:36 +0100
-Mike Looijmans <mike.looijmans@topic.nl> wrote:
-
-> Skeleton driver for the TI ADS1298 medical ADC. This device is
-> typically used for ECG and similar measurements. Supports data
-> acquisition at configurable scale and sampling frequency.
-> 
-> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
-> 
-Hi Mike,
-
-One final thing noticed on a (hopefully) last read through.
-
-/sys/bus/iio:device0/name is going to read ads1298 whichever
-chip is detected.
-
-Would be more useful to users if it identified the actual
-part given that is easily read from the ID register.
-
-Jonathan
-
+On 2/16/2024 9:37 PM, Andrew Lunn wrote:
+> On Fri, Feb 16, 2024 at 06:01:59PM +0800, Yang Xiwen via B4 Relay wrote:
+>> Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
+>> ---
+>> Changes in v2:
+>> - replace email.
+>> - hisi-femac: s/BUS/MACIF (Andrew Lunn)
+>> - hisi-femac: add "hisilicon,hisi-femac" compatible since the driver
+>>    seems generic enough for various SoCs
+>> - hisi-femac-mdio: convert binding to YAML (Krzysztof Kozlowski)
+>> - rewrite commit logs (Krzysztof Kozlowski)
+>> - Link to v1: https://lore.kernel.org/r/20240216-net-v1-0-e0ad972cda99@outlook.com
+> Generally, you wait for discussion to finish before posting a new
+> version. Also, netdev requests you wait a minimum of 24 hours between
+> versions.
+>
+> Having discussion happening on two different versions of a patchset
+> at once just causes confusion.
+Sorry for that, it's the first time i send netdev patches.
+>      Andrew
+>
 > ---
-> 
-> Changes in v4:
-> Explain rdata_xfer_busy better and remove post-decrement
-> Reset assert explanation and add cansleep
-> Additional style changes
-> 
-> Changes in v3:
-> Indentation fixups
-> Remove unused headers
-> Remove #define leftovers
-> Use devm_get_clk_optional_enabled
-> Use ilog2 instead of fls()-1
-> Magic "23" replaced
-> Explain the extra "0" in read/write register
-> use guard() from cleanup.h
-> use REGCACHE_MAPLE
-> 
-> Changes in v2:
-> Remove accidental "default y" in Kconfig
-> Indentation and similar cosmetic fixes
-> Magic numbers into constants
-> Short return paths in read_raw and write_raw
-> DMA buffer alignment
-> Bounce buffer is u32 instead of u8
-> Avoid races using claim_direct_mode
-> Check errors on all register accesses
-> Immediate SPI restart to reduce underruns
-> "name" is chip name, not unique
-
-I missed this until having a final read through but it's not the chip name
-in the driver currently - the name is always ads1298 despite there being a handy
-ID register that tells us what we actually have.
+> pw-bot: cr
 
 
-> 
->  drivers/iio/adc/Kconfig      |  11 +
->  drivers/iio/adc/Makefile     |   1 +
->  drivers/iio/adc/ti-ads1298.c | 766 +++++++++++++++++++++++++++++++++++
->  3 files changed, 778 insertions(+)
->  create mode 100644 drivers/iio/adc/ti-ads1298.c
-
-> +
-> +static const char *ads1298_family_name(unsigned int id)
-> +{
-> +	switch (id & ADS1298_MASK_ID_FAMILY) {
-> +	case ADS1298_ID_FAMILY_ADS129X:
-> +		return "ADS129x";
-> +	case ADS1298_ID_FAMILY_ADS129XR:
-> +		return "ADS129xR";
-> +	default:
-> +		return "(unknown)";
-> +	}
-> +}
-
-...
-
-> +static int ads1298_probe(struct spi_device *spi)
-> +{
-
-...
-
-> +
-> +	priv->tx_buffer[0] = ADS1298_CMD_RDATA;
-> +	priv->rdata_xfer.tx_buf = priv->tx_buffer;
-> +	priv->rdata_xfer.rx_buf = priv->rx_buffer;
-> +	priv->rdata_xfer.len = ADS1298_SPI_RDATA_BUFFER_SIZE;
-> +	/* Must keep CS low for 4 clocks */
-> +	priv->rdata_xfer.delay.value = 2;
-> +	priv->rdata_xfer.delay.unit = SPI_DELAY_UNIT_USECS;
-> +	spi_message_init_with_transfers(&priv->rdata_msg, &priv->rdata_xfer, 1);
-> +	priv->rdata_msg.complete = &ads1298_rdata_complete;
-> +	priv->rdata_msg.context = indio_dev;
-> +
-> +	indio_dev->name = spi_get_device_id(spi)->name;
-
-I was going to just tweak this whilst applying.  Using the spi device id often
-ends up being fragile in the long term because of the split between the different
-ID tables and the mess that happens if fallback compatibles are in use and
-the spi IDs are missing (you will get a warning about this at runtime
-but it'll carry on anyway).
-
-Easier to just hard code the name for now and when you have multiple
-devices supported, add this to a chip_info type structure.
-Or we could make it support the more specific name given the detection above.
-Is there a reason to not do that given a more accurate name is
-easy to work out and may be useful to a user?
-
-Jonathan
+-- 
+Regards,
+Yang Xiwen
 
