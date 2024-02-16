@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 801A214AD0E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2B914AD19;
 	Fri, 16 Feb 2024 22:37:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708123022; cv=none; b=UJAriLQXOqVC5qeoF90TMHZI70tvnbp1b1r0C37VdzqJOEOPknYRipbjezV+3uwDKim31MGq6uBC2NWDDuPkmRtpXnb1zYeUf9aob46QgCdsW0Nxlsnqc9Jo7jSoVHyCSI+i+36ikmupDBEQVMpAhyJ+k4yz/VCd4a+kmTxbPjA=
+	t=1708123022; cv=none; b=Jhq5PoO49rxntbT45eQfoHqZ34KhSSxlXdZ5pw+VcpncE/47wWi6ISdRMON9q3H3nMj0FQNStInfI1AgpaOjiE/7yVr6BGPkaoWwxIXIWv6nF8YBYOaIijgKDHhimSKsagfiKtrwCdvtPqra+qffCTzCE0JR7kG0EyjJLA9Tt8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708123022; c=relaxed/simple;
-	bh=2Rf/qADjPS/HdwZc3ACrJCkDkpnzYWtpsvVoZxBWBCU=;
+	bh=pSvctDHxVCaAu+4cZjOT/I3a/3LHsGScFSRvh9RHyIQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BArnl8b0JtkqMdHr3A+YTI5NMkBySf5ntIrB1ix/ZjZBnPM00qXrCsQ67XlqlgKZiG/cgK/do1vpPLkYzxTS0yOvRzYXKAN0OBlc9Lh5v4NpsUw+F3mD3nAlaJ3g/A4i7wfJKgTTGKMRk5+GANLvgyHV5yQT5dXBmAyNsSKqxYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bs1znpqp; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NLI/8OG9DZFJgoU3hlLx3OkqLamVyPC8rYO/m1qFAg36CX1rqzXHnqFi9tbJSHnf6PDHKsvmXvEQ/RUWZ9Zdd/wurjdz1ufmZB/Oj8xEUs6vf4wlNvms35L6KG+n0dCGuiXJB09Rrkh7O2ELWLYBgqPBONMLq0L8ZvQOj25/1+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KIlkIdZV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bs1znpqp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDEFBC43394;
-	Fri, 16 Feb 2024 22:37:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KIlkIdZV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0150DC433B2;
+	Fri, 16 Feb 2024 22:37:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1708123022;
-	bh=2Rf/qADjPS/HdwZc3ACrJCkDkpnzYWtpsvVoZxBWBCU=;
+	bh=pSvctDHxVCaAu+4cZjOT/I3a/3LHsGScFSRvh9RHyIQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Bs1znpqpO84ZWZbo0UXpQxKqYq8FuCnex9pmQ8pmEZQo3hiV/A7f3XWeeBjk9I2ms
-	 jozXqofqcTrIdoZHFbZ0r/NW7Y8kSbyc7gb7lskrlm1pxYELhRfHNXgDtpc/GAXDgx
-	 RZPPo/ns1Rjd/kIkhqPpo3tEA+xmzavwAFWuzyFLgHy0KfGSyuS2OE4vXXTL5ruV3z
-	 TAxH2KpR4RJQjPJSXEm8xoWnB8ju7A4wBFWNVniPe5V6smQ4DxiyKfF11a91mCX13U
-	 8HPNU5i4kzZXs+uCwG0bjBMPhT/LRzP8VdwMkC/v5LQmXzoxVGCNc4ofmC5PftpQDJ
-	 jNYqddrSidlcA==
+	b=KIlkIdZVYsGFndwc+i49nctXF2P6Sex1V3QebTY+frX2qx/HM8JPDu39KRb/iuvsx
+	 5E8H88kNy2MSh7SmKzy6SEWrdv+JrJmGi8+eSeMT3wQprW37wRGFIJOGfoGhlgADEk
+	 XiXnW6yjOigDWxY2/5+4OP3PmpwN9jEPJAaqsN6snVLQyw0haL1VrKGNa6ux6QyJ81
+	 K+UpXSyadiFBXvjlT7drMOZyfzarOnU2FJe9ljGzDGRMmnILUqz1NP9ObGVITDOtma
+	 OxQ7hPUwOrOdSWP9QX50EGr7K/keiTLV5kqGvdmiomqrgRj2/ybgDLgXD6kd905Fv7
+	 eVPbjjhuidsoA==
 Received: by mercury (Postfix, from userid 1000)
-	id B062210633C9; Fri, 16 Feb 2024 23:36:56 +0100 (CET)
+	id BB93910633D5; Fri, 16 Feb 2024 23:36:56 +0100 (CET)
 From: Sebastian Reichel <sre@kernel.org>
 To: Sebastian Reichel <sre@kernel.org>,
 	Rob Herring <robh+dt@kernel.org>,
@@ -44,12 +44,10 @@ Cc: Dong Aisheng <aisheng.dong@nxp.com>,
 	Mark Brown <broonie@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
 	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Michael Yackavage <michaely@ips-yes.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v3 07/16] dt-bindings: fsl-imx-sdma: fix HDMI audio index
-Date: Fri, 16 Feb 2024 23:34:26 +0100
-Message-ID: <20240216223654.1312880-8-sre@kernel.org>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 09/16] ARM: dts: imx6ul: Remove fsl,anatop from usbotg1
+Date: Fri, 16 Feb 2024 23:34:28 +0100
+Message-ID: <20240216223654.1312880-10-sre@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240216223654.1312880-1-sre@kernel.org>
 References: <20240216223654.1312880-1-sre@kernel.org>
@@ -61,33 +59,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-HDMI Audio has been added to the DT binding documentation with an
-incorrect index. DT and the driver use index 26. This happened,
-because the binding is missing MULTI_SAI type, which is using
-index 25.
+fsl,anatop should only be added to the usbphy nodes.
 
-Reported-by: Michael Yackavage <michaely@ips-yes.com>
-Fixes: 7bdbd87d4008 ("dt-bindings: fsl-imx-sdma: Convert imx sdma to DT schema")
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Sebastian Reichel <sre@kernel.org>
 ---
- Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/nxp/imx/imx6ul.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml b/Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml
-index b95dd8db5a30..37135fa024f9 100644
---- a/Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml
-+++ b/Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml
-@@ -92,7 +92,8 @@ properties:
-               description: needs firmware more than ver 2
-           - Shared ASRC: 23
-           - SAI: 24
--          - HDMI Audio: 25
-+          - Multi SAI: 25
-+          - HDMI Audio: 26
- 
-        The third cell: transfer priority ID
-          enum:
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
+index a27a7554c2e7..9eb4eee0c272 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
+@@ -855,7 +855,6 @@ usbotg1: usb@2184000 {
+ 				clocks = <&clks IMX6UL_CLK_USBOH3>;
+ 				fsl,usbphy = <&usbphy1>;
+ 				fsl,usbmisc = <&usbmisc 0>;
+-				fsl,anatop = <&anatop>;
+ 				ahb-burst-config = <0x0>;
+ 				tx-burst-size-dword = <0x10>;
+ 				rx-burst-size-dword = <0x10>;
 -- 
 2.43.0
 
