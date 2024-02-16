@@ -1,143 +1,120 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66CF912F5AE
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 15:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E41E712FB07
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 15:52:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708098750; cv=none; b=XiN7DCaeBCb2wIf6rskoQvn4xNABn+5ZDOCzPI0FMhZl6e6pdsFspzb/WeUgMNCqojlK2UNWxoWu8rNuky+ewutVs+m+Z2nhpt6STzRVxVIGPIsEI8c3KYKpAtBxo6Lg0ETFekXkINX3/F1zyBJLRFMDQ2a50hZCPbq6nL+SrR4=
+	t=1708098757; cv=none; b=T7dCK46hElTcMM/U9xUkuJdS+lxWiOwLl62LSRsCFMP+V+KB4FGumtkE9oEOeqrWkfp2KEhD1iL8nv8jWxVlu0GT4HK2xGRPpGJetIf/trle8v6UZnNaO+J/zZMAArQ3mK9Ry2vB3A9K0w66FmuSp1Mh9lF0or7tEg2wTWG50tE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708098750; c=relaxed/simple;
-	bh=zQHxIDjjwvENEklHG5+P+nAsCfKvOL33RSYN/au5iDk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JgA+la/Gm5niGzd+4rfm46UFRlhwhw1EZ/jeL6XJQCsa48L9weAlIgYp+rBTg6TYprro/63HtB+sDRCUsh4uQ0hBAmCB+4gd/Drwvbnw7PjAnn4W56pv6ABJT1M79BRENBrpPodkXNInJOsJ93Z/LmuQBq2P5sfYtAOh/ZOFqvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk; spf=none smtp.mailfrom=davidwei.uk; dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b=Zt2zLX7G; arc=none smtp.client-ip=209.85.166.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=davidwei.uk
+	s=arc-20240116; t=1708098757; c=relaxed/simple;
+	bh=Twfvqn5z2TPQUG3mCx7eOkQhXIYHDRrgU1d+jAxcuDQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=KeKzU1cpleEiHa25W0hxVsaNe+YnCqd2mDTcxtpMBB9dt7HhkCmuzGB5nV2FYFKMSYwSRM2L/OcYZKsS8KsTsWWFdUG2WZfVPiP/yTZl71eM+RUG4k4eN7rYKVQB0tQlHQC8Ld6DcJun99BdbgZr9O/iJ2gwyUqew2DWcjqSA9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hvc00JVY; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b="Zt2zLX7G"
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-7c457b8ef7cso71362339f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 07:52:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hvc00JVY"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5dcbb769a71so1552758a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 07:52:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=davidwei-uk.20230601.gappssmtp.com; s=20230601; t=1708098747; x=1708703547; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4UuLv5UoKgwS5Sbj+Drkana4tgYiAyfKFVJYKCmoJVg=;
-        b=Zt2zLX7GmLt+0ud+VHVzrDHuFsPhQJVRGfOHygy0MPMtwuGJwtHmqcTdCkEGGm0PZ4
-         WplZ9MQ48lleoQv/zaMUa/A/D1KY5q7TMJASI1UVvyrKSG1urR5uA/PJfP4YWMgyIs56
-         2eQd9RQaSmhh+I0cMtXTBAHuQilKOYennelDtajp2eYPzWyMdjGAmICiuPDqWFBxr/6i
-         yYAlG+CjOnqFuP1Jk1uMQu15Ay1ijK1ef4Z4U5PZZ7EWJZW4xuiAcD7pFQYT2vl+L1C2
-         fom7VGpuU2e3JHipj5MIxWY5GHt/DU7Y5QKU9xNZqmUtnC3El+0NDCu3Dp6vZ8SkVMJy
-         4duQ==
+        d=google.com; s=20230601; t=1708098754; x=1708703554; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vdWqN4twnny7sh0kB73t0EmMejLUnVRIUmMC6P4B0Co=;
+        b=hvc00JVY9QTiNJqrNSc9ww1n6V66a9ToFhqNn+QVc2hFHv9CJ6kl7fuFuU91Wpo9V5
+         AOCQ23wjPxaSVZ9fbzmTAfUlNhiX6nzvr6qmqmlarf1sT2G9/M8ahxG0T4/HOX1pwKyt
+         Ax1X4TNQfp8gFyCudeWba74kxXywGXaUm2sZN3k7Hu7zf+wOVlrIYKPj/ewPyq3Mrzoa
+         58i6se1eDpBM+th90UaVbSHE68Fci2xO4ngxX5kOopyDQkfNbH1yXd91RfyN3apqurfX
+         daI5BHm9rXCiweNWm7SUN4yth5rOCv4esCUEdSJahGAgEn+ejMzNp19HOI/jVYYEH7Ed
+         08pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708098747; x=1708703547;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4UuLv5UoKgwS5Sbj+Drkana4tgYiAyfKFVJYKCmoJVg=;
-        b=f9DRN2H4hD9tPu5m8iQG1BKM1730V/RSTL1pi4AyPwlmd+VJWJpD+PyRAOhIh3KTb+
-         DCVDuR5C1aUU3JKiY8iAH30bobRZN2K5Nfswta+FNFLflwTA/hyvpMtjrCZUOaz0BgUd
-         eA0A0KCeSptd1/3CluAipJJFVoD9fG1dAPpaIWdcQgcoOf9+olicv+PC3i9H01FEeYvo
-         TDi8T0/5L+IZ+FB051ezfMbJGq6GqYr/JQ3boBZgb7xFjVaiez0iEG0kYv6SFhAGJM0i
-         AZR21xBMDZvHBaDsOA0PcN7BUl10HY2fC0cx3k18+1c89AFDAcchnDD+L1pn4u9+AQZ9
-         LEQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVZLLffERYf6jrLD6KGR+Ls37KZQlpOw93F9CMFRE9IC6B6VTzmGfPoCabz8QuqIWfEI8VkUQqgVd80u0cvV6vwDixreDuKf0S1or2y
-X-Gm-Message-State: AOJu0Yw+JQ8tXBqLj3wMb6K8q+zntyHWhZ/Te77uDcRktjqB8o3jLdV8
-	RM1vSbN2pHIPK/k18rZBvgFOfhMD6noTLIaMLrBPJGj1+II4bPBhqyOwcVB86Ho=
-X-Google-Smtp-Source: AGHT+IHrUiej7yFWlHnP9s7250iMaB2JeyRPBgFUS7lY1WV3rbY8kPKQiQ+iQejR4JASuqBjKZnwyQ==
-X-Received: by 2002:a05:6602:1302:b0:7c4:5529:5818 with SMTP id h2-20020a056602130200b007c455295818mr5979560iov.4.1708098747464;
-        Fri, 16 Feb 2024 07:52:27 -0800 (PST)
-Received: from [192.168.1.132] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id z26-20020a02ceba000000b0047401a9b8cesm32736jaq.106.2024.02.16.07.52.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Feb 2024 07:52:27 -0800 (PST)
-Message-ID: <f0c51f71-dae8-447f-bbdb-73d2ce607893@davidwei.uk>
-Date: Fri, 16 Feb 2024 08:52:25 -0700
+        d=1e100.net; s=20230601; t=1708098754; x=1708703554;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vdWqN4twnny7sh0kB73t0EmMejLUnVRIUmMC6P4B0Co=;
+        b=eChAi6kXcFYp+wsKnLd/bJSgU0YgFPkfW90eLEyW2FhMOk2xSemPhGSkuqls9neien
+         0Cv5KXgwwNn3SfZ0fXxMpRMD5ayWG0pPlAG1rezPjOUG0tVxl7ReMY35ws4wbO6r7V2K
+         GlZREvrTMybP2WOY2z9CaRvserrzlUDJoUykyHTXI9hYxZ8+XKRTMSOunKwj7FwUGPIJ
+         kRDZUls1YMwHoZseim8npwaJlbIpfB4/5sSW6ywrs1lEq5zPTKPfY84zfIGBshbIVHN5
+         D155iUmrV/Ojv3ZvXPRiohZJrkIHTHYI77Pa5RjCteN509EvPQWtJrN7mEII55Lo6sCL
+         1OTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXdAcMjFjUA4CT8TQwQmZTdUONERPAm9zUHDJd3wBsJhMAw68bVbGL64J7M+KfpqhKH9IOdc4Zjb4oCN3nNm39yzDCc0eCzaZNBDA7p
+X-Gm-Message-State: AOJu0YwTQUft6cuUHCUemz+ClcWAqCgEm2ANc+yqTF8qT90LWP/DKGxz
+	nFbLG+pxpXCZu1ObjAMxwKIpOPjs6N5ibb4DV88fnEppOtVQ4ioLyPQV2xKAe9YzujQBr7s5mFG
+	/Fg==
+X-Google-Smtp-Source: AGHT+IHdTJArPS4Wa/fITdXprcQUHngTC0JP272as27E3u1351Uiji0GihlmCXFNyvIDmjcngg5SUcACTOg=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6a02:a09:b0:5dc:23a4:3a with SMTP id
+ cm9-20020a056a020a0900b005dc23a4003amr13383pgb.7.1708098754138; Fri, 16 Feb
+ 2024 07:52:34 -0800 (PST)
+Date: Fri, 16 Feb 2024 07:52:32 -0800
+In-Reply-To: <df6ad8b9-4e53-4357-ab17-e9af62342849@xen.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/8] net: tcp: tsq: Convert from tasklet to BH workqueue
-Content-Language: en-GB
-To: Eric Dumazet <edumazet@google.com>, Tejun Heo <tj@kernel.org>
-Cc: torvalds@linux-foundation.org, mpatocka@redhat.com,
- linux-kernel@vger.kernel.org, dm-devel@lists.linux.dev, msnitzer@redhat.com,
- ignat@cloudflare.com, damien.lemoal@wdc.com, bob.liu@oracle.com,
- houtao1@huawei.com, peterz@infradead.org, mingo@kernel.org,
- netdev@vger.kernel.org, allen.lkml@gmail.com, kernel-team@meta.com,
- "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- David Wei <davidhwei@meta.com>
-References: <20240130091300.2968534-1-tj@kernel.org>
- <20240130091300.2968534-7-tj@kernel.org> <Zc7zLsEhDzGkCH9m@slm.duckdns.org>
- <CANn89iKDsJPY=QQrTHK0Jw=s=A_G_GzcOA0WsqXaytWAVV3R4Q@mail.gmail.com>
-From: David Wei <dw@davidwei.uk>
-In-Reply-To: <CANn89iKDsJPY=QQrTHK0Jw=s=A_G_GzcOA0WsqXaytWAVV3R4Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240215152916.1158-1-paul@xen.org> <20240215152916.1158-22-paul@xen.org>
+ <23e7ec31a67a73fe94b2b04dbca26ea5ca1ea238.camel@infradead.org> <df6ad8b9-4e53-4357-ab17-e9af62342849@xen.org>
+Message-ID: <Zc-EwMoijOo7w49N@google.com>
+Subject: Re: [PATCH v13 21/21] KVM: pfncache: rework __kvm_gpc_refresh() to
+ fix locking issues
+From: Sean Christopherson <seanjc@google.com>
+To: paul@xen.org
+Cc: David Woodhouse <dwmw2@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>, 
+	David Hildenbrand <david@redhat.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Shuah Khan <shuah@kernel.org>, kvm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-s390@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On 2024-02-16 01:23, Eric Dumazet wrote:
-> !-------------------------------------------------------------------|
->   This Message Is From an External Sender
-> 
-> |-------------------------------------------------------------------!
-> 
-> On Fri, Feb 16, 2024 at 6:31 AM Tejun Heo <tj@kernel.org> wrote:
->>
->> Hello,
->>
->> On Mon, Jan 29, 2024 at 11:11:53PM -1000, Tejun Heo wrote:
->>> The only generic interface to execute asynchronously in the BH context is
->>> tasklet; however, it's marked deprecated and has some design flaws. To
->>> replace tasklets, BH workqueue support was recently added. A BH workqueue
->>> behaves similarly to regular workqueues except that the queued work items
->>> are executed in the BH context.
->>>
->>> This patch converts TCP Small Queues implementation from tasklet to BH
->>> workqueue.
->>>
->>> Semantically, this is an equivalent conversion and there shouldn't be any
->>> user-visible behavior changes. While workqueue's queueing and execution
->>> paths are a bit heavier than tasklet's, unless the work item is being queued
->>> every packet, the difference hopefully shouldn't matter.
->>>
->>> My experience with the networking stack is very limited and this patch
->>> definitely needs attention from someone who actually understands networking.
->>
->> On Jakub's recommendation, I asked David Wei to perform production memcache
->> benchmark on the backported conversion patch. There was no discernible
->> difference before and after. Given that this is likely as hot as it gets for
->> the path on a real workloal, the conversions shouldn't hopefully be
->> noticeable in terms of performance impact.
->>
->> Jakub, I'd really appreciate if you could ack. David, would it be okay if I
->> add your Tested-by?
+On Fri, Feb 16, 2024, Paul Durrant wrote:
+> On 16/02/2024 13:04, David Woodhouse wrote:
+> > On Thu, 2024-02-15 at 15:29 +0000, Paul Durrant wrote:
+> > > From: David Woodhouse <dwmw@amazon.co.uk>
+> > > 
+> > > This function can race with kvm_gpc_deactivate(), which does not take
+> > > the ->refresh_lock. This means kvm_gpc_deactivate() can wipe the ->pfn
+> > > and ->khva fields, and unmap the latter, while hva_to_pfn_retry() has
+> > > temporarily dropped its write lock on gpc->lock.
+> > 
+> > Let's drop this from your series for now, as it's contentious.
+> > 
+> > Sean didn't like calling it a 'fix', which I had conceded and reworked
+> > the commit message. It was on the list somewhere, and also in
+> > https://git.infradead.org/users/dwmw2/linux.git/commitdiff/f19755000a7
+> > 
+> > I *also* think we should do this simpler one:
+> > https://git.infradead.org/users/dwmw2/linux.git/commitdiff/cc69506d19a
+> > ... which almost makes the first one unnecessary, but I think we should
+> > do it *anyway* because the rwlock abuse it fixes is kind of awful.
+> > 
+> > And while we still can't actually *identify* the race condition that
+> > led to a dereference of a NULL gpc->khva while holding the read lock
+> > and gpc->valid and gpc->active both being true... I'll eat my hat if
+> > cleaning up and simplifying the locking (and making it self-contained)
+> > *doesn't* fix it.
 
-Yes, that's fine.
+Heh, I'm not taking that bet.
 
-> 
-> I presume memcache benchmark is using small RPC ?
+> > But either way, it isn't really part of your series. The only reason it
+> > was tacked on the end was because it would have merge conflicts with
+> > your series, which had been outstanding for months already.
+> > 
+> > So drop this one, and I'll work this bit out with Sean afterwards.
 
-It is not a benchmark but a prod shadow, but yes the requests are small.
+FWIW, I'm not opposed to overhauling the gpc locking, I agree it's a mess.  I just
+want to proceed slower than I would for a fix, it's a lot to digest.
 
-> 
-> TSQ matters for high BDP, and is very time sensitive.
-> 
-> Things like slow TX completions (firing from napi poll, BH context)
-> can hurt TSQ.
-> 
-> If we add on top of these slow TX completions, an additional work
-> queue overhead, I really am not sure...
-> 
-> I would recommend tests with pfifo_fast qdisc (not FQ which has a
-> special override for TSQ limits)
-> 
-> Eventually we could add in TCP a measure of the time lost because of
-> TSQ, regardless of the kick implementation (tasklet or workqueue).
-> Measuring the delay between when a tcp socket got tcp_wfree approval
-> to deliver more packets, and time it finally delivered these packets
-> could be implemented with a bpftrace program.
+> Ok. Sean, I assume that since this is the last patch in the series it's
+> superfluous for me to post a v14 just for this?
+
+Correct, definitely no need for a new version.
