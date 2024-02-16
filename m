@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C310712F58A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD2212F588;
 	Fri, 16 Feb 2024 15:21:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708096887; cv=none; b=l7aB08gyjgzYt/iNkLRnKmSdlQvb28P6EjxehXcMJ5uaRW7lP8uenA85a46wZuAAL/oFKw9DeVLB/5m2tHTs8f/J/oY/GkBg5hfbjaqyFmB4rYT+OvwCTHHikWy8wlI8BWnBcGvW0/PwtFfAmR4RXUzQmUwIn1Ppnzy7UQFv0fw=
+	t=1708096887; cv=none; b=lI0Vjzxse7dFaTUvTDnGB6Xj50ibck8zL/dCDuYT5cb884K27RI5l0Qw0/HmkyY+fh9mAH/sGwlXAjYBEb4H5rO0WQTOIq8QspGuIskSFeDLEZk+zDDzgtH9vMSABTjZbzG2X7ePrif/ck4R+nm2uJe1JVdYAnymm42IWaVgNdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708096887; c=relaxed/simple;
-	bh=esSfqR/EN2uGgQJhZInB3gQ5IgggyIpQkCwvAPI4KIE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uFZLKt+OhgSGpVuokKlv0NR3wjiUpW4At2WiCfL7DsQB8mHhnfU8lMV5rV7rL8a8/4d1pAP22YGzP++F1vV9O5LQiHq1GQ9IZ32NuT7cKzLz5xEGADToCVXCXYdCyaS+O72JtB5Ui0q7zujmjQPknavwK6tzueXA0MT/Sa6Hzdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ksU4hZnh; arc=none smtp.client-ip=10.30.226.201
+	bh=IxnSWTB2sBXQF0390u8a976PN+j85jvd6/lGGofC8VY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=durNq1Usy8ycXEIB5IyPqp8CBDhtm25OabWQ652YEgmKA+mooBCXQa4qp7HO/f+saKChORjlID/7mbxU3knRAJ60zWt3OfGg1iJNRG9gowP8EcD1xL/G7ahUlDcwnZbxsfdOTRWIKkGckf1KS8kEpqldJZ5vJbwphgAqn9b1AEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t8WSu/vW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ksU4hZnh"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5D19AC43390;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t8WSu/vW"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 46FDDC433C7;
 	Fri, 16 Feb 2024 15:21:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1708096887;
-	bh=esSfqR/EN2uGgQJhZInB3gQ5IgggyIpQkCwvAPI4KIE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=ksU4hZnhGFY/DpaonfNqIcpv7UidugyR75F1sQOQNhkbyxnTCEOUOW5eq1CVXstPf
-	 /bhZwdJThzwPWzyi6uwkEDiuo8SLUwUSDaGJ2x+1xQZcpLGndGox8zoRP6TZCJcmDq
-	 oPwaSW5cElsGXj+mrWIuJYSBFBjia+XFr3IUHlSgmF/VezNJKNKiwHbczxKQjeOqKZ
-	 /9k2DDFKD0/1W/3DFd/KuF/udubvA+GUrl+f9lMw7xvxZrIaTFU4dlmhjhHzsVGlvM
-	 d7KCKu/bnu1VGvn4lu93z2NlumZQyvsRhFxkFv9EiigvME5tVYNu1erdAx4PiQqU9M
-	 YL6+KZPvu8mHQ==
+	bh=IxnSWTB2sBXQF0390u8a976PN+j85jvd6/lGGofC8VY=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=t8WSu/vWzA3RAuEKVApWeF6Dn0DnVniiHCrLWnfntoku88Vb4Y4mz6lsLI+iafxcj
+	 kWAwRes8UHJnyXfUA1go2QS5nTZP6X50jjefqD8QpTvzmWEXr8giiaAtac90S3vVZp
+	 Wa+71Tp7fjI90vI8iIOx0XTN102gI82qtTK7n7ca3hOE8BMkULDF6DCzlayADLyJ23
+	 0Yaq1kP+aujvX1aonwgNiC1nUsySQ1ZSNfPMx/ehkd416Iks+baHt9zkSeABW39DzP
+	 xAB4c9ySq2sGW/c8sYuaE+4AHfA6gzFlifDdF9nkZQS+ALJiqtjWKFXcqjv0RfYuLI
+	 gkB1Qdkr4YqXQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 453B0C48BEF;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA8AC48260;
 	Fri, 16 Feb 2024 15:21:27 +0000 (UTC)
 From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Date: Fri, 16 Feb 2024 23:21:02 +0800
-Subject: [PATCH RFC 2/4] phy: hisilicon: enable clocks for every ports
+Subject: [PATCH RFC 0/4] phy: hisi-inno-phy: add support for
+ hi3798mv200-usb2-phy
+Date: Fri, 16 Feb 2024 23:21:00 +0800
+Message-Id: <20240216-inno-phy-v1-0-1ab912f0533f@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,9 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240216-inno-phy-v1-2-1ab912f0533f@outlook.com>
-References: <20240216-inno-phy-v1-0-1ab912f0533f@outlook.com>
-In-Reply-To: <20240216-inno-phy-v1-0-1ab912f0533f@outlook.com>
+X-B4-Tracking: v=1; b=H4sIAFx9z2UC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDI0Mz3cy8vHzdgoxK3USjFAtzozSzJHOTJCWg8oKi1LTMCrBR0UpBbs5
+ KsbW1AO6AnyJfAAAA
 To: Vinod Koul <vkoul@kernel.org>, 
  Kishon Vijay Abraham I <kishon@kernel.org>, 
  Rob Herring <robh+dt@kernel.org>, 
@@ -54,11 +55,11 @@ Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, 
  David Yang <mmyangfl@gmail.com>, Yang Xiwen <forbidden405@outlook.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708096886; l=971;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708096886; l=1304;
  i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
- bh=jGUbESXsyAvU27nkXjLoTOKtwqcjOT068eM8RNJCWfs=;
- b=ITanD2VY3jqLkr3V4AaluZ6h9nWHCdy3Na9jDZgUch40We/Y5Xqui1gOxijFrPIN7OP9s0KLu
- y967I7P63k6BFsOonwkTg3pWZVrf4mwUOvGffTMiP+h2VMI1SMATgVs
+ bh=IxnSWTB2sBXQF0390u8a976PN+j85jvd6/lGGofC8VY=;
+ b=jVZPCURmpgkvsGh4pmLptz411OscyhZfFOxAAmB4AKycoTJpCK24CwzaBAjfCCKBgjM8qYArr
+ uVTzXRcqYHvCIgzGWjYN3cP73jcSNBzIRH0pfkqv/yg6MlQsD8aC2Eo
 X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
  pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
 X-Endpoint-Received:
@@ -66,33 +67,33 @@ X-Endpoint-Received:
 X-Original-From: Yang Xiwen <forbidden405@outlook.com>
 Reply-To: <forbidden405@outlook.com>
 
-From: Yang Xiwen <forbidden405@outlook.com>
+This should be considered a dirty hack. The proper solution would be
+extracting write_reg logic to a separate regmap driver. Leaving only
+"write BIT(2) to address 0x6" to the PHY driver.
 
-This is needed for port1 to work.
+The initial commit is already doing things wrong. The following patches
+adding hi3798mv100 support is also very confusing. The name of the
+enumeration "PHY_TYPE_x" is very misleading as if it's the phy which is
+different across SoCs. But actually it's the bus (i.e. how to write to a
+given address) which is different, not the PHY.
 
-Fixes: ba8b0ee81fbb ("phy: add inno-usb2-phy driver for hi3798cv200 SoC")
 Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 ---
- drivers/phy/hisilicon/phy-hisi-inno-usb2.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Yang Xiwen (4):
+      dt-binding: phy: hisi-inno-usb2: convert to YAML
+      phy: hisilicon: enable clocks for every ports
+      phy: hisi-inno-usb2: add support for direct MMIO
+      dt-binding: phy: hisi-inno-usb2: add compatible of hisilicon,hi3798mv200-usb2-phy
 
-diff --git a/drivers/phy/hisilicon/phy-hisi-inno-usb2.c b/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
-index c138cd4807d6..b7e740eb4752 100644
---- a/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
-+++ b/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
-@@ -86,8 +86,10 @@ static void hisi_inno_phy_write_reg(struct hisi_inno_phy_priv *priv,
- 
- static void hisi_inno_phy_setup(struct hisi_inno_phy_priv *priv)
- {
-+	int i;
- 	/* The phy clk is controlled by the port0 register 0x06. */
--	hisi_inno_phy_write_reg(priv, 0, 0x06, PHY_CLK_ENABLE);
-+	for (i = 0; i < INNO_PHY_PORT_NUM; i++)
-+		hisi_inno_phy_write_reg(priv, i, 0x06, PHY_CLK_ENABLE);
- 	msleep(PHY_CLK_STABLE_TIME);
- }
- 
+ .../bindings/phy/hisilicon,inno-usb2-phy.yaml      | 125 +++++++++++++++++++++
+ .../devicetree/bindings/phy/phy-hisi-inno-usb2.txt |  71 ------------
+ drivers/phy/hisilicon/phy-hisi-inno-usb2.c         |  57 ++++++----
+ 3 files changed, 161 insertions(+), 92 deletions(-)
+---
+base-commit: 8d3dea210042f54b952b481838c1e7dfc4ec751d
+change-id: 20240216-inno-phy-a2d872f6b74b
 
+Best regards,
 -- 
-2.43.0
+Yang Xiwen <forbidden405@outlook.com>
 
