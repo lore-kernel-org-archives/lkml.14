@@ -1,230 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19717138496
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 20:20:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5CB12FF60;
+	Fri, 16 Feb 2024 20:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708114847; cv=none; b=ejGBLs83aoTM5mgR7w1j/502mh2ukOLfeBeGxgWgcoVgF1BMoetraOlnROEL+41btx3pvn1zkHhbx/ISh1Jk1mQUdokH8kActSltQzeaxwuX/lje6ZDQbxUuKFTDks3WKIlHzZb+WSzZ4/ywwRf5FfXGw872/kbPrrvfcFumy3o=
+	t=1708114937; cv=none; b=fdFZ99MKkc3QjERHWlLb9MIQFJSmy/A8txiGVgduQnwvp2nor64uHmNN+mV3+HXMzSZjdvbOJ552ZtoHe5N1DTbKMRJLUAIrQnwNWDlPUMD93G5bMKCGYtT/lTw/CKJ82+A2vmAmsTfmmVqx7Nkzs14BbV5py386iGBTuvf2QXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708114847; c=relaxed/simple;
-	bh=LjXrhM5S5R5YyJMzFZKDmPkYrKpRkwV4zq5L+4sY/P8=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=pf56FyeEl19ia+jZHK2ESDN14sctYPplwLSDdGLjtoHReDd5u9LXyKbIoOAuKmbQQk3owklR7ez4YimpbXzyY513Ko6/oesgown76LVXheALJXD2lJ0U7GkO23qQK8lVomX3oyfbO4PRIAJEPI/QDbyfhamdC+U59BRc4TYTpq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eLcHg2O3; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1708114937; c=relaxed/simple;
+	bh=nypb2KZnPJWR1XM7XwoJ16qmP0FPMeXO2miQqYZ+euc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NOkRVgMjejxNga2bXFF+kBKZlxfpv5bSsOodeaiPAaAh6ITcGPmce8pR4NcuOqooq2ti3MkGTYtglCqnCIYhPVobvoShjmHQtdvYacfCjby/0ROeDdI3gIm9GfcDFyB+iQmPSOD3DQLCIXbXh8WARoQo3a31NSjbzFraAMYlsbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YNtWCZN+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QdVOnBs3; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eLcHg2O3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708114845; x=1739650845;
-  h=date:from:to:cc:subject:message-id;
-  bh=LjXrhM5S5R5YyJMzFZKDmPkYrKpRkwV4zq5L+4sY/P8=;
-  b=eLcHg2O3r4Vcnx8GiW6T3Vsjq763aXFdWzhWMWL3jCTzpYvRlYJ9DWUd
-   2qzekVdJQFvnvnr2poSvqsOhFNEXbbs31wV3Yi69yrYuq/RfF6zYDfpXj
-   cKUAW8odDqHHYcT4hk8pYUzCBc1WcNIcCtPZ5T1Xq5pBevrFMWS7ox1GI
-   Jyw3OmZZICOujpuizPTu8kObGg5sxJOKtIrZ2SITXGSMrRjD0oD9u8nnn
-   EEOjq8q9dp0xw2zLuLKli2/sNodmKFc1Rd4qotv5LcewzETJ2e+gxOEAW
-   AhQi2qeJ+g7MxjMfF/A7gFAydqEXVQ5KgA0zAeWVvf/Wypra+sqoj9Lnh
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10986"; a="2372575"
-X-IronPort-AV: E=Sophos;i="6.06,165,1705392000"; 
-   d="scan'208";a="2372575"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 12:20:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,165,1705392000"; 
-   d="scan'208";a="8520641"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by fmviesa005.fm.intel.com with ESMTP; 16 Feb 2024 12:20:43 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rb4hM-0001b0-2e;
-	Fri, 16 Feb 2024 20:20:40 +0000
-Date: Sat, 17 Feb 2024 04:20:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:irq/msi] BUILD SUCCESS
- 9bbe13a5d414a7f8208dba64b54d2b6e4f7086bd
-Message-ID: <202402170424.2tedNrJl-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YNtWCZN+";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QdVOnBs3"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1708114934;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=le97KJdlsGBLqsiJ8aQfiKStXYCU6YwRihA6kx6vD50=;
+	b=YNtWCZN+oyza7Psrnp+o015RwbGOpg7nwPBmGlhWYhJoroMvc1j1yPwMbdlPkFxbZ099DY
+	cStpTLOPTTibGQZ6dRsFGbknNWj8VO1bsaW0+eIPgqMroaaMzbPCD9kzTrmYNUuMFWb7Rj
+	ujCSgGzYaticow53nctzXgJ7gXOWC7OHA853+v+EVBm0Dfhgy8aJUr2OraiKqXEDadV/3w
+	6oHgKU9uZR+LgRSztvgBVrr5BHhCt3HKME+aXGG9fOPGB7PbQ3OGIwarKrqfLDj1DRPg+y
+	ibA8yxPAnWLA+2R6lNb0h0dxwF1h8gILaiyDbknkPS3KZEXgJ990PuKUR4aPzw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1708114934;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=le97KJdlsGBLqsiJ8aQfiKStXYCU6YwRihA6kx6vD50=;
+	b=QdVOnBs3rHq1ra9e49kCrw2tSi/Be1PmqZXRATLKXzAosslD2EHYAtI+BnLejPsm8NkGNU
+	OKEsdip73eiy+dBQ==
+To: Anup Patel <anup@brainfault.org>
+Cc: Anup Patel <apatel@ventanamicro.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, Rob
+ Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Frank Rowand
+ <frowand.list@gmail.com>, Conor Dooley <conor+dt@kernel.org>, Marc Zyngier
+ <maz@kernel.org>, =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
+ Atish Patra
+ <atishp@atishpatra.org>, Andrew Jones <ajones@ventanamicro.com>, Sunil V L
+ <sunilvl@ventanamicro.com>, Saravana Kannan <saravanak@google.com>,
+ linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v12 14/25] irqchip/sifive-plic: Convert PLIC driver into
+ a platform driver
+In-Reply-To: <CAAhSdy2aeyJBcMVre12jGwU52oP9Z=1emB-bcYxygdR3QhP+6w@mail.gmail.com>
+References: <20240127161753.114685-1-apatel@ventanamicro.com>
+ <20240127161753.114685-15-apatel@ventanamicro.com> <87jzn4ctks.ffs@tglx>
+ <CAAhSdy2aeyJBcMVre12jGwU52oP9Z=1emB-bcYxygdR3QhP+6w@mail.gmail.com>
+Date: Fri, 16 Feb 2024 21:22:13 +0100
+Message-ID: <878r3kcg7e.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/msi
-branch HEAD: 9bbe13a5d414a7f8208dba64b54d2b6e4f7086bd  genirq/msi: Provide MSI_FLAG_PARENT_PM_DEV
+On Fri, Feb 16 2024 at 22:41, Anup Patel wrote:
+> On Fri, Feb 16, 2024 at 9:03=E2=80=AFPM Thomas Gleixner <tglx@linutronix.=
+de> wrote:
+>> I don't think that removing the setup protection is correct.
+>>
+>> Assume you have maxcpus=3DN on the kernel command line, then the above
+>> for_each_online_cpu() loop would result in cpuhp_setup =3D=3D true when =
+the
+>> instances for the not onlined CPUs are set up, no?
+>
+> A platform can have multiple PLIC instances where each PLIC
+> instance targets a subset of HARTs (or CPUs).
+>
+> Previously (before this patch), we were probing PLIC very early so on
+> a platform with multiple PLIC instances, we need to ensure that cpuhp
+> setup is done only after PLIC context associated with boot CPU is
+> initialized hence the plic_cpuhp_setup_done check.
+>
+> This patch converts PLIC driver into a platform driver so now PLIC
+> instances are probed after all available CPUs are brought-up. In this
+> case, the cpuhp setup must be done only after PLIC context of all
+> available CPUs are initialized otherwise some of the CPUs crash
+> in plic_starting_cpu() due to lack of PLIC context initialization.
 
-elapsed time: 1445m
+You're missing the point.
 
-configs tested: 157
-configs skipped: 3
+Assume you have 8 CPUs and 2 PLIC instances one for CPU0-3 and one for
+CPU4-7.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Add "maxcpus=3D4" on the kernel command line, then only the first 4 CPUs
+are brought up.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                     haps_hs_smp_defconfig   gcc  
-arc                   randconfig-001-20240216   gcc  
-arc                   randconfig-002-20240216   gcc  
-arm                              alldefconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                          collie_defconfig   gcc  
-arm                                 defconfig   clang
-arm                            hisi_defconfig   gcc  
-arm                        keystone_defconfig   gcc  
-arm                          moxart_defconfig   gcc  
-arm                        neponset_defconfig   gcc  
-arm                   randconfig-003-20240216   gcc  
-arm                   randconfig-004-20240216   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-002-20240216   gcc  
-arm64                 randconfig-004-20240216   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240216   gcc  
-csky                  randconfig-002-20240216   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240216   gcc  
-i386         buildonly-randconfig-004-20240216   gcc  
-i386         buildonly-randconfig-005-20240216   gcc  
-i386                                defconfig   clang
-i386                  randconfig-003-20240216   gcc  
-i386                  randconfig-005-20240216   gcc  
-i386                  randconfig-011-20240216   gcc  
-i386                  randconfig-012-20240216   gcc  
-i386                  randconfig-013-20240216   gcc  
-i386                  randconfig-015-20240216   gcc  
-i386                  randconfig-016-20240216   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240216   gcc  
-loongarch             randconfig-002-20240216   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                        mvme16x_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                           ip28_defconfig   gcc  
-mips                      loongson3_defconfig   gcc  
-mips                      pic32mzda_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240216   gcc  
-nios2                 randconfig-002-20240216   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                generic-32bit_defconfig   gcc  
-parisc                randconfig-001-20240216   gcc  
-parisc                randconfig-002-20240216   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                    klondike_defconfig   gcc  
-powerpc                 mpc832x_rdb_defconfig   gcc  
-powerpc                     tqm5200_defconfig   gcc  
-powerpc64             randconfig-003-20240216   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240216   gcc  
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240216   gcc  
-s390                  randconfig-002-20240216   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                            hp6xx_defconfig   gcc  
-sh                          landisk_defconfig   gcc  
-sh                          lboxre2_defconfig   gcc  
-sh                          r7785rp_defconfig   gcc  
-sh                    randconfig-001-20240216   gcc  
-sh                    randconfig-002-20240216   gcc  
-sh                   sh7724_generic_defconfig   gcc  
-sh                  sh7785lcr_32bit_defconfig   gcc  
-sh                          urquell_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240216   gcc  
-sparc64               randconfig-002-20240216   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                    randconfig-001-20240216   gcc  
-um                    randconfig-002-20240216   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-005-20240216   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240216   gcc  
-x86_64                randconfig-003-20240216   gcc  
-x86_64                randconfig-004-20240216   gcc  
-x86_64                randconfig-005-20240216   gcc  
-x86_64                randconfig-011-20240216   gcc  
-x86_64                randconfig-012-20240216   gcc  
-x86_64                randconfig-014-20240216   gcc  
-x86_64                randconfig-073-20240216   gcc  
-x86_64                randconfig-074-20240216   gcc  
-x86_64                randconfig-076-20240216   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                randconfig-001-20240216   gcc  
-xtensa                randconfig-002-20240216   gcc  
+So at probe time cpu_online_mask has bit 0,1,2,3 set.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+When the first PLIC it probed the loop which checks the context for each
+online CPU will not clear cpuhp_setup and the hotplug state is installed.
+
+Now the second PLIC is probed (the one for the offline CPUs 4-7) and the
+loop will again not clear cpuhp_setup and it tries to install the state
+again, no?
+
+Thanks,
+
+        tglx
