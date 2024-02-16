@@ -1,517 +1,209 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D00153BF3
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 23:55:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1282A14C59A
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 23:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708127735; cv=none; b=XDf5R/HGlJhcw1mYEpmAD0uWQs535DIzjIqXDAVJm1ANV4VRU8UF2dtLe5+oUdp5g1xMiFLloVrMEv0yl0+dFWxwfbqu5K2au1yMTXwX4hlwOnHUH96tFDqxzvsP5hxm5IE6h47C8Deu6uVeMGJ85bKH3owUjaqx7bAEhsC0rqY=
+	t=1708127747; cv=none; b=hJKqKswMLBBuQWrvXNiTR/CMW0J2OpfpTTGbeBI1pSDds7swn2mTowf2Z+4hJlIiPcoSj4c6yXAlwfJhUUFOOsFBQxG8EeTNy8k9UerFfCURoM33bWFkYs4z1gy91fFDUTr/s0wUrFbld29PXa0Mk0aTAkaXSvz5neRDCoGOPOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708127735; c=relaxed/simple;
-	bh=SV8Q2XP3AEzUCdEScST86iV7qnjMAWaIiYJHWAwVraA=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=ICBmG7OzFM41ihTDNIPr5vIIdqFugbHv8HSkIQtdkZ9NZbwXWr4e+bZFUj1novtfXXzUSqzO+at3nOO6lmgMTja/NNzThwU66qn8ju/qtwcsO0b9jbNP+NBnWKaTQE8TX8Mfvyd9h50nd86ytwl7NCQVaU8o2aV/21nh79zbpNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2xD/XWI8; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1708127747; c=relaxed/simple;
+	bh=4OucJmNe1/pNjupONQadff5J4lun4ayJWUXyyzw61w8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=krjPliP3jPkbddWytiWTci3ryX0rEtkl2nx1UOocgdyj92LPL7Tyq4PS/ica6xVk8wG6tYH3HGpVcFOz1dTvvp98Nc9zleaYU5kRFOOthpT+b37IIEjEp7o/xgKzyT7Zzx+OBGsvFph6/LOT9iVjM8vz4Ype4KYXKm/2uvz1n6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VQCtYCr/; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2xD/XWI8"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-607d0180d2fso44625647b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 15:55:32 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VQCtYCr/"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e10e50179bso1940276b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 15:55:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708127731; x=1708732531; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=46NbERsw+rX6VfHxglAqwzl8LfYw4J5J2BPeonbB4cQ=;
-        b=2xD/XWI8RWCfnnKUbC38A//aRCb+RsD1YE8l7g1oiyqkreszbQPb5/4ufZ4GiCsyV9
-         u+WthsJqknGcI7IYxeM61+ddnm1GY1MuSAfgmdfta4ieml94fvIKpv0l599MpcbW0JIt
-         lddrokNFfGW+feWLmcuTmjRsjEQQaxRlRA1cfPhVNXWj3P7aa+yZLWXwaTglv3khOjS7
-         bsKXGvBMvdOKGl1zvJLG+KOymwnLd+V4+uj6LhMggok0B4nWewG/g4UoPdgTVH/bY3RS
-         xp5i92yyD4biAVqBMsneNL+dIYAJP+kDWuLIdVqGO9c9t7D4VZlBk3lYfwqHMYs413Fu
-         pgyQ==
+        d=chromium.org; s=google; t=1708127743; x=1708732543; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rUDkEiOEm4wZFWkz9cLvzAsbKQOJPsyUHuSB+y80Mkk=;
+        b=VQCtYCr/+ts5IGN30TRG5SvBOqUyUZrUebrY5VZC5UYDCsfaMgpa/3qM9YoBXxTx3U
+         Gc9AUYF5vVlvdREE3lVmWZ3yJpbArbyk4bmvb+kSQnSQlaQJV5DIvlubT0QquujUA0Br
+         fQFB+0fUe3oegyOpeZvpJiJ4HbgTWjzHAYYzk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708127731; x=1708732531;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=46NbERsw+rX6VfHxglAqwzl8LfYw4J5J2BPeonbB4cQ=;
-        b=Bi1b29Q47W2j5u0NF9GbaReYjqZ9sE9hbebnaN5rA+KDK+ksJQa3BFO2OLOFjSyrUE
-         y/qTw6dW1tWFXzDHggcllKs54FDupR64YldNJAEDDV9ElenJ3c5K/TWGL0N7heeRrbfu
-         y/lvcgM582DLStz8Vhc6YB85FjSIy41scdnUU5V0Q3V/mHEjnMAIldeBpxFIAQgpEFjM
-         wZ2X6aWylsheo1AHAUL+yab6hTqjFdSu1TIsGIrq9frUCLVG1er7OQebfBXztrCKoHph
-         UBdfswyVbae8Kd6D0uOGWZAAJL3Yu8GdREBK6x/F7FgTWC2n7/vwEASVROX/bkE8AG9v
-         fQVw==
-X-Forwarded-Encrypted: i=1; AJvYcCVgE5I0y3+w/ttktb6B7nVGzkqdQvDzikUpOc8o4dW21gSx6t0H2ghpPdf9SdbPw/2BXKBUI8vncX9/xecZwVmyWy+HiHYbuwxuZakb
-X-Gm-Message-State: AOJu0YzBnCZPMY9Nuwy1Q5zSjQy60pXg4u6WzY2sWaSfTHXZwzsRR8Y+
-	fPfmwUohh96aEtB/QssQj0rstxEwD5WctVqK9waET60yaMwZw8xIvJJCZaF4Z8yWDGV5RE4H/25
-	WgbknGA==
-X-Google-Smtp-Source: AGHT+IE4bQY/CB1B0/WXTdaQyv1n3CcOnSyLya3adYFdC1HymqVRSC47qHyQNvHyN98hRvzQahTLeIlhVmlk
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:4b5c:352:4272:e34e])
- (user=irogers job=sendgmr) by 2002:a25:a4c9:0:b0:dcd:25be:aefb with SMTP id
- g67-20020a25a4c9000000b00dcd25beaefbmr1583424ybi.13.1708127731233; Fri, 16
- Feb 2024 15:55:31 -0800 (PST)
-Date: Fri, 16 Feb 2024 15:52:02 -0800
-In-Reply-To: <20240216235203.229256-1-irogers@google.com>
-Message-Id: <20240216235203.229256-9-irogers@google.com>
+        d=1e100.net; s=20230601; t=1708127743; x=1708732543;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rUDkEiOEm4wZFWkz9cLvzAsbKQOJPsyUHuSB+y80Mkk=;
+        b=F/hLdFE3qAznQK0DRPPvcbF/6Z+iclDzNPh/kBQ5EJvLKWfGbkNDLnqAFKMogTGQwE
+         dVddvKZjU+K3rnLWCzYZjd2CP2V8e94hBzzEpZ1X7pIkcLV11MxTLfq54GqLUAkUZ5AP
+         SxWe+ddd6B4u4uYGC5i1MaqhYGAOOJZOFx25Qr4kXYGuaN20+KmdtuyEFFGWZlC7KGKI
+         Z4UqWGzCQjWcVok893vebTERDJXXuxLL3yJ1Pe+RKyZze8N9NOQ9op9KYdygS/JE9+FE
+         xTSFe1EAaDXJaEy+JPiy1BOU8rSvhUTN0FOrl4jmCCGiM/APTVS5H2rrNk8zV1dIWEOu
+         Z0qA==
+X-Forwarded-Encrypted: i=1; AJvYcCWJKJBipVqLH5EGBYK1aIvaWf5lvNt6Y0mlkA9vXhr6mQpOm6nPw0v5cEs2u439Hzs8nSbvci4SAQ+vT+bu+w2liMjwpcRpC0Bmxfia
+X-Gm-Message-State: AOJu0YzRWtI9unbuTvPpsqg7RZ8woXDOssPdYd0QKLQoI43UlcNj74I0
+	Z2rj/K8Q4rvM7MvUfreW63gP9tEelOImm69UdFSRgL32jZwEOekFQWUJ9Z2akQ==
+X-Google-Smtp-Source: AGHT+IGp6ieCJBOEJNwqboZ7bIDXfwShDqq4uoQtFYAcWRwFzB9mZWSbaV8y9ctUgAo16I+2+a2wCw==
+X-Received: by 2002:a05:6a00:2d20:b0:6e1:4854:a971 with SMTP id fa32-20020a056a002d2000b006e14854a971mr1937441pfb.29.1708127743221;
+        Fri, 16 Feb 2024 15:55:43 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id ca27-20020a056a02069b00b005dc4fc80b21sm368295pgb.70.2024.02.16.15.55.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Feb 2024 15:55:42 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Alexei Starovoitov <ast@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Haowen Bai <baihaowen@meizu.com>,
+	bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Anton Protopopov <aspsk@isovalent.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] bpf: Replace bpf_lpm_trie_key 0-length array with flexible array
+Date: Fri, 16 Feb 2024 15:55:40 -0800
+Message-Id: <20240216235536.it.234-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240216235203.229256-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-Subject: [PATCH v5 8/8] perf tests: Add option to run tests in parallel
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, James Clark <james.clark@arm.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Yang Jihong <yangjihong1@huawei.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4343; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=4OucJmNe1/pNjupONQadff5J4lun4ayJWUXyyzw61w8=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlz/X8UPCdAKeZwgS/GrEX/APRKLSR78iobTw4y
+ dXxUgXbWaKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZc/1/AAKCRCJcvTf3G3A
+ Ju39D/9tO6fK6reOxpstX11hwZ2bgrVjYujyRm7uaqbmD+TCRcbVOzoQd0p7gjziow3lwrEyLa+
+ 4YP7D8O3gXP0SZVLS4qwYCBDTT09wuVBZzXp9rm3z8IxDmN+WpJOCaMh5j6jd84QsNNO8INr2Tf
+ Opb2E+xfhF9+rW3QEIksdQj1gOOS5o/R/jF0x+KJCS+fB5lNtJa0x545ihPNPAC76/WUdogGftD
+ SdhjFednoLYJFL/AOIiCa9GWmd8Gj7USAKFHFSs3ZkMwLqzAngxC8oPvGuK9stI/cBkAqzDj9Mg
+ ldvYlxhlCeAjn2yP0LKEEiCCGHz/KioHHO3r1J7ywT1ccobLkatybedYEk8zGMQWpfVKyWR4udr
+ ZLw4uXlAmfPdoZBZ0r8RcFpqhg6X+uTR6le6/I3JiOXHLPb2T4xaghtvCxXwWcjaG9DXXyK3wRz
+ CuLQ1arkLEbVTyyHNjBnG65P+BVRB5mJqSm1t3uA0nuMp+d2i4qgce2Z801e3gLPVI6TKVdrZHo
+ 5HqzhpSZXfrN7LaXubTTX7EVx+5jVV54lRpxKOdiOy23UrA9pI+olBpYjQHM+uztAtb6hVoHmTW
+ vRp8RuUUrhKE8U2QE65ZTTFIl1P86FFUqDgH96cB9vp3OQNZNGwBnRFR3+KxEGzvH0RQ4fKIoQn
+ q51rjQ9 nGYFw61w==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-By default tests are forked, add an option (-p or --parallel) so that
-the forked tests are all started in parallel and then their output
-gathered serially. This is opt-in as running in parallel can cause
-test flakes.
+Replace deprecated 0-length array in struct bpf_lpm_trie_key with
+flexible array. Found with GCC 13:
 
-Rather than fork within the code, the start_command/finish_command
-from libsubcmd are used. This changes how stderr and stdout are
-handled. The child stderr and stdout are always read to avoid the
-child blocking. If verbose is 1 (-v) then if the test fails the child
-stdout and stderr are displayed. If the verbose is >1 (e.g. -vv) then
-the stdout and stderr from the child are immediately displayed.
+../kernel/bpf/lpm_trie.c:207:51: warning: array subscript i is outside array bounds of 'const __u8[0]' {aka 'const unsigned char[]'} [-Warray-bounds=]
+  207 |                                        *(__be16 *)&key->data[i]);
+      |                                                   ^~~~~~~~~~~~~
+../include/uapi/linux/swab.h:102:54: note: in definition of macro '__swab16'
+  102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
+      |                                                      ^
+../include/linux/byteorder/generic.h:97:21: note: in expansion of macro '__be16_to_cpu'
+   97 | #define be16_to_cpu __be16_to_cpu
+      |                     ^~~~~~~~~~~~~
+../kernel/bpf/lpm_trie.c:206:28: note: in expansion of macro 'be16_to_cpu'
+  206 |                 u16 diff = be16_to_cpu(*(__be16 *)&node->data[i]
+^
+      |                            ^~~~~~~~~~~
+In file included from ../include/linux/bpf.h:7:
+../include/uapi/linux/bpf.h:82:17: note: while referencing 'data'
+   82 |         __u8    data[0];        /* Arbitrary size */
+      |                 ^~~~
 
-An unscientific test on my laptop shows the wall clock time for perf
-test without parallel being 5 minutes 21 seconds and with parallel
-(-p) being 1 minute 50 seconds.
+And found at run-time under CONFIG_FORTIFY_SOURCE:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+  UBSAN: array-index-out-of-bounds in kernel/bpf/lpm_trie.c:218:49
+  index 0 is out of range for type '__u8 [*]'
+
+This includes fixing the selftest which was incorrectly using a
+variable length struct as a header, identified earlier[1]. Avoid this
+by just explicitly including the prefixlen member instead of struct
+bpf_lpm_trie_key.
+
+Note that it is not possible to simply remove the "data" member, as it
+is referenced by userspace
+
+cilium:
+        struct egress_gw_policy_key in_key = {
+                .lpm_key = { 32 + 24, {} },
+                .saddr   = CLIENT_IP,
+                .daddr   = EXTERNAL_SVC_IP & 0Xffffff,
+        };
+
+systemd:
+	ipv6_map_fd = bpf_map_new(
+			BPF_MAP_TYPE_LPM_TRIE,
+			offsetof(struct bpf_lpm_trie_key, data) + sizeof(uint32_t)*4,
+			sizeof(uint64_t),
+			...
+
+The only risk to UAPI would be if sizeof() were used directly on the
+data member, which it does not seem to be. It is only used as a static
+initializer destination and to find its location via offsetof().
+
+Link: https://lore.kernel.org/all/202206281009.4332AA33@keescook/ [1]
+Reported-by: Mark Rutland <mark.rutland@arm.com>
+Closes: https://paste.debian.net/hidden/ca500597/
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- tools/perf/tests/builtin-test.c | 314 ++++++++++++++++++++++----------
- 1 file changed, 215 insertions(+), 99 deletions(-)
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Andrii Nakryiko <andrii@kernel.org>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>
+Cc: Song Liu <song@kernel.org>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: KP Singh <kpsingh@kernel.org>
+Cc: Stanislav Fomichev <sdf@google.com>
+Cc: Hao Luo <haoluo@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Mykola Lysenko <mykolal@fb.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Haowen Bai <baihaowen@meizu.com>
+Cc: bpf@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index c42cb40fc242..d13ee7683d9d 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -6,6 +6,7 @@
-  */
- #include <fcntl.h>
- #include <errno.h>
-+#include <poll.h>
- #include <unistd.h>
- #include <string.h>
- #include <stdlib.h>
-@@ -21,9 +22,11 @@
- #include "debug.h"
- #include "color.h"
- #include <subcmd/parse-options.h>
-+#include <subcmd/run-command.h>
- #include "string2.h"
- #include "symbol.h"
- #include "util/rlimit.h"
-+#include "util/strbuf.h"
- #include <linux/kernel.h>
- #include <linux/string.h>
- #include <subcmd/exec-cmd.h>
-@@ -31,7 +34,13 @@
+v2- clarify commit log, add more failure examples
+v1- https://lore.kernel.org/all/63e531e3.170a0220.3a46a.3262@mx.google.com/
+---
+ include/uapi/linux/bpf.h                         | 2 +-
+ tools/testing/selftests/bpf/progs/map_ptr_kern.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index 754e68ca8744..359dd8a429c1 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -80,7 +80,7 @@ struct bpf_insn {
+ /* Key of an a BPF_MAP_TYPE_LPM_TRIE entry */
+ struct bpf_lpm_trie_key {
+ 	__u32	prefixlen;	/* up to 32 for AF_INET, 128 for AF_INET6 */
+-	__u8	data[0];	/* Arbitrary size */
++	__u8	data[];		/* Arbitrary size */
+ };
  
- #include "tests-scripts.h"
+ struct bpf_cgroup_storage_key {
+diff --git a/tools/testing/selftests/bpf/progs/map_ptr_kern.c b/tools/testing/selftests/bpf/progs/map_ptr_kern.c
+index 3325da17ec81..1d476c6ae284 100644
+--- a/tools/testing/selftests/bpf/progs/map_ptr_kern.c
++++ b/tools/testing/selftests/bpf/progs/map_ptr_kern.c
+@@ -316,7 +316,7 @@ struct lpm_trie {
+ } __attribute__((preserve_access_index));
  
-+/*
-+ * Command line option to not fork the test running in the same process and
-+ * making them easier to debug.
-+ */
- static bool dont_fork;
-+/* Fork the tests in parallel and then wait for their completion. */
-+static bool parallel;
- const char *dso_to_test;
- const char *test_objdump_path = "objdump";
+ struct lpm_key {
+-	struct bpf_lpm_trie_key trie_key;
++	__u32 prefixlen;
+ 	__u32 data;
+ };
  
-@@ -209,76 +218,36 @@ static bool perf_test__matches(const char *desc, int curr, int argc, const char
- 	return false;
- }
- 
--static int run_test(struct test_suite *test, int subtest)
--{
--	int status, err = -1, child = dont_fork ? 0 : fork();
--	char sbuf[STRERR_BUFSIZE];
--
--	if (child < 0) {
--		pr_err("failed to fork test: %s\n",
--			str_error_r(errno, sbuf, sizeof(sbuf)));
--		return -1;
--	}
--
--	if (!child) {
--		if (!dont_fork) {
--			pr_debug("test child forked, pid %d\n", getpid());
--
--			if (verbose <= 0) {
--				int nullfd = open("/dev/null", O_WRONLY);
--
--				if (nullfd >= 0) {
--					close(STDERR_FILENO);
--					close(STDOUT_FILENO);
--
--					dup2(nullfd, STDOUT_FILENO);
--					dup2(STDOUT_FILENO, STDERR_FILENO);
--					close(nullfd);
--				}
--			} else {
--				signal(SIGSEGV, sighandler_dump_stack);
--				signal(SIGFPE, sighandler_dump_stack);
--			}
--		}
--
--		err = test_function(test, subtest)(test, subtest);
--		if (!dont_fork)
--			exit(err);
--	}
--
--	if (!dont_fork) {
--		wait(&status);
-+struct child_test {
-+	struct child_process process;
-+	struct test_suite *test;
-+	int test_num;
-+	int subtest;
-+};
- 
--		if (WIFEXITED(status)) {
--			err = (signed char)WEXITSTATUS(status);
--			pr_debug("test child finished with %d\n", err);
--		} else if (WIFSIGNALED(status)) {
--			err = -1;
--			pr_debug("test child interrupted\n");
--		}
--	}
-+static int run_test_child(struct child_process *process)
-+{
-+	struct child_test *child = container_of(process, struct child_test, process);
-+	int err;
- 
--	return err;
-+	pr_debug("--- start ---\n");
-+	pr_debug("test child forked, pid %d\n", getpid());
-+	err = test_function(child->test, child->subtest)(child->test, child->subtest);
-+	pr_debug("---- end(%d) ----\n", err);
-+	fflush(NULL);
-+	return -err;
- }
- 
--#define for_each_test(j, k, t)			\
--	for (j = 0, k = 0; j < ARRAY_SIZE(tests); j++, k = 0)	\
--		while ((t = tests[j][k++]) != NULL)
--
--static int test_and_print(struct test_suite *t, int subtest)
-+static int print_test_result(struct test_suite *t, int i, int subtest, int result, int width)
- {
--	int err;
-+	if (has_subtests(t)) {
-+		int subw = width > 2 ? width - 2 : width;
- 
--	pr_debug("\n--- start ---\n");
--	err = run_test(t, subtest);
--	pr_debug("---- end ----\n");
-+		pr_info("%3d.%1d: %-*s:", i + 1, subtest + 1, subw, test_description(t, subtest));
-+	} else
-+		pr_info("%3d: %-*s:", i + 1, width, test_description(t, subtest));
- 
--	if (!has_subtests(t))
--		pr_debug("%s:", t->desc);
--	else
--		pr_debug("%s subtest %d:", t->desc, subtest + 1);
--
--	switch (err) {
-+	switch (result) {
- 	case TEST_OK:
- 		pr_info(" Ok\n");
- 		break;
-@@ -297,34 +266,186 @@ static int test_and_print(struct test_suite *t, int subtest)
- 		break;
- 	}
- 
--	return err;
-+	return 0;
-+}
-+
-+static int finish_test(struct child_test *child_test, int width)
-+{
-+	struct test_suite *t = child_test->test;
-+	int i = child_test->test_num;
-+	int subi = child_test->subtest;
-+	int out = child_test->process.out;
-+	int err = child_test->process.err;
-+	bool out_done = out <= 0;
-+	bool err_done = err <= 0;
-+	struct strbuf out_output = STRBUF_INIT;
-+	struct strbuf err_output = STRBUF_INIT;
-+	int ret;
-+
-+	/*
-+	 * For test suites with subtests, display the suite name ahead of the
-+	 * sub test names.
-+	 */
-+	if (has_subtests(t) && subi == 0)
-+		pr_info("%3d: %-*s:\n", i + 1, width, test_description(t, -1));
-+
-+	/*
-+	 * Busy loop reading from the child's stdout and stderr that are set to
-+	 * be non-blocking until EOF.
-+	 */
-+	if (!out_done)
-+		fcntl(out, F_SETFL, O_NONBLOCK);
-+	if (!err_done)
-+		fcntl(err, F_SETFL, O_NONBLOCK);
-+	if (verbose > 1) {
-+		if (has_subtests(t))
-+			pr_info("%3d.%1d: %s:\n", i + 1, subi + 1, test_description(t, subi));
-+		else
-+			pr_info("%3d: %s:\n", i + 1, test_description(t, -1));
-+	}
-+	while (!out_done || !err_done) {
-+		struct pollfd pfds[2] = {
-+			{ .fd = out,
-+			  .events = POLLIN | POLLERR | POLLHUP | POLLNVAL,
-+			},
-+			{ .fd = err,
-+			  .events = POLLIN | POLLERR | POLLHUP | POLLNVAL,
-+			},
-+		};
-+		char buf[512];
-+		ssize_t len;
-+
-+		/* Poll to avoid excessive spinning, timeout set for 1000ms. */
-+		poll(pfds, ARRAY_SIZE(pfds), /*timeout=*/1000);
-+		if (!out_done && pfds[0].revents) {
-+			errno = 0;
-+			len = read(out, buf, sizeof(buf) - 1);
-+
-+			if (len <= 0) {
-+				out_done = errno != EAGAIN;
-+			} else {
-+				buf[len] = '\0';
-+				if (verbose > 1)
-+					fprintf(stdout, "%s", buf);
-+				else
-+					strbuf_addstr(&out_output, buf);
-+			}
-+		}
-+		if (!err_done && pfds[1].revents) {
-+			errno = 0;
-+			len = read(err, buf, sizeof(buf) - 1);
-+
-+			if (len <= 0) {
-+				err_done = errno != EAGAIN;
-+			} else {
-+				buf[len] = '\0';
-+				if (verbose > 1)
-+					fprintf(stdout, "%s", buf);
-+				else
-+					strbuf_addstr(&err_output, buf);
-+			}
-+		}
-+	}
-+	/* Clean up child process. */
-+	ret = finish_command(&child_test->process);
-+	if (verbose == 1 && ret == TEST_FAIL) {
-+		/* Add header for test that was skipped above. */
-+		if (has_subtests(t))
-+			pr_info("%3d.%1d: %s:\n", i + 1, subi + 1, test_description(t, subi));
-+		else
-+			pr_info("%3d: %s:\n", i + 1, test_description(t, -1));
-+		fprintf(stdout, "%s", out_output.buf);
-+		fprintf(stderr, "%s", err_output.buf);
-+	}
-+	strbuf_release(&out_output);
-+	strbuf_release(&err_output);
-+	print_test_result(t, i, subi, ret, width);
-+	if (out > 0)
-+		close(out);
-+	if (err > 0)
-+		close(err);
-+	return 0;
-+}
-+
-+static int start_test(struct test_suite *test, int i, int subi, struct child_test **child,
-+		      int width)
-+{
-+	int err;
-+
-+	*child = NULL;
-+	if (dont_fork) {
-+		pr_debug("--- start ---\n");
-+		err = test_function(test, subi)(test, subi);
-+		pr_debug("---- end ----\n");
-+		print_test_result(test, i, subi, err, width);
-+		return 0;
-+	}
-+
-+	*child = zalloc(sizeof(**child));
-+	if (!*child)
-+		return -ENOMEM;
-+
-+	(*child)->test = test;
-+	(*child)->test_num = i;
-+	(*child)->subtest = subi;
-+	(*child)->process.pid = -1;
-+	(*child)->process.no_stdin = 1;
-+	if (verbose <= 0) {
-+		(*child)->process.no_stdout = 1;
-+		(*child)->process.no_stderr = 1;
-+	} else {
-+		(*child)->process.out = -1;
-+		(*child)->process.err = -1;
-+	}
-+	(*child)->process.no_exec_cmd = run_test_child;
-+	err = start_command(&(*child)->process);
-+	if (err || parallel)
-+		return  err;
-+	return finish_test(*child, width);
- }
- 
-+#define for_each_test(j, k, t)					\
-+	for (j = 0, k = 0; j < ARRAY_SIZE(tests); j++, k = 0)	\
-+		while ((t = tests[j][k++]) != NULL)
-+
- static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
- {
- 	struct test_suite *t;
- 	unsigned int j, k;
- 	int i = 0;
- 	int width = 0;
-+	size_t num_tests = 0;
-+	struct child_test **child_tests;
-+	int child_test_num = 0;
- 
- 	for_each_test(j, k, t) {
- 		int len = strlen(test_description(t, -1));
- 
- 		if (width < len)
- 			width = len;
-+
-+		if (has_subtests(t)) {
-+			for (int subi = 0, subn = num_subtests(t); subi < subn; subi++) {
-+				len = strlen(test_description(t, subi));
-+				if (width < len)
-+					width = len;
-+				num_tests++;
-+			}
-+		} else {
-+			num_tests++;
-+		}
- 	}
-+	child_tests = calloc(num_tests, sizeof(*child_tests));
-+	if (!child_tests)
-+		return -ENOMEM;
- 
- 	for_each_test(j, k, t) {
- 		int curr = i++;
--		int subi;
- 
- 		if (!perf_test__matches(test_description(t, -1), curr, argc, argv)) {
- 			bool skip = true;
--			int subn;
--
--			subn = num_subtests(t);
- 
--			for (subi = 0; subi < subn; subi++) {
-+			for (int subi = 0, subn = num_subtests(t); subi < subn; subi++) {
- 				if (perf_test__matches(test_description(t, subi),
- 							curr, argc, argv))
- 					skip = false;
-@@ -334,52 +455,45 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
- 				continue;
- 		}
- 
--		pr_info("%3d: %-*s:", i, width, test_description(t, -1));
--
- 		if (intlist__find(skiplist, i)) {
-+			pr_info("%3d: %-*s:", curr + 1, width, test_description(t, -1));
- 			color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip (user override)\n");
- 			continue;
- 		}
- 
- 		if (!has_subtests(t)) {
--			test_and_print(t, -1);
--		} else {
--			int subn = num_subtests(t);
--			/*
--			 * minus 2 to align with normal testcases.
--			 * For subtest we print additional '.x' in number.
--			 * for example:
--			 *
--			 * 35: Test LLVM searching and compiling                        :
--			 * 35.1: Basic BPF llvm compiling test                          : Ok
--			 */
--			int subw = width > 2 ? width - 2 : width;
--
--			if (subn <= 0) {
--				color_fprintf(stderr, PERF_COLOR_YELLOW,
--					      " Skip (not compiled in)\n");
--				continue;
--			}
--			pr_info("\n");
-+			int err = start_test(t, curr, -1, &child_tests[child_test_num++], width);
- 
--			for (subi = 0; subi < subn; subi++) {
--				int len = strlen(test_description(t, subi));
--
--				if (subw < len)
--					subw = len;
-+			if (err) {
-+				/* TODO: if parallel waitpid the already forked children. */
-+				free(child_tests);
-+				return err;
- 			}
-+		} else {
-+			for (int subi = 0, subn = num_subtests(t); subi < subn; subi++) {
-+				int err;
- 
--			for (subi = 0; subi < subn; subi++) {
- 				if (!perf_test__matches(test_description(t, subi),
- 							curr, argc, argv))
- 					continue;
- 
--				pr_info("%3d.%1d: %-*s:", i, subi + 1, subw,
--					test_description(t, subi));
--				test_and_print(t, subi);
-+				err = start_test(t, curr, subi, &child_tests[child_test_num++],
-+						 width);
-+				if (err)
-+					return err;
- 			}
- 		}
- 	}
-+	for (i = 0; i < child_test_num; i++) {
-+		if (parallel) {
-+			int ret  = finish_test(child_tests[i], width);
-+
-+			if (ret)
-+				return ret;
-+		}
-+		free(child_tests[i]);
-+	}
-+	free(child_tests);
- 	return 0;
- }
- 
-@@ -447,6 +561,8 @@ int cmd_test(int argc, const char **argv)
- 		    "be more verbose (show symbol address, etc)"),
- 	OPT_BOOLEAN('F', "dont-fork", &dont_fork,
- 		    "Do not fork for testcase"),
-+	OPT_BOOLEAN('p', "parallel", &parallel,
-+		    "Run the tests altogether in parallel"),
- 	OPT_STRING('w', "workload", &workload, "work", "workload to run for testing"),
- 	OPT_STRING(0, "dso", &dso_to_test, "dso", "dso to test"),
- 	OPT_STRING(0, "objdump", &test_objdump_path, "path",
 -- 
-2.44.0.rc0.258.g7320e95886-goog
+2.34.1
 
