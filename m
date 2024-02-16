@@ -1,107 +1,85 @@
-Received: from mail.rosalinux.ru (mail.rosalinux.ru [195.19.76.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA062CCB4;
-	Fri, 16 Feb 2024 12:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.19.76.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0471212883D
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 12:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708087841; cv=none; b=aegjf+3bGz5LqLszOI+gQ23Zw2/AfnHAWZKMIvpO+oDLxM4y02Iw2m8XgwPpvQj7tvcODDOCt0+uM+XbV6xvpyIoWjJVvhxbRaYWz776/FNXwnTzRHzFO0fvIA8dxeDpEqErA5BJx2yISBkk8wa94tAJq36a2qEXDl8ZktRJWoU=
+	t=1708087931; cv=none; b=ZtomVC+cVpYsZLjhMikLrEP3mTQ/DoLdWAV8kZG58OQZUZjBgksvCEGozDvWIcIrcD8b18ZMthxKdJ/XGEuP5kRMdxnyUl7BUiM5bsJmtCfF/53RAiwkDxsNKCtTk/lFp9GcTPBHf91rEgznXnlBv9thhXvJZgz6V7e2U4a5d5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708087841; c=relaxed/simple;
-	bh=k2fpWlsq3ikrp8PHJJJBcQSXhbD5PcQPjZovIN5SiKE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tOUw2cvAP9RLs4VoFl+mhaYXC2UWSn2MPNIoYA5HHAUbGUsmuNVTDIjvGJcYFOeifU+UU1KpscOyawEmkVxyfWCfV1lPe3+yro73o9kN1MzoUmZqSpuAuMjC8UUfsX7JpqOhY4gs0FnX4tSqMKyNphUringUxyfSzt7ZxqUTuoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosalinux.ru; spf=pass smtp.mailfrom=rosalinux.ru; dkim=pass (2048-bit key) header.d=rosalinux.ru header.i=@rosalinux.ru header.b=OBnE1toA; arc=none smtp.client-ip=195.19.76.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosalinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosalinux.ru
+	s=arc-20240116; t=1708087931; c=relaxed/simple;
+	bh=pE/r6+xB3dzintHnnqc2M0R285DNLssjnyBlOWPpovg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F8LsCGTXCzfI+Temy5eNQNo/66G1mezyXpj+x56YyjrT2z+ZgIzzEnnM0KP2ciJLaY44m3gF3cfuPov+q3Zpgm0IAQR6Vx8b41YrY5UT2IWhfLvCkLle9HCJsFfqgOW+CWnjadXBkF1zrGpnVv2EzTQjx/wSmKZgRYnoSUccLFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=NAeRzwHM; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rosalinux.ru header.i=@rosalinux.ru header.b="OBnE1toA"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rosalinux.ru (Postfix) with ESMTP id 6DE5418575DEA;
-	Fri, 16 Feb 2024 15:40:28 +0300 (MSK)
-Received: from mail.rosalinux.ru ([127.0.0.1])
-	by localhost (mail.rosalinux.ru [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id yTkEI9-BT0By; Fri, 16 Feb 2024 15:40:28 +0300 (MSK)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rosalinux.ru (Postfix) with ESMTP id 3C67A1859D618;
-	Fri, 16 Feb 2024 15:40:28 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rosalinux.ru 3C67A1859D618
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosalinux.ru;
-	s=1D4BB666-A0F1-11EB-A1A2-F53579C7F503; t=1708087228;
-	bh=zgV0ivj/OEUx/r+edsUgWjC2NypknE++yAGJ22q5QGk=;
-	h=From:To:Date:Message-Id:MIME-Version;
-	b=OBnE1toA9i06HkfC7k8Q2ftnCEJ95/C/kobi4hfdtCJuoHST49Uloz9mYnMHED9MF
-	 waEdFoQlrN3tADQJsGGiPtHQPmdGISVjRJtGUWGSbq8ALxbA6/a7bSx+X6sgtS3xEi
-	 703fzxlXkEe/JEGm55nnwefGh96LMaTnbcRCSuoW84djwwHhTymWArnDiLm3JCmmrs
-	 8NJfKcsLFDSU5nxE4GDqylcaLEJwdiohuAaORB5Me5y6RpdlVtgT8WFHdTWplIu4lX
-	 RnSYdRiUeBVhSjD+XiNCAxyDvptpS5GxWF2L6Q1EUJ6DHa85MBal/QfiuI1GLbk+m5
-	 6GhFh/36hDnzg==
-X-Virus-Scanned: amavisd-new at rosalinux.ru
-Received: from mail.rosalinux.ru ([127.0.0.1])
-	by localhost (mail.rosalinux.ru [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id W8JxpCQNt1ZG; Fri, 16 Feb 2024 15:40:28 +0300 (MSK)
-Received: from ubuntu.localdomain (unknown [144.206.93.23])
-	by mail.rosalinux.ru (Postfix) with ESMTPSA id EE6151855EE38;
-	Fri, 16 Feb 2024 15:40:27 +0300 (MSK)
-From: Aleksandr Burakov <a.burakov@rosalinux.ru>
-To: Mauro Carvalho Chehab <mchehab@infradead.org>
-Cc: Aleksandr Burakov <a.burakov@rosalinux.ru>,
-	Hartmut Hackmann <hartmut.hackmann@t.online.de>,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH] [media] saa7134: Unchecked i2c_transfer function result fixed
-Date: Fri, 16 Feb 2024 15:40:06 +0300
-Message-Id: <20240216124006.18896-1-a.burakov@rosalinux.ru>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="NAeRzwHM"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-563fe793e1cso473860a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 04:52:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1708087925; x=1708692725; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=pE/r6+xB3dzintHnnqc2M0R285DNLssjnyBlOWPpovg=;
+        b=NAeRzwHMVuMwPDLmVTt3la0rkO+dWY1Bm0ndQSPnsY4Z6fCkUFiACxb3zLvr5xL3cR
+         eZmp6nH83tF+nacmEtHYSNAO2FJQEpA1DeEWtpwB+ytQ6c3Mzo2q+iRJcSSqwm1ohG48
+         YAnk+TfDkiFeP4pyRC5kd3H86XEMaS8RXRQJZSVJ8du5Cg/YoHXwIW7GZYJ3pOKa8JvI
+         rZlCcMSnCloXlrqP2mviAcSUcgJ/+5D5PAdg1FsTrsmaB3sTsW3eo9NPMWNrYJwGQqIL
+         3iOHIqwxx6sR+Nn5wJSCx0Jhk01JJSANXtFS6QftD2VBGsDjCcgrRLy0Yz9Et8zQVDtm
+         Hx6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708087925; x=1708692725;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pE/r6+xB3dzintHnnqc2M0R285DNLssjnyBlOWPpovg=;
+        b=m2Mtra4MinsD9PWl0dlzXus2SoeSKtvnTrRJgz18ZEZ2vnFNEN64KztDHpy5TAFqEV
+         NapmQcqTc9PrtZ6t4+daSadjS/LijoQlX6F2SlJrF4To6IudDpkiZ3DkymJUmwAfuWfT
+         td5LzO67GdOKREuZYc4u1jYOXiSa7jGIiKsY0saph+ug0/ou7Ols3UXpNfegkbTnPZW3
+         8vwsB6aq2T9YFbrRUulFhoOh6VuioOgHg/2WD9+CZFowiAOgZ4ShcZrlpSfBZh5JwjCA
+         iFXaaxsmj2lTnEw2YI1aBAdyotNe4zZcIFbIadVA05dMk40b9Jzsm3SpKP3f66JDoOHt
+         r4Tg==
+X-Forwarded-Encrypted: i=1; AJvYcCXy9ssgN0ZShgJVlKrJXj8DcwB2vfQr6NKKlrdBUTw/jvt2zj50OHKV/rq3qw7M3Vxu84zzkHWesM3HglwYgD9j5MCCYepqOENLd9Dl
+X-Gm-Message-State: AOJu0YxQwqU9wqke05/gtYVxg719dljj1tyHuWWS7c/nV+Nsi3jDc3AN
+	GOg5sOBoQp65SLQoIMGqU/2jLat2QcZKujhmt8pdnfaHygXdmITI0qhjkebDEqI=
+X-Google-Smtp-Source: AGHT+IFRBKb/J9TVj5LcjAPyURuoUyqdHkJtfwCi4Sl/QZ1XMIhc2qmgUFA+H+LpAaevvSb7nPXWTg==
+X-Received: by 2002:a05:6402:1045:b0:561:cec7:cb1b with SMTP id e5-20020a056402104500b00561cec7cb1bmr3344924edu.32.1708087924910;
+        Fri, 16 Feb 2024 04:52:04 -0800 (PST)
+Received: from localhost ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id eh15-20020a0564020f8f00b00563e97360f9sm558625edb.31.2024.02.16.04.52.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Feb 2024 04:52:04 -0800 (PST)
+Date: Fri, 16 Feb 2024 13:52:01 +0100
+From: Jiri Pirko <jiri@resnulli.us>
+To: =?iso-8859-1?Q?Asbj=F8rn_Sloth_T=F8nnesen?= <ast@fiberby.net>
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>,
+	Cong Wang <xiyou.wangcong@gmail.com>,
+	Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, llu@fiberby.dk
+Subject: Re: [PATCH net-next 1/3] net: sched: cls_api: add skip_sw counter
+Message-ID: <Zc9acSjD6Cf6UFrz@nanopsycho>
+References: <20240215160458.1727237-1-ast@fiberby.net>
+ <20240215160458.1727237-2-ast@fiberby.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240215160458.1727237-2-ast@fiberby.net>
 
-Return value of function 'i2c_transfer' is not checked that
-may cause undefined behaviour.
+Thu, Feb 15, 2024 at 05:04:42PM CET, ast@fiberby.net wrote:
+>Maintain a count of skip_sw filters.
+>
+>This counter is protected by the cb_lock, and is updated
+>at the same time as offloadcnt.
+>
+>Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Fixes: 2cf36ac44730 ("[PATCH] v4l: 656: added support for the following c=
-ards")
-Signed-off-by: Aleksandr Burakov <a.burakov@rosalinux.ru>
----
- drivers/media/pci/saa7134/saa7134-dvb.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/media/pci/saa7134/saa7134-dvb.c b/drivers/media/pci/=
-saa7134/saa7134-dvb.c
-index 9c6cfef03331..a66df6adfaad 100644
---- a/drivers/media/pci/saa7134/saa7134-dvb.c
-+++ b/drivers/media/pci/saa7134/saa7134-dvb.c
-@@ -466,7 +466,9 @@ static int philips_europa_tuner_sleep(struct dvb_fron=
-tend *fe)
- 	/* switch the board to analog mode */
- 	if (fe->ops.i2c_gate_ctrl)
- 		fe->ops.i2c_gate_ctrl(fe, 1);
--	i2c_transfer(&dev->i2c_adap, &analog_msg, 1);
-+	if (i2c_transfer(&dev->i2c_adap, &analog_msg, 1) !=3D 1)
-+		return -EIO;
-+
- 	return 0;
- }
-=20
-@@ -1018,7 +1020,9 @@ static int md8800_set_voltage2(struct dvb_frontend =
-*fe,
- 	else
- 		wbuf[1] =3D rbuf & 0xef;
- 	msg[0].len =3D 2;
--	i2c_transfer(&dev->i2c_adap, msg, 1);
-+	if (i2c_transfer(&dev->i2c_adap, msg, 1) !=3D 1)
-+		return -EIO;
-+
- 	return 0;
- }
-=20
---=20
-2.25.1
-
+Reviewed-by: Jiri Pirko <jiri@nvidia.com>
