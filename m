@@ -1,425 +1,128 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26429286AD;
-	Fri, 16 Feb 2024 09:56:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A821B812;
+	Fri, 16 Feb 2024 09:58:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708077384; cv=none; b=l4mcqAfyIaeOgBeYvvaecSEmwfrk/MrwOBw14IjFetPpYpwvPv+7aUlaO8khPp2/NKV1fElmTaG9dUXKYd/OLqJur8f38ZGiJ3Jxq/I9+RMN7mcg8ohIVYNSDXk1BA16CocJF+dHU4FyQHeCMycPGD7lMaSlbo3lau/rjcKyySY=
+	t=1708077496; cv=none; b=B4XQXqp9re//dXZH2b3c356JosfoWIi8mGDXjSsPuoD+YPDmcm92rMd247l6nIPokiNMSp/Q9GaQ3VuvGGkdNDFx0XLiXSVcxvNGvYpJ8FQneZOodcGuq7FIKtqndjftwrcns7wkkgZHkUWt9XVUDHaAws5hZZcXg5D0wN8Tlpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708077384; c=relaxed/simple;
-	bh=j4WYdlH2C0SjARdDRBqYCOTeUj3v1ffV3fGDsF0zbRM=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=XNapF43S3x151vAJrJFk25i8YCAhPgE8kMVTLICXWdE3oQCFh8aza4kf+byPhbtO0lxUbKsZmKHRDZcOVqEQNSD5qRlQBML1OstcAguoaBSoaz3mhbJaKnBbqjoGYFNC82cQ06wXOwH5IqnVQD1hPfKltm4eMataWxcAIVPcjX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=iz7Ye9Sp; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1708077496; c=relaxed/simple;
+	bh=Igmoy1QfrGqffoxw4riM61fuv9HSbbNYM74Sz4fxSTg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ehjn/huvL700jH9yVVmATBPz4HJy4VLaVfAGXjubx/5LFgOcIWy4y5Kf+hmxSrSTyisq9ws1VY9E8rhg0wDFQQZKh3JXyN2DT+QF0JvWcrWSK8Mvd0qQCVGqFjlrsWqwpAPgKFViPKzquyZcsJCie+jc5pVoSxih6Qhdf47pHZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=CcMs6WvF; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="iz7Ye9Sp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1708077374; x=1708682174; i=markus.elfring@web.de;
-	bh=j4WYdlH2C0SjARdDRBqYCOTeUj3v1ffV3fGDsF0zbRM=;
-	h=X-UI-Sender-Class:Date:From:Subject:To:Cc;
-	b=iz7Ye9SpWpUmC8Hr0DfRZV7pfVRPEplG1eviG2cAguU9yzhnKMfeMJqYas+fgrJc
-	 YIwxsqmLKUnyLLJWLKTroau9eidgH2X53s593F1Uu8Yzp9W9jY6dqCiAuap33WCCl
-	 hCIRHZIbJY+mOf+n1ZRbYRGMCLp5+gfDO8cmN7rdWknneqmjQxxowx2WU6U4eby6K
-	 conea6e0xQRH7mI2wfx2q0lc8atcryD1tIbRprmqcKdnM0aae4BtK6L3Z1MXI7UXF
-	 YV/BHu3pC2xu2PS8pTYjNuhi5MbcEkv3DbIqNr5EzAJUcpNQbK+eku2EV5BjUDZ0c
-	 jcj1HklLGP1lWe9h8A==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.80.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MeDMR-1qzvHw2FUN-00bHl6; Fri, 16
- Feb 2024 10:50:43 +0100
-Message-ID: <4b50017b-d3f6-45c8-b4a0-6943c7a7e54e@web.de>
-Date: Fri, 16 Feb 2024 10:50:27 +0100
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="CcMs6WvF"
+X-UUID: dfaecea2ccb111eea2298b7352fd921d-20240216
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=9E/UvhK5CSAsRCQgb1278nkWwKaiC3/rTLcvlSnjgNE=;
+	b=CcMs6WvF5d7loJMAWZtv51nKSvSl8fulQFJU5PZXS2zfL5CMi5Bm0AaKXoMqPQCFFKzkakF0SVxqg5iMI+d3myUQoc6dCZp1Ua3IjDfWKXPko/S+gJTUaJSmJkcw+D7Z8UQw8DGGeXpQ9qLAd1OSpkNmx791/6Xrl6bwTnncku0=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:599dcc33-084b-4862-ae1e-31e6349c55f2,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6f543d0,CLOUDID:f49af583-8d4f-477b-89d2-1e3bdbef96d1,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-UUID: dfaecea2ccb111eea2298b7352fd921d-20240216
+Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw02.mediatek.com
+	(envelope-from <macpaul.lin@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 447384518; Fri, 16 Feb 2024 17:58:02 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Fri, 16 Feb 2024 17:58:01 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Fri, 16 Feb 2024 17:58:01 +0800
+From: Macpaul Lin <macpaul.lin@mediatek.com>
+To: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>
+CC: Bear Wang <bear.wang@mediatek.com>, Pablo Sun <pablo.sun@mediatek.com>,
+	Macpaul Lin <macpaul.lin@mediatek.com>, Macpaul Lin <macpaul@gmail.com>,
+	Chunfeng Yun <chunfeng.yun@mediatek.com>, MediaTek Chromebook Upstream
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Chen-Yu Tsai
+	<wenst@chromium.org>
+Subject: [PATCH] arm64: dts: mediatek: mt8395-genio-1200-evk: add u3port1 for xhci1
+Date: Fri, 16 Feb 2024 17:57:51 +0800
+Message-ID: <20240216095751.4937-1-macpaul.lin@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] iwlwifi: Use common error handling code in five functions
-To: linux-wireless@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Alon Giladi <alon.giladi@intel.com>,
- Anjaneyulu <pagadala.yesu.anjaneyulu@intel.com>,
- Dan Carpenter <dan.carpenter@linaro.org>,
- Gregory Greenman <gregory.greenman@intel.com>,
- Johannes Berg <johannes.berg@intel.com>, Kalle Valo <kvalo@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:zvhrmtS8gAA7vSSneY/0kkuoyoordAd2oZO5xDRTNtWRPJ9Bgst
- FP6XSfiSD2jPijpx55JA1LIGpzQQCW9InIoK3jmo5+L/RQAofH2z06KGdfmKNFJBHJhd05t
- JdWVS8xWuTTl3wRD39QSO3P5Bag2bSdTCceMFdey7On9C6aqNFeEj+Aw7DtjwiObXmmhE0i
- 4Z0AaWv0J/X2b5KDFU//A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:bd9dY07eXD4=;f8/5w3QpeIlF3MwRUI2u101cWY0
- a9wLnhH7YB9ZRp7KQmHdTvH/hmiURFLnaJkPBUfjBm/qF/00JMBSCeaYJAzw8nANyt0P0g4ZI
- bkp4pGY/RjwjH+TI3jZROIr9cIX4xyRdW/3cOukpjHtAJ+mO5XjzJAkOU+sgV8DCiIzhdvJH7
- IDMMQBrQVHqHbI6GOA8FeykFnB/5OJE9VhpQ+DGMv+W/j7mDYWQcdzCRHhTXNP5r3lg5P7zF1
- /Qp0V6Aiz5TukKV/NW1EryQ0hEB82RB5/cL1VANVhIARmyHMrski5HvFr8V+McKO0xTcJOGkI
- uyw2BvRA0aoCi2psITq06gqTyPR+kuXNI5Q2QkcgNaLmYYZSu/5qdDqDj3ICEqtL1rCXJlSFH
- SuRy9rlwO44MmRTYlK9ZxNWLZGHON4GAeUvhOgp0/+gbGVPpCy4As9B+pvaC3Gaoy+WDIy03+
- 2yFlFVjLBGFQbaAF8gxV/d7CIFxA5MbXch1gEnX5OGTdt29RB3CW93nEE2wdWw2NEQj00B5pl
- CwtqUraLsYctWOA6Hy7ikHNREqIuMsaCi7hnIrpV94asTO9owmAmHqSTE/vD7Ljn+cxOGTSWg
- JELXdclpDOTz6rxHCuDOoeVSTDGCLGDRYHeuk9la347hSQAsQN3uwjIQfFhiT4cm9FwjKVG/y
- nsVP1F2yLgBuWSY7vXB1G8E1r5Z6GXiQ1HlhI+jOB365GPRpdaI1l3XQdWufNZU4rS6JPP/pm
- EdkYPRkC1XhzuEGtctlLSr7GlCdl40iGif3g8QtJkQcW8iFYjn5UgxeOnDj2VkKIEX6Wa02Ba
- AyZJGJRmVswx434xE8toyJyzvNm/f40SP1B2wsvsLFIsA=
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Fri, 16 Feb 2024 10:22:20 +0100
+This patch fixes an issue where xhci1 was not functioning properly because
+the state and PHY settings were incorrect.
 
-The error code =E2=80=9C-EINVAL=E2=80=9D was set before the statement =E2=
-=80=9Cgoto out_free=E2=80=9D
-multiple times in some function implementations.
-Add jump targets so that a bit of exception handling can be better reused
-at the end of these functions.
+The introduction of the 'force-mode' property in the phy-mtk-tphy driver
+allows for the correct initialization of xhci1 by updating the Device Tree
+settings accordingly.
 
-This issue was transformed by using the Coccinelle software.
+The necessary fixup which added support for the 'force-mode' switch in the
+phy-mtk-tphy driver.
+commit 9b27303003f5 ("phy: mediatek: tphy: add support force phy mode switch")
+Link: https://lore.kernel.org/r/20231211025624.28991-2-chunfeng.yun@mediatek.com
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/net/wireless/intel/iwlwifi/fw/acpi.c | 130 +++++++++----------
- 1 file changed, 58 insertions(+), 72 deletions(-)
+Prior to this fix, the system would exhibit the following probe failure messages
+for xhci1:
+  xhci-mtk 11290000.usb: supply vbus not found, using dummy regulator
+  xhci-mtk 11290000.usb: uwk - reg:0x400, version:104
+  xhci-mtk 11290000.usb: xHCI Host Controller
+  xhci-mtk 11290000.usb: new USB bus registered, assigned bus number 5
+  xhci-mtk 11290000.usb: clocks are not stable (0x1003d0f)
+  xhci-mtk 11290000.usb: can't setup: -110
+  xhci-mtk 11290000.usb: USB bus 5 deregistered
+  xhci-mtk: probe of 11290000.usb failed with error -110
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/acpi.c b/drivers/net/wi=
-reless/intel/iwlwifi/fw/acpi.c
-index 4caf2e25a297..0d7a2f2eab07 100644
-=2D-- a/drivers/net/wireless/intel/iwlwifi/fw/acpi.c
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/acpi.c
-@@ -285,8 +285,7 @@ int iwl_acpi_get_tas_table(struct iwl_fw_runtime *fwrt=
-,
- 		wifi_pkg->package.elements[1].type =3D=3D ACPI_TYPE_INTEGER) {
- 		enabled =3D !!wifi_pkg->package.elements[1].integer.value;
- 	} else {
--		ret =3D -EINVAL;
--		goto out_free;
-+		goto out_e_inval;
- 	}
+With the application of this dts fixup, the aforementioned initialization errors
+are resolved and xhci1 is working.
 
- 	if (!enabled) {
-@@ -301,8 +300,7 @@ int iwl_acpi_get_tas_table(struct iwl_fw_runtime *fwrt=
-,
- 	    IWL_WTAS_BLACK_LIST_MAX) {
- 		IWL_DEBUG_RADIO(fwrt, "TAS invalid array size %llu\n",
- 				wifi_pkg->package.elements[2].integer.value);
--		ret =3D -EINVAL;
--		goto out_free;
-+		goto out_e_inval;
- 	}
- 	block_list_size =3D wifi_pkg->package.elements[2].integer.value;
- 	tas_data->block_list_size =3D cpu_to_le32(block_list_size);
-@@ -316,8 +314,7 @@ int iwl_acpi_get_tas_table(struct iwl_fw_runtime *fwrt=
-,
- 		    ACPI_TYPE_INTEGER) {
- 			IWL_DEBUG_RADIO(fwrt,
- 					"TAS invalid array elem %d\n", 3 + i);
--			ret =3D -EINVAL;
--			goto out_free;
-+			goto out_e_inval;
- 		}
+Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
+---
+ arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
- 		country =3D wifi_pkg->package.elements[3 + i].integer.value;
-@@ -329,6 +326,10 @@ int iwl_acpi_get_tas_table(struct iwl_fw_runtime *fwr=
-t,
- out_free:
- 	kfree(data);
- 	return ret;
+diff --git a/arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dts b/arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dts
+index 7fc515a07c65..e0b9f2615c11 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dts
+@@ -854,6 +854,10 @@
+ 
+ &u3phy1 {
+ 	status = "okay";
 +
-+out_e_inval:
-+	ret =3D -EINVAL;
-+	goto out_free;
- }
-
- int iwl_acpi_get_mcc(struct iwl_fw_runtime *fwrt, char *mcc)
-@@ -474,10 +475,8 @@ int iwl_acpi_get_wrds_table(struct iwl_fw_runtime *fw=
-rt)
- 					 ACPI_WRDS_WIFI_DATA_SIZE_REV2,
- 					 &tbl_rev);
- 	if (!IS_ERR(wifi_pkg)) {
--		if (tbl_rev !=3D 2) {
--			ret =3D -EINVAL;
--			goto out_free;
--		}
-+		if (tbl_rev !=3D 2)
-+			goto out_e_inval;
-
- 		num_chains =3D ACPI_SAR_NUM_CHAINS_REV2;
- 		num_sub_bands =3D ACPI_SAR_NUM_SUB_BANDS_REV2;
-@@ -490,10 +489,8 @@ int iwl_acpi_get_wrds_table(struct iwl_fw_runtime *fw=
-rt)
- 					 ACPI_WRDS_WIFI_DATA_SIZE_REV1,
- 					 &tbl_rev);
- 	if (!IS_ERR(wifi_pkg)) {
--		if (tbl_rev !=3D 1) {
--			ret =3D -EINVAL;
--			goto out_free;
--		}
-+		if (tbl_rev !=3D 1)
-+			goto out_e_inval;
-
- 		num_chains =3D ACPI_SAR_NUM_CHAINS_REV1;
- 		num_sub_bands =3D ACPI_SAR_NUM_SUB_BANDS_REV1;
-@@ -506,10 +503,8 @@ int iwl_acpi_get_wrds_table(struct iwl_fw_runtime *fw=
-rt)
- 					 ACPI_WRDS_WIFI_DATA_SIZE_REV0,
- 					 &tbl_rev);
- 	if (!IS_ERR(wifi_pkg)) {
--		if (tbl_rev !=3D 0) {
--			ret =3D -EINVAL;
--			goto out_free;
--		}
-+		if (tbl_rev !=3D 0)
-+			goto out_e_inval;
-
- 		num_chains =3D ACPI_SAR_NUM_CHAINS_REV0;
- 		num_sub_bands =3D ACPI_SAR_NUM_SUB_BANDS_REV0;
-@@ -521,10 +516,8 @@ int iwl_acpi_get_wrds_table(struct iwl_fw_runtime *fw=
-rt)
- 	goto out_free;
-
- read_table:
--	if (wifi_pkg->package.elements[1].type !=3D ACPI_TYPE_INTEGER) {
--		ret =3D -EINVAL;
--		goto out_free;
--	}
-+	if (wifi_pkg->package.elements[1].type !=3D ACPI_TYPE_INTEGER)
-+		goto out_e_inval;
-
- 	IWL_DEBUG_RADIO(fwrt, "Reading WRDS tbl_rev=3D%d\n", tbl_rev);
-
-@@ -543,6 +536,10 @@ int iwl_acpi_get_wrds_table(struct iwl_fw_runtime *fw=
-rt)
- out_free:
- 	kfree(data);
- 	return ret;
-+
-+out_e_inval:
-+	ret =3D -EINVAL;
-+	goto out_free;
- }
-
- int iwl_acpi_get_ewrd_table(struct iwl_fw_runtime *fwrt)
-@@ -562,10 +559,8 @@ int iwl_acpi_get_ewrd_table(struct iwl_fw_runtime *fw=
-rt)
- 					 ACPI_EWRD_WIFI_DATA_SIZE_REV2,
- 					 &tbl_rev);
- 	if (!IS_ERR(wifi_pkg)) {
--		if (tbl_rev !=3D 2) {
--			ret =3D -EINVAL;
--			goto out_free;
--		}
-+		if (tbl_rev !=3D 2)
-+			goto out_e_inval;
-
- 		num_chains =3D ACPI_SAR_NUM_CHAINS_REV2;
- 		num_sub_bands =3D ACPI_SAR_NUM_SUB_BANDS_REV2;
-@@ -578,10 +573,8 @@ int iwl_acpi_get_ewrd_table(struct iwl_fw_runtime *fw=
-rt)
- 					 ACPI_EWRD_WIFI_DATA_SIZE_REV1,
- 					 &tbl_rev);
- 	if (!IS_ERR(wifi_pkg)) {
--		if (tbl_rev !=3D 1) {
--			ret =3D -EINVAL;
--			goto out_free;
--		}
-+		if (tbl_rev !=3D 1)
-+			goto out_e_inval;
-
- 		num_chains =3D ACPI_SAR_NUM_CHAINS_REV1;
- 		num_sub_bands =3D ACPI_SAR_NUM_SUB_BANDS_REV1;
-@@ -594,10 +587,8 @@ int iwl_acpi_get_ewrd_table(struct iwl_fw_runtime *fw=
-rt)
- 					 ACPI_EWRD_WIFI_DATA_SIZE_REV0,
- 					 &tbl_rev);
- 	if (!IS_ERR(wifi_pkg)) {
--		if (tbl_rev !=3D 0) {
--			ret =3D -EINVAL;
--			goto out_free;
--		}
-+		if (tbl_rev !=3D 0)
-+			goto out_e_inval;
-
- 		num_chains =3D ACPI_SAR_NUM_CHAINS_REV0;
- 		num_sub_bands =3D ACPI_SAR_NUM_SUB_BANDS_REV0;
-@@ -610,10 +601,8 @@ int iwl_acpi_get_ewrd_table(struct iwl_fw_runtime *fw=
-rt)
-
- read_table:
- 	if (wifi_pkg->package.elements[1].type !=3D ACPI_TYPE_INTEGER ||
--	    wifi_pkg->package.elements[2].type !=3D ACPI_TYPE_INTEGER) {
--		ret =3D -EINVAL;
--		goto out_free;
--	}
-+	    wifi_pkg->package.elements[2].type !=3D ACPI_TYPE_INTEGER)
-+		goto out_e_inval;
-
- 	enabled =3D !!(wifi_pkg->package.elements[1].integer.value);
- 	n_profiles =3D wifi_pkg->package.elements[2].integer.value;
-@@ -623,10 +612,8 @@ int iwl_acpi_get_ewrd_table(struct iwl_fw_runtime *fw=
-rt)
- 	 * from index 1, so the maximum value allowed here is
- 	 * ACPI_SAR_PROFILES_NUM - 1.
- 	 */
--	if (n_profiles >=3D BIOS_SAR_MAX_PROFILE_NUM) {
--		ret =3D -EINVAL;
--		goto out_free;
--	}
-+	if (n_profiles >=3D BIOS_SAR_MAX_PROFILE_NUM)
-+		goto out_e_inval;
-
- 	/* the tables start at element 3 */
- 	pos =3D 3;
-@@ -651,6 +638,10 @@ int iwl_acpi_get_ewrd_table(struct iwl_fw_runtime *fw=
-rt)
- out_free:
- 	kfree(data);
- 	return ret;
-+
-+out_e_inval:
-+	ret =3D -EINVAL;
-+	goto out_free;
- }
-
- int iwl_acpi_get_wgds_table(struct iwl_fw_runtime *fwrt)
-@@ -724,10 +715,9 @@ int iwl_acpi_get_wgds_table(struct iwl_fw_runtime *fw=
-rt)
- 				entry =3D &wifi_pkg->package.elements[entry_idx];
- 				entry_idx++;
- 				if (entry->type !=3D ACPI_TYPE_INTEGER ||
--				    entry->integer.value > num_profiles) {
--					ret =3D -EINVAL;
--					goto out_free;
--				}
-+				    entry->integer.value > num_profiles)
-+					goto out_e_inval;
-+
- 				num_profiles =3D entry->integer.value;
-
- 				/*
-@@ -736,10 +726,8 @@ int iwl_acpi_get_wgds_table(struct iwl_fw_runtime *fw=
-rt)
- 				 * looking up in ACPI
- 				 */
- 				if (wifi_pkg->package.count !=3D
--				    hdr_size + profile_size * num_profiles) {
--					ret =3D -EINVAL;
--					goto out_free;
--				}
-+				    hdr_size + profile_size * num_profiles)
-+					goto out_e_inval;
- 			}
- 			goto read_table;
- 		}
-@@ -769,10 +757,8 @@ int iwl_acpi_get_wgds_table(struct iwl_fw_runtime *fw=
-rt)
- 				entry =3D &wifi_pkg->package.elements[entry_idx];
- 				entry_idx++;
- 				if (entry->type !=3D ACPI_TYPE_INTEGER ||
--				    entry->integer.value > U8_MAX) {
--					ret =3D -EINVAL;
--					goto out_free;
--				}
-+				    entry->integer.value > U8_MAX)
-+					goto out_e_inval;
-
- 				fwrt->geo_profiles[i].bands[j].max =3D
- 					entry->integer.value;
-@@ -787,10 +773,8 @@ int iwl_acpi_get_wgds_table(struct iwl_fw_runtime *fw=
-rt)
- 					entry =3D &wifi_pkg->package.elements[entry_idx];
- 					entry_idx++;
- 					if (entry->type !=3D ACPI_TYPE_INTEGER ||
--					    entry->integer.value > U8_MAX) {
--						ret =3D -EINVAL;
--						goto out_free;
--					}
-+					    entry->integer.value > U8_MAX)
-+						goto out_e_inval;
-
- 					fwrt->geo_profiles[i].bands[j].chains[k] =3D
- 						entry->integer.value;
-@@ -805,6 +789,10 @@ int iwl_acpi_get_wgds_table(struct iwl_fw_runtime *fw=
-rt)
- out_free:
- 	kfree(data);
- 	return ret;
-+
-+out_e_inval:
-+	ret =3D -EINVAL;
-+	goto out_free;
- }
-
- int iwl_acpi_get_ppag_table(struct iwl_fw_runtime *fwrt)
-@@ -829,8 +817,7 @@ int iwl_acpi_get_ppag_table(struct iwl_fw_runtime *fwr=
-t)
- 					tbl_rev);
- 			goto read_table;
- 		} else {
--			ret =3D -EINVAL;
--			goto out_free;
-+			goto out_e_inval;
- 		}
- 	}
-
-@@ -839,10 +826,9 @@ int iwl_acpi_get_ppag_table(struct iwl_fw_runtime *fw=
-rt)
- 			ACPI_PPAG_WIFI_DATA_SIZE_V1, &tbl_rev);
-
- 	if (!IS_ERR(wifi_pkg)) {
--		if (tbl_rev !=3D 0) {
--			ret =3D -EINVAL;
--			goto out_free;
--		}
-+		if (tbl_rev !=3D 0)
-+			goto out_e_inval;
-+
- 		num_sub_bands =3D IWL_NUM_SUB_BANDS_V1;
- 		IWL_DEBUG_RADIO(fwrt, "Reading PPAG table v1 (tbl_rev=3D0)\n");
- 		goto read_table;
-@@ -855,10 +841,8 @@ int iwl_acpi_get_ppag_table(struct iwl_fw_runtime *fw=
-rt)
- 	fwrt->ppag_ver =3D tbl_rev;
- 	flags =3D &wifi_pkg->package.elements[1];
-
--	if (flags->type !=3D ACPI_TYPE_INTEGER) {
--		ret =3D -EINVAL;
--		goto out_free;
--	}
-+	if (flags->type !=3D ACPI_TYPE_INTEGER)
-+		goto out_e_inval;
-
- 	fwrt->ppag_flags =3D iwl_bios_get_ppag_flags(flags->integer.value,
- 						   fwrt->ppag_ver);
-@@ -873,10 +857,8 @@ int iwl_acpi_get_ppag_table(struct iwl_fw_runtime *fw=
-rt)
- 			union acpi_object *ent;
-
- 			ent =3D &wifi_pkg->package.elements[idx++];
--			if (ent->type !=3D ACPI_TYPE_INTEGER) {
--				ret =3D -EINVAL;
--				goto out_free;
--			}
-+			if (ent->type !=3D ACPI_TYPE_INTEGER)
-+				goto out_e_inval;
-
- 			fwrt->ppag_chains[i].subbands[j] =3D ent->integer.value;
- 		}
-@@ -887,6 +869,10 @@ int iwl_acpi_get_ppag_table(struct iwl_fw_runtime *fw=
-rt)
- out_free:
- 	kfree(data);
- 	return ret;
-+
-+out_e_inval:
-+	ret =3D -EINVAL;
-+	goto out_free;
- }
-
- void iwl_acpi_get_phy_filters(struct iwl_fw_runtime *fwrt,
-=2D-
-2.43.0
++	u3port1: usb-phy@700 {
++		mediatek,force-mode;
++	};
+ };
+ 
+ &u3phy2 {
+@@ -885,6 +889,8 @@
+ };
+ 
+ &xhci1 {
++	phys = <&u2port1 PHY_TYPE_USB2>,
++	       <&u3port1 PHY_TYPE_USB3>;
+ 	vusb33-supply = <&mt6359_vusb_ldo_reg>;
+ 	status = "okay";
+ };
+-- 
+2.18.0
 
