@@ -1,164 +1,155 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from FRA01-PR2-obe.outbound.protection.outlook.com (mail-pr2fra01on2123.outbound.protection.outlook.com [40.107.12.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC11A1353EB;
-	Fri, 16 Feb 2024 19:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708111970; cv=none; b=Sk3dBnIkMHntFofPuNCxMu6cnLylZ/Y/3fGMSts/Lr5CHw+yfnBTy/UjmcpwwIU0KeDZIWoCS40AaHooEc7Okom5rV/EHg5UXVbc3Xeq0ljx04p4iZovcw3DBUZGoSGaQ8ue273J0MCdxpBZSpxpXARRaFxEoTsiFPUr99YfYjQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708111970; c=relaxed/simple;
-	bh=Br02N1XoCkr35dKNdGtPJTZ7TXEI3Rna5beVLbPlfTc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CXDD+NNeWbWo4Vot9SOzhWFEDnrWU2FUyiJBwdUZGlQcajhWclX5BoLtxbyVCLiEsjF2PAc7GD/2fLmj7J3CMJ5a66gU/wYAMm7uQjPN4PQQnBrTbFwNLmFokWm6kHcbDuTaWh5/0ZCAt98/bnN2lVAE9pwYpyB+OGDvATaAtuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rdpZfcco; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3651350E4;
+	Fri, 16 Feb 2024 19:35:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.12.123
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708112137; cv=fail; b=uFF3+volEuL2/3rn6NZWGHu1PRWn9lUeCgJEQndNYaMlMrVqgmk1VGTD47zo0qEDgCp3G/2l5+WjRqRZtFiKQzgkipl07qSh8+lA9CEv7viDryhHKLcS1YyojDtLVIH5O4sqT46OrHjusj5bY2/Lo79rCF2AAgAohmDDZLCZgds=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708112137; c=relaxed/simple;
+	bh=EojwXAbU5kHOn4ZIlJ0TT2fBiUmrcYEjqvRV+ECtbhQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=D1obfPcABwsO91cstSn94WnOb1WclQqxrLuU1vW6odtNnRuX1la79crKsuBQEaf5iowpbrMETQ5/2aYLpX4SF0/MYQ16g1yh1nVrKklIYD7gqmASH9qE8BSe4Y+oOAAzEYFuA4VcEhvuaeqOqwJaukaBnzac8OMuwKwqxHibyVQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; dkim=pass (2048-bit key) header.d=csgroup.eu header.i=@csgroup.eu header.b=jGu7TOKU; arc=fail smtp.client-ip=40.107.12.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rdpZfcco"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41GJ0mtg024491;
-	Fri, 16 Feb 2024 19:32:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=GNnialPGx1cOc1nstc7U6OHGMq+fB1ZRhbwq/aKiOsw=;
- b=rdpZfccoTLBN/QnyH3DaL2sqWr0OARN+AQOs1ehHm7tbdJzUmCFHoXGfIlXWYLHIyxTH
- HVR/+Hng0SsRN17sevuU9IKhrjKgNXJhrNC0KvlOM5s7xo1lqLwCj4RrhkZ+Lo8WZEBn
- J/p4bADJ01RHEP7HZX/seCzih2LE6PMp4UsawY7hU+LdyNW1JZSSS/0twacsOPXcSMaC
- Zm4uvP1uUuzsiecUrCzkz7y4NmVI1dIOPsgBm4ZP4oflt/SMT+XHGT8xmdjgTDGTHeVq
- lG1sOxAiC4wiKV3uaq+/rYRdZ1GlPBWSNPlVYyayx5Ccc2O9Ivbp6c5RfTfpvZpfLY9N 4A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wacst9es5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 Feb 2024 19:32:41 +0000
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41GJDZ3a002450;
-	Fri, 16 Feb 2024 19:32:41 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wacst9erx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 Feb 2024 19:32:41 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41GHhcrQ032553;
-	Fri, 16 Feb 2024 19:32:40 GMT
-Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3w6kfu5k2a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 Feb 2024 19:32:40 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41GJWcDV50135462
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 16 Feb 2024 19:32:40 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 752605805E;
-	Fri, 16 Feb 2024 19:32:36 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 09EEE58076;
-	Fri, 16 Feb 2024 19:32:36 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 16 Feb 2024 19:32:35 +0000 (GMT)
-Message-ID: <b507fd52-a807-4325-981b-3852f4f6190b@linux.ibm.com>
-Date: Fri, 16 Feb 2024 14:32:35 -0500
+	dkim=pass (2048-bit key) header.d=csgroup.eu header.i=@csgroup.eu header.b="jGu7TOKU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=P938WWysBglOuLrjWDHkaim1wpqjaMPN32/imh2BBY5ncBI0w4nmPhzqBFGXUGB2gGyFVbsUaE/7qP/a8mw+crd0mxabhUGnd1ukPal8l5j8vGKk6KRoYElLRhgYjVIRw8/pT18rYIkW37qCvAIspUX1O9qZLgXbRn5puybrRSMlJqItNcCbyoLCfM3FwR6A/ZstfLl6pUvEkM4xJUPu/14AhzB1c3MJ8AvsywhnXIXhkhohPPG/ardKwnrmcpy57Wp4zAlzB97U+8uQQTtfcWsRm/fiqLy5xctpltGdWq+Dyi5aNGjN6q+pcIFRM0wpHAl0Txl4yUl57LV7X9v9cQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EojwXAbU5kHOn4ZIlJ0TT2fBiUmrcYEjqvRV+ECtbhQ=;
+ b=M+oyttbMoI4qsud4YbvaeOmXVXk2DA4fSAWbCZdV6BOOU8DZLzYPJQMUP9NlqSh1OKiSPhbtoBuFer2hvo+daJjKojjvih0H/IJAeFrC6qlHggpT+2q5vHdATHHedEs2gAXSnyWaODOcRfxtUJbSXjlxjUEozHgLXnByEB2CjXERNmP8HqAdS4CRoWKEbIPKdzltj9sqlBnHTq9wtieDiHF83Qh+gXtn/cds6o+9+ee9J2i7L3iSVCWexw+SLpJEKf9ElZfnpZnAvGfsuPuiTzu0fkpSsx9MxfKJOoebSKLjFmn+xIyI4zVyb+LDilo6wpQGG+16kGK7IRbt7T0j9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=csgroup.eu; dmarc=pass action=none header.from=csgroup.eu;
+ dkim=pass header.d=csgroup.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=csgroup.eu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EojwXAbU5kHOn4ZIlJ0TT2fBiUmrcYEjqvRV+ECtbhQ=;
+ b=jGu7TOKUvCFU5QVGQunNsdbPSJPoVL6qWjpWgV3vMMvg/yopD6W09ma0i+Pi9dFlgZqiD/YvxdUFcUPFZzZAI3JRsC/FazWMYpHFHiclAOTH29gr9nn0kAhVLpubBVbWMbc+yTZUNfrShCQc4mNJ9ua3rbXuPir4m1N89ZjfOOibxzczqULxT5WoXyel7+fQ5Lg0I9cgWvKJi4ZMR9dAhnb2czVdhljVdXouiUPbOcF34+43yw7oQlwUMGGyXvMEmf1+OqiwJOwQsQHr+n4i/5RZpRlRiAVVoupabkbTCplPR+PoizAkN3w0TiExBkoneDVPSt6eh8q6DZnOl3E16A==
+Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:31::15)
+ by PAZP264MB3285.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:141::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.32; Fri, 16 Feb
+ 2024 19:35:32 +0000
+Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::64a9:9a73:652c:1589]) by MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::64a9:9a73:652c:1589%7]) with mapi id 15.20.7292.029; Fri, 16 Feb 2024
+ 19:35:32 +0000
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Kees Cook <keescook@chromium.org>
+CC: Luis Chamberlain <mcgrof@kernel.org>, "linux-modules@vger.kernel.org"
+	<linux-modules@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-hardening @ vger . kernel . org"
+	<linux-hardening@vger.kernel.org>, Marek Szyprowski
+	<m.szyprowski@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Michael
+ Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v2] module: Don't ignore errors from set_memory_XX()
+Thread-Topic: [PATCH v2] module: Don't ignore errors from set_memory_XX()
+Thread-Index: AQHaYLA4WWYhqLg05kqaZUvko5K+cLENW1cAgAAB44A=
+Date: Fri, 16 Feb 2024 19:35:32 +0000
+Message-ID: <12b5fa1e-c6cf-489b-b7bd-4f9d5ed9aba6@csgroup.eu>
+References:
+ <21037bf38438a285f5dff9501668f1675bc45989.1708070781.git.christophe.leroy@csgroup.eu>
+ <202402161128.21EA3F8@keescook>
+In-Reply-To: <202402161128.21EA3F8@keescook>
+Accept-Language: fr-FR, en-US
+Content-Language: fr-FR
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Mozilla Thunderbird
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=csgroup.eu;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MRZP264MB2988:EE_|PAZP264MB3285:EE_
+x-ms-office365-filtering-correlation-id: 8841c7cd-ffa9-43a3-26ca-08dc2f26707b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ Y7xGRo6NLc8iOcEV3W5mN66Kj9/bK4P1GM//l0r5MChAeocxsuIUb9SafIfQ+vBV5AgaPYSutMLcAEblLVEQNzc2XfeMtSP4CmcOF6/UcP+i2Lt/+I1Hv6IYeLWW/kTNIcGvQBc/HedV4zoQsk/jWbZDFCRy32jReoowvEgFWp+ToZoGP91Aii5+cO3CXvqdnSN3EOLeqQ3krh5XIDcWJq/IKz+jejqm6OrZPMfL1D34RxRYPRBt1BH8Y1FRwOQ0RkYHQd9fsgiqixzjC+Sj5IDqiVwnglP9JTWySj1VYpWNlwQPH+ol0mzArIfJhM+sVjZ1QV6yWlHooF5XeVJNTBLtAPDol2sDqZByi84eGKouHpaKdjBJ0ZWAiMd3ZCKw/3titutudTaO4SGUFMm7MdJqf3lSpbwQYuDTEgGXFs8o2omWwwY/3Xzw5lmIG4fRe66dUg8cylfPcf7rN5RG54VTes1sEkptL/WTctcP3ECnKaplpZ/0IaaHrGhV7ytWjUAO37wnnR/18+e/yIUxQogpt/ikYggCO1xz3BNymu+Pnbn+Y0S7xUsCoFAtVG6r7dkmN6uzFN8XdpyQBUIX4xdYiCpydOavAxk8xpKhOs0=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(136003)(376002)(396003)(39850400004)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(8676002)(8936002)(4326008)(6916009)(44832011)(5660300002)(2906002)(38070700009)(36756003)(41300700001)(2616005)(26005)(478600001)(38100700002)(122000001)(83380400001)(66574015)(31696002)(86362001)(966005)(66556008)(66476007)(66446008)(64756008)(66946007)(76116006)(6512007)(6506007)(6486002)(316002)(54906003)(71200400001)(31686004);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?V3IrY1VDcDN5K1pnMHl0RWRkOW4zSU4xOTNPTzFjN0MyZlA3RXZQdlRZRnFR?=
+ =?utf-8?B?V0tVYmk1S0tmejRpYS9rVmlja0FKcURlZGZhbHJOL2I3NXFHMXF3RXZ5bzhM?=
+ =?utf-8?B?SHUvQU12ZkFtRWpZdXdSSzRFam1wWllFbWtNVjA2NXlXaDZMZjFYbGNTQlNK?=
+ =?utf-8?B?S3BYWTlOODVaUWZTc0sxNHZ5OC9RcXRmS1c3djZHSElza1lYeUp3Q1IydzdT?=
+ =?utf-8?B?VzVmZTc1WUFpN0oreXlUU1krTStzNnFHMGFlMkdjRUJJMHBVUEVKUXZsTngz?=
+ =?utf-8?B?Q0tLeFFZdGJtakRKQTNSM2xGTWk5Y1dBN1lSeEpvNkJPRWFtNjVrQ1Q2Misv?=
+ =?utf-8?B?eWNENzFNODVSRVFHenNmbEJ5dlA1anpNam1qTkMxVXFyd1pRK0JiYms4VW94?=
+ =?utf-8?B?VWpLcXRTaEwrZ2NwcCtDb08raTdISUFkN3VDcUw4elFaaEVrRFR0TWJwOWEx?=
+ =?utf-8?B?WDB0WkdNMTJ0YmdhWnFoVElXMjdMK0Q5dWkra3cyalQ5MFVMVG44KzVOZVl1?=
+ =?utf-8?B?SmhBdGszdm9CaTlKVlRELzNldU13MGxoeDhwYUpZUUNJa050ajZnTzdPclhW?=
+ =?utf-8?B?Z1FLMFcybk9mNG9DT0wxTVdDZnZhN3h6K05Dck9LajF4dUpmcG1XSW9hUXJm?=
+ =?utf-8?B?SWVKSzdpL0ppSk9BaFBqa1FNSlJtc3dHMEJUMW5WQTdqcHAxRmlldUVwbHdW?=
+ =?utf-8?B?dlhvbXN2V0ZjRW5kc2VrTFBIZ3poWVRDc01MT1drR3RYUU5EblFKV29CaHNk?=
+ =?utf-8?B?S0t6QmJNTWVRVFRvLzNCNVh6d2syaUdMT3p5NmhhakZENmJFRlFVOHFuazVQ?=
+ =?utf-8?B?bzBrNHRKMDcxaXY2NFd1OGQwSHd6eHQ4RjArenB2YVBCMkduN2wyRjhiV3M5?=
+ =?utf-8?B?bUwreEhaTlZPRTd6QzBKN1JaYU45M2lFeGpnbWFSTU5XOEg1VitVdElZSitO?=
+ =?utf-8?B?QW8reVNUakx2a0pHai85NkdUclN3bFlxK3VkUXNmY0F3emV0bk15eXF0OTVm?=
+ =?utf-8?B?c3RJempXWHhqZVZFTVRvaEpMeWM3aStrMDVSOFIvZDFvRkxlZEZHRHNDZ1dn?=
+ =?utf-8?B?UnQzeml4ZVdaRVFSL05zNFp6UmZ1YjJ0MjVWSmtabDkxbmFqeXozWjRSNSsw?=
+ =?utf-8?B?RytXY3RWSHFzYmYxYW94SVJUNnh4amU5TEtRZE9oVUJHTmtKNnk2ZDJXNjJE?=
+ =?utf-8?B?SUJ4VXNUcFFYSkVKekZVUzZMckgxTTlSVkhTZGdWQnJkaGtxQ3J5Y1dsazdt?=
+ =?utf-8?B?MThoeUc2dHdidXpxQ1cyckxhKzhTQVNkaEh4NzFDTTlab3ZGcHlsMEMvZm9T?=
+ =?utf-8?B?SlR4V3ZBQzFkMjkyT09ocGI4aVFPWW1oZmlpNm9pYmE3S0V2V1hoa2ExUTk2?=
+ =?utf-8?B?NkI1b0p2NEMrdno3eUR6VkFrek81bjFLMjBZTkROTlorU3ZweW5wRldnaEVN?=
+ =?utf-8?B?bjg5NDNaeHdmSFYvQk9VMVhuQmNaSEExdllrdHZRTVJoVFpKaDIxQVdCbDNX?=
+ =?utf-8?B?QjhsaTQwczJGUE5KV2VMSFhlczdISFEzcDU2OUJpRDd2emJYaC9CdE5TN3ZZ?=
+ =?utf-8?B?ek10SWRId0VVODdoa21sbm5DUWxTUlNaRVhvNGREMmZKR0RrMS93dktnYWhs?=
+ =?utf-8?B?UGVSc0x4SnkyOU5qZzNaWm1vZ0tXcDdNTE1kWTlPYXQyZW5GM2pQRUJtUUQv?=
+ =?utf-8?B?bVVmRXVFQVVueGQ3VEpFZWhQVk1PR0F1ZHAwUXlUWXlBWTNtVFVuUjFzamdr?=
+ =?utf-8?B?aHJyQzRiUGt0ZGEyL3BSV3ZVdkRIZlVMUUNVNHJGd1RJYzRWWjFSNGVBMFF1?=
+ =?utf-8?B?bGM5OXhmaWdPMU0vL1U2dzZMNjhuV0lEQmNTWDkxbndsQlMzMW96QXoxRHhF?=
+ =?utf-8?B?VVJucmVqbWx1OU1tRUlSNnhoUVpENkxaZjh5ZXFNb2RrdjhjL3p1RTlHZk0y?=
+ =?utf-8?B?MmNyakFvZkJXQmQvRGtpdFZrZTZFTllXeG5TdjdPZzFzbXltUHJ2ejhDVnBM?=
+ =?utf-8?B?NVkvdlYvVWVkS2NYL0hXU1AveDA2VDZadU1FV1ZJRTNtc3ZJa3llZVk2OEhu?=
+ =?utf-8?B?TVd0d1VjSGxORXZmS2R5MklzSlJzbnZqQ01HZFdEVVMwRmF5RU1RVThVK3Nj?=
+ =?utf-8?Q?5LUn50q95B1COwF5jxC8mVjWX?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9B9E2B01DD578949B623E5D9CE7DB1E3@FRAP264.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/14] Add support for NIST P521 to ecdsa and ecdh
-Content-Language: en-US
-To: Simo Sorce <simo@redhat.com>, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, herbert@gondor.apana.org.au,
-        davem@davemloft.net
-Cc: linux-kernel@vger.kernel.org, saulo.alessandre@tse.jus.br
-References: <20240215231414.3857320-1-stefanb@linux.ibm.com>
- <3bdb1c9e0ac35c7dc3fbba1233bc7df80ac466a2.camel@redhat.com>
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <3bdb1c9e0ac35c7dc3fbba1233bc7df80ac466a2.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: UtfbeBo_NFHup-ff0OY5lYpm3l4efxxa
-X-Proofpoint-GUID: VL9ERooELf1h3y-lG5YL4YyeG4xTkqwU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-16_18,2024-02-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- clxscore=1015 phishscore=0 malwarescore=0 bulkscore=0 suspectscore=0
- mlxscore=0 priorityscore=1501 spamscore=0 mlxlogscore=999
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402160151
+X-OriginatorOrg: csgroup.eu
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8841c7cd-ffa9-43a3-26ca-08dc2f26707b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Feb 2024 19:35:32.1598
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 9914def7-b676-4fda-8815-5d49fb3b45c8
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: f1cACIdlRwOSPXv8TTfEKSHmd4ySx6g3emgO7byMf8IvGeXrtO5KiacQUfIoef+qVuwqE9b8Oj+z6VAVW2jbp3qqLyXx/yeaRj/V2xNrqf0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAZP264MB3285
 
-
-
-On 2/16/24 14:27, Simo Sorce wrote:
-> On Thu, 2024-02-15 at 18:13 -0500, Stefan Berger wrote:
->> This series of patches adds support for the NIST P521 curve to ecdsa and
->> ecdh. Test cases for NIST P521 are added to both modules.
->>
->> An issue with the current code in ecdsa and ecdh is that it assumes that
->> input arrays providing key coordinates for example, are arrays of digits
->> (a 'digit' is a 'u64'). This works well for all currently supported
->> curves, such as NIST P192/256/384, but does not work for NIST P521 where
->> coordinates are 8 digits + 2 bytes long. So some of the changes deal with
->> converting byte arrays to digits and digits to byte arrays.
->>
->>
->> Regards,
->>     Stefan
->>
->> v2:
->>   - Reformulated some patch descriptions
->>   - Fixed issue detected by krobot
->>   - Some other small changes to the code
->>
->> Stefan Berger (14):
->>    crypto: ecdsa - Convert byte arrays with key coordinates to digits
->>    crypto: ecdsa - Adjust tests on length of key parameters
->>    crypto: ecdsa - Extend res.x mod n calculation for NIST P521
->>    crypto: ecc - Implement vli_mmod_fast_521 for NIST p521
->>    crypto: ecc - For NIST P521 use vli_num_bits to get number of bits
->>    crypto: ecc - Add NIST P521 curve parameters
->>    crypto: ecdsa - Register NIST P521 and extend test suite
->>    x509: Add OID for NIST P521 and extend parser for it
->>    crypto: ecdh - Use properly formatted digits to check for valid key
->>    crypto: ecc - Implement ecc_digits_to_bytes to convert digits to byte
->>      array
->>    crypto: Add nbits field to ecc_curve structure
->>    crypto: ecc - Implement and use ecc_curve_get_nbytes to get curve's
->>      nbytes
->>    crypto: ecdh - Use functions to copy digits from and to byte array
->>    crypto: ecdh - Add support for NIST P521 and add test case
->>
->>   crypto/asymmetric_keys/x509_cert_parser.c |   3 +
->>   crypto/ecc.c                              |  71 +++++--
->>   crypto/ecc_curve_defs.h                   |  45 +++++
->>   crypto/ecdh.c                             |  59 +++++-
->>   crypto/ecdsa.c                            |  48 ++++-
->>   crypto/testmgr.c                          |  14 ++
->>   crypto/testmgr.h                          | 225 ++++++++++++++++++++++
->>   include/crypto/ecc_curve.h                |   3 +
->>   include/crypto/ecdh.h                     |   1 +
->>   include/crypto/internal/ecc.h             |  61 +++++-
->>   include/linux/oid_registry.h              |   1 +
->>   11 files changed, 495 insertions(+), 36 deletions(-)
-> 
-> Hi Stefan,
-> what kind of side-channel testing was performed on this code?
-> And what is the use case you are adding it for?
-
-We're using public keys for signature verification. I am not aware that
-public key usage is critical to side channels.
-
-The use case for adding it is primarily driven by closing a gap to 
-complete the support for the common ECDSA NIST curves.
-
-     Stefan
-
-> 
-> Thanks,
-> Simo.
-> 
+DQoNCkxlIDE2LzAyLzIwMjQgw6AgMjA6MjgsIEtlZXMgQ29vayBhIMOpY3JpdMKgOg0KPiBPbiBG
+cmksIEZlYiAxNiwgMjAyNCBhdCAwOToxNDoyN0FNICswMTAwLCBDaHJpc3RvcGhlIExlcm95IHdy
+b3RlOg0KPj4gc2V0X21lbW9yeV9ybygpLCBzZXRfbWVtb3J5X254KCksIHNldF9tZW1vcnlfeCgp
+IGFuZCBvdGhlciBoZWxwZXJzDQo+PiBjYW4gZmFpbCBhbmQgcmV0dXJuIGFuIGVycm9yLiBJbiB0
+aGF0IGNhc2UgdGhlIG1lbW9yeSBtaWdodCBub3QgYmUNCj4+IHByb3RlY3RlZCBhcyBleHBlY3Rl
+ZCBhbmQgdGhlIG1vZHVsZSBsb2FkaW5nIGhhcyB0byBiZSBhYm9ydGVkIHRvDQo+PiBhdm9pZCBz
+ZWN1cml0eSBpc3N1ZXMuDQo+Pg0KPj4gQ2hlY2sgcmV0dXJuIHZhbHVlIG9mIGFsbCBjYWxscyB0
+byBzZXRfbWVtb3J5X1hYKCkgYW5kIGhhbmRsZQ0KPj4gZXJyb3IgaWYgYW55Lg0KPj4NCj4+IEFk
+ZCBhIGNoZWNrIHRvIG5vdCBjYWxsIHNldF9tZW1vcnlfWFgoKSBvbiBOVUxMIHBvaW50ZXJzIGFz
+IHNvbWUNCj4+IGFyY2hpdGVjdHVyZXMgbWF5IG5vdCBsaWtlIGl0IGFsbHRob3VnaCBudW1wYWdl
+cyBpcyBhbHdheXMgMCBpbiB0aGF0DQo+PiBjYXNlLiBUaGlzIGFsc28gYXZvaWQgYSB1c2VsZXNz
+IGNhbGwgdG8gc2V0X3ZtX2ZsdXNoX3Jlc2V0X3Blcm1zKCkuDQo+Pg0KPj4gTGluazogaHR0cHM6
+Ly9naXRodWIuY29tL0tTUFAvbGludXgvaXNzdWVzLzcNCj4+IFNpZ25lZC1vZmYtYnk6IENocmlz
+dG9waGUgTGVyb3kgPGNocmlzdG9waGUubGVyb3lAY3Nncm91cC5ldT4NCj4gDQo+IFlheSEgR2xh
+ZCB0byBzZWUgdGhpcyBoYXBwZW5pbmcuIFVuaXZlcnNhbCBfX211c3RfY2hlY2sgZm9yIHNldF9t
+ZW1vcnlfKigpDQo+IHN0YXJ0cyB0byBhcHBlYXIgb24gdGhlIGhvcml6b24uIDspDQo+IA0KPiBS
+ZXZpZXdlZC1ieTogS2VlcyBDb29rIDxrZWVzY29va0BjaHJvbWl1bS5vcmc+DQo+IA0KDQpUaGFu
+a3MNCg0KSSBhbHNvIHNlbnQgMyBwYXRjaGVzIHRvIHBvd2VycGMsIEkgZm9yZ290IHRvIGNvcHkg
+eW91IGJ1dCBJIHB1dCB0aGUgDQpsaW5rcyBpbiBodHRwczovL2dpdGh1Yi5jb20vS1NQUC9saW51
+eC9pc3N1ZXMvNw0KDQpDaHJpc3RvcGhlDQo=
