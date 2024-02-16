@@ -1,212 +1,106 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C7A59160
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 11:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9522158236
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 11:14:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708081767; cv=none; b=h1qUjYBo02kvU3qujHW5Xg6b122DsR2KzGDTsw96Q8U83RHQ3D3ku78Jmh8UTOJBHg747NhFdoXD42sQv+uo45/tukCAvhjR5vGwvs1tKgUw6vl+IrvjIcxe1e7yp4Yi56Vn0MoU0CVZb2t1ACGyeTN5qcIkY3neckY1z/GJoAw=
+	t=1708082090; cv=none; b=PLeMAfGiudRo+JtTkKE7mlR1rjZeB8nd3JMp3CRStUkKKw30HbDt9iyTLHudxRtDKtIOqVYIxcbOywMoCig51yYtgkjxH+I5k51/jI7XNRIgnbPUa+GNA2PWldS7ngGWx35itZhUBhp6oKacWSK7rAYA57uBkVJpCDPsiAv5Qm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708081767; c=relaxed/simple;
-	bh=gnlnNaO6Jwu3jGhpnG3RtcC00IxLKo7FT966b2z+Qcs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TjXFvprwcJeksHPYR2WPqQ3kkNHXmIDYbcjVHCkhk40dHXq8OFe94k1DmvN3wkMn0uAUz6Zd3pxzgV5W9rMyiuLJ9DGwOuXmSS5gXnXzu98qMohD07PFVO3Wd5M7qGS4r+F/VmaBVB0t3pkuWT4tEG434wdEEiQaGah7RheuL6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=aAHPjnUA; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/tNKM1xP; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=aAHPjnUA; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/tNKM1xP; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1708082090; c=relaxed/simple;
+	bh=Mb3O0r/ZDgnL5SsOM5Kxo3u/DkpD2rGMsl6RgDvEUvs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=GHdWrGpglXeqNWr7H8s1qwBqTzAtiEUlivGSdiywEPLteAVIGIuEpgA0UXrIFxWS7Zwkx1HRzvfR9SRO27ZmXeBP3qoIOIVAVOroCFAIL7azZMiDgUxRNcMiV6nZRUj+EvOyLCqQf9Z+Ssoj2onRNcVBFZy1l+bNwXGvPXPpW5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ny1bGW5B; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="aAHPjnUA";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/tNKM1xP";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="aAHPjnUA";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/tNKM1xP"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 5C6AE21E2A;
-	Fri, 16 Feb 2024 11:09:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1708081761; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rwwWeQK23rV3LdqRhnQ9vejxA72yppWbxf7GL0vqx8A=;
-	b=aAHPjnUAKnk6MXnVrRwcdGAQ8xuMU8nT7nR1dMboqyhqTjgvrbuUHYl9b0IW02x2x7/axp
-	5b6c7B6I30T8kBft6zyQvZURU8l15GeAgm0KEOdtPY+pUjtcZNdlGRPMC3wIsf5NYX63iF
-	whX3xd1fs5E8morsKYFw0l8/bNReofc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1708081761;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rwwWeQK23rV3LdqRhnQ9vejxA72yppWbxf7GL0vqx8A=;
-	b=/tNKM1xPBYvJos8/PZ4VPGpej21OatF3QKShuR+PfhtaI+MK+A25VBr4YyfR4bVRuIPf6R
-	PMnZ8nFZlagHZkDw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1708081761; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rwwWeQK23rV3LdqRhnQ9vejxA72yppWbxf7GL0vqx8A=;
-	b=aAHPjnUAKnk6MXnVrRwcdGAQ8xuMU8nT7nR1dMboqyhqTjgvrbuUHYl9b0IW02x2x7/axp
-	5b6c7B6I30T8kBft6zyQvZURU8l15GeAgm0KEOdtPY+pUjtcZNdlGRPMC3wIsf5NYX63iF
-	whX3xd1fs5E8morsKYFw0l8/bNReofc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1708081761;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rwwWeQK23rV3LdqRhnQ9vejxA72yppWbxf7GL0vqx8A=;
-	b=/tNKM1xPBYvJos8/PZ4VPGpej21OatF3QKShuR+PfhtaI+MK+A25VBr4YyfR4bVRuIPf6R
-	PMnZ8nFZlagHZkDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1998313A39;
-	Fri, 16 Feb 2024 11:09:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ttPHBWFCz2WuBgAAD6G6ig
-	(envelope-from <hare@suse.de>); Fri, 16 Feb 2024 11:09:21 +0000
-Message-ID: <c5f27e3c-d034-4a40-bfb5-1bd5ec5f5dfc@suse.de>
-Date: Fri, 16 Feb 2024 12:09:20 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ny1bGW5B"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40fd2f7ef55so16874175e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 03:14:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708082086; x=1708686886; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B4ZT8wxOTMEaNAlp2WhGQd6HjKItKsveZMf5lqO1FcA=;
+        b=ny1bGW5BU6N2a5c+Q+vWBaQsQdxN6KsbAKEHYh2VkcJEDmmeGLy31y2Oc+uGF+sDfa
+         7PQLg2OnyGr/BGjlFNgkDMYEMAQqDC+PWd3gpiymaUPI1LmSKZZvfpz7YGz6SgGmwq4z
+         R33noZhMton1+2zI9ojT3H3U3GOY0qRjXA564OvNzXb27/zGmxOaPAr6D1rcocnsKAgW
+         4P8nhHmFCc3DYTQBCfr3fw6MRhug/j7dF/WH42UQDBWvT1p7gtPYUxi1c3fe8XlRxlyP
+         2qBBoa7qiYtm1Uq6hPASxeMdAoehYnv1nO2hXdB6+D+Xn2ldZH+Ob9TugAdIJM5oMVO1
+         ABug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708082086; x=1708686886;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B4ZT8wxOTMEaNAlp2WhGQd6HjKItKsveZMf5lqO1FcA=;
+        b=UIhxpCf2vsnWdyc4Bifb+DVDkCN5d9nhJPjHbkhAb2soxy7gZXuAdwI+Kmnqy39JI9
+         5eVTG/xza4rq7sxo9rLUQSp78iBLOQKlharypAi8M74o2AWmCtGJX5yQ3XtUGEKo8qah
+         q+4oRaIbobhsBosdtQkW266rVNus0h+qwOilIXzgO6ZTYYoFMY5QjcX/RjHSQudJJJay
+         jmy+UEFOTHLQN3sISFuT2AUA5ie07VaBqnQiAOx/WFmyStNDdFWobpDrpGKfVRqVIqkk
+         DD7/XKj4EOvArWWiQWHLbuzNuMviy0F+qbNwJM+dz2ePFKxb7BpnQEx9/f/7GuS84wce
+         JZyw==
+X-Forwarded-Encrypted: i=1; AJvYcCUMoL94hXxMNAwO7hPnGOXofyl00GPOT8Q2OoUj7lp5vJ0DBwRwaUJLESekUrkjotLBFTMVSp87eU4HO1YFGMPCpccMYPlekglqe0jO
+X-Gm-Message-State: AOJu0YwLmJk2uPGbmFzkJcc4FzCPYWR/pWHLHJvgsrEtBZB9UAYRp9/f
+	6CZ9yGCN96BTFQ8s6QIiYg/5+SuNmLxOdc3e2B2BUplu8jwTEmTj25dQhyhH8O8=
+X-Google-Smtp-Source: AGHT+IHMW9EOiDBogGRBEw6/c9KN9vSHehtmGG0Sqpr8h98BQtKaE9M8TzBhHR4IQo9aOa3UMDmQKA==
+X-Received: by 2002:a05:600c:4f8a:b0:412:4731:a5e9 with SMTP id n10-20020a05600c4f8a00b004124731a5e9mr1055108wmq.4.1708082085778;
+        Fri, 16 Feb 2024 03:14:45 -0800 (PST)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id fc13-20020a05600c524d00b00412157dc70bsm2050270wmb.30.2024.02.16.03.14.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Feb 2024 03:14:45 -0800 (PST)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: Jessica Zhang <quic_jesszhan@quicinc.com>, 
+ Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@gmail.com>, 
+ Daniel Vetter <daniel@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Andy Gross <agross@kernel.org>, 
+ Luca Weiss <luca.weiss@fairphone.com>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20240216-fp4-panel-v3-0-a556e4b79640@fairphone.com>
+References: <20240216-fp4-panel-v3-0-a556e4b79640@fairphone.com>
+Subject: Re: (subset) [PATCH v3 0/4] Add display support for Fairphone 4
+Message-Id: <170808208477.3157813.2988071781833358555.b4-ty@linaro.org>
+Date: Fri, 16 Feb 2024 12:14:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v0 5/6] nvme-fc: redesign locking and refcounting
-Content-Language: en-US
-To: Daniel Wagner <dwagner@suse.de>, James Smart <james.smart@broadcom.com>
-Cc: Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
- Sagi Grimberg <sagi@grimberg.me>, linux-nvme@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240216084526.14133-1-dwagner@suse.de>
- <20240216084526.14133-6-dwagner@suse.de>
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20240216084526.14133-6-dwagner@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -8.29
-X-Spamd-Result: default: False [-8.29 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 XM_UA_NO_VERSION(0.01)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 MIME_GOOD(-0.10)[text/plain];
-	 REPLY(-4.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_SEVEN(0.00)[7];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[]
-X-Spam-Flag: NO
+X-Mailer: b4 0.12.4
 
-On 2/16/24 09:45, Daniel Wagner wrote:
-> The life time of the controller is managed by the upper layers.
-> 
-> Thus just ref counting the controller when creating it and giving the
-> ref back on the cleanup path. This is how the other transport are
-> managed as well. Until now, the ref count has been taken per LS request
-> which is not really necessary as the core guarantees that there is no in
-> flight request when shuting down (if we use the nvme APIs are used
-> correctly).
-> 
-> In fact we don't really need the ref count for nvme_fc_ctrl at this
-> point. Though, the FC transport is offloading the connect attempt to a
-> workqueue and in the next patch we introduce a sync option for which the
-> ref counter is necessary. So let's keep it around.
-> 
-> Also take a ref for lport and rport when creating the controller and
-> give it back when we destroy the controller. This means these refs are
-> tied to the life time of the controller and not the other way around.
-> 
-> We have also to reorder the cleanup code in nvme_fc_delete_ctrl and
-> nvme_fc_free_ctrl so that we do not expose resources too long and run
-> into use after free situations which are currently possible.
-> 
-> Signed-off-by: Daniel Wagner <dwagner@suse.de>
-> ---
->   drivers/nvme/host/fc.c | 136 +++++++++++++----------------------------
->   1 file changed, 41 insertions(+), 95 deletions(-)
-> 
-> diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-> index ddbc5b21af5b..7f9edab57550 100644
-> --- a/drivers/nvme/host/fc.c
-> +++ b/drivers/nvme/host/fc.c
-> @@ -229,6 +229,9 @@ static struct device *fc_udev_device;
->   
->   static void nvme_fc_complete_rq(struct request *rq);
->   
-> +static void nvme_fc_ctrl_put(struct nvme_fc_ctrl *);
-> +static int nvme_fc_ctrl_get(struct nvme_fc_ctrl *);
-> +
->   /* *********************** FC-NVME Port Management ************************ */
->   
->   static void __nvme_fc_delete_hw_queue(struct nvme_fc_ctrl *,
-> @@ -800,7 +803,7 @@ nvme_fc_ctrl_connectivity_loss(struct nvme_fc_ctrl *ctrl)
->   			dev_warn(ctrl->ctrl.device,
->   				"NVME-FC{%d}: Couldn't schedule reset.\n",
->   				ctrl->cnum);
-> -			nvme_delete_ctrl(&ctrl->ctrl);
-> +			nvme_fc_ctrl_put(ctrl);
->   		}
->   		break;
->   
-> @@ -868,7 +871,7 @@ nvme_fc_unregister_remoteport(struct nvme_fc_remote_port *portptr)
->   			dev_warn(ctrl->ctrl.device,
->   				"NVME-FC{%d}: controller connectivity lost.\n",
->   				ctrl->cnum);
-> -			nvme_delete_ctrl(&ctrl->ctrl);
-> +			nvme_fc_ctrl_put(ctrl);
->   		} else
->   			nvme_fc_ctrl_connectivity_loss(ctrl);
->   	}
-> @@ -1022,9 +1025,6 @@ fc_dma_unmap_sg(struct device *dev, struct scatterlist *sg, int nents,
->   
->   /* *********************** FC-NVME LS Handling **************************** */
->   
-> -static void nvme_fc_ctrl_put(struct nvme_fc_ctrl *);
-> -static int nvme_fc_ctrl_get(struct nvme_fc_ctrl *);
-> -
->   static void nvme_fc_error_recovery(struct nvme_fc_ctrl *ctrl, char *errmsg);
->   
->   static void
-> @@ -1050,8 +1050,6 @@ __nvme_fc_finish_ls_req(struct nvmefc_ls_req_op *lsop)
->   	fc_dma_unmap_single(rport->dev, lsreq->rqstdma,
->   				  (lsreq->rqstlen + lsreq->rsplen),
->   				  DMA_BIDIRECTIONAL);
-> -
-> -	nvme_fc_rport_put(rport);
->   }
->   
-Hmm. I'm a bit unsure about this; essentially you change the rport 
-refcounting (and not just the controller refcounting).
-And the problem here is that rport refcounting is actually tied to
-the driver-internal rports, which have a different lifetime
-(dev_loss_tmo and all that).
+Hi,
 
-Would it be possible to break this in two, with one patch changing the 
-controller/options refcounting and the other one changing the rport 
-refcounting?
+On Fri, 16 Feb 2024 11:10:47 +0100, Luca Weiss wrote:
+> Introduce the bindings and panel driver for the LCD panel with the model
+> number 9A-3R063-1102B from DJN which is using the HX83112A driver IC. It
+> is used on the Fairphone 4 smartphone.
+> 
+> Then we can add the panel to the device dts and also enable the GPU.
+> 
+> 
+> [...]
 
-Cheers,
+Thanks, Applied to https://anongit.freedesktop.org/git/drm/drm-misc.git (drm-misc-next)
 
-Hannes
+[1/4] dt-bindings: display: panel: Add Himax HX83112A
+      https://cgit.freedesktop.org/drm/drm-misc/commit/?id=3b59787a5170e12beb636cf1a66e481526f293cc
+[2/4] drm/panel: Add driver for DJN HX83112A LCD panel
+      https://cgit.freedesktop.org/drm/drm-misc/commit/?id=654f26a0f43cfd35a5ebd19e008b6f065f2a1f92
+
+-- 
+Neil
 
