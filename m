@@ -1,237 +1,155 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40E921BC5E
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 08:00:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6C21BC4C
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 08:00:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708070433; cv=none; b=I81MSrAJE2MzD9KPVR3uoa1xHLk+/5xhRMR5GZH0IfZH4Az20jM/ZzJAxwHuXEJ6Rc+KUEse7eKUlsuWAvgIgseJlQEWf5d4L5cfvFFUVdh6yw0S85lOJ0BgB1XXz69g/iaQ3WCx1CMYnXDkOcoJ1bv0+oS9tpZjQw/gT/qwU1M=
+	t=1708070448; cv=none; b=CJZgxwqI4/aGJscFxxpIrSzYnhJLKkyTPySqhJV5a+5rz7sg6B30vRceA8ebZI6l/+ZS4L/bLA1lquJ+Cjw94nDhPHz835QYR02MbOo1X1AxqTWhf6fW8U6cK73AlgRfAIebusI0ppVcun5DaF7KlZFFzhWQlXzNb0SRsw+e9e8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708070433; c=relaxed/simple;
-	bh=DpW7fdG3PEtBSw4uHybL/y6wUJ0RIFhtQZUvi+EiDQI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iJusRGlNsDF7ZsAHjdEu2/nUO8ydR22ARxe8drFe2d/J7uMktudVhiK+lkzXQfFcFuDZ6qCHTzk5CpBytGpFueeNdXYPmZLmQtmMdAF4+3nDdURZ+xMOjCpqLhobFaxEqvHfResKBHVMH0Ju9OKDS61m6vrZ4zyHb9K/AiWNOVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RraAo3q5; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708070448; c=relaxed/simple;
+	bh=nncceW1ifuGeCAQMt3+4gX5Q3Xj2JzTwmQjhbOP3fBY=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=bMuxxsjfNl22gsV++0vEYWAbtdS6xcx+t5PciA8aB12l9Ce5c9kskgi3diC3MCMO6IEEtDUrwnfyjzZOEwQVM6w36b6ncOHWXjuAV2iwfixquv3UqxY/jHUuVogjvMt+gcRR1GNNd4D6upy64eCQQL4ZQXTQFN379FZ4hwtWCUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HDqnlch7; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RraAo3q5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708070431;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bho+yn8M4kGUaS4UAXQ+fSY/db1hBVlHnbWifBhcoOQ=;
-	b=RraAo3q5dyTB7UDfIRn+NPY26twP/+NfzQNQoOL7jVuF6W3eR7ZZr896GbEahfwks+nXH/
-	VeL2hjBoV1zNBturjEXnfZz2s6eTb2UUDLxLkiTFITz0IeYXsvA08yz1VVedQeyXK9XUVV
-	iFU0iOj52V5hsoqQgfJ1mQhocwY2X/M=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-440-noXIOcegN7GhhCaugE67Mw-1; Fri, 16 Feb 2024 03:00:29 -0500
-X-MC-Unique: noXIOcegN7GhhCaugE67Mw-1
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-785d3e4f98aso189429485a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 00:00:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HDqnlch7"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a2d7e2e7fe0so324692066b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 00:00:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708070445; x=1708675245; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
+         :from:content-language:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=DnxukvBZ9HILW+/bXi1xM6ASxCxRAyvkY/gDibCLZJQ=;
+        b=HDqnlch7xEPUDZsbkZW03tH3xjYNYxgwHiXmbzeAUpeQY7RoXQFLcwj8WykAgAklFw
+         JNiT6tMhdgt2gac6Tfs5BXKZBGf6ZIQLDZ+HHye23P/KFt9m/eTEu5edtlZldisRjaMi
+         WQ59HsdRgPXyWSNJcmmZ6hF8Fzn9uUq/zBOSn7ttztDTgQ0oUphq/encHHVJ8FoHVLI3
+         B+WgRH2Q7i1orn19Ja7vlY9i4SgjJeHYodZKJwZ3dcib4tmbjoKZZUWmUE2d4r5lE8qK
+         Wiz3QMt4whRAaMhm3v8gErHGJ/GZhBr3bZo/kz83M5si88Kf5FiYHIWp0MTeenZXybzE
+         Apsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708070429; x=1708675229;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bho+yn8M4kGUaS4UAXQ+fSY/db1hBVlHnbWifBhcoOQ=;
-        b=nq5oWPgHEEdEdQPK6L19RAPXJsonPr9N8VnOxgYktr1h3+jz+GtuZUVa3/A+ijsOyy
-         ZZckuQ0FjwTYIQETx46AAMCo7yTjib0FDAfwfLklrdjIu0uQ48ZTEMOA2NTiQmEb5EdJ
-         Vc5MklfCyTYpWgaG+tG4Dex9UsI7X9Ju25t7j0ISslvSd9P5WZkioVe0rav5OG2mYW+T
-         Jpzetf6PTRkLB4xanwo2xoR79r3v9Wy3EHEqJbBdV+IJ45zYq9raz1uMj+7qy6JcncI+
-         ab2UvZLpsWwvXI6eGfhYDG6OE2fL5SSAHQnkTC1tsycXlFmw/jZC1OMApS3ZbohxBbjv
-         pUig==
-X-Gm-Message-State: AOJu0YzB5q7wsh0z6wx4Okn7hcwGC/R6salun8wX/SS/QgMZLN3nIe2D
-	FMjqXy4kDxtTqa5AopTZs9ZePGsqLbVbKZ3wtam2tfZ9A1zCuONPuz8kaEehJeUpM/GO91XAFFZ
-	7ae12ld3YL5cBIfocPtQeXMkZ6vb1WP+AaSwBOqWVNSzkshfRdUY84gbUA3pcbw==
-X-Received: by 2002:a05:620a:564a:b0:785:ec1f:6aee with SMTP id vw10-20020a05620a564a00b00785ec1f6aeemr3631452qkn.27.1708070428744;
-        Fri, 16 Feb 2024 00:00:28 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHk5xfmE9icqXe3ltJz8nq6nkHMSdP3/86CuMkgc0dqcATRNh3NfMI3OUZi8MhWVBnCnizQ8w==
-X-Received: by 2002:a05:620a:564a:b0:785:ec1f:6aee with SMTP id vw10-20020a05620a564a00b00785ec1f6aeemr3631427qkn.27.1708070428387;
-        Fri, 16 Feb 2024 00:00:28 -0800 (PST)
-Received: from LeoBras.redhat.com ([2804:1b3:a800:4770:9d0:4bac:1782:4637])
-        by smtp.gmail.com with ESMTPSA id br37-20020a05620a462500b00787346f1edasm1300756qkb.54.2024.02.16.00.00.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 00:00:28 -0800 (PST)
-From: Leonardo Bras <leobras@redhat.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Tony Lindgren <tony@atomide.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Leonardo Bras <leobras@redhat.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Shanker Donthineni <sdonthineni@nvidia.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: [RFC PATCH v2 4/4] tty/serial8250: Make use of IRQ_HANDLED_MANY interface
-Date: Fri, 16 Feb 2024 04:59:46 -0300
-Message-ID: <20240216075948.131372-6-leobras@redhat.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240216075948.131372-2-leobras@redhat.com>
-References: <20240216075948.131372-2-leobras@redhat.com>
+        d=1e100.net; s=20230601; t=1708070445; x=1708675245;
+        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
+         :from:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DnxukvBZ9HILW+/bXi1xM6ASxCxRAyvkY/gDibCLZJQ=;
+        b=wyIIXqYFGJrpO5abjUsrDA3mHg4ON9FDD2LTdOtT6w3nKEyLtLlZIpe6gxgjero4Aq
+         HZoazbwFph8iF4olUxlrKWtgtUTJqBpbbqDOL8GYfIfY9cfL/wGQThFyZPidzjZnIA6n
+         PChd6+Mr9I1kgdTj1LNxhNswNW5YMdoxz3ae8kGggVXfR28NmgzuMY7MlhUeUnHf1c1d
+         uKYjTMO+UZ6ri4E6zbe66MFpUKqO3NxqGBb/9Vy2PO0+iLMOZwHDPPWiv/9hcQjm1JtM
+         JVxQwavVu0t993JTdozvW2QUBECGLnuViO0ezAqqh8sIoMvHhrNpXAmYj95krVBJROVB
+         iBvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+60yMezQXRT4KA4ZjUbkBuqxMJ/mP5sEM9BPixU8kdNRpHKB3QoWmn8aPszF7ncBlI5Iu4zdcHhM90G9wa6pSRgUY8Wwiw3cOsLnB
+X-Gm-Message-State: AOJu0Yyn6UnQHOWEdgxW5L0sBfhMU/FbRqRakjXL0bMqee/4NRW5wnfY
+	4reGS0OldfB+2+DHk7vDmtiTtZJUyhc46YGtOAoWj4ocZzlLbTdApW4u7/LFaqVlFRL16R+picG
+	T
+X-Google-Smtp-Source: AGHT+IFd57IEzcsF8PDqsk0R8qLsrAPvudXoL14T4EGGsWAoH+Rnn00j/J8MVf3C+e28sU/FudCSpw==
+X-Received: by 2002:a17:907:940f:b0:a3c:c13f:a1d9 with SMTP id dk15-20020a170907940f00b00a3cc13fa1d9mr7659320ejc.38.1708070444936;
+        Fri, 16 Feb 2024 00:00:44 -0800 (PST)
+Received: from [192.168.0.22] ([78.10.207.130])
+        by smtp.gmail.com with ESMTPSA id r5-20020a1709062cc500b00a3d1580d702sm1296186ejr.185.2024.02.16.00.00.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 Feb 2024 00:00:44 -0800 (PST)
+Message-ID: <ebd2be9f-fbad-4295-b74d-35647d08ee76@linaro.org>
+Date: Fri, 16 Feb 2024 09:00:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 03/13] dt-bindings: hwmon: lm75: add label property
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Andi Shyti
+ <andi.shyti@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mips@vger.kernel.org, Gregory Clement <gregory.clement@bootlin.com>,
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, Jean Delvare
+ <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ linux-hwmon@vger.kernel.org
+References: <20240215-mbly-i2c-v1-0-19a336e91dca@bootlin.com>
+ <20240215-mbly-i2c-v1-3-19a336e91dca@bootlin.com>
+ <3e541dd7-90d8-43d1-a5b5-260828ac2a86@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <3e541dd7-90d8-43d1-a5b5-260828ac2a86@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-For every TX byte an IRQ is requested.
-On threaded IRQs, the handler calls serial8250_tx_chars can send multiple
-bytes, limited to it's queue size (tx_loadsz).
+On 16/02/2024 08:41, Krzysztof Kozlowski wrote:
+> On 15/02/2024 17:52, Théo Lebrun wrote:
+>> Declare optional label devicetree property. Show usage in one example
+>> with dummy name.
+>>
+>> To: Jean Delvare <jdelvare@suse.com>
+>> To: Guenter Roeck <linux@roeck-us.net>
+>> Cc: <linux-hwmon@vger.kernel.org>
+>> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+>> ---
+> 
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
 
-When this happens, the handler return IRQ_HANDLED with reduces the
-unhandled IRQ counter only by 1, even though many requests have been
-handled at once.
+Although you might need to re-work this patch if this gets accepted:
 
-This causes the unhandled IRQ counter to go up until it reaches the maximum
-and causes the registered IRQ to be disabled, thus breaking the serial
-console.
+https://lore.kernel.org/linux-devicetree/20240216-dt-bindings-hwmon-common-v1-0-3c2c24ff1260@linaro.org/T/#m341d8f47ca5badd2637cd662fb331f144e16a54c
 
-Make use of the newly introduced IRQ_HANDLED_MANY interface to return the
-number of requests handled, so the unhandled IRQ counter can get decreased
-accordingly.
-
-Signed-off-by: Leonardo Bras <leobras@redhat.com>
----
- include/linux/serial_8250.h         |  2 +-
- drivers/tty/serial/8250/8250_core.c | 13 ++++++++-----
- drivers/tty/serial/8250/8250_port.c | 16 ++++++++++------
- 3 files changed, 19 insertions(+), 12 deletions(-)
-
-diff --git a/include/linux/serial_8250.h b/include/linux/serial_8250.h
-index ec46e3b49ee99..c9d4271b71d70 100644
---- a/include/linux/serial_8250.h
-+++ b/include/linux/serial_8250.h
-@@ -200,7 +200,7 @@ int fsl8250_handle_irq(struct uart_port *port);
- int serial8250_handle_irq(struct uart_port *port, unsigned int iir);
- u16 serial8250_rx_chars(struct uart_8250_port *up, u16 lsr);
- void serial8250_read_char(struct uart_8250_port *up, u16 lsr);
--void serial8250_tx_chars(struct uart_8250_port *up);
-+int serial8250_tx_chars(struct uart_8250_port *up);
- unsigned int serial8250_modem_status(struct uart_8250_port *up);
- void serial8250_init_port(struct uart_8250_port *up);
- void serial8250_set_defaults(struct uart_8250_port *up);
-diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
-index ae637155fe7cd..2fab9102eec45 100644
---- a/drivers/tty/serial/8250/8250_core.c
-+++ b/drivers/tty/serial/8250/8250_core.c
-@@ -110,7 +110,7 @@ static irqreturn_t serial8250_interrupt(int irq, void *dev_id)
- {
- 	struct irq_info *i = dev_id;
- 	struct list_head *l, *end = NULL;
--	int pass_counter = 0, handled = 0;
-+	int pass_counter = 0, handled_total = 0;
- 
- 	pr_debug("%s(%d): start\n", __func__, irq);
- 
-@@ -120,15 +120,18 @@ static irqreturn_t serial8250_interrupt(int irq, void *dev_id)
- 	do {
- 		struct uart_8250_port *up;
- 		struct uart_port *port;
-+		int handled;
- 
- 		up = list_entry(l, struct uart_8250_port, list);
- 		port = &up->port;
- 
--		if (port->handle_irq(port)) {
--			handled = 1;
-+		handled = port->handle_irq(port);
-+		if (handled) {
-+			handled_total += handled;
- 			end = NULL;
--		} else if (end == NULL)
-+		} else if (end == NULL) {
- 			end = l;
-+		}
- 
- 		l = l->next;
- 
-@@ -140,7 +143,7 @@ static irqreturn_t serial8250_interrupt(int irq, void *dev_id)
- 
- 	pr_debug("%s(%d): end\n", __func__, irq);
- 
--	return IRQ_RETVAL(handled);
-+	return IRQ_RETVAL_MANY(handled_total);
- }
- 
- /*
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index f799c34f1603c..74d53507a73d4 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -1802,7 +1802,7 @@ u16 serial8250_rx_chars(struct uart_8250_port *up, u16 lsr)
- }
- EXPORT_SYMBOL_GPL(serial8250_rx_chars);
- 
--void serial8250_tx_chars(struct uart_8250_port *up)
-+int serial8250_tx_chars(struct uart_8250_port *up)
- {
- 	struct uart_port *port = &up->port;
- 	struct circ_buf *xmit = &port->state->xmit;
-@@ -1810,15 +1810,15 @@ void serial8250_tx_chars(struct uart_8250_port *up)
- 
- 	if (port->x_char) {
- 		uart_xchar_out(port, UART_TX);
--		return;
-+		return 0;
- 	}
- 	if (uart_tx_stopped(port)) {
- 		serial8250_stop_tx(port);
--		return;
-+		return 0;
- 	}
- 	if (uart_circ_empty(xmit)) {
- 		__stop_tx(up);
--		return;
-+		return 0;
- 	}
- 
- 	count = up->tx_loadsz;
-@@ -1858,6 +1858,9 @@ void serial8250_tx_chars(struct uart_8250_port *up)
- 	 */
- 	if (uart_circ_empty(xmit) && !(up->capabilities & UART_CAP_RPM))
- 		__stop_tx(up);
-+
-+	/* Return number of chars sent */
-+	return up->tx_loadsz - count;
- }
- EXPORT_SYMBOL_GPL(serial8250_tx_chars);
- 
-@@ -1923,6 +1926,7 @@ int serial8250_handle_irq(struct uart_port *port, unsigned int iir)
- 	bool skip_rx = false;
- 	unsigned long flags;
- 	u16 status;
-+	int handled = 0;
- 
- 	if (iir & UART_IIR_NO_INT)
- 		return 0;
-@@ -1956,14 +1960,14 @@ int serial8250_handle_irq(struct uart_port *port, unsigned int iir)
- 	serial8250_modem_status(up);
- 	if ((status & UART_LSR_THRE) && (up->ier & UART_IER_THRI)) {
- 		if (!up->dma || up->dma->tx_err)
--			serial8250_tx_chars(up);
-+			handled = serial8250_tx_chars(up);
- 		else if (!up->dma->tx_running)
- 			__stop_tx(up);
- 	}
- 
- 	uart_unlock_and_check_sysrq_irqrestore(port, flags);
- 
--	return 1;
-+	return handled ? : 1;
- }
- EXPORT_SYMBOL_GPL(serial8250_handle_irq);
- 
--- 
-2.43.2
+Best regards,
+Krzysztof
 
