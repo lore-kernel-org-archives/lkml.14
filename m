@@ -1,213 +1,156 @@
-Received: from smtp-fw-80008.amazon.com (smtp-fw-80008.amazon.com [99.78.197.219])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B9312FF81;
-	Fri, 16 Feb 2024 15:36:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E7112FB1D;
+	Fri, 16 Feb 2024 15:36:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708097794; cv=none; b=qy/3VXZjQlkQ7b7IXuYZ7p18427+d6shlcXZHrCuqGieWj9mculGURAjTUzET/IwvzVziVwnN6xaoYiADEq/UEaqEiiW1HtO9UkIaIGmSJUBAyFUAfOg2QNWaCv8qWPvbsO3209RmLCwSnkksHcqCxKXV06Jf7C0jzGVNqGdE+s=
+	t=1708097806; cv=none; b=aMH3QHQ4NkwDdznqreGass2qgRrxOLC9NzihdVbRYzsyBgB4j9OOCysV9KYw94a2x0z9sQhl3XyEHuMVRPfQJVGxY9rzCtTRDp+tIQaq7A3DMLBZIbS6DeSiahtrTiOa6epPdfit6Z+mcj8zuftl6MTFyi55E0o7cHXrDFpkkQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708097794; c=relaxed/simple;
-	bh=9X3M2Hi2BGu4LrBLQAuN+zc5VZRS6uyvkKa9xFV6lnk=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=FS/pYTb6N5qEtmvZVMYsH5pC9oaJ68qZPcVnxgVuaMZMYa5GRaErVKa10VUCS9L9mXOJNDGdc7jVjv+5brb0wG4Q6ZHTHrw7RuHbCW7VLrTVahgewPFfyYI0D8aXw3S6L+mlEdkj7XrhguYuBRzOiyJUMcxAv1/9MDgk8qWEMec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=QrhIENWD; arc=none smtp.client-ip=99.78.197.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	s=arc-20240116; t=1708097806; c=relaxed/simple;
+	bh=wfvh0/iVILV3fPSo2ZQ8Ff6gHCxRyDBSeSEOuuSMcNA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qXUanl6QD8VKm+8IhrJc1R/jbDUEF7vxnIWeogzY8B1E7tmqf8RNVI2m3mJezHoBM8dZ5YUFQnft54kmGld2L4GTwOcvn5uv8Hq0U2FnGivKXmEh5rf6st2qp/rqHWDSGmEQXw94dfnjM3lrTAanIRS/UPh8I+BcTYGArMVUU/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TWUcLL4E; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="QrhIENWD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TWUcLL4E"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5129e5b8cecso96934e87.3;
+        Fri, 16 Feb 2024 07:36:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1708097791; x=1739633791;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=zYEPhdOGwxfalucYYKXEQXA0b+MOVSC9pumogm3wVhQ=;
-  b=QrhIENWD4ZDj8t0DHE7YumF4mitFiDf9RNtQ4aHPib1iCDx4l0Q+yjQc
-   N+RRh1REJI8gk9ckrbDsOueXPLPlm/4EZnjpspCS6ElXQGnvcLIqvk5W+
-   pNXSuH3DshgB6EzWKRqlfq/P9QDxheSWgGzB85SEuLbqpfup8drIv+Ju0
-   8=;
-X-IronPort-AV: E=Sophos;i="6.06,165,1705363200"; 
-   d="scan'208";a="66561533"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 15:36:27 +0000
-Received: from EX19MTAUEC002.ant.amazon.com [10.0.29.78:36608]
- by smtpin.naws.us-east-1.prod.farcaster.email.amazon.dev [10.0.0.197:2525] with esmtp (Farcaster)
- id 14bd3545-92ef-44f2-844a-9c8f63002956; Fri, 16 Feb 2024 15:36:26 +0000 (UTC)
-X-Farcaster-Flow-ID: 14bd3545-92ef-44f2-844a-9c8f63002956
-Received: from EX19D008UEC003.ant.amazon.com (10.252.135.194) by
- EX19MTAUEC002.ant.amazon.com (10.252.135.253) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 16 Feb 2024 15:36:06 +0000
-Received: from EX19MTAUEC001.ant.amazon.com (10.252.135.222) by
- EX19D008UEC003.ant.amazon.com (10.252.135.194) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 16 Feb 2024 15:36:06 +0000
-Received: from dev-dsk-ptyadav-1c-37607b33.eu-west-1.amazon.com (10.15.11.255)
- by mail-relay.amazon.com (10.252.135.200) with Microsoft SMTP Server id
- 15.2.1118.40 via Frontend Transport; Fri, 16 Feb 2024 15:36:06 +0000
-Received: by dev-dsk-ptyadav-1c-37607b33.eu-west-1.amazon.com (Postfix, from userid 23027615)
-	id 0583720CE8; Fri, 16 Feb 2024 16:36:06 +0100 (CET)
-From: Pratyush Yadav <ptyadav@amazon.de>
-To: Alexander Graf <graf@amazon.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kexec@lists.infradead.org>,
-	<linux-doc@vger.kernel.org>, <x86@kernel.org>, Eric Biederman
-	<ebiederm@xmission.com>, "H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski
-	<luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt
-	<rostedt@goodmis.org>, Andrew Morton <akpm@linux-foundation.org>, "Mark
- Rutland" <mark.rutland@arm.com>, Tom Lendacky <thomas.lendacky@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>, James Gowans <jgowans@amazon.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, <arnd@arndb.de>,
-	<pbonzini@redhat.com>, <madvenka@linux.microsoft.com>, Anthony Yznaga
-	<anthony.yznaga@oracle.com>, Usama Arif <usama.arif@bytedance.com>, "David
- Woodhouse" <dwmw@amazon.co.uk>, Benjamin Herrenschmidt
-	<benh@kernel.crashing.org>, Rob Herring <robh+dt@kernel.org>, "Krzysztof
- Kozlowski" <krzk@kernel.org>
-Subject: Re: [PATCH v3 11/17] tracing: Introduce kho serialization
-In-Reply-To: <20240117144704.602-12-graf@amazon.com> (Alexander Graf's message
-	of "Wed, 17 Jan 2024 14:46:58 +0000")
-References: <20240117144704.602-1-graf@amazon.com>
-	<20240117144704.602-12-graf@amazon.com>
-Date: Fri, 16 Feb 2024 16:36:05 +0100
-Message-ID: <mafs0sf1s8lqy.fsf@amazon.de>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+        d=gmail.com; s=20230601; t=1708097803; x=1708702603; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EM9d4NKP1uyF0zPf3h7n9kTkhx6lIklzeqHT5ceF45E=;
+        b=TWUcLL4ENszIGh6uWEB2NwKVcekPWPbM84cztdlzhsPHPz+uyqbV2x5LWrvzME52+e
+         2BrHVFIka2E2efeU8DbsXrtqk+n+OOdjg6IaOYIEozv84zMig5UNDZpKz8BZZIPWyGqx
+         //cBFU1y28Ms8eLeuyTwz5FyA8MpLiro5XT+n0zNmxxk25xZIUJ4sZuuZ2Zz7gRZ+7+K
+         5Rjw++ol+cWspD2rDG90mqhxHaIRB1iAmyQuONHqTJ8/74yFDHaGndKYOp9sZS0QLiiM
+         81I/25OIOZ2xOuK0Zej/HOb3VleGBcqnlhe/lCUcmzQJ3V0sfuJQg2Ig0IUDtz4eVGex
+         RPmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708097803; x=1708702603;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EM9d4NKP1uyF0zPf3h7n9kTkhx6lIklzeqHT5ceF45E=;
+        b=ifEdsJkokD85rVzYLzKNm5ecZnWtw4IgD0HSAqwFZ9iJ83ds0pnKiEfW/YUgevezhN
+         ROyPOFx0w0Gb9PDUdvYLEwRapGrbdZq/SySrRZAy/TXxREcwpaAWh1zUfY4sZU6OyGiJ
+         6ydhH+156sKsZZIT1AIl8xneXudwd5V369Yx0K5oYnDiBZns1mdRj4Dmztb+So02k55g
+         MIdiwpXax/1Jhu1xhp9SmhxWfw1WBFGO/4WWGAjOnMM9nsnMhKc+oF+IppvWRxaa7MNE
+         zrSdUmKNE+7RNFx3L6GjHOtFNFl+VagOBnys/ugm/sg8L3Qr5XWtCF7+bANjLOuRV7aS
+         y6Og==
+X-Forwarded-Encrypted: i=1; AJvYcCVRgXX4w6HWMK7ZmS/U9RkkOQUNjkH/i7ctOD06++rCUkg8pNGmL6jVxqRXDFaYuUzFzCzKx0lK1D3CP1UmVjWLun/gISTUmo8i1QETXZEx3dh2ldF1SwRNebpu1zVQsVZvcT/TZW1v
+X-Gm-Message-State: AOJu0YyXaKlTSVavIeCORxCgWrfsUsNz2ramFZhZK1cK4Vrh7fHfVKrN
+	E58UXgXZfj2i+re20MRJ6xfWtBoObcKJC2dRxFAuUExAj6qOgD7s
+X-Google-Smtp-Source: AGHT+IGL8xStZCW0jsSm7bnH1KR8fWUNvYE74CqPyX9SruTFi822dSL84Kg/zpi2WSUJp79+WrOtxA==
+X-Received: by 2002:ac2:5970:0:b0:512:9c8f:d4c5 with SMTP id h16-20020ac25970000000b005129c8fd4c5mr447498lfp.26.1708097802849;
+        Fri, 16 Feb 2024 07:36:42 -0800 (PST)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id g26-20020a19e05a000000b005117a641cecsm643919lfj.142.2024.02.16.07.36.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Feb 2024 07:36:42 -0800 (PST)
+Date: Fri, 16 Feb 2024 18:36:39 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, 
+	Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] spi: dw: Drop default number of CS setting
+Message-ID: <4sbbhf4ltdwrmj7rrr6f7lnjbdxrwfjoutmcgsh2c44jy5fxzj@xgqdscqdnkkv>
+References: <20240215180102.13887-1-fancer.lancer@gmail.com>
+ <20240215180102.13887-4-fancer.lancer@gmail.com>
+ <Zc5mxyTjq6X_QRsQ@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zc5mxyTjq6X_QRsQ@smile.fi.intel.com>
 
-Hi,
-
-On Wed, Jan 17 2024, Alexander Graf wrote:
-
-> We want to be able to transfer ftrace state from one kernel to the next.
-> To start off with, let's establish all the boiler plate to get a write
-> hook when KHO wants to serialize and fill out basic data.
+On Thu, Feb 15, 2024 at 09:32:23PM +0200, Andy Shevchenko wrote:
+> On Thu, Feb 15, 2024 at 09:00:48PM +0300, Serge Semin wrote:
+> > DW APB/AHB SSI core now supports the procedure which automatically
+> > determines the number of native CS. Thus there is no longer point in
+> > defaulting to four CS if platform doesn't specify the real number.
+> 
+> ...
 >
-> Follow-up patches will fill in serialization of ring buffers and events.
->
-> Signed-off-by: Alexander Graf <graf@amazon.com>
->
-> ---
->
-> v1 -> v2:
->
->   - Remove ifdefs
-> ---
->  kernel/trace/trace.c | 47 ++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
->
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index a0defe156b57..9a0d96975c9c 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -32,6 +32,7 @@
->  #include <linux/percpu.h>
->  #include <linux/splice.h>
->  #include <linux/kdebug.h>
-> +#include <linux/kexec.h>
->  #include <linux/string.h>
->  #include <linux/mount.h>
->  #include <linux/rwsem.h>
-> @@ -866,6 +867,8 @@ static struct tracer		*trace_types __read_mostly;
->   */
->  DEFINE_MUTEX(trace_types_lock);
->
-> +static bool trace_in_kho;
-> +
->  /*
->   * serialize the access of the ring buffer
->   *
-> @@ -10574,12 +10577,56 @@ void __init early_trace_init(void)
->  	init_events();
->  }
->
-> +static int trace_kho_notifier(struct notifier_block *self,
-> +			      unsigned long cmd,
-> +			      void *v)
-> +{
-> +	const char compatible[] = "ftrace-v1";
-> +	void *fdt = v;
-> +	int err = 0;
-> +
-> +	switch (cmd) {
-> +	case KEXEC_KHO_ABORT:
-> +		if (trace_in_kho)
-> +			mutex_unlock(&trace_types_lock);
-> +		trace_in_kho = false;
-> +		return NOTIFY_DONE;
-> +	case KEXEC_KHO_DUMP:
-> +		/* Handled below */
-> +		break;
-> +	default:
-> +		return NOTIFY_BAD;
-> +	}
-> +
-> +	if (unlikely(tracing_disabled))
-> +		return NOTIFY_DONE;
-> +
-> +	err |= fdt_begin_node(fdt, "ftrace");
-> +	err |= fdt_property(fdt, "compatible", compatible, sizeof(compatible));
-> +	err |= fdt_end_node(fdt);
-> +
-> +	if (!err) {
-> +		/* Hold all future allocations */
-> +		mutex_lock(&trace_types_lock);
+ 
+> > -	num_cs = 4;
+> 
+> Simply update the default here?
+> 
+> > -	device_property_read_u32(&pdev->dev, "num-cs", &num_cs);
 
-Say I do "echo 1 | tee /sys/kernel/kho/active". Then the lock is held by
-tee, which exits. Then I later I do "echo 0 | tee
-/sys/kernel/kho/active". This time another tee task unlocks the lock. So
-it is not being unlocked by the same task that locked it. The comment
-above mutex_lock() definition says:
+Do you suggest to simply:
 
-    The mutex must later on be released by the same task that acquired
-    it. Recursive locking is not allowed. The task may not exit without
-    first unlocking the mutex.
+--- a/drivers/spi/spi-dw-mmio.c
++++ b/drivers/spi/spi-dw-mmio.c
+@@ -364,8 +364,9 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
+ 				     &dws->reg_io_width))
+ 		dws->reg_io_width = 4;
+ 
+-	num_cs = 4;
++	num_cs = 0;
+ 
+ 	device_property_read_u32(&pdev->dev, "num-cs", &num_cs);
+ 
+?
 
-I tested your code and it happens to work because the unlock always
-happened to take the fast path which does not sanity-check the owner.
-Still, this is not the correct thing to do.
+My idea was to make the statement looking closer to what is
+implemented for "reg-io-width" property. An alternative to what you
+suggest and to my patch can be converting the dw_spi::num_cs type to
+u32 and pass it to the device_property_read_u32() method directly:
 
-> +		trace_in_kho = true;
-> +	}
-> +
-> +	return err ? NOTIFY_BAD : NOTIFY_DONE;
-> +}
-> +
-> +static struct notifier_block trace_kho_nb = {
-> +	.notifier_call = trace_kho_notifier,
-> +};
-> +
->  void __init trace_init(void)
->  {
->  	trace_event_init();
->
->  	if (boot_instance_index)
->  		enable_instances();
-> +
-> +	if (IS_ENABLED(CONFIG_FTRACE_KHO))
-> +		register_kho_notifier(&trace_kho_nb);
->  }
->
->  __init static void clear_boot_tracer(void)
+--- a/drivers/spi/spi-dw.h
++++ b/drivers/spi/spi-dw.h
+ 	u32			max_freq;	/* max bus freq supported */
+ 
+ 	u32			reg_io_width;	/* DR I/O width in bytes */
++	u32			num_cs;		/* supported slave numbers */
+ 	u16			bus_num;
+-	u16			num_cs;		/* supported slave numbers */
+ 	void (*set_cs)(struct spi_device *spi, bool enable);
+ 
+ 	/* Current message transfer state info */
+--- a/drivers/spi/spi-dw-mmio.c
++++ b/drivers/spi/spi-dw-mmio.c
+@@ -320,7 +320,6 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
+ 	struct resource *mem;
+ 	struct dw_spi *dws;
+ 	int ret;
+-	int num_cs;
+ 
+ 	dwsmmio = devm_kzalloc(&pdev->dev, sizeof(struct dw_spi_mmio),
+ 			       GFP_KERNEL);
+@@ -364,8 +363,7 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
+ 				     &dws->reg_io_width))
+ 		dws->reg_io_width = 4;
 
---
-Regards,
-Pratyush Yadav
+-	num_cs = 4;
+-
+-       device_property_read_u32(&pdev->dev, "num-cs", &num_cs);
++       device_property_read_u32(&pdev->dev, "num-cs", &dws->num_cs);
+-
+-	dws->num_cs = num_cs;
+ 
+ 	init_func = device_get_match_data(&pdev->dev);
+ 	if (init_func) {
 
+What do you think? Would that be better?
 
+-Serge(y)
 
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
-
+> > -
+> > -	dws->num_cs = num_cs;
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
+> 
