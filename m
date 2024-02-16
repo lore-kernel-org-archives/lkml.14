@@ -1,103 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B4F5465D
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 16:56:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7FA31E86B
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 16:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708102577; cv=none; b=kTZMTwsw/O2/hu2YpKyoUV0SXg8Q5bWubLJaF5Dwf5xzASjnrDVn0g+5VETFNgcHWCPV2PFvEF7TYJliLtbDcE0u/e+FaW3jIDeRq+iB4nU99lGcxQAWr7XnRalEeai+iRbG4/UhgYKgTC5Lpb0b4mFc0scr71nDLO5zkePHaEo=
+	t=1708102631; cv=none; b=C/HepJ0/qRfJ1QmSwc+wchQR2eA9MjouipNwJ2denTNMm3zTDhjtUHUoHmNg3PFA+/aWcl3/AFeCZyNnB94O9eQeOnttY0O1JBycKIsXbf4rft6/StHiosyFxZlDlVREpLdQXNqV3r56dbpxPRCHGEgBKzXnXMvCgj6wvPPc0Mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708102577; c=relaxed/simple;
-	bh=YuAECvUSSs6CSyQUuMZzsqnAo9jtikzllwciZ2R7g1c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lyKAUD/XkM44moOLT9FNs8XJH0nxFT+UfrglcerSrr16clTwmx5B7wOTw1nt+964ABkrzrh6dVhxF1qgIkWAVxKRkS8UVHL5EdyvAk25miGE850NwU+4wfEOVTTIG+Njr7LHdEKZKty8f/x55aHIld9/g4TccUEaJhlGI8BRwfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A7B0C433F1;
-	Fri, 16 Feb 2024 16:56:12 +0000 (UTC)
-Date: Fri, 16 Feb 2024 16:56:10 +0000
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	David Hildenbrand <david@redhat.com>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	John Hubbard <jhubbard@nvidia.com>, Zi Yan <ziy@nvidia.com>,
-	Barry Song <21cnbao@gmail.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Yang Shi <shy828301@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 12/18] arm64/mm: Wire up PTE_CONT for user mappings
-Message-ID: <Zc-Tqqfksho3BHmU@arm.com>
-References: <20240215103205.2607016-1-ryan.roberts@arm.com>
- <20240215103205.2607016-13-ryan.roberts@arm.com>
- <Zc9UQy-mtYAzNWm2@arm.com>
- <892caa6a-e4fe-4009-aa33-0570526961c5@arm.com>
+	s=arc-20240116; t=1708102631; c=relaxed/simple;
+	bh=Njb939Xj2TSbF8CTUoe/en9KsOGgfKVWdwwSZxqrTVQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=JY4NLfGfPfZWzFrlAectwt1mOpKtPvARV4GKqPXVr9FBLNd58ozwPwo5EQ+QF7QNdhuX1ACS4DN0w7W+vjxW7rayOLMZd4LIHOr1OZm0+LzKP7G+/qR7ftaGOGqgauqGlVmsF+xnQ/BY8VUuaTLWlaK1ScT/aeZD1T5Npz7hKoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d4aMkHzX; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d4aMkHzX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708102630; x=1739638630;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=Njb939Xj2TSbF8CTUoe/en9KsOGgfKVWdwwSZxqrTVQ=;
+  b=d4aMkHzXvYwe/5YYiNazQjDoXJzJizNdzLS/MCgF6Dt6/j0zqaT0rMMT
+   +Vbpr71odfPL3Dtkz67j6RXh2CqBBbfoZtUBiNQsk9uJecsEoPsIqYrvs
+   QVkESHCFFED2lfTxaWl9lG9qYjISX8AOj5PjH2n5eKsQsqrAuKg/MWqiX
+   OQO6LoxhRN7tVo5FMmMC7ZyAKiDkxnq/h86w/2YOGiRs37eNklY+sVuGI
+   t2Z0b26/UZasXBX3aMPKWEk4k35i2REtdFDdHTrMisfcuRi+poyOMU2Pr
+   9t+cI6rg5o20MoPm7u4o5g4YhQDrsB/rs96jJ5wB4QumMmA9b/aLEHBen
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10986"; a="12780604"
+X-IronPort-AV: E=Sophos;i="6.06,165,1705392000"; 
+   d="scan'208";a="12780604"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 08:57:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,165,1705392000"; 
+   d="scan'208";a="4167575"
+Received: from sbiswas-mobl1.amr.corp.intel.com (HELO [10.255.230.53]) ([10.255.230.53])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 08:57:08 -0800
+Message-ID: <52d414b85f41a76fc0a7b0082cba95297d9e5874.camel@linux.intel.com>
+Subject: Re: [PATCH v4] mm: swap: async free swap slot cache entries
+From: Tim Chen <tim.c.chen@linux.intel.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Chris Li <chrisl@kernel.org>, linux-kernel@vger.kernel.org, 
+ linux-mm@kvack.org, Wei Xu <weixugc@google.com>, Yu Zhao
+ <yuzhao@google.com>,  Greg Thelen <gthelen@google.com>, Chun-Tse Shao
+ <ctshao@google.com>, Yosry Ahmed <yosryahmed@google.com>,  Michal Hocko
+ <mhocko@suse.com>, Mel Gorman <mgorman@techsingularity.net>, Huang Ying
+ <ying.huang@intel.com>,  Nhat Pham <nphamcs@gmail.com>, Kairui Song
+ <kasong@tencent.com>, Barry Song <v-songbaohua@oppo.com>
+Date: Fri, 16 Feb 2024 08:57:07 -0800
+In-Reply-To: <20240215201627.5abd1841192feaa262d545ba@linux-foundation.org>
+References: <20240214-async-free-v4-1-6abe0d59f85f@kernel.org>
+	 <20240215161114.6bd444ed839f778eefdf6e0a@linux-foundation.org>
+	 <1b9a69d1ecaac45a228eb2993d5d9b8234a84155.camel@linux.intel.com>
+	 <20240215201627.5abd1841192feaa262d545ba@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <892caa6a-e4fe-4009-aa33-0570526961c5@arm.com>
 
-On Fri, Feb 16, 2024 at 12:53:43PM +0000, Ryan Roberts wrote:
-> On 16/02/2024 12:25, Catalin Marinas wrote:
-> > On Thu, Feb 15, 2024 at 10:31:59AM +0000, Ryan Roberts wrote:
-> >>  arch/arm64/mm/contpte.c          | 285 +++++++++++++++++++++++++++++++
-> > 
-> > Nitpick: I think most symbols in contpte.c can be EXPORT_SYMBOL_GPL().
-> > We don't expect them to be used by random out of tree modules. In fact,
-> > do we expect them to end up in modules at all? Most seem to be called
-> > from the core mm code.
-> 
-> The problem is that the contpte_* symbols are called from the ptep_* inline
-> functions. So where those inlines are called from modules, we need to make sure
-> the contpte_* symbols are available.
-> 
-> John Hubbard originally reported this problem against v1 and I enumerated all
-> the drivers that call into the ptep_* inlines here:
-> https://lore.kernel.org/linux-arm-kernel/b994ff89-1a1f-26ca-9479-b08c77f94be8@arm.com/#t
-> 
-> So they definitely need to be exported. Perhaps we can tighten it to
-> EXPORT_SYMBOL_GPL(), but I was being cautious as I didn't want to break anything
-> out-of-tree. I'm not sure what the normal policy is? arm64 seems to use ~equal
-> amounts of both.
+On Thu, 2024-02-15 at 20:16 -0800, Andrew Morton wrote:
+> On Thu, 15 Feb 2024 17:38:38 -0800 Tim Chen <tim.c.chen@linux.intel.com> =
+wrote:
+>=20
+> > > What this description lacks is any description of why anyone cares.=
+=20
+> > >=20
+> > > The patch clearly decreases overall throughput (speed-vs-latency is a
+> > > common tradeoff).
+>=20
+> This, please.
+>=20
+> > > And the "we don't know how to fix this properly so punt it into a
+> > > kernel thread" approach remains lame.  For example, the risk that the
+> > > now-liberated allocator can outpace the async freeing, resulting in
+> > > unlimited object windup.
+> >=20
+> >=20
+> > Andrew,
+> >=20
+> > What you are saying about outpacing asyn free is true for v1 and v2 ver=
+sions of the patch.
+> >=20
+> > But in this latest version, if another reclaim comes in before the asyn=
+c free has kicked in,
+> > we would be freeing the whole cache directly, same as original code, wi=
+thout waiting
+> > for the async free.  It is different from the first version
+> > where you go into the free one at a time mode while waiting for the asy=
+nc free.=C2=A0
+> > That was also my objection to the first two versions as you could be in=
+ this
+> > slow free one at a time mode for a long time.
+> >=20
+> > So now we should not have unlimited object windup.  And we would be doi=
+ng free
+> > in batch of 64, either still in the direct path or in the async path.
+> >=20
+>=20
+> OK, thanks, I didn't read closely enough,
+>=20
+> > If the next swap fault comes in very fast, before the async
+> > free gets a chance to run. It will directly free all the swap
+> > cache in the swap fault the same way as previously.
+>=20
+> And might it be a win to cancel the async_work in this case?
+>=20
+Canceling async_work will matter for the case where we push swap hard,
+and have a better chance of finding async have not yet engaged when
+we need to free additional swap slots.
 
-I don't think we are consistent here. For example set_pte_at() can't be
-called from non-GPL modules because of __sync_icache_dcache. OTOH, such
-driver is probably doing something dodgy. Same with
-apply_to_page_range(), it's GPL-only (called from i915).
+Chris' tests so far has been for his use cases where swap is lightly
+loaded.  The scenarios you listed are when=C2=A0
+we push swap hard close to its max throughput.=C2=A0
 
-Let's see if others have any view over the next week or so, otherwise
-I'd go for _GPL and relax it later if someone has a good use-case (can
-be a patch on top adding _GPL).
+It would help answer your concerns if Chris could also test high swap scena=
+rio.
+Then we can make sure sustainable swap throughput does not regress and
+latency is improved. And check whether it is beneficial to cancel outstandi=
+ng async_work on
+direct free path. I think the pro of canceling the asyn_work is to
+skip an extra lock acquisition on the cache. Though
+there is also some overhead in canceling the work itself.
 
-> > If you can make this easier to parse (in a few years time) with an
-> > additional patch adding some more comments, that would be great. For
-> > this patch:
-> 
-> I already have a big block comment at the top, which was trying to explain it.
-> Clearly not well enough though. I'll add more comments as a follow up patch when
-> I get back from holiday.
+Tim
 
-I read that comment but it wasn't immediately obvious what the atomicity
-requirements are - basically we require a single PTE to be atomically
-read (which it is), the rest is the dirty/young state being added on
-top. I guess a sentence along these lines would do.
+>=20
+> Again, without a clear description of the userspace-visible effects of
+> this problem I am groping in the dark.  My hands blindly landed upon
+> the question: the overall effect here is to leave worst-case latency
+> unaltered, but to decrease average latency.  Does this satisfy the
+> yet-to-be-described requirements?
+>=20
+>=20
+> Also, the V4 patch's quoted quantitative testing results are pasted
+> from the V2 patch's.  V2 was a fundamentally different implementation.=
+=20
+> I think it is fair to say that V4 is "untested", with regard to
+> satisfying its runtime objectives.
+>=20
 
-Enjoy your holiday!
-
--- 
-Catalin
