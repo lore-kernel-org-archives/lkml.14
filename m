@@ -1,113 +1,118 @@
-Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC8212E5D;
-	Fri, 16 Feb 2024 07:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D026D17732
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 07:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708070115; cv=none; b=Tuj1yU/zVc8pNY8YBF0KlDuhwRYenSlyzM87DRKR0BtGrmYgZjuy6rsFR8mpIogtW6yOpTpcXKbWkLuVQ2I6zW7iCSK0t4J9up7EbNVsGdh6/O+TpeuY1AJLTjL7z0//2wVAH7FcqbagQ1AuT+o+jtDLyAyh06Lp0alK1eoxkBQ=
+	t=1708070154; cv=none; b=WmOOwhZlGfguizop9HiNy8E3T/yXqfUVwjxNNKiKnZE8q/zadNx8SIM1U4/z4rEFIBStVisHY8ctPim3RdAzIhHUZ1cXa5xZ4H8Xsg4X8jvg9PkTHWG9ItIVNmpnIAPXqKVUpjw18Yrpr8oS7X4IhIgUOEDPO/og07wIbhORqCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708070115; c=relaxed/simple;
-	bh=VCWiUNtrcsS5Bbg884AsO/L41fooQwqIz2TLGDos6rc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Hot16m7/KfkGTXSuaf1Gyqt+O13wp3ob/YvQXlTj4Pcrlv86z7sePTbKF/ezddsbHVjZHNgpd+1ItHnGwHhZAlRWsyO/Oj3tuRz126vToXMXlFmcvxiBjFEmm4JthxusFwTWQGGeCY04sIwTIASMdr+WkHbyV1manMum86Jsiqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.29])
-	by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4TbkNM4CT7z9y5ZF;
-	Fri, 16 Feb 2024 15:39:47 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id 13058140631;
-	Fri, 16 Feb 2024 15:54:54 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-	by APP1 (Coremail) with SMTP id LxC2BwC3YBm9FM9lcmabAg--.60113S2;
-	Fri, 16 Feb 2024 08:54:53 +0100 (CET)
-Message-ID: <45699f4ed5726fd0d9346069250cd22b04623d9a.camel@huaweicloud.com>
-Subject: Re: [PATCH v10 0/25] security: Move IMA and EVM to the LSM
- infrastructure
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: Paul Moore <paul@paul-moore.com>, viro@zeniv.linux.org.uk, 
- brauner@kernel.org, jack@suse.cz, chuck.lever@oracle.com,
- jlayton@kernel.org,  neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com,
- tom@talpey.com,  jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com, 
- dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com, dhowells@redhat.com, 
- jarkko@kernel.org, stephen.smalley.work@gmail.com, omosnace@redhat.com, 
- casey@schaufler-ca.com, shuah@kernel.org, mic@digikod.net
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org, 
-	selinux@vger.kernel.org, linux-kselftest@vger.kernel.org, Roberto Sassu
-	 <roberto.sassu@huawei.com>
-Date: Fri, 16 Feb 2024 08:54:35 +0100
-In-Reply-To: <2cdfefc8661d0a82c28250fc22a93a47@paul-moore.com>
-References: <20240215103113.2369171-1-roberto.sassu@huaweicloud.com>
-	 <2cdfefc8661d0a82c28250fc22a93a47@paul-moore.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1708070154; c=relaxed/simple;
+	bh=cSxKbeYGrXBi01u9f2n15BRakjqNeU6etmH0wZRAkZg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FvGKLvEc1IC6qW7zMFmNZK708T6psxO3KrLnV5Om+tw+ZFKKhjCnA3fIJI+IoMv0YP7lKqkYcdAou+Lrqon6HaRKF63c0ZuvPLoLIUjvSsLeTOj4TsXEkOopXYA1gWHkmsr5D7da4Jl5e1fkcC0SD3x9knJBhkMstwhOxOUrWts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JNFXtl+7; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JNFXtl+7"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-51182ece518so2082188e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 Feb 2024 23:55:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708070151; x=1708674951; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=emO4NNy3LKusCPqGhZZ7GE4y/efsFfuCMAIJiM7fXOw=;
+        b=JNFXtl+7MO7GHIQCGQEfu+TqdvWbz60dgmCfTLafOCv3PsAA7TmTGkBDqCC1ewBxcE
+         9Dp/7OAE3TVe8dq/ou4prwgihIJkuLdNcpNdYVnDDNCQ4+SC0FwRuDuCkXQfPD+71alW
+         zWtk7A2gDU7goq1R0u6Y6CPs9YLlc7TBCzP6SfUpUHLN37HoW5F0mSoTQNt+kxnth7bq
+         ba/skncyUDLZHIz+UDhehBOG4H4hD//DjM5ObwTIFL7Jh06UL/Jk5REWr4Lu1RC8uSK5
+         LuuXMm51N3snkKrCRKG/ovOpZJPLwFO8dIAn3ytjil1jIQ4XxhYfXc/2s2wzOapfVuVv
+         Dpcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708070151; x=1708674951;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=emO4NNy3LKusCPqGhZZ7GE4y/efsFfuCMAIJiM7fXOw=;
+        b=qNDNi6fOSBh5Fkh74Ny0rP03SdaDuCF+P8Uwpft24FjeMv2EQNEiTo5cza5+aeY3Mf
+         kjajv9qT1wvl0Gb6SHGppHcY/JGiun/Xnj26eBwuYMS1MlYAs8dAEHiPUjNr0yGCy7dw
+         tOsHtj6ATTxYK5Yg2VkSJQSBzaGo1s5grnKME/sTsEkNmf9V2DhT/IG+KQ3ZkrgRFsMl
+         bCf4g/Tfjs/pGV4A9CsgvqzNmmonoSLWh3Wonc6nZC5i68GsJDAvITWcJsgQ1xrW2hGy
+         M5rMi95rXPDaOmStZHOlmcGFU/i4po8MtAY5d+ddWxg41ZkOuIOU3OogZ02mHs4o7zsD
+         rGfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXLTnfG2lOpxCNLlIdrlDaIe8KoF7uj3xj7FMl3jjoVNpSJ7AZ4KlRslQVavhvdqy/hjhWrf/FXqat7aP4G+bZOci3X6JT4aquvEQmV
+X-Gm-Message-State: AOJu0YwIg6xvylv1h0hll8AQ8htdom/fn4KLF6K5rpAqBf6vLWkBUXPF
+	+FbQ8ueioLJIPNGekAo3FYsYhMkQeDCTHbVkezk9Mgh70XtsmSazTUe20uQBuhM=
+X-Google-Smtp-Source: AGHT+IEEoOtTe0HdxVvfqlQ6O+495RGQe5JtxVOZNl6Dponqsw8clxuHh3d3yoyjwq7es5Hs95e/hA==
+X-Received: by 2002:a05:6512:3f06:b0:512:8d30:6dce with SMTP id y6-20020a0565123f0600b005128d306dcemr1998999lfa.52.1708070150828;
+        Thu, 15 Feb 2024 23:55:50 -0800 (PST)
+Received: from [127.0.1.1] ([78.10.207.130])
+        by smtp.gmail.com with ESMTPSA id f23-20020a170906561700b00a3d828c54f1sm1300750ejq.135.2024.02.15.23.55.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Feb 2024 23:55:50 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 0/2] dt-bindings: hwmon: common schema
+Date: Fri, 16 Feb 2024 08:55:45 +0100
+Message-Id: <20240216-dt-bindings-hwmon-common-v1-0-3c2c24ff1260@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CM-TRANSID:LxC2BwC3YBm9FM9lcmabAg--.60113S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7WF4DAF1rtr18Gr13uryrtFb_yoW8Xw1DpF
-	Z7ta1UCr4qqF13Can7Zr48ua1rAwsYqr4jkry8KrWUZa45KF1ftr1xGF4j9FykWwn3ua4Y
-	q34jv3sYy34DAa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UAkuxUUUUU=
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAPBF1jj5ZmBQAAsN
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAEVz2UC/x2MQQ5AMBAAvyJ7tkmVoL4iDuhiD7bSChLxd+U0m
+ cPMDYE8U4AmucHTwYGdRMnSBMall5mQbXTQShdKZyXaHQcWyzIHXM7VCY5u/VCbylRqyE0+aYj
+ 55mni61+33fO8MvUNl2oAAAA=
+To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+ Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=815;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=cSxKbeYGrXBi01u9f2n15BRakjqNeU6etmH0wZRAkZg=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBlzxUD8/15G35K1Y17sS9k5UgCkpWQ7K1rEWJou
+ 1XAE20W0H6JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZc8VAwAKCRDBN2bmhouD
+ 1w6QD/4r/0zhv7EhrFTlGZ28Fd+s5H5qQGJLEoNeXizCIFhElG2yR+LJ0GuAJC8DhBgFTHkC7rl
+ sAlQk21uZKFHxSHcebhHV8tt/gnFnV1FNjBk4AtvjCT+slEemIan3X9/UhSbSNS0lqZWFcJtq0O
+ IPHdL0P4Q/7vQa/zm1HTsX9Ilb5DIby1iy9yvc4GE9+vNf18MwN1CvXBHxNbusAj5GrBRW2M/bp
+ olg2k7W/Oft1WWFtT5YGtgvECuZZbtm/07h31yy/D2tVjTzsJbRBNncJOUbpFj7tuYxJoG4gh7w
+ rpcsOYkg8u2isAs79mlorVFBBKoaXmVoqozjePv5Z9M3GJ7vFY/5xor/Z4Zclf/C4ejAbwouYqo
+ 8sbpCRnxTDPyyHNmV79aRQ2Rb+DSTiBagcoaBP1VBP/9/5KOGAN/X1Un9ttV//PuKnj9DRFAqNF
+ emGmo1MLjKHWO8qHjpYeGvHMmb12RfCfLTfJLrq+m9Lm6r8UmMBWWxtlmM5EF8N4KGWloKGBf5g
+ w6OOR9ZRBMjpLY0ex4G/p2TLvK1wb/xbLo6MkVvCpgc3Uu4nlpY/qlNxNE5V139O3Aw1rMNjNn1
+ cOQmCiRVTMwYPn8AbqHuBQM9MAnh79YV5pT5BFCozO9zaTshB8AZikLVw7UVPCEn/6yg0r+QH9S
+ qYREtDoCUXiaz4Q==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-On Thu, 2024-02-15 at 23:43 -0500, Paul Moore wrote:
-> On Feb 15, 2024 Roberto Sassu <roberto.sassu@huaweicloud.com> wrote:
-> >=20
-> > IMA and EVM are not effectively LSMs, especially due to the fact that i=
-n
-> > the past they could not provide a security blob while there is another =
-LSM
-> > active.
-> >=20
-> > That changed in the recent years, the LSM stacking feature now makes it
-> > possible to stack together multiple LSMs, and allows them to provide a
-> > security blob for most kernel objects. While the LSM stacking feature h=
-as
-> > some limitations being worked out, it is already suitable to make IMA a=
-nd
-> > EVM as LSMs.
-> >=20
-> > The main purpose of this patch set is to remove IMA and EVM function ca=
-lls,
-> > hardcoded in the LSM infrastructure and other places in the kernel, and=
- to
-> > register them as LSM hook implementations, so that those functions are
-> > called by the LSM infrastructure like other regular LSMs.
->=20
-> As discussed earlier, I've just merged this into the lsm/dev tree; a big
-> thank you to Roberto for working on this and to all helped along the way
-> with reviews, testing, etc.  I've wanted to see IMA/EVM integrated as
-> proper LSMs for a while and I'm very happy to finally see it happening.
+All device bindings could soon get a label like:
+https://lore.kernel.org/all/20240215-mbly-i2c-v1-3-19a336e91dca@bootlin.com/
 
-Thank you, and thanks to all! That's an excellent news! Excited about
-that!
+Add a common binding. If this gets acked/accepted, I can add $ref to all
+existing hwmon devices.
 
-> Mimi, Roberto, I'm going to hold off on merging anything into the lsm/dev
-> tree for a few days in case you decide you would prefer to take these
-> patches yourselves.  If I don't hear anything from the two of you, I'll
-> plan to send these to Linus during the next merge window.
+Best regards,
+Krzysztof
 
-Perfect!
+---
+Krzysztof Kozlowski (2):
+      dt-bindings: hwmon: add common properties with label
+      dt-bindings: hwmon: ti,ina2xx: use common hwmon schema
 
-Roberto
+ .../devicetree/bindings/hwmon/hwmon-common.yaml          | 16 ++++++++++++++++
+ Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml   |  8 ++++----
+ 2 files changed, 20 insertions(+), 4 deletions(-)
+---
+base-commit: ae00c445390b349e070a64dc62f08aa878db7248
+change-id: 20240216-dt-bindings-hwmon-common-897970b393f2
+
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
