@@ -1,217 +1,186 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE351353F0;
-	Fri, 16 Feb 2024 18:52:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708109577; cv=none; b=LR/zSg2JUUM1XyOjYzc++ILT/OsMVo2dcFAs7iTbn0oJ2mGUlTXEw+9IZENWD/+EJRGSgLpbJfezkH/eY+8mz7yLubiTaSZKKuqZjQLpKaiexrlCV/KrDcYbakqA+QzNBD2XP/C9YafJeWQ89X4+vV4LbR/G4xW9oBE4EpPQ5fU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708109577; c=relaxed/simple;
-	bh=3WkD8y+Hm2LbxjUUEU7dK0+hHpLtVVkdwRsfFhX61YI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a3wGLgyi4pKe838gzeFYXeka5PNy30fDqvB6wh6L7USV43gAfRHkX/HMz2t+kijZnnXvvrZpyKZfHTLwyzoYgmjwShu+YqmpE93gxwZTjCNMb1OMIbpGGeZ5QZ0+Te2OHCTz+wFfzYKI2DT1uW/kFAnMCSk251LZgW/WYY7ZoAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ck+WO+AD; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94649135A42;
+	Fri, 16 Feb 2024 18:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.147.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708109580; cv=fail; b=BQDqV07/6p5+DqmQBGTRFEfum9htuDCXyb8UvHArTEmkmXEIRX/ZI+EOjQwrockSBYPJrgRpd4NqFE9LCy2vcSnXRlCds6MUWbqNvBRVvfK2I7Rge+ECGc8t9fu8lL1W1ijhiz32SgD0V2ufyC0uE36FD4kT/PhpPpF4wDClutk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708109580; c=relaxed/simple;
+	bh=xkWg7DS9iqO6pm5VOjRltfTNm33JI0ocYZ5kUhuSN4k=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=WwOMJPnRM2jE5qpU72yTc7ZM7Pi5r1GLJm2D9ziTU2thwxLp92JlktBl6aGln0RevjBu+cZ9w5szIjETRuKDSJqd/EPi/ztUG4b/i5EzGWhqh2jI1DRx92x1BaRqlxHa2gViBlU3eS5QNl5ZSOTblKL7YdaxbiZ0H55MJaNXORI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=VYZ5C28E; arc=fail smtp.client-ip=148.163.147.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ck+WO+AD"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-42dc7ccabbaso8516851cf.0;
-        Fri, 16 Feb 2024 10:52:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708109575; x=1708714375; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=w66qiBcuO517k0fIfzU2tv5eomSTAcruHYKVEIiNz7U=;
-        b=ck+WO+ADeEfG2y4BG7FocgevHgRR7k15rEZb9UQeOEMToSgNJplPszgHE4y691I2S5
-         RxjQbK4Jjk8/icHfUJAfhxzPMzmDIzZ3Lwa0yZZYnk59UIe31BgpmIGW/tzPGrttTkGG
-         oxxVX9iiAtmbIJOHJe+tEWKv5Gwl1poUhaf26Hdjb6gmTIpT2eA3I4M1bP+FASkuW4gg
-         zRO1BxjPIGXFosXNaKOLzmpfxLd3Wv0Hhr4WLpprvMlUw14ajsZYbL/y30orxzqFORsg
-         N5gULBcfbJPYR/Ccckx5QLvvqN+QMhq1BargarvnR4qvAfcP0HL6qUSe4E3vlSFspkXa
-         pFvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708109575; x=1708714375;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w66qiBcuO517k0fIfzU2tv5eomSTAcruHYKVEIiNz7U=;
-        b=ExF6rrxbjW2LA2bce1A23XjMZYyKYEVhyKfqcjPViT6WJSMNTsaNRd7mGV4KNN/LUZ
-         xAfjEY7r8APMoTGv9StSKUP7f9xOojsFphySLa8OnSdjezcJscm4Z4l+6lV1akd+joFA
-         pvhRfkI+iTw/QI17SFRf4JxLm4/EaVYsr1ETreAsuC8UFRW38S2ELu2DdX4BBLk+w4bH
-         OyzieW/Y/YCJ8qJS7ckJSK6LHpPfUqAQ/H5R7Pt5gZfgA1SwJ7KvNOuc+Me3zPDGx5AX
-         e/S4DyKGbpaJysksr1z3455qg6OiE4rJOfpvsFaSfOwxpFgCf3RFaufAwHX2Q5u0I+bf
-         wMaA==
-X-Forwarded-Encrypted: i=1; AJvYcCUpzWZyDZBHwPfWr7Fb96pe6EnZRZoo47ATuNcq/xS39PbvwpxGMN2Lo/zIQ5cde8Eel/4556Gf0JOb3OzgAh5w8bfc38S6fKeMM9Hjce/WGPn1lo9r0xGpuFnTCASe6S1aEFu2nha85lHqtaPL5bMF52CKlzYzEggnThr0gdbq
-X-Gm-Message-State: AOJu0Yx8aVLf4lETrlj7SzeG+UNqtFO0eFOfxrvgqN/7fhilzXDsMrG5
-	IEnX4uEkC+smtNfyrKYTmMJU2RPKgnuwaHgKJVA58xT+CpgqCPhT
-X-Google-Smtp-Source: AGHT+IGi4/giR855KA+m+KaoReOo/3kdOIgybpIeUkxcyuMIxsIsRMDjoh4w3/EXWLQ6H6JRkjhOZQ==
-X-Received: by 2002:ac8:5acb:0:b0:42c:74ef:8f82 with SMTP id d11-20020ac85acb000000b0042c74ef8f82mr6389156qtd.67.1708109574675;
-        Fri, 16 Feb 2024 10:52:54 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id e18-20020ac86712000000b0042c61b99f42sm183180qtp.46.2024.02.16.10.52.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Feb 2024 10:52:54 -0800 (PST)
-Message-ID: <57a8160e-7f56-40b1-a69a-1fc56d8a79df@gmail.com>
-Date: Fri, 16 Feb 2024 10:52:50 -0800
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="VYZ5C28E"
+Received: from pps.filterd (m0150241.ppops.net [127.0.0.1])
+	by mx0a-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41GHv9v9014467;
+	Fri, 16 Feb 2024 18:48:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pps0720;
+ bh=nBHfrgfFUaNH+IcMndXyGzX6WFPI2LncIk5zrMX4jz4=;
+ b=VYZ5C28EiDOL0VQttWeTIF4dn42i1cGDDK4kBjnjRq5itmxeMvDtfqRiZdzbK8p+dKP4
+ 49q1I4MriwdECExWVJOMeWcDhuh1GJ3QZ/w253XeI6EVBFvnxHBJ7iOiRKaNgH2PqsYp
+ G9CUiCX0aEnGRsFVP7lLmEabU0v+atl02cYZRojzvd4V0hP55+wPiN6++opCXq7P7cl/
+ 3+wr8y4rbeP9UXt1RaoghWiPrjNbel3PURmDSHnDw/7EXRt7z2oR0o2VAp0Li8BAR99C
+ 2lFpoRAkYvNk898Ux5rHx0fucVG0ZTk972vlsTa6Gfa91MPoS97aNfeC04mub/ArdZ6f lw== 
+Received: from p1lg14878.it.hpe.com ([16.230.97.204])
+	by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 3wa9gtkatf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 Feb 2024 18:48:41 +0000
+Received: from p1wg14926.americas.hpqcorp.net (unknown [10.119.18.115])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by p1lg14878.it.hpe.com (Postfix) with ESMTPS id 3EEA72767D;
+	Fri, 16 Feb 2024 18:48:40 +0000 (UTC)
+Received: from p1wg14924.americas.hpqcorp.net (10.119.18.113) by
+ p1wg14926.americas.hpqcorp.net (10.119.18.115) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.42; Fri, 16 Feb 2024 06:48:16 -1200
+Received: from p1wg14921.americas.hpqcorp.net (16.230.19.124) by
+ p1wg14924.americas.hpqcorp.net (10.119.18.113) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42
+ via Frontend Transport; Fri, 16 Feb 2024 06:48:16 -1200
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (192.58.206.38)
+ by edge.it.hpe.com (16.230.19.124) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.42; Fri, 16 Feb 2024 06:48:16 -1200
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cBtN48W40kyXVHcwrJNm6gEdSi2Z4kFNTPbrh723VCIJeewnCtGAEuVLJRBKBXX3mb22/mybYnJr1hPLONMnNVCZiF63FFHDEQNU1v2sYwsdH1twIWiE5J+/8GsWUaHIukaEgjmh7frM1nEpURxOdzfc2lkHAtYLLXiwyOHYbhJaw3kpAfMa9QxfvFwCeDl32+2lozPhwGPbO2RO2IQtmPwseXvYQCXRlxQM3wcpvGKFbR24Eo41UgGcX7aid+k4iINmdnyemhSGoASiQoBf10oi5DIgUgHWXghFupgzvZGiEmw9rVmLJeN8H5g4GB5yJ2YWrdLLA0iLNEDxCCiTHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nBHfrgfFUaNH+IcMndXyGzX6WFPI2LncIk5zrMX4jz4=;
+ b=bsEZqpsNBMxWSLie8Yc9gUhbJaohkg7WzDuyRSDgoSgARE7yhxYndSDoazKbHaS+7I8nvXkgST6oUSeTLnLf8oK1jvula52PenS7LVpHPgnq2mJWniMA9uUATXayulhvtsrcu2vRjxwUUIez2tDjEvN5+Gyrs4QaJCJ2q6Q/s2othtF74/Bx2aTbL1BJSs7Gdqg8UP7qFRxyptHOqRByZ1iatV/5mrJ4ZTZVr/OKfC63NLi0uAurGiKaLoCh2CW0ZM4vouRlr64nGrJaZ1ztELsNib2PgCGWC/SuyNp4xo1l05U6bROd1ITWVGhAKRkkt7iaMGnooqVY4XVyTH6ocg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hpe.com; dmarc=pass action=none header.from=hpe.com; dkim=pass
+ header.d=hpe.com; arc=none
+Received: from MW5PR84MB1842.NAMPRD84.PROD.OUTLOOK.COM (2603:10b6:303:1c4::18)
+ by PH0PR84MB1694.NAMPRD84.PROD.OUTLOOK.COM (2603:10b6:510:172::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.31; Fri, 16 Feb
+ 2024 18:48:15 +0000
+Received: from MW5PR84MB1842.NAMPRD84.PROD.OUTLOOK.COM
+ ([fe80::f9c4:2ca:bc63:f0d6]) by MW5PR84MB1842.NAMPRD84.PROD.OUTLOOK.COM
+ ([fe80::f9c4:2ca:bc63:f0d6%7]) with mapi id 15.20.7292.029; Fri, 16 Feb 2024
+ 18:48:14 +0000
+From: "Elliott, Robert (Servers)" <elliott@hpe.com>
+To: Stefan Berger <stefanb@linux.ibm.com>,
+        "keyrings@vger.kernel.org"
+	<keyrings@vger.kernel.org>,
+        "linux-crypto@vger.kernel.org"
+	<linux-crypto@vger.kernel.org>,
+        "herbert@gondor.apana.org.au"
+	<herbert@gondor.apana.org.au>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "saulo.alessandre@tse.jus.br" <saulo.alessandre@tse.jus.br>
+Subject: RE: [PATCH v2 06/14] crypto: ecc - Add NIST P521 curve parameters
+Thread-Topic: [PATCH v2 06/14] crypto: ecc - Add NIST P521 curve parameters
+Thread-Index: AQHaYGT5n3XQ+RCgI0uVCceBNs3BVrENS+AQ
+Date: Fri, 16 Feb 2024 18:48:14 +0000
+Message-ID: <MW5PR84MB184295E25332F1516BE10BA5AB4C2@MW5PR84MB1842.NAMPRD84.PROD.OUTLOOK.COM>
+References: <20240215231414.3857320-1-stefanb@linux.ibm.com>
+ <20240215231414.3857320-7-stefanb@linux.ibm.com>
+In-Reply-To: <20240215231414.3857320-7-stefanb@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MW5PR84MB1842:EE_|PH0PR84MB1694:EE_
+x-ms-office365-filtering-correlation-id: 3e1705c7-b962-4533-ef87-08dc2f1fd535
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: BudxKRWElGVFDy3B08DJubzZsCGgD4BB7wPrFcR7QtoCT3VB30jZxU8Mz1DOlkeXOfj1C0Qut3l/LdYVmKvWMLz+jVBq8tu3TTVwqlPiNtTNt6cFoFVDtlx8hiueeoCnFmB1nJCdFtHK+RYj232Tun2bxO4rfXbgDD5VMnSViJtO/UipzMl4G811qPKUGkWLgXWtAfIi+HPBtDalsX05+KjZRE/zcQX5hKgm9fH4+FnHxn9GTEIzHPfhnmRxBU649hU40mSmtkV1WG7IVQfFV0DpujR6bg6V8K+wPbuptXxcVf2cgJj2oRn28MCgYjUHdu9KLG9cCLcQGfdtuXXZmXw7RtAvslynEeoHPCzKdveLlQCe4ov5nx9rZx7EAHbaTfWIFGEzYSRJFkPYScZi1fYNWvLMeDhH2zUPHNQs9rZkk89MtYyBpYr0WcLQUUn5W6LVpj+Jrs4bndHCfKmkjTbUM4byDzafAHi59sSwDjzFsXj9w2tULHcHZlNqkVIUuULnLjmWYyhilHNB3y7CPqzoOUmUc73zWJ8ZhJ1hga/UglemWnI0EHweh+KHy7BDhP6DpNMV6R3WI1GSP2fefpsgfRxLIE5zRZSU7UCUBff9fC/MOLoo/+MjzrB8KqRj
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW5PR84MB1842.NAMPRD84.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(136003)(396003)(366004)(39860400002)(346002)(376002)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(478600001)(41300700001)(53546011)(55016003)(2906002)(66476007)(8676002)(5660300002)(4744005)(76116006)(66446008)(8936002)(66556008)(66946007)(52536014)(4326008)(64756008)(71200400001)(6506007)(38070700009)(110136005)(54906003)(9686003)(316002)(26005)(7696005)(83380400001)(38100700002)(86362001)(82960400001)(33656002)(122000001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?+SPCNRYl47bOrjB7nN9XVoS8G+7v2wIHbXz7u/oQ6KBP0XNtV9QT7qoj7qg0?=
+ =?us-ascii?Q?/e91o+JgQlXpB/CYF0K2/UdlXNcwROhwB2hw1XvsNThsjycesg+vbh2pMlOU?=
+ =?us-ascii?Q?lQWwZyI4jEYgMj87ceAJ61ilfIRc+TotPfLgPkRrbLxAx+OF/WYMoOkoLpz0?=
+ =?us-ascii?Q?4h0YS1Xsa8VqLtSx+bAeJspAc67GGNVvVbQSLlNhMJwD+v+Cw9BjwkFEuTiq?=
+ =?us-ascii?Q?zuXvsK74H6JIWm9DKkkSp5FaM26eQE4wpc/CfQx31QMjjFVAtZINSvbS9Mi6?=
+ =?us-ascii?Q?u68wyUnjrTVCk9f3vP9amRDDT1i997LTgPwAiHuDH6UItQEanEF3WypH6zkt?=
+ =?us-ascii?Q?cSwkuMrRk7J7NGNaDo/isyrNtCDSZB2IAAUYUq3GHOnJphfeiYrVXoHInjKF?=
+ =?us-ascii?Q?pYntbxMPeXvJSyVkCYyIjH0J6ChkeBAzTdThsN8dLcLKt+IzKSI+P4EFcDZw?=
+ =?us-ascii?Q?LS5XQUa5hGMGGk1t1sgaezDcKWq743VQfk5QFlTY2LeDHVvlDewHWWICV0Ue?=
+ =?us-ascii?Q?qmIQRkUswmQ++6oBWKuK23tFschLk26GpUk+lqLTlRbNCcJoFs4Ffv3K0Vtz?=
+ =?us-ascii?Q?TEfgfTa0YmgQ6/NhZw8R/KlrP/Y3N/ZMqjnzwKGe4052WDf4mnTPAPTAc/Lg?=
+ =?us-ascii?Q?QOqaG2jg5fZ8i/sRbU+RouCSh8fSV5rl0swUIcoHWi71vccVfnz8ayXqiEN9?=
+ =?us-ascii?Q?8UefSOSSZo/dxFkKbZZ0V38K4z3E3jF3+coSxsZoVeIHG+otsEJZ+5/YTEro?=
+ =?us-ascii?Q?xGi/Yan6udloHiOKAzpqQ06lpXqeK2PP77i6ybnYahQLvFUQHGIwXKrxOW88?=
+ =?us-ascii?Q?IF1dShhWeQIlcrgbHn1Q95bPf9edEpNS8YqjHoYKbmRqq4/7xLmMIo6+XzBo?=
+ =?us-ascii?Q?6JZ+OlrmrFt01sCQGdC/639VrbDiSdftU2LwAHbzfiQZzkOaRwdPmEDeoPkb?=
+ =?us-ascii?Q?71BqMsDv8ZqKnBjVjtjV9BIJnaaJt8+bp18liZ/kNC1Vz6BNs/TCzy6fR8PP?=
+ =?us-ascii?Q?onjz4Jfv7MQ3YxlYc7NXoxxf/5JvvESYgZ6XRYIOnAqpKoydJ9YCh3DIC1KH?=
+ =?us-ascii?Q?GZi0ShC+KTyo6z99Dj1jgER/TsdK4lC5kuf59XYP44WDw5iNs6G/oBZs2tYD?=
+ =?us-ascii?Q?vm8S9TVgnOzTxEY2J4iqxujqZt0Bj5OmejoOmOaNtNgi33WWuQaTriZYQEAM?=
+ =?us-ascii?Q?JMLvPwXBJAM4qoIdbQc9MlNOnbR5G5tL3PbPIuY3vpCKZaupROQbXJZrmnZO?=
+ =?us-ascii?Q?qXPB17o+/0InRhE+6F0meQS3Y81WfORbNAhM1V7HmWhqxDqo+k+LHjb30Jv7?=
+ =?us-ascii?Q?lXRcoE3u/oMu7fM4QxB8VW1Q6K8XgBSI44USx5TD6vx4m7+4n3eMCIpmgBty?=
+ =?us-ascii?Q?l3JnhjNTnARsQdG2fZE4GayAns/QWlyQs/KdsfbbEeiDGQ6/wjN71HJVOivo?=
+ =?us-ascii?Q?GdTv3SYYNVWpkdepenno9adT2kHO4cbSKjP1Dv6J5bOgC/xcMFw9fyJr4uoF?=
+ =?us-ascii?Q?+YfNLBSb63tB+ZSUEABuvuJoFS4fiLBe252o4PgTXw9P/gFO58/P9TmIGaFJ?=
+ =?us-ascii?Q?9ONFWnm22BtkcUUrkJQ=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC net-next v8 04/13] net: Change the API of PHY default
- timestamp to MAC
-Content-Language: en-US
-To: Kory Maincent <kory.maincent@bootlin.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn <andrew@lunn.ch>,
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Richard Cochran <richardcochran@gmail.com>,
- Radu Pirea <radu-nicolae.pirea@oss.nxp.com>,
- Jay Vosburgh <j.vosburgh@gmail.com>, Andy Gospodarek <andy@greyhouse.net>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Horatiu Vultur <horatiu.vultur@microchip.com>, UNGLinuxDriver@microchip.com,
- Simon Horman <horms@kernel.org>, Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- Maxime Chevallier <maxime.chevallier@bootlin.com>,
- Rahul Rameshbabu <rrameshbabu@nvidia.com>
-References: <20240216-feature_ptp_netnext-v8-0-510f42f444fb@bootlin.com>
- <20240216-feature_ptp_netnext-v8-4-510f42f444fb@bootlin.com>
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- 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
-In-Reply-To: <20240216-feature_ptp_netnext-v8-4-510f42f444fb@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW5PR84MB1842.NAMPRD84.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e1705c7-b962-4533-ef87-08dc2f1fd535
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Feb 2024 18:48:14.7237
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 105b2061-b669-4b31-92ac-24d304d195dc
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: w/ADXa4WJXEciXrDHH749VNdNQ0B3HJhhLkuXdwWkQfOZBqLFh3YQKy3cnB5YhNa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR84MB1694
+X-OriginatorOrg: hpe.com
+X-Proofpoint-ORIG-GUID: DX6onMJ87whUhqlwVZheLn-eeL-juJxw
+X-Proofpoint-GUID: DX6onMJ87whUhqlwVZheLn-eeL-juJxw
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-16_18,2024-02-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ impostorscore=0 lowpriorityscore=0 adultscore=0 spamscore=0 mlxscore=0
+ suspectscore=0 priorityscore=1501 malwarescore=0 bulkscore=0 clxscore=1011
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402160147
 
-On 2/16/24 07:52, Kory Maincent wrote:
-> Change the API to select MAC default time stamping instead of the PHY.
-> Indeed the PHY is closer to the wire therefore theoretically it has less
-> delay than the MAC timestamping but the reality is different. Due to lower
-> time stamping clock frequency, latency in the MDIO bus and no PHC hardware
-> synchronization between different PHY, the PHY PTP is often less precise
-> than the MAC. The exception is for PHY designed specially for PTP case but
-> these devices are not very widespread. For not breaking the compatibility
-> default_timestamp flag has been introduced in phy_device that is set by
-> the phy driver to know we are using the old API behavior.
-> 
-> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-> ---
-> 
-> Changes in v5:
-> - Extract the API change in this patch.
-> - Rename whitelist to allowlist.
-> - Set NETDEV_TIMESTAMPING in register_netdevice function.
-> - Add software timestamping case description in ts_info.
-> 
-> Change in v6:
-> - Replace the allowlist phy with a default_timestamp flag to know which
->    phy is using old API behavior.
-> - Fix dereferenced of a possible null pointer.
-> - Follow timestamping layer naming update.
-> - Update timestamp default set between MAC and software.
-> - Update ts_info returned in case of software timestamping.
-> 
-> Change in v8:
-> - Reform the implementation to use a simple phy_is_default_hwtstamp helper
->    instead of saving the hwtstamp in the net_device struct.
-> ---
->   drivers/net/phy/bcm-phy-ptp.c     |  3 +++
->   drivers/net/phy/dp83640.c         |  3 +++
->   drivers/net/phy/micrel.c          |  6 ++++++
->   drivers/net/phy/mscc/mscc_ptp.c   |  3 +++
->   drivers/net/phy/nxp-c45-tja11xx.c |  3 +++
->   include/linux/phy.h               | 17 +++++++++++++++++
->   net/core/dev_ioctl.c              |  8 +++-----
->   net/core/timestamping.c           | 10 ++++++++--
->   net/ethtool/common.c              |  2 +-
->   9 files changed, 47 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/net/phy/bcm-phy-ptp.c b/drivers/net/phy/bcm-phy-ptp.c
-> index 617d384d4551..d3e825c951ee 100644
-> --- a/drivers/net/phy/bcm-phy-ptp.c
-> +++ b/drivers/net/phy/bcm-phy-ptp.c
-> @@ -931,6 +931,9 @@ struct bcm_ptp_private *bcm_ptp_probe(struct phy_device *phydev)
->   		return ERR_CAST(clock);
->   	priv->ptp_clock = clock;
->   
-> +	/* Timestamp selected by default to keep legacy API */
-> +	phydev->default_timestamp = true;
-> +
->   	priv->phydev = phydev;
->   	bcm_ptp_init(priv);
->   
-> diff --git a/drivers/net/phy/dp83640.c b/drivers/net/phy/dp83640.c
-> index 5c42c47dc564..64fd1a109c0f 100644
-> --- a/drivers/net/phy/dp83640.c
-> +++ b/drivers/net/phy/dp83640.c
-> @@ -1450,6 +1450,9 @@ static int dp83640_probe(struct phy_device *phydev)
->   	phydev->mii_ts = &dp83640->mii_ts;
->   	phydev->priv = dp83640;
->   
-> +	/* Timestamp selected by default to keep legacy API */
-> +	phydev->default_timestamp = true;
-> +
+> -----Original Message-----
+> From: Stefan Berger <stefanb@linux.ibm.com>
+> Sent: Thursday, February 15, 2024 5:14 PM
+> Subject: [PATCH v2 06/14] crypto: ecc - Add NIST P521 curve parameters
+>=20
+> Add the parameters for the NIST P521 curve and define a new curve ID
+> for it. Make the curve available in ecc_get_curve.
+>=20
+...
+> diff --git a/crypto/ecc_curve_defs.h b/crypto/ecc_curve_defs.h
+...
+> +static struct ecc_curve nist_p521 =3D {
+> +	.name =3D "nist_521",
 
-This probably does not matter too much given that the mii_ts is not 
-visible until we fully probed the PHY, though for consistency and to be 
-on the safe side, it would be more prudent to set default_timestamp 
-before finishing the mii_ts assignment, in case we ever become more 
-aggressive at exposing objects to user-space/kernel-space. Probably over 
-thinking this.
+Are the name fields in the ecc_curve structures used anywhere or
+exposed to userspace?
 
-More comments below:
+It'd be nice if the strings for the nist_p192, nist_p256, and nist_p384=20
+structures and this new nist_p521 structure included "p" before
+the number, better matching all the code and the NIST FIPS 186-4 names:
+    .name =3D "nist_p192"
+    .name =3D "nist_p256"
+    .name =3D "nist_p384"
+    .name =3D "nist_p521"
 
-[snip]
-
->   
-> -	if (!skb->dev || !skb->dev->phydev || !skb->dev->phydev->mii_ts)
-> +	if (!skb->dev)
-> +		return false;
-> +
-> +	if (!phy_is_default_hwtstamp(skb->dev->phydev))
-
-Was not obvious that we could remove the phydev NULL check, but it's 
-fine because phy_is_default_hwtstamp() calls phy_has_hwtstamp() first, 
-and that function has that check. Seems a bit brittle, but fair enough.
--- 
-Florian
 
