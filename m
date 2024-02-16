@@ -1,155 +1,258 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1B459B5F;
-	Fri, 16 Feb 2024 11:41:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0FB77F12;
+	Fri, 16 Feb 2024 11:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708083709; cv=none; b=O+sPjowcUQEOT42PED3OfOjdLkML9LVPnSFhBlmUEmGtgF92KskDsFfKGNvFJJc3zJo79hgOsrkItKSdtVexMpD00GvQmIO04tSPOQPtVb0xRy/o9lLKGkza8AKOP0QqTR883A3auDRP5LbnThEADlZYkgwUVU8BgzNAomjHcxA=
+	t=1708083775; cv=none; b=QOCwvjiLNRVL+L5vhQIfKXVDs8WLPrmBDJelWksf+fz/0cSx+i1PNCtwkWMjzoHbNXRSm06SyjZi0eO7o4U5jlYEelVF0f+2pYItk+dges454WmRqbuTIimEFOqy2OJdOyMvX/Pp/TnuGTEs5kq9Bc4bO/++4gA2KZupXbi9+Cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708083709; c=relaxed/simple;
-	bh=ENkj9c3IlxXNoqACou83okSe3zXu5WBJkYNjVu8EpqM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gNFMdDsTcRb4PDO8iVyIWRDdG2YHJoIWvIN4mtjelwZCzDsOfyAz40CqrEkGngNiUBDJb5k95qKotBGXwiu1vW1G2zhSYIcFyiajAuoRAm0YsvMV5tK9zb5t9Edj7YeAIcOGI98tNWtASuEgGOmedcSZAWfIfv11RzgYlQPRJ38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=kvIS8qtb; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1708083775; c=relaxed/simple;
+	bh=ir/2Fmuw0p7JWNzUui20venQobUnV6OhWF5JMo4bd4M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RXcMoFwxxUwJnTFeA6C0UyUCvGegwVPfFh/iN89AkyDNA8IGLJTnKTQ8dU+QaODQI64CDJjQ9NkIGatWeq5YimxdEalDUxyUNnDE5foYXpIdSkRe6DaqhUaktC4fb6K+tqtDHuEfU/tl5lgZyfcUDrdNctCj74m0XKWq3tjUzB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=aCHzXmcI; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="kvIS8qtb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1708083686; x=1708688486; i=deller@gmx.de;
-	bh=ENkj9c3IlxXNoqACou83okSe3zXu5WBJkYNjVu8EpqM=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=kvIS8qtbuadHs+uT7skkBZZK818kmErwrw6HwDJFsVcHlcBAOVUZTte9VNyrKsoK
-	 QWg8lTomgHOBthOqvumrvEU3JQXceBFOHwPDxOM4SEiEwVvwARQ+dO9ADGGbi0R1J
-	 EXqeykYxDj+LTKD3tEsifyKuDAKMq4Klb4qGbE9E+Y1Ezt5yhXYWJTdiEpIYj39OG
-	 hiQ2/MRwNuQtRTHp/z0gBVc5quMmpbNi/XSmpCZJSCTh2Xsd6moH+pZxGxOrnaoov
-	 /l7yqg9S2qvF/pKTeE3+Iq8EPsDZKFMLNO3tNd3M0kJucLM2MJDhvZSfBObafXDY5
-	 O5wVrMTTkxfraU4LbA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.20.55] ([94.134.148.214]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MXp5Q-1rTDsA1RXQ-00Y8u8; Fri, 16
- Feb 2024 12:41:26 +0100
-Message-ID: <61cfc73e-e406-4e98-9057-d7843e7694e7@gmx.de>
-Date: Fri, 16 Feb 2024 13:05:20 +0100
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="aCHzXmcI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1708083771; x=1739619771;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=MD8PpJdyDycq4idMKhBHf1v7B8Lage9uviizqG+a/uo=;
+  b=aCHzXmcIRYE5jUai2ns/GfF/4K7g5olCR6BVXq+cFaFS+4UIKNWsm1J2
+   pXTDiRr9H83quIe4rTeEDuL4dvDtEaXEiXHk3wIEQOjzRQoEMJho3ysGg
+   bPzHJn/SJzIuadO3pmFRpUB/cvsZ/nG7i9SKYG8jAcFhiM3kXZuMJCCMq
+   6uu6Y+NRHBxSQ0b3CouAepushe/uXMmN7nl6i2xV05jwCtnSRObHP7RIq
+   JKeY7UmHpPe399bi6rDjSPZ39c6PpQHeRpqMyD1JIT64+TOKZf6wf2hw+
+   LSIs1xA+FtfMUN5lZEIdYaOEh/W2Oj/ZkPC9nMwIz2smCWgB270pb8V+s
+   Q==;
+X-IronPort-AV: E=Sophos;i="6.06,164,1705359600"; 
+   d="scan'208";a="35445169"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 16 Feb 2024 12:42:47 +0100
+Received: from steina-w.localnet (steina-w.tq-net.de [10.123.53.25])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 687E7280075;
+	Fri, 16 Feb 2024 12:42:47 +0100 (CET)
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Adam Ford <aford173@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, marex@denx.de, frieder.schrempf@kontron.de, Lucas Stach <l.stach@pengutronix.de>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Philipp Zabel <p.zabel@pengutronix.de>, Vinod Koul <vkoul@kernel.org>, Kish
+ on Vijay Abraham I <kishon@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Liu Ying <victor.liu@nxp.com>, Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH V8 09/12] dt-bindings: display: imx: add binding for i.MX8MP HDMI TX
+Date: Fri, 16 Feb 2024 12:42:49 +0100
+Message-ID: <2184519.Mh6RI2rZIc@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <CAHCN7x+80iw0PWa4F4dMA=3RRaChNEO534LPACXd6FK0ndAHpw@mail.gmail.com>
+References: <20240203165307.7806-1-aford173@gmail.com> <5916132.MhkbZ0Pkbq@steina-w> <CAHCN7x+80iw0PWa4F4dMA=3RRaChNEO534LPACXd6FK0ndAHpw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 2/2] lib: checksum: Use aligned accesses for
- ip_fast_csum and csum_ipv6_magic tests
-Content-Language: en-US
-To: Charlie Jenkins <charlie@rivosinc.com>, Guenter Roeck <linux@roeck-us.net>
-Cc: David Laight <David.Laight@aculab.com>,
- Palmer Dabbelt <palmer@dabbelt.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Parisc List <linux-parisc@vger.kernel.org>, Al Viro
- <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org
-References: <20240214-fix_sparse_errors_checksum_tests-v8-0-36b60e673593@rivosinc.com>
- <20240214-fix_sparse_errors_checksum_tests-v8-2-36b60e673593@rivosinc.com>
- <2ec91b11-23c7-4beb-8cef-c68367c8f029@roeck-us.net> <Zc1pSi59aDOnqz++@ghost>
- <cb4e358b-3fd0-4ca4-bf53-9cc379087304@roeck-us.net>
- <25f108d1-827f-4a18-bee4-4105fbd45974@gmx.de>
- <6aaa4b89-a967-4b19-b4bf-a1ad5c8e9faa@roeck-us.net> <Zc79I5VDSaFnb4xj@ghost>
-From: Helge Deller <deller@gmx.de>
-Autocrypt: addr=deller@gmx.de; keydata=
- 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
-In-Reply-To: <Zc79I5VDSaFnb4xj@ghost>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:YuF9PVuGcuEpBNoBnA5hjOnuz5Bspi64Grxz2iK2S3IkdxDOLtv
- GCIoagFe46RGCoS+efUsxNyzUihQQFvedTJW87N4RIkC12WFAxCF5Lir2xaisO1CZgCQm0G
- EoeXSRdQGBscBtRjN86vJD8iSIy+My5vVZ7bFM8y4+xlQG43uQLc2qLpjuzNkr1/lMHZAa6
- PnwB1PeWf/kcK+PGdDkWQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:RTB83uO8wns=;hiZTewUlieqkNBMyVa449AXBYM6
- HdzkyUSoDb/eBmsqzN7SLxRPM72sm3iZzyQbz6IxN0vaqImha6nuQnbR+S7V0++cPK9N/L/4K
- jtlkTPedTLsFBUD5ax/Wla9tKK343Ir8ApowLkMwdeGrzQXHG4AWAeKrkqngVU7fAfXVbTHI5
- RABMhUxvWV6GLqeGNWak6iIGMOjseFrR0fCxAEywtRA02GC/Cs8nQ5YRkpE0xl1iz+iUA/aX8
- oFnFcPRodeEWeT5ojaCMJRr0cweZoRrpZMVmznSDke6BUaD9kK4c9nHq/pwzsIPbZiyaw45BK
- EXXzjptR5csN4fNBjs+Bfcu/91t6MUQUO5jZ8SPkq8PRBozGEj92HNrtw6pNkJ6iIg8Kc6LL2
- wPVwHEp7JN0D8J1JmhQpNl1eOZVAhr1JE75o8k1vLZt23QEQzBunKSCkPzuV6pEhGgR3vIDCT
- 59YCBjLvSISgG5qmBqHY/9lAbjrynkGozWPGqaYgGKIqrkG1RhXvwCVdTARyLU1Xv/gKpNVbE
- +Nagp2Y/Faurda1lhbkMzTQtUbXi51YLmuF0546r35sqXjkIOlcYuTX3vienWHsvssPG2ozO2
- iNb/GK+0hF2eci49SHMtwYKVqjId6USEb1r4Vt1BBw4ur1VVwXagVzSyoq+P0FqSx6covzOO1
- fpBL91YgifSzYQgf6yPqWIVRjB4C4iqvWANTkGrDpw3b9v9LeVAVszmpoHf5vlk2wIFYtmJel
- TjY3I86C7rjAEnvVrM8BxvUBtuC1v4UDV7CTsGW8L+ZG0/R+q8UexA/9WvH+wi3Gm411i+rAb
- rQBmcHCIVs5qAs9WnRhDCbwFfCUbJs9Q85udohi4ZUrPc=
+Content-Type: text/plain; charset="UTF-8"
 
-On 2/16/24 07:13, Charlie Jenkins wrote:
-> On Thu, Feb 15, 2024 at 10:09:42PM -0800, Guenter Roeck wrote:
->> On 2/15/24 21:54, Helge Deller wrote:
->> [ ... ]
->>>
->>> Can you please give a pointer to this test code?
->>> I'm happy to try it on real hardware.
->>>
->> You should also see the problem if you use v7 of Charlie's checksum
->> unit test fixes.
->>
->> I submitted the qemu fix (or at least what I think the fix should be)
->> a couple of minutes ago.
->>
->> https://patchwork.kernel.org/project/qemu-devel/patch/20240216053415.21=
-63286-1-linux@roeck-us.net/
->>
->>>> It is quite easy to show that carry is always set after executing ldd
->>>> on an unaligned address. That is also why I know for sure that the
->>>> problem is not seen with ldw on unaligned addresses.
->>> Interesting.
->>
->> Ultimately it wasn't surprising, with the unusual carry bit
->> implementation on hppa. The upper 8 carry bits were not masked
->> correctly when returning from a trap or interrupt.
->
-> Tangential question, but why does Linux need to save and restore the PSW
-> if that is already handled by the hardware? I am missing something.
+Am Freitag, 16. Februar 2024, 12:31:12 CET schrieb Adam Ford:
+> On Fri, Feb 16, 2024 at 3:05=E2=80=AFAM Alexander Stein
+>=20
+> <alexander.stein@ew.tq-group.com> wrote:
+> > Hi all,
+> >=20
+> > Am Samstag, 3. Februar 2024, 17:52:49 CET schrieb Adam Ford:
+> > > From: Lucas Stach <l.stach@pengutronix.de>
+> > >=20
+> > > The HDMI TX controller on the i.MX8MP SoC is a Synopsys designware IP
+> > > core with a little bit of SoC integration around it.
+> > >=20
+> > > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> > > Signed-off-by: Adam Ford <aford173@gmail.com>
+> > >=20
+> > > ---
+> > > V3:  Change name and location to better idenfity as a bridge and
+> > >=20
+> > >      HDMI 2.0a transmitter
+> > >     =20
+> > >      Fix typos and feedback from Rob and added ports.
+> > >=20
+> > > ---
+> > >=20
+> > >  .../display/bridge/fsl,imx8mp-hdmi-tx.yaml    | 102 ++++++++++++++++=
+++
+> > >  1 file changed, 102 insertions(+)
+> > >  create mode 100644
+> > >=20
+> > > Documentation/devicetree/bindings/display/bridge/fsl,imx8mp-hdmi-tx.y=
+aml
+> > >=20
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/display/bridge/fsl,imx8mp-hdmi-tx=
+=2Eya
+> > > ml
+> > > b/Documentation/devicetree/bindings/display/bridge/fsl,imx8mp-hdmi-tx=
+=2Eya
+> > > ml
+> > > new file mode 100644
+> > > index 000000000000..3791c9f4ebab
+> > > --- /dev/null
+> > > +++
+> > > b/Documentation/devicetree/bindings/display/bridge/fsl,imx8mp-hdmi-tx=
+=2Eya
+> > > ml
+> > > @@ -0,0 +1,102 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id:
+> > > http://devicetree.org/schemas/display/bridge/fsl,imx8mp-hdmi-tx.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Freescale i.MX8MP DWC HDMI TX Encoder
+> > > +
+> > > +maintainers:
+> > > +  - Lucas Stach <l.stach@pengutronix.de>
+> > > +
+> > > +description:
+> > > +  The i.MX8MP HDMI transmitter is a Synopsys DesignWare
+> > > +  HDMI 2.0a TX controller IP.
+> > > +
+> > > +allOf:
+> > > +  - $ref: /schemas/display/bridge/synopsys,dw-hdmi.yaml#
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - fsl,imx8mp-hdmi-tx
+> > > +
+> > > +  reg-io-width:
+> > > +    const: 1
+> > > +
+> > > +  clocks:
+> > > +    maxItems: 4
+> > > +
+> > > +  clock-names:
+> > > +    items:
+> > > +      - const: iahb
+> > > +      - const: isfr
+> > > +      - const: cec
+> > > +      - const: pix
+> > > +
+> > > +  power-domains:
+> > > +    maxItems: 1
+> > > +
+> > > +  ports:
+> > > +    $ref: /schemas/graph.yaml#/properties/ports
+> > > +
+> > > +    properties:
+> > > +      port@0:
+> > > +        $ref: /schemas/graph.yaml#/properties/port
+> > > +        description: Parallel RGB input port
+> > > +
+> > > +      port@1:
+> > > +        $ref: /schemas/graph.yaml#/properties/port
+> > > +        description: HDMI output port
+> > > +
+> > > +    required:
+> > > +      - port@0
+> > > +      - port@1
+> >=20
+> > Is this really correct that port@1 is required? AFAICS this host already
+> > supports HPD and DDC by itself, so there is no need for a dedicated HDMI
+> > connector.
+> > With the current state of the drivers this output port is completely
+> > ignored anyway. Yet it works for a lot of people.
+>=20
+> One of the feedback responses Lucas got was that it was missing the
+> reference to the HDMI connector, so I added it as a response to that
+> feedback.  I have tried device trees with and without it, and it
+> doesn't impact anything, but It seems like there may be a requirement
+> for it.
 
-e.g. for task switching.
+Yes, I noticed as well. A specified connector is completely ignored.
+One reason is that dw_hdmi_plat_data.output_port is unsed in drivers/gpu/dr=
+m/
+bridge/imx/imx8mp-hdmi-tx.c. Another one is that without=20
+DRM_BRIDGE_ATTACH_NO_CONNECTOR support in drivers/gpu/drm/mxsfb/lcdif_drv.c=
+=20
+nothing changes.
 
-Helge
+Best regards,
+Alexander
+
+> adam
+>=20
+> > Best regards,
+> > Alexander
+> >=20
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - clocks
+> > > +  - clock-names
+> > > +  - interrupts
+> > > +  - power-domains
+> > > +  - ports
+> > > +
+> > > +unevaluatedProperties: false
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    #include <dt-bindings/clock/imx8mp-clock.h>
+> > > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > > +    #include <dt-bindings/power/imx8mp-power.h>
+> > > +
+> > > +    hdmi@32fd8000 {
+> > > +        compatible =3D "fsl,imx8mp-hdmi-tx";
+> > > +        reg =3D <0x32fd8000 0x7eff>;
+> > > +        interrupts =3D <0 IRQ_TYPE_LEVEL_HIGH>;
+> > > +        clocks =3D <&clk IMX8MP_CLK_HDMI_APB>,
+> > > +                 <&clk IMX8MP_CLK_HDMI_REF_266M>,
+> > > +                 <&clk IMX8MP_CLK_32K>,
+> > > +                 <&hdmi_tx_phy>;
+> > > +        clock-names =3D "iahb", "isfr", "cec", "pix";
+> > > +        power-domains =3D <&hdmi_blk_ctrl IMX8MP_HDMIBLK_PD_HDMI_TX>;
+> > > +        reg-io-width =3D <1>;
+> > > +        ports {
+> > > +           #address-cells =3D <1>;
+> > > +           #size-cells =3D <0>;
+> > > +           port@0 {
+> > > +             reg =3D <0>;
+> > > +
+> > > +             hdmi_tx_from_pvi: endpoint {
+> > > +               remote-endpoint =3D <&pvi_to_hdmi_tx>;
+> > > +             };
+> > > +          };
+> > > +
+> > > +          port@1 {
+> > > +            reg =3D <1>;
+> > > +              hdmi_tx_out: endpoint {
+> > > +                remote-endpoint =3D <&hdmi0_con>;
+> > > +              };
+> > > +          };
+> > > +        };
+> > > +    };
+> >=20
+> > --
+> > TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, =
+Germany
+> > Amtsgericht M=C3=BCnchen, HRB 105018
+> > Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan=
+ Schneider
+> > http://www.tq-group.com/
+
+
+=2D-=20
+TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
+any
+Amtsgericht M=C3=BCnchen, HRB 105018
+Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
+neider
+http://www.tq-group.com/
+
+
