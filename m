@@ -1,134 +1,295 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9931113174B
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 18:27:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69CB2130AD5;
+	Fri, 16 Feb 2024 18:27:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708108061; cv=none; b=WDXJAtWjnJKH5mFcbXaWmhYx1xDV9W1kwxt0JvPCKFZz2JECff9FGOVRYFC3jYuaKNCESaI5y4VoiuaD13aBH7nTaedpckUufmE3PrxRpcjwFid9pnee9GNh5KLzwAfqrFFTD0s24jQsqfAho6xnhBOeweJJTBVHq+Bf3hAU2MQ=
+	t=1708108060; cv=none; b=UGURXEmidXGZuXEIpazW1C9NFhss/sgiKAE/FTKBfiyn313le8z8Z1U1SEhbAk+TILDQFQmtBOnH3IqO7VwGdy6Hn0OSkRQDtvEUmKGIH0uKWGl3rh9WwgqNYuxa3n/BwcxvTgamAFu3ab2nHsCZvKBvhfpIxlNlcg/k3AOnlkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708108061; c=relaxed/simple;
-	bh=UnShZ8EdBWD5I7RRNruBpEbtffINfrd97Kk9hac9+lQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r+PPvTBxbaN1Wa8QvDx+BKVDYeF1fbsP8QDkB2lKfFTLRUTxpzOyOUhh4KhRwGeIqranS60coDt/OclRfygLy4Tqyi3PbCpACpd4rZI7V++x7WNw5CJuYte5awbTwwq7s8f7W+AFzt2D7tkIPhd2o0VSF29QPkJ6+5mgo8ZBxCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GjfbCtA9; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708108060; c=relaxed/simple;
+	bh=CDdphN7I+FRntXd/EtAIlhcPcgaQb/31uP/MIsgTsAU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ifWy/e/JwkPz5WUq5qyNhQlO+JztO8gMMeDaRTIZQtjiQbHyl4vPS5+qe8aAYJp/q6rsmHjwKhvGbjkmddemvwZPpeOVxMYafi07sI44NiEFyQhav2D8F3l/TCuNNK/Lfa4XxdtBqLnaFSXunQRAtSrfKQugwFzZamujRYwC5Ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wbCgHubS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GjfbCtA9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708108055;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3pAxnKiY0v6Unt1MeteP4zhCiQHYAe7S4qrGIbBvNAI=;
-	b=GjfbCtA9flktVchGPdcx621/wFUrJgrVIpkMD1GAuGJ46Y8H4IbJV2uUja6OxBifaEJZgT
-	aXiGvkObZFD+OH2T0ZsvQ8se0HxT7ZgW14zsBEy0hGnigjuSKbcumFP2NNL/8RBt+qcA7D
-	Pz7aSdfffXqUykA57zmYJP7j9zCACRc=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-91-LYwSfQq_NNu3PJieQw9TOA-1; Fri, 16 Feb 2024 13:27:33 -0500
-X-MC-Unique: LYwSfQq_NNu3PJieQw9TOA-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a2c4e9cb449so173543366b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 10:27:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708108052; x=1708712852;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3pAxnKiY0v6Unt1MeteP4zhCiQHYAe7S4qrGIbBvNAI=;
-        b=r7dKSwgjzvme3W3rf4F8LrVRav4zpWgu6v3Ryv3uYxe8AM1Bj1IAMBwaVCIrWLa0+S
-         0DC5wEIULCPCLwD5upNjeOUzZTWfzERBwe1iP+8Pu8UZpK+8w6irjWe6GjMN7w4EpgO4
-         0lzL6CS13RgVsQ20tHeoEDWb8BBax1UzTXdeJpH4LpjZfHQ/QbLTM+RnlC1YfkFzbmVI
-         6GrL8lhyqJMXfOxRdMC8Wo5IrqkOTuGHo5s0srQNAyFfdbyVk2U+wCBFF2Zm074y9Hwu
-         sK9vWWjkSo2lLMmBBqS73QXNE7vIsM1Tdprs9f8TTXVzPOOgESwdXy2nS6IPCqPXTUVi
-         KukQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVi/kZhCCB1mUJ+ixPynoQ83t7/nsKOFHBPzT0+IzPPsj50wGreHBYXunp9Lhe1pAJlPUfMTiEOZcJCbTCcts2rBi7zwKCrF3j7L5Va
-X-Gm-Message-State: AOJu0YxYaoLWtIsmi+DpGo2v1fmtXBFy2m5JcBCEgZPaBtDEg6/g5w1Q
-	eB1QMGtzsPeJ/98vrg3R6Ab0Xjxd4ke39PUnlBK7vtGQiclo0UuexCRmQi1YLmt1YYC5KZMd1VH
-	NX3Wm9NU7aEgh7IF1onDutaxcEiLGHOafsyctXkkqBnA2cf+gdus7J64vUg/rKA==
-X-Received: by 2002:aa7:de0e:0:b0:564:7b9:8c18 with SMTP id h14-20020aa7de0e000000b0056407b98c18mr1164588edv.22.1708108052534;
-        Fri, 16 Feb 2024 10:27:32 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHc7HnCrb8Q59cHQe9Z/g3oIfkHjAxB+9md3uAcAJ23mrUVRozwXdVXewL5xF6l4JirE/riHw==
-X-Received: by 2002:aa7:de0e:0:b0:564:7b9:8c18 with SMTP id h14-20020aa7de0e000000b0056407b98c18mr1164581edv.22.1708108052264;
-        Fri, 16 Feb 2024 10:27:32 -0800 (PST)
-Received: from ?IPV6:2a02:810d:4b3f:ee94:abf:b8ff:feee:998b? ([2a02:810d:4b3f:ee94:abf:b8ff:feee:998b])
-        by smtp.gmail.com with ESMTPSA id p27-20020a056402501b00b00562d908daf4sm224163eda.84.2024.02.16.10.27.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Feb 2024 10:27:31 -0800 (PST)
-Message-ID: <9d9fcdeb-4d0c-4371-b871-ad1fb8055033@redhat.com>
-Date: Fri, 16 Feb 2024 19:27:29 +0100
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wbCgHubS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54623C433C7;
+	Fri, 16 Feb 2024 18:27:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1708108059;
+	bh=CDdphN7I+FRntXd/EtAIlhcPcgaQb/31uP/MIsgTsAU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=wbCgHubShJ/aB2aWhLEnSilJ0v4V8KBOmn9Qd0FSgF24LBPVYPEc4uF4h+5FL/aqZ
+	 74GBOMRE8ofjY2Ay9ijtupS+6xI0D3fz3Bk5mJRbnBv/5zlspLbvbN72gE/zPIZj0U
+	 F4OyyKfWlSyH7AX4o7O8toMDo5bLKC6re0p2/WHU=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	torvalds@linux-foundation.org,
+	stable@vger.kernel.org
+Cc: lwn@lwn.net,
+	jslaby@suse.cz,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Linux 6.1.78
+Date: Fri, 16 Feb 2024 19:27:34 +0100
+Message-ID: <2024021633-various-omnivore-f47d@gregkh>
+X-Mailer: git-send-email 2.43.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] nouveau: fix function cast warnings
-Content-Language: en-US
-To: Arnd Bergmann <arnd@kernel.org>, Karol Herbst <kherbst@redhat.com>,
- Lyude Paul <lyude@redhat.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Ben Skeggs <bskeggs@redhat.com>, dri-devel@lists.freedesktop.org,
- nouveau@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20240213095753.455062-1-arnd@kernel.org>
-From: Danilo Krummrich <dakr@redhat.com>
-Organization: RedHat
-In-Reply-To: <20240213095753.455062-1-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2/13/24 10:57, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> clang-16 warns about casting between incompatible function types:
-> 
-> drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadow.c:161:10: error: cast from 'void (*)(const struct firmware *)' to 'void (*)(void *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
->    161 |         .fini = (void(*)(void *))release_firmware,
-> 
-> This one was done to use the generic shadow_fw_release() function as a
-> callback for struct nvbios_source. Change it to use the same prototype
-> as the other five instances, with a trivial helper function that actually
-> calls release_firmware.
-> 
-> Fixes: 70c0f263cc2e ("drm/nouveau/bios: pull in basic vbios subdev, more to come later")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+I'm announcing the release of the 6.1.78 kernel.
 
-Applied to drm-misc-fixes, thanks!
+All users of the 6.1 kernel series must upgrade.
 
-> ---
->   drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadow.c | 8 +++++++-
->   1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadow.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadow.c
-> index 19188683c8fc..8c2bf1c16f2a 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadow.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadow.c
-> @@ -154,11 +154,17 @@ shadow_fw_init(struct nvkm_bios *bios, const char *name)
->   	return (void *)fw;
->   }
->   
-> +static void
-> +shadow_fw_release(void *fw)
-> +{
-> +	release_firmware(fw);
-> +}
-> +
->   static const struct nvbios_source
->   shadow_fw = {
->   	.name = "firmware",
->   	.init = shadow_fw_init,
-> -	.fini = (void(*)(void *))release_firmware,
-> +	.fini = shadow_fw_release,
->   	.read = shadow_fw_read,
->   	.rw = false,
->   };
+The updated 6.1.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-6.1.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+
+thanks,
+
+greg k-h
+
+------------
+
+ Makefile                                                 |    2 
+ block/blk-core.c                                         |   11 +
+ block/blk-iocost.c                                       |    7 
+ drivers/atm/idt77252.c                                   |    2 
+ drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c                  |   10 -
+ drivers/dma/fsl-qdma.c                                   |   27 +--
+ drivers/dma/ti/k3-udma.c                                 |   10 +
+ drivers/gpu/drm/amd/display/dc/dcn301/dcn301_resource.c  |    2 
+ drivers/gpu/drm/i915/gvt/handlers.c                      |    3 
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c              |    4 
+ drivers/gpu/drm/msm/dp/dp_ctrl.c                         |    5 
+ drivers/gpu/drm/msm/dp/dp_link.c                         |   22 +--
+ drivers/gpu/drm/msm/dp/dp_reg.h                          |    3 
+ drivers/hwmon/aspeed-pwm-tacho.c                         |    7 
+ drivers/hwmon/coretemp.c                                 |   40 ++---
+ drivers/infiniband/hw/irdma/verbs.c                      |    2 
+ drivers/input/keyboard/atkbd.c                           |   13 +
+ drivers/input/serio/i8042-acpipnpio.h                    |    6 
+ drivers/mtd/parsers/ofpart_core.c                        |   19 ++
+ drivers/net/ethernet/aquantia/atlantic/aq_ptp.c          |    4 
+ drivers/net/ethernet/aquantia/atlantic/aq_ring.c         |   13 +
+ drivers/net/ethernet/aquantia/atlantic/aq_ring.h         |    1 
+ drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c |   14 +
+ drivers/net/ethernet/stmicro/stmmac/common.h             |    1 
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h           |    3 
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c      |   58 +++++++-
+ drivers/net/netdevsim/dev.c                              |    8 -
+ drivers/net/ppp/ppp_async.c                              |    4 
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c                 |    4 
+ drivers/phy/ti/phy-omap-usb2.c                           |    4 
+ drivers/scsi/scsi_error.c                                |    3 
+ drivers/scsi/scsi_lib.c                                  |    4 
+ drivers/usb/dwc3/host.c                                  |    4 
+ drivers/usb/host/xhci-plat.c                             |    3 
+ drivers/usb/serial/cp210x.c                              |    1 
+ drivers/usb/serial/option.c                              |    1 
+ drivers/usb/serial/qcserial.c                            |    2 
+ drivers/vhost/vhost.c                                    |    5 
+ fs/dlm/lowcomms.c                                        |   38 +----
+ fs/ext4/mballoc.c                                        |   20 ++
+ fs/f2fs/compress.c                                       |   27 +++
+ fs/f2fs/f2fs.h                                           |    2 
+ fs/f2fs/super.c                                          |    4 
+ fs/ntfs3/ntfs_fs.h                                       |    2 
+ fs/smb/client/sess.c                                     |    2 
+ include/linux/dmaengine.h                                |    3 
+ include/linux/hrtimer.h                                  |    4 
+ include/uapi/linux/netfilter/nf_tables.h                 |    2 
+ io_uring/net.c                                           |    1 
+ kernel/time/clocksource.c                                |   25 +++
+ kernel/time/hrtimer.c                                    |    3 
+ net/ipv4/af_inet.c                                       |    6 
+ net/ipv4/ip_tunnel_core.c                                |    2 
+ net/mac80211/mlme.c                                      |    3 
+ net/netfilter/nft_compat.c                               |   17 +-
+ net/netfilter/nft_ct.c                                   |    3 
+ net/netfilter/nft_set_pipapo.c                           |  108 +++++++--------
+ net/netfilter/nft_set_pipapo.h                           |   18 +-
+ net/netfilter/nft_set_pipapo_avx2.c                      |   17 +-
+ net/netfilter/nft_set_rbtree.c                           |    6 
+ net/rxrpc/conn_event.c                                   |    8 +
+ net/tipc/bearer.c                                        |    6 
+ net/unix/garbage.c                                       |   11 +
+ sound/soc/amd/acp-config.c                               |   15 --
+ sound/usb/quirks.c                                       |   38 +++--
+ tools/testing/selftests/net/cmsg_ipv6.sh                 |    4 
+ tools/testing/selftests/net/pmtu.sh                      |   18 +-
+ tools/testing/selftests/net/udpgro_fwd.sh                |   14 +
+ tools/testing/selftests/net/udpgso_bench_rx.c            |    2 
+ 69 files changed, 519 insertions(+), 242 deletions(-)
+
+Abhinav Kumar (1):
+      drm/msm/dpu: check for valid hw_pp in dpu_encoder_helper_phys_cleanup
+
+Alexander Aring (1):
+      fs: dlm: don't put dlm_local_addrs on heap
+
+Alexander Tsoy (1):
+      ALSA: usb-audio: Add delay quirk for MOTU M Series 2nd revision
+
+Antoine Tenart (1):
+      tunnels: fix out of bounds access when building IPv6 PMTU error
+
+Baokun Li (1):
+      ext4: regenerate buddy after block freeing failed if under fc replay
+
+Christophe JAILLET (2):
+      dmaengine: fsl-qdma: Fix a memory leak related to the status queue DMA
+      dmaengine: fsl-qdma: Fix a memory leak related to the queue command DMA
+
+Dan Carpenter (2):
+      drm/i915/gvt: Fix uninitialized variable in handle_mmio()
+      fs/ntfs3: Fix an NULL dereference bug
+
+David Howells (1):
+      rxrpc: Fix response to PING RESPONSE ACKs to a dead call
+
+Eric Dumazet (3):
+      netdevsim: avoid potential loop in nsim_dev_trap_report_work()
+      inet: read sk->sk_family once in inet_recv_error()
+      ppp_async: limit MRU to 64K
+
+Florian Westphal (3):
+      netfilter: nft_set_pipapo: store index in scratch maps
+      netfilter: nft_set_pipapo: add helper to release pcpu scratch area
+      netfilter: nft_set_pipapo: remove scratch_aligned pointer
+
+Francesco Dolcini (1):
+      mtd: parsers: ofpart: add workaround for #size-cells 0
+
+Frank Li (1):
+      dmaengine: fix is_slave_direction() return false when DMA_DEV_TO_DEV
+
+Frederic Weisbecker (1):
+      hrtimer: Report offline hrtimer enqueue
+
+Furong Xu (2):
+      net: stmmac: xgmac: fix handling of DPP safety error for DMA channels
+      net: stmmac: xgmac: fix a typo of register name in DPP safety handling
+
+Greg Kroah-Hartman (2):
+      Revert "ASoC: amd: Add new dmi entries for acp5x platform"
+      Linux 6.1.78
+
+Guanhua Gao (1):
+      dmaengine: fsl-dpaa2-qdma: Fix the size of dma pools
+
+Hans de Goede (1):
+      Input: atkbd - skip ATKBD_CMD_SETLEDS when skipping ATKBD_CMD_GETID
+
+Ivan Vecera (1):
+      net: atlantic: Fix DMA mapping for PTP hwts ring
+
+JackBB Wu (1):
+      USB: serial: qcserial: add new usb-id for Dell Wireless DW5826e
+
+Jai Luthra (1):
+      dmaengine: ti: k3-udma: Report short packet errors
+
+Jakub Kicinski (1):
+      selftests: cmsg_ipv6: repeat the exact packet
+
+Jens Axboe (2):
+      io_uring/net: fix sr->len for IORING_OP_RECV with MSG_WAITALL and buffers
+      block: treat poll queue enter similarly to timeouts
+
+Jiri Wiesner (1):
+      clocksource: Skip watchdog check for large watchdog intervals
+
+Johannes Berg (1):
+      wifi: mac80211: fix waiting for beacons logic
+
+Julian Sikorski (1):
+      ALSA: usb-audio: Add a quirk for Yamaha YIT-W12TX transmitter
+
+Kuniyuki Iwashima (1):
+      af_unix: Call kfree_skb() for dead unix_(sk)->oob_skb in GC.
+
+Kuogee Hsieh (2):
+      drm/msms/dp: fixed link clock divider bits be over written in BPC unknown case
+      drm/msm/dp: return correct Colorimetry for DP_TEST_DYNAMIC_RANGE_CEA case
+
+Leonard Dallmayr (1):
+      USB: serial: cp210x: add ID for IMST iM871A-USB
+
+Loic Prylli (1):
+      hwmon: (aspeed-pwm-tacho) mutex for tach reading
+
+Mike Marciniszyn (1):
+      RDMA/irdma: Fix support for 64k pages
+
+Ming Lei (1):
+      scsi: core: Move scsi_host_busy() out of host lock if it is for per-command
+
+Pablo Neira Ayuso (5):
+      netfilter: nft_compat: narrow down revision to unsigned 8-bits
+      netfilter: nft_compat: reject unused compat flag
+      netfilter: nft_compat: restrict match/target protocol to u16
+      netfilter: nft_ct: reject direction for ct id
+      netfilter: nft_set_rbtree: skip end interval element from gc
+
+Paolo Abeni (2):
+      selftests: net: cut more slack for gro fwd tests.
+      selftests: net: avoid just another constant wait
+
+Prashanth K (2):
+      usb: dwc3: host: Set XHCI_SG_TRB_CACHE_SIZE_QUIRK
+      usb: host: xhci-plat: Add support for XHCI_SG_TRB_CACHE_SIZE_QUIRK
+
+Prathu Baronia (1):
+      vhost: use kzalloc() instead of kmalloc() followed by memset()
+
+Puliang Lu (1):
+      USB: serial: option: add Fibocom FM101-GL variant
+
+Sean Young (1):
+      ALSA: usb-audio: add quirk for RODE NT-USB+
+
+Sheng Yong (1):
+      f2fs: add helper to check compression level
+
+Shigeru Yoshida (1):
+      tipc: Check the bearer type before calling tipc_udp_nl_bearer_add()
+
+Shyam Prasad N (1):
+      cifs: failure to add channel on iface should bump up weight
+
+Simon Horman (1):
+      net: stmmac: xgmac: use #define for string constants
+
+Srinivasan Shanmugam (1):
+      drm/amd/display: Implement bounds check for stream encoder creation in DCN301
+
+Takashi Iwai (1):
+      ALSA: usb-audio: Sort quirk table entries
+
+Tejun Heo (1):
+      blk-iocost: Fix an UBSAN shift-out-of-bounds warning
+
+Tony Lindgren (1):
+      phy: ti: phy-omap-usb2: Fix NULL pointer dereference for SRP
+
+Werner Sembach (1):
+      Input: i8042 - fix strange behavior of touchpad on Clevo NS70PU
+
+Yoshihiro Shimoda (1):
+      phy: renesas: rcar-gen3-usb2: Fix returning wrong error code
+
+Zhang Rui (2):
+      hwmon: (coretemp) Fix out-of-bounds memory access
+      hwmon: (coretemp) Fix bogus core_id to attr name mapping
+
+Zhipeng Lu (2):
+      atm: idt77252: fix a memleak in open_card_ubr0
+      octeontx2-pf: Fix a memleak otx2_sq_init
 
