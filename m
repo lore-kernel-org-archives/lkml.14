@@ -1,35 +1,35 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD443135401;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD0F135413;
 	Fri, 16 Feb 2024 17:42:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708105367; cv=none; b=rajEsHaUrCUNbv9s/quzbF3ZNjnNQY3gkT2wkEk4yfHPWhBAQJuFvRCLBAIEu1c5+jaIOUFSRnsPGl7as7h0JbyJgC3NNoLutCxFXvWg2Iz067oOHETvVxqq7Iy6HlLjOmp8TW7ZFuNmdMQmaUVmOkAJjquFsU/Dp7rnT1/4ScU=
+	t=1708105367; cv=none; b=QD0rhZk9m93UF5q7LUFTsb39R7hGDP89AnHbjxgiTVcHSJPn7hCkTlMddKrizGgR8kh532RXVBk+7p27qjNXAQDxw0eqJpIOytWGMP2r986lJAfWKT3w60p1UhGZQbmxg7EVSrHCb2mCgNaNffpw6cwFGb7VnzU9aWoycy6B8cM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708105367; c=relaxed/simple;
-	bh=zkHzvVhKkqmhHXMYvIXk97BK8Hudfzm2zXC5uewsDi0=;
+	bh=oAaQLBWeM/gGCWiHBRYJVlhdSdktIqUBDSt+66t2HAY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bjp8MLKBTXtRscwP1Q9XWnosAWGDNEkEafd/4x1lW54MXN5Z6D+cJUeXOCGf0y9nt+z2ToCtAZ0I2pjn7E0qxU8AqSza/9k+CvQ/14ZZYgykptE6ydCeRd4QRWRVwtPa+1+HAKAfanTop4DCO2n4HGYzbqt5biWe0Ea6xjECpNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fHUoiYCQ; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version:Content-Type; b=dursu6v1nECqxGZYhzeTD1Rq5EvnNKcD1drcIhkkH+/tzvobt3YLAEgtF7Cd2qTzz7sH5QjelvJDeejwQ5Dl85Cvf/QwyMxdjyRS0DyRnxmaamB/Kz1mmrWx+5PT290gdpe+JoWTgkmR9uW0tApMSet4ruNcnbc7Wml46mIr5XE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jYzK41rC; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fHUoiYCQ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A59B2FF804;
-	Fri, 16 Feb 2024 17:42:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jYzK41rC"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DC8F9E0009;
+	Fri, 16 Feb 2024 17:42:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708105357;
+	t=1708105363;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lbVsbmHE4CGNjOWLyfslnCmWW1EMalEIZK9eUB8mHKE=;
-	b=fHUoiYCQBX+G8LDk0+TzfxJnaKfFyPj/Oh5JGJSJukX3scl7nF4nswEQbA0F4Hj2EFx6RA
-	MmQT0sW21UFPuArIKFFjjWG+/+U7iLQ+qj7Z9fcOht2Uv8cepjTaV+xy9UYWOlDMy5Ple9
-	4UzRRDexQmOuJHTVv68qpthL8YgCvlY3GKJaklrfPeYDG5wrLH3augQxL1m+C1fXJ1oT/+
-	ZsDYNyb0CJbjZcGnnZkpE9auhJW6cwmR47TJFts1+2MRroKwiWQ9XUSwpK6a1v0bd1Xymo
-	6Uwf1jhLF5W66ah+P85PXrUwa0yFfHCEpgPT7t+T61HY2n7ekfazNHW+RnZAeA==
+	bh=5w8TSeVOjB6sAyR43iL6A33OQFv+sJxNEeK/67wx8JQ=;
+	b=jYzK41rC2RfQmRQuuFKAoAXrUhP54h12NIMTTxDlzZnpNQbm3wii3eG4Oy2BC6ye1cgRWr
+	RvoqcCmTv99M8tP2EuUEXC72RFnWzg+YROepEHVb2uGc4cQ5jDkYcxM6DJtN3rO2cMu80e
+	csqvZP3j0JwV/t1n69ej8HpP0QO+k0aDSJg4ElK3EqIWxiLWg+Q1anC5MLQkIq/hgJEnu3
+	fUwAt5Phm2dcUzRY/6r8tO3UM/WB9RYnlfQDIHxiAqMAztJCUtui1sk28Mgexzb1qNgk2r
+	P+nXNmqZ6qd/idUQt3STE/58sP6vTKOUBimAZ3XarUEYyYfChq5yTTBFhI6szg==
 From: Gregory CLEMENT <gregory.clement@bootlin.com>
 To: Paul Burton <paulburton@kernel.org>,
 	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
@@ -44,12 +44,10 @@ Cc: Vladimir  Kondratiev <vladimir.kondratiev@mobileye.com>,
 	Alexandre Belloni <alexandre.belloni@bootlin.com>,
 	=?UTF-8?q?Th=C3=A9o=20Lebrun?= <theo.lebrun@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v8 07/14] dt-bindings: mips: cpus: Sort the entries
-Date: Fri, 16 Feb 2024 18:42:16 +0100
-Message-ID: <20240216174227.409400-8-gregory.clement@bootlin.com>
+	Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: [PATCH v8 14/14] MAINTAINERS: Add entry for Mobileye MIPS SoCs
+Date: Fri, 16 Feb 2024 18:42:23 +0100
+Message-ID: <20240216174227.409400-15-gregory.clement@bootlin.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240216174227.409400-1-gregory.clement@bootlin.com>
 References: <20240216174227.409400-1-gregory.clement@bootlin.com>
@@ -59,52 +57,43 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: gregory.clement@bootlin.com
 
-The entries were nearly sorted but there were still some entries at
-the wrong places. Let's fix it.
+Add Vlad, Théo and myself as co-maintainers for the Mobileye MIPS
+SoCs.
 
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 ---
- Documentation/devicetree/bindings/mips/cpus.yaml | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ MAINTAINERS | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mips/cpus.yaml b/Documentation/devicetree/bindings/mips/cpus.yaml
-index cf382dea3922c..9bc47868d28b6 100644
---- a/Documentation/devicetree/bindings/mips/cpus.yaml
-+++ b/Documentation/devicetree/bindings/mips/cpus.yaml
-@@ -23,22 +23,22 @@ properties:
-       - brcm,bmips4380
-       - brcm,bmips5000
-       - brcm,bmips5200
--      - ingenic,xburst-mxu1.0
-       - ingenic,xburst-fpu1.0-mxu1.1
-       - ingenic,xburst-fpu2.0-mxu2.0
-+      - ingenic,xburst-mxu1.0
-       - ingenic,xburst2-fpu2.1-mxu2.1-smt
-       - loongson,gs264
-       - mips,m14Kc
--      - mips,mips4Kc
--      - mips,mips4KEc
--      - mips,mips24Kc
-+      - mips,mips1004Kc
-       - mips,mips24KEc
-+      - mips,mips24Kc
-+      - mips,mips4KEc
-+      - mips,mips4Kc
-       - mips,mips74Kc
--      - mips,mips1004Kc
-       - mti,interaptiv
--      - mti,mips24KEc
-       - mti,mips14KEc
-       - mti,mips14Kc
-+      - mti,mips24KEc
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8d1052fa6a692..cb431c79c7b8e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14779,6 +14779,18 @@ W:	https://linuxtv.org
+ Q:	http://patchwork.linuxtv.org/project/linux-media/list/
+ F:	drivers/media/dvb-frontends/mn88473*
  
-   reg:
-     maxItems: 1
++MOBILEYE MIPS SOCS
++M:	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
++M:	Gregory CLEMENT <gregory.clement@bootlin.com>
++M:	Théo Lebrun <theo.lebrun@bootlin.com>
++L:	linux-mips@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/mips/mobileye.yaml
++F:	arch/mips/boot/dts/mobileye/
++F:	arch/mips/configs/eyeq5_defconfig
++F:	arch/mips/mobileye/board-epm5.its.S
++F:	include/dt-bindings/soc/mobileye,eyeq5.h
++
+ MODULE SUPPORT
+ M:	Luis Chamberlain <mcgrof@kernel.org>
+ L:	linux-modules@vger.kernel.org
 -- 
 2.43.0
 
