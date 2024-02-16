@@ -1,162 +1,105 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C6859B52;
-	Fri, 16 Feb 2024 11:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11EA15C90F;
+	Fri, 16 Feb 2024 11:20:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708082356; cv=none; b=ldIgVSQRxmESyxG2IbWUidrTj0Y08eKCW/bk9uj/CB1Jsb5wVNqRyXZxWqBiQCwLLBO2ypekA4iWQI3sYQ6V8uyMlDih2Ci+QrpJYACU1x1ndOStfB7VZcjQ9jnSeREVVOzfnkFPiB8fBCieqDfrM1oOSfIJfR11pjwNjnrJRUY=
+	t=1708082412; cv=none; b=VRknWWnQZrGJjrsizwRPLnKJA5E+5YY6hj/oUCY/qyc7zH8OxmpOMQaq4LDp9qxN6gEGYcdDo9orn18gvtdyXokQ2y/Fr60k8JXN0DTRTBjF9vU0lZ29l79CqVPZX/rmoNacxzSR/WqWei2fYdqg9IgbfxmHILeJ4t78MJkW8VA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708082356; c=relaxed/simple;
-	bh=iB6CRq25HlENFqGrsPH7JLQFt2BIJPW9dYbbZFCQLYM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=eyksR+miaHg7VqhhnaHIdCff3UtyrNgJP76vSGpz7BTVmdc6A1Ndyu5M/DuAnQKzT3cDoiAVAJ9fvmKd/GQbOCx8IiK/Nb/W82OOsolpS0YLznpXexPHYMeGctdJnth49/IVtfmYcUf7EOIVmQQhrvLrNhrIjEGJ0AWPhc4Ppik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=THn4oTjP; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1708082412; c=relaxed/simple;
+	bh=nkaCE6eCvGlgX7kiyuhw3auFPcpQnseOvbNalEBXKM0=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A4j4tu6ZP20n8YugdqMk8OLqSUoAco7WnGA3/osjHxSwQTA0llk3dUUlFOiGq76ct56BkJ2eelF8t4N4fS/jhSFRU5mjBXsPv9+gL2sag1JEu6SnDOqPunno4cnU7UXGnIptunyE3zUk9RWOvyh/WwOaKj+savu8waH3uIAxWGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TdR48MJr; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="THn4oTjP"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41G5xJRE030155;
-	Fri, 16 Feb 2024 11:18:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=RLtP2rJDNQHP8tWz4lIqKNUcxLZ6TvPXZeB9bvCF4fQ=; b=TH
-	n4oTjP3tc20wz+n0TBL6RQMqy/7dny+3Pf1mureOcsPx+H+bsNHbPT48mA20xP80
-	p3joSG8cTD0NtSQwCnlGXI/8w/i20OO8+pqk3yWtUQ6vJRLbBEnSuPpyqU/fWwW/
-	dJPEOUf5AjLkQeN8I4KL7trWcB1ZRG8+PH9EKgOdxf+J8XIWtspP1orHFRA/ncV7
-	t3xqtk2FzbfBFyhbyI6J5egkDnur5ELbgg3XhQrPeglFmvKLRiAGm8+NcB8KW7+H
-	zZeimwcpQDQkd/4n3GEEcrTEfKNOiWOb2vxUI9rwRlQxXB5xoaO4sUXdxXsyHj+O
-	WI7n9nkj5r430KUJiDlA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wa03r8qt0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 Feb 2024 11:18:47 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41GBIk7K022931
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 Feb 2024 11:18:46 GMT
-Received: from [10.218.16.59] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 16 Feb
- 2024 03:18:34 -0800
-Message-ID: <e491ec4a-f79b-4063-bd24-bbf3644ce486@quicinc.com>
-Date: Fri, 16 Feb 2024 16:48:31 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TdR48MJr"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a3d484a58f6so241698266b.3;
+        Fri, 16 Feb 2024 03:20:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708082409; x=1708687209; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yCznbNgmC/uH8itI3jd4dc5ZdCgsBJRraVYhNu+kzY4=;
+        b=TdR48MJraT6KcWbrFIIlguA5RJGkAEie1G1uhrtzUGIWplkIK8e5HOzoxXmkG0sVxc
+         Efkmc9PBaILzxGcYD6cHA/BN03Da/8edr2n8fh5eJ5R1Lf6Wzg8QLI6EMbkT/7nhKtF1
+         w44cniUGSMG2I0q6QTYo37lcoHx4I0NGD/vLxAAG6huQtghKX/gE0abx5Cw3xyZBANVF
+         AVSxD5G0Voh57FT7k5U90OfZcFgX14aieTLDgV1/CofeHk5Edz5DHcojPJVLqh7XkN9U
+         y6emThfK1/XueffGJWii3YYUMMH8D5z6NJRwXhXA4aWiXCljNUHW4JvJcqvGnzDMpzUD
+         WFmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708082409; x=1708687209;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yCznbNgmC/uH8itI3jd4dc5ZdCgsBJRraVYhNu+kzY4=;
+        b=ZmyATvp8K6dW9dKzfOF2kURi1pO24bcL20ZyYEw8rDta6fPDgb44NsJzLBzSoffwic
+         7eFZJ3BROuJ6Q2vAymX/iHEahcYBl5clbDWEl3GrpTFz6h2OVIoRcJ+TKHqlRxjSaMo7
+         YYeQndbz3rXzqbTlfoIKJgqcBtlUPiNugTrF00BNlrv/Y/nXZd3s1BnYcViVO/tcrmM6
+         FeTPx9rmlKLUuCf2StP+95sWs4xX5xh3b4hK3GJ2groPqWQrE3RPUY4ENCecs/PwId5K
+         7P2GXkktBfCw2G5knn0uPRlsDTVEcTRs8VDmK2QVi0U3Bk4EkJcMwRRDYB2JCZDJcESJ
+         Kbmw==
+X-Forwarded-Encrypted: i=1; AJvYcCVaU2hCUuMumx/UXCtfke0HMBPnP9orwq370KyalGcwK2exnAUZeyZqnI0ewqLHCMBns8PJjSbBkHIbVqLATE083p4+HTCYsOaXyca/JKnLySv7VR2zA6wmRg96Jx8JGFrFXClqiLas3fTtZ7ED5KXuKedV/nJpQeKHrzBOLpIUxZnNbHdu
+X-Gm-Message-State: AOJu0Yzpz9zDug3GICYuUQ6HqO/C+XoDolWdSzxJRbRbC3Rkt/FRUgaB
+	bwUIEPBgZiZSYfHD8WUmIKB5s5pk+ayB9F5F2M7seb62iMaKCBcw
+X-Google-Smtp-Source: AGHT+IHPHegJqbyoyL1SyH5aHZfiqfe2a8Kk/Xmi79pqAV50OjKgbAr67Gj29oOtjPgW56iENz3wwg==
+X-Received: by 2002:a17:906:f250:b0:a3d:51c4:812c with SMTP id gy16-20020a170906f25000b00a3d51c4812cmr3302801ejb.11.1708082409050;
+        Fri, 16 Feb 2024 03:20:09 -0800 (PST)
+Received: from localhost (p200300e41f147f00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f14:7f00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id i11-20020a1709063c4b00b00a3dae5dc653sm1097417ejg.157.2024.02.16.03.20.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Feb 2024 03:20:08 -0800 (PST)
+From: Thierry Reding <thierry.reding@gmail.com>
+To: thierry.reding@gmail.com,
+	jonathanh@nvidia.com,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	p.zabel@pengutronix.de,
+	dmitry.osipenko@collabora.com,
+	ulf.hansson@linaro.org,
+	kkartik@nvidia.com,
+	cai.huoqing@linux.dev,
+	spatra@nvidia.com,
+	linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Petlozu Pravareshwar <petlozup@nvidia.com>
+Subject: Re: [PATCH V3 1/3] soc/tegra: pmc: Update address mapping sequence for PMC apertures
+Date: Fri, 16 Feb 2024 12:20:07 +0100
+Message-ID: <170808233530.197509.809812872766738307.b4-ty@nvidia.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240211171727.914595-1-petlozup@nvidia.com>
+References: <20240211171727.914595-1-petlozup@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] dt-bindings: iio: adc: Add support for QCOM PMIC5
- Gen3 ADC
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, <jic23@kernel.org>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <lee@kernel.org>,
-        <andriy.shevchenko@linux.intel.com>, <daniel.lezcano@linaro.org>,
-        <lars@metafoo.de>, <luca@z3ntu.xyz>, <marijn.suijten@somainline.org>,
-        <agross@kernel.org>, <sboyd@kernel.org>, <rafael@kernel.org>,
-        <rui.zhang@intel.com>, <lukasz.luba@arm.com>,
-        <linus.walleij@linaro.org>, <quic_subbaram@quicinc.com>,
-        <quic_collinsd@quicinc.com>, <quic_amelende@quicinc.com>,
-        <quic_kamalw@quicinc.com>, <kernel@quicinc.com>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-arm-msm-owner@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <cros-qcom-dts-watchers@chromium.org>
-References: <20231231171237.3322376-1-quic_jprakash@quicinc.com>
- <20231231171237.3322376-3-quic_jprakash@quicinc.com>
- <3f812ffa-ec33-448e-b72a-ce698618a8c1@linaro.org>
- <13f2b558-a50d-44d3-85de-38e230212732@quicinc.com>
- <CAA8EJppsn2zsAXem-m=9U8izhtAZmVe62xS5qdkwJmFTqV30gA@mail.gmail.com>
-From: Jishnu Prakash <quic_jprakash@quicinc.com>
-In-Reply-To: <CAA8EJppsn2zsAXem-m=9U8izhtAZmVe62xS5qdkwJmFTqV30gA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 3loeRtsLeLAhQLMDXOPPD-VezXsdvBWc
-X-Proofpoint-GUID: 3loeRtsLeLAhQLMDXOPPD-VezXsdvBWc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-16_09,2024-02-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=908 lowpriorityscore=0 mlxscore=0 adultscore=0
- priorityscore=1501 clxscore=1015 bulkscore=0 phishscore=0 spamscore=0
- suspectscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2401310000 definitions=main-2402160091
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Dmitry,
+From: Thierry Reding <treding@nvidia.com>
 
-On 2/16/2024 4:18 PM, Dmitry Baryshkov wrote:
-> Hi Jishnu,
+
+On Sun, 11 Feb 2024 17:17:25 +0000, Petlozu Pravareshwar wrote:
+> On Tegra SoCs prior to Tegra186, PMC has single address range only.
+> Starting from and after Tegra186, PMC has additional address ranges
+> apart from base address range. Currently in PMC driver, we try to
+> map these additional address ranges on all SoCs and if we fail then
+> we assume that the range is not valid for an SoC. This change makes
+> it more explicit on which address ranges are expected to be present
+> on which SoCs and maps the additional address ranges only on SoCs
+> from and after Tegra186.
 > 
-> 
-> On Fri, 16 Feb 2024 at 12:39, Jishnu Prakash <quic_jprakash@quicinc.com> wrote:
-> 
-> Please disable sending HTML emails in your email client. It is
-> generally frowned upon, it complicates replying, it breaks quotations,
-> etc.
+> [...]
 
-Sorry, I'm not sure how that happened, but I have fixed it now.
+Applied, thanks!
 
-> 
->>
->> Hi Krzysztof,
->>
->> On 1/4/2024 1:48 PM, Krzysztof Kozlowski wrote:
->>
->> On 31/12/2023 18:12, Jishnu Prakash wrote:
->>
->> For the PMIC5-Gen3 type PMICs, ADC peripheral is present in HW for the
->> following PMICs: PMK8550, PM8550, PM8550B and PM8550VX PMICs.
->>
-
-
->> +
->>
->> +      qcom,adc-tm:
->> +        description: |
->> +            Indicates if ADC_TM monitoring is done on this channel.
->> +            Defined for compatible property "qcom,spmi-adc5-gen3".
-> 
-> You are describing qcom,spmi-adc5-gen3, are you not? So this phrase
-> adds nothing.
-
-Yes, I'll remove this.
-
-> 
->> +            This is the same functionality as in the existing QCOM ADC_TM
->> +            device, documented at devicetree/bindings/thermal/qcom-spmi-adc-tm5.yaml.
->> +        type: boolean
->> +
->>
->> Why do you duplicate entire vadc file? Why it cannot be part of that
->> file? Oh wait, it was in v2.
->>
->> You now duplicated a lot of property definitions without clear reason.
->> If this is intention, then you need to put them in common schema.
->>
->>
->> Many of the properties used for earlier QCOM VADC devices will be used for this device too.....do you mean I can add a new schema file (named something like qcom,vadc.yaml) and move common properties into it (like qcom,hw-settle-time, qcom,decimation, etc) from this file and qcom,spmi-vadc.yaml?
->>
->> Can I do it in the same patch or should it be a separate patch coming before this one ?
-> 
-> I'd say, separate patch. Move first, extend later.
-
-OK, I'll make it this way if no one else has any objections.
-
-Thanks,
-Jishnu
-
-> 
->>
->>
->>
+Best regards,
+-- 
+Thierry Reding <treding@nvidia.com>
