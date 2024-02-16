@@ -1,107 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73EFB1B966;
-	Fri, 16 Feb 2024 13:28:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4567869C;
+	Fri, 16 Feb 2024 13:29:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708090130; cv=none; b=Z8jmMxXP+8Z+3maGbugKThkdcBkwzpZ6gb+MxT3BDtH4Huhf/VSpmZX7/rT+h6QAY3JjCwUhiMsP7juNqNt2Sli4cK1DabA0WhHPf0/8KrvYTvWMs3RhzK+oap2ZRsOqRZrKFuAszJqCJGEvjaiHJDHpRMNFzZQe/fvuWta5rOk=
+	t=1708090180; cv=none; b=WosezjPvp4WCXwz1qktQTsSi6ucoacGSPLPjCmT1QEdX17+/bdN5YUGTUck94qQWzN3OcAtAEzxVZc0JcZw05TZeUXNajjK6F5dIry7kHVnBQWBdQctRSV9JVxQtmRbKKnt99VmR9kM7GKDl3BL6HQoJ7holFxAh9mTZkEZDRz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708090130; c=relaxed/simple;
-	bh=oNwPBpuoEDBJRr8Y1RXJ7zxW3hizZaGgzKTjVXJJj5U=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=JTtEBsmZecQrnJkwo8oOBcb+zM2tr4S7P2XO47OCnbwXD3fIvZj5Sxpw1HzI26rxhP2pPN/TPQ7iRCrnCIhsxBG1L8UVAflKINu3qAeYTJyfM73ZtTHdJiW+QqW+ZNVkfR5gfIuCeWTjxLzUPePrWW80nj4zporqJmW9nuT0dq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hiwXAz7C; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708090180; c=relaxed/simple;
+	bh=XNC+6/Otnw0WK31kMnwvs8qS0JEBOeN5lP09U8iWhcE=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=McyKherk4yiS+oHVW02BMZWyY4D0Mv3VSC//lhXnqMdbKdYGQArhYuVsFkbv2OAYGgXL87IUZ3KO2iXtP5pU1XmR95OCHpERyyv4PvPsfyfV5tw3HuQWFHwAdXR98qvzACAv1LpRgOepRpL16vUwwBrsiEb4WLwYan3+Vf2d0l4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h13ONrh7; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hiwXAz7C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708090129; x=1739626129;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=oNwPBpuoEDBJRr8Y1RXJ7zxW3hizZaGgzKTjVXJJj5U=;
-  b=hiwXAz7ClFl9X+U90XMvI2EQdJwcVwN6aDAPIID8w9Hj6rAOiGtxwUFL
-   a78Mcnp30KhFd+Man6vRftPYTo9ItG56hS49YV8+FXmV/cjzjYyTT5GaV
-   EOktC5PZPNEgHoZbduEs5XgQ3OWr7AFWK9fT3PyYp06YmHDxd5d2uYroA
-   g6L6/cW1RXDFoXKP6hzhgjRMKpcB9vXajwU+I8c0ly/A4oynrQbI48yeF
-   zHNA/LKeBaCKYhbfv8AeIN8mHJCSIhhMcybJgUfFjiwinQ0QF2iv/ieFi
-   S8gLo7wr48AqQLIMMBco6kog+qv0KFQu+jjSHcnJBTUudfrhJH1Pq9yWD
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10985"; a="2087954"
-X-IronPort-AV: E=Sophos;i="6.06,164,1705392000"; 
-   d="scan'208";a="2087954"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 05:28:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,164,1705392000"; 
-   d="scan'208";a="34876144"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.94.248.234])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 05:28:45 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 16 Feb 2024 15:28:40 +0200 (EET)
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH 1/1] PCI: Cleanup link activation wait logic
-In-Reply-To: <alpine.DEB.2.21.2402021359450.15781@angie.orcam.me.uk>
-Message-ID: <ce73f41a-b529-726f-ee4e-9d0e0cee3320@linux.intel.com>
-References: <20240202134108.4096-1-ilpo.jarvinen@linux.intel.com> <alpine.DEB.2.21.2402021359450.15781@angie.orcam.me.uk>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h13ONrh7"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-563e330351dso895722a12.0;
+        Fri, 16 Feb 2024 05:29:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708090177; x=1708694977; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XZruYQtkO+3BS3qcvdN/BJMk2n98rBP4bnPkKxou/uo=;
+        b=h13ONrh7K/oif1N0lf3/zQ63fw8J6KgGvyoL8Kw7hwRFnOmUi8Isdl+AhuRiBiuCsc
+         njLKApAtM2KxnYmpy9DBj9G7OX9qWoCtJO0tZHelHcWtCypMgMnWuX1HE+RLJrihv8VV
+         4xDNYrcRoYvBVr/2qL/qwBJEptok3BJZ92OqSPVTj1v/lr/JTazRtU+z4J2z01D/HITR
+         7zKC54aWdzTWVTCgBO/xHRMMUUYgJpvDTPOIpA/sFUys4KyKZUWtycQocnmO1NAdJKJs
+         BXlcJNDz/5BszBqBtEubcJcj9rBnSFmIBhqXO89rCFAWVwyxfjMOcCOgJW2vd9IqMxeA
+         9t3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708090177; x=1708694977;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XZruYQtkO+3BS3qcvdN/BJMk2n98rBP4bnPkKxou/uo=;
+        b=v8AFmv73KVXkzDSKsmwqqL0c22YhQHcI21COb29NkDBaaJgPlC5shsz89gJ02QJXVT
+         WpXcZCMJ9puy5ZTt+whsjnAG1HioUtzQdvF6SWI8mQh+t4BBDunhtuVoKCr1/jtxYsAb
+         9w14QTyzdhvvYLGII6tYrGxcjH6hlAV4y2tSNJ2NxBTEUM9YdNcbzggcf4J0EwrVEM7V
+         Dot4c5stvsJECQyshBBl/oysENi3BuVYwp+aZU3beZ3UcGtHWtWOOddq2HQ47Sb+v+VM
+         zLaqaUApQFb1AEAerXQjI3xn80VqZUfONUpdIFief7+iBxDZUtHow7IplCkQncXe7KCV
+         MIOg==
+X-Forwarded-Encrypted: i=1; AJvYcCUfDNgtAJFlLTsPZlACnNV0RA/NbZvsgisuyL+495bUswD4QvpTMwNtKwbgbMvQBwOzH88Xd0Y6kZ1gSliSvcVw8vDj6ezpR6c1uHR4F1mZlW9hG6L0/0NGpZkH3QRnGyQEjLbkG3wq
+X-Gm-Message-State: AOJu0YwMyQPiS2FvPtOJqL81xCYIhsJQZRDiK16Wysol9hOfQvtnMLga
+	bb0qj+STnSKmdehtckb3n7ZwFleaCUzlhXLzybHxDBJGeIUuBD87
+X-Google-Smtp-Source: AGHT+IG5EWpFRlQvxlO2MTT+wcIsZkecz8kpjq4nrVGUe0hsv3jXsHsR4CWx3hfCA32VYY7OARf4rw==
+X-Received: by 2002:a17:906:b0d9:b0:a36:5079:d6cb with SMTP id bk25-20020a170906b0d900b00a365079d6cbmr3512112ejb.56.1708090176555;
+        Fri, 16 Feb 2024 05:29:36 -0800 (PST)
+Received: from vamoiridPC ([2001:1458:204:1::102:961a])
+        by smtp.gmail.com with ESMTPSA id rs3-20020a170907036300b00a3ca56e9bcfsm1540457ejb.187.2024.02.16.05.29.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Feb 2024 05:29:36 -0800 (PST)
+From: Vasileios Amoiridis <vassilisamir@gmail.com>
+X-Google-Original-From: Vasileios Amoiridis <vamoirid@vamoiridPC>
+Date: Fri, 16 Feb 2024 14:29:34 +0100
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Vasileios Amoiridis <vassilisamir@gmail.com>, lars@metafoo.de,
+	ang.iglesiasg@gmail.com, 579lpy@gmail.com,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers: iio: pressure: Add SPI support for BMP38x and
+ BMP390
+Message-ID: <20240216132934.GB4236@vamoiridPC>
+References: <20240215164332.506736-1-vassilisamir@gmail.com>
+ <Zc5D35_4FdERZXe4@smile.fi.intel.com>
+ <20240216110543.5d6289f6@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1104822449-1708087900=:1097"
-Content-ID: <8aebecf1-b380-ec81-f4e1-9ba90a0d18f8@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240216110543.5d6289f6@jic23-huawei>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, Feb 16, 2024 at 11:05:43AM +0000, Jonathan Cameron wrote:
+> On Thu, 15 Feb 2024 19:03:27 +0200
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > On Thu, Feb 15, 2024 at 05:43:32PM +0100, Vasileios Amoiridis wrote:
+> > > According to the datasheet of BMP38x and BMP390 devices, in SPI
+> > > operation, the first byte that returns after a read operation is
+> > > garbage and it needs to be dropped and return the rest of the
+> > > bytes.  
+> > 
+> > Thank you for the patch, my comments below.
+> > 
+> > ...
+> > 
+> > > +static int bmp380_regmap_spi_read(void *context, const void *reg,
+> > > +				  size_t reg_size, void *val, size_t val_size)
+> > > +{
+> > > +	struct spi_device *spi = to_spi_device(context);
+> > > +	u8 ret[BMP380_SPI_MAX_REG_COUNT_READ + 1];
+> > > +	ssize_t status;
+> > > +	u8 buf;  
+> > 
+> > AFAIU this buffer is not DMA-capable.
+> 
+> Doesn't matter in this case as spi_write_then_read() bounces anyway so you don't need
+> to provide it with a dma safe buffer. It's in the docs, so we can rely
+> on this not changing.
+> 
+> https://elixir.bootlin.com/linux/latest/source/drivers/spi/spi.c#L4391
+> 
 
---8323328-1104822449-1708087900=:1097
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <5bb50767-a43a-884b-8c39-8442de383a68@linux.intel.com>
-
-On Fri, 2 Feb 2024, Maciej W. Rozycki wrote:
-
-> On Fri, 2 Feb 2024, Ilpo J=E4rvinen wrote:
->=20
-> > 1. Change pcie_failed_link_retrain() to return true only if link was
-> >    retrained successfully due to the Target Speed quirk. If there is no
-> >    LBMS set, return false instead of true because no retraining was
-> >    even attempted. This seems correct considering expectations of both
-> >    callers of pcie_failed_link_retrain().
->=20
->  You change the logic here in that the second conditional isn't run if th=
-e=20
-> first has not.  This is wrong, unclamping is not supposed to rely on LBMS=
-=2E=20
-> It is supposed to be always run and any failure has to be reported too, a=
-s=20
-> a retraining error.
-
-Now that (I think) I fully understand the intent of the second=20
-condition/block one additional question occurred to me.
-
-How is the 2nd condition even supposed to work in the current place when=20
-firmware has pre-arranged the 2.5GT/s resctriction? Wouldn't the link come=
-=20
-up fine in that case and the quirk code is not called at all since the=20
-link came up successfully?
-
-
-Yet another thing in this quirk code I don't like is how it can leaves the=
-=20
-target speed to 2.5GT/s when the quirk fails to get the link working=20
-(which actually does happen in the disconnection cases because DLLLA won't=
-=20
-be set so the target speed will not be restored).
-
-
---=20
- i.
---8323328-1104822449-1708087900=:1097--
+Since the read_flag_mask can be used in the struct regmap_bus, there is no need for an 
+extra u8 buffer to manipulate the bits. Instead, the reg value from the function inputs 
+can be used as in any other case.
