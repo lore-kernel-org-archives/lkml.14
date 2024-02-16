@@ -1,44 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C9628F1;
-	Fri, 16 Feb 2024 00:18:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C11C38F;
+	Fri, 16 Feb 2024 00:20:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708042684; cv=none; b=Y+aOZ0dS0SliFQ4/tO85fMcbvoyfJ1p7QZohRf3/prvClhlR+NZlGGNAnisMZ0o+XRbT6GpYxQooXX+q3UhrDTx1f5is5IhbTnR7DM95AYzE32GgWtCoJW6lIfo8nofXbmugSDrOC5QeuOCwiXQUk36ECGOOVZiutDzMPWzv0F8=
+	t=1708042814; cv=none; b=MR1e8WcBea5SeFpZeIouZHgq+82aGYUKJPSkTeZJyoItsxINUECva8RI0Ym5ST02UG/8Uxnyi2okkLTUbucTvQKeDzTdbUtjd3cA63L1/yHG6aT2mAnX1VkYZINrtptfYEtMBZ6MdHqBdsspTeEnskqBcf9jAHUNisbZWBBjsAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708042684; c=relaxed/simple;
-	bh=4PbgQsfGQ3x3R7D6HGJW1HkpIAtBaVUF/26+mLivtJw=;
+	s=arc-20240116; t=1708042814; c=relaxed/simple;
+	bh=GD1Wa7SHUnGt9gUDi+iC0B1+iivxZqph8uOCh9oMSdQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X+QfkdvjySatCw9FZdc081cjUpFm39wDVqqNvtH98rfFgLNwzG/EqQP3rcg2d1bQAxDDEdfAfRndKeFllIGADPrZRY7k+PkNUfKU2JF5cXlOSdHSGq51JABf4tUPTClcKSgznnkki29UT54sa8KOYIFe0RIMTKUOP3SQLYnrY58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nRVAiIaM; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nRVAiIaM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5477C433C7;
-	Fri, 16 Feb 2024 00:18:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708042684;
-	bh=4PbgQsfGQ3x3R7D6HGJW1HkpIAtBaVUF/26+mLivtJw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=nRVAiIaM0fl19nBK+PivSO4b9I0/DsU1tb56IZkDp3wFnNNFjbTuE6fk3QlKjWCY7
-	 7OII8D0Vhn5Vqa2HGcQHnvznDrzNGJxTchQtTkO7gpQIRLI7uJjnw8J+EZG8juLLBo
-	 cRD7IzpBCNPwYH4wAOOS02RxE1lVWlHa6zahuD1PO6K+DSHcRvsm/MshUAqoXX1aa1
-	 rGqvc0EdIZ3FMHoyDXFT6xBBXwkaTarDB0s2X8xm9WV+vCT8zwnqtIStZkId7FFpIg
-	 x/P90r6wR5Nd6A3IOPI/252STNJVRaqTXDRWi/iS48/CFVR+4T4qA4eAYnzSHLORyo
-	 st2J7UtkRaklA==
-Date: Thu, 15 Feb 2024 16:18:02 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Rand Deeb <rand.sec96@gmail.com>
-Cc: "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, deeb.rand@confident.ru,
- lvc-project@linuxtesting.org, voskresenski.stanislav@confident.ru
-Subject: Re: [PATCH] dl2k: Fix potential NULL pointer dereference in
- receive_packet()
-Message-ID: <20240215161802.73c0ece3@kernel.org>
-In-Reply-To: <CAN8dotmVcmpqxO0SyPvit20Ny-tU3OMHr0LLoXRQ3bpPTS5WqA@mail.gmail.com>
-References: <20240213200900.41722-1-rand.sec96@gmail.com>
-	<20240214170203.5bf20e2d@kernel.org>
-	<CAN8dotmVcmpqxO0SyPvit20Ny-tU3OMHr0LLoXRQ3bpPTS5WqA@mail.gmail.com>
+	 MIME-Version:Content-Type; b=A/MGmBanpdj7MoHYk33IxLyrSLNMbKdYdXZNbg1ss6gTa9cqkYr2rPu1Kclw3vsEPk03803+Vay3y6ZolMK2kO4/ZV+iEiH4FLg6uD/DoeBgasXt26+mMsRaYrYGpGFUVcM5FdwAeudh5vJYpvKTCWMDQ9JWMKZArzLWQOG3Pbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D7BAC433C7;
+	Fri, 16 Feb 2024 00:20:07 +0000 (UTC)
+Date: Thu, 15 Feb 2024 19:21:41 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Suren Baghdasaryan
+ <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ akpm@linux-foundation.org, hannes@cmpxchg.org, roman.gushchin@linux.dev,
+ mgorman@suse.de, dave@stgolabs.net, willy@infradead.org,
+ liam.howlett@oracle.com, corbet@lwn.net, void@manifault.com,
+ peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com,
+ will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com,
+ dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com,
+ david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org,
+ nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev,
+ rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com,
+ yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com,
+ hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org,
+ ndesaulniers@google.com, vvvvvv@google.com, gregkh@linuxfoundation.org,
+ ebiggers@google.com, ytcoode@gmail.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, bsegall@google.com, bristot@redhat.com,
+ vschneid@redhat.com, cl@linux.com, penberg@kernel.org,
+ iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com,
+ elver@google.com, dvyukov@google.com, shakeelb@google.com,
+ songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com,
+ minchan@google.com, kaleshsingh@google.com, kernel-team@android.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ iommu@lists.linux.dev, linux-arch@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-modules@vger.kernel.org, kasan-dev@googlegroups.com,
+ cgroups@vger.kernel.org
+Subject: Re: [PATCH v3 31/35] lib: add memory allocations report in
+ show_mem()
+Message-ID: <20240215192141.03421b85@gandalf.local.home>
+In-Reply-To: <jpmlfejxcmxa7vpsuyuzykahr6kz5vjb44ecrzfylw7z4un3g7@ia3judu4xkfp>
+References: <20240212213922.783301-1-surenb@google.com>
+	<20240212213922.783301-32-surenb@google.com>
+	<Zc3X8XlnrZmh2mgN@tiehlicka>
+	<CAJuCfpHc2ee_V6SGAc_31O_ikjGGNivhdSG+2XNcc9vVmzO-9g@mail.gmail.com>
+	<Zc4_i_ED6qjGDmhR@tiehlicka>
+	<CAJuCfpHq3N0h6dGieHxD6Au+qs=iKAifFrHAMxTsHTcDrOwSQA@mail.gmail.com>
+	<ruxvgrm3scv7zfjzbq22on7tj2fjouydzk33k7m2kukm2n6uuw@meusbsciwuut>
+	<320cd134-b767-4f29-869b-d219793ba8a1@suse.cz>
+	<efxe67vo32epvmyzplmpd344nw2wf37azicpfhvkt3zz4aujm3@n27pl5j5zahj>
+	<20240215180742.34470209@gandalf.local.home>
+	<jpmlfejxcmxa7vpsuyuzykahr6kz5vjb44ecrzfylw7z4un3g7@ia3judu4xkfp>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,18 +68,35 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 16 Feb 2024 02:32:54 +0300 Rand Deeb wrote:
-> Regarding your comment on using `(!skb)` instead of `(skb == NULL)`, I
-> understand that `(!skb)` is more common and is also recommended by `
-> checkpatch.pl`. However, I chose to keep the original code style and logic
-> to maintain consistency and avoid confusion, especially for other
-> developers who might be familiar with the existing format. The same
-> applies to the `printk` statement. In the same function, there is an exact
-> block of code used; should I fix it too?
+On Thu, 15 Feb 2024 18:51:41 -0500
+Kent Overstreet <kent.overstreet@linux.dev> wrote:
 
-Don't worry about surrounding code if it's written in a clearly
-outdated style.
+> Most of that is data (505024), not text (68582, or 66k).
+> 
 
-If the style is different intentionally, that's different, but
-for old code using more modern style helps bring the code base
-forward little by little.
+And the 4K extra would have been data too.
+
+> The data is mostly the alloc tags themselves (one per allocation
+> callsite, and you compiled the entire kernel), so that's expected.
+> 
+> Of the text, a lot of that is going to be slowpath stuff - module load
+> and unload hooks, formatt and printing the output, other assorted bits.
+> 
+> Then there's Allocation and deallocating obj extensions vectors - not
+> slowpath but not super fast path, not every allocation.
+> 
+> The fastpath instruction count overhead is pretty small
+>  - actually doing the accounting - the core of slub.c, page_alloc.c,
+>    percpu.c
+>  - setting/restoring the alloc tag: this is overhead we add to every
+>    allocation callsite, so it's the most relevant - but it's just a few
+>    instructions.
+> 
+> So that's the breakdown. Definitely not zero overhead, but that fixed
+> memory overhead (and additionally, the percpu counters) is the price we
+> pay for very low runtime CPU overhead.
+
+But where are the benchmarks that are not micro-benchmarks. How much
+overhead does this cause to those? Is it in the noise, or is it noticeable?
+
+-- Steve
