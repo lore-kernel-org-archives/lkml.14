@@ -1,84 +1,124 @@
-Received: from smtp-out3.simply.com (smtp-out3.simply.com [94.231.106.210])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0925B12CDA0;
-	Fri, 16 Feb 2024 16:24:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.210
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708100644; cv=none; b=Miz36FgzUXwkC469tz5nNN2vpTx57XGL9vt2XbaxOKf/Zr08mLVtO2t4aFC4GLNFfNWdcEP6/327iyxetmwbIBwa+DZIyjlr/TLd74CUoNzKz5Ev+a9U6hulKZCbMTtTy4razYyYlf3iGxtj37UcXTiEFhbvMWjgTl15wuFC6b0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708100644; c=relaxed/simple;
-	bh=Rfy5t+Ke97W7RYMJt/erJUa1+/Vwj2VdUC6H8BztsRc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P1UJpQhZBR4Y3L8/HpsdQBHQcIpiGGYWtOVok69M2dGjj+8ni2NWTuZKXBkK5PJq4g5hWzCK1Vu/Mh6prdyvvNVGDJ1VE/ug4fOuWZjb/99rktRr4Y3zUDKMfjynut+ovwGexdBuURvH+KC2CCoDU0MYAp20+wgg5MtgEjndwB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=pass (1024-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=TuGPUb0P; arc=none smtp.client-ip=94.231.106.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gaisler.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="TuGPUb0P"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp.simply.com (Simply.com) with ESMTP id 4Tby1D3DQ6z681W;
-	Fri, 16 Feb 2024 17:24:00 +0100 (CET)
-Received: from [10.10.15.23] (h-98-128-223-123.NA.cust.bahnhof.se [98.128.223.123])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(Client did not present a certificate)
-	by smtp.simply.com (Simply.com) with ESMTPSA id 4Tby1110Yhz681q;
-	Fri, 16 Feb 2024 17:23:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
-	s=unoeuro; t=1708100640;
-	bh=Cni14qWVF5Qo6yP1IoU8PFubchx+rq7qZRzJfHnvpQM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=TuGPUb0P7sFMjY7wydvc6Z9EnfErmRkHqJTvj6wzzPD2AMRdoPwYnmpphOaMjXf8F
-	 5CJJShVpg8H/BKZjnw6uZnO5OSNsqeWQ2TtJsMUJvo9so4j9MFJlQ+NFCOXgShy2Te
-	 J46TtXVqS8Frkam9F35ZRgRTDx8RBjp8gPWxNx08=
-Message-ID: <cf77fdf5-3121-4910-96da-9392ba7e53d3@gaisler.com>
-Date: Fri, 16 Feb 2024 17:23:48 +0100
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42CF12CDA0;
+	Fri, 16 Feb 2024 16:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708100680; cv=none; b=rbjrB1SoSDSsqXD1RRBW83ea7BRS9Ncifg/5CQsbvEqMXsulHO8bpBTfAt1nRsbcsSXF52NDCg5KjGX9wSsF4s2yT/hM4LNHTC1mQKw7ZJ4kTEslWPeRd6b8aJefj/EgW2YygKup5eC0qn4ftioHxemAZ2NDTeL6mL2RpLsxUEA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708100680; c=relaxed/simple;
+	bh=U6YG9Ti4C0gWK/nGR2s4gkUdINqjSSAttW9vvgbqrtU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uZ02gDJTWQbkjt+Yk6uPXDlUKodWIEAl3ke1dVeISq/zA2Oz3md9s3Y4DJCB2CkG9oO3oOklxeqY3h5mGLQH/6oTULTOWk01k1ZWmtYscJqunoix2xmd4Xx9rsUpkXadStHkzhxaRpKEL0ozdm9uOT7ka5guXf3s8vrfi5O6JtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EVX9P81m; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EVX9P81m"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6e104196e6eso2335159b3a.0;
+        Fri, 16 Feb 2024 08:24:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708100678; x=1708705478; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YQ+UNV/EAPr4AAhwPiPwcLP/Ta6X6kk2pf9+0780rLc=;
+        b=EVX9P81mYfg58/qZs9aH5PTsYlqIgoQPMBliRRfr8E+u1GhKLBwvOlEE93NopZE88a
+         3B7WeHSVYns08p3bh6oojL18tV7mGi8jkTai7zXnb40z6IClIrrA57bFl5KFgXiokvlO
+         Diq6x18SYrw/E5ZzwO85PhuyiBTabPfYo8LZOdT3B42PuQe4YfRTVsmEHSdzI1nwtVoq
+         xrnbdNVT29WrtZbdQ94Ay1bSxJQpZyDm6Q4/hQyIMFUFxETJV4lyXgP9A67rIo+d8bgk
+         YZPVIp348IHLiJ4pQOGSnUQQ5ms1n/taKG7IAVd/QnHSsQc37F1acckRWaDS8hqcc0V4
+         QL+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708100678; x=1708705478;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YQ+UNV/EAPr4AAhwPiPwcLP/Ta6X6kk2pf9+0780rLc=;
+        b=M/Y77BRTNWhSBhE1ECf5RqrjGp/vZe7KDuuWTwgu6WP1H2UpHzx2S5CVjxT5GJG27/
+         2bKUfYIrLe/G2yAMgRbpy7BibiAHHCr8w7FWM6FPIZDhi0Z4JFq7nd0CFtSwKMDq4HIn
+         84YOi/eYrn7WIORjvx+rzwLGQ1tu6NZAr5kSxW5HW+hKw6alLU/EssAY0kvmv/jB5Nq9
+         pDOzJlz7xsMXsQvvU2BYoFk50W3wBnbns6TvxyAExLvZyINpBpb7aIIDNEWNpahi/nSO
+         T7yrEXQW+LBZB60EnPLn+SfP8WDfkUfvUEmDuKXdUFmxEdnVmD/xtAYEdOFbG0i/fyq1
+         e4kQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVzJuMTIwms4GxDtGooerYDXuDaZF0K2mZfltkiufijAej3byAM9yV3QKbuzs+HJYpSJFUhHvPf31+Fm/uxv6dELi7F2ThY4pEoceCcblExo6SpKr9MRUrGOVOf2R4AzDo1ji/6
+X-Gm-Message-State: AOJu0YwsqY53n5wYDMxr4HLZ2wXfKVGCg0Igsiqf0LrlZa8JdumiaHwx
+	ZXaFOj+cMbOWzt2nuXxFR94VOhfJLDc1v4ZBBn0/yNGQvMXNjMsT
+X-Google-Smtp-Source: AGHT+IHb4zZg1UAszeDHy7JoD5f7d909sEn93hlBJmzyVRU53SDtzBN4FcJ5+lA4W5FXP6Z8EfsGSA==
+X-Received: by 2002:a05:6a00:1995:b0:6e0:e618:7eb0 with SMTP id d21-20020a056a00199500b006e0e6187eb0mr6237661pfl.8.1708100677762;
+        Fri, 16 Feb 2024 08:24:37 -0800 (PST)
+Received: from localhost (dhcp-141-239-158-86.hawaiiantel.net. [141.239.158.86])
+        by smtp.gmail.com with ESMTPSA id l15-20020a62be0f000000b006e133caaaa1sm151113pff.16.2024.02.16.08.24.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Feb 2024 08:24:37 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Fri, 16 Feb 2024 06:24:36 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Eric Dumazet <edumazet@google.com>
+Cc: torvalds@linux-foundation.org, mpatocka@redhat.com,
+	linux-kernel@vger.kernel.org, dm-devel@lists.linux.dev,
+	msnitzer@redhat.com, ignat@cloudflare.com, damien.lemoal@wdc.com,
+	bob.liu@oracle.com, houtao1@huawei.com, peterz@infradead.org,
+	mingo@kernel.org, netdev@vger.kernel.org, allen.lkml@gmail.com,
+	kernel-team@meta.com, "David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>, David Wei <davidhwei@meta.com>
+Subject: Re: [PATCH 6/8] net: tcp: tsq: Convert from tasklet to BH workqueue
+Message-ID: <Zc-MRN2tUmsCQLZO@slm.duckdns.org>
+References: <20240130091300.2968534-1-tj@kernel.org>
+ <20240130091300.2968534-7-tj@kernel.org>
+ <Zc7zLsEhDzGkCH9m@slm.duckdns.org>
+ <CANn89iKDsJPY=QQrTHK0Jw=s=A_G_GzcOA0WsqXaytWAVV3R4Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] sparc: vDSO: fix return value of __setup handler
-Content-Language: en-US
-To: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
-Cc: Igor Zhbanov <izh1979@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, sparclinux@vger.kernel.org,
- Dan Carpenter <dan.carpenter@oracle.com>,
- Nick Alcock <nick.alcock@oracle.com>, Sam Ravnborg <sam@ravnborg.org>,
- Andrew Morton <akpm@linux-foundation.org>, stable@vger.kernel.org,
- Arnd Bergmann <arnd@arndb.de>
-References: <20240211052808.22635-1-rdunlap@infradead.org>
-From: Andreas Larsson <andreas@gaisler.com>
-In-Reply-To: <20240211052808.22635-1-rdunlap@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANn89iKDsJPY=QQrTHK0Jw=s=A_G_GzcOA0WsqXaytWAVV3R4Q@mail.gmail.com>
 
-On 2024-02-11 06:28, Randy Dunlap wrote:
-> __setup() handlers should return 1 to obsolete_checksetup() in
-> init/main.c to indicate that the boot option has been handled.
-> A return of 0 causes the boot option/value to be listed as an Unknown
-> kernel parameter and added to init's (limited) argument or environment
-> strings. Also, error return codes don't mean anything to
-> obsolete_checksetup() -- only non-zero (usually 1) or zero.
-> So return 1 from vdso_setup().
+Hello, Eric. How have you been?
+
+On Fri, Feb 16, 2024 at 09:23:00AM +0100, Eric Dumazet wrote:
+...
+> TSQ matters for high BDP, and is very time sensitive.
 > 
-> Fixes: 9a08862a5d2e ("vDSO for sparc")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Reported-by: Igor Zhbanov <izh1979@gmail.com>
-> Link: lore.kernel.org/r/64644a2f-4a20-bab3-1e15-3b2cdd0defe3@omprussia.ru
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: sparclinux@vger.kernel.org
-> Cc: Dan Carpenter <dan.carpenter@oracle.com>
-> Cc: Nick Alcock <nick.alcock@oracle.com>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: stable@vger.kernel.org
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Andreas Larsson <andreas@gaisler.com>
+> Things like slow TX completions (firing from napi poll, BH context)
+> can hurt TSQ.
+> 
+> If we add on top of these slow TX completions, an additional work
+> queue overhead, I really am not sure...
 
-Applied to my for-next branch.
+Just to be sure, the workqueue here is executing in the same softirq context
+as tasklets. This isn't the usual workqueue which has to go through the
+scheduler. The only difference would be that workqueue does a bit more work
+(e.g. to manage the currenty executing hashtable) than tasklet. It's
+unlikely to show noticeable latency penalty in any practical case although
+the extra overhead would likely be visible in targeted microbenches where
+all that happens is scheduling and running noop work items.
 
-Thanks,
-Andreas
+> I would recommend tests with pfifo_fast qdisc (not FQ which has a
+> special override for TSQ limits)
+
+David, do you think this is something we can do?
+
+> Eventually we could add in TCP a measure of the time lost because of
+> TSQ, regardless of the kick implementation (tasklet or workqueue).
+> Measuring the delay between when a tcp socket got tcp_wfree approval
+> to deliver more packets, and time it finally delivered these packets
+> could be implemented with a bpftrace program.
+
+I don't have enough context here but it sounds like you are worried about
+adding latency in that path. This conversion is unlikely to make a
+noticeable difference there. The interface and sementics are workqueue but
+the work items are being executed exactly the same way from the same
+softirqs as tasklets. Would testing with pfifo_fast be sufficient to dispel
+your concern?
+
+Thanks.
+
+-- 
+tejun
