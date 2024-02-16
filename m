@@ -1,518 +1,176 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC6E137C41;
-	Fri, 16 Feb 2024 17:42:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4CF3132472
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 17:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708105370; cv=none; b=jSHdeY0zTaL+4Fam71h2EP9cD2zZmKaHmna8dKZ2lO3EW8B4w7Jzqmrv8DledZYaCDf7pQwLHNaWHGsdYfnK709/AepU0i7O34pPS1UjPrm62Onj6KuRVte2AYw5MKelUiwDvuL6ksPuXpiiatD0yfjPTuDT5pEgYCiLCtqB4J8=
+	t=1708105442; cv=none; b=T6lMQVgCzgBhtO3kOks3OUmlnUaA+CFe7EwME7H6RKsgHYo2H0p6U293EIsO6p3DjR+3qLeBgg3V2hO/MzUFeEFH7HnZu+XaLr2c4PoS8d5wUwUF0CT/OCPqoNJ0BEniKDBxkr3l+N6C8CVo6dgyQJJRP2mxZ2crSauhJJkPCCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708105370; c=relaxed/simple;
-	bh=8tVgkcNVLNLBRpOyAN3sTXkK2AFrbAaEOi1qJYHFBm8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lFuB5nlHsmNVwmrByWLbwi7VyCqnhPKNsVi+R+R3g+vcwBxEPP54tUg3GDWy+apJTL8DVYnjPQ8/dtGqZlwFsIwfYMM8jXOiPgx2DH26byZu4xLChd40+IXni7ywN6qT2hHE/SU8CSHouG90seTDn6lqRVuQAWFUJ+NOXDZY/ZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IRL8UEQQ; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1708105442; c=relaxed/simple;
+	bh=Vp2sP+hVGRaYxsIsbYmPQbJHb9mX+CXXwxtXpLpfDOI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d4K6IQXatZeDdkrv7Meahk51Qn6I76GeEWHw2keKJbDdhGn/M5mizJ+4AexDF3OPST+A70UqFZHFiRZsoyLrHHKQAw4YYBC9oGqUkycEJfyM9upiIruu81osrmePtQifUKwbmiK1IziZHXqxVm+CzofB7vibAw8PxXBvsdJ3S9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SMRttiIk; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IRL8UEQQ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id BF73B60002;
-	Fri, 16 Feb 2024 17:42:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708105360;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J34CKJwhiUt6uvWl5wHPj2lYqq5e5b68Q2aJT1fL64Y=;
-	b=IRL8UEQQBB8KpZQJJ6D0X3hyUHTtQzbiPQvIuTBm7UJl3DLt0y8N8FagFW47ZeG2qcGOLn
-	fvp56qEI5PX5FmDYLutQZY0Q8e6Z28j+U8KkivN1oitDPUlVnVakW9sn1z6fXAZeRoyk8k
-	HHMJBqJAndZRgoNL9Jrgu4pxvZQyRn05Thv1CMRuDw7DgGb6ueUCOAU1MnDtO5/oLdqR1r
-	m/hVoXzSSMtaegyqHtqFmvaqHRXOn0XPgm8UD9/iB+UeksOHnItTLBqR6lr/4I3vAhnky4
-	AshuQ0Y9w/P63bKTILeaYZtRZXYg7uUAd8AzU5dOpI0I2IRz2fxOdRmWXMzBYQ==
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-To: Paul Burton <paulburton@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	linux-mips@vger.kernel.org,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Vladimir  Kondratiev <vladimir.kondratiev@mobileye.com>,
-	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	=?UTF-8?q?Th=C3=A9o=20Lebrun?= <theo.lebrun@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH v8 10/14] MIPS: mobileye: Add EyeQ5 dtsi
-Date: Fri, 16 Feb 2024 18:42:19 +0100
-Message-ID: <20240216174227.409400-11-gregory.clement@bootlin.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240216174227.409400-1-gregory.clement@bootlin.com>
-References: <20240216174227.409400-1-gregory.clement@bootlin.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SMRttiIk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708105441; x=1739641441;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Vp2sP+hVGRaYxsIsbYmPQbJHb9mX+CXXwxtXpLpfDOI=;
+  b=SMRttiIk+3P/Erl9tgM13gL/PMk1RXtp0d8f9hIDFPGjNWdFtz5s6XUT
+   dvCWFxjAg5oyn4mEFcKTXoG+BERY8gD5IHP/3TPIn7czBUlOsY9Z4QpXE
+   ZriiQKgv6iE73LT8k6lQ6qbUgaIQMqDwl1RBksae8Eo+oUtNJDINfMml9
+   uUVkNMvZjjOMDZEpQAhKUp7/k+Rj9HA88GBhdassr8dtkOYFyA9rgzONe
+   l3X1z1qv5/f0ZjJJsZKim9hNtff/4JwO7diqKPHfZz9nWu4sgSFkJzGeh
+   +0NXQ2XjgSqc5HJf9GymDSVyR7Ig/kU7EyntLT9z2klAQ1xRp0hTDRFRm
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10986"; a="6052116"
+X-IronPort-AV: E=Sophos;i="6.06,165,1705392000"; 
+   d="scan'208";a="6052116"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 09:44:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,165,1705392000"; 
+   d="scan'208";a="4253874"
+Received: from pclear1x-mobl.ger.corp.intel.com (HELO [10.213.230.254]) ([10.213.230.254])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 09:43:57 -0800
+Message-ID: <cfe1870f-16ff-45b4-8966-6bb536d3cae7@linux.intel.com>
+Date: Fri, 16 Feb 2024 17:43:54 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/1] Always record job cycle and timestamp information
+Content-Language: en-US
+To: Daniel Vetter <daniel@ffwll.ch>, Steven Price <steven.price@arm.com>,
+ Lionel Landwerlin <lionel.g.landwerlin@linux.intel.com>
+Cc: =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Rob Herring <robh@kernel.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+References: <20240214121435.3813983-1-adrian.larumbe@collabora.com>
+ <ba987da3-b4aa-410c-95ae-434e94793d85@arm.com>
+ <CAKMK7uH=QKSyMgsOYCHMwE7iv6jQZRwUMcKq=HiXsBXBCv5BCQ@mail.gmail.com>
+From: Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
+Organization: Intel Corporation UK Plc
+In-Reply-To: <CAKMK7uH=QKSyMgsOYCHMwE7iv6jQZRwUMcKq=HiXsBXBCv5BCQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: gregory.clement@bootlin.com
 
-Add a device tree include file for the Mobileye EyeQ5 SoC.
 
-Based on the work of Slava Samsonov <stanislav.samsonov@intel.com>
+On 16/02/2024 16:57, Daniel Vetter wrote:
+> On Wed, Feb 14, 2024 at 01:52:05PM +0000, Steven Price wrote:
+>> Hi Adrián,
+>>
+>> On 14/02/2024 12:14, Adrián Larumbe wrote:
+>>> A driver user expressed interest in being able to access engine usage stats
+>>> through fdinfo when debugfs is not built into their kernel. In the current
+>>> implementation, this wasn't possible, because it was assumed even for
+>>> inflight jobs enabling the cycle counter and timestamp registers would
+>>> incur in additional power consumption, so both were kept disabled until
+>>> toggled through debugfs.
+>>>
+>>> A second read of the TRM made me think otherwise, but this is something
+>>> that would be best clarified by someone from ARM's side.
+>>
+>> I'm afraid I can't give a definitive answer. This will probably vary
+>> depending on implementation. The command register enables/disables
+>> "propagation" of the cycle/timestamp values. This propagation will cost
+>> some power (gates are getting toggled) but whether that power is
+>> completely in the noise of the GPU as a whole I can't say.
+>>
+>> The out-of-tree kbase driver only enables the counters for jobs
+>> explicitly marked (BASE_JD_REQ_PERMON) or due to an explicit connection
+>> from a profiler.
+>>
+>> I'd be happier moving the debugfs file to sysfs rather than assuming
+>> that the power consumption is small enough for all platforms.
+>>
+>> Ideally we'd have some sort of kernel interface for a profiler to inform
+>> the kernel what it is interested in, but I can't immediately see how to
+>> make that useful across different drivers. kbase's profiling support is
+>> great with our profiling tools, but there's a very strong connection
+>> between the two.
+> 
+> Yeah I'm not sure whether a magic (worse probably per-driver massively
+> different) file in sysfs is needed to enable gpu perf monitoring stats in
+> fdinfo.
+> 
+> I get that we do have a bit a gap because the linux perf pmu stuff is
+> global, and you want per-process, and there's kinda no per-process support
+> for perf stats for devices. But that's probably the direction we want to
+> go, not so much fdinfo. At least for hardware performance counters and
+> things like that.
+> 
+> Iirc the i915 pmu support had some integration for per-process support,
+> you might want to chat with Tvrtko for kernel side and Lionel for more
+> userspace side. At least if I'm not making a complete mess and my memory
+> is vaguely related to reality. Adding them both.
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
----
- arch/mips/boot/dts/Makefile                   |   1 +
- .../boot/dts/mobileye/eyeq5-fixed-clocks.dtsi | 292 ++++++++++++++++++
- arch/mips/boot/dts/mobileye/eyeq5.dtsi        | 124 ++++++++
- 3 files changed, 417 insertions(+)
- create mode 100644 arch/mips/boot/dts/mobileye/eyeq5-fixed-clocks.dtsi
- create mode 100644 arch/mips/boot/dts/mobileye/eyeq5.dtsi
+Yeah there are two separate things, i915 PMU and i915 Perf/OA.
 
-diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
-index 928f38a79dff9..efff87cb33a9e 100644
---- a/arch/mips/boot/dts/Makefile
-+++ b/arch/mips/boot/dts/Makefile
-@@ -8,6 +8,7 @@ subdir-$(CONFIG_LANTIQ)			+= lantiq
- subdir-$(CONFIG_MACH_LOONGSON64)	+= loongson
- subdir-$(CONFIG_SOC_VCOREIII)		+= mscc
- subdir-$(CONFIG_MIPS_MALTA)		+= mti
-+subdir-$(CONFIG_MACH_EYEQ5)		+= mobileye
- subdir-$(CONFIG_LEGACY_BOARD_SEAD3)	+= mti
- subdir-$(CONFIG_FIT_IMAGE_FDT_NI169445)	+= ni
- subdir-$(CONFIG_MACH_PIC32)		+= pic32
-diff --git a/arch/mips/boot/dts/mobileye/eyeq5-fixed-clocks.dtsi b/arch/mips/boot/dts/mobileye/eyeq5-fixed-clocks.dtsi
-new file mode 100644
-index 0000000000000..78f5533a95c67
---- /dev/null
-+++ b/arch/mips/boot/dts/mobileye/eyeq5-fixed-clocks.dtsi
-@@ -0,0 +1,292 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+/*
-+ * Copyright 2023 Mobileye Vision Technologies Ltd.
-+ */
-+
-+/ {
-+	/* Fixed clock */
-+	pll_cpu: pll-cpu {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <1500000000>;
-+	};
-+
-+	pll_vdi: pll-vdi {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <1280000000>;
-+	};
-+
-+	pll_per: pll-per {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <2000000000>;
-+	};
-+
-+	pll_ddr0: pll-ddr0 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <1857210000>;
-+	};
-+
-+	pll_ddr1: pll-ddr1 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <1857210000>;
-+	};
-+
-+/* PLL_CPU derivatives */
-+	occ_cpu: occ-cpu {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&pll_cpu>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+	};
-+	si_css0_ref_clk: si-css0-ref-clk { /* gate ClkRstGen_si_css0_ref */
-+		compatible = "fixed-factor-clock";
-+		clocks = <&occ_cpu>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+	};
-+	cpc_clk: cpc-clk {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&si_css0_ref_clk>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+	};
-+	core0_clk: core0-clk {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&si_css0_ref_clk>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+	};
-+	core1_clk: core1-clk {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&si_css0_ref_clk>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+	};
-+	core2_clk: core2-clk {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&si_css0_ref_clk>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+	};
-+	core3_clk: core3-clk {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&si_css0_ref_clk>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+	};
-+	cm_clk: cm-clk {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&si_css0_ref_clk>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+	};
-+	mem_clk: mem-clk {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&si_css0_ref_clk>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+	};
-+	occ_isram: occ-isram {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&pll_cpu>;
-+		#clock-cells = <0>;
-+		clock-div = <2>;
-+		clock-mult = <1>;
-+	};
-+	isram_clk: isram-clk { /* gate ClkRstGen_isram */
-+		compatible = "fixed-factor-clock";
-+		clocks = <&occ_isram>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+	};
-+	occ_dbu: occ-dbu {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&pll_cpu>;
-+		#clock-cells = <0>;
-+		clock-div = <10>;
-+		clock-mult = <1>;
-+	};
-+	si_dbu_tp_pclk: si-dbu-tp-pclk { /* gate ClkRstGen_dbu */
-+		compatible = "fixed-factor-clock";
-+		clocks = <&occ_dbu>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+	};
-+/* PLL_VDI derivatives */
-+	occ_vdi: occ-vdi {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&pll_vdi>;
-+		#clock-cells = <0>;
-+		clock-div = <2>;
-+		clock-mult = <1>;
-+	};
-+	vdi_clk: vdi-clk { /* gate ClkRstGen_vdi */
-+		compatible = "fixed-factor-clock";
-+		clocks = <&occ_vdi>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+	};
-+	occ_can_ser: occ-can-ser {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&pll_vdi>;
-+		#clock-cells = <0>;
-+		clock-div = <16>;
-+		clock-mult = <1>;
-+	};
-+	can_ser_clk: can-ser-clk { /* gate ClkRstGen_can_ser */
-+		compatible = "fixed-factor-clock";
-+		clocks = <&occ_can_ser>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+	};
-+	i2c_ser_clk: i2c-ser-clk {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&pll_vdi>;
-+		#clock-cells = <0>;
-+		clock-div = <20>;
-+		clock-mult = <1>;
-+	};
-+/* PLL_PER derivatives */
-+	occ_periph: occ-periph {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&pll_per>;
-+		#clock-cells = <0>;
-+		clock-div = <16>;
-+		clock-mult = <1>;
-+	};
-+	periph_clk: periph-clk {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&occ_periph>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+	};
-+	can_clk: can-clk {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&occ_periph>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+	};
-+	spi_clk: spi-clk {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&occ_periph>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+	};
-+	uart_clk: uart-clk {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&occ_periph>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+	};
-+	i2c_clk: i2c-clk {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&occ_periph>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+		clock-output-names = "i2c_clk";
-+	};
-+	timer_clk: timer-clk {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&occ_periph>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+		clock-output-names = "timer_clk";
-+	};
-+	gpio_clk: gpio-clk {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&occ_periph>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+		clock-output-names = "gpio_clk";
-+	};
-+	emmc_sys_clk: emmc-sys-clk {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&pll_per>;
-+		#clock-cells = <0>;
-+		clock-div = <10>;
-+		clock-mult = <1>;
-+		clock-output-names = "emmc_sys_clk";
-+	};
-+	ccf_ctrl_clk: ccf-ctrl-clk {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&pll_per>;
-+		#clock-cells = <0>;
-+		clock-div = <4>;
-+		clock-mult = <1>;
-+		clock-output-names = "ccf_ctrl_clk";
-+	};
-+	occ_mjpeg_core: occ-mjpeg-core {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&pll_per>;
-+		#clock-cells = <0>;
-+		clock-div = <2>;
-+		clock-mult = <1>;
-+		clock-output-names = "occ_mjpeg_core";
-+	};
-+	hsm_clk: hsm-clk { /* gate ClkRstGen_hsm */
-+		compatible = "fixed-factor-clock";
-+		clocks = <&occ_mjpeg_core>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+		clock-output-names = "hsm_clk";
-+	};
-+	mjpeg_core_clk: mjpeg-core-clk { /* gate ClkRstGen_mjpeg_gen */
-+		compatible = "fixed-factor-clock";
-+		clocks = <&occ_mjpeg_core>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+		clock-output-names = "mjpeg_core_clk";
-+	};
-+	fcmu_a_clk: fcmu-a-clk {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&pll_per>;
-+		#clock-cells = <0>;
-+		clock-div = <20>;
-+		clock-mult = <1>;
-+		clock-output-names = "fcmu_a_clk";
-+	};
-+	occ_pci_sys: occ-pci-sys {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&pll_per>;
-+		#clock-cells = <0>;
-+		clock-div = <8>;
-+		clock-mult = <1>;
-+		clock-output-names = "occ_pci_sys";
-+	};
-+	pclk: pclk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <250000000>;  /* 250MHz */
-+	};
-+	tsu_clk: tsu-clk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <125000000>;  /* 125MHz */
-+	};
-+};
-diff --git a/arch/mips/boot/dts/mobileye/eyeq5.dtsi b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-new file mode 100644
-index 0000000000000..6cc5980e2fa17
---- /dev/null
-+++ b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-@@ -0,0 +1,124 @@
-+// SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-+/*
-+* Copyright 2023 Mobileye Vision Technologies Ltd.
-+*/
-+
-+#include <dt-bindings/interrupt-controller/mips-gic.h>
-+
-+#include "eyeq5-fixed-clocks.dtsi"
-+
-+/ {
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "img,i6500";
-+			reg = <0>;
-+			clocks = <&core0_clk>;
-+		};
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		/* These reserved memory regions are also defined in bootmanager
-+		* for configuring inbound translation for BARS, don't change
-+		* these without syncing with bootmanager
-+		*/
-+		shmem0_reserved: shmem@804000000 {
-+			reg = <0x8 0x04000000 0x0 0x1000000>;
-+		};
-+		shmem1_reserved: shmem@805000000 {
-+			reg = <0x8 0x05000000 0x0 0x1000000>;
-+		};
-+		pci0_msi_reserved: pci0-msi@806000000 {
-+			reg = <0x8 0x06000000 0x0 0x100000>;
-+		};
-+		pci1_msi_reserved: pci1-msi@806100000 {
-+			reg = <0x8 0x06100000 0x0 0x100000>;
-+		};
-+
-+		mini_coredump0_reserved: mini-coredump0@806200000 {
-+			reg = <0x8 0x06200000 0x0 0x100000>;
-+		};
-+		mhm_reserved_0: the-mhm-reserved-0@0 {
-+			reg = <0x8 0x00000000 0x0 0x0000800>;
-+		};
-+	};
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
-+	};
-+
-+	cpu_intc: interrupt-controller {
-+		compatible = "mti,cpu-interrupt-controller";
-+		interrupt-controller;
-+		#address-cells = <0>;
-+		#interrupt-cells = <1>;
-+	};
-+
-+	soc: soc {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		compatible = "simple-bus";
-+
-+		uart0: serial@800000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0 0x800000 0x0 0x1000>;
-+			reg-io-width = <4>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SHARED 6 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks  = <&uart_clk>, <&occ_periph>;
-+			clock-names = "uartclk", "apb_pclk";
-+		};
-+
-+		uart1: serial@900000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0 0x900000 0x0 0x1000>;
-+			reg-io-width = <4>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SHARED 6 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks  = <&uart_clk>, <&occ_periph>;
-+			clock-names = "uartclk", "apb_pclk";
-+		};
-+
-+		uart2: serial@a00000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0 0xa00000 0x0 0x1000>;
-+			reg-io-width = <4>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SHARED 6 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks  = <&uart_clk>, <&occ_periph>;
-+			clock-names = "uartclk", "apb_pclk";
-+		};
-+
-+		gic: interrupt-controller@140000 {
-+			compatible = "mti,gic";
-+			reg = <0x0 0x140000 0x0 0x20000>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+
-+			/*
-+			* Declare the interrupt-parent even though the mti,gic
-+			* binding doesn't require it, such that the kernel can
-+			* figure out that cpu_intc is the root interrupt
-+			* controller & should be probed first.
-+			*/
-+			interrupt-parent = <&cpu_intc>;
-+
-+			timer {
-+				compatible = "mti,gic-timer";
-+				interrupts = <GIC_LOCAL 1 IRQ_TYPE_NONE>;
-+				clocks = <&core0_clk>;
-+			};
-+		};
-+	};
-+};
--- 
-2.43.0
+If my memory serves me right I indeed did have a per-process support for 
+i915 PMU implemented as an RFC (or at least a branch somewhere) some 
+years back. IIRC it only exposed the per engine GPU utilisation and did 
+not find it very useful versus the complexity. (I think it at least 
+required maintaining a map of drm clients per task.)
 
+Our more useful profiling is using a custom Perf/OA interface 
+(Observation Architecture) which is possibly similar to kbase mentioned 
+above. Why it is a custom interface is explained in a large comment on 
+top of i915_perf.c. Not sure if all of them still hold but on the 
+overall perf does not sound like the right fit for detailed GPU profiling.
+
+Also PMU drivers are very challenging to get the implementation right, 
+since locking model and atomicity requirements are quite demanding.
+
+ From my point of view, at least it is my initial thinking, if custom 
+per driver solutions are strongly not desired, it could be interesting 
+to look into whether there is enough commonality, in at least concepts, 
+to see if a new DRM level common but extensible API would be doable. 
+Even then it may be tricky to "extract" enough common code to justify it.
+
+Regards,
+
+Tvrtko
+
+> 
+> Cheers, Sima
+> 
+> 
+>>
+>> Steve
+>>
+>>> Adrián Larumbe (1):
+>>>    drm/panfrost: Always record job cycle and timestamp information
+>>>
+>>>   drivers/gpu/drm/panfrost/Makefile           |  2 --
+>>>   drivers/gpu/drm/panfrost/panfrost_debugfs.c | 21 ------------------
+>>>   drivers/gpu/drm/panfrost/panfrost_debugfs.h | 14 ------------
+>>>   drivers/gpu/drm/panfrost/panfrost_device.h  |  1 -
+>>>   drivers/gpu/drm/panfrost/panfrost_drv.c     |  5 -----
+>>>   drivers/gpu/drm/panfrost/panfrost_job.c     | 24 ++++++++-------------
+>>>   drivers/gpu/drm/panfrost/panfrost_job.h     |  1 -
+>>>   7 files changed, 9 insertions(+), 59 deletions(-)
+>>>   delete mode 100644 drivers/gpu/drm/panfrost/panfrost_debugfs.c
+>>>   delete mode 100644 drivers/gpu/drm/panfrost/panfrost_debugfs.h
+>>>
+>>>
+>>> base-commit: 6b1f93ea345947c94bf3a7a6e668a2acfd310918
+>>
+> 
+> --
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
