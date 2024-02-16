@@ -1,80 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92B912E74;
-	Fri, 16 Feb 2024 05:40:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A6F12E63;
+	Fri, 16 Feb 2024 05:42:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708062026; cv=none; b=UcJBqGHoozNLMKEsJwv6MtStUHA8AufmJ3FQkoVa67nOvJZ1Y2vG8e6HN9chCFLYMruyVBzrFRhNAPaDEpd5a9f4h4ial8cV+NFVf8bayfCcFwPB9A2XN+fPOsKjUNLyFhJ6CEBgHvKPbQ4JseHxD/rBDAXrhlPaNbuKihUye9s=
+	t=1708062157; cv=none; b=ZzDD1iW+s3ktkdWC/fos0Soj4YwqPWoaSkbSiEfcPjif+c3lKxYLd91rkAMvxg/IkTEd1AEmNY0qATtYs3WEH94DakFludnf2GPYXW4yutT3BTzuKxhOGMv00JulozO0HxaURk1X/VtbpnEvM0CbZiwWZ8hljv0dq1yREs1mJQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708062026; c=relaxed/simple;
-	bh=e0btg/nEkxmcE3ZWPeSYCuKrkKskM0N98V08CLYKCUc=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=h/jpNeHV33A2nAGlRLJ7oYL7pSarV8ySAmT5kJtX5BmTOb0Fov+e4bPQAR4hHNUXBkXZ7qAIyfJ4J2W6EZJW2sG/DEbw533W5vjOy809hv9DRpSJiTMybBSmqdOw4k8/ejxyZqnLsIeYcRdgwuKyNF6c3IpMoU6qPxqNU/wS/Mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ftaC8Y/L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708062157; c=relaxed/simple;
+	bh=cZ33RbXWRl7oeyYH20+M7tDKsle252OAe/cyfg297aE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RgmQMMgmDEVXW1PxHRYpTdD3NSLQ472zuvz5S11/bUtZ8iGkEwXjOotzooPBsGkjoot7NuMkqjVKBECSvPQrY4+w1C925Vy+HlSZFe3fF3OWct9qLRbiwR9dx+8f3+DJsqZaPhMsFsExE1QXfjBa1smmVvdBdp9SwdoNMj9M2L8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VVw0UCQo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ftaC8Y/L"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4A4A5C43390;
-	Fri, 16 Feb 2024 05:40:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VVw0UCQo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60732C433F1;
+	Fri, 16 Feb 2024 05:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708062025;
-	bh=e0btg/nEkxmcE3ZWPeSYCuKrkKskM0N98V08CLYKCUc=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ftaC8Y/L2MJLrxO8K3x9aCi1OcVZ7Q3iLr6Rkcoz9fyF61af8gnvcl+a2X7qUQ9QL
-	 tESdu5xDv0nFdcLSw3RpAxY6LEwZe71uwHyXmDBDIvPCexy1MuqRLF3c31PW1U27I0
-	 wpImsG8oxt4Ybc3i3qC8/zLkyU+wn1mKbtnWNZW8K2zhH6JlVBbStKzdNXoc/TlRf3
-	 oYj9K5iTV8Q2MkMozU3l1JdrqrDRTGmRkV3gVoKOlGUmjOqaJ4zHAU8VzYCMYb+J4J
-	 vun+yNgo6izH2PIIQi5X7ZXSEhnhutak5KqeWMLZa4J8mRkHEHoIfN4/obVUFx/9h8
-	 TPg+JqJdiCwtA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 26666D8C97D;
-	Fri, 16 Feb 2024 05:40:25 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1708062157;
+	bh=cZ33RbXWRl7oeyYH20+M7tDKsle252OAe/cyfg297aE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VVw0UCQoAkNFSoG6Wg5/BqtvlTSQRfaG+ZkZ4Gcbj0+b5x2KnR74ib/lPnfYYfNQv
+	 9ofAWa1Fg0WfQLtzVibadFijfwJDV8bnCxK9e4QkAWHktCaixQPt2bKwFwb3KPn5iT
+	 Cnj+7+9uphoOR4lAU4FyOBd+E20pbvWA1tOhhKXzfpvgNQ0NsNlNx5Og25M6fLoIoq
+	 zouKKe7XCB6EOT6mdzOBvU227WB/qoJzZroGpgk+7RNGWi8SHCUfUwpwYQLtxX6fOm
+	 2dqJdQyP3qNRJbCK/nZj0S+JZ0eiCoryqYVqFvXBKYSZUwRgKAuDVBciNGgdpmrVBL
+	 Rr1NpffmUgHOg==
+Date: Thu, 15 Feb 2024 21:42:35 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-tip-commits@vger.kernel.org, x86@kernel.org
+Subject: Re: [tip: x86/bugs] x86/retpoline: Ensure default return thunk isn't
+ used at runtime
+Message-ID: <20240216054235.ecpwuni2f3yphhuc@treble>
+References: <20231010171020.462211-4-david.kaplan@amd.com>
+ <170774721951.398.8999401565129728535.tip-bot2@tip-bot2>
+ <20240215032049.GA3944823@dev-arch.thelio-3990X>
+ <20240215155349.GBZc4zjaHn8hj6xOq3@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v2] net: dsa: remove OF-based MDIO bus
- registration from DSA core
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170806202514.18199.5277727035517778240.git-patchwork-notify@kernel.org>
-Date: Fri, 16 Feb 2024 05:40:25 +0000
-References: <20240213-for-netnext-dsa-mdio-bus-v2-1-0ff6f4823a9e@arinc9.com>
-In-Reply-To: <20240213-for-netnext-dsa-mdio-bus-v2-1-0ff6f4823a9e@arinc9.com>
-To: =?utf-8?b?QXLEsW7DpyDDnE5BTCB2aWEgQjQgUmVsYXkgPGRldm51bGwrYXJpbmMudW5hbC5h?=@ci.codeaurora.org,
-	=?utf-8?b?cmluYzkuY29tQGtlcm5lbC5vcmc+?=@ci.codeaurora.org
-Cc: andrew@lunn.ch, f.fainelli@gmail.com, olteanv@gmail.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- mithat.guner@xeront.com, erkin.bozoglu@xeront.com, luizluca@gmail.com,
- ALSI@bang-olufsen.dk, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- arinc.unal@arinc9.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240215155349.GBZc4zjaHn8hj6xOq3@fat_crate.local>
 
-Hello:
-
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Tue, 13 Feb 2024 10:29:05 +0300 you wrote:
-> From: Arınç ÜNAL <arinc.unal@arinc9.com>
+On Thu, Feb 15, 2024 at 04:53:49PM +0100, Borislav Petkov wrote:
+> I'd tend to look in Josh's direction as to say what would be the right
+> thing to do here and more specifically, where?
 > 
-> The code block under the "!ds->user_mii_bus && ds->ops->phy_read" check
-> under dsa_switch_setup() populates ds->user_mii_bus. The use of
-> ds->user_mii_bus is inappropriate when the MDIO bus of the switch is
-> described on the device tree [1].
+> We need to run objtool on the vdso objects which are *kernel* code.
+> I.e., that initcall thing. The vdso-image-64.c gets generated by vdso2c
+> and lands in arch/x86/entry/vdso/vdso-image-64.c, that's why objtool
+> hasn't seen it yet.
 > 
-> [...]
+> I mean, it is one initcall in the vdso, probably not that important and
+> if its return hasn't been patched, it won't be the end of the world but
+> still...
+> 
+> In any case, the patch works as advertized! :-)
 
-Here is the summary with links:
-  - [net-next,v2] net: dsa: remove OF-based MDIO bus registration from DSA core
-    https://git.kernel.org/netdev/net-next/c/ae94dc25fd73
+Right, the good news is this isn't a regression and the warning is
+working as designed.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+This should tell the build to invoke objtool on that file:
 
-
+diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+index b1b8dd1608f7..92d67379f570 100644
+--- a/arch/x86/entry/vdso/Makefile
++++ b/arch/x86/entry/vdso/Makefile
+@@ -36,6 +36,7 @@ UBSAN_SANITIZE_vma.o			:= y
+ KCSAN_SANITIZE_vma.o			:= y
+ OBJECT_FILES_NON_STANDARD_vma.o		:= n
+ OBJECT_FILES_NON_STANDARD_extable.o	:= n
++OBJECT_FILES_NON_STANDARD_vdso-image-64.o := n
+ 
+ # vDSO images to build
+ vdso_img-$(VDSO64-y)		+= 64
