@@ -1,129 +1,169 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA8F1BC31;
-	Fri, 16 Feb 2024 08:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9FA1862F
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 09:00:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708073919; cv=none; b=XyqaNTqcsYspObpD6dkmcI6EM4oiorhdVWWDW5eDzVWbqOYKDzdhdbeX1GGelDQr8xFipA56vl6HOxIBZwjN/ANFoRz8Jgq9uyVCGZfiwBLHWBllVXPvmh2OCjugmUXlpYiWSDlGL9i53o7nr4ZGVMJWlYmTcvJCiORy48PrgJc=
+	t=1708074026; cv=none; b=m3++tX3T/yO8RpHlOrHdiJfUeKsDAFJAmGY+FFMkbnDC9TF8KKFA+hXnJm4PKOGUU/nIU9XdO6JSz6wMaabyM57UxUK5zlFnzpmBlZFJYUvbg9RBKL4UyOEUAg6UIk3/GM2d5auMHLoGt3DHeuVh9vNAoTKcmbCvfEHr3wyGLNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708073919; c=relaxed/simple;
-	bh=eEtVCkbL1zLpF1IuJ2P51hMpCC9ce5VcXTMVCrOozwE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WrQdu1C1L5UeDkSkqXKhhyDd+1aeQGqMa2B/xKd/0irGpSOLnu5JF5X4kd5wB/HYgD8pELSFxLq3paitNcyR/p8bn64JsCPCgQLOHmWw4c9SrPxoRlUDI5nZXoRPPgTKwBMxeHGX2KJbrJFPqOoLMLyKb3bGYFHvvDDOPl3OXZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=By0CxpoX; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1708074026; c=relaxed/simple;
+	bh=SkPF05zi1FFkC5mvRTPYwqGozbga3ft2n9Q6OzdOph0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MOOcjrIwjsx0lwdNqllbpJJjsCwkbI4LuOUce3TNcL7GNYmtwjSE6CgfhPOfWkWy2/3rrsqXlCCG/wvEJLZJjtIn8lz949bGnDrzPiYSK3ev7ZvS5CIdUkc3WLpxk0n1AgbBgebkeTMNF3n8+XmAb/o3sRtPyvkePfafmxrp4VU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=YCzORuYA; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="By0CxpoX"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2C6FCFF802;
-	Fri, 16 Feb 2024 08:58:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708073914;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CiS06Ba9lRype48ky6kOoEGXIXSDOLtm/1ZqevNezdI=;
-	b=By0CxpoXwlqrQa7QSSS1EBd0TrZt65BWnSkr4Wu2tU2J8bmvJds7j8FGPEV6b1V7qImpKR
-	F47MRVR7q0Iqxj0rR9SfxvwRbMWAt77IIi3ZdAyLeYPGKSvH/ATcj17q1Y3MnzZWE9gbBN
-	T0LKqYZkJYBc+nBHLaSEipLnuBUXcuNk1paQikZzX3SHUnr6JSgHl42X+XgcZKIG9rfKi+
-	JwkzlGtlB1Ye+HU0cFWVy1VsZnmEpgroVBIdWJfHZfd229YJH0Z5WsH/1aXTiHr45w99oB
-	MJRkqBFcgy5XzDMr28umn6GWNDUufWG0LElKab4rT3ygvO7y07Ffe+GFnWLY1g==
-Date: Fri, 16 Feb 2024 09:58:29 +0100
-From: =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Luis Chamberlain
- <mcgrof@kernel.org>, "David S. Miller" <davem@davemloft.net>, Jonathan
- Corbet <corbet@lwn.net>, netdev@vger.kernel.org, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Russell King <linux@armlinux.org.uk>,
- devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Dent Project
- <dentproject@linuxfoundation.org>, Heiner Kallweit <hkallweit1@gmail.com>,
- Frank Rowand <frowand.list@gmail.com>, Mark Brown <broonie@kernel.org>,
- Oleksij Rempel <o.rempel@pengutronix.de>, Russ Weight
- <russ.weight@linux.dev>, Eric Dumazet <edumazet@google.com>, "Rafael J.
- Wysocki" <rafael@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Jakub Kicinski
- <kuba@kernel.org>
-Subject: Re: [PATCH net-next v4 11/17] dt-bindings: net: pse-pd: Add another
- way of describing several PSE PIs
-Message-ID: <20240216095829.44b8797f@kmaincent-XPS-13-7390>
-In-Reply-To: <20240216095616.3300aef3@kmaincent-XPS-13-7390>
-References: <20240215-feature_poe-v4-0-35bb4c23266c@bootlin.com>
-	<20240215-feature_poe-v4-11-35bb4c23266c@bootlin.com>
-	<170802277529.323906.8697693998570251856.robh@kernel.org>
-	<20240216095616.3300aef3@kmaincent-XPS-13-7390>
-Organization: bootlin
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="YCzORuYA"
+Received: from [192.168.88.20] (91-154-35-128.elisa-laajakaista.fi [91.154.35.128])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 56387564;
+	Fri, 16 Feb 2024 10:00:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1708074017;
+	bh=SkPF05zi1FFkC5mvRTPYwqGozbga3ft2n9Q6OzdOph0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YCzORuYAlZghv2vuK2qntd9dZivp26YGwNW4MEzYH6S7cjxtTmaFtqrx7WskQR7Pa
+	 YdbAqY4gN4QCDEqsJNsF6eWW3x89tjVVwFTdboNIIVNr0J9/Axlrck25Ds7xdYuDbC
+	 1vuKzmF2zc9fpnu+sYzC9oJWHvr87DgFv8BOeK3o=
+Message-ID: <263c5e9b-d6fb-41a8-9d8a-84ea49eef51c@ideasonboard.com>
+Date: Fri, 16 Feb 2024 11:00:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: kory.maincent@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] drm/tidss: Fix initial plane zpos values
+Content-Language: en-US
+To: Daniel Stone <daniel@fooishbar.org>,
+ Marius Vlad <marius.vlad@collabora.com>
+Cc: Pekka Paalanen <pekka.paalanen@haloniitty.fi>,
+ Jyri Sarha <jyri.sarha@iki.fi>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Sam Ravnborg <sam@ravnborg.org>, Devarsh Thakkar <devarsht@ti.com>,
+ Aradhya Bhatia <a-bhatia1@ti.com>, Francesco Dolcini <francesco@dolcini.it>,
+ Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org,
+ "wayland-devel@lists.freedesktop.org" <wayland-devel@lists.freedesktop.org>,
+ Randolph Sapp <rs@ti.com>
+References: <20240213-tidss-fixes-v1-0-d709e8dfa505@ideasonboard.com>
+ <20240213-tidss-fixes-v1-1-d709e8dfa505@ideasonboard.com>
+ <20240213110440.13af335a@eldfell>
+ <bb8089cd-2a57-4ed0-a8bd-2140a89b0887@ideasonboard.com>
+ <ZctCCCJORdDEaDl1@xpredator>
+ <CAPj87rPpdOQLLu5oGVfqDUh0_j9NXqc3XgZe5=tcOzUfVoeeqg@mail.gmail.com>
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <CAPj87rPpdOQLLu5oGVfqDUh0_j9NXqc3XgZe5=tcOzUfVoeeqg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 16 Feb 2024 09:56:16 +0100
-K=C3=B6ry Maincent <kory.maincent@bootlin.com> wrote:
+Hi,
 
-> On Thu, 15 Feb 2024 12:46:16 -0600
-> Rob Herring <robh@kernel.org> wrote:
->=20
-> > On Thu, 15 Feb 2024 17:02:52 +0100, Kory Maincent wrote: =20
-> > > PSE PI setup may encompass multiple PSE controllers or auxiliary circ=
-uits
-> > > that collectively manage power delivery to one Ethernet port.
-> > > Such configurations might support a range of PoE standards and require
-> > > the capability to dynamically configure power delivery based on the
-> > > operational mode (e.g., PoE2 versus PoE4) or specific requirements of
-> > > connected devices. In these instances, a dedicated PSE PI node becomes
-> > > essential for accurately documenting the system architecture. This no=
-de
-> > > would serve to detail the interactions between different PSE controll=
-ers,
-> > > the support for various PoE modes, and any additional logic required =
-to
-> > > coordinate power delivery across the network infrastructure.
-> > >=20
-> > > The old usage of "#pse-cells" is unsuficient as it carries only the P=
-SE PI
-> > > index information.
-> > >=20
-> > > This patch is sponsored by Dent Project <dentproject@linuxfoundation.=
-org>.
-> > >=20
-> > > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-> > > ---
-> > >=20
-> > > Changes in v3:
-> > > - New patch
-> > >=20
-> > > Changes in v4:
-> > > - Remove $def
-> > > - Fix pairset-names item list
-> > > - Upgrade few properties description
-> > > - Update the commit message
-> > > ---
-> > >  .../bindings/net/pse-pd/pse-controller.yaml        | 84
-> > > +++++++++++++++++++++- 1 file changed, 81 insertions(+), 3 deletions(=
--)
-> > >    =20
-> >=20
-> > My bot found errors running 'make DT_CHECKER_FLAGS=3D-m dt_binding_chec=
-k'
-> > on your patch (DT_CHECKER_FLAGS is new in v5.13): =20
->=20
-> Weird, I don't get your errors even with dt-schema up to date.
-> Maybe I have version mismatch in other tools.
+On 13/02/2024 13:39, Daniel Stone wrote:
+> Hi,
+> 
+> On Tue, 13 Feb 2024 at 10:18, Marius Vlad <marius.vlad@collabora.com> wrote:
+>> On Tue, Feb 13, 2024 at 11:57:59AM +0200, Tomi Valkeinen wrote:
+>>> I haven't. I'm quite unfamiliar with Weston, and Randolph from TI (cc'd) has
+>>> been working on the Weston side of things. I also don't know if there's
+>>> something TI specific here, as the use case is with non-mainline GPU drivers
+>>> and non-mainline Mesa. I should have been a bit clearer in the patch
+>>> description, as I didn't mean that upstream Weston has a bug (maybe it has,
+>>> maybe it has not).
+> 
+> Don't worry about it. We've had bugs in the past and I'm sure we'll
+> have more. :) Either way, it's definitely better to have the kernel
+> expose sensible behaviour rather than weird workarounds, unless
+> they've been around for so long that they're basically baked into ABI.
 
-Ah found it! I had yamllint not up to date.
-Sorry for the noise.
+Yeah, that's always a worry. I do hope that no user of tidss expects the 
+plane zpos values to be the current funny ones. But we'll probably find 
+out when I merge this =).
 
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+>>> The issue seen is that when Weston decides to use DRM planes for
+>>> composition, the plane zpositions are not configured correctly (or at all?).
+>>> Afaics, this leads to e.g. weston showing a window with a DRM "overlay"
+>>> plane that is behind the "primary" root plane, so the window is not visible.
+>>> And as Weston thinks that the area supposedly covered by the overlay plane
+>>> does not need to be rendered on the root plane, there are also artifacts on
+>>> that area.
+>>>
+>>> Also, the Weston I used is a bit older one (10.0.1), as I needed to go back
+>>> in my buildroot versions to get all that non-mainline GPU stuff compiled and
+>>> working. A more recent Weston may behave differently.
+>>
+>> Right after Weston 10, we had a few minor changes related to the
+>> zpos-sorting list of planes and how we parse the plan list without having
+>> a temporary zpos ordered list to pick planes from.
+>>
+>> And there's another fix for missing out to set out the zpos for scanout
+>> to the minimum available - which seems like a good candidate to explain
+>> what happens in the issue described above. So if trying Weston again,
+>> please try with at least Weston 12, which should have those changes
+>> in.
+> 
+> Specifically, you probably want commits 4cde507be6a1 and 58dde0e0c000.
+> I think the window of breakage was small enough that - assuming either
+> those commits or an upgrade to Weston 12/13 fixes it - we can just ask
+> people to upgrade to a fixed Weston.
+> 
+>>> Presuming this is not related to any TI specific code, I guess it's a
+>>> regression in the sense that at some point Weston added the support to use
+>>> planes for composition, so previously with only a single plane per display
+>>> there was no issue.
+> 
+> That point was 12 years ago, so not that novel. ;)
+
+Hmm, so do I understand it right, the plane code from 12 years back 
+supposedly works ok, but somewhere around Weston 10 something broke, but 
+was fixed with the commits you mention above?
+
+  Tomi
+
