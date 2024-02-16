@@ -1,128 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F21812BEA5;
-	Fri, 16 Feb 2024 13:58:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 713E612C7E4;
+	Fri, 16 Feb 2024 13:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708091905; cv=none; b=IzYjzDZqxZPm+phJlXWJtMDAp6scWcxFqJ70jKHt7riSjFvWlHTwMthmzqSOMhr5Rzu+C6MAoYE2c8IhWc24jIYWewxCNz2xF54FY9QIPbE5mtoQlOs1V1LCLaipS2YapD5GJw14ZXncLe+kDK+4cvy+Nu+MpqTu0Ddjv+8c6P8=
+	t=1708091910; cv=none; b=FAGuBJK3xKKIcabi5ybkRkjN31OHO+T9WvKOnMsxMWjaYjuJoF32uAd03C6qXNt2FGZsaIt4+YNQUZegv+ywmvCssWOhg1QAe6NJLqflzpSvqIUDw0CnQerISCSFns8qKWiObIEP30i38m94tEMc0FTHy4YN4xSAu1BrHbm0/CI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708091905; c=relaxed/simple;
-	bh=CB4g2cCQgiWIC67i2T4tPOsa8k0vlzMP7TVNg5Oz1j0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UsETvJAPxoGYsb+SGcE+B70gYejNl6vZ8/cKZ72hQItyaGN87wbBB0NsqNXECVQKFXDy3ql3iPq75LcMWenRPbTkfMvH1NnkOmokIfcnPKo/Ca+99neRxmp/x7xVSAHVb0c8aN0byDHOIxYVnfnkf6bucUClBcQ5y5fGnzwszwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OK6FDq9M; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OK6FDq9M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 059D3C43390;
-	Fri, 16 Feb 2024 13:58:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708091904;
-	bh=CB4g2cCQgiWIC67i2T4tPOsa8k0vlzMP7TVNg5Oz1j0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=OK6FDq9MAY2HkAu8eJYLHeP1oEYKKgwKmwlZtUdkddD5wg3cTXrlDcJ7Vc5NknZkL
-	 0WNZbEyZORYkCs15IgQz0jJtCsevneOIyksZzepmPHoA1MUo3XafKc9RmWAL/ORHJJ
-	 qBoUfRJF3/iyO+hpqSEcJ4STBX6RFDCeGtdzBsVW5rCNQbbufyepzcG4BbiWNfj1TC
-	 WV8lYFOy02aHz7IsofjHhYfs/8+6LHLDvYw4YavFgcr0MnnUWwzzRofcGUsHRsXt8Q
-	 sih2MhPmf/LtBnYITHTWTGIIt3RESfARRtWd0mDGqq66oB9aCdaMMJikhTO/PWhtq/
-	 W/c89UIesdFcw==
-Date: Fri, 16 Feb 2024 13:58:12 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lars-Peter Clausen
- <lars@metafoo.de>, linux-kernel@vger.kernel.org, David Laight
- <David.Laight@aculab.com>, Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>,
- linux-iio@vger.kernel.org
-Subject: Re: [RESEND PATCH v2] iio: gts-helper: Fix division loop
-Message-ID: <20240216135812.07c9b769@jic23-huawei>
-In-Reply-To: <Zcn-6e-0-nh2WcfU@drtxq0yyyyyyyyyyyyyby-3.rev.dnainternet.fi>
-References: <Zcn-6e-0-nh2WcfU@drtxq0yyyyyyyyyyyyyby-3.rev.dnainternet.fi>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1708091910; c=relaxed/simple;
+	bh=gvevfXqvHIBXNNVCKb7to6U/1T+JLO2BfiaVSk6KNlU=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=MuV5HspbMpk+SPjW9+o3UpIb+EPDGSckXdA9l5PxwFuq+ortgHsJZtQ5vMD4MUPVFMeE/65QLj1ur3sA7zcTrAhgdB8LwQt9rwXV/vedx8EGCictiVZMdorkcsKEiKnOcc0fIyvxHflLwLkuiytv0z4QiAOQJYibu1DKVG2GarA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id D6F5092009C; Fri, 16 Feb 2024 14:58:19 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id D051D92009B;
+	Fri, 16 Feb 2024 13:58:19 +0000 (GMT)
+Date: Fri, 16 Feb 2024 13:58:19 +0000 (GMT)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH 1/1] PCI: Cleanup link activation wait logic
+In-Reply-To: <ce73f41a-b529-726f-ee4e-9d0e0cee3320@linux.intel.com>
+Message-ID: <alpine.DEB.2.21.2402161349350.3971@angie.orcam.me.uk>
+References: <20240202134108.4096-1-ilpo.jarvinen@linux.intel.com> <alpine.DEB.2.21.2402021359450.15781@angie.orcam.me.uk> <ce73f41a-b529-726f-ee4e-9d0e0cee3320@linux.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-On Mon, 12 Feb 2024 13:20:09 +0200
-Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+On Fri, 16 Feb 2024, Ilpo Järvinen wrote:
 
-> The loop based 64bit division may run for a long time when dividend is a
-> lot bigger than the divider. Replace the division loop by the
-> div64_u64() which implementation may be significantly faster.
+> >  You change the logic here in that the second conditional isn't run if the 
+> > first has not.  This is wrong, unclamping is not supposed to rely on LBMS. 
+> > It is supposed to be always run and any failure has to be reported too, as 
+> > a retraining error.
 > 
-> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-> Fixes: 38416c28e168 ("iio: light: Add gain-time-scale helpers")
+> Now that (I think) I fully understand the intent of the second 
+> condition/block one additional question occurred to me.
 > 
-> ---
-> This is a resend. Only change is the base which is now the v6.8-rc4 and
-> not the v6.8-rc1
-Given I'm not rushing this in, it is going via my togreg tree, so the
-rebase wasn't really helpful (thankfully didn't stop it applying).
-Would have been fine to send a ping response to the first posting of it.
+> How is the 2nd condition even supposed to work in the current place when 
+> firmware has pre-arranged the 2.5GT/s resctriction? Wouldn't the link come 
+> up fine in that case and the quirk code is not called at all since the 
+> link came up successfully?
 
-I was leaving some time for David or Subhajit to have time to take
-another look, but guess they are either happy with this or busy.
+ The quirk is called unconditionally from `pci_device_add', so an attempt 
+to unclamp will always happen with a working link for qualifying devices.
 
-Applied to the togreg branch of iio.git and pushed out as testing for
-all the normal reasons.
+> Yet another thing in this quirk code I don't like is how it can leaves the 
+> target speed to 2.5GT/s when the quirk fails to get the link working 
+> (which actually does happen in the disconnection cases because DLLLA won't 
+> be set so the target speed will not be restored).
 
-Jonathan
+ I chose to leave the target speed at the most recent setting, because the 
+link doesn't work in that case anyway, so I concluded it doesn't matter, 
+but reduces messing with the device; technically you should retrain again 
+afterwards.  I'm not opposed to changing this if you have a use case.
 
-> 
-> This change was earlier applied and reverted as it confusingly lacked of
-> the removal of the overflow check (which is only needed when we do
-> looping "while (full > scale * (u64)tmp)". As this loop got removed, the
-> check got also obsolete and leaving it to the code caused some
-> confusion.
-> 
-> So, I marked this as a v2, where v1 is the reverted change discussed
-> here:
-> https://lore.kernel.org/linux-iio/ZZZ7pJBGkTdFFqiY@dc78bmyyyyyyyyyyyyydt-3.rev.dnainternet.fi/
-> 
-> Revision history:
-> v1 => v2:
->  - Drop the obsolete overflow check
->  - Rebased on top of the v6.8-rc4
-> 
-> iio: gts: loop fix fix
-> ---
->  drivers/iio/industrialio-gts-helper.c | 15 +--------------
->  1 file changed, 1 insertion(+), 14 deletions(-)
-> 
-> diff --git a/drivers/iio/industrialio-gts-helper.c b/drivers/iio/industrialio-gts-helper.c
-> index 7653261d2dc2..b51eb6cb766f 100644
-> --- a/drivers/iio/industrialio-gts-helper.c
-> +++ b/drivers/iio/industrialio-gts-helper.c
-> @@ -34,24 +34,11 @@
->  static int iio_gts_get_gain(const u64 max, const u64 scale)
->  {
->  	u64 full = max;
-> -	int tmp = 1;
->  
->  	if (scale > full || !scale)
->  		return -EINVAL;
->  
-> -	if (U64_MAX - full < scale) {
-> -		/* Risk of overflow */
-> -		if (full - scale < scale)
-> -			return 1;
-> -
-> -		full -= scale;
-> -		tmp++;
-> -	}
-> -
-> -	while (full > scale * (u64)tmp)
-> -		tmp++;
-> -
-> -	return tmp;
-> +	return div64_u64(full, scale);
->  }
->  
->  /**
-> 
-> base-commit: 841c35169323cd833294798e58b9bf63fa4fa1de
-
+  Maciej
