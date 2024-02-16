@@ -1,100 +1,107 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A314133287;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37ACB133298;
 	Fri, 16 Feb 2024 15:53:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708098793; cv=none; b=Ag5KM2zteVC4aU+CLH8EsaapTj51w6nLIw0739yiRdpiZ0NJpbmTLw5JN7UFaNOWGIB49diNaKTqPwz/pieCbxL8NDYb+xlsysVPkkvkZigVaye+GtdTgxb24HNTqnkmzxvhRvutRVetH58Fd7DwIcBDbH+wlKFyFK0WpWPBMSI=
+	t=1708098793; cv=none; b=Nd7K3ZMpMvPV9wd5DqEHyF7m8+omQAc6VCeRMGgqCZhKnXIgOKkCqPOK3UBxniCb2MFILHBUxGEtLKgS8tbeHbYoXeY7PFQu/7nW3kRnhd988wrBTxn6goWjmPaDmpaj3y3Y4/9tuM3TjWVKZ1pn5bVfPwz7dXex2iEwjos+xk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708098793; c=relaxed/simple;
-	bh=Qcp2uc+UUo36BOh1LCqqElt85kVpuM5XT+lI8HhHyio=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EDHTKhl9/FtR8onCH0vrS/qsZrP+7mE3Uk+tCnR/C3iBcYRdnXCwlClkyPi4/eV4btPUSosLvoswjJIYAyoUM5Te9nJKhh5Cl2JL+RuvmCgrwsb5zm//JUMS2v+26roOuDTNNQ6DeubTFLPuW8ULBINQCsVxn570IZExDSckxVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Sdru2HTo; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	bh=ETzxVU5TL7u3yOgl+fq2bk8/qmTAeHHWvLXY1JVcMm4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=n1uFory1NeEd1uYGixrpNO3hsUGPBJu/OgNUtnUFQNYVz1kASyspy9OQ3fSKy3bnVo9YiGY9dFt1o8N1LOMOVMZlNmmt4szxYtRh/ekO/w1rl6BetCxqV25r29HiFGB1wNxYnqS7We2XJyeewHOx3r2XbF8QnezxV6C+D6Wm0I0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ECy4aIFV; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Sdru2HTo"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4934F240007;
-	Fri, 16 Feb 2024 15:53:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708098789;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Fcclx+P2VRL5YyMqc19FLMrEZY/bn8QqcU/6ryhVROM=;
-	b=Sdru2HToC5w4SIlyVlPdFHMaouOsUH9ZYHKsGipSdGiEK1cKxcQEvQg97SCS+cxB+dwP7o
-	dmLxHVvkT4yPK7Q9agn1Mf4r+cy0n/acW+1Wvwkvv7Ddz3FD7tX6nZ9Qpk+AKXA+FGg5Ql
-	FDHZ1ku/r69gCOVvb1x4mwCjRG6nBEXJL2RSItuGAyUaMD+tUTxA3gEuhJQq/w0YdVsa94
-	GnpaQhQJCTEMHUh0/0FFuyDHt7GS6LpCupoIajybnLjvTPCUsjW0TYInZ8ZFSmZP/W7zIm
-	WVtu2gODgv2V5PzQ5iT8g2AmBxuDYr42bkunhXSiifsAETM1+XsRD3PriMbKaw==
-From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Fri, 16 Feb 2024 16:52:29 +0100
-Subject: [PATCH RFC net-next v8 11/13] net: macb: Convert to
- netdev_ptp_clock_register
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ECy4aIFV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708098791; x=1739634791;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=ETzxVU5TL7u3yOgl+fq2bk8/qmTAeHHWvLXY1JVcMm4=;
+  b=ECy4aIFVWmkqCWBchhdtU24tWMJBGIzZtosancRfm0fzYAuzjt4yKyBF
+   Ifqwgldp3hbSW2oQbnJ2OhrGvi7iRJk5LpnactuBAGrHOZVBd70h/MJTr
+   RzpOPHsYWwhmUIhT+Y5e7oeV+f/fNsXjYMP9ztxlS02kCG4vHnpE7aCam
+   cPOFZJyU/ziSJpkMYhwbB9brwzynQ6Al9nT9v4xgnELlTt2V/zAwD91Lw
+   W6YUkooVcJQbirGlA1os/WQlvK29I7NBQLAsycEDqrLiqOZay7/1gKv9t
+   /CtX1UHWf6l766RnNYgMDUCnwIBRrfC8zZBho/eaMUyE5bmzgAoqZqIz1
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10986"; a="13630527"
+X-IronPort-AV: E=Sophos;i="6.06,165,1705392000"; 
+   d="scan'208";a="13630527"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 07:53:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10986"; a="935862609"
+X-IronPort-AV: E=Sophos;i="6.06,165,1705392000"; 
+   d="scan'208";a="935862609"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 07:53:06 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rb0WN-000000055TF-2g31;
+	Fri, 16 Feb 2024 17:53:03 +0200
+Date: Fri, 16 Feb 2024 17:53:03 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mike Looijmans <mike.looijmans@topic.nl>, devicetree@vger.kernel.org,
+	linux-iio@vger.kernel.org
+Cc: Mike Looijmans <mike.looijmans@topic.nl>,
+	Arnd Bergmann <arnd@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Liam Beguin <liambeguin@gmail.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Maksim Kiselev <bigunclemax@gmail.com>,
+	Marcus Folkesson <marcus.folkesson@gmail.com>,
+	Marius Cristea <marius.cristea@microchip.com>,
+	Mark Brown <broonie@kernel.org>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Okan Sahin <okan.sahin@analog.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 2/2] iio: adc: ti-ads1298: Add driver
+Message-ID: <Zc-E3-MNe9dG9tdW@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240216-feature_ptp_netnext-v8-11-510f42f444fb@bootlin.com>
-References: <20240216-feature_ptp_netnext-v8-0-510f42f444fb@bootlin.com>
-In-Reply-To: <20240216-feature_ptp_netnext-v8-0-510f42f444fb@bootlin.com>
-To: Florian Fainelli <florian.fainelli@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Richard Cochran <richardcochran@gmail.com>, 
- Radu Pirea <radu-nicolae.pirea@oss.nxp.com>, 
- Jay Vosburgh <j.vosburgh@gmail.com>, Andy Gospodarek <andy@greyhouse.net>, 
- Nicolas Ferre <nicolas.ferre@microchip.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- Jonathan Corbet <corbet@lwn.net>, 
- Horatiu Vultur <horatiu.vultur@microchip.com>, UNGLinuxDriver@microchip.com, 
- Simon Horman <horms@kernel.org>, Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
- Maxime Chevallier <maxime.chevallier@bootlin.com>, 
- Rahul Rameshbabu <rrameshbabu@nvidia.com>, 
- Kory Maincent <kory.maincent@bootlin.com>
-X-Mailer: b4 0.12.4
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-The hardware registration clock for net device is now using
-netdev_ptp_clock_register to save the net_device pointer within the ptp
-clock xarray. Convert the macb driver to the new API.
+...
 
-Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
----
++	if (reset_gpio) {
++		/*
++		 * Deassert reset now that clock and power are active.
++		 * Minimum reset pulsewidth is 2 clock cycles.
++		 */
++		udelay(ADS1298_CLOCKS_TO_USECS(2));
 
-Change in v8:
-- New patch
----
- drivers/net/ethernet/cadence/macb_ptp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This is sleeping context and you are calling unsleeping function. I haven't
+checked the macro implementation and I have no idea what is the maximum it may
+give, but making code robust just use fsleep() call.
 
-diff --git a/drivers/net/ethernet/cadence/macb_ptp.c b/drivers/net/ethernet/cadence/macb_ptp.c
-index a63bf29c4fa8..50fa62a0ddc5 100644
---- a/drivers/net/ethernet/cadence/macb_ptp.c
-+++ b/drivers/net/ethernet/cadence/macb_ptp.c
-@@ -332,7 +332,7 @@ void gem_ptp_init(struct net_device *dev)
- 	bp->tsu_rate = bp->ptp_info->get_tsu_rate(bp);
- 	bp->ptp_clock_info.max_adj = bp->ptp_info->get_ptp_max_adj();
- 	gem_ptp_init_timer(bp);
--	bp->ptp_clock = ptp_clock_register(&bp->ptp_clock_info, &dev->dev);
-+	bp->ptp_clock = netdev_ptp_clock_register(&bp->ptp_clock_info, dev);
- 	if (IS_ERR(bp->ptp_clock)) {
- 		pr_err("ptp clock register failed: %ld\n",
- 			PTR_ERR(bp->ptp_clock));
++		gpiod_set_value_cansleep(reset_gpio, 0);
++	} else {
++		ret = ads1298_write_cmd(priv, ADS1298_CMD_RESET);
++		if (ret)
++			return dev_err_probe(dev, ret, "RESET failed\n");
++	}
++	/* Wait 18 clock cycles for reset command to complete */
++	udelay(ADS1298_CLOCKS_TO_USECS(18));
+
+Ditto.
+
+...
+
+If it's the only issue I think Jonathan can modify when applying
+(no new patch version would be needed).
 
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
