@@ -1,145 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D40E135A52;
-	Fri, 16 Feb 2024 20:27:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B687A139581;
+	Fri, 16 Feb 2024 20:27:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708115226; cv=none; b=JJidLRhl1XSyFegFlKrmzaX1XwSZWir4BsWTS0isnJYBwci2VYB6oLPeOtDzeS4LDaUVPbOgfYmj7Tmsxxq95/q3vdCh/W7le74IGk74LRrF0cMr38D6WfFdAOmb0ErsPEpbjZ3L5BgfSSD6MqbsenvcTiyNLP/k09yuQAChLeA=
+	t=1708115268; cv=none; b=gc6lorh1pbjYMAGRvVCyNasDiPDMSOlRUY6VCSGfZBpTgw14VNVjl/tHzVfUDbb8iXiWLjL6VeZGCbQBpwAQmhvEp+sp+EhBQk8S3D4tG4sxWR7nsB/oaq1W3FcgV3FgjBcuoSrJxoKWXEfVcjkUlQFKcnb4zNx2iTkflDBUge0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708115226; c=relaxed/simple;
-	bh=Bfl/Ng5CZItia0/GY+Hx1jAddMyPxQ6niSHRMQS6iz0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uJfqRSjw8j41KEPVczDGfSvKdeNhLWJfOb3VO1r0tBG9DDtUvi45vUQzheS3X2GYyrhbtD15ajvwwiWk4FRKBUuqwPYPDxtEnmWO/DBuk9KWA7KcJ6zKeST25AoDpsFjlHVaQ42A7XD736T5NtShiLdEX5QEF+QzjPBOE3pMpQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MOzfxLMO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708115268; c=relaxed/simple;
+	bh=5eEyyHxk59pCQy01eZ3kO5VsW0KLoSkpdsO63ghICCI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=T390rVYtQAA3egQVuY/vKiEKhPQrsA94z0arudBPiy7MuMq/bO1p/Ff2EZ16ouG57VZcJXLYaWmcYzwvZ5w4Mn5Z2Fp5SR36hUQcq2ogT6yLoHbcKzuigtnuwBKb06ZazmIzrV9200907fXRIDLAaEjSq6wkOrcROJigSaav/Do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C9s57z4z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MOzfxLMO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BDEFC433C7;
-	Fri, 16 Feb 2024 20:27:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C9s57z4z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2851C433F1;
+	Fri, 16 Feb 2024 20:27:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708115225;
-	bh=Bfl/Ng5CZItia0/GY+Hx1jAddMyPxQ6niSHRMQS6iz0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=MOzfxLMOHu6xQfc/ML3X8y0+mGW7q8Q4Y9CCiNbvf3OUYx1qXuEYbM8Yac6LN8z1j
-	 DnWiQMctxaeXmQW3sxZbQTB/kNQf6OhnPjKSpKkOnKKYrUsz0nH6Ug6EvKnevq+rHl
-	 3P6E4GRWLJGMW4YOmk6f+W75rTJQGEQairmG2BzUBXSLh7mfd7wr9KqrZF8XWbiFPR
-	 1omDWeCFRAomQBikiR9bvqeklK6VCDC2DWsZcHNMSNJKByGLYbsU5vacxOcZSEEpai
-	 eoRpBsDp4VNBNzspq8JLg4Xg9K5TLq/yf77TBxh74Cen8LqlQVZBHJK/IOTjrxSMJ6
-	 lQufX7ox0HfQQ==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Nathan Chancellor <nathan@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	Leon Romanovsky <leon@kernel.org>,
-	Lin Ma <linma@zju.edu.cn>,
-	Simon Horman <horms@kernel.org>,
-	Breno Leitao <leitao@debian.org>,
-	Tobias Brunner <tobias@strongswan.org>,
-	Raed Salem <raeds@nvidia.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH] [RFC] xfrm: work around a clang-19 fortifiy-string false-positive
-Date: Fri, 16 Feb 2024 21:26:40 +0100
-Message-Id: <20240216202657.2493685-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	s=k20201202; t=1708115268;
+	bh=5eEyyHxk59pCQy01eZ3kO5VsW0KLoSkpdsO63ghICCI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=C9s57z4zJYL3RMdj308R+wIz3APNia/JGof6uISu1wROuMciZ7P8Vay9YbMooG65R
+	 J6lSDiXezleXAH8A6OCkWOL0ex4QNEebSeFeZKQe5hcX5D7qVYderfXMEgNh8RHbpz
+	 iDiU1GohfAtHLV3qM1XU8IxzZEg+xROk6l1175YK5++Nq4dKT4fXIaR8eRsyzz5TuL
+	 I3GkKwTW2a80A1gqhM3cJerdLKakhddVtcqPXi2ZkYmns/0N9t6KgB0NsMpX67r8Q8
+	 8KVxW1btTlD6v1zkY/5aaJKWiCqHjltIVQkGNIV7m7xQpPGBRgpzMQwzyNqpUiB0v1
+	 yal9i8V8MyLJQ==
+Date: Fri, 16 Feb 2024 21:27:48 +0100 (CET)
+From: Jiri Kosina <jikos@kernel.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, corbet@lwn.net, 
+    workflows@vger.kernel.org, linux-doc@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, security@kernel.org, linux@leemhuis.info, 
+    Kees Cook <keescook@chromium.org>, 
+    Konstantin Ryabitsev <konstantin@linuxfoundation.org>, 
+    Krzysztof Kozlowski <krzk@kernel.org>, 
+    Lukas Bulwahn <lukas.bulwahn@gmail.com>, Sasha Levin <sashal@kernel.org>, 
+    Lee Jones <lee@kernel.org>
+Subject: Re: [PATCH v4] Documentation: Document the Linux Kernel CVE
+ process
+In-Reply-To: <20240216192625.o3q6m7cjgkwyfe4y@treble>
+Message-ID: <nycvar.YFH.7.76.2402162108370.21798@cbobk.fhfr.pm>
+References: <2024021500-laziness-grimace-ed80@gregkh> <20240216192625.o3q6m7cjgkwyfe4y@treble>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Fri, 16 Feb 2024, Josh Poimboeuf wrote:
 
-clang-19 recently got branched from clang-18 and is not yet released.
-The current version introduces exactly one new warning that I came
-across in randconfig testing, in the copy_to_user_tmpl() function:
+> - Not users of -stable since they already know they need to be on the
+>   latest version.
+> 
+> - Not distros or their users as it's just flooding them with low quality
+>   CVEs which have no analysis or scoring.
+> 
+> And enterprise distros will never be able to rebase onto -stable,
+> especially for older streams for which they have to be very selective,
+> in order to avoid destabilizing them.  As you say, "a bug is a bug".
 
-include/linux/fortify-string.h:420:4: error: call to '__write_overflow_field' declared with 'warning' attribute: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror,-Wattribute-warning]
-  420 |                         __write_overflow_field(p_size_field, size);
+Now that you have played the distro card (thanks!) here, let me just copy 
+my comment from LWN where someone suggested "well, it's easy, it's the job 
+of the [paid] distros to do the triage" ...
 
-I have not yet produced a minimized test case for it, but I have a
-local workaround, which avoids the memset() here by replacing it with
-an initializer.
+The problem is, that with this new system, paid distros are going to 
+suffer a big time (with no benefit to anybody at all). We'll have to put a 
+lot of productive and creative (upstream) work on hold in order to have 
+enough resources to sort out the havoc that LTS team is apparently going 
+to create by DoSing the world with a truckload of irrelevant CVEs.
 
-The memset is required to avoid leaking stack data to user space
-and was added in commit 1f86840f8977 ("xfrm_user: fix info leak in
-copy_to_user_tmpl()"). Simply changing the initializer to set all fields
-still risks leaking data in the padding between them, which the compiler
-is free to do here. To work around that problem, explicit padding fields
-have to get added as well.
-
-My first idea was that just adding the padding would avoid the warning
-as well, as the padding tends to confused the fortified string helpers,
-but it turns out that both changes are required here.
-
-Since this is a false positive, a better fix would likely be to
-fix the compiler.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- include/uapi/linux/xfrm.h | 3 +++
- net/xfrm/xfrm_user.c      | 3 +--
- 2 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/include/uapi/linux/xfrm.h b/include/uapi/linux/xfrm.h
-index 6a77328be114..99adac4fa648 100644
---- a/include/uapi/linux/xfrm.h
-+++ b/include/uapi/linux/xfrm.h
-@@ -27,6 +27,7 @@ struct xfrm_id {
- 	xfrm_address_t	daddr;
- 	__be32		spi;
- 	__u8		proto;
-+	__u8		__pad[3];
- };
- 
- struct xfrm_sec_ctx {
-@@ -242,11 +243,13 @@ struct xfrm_user_sec_ctx {
- struct xfrm_user_tmpl {
- 	struct xfrm_id		id;
- 	__u16			family;
-+	__u16			__pad1;
- 	xfrm_address_t		saddr;
- 	__u32			reqid;
- 	__u8			mode;
- 	__u8			share;
- 	__u8			optional;
-+	__u8			__pad2;
- 	__u32			aalgos;
- 	__u32			ealgos;
- 	__u32			calgos;
-diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
-index a5232dcfea46..e81f977e183c 100644
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -2011,7 +2011,7 @@ static int xfrm_add_policy(struct sk_buff *skb, struct nlmsghdr *nlh,
- 
- static int copy_to_user_tmpl(struct xfrm_policy *xp, struct sk_buff *skb)
- {
--	struct xfrm_user_tmpl vec[XFRM_MAX_DEPTH];
-+	struct xfrm_user_tmpl vec[XFRM_MAX_DEPTH] = {};
- 	int i;
- 
- 	if (xp->xfrm_nr == 0)
-@@ -2021,7 +2021,6 @@ static int copy_to_user_tmpl(struct xfrm_policy *xp, struct sk_buff *skb)
- 		struct xfrm_user_tmpl *up = &vec[i];
- 		struct xfrm_tmpl *kp = &xp->xfrm_vec[i];
- 
--		memset(up, 0, sizeof(*up));
- 		memcpy(&up->id, &kp->id, sizeof(up->id));
- 		up->family = kp->encap_family;
- 		memcpy(&up->saddr, &kp->saddr, sizeof(up->saddr));
 -- 
-2.39.2
+Jiri Kosina
+SUSE Labs
 
