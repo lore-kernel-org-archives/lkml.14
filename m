@@ -1,65 +1,59 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CF91B818
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 09:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5711B974
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 09:08:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708074482; cv=none; b=Y0zixR64JYwJDl0vPdwOdwbKuSGC6ifKvgNnLXYHo5YUMc7Ewgez1HssYVB82rQJ0ANivYBllt8GQlrtkNV7S5MvnFwfjL+yG35E45unUm+savjIoS/D673YQEPuKXGXGyUNqx7Vcp/CBdqwbk/vebQV3chzRSKHipJx4ll9TA8=
+	t=1708074491; cv=none; b=sxdzi8EV8+SepgGWOzUoiqKGIz30S+XtFGUUu7GoHisH4CdQuNtHtbFU8SRMbaH+6J2cnjggcAsdsywWUIqg9ebnB+2u400H6CHuSwCo4D/l0NOF1kvvtULChZ8HWHL1iv7J041/bfkbwW0mQK/JfSFHjlU5tFoENmHu6wmWwqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708074482; c=relaxed/simple;
-	bh=7J8pSL/32D94uVprNImCvGjjaFCv6Y80DkeF9Zb0ecc=;
+	s=arc-20240116; t=1708074491; c=relaxed/simple;
+	bh=oERm1l0ziZ/kArGwE/f98QL6u0Kyjehs1eDEGtkoX7Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bbSDLSO776JjnlmrcZub+2pxvIdprAqdYe1lxg/HfWoKNex2EUfKcon9b8l3n4dWhre8I49NjC9HI+EdvzONEG9QqQhSx3RWX8wHLfh9jcQxccJ6rEPkkBxlfdd6nQiQ9An/xyt4qV3NpDa2FcyJ0U7AiPA+eiDe+lBzRcOBMd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Fyj/55Yi; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=O/0gd/ZjZHX5AvfZeaxOFrv53HEKka+/M0vso9T50I0/BYY0ZV+vB/0B/d+AwQQr9MWN19GZpcDWwqNClsm25udNqhaT546YyrelxZHGao5X9AEODDBWxCcabd9uovcCGOgaqk5yvycaGiR0KK2gKS+FMXMDtdn280RQqnVrWFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=utrj9bXM; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fyj/55Yi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708074479;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=nZitMWe+tPaHyOlddPHAfwqLwys1/LvTwfEIL/HS1ek=;
-	b=Fyj/55YiXFZpzxsfIcAuphU54pnHpeCAjnAw3gWrobM5SV8igqriQb1qtJtu+PjCLVhv0l
-	2+NbVROZlBUqLmzwynBuTI/SEN6oUCWw/qq+EZEcwe7Fvi8HpQ5UjelmJV0kPAM148npUm
-	aWHmpRdq9SV2DscKsv5hzKVqjZC5arw=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-510-8-mlE5rCOhGR8kWAhFRcow-1; Fri, 16 Feb 2024 04:07:58 -0500
-X-MC-Unique: 8-mlE5rCOhGR8kWAhFRcow-1
-Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-51145df2a08so1016239e87.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 01:07:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="utrj9bXM"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-51147d0abd1so2036532e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 01:08:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1708074487; x=1708679287; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vA2DFFOFzcRyvxqcYVpsnM/x9YtF8fmooWYl5oGtBh0=;
+        b=utrj9bXMWNTLmIHcWDp4HIIw5cG8kY06kJr2XYOXj+cCQZSaqIjzqNJS7wEiunOOXX
+         LmPtqaVzBkAxwk3Z3LjiihgJ9YN1kItnHOob2Zl66XNYoRe2gq4TZ5IL4r5xCEAZY6/9
+         0IPmNvdANqW5mYYVCV9qJL4TA0jxo727u0qxT980HOJ54t98PPxdRjcla7TdiKdmaNmr
+         +vySs4pDylfG8wfscXJm0Gu9Z8HM2UN0lmBap/SGbWRfy1uoOkMBqgX18h9en+9bTzbw
+         h7sCMLziSvc1yhmNwko25+anmLK07i2ZBPNiQlOBtjWMV5se24jomPuHn5sUJ9O/xLW2
+         kB6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708074476; x=1708679276;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nZitMWe+tPaHyOlddPHAfwqLwys1/LvTwfEIL/HS1ek=;
-        b=wJVJGYRaObyJ9Tv5fneUECgGGNDZXTkL8IiWRTiZv7VfeamwyXS4yXZKBF7tvtCByF
-         RrPtTtEvWi5neRIevXQnMxapzJEHOPKWGxJFWjrdg+QK6TGaqbpcnivG/5buWw35/kTe
-         fZ1/NXZJFEXeT9s7Ejy7puDpBNRglcUlRhO4skAokBjgX6rLOpsDxxN7WDJvjJIvvhgP
-         i4wMpaapdGzDkf7P3Xau444LVsPptEE7vIOE/wMVRmvZEGY63oiy2Yipm4fi7B2OVaGu
-         7IHwIHQYFwDZuWuH7xVWEt6hEzhQT+dToEDthSIuPbhWuR1zAYfj49sF/KeWdFy39cTP
-         GTEw==
-X-Gm-Message-State: AOJu0Yy89y3FjqERtO/8C97ZDNlfVoVqY1Q7PgHtGBpZ2h9pfyoXMfhK
-	ZrMNbxy2sy2SQmy8rMs9D+1f2aLrQ/9jg9as7GEjyk+G7/zAIv5sl4e7liqBc+FpvcXEkto/n1k
-	KvvpGulxjW75PE7r366EdvtSbIm2sdexcMply7+r2tVJzAa8KeJsgTZDjeh71Fg==
-X-Received: by 2002:a05:6512:3a85:b0:512:8482:a7e0 with SMTP id q5-20020a0565123a8500b005128482a7e0mr1633154lfu.33.1708074476628;
-        Fri, 16 Feb 2024 01:07:56 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFRmxUki7Suc5I/78almuAPevH2G9vaTICnUFr00lsv2dp2nHb7Tv9xubh64Vh932zCSKlWBQ==
-X-Received: by 2002:a05:6512:3a85:b0:512:8482:a7e0 with SMTP id q5-20020a0565123a8500b005128482a7e0mr1633137lfu.33.1708074476142;
-        Fri, 16 Feb 2024 01:07:56 -0800 (PST)
-Received: from ?IPV6:2003:d8:2f3c:3f00:7177:eb0c:d3d2:4b0e? (p200300d82f3c3f007177eb0cd3d24b0e.dip0.t-ipconnect.de. [2003:d8:2f3c:3f00:7177:eb0c:d3d2:4b0e])
-        by smtp.gmail.com with ESMTPSA id 20-20020ac24854000000b005115e1d1998sm543119lfy.59.2024.02.16.01.07.54
+        d=1e100.net; s=20230601; t=1708074487; x=1708679287;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vA2DFFOFzcRyvxqcYVpsnM/x9YtF8fmooWYl5oGtBh0=;
+        b=wIB0OvHIWl6KjKExh987QZfPd6/T3ptkg11uchUu3cdmxGEB69w2pRtZPg6Z0ZN5oz
+         vQM1fKWrFy9PiSn61KbbNyZNf2qlU5AQJwURipMW6weaQyfqUvXf93nQ0mbAl/dyUe5Q
+         /nVLMPnpWlf1tVlBf1uBzHS9KZum0dKF5S6p8jT9Tt1p6ur35XnPQ33njTP9gsOssVPF
+         1jCvG8Bk2566LRPG4sv2j7dsRlriViAlndgsid6/epVvOFlP36r4xazM4Kyxp7kBVEoF
+         OjS53ZFMGdMyqDtguskzEWmTiCWXC7OWoiFEXrpBPEKJA1LE2eSNc4LogUhvtXxn44Jh
+         CR1w==
+X-Forwarded-Encrypted: i=1; AJvYcCXzdrBhA7dgMH5ERW1RN/KwEy8wGUs7XlmWashTcuzcIQiL2U/BJ400FKlirqY+dkdfNgpk6wX5NIQ3DNXbNz426NI1Vtc3y35vGydp
+X-Gm-Message-State: AOJu0Yx3ixiXqQ/vOxEHs7HbTPHg9sL0IQ5ZSVrw3/2gDFy1E1xfC4r2
+	l/vKy7uXcy4X6hiAm8/ZUDh25y8ZHc+/HeAO431aPuVDitMpIQR4J+nNPaEOlh0=
+X-Google-Smtp-Source: AGHT+IGi+3vhNJtCp1mYtRx80UFnIA/8ta458vq75nKmQ6whOzZbmMoMt+v97FMnmJ6t/dByVPfZDw==
+X-Received: by 2002:a05:6512:124f:b0:512:8d8f:db7a with SMTP id fb15-20020a056512124f00b005128d8fdb7amr2294792lfb.65.1708074487376;
+        Fri, 16 Feb 2024 01:08:07 -0800 (PST)
+Received: from [192.168.1.70] ([84.102.31.43])
+        by smtp.gmail.com with ESMTPSA id f11-20020a0565123b0b00b005128ae41781sm462170lfv.253.2024.02.16.01.08.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Feb 2024 01:07:55 -0800 (PST)
-Message-ID: <b7fa4eb9-2659-4766-b8da-d6281f34a4ee@redhat.com>
-Date: Fri, 16 Feb 2024 10:07:53 +0100
+        Fri, 16 Feb 2024 01:08:06 -0800 (PST)
+Message-ID: <e13627e2-9d8f-437d-afe4-d8bfcade2f6a@baylibre.com>
+Date: Fri, 16 Feb 2024 10:08:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,135 +61,108 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] sched/numa, mm: do not promote folios to nodes not set
- N_MEMORY
-To: Byungchul Park <byungchul@sk.com>, mingo@redhat.com,
- peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- kernel_team@skhynix.com, akpm@linux-foundation.org
-References: <20240216073340.55404-1-byungchul@sk.com>
+Subject: Re: [RESEND PATCH v1 03/13] dt-bindings: mfd: ti,tps6594: Add TI
+ TPS65224 PMIC
 Content-Language: en-US
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240216073340.55404-1-byungchul@sk.com>
+To: Conor Dooley <conor@kernel.org>, Kevin Hilman <khilman@kernel.org>
+Cc: Bhargav Raviprakash <bhargav.r@ltts.com>, arnd@arndb.de,
+ broonie@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
+ gregkh@linuxfoundation.org, kristo@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, lee@kernel.org, lgirdwood@gmail.com,
+ linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ m.nirmaladevi@ltts.com, nm@ti.com, robh+dt@kernel.org, vigneshr@ti.com
+References: <20240209-blitz-fidgety-78469aa80d6d@spud>
+ <20240214093106.86483-1-bhargav.r@ltts.com>
+ <20240214-galley-dweller-1e9872229d80@spud> <7hil2r5556.fsf@baylibre.com>
+ <20240214-depraved-unfunded-3f0b3d6bf3e2@spud>
+From: Julien Panis <jpanis@baylibre.com>
+In-Reply-To: <20240214-depraved-unfunded-3f0b3d6bf3e2@spud>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 16.02.24 08:33, Byungchul Park wrote:
-> Changes from v1:
-> 	1. Trim the verbose oops in the commit message. (feedbacked by
-> 	   Phil Auld)
-> 	2. Rewrite a comment in code. (feedbacked by Phil Auld)
-> 
-> --->8---
->  From 6830b59db267a31b78f6f09af12ae0e3132b4bca Mon Sep 17 00:00:00 2001
-> From: Byungchul Park <byungchul@sk.com>
-> Date: Fri, 16 Feb 2024 16:26:23 +0900
-> Subject: [PATCH v2] sched/numa, mm: do not promote folios to nodes not set N_MEMORY
-> 
-> While running qemu with a configuration where some CPUs don't have their
-> local memory and with a kernel numa balancing on, the following oops has
-> been observed. It's because of null pointers of ->zone_pgdat of zones of
-> those nodes that are not initialized properly at booting time. So should
-> avoid nodes not set N_MEMORY from getting promoted.
-> 
->> BUG: unable to handle page fault for address: 00000000000033f3
->> #PF: supervisor read access in kernel mode
->> #PF: error_code(0x0000) - not-present page
->> PGD 0 P4D 0
->> Oops: 0000 [#1] PREEMPT SMP NOPTI
->> CPU: 2 PID: 895 Comm: masim Not tainted 6.6.0-dirty #255
->> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
->>     rel-1.16.0-0-gd239552ce722-prebuilt.qemu.org 04/01/2014
->> RIP: 0010:wakeup_kswapd (./linux/mm/vmscan.c:7812)
->> Code: (omitted)
->> RSP: 0000:ffffc90004257d58 EFLAGS: 00010286
->> RAX: ffffffffffffffff RBX: ffff88883fff0480 RCX: 0000000000000003
->> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88883fff0480
->> RBP: ffffffffffffffff R08: ff0003ffffffffff R09: ffffffffffffffff
->> R10: ffff888106c95540 R11: 0000000055555554 R12: 0000000000000003
->> R13: 0000000000000000 R14: 0000000000000000 R15: ffff88883fff0940
->> FS:  00007fc4b8124740(0000) GS:ffff888827c00000(0000) knlGS:0000000000000000
->> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> CR2: 00000000000033f3 CR3: 000000026cc08004 CR4: 0000000000770ee0
->> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->> PKRU: 55555554
->> Call Trace:
->>   <TASK>
->> ? __die
->> ? page_fault_oops
->> ? __pte_offset_map_lock
->> ? exc_page_fault
->> ? asm_exc_page_fault
->> ? wakeup_kswapd
->> migrate_misplaced_page
->> __handle_mm_fault
->> handle_mm_fault
->> do_user_addr_fault
->> exc_page_fault
->> asm_exc_page_fault
->> RIP: 0033:0x55b897ba0808
->> Code: (omitted)
->> RSP: 002b:00007ffeefa821a0 EFLAGS: 00010287
->> RAX: 000055b89983acd0 RBX: 00007ffeefa823f8 RCX: 000055b89983acd0
->> RDX: 00007fc2f8122010 RSI: 0000000000020000 RDI: 000055b89983acd0
->> RBP: 00007ffeefa821a0 R08: 0000000000000037 R09: 0000000000000075
->> R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000000
->> R13: 00007ffeefa82410 R14: 000055b897ba5dd8 R15: 00007fc4b8340000
->>   </TASK>
-> 
+On 2/14/24 18:45, Conor Dooley wrote:
+> On Wed, Feb 14, 2024 at 09:26:13AM -0800, Kevin Hilman wrote:
+>> Conor Dooley <conor@kernel.org> writes:
+>>> On Wed, Feb 14, 2024 at 03:01:06PM +0530, Bhargav Raviprakash wrote:
+>>>> On Fri 2/9/2024 10:41 PM, Conor Dooley wrote:
+>>>>> On Thu, Feb 08, 2024 at 04:23:33PM +0530, Bhargav Raviprakash wrote:
+>>>>>> TPS65224 is a Power Management IC with 4 Buck regulators and 3 LDO
+>>>>>> regulators, it includes additional features like GPIOs, watchdog, ESMs
+>>>>>> (Error Signal Monitor), and PFSM (Pre-configurable Finite State Machine)
+>>>>>> managing the state of the device.
+>>>>>> TPS6594 and TPS65224 have significant functional overlap.
+>>>>> What does "significant functional overlap" mean? Does one implement a
+>>>>> compatible subset of the other? I assume the answer is no, given there
+>>>>> seems to be some core looking registers at different addresses.
+>>>> The intention behind “significant functional overlap” was meant to
+>>>> indicate a lot of the features between TPS6594 and TPS65224 overlap,
+>>>> while there are some features specific to TPS65224.
+>>>> There is compatibility between the PMIC register maps, I2C, PFSM,
+>>>> and other drivers even though there are some core registers at
+>>>> different addresses.
+>>>>
+>>>> Would it be more appropriate to say the 2 devices are compatible and have
+>>>> sufficient feature overlap rather than significant functional overlap?
+>>> If core registers are at different addresses, then it is unlikely that
+>>> these devices are compatible.
+>> That's not necessarily true.  Hardware designers can sometimes be
+>> creative. :)
+> Hence "unlikely" in my mail :)
 
-This sounds like we need a Fixes: and want to CC stable?
+For tps6594 and tps65224, some core registers are at different adresses
+indeed, but the code is the same for both MFD I2C/SPI entry points. As an
+example, the way CRC is enabled is exactly the same, even if the bit that
+must be set belongs to different registers. tps65224 has more resources and
+it's as if HW designers had had to re-organize the way bits are distributed
+among the registers (due to a lack of space, so to speak).
 
--- 
-Cheers,
+That said, if we consider that these devices are not compatible, what does it
+imply concretely for the next version ? Does that mean that:
+1) Only a new binding must be created, even if MFD drivers and most of child
+drivers will be re-used ? (then the binding would simply be duplicated, but
+the drivers would not)
+2) A new binding and new MFD drivers must be created, even if most of child
+drivers will be re-used ? (then the binding and MFD drivers would simply be
+duplicated, but the child drivers would not)
+3) A new binding and new drivers (MFD and child devices) must be created ?
+4) Anything else ?
 
-David / dhildenb
+@Conor: I understand that it's not your problem. Anybody can answer, I just
+try to make things clear for the next version. :)
+
+Julien
+
+>
+>>> In this context, compatible means that existing software intended for
+>>> the 6594 would run without modification on the 65224, although maybe
+>>> only supporting a subset of features.  If that's not the case, then
+>>> the devices are not compatible.
+>> Compatible is a fuzzy term... so we need to get into the gray area.
+>>
+>> What's going on here is that this new part is derivative in many
+>> signifcant (but not all) ways from an existing similar part.  When
+>> writing drivers for new, derivative parts, there's always a choice
+>> between 1) extending the existing driver (using a new compatible string
+>> & match table for the diffs) or 2) creating a new driver which will have
+>> a bunch of duplicated code.
+>>
+>> The first verion of this series[1] took the 2nd approach, but due to the
+>> significant functional (and feature) overlap, the recommendation was
+>> instead to take the "reuse" path to avoid signficant amounts of
+>> duplicated code.
+>>
+>> Of course, it's possible that while going down the "reuse" path, there
+>> may be a point where creating a separate driver for some aspects might
+>> make sense, but that needs to be justified.  Based on a quick glance of
+>> what I see in this series so far (I have not done a detailed review),
+>> the differences with the new device look to me like they can be handled
+>> with chip-specific data in a match table.
+> This is all nice information, but not really relevant here - this is a
+> binding patch, not a driver one & the conversation stemmed from me
+> making sure that a fallback compatible was not suitable. Whether or not
+> there are multiple drivers or not is someone else's problem!
+>
+> Thanks,
+> Conor.
 
