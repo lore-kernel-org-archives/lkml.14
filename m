@@ -1,62 +1,55 @@
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8326145B03
-	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 21:45:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C0D145B03
+	for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 21:46:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708119957; cv=none; b=MX8og+tL6ByCBPvHLoX03ViOl5QHF+Is4nCVgf3ZxF2ApdtKK+VIewUa2Ifgenz7y9UGahaJ7M1AgWEWH+Mdhg9cmyOAxO8+Vieo8t/gm3dzrwEuQFBV3ltlg45GLACrqukoIG/SYWJqFo/AfMsDCrc7Tnd2gLPPBPpUe3P2mFw=
+	t=1708119968; cv=none; b=B2hi5D44jqn6gSUCe0hBsjzTGRMxjvxAOwFrCfTVYlmqLJstVtmRYz09bxsKkz8NdPV371qdT52fqa4Vfqwcd9KEHvsxbNz7NENItWCtvekfAI6JypRr86B5CKsebokHEDN3rvFvHAA4WolzLHuz5Xmnxwti5E+Vse8uphRU5ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708119957; c=relaxed/simple;
-	bh=sWcb4QWZQerF6dGRRf3Saf0ygsiHNPwWHpaQ0U2ubAU=;
+	s=arc-20240116; t=1708119968; c=relaxed/simple;
+	bh=o0ndNCuW/LGkSeAXqoK2Hh0K+6mw4AiIuP9CZwqmqZ4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fX4I3CKclvLx6zvzgu+G6bGjh1p7BOhBMfmN5CEqmkzMeJ2tAyGRr2uFS0orlcIpftJTslluvE3sStNf5kvv8qDKydWUYK+OvwItrEwYReB6NZ2hN/f+WjMHaPEuMuC03u1zEduLoydujOm4JE7GAxPaE3Kj4OoGcC5F5qy3rls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TdZbvg5k; arc=none smtp.client-ip=209.85.161.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=ewUN6hopgvzHh48GDypfjNR2hVnu/nwEEzaHG7AVYylA77n3g2K3QTBJJgA7NSuD/lVk9XhNt0AjAWtm8JN4hSpBSj1tkPvIe3kg/xqvHyoTV0nGJ5shBrbjnWltSAXbbpFZpcvIXky5IxwV9Prn7QOEZbzL5NB4XLyBvDWy+no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=Z0huVsDe; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TdZbvg5k"
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-59fa37c33dbso433769eaf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 13:45:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708119954; x=1708724754; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jksvwB5iTFy80QFc8o5j3z92gnehVl2fAGc//WCCKZg=;
-        b=TdZbvg5k1WzoSRChsZ8ZH0hIBJkpubl4faHGJBahsAR4Rn1FbSpuNIqXbeQxN+Lqv3
-         cl5u9EIsM6UTMHn1zhkGC3A8fvhn+6ZBQ0aSS07tZXNk8Ix1XkWGigxhdKpvhSubBrYd
-         irmgEFLSC+x384R3lGCtxIpLBrVn8qbSNCONA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708119954; x=1708724754;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jksvwB5iTFy80QFc8o5j3z92gnehVl2fAGc//WCCKZg=;
-        b=UAPsZyrq1C2wOQsLn/pL34w0vLZTWp7qANxvI+4cYnWJxyhS/qcN4gfISIVhySlVkf
-         g1MWFfP2c6W9z/XPoNmgxxZJgfoHrWDBSDHreTdkiJNAIycnhJ8Iv6w+lTpp24SMF5wo
-         2rydAPt57SEC9jjFGZdEOEKtc7ftPRblYpJx3aQMGnQpFfWPmknJT2jaOQdZa5K66fxy
-         mZb6gr5RBJpNKPhtcaZ/CC4xOdneEsQBalINwvIWBpg0a03BZ6z9Dm9WqhyCRSmgzxJn
-         axROuV3WPSeykq/kWsY9AT+7rzNTD+DlGi1KDrd2G3XS7AMDHAMPp7g5ohQ1J0MnvLvv
-         Ecvg==
-X-Forwarded-Encrypted: i=1; AJvYcCWmG+mtiT4xgzLVIG/lXoPOEwhN4MnTK3dh4scKJrqkxRXelPsexJWhzWlTWOJzKaPzDdKmQgxKnaaL1rpAQlxq6ju7kr99ExO6ml7j
-X-Gm-Message-State: AOJu0Ywhq3ivJhZ68v+g9vjrkYwGJ+9A/EyXcleWS6x62J0aoW1AuG00
-	IIxIF9WqjhAWgonyt9I2s5olbJ4Yld/UGbBmOejU3mKfwwd7i8LTVf7RVzMaMtH3fsQTG542y50
-	=
-X-Google-Smtp-Source: AGHT+IF9+vJFbk3kmtKKuYnkYafkp2Qrd9UzE5RWwOf99PqpIE62RSHCclH6Xu0D7RM+/Fd/EwCtzg==
-X-Received: by 2002:a05:6358:648b:b0:179:2136:9971 with SMTP id g11-20020a056358648b00b0017921369971mr6537867rwh.11.1708119953974;
-        Fri, 16 Feb 2024 13:45:53 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id b11-20020a6567cb000000b005dcbb855530sm296297pgs.76.2024.02.16.13.45.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 13:45:53 -0800 (PST)
-Date: Fri, 16 Feb 2024 13:45:52 -0800
-From: Kees Cook <keescook@chromium.org>
-To: "Gustavo A . R . Silva" <gustavoars@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fortify: Include more details when reporting overflows
-Message-ID: <202402161343.DC688FDB@keescook>
-References: <20240216203935.work.829-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="Z0huVsDe"
+Received: from cwcc.thunk.org (pool-173-48-116-68.bstnma.fios.verizon.net [173.48.116.68])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 41GLjLRn027258
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 Feb 2024 16:45:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1708119925; bh=qX3u18CRlr9QIqISpdJUxdSosa3u7KUTMQrg629TsYY=;
+	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
+	b=Z0huVsDeqd9GAdZu8WotBIJJhNJ7TRQBHuR0dYi51rt+y7Tb9Fr2zamV4RsUxNCDH
+	 hKaQiX3bjLkgl+FruGnCLynXeZ4NtqL1fiL84OVccG7/dtMxpVVsba3to8WcwyTyGr
+	 QOD/dzYfmyVqgGY7/P2iIpt0Vu3QmTQLETnqpuQLTqNUVGciJpAFwZkxjbEnqp6i4U
+	 WjF11+JfB+ZBM0AL8R7/U+R3q/sUDMILBXlIf90Fr7O4sG1G1Cqza9EB3ky0Pf+074
+	 odVEA7cSYStvHpU0EZkA8ECr2MkMNB2KJMk2FV5okZcb9lrAq1BCuMQu7gez9EvJvg
+	 cTtqws76t9BoA==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+	id BD7C415C0336; Fri, 16 Feb 2024 16:45:21 -0500 (EST)
+Date: Fri, 16 Feb 2024 16:45:21 -0500
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Jiri Kosina <jikos@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, corbet@lwn.net,
+        workflows@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, security@kernel.org, linux@leemhuis.info,
+        Kees Cook <keescook@chromium.org>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, Lee Jones <lee@kernel.org>
+Subject: Re: [PATCH v4] Documentation: Document the Linux Kernel CVE process
+Message-ID: <20240216214521.GC549270@mit.edu>
+References: <2024021500-laziness-grimace-ed80@gregkh>
+ <20240216192625.o3q6m7cjgkwyfe4y@treble>
+ <nycvar.YFH.7.76.2402162108370.21798@cbobk.fhfr.pm>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,37 +58,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240216203935.work.829-kees@kernel.org>
+In-Reply-To: <nycvar.YFH.7.76.2402162108370.21798@cbobk.fhfr.pm>
 
-On Fri, Feb 16, 2024 at 12:39:41PM -0800, Kees Cook wrote:
-> When a memcpy() would exceed the length of an entire structure, no
-> detailed WARN would be emitted, making debugging a bit more challenging.
-> Similarly, other buffer overflow reports would have no size information
-> reported.
->
-> Always warn for memcpy() overflows, but distinguish between the two
-> cases in the message before continuing (warn-only) or blocking the copy
-> (hard-fail). Additionally add size information to existing overflow
-> reports.
->
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+On Fri, Feb 16, 2024 at 09:27:48PM +0100, Jiri Kosina wrote:
+> 
+> Now that you have played the distro card (thanks!) here, let me just copy 
+> my comment from LWN where someone suggested "well, it's easy, it's the job 
+> of the [paid] distros to do the triage" ...
+> 
+> The problem is, that with this new system, paid distros are going to 
+> suffer a big time (with no benefit to anybody at all). We'll have to put a 
+> lot of productive and creative (upstream) work on hold in order to have 
+> enough resources to sort out the havoc that LTS team is apparently going 
+> to create by DoSing the world with a truckload of irrelevant CVEs.
 
-This will need a v2 ... something in my manipulations is triggering a
-bizarre warning in Clang:
+My observation is that the old system has had pretty low-quality
+CVE's, and worse, overly inflated CVE Severity Scores, which has
+forced all people who are supporting distro and cloud serves which
+sell into the US Government market to have to do very fast releases to
+meet FedRAMP requirements.  At least once, I protested an overly
+inflated CVSS score as being completely b.s., at a particular
+enterprise distro bugzilla, and my opinion as the upstream developer
+was completely ignored.
 
+So quite frankly, at least one enteprise distro hasn't impressed me
+with avoiding low quality CVE's and high CVSS scores, and so I'm quite
+willing to give the new system a chance.  (Especially since I've been
+told that the Linux Kernel CVE team isn't planning on issuing CVSS
+scores, which as far as I'm concerned, is *excellent* since my
+experience is that they are quite bogus, and quite arbitrary.)
 
-../fs/dlm/rcom.c:490:13: error: member reference type 'int' is not a pointer
-  490 |         memcpy(rc->rc_buf, rc_in->rc_buf, sizeof(struct rcom_lock));
-      |                ~~  ^
-../include/linux/fortify-string.h:636:47: note: expanded from macro 'memcpy'
-  636 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
-      |                                               ^
-../include/linux/fortify-string.h:591:20: note: expanded from macro '__fortify_memcpy_chk'
-  591 |         __underlying_##op(p, q, __fortify_size);                        \
-      |                           ^
-
-
-I'll track it down...
-
---
-Kees Cook
+	      	   	     	   	  - Ted
