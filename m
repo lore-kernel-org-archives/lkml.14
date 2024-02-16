@@ -1,136 +1,205 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1365512F369;
-	Fri, 16 Feb 2024 19:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02E4F1353FD;
+	Fri, 16 Feb 2024 19:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708110221; cv=none; b=BJCKCjg/2O9oc8NlhLRRyLnL9Cn7X5CbESPxd8X0qHr/x4K25Atsoi8/gWz6zh6oGPUFeUCBaa5t6d+HYh3t+Z1rdkZlkeysWcTmPWWyn0jmd3Qbjsch92GQ1KMxYokfiVpUsCqGhOINqKDD3JZdC5UuuUWxqnl5KRy4KM1TOoQ=
+	t=1708110237; cv=none; b=dn6hJxdIA4uZ75lDqXSVqhLbkZ+y6AUcvaHNSzgbwuWQ1PxkQqOjhT7QN3k6NJ2YLO35+x9BgIc5lpft4pWglKc/k9JVoz2qxSPkyzKBrkycEY98RNF6ISe5Dp41J4JyaOBTv9h1Pd3KDDNnE11WDAn4sP/3D0Zesh4wJshNkQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708110221; c=relaxed/simple;
-	bh=HB0D5Sj54XR6dVqOCAU9iJme/Ni8rgdc7NtQ4J161JQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NwUvRGsABHiAhsICVIgJ8wUHvFJO4OzkNAUPxtl+cbRRBfq0veobeCwEko2c9Wex4bRj1EzhntwTn5ipmkPJp6y/MVDTIVluSTu7+fKiiQLXW4GCsaYEAB2h8ch0UyVtXG/g9RPfeXSdSqMSmBRAldB5URlOGdDmpMS49TWA39w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=f/lTtXn2; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1708110237; c=relaxed/simple;
+	bh=Zv4cPeyVJDLB/TvNG/DJYoKenA7k7ijVed+YxbCFd04=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ECCMxPWiLgIPUCvJFnhVTfgCcRrbTjUKe16jt2WqB1Nha92yvXsFDyvA2fCY2wkbJaRuQKo9UxVd44X5G0rMiihMhirMGtbT6brBDtBX0tipO+ylqFpK+wzqk1MWYfYdwUICxcwQrFT1QlN2HI5QBPA5tfvLrcAiNQOSVQX5c6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fTTLFWQk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="f/lTtXn2"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41GIDeoF032401;
-	Fri, 16 Feb 2024 19:03:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=Qz0aHND61ieKnxXfugw5FRubzhuSqEDmnCQFdKTg9wo=;
- b=f/lTtXn2s7z3sAHApejwnf1ZDJlc8L57NMLAZPQxwBbHSnIMYi8uAC9T9xeONIlso9wh
- 6hoNIFXK7DhSZnJJdGVsZLakfKUGTdXHBVqvrIY/sro5hORhD5Jesxlv9kRzXPTm55Hk
- pQjKk96EdZpOb3dBnb25V8dRn2SVw1BvUBttPHq+P11pehKzd0paeveM2EVUYq7ybSgV
- 5SBcdplnUe5OhCjSFqRjg9tTx8Ob/oBzuTh5f5L9t9NPHX6McVy5tGmEk33g7b8hjMyW
- FsOnmAUtJHYqbSsYaJ7l8BLdR4djfilOr0s2Gpe9lvHnMTUAV96AbYs6dQuYIN+ODXyF Lw== 
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wacst8spq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 Feb 2024 19:03:30 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41GGiXkt010060;
-	Fri, 16 Feb 2024 19:03:30 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3w6npmcu9u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 Feb 2024 19:03:30 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41GJ3R2424511050
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 16 Feb 2024 19:03:29 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1BA525805F;
-	Fri, 16 Feb 2024 19:03:27 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 954EF58059;
-	Fri, 16 Feb 2024 19:03:26 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 16 Feb 2024 19:03:26 +0000 (GMT)
-Message-ID: <631a6d09-daac-49ac-aec9-9b8f23af34c8@linux.ibm.com>
-Date: Fri, 16 Feb 2024 14:03:24 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fTTLFWQk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80137C433C7;
+	Fri, 16 Feb 2024 19:03:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708110236;
+	bh=Zv4cPeyVJDLB/TvNG/DJYoKenA7k7ijVed+YxbCFd04=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=fTTLFWQk8Bg/dwggOXUDRXelJZOC2XOZmfB8DffPENLY5Db2QdyFCJySMp57mfT/h
+	 it4o2jimrk22UoeQeftpgq/CnD83KEsB4wumP2kL99cBkARVIBJrHpSbBP9vwYeBEM
+	 7e2+9ik8tTdhpkV2Pj1EcXIVVduFkHMVzLuGzFBt9T9hh9Re1nQo+sewdALx8l647F
+	 /kZUuee0CkaSuCQG771/oStF4wy5zhWpSfNqq7YOWY5pm3mJ4p8yuwF55c70gHv6bi
+	 YGweChb3KMp+/HPqEaNBWTHt3hCn0LSEbwnUDJtEQXo21x72AqaGMWa+kEDmubW70G
+	 UfMBwSOuy2x9g==
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-511976c126dso3048046e87.1;
+        Fri, 16 Feb 2024 11:03:56 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWqPgvw8lGTlUxMtrV2XeA9GTQX3Vx5w21SWhuAUqdrHDNlkLxgeo1te/xGnujwamMhsN36phsZEjfFimEvstC5qxCQKjU4NQkeo66csu6IXblglewiNTnEXRKoKlADnHTBw2jC1bVJ2PfBqPehkfxI/QFcAJqbnqjrtcE0d6zm4MmCPO/N
+X-Gm-Message-State: AOJu0YzLQQS8vm5TTwq06omahPSU1p93xY42XrxxQnmcFWXxc4xezCu7
+	x68rRUu58yN2//KWxt+WPglcaIUqr+CSj89w+tfCWDTvfeP97K7rAz9Xxlsh44/h54JIL85fYxV
+	pZuJe3Oap8/GADEs5poskJxx5Ook=
+X-Google-Smtp-Source: AGHT+IEycf+NM9n+P8mdOFvZz+EtAfjPtC1B7CFJzSUv0WLyR/fxT5QjiwPKU3tH/DqHNhYF216exWdMLQjfU/95U4Q=
+X-Received: by 2002:ac2:464f:0:b0:512:9f9b:ec50 with SMTP id
+ s15-20020ac2464f000000b005129f9bec50mr422755lfo.38.1708110234637; Fri, 16 Feb
+ 2024 11:03:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 06/14] crypto: ecc - Add NIST P521 curve parameters
-Content-Language: en-US
-To: "Elliott, Robert (Servers)" <elliott@hpe.com>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "davem@davemloft.net" <davem@davemloft.net>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "saulo.alessandre@tse.jus.br" <saulo.alessandre@tse.jus.br>
-References: <20240215231414.3857320-1-stefanb@linux.ibm.com>
- <20240215231414.3857320-7-stefanb@linux.ibm.com>
- <MW5PR84MB184295E25332F1516BE10BA5AB4C2@MW5PR84MB1842.NAMPRD84.PROD.OUTLOOK.COM>
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <MW5PR84MB184295E25332F1516BE10BA5AB4C2@MW5PR84MB1842.NAMPRD84.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: cTDUHXX0W_CG8EFFa75fwBnjg7jdHT7h
-X-Proofpoint-GUID: cTDUHXX0W_CG8EFFa75fwBnjg7jdHT7h
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-16_18,2024-02-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- clxscore=1011 phishscore=0 malwarescore=0 bulkscore=0 suspectscore=0
- mlxscore=0 priorityscore=1501 spamscore=0 mlxlogscore=999
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402160149
+References: <20240207092756.2087888-1-linan666@huaweicloud.com>
+ <CAPhsuW74hLiW_KTv3xohwMAcPZ9gp2TvLST4tY7H3O8cA26TTg@mail.gmail.com>
+ <6849835d-a3ac-e840-09e9-8539e7953fe4@huaweicloud.com> <CAPhsuW4k_C=UxwESU4t7R+fpoAJ_HE8g_PpCJXSUGWOdbpCEoQ@mail.gmail.com>
+In-Reply-To: <CAPhsuW4k_C=UxwESU4t7R+fpoAJ_HE8g_PpCJXSUGWOdbpCEoQ@mail.gmail.com>
+From: Song Liu <song@kernel.org>
+Date: Fri, 16 Feb 2024 11:03:42 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW4H=ehc1UiuFdhBXZUfU_okQ=-rbti1oEWHcs7ajT89iw@mail.gmail.com>
+Message-ID: <CAPhsuW4H=ehc1UiuFdhBXZUfU_okQ=-rbti1oEWHcs7ajT89iw@mail.gmail.com>
+Subject: Re: [PATCH] block: fix deadlock between bd_link_disk_holder and
+ partition scan
+To: Li Nan <linan666@huaweicloud.com>
+Cc: axboe@kernel.dk, linux-raid@vger.kernel.org, linux-block@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, yukuai3@huawei.com, yi.zhang@huawei.com, 
+	houtao1@huawei.com, yangerkun@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Feb 8, 2024 at 4:49=E2=80=AFPM Song Liu <song@kernel.org> wrote:
+>
+> On Thu, Feb 8, 2024 at 12:44=E2=80=AFAM Li Nan <linan666@huaweicloud.com>=
+ wrote:
+> >
+> >
+> >
+> > =E5=9C=A8 2024/2/8 14:50, Song Liu =E5=86=99=E9=81=93:
+> > > On Wed, Feb 7, 2024 at 1:32=E2=80=AFAM <linan666@huaweicloud.com> wro=
+te:
+> > >>
+> > >> From: Li Nan <linan122@huawei.com>
+> > >>
+> > >> 'open_mutex' of gendisk is used to protect open/close block devices.=
+ But
+> > >> in bd_link_disk_holder(), it is used to protect the creation of syml=
+ink
+> > >> between holding disk and slave bdev, which introduces some issues.
+> > >>
+> > >> When bd_link_disk_holder() is called, the driver is usually in the p=
+rocess
+> > >> of initialization/modification and may suspend submitting io. At thi=
+s
+> > >> time, any io hold 'open_mutex', such as scanning partitions, can cau=
+se
+> > >> deadlocks. For example, in raid:
+> > >>
+> > >> T1                              T2
+> > >> bdev_open_by_dev
+> > >>   lock open_mutex [1]
+> > >>   ...
+> > >>    efi_partition
+> > >>    ...
+> > >>     md_submit_bio
+> > >>                                  md_ioctl mddev_syspend
+> > >>                                    -> suspend all io
+> > >>                                   md_add_new_disk
+> > >>                                    bind_rdev_to_array
+> > >>                                     bd_link_disk_holder
+> > >>                                      try lock open_mutex [2]
+> > >>      md_handle_request
+> > >>       -> wait mddev_resume
+> > >>
+> > >> T1 scan partition, T2 add a new device to raid. T1 waits for T2 to r=
+esume
+> > >> mddev, but T2 waits for open_mutex held by T1. Deadlock occurs.
+> > >>
+> > >> Fix it by introducing a local mutex 'holder_mutex' to replace 'open_=
+mutex'.
+> > >
+> > > Is this to fix [1]? Do we need some Fixes and/or Closes tags?
+> > >
+> >
+> > No. Just use another way to fix [2], and both [2] and this patch can fi=
+x
+> > the issue. I am not sure about the root cause of [1] yet.
+> >
+> > [2] https://patchwork.kernel.org/project/linux-raid/list/?series=3D8120=
+45
+> >
+> > > Could you please add steps to reproduce this issue?
+> >
+> > We need to modify the kernel, add sleep in md_submit_bio() and md_ioctl=
+()
+> > as below, and then:
+> >    1. mdadm -CR /dev/md0 -l1 -n2 /dev/sd[bc]  #create a raid
+> >    2. echo 1 > /sys/module/md_mod/parameters/error_inject  #enable slee=
+p
+> >    3. 'mdadm --add /dev/md0 /dev/sda'  #add a disk to raid
+> >    4. submit ioctl BLKRRPART to raid within 10s.
+>
+> The analysis makes sense. I also hit the issue a couple times without add=
+ing
+> extra delays. But I am not sure whether this is the best fix (I didn't fi=
+nd real
+> issues with it either).
 
+To be extra safe and future proof, we can do something like the
+following to only
+suspend the array for ADD_NEW_DISK on not-running arrays.
 
-On 2/16/24 13:48, Elliott, Robert (Servers) wrote:
->> -----Original Message-----
->> From: Stefan Berger <stefanb@linux.ibm.com>
->> Sent: Thursday, February 15, 2024 5:14 PM
->> Subject: [PATCH v2 06/14] crypto: ecc - Add NIST P521 curve parameters
->>
->> Add the parameters for the NIST P521 curve and define a new curve ID
->> for it. Make the curve available in ecc_get_curve.
->>
-> ...
->> diff --git a/crypto/ecc_curve_defs.h b/crypto/ecc_curve_defs.h
-> ...
->> +static struct ecc_curve nist_p521 = {
->> +	.name = "nist_521",
-> 
-> Are the name fields in the ecc_curve structures used anywhere or
-> exposed to userspace?
-> 
-> It'd be nice if the strings for the nist_p192, nist_p256, and nist_p384
-> structures and this new nist_p521 structure included "p" before
-> the number, better matching all the code and the NIST FIPS 186-4 names:
->      .name = "nist_p192"
->      .name = "nist_p256"
->      .name = "nist_p384"
->      .name = "nist_p521"
-> 
-> 
+This appear to solve the problem reported in
 
-This is what is exposed:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218459
 
-$ cat /proc/crypto | grep nist
-name         : ecdh-nist-p384
-driver       : ecdh-nist-p384-generic
-name         : ecdh-nist-p256
-driver       : ecdh-nist-p256-generic
-name         : ecdh-nist-p192
-driver       : ecdh-nist-p192-generic
-name         : ecdsa-nist-p384
-driver       : ecdsa-nist-p384-generic
-name         : ecdsa-nist-p256
-driver       : ecdsa-nist-p256-generic
-name         : ecdsa-nist-p192
-driver       : ecdsa-nist-p192-generic
+Thanks,
+Song
+
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 9e41a9aaba8b..395911d5f4d6 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -7570,10 +7570,11 @@ static inline bool md_ioctl_valid(unsigned int cmd)
+        }
+ }
+
+-static bool md_ioctl_need_suspend(unsigned int cmd)
++static bool md_ioctl_need_suspend(struct mddev *mddev, unsigned int cmd)
+ {
+        switch (cmd) {
+        case ADD_NEW_DISK:
++               return mddev->pers !=3D NULL;
+        case HOT_ADD_DISK:
+        case HOT_REMOVE_DISK:
+        case SET_BITMAP_FILE:
+@@ -7625,6 +7626,7 @@ static int md_ioctl(struct block_device *bdev,
+blk_mode_t mode,
+        void __user *argp =3D (void __user *)arg;
+        struct mddev *mddev =3D NULL;
+        bool did_set_md_closing =3D false;
++       bool need_suspend;
+
+        if (!md_ioctl_valid(cmd))
+                return -ENOTTY;
+@@ -7716,8 +7718,11 @@ static int md_ioctl(struct block_device *bdev,
+blk_mode_t mode,
+        if (!md_is_rdwr(mddev))
+                flush_work(&mddev->sync_work);
+
+-       err =3D md_ioctl_need_suspend(cmd) ? mddev_suspend_and_lock(mddev) =
+:
+-                                          mddev_lock(mddev);
++       need_suspend =3D md_ioctl_need_suspend(mddev, cmd);
++       if (need_suspend)
++               err =3D mddev_suspend_and_lock(mddev);
++       else
++               err =3D mddev_lock(mddev);
+        if (err) {
+                pr_debug("md: ioctl lock interrupted, reason %d, cmd %d\n",
+                         err, cmd);
+@@ -7846,8 +7851,10 @@ static int md_ioctl(struct block_device *bdev,
+blk_mode_t mode,
+            err !=3D -EINVAL)
+                mddev->hold_active =3D 0;
+
+-       md_ioctl_need_suspend(cmd) ? mddev_unlock_and_resume(mddev) :
+-                                    mddev_unlock(mddev);
++       if (need_suspend)
++               mddev_unlock_and_resume(mddev);
++       else
++               mddev_unlock(mddev);
+
+ out:
+        if(did_set_md_closing)
