@@ -1,33 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6007C08E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5CA7B3D0;
 	Sat, 17 Feb 2024 15:03:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708182183; cv=none; b=JU57P2otv88wpG0anqGD98QrMYy4L/dnPH8HFcT/QJH/X5sK2X4P31+JHOgz0C+zi6Jf4RASftAFDkYMpZcq1IhpdU4zTzdCyUu8MEtNHXTvnqPABHv/t494jykRq/dTVqJ738cIHHapHUmqP/dKUd+psHKGwaonXOX0K95VNAk=
+	t=1708182183; cv=none; b=PMggC/IGKfVt4fITT+X9KR3YntsvIBOAlljdQTwpxYKXpxUx7TW3d8s/JFGuUMAjNuYY8hELxAzxq2f4MU6KBsO6zozdMezxR1tBGPyQ63SNR6ZLLizBX+1ux36AUNi5KjSLv1vwHK4XP9HBxSU5hRlSUAEahMMohrzjbZWq3H4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708182183; c=relaxed/simple;
-	bh=RYGrgArfEQO1hz4ZDJrYc151D2jwcPj4HsJMgduGqdg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mYv9kfB8L01xHeU3zwudfIoqbxqUbp2tt1h1kS8CickFQ2XLX/eEe7VD27/sz39tRTujZNEy4HoaasQnBB8VBZD/ZsE/5nktswTLusHFt7iRWPlYd4D7prNcZnT+6UP57ltIJC4iSKDXMjFpsCKmgzFluzd+DOr6AH6onp8kgPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sk6Bj7qn; arc=none smtp.client-ip=10.30.226.201
+	bh=gXXEjah83df2mjIZE6PBMMf9QLss5RTOxJWznY2GGWw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CkLjS7Tarl/0VQ5x/BLpigBRZzt4Zl1pzWFTd2D+fDLf7Tr5B5zt+u4GC7g1R7p9WpJb3rgSkToLfq8/VDLV43bFUq+X5Aww53c+xf4Bg6CuRRucJ0NuXaFmp7C5LRnwt7nWmJjtLMFb6VL9qsXAAVUXbWizRi34mxmFkNwKZFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YYCrcRG2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sk6Bj7qn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FF3FC43399;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YYCrcRG2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D7A2C43394;
 	Sat, 17 Feb 2024 15:03:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1708182183;
-	bh=RYGrgArfEQO1hz4ZDJrYc151D2jwcPj4HsJMgduGqdg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Sk6Bj7qnkUtxpPu7r0OWOEKX33/NEitQ5TtRnYdKJx+5sZ2r+IdHyM4505BXrMdz7
-	 GQebIt2mgAB3H+iuiVvivn25osbNIPGGdUUA6Sy7we/HmOoNHmvZ29aY/D1v/3OXKD
-	 P0bwBYQVv0Ddw4ZaTUT+gKpRcQrYUqIJMifT/Fi8HGaiNqwKjJbCouYHnoGUUkhJwI
-	 Bbf7tsUiicb0WSQafeUfOO4SvhcBn4jAy7CpR1tGSBqOarXQ+/gZF8xYjmsOgZNnzD
-	 AqUCkvJtcEa+vQ7aB1sdYH+ZhJa3h5ARzbrw4zE8XlUbS07GjIwzvSopeuJnp/v7Nw
-	 PeCQwYiphYhEw==
+	bh=gXXEjah83df2mjIZE6PBMMf9QLss5RTOxJWznY2GGWw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=YYCrcRG2Bd4HtdSjVhBFoyvNHGakjwLypXKacKIBHXJrLfhpQut/AO/LcBQ3Y0KjF
+	 sPdXqHSXykK74eTVnJeNok7niPfXO0Czt/1YPR768rWKLabFR6u9U6X5zIoNHXtfCO
+	 USZHcA9Rm8QSNKTbGnvdNY/kIjWyg4w+1ZXDETyizCJSpTAN1qQacxjTa7UDJF9A2O
+	 msphIG/8uQP28WXSj7qoecFU1NmlhQEAP7CJjIeye7CoVAI4y/049aiTpZjWH59Xcd
+	 XI5S8l0Qbk9Ya0xxP0z0xuzlJ6QUvVP0P3e4nAwJAmqIZ/HBGy+WfJdIV0A5NlROZa
+	 yxMde5QWQVT1A==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1rbMDW-000000001Vm-1iMa;
+	id 1rbMDW-000000001Vw-3n8S;
 	Sat, 17 Feb 2024 16:03:02 +0100
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Bjorn Andersson <andersson@kernel.org>,
@@ -54,11 +55,15 @@ Cc: Jonas Karlman <jonas@kwiboo.se>,
 	linux-kernel@vger.kernel.org,
 	linux-arm-msm@vger.kernel.org,
 	linux-phy@lists.infradead.org,
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH 0/6] soc: qcom: pmic_glink_altmode: fix drm bridge use-after-free
-Date: Sat, 17 Feb 2024 16:02:22 +0100
-Message-ID: <20240217150228.5788-1-johan+linaro@kernel.org>
+	Johan Hovold <johan+linaro@kernel.org>,
+	stable@vger.kernel.org,
+	Bjorn Andersson <quic_bjorande@quicinc.com>
+Subject: [PATCH 5/6] phy: qcom-qmp-combo: fix drm bridge registration
+Date: Sat, 17 Feb 2024 16:02:27 +0100
+Message-ID: <20240217150228.5788-6-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240217150228.5788-1-johan+linaro@kernel.org>
+References: <20240217150228.5788-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,61 +72,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Starting with 6.8-rc1 the internal display sometimes fails to come up on
-machines like the Lenovo ThinkPad X13s and the logs indicate that this
-is due to a regression in the DRM subsystem [1].
+Due to a long-standing issue in driver core, drivers may not probe defer
+after having registered child devices to avoid triggering a probe
+deferral loop (see fbc35b45f9f6 ("Add documentation on meaning of
+-EPROBE_DEFER")).
 
-This series fixes a race in the pmic_glink_altmode driver which was
-exposed / triggered by the transparent DRM bridges rework that went into
-6.8-rc1 and that manifested itself as a bridge failing to attach and
-sometimes triggering a NULL-pointer dereference.
+This could potentially also trigger a bug in the DRM bridge
+implementation which does not expect bridges to go away even if device
+links may avoid triggering this (when enabled).
 
-The intermittent hard resets that have also been reported since 6.8-rc1
-unfortunately still remains and suggests that we are dealing with two
-separate regressions. There is some indication that also the hard resets
-(e.g. due to register accesses to unclocked hardware) are also due to
-changes in the DRM subsystem as it happens around the time that the eDP
-panel and display controller would be initialised during boot (the
-runtime PM rework?). This remains to be verified, however.
+Move registration of the DRM aux bridge to after looking up clocks and
+other resources.
 
-Included is also a fix for a related OF node reference leak in the
-aux-hpd driver found through inspection when reworking the driver.
+Note that PHY creation can in theory also trigger a probe deferral when
+a 'phy' supply is used. This does not seem to affect the QMP PHY driver
+but the PHY subsystem should be reworked to address this (i.e. by
+separating initialisation and registration of the PHY).
 
-The use-after-free bug is triggered by a probe deferral and highlighted
-some further bugs in the involved drivers, which were registering child
-devices before deferring probe. This behaviour is not correct and can
-both trigger probe deferral loops and potentially also further issues
-with the DRM bridge implementation.
+Fixes: 35921910bbd0 ("phy: qcom: qmp-combo: switch to DRM_AUX_BRIDGE")
+Fixes: 1904c3f578dc ("phy: qcom-qmp-combo: Introduce drm_bridge")
+Cc: stable@vger.kernel.org      # 6.5
+Cc: Bjorn Andersson <quic_bjorande@quicinc.com>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+---
+ drivers/phy/qualcomm/phy-qcom-qmp-combo.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-This series can either go through the Qualcomm SoC tree (pmic_glink) or
-the DRM tree. The PHY patches do not depend on the rest of the series
-and could possibly be merged separately through the PHY tree.
-
-Whichever gets this to mainline the fastest.
-
-Johan
-
-
-[1] https://lore.kernel.org/lkml/ZctVmLK4zTwcpW3A@hovoldconsulting.com/
-
-
-Johan Hovold (5):
-  drm/bridge: aux-hpd: fix OF node leaks
-  drm/bridge: aux-hpd: separate allocation and registration
-  soc: qcom: pmic_glink_altmode: fix drm bridge use-after-free
-  phy: qcom-qmp-combo: fix drm bridge registration
-  phy: qcom-qmp-combo: fix type-c switch registration
-
-Rob Clark (1):
-  soc: qcom: pmic_glink: Fix boot when QRTR=m
-
- drivers/gpu/drm/bridge/aux-hpd-bridge.c   | 70 ++++++++++++++++++-----
- drivers/phy/qualcomm/phy-qcom-qmp-combo.c | 16 +++---
- drivers/soc/qcom/pmic_glink.c             | 21 +++----
- drivers/soc/qcom/pmic_glink_altmode.c     | 16 +++++-
- include/drm/bridge/aux-bridge.h           | 15 +++++
- 5 files changed, 102 insertions(+), 36 deletions(-)
-
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
+index 1ad10110dd25..e19d6a084f10 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
+@@ -3566,10 +3566,6 @@ static int qmp_combo_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = drm_aux_bridge_register(dev);
+-	if (ret)
+-		return ret;
+-
+ 	/* Check for legacy binding with child nodes. */
+ 	usb_np = of_get_child_by_name(dev->of_node, "usb3-phy");
+ 	if (usb_np) {
+@@ -3589,6 +3585,10 @@ static int qmp_combo_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_node_put;
+ 
++	ret = drm_aux_bridge_register(dev);
++	if (ret)
++		goto err_node_put;
++
+ 	pm_runtime_set_active(dev);
+ 	ret = devm_pm_runtime_enable(dev);
+ 	if (ret)
 -- 
 2.43.0
 
