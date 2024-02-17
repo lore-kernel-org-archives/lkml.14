@@ -1,38 +1,60 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12401CD17;
-	Sat, 17 Feb 2024 08:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 500FB1B7F2;
+	Sat, 17 Feb 2024 08:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708157963; cv=none; b=IKT7/arNuQHVIdqK5hQcZc2Zb+62+U93+4X4j26mm+NVSaU2Vlj8GPZiC+GHqrXEhrG94H/eb4eiCl1h3eqgp5vyFlOh3I0ZAvx1fzYMdFTKTt8/nDDFOp74OpAEnfyj0OSE+eYAJoS/kDnlEoCWELS+938FCo/ihv1nPj0iYAQ=
+	t=1708158047; cv=none; b=ojbLstEj/Vku0moYTMmG5UYalJB2zQM9a00k/C48kba5OPQbVjnB9oBOPNU6KpKM8tu2Ag39ucW6Nk/vMxPwNnDzBnA2RNklMc+zLOUtnQT5IluEWG43PRS9+kaQZbHWCV/ZL721E0x4QZlI9fFuSKuQpi4G5l6HSA8QtNAGSqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708157963; c=relaxed/simple;
-	bh=OEujMmKsaz34R6ihVj0EBGAxb1fHPMfIT7TYuck2xHM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eEjNaFvNCmEAJtgg+gZ/KREedSVvVJkfgTe3QpgQWwJx0EpYtoUOkVe9ykDByeebhiFnQKFjRcHBOXegoJI6lijU/lp9EWKiZ9P7/bJFAmgV/6Qisck5cPmMyu93GMU0dUwuIvNXDAlI9KS2drM/ojGIOQm4//eIMLgsU+Y+lrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TcM952KLBz2Bcnr;
-	Sat, 17 Feb 2024 16:17:13 +0800 (CST)
-Received: from kwepemd100002.china.huawei.com (unknown [7.221.188.184])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8BD17140485;
-	Sat, 17 Feb 2024 16:19:18 +0800 (CST)
-Received: from M910t.huawei.com (10.110.54.157) by
- kwepemd100002.china.huawei.com (7.221.188.184) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.28; Sat, 17 Feb 2024 16:19:17 +0800
-From: Changbin Du <changbin.du@huawei.com>
-To: Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain
-	<mcgrof@kernel.org>
-CC: <linux-modules@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Changbin
- Du <changbin.du@huawei.com>, Xiaoyi Su <suxiaoyi@huawei.com>, Eric Chanudet
-	<echanude@redhat.com>
-Subject: [PATCH v3] modules: wait do_free_init correctly
-Date: Sat, 17 Feb 2024 16:18:10 +0800
-Message-ID: <20240217081810.4155871-1-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1708158047; c=relaxed/simple;
+	bh=rlrKqJgDDoZsSfU8eHHfyWZ3HpVBBXtH8uA9Pgt9aF0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=DgFPB+U/YHs4AY/TwPLmwMMn9TNr73soKOoDeo4RkZShSbpVWf+q3uBYN/knhEMV7wCTFYi9ddqmmy65YT6bWzEiIjtexKoTvVpvGXVjVaq1nQYMY7UvU1303KMdOtksnCz15+7E5bQBPZV/cMjd2VB251uLHjLpDZS4ulq68p8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=ADr0PuQp; arc=none smtp.client-ip=178.238.236.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="ADr0PuQp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=lU5OchIEvF38TLlRSscnw+iYzDDWri1rHhV16S0CVpM=; b=ADr0PuQpZRMBepM64LjFYaaOi+
+	tkcPwSo+I4qeLQBDaLa7fpFBaydlqooJTMus9WqxsFLTM+d1iNkEL0VRu4Fjh6LpZPeFp0giGVtHK
+	DU9OFYbk/eWc8xwDi1D2t1pnvfUg4EpUifsLuUxgZSppXbapvwxBAKh3QuxeldXe4O2T74OJ1I81t
+	veGV819ckIuaf0kFaxrP92fvo8KK7R3Q67tOwcHFY/7q8GvGX4Y+a/rfLQU9b92s5UKzyRXsL7ftG
+	XYo7ETnB5CI+UxLwHUYcjoSjjVqvIQzSUG4H5f59p5hAxAscqE7n8w3JtNnzgMRpd4eGRdHyBULWm
+	lXiVV34A==;
+Received: from p2003010777002c001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:107:7700:2c00:1a3d:a2ff:febf:d33a] helo=aktux)
+	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <andreas@kemnade.info>)
+	id 1rbFvz-009WA1-GY; Sat, 17 Feb 2024 09:20:31 +0100
+Received: from andi by aktux with local (Exim 4.96)
+	(envelope-from <andreas@kemnade.info>)
+	id 1rbFvy-00Dabd-37;
+	Sat, 17 Feb 2024 09:20:30 +0100
+From: Andreas Kemnade <andreas@kemnade.info>
+To: lee@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	bcousson@baylibre.com,
+	tony@atomide.com,
+	andreas@kemnade.info,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-omap@vger.kernel.org
+Cc: Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v4 1/5] dt-bindings: mfd: ti,twl: Document system-power-controller
+Date: Sat, 17 Feb 2024 09:20:03 +0100
+Message-Id: <20240217082007.3238948-2-andreas@kemnade.info>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240217082007.3238948-1-andreas@kemnade.info>
+References: <20240217082007.3238948-1-andreas@kemnade.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,115 +62,29 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemd100002.china.huawei.com (7.221.188.184)
 
-The synchronization here is just to ensure the module init's been freed
-before doing W+X checking. But the commit 1a7b7d922081 ("modules: Use
-vmalloc special flag") moves do_free_init() into a global workqueue
-instead of call_rcu(). So now rcu_barrier() can not ensure that do_free_init
-has completed. We should wait it via flush_work().
+Add system-power-controller property because these chips
+can power off the device.
 
-Without this fix, we still could encounter false positive reports in
-W+X checking, and the rcu synchronization is unnecessary which can
-introduce significant delay.
-
-Eric Chanudet reports that the rcu_barrier introduces ~0.1s delay on a
-PREEMPT_RT kernel.
-  [    0.291444] Freeing unused kernel memory: 5568K
-  [    0.402442] Run /sbin/init as init process
-
-With this fix, the above delay can be eliminated.
-
-Fixes: 1a7b7d922081 ("modules: Use vmalloc special flag")
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
-Cc: Xiaoyi Su <suxiaoyi@huawei.com>
-Cc: Eric Chanudet <echanude@redhat.com>
-
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 ---
-v3:
-  - amend comment in do_init_module() and update commit msg.
-v2:
-  - fix compilation issue for no CONFIG_MODULES found by 0-DAY.
----
- include/linux/moduleloader.h | 8 ++++++++
- init/main.c                  | 5 +++--
- kernel/module/main.c         | 9 +++++++--
- 3 files changed, 18 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/mfd/ti,twl.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/moduleloader.h b/include/linux/moduleloader.h
-index 001b2ce83832..89b1e0ed9811 100644
---- a/include/linux/moduleloader.h
-+++ b/include/linux/moduleloader.h
-@@ -115,6 +115,14 @@ int module_finalize(const Elf_Ehdr *hdr,
- 		    const Elf_Shdr *sechdrs,
- 		    struct module *mod);
+diff --git a/Documentation/devicetree/bindings/mfd/ti,twl.yaml b/Documentation/devicetree/bindings/mfd/ti,twl.yaml
+index c04d57ba22b49..52ed228fb1e7e 100644
+--- a/Documentation/devicetree/bindings/mfd/ti,twl.yaml
++++ b/Documentation/devicetree/bindings/mfd/ti,twl.yaml
+@@ -34,6 +34,8 @@ properties:
  
-+#ifdef CONFIG_MODULES
-+void flush_module_init_free_work(void);
-+#else
-+static inline void flush_module_init_free_work(void)
-+{
-+}
-+#endif
+   interrupt-controller: true
+ 
++  system-power-controller: true
 +
- /* Any cleanup needed when module leaves. */
- void module_arch_cleanup(struct module *mod);
+   "#interrupt-cells":
+     const: 1
  
-diff --git a/init/main.c b/init/main.c
-index e24b0780fdff..f0b7e21ac67f 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -99,6 +99,7 @@
- #include <linux/init_syscalls.h>
- #include <linux/stackdepot.h>
- #include <linux/randomize_kstack.h>
-+#include <linux/moduleloader.h>
- #include <net/net_namespace.h>
- 
- #include <asm/io.h>
-@@ -1402,11 +1403,11 @@ static void mark_readonly(void)
- 	if (rodata_enabled) {
- 		/*
- 		 * load_module() results in W+X mappings, which are cleaned
--		 * up with call_rcu().  Let's make sure that queued work is
-+		 * up with init_free_wq. Let's make sure that queued work is
- 		 * flushed so that we don't hit false positives looking for
- 		 * insecure pages which are W+X.
- 		 */
--		rcu_barrier();
-+		flush_module_init_free_work();
- 		mark_rodata_ro();
- 		rodata_test();
- 	} else
-diff --git a/kernel/module/main.c b/kernel/module/main.c
-index 36681911c05a..b0b99348e1a8 100644
---- a/kernel/module/main.c
-+++ b/kernel/module/main.c
-@@ -2489,6 +2489,11 @@ static void do_free_init(struct work_struct *w)
- 	}
- }
- 
-+void flush_module_init_free_work(void)
-+{
-+	flush_work(&init_free_wq);
-+}
-+
- #undef MODULE_PARAM_PREFIX
- #define MODULE_PARAM_PREFIX "module."
- /* Default value for module->async_probe_requested */
-@@ -2593,8 +2598,8 @@ static noinline int do_init_module(struct module *mod)
- 	 * Note that module_alloc() on most architectures creates W+X page
- 	 * mappings which won't be cleaned up until do_free_init() runs.  Any
- 	 * code such as mark_rodata_ro() which depends on those mappings to
--	 * be cleaned up needs to sync with the queued work - ie
--	 * rcu_barrier()
-+	 * be cleaned up needs to sync with the queued work by invoking
-+	 * flush_module_init_free_work().
- 	 */
- 	if (llist_add(&freeinit->node, &init_free_list))
- 		schedule_work(&init_free_wq);
 -- 
-2.25.1
+2.39.2
 
