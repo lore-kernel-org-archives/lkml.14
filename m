@@ -1,65 +1,68 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2085.outbound.protection.outlook.com [40.107.94.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03215673;
-	Sun, 18 Feb 2024 06:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708237391; cv=none; b=UXdxUc1Dh1a42jmX41SFjesL8ef1yZQ/ITAFLTICSV20mp9QqBO9haBqUSslYcwv82sw9Ezc16/gwP1YFCXBuj1GooCUAdjrbyzFys2mUlLrptYTTzmSHcRmHjecr6imesqdNCS/Xu7WWgB+rOsidQmPADvT9H1JlE4MBgv/dvw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708237391; c=relaxed/simple;
-	bh=TpNmMKu6WpziuYbuJj9ICNiDX2B0lv7+wTrPai/vhQ8=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=lUtjKlhnERTtVYj9WxAYoWQ488u3F4GZTmlAEiT+2IqEtrDu4IWUs6vBN9xFdBPeSb9xry6KCazt2+gJARqJv8HWcKPz5GJtN/rszIoOkNcxQ1icwGxURVELqMJG1Lyigo60ISv1Pg/t+YZlekmH5Qa/1MUPJc2BHpk9X02HA9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=XuRurxUj; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 519215394;
+	Sun, 18 Feb 2024 06:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708237627; cv=fail; b=pNyR7N6a6I4wgZqGncZjMk9DAjlbzDNAzzKLwnzm+uF5sRb51UXFbyfYWSD+gv5SwslNhUXn2/dtfTEoBUooOiGvSZATdyR42yST52KAfChFAcyelZYSw8MvlrqgtmzJwRCP9Y//Nk6vB4pJ0AOgIUm/2DJ58FAqaFaVX0badtc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708237627; c=relaxed/simple;
+	bh=rzQnxdRe91xgi1qd14VaVZBsBMyfeoc0gIP1/2UMeqs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=n327cdXLAHv33PMWMSEDD2cO0N0Kfmx6FlnoJAIIWuvbGa8ciI9ilwySeESYM4aa1cynTidtlj1M1B/N0yPAt479EVY34iGWRuJ8O208EwsSp8jQnR5Kqc2bSFHTtPCHR8+XMZCKP0c46vgzgkwdZfpzOYJVO3Jgm2A2nlYq6aw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2s0ie98v; arc=fail smtp.client-ip=40.107.94.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="XuRurxUj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1708237377; bh=gi2NcGCCj6PfFOIK2hkne1naRKBj6Q9hH3RQxbNAwco=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=XuRurxUjTBjoayvJgkymXHdpDJDFeivn+sqlDQt82qXK5nJN0GJEjPBVvk9FZYVSr
-	 9XmCYIKdnQExrjviyOKRSgOddSuS6oMVKBhySRxkmVbkIBX2omceElCtuN9oAkms0H
-	 5yokKijQ0MIU1lBJwMZTK2yi67ydJlJRzyo/hL1s=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.140])
-	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
-	id 5B5B06A1; Sun, 18 Feb 2024 14:22:53 +0800
-X-QQ-mid: xmsmtpt1708237373t67boyyzw
-Message-ID: <tencent_8665C99F2EF26EFF0CAF67DF86C592E74606@qq.com>
-X-QQ-XMAILINFO: MOpJcPT3Yy24wX/PWmzIjsZ2p88WhJoar8OjDsb57NIXVmM231PGujqEA5GSG4
-	 UJ37+zIeeQKSm/mamnZMI2kpbtMTGUww+JG6xsg+3fLRGe4B8WyEH43BsQD1nWf0M2A8oq+OHvS3
-	 V2r7TL9m2qNcNPrAE3q+ix3wEgEC9n3fS6+GmSpIpr0ZWm7UxYysTDdYY5ChCsmRM7fyOHjhRPHK
-	 bkgJBbR2TutT5iIO97LJqBAB7aAlniThYY0JzO54B8VpQpn+L5E8Bf7h+hIv57FZ4l+c6UDq1sK8
-	 hNpYO9PX1X+7jU2Kfz4fdtOPvIum+y7rMA1yZGwJkJnceeOTnt6GTEZo18wy4qGiJinAKobzOw4P
-	 lxPvqAUCB2GrD9HdjYzzga3k1/edxGYpF/qSK403qjJhvaeAjNvvQBwJOZla/TSioNPNJrYazSXU
-	 0MMG3Q1zFSFgK9SjNp0Nd/LZYX9ZkP9JKyQ7hvFCNGAuZz3SB5Chi/g8AZ15XU33wzrb6i5f+1fQ
-	 dtr32vCIF17/JhqAKvQa06fbLE9ELcmFX2pWLJETkncCINy76+BkVTrXoDXEC75e/pTC2GX3ST2c
-	 2/6XP8W4bz/cNGzLxu2nkarrBIZ/qFlb8xmFdVwqLyoJtKwkeyud3p3vNCt1ldlz06LLCtmj10QW
-	 P+ck/G0CWR4VrDQHXoOKGo+eR1dJyZHb/old3BL8PQ3jNONGtxYnCsQNsGSMm67mfP4qy6GJL2PV
-	 sHGby0w2zCcMMf9br913dFW1URF8Bto65UttSJz1wD6LorZg04SFNuj7SL7P+ROKmOVNNjSzhTvH
-	 AcP80QaITTUwB1eIFfuK31D8HTZx42rv3oSblBJmCK0CPsfQlJ2eszBDEPFYGwABoTYnPtp/sYrJ
-	 7OMLjDcOpU9xXiKem52/6Tap9YhQR5CfeCJ/o1QjBoxUJzbaGvvQUlDdRTB8Y5dhtRGx1ZazY95h
-	 L9Hadj9CJ6TxqfcHZRqQ==
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-From: Edward Adam Davis <eadavis@qq.com>
-To: greg@kroah.com
-Cc: eadavis@qq.com,
-	isely@pobox.com,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	mchehab@kernel.org,
-	pvrusb2-owner@isely.net,
-	pvrusb2@isely.net,
-	syzbot+ce750e124675d4599449@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH usb] media/pvrusb2: fix uaf in pvr2_context_set_notify
-Date: Sun, 18 Feb 2024 14:22:54 +0800
-X-OQ-MSGID: <20240218062253.101675-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <2024021716-accent-islamist-6a87@gregkh>
-References: <2024021716-accent-islamist-6a87@gregkh>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2s0ie98v"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mtOanqcmhxydz2HMUrBxE+hdfkpeNoPfvgEysg3C53OyHsx6reYfMr6C6Qc24uW9+nYHR/ZZ5lm3KQFAZiHNvVNeTgvYHdR0oXTIJm/lfqwA64mf1US4DfsG1QysTYGjXkiuLErikegLAMKLS0acipgbIA1S9EXnqycHttBRcHAv8qs0LFwGuy60h+QDFwvt1zI+gI8YU3Oxl3DnZNal8FIOkoweR3NXhsZFFBmUlgvh6VNWLdV4Yo8RlEoR43KE6Och9X11wJye4PBHGcTjq/5RgA6k66ufJzk46D2jt5XpcldsiuKx4EvoFoSgRxNMaHfQC92tmXhi5owFp5krtg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NWnAJvu9w9md7Xmz3I9F9/pQzitMXGCKTyeLf00SEvA=;
+ b=bruOnp5tixUu7Jz8YU5FMjAuGEWR4wYTOL4jY5RUi01MUeAdikxaRoEfPy38c+yU5FsxlXMP2Jp8BYcr94Hjfb03/xOj/FrWRyjTnFriE/+YNoabJcU/5AllJbaL5h1tclS5KH7p+1egNPsvYqhhivyoZcU6N7RJXPLEMzhkNlFwbEXG6WKOyNAOL6KFd7Q56DgNC/W0IuvP09b/o2xz6z8Zm1GcZneGm8fDIZALFE87vN3kXxqMOR+EptRoX0JN2MNq7Z3symQ3aPrPHb1493nB+QXPFMICRJdvrW7iL9eFvQNUisc7rQHI9BnTZQwpE3oi9N0JczKMp4kHXZX9hA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NWnAJvu9w9md7Xmz3I9F9/pQzitMXGCKTyeLf00SEvA=;
+ b=2s0ie98v4/9k0iKOwZZroz7ZowFW3SXaWb4j3JZelVu258RnRu/8bjqlCNt5xwegnqTDIxOWI7DBOALN9lBIt29uEuPYnm+p2d0FthRITJ758GIQ/JReHV3enuUCfP94xrqnOxqlEqNyPzqTR1tes9YzoQ+lvYxWuH0HyfZu5Z8=
+Received: from CH5P222CA0006.NAMP222.PROD.OUTLOOK.COM (2603:10b6:610:1ee::27)
+ by DM4PR12MB8449.namprd12.prod.outlook.com (2603:10b6:8:17f::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.15; Sun, 18 Feb
+ 2024 06:27:01 +0000
+Received: from CH1PEPF0000A34C.namprd04.prod.outlook.com
+ (2603:10b6:610:1ee:cafe::b9) by CH5P222CA0006.outlook.office365.com
+ (2603:10b6:610:1ee::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.37 via Frontend
+ Transport; Sun, 18 Feb 2024 06:27:01 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH1PEPF0000A34C.mail.protection.outlook.com (10.167.244.6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7292.25 via Frontend Transport; Sun, 18 Feb 2024 06:27:01 +0000
+Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Sun, 18 Feb
+ 2024 00:27:00 -0600
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: <Shyam-sundar.S-k@amd.com>, <hdegoede@redhat.com>
+CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>, "Mario
+ Limonciello" <mario.limonciello@amd.com>
+Subject: [PATCH 0/2] AMD PMF Smart PC error handling cleanups
+Date: Fri, 16 Feb 2024 19:22:03 -0600
+Message-ID: <20240217012205.113614-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,58 +70,50 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000A34C:EE_|DM4PR12MB8449:EE_
+X-MS-Office365-Filtering-Correlation-Id: f031bd74-c42e-4168-6d9c-08dc304a9db9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	+r2b1AXo6tQUtaQ7kw2p6BduQbhNzWh9noHvAOvGKFVlNLqtRtOcKBkXanXPaQoktlg+r5BbF7jTsNjDzvHlMid+IktUhBye+uPiHOs4UOaAoT2/lwSlEMD/MnTnyWAzrO7WoE69e0jGZ2ju4slvBenESyYEk/9azyp2qvU0KI72LFMhJQCTKOjZzLEKvVLfjt2uvWIpV5gl/cc37JK5JrDxAgpEK40pMODod1vjC0tmFCN9l62L3UO3rfuVbSfne7g3X+xm/jMPehqo3p5sH2R8m1hfxrIQCXFBeC13QlxYUJKt1kMolk5sxTzXina7CkMviPKGRz7OT7RVfsJKL4gcv7YYm1UYpH2kD/n1xoAb5VyZA70l2ZLoCIkpafQefVsTIQYu/+dlOblAUMaNsigGEkq1tecFRV8gWgHl9xSTx/GJFFjGPBcqrKQDfTjoDhoSXMKI+Huiv7130ilq9IrSTQXZHiFZIQ+0cSjZjXyZBRVkE/L6vYrZNBcZPRPAMJMsFZA0ddmKr/s/EhVTz/wV2JZet78DXGCt07uPjfJq0WRMuD9EbONvP2ZVrGV3RW3lB1Vq4f3d82wAqLCdPIAF2QP3J+ofyN49q9dlp6sdjraBr5g01zHAlIYjKLUCaYh6OrDTWLnF7NMZvTMqNzYQ5pqYNay7iQ3a13zbiSA=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(346002)(396003)(376002)(136003)(230922051799003)(1800799012)(451199024)(82310400011)(186009)(64100799003)(36860700004)(40470700004)(46966006)(86362001)(82740400003)(356005)(36756003)(81166007)(336012)(1076003)(7696005)(478600001)(316002)(26005)(54906003)(83380400001)(2616005)(41300700001)(110136005)(16526019)(426003)(70586007)(2906002)(4326008)(8676002)(4744005)(70206006)(8936002)(44832011)(5660300002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2024 06:27:01.1031
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f031bd74-c42e-4168-6d9c-08dc304a9db9
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000A34C.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8449
 
-On Sat, 17 Feb 2024 08:41:33 +0100, Greg KH wrote:
-> On Fri, Feb 16, 2024 at 03:30:47PM +0800, Edward Adam Davis wrote:
-> > [Syzbot reported]
-> > BUG: KASAN: slab-use-after-free in pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35
-> > Read of size 4 at addr ffff888113aeb0d8 by task kworker/1:1/26
-> > 
-> > CPU: 1 PID: 26 Comm: kworker/1:1 Not tainted 6.8.0-rc1-syzkaller-00046-gf1a27f081c1f #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
-> > Workqueue: usb_hub_wq hub_event
-> > Call Trace:
-> >  <TASK>
-> >  __dump_stack lib/dump_stack.c:88 [inline]
-> >  dump_stack_lvl+0xd9/0x1b0 lib/dump_stack.c:106
-> >  print_address_description mm/kasan/report.c:377 [inline]
-> >  print_report+0xc4/0x620 mm/kasan/report.c:488
-> >  kasan_report+0xda/0x110 mm/kasan/report.c:601
-> >  pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35
-> >  pvr2_context_notify drivers/media/usb/pvrusb2/pvrusb2-context.c:95 [inline]
-> >  pvr2_context_disconnect+0x94/0xb0 drivers/media/usb/pvrusb2/pvrusb2-context.c:272
-> > 
-> > Freed by task 906:
-> > kasan_save_stack+0x33/0x50 mm/kasan/common.c:47
-> > kasan_save_track+0x14/0x30 mm/kasan/common.c:68
-> > kasan_save_free_info+0x3f/0x60 mm/kasan/generic.c:640
-> > poison_slab_object mm/kasan/common.c:241 [inline]
-> > __kasan_slab_free+0x106/0x1b0 mm/kasan/common.c:257
-> > kasan_slab_free include/linux/kasan.h:184 [inline]
-> > slab_free_hook mm/slub.c:2121 [inline]
-> > slab_free mm/slub.c:4299 [inline]
-> > kfree+0x105/0x340 mm/slub.c:4409
-> > pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:137 [inline]
-> > pvr2_context_thread_func+0x69d/0x960 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
-> > 
-> > [Analyze]
-> > Task A set disconnect_flag = !0, which resulted in Task B's condition being met
-> > and releasing mp, leading to this issue.
-> > 
-> > [Fix]
-> > Place the disconnect_flag assignment operation after all code in pvr2_context_disconnect()
-> > to avoid this issue.
-> > 
-> > Reported-and-tested-by: syzbot+ce750e124675d4599449@syzkaller.appspotmail.com
-> > Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-> 
-> What commit id does this fix?
-e5be15c63804 ("V4L/DVB (7711): pvrusb2: Fix race on module unload")
-> 
-> And should it be cc: stable as well?
-I checked the stable git tree and it introduced e5be15c63804. I think we need to
-cc stable.
+While debugging the suspend issue for amd-pmf the initial bisect result
+pointed at red herrings of cleanup flow problems for
+amd_pmf_init_smart_pc().  The actual issue wasn't in this code, but still
+a lot of memory is allocated and not immediately released if any of the
+error branches are taken.
 
-thanks,
-edward
+This series cleans that up so that every step is cleaned up. I believe
+this actually fixes driver bugs that "could" occur if a BIOS advertisd
+Smart PC as well as ITS auto or CNQF but didn't include a policy in the
+BIOS.
+
+Mario Limonciello (2):
+  platform/x86/amd/pmf: Add debugging message for missing policy data
+  platform/x86/amd/pmf: Fixup error handling for amd_pmf_init_smart_pc()
+
+ drivers/platform/x86/amd/pmf/tee-if.c | 71 ++++++++++++++++++---------
+ 1 file changed, 47 insertions(+), 24 deletions(-)
+
+-- 
+2.34.1
 
