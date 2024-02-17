@@ -1,45 +1,45 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E451D535;
-	Sat, 17 Feb 2024 00:10:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB46F1C2A6;
+	Sat, 17 Feb 2024 00:10:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708128656; cv=none; b=fdfT/agQLQFMgd9Re7Ve1pm9WM+OS+/+7zI58pOoE4UuHqHRnNUu1Ww24bQBQvL9Ulq7+r+42RMicNApmhxmvU5d85tBCGoaC8oKScq0ADB9GuXWtV2DtSrTMNIu98igW1j/1aITbiF/0VzGO2kadrH/gzLn1T8+C9bEvb2N9AM=
+	t=1708128656; cv=none; b=hRiCViIrSk3QvAEpii/+YcGuLcHTmRMv+iVJQLI883tl/q8ndQnel8N/q++OFzgkQodHqPCN6khPPOrENCD8fjSPDfSJofic/l0yCxL6P0GyaUd5YG7KlbmUl5gR6UhAV3e+x5of4XWT2VCouzB0JiPxemIumMYZxR9AoKtbUo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708128656; c=relaxed/simple;
-	bh=uaCPGA2xpM/XYzbNp4Zx/iXcVoo2XRBq3+RQP/b21ic=;
+	bh=LMiS4knFWEfrRxeu7CJSVOD1I3/B5ywgJcou/bdcDIA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oTEhznMXPiioPh3B3UDfvd0ehzD7bZ++I94I3xrFMzCwh9tDX7PhMetR0Yl3ceyIuqouxgpnXrB7cK7tzFf1CENBdVa9sORTF/j1EvWUuhhc1m1xJE5fqmMAQ6oDV8YYHqboM5x3W+K6nMXiBPZpVAbibGefY2z6M4lhz0ZC3qM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KJ1C4VIi; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version:Content-Type; b=PqgKlXyhtkwtVEks+gv4NYElnluoOIf8fr5BRmAtFeBZYbToi6QU+DJYZT6ILPvdpS0Wpw8WfZhN3MOn4F57HkEeLm/GmKikCkwQ/ePUSyaL1L35nnnUS01rasdN5no2svkhvGioFxBaoUYSagAJqWwxJTd8KzRXHXiQvXxtBk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KmMicD6S; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KJ1C4VIi"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41GNt9v4000483;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KmMicD6S"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41GMI60b028052;
 	Sat, 17 Feb 2024 00:10:33 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=qcppdkim1; bh=7tr9m0v9Vw7mTZF+qY7T
-	jWXb+zUwY5MherG9XL6zAF0=; b=KJ1C4VIiNAwFj6FM+nG0j/31/jh6/oKIJqO/
-	tl96Aih4Vybmz+qsG/9dCQHAuYjv+h5C9y//d+cc97UeFjK01BGPQzlaeOqEBodR
-	sv64PJoQzoxz7x4yzAFtGXmA3w3o4/P5stuMkV2m2f8Pj4bPJq8Htv1gNZDCWqRy
-	wGjt/VkakzBRu2Hj4+9opbgcunZAHZwFPBzF+7YyxNjxxqpy5FNYyPOBoTDHl8dd
-	e4wR8pVILOV0DnO1NNgblCCoJiwCYHFhPU6AB6wfNP5o4OS4HfrO4JRGC/h2RvfS
-	pFNxzU4nYoJ2vM0j50TLHuJnmvDD+txNgVynpc5uFSTyD+x7OQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w9wxf2cn2-1
+	:mime-version:content-type; s=qcppdkim1; bh=j6KhsNPJkKJnAiS4EW1w
+	T5/zOfT1G3Xs5VOM7yP6NQg=; b=KmMicD6SvvC8TdRWwtp0pcgHQ0S0fYZJ3Emx
+	+C12gNnS+Qdr/faoVXhJPUVtJPMgEHwUD/qOjIN0QLqfOLiOxPS7zoY3IdUhAQDv
+	DtY5FMsSYsu3giElrBQLUdnuzv0wqgG4HJnmf6vpoC0e5ZQBacg4xzlaUIQhT2zW
+	P+s/ePBRL/3x52hj+9rqm6547LzH1HevLYQ7OEHWX9uSD560qln+lpRSgi72R9pU
+	i8uO3ZA7uZaMlfaj45L419lqXucCSoXWs4+OzQZcnCTL79jxy7c8D/Wt9JuLBsSH
+	Gi0imlYITcqhqWJ2qI/1IVnQfaNUH94YIxasyrPS1mAUByl/eg==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wa6nk9e5m-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 17 Feb 2024 00:10:33 +0000 (GMT)
+	Sat, 17 Feb 2024 00:10:32 +0000 (GMT)
 Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41H0AWBg017199
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41H0AVjj012877
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 17 Feb 2024 00:10:32 GMT
+	Sat, 17 Feb 2024 00:10:31 GMT
 Received: from hu-wcheng-lv.qualcomm.com (10.49.16.6) by
  nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 16 Feb 2024 16:10:32 -0800
+ 15.2.1118.40; Fri, 16 Feb 2024 16:10:31 -0800
 From: Wesley Cheng <quic_wcheng@quicinc.com>
 To: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
         <perex@perex.cz>, <conor+dt@kernel.org>, <corbet@lwn.net>,
@@ -54,9 +54,9 @@ CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <alsa-devel@alsa-project.org>,
         Mathias Nyman <mathias.nyman@linux.intel.com>,
         Wesley Cheng <quic_wcheng@quicinc.com>
-Subject: [PATCH v17 09/51] xhci: Decouple handling an event from checking for unhandled events
-Date: Fri, 16 Feb 2024 16:09:35 -0800
-Message-ID: <20240217001017.29969-10-quic_wcheng@quicinc.com>
+Subject: [PATCH v17 05/51] xhci: update event ring dequeue pointer position to controller correctly
+Date: Fri, 16 Feb 2024 16:09:31 -0800
+Message-ID: <20240217001017.29969-6-quic_wcheng@quicinc.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240217001017.29969-1-quic_wcheng@quicinc.com>
 References: <20240217001017.29969-1-quic_wcheng@quicinc.com>
@@ -71,117 +71,105 @@ X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
  nalasex01b.na.qualcomm.com (10.47.209.197)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: DXZy5_W1P3Y7HiX2yAbUtJo8yPfNnQHX
-X-Proofpoint-ORIG-GUID: DXZy5_W1P3Y7HiX2yAbUtJo8yPfNnQHX
+X-Proofpoint-GUID: 071h6m0On4iwN-75tIxJqYbYiao25lqv
+X-Proofpoint-ORIG-GUID: 071h6m0On4iwN-75tIxJqYbYiao25lqv
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-16_23,2024-02-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=907
- lowpriorityscore=0 priorityscore=1501 mlxscore=0 clxscore=1015
- impostorscore=0 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402160189
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 phishscore=0 mlxlogscore=999 priorityscore=1501
+ lowpriorityscore=0 spamscore=0 bulkscore=0 mlxscore=0 adultscore=0
+ clxscore=1015 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2401310000 definitions=main-2402160189
 
 From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-Some sequences, will require traversing through the entire event ring
-without handling the event TRB.  This is ideal for when secondary
-interrupters that are utilized by external entities need to clean up the
-interrupter's event rings during halting of the XHCI HCD.
+The event ring dequeue pointer field (ERDP) in xHC hardware is used to
+inform controller how far the driver has processed events on the event
+ring.
 
+In the case all events are handled and event ring is empty then the
+address of the TRB after the last processed one should be written.
+This TRB is both the enqueue and dequeue pointer.
+
+But in case we are writing the ERDP in the middle of processing
+several events then ERDP field should be written with the "up to and
+including" address of the last handled event TRB.
+
+Currenly each ERDP write by driver is done as if all events are handled
+and ring is empty.
+
+Fix this by adjusting the order when software dequeue "inc_deq()"
+is called and hardware dequeue "xhci_update_erst_dequeue()" is updated.
+
+Details in xhci 1.2 specification section 4.9.4:
+
+"System software shall write the Event Ring Dequeue Pointer (ERDP)
+ register to inform the xHC that it has completed the processing of Event
+ TRBs up to and including the Event TRB referenced by the ERDP.
+
+ The detection of a Cycle bit mismatch in an Event TRB processed by
+ software indicates the location of the xHC Event Ring Enqueue Pointer
+ and that the Event Ring is empty. Software shall write the ERDP with
+ the address of this TRB to indicate that it has processed all Events
+ in the ring"
+
+This change depends on fixes made to relocate inc_deq() calls captured
+in the below commits:
+
+  commit 3321f84bfae0 ("xhci: simplify event ring dequeue tracking for
+  transfer events")
+
+  commit d1830364e963 ("xhci: Simplify event ring dequeue pointer update
+  for port change events")
+
+Fixes: dc0ffbea5729 ("usb: host: xhci: update event ring dequeue pointer on purpose")
 Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
 ---
- drivers/usb/host/xhci-ring.c | 38 ++++++++++++++++++------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+ drivers/usb/host/xhci-ring.c | 23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-index d31599d46b92..d4a28ac4967f 100644
+index 1136c6170b1a..62bde16f435e 100644
 --- a/drivers/usb/host/xhci-ring.c
 +++ b/drivers/usb/host/xhci-ring.c
-@@ -2962,25 +2962,18 @@ static int handle_tx_event(struct xhci_hcd *xhci,
- }
+@@ -3016,9 +3016,6 @@ static int xhci_handle_event(struct xhci_hcd *xhci, struct xhci_interrupter *ir)
+ 		return 0;
+ 	}
  
- /*
-- * This function handles all OS-owned events on the event ring.  It may drop
-+ * This function handles one OS-owned event on the event ring. It may drop
-  * xhci->lock between event processing (e.g. to pass up port status changes).
-- * Returns >0 for "possibly more events to process" (caller should call again),
-- * otherwise 0 if done.  In future, <0 returns should indicate error code.
-  */
--static int xhci_handle_event(struct xhci_hcd *xhci, struct xhci_interrupter *ir)
-+static int xhci_handle_event_trb(struct xhci_hcd *xhci, struct xhci_interrupter *ir,
-+				 union xhci_trb *event)
- {
--	union xhci_trb *event;
- 	u32 trb_type;
- 
--	event = ir->event_ring->dequeue;
+-	/* Update SW event ring dequeue pointer */
+-	inc_deq(xhci, ir->event_ring);
 -
--	if (!unhandled_event_trb(ir->event_ring))
--		return 0;
--
- 	trace_xhci_handle_event(ir->event_ring, &event->generic);
- 
- 	/*
--	 * Barrier between reading the TRB_CYCLE (valid) flag above and any
-+	 * Barrier between reading the TRB_CYCLE (valid) flag before, and any
- 	 * speculative reads of the event's flags/data below.
+ 	/* Are there more items on the event ring?  Caller will call us again to
+ 	 * check.
  	 */
- 	rmb();
-@@ -3010,15 +3003,11 @@ static int xhci_handle_event(struct xhci_hcd *xhci, struct xhci_interrupter *ir)
- 	 * to make sure a watchdog timer didn't mark the host as non-responsive.
+@@ -3141,15 +3138,21 @@ irqreturn_t xhci_irq(struct usb_hcd *hcd)
+ 	 * that clears the EHB.
  	 */
- 	if (xhci->xhc_state & XHCI_STATE_DYING) {
--		xhci_dbg(xhci, "xHCI host dying, returning from "
--				"event handler.\n");
--		return 0;
-+		xhci_dbg(xhci, "xHCI host dying, returning from event handler.\n");
-+		return -ENODEV;
- 	}
- 
--	/* Are there more items on the event ring?  Caller will call us again to
--	 * check.
--	 */
--	return 1;
-+	return 0;
- }
- 
- /*
-@@ -3068,9 +3057,14 @@ static void xhci_clear_interrupt_pending(struct xhci_hcd *xhci,
- 	}
- }
- 
-+/*
-+ * Handle all OS-owned events on an interrupter event ring. It may drop
-+ * and reaquire xhci->lock between event processing.
-+ */
- static int xhci_handle_events(struct xhci_hcd *xhci, struct xhci_interrupter *ir)
- {
- 	int event_loop = 0;
-+	int err;
- 	u64 temp;
- 
- 	xhci_clear_interrupt_pending(xhci, ir);
-@@ -3091,7 +3085,10 @@ static int xhci_handle_events(struct xhci_hcd *xhci, struct xhci_interrupter *ir
- 		return -ENODEV;
- 	}
- 
--	while (xhci_handle_event(xhci, ir) > 0) {
-+	/* Process all OS owned event TRBs on this event ring */
-+	while (unhandled_event_trb(ir->event_ring)) {
-+		err = xhci_handle_event_trb(xhci, ir, ir->event_ring->dequeue);
+ 	while (xhci_handle_event(xhci, ir) > 0) {
+-		if (event_loop++ < TRBS_PER_SEGMENT / 2)
+-			continue;
+-		xhci_update_erst_dequeue(xhci, ir, false);
++		/*
++		 * If half a segment of events have been handled in one go then
++		 * update ERDP, and force isoc trbs to interrupt more often
++		 */
++		if (event_loop++ > TRBS_PER_SEGMENT / 2) {
++			xhci_update_erst_dequeue(xhci, ir, false);
 +
- 		/*
- 		 * If half a segment of events have been handled in one go then
- 		 * update ERDP, and force isoc trbs to interrupt more often
-@@ -3107,6 +3104,9 @@ static int xhci_handle_events(struct xhci_hcd *xhci, struct xhci_interrupter *ir
++			if (ir->isoc_bei_interval > AVOID_BEI_INTERVAL_MIN)
++				ir->isoc_bei_interval = ir->isoc_bei_interval / 2;
  
- 		/* Update SW event ring dequeue pointer */
- 		inc_deq(xhci, ir->event_ring);
-+
-+		if (err)
-+			break;
+-		/* ring is half-full, force isoc trbs to interrupt more often */
+-		if (ir->isoc_bei_interval > AVOID_BEI_INTERVAL_MIN)
+-			ir->isoc_bei_interval = ir->isoc_bei_interval / 2;
++			event_loop = 0;
++		}
+ 
+-		event_loop = 0;
++		/* Update SW event ring dequeue pointer */
++		inc_deq(xhci, ir->event_ring);
  	}
  
  	xhci_update_erst_dequeue(xhci, ir, true);
