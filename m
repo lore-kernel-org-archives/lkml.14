@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678711E889;
-	Sat, 17 Feb 2024 01:05:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7B2F200AD;
+	Sat, 17 Feb 2024 01:06:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708131959; cv=none; b=H5YK78yQfdI1eUIfNWR2Fow0gMX622f4DVKDD2kJzL6oE5cgmvRX+fXy8+46bSxiF+1geLeaRIYGlAF0cpI2i32oxcyiM9Ay+vvKmUGkkz6osXNtqRdgjVdVAuhrmBMRIDiBDdkkwygOfMtqAdM4HYpJ8CYHol5m/6JH/fv5h0Y=
+	t=1708131960; cv=none; b=hGhvUpypWcAef3fk7Kxsgi+YPWHKRqXjhvSqYMdmq974s1c15ysXi3gR1LZe4Jj7flw5j5OIOlawu3vP2e42ffnR4sJezwg7qHEmlqJ7QXiV9gKgUNIYo4m+rJ2NzLgbmiqqUMu2eajoq32vVxmWUReFq8PNRPq7VQXyI7hTGgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708131959; c=relaxed/simple;
-	bh=Qt8ricOYsTKcXJqQzKSKsHiM2MHdHGBlaBkQ7xeVb1w=;
+	s=arc-20240116; t=1708131960; c=relaxed/simple;
+	bh=bAiFEbT58TXbP+zf0tFWIGODmRi8LJ7psP4/tHXmMrI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K6q51ue4tCkcrRvh14h4jf2lq5DVsG3FlTLLJWklsUHUUeDnFF6WSSbZrj7gC7E3VrVgh087GB/7UbsJjTsH1rxtHBaSmQ+YCc4RUookdTDqvO/dKCIGGjLzlU6iOYtn9QQEYjv9b832buVbAw/JKC8GgKZo+KuuBT1cs8CmtYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L8xIBjCa; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=oipN2FitzHPpQwjTmbtft5MGZAoxajicanu/Uft9bBX/lzx5JWGNLo7ixPXY9Z+xID/wl+dP/OP6ji/2eXylsTOGydGFQg+97IE5K3O9QeMGKMFASRWt8dFdNzREft5vEa4sPu4DSe7hLPV+N9icjQnCHXIbxEmtXEd+aGJw3Cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nWHPrdK5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L8xIBjCa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85202C43390;
-	Sat, 17 Feb 2024 01:05:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nWHPrdK5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBAC4C32789;
+	Sat, 17 Feb 2024 01:05:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708131959;
-	bh=Qt8ricOYsTKcXJqQzKSKsHiM2MHdHGBlaBkQ7xeVb1w=;
+	s=k20201202; t=1708131960;
+	bh=bAiFEbT58TXbP+zf0tFWIGODmRi8LJ7psP4/tHXmMrI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=L8xIBjCa+dP4TX6pBp3oF6oHj02qDWwzqY5w06pu4FHMPm4oM9+4GnK7hf5lo+VW6
-	 2PhfKNRoQPgxXisBnnsAXZ5oj4v4uKt3qaRh2dMgYSzp74qIOTG36ECnrrKJWd6Gxp
-	 +ecvRyAQwM3x1JuJba6WXapmpAKCdm8eSRGiU9p8mkN1XxFjmPHIhoWKTiFzdiJQs4
-	 9ZK2Gchk2QqCFqUS7c9+oZoeDjD7SyQ+xcnDPpBDiWeZtpaXTNx0xGVkdlYOzqvP4t
-	 ESOs5SV9vbgJoDEkCAm5iVKsa9Qt6LOu34Dp8u1jevaN5YhRuDc5pe+VVlc7noE4gq
-	 tJba78OWDOnEQ==
+	b=nWHPrdK51ANKmmUE3NqJATrEVu6sf4ZIcdhvGIb1FIOmfGEAlBBUzElIK3HXYvtau
+	 HM8OPq8HMxmE9tV8EHUsdjlUrBVacmJLtTFqEgDvSIkYu//JsuZnSiCygfMUAUP5p2
+	 WzURYNN7LTNRzRNRTMPM9s9UNIbyHCFzBjQQSta0mjCFfUeA2MLNLYbltHu4sA/nRK
+	 xAhmAwqIQ5hcPyyiybY2EYhSeBudz+h/5mDdVenucdfsF+wgwIZur9UXrCkkKGQ4EE
+	 8ioWUb7gB4t06y/Xgd2WQLhkZe9z3EacufoevPtfc57OygRYn0npOjK9jtlF4dknIo
+	 FNcCYQOdi1FQw==
 From: Stephen Boyd <sboyd@kernel.org>
 To: Rob Herring <robh+dt@kernel.org>
 Cc: linux-kernel@vger.kernel.org,
@@ -35,10 +35,13 @@ Cc: linux-kernel@vger.kernel.org,
 	kunit-dev@googlegroups.com,
 	linux-kselftest@vger.kernel.org,
 	devicetree@vger.kernel.org,
-	Frank Rowand <frowand.list@gmail.com>
-Subject: [PATCH v4 1/7] of: Always unflatten in unflatten_and_copy_device_tree()
-Date: Fri, 16 Feb 2024 17:05:50 -0800
-Message-ID: <20240217010557.2381548-2-sboyd@kernel.org>
+	Frank Rowand <frowand.list@gmail.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>
+Subject: [PATCH v4 3/7] um: Unconditionally call unflatten_device_tree()
+Date: Fri, 16 Feb 2024 17:05:52 -0800
+Message-ID: <20240217010557.2381548-4-sboyd@kernel.org>
 X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
 In-Reply-To: <20240217010557.2381548-1-sboyd@kernel.org>
 References: <20240217010557.2381548-1-sboyd@kernel.org>
@@ -50,72 +53,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We want to populate an empty DT whenever CONFIG_OF is enabled so that
-overlays can be applied and the DT unit tests can be run. Make
-unflatten_and_copy_device_tree() stop printing a warning if the
-'initial_boot_params' pointer is NULL. Instead, simply copy the dtb if
-there is one and then unflatten it. If there isn't a DT to copy, then
-the call to unflatten_device_tree() is largely a no-op, so nothing
-really changes here.
+Call this function unconditionally so that we can populate an empty DTB
+on platforms that don't boot with a command line provided DTB.  There's
+no harm in calling unflatten_device_tree() unconditionally. If there
+isn't a valid initial_boot_params dtb then unflatten_device_tree()
+returns early.
 
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: Richard Weinberger <richard@nod.at>
+Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: <linux-um@lists.infradead.org>
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 ---
- drivers/of/fdt.c | 32 +++++++++++++++++---------------
- 1 file changed, 17 insertions(+), 15 deletions(-)
+ arch/um/kernel/dtb.c  | 14 +++++++-------
+ drivers/of/unittest.c |  4 ----
+ 2 files changed, 7 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index bf502ba8da95..dfeba8b8ce94 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -1318,6 +1318,21 @@ bool __init early_init_dt_scan(void *params)
- 	return true;
- }
+diff --git a/arch/um/kernel/dtb.c b/arch/um/kernel/dtb.c
+index 484141b06938..4954188a6a09 100644
+--- a/arch/um/kernel/dtb.c
++++ b/arch/um/kernel/dtb.c
+@@ -16,16 +16,16 @@ void uml_dtb_init(void)
+ 	void *area;
  
-+static void *__init copy_device_tree(void *fdt)
-+{
-+	int size;
-+	void *dt;
-+
-+	size = fdt_totalsize(fdt);
-+	dt = early_init_dt_alloc_memory_arch(size,
-+					     roundup_pow_of_two(FDT_V17_SIZE));
-+
-+	if (dt)
-+		memcpy(dt, fdt, size);
-+
-+	return dt;
-+}
-+
- /**
-  * unflatten_device_tree - create tree of device_nodes from flat blob
-  *
-@@ -1350,22 +1365,9 @@ void __init unflatten_device_tree(void)
-  */
- void __init unflatten_and_copy_device_tree(void)
- {
--	int size;
--	void *dt;
-+	if (initial_boot_params)
-+		initial_boot_params = copy_device_tree(initial_boot_params);
- 
--	if (!initial_boot_params) {
--		pr_warn("No valid device tree found, continuing without\n");
+ 	area = uml_load_file(dtb, &size);
+-	if (!area)
 -		return;
--	}
--
--	size = fdt_totalsize(initial_boot_params);
--	dt = early_init_dt_alloc_memory_arch(size,
--					     roundup_pow_of_two(FDT_V17_SIZE));
--
--	if (dt) {
--		memcpy(dt, initial_boot_params, size);
--		initial_boot_params = dt;
--	}
++	if (area) {
++		if (!early_init_dt_scan(area)) {
++			pr_err("invalid DTB %s\n", dtb);
++			memblock_free(area, size);
++			return;
++		}
+ 
+-	if (!early_init_dt_scan(area)) {
+-		pr_err("invalid DTB %s\n", dtb);
+-		memblock_free(area, size);
+-		return;
++		early_init_fdt_scan_reserved_mem();
+ 	}
+ 
+-	early_init_fdt_scan_reserved_mem();
  	unflatten_device_tree();
  }
  
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index cfd60e35a899..891752a20a5f 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -4087,10 +4087,6 @@ static int __init of_unittest(void)
+ 	add_taint(TAINT_TEST, LOCKDEP_STILL_OK);
+ 
+ 	/* adding data for unittest */
+-
+-	if (IS_ENABLED(CONFIG_UML))
+-		unittest_unflatten_overlay_base();
+-
+ 	res = unittest_data_add();
+ 	if (res)
+ 		return res;
 -- 
 https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/
 https://git.kernel.org/pub/scm/linux/kernel/git/sboyd/spmi.git
