@@ -1,126 +1,352 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from hognose1.porkbun.com (hognose1.porkbun.com [35.82.102.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7981CA87;
-	Sat, 17 Feb 2024 05:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317481CAAC;
+	Sat, 17 Feb 2024 06:04:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.82.102.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708149461; cv=none; b=V9gepoyHM/7RDIQTIMZdZ39PLRAFpU066CqArp2B3WvmHoRWZIDQtI1tgzisK517hNBJzVGMA6GzM/7HvF1uQRSILa90OYXKKW/50eK6eXoUDSc0vJvT3DPW97BhHBHXoCYfUiKAPoqB8WNdIVvVtvv0ke6IfOC0C1xgy0h6Kuw=
+	t=1708149881; cv=none; b=dJXW/FlCCRpkexeU2sKaQbrEBdrP5Mh/ZWaIyYzITrswKk8iS0cK/7Hpen9mnx9xPabPofHMjOvxBp3s+y5Uk//SG/HfAQT3dc6AREl2l1IP3r4HAzYsIiBV6raJ0SZ/gK3Cmo7uX5XKVB1+pSTW5gQH8G4GGpw4s4AtCC8Op5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708149461; c=relaxed/simple;
-	bh=te3NvISa2cg+5326YYQR9qU1/sfQi28dFBgXgq7HymI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hAOuGhaDTOsYEJgiILsS5v1S9qLKubiCcl6Obae84FVGEpVgdNUg73vteEdqyP1xow2oWzwX+u/6jyxeHTbvRTCwFewQ0BmwrpvDY5TfcOcE+lahoIOANAb67wRTXiAbXcsY5zP02p5LE/BTYXFzygORbT+DXoFtsWTsfrvZDRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H3+QHFWA; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708149881; c=relaxed/simple;
+	bh=8Jo3+1fbXUjvAXRUG/kCX6FortRRxMk/ITjxwuFyDfw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=eLJR3+YDQ3J+A97fa4eenfzqTZvFkhk9R3672uCs65gPJFQCTaBeGkKfmqEfbZQiCo5BiTwYjvwRL20JYX+aS07hjaViCAepYfCkjzk+mMnKKUAqYG0hUc+mqZZJ382PYX7PW6KOkPHOkBBxAZI7dmTuADTpdd7xH+7w2W17E/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=altimeter.info; spf=pass smtp.mailfrom=altimeter.info; dkim=pass (1024-bit key) header.d=altimeter.info header.i=@altimeter.info header.b=w2HDsiqh; arc=none smtp.client-ip=35.82.102.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=altimeter.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altimeter.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H3+QHFWA"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7872614af89so279798985a.0;
-        Fri, 16 Feb 2024 21:57:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708149459; x=1708754259; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+uCjdazgHe9L1xw/mXjLr8atA9J7oVAnfB8tvbVqeMc=;
-        b=H3+QHFWADbTAqHfPwGQxW00WmkAviWd490l3E+tAdvlb4XZslilBk9TS1EGiwWGfC1
-         xGHGLs+c8T8MHaqahBORWA3ISysHAYd6sIFIwYHrMN1G3Arr9DeKyUhaVeEqVmE4f9LM
-         lG9MhQqUEg0vUjHsx39cXsT4GORYufJRymc+eSMI/wd2cjCfbmn+ejf3FPACYukCQfvw
-         XogAxnR8v/NRHHZEVD0LqnBJq7PtD7LA6Uq05Rh1UY3LkPLjPnIlEulYH3d53VpUmha/
-         fNQZjmmqBZfR3gaKvTjoWLYNbcPpbPUoHn0CqP8DrsMDEM9X2E3TCjJNvXe4mTDNlsMg
-         i+tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708149459; x=1708754259;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+uCjdazgHe9L1xw/mXjLr8atA9J7oVAnfB8tvbVqeMc=;
-        b=vrtGeNqGzNsIIJwin4p0XziK25FWNqLdpDeLWIVi5sZOPKAyPIduaf5Ezn9hxrNCCY
-         x1ujtT6NkfdaC+Fy5UerWMzo2noqQygI+pZeYjU2oEK6FpKWGsDvPvpQASzJ/Xn8NmIM
-         edOWd8odsi1+ZGhCUFrCk86bLrucjTFI8gNnsNCRFY2LXzgRXLy6eJbdY6PYfCB/+w8T
-         iJ1Yy8lhScSNaeb+JkXcUTo0qoU+I/gOAwjtbgmFPspGhZ8vJ6UAODrJCAVsGMgkPS6b
-         xElLhRu6Px3tITeuJs8FXMuuakNSEdl9fBj85zlgHAyDWdHP+kJHbM+SYqbgFBZQQfyZ
-         IxNA==
-X-Forwarded-Encrypted: i=1; AJvYcCUIlG2dYHeYy4yTIK9jCE1A2uYPTxYgKpMHD92G3qaAbvCCkKRnTmIQS3TBDYzfp7Tqp+8rfwl4JOFH5Q0tJ1n8KEmqUlE9LUoQQqBsGXDW3K+sDDiF1J8ehgmeHZxzJxLw6FPXGtVVwYkcaIhVs/rlUbRReaRGEhVIQjJQxooCgbQZ+gpqKdExYCY=
-X-Gm-Message-State: AOJu0YxjjnxHxJNeScbU2qoRSXMYGnxdz9Im/wySxp7qP8OunAY3gFAN
-	SILPbquI/TOC2eLRmBqHwNVMv3bv4JA7dSuWcbcdsB5ikSywu0jY
-X-Google-Smtp-Source: AGHT+IHwSaPs/0sTuYyvoGkTZ9yU/0PeCt6IS+EHLIK/2TZ+2uktYLYLIeclv/Cjb75EaezoyQI1FA==
-X-Received: by 2002:a0c:e408:0:b0:68f:35f5:8e96 with SMTP id o8-20020a0ce408000000b0068f35f58e96mr5046198qvl.25.1708149459024;
-        Fri, 16 Feb 2024 21:57:39 -0800 (PST)
-Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id ks6-20020a056214310600b0068f2b9a6ec7sm702735qvb.18.2024.02.16.21.57.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 21:57:38 -0800 (PST)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id B55151200043;
-	Sat, 17 Feb 2024 00:57:37 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Sat, 17 Feb 2024 00:57:37 -0500
-X-ME-Sender: <xms:0UrQZdnfl4NbTm4uWwvRVrT6KieJBsb00dcr25ZfdE3qfs15uacr3A>
-    <xme:0UrQZY1hyUy8DmVym6YNHGUBsFsc5lNvw0_d32anhjOlz2QQ5urOLEcsw6yrQP9tq
-    lBIFoxJg79MTnh4_Q>
-X-ME-Received: <xmr:0UrQZTqPv8oUezjWvoIIodh5eP7ENC5bWY2foa9JZUls14MjyMBHrfMvSKvkbw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdefgdeklecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
-    htvghrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveeiudff
-    iedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsg
-    hoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieeg
-    qddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigi
-    hmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:0UrQZdmDmQj-P7KHbcNASwtq7JAZ1BrQPiK-E-lqlF65y2xhdvLgzw>
-    <xmx:0UrQZb3dIYw7qCeZEQJj9YmN5RTW4f8e5oDhDqTAt-JPDWrZ17tZMw>
-    <xmx:0UrQZcvTxegSNMCIva8DBaFco6dAUbvTZaFvuRtT8NQMQyMtGrRFOA>
-    <xmx:0UrQZS10S57g9lkxQrt_FC_ZufMGm7kpcGl1dfJOf10mLNIdT9NZ5nGSoH8>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 17 Feb 2024 00:57:37 -0500 (EST)
-Date: Fri, 16 Feb 2024 21:57:29 -0800
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	linux-kbuild@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Subject: Re: [PATCH 2/2] rust: upgrade to Rust 1.76.0
-Message-ID: <ZdBKycd6mPI5cpkA@boqun-archlinux>
-References: <20240217002638.57373-1-ojeda@kernel.org>
- <20240217002638.57373-2-ojeda@kernel.org>
+	dkim=pass (1024-bit key) header.d=altimeter.info header.i=@altimeter.info header.b="w2HDsiqh"
+Received: from lxl-9drxzh3.na.joby.aero (c-73-162-2-38.hsd1.ca.comcast.net [73.162.2.38])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(Client did not present a certificate)
+	(Authenticated sender: linux-kernel@altimeter.info)
+	by hognose1.porkbun.com (Postfix) with ESMTPSA id 2591B4486D;
+	Sat, 17 Feb 2024 05:54:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altimeter.info;
+	s=default; t=1708149291;
+	bh=NEVBh6mOSjcsgykdJd+GkKPLBxuCjxP6gniCvpJhqx0=;
+	h=Date:From:To:Cc:Subject;
+	b=w2HDsiqhxJ/nvHAYljjEj3/51RC2dzdB5Qsnv4wbTPkc9X0ZzSm/mhAXht1S5FPbV
+	 GJR0evMWMoITqCZCoINTeILIyM5ngoiNh49bk2yDfTAFCMgjqJiot0EHEXOP2TXHEK
+	 an30HFBApCeaP7xeUdur0BWLG9chXY5SXOcqqrI4=
+Date: Fri, 16 Feb 2024 21:54:47 -0800
+From: Ivan Gorinov <linux-kernel@altimeter.info>
+To: Jiri Kosina <jikos@kernel.org>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] Input: WinWing Orion2 throttle support
+Message-ID: <20240216215447.426ca3e7@lxl-9drxzh3.na.joby.aero>
+Organization: altimeter.info
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240217002638.57373-2-ojeda@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Feb 17, 2024 at 01:26:38AM +0100, Miguel Ojeda wrote:
-> This is the next upgrade to the Rust toolchain, from 1.75.0 to 1.76.0
-> (i.e. the latest) [1].
-> 
+WinWing Orion2 throttle works with Linux out of box,
+but the kernel sees only 16 of 47 buttons on the throttle base.
 
-I've applied this on the merge point of for-next/rust-for-arm64 in arm64
-tree and today's rust-next (patch #1 has a small conflict with the
-target.json changes in arm64 tree), tested with kunit for both x86 and
-arm64.
+This module enables all buttons, and also adds LED controls.
 
-Tested-by: Boqun Feng <boqun.feng@gmail.com>
+Button numbers 0 .. 63 on Orion2 are reserved for throttle grip;
+the throttle base buttons have numbers 64 .. 110.
 
-Regards,
-Boqun
+Linux kernel HID subsystem only supports up to 80 buttons.
 
-> See the upgrade policy [2] and the comments on the first upgrade in
-> commit 3ed03f4da06e ("rust: upgrade to Rust 1.68.2").
-> 
+Remap throttle base buttons to numbers 32 .. 78,
+reserving only numbers 0 .. 31 for buttons on the grip handle.
 
-[...]
+Changes since v2:
+   - Fixed automatic line wraps added by mail client
+
+Changes since v1:
+   - Fixed formatting of descriptor byte array;
+   - Using product codes of Winwing grips in config.
+
+Signed-off-by: Ivan Gorinov <ivan.gorinov@jobyaviation.com>
+---
+ drivers/hid/Kconfig       |  16 +++
+ drivers/hid/Makefile      |   1 +
+ drivers/hid/hid-winwing.c | 229 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 246 insertions(+)
+ create mode 100644 drivers/hid/hid-winwing.c
+
+diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+index 4c682c650704..08446c89eff6 100644
+--- a/drivers/hid/Kconfig
++++ b/drivers/hid/Kconfig
+@@ -1236,6 +1236,22 @@ config HID_WIIMOTE
+ 	To compile this driver as a module, choose M here: the
+ 	module will be called hid-wiimote.
+ 
++config HID_WINWING
++	tristate "WinWing Orion2 throttle support"
++	depends on USB_HID
++	depends on NEW_LEDS
++	depends on LEDS_CLASS
++	help
++	  Support for WinWing Orion2 throttle base with the following grips:
++
++	    * TGRIP-16EX
++	    * TGRIP-18
++
++	  This driver enables all buttons and switches on the throttle base.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called hid-winwing.
++
+ config HID_XINMO
+ 	tristate "Xin-Mo non-fully compliant devices"
+ 	help
+diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
+index 082a728eac60..ce71b53ea6c5 100644
+--- a/drivers/hid/Makefile
++++ b/drivers/hid/Makefile
+@@ -150,6 +150,7 @@ wacom-objs			:= wacom_wac.o wacom_sys.o
+ obj-$(CONFIG_HID_WACOM)		+= wacom.o
+ obj-$(CONFIG_HID_WALTOP)	+= hid-waltop.o
+ obj-$(CONFIG_HID_WIIMOTE)	+= hid-wiimote.o
++obj-$(CONFIG_HID_WINWING)	+= hid-winwing.o
+ obj-$(CONFIG_HID_SENSOR_HUB)	+= hid-sensor-hub.o
+ obj-$(CONFIG_HID_SENSOR_CUSTOM_SENSOR)	+= hid-sensor-custom.o
+ 
+diff --git a/drivers/hid/hid-winwing.c b/drivers/hid/hid-winwing.c
+new file mode 100644
+index 000000000000..d895c82a541d
+--- /dev/null
++++ b/drivers/hid/hid-winwing.c
+@@ -0,0 +1,229 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * HID driver for WinWing Orion 2 throttle
++ *
++ * Copyright (c) 2023 Ivan Gorinov
++ */
++
++#include <linux/device.h>
++#include <linux/hid.h>
++#include <linux/hidraw.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++
++#define MAX_REPORT 16
++
++struct winwing_led {
++	struct led_classdev cdev;
++	struct hid_device *hdev;
++	int number;
++};
++
++struct winwing_led_info {
++	int number;
++	int max_brightness;
++	const char *led_name;
++};
++
++static struct winwing_led_info led_info[3] = {
++	{ 0, 255, "backlight" },
++	{ 1, 1, "a-a" },
++	{ 2, 1, "a-g" },
++};
++
++struct winwing_drv_data {
++	struct hid_device *hdev;
++	__u8 *report_buf;
++	struct mutex lock;
++	unsigned int num_leds;
++	struct winwing_led leds[];
++};
++
++static int winwing_led_write(struct led_classdev *cdev,
++		enum led_brightness br)
++{
++	struct winwing_led *led = (struct winwing_led *) cdev;
++	struct winwing_drv_data *data = hid_get_drvdata(led->hdev);
++	__u8 *buf = data->report_buf;
++	int ret;
++
++	mutex_lock(&data->lock);
++
++	buf[0] = 0x02;
++	buf[1] = 0x60;
++	buf[2] = 0xbe;
++	buf[3] = 0x00;
++	buf[4] = 0x00;
++	buf[5] = 0x03;
++	buf[6] = 0x49;
++	buf[7] = led->number;
++	buf[8] = br;
++	buf[9] = 0x00;
++	buf[10] = 0;
++	buf[11] = 0;
++	buf[12] = 0;
++	buf[13] = 0;
++
++	ret = hid_hw_output_report(led->hdev, buf, 14);
++
++	mutex_unlock(&data->lock);
++
++	return ret;
++}
++
++static int winwing_init_led(struct hid_device *hdev,
++		struct input_dev *input)
++{
++	struct winwing_drv_data *data;
++	struct winwing_led *led;
++	int ret;
++	int i;
++
++	size_t data_size = struct_size(data, leds, 3);
++
++	data = devm_kzalloc(&hdev->dev, data_size, GFP_KERNEL);
++
++	if (!data)
++		return -ENOMEM;
++
++	data->report_buf = devm_kmalloc(&hdev->dev, MAX_REPORT, GFP_KERNEL);
++
++	if (!data->report_buf)
++		return -ENOMEM;
++
++	for (i = 0; i < 3; i += 1) {
++		struct winwing_led_info *info = &led_info[i];
++
++		led = &data->leds[i];
++		led->hdev = hdev;
++		led->number = info->number;
++		led->cdev.max_brightness = info->max_brightness;
++		led->cdev.brightness_set_blocking = winwing_led_write;
++		led->cdev.flags = LED_HW_PLUGGABLE;
++		led->cdev.name = devm_kasprintf(&hdev->dev, GFP_KERNEL,
++						"%s::%s",
++						dev_name(&input->dev),
++						info->led_name);
++
++		ret = devm_led_classdev_register(&hdev->dev, &led->cdev);
++		if (ret)
++			return ret;
++	}
++
++	hid_set_drvdata(hdev, data);
++
++	return ret;
++}
++
++static int winwing_probe(struct hid_device *hdev,
++		const struct hid_device_id *id)
++{
++	unsigned int minor;
++	int ret;
++
++	ret = hid_parse(hdev);
++	if (ret) {
++		hid_err(hdev, "parse failed\n");
++		return ret;
++	}
++
++	ret = hid_hw_start(hdev, HID_CONNECT_DEFAULT);
++	if (ret) {
++		hid_err(hdev, "hw start failed\n");
++		return ret;
++	}
++
++	minor = ((struct hidraw *) hdev->hidraw)->minor;
++
++	return 0;
++}
++
++static int winwing_input_configured(struct hid_device *hdev,
++		struct hid_input *hidinput)
++{
++	int ret;
++
++	ret = winwing_init_led(hdev, hidinput->input);
++
++	if (ret)
++		hid_err(hdev, "led init failed\n");
++
++	return ret;
++}
++
++static __u8 original_rdesc_buttons[] = {
++	0x05, 0x09, 0x19, 0x01, 0x29, 0x6F,
++	0x15, 0x00, 0x25, 0x01, 0x35, 0x00,
++	0x45, 0x01, 0x75, 0x01, 0x95, 0x6F,
++	0x81, 0x02, 0x75, 0x01, 0x95, 0x01,
++	0x81, 0x01
++};
++
++/*
++ * HID report descriptor shows 111 buttons, which exceeds maximum
++ * number of buttons (80) supported by Linux kernel HID subsystem.
++ *
++ * This module skips numbers 32-63, unused on some throttle grips.
++ */
++
++static __u8 *winwing_report_fixup(struct hid_device *hdev, __u8 *rdesc,
++		unsigned int *rsize)
++{
++	int sig_length = sizeof(original_rdesc_buttons);
++	int unused_button_numbers = 32;
++
++	if (*rsize < 34)
++		return rdesc;
++
++	if (memcmp(rdesc + 8, original_rdesc_buttons, sig_length) == 0) {
++
++		/* Usage Maximum */
++		rdesc[13] -= unused_button_numbers;
++
++		/*  Report Count for buttons */
++		rdesc[25] -= unused_button_numbers;
++
++		/*  Report Count for padding [HID1_11, 6.2.2.9] */
++		rdesc[31] += unused_button_numbers;
++
++		hid_info(hdev, "winwing descriptor fixed\n");
++	}
++
++	return rdesc;
++}
++
++static int winwing_raw_event(struct hid_device *hdev,
++		struct hid_report *report, u8 *raw_data, int size)
++{
++	if (size >= 15) {
++		/* Skip buttons 32 .. 63 */
++		memmove(raw_data + 5, raw_data + 9, 6);
++
++		/* Clear the padding */
++		memset(raw_data + 11, 0, 4);
++	}
++
++	return 0;
++}
++
++static const struct hid_device_id winwing_devices[] = {
++	{ HID_USB_DEVICE(0x4098, 0xbe62) },  /* TGRIP-18 */
++	{ HID_USB_DEVICE(0x4098, 0xbe68) },  /* TGRIP-16EX */
++	{}
++};
++
++MODULE_DEVICE_TABLE(hid, winwing_devices);
++
++static struct hid_driver winwing_driver = {
++	.name = "winwing",
++	.id_table = winwing_devices,
++	.probe = winwing_probe,
++	.input_configured = winwing_input_configured,
++	.report_fixup = winwing_report_fixup,
++	.raw_event = winwing_raw_event,
++};
++module_hid_driver(winwing_driver);
++
++MODULE_LICENSE("GPL");
+-- 
+2.25.1
+
