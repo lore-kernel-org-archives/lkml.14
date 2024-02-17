@@ -1,229 +1,205 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2077.outbound.protection.outlook.com [40.107.94.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA9B1CF83
-	for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 21:19:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708204746; cv=none; b=r9CRdKj1BNlpHk4l4DsKQuAQ+j2277bd0mP9hQPVhKKjhdrxb+PnOv96KjLbqyzG75yr7LnoYRy+ZaZ8CkLhNsB2rFyFnR6aueP8c0QMgK+ZBciuyqYCHMaObTUYObI1RdPllFvVduzxwS/DzyVOQc+pUQ9N7RytZsT2AI4IGHQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708204746; c=relaxed/simple;
-	bh=jqmSZE/6hIL7tHTUq7XBmsqEMOHIxcazTD9D7B73dnA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GNyuUoF+iwMeH4QNbDejV4xFVijm2yo35Rba/HxdwFxOu1nq1a9kw8NEP/4DUh8i9Um7v0mO3p6EGXKFE61kxkyl4JcULHowPt+bf3Ml/hLqN2eQQcfceQQQbVtUJA32JHkhDKBFU71GcjJGiexyjsM44Gj/Y+A1NnPk4WWGxws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org; spf=pass smtp.mailfrom=ieee.org; dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b=fRjUtNWb; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ieee.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847B15B1E7;
+	Sat, 17 Feb 2024 21:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708205008; cv=fail; b=Weh94+FE80jxx6gQU1KV1b4UxonRfQKZFhKHtaDYV1a1PW+yW7jFYpq0dhJAZ6DD9G3ErqRgWalG/CUsV6z+EkyKF9PblfOIfWy1LWq2+01SoHQvuPZdUbrbzaNzgCJIPZ6wG+zodj5uDQrC63VU2wCZ7xRWKR+4GFgdtoDYbu4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708205008; c=relaxed/simple;
+	bh=qIocdiArhV9yTZTCb509W8yUPjAVWc1M5nWkn3VsKsE=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 Content-Type:MIME-Version; b=V5D9+p0dYvOnr4HTqi/7EFJ5rRtTPseZdtSMl+GWLFthknRTNWMj0FcO9AJ16JlUgXJ4nlUyQFdctk0NokYYCpeXc0hFkkPYlMZpHqpQhqJ5SyQzlhC2wAzhC+s4t3fdV0HWF6hSzovWnfnEMCBTA99KdKzqht2sjZPLEWv4wV4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Fg6Elk2d; arc=fail smtp.client-ip=40.107.94.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="fRjUtNWb"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7875adf71b1so25395085a.0
-        for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 13:19:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ieee.org; s=google; t=1708204742; x=1708809542; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jsUAb6vb40+XemerMiSmb6ZuxYzXcwGlQ49c+yrXOkw=;
-        b=fRjUtNWbyUcxuRIkCB0gXWYH6TIvfHCtO29QgX3+Ws+ceUgFRqNzEYiutvsEmoBBYM
-         ypJp25oScrs8hIJBClbEkerQf+Um4HRE0GUZ+JrpN8Pzx8C4G5JwFfJKXVuZvVFP+MIG
-         f+tCQxLCGwwjS0d5d8xqHaIMgDw958TM+cDl0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708204742; x=1708809542;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jsUAb6vb40+XemerMiSmb6ZuxYzXcwGlQ49c+yrXOkw=;
-        b=mY0Q7HP5SARybM2M17gjFStZl+uNi2xJOTmHmj7QDIPtGrcflOQWWc8YmY1AaVBZpH
-         /3IuKreSd/8Hjeb5HJxU/IdvNRlX8KMTve0s1Kt/AqncJPP+yiUtYmbK2jWESBvJ0Y3+
-         zUmSv7T/N39nzpt+24V4Z+PHz92sCKnjJqNXKB/isbVtLgj1d/rq7l2zi9qTrHUhtVtZ
-         lQhphKyFEnlbCkkhOVQQKuoRIPYnYP+NlFGp5URF4a06FWtJh/jyWJB71EjrSFGvNy2T
-         4+Gt6sgF8JO9HAF2jfS2liLpR6WPqvb05ibqbPMQ7qNlycncgANfS+mbVqtVMtRj637X
-         X1Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCVB3J1YZ0cGQRuwQwBairV+zOCiEnRoAImjj0ZvbawZGEnfQMeQfA5R70jSwQWXdhCd28EnY2+TKVFnFemGkMXLBVtLc5Nf7M1u3tV/
-X-Gm-Message-State: AOJu0Yw4Ure37w2yCWbOA7cHabt82vpUJbs/PdF9mOk3M/QGiilhTUtn
-	l/bLFmXclvG/0F7jaJFC3+S58N75Cgh9Rx6f3iQNAIg5QJY65mSZWTdekP0L5A==
-X-Google-Smtp-Source: AGHT+IGP14v6oCCtMP0+vugRbMd2i51vK0hqWp5NBXjAY0xKJajqQMGwjum2Jn2GI6G56nWQ9lc40Q==
-X-Received: by 2002:a05:620a:46ab:b0:787:538c:58cb with SMTP id bq43-20020a05620a46ab00b00787538c58cbmr4663545qkb.28.1708204741830;
-        Sat, 17 Feb 2024 13:19:01 -0800 (PST)
-Received: from [10.211.55.3] (c-98-61-227-136.hsd1.mn.comcast.net. [98.61.227.136])
-        by smtp.googlemail.com with ESMTPSA id c3-20020a05620a11a300b00785d7f634bcsm1116200qkk.8.2024.02.17.13.19.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 17 Feb 2024 13:19:01 -0800 (PST)
-Message-ID: <02cf87a3-4e92-4f6d-98f6-dfc0e198d462@ieee.org>
-Date: Sat, 17 Feb 2024 15:18:59 -0600
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Fg6Elk2d"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gnWPMml3hKsIK6KbgedMl3f5XDbJoD2cpUaKjM6L0AF8esNPNLPoIWtuDBE1L11xcJFRE/pNinPopAx6PNud4RRF1N+2ZX95RmTs/GJ9+1QjL+wrd4+2xVEbdq9PZSeGy9yiIDS8dXRI/iCvobpErJplomYtyMrk97vrJ1cc/xiNLxMjdGIytBVnMd3L60N4QSZHH4CGQtYMmZ4bXGt8PuVLRC0gWaeXy2vt9QXipBxtDysd1E5yP27kWiptOYuMhGmKUI3SLqBpgrdLK3fU7j7OI/vd/pTNh26edIVvBq8WT6IdMHcq1poXTJzD6Ot4ONYQwjfY5LDvIWDYcaOZHQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=S/S33O5k4T0ajGzZomawcoPsss/RcrnMFGRUK7hNGJA=;
+ b=CO98w83d7Sca+GudoXCBaLfad9T5UNp9QuuUedt27FPDlOKdaphtauma60eASAjuFWbp2WVrnjA9I/LkiULcfDLRRYVCJsoTZwdOEN27H3czMQwofeA/1dWuuWyYM+0dx2B7wfx1IQne2lCFOV6kqkTdbWAq273h1/GiAnjf7OeK9aA+R3gE0h1uNamWzVJ6gby2/4n+aaDELBbA9aCkicsKuq3md1gUHg7ysRoYbMwX/WiJHiOC7azVAwUvF1n9lBEhroMt97NhZV1cvHqiHQEqvwDFsgSo+zJNIO4j3fQpO45B2gwsZUjWgFuK8vfnczE+F28kFG0a5nqwvTiaPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S/S33O5k4T0ajGzZomawcoPsss/RcrnMFGRUK7hNGJA=;
+ b=Fg6Elk2dDiNRhMxWK1FoO9JaK1Ar1kYoduBsuuPn0YM05UAjGppDhOqaRyl9X3oQ1417bocSHf4+wBtoKzLa5ktIu97I0fHgDDEcQ69zDSbK+gbUzmB3wcpCu+iBzBk6kqcCnXuMLEZEJLgdXNbGLh7VUgHpBd2MlUZf9/x8HM+ODy/1nqnN0HGH5YBT2Wp38c6KWYxc+jWX1ejCvhONuiQQgo07QJ7GC4jWBPVJvR+EqM1mzkAC5Kmm/rbT+bNyO3jQV9D9W5DLzE7JRapGRu5jIh1YsQ/rP1ZBYAwVrFxrUf1U/K36syxVrZkz+punGb9Qd90q04+rcVHvs4RRzw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BYAPR12MB2743.namprd12.prod.outlook.com (2603:10b6:a03:61::28)
+ by DS7PR12MB8322.namprd12.prod.outlook.com (2603:10b6:8:ed::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.17; Sat, 17 Feb
+ 2024 21:23:23 +0000
+Received: from BYAPR12MB2743.namprd12.prod.outlook.com
+ ([fe80::d726:fa79:bfce:f670]) by BYAPR12MB2743.namprd12.prod.outlook.com
+ ([fe80::d726:fa79:bfce:f670%7]) with mapi id 15.20.7316.012; Sat, 17 Feb 2024
+ 21:23:22 +0000
+References: <20240216-feature_ptp_netnext-v8-0-510f42f444fb@bootlin.com>
+ <20240216-feature_ptp_netnext-v8-4-510f42f444fb@bootlin.com>
+ <87jzn4gtlv.fsf@nvidia.com> <b8926fe5-81ef-40ea-9e87-5e84b368b745@lunn.ch>
+User-agent: mu4e 1.10.8; emacs 28.2
+From: Rahul Rameshbabu <rrameshbabu@nvidia.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Kory Maincent <kory.maincent@bootlin.com>, Florian Fainelli
+ <florian.fainelli@broadcom.com>, Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Richard
+ Cochran <richardcochran@gmail.com>, Radu Pirea
+ <radu-nicolae.pirea@oss.nxp.com>, Jay Vosburgh <j.vosburgh@gmail.com>,
+ Andy Gospodarek <andy@greyhouse.net>, Nicolas Ferre
+ <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Jonathan Corbet
+ <corbet@lwn.net>, Horatiu Vultur <horatiu.vultur@microchip.com>,
+ UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>, Vladimir
+ Oltean <vladimir.oltean@nxp.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Maxime Chevallier
+ <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH RFC net-next v8 04/13] net: Change the API of PHY
+ default timestamp to MAC
+Date: Sat, 17 Feb 2024 13:05:40 -0800
+In-reply-to: <b8926fe5-81ef-40ea-9e87-5e84b368b745@lunn.ch>
+Message-ID: <87o7cebx9z.fsf@nvidia.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR03CA0241.namprd03.prod.outlook.com
+ (2603:10b6:a03:3a0::6) To BYAPR12MB2743.namprd12.prod.outlook.com
+ (2603:10b6:a03:61::28)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] greybus: audio: apbridgea: Remove flexible array from
- struct audio_apbridgea_hdr
-Content-Language: en-US
-To: Erick Archer <erick.archer@gmx.com>,
- Vaibhav Agarwal <vaibhav.sr@gmail.com>, Mark Greer <mgreer@animalcreek.com>,
- Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Kees Cook <keescook@chromium.org>
-Cc: greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20240217154758.7965-1-erick.archer@gmx.com>
-From: Alex Elder <elder@ieee.org>
-In-Reply-To: <20240217154758.7965-1-erick.archer@gmx.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2743:EE_|DS7PR12MB8322:EE_
+X-MS-Office365-Filtering-Correlation-Id: a07137ca-8036-4b6c-23fa-08dc2ffeab4a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	IAybwvnCHnfXxqwf9QsET4/QrFQm/287PZS5goUczZRdVk5V0Q30IULQ09uqEIrxAXLu5xR3ZycBhFNCghOGPkfJ3QXtLc1zOa01WDoDBHb0gsNX75sS9QQCKGZApM2zhp3Jeuac0FaqQj+5aTs0andLeTfMEDoY+VV0QaulRXsKtuXqc4wxVrbwNCnnI3RoJ1o/GpAybjxbXHJ3naaUq+98kF2kgVXd30ikf3IVEfeNmVkf0+o0i6h7nLOb+e7Dmz1UKreCiwbfBmHJYJjI71oUu9Zo3cwv6NSAJwhEk2zYVihyViPEQTpnFrcOpF+P5KK7dXQKduOUYeTRhXa1PRpppphlrbIRd9Jh6e17jgn8Kf78dYy+aQ+zyr/1WpdLtWEPRqqqSunYX56fPSSS1lEyf+KmRVJTLPCeLPNp6rJI3+WhcT+tbjWs8nmbOvlsJtiVEXa97UZdTWk0auzgYK39NEXlv2m0cqY6DT3eQK0PDOEP+8r8m+o+YT/+WKXnu5gYu8suR/EkJcuKZKojs4/1FLj2axSU5gs7F7Gxzmu8wfOuf3ZrYX2CUps+fI1/jVn+aaTj0SANME+9+uUIew6A65w/AAc3gQZuu/6CzrY=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2743.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(346002)(136003)(396003)(376002)(39860400002)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(38100700002)(5660300002)(4326008)(2906002)(66946007)(66556008)(66476007)(6916009)(8936002)(8676002)(7416002)(86362001)(66899024)(2616005)(26005)(83380400001)(54906003)(6486002)(36756003)(966005)(316002)(6506007)(6666004)(6512007)(478600001)(41300700001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?TOBLaHYs5gryPBKf2XeTXbm+lgP/VHZLb6tZsnZyPWMRUk7hzj84RHcDrfeF?=
+ =?us-ascii?Q?8TrQS5cpiIyxvrqI+aCfuyk6Mp/QHKJCYKpKdj7tATPggZSj7Kge+v/23xQe?=
+ =?us-ascii?Q?vRki6XJvljEC4gK8dY5k4Fhl8RhH4iQB736F983YGJacSx88Z0tmb1pD/RJT?=
+ =?us-ascii?Q?X2OUKE5LxkWNZNaVvk8AfGUvtB4aMTmV51dJ32+cWbA0+jxVjmkZwBr8NNgc?=
+ =?us-ascii?Q?syKieqZ/3spkUXIQ/BznTY8vwaV16TNAdwHm2TXlxgOTOSHb0Ye3AFYzMXk8?=
+ =?us-ascii?Q?opBcasYmcKB7M65vvvbdfzfg4FPL0ZeZJE+5x6iZQZbzH0ahB3XIRtMDhQHZ?=
+ =?us-ascii?Q?4HDdILAJkA2YRMpOZbSCu8zuzVDy/3VB1x5rLlrWjue0N39FSXKSQpifp60T?=
+ =?us-ascii?Q?D1CbwGkOV5BQFaU+2CM+IzF7REd1l2/aTZGL7Yen8nTJ11UL3mCV6UuIkS95?=
+ =?us-ascii?Q?PupKeJwyA4TzM3KRe/M5G7KfXTsZJHeDXYyAiDZ6kfS5iZgO7MLyDAwIlIfF?=
+ =?us-ascii?Q?T88yG9QYmmI+AhGaKL3OLbaLLsdQY8HX/L4EvEjgK9Xck2RpWU8LVu4hKXPw?=
+ =?us-ascii?Q?L/2VNWJ8AKvK69OShbBa88mqIPci70LaeT8F+/cJKI6+UVNzUhjhS0Zi0g9Z?=
+ =?us-ascii?Q?uyMRqqQIazbf3K40VgIljeL09lUIEh9GTByArIOgPBLNARy13N9kvECqyOZZ?=
+ =?us-ascii?Q?GRoArdIgLS64jcppUUEDk+C/bXrnWCodIass/gw5DHtjQJjOx5A9D7qyz5F/?=
+ =?us-ascii?Q?EpPW7346ekKAe7DlqKnJ3rNzJ9F0jbPcWZKZ5mCJoYuGMZCXJe79T9H9J6k0?=
+ =?us-ascii?Q?WbbYXyOmWsa4i7dw4Q6eJ4boJeN7N9ecyqa06SXDfzw31uI99G2H1W3PupvN?=
+ =?us-ascii?Q?5T+kRO0vNuWqKRW6iN3ZJC0V0nL0FnUCKSlYvxvoy7thr7ixihPiCsuLUQE3?=
+ =?us-ascii?Q?Gc+3Kh4ndJAJQev3FfrUCIZgfkIv8sKuiuZfz+buPV/hNF3R1EtvUI8BiL9b?=
+ =?us-ascii?Q?8ikMxJJsMFYeGk7iTNF9eZNqf/D6NNPl0Hoizjt+QDJw2xwpbMZ/1pzT68Uu?=
+ =?us-ascii?Q?LC1WZwKRbu/s1eRTN6iV3yGWwi1mJzj2Y+VMY3Uz5uAViZOCsK6kpHcyGcE5?=
+ =?us-ascii?Q?HXAVTH4mEM6rAakZOogLfxILRvQ5ocZ8jLU8Koi8QDz0tKplwRikoI5/h2Qj?=
+ =?us-ascii?Q?fSjSjIrkxM7ajaeYpfJAzTGLkZ+AtmLUePgNw758hmVrpKyGaS6xY11L9vMJ?=
+ =?us-ascii?Q?59sj2y8yerY25VQKB06/RWRhRufZ85nlKfiisL4lKdgBZe823cgm6qJrVb4a?=
+ =?us-ascii?Q?1nCaoPM1DHorqGWHZxL+nY+Maj5It6NFBqo4jYbiptuCupI7OFYxNDAvn+2r?=
+ =?us-ascii?Q?yIHxFZuMCWx+q4+jvj6bOftMnvZAQ83WGSuJBSf0P5Wu2e+cPJFU3lRfGPZK?=
+ =?us-ascii?Q?90mnwlJGMx/lT5+nrLVF6jXhNRZZID2qZgI1fcuSBr4FFSPkTBKLsndqanf6?=
+ =?us-ascii?Q?6tl65gX5F8UCxaWsN8CY0SDmxROM5zHAA9PkLE352soh3ubJkfxyiQnXqPrv?=
+ =?us-ascii?Q?7Iop4LoWS2qG7cwLjNLB/JWhownol9RyOR3rEDhJ?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a07137ca-8036-4b6c-23fa-08dc2ffeab4a
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2743.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2024 21:23:22.3359
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +a63vekqXwPulcLqcFH85OWOj8RQD1iNyqNqvA2Ns8jRUXKdLZfVENCbOrRN6gaOOv+jc/FqGWO2cYzSeqEh0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8322
 
-On 2/17/24 9:47 AM, Erick Archer wrote:
-> When a struct containing a flexible array is included in another struct,
-> and there is a member after the struct-with-flex-array, there is a
-> possibility of memory overlap. These cases must be audited [1]. See:
-> 
-> struct inner {
-> 	...
-> 	int flex[];
-> };
-> 
-> struct outer {
-> 	...
-> 	struct inner header;
-> 	int overlap;
-> 	...
-> };
-> 
-> This is the scenario for the "struct audio_apbridgea_hdr" structure
-> that is included in the following "struct audio_apbridgea_*_request"
-> structures:
+On Sat, 17 Feb, 2024 18:07:31 +0100 Andrew Lunn <andrew@lunn.ch> wrote:
+> On Fri, Feb 16, 2024 at 10:09:36AM -0800, Rahul Rameshbabu wrote:
+>> 
+>> On Fri, 16 Feb, 2024 16:52:22 +0100 Kory Maincent <kory.maincent@bootlin.com> wrote:
+>> > Change the API to select MAC default time stamping instead of the PHY.
+>> > Indeed the PHY is closer to the wire therefore theoretically it has less
+>> > delay than the MAC timestamping but the reality is different. Due to lower
+>> > time stamping clock frequency, latency in the MDIO bus and no PHC hardware
+>> > synchronization between different PHY, the PHY PTP is often less precise
+>> > than the MAC. The exception is for PHY designed specially for PTP case but
+>> > these devices are not very widespread. For not breaking the compatibility
+>> > default_timestamp flag has been introduced in phy_device that is set by
+>> > the phy driver to know we are using the old API behavior.
+>> >
+>> > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+>> > ---
+>> 
+>> Overall, I agree with the motivation and reasoning behind the patch. It
+>> takes dedicated effort to build a good phy timestamping mechanism, so
+>> this approach is good. I do have a question though. In this patch if we
+>> set the phy as the default timestamp mechanism, does that mean for even
+>> non-PTP applications, the phy will be used for timestamping when
+>> hardware timestamping is enabled? If so, I think this might need some
+>> thought because there are timing applications in general when a
+>> timestamp closest to the MAC layer would be best.
+>
+> Could you give some examples? It seems odd to me, the application
+> wants a less accurate timestamp?
+>
+> Is it more about overheads? A MAC timestamp might be less costly than
+> a PHY timestamp?
 
-Yeah this was not a very good way to define these header
-structures, but I'm glad to hear the flexible array at the
-end was never used.  I don't know why it was there; maybe
-it's an artifact from some other information that got removed.
+It's a combination of both though I think primarily about line rate.
+This point is somewhat carried over from the previous discussions on
+this patch series in the last revision. I assume the device in question
+here cannot timestamp at the PHY at a high rate.
 
-If the code compiles with your change, it ought to be fine.
-(It compiles for me.)
+  https://lore.kernel.org/netdev/20231120093723.4d88fb2a@kernel.org/
 
-It would be good for Vaibhav or Mark to comment though, maybe
-they can provide some context.
+>
+> Or is the application not actually doing PTP, it does not care about
+> the time of the packet on the wire, but it is more about media access
+> control? Maybe the applications you are talking about are misusing the
+> PTP API for something its not intended?
 
+So hardware timestamping is not a PTP specific API or application right?
+It's purely a socket option that is not tied to PTP (unless I am missing
+something here).
 
-> 
-> struct audio_apbridgea_set_config_request
-> struct audio_apbridgea_register_cport_request
-> struct audio_apbridgea_unregister_cport_request
-> struct audio_apbridgea_set_tx_data_size_request
-> struct audio_apbridgea_prepare_tx_request
-> struct audio_apbridgea_start_tx_request
-> struct audio_apbridgea_stop_tx_request
-> struct audio_apbridgea_shutdown_tx_request
-> struct audio_apbridgea_set_rx_data_size_request
-> struct audio_apbridgea_prepare_rx_request
-> struct audio_apbridgea_start_rx_request
-> struct audio_apbridgea_stop_rx_request
-> struct audio_apbridgea_shutdown_rx_request
-> 
-> The pattern is like the one shown below:
-> 
-> struct audio_apbridgea_hdr {
-> 	...
-> 	__u8 data[];
-> } __packed;
-> 
-> struct audio_apbridgea_*_request {
-> 	struct audio_apbridgea_hdr hdr;
-> 	...
-> } __packed;
-> 
-> In this case, the trailing flexible array can be removed because it is
-> never used.
-> 
-> Link: https://github.com/KSPP/linux/issues/202 [1]
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
-> ---
-> Hi everyone,
-> 
-> I'm not sure this patch is correct. My concerns are:
-> 
-> The "struct audio_apbridgea_hdr" structure is used as a first member in
-> all the "struct audio_apbridgea_*_request" structures. And these last
-> structures are used in the "gb_audio_apbridgea_*(...)" functions. These
-> functions fill the "request" structure and always use:
-> 
-> 	gb_hd_output(connection->hd, &req, sizeof(req),
-> 		     GB_APB_REQUEST_AUDIO_CONTROL, true);
-> 
-> Then, the "gb_hd_output(struct gb_host_device *hd, ...)" function calls:
-> 
-> 	hd->driver->output(hd, req, size, cmd, async);
-> 
-> The first parameter to this function is of type:
-> 
-> 	struct gb_host_device {
-> 		...
-> 		const struct gb_hd_driver *driver;
-> 		...
-> 	};
-> 
-> And the "gb_hd_driver" structure is defined as:
-> 
-> 	struct gb_hd_driver {
-> 		...
-> 		int (*output)(struct gb_host_device *hd, void *req, u16 size, u8 cmd,
-> 			      bool async);
-> 	};
-> 
-> Therefore, my question is:
-> Where is the "output" function pointer set? I think I'm missing something.
+  https://docs.kernel.org/networking/timestamping.html#timestamp-generation
 
-I think it will be drivers/greybus/es2.c:output().
+So you could use this information for other applications like congestion
+control where you do not want to limit the line rate using the PHY
+timestamping mechanism.
 
-But in any case, the output function will know nothing about
-the structure of the request, so I think it's unrelated to
-the change you're proposing.
+In mlx5, we only steering PTP traffic to our PHY timestamping mechanism
+through a traffic matching logic.
 
-Johan can confirm this.
+  https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/drivers/net/ethernet/mellanox/mlx5/core/en/ptp.h?id=a6e0cb150c514efba4aaba4069927de43d80bb59#n71
 
-I'd like to hear from these others, but otherwise this change
-looks good to me.
+This is because we do not want to PHY/port timestamp timing related
+applications such as congestion control. I think it makes sense for
+specialized timestamping applications to instead use the ethtool ioctl
+to reconfigure using the PHY timestamps if the device is capable of PHY
+timestamping. (So have the change be in userspace application tools like
+linuxptp where precise but low <relative> rate timestamp information is
+ideal).
 
-Reviewed-by: Alex Elder <elder@linaro.org>
+--
+Thanks,
 
-> 
-> I have search for another greybus drivers and I have found that, for
-> example, the "es2_ap_driver" (drivers/greybus/es2.c) sets the "output"
-> member in:
-> 
-> 	static struct gb_hd_driver es2_driver = {
-> 		...
-> 		.output	= output,
-> 	};
-> 
-> I think that the flexible array that I have removed should be used in
-> the function assigned to the "output" function pointer. But I am not
-> able to find this function.
-> 
-> A bit of light on this would be greatly appreciated.
-> 
-> Thanks,
-> Erick
-> ---
->   drivers/staging/greybus/audio_apbridgea.h | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/staging/greybus/audio_apbridgea.h b/drivers/staging/greybus/audio_apbridgea.h
-> index efec0f815efd..ab707d310129 100644
-> --- a/drivers/staging/greybus/audio_apbridgea.h
-> +++ b/drivers/staging/greybus/audio_apbridgea.h
-> @@ -65,7 +65,6 @@
->   struct audio_apbridgea_hdr {
->   	__u8	type;
->   	__le16	i2s_port;
-> -	__u8	data[];
->   } __packed;
-> 
->   struct audio_apbridgea_set_config_request {
-> --
-> 2.25.1
-> 
-
+Rahul Rameshbabu
