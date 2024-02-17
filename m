@@ -1,723 +1,187 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852FE1D543;
-	Sat, 17 Feb 2024 14:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708180187; cv=none; b=nrflKFH0fyFJUOVzGZjeRC6AVbaqiXw/lUU/FRxlh7Nsrfwk4JXNVqjNLxLJBBnO8hUbQSEzLFWRcK41AJavSvGEzvnpwQ/VIpfwSYuFNnFZ2pEtj8oIYrosrYay7+/NGod3g68dZRc6d5PVo+eVIoja2V9JD9NpizYRXCECU1c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708180187; c=relaxed/simple;
-	bh=4F0fSm9sIOKiDH7biZXDlKbDUozKqdCQrjnWq48Lc08=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=naNuORt0t5VwQiVUtNHhgkaiLgidlahpaP6r96EkT46TiVNI4XsKuFRFwZB9xa8aEncgfGP9kFPO9175bUTvkEp24rfH+k35MDXE5cXIi2kGKrYA8ypHIXmhwm+1h9JMdF6w2utfpe1jUHJfPvcIbXOo79engvlzFBl0AScXCAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=WpZmyxjT; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88E241C63;
+	Sat, 17 Feb 2024 14:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.178.238
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708180283; cv=fail; b=Inz9sF7vyV3+51aEER7wG/3OKTigi6vmRYlQrEaW6JG304cHzErZ9HUkkKFYXK4wqzAn5r6W3lwFrgS4rBBqmySMMVbDJ4aZbXtP6YHOInYK8+fcykCjI1Do5zu7F/euPiEHLFGbPVJT6RScijhLMOGXLBXjQ07I5xfqhbu7Xxs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708180283; c=relaxed/simple;
+	bh=knB5Wr0EdvldGQRBN5rgKEiI3upQjgeFbpoodzisEAA=;
+	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=d2nQSPuKfHBeBKLhB19NWY83qhpxWJaql7DqulEXp6R1uVgHFU8KWIHGfJP/qMa+rltnUYNus8Br5dJoqYS44fZQuHqQPBMc4fa7vdJWG+9Sm/t+kvOWQty+fjiDfZ70OP6uGVXV6b3xIresXrM35vJozPayhFbpeH6PRx5XPJ0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b=IbSwpNi3; arc=fail smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="WpZmyxjT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
-	s=s31663417; t=1708180173; x=1708784973; i=erick.archer@gmx.com;
-	bh=4F0fSm9sIOKiDH7biZXDlKbDUozKqdCQrjnWq48Lc08=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=WpZmyxjTivrnLIEtXxxit+JG39C/PxnLDhCstpqbWtgCrNEtr7XSkSmdVscBoGrz
-	 qqC6baqcUAqw2eKIAqkV/r3urfxJ4/BHWT+/UyXI8+2pVvb3Wz/5yeIvi/91i25qt
-	 f00y/Gc/VQG9X7eITWAAIi1apKe2pWoUWh6zhYu9GwN+t+A54xwKMioyvdLEYQgx5
-	 P9SzD1GBLwuB7usgdgB8gCN3BdIqTbXeWOfzD1kjSpP98BJT2g+IOu1KZr/9RjZI8
-	 tfVhWabQi0oUiky4vSc3Mcq1veMPD6TDLTdGp5ZG43+E7el1j4MuYZ2XTkaGWw1K6
-	 k++0/pT1ucmyclBUVQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
- (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1M3DNt-1rewC13ntF-003fXa; Sat, 17 Feb 2024 15:29:33 +0100
-From: Erick Archer <erick.archer@gmx.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>,
-	Edward Srouji <edwards@nvidia.com>,
-	Patrisious Haddad <phaddad@nvidia.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Kees Cook <keescook@chromium.org>
-Cc: Erick Archer <erick.archer@gmx.com>,
-	linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] RDMA/uverbs: Remove flexible arrays from struct *_filter
-Date: Sat, 17 Feb 2024 15:29:13 +0100
-Message-Id: <20240217142913.4285-1-erick.archer@gmx.com>
+	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="IbSwpNi3"
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41HDfIU4002150;
+	Sat, 17 Feb 2024 13:53:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=from:to:subject:date:message-id:content-transfer-encoding
+	:content-type:mime-version; s=PPS06212021; bh=mF0XP3Dq9AaRaDfxaQ
+	QVmxh6UnzuW/dbeRBhpf7Ent4=; b=IbSwpNi3yOsrKhgsHzQLKxODoGdYk5Mb/6
+	euKAt8n9XXio2vmLqU5ofDJImud7uPcnh89YnioSQJP9dRCymzXYdXjNPesMXJMu
+	04wm015B+txHr3CjIAiWTHmHUdaH/2uThev+fwLFwPz3FTNDf+TPRCuesym6hy1b
+	aXOrJ/iX8h06S5yBmYhowcIt23dXSFe7Z3CLNqOFn2+SCOTkD20vKVbDDMPLmK1K
+	SaQ38emeTCygd8ZA34VPN6gJujuDK78a+HPbZdKlROHWaujDV8PbXZ3F5SvrgsK8
+	LJeRJ8F/n+F9GEKoJ4odB57JkEo+WE4u2wPqM18PF7MecsvQxH1w==
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2168.outbound.protection.outlook.com [104.47.57.168])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3waks68a5j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 17 Feb 2024 13:53:16 +0000 (GMT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JuNkqiYVyM1pkcCka8TBpYyF01mydrhwQKkUONVpJiNggvcteSI3yyyJZNGbaigd6AgDxhgC6Iz1ng3oO2hwwVtfn7YNuEStyej9am/sRV9MhZ+9JKnLmkG2xHopohqs4WBFeBz3iCAeX1z/TdezMoxJKu7iEB1hKQTrG5QrIJxppbChg2AIx0jV3jfNoJxQilpQEK8v52LngZEGv4b0kdPDdllYVaZjALuw7bXIgRims5ofBEdeRsZ3bD8FBC+p2lmPSqi9GZOLG/qxT8Ek44sQbzshwwU6QwHblbcCRcb0M6WXbQafeTdd8vLL4KyKt/XI/KZ3bT8qae4x+4glYQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mF0XP3Dq9AaRaDfxaQQVmxh6UnzuW/dbeRBhpf7Ent4=;
+ b=ea5huz+F2XXTfqiBm2vpxJNc+XOxeGABmsNeGu4nOwk6hyvmPu9qLlS68KOqOiGKuyibGYRYrGahILeNUNEPmDGRI+3EWavSDzoXTU31BZxO9H2J982duXgyTvBxFoSO0+n5AwQKQUDXm5Sgk9jCPA2+82BwgzsYZxTx1FTc8HFVA2YJiWYvlkUP9atHODc0R+JoOPagJ7vYV3t17XjuX2ijUTHe6djcM2WiQSs37T+LMNr5exvaqcjg/P/363EeoZNJEqpeg5dc2seHH2/8V80SiopU1YzwN+sxNZJSImxqz4rhKAW23/1SW4rY5BuRvh0QtIC3y7+TJN/P1Kzrzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+Received: from MW5PR11MB5764.namprd11.prod.outlook.com (2603:10b6:303:197::8)
+ by PH8PR11MB8063.namprd11.prod.outlook.com (2603:10b6:510:252::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.31; Sat, 17 Feb
+ 2024 13:53:12 +0000
+Received: from MW5PR11MB5764.namprd11.prod.outlook.com
+ ([fe80::9c74:bf8d:9e30:b9be]) by MW5PR11MB5764.namprd11.prod.outlook.com
+ ([fe80::9c74:bf8d:9e30:b9be%4]) with mapi id 15.20.7292.027; Sat, 17 Feb 2024
+ 13:53:12 +0000
+From: Xiaolei Wang <xiaolei.wang@windriver.com>
+To: linus.walleij@linaro.org, brgl@bgdev.pl, andriy.shevchenko@linux.intel.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [linux-next][PATCH 1/1] gpio: Delete excess allocated label memory
+Date: Sat, 17 Feb 2024 21:52:55 +0800
+Message-Id: <20240217135255.1128716-1-xiaolei.wang@windriver.com>
 X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2P153CA0016.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:4:140::17) To MW5PR11MB5764.namprd11.prod.outlook.com
+ (2603:10b6:303:197::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:D0LW3rS6Kb8KHyd05rEBV3fbPyFXaeuY88272CwGQlRgw1uxXDc
- mLMrydIoRL6XLzaQ8Qopl2bbDv1C+/NQj5rcaw59SoIa+EZD/qSPxRaKeR3jCJVGHkJxA4R
- RwG84lfBqUQhiW6hGuVwIsMJ+zH2gy9Q+iO9DoXOBanQ8Xh53mr6s/W38ByrOD6RnWAOrxU
- kfFSCZ6MvQV6fPjQn3wFw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:9DffPVlSLGk=;szJhT5oGTWDSgGbknu6B4IBc7Ns
- bXc+cuPplQ+V3MsChBld0LJwcNAwRl3mfZGwiKXOVnNzg3qAv6h+401CqL3AfOnMalwjuJ7S7
- snF+kW44mQweFn5dNtP8U7NNFTRSSoIdBwhD0C/6B+HM9c1pTbTJ4fbxx7f9d2XS9ysoDO0PH
- VEs8i+SYEbM+RfyRjcvT94jVQWXeHjfTvKUkCHmEelyeWOgroCNd6EcojO8FvRGXsbRdP8P7G
- T3SSqP0aJTb4Dgowqns7wUsxq02y1yTFTF+TKWDEv5DZPHkqYh0bOTs+M9SigOoCM9A6uyp7t
- 1glin7dWdVqYfZzvoXrZjiklFKmUWZIcJAth1WfkidiStpK6cHf5jwUnBsPhI6l16KqBaCvrl
- L2p5Zv040Nz76mUG5ERdhfJtDiwNVAEz+F6YBEorZ2a9cC5uLdbgPtMc6B2/rJpERVK2ENral
- vtQyBBIIAF7yRKamBTlfsNtIdXxQXia7JbVKDW6x5L8Y8k02J0l3/W+PXCg6viRA9eSQ12z8t
- 1jFWs2Ku90pREVVO8RmDLLG5G9INhy9Z/hI6nHHmXNyg4fiwpbsJx1PgbCKpCzSOaKSWvQ5bI
- RywFIX7ht+WO9EwdvkrADyBSPVBdXSXrcBZaWqrtOYCdBp/fgJoc7yv3sdReqtkBdQa8434sO
- wc4ccjVQYeGMiAK4/AyqbuY4gX7SHTLJMZoZ5DmdRAJYItKxBBCZGxRFyrA0tfDXuztY+dPWr
- H8CNWmtHbQV9thpQHvI810ogcRM6aLKMs8AUSRXAxZHPoQwC6RpbLUWBH9b/Dl5rfdLewp0fX
- SfTgOIXd+rjDa8cMYguxlcrLQlvlG6eXQPnLEajheO9gc=
-
-When a struct containing a flexible array is included in another struct,
-and there is a member after the struct-with-flex-array, there is a
-possibility of memory overlap. These cases must be audited [1]. See:
-
-struct inner {
-	...
-	int flex[];
-};
-
-struct outer {
-	...
-	struct inner header;
-	int overlap;
-	...
-};
-
-This is the scenario for all the "struct *_filter" structures that are
-included in the following "struct ib_flow_spec_*" structures:
-
-struct ib_flow_spec_eth
-struct ib_flow_spec_ib
-struct ib_flow_spec_ipv4
-struct ib_flow_spec_ipv6
-struct ib_flow_spec_tcp_udp
-struct ib_flow_spec_tunnel
-struct ib_flow_spec_esp
-struct ib_flow_spec_gre
-struct ib_flow_spec_mpls
-
-The pattern is like the one shown below:
-
-struct *_filter {
-	...
-	u8 real_sz[];
-};
-
-struct ib_flow_spec_* {
-	...
-	struct *_filter val;
-	struct *_filter mask;
-};
-
-In this case, the trailing flexible array "real_sz" is never allocated
-and is only used to calculate the size of the structures. Here the use
-of the "offsetof" helper can be changed by the "sizeof" operator because
-the goal is to get the size of these structures. Therefore, the trailing
-flexible arrays can also be removed.
-
-However, due to the trailing padding that can be induced in structs it
-is possible that the:
-
-offsetof(struct *_filter, real_sz) !=3D sizeof(struct *_filter)
-
-This situation happens with the "struct ib_flow_ipv6_filter" and to
-avoid it the "__packed" macro is used in this structure. But now, the
-"sizeof(struct ib_flow_ipv6_filter)" has changed. This is not a problem
-since this size is not used in the code.
-
-The situation now is that "sizeof(struct ib_flow_spec_ipv6)" has also
-changed (this struct contains the struct ib_flow_ipv6_filter). This is
-also not a problem since it is only used to set the size of the "union
-ib_flow_spec", which can store all the "ib_flow_spec_*" structures.
-
-Link: https://github.com/KSPP/linux/issues/202 [1]
-Signed-off-by: Erick Archer <erick.archer@gmx.com>
-=2D--
-Changes in v2:
-- Add the "__packed" macro to the "struct ib_flow_ipv6_filter".
-- Update the commit message to explain why the "__packed" macro is used.
-
-Previous versions:
-v1: https://lore.kernel.org/linux-hardening/20240211115856.9788-1-erick.ar=
-cher@gmx.com/
-
-Hi Kees and Jason,
-
-First of all, thanks for yours explanations and tips. These were used to g=
-et
-the final patch.
-
-The steps that I have followed to only add the "__packed" macro to the
-"struct ib_flow_ipv6_filter" are the followings:
-
-Step 1: Create new "struct *_filter_new" structures based on "struct *_fil=
-ter"
-        structures but with the trailing flexible arrays removed. Create n=
-ew
-        "struct ib_flow_spec_*_new" structures based on "struct ib_flow_sp=
-ec_*"
-        structures but containing the new "struct *_filter_new" structures=
-.
-
-        Also add a set of assertions to check all the "offsetof" changes m=
-ade
-        in the patch sent. And a set of assertions to verify if the size o=
-f
-        all the "struct ib_flow_spec_*" structures " has changed.
-
- drivers/infiniband/core/uverbs_cmd.c |  19 +++++
- include/rdma/ib_verbs.h              | 117 +++++++++++++++++++++++++++
- 2 files changed, 136 insertions(+)
-
-diff --git a/drivers/infiniband/core/uverbs_cmd.c b/drivers/infiniband/cor=
-e/uverbs_cmd.c
-index 6de05ade2ba9..a7ee65791900 100644
-=2D-- a/drivers/infiniband/core/uverbs_cmd.c
-+++ b/drivers/infiniband/core/uverbs_cmd.c
-@@ -2726,6 +2726,25 @@ int ib_uverbs_kern_spec_to_ib_spec_filter(enum ib_f=
-low_spec_type type,
- 	ssize_t actual_filter_sz;
- 	ssize_t ib_filter_sz;
-
-+	static_assert(offsetof(struct ib_flow_eth_filter, real_sz) =3D=3D sizeof=
-(struct ib_flow_eth_filter_new));
-+	static_assert(offsetof(struct ib_flow_ipv4_filter, real_sz) =3D=3D sizeo=
-f(struct ib_flow_ipv4_filter_new));
-+	static_assert(offsetof(struct ib_flow_ipv6_filter, real_sz) =3D=3D sizeo=
-f(struct ib_flow_ipv6_filter_new));
-+	static_assert(offsetof(struct ib_flow_tcp_udp_filter, real_sz) =3D=3D si=
-zeof(struct ib_flow_tcp_udp_filter_new));
-+	static_assert(offsetof(struct ib_flow_tunnel_filter, real_sz) =3D=3D siz=
-eof(struct ib_flow_tunnel_filter_new));
-+	static_assert(offsetof(struct ib_flow_esp_filter, real_sz) =3D=3D sizeof=
-(struct ib_flow_esp_filter_new));
-+	static_assert(offsetof(struct ib_flow_gre_filter, real_sz) =3D=3D sizeof=
-(struct ib_flow_gre_filter_new));
-+	static_assert(offsetof(struct ib_flow_mpls_filter, real_sz) =3D=3D sizeo=
-f(struct ib_flow_mpls_filter_new));
-+
-+	static_assert(sizeof(struct ib_flow_spec_eth) =3D=3D sizeof(struct ib_fl=
-ow_spec_eth_new));
-+	static_assert(sizeof(struct ib_flow_spec_ib) =3D=3D sizeof(struct ib_flo=
-w_spec_ib_new));
-+	static_assert(sizeof(struct ib_flow_spec_ipv4) =3D=3D sizeof(struct ib_f=
-low_spec_ipv4_new));
-+	static_assert(sizeof(struct ib_flow_spec_ipv6) =3D=3D sizeof(struct ib_f=
-low_spec_ipv6_new));
-+	static_assert(sizeof(struct ib_flow_spec_tcp_udp) =3D=3D sizeof(struct i=
-b_flow_spec_tcp_udp_new));
-+	static_assert(sizeof(struct ib_flow_spec_tunnel) =3D=3D sizeof(struct ib=
-_flow_spec_tunnel_new));
-+	static_assert(sizeof(struct ib_flow_spec_esp) =3D=3D sizeof(struct ib_fl=
-ow_spec_esp_new));
-+	static_assert(sizeof(struct ib_flow_spec_gre) =3D=3D sizeof(struct ib_fl=
-ow_spec_gre_new));
-+	static_assert(sizeof(struct ib_flow_spec_mpls) =3D=3D sizeof(struct ib_f=
-low_spec_mpls_new));
-+
- 	/* User flow spec size must be aligned to 4 bytes */
- 	if (kern_filter_sz !=3D ALIGN(kern_filter_sz, 4))
- 		return -EINVAL;
-diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
-index b7b6b58dd348..6ee3110c008e 100644
-=2D-- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -1914,6 +1914,13 @@ struct ib_flow_eth_filter {
- 	u8	real_sz[];
- };
-
-+struct ib_flow_eth_filter_new {
-+	u8	dst_mac[6];
-+	u8	src_mac[6];
-+	__be16	ether_type;
-+	__be16	vlan_tag;
-+};
-+
- struct ib_flow_spec_eth {
- 	u32			  type;
- 	u16			  size;
-@@ -1921,6 +1928,13 @@ struct ib_flow_spec_eth {
- 	struct ib_flow_eth_filter mask;
- };
-
-+struct ib_flow_spec_eth_new {
-+	u32			      type;
-+	u16			      size;
-+	struct ib_flow_eth_filter_new val;
-+	struct ib_flow_eth_filter_new mask;
-+};
-+
- struct ib_flow_ib_filter {
- 	__be16 dlid;
- 	__u8   sl;
-@@ -1928,6 +1942,11 @@ struct ib_flow_ib_filter {
- 	u8	real_sz[];
- };
-
-+struct ib_flow_ib_filter_new {
-+	__be16 dlid;
-+	__u8   sl;
-+};
-+
- struct ib_flow_spec_ib {
- 	u32			 type;
- 	u16			 size;
-@@ -1935,6 +1954,13 @@ struct ib_flow_spec_ib {
- 	struct ib_flow_ib_filter mask;
- };
-
-+struct ib_flow_spec_ib_new {
-+	u32			     type;
-+	u16			     size;
-+	struct ib_flow_ib_filter_new val;
-+	struct ib_flow_ib_filter_new mask;
-+};
-+
- /* IPv4 header flags */
- enum ib_ipv4_flags {
- 	IB_IPV4_DONT_FRAG =3D 0x2, /* Don't enable packet fragmentation */
-@@ -1953,6 +1979,15 @@ struct ib_flow_ipv4_filter {
- 	u8	real_sz[];
- };
-
-+struct ib_flow_ipv4_filter_new {
-+	__be32	src_ip;
-+	__be32	dst_ip;
-+	u8	proto;
-+	u8	tos;
-+	u8	ttl;
-+	u8	flags;
-+};
-+
- struct ib_flow_spec_ipv4 {
- 	u32			   type;
- 	u16			   size;
-@@ -1960,6 +1995,13 @@ struct ib_flow_spec_ipv4 {
- 	struct ib_flow_ipv4_filter mask;
- };
-
-+struct ib_flow_spec_ipv4_new {
-+	u32			       type;
-+	u16			       size;
-+	struct ib_flow_ipv4_filter_new val;
-+	struct ib_flow_ipv4_filter_new mask;
-+};
-+
- struct ib_flow_ipv6_filter {
- 	u8	src_ip[16];
- 	u8	dst_ip[16];
-@@ -1971,6 +2013,15 @@ struct ib_flow_ipv6_filter {
- 	u8	real_sz[];
- };
-
-+struct ib_flow_ipv6_filter_new {
-+	u8	src_ip[16];
-+	u8	dst_ip[16];
-+	__be32	flow_label;
-+	u8	next_hdr;
-+	u8	traffic_class;
-+	u8	hop_limit;
-+};
-+
- struct ib_flow_spec_ipv6 {
- 	u32			   type;
- 	u16			   size;
-@@ -1978,6 +2029,13 @@ struct ib_flow_spec_ipv6 {
- 	struct ib_flow_ipv6_filter mask;
- };
-
-+struct ib_flow_spec_ipv6_new {
-+	u32			       type;
-+	u16			       size;
-+	struct ib_flow_ipv6_filter_new val;
-+	struct ib_flow_ipv6_filter_new mask;
-+};
-+
- struct ib_flow_tcp_udp_filter {
- 	__be16	dst_port;
- 	__be16	src_port;
-@@ -1985,6 +2043,11 @@ struct ib_flow_tcp_udp_filter {
- 	u8	real_sz[];
- };
-
-+struct ib_flow_tcp_udp_filter_new {
-+	__be16	dst_port;
-+	__be16	src_port;
-+};
-+
- struct ib_flow_spec_tcp_udp {
- 	u32			      type;
- 	u16			      size;
-@@ -1992,11 +2055,22 @@ struct ib_flow_spec_tcp_udp {
- 	struct ib_flow_tcp_udp_filter mask;
- };
-
-+struct ib_flow_spec_tcp_udp_new {
-+	u32				  type;
-+	u16				  size;
-+	struct ib_flow_tcp_udp_filter_new val;
-+	struct ib_flow_tcp_udp_filter_new mask;
-+};
-+
- struct ib_flow_tunnel_filter {
- 	__be32	tunnel_id;
- 	u8	real_sz[];
- };
-
-+struct ib_flow_tunnel_filter_new {
-+	__be32	tunnel_id;
-+};
-+
- /* ib_flow_spec_tunnel describes the Vxlan tunnel
-  * the tunnel_id from val has the vni value
-  */
-@@ -2007,6 +2081,13 @@ struct ib_flow_spec_tunnel {
- 	struct ib_flow_tunnel_filter  mask;
- };
-
-+struct ib_flow_spec_tunnel_new {
-+	u32				 type;
-+	u16				 size;
-+	struct ib_flow_tunnel_filter_new val;
-+	struct ib_flow_tunnel_filter_new mask;
-+};
-+
- struct ib_flow_esp_filter {
- 	__be32	spi;
- 	__be32  seq;
-@@ -2014,6 +2095,11 @@ struct ib_flow_esp_filter {
- 	u8	real_sz[];
- };
-
-+struct ib_flow_esp_filter_new {
-+	__be32	spi;
-+	__be32  seq;
-+};
-+
- struct ib_flow_spec_esp {
- 	u32                           type;
- 	u16			      size;
-@@ -2021,6 +2107,13 @@ struct ib_flow_spec_esp {
- 	struct ib_flow_esp_filter     mask;
- };
-
-+struct ib_flow_spec_esp_new {
-+	u32			      type;
-+	u16			      size;
-+	struct ib_flow_esp_filter_new val;
-+	struct ib_flow_esp_filter_new mask;
-+};
-+
- struct ib_flow_gre_filter {
- 	__be16 c_ks_res0_ver;
- 	__be16 protocol;
-@@ -2029,6 +2122,12 @@ struct ib_flow_gre_filter {
- 	u8	real_sz[];
- };
-
-+struct ib_flow_gre_filter_new {
-+	__be16 c_ks_res0_ver;
-+	__be16 protocol;
-+	__be32 key;
-+};
-+
- struct ib_flow_spec_gre {
- 	u32                           type;
- 	u16			      size;
-@@ -2036,12 +2135,23 @@ struct ib_flow_spec_gre {
- 	struct ib_flow_gre_filter     mask;
- };
-
-+struct ib_flow_spec_gre_new {
-+	u32			      type;
-+	u16			      size;
-+	struct ib_flow_gre_filter_new val;
-+	struct ib_flow_gre_filter_new mask;
-+};
-+
- struct ib_flow_mpls_filter {
- 	__be32 tag;
- 	/* Must be last */
- 	u8	real_sz[];
- };
-
-+struct ib_flow_mpls_filter_new {
-+	__be32 tag;
-+};
-+
- struct ib_flow_spec_mpls {
- 	u32                           type;
- 	u16			      size;
-@@ -2049,6 +2159,13 @@ struct ib_flow_spec_mpls {
- 	struct ib_flow_mpls_filter     mask;
- };
-
-+struct ib_flow_spec_mpls_new {
-+	u32			       type;
-+	u16			       size;
-+	struct ib_flow_mpls_filter_new val;
-+	struct ib_flow_mpls_filter_new mask;
-+};
-+
- struct ib_flow_spec_action_tag {
- 	enum ib_flow_spec_type	      type;
- 	u16			      size;
-
-The built of this patch shows an assertion error:
-
-static assertion failed:
-drivers/infiniband/core/uverbs_cmd.c:2731:2: note: in expansion of macro =
-=E2=80=98static_assert=E2=80=99
- 2731 |  static_assert(offsetof(struct ib_flow_ipv6_filter, real_sz) =3D=
-=3D sizeof(struct ib_flow_ipv6_filter_new));
-
-Step 2: Add the "__packed" macro to "struct ib_flow_ipv6_filter_new".
-
- include/rdma/ib_verbs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
-index 6ee3110c008e..e10a2bf4e0fe 100644
-=2D-- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -2020,7 +2020,7 @@ struct ib_flow_ipv6_filter_new {
- 	u8	next_hdr;
- 	u8	traffic_class;
- 	u8	hop_limit;
--};
-+} __packed;
-
- struct ib_flow_spec_ipv6 {
- 	u32			   type;
-
-The built of this patch passes the last assertion error but shows a
-new error:
-
-static assertion failed:
-drivers/infiniband/core/uverbs_cmd.c:2741:2: note: in expansion of macro =
-=E2=80=98static_assert=E2=80=99
- 2741 |  static_assert(sizeof(struct ib_flow_spec_ipv6) =3D=3D sizeof(stru=
-ct ib_flow_spec_ipv6_new));
-
-Step 3: Change the comparison operator in the last assertion.
-
- drivers/infiniband/core/uverbs_cmd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/infiniband/core/uverbs_cmd.c b/drivers/infiniband/cor=
-e/uverbs_cmd.c
-index a7ee65791900..83f9edd55280 100644
-=2D-- a/drivers/infiniband/core/uverbs_cmd.c
-+++ b/drivers/infiniband/core/uverbs_cmd.c
-@@ -2738,7 +2738,7 @@ int ib_uverbs_kern_spec_to_ib_spec_filter(enum ib_fl=
-ow_spec_type type,
- 	static_assert(sizeof(struct ib_flow_spec_eth) =3D=3D sizeof(struct ib_fl=
-ow_spec_eth_new));
- 	static_assert(sizeof(struct ib_flow_spec_ib) =3D=3D sizeof(struct ib_flo=
-w_spec_ib_new));
- 	static_assert(sizeof(struct ib_flow_spec_ipv4) =3D=3D sizeof(struct ib_f=
-low_spec_ipv4_new));
--	static_assert(sizeof(struct ib_flow_spec_ipv6) =3D=3D sizeof(struct ib_f=
-low_spec_ipv6_new));
-+	static_assert(sizeof(struct ib_flow_spec_ipv6) !=3D sizeof(struct ib_flo=
-w_spec_ipv6_new));
- 	static_assert(sizeof(struct ib_flow_spec_tcp_udp) =3D=3D sizeof(struct i=
-b_flow_spec_tcp_udp_new));
- 	static_assert(sizeof(struct ib_flow_spec_tunnel) =3D=3D sizeof(struct ib=
-_flow_spec_tunnel_new));
- 	static_assert(sizeof(struct ib_flow_spec_esp) =3D=3D sizeof(struct ib_fl=
-ow_spec_esp_new));
-
-Finally the built shows no errors. So, removing all the trailing flexible
-arrays and adding the "__packed" macro only affects the size of the
-"struct ib_flow_spec_ipv6" structure.
-
-As a final point I would like to comment that the binary comparison
-produced results that were complicated for me to analyze due to the
-difference in the size of the structures.
-
-Regards,
-Erick
-=2D--
- drivers/infiniband/core/uverbs_cmd.c | 16 ++++++++--------
- include/rdma/ib_verbs.h              | 19 +------------------
- 2 files changed, 9 insertions(+), 26 deletions(-)
-
-diff --git a/drivers/infiniband/core/uverbs_cmd.c b/drivers/infiniband/cor=
-e/uverbs_cmd.c
-index 6de05ade2ba9..3d3ee3eca983 100644
-=2D-- a/drivers/infiniband/core/uverbs_cmd.c
-+++ b/drivers/infiniband/core/uverbs_cmd.c
-@@ -2737,7 +2737,7 @@ int ib_uverbs_kern_spec_to_ib_spec_filter(enum ib_fl=
-ow_spec_type type,
-
- 	switch (ib_spec->type & ~IB_FLOW_SPEC_INNER) {
- 	case IB_FLOW_SPEC_ETH:
--		ib_filter_sz =3D offsetof(struct ib_flow_eth_filter, real_sz);
-+		ib_filter_sz =3D sizeof(struct ib_flow_eth_filter);
- 		actual_filter_sz =3D spec_filter_size(kern_spec_mask,
- 						    kern_filter_sz,
- 						    ib_filter_sz);
-@@ -2748,7 +2748,7 @@ int ib_uverbs_kern_spec_to_ib_spec_filter(enum ib_fl=
-ow_spec_type type,
- 		memcpy(&ib_spec->eth.mask, kern_spec_mask, actual_filter_sz);
- 		break;
- 	case IB_FLOW_SPEC_IPV4:
--		ib_filter_sz =3D offsetof(struct ib_flow_ipv4_filter, real_sz);
-+		ib_filter_sz =3D sizeof(struct ib_flow_ipv4_filter);
- 		actual_filter_sz =3D spec_filter_size(kern_spec_mask,
- 						    kern_filter_sz,
- 						    ib_filter_sz);
-@@ -2759,7 +2759,7 @@ int ib_uverbs_kern_spec_to_ib_spec_filter(enum ib_fl=
-ow_spec_type type,
- 		memcpy(&ib_spec->ipv4.mask, kern_spec_mask, actual_filter_sz);
- 		break;
- 	case IB_FLOW_SPEC_IPV6:
--		ib_filter_sz =3D offsetof(struct ib_flow_ipv6_filter, real_sz);
-+		ib_filter_sz =3D sizeof(struct ib_flow_ipv6_filter);
- 		actual_filter_sz =3D spec_filter_size(kern_spec_mask,
- 						    kern_filter_sz,
- 						    ib_filter_sz);
-@@ -2775,7 +2775,7 @@ int ib_uverbs_kern_spec_to_ib_spec_filter(enum ib_fl=
-ow_spec_type type,
- 		break;
- 	case IB_FLOW_SPEC_TCP:
- 	case IB_FLOW_SPEC_UDP:
--		ib_filter_sz =3D offsetof(struct ib_flow_tcp_udp_filter, real_sz);
-+		ib_filter_sz =3D sizeof(struct ib_flow_tcp_udp_filter);
- 		actual_filter_sz =3D spec_filter_size(kern_spec_mask,
- 						    kern_filter_sz,
- 						    ib_filter_sz);
-@@ -2786,7 +2786,7 @@ int ib_uverbs_kern_spec_to_ib_spec_filter(enum ib_fl=
-ow_spec_type type,
- 		memcpy(&ib_spec->tcp_udp.mask, kern_spec_mask, actual_filter_sz);
- 		break;
- 	case IB_FLOW_SPEC_VXLAN_TUNNEL:
--		ib_filter_sz =3D offsetof(struct ib_flow_tunnel_filter, real_sz);
-+		ib_filter_sz =3D sizeof(struct ib_flow_tunnel_filter);
- 		actual_filter_sz =3D spec_filter_size(kern_spec_mask,
- 						    kern_filter_sz,
- 						    ib_filter_sz);
-@@ -2801,7 +2801,7 @@ int ib_uverbs_kern_spec_to_ib_spec_filter(enum ib_fl=
-ow_spec_type type,
- 			return -EINVAL;
- 		break;
- 	case IB_FLOW_SPEC_ESP:
--		ib_filter_sz =3D offsetof(struct ib_flow_esp_filter, real_sz);
-+		ib_filter_sz =3D sizeof(struct ib_flow_esp_filter);
- 		actual_filter_sz =3D spec_filter_size(kern_spec_mask,
- 						    kern_filter_sz,
- 						    ib_filter_sz);
-@@ -2812,7 +2812,7 @@ int ib_uverbs_kern_spec_to_ib_spec_filter(enum ib_fl=
-ow_spec_type type,
- 		memcpy(&ib_spec->esp.mask, kern_spec_mask, actual_filter_sz);
- 		break;
- 	case IB_FLOW_SPEC_GRE:
--		ib_filter_sz =3D offsetof(struct ib_flow_gre_filter, real_sz);
-+		ib_filter_sz =3D sizeof(struct ib_flow_gre_filter);
- 		actual_filter_sz =3D spec_filter_size(kern_spec_mask,
- 						    kern_filter_sz,
- 						    ib_filter_sz);
-@@ -2823,7 +2823,7 @@ int ib_uverbs_kern_spec_to_ib_spec_filter(enum ib_fl=
-ow_spec_type type,
- 		memcpy(&ib_spec->gre.mask, kern_spec_mask, actual_filter_sz);
- 		break;
- 	case IB_FLOW_SPEC_MPLS:
--		ib_filter_sz =3D offsetof(struct ib_flow_mpls_filter, real_sz);
-+		ib_filter_sz =3D sizeof(struct ib_flow_mpls_filter);
- 		actual_filter_sz =3D spec_filter_size(kern_spec_mask,
- 						    kern_filter_sz,
- 						    ib_filter_sz);
-diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
-index b7b6b58dd348..477bf9dd5e71 100644
-=2D-- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -1910,8 +1910,6 @@ struct ib_flow_eth_filter {
- 	u8	src_mac[6];
- 	__be16	ether_type;
- 	__be16	vlan_tag;
--	/* Must be last */
--	u8	real_sz[];
- };
-
- struct ib_flow_spec_eth {
-@@ -1924,8 +1922,6 @@ struct ib_flow_spec_eth {
- struct ib_flow_ib_filter {
- 	__be16 dlid;
- 	__u8   sl;
--	/* Must be last */
--	u8	real_sz[];
- };
-
- struct ib_flow_spec_ib {
-@@ -1949,8 +1945,6 @@ struct ib_flow_ipv4_filter {
- 	u8	tos;
- 	u8	ttl;
- 	u8	flags;
--	/* Must be last */
--	u8	real_sz[];
- };
-
- struct ib_flow_spec_ipv4 {
-@@ -1967,9 +1961,7 @@ struct ib_flow_ipv6_filter {
- 	u8	next_hdr;
- 	u8	traffic_class;
- 	u8	hop_limit;
--	/* Must be last */
--	u8	real_sz[];
--};
-+} __packed;
-
- struct ib_flow_spec_ipv6 {
- 	u32			   type;
-@@ -1981,8 +1973,6 @@ struct ib_flow_spec_ipv6 {
- struct ib_flow_tcp_udp_filter {
- 	__be16	dst_port;
- 	__be16	src_port;
--	/* Must be last */
--	u8	real_sz[];
- };
-
- struct ib_flow_spec_tcp_udp {
-@@ -1994,7 +1984,6 @@ struct ib_flow_spec_tcp_udp {
-
- struct ib_flow_tunnel_filter {
- 	__be32	tunnel_id;
--	u8	real_sz[];
- };
-
- /* ib_flow_spec_tunnel describes the Vxlan tunnel
-@@ -2010,8 +1999,6 @@ struct ib_flow_spec_tunnel {
- struct ib_flow_esp_filter {
- 	__be32	spi;
- 	__be32  seq;
--	/* Must be last */
--	u8	real_sz[];
- };
-
- struct ib_flow_spec_esp {
-@@ -2025,8 +2012,6 @@ struct ib_flow_gre_filter {
- 	__be16 c_ks_res0_ver;
- 	__be16 protocol;
- 	__be32 key;
--	/* Must be last */
--	u8	real_sz[];
- };
-
- struct ib_flow_spec_gre {
-@@ -2038,8 +2023,6 @@ struct ib_flow_spec_gre {
-
- struct ib_flow_mpls_filter {
- 	__be32 tag;
--	/* Must be last */
--	u8	real_sz[];
- };
-
- struct ib_flow_spec_mpls {
-=2D-
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW5PR11MB5764:EE_|PH8PR11MB8063:EE_
+X-MS-Office365-Filtering-Correlation-Id: 001229f1-52b6-4720-ebf6-08dc2fbfc7d4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	XXkhOsTdFeBLmgqbMNy12eAroeiRadBFau0Va9Kv2cHSM12e2oEML6U/dgPBqDvekZlTtT6qq7lqGRhGp+iqcJ8/QgsLoh1rAoGQ7mMjjC3oGPUyxvRKZnunTR9Q1se96hXxHHHeDa4w1BQbeIBhGyEyKcZhqKepQm04y7a3v5dFywZIwwVOcdbJyb80ERgHrGxOnVRqvERpdbVbos/ha/hTnMaHVYEFf+cIVSIaVHlk2d8M2+URCxpnyHEw7VxOwRaG7N17s9OLrSyT40K2aNP2p9aBoKVgz1ixOsRjTD133fcDnUkPBfI2wdIyZKcP3UcqVZ2q9mhIqoS+SXP8mhX1MOXPGYX8XVrlhIuKvU/reyoerq2s3Ke1tNTrVVJIHrSxlpQ/2dw/K4et4NOY8vCPFthvQbFFa4SRZjAOpUYNdw3cHQov7ziSrE0v9tWPAzIPTZJWJTGWnabVgCOlHGGFeDlUEh9uezJiwe6tFfrVZXwv1q/V4KhlmYHZ9kqNO6nInlD4tZpQbLPiZV3TE0M3N1bR0hw79borTV6n4bEjjUjHh2jSykoY+3YSmV+DULUMoeOgIOMS5/KV5j6k7dqWw/7rWD/5cruT7Ct7582u7ffAZK45Mlp9dgo/nROt
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW5PR11MB5764.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(396003)(39850400004)(346002)(136003)(230922051799003)(1800799012)(186009)(64100799003)(451199024)(36756003)(86362001)(316002)(2906002)(6512007)(6486002)(8936002)(66946007)(38100700002)(1076003)(66556008)(66476007)(6506007)(41300700001)(8676002)(83380400001)(6666004)(38350700005)(5660300002)(52116002)(478600001)(44832011)(26005)(2616005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?XDBBUxVHhNxhVAump27ku61Hcgz6Q4/RKlB9wUHclQvh3R85BcMp922UZr7P?=
+ =?us-ascii?Q?XbmvfhBh/W9aVcFskko3QnLe5Fa5XBqNQqsajRYxMFp+zEFuPDOUWS/qB2xt?=
+ =?us-ascii?Q?oqJKvCDQOrpFameOPT2y/eCWPrdHUp4Bc8lT2URRyN2V+g2VqfWfGzK9RUgF?=
+ =?us-ascii?Q?D9k77O1usERA2v4mm2HXSNXotRZ7t55AWUJByZt6SHDHKXE5zgHynxlpGKvA?=
+ =?us-ascii?Q?5mCj0Gdu6tAZP9YAd05iBgdXHqD1JrC6iqbht22pUUXjUPJaWsyUKhKFHU9r?=
+ =?us-ascii?Q?s4ng6kevkj3csQl+vRaEUIQtEkyNRlzTlcYrNuhMaLZU6eSvuPntqu/jBdsx?=
+ =?us-ascii?Q?O0sB4JBDp+mTLDixz/ySVp3/VmqWl73XB+45+9lKqWGV7seC+I99cF7E3Eb6?=
+ =?us-ascii?Q?V6Ngytfbros855yUJWtx+lXhLgfhs1BMzcilXub73yhMx1WetNAgZigx7jLW?=
+ =?us-ascii?Q?5DOcRP3qi20a+HiNucMavxumnwFQwLaAkF1DWm/qPEE8lVAXeDj+j9sshara?=
+ =?us-ascii?Q?n4OJSZsISE0g52d7YQ0/owhxsMSuDPKvMBgoj17RcsXqFHh7eUQq3oFfXRey?=
+ =?us-ascii?Q?i0lcU1HUHlFuH7AWNGA+6hp9glmNpLuEIUbl29n2EhfSHQLDvg7mOY69LHyn?=
+ =?us-ascii?Q?kOusXbkmthYs6859aCPgvN1df3yi7JZTNRnoQ1vuoR6iY0vIhTfNRXH3KCOY?=
+ =?us-ascii?Q?5RfTiQXcSl6Y31RGjZbosuN3Zv0Zl0eSkWmvSndRbL8R1VUav8544UdeEEH+?=
+ =?us-ascii?Q?40gQ3hAMVdoKniM02s0gtKi5QItxmFbxMXqNY+Er5u0RMOumJEzqAdwpkASX?=
+ =?us-ascii?Q?vqsH6gEMEkB0G5gOcbl6+Y/bKBwTXUx5Xinfebp8kFVQGwVmqNtEs/7tJ3S8?=
+ =?us-ascii?Q?Ew3syPOxt+T/yAxTIsKZy9yl93DBUr/Cl9Z7DPOBon4gAQBNXA8gLTU3ei3w?=
+ =?us-ascii?Q?sZZfjnU/puODKW8oLSKAv/wXa9SEigH1Rw3EVBY0JYCSaee5PswWZFW/3nUY?=
+ =?us-ascii?Q?CQzmg+EBaGCe07+LPZq2+MgnM5jmk4R7QZSNhDEnPvj8G3dHrl6fRBtPhdDX?=
+ =?us-ascii?Q?D3/4Boh2LsokCF+pmuhtnZE6q+siq8amglIntamdO/ZsKd9zacXVrjdv/QxM?=
+ =?us-ascii?Q?eYRKdu934EKNdylyRc39HTBlsycxZtlS1ij/Q9nZJ++JcCgwpVUQXO5vurmC?=
+ =?us-ascii?Q?95Ew4ITBqex5kXqo/zG6UMgikDFP4lW3ZsP5X/G1aYJ+W+qOA7RXu3kPlWpT?=
+ =?us-ascii?Q?BCacQ5z1L6djOlihPAN08PnEplsfuFt0vt08v/l09TV8atqrRl6nYHqpW2y3?=
+ =?us-ascii?Q?uI/8VWQykBEkDpIw38vJ6/RSnYH6KqVYk5topael1srpp1ERHryJ74tPGK+z?=
+ =?us-ascii?Q?wZwUkVov/curEhhnoFc5rEh3RMXgeW3ouLvn2bXQl6EpqNm9W0W1yfMuwKWr?=
+ =?us-ascii?Q?MNIdAK2LzHaEaFMCKRZE/lva3RFunT4RNxhKURpiyP0smS1gNPOPTqgmKP9i?=
+ =?us-ascii?Q?Tf+E8sVHNxP3T+tP3RylfAvyMJ/6oYh64dKe1P8pUmRNxBw542UgwcZc0ydV?=
+ =?us-ascii?Q?MxHPV14N8uiAxwYbNfj9lphI9XtoyK89UxkQiN29jU6+V+V9RyiDzBeU7w2A?=
+ =?us-ascii?Q?fA=3D=3D?=
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 001229f1-52b6-4720-ebf6-08dc2fbfc7d4
+X-MS-Exchange-CrossTenant-AuthSource: MW5PR11MB5764.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2024 13:53:12.3010
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: F9YQbjTru80Oq74popuy1e2gN/hiiX2kbLGNWxb5Vm2S09i+K7bIv80vyMrGIDu+usqkD6gPVXr+gvM2wrw419U+WODEjoBI1bcPLPmF/ks=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB8063
+X-Proofpoint-ORIG-GUID: JolyDotmc4MYXIp8SC1m92R6vD2hlTSE
+X-Proofpoint-GUID: JolyDotmc4MYXIp8SC1m92R6vD2hlTSE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-17_10,2024-02-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ impostorscore=0 clxscore=1011 phishscore=0 spamscore=0 mlxlogscore=999
+ suspectscore=0 lowpriorityscore=0 adultscore=0 bulkscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402170112
+
+The changes in commit 1f2bcb8c8ccd ("gpio: protect the
+descriptor label with SRCU"), desc_set_label has already
+allocated memory space for the label, so there is no need
+to allocate it again. otherwise memory leaks will be
+introduced.
+
+unreferenced object 0xffff0000c3e4d0c0 (size 32):
+  comm "kworker/u16:4", pid 60, jiffies 4294894555
+  hex dump (first 32 bytes):
+    72 65 67 75 6c 61 74 6f 72 2d 63 61 6e 32 2d 73  regulator-can2-s
+    74 62 79 00 00 00 ff ff ff ff ff ff eb db ff ff  tby.............
+  backtrace (crc 2c3a0350):
+    [<00000000e93c5cf4>] kmemleak_alloc+0x34/0x40
+    [<0000000097a2657f>] __kmalloc_node_track_caller+0x2c4/0x524
+    [<000000000dd1c057>] kstrdup+0x4c/0x98
+    [<00000000b513a96a>] kstrdup_const+0x34/0x40
+    [<000000008a7f0feb>] gpiod_request_commit+0xdc/0x358
+    [<00000000fc71ad64>] gpiod_request+0xd8/0x204
+    [<00000000fa24b091>] gpiod_find_and_request+0x170/0x780
+    [<0000000086ecf92d>] gpiod_get_index+0x70/0xe0
+    [<000000004aef97f9>] gpiod_get_optional+0x18/0x30
+    [<00000000312f1b25>] reg_fixed_voltage_probe+0x58c/0xad8
+    [<00000000e6f47635>] platform_probe+0xc4/0x198
+    [<00000000cf78fbdb>] really_probe+0x204/0x5a8
+    [<00000000e28d05ec>] __driver_probe_device+0x158/0x2c4
+    [<00000000e4fe452b>] driver_probe_device+0x60/0x18c
+    [<00000000479fcf5d>] __device_attach_driver+0x168/0x208
+    [<000000007d389f38>] bus_for_each_drv+0x104/0x190
+
+Fixes: 1f2bcb8c8ccd ("gpio: protect the descriptor label with SRCU")
+Signed-off-by: Xiaolei Wang <xiaolei.wang@windriver.com>
+---
+ drivers/gpio/gpiolib.c | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 02be0ba1a402..32191547dece 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2250,12 +2250,6 @@ static int gpiod_request_commit(struct gpio_desc *desc, const char *label)
+ 	if (test_and_set_bit(FLAG_REQUESTED, &desc->flags))
+ 		return -EBUSY;
+ 
+-	if (label) {
+-		label = kstrdup_const(label, GFP_KERNEL);
+-		if (!label)
+-			return -ENOMEM;
+-	}
+-
+ 	/* NOTE:  gpio_request() can be called in early boot,
+ 	 * before IRQs are enabled, for non-sleeping (SOC) GPIOs.
+ 	 */
+-- 
 2.25.1
 
