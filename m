@@ -1,74 +1,124 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CCC97B3E4
-	for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 15:01:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 744257B3D0;
+	Sat, 17 Feb 2024 15:01:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708182067; cv=none; b=V0qGQiu2+KRwtfScK0AvJ/cwFG1o3soDANkr/QzKVDj/1wxWck7gIhHdhRaxKT4n6FCTeW6/dmiVfo+1oxkmZ7AFUhNunKZWvr3eFGgcW7nPIyBf5BHoGwxD8Qs6keh5enQPrb56g96NYBZH9QDWYX+cZAED4+yfC4ujLZiuhA4=
+	t=1708182084; cv=none; b=hX2EO9niyacKZhh6gwaZ6pGAYdt0ESrwSxWAkfvnQtF0kSeDIl7Q/g28VyKQhRQ8FATaVRdIFOhnMshjqShb3LnHy8851dr2dYFS0tjUXNnmx1goAhwq91umhXyOJqADk4FxoqTtWNb1ecOA+8uY2rLTYl7EYgxxPQukry8xmGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708182067; c=relaxed/simple;
-	bh=v3qPHREL8y4lhPH+JqjQ41slZwMMdqVh6lqLROLzu/Y=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=s3UKfG2BPVukAgqaBOiv8TwijN1waT24SsHFwfi48G3IhqVC5YvrVxbhnrTsurfFTIM4v+UIvHGl2C2sJUKq+ib2yS/2VrqvL+S1rJiCm725nstmr112uhggkzfsASKvxH/A5im1k6yTj9zGo39RePGh1p4Mg1V1zvTG9dnlxq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3652275e581so374005ab.3
-        for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 07:01:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708182065; x=1708786865;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MwNQueuYmB/11gbOG3QeCQx8po7ZygrhAL8Ov/WqAlE=;
-        b=ejBcBUBPwHRelCHbaovQgkZvKZ10a96uVF1YXe9H+oMjM8HAywgz6CL+LGyTwxd7Uf
-         u+6UhI8ScjSr0mo7plwmJT52pwOVyC/9p6YtRmCvA7iCzVgeroKB/4FqaqKGRnO4hMQd
-         R7zbs4toiNZoskJn4Dw4BmhkP6jRndxjLsX+diicbkldRrcjQS0h+g7ooRHy9lFQB3ul
-         diQ7+GXScBdq++YL5Xue0Qs+HquMEand4S6IrPPxgthmLDNytLsgnl1morPcCTr40u/S
-         rFOFy6mobSuVkWRhnIw4Sx/MGdL27YcD3KZcYfgcqMrSGuPVWkum+LiIpDzCqS8Ob6Yc
-         AQbg==
-X-Forwarded-Encrypted: i=1; AJvYcCUuBPkUnB3rvJrLZuCU30cBlBZnfC23Wp4qH8sq3B0IFjaQE7amUt2RA49+iNSMeNUrZ0QJUWln1ft/Y0ano4q+sZXpxpSQiWg7+0Kx
-X-Gm-Message-State: AOJu0YwSJ//fa7qLL7lUlH7PYVLTwh9qyfkduYtcVKs74FV+pxccezvS
-	MzJFfrkNII4LIm3n45DquuYrsepZr595SYA8XbTR/Y8ZYR7cgP96Zo1iFCzG8KXfrAzEuOR0K7r
-	sR/GQ0A/kgUyv0CfJFv37qzfv5TeSUdZODWHM/U1mdVqape3Zzlo458Y=
-X-Google-Smtp-Source: AGHT+IEBdhWTaosc/BZRU1Ig+P68HanPIcYAdDVfh8P0PrL8wce8QOLRvgTXLmzncxBxXxBJXjNeF/KiKPKPxtq3e5BT7OxP6ZGq
+	s=arc-20240116; t=1708182084; c=relaxed/simple;
+	bh=IojVOTkkmUgO8R4R5BC+JvxU3MusAnoRWz5cmE/Gqjc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ROUHKwGG1uS7o5CcSzRkLZJni/Ly4zwLMsv7lflI9CxMqQZ3sYR9gBye91pM3SE3A2QwVlai3F2nNnQgBRllIilkPVBUttQyxGOsRw/XlfsYNO+EyrRLwMuLA6MLRTrWT0j9MmzSyavFXQI/PAJaqKKCGF21+kJ2EI8IRfpDgv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CtrUsh6b; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CtrUsh6b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AD4EC433F1;
+	Sat, 17 Feb 2024 15:01:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708182083;
+	bh=IojVOTkkmUgO8R4R5BC+JvxU3MusAnoRWz5cmE/Gqjc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CtrUsh6bwVqhdBGdyOuDk0xtJef3k8N8vCn7a3CH5JXonVHQxfPDLMFYZdVsQDVWk
+	 +bjGkaUhzstRRxhqn8KOlfclvoHzFFGzo67TuaoxpU8lmWHjta9QxHjyN8o/C3jf0y
+	 PjMVYo4N6IeVR9dOnA/e47OtlC4ClvurnxM7fFTS6D0nfUzgLPukjzTlGm1O7ag76A
+	 lhj0tWdeUNi2x9yXHIeHYzB/mKh4DraVWbyGjO4sUL83gBliNF7T4BXhGmXzHVrEli
+	 ZU4VJRgjOqQiF9rXK/MXwDUC8+TcX1EnGeGiIYuYkoK0ndebkMu2qVS/x4TZ/z42ey
+	 OkyO12z0GoLKQ==
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-mmc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH RFC] riscv: dts: sophgo: add sdcard support for milkv duo
+Date: Sat, 17 Feb 2024 22:48:26 +0800
+Message-ID: <20240217144826.3944-1-jszhang@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:154f:b0:363:9252:ed47 with SMTP id
- j15-20020a056e02154f00b003639252ed47mr647629ilu.1.1708182064966; Sat, 17 Feb
- 2024 07:01:04 -0800 (PST)
-Date: Sat, 17 Feb 2024 07:01:04 -0800
-In-Reply-To: <CAMj1kXHQYuv2H5XA+abgj+Mw8xyxsoHARx2w-tT7jRrDLQ=EVg@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000031b790061195214f@google.com>
-Subject: Re: [syzbot] [arm?] [crypto?] KASAN: invalid-access Read in neon_aes_ctr_encrypt
-From: syzbot <syzbot+f1ceaa1a09ab891e1934@syzkaller.appspotmail.com>
-To: ardb@kernel.org, catalin.marinas@arm.com, davem@davemloft.net, 
-	herbert@gondor.apana.org.au, linux-arm-kernel@lists.infradead.org, 
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, will@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Add sdhci dt node in SoC dtsi and enable it in milkv duo dts.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+---
+Since cv1800b's clk support isn't in, this patch uses fixed dummy clk
+and just RFC, I will send formal patch after clk support is ready.
 
-Reported-and-tested-by: syzbot+f1ceaa1a09ab891e1934@syzkaller.appspotmail.com
+ .../riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts |  8 ++++++++
+ arch/riscv/boot/dts/sophgo/cv18xx.dtsi          | 17 +++++++++++++++++
+ 2 files changed, 25 insertions(+)
 
-Tested on:
+diff --git a/arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts b/arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts
+index 3af9e34b3bc7..94e64ddce8fa 100644
+--- a/arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts
++++ b/arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts
+@@ -33,6 +33,14 @@ &osc {
+ 	clock-frequency = <25000000>;
+ };
+ 
++&sdhci0 {
++	status = "okay";
++	bus-width = <4>;
++	no-1-8-v;
++	no-mmc;
++	no-sdio;
++};
++
+ &uart0 {
+ 	status = "okay";
+ };
+diff --git a/arch/riscv/boot/dts/sophgo/cv18xx.dtsi b/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
+index 2d6f4a4b1e58..405f4ba18392 100644
+--- a/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
++++ b/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
+@@ -4,6 +4,7 @@
+  * Copyright (C) 2023 Inochi Amaoto <inochiama@outlook.com>
+  */
+ 
++#include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ 
+ / {
+@@ -45,6 +46,13 @@ osc: oscillator {
+ 		#clock-cells = <0>;
+ 	};
+ 
++	sdhci_clk: sdhci-clock {
++		compatible = "fixed-clock";
++		clock-frequency = <375000000>;
++		clock-output-names = "sdhci_clk";
++		#clock-cells = <0>;
++	};
++
+ 	soc {
+ 		compatible = "simple-bus";
+ 		interrupt-parent = <&plic>;
+@@ -175,6 +183,15 @@ uart4: serial@41c0000 {
+ 			status = "disabled";
+ 		};
+ 
++		sdhci0: mmc@4310000 {
++			compatible = "sophgo,cv1800b-dwcmshc";
++			reg = <0x4310000 0x1000>;
++			interrupts = <36 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&sdhci_clk>;
++			clock-names = "core";
++			status = "disabled";
++		};
++
+ 		plic: interrupt-controller@70000000 {
+ 			reg = <0x70000000 0x4000000>;
+ 			interrupts-extended = <&cpu0_intc 11>, <&cpu0_intc 9>;
+-- 
+2.43.0
 
-commit:         67e0a702 crypto: arm64/neonbs - fix out-of-bounds acce..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git neon-aes-ctr-fix
-console output: https://syzkaller.appspot.com/x/log.txt?x=122f4464180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b4dde08ba7d52a4b
-dashboard link: https://syzkaller.appspot.com/bug?extid=f1ceaa1a09ab891e1934
-compiler:       aarch64-linux-gnu-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
-
-Note: no patches were applied.
-Note: testing is done by a robot and is best-effort only.
