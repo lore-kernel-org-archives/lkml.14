@@ -1,178 +1,105 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA47D41C63
-	for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 14:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45176149E03
+	for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 14:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708180782; cv=none; b=OmSdZlXIj1luYF7nNucw3QyKSZ6u7jg1FGHkmhm5cvc+1a06vi/Msdm2zt2RnCmueohrP7vyOp4th5JeVqwNEDTGV5s5dnTXDK1egfOZOJBCs0FAukXSfz8STIZY0RgjhFwaa1CKxuF9IaxSN+MNjgnHZLKaInndWYSLKF9KZuI=
+	t=1708181002; cv=none; b=u9+omqYngX4XtQ/G68DPusR1wygjW+WeLOOdiID05Xr+dmoQZbJEqwM9WP9IMjC4oGfa4Hh8sshT1NT4SfL4azIdGcczw43tq74cW5wU7dwz3AeGtiY8v06pRKJVthk/r1C5dXRcRNiF05sLsZ470hoP56Y0Zsd6pZp+PiHOiWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708180782; c=relaxed/simple;
-	bh=xWWAkwL0hz4hu8Jh3YaTF/1bFJqdVShaDpWcm63XY2U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lr6uHBTRxSI5FEskJd0LJgNSuIXpahB12XgSlj14eIXiDs2lTulngf9KO680Ckzow5b6vuxS3XdViWCr+xZTCPfthRnOLmxsJKQErpPeX0WDDEiCyWKq+EpvKUfJyIWyp9z1OMJLI5c2GcwaIenGRR6ZCXgBFMYKSRPTDXjwcqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tweaklogic.com; spf=pass smtp.mailfrom=tweaklogic.com; dkim=pass (2048-bit key) header.d=tweaklogic.com header.i=@tweaklogic.com header.b=PANa8sru; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tweaklogic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tweaklogic.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tweaklogic.com header.i=@tweaklogic.com header.b="PANa8sru"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-517ab9a4a13so2418791a12.1
-        for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 06:39:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tweaklogic.com; s=google; t=1708180779; x=1708785579; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Snv5IU+ADbcqgOjycYAOmXHtXMcTl5Y5BUfYBZJWwIg=;
-        b=PANa8sruRbDv1u1RX0i4Py3Kum7c4V+fkE0skrMnyP0J+rhT4d1dXfcX4j/8uSpLoS
-         18MjyajSDSsHbK998T2wlaGdSppt2k/eIkGrDRkVsXt0322sbiFHLDQl1KMQ0O6sTz6K
-         CZAKqQXkhLgm0nvbzDBD99PyI6J4ApEE5b3kqOxZzcQvYSOdwFzhawGVOM+CUThNf6mI
-         SG1Gy/c5zOXyhHJGJsXGk7OIPZB47vYh+/l0jYPs0hztlLvUjzkr0IBII49GeWbXdDTN
-         kiBi/S1k5gx05WHo6l1CVS7i2FBDez/T6ot9Pz4O8HJKK0EJMA6m92fCQWCNdk/p0LJl
-         hgfg==
+	s=arc-20240116; t=1708181002; c=relaxed/simple;
+	bh=TZ0y3aVpF7C8KltuvmbMmwIVNNDanpPi2S/HXQ/ocSg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=aUJObxwqQxt2yLa0y1QpMFawUNcS7Pj8HtaNQn8b9mhB0mhjYgbfJsIlVfDF3l++cBKjR1aHypkpiJmMwH35k+451wVtC+lQSVwuJnxh6DIop+rz3cTgqwEWxar/gsXvugOClQjkFE2Z/aKZjSrg51wkSHoQp5plIlg3K25wxvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-365032b8456so15537135ab.2
+        for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 06:43:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708180779; x=1708785579;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1708181000; x=1708785800;
+        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Snv5IU+ADbcqgOjycYAOmXHtXMcTl5Y5BUfYBZJWwIg=;
-        b=MaDiQMNRzyJGN9DSOkYwKMdP1lylUcJT59ZfAN5g9IPCkbqozm+XaVqkVIGebQW5Pt
-         SGg74funUi+7M9rojE3NbSSmqPUGKb93NPXDZ6pa4CRgGt4z22UdNzSVR1mtAQHaBlTR
-         l37IoPcujD9MQydclED+QSL3CbrcwAP9PJaG2+IIKz9B8DtFAIOKzlvtJvch6NEmTmTq
-         U0dKEm/Lb7uKK1Fx6ZMKMjn/k9myGgRNVHvDX9sMNnQaFfTQndt3V8lrVntDwrGI1VSk
-         9xV4nU+W3s5ny7Nv35C8TofYgxR92J4ljbIDRzvSjV8urCHzNY/1Jvq0k11UpIBpJB9e
-         X5vw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNbQ0jtOvXi0XzljGQeLgpjvn9mTsfxHBa0FGxq/dx12oXop/LW/IyI2J9Jn8Hlf2bGFrSYglv9N44qKQZ/nqtUrT3pLIBO/JRufJG
-X-Gm-Message-State: AOJu0YxPzjzxwlDsvlZm9yc05bYck4EUNuHUWdYU1IGnUONcPQw8HGKB
-	1BB76N6IOo2Pd6Yh2BjcvpxXYw8eraMXPqJ1WrRvod5o1wE8Sr3xeyZpryJxn7w=
-X-Google-Smtp-Source: AGHT+IFxc2PAnZvU9E8M/6kregS4EPVrmZJU0xTOHO0l1B7IbunDfGh0jPEaAt9U+I1OeuRBW+LXfA==
-X-Received: by 2002:a05:6a20:9e48:b0:1a0:60b2:45b with SMTP id mt8-20020a056a209e4800b001a060b2045bmr9980124pzb.6.1708180778915;
-        Sat, 17 Feb 2024 06:39:38 -0800 (PST)
-Received: from [192.168.20.11] ([180.150.113.62])
-        by smtp.gmail.com with ESMTPSA id n14-20020a635c4e000000b005dc2ca5b667sm1454274pgm.10.2024.02.17.06.39.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 17 Feb 2024 06:39:38 -0800 (PST)
-Message-ID: <dfe6e5da-b104-4acd-b323-4a7fa980de88@tweaklogic.com>
-Date: Sun, 18 Feb 2024 01:09:33 +1030
+        bh=yxgwFaGmbKW0ehKsu3OuuZK9A0Cvn9rXai+nVeD7el0=;
+        b=acIqiDKwX6GgZmcbhYMsoEthEsAVIruT7/hNPX/7oCwoKJcfhZU8kR7INQWXeNajbp
+         mxV1fZ9XGolWlsOWtA9fObAgzErO9gYjv2ZGR90CvlYSmC7OAojIB5Zk3ceNXOlu/TDt
+         CRUXCtudkMJQsm1WRRMBER1NeIxaFt2gNcvsrPQ/kTL8S3PZLULFtWFI9rcUn9mb0iFp
+         vQ9b6KWfBAvRT/HVI0dI65DetRyEu6yUrrevPDpAr/p1xSWZnf1+soqzmB4wvHCyXN0t
+         hQcBs7IUBpHlTjitDIKOTXuZly5H5Iq9VIUga2ZDnYu0XmQde8RKt0ywven8WvEz+D3V
+         J1iA==
+X-Forwarded-Encrypted: i=1; AJvYcCXSjbqtM9M4RSJyG0KVK+kmzYRbYpLYW/cLmnOcA6jqVwheRCiJVw/ECaNYJo+6NdFMwj7YX7NtOASBMM7HrLKKLxO62u4FvzfdrJeP
+X-Gm-Message-State: AOJu0YxDk/YuLqahS8SnCVpdW9vKE8+y/+o5Au5gq+ZW7dtmRZ6aEo61
+	vf2zzh+A6ugBNUbpS4DHeI7HzSs5XcnEveC6r9mafgKO6VL7/Y6TyetMBP/pH4LXbtwuwfOJh6x
+	CerP1Lu1xqQGDMwff2L5ZNdOCURfl5UCYiC1Ia9Zse/nhPgYFKS78gbk=
+X-Google-Smtp-Source: AGHT+IEXudJDz0MH8FXd1pGgCXpaAHIRzjRJSsYg6KQ6WpCUKtpUNoBRASEYMQ8w7x89DyTfq6RJ/YDIaU3sKSuIUZx8y3p63EZg
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH v2] iio: gts-helper: Fix division loop
-To: Jonathan Cameron <jic23@kernel.org>,
- Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Lars-Peter Clausen <lars@metafoo.de>, linux-kernel@vger.kernel.org,
- David Laight <David.Laight@aculab.com>, linux-iio@vger.kernel.org
-References: <Zcn-6e-0-nh2WcfU@drtxq0yyyyyyyyyyyyyby-3.rev.dnainternet.fi>
- <20240216135812.07c9b769@jic23-huawei>
-Content-Language: en-US
-From: Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>
-In-Reply-To: <20240216135812.07c9b769@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:1c89:b0:363:c3d9:c10 with SMTP id
+ w9-20020a056e021c8900b00363c3d90c10mr581820ill.0.1708181000518; Sat, 17 Feb
+ 2024 06:43:20 -0800 (PST)
+Date: Sat, 17 Feb 2024 06:43:20 -0800
+In-Reply-To: <CAHpthZojFipy1QVY=61vbBD6s6QdJdoNmQdTo90a=JixHA-V5g@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000bf86ff061194e1ba@google.com>
+Subject: Re: [PATCH] net: Fix kernel-infoleak in __skb_datagram_iter (2)
+From: syzbot <syzbot+34ad5fab48f7bf510349@syzkaller.appspotmail.com>
+To: ryasuoka@redhat.com
+Cc: ryasuoka@redhat.com, syzkaller-bugs@googlegroups.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 17/2/24 00:28, Jonathan Cameron wrote:
-> On Mon, 12 Feb 2024 13:20:09 +0200
-> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
-> 
->> The loop based 64bit division may run for a long time when dividend is a
->> lot bigger than the divider. Replace the division loop by the
->> div64_u64() which implementation may be significantly faster.
->>
->> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
->> Fixes: 38416c28e168 ("iio: light: Add gain-time-scale helpers")
->>
->> ---
->> This is a resend. Only change is the base which is now the v6.8-rc4 and
->> not the v6.8-rc1
-> Given I'm not rushing this in, it is going via my togreg tree, so the
-> rebase wasn't really helpful (thankfully didn't stop it applying).
-> Would have been fine to send a ping response to the first posting of it.
-> 
-> I was leaving some time for David or Subhajit to have time to take
-> another look, but guess they are either happy with this or busy.
-> 
-> Applied to the togreg branch of iio.git and pushed out as testing for
-> all the normal reasons.
-> 
-> Jonathan
-> 
->>
->> This change was earlier applied and reverted as it confusingly lacked of
->> the removal of the overflow check (which is only needed when we do
->> looping "while (full > scale * (u64)tmp)". As this loop got removed, the
->> check got also obsolete and leaving it to the code caused some
->> confusion.
->>
->> So, I marked this as a v2, where v1 is the reverted change discussed
->> here:
->> https://lore.kernel.org/linux-iio/ZZZ7pJBGkTdFFqiY@dc78bmyyyyyyyyyyyyydt-3.rev.dnainternet.fi/
->>
->> Revision history:
->> v1 => v2:
->>   - Drop the obsolete overflow check
->>   - Rebased on top of the v6.8-rc4
->>
->> iio: gts: loop fix fix
->> ---
->>   drivers/iio/industrialio-gts-helper.c | 15 +--------------
->>   1 file changed, 1 insertion(+), 14 deletions(-)
->>
->> diff --git a/drivers/iio/industrialio-gts-helper.c b/drivers/iio/industrialio-gts-helper.c
->> index 7653261d2dc2..b51eb6cb766f 100644
->> --- a/drivers/iio/industrialio-gts-helper.c
->> +++ b/drivers/iio/industrialio-gts-helper.c
->> @@ -34,24 +34,11 @@
->>   static int iio_gts_get_gain(const u64 max, const u64 scale)
->>   {
->>   	u64 full = max;
->> -	int tmp = 1;
->>   
->>   	if (scale > full || !scale)
->>   		return -EINVAL;
->>   
->> -	if (U64_MAX - full < scale) {
->> -		/* Risk of overflow */
->> -		if (full - scale < scale)
->> -			return 1;
->> -
->> -		full -= scale;
->> -		tmp++;
->> -	}
->> -
->> -	while (full > scale * (u64)tmp)
->> -		tmp++;
->> -
->> -	return tmp;
->> +	return div64_u64(full, scale);
->>   }
->>   
->>   /**
-Hi Matti and Jonathan,
+> #syz test git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 
-I somehow missed testing this patch earlier. The above patch works fine with apds9306 v7 driver(which work in progress!).
-There are no errors.
-My test script is simple:
-#!/bin/bash
-D=0
-S=`cat /sys/bus/iio/devices/iio:device${D}/in_illuminance_scale_available`
+want either no args or 2 args (repo, branch), got 1
 
-for s in $S; do
-	echo $s
-	echo $s > /sys/bus/iio/devices/iio:device${D}/in_illuminance_scale
-	sleep 5
-done
-
-One question - if I test a patch like this, do I put a "Tested-by" tag or just mention that I have tested it?
-
-Regards,
-Subhajit Ghosh
-
->>
->> base-commit: 841c35169323cd833294798e58b9bf63fa4fa1de
-> 
-
+> 9f8413c4a66f
+>
+> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+> index 27998f73183e..c7bf1c38b292 100644
+> --- a/include/linux/skbuff.h
+> +++ b/include/linux/skbuff.h
+> @@ -2532,6 +2532,11 @@ static inline unsigned char
+> *skb_tail_pointer(const struct sk_buff *skb)
+>   return skb->head + skb->tail;
+>  }
+>
+> +static inline unsigned int skb_tail_offset(const struct sk_buff *skb)
+> +{
+> + return skb->tail;
+> +}
+> +
+>  static inline void skb_reset_tail_pointer(struct sk_buff *skb)
+>  {
+>   skb->tail = skb->data - skb->head;
+> @@ -2549,6 +2554,11 @@ static inline unsigned char
+> *skb_tail_pointer(const struct sk_buff *skb)
+>   return skb->tail;
+>  }
+>
+> +static inline unsigned int skb_tail_offset(const struct sk_buff *skb)
+> +{
+> + return skb->tail - skb->head;
+> +}
+> +
+>  static inline void skb_reset_tail_pointer(struct sk_buff *skb)
+>  {
+>   skb->tail = skb->data;
+> diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
+> index eb086b06d60d..f11bb308f1ed 100644
+> --- a/net/netlink/af_netlink.c
+> +++ b/net/netlink/af_netlink.c
+> @@ -167,7 +167,7 @@ static inline u32 netlink_group_mask(u32 group)
+>  static struct sk_buff *netlink_to_full_skb(const struct sk_buff *skb,
+>      gfp_t gfp_mask)
+>  {
+> - unsigned int len = skb_end_offset(skb);
+> + unsigned int len = skb_tail_offset(skb);
+>   struct sk_buff *new;
+>
+>   new = alloc_skb(len, gfp_mask);
+>
