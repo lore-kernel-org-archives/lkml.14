@@ -1,112 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D916069E03;
-	Sat, 17 Feb 2024 14:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B020F69E03
+	for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 14:51:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708181389; cv=none; b=S5xKCvniynOhgrmFEg8kpQXTAQ7dCoJL866ZOa4Q1yVgElC25SLbyAMiLqXpiPrxPzFJoZngM7ckD84By/ANkvPN2IbMUjWENbBdw9TrkancF4QrejYxRlosJmSS54fAs1FNGcgGV2mZN+hXbRToK+H7VRhK8DHwtMQ+S1W8v2k=
+	t=1708181470; cv=none; b=X4NZez7fDpopcruiJIFd342sNOVgtOo3+vmoJ14BSbuSD5LDKPoKsWu+kr4N4QEjdK2jGqqThLK4D+vie6rwSx/Q6+9lx2+aLqB6KGNgLPYA+dByzve9yEYmaKNKZRCAeE914JUxx8CIuphbPAjZWkCkvJ4okYyM8IXkdMZasgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708181389; c=relaxed/simple;
-	bh=otsEbdPdtjFAM/AizCCrQI4l4jZouA2uDT+VnoJXyhY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZBBslrKu28w4286p6oSmzhf4YwdoSkXma30lMvB9RfeOPXDD9QR1u9h/TRinPR35WYszyd9cuGPrNcm01t51FlDujyASEwExqKFIg9xy9HdHEgtjrEp2jBTaIoNwE5je8dZws7n59VGiTYPKK1KfBfToyG03RxWhn53THAENX68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HrCK03ru; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HrCK03ru"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708181388; x=1739717388;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=otsEbdPdtjFAM/AizCCrQI4l4jZouA2uDT+VnoJXyhY=;
-  b=HrCK03ru+pk+aJwbKhipB2QrHsainsqxTYFSdWXVZP5b8WTOgljLMyy9
-   hkXrFPhoPUk7P6DNmZbV/dzTdWG8ckFc38c+ZqObcSwPoMH+5zqsyXAO7
-   PgADDkwFBDslC/LFjlpVgy+n2kl3Xvnk7hbJDGEJvL85m+Qhx5bA4RPac
-   rNJ6fT65NgfdYfXkD7BgmcvRz5ge/vax/yz09uT29IKjF/uhoZWjH5a8Z
-   Bbr1PuNG/Ho+u51ME4BtQc45pd+wAS2+Cac0r5XEC7zc+Jvl90DHnovlH
-   dCZw1BR2UYD5XPDRNTKjSXCg//9jeGNXbDREvdyixb5iLsyeAIt0Wc6ZS
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10986"; a="19725340"
-X-IronPort-AV: E=Sophos;i="6.06,166,1705392000"; 
-   d="scan'208";a="19725340"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2024 06:49:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,166,1705392000"; 
-   d="scan'208";a="4058262"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa009.fm.intel.com with ESMTP; 17 Feb 2024 06:49:44 -0800
-Date: Sat, 17 Feb 2024 22:45:54 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Yan Zhao <yan.y.zhao@intel.com>,
-	Friedrich Weber <f.weber@proxmox.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Yuan Yao <yuan.yao@linux.intel.com>,
-	Yu Zhang <yu.c.zhang@linux.intel.com>,
-	Chao Peng <chao.p.peng@linux.intel.com>,
-	Fuad Tabba <tabba@google.com>, Michael Roth <michael.roth@amd.com>,
-	Isaku Yamahata <isaku.yamahata@intel.com>,
-	David Matlack <dmatlack@google.com>
-Subject: Re: [PATCH v4 1/4] KVM: x86/mmu: Retry fault before acquiring
- mmu_lock if mapping is changing
-Message-ID: <ZdDGooxx/a+sAzmq@yilunxu-OptiPlex-7050>
-References: <20240209222858.396696-1-seanjc@google.com>
- <20240209222858.396696-2-seanjc@google.com>
+	s=arc-20240116; t=1708181470; c=relaxed/simple;
+	bh=cJyGmbL/M2P2FaQNjfB8qOun1MkvJL88mCvWOiDQvk4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=sD71w44GVKJXknoukvVLVWGmRiKAMshuvSwEqwLF/YEooDMIy2MqtSQQ07Da2237MYRDqplwuNgSP249vE25OHyiNjxTzMD9XVKfhwPlbrecHIEtLV0aoPw3MNIxus0CnyWcbKRcQsVvoxWST0UetRyRdZUFsx21V4YM4FGfyWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-363dfc1a546so27320345ab.2
+        for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 06:51:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708181468; x=1708786268;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fXwBazE1XSTv1CcPSfbL565M8WUrifKU9hE49H2OgVI=;
+        b=Of/eRP35sMIvb5+mFlqQBemlBj96NRiRwCe73phIH8O8hE9/KiusA81bYfTqrZVATD
+         qWCQqMxD4mUFwYsT/56GivlQ0dcFPsGMghVXjHVLr6pOKnmQd/rkJ0n8ASYjKmHUYlVx
+         bTUEZaBwlyKUdv3mG4UTEVzEYV6ZtSKWn/5w4DVswxkQviMQZOypbntXb+mDAsTWMcWA
+         BCy4q8UiuKkRZTku7DrsFahCJjV5H5i440Fjod+bBXs+3YVzYXOJDpBRWFxbZVVs5TY8
+         z+K4SST4Vtb9+9aAEDcmB5Yv902laqEDw/wb3BP9gp6aYLC9avhqezq2tvLmYTk4SKJq
+         Gkow==
+X-Gm-Message-State: AOJu0YwcGb8Sc0sd4uW1wdzdpLIOCwfYERpEuiTtDr2YqKa24KhNE/dP
+	R6H64aQ6YAgPQNCXe+vRJPaG/iA6m62A4XGt6PCEzzJI9enRheg/JMM2FStqR4vkSPbZCUb7iNI
+	DCFe/+pVqKH4dsDK2nou9fHbctKOBC9IPiPSnWm6+qIymutWoCBzltqs53A==
+X-Google-Smtp-Source: AGHT+IE1K2NgFIIbui6miofg6AnSukOL4SNTaJAtLvEfHhFfGClL4G7VVticxwd7uRpmLCEXVcZsv6urhGgk6pr2fnEi38k4lEuM
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240209222858.396696-2-seanjc@google.com>
+X-Received: by 2002:a92:cd8b:0:b0:363:cc38:db22 with SMTP id
+ r11-20020a92cd8b000000b00363cc38db22mr575563ilb.3.1708181467879; Sat, 17 Feb
+ 2024 06:51:07 -0800 (PST)
+Date: Sat, 17 Feb 2024 06:51:07 -0800
+In-Reply-To: <0000000000002cf4690610660f71@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009adee2061194fdf2@google.com>
+Subject: Re: [syzbot] Re: [PATCH] net: Fix kernel-infoleak in
+ __skb_datagram_iter (2)
+From: syzbot <syzbot+34ad5fab48f7bf510349@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
->  static int kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault,
->  			   unsigned int access)
->  {
-> +	struct kvm_memory_slot *slot = fault->slot;
->  	int ret;
->  
->  	fault->mmu_seq = vcpu->kvm->mmu_invalidate_seq;
->  	smp_rmb();
->  
-> +	/*
-> +	 * Check for a relevant mmu_notifier invalidation event before getting
-> +	 * the pfn from the primary MMU, and before acquiring mmu_lock.
-> +	 *
-> +	 * For mmu_lock, if there is an in-progress invalidation and the kernel
-> +	 * allows preemption, the invalidation task may drop mmu_lock and yield
-> +	 * in response to mmu_lock being contended, which is *very* counter-
-> +	 * productive as this vCPU can't actually make forward progress until
-> +	 * the invalidation completes.
-> +	 *
-> +	 * Retrying now can also avoid unnessary lock contention in the primary
-> +	 * MMU, as the primary MMU doesn't necessarily hold a single lock for
-> +	 * the duration of the invalidation, i.e. faulting in a conflicting pfn
-> +	 * can cause the invalidation to take longer by holding locks that are
-> +	 * needed to complete the invalidation.
-> +	 *
-> +	 * Do the pre-check even for non-preemtible kernels, i.e. even if KVM
-> +	 * will never yield mmu_lock in response to contention, as this vCPU is
-> +	 * *guaranteed* to need to retry, i.e. waiting until mmu_lock is held
-> +	 * to detect retry guarantees the worst case latency for the vCPU.
-> +	 */
-> +	if (!slot &&
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-typo?   if (slot &&
+***
 
-Thanks,
-Yilun
+Subject: Re: [PATCH] net: Fix kernel-infoleak in __skb_datagram_iter (2)
+Author: ryasuoka@redhat.com
 
-> +	    mmu_invalidate_retry_gfn_unsafe(vcpu->kvm, fault->mmu_seq, fault->gfn))
-> +		return RET_PF_RETRY;
-> +
->  	ret = __kvm_faultin_pfn(vcpu, fault);
->  	if (ret != RET_PF_CONTINUE)
->  		return ret;
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+9f8413c4a66f
+
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index 27998f73183e..c7bf1c38b292 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -2532,6 +2532,11 @@ static inline unsigned char
+*skb_tail_pointer(const struct sk_buff *skb)
+  return skb->head + skb->tail;
+ }
+
++static inline unsigned int skb_tail_offset(const struct sk_buff *skb)
++{
++ return skb->tail;
++}
++
+ static inline void skb_reset_tail_pointer(struct sk_buff *skb)
+ {
+  skb->tail = skb->data - skb->head;
+@@ -2549,6 +2554,11 @@ static inline unsigned char
+*skb_tail_pointer(const struct sk_buff *skb)
+  return skb->tail;
+ }
+
++static inline unsigned int skb_tail_offset(const struct sk_buff *skb)
++{
++ return skb->tail - skb->head;
++}
++
+ static inline void skb_reset_tail_pointer(struct sk_buff *skb)
+ {
+  skb->tail = skb->data;
+diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
+index eb086b06d60d..f11bb308f1ed 100644
+--- a/net/netlink/af_netlink.c
++++ b/net/netlink/af_netlink.c
+@@ -167,7 +167,7 @@ static inline u32 netlink_group_mask(u32 group)
+ static struct sk_buff *netlink_to_full_skb(const struct sk_buff *skb,
+     gfp_t gfp_mask)
+ {
+- unsigned int len = skb_end_offset(skb);
++ unsigned int len = skb_tail_offset(skb);
+  struct sk_buff *new;
+
+  new = alloc_skb(len, gfp_mask);
+
