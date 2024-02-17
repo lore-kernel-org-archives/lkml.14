@@ -1,140 +1,94 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A8569E03
-	for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 12:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E2069E03;
+	Sat, 17 Feb 2024 12:18:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708172106; cv=none; b=Fyq4hfGgCXA1ytkr+KINop/XTaxcTfL2ggmnTQmMxAdBHWiCkC0BmVo4bm/cBlkpyTz0COP7JPY/CHClzG229ru1MfenqoDiAdq1g29ybDLZA02qKslDhk3tOKouOJwvxyeMsZpJCJTaddBWzrm9ggMYu3topc05mTDJRApOdq4=
+	t=1708172297; cv=none; b=e7wR55Aa5l644k8evDxmfhvRkT1KBas5EY2a4MBk0Yy+KVC2AaBGJFiPZzh2YqvxFW61KfiwMAqRGea4YIyGV20YlEuA/aQfMX2rcAttkBxjBzC+q9oxdizz4CjcEB8jLpOBCyLoF9FmMrkECCk2Y6pj33w0g7kSDPYigIxgPvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708172106; c=relaxed/simple;
-	bh=S2t8ZmWnf3+Vn3K2L7tspN0gX9dvNd1USxfVoDWBbZE=;
+	s=arc-20240116; t=1708172297; c=relaxed/simple;
+	bh=/E/MynKORulWdcZ+7q48yIRXb8NDuNofQIEQN5JW+Co=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qpSTAbq9ypzWZOWCIwVlZ+RduoFfUMdO2A6W4dHWlZINZc2iDUP0i/v6wvESMA3isGOC4iUcPOhrwaEYfL4PxLEquIN1gydVM6Tk5gxgwcPHGSpO4b5rtOUdq/Z8VNS4v7WQT3ed8EghnMnJW+08EDND127V8U9uPtiOUDzfxZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rbJaS-0000RV-Fa; Sat, 17 Feb 2024 13:14:32 +0100
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rbJaP-001GBa-EN; Sat, 17 Feb 2024 13:14:29 +0100
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rbJaP-00CwUe-15;
-	Sat, 17 Feb 2024 13:14:29 +0100
-Date: Sat, 17 Feb 2024 13:14:29 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Frank Rowand <frowand.list@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
-	Dent Project <dentproject@linuxfoundation.org>
-Subject: Re: [PATCH net-next v4 14/17] dt-bindings: net: pse-pd: Add bindings
- for PD692x0 PSE controller
-Message-ID: <ZdCjJcPbbBGYVtuo@pengutronix.de>
-References: <20240215-feature_poe-v4-0-35bb4c23266c@bootlin.com>
- <20240215-feature_poe-v4-14-35bb4c23266c@bootlin.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xpgsv5Jjs6OHDJkn56cDFH0akB2eaI0aO6fHcvvKW8l1+kFcba/kBPZKq6bf9gBNAR+yxXkgQd0Z0TobsGqh6jcCtwK2/eyqsUdfT4NMFUQunYPBcHg0KPH9pTKjgeY/kESUAVyBrRFgxZu5bWD2ZnOJcKusffxbvii+VbbELaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CkRhRVdd; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CkRhRVdd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B3B7C433F1;
+	Sat, 17 Feb 2024 12:18:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708172297;
+	bh=/E/MynKORulWdcZ+7q48yIRXb8NDuNofQIEQN5JW+Co=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CkRhRVddkWVC8eF9JH/8t1QclE8crAmRtpLTRPmlphJoqCwmfUXynbj4snHeVLzJ0
+	 dXgq8FeqquEAXjLRUVg3K/35LPLsbW47qDoW9dOq+6vSBlKNXQLTlqeClrSlTe2/JK
+	 tTNMXWhJVPriWQZA6O/ak4h51HOP7rqu3r3S2raYQGpaXBkM1kl1U5htvJdyXkS3ty
+	 b+Zow+Kzq746WSwy0wg2/zWTN0BiYudqNpO3XzSlyj8eyG18TEXnKlfRpcyR91xp8t
+	 ZQzG5Tib/RXdV9gw7KqwuIvOLUnGtWArbIvFE4xt5UHr9dEEhC2yucqpzGSYXVi3ZV
+	 iZrQ5LkQTcCcw==
+Date: Sat, 17 Feb 2024 13:18:13 +0100
+From: Wolfram Sang <wsa@kernel.org>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Peter Rosin <peda@axentia.se>
+Subject: Re: [GIT PULL] i2c-host fixes for v6.8-rc5
+Message-ID: <ZdCkBV793vDud7WT@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>
+References: <6utwghfmlmpaasdtoel5faalrrnfhyg3iupeditg4w7bgd7g35@cxplq2kipgfb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="yZmkPVdAdvkW4jm3"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240215-feature_poe-v4-14-35bb4c23266c@bootlin.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <6utwghfmlmpaasdtoel5faalrrnfhyg3iupeditg4w7bgd7g35@cxplq2kipgfb>
 
-On Thu, Feb 15, 2024 at 05:02:55PM +0100, Kory Maincent wrote:
-> Add the PD692x0 I2C Power Sourcing Equipment controller device tree
-> bindings documentation.
-> 
-> This patch is sponsored by Dent Project <dentproject@linuxfoundation.org>.
-> 
-> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-> ---
-...
-> +        pse_pis {
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +
-> +          pse_pi0: pse_pi@0 {
-> +            reg = <0>;
-> +            #pse-cells = <0>;
-> +            pairset-names = "alternative-a", "alternative-b";
-> +            pairsets = <&phys0>, <&phys1>;
-> +          };
-> +          pse_pi1: pse_pi@1 {
-> +            reg = <1>;
-> +            #pse-cells = <0>;
-> +            pairset-names = "alternative-a";
-> +            pairsets = <&phys2>;
 
-According to latest discussions, PSE PI nodes will need some
-additional, board specific, information:
-- this controller do not implements polarity switching, we need to know
-  what polarity is implemented on this board. The 802.3 spec provide not
-  really consistent names for polarity configurations:
-  - Alternative A MDI-X
-  - Alternative A MDI
-  - Alternative B X
-  - Alternative B S
-  The board may implement one of polarity configurations per alternative
-  or have additional helpers to switch them without using PSE
-  controller.
-  Even if specification explicitly say:
-  "The PD shall be implemented to be insensitive to the polarity of the power
-   supply and shall be able to operate per the PD Mode A column and the PD
-   Mode B column in Table 33–13"
-  it is possible to find reports like this:
-  https://community.ui.com/questions/M5-cant-take-reversed-power-polarity-/d834d9a8-579d-4f08-80b1-623806cc5070
+--yZmkPVdAdvkW4jm3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-  Probably this kind of property is a good fit:
-  polarity-supported = "MDI-X", "MDI", "X", "S";
+Hi Andi,
 
-- Except of polarity, we have alternative-b variant with direct or
-  phantom feeding (No idea if it is proper description). Theoretically, this
-  difference would affect electrical rating specifications.
-  For example direct path for alternate-b (10/100Mbit only), would have
-  higher rating as the path over coils/magnetics. Practically, vendors do not
-  make different ratings for this paths, so no need to care about it for now
-  until someone will be able to provide good reason.
-  Here is example of RJ45 connector with integrated magnetics with PoE support
-  where alternative-a feed over magnetics and alternative-b is feed directly:
-  https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=5-2337992-4&DocType=Customer+Drawing&DocLang=English&PartCntxt=5-2337992-4&DocFormat=pdf 
+On Thu, Feb 15, 2024 at 08:34:28PM +0100, Andi Shyti wrote:
+> Hi Wolfram,
+>=20
+> This week, I'm submitting three fixes: two address hardware
+> issues with the i801 and qcom-gen devices, and the third resolves
+> a compilation error that occurs when including both pasemi and
+> apple i2c in compile tests on PowerPC.
 
-  (the last topic is more an answer to my self and for archive :))
+Thanks, pulled. buildbot is already happy or is the report still
+pending?
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Have a nice weekend,
+
+   Wolfram
+
+--yZmkPVdAdvkW4jm3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmXQpAEACgkQFA3kzBSg
+KbZhHw//YPd1lBILSSSPt6FxTcqVzYYsit7ziwAKRxt3WaRk9jL0ZccpafUOzJp7
+sI+EVjJPiwWNkoO03EGBFlnTIHIcLkFNfFRGEHmgXDMmYcjmj69JXYAqwG4VOOrn
+9Lb1lPbvu3JBjd6k1kj3IqAUpXLgdU8dfsz68iFo4sgM+5fhvEQv/VbwE9jr61Vy
+DMdrMchoq/oVzO2auPbjqJyIgBv1ZFeCKo9dM1k8ZHElZ7cLAfHqqxr9jzFHfH+x
+P+QdDio0yTQ4au97ljmDVQqKD4BZ4quE1ai5pAGL5slHjd13oooWnKnSVaECoUWz
+kID42jGgq329fCw2MQghWjB4kguF70/pS+pgzKQULNCgrt6JTdraWUWXoQuQpqhG
+P7OstcsFEWahw327PZnFDfZeH7rbKcoCzL56yV6XH3uVqTtb6gywKkvT9d/xnoZT
+//OC6Q+7eXz9OEdVGzFHCUqhBZKnAuBP0yjpCvhUY29ydlwwRB5NPazfcORLM006
+9VYns2muAe4PhTbPeQZTfSqjY+H8Zpi4f4hsmaMKhk9R6kQAey9ku8IAhN8PgdJ/
+Erkp+MdU6WH9ewVsYhI0mPFniWuGIrMEgvu4HMbgcrX03Kkc+/LjfiuoufQXn7Du
+OMzlc2OQbBljBu7udq7A9FcWfziOWvoQnk6qLN6t0mX3AYM2f2I=
+=OVbT
+-----END PGP SIGNATURE-----
+
+--yZmkPVdAdvkW4jm3--
