@@ -1,125 +1,81 @@
-Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 506147CF09;
-	Sat, 17 Feb 2024 15:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292037B3E8
+	for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 15:42:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708184435; cv=none; b=jqfE3pmimnKkgVovrrB0Ymr6d1hAiTZlFUP3JHrRzl17cNRMTNX0/Fold6efyok2sKsyo8nEd2yWC8XxQczR7XMUQ+CxCa+PYiErjgoidUataWYmblPOnijNbC8QrFTgxiOJbHChjPCcxzC+TMyb6IVNcceT6UilX+wQKNEyI9A=
+	t=1708184535; cv=none; b=cB7VqzP31F0TdK4p9uCwRX5oe94NXt0ARNe01cKEiu+dRp2Zwrpcg+hXZph2PjBxGOHczkH97YkGntkg59hqlJDjty+v4NQ2m7ql8A4ejdm/MNLJtqse+yOQG8zCXFlUy36D0XOTXrkk5bzoukxfOvMqvTLbvRCvKJqfC6b1vnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708184435; c=relaxed/simple;
-	bh=7TO0o92Ga8ESXmzM9toUqaahOhxbAM7ETu+ddZ/IHu8=;
+	s=arc-20240116; t=1708184535; c=relaxed/simple;
+	bh=dWSfIWGZQDjbdl5zINyK6G7jsTcPEdrq5dv0jPqVMMA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dkXssfLIaPipfht583Mex/iIotpLdkSIeacuGqE68bt+MnCPmtRBICshk+NHUT/QqfepSWSQxDXimam0As3JCvy+wB3GJpmYJD66d1JHylOAxxtI8FWRq5VSOjz+yQrtCmu7oPG3FXfziFmi6CDTaMQ/0gcnOx11KeUWLO1JRAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=c8zhbCIQ; arc=none smtp.client-ip=195.181.215.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=fVDhZZen/81zpmIyHGQ6mb8JGlvyzBBtmKGdgYjQWVDjGvCVyJdi0tsrgbLv7QUJR/qblhWxkYSnKiHEYgxHpaT5vtA55cW3VAEXvoGu69LL7VN/ZU6y9JTnDVm3CVWHX6A9gFgtbykzfxtEFF+60w5J7WHWroqRcihBN4rmpqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=lwHhs3gF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="c8zhbCIQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
-	t=1708184421; bh=7TO0o92Ga8ESXmzM9toUqaahOhxbAM7ETu+ddZ/IHu8=;
-	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
-	b=c8zhbCIQmEAlYlfZryIDbVnOrvVE5qQTvKvzp79t50tnCHR9oegobZcaN2U+tTTeg
-	 2NzqC+amgujhFcqLXCnAAPKsU2/rcgk+4OzmKn1+SCxRCbnL50VeJLHhCEWnIAQOfw
-	 ZaEH1fUS2VOTJnckIlyPE5VcoY51YmAOLYWnpndI=
-Date: Sat, 17 Feb 2024 16:40:21 +0100
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Revert "usb: typec: tcpm: reset counter when enter into
- unattached state after try role"
-Message-ID: <ratkc4fo3mqwuzsbxsiwq54jclnarnjl3x7ts64elx6hguvbay@ihelujsnzd6i>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, open list <linux-kernel@vger.kernel.org>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
-References: <20240215193352.1026707-1-megi@xff.cz>
- <2024021739-self-pencil-b932@gregkh>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="lwHhs3gF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 361AFC433F1;
+	Sat, 17 Feb 2024 15:42:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1708184534;
+	bh=dWSfIWGZQDjbdl5zINyK6G7jsTcPEdrq5dv0jPqVMMA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lwHhs3gF6gwcd7HquiLw6hobQyaXq8/IT35uQGKr9IyG/JdanlsvBh18yqiVRZqUY
+	 286C8WIvI8I96knEP/ZbwOtoBQuFBVDtOYy5M47seXQevuI6XcDgd/Wu58JFEc8Mia
+	 Q3Pg7OWPL5OnLCO9zngYEwv94ECCmgZianicG8aI=
+Date: Sat, 17 Feb 2024 16:42:11 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kernel@vger.kernel.org,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH] MAINTAINERS: Drop myself as maintainer of TYPEC port
+ controller drivers
+Message-ID: <2024021735-fascism-shield-04f5@gregkh>
+References: <20240215202039.1982539-1-linux@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2024021739-self-pencil-b932@gregkh>
+In-Reply-To: <20240215202039.1982539-1-linux@roeck-us.net>
 
-On Sat, Feb 17, 2024 at 04:32:54PM +0100, Greg Kroah-Hartman wrote:
-> On Thu, Feb 15, 2024 at 08:33:50PM +0100, Ondřej Jirman wrote:
-> > From: Ondrej Jirman <megi@xff.cz>
-> > 
-> > The reverted commit makes the state machine only ever go from SRC_ATTACH_WAIT
-> > to SNK_TRY in endless loop when toggling. After revert it goes to SRC_ATTACHED
-> > after initially trying SNK_TRY earlier, as it should for toggling to ever detect
-> > the power source mode and the port is again able to provide power to attached
-> > power sinks.
-> > 
-> > This reverts commit 2d6d80127006ae3da26b1f21a65eccf957f2d1e5.
-> > ---
-> >  drivers/usb/typec/tcpm/tcpm.c | 3 ---
-> >  1 file changed, 3 deletions(-)
-> > 
-> > See https://lore.kernel.org/all/odggrbbgjpardze76qiv57mw6tllisyu5sbrta37iadjzwamcv@qr3ubwnlzqqt/
-> > for more.
-> > 
-> > diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-> > index f7d7daa60c8d..295ae7eb912c 100644
-> > --- a/drivers/usb/typec/tcpm/tcpm.c
-> > +++ b/drivers/usb/typec/tcpm/tcpm.c
-> > @@ -3743,9 +3743,6 @@ static void tcpm_detach(struct tcpm_port *port)
-> >  	if (tcpm_port_is_disconnected(port))
-> >  		port->hard_reset_count = 0;
-> >  
-> > -	port->try_src_count = 0;
-> > -	port->try_snk_count = 0;
-> > -
-> >  	if (!port->attached)
-> >  		return;
-> >  
-> > -- 
-> > 2.43.0
-> > 
-> > 
+On Thu, Feb 15, 2024 at 12:20:39PM -0800, Guenter Roeck wrote:
+> I am no longer involved in Type-C development and not really current on its
+> status and progress. Recently I have been doing more damage than good.
+> It is time to go.
 > 
-> Hi,
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+>  MAINTAINERS | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-> a patch that has triggered this response.  He used to manually respond
-> to these common problems, but in order to save his sanity (he kept
-> writing the same thing over and over, yet to different people), I was
-> created.  Hopefully you will not take offence and will fix the problem
-> in your patch and resubmit it so that it can be accepted into the Linux
-> kernel tree.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 73d898383e51..ae3283f9eceb 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -22864,9 +22864,8 @@ S:	Maintained
+>  F:	drivers/usb/typec/mux/pi3usb30532.c
+>  
+>  USB TYPEC PORT CONTROLLER DRIVERS
+> -M:	Guenter Roeck <linux@roeck-us.net>
+>  L:	linux-usb@vger.kernel.org
+> -S:	Maintained
+> +S:	Orphan
+>  F:	drivers/usb/typec/tcpm/
+>  
+>  USB UHCI DRIVER
+> -- 
+> 2.39.2
 > 
-> You are receiving this message because of the following common error(s)
-> as indicated below:
-> 
-> - Your patch does not have a Signed-off-by: line.  Please read the
->   kernel file, Documentation/process/submitting-patches.rst and resend
->   it after adding that line.  Note, the line needs to be in the body of
->   the email, before the patch, not at the bottom of the patch or in the
->   email signature.
-> 
-> 
-> If you wish to discuss this problem further, or you have questions about
-> how to resolve this issue, please feel free to respond to this email and
-> Greg will reply once he has dug out from the pending patches received
-> from other developers.
 
-It's a mechanically generated revert of upstream patch. It has no authorship.
-I did not write it, machine did. :)
+Many thanks for all the help you provided here over the years, it is
+much appreciated!
 
-But I can add a sign off for the commit message I made:
+I'll go queue this up after -rc5 is out, thanks.
 
-Signed-of-by: Ondrej Jirman <megi@xff.cz>
-
-kind regards,
-	o.
-
-> thanks,
-> 
-> greg k-h's patch email bot
+greg k-h
