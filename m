@@ -1,131 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7BC60BBA;
-	Sat, 17 Feb 2024 10:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8308A5EE78;
+	Sat, 17 Feb 2024 11:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708167570; cv=none; b=XI1DVRfoU9nkW0QReMmctT+U57FxtvM/sLtQUTg+nx+hTQNa4vrGDARsAmUKCcS+uYpmuE4E07YyjsWIZEmPy1s0QfulNJrW/DPyuO7D/47DSMjPj2nEbP5e34/sRIHOr9Ca0SXnTrzZCNkZ8juPDW3k2vGLNUW1cw2rsJNeO6I=
+	t=1708167890; cv=none; b=frzHG/veDMHNtOetsd/bvU3XzdxkJ8xdils3RHCjPTFNQrc0eXPxj2tSFaHLl/Kigx07LNWuL3nNysndpPBdKmmu0rRVcpSvqn7QuqYYUON7z80eXLaIn85A6twoLEQ3BTgXSo1X/PUmYcST2b6TaVKEU/Oj5u14MkiDAJLVJJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708167570; c=relaxed/simple;
-	bh=Rg9lLhRXKxcDqABXuFQf8jwhkLJkiGL2KthCj4b7KB8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aP593LR5z1vEDAcPEOsPokPXC6HcuhMff8pFFl377rNCBRfqltOZhIpuFuwmvjxdZJVKR1PstblBv0EFYmUEjvsNvI1oTCZIw8xHIXPSfKMUNxkcko9yqtLU5xeJHZPbFD1Z8or/QTyEjqv2iWftiT5zsA/N/GS7zdfbwrRcjR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XVlyEtFs; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708167890; c=relaxed/simple;
+	bh=ugIMxaqtGiWtkvlDP1PnDeAPKZDlKx1Qzah9gu2ZwmU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=scsuRXUNkPHu9WlMUCr/L7Q/ZifI7kF62B3uIiPRhGmmp3gbFJPfNuGtOkmNkYYt5N9qRie5kXdKsg/w8G5+s8hDjahGwsB3dY2Xa7wCHm4hylWG9Cz/ooL+CVAzKdPVIoQ9gZNYfQ77upAK6j+nM//wNeCtzreo9ZHJEu7DcOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Rs25/BLc; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XVlyEtFs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708167569; x=1739703569;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Rg9lLhRXKxcDqABXuFQf8jwhkLJkiGL2KthCj4b7KB8=;
-  b=XVlyEtFsdA8o+E4MI0HYNcLutkco/64tCA6bLq7ZxqRY0zZcd7m4UKc7
-   EGMaZhuy8qAOnGO6MBVcLfPtmpT3fik3HqrX0qWA9El/FhP3DCORtsjIX
-   yNMe3er52pPvqeKY9fWP8nPntnLDZ+IEBsKM4T+z7q6cctEvUSbTjkQJ3
-   i9CeDN4Udy9/mLBJKkah+G9caSCgBTTOUb8VeQUqzY0VXlpWKYKX11EEz
-   pWULYGvimmy+NivjuTrnXtLzgFqHBrasXDiQLMvTn0LYwFBK7BuaqX1YN
-   ojGiZK/oZZS1ne1bzbhgAlPxYeQhGvsGjgVCRSFwMmN5K1aHagESWo3Oj
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10986"; a="27746715"
-X-IronPort-AV: E=Sophos;i="6.06,166,1705392000"; 
-   d="scan'208";a="27746715"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2024 02:59:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,166,1705392000"; 
-   d="scan'208";a="4348739"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.Hitronhub.home) ([10.213.3.209])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2024 02:59:25 -0800
-From: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org
-Cc: linux-cxl@vger.kernel.org,
-	Ingo Molnar <mingo@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
-Subject: [PATCH 3/3 v5] cxl/memdev: Use cond_guard() in cxl_inject_poison()
-Date: Sat, 17 Feb 2024 11:59:04 +0100
-Message-ID: <20240217105904.1912368-4-fabio.maria.de.francesco@linux.intel.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240217105904.1912368-1-fabio.maria.de.francesco@linux.intel.com>
-References: <20240217105904.1912368-1-fabio.maria.de.francesco@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Rs25/BLc"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41H4iBek028987;
+	Sat, 17 Feb 2024 12:04:06 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:date:subject:mime-version:content-type
+	:content-transfer-encoding:message-id:references:in-reply-to:to
+	:cc; s=selector1; bh=RnhRbd/hclbstXd7Q3NPDVDNjfAippsXAKSovZiaCJg
+	=; b=Rs25/BLctHvzsAXjDLDQ6PuOhH0RPprK6ImbHWKJB4ggXElnwrey2IMElUE
+	DFZ2yxK5VKcduqooM2Bl0wcuslxrmT6r9M3yDfEa9Rnc/tvveM1iuLz0t1ZOpAH8
+	8AAhLeAxqL1RIL196lQhbZjy7hPeZIVA08yfc7rCGOMX0RTeL86ZWyYpsCM+gcZl
+	K+xXCph+LtfXysAKv8Vg9lovwj9yQ4QQOdTOllJJnx/lXcItJCLTcmtFA5+DyQ7U
+	AbX5P5RTubdacf3cn6XqESP6BBcWkfNA31N/VhjX14d2E/4tIhK595xCX+W2ppn/
+	s3oK59BK7PDkRs1Bcw55C/u0SWQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wamjh0tbx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 17 Feb 2024 12:04:05 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id C72F840046;
+	Sat, 17 Feb 2024 12:03:58 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8345F253B49;
+	Sat, 17 Feb 2024 12:03:12 +0100 (CET)
+Received: from localhost (10.252.12.210) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Sat, 17 Feb
+ 2024 12:03:12 +0100
+From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
+Date: Sat, 17 Feb 2024 12:02:58 +0100
+Subject: [PATCH v2 4/4] dt-bindings: display: simple: hardware can use
+ several properties
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240217-ltdc_mp13-v2-4-50881f1b394e@foss.st.com>
+References: <20240217-ltdc_mp13-v2-0-50881f1b394e@foss.st.com>
+In-Reply-To: <20240217-ltdc_mp13-v2-0-50881f1b394e@foss.st.com>
+To: Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Jessica Zhang <quic_jesszhan@quicinc.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard
+	<mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie
+	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+CC: <devicetree@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        Raphael Gallais-Pou
+	<raphael.gallais-pou@foss.st.com>
+X-Mailer: b4 0.12.4
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-17_07,2024-02-16_01,2023-05-22_02
 
-Use cond_guard() in cxl_inject_poison() to not open code two up_write()
-in an 'out' block. If the down_read_interruptible() fail, the statements
-passed as the second argument of cond_guard() return -EINTR.
+Setting a panel-timing in the device-tree overwrite the one specified in
+the driver and set it as preferred.  In that case 'height-mm',
+'width-mm' and 'panel-timing' are properties that can be use for simple
+panels, according to panel-common.yaml
 
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Suggested-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Fabio M. De Francesco <fabio.maria.de.francesco@linux.intel.com>
+Fixes following warnings:
+arch/arm/boot/dts/st/stm32mp135f-dk.dtb: panel-rgb: 'height-mm', 'panel-timing', 'width-mm' do not match any of the regexes: 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/display/panel/panel-simple.yaml#
+
+Signed-off-by: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
 ---
- drivers/cxl/core/memdev.c | 19 +++++--------------
- 1 file changed, 5 insertions(+), 14 deletions(-)
+ Documentation/devicetree/bindings/display/panel/panel-simple.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index dae8802ecdb0..bd97eea65bb0 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -331,19 +331,13 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 	if (!IS_ENABLED(CONFIG_DEBUG_FS))
- 		return 0;
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+index 634a10c6f2dd..c02cbbc7a100 100644
+--- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
++++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+@@ -352,6 +352,9 @@ properties:
+   no-hpd: true
+   hpd-gpios: true
+   data-mapping: true
++  height-mm: true
++  width-mm: true
++  panel-timing: true
  
--	rc = down_read_interruptible(&cxl_region_rwsem);
--	if (rc)
--		return rc;
-+	cond_guard(rwsem_read_intr, return -EINTR, &cxl_region_rwsem);
- 
--	rc = down_read_interruptible(&cxl_dpa_rwsem);
--	if (rc) {
--		up_read(&cxl_region_rwsem);
--		return rc;
--	}
-+	cond_guard(rwsem_read_intr, return -EINTR, &cxl_dpa_rwsem);
- 
- 	rc = cxl_validate_poison_dpa(cxlmd, dpa);
- 	if (rc)
--		goto out;
-+		return rc;
- 
- 	inject.address = cpu_to_le64(dpa);
- 	mbox_cmd = (struct cxl_mbox_cmd) {
-@@ -353,7 +347,7 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 	};
- 	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
- 	if (rc)
--		goto out;
-+		return rc;
- 
- 	cxlr = cxl_dpa_to_region(cxlmd, dpa);
- 	if (cxlr)
-@@ -366,11 +360,8 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 		.length = cpu_to_le32(1),
- 	};
- 	trace_cxl_poison(cxlmd, cxlr, &record, 0, 0, CXL_POISON_TRACE_INJECT);
--out:
--	up_read(&cxl_dpa_rwsem);
--	up_read(&cxl_region_rwsem);
- 
--	return rc;
-+	return 0;
- }
- EXPORT_SYMBOL_NS_GPL(cxl_inject_poison, CXL);
- 
+ if:
+   not:
+
 -- 
-2.43.2
+2.25.1
 
