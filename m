@@ -1,404 +1,201 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1F3537F0;
-	Sat, 17 Feb 2024 00:11:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708128664; cv=none; b=ppeWhGqjv4MEZPi9dDwhiR7AuMrOs2wA2RKin1SndXXpEh0DmDmpXMt10XkWhdRh9osvmue1IKj75jc3rYjpJs++T739hq18BzUYacDYUhAzgQaxDQZOmKxwCm/1u/DMyBRCR2DgJioQB1Hb5GEcU2FLNDSMBpurgh+ftf7veOs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708128664; c=relaxed/simple;
-	bh=N23dg8al6HbBLCda6qJ0oVDvGHdmFr2dXoi++liPoTE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BeXylszWx3Fu7TCi/wKQ8sz0cTpxPIGAqB+Ich9AcLLlD2fZMRU8aAHvS1DdO/ROLPP524KB8c2bv95qo9LL1pw6vtBt1qdT1Ir6exK8MPVUgKWzIU4Fhea6QQGHZl/LHdBsha4LxX64e9ayOwyXgXgcsgFlqTKzUlOA8J2eaA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=VobUEhJZ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4881A3F9F7;
+	Sat, 17 Feb 2024 00:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.154.123
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708128660; cv=fail; b=jvY5qtCn/oLTZedLKGYSz+ApKR5UpHnsPOojKI9+2XLsI/x8WWUQ6MZiVoJIAX1/kQ5YRTHR/uvvjHwLDcWr2oti4lnj9y0ax7V0IMT0nPREKPyFS3GAvzp6Ru/ryoyC3gwfeozyfmxz+N9h8M0B1u5/CH+PGNkmDF5FNPYmbV0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708128660; c=relaxed/simple;
+	bh=wT+2yxOZj7ufhadY5QYlsF2l412TVp3F/FNC3Wdoo6k=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=BQpN8YGzrleVdnDzMDLsiKpR74ONKjgAjc2azCgshEsONB9dt7jCuTjRUEzJ8cgNDCubtlKapWXjVorTgkgMuF4eUylJolncUJH4GYx7FafORV4n9vrJsaQzMQCa44CF++sFYhTXlwEAYgOYKoLScDy3CtuQEL74HTDEck/eRAM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=FMwlWSke; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=yGUwmfCi; arc=fail smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="VobUEhJZ"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41GNviE4010874;
-	Sat, 17 Feb 2024 00:10:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=qcppdkim1; bh=1+LksB4NEmAs1IJ5/76C
-	60ccidbJQS1B+QKm101TG6k=; b=VobUEhJZXwXH+GAvwd3qk8NX/qbFxL3kPUdV
-	7//i4+urHQqgJx0DR7+ehvgPOoIQ/r6QyBFo4dQB/vcZsqvp49Ywq9eP7vTaohLl
-	68/6JKFLnI/Y526BUh4hLc7lP2vMV44y4PTb9MWIN0i+w2VWzbuPVapihzNWOO2c
-	RdvONl84eLuvEEqZjVndR4+ftAkmcQgeAuN4lBNm37SMnTPQwRoEnIYCOhYekY1l
-	LxkFuEMUzPb95wdLkvlYLbO3dJWVComEO/AsfQPSkan4pWb6V29wF3k2Xw9OlJRX
-	kGarQfE7jbQjP8TdlSOvpqPEycUIYmQPQ41BDFHrcGoCrHTs/g==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wa61nheka-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 17 Feb 2024 00:10:42 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41H0AftX012956
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 17 Feb 2024 00:10:41 GMT
-Received: from hu-wcheng-lv.qualcomm.com (10.49.16.6) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 16 Feb 2024 16:10:41 -0800
-From: Wesley Cheng <quic_wcheng@quicinc.com>
-To: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
-        <perex@perex.cz>, <conor+dt@kernel.org>, <corbet@lwn.net>,
-        <lgirdwood@gmail.com>, <andersson@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <gregkh@linuxfoundation.org>,
-        <Thinh.Nguyen@synopsys.com>, <broonie@kernel.org>,
-        <bgoswami@quicinc.com>, <tiwai@suse.com>, <robh+dt@kernel.org>,
-        <konrad.dybcio@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-sound@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>, Wesley Cheng <quic_wcheng@quicinc.com>
-Subject: [PATCH v17 41/51] ASoC: Introduce SND kcontrols to track USB offloading state
-Date: Fri, 16 Feb 2024 16:10:07 -0800
-Message-ID: <20240217001017.29969-42-quic_wcheng@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240217001017.29969-1-quic_wcheng@quicinc.com>
-References: <20240217001017.29969-1-quic_wcheng@quicinc.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="FMwlWSke";
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="yGUwmfCi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1708128657; x=1739664657;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=wT+2yxOZj7ufhadY5QYlsF2l412TVp3F/FNC3Wdoo6k=;
+  b=FMwlWSkeuFtLDbrYTQGNqYEHHfPF9cFwNTvGK/1DM0oywh+n8Xs5T3pV
+   qZSk24P+KAUN4meqfXlak86wRcC8ufF9u5hXmi5RgnK2Q2lZC8Pjp7PUI
+   SI36pj8j82F3mvTR8oUrUxB/5dOacODTgqm2NOAiPecvSMUf3g9s4Wd7o
+   Yk/zOf8jgJlIQR4CH+rXDxceyykSlKgCsjl8//hzRAHTt0EOWPB48dyUW
+   zXuQN60Xa3lUM5Br/jHPXIWvesZbNuU1gYxI+aAy0eNo7qmZBvFAFwGTS
+   9X0IjCpA9qgSSGiJnWjGxy9ZnJDnN4794c3jDdMJV6qXMzUDyXyssT98p
+   g==;
+X-CSE-ConnectionGUID: YJPOFQWcTzS2AibtPnAdsg==
+X-CSE-MsgGUID: ng5Pmcg/S4iM6uDF7Gzdgg==
+X-IronPort-AV: E=Sophos;i="6.06,165,1705388400"; 
+   d="scan'208";a="16382798"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 16 Feb 2024 17:10:55 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 16 Feb 2024 17:10:50 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.10.215.250)
+ by email.microchip.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Fri, 16 Feb 2024 17:10:49 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MAEk32TPgTkm3Fr9r7OQqKD0Uj7XfYIs5BBBNrY6Sh0GoFIikgFUtDx40o06mcO9BjAJUywlU1XscprFKiUUWQthjtqCCUI79AQ6/pZjUuJIjU+xTddh41TT+FnvXAtNH5BjkIdfUXpH6/x9AdxhzLGUVZKUucRdFRnDeBDOdeKHZ07vA1sW0v9YHe0MyTDgUme9Rc4p+OSSGDmDDpUuNIgSrzyGi8WpLIeRv9FFblwZMq+kmJY70Q4E9EXOw7xLR0OHzxGtzuiwwbGg0J4mWJ6B6euY7XTfgAsAxDUtxnrvNlgGykpRShKTTDuF9LRHZxL4bOk7vq+2jP4VoTDREg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wT+2yxOZj7ufhadY5QYlsF2l412TVp3F/FNC3Wdoo6k=;
+ b=L5blWRsl1cnd0QPdb3GGi0j0bscM2sr+NvkowhzG4w6215PXezFPa2FXpuoWNm1Ks44XE0tG56+ZFx++apOm4/hwHpgiKAIdVHGEoyrG0/csdFEboBOVkJzkQGdUGYxoMyE6Y55ijHrBKXjqqfgIofx6AacRSgnUyhCnemr/mMk2fwVYqMM7Oq4DSwYMwDEBsn7BxXwGq4w0mSQMEKH9lYlpZi7A6kz4IQg5CQo0ZMAOY7m1fyrrl+MrW8SuEqNwSVH12T43Znk/jdXjdIzb+aslo1ImVY7pTdLAGbSXq2lkI1Q3zbLQy0iXhemd+DxyXZFFUeMtUKJStKOZ5pMJvg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wT+2yxOZj7ufhadY5QYlsF2l412TVp3F/FNC3Wdoo6k=;
+ b=yGUwmfCi8nJeQmy1/FkX8f2nFZxy8t6e71KA4Ily9GPUuSlKc2eT4t71GjyiljtK4TbdeFoq/st7UerAO8/8oYYHrzGTyTz5d8yTIiJGn5Hw9CIhlOyPwX2H04vlREiyQg3HzvlrfW7YawdyQkq2nf5MAkcuMx+d0DTGv8uCuqj8+ZYSWEzUeGq0iLD3/A9J9Eo0JgSsuDSOc70RynXDKDjiXFSBovw2e8nfMr+p7BVTqV8xcpyEP+UHiLAxhjJrguLC9igLUUuocyvE7ZRds1VJsDGHozdq3pcOrXtwPuRbUjFEDbPiwRkoeFmEL3Xq4RL4y/kI8mZnGr9jJwjqew==
+Received: from PH0PR11MB5176.namprd11.prod.outlook.com (2603:10b6:510:3f::5)
+ by CH0PR11MB8234.namprd11.prod.outlook.com (2603:10b6:610:190::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.31; Sat, 17 Feb
+ 2024 00:10:46 +0000
+Received: from PH0PR11MB5176.namprd11.prod.outlook.com
+ ([fe80::613:fb5:737:dae8]) by PH0PR11MB5176.namprd11.prod.outlook.com
+ ([fe80::613:fb5:737:dae8%7]) with mapi id 15.20.7292.029; Sat, 17 Feb 2024
+ 00:10:46 +0000
+From: <Ajay.Kathat@microchip.com>
+To: <kvalo@kernel.org>, <conor@kernel.org>
+CC: <alexis.lothore@bootlin.com>, <davidm@egauge.net>,
+	<linux-wireless@vger.kernel.org>, <claudiu.beznea@tuxon.dev>,
+	<thomas.petazzoni@bootlin.com>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>
+Subject: Re: [PATCH RFC] wifi: wilc1000: fix reset line assert/deassert
+ polarity
+Thread-Topic: [PATCH RFC] wifi: wilc1000: fix reset line assert/deassert
+ polarity
+Thread-Index: AQHaXpDVeUNEJsQx1Uu1SAoo0Dj95LEIegQAgAAEeACAAlVDgIACUiP6gAAOkgCAAAA+AIAAFH/ygABlLAA=
+Date: Sat, 17 Feb 2024 00:10:46 +0000
+Message-ID: <296bfe15-7e4e-4d67-b84f-bd9d9f1266e5@microchip.com>
+References: <20240213-wilc_1000_reset_line-v1-1-e01da2b23fed@bootlin.com>
+ <2ff1c701f3443e1c612a81f4077b0280850f57c6.camel@egauge.net>
+ <081bce96-f485-414c-8051-e1c14271f8cc@bootlin.com>
+ <aac398e4-d870-4ba2-8877-b98afecb8d1b@microchip.com>
+ <877cj4o0sv.fsf@kernel.org> <20240216-reckless-freedom-4768ce41e939@spud>
+ <20240216-spinster-decade-e136ac3e72d0@spud> <87h6i8cmf5.fsf@kernel.org>
+In-Reply-To: <87h6i8cmf5.fsf@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Mozilla Thunderbird
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microchip.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH0PR11MB5176:EE_|CH0PR11MB8234:EE_
+x-ms-office365-filtering-correlation-id: 1158729a-2982-4438-adb0-08dc2f4ce387
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: S24JpI7GE9YD5tZprTiEOt5UI71ce1KvNjgfgb1YA9xP4kzq0zSty7YL1pbSUaLrWmW/sZap1N4Qnt+bZOX7JUaqn3uw4M/FgiiZOR3iR6Vdxb0Pur9Pq1bC1C0qLwe8nn1tYdN1fzfTxrARw5MsVRZb4xK2Y/lpo9QW4ncBkxaBrS7Tdoo0Wikn38UpAGUY4QjBm+aVh1uvN/LnXlZcE2ts/FevDBsaY5MUQWn9Pgn9TY+ENVhc+eOBFUL99lkBPJlPUY3A4ps7gStIaM4E2TmodExyd09msek1HZMwVFIwaaxXTYvH97aMmHxtgLnqmmSFVSqGNtJLLr4EH2Zv6gqeaMtZBcnsIyj7XoRdcqyIHvNc943GZphHpg0kzsRCwjFx1qWndKE5EwJgfzdsVEjhsQWeIPVSqd1ATnbeaQedWHn5fZzg9aFUTxx9GcZSZrxenLFOrmKCBcd6l1q2oFCWrEtFMkWczNcXy/nhBzHBgZZPq2/iTwuGpgOofvfdii+HDnDX8yQUHQPEjcpWUO3M6E6Njysm0OYWEGntzlFs37oBP2b8sKOlxRSyeTjEBsVQNqFsl9P85yz8qsmOlahPcaInM/CcZk8V9Bs9oVHh3WLnFcQJCNvRbF34x4v4
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB5176.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(396003)(366004)(136003)(376002)(230922051799003)(230273577357003)(64100799003)(1800799012)(186009)(451199024)(71200400001)(31686004)(86362001)(66446008)(76116006)(66476007)(2906002)(8676002)(8936002)(64756008)(66946007)(66556008)(4326008)(38100700002)(5660300002)(54906003)(53546011)(316002)(31696002)(6506007)(36756003)(122000001)(6486002)(478600001)(38070700009)(41300700001)(6512007)(110136005)(26005)(2616005)(83380400001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?K1RYTTNwU2F6T1FrS05uSXVySTlOeDBjQUpiV1RtOEJGTGY0SzJnTW5IOUdT?=
+ =?utf-8?B?SWtNWWdtU05pNkRJY3JyWEhLNTZSWnVGREJacHhQeFZPbmdUM3Q3NGxOTGR5?=
+ =?utf-8?B?SllRRnZ1MFpLbnlTMHFadE04QkxuQmM2Nk9FYVpmZ2kxTlJ1Mm54UFU3ZWxX?=
+ =?utf-8?B?Tm1ETzcvZ3dnRUxFdGJNMGsrMlNGTE5IdWR0Ry9CSWNpcVdOZ2Z3emYxNmRU?=
+ =?utf-8?B?aFlDZDBLb1JTUjJwbzAwb1BKTzNxRzBVR0NzWDFEVm1PWkt3R1lNMlA4eWVq?=
+ =?utf-8?B?TG41QWwzQ0xuLzc3ZHhENnFua3dJOEF0TUs1S0ZXRmswblhIWmxGaFJCQkEw?=
+ =?utf-8?B?cHE2eDRCaXVmTTUwbitLMTc3Ym1aUmI0ZnhaaVVTMWlib0JFMGNCVE9iTTEr?=
+ =?utf-8?B?b0ZFc0NWZ1ducXY5YStyQ2FUb09ZQTNPUUdXWDJOUytLTUVXOGxvTUlJa2Vo?=
+ =?utf-8?B?OUIyaHhlNjV0bWhvZFVTYnJUb0EzV1QzT0lYWG1HeFpDK3c5S3ovdkZCZnhH?=
+ =?utf-8?B?aFloY0pnQkgvSGpoY0xTc1haNElrYnNNRkNFaVp1OTc3NWtmTUlHN0ZSM2U4?=
+ =?utf-8?B?Sm1YOElMRU5kVU1xRjZHZ3ZvQ2plZG1qT0Z1dEREVytld3JkUkZzTk00UXFQ?=
+ =?utf-8?B?RTZXVnNFYVhoZEllOExEcTkxbzczOS9EOGVUeDZUcXEwSW1KeUZtVnV2UU1D?=
+ =?utf-8?B?eEdHd25lOU4vZFg1YjRiK2hJYXRqY2I4TytSb3NQdTZnRHBvL2ZjRG96S1Fz?=
+ =?utf-8?B?VHhoTXJycEZKV2dNd01Cb2dCbG8wMWN4ZzdBVWliRmcxS2tLMGR2NDlCUjhy?=
+ =?utf-8?B?VHZRcDg2QU9EUEltYnh0ZC9hdmh4MkdiSUJ5enlKb3o3VTNLaUhVQW94L241?=
+ =?utf-8?B?OUY3QmJpUHBKOTlhU1JjVlJWa2NHZGZKb2lMUWROeDZzdGk3NVcvZFBONk1z?=
+ =?utf-8?B?bStNVkJHbFcxbTFNc2tNbnZRaUJISlBNazFGNTdhL2JCdStRL2RqempqaElh?=
+ =?utf-8?B?TDVpTFZ6djFLU3dhdjNyRzJRZ2dtVi9UV29aNlNNalJKNVlyaDNFM2pHWEdh?=
+ =?utf-8?B?ZXA4WWhPenBUbjRVQ3Q4MU9nNkdQSDB5WTZZSWJacWZYQUM1bUh0bldlQm91?=
+ =?utf-8?B?d0VtUGJzcENVR2lDOWxrNWgvc2JQc2pjSHo0SklGSmV0aGlUbEVMMDVLc0VW?=
+ =?utf-8?B?bEFvSDUrTXZBOWc4YzN0M0Q0ektLL3J0emY2NWQ3cXNVMTZSK2Y5V3FQUytk?=
+ =?utf-8?B?ZGlacG0zbjRQNGZQQkJFblJQbCtHeERvZmRSYWIwM1ZUdWlSN0xEYm9QRjcx?=
+ =?utf-8?B?THl5L2huaHd2TzB2N0pyMHpjRHZOSW8wbjJlVVBETkpVZjdDVHlrOWdOcVNt?=
+ =?utf-8?B?R1F3SGMrRVM3SWJ3R0dlUm0vb0NvbUVlTGtxYVVUZWJWaVoyRkN4c0JOcDB1?=
+ =?utf-8?B?ZTVKK1l5QlNiNzZuMFAydDI4L0w5Ylh3T3R4WVArMllYMXBIaTRDUlZOalBI?=
+ =?utf-8?B?UkF4aXhvYUJSU3VuNjlERFk1SENuMzd6SmRCa2lIYzZjdVNaYnZPMkpnQ3o1?=
+ =?utf-8?B?c0hnYzdnNFd4TGd0YnFBT29oUEt2S1FWeG9wdkJqNi96UkZncTNjRktVWTM1?=
+ =?utf-8?B?NUd1QzFPL1BZaVNkeEJTMkpEMjNRUHBqSmhhM3hQZk1EMUZ4emI4cmh5d3d3?=
+ =?utf-8?B?QU5uRHovTHlMMnY0c3o1Y3BKcERzSDBiM2ZseW5IZitMajczTmkvZklOQ296?=
+ =?utf-8?B?c1pLd0RYbm1PWWFmWEY4Z0phL0RUUWFCVEUzdkFzaWozemtBbHRUUnkxL1Q0?=
+ =?utf-8?B?ak9PZ2t0U0dKeGRSN2EwTGVpcW1VUkV3eXJQbG9jSGJQZ3VZUkQ2M2gvemMv?=
+ =?utf-8?B?SGwwbHc3SnJpRW9zZjNSTGc3ZFJrTnlCdlU0REpyU2pUeFk5ZG15S2hRQi9U?=
+ =?utf-8?B?L0JYb3FtNXBaejBkd3BjQVBnRGQwWGZGL1NjZm5Zb2REZzFGclRicEF4dkZ4?=
+ =?utf-8?B?bVNwaGFKY2taOVRDSDFGeG5rbC9EM25kU1I0czZwdmJTT0pEaDhVU1lrV0Rp?=
+ =?utf-8?B?c0VCYUU4MURqLzFrWkJlUXVRRzN4TzVpNTJ3ZlhiMjI5WWk2UG1CZkJKZEJF?=
+ =?utf-8?Q?23hbn7F+54Tew4xfT1Qn4zEJB?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5C49540F361BE04DB9E00D6332289AFF@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: GKecpLq-uFuAzZUtzBFcg0K3_YUtCJGO
-X-Proofpoint-ORIG-GUID: GKecpLq-uFuAzZUtzBFcg0K3_YUtCJGO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-16_23,2024-02-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- clxscore=1015 bulkscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0
- adultscore=0 spamscore=0 suspectscore=0 priorityscore=1501 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2401310000
- definitions=main-2402160189
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB5176.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1158729a-2982-4438-adb0-08dc2f4ce387
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Feb 2024 00:10:46.0634
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rhSz0cMtGfwMbkPc1WH6s/137tW2ckNNGcN7bm0s//MaVEED8R+RFOBOW4PyFLtcJ2F5oLQ7ofICuIOIlI7WFTTmoA1hsaBIDvWoZiLZcok=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB8234
 
-Expose helpers in the SoC USB layer so components can update and keep track
-of the offloading sessions.  This exposes a kcontrol to userspace, so that
-applications can be aware of what the current USB offloading status is.
-An example output using tinymix is:
-
-USB offloading idle:
-tinymix -D 0 get 'USB Offload Playback Route Status'
--->-1, -1 (range -1->32)
-
-USB offloading active(USB card#1 pcm#0):
-tinymix -D 0 get 'USB Offload Playback Route Status'
--->1, 0 (range -1->32)
-
-Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
----
- include/sound/soc-usb.h |  46 +++++++++++
- sound/soc/soc-usb.c     | 176 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 222 insertions(+)
-
-diff --git a/include/sound/soc-usb.h b/include/sound/soc-usb.h
-index 18cdc59df9aa..5e6076f65a41 100644
---- a/include/sound/soc-usb.h
-+++ b/include/sound/soc-usb.h
-@@ -9,9 +9,29 @@
- enum snd_soc_usb_kctl {
- 	SND_SOC_USB_KCTL_CARD_ROUTE,
- 	SND_SOC_USB_KCTL_PCM_ROUTE,
-+	SND_SOC_USB_KCTL_CARD_STATUS,
-+	SND_SOC_USB_KCTL_PCM_STATUS,
- 	SND_SOC_USB_KCTL_MAX,
- };
- 
-+enum snd_soc_usb_dai_state {
-+	SND_SOC_USB_IDLE,
-+	SND_SOC_USB_PREPARED,
-+	SND_SOC_USB_RUNNING,
-+};
-+
-+/**
-+ * struct snd_soc_usb_session
-+ * @active_card_idx - active offloaded sound card
-+ * @active_pcm_idx - active offloaded PCM device
-+ * @state - USB BE DAI link PCM state
-+ */
-+struct snd_soc_usb_session {
-+	int active_card_idx;
-+	int active_pcm_idx;
-+	enum snd_soc_usb_dai_state state;
-+};
-+
- /**
-  * struct snd_soc_usb_device
-  * @card_idx - sound card index associated with USB device
-@@ -31,6 +51,7 @@ struct snd_soc_usb_device {
-  * @list - list head for SND SOC struct list
-  * @component - reference to ASoC component
-  * @kctl - list of kcontrols created
-+ * @active_list - active sessions
-  * @num_supported_streams - number of supported concurrent sessions
-  * @connection_status_cb - callback to notify connection events
-  * @put_offload_dev - callback to select USB sound card/PCM device
-@@ -41,6 +62,7 @@ struct snd_soc_usb {
- 	struct list_head list;
- 	struct snd_soc_component *component;
- 	struct snd_kcontrol *kctl[SND_SOC_USB_KCTL_MAX];
-+	struct snd_soc_usb_session *active_list;
- 	unsigned int num_supported_streams;
- 	int (*connection_status_cb)(struct snd_soc_usb *usb,
- 			struct snd_soc_usb_device *sdev, bool connected);
-@@ -62,6 +84,11 @@ int snd_soc_usb_connect(struct device *usbdev, struct snd_soc_usb_device *sdev);
- int snd_soc_usb_disconnect(struct device *usbdev, struct snd_soc_usb_device *sdev);
- void *snd_soc_usb_find_priv_data(struct device *dev);
- 
-+int snd_soc_usb_prepare_session(struct snd_soc_usb *usb, int card_idx, int pcm_idx);
-+int snd_soc_usb_shutdown_session(struct snd_soc_usb *usb, int session_id);
-+int snd_soc_usb_set_session_state(struct snd_soc_usb *usb, int session_id,
-+				  enum snd_soc_usb_dai_state state);
-+
- struct snd_soc_usb *snd_soc_usb_allocate_port(struct snd_soc_component *component,
- 					      int num_streams, void *data);
- void snd_soc_usb_free_port(struct snd_soc_usb *usb);
-@@ -97,6 +124,25 @@ static inline void *snd_soc_usb_find_priv_data(struct device *dev)
- 	return NULL;
- }
- 
-+static inline int snd_soc_usb_prepare_session(struct snd_soc_usb *usb, int card_idx,
-+						int pcm_idx)
-+{
-+	return -EINVAL;
-+}
-+
-+static inline int snd_soc_usb_shutdown_session(struct snd_soc_usb *usb,
-+						int session_id)
-+{
-+	return -EINVAL;
-+}
-+
-+static inline int snd_soc_usb_set_session_state(struct snd_soc_usb *usb,
-+						int session_id,
-+						enum snd_soc_usb_dai_state state)
-+{
-+	return -EINVAL;
-+}
-+
- static inline struct snd_soc_usb *snd_soc_usb_allocate_port(
- 					      struct snd_soc_component *component,
- 					      int num_streams, void *data)
-diff --git a/sound/soc/soc-usb.c b/sound/soc/soc-usb.c
-index ade09b416d45..e291f146a79d 100644
---- a/sound/soc/soc-usb.c
-+++ b/sound/soc/soc-usb.c
-@@ -42,6 +42,79 @@ static struct snd_soc_usb *snd_soc_find_usb_ctx(struct device_node *node)
- }
- 
- /* SOC USB sound kcontrols */
-+static int snd_soc_usb_get_offload_card_status(struct snd_kcontrol *kcontrol,
-+				   struct snd_ctl_elem_value *ucontrol)
-+{
-+	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
-+	struct snd_soc_usb *ctx = snd_soc_find_usb_ctx(component->dev->of_node);
-+	int control_idx = 0;
-+	int card_idx;
-+	int i;
-+
-+	for (i = 0; i < ctx->num_supported_streams; i++) {
-+		card_idx = -1;
-+
-+		if (ctx->active_list[i].state == SND_SOC_USB_RUNNING)
-+			card_idx = ctx->active_list[i].active_card_idx;
-+
-+		ucontrol->value.integer.value[control_idx] = card_idx;
-+		control_idx++;
-+	}
-+
-+	return 0;
-+}
-+
-+static int snd_soc_usb_offload_card_status_info(struct snd_kcontrol *kcontrol,
-+			      struct snd_ctl_elem_info *uinfo)
-+{
-+	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
-+	struct snd_soc_usb *ctx = snd_soc_find_usb_ctx(component->dev->of_node);
-+
-+	uinfo->type = SNDRV_CTL_ELEM_TYPE_INTEGER;
-+	uinfo->count = ctx->num_supported_streams;
-+	uinfo->value.integer.min = -1;
-+	uinfo->value.integer.max = SNDRV_CARDS;
-+
-+	return 0;
-+}
-+
-+static int snd_soc_usb_get_offload_pcm_status(struct snd_kcontrol *kcontrol,
-+				   struct snd_ctl_elem_value *ucontrol)
-+{
-+	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
-+	struct snd_soc_usb *ctx = snd_soc_find_usb_ctx(component->dev->of_node);
-+	int control_idx = 0;
-+	int pcm_idx;
-+	int i;
-+
-+	for (i = 0; i < ctx->num_supported_streams; i++) {
-+		pcm_idx = -1;
-+
-+		if (ctx->active_list[i].state == SND_SOC_USB_RUNNING)
-+			pcm_idx = ctx->active_list[i].active_pcm_idx;
-+
-+		ucontrol->value.integer.value[control_idx] = pcm_idx;
-+		control_idx++;
-+	}
-+
-+	return 0;
-+}
-+
-+static int snd_soc_usb_offload_pcm_status_info(struct snd_kcontrol *kcontrol,
-+			      struct snd_ctl_elem_info *uinfo)
-+{
-+	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
-+	struct snd_soc_usb *ctx = snd_soc_find_usb_ctx(component->dev->of_node);
-+
-+	uinfo->type = SNDRV_CTL_ELEM_TYPE_INTEGER;
-+	uinfo->count = ctx->num_supported_streams;
-+	uinfo->value.integer.min = -1;
-+	/* Arbitrary max value, as there is no 'limit' on number of PCM devices */
-+	uinfo->value.integer.max = 0xff;
-+
-+	return 0;
-+}
-+
- static int soc_usb_put_offload_pcm_dev(struct snd_kcontrol *kcontrol,
- 			      struct snd_ctl_elem_value *ucontrol)
- {
-@@ -152,6 +225,22 @@ static const struct snd_kcontrol_new soc_usb_kcontrols[] = {
- 		.get = soc_usb_get_offload_pcm_dev,
- 		.put = soc_usb_put_offload_pcm_dev,
- 	},
-+	[SND_SOC_USB_KCTL_CARD_STATUS] = {
-+		.iface = SNDRV_CTL_ELEM_IFACE_CARD,
-+		.access = SNDRV_CTL_ELEM_ACCESS_READ,
-+		.name = "USB Offload Playback Route Card Status",
-+		.info = snd_soc_usb_offload_card_status_info,
-+		.get = snd_soc_usb_get_offload_card_status,
-+		.put = NULL,
-+	},
-+	[SND_SOC_USB_KCTL_PCM_STATUS] = {
-+		.iface = SNDRV_CTL_ELEM_IFACE_CARD,
-+		.access = SNDRV_CTL_ELEM_ACCESS_READ,
-+		.name = "USB Offload Playback Route PCM Status",
-+		.info = snd_soc_usb_offload_pcm_status_info,
-+		.get = snd_soc_usb_get_offload_pcm_status,
-+		.put = NULL,
-+	},
- };
- 
- static int snd_soc_usb_control_remove(struct snd_soc_usb *usb)
-@@ -187,6 +276,85 @@ static int snd_soc_usb_control_init(struct snd_soc_usb *usb)
- 	return ret;
- }
- 
-+/**
-+ * snd_soc_usb_set_session_state() - Set the session state for a session
-+ * @usb: SOC USB device
-+ * @session_id: index to active_list
-+ * @state: USB PCM device index
-+ *
-+ * Set the session state for an entry in active_list.  This should be only
-+ * called after snd_soc_usb_prepare_session.
-+ *
-+ * Returns 0 on success, negative on error.
-+ *
-+ */
-+int snd_soc_usb_set_session_state(struct snd_soc_usb *usb, int session_id,
-+				  enum snd_soc_usb_dai_state state)
-+{
-+	if (session_id < 0 || session_id >= usb->num_supported_streams)
-+		return -EINVAL;
-+
-+	mutex_lock(&ctx_mutex);
-+	if (usb->active_list[session_id].state == state) {
-+		mutex_unlock(&ctx_mutex);
-+		return 0;
-+	}
-+
-+	usb->active_list[session_id].state = state;
-+	mutex_unlock(&ctx_mutex);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(snd_soc_usb_set_session_state);
-+
-+/**
-+ * snd_soc_usb_prepare_session() - Find and prepare a session
-+ * @usb: SOC USB device
-+ * @card_idx: USB card index
-+ * @pcm_idx: USB PCM device index
-+ *
-+ * Find an open active session slot on the SOC USB device.  If all slots
-+ * are busy, return an error.  If not, claim the slot and place it into
-+ * the SND_SOC_USB_PREPARED state.  This should be called first before
-+ * calling snd_soc_usb_set_session_state or snd_soc_usb_shutdown_session.
-+ *
-+ * Returns the session id (index) to active_list, negative on error.
-+ *
-+ */
-+int snd_soc_usb_prepare_session(struct snd_soc_usb *usb, int card_idx, int pcm_idx)
-+{
-+	int i;
-+
-+	mutex_lock(&ctx_mutex);
-+	for (i = 0; i < usb->num_supported_streams; i++) {
-+		if (usb->active_list[i].state == SND_SOC_USB_IDLE) {
-+			usb->active_list[i].active_card_idx = card_idx;
-+			usb->active_list[i].active_pcm_idx = pcm_idx;
-+			usb->active_list[i].state = SND_SOC_USB_PREPARED;
-+			mutex_unlock(&ctx_mutex);
-+			return i;
-+		}
-+	}
-+	mutex_unlock(&ctx_mutex);
-+
-+	return -EBUSY;
-+}
-+EXPORT_SYMBOL_GPL(snd_soc_usb_prepare_session);
-+
-+/**
-+ * snd_soc_usb_shutdown_session() - Set USB SOC to idle state
-+ * @usb: SOC USB device
-+ * @session_id: index to active_list
-+ *
-+ * Place the session specified by session_id into the idle/shutdown state.
-+ *
-+ */
-+int snd_soc_usb_shutdown_session(struct snd_soc_usb *usb, int session_id)
-+{
-+	return snd_soc_usb_set_session_state(usb, session_id, SND_SOC_USB_IDLE);
-+}
-+EXPORT_SYMBOL_GPL(snd_soc_usb_shutdown_session);
-+
- /**
-  * snd_soc_usb_get_components_tag() - Retrieve SOC USB component tag
-  * @playback: direction of audio stream
-@@ -273,6 +441,13 @@ struct snd_soc_usb *snd_soc_usb_allocate_port(struct snd_soc_component *componen
- 	if (!usb)
- 		return ERR_PTR(-ENOMEM);
- 
-+	usb->active_list = kcalloc(num_streams, sizeof(struct snd_soc_usb_session),
-+				   GFP_KERNEL);
-+	if (!usb->active_list) {
-+		kfree(usb);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
- 	usb->component = component;
- 	usb->priv_data = data;
- 	usb->num_supported_streams = num_streams;
-@@ -291,6 +466,7 @@ EXPORT_SYMBOL_GPL(snd_soc_usb_allocate_port);
- void snd_soc_usb_free_port(struct snd_soc_usb *usb)
- {
- 	snd_soc_usb_remove_port(usb);
-+	kfree(usb->active_list);
- 	kfree(usb);
- }
- EXPORT_SYMBOL_GPL(snd_soc_usb_free_port);
+T24gMi8xNi8yNCAxMTowNywgS2FsbGUgVmFsbyB3cm90ZToNCj4gRVhURVJOQUwgRU1BSUw6IERv
+IG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVzcyB5b3Uga25vdyB0aGUg
+Y29udGVudCBpcyBzYWZlDQo+IA0KPiBDb25vciBEb29sZXkgPGNvbm9yQGtlcm5lbC5vcmc+IHdy
+aXRlczoNCj4gDQo+Pj4+IFNvIGlmIEknbSB1bmRlcnN0YW5kaW5nIHRoZSBzaXR1YXRpb24gY29y
+cmVjdGx5IE1pY3JvY2hpcCdzIHBvcnRpbmcNCj4+Pj4gZ3VpZGVbMV0gZG9lc24ndCBtYXRjaCB3
+aXRoIGtlcm5lbC5vcmcgZG9jdW1lbnRhdGlvblsyXT8gSSdtIG5vdCB0aGUNCj4+Pj4gZXhwZXJ0
+IGhlcmUgYnV0IGZyb20gbXkgcG9pbnQgb2YgdmlldyB0aGUgaXNzdWUgaXMgY2xlYXI6IHRoZSBj
+b2RlIG5lZWRzDQo+Pj4+IHRvIGZvbGxvdyBrZXJuZWwub3JnIGRvY3VtZW50YXRpb25bMl0sIG5v
+dCBleHRlcm5hbCBkb2N1bWVudGF0aW9uLg0KPj4+DQo+Pj4gTXkgcG9pbnQgb2YgdmlldyB3b3Vs
+ZCBkZWZpbml0ZWx5IGJlIHRoYXQgZHJpdmVycyBpbiB0aGUgbWFpbmxpbmUga2VybmVsDQo+Pj4g
+YWJzb2x1dGVseSBzaG91bGQgcmVzcGVjdCB0aGUgQUJJIGRlZmluZWQgaW4gdGhlIGR0LWJpbmRp
+bmcuIFdoYXQgYSB2ZW5kb3INCj4+PiBkZWNpZGVzIHRvIGRvIGluIHRoZWlyIG93biB0cmVlIEkg
+c3VwcG9zZSBpcyB0aGVpciBwcm9ibGVtLCBidXQgSSB3b3VsZA0KPj4+IGFkdm9jYXRlIHRoYXQg
+dmVuZG9yIGtlcm5lbHMgd291bGQgYWxzbyByZXNwZWN0IHRoZSBBQkkgZnJvbSBtYWlubGluZS4N
+Cj4+Pg0KPj4+IExvb2tpbmcgYSBiaXQgbW9yZSBjbG9zZWx5IGF0IHRoZSBwb3J0aW5nIGd1aWRl
+LCBpdCBjb250YWlucyBvdGhlcg0KPj4+IHByb3BlcnRpZXMgdGhhdCBhcmUgbm90IHByZXNlbnQg
+aW4gdGhlIGR0LWJpbmRpbmcgLSB1bmRvY3VtZW50ZWQNCj4+PiBjb21wYXRpYmxlcyBhbmQgYSBk
+aWZmZXJlbnQgZW5hYmxlIGdwaW8gcHJvcGVydHkgZm9yIGV4YW1wbGUuDQo+Pj4gSSBndWVzcyBp
+dCAoYW5kIHRoZSB2ZW5kb3IgdmVyc2lvbiBvZiB0aGUgZHJpdmVyKSBuZXZlciBnb3QgdXBkYXRl
+ZCB3aGVuDQo+Pj4gd2lsYzEwMDAgc3VwcG9ydGVkIGxhbmRlZCBpbiBtYWlubGluZT8NCj4+Pg0K
+Pj4+PiBJJ2xsIGFkZCBkZXZpY2V0cmVlIGxpc3Qgc28gaG9wZWZ1bGx5IHBlb3BsZSB0aGVyZSBj
+YW4gY29tbWVudCBhbHNvLA0KPj4+PiBmdWxsIHBhdGNoIGF2YWlsYWJsZSBpbiBbM10uDQo+Pj4+
+DQo+Pj4+IEFsZXhpcywgaWYgdGhlcmUgYXJlIG5vIG1vcmUgY29tbWVudHMgSSdtIGluIGZhdm9y
+IHN1Ym1pdHRpbmcgdGhlIHJldmVydA0KPj4+PiB5b3UgbWVudGlvbmVkLg0KPj4+DQo+Pj4gRnJv
+bSBhIGR0LWJpbmRpbmdzIHBvaW50IG9mIHZpZXcsIHRoZSBhZm9yZW1lbnRpb25lZCByZXZlcnQg
+c2VlbXMNCj4+PiBjb3JyZWN0IGFuZCB3b3VsZCBiZQ0KPj4+IEFja2VkLWJ5OiBDb25vciBEb29s
+ZXkgPGNvbm9yLmRvb2xleUBtaWNyb2NoaXAuY29tPg0KPj4NCj4+IE1heWJlIGFuIFItYiBpcyBt
+b3JlIHN1aXRhYmxlIGhlcmUsIHRvbyB1c2VkIHRvIGFja2luZyB0cml2aWFsIHBhdGNoZXMNCj4+
+IHRoYXQgYXJlIGR0IHJlbGF0ZWQuLg0KPiANCj4gT24gdGhlIGNvbnRyYXJ5LCBJIHRoaW5rIEFj
+a2VkLWJ5IGlzIHRoZSByaWdodCB0aGluZyBoZXJlIGFuZCBtYWtlcyBpdA0KPiBlYXNpZXIgZm9y
+IEFsZXhpcyBhbmQgbWUuIFRoYW5rcyENCg0KQWNrZWQtYnk6IEFqYXkgU2luZ2ggPGFqYXkua2F0
+aGF0QG1pY3JvY2hpcC5jb20+DQoNCkFncmVlLCB3ZSBjYW4gZ28gYWhlYWQgd2l0aCB0aGlzIHBh
+dGNoIHRvIG1ha2UgdGhlIGNvZGUgaW5saW5lIHdpdGgNCmtlcm5lbC5vcmcgZG9jdW1lbnRhdGlv
+bi4gSSBkb24ndCB0aGluayBhbnkgY2hhbmdlIGlzIHJlcXVpcmVkIGluDQpkdC1iaW5kaW5nIGRl
+ZmluaXRpb24gYWZ0ZXIgdGhpcyBwYXRjaC4gSG93ZXZlciBleHRlcm5hbCBkb2N1bWVudGF0aW9u
+DQp1cGRhdGUgaXMgbmVlZGVkIGFzIENvbm9yIGhhcyBhbHNvIHBvaW50ZWQgb3V0LCAgSSB3aWxs
+IGJlIHRha2luZyBjYXJlDQpvZiBpdC4NCg0KUmVnYXJkcywNCkFqYXkNCg==
