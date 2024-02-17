@@ -1,59 +1,59 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62031CD20
-	for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 08:17:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E171CD15
+	for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 08:18:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708157879; cv=none; b=i3y9zR/gKdWMPX6n61aTKdcXd82QVPkdPpXQcn+T8vKv27W8oV/LyVAa4BCeAvq6c/T+lS3yj7XVpZV1mQUSi9hjxi8rBCkTWL+1Ceyrw19cuLjtiKwkJZxBTbO0kTnwq0lXin0PBAmeZoaoObCq1kqJmV2ECbKpYPr+Ami3Ano=
+	t=1708157920; cv=none; b=syrrnaprQMD3AZOPVris//TkMUQr33gzazpaQrWjGZRB9N/ex3mfFcojelaPs5wbYkmFRsvxObrcu6jNRfX3mOsOc7j+SnT7sZBkP8IoPKI/CPgYckekb95PJ/fIFT/id+WBwG7XmjAlqrW96OSIJ3QHm0sPVXnHqAnAo+x0XsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708157879; c=relaxed/simple;
-	bh=mZPD6pl61ru1tRN9uYvlKR/Si6aRgYiz1L+8pU5DljQ=;
+	s=arc-20240116; t=1708157920; c=relaxed/simple;
+	bh=untqbsXfV/q5gbhBPVY8vCVosKgckyU7n01PP+UkTRk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C4sE/a4HGh2iJB4JT+RhLzOnZ8y4cMDcHQ4nI+suGGzBxzddO1ue2npUGby/Z2g5ByQE/BCfeSWFuwZWX7sD6KowO1wDtYBo19P0RkOqIZEVeLmsDtq84OjdOJq41D/VRPk2wSW8GRu1R3bs3RAKoGGddRkaY9DFQDSsqSsE9tM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AWlU2Jb0; arc=none smtp.client-ip=209.85.218.47
+	 In-Reply-To:Content-Type; b=ruBDYqZ/u74/JOS1KsXh+0OB6UDDq16yqeJQuzmn6rDigaK/+WBhTrzfULsJPH/+hPfgSi72ssesegNKSMuV3TE5MDBkClzHnRmJBSMiMB9ZNmFPvIcIAEySXfkKmWGjtaGoLHci5mlOi9obNYWi/xfp6NXk6UxgxPY/HYfOrl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SkPMYUqm; arc=none smtp.client-ip=209.85.218.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AWlU2Jb0"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a3122b70439so326177466b.3
-        for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 00:17:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SkPMYUqm"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a36126ee41eso373516366b.2
+        for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 00:18:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708157876; x=1708762676; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1708157916; x=1708762716; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=CwPOpkqVqxfLP/r0/a1aV4i2KCiMxSxp2/IT7KltBkI=;
-        b=AWlU2Jb0Z/6dy0nQqWYHSGZRXExLezL5cpDcDs08FqkJsSD+49yBxp3OV4woxW08xE
-         BNM9hx3AZePfgs/2k/UjNDyWapKawmECzWQVC2te7fkFfVUkjg0H8qtgZ+MPNM6Zk4cO
-         eLm49as1MrIUFLARVkrBszKZgjAPYZcR+lUzVy7rBxozczdP3IQ0yRxQxfEoqGWFwNSv
-         4hD45Xi5nDxUCzyG8/xBvqDVEkDZfMq13MSn8U9Aboo36gjJidZeF/aCaPOytQtTzcTZ
-         GriTeU+FnJ5APxPlnQd4XfQgQJ4nicQ4w9tfBUw2ySzglfn82UxrE/73sKWBD3wL4VcZ
-         6fmw==
+        bh=SyO5gKPS/KGhH7O6zjJaTYW2WsaQ3OFqgSJ+qkTClHk=;
+        b=SkPMYUqmH5FwktdbVvWBdPQjbUAjt7kbSAyrD5a7Cnuo/avztjvfnDjgEl+YauhNjQ
+         rG3JvHWlwL9hJ9XzgXvVThNavpVfe7f9QFZfk0PIDXU4RLHqy9NUbsBkrm3ZRjoOyQse
+         ijYcdZ5MMFChD0zomHuCg9uKCVV9tRxVqto95bAclJQmLy2zrhfDAMx/aIaUk5utCb4v
+         qMLfk4bDVbSswPuRiKDFh8zDgtOKq3CjiRuB7SF2s+VNkvXd5RWXZk0MZj3+qVBylD5k
+         7Fn1AHIJgilyxX1fB1Nu3vEM3teqkl+WPbPY3jJ0OLoa2ity39Y2AJiX+ztaeMdqIPPX
+         CzGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708157876; x=1708762676;
+        d=1e100.net; s=20230601; t=1708157916; x=1708762716;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CwPOpkqVqxfLP/r0/a1aV4i2KCiMxSxp2/IT7KltBkI=;
-        b=H26m17ksYIenQihpHFeE/+ya9JsHzPv4xglbakt627G3sqBQekFyrogCoHqZKleyT5
-         lIKT1LMbd48UGHLcLB7aCBtt4DCc3jH6zmhSMqFZKF0qtQHw67MbUUZpke36Pyk2pxwM
-         2PcNMvjG2Uq0vhmkYqyqq12MOegw8JoO0/kt8YL9m2ac3XDqutY+tNOzzvPBmUYOZYTW
-         LTz4ic57KJUM0f1ETRz0CcEhkcShnBld+s5zCc21WZm/pFSWs9AlPXGgt+4ZAcdW95LB
-         WRDTZ2RhWrPOduKAzTwRt3ReE1ZcVQ9XKaBmMmpYjR7SXikjSvcM3jtBYClJ33SNVp4S
-         HdRA==
-X-Forwarded-Encrypted: i=1; AJvYcCVaQhQNDRtuldDarXzkjetD8dOrd4DgFHnDa07lct8mXaY7h1zvhEOv/RVrW4UsavxgeVgZMjWsydUA916NIhk/fYTEfXpXkSJK1F5C
-X-Gm-Message-State: AOJu0YwoBeIx8uYM1gB5jZpGd5GMkTVSGQRpci3wAAhJNFudRRyEMgna
-	OuyeIXosv+y7iaqQMfdTMuG5+6EvlZGH+kY7Jt/u2fFWtNNQ+ePNsEuj5JtAKAE=
-X-Google-Smtp-Source: AGHT+IGGyO604nMOa87jDhCkt+7xpP/CbQmeT7tQGtKi7mJxmegXZxtKs15Kc/7W6mnDxGwYMk+joA==
-X-Received: by 2002:a17:906:fb9a:b0:a3d:f468:74dc with SMTP id lr26-20020a170906fb9a00b00a3df46874dcmr2241626ejb.34.1708157876107;
-        Sat, 17 Feb 2024 00:17:56 -0800 (PST)
+        bh=SyO5gKPS/KGhH7O6zjJaTYW2WsaQ3OFqgSJ+qkTClHk=;
+        b=WPR2E+X2WR9bEkazgnaxEkyDS9yOsdr9R7+PZ+0E0VkQX3tusmySWSwAuPDwIDKJq5
+         wRaOylJyFamMqP8LuspQBrLxlyCMEfaTxwGbul16p1uUr8ttqjvkNhKt7pgkhuy/zDtt
+         /qbWDnAdadiiCwmw/1iefFRxixKPGNg3gPbBqB3vfqom6R1VX+n9Tnqdfbw8Ml86mZem
+         Mbv9RVDiInBpeHK02m76WAkMzgSZ1o0/K3d+zWB+dmBCY0mZdHiUoHTm/Q1+OZMwWn5C
+         9kBlM/lvc6rERK52XSfMctEFKOWoM8Gfxx3FPRQnIiD/OfZbwWF54bBMhkvMauXAqcqV
+         JBLA==
+X-Forwarded-Encrypted: i=1; AJvYcCWRURksBgs7BFvfHJjXEAsg/gWhzVpZojNHw3G4fYbEQTp/n+B2pkesA2Nh9H9u8drvJoLn31qzEDczBsTxWsSWG2VKi+ttszr3oQ1Y
+X-Gm-Message-State: AOJu0YzS9QyqmGITacaLFSCPvdBa128p7akPa2LPGGyoofzeJDe2Nobg
+	9+rk33B9RTaWerhbNqZOHnM/fOsHGzh7h1e1hbU37BBll2Gz8sD05A+KS0C5ETI=
+X-Google-Smtp-Source: AGHT+IG7VonUcs6rEJcjK7mLjd2eWBOWIIBXH2IJRm2UzIxSTYRdMRM3jrPGrmbpvFin8OzEETjeXQ==
+X-Received: by 2002:a17:906:395b:b0:a3c:36ae:6c96 with SMTP id g27-20020a170906395b00b00a3c36ae6c96mr5135632eje.42.1708157916365;
+        Sat, 17 Feb 2024 00:18:36 -0800 (PST)
 Received: from [192.168.0.22] ([78.10.207.130])
-        by smtp.gmail.com with ESMTPSA id th7-20020a1709078e0700b00a3e059c5c5fsm757086ejc.188.2024.02.17.00.17.54
+        by smtp.gmail.com with ESMTPSA id th7-20020a1709078e0700b00a3e059c5c5fsm757086ejc.188.2024.02.17.00.18.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 17 Feb 2024 00:17:55 -0800 (PST)
-Message-ID: <0c2f4d92-afa9-46f1-844e-994bd45924ef@linaro.org>
-Date: Sat, 17 Feb 2024 09:17:53 +0100
+        Sat, 17 Feb 2024 00:18:35 -0800 (PST)
+Message-ID: <668c1511-4ee6-4fad-9b7e-7783b6853988@linaro.org>
+Date: Sat, 17 Feb 2024 09:18:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,23 +61,25 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] clk: rockchip: rst-rk3588: Add BIU reset
+Subject: Re: [PATCH v2 2/4] dt-bindings: net: fec: add iommus property
 Content-Language: en-US
-To: Shreeya Patel <shreeya.patel@collabora.com>
-Cc: heiko@sntech.de, mchehab@kernel.org, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de,
- jose.abreu@synopsys.com, nelson.costa@synopsys.com,
- dmitry.osipenko@collabora.com, sebastian.reichel@collabora.com,
- shawn.wen@rock-chips.com, kernel@collabora.com,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+To: Frank Li <Frank.li@nxp.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>,
+ Wei Fang <wei.fang@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>,
+ Clark Wang <xiaoning.wang@nxp.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, linux-mmc@vger.kernel.org,
  devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-clk@vger.kernel.org,
- linux-dt@vger.kernel.org, linux-arm@lists.infradead.org
-References: <20240216094922.257674-1-shreeya.patel@collabora.com>
- <20240216094922.257674-2-shreeya.patel@collabora.com>
- <237e690a-2f49-4046-b054-3a878eed6748@linaro.org>
- <30d2-65cf5980-3-2ec9f500@242931553>
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, imx@lists.linux.dev
+References: <20240201-8qm_smmu-v2-0-3d12a80201a3@nxp.com>
+ <20240201-8qm_smmu-v2-2-3d12a80201a3@nxp.com>
+ <49dbd0a2-a4b9-4c05-bb10-44f267672374@linaro.org>
+ <Zc+2EitZrVzLsA03@lizhi-Precision-Tower-5810>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -123,49 +125,23 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <30d2-65cf5980-3-2ec9f500@242931553>
+In-Reply-To: <Zc+2EitZrVzLsA03@lizhi-Precision-Tower-5810>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 16/02/2024 13:48, Shreeya Patel wrote:
-> On Friday, February 16, 2024 15:33 IST, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
-> 
->> On 16/02/2024 10:49, Shreeya Patel wrote:
->>> Export hdmirx_biu soft reset id which is required by the hdmirx controller.
+On 16/02/2024 20:22, Frank Li wrote:
+> On Fri, Feb 02, 2024 at 09:23:37AM +0100, Krzysztof Kozlowski wrote:
+>> On 01/02/2024 21:22, Frank Li wrote:
+>>> iMX8QM have iommu. Add proerty 'iommus'.
 >>>
->>> Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
+>>> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 >>> ---
->>>  drivers/clk/rockchip/rst-rk3588.c               | 1 +
->>>  include/dt-bindings/reset/rockchip,rk3588-cru.h | 2 ++
 >>
->> Please run scripts/checkpatch.pl and fix reported warnings. Some
->> warnings can be ignored, but the code here looks like it needs a fix.
->> Feel free to get in touch if the warning is not clear.
->>
->> Please do internal review. The internal Collabora review would tell you:
->> YOU MUST run checkpatch. Then you see errors, so why do you send patch
->> with errors to the mailing list?
->>
+>> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > 
-> I am sorry but what errors are you talking about?
-> I don't see any errors reported by checkpatch :-
-> 
-> shreeya@shreeya:~/collabora/rd/rockchip/torvalds$ ./scripts/checkpatch.pl hdmirx/0001-clk-rockchip-rst-rk3588-Add-BIU-reset.patch
-> WARNING: DT binding docs and includes should be a separate patch. See: Documentation/devicetree/bindings/submitting-patches.rst
+> Other 3 patches already been linux-next. Who will pick this one?
 
-Here.
-
-> 
-> total: 0 errors, 1 warnings, 13 lines checked
-> 
-> NOTE: For some of the reported defects, checkpatch may be able to
->       mechanically convert to the typical style using --fix or --fix-inplace.
-> 
-> hdmirx-v1-1602/0001-clk-rockchip-rst-rk3588-Add-BIU-reset.patch has style problems, please review.
-> 
-> I see the above warning but that looks like a false positive to me.
-
-Why for your patch it would be false positive and for all others would not?
+Resend it to net-next (with proper title).
 
 Best regards,
 Krzysztof
