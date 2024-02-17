@@ -1,70 +1,88 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB3E14F70;
-	Sat, 17 Feb 2024 01:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1B3DDA9
+	for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 01:15:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708132462; cv=none; b=POCvPMrliWvyc9ev33xNxBR5HfAueyqlKmqDbAoPZ6BQM+p3RxFv0LGtiAy3XC5CIHo0gTLw+jngc4fMrUSF7NHQN7wPGHAf2yWQYXlAG5AT928YvYOaN1DOUaCjufcxWSjNPTGebJdW0syKEWnjzwDF9Ke6iITPg9fQWAxgALk=
+	t=1708132521; cv=none; b=HQHzcOjHigsa710qU+jwJDGdvchwApQ9BsVRpkdmjL0HldBv4c4TXkpv8LJz/mgwjDjjgbdqhhgqztM946nHXtLUXqjZl8SB2Q6U89ZLp+vUlN/ZwxdDhFxNT2ncbEQsYxJrXrZ1HpP/QF4zy28mdzSCpn1+/4Ewx5/s1y6xXUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708132462; c=relaxed/simple;
-	bh=eLT+arJ+8yFumTvJh48qRxmwSTAY308IM4WrOYdkfK4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A2rnLR2mmnQ5raXXhWnjTawdCPDInvos8RLAOIDp4msq3F5xJ/c6euXQ9r7tUT9+QdN8rAwr3ejVyNidaHkXlc/En3b1KFD+U448tgZjYRq7KmrdByh0w30o4L8N8G3y3oOAdPuEjZc20gpyqFVe1xEzp5c34zanMP2MMz7i7XE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
-	id 1rb9HN-00EePX-0C; Sat, 17 Feb 2024 09:14:10 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sat, 17 Feb 2024 09:14:23 +0800
-Date: Sat, 17 Feb 2024 09:14:23 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc: Danny Tsen <dtsen@linux.ibm.com>, linux-crypto@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] MAINTAINERS: adjust file entries after crypto vmx
- file movement
-Message-ID: <ZdAIb0RFdY8KUp8z@gondor.apana.org.au>
-References: <20240208093327.23926-1-lukas.bulwahn@gmail.com>
+	s=arc-20240116; t=1708132521; c=relaxed/simple;
+	bh=ZLpzPkaQVf3vPQXMg5o0TPQW1auuMvt5zHLMK/s9MLQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=HLTfCAFiqNuKfvxXC8K8MG5NoguMdui1uQTgXqzShOIa0YKF3M0eMKCoN3flHz8Wos6nEiRbpaxzBhV3qVO2ULOEIl9S/wxr34u7NevB/UFiW81Tznne8Nlhu/7IdW+oqXWIBagZgYhjczuxR4ac6hG7yVlK7HB6ZjLmdWs+xoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pU9NiicI; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pU9NiicI"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-5dca5c631ffso2893879a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 17:15:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708132519; x=1708737319; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4LBEMe2qsSCAfEzNdzegJHhWuWUWp8q/u+78ScdPwFM=;
+        b=pU9NiicIBS/T1qFm818l485nxSBrpnbAiJA4YrTD6ZDPVsvhJeEuqMD7BLUGMbZpGm
+         y4FL1d1wV3g+FaDt4dtGuuBiaIynd3SE5ZQ6P0uiBlKiUSDs4LLy1BpXuc1FL+EB8f5+
+         tNvWy6G2OYDleJGksPV7lBuL8VYzOIGjNKrYy67XyOGGoAD36SCVZESWbr4uK18BJQj5
+         o2w43D3/OWWpxVdd1eK5BHf4vZIhPfvlGyLYe2B3IcqZwaLah1AYqfRJJCl1VbQZjtxa
+         MXFpbmlKhW/SUfBmmGhyOo/EBALXobo+nYxcmKJODIRcVPYrkpAV0xj+ZQDfG4rnu+P+
+         cGXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708132519; x=1708737319;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4LBEMe2qsSCAfEzNdzegJHhWuWUWp8q/u+78ScdPwFM=;
+        b=PHi2PRySjFK3FjU3Td2Pvh70t9WD40ESZ/XUeVXKJwgdDa04dRg0xduL/VcS3bl2Hk
+         ykqBwd5KR9h+yEyl2e2Hej8w3l9yrirsMriP2IVaEfHmaDJ1xVgSGQW7i3Fx5gghKAul
+         XTqT8PBcM6ErwYcpyfJyl3iaTMp9g6jxC3Fy8A1Pa4g2QTkNTHX/1XrBHA/F6SviII5t
+         BmxI1DIWDyQ0w40LuwxF6sTOEH6Leo8Y4nTAejKSgAR45AYHC/WsnK7qcWP3SgYzqt5B
+         qFxe8qAzgjKQFNeYFcqCoB5enfrWohsTemdEsuauVZzdsA7PwdEQLDAK2HT5yxwvTNsw
+         IGKg==
+X-Forwarded-Encrypted: i=1; AJvYcCWrXz2l56PYd4D/YmeR4wE9UEoiQQdmiDAOx4z+ydPVyqObdpgqm1dfxdZkvXcF3t3DPAzt9U2pwQRHLwvRWcwl2w1fsPd1oy1F4ifl
+X-Gm-Message-State: AOJu0YyP+fQSUQTlMN5LUUJ97E+YZEq2pz9EROUVUC2jTqDlFuptCnPH
+	BwUZybuaibP7rx7iAniH+rxor/C+UzSvQzbN4W+TOwgpAJB2jxjS9Mm5p0PRrpVcG/WP6ywmvQL
+	MYA==
+X-Google-Smtp-Source: AGHT+IFVkQ9NvXY6j/sr7qRJV7g3L2FAzP7Bjq0b5BlAdMognqEtCrekhuZo7id9NSWv8WxOXOoIKWFJ+jA=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:902:d4c2:b0:1db:7d2a:8cc3 with SMTP id
+ o2-20020a170902d4c200b001db7d2a8cc3mr281265plg.6.1708132519505; Fri, 16 Feb
+ 2024 17:15:19 -0800 (PST)
+Date: Fri, 16 Feb 2024 17:02:29 -0800
+In-Reply-To: <20240215010004.1456078-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240208093327.23926-1-lukas.bulwahn@gmail.com>
+Mime-Version: 1.0
+References: <20240215010004.1456078-1-seanjc@google.com>
+X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
+Message-ID: <170813138426.2064122.1636080722842815115.b4-ty@google.com>
+Subject: Re: [PATCH 0/2] KVM: x86: Fix dirty logging of emulated atomics
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	David Matlack <dmatlack@google.com>, Pasha Tatashin <tatashin@google.com>, 
+	Michael Krebs <mkrebs@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Thu, Feb 08, 2024 at 10:33:27AM +0100, Lukas Bulwahn wrote:
-> Commit 109303336a0c ("crypto: vmx - Move to arch/powerpc/crypto") moves the
-> crypto vmx files to arch/powerpc, but misses to adjust the file entries for
-> IBM Power VMX Cryptographic instructions and LINUX FOR POWERPC.
+On Wed, 14 Feb 2024 17:00:02 -0800, Sean Christopherson wrote:
+> Fix a bug in KVM's emulator where the target page of an atomic write isn't
+> marked dirty, and enhance the dirty_log_test selftest to serve as
+> a regression test by conditionally doing forced emulation of guest writes.
 > 
-> Hence, ./scripts/get_maintainer.pl --self-test=patterns complains about
-> broken references.
+> Note, the selftest depends on several patches that are sitting in
+> `kvm-x86 pmu`, so I'll likely take the selftest through that branch (eww).
 > 
-> Adjust these file entries accordingly. To keep the matched files exact
-> after the movement, spell out each file name in the new directory.
-> 
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> ---
-> v1: https://lore.kernel.org/lkml/20240129131729.4311-1-lukas.bulwahn@gmail.com/
-> 
-> v1 -> v2:
->   - address Herbert Xu's feedback:
->   keep the matched files exactly those which were in the vmx directory
-> 
-> Danny, please ack.
-> Herbert, please pick this minor clean-up patch on your -next tree.
-> 
->  MAINTAINERS | 18 +++++++++++-------
->  1 file changed, 11 insertions(+), 7 deletions(-)
+> [...]
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Applied the fix itself to kvm-x86 fixes, I'll follow up with a heftier version
+of the selftest patch for 6.9.
+
+[1/2] KVM: x86: Mark target gfn of emulated atomic instruction as dirty
+      https://github.com/kvm-x86/linux/commit/910c57dfa4d1
+
+--
+https://github.com/kvm-x86/linux/tree/next
