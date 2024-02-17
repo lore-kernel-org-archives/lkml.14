@@ -1,79 +1,67 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2077.outbound.protection.outlook.com [40.107.94.77])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847B15B1E7;
-	Sat, 17 Feb 2024 21:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0507C7C083;
+	Sat, 17 Feb 2024 21:27:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.40
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708205008; cv=fail; b=Weh94+FE80jxx6gQU1KV1b4UxonRfQKZFhKHtaDYV1a1PW+yW7jFYpq0dhJAZ6DD9G3ErqRgWalG/CUsV6z+EkyKF9PblfOIfWy1LWq2+01SoHQvuPZdUbrbzaNzgCJIPZ6wG+zodj5uDQrC63VU2wCZ7xRWKR+4GFgdtoDYbu4=
+	t=1708205272; cv=fail; b=kl6po2kk83mMn7uJLVgE1FXgqH+aNf0/JPfHOTw8BbSby4iEamLk1WUepzQB9/WoBBh6B17rZM7rYdsNqU73sefJiFOjK+M8YPB/za0DvxJWAtffQ9tCFHg7bTYhFfOUrKcxW2yiRLQeQpZP67GEwoQp6GuFN8c9DHnQxSIsTIM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708205008; c=relaxed/simple;
-	bh=qIocdiArhV9yTZTCb509W8yUPjAVWc1M5nWkn3VsKsE=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 Content-Type:MIME-Version; b=V5D9+p0dYvOnr4HTqi/7EFJ5rRtTPseZdtSMl+GWLFthknRTNWMj0FcO9AJ16JlUgXJ4nlUyQFdctk0NokYYCpeXc0hFkkPYlMZpHqpQhqJ5SyQzlhC2wAzhC+s4t3fdV0HWF6hSzovWnfnEMCBTA99KdKzqht2sjZPLEWv4wV4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Fg6Elk2d; arc=fail smtp.client-ip=40.107.94.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1708205272; c=relaxed/simple;
+	bh=O/sH2HBlZYptmobJjDGliVtAd2l0If+dFNq1tFy0zxU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=IfWqJyaDg/dTXBDTXtOLjZYMn8yqKbQLeDaVsrO0dlwIYrBKP6MlTVXOObpuZJzRy00ahDn2OlNedUJs2ogPb5bFOM4OKa/5vzxP6r1aTIYE3JMjSSfUen6KCFlzdHq8K4VxNujfFi1v1gP0zLgz7izgTnTxJqRNnOJDEJT38xc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZpwmHTgL; arc=fail smtp.client-ip=40.107.236.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Fg6Elk2d"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZpwmHTgL"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gnWPMml3hKsIK6KbgedMl3f5XDbJoD2cpUaKjM6L0AF8esNPNLPoIWtuDBE1L11xcJFRE/pNinPopAx6PNud4RRF1N+2ZX95RmTs/GJ9+1QjL+wrd4+2xVEbdq9PZSeGy9yiIDS8dXRI/iCvobpErJplomYtyMrk97vrJ1cc/xiNLxMjdGIytBVnMd3L60N4QSZHH4CGQtYMmZ4bXGt8PuVLRC0gWaeXy2vt9QXipBxtDysd1E5yP27kWiptOYuMhGmKUI3SLqBpgrdLK3fU7j7OI/vd/pTNh26edIVvBq8WT6IdMHcq1poXTJzD6Ot4ONYQwjfY5LDvIWDYcaOZHQ==
+ b=nnWFkjuNwu/jEgahTAkXyOmeDIuWZYWEQVtRIMqrqf1Qx7k50osZ8xtWnSy8COPMv12Ox3PIuBTLpx69zk5f6T1E6/XuoIJYzUfjFoj+8BMdxE+yQMIddTjD1CvjVodwU63wl/4lSyLWsJK0PBvjP8UpD+B3fNDdRhjBAs+a9lGG2mRpiPBGnUNHbcW7Js0D1ti53jbVhEq0w2cNr5ob3uMevl3JO+uATfgHXZz/mRxB0EFlY1uU+bh/I8pyMdnkPusowLpSba7M1IR3XU8xDy7o6cLMTFIzCOhPLbZMJtG0DosmqvIX4cuu7eacJKOTUYwuK+zIG8Ahbt+gDBdNfQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=S/S33O5k4T0ajGzZomawcoPsss/RcrnMFGRUK7hNGJA=;
- b=CO98w83d7Sca+GudoXCBaLfad9T5UNp9QuuUedt27FPDlOKdaphtauma60eASAjuFWbp2WVrnjA9I/LkiULcfDLRRYVCJsoTZwdOEN27H3czMQwofeA/1dWuuWyYM+0dx2B7wfx1IQne2lCFOV6kqkTdbWAq273h1/GiAnjf7OeK9aA+R3gE0h1uNamWzVJ6gby2/4n+aaDELBbA9aCkicsKuq3md1gUHg7ysRoYbMwX/WiJHiOC7azVAwUvF1n9lBEhroMt97NhZV1cvHqiHQEqvwDFsgSo+zJNIO4j3fQpO45B2gwsZUjWgFuK8vfnczE+F28kFG0a5nqwvTiaPw==
+ bh=cI+FOK9ocK1z2jnw1KRC7DDotKVVzkIzXoWsNgWD/YY=;
+ b=I1AyXIF6PWLAQ5HjFWgV0Diip5DcdSiNh0KaWuMVXv2Gsmmwjj+jAGRi5L2q4JCpFjkrGbdYl43ExwzigYiM8CFAkBBhCtGjwGbqxuFggNrYSDQvAMDJ03wzx5y7IDeQwCbT+/z6ZNhfF57orwSR5bhmdRRmhxv4LTM/+xJHYO7C4LFjZ7tk8ODfpCwvJbxVguSqEatJjzbcZV1uJCYmXTyjx7xGuPqsBUeyzV2EbG2fZD40kecJYrYerKntMYx0V09Ch/BehBKrRmHhnxmW84QDY8QhrWXUmPk5n8YRH8d9wquKvjgIuFKpiUkd//6FnUJnPaWFyDKnM0oIPzwbzA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S/S33O5k4T0ajGzZomawcoPsss/RcrnMFGRUK7hNGJA=;
- b=Fg6Elk2dDiNRhMxWK1FoO9JaK1Ar1kYoduBsuuPn0YM05UAjGppDhOqaRyl9X3oQ1417bocSHf4+wBtoKzLa5ktIu97I0fHgDDEcQ69zDSbK+gbUzmB3wcpCu+iBzBk6kqcCnXuMLEZEJLgdXNbGLh7VUgHpBd2MlUZf9/x8HM+ODy/1nqnN0HGH5YBT2Wp38c6KWYxc+jWX1ejCvhONuiQQgo07QJ7GC4jWBPVJvR+EqM1mzkAC5Kmm/rbT+bNyO3jQV9D9W5DLzE7JRapGRu5jIh1YsQ/rP1ZBYAwVrFxrUf1U/K36syxVrZkz+punGb9Qd90q04+rcVHvs4RRzw==
+ bh=cI+FOK9ocK1z2jnw1KRC7DDotKVVzkIzXoWsNgWD/YY=;
+ b=ZpwmHTgLXp9KN7duPb3GZ/2rXb48RQbHBV1bEOshc9Oo+Z14i0djYXeDxD3w++DMBXIGAhYtStkGqZawniBznZioj1DANsEqtIrOusllVDTXjVf2tgoB5f3FWN6Nv9Mc/offvSrwN7ELhaIp/OYdbpSUl6qTV+poUvriH7tjGPg=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BYAPR12MB2743.namprd12.prod.outlook.com (2603:10b6:a03:61::28)
- by DS7PR12MB8322.namprd12.prod.outlook.com (2603:10b6:8:ed::13) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
+ by PH7PR12MB5974.namprd12.prod.outlook.com (2603:10b6:510:1d9::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.17; Sat, 17 Feb
- 2024 21:23:23 +0000
-Received: from BYAPR12MB2743.namprd12.prod.outlook.com
- ([fe80::d726:fa79:bfce:f670]) by BYAPR12MB2743.namprd12.prod.outlook.com
- ([fe80::d726:fa79:bfce:f670%7]) with mapi id 15.20.7316.012; Sat, 17 Feb 2024
- 21:23:22 +0000
-References: <20240216-feature_ptp_netnext-v8-0-510f42f444fb@bootlin.com>
- <20240216-feature_ptp_netnext-v8-4-510f42f444fb@bootlin.com>
- <87jzn4gtlv.fsf@nvidia.com> <b8926fe5-81ef-40ea-9e87-5e84b368b745@lunn.ch>
-User-agent: mu4e 1.10.8; emacs 28.2
-From: Rahul Rameshbabu <rrameshbabu@nvidia.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Kory Maincent <kory.maincent@bootlin.com>, Florian Fainelli
- <florian.fainelli@broadcom.com>, Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Heiner Kallweit
- <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Richard
- Cochran <richardcochran@gmail.com>, Radu Pirea
- <radu-nicolae.pirea@oss.nxp.com>, Jay Vosburgh <j.vosburgh@gmail.com>,
- Andy Gospodarek <andy@greyhouse.net>, Nicolas Ferre
- <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Jonathan Corbet
- <corbet@lwn.net>, Horatiu Vultur <horatiu.vultur@microchip.com>,
- UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>, Vladimir
- Oltean <vladimir.oltean@nxp.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Maxime Chevallier
- <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH RFC net-next v8 04/13] net: Change the API of PHY
- default timestamp to MAC
-Date: Sat, 17 Feb 2024 13:05:40 -0800
-In-reply-to: <b8926fe5-81ef-40ea-9e87-5e84b368b745@lunn.ch>
-Message-ID: <87o7cebx9z.fsf@nvidia.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR03CA0241.namprd03.prod.outlook.com
- (2603:10b6:a03:3a0::6) To BYAPR12MB2743.namprd12.prod.outlook.com
- (2603:10b6:a03:61::28)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.12; Sat, 17 Feb
+ 2024 21:27:46 +0000
+Received: from CYYPR12MB8750.namprd12.prod.outlook.com
+ ([fe80::9d:17f1:8b3b:1958]) by CYYPR12MB8750.namprd12.prod.outlook.com
+ ([fe80::9d:17f1:8b3b:1958%4]) with mapi id 15.20.7316.012; Sat, 17 Feb 2024
+ 21:27:46 +0000
+Date: Sat, 17 Feb 2024 22:27:40 +0100
+From: Robert Richter <rrichter@amd.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] cxl/pci: Fix disabling memory if DVSEC CXL Range does
+ not match a CFMWS window
+Message-ID: <ZdEkzBbm7aqcghAl@rric.localdomain>
+References: <20240216160113.407141-1-rrichter@amd.com>
+ <65d034a22e258_29b129484@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65d034a22e258_29b129484@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+X-ClientProxiedBy: FR5P281CA0057.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:f0::15) To CYYPR12MB8750.namprd12.prod.outlook.com
+ (2603:10b6:930:be::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,125 +69,122 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR12MB2743:EE_|DS7PR12MB8322:EE_
-X-MS-Office365-Filtering-Correlation-Id: a07137ca-8036-4b6c-23fa-08dc2ffeab4a
+X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|PH7PR12MB5974:EE_
+X-MS-Office365-Filtering-Correlation-Id: 05da3396-9050-494a-7ce3-08dc2fff48a4
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	IAybwvnCHnfXxqwf9QsET4/QrFQm/287PZS5goUczZRdVk5V0Q30IULQ09uqEIrxAXLu5xR3ZycBhFNCghOGPkfJ3QXtLc1zOa01WDoDBHb0gsNX75sS9QQCKGZApM2zhp3Jeuac0FaqQj+5aTs0andLeTfMEDoY+VV0QaulRXsKtuXqc4wxVrbwNCnnI3RoJ1o/GpAybjxbXHJ3naaUq+98kF2kgVXd30ikf3IVEfeNmVkf0+o0i6h7nLOb+e7Dmz1UKreCiwbfBmHJYJjI71oUu9Zo3cwv6NSAJwhEk2zYVihyViPEQTpnFrcOpF+P5KK7dXQKduOUYeTRhXa1PRpppphlrbIRd9Jh6e17jgn8Kf78dYy+aQ+zyr/1WpdLtWEPRqqqSunYX56fPSSS1lEyf+KmRVJTLPCeLPNp6rJI3+WhcT+tbjWs8nmbOvlsJtiVEXa97UZdTWk0auzgYK39NEXlv2m0cqY6DT3eQK0PDOEP+8r8m+o+YT/+WKXnu5gYu8suR/EkJcuKZKojs4/1FLj2axSU5gs7F7Gxzmu8wfOuf3ZrYX2CUps+fI1/jVn+aaTj0SANME+9+uUIew6A65w/AAc3gQZuu/6CzrY=
+	sMDEsu7BGDGFJBj5YpzY0s3KJzEcvvc41PmjBw5ubqAXrwv/A/Nr6Qda6fhU4BUWfD1i6xChUlKNPKI/co18TonZuWzc7eJAjDbO4CkkC8nz8+tlRR+ZwZH5dkA724JY00n+ro1Qr8gqb9gkA8gLQuXOqjo0048VFbLt9T0lKV0igB8Vi/6cdVjIf1fggm3VnhZmECuKW1Inq2B1MbslJoDM/GsXcJMyA8rXQbTVQmzY6qOJ2ZOsIJNUHzJ7obVjGwZ+KjgAqhevWCmVXaYbPHaVaiNxZMnjnpwiOFAY10ksJlQnh5NHaOGsig9o69VAADwmEsAwmcKMF4I+s8z41ZbT/hIizX6l3r1x90QstgI3TGhyo2DQGoZtTREB7m8YolH+2bSxSVlrHaRistvSHm13JziC2JZqhGHtiJzKMB3KUQHKe7sNfFQRvfhKJGcEGpSRVckvIbRamqTFTDL1mdnYBtUczUvN4F+a+xkgZrHZI+z+SQulMC+8pA+hWWqMBwwPAZJWiSvRs3EGUfukkR172MI+iE6h6maXVL4CHrIAJs7LD5eO+kNZTJ2+vgbb
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2743.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(346002)(136003)(396003)(376002)(39860400002)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(38100700002)(5660300002)(4326008)(2906002)(66946007)(66556008)(66476007)(6916009)(8936002)(8676002)(7416002)(86362001)(66899024)(2616005)(26005)(83380400001)(54906003)(6486002)(36756003)(966005)(316002)(6506007)(6666004)(6512007)(478600001)(41300700001);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(346002)(39860400002)(136003)(376002)(396003)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(66946007)(8936002)(8676002)(66556008)(66476007)(38100700002)(4326008)(5660300002)(6916009)(2906002)(83380400001)(41300700001)(26005)(53546011)(6666004)(54906003)(316002)(478600001)(9686003)(6506007)(6512007)(6486002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?TOBLaHYs5gryPBKf2XeTXbm+lgP/VHZLb6tZsnZyPWMRUk7hzj84RHcDrfeF?=
- =?us-ascii?Q?8TrQS5cpiIyxvrqI+aCfuyk6Mp/QHKJCYKpKdj7tATPggZSj7Kge+v/23xQe?=
- =?us-ascii?Q?vRki6XJvljEC4gK8dY5k4Fhl8RhH4iQB736F983YGJacSx88Z0tmb1pD/RJT?=
- =?us-ascii?Q?X2OUKE5LxkWNZNaVvk8AfGUvtB4aMTmV51dJ32+cWbA0+jxVjmkZwBr8NNgc?=
- =?us-ascii?Q?syKieqZ/3spkUXIQ/BznTY8vwaV16TNAdwHm2TXlxgOTOSHb0Ye3AFYzMXk8?=
- =?us-ascii?Q?opBcasYmcKB7M65vvvbdfzfg4FPL0ZeZJE+5x6iZQZbzH0ahB3XIRtMDhQHZ?=
- =?us-ascii?Q?4HDdILAJkA2YRMpOZbSCu8zuzVDy/3VB1x5rLlrWjue0N39FSXKSQpifp60T?=
- =?us-ascii?Q?D1CbwGkOV5BQFaU+2CM+IzF7REd1l2/aTZGL7Yen8nTJ11UL3mCV6UuIkS95?=
- =?us-ascii?Q?PupKeJwyA4TzM3KRe/M5G7KfXTsZJHeDXYyAiDZ6kfS5iZgO7MLyDAwIlIfF?=
- =?us-ascii?Q?T88yG9QYmmI+AhGaKL3OLbaLLsdQY8HX/L4EvEjgK9Xck2RpWU8LVu4hKXPw?=
- =?us-ascii?Q?L/2VNWJ8AKvK69OShbBa88mqIPci70LaeT8F+/cJKI6+UVNzUhjhS0Zi0g9Z?=
- =?us-ascii?Q?uyMRqqQIazbf3K40VgIljeL09lUIEh9GTByArIOgPBLNARy13N9kvECqyOZZ?=
- =?us-ascii?Q?GRoArdIgLS64jcppUUEDk+C/bXrnWCodIass/gw5DHtjQJjOx5A9D7qyz5F/?=
- =?us-ascii?Q?EpPW7346ekKAe7DlqKnJ3rNzJ9F0jbPcWZKZ5mCJoYuGMZCXJe79T9H9J6k0?=
- =?us-ascii?Q?WbbYXyOmWsa4i7dw4Q6eJ4boJeN7N9ecyqa06SXDfzw31uI99G2H1W3PupvN?=
- =?us-ascii?Q?5T+kRO0vNuWqKRW6iN3ZJC0V0nL0FnUCKSlYvxvoy7thr7ixihPiCsuLUQE3?=
- =?us-ascii?Q?Gc+3Kh4ndJAJQev3FfrUCIZgfkIv8sKuiuZfz+buPV/hNF3R1EtvUI8BiL9b?=
- =?us-ascii?Q?8ikMxJJsMFYeGk7iTNF9eZNqf/D6NNPl0Hoizjt+QDJw2xwpbMZ/1pzT68Uu?=
- =?us-ascii?Q?LC1WZwKRbu/s1eRTN6iV3yGWwi1mJzj2Y+VMY3Uz5uAViZOCsK6kpHcyGcE5?=
- =?us-ascii?Q?HXAVTH4mEM6rAakZOogLfxILRvQ5ocZ8jLU8Koi8QDz0tKplwRikoI5/h2Qj?=
- =?us-ascii?Q?fSjSjIrkxM7ajaeYpfJAzTGLkZ+AtmLUePgNw758hmVrpKyGaS6xY11L9vMJ?=
- =?us-ascii?Q?59sj2y8yerY25VQKB06/RWRhRufZ85nlKfiisL4lKdgBZe823cgm6qJrVb4a?=
- =?us-ascii?Q?1nCaoPM1DHorqGWHZxL+nY+Maj5It6NFBqo4jYbiptuCupI7OFYxNDAvn+2r?=
- =?us-ascii?Q?yIHxFZuMCWx+q4+jvj6bOftMnvZAQ83WGSuJBSf0P5Wu2e+cPJFU3lRfGPZK?=
- =?us-ascii?Q?90mnwlJGMx/lT5+nrLVF6jXhNRZZID2qZgI1fcuSBr4FFSPkTBKLsndqanf6?=
- =?us-ascii?Q?6tl65gX5F8UCxaWsN8CY0SDmxROM5zHAA9PkLE352soh3ubJkfxyiQnXqPrv?=
- =?us-ascii?Q?7Iop4LoWS2qG7cwLjNLB/JWhownol9RyOR3rEDhJ?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a07137ca-8036-4b6c-23fa-08dc2ffeab4a
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2743.namprd12.prod.outlook.com
+	=?us-ascii?Q?iHd6bzeExtYfKicYX9/81Aky0nvJyUbSiCl5UEy2o+bHEMgzXhev7wJsZKx4?=
+ =?us-ascii?Q?YMaTZpw5sVz+aYmRQEYVU/8u8BNGyth/uqp7Z3nreAHPJuUZ24hwsR8dda90?=
+ =?us-ascii?Q?pRZndKt47/fw8E45lVNvszXhslMN98KJoI9OK1xdiPSlUMS1lbeMFgZDFTay?=
+ =?us-ascii?Q?M/7UIEqZn8cWeydb7AJ3q9v69YUm4VDSFg/t0WY/lZl0z/x90Pnnp36LfeBo?=
+ =?us-ascii?Q?tE6IOud3jx2Mql3SXtUAzdJEDQfGAvoCJQOT1iblOTZS4i/56oQKqXSVNQVb?=
+ =?us-ascii?Q?uNXGP2p6oAITxws5OZbdAH9V4A5pX9okzVWlKwvTAzPDYHcAflyX9S+H/49p?=
+ =?us-ascii?Q?6O4qjQrFXdzVS9DpEdIdC+tYXGaJ1yMFbenLyUcPhbgMa/6BJFMsIn2Ffq17?=
+ =?us-ascii?Q?ylhSFd2f9wTzw4oLE7qfsTmZsm7+3OBOelWwbfWTHWyYkMeOovCWSuBfvwLy?=
+ =?us-ascii?Q?qMA7XhEwRjdSJk4BOAYQkZIQjEbUGaW/CxtH68NShRZBp5XMFc08D/REtrei?=
+ =?us-ascii?Q?fW//tBzB/GbP9QXF24S+Do2kLgTF36/fOuF5NASh6vUs4bHlIZ693h7eR/iD?=
+ =?us-ascii?Q?gqucEnjaoqei+UQYkaNL28LMD8N06kGqjuT8D11FhDYXD4iZejC1u9OyBibH?=
+ =?us-ascii?Q?rq71HomtG60xyDFdO5/YD1IszL525KeKXsL3Q8p0XATwZ5UcKxPywC3/KW8k?=
+ =?us-ascii?Q?VBW8QomqBBrF9XFstAFiy5cx04ImuUOtDfYzNEudrj55bz3EOOlzfnh0Eb7c?=
+ =?us-ascii?Q?LzXSQZCbzjyjD9Rr1K39ukCzQ3wdhdLQAjMt2aNooL0AoVn8DwKqE/JBxrp2?=
+ =?us-ascii?Q?RBVmEzokxcojEmwplH4eonoChAHjuGYybV80XAMH6TUZFzC/F8W/JoTXG5B9?=
+ =?us-ascii?Q?ur0LFQNDj1xwk9ZbuGCPei8AOll4jXKgnORoxlpB2jZ68R9o/wjzd6rPrs6E?=
+ =?us-ascii?Q?hu9wsHc+OngHS5QWixo+QQBbFIN1B5uf/rimrw6KxBNeoKZm0GfOsoO4btUG?=
+ =?us-ascii?Q?K+QmynPX5XkXehp/hCudbFk1pvThs6ejD7wbkX711gjyS32YDQz/TmQTKU2q?=
+ =?us-ascii?Q?hJG6Y4YL6IglJbKVy5FMnPmS5ailZfX6wj+QGycG13X0av+NHriTZoMBSa8b?=
+ =?us-ascii?Q?xwqK8JLnEQMK6S0MCQELr3mr++9TR+PJfZpgAdZ96NCQsCLcxqxDpjiEjSs2?=
+ =?us-ascii?Q?jLqtg4k7bSNhWbKoOI4IkC1PlW6p9AkHKD+WulPNZ7DE+2ZmGuY3OOgMb7iT?=
+ =?us-ascii?Q?K/f7XLzqU3+bCG63POyIN6tvHqht+liv1n/FWkXTHnZX25pQ30vXMmMQzT0M?=
+ =?us-ascii?Q?PM7yPnh/U5zeGp1COFAKPWuNmQAwI+VXq8jOAaYjLqw5uBhD1m5xSBwOSqq+?=
+ =?us-ascii?Q?rr1EZ54Hh0MXGnFHMjiFAq7DxaOQcvP3VPZffCXGFz6+MK7mJKOGCelI1yvY?=
+ =?us-ascii?Q?5Zg0zzLloqRDmDVDDmPZmRpfMnyKKwW1JXjrZM+/9Gr5c+0THnvpgbL72fdV?=
+ =?us-ascii?Q?bMqgoXdpQJrZJoqjhQPJWNBkaX1AULfIXhiSrebMNfuPZW8FHVXWdMOfK0/b?=
+ =?us-ascii?Q?tiezDv13QyK5oLpba9OTTClb86Y9GHRxHhpR7I8i?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 05da3396-9050-494a-7ce3-08dc2fff48a4
+X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2024 21:23:22.3359
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2024 21:27:46.3023
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +a63vekqXwPulcLqcFH85OWOj8RQD1iNyqNqvA2Ns8jRUXKdLZfVENCbOrRN6gaOOv+jc/FqGWO2cYzSeqEh0g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8322
+X-MS-Exchange-CrossTenant-UserPrincipalName: LBn4HdZUKVFiMUoC9E/Frmn57unQoCkLKHwibXMoPsmZmpC9b5pxwRC2TnoKEDf8x+FMRQ4F1tozX8sZTkD5ug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5974
 
-On Sat, 17 Feb, 2024 18:07:31 +0100 Andrew Lunn <andrew@lunn.ch> wrote:
-> On Fri, Feb 16, 2024 at 10:09:36AM -0800, Rahul Rameshbabu wrote:
->> 
->> On Fri, 16 Feb, 2024 16:52:22 +0100 Kory Maincent <kory.maincent@bootlin.com> wrote:
->> > Change the API to select MAC default time stamping instead of the PHY.
->> > Indeed the PHY is closer to the wire therefore theoretically it has less
->> > delay than the MAC timestamping but the reality is different. Due to lower
->> > time stamping clock frequency, latency in the MDIO bus and no PHC hardware
->> > synchronization between different PHY, the PHY PTP is often less precise
->> > than the MAC. The exception is for PHY designed specially for PTP case but
->> > these devices are not very widespread. For not breaking the compatibility
->> > default_timestamp flag has been introduced in phy_device that is set by
->> > the phy driver to know we are using the old API behavior.
->> >
->> > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
->> > ---
->> 
->> Overall, I agree with the motivation and reasoning behind the patch. It
->> takes dedicated effort to build a good phy timestamping mechanism, so
->> this approach is good. I do have a question though. In this patch if we
->> set the phy as the default timestamp mechanism, does that mean for even
->> non-PTP applications, the phy will be used for timestamping when
->> hardware timestamping is enabled? If so, I think this might need some
->> thought because there are timing applications in general when a
->> timestamp closest to the MAC layer would be best.
->
-> Could you give some examples? It seems odd to me, the application
-> wants a less accurate timestamp?
->
-> Is it more about overheads? A MAC timestamp might be less costly than
-> a PHY timestamp?
+On 16.02.24 20:22:58, Dan Williams wrote:
+> Robert Richter wrote:
+> > The Linux CXL subsystem is built on the assumption that HPA == SPA.
+> > That is, the host physical address (HPA) the HDM decoder registers are
+> > programmed with are system physical addresses (SPA).
+> > 
+> > During HDM decoder setup, the DVSEC CXL range registers (cxl-3.1,
+> > 8.1.3.8) are checked if the memory is enabled and the CXL range is in
+> > a HPA window that is described in a CFMWS structure of the CXL host
+> > bridge (cxl-3.1, 9.18.1.3).
+> > 
+> > Now, if the HPA is not an SPA, the CXL range does not match a CFMWS
+> > window and the CXL memory range will be disabled then. The HDM decoder
+> > stops working which causes system memory being disabled and further a
+> > system hang during HDM decoder initialization, typically when a CXL
+> > enabled kernel boots.
+> > 
+> > Prevent a system hang and do not disable the HDM decoder if the
+> > decoder's CXL range is not found in a CFMWS window.
+> > 
+> > Note the change only fixes a hardware hang, but does not implement
+> > HPA/SPA translation. Support for this can be added in a follow on
+> > patch series.
+> > 
+> > Signed-off-by: Robert Richter <rrichter@amd.com>
+> > ---
+> >  drivers/cxl/core/pci.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> > index a0e7ed5ae25f..18616ca873e5 100644
+> > --- a/drivers/cxl/core/pci.c
+> > +++ b/drivers/cxl/core/pci.c
+> > @@ -478,8 +478,8 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+> >  	}
+> >  
+> >  	if (!allowed) {
+> > -		cxl_set_mem_enable(cxlds, 0);
+> > -		info->mem_enabled = 0;
+> > +		dev_err(dev, "Range register decodes outside platform defined CXL ranges.\n");
+> > +		return -ENXIO;
+> 
+> While testing I found this needs the following fixup:
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index e24ffae8135f..e9e6c81ce034 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -477,7 +477,7 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+>                 allowed++;
+>         }
+>  
+> -       if (!allowed) {
+> +       if (!allowed && info->mem_enabled) {
+>                 dev_err(dev, "Range register decodes outside platform defined CXL ranges.\n");
+>                 return -ENXIO;
+>         }
 
-It's a combination of both though I think primarily about line rate.
-This point is somewhat carried over from the previous discussions on
-this patch series in the last revision. I assume the device in question
-here cannot timestamp at the PHY at a high rate.
+The change looks correct to me, thanks for fixing.
 
-  https://lore.kernel.org/netdev/20231120093723.4d88fb2a@kernel.org/
+-Robert
 
->
-> Or is the application not actually doing PTP, it does not care about
-> the time of the packet on the wire, but it is more about media access
-> control? Maybe the applications you are talking about are misusing the
-> PTP API for something its not intended?
-
-So hardware timestamping is not a PTP specific API or application right?
-It's purely a socket option that is not tied to PTP (unless I am missing
-something here).
-
-  https://docs.kernel.org/networking/timestamping.html#timestamp-generation
-
-So you could use this information for other applications like congestion
-control where you do not want to limit the line rate using the PHY
-timestamping mechanism.
-
-In mlx5, we only steering PTP traffic to our PHY timestamping mechanism
-through a traffic matching logic.
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/drivers/net/ethernet/mellanox/mlx5/core/en/ptp.h?id=a6e0cb150c514efba4aaba4069927de43d80bb59#n71
-
-This is because we do not want to PHY/port timestamp timing related
-applications such as congestion control. I think it makes sense for
-specialized timestamping applications to instead use the ethtool ioctl
-to reconfigure using the PHY timestamps if the device is capable of PHY
-timestamping. (So have the change be in userspace application tools like
-linuxptp where precise but low <relative> rate timestamp information is
-ideal).
-
---
-Thanks,
-
-Rahul Rameshbabu
+> 
+> 
+> ...i.e. Linux should only give up if it does not understand an active
+> decode region.
+> 
+> Now this SPA/HPA mismatch will still cause problems later in region
+> creation flow, but that's a separate issue.
