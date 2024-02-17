@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8017CF0C;
-	Sat, 17 Feb 2024 16:03:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C88657BE;
+	Sat, 17 Feb 2024 16:10:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708185840; cv=none; b=Ghou7+at6vXgfdwcyq534stna8cpv/oD6LmHktCV1VF7PauqHyLAGB652UswFJg2Yxy0QxMrcG7a4VrSS+AJ+8f9vltaVZ2X1oSyvnzKRSRsrj8MusBEvIiy/ma6q1oHKJEEvabjp9DiLKp8hxh0R2cTG0CAZQkLdtJ+NiC4B98=
+	t=1708186217; cv=none; b=QhHKaVPBxf8A5SR5fE7k62dR7MnuvT1sbcyH+etIivWPOkF6zxxm0w2bev00mqpjlTf/EkPLh5+u70pH1R3tjuvSRpNr09fF3xEEwL6MQy4xVx/1Qi5uPSUVTXLvxRB6UCgsBS0yf7c7KHu7zDIMVkGaaya3WmFK7TaRw8ELUqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708185840; c=relaxed/simple;
-	bh=idhzi+lvLrvt3lT5g616HW/iowk9PphKg3c1Aoged8A=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LfkjB/ugwdnnUZRGcnxj4alhhxMG8kAosGuwrc+L7IH9n7KCckMABJtFV5F/upeoz6oPz+esXrRYzV2usekBzLWSg9RjRbhLmALIWkDaUezzXk6tbmWFjxKZ7PrEgFtKsc794z9+ONCV9RhUq/9VYOyLa1RChX4OhmgMydp1r3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FMR++vwp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708186217; c=relaxed/simple;
+	bh=jnnuiG2JA3w1jL3b+rX0XgYDDbHfBnfPxf8SR5AXRDY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UK61wsiE08w+SIfzPg7VTZbqbVRLd8Gt43qfDWq2lQPJ4LyvZgmXwF0VP1xvu4B2j4jtxTHMjEyjIJDGiE53tz2LGZKtEab5izCoSGr74Lk5/qHLm4G2GU4dIbR3iOdhWCsq98eOQW7LtaDLCxt8rw2kLYo7Fubc4+4cqpy0HWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TnOKWYAv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FMR++vwp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A0F2C433F1;
-	Sat, 17 Feb 2024 16:03:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1708185839;
-	bh=idhzi+lvLrvt3lT5g616HW/iowk9PphKg3c1Aoged8A=;
-	h=Date:From:To:Subject:References:In-Reply-To:From;
-	b=FMR++vwpuRjhvzYouPZTQJ5KJWYM0TwTC0nb755B+G+bwYdxWlLbaHIQV7JBpg2YR
-	 0a0zzXDV1+lxeYkN2o0N3gH0PValQXED+2/3OgWugYQ1hNbj9ECvghpQOL7Tp3yWzP
-	 QURJGJM+rh62m29co0urevEKR1ZiCd0qboOUSQiA=
-Date: Sat, 17 Feb 2024 17:03:57 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, linux-usb@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Revert "usb: typec: tcpm: reset counter when enter into
- unattached state after try role"
-Message-ID: <2024021724-festivity-divisible-0b32@gregkh>
-References: <20240215193352.1026707-1-megi@xff.cz>
- <2024021739-self-pencil-b932@gregkh>
- <ratkc4fo3mqwuzsbxsiwq54jclnarnjl3x7ts64elx6hguvbay@ihelujsnzd6i>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TnOKWYAv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BDA1C433C7;
+	Sat, 17 Feb 2024 16:10:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708186217;
+	bh=jnnuiG2JA3w1jL3b+rX0XgYDDbHfBnfPxf8SR5AXRDY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TnOKWYAvQgSl1jOt4DM2iJrH5X+Js5+PgWiKEnVlYkyFEcOmM+JKmfznrRVZwfyAK
+	 Oz3vZ/1OxKpjQaq/rW8w7wN3lEo97vJ9Ct+nfw7s/n8hlesL5z+Kgt5rl5WOZJBa+7
+	 7OLLZkb8L7JcqOFLv9w9YrYEAHeGHESslkwOidqQ0Kt2bX9UgaHCdfvLRucOPe58ms
+	 hhVS9SS2ZtbpMdwVXAE3KqsjIGxuDsBqj1VbEUlSukdW4Yy13JwqCbER2u1cuowApX
+	 AaXOwd9KR6JoD3Yi94cQSlP/4PipDzfjUm35sjSGTVR2l1AXW2lR2BEFuGvRg+foEK
+	 NuotaXNE7WJDQ==
+Date: Sat, 17 Feb 2024 23:57:14 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: AnnanLiu <annan.liu.xdu@outlook.com>
+Cc: chao.wei@sophgo.com, unicorn_wang@outlook.com, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] riscv: dts: sophgo: add watchdog dt node for CV1800
+Message-ID: <ZdDXWkibFjKvXJPe@xhacker>
+References: <DM6PR20MB2316366FC9ADCBC7B6E9C289AB7A2@DM6PR20MB2316.namprd20.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,85 +45,89 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ratkc4fo3mqwuzsbxsiwq54jclnarnjl3x7ts64elx6hguvbay@ihelujsnzd6i>
+In-Reply-To: <DM6PR20MB2316366FC9ADCBC7B6E9C289AB7A2@DM6PR20MB2316.namprd20.prod.outlook.com>
 
-On Sat, Feb 17, 2024 at 04:40:21PM +0100, Ondřej Jirman wrote:
-> On Sat, Feb 17, 2024 at 04:32:54PM +0100, Greg Kroah-Hartman wrote:
-> > On Thu, Feb 15, 2024 at 08:33:50PM +0100, Ondřej Jirman wrote:
-> > > From: Ondrej Jirman <megi@xff.cz>
-> > > 
-> > > The reverted commit makes the state machine only ever go from SRC_ATTACH_WAIT
-> > > to SNK_TRY in endless loop when toggling. After revert it goes to SRC_ATTACHED
-> > > after initially trying SNK_TRY earlier, as it should for toggling to ever detect
-> > > the power source mode and the port is again able to provide power to attached
-> > > power sinks.
-> > > 
-> > > This reverts commit 2d6d80127006ae3da26b1f21a65eccf957f2d1e5.
-> > > ---
-> > >  drivers/usb/typec/tcpm/tcpm.c | 3 ---
-> > >  1 file changed, 3 deletions(-)
-> > > 
-> > > See https://lore.kernel.org/all/odggrbbgjpardze76qiv57mw6tllisyu5sbrta37iadjzwamcv@qr3ubwnlzqqt/
-> > > for more.
-> > > 
-> > > diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-> > > index f7d7daa60c8d..295ae7eb912c 100644
-> > > --- a/drivers/usb/typec/tcpm/tcpm.c
-> > > +++ b/drivers/usb/typec/tcpm/tcpm.c
-> > > @@ -3743,9 +3743,6 @@ static void tcpm_detach(struct tcpm_port *port)
-> > >  	if (tcpm_port_is_disconnected(port))
-> > >  		port->hard_reset_count = 0;
-> > >  
-> > > -	port->try_src_count = 0;
-> > > -	port->try_snk_count = 0;
-> > > -
-> > >  	if (!port->attached)
-> > >  		return;
-> > >  
-> > > -- 
-> > > 2.43.0
-> > > 
-> > > 
-> > 
-> > Hi,
-> > 
-> > This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-> > a patch that has triggered this response.  He used to manually respond
-> > to these common problems, but in order to save his sanity (he kept
-> > writing the same thing over and over, yet to different people), I was
-> > created.  Hopefully you will not take offence and will fix the problem
-> > in your patch and resubmit it so that it can be accepted into the Linux
-> > kernel tree.
-> > 
-> > You are receiving this message because of the following common error(s)
-> > as indicated below:
-> > 
-> > - Your patch does not have a Signed-off-by: line.  Please read the
-> >   kernel file, Documentation/process/submitting-patches.rst and resend
-> >   it after adding that line.  Note, the line needs to be in the body of
-> >   the email, before the patch, not at the bottom of the patch or in the
-> >   email signature.
-> > 
-> > 
-> > If you wish to discuss this problem further, or you have questions about
-> > how to resolve this issue, please feel free to respond to this email and
-> > Greg will reply once he has dug out from the pending patches received
-> > from other developers.
+On Thu, Jan 25, 2024 at 05:46:40PM +0800, AnnanLiu wrote:
+> Add the watchdog device tree node to cv1800 SoC.
 > 
-> It's a mechanically generated revert of upstream patch. It has no authorship.
-> I did not write it, machine did. :)
+> Signed-off-by: AnnanLiu <annan.liu.xdu@outlook.com>
+> ---
+> This patch depends on the clk driver and reset driver.
+> Clk driver link:
+> https://lore.kernel.org/all/IA1PR20MB49539CDAD9A268CBF6CA184BBB9FA@IA1PR20MB4953.namprd20.prod.outlook.com/
+> Reset driver link:
+> https://lore.kernel.org/all/20231113005503.2423-1-jszhang@kernel.org/
+
+I will update reset series soon
+
 > 
-> But I can add a sign off for the commit message I made:
+> Changes since v1:
+> - Change the name of the watchdog from watchdog0 to watchdog.
+> - Change the status of watchdog.
+> v1 link:
+> https://lore.kernel.org/all/DM6PR20MB23160B8499CC2BFDAE6FCACDAB9EA@DM6PR20MB2316.namprd20.prod.outlook.com/
 > 
-> Signed-of-by: Ondrej Jirman <megi@xff.cz>
+> 
+>  arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts |  4 ++++
+>  arch/riscv/boot/dts/sophgo/cv1800b.dtsi          | 16 ++++++++++++++++
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts b/arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts
+> index 3af9e34b3bc7..75469161bfff 100644
+> --- a/arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts
+> +++ b/arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts
+> @@ -36,3 +36,7 @@ &osc {
+>  &uart0 {
+>  	status = "okay";
+>  };
+> +
+> +&watchdog {
+> +	status = "okay";
+> +};
+> diff --git a/arch/riscv/boot/dts/sophgo/cv1800b.dtsi b/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
+> index aec6401a467b..03ca32cd37b6 100644
+> --- a/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
+> +++ b/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: (GPL-2.0 OR MIT)
+>  /*
+>   * Copyright (C) 2023 Jisheng Zhang <jszhang@kernel.org>
+> + * Copyright (C) 2024 Annan Liu <annan.liu.xdu@outlook.com>
 
-You have to do so.
+No, I don't think every commit author needs to add this line.
 
-And you need a Fixes: and cc: stable tag too, right?
+>   */
+>  
+>  #include <dt-bindings/interrupt-controller/irq.h>
+> @@ -103,6 +104,21 @@ uart4: serial@41c0000 {
+>  			status = "disabled";
+>  		};
+>  
+> +		watchdog: watchdog@3010000{
+> +			compatible = "snps,dw-wdt";
+> +			reg = <0x3010000 0x100>;
+> +			interrupts = <58 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&pclk>;
+> +			resets = <&rst RST_WDT>;
+> +			status = "disabled";
+> +		};
+> +
+> +		pclk: pclk {
 
-Please fix up and send a v2 properly.
-
-thanks,
-
-greg k-h
+what's this clk?
+> +			#clock-cells = <0>;
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <25000000>;
+> +		};
+> +
+>  		plic: interrupt-controller@70000000 {
+>  			compatible = "sophgo,cv1800b-plic", "thead,c900-plic";
+>  			reg = <0x70000000 0x4000000>;
+> -- 
+> 2.34.1
+> 
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
