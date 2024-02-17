@@ -1,137 +1,214 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7959F23D0;
-	Sat, 17 Feb 2024 05:53:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82D61CD03;
+	Sat, 17 Feb 2024 05:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708149213; cv=none; b=tZljfwliuAmfQivT09ICGlB+B2i7EGYagMINZZH8Ye8wvXBnrx/hdEsskzMtbxfqkA1hclZhp5/dcYwXfmRxxc+IyTSjvFUHAakD90Fu+eCvylL925/iIg5e5GLB7V4w4hHTJZWc6z3tJcDgi0nPAbUJZTtF9WEJm68wzBQ4uG0=
+	t=1708149312; cv=none; b=PjnZaCIMakIAmRIML+qQTyfz/eKscBoF4z+sq3TKqiZ7RDGjYRSP9hBY6G2KS/X5F/SIa4so3YixHrUEzUdjWtfkTv3x0bO7M2u1UZ5tzG6kCVB4rEoXQDuVGxf7X2ii/YQ+lSBfFDIvBMEd4RGcw8QfYf5vZvvSIMVXE+QgGVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708149213; c=relaxed/simple;
-	bh=J97O+8s7zLrg4/007e5d7/fK2OrxoqmwttL4iP9Zm9g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=U5HRWDzsF+5+dgGAZEr3SkLy5sLz5hPVzQ2feOBu7LB+dTy0R0pfXpJRnBaatEhkD2UP4ToktYfzo/YWRcBn8gz5zTDS2P/5GXcc5D5I9QtNIm2uC6XAqWsYs+nZdOZJURb5YuSahD+g6RTUq7xNMNK6Gvd1HIl4Hy4Z1Y9s2FU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jsGZ3Lum; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1708149312; c=relaxed/simple;
+	bh=zRUd7yREBkG9fojxxpCwFR+ZH4UPtylxuQpNSInrd68=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HNa4zHUtq7dmRe/2OikHNdlzktRz1XnMPd2pdMJdhG1FO2+EUz4PLhD0nbNABOopGh/acX82VVu6H4XhiQ/T893EokADftqk7smeUngD+s809xA02qAN+npncmULMXBf8qXUz/2bT5AcXgsX7IYN4mKhFuDbCQ61HT8qWbiC8ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uQ1ZkXyf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jsGZ3Lum"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41H5rSt1006585;
-	Sat, 17 Feb 2024 05:53:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=XOzeWI9vZsx3HRpuXAkLJFYxgRaUp8c1O6F9yf9gJFI=; b=js
-	GZ3LumrrUvDqo5kk5yi1w99j0Klt2WZx7ZzygbuSKTdbwLlyfNg8/Lqom5XauIkh
-	WGlsDEeUxysPklVXJ9DTsUACcmUBogPVJX5miLT3EnSWw0Vzc3K9UUiSdUAeUt2F
-	MaoiDXlvKlZymonVse+rQFGdvtj8w5SAueaWc6lzh3o418nwsyd8ge3Myku5XRD8
-	mKULwU2YwAMay7adLmQ6RaefE99tCudZBDBBSNfLBExhjcHvLX4FgQywtz367Uyk
-	fBmWdiotw6ocktavY1uv+Okw8LQMBw3pNRUNlSSy2fikSEUVyMGRh4jUbYAwqUgK
-	47y0VenroHo2w3aaxLTQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wamd505pr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 17 Feb 2024 05:53:27 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41H5rQmJ001810
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 17 Feb 2024 05:53:27 GMT
-Received: from [10.216.0.128] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 16 Feb
- 2024 21:53:23 -0800
-Message-ID: <0870fec7-e47d-40d5-a782-d2fc638c3b05@quicinc.com>
-Date: Sat, 17 Feb 2024 11:23:19 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uQ1ZkXyf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8D62C433F1;
+	Sat, 17 Feb 2024 05:55:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708149311;
+	bh=zRUd7yREBkG9fojxxpCwFR+ZH4UPtylxuQpNSInrd68=;
+	h=From:To:Cc:Subject:Date:From;
+	b=uQ1ZkXyfKjkIl/6pdVqjIvudxuvRkWyWIwOXR/WWo0YsF6v6M7SJL+fae1/uDSQvs
+	 WZDiQ9uHCPFPVQxZyB7d/x5mwp2AVUDTeGlCP+3h6eSe1Y0LucWaoQU8sxuAx+OGm/
+	 RqFMmNTyWTq4odftpgr/xigJNpCUYM7A9KU2q7l4BmKEL3xO1uJjUfpjS21xkFctgf
+	 PeUSlVnTzhYcLwV6hRQGwUYL3lXbFbnf7Jis5Ppuae7pYtZKz5cGsM1s/QmfG1S0OJ
+	 oR2C/CTzB9yTT2Dv4aj/4rX/pv6zkS47Rjo9K4iVtavrKTpLv55g4o2VaRBg+VXXXX
+	 Bcrq0zmq1DyPw==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Subject: [PATCH 1/2] kbuild: change tool coverage variables to take the path relative to $(obj)
+Date: Sat, 17 Feb 2024 14:55:03 +0900
+Message-Id: <20240217055504.2059803-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] usb-storage: Add US_FL_FIX_INQUIRY quirk for Intenso
- Twist Line USB 3.2
-Content-Language: en-US
-To: Alan Stern <stern@rowland.harvard.edu>
-CC: <tern@rowland.harvard.edu>, <gregkh@linuxfoundation.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_ppratap@quicinc.com>, <quic_wcheng@quicinc.com>,
-        <quic_jackp@quicinc.com>
-References: <20240214111721.18346-1-quic_selvaras@quicinc.com>
- <39cd8789-7764-4904-8cb9-21f239b3c04c@rowland.harvard.edu>
-From: Selvarasu Ganesan <quic_selvaras@quicinc.com>
-In-Reply-To: <39cd8789-7764-4904-8cb9-21f239b3c04c@rowland.harvard.edu>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: AmRIWnTJhhN0nEY74VTqZbAjN3BHrEnw
-X-Proofpoint-GUID: AmRIWnTJhhN0nEY74VTqZbAjN3BHrEnw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-17_02,2024-02-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- malwarescore=0 mlxlogscore=885 mlxscore=0 suspectscore=0 bulkscore=0
- spamscore=0 clxscore=1015 lowpriorityscore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402170042
+Content-Transfer-Encoding: 8bit
 
-Hi Alan,
+Commit 54b8ae66ae1a ("kbuild: change *FLAGS_<basetarget>.o to take the
+path relative to $(obj)") changed the syntax of per-file compiler flags.
 
-On 2/14/2024 8:34 PM, Alan Stern wrote:
-> On Wed, Feb 14, 2024 at 03:17:21AM -0800, Selvarasu Ganesan wrote:
->> The Intenso Twist Line USB 3.2 flash drive fails to respond to the
->> INQUIRY data stage request for a 36 bulk in request from the host. This
->> commit adds the US_FL_FIX_INQUIRY flag to fake the INQUIRY command for
->> this device, preventing a storage enumeration failure.
->>
->> USBMON log:
->> ffffff8a3ee06a00 3192811972 S Ci:2:009:0 s c0 33 0000 0000 0002 2 <
->> ffffff8a3ee06a00 3192862051 C Ci:2:009:0 -2 0
->> ffffff8a3ee06a00 3192862185 S Ci:2:009:0 s c0 33 0000 0000 0002 2 <
->> ffffff8a3ee06a00 3192912299 C Ci:2:009:0 -2 0
->> ffffff8a3ee06e00 3193040068 S Ci:2:003:0 s c1 04 0930 bf80 0004 4 <
->> ffffff8a3ee06e00 3193040214 C Ci:2:003:0 0 4 = 880b0700
->> ffffff8a3ee06e00 3193040279 S Ci:2:002:0 s a3 00 0000 0003 0004 4 <
->> ffffff8a3ee06e00 3193040427 C Ci:2:002:0 0 4 = 00010000
->> ffffff8a3ee06e00 3193040470 S Ci:2:002:0 s a3 00 0000 0004 0004 4 <
->> ffffff8a3ee06e00 3193040672 C Ci:2:002:0 0 4 = 03050000
->> ffffff892b309500 3193824092 S Ci:2:009:0 s a1 fe 0000 0000 0001 1 <
->> ffffff892b309500 3193824715 C Ci:2:009:0 0 1 = 00
->> ffffff892b309500 3193825060 S Bo:2:009:2 -115 31 = 55534243 01000000 24000000 80000612 00000024 00000000 00000000 000000
->> ffffff892b309500 3193825150 C Bo:2:009:2 0 31 >
->> ffffff8b8419d400 3193825737 S Bi:2:009:1 -115 36 <
->> ffffff8a3ee06400 3194040175 S Ci:2:003:0 s c1 04 0930 bf80 0004 4 <
->> ffffff8a3ee06400 3194040372 C Ci:2:003:0 0 4 = 880b0700
->> ffffff89bee5b100 3194040591 S Ci:2:002:0 s a3 00 0000 0003 0004 4 <
->> ffffff89bee5b100 3194040681 C Ci:2:002:0 0 4 = 00010000
->> ffffff89bee5b100 3194040999 S Ci:2:002:0 s a3 00 0000 0004 0004 4 <
->> ffffff89bee5b100 3194041083 C Ci:2:002:0 0 4 = 03050000
->> ffffff8a3ee06a00 3195040349 S Ci:2:003:0 s c1 04 0930 bf80 0004 4 <
-> 
-> This is very surprising.  A mass-storage device that doesn't respond to
-> INQUIRY commands won't work with Windows or Mac OSX.  Have you tried
-> testing the device with those operating systems to see what they send
-> and how it responds?
-> 
-> Alan Stern
+The situation is the same for the following variables:
 
-Thanks for your review comments.
-To reconfirm, we have tested this device with Windows and its working
-fine. We noticed that the INQUIRY command only fails when this device is
-connected to our DUT via a USB2.0 hub.
-We also tested various Intensio mass storage devices and observed the
-same behavior.
-We have confirmed that there are no issues with our DUT setup as we have
-tested different mass storage devices (such as Kingston usb3.2, Samsung
-ssd 3.2) and they are working fine. We also observed responses for the
-INQUIRY command for other working mass storage devcies.
-We suspect that this issue is specific to Intensio devices when used
-with a USB2.0 hub on a Linux host. We are still investigating this issue
-on other hosts using an external hub.
+  OBJECT_FILES_NON_STANDARD_<basetarget>.o
+  GCOV_PROFILE_<basetarget>.o
+  KASAN_SANITIZE_<basetarget>.o
+  KMSAN_SANITIZE_<basetarget>.o
+  KMSAN_ENABLE_CHECKS_<basetarget>.o
+  UBSAN_SANITIZE_<basetarget>.o
+  KCOV_INSTRUMENT_<basetarget>.o
+  KCSAN_SANITIZE_<basetarget>.o
+  KCSAN_INSTRUMENT_BARRIERS_<basetarget>.o
 
-Thanks,
-Selva
+The <basetarget> is the filename of the target with its directory and
+suffix stripped.
+
+This syntax comes into a trouble when two files with the same basename
+appear in one Makefile, for example:
+
+  obj-y += dir1/foo.o
+  obj-y += dir2/foo.o
+  OBJECT_FILES_NON_STANDARD_foo.o := y
+
+OBJECT_FILES_NON_STANDARD_foo.o is applied to both dir1/foo.o and
+dir2/foo.o. This syntax is not flexbile enough to handle cases where
+one of them is a standard object, but the other is not.
+
+It is more sensible to use the relative path to the Makefile, like this:
+
+  obj-y += dir1/foo.o
+  OBJECT_FILES_NON_STANDARD_dir1/foo.o := y
+  obj-y += dir2/foo.o
+  OBJECT_FILES_NON_STANDARD_dir2/foo.o := y
+
+To maintain the current behavior, I made adjustments to two Makefiles:
+
+ - arch/x86/entry/vdso/Makefile, which compiles vclock_gettime.o and
+   vdso32/vclock_gettime.o
+
+ - arch/x86/kvm/Makefile, which compiles vmx/vmenter.o and svm/vmenter.o
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ arch/x86/entry/vdso/Makefile |  2 ++
+ arch/x86/kvm/Makefile        |  3 ++-
+ scripts/Makefile.build       |  2 +-
+ scripts/Makefile.lib         | 16 ++++++++--------
+ 4 files changed, 13 insertions(+), 10 deletions(-)
+
+diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+index 7a97b17f28b7..148adfdb2325 100644
+--- a/arch/x86/entry/vdso/Makefile
++++ b/arch/x86/entry/vdso/Makefile
+@@ -9,7 +9,9 @@ include $(srctree)/lib/vdso/Makefile
+ # Sanitizer runtimes are unavailable and cannot be linked here.
+ KASAN_SANITIZE			:= n
+ KMSAN_SANITIZE_vclock_gettime.o := n
++KMSAN_SANITIZE_vdso32/vclock_gettime.o	:= n
+ KMSAN_SANITIZE_vgetcpu.o	:= n
++KMSAN_SANITIZE_vdso32/vgetcpu.o	:= n
+ 
+ UBSAN_SANITIZE			:= n
+ KCSAN_SANITIZE			:= n
+diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
+index 475b5fa917a6..a88bb14266b6 100644
+--- a/arch/x86/kvm/Makefile
++++ b/arch/x86/kvm/Makefile
+@@ -4,7 +4,8 @@ ccflags-y += -I $(srctree)/arch/x86/kvm
+ ccflags-$(CONFIG_KVM_WERROR) += -Werror
+ 
+ ifeq ($(CONFIG_FRAME_POINTER),y)
+-OBJECT_FILES_NON_STANDARD_vmenter.o := y
++OBJECT_FILES_NON_STANDARD_vmx/vmenter.o := y
++OBJECT_FILES_NON_STANDARD_svm/vmenter.o := y
+ endif
+ 
+ include $(srctree)/virt/kvm/Makefile.kvm
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 4971f54c855e..256db2a0e984 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -214,7 +214,7 @@ endif # CONFIG_FTRACE_MCOUNT_USE_RECORDMCOUNT
+ # 'OBJECT_FILES_NON_STANDARD_foo.o := 'y': skip objtool checking for a file
+ # 'OBJECT_FILES_NON_STANDARD_foo.o := 'n': override directory skip for a file
+ 
+-is-standard-object = $(if $(filter-out y%, $(OBJECT_FILES_NON_STANDARD_$(basetarget).o)$(OBJECT_FILES_NON_STANDARD)n),y)
++is-standard-object = $(if $(filter-out y%, $(OBJECT_FILES_NON_STANDARD_$(target-stem).o)$(OBJECT_FILES_NON_STANDARD)n),y)
+ 
+ $(obj)/%.o: objtool-enabled = $(if $(is-standard-object),$(if $(delay-objtool),$(is-single-obj-m),y))
+ 
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index b35d39022a30..328c0d77ed48 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -154,7 +154,7 @@ _cpp_flags     = $(KBUILD_CPPFLAGS) $(cppflags-y) $(CPPFLAGS_$(target-stem).lds)
+ #
+ ifeq ($(CONFIG_GCOV_KERNEL),y)
+ _c_flags += $(if $(patsubst n%,, \
+-		$(GCOV_PROFILE_$(basetarget).o)$(GCOV_PROFILE)$(CONFIG_GCOV_PROFILE_ALL)), \
++		$(GCOV_PROFILE_$(target-stem).o)$(GCOV_PROFILE)$(CONFIG_GCOV_PROFILE_ALL)), \
+ 		$(CFLAGS_GCOV))
+ endif
+ 
+@@ -165,29 +165,29 @@ endif
+ ifeq ($(CONFIG_KASAN),y)
+ ifneq ($(CONFIG_KASAN_HW_TAGS),y)
+ _c_flags += $(if $(patsubst n%,, \
+-		$(KASAN_SANITIZE_$(basetarget).o)$(KASAN_SANITIZE)y), \
++		$(KASAN_SANITIZE_$(target-stem).o)$(KASAN_SANITIZE)y), \
+ 		$(CFLAGS_KASAN), $(CFLAGS_KASAN_NOSANITIZE))
+ endif
+ endif
+ 
+ ifeq ($(CONFIG_KMSAN),y)
+ _c_flags += $(if $(patsubst n%,, \
+-		$(KMSAN_SANITIZE_$(basetarget).o)$(KMSAN_SANITIZE)y), \
++		$(KMSAN_SANITIZE_$(target-stem).o)$(KMSAN_SANITIZE)y), \
+ 		$(CFLAGS_KMSAN))
+ _c_flags += $(if $(patsubst n%,, \
+-		$(KMSAN_ENABLE_CHECKS_$(basetarget).o)$(KMSAN_ENABLE_CHECKS)y), \
++		$(KMSAN_ENABLE_CHECKS_$(target-stem).o)$(KMSAN_ENABLE_CHECKS)y), \
+ 		, -mllvm -msan-disable-checks=1)
+ endif
+ 
+ ifeq ($(CONFIG_UBSAN),y)
+ _c_flags += $(if $(patsubst n%,, \
+-		$(UBSAN_SANITIZE_$(basetarget).o)$(UBSAN_SANITIZE)$(CONFIG_UBSAN_SANITIZE_ALL)), \
++		$(UBSAN_SANITIZE_$(target-stem).o)$(UBSAN_SANITIZE)$(CONFIG_UBSAN_SANITIZE_ALL)), \
+ 		$(CFLAGS_UBSAN))
+ endif
+ 
+ ifeq ($(CONFIG_KCOV),y)
+ _c_flags += $(if $(patsubst n%,, \
+-	$(KCOV_INSTRUMENT_$(basetarget).o)$(KCOV_INSTRUMENT)$(CONFIG_KCOV_INSTRUMENT_ALL)), \
++	$(KCOV_INSTRUMENT_$(target-stem).o)$(KCOV_INSTRUMENT)$(CONFIG_KCOV_INSTRUMENT_ALL)), \
+ 	$(CFLAGS_KCOV))
+ endif
+ 
+@@ -197,12 +197,12 @@ endif
+ #
+ ifeq ($(CONFIG_KCSAN),y)
+ _c_flags += $(if $(patsubst n%,, \
+-	$(KCSAN_SANITIZE_$(basetarget).o)$(KCSAN_SANITIZE)y), \
++	$(KCSAN_SANITIZE_$(target-stem).o)$(KCSAN_SANITIZE)y), \
+ 	$(CFLAGS_KCSAN))
+ # Some uninstrumented files provide implied barriers required to avoid false
+ # positives: set KCSAN_INSTRUMENT_BARRIERS for barrier instrumentation only.
+ _c_flags += $(if $(patsubst n%,, \
+-	$(KCSAN_INSTRUMENT_BARRIERS_$(basetarget).o)$(KCSAN_INSTRUMENT_BARRIERS)n), \
++	$(KCSAN_INSTRUMENT_BARRIERS_$(target-stem).o)$(KCSAN_INSTRUMENT_BARRIERS)n), \
+ 	-D__KCSAN_INSTRUMENT_BARRIERS__)
+ endif
+ 
+-- 
+2.40.1
+
