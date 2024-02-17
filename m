@@ -1,165 +1,159 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC9B1CF8B;
-	Sat, 17 Feb 2024 04:51:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F25DF1C292
+	for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 04:53:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708145503; cv=none; b=A08wxn7k5odK9mWA0Zpm4XCJrlYQlMs3geU3Yes+c8gggnaPi+uc+O00cVjxrPsLb4DcWV2rnofXL0WXLB8N8HfvARQ2wb6Rdc6B4PlfGkdp63ppvfWyKIe+6+IdNshLHuuT3g+4Sbawn8ZeiNxsVlvtT2RMhGiIA1p4DwMdQUA=
+	t=1708145619; cv=none; b=EHmGqgwjvLq+waBCGf5vZM7UYDUETGEOtjA6Cb5fey+fbIkbGdmA55vYTL5UMLjKNngiu4tx872EvRQA83wM5uI2c70lA7u82Vd/p+kbBDjLHrL8XMVyVfikzBLS5bvNujtwwZTi/CfwPadh4VttQIfjU+qZtNGWpq4zTy8KCaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708145503; c=relaxed/simple;
-	bh=OXsYoToIjgeSRYAs9X9E0bo5WCdOjPMMPVgmJGURH78=;
+	s=arc-20240116; t=1708145619; c=relaxed/simple;
+	bh=kuoh45Evnx5JyHfck+cgZ7vm+rNwO3DEfwaBM/CzXtM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kCEQojNmjLnpL671iBNqw9ABIKqpozRsEV+tVE/Q4LtYWLqSHGk/X6uHkD3WyPPIL9gakE5Tgtf7ydLO0P8NYc9lB3i3TdTPpjB7lWcI/YwRRdlBDT4G+kIw3maKI9UbNxqD5CZ22kXamFGxoYDqgL16jAZCZzaTHXxpqJ76+UY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GhD1c8DO; arc=none smtp.client-ip=209.85.166.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version; b=cFXRKU0xBqMfwEhArIe11NLEozt6LRKIaDHx2VLlk2Q5koTwQpblxb4DrwwCSGTTDfxIPll8FPFWUP282AwtJACGcvHbplFJk1dN4xEHNqmH7ZKLKkSOpvOe9/PL6AVtjK2Y545+ZmGFBntRKinUUfTz95TvIl9z05eZThJHR54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AsKyh1i7; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GhD1c8DO"
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7bf7e37dc60so145971739f.3;
-        Fri, 16 Feb 2024 20:51:41 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AsKyh1i7"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d94b222a3aso26934955ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 20:53:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708145500; x=1708750300; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1708145617; x=1708750417; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kW/qQndLj7MYeSMYgAPMliKXg25U647vW1M3U8+Bgew=;
-        b=GhD1c8DOfSx/cvZLwz0Xk2k2Et3ZwFV169yH93IYF0UPQWfZdf8zNSH4tse5ipK53w
-         PKgh/Y4f5q9CrylOtc6a+ot+k76IzBr7Pr1BBYQGGEhDOyUNP9+kJryEF+PB7nAeB0YU
-         1XPpJFiz+JJL/EEKUE5ZQ4cHrH7FgEDOnkI8XeOob610Ms1B4a91eTJMKeSJ3Wu3iDxe
-         uFQ9r1Tu66qq01zgid2EFxz7bAaQIFYjxAIb3EY/TrwZYvDeVtROdbayCuvM0cstN3wi
-         Rk4pX4yvEKMW4EuSvF+pvd5CBrt5P+VqvZzEmdIVWOVA+hNoBbjdfnYskS9i/dy7qCiV
-         6tPQ==
+        bh=7qdAfjTcONjZuFbVJIFLeD6GXhLkNJkyoK1rJKpx18g=;
+        b=AsKyh1i7gSiAco917JNW/VbpJGqDbRvPapj4xwCbAVEXUgv6Kx5YoLEKMgnpw5bjUZ
+         jV4ziR78LhoSc2RsaRabVjHVK155ztqZz8uFLrAqoIpEnjNN+jwT+ywFBQDmZzCc6MDS
+         wxq9lPFjEGNh8pKxLbSq+SZNrMXh/3aefHB/Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708145500; x=1708750300;
+        d=1e100.net; s=20230601; t=1708145617; x=1708750417;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kW/qQndLj7MYeSMYgAPMliKXg25U647vW1M3U8+Bgew=;
-        b=eEkoOAZ4HiQCxgEs6ZCh6W4CIsFtC45qdbB2RUoSrBZawozVhrDAgH2p08nHtCiqLM
-         l7CyI3Mmb4+FVR/El+yWQ+TFKLo1/saHdl8UMA2gDIk7N3PoFK7NDA+j/lDhpRIevn35
-         tF/p6zKCO/XpKv4/g1M9ZcLwMd8TkSK0BRE4G4YRwIUc53mTtwgH+2ikP2eLR3cHv48M
-         y23t52HCqxYAbbia1YYAJUqgvbcVJpZH5rPsLfB6Z2IiXOUx3XmyTTMDpFDlib2mKgY3
-         3b2hn72EDMPcdtTwZkhngdmNZBB4FCAqoVgyQ97bvERgiT7UTeQJIQjsNPBnAiTjaGXi
-         kebw==
-X-Forwarded-Encrypted: i=1; AJvYcCUoPilh/j3il++8x/aM5Jx/3oEK63zsBP7p9x3ZA7XqZ8mS9dhAArvT+viR872gUeD1WZVW0fqqVH0KYmGcGJDej6L1uhS5jJnS0/hvlcsc4mnIADc5+/7s4Gr0Eajgl4njYoxMxlYkCMkc
-X-Gm-Message-State: AOJu0YwmO9H0cM0ovuKrS5RA65sDrh+8QGuKeyOoEyZSjeg/6nH07OLh
-	cKTAyojN1zDThOQ1ynxUCQFau2RmX0SkgLSsGdDt+Mz/L+ttbsX0
-X-Google-Smtp-Source: AGHT+IEOW4DS9BP7Ysw7VmEnIq9KlLgS920AXTvAFRO+XZXAmVk4YcCGu0RWQu1NKlAdLNbOmorNFg==
-X-Received: by 2002:a05:6e02:13e2:b0:363:c63a:7975 with SMTP id w2-20020a056e0213e200b00363c63a7975mr6639713ilj.24.1708145500701;
-        Fri, 16 Feb 2024 20:51:40 -0800 (PST)
-Received: from barry-desktop.hub ([2407:7000:8942:5500:e82e:22f2:1bdb:989f])
-        by smtp.gmail.com with ESMTPSA id n14-20020a635c4e000000b005dc2ca5b667sm610703pgm.10.2024.02.16.20.51.34
+        bh=7qdAfjTcONjZuFbVJIFLeD6GXhLkNJkyoK1rJKpx18g=;
+        b=kF1N8Gzuii0Ppskq66EImmqgNyxWXndfmOCG9LJoLXxz5aA+awWZIQ0rNgkf4BgfnH
+         KLi9tB09u2HdQ9GA301tPBNcxShcUoQ37fzPY8CmvzANlHwW9eun86Mj+lB2Gw+E7Gs8
+         YGZDMggSGkfWGBZkRd8weiUt/uzBmf7KzwJ7PMoPjY+gRUAJyNYSYpG4O5NJLyDJ7Jbm
+         Vz9J4xhVNNjd9pC+Re8M1IZzs2D5G3Aquq4ef7puYG1z/J3Y02f+XoUcLrz58XPfgwRM
+         0N2dMyWYS+pc9SyFA9J/NeWqSMJVBuhv8dTUaAVSHgRyeNVGAcGjV0D1og++NYmZB+WI
+         vQ0w==
+X-Forwarded-Encrypted: i=1; AJvYcCXwydd++XM2hUc8j1Rdz83+0IKU7/tzumrpSiY66iTgBJ+SSpn81zTurpaozb8qpLhJB3kgaAi2QCqs5h3PQFhTmUwqFbI/jNf1apQd
+X-Gm-Message-State: AOJu0YzsZDZhMpoShsq9CXF1cNhdccFD1013p/6NSG5VMCUm+WnR312F
+	WkzgWzi7dxOs4A2a8JXGWUdIV/BHGVp46ZYuzqTIkIVhGSNBkvRxjfB66KwunQ==
+X-Google-Smtp-Source: AGHT+IEEA7cH25c2SnuHT2lLGBTXjPK22F4JueEyhr7TFgx+E6bytot0sa7AxNKmXd0gd+XwMXTAbQ==
+X-Received: by 2002:a17:902:d2c2:b0:1db:2d82:e803 with SMTP id n2-20020a170902d2c200b001db2d82e803mr8044720plc.20.1708145617246;
+        Fri, 16 Feb 2024 20:53:37 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id w12-20020a170902d3cc00b001db398d13ecsm621742plb.258.2024.02.16.20.53.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 20:51:40 -0800 (PST)
-From: Barry Song <21cnbao@gmail.com>
-To: akpm@linux-foundation.org,
-	davem@davemloft.net,
-	hannes@cmpxchg.org,
-	herbert@gondor.apana.org.au,
-	linux-crypto@vger.kernel.org,
-	linux-mm@kvack.org,
-	nphamcs@gmail.com,
-	yosryahmed@google.com,
-	zhouchengming@bytedance.com
-Cc: chriscli@google.com,
-	chrisl@kernel.org,
-	ddstreet@ieee.org,
+        Fri, 16 Feb 2024 20:53:36 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: linux-hardening@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Cezary Rojewski <cezary.rojewski@intel.com>,
+	Puyou Lu <puyou.lu@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>,
+	Nick Desaulniers <ndesaulniers@google.com>,
 	linux-kernel@vger.kernel.org,
-	sjenning@redhat.com,
-	vitaly.wool@konsulko.com,
-	Barry Song <v-songbaohua@oppo.com>
-Subject: [PATCH v3 3/3] crypto: scompress: remove memcpy if sg_nents is 1
-Date: Sat, 17 Feb 2024 17:51:02 +1300
-Message-Id: <20240217045102.55339-4-21cnbao@gmail.com>
+	kunit-dev@googlegroups.com
+Subject: [PATCH v3 2/5] fortify: Allow KUnit test to build without FORTIFY
+Date: Fri, 16 Feb 2024 20:48:25 -0800
+Message-Id: <20240217045335.1526675-2-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240217045102.55339-1-21cnbao@gmail.com>
-References: <20240217045102.55339-1-21cnbao@gmail.com>
+In-Reply-To: <20240217043535.make.664-kees@kernel.org>
+References: <20240217043535.make.664-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2099; i=keescook@chromium.org;
+ h=from:subject; bh=kuoh45Evnx5JyHfck+cgZ7vm+rNwO3DEfwaBM/CzXtM=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl0DqcqxsshKhN+XVitP/aPp0wIqPepQH/G0HTU
+ LaFc4bmVtyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZdA6nAAKCRCJcvTf3G3A
+ JsyxD/9NuT75fNho8Z/IYQI3bIaDR5+SVoHtJn460dJU895HRVECqQDQK0FH10OwLUPmtsWRNLO
+ e3AY4jCBlmVXEUvk312YO4mVGGKOwIrKn4qRGfuwrYIg6di0KWySPoUJlJmKuEeC0crqblr2VCm
+ 9KdKwIM8rpCcWtVDnfpUdTHtEJDp4t8GB8jwnp3gJQbOgexoO1iHwV6eOQy6pJvdEFaPzv+pcqx
+ 5b9SD2CIjBFPyY1unxleXUEbKZC7kOkSzcCyEQvAK7UgB7cH+7EhKyaXlPyVrou72mOJUhDHKv0
+ bR/kWpMi+iQ2zUIfTpl8jZIQpcxJZ8b3WsTN7mAG5xtpTnVjdzSbfazkWiTpY1AjGy2nUpuOqSD
+ jhc8Tw8shjxmcmN6hgY9NfC5PQXVrg1frUMWiNR9fTlaSRIYSp9hlixNzCmHGFCFYKhEuWxYoXv
+ gPFCLy8MEGfoUv28zY/TcahYUe338xs7yYeK5Ew7IVFHYtiX7psKu+eOT6oz8C6vQOZ/RmRYMVP
+ K6DOuJygGnjnC1XgOib+KqdhTQCJ0KznSI24Z9g/U2hPwJrn8fdDa3LmXFsTE4+riDIDI3RbkmT
+ CNmNkScyxcDWDUVFXft/0/JEVwtdhsW/xoLpBw8DTPLFlqaFywHieC3G4G808zoLZnhnI8lTLHN 6/YCwtjCopS6SAw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-From: Barry Song <v-songbaohua@oppo.com>
+In order for CI systems to notice all the skipped tests related to
+CONFIG_FORTIFY_SOURCE, allow the FORTIFY_SOURCE KUnit tests to build
+with or without CONFIG_FORTIFY_SOURCE.
 
-while sg_nents is 1 which is always true for the current kernel
-as the only user - zswap is the case, we should remove two big
-memcpy.
-
-Signed-off-by: Barry Song <v-songbaohua@oppo.com>
-Tested-by: Chengming Zhou <zhouchengming@bytedance.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- crypto/scompress.c | 36 +++++++++++++++++++++++++++++-------
- 1 file changed, 29 insertions(+), 7 deletions(-)
+Cc: linux-hardening@vger.kernel.org
+---
+ lib/Kconfig.debug   |  2 +-
+ lib/fortify_kunit.c | 14 ++++++++++++++
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/crypto/scompress.c b/crypto/scompress.c
-index b108a30a7600..50a487eac792 100644
---- a/crypto/scompress.c
-+++ b/crypto/scompress.c
-@@ -117,6 +117,7 @@ static int scomp_acomp_comp_decomp(struct acomp_req *req, int dir)
- 	struct crypto_scomp *scomp = *tfm_ctx;
- 	void **ctx = acomp_request_ctx(req);
- 	struct scomp_scratch *scratch;
-+	void *src, *dst;
- 	unsigned int dlen;
- 	int ret;
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 975a07f9f1cc..4e2febe3b568 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2748,7 +2748,7 @@ config STACKINIT_KUNIT_TEST
  
-@@ -134,13 +135,25 @@ static int scomp_acomp_comp_decomp(struct acomp_req *req, int dir)
- 	scratch = raw_cpu_ptr(&scomp_scratch);
- 	spin_lock(&scratch->lock);
+ config FORTIFY_KUNIT_TEST
+ 	tristate "Test fortified str*() and mem*() function internals at runtime" if !KUNIT_ALL_TESTS
+-	depends on KUNIT && FORTIFY_SOURCE
++	depends on KUNIT
+ 	default KUNIT_ALL_TESTS
+ 	help
+ 	  Builds unit tests for checking internals of FORTIFY_SOURCE as used
+diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
+index 2e4fedc81621..7a88b5dd3d27 100644
+--- a/lib/fortify_kunit.c
++++ b/lib/fortify_kunit.c
+@@ -22,6 +22,11 @@
+ #include <linux/string.h>
+ #include <linux/vmalloc.h>
  
--	scatterwalk_map_and_copy(scratch->src, req->src, 0, req->slen, 0);
-+	if (sg_nents(req->src) == 1) {
-+		src = kmap_local_page(sg_page(req->src)) + req->src->offset;
-+	} else {
-+		scatterwalk_map_and_copy(scratch->src, req->src, 0,
-+					 req->slen, 0);
-+		src = scratch->src;
-+	}
++/* Handle being built without CONFIG_FORTIFY_SOURCE */
++#ifndef __compiletime_strlen
++# define __compiletime_strlen __builtin_strlen
++#endif
 +
-+	if (req->dst && sg_nents(req->dst) == 1)
-+		dst = kmap_local_page(sg_page(req->dst)) + req->dst->offset;
-+	else
-+		dst = scratch->dst;
+ static const char array_of_10[] = "this is 10";
+ static const char *ptr_of_11 = "this is 11!";
+ static char array_unknown[] = "compiler thinks I might change";
+@@ -308,6 +313,14 @@ DEFINE_ALLOC_SIZE_TEST_PAIR(kvmalloc)
+ } while (0)
+ DEFINE_ALLOC_SIZE_TEST_PAIR(devm_kmalloc)
+ 
++static int fortify_test_init(struct kunit *test)
++{
++	if (!IS_ENABLED(CONFIG_FORTIFY_SOURCE))
++		kunit_skip(test, "Not built with CONFIG_FORTIFY_SOURCE=y");
 +
- 	if (dir)
--		ret = crypto_scomp_compress(scomp, scratch->src, req->slen,
--					    scratch->dst, &req->dlen, *ctx);
-+		ret = crypto_scomp_compress(scomp, src, req->slen,
-+					    dst, &req->dlen, *ctx);
- 	else
--		ret = crypto_scomp_decompress(scomp, scratch->src, req->slen,
--					      scratch->dst, &req->dlen, *ctx);
-+		ret = crypto_scomp_decompress(scomp, src, req->slen,
-+					      dst, &req->dlen, *ctx);
- 	if (!ret) {
- 		if (!req->dst) {
- 			req->dst = sgl_alloc(req->dlen, GFP_ATOMIC, NULL);
-@@ -152,10 +165,19 @@ static int scomp_acomp_comp_decomp(struct acomp_req *req, int dir)
- 			ret = -ENOSPC;
- 			goto out;
- 		}
--		scatterwalk_map_and_copy(scratch->dst, req->dst, 0, req->dlen,
--					 1);
-+		if (dst == scratch->dst) {
-+			scatterwalk_map_and_copy(scratch->dst, req->dst, 0,
-+						 req->dlen, 1);
-+		} else {
-+			flush_dcache_page(sg_page(req->dst));
-+		}
- 	}
- out:
-+	if (src != scratch->src)
-+		kunmap_local(src);
-+	if (dst != scratch->dst)
-+		kunmap_local(dst);
++	return 0;
++}
 +
- 	spin_unlock(&scratch->lock);
- 	return ret;
- }
+ static struct kunit_case fortify_test_cases[] = {
+ 	KUNIT_CASE(known_sizes_test),
+ 	KUNIT_CASE(control_flow_split_test),
+@@ -324,6 +337,7 @@ static struct kunit_case fortify_test_cases[] = {
+ 
+ static struct kunit_suite fortify_test_suite = {
+ 	.name = "fortify",
++	.init = fortify_test_init,
+ 	.test_cases = fortify_test_cases,
+ };
+ 
 -- 
 2.34.1
 
