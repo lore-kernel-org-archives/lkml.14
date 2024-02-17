@@ -1,71 +1,76 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4D57C6C5
-	for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 14:55:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A845B7C6CD;
+	Sat, 17 Feb 2024 14:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708181704; cv=none; b=HkZFi8zV/PI4q55cUzTXH61OFa6rTHtYdvwlni1QrC3gO3pRQ99wRPv2JcmdXQnJk3h2GuYCcKmByznUJqYC88LgeCAUTJM3HQRBDcv4lnShJ0w0+Ai+2T7YGb7n7ByvqwE8Wz+5tDFpVu6935R43v/wuuynccEek0uUoQxLBgk=
+	t=1708181703; cv=none; b=TWTk1dZt4DCDfwXuzZ8qSLEaTZn0xlXPBV08BWUAF6g1itCeg+6xNxN2PjzgBPlpw9fwhWWA1f+Ar4fgpGTSKCDbLqM1hAnNwdPYBDHZDPmgV1mTFbmP5MRCECVYe12+/73rcWFfoGvpEhVm7YtnV1oMYxRPQcUl25KOHpUMkzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708181704; c=relaxed/simple;
-	bh=WVKY6mV506NYY5lllafZQPS/zjBkD2UQAn8RDigrfjs=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=s5H/Qpxo6l/XhCnBF0frKwyUSWFvGPrLyCGmBaO9a8ED4+2f8a3s57p0+v6M/vG7GvfAKBP3Z9xOXWKp3t1Zv/56Q2uGvl8cdowAeakfo3cKeyYhh8t44FuXQJe1mwuOG0Qa7JnEH3VMEekcwvu4FMRoAwiZRiFAQb7FYUPV/cE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-365026bbf10so23199275ab.3
-        for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 06:55:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708181702; x=1708786502;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=r08pkwJbEFMcVD2+H2obM8s0FRORd9p3iWPj1Rboc4g=;
-        b=xGMr0RGRO9T13jKw7gVcifsg/Gg8C4AF/OqHCS8bWF8YyXIsk775ryE2Xq2Me/+Z4v
-         Y7JcVblPRQRtnsBteCH+gV8BM96NQ8YlKv/BzasSLOmln9k7fintaJzyOBkEtH2F14Fo
-         b8oWO3QlBogwIvnhgjiYWCyGGtd0897wjk3j/2grtmblM3ATDh3xcDi00t/QTpxC0mAf
-         t32VkdEc+c2MjCeSSMwxzWO9IbYEEfTPQi7+DiGHsq2kY03XDFHkvuheT7B9jvIm6Z4h
-         tNqffJFWkisdeCon8mUVjALuclE0aQIhzQ4plhy5GMCBPX4Ya5WOv9DPt5KPfOFaBZV/
-         mckw==
-X-Gm-Message-State: AOJu0Ywa4rEpkdqgrTWCIZIcLQGKlXR779xPXDwjP59+ysxLcAGtXZC6
-	rCriVpbfCwhW4viNDfJIBQlUK7pbig6sInfip+42XmPmqIs6yE1gmlPBVANmXOWnbhpowQn9w06
-	YTvzSCqiP7GGYScBL/t6IQwkGnaL1kZWC5ecdrg1u9T6Z6r/Jwm+HACMZ4Q==
-X-Google-Smtp-Source: AGHT+IHckb3l/e25xeNqbOwEmf8UBeG4ehg51eZp86toQW05bSYmOsQqnE9B4ESnV71hjla3FteeRja0qEi5fwT5xMgFHEpazjMB
+	s=arc-20240116; t=1708181703; c=relaxed/simple;
+	bh=UJc8Pftdab1S/MgsZW8hxK4dRCrJbQnMNrplUSPk6L0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=K7dpWLhGhBzkMh8GxyRI57Oxw0SvOlqvr9B6WuGECApwzrT00YzGPUMmsOJv2Sq3QsjwsL6Pp6rDHmyXlQyDN6zHwTFOBZNzFokcm+DjrzF4EkscnM6FKoFgB+MqSQNuL4AQt3Tk0ElWACD5Ldp+pKdqUnqzmQ7D6UQFGPkCmMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hdw2mjoa; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hdw2mjoa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3151C43394;
+	Sat, 17 Feb 2024 14:55:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708181703;
+	bh=UJc8Pftdab1S/MgsZW8hxK4dRCrJbQnMNrplUSPk6L0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=hdw2mjoacpFfvtxW0Xx39lnqAvTuZy4rvCresHMo6Ayvc2p3UG32PNZlVI8nj4gHc
+	 4d15vZkCGAsCNgUH98zbLdxvvLo9Ag9GMvlh0hfj0XVXaZg16GjiHzwA8y7dsxrjE1
+	 QAevFzx72i1UPZ642yXtrzVA1PkGDp8ws3zfivut6OTf0CEUjVr2atmW1PyIl5KrMD
+	 iG/J/iQR0d1L8iiTnVLMmYoFlwnlFzt9BskCK5/ZszT+WtKos6CRu11byEU5c7L5wb
+	 RMBZJaZ59c94/gNxWgZLCLQ7zC8Of0VI4ean/Yymtr/qADlKHnUwbu9r+kkXYUylbn
+	 KKtDoNu2cmxzw==
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-mmc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH 1/2] dt-bindings: mmc: sdhci-of-dwcmhsc: Add Sophgo CV1800B and SG2002 support
+Date: Sat, 17 Feb 2024 22:42:01 +0800
+Message-ID: <20240217144202.3808-2-jszhang@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240217144202.3808-1-jszhang@kernel.org>
+References: <20240217144202.3808-1-jszhang@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1b81:b0:365:1212:3f0 with SMTP id
- h1-20020a056e021b8100b00365121203f0mr285132ili.6.1708181702399; Sat, 17 Feb
- 2024 06:55:02 -0800 (PST)
-Date: Sat, 17 Feb 2024 06:55:02 -0800
-In-Reply-To: <CAHpthZpJeO1JGpOS3h_7n-wu28pEZuxo-SVB=x=OJKXpZ71Brg@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000955f8c0611950b18@google.com>
-Subject: Re: [syzbot] [net?] KMSAN: kernel-infoleak in __skb_datagram_iter (2)
-From: syzbot <syzbot+34ad5fab48f7bf510349@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, ryasuoka@redhat.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Add compatible value for the dwcmshc controller in Sophgo's CV1800B and
+SG2002.
 
-syzbot tried to test the proposed patch but the build/boot failed:
+Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+---
+ Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-failed to checkout kernel repo git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git on commit 9f8413c4a66f: failed to run ["git" "fetch" "--force" "--tags" "f569e972c8e9057ee9c286220c83a480ebf30cc5" "9f8413c4a66f"]: exit status 128
-fatal: couldn't find remote ref 9f8413c4a66f
-
-
-
-Tested on:
-
-commit:         [unknown 
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 9f8413c4a66f
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f3f069371247b697
-dashboard link: https://syzkaller.appspot.com/bug?extid=34ad5fab48f7bf510349
-compiler:       
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=111c98f8180000
+diff --git a/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml b/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
+index 42804d955293..4d3031d9965f 100644
+--- a/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
++++ b/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
+@@ -19,6 +19,8 @@ properties:
+       - rockchip,rk3568-dwcmshc
+       - rockchip,rk3588-dwcmshc
+       - snps,dwcmshc-sdhci
++      - sophgo,cv1800b-dwcmshc
++      - sophgo,sg2002-dwcmshc
+       - thead,th1520-dwcmshc
+ 
+   reg:
+-- 
+2.43.0
 
