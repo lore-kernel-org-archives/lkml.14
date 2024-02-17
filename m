@@ -1,98 +1,89 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D427436A6
-	for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 20:56:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F8CA1E880
+	for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 21:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708203407; cv=none; b=puw3ggt2kAE3FP8iPvBvX3H0rnxBeQ7i5Kp0TuJymWUzakoif0X9io5MSPyakpa4ceoswLXiK1qEC9EgnGi0un5jKKtv0BHMJyfxpTeR6vZSFWGkNeCxJJkxknAg2dqar8teZeY5QS3NhtKD73OLh7BWj1SpxXrH8M+NJt0HsQc=
+	t=1708204410; cv=none; b=hYW6+JgkZV/uUj4abaN8QL2PcCebDJ1/AnNrK9aY1WJghQ0FChddVoZwsmqQ4ag4lm1kcqx7tX5Emwcy4lKoHDdGJU5NYFIkHmVK81t7/TII7krNbu2V6Cdu3lmjurLLZcmtZr22Ma+yK7RLpJpHIQBngEG1wGHyAKzvlqLNkL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708203407; c=relaxed/simple;
-	bh=sLnpjWXtHn126dH9KY5lksXlS3Xddlz8ALRfxjqvHNU=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=uc0THMdByLH3T+aoig8/At2kfzaxwNIxegg1yyRa6akRioOfvC2KuBFMtH0pXz9m8rJoJQ1mIOB3iicfo7eopbeF8s/ioH8/wGvdkgoJSNm28UuAS9Nq4KeS2cJel1xsYliTncrNYaEJiTFxU+Ov0QvHEcoU8HbVAkFDa7dox9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IClDwX8P; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1708204410; c=relaxed/simple;
+	bh=fgLVkE2GXqizLVWyGzhJrb1Y0u81C/+bGZCwGZyhqjk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=onF7BKT4agOC1Ml6aghCLJ28gSrexRv4WDMKDUVj2HmDScl5gaAxqwGW6WEPgnxJeW3hfiMEpi1salRCBdYSE4t3Pf3HJoX86Ta0KPhmv/vHJGUaNz04V75XyYLJ/qQNFULNpmcEUq2uOD3hvTjTJG0igt9GiKPcfsinyD8dkXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f2k+wvx4; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IClDwX8P"
-Date: Sat, 17 Feb 2024 15:56:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1708203403;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type;
-	bh=GYlD62MZzIuZyNCsoCfXEkfgZAjvXmKUf8f+PmRt0x0=;
-	b=IClDwX8PwFz8TqHo/Dc040UtCcGSrFLKn3Y3H7StwbQPuPCUyXm0RVGdsqj1W6W+jlSh1e
-	++XfSHkoKXHoj267dMZVhVJS3MeldXBnR0lT6SvHT4HJj8GkYOVIGUHfQdHOZhlIZmDr0u
-	75US7yEmqDJWL9XjUiEzpXT475cpyc8=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	lsf-pc@lists.linux-foundation.org
-Subject: [LSF TOPIC] beyond uidmapping, & towards a better security model
-Message-ID: <tixdzlcmitz2kvyamswcpnydeypunkify5aifsmfihpecvat7d@pmgcepiilpi6>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f2k+wvx4"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d090c83d45so41384921fa.3
+        for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 13:13:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708204407; x=1708809207; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=X5KrHvRvX5NmJw1iIyLeL4nKWoIo2Stg2o/a0niAbAg=;
+        b=f2k+wvx4xY0TwEw//fK87x5gsM6M7iHkscY+52WN/RS+epTrTyXqHcBwXSM1+AyDhM
+         sP5et2NbzNadLjd8zn6J7tgxt3qjIoWUK9c28YYAWGLwgNPch24vz0taGsGnHhr7jS5X
+         4FUTzSaMa54D4N+kniPNwQAyEGn95aHZxLzC393PQiglyIk7+AlrtM5ohWIIzS1PJ4Im
+         lqCvsvR1zwi5gKgBHdvLxLz/Hc+kD7phsgj19P2luIEf1SIIF0KAWuW/zt097TVYEtwW
+         WPCAW6mbELyhlEsRi3cTCw9W/eC3/9xyaXFiKxylR6UfB6FFhyCxYJDZysBLD9wmjOe9
+         9Fzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708204407; x=1708809207;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=X5KrHvRvX5NmJw1iIyLeL4nKWoIo2Stg2o/a0niAbAg=;
+        b=QDSBxOglN4Y14BsRcbXLDwuix8toxn1Bo+aXLSF+g88u1zVtr+i7JPr3f378AfTHs1
+         rLGXdMkDUhoWnULy0pOdupfxpDkWoA7yqM/FC+SZCq5gU4GUqrt7Q4GWeDEPsIbJy5C8
+         HuFp1ApFR1cw+kvg+feCoTwyib17m5LcP4P8qw6AyDzLDahnC66FuX8z5sf8MNSqv857
+         pr8dqNgC0pOIboVE3hjRLhF9nJuMd8Mvq0elct3mKDRcLCx1sM5ryq0O6YjPhDyXQ98T
+         40aLIzYUnaMbYKBMbnKfWstxvNmhOxA8zuh1IieV98poiHoCE3h6P7ZX65jaOLmSBFZT
+         jjxA==
+X-Forwarded-Encrypted: i=1; AJvYcCUOf4UXiLO3KO111IE2QGE46GsUot/htSQhaShqbJeXoCIMTwjgVG7nHLfKQCwv9AH1wAb5nRl/oKRMYXRoXX5+IDDbEw9p/BrUNC4v
+X-Gm-Message-State: AOJu0YzrkW3e9OExXrwAh/dtbn9q0KsGc4vAGTzXeO93QKu3iOdF5qmG
+	iuuOqD9kTYhiFMh2b0Ok27rZaVa0WzWdSg2AqaVzti7lnngbMTwR
+X-Google-Smtp-Source: AGHT+IGQW9t/Ign8tuIdpWBDnnpeicJVQEPwtk4gbl2C1sFXpO2TkTRg31490oUWRseCPX4oZ40PGA==
+X-Received: by 2002:a2e:2c19:0:b0:2d0:ce72:570b with SMTP id s25-20020a2e2c19000000b002d0ce72570bmr5227109ljs.48.1708204406518;
+        Sat, 17 Feb 2024 13:13:26 -0800 (PST)
+Received: from pinguine.lan (ip-176-198-146-182.um43.pools.vodafone-ip.de. [176.198.146.182])
+        by smtp.gmail.com with ESMTPSA id n3-20020a05640206c300b005644eca3befsm132087edy.85.2024.02.17.13.13.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 17 Feb 2024 13:13:26 -0800 (PST)
+From: "Moritz C. Weber" <mo.c.weber@gmail.com>
+To: florian.fainelli@broadcom.com
+Cc: linux-staging@lists.linux.dev,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	"Moritz C. Weber" <mo.c.weber@gmail.com>
+Subject: [PATCH v2 0/8] Staging: vc04_services: bcm2835-camera: Fix code style checks
+Date: Sat, 17 Feb 2024 22:12:38 +0100
+Message-Id: <20240217211246.28882-1-mo.c.weber@gmail.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-AKA - integer identifiers considered harmful
+Resubmit these patches to fix multiple code style checks for better readability, consistency, and to address errors indicated by Gregs patch bot
 
-Any time you've got a namespace that's just integers, if you ever end up
-needing to subdivide it you're going to have a bad time.
+Moritz C. Weber (8):
+  Staging: vc04_services: bcm2835-camera: fix brace code style check
+  Staging: vc04_services: bcm2835-camera: fix brace code style check
+  Staging: vc04_services: bcm2835-camera: fix brace code style check
+  Staging: vc04_services: bcm2835-camera: fix brace code style check
+  Staging: vc04_services: bcm2835-camera: fix brace code style check
+  Staging: vc04_services: bcm2835-camera: fix blank line style check
+  Staging: vc04_services: bcm2835-camera: fix brace code style check
+  Staging: vc04_services: bcm2835-camera: fix brace code style check
 
-This comes up all over the place - for another example, consider ioctl
-numbering, where keeping them organized and collision free is a major
-headache.
+ .../bcm2835-camera/bcm2835-camera.c           | 61 +++++++++----------
+ 1 file changed, 28 insertions(+), 33 deletions(-)
 
-For UIDs, we need to be able to subdivide the UID namespace for e.g.
-containers and mounting filesystems as an unprivileged user - but since
-we just have an integer identifier, this requires complicated remapping
-and updating and maintaining a global table.
+-- 
+2.30.2
 
-Subdividing a UID to create new permissions domains should be a cheap,
-easy operation, and it's not.
-
-The solution (originally from plan9, of course) is - UIDs shouldn't be
-numbers, they should be strings; and additionally, the strings should be
-paths.
-
-Then, if 'alice' is a user, 'alice.foo' and 'alice.bar' would be
-subusers, created by alice without any privileged operations or mucking
-with outside system state, and 'alice' would be superuser w.r.t.
-'alice.foo' and 'alice.bar'.
-
-What's this get us?
-
-Much better, easier to use sandboxing - and maybe we can kill off a
-_whole_ lot of other stuff, too.
-
-Apparmour and selinux are fundamentally just about sandboxing programs
-so they can't own everything owned by the user they're run by.
-
-But if we have an easy way to say "exec this program as a subuser of the
-current user..."
-
-Then we can control what that program can access with just our existing
-UNIX permission and acls.
-
-This would be a pretty radical change, and there's a number of things to
-explore - lots of brainstorming to do.
-
- - How can we do this without breaking absolutely everything? Obviously,
-   any syscalls that communicate in terms of UIDs and GIDs are a
-   problem; can we come up with a compat layer so that most stuff more
-   or less still works?
-
- - How can we do this a way that's the most orthogonal, that gets us the
-   most bang for our buck? How can we kill off as much security model
-   stupidity as possible? How can we make sandboxing _dead easy_ for new
-   applications?
-
-Cheers,
-Kent
