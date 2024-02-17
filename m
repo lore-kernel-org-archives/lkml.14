@@ -1,190 +1,87 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 007511CFA8;
-	Sat, 17 Feb 2024 09:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253BB1CFBF
+	for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 09:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708161285; cv=none; b=oSQBApvlLaPUsxCkdsomDhce0QbqRSwEN9X18RnCW3mxEiuBTKWcj5LqnhMT0+ZOcbO752u2Q631gq3kC3hYrebLst3kAxpSkzvtk+8j/F1zkKwxxgQuhjDUxL/R3Yg4teN8r7DqwwEyLPB5FalKh6BeM8WY1JTGbXUCGBZ6m0A=
+	t=1708161566; cv=none; b=l4zjc1JzpoWMHZY7y4p0OuTPN2LS93fAAH3O+JDL9oACEnovM8buZ23Yb92PvhZm2foSowJ80HCURkvIe6CwaIF457VlG3SS1cf07WC5mRC6iHD1lCLxd8m6+jvMGwb5JV6vzoai92I4ZOXB9o6p5tRTA9+552vW5KPdBXxxPRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708161285; c=relaxed/simple;
-	bh=1hnntFnpL+B0bxwjndXaJRsgWy/yqq6rJPou9nkkkT8=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=TypI47SLhxH3rSi+RncWAsVn8+vNwEYbidaWXH32eAE8eitpMMys0wc+m+Eb8p9YuwFZyeMalERQ0fG7u2rLMPXFwSTUCnfXIRn0by2luQF76VCyAKYX+m2ABFn+s3B9Hdztb10CvYxUGv9JmaKTZsgHO+WqISJ/gQcHb0OScQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4TcN1c56fMz4f3jHj;
-	Sat, 17 Feb 2024 16:55:48 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 855A61A09F9;
-	Sat, 17 Feb 2024 16:55:53 +0800 (CST)
-Received: from [10.174.176.34] (unknown [10.174.176.34])
-	by APP1 (Coremail) with SMTP id cCh0CgBHZQ6XdNBl_ygdEQ--.60286S3;
-	Sat, 17 Feb 2024 16:55:53 +0800 (CST)
-Subject: Re: [RFC PATCH v3 07/26] iomap: don't increase i_size if it's not a
- write operation
-To: Christoph Hellwig <hch@infradead.org>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, tytso@mit.edu,
- adilger.kernel@dilger.ca, jack@suse.cz, ritesh.list@gmail.com,
- djwong@kernel.org, willy@infradead.org, zokeefe@google.com,
- yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com,
- wangkefeng.wang@huawei.com
-References: <20240127015825.1608160-1-yi.zhang@huaweicloud.com>
- <20240127015825.1608160-8-yi.zhang@huaweicloud.com>
- <ZcsCP4h-ExNOcdD6@infradead.org>
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-Message-ID: <74ab3c3e-3daf-5374-75e5-bcb25ffdb527@huaweicloud.com>
-Date: Sat, 17 Feb 2024 16:55:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+	s=arc-20240116; t=1708161566; c=relaxed/simple;
+	bh=qJrbBO4q7O8G85zQS3wGQfe/qj0jzrFk8fExy9Ziewc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=dzyilNEOSBMP0oulyjbdaGvzTC7zd4/RFfqAWDrpzBc4307lYGGHhaNCPd22NA2sxAN+SDk/tF7VWQTYVWlWghsusulkrM9DEXaGZ8J3aT+J3BTrU1BRqvJUSERu3iMtfYiTok6HHdEIhtuB/9B0A2bXWHwVbVU6tPsDtZcv4Iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M4LeIhyd; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M4LeIhyd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708161560; x=1739697560;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=qJrbBO4q7O8G85zQS3wGQfe/qj0jzrFk8fExy9Ziewc=;
+  b=M4LeIhydup6n6gdpSnxJlJXTF89bHoSDujy035vKL2BYbFMJLm1DUEUi
+   OMW8EIKVUjdrjoy6bJhrx51g8mNUonF89FHCaimOS22Ke6vL3LA2PgbIq
+   hz1cQQKNeGlxpuF0LqHP3Z+QyFJnvo+Zz94nzui6gSy5hIIjQOvdN143a
+   GoqAc86MXD9roeiN9mew5I0JxG6BKukSAmzbsqpB0d4lguYhFA2DY097O
+   rMO1met0z9sEu8URSXyHR5+yML5wggUUSSGKGRV5sSSoeNKyKejltha2c
+   4Q/VDBCCoaTq5WkVvQbwDFOSKGbJL2soMOHcsavpBi72Got1OlM8e3znC
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10986"; a="6068393"
+X-IronPort-AV: E=Sophos;i="6.06,166,1705392000"; 
+   d="scan'208";a="6068393"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2024 01:19:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10986"; a="935975343"
+X-IronPort-AV: E=Sophos;i="6.06,166,1705392000"; 
+   d="scan'208";a="935975343"
+Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
+  by fmsmga001.fm.intel.com with ESMTP; 17 Feb 2024 01:19:18 -0800
+Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rbGqq-0001zk-0N;
+	Sat, 17 Feb 2024 09:19:16 +0000
+Date: Sat, 17 Feb 2024 17:19:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Ingo Molnar <mingo@kernel.org>
+Subject: powerpc64-linux-ld: warning: orphan section `.bss..Lubsan_data75'
+ from `kernel/sched/core.o' being placed in section `.bss..Lubsan_data75'
+Message-ID: <202402171724.TnJqaa6v-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <ZcsCP4h-ExNOcdD6@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:cCh0CgBHZQ6XdNBl_ygdEQ--.60286S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxur4UGw45Cw47Gr4xtr48tFb_yoWruw1rpr
-	yq93yDCFs3tF17Wr1kJFZ8XryYka4rKrW2kryxGw43ZFnIyr9rKF1rGa4Yv3Z8J3sxAr4f
-	JF4kAa4kWF1UAr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS
-	07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
-	02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_
-	WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-	CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAF
-	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
-	7IU13rcDUUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 2024/2/13 13:46, Christoph Hellwig wrote:
-> Wouldn't it make more sense to just move the size manipulation to the
-> write-only code?  An untested version of that is below.  With this
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   c1ca10ceffbb289ed02feaf005bc9ee6095b4507
+commit: 7a50f76674f8b6f4f30a1cec954179f10e20110c sched: Simplify yield_to()
+date:   5 months ago
+config: powerpc64-randconfig-r002-20220227 (https://download.01.org/0day-ci/archive/20240217/202402171724.TnJqaa6v-lkp@intel.com/config)
+compiler: powerpc64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240217/202402171724.TnJqaa6v-lkp@intel.com/reproduce)
 
-Sorry for the late reply and thanks for your suggestion, The reason why
-I introduced this new helper iomap_write_end_simple() is I don't want to
-open code __iomap_put_folio() in each caller since corresponding to
-iomap_write_begin(), it's the responsibility for iomap_write_end_*() to
-put and unlock folio, so I'd like to keep it in iomap_write_end_*().
-But I don't feel strongly about it, it's also fine by me to just move
-the size manipulation to the write-only code if you think it's better.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202402171724.TnJqaa6v-lkp@intel.com/
 
-> the naming of the status variable becomes even more confusing than
-> it already is, maybe we need to do a cleanup of the *_write_end
-> calling conventions as it always returns the passed in copied value
-> or 0.
+All warnings (new ones prefixed by >>):
 
-Indeed, it becomes more confused and deserve a cleanup.
+>> powerpc64-linux-ld: warning: orphan section `.bss..Lubsan_data75' from `kernel/sched/core.o' being placed in section `.bss..Lubsan_data75'
+   powerpc64-linux-ld: warning: orphan section `.bss..Lubsan_data43' from `fs/overlayfs/copy_up.o' being placed in section `.bss..Lubsan_data43'
+>> powerpc64-linux-ld: warning: orphan section `.bss..Lubsan_data75' from `kernel/sched/core.o' being placed in section `.bss..Lubsan_data75'
+   powerpc64-linux-ld: warning: orphan section `.bss..Lubsan_data43' from `fs/overlayfs/copy_up.o' being placed in section `.bss..Lubsan_data43'
+>> powerpc64-linux-ld: warning: orphan section `.bss..Lubsan_data75' from `kernel/sched/core.o' being placed in section `.bss..Lubsan_data75'
+   powerpc64-linux-ld: warning: orphan section `.bss..Lubsan_data43' from `fs/overlayfs/copy_up.o' being placed in section `.bss..Lubsan_data43'
 
-Thanks,
-Yi.
-
-> 
-> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-> index 3dab060aed6d7b..8401a9ca702fc0 100644
-> --- a/fs/iomap/buffered-io.c
-> +++ b/fs/iomap/buffered-io.c
-> @@ -876,34 +876,13 @@ static size_t iomap_write_end(struct iomap_iter *iter, loff_t pos, size_t len,
->  		size_t copied, struct folio *folio)
->  {
->  	const struct iomap *srcmap = iomap_iter_srcmap(iter);
-> -	loff_t old_size = iter->inode->i_size;
-> -	size_t ret;
-> -
-> -	if (srcmap->type == IOMAP_INLINE) {
-> -		ret = iomap_write_end_inline(iter, folio, pos, copied);
-> -	} else if (srcmap->flags & IOMAP_F_BUFFER_HEAD) {
-> -		ret = block_write_end(NULL, iter->inode->i_mapping, pos, len,
-> -				copied, &folio->page, NULL);
-> -	} else {
-> -		ret = __iomap_write_end(iter->inode, pos, len, copied, folio);
-> -	}
-> -
-> -	/*
-> -	 * Update the in-memory inode size after copying the data into the page
-> -	 * cache.  It's up to the file system to write the updated size to disk,
-> -	 * preferably after I/O completion so that no stale data is exposed.
-> -	 */
-> -	if (pos + ret > old_size) {
-> -		i_size_write(iter->inode, pos + ret);
-> -		iter->iomap.flags |= IOMAP_F_SIZE_CHANGED;
-> -	}
-> -	__iomap_put_folio(iter, pos, ret, folio);
->  
-> -	if (old_size < pos)
-> -		pagecache_isize_extended(iter->inode, old_size, pos);
-> -	if (ret < len)
-> -		iomap_write_failed(iter->inode, pos + ret, len - ret);
-> -	return ret;
-> +	if (srcmap->type == IOMAP_INLINE)
-> +		return iomap_write_end_inline(iter, folio, pos, copied);
-> +	if (srcmap->flags & IOMAP_F_BUFFER_HEAD)
-> +		return block_write_end(NULL, iter->inode->i_mapping, pos, len,
-> +					copied, &folio->page, NULL);
-> +	return __iomap_write_end(iter->inode, pos, len, copied, folio);
->  }
->  
->  static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
-> @@ -918,6 +897,7 @@ static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
->  
->  	do {
->  		struct folio *folio;
-> +		loff_t old_size;
->  		size_t offset;		/* Offset into folio */
->  		size_t bytes;		/* Bytes to write to folio */
->  		size_t copied;		/* Bytes copied from user */
-> @@ -964,7 +944,24 @@ static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
->  
->  		copied = copy_folio_from_iter_atomic(folio, offset, bytes, i);
->  		status = iomap_write_end(iter, pos, bytes, copied, folio);
-> +		/*
-> +		 * Update the in-memory inode size after copying the data into
-> +		 * the page cache.  It's up to the file system to write the
-> +		 * updated size to disk, preferably after I/O completion so that
-> +		 * no stale data is exposed.
-> +		 */
-> +		old_size = iter->inode->i_size;
-> +		if (pos + status > old_size) {
-> +			i_size_write(iter->inode, pos + status);
-> +			iter->iomap.flags |= IOMAP_F_SIZE_CHANGED;
-> +		}
-> +		__iomap_put_folio(iter, pos, status, folio);
->  
-> +		if (old_size < pos)
-> +			pagecache_isize_extended(iter->inode, old_size, pos);
-> +		if (status < bytes)
-> +			iomap_write_failed(iter->inode, pos + status,
-> +						bytes - status);
->  		if (unlikely(copied != status))
->  			iov_iter_revert(i, copied - status);
->  
-> @@ -1334,6 +1331,7 @@ static loff_t iomap_unshare_iter(struct iomap_iter *iter)
->  			bytes = folio_size(folio) - offset;
->  
->  		bytes = iomap_write_end(iter, pos, bytes, bytes, folio);
-> +		__iomap_put_folio(iter, pos, bytes, folio);
->  		if (WARN_ON_ONCE(bytes == 0))
->  			return -EIO;
->  
-> @@ -1398,6 +1396,7 @@ static loff_t iomap_zero_iter(struct iomap_iter *iter, bool *did_zero)
->  		folio_mark_accessed(folio);
->  
->  		bytes = iomap_write_end(iter, pos, bytes, bytes, folio);
-> +		__iomap_put_folio(iter, pos, bytes, folio);
->  		if (WARN_ON_ONCE(bytes == 0))
->  			return -EIO;
->  
-> 
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
