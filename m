@@ -1,52 +1,52 @@
 Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8308A5EE78;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830C060BB8;
 	Sat, 17 Feb 2024 11:04:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708167890; cv=none; b=frzHG/veDMHNtOetsd/bvU3XzdxkJ8xdils3RHCjPTFNQrc0eXPxj2tSFaHLl/Kigx07LNWuL3nNysndpPBdKmmu0rRVcpSvqn7QuqYYUON7z80eXLaIn85A6twoLEQ3BTgXSo1X/PUmYcST2b6TaVKEU/Oj5u14MkiDAJLVJJ0=
+	t=1708167891; cv=none; b=PM4ZATbhbU9GNd4cTcxgo99OmOOp3vhCSD1N4/y6rXpVtPH8h57WTxk4HPhEtTYwH1391ZOZAVil/ebHL9VlrzIexU8hHXWvEo9/99u8tbyuznzXWaJit3iw1/BWYn6hr7daYC1mGqSxlZG0SayYMcQQk2Oil7ApypsSKgp2Jyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708167890; c=relaxed/simple;
-	bh=ugIMxaqtGiWtkvlDP1PnDeAPKZDlKx1Qzah9gu2ZwmU=;
+	s=arc-20240116; t=1708167891; c=relaxed/simple;
+	bh=Vu3pxfSOvU02G6kf5xYrgXdA4Nr4gnOhkhAT0KtaVio=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=scsuRXUNkPHu9WlMUCr/L7Q/ZifI7kF62B3uIiPRhGmmp3gbFJPfNuGtOkmNkYYt5N9qRie5kXdKsg/w8G5+s8hDjahGwsB3dY2Xa7wCHm4hylWG9Cz/ooL+CVAzKdPVIoQ9gZNYfQ77upAK6j+nM//wNeCtzreo9ZHJEu7DcOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Rs25/BLc; arc=none smtp.client-ip=91.207.212.93
+	 In-Reply-To:To:CC; b=n//paksxrY5SS8Nr1K4niHxffH1aXK+oVxAjY0/vrCG9yzuuYtuSFvogd5G8UCWxiJK5xi41nNHcVdKlauVidwEdkX+lAbreJHSRVRqNqICcauKpiaGZQKrLW1wYm3T+hp3WUFv2DGv5NsLVxxGCsH+EIZyWH62Ived8wWY4wqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=y84dla0w; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Rs25/BLc"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="y84dla0w"
 Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41H4iBek028987;
-	Sat, 17 Feb 2024 12:04:06 +0100
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41H4j1TN030402;
+	Sat, 17 Feb 2024 12:04:16 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	from:date:subject:mime-version:content-type
 	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=selector1; bh=RnhRbd/hclbstXd7Q3NPDVDNjfAippsXAKSovZiaCJg
-	=; b=Rs25/BLctHvzsAXjDLDQ6PuOhH0RPprK6ImbHWKJB4ggXElnwrey2IMElUE
-	DFZ2yxK5VKcduqooM2Bl0wcuslxrmT6r9M3yDfEa9Rnc/tvveM1iuLz0t1ZOpAH8
-	8AAhLeAxqL1RIL196lQhbZjy7hPeZIVA08yfc7rCGOMX0RTeL86ZWyYpsCM+gcZl
-	K+xXCph+LtfXysAKv8Vg9lovwj9yQ4QQOdTOllJJnx/lXcItJCLTcmtFA5+DyQ7U
-	AbX5P5RTubdacf3cn6XqESP6BBcWkfNA31N/VhjX14d2E/4tIhK595xCX+W2ppn/
-	s3oK59BK7PDkRs1Bcw55C/u0SWQ==
+	:cc; s=selector1; bh=B/DdT1Hekue/y2cbdJTf13MdZkRgi2lmLP5jnu8Gv/8
+	=; b=y84dla0wffULnfSSBkGVUUWn+av7VOb36GnK3fekKAJnJ26qdyM/h/KHBfC
+	V7e1D0duE2y8a2+/inYiahggSgdNUsx2WcT8A+5D8rD/hRUEb7YdxfQugUggRvGt
+	73Ct6hjSTwRXR1nWVLfsPbqWjMwEkqsS87nrfnDdThZjYtVb62dGxO3mzjf+MGSN
+	MKM2QCwYpWdWmAGWxnubC9XLVonY4mxR6Yc5qOX0ybubKKtNJSccDIrLGpp1U+G0
+	sFmqTuJi+WnAgcuHLHbx3seIDZndCmMYXvoUvmG5X4A/bgl7yxDB6BvOu1rCvo6F
+	8XcbNCWp6I1duz3CMBsOgTdGP9w==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wamjh0tbx-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wamjh0tcq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 17 Feb 2024 12:04:05 +0100 (CET)
+	Sat, 17 Feb 2024 12:04:15 +0100 (CET)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id C72F840046;
-	Sat, 17 Feb 2024 12:03:58 +0100 (CET)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id BCB534002D;
+	Sat, 17 Feb 2024 12:04:07 +0100 (CET)
 Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8345F253B49;
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1FE16253B48;
 	Sat, 17 Feb 2024 12:03:12 +0100 (CET)
 Received: from localhost (10.252.12.210) by SHFDAG1NODE2.st.com (10.75.129.70)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Sat, 17 Feb
- 2024 12:03:12 +0100
+ 2024 12:03:11 +0100
 From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
-Date: Sat, 17 Feb 2024 12:02:58 +0100
-Subject: [PATCH v2 4/4] dt-bindings: display: simple: hardware can use
- several properties
+Date: Sat, 17 Feb 2024 12:02:56 +0100
+Subject: [PATCH v2 2/4] ARM: dts: stm32: add LTDC pinctrl on STM32MP13x SoC
+ family
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240217-ltdc_mp13-v2-4-50881f1b394e@foss.st.com>
+Message-ID: <20240217-ltdc_mp13-v2-2-50881f1b394e@foss.st.com>
 References: <20240217-ltdc_mp13-v2-0-50881f1b394e@foss.st.com>
 In-Reply-To: <20240217-ltdc_mp13-v2-0-50881f1b394e@foss.st.com>
 To: Rob Herring <robh+dt@kernel.org>,
@@ -86,34 +86,81 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-17_07,2024-02-16_01,2023-05-22_02
 
-Setting a panel-timing in the device-tree overwrite the one specified in
-the driver and set it as preferred.  In that case 'height-mm',
-'width-mm' and 'panel-timing' are properties that can be use for simple
-panels, according to panel-common.yaml
-
-Fixes following warnings:
-arch/arm/boot/dts/st/stm32mp135f-dk.dtb: panel-rgb: 'height-mm', 'panel-timing', 'width-mm' do not match any of the regexes: 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/display/panel/panel-simple.yaml#
+Adds LTDC pinctrl support and assigns dedicated GPIO pins.
 
 Signed-off-by: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
 ---
- Documentation/devicetree/bindings/display/panel/panel-simple.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/st/stm32mp13-pinctrl.dtsi | 57 +++++++++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-index 634a10c6f2dd..c02cbbc7a100 100644
---- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-@@ -352,6 +352,9 @@ properties:
-   no-hpd: true
-   hpd-gpios: true
-   data-mapping: true
-+  height-mm: true
-+  width-mm: true
-+  panel-timing: true
+diff --git a/arch/arm/boot/dts/st/stm32mp13-pinctrl.dtsi b/arch/arm/boot/dts/st/stm32mp13-pinctrl.dtsi
+index 27e0c3826789..32c5d8a1e06a 100644
+--- a/arch/arm/boot/dts/st/stm32mp13-pinctrl.dtsi
++++ b/arch/arm/boot/dts/st/stm32mp13-pinctrl.dtsi
+@@ -47,6 +47,63 @@ pins {
+ 		};
+ 	};
  
- if:
-   not:
++	ltdc_pins_a: ltdc-0 {
++		pins {
++			pinmux = <STM32_PINMUX('D',  9, AF13)>, /* LCD_CLK */
++				 <STM32_PINMUX('C',  6, AF14)>, /* LCD_HSYNC */
++				 <STM32_PINMUX('G',  4, AF11)>, /* LCD_VSYNC */
++				 <STM32_PINMUX('H',  9, AF11)>, /* LCD_DE */
++				 <STM32_PINMUX('G',  7, AF14)>, /* LCD_R2 */
++				 <STM32_PINMUX('B', 12, AF13)>, /* LCD_R3 */
++				 <STM32_PINMUX('D', 14, AF14)>, /* LCD_R4 */
++				 <STM32_PINMUX('E',  7, AF14)>, /* LCD_R5 */
++				 <STM32_PINMUX('E', 13, AF14)>, /* LCD_R6 */
++				 <STM32_PINMUX('E',  9, AF14)>, /* LCD_R7 */
++				 <STM32_PINMUX('H', 13, AF14)>, /* LCD_G2 */
++				 <STM32_PINMUX('F',  3, AF14)>, /* LCD_G3 */
++				 <STM32_PINMUX('D',  5, AF14)>, /* LCD_G4 */
++				 <STM32_PINMUX('G',  0, AF14)>, /* LCD_G5 */
++				 <STM32_PINMUX('C',  7, AF14)>, /* LCD_G6 */
++				 <STM32_PINMUX('A', 15, AF11)>, /* LCD_G7 */
++				 <STM32_PINMUX('D', 10, AF14)>, /* LCD_B2 */
++				 <STM32_PINMUX('F',  2, AF14)>, /* LCD_B3 */
++				 <STM32_PINMUX('H', 14, AF11)>, /* LCD_B4 */
++				 <STM32_PINMUX('E',  0, AF14)>, /* LCD_B5 */
++				 <STM32_PINMUX('B',  6, AF7)>,  /* LCD_B6 */
++				 <STM32_PINMUX('F',  1, AF13)>; /* LCD_B7 */
++			bias-disable;
++			drive-push-pull;
++			slew-rate = <0>;
++		};
++	};
++
++	ltdc_sleep_pins_a: ltdc-sleep-0 {
++		pins {
++			pinmux = <STM32_PINMUX('D',  9, ANALOG)>, /* LCD_CLK */
++				 <STM32_PINMUX('C',  6, ANALOG)>, /* LCD_HSYNC */
++				 <STM32_PINMUX('G',  4, ANALOG)>, /* LCD_VSYNC */
++				 <STM32_PINMUX('H',  9, ANALOG)>, /* LCD_DE */
++				 <STM32_PINMUX('G',  7, ANALOG)>, /* LCD_R2 */
++				 <STM32_PINMUX('B', 12, ANALOG)>, /* LCD_R3 */
++				 <STM32_PINMUX('D', 14, ANALOG)>, /* LCD_R4 */
++				 <STM32_PINMUX('E',  7, ANALOG)>, /* LCD_R5 */
++				 <STM32_PINMUX('E', 13, ANALOG)>, /* LCD_R6 */
++				 <STM32_PINMUX('E',  9, ANALOG)>, /* LCD_R7 */
++				 <STM32_PINMUX('H', 13, ANALOG)>, /* LCD_G2 */
++				 <STM32_PINMUX('F',  3, ANALOG)>, /* LCD_G3 */
++				 <STM32_PINMUX('D',  5, ANALOG)>, /* LCD_G4 */
++				 <STM32_PINMUX('G',  0, ANALOG)>, /* LCD_G5 */
++				 <STM32_PINMUX('C',  7, ANALOG)>, /* LCD_G6 */
++				 <STM32_PINMUX('A', 15, ANALOG)>, /* LCD_G7 */
++				 <STM32_PINMUX('D', 10, ANALOG)>, /* LCD_B2 */
++				 <STM32_PINMUX('F',  2, ANALOG)>, /* LCD_B3 */
++				 <STM32_PINMUX('H', 14, ANALOG)>, /* LCD_B4 */
++				 <STM32_PINMUX('E',  0, ANALOG)>, /* LCD_B5 */
++				 <STM32_PINMUX('B',  6, ANALOG)>, /* LCD_B6 */
++				 <STM32_PINMUX('F',  1, ANALOG)>; /* LCD_B7 */
++		};
++	};
++
+ 	mcp23017_pins_a: mcp23017-0 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('G', 12, GPIO)>;
 
 -- 
 2.25.1
