@@ -1,133 +1,142 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F5E7AE44;
-	Sat, 17 Feb 2024 13:57:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 058107A72E
+	for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 13:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708178250; cv=none; b=aDMAEM6kIeCwHgjxrgVPVP6GNm4s4v9GxWzryireJl19gnAnYLuSuPpYz6kbwzHaHWGjIZ/DiTtYaYkr9WB7SHJwesux08v6GwKmOdWvzKZJZQPRNxhbVL2Bcz1n5ba6L9yUYvmz/5gW1gSVD91JQWesJxpFA9FRHZzd3HwoM5k=
+	t=1708178250; cv=none; b=nKnIbSnYaZmYxVDt4L5rsluo4M7k+ZRp0ex7CiAB/BaCNeS7fzqinTLmtOqfJTzRBN3A8d/P4LgSlsrA1nMrNI/SzURWeVEymyDPL2qOjHal3kctWnPoGKgg9bwDm82vaUCL0hPhpA7QwegHqs0kaIMbye0o9qPap2X0myc2hno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708178250; c=relaxed/simple;
-	bh=wftFHk4jzES9vDs2ANiZtphQYDYENKzFBUmfNJ9pR/c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=SYCUvimf92ZEYCeY62tbfzfoD2EYQF7RXnWAMY+RaN2xi/57dP3ZIQWboZEO3TJbD95W0Ddw2ldeXtYQK5HLa3dtRcdGpoJ/w/voUAIdQ1k/TOGecxzVczrLn25oz0iM/rbP0UBFzhogD2yv5iDPGHQQFtt2IbBaX73h5BTI9yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aisT4pG6; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	bh=ryM+C4TUaD1TtA4eDxWWXV1YoFmsoAFDJN7ycQy+f5M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Iiak8YWTtR71iedLLaTk2YHi4Z0zCOCE6PqA+wM825aeLGqsO/w/PdDgp0V8UAG0ImVnT1XpFLnBvJWLwHkHIXG+WVWUZGG55kNzLDTzkpVC0dfiPrgQuXerM+i/m6xrSILoYk/wtY7AiR2GWOicYtSSUaGwkbxc/OtVP/FsN+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AcMKsZO0; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aisT4pG6"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41HDbBoc004255;
-	Sat, 17 Feb 2024 13:57:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=mwzABwdWNWrkewwBO37WiJFPjz8OwxhXknYoD7FSgk4
-	=; b=aisT4pG6J1bI8Rfm8vUKbuZ0ZFmYt93GC5p3i6e9Bv8RWhhIiUYmm8TnM/w
-	oKQRgLNOOuqP30zYw7cKZQKA2+KOYajElq6WXJqCE4G2ifP+ADBWPk8gwi6qIOtQ
-	OLg7ev+5sRDwV1lOwPRUMhBUO5Qm4wZQ7JA14+5ppeKxDjXbD6uJ4DOq9/Fej33y
-	LyA4wf0OwdMrxzZhcOOxnxChCGtXevQ+c3mdPuBPDhA0B1xuw842boBis7plGK/K
-	MlT+ozultcT/bXXztEgDwilq+bAYA0gGbISJOMfI9eTxjmfHvDh7kPOKIOJCi1qJ
-	/nbOtrVksoAo4qr+7aMmczPHwkg==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wav1ar4e2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 17 Feb 2024 13:57:17 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41HDvGgS026943
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 17 Feb 2024 13:57:16 GMT
-Received: from hu-mkshah-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Sat, 17 Feb 2024 05:57:13 -0800
-From: Maulik Shah <quic_mkshah@quicinc.com>
-Date: Sat, 17 Feb 2024 19:27:07 +0530
-Subject: [PATCH 1/2] soc: qcom: Update init level to core_initcall() for
- cmd-db and rpmh-rsc
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AcMKsZO0"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5129ece824aso1043556e87.3
+        for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 05:57:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708178247; x=1708783047; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LHkv62BBlSsKFseDzKxHUgPCAgv++YI7qwmDq3fNylE=;
+        b=AcMKsZO0GYso5J1BvhAiCjI8T8H9K24dRA19lIuv6yXly/9ojulI8UgjtcYf5/QoSF
+         u5ccCxC7w/0ITBh7yp/VvcteGue0T6nXENUbMVavQ/l4/23LwborqS0twJ2BOaZi7Os8
+         ULa4zGnsl2sVXWqa6qP1CFw5crQUxgIqntxaFD37JIk8eWKYqAMZHVLiew4lM7wX7PyW
+         q5XnBqbsLfR4S2Bwe0HWjtFE/bGFQM2rfyq12XYd70mKUzK26u0yKxtkycOa2mr+BiFn
+         6jvkKN8w9sfeIphh098lQeiqj38+qV43O6p6LGrC4X9Z+N9Q2K301MuXTDquYcPJD9bf
+         bC3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708178247; x=1708783047;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LHkv62BBlSsKFseDzKxHUgPCAgv++YI7qwmDq3fNylE=;
+        b=XoUUZEM0Elcj/AYZt0/TJYVD0Hi1G+t4ChWgUPKDjY83mX5weO0fiM/11AwxZDxpms
+         SjYCjLX4WROQc1/0qvBp+Sa9AX1zhoaGLSNZu1kbedCnwIpkLjR0isXPyOvSLNLxEK0T
+         NwD9GAbGpptPN3YLKvMVRXhDeZBmZY8ro155itGJy9NBCMj9g6w56OmoCh0xOEyrtNYZ
+         alNgS6820zp0YHcjHnthwU8d8QC2rfAyZn7tRVY+Y43iBSy4Ge4fw1YQ3PVJb3yw4i3/
+         dYYCiVNeQHuTnIYMTWE+3c00CyDhkErW6HD2GYDhy7x/1UJUOW6gnr4zJ+RFH6AtK/Jk
+         G/Ew==
+X-Forwarded-Encrypted: i=1; AJvYcCWg2IjAHC0sopYcQoebFbg4Xbn3sgZCU0Z3DPUeK7vfKBdBL/DcwK2tXUHAsPrJD1jLAsNGYyNgy/3CAQUJsQAmX776cR1CCVYONMCp
+X-Gm-Message-State: AOJu0YwtlHbLlndc0PkS9nBOvNIjblOkuq8ScQCBjVXvQ07yUPZ1TStg
+	DmmhZTjUAtrQHH1ngE8OCXJi9mkct84xLHSjo+Ukwcn20MZ4hBZChdni5H7fT9Q=
+X-Google-Smtp-Source: AGHT+IEb3VOP9YWFz1SvNwuQRPmz6cT7GnOXl00S+pVjzHLAxIqQi4ENCZ3RixYd/Eus3N/cMGHK6w==
+X-Received: by 2002:ac2:4145:0:b0:511:7021:9418 with SMTP id c5-20020ac24145000000b0051170219418mr4909371lfi.69.1708178247242;
+        Sat, 17 Feb 2024 05:57:27 -0800 (PST)
+Received: from [192.168.0.22] ([78.10.207.130])
+        by smtp.gmail.com with ESMTPSA id ec11-20020a0564020d4b00b005643f110e66sm71005edb.16.2024.02.17.05.57.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 17 Feb 2024 05:57:26 -0800 (PST)
+Message-ID: <ad30fcc6-4a47-411a-9deb-ee26cb6109ff@linaro.org>
+Date: Sat, 17 Feb 2024 14:57:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: i3c-hub: Add Renesas RG3MxxB12A1 I3C HUB
+Content-Language: en-US
+To: Steven Niu <steven.niu.uj@renesas.com>, alexandre.belloni@bootlin.com,
+ linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ devicetree@vger.kernel.org
+Cc: zbigniew.lukwinski@linux.intel.com
+References: <20240217131412.4145506-1-steven.niu.uj@renesas.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240217131412.4145506-1-steven.niu.uj@renesas.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240217-init_level-v1-1-bde9e11f8317@quicinc.com>
-References: <20240217-init_level-v1-0-bde9e11f8317@quicinc.com>
-In-Reply-To: <20240217-init_level-v1-0-bde9e11f8317@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "Rafael J.
- Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <quic_lsrao@quicinc.com>, Maulik Shah <quic_mkshah@quicinc.com>
-X-Mailer: b4 0.12.5-dev-2aabd
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708178229; l=1457;
- i=quic_mkshah@quicinc.com; s=20240109; h=from:subject:message-id;
- bh=wftFHk4jzES9vDs2ANiZtphQYDYENKzFBUmfNJ9pR/c=;
- b=H6gcB0VQ3OIGQtfx4U/KwYbyMeci9KevvJ/GCFxh95BvZ4Qo1hlK36f3btRnaohmomxLLZVlP
- 2UwvK8HDLtzB8VASaJW1zfuU7QS0yLFJfxgMOZ8hXHwWLa7xuT+aGZD
-X-Developer-Key: i=quic_mkshah@quicinc.com; a=ed25519;
- pk=bd9h5FIIliUddIk8p3BlQWBlzKEQ/YW5V+fe759hTWQ=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 2X7MUvLR_4MB3vVm877mBC0mP43YJjHZ
-X-Proofpoint-GUID: 2X7MUvLR_4MB3vVm877mBC0mP43YJjHZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-17_10,2024-02-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 mlxlogscore=999 mlxscore=0 impostorscore=0 suspectscore=0
- lowpriorityscore=0 spamscore=0 phishscore=0 clxscore=1015 bulkscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402170113
 
-cmd-db and rpmh-rsc are used by clients like regulators, interconnects and
-clocks for resource voting. These clients are in core_initcall() while
-cmd-db and rpmh-rsc are in arch_initcall(). Update init level for these
-drivers also to core_initcall() to avoid unnecessary probe defer during
-boot up.
+On 17/02/2024 14:14, Steven Niu wrote:
+> +
+> +    patternProperties:
+> +      "@0,0$":
+> +        type: object
+> +        description: |
+> +          Backend for handling SMBus mode, should be named: backend@0,0
+> +          Adding this node installs the backed for handling SMBus Target mode communication.
+> +
+> +        properties:
+> +          compatible:
+> +            description:
+> +              Compatible of the I2C/SMBus backend.
+> +
+> +          target-reg:
+> +            description:
 
-Signed-off-by: Maulik Shah <quic_mkshah@quicinc.com>
----
- drivers/soc/qcom/cmd-db.c   | 2 +-
- drivers/soc/qcom/rpmh-rsc.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Heh, you did not even bother with testing this...
 
-diff --git a/drivers/soc/qcom/cmd-db.c b/drivers/soc/qcom/cmd-db.c
-index a5fd68411bed..c344107bc36c 100644
---- a/drivers/soc/qcom/cmd-db.c
-+++ b/drivers/soc/qcom/cmd-db.c
-@@ -362,7 +362,7 @@ static int __init cmd_db_device_init(void)
- {
- 	return platform_driver_register(&cmd_db_dev_driver);
- }
--arch_initcall(cmd_db_device_init);
-+core_initcall(cmd_db_device_init);
- 
- MODULE_DESCRIPTION("Qualcomm Technologies, Inc. Command DB Driver");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-index a021dc71807b..c4c7aad957e6 100644
---- a/drivers/soc/qcom/rpmh-rsc.c
-+++ b/drivers/soc/qcom/rpmh-rsc.c
-@@ -1154,7 +1154,7 @@ static int __init rpmh_driver_init(void)
- {
- 	return platform_driver_register(&rpmh_driver);
- }
--arch_initcall(rpmh_driver_init);
-+core_initcall(rpmh_driver_init);
- 
- MODULE_DESCRIPTION("Qualcomm Technologies, Inc. RPMh Driver");
- MODULE_LICENSE("GPL v2");
-
--- 
-2.22.0
+Best regards,
+Krzysztof
 
