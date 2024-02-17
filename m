@@ -1,124 +1,146 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9623D68
-	for <linux-kernel@vger.kernel.org>; Sat, 17 Feb 2024 00:08:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DCCA3D68;
+	Sat, 17 Feb 2024 00:10:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708128530; cv=none; b=Kff4BaauPN380w+hUU7FSG5MPndyEaI7L7hYsihxg9VIZP/iPEYJhdpYUwzQJSpnDb129W5hYh5UxRXctUOZGOqeJypD+yZQ+iROlqxFRTc7tcVagodAzbcBdwmIBjfSuUdDHTe9ovZFWvbhvMEzXosxvF/Hdg0968LKgXifbfM=
+	t=1708128652; cv=none; b=sMsL8Obo2M6D963e94/fVlJ2rRNCyxCGh348Ft014cIVWD8lBrJewIpkR9yM94fSAP6lzHs2roOsvZZzLZs+C3EmuuX2Jmf7pZQOflimr4C3K18mxMq1SN8fLLs6z1Jobez58taf4w6MrJRodLlkE2l8tqNACLaWcusQ26Y3l28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708128530; c=relaxed/simple;
-	bh=plU6YhEkyhkbfKgfjHrx3qjSg7IHeMnpyb2DBIHN9Rs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LbDyQLKLT6LjnDclhaLZArborw8NK1DSr1wYfuzjQVD0PZ8jVeE8MurNnohajNCUnEJqbOKeFNNvkGIOrhOLCnrqZEkdQxHnROgMVmtigb5clxsEvCRk81jujXvnSShgGbvgEH3z3i5z4Cq06PHAvPtWkC9aRcT2hywW+DTVF04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FAXamuuN; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1708128652; c=relaxed/simple;
+	bh=1lZ9C3IooDwlk8tTDX36s+KlO4L2cj6MdvkA+2BRvL0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dN40thlTdfneOiXzmkKUNPS2+nhptz0Mr4oyfTqbU5k1mT582jsAJ+55VqDzKCRPtSQqR2yihSyye0x0tKZOA8IvayTZnCYf5tQjigKe2p9tJMfLPLReoPaa42hhQeB1PBxleurQHOnkhNXtpMaVCT06/KPOhwCnF4TEYViPDwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JLETJxmQ; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FAXamuuN"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6d9f94b9186so2159587b3a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 16 Feb 2024 16:08:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708128528; x=1708733328; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=S1txfacIBFBZ/O4tjcxs+bfhiTiZyaDvYXwzko6DwYw=;
-        b=FAXamuuNv/zQzAsTiczfELCzSiTGSx1i/N2NTp0zupFLDQsEIxjlp36niuZ2AP+LXG
-         uwz2r7+1poIRzYwVXiE5dopiurRDvewCRlMU4JDMQz2+foC3MvDRrVkWlpAZZy83/LUv
-         Teb8jXfQwKklL/wDFlt/TtF/74WCF3iwL7PHw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708128528; x=1708733328;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S1txfacIBFBZ/O4tjcxs+bfhiTiZyaDvYXwzko6DwYw=;
-        b=HNrWUp2918JSr61tE4/dGSaB9IEDn+JGjjz7sQVxpOD/GbqUVeENiD0zKK1xN8PTtv
-         +ugp3eYp8Em0TB0oEWEpmcRZ8tMhqEL3trbxNjQFL69/Jm9Sb8LEmAnxHyqMxuJ8d0Ww
-         Fi/H8R2HcflG9FLvUv2Dm3dS1ZJv5UgrpvlDWckTA+RevbAC2n4K7a2pVW3TnMcASu93
-         9t8PHRji1nOxDZuu90jhvexqE3EkcjGhmntUZsI5YNWkVgaoPqp9yRR91ytwO5nq1qG/
-         ZTggyddQdTLLA7cDqHub+k2UaBYCbwywIbjJ6vYB35MrNbt33gyJBFJJdL8v1B6t05i6
-         eMQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVdgTCymEu2sEaFosQnELd+Xtco8/Ct+5J39iCLq4GAk0q0P3se+eVXtKfuKBp/7WlVEMNZ92pEdAcfigxJpeab+9luiTHvqv77zjLV
-X-Gm-Message-State: AOJu0YyGswTk/7g4KaoHHb3ObKy1w2jBTfTjT0s2wXbjzp9oInXZ+XC+
-	M6F+7GVWJxT6XJny2of04S85yItZHIi74B7xMMGpqhKGeKtEMyW4MGcZcLvt+Q==
-X-Google-Smtp-Source: AGHT+IF+QQ/9SK4sTlRF7CviXNWL9OdNoE9iSFRsOXGRftVqcaAIHIRUQhIt4OYE39Err1qxKn5GJw==
-X-Received: by 2002:a05:6a21:3183:b0:19e:a9e6:c05 with SMTP id za3-20020a056a21318300b0019ea9e60c05mr7276163pzb.43.1708128527870;
-        Fri, 16 Feb 2024 16:08:47 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id z3-20020aa79903000000b006e094bf05f4sm487826pff.213.2024.02.16.16.08.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 16:08:47 -0800 (PST)
-Date: Fri, 16 Feb 2024 16:08:46 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org,
-	mhocko@suse.com, vbabka@suse.cz, hannes@cmpxchg.org,
-	roman.gushchin@linux.dev, mgorman@suse.de, dave@stgolabs.net,
-	willy@infradead.org, liam.howlett@oracle.com, corbet@lwn.net,
-	void@manifault.com, peterz@infradead.org, juri.lelli@redhat.com,
-	catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, peterx@redhat.com, david@redhat.com,
-	axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org,
-	nathan@kernel.org, dennis@kernel.org, tj@kernel.org,
-	muchun.song@linux.dev, rppt@kernel.org, paulmck@kernel.org,
-	pasha.tatashin@soleen.com, yosryahmed@google.com, yuzhao@google.com,
-	dhowells@redhat.com, hughd@google.com, andreyknvl@gmail.com,
-	ndesaulniers@google.com, vvvvvv@google.com,
-	gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, bristot@redhat.com,
-	vschneid@redhat.com, cl@linux.com, penberg@kernel.org,
-	iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com,
-	elver@google.com, dvyukov@google.com, shakeelb@google.com,
-	songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com,
-	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev, linux-arch@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com,
-	cgroups@vger.kernel.org
-Subject: Re: [PATCH v3 13/35] lib: add allocation tagging support for memory
- allocation profiling
-Message-ID: <202402161607.0208EB45C@keescook>
-References: <20240212213922.783301-1-surenb@google.com>
- <20240212213922.783301-14-surenb@google.com>
- <202402121433.5CC66F34B@keescook>
- <lvrwtp73y2upktswswekhhilrp2i742tmhcxi2c4gayyn24qd2@hdktbg3qutgb>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JLETJxmQ"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41GNx1WT026851;
+	Sat, 17 Feb 2024 00:10:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-type; s=qcppdkim1; bh=43Y107OTi62mysj+97E4
+	2k9CxbAKw69bBJuDumhcQb8=; b=JLETJxmQhqa7c0vW0wWBlFdd16rMDBk/GdnG
+	nX9uZl2vbQDvf1F5iEhBALLBRpqX8IVzW5behdOEbADTuUvJjfTCOVzEHHBjJ9bH
+	MRECZTv2D8af1CobVzOKe6t1qvJIoMvBzwWYWMtKAxVXxqN+sdwVWTbJBJDXRXoh
+	Efa+pkaj/pGV/9F63g4shW3GJnE+t4sgxfH2acngYhzXSOd5hPx+TalhSwNM8TsN
+	cP9NJaHLkcp4GNGXJ1wV5mcuU/906K5HK3zg+cFNG6B8nnEAI7UEe8/anZMrMdAu
+	CUM/PBlYMF0i7tlzyk6w392f4nU0rhvT4QKPs7EefHgJzQYllQ==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w9fkfcv52-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 17 Feb 2024 00:10:34 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41H0AX0q017210
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 17 Feb 2024 00:10:33 GMT
+Received: from hu-wcheng-lv.qualcomm.com (10.49.16.6) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 16 Feb 2024 16:10:32 -0800
+From: Wesley Cheng <quic_wcheng@quicinc.com>
+To: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
+        <perex@perex.cz>, <conor+dt@kernel.org>, <corbet@lwn.net>,
+        <lgirdwood@gmail.com>, <andersson@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <gregkh@linuxfoundation.org>,
+        <Thinh.Nguyen@synopsys.com>, <broonie@kernel.org>,
+        <bgoswami@quicinc.com>, <tiwai@suse.com>, <robh+dt@kernel.org>,
+        <konrad.dybcio@linaro.org>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-sound@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>, Wesley Cheng <quic_wcheng@quicinc.com>
+Subject: [PATCH v17 12/51] usb: host: xhci: Repurpose event handler for skipping interrupter events
+Date: Fri, 16 Feb 2024 16:09:38 -0800
+Message-ID: <20240217001017.29969-13-quic_wcheng@quicinc.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240217001017.29969-1-quic_wcheng@quicinc.com>
+References: <20240217001017.29969-1-quic_wcheng@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <lvrwtp73y2upktswswekhhilrp2i742tmhcxi2c4gayyn24qd2@hdktbg3qutgb>
+Content-Type: text/plain
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: bnwZN7T8pQj4-lMgdRCtPOFQwqu0dTQt
+X-Proofpoint-GUID: bnwZN7T8pQj4-lMgdRCtPOFQwqu0dTQt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-16_23,2024-02-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ adultscore=0 lowpriorityscore=0 impostorscore=0 mlxlogscore=927
+ spamscore=0 bulkscore=0 suspectscore=0 mlxscore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402160189
 
-On Fri, Feb 16, 2024 at 06:26:06PM -0500, Kent Overstreet wrote:
-> On Mon, Feb 12, 2024 at 02:40:12PM -0800, Kees Cook wrote:
-> > On Mon, Feb 12, 2024 at 01:38:59PM -0800, Suren Baghdasaryan wrote:
-> > > diff --git a/include/linux/sched.h b/include/linux/sched.h
-> > > index ffe8f618ab86..da68a10517c8 100644
-> > > --- a/include/linux/sched.h
-> > > +++ b/include/linux/sched.h
-> > > @@ -770,6 +770,10 @@ struct task_struct {
-> > >  	unsigned int			flags;
-> > >  	unsigned int			ptrace;
-> > >  
-> > > +#ifdef CONFIG_MEM_ALLOC_PROFILING
-> > > +	struct alloc_tag		*alloc_tag;
-> > > +#endif
-> > 
-> > Normally scheduling is very sensitive to having anything early in
-> > task_struct. I would suggest moving this the CONFIG_SCHED_CORE ifdef
-> > area.
-> 
-> This is even hotter than the scheduler members; we actually do want it
-> up front.
+Depending on the interrupter use case, the OS may only be used to handle
+the interrupter event ring clean up.  In these scenarios, event TRBs don't
+need to be handled by the OS, so introduce an xhci interrupter flag to tag
+if the events from an interrupter needs to be handled or not.
 
-It is? I would imagine the scheduler would touch stuff more than the
-allocator, but whatever works. :)
+Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
+---
+ drivers/usb/host/xhci-ring.c | 17 +++++++++++++----
+ drivers/usb/host/xhci.h      |  1 +
+ 2 files changed, 14 insertions(+), 4 deletions(-)
 
--- 
-Kees Cook
+diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+index d4a28ac4967f..82c10a5ac6e9 100644
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -2962,14 +2962,22 @@ static int handle_tx_event(struct xhci_hcd *xhci,
+ }
+ 
+ /*
+- * This function handles one OS-owned event on the event ring. It may drop
+- * xhci->lock between event processing (e.g. to pass up port status changes).
++ * This function handles one OS-owned event on the event ring, or ignores one event
++ * on interrupters which are non-OS owned. It may drop xhci->lock between event
++ * processing (e.g. to pass up port status changes).
+  */
+ static int xhci_handle_event_trb(struct xhci_hcd *xhci, struct xhci_interrupter *ir,
+ 				 union xhci_trb *event)
+ {
+ 	u32 trb_type;
+ 
++	/*
++	 * Some interrupters do not need to handle event TRBs, as they may be
++	 * managed by another entity, but rely on the OS to clean up.
++	 */
++	if (ir->skip_events)
++		return 0;
++
+ 	trace_xhci_handle_event(ir->event_ring, &event->generic);
+ 
+ 	/*
+@@ -3058,8 +3066,9 @@ static void xhci_clear_interrupt_pending(struct xhci_hcd *xhci,
+ }
+ 
+ /*
+- * Handle all OS-owned events on an interrupter event ring. It may drop
+- * and reaquire xhci->lock between event processing.
++ * Handle all OS-owned events on an interrupter event ring, or skip pending events
++ * for non OS owned interrupter event ring. It may drop and reaquire xhci->lock
++ * between event processing.
+  */
+ static int xhci_handle_events(struct xhci_hcd *xhci, struct xhci_interrupter *ir)
+ {
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index 8908c3f5af6f..9039f234cf52 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -1433,6 +1433,7 @@ struct xhci_interrupter {
+ 	struct xhci_intr_reg __iomem *ir_set;
+ 	unsigned int		intr_num;
+ 	bool			ip_autoclear;
++	bool			skip_events;
+ 	u32			isoc_bei_interval;
+ 	/* For interrupter registers save and restore over suspend/resume */
+ 	u32	s3_irq_pending;
